@@ -2,18 +2,18 @@
 
 CC = cl
 # Debug version
-CFLAGS = -c -Zi -W4 \
-	-I..\spec\include \
-	-I$(VISION_PRERELEASE)\libpng \
-	-I$(VISION_PRERELEASE)\zlib \
-	-I$(EIFFEL4)\bench\spec\windows\include
-
-# Release version
-#CFLAGS = -c -Ox \
+#CFLAGS = -c -Zi -W4 \
 #	-I..\spec\include \
 #	-I$(VISION_PRERELEASE)\libpng \
 #	-I$(VISION_PRERELEASE)\zlib \
 #	-I$(EIFFEL4)\bench\spec\windows\include
+
+# Release version
+CFLAGS = -c -O1 \
+	-I..\spec\include \
+	-I$(VISION_PRERELEASE)\libpng \
+	-I$(VISION_PRERELEASE)\zlib \
+	-I$(EIFFEL4)\bench\spec\windows\include
 
 .c.obj:
 	$(CC) $(CFLAGS) $<

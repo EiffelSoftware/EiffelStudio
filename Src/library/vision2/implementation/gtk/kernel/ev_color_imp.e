@@ -216,6 +216,14 @@ feature -- Conversion
 
 feature {EV_ANY_I} -- Command
 
+	delta: REAL is
+			-- Amount by which two intensities can differ but still be
+			-- considered equal by `is_equal'.
+		do
+			--| FIXME IEK Is this correct for GTK?
+			Result := 1 / 255
+		end
+
 	destroy is
           		-- Render `Current' unusable.
 		do
@@ -250,6 +258,18 @@ end -- class EV_COLOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/06/07 17:27:30  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.3.4.3  2000/05/25 00:27:56  king
+--| Added fixme
+--|
+--| Revision 1.3.4.2  2000/05/16 22:46:46  king
+--| Added delta feature
+--|
+--| Revision 1.3.4.1  2000/05/03 19:08:37  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.6  2000/05/02 18:26:14  oconnor
 --| Optimised copy
 --|

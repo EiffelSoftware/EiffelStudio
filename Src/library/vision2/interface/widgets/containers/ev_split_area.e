@@ -51,6 +51,8 @@ feature {NONE} -- Initialization
 				-- This function should be called after init
 				-- of vertical/horizontal split area.
 			end
+			sep.enable_raised
+			create split_box
 			{EV_WIDGET} Precursor
 			create scr
 			scr.set_line_width (3)
@@ -59,6 +61,7 @@ feature {NONE} -- Initialization
 			sep.set_minimum_width (8)
 			create first_cell.make_with_real_parent (Current)
 			split_box.extend (first_cell)
+			sep.set_minimum_size (Half_sep_dimension * 2, Half_sep_dimension * 2)
 			split_box.extend (sep)
 			split_box.disable_item_expand (sep)
 			create second_cell.make_with_real_parent (Current)
@@ -67,6 +70,13 @@ feature {NONE} -- Initialization
 			first_cell.merge_radio_button_groups (second_cell)
 			previous_split_position := -1
 			sep.pointer_button_press_actions.extend (~on_click)
+			update_minimum_size
+			resize_actions.extend (~on_fixed_resized)
+			first_cell.resize_actions.extend (~on_cell_resized)
+			second_cell.resize_actions.extend (~on_cell_resized)
+			split_position := width // 2
+			first_expandable := True
+			second_expandable := True
 		end
 
 feature -- Access
@@ -139,19 +149,19 @@ feature -- Status report
 	empty: BOOLEAN is
 			-- Is structure empty?
 		do
-			Result := not (second_cell.readable or first_cell.readable)
+			Result := first = Void
 		end
 
 	extendible: BOOLEAN is
 			-- Is structure not full yet?
 		do
-			Result := not second_cell.readable
+			Result := second = Void
 		end
 
 	full: BOOLEAN is
 			-- Is structure filled to capacity?
 		do
-			Result := second_cell.readable
+			Result := second /= Void
 		end
 
 	readable: BOOLEAN is
@@ -163,7 +173,7 @@ feature -- Status report
 	writable: BOOLEAN is
 			-- Is there a current item that may be modified?
 		do
-			Result := item /= Void
+			Result := readable
 		end
 
 	prunable: BOOLEAN is True
@@ -181,16 +191,9 @@ feature -- Status report
 	minimum_split_position: INTEGER is
 			-- Minimum position the splitter can have.
 		do
-			if first_cell.readable then
-				Result := select_from (first.minimum_width,
-					first.minimum_height)
-			else
-				Result := 1
-			end
-			Result := Result + select_from (sep.width, sep.height)
+			Result := first_cell_min_size + Half_sep_dimension
 		ensure
-			positive_value: Result >= 0
-			coherent_position: Result <= maximum_split_position
+			non_negative: Result >= 0
 		end
 
 	maximum_split_position: INTEGER is
@@ -199,19 +202,9 @@ feature -- Status report
 			sec_item_min_size: INTEGER
 			sec : EV_WIDGET
 		do
-			sec := second
-			if sec /= Void then
-				sec_item_min_size := select_from (
-					sec.minimum_width,
-					sec.minimum_height)
-			else
-				sec_item_min_size := 1
-			end
-			Result := select_from (split_box.width, split_box.height) -
-				select_from (sep.width, sep.height) - sec_item_min_size
+			Result := assumed_dimension - second_cell_min_size - Half_sep_dimension
 		ensure
-			positive_value: Result >= 0
-			coherent_position: Result >= minimum_split_position
+			non_negative: Result >= 0
 		end
 
 feature -- Measurement
@@ -219,13 +212,13 @@ feature -- Measurement
 	client_width: INTEGER is
 			-- Width of the client area of container.
 		do
-			Result := implementation.box.client_width
+			Result := width
 		end
 
 	client_height: INTEGER is
 			-- Height of the client area of container.
 		do
-			Result := implementation.box.client_height
+			Result := height
 		end
 
 feature -- Element change
@@ -234,9 +227,6 @@ feature -- Element change
 			-- Assign `an_item' to `first_item' if not already assigned or to
 			-- `second_item' otherwise.
 		do
-			if an_item.parent /= Void then
-				an_item.parent.prune_all (an_item)
-			end
 			if first_cell.empty then
 				first_cell.put (an_item)
 			else 
@@ -291,30 +281,62 @@ feature -- Status setting
 			first_cell.merge_radio_button_groups (other)
 		end
 
+	enable_item_expand (an_item: EV_WIDGET) is
+			-- When `Current' is resized, resize `an_item' respectively.
+		require
+			an_item_not_void: an_item /= Void
+			has_an_item: has (an_item)
+		do
+			if an_item = first then
+				first_expandable := True
+			elseif an_item = second then
+				second_expandable := True
+			end
+		ensure
+			an_item_expanded: is_item_expanded (an_item)
+		end
+
+	disable_item_expand (an_item: EV_WIDGET) is
+			-- When `Current' is resized, do not resize `an_item'.
+		require
+			an_item_not_void: an_item /= Void
+			has_an_item: has (an_item)
+		do
+			if an_item = first then
+				first_expandable := False
+			elseif an_item = second then
+				second_expandable := False
+			end
+		ensure
+			not_an_item_expanded: not is_item_expanded (an_item)
+		end
+
+	is_item_expanded (an_item: EV_WIDGET): BOOLEAN is
+			-- Is `an_item' expanded relative to `Current'?
+		require
+			an_item_not_void: an_item /= Void
+			has_an_item: has (an_item)
+		do
+			if an_item = first then
+				Result := first_expandable
+			elseif an_item = second then
+				Result := second_expandable
+			end
+		end
+
 	set_split_position (a_split_position: INTEGER) is
 			-- Make `a_split_position' position of splitter in pixels.
 		require
-			position_in_valid_range:
+			a_split_position_within_bounds:
 				(a_split_position >= minimum_split_position
 				and a_split_position <= maximum_split_position)
 		local
 			fcd, scd, previous_split_pos: INTEGER
 		do
-			fcd := a_split_position
-			scd := select_from (split_box.width, split_box.height) -
-				select_from (sep.width, sep.height) - a_split_position
-			previous_split_pos := select_from (first_cell.width, first_cell.height)
-			if a_split_position < previous_split_pos then
-				set_first_cell_dimension (fcd)
-				set_second_cell_dimension (scd)
-			elseif a_split_position > previous_split_pos then
-				set_second_cell_dimension (scd)
-				set_first_cell_dimension (fcd)
-			end
+			split_position := a_split_position
+			layout_widgets (split_position)
 		ensure
-			--split_position = a_split_position
---| FIXME IEK This doesn't always hold true as GTK may not resize the
---| split area immediately, this is true when shrinking min size of first cell.
+			split_position_assigned: split_position = a_split_position
 		end
 
 	set_proportion (a_proportion: REAL) is
@@ -398,28 +420,13 @@ feature {NONE} -- Implementation
 			-- Return splitter position given screen `a_y'.
 		do
 			Result := select_from (a_x, a_y) - offset -
-				select_from (x_origin, y_origin)
+				select_from (x_origin, y_origin) + Half_sep_dimension
 			Result := Result.max (minimum_split_position)
 			Result := Result.min (maximum_split_position)
 		end
 
-	offset: INTEGER
-			-- Horizontal or vertical offset where the user
-			-- clicked on the separator.
-
-	x_origin: INTEGER
-			-- Horizontal screen offset of `Current'.
-
-	y_origin: INTEGER
-			-- Vertical screen offset of `Current'.
-
-	half_sep_dimension: INTEGER
-			-- Width or height of separator divided by 2.
-
 	on_click (a_x, a_y, e: INTEGER; f, g, h: DOUBLE; scr_x, scr_y: INTEGER) is
 			-- Start of the drag.
-		local
-			origin: TUPLE [INTEGER, INTEGER]
 		do
 			half_sep_dimension := select_from (sep.width, sep.height) // 2
 			offset := select_from (a_x, a_y)
@@ -444,6 +451,8 @@ feature {NONE} -- Implementation
 			if new_pos /= previous_split_position then
 				remove_line
 				draw_line (new_pos)
+				--| FIXME If resizing is better, we can do this:
+				--| layout_widgets (new_pos)
 			end
 		end
 
@@ -477,23 +486,210 @@ feature {NONE} -- Implementation
 		do
 			if select_from (0, 1) = 0 then
 				scr.draw_segment (
-					a_position + x_origin + half_sep_dimension,
+					a_position + x_origin,
 					y_origin,
-					a_position + x_origin + half_sep_dimension,
+					a_position + x_origin,
 					y_origin + sep.height
 				)
 			else
 				scr.draw_segment (
 					x_origin,
-					a_position + y_origin + half_sep_dimension,
+					a_position + y_origin,
 					x_origin + sep.width,
-					a_position + y_origin + half_sep_dimension
+					a_position + y_origin
 				)
 			end
 			previous_split_position := a_position
 		end
 
+	on_fixed_resized (fx, fy, fwidth, fheight: INTEGER) is
+			-- `split_box' is resized by the user.
+		local
+			splitter_movement_factor: DOUBLE
+			movement: INTEGER
+		do
+			if first_expandable = second_expandable then
+				splitter_movement_factor := 0.5
+			elseif first_expandable then
+				splitter_movement_factor := 1.0
+			elseif second_expandable then
+				splitter_movement_factor := 0.0
+			end
+
+			movement := select_from (fwidth, fheight) - last_width
+			last_width := select_from (fwidth, fheight)
+			movement := (movement * splitter_movement_factor).rounded
+			split_position := split_position + movement
+			update_split_position
+			layout_widgets (split_position)
+		end
+
+	on_cell_resized (fx, fy, fwidth, fheight: INTEGER) is
+			-- `split_box' is resized by the user.
+		do
+			--| FIXME Do nothing if resized by us.
+			update_split_position
+			update_minimum_size
+			layout_widgets (split_position)
+		end
+
+	layout_widgets (a_pos: INTEGER) is
+			-- Position widgets with groove on `a_pos'.
+			-- Set position and dimensions of the children in `split_box'.
+			--| Call after split_position or dimensions changed.
+		do
+			if select_from (0, 1) = 0 then
+				set_item_geometry (first_cell, 0, 0,
+					a_pos - Half_sep_dimension, height)
+				set_item_geometry (sep, a_pos - Half_sep_dimension, 0,
+					Half_sep_dimension * 2, height)
+				set_item_geometry (second_cell,
+					a_pos + Half_sep_dimension, 0,
+					width - split_position - Half_sep_dimension,
+					height)
+			else
+				set_item_geometry (first_cell, 0, 0,
+					width, a_pos - Half_sep_dimension)
+				set_item_geometry (sep,
+					0, a_pos - Half_sep_dimension,
+					width, Half_sep_dimension * 2)
+				set_item_geometry (second_cell,
+					0, a_pos + Half_sep_dimension,
+					width,
+					height - split_position - Half_sep_dimension)
+			end
+		end
+
+	set_item_geometry (a_widget: EV_WIDGET; cx, cy, cw, ch: INTEGER) is
+			-- Set geometry of `a_cell'.
+			--| Values do not need to be in range, they will be cropped because
+			--| the `split_box' may be smaller than the minimum size, if the
+			--| aggregate box is smaller.
+		require
+			first_or_second_cell_or_sep: a_widget = first_cell or
+				a_widget = second_cell or a_widget = sep
+		do
+			split_box.set_item_position (a_widget, cx.max (0), cy.max (0))
+		--	split_box.set_item_size (a_widget,
+		--		cw.max (a_widget.minimum_width).max (1),
+		--		ch.max (a_widget.minimum_height).max (1))
+			a_widget.set_minimum_size (
+				cw.max (1),
+				ch.max (1))
+		end
+
+	update_split_position is
+			-- Set splitter to a valid position and redraw if necessary.
+		do
+			split_position := split_position.max (minimum_split_position)
+			split_position := split_position.min (maximum_split_position)
+		end
+
+	update_minimum_size is
+			-- Set minimum size after change in children.
+		do
+			split_box.set_minimum_size (required_width, required_height)
+		end
+
+	required_width: INTEGER is
+			-- Horizontal dimension in pixels required by `Current'.
+		local
+			f_mw, s_mw: INTEGER
+		do
+			if first_cell.readable then
+				f_mw := first_cell.item.minimum_width
+			else
+				f_mw := 1
+			end
+			if second_cell.readable then
+				s_mw := second_cell.item.minimum_width
+			else
+				s_mw := 1
+			end
+			Result := select_from (
+				Half_sep_dimension * 2 + f_mw + s_mw,
+				s_mw.max (f_mw).max (Half_sep_dimension * 2))
+		end
+
+	required_height: INTEGER is
+			-- Vertical dimension in pixels required by `Current'.
+		local
+			f_mh, s_mh: INTEGER
+		do
+			if first_cell.readable then
+				f_mh := first_cell.item.minimum_height
+			else
+				f_mh := 1
+			end
+			if second_cell.readable then
+				s_mh := second_cell.item.minimum_height
+			else
+				s_mh := 1
+			end
+			Result := select_from (
+				s_mh.max (f_mh).max (Half_sep_dimension * 2),
+				Half_sep_dimension * 2 + f_mh + s_mh)
+		end
+
+	assumed_dimension: INTEGER is
+			-- Width or height (or at least minimum size).
+		do
+			Result := select_from (
+				required_width.max (width),
+				required_height.max (height)
+			)
+		end
+
+	first_cell_min_size: INTEGER is
+			-- Minimum height or width of `first_cell'. 1 if empty.
+		local
+			f_mh, f_mw: INTEGER
+		do
+			if first_cell.readable then
+				f_mh := first_cell.item.minimum_height
+			else
+				f_mh := 1
+			end
+			if first_cell.readable then
+				f_mw := first_cell.item.minimum_width
+			else
+				f_mw := 1
+			end
+			Result := select_from (f_mw, f_mh)
+		end
+
+	second_cell_min_size: INTEGER is
+			-- Minimum height or width of `second_cell'. 1 if empty.
+		local
+			s_mh, s_mw: INTEGER
+		do
+			if second_cell.readable then
+				s_mh := second_cell.item.minimum_height
+			else
+				s_mh := 1
+			end
+			if second_cell.readable then
+				s_mw := second_cell.item.minimum_width
+			else
+				s_mw := 1
+			end
+			Result := select_from (s_mw, s_mh)
+		end
+
 feature {NONE} -- Implementation
+
+	offset: INTEGER
+			-- Horizontal or vertical offset where the user
+			-- clicked on the separator.
+
+	x_origin: INTEGER
+			-- Horizontal screen offset of `Current'.
+
+	y_origin: INTEGER
+			-- Vertical screen offset of `Current'.
+
+	Half_sep_dimension: INTEGER is 3
+			-- Width or height of separator divided by 2.
 
 	index: INTEGER
 			-- Current cursor position.
@@ -511,7 +707,16 @@ feature {NONE} -- Implementation
 		-- Separator used to split between the two items.
 
 	scr: EV_SCREEN
-		-- Used for drawing guideline on screen.
+			-- Used for drawing guideline on screen.
+
+	first_expandable: BOOLEAN
+			-- Is `first' expandable?
+
+	second_expandable: BOOLEAN
+			-- Is `second' expandable?
+
+	last_width: INTEGER
+			-- Used for splitter movement calculation.
 
 	implementation: EV_AGGREGATE_WIDGET_I
 			-- Responsible for interaction with the native graphics toolkit.
@@ -532,6 +737,11 @@ invariant
 		is_useable implies split_box.first = first_cell
 	split_box_last_is_second_cell:
 		is_useable implies split_box.last = second_cell
+--	maximum_greater_or_equal_minimum: is_useable implies
+--		minimum_split_position <= maximum_split_position
+--	splitter_in_valid_position: is_useable implies
+--		split_position >= minimum_split_position and then
+--		split_position <= maximum_split_position
 
 end -- class EV_SPLIT_AREA
 
@@ -556,6 +766,33 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.40  2000/06/07 17:28:12  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.10.4.9  2000/05/11 15:47:09  brendel
+--| Changed not to use {EV_FIXED}.set_item_size.
+--|
+--| Revision 1.10.4.8  2000/05/09 19:02:51  brendel
+--| Removed output.
+--|
+--| Revision 1.10.4.7  2000/05/08 22:10:45  brendel
+--| Cleanup.
+--|
+--| Revision 1.10.4.6  2000/05/05 23:40:39  brendel
+--| Normal separator again with raised style.
+--|
+--| Revision 1.10.4.5  2000/05/05 22:15:05  brendel
+--| Fixed minimum sizing.
+--|
+--| Revision 1.10.4.4  2000/05/04 22:15:01  brendel
+--| Added debug text output, improved contracts.
+--|
+--| Revision 1.10.4.3  2000/05/04 17:41:52  brendel
+--| Corrected client_width and client_height.
+--|
+--| Revision 1.10.4.2  2000/05/04 01:08:34  brendel
+--| Improved widget layout procedure.
+--|
 --| Revision 1.39  2000/05/03 21:44:10  brendel
 --| Reverted to old version not using EV_FIXED.
 --|

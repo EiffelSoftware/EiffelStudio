@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 	
 deferred class 
-	EV_DYNAMIC_LIST [G -> EV_ANY]
+	EV_DYNAMIC_LIST [G -> EV_CONTAINABLE]
 
 inherit
 	EV_ANY
@@ -32,6 +32,7 @@ inherit
 			default_create,
 			move
 		redefine
+			index_of,
 			i_th,
 			go_i_th,
 			start,
@@ -87,6 +88,14 @@ feature -- Access
 			Result := implementation.i_th (i)
 		ensure then
 			bridge_ok: Result.is_equal (implementation.i_th (i))
+		end
+
+	index_of (v: like item; i: INTEGER): INTEGER is
+			-- Index of item `v'.
+		do
+			Result := implementation.index_of (v, i)
+		ensure then
+			bridge_ok: Result = implementation.index_of (v, i)
 		end
 
 feature -- Measurement
@@ -161,13 +170,13 @@ feature -- Element change
 		require
 			extendible: extendible
 			v_not_void: v /= Void
-			v_parent_void: parent_void (v)
+			v_parent_void: v.parent = Void
 			v_not_current: not same (v)
 			v_not_parent_of_current: not is_parent_recursive (v)
 		do
 			implementation.extend (v)
 		ensure
-			parent_is_current: is_parent_of (v)
+			parent_is_current: v.parent = Current
 			v_is_last: v = last
 			count_increased: count = old count + 1
 			cursor_not_moved: (index = old index) or (after and old after)
@@ -178,16 +187,16 @@ feature -- Element change
 		require
 			writable: writable
 			v_not_void: v /= Void
-			v_parent_void: parent_void (v)
+			v_parent_void: v.parent = Void
 			v_not_current: not same (v)
 			v_not_parent_of_current: not is_parent_recursive (v)
 		do
 			implementation.replace (v)
 		ensure
-			parent_is_current: is_parent_of (v)
+			parent_is_current: v.parent = Current
 			item_replaced: v = item
 			not_has_old_item: not has (old item)
-			old_item_parent_void: parent_void (old item)
+			old_item_parent_void: (old item).parent = Void
 			count_same: count = old count
 			cursor_not_moved: index = old index
 		end
@@ -197,13 +206,13 @@ feature -- Element change
 		require
 			extendible: extendible
 			v_not_void: v /= Void
-			v_parent_void: parent_void (v)
+			v_parent_void: v.parent = Void
 			v_not_current: not same (v)
 			v_not_parent_of_current: not is_parent_recursive (v)
 		do
 			implementation.put_front (v)
 		ensure
-			parent_is_current: is_parent_of (v)
+			parent_is_current: v.parent = Current
 			v_is_first: v = first
 			count_increased: count = old count + 1
 			cursor_not_moved: (index = old index + 1) or
@@ -216,13 +225,13 @@ feature -- Element change
 			extendible: extendible
 			not_after: not after
 			v_not_void: v /= Void
-			v_parent_void: parent_void (v)
+			v_parent_void: v.parent = Void
 			v_not_current: not same (v)
 			v_not_parent_of_current: not is_parent_recursive (v)
 		do
 			implementation.put_right (v)
 		ensure
-			parent_is_current: is_parent_of (v)
+			parent_is_current: v.parent = Current
 			v_at_index_plus_one: v = i_th (index + 1)
 			count_increased: count = old count + 1
 	 		cursor_not_moved: index = old index
@@ -234,13 +243,13 @@ feature -- Element change
 			extendible: extendible
 			not_before: not before
 			v_not_void: v /= Void
-			v_parent_void: parent_void (v)
+			v_parent_void: v.parent = Void
 			v_not_current: not same (v)
 			v_not_parent_of_current: not is_parent_recursive (v)
 		do
 			implementation.put_left (v)
 		ensure
-			parent_is_current: is_parent_of (v)
+			parent_is_current: v.parent = Current
 			v_at_index_plus_one: v = i_th (index - 1)
 			count_increased: count = old count + 1
 	 		cursor_not_moved: index = old index + 1
@@ -251,16 +260,16 @@ feature -- Element change
 		require
 			valid_index: i > 0 and i <= count
 			v_not_void: v /= Void
-			v_parent_void: parent_void (v)
+			v_parent_void: v.parent = Void
 			v_not_current: not same (v)
 			v_not_parent_of_current: not is_parent_recursive (v)
 		do
 			implementation.put_i_th (v, i)
 		ensure
-			parent_is_current: is_parent_of (v)
+			parent_is_current: v.parent = Current
 			item_replaced: v = i_th (i)
 			not_has_old_item: not has (old i_th (i))
-			old_item_parent_void: parent_void (old i_th (i))
+			old_item_parent_void: (old i_th (i)).parent = Void
 			count_same: count = old count
 			cursor_not_moved: index = old index
 		end
@@ -289,7 +298,7 @@ feature -- Removal
 		ensure then
 			not_has_v: not has (v)
 			had_item_implies_parent_void:
-				old has (v) implies parent_void (v)
+				old has (v) implies v.parent = Void
 			had_item_implies_count_decreased:
 				old has (v) implies count = old count - 1
 			had_item_and_was_after_implies_index_decreased:
@@ -303,7 +312,7 @@ feature -- Removal
 			implementation.remove
 		ensure then
 			v_removed: not has (old item)
-			parent_void: parent_void (old item)
+			parent_void: (old item).parent = Void
 			count_decreased: count = old count - 1
 			index_same: index = old index
 		end
@@ -315,7 +324,7 @@ feature -- Removal
 			implementation.remove_left
 		ensure then
 			left_neighbor_removed: not has (old i_th (index - 1))
-			parent_void: parent_void (old i_th (index - 1))
+			parent_void: (old i_th (index - 1)).parent = Void
 			index_decreased: index = old index - 1
 		end
 
@@ -326,18 +335,11 @@ feature -- Removal
 			implementation.remove_right
 		ensure then
 			right_neighbor_removed: not has (old i_th (index + 1))
-			parent_void: parent_void (old i_th (index + 1))
+			parent_void: (old i_th (index + 1)).parent = Void
 			index_same: index = old index
 		end
 
 feature -- Contract support
-
-	parent_void (v: like item): BOOLEAN is
-			-- Is `v' not in an Eiffel Vision container yet?
-		require
-			v_not_void: v /= Void
-		deferred
-		end
 
 	is_parent_recursive (a_list: EV_ANY): BOOLEAN is
 			-- Is `a_list' a parent of `Current'?
@@ -350,13 +352,6 @@ feature -- Contract support
 			-- Is `other' `Current'?
 		do
 			Result := Current = other
-		end
-
-	is_parent_of (v: like item): BOOLEAN is
-			-- Is `Current' parent of `v'.
-		require
-			v_not_void: v /= Void
-		deferred
 		end
 
 feature {NONE} -- Inapplicable
@@ -432,6 +427,21 @@ end -- class EV_DYNAMIC_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/06/07 17:28:08  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.6.2.4  2000/05/15 22:14:09  king
+--| Removed redundant contract support features
+--|
+--| Revision 1.6.2.3  2000/05/13 00:04:17  king
+--| Converted to new EV_CONTAINABLE class
+--|
+--| Revision 1.6.2.2  2000/05/05 22:27:37  king
+--| Redefined index_of
+--|
+--| Revision 1.6.2.1  2000/05/03 19:10:04  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.6  2000/04/07 23:59:37  brendel
 --| Added put_left.
 --|

@@ -69,7 +69,7 @@ feature -- Element change
 				v_imp.set_parent (Void)
 				v_imp.on_orphaned
 				item := Void
-				notify_change (2 + 1)
+				notify_change (2 + 1, Current)
 			end
 		end
 
@@ -89,7 +89,7 @@ feature -- Element change
 				end
 				item := v
 				v_imp.set_parent (interface)
-				notify_change (2 + 1)
+				notify_change (2 + 1, Current)
 				
 				new_item_actions.call ([item])
 			end
@@ -99,7 +99,9 @@ feature -- Element change
 			-- Replace `item' with `v'.
 		do
 			remove
-			insert (v)
+			if v /= Void then
+				insert (v)
+			end
 		end
 
 feature -- Basic operations
@@ -149,7 +151,7 @@ feature -- Obsolete
 		obsolete
 			"Call notify_change."
 		do
-			notify_change (2 + 1)
+			notify_change (2 + 1, Current)
 		end
 
 	remove_child (child_imp: EV_WIDGET_IMP) is
@@ -158,7 +160,7 @@ feature -- Obsolete
 		obsolete
 			"Call notify_change."
 		do
-			notify_change (2 + 1)
+			notify_change (2 + 1, Current)
 		end
 
 	add_child_ok: BOOLEAN is
@@ -202,8 +204,29 @@ end -- class EV_SINGLE_CHILD_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/06/07 17:27:57  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.14  2000/05/13 01:08:09  pichery
 --| Protected call by a check.
+--|
+--| Revision 1.4.8.4  2000/06/06 00:08:39  manus
+--| `compute_minimum_size' will compute something only if a window is visible, and will just
+--| notify the parent otherwise.
+--| New signature for `notify_change' that takes `child' which request the change as 2 parameter.
+--| The rational is that it is used only for EV_NOTEBOOK_IMP where we do not want to resize a
+--| page if it is not visible. This largely improves the resizing performance.
+--|
+--| Revision 1.4.8.3  2000/05/09 00:48:27  manus
+--| `insert' can now accept a Void argument (and does nothing in this case).
+--| Done because `replace' call `insert' and `replace' can be called with
+--| a Void argument.
+--|
+--| Revision 1.4.8.2  2000/05/08 17:32:49  brendel
+--| Fixed bug in put, replace.
+--|
+--| Revision 1.4.8.1  2000/05/03 19:09:18  oconnor
+--| mergred from HEAD
 --|
 --| Revision 1.13  2000/05/01 19:33:24  pichery
 --| Added feature `is_control_in_window' used

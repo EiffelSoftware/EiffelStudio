@@ -37,7 +37,7 @@ feature -- Status report
 	is_editable: BOOLEAN is
 			-- Is the text editable
 		do
-			Result := C.c_gtk_editable_editable (entry_widget) /= 0
+			Result := C.gtk_editable_struct_editable (entry_widget) /= 0
 		end
 
 	position: INTEGER is
@@ -49,19 +49,19 @@ feature -- Status report
 	has_selection: BOOLEAN is
 			-- Is something selected?
 		do
-			Result := C.c_gtk_editable_has_selection (entry_widget) /= 0
+			Result := C.gtk_editable_struct_has_selection (entry_widget) /= 0
 		end
 
 	selection_start: INTEGER is
 			-- Index of the first character selected
 		do
-			Result := C.c_gtk_editable_selection_start (entry_widget) + 1
+			Result := C.gtk_editable_struct_selection_start_pos (entry_widget) + 1
 		end
 
 	selection_end: INTEGER is
 			-- Index of the last character selected
 		do
-			Result := C.c_gtk_editable_selection_end (entry_widget)
+			Result := C.gtk_editable_struct_selection_end_pos (entry_widget)
 		end
 
 feature -- status settings
@@ -179,6 +179,15 @@ end -- class EV_TEXT_COMPONENT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/06/07 17:27:39  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.16.4.2  2000/05/25 00:41:18  king
+--| Implemented externals in Eiffel
+--|
+--| Revision 1.16.4.1  2000/05/03 19:08:51  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.19  2000/03/08 21:40:42  king
 --| Made implementation refer to entry_widget insetad of c_object
 --|

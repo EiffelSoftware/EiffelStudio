@@ -1,101 +1,92 @@
 indexing
 	description:
-		"Apearance of a screen pointer cursor, typicaly moved by a mouse."
+		"Apearance of a screen pointer cursor, typically moved by a mouse."
 	status: "See notice at end of class."
 	keywords: "mouse, pointer, cursor, arrow"
 	date: "$Date$"
 	revision: "$Revision$"
 
---| FIXME Exactly how the codes work and if they are needed should be looked
---| into and documented here.
-
 class
 	EV_CURSOR
 
 inherit
-	EV_ANY
+	EV_PIXMAP
 		redefine
-			implementation,
-			is_equal
+			copy
 		end
 
 create
 	default_create,
-	make_with_code,
+	make_with_size,
+	make_for_test,
 	make_with_pixmap
 
 feature {NONE} -- Initialization
 
-	make_with_code (a_code: INTEGER) is
+	make_with_pixmap (a_pixmap: EV_PIXMAP; a_x_hotspot, 
+	a_y_hotspot: INTEGER) is
+			-- Create a cursor initialized with `a_pixmap' as
+			-- pixmap and `a_x_hotspot' & `a_y_hotspot' as 
+			-- hotspot coordinates
 		do
 			default_create
-			set_code (a_code)
-		end
-
-	make_with_pixmap (a_pixmap: EV_PIXMAP) is
-		do
-			default_create
-			set_pixmap (a_pixmap)
+			implementation.copy_pixmap (a_pixmap)
+			set_x_hotspot (a_x_hotspot)
+			set_y_hotspot (a_y_hotspot)
 		end
 
 feature -- Access
 
-	pixmap: EV_PIXMAP is
-			-- Used as pointer cursor.
-		do
-			Result := implementation.pixmap
-		ensure
-			bridge_ok: Result.is_equal (implementation.pixmap)
-		end
+	x_hotspot: INTEGER
+			-- Specifies the x-coordinate of a cursor's hot spot. 
 
-	code: INTEGER is
-			-- Toolkit pointer identification code.
-			--| FIXME To be implemented: Constants.
-		do
-			Result := implementation.code
-		ensure
-			bridge_ok: Result = implementation.code
-		end
+	Y_hotspot: INTEGER
+			-- Specifies the y-coordinate of a cursor's hot spot. 
 
-feature -- Element change
+feature -- Status setting
 
-	set_pixmap (a_pixmap: EV_PIXMAP) is
-			-- Set `pixmap' to `a_pixmap'.
+	set_x_hotspot (a_x_hotspot: INTEGER) is
+			-- Set `x_hotspot' to `a_x_hotspot'.
 		require
-			a_pixmap_not_void: a_pixmap /= Void
+			valid_x_hotspot: a_x_hotspot >= 0 and a_x_hotspot < width
 		do
-			implementation.set_pixmap (a_pixmap)
+			x_hotspot := a_x_hotspot
 		ensure
-			assigned: pixmap.is_equal (a_pixmap)
+			x_hotspot_set: x_hotspot = a_x_hotspot
 		end
 
-	set_code (a_code: INTEGER) is
-			-- Set `code' to `a_code'.
+	set_y_hotspot (a_y_hotspot: INTEGER) is
+			-- Set `y_hotspot' to `a_y_hotspot'.
+		require
+			valid_y_hotspot: a_y_hotspot >= 0 and a_y_hotspot < height
 		do
-			implementation.set_code (a_code)
+			y_hotspot := a_y_hotspot
 		ensure
-			assigned: code = a_code
+			y_hotspot_set: y_hotspot = a_y_hotspot
 		end
 
-feature -- Comparison
+feature -- Duplication
 
-	is_equal (other: like Current): BOOLEAN is
-			-- Does `other' look like `Current'.
+	copy (other: EV_PIXMAP) is 
+			-- Update `Current' to have same appearence as `other'.
+			-- (So as to satisfy `is_equal'.)
+		local
+			other_cursor: EV_CURSOR
 		do
-			check to_be_implemented: False end
-			--|FIXME Result := pixmap.is_equal (other.pixmap)
-			Result := True 
-		end
+				-- Copy the "pixmap part"
+			implementation.copy_pixmap(other)
 
-feature {EV_ANY_I} -- Implementation
-
-	implementation: EV_CURSOR_I
-			-- Responsible for interaction with the native graphics toolkit.
-
-	create_implementation is
-			-- See `{EV_ANY}.create_implementation'.
-		do
-			create {EV_CURSOR_IMP} implementation.make (current)
+				-- Copy the "cursor part"
+			other_cursor ?= other
+			if other_cursor /= Void then
+					-- Retrieve the hotspot coordinates of `other'
+				set_x_hotspot (other_cursor.x_hotspot)
+				set_y_hotspot (other_cursor.y_hotspot)
+			else
+					-- Reset the hotspot coordinates to (0,0)
+				set_x_hotspot (0)
+				set_y_hotspot (0)
+			end
 		end
 
 end -- class EV_CURSOR
@@ -121,6 +112,21 @@ end -- class EV_CURSOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/06/07 17:28:06  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.4.4.3  2000/05/05 22:26:15  pichery
+--| Redefined `copy' feature to take into
+--| account the hotspot.
+--|
+--| Revision 1.4.4.2  2000/05/04 04:17:07  pichery
+--| Brand new EV_CURSOR class. It now a
+--| simple pixmap with 2 attributes `x_hotspot'
+--| and `y_hotspot'.
+--|
+--| Revision 1.4.4.1  2000/05/03 19:10:00  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.8  2000/03/16 01:13:15  oconnor
 --| comments
 --|

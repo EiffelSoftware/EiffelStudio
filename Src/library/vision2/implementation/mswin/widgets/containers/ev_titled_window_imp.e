@@ -74,7 +74,6 @@ feature -- Access
 			icon: WEL_ICON
 			ev_pixmap: EV_PIXMAP
 			ev_pixmap_imp: EV_PIXMAP_IMP
-			default_pixmaps: EV_DEFAULT_PIXMAPS
 		do
 			icon_res := cwin_send_message_result (
 				wel_item, 
@@ -91,7 +90,6 @@ feature -- Access
 				ev_pixmap_imp.set_with_icon (icon)
 				Result := ev_pixmap
 			else
-				create default_pixmaps
 				Result := default_pixmaps.Default_window_icon
 			end
 		end
@@ -227,13 +225,7 @@ feature {NONE} -- Implementation
 			mh: INTEGER
 		do
 			if exists then
-				-- We calculate the values first
-				mh := title_bar_height + window_border_height +
-					2 * window_frame_height
-
-				if item_imp /= Void then
-					mh := mh + item_imp.minimum_height
-				end
+				mh := title_bar_height + window_border_height + 2 * window_frame_height
 				if has_menu then
 					mh := mh + menu_bar_height
 				end
@@ -261,6 +253,9 @@ feature {NONE} -- Implementation
 					mw := mw + item_imp.minimum_width
 					mh := mh + item_imp.minimum_height
 				end
+				mw := mw.max (interface.upper_bar.minimum_width).max (interface.lower_bar.minimum_width)
+
+				mh := title_bar_height + window_border_height + 2 * window_frame_height
 				if has_menu then
 					mh := mh + menu_bar_height
 				end
@@ -330,8 +325,6 @@ feature {NONE} -- WEL Implementation
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- Called when the window is resized.
 			-- Resize the child if it exists.
-		local
-			str: STRING
 		do
 			if size_type = Wel_window_constants.Size_minimized then
 				set_text (icon_name)
@@ -382,6 +375,30 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.71  2000/06/07 17:27:59  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.49.4.7  2000/05/30 16:10:40  rogers
+--| Removed unreferenced variables.
+--|
+--| Revision 1.49.4.6  2000/05/05 00:15:23  brendel
+--| Fixed minimum height.
+--|
+--| Revision 1.49.4.5  2000/05/04 04:21:40  pichery
+--| Removed local variable `default_pixmap'. Is it
+--| now a once function.
+--|
+--| Revision 1.49.4.4  2000/05/04 01:10:07  brendel
+--| Uses lower_bar and upper_bar.
+--|
+--| Revision 1.49.4.3  2000/05/03 22:16:28  pichery
+--| - Cosmetics / Optimization with local variables
+--| - Replaced calls to `width' to calls to `wel_width'
+--|   and same for `height'.
+--|
+--| Revision 1.49.4.2  2000/05/03 19:09:48  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.70  2000/05/03 04:35:46  pichery
 --| Fixed bug in feature `set_icon_pixmap'
 --|

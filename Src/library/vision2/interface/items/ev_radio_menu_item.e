@@ -12,7 +12,7 @@ class
 	EV_RADIO_MENU_ITEM
 
 inherit
-	EV_SELECT_MENU_ITEM
+	EV_MENU_ITEM
 		redefine
 			implementation,
 			create_implementation,
@@ -20,6 +20,12 @@ inherit
 		end
 
 	EV_RADIO_PEER
+		redefine
+			implementation,
+			is_in_default_state
+		end
+
+	EV_SELECTABLE
 		redefine
 			implementation,
 			is_in_default_state
@@ -48,7 +54,7 @@ feature -- Contract support
 			-- Is `Current' in its default state?
 			-- Radio buttons are selected by default.
 		do
-			Result := {EV_SELECT_MENU_ITEM} Precursor
+			Result := {EV_MENU_ITEM} Precursor
 				and then {EV_RADIO_PEER} Precursor
 		end
 
@@ -75,6 +81,15 @@ end -- class EV_RADIO_MENU_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/06/07 17:28:05  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.9.4.2  2000/05/09 21:46:47  king
+--| Intergrated selectable/deselectable
+--|
+--| Revision 1.9.4.1  2000/05/03 19:09:58  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.18  2000/05/01 21:34:40  king
 --| Corrected spelling mistake in indexing clause
 --|

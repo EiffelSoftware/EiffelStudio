@@ -11,6 +11,18 @@ deferred class
 
 inherit
 	EV_WIDGET
+		redefine
+			implementation
+		end
+
+	EV_TOOLTIPABLE
+		redefine
+			implementation
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	implementation: EV_PRIMITIVE_I
 	
 end -- class EV_PRIMITIVE
 
@@ -35,6 +47,15 @@ end -- class EV_PRIMITIVE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/06/07 17:28:13  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.5.4.2  2000/05/10 23:03:08  king
+--| Integrated inital tooltipable changes
+--|
+--| Revision 1.5.4.1  2000/05/03 19:10:10  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.8  2000/03/21 19:10:39  oconnor
 --| comments, formatting
 --|

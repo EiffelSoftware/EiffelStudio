@@ -43,8 +43,7 @@ feature {NONE} -- Initialization
 			parent := combo
 			make_by_pointer (combo.combo_item)
 			if item /= default_pointer then
-				exists := True
-				register_window (Current)
+				register_current_window
 				set_default_window_procedure
 			end
 		end
@@ -289,6 +288,22 @@ end -- class EV_INTERNAL_COMBO_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/06/07 17:27:57  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.2.8.3  2000/05/09 00:49:41  manus
+--| Update with recent WEL changes:
+--| - replace `register_window (Current)' by `register_current_window'
+--| - replace `windows.item (p)' by `window_of_item (p)'
+--|
+--| Revision 1.2.8.2  2000/05/07 03:53:09  manus
+--| No need to set `exists' explicitely since it is not an attribute anymore and
+--| we are using `exists' of WEL_ANY that computes this value automatically without
+--| user intervention.
+--|
+--| Revision 1.2.8.1  2000/05/03 19:09:17  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.4  2000/03/07 02:39:12  oconnor
 --| released
 --|

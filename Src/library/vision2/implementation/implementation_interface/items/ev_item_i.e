@@ -27,6 +27,9 @@ feature -- Access
 		do
 			if parent_imp /= Void then
 				Result ?= parent_imp.interface
+				check 
+					parent_not_void: Result /= Void
+				end
 			end
 		end
 
@@ -65,6 +68,15 @@ end -- class EV_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/06/07 17:27:41  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.8.4.2  2000/05/18 00:29:04  king
+--| Added check to parent
+--|
+--| Revision 1.8.4.1  2000/05/03 19:08:54  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.13  2000/04/07 22:10:00  brendel
 --| EV_SIMPLE_ITEM_I -> EV_ITEM_I & EV_TEXTABLE_I.
 --|

@@ -26,11 +26,12 @@ feature -- Initialization
 
 	do_tests is
 		local
-			hbox_test, vbox_test, sb_test, nb_test : EV_LIST_TEST [EV_WIDGET]
+			hbox_test, vbox_test, sb_test, nb_test, fixed_test : EV_LIST_TEST [EV_WIDGET]
 			list_test, tb_test, mcl_test: EV_LIST_TEST [EV_ITEM]
 			tree_test, ti_test, menu_test, mb_test: EV_LIST_TEST [EV_ITEM]
 			cb_test: EV_LIST_TEST [EV_ITEM]
 		do
+			create fixed_test.make ("EV_FIXED", ~fixed_list_generator, ~item_generator)
 			create hbox_test.make ("EV_HORIZONTAL_BOX", ~hbox_list_generator, ~item_generator)
 			create vbox_test.make ("EV_VERTICAL_BOX", ~vbox_list_generator, ~item_generator)
 			create nb_test.make ("EV_NOTEBOOK", ~notebook_list_generator, ~item_generator)
@@ -44,9 +45,9 @@ feature -- Initialization
 			create menu_test.make ("EV_MENU", ~menu_generator, ~menu_item_generator)
 			create mb_test.make ("EV_MENU_BAR", ~menu_bar_generator, ~menu_generator)
 		--	create cb_test.make ("EV_COMBO_BOX", ~cb_generator, ~list_item_generator)
-
+			fixed_test.execute
+			print (fixed_test.description + "%N")
 			hbox_test.execute
-
 			print (hbox_test.description + "%N")
 			vbox_test.execute
 			print (vbox_test.description + "%N")
@@ -71,6 +72,7 @@ feature -- Initialization
 		--	cb_test.execute
 		--	print (cb_test.description + "%N")
 			if
+				fixed_test.test_successful and
 				hbox_test.test_successful and
 				vbox_test.test_successful and
 				nb_test.test_successful and
@@ -103,6 +105,11 @@ feature -- Initialization
 		end
 
 	notebook_list_generator: EV_NOTEBOOK is
+		do
+			create Result
+		end
+
+	fixed_list_generator: EV_FIXED is
 		do
 			create Result
 		end

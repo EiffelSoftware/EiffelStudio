@@ -109,7 +109,7 @@ feature -- Status setting
 			-- Return the maximum number of characters that the
 			-- user may enter.
 		do
-			Result := C.c_gtk_entry_get_max_length (entry_widget)
+			Result := C.gtk_entry_struct_text_max_length (entry_widget)
 		end
 
 feature -- Status Report
@@ -156,6 +156,15 @@ end -- class EV_TEXT_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/06/07 17:27:39  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.13.4.2  2000/05/25 00:41:58  king
+--| Implemented external in Eiffel
+--|
+--| Revision 1.13.4.1  2000/05/03 19:08:51  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.19  2000/05/02 18:55:30  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

@@ -71,7 +71,7 @@ feature
 			create p2
 			p2.set_with_named_file ("vision.png")
 			da.set_minimum_size (p2.width+100, p2.height+100)
-			p1.set_size (da.width, da.height)
+			p1.set_size (p2.width+100, p2.height+100)
 			scroll.extend (da)
 			create t
 			t.actions.extend (~update_face (da, p1, p2))
@@ -367,7 +367,7 @@ feature
 			Result.extend (create {EV_TEXT_FIELD}.make_for_test)
 			Result.extend (create {EV_TOGGLE_BUTTON}.make_for_test)
 			Result.extend (create {EV_TOOL_BAR}.make_for_test)
-			Result.extend (create {EV_TREE}.make_for_test)
+--			Result.extend (create {EV_TREE}.make_for_test)
 			Result.extend (create {EV_VERTICAL_PROGRESS_BAR}.make_for_test)
 			Result.extend (create {EV_VERTICAL_RANGE}.make_for_test)
 			Result.extend (create {EV_VERTICAL_SCROLL_BAR}.make_for_test)
@@ -548,6 +548,24 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.46  2000/06/07 17:28:17  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.45.2.4  2000/05/18 17:47:26  brendel
+--| *** empty log message ***
+--|
+--| Revision 1.45.2.3  2000/05/05 23:20:01  pichery
+--| We still have our bug on windows with the
+--| geometry managment. This fix it.
+--|
+--| Revision 1.45.2.2  2000/05/03 22:23:30  pichery
+--| - Removed inline creation that screw up the
+--|   debugger for the moment.
+--|
+--|
+--| Revision 1.45.2.1  2000/05/03 19:10:18  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.45  2000/05/03 17:00:12  oconnor
 --| more tests
 --|

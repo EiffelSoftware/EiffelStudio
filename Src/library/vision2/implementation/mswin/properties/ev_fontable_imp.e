@@ -17,9 +17,6 @@ feature -- Access
 
 	font: EV_FONT is
 			-- Font of `Current'.
-		local
-			font_windows: EV_FONT_IMP
-			default_font: WEL_FONT
 		do
 			if private_font = Void then
 				create private_font
@@ -84,6 +81,15 @@ end -- class EV_FONTABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/06/07 17:27:56  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.7.8.2  2000/05/30 16:16:34  rogers
+--| Removed unreferenced local variables.
+--|
+--| Revision 1.7.8.1  2000/05/03 19:09:16  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.10  2000/04/05 19:26:57  rogers
 --| Review work. Comments, formatting.
 --|

@@ -1,5 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
---| Remove all the "the item"s from comments.
 indexing	
 	description: 
 		"Item for use with EV_TREE.%N%
@@ -15,135 +13,33 @@ class
 	EV_TREE_ITEM
 
 inherit
-	EV_ITEM
-		redefine
-			implementation,
-			create_action_sequences
-		end
-
-	EV_TEXTABLE
+	EV_TREE_NODE
+		undefine
+			off,
+			index_of,
+			search,
+			changeable_comparison_criterion,
+			occurrences,
+			has
 		redefine
 			implementation
 		end
 
-	EV_TREE_ITEM_LIST
-		redefine
-			implementation,
+	EV_TREE_NODE_LIST
+		undefine
 			create_action_sequences
+		redefine
+			implementation
 		end
 
 create
 	default_create,
 	make_with_text
 
-feature -- Access
-	
-	parent_tree: EV_TREE is
-			-- Contains `Current'.
-		do
-			Result := implementation.parent_tree
-		end
-
-feature -- Status report
-
-	is_selected: BOOLEAN is
-			-- Is `Current' selected in `parent_tree'?
-		require
-			parent_tree_not_void: parent_tree /= Void
-		do
-			Result := implementation.is_selected
-		end
-
-	is_expanded: BOOLEAN is
-			-- Are items in `Current' displayed?
-		require
-			in_tree: parent_tree /= Void
-		do
-			Result := implementation.is_expanded
-		end
-
-feature -- Status setting
-
-	enable_select is
-			-- Set `is_selected' `True'.
-		require
-			parent_tree_not_void: parent_tree /= Void
-		do
-			implementation.set_selected (True)
-		ensure
- 			is_selected: is_selected
-		end
-
-	disable_select is
-			-- Set `is_selected' `False'.
-		require
-			parent_tree_not_void: parent_tree /= Void
-		do
-			implementation.set_selected (False)
-		ensure
- 			not_is_selected: not is_selected
-		end
-
-	toggle is
-			-- Change `is_selected'.
-		require
-			parent_tree_not_void: parent_tree /= Void
-		do
-			implementation.toggle
-		ensure
-			is_selected_changed: is_selected /= old is_selected
-		end
-
-	expand is
-			-- Set `is_expanded' `True'.
-		require
-			parent_tree_not_void: parent_tree /= Void
-			count_positive: count > 0
-		do
-			implementation.set_expand (True)
-		ensure
-			is_expanded: is_expanded
-		end
-
-	collapse is
-			-- Set `is_expanded' `False'.
-		require
-			parent_tree_not_void: parent_tree /= Void
-			count_positive: count > 0
-		do
-			implementation.set_expand (False)
-		ensure
-			not_is_expanded: not is_expanded
-		end
-
-feature -- Event handling
-
-	select_actions: EV_NOTIFY_ACTION_SEQUENCE
-		-- Actions to be performed when selected.
-
-	deselect_actions: EV_NOTIFY_ACTION_SEQUENCE
-		-- Actions to be performed when deselected.
-
-	expand_actions: EV_NOTIFY_ACTION_SEQUENCE
-		-- Actions to be performed when expanded.
-
-	collapse_actions: EV_NOTIFY_ACTION_SEQUENCE
-		-- Actions to be performed when collapsed.
-
-feature -- Contract support
-
-	is_parent_recursive (a_list: like Current): BOOLEAN is
-			-- Is `a_widget' `parent' or recursively `parent' of `parent'.
-		do
-			Result := a_list = parent or else
-				(parent /= Void and then parent.is_parent_recursive (a_list))
-		end
-
 feature {EV_ANY_I}-- Implementation
 
 	implementation: EV_TREE_ITEM_I
 			-- Responsible for interaction with the native graphics toolkit.
-
 
 feature {NONE} -- Implementation
 
@@ -151,16 +47,6 @@ feature {NONE} -- Implementation
 			-- See `{EV_ANY}.create_implementation'.
 		do
 			create {EV_TREE_ITEM_IMP} implementation.make (Current)
-		end
-
-	create_action_sequences is
-			-- See `{EV_ANY}.create_action_sequences'.
-		do
-			{EV_ITEM} Precursor
-			create select_actions
-			create deselect_actions
-			create expand_actions
-			create collapse_actions
 		end
 
 end -- class EV_TREE_ITEM
@@ -186,6 +72,24 @@ end -- class EV_TREE_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2000/06/07 17:28:05  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.25.4.5  2000/05/16 16:57:40  oconnor
+--| moved bulk to ev_tree_node.e
+--|
+--| Revision 1.25.4.4  2000/05/11 00:00:01  king
+--| Made tooltipable
+--|
+--| Revision 1.25.4.3  2000/05/09 23:10:13  king
+--| Altered spacing
+--|
+--| Revision 1.25.4.2  2000/05/09 22:56:01  king
+--| Integrated selectable with tree item
+--|
+--| Revision 1.25.4.1  2000/05/03 19:09:58  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.43  2000/04/07 22:28:19  brendel
 --| EV_SIMPLE_ITEM -> EV_ITEM.
 --|

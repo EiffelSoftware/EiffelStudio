@@ -34,6 +34,11 @@ inherit
 			implementation
 		end
 
+	EV_TOOLTIPABLE
+		redefine
+			implementation
+		end
+
 create
 	default_create,
 	make_with_text
@@ -166,6 +171,15 @@ end -- class EV_TOOL_BAR_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/06/07 17:28:05  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.7.2.2  2000/05/10 23:03:04  king
+--| Integrated inital tooltipable changes
+--|
+--| Revision 1.7.2.1  2000/05/03 19:09:58  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.15  2000/04/17 16:06:10  brendel
 --| Replaced press_actions with select_actions.
 --|

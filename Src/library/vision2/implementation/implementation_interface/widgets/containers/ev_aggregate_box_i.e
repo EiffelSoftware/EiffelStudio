@@ -27,14 +27,18 @@ feature -- Access
 
 	screen_x: INTEGER is
 			-- Horizontal offset relative to screen.
-		do 
-			Result := x_position + real_parent.screen_x
+		do
+			if real_parent /= Void then
+				Result := x_position + real_parent.screen_x
+			end
 		end
 
 	screen_y: INTEGER is
 			-- Vertical offset relative to screen.
 		do
-			Result := y_position + real_parent.screen_y
+			if real_parent /= Void then
+				Result := y_position + real_parent.screen_y
+			end
 		end
 
 	real_parent: EV_AGGREGATE_WIDGET_IMP is
@@ -70,6 +74,15 @@ end -- class EV_AGGREGATE_BOX_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/06/07 17:27:48  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.5.6.2  2000/05/04 17:36:35  brendel
+--| Corrected screen_x and screen_y.
+--|
+--| Revision 1.5.6.1  2000/05/03 19:09:04  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.5  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

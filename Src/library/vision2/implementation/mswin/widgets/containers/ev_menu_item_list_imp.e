@@ -101,7 +101,6 @@ feature {NONE} -- Implementation
 			menu_imp: EV_MENU_IMP
 			menu_item_imp: EV_MENU_ITEM_IMP
 			radio_imp: EV_RADIO_MENU_ITEM_IMP
-			pix_imp: EV_PIXMAP_IMP
 			rgroup: LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
 			chk_imp: EV_CHECK_MENU_ITEM_IMP
 		do
@@ -267,7 +266,6 @@ feature {NONE} -- Implementation
 			an_index_within_bounds:
 				an_index > 0 and then an_index <= ev_children.count
 		local
-			cur: CURSOR
 			cur_item: INTEGER
 			sep_imp: EV_MENU_SEPARATOR_IMP
 		do
@@ -341,6 +339,15 @@ end -- class EV_MENU_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/06/07 17:27:59  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.15.2.2  2000/05/30 16:24:57  rogers
+--| Removed unreferenced local variables.
+--|
+--| Revision 1.15.2.1  2000/05/03 19:09:36  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.15  2000/04/10 17:57:48  brendel
 --| Removed calls to ev_children in graphical insert/remove function.
 --|

@@ -18,24 +18,10 @@ inherit
 			interface
 		end
 
-feature -- Status report
-
-	is_sensitive: BOOLEAN is
-			-- Is `Current' sensitive to user actions?
-		deferred
+	EV_SENSITIVE_I
+		redefine
+			interface
 		end
-
-feature -- Status setting
-
-	enable_sensitive is
-   			-- Set current item sensitive.
-		deferred
- 		end
-
-	disable_sensitive is
-   			-- Set current item insensitive.
-		deferred
-  		end
 
 feature {EV_ANY_I} -- Implementation
 
@@ -64,6 +50,15 @@ end -- class EV_MENU_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/06/07 17:27:41  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.27.4.2  2000/05/11 21:18:39  king
+--| Inheriting from EV_SENSITIVE
+--|
+--| Revision 1.27.4.1  2000/05/03 19:08:54  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.30  2000/04/07 20:49:34  brendel
 --| EV_SIMPLE_ITEM_I -> EV_ITEM_I & EV_TEXTABLE_I.
 --|

@@ -13,15 +13,14 @@ inherit
 			interface
 		end
 		
-	EV_SELECT_BUTTON_IMP
+	EV_BUTTON_IMP
 		undefine
 			default_style,
 			on_key_down,
 			on_bn_clicked
 		redefine
 			interface,
-			initialize,
-			enable_select
+			initialize
 		select
 			wel_make
 		end
@@ -50,7 +49,8 @@ inherit
 			resize as wel_resize,
 			move_and_resize as wel_move_and_resize,
 			text as wel_text,
-			set_text as wel_set_text
+			set_text as wel_set_text,
+			checked as is_selected
 		undefine
 			make_by_id,
 			window_process_message,
@@ -114,7 +114,7 @@ feature -- Status setting
 				end
 				radio_group.go_to (cur)
 			end
-			Precursor
+			set_checked
 		end
 
 feature {NONE} -- Implementation
@@ -130,7 +130,7 @@ feature {NONE} -- Implementation
 			-- Called when `Current' is pressed.
 		do
 			enable_select
-			{EV_SELECT_BUTTON_IMP} Precursor
+			{EV_BUTTON_IMP} Precursor
 		end
 
 	default_style: INTEGER is
@@ -167,8 +167,17 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/06/07 17:28:01  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.33  2000/05/03 20:13:27  brendel
 --| Fixed resize_actions.
+--|
+--| Revision 1.17.8.2  2000/05/09 20:48:28  king
+--| Implemented to fit in with new selectable abstract classes
+--|
+--| Revision 1.17.8.1  2000/05/03 19:09:50  oconnor
+--| mergred from HEAD
 --|
 --| Revision 1.32  2000/05/02 22:07:31  rogers
 --| Redefined on_default_style to fix the bug due to conflicts with

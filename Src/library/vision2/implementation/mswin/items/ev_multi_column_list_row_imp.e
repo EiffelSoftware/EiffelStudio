@@ -1,4 +1,3 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
 		"Eiffel Vision multi column list row. Mswindows implementation."
@@ -20,7 +19,6 @@ inherit
 
 	EV_ITEM_IMP
 		rename
-			--| FIXME Get back to this.
 			pixmap as ev_item_imp_pixmap
 		undefine
 			parent,
@@ -91,12 +89,12 @@ feature {EV_ANY_I} -- Access
 			parent_imp.update_children
 		end
 
-	set_parent (par: like parent) is
-			-- Assign `par' to `parent_imp'.
-			--| Make `par' the new parent of `Current'.
+	set_parent_imp (par_imp: like parent_imp) is
+			-- Assign `par_imp' to `parent_imp'.
+			--| Make `par_imp' the new parent of `Current'.
 		do
-			if par /= Void then
-				parent_imp ?= par.implementation
+			if par_imp /= Void then
+				parent_imp := par_imp
 			else
 				parent_imp := Void
 			end
@@ -129,6 +127,19 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2000/06/07 17:27:52  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.15.4.3  2000/05/18 23:09:35  rogers
+--| Set_parent renamed to set_parent_imp and now takes a parameter of type
+--| parent_imp.
+--|
+--| Revision 1.15.4.2  2000/05/04 17:47:50  rogers
+--| Removed FIXME NOT_REVIWED. Removed Unecessary FIXME.
+--|
+--| Revision 1.15.4.1  2000/05/03 19:09:10  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.43  2000/04/25 01:15:10  pichery
 --| Removed useless (and confusing)
 --| inheritance.

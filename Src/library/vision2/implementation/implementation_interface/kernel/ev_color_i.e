@@ -69,7 +69,7 @@ feature {EV_COLOR} -- Element change
 			within_range: a_red >= 0 and a_red <= 1
 		deferred
 		ensure
-			red_assigned: red = a_red
+			red_assigned: (red - a_red).abs <= delta
 		end
 
 	set_green (a_green: REAL) is
@@ -78,7 +78,7 @@ feature {EV_COLOR} -- Element change
 			within_range: a_green >= 0 and a_green <= 1
 		deferred
 		ensure
-			green_assigned: green = a_green
+			green_assigned: (green - a_green).abs <= delta
 		end
 
 	set_blue (a_blue: REAL) is
@@ -87,7 +87,7 @@ feature {EV_COLOR} -- Element change
 			blue_within_range: a_blue >= 0 and a_blue <= 1
 		deferred
 		ensure
-			blue_assigned: blue = a_blue
+			blue_assigned: (blue - a_blue).abs <= delta
 		end
 
 	set_name (a_name: STRING) is
@@ -250,6 +250,13 @@ feature --{EV_COLOR_I, EV_COLOR} -- Implementation
 	interface: EV_COLOR
 			-- Interface of the current color.
 
+	delta: REAL is
+			-- Amount by which two intensities can differ but still be
+			-- considered equal by `is_equal'.
+		deferred
+		end
+
+
 invariant
 	red_within_range: red >= 0 and red <= 1
 	green_within_range: green >= 0 and green <= 1
@@ -266,12 +273,12 @@ invariant
 		blue_16_bit >= 0 and blue_16_bit <= interface.Max_16_bit
 	rgb_24_bit_within_range:
 		rgb_24_bit >= 0 and rgb_24_bit <= interface.Max_24_bit
-	red_16_bit_conversion_consistent: (red * 65535).rounded = red_16_bit
-	--red_8_bit_conversion_consistent: (red * 255).rounded = red_8_bit
-	green_16_bit_conversions_consistent: (green * 65535).rounded = green_16_bit
-	--green_8_bit_conversions_consistent: (green * 255).rounded = green_8_bit
-	blue_16_bit_conversions_consistent: (blue * 65535).rounded = blue_16_bit
-	--blue_8_bit_conversions_consistent: (blue * 255).rounded = blue_8_bit
+	red_16_bit_conversion: ((red * interface.Max_16_bit) - red_16_bit).abs <= delta * interface.Max_16_bit
+	red_8_bit_conversion: ((red * interface.Max_8_bit) - red_8_bit).abs <= delta * interface.Max_8_bit
+	green_16_bit_conversion: ((green * interface.Max_16_bit) - green_16_bit).abs <= delta * interface.Max_16_bit
+	green_8_bit_conversion: ((green * interface.Max_8_bit) - green_8_bit).abs < delta * interface.Max_8_bit
+	blue_16_bit_conversion: ((blue * interface.Max_16_bit) - blue_16_bit).abs < delta * interface.Max_16_bit
+	blue_8_bit_conversion: ((blue * interface.Max_8_bit) - blue_8_bit).abs < delta * interface.Max_8_bit
 	name_not_void: name /= Void
 
 end -- class EV_COLOR_I
@@ -297,6 +304,16 @@ end -- class EV_COLOR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/06/07 17:27:43  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.5.4.2  2000/05/16 22:21:58  rogers
+--| Added delta. Assertions and postconditions now ensure that colors are equal
+--| to within delta.
+--|
+--| Revision 1.5.4.1  2000/05/03 19:08:56  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.8  2000/05/02 18:26:13  oconnor
 --| Optimised copy
 --|

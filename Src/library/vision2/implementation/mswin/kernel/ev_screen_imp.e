@@ -30,8 +30,6 @@ feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create `Current', a screen object.
-		local
-			color: EV_COLOR
 		do
 			base_make (an_interface)
 			create dc
@@ -191,6 +189,15 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/06/07 17:28:02  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.3.8.2  2000/05/30 16:07:46  rogers
+--| Removed unreferenced variables.
+--|
+--| Revision 1.3.8.1  2000/05/03 19:09:53  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.15  2000/05/02 22:43:55  rogers
 --| Removed FIXME NOT_REVIEWED. Comments. Formatting.
 --|

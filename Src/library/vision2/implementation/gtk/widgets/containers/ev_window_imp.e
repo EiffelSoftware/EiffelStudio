@@ -191,7 +191,6 @@ feature -- Element change
 
 			create icon_window
 			icon_window.set_size (an_icon.width, an_icon.height)
-			io.putstring (an_icon.height.out + "%N")
 			icon_window.extend (an_icon)
 
 			icon_window_imp ?= icon_window.implementation			
@@ -274,6 +273,15 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.46  2000/06/07 17:27:38  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.31.2.6  2000/05/05 23:21:02  king
+--| Removed onscreen printing of the magic 32
+--|
+--| Revision 1.31.2.5  2000/05/03 19:08:48  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.45  2000/05/02 18:55:28  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

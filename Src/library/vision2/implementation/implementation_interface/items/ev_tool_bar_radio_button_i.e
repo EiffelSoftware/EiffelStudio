@@ -10,12 +10,17 @@ deferred class
 	EV_TOOL_BAR_RADIO_BUTTON_I
 
 inherit
-	EV_TOOL_BAR_SELECT_BUTTON_I
+	EV_TOOL_BAR_BUTTON_I
 		redefine
 			interface
 		end
 
 	EV_RADIO_PEER_I
+		redefine
+			interface
+		end
+
+	EV_SELECTABLE_I
 		redefine
 			interface
 		end
@@ -47,6 +52,15 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/06/07 17:27:41  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.2.4.2  2000/05/09 21:12:42  king
+--| Integrated changes to selectable/deselectable
+--|
+--| Revision 1.2.4.1  2000/05/03 19:08:54  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.7  2000/04/26 22:22:15  rogers
 --| Removed FIXME NOT_REVIEWED.
 --|

@@ -67,20 +67,6 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature -- Contract support
-
-	parent_void (v: like item): BOOLEAN is
-			-- Is `v' not in an Eiffel Vision container yet?
-		do
-			Result := v.parent = Void
-		end
-
-	is_parent_of (v: like item): BOOLEAN is
-			-- Is `Current' parent of `v'.
-		do
-			Result := v.parent = Current
-		end
-
 feature {NONE} -- Implementation
 
 	implementation: EV_WIDGET_LIST_I
@@ -109,6 +95,15 @@ end -- class EV_WIDGET_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/06/07 17:28:12  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.20.2.2  2000/05/13 00:04:20  king
+--| Converted to new EV_CONTAINABLE class
+--|
+--| Revision 1.20.2.1  2000/05/03 19:10:08  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.20  2000/04/26 17:03:10  oconnor
 --| test now uses EV_BUTTON not EV_RADIO_BUTTON
 --|

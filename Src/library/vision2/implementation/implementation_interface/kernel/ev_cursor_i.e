@@ -7,12 +7,14 @@ indexing
 deferred class
 	EV_CURSOR_I
 
+obsolete
+	"Don't use it. EV_CURSOR now inherit from EV_PIXMAP."
+
 inherit
 	EV_ANY_I
 		redefine
 			interface
 		end
-
 
 feature -- Access
 
@@ -71,6 +73,18 @@ end -- class EV_CURSOR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/06/07 17:27:43  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.4.2.3  2000/05/04 17:36:02  brendel
+--| Moved obsolete clause.
+--|
+--| Revision 1.4.2.2  2000/05/04 04:16:17  pichery
+--| This class is now Obsolete and marked as it.
+--|
+--| Revision 1.4.2.1  2000/05/03 19:08:56  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.6  2000/02/22 18:39:40  oconnor
 --| updated copyright date and formatting
 --|

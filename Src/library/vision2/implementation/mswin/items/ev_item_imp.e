@@ -35,11 +35,11 @@ feature -- Status setting
 			is_destroyed := True
 		end
 
-	set_parent (a_parent: like parent) is
-			-- Assign `a_parent' to `parent'.
+	set_parent_imp (a_parent_imp: like parent_imp) is
+			-- Assign `a_parent_imp' to `parent_imp'.
 		deferred
 		ensure
-			assigned: parent = a_parent
+			assigned: parent_imp = a_parent_imp
 		end
 
 feature {EV_PICK_AND_DROPABLE_I} -- Status report
@@ -112,6 +112,16 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/06/07 17:27:52  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.7.4.2  2000/05/18 23:12:44  rogers
+--| set_parent renamed to set_parent_imp and parameter is now of type
+--| parent_imp.
+--|
+--| Revision 1.7.4.1  2000/05/03 19:09:10  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.20  2000/04/14 17:34:27  rogers
 --| Inheritance changed from EV_PICK_AND_DROPABLE_IMP to
 --| EV_PICK_AND_dROPABLE_ITEM_IMP. Removed commented pnd_motion

@@ -8,12 +8,17 @@ deferred class
 	EV_RADIO_MENU_ITEM_I
 
 inherit
-	EV_SELECT_MENU_ITEM_I
+	EV_MENU_ITEM_I
 		redefine
 			interface
 		end
 
 	EV_RADIO_PEER_I
+		redefine
+			interface
+		end
+
+	EV_SELECTABLE_I
 		redefine
 			interface
 		end
@@ -45,6 +50,15 @@ end -- class EV_RADIO_MENU_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/06/07 17:27:41  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.3.4.2  2000/05/09 21:46:46  king
+--| Intergrated selectable/deselectable
+--|
+--| Revision 1.3.4.1  2000/05/03 19:08:54  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.8  2000/02/24 20:34:31  brendel
 --| Changed to comply with renewed interface.
 --|

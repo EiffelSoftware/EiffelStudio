@@ -16,6 +16,16 @@ inherit
 			interface
 		end
 
+	EV_SENSITIVE_I
+		redefine
+			interface
+		end
+
+	EV_COLORIZABLE_I
+		redefine
+			interface
+		end
+
 feature -- Access
 
 	parent: EV_CONTAINER is
@@ -34,27 +44,7 @@ feature -- Access
 		deferred
 		end
 
-	foreground_color: EV_COLOR is
-			-- Color of foreground features like text.
-		deferred
-		end
-
-	background_color: EV_COLOR is
-			-- Color displayed behind foreground features.
-		deferred
-		end
-
-	tooltip: STRING is
-			-- Text displayed when user moves mouse over widget.
-		deferred
-		end
-
 feature -- Status Report
-
-	is_sensitive: BOOLEAN is
-			-- Does `Current' respond to user input events.
-		deferred
-		end
 
 	is_show_requested: BOOLEAN is
 			-- Will `Current' be displayed when its parent is?
@@ -96,32 +86,6 @@ feature -- Status setting
 			has_focus: has_focus
 		end
 
-	enable_sensitive is
-			-- Enable sensitivity to user input events.
-		deferred
-		ensure
-			is_sensitive: is_useable implies is_sensitive
-		end
-
-	disable_sensitive is
-			-- Disable sensitivity to user input events.
-		deferred
-		ensure
-			not_is_sensitive: is_useable implies not is_sensitive
-		end
-
-	set_default_colors is
-			-- Initialize the colors of the widget
-		local
-			default_colors: EV_DEFAULT_COLORS
-		do
-			create default_colors
-			set_background_color (default_colors.default_background_color)
-			set_foreground_color (default_colors.default_foreground_color)
-		end
-			--| Descendants of EV_WIDGET_I may dedefine this to use different
-			--| colors so there is no postcondition.
-
 feature -- Element change
 
 --	set_pointer_style (a_cursor: like pointer_style) is
@@ -132,26 +96,6 @@ feature -- Element change
 --		ensure
 --			pointer_style_assigned: pointer_style.is_equal (a_cursor)
 --		end
-
-	set_background_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `background_color'.
-		require
-			a_color_not_void: a_color /= Void
-		deferred
-		ensure
-			background_color_assigned: is_useable implies
-				interface.background_color.is_equal (a_color)
-		end
-
-	set_foreground_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `foreground_color'
-		require
-			a_color_not_void: a_color /= Void
-		deferred
-		ensure
-			foreground_color_assigned: is_useable implies
-				interface.foreground_color.is_equal (a_color)
-		end
 
 	set_minimum_width (a_minimum_width: INTEGER) is
 			-- Set the minimum horizontal size to `a_minimum_width' in pixels.
@@ -185,16 +129,6 @@ feature -- Element change
 				interface.minimum_width = a_minimum_width
 			minimum_height_assigned: is_useable implies 
 				interface.minimum_height = a_minimum_height
-		end
-
-	set_tooltip (a_text: STRING) is
-			-- Set `tooltip' to `a_text'.
-        	deferred
-		end
-
-	remove_tooltip is
-			-- Set `tooltip' to `Void'.
-        	deferred
 		end
 
 feature -- Measurement
@@ -303,7 +237,8 @@ feature -- Obsolete
 		-- for that widget.
 		-- When the widget is not shown, the result is -1
 		obsolete "don't use it"
-		deferred
+		do
+			check false end
 		end
 
 	x_set (value: INTEGER): BOOLEAN is
@@ -327,8 +262,6 @@ feature -- Obsolete
 
 	parent_set (par: EV_CONTAINER): BOOLEAN is
 		obsolete "don't use it"
-		local
-			wid_imp: EV_CONTAINER_I
 		do
 			check false end
 		end
@@ -345,29 +278,14 @@ feature -- Obsolete
 
 invariant
 	pointer_position_not_void: is_useable implies pointer_position /= Void
-	background_color_not_void: is_useable implies background_color /= void
-	foreground_color_not_void: is_useable implies foreground_color /= void
 
 	--| FIXME IEK The minimum dimension size should be greater than 0
 	--| This does not hold for containers though
 	minimum_width_positive_or_zero: is_useable implies minimum_width >= 0
 	minimum_height_positive_or_zero: is_useable implies minimum_height >= 0
 
-
-	--|FIXME These two assertions have been commented out due to problems with
-	--|The windows implementation. The problem is due to the fact that until
-	--| the widgets have been re-sized then the width, which is returned by
-	--| wel will by 0. However,
-	--| the minimum width of the widget will be greater than 0.
-	--| This violates these pre-conditions and needs to be fixed.
-	--|width_not_less_than_minimum_width:
-	--|	 is_useable implies width >= minimum_width
-	--|height_not_less_than_minimum_height:
-	--|	 is_useable implies height >= minimum_height
-
 	is_displayed_implies_show_requested:
 		is_useable and is_displayed implies is_show_requested
-
 
 	--| FIXME IEK Not applicable for items that inherit from widget
 	--| only on the implementation side such as T.B. Button
@@ -397,6 +315,33 @@ end -- class EV_WIDGET_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.68  2000/06/07 17:27:47  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.57.4.8  2000/05/30 16:17:35  rogers
+--| Removed unreferenced local variables.
+--|
+--| Revision 1.57.4.7  2000/05/13 00:04:15  king
+--| Converted to new EV_CONTAINABLE class
+--|
+--| Revision 1.57.4.6  2000/05/12 17:34:59  king
+--| Integrated ev_colorize
+--|
+--| Revision 1.57.4.5  2000/05/11 19:33:27  king
+--| Integrated ev_sensitive
+--|
+--| Revision 1.57.4.4  2000/05/10 23:03:01  king
+--| Integrated inital tooltipable changes
+--|
+--| Revision 1.57.4.3  2000/05/04 17:34:58  brendel
+--| Removed commented invariant, which is inapplicable.
+--|
+--| Revision 1.57.4.2  2000/05/03 22:12:39  pichery
+--| Removed some obsolete features
+--|
+--| Revision 1.57.4.1  2000/05/03 19:09:01  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.67  2000/05/01 21:33:53  king
 --| Removed post cond references from features used by item imps to prevent sig seg on cat call
 --|

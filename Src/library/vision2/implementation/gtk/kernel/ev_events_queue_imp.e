@@ -22,7 +22,7 @@ feature -- Basic operations
 	process is
 			-- Process all the events of the events queue.
 		do
-			c_gtk_events_process_events_queue ()
+			c_--gtk_events_process_events_queue ()
 		end
 
 end -- class EV_EVENTS_QUEUE_IMP
@@ -48,6 +48,15 @@ end -- class EV_EVENTS_QUEUE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/06/07 17:27:30  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.2.4.2  2000/05/25 00:28:17  king
+--| Removed defunct external call
+--|
+--| Revision 1.2.4.1  2000/05/03 19:08:38  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.4  2000/02/22 18:39:35  oconnor
 --| updated copyright date and formatting
 --|

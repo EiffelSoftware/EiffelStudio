@@ -174,7 +174,7 @@ feature {NONE} -- WEL Implementation
 	 			p := get_wm_vscroll_hwnd (wparam, lparam)
 	 			if p /= default_pointer then
 	 				-- The message comes from a gauge,
- 					gauge ?= windows.item (p)
+ 					gauge ?= window_of_item (p)
 						if gauge /= Void then
 	 						check
  							gauge_exists: gauge.exists
@@ -203,7 +203,7 @@ feature {NONE} -- WEL Implementation
 	 			p := get_wm_hscroll_hwnd (wparam, lparam)
 	 			if p /= default_pointer then
 	 				-- The message comes from a gauge
-	 				gauge ?= windows.item (p)
+	 				gauge ?= window_of_item (p)
 	 				if gauge /= Void then
 	 					check
 	 						gauge_exists: gauge.exists
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation : deferred features
 		deferred
 		end
 
-	windows: HASH_TABLE [WEL_WINDOW, POINTER] is
+	window_of_item (hwnd: POINTER): WEL_WINDOW is
 		deferred
 		end
 
@@ -440,6 +440,18 @@ end -- class EV_CONTAINER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.54  2000/06/07 17:27:59  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.34.8.2  2000/05/09 00:57:04  manus
+--| Update WEL recent changes:
+--| - rename `windows.item (p)' by `window_of_item (p)'.
+--| - Add new deferred routine `window_of_item' which replaces `windows' previously
+--|   defined.
+--|
+--| Revision 1.34.8.1  2000/05/03 19:09:26  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.53  2000/05/01 21:54:32  rogers
 --| Comments, formatting. Removed FIXME NOT_REVIEWED.
 --|

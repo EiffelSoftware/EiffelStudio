@@ -8,18 +8,6 @@ indexing
 class
 	EV_GTK_GENERAL_EXTERNALS
 
-feature {NONE} -- Cast features
-
-	c_gtk_integer_to_pointer (i: INTEGER): POINTER is
-		external
-			"C [macro %"gtk_eiffel.h%"]"
-		end
-
-	c_gtk_pointer_to_integer (i: POINTER): INTEGER is
-		external
-			"C [macro %"gtk_eiffel.h%"]"
-		end
-
 end -- class EV_GTK_GENERAL_EXTERNALS
 
 --!-----------------------------------------------------------------------------
@@ -43,6 +31,15 @@ end -- class EV_GTK_GENERAL_EXTERNALS
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/06/07 17:27:34  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.10.4.2  2000/05/25 00:33:01  king
+--| Removed redundant externals
+--|
+--| Revision 1.10.4.1  2000/05/03 19:08:43  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.12  2000/02/22 18:39:36  oconnor
 --| updated copyright date and formatting
 --|

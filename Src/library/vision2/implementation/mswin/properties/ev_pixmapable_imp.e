@@ -16,7 +16,7 @@ feature -- Access
 	pixmap: EV_PIXMAP
 			-- Pixmap of `Current'.
 
-	pixmap_imp: EV_PIXMAP_IMP is
+	pixmap_imp: EV_PIXMAP_IMP_STATE is
 			-- Implementation of pixmap in `Current'.
 		do
 			if pixmap /= Void then
@@ -28,19 +28,12 @@ feature -- Element change
 
 	set_pixmap (pix: EV_PIXMAP) is
 			-- Make `pix' the new pixmap of `Current'.
-			-- We need to destroy the dc that comes with it,
-			-- because a bitmap can be linked to only one dc
-			-- at a time.
 		do
-			remove_pixmap
-			create pixmap
-			pixmap.copy (pix)
+			pixmap := pix
 		end
 
 	remove_pixmap is
 			-- Remove the pixmap from `Current'.
-		local
-			current_pixmap_imp: EV_PIXMAP_IMP
 		do
 			pixmap := Void
 		end
@@ -78,6 +71,26 @@ end -- class EV_PIXMAPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/06/07 17:27:56  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.9.4.3  2000/06/05 16:49:19  manus
+--| Now `pixmap_imp' is of type `EV_PIXMAP_IMP_STATE' which is widely accepted instead of the
+--| too restrictive EV_PIXMAP_IMP.
+--|
+--| Now `set_pixmap' does not call `remove_pixmap' anymore because of a poor performance
+--| of the resizing done in redefinitions of `remove_pixmap' (eg the one in EV_BUTTON_IMP).
+--|
+--| Also due to the poor performance of the `copy' in `set_pixmap' we do aliasing on the
+--| EV_PIXMAP object given as parameter. It is not much a problem because when we give
+--| the PIXMAP object to Windows, Windows does a copy.
+--|
+--| Revision 1.9.4.2  2000/05/05 22:29:29  pichery
+--| Replaced (Create + Copy) with `ev_clone'
+--|
+--| Revision 1.9.4.1  2000/05/03 19:09:16  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.14  2000/05/02 00:20:41  rogers
 --| Removed FIXME NOT_REVIEWED. Comments and formatting.
 --|

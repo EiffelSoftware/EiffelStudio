@@ -35,10 +35,9 @@ feature {NONE} -- Initialization
 			create C
 			c_ev_gtk_callback_marshal_init (Current, $marshal)
 			gtk_init
-			C.gtk_rc_parse(eiffel_to_c ("gtkrc"));
+			C.gtk_rc_parse (eiffel_to_c ("gtkrc"));
 			C.gdk_rgb_init
 			tooltips := C.gtk_tooltips_new
-			--| FIXME Check this:
 			set_tooltip_delay (500)
 			idle_actions_agent := (interface.idle_actions)~call ([])
 		end
@@ -149,9 +148,6 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 			row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 			trg: EV_PICK_AND_DROPABLE
 		do
-			--| FIXME use this implementation instead!:
-			--| Result := hash_table.item (a_gdk_window)
-			--| FIXME IEK Mclist is comprised of multiple gdk windows.
 			cur := pnd_targets.cursor
 			from
 				pnd_targets.start
@@ -317,7 +313,7 @@ feature {EV_WINDOW_I} -- Root window management
 			end
 		end
 
-feature {EV_WIDGET_IMP} -- Implementation
+feature {EV_TOOLTIPABLE_IMP} -- Implementation
 
 	tooltips: POINTER
 			-- Reference to GtkTooltips object.
@@ -444,6 +440,21 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/06/07 17:27:30  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.13.4.4  2000/05/25 00:27:05  king
+--| Formatting
+--|
+--| Revision 1.13.4.3  2000/05/16 00:23:01  king
+--| Removed resolved fixmes
+--|
+--| Revision 1.13.4.2  2000/05/10 23:02:55  king
+--| Integrated inital tooltipable changes
+--|
+--| Revision 1.13.4.1  2000/05/03 19:08:37  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.30  2000/05/02 18:55:21  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

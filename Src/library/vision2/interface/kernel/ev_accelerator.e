@@ -54,6 +54,13 @@ feature -- Events
 
 feature -- Access
 
+	parented: BOOLEAN is
+		-- Does `Current' have a parent.
+		-- key combination of `Current' can not be modified if True.
+		do
+			Result := implementation.parented
+		end
+
 	key: EV_KEY is
 			-- Key that will trigger `actions'.
 		do
@@ -93,6 +100,7 @@ feature -- Status setting
 		require
 			a_key_not_void: a_key /= Void
 			a_key_valid_accelerator: a_key.is_valid_accelerator
+			not_parented: not parented
 		do
 			implementation.set_key (a_key)
 		ensure
@@ -101,6 +109,8 @@ feature -- Status setting
 
 	enable_shift_required is
 			-- Make `shift_required' True.
+		require
+			not_parented: not parented
 		do
 			implementation.enable_shift_key
 		ensure
@@ -109,6 +119,8 @@ feature -- Status setting
 
 	disable_shift_required is
 			-- Make `shift_required' False.
+		require
+			not_parented: not parented
 		do
 			implementation.disable_shift_key
 		ensure
@@ -117,6 +129,8 @@ feature -- Status setting
 
 	enable_alt_required is
 			-- Make `alt_required' True.
+		require
+			not_parented: not parented
 		do
 			implementation.enable_alt_key
 		ensure
@@ -125,6 +139,8 @@ feature -- Status setting
 
 	disable_alt_required is
 			-- Make `alt_required' False.
+		require
+			not_parented: not parented
 		do
 			implementation.disable_alt_key
 		ensure
@@ -133,6 +149,8 @@ feature -- Status setting
 
 	enable_control_required is
 			-- Make `control_required' True.
+		require
+			not_parented: not parented
 		do
 			implementation.enable_control_key
 		ensure
@@ -141,6 +159,8 @@ feature -- Status setting
 
 	disable_control_required is
 			-- Make `control_required' False.
+		require
+			not_parented: not parented
 		do
 			implementation.disable_control_key
 		ensure
@@ -174,7 +194,7 @@ feature -- Status report
 			Result.append (key.out)
 		end
 
-feature {EV_WINDOW_IMP} -- Implementation
+feature {EV_WINDOW_IMP, EV_ACCELERATOR_LIST} -- Implementation
 
 	implementation: EV_ACCELERATOR_I
 			-- Responsible for interaction with the native graphics toolkit.
@@ -222,6 +242,16 @@ end -- class EV_ACCELERATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/06/07 17:28:06  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.3.4.2  2000/05/19 21:57:37  rogers
+--| Added parented, enable_*_required and disable_*_required all require
+--| not parented.
+--|
+--| Revision 1.3.4.1  2000/05/03 19:09:59  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.13  2000/04/20 16:27:01  brendel
 --| Export status updated to EV_WINDOW_IMP.
 --|

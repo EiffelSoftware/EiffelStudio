@@ -26,6 +26,11 @@ inherit
 			interface
 		end
 
+	EV_TOOLTIPABLE_IMP
+		redefine
+			interface
+		end
+
 feature -- Access
 
 	top_level_window_imp: EV_WINDOW_IMP
@@ -73,7 +78,7 @@ feature -- Basic operations
 		do
 			hwnd := next_dlgtabitem (top_level_window_imp.wel_item,
 			wel_item, direction)
-			window := windows.item (hwnd)
+			window := window_of_item (hwnd)
 			window.set_focus
 		end
 
@@ -87,7 +92,7 @@ feature -- Basic operations
 		do
 			hwnd := next_dlggroupitem (top_level_window_imp.wel_item,
 			wel_item, direction)
-			window ?= windows.item (hwnd)
+			window ?= window_of_item (hwnd)
 			check
 				valid_cast: window /= Void
 			end
@@ -134,7 +139,7 @@ feature -- Basic operations
 
 feature {NONE} -- Deferred features
 
-	windows: HASH_TABLE [WEL_WINDOW, POINTER] is
+	window_of_item (hwnd: POINTER): WEL_WINDOW is
 		deferred
 		end
 
@@ -188,6 +193,28 @@ end -- class EV_PRIMITIVE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/06/07 17:28:01  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.20.4.5  2000/05/23 16:48:48  rogers
+--| Undid previous change as the code was definitely required.
+--|
+--| Revision 1.20.4.4  2000/05/23 15:56:37  rogers
+--| Removed redundent check for a widget implementation with a void interface,
+--| in set_parent, as Vision2 does not allow this anymore.
+--|
+--| Revision 1.20.4.3  2000/05/10 23:10:04  king
+--| Integrated tooltipable changes
+--|
+--| Revision 1.20.4.2  2000/05/09 00:58:58  manus
+--| Update with WEL recent changes:
+--| - rename `windows.item (hwnd)' by `window_of_item (hwnd)'.
+--| - added new deferred feature `window_of_item' which substitutes `windows'
+--|   previously defined.
+--|
+--| Revision 1.20.4.1  2000/05/03 19:09:50  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.29  2000/05/03 00:35:57  pichery
 --| Changed constants retrieval
 --|

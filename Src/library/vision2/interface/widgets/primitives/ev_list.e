@@ -16,17 +16,10 @@ class
 	EV_LIST
 
 inherit
-	EV_PRIMITIVE
+	EV_LIST_ITEM_LIST
 		redefine
 			implementation,
-			create_action_sequences,
 			make_for_test
-		end
-
-	EV_ITEM_LIST [EV_LIST_ITEM]
-		redefine
-			implementation,
-			create_action_sequences
 		end
 
 create
@@ -34,38 +27,7 @@ create
 	make_with_strings,
 	make_for_test
 
-feature -- Initialization
-
-	make_with_strings (strings: CHAIN [STRING]) is
-			-- Create with an item for each of `strings'.
-		local
-			c: CURSOR
-		do
-			default_create
-			c := strings.cursor
-			from
-				strings.start
-			until
-				strings.after
-			loop
-				extend (create {EV_LIST_ITEM}.make_with_text (strings.item))
-				strings.forth
-			end
-			strings.go_to (c)
-		ensure
-			items_created: count = strings.count
-		end
-
 feature -- Access
-
-	selected_item: EV_LIST_ITEM is
-			-- Currently selected item.
-			-- Topmost selected item if multiple items are selected.
-		do
-			Result := implementation.selected_item
-		ensure
-			bridge_ok: Result = implementation.selected_item
-		end
 
 	selected_items: DYNAMIC_LIST [EV_LIST_ITEM] is
 			-- Currently selected items.
@@ -87,30 +49,6 @@ feature -- Status report
 
 feature -- Status setting
 
-	select_item (an_index: INTEGER) is
-			-- Select item at `an_index'.
-		require
-			index_within_range: an_index > 0 and an_index <= count
-		do
-			implementation.select_item (an_index)
-		end
-
-	deselect_item (an_index: INTEGER) is
-			-- Deselect item at `an_index'.
-		require
-			index_within_range: an_index > 0 and an_index <= count
-		do
-			implementation.deselect_item (an_index)
-		end
-
-	clear_selection is
-			-- Ensure there are no `selected_items'.
-		do
-			implementation.clear_selection
-		ensure
-			not_selected: selected_item = Void and selected_items.count = 0
-		end
-
 	enable_multiple_selection is
 			-- Allow more than one item to be selected.
 		do
@@ -127,14 +65,6 @@ feature -- Status setting
 			not_multiple_selection_enabled: not multiple_selection_enabled
 		end
 
-feature -- Event handling
-
-	select_actions: EV_LIST_ITEM_SELECT_ACTION_SEQUENCE
-			-- Actions to be performed when an item is selected. 
-
-	deselect_actions: EV_LIST_ITEM_SELECT_ACTION_SEQUENCE
-			-- Actions to be performed when an item is deselected.
-
 feature {EV_ANY_I, EV_LIST} -- Implementation
 
 	implementation: EV_LIST_I
@@ -148,15 +78,6 @@ feature {NONE} -- Implementation
 			create {EV_LIST_IMP} implementation.make (Current)
 		end
 
-	create_action_sequences is
-   			-- See `{EV_ANY}.create_action_sequences'.
-		do
-			{EV_ITEM_LIST} Precursor
-			{EV_PRIMITIVE} Precursor
-			create select_actions
-			create deselect_actions
-		end
-
 feature -- Contract support
 
 	make_for_test is
@@ -165,7 +86,7 @@ feature -- Contract support
 			list_item: EV_LIST_ITEM
 			counter: INTEGER
 		do
-			{EV_PRIMITIVE} Precursor
+			{EV_LIST_ITEM_LIST} Precursor
 			from
 			until
 				counter = 10
@@ -213,6 +134,15 @@ end -- class EV_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2000/06/07 17:28:13  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.28.4.2  2000/05/10 18:50:38  king
+--| Integrated ev_list_item_list
+--|
+--| Revision 1.28.4.1  2000/05/03 19:10:10  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.44  2000/04/19 01:38:16  pichery
 --| Modified the type of `selected_items'.
 --|

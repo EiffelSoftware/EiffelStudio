@@ -1,10 +1,13 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision untitled window. Window without the overlapped title."
+	description: "Eiffel Vision window. GTK+ implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
+
+	--| FIXME (Christophe Bonnard)
+	--| When closing main window, `dispose' tries to unreference the c_object
+	--| while ref_count is already 0.
 
 class
 	EV_WINDOW_IMP
@@ -60,7 +63,7 @@ feature  -- Access
 			o: EV_ANY_IMP
 		do
 			p := C.gtk_container_children (hbox)
-			if p/= NULL then
+			if p /= NULL then
 				p := C.g_list_nth_data (p, 0)
 				if p /= NULL then
 					o := eif_object_from_c (p)
@@ -71,37 +74,49 @@ feature  -- Access
 
 	x_position: INTEGER is
 			-- Horizontal position relative to parent
+		local
+			a_x: INTEGER
 		do
-			Result := C.c_gtk_window_x (c_object) 
+			if is_show_requested then
+				C.gdk_window_get_position (
+					C.gtk_widget_struct_window (c_object),
+					$a_x,
+					NULL
+				)
+				Result := a_x
+			else
+				Result := -1
+			end
+			
 		end
 
 	y_position: INTEGER is
 			-- Vertical position relative to parent
+		local
+			a_y: INTEGER
 		do
-			Result := C.c_gtk_window_y (c_object) 
-		end	
+			if is_show_requested then
+				C.gdk_window_get_position (
+					C.gtk_widget_struct_window (c_object),
+					NULL,
+					$a_y
+				)
+				Result := a_y
+			else
+				Result := -1
+			end
+			
+		end
 
- 	maximum_width: INTEGER --is
+ 	maximum_width: INTEGER
 			-- Maximum width that application wishes widget
 			-- instance to have
-		--do
-		--	Result := C.c_gtk_window_maximum_width (c_object)
-		--	if Result = -1 then
-		--		Result := minimum_width
-		--	end 
-		--end
 
 	minimum_width: INTEGER	
 	
-	maximum_height: INTEGER --is
+	maximum_height: INTEGER
 			-- Maximum height that application wishes widget
 			-- instance to have
-		--do
-		--	Result := C.c_gtk_window_maximum_height (c_object)
-		--	if Result = -1 then
-		--		Result := minimum_height
-		--	end
-		--end
 
 	minimum_height: INTEGER
 
@@ -111,7 +126,7 @@ feature  -- Access
 		local
 			p : POINTER
 		do
-			p := C.c_gtk_window_title (c_object)
+			p := C.gtk_window_struct_title (c_object)
 			if p /= NULL then
 				create Result.make_from_c (p)
 			else
@@ -133,10 +148,6 @@ feature  -- Access
 
 	menu_bar: EV_MENU_BAR
 			-- Horizontal bar at top of client area that contains menu's.
-	
-	status_bar: EV_WIDGET
-			-- Horizontal bar at bottom of client area used for showing messages
-			-- to the user.
 
 	is_modal: BOOLEAN is
 			-- Must the window be closed before application continues?
@@ -156,7 +167,7 @@ feature -- Status setting
 		do
 			from
 			until
-				not is_show_requested
+				is_destroyed or else not is_show_requested
 			loop
 				dummy := C.gtk_main_iteration_do (True)
 			end
@@ -238,14 +249,8 @@ feature -- Status setting
 	destroy is
 			-- Render `Current' unuseable.
 		do
+			interface.close_actions.call ([])
 			Precursor
-	-- FIXME		if (has_close_command = True) then
-	--			s := "destroy"
-	--			a := s.to_c
-	--			gtk_signal_emit_stop_by_name (c_object, $a)
-	--		else
-	--			widget := NULL
-	--		end
 		end
 
 feature -- Element change
@@ -355,46 +360,6 @@ feature -- Element change
 			menu_bar := Void
 		end
 
-	set_status_bar (a_bar: EV_WIDGET) is
-			-- Make `a_bar' the new `status_bar'.
-		local
-			sbar_imp: EV_WIDGET_IMP
-		do
-			status_bar := a_bar
-			sbar_imp ?= a_bar.implementation
-			C.gtk_box_pack_end (vbox, sbar_imp.c_object, False, True, 0)
-		end
-
-	remove_status_bar is
-			-- Set `status_bar' to `Void'.
-		local
-			sbar_imp: EV_WIDGET_IMP
-		do
-			if status_bar /= Void then
-				sbar_imp ?= status_bar.implementation
-				C.gtk_container_remove (vbox, sbar_imp.c_object)
-			end
-			status_bar := Void
-		end
-
-feature {EV_CONTAINER, EV_WIDGET} -- Element change
-	
---| FIXME we may need a set_transient_for feature
---	set_parent (par: EV_TITLED_WINDOW) is
---			-- Make `par' the new parent of the widget.
---			-- `par' can be Void then the parent is the screen.
---		do
---			if parent_imp /= Void then
---				parent_imp := Void
---			end
---			if par /= Void then
---				parent_imp ?= par.implementation
---
---				-- Attach the window to `par'.
---				gtk_window_set_transient_for (c_object, parent_imp.c_object)
---			end
---		end
-
 feature {NONE} -- Implementation
 
 	initialize is
@@ -405,6 +370,7 @@ feature {NONE} -- Implementation
 			-- The `hbox' will contain the child of the window.
 		local
 			scr: EV_SCREEN
+			bar_imp: EV_VERTICAL_BOX_IMP
 		do
 			Precursor
 			vbox := C.gtk_vbox_new (False, 0)
@@ -412,12 +378,32 @@ feature {NONE} -- Implementation
 			C.gtk_container_add (c_object, vbox)
 			hbox := C.gtk_hbox_new (False, 0)
 			C.gtk_widget_show (hbox)
+
+			bar_imp ?= interface.upper_bar.implementation
+			check
+				bar_imp_not_void: bar_imp /= Void
+			end
+			C.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
+
 			C.gtk_box_pack_start (vbox, hbox, True, True, 0)
+
+			bar_imp ?= interface.lower_bar.implementation
+			check
+				bar_imp_not_void: bar_imp /= Void
+			end
+			C.gtk_box_pack_start (vbox, bar_imp.c_object, False, True, 0)
+
 			enable_motion_notify (c_object)
 
 			create scr
 			set_maximum_width (scr.width)
 			set_maximum_height (scr.height)
+
+			connect_signal_to_actions (
+					"destroy",
+					interface.close_actions,
+					Void
+			)
 		end
 
 	vbox: POINTER
@@ -426,11 +412,6 @@ feature {NONE} -- Implementation
 
 	hbox: POINTER
 			-- Horizontal box for the child
-
-feature {EV_APPLICATION_IMP} -- Implementation
-
-	has_close_command: BOOLEAN
-			-- Did the user add a close command to the window?
 
 feature {EV_ANY_I} -- Implementation
 
@@ -459,6 +440,27 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/06/07 17:27:38  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.12.4.9  2000/05/25 00:36:22  king
+--| Removed redundant code
+--|
+--| Revision 1.12.4.8  2000/05/09 16:39:40  brendel
+--| Added FIXME.
+--|
+--| Revision 1.12.4.7  2000/05/05 22:25:39  brendel
+--| Switched upper and lower bar.
+--|
+--| Revision 1.12.4.6  2000/05/05 20:41:12  brendel
+--| Fixed bug in `block'.
+--|
+--| Revision 1.12.4.5  2000/05/04 19:00:23  brendel
+--| Implemented lower_bar and upper_bar.
+--|
+--| Revision 1.12.4.4  2000/05/03 19:08:48  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.21  2000/05/02 18:55:28  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

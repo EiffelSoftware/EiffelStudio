@@ -20,7 +20,8 @@ inherit
 		undefine
 			set_default_colors,
 			set_default_minimum_size,
-			destroy
+			destroy,
+			initialize_sizeable
 		redefine
 			on_key_down,
 			interface,
@@ -72,7 +73,7 @@ feature {NONE} -- Initialization
 feature {EV_ANY_I} -- Access
 
 	leap: INTEGER
-		-- Size of leap. Default: 10.
+			-- Size of leap. Default: 10.
 
 	container: EV_INTERNAL_SILLY_CONTAINER_IMP
 			-- A WEL control window used as a parent for
@@ -300,6 +301,15 @@ end -- class EV_SPIN_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/06/07 17:28:01  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.3.8.2  2000/05/04 17:39:44  brendel
+--| Undefined initialize_sizeable from EV_GAUGE_IMP.
+--|
+--| Revision 1.3.8.1  2000/05/03 19:09:51  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.12  2000/05/01 22:09:18  rogers
 --| Comments, formatting.
 --|

@@ -77,8 +77,6 @@ feature {NONE} -- Initialization
 			gtk_pixmap := C.gtk_pixmap_new (gdkpix, gdkmask)
 			C.gtk_widget_show (gtk_pixmap)
 			C.gtk_container_add (c_object, gtk_pixmap)
---|hmm?		C.gtk_widget_show (c_object)
-
 				-- Initialize the GC
 			gc := C.gdk_gc_new (C.gtk_pixmap_struct_pixmap (gtk_pixmap))
 			C.gdk_gc_set_function (gc, C.GDK_COPY_ENUM)
@@ -413,13 +411,28 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 			Result := C.gtk_pixmap_struct_pixmap (gtk_pixmap)
 		end
 
-feature {EV_PIXMAP_I, EV_PIXMAPABLE_IMP} -- Implementation
-
-	interface: EV_PIXMAP
-
 feature {EV_PIXMAPABLE_IMP, EV_CURSOR_IMP, EV_MULTI_COLUMN_LIST_IMP} -- Implementation
 
 	gtk_pixmap: POINTER
+		-- Pointer to the gtk pixmap widget.
+
+feature {EV_DEFAULT_PIXMAPS_IMP} -- Implementation
+
+	set_from_xpm_data (a_xpm_data: POINTER) is
+			-- Pixmap symbolizing a piece of information.
+		require
+			xpm_data_not_null: a_xpm_data /= NULL
+		local
+			gdk_pixmap: POINTER
+		do
+			gdk_pixmap := C.gdk_pixmap_create_from_xpm_d (
+				C.gdk_root_parent,
+				Default_pointer,
+				Default_pointer,
+				a_xpm_data
+			)
+			set_pixmap (gdk_pixmap, Default_pointer)
+		end
 
 feature {NONE} -- Implementation
 	
@@ -449,6 +462,10 @@ feature -- Externals
 	Loadpixmap_hicon: INTEGER is 2
 	Loadpixmap_hbitmap: INTEGER is 3
 
+feature {EV_PIXMAP_I, EV_PIXMAPABLE_IMP} -- Implementation
+
+	interface: EV_PIXMAP
+
 end -- EV_PIXMAP_IMP
 
 --!-----------------------------------------------------------------------------
@@ -472,6 +489,18 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/06/07 17:27:40  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.15.2.5  2000/05/08 23:02:19  king
+--| Tidied up code
+--|
+--| Revision 1.15.2.4  2000/05/08 21:58:28  king
+--| Added set_from_xpm_data
+--|
+--| Revision 1.15.2.3  2000/05/03 22:00:51  king
+--| merged from HEAD
+--|
 --| Revision 1.36  2000/05/03 21:35:34  king
 --| Altered export clause of set_pixmap to EV_DEF_PIX_IMP
 --|

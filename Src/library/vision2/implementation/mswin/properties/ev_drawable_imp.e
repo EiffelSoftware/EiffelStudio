@@ -561,7 +561,6 @@ feature -- Drawing operations
 		local
 			left, top, right, bottom: INTEGER
 			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
-			null_brush: WEL_NULL_BRUSH
 		do
 			left := x - a_horizontal_radius
 			right := x + a_horizontal_radius
@@ -722,7 +721,6 @@ feature {NONE} -- Implementation
 	reset_brush is
 			-- Restore brush to tile or color.
 		local
-			brush: WEL_BRUSH
 			pix_imp: EV_PIXMAP_IMP
 		do
 			if not internal_initialized_brush then
@@ -775,9 +773,6 @@ feature {NONE} -- Implementation
 
 	remove_pen is
 			-- Draw without outline.
-		local
-			pen: WEL_PEN
-			log_pen: WEL_LOG_PEN
 		do
 			if dc.pen_selected then
 				dc.unselect_pen
@@ -789,9 +784,6 @@ feature {NONE} -- Implementation
 
 	remove_brush is
 			-- Draw without filling.
-		local
-			brush: WEL_BRUSH
-			log_brush: WEL_LOG_BRUSH
 		do
 			if dc.brush_selected then
 				dc.unselect_brush
@@ -891,6 +883,15 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/06/07 17:27:55  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.14.4.2  2000/05/27 01:54:07  pichery
+--| Cosmetics
+--|
+--| Revision 1.14.4.1  2000/05/03 19:09:15  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.28  2000/04/21 23:58:14  pichery
 --| Speed optimization with Manus.
 --|

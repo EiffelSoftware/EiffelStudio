@@ -5,28 +5,20 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_TREE_ITEM_LIST
+	EV_TREE_NODE_LIST
 
 inherit
-	EV_ITEM_LIST [EV_TREE_ITEM]
+	EV_ITEM_LIST [EV_TREE_NODE]
 		redefine
 			implementation
 		end
 
-feature -- Status report
-
-	find_item_recursively_by_data (data: ANY): EV_TREE_ITEM is
-			-- An item at any level in tree that has `data'.
-		do
-			Result := implementation.find_item_recursively_by_data (data)
-		end
-
 feature {EV_ANY_I} -- Implementation
 
-	implementation: EV_TREE_ITEM_LIST_I
+	implementation: EV_TREE_NODE_LIST_I
 			-- Responsible for interaction with the native graphics toolkit.
 
-end -- class EV_TREE_ITEM_LIST
+end -- class EV_TREE_NODE_LIST
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -49,6 +41,15 @@ end -- class EV_TREE_ITEM_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/06/07 17:28:08  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.9.4.2  2000/05/16 16:56:58  oconnor
+--| updated for EV_TREE_NODE
+--|
+--| Revision 1.9.4.1  2000/05/03 19:10:05  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.14  2000/04/04 21:31:56  oconnor
 --| comments
 --|

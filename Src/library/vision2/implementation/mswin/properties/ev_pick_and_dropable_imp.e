@@ -86,6 +86,15 @@ feature -- Status setting
 			then
 				end_transport (a_x, a_y, a_button)
 			else
+				-- If there is no drag and drop on `Current' then
+				-- we make `Current' the topmost window as soon as
+				-- the left button is pressed. If there is drag and drop
+				-- on `Current' and a press did not lead to execution of the
+				-- drag and drop then this will happen during
+				-- check_drag_and_drop_release.
+				if a_button = 1 then
+					top_level_window_imp.move_to_foreground
+				end
 				check
 					disabled: press_action = Ev_pnd_disabled
 				end
@@ -95,10 +104,22 @@ feature -- Status setting
 	check_drag_and_drop_release (a_x, a_y: INTEGER) is
 			-- End transport if in drag and drop.
 			--| Releasing the left button ends drag and drop.
+			--| Only called when the left button is released after
+			--| initial drag and drop execution is started, possibly before
+			--| movement thresh hold has been passed.
 		do
+			original_x := -1
+			original_y := -1
+			awaiting_movement := False
 			if mode_is_drag_and_drop and press_action =
 				Ev_pnd_end_transport then
 				end_transport (a_x, a_y, 1)
+			else
+				-- If we have not started an actual drag and drop then make
+				-- `Current' the topmost window. We have to wait for the release
+				-- if `Current' has drag and drop enabled which is true if
+				-- check_drag_and_drop_release has been called.
+				top_level_window_imp.move_to_foreground
 			end
 		end
 
@@ -107,15 +128,25 @@ feature -- Status setting
 			--| This is executed every time the pointer is moved over
 			--| `Current' while pick/drag and drop is in process.
 		do
-			inspect
-				motion_action
-			when
-				Ev_pnd_execute
-			then
-				execute (a_x, a_y, 0, 0, 0.5, a_screen_x, a_screen_y)
+			if awaiting_movement then
+				if (original_x - a_x).abs > 3 or (original_y - a_y).abs > 3 then
+					real_start_transport (original_x, original_y, 1,
+						original_x_tilt, original_y_tilt, original_pressure,
+						a_screen_x + (original_x - a_x), a_screen_y +
+						(original_y - a_y))
+					awaiting_movement := False
+				end
 			else
-				check
-					disabled: motion_action = Ev_pnd_disabled
+				inspect
+					motion_action
+				when
+					Ev_pnd_execute
+				then
+					execute (a_x, a_y, 0, 0, 0.5, a_screen_x, a_screen_y)
+				else
+					check
+						disabled: motion_action = Ev_pnd_disabled
+					end
 				end
 			end
 		end
@@ -125,7 +156,30 @@ feature {EV_ANY_I} -- Implementation
 
 	start_transport (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
 		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
-			-- Initialize the pick and drop mechanism.
+			-- Initialize the pick/drag and drop mechanism.
+		do
+			if mode_is_pick_and_drop and a_button = 3 then
+				real_start_transport (a_x, a_y, a_button, a_x_tilt, a_y_tilt,
+					a_pressure, a_screen_x, a_screen_y)
+			elseif mode_is_pick_and_Drop and a_button = 1 then
+				top_level_window_imp.move_to_foreground
+			elseif mode_is_drag_and_drop and a_button = 1 then
+				if not awaiting_movement then
+						-- Store arguments so they can be passed to
+						-- real_start_transport.
+					original_x := a_x
+					original_y := a_y
+					original_x_tilt := a_x_tilt
+					original_y_tilt := a_y_tilt
+					original_pressure := a_pressure
+					awaiting_movement := True
+				end
+			end
+		end
+		
+	real_start_transport (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt,
+		a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Actually start the pick/drag and drop mechanism.
 		require else
 			not_already_transporting: not is_pnd_in_transport and
 				not is_dnd_in_transport 
@@ -133,8 +187,8 @@ feature {EV_ANY_I} -- Implementation
 			env: EV_ENVIRONMENT
 		do
 			if
-				mode_is_drag_and_drop and a_button = 1 or
-				mode_is_pick_and_drop and a_button = 3
+				(mode_is_drag_and_drop and a_button = 1) or
+				(mode_is_pick_and_drop and a_button = 3)
 				-- Check that transport can be started.
 				--| Drag and drop is always started with the left button press.
 				--| Pick and drop is always started with the right button press.
@@ -167,14 +221,15 @@ feature {EV_ANY_I} -- Implementation
 					pick_x := a_screen_x
 					pick_y := a_screen_y
 				end
-				set_capture_type (Capture_heavy)
-
-				enable_capture
-					-- Start the capture.
 				press_action := Ev_pnd_end_transport
 				motion_action := Ev_pnd_execute
-				pnd_stored_cursor_imp := cursor_imp
 					-- Store the previous cursor of `Current'.
+				pnd_stored_cursor := cursor_pixmap
+				set_capture_type (Capture_heavy)
+
+					-- Start the capture (as late as possible because 
+					-- we can't debug when the capture is enabled)
+				enable_capture
 			end
 		end
 
@@ -183,20 +238,22 @@ feature {EV_ANY_I} -- Implementation
 		local
 			env: EV_ENVIRONMENT
 			target: EV_PICK_AND_DROPABLE
-			standard_cursor: EV_CURSOR
-			cursor_code: EV_CURSOR_CODE
 		do
-			release_action := Ev_pnd_disabled
-			motion_action := Ev_pnd_disabled
-			erase_rubber_band
-				-- Remove the line drawn from source position to
-				-- Pointer.
-
+			io.putstring ("Transport Ended%N")
+				-- Remove the capture (as soon as possible because we can't
+				-- debug
+				-- when the capture is enabled)
 			disable_capture
-				-- Remove the capture
-			set_capture_type (Capture_normal)
+
 				-- Return capture type to capture_normal.
 				--| normal capture only works on the current windows thread.
+			set_capture_type (Capture_normal)
+
+			release_action := Ev_pnd_disabled
+			motion_action := Ev_pnd_disabled
+
+				-- Remove the line drawn from source position to Pointer.
+			erase_rubber_band
 
 			if
 				(a_button = 3 and is_pnd_in_transport) or
@@ -226,14 +283,12 @@ feature {EV_ANY_I} -- Implementation
 			pick_y := 0
 			last_pointed_target := Void
 				-- Assign `Void' to `last_pointer_target'.
-			if pnd_stored_cursor_imp /= Void then
-				set_pointer_style (pnd_stored_cursor_imp.interface)
-				-- Restore the cursor style of `Current' if necessary.
+			if pnd_stored_cursor /= Void then
+					-- Restore the cursor style of `Current' if necessary.
+				set_pointer_style (pnd_stored_cursor)
 			else
-				create cursor_code
-				create standard_cursor.make_with_code (cursor_code.standard)
-				set_pointer_style (standard_cursor)
-				-- Restore the standard cursor style.
+					-- Restore the standard cursor style.
+				set_pointer_style (Default_pixmaps.Standard_cursor)
 			end
 			press_action := Ev_pnd_start_transport
 			if pebble_function /= Void then
@@ -253,7 +308,7 @@ feature {EV_ANY_I} -- Implementation
 			list_item: EV_LIST_ITEM_IMP
 			tree: EV_TREE			
 			tree_imp: EV_TREE_IMP
-			tree_item: EV_TREE_ITEM_IMP
+			tree_item: EV_TREE_NODE_IMP
 			mcl: EV_MULTI_COLUMN_LIST
 			mcl_imp: EV_MULTI_COLUMN_LIST_IMP
 			mcl_item: EV_MULTI_COLUMN_LIST_ROW_IMP
@@ -398,19 +453,44 @@ feature {EV_ANY_I} -- Implementation
 		-- Hold the last position that the rubber band was drawn to.
 		--| Used to stop unecessary re-draw of the band when no movement.
 
-	cursor_imp: EV_CURSOR_IMP
+
+		-- Hold the values passed to start transport so when a drag and drop
+		-- actually starts, with real_start_transport,these can be passed
+		-- as arguments.
+	original_x, original_y: INTEGER
+	original_x_tilt, original_y_tilt, original_pressure: DOUBLE
+
+		-- Is a drag and drop awaiting mouse movement?
+	awaiting_movement: BOOLEAN
+
+
+	cursor_pixmap: EV_CURSOR
 			-- Cursor used on the widget.
 
-	pnd_stored_cursor_imp: EV_CURSOR_IMP
+	pnd_stored_cursor: EV_CURSOR
 			-- Cursor used on the widget before PND started.
 
-	set_pointer_style (value: EV_CURSOR) is
-			-- Make `value' the new cursor of the widget
+	set_pointer_style (new_cursor: EV_CURSOR) is
+			-- Make `new_cursor' the new cursor of the widget
+		local
+			wel_cursor: WEL_CURSOR
+			cursor_imp: EV_PIXMAP_IMP_STATE
 		do
-			if value /= Void then
-				cursor_imp ?= value.implementation
+			if new_cursor /= Void then
+				cursor_pixmap := new_cursor
 				if cursor_on_widget.item = Current then
-					cursor_imp.set
+					cursor_imp ?= cursor_pixmap.implementation
+					wel_cursor := cursor_imp.cursor
+					if wel_cursor = Void then
+						wel_cursor := cursor_imp.build_cursor
+					end
+--| FIXME ARNAUD:
+--| Windows 95: The width and height of the cursor must be the values returned
+--|	by the GetSystemMetrics  function for SM_CXCURSOR and SM_CYCURSOR. In
+--| addition, either the cursor bit depth must match the bit depth of the
+--| display or the cursor must be monochrome. 
+--| See MSDN:Platform SDK:Windows User Interface:SetCursor
+					wel_cursor.set
 				end
 			else
 				cursor_imp := Void
@@ -480,6 +560,11 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
+	top_level_window_imp: EV_WINDOW_IMP is
+			-- Top level window that contains `Current'.
+		deferred
+		end
+
 	set_heavy_capture is
 		deferred
 		end
@@ -546,6 +631,30 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/06/07 17:27:54  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.8.8.7  2000/05/30 16:30:00  rogers
+--| Removed unreferenced local variables.
+--|
+--| Revision 1.8.8.6  2000/05/16 20:19:45  king
+--| Converted to new tree item structure
+--|
+--| Revision 1.8.8.5  2000/05/15 21:57:57  rogers
+--| Drag and drop now will only execute after the mouse has been held down and
+--| moved at least three pixels in any one direction from the press position.
+--|
+--| Revision 1.8.8.4  2000/05/05 22:34:26  pichery
+--| Moved the mouse capture instruction to minimize
+--| impact while debugging.
+--|
+--| Revision 1.8.8.3  2000/05/04 04:20:45  pichery
+--| Replaced calls to EV_CURSOR_CODE with
+--| calls to EV_DEFAULT_PIXMAPS
+--|
+--| Revision 1.8.8.2  2000/05/03 19:09:14  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.29  2000/04/27 17:34:46  rogers
 --| More formatting and comments.
 --|

@@ -18,19 +18,12 @@ inherit
 
 	EV_DRAWABLE_CONSTANTS
 
+	EV_COLORIZABLE_I
+		redefine
+			interface
+		end
+
 feature -- Access
-
-	foreground_color: EV_COLOR is
-			-- Color used to draw primitives.
-			-- Default: black.
-		deferred
-		end
-
-	background_color: EV_COLOR is
-			-- Color used for erasing of canvas.
-			-- Default: white.
-		deferred
-		end
 
 	line_width: INTEGER is
 			-- Line thickness.
@@ -65,26 +58,6 @@ feature -- Access
 		end
 
 feature -- Element change
-
-	set_background_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `background_color'.
-		require
-			a_color_not_void: a_color /= Void
-		deferred
-		ensure
-			background_color_assigned: is_useable implies
-				interface.background_color.is_equal (a_color)
-		end
-
-	set_foreground_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `foreground_color'
-		require
-			a_color_not_void: a_color /= Void
-		deferred
-		ensure
-			foreground_color_assigned: is_useable implies
-				interface.foreground_color.is_equal (a_color)
-		end
 
 	set_line_width (a_width: INTEGER) is
 			-- Assign `a_width' to `line_width'.
@@ -330,6 +303,15 @@ end -- class EV_DRAWABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/06/07 17:27:45  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.13.2.2  2000/05/12 17:34:57  king
+--| Integrated ev_colorize
+--|
+--| Revision 1.13.2.1  2000/05/03 19:08:59  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.20  2000/04/11 23:17:49  oconnor
 --| replaced postconditions previously commented out
 --|

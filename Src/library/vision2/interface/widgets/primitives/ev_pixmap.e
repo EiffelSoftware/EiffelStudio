@@ -136,7 +136,7 @@ feature -- Status setting
 
 feature -- Duplication
 
-	copy (other: like Current) is 
+	copy (other: EV_PIXMAP) is 
 			-- Update `Current' to have same appearence as `other'.
 			-- (So as to satisfy `is_equal'.)
 		do
@@ -202,6 +202,15 @@ end -- class EV_PIXMAP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/06/07 17:28:14  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.13.4.2  2000/05/05 22:27:37  pichery
+--| Changed `copy' signature
+--|
+--| Revision 1.13.4.1  2000/05/03 19:10:12  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.33  2000/05/03 16:31:49  pichery
 --| Removed feature `make_with_default'
 --|

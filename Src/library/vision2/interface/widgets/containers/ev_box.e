@@ -66,9 +66,9 @@ feature -- Status report
 		require
 			has_an_item: has (an_item)
 		do
-			Result := implementation.is_child_expanded (an_item)
+			Result := implementation.is_item_expanded (an_item)
 		ensure
-			bridge_ok: Result = implementation.is_child_expanded (an_item)
+			bridge_ok: Result = implementation.is_item_expanded (an_item)
 		end
 
 feature -- Status setting
@@ -208,6 +208,15 @@ end -- class EV_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/06/07 17:28:12  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.16.4.2  2000/05/15 22:53:19  king
+--| set_child_expand->set_item_expand
+--|
+--| Revision 1.16.4.1  2000/05/03 19:10:07  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.24  2000/03/17 23:44:21  oconnor
 --| comments
 --|

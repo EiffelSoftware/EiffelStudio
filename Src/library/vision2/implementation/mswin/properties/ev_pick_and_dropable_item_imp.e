@@ -42,6 +42,11 @@ feature -- Access
 		deferred
 		end
 
+	top_level_window_imp: EV_WINDOW_IMP is
+		do
+			Result := parent_imp.top_level_window_imp
+		end
+
 	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
 		do
 			check
@@ -63,6 +68,9 @@ feature -- Access
 				pnd_original_parent.set_parent_source_false
 				pnd_original_parent.set_item_source (Void)
 				pnd_original_parent.set_item_source_false
+				if a_button = 1 then
+					top_level_window_imp.move_to_foreground
+				end
 				check
 					disabled: press_action = Ev_pnd_disabled
 				end
@@ -73,12 +81,17 @@ feature -- Access
 			-- End transport if in drag and drop.
 			--| Releasing the left button ends drag and drop.
 		do
+			original_x := -1
+			original_y := -1
+			awaiting_movement := False	
 			if mode_is_drag_and_drop and press_action =
 				Ev_pnd_end_transport then
 				end_transport (a_x, a_y, 1)
 				pnd_original_parent.set_parent_source_false
 				pnd_original_parent.set_item_source (Void)
 				pnd_original_parent.set_item_source_false
+			else
+				top_level_window_imp.move_to_foreground
 			end
 		end
 
@@ -141,6 +154,17 @@ end -- class EV_PICK_AND_DROPABLE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/06/07 17:27:54  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.6.2.2  2000/05/15 22:02:57  rogers
+--| Added top_level_window which is the window containing `Current'. Pnd_press
+--| and check_drag_and_drop_release both call move_to_foreground on
+--| top_level_ window as required.
+--|
+--| Revision 1.6.2.1  2000/05/03 19:09:14  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.6  2000/04/27 23:02:48  rogers
 --| Redefined check_drag_and_drop_release from
 --| EV_PICK_AND_DROPABLE_IMP.

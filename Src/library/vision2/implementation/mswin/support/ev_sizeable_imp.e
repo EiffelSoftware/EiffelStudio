@@ -186,54 +186,6 @@ feature -- Position
 			wel_move (new_x_position, new_y_position)
 		end
 
-feature -- Contract support
-
-	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
-			-- Check if the dimensions of the widget are set to 
-			-- the values given or the minimum values possible 
-			-- for that widget.
-		obsolete
-			"Do not use it."
-		local
-			temp: INTEGER
-		do
-			Result := (width = new_width or else width = internal_minimum_width) and then
-				  (height = new_height or else height = internal_minimum_height)
-		end
-
-	minimum_dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
-			-- Check if the dimensions of the widget are set to 
-			-- the values given or the minimum values possible 
-			-- for that widget.
-		obsolete
-			"Do not use it."
-		do
-			if new_width = -1 then
-				Result := new_height = internal_minimum_height
-			elseif new_height = -1 then
-				Result := new_width = internal_minimum_width
-			else
-				Result := new_width = internal_minimum_width
-					and new_height = internal_minimum_height
-			end
-		end		
-
-	position_set (new_x_position, new_y_position: INTEGER): BOOLEAN is
-			-- Check if the dimensions of the widget are set to 
-			-- the values given or the minimum values possible 
-			-- for that widget.
-		obsolete
-			"Do not use it."
-		do
-			if new_x_position = -1 then
-				Result := new_y_position = y_position
-			elseif new_y_position = -1 then
-				Result := new_x_position = x_position
-			else
-				Result := new_x_position = x_position and new_y_position = y_position
-			end
-		end
-
 feature -- Basic operation
 
 	set_move_and_size (a_x_position, a_y_position, a_width, a_height: INTEGER) is
@@ -381,8 +333,14 @@ feature {EV_ANY_I} -- deferred feature
 		end
 
 	is_show_requested: BOOLEAN is
-			-- Is the widget shown?
+			-- Is the widget to be shown?
 			-- Implemented by wel.
+		deferred
+		end
+
+	is_displayed: BOOLEAN is
+			-- Is widget visible to screen?
+			-- Implemented by WEL
 		deferred
 		end
 
@@ -434,6 +392,21 @@ end -- EV_SIZEABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/06/07 17:27:57  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.16.8.4  2000/06/05 20:48:55  manus
+--| Added `is_displayed' that tells if a window is shown (ie visible) on screen.
+--|
+--| Revision 1.16.8.3  2000/05/13 00:51:26  king
+--| Integrated with change to EV_DYNAMIC_LIST
+--|
+--| Revision 1.16.8.2  2000/05/03 22:13:03  pichery
+--| Removed some obsolete features
+--|
+--| Revision 1.16.8.1  2000/05/03 19:09:18  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.22  2000/03/14 20:01:08  brendel
 --| Renamed initialize to initialize_sizeable.
 --|

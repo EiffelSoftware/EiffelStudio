@@ -14,7 +14,7 @@ class
 inherit
 	EV_COMBO_BOX_I
 		undefine
-			selected_item
+			set_default_colors
 		redefine
 			interface,
 			initialize
@@ -46,7 +46,8 @@ inherit
 			on_middle_button_down,
 			on_left_button_down,
 			on_left_button_up,
-			pnd_press
+			pnd_press,
+			set_default_colors
 		redefine
 			set_minimum_width_in_characters,
 			set_default_minimum_size,
@@ -447,10 +448,7 @@ feature {NONE} -- Implementation
 		end
 
 	set_read_only is
-			-- Set the read-only state.
-		local
-			par_imp: WEL_WINDOW
-			a, b, c: INTEGER
+			-- Make `Current' read only.
 		do
 			if is_editable then
 				recreate_combo_box (Cbs_dropdownlist)
@@ -462,10 +460,7 @@ feature {NONE} -- Implementation
 		end
 
 	set_read_write is
-			-- Set the read-write state.
-		local
-			par_imp: WEL_WINDOW
-			a, b, c: INTEGER
+			-- Make `Current' read-writeable.
 		do
 			if not is_editable then
 				recreate_combo_box (Cbs_dropdown)
@@ -487,7 +482,6 @@ feature {NONE} -- Implementation
 			-- the contents of `ev_children'.
 		local
 			original_index: INTEGER
-			item_imp: EV_LIST_ITEM_IMP
 		do
 			original_index := ev_children.index
 			from
@@ -737,6 +731,20 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.78  2000/06/07 17:28:01  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.50.2.7  2000/05/30 16:01:14  rogers
+--| Removed unreferenced variables.
+--|
+--| Revision 1.50.2.6  2000/05/10 20:02:10  king
+--| Integrated with new list_item_list structure
+--|
+--| Revision 1.50.2.5  2000/05/04 00:19:57  rogers
+--| Comments and formatting.
+--|
+--| Revision 1.50.2.4  2000/05/03 22:35:04  brendel
+--|
 --| Revision 1.77  2000/05/03 20:13:27  brendel
 --| Fixed resize_actions.
 --|

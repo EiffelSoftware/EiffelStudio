@@ -202,20 +202,14 @@ feature {EV_ANY_I} -- Implementation
 
 	default_accept_cursor: EV_CURSOR is
 			-- Used in lieu of a user defined `accept_cursor'.
-		local
-			cursor_code: EV_CURSOR_CODE
 		once
-			create cursor_code
-			create result.make_with_code (cursor_code.standard)
+			Result := Default_pixmaps.Standard_cursor
 		end
 
 	default_deny_cursor: EV_CURSOR is
 			-- Used in lieu of a user defined `deny_cursor'.
-		local
-			cursor_code: EV_CURSOR_CODE
 		once
-			create cursor_code
-			create result.make_with_code (cursor_code.no)
+			Result := Default_pixmaps.No_cursor
 		end
 	
 	execute (
@@ -230,10 +224,6 @@ feature {EV_ANY_I} -- Implementation
 			deny_cursor_not_void: default_deny_cursor /= Void
 		local
 			target: EV_PICK_AND_DROPABLE
-			target_imp: EV_PICK_AND_DROPABLE_IMP
-			item_target: EV_ITEM
-			curs_code: EV_CURSOR_CODE
-			curs: EV_CURSOR
 		do
 			draw_rubber_band
 			pointer_x := a_screen_x
@@ -308,6 +298,14 @@ feature {EV_WIDGET}
         deferred
         end
 
+feature {NONE} -- Constants
+
+	Default_pixmaps: EV_DEFAULT_PIXMAPS is
+			-- Default pixmaps
+		once
+			create Result
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_PICK_AND_DROPABLE
@@ -347,6 +345,19 @@ end -- class EV_PICK_AND_DROPABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/06/07 17:27:44  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.13.4.5  2000/05/30 16:22:47  rogers
+--| Removed unreferenced local variables.
+--|
+--| Revision 1.13.4.4  2000/05/04 04:19:08  pichery
+--| Replaced calls to EV_CURSOR_CODE with
+--| calls to EV_DEFAULT_PIXMAPS
+--|
+--| Revision 1.13.4.3  2000/05/03 19:08:57  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.24  2000/04/25 00:56:46  oconnor
 --| added right click context menu UI for PND.
 --|

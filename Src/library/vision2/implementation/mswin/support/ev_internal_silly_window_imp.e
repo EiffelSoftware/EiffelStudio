@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 	 			p := cwin_get_wm_vscroll_hwnd (wparam, lparam)
 	 			if p /= default_pointer then
 	 				-- The message comes from a gauge,
- 					gauge ?= windows.item (p)
+ 					gauge ?= window_of_item (p)
 						if gauge /= Void then
 	 						check
  							gauge_exists: gauge.exists
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 	 			p := cwin_get_wm_hscroll_hwnd (wparam, lparam)
 	 			if p /= default_pointer then
 	 				-- The message comes from a gauge
-	 				gauge ?= windows.item (p)
+	 				gauge ?= window_of_item (p)
 	 				if gauge /= Void then
 	 					check
 	 						gauge_exists: gauge.exists
@@ -104,7 +104,6 @@ feature {NONE} -- Implementation
 			-- Wm_notify message
 		local
 			info: WEL_NMHDR
-			i_result: INTEGER
 			ww: WEL_WINDOW
 		do
 			!! info.make_by_pointer (cwel_integer_to_pointer (lparam))
@@ -171,6 +170,20 @@ end -- class EV_INTERNAL_SILLY_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/06/07 17:27:57  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.6.2.3  2000/05/30 16:29:10  rogers
+--| Removed unreferenced local variables.
+--|
+--| Revision 1.6.2.2  2000/05/09 00:49:41  manus
+--| Update with recent WEL changes:
+--| - replace `register_window (Current)' by `register_current_window'
+--| - replace `windows.item (p)' by `window_of_item (p)'
+--|
+--| Revision 1.6.2.1  2000/05/03 19:09:17  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.9  2000/04/28 21:52:43  brendel
 --| Removed reference to EV_STATUS_BAR_IMP.
 --|

@@ -34,6 +34,7 @@ feature -- Element change
 			-- Assign `a_tooltip' to `tooltip'.
 		require
 			tooltip: a_tooltip /= Void
+			a_tooltip_not_empty: not a_tooltip.empty
 		do
 			implementation.set_tooltip (a_tooltip)
 		ensure
@@ -76,6 +77,15 @@ end -- class EV_TOOLTIPABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.3  2000/06/07 17:28:07  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.2.2.2  2000/05/10 23:03:05  king
+--| Integrated inital tooltipable changes
+--|
+--| Revision 1.2.2.1  2000/05/03 19:10:03  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.2  2000/05/02 22:00:38  brendel
 --| Added CVS log.
 --|

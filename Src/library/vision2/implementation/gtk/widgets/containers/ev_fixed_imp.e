@@ -49,8 +49,15 @@ feature -- Status setting
 		local
 			w_imp: EV_WIDGET_IMP
 		do
-			w_imp ?= a_widget.implementation
-			C.gtk_fixed_move (c_object, w_imp.c_object, a_width, a_height)
+			check
+				to_be_implemented: False
+			end
+			--| FIXME this is the only correct implementation,
+			--| but GtkFixed does not have this function.
+			--| We should make a descendant of GtkFixed or not use
+			--| GtkFixed altogether.
+		--|	w_imp ?= a_widget.implementation
+		--|	C.gtk_fixed_resize (c_object, w_imp.c_object, a_width, a_height)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -91,6 +98,18 @@ end -- class EV_FIXED
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/06/07 17:27:37  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.6.4.4  2000/05/16 22:59:14  brendel
+--| Now uses GtkWidget's set_uposition to move widgets.
+--|
+--| Revision 1.6.4.3  2000/05/11 15:46:19  brendel
+--| Removed implementation of set_item_size. See class text.
+--|
+--| Revision 1.6.4.2  2000/05/03 21:58:17  brendel
+--| Implemented gtk_reorder_child.
+--|
 --| Revision 1.11  2000/05/02 18:34:22  brendel
 --| Corrected implementation.
 --|

@@ -12,6 +12,9 @@ deferred class
 
 inherit
 	EV_CONTAINER_I
+		redefine
+			interface
+		end
 
 feature -- Access
 
@@ -19,69 +22,100 @@ feature -- Access
 	Default_row_spacing: INTEGER is 0
 	Default_column_spacing: INTEGER is 0
 
-feature -- Status report
-
-	rows: INTEGER is
-			-- Number of rows
-		require
-		deferred
+	item: EV_WIDGET is
+		do
+			check Inapplicable: False end
 		end
 
-	columns: INTEGER is
-			-- Number of columns
-		require
+feature -- Status report
+
+	widget_count: INTEGER is
+			-- Number of widgets in table.
 		deferred
 		end
 
 	row_spacing: INTEGER is
 			-- Spacing between two rows
-		require
 		deferred
 		end
 	
 	column_spacing: INTEGER is
 			-- Spacing between two columns
-		require
+		deferred
+		end
+
+	border_width: INTEGER is
+			-- Spacing between edge of `Current' and items.
 		deferred
 		end
 
 feature -- Status settings
 
-	set_homogeneous (flag: BOOLEAN) is
-			-- Homogenous controls whether each object in
-			-- the box has the same size.
-		require
+	enable_homogeneous is
+			-- Set all item's sizes to that of the largest in the table.
+		deferred
+		end
+
+	disable_homogeneous is
+			-- Allow items to be of varying sizes.
 		deferred
 		end
 	
-	set_row_spacing (value: INTEGER) is
-			-- Spacing between two rows of the table
+	set_row_spacing (a_value: INTEGER) is
+			-- Spacing between two rows of the table.
 		require
-			positive_value: value >= 0
+			positive_value: a_value >= 0
 		deferred
 		end
 
-	set_column_spacing (value: INTEGER) is
-			-- Spacing between two columns of the table
+	set_column_spacing (a_value: INTEGER) is
+			-- Spacing between two columns of the table.
 		require
-			positive_value: value >= 0
+			positive_value: a_value >= 0
 		deferred
 		end
 
-	set_child_position (the_child: EV_WIDGET; top, left, bottom, right: INTEGER) is
-			-- Set the position and the size of the given child in
-			-- the table. `top', `left', `bottom' and `right' give the
-			-- one-based numbers of the cells covered by the child 
-			-- This feature must be called after the create of
-			-- the child, otherwise, the child won't appear in
-			-- the table.
+	set_border_width (a_value: INTEGER) is
+			-- Assign `a_value' to `border_width'.
 		require
-			the_child_not_void: the_child /= Void
-			good_child: the_child.parent = interface
-			bottom_larger_than_top: bottom > top
-			right_larger_than_left: right > left
+			positive_value: a_value >= 0
 		deferred
 		end
+
+	resize (a_column, a_row: INTEGER) is
+			-- Resize the table to.
+		require
+			a_column_positive: a_column >= 1
+			a_row_positive: a_row >= 1
+		deferred
+		end
+
+feature -- Element change
+
+	put (v: EV_WIDGET; a_column, a_row, column_span, row_span: INTEGER) is
+			-- Set `a_widgets' position in the
+			-- table to be (x1, y1) (x2, y2)
+		require
+			v_not_void: v /= Void
+			a_column_positive: a_column >= 1
+			a_row_positive: a_row >= 1
+			column_span_positive: column_span >= 1
+			row_span_positive: row_span >= 1
+		deferred
+		end
+
+	remove (v: EV_WIDGET) is
+			-- Remove `v' from the table if present.
+		require
+			v_not_void: v /= Void
+		deferred
+		end
+
+	extend (v: like item) is do check Inapplicable: False end end
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_TABLE
 
 end -- class EV_TABLE_I
 
@@ -106,6 +140,37 @@ end -- class EV_TABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/06/07 17:27:48  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.3.4.9  2000/06/06 23:37:41  rogers
+--| Added border_Width and set_border_wdith. Removed some redundent
+--| requires.
+--|
+--| Revision 1.3.4.8  2000/06/06 00:42:17  king
+--| Added resize
+--|
+--| Revision 1.3.4.7  2000/06/05 21:11:13  king
+--| Added widget_count, prune->remove
+--|
+--| Revision 1.3.4.6  2000/06/02 23:31:21  king
+--| Now inheriting from EV_CONTAINER
+--|
+--| Revision 1.3.4.5  2000/06/02 22:07:51  king
+--| New table implementation
+--|
+--| Revision 1.3.4.4  2000/05/31 22:30:18  king
+--| Corrected argument ordering in set_position_by_widget
+--|
+--| Revision 1.3.4.3  2000/05/31 00:32:11  king
+--| Corrected preconditions for set_position_by_widget
+--|
+--| Revision 1.3.4.2  2000/05/30 22:25:09  king
+--| Implemented to new structure
+--|
+--| Revision 1.3.4.1  2000/05/03 19:09:05  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.6  2000/03/21 16:52:53  oconnor
 --| removed invisible container
 --|

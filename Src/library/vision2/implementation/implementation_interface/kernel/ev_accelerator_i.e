@@ -15,6 +15,22 @@ inherit
 
 feature -- Access
 
+	parented: BOOLEAN
+			-- Does `Current' have a parent?
+
+	enable_parented is
+			-- Assign True to `parented'.
+		do
+			parented := True
+		end
+
+	disable_parented is
+			-- Assign False to `parented'.
+		do
+			parented := False
+		end
+
+
 	key: EV_KEY is
 			-- Key that has to pressed to trigger actions.
 		deferred
@@ -99,6 +115,15 @@ end -- class EV_ACCELERATOR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/06/07 17:27:43  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.4.4.2  2000/05/19 21:58:45  rogers
+--| Added parented, enable_parented and disable_parented.
+--|
+--| Revision 1.4.4.1  2000/05/03 19:08:55  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.4  2000/03/15 21:15:46  brendel
 --| Changed key_code to key like in interface.
 --|

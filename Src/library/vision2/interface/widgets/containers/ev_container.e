@@ -231,7 +231,7 @@ feature -- Contract support
 				if ll.has (l.item) then
 					Result := False
 				end
-				ll.extend (item)
+				ll.extend (l.item)
 				l.forth
 			end
 			if cs /= Void then
@@ -365,6 +365,15 @@ end -- class EV_CONTAINER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/06/07 17:28:12  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.12.4.2  2000/06/05 23:12:02  king
+--| Corrected items_unique invariant
+--|
+--| Revision 1.12.4.1  2000/05/03 19:10:07  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.32  2000/04/29 03:38:15  pichery
 --| Fixed bug in `recursive_has'
 --|

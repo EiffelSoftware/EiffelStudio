@@ -115,7 +115,7 @@ feature -- Status report
 		local
 			p: POINTER
 		do
-			p := C.c_gtk_frame_text (c_object)
+			p := C.gtk_frame_struct_label (c_object)
 			if p /= NULL then
 				create Result.make_from_c (p)
 				if Result.count = 0 then
@@ -167,6 +167,15 @@ end -- class EV_FRAME_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/06/07 17:27:37  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.7.4.2  2000/05/25 00:35:50  king
+--| Implemented external in Eiffel
+--|
+--| Revision 1.7.4.1  2000/05/03 19:08:48  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.12  2000/05/02 18:55:28  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

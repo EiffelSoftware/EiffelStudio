@@ -14,6 +14,29 @@ inherit
 			interface
 		end
 
+feature -- Access
+
+	is_raised: BOOLEAN is
+			-- Does `Current' appear raised?
+		deferred
+		end
+
+feature -- Status setting
+
+	enable_raised is
+			-- Set `is_raised' `True'.
+		deferred
+		ensure
+			is_raised: is_raised
+		end
+
+	disable_raised is
+			-- Set `is_raised' `False'.
+		deferred
+		ensure
+			is_lowered: not is_raised
+		end
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_SEPARATOR
@@ -43,6 +66,15 @@ end -- class EV_SEPARATOR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/06/07 17:27:50  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.5.4.2  2000/05/05 23:34:01  brendel
+--| Added is_raised, enable_raised and disable_raised.
+--|
+--| Revision 1.5.4.1  2000/05/03 19:09:07  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.7  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|

@@ -8,19 +8,17 @@ deferred class
 	EV_TOGGLE_BUTTON_I 
 
 inherit
-	EV_SELECT_BUTTON_I
+	EV_BUTTON_I
+		redefine
+			interface
+		end
+
+	EV_DESELECTABLE_I
 		redefine
 			interface
 		end
 	
 feature -- Status setting
-
-	disable_select is
-			-- Set `is_selected' `False'.
-		deferred
-		ensure
-			not_is_selected: not is_selected
-		end
 
 	toggle is
 			-- Invert the value of `is_selected'.
@@ -56,6 +54,15 @@ end -- class EV_TOGGLE_BUTTON_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/06/07 17:27:50  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.10.2.2  2000/05/09 20:31:08  king
+--| Integrated selectable/deselectable
+--|
+--| Revision 1.10.2.1  2000/05/03 19:09:07  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.14  2000/02/25 21:28:15  brendel
 --| Formatting.
 --|

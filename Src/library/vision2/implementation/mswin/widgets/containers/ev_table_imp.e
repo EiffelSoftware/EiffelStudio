@@ -18,21 +18,26 @@ class
 
 inherit
 	EV_TABLE_I
-
+		redefine
+			interface
+		end
+		
 	EV_CONTAINER_IMP
 		redefine
-			set_insensitive,
+			disable_sensitive,
 			child_added,
-			compute_minimum_width, 
+			compute_minimum_width,
 			compute_minimum_height,
-			compute_minimum_size
+			compute_minimum_size,
+			interface
 		end
-
+		
 	EV_WEL_CONTROL_CONTAINER_IMP
+		rename
+			make as ev_wel_control_container_make
 		redefine
-			make,
-			move_and_resize,
-			top_level_window_imp
+			top_level_window_imp,
+			wel_move_and_resize
 		end
 
 creation
@@ -40,17 +45,20 @@ creation
 
 feature {NONE} -- Initialization
 
-	make is
+	make (an_interface: like interface) is
 			-- Create a table widget with `par' as
 			-- parent.
 		local
 			fix: FIXED_LIST [INTEGER]
 		do
-			{EV_WEL_CONTROL_CONTAINER_IMP} Precursor
+			base_make (an_interface)
+			ev_wel_control_container_make
 			create ev_children.make (2)
+			create old_ev_children.make (2)
 			create_columns
 			create_rows
-			set_text ("EV_TABLE")
+			--|FIXME
+			--|set_text ("EV_TABLE")
 		end	
 
 	create_columns is
@@ -70,6 +78,11 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	count: INTEGER is
+		do
+			Result := ev_children.count
+		end
 
 	is_homogeneous: BOOLEAN is
 			-- Does children have the same size ?
@@ -109,12 +122,45 @@ feature -- Status report
 			Result := columns_minimum.count
 		end
 
+	widget_count: INTEGER is
+			-- Number of widgets in `Current'.
+		do
+			check
+				to_be_implemented: False
+			end
+		end
+
 	top_level_window_imp: EV_WINDOW_IMP
 			-- Top level window that contains the current widget.
 
+	is_control_in_window (hwnd_control: POINTER): BOOLEAN is
+			-- Is the control of handle `hwnd_control'
+			-- located inside the current window?
+		local	
+			loc_cursor: CURSOR
+		do
+		--|FIXME Implement
+		--	if hwnd_control = wel_item then
+		--		Result := True
+		--	else
+		--		loc_cursor := ev_children.cursor
+		--		from
+		--			ev_children.start
+		--		until
+		--			Result or ev_children.after
+		--		loop
+		--			Result := ev_children.item.
+		--				is_control_in_window (hwnd_control)
+		--			ev_children.forth
+		--		end
+		--		ev_children.go_to (loc_cursor)
+		--	end
+		end
+
+
 feature -- Status settings
 
-	set_insensitive (flag: BOOLEAN) is
+	disable_sensitive  is
 			-- Set current widget in insensitive mode if
 				-- `flag'.
 		local
@@ -129,29 +175,37 @@ feature -- Status settings
 				until
 					list.after
 				loop
-					list.item.widget.set_insensitive (flag)
+					list.item.widget.disable_sensitive
 					list.forth
 				end
 				list.go_to (cur)
 			end
-			{EV_CONTAINER_IMP} Precursor (flag)
+			Precursor
 		end
 
-	set_homogeneous (flag: BOOLEAN) is
+	enable_homogeneous is
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		do
-			rows_homogeneous := flag
-			columns_homogeneous := flag
-			notify_change (2 + 1)
+			rows_homogeneous := True
+			columns_homogeneous := True
+			notify_change (2 + 1, Current)
 		end
+
+	disable_homogeneous is
+			-- Disable homogeneous. Allow controls to take different sizes.
+		do
+			rows_homogeneous := False
+			columns_homogeneous := False
+		end
+		
 
 	set_rows_homogeneous (flag: BOOLEAN) is
 			-- Rows_homogenous controls whether each object in
 			-- the box has the same height.
 		do
 			rows_homogeneous := flag
-			notify_change (2)
+			notify_change (2, Current)
 		end
 
 	set_columns_homogeneous (flag: BOOLEAN) is
@@ -159,24 +213,63 @@ feature -- Status settings
 			-- the box has the same width.
 		do
 			columns_homogeneous := flag
-			notify_change (1)
+			notify_change (1, Current)
 		end
 	
 	set_row_spacing (value: INTEGER) is
 			-- Make `value' the new `row_spacing'.
 		do
 			row_spacing := value
-			notify_change (2)
+			notify_change (2, Current)
 		end
 
 	set_column_spacing (value: INTEGER) is
 			-- Make `value' the new `column_spacing'.
 		do
 			column_spacing := value
-			notify_change (1)
+			notify_change (1, Current)
 		end
 
-	set_child_position (the_child: EV_WIDGET; top, left, bottom, right: INTEGER) is
+	set_border_width (a_value: INTEGER) is
+			-- Spacing between edge of `Current' and items.
+		do
+			border_width := a_value
+			notify_change (2 + 1, Current)
+		end
+
+		put (v: like item; a_column, a_row, column_span, row_span: INTEGER) is
+				-- Set the position in one-based coordinates
+				-- 
+				--
+				--           1         2
+				--     +----------+---------+
+				--   1 |xxxxxxxxxxxxxxxxxxxx|
+				--     +----------+---------+
+				--   2 |          |         |
+				--     +----------+---------+
+				--
+				-- To describe the widget in the table as shown above
+				-- the corresponding coordinates would be (1, 1, 2, 1)
+			do
+				--add_child (v)
+				set_position_by_widget (v, a_column, a_row, column_span, row_span)
+			--	check
+			--		to_be_implemented: False
+			--	end
+			end
+
+		replace (v: like item) is
+			-- Replace `item' with `v'.
+			do
+				check
+					to_be_implemented: False
+				end
+			end
+
+			
+
+
+	set_position_by_widget (the_child: EV_WIDGET; a_x, a_y, a_width, a_height: INTEGER) is
 			-- Set the position and the size of the given child in
 			-- the table. `top', `left', `bottom' and `right' give the
 			-- zero-based numbers of the line where the child starts and ends.
@@ -193,12 +286,16 @@ feature -- Status settings
 			end
 
 			-- First, we change the number of cells of the table if it is too small.
-			if right > columns then
-				initialize_columns (right)
+			if a_x + a_width > columns + 1 then
+				initialize_columns (a_x + a_width - 1)
 			end
-			if bottom > rows then
-				initialize_rows (bottom)
+
+			if a_y + a_height > rows + 1 then
+				initialize_rows (a_y + a_height - 1)
 			end
+
+			--| FIXME Added by me
+			child_imp.set_parent (Current.interface)
 
 			-- Then, we check if the children has already been placed in the table,
 			-- if not, we create a table child with the given information.
@@ -208,12 +305,34 @@ feature -- Status settings
 				ev_children.extend (table_child)
 			end
 			-- The list start at one, then we change the attachment
-			table_child.set_attachment (top, left, bottom, right)
+			table_child.set_attachment (a_y - 1, a_x - 1, a_y + a_height - 1, a_x + a_width - 1)
 
 			-- We show the child and resize the container
 			child_imp.show
-			notify_change (1 + 2)
+			notify_change (1 + 2, Current)
 		end
+
+	resize (a_column, a_row: INTEGER) is
+			-- Resize the table to.
+		do
+			io.putstring ("Re-sizing")
+			-- Initialize the size of the rows
+				initialize_columns (a_column)
+				initialize_rows (a_row)
+		end
+
+	remove (v: EV_WIDGET) is
+			-- Remove `v' from `Current' if present.
+		local
+			widget_imp: EV_WIDGET_IMP
+		do
+			widget_imp ?= v.implementation
+			check
+				implementation_not_void: widget_imp /= Void
+			end
+			remove_child (widget_imp)
+		end
+
 
 feature -- Element change
 
@@ -230,9 +349,16 @@ feature -- Element change
 		local
 			tchild: EV_TABLE_CHILD_IMP
 		do
+				-- Retrieve the table child for `tchild'.
 			tchild := find_widget_child (child_imp)
+				-- Remove the table child from `ev_children'.
 			ev_children.prune_all (tchild)
-			notify_change (2 + 1)
+				-- Update changes.
+			notify_change (2 + 1, Current)
+				-- Update the parent of `child_imp'.
+			child_imp.set_parent (Void)
+				-- Call on_orphaned.
+			child_imp.on_orphaned
 		end
 
 	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
@@ -258,52 +384,6 @@ feature -- Element change
 			end
 		end
 
-feature -- Basic operations
-
-	propagate_background_color is
-			-- Propagate the current background color of the container
-			-- to the children.
-		local
-			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
-			cur: CURSOR
-		do
-			if not ev_children.empty then
-				list := ev_children
-				from
-					cur := list.cursor
-					list.start
-				until
-					list.after
-				loop
-					list.item.widget.set_background_color (background_color)
-					list.forth
-				end
-				list.go_to (cur)
-			end
-		end
-
-	propagate_foreground_color is
-			-- Propagate the current foreground color of the container
-			-- to the children.
-		local
-			list: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
-			cur: CURSOR
-		do
-			if not ev_children.empty then
-				list := ev_children
-				from
-					cur := list.cursor
-					list.start
-				until
-					list.after
-				loop
-					list.item.widget.set_foreground_color (foreground_color)
-					list.forth
-				end
-				list.go_to (cur)
-			end
-		end
-
 feature -- Assertions
 
 	add_child_ok: BOOLEAN is
@@ -323,10 +403,12 @@ feature -- Assertions
 	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
 			-- Has `a_child' been added properly?
 		do
-			Result := not a_child.shown
+			Result := not a_child.is_show_requested
 		end
 
 feature {NONE} -- Access features for implementation
+
+	old_ev_children: ARRAYED_LIST [EV_WIDGET_IMP]
 
 	ev_children: ARRAYED_LIST [EV_TABLE_CHILD_IMP]
 			-- List of the children of the tab.
@@ -350,13 +432,13 @@ feature {NONE} -- Access features for implementation
 
 feature {NONE} -- Resize Implementation
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
+	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
 			repaint: BOOLEAN) is
 			-- Move the window to `a_x', `a_y' position and
 			-- resize it with `a_width', `a_height'.
 		do
 			set_local_size (a_width, a_height)
-			move (a_x, a_y)
+			wel_move (a_x, a_y)
 		end
 
 	set_local_size (new_width, new_height: INTEGER) is
@@ -370,7 +452,7 @@ feature {NONE} -- Resize Implementation
 			if columns_value /= Void and rows_value /= Void then
 				adjust_children (columns_value, rows_value)
 			end
-			resize (new_width, new_height)
+			wel_resize (new_width, new_height)
 		end
 
 feature {NONE} -- Basic operations for implementation
@@ -545,17 +627,19 @@ feature {NONE} -- Implementation
 			-- Recalculate values depending on the options and the minimums. 
 		local
 			rate, total_rest, mark: INTEGER
-			total_size, count: INTEGER
+			total_size, count1: INTEGER
 		do
-			count := minimums.count
-			if count = 1 then
+			io.putstring("Compute values called.%N")
+			io.putstring ("     New size " + new_size.out + "%N")
+			count1 := minimums.count
+			if count1 = 1 then
 				create Result.make_filled (2)
 				Result.put_i_th (border_width, 1)
 				Result.put_i_th (minimums.first + spacing, 2)
 			else
-				create Result.make_filled (count + 1)
-				total_size := new_size + spacing - 2 * border_width
+				create Result.make_filled (count1 + 1)
 
+				total_size := new_size + spacing - 2 * border_width
 				-- In both case, homogeneous or not, the first line is after
 				-- the border width.
 				Result.start
@@ -565,8 +649,11 @@ feature {NONE} -- Implementation
 
 				-- Homogeneous : All the cells have the same size.
 				if homogeneous then
-					rate := total_size // count
-					total_rest := total_size \\ count
+						--|FIXME This has been added, how did the old algorithm work.
+						count1 := Result.count - 1
+
+					rate := total_size // count1
+					total_rest := total_size \\ count1
 					from
 					until
 						Result.after
@@ -585,8 +672,8 @@ feature {NONE} -- Implementation
 				-- Non homogeneous : we have to be carefull to the non expanded
 				-- children too.
 				else
-					rate := (total_size - total_sum) // count
-					total_rest := (total_size - total_sum) \\ count
+					rate := (total_size - total_sum) // count1
+					total_rest := (total_size - total_sum) \\ count1
 					from
 						minimums.start
 					until
@@ -678,7 +765,7 @@ feature {NONE} -- Implementation
 			cs, rs: INTEGER
 			cur: CURSOR
 		do
-			-- Initialize some local variables to be faster.
+				-- Initialize some local variables to be faster.
 			list := ev_children
 			if not list.empty then
 				cs := column_spacing
@@ -794,6 +881,10 @@ feature {NONE} -- Implementation
 			columns_sum := sum
 		end
 
+feature -- Implementation
+
+	interface: EV_TABLE
+
 invariant
 
 --	ev_children_not_void: ev_children /= Void
@@ -823,6 +914,39 @@ end -- class EV_TABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/06/07 17:27:59  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.18.8.8  2000/06/07 16:12:31  rogers
+--| Implemented remove, and fixed remove_child which is called by
+--| remove. Result from compute_values is created one larger to fix bug.
+--|
+--| Revision 1.18.8.7  2000/06/06 23:35:59  rogers
+--| Added set_border_width and some basic funcationality.
+--|
+--| Revision 1.18.8.6  2000/06/06 16:39:09  rogers
+--| Changes to comply with interface change. Added resize, remove and
+--| widget_count. All calls to notify change now also pass `Current'.
+--|
+--| Revision 1.18.8.5  2000/06/05 23:48:31  rogers
+--| Fixed parameters passed to table_child.set_attachment within
+--| Set_position_by_widget.
+--|
+--| Revision 1.18.8.4  2000/06/05 22:51:02  rogers
+--| Completely removed propagate_foreground_color and
+--| propagate_background_color. Put will now display a widget, although
+--| size and positioning is still not correct.
+--|
+--| Revision 1.18.8.3  2000/06/03 00:09:09  rogers
+--| Interface of table has changed again, so these changes comply with the
+--| interface so it will compile. Not implemented correctly yet.
+--|
+--| Revision 1.18.8.2  2000/06/02 16:33:53  rogers
+--| Will now compile under vision2. Does not currently work.
+--|
+--| Revision 1.18.8.1  2000/05/03 19:09:40  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.19  2000/02/14 11:40:43  oconnor
 --| merged changes from prerelease_20000214
 --|

@@ -120,7 +120,7 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
-			extra_width := 16
+			extra_width := 20
 			text_alignment := Text_alignment_left
 		end
 
@@ -149,9 +149,9 @@ feature -- Status setting
 			w,h: INTEGER
 		do
 			if pixmap_imp /= Void then
-				w := extra_width + pixmap_imp.width
-				h := 20 * pixmap_imp.height // 9
-			elseif text /= "" then
+				w := pixmap_imp.width + 8
+				h := pixmap_imp.height + 8
+			elseif text /= Void and then not text.empty then
 				fw ?= font.implementation
 				check
 					font_not_void: fw /= Void
@@ -163,7 +163,7 @@ feature -- Status setting
 				h := 7
 			end
 
-			-- Finaly, we set the minimum values.
+				-- Finaly, we set the minimum values.
 			internal_set_minimum_size (w, h)
 		end
 
@@ -240,9 +240,11 @@ feature -- Element change
 	set_pixmap (pix: EV_PIXMAP) is
 			-- Make `pix' the pixmap of the button.
 		do
-			{EV_PIXMAPABLE_IMP} Precursor (pix)
-			set_bitmap (pixmap_imp.bitmap)
-			set_default_minimum_size
+			if pix /= pixmap then
+				{EV_PIXMAPABLE_IMP} Precursor (pix)
+				set_bitmap (pixmap_imp.bitmap)
+				set_default_minimum_size
+			end
 		end
 
 	remove_pixmap is
@@ -364,6 +366,27 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.51  2000/06/07 17:28:01  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.35.8.6  2000/06/05 20:56:35  manus
+--| In `set_default_minimum_size' we have a fixed space of 4 pixels around a pixmap instead
+--| of a proportional distance.
+--| `set_pixmap' does set the pixmap only if it is different from the previous one.
+--|
+--| Revision 1.35.8.5  2000/05/07 03:41:56  manus
+--| Cosmetics.
+--| Fixed a bug because `text /= ""' was used, instead it should have been
+--| `text /= Void and then not text.empty'
+--|
+--| Revision 1.35.8.4  2000/05/05 22:31:16  pichery
+--| Changed `extra_width' value
+--|
+--| Revision 1.35.8.3  2000/05/04 00:18:26  king
+--| Added dummy enable_can_default
+--|
+--| Revision 1.35.8.2  2000/05/03 22:35:04  brendel
+--|
 --| Revision 1.50  2000/05/03 20:13:27  brendel
 --| Fixed resize_actions.
 --|

@@ -45,7 +45,7 @@ feature -- Element change
 			-- Assign `a_text' to `text'.
 		require
 			a_text_not_void: a_text /= Void
-			a_text_not_empty: a_text.count > 0
+			a_text_not_empty: not a_text.empty
 		deferred
 		ensure
 			text_assigned: text.is_equal (a_text)
@@ -87,6 +87,15 @@ end -- class EV_TEXTABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/06/07 17:27:45  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.7.4.2  2000/05/10 23:00:48  king
+--| Changed set_text precond to use empty
+--|
+--| Revision 1.7.4.1  2000/05/03 19:08:59  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.9  2000/02/22 18:39:42  oconnor
 --| updated copyright date and formatting
 --|

@@ -3,7 +3,7 @@ indexing
 		"Base class for simple scored line separator widgets.%N%
 		%See EV_HORIZONTAL_SEPARATOR and EV_VERTICAL_SEPARATOR"
 	status: "See notice at end of class"
-	keywords: "seperator, line, score"
+	keywords: "separator, line, score"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,6 +14,34 @@ inherit
 	EV_PRIMITIVE
 		redefine
 			implementation
+		end
+
+feature -- Access
+
+	is_raised: BOOLEAN is
+			-- Does `Current' appear raised?
+		do
+			Result := implementation.is_raised
+		ensure
+			bridge_ok: Result = implementation.is_raised
+		end
+
+feature -- Status setting
+
+	enable_raised is
+			-- Set `is_raised' `True'.
+		do
+			implementation.enable_raised
+		ensure
+			is_raised: is_raised
+		end
+
+	disable_raised is
+			-- Set `is_raised' `False'.
+		do
+			implementation.disable_raised
+		ensure
+			is_lowered: not is_raised
 		end
 
 feature {NONE} -- Implementation
@@ -44,6 +72,15 @@ end -- class EV_SEPARATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/06/07 17:28:13  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.4.4.2  2000/05/05 23:34:00  brendel
+--| Added is_raised, enable_raised and disable_raised.
+--|
+--| Revision 1.4.4.1  2000/05/03 19:10:10  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.7  2000/03/21 19:10:39  oconnor
 --| comments, formatting
 --|

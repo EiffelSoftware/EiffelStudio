@@ -174,6 +174,18 @@ end -- class EV_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.47  2000/06/07 17:27:29  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.36.4.3  2000/06/02 21:00:42  king
+--| Removed previous bug fix, reimplement in radio menu item
+--|
+--| Revision 1.36.4.2  2000/06/02 20:55:43  king
+--| Bug fix for select_actions firing on deselection
+--|
+--| Revision 1.36.4.1  2000/05/03 19:08:35  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.46  2000/05/02 18:55:19  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

@@ -104,7 +104,7 @@ feature -- Status setting
 				par, c_object,
 				$expand, $fill, $pad, $pack_type
 			)
-			allocation := C.c_gtk_allocation_struct_allocate
+			--allocation := C.c_--gtk_allocation_struct_allocate
 			C.set_gtk_allocation_struct_height (allocation, height)
 			if (value = -1) then
 				C.gtk_box_set_child_packing (
@@ -120,7 +120,7 @@ feature -- Status setting
 				C.set_gtk_allocation_struct_width (allocation, value)
 			end
 			C.gtk_widget_size_allocate (c_object, allocation)
-			C.c_gtk_allocation_struct_free (allocation)
+			--C.c_--gtk_allocation_struct_free (allocation)
 		end
 
 feature {NONE} -- Implementation
@@ -163,6 +163,15 @@ end -- class EV_STATUS_BAR_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/06/07 17:27:29  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.19.2.2  2000/05/25 00:26:47  king
+--| Removed c_* external calls
+--|
+--| Revision 1.19.2.1  2000/05/03 19:08:36  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.28  2000/05/02 18:55:19  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

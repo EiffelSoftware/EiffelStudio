@@ -15,29 +15,43 @@ inherit
 			interface
 		end
 
-	EV_TOOL_BAR_SELECT_BUTTON_IMP
+	EV_TOOL_BAR_BUTTON_IMP
 		redefine
-			interface
+			interface,
+			make
 		end
 
 create
 	make
+
+feature -- Initialization
+
+	make (an_interface: like interface) is
+		-- Create the tool-bar toggle button.
+		do
+			base_make (an_interface)
+			set_c_object (C.gtk_toggle_button_new)
+			C.gtk_button_set_relief (c_object, C.gtk_relief_none_enum)
+		end
 
 feature -- Status setting
 
 	disable_select is
 			-- Unselect the current button.
 		do
-			set_selected (False)
+			C.gtk_toggle_button_set_active (c_object, False)
+		end
+
+	enable_select is
+		do
+			C.gtk_toggle_button_set_active (c_object, True)
 		end	
 
-feature -- Implementation
+feature -- Status report
 
-	set_selected (flag: BOOLEAN) is
-			-- Select the current button if `flag', unselect it
-			-- otherwise.
+	is_selected: BOOLEAN is
 		do
-			C.gtk_toggle_button_set_active (c_object, flag)
+			Result := C.gtk_toggle_button_get_active (c_object)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -67,6 +81,18 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/06/07 17:27:29  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.8.2.3  2000/05/10 18:47:34  king
+--| Corrected make procedure
+--|
+--| Revision 1.8.2.2  2000/05/09 21:12:41  king
+--| Integrated changes to selectable/deselectable
+--|
+--| Revision 1.8.2.1  2000/05/03 19:08:36  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.11  2000/04/05 17:02:51  king
 --| Moved make, is_selected and enable_select in to tb select button imp
 --|

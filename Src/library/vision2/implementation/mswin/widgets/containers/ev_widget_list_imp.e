@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 			end
 			v_imp.wel_set_parent (wel_win)
 			v_imp.set_top_level_window_imp (top_level_window_imp)
-			notify_change (2 + 1)
+			notify_change (2 + 1, Current)
 			new_item_actions.call ([v])
 		end
 
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 			check
 				v_parent_imp_not_void: v_parent_imp /= Void
 			end
-			v_parent_imp.notify_change (2 + 1)
+			v_parent_imp.notify_change (2 + 1, Current)
 
 				-- Unlink the widget from its parent and
 				-- signal it.
@@ -131,6 +131,17 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/06/07 17:27:59  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.22.2.2  2000/06/05 21:08:04  manus
+--| Updated call to `notify_parent' because it requires now an extra parameter which is
+--| tells the parent which children did request the change. Usefull in case of NOTEBOOK
+--| for performance reasons (See EV_NOTEBOOK_IMP log for more details)
+--|
+--| Revision 1.22.2.1  2000/05/03 19:09:47  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.22  2000/05/01 19:36:41  pichery
 --| Added feature `is_control_in_window' used
 --| to determine if a certain control is contained

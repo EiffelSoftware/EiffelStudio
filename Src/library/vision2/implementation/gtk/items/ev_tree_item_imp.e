@@ -14,274 +14,13 @@ inherit
 			interface
 		end
 	
-	EV_ITEM_IMP
-		redefine
-			interface,
-			initialize,
-			minimum_width,
-			minimum_height
-		end
-
-	EV_TEXTABLE_IMP
+	EV_TREE_NODE_IMP
 		redefine
 			interface
 		end
 
-	EV_ITEM_LIST_IMP [EV_TREE_ITEM]
-		redefine
-			interface,
-			add_to_container,
-			remove_i_th,
-			reorder_child,
-			list_widget
-		end
-
 create
 	make
-
-feature {NONE} -- Initialization
-
-	make (an_interface: like interface) is
-			-- Create the tree item.
-		do
-			base_make (an_interface)
-			set_c_object (C.gtk_tree_item_new)
-		end
-
-	initialize is
-			-- Set up action sequence connection and `Precursor' initialization,
-			-- create item box to hold label and pixmap.
-		do
-			--{EV_PRIMITIVE_IMP} Precursor
-			pixmapable_imp_initialize
-			textable_imp_initialize
-			initialize_item_box
-			connect_signal_to_actions (
-				"collapse",
-				interface.collapse_actions,
-				Void
-			)
-			connect_signal_to_actions (
-				"expand",
-				interface.expand_actions,
-				Void
-			)
-			is_initialized := True
-			align_text_left
-		end
-
-	select_callback (a_tree_item: POINTER) is
-			-- Called when a tree item is selected
-		local
-			par_tree_imp: EV_TREE_IMP
-		do
-		 	par_tree_imp ?= parent_tree.implementation
-			par_tree_imp.select_callback (a_tree_item)
-		end
-
-	initialize_item_box is
-			-- Create and initialize item box.
-		local
-			box: POINTER
-		do
-			box := C.gtk_hbox_new (False, 0)
-			C.gtk_container_add (c_object, box)
-			C.gtk_widget_show (box)
-			C.gtk_box_pack_start (box, pixmap_box, False, False, 0)
-			C.gtk_widget_hide (pixmap_box)
-			C.gtk_box_pack_start (box, text_label, True, True, 2)
-			C.gtk_widget_hide (text_label)
-		ensure
-			item_box /= NULL
-		end
-
-feature -- Status report
-
-	is_selected: BOOLEAN is
-			-- Is the item selected ?
-		local
-			list_pointer: POINTER
-			sel_list: LINKED_LIST [EV_TREE_ITEM_IMP]
-		do
-			list_pointer := GTK_TREE_SELECTION (parent_imp.list_widget)
-			sel_list ?= gslist_to_eiffel (list_pointer)
-			Result := sel_list.has (Current)
-		end
-
-	is_expanded: BOOLEAN is
-			-- is the item expanded ?
-		do
-			Result := C.gtk_tree_item_struct_expanded (c_object).to_boolean
-		end
-
-feature -- Status setting
-
-	set_selected (a_flag: BOOLEAN) is
-			-- Select the item if `flag', unselect it otherwise.
-		do
-			--| FIXME IEK Does not function correctly.
-			check to_be_implemented: False end
-			if a_flag then
-				C.gtk_tree_item_select (c_object)
-			else
-				C.gtk_tree_item_deselect (c_object)
-			end
-		end
-	
-	set_expand (a_flag: BOOLEAN) is
-			-- Expand the item if `flag', collapse it otherwise.
-		do
-			if a_flag then
-				C.gtk_tree_item_expand (c_object)
-			else
-				C.gtk_tree_item_collapse (c_object)
-			end
-		end
-
-feature {NONE} -- Implementation
-
-	sub_tree: POINTER is
-		do
-			Result := C.gtk_tree_new
-				-- Connect events to items own tree.
-			real_signal_connect (
-				Result,
-				"select_child",
-				~select_callback, default_translate
-			)
-				--| Gtk bug means that select_child signal gets
-				--| fired on button click regardless.
-		end
-
-	add_to_container (v: like item) is
-			-- Add `v' to tree items tree.
-		local
-			item_imp: EV_TREE_ITEM_IMP
-			item_subtree: POINTER
-		do
-			item_imp ?= v.implementation
-			item_imp.set_parent_imp (Current)
-			C.gtk_widget_show (item_imp.c_object)
-			item_subtree := C.gtk_tree_item_struct_subtree (c_object)
-
-			if list_widget = NULL then
-				set_dummy_list_widget (sub_tree)
-			end
-
-			if item_subtree /= NULL then
-				C.gtk_tree_append (
-					item_subtree,
-					item_imp.c_object
-				)
-			else
-				C.gtk_tree_append (
-					dummy_list_widget,
-					item_imp.c_object
-				)
-				if parent /= Void then
-					C.gtk_tree_item_set_subtree (
-						c_object,
-						dummy_list_widget
-					)
-					set_dummy_list_widget (NULL)
-				end
-			end
-
-			if item_imp.dummy_list_widget /= NULL then
-				C.gtk_tree_item_set_subtree (
-					item_imp.c_object,
-					item_imp.dummy_list_widget
-				)
-				item_imp.set_dummy_list_widget (NULL)
-			end
-		end
-
-	remove_i_th (a_position: INTEGER) is
-			-- Remove item at `a_position'
-		local
-			item_imp: EV_TREE_ITEM_IMP
-		do	
-			item_imp ?= interface.i_th (a_position).implementation
-			item_imp.set_parent_imp (Void)
-			item_imp.set_dummy_list_widget (item_imp.list_widget)
-			if item_imp.list_widget /= NULL then
-				C.gtk_widget_ref (item_imp.list_widget)
-			end	
-			Precursor (a_position)
-		end
-
-	reorder_child (v: like item; a_position: INTEGER) is
-			-- Move `v' to `a_position' in container.
-		local
-			imp: EV_TREE_ITEM_IMP
-		do
-			imp ?= v.implementation
-			C.gtk_widget_ref (imp.c_object)
-			C.gtk_tree_remove_item (list_widget, imp.c_object)
-			C.gtk_widget_unref (imp.c_object)
-			C.gtk_tree_insert (
-				list_widget,
-				imp.c_object,
-				a_position - 1
-			)
-		end
-
-	item_box: POINTER is
-			-- GTKHbox in tree item.
-			-- Holds pixmap and label.
-		do
-			Result := C.gtk_container_children (c_object)
-			Result := C.g_list_nth_data (Result, 0)
-		end
-
-	gtk_reorder_child (a_container, a_child: POINTER; a_pos: INTEGER) is
-			-- Not needed in this class.
-		do
-			check dont_call: False end
-		end
-
-feature {NONE} -- Implementation
-
-	minimum_width, minimum_height: INTEGER
-		-- Redefined to avoid seg faults from invariant calling
-		-- invalid features for items.
-
-feature {EV_ITEM_LIST_IMP} -- Implementation
-
-	set_dummy_list_widget (list_wid: POINTER) is
-		do
-			dummy_list_widget := list_wid
-		end
-
-	dummy_list_widget: POINTER
-			-- Used to temporary store list widget if not in parent.
-
-	list_widget: POINTER is
-			-- Pointer to the items own gtktree.
-		do
-			Result := C.gtk_tree_item_struct_subtree (c_object)
-			if Result = NULL then
-				Result := dummy_list_widget
-			end
-		end
-
-feature {NONE} -- External  FIXME IEK Remove when macros are in gel.
-
-	gtk_tree_root_tree (a_tree: POINTER): POINTER is
-			-- Root tree of the item.
-		external
-			" C [macro <gtk/gtktree.h>]"
-		alias
-			"GTK_TREE_ROOT_TREE"
-		end
-
-	gtk_tree_selection (a_tree: POINTER): POINTER is
-			-- Selection of root tree.
-		external
-			" C [macro <gtk/gtktree.h>]"
-		alias
-			"GTK_TREE_SELECTION"
-		end
 
 feature {EV_ANY_I} -- Implementation
 
@@ -310,6 +49,27 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.56  2000/06/07 17:27:29  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.28.4.6  2000/05/16 16:58:41  oconnor
+--| moved bulk to ev_tree_node_i.e
+--|
+--| Revision 1.28.4.5  2000/05/10 23:59:58  king
+--| Made tooltipable
+--|
+--| Revision 1.28.4.4  2000/05/09 22:55:59  king
+--| Integrated selectable with tree item
+--|
+--| Revision 1.28.4.3  2000/05/08 22:13:16  king
+--| Corrected is_selecred, add comment to set_selected
+--|
+--| Revision 1.28.4.2  2000/05/05 22:18:47  king
+--| Implemented to use insert_i_th
+--|
+--| Revision 1.28.4.1  2000/05/03 19:08:36  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.55  2000/05/02 18:55:19  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

@@ -25,12 +25,9 @@ inherit
 			interface
 		end
 
-	EV_LIST_IMP
+	EV_LIST_ITEM_LIST_IMP
 		undefine
-			set_default_colors,
-			multiple_selection_enabled,
-			disable_multiple_selection,
-			enable_multiple_selection
+			set_default_colors
 		redefine
 			select_callback,
 			remove_i_th,
@@ -67,7 +64,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Connect action sequences to signals.
 		do
-			{EV_LIST_IMP} Precursor
+			{EV_LIST_ITEM_LIST_IMP} Precursor
 
 			--| We don't call EV_TEXT_FIELD_IMP Precursor as this only
 			--| adds two extra ones to what ev_list_imp Precursor calls
@@ -219,6 +216,15 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/06/07 17:27:39  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.16.4.2  2000/05/10 18:50:35  king
+--| Integrated ev_list_item_list
+--|
+--| Revision 1.16.4.1  2000/05/03 19:08:50  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.35  2000/04/20 18:07:41  oconnor
 --| Removed default_translate where not needed in sognal connect calls.
 --|

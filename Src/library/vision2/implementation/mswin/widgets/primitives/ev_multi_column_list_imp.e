@@ -42,7 +42,7 @@ inherit
 	WEL_LIST_VIEW
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			parent as wel_window_parent,
 			set_parent as wel_set_parent,
 			destroy as wel_destroy,
 			shown as is_displayed,
@@ -55,8 +55,9 @@ inherit
 			set_column_width as wel_set_column_width,
 			get_column_width as wel_get_column_width,
 			set_column_title as wel_set_column_title,
+			set_background_color as wel_set_background_color,
 			column_count as wel_column_count,
-			item as wel_item,
+			item as wel_window_item,
 			move as wel_move,
 			enabled as is_sensitive, 
 			width as wel_width,
@@ -112,7 +113,7 @@ feature {NONE} -- Initialization
 		end
 
 	initialize is
-			-- Initialize with precursors.
+			-- Initialize `Current'.
 		local
 			wel_column: WEL_LIST_VIEW_COLUMN
 		do
@@ -138,9 +139,9 @@ feature -- Access
 	selected_item: EV_MULTI_COLUMN_LIST_ROW is
 			-- Currently selected item.
 			-- Topmost selected item if multiple items are selected.
-			-- (For multiple selections see `selected_items')
+			-- (For multiple selections see `selected_items').
 			--
-			-- Void if there is no selection
+			-- Void if there is no selection.
 		local
 			local_selected_index: INTEGER
 		do
@@ -201,6 +202,7 @@ feature -- Status setting
 
 	clear_selection is
 			-- Make `selected_items' empty.
+			-- Unselect any selected items. 
 		local
 			c: like selected_items
 		do
@@ -222,7 +224,8 @@ feature -- Status setting
 				if has_headers then
 					set_style (default_style - Lvs_singlesel)
 				else
-					set_style (default_style - Lvs_singlesel + Lvs_nocolumnheader)
+					set_style (default_style - Lvs_singlesel +
+						Lvs_nocolumnheader)
 				end
 				multiple_selection_enabled := True
 			end
@@ -313,7 +316,7 @@ feature {NONE} -- Implementation
 		end
 
 	add_column is
-			-- Append new column at end.
+			-- Append new column to `Current' at end of columns.
 		local
 			wel_column: WEL_LIST_VIEW_COLUMN
 			col_width: INTEGER
@@ -370,15 +373,13 @@ feature -- Access
 
 	find_item_at_position (x_pos, y_pos: INTEGER):
 		EV_MULTI_COLUMN_LIST_ROW_IMP is
-			-- Find the item at the given position.
-			-- Position is relative to the multi-column list.
+			-- Find the item at the given position`x_pos', 1y_pos'
+			-- relative to `Current'.
 		local
 			pt: WEL_POINT
 			info: WEL_LV_HITTESTINFO
 		do
-			create pt.make (16, y_pos)
-				-- 16 is used as it will always be within the selected part
-				-- of the row.
+			create pt.make (x_pos, y_pos)
 			create info.make_with_point (pt)
 			cwin_send_message (wel_item, Lvm_hittest, 0, info.to_integer)
 			if flag_set (info.flags, Lvht_onitemlabel)
@@ -392,7 +393,7 @@ feature -- Status report
 
 	has_headers: BOOLEAN is
 			-- True if there is a header line to give titles
-			-- to columns
+			-- to columns.
 		do
 			Result := not flag_set (style, Lvs_nocolumnheader)
 		end
@@ -400,7 +401,7 @@ feature -- Status report
 feature -- Element change
 
 	clear_items is
-			-- Clear all the items of the list.
+			-- Clear all rows of `Current'.
 		local
 			c: like ev_children
 		do
@@ -425,7 +426,6 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 			list: LINKED_LIST [STRING]
 			litem: WEL_LIST_VIEW_ITEM
 			first_string: STRING
-			columns_to_add: INTEGER
 		do
 			list := item_imp.interface
 
@@ -459,7 +459,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 		end
 
 	move_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; an_index: INTEGER) is
-			-- Move the given item to the given position.
+			-- Move `item_imp' to position `an_index'.
 		local
 			bool: BOOLEAN
 		do
@@ -472,7 +472,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 		end
 
 	remove_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
-			-- Remove `item' from the list
+			-- Remove `item_imp' from `Current'.
 		local
 			an_index: INTEGER
 		do
@@ -482,13 +482,13 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 		end
 
 	internal_get_index (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP): INTEGER is
-			-- Return the index of `item' in the list.
+			-- Return the index of `item_imp' in `Current'.
 		do
 			Result := ev_children.index_of (item_imp, 1)
 		end
 
 	internal_is_selected (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP): BOOLEAN is
-			-- Is `item_imp' selected in the list?
+			-- Is `item_imp' selected in `Current'?
 		local
 			i: INTEGER
 		do
@@ -498,9 +498,9 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 		end
 
 	internal_select (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
-			-- Select `item_imp' in the list.
+			-- Select `item_imp' in `Current'.
 		local
-			i, flags: INTEGER
+			i: INTEGER
 			litem: WEL_LIST_VIEW_ITEM
 		do
 			i := ev_children.index_of (item_imp, 1) - 1
@@ -512,9 +512,9 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 		end
 
 	internal_deselect (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
-			-- Deselect `item_imp' in the list.
+			-- Deselect `item_imp' in `Current'.
 		local
-			i, flags: INTEGER
+			i: INTEGER
 			litem: WEL_LIST_VIEW_ITEM
 		do
 			i := ev_children.index_of (item_imp, 1) - 1
@@ -544,10 +544,10 @@ feature {NONE} -- Implementation, Pixmap handling
 
 	setup_image_list is
 			-- Create the image list and associate it
-			-- to the control if it's not already done.
+			-- to `Current' if not already associated.
 		do
 				-- Create image list with all images 16 by 16 pixels
-			create image_list.make_with_size (pixmaps_width, pixmaps_height)
+			create image_list.make_with_size (pixmaps_width , pixmaps_height)
 
 				-- Associate the image list with the multicolumn list.
 			set_small_image_list(image_list)
@@ -557,7 +557,7 @@ feature {NONE} -- Implementation, Pixmap handling
 
 	remove_image_list is
 			-- Destroy the image list and remove it
-			-- from the control if it's not already done.
+			-- from `Current'.
 		require
 			image_list_not_void: image_list /= Void
 		do
@@ -640,8 +640,7 @@ feature {NONE} -- Implementation, Pixmap handling
 	remove_row_pixmap (a_row: INTEGER) is
 			-- Remove any associated pixmap with row `a_row'.
 		local
-			image_index		: INTEGER
-			wel_row			: WEL_LIST_VIEW_ITEM
+			wel_row: WEL_LIST_VIEW_ITEM
 		do
 				-- Create the imagelist and associate it
 				-- to the control if it's not already done.
@@ -700,7 +699,8 @@ feature {NONE} -- WEL Implementation
 
 	internal_propagate_pointer_press
 		(event_id, x_pos, y_pos, button: INTEGER) is
-			-- Propagate `event_id' to the good item. 
+			-- Propagate `event_id' and `button' to item at position
+			-- `x_pos', `y_pos'.
 		local 
 			mcl_row: EV_MULTI_COLUMN_LIST_ROW_IMP
 			pt: WEL_POINT
@@ -709,9 +709,9 @@ feature {NONE} -- WEL Implementation
 			pt := client_to_screen (x_pos, y_pos)
 			if mcl_row /= Void and mcl_row.is_transport_enabled and not
 				parent_is_pnd_source then
-					mcl_row.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+					mcl_row.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 				elseif pnd_item_source /= Void then 
-					pnd_item_source.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+					pnd_item_source.pnd_press (x_pos, y_pos, button, pt.x, pt.y)
 				end
 			if mcl_row /= Void then 
 				mcl_row.interface.pointer_button_press_actions.call ([x_pos,
@@ -721,7 +721,7 @@ feature {NONE} -- WEL Implementation
 		end
 
 	relative_y (a_row: EV_MULTI_COLUMN_LIST_ROW_IMP): INTEGER is
-			-- `Result' is relative y_position of `a_row' to `Current'
+			-- `Result' is relative y_position of `a_row' to `Current'.
 		local
 			point: WEL_POINT
 		do
@@ -735,6 +735,7 @@ feature {NONE} -- WEL Implementation
 			-- message `msg'.
 		local
 			wel_window_pos: WEL_WINDOW_POS
+			paint_dc: WEL_PAINT_DC
 		do
 			inspect msg
 			when Wm_windowposchanging then
@@ -747,23 +748,102 @@ feature {NONE} -- WEL Implementation
 					cwel_integer_to_pointer(lparam)
 					)
 				on_wm_windowposchanged (wel_window_pos)
---|--------------------------------------------------------
---| FIXME ARNAUD: Handle This message to avoid flickering
---| while resizing.
---|--------------------------------------------------------
---			when Wm_erasebkgnd then
---				disable_default_processing
---				set_message_return_value (1)
+			when Wm_vscroll then
+				on_wm_vscroll
+			when Wm_erasebkgnd then
+				create paint_dc.make_by_pointer (Current,
+					cwel_integer_to_pointer(wparam))
+				on_erase_background (paint_dc, client_rect)
 			else
 				Result := Precursor (hwnd, msg, wparam, lparam)
 			end
 		end
+	
+	on_wm_vscroll is
+		do
+			smart_resize := False
+		end
+
+	smart_resize: BOOLEAN
+		-- Can we re-draw the background ourselves?
+		--| If `True' the background is re-drawn manually during
+		--| on_erase_background.
+		--| If `False' windows re-draws the background for us. 
+
+	column_widths_fill_client_area: BOOLEAN
+		-- Have the column widths been successfully recomputed?
+
+	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- Wm_erasebkgnd message.
+			--| If `smart_resize' then disable the default windows processing
+			--| as this causes flickering when showing `Current' while
+			--| re-sizing. We then draw all areas of `Current' that are not
+			--| automatically re-drawn, to avoid the flickering.
+		require
+			paint_dc_not_void: paint_dc /= Void
+			paint_dc_exists: paint_dc.exists
+			invalid_rect_not_void: invalid_rect /= Void
+		local
+			counter: INTEGER
+			rect1, rect2: WEL_RECT
+			brush: WEL_BRUSH
+			pixmap_line_length: INTEGER
+		do
+			if smart_resize and column_widths_fill_client_area then
+				create brush.make_solid (get_background_color)
+
+					-- Fill in bottom of `paint_dc' if not filled by children.
+				if top_index + visible_count + 1 > ev_children.count then
+					rect1 := get_item_rect (ev_children.count - 1)
+					create rect2.make (0, rect1.bottom, client_rect.right,
+						client_rect.bottom)
+					paint_dc.fill_rect (rect2, brush)
+				end
+					
+					-- Fill in right side of `paint_dc'.
+				create rect2.make (client_rect.left, client_rect.top,
+					client_rect.left + 2, client_rect.bottom)
+				paint_dc.fill_rect (rect2, brush)
+
+					-- Fill area of `paint_dc' just above `top_index' item.
+				rect1 := get_item_rect (top_index)
+				create rect2.make (client_rect.left, rect1.top,
+					client_rect.right, rect1.top - 2)	
+				paint_dc.fill_rect (rect2, brush)
+
+
+					-- Fill in areas of `paint_dc' around images contained.
+				if image_list /= Void then
+					from
+						counter:= top_index
+					until
+						counter = top_index + visible_count or
+						counter > top_index + ev_children.count - 1
+					loop
+						rect1 := get_item_rect (counter)
+						if pixmaps_width < column_width (1) then
+							pixmap_line_length := pixmaps_width + 2
+						else
+							pixmap_line_length := column_width (1)
+						end
+						create rect2.make (rect1.left, rect1.top +
+							pixmaps_height, pixmap_line_length, rect1.bottom)
+						paint_dc.fill_rect (rect2, brush)
+						counter := counter + 1
+					end
+				end
+				disable_default_processing
+				set_message_return_value (1)
+			end
+		end
 
 	update_last_column_width is
+			-- Update width of last column to fill remaining width of `Current'.
 		do
 			updating_column_width := True -- Set reentrance flag.
 
-			wel_set_column_width (Lvscw_autosize_useheader, wel_column_count - 1)
+			wel_set_column_width (Lvscw_autosize_useheader, wel_column_count
+				- 1)
 
 			updating_column_width := False -- remove reentrance flag.
 		end
@@ -785,10 +865,12 @@ feature {NONE} -- WEL Implementation
 			-- Increasing size width is handled in 
 			-- `on_wm_windowposchanged'.
 		do
+			smart_resize := True
 			if (not updating_column_width) and is_displayed then
 					-- window_pos.width holds the future
 					-- width of the window.
-				if window_pos.width - width < 0 then
+				if window_pos.width - wel_width < 0 then
+					column_widths_fill_client_area := True
 					update_last_column_width
 				end
 			end
@@ -808,8 +890,10 @@ feature {NONE} -- WEL Implementation
 			if (not updating_column_width) and is_displayed then
 					-- window_pos.width holds the future
 					-- width of the window.
+				column_widths_fill_client_area := True
 				update_last_column_width
 			end
+			smart_resize := False
 		end
 
 	on_notify (control_id: INTEGER; info: WEL_NMHDR) is
@@ -826,12 +910,13 @@ feature {NONE} -- WEL Implementation
 					-- A column header has changed. Its size may 
 					-- being changed. So we recompute the width 
 					-- of the last column.
+				smart_resize := False
 				update_last_column_width
 			end
 		end
 	
 	default_style: INTEGER is
-			-- Style of the current window.
+			-- Style of `Current'.
 		do
 			Result := Ws_child + Ws_visible + Ws_group 
 				+ Ws_tabstop + Ws_border + Ws_clipchildren
@@ -848,7 +933,8 @@ feature {NONE} -- WEL Implementation
 		end
 
 	on_lvn_itemchanged (info: WEL_NM_LIST_VIEW) is
-			-- An item has changed
+			-- An item has changed.
+			--| For example, one of the items has been selected or deselected.
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
@@ -875,21 +961,22 @@ feature {NONE} -- WEL Implementation
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
-			-- A key has been pressed
+			-- A key has been pressed.
 		do
 			{EV_PRIMITIVE_IMP} Precursor (virtual_key, key_data)
 			process_tab_key (virtual_key)
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is
-			-- List resized.
+			-- `Current' is being resized.
 		do
+			smart_resize:= True
 			{WEL_LIST_VIEW} Precursor (size_type, a_width, a_height)
 			{EV_PRIMITIVE_IMP} Precursor (size_type, a_width, a_height)
 		end
 
 	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
-			-- Mouse moved on list.
+			-- Mouse moved on `Current'.
 		local
 			mcl_row: EV_MULTI_COLUMN_LIST_ROW_IMP
 			pt: WEL_POINT
@@ -962,9 +1049,37 @@ feature {NONE}
 
 	interface: EV_MULTI_COLUMN_LIST
 
+feature -- Compiler bug workaround
+
+	wel_item: POINTER is
+			--|---------------------------------------------------------------
+			--| FIXME ARNAUD
+			--|---------------------------------------------------------------
+			--| Small hack in order to avoid a SEGMENTATION VIOLATION
+			--| with Compiler 4.6.008. To remove the hack, simply remove
+			--| this feature and replace "parent as wel_window_item" with
+			--| "item as wel_item" in the inheritance clause of this class
+			--|---------------------------------------------------------------
+		do
+			Result := wel_window_item
+		end
+
+	wel_parent: WEL_WINDOW is
+			--|---------------------------------------------------------------
+			--| FIXME ARNAUD
+			--|---------------------------------------------------------------
+			--| Small hack in order to avoid a SEGMENTATION VIOLATION
+			--| with Compiler 4.6.008. To remove the hack, simply remove
+			--| this feature and replace "parent as wel_window_parent" with
+			--| "parent as wel_parent" in the inheritance clause of this class
+			--|---------------------------------------------------------------
+		do
+			Result := wel_window_parent
+		end
+
 end -- class EV_MULTI_COLUMN_LIST_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -978,13 +1093,42 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|---------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.100  2000/06/07 17:28:01  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.31.4.13  2000/05/27 01:55:52  pichery
+--| Cosmetics
+--|
+--| Revision 1.31.4.12  2000/05/17 18:49:43  rogers
+--| Added column_widths_fill_client_area, used in on_erase_background to
+--| allow the control to automatically re-draw itself before the columns
+--| fill the width of the control.
+--|
+--| Revision 1.31.4.11  2000/05/16 22:25:05  rogers
+--| On_erase_background now fills the background with the correct brush color,
+--| instead of always white.
+--|
+--| Revision 1.31.4.10  2000/05/14 07:43:12  pichery
+--| Added 2 compiler bug workarounds (to be removed
+--| when the compiler has been fixed)
+--|
+--| Revision 1.31.4.9  2000/05/09 17:29:12  rogers
+--| Removed magic number from propagate_pointer_press, comments and formatting.
+--|
+--| Revision 1.31.4.7  2000/05/09 00:43:21  rogers
+--| Redefined on_erase_background so we now draw the background ourselves to
+--| avoid flickering when the window re-sizes. Added smart_resize and redefined
+--| on_wm_vscroll.
+--|
+--| Revision 1.31.4.4  2000/05/03 22:35:04  brendel
+--|
 --| Revision 1.99  2000/05/03 20:13:27  brendel
 --| Fixed resize_actions.
 --|

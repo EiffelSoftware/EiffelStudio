@@ -25,7 +25,6 @@ inherit
 		redefine
 			initialize
 		select
-			widget_parent_imp,
 			widget_parent_set,
 			widget_parent,
 			initialize
@@ -33,13 +32,12 @@ inherit
 
 	EV_VERTICAL_SEPARATOR_IMP
 		rename
-			parent_imp as vsep_parent_imp,
 			parent_set as vsep_parent_set,
 			initialize as vsep_initialize,
 			interface as vsep_interface,
 			parent as vsep_parent
 		undefine
-			has_parent
+			has_parent, button_press_switch
 		end		
 
 create
@@ -96,6 +94,18 @@ end -- class EV_TOOL_BAR_SEPARATOR_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/06/07 17:27:29  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.10.4.3  2000/06/06 00:41:55  king
+--| Undefining button_press_switch
+--|
+--| Revision 1.10.4.2  2000/05/16 16:23:48  king
+--| Removed refererence to now defunct parent_imp
+--|
+--| Revision 1.10.4.1  2000/05/03 19:08:36  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.14  2000/04/12 21:52:05  brendel
 --| Added to initialization: parent for pixmap box (to satisfy pixmapable
 --| invariants).

@@ -14,12 +14,17 @@ class
 	EV_TOGGLE_BUTTON
 
 inherit
-	EV_SELECT_BUTTON
+	EV_BUTTON
 		redefine
 			implementation,
 			create_implementation
 		end
-	
+
+	EV_DESELECTABLE
+		redefine
+			implementation
+		end
+
 create
 	default_create,
 	make_with_text,
@@ -27,14 +32,6 @@ create
 	make_for_test
 	
 feature -- Status setting
-
-	disable_select is
-			-- Set `is_selected' `False'.
-		do
-			implementation.disable_select
-		ensure
-			not_is_selected: not is_selected
-		end
 
 	toggle is
 			-- Change `is_selected'.
@@ -78,6 +75,18 @@ end -- class EV_TOGGLE_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/06/07 17:28:13  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.17.2.3  2000/05/10 00:01:42  king
+--| Corrected make to make toggle button instead of button
+--|
+--| Revision 1.17.2.2  2000/05/09 20:31:09  king
+--| Integrated selectable/deselectable
+--|
+--| Revision 1.17.2.1  2000/05/03 19:10:11  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.24  2000/03/21 19:10:39  oconnor
 --| comments, formatting
 --|

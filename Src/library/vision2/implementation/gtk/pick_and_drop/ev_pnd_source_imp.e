@@ -89,7 +89,6 @@ feature -- Implementation
 		local
 			env: EV_ENVIRONMENT
 			app_imp: EV_APPLICATION_IMP
-			curs_code: EV_CURSOR_CODE
 		do
 			create env
 			app_imp ?= env.application.implementation
@@ -105,12 +104,13 @@ feature -- Implementation
 			app_imp.on_pick (pebble)
 			interface.pick_actions.call ([a_x, a_y])
 
-			create curs_code
+			
 			if accept_cursor = Void then
-				create accept_cursor.make_with_code (curs_code.standard)
+				--| FIXME IEK
+				create accept_cursor--.make_with_code (curs_code.standard)
 			end
 			if deny_cursor = Void then
-				create deny_cursor.make_with_code (curs_code.no)
+				create deny_cursor--.make_with_code (curs_code.no)
 			end
 
 			pointer_x := a_screen_x
@@ -517,6 +517,18 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2000/06/07 17:27:32  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.8.2.7  2000/05/25 00:29:15  king
+--| Removed references to cursor code
+--|
+--| Revision 1.8.2.6  2000/05/04 18:34:44  king
+--| Made compilable with new cursor changes
+--|
+--| Revision 1.8.2.5  2000/05/03 19:08:39  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.25  2000/05/02 18:55:22  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

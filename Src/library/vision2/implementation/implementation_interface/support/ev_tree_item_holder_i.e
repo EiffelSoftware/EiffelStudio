@@ -6,14 +6,14 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_TREE_ITEM_LIST_I
+	EV_TREE_NODE_LIST_I
 
 inherit
-	EV_ITEM_LIST_I [EV_TREE_ITEM]
+	EV_ITEM_LIST_I [EV_TREE_NODE]
 
 Feature -- Status report
 
-	find_item_recursively_by_data (data: ANY): EV_TREE_ITEM is
+	find_item_recursively_by_data (data: ANY): EV_TREE_NODE is
 			-- If `data' contained in a tree item at any level then
 			-- assign this item to `Result'.
 		local
@@ -35,7 +35,7 @@ Feature -- Status report
 			go_to (temp_cursor)
 		end
 
-end -- class EV_TREE_ITEM_LIST_I
+end -- class EV_TREE_ITEM_NDOE_I
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -58,6 +58,15 @@ end -- class EV_TREE_ITEM_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/06/07 17:27:46  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.10.4.2  2000/05/16 16:59:07  oconnor
+--| updated for EV_TREE_NODE
+--|
+--| Revision 1.10.4.1  2000/05/03 19:09:00  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.15  2000/03/16 23:13:06  king
 --| Renamed class from holder to list
 --|

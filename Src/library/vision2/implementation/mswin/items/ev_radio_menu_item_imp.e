@@ -15,9 +15,8 @@ inherit
 			interface
 		end
 
-	EV_SELECT_MENU_ITEM_IMP
+	EV_MENU_ITEM_IMP
 		redefine
-			enable_select,
 			interface,
 			on_activate,
 			initialize
@@ -40,6 +39,10 @@ feature {NONE} -- Initialization
 			is_selected := True
 		end
 
+feature -- Status report
+
+	is_selected: BOOLEAN
+
 feature -- Status setting
 	
 	enable_select is
@@ -58,7 +61,10 @@ feature -- Status setting
 				end
 				radio_group.go_to (cur)
 			end
-			Precursor
+			is_selected := True
+			if has_parent then
+				parent_imp.check_item (id)
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -97,6 +103,15 @@ end -- class EV_RADIO_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/06/07 17:27:52  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.10.4.2  2000/05/09 21:51:33  king
+--| Implemented to new selectable abstract class
+--|
+--| Revision 1.10.4.1  2000/05/03 19:09:10  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.18  2000/02/25 20:29:59  brendel
 --| Does not need to redefine is_selected anymore, due to fix of
 --| EV_SELECT_MENU_ITEM_IMP.

@@ -9,78 +9,14 @@ deferred class
 	EV_TREE_ITEM_I
 
 inherit
-	EV_ITEM_I
+	EV_TREE_NODE_I
 		redefine
 			interface
 		end
 
-	EV_TREE_ITEM_LIST_I
+	EV_TREE_NODE_LIST_I
 		redefine
 			interface
-		end
-
-	EV_TEXTABLE_I
-		redefine
-			interface
-		end
-
-feature -- Access
-
-	parent_tree: EV_TREE is
-			-- Root tree that parent is held within.
-		local
-			parent_item: EV_TREE_ITEM_IMP
-		do
-			Result ?= parent
-			if Result = Void and then parent /= Void then
-				parent_item ?= parent.implementation
-				Result := parent_item.parent_tree
-			end
-		end
-
-feature -- Status report
-
-	is_selected: BOOLEAN is
-			-- Is the item selected?
-		require
-			in_tree: parent_tree /= Void
-		deferred
-		end
-
-	is_expanded: BOOLEAN is
-			-- is the item expanded ?
-		require
-			in_tree: parent_tree /= Void
-		deferred
-		end
-
-feature -- Status setting
-
-	set_selected (flag: BOOLEAN) is
-			-- Select the item if `flag', unselect it otherwise.
-		require
-			in_tree: parent_tree /= Void
-		deferred
-		ensure
- 			state_set: is_selected = flag
-		end
-
-	toggle is
-			-- Change the state of selection of the item.
-		require
-			in_tree: parent_tree /= Void
-		do
-			set_selected (not is_selected)
-		end
-
-	set_expand (flag: BOOLEAN) is
-			-- Expand the item if `flag', collapse it otherwise.
-		require
-			in_tree: parent_tree /= Void
-			is_parent: count > 0
-		deferred
-		ensure
-			state_set: is_expanded = flag
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -110,6 +46,21 @@ end -- class EV_TREE_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2000/06/07 17:27:41  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.22.4.4  2000/05/16 16:58:09  oconnor
+--| moved bulk to ev_tree_node_i.e
+--|
+--| Revision 1.22.4.3  2000/05/10 23:59:59  king
+--| Made tooltipable
+--|
+--| Revision 1.22.4.2  2000/05/09 22:56:00  king
+--| Integrated selectable with tree item
+--|
+--| Revision 1.22.4.1  2000/05/03 19:08:54  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.33  2000/04/07 22:10:00  brendel
 --| EV_SIMPLE_ITEM_I -> EV_ITEM_I & EV_TEXTABLE_I.
 --|
@@ -158,7 +109,6 @@ end -- class EV_TREE_ITEM_I
 --|
 --| Revision 1.22.2.2  1999/11/02 17:20:05  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

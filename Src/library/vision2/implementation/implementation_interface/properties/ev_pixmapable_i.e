@@ -34,6 +34,8 @@ feature -- Element change
 	remove_pixmap is
 			-- Make `pixmap' `Void'.
 		deferred
+		ensure
+			pixmap_removed: pixmap = Void
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -42,7 +44,7 @@ feature {EV_ANY_I} -- Implementation
 			-- Provides a common user interface to platform dependent
 			-- functionality implemented by `Current'.
 
-end -- class EV_PIXMAP_CONTAINER_I
+end -- class EV_PIXMAPABLE_I
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -65,6 +67,15 @@ end -- class EV_PIXMAP_CONTAINER_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/06/07 17:27:45  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.13.4.2  2000/05/09 20:30:38  king
+--| Added post cond to remove pixmap
+--|
+--| Revision 1.13.4.1  2000/05/03 19:08:59  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.15  2000/02/22 18:39:42  oconnor
 --| updated copyright date and formatting
 --|

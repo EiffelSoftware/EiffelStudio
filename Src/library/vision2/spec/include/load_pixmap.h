@@ -37,4 +37,8 @@ void c_ev_load_pixmap(
 		void (*LoadPixmapUpdateObject)(void*, unsigned int, unsigned int, unsigned int, unsigned int, void*, void*)
 		);
 
+//FIXME put this somewhere else!!
+
+unsigned long time_msec (void);
+
 #endif /* __LOAD_PIXMAP_H_ */

@@ -44,7 +44,7 @@ feature -- Access
 
 feature {EV_ANY, EV_ANY_I} -- Status report
 
-	is_child_expanded (child: EV_WIDGET): BOOLEAN is
+	is_item_expanded (child: EV_WIDGET): BOOLEAN is
 			-- Is `child' expanded to occupy available spare space.
 		require
 			has_child: interface.has (child)
@@ -82,7 +82,7 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 			has_child: interface.has (child)
 		deferred
 		ensure
-			flag_assigned: is_child_expanded (child) = flag
+			flag_assigned: is_item_expanded (child) = flag
 		end	
 		
 feature {EV_ANY, EV_ANY_I} -- Implementation
@@ -112,6 +112,15 @@ end -- class EV_BOX_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/06/07 17:27:48  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.15.4.2  2000/05/15 22:53:18  king
+--| set_child_expand->set_item_expand
+--|
+--| Revision 1.15.4.1  2000/05/03 19:09:04  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.17  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

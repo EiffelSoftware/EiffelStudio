@@ -37,6 +37,9 @@ feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP,
 				end_transport (a_x, a_y, a_button)
 				set_parent_source_false
 			else
+				if a_button = 1 then
+					top_level_window_imp.move_to_foreground
+				end
 				check
 					disabled: press_action = Ev_pnd_disabled
 				end
@@ -152,6 +155,10 @@ feature {EV_PICK_AND_DROPABLE_ITEM_IMP} -- Status report
 			-- Assign `False' to `item_is_pnd_source'.
 		do
 			item_is_pnd_source := False
+		end
+
+	top_level_window_imp: EV_WINDOW_IMP is
+		deferred
 		end
 
 	set_pointer_style (c: EV_CURSOR) is

@@ -52,9 +52,9 @@ feature -- Initialization
 			set_green (a_green)
 			set_blue (a_blue)
 		ensure
-			red_assigned: red = a_red
-			green_assigned: green = a_green
-			blue_assigned: blue = a_blue
+			red_assigned: (red - a_red).abs <= delta
+			green_assigned: (green - a_green).abs <= delta
+			blue_assigned: (blue - a_blue).abs <= delta
 		end
 
 feature -- Access
@@ -184,9 +184,9 @@ feature -- Element change
 			set_green (a_green)
 			set_blue (a_blue)
 		ensure
-			red_assigned: red = a_red
-			green_assigned: green = a_green
-			blue_assigned: blue = a_blue
+			red_assigned: (red - a_red).abs <= delta
+			green_assigned: (green - a_green).abs <= delta
+			blue_assigned: (blue - a_blue).abs <= delta
 		end
 
 	set_red (a_red: REAL) is
@@ -196,7 +196,7 @@ feature -- Element change
 		do
 			implementation.set_red (a_red)
 		ensure
-			red_assigned: red = a_red
+			red_assigned: (red - a_red).abs <= delta
 		end
 
 	set_green (a_green: REAL) is
@@ -206,7 +206,7 @@ feature -- Element change
 		do
 			implementation.set_green (a_green)
 		ensure
-			green_assigned: green = a_green
+			green_assigned: (green - a_green).abs <= delta
 		end
 
 	set_blue (a_blue: REAL) is
@@ -216,7 +216,7 @@ feature -- Element change
 		do
 			implementation.set_blue (a_blue)
 		ensure
-			blue_assigned: blue = a_blue
+			blue_assigned: (blue - a_blue).abs <= delta
 		end
 
 	set_alpha (an_alpha: REAL) is
@@ -304,7 +304,7 @@ feature -- Conversion
 		do
 			set_red_with_8_bit (an_8_bit_red)
 			set_green_with_8_bit (an_8_bit_green)
-			set_blue_with_8_bit (an_8_bit_green)
+			set_blue_with_8_bit (an_8_bit_blue)
 		ensure
 			red_assigned: red_8_bit = an_8_bit_red
 			green_assigned: green_8_bit = an_8_bit_green
@@ -326,7 +326,7 @@ feature -- Conversion
 		do
 			set_red_with_8_bit (an_8_bit_red)
 			set_green_with_8_bit (an_8_bit_green)
-			set_blue_with_8_bit (an_8_bit_green)
+			set_blue_with_8_bit (an_8_bit_blue)
 			set_alpha_with_8_bit (an_8_bit_alpha)
 		ensure
 			red_assigned: red_8_bit = an_8_bit_red
@@ -459,7 +459,7 @@ feature -- Conversion
 		do
 			set_red_with_16_bit (a_16_bit_red)
 			set_green_with_16_bit (a_16_bit_green)
-			set_blue_with_16_bit (a_16_bit_green)
+			set_blue_with_16_bit (a_16_bit_blue)
 			set_alpha_with_16_bit (a_16_bit_alpha)
 		ensure
 			red_assigned: red_16_bit = a_16_bit_red
@@ -593,27 +593,54 @@ feature -- Miscellaneous
 	test_widget: EV_WIDGET is
 			-- Visualization on pixmap.
 		local
-			p: EV_PIXMAP
+			p: EV_DRAWING_AREA
+			t: EV_TIMEOUT
+		do
+			create p
+			p.set_minimum_size (300, 100)
+			create t.make_with_interval (500)
+			t.actions.extend (~do_test (p, t))
+			Result := p
+		end
+
+	do_test (p: EV_DRAWABLE; t: EV_TIMEOUT) is
+		local
 			a_x, a_y: INTEGER
 			test_subject: EV_COLOR
+			d, e, f: REAL
+			i: INTEGER
 		do
-			create test_subject
-			create p.make_with_size (300, 100)
-			from a_y := 0 until a_y = 100 loop
-				from a_x := 0 until a_x = 300 loop
-					test_subject.set_red (
-						sine ((a_x + 100) / 300 * Pi).abs * a_y / 100)
-					test_subject.set_green (
-						sine (a_x / 300 * Pi).abs * a_y / 100)
-					test_subject.set_blue (
-						sine ((a_x - 100) / 300 * Pi).abs * a_y / 100)
-					p.set_foreground_color (test_subject)
-					p.draw_point (a_x, a_y)
-					a_x := a_x + 1
-				end
-				a_y := a_y + 1
+			i := t.count \\ 30
+			if i > 15 then
+				i := 30 - i 
 			end
-			Result := p
+			create test_subject
+			d := i / 15
+			i := t.count \\ 20
+			if i > 10 then
+				i := 20 - i 
+			end
+			e := i / 10
+			i := t.count \\ 14
+			if i > 7 then
+				i := 14 - i 
+			end
+			f := i / 7
+			from a_y := 0 until a_y >= 100 loop
+				from a_x := (t.count \\ 2)*8 until a_x >= 300 loop
+					test_subject.set_red (
+						sine ((a_x + 100) / 300 * Pi).abs * a_y / 100 * (1-f))
+					test_subject.set_green (
+						sine ((a_x / 300 * Pi).abs * a_y / 100) *d)
+					test_subject.set_blue (
+						sine ((a_x - 100) / 300 * Pi).abs * a_y / 100 * e)
+					p.set_foreground_color (test_subject)
+					--p.draw_point (a_x, a_y)
+					p.fill_rectangle (a_x, a_y, 8, 8)
+					a_x := a_x + 16
+				end
+				a_y := a_y + 8
+			end
 		end
 
 feature {EV_ANY_I, EV_DEFAULT_COLORS_IMP} -- Implementation
@@ -627,9 +654,12 @@ feature {EV_ANY_I, EV_DEFAULT_COLORS_IMP} -- Implementation
 			create {EV_COLOR_IMP} implementation.make (Current)
 		end
 
-	delta: REAL is 0.05
+	delta: REAL is
 			-- Amount by which two intensities can differ but still be
 			-- considered equal by `is_equal'.
+		do
+			Result := implementation.delta
+		end
 
 invariant
 --|FIXME uncomment alpha invariants
@@ -647,12 +677,12 @@ invariant
 --|	alpha_16_bit_within_range: alpha_16_bit >= 0 and alpha_16_bit <= Max_16_bit
 	rgb_24_bit_within_range: rgb_24_bit >= 0 and rgb_24_bit <= Max_24_bit
 --|	rgba_32_bit_within_range: rgba_32_bit >= 0 and rgba_32_bit <= Max_32_bit
-	red_16_bit_conversion: (red * Max_16_bit).rounded = red_16_bit
-	red_8_bit_conversion: (red * Max_8_bit).rounded = red_8_bit
-	green_16_bit_conversion: (green * Max_16_bit).rounded = green_16_bit
-	green_8_bit_conversion: (green * Max_8_bit).rounded = green_8_bit
-	blue_16_bit_conversion: (blue * Max_16_bit).rounded = blue_16_bit
-	blue_8_bit_conversion: (blue * Max_8_bit).rounded = blue_8_bit
+	red_16_bit_conversion: ((red * Max_16_bit) - red_16_bit).abs <= delta * Max_16_bit
+	red_8_bit_conversion: ((red * Max_8_bit) - red_8_bit).abs <= delta * Max_8_bit
+	green_16_bit_conversion: ((green * Max_16_bit) - green_16_bit).abs <= delta * Max_16_bit
+	green_8_bit_conversion: ((green * Max_8_bit) - green_8_bit).abs < delta * Max_8_bit
+	blue_16_bit_conversion: ((blue * Max_16_bit) - blue_16_bit).abs < delta * Max_16_bit
+	blue_8_bit_conversion: ((blue * Max_8_bit) - blue_8_bit).abs < delta * Max_8_bit
 --|	alpha_16_bit_conversions_consistent: (alpha * 65535).rounded = alpha_16_bit
 --|	alpha_8_bit_conversions_consistent: (alpha * 255).rounded = alpha_8_bit
 	name_not_void: name /= Void
@@ -680,9 +710,34 @@ end -- class EV_COLOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/06/07 17:28:06  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.18  2000/05/12 20:59:54  pichery
 --| Added feature `Lightness', `Hue' and `Saturation'.
 --| the "set" features will follow soon.
+--|
+--| Revision 1.9.2.7  2000/06/04 21:34:23  manus
+--| Fixed some bad RGC color assignment that set `blue' field with `green' instead of `blue'.
+--|
+--| Revision 1.9.2.6  2000/05/30 15:47:41  rogers
+--| Removed unreferenced variables from test_widget.
+--|
+--| Revision 1.9.2.5  2000/05/26 00:09:41  pichery
+--| Added lightness, hue and saturation.
+--|
+--| Revision 1.9.2.4  2000/05/16 22:32:04  oconnor
+--| reduce speed of test annimation
+--|
+--| Revision 1.9.2.3  2000/05/16 22:21:01  rogers
+--| Added delta. Assertions and postconditions now check that the colors are
+--| accurate to within delta.
+--|
+--| Revision 1.9.2.2  2000/05/05 23:11:55  oconnor
+--| more tests
+--|
+--| Revision 1.9.2.1  2000/05/03 19:10:00  oconnor
+--| mergred from HEAD
 --|
 --| Revision 1.17  2000/05/02 18:26:12  oconnor
 --| Optimised copy

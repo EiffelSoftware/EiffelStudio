@@ -40,8 +40,18 @@ feature {NONE} -- Initialization
 			-- Create an empty drawing area.
 		do
 			base_make (an_interface)
-			set_c_object (C.gtk_drawing_area_new)
-			C.gtk_widget_add_events (c_object, C.Gdk_pointer_motion_mask_enum)
+			set_c_object (C.gtk_event_box_new)
+
+			drawing_area_widget := C.gtk_drawing_area_new
+			C.gtk_widget_show (drawing_area_widget)
+			C.gtk_container_add (c_object, drawing_area_widget)
+
+				-- Use special hint mask to prevent mouse motion
+				-- events for every mouse movement.
+			C.gtk_widget_add_events (c_object, C.GDK_POINTER_MOTION_HINT_MASK_ENUM)
+			C.gtk_widget_add_events (drawing_area_widget, C.GDK_POINTER_MOTION_HINT_MASK_ENUM)
+			C.gtk_widget_add_events (c_object, C.GDK_EXPOSURE_MASK_ENUM)
+			C.gtk_widget_add_events (drawing_area_widget, C.GDK_EXPOSURE_MASK_ENUM)
 	
 			gc := C.gdk_gc_new (C.gdk_root_parent)
 			gcvalues := C.c_gdk_gcvalues_struct_allocate
@@ -54,7 +64,8 @@ feature {NONE} -- Initialization
 			-- and `Precursor' initialization.
 		do
 			Precursor
-			connect_signal_to_actions (
+			real_connect_signal_to_actions (
+				drawing_area_widget,
 				"expose-event",
 				interface.expose_actions,
 				default_translate
@@ -93,11 +104,14 @@ feature {NONE} -- Implementation
 			-- do nothing
 		end
 
+	drawing_area_widget: POINTER
+		-- Pointer to gtkdrawingarea as c_object is an event box.
+
 feature {EV_DRAWABLE_IMP} -- Implementation
 
 	drawable: POINTER is
 		do
-			Result := C.gtk_widget_struct_window (c_object)
+			Result := C.gtk_widget_struct_window (drawing_area_widget)
 		end
 
 end -- class EV_DRAWING_AREA_IMP
@@ -123,6 +137,22 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/06/07 17:27:39  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.6.4.5  2000/06/02 22:49:43  king
+--| Fixed expose actions calling
+--|
+--| Revision 1.6.4.4  2000/06/01 22:05:36  king
+--| Inheriting from event box to catch mouse events
+--|
+--| Revision 1.6.4.3  2000/05/09 16:40:54  brendel
+--| Changed motion_mask to motion_hint_mask which prevents generation of mouse
+--| motion events when one is still being processed.
+--|
+--| Revision 1.6.4.2  2000/05/03 19:08:50  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.12  2000/04/04 20:54:08  oconnor
 --| updated signal connection for new marshaling scheme
 --|

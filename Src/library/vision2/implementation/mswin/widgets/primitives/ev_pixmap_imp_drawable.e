@@ -19,6 +19,9 @@ inherit
 		end
 
 	EV_PIXMAP_IMP_STATE
+		redefine
+			interface
+		end
 
 	EV_DRAWABLE_IMP
 		export
@@ -298,7 +301,7 @@ feature {
 		} -- Implementation
 
  	interface: EV_PIXMAP
- 			-- Interface for the bridge pattern.
+			-- Interface for the bridge pattern.
 
 	internal_bitmap: WEL_BITMAP
 			-- Bitmap mapped onto the current DC and
@@ -369,7 +372,6 @@ feature {NONE} -- Private Implementation
 			-- display on the screen.
 		local
 			widget_pixmap: EV_PIXMAP_IMP_WIDGET
-			t: EV_DRAWING_AREA_IMP
 		do
 			create widget_pixmap.make_with_drawable(Current)
 			interface.replace_implementation(widget_pixmap)
@@ -676,23 +678,6 @@ feature -- Delegated features
 			Result := interface.implementation.pointer_style
 		end
 
-	position_set (
-			new_x: INTEGER
-			new_y: INTEGER
-		): BOOLEAN is
-			-- Check if the dimensions of the widget are set to 
-			-- the values given or the minimum values possible 
-			-- for that widget.
-			-- When the widget is not shown, the result is -1
-		obsolete "don't use it"
-		do
-			promote_to_widget
-			Result := interface.implementation.position_set (
-				new_x,
-				new_y
-				)
-		end
-
 	remove_tooltip is
 			-- Set `tooltip' to `Void'.
 		do
@@ -831,6 +816,27 @@ end -- class EV_PIXMAP_IMP_DRAWABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/06/07 17:28:02  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.6.2.5  2000/05/30 16:25:57  rogers
+--| Removed unreferenced local variables.
+--|
+--| Revision 1.6.2.4  2000/05/13 00:51:28  king
+--| Integrated with change to EV_DYNAMIC_LIST
+--|
+--| Revision 1.6.2.3  2000/05/04 04:23:01  pichery
+--| Adapted inheritance clause since
+--| EV_PIXMAP_IMP_STATE now
+--| define `interface'.
+--|
+--| Revision 1.6.2.2  2000/05/03 22:13:59  pichery
+--| Removed some obsolete features
+--|
+--|
+--| Revision 1.6.2.1  2000/05/03 19:09:53  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.6  2000/05/03 04:36:40  pichery
 --| Removed parameter in feature `set_with_default'.
 --|

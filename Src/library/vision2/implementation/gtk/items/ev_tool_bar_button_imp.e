@@ -12,6 +12,8 @@ class
 
 inherit
 	EV_TOOL_BAR_BUTTON_I
+		redefine
+			interface
 		select
 			interface
 		end
@@ -22,7 +24,8 @@ inherit
 		undefine
 			set_pixmap,
 			remove_pixmap,
-			parent
+			parent,
+			pointer_over_widget
 		redefine
 			initialize
 		end
@@ -30,19 +33,22 @@ inherit
 	EV_BUTTON_IMP
 		rename
 			interface as button_interface,
-			parent_imp as button_parent_imp,
 			parent_set as button_parent_set,
 			parent as button_parent
 		undefine
-			has_parent
+			has_parent, button_press_switch
 		redefine
 			make,
 			initialize,
 			initialize_button_box
 		select
-			button_parent_imp,
 			button_parent_set,
 			button_parent
+		end
+
+	EV_TOOLTIPABLE_IMP
+		redefine
+			interface
 		end
 
 create
@@ -130,6 +136,10 @@ feature -- Status report
 			end 
 		end
 
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_TOOL_BAR_BUTTON
+
 end -- class EV_TOOL_BAR_BUTTON_IMP
 
 --!-----------------------------------------------------------------------------
@@ -153,6 +163,24 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.25  2000/06/07 17:27:29  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.15.2.5  2000/06/06 00:40:41  king
+--| Undefined button_press_switch
+--|
+--| Revision 1.15.2.4  2000/06/01 22:03:38  king
+--| Using pointer over widget from EV_BUTTON_IMP
+--|
+--| Revision 1.15.2.3  2000/05/16 16:23:48  king
+--| Removed refererence to now defunct parent_imp
+--|
+--| Revision 1.15.2.2  2000/05/10 23:02:54  king
+--| Integrated inital tooltipable changes
+--|
+--| Revision 1.15.2.1  2000/05/03 19:08:36  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.24  2000/05/02 18:55:19  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

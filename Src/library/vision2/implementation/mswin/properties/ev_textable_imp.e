@@ -16,10 +16,8 @@ feature -- Access
 	text: STRING is
 			-- Text displayed in `Current'.
 		do
-			Result := wel_text
-			if Result.empty then
-				Result := Void
-			else
+			if text_length > 0 then
+				Result := wel_text
 				unescape_ampersands (Result)
 			end
 		end 
@@ -50,6 +48,13 @@ feature {NONE} -- Implementation
 		deferred
 		ensure
 			not_void: Result /= Void
+		end
+
+	text_length: INTEGER is
+			-- Length of text
+		deferred
+		ensure
+			positive_length: Result >= 0
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -178,6 +183,20 @@ end -- class EV_TEXTABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/06/07 17:27:56  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.12.4.2  2000/06/05 16:50:40  manus
+--| Added `text_length' in `EV_TEXTABLE_IMP' to improve the performance of its
+--| counterpart `text' in order to reduce creation of useless empty strings.
+--|
+--| Revision 1.12.4.1  2000/05/03 19:09:16  oconnor
+--| mergred from HEAD
+--|
+--| $Log$
+--| Revision 1.24  2000/06/07 17:27:56  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.23  2000/04/10 18:25:52  brendel
 --| Reverted to old imp of `text'.
 --|

@@ -12,116 +12,143 @@ class
 
 inherit
 	EV_TABLE_I
-
-	EV_INVISIBLE_CONTAINER_IMP
 		redefine
-			add_child,
-			child_added
+			interface
 		end
 
+	EV_CONTAINER_IMP
+		redefine
+			interface
+		end
 create
 	make
 
 feature {NONE} -- Implementation
 
-	make is
+	make (an_interface: like interface) is
                         -- Create a table widget with `par' as
                         -- parent.
 		do
-			widget := gtk_table_new (0, 0, Default_homogeneous)
+			base_make (an_interface)
+			set_c_object (C.gtk_table_new (0, 0, Default_homogeneous))
 				-- table created with 0 row and 0 column.
 		end
 
 feature -- Status report
 
-	rows: INTEGER is
-			-- Number of rows
+	widget_count: INTEGER is
 		do
-			Result := c_gtk_table_rows (widget)
-		end
-
-	columns: INTEGER is
-			-- Number of columns
-		do
-			Result := c_gtk_table_columns (widget)
+			Result := C.g_list_length (C.gtk_container_children (c_object))
 		end
 
 	row_spacing: INTEGER is
-			-- Spacing between two rows
 		do
-			Result := c_gtk_table_row_spacing (widget)
+			Result := c_gtk_table_row_spacing (c_object)
 		end
-	
+
 	column_spacing: INTEGER is
-			-- Spacing between two columns
 		do
-			Result := c_gtk_table_column_spacing (widget)
+			Result := c_gtk_table_column_spacing (c_object)
+		end
+
+	resize (a_column, a_row: INTEGER) is
+		do
+			C.gtk_table_resize (c_object, a_row, a_column)
 		end
 
 feature -- Status settings
 
-	set_homogeneous (flag: BOOLEAN) is
+	enable_homogeneous is
 			-- Homogenous controls whether each object in
 			-- the box has the same size.
 		do
-			gtk_table_set_homogeneous (GTK_TABLE (widget), flag)
+			C.gtk_table_set_homogeneous (c_object, True)
 		end
-	
-	set_row_spacing (value: INTEGER) is
+
+	disable_homogeneous is
+			-- Homogenous controls whether each object in
+			-- the box has the same size.
+		do
+			C.gtk_table_set_homogeneous (c_object, False)
+		end
+
+	set_row_spacing (a_value: INTEGER) is
 			-- Spacing between two rows of the table
 		do
-			gtk_table_set_row_spacings (GTK_TABLE (widget), value)
+			C.gtk_table_set_row_spacings (c_object, a_value)
 		end
 
-	set_column_spacing (value: INTEGER) is
+	set_column_spacing (a_value: INTEGER) is
 			-- Spacing between two columns of the table
 		do
-			gtk_table_set_col_spacings (GTK_TABLE (widget), value)
+			C.gtk_table_set_col_spacings (c_object, a_value)
 		end
 
-	set_child_position (the_child: EV_WIDGET; top, left, bottom, right: INTEGER) is
-			-- Set the position and the size of the given child in
-			-- the table. `top', `left', `bottom' and `right' give the
-			-- zero-based coordinates of the child in the
-			-- grid. 
+	put (v: EV_WIDGET; a_x, a_y, column_span, row_span: INTEGER) is
+			-- Set the position of the `v' in the table.
 		local
-			child_imp: EV_WIDGET_IMP
+			item_imp: EV_WIDGET_IMP
 		do
-			child_imp ?= the_child.implementation
-			gtk_table_attach_defaults (GTK_TABLE(widget), child_imp.vbox_widget,
-						left, right, top, bottom)
-
-			-- we set the spacings if needed. This function has been create
-			-- because of a GTK bug: when adding a new child in the table,
-			-- the spacings are not set for it. As soon as the bug is fixed, we
-			-- can erase this function.
-			c_gtk_table_set_spacing_if_needed (GTK_TABLE (widget))		
-
-			-- Sets the resizing options.
-			child_packing_changed (child_imp) 
+			item_imp ?= v.implementation
+			C.gtk_table_attach_defaults (
+					c_object,
+					item_imp.c_object,
+					a_x - 1,
+					a_x - 1 + column_span,
+					a_y - 1,
+					a_y - 1 + row_span
+			)
 		end
 
 feature -- Element change
 
-	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite. Several children
-			-- possible.
+	remove (v: EV_WIDGET) is
+			-- Remove `v' from the table if present.
+		local
+			item_imp: EV_WIDGET_IMP
 		do
-			-- Create `vbox_widget' and `hbox_widget'.
-			add_child_packing (child_imp)
-
-			-- As the child is put into the table only
-			-- with feature `set_child_position', there
-			-- is nothing to do here.
+			item_imp ?= v.implementation
+			C.gtk_container_remove (c_object, item_imp.c_object)
 		end
 
-feature -- Assertion test
+feature {NONE} -- Externals
 
-	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
-			-- Has `a_child' been added properly?
-		do
-			Result := True
+	c_gtk_table_rows (a_table_struct: POINTER): INTEGER is
+			-- Number of rows
+		external
+			"C [struct <gtk/gtk.h>] (GtkTable): EIF_INTEGER"
+		alias
+			"nrows"
 		end
+
+	c_gtk_table_columns (a_table_struct: POINTER): INTEGER is
+			-- Number of columns
+		external
+			"C [struct <gtk/gtk.h>] (GtkTable): EIF_INTEGER"
+		alias
+			"ncols"
+		end
+
+	c_gtk_table_row_spacing (a_table_struct: POINTER): INTEGER is
+			-- Spacing between two rows
+		external
+			"C [struct <gtk/gtk.h>] (GtkTable): EIF_INTEGER"
+		alias
+			"row_spacing"
+		end
+	
+	c_gtk_table_column_spacing (a_table_struct: POINTER): INTEGER is
+			-- Spacing between two columns
+		external
+			"C [struct <gtk/gtk.h>] (GtkTable): EIF_INTEGER"
+		alias
+			"column_spacing"
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_TABLE
+
 
 end -- class EV_TABLE_IMP
 
@@ -146,6 +173,33 @@ end -- class EV_TABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/06/07 17:27:38  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.9.4.8  2000/06/06 00:42:15  king
+--| Added resize
+--|
+--| Revision 1.9.4.7  2000/06/05 21:09:48  king
+--| Added, remove, widget_count amd corrected put comment.
+--|
+--| Revision 1.9.4.6  2000/06/02 23:30:55  king
+--| Now inheriting from EV_CONTAINER
+--|
+--| Revision 1.9.4.5  2000/06/02 22:07:13  king
+--| New table implementation
+--|
+--| Revision 1.9.4.4  2000/05/31 22:28:37  king
+--| Added add/remove act seq calls
+--|
+--| Revision 1.9.4.3  2000/05/31 21:55:05  king
+--| Added comment to insert_i_th about extend behaviour
+--|
+--| Revision 1.9.4.2  2000/05/30 22:24:04  king
+--| Initial implementation to new structure
+--|
+--| Revision 1.9.4.1  2000/05/03 19:08:48  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.11  2000/02/22 18:39:38  oconnor
 --| updated copyright date and formatting
 --|

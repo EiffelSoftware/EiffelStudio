@@ -27,112 +27,8 @@ feature -- Initialization
 	make is
 			-- Create the tooltip.
 		do
-			widget := gtk_tooltips_new
-			gtk_object_ref (widget)
+
 		end
-
-feature -- Access
-
-	delay: INTEGER is
-			-- Delay im milliseconds the user has to hold the pointer over
-			-- the widget before the tooltip pop up.
-		do
-			Result := c_gtk_tooltips_delay (widget)
-		end
-
-feature -- Status report
-
-	background_color: EV_COLOR is
-			-- Color used for the background of the widget
-		local
-			r, g, b: INTEGER
-		do
-			c_gtk_tooltips_get_bg_color (widget, $r, $g, $b)
-			create Result.make_rgb (r, g, b)
-		end
-
-	foreground_color: EV_COLOR is
-			-- Color used for the foreground of the widget
-			-- usually the text.
-		local
-			r, g, b: INTEGER
-		do
-			c_gtk_tooltips_get_fg_color (widget, $r, $g, $b)
-			create Result.make_rgb (r, g, b)
-		end
-
-	destroyed: BOOLEAN is
-			-- Is Current object destroyed?
-		do
-			Result := widget = NULL
-		end
-
-feature -- Status setting
-
-	destroy is
-			-- Destroy actual object.
-		do
-			if not destroyed then
-				gtk_widget_destroy (widget)
-			end
-			widget := NULL
-		end
-
-	activate is
-			-- Enable the tooltip control.
-		do
-			gtk_tooltips_enable (widget)
-		end
-
-	deactivate is
-			-- Disable the tooltip control.
-		do
-			gtk_tooltips_disable (widget)
-		end
-
-	set_background_color (color: EV_COLOR) is
-			-- Make `color' the new `background_color'
-		do
-			c_gtk_tooltips_set_bg_color (widget, color.red, color.green, color.blue)
-		end
-
-	set_foreground_color (color: EV_COLOR) is
-			-- Make `color' the new `foreground_color'
-		do
-			c_gtk_tooltips_set_fg_color (widget, color.red, color.green, color.blue)
-		end
-
-feature -- Element change
-
-	set_delay (value: INTEGER) is
-			-- Make `value' the new delay.
-		do
-			gtk_tooltips_set_delay (widget, value)
-		end
-
-	add_tip (wid: EV_WIDGET; txt: STRING) is
-			-- Make `txt' the tip that is displayed when the
-			-- user stays on `wid'.
-		local
-			wid_imp: EV_WIDGET_IMP
-		do
-			wid_imp ?= wid.implementation
-
-			-- The last parameter is a text that may be helpful if
-			-- the user gets stop. For now, as Windows does not
-			-- have this options, we set it to `NULL'.
-			gtk_tooltips_set_tip (
-				widget,
-				wid_imp.widget,
-				eiffel_to_c (txt),
-				NULL
-			)
-		end
-
-feature -- Implementation
-
-	widget: POINTER
-			-- Pointer to the GtkTooltips object.
 
 end -- class EV_TOOLTIP_IMP
 
@@ -157,6 +53,15 @@ end -- class EV_TOOLTIP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/06/07 17:27:30  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.3.4.2  2000/05/25 00:28:44  king
+--| Removed old implementation
+--|
+--| Revision 1.3.4.1  2000/05/03 19:08:38  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.6  2000/05/02 18:55:21  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

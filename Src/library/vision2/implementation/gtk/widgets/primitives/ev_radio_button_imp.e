@@ -13,7 +13,7 @@ inherit
 			interface
 		end
 	
-	EV_SELECT_BUTTON_IMP
+	EV_BUTTON_IMP
 		redefine
 			interface,
 			initialize,
@@ -41,6 +41,22 @@ feature {NONE} -- Initialization
 		do
 			Precursor
 			align_text_left
+		end
+
+feature -- Status report
+	
+	is_selected: BOOLEAN is
+			-- Is toggle button pressed?
+		do
+			Result := C.gtk_toggle_button_get_active (c_object)
+		end 
+	
+feature -- Status setting
+
+	enable_select is
+			-- Set `is_selected' `True'.
+		do
+			C.gtk_toggle_button_set_active (c_object, True)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -77,6 +93,17 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/06/07 17:27:39  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.12.4.4  2000/05/09 20:31:07  king
+--| Integrated selectable/deselectable
+--|
+--| Revision 1.12.4.3  2000/05/05 20:59:02  king
+--| Corrected initialize
+--|
+--| Revision 1.12.4.2  2000/05/04 00:17:41  king
+--|
 --| Revision 1.21  2000/05/03 18:20:07  king
 --| Made text left aligned
 --|

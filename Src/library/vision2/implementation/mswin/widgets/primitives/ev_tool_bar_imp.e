@@ -188,9 +188,8 @@ feature -- Element change
 			-- Insert `button' at the `an_index' position in `Current'.
 		local
 			but: WEL_TOOL_BAR_BUTTON
-			num: INTEGER
-			pixmap: EV_PIXMAP_IMP
-			gray_pixmap: EV_PIXMAP_IMP
+			pixmap: EV_PIXMAP
+			gray_pixmap: EV_PIXMAP
 			button_text: STRING
 			radio_button: EV_TOOL_BAR_RADIO_BUTTON_IMP
 			separator_button: EV_TOOL_BAR_SEPARATOR_IMP
@@ -214,14 +213,14 @@ feature -- Element change
 			end
 
 				-- First, we take care of the pixmap,
-			pixmap := button.pixmap_imp
+			pixmap := button.pixmap
 			if pixmap /= Void then
 					-- The first bitmap added determine the size of all bitmaps
 				if not has_bitmap then
 					set_bitmap_size(pixmap.width, pixmap.height)
 				end
 
-				gray_pixmap := button.gray_pixmap_imp
+				gray_pixmap := button.gray_pixmap
 				if gray_pixmap = Void then
 						-- No gray pixmap, so both normal and hot state will
 						-- have the same bitmap.
@@ -244,7 +243,7 @@ feature -- Element change
 			wel_insert_button (an_index - 1, but)
 
 			-- We notify the change to integrate them if necessary
-			notify_change (2 + 1)
+			notify_change (2 + 1, Current)
 		end
 
 	remove_item (button: EV_TOOL_BAR_BUTTON_IMP) is
@@ -254,7 +253,7 @@ feature -- Element change
 		do
 			id1 := ev_children.index_of (button, 1)
 			delete_button (internal_get_index (button))
-			notify_change (2 + 1)
+			notify_change (2 + 1, Current)
 		end
 
 feature -- Basic operation
@@ -405,50 +404,100 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation
 
-	add_pixmap(a_pixmap_imp: EV_PIXMAP_IMP) is
-			-- Add `a_pixmap_imp' to the list of pixmaps in `Current'.
+	add_hot_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Add `a_pixmap' to the toolbar image list.
+			-- The pixmap is resized if needed to fit into the 
+			-- image list.
+		require
+			a_pixmap_not_void: a_pixmap /= Void
 		local
-			pixmap_icon: WEL_ICON
+			mask_bitmap		: WEL_BITMAP
+			bitmap			: WEL_BITMAP
+			graphres		: WEL_GRAPHICAL_RESOURCE
+			resized_pixmap	: EV_PIXMAP
+			pixmap_imp		: EV_PIXMAP_IMP_STATE
 		do
-			pixmap_icon := a_pixmap_imp.icon
-			if pixmap_icon /= Void then
-				add_icon(pixmap_icon)
+			pixmap_imp ?= a_pixmap.implementation
+
+				-- Try to get the icon
+			graphres := pixmap_imp.icon
+				
+				-- If there is no icon, try a cursor
+			if graphres = Void then
+				graphres := pixmap_imp.cursor
+			end
+
+			if graphres /= Void then
+					-- Add the icon to image_list and set image_index.
+				add_hot_icon (graphres)
 			else
-				if a_pixmap_imp.width /= bitmaps_width or
-				   a_pixmap_imp.height /= bitmaps_height then
-					a_pixmap_imp.stretch(bitmaps_width, bitmaps_height)
-				end
-				if a_pixmap_imp.has_mask then
-					add_masked_bitmap(
-						a_pixmap_imp.bitmap, 
-						a_pixmap_imp.mask_bitmap
+				if (pixmap_imp.height /= bitmaps_height) or 
+				   (pixmap_imp.width /= bitmaps_width)
+				then
+						-- We use a_pixmap as interface to access `ev_clone'
+					resized_pixmap := a_pixmap.ev_clone (a_pixmap)
+					resized_pixmap.stretch (
+						bitmaps_width,
+						bitmaps_height
 						)
+					pixmap_imp ?= resized_pixmap.implementation
+				end
+
+				bitmap := pixmap_imp.bitmap
+				mask_bitmap := pixmap_imp.mask_bitmap
+				if mask_bitmap /= Void then
+					add_hot_masked_bitmap(bitmap, mask_bitmap)
 				else
-					add_bitmap(a_pixmap_imp.bitmap)
+					add_hot_bitmap(bitmap)
 				end
 			end
 		end
-		
-	add_hot_pixmap(a_pixmap_imp: EV_PIXMAP_IMP) is
-			-- Add `a_pixmap_imp' to the list of hot pixmaps in `Current'
+
+	add_pixmap (a_pixmap: EV_PIXMAP) is
+			-- Add `a_pixmap' to the toolbar image list.
+			-- The pixmap is resized if needed to fit into the 
+			-- image list.
+		require
+			a_pixmap_not_void: a_pixmap /= Void
 		local
-			pixmap_icon: WEL_ICON
+			mask_bitmap		: WEL_BITMAP
+			bitmap			: WEL_BITMAP
+			graphres		: WEL_GRAPHICAL_RESOURCE
+			resized_pixmap	: EV_PIXMAP
+			pixmap_imp		: EV_PIXMAP_IMP_STATE
 		do
-			pixmap_icon := a_pixmap_imp.icon
-			if pixmap_icon /= Void then
-				add_hot_icon(pixmap_icon)
+			pixmap_imp ?= a_pixmap.implementation
+
+				-- Try to get the icon
+			graphres := pixmap_imp.icon
+				
+				-- If there is no icon, try a cursor
+			if graphres = Void then
+				graphres := pixmap_imp.cursor
+			end
+
+			if graphres /= Void then
+					-- Add the icon to image_list and set image_index.
+				add_icon (graphres)
 			else
-				if a_pixmap_imp.width /= bitmaps_width or
-				   a_pixmap_imp.height /= bitmaps_height then
-					a_pixmap_imp.stretch(bitmaps_width, bitmaps_height)
-				end
-				if a_pixmap_imp.has_mask then
-					add_hot_masked_bitmap(
-						a_pixmap_imp.bitmap, 
-						a_pixmap_imp.mask_bitmap
+				if (pixmap_imp.height /= bitmaps_height) or 
+				   (pixmap_imp.width /= bitmaps_width)
+				then
+						-- We use a_pixmap as interface to access `ev_clone'
+					resized_pixmap := a_pixmap.ev_clone (a_pixmap)
+					resized_pixmap.stretch (
+						bitmaps_width,
+						bitmaps_height
 						)
+					pixmap_imp ?= resized_pixmap.implementation
+				end
+
+				bitmap := pixmap_imp.bitmap
+				mask_bitmap := pixmap_imp.mask_bitmap
+				if mask_bitmap /= Void then
+					add_masked_bitmap(bitmap, mask_bitmap)
 				else
-					add_hot_bitmap(a_pixmap_imp.bitmap)
+					add_bitmap(bitmap)
 				end
 			end
 		end
@@ -737,6 +786,26 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.66  2000/06/07 17:28:01  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.24.4.8  2000/06/05 20:43:14  manus
+--| Update code with new signature of `notify_change'.
+--| Removed call to `set_button_size' because the call can only be performed only once before
+--| anything is put in the toolbar.
+--|
+--| Revision 1.24.4.7  2000/05/31 23:27:47  rogers
+--| Wel_move_and_resize and wel_resize now both resize the buttons in the
+--| toolbar, to fix the bug where the buttons height was not resized when
+--| the tool bar was re-sized.
+--|
+--| Revision 1.24.4.6  2000/05/30 16:13:13  rogers
+--| Removed unreferenced variables.
+--|
+--| Revision 1.24.4.5  2000/05/05 22:32:42  pichery
+--| Redone the pixmap handling.
+--|
+--| Revision 1.24.4.4  2000/05/03 22:35:05  brendel
 --| Revision 1.65  2000/05/03 20:13:27  brendel
 --| Fixed resize_actions.
 --|

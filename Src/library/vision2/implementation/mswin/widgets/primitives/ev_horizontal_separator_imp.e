@@ -38,13 +38,33 @@ feature -- Status setting
 feature {NONE} -- Implementation
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
+			-- Repaint 3D separator based on `is_raised'.
 		local
 			top: INTEGER
+			cur_height_div_two: INTEGER
 		do
-			paint_dc.select_pen (shadow_pen)
-			paint_dc.line (0, height // 2 - 1, width, height // 2 - 1)
-			paint_dc.select_pen (highlight_pen)
-			paint_dc.line (0, height // 2, width, height // 2)
+			cur_height_div_two := wel_height // 2
+			if is_raised then
+				draw_horizontal_line (paint_dc, highlight_pen,
+					cur_height_div_two - 2)
+				draw_horizontal_line (paint_dc, shadow_pen,
+					cur_height_div_two + 1)
+				draw_horizontal_line (paint_dc, black_pen,
+					cur_height_div_two + 2)
+			else
+				draw_horizontal_line (paint_dc, shadow_pen,
+					cur_height_div_two - 1)
+				draw_horizontal_line (paint_dc, highlight_pen,
+					cur_height_div_two)
+			end
+		end
+
+	draw_horizontal_line (paint_dc: WEL_PAINT_DC;
+			a_pen: WEL_PEN; a_y: INTEGER) is
+			-- Draw graphical component of `Current'.
+		do
+			paint_dc.select_pen (a_pen)
+			paint_dc.line (0, a_y, wel_width, a_y)
 		end
 
 	interface: EV_HORIZONTAL_SEPARATOR
@@ -72,6 +92,23 @@ end -- class EV_HORIZONTAL_SEPARATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/06/07 17:28:01  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.5.8.4  2000/05/08 19:45:50  brendel
+--| Optimized implementation of on_paint.
+--|
+--| Revision 1.5.8.3  2000/05/03 22:20:17  pichery
+--| - Formatting
+--|
+--| Revision 1.5.8.2  2000/05/03 22:17:18  pichery
+--| - Cosmetics / Optimization with local variables
+--| - Replaced calls to `width' to calls to `wel_width'
+--|   and same for `height'.
+--|
+--| Revision 1.5.8.1  2000/05/03 19:09:50  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.7  2000/02/19 05:45:01  oconnor
 --| released
 --|

@@ -20,7 +20,7 @@ feature -- Access
 
 	tooltip: STRING is
 			-- Tooltip displayed on `Current'.
-		do
+		deferred
 		end
 
 feature -- Element change
@@ -28,13 +28,13 @@ feature -- Element change
 	set_tooltip (a_tooltip: STRING) is
 			-- Assign `a_tooltip' to `tooltip'.
 		require
-			tooltip_not_void: a_tooltip /= Void
-		do
+			a_tooltip_not_void: a_tooltip /= Void
+		deferred
 		end
 
 	remove_tooltip is
 			-- Make `tooltip' `Void'.
-		do	
+		deferred
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -66,8 +66,17 @@ end -- class EV_TOOLTIPABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/06/07 17:27:45  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.3  2000/05/05 16:40:54  king
 --| Added not for release
+--|
+--| Revision 1.2.2.2  2000/05/05 15:49:47  brendel
+--| Made deferred.
+--|
+--| Revision 1.2.2.1  2000/05/03 19:08:59  oconnor
+--| mergred from HEAD
 --|
 --| Revision 1.2  2000/05/02 22:17:17  king
 --| Cleaned up log

@@ -415,9 +415,12 @@ feature {EV_ANY_I} -- Event handling
 				Gdk_configure_enum
 			then
 					-- gdk_event type GdkEventConfigure
-				check
-					gdk_configure_event_not_handled: False
-				end
+				Result := [
+					C.gdk_event_configure_struct_x (gdk_event),
+					C.gdk_event_configure_struct_y (gdk_event),
+					C.gdk_event_configure_struct_width (gdk_event),
+					C.gdk_event_configure_struct_height (gdk_event)
+				]
 
 			when
 				Gdk_property_notify_enum
@@ -499,6 +502,8 @@ feature {NONE} -- Implementation
 			if c_object /= NULL then
 				gtk_signal_disconnect_by_data (c_object, object_id)
 				gtk_object_unref (c_object)
+				--| FIXME IEK When gtk_object_unref calls gtk_object_destroy
+				-- for the `root' window, the ref count is still above zero.
 			end
 			Precursor
 		end
@@ -689,6 +694,18 @@ end -- class EV_ANY_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/06/07 17:27:30  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.11.2.3  2000/05/24 00:43:19  king
+--| Added fixme comment to dispose
+--|
+--| Revision 1.11.2.2  2000/05/17 19:29:55  king
+--| Added configure event tuple translation
+--|
+--| Revision 1.11.2.1  2000/05/03 19:08:37  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.11  2000/05/02 18:55:21  oconnor
 --| Use NULL instread of Defualt_pointer in C code.
 --| Use eiffel_to_c (a) instead of a.to_c.

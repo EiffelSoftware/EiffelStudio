@@ -19,7 +19,8 @@ inherit
 	EV_TEXT_COMPONENT_IMP
 		redefine
 			on_key_down,
-			interface
+			interface,
+			initialize_sizeable
 		end
 
 	WEL_SINGLE_LINE_EDIT
@@ -90,9 +91,10 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
 
-			--| FIXME We need text fields not te resize vertically.
-			--| Horizontally still depends on `disable_item_expand'.
-			--| Redefine function somehow.
+	initialize_sizeable is
+			-- Set as not vertically resizable.
+		do
+			Precursor
 			internal_changes := set_bit (internal_changes, 32, False)
 		end
 
@@ -244,6 +246,15 @@ end -- class EV_TEXT_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2000/06/07 17:28:01  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.27.8.4  2000/05/04 17:40:30  brendel
+--| Added redefinition of initialize_sizeable which sets vertically resizable
+--| to False.
+--|
+--| Revision 1.27.8.3  2000/05/03 22:35:05  brendel
+--|
 --| Revision 1.40  2000/05/03 20:13:27  brendel
 --| Fixed resize_actions.
 --|

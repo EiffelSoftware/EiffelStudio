@@ -19,7 +19,6 @@ indexing
 class 
 	EV_COMBO_BOX
 
-
 inherit
 	EV_TEXT_FIELD
 		undefine
@@ -30,10 +29,7 @@ inherit
 			create_implementation
 		end
 
-	EV_LIST	
-		export
-			{NONE} enable_multiple_selection, multiple_selection_enabled
-			{NONE} selected_items
+	EV_LIST_ITEM_LIST
 		redefine
 			implementation,
 			create_implementation,
@@ -83,7 +79,7 @@ feature {NONE} -- Implementation
 	create_action_sequences is
 			-- See `{EV_ANY}.create_action_sequences'.
 		do
-			{EV_LIST} Precursor
+			{EV_LIST_ITEM_LIST} Precursor
 			{EV_TEXT_FIELD} Precursor
 		end
 
@@ -110,6 +106,15 @@ end -- class EV_COMBO_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/06/07 17:28:13  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.22.4.2  2000/05/10 18:50:38  king
+--| Integrated ev_list_item_list
+--|
+--| Revision 1.22.4.1  2000/05/03 19:10:10  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.32  2000/03/21 16:13:53  king
 --| Corrected set_extended_height to deal with name change of parameter
 --|

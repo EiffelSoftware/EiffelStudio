@@ -25,23 +25,13 @@ inherit
 			default_create
 		end
 
+	EV_COLORIZABLE
+		redefine
+			implementation,
+			is_in_default_state
+		end
+
 feature -- Access
-
-	foreground_color: EV_COLOR is
-			-- Color used to draw primitives. Default: black.
-		do
-			Result := implementation.foreground_color
-		ensure
-			bridge_ok: Result.is_equal (implementation.foreground_color)
-		end
-
-	background_color: EV_COLOR is
-			-- Color used for erasing of canvas. Default: white.
-		do
-			Result := implementation.background_color
-		ensure
-			bridge_ok: Result.is_equal (implementation.background_color)
-		end
 
 	line_width: INTEGER is
 			-- Line thickness. Default: 1.
@@ -94,28 +84,6 @@ feature -- Access
 		end
 
 feature -- Element change
-
-	set_background_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `background_color'.
-		require
-			a_color_not_void: a_color /= Void
-		do
-			implementation.set_background_color (a_color)
-		ensure
-			--| FIXME why is this commented out? - sam
-			-- background_color_assigned: background_color.is_equal (a_color)
-		end
-
-	set_foreground_color (a_color: EV_COLOR) is
-			-- Assign `a_color' to `foreground_color'
-		require
-			a_color_not_void: a_color /= Void
-		do
-			implementation.set_foreground_color (a_color)
-		ensure
-			--| FIXME why is this commented out? - sam
-			-- foreground_color_assigned: foreground_color.is_equal (a_color)
-		end
 
 	set_line_width (a_width: INTEGER) is
 			-- Assign `a_width' to `line_width'.
@@ -450,8 +418,6 @@ feature -- Obsolete
 
 invariant
 	font_not_void: font /= Void
-	background_color_not_void: background_color /= Void
-	foreground_color_not_void: foreground_color /= Void
 	line_width_positive_or_zero: line_width >= 0
 	drawing_mode_valid: valid_drawing_mode (drawing_mode)
 
@@ -478,6 +444,15 @@ end -- class EV_DRAWABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/06/07 17:28:07  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.14.4.13  2000/05/12 17:35:00  king
+--| Integrated ev_colorize
+--|
+--| Revision 1.14.4.12  2000/05/03 19:10:03  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.21  2000/04/27 17:21:01  brendel
 --| Spelling.
 --|

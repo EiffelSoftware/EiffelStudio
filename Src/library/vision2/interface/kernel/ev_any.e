@@ -22,7 +22,7 @@ inherit
 			default_create
 		end
 	
-feature {NONE} -- Initialization
+feature {EV_ANY} -- Initialization
 
 --|-----------------------------------------------------------------------------
 --| Creation sequence for all Vision2 objects is like this:
@@ -244,6 +244,29 @@ feature {EV_ANY} -- Contract support
 			end
 		end
 
+feature -- Duplication
+
+	frozen ev_clone (other: EV_ANY): like other is
+			-- Void if `other' is void; otherwise new object
+			-- equal to `other'
+			--
+			-- For non-void `other', `clone' calls `default_create'
+			-- and then `copy'
+			-- to change copying/cloning semantics, redefine `copy'.
+		local
+			temp: BOOLEAN
+		do
+			if other /= Void then
+				temp := c_check_assert (False)
+				Result ?= c_standard_clone ($other)
+				Result.default_create
+				Result.copy (other)
+				temp := c_check_assert (temp)
+			end
+		ensure
+			equal: equal (Result, other)
+		end
+
 invariant
 	is_initialized: is_initialized
 	is_coupled:
@@ -297,6 +320,15 @@ end -- class EV_ANY
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/06/07 17:28:06  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.7.4.2  2000/05/05 22:25:48  pichery
+--| Added feature `ev_clone'.
+--|
+--| Revision 1.7.4.1  2000/05/03 19:09:59  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.18  2000/04/12 01:38:54  pichery
 --| when changing implementation, the
 --| old implementation still has a reference

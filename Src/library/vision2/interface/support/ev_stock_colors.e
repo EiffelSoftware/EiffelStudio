@@ -266,9 +266,15 @@ end -- class EV_DEFAULT_COLORS
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/06/07 17:28:08  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
 --| Revision 1.11  2000/05/12 19:27:28  pichery
 --| Added colors `Color_3d_face', `Color_3d_highlight',
 --| `Color_3d_shadow'.
+--|
+--| Revision 1.6.4.2  2000/05/13 03:29:40  pichery
+--| Added new colors
 --|
 --| Revision 1.6.4.1  2000/05/03 19:10:04  oconnor
 --| mergred from HEAD

@@ -9,48 +9,16 @@ deferred class
 	EV_LIST_I
 	
 inherit
-	EV_PRIMITIVE_I
-		redefine
-			set_default_colors,
-			interface
-		end
-
-	EV_ITEM_LIST_I [EV_LIST_ITEM]
+	EV_LIST_ITEM_LIST_I
 		redefine
 			interface
-		end
-
-feature {EV_WIDGET} -- Initialization
-
-	set_default_colors is
-			-- Common initializations for Gtk and Windows.
-		local
-			color: EV_COLOR
-		do
-			create color.make_with_rgb (1, 1, 1)
-			set_background_color (color)
-			create color.make_with_rgb (0, 0, 0)
-			set_foreground_color (color)
 		end
 
 feature -- Access
 
-	selected_item: EV_LIST_ITEM is
-			-- Currently selected item.
-			-- Topmost selected item if multiple items are selected.
-		local
-			l: like selected_items
-		do
-			l := selected_items
-			if not l.empty then
-				Result := l.first
-			end
-		end
-
 	selected_items: ARRAYED_LIST [EV_LIST_ITEM] is
 			-- Currently selected items.
 		local
-			litem: EV_LIST_ITEM
 			original_position: INTEGER
 		do
 			original_position := interface.index
@@ -75,34 +43,10 @@ feature -- Status report
 		deferred
 		end
 
---	selected: BOOLEAN is
---			-- Is at least one item selected ?
---		deferred
---		end
-
 feature -- Status setting
 
-	select_item (an_index: INTEGER) is
-			-- Select item at `an_index'.
-		require
-			index_within_range: an_index > 0 and an_index <= count
-		deferred
-		end
-
-	deselect_item (an_index: INTEGER) is
-			-- Deselect item at `an_index'.
-		require
-			index_within_range: an_index > 0 and an_index <= count
-		deferred
-		end
-
-	clear_selection is
-			-- Ensure there are no `selected_items'.
-		deferred
-		end
-
 	enable_multiple_selection is
-			-- Allow more than one item to be selected.
+			-- Allow multiple items to be selected.
 		deferred
 		end
 
@@ -138,6 +82,18 @@ end -- class EV_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.46  2000/06/07 17:27:50  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.34.4.3  2000/05/30 15:57:09  rogers
+--| Removed unreferenced variables from selected_items.
+--|
+--| Revision 1.34.4.2  2000/05/10 18:50:37  king
+--| Integrated ev_list_item_list
+--|
+--| Revision 1.34.4.1  2000/05/03 19:09:07  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.45  2000/04/20 00:58:52  pichery
 --| Removed `ev_children' from EV_LIST_I.
 --| Now only defined on Windows in

@@ -12,7 +12,7 @@ class
 	EV_TOOL_BAR_RADIO_BUTTON
 
 inherit
-	EV_TOOL_BAR_SELECT_BUTTON
+	EV_TOOL_BAR_BUTTON
 		redefine
 			implementation,
 			create_implementation,
@@ -20,6 +20,12 @@ inherit
 		end
 
 	EV_RADIO_PEER
+		redefine
+			implementation,
+			is_in_default_state
+		end
+
+	EV_SELECTABLE
 		redefine
 			implementation,
 			is_in_default_state
@@ -36,7 +42,7 @@ feature -- Contract support
 			-- Radio buttons are selected by default.
 		do
 			Result := {EV_RADIO_PEER} Precursor
-			and then {EV_TOOL_BAR_SELECT_BUTTON} Precursor
+			and then {EV_TOOL_BAR_BUTTON} Precursor
 		end
 
 feature {EV_ANY_I, EV_RADIO}-- Implementation
@@ -75,6 +81,15 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/06/07 17:28:05  oconnor
+--| merged from DEVEL tag MERGED_TO_TRUNK_20000607
+--|
+--| Revision 1.4.2.2  2000/05/09 21:12:43  king
+--| Integrated changes to selectable/deselectable
+--|
+--| Revision 1.4.2.1  2000/05/03 19:09:58  oconnor
+--| mergred from HEAD
+--|
 --| Revision 1.12  2000/04/24 23:51:43  rogers
 --| Fixed is_in_default_state.
 --|

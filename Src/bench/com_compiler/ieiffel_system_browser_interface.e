@@ -31,6 +31,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	external_clusters_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `external_clusters'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	cluster_count_user_precondition: BOOLEAN is
 			-- User-defined preconditions for `cluster_count'.
 			-- Redefine in descendants if needed.
@@ -95,6 +102,14 @@ feature -- Basic Operations
 			-- List of system's clusters.
 		require
 			system_clusters_user_precondition: system_clusters_user_precondition
+		deferred
+
+		end
+
+	external_clusters: IENUM_CLUSTER_INTERFACE is
+			-- List of system's external clusters.
+		require
+			external_clusters_user_precondition: external_clusters_user_precondition
 		deferred
 
 		end

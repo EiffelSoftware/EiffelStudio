@@ -43,6 +43,12 @@ feature -- Access
 			Result := ccom_system_clusters (initializer)
 		end
 
+	external_clusters: IENUM_CLUSTER_INTERFACE is
+			-- List of system's external clusters.
+		do
+			Result := ccom_external_clusters (initializer)
+		end
+
 	cluster_count: INTEGER is
 			-- Number of top-level clusters in system.
 		do
@@ -113,6 +119,12 @@ feature {NONE}  -- Externals
 
 	ccom_system_clusters (cpp_obj: POINTER): IENUM_CLUSTER_INTERFACE is
 			-- List of system's clusters.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_REFERENCE"
+		end
+
+	ccom_external_clusters (cpp_obj: POINTER): IENUM_CLUSTER_INTERFACE is
+			-- List of system's external clusters.
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelSystemBrowser_impl_proxy %"ecom_eiffel_compiler_IEiffelSystemBrowser_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end

@@ -30,6 +30,12 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	external_clusters: IENUM_CLUSTER_INTERFACE is
+			-- List of system's external clusters.
+		do
+			-- Put Implementation here.
+		end
+
 	cluster_count: INTEGER is
 			-- Number of top-level clusters in system.
 		do

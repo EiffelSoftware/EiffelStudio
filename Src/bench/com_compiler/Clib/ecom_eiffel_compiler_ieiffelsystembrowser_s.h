@@ -118,6 +118,12 @@ public:
 
 
 	/*-----------------------------------------------------------
+	List of system's external clusters.
+	-----------------------------------------------------------*/
+	virtual STDMETHODIMP external_clusters(  /* [out, retval] */ ecom_eiffel_compiler::IEnumCluster * * some_clusters ) = 0;
+
+
+	/*-----------------------------------------------------------
 	Number of top-level clusters in system.
 	-----------------------------------------------------------*/
 	virtual STDMETHODIMP cluster_count(  /* [out, retval] */ ULONG * return_value ) = 0;

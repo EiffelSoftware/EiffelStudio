@@ -51,6 +51,6 @@ cd ..
 #Let's compile for PPC on lisbon in background
 /bin/sh make_linuxppc local &
 
-#Let's compile for Solaris on dakar in background
+#Let's compile for Solaris on mosis in background
 /bin/sh make_solaris local &
 

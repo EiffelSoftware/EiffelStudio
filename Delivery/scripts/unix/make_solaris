@@ -2,7 +2,7 @@
 
 if [ "$1" == "local" ]; then
 	echo $1
-	export REMOTE=dakar
+	export REMOTE=mosis
 	cp -f make_solaris ~/
 	# Launch platform specific scripts
 	rsh $REMOTE "cd local/TEST_DELIV ; mv -f ~/make_solaris ."
@@ -10,7 +10,7 @@ if [ "$1" == "local" ]; then
 
 ftp -n << EOF 
 verbose 
-open dakar.ise 
+open mosis.ise 
 user manus manus 
 binary
 get local/TEST_DELIV/PorterPackage/Eiffel52_enterprise.tgz Eiffel52_solaris.tgz

@@ -323,12 +323,13 @@ feature -- Access
 		local
 			curr_item: like explorer_item
 			item_state: STRING
-			i: INTEGER
+			i, j: INTEGER
 			item_height: STRING
 			all_heights: ARRAYED_LIST [INTEGER]
 			a_height: INTEGER
 			has_maximized_tool: BOOLEAN
 			items_by_name: HASH_TABLE [EB_EXPLORER_BAR_ITEM, STRING]
+			temp_layout: ARRAY [STRING]
 		do
 				-- Clear `item_list' and store all items in `items_by_name', hashed
 				-- by their names, for retrieval based on the current settings in `layout'.
@@ -342,6 +343,43 @@ feature -- Access
 				item_list.item.close
 				item_list.remove
 			end
+
+				-- Now perform special processing which parses `a_layout' and removes any invalid
+				-- items which prevents EiffelStudio from crashing if a tool that is not in `item_list'
+				-- is referenced. We simply do not add the tool to `temp_layout'. This fix has been added
+				-- in response to a bug reported by David Hollenberg where the call stack tool was saved within
+				-- the left panel non debug layout. I believe this problem was duw to the result of an old bug that did
+				-- not properly clear the externally docked tools when debug specific tools such as the
+				-- call stack were docked out while the bugger execution is fixed. Therefore, this problem should be fixed
+				-- but the protection has been added in case something occurs. We should not rely on this code, but
+				-- fix the problem at the source when it can be found. Julian.
+			create temp_layout.make (a_layout.lower, a_layout.lower)
+			from
+				i := a_layout.lower
+				j := i
+			until
+				i >= a_layout.upper + 1
+			loop
+				if i \\ 6 = 1 then
+					curr_item := items_by_name.item (a_layout.item(i))
+					if curr_item /= Void then
+						temp_layout.resize (temp_layout.lower, temp_layout.upper + 6)
+						temp_layout.put (a_layout.item (i), j)
+					else
+						check
+							invalid_tool_contained: False
+						end
+						i := i + 5
+							-- Needed to counter against the adding of one in the main body of the loop.
+						j := j - 1
+					end
+				else
+					temp_layout.put (a_layout.item (i), j)
+				end
+				i := i + 1
+				j := j + 1
+			end
+
 			
 				-- Block rebuilding of `Current' until further notice. This is because a
 				-- lot of building is to take place, and it is optimal to perform it once at
@@ -349,15 +387,15 @@ feature -- Access
 			block
 			
 				-- Rebuild contents of `item_list' to ensure their order matches that of
-				-- `a_layout'. As the order may change, it is possible that it may be different
+				-- `temp_layout'. As the order may change, it is possible that it may be different
 				-- between standard and debugging layouts, hence the need to rebuild this.
 			from
-				i := a_layout.lower
+				i := temp_layout.lower
 			until
-				i >= a_layout.upper
+				i >= temp_layout.upper
 			loop
-				item_list.extend (items_by_name.item (a_layout.item(i)))
-				item_state := a_layout.item(i + 1)
+				item_list.extend (items_by_name.item (temp_layout.item(i)))
+				item_state := temp_layout.item(i + 1)
 				if item_state.is_equal ("maximized") then
 					has_maximized_tool := True
 				end
@@ -368,11 +406,11 @@ feature -- Access
 				-- Reset all items to their default states.
 			create all_heights.make (item_list.count)
 			from
-				i := a_layout.lower
+				i := temp_layout.lower
 			until
-				i >= a_layout.upper
+				i >= temp_layout.upper
 			loop
-				curr_item := items_by_name.item (a_layout.item(i))
+				curr_item := items_by_name.item (temp_layout.item(i))
 				check
 					curr_item_not_void: curr_item /= Void
 				end
@@ -386,12 +424,12 @@ feature -- Access
 				-- Now perform a pass, updating the status of all items contained as
 				-- required.
 			from
-				i := a_layout.lower
+				i := temp_layout.lower
 			until
-				i >= a_layout.upper
+				i >= temp_layout.upper
 			loop
-				item_state := a_layout.item(i + 1)
-				 item_height := a_layout.item(i + 5)
+				item_state := temp_layout.item(i + 1)
+				 item_height := temp_layout.item(i + 5)
 				 check
 				 	item_height_is_integer: item_height.is_integer
 				 end
@@ -403,7 +441,7 @@ feature -- Access
 				 if not item_state.is_equal ("closed") and not item_state.is_equal ("external") then
 					 all_heights.extend (a_height) 	
 				 end
-				 curr_item := items_by_name.item (a_layout.item(i))
+				 curr_item := items_by_name.item (temp_layout.item(i))
 					check
 						curr_item_not_void: curr_item /= Void
 					end
@@ -415,7 +453,7 @@ feature -- Access
 						curr_item.show
 					end
 				elseif item_state.is_equal ("external") then
-					curr_item.show_external (explorer_bar_manager.window.x_position + (a_layout.item(i + 2)).to_integer, explorer_bar_manager.window.y_position + (a_layout.item(i + 3)).to_integer, (a_layout.item(i + 4)).to_integer, (a_layout.item(i + 5)).to_integer)				
+					curr_item.show_external (explorer_bar_manager.window.x_position + (temp_layout.item(i + 2)).to_integer, explorer_bar_manager.window.y_position + (temp_layout.item(i + 3)).to_integer, (temp_layout.item(i + 4)).to_integer, (temp_layout.item(i + 5)).to_integer)				
 				elseif item_state.is_equal ("visible") or item_state.is_equal ("maximized") then
 					curr_item.show	
 				end
@@ -425,16 +463,16 @@ feature -- Access
 				-- This is because tools may only be minimized and maximized correctly when the other tools
 				-- are contained.
 			from
-				i := a_layout.lower
+				i := temp_layout.lower
 			until
-				i >= a_layout.upper
+				i >= temp_layout.upper
 			loop
-				curr_item := items_by_name.item (a_layout.item(i))
+				curr_item := items_by_name.item (temp_layout.item(i))
 				check
 					curr_item_not_void: curr_item /= Void
 				end
-				item_state := a_layout.item(i + 1)
-				 item_height := a_layout.item(i + 5)
+				item_state := temp_layout.item(i + 1)
+				 item_height := temp_layout.item(i + 5)
 				 check
 				 	item_height_is_integer: item_height.is_integer
 				 end
@@ -593,5 +631,5 @@ feature {NONE} -- Implementation
 			
 	default_item_list_size: INTEGER is 6
 			-- Default size of `item_list'.
-
+			
 end -- class EB_EXPLORER_BAR

@@ -98,8 +98,6 @@ feature {NONE} -- Initialization
 	init_commands is
 			-- Create command classes.
 		do
-			create super_cluster_cmd.make (Current)
-			super_cluster_cmd.enable_displayed
 			create center_diagram_cmd.make (Current)
 			center_diagram_cmd.enable_displayed
 			center_diagram_cmd.enable_sensitive
@@ -109,16 +107,8 @@ feature {NONE} -- Initialization
 			create delete_cmd.make (Current, development_window)
 			delete_cmd.enable_displayed
 
---			create create_inherit_cmd.make (Current)
---			create_inherit_cmd.enable_displayed
---			create create_supplier_cmd.make (Current)
---			create_supplier_cmd.enable_displayed
---			create create_aggregate_cmd.make (Current)
---			create_aggregate_cmd.enable_displayed
-
 			create create_new_links_cmd.make (Current)
 			create_new_links_cmd.enable_displayed
-
 
 			create change_color_cmd.make (Current)
 			change_color_cmd.enable_displayed
@@ -155,51 +145,46 @@ feature {NONE} -- Initialization
 			delete_view_cmd.enable_displayed
 			create diagram_to_ps_cmd.make (Current)
 			diagram_to_ps_cmd.enable_displayed
+			
+			create crop_cmd.make (Current)
+			crop_cmd.enable_displayed
 		end
 
 	build_tool_bar is
 			-- Create diagram option bar.
 		local
 			bar_bar: EV_HORIZONTAL_BOX
-			view_label: EV_LABEL
+			view_menu_button: EV_TOOL_BAR_BUTTON
+			view_menu_toolbar: EV_TOOL_BAR
 			customize_area: EV_CELL
+			tb_commands: LINKED_LIST [EB_TOOLBARABLE_COMMAND]
 		do
 			create bar_bar
 
-			create custom_toolbar
-			custom_toolbar.extend (center_diagram_cmd)
-			custom_toolbar.extend (super_cluster_cmd)
-			custom_toolbar.extend (create {EB_TOOLBARABLE_SEPARATOR})
-			custom_toolbar.extend (create_class_cmd)
-			custom_toolbar.extend (create_new_links_cmd)
-			custom_toolbar.extend (delete_cmd)
-			custom_toolbar.extend (create {EB_TOOLBARABLE_SEPARATOR})
-			custom_toolbar.extend (undo_cmd)
-			custom_toolbar.extend (history_cmd)
-			custom_toolbar.extend (redo_cmd)
+			create tb_commands.make
+			tb_commands.extend (center_diagram_cmd)
+			tb_commands.extend (create_class_cmd)
+			tb_commands.extend (create_new_links_cmd)
+			tb_commands.extend (delete_cmd)
+			tb_commands.extend (undo_cmd)
+			tb_commands.extend (history_cmd)
+			tb_commands.extend (redo_cmd)
+			tb_commands.extend (trash_cmd)
+			tb_commands.extend (change_color_cmd)
+			tb_commands.extend (change_header_cmd)
+			tb_commands.extend (link_tool_cmd)
+			tb_commands.extend (select_depth_cmd)
+			tb_commands.extend (fill_cluster_cmd)
+			tb_commands.extend (zoom_in_cmd)
+			tb_commands.extend (zoom_out_cmd)
+			tb_commands.extend (toggle_supplier_cmd)
+			tb_commands.extend (toggle_inherit_cmd)
+			tb_commands.extend (toggle_labels_cmd)
+			tb_commands.extend (delete_view_cmd)
+			tb_commands.extend (diagram_to_ps_cmd)
+			tb_commands.extend (crop_cmd)
+			custom_toolbar := retrieve_diagram_toolbar (tb_commands)
 
---			custom_toolbar.extend (create {EB_TOOLBARABLE_SEPARATOR})
---			custom_toolbar.extend (create_inherit_cmd)
---			custom_toolbar.extend (create_supplier_cmd)
---			custom_toolbar.extend (create_aggregate_cmd)
-			custom_toolbar.extend (create {EB_TOOLBARABLE_SEPARATOR})
-			custom_toolbar.extend (trash_cmd)
-			custom_toolbar.extend (change_color_cmd)
-			custom_toolbar.extend (change_header_cmd)
-			custom_toolbar.extend (link_tool_cmd)
-			custom_toolbar.extend (create {EB_TOOLBARABLE_SEPARATOR})
-			custom_toolbar.extend (select_depth_cmd)
-			custom_toolbar.extend (fill_cluster_cmd)
-			custom_toolbar.extend (create {EB_TOOLBARABLE_SEPARATOR})
-			custom_toolbar.extend (zoom_in_cmd)
-			custom_toolbar.extend (zoom_out_cmd)
-			custom_toolbar.extend (create {EB_TOOLBARABLE_SEPARATOR})
-			custom_toolbar.extend (toggle_supplier_cmd)
-			custom_toolbar.extend (toggle_inherit_cmd)
-			custom_toolbar.extend (toggle_labels_cmd)
-			custom_toolbar.extend (create {EB_TOOLBARABLE_SEPARATOR})
-			custom_toolbar.extend (delete_view_cmd)
-			custom_toolbar.extend (diagram_to_ps_cmd)
 			custom_toolbar.update_toolbar
 			bar_bar.extend (custom_toolbar.widget)
 			bar_bar.disable_item_expand (custom_toolbar.widget)
@@ -210,21 +195,37 @@ feature {NONE} -- Initialization
 			create customize_area
 			bar_bar.extend (customize_area)
 
-			create view_label.make_with_text ("View   ")
-			bar_bar.extend (view_label)
-			bar_bar.disable_item_expand (view_label)
+			create view_menu_button.make_with_text ("View")
+			view_menu_button.set_pixmap (pixmaps.Icon_nothing)
+			create view_menu_toolbar
+			view_menu_toolbar.extend (view_menu_button)
+
+			view_menu_button.select_actions.extend (agent show_view_menu)
+			bar_bar.extend (view_menu_toolbar)
+			bar_bar.disable_item_expand (view_menu_toolbar)
 
 			create view_selector.make_default
 			view_selector.select_actions.extend (~on_view_changed)
 			bar_bar.extend (view_selector)
 			bar_bar.disable_item_expand (view_selector)
 
---			create toolbar_menu
---			create mi.make_with_text ("Customize...")
---			toolbar_menu.extend (mi)
---			mi.select_actions.extend (custom_toolbar~customize)
 			customize_area.pointer_button_release_actions.extend (~on_customize)
-
+		end
+		
+	show_view_menu is
+			-- Display "View" menu.
+		local
+			view_menu: EV_MENU
+		do
+			create view_menu
+			view_menu.extend (select_depth_cmd.new_menu_item)
+			view_menu.extend (create {EV_MENU_SEPARATOR})
+			view_menu.extend (link_tool_cmd.new_menu_item)
+			view_menu.extend (crop_cmd.new_menu_item)
+			view_menu.extend (create {EV_MENU_SEPARATOR})
+			view_menu.extend (delete_view_cmd.new_menu_item)			
+			view_menu.extend (diagram_to_ps_cmd.new_menu_item)
+			view_menu.show
 		end
 
 feature -- Access
@@ -623,15 +624,8 @@ feature {EB_CONTEXT_EDITOR, EB_CONTEXT_DIAGRAM_COMMAND, CONTEXT_DIAGRAM} -- Tool
 	reset_tool_bar_for_class_view is
 			-- Set toolbar for class_view.
 		do
-			super_cluster_cmd.enable_sensitive
---			center_diagram_cmd.enable_sensitive
 			create_class_cmd.enable_sensitive
 			delete_cmd.enable_sensitive
---			create_inherit_cmd.enable_sensitive
---			create_supplier_cmd.enable_sensitive
---			create_supplier_cmd.current_button.enable_select
---			create_aggregate_cmd.enable_sensitive
-
 			create_new_links_cmd.select_type (create_new_links_cmd.Inheritance)
 			create_new_links_cmd.enable_sensitive
 			change_color_cmd.enable_sensitive
@@ -650,6 +644,7 @@ feature {EB_CONTEXT_EDITOR, EB_CONTEXT_DIAGRAM_COMMAND, CONTEXT_DIAGRAM} -- Tool
 			zoom_out_cmd.enable_sensitive
 			delete_view_cmd.enable_sensitive
 			diagram_to_ps_cmd.enable_sensitive
+			crop_cmd.enable_sensitive
 		end
 
 	reset_tool_bar_for_cluster_view is
@@ -657,26 +652,14 @@ feature {EB_CONTEXT_EDITOR, EB_CONTEXT_DIAGRAM_COMMAND, CONTEXT_DIAGRAM} -- Tool
 		do
 			reset_tool_bar_for_class_view
 			fill_cluster_cmd.enable_sensitive
-			if cluster_stone /= Void and then cluster_stone.is_valid then
-				if cluster_stone.cluster_i.parent_cluster = Void then
-					super_cluster_cmd.disable_sensitive
-				end
-			end
 		end
 
 	disable_toolbar is
 			-- There is no need for any button to be sensitive.
 		do
-			super_cluster_cmd.disable_sensitive
 			create_class_cmd.disable_sensitive
 			delete_cmd.disable_sensitive
-			
---			create_inherit_cmd.disable_sensitive
---			create_supplier_cmd.disable_sensitive
---			create_aggregate_cmd.disable_sensitive
 			create_new_links_cmd.disable_sensitive
---			center_diagram_cmd.disable_sensitive
-			
 			change_color_cmd.disable_sensitive
 			trash_cmd.disable_sensitive
 			change_header_cmd.disable_sensitive
@@ -693,9 +676,21 @@ feature {EB_CONTEXT_EDITOR, EB_CONTEXT_DIAGRAM_COMMAND, CONTEXT_DIAGRAM} -- Tool
 			zoom_out_cmd.disable_sensitive
 			delete_view_cmd.disable_sensitive
 			diagram_to_ps_cmd.disable_sensitive
+			crop_cmd.disable_sensitive
 		end
-			
 
+	crop_diagram is
+			-- Crop diagram.
+		do
+			if class_view /= Void then
+				class_view.crop
+			elseif cluster_view /= Void then
+				cluster_view.crop
+			end
+			projector.full_project
+			projector.update
+		end
+	
 feature {DIAGRAM_COMPONENT} -- Control right-click
 
 	create_development_window (a_stone: STONE) is
@@ -949,13 +944,6 @@ feature {NONE} -- Implementation
 	center_diagram_cmd: EB_CENTER_DIAGRAM_COMMAND
 			-- Command to target the diagram to a class or a cluster.
 
-	super_cluster_cmd: EB_SUPER_CLUSTER_DIAGRAM_COMMAND
-			-- Command to target the diagram to the super cluster of current class or cluster.
-	
---	create_inherit_cmd: EB_CREATE_INHERIT_COMMAND	
---	create_supplier_cmd: EB_CREATE_SUPPLIER_COMMAND	
---	create_aggregate_cmd: EB_CREATE_AGGREGATE_COMMAND	
-
 	change_color_cmd: EB_CHANGE_COLOR_COMMAND
 			-- Command to change the color of a class or all the classes.
 			
@@ -982,6 +970,8 @@ feature {NONE} -- Implementation
 	fill_cluster_cmd: EB_FILL_CLUSTER_COMMAND
 
 	history_cmd: EB_DIAGRAM_HISTORY_COMMAND
+	
+	crop_cmd: EB_CROP_DIAGRAM_COMMAND
 
 	zoom_in_cmd: EB_ZOOM_IN_COMMAND
 
@@ -990,7 +980,7 @@ feature {NONE} -- Implementation
 	delete_view_cmd: EB_DELETE_VIEW_COMMAND
 
 	diagram_to_ps_cmd: EB_DIAGRAM_TO_PS_COMMAND
-
+	
 	Pixmaps: EB_SHARED_PIXMAPS is
 		once
 			create Result
@@ -1105,11 +1095,18 @@ feature {NONE} -- Events
 				create toolbar_menu
 				create mi.make_with_text ("Customize...")
 				toolbar_menu.extend (mi)
-				mi.select_actions.extend (custom_toolbar~customize)
+				mi.select_actions.extend (agent customize_toolbar)
 				toolbar_menu.show
 			end
 		end
-
+	
+	customize_toolbar is
+			-- Customize diagram toolbar.
+		do
+			custom_toolbar.customize
+			save_diagram_toolbar (custom_toolbar)
+		end
+		
 	on_resizing (a_x, a_y, a_width, a_height: INTEGER) is
 			-- `area' has been resized.
 			-- Update scrollbars.
@@ -1237,10 +1234,11 @@ feature {DIAGRAM_COMPONENT} -- Events
 
 	scroll_if_necessary is
 			-- A figure has moved.
-			-- `scrollable_area' should move as well,
-			-- and may have to resize.
+			-- `scrollable_area' should move as well, and may have to be resized.
+			-- Do nothing if `only_if_cursor_outside' and if the mouse pointer is over
+			-- the diagram.
 		local
- 			cursor_x, cursor_y, offset: INTEGER
+ 			cursor_x, cursor_y, offset, old_value: INTEGER
 		do
 			cursor_x := (pointer_position.x).max (0)
 			cursor_y := (pointer_position.y)
@@ -1278,9 +1276,10 @@ feature {DIAGRAM_COMPONENT} -- Events
 					if class_view /= Void then
 						class_view.point.set_y (class_view.y_to_grid (class_view.point.y + offset)) 
 					elseif cluster_view /= Void then
-						offset := cluster_view.y_to_grid (cluster_view.point.y + offset)
+						old_value := cluster_view.point.y
+						offset := cluster_view.y_to_grid (old_value + offset)
 						cluster_view.point.set_y (offset) 
-						cluster_view.notify_clusters_of_origin_moved (0, offset - cluster_view.point.y)
+						cluster_view.notify_clusters_of_origin_moved (0, offset - old_value)
 					end
 				end
 			end
@@ -1290,7 +1289,7 @@ feature {DIAGRAM_COMPONENT} -- Events
 					horizontal_scrollbar.set_value (
 						(horizontal_scrollbar.value + 40).max (0).min (horizontal_scrollbar.value_range.upper))
 				else
-					offset := (40 + cursor_x -visible_width).max (40)
+					offset := (40 + cursor_x - visible_width).max (40)
 					visible_width := visible_width + offset
 					horizontal_scrollbar.value_range.resize_exactly (
 						0,

@@ -740,7 +740,8 @@ feature -- Element change
 			else
 				create a_wel_string.make_empty (0)
 			end
-			cwin_set_window_text (item, a_wel_string.item)
+			--cwin_set_window_text (item, a_wel_string.item)
+			cwin_send_message (item, Wm_settext, 0, cwel_pointer_to_integer(a_wel_string.item))
 		ensure
 			text_set_when_not_void: a_text /= Void implies
 				equal (text, a_text)

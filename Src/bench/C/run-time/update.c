@@ -612,10 +612,31 @@ rt_public void conform_updt(void)
 
 rt_private void parents_updt(void)
 {
-	short   dtype, max_dtype;
-	struct  eif_par_types *pt, **pt2;
+	short   dtype, max_dtype, tsize, i;
+	struct  eif_par_types *pt, **pt2, **pt1;
 
 	max_dtype = eif_par_table_size;
+	tsize = max_dtype + 32;
+
+	eif_par_table2 = (struct eif_par_types **) cmalloc (tsize*sizeof(struct eif_par_types *));
+
+	if (eif_par_table2 == (struct eif_par_types **)0)
+		enomem(MTC_NOARG);
+
+	/* Copy pointers from `eif_par_table' */
+
+	pt1 = eif_par_table;
+	pt2 = eif_par_table2;
+
+	for (i = 0; i <= eif_par_table_size; ++i)
+		*(pt2++) = *(pt1++);
+
+	/* Initialize remaining entries to null */
+
+	for (; i < tsize; ++i)
+		*(pt2++) = (struct eif_par_types *) 0;
+
+	pt2 = eif_par_table2;
 
 	while ((dtype = wshort()) != -1)
 	{
@@ -640,42 +661,36 @@ rt_private void parents_updt(void)
 
 		pt->parents = wtype_array ((int16 *)0);
 
-		if (dtype <= eif_par_table_size)
-		{
-			/* Simply replace old entry with this one */
-			eif_par_table [dtype] = pt;
-		}
-		else
-		{
-			/* Put it in the second table */
-			/* Create/expand second table if necessary */
+		if (dtype >= max_dtype)
+			max_dtype = dtype;
 
-			if (dtype >= max_dtype)
-				max_dtype = dtype;
+		if (dtype >= tsize)
+		{
+			/* Expand table */
 
-			dtype -= eif_par_table_size;
+			i = tsize;
+			tsize = dtype + 32;     /* Give it some extra space */
+
+			eif_par_table2 = (struct eif_par_types **) crealloc (
+													(char *) eif_par_table2, 
+										tsize*sizeof(struct eif_par_types *)
+																);
+
+			if (eif_par_table2 == (struct eif_par_types **)0)
+				enomem(MTC_NOARG);
+
+			pt2 = eif_par_table2 + i;
+
+			for (; i < tsize; ++i)
+				*(pt2++) = (struct eif_par_types *) 0;
+
 			pt2 = eif_par_table2;
-
-			if (dtype >= eif_par_table2_size)
-			{
-				/* Allocate or reallocate second table */
-
-				if (pt2 == (struct eif_par_types **)0)
-					eif_par_table2 = (struct eif_par_types **) cmalloc ((dtype+32)*sizeof(struct eif_par_types *));
-				else
-					eif_par_table2 = (struct eif_par_types **) crealloc ((char *) pt2, (dtype+32)*sizeof(struct eif_par_types *));
-
-				if (eif_par_table2 == (struct eif_par_types **)0)
-					enomem(MTC_NOARG);
-
-				pt2 = eif_par_table2;
-				eif_par_table2_size = dtype + 32;
-			}
-
-			pt2 [dtype] = pt;
 		}
+
+		pt2 [dtype] = pt;
 	}
 
+	eif_par_table2_size = tsize;
 	eif_gen_conf_init (max_dtype);
 }
 

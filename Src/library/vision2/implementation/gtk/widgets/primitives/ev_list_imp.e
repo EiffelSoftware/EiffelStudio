@@ -55,9 +55,6 @@ feature {NONE} -- Initialization
 			disable_multiple_selection
 			C.gtk_widget_show (list_widget)
 			C.gtk_scrolled_window_add_with_viewport (c_object, list_widget)
-
-			-- Create the array where the items will be listed.
-			create ev_children.make (0)
 		end
 
 feature -- Status report
@@ -118,39 +115,12 @@ feature -- Status setting
 			C.gtk_list_set_selection_mode (list_widget, C.GTK_SELECTION_SINGLE_ENUM)
 		end
 
-feature {EV_LIST_ITEM_IMP} -- Implementation
-
-	add_item (item_imp: EV_LIST_ITEM_IMP) is
-			-- Add `item' to the list.
-		do
-			ev_children.extend (item_imp)
-			C.gtk_container_add (list_widget, item_imp.c_object)
-		end
-
-	insert_item (item_imp: EV_LIST_ITEM_IMP; value: INTEGER) is
-			-- insert `item_imp' at the position
-			-- `value' of list.
-		do
-			check
-				To_be_implemented: False
-			end
-		end
-
-	remove_item (item_imp: EV_LIST_ITEM_IMP) is
-			-- Remove `item_imp' from the list.
-		do
-			ev_children.prune_all (item_imp)
-			C.gtk_container_remove (list_widget, item_imp.c_object)
-		end
-
 feature {EV_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
 			-- Move `a_child' to `a_position' in `a_container'.
 		do
-			check
-				not_implemented: False
-			end
+			check to_be_implemented: False end
 		end
 
 	list_widget: POINTER
@@ -187,6 +157,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/03/02 17:49:05  king
+--| Removed redundant features from old implementation
+--|
 --| Revision 1.27  2000/03/01 00:58:16  king
 --| Removed selected_item
 --|

@@ -291,19 +291,24 @@ feature -- Per entity output
 			a_per: INTEGER
 			nbr_of_clusters: INTEGER
 			l_path: STRING
+			cluster_name, output_string: STRING
 		do
 			nbr_of_clusters := total_number - processed
 			a_per := percentage_calculation (nbr_of_clusters)
 
-			if a_path.count > 32 then
-				l_path := clone (a_path)
-				l_path.tail (32)
-				l_path.prepend ("...")
+			cluster_name := a_cluster.cluster_name
+			if cluster_name.count + a_path.count > 40 then
+				l_path := clone(a_path)
+				l_path.head (7)
+				output_string := clone (cluster_name) + " in " + l_path
+				l_path := clone(a_path)
+				l_path.tail (15)
+				output_string.append ("..." + l_path)
 			else
-				l_path := a_path
+				output_string := clone (cluster_name) + " in " + a_path
 			end
 
-			update_interface (a_cluster.cluster_name + " in " + l_path, nbr_of_clusters, a_per)
+			update_interface (output_string, nbr_of_clusters, a_per)
 
 			process_messages
 		end

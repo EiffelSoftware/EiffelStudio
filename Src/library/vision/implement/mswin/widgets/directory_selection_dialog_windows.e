@@ -58,6 +58,7 @@ feature {NONE} -- Initialization
 				directory := current_working_directory
 			end
 			update_directories
+			selection_made := True
 		end
 
 feature -- Access

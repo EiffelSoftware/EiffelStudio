@@ -92,7 +92,6 @@ feature {NONE} -- Implementation
 		do
 			if size_type /= (feature {WEL_WINDOW_CONSTANTS}.Size_minimized) then
 				if internal_child_window /= Void then
-					io.putstring ("Resizing internal window : " + a_width.out + " : " + a_height.out + "%N")
 					internal_child_window.resize (a_width, a_height)
 				end
 			end

@@ -394,7 +394,7 @@ feature {NONE} -- Implementations: signatures
 			if a_is_by_ref then
 				a_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_byref, 0)
 			end
-			if a_type.is_basic then
+			if a_type.is_basic and not a_type.is_bit then
 				a_sig.set_type (a_type.element_type, 0)
 			else
 				l_native_array_type ?= a_type

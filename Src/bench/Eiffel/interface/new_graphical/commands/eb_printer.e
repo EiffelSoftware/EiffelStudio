@@ -204,17 +204,12 @@ feature -- Basic operations
 				else
 					sent_txt := text.image
 					sent_txt.prune_all ('%R')
-					sent_txt.replace_substring_all ("%N", "%R%N")
+					if feature {PLATFORM_CONSTANTS}.is_windows then
+						sent_txt.replace_substring_all ("%N", "%R%N")
+					end
 				end
 					-- Generate the file we put the text in.
-				tmp_dir := (create {EXECUTION_ENVIRONMENT}).get ("TMP")
-				if tmp_dir /= Void then
-					create file_name.make_from_string (tmp_dir)
-				else
-					create file_name.make_from_string ((create {EXECUTION_ENVIRONMENT}).current_working_directory)
-				end
-				file_name.set_file_name ("prn_buffer")
-				file_name.add_extension ("tmp")
+				create file_name.make_temporary_name
 				create file.make (file_name)
 				if file.exists then
 					file.open_write
@@ -226,10 +221,8 @@ feature -- Basic operations
 					-- Generate the actual command line.
 				cmd := clone (external_command)
 				cmd.replace_substring_all ("$target", file_name)
-				cmd.replace_substring_all ("$printer", context.printer_name)
 					-- Send the command.
-				create shell_request
-				shell_request.execute (cmd)
+				(create {EXECUTION_ENVIRONMENT}).launch (cmd)
 					-- Delete the temporary file.
 					--| FIXME XR: It is too soon, the external command didn't have time to load the file!
 				--file.delete

@@ -8,6 +8,8 @@ remtrace com
 exprt -r %DEFAULT_CVS_TAG -d com "Src/library/com"
 remtrace Eiffel2Java
 exprt -r %DEFAULT_CVS_TAG -d Eiffel2Java "Src/library/Eiffel2Java"
+remtrace graph
+exprt -r %DEFAULT_CVS_TAG -d graph "Src/library/graph"
 remtrace lex
 exprt -r %DEFAULT_CVS_TAG -d lex "Src/library/lex"
 remtrace net

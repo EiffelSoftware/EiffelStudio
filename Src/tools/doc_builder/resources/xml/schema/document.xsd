@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- edited with XMLSPY v2004 rel. 2 U (http://www.xmlspy.com) by Neil Collier (ISE) -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:complexType name="metaType">
+		<xs:annotation>
+			<xs:documentation>Type denoting meta information for given content.</xs:documentation>
+		</xs:annotation>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="help" type="helpType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Denotes documentation help settings for given content</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="header_file" type="includeType" minOccurs="0"/>
+			<xs:element name="footer_file" type="includeType" minOccurs="0"/>
+		</xs:choice>
+	</xs:complexType>
 	<xs:element name="document">
 		<xs:annotation>
 			<xs:documentation>Documentation document type</xs:documentation>
@@ -20,26 +34,17 @@
 						</xs:complexContent>
 					</xs:complexType>
 				</xs:element>
-				<xs:element name="meta_data">
+				<xs:element name="meta_data" type="metaType">
 					<xs:annotation>
 						<xs:documentation>Document meta data for filtering and processing</xs:documentation>
 					</xs:annotation>
-					<xs:complexType>
-						<xs:sequence minOccurs="0" maxOccurs="unbounded">
-							<xs:element name="help" type="helpType">
-								<xs:annotation>
-									<xs:documentation>Information specific to the documents status within a help system - keywords, titles, etc.</xs:documentation>
-								</xs:annotation>
-							</xs:element>
-						</xs:sequence>
-					</xs:complexType>
 				</xs:element>
 			</xs:all>
 			<xs:attribute name="title" type="xs:string" use="optional"/>
 			<xs:attribute name="output" type="outputType" use="optional"/>
 		</xs:complexType>
 	</xs:element>
-	<xs:complexType name="eiffelLinkType" mixed="true">
+	<xs:complexType name="eiffelLinkType" block="extension" mixed="true">
 		<xs:annotation>
 			<xs:documentation>Type for links to Eiffel classes, features, etc.</xs:documentation>
 		</xs:annotation>
@@ -71,9 +76,21 @@
 			<xs:documentation>A link with a label</xs:documentation>
 		</xs:annotation>
 		<xs:all minOccurs="0">
-			<xs:element name="url" type="xs:string"/>
-			<xs:element name="label" type="compositeTextType" minOccurs="0"/>
-			<xs:element name="target" type="xs:string" minOccurs="0"/>
+			<xs:element name="url" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Physical url resource location</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="label" type="compositeTextType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Label</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="target" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Window target</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:all>
 	</xs:complexType>
 	<xs:complexType name="listType">
@@ -81,18 +98,13 @@
 			<xs:documentation>List type containing items</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="item" type="compositeTextType" maxOccurs="unbounded"/>
+			<xs:element name="item" type="compositeTextType" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Single list item</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 		<xs:attribute name="ordered" type="xs:string" use="required"/>
-	</xs:complexType>
-	<xs:complexType name="descriptiveLinkType">
-		<xs:annotation>
-			<xs:documentation>Link with label and description</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="link" type="docLinkType"/>
-			<xs:element name="description" type="xs:string"/>
-		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="codeType" mixed="true">
 		<xs:annotation>
@@ -306,12 +318,28 @@
 			<xs:documentation>Image</xs:documentation>
 		</xs:annotation>
 		<xs:all>
-			<xs:element name="url" type="xs:string"/>
-			<xs:element name="alt_text" type="xs:string" minOccurs="0"/>
-			<xs:element name="border" type="xs:integer" minOccurs="0"/>
-			<xs:element name="width" type="xs:integer" minOccurs="0"/>
-			<xs:element name="height" type="xs:integer" minOccurs="0"/>
+			<xs:element name="url" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Location of physical image file</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="alt_text" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Hover text of image</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="width" type="xs:integer" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Width of image</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="height" type="xs:integer" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Height of image</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="usemap" type="xs:string" minOccurs="0"/>
+			<xs:element name="border" type="xs:string" minOccurs="0"/>
 		</xs:all>
 	</xs:complexType>
 	<xs:complexType name="xmlHelpType">
@@ -386,7 +414,7 @@
 		</xs:annotation>
 		<xs:all>
 			<xs:element name="name" type="xs:string"/>
-			<xs:element name="content" type="xs:string"/>
+			<xs:element name="meta_content" type="xs:string"/>
 		</xs:all>
 	</xs:complexType>
 	<xs:complexType name="rowType">
@@ -394,20 +422,67 @@
 			<xs:documentation>Table row</xs:documentation>
 		</xs:annotation>
 		<xs:sequence maxOccurs="unbounded">
-			<xs:element name="cell" type="compositeTextType"/>
+			<xs:element name="cell" type="compositeTextType">
+				<xs:annotation>
+					<xs:documentation>Single row cell</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
+		<xs:attribute name="style" type="xs:string" use="optional"/>
 	</xs:complexType>
 	<xs:complexType name="tableType">
 		<xs:annotation>
 			<xs:documentation>Table</xs:documentation>
 		</xs:annotation>
-		<xs:sequence maxOccurs="unbounded">
-			<xs:element name="row" type="rowType"/>
-		</xs:sequence>
+		<xs:choice minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="row" type="rowType">
+				<xs:annotation>
+					<xs:documentation>Single table row</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="border" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Border width of table (default: no border)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="padding" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Cell padding width in pixels (default: no padding)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="spacing" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Cell spacing width in pixels</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="width" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Width of table in pixels</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="height" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Height of table</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+		<xs:attribute name="style" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="includeType">
+		<xs:annotation>
+			<xs:documentation>External include declaration.  The url denotes the file text to include at the element location and may be a reference to another XML file, or to client-side Javascript or VBScript.</xs:documentation>
+		</xs:annotation>
+		<xs:all>
+			<xs:element name="url">
+				<xs:annotation>
+					<xs:documentation>Resource url to file to include</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:all>
 	</xs:complexType>
 	<xs:complexType name="compositeTextType" mixed="true">
 		<xs:annotation>
-			<xs:documentation>Composite type containing other elements</xs:documentation>
+			<xs:documentation>Composite type containing text and other elements</xs:documentation>
 		</xs:annotation>
 		<xs:choice minOccurs="0" maxOccurs="unbounded">
 			<xs:element name="link" type="docLinkType" minOccurs="0" maxOccurs="unbounded">
@@ -415,7 +490,11 @@
 					<xs:documentation>Link to another document</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="image" type="imageType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="image" type="imageType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Embedded image</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="heading" type="headingType" minOccurs="0" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation>A heading of a particular sixe from 1-6</xs:documentation>
@@ -426,14 +505,83 @@
 					<xs:documentation>A list of text items</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="seealso" type="compositeTextType" minOccurs="0"/>
-			<xs:element name="sample" type="compositeTextType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="div" type="compositeTextType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="span" type="compositeTextType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="paragraph" type="compositeTextType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="note" type="compositeTextType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="tip" type="compositeTextType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="warning" type="compositeTextType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="paragraph" type="compositeTextType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Paragraph</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="sample" type="compositeTextType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>'Sample' section</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="note" type="compositeTextType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>'Note' section</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="tip" type="compositeTextType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>'Tip' section</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="warning" type="compositeTextType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>'Warning' section</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="seealso" type="compositeTextType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>'See Also' section</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="image_map" type="imageMapType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="info" type="compositeTextType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>'Info' section</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="code" type="codeType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Eiffel code formatting (use for inline code refernces)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="table" type="tableType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Embedded table</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="help_link" type="msLinkType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="output" type="compositeTextType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Output filterable section</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="code_block" type="codeType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Eiffel code formatting (use for separate code examples)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="image_link" type="imageLinkType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Embedded image-link composite element</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="alignment" type="xs:string" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Content alignment of enclosing paragraph (left, center or right)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="span" type="compositeTextType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>HTML span (inline) section</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="div" type="compositeTextType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>HTML div section</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="bold" type="xs:string" minOccurs="0" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation>For bold text</xs:documentation>
@@ -444,26 +592,25 @@
 					<xs:documentation>For italic text</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="image_map" type="imageMapType" minOccurs="0" maxOccurs="unbounded"/>
 			<xs:element name="line_break" minOccurs="0" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation>A line break/new line.</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="code" type="codeType" minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="tab_indent" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation>A block of sample source code</xs:documentation>
+					<xs:documentation>A single tabulation indent</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="table" type="tableType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="help_link" type="msLinkType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="output" type="compositeTextType" minOccurs="0" maxOccurs="unbounded"/>
-			<xs:element name="code_block" type="codeType" minOccurs="0"/>
-			<xs:element name="info" type="compositeTextType" minOccurs="0"/>
-			<xs:element name="image_link" type="imageLinkType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="include" type="includeType" minOccurs="0"/>
+			<xs:element name="sub_script" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>Indicates text the is sub-scripted (positioned half a character below preceeding text)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:choice>
-		<xs:attribute name="output" type="outputType" use="optional" default="all"/>
-		<xs:attribute name="inline" type="xs:boolean" use="optional" default="true"/>
+		<xs:attribute name="style" type="xs:string" use="optional"/>
+		<xs:attribute name="output" type="xs:string" use="optional"/>
 	</xs:complexType>
 	<xs:simpleType name="outputType">
 		<xs:annotation>
@@ -476,9 +623,20 @@
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="headingType" mixed="true">
+		<xs:annotation>
+			<xs:documentation>Heading</xs:documentation>
+		</xs:annotation>
 		<xs:all minOccurs="0">
-			<xs:element name="size" type="xs:string"/>
-			<xs:element name="content" type="compositeTextType" minOccurs="0"/>
+			<xs:element name="size" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>Size of heading (values from 1-6)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="content" type="compositeTextType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Heading composite content</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:all>
 	</xs:complexType>
 	<xs:complexType name="imageLinkType">
@@ -489,6 +647,11 @@
 			<xs:element name="url" type="xs:string"/>
 			<xs:element name="target" type="xs:string" minOccurs="0"/>
 			<xs:element name="image" type="imageType"/>
+			<xs:element name="border" type="xs:integer" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation>Width of surrounding border in pixels for an image that is a link to another resource</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:all>
 	</xs:complexType>
 </xs:schema>

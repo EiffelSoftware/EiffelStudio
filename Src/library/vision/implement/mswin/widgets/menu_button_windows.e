@@ -53,6 +53,7 @@ feature -- Status setting
 	set_insensitive (flag: BOOLEAN) is
 			-- Set sensitivity of Current to reflect `flag'.
 		do
+			{BUTTON_WINDOWS} precursor (flag)
 			if flag then
 				associated_menu.set_insensitive
 			else

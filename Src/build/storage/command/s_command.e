@@ -109,18 +109,18 @@ feature
 		local
 			sub_pos: INTEGER;
 			class_name: STRING;
+			new_class_name: STRING
 		do
+			new_class_name := clone (s);
+			new_class_name.to_upper;
 			class_name := clone (internal_name);
-			class_name.prepend (" ");
-			from
-				sub_pos := nt.substring_index (class_name, 1)
-			until
-				sub_pos = 0
-			loop
-				nt.replace_substring (s, sub_pos+1, sub_pos + class_name.count- 1);
-				sub_pos := nt.substring_index (class_name, sub_pos + s.count)
+			class_name.to_upper;
+			sub_pos := nt.substring_index (class_name, 1)
+			if sub_pos /= 0 then
+				nt.replace_substring (new_class_name, 
+						sub_pos, 
+						sub_pos + class_name.count - 1);
 			end;
-
 		end;
 
 	get_new_text (dir_name: STRING): STRING is

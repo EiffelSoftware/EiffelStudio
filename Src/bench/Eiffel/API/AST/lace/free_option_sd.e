@@ -98,6 +98,23 @@ feature -- Properties
 	working_directory,
 	force_recompile,
 	generate_eac_metadata: INTEGER is unique
+	free_option_count: INTEGER is 35
+
+feature -- Access
+
+	option_names: ARRAY [STRING] is
+			-- Name of each option associated to its code
+		once
+			from
+				create Result.make (0, free_option_count)
+				option_codes.start
+			until
+				option_codes.after
+			loop
+				Result.force (option_codes.key_for_iteration, option_codes.item_for_iteration)	
+				option_codes.forth
+			end
+		end
 
 feature -- Duplication
 
@@ -125,7 +142,7 @@ feature {NONE} -- Codes and names.
 	option_codes: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
 		once
-			!!Result.make (35);
+			!!Result.make (free_option_count);
 			Result.force (dead_code, "dead_code_removal");
 			Result.force (array_optimization, "array_optimization");
 			Result.force (inlining, "inlining");
@@ -162,20 +179,6 @@ feature {NONE} -- Codes and names.
 			Result.force (cls_compliant_name, "cls_compliant_name")
 		end
 
-	option_names: ARRAY [STRING] is
-			-- Name of each option associated to its code
-		once
-			from
-				create Result.make (0, 35)
-				option_codes.start
-			until
-				option_codes.after
-			loop
-				Result.force (option_codes.key_for_iteration, option_codes.item_for_iteration)	
-				option_codes.forth
-			end
-		end
-
 feature {COMPILER_EXPORTER}
 
 	adapt ( value: OPT_VAL_SD;
@@ -190,20 +193,22 @@ feature {COMPILER_EXPORTER}
 			opt: INTEGER
 		do
 			opt := code
-			if opt = hide then
-				!! hide_sd;
+			inspect opt
+			when hide then
+				create hide_sd
 				hide_sd.adapt (value, classes, list)	
-			elseif opt = hide_implementation then
-				!! hide_imp_sd;
+			when hide_implementation then
+				create hide_imp_sd
 				hide_imp_sd.adapt (value, classes, list)	
-			elseif opt = document then
-				!! document_sd;
+			when document then
+				create document_sd
 				document_sd.adapt (value, classes, list)	
-			elseif opt = profile then
-				!! profile_sd;
-				profile_sd.adapt (value, classes, list)	
+			when profile then
+				create profile_sd
+				profile_sd.adapt (value, classes, list)
+			else
 			end
-		end;
+		end
 
 	process_system_level_options (value: OPT_VAL_SD) is
 		local

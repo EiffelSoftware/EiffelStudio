@@ -427,10 +427,15 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					create l_compiled_assembly.make_from_ast (l_assembly)
 					l_old_assembly ?= Lace.old_universe.
 						cluster_of_name (l_compiled_assembly.cluster_name)
+						
+						-- Add it to top cluster list of system and to universe.
+
 					if l_old_assembly = Void then
 						l_new_assemblies.extend (l_compiled_assembly)
+						Eiffel_system.add_sub_cluster (l_compiled_assembly)
 						Universe.insert_cluster (l_compiled_assembly)
 					else
+						Eiffel_system.add_sub_cluster (l_old_assembly)
 						Universe.insert_cluster (l_old_assembly)
 					end
 					assemblies.forth

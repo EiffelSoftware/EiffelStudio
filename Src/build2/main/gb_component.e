@@ -29,23 +29,13 @@ feature -- Access
 	name: STRING
 		-- Name of `Current'.
 		
-	object: EV_WIDGET is
+	object: GB_OBJECT is
 			-- `Result' is representation of `Current'
 			-- unique each time.
 		do
-			Result ?= (new_object ((create {GB_ACCESSIBLE_XML_HANDLER}).xml_handler.xml_element_representing_named_component (name))).object
+			Result := (new_object ((create {GB_ACCESSIBLE_XML_HANDLER}).xml_handler.xml_element_representing_named_component (name), True))
 		ensure
 			result_not_void: Result /= Void
-		end
-		
-	
-	display_object: EV_WIDGET is
-			-- `Result' is display representation of `Current'
-			-- unique each time.
-		do
-			Result ?= (new_object ((create {GB_ACCESSIBLE_XML_HANDLER}).xml_handler.xml_element_representing_named_component (name))).display_object
-		ensure
-			Result_not_void: Result /= Void
 		end
 
 feature -- Status Setting

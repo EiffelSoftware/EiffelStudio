@@ -86,7 +86,7 @@ feature -- Implementation
 
 	add_child (child_imp: EV_WIDGET_IMP) is
 		do
-			child := child_imp
+			{EV_CONTAINER_IMP} Precursor (child_imp)
 			ev_children.extend (child_imp)
 		end
 

@@ -26,6 +26,7 @@ feature {NONE}
 	work (argument: ANY) is
 			-- Save a file with the chosen name.
 		local
+			fn: STRING;
 			new_file: RAW_FILE;
 			to_write: STRING;
 			aok: BOOLEAN;
@@ -35,34 +36,41 @@ feature {NONE}
 				(argument = name_chooser) or else
 				(last_warner /= Void and argument = last_warner)
 			then
-				!!new_file.make (name_chooser.selected_file);
-				aok := True;
-				if
-					(new_file.exists) and then (not new_file.is_plain)
-				then
+				fn := clone (name_chooser.selected_file);
+				if not fn.empty then
+					!!new_file.make (fn);
+					aok := True;
+					if
+						(new_file.exists) and then (not new_file.is_plain)
+					then
+						aok := False;
+						warner (text_window).gotcha_call 
+							(w_Not_a_plain_file (new_file.name))
+					elseif 
+						argument = name_chooser and then 
+						(new_file.exists and then new_file.is_writable)
+					then
+						aok := False;
+						warner (text_window).custom_call (Current, 
+							w_File_exists (new_file.name), 
+							"Overwrite", Void, "Cancel");
+					elseif
+						new_file.exists and then (not new_file.is_writable)
+					then
+						aok := False;
+						warner (text_window).gotcha_call 
+							(w_Not_writable (new_file.name))
+					elseif
+						not new_file.is_creatable
+					then
+						aok := False;
+						warner (text_window).gotcha_call 
+							(w_Not_creatable (new_file.name))
+					end
+				else
 					aok := False;
 					warner (text_window).gotcha_call 
 						(w_Not_a_plain_file (new_file.name))
-				elseif 
-					argument = name_chooser and then 
-					(new_file.exists and then new_file.is_writable)
-				then
-					aok := False;
-					warner (text_window).custom_call (Current, 
-						w_File_exists (new_file.name), 
-						"Overwrite", Void, "Cancel");
-				elseif
-					new_file.exists and then (not new_file.is_writable)
-				then
-					aok := False;
-					warner (text_window).gotcha_call 
-						(w_Not_writable (new_file.name))
-				elseif
-					not new_file.is_creatable
-				then
-					aok := False;
-					warner (text_window).gotcha_call 
-						(w_Not_creatable (new_file.name))
 				end;
 				if aok then
 					new_file.open_write;
@@ -76,7 +84,9 @@ feature {NONE}
 						end;
 					end;
 					new_file.close;
-					text_window.clear_clickable;
+					if text_window.changed then 
+						text_window.clear_clickable
+					end;
 					text_window.set_changed (false);
 					if text_window.file_name = Void then
 						text_window.set_file_name (new_file.name);

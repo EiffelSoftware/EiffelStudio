@@ -56,7 +56,6 @@ feature
 			pos: INTEGER
 		do
 			pos := position;
-			destroy;
 			if pos /= 1 then
 				if pos = data_list.count + 2 then
 					-- Selected edit all

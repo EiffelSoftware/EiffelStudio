@@ -461,7 +461,11 @@ void c_gtk_window_set_modal(GtkWindow* window, gboolean modal);
 /* Title of the window */
 char* c_gtk_window_title(GtkWindow* window);
 
+/*==============================================================================
+ gtk_frame functions
+==============================================================================*/
 
+#define c_gtk_frame_text(p) ((EIF_POINTER) ((GtkFrame*)p)->label)
 
 /*==============================================================================
  gtk_menu functions

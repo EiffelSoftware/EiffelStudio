@@ -265,6 +265,10 @@ feature {NONE} -- GTK C functions for frames
 		external "C | <gtk/gtk.h>"
 		end
 
+	c_gtk_frame_text (frame: POINTER): POINTER is
+		external "C [macro %"gtk_eiffel.h%"]"
+		end
+
 end -- class EV_GTK_CONTAINERS_EXTERNALS
 
 --|----------------------------------------------------------------

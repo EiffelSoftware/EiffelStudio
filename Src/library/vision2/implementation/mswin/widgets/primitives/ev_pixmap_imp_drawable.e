@@ -566,17 +566,6 @@ feature -- Delegated features
 				)
 		end
 
-	dimensions_set (new_width: INTEGER; new_height: INTEGER): BOOLEAN is
-			-- Check if the dimensions of the widget are set to 
-			-- the values given or the minimum values possible 
-			-- for that widget.
-		obsolete "don't use it"
-		do
-			check
-				do_not_use: False
-			end
-		end
-
 	disable_sensitive is
 			-- Disable sensitivity to user input events.
 		do
@@ -799,6 +788,9 @@ end -- class EV_PIXMAP_IMP_DRAWABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/06/09 01:55:23  manus
+--| Removed obsolete feature `dimension_set'
+--|
 --| Revision 1.8  2000/06/08 20:49:24  rogers
 --| Removed minimum_dimensions_set.
 --|

@@ -372,7 +372,7 @@ feature -- Settings
 feature -- Generation Structure
 
 	start_assembly_generation (assembly_name, a_file_name,
-			a_key_pair_file_name, location: STRING)
+			a_key_pair_file_name, location: STRING; assembly_info: ASSEMBLY_INFO)
 		is
 			-- Create Assembly with `name'.
 		require
@@ -385,6 +385,7 @@ feature -- Generation Structure
 		local
 			ass: MD_ASSEMBLY_INFO
 			l_assembly_flags: INTEGER
+			l_version: VERSION
 		do
 			create output_file_name.make_from_string (location)
 			output_file_name.set_file_name (a_file_name)
@@ -429,7 +430,18 @@ feature -- Generation Structure
 				public_key := Void
 			end
 
+			set_public_key_token (assembly_info)
+
 			create ass.make
+			create l_version
+			if l_version.is_version_valid (assembly_info.version) then
+				l_version.set_version (assembly_info.version)
+				ass.set_major_version (l_version.major.to_integer_16)
+				ass.set_minor_version (l_version.minor.to_integer_16)
+				ass.set_build_number (l_version.build.to_integer_16)
+				ass.set_revision_number (l_version.revision.to_integer_16)
+			end
+			
 			uni_string.set_string (assembly_name)
 			main_module_token := md_emit.define_assembly (uni_string, l_assembly_flags, ass,
 				public_key)
@@ -5036,7 +5048,8 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 			l_ass_info: MD_ASSEMBLY_INFO
 			l_indexes: INDEXING_CLAUSE_AS
 			l_info: ARRAY [STRING]
-			l_name, l_key_string, l_culture, l_version: STRING
+			l_name, l_key_string, l_culture, l_version_string: STRING
+			l_version: VERSION
 			l_token: INTEGER
 			l_key_token: MD_PUBLIC_KEY_TOKEN
 			l_major, l_minor, l_build, l_revision: INTEGER
@@ -5049,10 +5062,13 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 			if a_class_type.is_generated then
 				internal_assemblies.put (main_module_token, a_class_type.implementation_id)
 			else
-				if not a_class_type.associated_class.is_external and then a_class_type.is_precompiled then
-					l_precompiled_assembly := a_class_type.associated_class.assembly_info
+				if
+					not a_class_type.associated_class.is_external and then
+					a_class_type.is_precompiled
+				then
+					l_precompiled_assembly := a_class_type.assembly_info
 					l_name := l_precompiled_assembly.assembly_name
-					l_version := l_precompiled_assembly.version
+					l_version_string := l_precompiled_assembly.version
 					l_culture := l_precompiled_assembly.culture
 					l_key_string := l_precompiled_assembly.public_key_token
 				else
@@ -5061,7 +5077,7 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 							-- When it is an XML represented external class.
 						l_assembly := l_external_class.lace_class.cluster
 						l_name := l_assembly.assembly_name
-						l_version := l_assembly.version
+						l_version_string := l_assembly.version
 						l_culture := l_assembly.culture
 						l_key_string := l_assembly.public_key_token
 					else
@@ -5074,7 +5090,7 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 						l_info := l_indexes.assembly_name
 						l_name := l_info.item (1)
 						if l_info.valid_index (2) then
-							l_version := l_info.item (2)
+							l_version_string := l_info.item (2)
 						end
 						if l_info.valid_index (4) then
 							l_key_string := l_info.item (4)
@@ -5082,7 +5098,8 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 					end
 				end
 				if defined_assemblies.has (l_name) then
-					internal_assemblies.put (defined_assemblies.found_item, a_class_type.implementation_id)
+					internal_assemblies.put (defined_assemblies.found_item,
+						a_class_type.implementation_id)
 				else
 					if l_name.is_equal ("mscorlib") then
 						internal_assemblies.put (mscorlib_token, a_class_type.implementation_id)
@@ -5093,21 +5110,13 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 					else
 						create l_ass_info.make
 
-						if l_version /= Void then
-							l_pos := 1
-							l_new_pos := l_version.index_of ('.', l_pos)
-							l_major := l_version.substring (l_pos, l_new_pos - 1).to_integer
-
-							l_pos := l_new_pos + 1
-							l_new_pos := l_version.index_of ('.', l_pos)
-							l_minor := l_version.substring (l_pos, l_new_pos - 1).to_integer
-
-							l_pos := l_new_pos + 1
-							l_new_pos := l_version.index_of ('.', l_pos)
-							l_build := l_version.substring (l_pos, l_new_pos - 1).to_integer
-
-							l_pos := l_new_pos + 1
-							l_revision := l_version.substring (l_pos, l_version.count).to_integer
+						create l_version
+						if l_version.is_version_valid (l_version_string) then
+							l_version.set_version (l_version_string)
+							l_major := l_version.major
+							l_minor := l_version.minor
+							l_build := l_version.build
+							l_revision := l_version.revision
 
 							l_ass_info.set_major_version (l_major.to_integer_16)
 							l_ass_info.set_minor_version (l_minor.to_integer_16)

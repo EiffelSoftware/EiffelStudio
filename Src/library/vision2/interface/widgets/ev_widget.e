@@ -423,12 +423,27 @@ feature -- Event - command association
 	add_button_release_command (mouse_button: INTEGER;
 				    command: EV_COMMAND; 
 				    arguments: EV_ARGUMENTS) is
+			-- Add 'command' to the list of commands to 
+			-- be executed when button no 'mouse_button' 
+			-- is released
 		do
 			implementation.add_button_release_command (mouse_button,
 								   command, 
 								   arguments)
 		end
-			
+	
+	add_double_click_command (mouse_button: INTEGER;
+				  command: EV_COMMAND; 
+				  arguments: EV_ARGUMENTS) is
+			-- Add 'command' to the list of commands to 
+			-- be executed when button no 'mouse_button' 
+			-- is double clicked
+		do
+			implementation.add_double_click_command (mouse_button,
+								 command, 
+								 arguments)
+		end
+	
 	add_motion_notify_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
 		do
 			implementation.add_motion_notify_command (command, 

@@ -985,21 +985,21 @@ feature {NONE} -- Translation
 				lastline.substring (1, appl.count).is_equal (appl)
 			then
 				translate_appl
-			elseif lastline.count>14 and then lastline.substring (1,14).is_equal ("STATIC_CECIL =") then
+			elseif
+				lastline.count>14 and then lastline.substring (1,14).is_equal ("STATIC_CECIL =")
+			then
 				translate_cecil_and_dll
 			elseif
 				is_il_code and then
-				lastline.count >= 28 and then
-				lastline.substring (1, 28).is_equal ("clean: sub_clean local_clean")
+				lastline.count = 27 and then
+				lastline.substring (1, 27).is_equal ("$il_system_compilation_line")
 			then
 					-- Add resource file dependency for IL system
-				replacement := options.get_string ("il_resource", Void)
+				replacement := options.get_string ("il_system_compilation_line", "")
 				subst_eiffel (replacement)
 				subst_platform (replacement)
 				subst_compiler (replacement)
 				makefile.putstring (replacement)
-				makefile.putstring ("%N")
-				makefile.putstring (lastline)
 			else
 				debug ("translate_line_change")
 					debug ("output")

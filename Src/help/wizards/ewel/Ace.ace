@@ -1,11 +1,13 @@
 system
-	 Wel_Wizard
+	 wizard
 
 root
-	WIZARD_PROJECT_MANAGER(wizard_tool): "make_and_launch"
+	WEL_WIZARD_PROJECT_MANAGER(src): "make_and_launch"
 
 default
-	assertion (no)
+	assertion (require)
+	assertion (ensure)
+	assertion (check)
 	multithreaded (no)
 	console_application (no)
 	dynamic_runtime (no)
@@ -17,56 +19,56 @@ default
 	inlining (no)
 	inlining_size ("4")
 	exception_trace (yes)
+	arguments ("C:\50dev\help\wizards\ewel -callback c:\test.txt")
 
 cluster
 
 		-- Wel Wizard
 
-	root_class: 					"D:\Src\help\wizards\ewel"
+	root_class: 					"$EIFFEL_SRC\help\wizards\ewel"
 	src (root_class):				"$\src"
 	
 		-- EiffelBase
-	all base:						"$EIFFEL4\library\base"
+	all base:									"$EIFFEL_SRC\library\base"
 		exclude
 			"desc";"table_eiffel3"
 		end
 
-	all vision2: 			"$EIFFEL4\library\vision2_devel"
+	all wel:									"$EIFFEL_SRC\library\wel"
 		exclude
-			"gtk"
-			"test"
+			"CVS"
+		default
+			assertion (ensure)
 		end
 
-	all Events:				"$EIFFEL4\library\event"
+		-- EiffelVision
+	all vision2:								"$EIFFEL_SRC\library\vision2"
+		exclude
+			"gtk"
+			"EIFGEN"
+			"tmp"
+			"temp"
+			"release"
+			"obsolete"
+			"CVS"
+		end
 
-	all wel: 				"$EIFFEL4\library\wel_devel"
-
-	all wizard_tool:				"$EIFFEL4\tools\wizard"
+		-- Wizard library
+	all wizard_tool:				"$EIFFEL_SRC\library\wizard"
 
 		-- Lex and Parse
-	lex:			"$EIFFEL4\library\lex"
-	parse:		"$EIFFEL4\library\parse"
-
-
-		-- Resource Bench
-	interface (src):			"$\rb\interface"
-	lexical (interface):			"$\..\lexical"
-	Sem_expression (interface): 		"$\..\semantic\expression"
-	Sem_resource (interface):		"$\..\semantic\resource"
-	Synt_resource (interface):		"$\..\syntactic\resource"
-	Synt_expression (interface):		"$\..\syntactic\expression"
-	table_of_symbols (interface):	"$\..\tos"
-
-
+	lex:		"$EIFFEL_SRC\library\lex"
+	parse:		"$EIFFEL_SRC\library\parse"
 
 external
-	include_path:	
-			"$EIFFEL4\library\wel_devel\spec\windows\include",
-			"$EIFFEL4\library\vision2_devel\spec\include"
+	include_path:
+		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
+		"$(EIFFEL_SRC)\library\vision2\spec\include"
 
 	object:
-			"$EIFFEL4\library\wel_devel\spec\msc\lib\wel.lib",
-			"$EIFFEL4\library\vision2_devel\spec\$(COMPILER)\lib\vision2.lib",
-			"$EIFFEL4\library\vision2_devel\spec\$(COMPILER)\lib\libpng.lib",
-			"$EIFFEL4\library\vision2_devel\spec\$(COMPILER)\lib\zlib.lib"
+		"$(EIFFEL_SRC)\library\wel\spec\$(COMPILER)\lib\wel.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
+		"$(EIFFEL_SRC)\C_library\zlib\zlib.lib",
+		"$(EIFFEL_SRC)\C_library\libpng\libpng.lib"
 end
+

@@ -119,17 +119,80 @@ feature -- Basic operation
 	put_new_line is
 			-- Go to the beginning of the following line.
 		do
-			insert_text ("%R%N")
+			if position = text.count+1 then
+				append_text ("%R%N")
+			else
+				insert_text ("%R%N")
+			end
 		end
 
 	search (str: STRING): INTEGER is
 			-- Search the string `str' in the text.
 			-- If `str' is find, it returns its start
 			-- index in the text, otherwise, it returns
-			-- `Void'
+			-- `-1'
+		local
+			search_text: STRING
+				-- The text to be searched.
+			searched_for_text: STRING
+				-- The string to be search for.
+			searched_for_text_count: INTEGER
+				-- The length of the string to be searched for.
+			index_of_search: INTEGER
+				-- The current index of the search.
+			index_of_search_string: INTEGER
+				-- The current index within the string that
+				-- is being searched for.
+			current_search_valid: BOOLEAN
+				-- Is the current search position still valid?
+			found: BOOLEAN
+				-- Has the search text been found?
+			positions_to_search: INTEGER
+				-- The number of positions that must be searched.
 		do
-			check
-				not_yet_implemented: False
+				-- calculate sums wherever possible outside the loops.
+			search_text := text
+			searched_for_text := str
+			searched_for_text_count := searched_for_text.count
+			positions_to_search := search_text.count - searched_for_text_count + 1
+			from
+				index_of_search := 0
+				found := False
+			until
+				index_of_search = positions_to_search or
+				found
+			loop
+				if (search_text.item (index_of_search+1) = searched_for_text.item (1)) then
+					-- For improved speed, check the first character outside of the inner loop.
+					if searched_for_text.count = 1 then
+							found := true
+					else
+						from
+							-- If the first character has matched and the length of the string is
+							-- greater than one then loop through the remaining characters until
+							-- it is known that the string is either contained or not contained.
+							current_search_valid := True
+							index_of_search_string := 2
+						until
+							not current_search_valid or
+							found
+						loop
+							if not (search_text.item (index_of_search + index_of_search_string) =
+							searched_for_text.item (index_of_search_string)) then
+								current_search_valid := False
+							elseif index_of_search_string = searched_for_text.count then
+								found := True
+							end
+							index_of_search_string := index_of_search_string + 1
+						end
+					end
+				end
+				index_of_search := index_of_search + 1
+			end
+			if found then
+				Result := index_of_search
+			else
+				Result := -1
 			end
 		end
 

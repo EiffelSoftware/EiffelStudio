@@ -4,11 +4,6 @@ root
 
 	ewb_motif (root_cluster): "make"
 
-default
-
-	dead_code_removal (no);
-	assertion (no);
-
 cluster
 
 -- STANDARD STRUCTURES:

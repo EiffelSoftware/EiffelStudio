@@ -304,6 +304,7 @@ feature -- Status setting
 				refresh_threads_info
 				process_real_update_on_idle (l_status.is_stopped)
 			else
+				display_stop_cause
 				display_box_thread (False)
 			end
 		end
@@ -421,7 +422,11 @@ feature {NONE} -- Implementation
 			l_status: APPLICATION_STATUS
 		do
 			l_status := Application.status
-			if not l_status.is_stopped then
+			if l_status = Void then
+				stop_cause.remove_text
+				exception.remove_text
+				exception.remove_tooltip
+			elseif not l_status.is_stopped then
 				stop_cause.set_text (Interface_names.l_System_running)
 				exception.remove_text
 				exception.remove_tooltip
@@ -800,29 +805,34 @@ feature {NONE} -- Implementation
 			l_status: APPLICATION_STATUS
 		do
 			l_status := Application.status
-			arr := l_status.all_thread_ids
-			if arr /= Void and then not arr.is_empty then
-				create m
-				from
-					i := arr.lower
-				until
-					i > arr.upper
-				loop
-					tid := arr @ i
-					l_item_text := "0x" + tid.to_hex_string
-					create mi
-					if tid = l_status.current_thread_id then
-						mi.set_pixmap (pixmaps.icon_green_arrow)
-					end					
-					mi.set_text (l_item_text)
-					mi.set_data (tid)
-					mi.select_actions.extend (agent set_callstack_thread (tid))
-					m.extend (mi)
-					i := i + 1
+			if l_status /= Void and then l_status.is_stopped then
+				arr := l_status.all_thread_ids
+				if arr /= Void and then not arr.is_empty then
+					create m
+					from
+						i := arr.lower
+					until
+						i > arr.upper
+					loop
+						tid := arr @ i
+						l_item_text := "0x" + tid.to_hex_string
+						create mi
+						if tid = l_status.current_thread_id then
+							mi.set_pixmap (pixmaps.icon_green_arrow)
+						end					
+						mi.set_text (l_item_text)
+						mi.set_data (tid)
+						mi.select_actions.extend (agent set_callstack_thread (tid))
+						m.extend (mi)
+						i := i + 1
+					end
+					m.show_at (lab, 0, thread_id.height)
+				else
+					create wd.make_with_text ("Sorry no information available on Threads for now")
+					wd.show
 				end
-				m.show_at (lab, 0, thread_id.height)
 			else
-				create wd.make_with_text ("Sorry no information available on Threads for now")
+				create wd.make_with_text ("Sorry you can not change thread while execution is running")
 				wd.show
 			end
 		end		

@@ -12,8 +12,6 @@ inherit
 	WEL_STRUCTURE
 		rename
 			make as structure_make
-		redefine
-			destroy_item
 		end
 
 feature {NONE} -- Initialization
@@ -87,7 +85,7 @@ feature {NONE} -- Cookie access and settings
 		local
 			ptr: POINTER
 		do
-			ptr := c_protect_cookie (Current)
+			ptr := c_protect_cookie ($Current)
 			set_cookie (ptr)
 		ensure
 			cookie_set: cookie /= default_pointer
@@ -97,10 +95,8 @@ feature {NONE} -- Cookie access and settings
 			-- Free protected reference on Current
 		require
 			valid_cookie: cookie /= default_pointer
-		local
-			a: ANY
 		do
-			a := c_free_cookie (cookie)
+			c_free_cookie (cookie)
 			set_cookie (default_pointer)
 		ensure
 			cookie_set: cookie = default_pointer
@@ -122,29 +118,20 @@ feature {NONE} -- Cookie access and settings
 			cookie_set: cookie = a_cookie
 		end
 
-	c_protect_cookie (a: ANY): POINTER is
+	c_protect_cookie (a: POINTER): POINTER is
 			-- Protect `a'.
 		external
-			"C [macro %"estream.h%"] (EIF_OBJECT): EIF_OBJECT"
+			"C [macro %"estream.h%"] (EIF_REFERENCE): EIF_POINTER"
 		alias
-			"eif_adopt"
+			"eif_protect"
 		end
 
-	c_free_cookie (ptr: POINTER): ANY is
+	c_free_cookie (ptr: POINTER) is
 			-- Remove protection on `ptr'.
 		external
-			"C [macro %"estream.h%"] (EIF_OBJECT): EIF_REFERENCE"
+			"C [macro %"estream.h%"] (EIF_REFERENCE)"
 		alias
 			"eif_wean"
-		end
-
-feature {NONE} -- Removal
-
-	destroy_item is
-			-- Free `item'.
-		do
---			c_free (item)
-			item := default_pointer
 		end
 
 feature {NONE} -- Externals

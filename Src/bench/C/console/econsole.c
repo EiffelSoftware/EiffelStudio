@@ -420,7 +420,7 @@ BOOL CALLBACK exception_trace_dialog (HWND hwnd, UINT umsg, WPARAM wparam, LPARA
 			}
 			return 1;
 		default:
-			return 0;       
+			return 0;
 	}
 	EIF_END_GET_CONTEXT
 }

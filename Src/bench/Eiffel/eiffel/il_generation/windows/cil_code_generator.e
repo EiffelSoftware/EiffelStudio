@@ -4090,7 +4090,7 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 		do
 			insert_in_table (internal_setters, a_token, a_type_id, a_feature_id)
 		ensure
-			inserted: feature_token (a_type_id, a_feature_id) = a_token
+			inserted: setter_token (a_type_id, a_feature_id) = a_token
 		end
 
 	insert_implementation_feature (a_token, a_type_id, a_feature_id: INTEGER) is

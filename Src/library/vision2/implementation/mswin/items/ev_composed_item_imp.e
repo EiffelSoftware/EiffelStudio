@@ -92,17 +92,6 @@ feature -- Access
 			end
 		end
 
-               set_parent (par: like parent) is
-                       -- Make `par' the new parent of the widget.
-                       -- `par' can be Void then the parent is the screen.
-               do
-				if par /= Void then
-				--	parent_imp ?= par.implementation
-				else
-				--	parent_imp := Void
-				end
-               end
-
 feature -- Element change
 
 	set_count (value: INTEGER) is
@@ -191,6 +180,9 @@ end -- class EV_COMPOSED_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/03 00:21:34  rogers
+--| Removed set_parent.
+--|
 --| Revision 1.6  2000/02/19 05:44:59  oconnor
 --| released
 --|

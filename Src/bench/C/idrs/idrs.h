@@ -67,7 +67,7 @@ extern void idrmem_destroy(IDR *idrs);	/* Destruction of the memory IDR stream *
 extern int idr_getpos(IDR *idrs);		/* Get position in stream */
 extern int idr_size(IDR *idrs, int *lp, int maxlength);			/* Retrieve/store a size (variable length) */
 extern bool_t idr_setpos(IDR *idrs, int pos);		/* Set position in stream */
-extern bool_t idr_void(void);		/* Always return TRUE */
+extern bool_t idr_void(IDR *idrs, void *ext);		/* Always return TRUE */
 extern bool_t idr_char(IDR *idrs, char *cp);		/* Encoding of a char */
 extern bool_t idr_u_char(IDR *idrs, unsigned char *cp);		/* Encoding of an unsigned char */
 extern bool_t idr_short(IDR *idrs, short int *sp);		/* Encoding of a short integer */

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 if [ ! "$ISE_EIFFEL" ]; then
 	echo ISE_EIFFEL not defined. Cannot continue

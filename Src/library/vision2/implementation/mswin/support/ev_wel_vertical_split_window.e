@@ -22,7 +22,6 @@ inherit
 				on_left_button_up
 		end
 
-
 creation
 	make
 
@@ -30,12 +29,6 @@ feature {NONE} -- Access
 
 	split_imp: EV_VERTICAL_SPLIT_IMP
 			-- The parent container, an EV_SPLIT_IMP
-
-	splitter_rect: WEL_RECT is
-			-- The rect filled by the splitter
-		do
-			!! Result.make (0, level, width, level + size)
-		end
 
 feature -- Event handling
 
@@ -90,12 +83,20 @@ feature -- Event handling
 
 	on_mouse_move (code, a_x, a_y: INTEGER) is
 			-- Respond to a mouse move message.
+		local
+			acceptable_y: INTEGER
 		do
 			if is_splitting then
-				if a_y >= split_imp.minimum_level and
-					   	a_y <= split_imp.maximum_level then
+				if a_y < split_imp.minimum_level then
+					acceptable_y := split_imp.minimum_level
+				elseif a_y > split_imp.maximum_level then
+					acceptable_y := split_imp.maximum_level
+				else
+					acceptable_y := a_y
+				end
+				if acceptable_y /= level then
 					invert_split
-					level := a_y
+					level := acceptable_y
 					invert_split
 				end
  			end
@@ -132,6 +133,24 @@ feature -- Basic routines
 			dc.line (0, level + 5, width, level + 5)
 			dc.release
 		end
+
+	invert_split is
+			-- Invert the vertical split from `first' position to `last' position
+			-- Used when the user move the split
+			-- It uses rectangle and not fill_rectangle because
+			-- the second feature doesn't use the rop2 status.
+		local
+			old_rop2: INTEGER
+		do
+			dc.get
+			old_rop2 := dc.rop2
+			dc.set_rop2 (R2_xorpen)
+			dc.select_brush (splitter_brush)
+			dc.rectangle (-1, level, width+1, level + size)
+			dc.set_rop2 (old_rop2)
+			dc.release
+		end
+
 
 end -- class EV_WEL_VERTICAL_SPLIT_WINDOW
 

@@ -38,12 +38,6 @@ feature {NONE} -- Access
 	split_imp: EV_HORIZONTAL_SPLIT_IMP
 			-- The parent container, an EV_SPLIT_IMP
 
-	splitter_rect: WEL_RECT is
-			-- The rect filled by the splitter
-		do
-			!! Result.make (level, 0, level + size, height)
-		end
-
 feature -- Event handling
 
 	on_wm_erase_background (wparam: INTEGER) is
@@ -98,12 +92,22 @@ feature -- Event handling
 
 	on_mouse_move (code, a_x, a_y: INTEGER) is
 			-- Respond to a mouse move message.
+			-- Do something only if the user is moving the splitter
+			-- inside the acceptable area.
+		local
+			acceptable_x: INTEGER
 		do
 			if is_splitting then
-				if a_x >= split_imp.minimum_level and
-					   	a_x <= split_imp.maximum_level then
+				if a_x < split_imp.minimum_level then
+					acceptable_x := split_imp.minimum_level
+				elseif a_x > split_imp.maximum_level then
+					acceptable_x := split_imp.maximum_level
+				else
+					acceptable_x := a_x
+				end
+				if acceptable_x /= level then
 					invert_split
-					level := a_x
+					level := acceptable_x
 					invert_split
 				end
  			end
@@ -138,6 +142,23 @@ feature -- Basic routines
 			dc.line (level + 4, 0, level + 4, height)
 			dc.select_pen (window_frame_pen)
 			dc.line (level + 5, 0, level + 5, height)
+			dc.release
+		end
+
+	invert_split is
+			-- Invert the vertical split from `first' position to `last' position
+			-- Used when the user move the split
+			-- It uses rectangle and not fill_rectangle because
+			-- the second feature doesn't use the rop2 status.
+		local
+			old_rop2: INTEGER
+		do
+			dc.get
+			old_rop2 := dc.rop2
+			dc.set_rop2 (R2_xorpen)
+			dc.select_brush (splitter_brush)
+			dc.rectangle (level, -1, level + size, height+1)
+			dc.set_rop2 (old_rop2)
 			dc.release
 		end
 

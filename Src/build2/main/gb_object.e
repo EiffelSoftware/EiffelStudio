@@ -542,15 +542,21 @@ feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT} -- Implementation
 			-- A convenient was of setting up the drop
 			-- actions for GB_TYPE_SELECTOR_ITEM.
 		do
-				-- If the ctrl key is pressed, then we must
-				-- start a new object editor for `Current', instead
-				-- of beginning the pick and drop.
-			if application.ctrl_pressed then
+				
+			if application.ctrl_pressed and application.shift_pressed then
+					-- If ctrl and shift is pressed, we must highlight
+					-- the object in the layout constructor.
+				Layout_constructor.highlight_object (Current)
+			elseif application.ctrl_pressed then
+					-- If the ctrl key is pressed, then we must
+					-- start a new object editor for `Current', instead
+					-- of beginning the pick and drop.
 				new_object_editor (Current)
 			else
 				type_selector.update_drop_actions_for_all_children (Current)
 				Result := Current
 			end
+			
 		end
 
 	set_up_display_object_events (a_display_object, an_object: EV_ANY) is

@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class COMPLEX_FIG
+class
+
+	COMPLEX_FIG
 
 inherit
 	
@@ -111,7 +113,7 @@ feature -- Duplication
 		end;
 
 
-feature -- Modification & Insertion 
+feature -- Element change 
 
 	add (v: like first) is
 			-- Append `v' to list.
@@ -248,7 +250,7 @@ feature {NONE} -- Access
 
 	linked_list_cursor: CURSOR;
 
-feature {NONE} -- Modification & Insertion
+feature {NONE} -- Element change
 
 	set_no_origin is
 			-- Erase definition of `origin'.
@@ -269,7 +271,6 @@ feature {NONE} -- Cursor movement
 		end;
 		
 end -- class COMPLEX_FIG
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

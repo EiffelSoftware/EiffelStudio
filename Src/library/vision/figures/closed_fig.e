@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class CLOSED_FIG 
+deferred class
+
+	CLOSED_FIG 
 
 inherit
 
@@ -28,7 +30,7 @@ feature -- Access
 			-- Type of path
 			-- Void if the path of the figure shouldn't be drawn
 
-feature -- Modification & Insertion
+feature -- Status setting
 
 	set_origin_to_center is
 			-- Set origin to `center'
@@ -52,7 +54,6 @@ feature -- Modification & Insertion
 		end
 
 end -- class CLOSED_FIG
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

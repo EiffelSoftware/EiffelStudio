@@ -4,12 +4,11 @@ indexing
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$";
-	author: "E. Letellier, J.P. Sarkis & S. Villette";
-	product: EiffelCase;
 	keywords: Graphical_figure
 
-class CLOSURE 
+class
 
+	CLOSURE 
 
 creation
 
@@ -20,10 +19,10 @@ feature -- Initialization
 	make is
 			-- Create a closure
 		do
-			!!up_left;
-			!!down_right;
-			empty := true;
-			infinite := false
+			!! up_left;
+			!! down_right;
+			empty := True;
+			infinite := False
 		end; 
 	
 feature -- Access 
@@ -90,9 +89,8 @@ feature -- Conversion
 			Result.set (up_left, down_right.x-up_left.x, down_right.y-up_left.y)
 		end;
 
-feature -- Modification & Insertion
+feature -- Element change
 
-	
 	set (x, y, width, height: INTEGER) is
 			-- Set coordinates and size of closure.
 		require
@@ -187,6 +185,7 @@ feature -- Modification & Insertion
 		end;
 
 	set_infinite is
+			-- Set current infinite.
 		do
 			infinite := true;
 			empty := false
@@ -195,6 +194,7 @@ feature -- Modification & Insertion
 		end;
 
 	set_finite is
+			-- Set current finite.
 		do
 			infinite := false
 		end;
@@ -223,9 +223,7 @@ invariant
 	empty_implies_not_infinite: empty implies not infinite;
 	infinite_implies_not_empty: infinite implies not empty
 
-
 end -- class CLOSURE 
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
@@ -239,3 +237,4 @@ end -- class CLOSURE
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------
+

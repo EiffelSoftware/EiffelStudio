@@ -53,6 +53,7 @@ feature {NONE} -- Initialization
 
 	make is
 			-- Create a world.
+			--| FIXME IEK 15101999 Makes call to non-existent `notify make'
 		local
 			ll: LINKED_LIST [EV_FIGURE]
 		do
@@ -71,7 +72,7 @@ feature {NONE} -- Initialization
 				al_forth
 			end
 			start
-			notify_make
+			--notify_make
 			create changes_box.make
 			create surround_box.make
 			create origin.make

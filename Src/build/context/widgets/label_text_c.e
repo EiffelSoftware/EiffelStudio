@@ -64,11 +64,11 @@ feature
 			resize_policy_disabled_modified := True;
 			resize_policy_disabled := flag;
 			if flag then
-				--forbid_recompute_size;
+				forbid_recompute_size;
 					-- the current size must be saved
 				size_modified := True;
 			else
-				--allow_recompute_size
+				allow_recompute_size
 			end;
 		end;
 

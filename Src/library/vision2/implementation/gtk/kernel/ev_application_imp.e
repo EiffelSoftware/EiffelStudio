@@ -12,7 +12,7 @@ class
 inherit
 	EV_APPLICATION_I
 			export
-				{EV_PICK_AND_DROPABLE_IMP} capture_widget
+				{EV_PICK_AND_DROPABLE_IMP} captured_widget
 			end
 
 	IDENTIFIED
@@ -317,12 +317,6 @@ feature -- Implementation
 
 	is_in_transport: BOOLEAN
 		-- Is application currently in transport (either PND or docking)?
-
-	set_capture_widget (a_capture_widget: EV_WIDGET) is
-			-- Set `capture_widget' to the widget that has the current capture 'a_capture_widget'.
-		do
-			capture_widget := a_capture_widget
-		end
 
 	enable_is_in_transport is
 			-- Set `is_in_transport' to True.

@@ -125,7 +125,7 @@ feature -- Element change
 
 	read_from_named_file (file_name: STRING) is
 			-- Attempt to load pixmap data from a file specified by `file_name'.
-			-- May raise `Ev_unknow_image_format' or `Ev_courpt_image_data'
+			-- May raise `Ev_unknown_image_format' or `Ev_corrupt_image_data'
 			-- exceptions.
 			--|FIXME do this!
 		do
@@ -220,6 +220,7 @@ feature -- Access
 					(array_offset \\ (a_width) // 4), -- Zero based X coord
 					((array_offset) // a_width) -- Zero based Y coord
 				)
+--C.c_gdk_colormap_query_color (a_color_map, a_pixel, a_color)
 				array_area.put (C.gdk_color_struct_red (a_color).ascii_char, array_offset)
 				array_area.put (C.gdk_color_struct_green (a_color).ascii_char, array_offset + 1)
 				array_area.put (C.gdk_color_struct_blue (a_color).ascii_char, array_offset + 2)

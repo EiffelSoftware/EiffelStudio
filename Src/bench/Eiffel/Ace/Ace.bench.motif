@@ -141,6 +141,8 @@ cluster
 		main:				"$BENCH/Eiffel/interface/graphical/main";
 		graphical_shared:	"$BENCH/Eiffel/interface/graphical/shared";
 		stones:				"$BENCH/Eiffel/interface/graphical/stones";
+		preference_tool:		"$BENCH/Eiffel/interface/graphical/preference_tool";
+		profile_tool:			"$BENCH/Eiffel/interface/graphical/profile_tool";
 		text_window:		"$BENCH/Eiffel/interface/graphical/text_window";
 		windows:			"$BENCH/Eiffel/interface/graphical/windows";
 		wizard_common:		"$BENCH/Eiffel/interface/graphical/wizard/common";

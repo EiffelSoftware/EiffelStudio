@@ -45,16 +45,17 @@ inherit
 			has_precondition,
 			has_postcondition,
 			feature_location,
-			is_feature,
-			ccom_create_item
+			is_feature
+		select
+			create_item
 		end
 
 	COMPLETION_ENTRY
-		undefine
-			create_item
-		redefine
-			ccom_create_item
+		rename
+			ccom_create_item as completion_ccom_create_item,
+			create_item as completion_create_item
 		end
+
 
 	SHARED_EIFFEL_PROJECT
 		export {NONE}
@@ -159,9 +160,11 @@ feature -- Access
 			ast: FEATURE_AS
 		do
 			ast := compiler_feature.e_feature.ast
-			create ef.make (compiler_feature.e_feature.written_class.file_name, ast.end_position)
-			ef.set_current_feature (ast)
-			comments := ef.current_feature_comments
+			if ast /= Void then
+				create ef.make (compiler_feature.e_feature.written_class.file_name, ast.end_position)
+				ef.set_current_feature (ast)
+				comments := ef.current_feature_comments				
+			end
 			create Result.make (20)
 			if is_once then
 				Result.append ("once ")
@@ -481,9 +484,12 @@ feature -- Basic Operations
 		do
 			if file_path /= Void and line_number /= Void then
 				file_path.replace (compiler_feature.e_feature.written_class.file_name)
-				start_position := compiler_feature.e_feature.ast.start_position
-				txt := compiler_feature.written_class.lace_class.text.substring (1, start_position)
-				line_number.set_item (txt.occurrences ('%N'))
+				if compiler_feature.e_feature.ast /= Void then
+					-- AST may be Void for inherited features.
+					start_position := compiler_feature.e_feature.ast.start_position
+					txt := compiler_feature.written_class.lace_class.text.substring (1, start_position)
+					line_number.set_item (txt.occurrences ('%N'))					
+				end
 			end
 		end
 
@@ -720,10 +726,5 @@ feature {NONE} -- Implementation
 		
 	Initial_array_size: INTEGER is 0
 
-	ccom_create_item (eif_object: ANY): POINTER is
-			-- Initialize `item'
-		external
-			"C++ [new ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub %"ecom_eiffel_compiler_IEiffelFeatureDescriptor_impl_stub_s.h%"](EIF_OBJECT)"
-		end
 			
 end -- class FEATURE_DESCRIPTOR

@@ -1,4 +1,4 @@
-warning_level='-woff 1009,1167,1174,1552'
+warning_level='-woff 1552'
 wkoptimize='-O0'
 binary_format='-n32'
 ldflags='-multigot'

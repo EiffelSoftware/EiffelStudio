@@ -1,50 +1,40 @@
+indexing
+	description: "Hole to do a back trasition on the previous state."
+	Id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class APP_RETURN_H 
 
 inherit
-
-	APP_EDITOR_HOLE
-        rename
-            make as parent_make
+	EB_BUTTON
 		redefine
-			process_label
+			make
 		end
 
 creation
-
 	make
-	
-feature {NONE}
 
-    make (a_parent: COMPOSITE) is
-        do
-            parent_make (a_parent)
-        end
+feature {NONE} -- Initialization
 
-	symbol: PIXMAP is
+	make (par: EV_CONTAINER) is
+		local
+			cmd: APP_SET_RETURN
+		do
+			Precursor (par)
+			create cmd
+			add_pnd_command (Pnd_types.label_type, cmd, Void)
+		end
+
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.return_pixmap
-		end;
+		end
 
-	create_focus_label is
-		do
-			set_focus_string (Focus_labels.return_label)
-		end;
-	
-feature {NONE}
+--	create_focus_label is
+--		do
+--			set_focus_string (Focus_labels.return_label)
+--		end
 
-	stone_type: INTEGER is
-		do
-			Result := Stone_types.label_type
-		end;
+end -- class APP_RETURN_H
 
-	process_label (dropped: LABEL_STONE) is
-			-- Set the return transition to the dropped stone. 
-		local
-			set_return_command: APP_SET_RETURN;
-		do
-			!!set_return_command;
-			set_return_command.execute (dropped.data.label);
-		end;
-
-end 

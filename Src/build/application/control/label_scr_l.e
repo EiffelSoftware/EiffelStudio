@@ -1,124 +1,89 @@
+indexing
+	description: "List of the existing label for the currently selected state."
+	Id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class LABEL_SCR_L  
+class LABEL_SCR_L
 
 inherit
-
-	COMMAND
-	COMMAND_ARGS
-		rename 
-			First as unused,
-			Second as set_show_action,
-			Third as set_label_action
-		end
-	DRAG_SOURCE
-	LABEL_STONE
-	SCROLLABLE_LIST
-		rename 
-			make as list_make,
-			append as list_append
-		export
-			{APP_EDITOR} all
-		end
-	SCROLLABLE_LIST
-		rename		
-			make as list_make
-		export
-			{APP_EDITOR} all
+	EV_LIST
 		redefine
-			append
-		select
-			append
+			make
 		end
+
+	EV_COMMAND
+
 	REMOVABLE
 
-creation
+	CONSTANTS
 
+creation
 	make
 	
-feature -- Creation
+feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (par: EV_CONTAINER) is
 		do
-			list_make (a_name, a_parent)
-			!! label_names.make 
-			compare_objects
-			add_button_press_action (3, Current, set_show_action)
-			add_button_press_action (3, Current, set_label_action)
-			initialize_transport
-			set_visible_item_count (7)
+			Precursor (par)
+			activate_pick_and_drop (3, Current, Void) 
+			set_data_type (Pnd_types.label_type)
 		end 
 
-feature
+feature -- Access
 
 	selected_label: STRING is
 			-- Current label selected
+		local
+			tran_nm: TRAN_NAME
 		do
-			if selected_item /= Void then
-				from
-					label_names.start
-				until
-					label_names.after or else
-					equal (selected_item, label_names.item)
-				loop
-					label_names.forth
-				end
-				if not label_names.after  then
-	   				Result := label_names.item.cmd_label.label
-				end
+			tran_nm ?= selected_item
+			if tran_nm /= Void  then
+				Result := tran_nm.cmd_label.label
 			end
 		end
 
-	append (l: ARRAYED_LIST [TRAN_NAME]) is
-			-- Append `l'. Construct `label_names' from `l'.
+	append (l: TRAN_NAME_LIST) is
+		-- Append `l' to current list.
+		require
+			valid_list: l /= Void
 		do
-			label_names.append (l)
-			list_append (l)	
+			from
+				l.start
+			until
+				l.after
+			loop
+				l.item.set_parent (Current)
+				l.forth
+			end
 		end
-			
-feature {NONE}
+
+feature {NONE} -- Removable
 
 	remove_yourself is
 		local
-			cut_label_command: APP_CUT_LABEL
+			cut_label_cmd: APP_CUT_LABEL
+			arg: EV_ARGUMENT2 [STRING, GRAPH_ELEMENT]
 		do
-			!! cut_label_command
-			cut_label_command.execute (selected_item)
+			create cut_label_cmd
+			create arg.make (selected_item.text, Void)
+			cut_label_cmd.work (arg)
+			cut_label_cmd.update_history
 		end
-
-	data: CMD_LABEL
-
-	source:WIDGET is
-		do
-			Result := Current 
-		end
-
-	label_names: SORTED_TWO_WAY_LIST [TRAN_NAME]
-			-- List of the labels names. 
 
 feature {NONE} -- Execute
 
-	execute (argument: ANY) is
-			-- Execute the command
+	execute (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
+			-- Prepare the transport (pick and drop).
+		local
+			tran_nm: TRAN_NAME
 		do
-			if argument = set_label_action then
-				data := Void
-				if selected_item /= Void then
-					from
-						label_names.start
-					until
-						label_names.after or else
-						equal (selected_item, label_names.item)
-					loop
-						label_names.forth
-					end
-					if not label_names.after  then
-	   					data := label_names.item.cmd_label
-					end
-				end
-			elseif argument = set_show_action then
-				data := Void
+			set_transported_data (Void)
+			tran_nm ?= selected_item
+			if tran_nm /= Void then
+				set_transported_data (tran_nm.cmd_label)
 			end
 		end
 
-end
-	
+end -- class LABEL_SCR_L
+

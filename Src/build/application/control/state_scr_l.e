@@ -1,112 +1,86 @@
+indexing
+	description: "List of the created states."
+	Id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class STATE_SCR_L 
+class STATE_SCR_L
 
 inherit
-
-	COMMAND;
-	COMMAND_ARGS
-		rename 
-			First as First_arg
-		end;
-	DRAG_SOURCE
-		redefine
-			transportable
-		end;
-	HOLE
+	EV_LIST
 		rename
-			target as source
-		redefine
-			process_state
-		select
-			init_toolkit
-		end;
-	STATE_STONE;
-	SCROLLABLE_LIST
-		rename 
-			identifier as oui_identifier,
-			make as list_create,
-			init_toolkit as scroll_list_init_toolkit
-		end;
-		
+			make as list_create
+		end
+
+	EV_COMMAND
+
 	REMOVABLE
 
-creation
+	CONSTANTS
 
+creation
 	make
 
-feature -- Creation
+feature {NONE} -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE; editor: APP_EDITOR) is
+	make (par: EV_CONTAINER; editor: APP_EDITOR) is
 			-- Create the state_scr_list.
+		local
+			rout_cmd: EV_ROUTINE_COMMAND
+			arg: EV_ARGUMENT1 [APP_EDITOR]
 		do
-			list_create (a_name, a_parent);
-			compare_objects;
-			application_editor := editor;
-			register;
-			add_button_press_action (3, Current, Void);
-			initialize_transport;
-		end; -- Create
+			list_create (par)
+--			compare_objects
+
+			activate_pick_and_drop (3, Current, Void)
+			set_data_type (Pnd_types.state_type)
+			create rout_cmd.make (~process_state)
+			create arg.make (editor)
+			add_pnd_command (Pnd_types.state_type, rout_cmd, arg)
+		end
 	
-feature 
-
-	data: BUILD_STATE;
-			-- Current data
-
-feature {NONE} -- Stone
-
-	source: STATE_SCR_L is
-		do
-			Result := Current
-		end;
-
-	transportable: BOOLEAN;
-			-- Is the data able to be transported ?
-
 feature {NONE} -- Removable
 
 	remove_yourself is
 		local
 			cut_figure_command: APP_CUT_FIGURE
+			arg: EV_ARGUMENT1 [STATE_CIRCLE]
 		do
-			!! cut_figure_command.make (selected_circle)
-			cut_figure_command.execute (Void)
-		end;
+			create cut_figure_command
+			create arg.make (Void)
+			cut_figure_command.execute (arg, Void)
+		end
 	
-feature 
+feature -- Access
 
-	selected_circle: STATE_CIRCLE;
+	selected_circle: STATE_CIRCLE
 			-- Current state_figure 
 
 	set_selected (c: STATE_CIRCLE) is
 			-- Set selected_circle to `c'.
 		do
 			selected_circle := c	
-		end; -- set_figure
+		end
 
-feature {NONE}
+feature {STATE_SCR_L} -- Command
 
-	application_editor: APP_EDITOR;
-
-	process_state (dropped: STATE_STONE) is
+	execute (arg: EV_ARGUMENT; ev_data: EV_EVENT_DATA) is
+			-- Prepare the transport.
+			-- If `selected_circle' is Void the data isn't transportable.
 		do
-			application_editor.update_selected (dropped.data)
-		end; -- process_stone
+			set_transported_data (selected_circle)
+		end
 
-	
-feature {NONE} -- Execute
-
-	execute (argument: ANY) is
-			-- Execute the command
+	process_state (arg: EV_ARGUMENT1 [APP_EDITOR]; ev_data: EV_PND_EVENT_DATA) is
+			-- Select the state dropped into the list.
+		local
+			st: BUILD_STATE
 		do
-			if
-				(selected_circle = Void)
-			then
-				transportable := false
-			else
-				data := selected_circle.data;
-				transportable := true;
-			end;
-		end; -- execute
+			st ?= ev_data.data
+			if st /= Void then
+				arg.first.update_selected (st)
+			end
+		end
 
 end -- class LABEL_SCR_L
-	
+

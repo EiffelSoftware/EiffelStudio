@@ -93,6 +93,7 @@ feature {GB_CODE_GENERATOR} -- Output
 			element_info := full_information @ (family_string)
 			if element_info /= Void then
 				info.enable_fonts_set
+				Result.extend ("create internal_font")
 				Result.extend ("internal_font.set_family (" + element_info.data + ")")
 
 				element_info := full_information @ (weight_string)

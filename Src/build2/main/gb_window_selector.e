@@ -858,7 +858,7 @@ feature {NONE} -- Implementation
 				dialog.show_actions.wipe_out
 				dialog.show_actions.extend (agent show_invalid_directory_warning (dialog, last_dialog_name))
 			else
-				create dialog.make_with_values (unique_name_from_array (directory_names, "directory"), "New directory", "Please specify the directory name:"," is an invalid directory name. Please ensure that it is valid and is not already in use.", agent valid_directory_name)
+				create dialog.make_with_values (unique_name_from_array (directory_names, "directory"), "New directory", "Please specify the directory name:"," is an invalid directory name.%N%NPlease ensure that it is not in use,%Nand is valid for the current platform.", agent valid_directory_name)
 			end
 			
 			dialog.show_modal_to_window (parent_window (current))

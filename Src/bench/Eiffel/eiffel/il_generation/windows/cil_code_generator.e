@@ -1184,6 +1184,7 @@ feature -- Features info
 			features: SEARCH_TABLE [INTEGER]
 			feat: FEATURE_I
 		do
+			is_single_class := False
 			from
 				select_tbl := class_c.feature_table.origin_table
 				features := class_type.class_interface.features
@@ -1409,6 +1410,16 @@ feature -- Features info
 			-- Generate interface `feat' description.
 		require
 			feat_not_void: feat /= Void
+		do
+			implementation_generate_feature (feat, in_interface, is_static, is_override, False)
+		end
+
+	implementation_generate_feature (
+			feat: FEATURE_I; in_interface, is_static, is_override, is_empty: BOOLEAN)
+		is
+			-- Generate interface `feat' description.
+		require
+			feat_not_void: feat /= Void
 		local
 			l_meth_sig: like method_sig
 			l_field_sig: like field_sig
@@ -1532,7 +1543,7 @@ feature -- Features info
 							if feat.is_origin then
 								l_meth_attr := l_meth_attr | feature {MD_METHOD_ATTRIBUTES}.New_slot
 							end
-							if feat.is_deferred and not is_override then
+							if feat.is_deferred and not is_empty and not is_override then
 								l_meth_attr := l_meth_attr |
 									feature {MD_METHOD_ATTRIBUTES}.Abstract
 							end
@@ -1987,6 +1998,24 @@ feature -- IL Generation
 		deferred
 		end
 
+	generate_empty_body (a_feat: FEATURE_I) is
+			-- Generate a valid empty body for `a_feat' in `current_type_id'.
+		require
+			feature_not_void: a_feat /= Void
+		local
+			l_meth_token: INTEGER
+			l_type: TYPE_I
+		do
+			l_meth_token := feature_token (current_type_id, a_feat.feature_id)
+			start_new_body (l_meth_token)
+			l_type := argument_actual_type (a_feat.type.actual_type.type_i)
+			if not l_type.is_void then
+				put_default_value (l_type)
+			end
+			method_body.put_opcode (feature {MD_OPCODES}.Ret)
+			method_writer.write_current_body
+		end
+
 	generate_feature_il (feat, orig: FEATURE_I; a_type_id, code_feature_id: INTEGER) is
 			-- Specifies for which feature `feat' of `feat.feature_id' written in class of
 			-- `a_type_id' IL code will be generated. If `a_type_id' is different from current
@@ -2259,9 +2288,7 @@ feature -- IL Generation
 	override_counter: COUNTER
 			-- Number of generated override methods.
 
-	generate_method_impl (cur_feat: FEATURE_I; parent_type: CLASS_TYPE; inh_feat: FEATURE_I;
-			from_implementation: BOOLEAN)
-		is
+	generate_method_impl (cur_feat: FEATURE_I; parent_type: CLASS_TYPE; inh_feat: FEATURE_I) is
 			-- Generate a MethodImpl from `parent_type' and `inh_feat'
 			-- to `current_class_type' and `cur_feat'.
 		require
@@ -2282,11 +2309,7 @@ feature -- IL Generation
 			l_name: STRING
 			l_return_type: TYPE_I
 		do
-			if from_implementation then
-				l_parent_type_id := parent_type.implementation_id
-			else
-				l_parent_type_id := parent_type.static_type_id
-			end
+			l_parent_type_id := parent_type.static_type_id
 			l_cur_sig := signatures (current_type_id, cur_feat.feature_id)
 			l_inh_sig := signatures (l_parent_type_id, inh_feat.feature_id)
 

@@ -124,15 +124,17 @@ feature -- Definition: access
 feature -- Definition: creation
 
 	define_assembly (assembly_name: UNI_STRING; assembly_flags:
-			INTEGER; assembly_info: MD_ASSEMBLY_INFO): INTEGER
+			INTEGER; assembly_info: MD_ASSEMBLY_INFO; public_key: MD_PUBLIC_KEY): INTEGER
 		is
 			-- Define a new assembly.
 		require
 			assembly_name_not_void: assembly_name /= Void
 			assembly_info_not_void: assembly_info /= Void
+			valid_flags: public_key /= Void implies assembly_flags &
+				feature {MD_ASSEMBLY_FLAGS}.public_key = feature {MD_ASSEMBLY_FLAGS}.public_key
 		do
 			Result := assembly_emitter.define_assembly (assembly_name, assembly_flags,
-				assembly_info)
+				assembly_info, public_key)
 		ensure
 			valid_result: Result > 0
 		end

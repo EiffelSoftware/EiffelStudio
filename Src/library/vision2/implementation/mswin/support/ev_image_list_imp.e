@@ -100,7 +100,7 @@ feature -- Element change
 						-- Add the icon to image_list and set image_index.
 					add_icon (icon)
 					last_position := wel_last_position
-					info.extend ([last_position, 1], item_value)
+					info.put ([last_position, 1], item_value)
 				else
 						-- `icon' already in image list so set 
 						-- `image_index' to this.

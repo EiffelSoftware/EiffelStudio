@@ -83,6 +83,25 @@ feature {GB_XML_STORE} -- Output
 			end
 		end
 
+feature {GB_CODE_GENERATOR} -- Output
+
+		generate_code (element: XML_ELEMENT; a_name: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+			-- `Result' is string representation of
+			-- settings held in `Current' which is
+			-- in a compilable format.
+		local
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			element_info: ELEMENT_INFORMATION
+		do
+			Result := ""
+			full_information := get_unique_full_info (element)
+			element_info := full_information @ (Tooltip_string)
+			if element_info /= Void then
+				Result := a_name + ".set_tooltip (%"" + element_info.data + "%")"
+			end
+			Result := strip_leading_indent (Result)
+		end
+
 feature {NONE} -- Implementation
 
 --	check_button: EV_CHECK_BUTTON

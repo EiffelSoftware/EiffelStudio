@@ -96,7 +96,6 @@ feature -- Access
 			-- Add events necessary for `vision2_object'.
 		local
 			widget: EV_WIDGET
-			item: EV_ITEM
 		do
 			--| For now, just deal with widgets. At some point items may be supported also.
 		user_event_widget := vision2_object
@@ -108,8 +107,6 @@ feature -- Access
 		objects.extend (an_object)
 		objects.extend (vision2_object)
 		widget.pointer_button_release_actions.force_extend (agent start_timer)
-		--	io.putstring ("Setting up events for deselctable%N")
-	--	vision2_object
 		end	
 		
 		start_timer is
@@ -124,20 +121,11 @@ feature -- Access
 			end
 			
 		check_state is
-				--
+				-- Update the display window representation of
+				-- the gauge, to reflect change from user.
 			do
 				objects.first.set_value (user_event_widget.value)
 				update_editors
---				io.putstring ("Check state called%N")
---				if user_event_widget.is_selected then
---					io.putstring ("Is selected%N")
---					objects.first.enable_select
---					update_editors
---				else
---					io.putstring ("Is not selected%N")
---					objects.first.disable_select
---					update_editors
---				end
 			end
 			
 		user_event_widget: like ev_type
@@ -179,6 +167,33 @@ feature {GB_XML_STORE} -- Output
 --			element_info := full_information @ (title_string)
 --			for_all_objects (agent {EV_WINDOW}.set_title (element_info.data))
 --			
+		end
+		
+feature {GB_CODE_GENERATOR} -- Output
+
+	generate_code (element: XML_ELEMENT; a_name: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+			-- `Result' is string representation of
+			-- settings held in `Current' which is
+			-- in a compilable format.
+		local
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			element_info: ELEMENT_INFORMATION
+		do
+--			Result := ""
+--			full_information := get_unique_full_info (element)
+--			element_info := full_information @ (text_string)
+--			if element_info /= Void and then element_info.data.count /= 0 then
+--				Result := a_name + ".set_text (%"" + element_info.data + "%")"
+--			end
+--			element_info := full_information @ (text_alignment_string)
+--			if element_info.data.is_equal (Ev_textable_left_string) then
+--				Result := Result + indent + a_name + ".align_text_left"
+--			elseif element_info.data.is_equal (Ev_textable_center_string) then
+--				Result := Result + indent + a_name + ".align_text_center"
+--			elseif element_info.data.is_equal (Ev_textable_right_string) then
+--				Result := Result + indent + a_name + ".align_text_right"
+--			end
+--			Result := strip_leading_indent (Result)
 		end
 
 feature {NONE} -- Implementation

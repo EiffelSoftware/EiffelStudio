@@ -105,8 +105,6 @@ feature {GB_XML_STORE} -- Output
 
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
-		local
-			new_type_element: XML_ELEMENT
 		do
 			add_element_containing_string (element, background_color_string, build_string_from_color (objects.first.background_color))
 			add_element_containing_string (element, foreground_color_string, build_string_from_color (objects.first.foreground_color))
@@ -123,6 +121,28 @@ feature {GB_XML_STORE} -- Output
 			for_all_objects (agent {EV_COLORIZABLE}.set_background_color (build_color_from_string (element_info.data)))
 			element_info := full_information @ (foreground_color_string)
 			for_all_objects (agent {EV_COLORIZABLE}.set_foreground_color (build_color_from_string (element_info.data)))
+		end
+		
+feature {GB_CODE_GENERATOR} -- Output
+
+	generate_code (element: XML_ELEMENT; a_name: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+			-- `Result' is string representation of
+			-- settings held in `Current' which is
+			-- in a compilable format.
+		local
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			element_info: ELEMENT_INFORMATION
+			temp_color: EV_COLOR
+		do
+			Result := ""
+			full_information := get_unique_full_info (element)
+			element_info := full_information @ (background_color_string)
+			temp_color := build_color_from_string (element_info.data)
+			Result := a_name + ".set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (" + temp_color.red_8_bit.out + ", " + temp_color.green_8_bit.out + ", " + temp_color.blue_8_bit.out + "))"
+			element_info := full_information @ (foreground_color_string)
+			temp_color := build_color_from_string (element_info.data)
+			Result := Result + indent + a_name + ".set_foreground_color (create {EV_COLOR}.make_with_8_bit_rgb (" + temp_color.red_8_bit.out + ", " + temp_color.green_8_bit.out + ", " + temp_color.blue_8_bit.out + "))"
+			Result := strip_leading_indent (Result)
 		end
 
 

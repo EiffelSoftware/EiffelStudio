@@ -199,8 +199,6 @@ feature {GB_XML_STORE} -- Output
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
-			gb_ev_any: GB_EV_ANY
-			temp_list: ARRAYED_LIST [GB_EV_ANY]
 		do
 			full_information := get_unique_full_info (element)
 			
@@ -220,6 +218,51 @@ feature {GB_XML_STORE} -- Output
 		
 				
 			deferred_builder.defer_building (Current, element)
+		end
+		
+feature {GB_CODE_GENERATOR} -- Output
+
+	generate_code (element: XML_ELEMENT; a_name: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+			-- `Result' is string representation of
+			-- settings held in `Current' which is
+			-- in a compilable format.
+		local
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			element_info: ELEMENT_INFORMATION
+		do
+			Result := ""
+			full_information := get_unique_full_info (element)
+			element_info := full_information @ (Is_homogeneous_string)
+			if element_info.data.is_equal (True_string) then
+				Result := a_name + ".enable_homgeneous"
+			else
+				Result := a_name + ".disable_homogeneous"
+			end
+			element_info := full_information @ (Padding_string)
+			Result := Result + indent + a_name + ".set_padding_width (" + element_info.data + ")"
+			
+			element_info := full_information @ (Border_string)
+			Result := Result + indent + a_name + ".set_border_width (" + element_info.data + ")"
+			
+		
+			element_info := full_information @ (Is_item_expanded_string)
+			check
+				consistent: children_names.count = element_info.data.count
+			end
+			from
+				children_names.start
+			until
+				children_names.off
+			loop
+				if element_info.data @ children_names.index = '1' then
+					Result := Result + indent + a_name + ".enable_item_expand (" + children_names.item + ")"
+				else
+					Result := Result + indent + a_name + ".disable_item_expand (" + children_names.item + ")"
+				end
+				children_names.forth
+			end
+	
+			Result := strip_leading_indent (Result)
 		end
 		
 feature {GB_DEFERRED_BUILDER} -- Status setting

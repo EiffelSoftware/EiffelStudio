@@ -40,7 +40,9 @@ modifications are relative to the previously released version.</p>
 	<LI><b>EV_TREE</b> - `ensure_item_visible' and `has_recursively' now take an EV_TREE_NODE as arguments, instead of an EV_TREE_ITEM.</li>
 	<li><b>EV_TEXT</b> - `put_new_line' is now obsolete. Use `set_text ("%N") instead.</li>"
 	<li><b>EV_APPLICATION_ACTION_SEQUENCES</b> - Added `cancel_actions', fired when a pick and drop is cancelled, and `pnd_motion_actions' fired while the pointer moves during a pick and drop.</li>
-	<li><b>EV_TREE_NODE_LIST</b> - `find_item_recursively_by_data', `has_recursively' and `recursive_do_all' are now implemented in this class, instead of both EV_TREE and EV_TREE_NODE which are descendents.</li>
+	<li><b>EV_TREE_NODE_LIST</b> - `find_item_recursively_by_data', `has_recursively' and `recursive_do_all' are now implemented in this class, instead of both EV_TREE and EV_TREE_NODE which are descendents. Added `retrive_items_recursively_by_data' and `retrieve_item_recursively_by_data' which allow you to specify a comparison criterion, and due to this addition, `find_item_recursively_by_data' has now been made obsolete.</li>
+	<li><b>EV_DYNAMIC_LIST</b> - Added `retrieve_item_by_data' and `retrieve_items_by_data'.</li>
+	<li><b>EV_ITEM_LIST</b> - Made `item_by_data' obsolete, as you should now use `retrieve_item_by_data' added in EV_DYNAMIC_LIST.</li>
 </ul>
 <p><b>Bug fixes</b>
 <ul>

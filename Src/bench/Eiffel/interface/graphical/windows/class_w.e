@@ -21,14 +21,14 @@ inherit
 			create_edit_buttons, set_default_size,
 			build_widgets, resize_action,
 			build_edit_bar, stone_type, synchronize,
-			process_class_syntax, process_feature,
+			process_class_syntax, process_feature, process_feature_error,
 			process_class, process_classi, compatible,
 			set_mode_for_editing, set_font, editable_text_window,
 			set_editable_text_window, has_editable_text, read_only_text_window,
 			set_read_only_text_window,
 			update_boolean_resource,
 			update_integer_resource,
-			close, set_title
+			close, set_title, parse_file
 		end;
 	BAR_AND_TEXT
 		redefine
@@ -42,10 +42,10 @@ inherit
 			process_feature, process_class, process_classi,
 			compatible, set_mode_for_editing, set_font, editable_text_window,
 			set_editable_text_window, has_editable_text, read_only_text_window,
-			set_read_only_text_window,
+			set_read_only_text_window, process_feature_error,
 			update_boolean_resource,
 			update_integer_resource,
-			close, set_title
+			close, set_title, parse_file
 		select
 			reset, close_windows, set_stone
 		end;
@@ -114,6 +114,8 @@ feature -- Properties
 
 	read_only_text_window: TEXT_WINDOW
 			-- Text window that only reads text
+
+	version_cmd: CLASS_VERSIONS
 
 feature -- Access
 
@@ -219,6 +221,34 @@ feature -- Stone process
 			end
 		end;
  
+	process_feature_error (s: FEATURE_ERROR_STONE) is
+			-- Proces feature stone.
+		local
+			cl_stone: CLASSC_STONE;
+			e_class: E_CLASS;
+			txt: STRING;
+			pos, end_pos: INTEGER
+		do
+			if text_window.changed then
+				showtext_frmt_holder.execute (s);
+			else
+				e_class := s.e_feature.written_class;
+				!! cl_stone.make (e_class);
+				showtext_frmt_holder.execute (cl_stone);
+				history.extend (stone);
+				text_window.deselect_all;
+				pos := s.error_position;
+				txt := text_window.text;
+				if txt.count > pos then
+					end_pos := txt.index_of ('%N', pos);
+					if pos /= 0 then
+						text_window.highlight_selected (pos, end_pos)
+					end
+				end;
+				text_window.set_cursor_position (pos);
+			end
+		end;
+ 
 	process_feature (s: FEATURE_STONE) is
 			-- Proces feature stone.
 		local
@@ -284,6 +314,41 @@ feature -- Update
 			class_text_field.set_text (s);
 		end;
 
+	parse_file is
+			-- Parse the file if possible.
+			-- (By default, do nothing).
+		local
+			syn_error: SYNTAX_ERROR;
+			classc_stone: CLASSC_STONE;
+			syn_stone: CL_SYNTAX_STONE;
+			e_class: E_CLASS;
+			txt, msg: STRING
+		do
+			classc_stone ?= stone;
+			if classc_stone /= Void then
+					-- Only interested in compiled classes.
+				e_class := classc_stone.e_class;
+				e_class.parse_ast;
+				syn_error := e_class.last_syntax_error;
+				if syn_error /= Void then	
+					txt := "Class has syntax error ";
+					msg := syn_error.syntax_message;
+					if not msg.empty then
+						txt.extend ('(');
+						txt.append (msg);
+						txt.extend (')');
+					end;
+						-- syntax error occurred
+					!! syn_stone.make (syn_error, e_class);
+					process_class_syntax (syn_stone);
+					e_class.clear_syntax_error;
+					warner (popup_parent).gotcha_call (txt);
+				else
+					text_window.update_clickable_from_stone (stone)
+				end
+			end
+		end;
+
 feature -- Window Settings
 
 	close is
@@ -300,6 +365,7 @@ feature -- Window Settings
 			old_close_windows;
 			class_text_field.close_choice_window;
 			filter_command.close_filter_window;
+			version_cmd.close_choice_window
 		end;
 
 feature -- Widgets
@@ -425,7 +491,7 @@ feature {NONE} -- Implemetation; Window Settings
 		do
 			raise_grabbed_popup;
 			class_text_field.update_text;
-			class_text_field.update_choice_position
+			--class_text_field.update_choice_position
 		end;
 
 feature {NONE} -- Commands
@@ -458,11 +524,6 @@ feature {NONE} -- Implementation; Graphical Interface
 			quit_button: EB_BUTTON;
 			quit_menu_entry: EB_MENU_ENTRY;
 			exit_menu_entry: EB_MENU_ENTRY;
-			change_font_cmd: CHANGE_FONT;
-			change_font_menu_entry: EB_MENU_ENTRY;
-			search_cmd: SEARCH_STRING;
-			search_button: EB_BUTTON;
-			search_menu_entry: EB_MENU_ENTRY;
 			open_cmd: OPEN_FILE;
 			open_button: EB_BUTTON;
 			open_menu_entry: EB_MENU_ENTRY;
@@ -475,19 +536,19 @@ feature {NONE} -- Implementation; Graphical Interface
 			history_list_cmd: LIST_HISTORY
 		do
 			!! class_text_field.make (edit_bar, Current);
-			!! open_cmd.make (text_window);
+			!! open_cmd.make (Current);
 			!! open_button.make (open_cmd, edit_bar);
 			!! open_menu_entry.make (open_cmd, file_menu);
 			!! open_cmd_holder.make (open_cmd, open_button, open_menu_entry);
-			!! save_cmd.make (text_window);
+			!! save_cmd.make (Current);
 			!! save_button.make (save_cmd, edit_bar);
 			!! save_menu_entry.make (save_cmd, file_menu);
 			!! save_cmd_holder.make (save_cmd, save_button, save_menu_entry);
-			!! save_as_cmd.make (text_window);
+			!! save_as_cmd.make (Current);
 			!! save_as_menu_entry.make (save_as_cmd, file_menu);
 			!! save_as_cmd_holder.make_plain (save_as_cmd);
 			save_as_cmd_holder.set_menu_entry (save_as_menu_entry);
-			!! quit_cmd.make (text_window);
+			!! quit_cmd.make (Current);
 			!! quit_button.make (quit_cmd, edit_bar);
 			!! sep.make (new_name, file_menu);
 			!! quit_menu_entry.make (quit_cmd, file_menu);
@@ -495,20 +556,14 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu);
 			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command);
 			exit_cmd_holder.set_menu_entry (exit_menu_entry);
-			!! change_font_cmd.make (text_window);
-			!! change_font_menu_entry.make (change_font_cmd, preference_menu);
-			!! change_font_cmd_holder.make_plain (change_font_cmd);
-			change_font_cmd_holder.set_menu_entry (change_font_menu_entry);
-			!! search_cmd.make (Current);
-			!! search_button.make (search_cmd, edit_bar);
-			!! search_menu_entry.make (search_cmd, edit_menu);
-			!! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
+			build_edit_menu (edit_bar)
 		end;
 
 	build_command_bar is
 		local
+			version_menu_entry: EB_MENU_ENTRY;
 			shell_cmd: SHELL_COMMAND;
-			shell_button: EB_BUTTON;
+			shell_button: EB_BUTTON_HOLE;
 			shell_menu_entry: EB_MENU_ENTRY;
 			previous_target_cmd: PREVIOUS_TARGET;
 			previous_target_button: EB_BUTTON;
@@ -524,7 +579,9 @@ feature {NONE} -- Implementation; Graphical Interface
 			history_list_cmd: LIST_HISTORY;
 			new_class_button: EB_BUTTON_HOLE
 		do
-			!! shell_cmd.make (text_window);
+			!! version_cmd.make (Current);
+			!! version_menu_entry.make (version_cmd, special_menu);
+			!! shell_cmd.make (Current);
 			!! shell_button.make (shell_cmd, edit_bar);
 			shell_button.add_third_button_action;
 			!! shell_menu_entry.make (shell_cmd, special_menu);
@@ -536,21 +593,21 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! super_melt_cmd.make (Current);
 			!! super_melt_menu_entry.make (super_melt_cmd, special_menu);
 
-			!! current_target_cmd.make (text_window);
+			!! current_target_cmd.make (Current);
 			!! sep.make (new_name, special_menu);
 			!! current_target_menu_entry.make (current_target_cmd, special_menu);
 			!! current_target_cmd_holder.make_plain (current_target_cmd);
 			current_target_cmd_holder.set_menu_entry (current_target_menu_entry);
-			!! next_target_cmd.make (text_window);
+			!! next_target_cmd.make (Current);
 			!! next_target_button.make (next_target_cmd, edit_bar);
 			!! next_target_menu_entry.make (next_target_cmd, special_menu);
 			!! next_target_cmd_holder.make (next_target_cmd, next_target_button, next_target_menu_entry);
-			!! previous_target_cmd.make (text_window);
+			!! previous_target_cmd.make (Current);
 			!! previous_target_button.make (previous_target_cmd, edit_bar);
 			!! previous_target_menu_entry.make (previous_target_cmd, special_menu);
 			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button, previous_target_menu_entry);
 
-			!! history_list_cmd.make (text_window);
+			!! history_list_cmd.make (Current);
 			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button);
 			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button);
 
@@ -619,19 +676,19 @@ feature {NONE} -- Implementation; Graphical Interface
 			sep: SEPARATOR
 		do
 				-- First we create all objects.
-			!! tex_cmd.make (text_window);
+			!! tex_cmd.make (Current);
 			!! tex_button.make (tex_cmd, format_bar);
 			!! tex_menu_entry.make (tex_cmd, format_menu);
 			!! showtext_frmt_holder.make (tex_cmd, tex_button, tex_menu_entry);
-			!! fla_cmd.make (text_window);
+			!! fla_cmd.make (Current);
 			!! fla_button.make (fla_cmd, format_bar);
 			!! fla_menu_entry.make (fla_cmd, format_menu);
 			!! showflat_frmt_holder.make (fla_cmd, fla_button, fla_menu_entry);
-			!! fs_cmd.make (text_window);
+			!! fs_cmd.make (Current);
 			!! fs_button.make (fs_cmd, format_bar);
 			!! fs_menu_entry.make (fs_cmd, format_menu);
 			!! showflatshort_frmt_holder.make (fs_cmd, fs_button, fs_menu_entry);
-			!! sho_cmd.make (text_window);
+			!! sho_cmd.make (Current);
 			!! sho_button.make (sho_cmd, format_bar);
 			!! sho_menu_entry.make (sho_cmd, format_menu);
 			!! showshort_frmt_holder.make (sho_cmd, sho_button, sho_menu_entry);
@@ -640,44 +697,44 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! click_menu_entry.make (click_cmd, format_menu);
 			!! sep.make (new_name, format_menu);
 			!! showclick_frmt_holder.make (click_cmd, click_button, click_menu_entry);
-			!! anc_cmd.make (text_window);
+			!! anc_cmd.make (Current);
 			!! anc_button.make (anc_cmd, format_bar);
 			!! anc_menu_entry.make (anc_cmd, format_menu);
 			!! showancestors_frmt_holder.make (anc_cmd, anc_button, anc_menu_entry);
-			!! des_cmd.make (text_window);
+			!! des_cmd.make (Current);
 			!! des_button.make (des_cmd, format_bar);
 			!! des_menu_entry.make (des_cmd, format_menu);
 			!! showdescendants_frmt_holder.make (des_cmd, des_button, des_menu_entry);
-			!! cli_cmd.make (text_window);
+			!! cli_cmd.make (Current);
 			!! cli_button.make (cli_cmd, format_bar);
 			!! cli_menu_entry.make (cli_cmd, format_menu);
 			!! showclients_frmt_holder.make (cli_cmd, cli_button, cli_menu_entry);
-			!! sup_cmd.make (text_window);
+			!! sup_cmd.make (Current);
 			!! sup_button.make (sup_cmd, format_bar);
 			!! sup_menu_entry.make (sup_cmd, format_menu);
 			!! sep.make (new_name, format_menu);
 			!! showsuppliers_frmt_holder.make (sup_cmd, sup_button, sup_menu_entry);
-			!! att_cmd.make (text_window);
+			!! att_cmd.make (Current);
 			!! att_button.make (att_cmd, format_bar);
 			!! att_menu_entry.make (att_cmd, format_menu);
 			!! showattributes_frmt_holder.make (att_cmd, att_button, att_menu_entry);
-			!! rou_cmd.make (text_window);
+			!! rou_cmd.make (Current);
 			!! rou_button.make (rou_cmd, format_bar);
 			!! rou_menu_entry.make (rou_cmd, format_menu);
 			!! showroutines_frmt_holder.make (rou_cmd, rou_button, rou_menu_entry);
-			!! def_cmd.make (text_window);
+			!! def_cmd.make (Current);
 			!! def_button.make (def_cmd, format_bar);
 			!! def_menu_entry.make (def_cmd, format_menu);
 			!! showdeferreds_frmt_holder.make (def_cmd, def_button, def_menu_entry);
-			!! ext_cmd.make (text_window);
+			!! ext_cmd.make (Current);
 			!! ext_button.make (ext_cmd, format_bar);
 			!! ext_menu_entry.make (ext_cmd, format_menu);
 			!! showexternals_frmt_holder.make (ext_cmd, ext_button, ext_menu_entry);
-			!! exp_cmd.make (text_window);
+			!! exp_cmd.make (Current);
 			!! exp_button.make (exp_cmd, format_bar);
 			!! exp_menu_entry.make (exp_cmd, format_menu);
 			!! showexported_frmt_holder.make (exp_cmd, exp_button, exp_menu_entry);
-			!! onc_cmd.make (text_window);
+			!! onc_cmd.make (Current);
 			!! onc_button.make (onc_cmd, format_bar);
 			!! onc_menu_entry.make (onc_cmd, format_menu);
 			!! showonces_frmt_holder.make (onc_cmd, onc_button, onc_menu_entry);

@@ -177,6 +177,18 @@ feature -- Attributes
 
 feature -- Access
 
+	short_cluster_name: STRING is
+			-- Name of cluster without preceeding parents.
+		do
+			if belongs_to_all then
+				Result := clone (cluster_name.substring (cluster_name.last_index_of ('.', cluster_name.count) + 1, cluster_name.count))
+			else
+				Result := clone (cluster_name)
+			end
+		ensure
+			Result_not_void: Result /= Void
+		end
+
 	has_base_name (b_name: STRING): BOOLEAN is
 			-- Does cluster have a class with base name `b_name'?
 		require

@@ -1,104 +1,56 @@
 indexing
-	description: "List view selection type constants."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "List view selection type constants."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 
 class
 	WEL_LVN_CONSTANTS
 
+obsolete
+	"use WEL_LIST_VIEW_CONSTANTS instead"
+
 feature -- Access
 
-	Lvn_begindrag: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVN_BEGINDRAG"
-		end
+	Lvn_begindrag: INTEGER is -109
+			-- Declared in Windows as LVN_BEGINDRAG
 
-	Lvn_beginlabeledit: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVN_BEGINLABELEDIT"
-		end
+	Lvn_beginlabeledit: INTEGER is -105
+			-- Declared in Windows as LVN_BEGINLABELEDIT
 
-	Lvn_beginrdrag: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVN_BEGINRDRAG"
-		end
+	Lvn_beginrdrag: INTEGER is -111
+			-- Declared in Windows as LVN_BEGINRDRAG
 
-	Lvn_columnclick: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVN_COLUMNCLICK"
-		end
+	Lvn_columnclick: INTEGER is -108
+			-- Declared in Windows as LVN_COLUMNCLICK
 
-	Lvn_deleteallitems: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVN_DELETEALLITEMS"
-		end
+	Lvn_deleteallitems: INTEGER is -104
+			-- Declared in Windows as LVN_DELETEALLITEMS
 
-	Lvn_deleteitem: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVN_DELETEITEM"
-		end
+	Lvn_deleteitem: INTEGER is -103
+			-- Declared in Windows as LVN_DELETEITEM
 
-	Lvn_endlabeledit: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVN_ENDLABELEDIT"
-		end
+	Lvn_endlabeledit: INTEGER is -106
+			-- Declared in Windows as LVN_ENDLABELEDIT
 
-	Lvn_getdispinfo: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVN_GETDISPINFO"
-		end
+	Lvn_getdispinfo: INTEGER is -150
+			-- Declared in Windows as LVN_GETDISPINFO
 
-	Lvn_insertitem: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVN_INSERTITEM"
-		end
+	Lvn_insertitem: INTEGER is -102
+			-- Declared in Windows as LVN_INSERTITEM
 
-	Lvn_itemchanged: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVN_ITEMCHANGED"
-		end
+	Lvn_itemchanged: INTEGER is -101
+			-- Declared in Windows as LVN_ITEMCHANGED
 
-	Lvn_itemchanging: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVN_ITEMCHANGING"
-		end
+	Lvn_itemchanging: INTEGER is -100
+			-- Declared in Windows as LVN_ITEMCHANGING
 
-	Lvn_keydown: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVN_KEYDOWN"
-		end
+	Lvn_keydown: INTEGER is -155
+			-- Declared in Windows as LVN_KEYDOWN
 
-	Lvn_setdispinfo: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVN_SETDISPINFO"
-		end
+	Lvn_setdispinfo: INTEGER is -151
+			-- Declared in Windows as LVN_SETDISPINFO
 
 end -- class WEL_LVN_CONSTANTS
 

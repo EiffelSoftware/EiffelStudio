@@ -1,132 +1,68 @@
 indexing
-	description: "List view style (LVS) constants."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "List view style (LVS) constants."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 
 class
 	WEL_LVS_CONSTANTS
 
-feature -- Access
+obsolete
+	"use WEL_LIST_VIEW_CONSTANTS instead"
 
-	Lvs_alignleft: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVS_ALIGNLEFT"
-		end
+feature -- Style
 
-	Lvs_aligntop: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVS_ALIGNTOP"
-		end
+	Lvs_alignleft: INTEGER is 2048
+			-- Declared in Windows as LVS_ALIGNLEFT
 
-	Lvs_autoarrange: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVS_AUTOARRANGE"
-		end
+	Lvs_aligntop: INTEGER is 0
+			-- Declared in Windows as LVS_ALIGNTOP
 
-	Lvs_editlabels: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVS_EDITLABELS"
-		end
+	Lvs_autoarrange: INTEGER is 256
+			-- Declared in Windows as LVS_AUTOARRANGE
 
-	Lvs_icon: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVS_ICON"
-		end
+	Lvs_editlabels: INTEGER is 512
+			-- Declared in Windows as LVS_EDITLABELS
 
-	Lvs_list: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVS_LIST"
-		end
+	Lvs_icon: INTEGER is 0
+			-- Declared in Windows as LVS_ICON
 
-	Lvs_nocolumnheader: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVS_NOCOLUMNHEADER"
-		end
+	Lvs_list: INTEGER is 3
+			-- Declared in Windows as LVS_LIST
 
-	Lvs_nolabelwrap: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVS_NOLABELWRAP"
-		end
+	Lvs_nocolumnheader: INTEGER is 16384
+			-- Declared in Windows as LVS_NOCOLUMNHEADER
 
-	Lvs_noscroll: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVS_NOSCROLL"
-		end
+	Lvs_nolabelwrap: INTEGER is 128
+			-- Declared in Windows as LVS_NOLABELWRAP
 
-	Lvs_ownerdrawfixed: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVS_OWNERDRAWFIXED"
-		end
+	Lvs_noscroll: INTEGER is 8192
+			-- Declared in Windows as LVS_NOSCROLL
 
-	Lvs_report: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVS_REPORT"
-		end
+	Lvs_ownerdrawfixed: INTEGER is 1024
+			-- Declared in Windows as LVS_OWNERDRAWFIXED
 
-	Lvs_shareimagelists: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVS_SHAREIMAGELISTS"
-		end
+	Lvs_report: INTEGER is 1
+			-- Declared in Windows as LVS_REPORT
 
-	Lvs_showselalways: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVS_SHOWSELALWAYS"
-		end
+	Lvs_shareimagelists: INTEGER is 64
+			-- Declared in Windows as LVS_SHAREIMAGELISTS
 
-	Lvs_singlesel: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVS_SINGLESEL"
-		end
+	Lvs_showselalways: INTEGER is 8
+			-- Declared in Windows as LVS_SHOWSELALWAYS
 
-	Lvs_smallicon: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVS_SMALLICON"
-		end
+	Lvs_singlesel: INTEGER is 4
+			-- Declared in Windows as LVS_SINGLESEL
 
-	Lvs_sortascending: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVS_SORTASCENDING"
-		end
+	Lvs_smallicon: INTEGER is 2
+			-- Declared in Windows as LVS_SMALLICON
 
-	Lvs_sortdescending: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVS_SORTDESCENDING"
-		end
+	Lvs_sortascending: INTEGER is 16
+			-- Declared in Windows as LVS_SORTASCENDING
+
+	Lvs_sortdescending: INTEGER is 32
+			-- Declared in Windows as LVS_SORTDESCENDING
 
 end -- class WEL_LVS_CONSTANTS
 

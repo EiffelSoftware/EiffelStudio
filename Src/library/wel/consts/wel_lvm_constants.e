@@ -1,370 +1,170 @@
 indexing
-	description: "List view message (LVM) constants."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "List view message (LVM) constants."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 
 class
 	WEL_LVM_CONSTANTS
 
+obsolete
+	"use WEL_LIST_VIEW_CONSTANTS instead"
+
 feature -- Access
 
-	Lvm_arrange: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_ARRANGE"
-		end
+	Lvm_arrange: INTEGER is 4118
+			-- Declared in Windows as LVM_ARRANGE
 
-	Lvm_createdragimage: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_CREATEDRAGIMAGE"
-		end
+	Lvm_createdragimage: INTEGER is 4129
+			-- Declared in Windows as LVM_CREATEDRAGIMAGE
 
-	Lvm_deleteallitems: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_DELETEALLITEMS"
-		end
+	Lvm_deleteallitems: INTEGER is 4105
+			-- Declared in Windows as LVM_DELETEALLITEMS
 
-	Lvm_deletecolumn: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_DELETECOLUMN"
-		end
+	Lvm_deletecolumn: INTEGER is 4124
+			-- Declared in Windows as LVM_DELETECOLUMN
 
-	Lvm_deleteitem: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_DELETEITEM"
-		end
+	Lvm_deleteitem: INTEGER is 4104
+			-- Declared in Windows as LVM_DELETEITEM
 
-	Lvm_editlabel: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_EDITLABEL"
-		end
+	Lvm_editlabel: INTEGER is 4119
+			-- Declared in Windows as LVM_EDITLABEL
 
-	Lvm_ensurevisible: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_ENSUREVISIBLE"
-		end
+	Lvm_ensurevisible: INTEGER is 4115
+			-- Declared in Windows as LVM_ENSUREVISIBLE
 
-	Lvm_finditem: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_FINDITEM"
-		end
+	Lvm_finditem: INTEGER is 4109
+			-- Declared in Windows as LVM_FINDITEM
 
-	Lvm_getbkcolor: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETBKCOLOR"
-		end
+	Lvm_getbkcolor: INTEGER is 4096
+			-- Declared in Windows as LVM_GETBKCOLOR
 
-	Lvm_getcallbackmask: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETCALLBACKMASK"
-		end
+	Lvm_getcallbackmask: INTEGER is 4106
+			-- Declared in Windows as LVM_GETCALLBACKMASK
 
-	Lvm_getcolumn: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETCOLUMN"
-		end
+	Lvm_getcolumn: INTEGER is 4121
+			-- Declared in Windows as LVM_GETCOLUMN
 
-	Lvm_getcolumnwidth: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETCOLUMNWIDTH"
-		end
+	Lvm_getcolumnwidth: INTEGER is 4125
+			-- Declared in Windows as LVM_GETCOLUMNWIDTH
 
-	Lvm_getcountperpage: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETCOUNTPERPAGE"
-		end
+	Lvm_getcountperpage: INTEGER is 4136
+			-- Declared in Windows as LVM_GETCOUNTPERPAGE
 
-	Lvm_geteditcontrol: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETEDITCONTROL"
-		end
+	Lvm_geteditcontrol: INTEGER is 4120
+			-- Declared in Windows as LVM_GETEDITCONTROL
 
-	Lvm_getimagelist: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETIMAGELIST"
-		end
+	Lvm_getimagelist: INTEGER is 4098
+			-- Declared in Windows as LVM_GETIMAGELIST
 
-	Lvm_getisearchstring: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETISEARCHSTRING"
-		end
+	Lvm_getisearchstring: INTEGER is 4148
+			-- Declared in Windows as LVM_GETISEARCHSTRING
 
-	Lvm_getitem: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETITEM"
-		end
+	Lvm_getitem: INTEGER is 4101
+			-- Declared in Windows as LVM_GETITEM
 
-	Lvm_getitemcount: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETITEMCOUNT"
-		end
+	Lvm_getitemcount: INTEGER is 4100
+			-- Declared in Windows as LVM_GETITEMCOUNT
 
-	Lvm_getitemposition: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETITEMPOSITION"
-		end
+	Lvm_getitemposition: INTEGER is 4112
+			-- Declared in Windows as LVM_GETITEMPOSITION
 
-	Lvm_getitemrect: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETITEMRECT"
-		end
+	Lvm_getitemrect: INTEGER is 4110
+			-- Declared in Windows as LVM_GETITEMRECT
 
-	Lvm_getitemspacing: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETITEMSPACING"
-		end
+	Lvm_getitemspacing: INTEGER is 4147
+			-- Declared in Windows as LVM_GETITEMSPACING
 
-	Lvm_getitemstate: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETITEMSTATE"
-		end
+	Lvm_getitemstate: INTEGER is 4140
+			-- Declared in Windows as LVM_GETITEMSTATE
 
-	Lvm_getitemtext: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETITEMTEXT"
-		end
+	Lvm_getitemtext: INTEGER is 4141
+			-- Declared in Windows as LVM_GETITEMTEXT
 
-	Lvm_getnextitem: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETNEXTITEM"
-		end
+	Lvm_getnextitem: INTEGER is 4108
+			-- Declared in Windows as LVM_GETNEXTITEM
 
-	Lvm_getorigin: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETORIGIN"
-		end
+	Lvm_getorigin: INTEGER is 4137
+			-- Declared in Windows as LVM_GETORIGIN
 
-	Lvm_getselectedcount: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETSELECTEDCOUNT"
-		end
+	Lvm_getselectedcount: INTEGER is 4146
+			-- Declared in Windows as LVM_GETSELECTEDCOUNT
 
-	Lvm_getstringwidth: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETSTRINGWIDTH"
-		end
+	Lvm_getstringwidth: INTEGER is 4113
+			-- Declared in Windows as LVM_GETSTRINGWIDTH
 
-	Lvm_gettextbkcolor: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETTEXTBKCOLOR"
-		end
+	Lvm_gettextbkcolor: INTEGER is 4133
+			-- Declared in Windows as LVM_GETTEXTBKCOLOR
 
-	Lvm_gettextcolor: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETTEXTCOLOR"
-		end
+	Lvm_gettextcolor: INTEGER is 4131
+			-- Declared in Windows as LVM_GETTEXTCOLOR
 
-	Lvm_gettopindex: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETTOPINDEX"
-		end
+	Lvm_gettopindex: INTEGER is 4135
+			-- Declared in Windows as LVM_GETTOPINDEX
 
-	Lvm_getviewrect: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_GETVIEWRECT"
-		end
+	Lvm_getviewrect: INTEGER is 4130
+			-- Declared in Windows as LVM_GETVIEWRECT
 
-	Lvm_hittest: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_HITTEST"
-		end
+	Lvm_hittest: INTEGER is 4114
+			-- Declared in Windows as LVM_HITTEST
 
-	Lvm_insertcolumn: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_INSERTCOLUMN"
-		end
+	Lvm_insertcolumn: INTEGER is 4123
+			-- Declared in Windows as LVM_INSERTCOLUMN
 
-	Lvm_insertitem: INTEGER is
-		external
-			"c [macro %"cctrl.h%"]"
-		alias
-			"LVM_INSERTITEM"
-		end
+	Lvm_insertitem: INTEGER is 4103
+			-- Declared in Windows as LVM_INSERTITEM
 
-	Lvm_redrawitems: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_REDRAWITEMS"
-		end
+	Lvm_redrawitems: INTEGER is 4117
+			-- Declared in Windows as LVM_REDRAWITEMS
 
-	Lvm_scroll: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_SCROLL"
-		end
+	Lvm_scroll: INTEGER is 4116
+			-- Declared in Windows as LVM_SCROLL
 
-	Lvm_setbkcolor: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_SETBKCOLOR"
-		end
+	Lvm_setbkcolor: INTEGER is 4097
+			-- Declared in Windows as LVM_SETBKCOLOR
 
-	Lvm_setcallbackmask: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_SETCALLBACKMASK"
-		end
+	Lvm_setcallbackmask: INTEGER is 4107
+			-- Declared in Windows as LVM_SETCALLBACKMASK
 
-	Lvm_setcolumn: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_SETCOLUMN"
-		end
+	Lvm_setcolumn: INTEGER is 4122
+			-- Declared in Windows as LVM_SETCOLUMN
 
-	Lvm_setcolumnwidth: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_SETCOLUMNWIDTH"
-		end
+	Lvm_setcolumnwidth: INTEGER is 4126
+			-- Declared in Windows as LVM_SETCOLUMNWIDTH
 
-	Lvm_setimagelist: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_SETIMAGELIST"
-		end
+	Lvm_setimagelist: INTEGER is 4099
+			-- Declared in Windows as LVM_SETIMAGELIST
 
-	Lvm_setitem: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_SETITEM"
-		end
+	Lvm_setitem: INTEGER is 4102
+			-- Declared in Windows as LVM_SETITEM
 
-	Lvm_setitemcount: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_SETITEMCOUNT"
-		end
+	Lvm_setitemcount: INTEGER is 4143
+			-- Declared in Windows as LVM_SETITEMCOUNT
 
-	Lvm_setitemposition: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_SETITEMPOSITION"
-		end
+	Lvm_setitemposition: INTEGER is 4111
+			-- Declared in Windows as LVM_SETITEMPOSITION
 
-	Lvm_setitemposition32: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_SETITEMPOSITION32"
-		end
+	Lvm_setitemposition32: INTEGER is 4145
+			-- Declared in Windows as LVM_SETITEMPOSITION32
 
-	Lvm_setitemstate: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_SETITEMSTATE"
-		end
+	Lvm_setitemstate: INTEGER is 4139
+			-- Declared in Windows as LVM_SETITEMSTATE
 
-	Lvm_setitemtext: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_SETITEMTEXT"
-		end
+	Lvm_setitemtext: INTEGER is 4142
+			-- Declared in Windows as LVM_SETITEMTEXT
 
-	Lvm_settextbkcolor: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_SETTEXTBKCOLOR"
-		end
+	Lvm_settextbkcolor: INTEGER is 4134
+			-- Declared in Windows as LVM_SETTEXTBKCOLOR
 
-	Lvm_settextcolor: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_SETTEXTCOLOR"
-		end
+	Lvm_settextcolor: INTEGER is 4132
+			-- Declared in Windows as LVM_SETTEXTCOLOR
 
-	Lvm_sortitems: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_SORTITEMS"
-		end
+	Lvm_sortitems: INTEGER is 4144
+			-- Declared in Windows as LVM_SORTITEMS
 
-	Lvm_update: INTEGER is
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVM_UPDATE"
-		end
+	Lvm_update: INTEGER is 4138
+			-- Declared in Windows as LVM_UPDATE
 
 end -- class WEL_LVM_CONSTANTS
 

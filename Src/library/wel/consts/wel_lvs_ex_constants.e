@@ -1,12 +1,15 @@
 indexing
 	description	: "Extended list view styles (LVS_EX_...) constants."
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 	status		: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 
 class
 	WEL_LVS_EX_CONSTANTS
+
+obsolete
+	"use WEL_LIST_VIEW_CONSTANTS instead"
 
 feature -- Access
 
@@ -69,7 +72,9 @@ feature -- Access
 			-- Version 4.70. The list view control sends an LVN_ITEMACTIVATE 
 			-- notification message to the parent window when the user clicks
 			-- an item. This style also enables hot tracking in the list view
-			-- control. Hot tracking means that when the cursor moves over an item, it is highlighted but not selected. See the Remarks for a discussion of item activation. 
+			-- control. Hot tracking means that when the cursor moves over an
+			-- item, it is highlighted but not selected. See the Remarks for a 
+			-- discussion of item activation. 
 
 	Lvs_ex_regional: INTEGER is 512
 			-- Version 4.71. The list view will create a region that includes 

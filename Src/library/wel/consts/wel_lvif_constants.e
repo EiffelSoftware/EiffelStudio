@@ -1,51 +1,43 @@
 indexing
-	description: "List view item flag (LVIF) constants."
-	status: "See notice at end of class."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "List view item flag (LVIF) constants."
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 
 class
 	WEL_LVIF_CONSTANTS
 
+obsolete
+	"use WEL_LIST_VIEW_CONSTANTS instead"
+
 feature -- Access
 
-	Lvif_text: INTEGER is
+	Lvif_text: INTEGER is 1
 			-- The pszText member is valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVIF_TEXT"
-		end
+			--
+			-- Declared in Windows as LVIF_TEXT
 
-	Lvif_image: INTEGER is
+	Lvif_image: INTEGER is 2
 			-- The iImage member is valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVIF_IMAGE"
-		end
+			--
+			-- Declared in Windows as LVIF_IMAGE
 
-	Lvif_param: INTEGER is
+	Lvif_param: INTEGER is 4
 			-- The lParam member is valid.
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVIF_PARAM"
-		end
+			--
+			-- Declared in Windows as LVIF_PARAM
 
-	Lvif_state: INTEGER is
+	Lvif_state: INTEGER is 8
 			-- The state member is valid
-		external
-			"C [macro %"cctrl.h%"]"
-		alias
-			"LVIF_STATE"
-		end
+			--
+			-- Declared in Windows as LVIF_STATE
 
 end -- class WEL_LVIF_CONSTANTS
 
 --|----------------------------------------------------------------
 --| Windows Eiffel Library: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.

@@ -322,7 +322,7 @@ feature -- Access
 		end
 		
 	virtual_height: INTEGER is
-			-- Hieght of virtual area in pixels.
+			-- Height of virtual area in pixels.
 		require
 			not_destroyed: not is_destroyed
 		do

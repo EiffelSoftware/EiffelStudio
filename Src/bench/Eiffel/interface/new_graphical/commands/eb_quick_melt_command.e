@@ -40,11 +40,7 @@ feature {NONE} -- Implementation
 	perform_compilation is
 			-- The actual compilation process.
 		do
-			if Workbench.lace.successful then
-				workbench.recompile_no_degree_6
-			else
-				Workbench.recompile
-			end
+			eiffel_project.recompile_known_modified_classes			
 		end
 
 feature {NONE} -- Attributes

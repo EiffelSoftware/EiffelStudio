@@ -463,6 +463,23 @@ feature -- Status setting
 
 feature -- Update
 
+	recompile_known_modified_classes is
+			-- Recompile only know modified class
+			-- (used for Quick compilation)
+		do
+			if Workbench.lace.successful then
+				workbench.recompile_no_degree_6
+			else
+				Workbench.recompile
+			end
+			if successful then
+				if Application.has_breakpoints then
+					Degree_output.put_resynchronizing_breakpoints_message
+					Application.resynchronize_breakpoints
+				end				
+			end
+		end
+
 	melt is
 			-- Incremental recompilation of Eiffel project.
 			-- Raise error messages if necessary if unsuccessful. Otherwize,

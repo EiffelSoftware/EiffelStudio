@@ -15,8 +15,11 @@ inherit
 		end;
 
 	FONT_BOX_M
+		rename
+			make as font_box_make
 		undefine
-			make, lower, raise, action_target
+			lower, raise, action_target,
+			show, hide, shown, destroy_xt_widget
 		redefine
 			define_cursor_if_shell, undefine_cursor_if_shell,
 			set_x, set_y, set_x_y, is_stackable
@@ -28,7 +31,7 @@ creation
 
 	make
 
-feature 
+feature {NONE} -- Creation
 
 	make (a_font_box_dialog: FONT_BOX_D) is
 			-- Create a motif font box.
@@ -39,7 +42,7 @@ feature
 			ext_name := a_font_box_dialog.identifier.to_c;
 			data := font_box_create ($ext_name,
 					parent_screen_object (a_font_box_dialog, widget_index),
-					True);
+					True, True);
 			screen_object := font_box_form (data);
 			a_font_box_dialog.set_dialog_imp (Current);
 			forbid_resize

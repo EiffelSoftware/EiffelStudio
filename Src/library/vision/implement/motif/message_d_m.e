@@ -12,8 +12,11 @@ class MESSAGE_D_M
 inherit
 
 	MESSAGE_M
+		rename
+			make as message_make
 		undefine
-			make, lower, raise, action_target
+			lower, raise, action_target,
+			hide, show, shown, destroy_xt_widget
 		redefine
 			set_x, set_y, set_x_y,
 			define_cursor_if_shell,
@@ -27,13 +30,12 @@ inherit
 		end;
 
 	DIALOG_M
-        
 
 creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
 	make (a_message_dialog: MESSAGE_D) is
 			-- Create a motif dialog message box.

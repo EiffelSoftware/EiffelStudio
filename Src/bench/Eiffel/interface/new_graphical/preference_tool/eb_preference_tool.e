@@ -63,7 +63,7 @@ feature {NONE} -- Initialization
 
 			create tree.make (panels_box)
 			tree.set_minimum_size (150, 300)
---			tree.set_expand (False)
+			tree.set_expand (False)
 			create leaves.make (1, panel_list.number_of_tree_items)
 			from
 				ijk := 1

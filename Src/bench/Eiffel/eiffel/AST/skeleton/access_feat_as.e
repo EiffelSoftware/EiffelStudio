@@ -27,8 +27,8 @@ feature {AST_FACTORY} -- Initialization
 		do
 			feature_name := f
 			parameters := p
-			if parameters /= Void then
-				parameters.start
+			if p /= Void then
+				p.start
 			end
 		ensure
 			feature_name_set: feature_name = f
@@ -83,16 +83,6 @@ feature -- Type check, byte code and dead code removal
 			veen: VEEN
 		do
 			id_type := access_type
-			Error_handler.checksum
-			if id_type = Void then
-					-- Undeclared identifier
-				create veen
-				context.init_error (veen)
-				veen.set_identifier (feature_name)
-				Error_handler.insert_error (veen)
-					-- Cannot go on here.
-				Error_handler.raise_error
-			end
 			check
 				id_type_exists: id_type /= Void
 			end
@@ -171,14 +161,14 @@ feature -- Type check, byte code and dead code removal
 				Error_handler.raise_error
 			end
 
-			last_class := last_constrained.associated_class
+			last_class := associated_class (last_constrained)
 			last_id := last_class.class_id
 
 				-- Look for a feature in the class associated to the
 				-- last actual type onto the context type stack. If it
 				-- is a generic take the associated constraint.
 			a_feature := last_class.feature_table.item (feature_name)
-			if a_feature /= Void then
+			if valid_feature (a_feature) then
 					-- Supplier dependances update
 				create depend_unit.make (last_id, a_feature)
 				context.supplier_ids.extend (depend_unit)
@@ -396,6 +386,42 @@ end
 					-- Access managment
 				access_b := a_feature.access (Result.type_i)
 				context.access_line.insert (access_b)
+			else
+					-- `a_feature' was not valid for current, report
+					-- corresponding error.
+				report_error_for_feature (a_feature)
+			end
+		end
+
+	associated_class (a_constraint: TYPE_A): CLASS_C is
+			-- Associated class to `a_constraint' if any.
+		require
+			a_constraint_not_void: a_constraint /= Void
+		do
+			Result := a_constraint.associated_class
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	valid_feature (a_feature: FEATURE_I): BOOLEAN is
+			-- Is `a_feature' valid for current analyzis?
+		do
+			Result := a_feature /= Void	
+		end
+
+	report_error_for_feature (a_feature: FEATURE_I) is
+			-- Report error during `type_check' because `a_feature'
+			-- was not valid for call.
+		local
+			veen: VEEN
+		do
+			if a_feature = Void then
+					-- Not a valid feature name.
+				create veen
+				context.init_error (veen)
+				veen.set_identifier (feature_name)
+				error_handler.insert_error (veen)
+				error_handler.raise_error
 			end
 		end
 

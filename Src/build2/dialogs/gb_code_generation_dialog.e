@@ -82,7 +82,9 @@ feature {NONE} -- Initialization
 
 				-- Setup the default buttons and show actions.
 			set_default_cancel_button (cancel_b)
+			cancel_b.select_actions.extend (agent destroy)
 			set_default_push_button (create_button)
+			create_button.select_actions.extend (agent destroy)
 			show_actions.extend (agent on_show_actions)
 
 			cancelled := False

@@ -21,8 +21,14 @@ inherit
 
 feature -- Initialization
 
-	tooltip: STRING
+	tooltip: STRING is
 			-- Text of tooltip assigned to `Current'.
+		do
+			Result := internal_tooltip_string
+			if Result = Void then
+				Result := ""
+			end
+		end
 
 feature -- Element change
 
@@ -55,7 +61,7 @@ feature -- Element change
 				
 				app_imp.all_tooltips.extend (internal_tooltip)
 			else
-				if tooltip /= Void and then not tooltip.is_empty then
+				if internal_tooltip_string /= Void and then not internal_tooltip_string.is_empty then
 						-- If `tooltip' is not `Void' then there should always
 						-- be an internal tooltip.
 					check
@@ -74,10 +80,13 @@ feature -- Element change
 			end
 
 				-- Assign `a_tooltip' to `tooltip'.
-			tooltip := clone (a_tooltip)
+			internal_tooltip_string := clone (a_tooltip)
 		end
 
-feature {NONE} -- Implementation 
+feature {NONE} -- Implementation
+
+	internal_tooltip_string: STRING
+		-- Internal text of tooltip assigned to `Current'.
 
 	internal_tooltip: WEL_TOOLTIP
 		-- WEL_TOOLTIP used internally by current.

@@ -205,6 +205,7 @@ debug("DEBUG_RECV")
 	io.error.putstring ("Putting `attr' in `attr_list'.%N")
 end;
 				attr_list.extend (attr);
+				attr_list.forth
 				i := i + 1
 			end
 		end;

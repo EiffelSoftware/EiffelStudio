@@ -469,31 +469,10 @@ feature {NONE} -- C code generation
 				buffer.putstring ("(EIF_INTEGER_32) (")
 				target.print_register
 				buffer.putchar(')')
-			when integer_type then
-				buffer.putstring ("(EIF_INTEGER_32) (")
+			else
+				buffer.putstring ("(EIF_INTEGER_32) (0x7FFFFFFF & (EIF_INTEGER_32) (")
 				target.print_register
-				buffer.putstring (" >= 0 ? ")
-				target.print_register
-				buffer.putstring (" : -(")
-				target.print_register
-				buffer.putstring (" + 1))")
-			when pointer_type then
-				buffer.putstring ("((EIF_INTEGER_32) ")
-				target.print_register
-				buffer.putstring (" >= 0 ? (EIF_INTEGER_32) ")	
-				target.print_register
-				buffer.putstring (" : -((EIF_INTEGER_32) ")
-				target.print_register
-				buffer.putchar(')')
-				buffer.putchar(')')
-			when real_type, double_type then
-				buffer.putchar('(')
-				target.print_register
-				buffer.putstring (" >= 0.0 ? (EIF_INTEGER_32) (")
-				target.print_register
-				buffer.putstring (" + 1) : (EIF_INTEGER_32) (-")
-				target.print_register
-				buffer.putstring (" + 1 ))")
+				buffer.putstring ("))")
 			end
 		end
 

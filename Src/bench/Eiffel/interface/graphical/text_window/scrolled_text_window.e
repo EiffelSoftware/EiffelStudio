@@ -58,12 +58,6 @@ inherit
 		undefine
 			copy, setup, consistent, is_equal
 		end;
-	COMMAND
-		undefine
-			copy, setup, consistent, is_equal
-		redefine
-			context_data_useful
-		end;
 	GRAPHICAL_CONSTANTS
 		undefine
 			copy, setup, consistent, is_equal
@@ -460,29 +454,15 @@ feature -- Update
 
 feature -- Execution
 
-	context_data_useful: BOOLEAN is
-		do
-			Result := True
-		end;
-
 	execute (argument: ANY) is
 			-- Execute the command for Current.
-		local
-			but_data: BUTTON_DATA;
-			st: like focus
 		do
 			if not changed then
-				if argument = modify_event then
+				if argument = modify_event_action then
 					disable_clicking;
 					set_changed (true);
-				elseif argument = new_tooler then
-					but_data ?= context_data;
-					update_before_transport (but_data);
-					st := focus;
-					if st /= Void then
-						Project_tool.receive (st);
-						deselect_all
-					end
+				else
+					process_action (argument)
 				end
 			end
 		end;
@@ -492,8 +472,9 @@ feature {NONE} -- Callback values
 	add_default_callbacks is
 			-- Set some default callbacks.
 		do
-			add_modify_action (Current, modify_event);
-			set_action ("!c<Btn3Down>", Current, new_tooler)
+			add_modify_action (Current, modify_event_action);
+			set_action ("!c<Btn3Down>", Current, new_tooler_action)
+			set_action ("!Shift<Btn3Down>", Current, super_melt_action)
 		end;
 
 feature {NONE} -- Properties

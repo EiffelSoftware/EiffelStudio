@@ -139,6 +139,8 @@ int tagged_len;         /* Actual length of `tagged_out' */
 #define EIF_CONTEXT
 #define EIF_STATIC_OPT static
 
+#define EIF_GET_CONTEXT
+
 
 	/* except.c */
 /* Exported data structures (used by the generated C code) */

@@ -108,7 +108,7 @@ rt_private void stk_start(EIF_CONTEXT int what)
 	 * my mind, this program being only an implicit translation. Any typos
 	 * are mine :-) -- RAM
 	 */
-
+	EIF_GET_CONTEXT
 	dump_mode = what;	/* Save working mode */
 
 	/* Save the appropriate stack context, depending on the operations to
@@ -147,6 +147,7 @@ rt_private void stk_start(EIF_CONTEXT int what)
 rt_private void stk_end(EIF_CONTEXT int what)
 {
 	/* Restore context of all the stack we had to modify/inspect */
+	EIF_GET_CONTEXT
 
 	switch (what) {
 	case ST_PENDING:
@@ -179,7 +180,7 @@ rt_private struct dump *pending(void)
 	 * very first item dumped, because an implict exception left the faulty
 	 * vector on top of the eif_stack execution stack.
 	 */
-
+	EIF_GET_CONTEXT
 	struct ex_vect *top;				/* Exception vector */
 	static struct dump dumped;			/* Item returned */
 
@@ -221,7 +222,7 @@ rt_private struct dump *execution(void)
 	 * the arguments (and possibly the locals in ST_FULL mode). This is why
 	 * we keep an internal state about the status of the last vector.
 	 */
-
+	EIF_GET_CONTEXT
 	struct ex_vect *top;				/* Exception vector */
 	static struct ex_vect copy;			/* copy of the exception vector */
 	struct dump *dp;					/* Partial dump pointer */

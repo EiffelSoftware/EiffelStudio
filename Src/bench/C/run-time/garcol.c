@@ -854,7 +854,7 @@ rt_private void full_mark(EIF_CONTEXT_NOARG)
 	 * objects. At the beginning of this phase, it is assumed that no
 	 * object is marked.
 	 */
-
+	EIF_GET_CONTEXT
 	int moving = g_data.status & (GC_PART | GC_GEN);	/* Objects may move? */
 
 	root_obj = MARK_SWITCH(root_obj);	/* Primary root */
@@ -3483,7 +3483,7 @@ rt_private void mark_new_generation(EIF_CONTEXT_NOARG)
 	 * I am aware of the code duplication, but this is a trade for speed over
 	 * run-time size and maintainability--RAM.
 	 */
-
+	EIF_GET_CONTEXT
 	register1 int age;					/* Object's age */
 	int moving = gen_scavenge & GS_ON;	/* May objects be moved? */
 

@@ -245,7 +245,7 @@ void check_options(EIF_CONTEXT struct eif_opt *opt, int dtype)
 	 * called explicitly from the interpreter as soon as it determines that
 	 * a feature is to be executed.
 	 */
-
+	EIF_GET_CONTEXT
 	struct ex_vect *vector = (struct ex_vect *) 0;
 
  	if (opt->trace_level) {
@@ -285,7 +285,7 @@ void check_options_stop(EIF_CONTEXT_NOARG)
 	 * guarantee that at least this part of E-TRACE and E-PROFILE will
 	 * work for both frozen and melted code.
 	 */
-
+	EIF_GET_CONTEXT
 	struct ex_vect *vector;
 	struct eif_opt opt;
 	int dtype;

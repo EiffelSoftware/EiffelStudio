@@ -105,7 +105,7 @@ rt_private Signal_t ehandlr(EIF_CONTEXT register int sig)
 	 * process jump to this routine, which is in charge of dispatching the
 	 * signal or simply ignoring it.
 	 */
-
+	EIF_GET_CONTEXT
 	Signal_t (*handler)(int);			/* The Eiffel signal handler routine */
 
 #ifndef SIGNALS_KEPT
@@ -234,7 +234,7 @@ rt_shared void esdpch(EIF_CONTEXT_NOARG)
 	 * being received now. We knwo the signal was not meant to be ignored,
 	 * otherwise it would not have been queued.
 	 */
-
+	EIF_GET_CONTEXT
 	Signal_t (*handler)(int);			/* The Eiffel signal handler routine */
 	int sig;						/* Signal number to be sent */
 
@@ -779,7 +779,7 @@ rt_public char *esigname(long int sig)
 rt_public long esignum(EIF_CONTEXT_NOARG)	/* %%zmt never called in C dir. */
 {
 	/* Number of last signal */
-
+	EIF_GET_CONTEXT
 	return (long) echsig;
 }
 

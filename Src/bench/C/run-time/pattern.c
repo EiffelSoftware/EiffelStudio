@@ -52,7 +52,7 @@ rt_public int str_str(EIF_CONTEXT EIF_OBJ text, EIF_OBJ pattern, int tlen, int p
 	 * give us protected addresses.
 	 */
 
-	/* int i;*/				/* %%ss Index of found substring */
+	EIF_GET_CONTEXT
 	char *p;			/* Returned address from quick search algorithm */
 
 	if (fuzzy < 0)		/* Invalid fuzzy parameter */
@@ -132,7 +132,7 @@ rt_private void fuz_compile(EIF_CONTEXT EIF_OBJ pattern, register int plen, int 
 	 * the rightmost character removed, and so on. A total of (fuzzy + 1) tables
 	 * are computed.
 	 */
-	
+	EIF_GET_CONTEXT
 	int i;
 	uint32 *new;	/* Address of new delta table */
 
@@ -162,6 +162,7 @@ rt_private void fuz_compile(EIF_CONTEXT EIF_OBJ pattern, register int plen, int 
 
 rt_private void free_structures(EIF_CONTEXT int n)
 {
+	EIF_GET_CONTEXT
 	/* Free fuzzy delta shift tables from 0 to 'n' */
 
 	while (n > 0)
@@ -178,7 +179,7 @@ rt_private char *qsearch(EIF_CONTEXT char *text, int tlen, char *pattern, int pl
 	/* The quick substring search algorithm. It returns the address of the start
 	 * of the matching substring or a null pointer if not found.
 	 */
-
+	EIF_GET_CONTEXT
 	register1 unsigned char *p;		/* Pattern string pointer */
 	register2 unsigned char *t;		/* Text pointer */
 	register4 unsigned char *tx;	/* Another text pointer (start of search) */
@@ -219,7 +220,7 @@ rt_private char *fuz_qsearch(EIF_CONTEXT char *text, int tlen, char *pattern, in
 	 * of the matching substring or a null pointer if not found. At most 'fuzzy'
 	 * mismatches are allowed.
 	 */
-
+	EIF_GET_CONTEXT
 	register1 char *p;		/* Pattern string pointer */
 	register2 char *t;		/* Text pointer */
 	register4 char *tx;		/* Another text pointer (start of search) */

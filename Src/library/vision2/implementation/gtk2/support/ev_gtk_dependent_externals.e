@@ -10,20 +10,21 @@ feature -- Externals
 
 	signal_disconnect (a_object: POINTER; a_handler_id: INTEGER) is
 		external
-			"C (GtkObject*, guint) | <gtk/gtk.h>"
+			"C (gpointer, gulong) | <gtk/gtk.h>"
 		alias
-			"gtk_signal_disconnect"
+			"g_signal_handler_disconnect"
 		end
 		
 	signal_disconnect_by_data (a_c_object: POINTER; data: INTEGER) is
 		external
-			"C (GtkObject*, gpointer) | <gtk/gtk.h>"
+			"C [macro <gtk/gtk.h>]"
+		alias
+			"gtk_signal_disconnect_by_data"
 		end
 
 	signal_handler_block (a_object: POINTER; a_handler_id: INTEGER) is
-			-- void   gtk_signal_handler_block (GtkObject *object, guint handler_id);)
 		external
-			"C (GtkObject*, guint) | <gtk/gtk.h>"
+			"C [macro <gtk/gtk.h>]"
 		alias
 			"gtk_signal_handler_block"
 		end
@@ -32,7 +33,7 @@ feature -- Externals
 			-- void   gtk_signal_handler_unblock      (GtkObject           *object,
 			--                                         guint                handler_id);
 		external
-			"C (GtkObject*, guint) | <gtk/gtk.h>"
+			"C [macro <gtk/gtk.h>]"
 		alias
 			"gtk_signal_handler_unblock"
 		end
@@ -41,30 +42,28 @@ feature -- Externals
 			-- void   gtk_signal_emit_stop_by_name    (GtkObject           *object,
 			--                                         const gchar         *name);
 		external
-			"C (GtkObject*, gchar*) | <gtk/gtk.h>"
+			"C [macro <gtk/gtk.h>]"
 		alias
 			"gtk_signal_emit_stop_by_name"
 		end
 		
 	gtk_editable_struct_selection_start (a_c_struct: POINTER): INTEGER is
 		external
-			"C [struct <gtk/gtk.h>] (GtkEditable): EIF_INTEGER"
+			"C [struct <gtk/gtk.h>] (GtkOldEditable): EIF_INTEGER"
 		alias
-			"selection_start"
+			"selection_start_pos"
 		end
 		
 	gtk_editable_struct_selection_end (a_c_struct: POINTER): INTEGER is
 		external
-			"C [struct <gtk/gtk.h>] (GtkEditable): EIF_INTEGER"
+			"C [struct <gtk/gtk.h>] (GtkOldEditable): EIF_INTEGER"
 		alias
-			"selection_end"
+			"selection_end_pos"
 		end
 
 	gtk_style_set_font (a_c_struct: POINTER; a_font: POINTER) is
 		external
 			"C (GtkStyle*, GdkFont*) | <gtk/gtk.h>"
-		alias
-			"font"
 		end
 
 	gtk_style_get_font (a_c_struct: POINTER): POINTER is
@@ -93,16 +92,22 @@ feature -- Externals
 	object_destroy (a_c_object: POINTER) is
 		external
 			"C (GtkObject*) | <gtk/gtk.h>"
+		alias
+			"gtk_object_destroy"
 		end
 
 	object_ref (a_c_object: POINTER) is
 		external
-			"C (GtkObject*) | <gtk/gtk.h>"
+			"C (gpointer) | <gtk/gtk.h>"
+		alias
+			"g_object_ref"
 		end
 		
 	object_unref (a_c_object: POINTER) is
 		external
-			"C (GtkObject*) | <gtk/gtk.h>"
+			"C (gpointer) | <gtk/gtk.h>"
+		alias
+			"g_object_unref"
 		end
 
 end

@@ -95,7 +95,7 @@ feature -- Basic Operations
 		require
 				right_order: start_selection < end_selection
 		local
-			s, aux: STRING
+			s: STRING
 			line: EDITOR_LINE
 			t : EDITOR_TOKEN
 		do
@@ -144,6 +144,65 @@ feature -- Basic Operations
 			lexer.execute (s)
 			line.make_from_lexer (lexer)
 		end
+
+	string_selected (start_selection: TEXT_CURSOR; end_selection: TEXT_CURSOR): STRING is
+		require
+				right_order: start_selection < end_selection
+		local
+			line: EDITOR_LINE
+			t, t2 : EDITOR_TOKEN
+		do
+				-- Retrieving line after `start_selection'.
+			t := start_selection.token
+			t2 := end_selection.token
+			if t = t2 then
+				if start_selection.pos_in_token = end_selection.pos_in_token then
+					Result := t.image.substring (start_selection.pos_in_token, end_selection.pos_in_token -1)
+				else
+					Result := ""
+				end
+			else
+				line := start_selection.line
+				from
+					if t = line.eol_token then
+						Result := "%N"
+						line := line.next
+						if line = Void then
+							check
+								never_reached: False
+							end
+						else
+							t := line.first_token
+						end
+					else
+						Result := t.image.substring (start_selection.pos_in_token, t.image.count)
+						t := t.next
+					end
+				until
+					t = t2
+				loop
+					if t = line.eol_token then
+						Result.extend ('%N')
+						line := line.next
+						if line = Void then
+							check
+								never_reached: False
+							end
+						else
+							t := line.first_token
+						end
+					else
+						Result.append (t.image)
+						t := t.next
+					end
+				end
+				check
+					good_line: line = end_selection.line
+				end
+				Result.append (t2.image.substring (1, end_selection.pos_in_token -1))
+			end
+		end
+
 
 --	list is
 --		do

@@ -10,7 +10,7 @@ inherit
 			make as form_d_make
 		end;
 	COMMAND_W;
-	SHARED_WORKBENCH
+	SHARED_EIFFEL_PROJECT
 
 creation
 
@@ -121,7 +121,7 @@ feature
 			f_name: FILE_NAME;
 			file: PLAIN_TEXT_FILE;
 			str: STRING;
-			base_name: STRING
+			base_name: STRING;
 		do
 			if argument = create then
 				change_cluster;
@@ -142,7 +142,7 @@ feature
 					then
 						warner (class_text).gotcha_call (w_Cannot_create_file (f_name))
 					else 
-						stone := class_i.stone;
+						!! stone.make (class_i);
 						if not file.exists then
 							file.open_write;
 							file.putstring ("class ");
@@ -152,7 +152,7 @@ feature
 							file.new_line;
 							file.close;
 							cluster.add_new_classs (class_i);
-							stone := class_i.stone;
+							!! stone.make (class_i);
 							class_text.receive (stone);
 							popdown;
 						elseif
@@ -192,7 +192,7 @@ feature
 		do
 			clun := cluster_entry.text; 
 			clun.to_lower;
-			clu := Universe.cluster_of_name (clun);
+			clu := Eiffel_universe.cluster_of_name (clun);
 			if clu = Void then
 				aok := False;
 				warner (class_text).gotcha_call (w_Invalid_cluster_name)

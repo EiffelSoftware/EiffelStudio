@@ -2,12 +2,19 @@ indexing
 	description:
 		"EiffelVision multi-column list row. These rows are used in %
 		%the multi-column lists."
+	status: "See notice at end of class"
 	note: "It is not an item because it doesn't have the same options."
 	date: "$Date$";
 	revision: "$Revision$"
 
 class
 	EV_MULTI_COLUMN_LIST_ROW
+
+inherit
+	EV_ANY
+		redefine
+			implementation
+		end
 
 creation
 	make,
@@ -48,13 +55,6 @@ feature -- Access
 
 feature -- Status report
 	
-	destroyed: BOOLEAN is
-			-- Is Current widget destroyed?  
-			-- (= implementation does not exist)
-		do
-			Result := (implementation = Void)
-		end
-
 	is_selected: BOOLEAN is
 			-- Is the item selected
 		require
@@ -106,15 +106,6 @@ feature -- Element Change
 feature {EV_MULTI_COLUMN_LIST_I} -- Implementation
 
 	implementation: EV_MULTI_COLUMN_LIST_ROW_I
-
-	remove_implementation is
-		-- Remove implementation of list row
-		do
-			implementation := Void
-		ensure
-			void_implementation: implementation = Void
-		end
-
 
 invariant
 --	parent_not_void: parent /= Void

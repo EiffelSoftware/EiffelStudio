@@ -4,25 +4,18 @@ class EIFFEL_HISTORY
 
 
 inherit
-
-	CACHE [POLY_TABLE [ENTRY], ROUTINE_ID]
-		rename
-			item_id as cache_item_id,
-			wipe_out as cache_wipe_out,
-			make as cache_make
-		end;
 	CACHE [POLY_TABLE [ENTRY], ROUTINE_ID]
 		rename
 			item_id as poly_table
 		redefine
 			poly_table, wipe_out, make
-		select
-			poly_table, wipe_out, make
 		end;
+
 	SHARED_SERVER
 		undefine
 			copy, setup, consistent, is_equal
 		end;
+
 	COMPILER_EXPORTER
 		undefine
 			copy, setup, consistent, is_equal
@@ -37,7 +30,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialization
 		do
-			cache_make;
+			{CACHE} Precursor;
 			!!used.make (1);
 		end;
 
@@ -46,7 +39,7 @@ feature
 	poly_table (rout_id: ROUTINE_ID): POLY_TABLE [ENTRY] is
 			-- Routine table of id `rout_id'
 		do
-			Result := cache_item_id (rout_id);
+			Result := {CACHE} Precursor (rout_id);
 			if Result = Void and then Tmp_poly_server.has (rout_id) then
 					-- Not in cache and the routine id is not associated
 					-- to a routine table of deferred features only.
@@ -77,7 +70,7 @@ feature
 	wipe_out is
 			-- Wipe out the structure
 		do
-			cache_wipe_out;
+			{CACHE} Precursor;
 			!!used.make (1);
 		end;
 

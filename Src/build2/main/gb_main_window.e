@@ -86,6 +86,8 @@ feature -- Basic operation
 				-- We build the menus here, as the only time they
 				-- change at the moment is in conjunction with the
 				-- tools being displayed. This may have to change later.
+			horizontal_split_area.set_split_position (Default_width_of_type_selector)
+			vertical_split_area.set_split_position (Default_height_of_type_selector)
 			build_menu
 			unlock_update
 		ensure
@@ -186,10 +188,8 @@ feature {NONE} -- Implementation
 			-- create and layout "widgets" within `Current'.
 		local
 			separator: EV_HORIZONTAL_SEPARATOR
-			split_area: EV_HORIZONTAL_SPLIT_AREA
 			vertical_box1: EV_VERTICAL_BOX
 			horizontal_box: EV_HORIZONTAL_BOX
-			vertical_split_area: EV_VERTICAL_SPLIT_AREA
 		do
 			create tool_holder
 			create separator
@@ -200,19 +200,19 @@ feature {NONE} -- Implementation
 			create separator
 			tool_holder.extend (separator)
 			tool_holder.disable_item_expand (separator)
-			create split_area
+			create horizontal_split_area
 			create horizontal_box
 			tool_holder.extend (horizontal_box)
-			horizontal_box.extend (split_area)
+			horizontal_box.extend (horizontal_split_area)
 			create vertical_split_area
-			split_area.extend (vertical_split_area)
+			horizontal_split_area.extend (vertical_split_area)
 			vertical_split_area.set_minimum_width (100)
 			type_selector.set_minimum_size (100, 100)
 			vertical_split_area.extend (type_selector)
 			vertical_split_area.extend (component_selector)
 			component_selector.set_minimum_height (100)
 			create vertical_box1
-			split_area.extend (vertical_box1)
+			horizontal_split_area.extend (vertical_box1)
 			layout_constructor.set_minimum_size (100, 100)
 			vertical_box1.extend (layout_constructor)
 			horizontal_box.extend (docked_object_editor)
@@ -303,6 +303,12 @@ feature {NONE} -- Implementation
 		
 	menus_initialized: BOOLEAN
 		-- Has `initialize_menus' been called?
+		
+	horizontal_split_area: EV_HORIZONTAL_SPLIT_AREA
+		-- Horizontal split area holding main tools.
+		
+	vertical_split_area: EV_VERTICAL_SPLIT_AREA
+		-- Vertical split area holding main tools.
 		
 invariant
 	

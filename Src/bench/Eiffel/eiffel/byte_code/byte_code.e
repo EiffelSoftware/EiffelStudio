@@ -40,6 +40,9 @@ feature -- Access
 			-- Name ID of the feature to which the current byte code tree
 			-- belongs to.
 
+	start_line_number: INTEGER
+			-- Line where feature name is located.
+
 	end_location: TOKEN_LOCATION
 			-- Position where `end' keyword is located.
 			
@@ -140,6 +143,14 @@ feature -- Settings
 			-- Assign `i' to `real_body_id'.
 		do
 			real_body_id := i
+		end
+
+	set_start_line_number (l: like start_line_number) is
+			-- Assign `l' to `start_line_number'.
+		do
+			start_line_number := l
+		ensure
+			start_line_number_set: start_line_number = l
 		end
 
 	set_end_location (e: like end_location) is
@@ -589,6 +600,10 @@ feature -- IL code generation
 				generate_il_local_info (local_list)
 			end
 
+				-- Put a breakable point on feature name.
+			Il_generator.put_line_info (start_line_number)
+			Il_generator.flush_sequence_points (context.class_type)
+
 			if rescue_clause /= Void then
 				context.add_local (Boolean_c_type)
 				exception_occurred := context.local_list.count
@@ -601,25 +616,20 @@ feature -- IL code generation
 
 				-- Make IL code for preconditions
 			if
-				class_c.assertion_level.check_precond
+				class_c.assertion_level.check_precond and then
+				precondition /= Void or inh_assert.has_precondition
 			then
-				context.set_assertion_type (In_precondition)
-				end_of_assertion := il_label_factory.new_label
-				il_generator.generate_in_assertion_test (end_of_assertion)
-				il_generator.generate_set_assertion_status
 				generate_il_precondition
-				il_generator.generate_restore_assertion_status
-				il_generator.mark_label (end_of_assertion)
 			end
 			
-			if class_c.assertion_level.check_postcond then
+			if
+				class_c.assertion_level.check_postcond and then
+				(old_expressions /= Void or inh_assert.has_postcondition)
+			then
 				end_of_assertion := il_label_factory.new_label
 				il_generator.generate_in_assertion_test (end_of_assertion)
 				il_generator.generate_set_assertion_status
-				if
-					postcondition /= Void and then
-					old_expressions /= Void
-				then
+				if old_expressions /= Void then
 					from
 						old_expressions.start
 					until
@@ -641,13 +651,17 @@ feature -- IL code generation
 			end
 
 				-- Make IL code for postcondition
-			if class_c.assertion_level.check_postcond then
+			if
+				class_c.assertion_level.check_postcond and then
+				(postcondition /= Void or inh_assert.has_postcondition)
+			then
 				end_of_assertion := il_label_factory.new_label
 				il_generator.generate_in_assertion_test (end_of_assertion)
 				il_generator.generate_set_assertion_status
 				context.set_assertion_type (In_postcondition)
 				if postcondition /= Void then
 					postcondition.generate_il
+					Il_generator.flush_sequence_points (context.class_type)
 				end
 				if inh_assert.has_postcondition then
 					inh_assert.generate_il_postcondition
@@ -682,22 +696,28 @@ feature -- IL code generation
 			end
 		end
 
-	generate_il_precondition is
+	generate_il_precondition  is
 			-- Generate IL precondition checking blocks.
 		local
 			inh_assert: INHERITED_ASSERTION
-			success_block, failure_block: IL_LABEL
+			end_of_assertion, success_block, failure_block: IL_LABEL
 			l_prec: like precondition
 			assert_b: ASSERT_B
 			need_end_label: BOOLEAN
 		do
+			context.set_assertion_type (In_precondition)
+
+			l_prec := precondition
 			inh_assert := Context.inherited_assertion
+
+			end_of_assertion := il_label_factory.new_label
+			il_generator.generate_in_assertion_test (end_of_assertion)
+			il_generator.generate_set_assertion_status
 			if precondition /= Void then
 				from
 					need_end_label := True
 					success_block := il_label_factory.new_label
 					failure_block := il_label_factory.new_label
-					l_prec := precondition
 					l_prec.start
 				until
 					l_prec.after
@@ -711,6 +731,7 @@ feature -- IL code generation
 				end
 				il_generator.branch_to (success_block)
 				il_generator.mark_label (failure_block)
+				Il_generator.flush_sequence_points (context.class_type)
 			end
 
 			if inh_assert.has_precondition then
@@ -724,6 +745,8 @@ feature -- IL code generation
 					il_generator.mark_label (success_block)
 				end
 			end
+			il_generator.generate_restore_assertion_status
+			il_generator.mark_label (end_of_assertion)
 		end
 
 	generate_il_local_info (local_list: LINKED_LIST [TYPE_I]) is

@@ -1800,7 +1800,7 @@ rt_private void clean_zones()
 			 */
 
 			((union overhead *) ps_from.sc_arena)->ov_size |= B_BUSY;
-			xfreechunk(ps_from.sc_arena + OVERHEAD);	/* One big bloc */
+			xfree(ps_from.sc_arena + OVERHEAD);			/* One big bloc */
 			bzero(&ps_from, sizeof(struct sc_zone));	/* Was freed */
 			g_data.gc_to--;
 
@@ -1870,7 +1870,7 @@ rt_private void init_plsc()
 			 * into trouble when we try to put it back into the free list.
 			 */
 			((union overhead *) ps_to.sc_arena)->ov_size |= B_BUSY;
-			xfreechunk(ps_to.sc_arena + OVERHEAD);
+			xfree(ps_to.sc_arena + OVERHEAD);
 			ps_to.sc_arena = (char *) 0;	/* No to zone yet */
 		}
 	}

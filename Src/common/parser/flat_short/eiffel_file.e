@@ -397,7 +397,7 @@ feature {}
 		do
 			from
 				l_list.start;
-				!! lines.make (l_list.count);
+				!! lines.make_filled (l_list.count);
 				lines.start;
 			until
 				l_list.after
@@ -408,7 +408,7 @@ feature {}
 			end;
 			from
 				c_list.start;
-				!! comments.make (c_list.count);
+				!! comments.make_filled (c_list.count);
 				comments.start;
 			until
 				c_list.after

@@ -17,7 +17,8 @@ inherit
 			trace
 		end;
 	SHARED_WORKBENCH;
-	COMPILER_EXPORTER
+	COMPILER_EXPORTER;
+	SHARED_COUNTER
 
 creation
 
@@ -98,7 +99,9 @@ end;
 			a_class: CLASS_C;
 			types: TYPE_LIST;
 			class_type: CLASS_TYPE;
-			classes: CLASS_C_SERVER
+			classes: CLASS_C_SERVER;
+			class_array: ARRAY [CLASS_C];
+			i, nb: INTEGER
 		do
 				-- Check array class
 			check_array_class;
@@ -123,32 +126,35 @@ end;
 			derivations.clear_all;
 
 				-- Remove the obsolete class types
-			from
-				classes := System.classes;
-				classes.start
-			until
-				classes.after
-			loop
-				a_class := classes.item_for_iteration;
-				from
-					types := a_class.types;
-					types.start
-				until
-					types.after
-				loop
-					class_type := types.item;
-					if not class_type.type.is_valid then
+			classes := System.classes;
+			from classes.start until classes.after loop
+				class_array := classes.item_for_iteration;
+				nb := Class_counter.item (classes.key_for_iteration).count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						from
+							types := a_class.types;
+							types.start
+						until
+							types.after
+						loop
+							class_type := types.item;
+							if not class_type.type.is_valid then
 debug
 	io.error.putstring ("Removing a type of ");
 	io.error.putstring (a_class.class_name);
 	io.error.new_line;
 end;
-						System.class_types.put (Void, class_type.type_id);
-						types.remove;
-					else
-						types.forth
-					end;
-				end;
+								System.class_types.put (Void, class_type.type_id);
+								types.remove;
+							else
+								types.forth
+							end;
+						end;
+					end
+					i := i + 1
+				end
 				classes.forth
 			end;
 		end;

@@ -92,15 +92,12 @@ feature -- Code generation
 			end
 		end
 
-	register_acces (id: INTEGER): STRING is
+	register_acces (buf: GENERATION_BUFFER; id: INTEGER) is
 		do
 			if context.byte_code.is_once and then id = 0 then
-				Result := "Result"
+				buf.putstring ("Result")
 			else
-				!!Result.make (0);
-				Result.append ("l[");
-				Result.append_integer (context.local_index (internal_reg_name (id)));
-				Result.append_character (']');
+				buf.put_protected_local (context.local_index (internal_reg_name (id)));
 			end
 		end
 
@@ -135,7 +132,7 @@ feature -- Code generation
 			buf.putstring (external_reg_name (id));
 			buf.putstring (gc_comma);
 			if not access_area then
-				buf.putstring (register_acces (id));
+				register_acces (buf, id);
 				buf.putstring (gc_comma);
 			end;
 

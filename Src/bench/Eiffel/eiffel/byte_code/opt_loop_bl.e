@@ -62,15 +62,12 @@ feature
 			end
 		end;
 
-	register_acces (id: INTEGER): STRING is
+	register_acces (buf: GENERATION_BUFFER; id: INTEGER) is
 		do
 			if context.byte_code.is_once and then id = 0 then
-				Result := "Result"
+				buf.putstring ("Result")
 			else
-				!!Result.make (5);
-				Result.append ("l[");
-				Result.append_integer (context.local_index (internal_reg_name (id)));
-				Result.append_character (']');
+				buf.put_protected_local (context.local_index (internal_reg_name (id)));
 			end
 		end
 
@@ -171,7 +168,7 @@ feature
 					buf.putstring (gc_comma);
 					buf.putstring (external_reg_name (id));
 					buf.putstring (gc_comma);
-					buf.putstring (register_acces (id));
+					register_acces (buf, id);
 					buf.putstring (gc_rparan_comma);
 					buf.new_line;
 
@@ -190,7 +187,7 @@ feature
 					buf.putstring ("RTAIOFFSETS(");
 					buf.putstring (r_name);
 					buf.putstring (gc_comma);
-					buf.putstring (register_acces (id));
+					register_acces (buf, id);
 					buf.putstring (gc_rparan_comma);
 					buf.new_line;
 					generated_offsets.forth
@@ -215,7 +212,7 @@ feature
 					id := array_desc.item
 					buf.putstring (external_reg_name (id));
 					buf.putstring (gc_comma);
-					buf.putstring (register_acces (id));
+					register_acces (buf, id);
 					buf.putstring (gc_rparan_comma);
 					buf.new_line;
 					array_desc.forth

@@ -52,9 +52,7 @@ feature
 		do
 			buffer := context.buffer
 			if context.need_gc_hooks then
-				buffer.putstring ("l[");
-				buffer.putint (context.local_index (register_name));
-				buffer.putchar (']');
+				buffer.put_protected_local (context.local_index (register_name));
 			else
 				buffer.putstring (register_name);
 			end;

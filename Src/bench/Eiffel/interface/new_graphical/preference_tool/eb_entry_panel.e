@@ -73,7 +73,7 @@ feature -- Access
 		deferred
 		end
 	
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 			-- Pixmap representing the category
 		deferred
 		end
@@ -133,8 +133,9 @@ feature -- Element Change
 			-- Update the resource users from
 			-- `parameters'.
 		local
-			mod_res: MODIFIED_RESOURCE
+--			mod_res: EB_MODIFIED_RESOURCE
 			res: like resources
+			lrd: EB_LINE_RESOURCE_DISPLAY
 		do
 			from
 				res := resources
@@ -143,7 +144,10 @@ feature -- Element Change
 				res.after
 			loop
 				if res.item.is_changed then
---					parameters.add_modified_resource (res.item.modified_resource)
+					lrd ?= res.item
+					if lrd /= Void then
+						parameters.add_modified_resource (lrd.modified_resource)
+					end
 				end
 				res.forth
 			end

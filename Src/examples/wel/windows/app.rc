@@ -41,6 +41,7 @@ ID_MAIN_MENU MENU
 MODELESS_DLG_ID DIALOG 57, 46, 140, 83
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Modeless Dialog"
+FONT 8, "MS Sans Serif"
 BEGIN
 	CONTROL "This a modeless dialog box that allows the user to switch between the dialog and the application.", -1, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE, 9, 5, 122, 34
 	EDITTEXT EDIT_ID, 21, 38, 98, 12, ES_LEFT | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_GROUP | WS_TABSTOP
@@ -51,6 +52,7 @@ END
 MODAL_DLG_ID DIALOG 57, 46, 140, 83
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Modal Dialog"
+FONT 8, "MS Sans Serif"
 BEGIN
 	CONTROL "This a modal dialog box that does *not* allow the user to switch between the dialog and the application.", -1, "STATIC", SS_LEFT | WS_CHILD | WS_VISIBLE, 7, 5, 126, 34
 	EDITTEXT EDIT_ID, 21, 39, 98, 12, ES_LEFT | WS_CHILD | WS_VISIBLE | WS_BORDER | WS_GROUP | WS_TABSTOP

@@ -26,8 +26,8 @@ inherit
 		rename
 			default_create as interactive_list_make
 		redefine
-			on_item_added,
-			on_item_removed
+			on_item_added_at,
+			on_item_removed_at
 		end
 
 	EV_DESELECTABLE
@@ -61,7 +61,7 @@ feature {EV_ANY_I} -- Implementation
 	implementation: EV_MULTI_COLUMN_LIST_ROW_I
 			-- Responsible for interaction with native graphics toolkit.
 
-feature {NONE} -- Implementation
+feature {EV_ANY_I} -- Implementation
 
 	create_implementation is 
 			-- See `{EV_ANY}.create_implementation'.
@@ -70,16 +70,16 @@ feature {NONE} -- Implementation
 			create {EV_MULTI_COLUMN_LIST_ROW_IMP} implementation.make (Current)
 		end
 		
-	on_item_added (an_item: STRING) is
+	on_item_added_at (an_item: STRING; item_index: INTEGER) is
 			-- `an_item' is about to be added.
 		do
-			implementation.update
+			implementation.on_item_added_at (an_item, item_index)
 		end
 
-	on_item_removed (an_item: STRING) is
+	on_item_removed_at (an_item: STRING; item_index: INTEGER) is
 			-- `an_item' is about to be removed.
 		do
-			implementation.update
+			implementation.on_item_removed_at (an_item, item_index)
 		end
 
 end -- class EV_MULTI_COLUMN_LIST_ROW

@@ -112,7 +112,6 @@ feature -- Basic Operations
 			if folder_selection_dialog.selected then
 				destination_folder_edit.set_text (folder_selection_dialog.folder_name)
 			end
-			set_browse_directory (folder_selection_dialog.folder_name)
 		end
 	
 	Folder_selection_dialog: WEL_CHOOSE_FOLDER_DIALOG is

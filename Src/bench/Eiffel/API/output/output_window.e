@@ -10,7 +10,8 @@ deferred class OUTPUT_WINDOW
 inherit
 	TEXT_FORMATTER
 		redefine
-			process_string_text, process_difference_text_item
+			process_string_text, process_difference_text_item,
+			process_feature_error
 		end
 
 feature {TEXT_ITEM} -- Text processing
@@ -146,6 +147,18 @@ feature {TEXT_ITEM} -- Text processing
 			put_ace_syntax (text.syntax_error, text.error_text)
 		end;
 
+	process_difference_text_item (text: DIFFERENCE_TEXT_ITEM) is
+			-- Process difference text.
+		do
+			put_string (text.image)
+		end;
+
+	process_feature_error (text: FEATURE_ERROR_TEXT) is
+			-- Process error feature text.
+		do
+			put_feature_error (text.e_feature, text.image, text.position);
+		end;
+
 feature -- Ouput
 	
 	display is 
@@ -233,6 +246,16 @@ feature -- Ouput
 			valid_f_name: f_name /= Void
 		do
 			put_string (f_name)
+		end;
+
+	put_feature_error (feat: E_FEATURE; str: STRING; pos: INTEGER) is
+			-- Put feature `feat' with error at charcter
+			-- position `pos'
+		require
+			valid_str: str /= Void;
+			positive_pos: pos > 0 
+		do
+			put_feature (feat, str)
 		end;
 
 	put_address (address: STRING; e_class: E_CLASS) is
@@ -336,12 +359,6 @@ feature -- Ouput
 			valid_e_feature: e_feature /= Void
 		do
 			put_string (str)
-		end;
-
-	process_difference_text_item (text: DIFFERENCE_TEXT_ITEM) is
-				-- Process difference text text.
-		do
-			put_string (text.image)
 		end;
 
 end -- class OUTPUT_WINDOW

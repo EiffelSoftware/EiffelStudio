@@ -53,7 +53,8 @@ inherit
 			on_set_cursor,
 			on_draw_item,
 			on_menu_command,
-			on_accelerator_command
+			on_accelerator_command,
+			on_color_control
 		redefine
 			default_ex_style,
 			default_style,

@@ -11,7 +11,7 @@
 		<heading>
 			<size>1</size>Iterators and Agents
 		</heading>
-		<paragraph> The recent introduction of the agents mechanism in Eiffel Software Eiffel offers an attractive alternative to the 
+		<paragraph> The recent introduction of the agents mechanism in Eiffel offers an attractive alternative to the 
 			<code>
 				<cluster_name>Iterator</cluster_name>
 			</code> cluster of EiffelBase.

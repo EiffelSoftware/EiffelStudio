@@ -14,7 +14,7 @@ inherit
 			copy_attributes, context_initialization, 
 			create_context, position_initialization,
 			shown, hide, show, update_visual_name_in_editor,
-			description_text
+			description_text, creation_procedure_text
 		end
 
 feature 
@@ -33,13 +33,13 @@ feature
 		local
 			x1, y1: INTEGER
 		do
-			!!widget.make (entity_name, a_parent)
+			!! widget.make (entity_name, a_parent)
 			title := entity_name
 			widget.set_default_position (False)
 			widget.allow_resize
 			widget.realize
+			widget_set_title (entity_name)
 			if retrieved_node = Void then
-				widget_set_title (entity_name)
 				set_size (300, 300)
 				default_position := True
 				x1 := a_parent.real_x + a_parent.width // 2 
@@ -229,6 +229,13 @@ feature {NONE}
 				Result.append (visual_name)
 			end
 			Result.append (".")
+		end
+
+	creation_procedure_text: STRING is
+		do
+			!! Result.make (100)
+			Result.append ("%N%Tmake (a_name: STRING; a_parent: COMPOSITE) is%N%T%Tdo%N")
+			Result.append ("%T%T%TPrecursor (a_name, a_parent)%N")
 		end
 
 feature {CONTEXT}

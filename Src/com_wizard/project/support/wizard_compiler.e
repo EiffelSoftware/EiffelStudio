@@ -192,7 +192,7 @@ feature -- Basic Operations
 			a_local_folder.append ("Component")
 			create a_directory.make (a_local_folder)
 			if a_directory.exists then
-				Result := a_directory.empty
+				Result := a_directory.is_empty
 			end
 		end
 		

@@ -106,7 +106,7 @@ feature -- Basic Operations
 				end
 				execution_environment.change_working_directory (a_working_directory)
 				check
-					directory_empty: a_directory.empty
+					directory_empty: a_directory.is_empty
 				end
 			end
 		end

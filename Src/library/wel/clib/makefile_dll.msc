@@ -17,13 +17,13 @@ LIBS =  /OUT:$(PROJ).dll kernel32.lib user32.lib advapi32.lib
 #############################################################
 # Release
 #############################################################
-CFLAGS = $(CFLAGS) /DNDEBUG /W3 /Ox
+CFLAGS = $(CFLAGS) /DNDEBUG /W3 /Ox /GD
 
 $(PROJ).DLL: $(OBJS)
     echo >NUL @<<$(PROJ).CRF
 $(LFLAGS) $(OBJS) $(LIBS)
 <<
-    link @$(PROJ).CRF
+    link /NOLOGO @$(PROJ).CRF
 
 .cpp.obj:
     CL $(CFLAGS) /c $<

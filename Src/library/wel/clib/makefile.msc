@@ -1,6 +1,6 @@
 # wel.lib - Makefile for Microsoft C
 
-CC = cl
+CC = cl /nologo
 # Finalized Version
 CFLAGS = -c -Ox -I..\spec\windows\include -I$(EIFFEL4)\bench\spec\windows\include
 
@@ -10,18 +10,18 @@ CFLAGS = -c -Ox -I..\spec\windows\include -I$(EIFFEL4)\bench\spec\windows\includ
 .c.obj:
 	$(CC) $(CFLAGS) $<
 
-OBJ = 	disptchr.obj \
+OBJ = 	registry.obj \
+		disptchr.obj \
 		enumfont.obj \
 		estream.obj \
 		msgboxpa.obj \
-		registry.obj \
 		diskspace.obj \
 		dynload.obj \
 		mousehook.obj
 
 wel.lib: $(OBJ)
 	if exist $@ del $@
-	lib /OUT:$@ $(OBJ)
+	lib /NOLOGO /OUT:$@ $(OBJ)
 	if not exist ..\spec\msc mkdir ..\spec\msc
 	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
 	copy $@ ..\spec\msc\lib

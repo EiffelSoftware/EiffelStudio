@@ -794,6 +794,8 @@ feature {NONE} -- C code generation
 					buffer.put_string ("eif_bit_shift_right(")
 				when bit_test_type then
 					buffer.put_string ("eif_bit_test(")
+					target.c_type.generate (buffer)
+					buffer.put_character (',')
 				end
 				target.print_register
 				buffer.put_character (',')

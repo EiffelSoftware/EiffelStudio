@@ -140,7 +140,7 @@ feature {NONE}
 			-- the names of the features
 		local
 			g_window: GRAPHICAL_TEXT_WINDOW
-			imp: SCROLLED_TEXT_WINDOWS
+			imp: SCROLLED_T_IMP
 			html_format: WEL_CHARACTER_FORMAT
 			click_item: CLICK_STONE
 			click_array: ARRAY [CLICK_STONE]

@@ -30,11 +30,13 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen,
 			increment as granularity,
 			value as position,
 			set_increment as set_granularity,
 			set_horizontal as mel_set_horizontal,
+			set_vertical as mel_set_vertical,
 			set_value as set_position,
 			is_shown as shown
 		end
@@ -75,7 +77,11 @@ feature -- Status setting
 			-- Set orientation of the scale to horizontal if `flag',
 			-- to vertical otherwise.
 		do
-				mel_set_horizontal (flag)
+			if flag then
+				mel_set_horizontal
+			else
+				mel_set_vertical
+			end
 		end;
 
 	set_maximum_right_bottom (flag: BOOLEAN) is
@@ -85,15 +91,15 @@ feature -- Status setting
 		do
 			if flag then
 				if is_horizontal then
-					set_maximum_on_left (False)
+					set_maximum_on_right
 				else
-					set_maximum_on_top (False)
+					set_maximum_on_bottom
 				end
 			else
 				if is_horizontal then
-					set_maximum_on_left (True)
+					set_maximum_on_left
 				else
-					set_maximum_on_top (True)
+					set_maximum_on_top
 				end
 			end
 		end;

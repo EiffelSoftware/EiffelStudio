@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			widget_index := widget_manager.last_inserted_position;
 			mel_pb_make (a_push_b.identifier, mc, man);
 			a_push_b.set_font_imp (Current)
-			set_type_string (False);
+			set_type_pixmap
 		end;
 
 feature -- Status report

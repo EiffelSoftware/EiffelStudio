@@ -28,6 +28,7 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen,
 			set_horizontal as mel_set_horizontal,
 			is_shown as shown
@@ -55,7 +56,11 @@ feature -- Status setting
 			-- Set orientation of the scale to horizontal if `flag',
 			-- to vertical otherwise.
 		do
-				mel_set_horizontal (flag)
+			if flag then
+				mel_set_horizontal 
+			else
+				set_vertical
+			end
 		end;
 
 end -- class SEPARATOR_M

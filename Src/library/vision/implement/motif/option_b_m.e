@@ -49,6 +49,7 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen,
 			is_shown as shown
 		redefine
@@ -191,18 +192,18 @@ feature -- Status setting
 			-- Allow current button to recompute its  size according to
 			-- some changes on its text.
 		do
-			button_gadget.set_recomputing_size_allowed (True);
-			set_resize_width (True);
-			set_resize_height (True)
+			button_gadget.allow_recompute_size;
+			enable_resize_width;
+			enable_resize_height
 		end;
 	
 	forbid_recompute_size is
 			-- Disallow current button to recompute its  size according to
 			-- some changes on its text.
 		do
-			button_gadget.set_recomputing_size_allowed (False);
-			set_resize_width (False);
-			set_resize_height (False)
+			button_gadget.forbid_recompute_size;
+			disable_resize_width;
+			disable_resize_height
 		end;
 
 feature -- Removal

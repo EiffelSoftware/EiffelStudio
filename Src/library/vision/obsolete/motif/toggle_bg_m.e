@@ -26,6 +26,7 @@ inherit
 		rename
 			make as mel_toggle_make,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen,
 			is_shown as shown
 		select
@@ -48,22 +49,6 @@ feature {NONE} -- Initialization
 			mel_toggle_make (a_toggle_bg.identifier, mc, man);
 			a_toggle_bg.set_font_imp (Current);
 			set_mnemonic_from_text (a_toggle_bg.identifier, False)
-		end;
-
-feature -- Status setting
-
-	allow_recompute_size is
-			-- Allow Current to recompute its size
-			-- according to the children.
-		do
-			set_recomputing_size_allowed (True)
-		end;
-
-	forbid_recompute_size is
-			-- Forbid Current to recompute its size
-			-- according to the children.
-		do
-			set_recomputing_size_allowed (False)
 		end;
 
 feature -- Element change

@@ -30,6 +30,7 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen,
 			is_shown as shown
 		end
@@ -81,7 +82,11 @@ feature -- Status setting
 			-- Set row column to layout items preferably in row if `flag',
 			-- in column otherwise.
 		do
-				set_horizontal (flag)
+			if flag then
+				set_horizontal
+			else
+				set_vertical
+			end
 		end; 
 
 	set_same_size is

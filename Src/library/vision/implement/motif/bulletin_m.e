@@ -31,6 +31,7 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen,
 			is_shown as shown
 		end
@@ -54,6 +55,17 @@ feature {NONE} -- Creation
 		end;
 
 feature -- Status setting
+
+	set_default_position (flag: BOOLEAN) is
+			-- Enable or disable default position according
+			-- to `flag'.
+		do	
+			if flag then
+				enable_default_positioning
+			else
+				disable_default_positioning
+			end
+		end
 
 	allow_recompute_size is	
 			-- Allow Current bulletin to recompute its size

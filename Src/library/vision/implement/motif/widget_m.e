@@ -25,6 +25,7 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen
 		end
 
@@ -109,7 +110,11 @@ feature -- Status Setting
 			-- not be dispatched to current widget and to all its children.
 			-- Set it to sensitive mode otherwise.
 		do
-			set_sensitive (not flag)
+			if flag then
+				mel_set_insensitive
+			else
+				set_sensitive 
+			end
 		ensure
 			insensitive_equal_flag: insensitive = flag
 		end;

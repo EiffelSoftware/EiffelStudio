@@ -13,7 +13,7 @@ inherit
 
 	WIDGET_M
 		undefine
-			mel_destroy, clean_up, object_clean_up
+			mel_destroy, clean_up, object_clean_up, mel_set_insensitive
 		end;
 
 	MEL_COMPOSITE
@@ -23,6 +23,7 @@ inherit
             set_background_color as mel_set_background_color,
             set_background_pixmap as mel_set_background_pixmap,
             destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen
         end
 

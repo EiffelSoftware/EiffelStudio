@@ -36,15 +36,13 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen,
-			set_editable as mel_set_editable,
 			pos_to_x as x_coordinate,
 			pos_to_y as y_coordinate,
 			xy_to_pos as character_position,
-			resize_height as is_height_resizable,
-			resize_width as is_width_resizable,
-			word_wrap as is_word_wrap_mode,
-			verify_bell as is_bell_enabled,
+			is_word_wrapped as is_word_wrap_mode,
+			is_verify_bell_enabled as is_bell_enabled,
 			string as text,
 			set_string as set_text,
 			max_length as maximum_size,
@@ -56,7 +54,10 @@ inherit
 			set_selection as set_selecton_with_time,
 			set_selection_with_current_time as set_selection,
 			insert as mel_insert,
-			is_shown as shown
+			is_shown as shown,
+			set_single_line_edit_mode as set_single_line_mode,
+			set_multi_line_edit_mode as set_multi_line_mode,
+			set_cursor_position_visible as mel_set_cursor_position_visible
 		end
 
 creation
@@ -82,7 +83,7 @@ feature {NONE} -- Initialization
 		do
 			make (a_text, man, oui_parent);
 			set_multi_line_mode;
-			set_word_wrap (True)
+			enable_word_wrap
 		end;
 
 feature -- Access
@@ -105,7 +106,7 @@ feature -- Status report
 	is_multi_line_mode: BOOLEAN is
 			-- Is Current editing a multiline text?
 		do
-			Result := not single_line_edit_mode
+			Result := not is_single_line_edit_mode
 		end;
 
 	is_any_resizable: BOOLEAN is
@@ -122,6 +123,16 @@ feature -- Status report
 
 feature -- Status setting
 
+	set_cursor_position_visible (flag: BOOLEAN) is
+			-- Set is_cursor_position_visible to flag.
+		do
+			if flag then	
+				mel_set_cursor_position_visible
+			else
+				set_cursor_position_invisible
+			end
+		end
+
 	allow_action is
 			-- Allow the cursor to move or the text to be modified
 			-- during a `motion' or a `modify' action.
@@ -129,7 +140,7 @@ feature -- Status setting
 			ts: MEL_TEXT_VERIFY_CALLBACK_STRUCT
 		do
 			ts ?= last_callback_struct;
-			ts.set_do_it (True);
+			ts.set_do_it;
 		end;
 
 	forbid_action is
@@ -139,87 +150,23 @@ feature -- Status setting
 			ts: MEL_TEXT_VERIFY_CALLBACK_STRUCT
 		do
 			ts ?= last_callback_struct;
-			ts.set_do_it (False);
-		end;
-
-	disable_verify_bell is
-			-- Disable the bell when an action is forbidden
-		do
-			set_verify_bell (False)
-		end;
-
-	enable_verify_bell is
-			-- enable the bell when an action is forbidden
-		do
-			set_verify_bell (True)
-		end;
-
-	set_editable is
-			-- Set current text to be editable.
-		do
-			mel_set_editable (True)
-		end;
-
-	set_read_only is
-			-- Set current text to be read only.
-		do
-			mel_set_editable (False)
+			ts.unset_do_it;
 		end;
 
 	disable_resize is
 			-- Disable that current text widget attempts to resize its width an
 			-- height to accommodate all the text contained.
 		do
-			set_resize_width (False);
-			set_resize_height (False);
-		end;
-
-	disable_resize_height is
-			-- Disable that current text widget attempts to resize its height
-			-- to accommodate all the text contained.
-		do
-			set_resize_height (False);
-		end;
-
-	disable_resize_width is
-			-- Disable that current text widget attempts to resize its width
-			-- to accommodate all the text contained.
-		do
-			set_resize_width (False);
+			disable_resize_width;
+			disable_resize_height
 		end;
 
 	enable_resize is
 			-- Enable that current text widget attempts to resize its width and
 			-- height to accommodate all the text contained.
 		do
-			set_resize_height (True);
-			set_resize_width (True);
-		end;
-
-	enable_resize_height is
-			-- Enable that current text widget attempts to resize its height to
-			-- accomodate all the text contained.
-		do
-			set_resize_height (True);
-		end;
-
-	enable_resize_width is
-			-- Enable that current text widget attempts to resize its width to
-			-- accommodate all the text contained.
-		do
-			set_resize_width (True);
-		end;
-
-	set_single_line_mode is
-			-- Enable single line editing.
-		do
-			set_single_line_edit_mode (True)
-		end;
-
-	set_multi_line_mode is
-			-- Enabble multi line editing.
-		do
-			set_single_line_edit_mode (False)
+			enable_resize_height;
+			enable_resize_width
 		end;
 
 feature -- Element change

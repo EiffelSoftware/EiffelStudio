@@ -39,6 +39,7 @@ inherit
 			set_foreground_color as mel_set_foreground_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen,
 			attach_right as child_attach_right,
 			attach_left as child_attach_left,

@@ -13,14 +13,14 @@ inherit
 
 	WM_SHELL_M
 		undefine
-			is_shown, mel_destroy
+			is_shown, mel_destroy, mel_set_insensitive
 		redefine
 			mel_screen, set_x, set_y, set_x_y
 		end;
 
 	SHELL_M
 		undefine
-			is_shown, mel_destroy
+			is_shown, mel_destroy, mel_set_insensitive
 		redefine
 			mel_screen, set_x, set_y, set_x_y
 		end;
@@ -36,6 +36,7 @@ inherit
 			set_background_color as mel_set_background_color,
 			set_background_pixmap as mel_set_background_pixmap,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen
 		redefine
 			mel_screen, set_x, set_y, set_x_y
@@ -61,13 +62,13 @@ feature -- Status Setting
 	set_iconic_state is
 			-- Set start state of the application to be iconic.
 		do
-			set_initial_state_normal (False)
+			set_initial_state_to_iconic
 		end;
 
 	set_normal_state is
 			-- Set start state of the application to be normal.
 		do
-			set_initial_state_normal (True)
+			set_initial_state_to_normal
 		end;
 
 	delete_window_action is

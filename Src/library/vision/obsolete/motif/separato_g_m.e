@@ -26,6 +26,7 @@ inherit
 		rename
 			make as mel_sep_make,
 			destroy as mel_destroy,
+			set_insensitive as mel_set_insensitive,
 			screen as mel_screen,
 			set_horizontal as mel_set_horizontal,
 			is_shown as shown

@@ -374,14 +374,14 @@ feature -- Element change
 			-- Allow geometry resize to all geometry requests
 			-- from its children.
 		do
-			parent.set_allow_shell_resize (True)
+			parent.allow_shell_resize 
 		end;
 
 	forbid_resize is
 			-- Forbid geometry resize to all geometry requests
 			-- from its children.
 		do
-			parent.set_allow_shell_resize (False)
+			parent.forbid_shell_resize 
 		end;
 
 feature -- Display
@@ -479,7 +479,7 @@ feature {NONE} -- Implementation
 	initialize (shell: MEL_SHELL) is
 			-- Initialize the current dialog
 		do
-			shell.set_allow_shell_resize (False);
+			shell.forbid_shell_resize;
 			shell.add_popup_callback (Current, True);
 			shell.add_popdown_callback (Current, False);
 		end;

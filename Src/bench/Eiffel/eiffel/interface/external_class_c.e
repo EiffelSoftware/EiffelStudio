@@ -54,6 +54,9 @@ feature -- Initialization
 				-- Initializes inheritance structure
 			process_parents
 
+				-- Check if it is a nested type or not.
+			process_nesting
+
 				-- Create data structures to hold features information.
 			nb := external_class.fields.count + external_class.constructors.count +
 				external_class.procedures.count + external_class.functions.count
@@ -102,6 +105,14 @@ feature -- Access
 
 	external_class: CONSUMED_TYPE
 			-- Data read from XML file.
+
+	enclosing_class: CLASS_C
+			-- Class in which Current class is defined when `is_nested'.
+
+feature -- Status report
+
+	is_nested: BOOLEAN
+			-- Is current external class a nested type?
 			
 feature {NONE} -- Initialization
 
@@ -376,7 +387,24 @@ feature {NONE} -- Initialization
 				i := i + 1
 			end
 		end
-		
+	
+	process_nesting is
+			-- If `external_class' represent an instance of CONSUMED_NESTED_TYPE
+			-- we initialize `enclosing_class' correctly.
+		require
+			external_class_not_void: external_class /= Void
+		local
+			l_nested: CONSUMED_NESTED_TYPE
+			l_enclosing_type: CL_TYPE_A
+		do
+			l_nested ?= external_class
+			if l_nested /= Void then
+				l_enclosing_type := type_from_consumed_type (l_nested.enclosing_type)
+				is_nested := True
+				enclosing_class := l_enclosing_type.associated_class
+			end
+		end
+
 	type_from_consumed_type (c: CONSUMED_REFERENCED_TYPE): CL_TYPE_A is
 			-- Given an external type `c' get its associated CL_TYPE_A.
 		require
@@ -527,5 +555,8 @@ feature {NONE} -- Initialization
 			inserted_generic_parameter: cl.has_generics implies
 				syntactical_suppliers.has (cl.generics.item (1).associated_class)
 		end
-		
+
+invariant
+	valid_enclosing_class: is_nested implies enclosing_class /= Void
+
 end -- class EXTERNAL_CLASS_C

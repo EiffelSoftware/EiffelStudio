@@ -41,40 +41,50 @@ feature
 			-- the maximum entry id ?
 		local
 			current_type_id: INTEGER;
-			entry: ATTR_ENTRY;
+			entry, first_entry: ATTR_ENTRY;
 			cl_type: CLASS_TYPE;
 			first_class: CLASS_C;
 			i, nb, old_position: INTEGER
 			local_copy: ATTR_TABLE
+			system_i: SYSTEM_I
 		do
-			old_position := position;
+			old_position := position
+			system_i := System
 
 				-- If it is not a poofter finalization
 				-- we have a quicker algorithm handy.
-			if not System.poofter_finalization then
+			if not system_i.poofter_finalization then
 				goto_used (type_id);
-				if position <= upper then
-					from
-						local_copy := Current
-						cl_type := System.class_type_of_id (type_id);
-						first_class := cl_type.associated_class;
-						i := position + 1
-						nb := upper
-					until
-						Result or else i > nb
-					loop
-						entry := local_copy.array_item (i)
-						cl_type := System.class_type_of_id (entry.type_id);
-						if cl_type.associated_class.conform_to (first_class) then
-							Result := entry.used;
+				i := position
+				if i <= upper then
+					local_copy := Current
+					first_entry := local_copy.array_item (i)
+					if first_entry.is_set then
+						Result := first_entry.is_polymorphic
+					else
+						from
+							cl_type := system_i.class_type_of_id (type_id);
+							first_class := cl_type.associated_class;
+							i := i + 1
+							nb := upper
+						until
+							Result or else i > nb
+						loop
+							entry := local_copy.array_item (i)
+							cl_type := system_i.class_type_of_id (entry.type_id);
+							if cl_type.associated_class.simple_conform_to (first_class) then
+								Result := entry.used;
+							end;
+							i := i + 1
 						end;
-						i := i + 1
-					end;
+						
+						first_entry.set_polymorphic (Result)
+					end
 				end;
 			else
 				from
 					local_copy := Current
-					cl_type := System.class_type_of_id (type_id);
+					cl_type := system_i.class_type_of_id (type_id);
 					first_class := cl_type.associated_class;
 					i := lower
 					nb := upper
@@ -84,8 +94,8 @@ feature
 					entry := local_copy.array_item (i)
 					current_type_id := entry.type_id;
 					if current_type_id /= type_id then
-						cl_type := System.class_type_of_id (current_type_id);
-						if cl_type.associated_class.conform_to (first_class) then
+						cl_type := system_i.class_type_of_id (current_type_id);
+						if cl_type.associated_class.simple_conform_to (first_class) then
 							Result := entry.used
 						end;
 					end;

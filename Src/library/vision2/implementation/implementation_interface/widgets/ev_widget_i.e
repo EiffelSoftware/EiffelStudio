@@ -100,14 +100,14 @@ feature -- Status setting
 			-- Enable sensitivity to user input events.
 		deferred
 		ensure
-			is_sensitive: is_useable implies interface.is_sensitive
+			is_sensitive: is_useable implies is_sensitive
 		end
 
 	disable_sensitive is
 			-- Disable sensitivity to user input events.
 		deferred
 		ensure
-			not_is_sensitive: is_useable implies not interface.is_sensitive
+			not_is_sensitive: is_useable implies not is_sensitive
 		end
 
 	set_default_colors is
@@ -189,12 +189,12 @@ feature -- Element change
 
 	set_tooltip (a_text: STRING) is
 			-- Set `tooltip' to `a_text'.
-        deferred
+        	deferred
 		end
 
 	remove_tooltip is
 			-- Set `tooltip' to `Void'.
-        deferred
+        	deferred
 		end
 
 feature -- Measurement
@@ -397,6 +397,9 @@ end -- class EV_WIDGET_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.67  2000/05/01 21:33:53  king
+--| Removed post cond references from features used by item imps to prevent sig seg on cat call
+--|
 --| Revision 1.66  2000/05/01 19:31:05  pichery
 --| Removed precondition. It should work now.
 --|

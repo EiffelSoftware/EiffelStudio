@@ -2,8 +2,8 @@
 
 @REM Setup Eiffel CodeDom Provider EiffelStudio projects
 
-IF %ISE_EIFFEL% == "" ECHO ISE_EIFFEL is not defined !!
-IF %ISE_EIFFEL% == "" EXIT 1
+IF "%ISE_EIFFEL%" == "" ECHO ISE_EIFFEL is not defined !!
+IF "%ISE_EIFFEL%" == "" GOTO END
 SET PATH=%PATH%;%ISE_EIFFEL%\studio\spec\windows\bin
 
 IF "%1"=="/release" GOTO CDREL

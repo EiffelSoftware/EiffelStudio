@@ -324,17 +324,17 @@ feature -- Access
 			bid := body_id;
 			if bid /= Void then
 				if
-					Tmp_body_server.has (bid.id) or Body_server.has (bid.id)
+					Tmp_body_server.has (bid) or Body_server.has (bid)
 				then
-					Result := Body_server.item (bid.id);
+					Result := Body_server.item (bid);
 				end
 			end;
 			if Result = Void then
-				if Tmp_ast_server.has (written_in.id) then
+				if Tmp_ast_server.has (written_in) then
 					-- Means a degree 4 error has occurred so the
 					-- best we can do is to search through the
 					-- class ast and find the feature as
-					class_ast := Tmp_ast_server.item (written_in.id)
+					class_ast := Tmp_ast_server.item (written_in)
 					Result := class_ast.feature_with_name (name)
 				end
 			end;
@@ -360,7 +360,7 @@ feature -- Access
 			current_d: DEPEND_UNIT;
 		do
 			!! Result.make;
-			dep := Depend_server.item (cl_class.id.id);
+			dep := Depend_server.item (cl_class.id);
 			!! current_d.make (in_class.id, id);
 			from
 				-- Loop through the features of each client
@@ -546,18 +546,12 @@ feature {NONE} -- Implementation
 	is_dynamic: BOOLEAN is
 			-- Is the feature dynamic?
 		do
--- TO DO GOBO
--- Ask Dino about that.
-			Result := associated_feature_i.is_dynamic
+			if Compilation_modes.is_extending then
+				Result := associated_feature_i.is_dynamic
+			end
 		end
 
 feature {FEATURE_I} -- Setting
-
---	set_is_dynamic (b: BOOLEAN) is
---			-- Set `is_dynamic' to `b'
---		do
---			is_dynamic := b
---		end;
 
 	set_written_in (i: CLASS_ID) is
 			-- Set `written_in' to `i'.

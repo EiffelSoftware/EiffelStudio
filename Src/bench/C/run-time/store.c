@@ -63,32 +63,32 @@ private char *rcsid =
  * Functions definitions
  */
 
-public void eestore(file_ptr, object)
-FILE *file_ptr;
+public void eestore(file_desc, object)
+EIF_INTEGER file_desc;
 char *object;
 {
 	/* Store object hierarchy of root `object' and produce a header
 	 * so it can be retrieved by other systems.
 	 */
 
-	fides = fileno( file_ptr);
+	fides = (int) file_desc;
 	accounting = TR_ACCOUNT;
 	internal_store(object);
 	accounting = 0;
 }
 
-public void estore(file_ptr, object)
-FILE *file_ptr;
+public void estore(file_desc, object)
+EIF_INTEGER file_desc;
 char *object;
 {
 	/* Store object hierarchy of root `object' without header. */
-	fides = fileno( file_ptr);
+	fides = (int) file_desc;
 	accounting = 0;
 	internal_store(object);
 }
 
 public void sstore (fd, object)
-int fd;
+EIF_INTEGER fd;
 char * object;
 {
 	/* Use file decscriptor so sockets and files can be used for storage
@@ -96,7 +96,7 @@ char * object;
      * so it can be retrieved by other systems.
      */
 
-    fides = fd;
+    fides = (int) fd;
 	accounting = INDEPEND_ACCOUNT;
     internal_store(object);
 	accounting = 0;

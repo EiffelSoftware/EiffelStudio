@@ -788,7 +788,7 @@ feature {NONE} -- Inapplicable
 			Result := substring_index (other, start);
 		end;
 
-feature {STRING, FILE, TEXT_FILLER} -- Implementation
+feature {STRING, IO_MEDIUM, TEXT_FILLER} -- Implementation
 
 	frozen set_count (number: INTEGER) is
 			-- Set `count' to `number' of characters.

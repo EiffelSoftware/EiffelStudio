@@ -31,8 +31,7 @@ class PART_SORTED_SET [G -> PART_COMPARABLE] inherit
 			put as pstwl_put
 		export
 			{ANY}
-				merge, duplicate
-			{PART_SORTED_SET} 
+				merge, duplicate,
 				forth, item, after, start,
 				put_left, finish 
 			{NONE} all

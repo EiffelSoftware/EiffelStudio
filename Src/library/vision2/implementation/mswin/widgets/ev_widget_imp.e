@@ -1,8 +1,8 @@
 indexing
 	description: "EiffelVision widget, mswindows implementation."
-	note: "The parent of a widget cannot be void, except for a  %
-		%  window. Therefore, each feature that call the parent %
-		%  here need to be redefine by EV_WINDOW to check if    %
+	note: "The parent of a widget cannot be void, except for a%
+		%  window. Therefore, each feature that call the parent%
+		%  here need to be redefine by EV_WINDOW to check if%
 		%  parent is `Void'"
 	note: "The current class would be the equivalent of a wel_window%
 		% Yet, it doesn't inherit from wel_window. Then, all the%
@@ -13,10 +13,10 @@ indexing
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_WIDGET_IMP
-        
+
 inherit
 	EV_WIDGET_I
 
@@ -24,7 +24,7 @@ inherit
 
 	EV_WIDGET_EVENTS_CONSTANTS_IMP
 
-	WEL_WM_CONSTANTS        
+	WEL_WM_CONSTANTS
 
 feature {NONE} -- Initialization
 
@@ -53,15 +53,28 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	background_color: EV_COLOR_IMP
+	background_color: EV_COLOR is
 			-- Color used for the background of the widget
+		do
+			if background_color_imp /= Void then
+				Result ?= background_color_imp.interface
+			else
+				Result := Void
+			end
+		end
 
-	foreground_color: EV_COLOR_IMP
-			-- Color used for the foreground of the widget,
-			-- usually the text.
+	foreground_color: EV_COLOR is
+			-- Color used for the foreground of the widget
+		do
+			if foreground_color_imp /= Void then
+				Result ?= foreground_color_imp.interface
+			else
+				Result := Void
+			end
+		end
 
 feature -- Status report
-	
+
 	destroyed: BOOLEAN is
 			-- Is Current widget destroyed?
 		do
@@ -102,16 +115,22 @@ feature -- Status setting
 			end
 		end
 
+	set_expand (flag: BOOLEAN) is
+			-- Make `flag' the new expand option.
+		do
+			expandable := flag	
+		end
+
 	set_background_color (color: EV_COLOR) is
 			-- Make `color' the new `background_color'
 		do
-			background_color ?= color.implementation
+			background_color_imp ?= color.implementation
 		end
 
 	set_foreground_color (color: EV_COLOR) is
 			-- Make `color' the new `foreground_color'
 		do
-			foreground_color ?= color.implementation
+			foreground_color_imp ?= color.implementation
 		end
 
 feature -- Measurement
@@ -149,7 +168,7 @@ feature -- Resizing
 			resize (width, child_cell.height)
 		end
 	
-    set_minimum_height (value: INTEGER) is
+	set_minimum_height (value: INTEGER) is
 			-- Make `value' the new `minimum__height' and
 			-- notify the parent of the change. If this new minimum is
 			-- bigger than the Current `height', the widget is resized.
@@ -158,7 +177,7 @@ feature -- Resizing
 			parent_imp.child_minheight_changed (value, Current)
 		end
 
-    set_minimum_width (value: INTEGER) is
+	set_minimum_width (value: INTEGER) is
 			-- Make `value' the new `minimum_width' and
 			-- notify the parent of the change. If this new minimum is
 			-- bigger than the Current `width', the widget is resized.
@@ -289,35 +308,62 @@ feature -- Event - command association
 
 feature -- Postconditions
 
+	dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
+		-- Check if the dimensions of the widget are set to 
+		-- the values given or the minimum values possible 
+		-- for that widget.
+		local
+			temp: INTEGER
+		do
+			temp := width
+			temp := height
+			Result := (width = new_width or else width = minimum_width) and then
+				  (height = new_height or else height = minimum_height)
+		end
+
 	minimum_dimensions_set (new_width, new_height: INTEGER): BOOLEAN is
 			-- Check if the dimensions of the widget are set to 
 			-- the values given or the minimum values possible 
 			-- for that widget.
-			-- On gtk, when the widget is not shown, the result is 0
 		do
-			Result := True
-					--	(shown and then new_width = minimum_width and new_height = minimum_height) or else
-					--	(not shown and then (minimum_width = 0 and minimum_height = 0))
+			if new_width = -1 then
+				Result := new_height = minimum_height
+			elseif new_height = -1 then
+				Result := new_width = minimum_width
+			else
+				Result := new_width = minimum_width and new_height = minimum_height
+			end
 		end		
 
 	position_set (new_x, new_y: INTEGER): BOOLEAN is
 			-- Check if the dimensions of the widget are set to 
 			-- the values given or the minimum values possible 
 			-- for that widget.
- 			-- On gtk, when the widget is not shown, the result is -1
 		do
-			Result := True
-					--	(shown and then new_x = x and new_y = y) or else
-					--	(not shown and then (x = - 1 and y = - 1))
+			if new_x = -1 then
+				Result := new_y = y
+			elseif new_y = -1 then
+				Result := new_x = x
+			else
+				Result := new_x = x and new_y = y
+			end
 		end
 
 feature -- Implementation
+
+
+	background_color_imp: EV_COLOR_IMP
+			-- Color used for the background of the widget
+
+	foreground_color_imp: EV_COLOR_IMP
+			-- Color used for the foreground of the widget,
+			-- usually the text.
 
 	parent_imp: EV_CONTAINER_IMP is
 			-- Parent container of this widget. The same than
 			-- parent but with a different type.
 		do 
-			Result ?= wel_parent
+			Result ?= parent
 		end
 
 	set_minimum_size (min_width, min_height: INTEGER) is
@@ -546,7 +592,7 @@ feature -- Implementation : deferred features of WEL_WINDOW that are used
 		deferred
 		end
 
-	wel_parent: WEL_WINDOW is
+	parent: WEL_WINDOW is
 		deferred
 		end
 

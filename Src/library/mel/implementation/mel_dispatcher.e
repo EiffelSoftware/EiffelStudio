@@ -346,16 +346,17 @@ feature {NONE} -- External features passed out to C
 			-- Handle the work proc event with `id'.
 		require
 			non_null_id: id /= default_pointer;
-			has_id: xt_work_proc_callbacks.has (id);
 		local
 			mel_exec: MEL_COMMAND_EXEC;
 			mel_struct: MEL_ID_CALLBACK_STRUCT;
 			mel_id: MEL_IDENTIFIER
 		do
-			!! mel_id.make_work_proc (id);
-			!! mel_struct.make (mel_id);
-			mel_exec := xt_work_proc_callbacks.item (id);
-			mel_exec.execute (mel_struct)
+			if  xt_work_proc_callbacks.has (id) then
+				!! mel_id.make_work_proc (id);
+				!! mel_struct.make (mel_id);
+				mel_exec := xt_work_proc_callbacks.item (id);
+				mel_exec.execute (mel_struct)
+			end
 		end;
 
 	frozen handle_requestor_callback (c_string: POINTER; len: INTEGER) is

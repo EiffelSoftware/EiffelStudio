@@ -212,7 +212,7 @@ rt_public EIF_REFERENCE striparr(EIF_CONTEXT register EIF_REFERENCE curr, regist
 	EIF_END_GET_CONTEXT
 }
 
-rt_public EIF_REFERENCE makestr(EIF_CONTEXT register char *s, register int len)
+rt_public EIF_REFERENCE makestr(register char *s, register int len)
 {
 	/* Makes an Eiffel STRING object from a C string.
 	 * This routine creates the object and returns a pointer to the newly

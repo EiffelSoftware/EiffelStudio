@@ -35,7 +35,6 @@ feature -- Access
 			if
 				internal_generating_type_feature.item = Void
 			then
-				print ("compute generating_type ...")
 				internal_generating_type_feature.put (
 					generating_type_class.feature_named (generating_type_feature_name))
 			end

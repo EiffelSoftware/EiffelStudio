@@ -730,7 +730,7 @@ feature -- Status setting
 				parent_window (Current).unlock_update
 			end
 		end
-
+		
 feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 
 	rebuilding_locked: BOOLEAN
@@ -886,13 +886,19 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				holder := holder_of_widget (linear_representation.i_th (counter))
 				if linear_representation.has (a_holder.tool) and (counter < index_of_tool or
 					counter > index_of_tool + 1) or not linear_representation.has (a_holder.tool) then
-					vertical_box := holder.upper_box
-					create cell
-					cell.set_data (counter)
-					vertical_box.extend (cell)
-					vertical_box.disable_item_expand (cell)
-					cell.enable_docking
-					holder.set_real_target (cell)
+					
+						--|FIXME this is a temporary workaround/limitation when you try to move an undocked widget that
+						-- has only minimized widgets between itself and the edge, to the edge. No longer allowed
+						-- AS it caused an infinited loop. Julian.
+					if not a_holder.has_recursive (holder.upper_box) then
+						vertical_box := holder.upper_box
+						create cell
+						cell.set_data (counter)
+						vertical_box.extend (cell)
+						vertical_box.disable_item_expand (cell)
+						cell.enable_docking
+						holder.set_real_target (cell)
+					end
 				end
 				if counter = count and index_of_tool /= count then
 						-- As `holder' is the last holder, we must perform special processing, so
@@ -1956,6 +1962,7 @@ feature {NONE} -- Implementation
 				linear_representation.go_i_th (linear_representation.index_of (a_widget, 1))
 				linear_representation.remove
 			end
+			holder.destroy
 		ensure
 			remove: not linear_representation.has (a_widget)
 			count_decreased: linear_representation.count = old linear_representation.count - 1

@@ -136,7 +136,7 @@ feature
 								vgcp21.set_creation_feature (a_feature);
 								Error_handler.insert_error (vgcp21);
 							end;
-							if 	a_class.is_expanded
+							if a_class.is_expanded 
 								and then
 								(
 									feature_list.count > 1

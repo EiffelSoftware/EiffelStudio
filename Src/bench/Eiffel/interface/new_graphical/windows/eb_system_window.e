@@ -306,11 +306,11 @@ feature {NONE} -- Initialization
 			notebook.extend (general_tab)
 			notebook.set_item_text (general_tab, general_tab.name)
 
-			create debug_tab.make
+			create debug_tab.make (Current)
 			notebook.extend (debug_tab)
 			notebook.set_item_text (debug_tab, debug_tab.name)
 
-			create clusters_tab.make
+			create clusters_tab.make (Current)
 			notebook.extend (clusters_tab)
 			notebook.set_item_text (clusters_tab, clusters_tab.name)
 
@@ -406,22 +406,40 @@ feature {NONE} -- Initialization
 feature {NONE} -- Implementation
 
 	retrieve_ace_file (f: EV_FILE_OPEN_DIALOG) is
+			-- Retrieve selected Ace file from `f' and set it to
+			-- system if valid.
 		require
 			f_not_void: f /= Void
 		local
 			old_ace_location: STRING
+			new_location: STRING
+			error_dialog: EV_WARNING_DIALOG
 		do
 			old_ace_location := Eiffel_ace.file_name
-			Eiffel_ace.set_file_name (f.file_name)
+			new_location := f.file_name
 
-			check_content
+			if
+				new_location /= Void and then
+				Eiffel_ace.valid_file_name (new_location)
+			then
+				Eiffel_ace.set_file_name (f.file_name)
 
-			if is_content_valid then
-				reset_content
-				is_content_valid := True
-				retrieve_content (root_ast)
+				check_content
+
+				if is_content_valid then
+					reset_content
+					is_content_valid := True
+					retrieve_content (root_ast)
+				else
+						-- No need to raise an error, it is done in
+						-- `check_content'.
+					Eiffel_ace.set_file_name (old_ace_location)
+				end
 			else
 				Eiffel_ace.set_file_name (old_ace_location)
+				create error_dialog.make_with_text (
+					Warning_messages.w_Cannot_read_file (new_location))
+				error_dialog.show_modal_to_window (window)
 			end
 		end
 

@@ -24,12 +24,14 @@ feature -- Status report
 			-- Is the box expanded to fill the area 
 			-- allocated to 'box_child'
 		do
+--			Result := implementation.get_expand (box_child)
 		end
 	
 	get_fill (box_child: EV_WIDGET): BOOLEAN is
 			-- Is the extra space allocated to 'box_child'. Has 
 			-- effect only if get_expand is True.
 		do
+--			Result := implementation.get_fill (box_child)
 		end
 	
 	get_padding (box_child: EV_WIDGET): INTEGER is
@@ -37,7 +39,28 @@ feature -- Status report
 		do
 		end
 	
-feature -- Element change
+feature -- Element change (box specific)
+	
+	set_homogeneous (homogeneous: BOOLEAN) is
+			-- Homogenous controls whether each object in
+			-- the box has the same size. If homogenous =
+			-- True, expand argument for each child is
+			-- automatically True
+		require
+			exist: not destroyed
+		do
+			implementation.set_homogeneous (homogeneous)
+		end
+	
+	set_spacing (spacing: INTEGER) is
+			-- Spacing between the objects in the box
+		require
+			exist: not destroyed
+		do
+			implementation.set_spacing (spacing)
+		end
+		
+feature -- Element change (specific for each child in the box)
 	
 	set_child_packing (box_child: EV_WIDGET; expand, fill: BOOLEAN; padding: INTEGER) is
 			-- Set expand, fill and padding for 'box_child'

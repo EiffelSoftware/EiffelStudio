@@ -13,7 +13,18 @@ inherit
 creation
 	make_by_pointer
 
+
 feature -- Basic operations
+
+	get is
+			-- Get the device context
+		do
+		end
+
+	release is
+			-- Release the device context
+		do
+		end
 
 	start_document (title: STRING) is
 			-- Start the job `title' on the printer.

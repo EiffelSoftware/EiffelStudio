@@ -88,7 +88,7 @@ rt_public char *ht_value(struct htable *ht, register long unsigned int key)
 	register2 long pos;		/* Position in H table */
 	register3 int32 hsize;		/* Size of H table */
 	register4 unsigned long *hkeys;		/* Array of keys */
-	register5 int32 try = 0;	/* Count number of attempts */
+	register5 int32 tmp_try = 0;	/* Count number of attempts */
 	register6 long inc;		/* Loop increment */
 
 	/* Initializations */
@@ -99,7 +99,7 @@ rt_public char *ht_value(struct htable *ht, register long unsigned int key)
 	 * go to an empty entry or reached the end of the table.
 	 */
 	inc = 1 + (key % (hsize - 1));
-	for (pos = key % hsize; try < hsize; try++, pos = (pos + inc) % hsize) {
+	for (pos = key % hsize; tmp_try < hsize; tmp_try++, pos = (pos + inc) % hsize) {
 		if (hkeys[pos] == key)
 			return ht->h_values + (pos * ht->h_sval);
 		else if (hkeys[pos] == 0L)
@@ -118,7 +118,7 @@ rt_public char *ht_first(struct htable *ht, register long unsigned int key)
 	register2 long pos;		/* Position in H table */
 	register3 int32 hsize;	  	/* Size of H table */
 	register4 unsigned long *hkeys;	 	/* Array of keys */
-	register5 int32 try = 0;	/* Count number of attempts */
+	register5 int32 tmp_try = 0;	/* Count number of attempts */
 	register6 long inc;		/* Loop increment */
 	register7 unsigned long other_key;
 
@@ -130,7 +130,7 @@ rt_public char *ht_first(struct htable *ht, register long unsigned int key)
 	* go to an empty entry or reached the end of the table.
 	 */
 	inc = 1 + (key % (hsize - 1));
-	for (pos = key % hsize; try < hsize; try++, pos = (pos + inc) % hsize) {
+	for (pos = key % hsize; tmp_try < hsize; tmp_try++, pos = (pos + inc) % hsize) {
 		other_key = hkeys[pos];
 		
 		if (other_key == key)
@@ -172,7 +172,7 @@ rt_public char *ht_put(struct htable *ht, register long unsigned int key, char *
 	register2 long pos;		/* Position in H table */
 	register3 int32 hsize;		/* Size of H table */
 	register4 unsigned long *hkeys;		/* Array of keys */
-	register5 int32 try = 0;	/* Records number of attempts */
+	register5 int32 tmp_try = 0;	/* Records number of attempts */
 	register6 long inc;		/* Loop increment */
 
 	/* Initializations */
@@ -183,7 +183,7 @@ rt_public char *ht_put(struct htable *ht, register long unsigned int key, char *
 	 * we reached the end of the table.
 	 */
 	inc = 1 + (key % (hsize - 1));
-	for (pos = key % hsize; try < hsize; try++, pos = (pos + inc) % hsize) {
+	for (pos = key % hsize; tmp_try < hsize; tmp_try++, pos = (pos + inc) % hsize) {
 #ifdef MAY_PANIC
 		if (hkeys[pos] == key)
 			panic("H table key conflict");
@@ -215,7 +215,7 @@ rt_public void ht_remove(struct htable *ht, register long unsigned int key)
 	register2 long pos;		/* Position in H table */
 	register3 int32 hsize;		/* Size of H table */
 	register4 unsigned long *hkeys;		/* Array of keys */
-	register5 int32 try = 0;	/* Records number of attempts */
+	register5 int32 tmp_try = 0;	/* Records number of attempts */
 	register6 long inc;		/* Loop increment */
 
 	/* Initializations */
@@ -226,7 +226,7 @@ rt_public void ht_remove(struct htable *ht, register long unsigned int key)
 	 * we reached the end of the table.
 	 */
 	inc = 1 + (key % (hsize - 1));
-	for (pos = key % hsize; try < hsize; try++, pos = (pos + inc) % hsize) {
+	for (pos = key % hsize; tmp_try < hsize; tmp_try++, pos = (pos + inc) % hsize) {
 		if (hkeys[pos] == key) {
 			hkeys[pos] = 0L;
 			bzero(ht->h_values + (pos * ht->h_sval), ht->h_sval);

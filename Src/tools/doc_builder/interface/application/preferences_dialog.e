@@ -32,16 +32,23 @@ feature {NONE} -- Initialization
 			-- (due to regeneration of implementation class)
 			-- can be added here.
 		do			
+				-- Buttons
 			apply_bt.select_actions.extend (agent apply)
 			okay_bt.select_actions.extend (agent okay)
 			cancel_bt.select_actions.extend (agent hide)
+			
+				-- Files
 			browse_schema_bt.select_actions.extend (agent initialize_schema)
 			browse_css_bt.select_actions.extend (agent initialize_stylesheet)
 			browse_header_button.select_actions.extend (agent initialize_header)
 			browse_footer_button.select_actions.extend (agent initialize_footer)
+			
+				-- Filters
 			filters_list.select_actions.extend (agent filter_selected)
 			add_description_button.select_actions.extend (agent add_filter)
 			add_tag_button.select_actions.extend (agent add_filter_tag)
+			color_button.select_actions.extend (agent change_filter_color)
+			
 			get_settings
 		end
 
@@ -324,6 +331,9 @@ feature {NONE} -- Query
 			if l_list_item /= Void then
 				l_filter_description := l_list_item.text
 				l_filter ?= shared_project.filter_manager.filter_by_description (l_filter_description)
+				if l_filter.color /= Void then
+					color_label.set_background_color (l_filter.color)
+				end
 				from
 					l_flags := l_filter.output_flags
 					l_flags.start
@@ -364,6 +374,28 @@ feature {NONE} -- Query
 				l_filter.add_output_flag (l_tag)
 				tags_list.extend (create {EV_LIST_ITEM}.make_with_text (l_tag))
 			end			
+		end
+	
+	change_filter_color is
+			-- Change the color of the selected filter
+		local
+			l_list_item: EV_LIST_ITEM
+			l_filter: OUTPUT_FILTER			
+			l_color_dialog: EV_COLOR_DIALOG
+		do			
+			l_list_item := filters_list.selected_item
+			if l_list_item /= Void then
+				create l_color_dialog
+				l_color_dialog.set_color (color_label.background_color)
+				l_color_dialog.show_modal_to_window (Current)
+				if l_color_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then					
+					l_filter ?= shared_project.filter_manager.filter_by_description (l_list_item.text)
+					if l_filter /= Void then
+						l_filter.set_color (l_color_dialog.color)
+						color_label.set_background_color (l_color_dialog.color)
+					end
+				end
+			end
 		end
 		
 	set_check_button_value (a_button: EV_CHECK_BUTTON; a_flag: BOOLEAN) is

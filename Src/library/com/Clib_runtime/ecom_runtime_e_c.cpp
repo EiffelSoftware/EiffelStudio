@@ -446,7 +446,6 @@ long * ecom_runtime_ec::ccom_ec_pointed_long (EIF_REFERENCE a_ref, long * old)
 	* result = (long) eif_field (eif_access(eif_object), "item", EIF_INTEGER);
 
 	eif_wean (eif_object);
-	eif_wean (eif_object);
 	if (old != NULL)
 	{
 		*old = *result;
@@ -471,7 +470,6 @@ float * ecom_runtime_ec::ccom_ec_pointed_real (EIF_REFERENCE a_ref, float * old)
 	* result = (float) eif_field (eif_access(eif_object), "item", EIF_REAL);
 
 	eif_wean (eif_object);
-	eif_wean (eif_object);
 	if (old != NULL)
 	{
 		*old = *result;
@@ -494,7 +492,6 @@ double * ecom_runtime_ec::ccom_ec_pointed_double (EIF_REFERENCE a_ref, double * 
 	result = (double *) CoTaskMemAlloc (sizeof (double));
 	* result = (double) eif_field(eif_access(eif_object), "item", EIF_DOUBLE);
 
-	eif_wean (eif_object);
 	eif_wean (eif_object);
 	if (old != NULL)
 	{

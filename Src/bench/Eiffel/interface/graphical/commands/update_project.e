@@ -375,7 +375,7 @@ feature {NONE} -- Implementation; Execution
 						end
 					else
 						warner (popup_parent).custom_call (Current,
-							l_Specify_ace, "Browse", "Build", "Cancel");
+							l_Specify_ace, l_Browse, l_Build, "Cancel");
 					end;
 				else
 					warner (popup_parent).custom_call (Void,

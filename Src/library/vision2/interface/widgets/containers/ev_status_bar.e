@@ -50,8 +50,8 @@ feature {NONE} -- Initialization
 			default_create
 			from until count = 5 loop
 				create sbi
-				sbi.set_text ("Item " + count.out)
-				sbi.set_width (20 + count * 10)
+				sbi.set_text ("Item " + (count + 1).out)
+				sbi.set_width (50 + count * 10)
 				extend (sbi)
 			end
 		end
@@ -84,6 +84,9 @@ end -- class EV_STATUS_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/04/26 23:10:42  brendel
+--| Improved make_for_test.
+--|
 --| Revision 1.16  2000/04/26 21:09:05  brendel
 --| Added make_for_test.
 --|

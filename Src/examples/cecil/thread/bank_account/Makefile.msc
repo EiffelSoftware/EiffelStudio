@@ -4,20 +4,18 @@ LN = copy
 RM = del
 CP = copy
 CFLAGS = -MT -DEIF_THREADS -I$(INCLUDE_PATH)
-FINISH_FREEZING = $(ISE_EIFFEL)\studio\spec\windows\bin\finish_freezing -silent
 EC = $(ISE_EIFFEL)\studio\spec\windows\bin\ec
 EIFLIB = EIFGEN\W_code\libbank_account.lib 
 LIBS = 
 OBJECTS = main.obj fext.obj
 
-all: $(OBJECTS) compile_eiffel compile_c bank_account.exe
+all: $(OBJECTS) compile_eiffel make_cecil bank_account.exe
 
 compile_eiffel:
-	$(EC) -freeze
+	$(EC) -freeze -c_compile
 
-compile_c:
+make_cecil:
 	cd EIFGEN\W_code
-	$(FINISH_FREEZING)
 	$(MAKE) cecil
 	cd ..\..
 

@@ -21,7 +21,7 @@ feature -- Execution
 	
 	deposit (m: INTEGER) is
 		do
-			c_make_transaction (m, c_account)
+			c_make_transaction (m, c_account, thread_id)
 		end
 
 end -- class DEPOSITOR

@@ -1,6 +1,5 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Abstract representation of a customer."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,7 +12,7 @@ inherit
 
 feature	-- Initialization
 	
-	make (ptr: POINTER; m: MUTEX; p: PROXY [BOOLEAN_REF]) is
+	make (ptr: POINTER; m: MUTEX; p: BOOLEAN_REF) is
 		do
 			mutex := m
 			c_account := ptr
@@ -53,7 +52,7 @@ feature {NONE} -- Access
 	
 	stop: BOOLEAN
 
-	finished: PROXY [BOOLEAN_REF]
+	finished: BOOLEAN_REF
 
 	c_account: POINTER
 	
@@ -61,12 +60,12 @@ feature {NONE}	-- Status
 	
 	continue: BOOLEAN is
 		do
-			Result := finished.item.item = False
+			Result := finished.item = False
 		end
+
 feature	{NONE} -- Externals
 
-
-	c_make_transaction (m: INTEGER; ptr: POINTER) is
+	c_make_transaction (m: INTEGER; ptr, tid: POINTER) is
 		external
 			"C"
 		end
@@ -75,6 +74,9 @@ feature {NONE} -- Implementation
 
 	random: RANDOM is
 			-- Initialize a random number
+			-- No synchronization needed as created when holding `mutex'.
+		indexing
+			once_status: global
 		once
 			create Result.make
 			random.start
@@ -82,11 +84,11 @@ feature {NONE} -- Implementation
 			not_void: Result /= Void
 		end
 
-
 	next_amount (range: INTEGER): INTEGER is
 			-- Random number between 1 and `range'
 			-- | Side effect function.
 		do
+				-- No synchronization needed on `random' as computed while holding `mutex'.
 			random.forth
 			if range <= 0 then
 				Result := 0

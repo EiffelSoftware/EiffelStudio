@@ -32,7 +32,7 @@ OBJECT = main.o fext.o
 $spitshell >>Makefile <<'!NO!SUBS!'
 
 
-all: prepare $(OBJECT) compile_eiffel compile_c mklink bank_account 
+all: prepare $(OBJECT) compile_eiffel make_cecil mklink bank_account 
 
 prepare:
 	sed -e s/"fext.obj"/"fext.o"/ Ace.ace > tmp
@@ -40,10 +40,10 @@ prepare:
 	$(MV) tmp Ace.ace
 
 compile_eiffel:
-	$(EC) -freeze; 
+	$(EC) -freeze -c_compile 
 
-compile_c:
-	cd EIFGEN/W_code; $(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/bin/finish_freezing -silent; $(MAKE) cecil
+make_cecil:
+	cd EIFGEN/W_code; $(MAKE) cecil
 
 mklink:
 	$(LN) EIFGEN/W_code/bank_account.melted .

@@ -25,7 +25,7 @@ feature {OPEN_PROJECT} -- Command
 
 	rescued: BOOLEAN
 
-	execute (arg: EV_ARGUMENT1 [EV_DIRECTORY_SELECTION_DIALOG]; ev_data: EV_EVENT_DATA) is
+	execute (arg: EV_ARGUMENT1 [EV_DIRECTORY_DIALOG]; ev_data: EV_EVENT_DATA) is
 		do
 			create_project (arg.first.directory)
 		end
@@ -80,9 +80,9 @@ feature {OPEN_PROJECT} -- Command
 
 	question_cancel_action is
 		local
-			dialog: EV_DIRECTORY_SELECTION_DIALOG
+			dialog: EV_DIRECTORY_DIALOG
 			cmd: CREATE_PROJECT
-			arg: EV_ARGUMENT1 [EV_DIRECTORY_SELECTION_DIALOG]
+			arg: EV_ARGUMENT1 [EV_DIRECTORY_DIALOG]
 		do
 			create dialog.make_with_text (main_window,
 							Widget_names.create_project_window)

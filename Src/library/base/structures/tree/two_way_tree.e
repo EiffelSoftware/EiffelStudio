@@ -16,7 +16,7 @@ class TWO_WAY_TREE [G] inherit
 	DYNAMIC_TREE [G]
 		undefine
 			child_after, child_before, child_item,
-			child_off
+			child_off, child_islast
 		redefine
 			parent
 		select
@@ -91,10 +91,10 @@ class TWO_WAY_TREE [G] inherit
 			copy, child_readable, is_leaf,
 			child_writable,
 			linear_representation,
-			child_isfirst, child_islast, valid_cursor_index,
+			child_isfirst, valid_cursor_index,
 			is_equal
 		redefine
-			first_child, last_child, new_cell
+			first_child, child_islast, last_child, new_cell
 		select
 			is_leaf
 		end
@@ -122,6 +122,14 @@ feature -- Access
 
 	last_child: like parent
 
+feature -- Status report
+
+	child_islast: BOOLEAN is
+			-- Is cursor under last child?
+		do
+			Result := not is_leaf and Precursor {TWO_WAY_LIST}
+		end
+		
 feature {RECURSIVE_CURSOR_TREE} -- Element change
 
 	set_child (n: like parent) is

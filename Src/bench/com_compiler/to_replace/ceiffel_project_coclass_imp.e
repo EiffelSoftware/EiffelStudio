@@ -50,7 +50,7 @@ feature -- Access
       Result := compiler_kernel.project_directory
     end
     
-  valid_project: BOOLEAN is
+  is_valid_project: BOOLEAN is
       -- Is project valid?
     do
       Result := compiler_kernel.valid_project
@@ -98,7 +98,7 @@ feature -- Access
       Result := compiler_kernel.completion_information
     end
     
-  html_doc_generator: IEIFFEL_HTMLDOC_GENERATOR_INTERFACE is
+  html_documentation_generator: IEIFFEL_HTML_DOCUMENTATION_GENERATOR_INTERFACE is
       -- html documentation generator
     do
       Result := compiler_kernel.html_doc_generator
@@ -118,6 +118,17 @@ feature -- Basic Operations
     do
       compiler_kernel.retrieve_eiffel_project (a_project_file_name)
     end
+    
+  generate_new_eiffel_project (a_project_name: STRING; a_ace_file_name: STRING; a_root_class_name: STRING; a_creation_routine: STRING; a_project_directory: STRING) is
+		-- Create new Eiffel project from scratch.
+		-- `a_project_name' [in].  
+		-- `a_ace_file_name' [in].  
+		-- `a_root_class_name' [in].  
+		-- `a_creation_routine' [in].  
+		-- `a_project_directory' [in].  
+	do
+		compiler_kernel.generate_new_eiffel_project (a_project_name, a_ace_file_name, a_root_class_name, a_creation_routine, a_project_directory)
+	end
 
   create_eiffel_project (a_ace_file_name: STRING; a_project_directory_path: STRING) is
       -- Create new Eiffel project.

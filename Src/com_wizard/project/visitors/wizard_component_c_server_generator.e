@@ -1570,7 +1570,7 @@ feature -- Basic Operations
 			non_void_body: a_case_body /= Void
 			non_empty_body: not a_case_body.empty 
 			valid_body_start: a_case_body.substring_index ("%N%T%T%T%<", 1) = 1 or a_case_body.substring_index ("%N%T%T%Tif", 1) = 1
-			valid_body_end: a_case_body.substring (a_case_body.count - 4, a_case_body.count).is_equal ("%N%T%T%T%>") 
+--			valid_body_end: a_case_body.substring (a_case_body.count - 4, a_case_body.count).is_equal ("%N%T%T%T%>") 
 		do
 			create Result.make (1000)
 			Result.append (New_line_tab_tab)

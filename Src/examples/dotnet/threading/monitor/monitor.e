@@ -15,7 +15,7 @@ feature {NONE} -- Initialization
 			-- Main entry point.
 		local
 			 counter: INTEGER
-			 dummy : BOOLEAN
+			 return: BOOLEAN
 		do
 			num_operations := 5
 			from
@@ -23,14 +23,15 @@ feature {NONE} -- Initialization
 			until
 				counter > num_operations
 			loop
-				dummy := feature {THREAD_POOL}.queue_user_work_item_wait_callback_object (
+				return := feature {THREAD_POOL}.queue_user_work_item (
 					create {WAIT_CALLBACK}.make (Current, $update_resource), counter)
 				counter := counter + 1
 			end
 
-			dummy := l_async_operations.wait_one
+			return := async_operations.wait_one
 			io.put_new_line
 			io.put_string ("All operations have completed.")
+			io.read_line
 		end
 
 feature -- Access
@@ -46,8 +47,8 @@ feature -- Access
 	num_operations: INTEGER
 			-- number of access to the resource.
 
-	l_async_operations: AUTO_RESET_EVENT is
-			-- 
+	async_operations: AUTO_RESET_EVENT is
+			-- Notifies a waiting thread that an event has occurred
 		once
 			create Result.make (False)
 		ensure
@@ -61,12 +62,12 @@ feature -- Basic Operation
 			-- delegate (it takes an SYSTEM_OBJECT parameter and returns void)
 		local
 			l_state: INTEGER
-			dummy: BOOLEAN
+			return: BOOLEAN
 		do
 			l_state ?= a_state
 			res.access_resource (l_state)
 			if feature {INTERLOCKED}.decrement_integer ($num_operations) <= 0 then
-				dummy := l_async_operations.set
+				return := async_operations.set
 			end
 		end
 

@@ -657,8 +657,8 @@ feature {NONE} -- Implementation
 				adapt := local_adapt;
 				feature_i := adapt.target_feature;
 				f_name := adapt.final_name;
-				c := adapt.target_class.e_class;
 				if feature_i /= void and then in_bench_mode then
+					c := adapt.target_class.e_class;
 					!FEATURE_NAME_TEXT! item.make (f_name, 
 						feature_i.api_feature (c.id), c);
 				else			
@@ -712,9 +712,9 @@ feature {NONE} -- Implementation
 				is_key := True
 			end
 			last_was_printed := True;
-			c := adapt.target_class.e_class;
 			if feature_i /= Void and then in_bench_mode then
-				ot.make (f_name, feature_i.api_feature (c.id), c)
+				c := adapt.target_class.e_class;
+				!! ot.make (f_name, feature_i.api_feature (c.id), c)
 				if is_key then
 					ot.set_is_keyword
 				end;

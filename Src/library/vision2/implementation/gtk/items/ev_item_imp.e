@@ -133,7 +133,7 @@ feature {EV_ITEM_IMP, EV_ITEM_LIST_IMP} -- Implementation
 		-- Used to store parent imp of items where parent stores
 		-- items in a list widget instead of the c_object.
 
-	set_parent_imp (a_parent: EV_ITEM_LIST_IMP [EV_ITEM]) is
+	set_item_parent_imp (a_parent: EV_ITEM_LIST_IMP [EV_ITEM]) is
 			-- Set `item_parent_imp' to `a_parent'.
 		do
 			item_parent_imp := a_parent

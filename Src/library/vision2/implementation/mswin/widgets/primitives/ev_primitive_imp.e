@@ -15,10 +15,8 @@ inherit
 	EV_PRIMITIVE_I
 
 	EV_WIDGET_IMP
-
-	WEL_VK_CONSTANTS
-		export
-			{NONE} all
+		redefine
+			on_key_down
 		end
 
 feature -- Access
@@ -70,6 +68,7 @@ feature {NONE} -- WEL Implementation
 			hwnd: POINTER
 			window: WEL_WINDOW
 		do
+			{EV_WIDGET_IMP} Precursor (virtual_key, key_data)
 			if virtual_key = Vk_tab then
 				hwnd := next_dlgtabitem (top_level_window_imp.item, item, True)
 				window := windows.item (hwnd)

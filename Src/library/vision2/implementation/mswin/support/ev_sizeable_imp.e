@@ -66,10 +66,10 @@ feature -- Status setting
 
 feature -- Resizing
 
-	set_size (new_width:INTEGER; new_height: INTEGER) is
+	set_size (w, h: INTEGER) is
 			-- Resize the widget when it is not managed.
 		do
-			move_and_resize (x, y, new_width.max (minimum_width), new_height.max (minimum_height), True)
+			move_and_resize (x, y, w.max (minimum_width), h.max (minimum_height), True)
 		end
 
 	set_width (value:INTEGER) is

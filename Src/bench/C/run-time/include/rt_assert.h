@@ -32,21 +32,10 @@ extern "C" {
 #define COMPILE_CHECK(tag, exp) extern dummy_array_for_checking[(exp)?1:-1];
 
 
-#ifdef EIF_WIN32
-	/* General assert mechanism */
-#define INTERNAL_CHECK(type, tag, exp) \
-	if (!(exp)) {\
-		static char error_msg [5024]; \
-		sprintf (error_msg, "\n%s violation: %s\n\tin file %s at line %d:\n\t%s\n", \
-				(type), (tag), __FILE__, __LINE__, #exp); \
-		MessageBox (NULL, error_msg, "ISE Runtime assertion error", MB_OK); \
-	}
-#else
 #define INTERNAL_CHECK(type, tag, exp) \
 	if (!(exp)) \
 		printf ("\n%s violation: %s\n\tin file %s at line %d:\n\t%s\n", \
 				(type), (tag), __FILE__, __LINE__, #exp);
-#endif
 
 	/* Precondition checking */
 #define REQUIRE(tag,exp)	INTERNAL_CHECK("Precondition", (tag), (exp))

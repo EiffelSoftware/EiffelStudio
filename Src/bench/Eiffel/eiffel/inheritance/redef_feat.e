@@ -101,14 +101,16 @@ end;
 			io.putstring ("Feature joined or merged: ");
 			io.putstring (new_feat.feature_name);
 			io.new_line;
+			assert_set := new_feat.assert_id_set;
+			if assert_set /= Void then
 			from
 				i := 1;
-				assert_set := new_feat.assert_id_set;
 			until
 				i > assert_set.count 
 			loop
 				assert_set.item (i).trace;
 				i := i + 1;
+			end
 			end
 		end;
 

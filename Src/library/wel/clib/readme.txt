@@ -7,9 +7,9 @@ If you have Microsoft C, run `make_msc.bat'.
 The makefiles assume that the C-compiler is in your $PATH environment
 variable.
 
-The environment variable EIFFEL4 needs to be set to where ISE Eiffel is
-installed for these compilation. (This is usually `c:\eiffel4').
+The environment variable ISE_EIFFEL needs to be set to where ISE Eiffel is
+installed for these compilation. (This is usually `C:\Eiffel50').
 
 To set the variable, type:
 
-	set eiffel4=c:\eiffel4
+	SET ISE_EIFFEL=C:\Eiffel50

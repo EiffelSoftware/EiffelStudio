@@ -1,6 +1,5 @@
 indexing
-
-	description: 
+	description:
 		"EiffelVision window, gtk implementation."
 	status: "See notice at end of class"
 	id: "$Id$"
@@ -8,7 +7,6 @@ indexing
 	revision: "$Revision$"
 	
 class
-	
 	EV_WINDOW_IMP
 	
 inherit
@@ -16,13 +14,18 @@ inherit
 		
 	EV_CONTAINER_IMP
 		undefine
-			set_default_colors
+			set_default_colors,
+			has_parent
 		redefine
+			add_child_ok,
 			add_child,
+			is_child,
+			child_added,
 			remove_child,
 			x,
 			y,
-			set_parent
+			set_parent,
+			show
 		end
 	
 creation
@@ -187,6 +190,16 @@ feature -- Status setting
 			c_gtk_window_set_modal(widget, True)
 		end
 
+	show is
+			-- Make widget visible on the screen. (default)
+			-- redefined because a window can have no parent
+		require else
+			exists: not destroyed
+		do
+			gtk_widget_show (widget)
+		end
+
+
 feature -- Element change
 
 	set_maximum_width (max_width: INTEGER) is
@@ -295,6 +308,35 @@ feature -- Event -- removing command association
 			check False end
 		end
 
+feature -- Assertion test
+
+	add_child_ok: BOOLEAN is
+			-- Used in the precondition of
+			-- 'add_child'. True, if it is ok to add a
+			-- child to the window by testing if its hbox has
+			-- not child
+		local
+			le_result : INTEGER			
+		do
+			le_result:= c_gtk_container_nb_children (hbox)
+			Result := c_gtk_container_nb_children (hbox)= 0
+		end
+
+	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Is `a_child' a child of the window?
+			-- by testing if a_child is a child of its
+			-- hbox
+		do
+			Result := c_gtk_container_has_child (hbox, a_child.widget)
+		end
+
+	child_added (a_child: EV_WIDGET_IMP): BOOLEAN is
+			-- Has `a_child' been added properly?
+		do
+			Result := c_gtk_container_has_child (hbox, a_child.widget)
+		end
+
+
 feature {EV_APPLICATION_IMP} -- Implementation
 	
 	connect_to_application (exit_function, application: POINTER) is
@@ -328,24 +370,31 @@ feature {NONE} -- Implementation
 			vbox := gtk_vbox_new (False, 0)
 			gtk_widget_show (vbox)
 			gtk_container_add (GTK_CONTAINER (widget), vbox)
+			hbox := gtk_hbox_new (False, 0)
+			gtk_widget_show (hbox)
+			gtk_box_pack_end (vbox, hbox, True, True, 0)
+
 		end
 
 	vbox: POINTER
 		-- Vertical_box to have a possibility for a menu on the
 		-- top.
 
+	hbox: POINTER
+		-- Horizontal box for the child
+
 feature {EV_CONTAINER, EV_WIDGET} -- Element change
 	
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add `child_imp' in the window.
 		do
-			gtk_box_pack_end (vbox, child_imp.widget, True, True, 0)
+			gtk_box_pack_end (hbox, child_imp.widget, True, True, 0)
 		end
 
 	remove_child (child_imp: EV_WIDGET_IMP) is
 			-- Remove `child_imp' from the window.
 		do
-			gtk_container_remove (vbox, child_imp.widget)
+			gtk_container_remove (hbox, child_imp.widget)
 		end
 
 feature {EV_STATIC_MENU_BAR_IMP} -- Implementation

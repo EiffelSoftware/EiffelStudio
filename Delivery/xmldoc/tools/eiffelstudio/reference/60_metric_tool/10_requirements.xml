@@ -1,7 +1,5 @@
 <document title="Requirements" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>  
+	<meta_data/>  
 	<paragraph> 
 		<heading>
 			<size>1</size>Requirements
@@ -11,13 +9,13 @@
 		<paragraph>The purpose of software measurements is to provide quantitative assessments or predictions of properties of software products and processes </paragraph> 
 		<paragraph>For any numerical measure that we propose we must have precise information on four properties: coverage, trustworthiness, relevance, theory.</paragraph> 
 		<paragraph>Any quantitative report on software products or processes should satisfy the following properties:
-			<line_break></line_break> 
+			<line_break/> 
 			<bold>- Coverage</bold>: include a definition of what is being measured, sufficient to enable repetition of the measurements.
-			<line_break></line_break> 
+			<line_break/> 
 			<bold>- Trustworthiness</bold>: include an estimate of how much the results can be believed, in particular of their precision (expected variations in case of repetition).
-			<line_break></line_break> 
+			<line_break/> 
 			<bold>- Relevance</bold>: specify interesting properties of software products or processes on which the measurement may provide insight.
-			<line_break></line_break> 
+			<line_break/> 
 			<bold>- Theory:</bold> include arguments backing the statement of relevance.
 		</paragraph>
 	</paragraph>

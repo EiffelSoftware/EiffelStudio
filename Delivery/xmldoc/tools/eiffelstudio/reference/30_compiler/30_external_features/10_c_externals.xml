@@ -18,12 +18,12 @@
 		<heading>
 			<size>2</size>General consideration
 		</heading>
-		<paragraph>As ISE's technology relies heavily on the use of a C/C++ ANSI compiler, you have to be sure to always put the correct signature of an external C/C++ routine. If it was not the case, the Ccompilation of your system could fail. Most of the time a C compiler is more comprehensive than a C++ compiler and most type errors won't cause you any harm, but C++ compilers are not as laxas C compilers and they will mostly generate errors.</paragraph>
+		<paragraph>As ISE's technology relies heavily on the use of a C/C++ ANSI compiler, you have to be sure to always put the correct signature of an external C/C++ routine. If it was not the case, the C compilation of your system could fail. Most of the time a C compiler is more comprehensive than a C++ compiler and most type errors won't cause you any harm, but C++ compilers are not as lax as C compilers and they will mostly generate errors.</paragraph>
 		<paragraph>The section concerning 
 			<link>
 				<url>#macros</url>
 				<label>Macros</label>
-			</link> and 
+			</link> and
 			<link>
 				<url>#structs</url>
 				<label>Structs</label>
@@ -34,18 +34,140 @@
 		</heading>
 		<paragraph>You can encapsulate routines that are defined in a C header file. We will take some examples and will show you how to write wrappers in Eiffel.</paragraph>
 		<paragraph>If in a header file called `my_header.h', you have the following declaration:</paragraph>
+<code_block>
+		/* Routine with no parameter */
+	extern void no_param(void);
+
+		/* Routine with one parameter */
+	extern void one_param(int j);
+
+		/* Routine returning a value with no parameter */
+	extern size_t no_param_return(void);
+
+		/* Routine returning a value with one parameter */
+	extern size_t one_param_return(FILE *f);
+</code_block>
 		<paragraph>Here is the corresponding Eiffel code:</paragraph>
+<code_block>
+	c_no_param is
+			-- Encapsulation of a C routine with no parameter.
+		external
+			"C | %"my_header.h%""
+		alias
+			"no_param"
+		end
+
+	c_one_param (i: INTEGER) is
+			-- Encapsulation of a C routine with one parameter.
+		external
+			"C (int) | %"my_header.h%""
+		alias
+			"one_param"
+		end
+
+	c_no_param_return: INTEGER is
+			-- Encapsulation of a C routine with no parameter
+			-- returning an INTEGER
+		external
+			"C (): EIF_INTEGER| %"my_header.h%""
+		alias
+			"no_param_return"
+		end
+
+	c_one_param_return (p: POINTER): INTEGER is
+			-- Encapsulation of a C routine with one parameter
+			-- returning an INTEGER
+		external
+			"C (FILE *): EIF_INTEGER| %"my_header.h%""
+		alias
+			"one_param_return"
+		end
+</code_block>
 		<heading>
 			<size>2</size>Macros
 		</heading>
 		<paragraph>If in a header file called `my_header.h', you have the following declaration:</paragraph>
+<code_block>
+		/* Predefined constants */
+	#define ID_MENU				128
+	#define ID_MENU_CHARACTER	'c'
+
+		/* Access the `i'-th element of `a' where `a'
+		 * is an array of EIF_INTEGER */
+	#define i_th(a,i)				((a) + (i)*sizeof(EIF_INTEGER))
+</code_block>
 		<paragraph>Then, the corresponding Eiffel code will look like:</paragraph>
+<code_block>
+	menu_id: INTEGER is
+			-- `ID_MENU' C encapsulation.
+		external
+			"C [macro %"my_header.h%"] : EIF_INTEGER"
+		alias
+			"ID_MENU"
+		end
+
+	menu_id_character: CHARACTER is
+			-- `ID_MENU_CHARACTER' C encapsulation.
+		external
+			"C [macro %"my_header.h%"] : EIF_CHARACTER"
+		alias
+			"ID_MENU_CHARACTER"
+		end
+
+	i_th (p: POINTER; i: INTEGER): INTEGER is
+			-- Access the `i'-th element of `p', array of C EIF_INTEGER.
+		external
+			"C [macro %"my_header.h%"] (EIF_INTEGER *, EIF_INTEGER): EIF_INTEGER"
+		alias
+			"i_th"
+		end
+</code_block>
 		<heading>
 			<size>2</size>Structs
 		</heading>
 		<paragraph>The struct encapsulation enables you to wrap C/C++ structures easily without having to write any additional code in a C header file as it was the case until ISE introduced this new keyword in the external specification with ISE EiffelBench 4.5. With the struct encapsulation you can set and retrieve the value of a certain field of a struct.</paragraph>
-		<paragraph>If in a header file called `my_header.h', you have the followingdeclaration of the `Point' structure whose `x' and `y' fields we want to access and set:</paragraph>
+		<paragraph>If in a header file called `my_header.h', you have the following declaration of the `Point' structure whose `x' and `y' fields we want to access and set:</paragraph>
+<code_block>
+		/* Definition of `Point' */
+	typdef struct point {
+		int x;
+		int y;
+	} Point;
+</code_block>
 		<paragraph>Then, the corresponding Eiffel code will look like:</paragraph>
+<code_block>
+	x (p: POINTER): INTEGER is
+			-- Access field x of struct pointed by `p'.
+		external
+			"C [struct %"my_header.h%"] (Point): EIF_INTEGER"
+		alias
+			"x"
+		end
+
+	y (p: POINTER): INTEGER is
+			-- Access field y of struct pointed by `p'.
+		external
+			"C [struct %"my_header.h%"] (Point): EIF_INTEGER"
+		alias
+			"y"
+		end
+
+	set_x (p: POINTER; v: INTEGER) is
+			-- Set field x of struct pointed by `p'.
+		external
+			"C [struct %"my_header.h%"] (Point, int)"
+		alias
+			"x"
+		end
+
+	set_y (p: POINTER: v: INTEGER) is
+			-- Set field y of struct pointed by `p' with `v'.
+		external
+			"C [struct %"my_header.h%"] (Point, int)"
+		alias
+			"y"
+		end
+</code_block>
 		<heading>
 			<size>2</size>Windows externals
 		</heading>
@@ -63,18 +185,51 @@
 			</span> sub-language option. For `__stdcall' you need to use the `
 			<bold>dllwin32</bold>' sub-language option. Here is an example:
 		</paragraph>
+<code_block>
+	my_cdecl_routine (a: INTEGER): POINTER is
+			-- Encapsulation of a dll function with the `_cdecl' call mechanism.
+		external
+			"C [dll32 %"my_dll.dll%"] (int): EIF_POINTER"
+		end
+
+	my_stdcall_routine (a: INTEGER): POINTER is
+			-- Encapsulation of a dll function with the `_stdcall' call mechanism.
+		external
+			"C [dllwin32 %"my_dll.dll%"] (int): EIF_POINTER"
+		end
+</code_block>
 		<warning>
 			<bold>Caution</bold>: Using wrongly 
 			<bold>dll32</bold> instead of 
-			<bold>dllwin32</bold>and reciprocally will conduce to a crash of your system since the C call stack will be corrupted. For more information please read your C compiler documentation.
+			<bold>dllwin32</bold> and reciprocally will conduce to a crash of your system since the C call stack will be corrupted. For more information please read your C compiler documentation.
 		</warning>
 		<heading>
 			<size>3</size>Windows API
 		</heading>
-		<paragraph>As described in the previous section concerning routines exported in a DLL, the Windows API is using the `__stdcall'convention. As a consequence, you cannot use the standard external mechanism to wrap them because it is using the `_cdecl' convention. However, you can easily wrap those function by using the`
+		<paragraph>As described in the previous section concerning routines exported in a DLL, the Windows API is using the `__stdcall' convention. As a consequence, you cannot use the standard external mechanism to wrap them because it is using the `_cdecl' convention. However, you can easily wrap those function by using the`
 			<bold>macro</bold>' sub-language.
 		</paragraph>
 		<paragraph>Here is an example that has been taken from WEL, the Windows Eiffel Library, to encapsulate the Windows `SendMessage' function:</paragraph>
+<code_block>
+Windows defined SendMessage as:
+
+LRESULT SendMessage(
+		HWND hWnd,      // handle to destination window
+		UINT Msg,       // message
+		WPARAM wParam,  // first message parameter
+		LPARAM lParam   // second message parameter
+	);
+
+In WEL, the encapsulation is written as:
+
+cwin_send_message (hwnd: POINTER; msg, wparam, param: INTEGER) is
+			-- SDK SendMessage (without the result)
+		external
+			"C [macro %"wel.h%"] (HWND, UINT, WPARAM, LPARAM)"
+		alias
+			"SendMessage"
+		end
+</code_block>
 		<seealso>
 			<bold>See also</bold>
 			<line_break></line_break>

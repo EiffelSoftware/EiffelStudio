@@ -25,7 +25,7 @@
 			<image>
 				<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
 				<border>0</border>
-			</image>pops-up the following dialog. Select the metric ratio tab toobtain:
+			</image>pops-up the following dialog. Select the metric ratio tab to obtain:
 		</paragraph>
 		<paragraph>
 			<image>
@@ -41,7 +41,6 @@
 				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/10_defining_new_metrics/30_defining_ratio_metrics.xml</url>
 				<label>Defining ratio metrics</label>
 			</link>
-			<line_break></line_break>
 		</seealso>
 		<paragraph> </paragraph>
 	</paragraph>

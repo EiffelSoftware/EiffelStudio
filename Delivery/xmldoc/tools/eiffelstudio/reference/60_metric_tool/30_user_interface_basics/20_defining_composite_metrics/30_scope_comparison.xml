@@ -1,7 +1,5 @@
 <document title="Scope comparison for metrics" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Scope comparison for metrics
@@ -14,7 +12,7 @@
 		<paragraph>The metric tool provides a command for defining linear metrics. Button 
 			<image>
 				<url>/images/eiffelstudio/icons/icon_new_metric_color.gif</url>
-			</image>pops-up the following dialog. Select the scope ratio tab toobtain:
+			</image>pops-up the following dialog. Select the scope ratio tab to obtain:
 		</paragraph>
 		<paragraph>
 			<image>
@@ -29,7 +27,6 @@
 				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/10_defining_new_metrics/40_defining_scope_comparison_metrics.xml</url>
 				<label>Defining scope comparison metrics</label>
 			</link>
-			<line_break></line_break>
 		</seealso>
 	</paragraph>
 </document>

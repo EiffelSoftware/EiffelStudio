@@ -17,16 +17,18 @@
 		</heading>
 		<paragraph>Some of our metrics will be elementary and some composite. An elementary metric is measured directly from the product or project record:</paragraph>
 		<note>
-			<bold></bold>:- An 
-			<bold>elementary product metric</bold> is a product metric whose values (integers) indicate the number of occurrences of a certain pattern in a product.
-			<line_break></line_break> - An 
+			<bold>Elementary_metric</bold>
+			<line_break/>
+			- An <bold>elementary product metric</bold> is a product metric whose values (integers) indicate the number of occurrences of a certain pattern in a product.
+			<line_break/>
+			- An 
 			<bold>elementary process metric</bold> is a process metric whose values reflect measurements drawn directly from project records.
 		</note>
 		<paragraph>An example of elementary product metric is the number of source lines. An example of elementary process metric is the number of incremental compilations of a system.</paragraph>
 		<paragraph>Elementary metrics are provided by default by the metric tool. There is no means to remove them or to define new ones since they are not expressed as a combination of other metrics.</paragraph>
 		<paragraph>From these elementary metrics we may define composite ones:</paragraph>
 		<note>
-			<bold></bold>: A 
+			<bold>Composite metric </bold>: A 
 			<bold>composite metric</bold> is a metric whose values are defined by a mathematical formula involving other metrics (elementary, or previously defined composite metrics).
 		</note>A later section will introduce a number of operations for defining composite metrics out of elementary ones. 
 		<paragraph> </paragraph>
@@ -60,9 +62,10 @@
 				<url>10_attributes_metrics_measures.html#Metric</url>
 				<label>Metrics</label>
 			</link>
+			<line_break/>
 			<link>
 				<url>70_scopes_scope_types.xml</url>
-				<label>scopes</label>
+				<label>Scopes</label>
 			</link>
 		</seealso>
 	</paragraph>

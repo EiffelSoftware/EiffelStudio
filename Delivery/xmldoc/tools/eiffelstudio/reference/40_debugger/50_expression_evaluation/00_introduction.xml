@@ -22,8 +22,8 @@
 				<label>list of expressions</label>
 			</link>.
 		</paragraph>
-		<paragraph>
-			<bold>Caution</bold>: During the evaluation of an expression, all features that arenecessary to obtain the result are called. Therefore, you should avoid calling queries that have side-effects, since doing so may alter the program execution. The Eiffel methodology recommends not to define side-effects queries anyway.
-		</paragraph>
+		<warning>
+			<bold>Caution</bold>: During the evaluation of an expression, all features that are necessary to obtain the result are called. Therefore, you should avoid calling queries that have side-effects, since doing so may alter the program execution. The Eiffel methodology recommends not to define side-effects queries anyway.
+		</warning>
 	</paragraph>
 </document>

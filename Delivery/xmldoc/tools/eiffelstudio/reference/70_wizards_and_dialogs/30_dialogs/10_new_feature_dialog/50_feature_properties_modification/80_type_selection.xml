@@ -1,7 +1,5 @@
 <document title="Type selection" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Type selection
@@ -49,19 +47,8 @@
 			</image>
 			<line_break></line_break>
 		</div> 
-		<code>
-			<feature_name>new_feature</feature_name>
-			<symbol>:</symbol> 
-			<class_name>FUNCTION</class_name> 
-			<symbol>[</symbol>
-			<class_name>ANY</class_name>
-			<symbol>,</symbol> 
-			<class_name>TUPLE</class_name> 
-			<symbol>[</symbol>
-			<class_name>INTEGER</class_name>
-			<symbol>],</symbol> 
-			<class_name>BOOLEAN</class_name>
-			<symbol>]</symbol>
-		</code>
+<code_block>
+	<feature_name>new_feature</feature_name><symbol>:</symbol> <class_name>FUNCTION</class_name> <symbol>[</symbol><class_name>ANY</class_name><symbol>,</symbol> <class_name>TUPLE</class_name> <symbol>[</symbol><class_name>INTEGER</class_name><symbol>],</symbol> <class_name>BOOLEAN</class_name><symbol>]</symbol>
+</code_block>
 	</paragraph>
 </document>

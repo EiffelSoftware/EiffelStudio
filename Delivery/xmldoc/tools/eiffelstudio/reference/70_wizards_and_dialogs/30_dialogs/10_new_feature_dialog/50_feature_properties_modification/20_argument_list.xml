@@ -1,7 +1,5 @@
 <document title="Argument list" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Argument list
@@ -33,6 +31,10 @@
 			</image>
 		</div>
 		<paragraph>The code that is generated:</paragraph>
-		<code></code>
+<code_block>
+	set_name (s: STRING) is
+		do
+		end
+</code_block>
 	</paragraph>
 </document>

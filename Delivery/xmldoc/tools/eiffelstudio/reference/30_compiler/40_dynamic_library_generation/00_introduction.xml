@@ -6,7 +6,7 @@
 		<heading>
 			<size>1</size>Introduction
 		</heading>
-		<paragraph>The ISE Eiffel compiler offers now the possibility to generate a
+		<paragraph>The ISE Eiffel compiler offers now the possibility to generate a 
 			<bold>dynamic shared library</bold> based on the system.
 		</paragraph>
 		<paragraph>Thanks to this dynamic library, it is possible to call Eiffel features from a C program, by using the real names of the features.</paragraph>
@@ -15,7 +15,7 @@
 			<italic>(*.so)</italic> on Unix.
 		</paragraph>
 		<paragraph>For that, the user has first to describe what he wants to export in his dynamic library. This is done via a definition file
-			<italic>(*.def)</italic>, which specifies what features should be exported. A
+			<italic>(*.def)</italic>, which specifies what features should be exported. A 
 			<link>
 				<url>10_dynamic_library_builder.xml</url>
 				<label>wizard</label>

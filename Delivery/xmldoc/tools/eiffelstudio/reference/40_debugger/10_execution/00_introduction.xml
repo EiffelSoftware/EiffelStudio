@@ -89,18 +89,19 @@
 				<label>kill</label>
 			</link> it completely.
 		</paragraph>
-		<paragraph>All these commands are accessible either through the
+		<paragraph>All these commands are accessible either through the 
 			<bold>debug</bold> menu, or through the 
 			<bold>project</bold> toolbar.
 		</paragraph>
-		<paragraph> </paragraph>
 		<paragraph>Note:  Debugging a .NET compiled system within EiffelStudio is not currently possible.  Consequently for a system compiled using .NET the debugging toolbar buttons will not be enabled.  Only the 'Launch' and 'Launch and stop at breakpoints' are available. </paragraph>
+		
+		<seealso>
 		<bold>See Also</bold>
 		<line_break></line_break> 
 		<link>
 			<url>../../30_compiler/00_introduction.xml</url>
 			<label>Compiling a project</label>
 		</link>
-		<line_break></line_break>
-	</paragraph>
+		</seealso>
+</paragraph>
 </document>

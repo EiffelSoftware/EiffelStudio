@@ -1,7 +1,5 @@
 <document title="Set-procedure" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Set-procedure
@@ -15,7 +13,7 @@
 			</code> to set it. This feature takes one argument of the same type as 
 			<code>
 				<feature_name>property</feature_name>
-			</code> or is anchored to it. The only thing you have to do with the feature wizard is check the button
+			</code> or is anchored to it. The only thing you have to do with the feature wizard is check the button 
 			<bold>Generate set procedure</bold>.
 		</paragraph>
 		<div>
@@ -25,7 +23,7 @@
 		</div>
 		<paragraph>The feature that is generated in addition to the attribute itself is placed in feature clause 
 			<code>
-				<comment>change Element</comment>
+				<comment>Element change</comment>
 			</code> and is exported to all classes. If you have selected or entered an invariant, the precondition will protect this invariant. Example of a generated set-procedure:
 		</paragraph>
 		<div>
@@ -33,6 +31,18 @@
 				<url>/images/eiffelstudio/dialogs_and_wizards/feature-wizard-setprocedure-example.png</url>
 			</image>
 		</div>
-		<code></code>
+<code_block>
+feature -- Element change
+
+	set_button (a_button: EV_BUTTON) is
+			-- Assign `a_button' to `button'
+		require
+			a_button_not_void: a_button /= Void
+		do
+			button := a_button
+		ensure
+			button_assigned: button = a_button
+		end
+</code_block>
 	</paragraph>
 </document>

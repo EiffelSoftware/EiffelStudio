@@ -1,7 +1,5 @@
 <document title="Diagram toolbar" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Diagram toolbar
@@ -12,7 +10,7 @@
 				<image>
 					<url>/images/eiffelstudio/icons/icon_center_diagram_color.gif</url>
 				</image>Target to cluster or class
-				<line_break></line_break> Drop a class or a cluster on this icon to build the correspondingdiagram.
+				<line_break></line_break> Drop a class or a cluster on this icon to build the corresponding diagram.
 			</item>
 			<item>
 				<image>
@@ -28,7 +26,7 @@
 					<url>../../how_to_s/60_designing_a_project/20_altering_the_system/10_new_class.xml</url>
 					<label>Create a new class</label>
 				</link>
-				<line_break></line_break> Pick from this button and drop on the diagram to add a newclass.
+				<line_break></line_break> Pick from this button and drop on the diagram to add a new class.
 			</item>
 			<item>
 				<image>
@@ -58,7 +56,7 @@
 					<url>../../how_to_s/60_designing_a_project/30_managing_links/30_new_aggregate_link.xml</url>
 					<label>Create new aggregate client-supplier links</label>
 				</link>
-				<line_break></line_break> Selecting this button allows you to create aggregate client-supplier links by picking from one class and dropping on theother.
+				<line_break></line_break> Selecting this button allows you to create aggregate client-supplier links by picking from one class and dropping on the other.
 			</item>
 			<item>
 				<image>
@@ -109,7 +107,7 @@
 					<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/30_remove_from_view.xml</url>
 					<label>Remove figure</label>
 				</link>
-				<line_break></line_break> Drop figures in this hole that you want to remove from the viewonly.
+				<line_break></line_break> Drop figures in this hole that you want to remove from the view only.
 			</item>
 			<item>
 				<image>

@@ -1,7 +1,5 @@
 <document title="Set slice size command" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Set slice size command
@@ -9,7 +7,7 @@
 		<paragraph>Located in the object tool toolbar, this command 
 			<image>
 				<url>../../../../../images/eiffelstudio/icons/icon_slice_limits_vsmall_color.gif</url>
-			</image> changes the display size of special objects (ie objects whose class is SPECIAL).Since special objects may contain thousands of attributes, only the50 first are displayed by default. If left-clicked, a dialog is popped up that sets the exploration indices of special objects that will be loaded in the future.
+			</image> changes the display size of special objects (ie objects whose class is SPECIAL).Since special objects may contain thousands of attributes, only the first fifty are displayed by default. If left-clicked, a dialog is popped up that sets the exploration indices of special objects that will be loaded in the future.
 		</paragraph>
 		<paragraph>This dialog changes the settings for future special objects:</paragraph>
 		<paragraph>
@@ -23,7 +21,7 @@
 				<label>dropped</label>
 			</link> onto this command, the special object that is dropped is shrunk or extended in the tree according to the new exploration indices it is given in the dialog box. The dropped object may be any object, top-level or not.
 		</paragraph>
-		<paragraph>This dialog changes the settings for a single specialobject:</paragraph>
+		<paragraph>This dialog changes the settings for a single special object:</paragraph>
 		<paragraph>
 			<image>
 				<url>../../../../../images/eiffelstudio/dialogs_and_wizards/set_slice_size_dlg.png</url>

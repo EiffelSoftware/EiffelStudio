@@ -1,7 +1,5 @@
 <document title="Profiler wizard guided tour" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Profiler wizard guided tour
@@ -16,13 +14,13 @@
 			<item>Second step (only appears when an 
 				<italic>Execution Profile</italic> has already been generated for this system): Select an existing 
 				<italic>Execution Profile</italic> or choose to generate a new 
-				<italic>Execution Profile</italic> from a
+				<italic>Execution Profile</italic> from a 
 				<italic>Run-time information record</italic>.
 			</item>
 			<item>Third step (only appears when generating a new 
 				<italic>Execution Profile</italic>):  Generate a new 
 				<italic>Execution Profile</italic> from a 
-				<italic>Run-time informationrecord</italic>.
+				<italic>Run-time information record</italic>.
 			</item>
 			<item>
 				<link>

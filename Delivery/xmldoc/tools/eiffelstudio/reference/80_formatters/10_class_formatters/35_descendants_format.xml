@@ -1,7 +1,5 @@
 <document title="Descendants" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Descendants
@@ -24,7 +22,6 @@
 				<url>./30_ancestors_format.xml</url>
 				<label>Ancestors</label>
 			</link>
-			<line_break></line_break>
 		</seealso>
 	</paragraph>
 </document>

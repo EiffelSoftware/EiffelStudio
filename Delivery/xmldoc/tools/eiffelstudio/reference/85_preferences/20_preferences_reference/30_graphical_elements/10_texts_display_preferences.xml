@@ -1,7 +1,5 @@
 <document title="Texts display preferences" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Texts display preferences
@@ -9,8 +7,8 @@
 		<paragraph>"Graphical elements" contains the following properties in relation with texts:</paragraph>
 		<list ordered="false">
 			<item>The font used in EiffelStudio editors ("All-purpose editor font"). You can change this by using a font selection window.</item>
-			<item>The font used for Eiffel keywords in EiffelStudio editors("Keyword editor font"). You can change this by using a font selection window.</item>
-			<item>The tabulation size : This integer set to how many blank spaces a tabulation will be equivalent on screen. The default value is4.</item>
+			<item>The font used for Eiffel keywords in EiffelStudio editors ("Keyword editor font"). You can change this by using a font selection window.</item>
+			<item>The tabulation size: This integer set to how many blank spaces a tabulation will be equivalent on screen. The default value is 4.</item>
 		</list>
 		<note>
 			<bold>Note</bold>: The last property ("Use animated icons") decides whether animated icons should be used in status bars when they are available.

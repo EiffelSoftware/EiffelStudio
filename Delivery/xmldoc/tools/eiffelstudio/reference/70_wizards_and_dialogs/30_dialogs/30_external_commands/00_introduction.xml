@@ -9,9 +9,9 @@
 	</meta_data>
 	<paragraph>
 		<heading>
-			<size>1</size>
+			<size>1</size>Extenal commands editor dialog
 		</heading>
-		<paragraph>From EiffelStudio, you can define up to 10 external commands. Those commands will have their output redirected in the output pane of the context tool. You can execute them through the Tools menu. Atypical usage is to use those external commands to integrate with your source control management solution (e.g. CVS, Visual SourceSafe,...)</paragraph>
+		<paragraph>From EiffelStudio, you can define up to 10 external commands. Those commands will have their output redirected in the output pane of the context tool. You can execute them through the Tools menu. A typical usage is to use those external commands to integrate with your source control management solution (e.g. CVS, Visual SourceSafe,...)</paragraph>
 		<paragraph>To define your own command, select "External commands..." in the Tools menu. Then the following dialog will appear:</paragraph>
 		<paragraph>
 			<image>

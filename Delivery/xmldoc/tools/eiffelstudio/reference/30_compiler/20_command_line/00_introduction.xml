@@ -12,7 +12,7 @@
 			<size>1</size>Introduction
 		</heading>It is possible to compile from outside of the graphical environment, by using the command 
 		<bold>ec</bold>. The form of compilation's results are the same in both cases. You may therefore alternate between the two techniques. 
-		<bold>ec</bold> will enable you to
+		<bold>ec</bold> will enable you to 
 		<link>
 			<url>10_command_line_options.xml</url>
 			<label>melt or freeze</label>
@@ -24,7 +24,7 @@
 		<link>
 			<url>10_command_line_options.xml</url>
 			<label>information about a class</label>
-		</link>as its Flat and Flat Contract views. 
+		</link> as its Flat and Flat Contract views. 
 		<line_break></line_break>The 
 		<link>
 			<url>30_interactive_mode/00_introduction.xml</url>

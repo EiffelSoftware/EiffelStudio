@@ -15,7 +15,7 @@
 			<bold>feature</bold>, the name of the concerned 
 			<bold>class</bold>, and the name of a 
 			<bold>creation procedure</bold>. What is optional is to specify an 
-			<bold>alias</bold>, an
+			<bold>alias</bold>, an 
 			<bold>index</bold> and a 
 			<bold>calling convention</bold>. The index and calling convention are mainly used to create a DLL for windows, and the alias to export the feature under a different name.
 		</paragraph>

@@ -9,7 +9,7 @@
 	</meta_data>
 	<paragraph>
 		<heading>
-			<size>1</size>
+			<size>1</size>Introduction
 		</heading>The new feature dialog window lets you create simple Eiffel features using the coding standards described in 
 		<link>
 			<url>http://www.eiffel.com/doc/oosc/</url>
@@ -40,11 +40,13 @@
 			<item>You want to edit an existing feature. This is not possible, you can only create new features with it.</item>
 			<item>You want to write a more advanced feature. With the feature wizard, you can enter only a single line of code.</item>
 		</list>
-		<div>See Also</div>
+		<seealso>
+		<bold>See Also</bold>
 		<line_break></line_break>
 		<link>
 			<url>10_overview.xml</url>
 			<label>New feature dialog overview</label>
 		</link>
+		</seealso>
 	</paragraph>
 </document>

@@ -1,7 +1,5 @@
 <document title="Select a Run-time information record to generate the Execution Profile" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Select a Run-time information record to generate the ExecutionProfile
@@ -23,8 +21,8 @@
 		</paragraph>
 		<note>
 			<bold>Note</bold>: 
-			<italic>The Run-time information record</italic>has to be located in the 
-			<italic>EIFGEN\W_code</italic> directory of yourproject.
+			<italic>The Run-time information record</italic> has to be located in the 
+			<italic>EIFGEN\W_code</italic> directory of your project.
 		</note>
 		<paragraph>
 			<line_break></line_break>
@@ -39,10 +37,10 @@
 			<link>
 				<url>40_final_state.xml</url>
 				<label>Final state</label>
-			</link> if the provided
+			</link> if the provided 
 			<italic>Run-time information record</italic> is valid. If the 
-			<italic>Run-time information record</italic> is not valid or is not located in the
-			<italic>EIFGEN\W_code</italic> directory of the project, you will go to the
+			<italic>Run-time information record</italic> is not valid or is not located in the 
+			<italic>EIFGEN\W_code</italic> directory of the project, you will go to the 
 			<bold>Run-time Information Record Error state</bold> as shown below.
 		</paragraph>
 		<line_break></line_break>

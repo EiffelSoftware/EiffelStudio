@@ -1,7 +1,5 @@
 <document title="Tools" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Tools
@@ -16,7 +14,7 @@
 			<item>
 				<link>
 					<url>eiffelstudio/index.xml</url>
-					<label>EiffelStudio</label>
+					<label>EiffelStudio</label> 
 				</link>
 			</item>
 			<item>

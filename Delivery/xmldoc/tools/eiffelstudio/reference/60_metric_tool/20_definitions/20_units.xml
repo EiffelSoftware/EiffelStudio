@@ -1,7 +1,5 @@
 <document title="Units" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Units
@@ -72,6 +70,6 @@
 		<paragraph>The units listed here are 
 			<bold>minimal</bold> in the sense that it is not possible to add the properties measured by any two of them; for example it makes no sense to add a number of features to a number of classes.
 		</paragraph> 
-		<paragraph>In the future, it might be desirable to include more specific units, such as ?features per class , and an associated calculus of units (as in the physical sciences, where multiplying a quantity expressed in g /cm by one in cm yields a result in g). This has not appeared necessary for the typical uses of division envisioned in this note, answering such questions as ?What percentage of routines have a header comment? and all expressed as simply as RATIO.</paragraph>
+		<paragraph>In the future, it might be desirable to include more specific units, such as "features per class" , and an associated calculus of units (as in the physical sciences, where multiplying a quantity expressed in g /cm by one in cm yields a result in g). This has not appeared necessary for the typical uses of division envisioned in this note, answering such questions as "What percentage of routines have a header comment" and all expressed as simply as RATIO.</paragraph>
 	</paragraph>
 </document>

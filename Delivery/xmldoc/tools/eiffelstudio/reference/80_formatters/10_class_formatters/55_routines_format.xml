@@ -1,7 +1,5 @@
 <document title="Routines" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Routines
@@ -24,7 +22,6 @@
 				<url>./50_attributes_format.xml</url>
 				<label>Attributes</label>
 			</link>
-			<line_break></line_break>
 		</seealso>
 	</paragraph>
 </document>

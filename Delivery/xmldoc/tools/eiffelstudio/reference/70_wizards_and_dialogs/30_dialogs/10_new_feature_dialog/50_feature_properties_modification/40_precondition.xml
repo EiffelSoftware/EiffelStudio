@@ -1,7 +1,5 @@
 <document title="Precondition" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Precondition
@@ -11,6 +9,11 @@
 				<keyword>require</keyword>
 			</code> field. A precondition clause will be added to the feature:
 		</paragraph>
-		<code></code>
+<code_block>
+	...
+	require
+		n >= 0
+	...
+</code_block>
 	</paragraph>
 </document>

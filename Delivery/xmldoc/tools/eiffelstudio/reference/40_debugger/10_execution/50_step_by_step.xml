@@ -1,7 +1,5 @@
 <document title="Execute one line at a time" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Execute one line at a time
@@ -22,7 +20,6 @@
 				<url>00_introduction.xml</url>
 				<label>Execution commands</label>
 			</link>
-			<line_break></line_break>
 			<line_break></line_break>
 			<link>
 				<url>../../../../../tools/eiffelstudio/how_to_s/40_compiling/10_generating_executables.xml</url>

@@ -1,7 +1,5 @@
 <document title="Attributes" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Attributes
@@ -24,7 +22,6 @@
 				<url>./55_routines_format.xml</url>
 				<label>Routines</label>
 			</link>
-			<line_break></line_break>
 		</seealso>
 	</paragraph>
 </document>

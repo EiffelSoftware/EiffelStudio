@@ -20,8 +20,8 @@
 		<paragraph>Its first column gives the context in which the 
 			<link>
 				<url>20_new_expression_dialog.xml</url>
-				<label>expression </label>
-			</link>is evaluated. Its second column gives the expression itself, as it was entered by the user. The last column gives the result of the expression.
+				<label>expression</label>
+			</link> is evaluated. Its second column gives the expression itself, as it was entered by the user. The last column gives the result of the expression.
 		</paragraph>
 		<tip>
 			<bold>Tip</bold>: If the expression returns a non-Void object, then the corresponding row in the list is pickable, and can be dropped for example in the object tool to inspect its state.

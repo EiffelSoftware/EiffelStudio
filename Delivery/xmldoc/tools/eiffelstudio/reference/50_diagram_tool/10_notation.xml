@@ -1,7 +1,5 @@
 <document title="Notation" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Notation
@@ -26,7 +24,7 @@
 			<italic>bubble</italic>). It contains the class name and formal generics of the Eiffel class it represents. Second, it displays information about properties of a class. These properties are:
 		</paragraph>
 		<list ordered="false">
-			<item>: class is declared as 
+			<item>Deferred: class is declared as 
 				<code>
 					<keyword>deferred</keyword>
 				</code>. 
@@ -36,7 +34,7 @@
 					</image>
 				</paragraph>
 			</item>
-			<item>: class is not 
+			<item>Effective: class is not 
 				<code>
 					<keyword>deferred</keyword>
 				</code> and has at least one 
@@ -49,7 +47,7 @@
 					</image>
 				</paragraph>
 			</item>
-			<item>: class inherits 
+			<item>Persistent: class inherits 
 				<code>
 					<class_name>STORABLE</class_name>
 				</code> or has indexing tag 
@@ -62,7 +60,7 @@
 					</image>
 				</paragraph>
 			</item>
-			<item>: class has one ore more 
+			<item>Interfaced: class has one ore more 
 				<code>
 					<keyword>external</keyword>
 				</code> features. 
@@ -72,7 +70,7 @@
 					</image>
 				</paragraph>
 			</item>
-			<item>: class resides in a precompiled library or in a
+			<item>Reused: class resides in a precompiled library or in a 
 				<code>
 					<keyword>library</keyword>
 				</code> cluster. 
@@ -82,7 +80,7 @@
 					</image>
 				</paragraph>
 			</item>
-			<item>: class has the program's entry point. 
+			<item>Root class: class has the program's entry point. 
 				<paragraph>
 					<image>
 						<url>../../../../images/eiffelstudio/diagram/bon-class-root.png</url>
@@ -90,10 +88,9 @@
 				</paragraph>
 			</item>
 		</list>
-		<line_break></line_break>
-		<line_break></line_break> 
 		<seealso>
 			<bold>See also</bold>
+			<line_break/>
 			<link>
 				<url>../../how_to_s/60_designing_a_project/20_altering_the_system/30_class_header.xml</url>
 				<label>Changing class names and formal generics</label>
@@ -112,9 +109,9 @@
 			</image>
 		</div>
 		<line_break></line_break>
-		<line_break></line_break> 
 		<seealso>
 			<bold>See also</bold>
+			<line_break/>
 			<link>
 				<url>../../how_to_s/60_designing_a_project/40_modifying_the_display/70_iconify.xml</url>
 				<label>Iconifying a cluster</label>
@@ -133,6 +130,7 @@
 		<line_break></line_break> 
 		<seealso>
 			<bold>See also</bold>
+			<line_break/>
 			<link>
 				<url>../../how_to_s/60_designing_a_project/30_managing_links/10_new_inheritance_link.xml</url>
 				<label>Creating inheritance links</label>
@@ -158,6 +156,7 @@
 		<line_break></line_break> 
 		<seealso>
 			<bold>See also</bold>
+			<line_break/>
 			<link>
 				<url>../../how_to_s/60_designing_a_project/30_managing_links/20_new_client_link.xml</url>
 				<label>Creating client/supplier links</label>

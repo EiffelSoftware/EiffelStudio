@@ -1,7 +1,5 @@
 <document title="Type Library Marshalling Definition Dialog" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Type Library Marshalling Definition Dialog
@@ -13,61 +11,75 @@
 		<image>
 			<url>../images/com_image11.gif</url>
 		</image>
-		<paragraph> Because the definition file is a Type Library, the wizard cannot compile the Standard marshaler without additional information. This is the reason for having an extra text field for the path to the marshaler(also known as Proxy/Stub pair or just Proxy/Stub). The Proxy/Stubis a Dynamic Link Library that is used to marshal the data on the wire for a given component.</paragraph>
-		<seealso>See Also:
-			<line_break></line_break> 
+		<paragraph> Because the definition file is a Type Library, the wizard cannot compile the Standard marshaler without additional information. This is the reason for having an extra text field for the path to the marshaler (also known as Proxy/Stub pair or just Proxy/Stub). The Proxy/Stub is a Dynamic Link Library that is used to marshal the data on the wire for a given component.</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
 			<link>
 				<url>01_introduction_d.xml</url>
 				<label>Introduction Dialog and Main Window</label>
-			</link>, 
+			</link>
+			<line_break/>
 			<link>
 				<url>02_generated_code_type_d.xml</url>
 				<label>Generated Code Type Dialog</label>
-			</link>, 
+			</link>
+			<line_break/>
 			<link>
 				<url>03_definition_file_d.xml</url>
 				<label>Definition File Dialog</label>
-			</link>, 
+			</link>
+			<line_break/>
 			<link>
 				<url>04_eiffel_project_file_d.xml</url>
-				<label>EiffelProject File Dialog</label>
-			</link>, 
+				<label>Eiffel Project File Dialog</label>
+			</link>
+			<line_break/>
 			<link>
 				<url>05_destination_folder_d.xml</url>
 				<label>Destination Folder Dialog</label>
-			</link>,
+			</link>
+			<line_break/>
 			<link>
 				<url>06_idl_marshalling_d.xml</url>
 				<label>IDL Marshaling Definition Dialog</label>
-			</link>, 
+			</link>
+			<line_break/>
 			<link>
 				<url>07_type_lybrary_m_d.xml</url>
 				<label>Type Library Marshaling Definition Dialog</label>
-			</link>, 
+			</link>
+			<line_break/>
 			<link>
 				<url>08_final_d.xml</url>
-				<label>FinalDialog</label>
-			</link>, 
+				<label>Final Dialog</label>
+			</link>
+			<line_break/>
 			<link>
 				<url>09_com_definition_file_processing.xml</url>
-				<label>COMDefinition File Processing</label>
-			</link>, 
+				<label>COM Definition File Processing</label>
+			</link>
+			<line_break/>
 			<link>
 				<url>10_eiffel_project_processing.xml</url>
 				<label>Eiffel Project Processing</label>
-			</link>, 
+			</link>
+			<line_break/>
 			<link>
 				<url>11_generated_files.xml</url>
-				<label>GeneratedFiles</label>
-			</link>, 
+				<label>Generated Files</label>
+			</link>
+			<line_break/>
 			<link>
 				<url>12_class_hierarchy.xml</url>
 				<label>Class Hierarchy</label>
-			</link>,
+			</link>
+			<line_break/>
 			<link>
 				<url>13_accessing_component.xml</url>
 				<label>Accessing a Component</label>
-			</link>, 
+			</link>
+			<line_break/>
 			<link>
 				<url>14_building_component.xml</url>
 				<label>Building a Component</label>

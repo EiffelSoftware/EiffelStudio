@@ -1,7 +1,5 @@
 <document title="Flat Contract view" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Flat Contract view
@@ -39,7 +37,6 @@
 				<url>./20_contract_format.xml</url>
 				<label>Contract view</label>
 			</link>
-			<line_break></line_break>
 		</seealso>
 	</paragraph>
 </document>

@@ -1,7 +1,5 @@
 <document title="Attributes, metrics and measures" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Attributes, metrics and measures
@@ -13,14 +11,14 @@
 		</note>
 		<paragraph>We may distinguish between the product and process cases:</paragraph>
 		<note>
-			<bold>Product attribute, process attribute</bold>: A
+			<bold>Product attribute, process attribute</bold>: A 
 			<bold>product attribute</bold> is an attribute that characterizes a software product or set of products. A 
 			<bold>process attribute</bold> is an attribute that characterizes a software-related process, such as development, maintenance, documentation, management, or multiple instances of such a process.
 		</note>
 		<paragraph>Examples of attributes include reliability (a product attribute, non-quantitative) and total project cost (process, quantitative).</paragraph>
 		<paragraph>A metric is simply a quantitative attribute:</paragraph>
 		<note>
-			<bold>Metric</bold>: A
+			<bold>Metric</bold>: A 
 			<bold>metric</bold> is an attribute whose values are numbers (integers or reals), expressed relative to a certain 
 			<bold>unit</bold> specified as part of the metric definition.
 		</note>

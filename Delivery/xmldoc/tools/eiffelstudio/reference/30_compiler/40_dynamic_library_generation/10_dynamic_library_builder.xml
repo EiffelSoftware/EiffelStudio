@@ -9,7 +9,7 @@
 	</meta_data>
 	<paragraph>
 		<heading>
-			<size>1</size>
+			<size>1</size>Dynamic library builder
 		</heading>
 		<paragraph>In order to facilitate the creation of C dynamic libraries using EiffelStudio, a wizard helps generate the definition files used to define the contents of the shared library. If for some reason you need to override the wizard, the 
 			<link>

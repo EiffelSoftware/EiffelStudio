@@ -1,7 +1,5 @@
 <document title="Invariant field" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Invariant field
@@ -23,6 +21,9 @@
 			</image>
 		</div>
 		<paragraph>The example above will generate the code:</paragraph>
-		<code></code>
+<code_block>
+	invariant
+		count_positive: count > 0
+</code_block>
 	</paragraph>
 </document>

@@ -1,19 +1,16 @@
 <document title="Breakpoint information command" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>Breakpoint information command
 		</heading>
 		<paragraph>The breakpoint information command, located in the 
-			<bold>debug</bold>menu and in the 
+			<bold>debug</bold> menu and in the 
 			<bold>project</bold> toolbar ( 
 			<image>
 				<url>../../../../../images/eiffelstudio/icons/icon_bkpt_info_color.gif</url>
 			</image> ), displays the list of all set breakpoints in the system (enabled or disabled).
 		</paragraph>
-		<paragraph></paragraph>
 		<seealso>
 			<bold>See Also</bold>
 			<line_break></line_break> 
@@ -24,7 +21,7 @@
 			<line_break></line_break> 
 			<link>
 				<url>30_breakpoint_information.xml</url>
-				<label>Breakpoint informationcommand</label>
+				<label>Breakpoint information command</label>
 			</link>
 			<line_break></line_break>
 		</seealso>

@@ -42,15 +42,17 @@
 			</item>
 		</list>
 		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
 			<link>
 				<url>../../../technologies/com/index.xml</url>
-				<label>The Component ObjectModel</label>
+				<label>The Component Object Model</label>
 			</link>
+			<line_break/>
 			<link>
 				<url>../../../libraries/com/index.xml</url>
-				<label>EiffelCOMlibrary</label>
+				<label>EiffelCOM library</label>
 			</link>
 		</seealso>
-		<paragraph> </paragraph>
 	</paragraph>
 </document>

@@ -43,11 +43,10 @@
 		<line_break></line_break>
 		<line_break></line_break>
 		<paragraph>
-			<code>System recompiled.
-				<line_break></line_break>You must now run "finish_freezing" in:
-				<line_break></line_break>    
-				<italic>your_project_path</italic>|EIFGEN|F_code
-			</code>
+<code_block>	System recompiled.
+	You must now run "finish_freezing" in:
+		<italic>your_project_path</italic>|EIFGEN|F_code
+</code_block>
 		</paragraph>
 		<paragraph>with | replaced by \ if your platform is Windows, / if it is Unix. To execute the C compilation and linking part of the finalization, change directory to
 			<italic>your_project_path</italic>|EIFGEN|F_code as indicated and execute
@@ -58,11 +57,8 @@
 			<line_break></line_break>
 			<link>
 				<url>20_batch_compilation.xml</url>
-				<label>batch_compilation</label>
+				<label>Batch compilation</label>
 			</link>
 		</seealso>
-		<line_break></line_break>
-		<line_break></line_break>
-		<line_break></line_break>
 	</paragraph>
 </document>

@@ -95,7 +95,7 @@ feature {NONE} -- Initialization
 			if mask /= default_pointer then
 				a_mask := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (null, area.width, area.height, monochrome_color_depth)
 				maskgc := feature {EV_GTK_EXTERNALS}.gdk_gc_new (a_mask)
-				feature {EV_GTK_EXTERNALS}.gdk_draw_pixmap (a_mask, maskgc, mask, 0, 0, area.x, area.y, area.width, area.height)
+				feature {EV_GTK_EXTERNALS}.gdk_draw_pixmap (a_mask, maskgc, mask, area.x, area.y, 0, 0, area.width, area.height)
 				feature {EV_GTK_EXTERNALS}.gdk_gc_unref (maskgc)
 				a_src := feature {EV_GTK_EXTERNALS}.gdk_pixmap_ref (pix_imp.drawable)
 				pix_imp.set_pixmap (a_src, a_mask)

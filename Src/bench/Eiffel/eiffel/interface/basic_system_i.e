@@ -4,7 +4,7 @@ class BASIC_SYSTEM_I
 
 inherit
 
-	shared_code_files
+	SHARED_CODE_FILES
 	
 feature 
 

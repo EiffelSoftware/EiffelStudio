@@ -365,7 +365,8 @@
               <Component Id="rich_text" Guid="9058BA86-55E4-4e90-9CBE-B6C84D5ED65A">
                 <File Id="rich_text_basic_test.e" Name="RICH_T~1.E" LongName="rich_text_basic_test.e" KeyPath="yes" />
                 <File Id="rich_text_buffering_test.e" Name="RICH_T~2.E" LongName="rich_text_buffering_test.e" />
-                <File Id="rich_text_tab_test.e" Name="RICH_T~3.E" LongName="rich_text_tab_test.e" />
+                <File Id="rich_text_formatting_test.e" Name="RICH_T~3.E" LongName="rich_text_formatting_test.e" />
+                <File Id="rich_text_tab_test.e" Name="RICH_T~4.E" LongName="rich_text_tab_test.e" />
               </Component>
             </Directory>
             <Directory Id="pixmap" Name="pixmap">

@@ -2425,6 +2425,7 @@
                 <File Id="wel_enm_constants.e" Name="WEL_EN~2.E" LongName="wel_enm_constants.e" />
                 <File Id="wel_color_constants.e" Name="WEL_CO~B.E" LongName="wel_color_constants.e" />
                 <File Id="wel_cfe_constants.e" Name="WEL_CF~2.E" LongName="wel_cfe_constants.e" />
+                <File Id="wel_cfu_constants.e" Name="WEL_CF~4.E" LongName="wel_cfu_constants.e" />
                 <File Id="wel_cb_constants.e" Name="WEL_CB~1.E" LongName="wel_cb_constants.e" />
                 <File Id="wel_bn_constants.e" Name="WEL_BN~1.E" LongName="wel_bn_constants.e" />
                 <File Id="wel_bif_constants.e" Name="WEL_BI~5.E" LongName="wel_bif_constants.e" />

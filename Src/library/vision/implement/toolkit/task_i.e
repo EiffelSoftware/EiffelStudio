@@ -15,6 +15,12 @@ inherit
 
 
 
+	G_ANY_I
+		export
+			{NONE} all
+		end;
+
+
 	
 feature 
 

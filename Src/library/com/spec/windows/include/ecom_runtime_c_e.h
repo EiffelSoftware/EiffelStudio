@@ -20,6 +20,8 @@
 #include "eif_globals.h"
 #include "E_bstr.h"
 #include "eif_except.h"
+#include "ecom_vba__collection.h"
+#include "ecom_vba__errobject.h"
 
 
 #define ccom_c_array_element(_c_array_, _index_, _type_) (*((_type_ *)_c_array_ + _index_))

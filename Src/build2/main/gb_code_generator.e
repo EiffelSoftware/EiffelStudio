@@ -140,6 +140,8 @@ feature -- Basic operation
 								end
 								current_element.forth
 							end
+						elseif current_type.is_equal (Constants_string) then
+							
 						else
 							reset_generation_constants
 							directory_name := clone (generated_path)

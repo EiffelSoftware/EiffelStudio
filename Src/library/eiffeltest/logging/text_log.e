@@ -31,10 +31,10 @@ feature -- Output
 			put_new_line
 			put_new_line
 			put_string ("Top level tests: " + d.test_count.out + ", ")
-			put_string ("Passed: " + d.passed_tests.out + " [" + 
-				(d.pass_percentage.rounded).out + "%%], " +
-				"Failed: " + d.failed_tests.out + " [" + 
-				(d.fail_percentage.rounded).out + "%%]")
+			put_string ("Passed: " + d.contained_passed_tests.out + " [" + 
+				(d.contained_pass_percentage.rounded).out + "%%], " +
+				"Failed: " + d.contained_failed_tests.out + " [" + 
+				(d.contained_fail_percentage.rounded).out + "%%]")
 			put_new_line
 			put_new_line
 			put_new_line
@@ -157,6 +157,17 @@ feature -- Output
 			put_new_line
 		end
 					
+	put_container_results (t: TEST_CONTAINER) is
+			-- Output statistic information about tests contained in `t'.
+		do
+			put_string ("   (Contained tests: " + t.test_count.out + ", ")
+			put_string ("Passed: " + t.contained_passed_tests.out + " [" + 
+				(t.contained_pass_percentage.rounded).out + "%%], " +
+				"Failed: " + t.contained_failed_tests.out + " [" + 
+				(t.contained_fail_percentage.rounded).out + "%%])")
+			put_new_line
+		end
+
 	put_failure_information (t: SINGLE_TEST; run: INTEGER) is
 			-- Output failure information for `run' of test `t'
 		local

@@ -100,20 +100,23 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 			class_i: CLASS_I;
 			at_pos: INTEGER;
 			cluster_name: STRING;
-			cluster: CLUSTER_I
+			cluster: CLUSTER_I;
+			pattern: STRING_PATTERN
 		do
 			if (choice /= Void) and then arg = choice then
 				check
 					class_list /= Void
 				end;
 				choice_position := choice.position;
-				if choice.position /= 1 then
+				if choice_position /= 1 then
 					class_i := class_list.i_th (choice_position - 1);
 					class_list := Void;
 					cname := clone (class_i.class_name);
 					cname.to_upper;
 					set_text (cname);
 					execute (class_i)
+				else
+					close_choice_window
 				end
 			else
 				class_i ?= arg;
@@ -125,7 +128,9 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 						warner (popup_parent).gotcha_call (w_Specify_a_class)
 					else
 						cname.to_lower;
-						if cname.item (cname.count) /= '*' then
+						!! pattern.make (0);
+						pattern.append (cname);
+						if not pattern.has_wild_cards then
 							!! mp.set_watch_cursor;
 							at_pos := cname.index_of ('@', 1);
 							if at_pos = 0 then
@@ -145,8 +150,7 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 								set_text (cname);
 								execute (Void)
 							else
-								cluster_name := cname.substring (at_pos + 1,
-cname.count)
+								cluster_name := cname.substring (at_pos + 1, cname.count)
 								if at_pos > 1 then
 									cname := cname.substring (1, at_pos - 1)
 								else
@@ -170,15 +174,16 @@ cname.count)
 							clusters := Eiffel_universe.clusters;
 							from clusters.start until clusters.after loop
 								classes := clusters.item.classes;
-								from classes.start until classes.after loop
+								from
+									classes.start
+								until
+									classes.after
+								loop
 									class_name := classes.key_for_iteration;
 									class_i := classes.item_for_iteration
 									if
 										class_i.compiled and
-										(cname.empty or else
-										(class_name.count >= cname.count
-										and then class_name.substring
-											(1, cname.count).is_equal (cname)))
+										pattern.matches (class_name)
 									then
 										sorted_classes.put_front (class_i)
 									end;
@@ -199,7 +204,8 @@ cname.count)
 						class_i.compiled
 					end
 					!! stone.make (class_i.compiled_eclass);
-					tool.routine_text_field.execute (stone)
+					tool.routine_text_field.execute (stone);
+					close_choice_window
 				end
 			end
 		end;

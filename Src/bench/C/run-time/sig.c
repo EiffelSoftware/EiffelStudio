@@ -528,7 +528,7 @@ rt_shared void initsig(void)
 	 */
 
 #ifdef SIGTRAP
-	sig_ign[SIGTRAP] = 0;
+	sig_ign[SIGTRAP] = 0;	/* Do not ignore Trap signal */
 #	ifdef EIF_SGI
 		/* On some platforms (sgi), SIGTRAP is used as a
 		 * Integer-Division-By-Zero signal
@@ -701,7 +701,12 @@ rt_private struct sig_desc sig_name[] = {
 	{ 4, SIGILL, "Illegal instruction" },
 #endif
 #ifdef SIGTRAP
+#	ifdef EIF_SGI
+	{ 5, SIGTRAP, "Trace trap or Divide-by-zero" },
+#	else
 	{ 5, SIGTRAP, "Trace trap" },
+#	endif	/* EIF_SGI */
+	
 #endif
 #ifdef SIGABRT
 	{ 6, SIGABRT, "Abort" },
@@ -907,7 +912,12 @@ rt_public void esigcatch(long int sig)
 #endif
 #ifdef SIGTRAP
 	if (sig == SIGTRAP) {
+#	ifdef EIF_SGI
+		(void) signal(SIGTRAP, ehandlr); 	/* Integer-Division-by-Zero on sgi */
+#	else
 		(void) signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
+#	endif 	/* EIF_SGI */
+
 		return;
 	}
 #endif
@@ -966,6 +976,7 @@ rt_public void esigignore(long int sig)
 	}
 #endif
 #ifdef SIGTRAP
+	/* Not necessary on SGI since it is handled by ehandlr by default */
 	if (sig == SIGTRAP) {
 		(void) signal(SIGTRAP, SIG_IGN);
 		return;
@@ -1037,7 +1048,12 @@ void esigresall(void)
 	(void) signal(SIGCONT, SIG_DFL);	/* Restore default behaviour */
 #endif
 #ifdef SIGTRAP
-	(void) signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
+#	ifdef EIF_SGI
+		(void) signal(SIGTRAP, ehandlr);
+#	else
+		(void) signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
+#	endif /* EIF_SGI */
+		
 #endif
 #ifdef SIGFPE
 	(void) signal(SIGFPE, exfpe);	/* Raise an Eiffel exception when caught */
@@ -1090,7 +1106,12 @@ void esigresdef(long int sig)
 #endif
 #ifdef SIGTRAP
 	if (sig == SIGTRAP) {
+#	ifdef EIF_SGI
+		(void) signal(SIGTRAP, ehandlr);	/* Restore default behaviour */
+#	else
 		(void) signal(SIGTRAP, SIG_DFL);	/* Restore default behaviour */
+#	endif /* EIF_SGI */
+		
 		return;
 	}
 #endif

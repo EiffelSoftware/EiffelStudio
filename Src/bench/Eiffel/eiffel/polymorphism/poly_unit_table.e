@@ -79,16 +79,8 @@ feature
 				associated_class := System.class_of_id (unit.id);
 				if associated_class /= Void then
 						-- Classes could be removed
-					from
-						types := associated_class.types;
-						types.start
-					until
-						types.after
-					loop
-						Result.extend (unit.entry (types.item));
-						types.forth
-					end;
-				end;
+					associated_class.types.generate_poly_table (unit, Result)
+				end
 				forth
 			end;
 		end;
@@ -135,19 +127,7 @@ feature -- DLE
 				associated_class := System.class_of_id (unit.id);
 				if associated_class /= Void then
 						-- Classes could be removed
-					from
-						types := associated_class.types;
-						types.start
-					until
-						types.after
-					loop
-						cl_type := types.item;
-						if cl_type.is_static then
-								-- Generate only what was in the static system.
-							Result.extend (unit.entry (cl_type))
-						end;
-						types.forth
-					end
+					associated_class.types.generate_dle_poly_table (unit, Result)
 				end;
 				forth
 			end

@@ -134,6 +134,7 @@ feature -- Status report
 		require
 			exits: exists
 		do
+			
 			Result := cwin_send_message_result (item,
 				Lb_getselcount, 0, 0)
 		ensure
@@ -153,22 +154,24 @@ feature -- Status report
 		do
 			local_count_selected_items := count_selected_items
 			create Result.make (0, local_count_selected_items - 1)
-			create l_result.make (Result)
-
-				-- Retrieve the selected items.
-			items_in_buffer := cwin_send_message_result (
-				item, 
-				Lb_getselitems, 
-				local_count_selected_items,
-				cwel_pointer_to_integer(l_result.item)
-				)
-
-				-- Check that Windows has filled the given buffer.
-			check
-				buffer_filled: items_in_buffer = local_count_selected_items
+			if local_count_selected_items /= 0 then
+				create l_result.make (Result)
+	
+					-- Retrieve the selected items.
+				items_in_buffer := cwin_send_message_result (
+					item, 
+					Lb_getselitems, 
+					local_count_selected_items,
+					cwel_pointer_to_integer(l_result.item)
+					)
+	
+					-- Check that Windows has filled the given buffer.
+				check
+					buffer_filled: items_in_buffer = local_count_selected_items
+				end
+				
+				Result := l_result.to_array (0)
 			end
-			
-			Result := l_result.to_array (0)
 		ensure
 			result_not_void: Result /= Void
 			count_ok: Result.count = count_selected_items

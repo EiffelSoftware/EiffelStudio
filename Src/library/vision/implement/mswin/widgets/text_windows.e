@@ -18,8 +18,7 @@ inherit
 
 	TEXT_I
 
-	--WEL_RICH_EDIT
-	WEL_MULTIPLE_LINE_EDIT
+	WEL_RICH_EDIT
 		rename
 			make as wel_make,
 			move as wel_move,
@@ -82,26 +81,24 @@ feature -- Initialization
 	make (a_text: TEXT; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create the text_windows
 		do
+			init_common_controls_dll
+			init_rich_edit_dll
 			parent ?= oui_parent.implementation
 			!! private_text.make (0)
 			managed := man
 			a_text.set_font_imp (Current)
 			is_multi_line_mode := true
 			!! private_attributes;
-			--init_dlls
 		end
 
-	--init_dlls is
-			-- Initialize the Dlls
-		--local
-			--common_controls_dll: WEL_COMMON_CONTROLS_DLL;
-			--rich_edit_dll: WEL_RICH_EDIT_DLL
-		--once
-			--!! common_controls_dll.make;
-			--common_controls_dll.set_shared
-			--!! rich_edit_dll.make
-			--rich_edit_dll.set_shared
-		--end;
+	init_rich_edit_dll is
+			-- Load the rich edit control DLL.
+		local
+			rich_edit_dll: WEL_RICH_EDIT_DLL
+		once
+			!! rich_edit_dll.make
+			rich_edit_dll.set_shared
+		end
 
 	realize is
 			-- Realize current widget

@@ -567,7 +567,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 				i > count
 			loop
 					-- Take the current studied parameter of A [G,...] 
-				gen_param := generics.item (i)
+				gen_param := generics.item (i).actual_type
 				if gen_param.is_formal then
 						-- Check if the associated constraint conforms to the
 						-- i_th generic parameter of context_type
@@ -734,6 +734,9 @@ feature {COMPILER_EXPORTER} -- Primitives
 			crc_list := formal_dec_as.constraint_creation_list
 			if formal_type = Void then
 				class_c := to_check.associated_class
+				check
+					class_c_not_void: class_c /= Void
+				end
 				creators_table := class_c.creators
 	
 					-- A creation procedure has to be specified, so if none is

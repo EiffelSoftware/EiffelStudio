@@ -1,26 +1,23 @@
 indexing
- 
-	description:
-		"Routine identifiers.";
+	description:	"Routine identifiers.";
 	date: "$Date$";
 	revision: "$Revision $"
 
 class ROUTINE_ID
 
 inherit
-
 	COMPILER_ID
 		export
 			{COMPILER_EXPORTER} all;
 			{ANY} is_equal
-		end;
+		end
+
 	ENCODER
 		export
 			{NONE} all
 		end
 
 creation
-
 	make
 
 feature {COMPILER_EXPORTER} -- Status report

@@ -292,8 +292,7 @@ feature -- prototype code generation
 					arg_types: ARRAY [STRING]) is
 			-- Generate the external declaration for a C function
 		require
-			non_void_args: type /= Void and f_name /= Void and
-				arg_types /= Void
+			non_void_args: type /= Void and f_name /= Void and arg_types /= Void
 			valid_lower:arg_types.lower = 1
 		do
 			generate_function_declaration (type, f_name, True, arg_types)
@@ -303,8 +302,7 @@ feature -- prototype code generation
 					arg_types: ARRAY [STRING]) is
 			-- Generate the external declaration for a C function
 		require
-			non_void_args: type /= Void and f_name /= Void and
-				arg_types /= Void
+			non_void_args: type /= Void and f_name /= Void and arg_types /= Void
 			valid_lower:arg_types.lower = 1
 		do
 			generate_function_declaration (type, f_name, False, arg_types)

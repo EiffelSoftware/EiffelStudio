@@ -279,7 +279,7 @@ printf ("Malloc on sorted_attributes %d %d %lx\n", scount, scount * sizeof(unsig
 	st_store(object);			/* Write objects to be stored in `fides' */
 
 						/* flush the buffer */
-		flush_buffer_func ();
+		flush_buffer_func();
 #if DEBUG & 3
 		printf ("\n");
 #endif
@@ -1244,7 +1244,7 @@ rt_public void buffer_write(register char *data, int size)
 rt_public void flush_st_buffer (void)
 {
 	if (current_position != 0)
-		store_write_func ();
+		store_write_func();
 }
 
 
@@ -1256,7 +1256,6 @@ void store_write(void)
 	int cmps_out_size = 0;
 	register char * ptr = (char *)0;
 	register int number_left = 0;
-	int send_size = 0;
 	int number_writen = 0;
 
 	cmps_in_ptr = general_buffer;
@@ -1270,7 +1269,6 @@ void store_write(void)
  
 	ptr = cmps_general_buffer;
 	number_left = cmps_out_size + EIF_CMPS_HEAD_SIZE;
-	send_size = cmps_out_size + EIF_CMPS_HEAD_SIZE;
  
 	while (number_left > 0) {
 #ifdef EIF_WIN32

@@ -60,6 +60,6 @@ feature {NONE} -- Implementation
 
 	label: EV_LABEL
 
-	caller: EB_SHOW_SYSTEM_TOOL
+	caller: EB_CHOOSE_ACE_CALLBACK
 
 end -- class EB_CHOOSE_ACE_DIALOG

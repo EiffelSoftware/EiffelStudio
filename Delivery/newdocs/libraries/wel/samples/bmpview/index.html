@@ -1,0 +1,48 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>Bmpview</TITLE>
+		<LINK REL=StyleSheet HREF="/default.css">
+		<META NAME="MS-HKWD" CONTENT="WEL Samples, Bmpview">
+	</HEAD>
+
+	<BODY>
+		<H1>Bitmap View Sample</H1>
+		<CENTER><IMG SRC="bmpview.png" ALT="bmpview" /></CENTER><BR><BR>
+		<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch [BENCH].
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\wel\bmpview\</I>.
+			<LI>Choose <I>Ace.ace</I>
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.
+		</UL>
+		<H2>Running</H2>
+		After launching the program, a window will be displayed as illustrated above, although no child windows will be present. Selecting "Open" from the
+		"File" menu will allow you to browse for a .BMP file to view. Multiple files may be opened and each opens in a new child window. The options on the "Window" menu
+		provide features for positioning the child windows. Selecting "Close" will close the currently selected child window, while selecting "Exit" or closing the window manually will
+		exit the program.
+
+		<H2>Under the Hood</H2>
+		<A CLASS="eclass" HREF="/libraries/wel/samples/bmpview/root_cluster/main_window_chart.html">MAIN_WINDOW</A> inherits <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_mdi_frame_Window_chart.html">WEL_MDI_FRAME_WINDOW</A> and
+		redefines `on_menu_command' to handle the menu selections. <A CLASS="eclass" HREF="/libraries/wel/samples/bmpview/root_cluster/child_window_chart.html">CHILD_WINDOW</A> inherits <A CLASS="eclass" HREF="/libraries/wel/reference/windows/wel_mdi_child_Window_chart.html">WEL_MDI_CHILD_WINDOW</A>
+		and implements <A CLASS="efeature" HREF="/libraries/wel/samples/bmpview/root_cluster/child_window.html#f_make">make</A> to load a named bitmap, while <A CLASS="efeature" HREF="/libraries/wel/samples/bmpview/root_cluster/child_window.html#f_on_paint">on_paint</A> has been redefined
+		to re-draw the bitmap. A <A CLASS="eclass" HREF="/libraries/wel/reference/stddlgs/wel_open_file_dialog.html">WEL_OPEN_FILE_DIALOG</A> is used to select files for viewing.
+		
+		<P>This sample contains the following classes:
+			<UL>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/bmpview/root_cluster/bmpview_demo_chart.html">BMP_VIEW</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/bmpview/root_cluster/main_window_chart.html">MAIN_WINDOW</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/bmpview/root_cluster/child_window_chart.html">CHILD_WINDOW</A>
+				<LI><A CLASS="eclass" HREF="/libraries/wel/samples/bmpview/root_cluster/application_ids_chart.html">APPLICATION_IDS</A>
+			</UL>
+		</P>
+		<P CLASS="seealso"><B>See Also</B><BR><A HREF="/libraries/wel/content/stddlgs/wel_open_file_dialog.html">WEL_OPEN_FILE_DIALOG</A></BR>
+			<A HREF="/libraries/wel/samples/mdi/index.html">Mdi sample</A></P>
+	</BODY>
+</HTML>

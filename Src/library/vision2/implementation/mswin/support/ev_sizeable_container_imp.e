@@ -225,7 +225,7 @@ feature -- Basic operations
 				if a_width > rw or a_height > rh then
 						-- Apply changes to current and descendant
 					ev_move_and_resize (x_position, y_position,
-							a_width, a_height, True)
+							a_width.max (rw), a_height.max (rh), True)
 				elseif is_initialized then
 						-- Apply changes to descendant only
 					ev_apply_new_size (x_position, y_position,

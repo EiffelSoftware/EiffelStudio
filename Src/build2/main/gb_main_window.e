@@ -328,9 +328,7 @@ feature {NONE} -- Implementation
 			the_tool_holder: EV_VERTICAL_BOX
 			vertical_box: EV_VERTICAL_BOX
 			constructor_box: EV_HORIZONTAL_BOX
-			vertical_holder: GB_VERTICAL_SPLIT_AREA_THREE_PART_TOOL_HOLDER
 			temp_tool_bar: EV_TOOL_BAR
-			sa: EV_SPLIT_AREA
 		do
 				-- Now we perform a large hack. In Wizard, mode, the
 				-- fourth state may be re-built, if we go back and change a setting
@@ -475,13 +473,10 @@ feature {NONE} -- Implementation
 			info_not_void: info /= Void
 		local
 			tool_name: STRING
-			tool: EV_WIDGET
 			info_string: STRING
 			state: STRING
 			index: INTEGER
-			a_width, a_height: INTEGER
 			counter: INTEGER
-			temp_string: STRING
 			stored_heights: ARRAYED_LIST [INTEGER]
 			stored_widths: ARRAYED_LIST [INTEGER]
 			minimized_items: ARRAYED_LIST [BOOLEAN]
@@ -564,18 +559,11 @@ feature {NONE} -- Implementation
 		local
 			tool_name: STRING
 			info_string: STRING
-			state: STRING
 			index: INTEGER
 			a_width, a_height: INTEGER
 			an_x, a_y: INTEGER
-			counter: INTEGER
-			temp_string: STRING
-			stored_heights: ARRAYED_LIST [INTEGER]
-			stored_widths: ARRAYED_LIST [INTEGER]
-			minimized_items: ARRAYED_LIST [BOOLEAN]
-			maximized_index: INTEGER
-			dialog: EV_DOCKABLE_DIALOG
 			tool: EV_WIDGET
+			counter: INTEGER
 		do
 			from
 				counter := 1

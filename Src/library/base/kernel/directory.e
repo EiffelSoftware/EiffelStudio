@@ -252,8 +252,9 @@ feature -- Removal
 			eif_dir_delete ($external_name)
 		end
 
-	recursive_delete is
-			-- Delete directory, its files and its subdirectories.
+	delete_content is
+			-- Delete all files located in current directory and its
+			-- subdirectories.
 		require
 			directory_exists: exists
 		local
@@ -292,6 +293,14 @@ feature -- Removal
 				end
 				l.forth
 			end
+		end
+
+	recursive_delete is
+			-- Delete directory, its files and its subdirectories.
+		require
+			directory_exists: exists
+		do	
+			delete_content
 			delete
 		end
 

@@ -38,7 +38,7 @@ feature -- Element change
 		do
 			set_background_color (a_color)
 		ensure
-			set: color = a_color
+			set: color.equal_color (a_color)
 		end
 
 end -- class EB_COLOR_BUTTON

@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 			extend (label)
 			create location_field
 			extend (location_field)
-			location_field.disable_sensitive
+			location_field.disable_edit
 			is_initialized := True
 			disable_all_items (Current)
 			align_labels_left (Current)
@@ -35,6 +35,7 @@ feature -- Basic operation
 			-- in `project_settings'.
 		do
 			location_field.set_text (system_status.current_project_settings.project_location)
+			location_field.set_tooltip ("%"" + location_field.text + "%" (This entry is the location of the project, and may not be modified)")
 		end
 		
 	save_attributes (project_settings: GB_PROJECT_SETTINGS) is

@@ -75,14 +75,18 @@ feature {EV_TITLED_WINDOW_IMP} -- Implementation
 				internal_gdk_key_code := key_code_to_gtk (key.code)
 			end
 			
-			feature {EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (
-				a_window_imp.accel_box,
-				a_cs.item,
-				a_window_imp.accel_group,
-				internal_gdk_key_code,
-				modifier_mask,
-				0
-			)
+			if internal_gdk_key_code > 0 then
+					-- If internal_gdk_key_code is 0 then the key mapping doesn't exist
+				feature {EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (
+					a_window_imp.accel_box,
+					a_cs.item,
+					a_window_imp.accel_group,
+					internal_gdk_key_code,
+					modifier_mask,
+					0
+				)				
+			end
+
 		end
 
 	remove_accel (a_window_imp: EV_TITLED_WINDOW_IMP) is

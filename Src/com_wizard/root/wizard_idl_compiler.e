@@ -51,7 +51,14 @@ inherit
 		export
 			{NONE} all
 		end
-		
+	
+	WIZARD_MESSAGE_OUTPUT
+		export
+			{NONE} all
+		undefine
+			output_window
+		end
+
 create
 	make
 
@@ -73,6 +80,9 @@ feature -- Basic Operations
 			shared_wizard_environment.set_type_library_file_name (a_string)
 			a_string.append ("%"")
 			a_string.prepend ("%"")
+			if Shared_wizard_environment.output_level = Output_all then
+				add_message (Current, Idl_compiler_command_line)
+			end
 			launch (Idl_compiler_command_line, shared_wizard_environment.destination_folder)
 			check_return_code (1)
 		end
@@ -80,6 +90,9 @@ feature -- Basic Operations
 	compile_iid is
 			-- Compile iid C file.
 		do
+			if Shared_wizard_environment.output_level = Output_all then
+				add_message (Current, C_compiler_command_line (Generated_iid_file_name))
+			end
 			launch (C_compiler_command_line (Generated_iid_file_name), shared_wizard_environment.destination_folder)
 			check_return_code (1)
 		end
@@ -87,6 +100,9 @@ feature -- Basic Operations
 	compile_ps is
 			-- Compile proxy/stub C file.
 		do
+			if Shared_wizard_environment.output_level = Output_all then
+				add_message (Current, C_compiler_command_line (Generated_iid_file_name))
+			end
 			launch (C_compiler_command_line (Generated_ps_file_name), shared_wizard_environment.destination_folder)
 			check_return_code (1)
 		end
@@ -94,6 +110,9 @@ feature -- Basic Operations
 	compile_data is
 			-- Compile dlldata C file.
 		do
+			if Shared_wizard_environment.output_level = Output_all then
+				add_message (Current, C_compiler_command_line (Generated_iid_file_name))
+			end
 			launch (C_compiler_command_line (Generated_dlldata_file_name), shared_wizard_environment.destination_folder)
 			check_return_code (1)
 		end
@@ -104,6 +123,9 @@ feature -- Basic Operations
 			a_string: STRING
 		do
 			generate_def_file
+			if Shared_wizard_environment.output_level = Output_all then
+				add_message (Current, Linker_command_line)
+			end
 			launch (Linker_command_line, shared_wizard_environment.destination_folder)
 			check_return_code (1)
 			a_string := ("%"")
@@ -175,6 +197,9 @@ feature {NONE} -- Implementation
 			Result.append ("\%" /tlb \%"")
 			Result.append (clone (shared_wizard_environment.project_name))
 			Result.append (".tlb")
+			if Shared_wizard_environment.output_level = Output_none then
+				Result.append (" /nologo ")
+			end
 			Result.append ("\%" \%"")
 			Result.append (shared_wizard_environment.idl_file_name)
 			Result.append ("\%"%"")
@@ -187,6 +212,9 @@ feature {NONE} -- Implementation
 			Result.append (clone (C_compiler))
 			Result.append (" ")
 			Result.append (Common_c_compiler_options)
+			if Shared_wizard_environment.output_level = Output_none then
+				Result.append (" /nologo ")
+			end
 			Result.append ("\%"")
 			Result.append (clone (shared_wizard_environment.destination_folder))
 			Result.append_character (directory_separator)
@@ -203,6 +231,9 @@ feature {NONE} -- Implementation
 			Result.append (clone (Linker))
 			Result.append (" ")
 			Result.append (Common_linker_options)
+			if Shared_wizard_environment.output_level = Output_none then
+				Result.append (" /nologo ")
+			end
 			Result.append (" /OUT:")
 			Result.append ("\%"")
 			Result.append (Proxy_stub_file_name)

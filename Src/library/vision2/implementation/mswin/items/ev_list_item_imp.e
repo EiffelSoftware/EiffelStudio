@@ -19,7 +19,7 @@ inherit
 			pointer_button_press_actions_internal,
 			pointer_double_press_actions_internal
 		undefine
-			parent
+			parent, pixmap_equal_to
 		redefine
 			set_pixmap, pixmap, remove_pixmap, on_parented, on_orphaned,
 			parent_imp, interface

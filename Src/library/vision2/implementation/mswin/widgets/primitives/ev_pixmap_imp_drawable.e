@@ -270,7 +270,9 @@ feature -- Access
 			-- need it anymore.
 		do
 			if mask_dc /= Void and internal_mask_bitmap /= Void then
-				mask_dc.unselect_bitmap
+				if mask_dc.bitmap_selected then-- and mask_dc.o--mask_dc.bitmap.item /= default_pointer then
+					mask_dc.unselect_bitmap
+				end
 				create Result.make_by_bitmap (internal_mask_bitmap)
 				Result.enable_reference_tracking
 				mask_dc.select_bitmap (internal_mask_bitmap)
@@ -433,6 +435,15 @@ feature {EV_PIXMAP} -- Duplication
 		local
 			simple_pixmap: EV_PIXMAP_IMP
 		do
+				-- Reset `internal_mask_bitmap'.
+				-- Julian 06/26/03 This is necessary to fix the following problem:
+				-- Display a pixmap in a container, using something such as an icon which has a mask.
+				-- Perform `copy' on the bixmap with a bitmap.
+				-- If fails, due to `internal_mask_bitmap' being non Void, which I believe is left
+				-- from the old implementation, and needs re-setting. If the new implementation
+				-- requires a mask bitmap, it will be set during `copy_pixmap'.
+			internal_mask_bitmap := Void
+			
 				-- Create a simple pixmap
 			simple_pixmap := create_simple_pixmap
 			simple_pixmap.copy_pixmap (other_interface)

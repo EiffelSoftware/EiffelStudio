@@ -28,7 +28,7 @@ feature -- Basic operation
 			formater: XML_FORMATER
 		do
 				-- Generate an XML representation of the sysyetm in `document'.
-			generate_document
+			generate_document (False)
 			create formater.make
 				-- Process the document ready for output
 			formater.process_document (document)
@@ -52,18 +52,15 @@ feature {NONE} -- Basic operation.
 		
 feature {NONE} -- Implementation
 
-	add_new_object_to_output (an_object: GB_OBJECT; element: XML_ELEMENT) is
+	add_new_object_to_output (an_object: GB_OBJECT; element: XML_ELEMENT; add_names: BOOLEAN) is
 			-- Add XML representation of `an_object' to `element'.
 		local
 			gb_cell_object: GB_CELL_OBJECT
 			gb_container_object: GB_CONTAINER_OBJECT
-			gb_primitive_object: GB_PRIMITIVE_OBJECT
 			layout_item, current_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			new_widget_element: XML_ELEMENT
-			counter: INTEGER
-			new_type_element: XML_ELEMENT
 		do
-			output_attributes (an_object, element)
+			output_attributes (an_object, element, add_names)
 				-- If `object' is a primitive then there are no children, so we do nothing.
 				-- When we support items, we will need to alter this.
 			if not is_instance_of (an_object, dynamic_type_from_string (gb_primitive_object_class_name)) then
@@ -73,7 +70,7 @@ feature {NONE} -- Implementation
 						layout_item ?= gb_cell_object.layout_item.first
 						new_widget_element := create_widget_instance (element, layout_item.object.type)
 						element.force_last (new_widget_element)
-						add_new_object_to_output (layout_item.object, new_widget_element)
+						add_new_object_to_output (layout_item.object, new_widget_element, add_names)
 					end
 				end
 				gb_container_object ?= an_object
@@ -88,7 +85,7 @@ feature {NONE} -- Implementation
 							current_layout_item ?= layout_item.item
 							new_widget_element := create_widget_instance (element, current_layout_item.object.type)
 							element.force_last (new_widget_element)
-							add_new_object_to_output (current_layout_item.object, new_widget_element)
+							add_new_object_to_output (current_layout_item.object, new_widget_element, add_names)
 							layout_item.forth
 						end
 					end
@@ -97,14 +94,13 @@ feature {NONE} -- Implementation
 		end
 		
 		
-	output_attributes (an_object: GB_OBJECT; element: XML_ELEMENT) is
+	output_attributes (an_object: GB_OBJECT; element: XML_ELEMENT; add_names: BOOLEAN) is
 			--
 		local
 			handler: GB_EV_HANDLER
 			supported_types: ARRAYED_LIST [STRING]
 			current_type: STRING
 			gb_ev_any: GB_EV_ANY
-			display_object: GB_DISPLAY_OBJECT
 			new_type_element: XML_ELEMENT
 			vision2_type: STRING
 		do
@@ -116,6 +112,11 @@ feature {NONE} -- Implementation
 				new_type_element := new_child_element (element, Internal_properties_string, "")
 				element.force_last (new_type_element)	
 				an_object.generate_xml (new_type_element)
+				-- Generate a name if `add_names'.
+			elseif add_names then
+				new_type_element := new_child_element (element, Internal_properties_string, "")
+				element.force_last (new_type_element)
+				add_element_containing_string (new_type_element, name_string, generate_new_name (an_object.short_type))
 			end
 			
 				-- Now store all attributes from interface of Vision2.
@@ -146,16 +147,23 @@ feature {NONE} -- Implementation
 		
 feature {GB_CODE_GENERATOR} -- Implementation
 		
-	generate_document is
+	generate_document (add_names: BOOLEAN) is
 			-- Generate an XML representation of the
 			-- current system in `document'.
+			-- If `add_names' then generate a name
+			-- automatically and insert for any object
+			-- that was not named by the user.
 		local
 			application_element: XML_ELEMENT
 			toe_document: TOE_DOCUMENT
-			formater: XML_FORMATER
 			window_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			window_element: XML_ELEMENT
 		do
+				-- If we are adding names, then we must ensure that the list of
+				-- names is empty when we being generating.
+			if add_names then
+				generated_names.wipe_out
+			end
 			application_element := new_root_element ("application", "")
 			add_attribute_to_element (application_element, "xsi", "xmlns", "http://www.w3.org/1999/XMLSchema-instance")	
 			
@@ -175,7 +183,7 @@ feature {GB_CODE_GENERATOR} -- Implementation
 				-- one window, then this will need to be updated.
 			window_element := create_widget_instance (application_element, "EV_TITLED_WINDOW")
 			application_element.force_last (window_element)
-			add_new_object_to_output (window_item.object, window_element)		
+			add_new_object_to_output (window_item.object, window_element, add_names)		
 		end
 		
 	document: XML_DOCUMENT
@@ -190,5 +198,38 @@ feature {NONE} -- Implementation
 
 	filename: STRING is "D:\work\build2\xml_output.xml"
 		-- File to be generated.
+		
+	generated_names: ARRAYED_LIST [STRING] is
+			-- All names generated automatically.
+		once
+			create Result.make (0)
+		end
+		
+	generate_new_name (type: STRING): STRING is
+			-- `Result' is a newly generated name from `type'
+			-- which must not be already in `generated_names.
+		local
+			occurances: INTEGER
+			new_name, lower_type: STRING
+			local_names: ARRAYED_LIST [STRING]
+		do
+			local_names := generated_names
+			from
+				generated_names.start				
+			until
+				generated_names.off
+			loop
+				lower_type := type
+				lower_type.to_lower
+				if generated_names.item.substring (1, type.count).is_equal (lower_type) then
+					occurances := occurances + 1
+				end
+				generated_names.forth
+			end
+			new_name := type + (occurances + 1).out
+			new_name.to_lower
+			generated_names.force (new_name)
+			Result := new_name
+		end
 
 end -- class GB_XML_STORE

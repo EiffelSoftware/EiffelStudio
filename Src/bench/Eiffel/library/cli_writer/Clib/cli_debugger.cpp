@@ -164,9 +164,9 @@ rt_public void trace_event (char* mesg)
 {
   FILE *out;
 
+  LOCK_DEBUG_OUTPUT_ACCESS;
   dbg_msg_displayed_index = dbg_msg_displayed_index + 1;
 
-  LOCK_DEBUG_OUTPUT_ACCESS;
   out=fopen("eif_debugger.out","a+");
   fprintf(out,"%d:%d - <%d>%s\n",
 		  			dbg_msg_displayed_index, 
@@ -181,8 +181,8 @@ rt_public void trace_event (char* mesg, char* mesg2)
 {
   FILE *out;
 
-  dbg_msg_displayed_index = dbg_msg_displayed_index + 1;
   LOCK_DEBUG_OUTPUT_ACCESS;
+  dbg_msg_displayed_index = dbg_msg_displayed_index + 1;
   out=fopen("eif_debugger.out","a+");
   fprintf(out,"%d:%d - <%d>%s %s\n",
 		  			dbg_msg_displayed_index, 
@@ -196,12 +196,13 @@ rt_public void trace_event (char* mesg, char* mesg2)
 rt_public void trace_event_dbg_hr (char* mesg,HRESULT hr)
 {
   FILE *out;
-  dbg_msg_displayed_index = dbg_msg_displayed_index + 1;
   LOCK_DEBUG_OUTPUT_ACCESS;
+  dbg_msg_displayed_index = dbg_msg_displayed_index + 1;
   out=fopen("eif_debugger.out","a+");
-  fprintf(out,"%d:%d - %s %d\n",
+  fprintf(out,"%d:%d - <%d>%s %d\n",
 		  			dbg_msg_displayed_index, 
 		  			GetCurrentThreadId(),
+					dbg_state, 
 					mesg,
 					hr
 					);
@@ -211,12 +212,13 @@ rt_public void trace_event_dbg_hr (char* mesg,HRESULT hr)
 rt_public void trace_event_dbg_dword (char* mesg,DWORD dw)
 {
   FILE *out;
-  dbg_msg_displayed_index = dbg_msg_displayed_index + 1;
   LOCK_DEBUG_OUTPUT_ACCESS;
+  dbg_msg_displayed_index = dbg_msg_displayed_index + 1;
   out=fopen("eif_debugger.out","a+");
-  fprintf(out,"%d:%d - %s %d \n",
+  fprintf(out,"%d:%d - <%d>%s %d \n",
 		  			dbg_msg_displayed_index, 
 		  			GetCurrentThreadId(),
+					dbg_state, 
 					mesg,
 					dw
 					);
@@ -252,10 +254,8 @@ rt_private UINT once_enter_ec_cb;
 */
 
 rt_private void dbg_close_estudio_thread_handle () {
- 	HANDLE thread_hdl;
-	thread_hdl = estudio_thread_handle;
-	DBGTRACE_HR("[ES] CloseHandle of thread : handle = ", (HRESULT)thread_hdl);	/*D*/
-	CloseHandle (thread_hdl);
+	DBGTRACE_HR("[ES] CloseHandle of thread : handle = ", (HRESULT)estudio_thread_handle);	
+	CloseHandle (estudio_thread_handle);
 }
 
 rt_public void dbg_init_estudio_thread_handle () {
@@ -281,21 +281,16 @@ rt_public void dbg_init_estudio_thread_handle () {
 	CHECK(fSuccess == 0, "Ensure: DuplicateHandle failed !!")
 }
 
-
 rt_private void dbg_suspend_estudio_thread () {
 	DWORD result;
- 	HANDLE thread_hdl;
-	thread_hdl = estudio_thread_handle;
-	result = SuspendThread (thread_hdl);
+	result = SuspendThread (estudio_thread_handle);
 }
 
 rt_private void dbg_resume_estudio_thread () {
 	DWORD result;
- 	HANDLE thread_hdl;
-	thread_hdl = estudio_thread_handle;
-	result = ResumeThread (thread_hdl);
+	result = ResumeThread (estudio_thread_handle);
 }
-
+#define DBG_INIT_CRITICAL_SECTION	dbg_init_critical_section ()
 #define DBG_INIT_ESTUDIO_THREAD_HANDLE dbg_init_estudio_thread_handle ()
 #define DBG_CLOSE_ESTUDIO_THREAD_HANDLE dbg_close_estudio_thread_handle ()
 #define DBG_SUSPEND_ESTUDIO_THREAD dbg_suspend_estudio_thread ()
@@ -331,14 +326,14 @@ rt_public void dbg_init_synchro () {
 }
 rt_public void dbg_terminate_synchro () {
 	/* Terminate synchronisation */
-	DBGTRACE("[Synchro|ES] Terminate Synchro : start");					/*D*/
+	DBGTRACE("[Synchro|ES] Terminate Synchro : start");
 	CHECK (dbg_timer != 0, "Require: timer = 0 (OFF)")
 	dbg_keep_synchro = 0;
 	InterlockedExchange (&dbg_state, 2); /* Release dbg in case dbg is waiting and stucked */
 	//FIXME: we should not close the THREAD HANDLE since callback will need it 
 	// to suspend or resume
 	//DBG_CLOSE_ESTUDIO_THREAD_HANDLE;
-	DBGTRACE("[Synchro|ES] Terminate Synchro: done");					/*D*/
+	DBGTRACE("[Synchro|ES] Terminate Synchro: done");
 #ifdef DBGTRACE_ENABLED
 	CLI_MUTEX_DESTROY(trace_mutex, "");
 #endif
@@ -378,7 +373,7 @@ rt_public EIF_INTEGER dbg_continue (void* icdc, BOOL a_f_is_out_of_band) {
 		dbg_start_timer();
 	}
 	hr = ((ICorDebugController*)icdc)->Continue (a_f_is_out_of_band);
-	DBGTRACE_HR("[???] ICorDebugController->Continue(false) = ", (HRESULT)hr); /*D*/
+	DBGTRACE_HR("[???] ICorDebugController->Continue(false) = ", (HRESULT)hr);
 	return hr;
 }
 
@@ -402,17 +397,17 @@ rt_public void dbg_start_timer () {
 	CHECK (dbg_timer != 0, "Require: timer = 0 (OFF)")
 	CHECK ( OUTSIDE_ESTUDIO_THREAD, "timer started in callback thread !! BAD")
 	CHECK (dbg_estudio_notification_processing == true, "Require: dbg_estudio_notification_processing = false (OFF)")
-	DBGTRACE("[???] START timer");											/*D*/
+	DBGTRACE("[???] START timer");
 //	dbg_reset_dbg_state (0);
-#ifdef DBGTRACE_ENABLED														/*D*/
-	once_enter_ec_cb = 0;													/*D*/
-	once_enter_cb = 0;														/*D*/
-#endif																		/*D*/
+#ifdef DBGTRACE_ENABLED
+	once_enter_ec_cb = 0;
+	once_enter_cb = 0;
+#endif
 	dbg_start_timer_requested = false;
 	dbg_timer = SetTimer (NULL, 0 /* ignored with HWnd NULL */, 
 			10 /* millisecond */, (TIMERPROC) dbg_timer_callback);
 
-	DBGTRACE_DWORD("[???] timer started = ", dbg_timer);							/*D*/
+	DBGTRACE_DWORD("[???] timer started = ", dbg_timer);
 	CHECK (dbg_timer == 0, "Could not create dbg_timer")
 }
 
@@ -420,14 +415,14 @@ rt_public void dbg_stop_timer () {
 	/* Stop synchro Timer */
 	BOOL hr;
 	CHECK (dbg_timer == 0, "Require: timer /= 0 (ON)")
-	DBGTRACE("[???] STOP timer");											/*D*/
+	DBGTRACE("[???] STOP timer");
 	hr = KillTimer (NULL, dbg_timer);
 	dbg_timer = 0;
 
-#ifdef DBGTRACE_ENABLED														/*D*/
-	once_enter_ec_cb = 0;													/*D*/
-	once_enter_cb = 0;														/*D*/
-#endif																		/*D*/
+#ifdef DBGTRACE_ENABLED
+	once_enter_ec_cb = 0;
+	once_enter_cb = 0;
+#endif
 
 	CHECK (hr == 0, "Could not kill dbg_timer")
 }
@@ -440,7 +435,7 @@ rt_public void dbg_restore_cb_notification_state () {
 	 * termination. This will avoid unexpected dbg_start_timer ()
 	 * 
 	 */
-	DBGTRACE("[???] restore cb notification state");						/*D*/
+	DBGTRACE("[???] restore cb notification state");
 	CHECK (dbg_state != 5, "Require: end of evaluation processing")
 	dbg_reset_dbg_state (4);
 }
@@ -451,58 +446,53 @@ rt_public void dbg_restore_cb_notification_state () {
 ///////////////////////////////////////////////////////////
 */
 rt_public void CALLBACK dbg_timer_callback (HWND hwnd, UINT uMsg, UINT idEvent, DWORD dwTime) {
-	DBGTRACE("[ES] enter timer action");								/*D*/
+	DBGTRACE("[ES] enter timer action");
 	if (InterlockedExchangeAdd (&dbg_state, 0) != 1) {
 //<not 1>---------------------------------------------------------//
-#ifdef DBGTRACE_ENABLED														/*D*/
-		if (once_enter_ec_cb == 0) {										/*D*/
-			DBGTRACE("[ES] waiting for callback event");					/*D*/
-			once_enter_ec_cb = (once_enter_ec_cb + 1) % 100;				/*D*/
-		}																	/*D*/
-#endif																		/*D*/
+#ifdef DBGTRACE_ENABLED
+		if (once_enter_ec_cb == 0) {
+			DBGTRACE("[ES] waiting for callback event");
+			once_enter_ec_cb = (once_enter_ec_cb + 1) % 100;
+		}
+#endif
 		return;
 	} else {
 //<1>---< dbg waiting >------------------------------------------//
 		dbg_stop_timer ();
-		InterlockedIncrement (&dbg_state);
-		DBGTRACE("[ES] give hand to dbg and wait to be suspended");			/*D*/
-		if (InterlockedExchangeAdd (&dbg_state, 0) == 2) {
-			DBG_SUSPEND_ESTUDIO_THREAD;
-		}
+		DBGTRACE("[ES] will give hand to dbg and SUSPEND itself");
 //<2>---< give hand to dbg >-------------------------------------//
-		while (InterlockedExchangeAdd (&dbg_state, 0) == 2) {
-//			give time to Dbg's thread to suspend EC's thread			
-		}
+		InterlockedIncrement (&dbg_state);
+		DBG_SUSPEND_ESTUDIO_THREAD;
 //<4>------------------------------------------------------------//
-		DBGTRACE("[Synchro|ES] Notify EC : START");							/*D*/
+		DBGTRACE("[Synchro|ES] Notify EC : START");
 		DBG_NOTIFY_ESTUDIO;
-		DBGTRACE("[Synchro|ES] Notify EC : END");							/*D*/ 
+		DBGTRACE("[Synchro|ES] Notify EC : END");
 
 		if (InterlockedExchangeAdd (&dbg_state, 0) == 4) {
-			DBGTRACE("[ES] exit timer action and unlock dbg ");				/*D*/
+			DBGTRACE("[ES] exit timer action and unlock dbg ");
 			InterlockedIncrement (&dbg_state);
 			if (dbg_keep_synchro == 1) {
 				dbg_reset_dbg_state (0);
 				if (dbg_start_timer_requested) {
 					dbg_start_timer ();
 				}
-#ifdef DBGTRACE_ENABLED														/*D*/
+#ifdef DBGTRACE_ENABLED
 				else {
-					DBGTRACE("[ES] start timer Not Requested !!");			/*D*/
+					DBGTRACE("[ES] start timer Not Requested !!");
 				}
 #endif
 			}
-#ifdef DBGTRACE_ENABLED														/*D*/
-			else {															/*D*/
-				DBGTRACE("[ES] exit timer callback WITHOUT continue synchro !!");			/*D*/
-			}																/*D*/
-#endif																		/*D*/
+#ifdef DBGTRACE_ENABLED
+			else {
+				DBGTRACE("[ES] exit timer callback WITHOUT continue synchro !!");
+			}
+#endif
 		} // Otherwise, this means an eval forced the priority
-#ifdef DBGTRACE_ENABLED														/*D*/
-		else {																/*D*/
-			DBGTRACE("[ES] exit timer callback WITHOUT unlocking dbg, already done !!");	/*D*/
-		}																	/*D*/
-#endif																		/*D*/
+#ifdef DBGTRACE_ENABLED
+		else {
+			DBGTRACE("[ES] exit timer callback WITHOUT unlocking dbg, already done !!");
+		}
+#endif
 	}
 }
 
@@ -517,21 +507,21 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 	dbg_last_callback_id = CB_NONE;
 
 	/*** Local  ***/
-#ifdef DBGTRACE_ENABLED														/*D*/
-	UINT once_enter; 														/*D*/
+#ifdef DBGTRACE_ENABLED
+	UINT once_enter;
 #endif
 	BOOL eval_callback_proceed;
 	/*** Require  ***/
 	CHECK (dbg_timer != 0, "Require : Timer should be disable in this context (evaluating)")
 	/*** Do  ***/
 
-	DBGTRACE("[ES::Eval] START evaluation");								/*D*/
+	DBGTRACE("[ES::Eval] START evaluation");
 
 	if (InterlockedExchangeAdd (&dbg_state, 0) == 4) {
 		// We are in notification processing
 		// we need evaluation functionalities
 		// so we force the priority and overtake the estudio unlocking
-		DBGTRACE("[ES::Eval] estudio into NOTIFY, eval forced, then estudio will end right away");	/*D*/
+		DBGTRACE("[ES::Eval] estudio into NOTIFY, eval forced, then estudio will end right away");
 		InterlockedIncrement (&dbg_state);
 	}
 
@@ -542,27 +532,27 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 
 	// Process the evaluation :
 	hr = ((ICorDebugController*)icdc)->Continue (false);
-	DBGTRACE_HR("[ES::Eval] Start effective evaluation: ICorDebugController->Continue(false) = ", (HRESULT)hr); /*D*/
+	DBGTRACE_HR("[ES::Eval] Start effective evaluation: ICorDebugController->Continue(false) = ", (HRESULT)hr);
 	if (hr < 0) { eval_callback_proceed = true; }
 
 	while (!eval_callback_proceed) {
 		// While we haven't reach "eval callback", and proceed it 
 
-#ifdef DBGTRACE_ENABLED														/*D*/
-		once_enter = 0; 													/*D*/
+#ifdef DBGTRACE_ENABLED
+		once_enter = 0;
 #endif
 		while (InterlockedExchangeAdd (&dbg_state, 0) != 1) {
-#ifdef DBGTRACE_ENABLED														/*D*/
-			if (once_enter == 0) {											/*D*/
-				DBGTRACE("[ES::Eval] waiting for callback (s=1)");			/*D*/
-				once_enter = (once_enter + 1) % 500;						/*D*/
-			}																/*D*/
+#ifdef DBGTRACE_ENABLED
+			if (once_enter == 0) {
+				DBGTRACE("[ES::Eval] waiting for callback (s=1)");
+				once_enter = (once_enter + 1) % 500;
+			}
 #endif
 			Sleep (1);
 		}
 		
-		// now check if last callback is about evaluating
-		// only now, after synchronized with debugger, otherwise we may missed one
+		/* now check if last callback is about evaluating
+		 * only now, after synchronized with debugger, otherwise we may missed one */
 		DBGTRACE2("[ES::Eval] LastCallback = ", Callback_name(dbg_last_callback_id));
 		switch (dbg_last_callback_id) {
 			case CB_EVAL_COMPLETE:
@@ -580,35 +570,23 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 				eval_callback_proceed = true;
 				DBGTRACE("[ES::Eval] Exception Callback Occured ");
 				break;
-//			case CB_BREAKPOINT:
-//			case CB_STEP_COMPLETE:
-//				eval_callback_proceed = false;
-//				hr = ((ICorDebugController*)icdc)->Continue (false);
-//				DBGTRACE_HR("[ES::Eval] Stopping Events Occured : ICorDebugController->Continue(false) = ", (HRESULT)hr); /*D*/
-//				break;
 			default:
 				eval_callback_proceed = false;
-				DBGTRACE_HR("[ES::Eval] Callback Events Occured (non stopping since evaluation)", (HRESULT)hr); /*D*/
+				DBGTRACE_HR("[ES::Eval] Callback Events Occured (non stopping since evaluation)", (HRESULT)hr);
 				break;
 		}
-		// if eval callback occured, we must exit after this loop 
-		// but we need to do this at least once
+		/* if eval callback occured, we must exit after this loop 
+		 * but we need to do this at least once */
 
-		DBGTRACE("[ES::Eval] call back arrived, dbg waiting");				/*D*/
+		DBGTRACE("[ES::Eval] will give hand to dbg and SUSPEND itself");
 		InterlockedIncrement (&dbg_state);
-
-		if (InterlockedExchangeAdd (&dbg_state, 0) == 2) {
-			DBG_SUSPEND_ESTUDIO_THREAD;
-		}
-		while (InterlockedExchangeAdd (&dbg_state, 0) == 2) {
-		// give time to Dbg's thread to suspend EC's thread			
-		}
-		// EC's thread has been suspended And resumed by dbg's thread
-		DBGTRACE("[ES::Eval] call back finished");							/*D*/
+		DBG_SUSPEND_ESTUDIO_THREAD;
+		/* EC's thread has been suspended And resumed by dbg's thread */
+		DBGTRACE("[ES::Eval] call back finished");
 		InterlockedIncrement (&dbg_state);
-		DBGTRACE("[ES::Eval] eval finished");								/*D*/
+		DBGTRACE("[ES::Eval] eval finished");
 	}
-	DBGTRACE("[ES::Eval] LAST CALLBACK = EVAL Done !!!");					/*D*/
+	DBGTRACE("[ES::Eval] LAST CALLBACK = EVAL Done !!!");
 
 	/*** Ensure ***/
 	CHECK (!eval_callback_proceed, "Ensure : Last callback should be about evaluating")
@@ -622,12 +600,12 @@ rt_public void dbg_lock_and_wait_callback (void* icdc) {
 */
 rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 	dbg_last_callback_id = callback_id;
-	DBGTRACE2("[CB] ENTER CALLBACK = ", Callback_name(callback_id));					/*D*/
-	// It is not possible to have 2 callbacks at the same time, 
-	// since it is supposed to be in the same thread ...
-#ifdef DBGTRACE_ENABLED															/*D*/
-	once_enter_cb = 0;															/*D*/
-#endif																			/*D*/
+	DBGTRACE2("[CB] ENTER CALLBACK = ", Callback_name(callback_id));
+	/* It is not possible to have 2 callbacks at the same time, 
+	 * since it is supposed to be in the same thread ...  */
+#ifdef DBGTRACE_ENABLED
+	once_enter_cb = 0;
+#endif
 	while (InterlockedExchangeAdd (&dbg_state, 0) == 4) {
 //<4>---< wait for ec to finish >--------------------------------//
 		if (callback_id == CB_CREATE_PROCESS) {
@@ -635,25 +613,25 @@ rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 				 * to refresh itself before starting debugging. */
 			Sleep (100);
 		}
-#ifdef DBGTRACE_ENABLED															/*D*/
-		if (once_enter_cb == 0) {												/*D*/
-			DBGTRACE("1.5 - [CB] wait at entrance door");						/*D*/
-			once_enter_cb = (once_enter_cb + 1) % 500;							/*D*/
-		}																		/*D*/
-#endif																			/*D*/
+#ifdef DBGTRACE_ENABLED
+		if (once_enter_cb == 0) {
+			DBGTRACE("1.5 - [CB] wait at entrance door");
+			once_enter_cb = (once_enter_cb + 1) % 500;
+		}
+#endif
 	}
 	// we set it again, in case this is unset by dbg_stop_timer
 	// Let's tell the timer we are ready
-	DBGTRACE("2 - [CB] enter dbg callback");									/*D*/
+	DBGTRACE("2 - [CB] enter dbg callback");
 	InterlockedExchange (&dbg_state, 1);
 //<1>---< give hand to ec >--------------------------------------//
-	DBGTRACE("3 - [CB] now s=1, it is ec's turn");								/*D*/
-#ifdef DBGTRACE_ENABLED															/*D*/
-	once_enter_cb = 0;															/*D*/
-#endif																			/*D*/
+	DBGTRACE("3 - [CB] now s=1, it is ec's turn");
+#ifdef DBGTRACE_ENABLED
+	once_enter_cb = 0;
+#endif
 	if (dbg_keep_synchro == 0) { /* We are terminating debugging .. */
 		InterlockedExchange (&dbg_state, 2);
-		DBGTRACE("3.3 - [CB] now s=2, we by pass ec's turn, because dbg_keep_synchro == 0");	/*D*/
+		DBGTRACE("3.3 - [CB] now s=2, we by pass ec's turn, because dbg_keep_synchro == 0");
 	} else {
 		while (InterlockedExchangeAdd (&dbg_state, 0) == 1) {
 //<1>---< wait for ec to finish >--------------------------------//
@@ -664,31 +642,35 @@ rt_public void dbg_debugger_before_callback (Callback_ids callback_id) {
 			}
 			// Dbg wait for the Ec to call back
 			// no sleep for a spinlock (active waiting)
-#ifdef DBGTRACE_ENABLED																/*D*/
-			if (once_enter_cb == 0) {												/*D*/
-				DBGTRACE("3.5 - [CB] wait at entrance door");						/*D*/
-				once_enter_cb = (once_enter_cb + 1) % 500;							/*D*/
-			}																		/*D*/
-#endif																				/*D*/
+#ifdef DBGTRACE_ENABLED
+			if (once_enter_cb == 0) {
+				DBGTRACE("3.5 - [CB] wait at entrance door");
+				once_enter_cb = (once_enter_cb + 1) % 500;
+			}
+#endif
 		}
 	}
-	DBG_SUSPEND_ESTUDIO_THREAD;
+//	DBG_SUSPEND_ESTUDIO_THREAD;
 //<2>---< ec waiting >-------------------------------------------//
 	InterlockedIncrement (&dbg_state);
 //<3>---< ec waiting >-------------------------------------------//
-	DBGTRACE2("5 - [CB] start exec callback :", Callback_name(callback_id));	/*D*/
+	DBGTRACE2("5 - [CB] start exec callback :", Callback_name(callback_id));
 	// Executing callback code
 	// and then come back by dbg_debugger_after_callback ...
 }
 
 rt_public void dbg_debugger_after_callback (Callback_ids callback_id) {
 //<3>---< come back from callback >------------------------------//
-	DBGTRACE2("6 - [CB] end exec callback : ", Callback_name(callback_id));	/*D*/
+	DBGTRACE2("6 - [CB] end exec callback : ", Callback_name(callback_id));
 //<4>---< give back the hand to ec >-----------------------------//
 	InterlockedIncrement (&dbg_state);
-	DBGTRACE2("7 - [CB] EXIT CALLBACK = ", Callback_name(callback_id));					/*D*/
+	DBGTRACE("7 - [CB] RESUME ES");
 	DBG_RESUME_ESTUDIO_THREAD;
-	DBG_RESUME_ESTUDIO_THREAD; /* Called twice since it is suspended twice */
+
+//	DBG_RESUME_ESTUDIO_THREAD; 
+	/* Called twice since it is suspended twice */
+
+	DBGTRACE2("8 - [CB] EXIT CALLBACK = ", Callback_name(callback_id));
 	// Callback done
 }
 

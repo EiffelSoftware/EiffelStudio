@@ -380,6 +380,7 @@ feature -- Duplication
 		do
 			create tmp_tree.make (other.item)
 			if not other.is_leaf then tree_copy (other, tmp_tree) end
+			standard_copy (tmp_tree)
 		end
 
 feature {BINARY_TREE} -- Implementation

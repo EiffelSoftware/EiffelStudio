@@ -79,11 +79,8 @@ feature -- Initialization
 		end
 
 	create_empty_editor is
-		local
-			tool: COMMAND_TOOL_TOP_SHELL
 		do
-			tool := window_mgr.command_tool
-			window_mgr.display (tool)	
+			window_mgr.display (window_mgr.command_tool)	
 		end
 
 	set_empty_symbol is

@@ -135,7 +135,7 @@ feature -- Element change
 			internal_background_color := a_color.twin
 		end
 		
-feature {EV_GRID_I} -- Implementation
+feature {EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 
 	set_parent_grid_i (a_parent_grid_i: EV_GRID_I) is
 			-- Set `parent_grid_i' to `a_parent_grid_i'

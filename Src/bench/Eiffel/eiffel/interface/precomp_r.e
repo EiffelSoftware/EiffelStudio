@@ -15,7 +15,7 @@ inherit
 	COMPILER_EXPORTER;
 	SHARED_EIFFEL_PROJECT;
 	SHARED_WORKBENCH;
-	SHARED_RESOURCES
+	SHARED_CONFIGURE_RESOURCES
 
 feature
 
@@ -94,9 +94,8 @@ feature
 				Error_handler.raise_error
 			end
 		rescue
-			if
-				Rescue_status.is_unexpected_exception and then
-				not Resources.get_boolean (r_Fail_on_rescue, False)
+			if Rescue_status.is_unexpected_exception and then
+				not fail_on_rescue
 			then
 				retried := True;
 				retry
@@ -248,7 +247,7 @@ feature {NONE} -- Implementation
 		rescue
 			if
 				Rescue_status.is_unexpected_exception and then
-				not Resources.get_boolean (r_Fail_on_rescue, False)
+				not fail_on_rescue
 			then
 				retried := True;
 				retry
@@ -322,7 +321,7 @@ feature {NONE} -- Implementation
 		rescue
 			if
 				Rescue_status.is_unexpected_exception and then
-				not Resources.get_boolean (r_Fail_on_rescue, False)
+				not fail_on_rescue
 			then
 				retried := True;
 				retry

@@ -25,12 +25,11 @@
 #define ccom_decimal_subtract(_ptr_, _ptr_2,_ptr_3) VarDecSub(_ptr_,_ptr_2,_ptr_3)
 #define ccom_decimal_multiply(_ptr_, _ptr_2,_ptr_3) VarDecMul(_ptr_,_ptr_2,_ptr_3)
 #define ccom_decimal_add(_ptr_, _ptr_2,_ptr_3) VarDecAdd(_ptr_,_ptr_2,_ptr_3)
-#define ccom_decimal_divide(_ptr_, _ptr_2, _ptr_3) VarDecDiv(_ptr_, _ptr_2, _ptr_3) 
+#define ccom_decimal_divide(_ptr_, _ptr_2, _ptr_3) VarDecDiv(_ptr_, _ptr_2, _ptr_3)
+#define ccom_decimal_scale(_ptr_) ((EIF_INTEGER) (_ptr_)->scale)
 
 void ccom_decimal_value_zero (DECIMAL * a_value);
 
 void ccom_decimal_value_one (DECIMAL * a_value);
-
-EIF_REFERENCE ccom_decimal_convert_to_eiffel_decimal (DECIMAL * a_value);
 
 #endif // !__ECOM_E_DECIMAL_H_INC__

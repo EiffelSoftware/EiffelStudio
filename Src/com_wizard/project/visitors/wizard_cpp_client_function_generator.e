@@ -182,8 +182,11 @@ feature {NONE} -- Implementation
 								return_value.append (Space_open_parenthesis)
 								return_value.append (Tmp_clause)
 								return_value.append (arguments.item.name)
-								return_value.append (Comma_space)
-								return_value.append (Null)
+
+								if visitor.writable then
+									return_value.append (Comma_space)
+									return_value.append (Null)
+								end
 								return_value.append (Close_parenthesis)	
 							end
 

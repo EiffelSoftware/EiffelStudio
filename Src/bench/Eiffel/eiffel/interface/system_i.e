@@ -2126,7 +2126,30 @@ end;
 			rout_table.write;
 		end;
 
+feature -- Dispose routine
+
+	memory_dispose_id: INTEGER is
+			-- Memory dispose routine id from class MEMORY. 
+			-- Return 0 if the MEMORY class has not been compiled.
+			--! (Assumed memory must have a dispose routine
+			--! called "dispose" - DINOV).
+		require
+			checked_desc: memory_descendants /= Void
+		local
+			feature_i: FEATURE_I;
+		once
+			if memory_class /= Void then
+				feature_i :=
+				memory_class.feature_table.item ("dispose");
+				if feature_i /= Void then
+					Result := feature_i.rout_id_set.first;
+				end;
+			end
+		end;
+
     memory_class: CLASS_C is
+			-- MEMORY class of system. Void if it has
+			-- not been compiled.
         local
             nbr, i: INTEGER;
 			class_c: CLASS_C
@@ -2156,6 +2179,7 @@ end;
         end;
  
     formulate_mem_descendants (c: CLASS_C; desc: LINKED_LIST [CLASS_C]) is
+			-- Formulate descendants of class MEMORY. 
         local
             descendants: LINKED_LIST [CLASS_C];
             d: CLASS_C
@@ -2207,6 +2231,8 @@ end;
 			end;
 			rout_table.write;
 		end;
+
+feature -- Plug and Makefile file
 
 	generate_plug is
 			-- Generate plug with run-time
@@ -2300,10 +2326,10 @@ end;
 			Plug_file.putint (arr_type_id - 1);
 			Plug_file.putstring (";%N");
 
-				--	Dynmaic type of class MEMORY (if compiled) 
-			Plug_file.putstring ("int mem_dtype = ");
+				-- Dispose routine id from class MEMORY (if compiled) 
+			Plug_file.putstring ("int32 disp_rout_id = ");
 			if memory_class /= Void then
-				Plug_file.putint (memory_class.types.first.type_id - 1);
+				Plug_file.putint (memory_dispose_id);
 			else
 				Plug_file.putstring ("-1");
 			end;

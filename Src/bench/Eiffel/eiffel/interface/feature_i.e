@@ -220,7 +220,12 @@ feature -- Incrementality
 						and then
 						export_status.same_as (other.export_status)
 						and then
-						same_signature (other);
+						same_signature (other)
+						and then
+						has_precondition = other.has_precondition 
+						and then
+						has_postcondition = other.has_postcondition
+
 		end;
 
 	select_table_equiv (other: FEATURE_I): BOOLEAN is

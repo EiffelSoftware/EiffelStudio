@@ -207,7 +207,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (0)
 
-			-- EIF_INTEGER = some_element_counts [dim_count];
+			-- EIF_INTEGER  some_element_counts [dim_count];
 			--                               value of ^
 
 			Result.append (Tab)
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (0)
 
-			-- EIF_INTEGER = some_element_counts [dim_count];
+			-- EIF_INTEGER some_element_counts [dim_count];
 			--                               value of ^
 
 			Result.append (Tab)
@@ -332,15 +332,23 @@ feature {NONE} -- Implementation
 			Result.append (Eif_object)
 			Result.append (Space)
 			Result.append ("result")
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Comma)
 			Result.append (Space)
 			Result.append ("intermediate_array")
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Comma)
 			Result.append (Space)
 			Result.append ("eif_lower_indeces")
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Comma)
 			Result.append (Space)
 			Result.append ("eif_element_count")
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
@@ -349,9 +357,15 @@ feature {NONE} -- Implementation
 			Result.append (Eif_type_id)
 			Result.append (Space)
 			Result.append ("type_id")
+			Result.append (Space_equal_space)
+			Result.append (Minus)
+			Result.append (One)
 			Result.append (Comma)
 			Result.append (Space)
 			Result.append ("int_array_id")
+			Result.append (Space_equal_space)
+			Result.append (Minus)
+			Result.append (One)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
@@ -360,9 +374,13 @@ feature {NONE} -- Implementation
 			Result.append (Eif_procedure)
 			Result.append (Space)
 			Result.append ("make")
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Comma)
 			Result.append (Space)
 			Result.append ("put")
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
@@ -381,6 +399,8 @@ feature {NONE} -- Implementation
 			Result.append (Asterisk)
 			Result.append (Space)
 			Result.append ("lower_indeces")
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
@@ -394,6 +414,8 @@ feature {NONE} -- Implementation
 				Result.append (Space)
 			end
 			Result.append ("an_array_element")
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line)
 			Result.append (New_line_tab)
@@ -1138,6 +1160,8 @@ feature {NONE} -- Implementation
 			Result.append (Eif_object)
 			Result.append (Space)
 			Result.append (Eif_array)
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 			
@@ -1146,6 +1170,9 @@ feature {NONE} -- Implementation
 			Result.append (Eif_type_id)
 			Result.append (Space)
 			Result.append (Type_id)
+			Result.append (Space_equal_space)
+			Result.append (Minus)
+			Result.append (One)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 			
@@ -1154,6 +1181,8 @@ feature {NONE} -- Implementation
 			Result.append (Eif_reference_function)
 			Result.append (Space)
 			Result.append (Item_clause)
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 			
@@ -1162,6 +1191,8 @@ feature {NONE} -- Implementation
 			Result.append (Eif_integer_function)
 			Result.append (Space)
 			Result.append (Count_word)
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 			
@@ -1171,6 +1202,8 @@ feature {NONE} -- Implementation
 			Result.append (Asterisk)
 			Result.append (Space)
 			Result.append (Array_word)
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 			

@@ -363,19 +363,24 @@ feature {NONE} -- Implementation
 			create Result.make (0)
 			Result.append (Tab)
 
-			-- EIF_TYPE_ID type_id;
+			-- EIF_TYPE_ID type_id = -1;
 
 			Result.append (Eif_type_id)
 			Result.append (Space)
 			Result.append ("type_id")
+			Result.append (Space_equal_space)
+			Result.append (Minus)
+			Result.append (One)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- EIF_PROCEDURE set_item;
+			-- EIF_PROCEDURE set_item = o;
 
 			Result.append (Eif_procedure)
 			Result.append (Space)
 			Result.append ("set_item")
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
@@ -385,8 +390,16 @@ feature {NONE} -- Implementation
 			Result.append (Eif_object)
 			Result.append (Space)
 			Result.append (C_result)
-			Result.append (Comma_space)
+			Result.append (Space_equal_space)
+			Result.append (Zero)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+
+			Result.append (Eif_object)
+			Result.append (Space)
 			Result.append ("tmp_object")
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line)
 			Result.append (New_line_tab)
@@ -648,15 +661,17 @@ feature {NONE} -- Implementation
 			create Result.make (0)
 			Result.append (Tab)
 
-			-- EIF_OBJECT eif_object;
+			-- EIF_OBJECT eif_object = 0;
 
 			Result.append (Eif_object)
 			Result.append (Space)
 			Result.append (Eif_object_variable)
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- element_c_type * result;
+			-- element_c_type * result = 0;
 			-- value of ^
 			--
 
@@ -665,6 +680,8 @@ feature {NONE} -- Implementation
 			Result.append (Asterisk)
 			Result.append (Space)
 			Result.append ("result")
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line)
 			Result.append (New_line_tab)
@@ -801,11 +818,13 @@ feature {NONE} -- Implementation
 			create Result.make (0)
 			Result.append (Tab)
 
-			-- EIF_OBJECT eif_object;
+			-- EIF_OBJECT eif_object = 0;
 
 			Result.append (Eif_object)
 			Result.append (Space)
 			Result.append ("eif_object")
+			Result.append (Space_equal_space)
+			Result.append (Zero)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 

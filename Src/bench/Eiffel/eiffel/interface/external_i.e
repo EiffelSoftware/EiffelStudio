@@ -190,6 +190,7 @@ feature
 			Result.set_external_name (external_name);
 			Result.set_encapsulated (encapsulated);
 			Result.set_feature_id (feature_id)
+			Result.set_include_list (include_list)
 		end;
 
 	replicated: FEATURE_I is

@@ -142,7 +142,7 @@ feature {NONE} -- Implementation
 			-- interface in the window, and hence need to build the contents
 			-- of the frame differently.
 		require else
-			main_box_empty: main_box.count=0
+			main_box_empty: main_box.count = 0
 		local
 			title_white_box: EV_HORIZONTAL_BOX	-- Box where is displayed the state title and an icon (white bkgroud).
 			horizontal_separator: EV_HORIZONTAL_SEPARATOR

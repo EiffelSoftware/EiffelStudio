@@ -15,6 +15,10 @@ A:hover {
     FONT-STYLE: italic;
 }
 
+.neclass {
+    COLOR: darkmagenta;
+}
+
 .ekeyword {
     COLOR: blue;
     FONT-WEIGHT: bold;
@@ -48,6 +52,10 @@ A:hover {
     FONT-STYLE: italic;
 }
 
+.nefeature {
+    COLOR: darkslategray;
+}
+
 .ecomment {
     COLOR: red;
     FONT: 91% "Courier New", serif;
@@ -77,6 +85,12 @@ A:hover {
 
 .ecluster {
     COLOR: navy;
+    FONT-VARIANT: small-caps;
+    FONT-WEIGHT: bold;
+}
+
+.necluster {
+    COLOR: black;
     FONT-VARIANT: small-caps;
     FONT-WEIGHT: bold;
 }

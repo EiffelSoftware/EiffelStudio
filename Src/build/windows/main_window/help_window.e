@@ -31,7 +31,7 @@ feature -- Geometry
 
 feature {HELP_WINDOW}
 
-	text: EV_TEXT
+	text: EV_RICH_TEXT
 
 	help_hole: HELP_WINDOW_HOLE
 
@@ -72,7 +72,7 @@ feature -- Initialization
 			set_close_callback (Void)
 			create cmd.make (~close)
 			exit_tool_entry.add_select_command (cmd, Void)
-			create cmd.make (~exit_build)
+			create cmd.make (main_window~close)
 			exit_entry.add_select_command (cmd, Void)
 
 			create cmd.make (~update_text)

@@ -75,7 +75,7 @@ void eif_call_finish_freezing(EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
 		enomem();
 	sprintf (cmd, "%s\\bench\\spec\\", eiffel_dir);
 	strcat (cmd, eif_getenv("PLATFORM"));
-	strcat (cmd, "\\bin\\es4sh.exe");
+	strcat (cmd, "\\bin\\finish_freezing.exe");
 
 #ifdef EIF_WIN32
 	memset (&siStartInfo, 0, sizeof(STARTUPINFO));
@@ -120,7 +120,7 @@ void eif_call_finish_freezing(EIF_OBJ c_code_dir, EIF_OBJ freeze_cmd_name)
 		enomem();
 	sprintf (cmd, "%s\\bench\\spec\\", eiffel_dir);
 	strcat (cmd, eif_getenv("PLATFORM"));
-    strcat (cmd, "\\bin\\es4sh.exe");
+    strcat (cmd, "\\bin\\finish_freezing.exe");
     rc = DosExecPgm(LoadError,           /* Object name buffer           */
                     sizeof(LoadError),   /* Length of object name buffer */
 					EXEC_ASYNC, 		  /* Asynchronous/Trace flags	  */

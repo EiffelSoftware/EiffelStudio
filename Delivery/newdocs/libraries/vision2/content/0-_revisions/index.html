@@ -21,6 +21,7 @@
 			<b>Interface modifications</b></p>
 		<ul class="circle">
 			<li><b>EV_ENVIRONMENT</b> - Added `fonts' which returns a list of all fonts available on the system.</li>
+			<li><b>EV_TEXT</b> - Weakened a number of preconditions that required a non empty final line, which was unecessary. Removed the obsolete feature `put_new_line' and made `last_line_not_empty' obsolete as it is unecessary and can be queried via `line'.</li>
 			<li><b>EV_RICH_TEXT</b> - New class, providing a text control with support for character formatting and colors on a character by character basis. Supporting classes EV_CHARACTER_FORMAT and EV_CHARACTER_FORMAT_EFFECTS added.</li>
 				<li><b>EV_APPLICATION</b> - Added `captured_widget' which returns the EV_WIDGET currently captured in the system, or `Void' if none.
 	

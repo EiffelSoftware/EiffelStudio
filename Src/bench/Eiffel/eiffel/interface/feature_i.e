@@ -1881,13 +1881,20 @@ feature -- PS
 feature -- Debugging
 
 	is_debuggable: BOOLEAN is
+		local
+			wc: CLASS_C
 		do
-			Result := (not is_external)
+			if (not is_external)
 				and then (not is_attribute)
 				and then (not is_constant)
 				and then (not is_deferred)
 				and then (not is_unique)
-				and then (written_class.has_types)
+			then
+				wc := written_class;
+				Result := (not wc.is_basic)
+					and then (not wc.is_special)
+					and then (wc.has_types)
+			end
 		end;
 
 	debuggables: LINKED_LIST [DEBUGGABLE] is
@@ -1996,7 +2003,7 @@ feature -- Debugging
 			--| In the latter case, the new real body id is kept
 			--| in DEBUGGABLE objects.
 		require
-			is_debuggable: valid_body_id
+			valid_body_id: valid_body_id
 		local
 			du: DISPATCH_UNIT;
 			class_type: CLASS_TYPE;
@@ -2020,7 +2027,14 @@ feature -- Debugging
 			-- Indeed, if an external has to be encapsulated (macro, signature)
 			-- an EXECUTION_UNIT is created instead of an EXT_EXECUTION_UNIT
 		do
-			Result := is_debuggable or else (is_constant and is_once);
+			Result := (	(not is_external)
+						and then (not is_attribute)
+						and then (not is_constant)
+						and then (not is_deferred)
+						and then (not is_unique)
+						and then written_class.has_types)
+				or else
+					(is_constant and is_once);
 		end;
 
 feature -- Didier stuff

@@ -6526,8 +6526,10 @@ lngpad_2='LNGPAD(2)'
 #Check value for next 4
 inttypes_include=''
 eif_integer_64_display='"lld"'
+eif_natural_64_display='"llu"'
 eif_pointer_display='"X"'
 eif_integer_64_constant='CAT2(x,LL)'
+d_uint64_to_real='define'
 
 #File system
 nofile='$nofile'

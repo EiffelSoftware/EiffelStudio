@@ -23,7 +23,7 @@ cdd %TEMP%\dotnet_wizard
 copy %EIFFEL_SRC%\help\wizards\wizard.ico .
 copy %EIFFEL_SRC%\help\wizards\wizard.rc .
 cdd %TEMP%\dotnet_wizard\EIFGEN\F_Code
-%EIFFEL5%\bench\spec\windows\bin\finish_freezing -silent
+%ISE_EIFFEL%\bench\spec\windows\bin\finish_freezing -silent
 echo -----------------------------------------------------------------
 echo ------- Compress generated executable file ----------------------
 echo -----------------------------------------------------------------

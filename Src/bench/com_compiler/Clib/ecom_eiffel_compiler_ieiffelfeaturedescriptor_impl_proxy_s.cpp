@@ -236,8 +236,8 @@ void ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_feature_loc
 	};
 	BSTR * tmp_file_path = 0;
 	tmp_file_path = (BSTR *)grt_ec_Eif_compiler.ccom_ec_pointed_cell_61 (eif_access (file_path), NULL);
-	LONG * tmp_line_number = 0;
-	tmp_line_number = (LONG *)rt_ec.ccom_ec_pointed_long (eif_access (line_number), NULL);
+	ULONG * tmp_line_number = 0;
+	tmp_line_number = (ULONG *)rt_ec.ccom_ec_pointed_unsigned_long (eif_access (line_number), NULL);
 	
 	hr = p_IEiffelFeatureDescriptor->feature_location(tmp_file_path,tmp_line_number);
 	if (FAILED (hr))
@@ -247,7 +247,7 @@ void ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_proxy::ccom_feature_loc
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	grt_ce_Eif_compiler.ccom_ce_pointed_cell_61 ((BSTR *)tmp_file_path, file_path);
-	rt_ce.ccom_ce_pointed_long ((LONG *)tmp_line_number, line_number);
+	rt_ce.ccom_ce_pointed_unsigned_long ((ULONG *)tmp_line_number, line_number);
 	
 	grt_ce_Eif_compiler.ccom_free_memory_pointed_61 (tmp_file_path);
 grt_ce_Eif_compiler.ccom_free_memory_pointed_62 (tmp_line_number);

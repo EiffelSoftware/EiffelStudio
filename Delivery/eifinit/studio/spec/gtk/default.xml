@@ -438,6 +438,7 @@
 			<TEXT>development_window__show_project_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>development_window__show_general_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>development_window__show_text_in_general_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Show only one tool (Features, Clusters, Search, Windows) at a time">development_window__left_panel_use_explorer_style<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT>feature_clause_order<LIST_STRING>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST_STRING></TEXT>
 		</TOPIC>
 		<TOPIC TOPIC_ID="Feature_tool_preferences" ICON="icon_preferences_folder">

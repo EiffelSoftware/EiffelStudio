@@ -2,18 +2,18 @@ indexing
 	description: "Table of consumed types for a given assembly"
 
 class
-	CONSUMED_ASSEMBLY_INFO
+	CONSUMED_ASSEMBLY_TYPES
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (count: INTEGER) is
 			-- Create name arrays.
 		do
-			create eiffel_names.make (1, 1024)
-			create dotnet_names.make (1, 1024)
+			create eiffel_names.make (1, count)
+			create dotnet_names.make (1, count)
 		end
 		
 feature -- Access
@@ -38,11 +38,11 @@ feature -- Element Settings
 			valid_eiffel_name: not en.is_empty
 		do
 			index := index + 1
-			eiffel_names.force (en, index)
-			dotnet_names.force (dn, index)
+			eiffel_names.put (en, index)
+			dotnet_names.put (dn, index)
 		ensure
 			eiffel_name_inserted: eiffel_names.item (eiffel_names.count) = en
 			dotnet_name_inserted: dotnet_names.item (dotnet_names.count) = dn
 		end
 
-end -- class CONSUMED_ASSEMBLY_INFO
+end -- class CONSUMED_ASSEMBLY_TYPES

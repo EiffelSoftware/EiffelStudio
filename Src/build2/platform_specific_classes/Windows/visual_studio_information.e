@@ -33,8 +33,7 @@ feature -- Access
 		end
 		
 	is_visual_studio_wizard: BOOLEAN is
-			-- Has Build been launched from
-			-- VisualStudio in Wizard mode?
+			-- Has Build been launched from			-- VisualStudio in Wizard mode?
 			-- This is a Once, as it will
 			-- never change during the execution of
 			-- the system.

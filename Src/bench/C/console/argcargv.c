@@ -8,14 +8,20 @@
 
 	Also the cleanup processing is held in this file.
 */
-#include <windows.h>
 #include <dos.h>
-
 #include <stdio.h>
+#include <windows.h>
 
-extern char ** shword(char *);
-extern shfree(char **);
+#include "argcargv.h"
+#include "except.h"		/* For `eraise' */
+
+extern int main();		/* Main entry point */
 extern int eif_wmain (int, char**, char **);
+
+#define EIF_CLEANUP_TABLE_SIZE 20		/* Clean up table size */
+
+EIF_CLEANUP eif_fn_table [EIF_CLEANUP_TABLE_SIZE];
+int eif_fn_count = 0;
 
 HANDLE ghInstance;
 HINSTANCE eif_hInstance;
@@ -24,7 +30,6 @@ LPSTR     eif_lpCmdLine;
 int       eif_nCmdShow;
 
 static char **argv = NULL, *t = NULL;
-
 
 APIENTRY WinMain(HANDLE hInstance, HANDLE hPrevInstance, 
     LPSTR lpCmdLine, int nCmdShow)
@@ -53,21 +58,14 @@ APIENTRY WinMain(HANDLE hInstance, HANDLE hPrevInstance,
 	argv = shword (t);
 	for (argc = 0; argv[argc] != (char *) 0; argc++)
 		;       
-	environ = GetEnvironmentStrings();
+	environ = (char **) GetEnvironmentStrings();
 
 	main(argc, argv, environ);
     
-	FreeEnvironmentStrings (environ);
+	FreeEnvironmentStrings ((LPTSTR) environ);
 
 	return ret;
 }
-
-typedef void (* EIF_CLEANUP)();
-
-#define EIF_CLEANUP_TABLE_SIZE 20
-
-EIF_CLEANUP eif_fn_table [EIF_CLEANUP_TABLE_SIZE];
-int eif_fn_count = 0;
 
 void eif_cleanup()
 /*
@@ -98,6 +96,6 @@ void eif_register_cleanup(EIF_CLEANUP f)
 		eraise ("Cleanup table overflow");
 
 	eif_fn_table [eif_fn_count] = f;
-	eif_fn_count ++;
+	eif_fn_count++;
 }
 

@@ -51,9 +51,16 @@ feature {NONE} -- Initialization
 
 			-- Creating the gtk scrolled window
 
-			set_c_object (C.gtk_scrolled_window_new (Default_pointer, Default_pointer))
+			set_c_object (
+				C.gtk_scrolled_window_new (
+					Default_pointer, 
+					Default_pointer
+				)
+			)
 			C.gtk_scrolled_window_set_policy (
-				c_object, C.GTK_POLICY_AUTOMATIC_ENUM, C.GTK_POLICY_AUTOMATIC_ENUM
+				c_object,
+				C.GTK_POLICY_AUTOMATIC_ENUM,
+				C.GTK_POLICY_AUTOMATIC_ENUM
 			)
 			create ev_children.make (0)
 		end
@@ -71,12 +78,14 @@ feature {NONE} -- Initialization
 			signal_connect ("select_row", ~select_callback)
 			signal_connect ("unselect_row", ~deselect_callback)
 
-			--| FIXME IEK  Click column needs special attention in marshal feature
 			signal_connect ("click_column", ~column_click_callback)
 			c_object := temp_c_object
 
 			if rows_height > 0 then
-				C.gtk_clist_set_row_height (list_widget, rows_height)
+				C.gtk_clist_set_row_height (
+					list_widget,
+					rows_height
+				)		
 			end
 
 			C.gtk_widget_show (list_widget)
@@ -89,7 +98,11 @@ feature {NONE} -- Initialization
 			until
 				i = a_columns
 			loop
-				C.gtk_clist_set_column_width (list_widget, i, 80)
+				C.gtk_clist_set_column_width (
+					list_widget,
+					i,
+					80
+				)
 				i := i + 1
 			end
 			show_title_row
@@ -107,7 +120,6 @@ feature {NONE} -- Initialization
 			a_position: INTEGER
 		do
 			temp_int ?= int.item (1)
-				-- Row position from gtk is zero based so increment.
 			a_position := temp_int.item + 1
 
 			interface.i_th (a_position).deselect_actions.call ([])
@@ -150,13 +162,17 @@ feature -- Access
 			an_index: INTEGER
 		do
 			if (list_widget /= Default_pointer and
-				C.c_gtk_clist_selection_length (list_widget) = 0 ) then
+			C.c_gtk_clist_selection_length (list_widget) = 0 ) then
 					-- there is no selected item
 				Result := Void
 			elseif list_widget /= Default_pointer then
 					-- there is one selected item
-				an_index := C.c_gtk_clist_ith_selected_item (list_widget, 0)
-				Result ?= (ev_children @ (an_index + 1)).interface
+				an_index := C.c_gtk_clist_ith_selected_item (
+					list_widget,
+					0
+				)		
+				Result ?= 
+					(ev_children @ (an_index + 1)).interface
 			end
 		end
 
@@ -173,7 +189,8 @@ feature -- Access
 			row: EV_MULTI_COLUMN_LIST_ROW
 		do
 			if list_widget /= Default_pointer then
-				upper := C.c_gtk_clist_selection_length (list_widget)
+				upper := 
+				C.c_gtk_clist_selection_length (list_widget)
 			end
 			create Result.make
 			from
@@ -229,12 +246,13 @@ feature -- Status report
 			end
 		end
 
-	is_multiple_selection: BOOLEAN is
+	multiple_selection_enabled: BOOLEAN is
 			-- True if the user can choose several items
 			-- False otherwise
 		do
 			if list_widget /= Default_pointer then
-				Result := (C.c_gtk_clist_selection_mode (list_widget) = C.GTK_SELECTION_MULTIPLE_ENUM)
+				Result := (C.c_gtk_clist_selection_mode (list_widget) 
+					= C.GTK_SELECTION_MULTIPLE_ENUM)
 			end
 		end
 
@@ -274,20 +292,25 @@ feature -- Status setting
 			C.gtk_clist_column_titles_hide (list_widget)
 		end
 
-	set_multiple_selection is
+	enable_multiple_selection is
 			-- Allow the user to do a multiple selection simply
 			-- by clicking on several choices.
 			-- For constants, see EV_GTK_CONSTANTS
 		do
-			C.gtk_clist_set_selection_mode (list_widget, C.GTK_SELECTION_MULTIPLE_ENUM)
+			C.gtk_clist_set_selection_mode (
+				list_widget, C.GTK_SELECTION_MULTIPLE_ENUM
+			)	
 		end
 
-	set_single_selection is
+	disable_multiple_selection is
 			-- Allow the user to do only one selection. It is the
 			-- default status of the list.
 			-- For constants, see EV_GTK_CONSTANTS
 		do
-			C.gtk_clist_set_selection_mode (list_widget, C.GTK_SELECTION_SINGLE_ENUM)
+			C.gtk_clist_set_selection_mode (
+				list_widget,
+				C.GTK_SELECTION_SINGLE_ENUM
+			)	
 		end
 
 	set_column_alignment (type: INTEGER; column: INTEGER) is
@@ -461,7 +484,11 @@ feature {NONE} -- Implementation
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
 			item_imp ?= v.implementation
-			C.gtk_clist_row_move (list_widget, item_imp.index - 1, a_position - 1)
+			C.gtk_clist_row_move (
+				list_widget,
+				item_imp.index - 1,
+				a_position - 1
+			)	
 		end
 
 	gtk_reorder_child (a_container, a_child: POINTER; a_position: INTEGER) is
@@ -501,13 +528,16 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!---------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/03/02 21:41:26  king
+--| Renamed selection features to account for interface name change
+--|
 --| Revision 1.31  2000/02/24 01:50:03  king
 --| Removed redundant command association routines
 --|
@@ -524,7 +554,8 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --| released
 --|
 --| Revision 1.26  2000/02/18 22:26:02  king
---| Added callback features to call action sequences so zero arg of PROCEDURE is of type EV_MULTI_COLUMN_LIST_IMP
+--| Added callback features to call action sequences so zero arg of PROCEDURE
+--| is of type EV_MULTI_COLUMN_LIST_IMP
 --|
 --| Revision 1.25  2000/02/18 18:37:46  king
 --| Removed redundant command association commands

@@ -34,6 +34,10 @@
           <li>Fixed incorrect Ace file specification for EiffelVision2 examples 
           and wizards on Unix platforms where application could be linked 
           dynamically with `libpng' but should not.</li>
+          <li>Fixed disappearance of EiffelStudio when debugging a routine 
+          `infix' or `prefix' in which an exception was raised. This issue was 
+          only occurring with melted code (usually noticeable when using a 
+          precompiled library).</li>
         </ul>
 		<h2>Compiler</h2>
         <ul>
@@ -43,6 +47,15 @@
         </ul>
 		<h2>Debugger</h2>
 		<h2>Libraries</h2>
+        <h3>CECIL</h3>
+        <ul>
+          <li>Enforced definition of EIF_OBJECT so that it is different from 
+          EIF_REFERENCE to better catch errors when passing a protected 
+          reference to a feature accepting an unprotected reference and vice 
+          versa. Because of this change some C code might not compile anymore 
+          which is good as it points out that code was doing something wrong 
+          that could corrupt the Eiffel memory.</li>
+        </ul>
         <h3>EiffelBase</h3>
         <ul>
           <li>Added in <span class="eclass">INTERNAL</span> the following new features: 
@@ -87,10 +100,16 @@
 		<span class="efeature">print</span> (<span class="efeature">equal</span> (b, a))
 	<span class="ekeyword">end</span>
 </pre><li>
-          &nbsp;</ul>
+          Fixed  .NET implementation of <span class="efeature">open_write</span> and <span class="efeature">create_read_write</span> 
+          in <span class="eclass">FILE</span>. They 
+          were not resetting the file size to zero if file already existed.</ul>
         <h3>Eiffel2Java</h3>
         <ul>
           <li>Updated library so that it works both in classic and dotnet mode.</li>
+        </ul>
+        <h3>EiffelCOM</h3>
+        <ul>
+          <li>Fixed crash in ccom_set_name from FONT_IMPL_PROXY.</li>
         </ul>
         <h3>EiffelNet</h3>
         <ul>

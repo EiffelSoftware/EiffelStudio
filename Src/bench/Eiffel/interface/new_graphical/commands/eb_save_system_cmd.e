@@ -82,7 +82,7 @@ feature -- Execution
 				tmp_file.open_write
 				if not to_write.empty then
 					to_write.prune_all ('%R')
-					if general_resources.text_mode.value.is_equal ("UNIX") then
+					if text_mode.is_equal ("UNIX") then
 						tmp_file.putstring (to_write)
 						if to_write.item (to_write.count) /= '%N' then 
 							-- Add a carriage return like `vi' if there's none at the end 
@@ -108,7 +108,7 @@ feature -- Execution
 					Eiffel_ace.set_file_name (file_name)
 				end
 				tool.text_window.disable_clicking
-				if tool.stone /= Void and then system_resources.parse_ace_after_saving.actual_value then
+				if tool.stone /= Void and then parse_ace_after_saving then
 					if tool.parse_file then
 						tool.synchronise_stone
 					end

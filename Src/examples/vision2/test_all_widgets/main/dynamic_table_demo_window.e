@@ -1,0 +1,80 @@
+indexing
+
+	description:
+		"";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class
+	DYNAMIC_TABLE_DEMO_WINDOW
+
+inherit
+
+	DEMO_WINDOW
+		redefine
+			main_widget,
+			set_widgets,
+			set_values
+		end
+
+creation
+
+	make
+
+feature -- Access
+
+	main_widget: EV_DYNAMIC_TABLE is
+		once
+			!!Result.make (Current)
+			Result.set_row_layout
+			Result.set_finite_dimension (2)
+		end
+	
+feature -- Access
+	
+	button: EV_BUTTON
+
+feature -- Status setting
+	
+	set_widgets is
+		do
+			!!button.make_with_text (main_widget, "Element 1")
+			!!button.make_with_text (main_widget, "Element 2")
+			!!button.make_with_text (main_widget, "Element 3")
+			!!button.make_with_text (main_widget, "Element 4")
+			!!button.make_with_text (main_widget, "Element 5")
+			!!button.make_with_text (main_widget, "Element 6")
+			!!button.make_with_text (main_widget, "Element 7")
+			!!button.make_with_text (main_widget, "Element 8")
+			!!button.make_with_text (main_widget, "Element 9")
+			!!button.make_with_text (main_widget, "Element 10")
+			!!button.make_with_text (main_widget, "Element 11")
+		end
+	
+feature -- Status setting
+	
+	set_values is
+		do
+			set_title ("Dynamic table demo")
+			main_widget.set_homogeneous (True)
+			main_widget.set_row_spacing (5)
+			main_widget.set_column_spacing (5)
+		end
+
+end -- class DYNAMIC_TABLE_DEMO_WINDOW
+
+--|----------------------------------------------------------------
+--| EiffelVision: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

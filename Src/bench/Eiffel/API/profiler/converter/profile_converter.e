@@ -291,8 +291,8 @@ debug("PROFILE_CONVERT")
 end;
 						class_id := function_name.substring (function_name.substring_index (" from ", 1) + 6, function_name.count).to_integer;
 						if
-							project_initialized and then
-							system_defined and then
+							Eiffel_project.initialized and then
+							Eiffel_project.system_defined and then
 							Eiffel_system.valid_dynamic_id (class_id + 1)
 						then
 							eclass := Eiffel_system.class_of_dynamic_id (class_id + 1);

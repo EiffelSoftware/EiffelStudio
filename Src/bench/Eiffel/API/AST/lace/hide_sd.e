@@ -4,18 +4,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision $"
 
-class HIDE_SD
+class
+	HIDE_SD
 
 inherit
-
 	OPTION_SD
 
 feature -- Properties
 
-	option_name: STRING is
-		once
-			Result := "hide"
-		end;
+	option_name: STRING is "hide"
 
 feature {COMPILER_EXPORTER}
 

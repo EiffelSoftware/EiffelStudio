@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"";
-	date: "$Date$";
+	description: ""
+	date: "$Date$"
 	revision: "$Revision $"
 
-class REQUIRE_SD
+class
+	REQUIRE_SD
 
 inherit
-
 	OPT_VAL_SD
 		redefine
 			is_require
@@ -16,10 +14,7 @@ inherit
 
 feature -- Properties
 
-	is_require: BOOLEAN is
+	is_require: BOOLEAN is True
 			-- Is the option value `require' ?
-		do
-			Result := True;
-		end
 
 end -- class REQUIRE_SD

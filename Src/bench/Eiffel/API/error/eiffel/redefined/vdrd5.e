@@ -1,15 +1,13 @@
 indexing
-
-	description: 
-		"Error for non signature-conformance for a redefinition.";
-	date: "$Date$";
+	description: "Error for non signature-conformance for a redefinition."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class VDRD5 
 
 inherit
 
-	SHARED_WORKBENCH;
+	SHARED_WORKBENCH
 	EIFFEL_ERROR
 		redefine
 			build_explain, is_defined
@@ -17,16 +15,13 @@ inherit
 	
 feature -- Properties
 
-	redeclaration: E_FEATURE;
+	redeclaration: E_FEATURE
 			-- Redeclared feature
 
-	precursor_of_redeclaration: E_FEATURE;
+	precursor_of_redeclaration: E_FEATURE
 			-- Precursor of the redeclaration
 
-	code: STRING is
-		do
-			Result := "VDRD"
-		end;
+	code: STRING is "VDRD"
 
 feature -- Access
 
@@ -37,7 +32,7 @@ feature -- Access
 				redeclaration /= Void and then
 				precursor_of_redeclaration /= Void
 		ensure then
-			valid_redeclaration: Result implies redeclaration /= Void;
+			valid_redeclaration: Result implies redeclaration /= Void
 			valid_precursor: Result implies precursor_of_redeclaration /= Void	
 		end
 
@@ -47,22 +42,22 @@ feature -- Output
 			-- Build specific explanation image for current error
 			-- in `st'.
 		local
-			r_class: E_CLASS;
-			p_class: E_CLASS;
+			r_class: E_CLASS
+			p_class: E_CLASS
 		do
-			r_class := redeclaration.written_class;
-			p_class := precursor_of_redeclaration.written_class;
-			st.add_string ("Redefined feature: ");
-			redeclaration.append_signature (st);
-			st.add_string (" From: ");
-			r_class.append_name (st);
-			st.add_new_line;
-			st.add_string ("Precursor: ");
-			precursor_of_redeclaration.append_signature (st);
-			st.add_string (" From: ");
-			p_class.append_name (st);
-			st.add_new_line;
-		end;
+			r_class := redeclaration.written_class
+			p_class := precursor_of_redeclaration.written_class
+			st.add_string ("Redefined feature: ")
+			redeclaration.append_signature (st)
+			st.add_string (" From: ")
+			r_class.append_name (st)
+			st.add_new_line
+			st.add_string ("Precursor: ")
+			precursor_of_redeclaration.append_signature (st)
+			st.add_string (" From: ")
+			p_class.append_name (st)
+			st.add_new_line
+		end
 
 feature {COMPILER_EXPORTER}
 
@@ -70,11 +65,11 @@ feature {COMPILER_EXPORTER}
 			-- Initialization
         require
             good_arguments: not (old_feature = Void or else 
-					new_feature = Void);
+					new_feature = Void)
 		do
 			e_class := System.current_class
-			redeclaration := new_feature.api_feature (new_feature.written_in);
-			precursor_of_redeclaration := old_feature.api_feature (old_feature.written_in);
-		end;
+			redeclaration := new_feature.api_feature (new_feature.written_in)
+			precursor_of_redeclaration := old_feature.api_feature (old_feature.written_in)
+		end
 
 end -- class VDRD5

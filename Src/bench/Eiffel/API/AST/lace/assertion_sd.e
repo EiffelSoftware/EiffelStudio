@@ -17,16 +17,10 @@ inherit
 
 feature -- Properties
 
-	option_name: STRING is
-		once
-			Result := "assertion"
-		end;
+	option_name: STRING is "assertion"
 
-	is_assertion: BOOLEAN is
+	is_assertion: BOOLEAN is True
 			-- Is the option an assertion one ?
-		do
-			Result := True;
-		end;
 
 feature {COMPILER_EXPORTER}
 

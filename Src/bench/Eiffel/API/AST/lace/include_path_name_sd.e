@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"";
-	date: "$Date$";
+	description: ""
+	date: "$Date$"
 	revision: "$Revision $"
 
-class INCLUDE_PATH_NAME_SD
+class
+	INCLUDE_PATH_NAME_SD
 
 inherit
-
 	LANGUAGE_NAME_SD
 		redefine
 			is_include_path
@@ -16,10 +14,7 @@ inherit
 
 feature -- Properties
 
-	is_include_path: BOOLEAN is
+	is_include_path: BOOLEAN is True
 			-- Is the language name "Include_path" ?
-		do
-			Result := True;
-		end
 
 end -- class INCLUDE_PATH_NAME_SD

@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"";
-	date: "$Date$";
+	description: ""
+	date: "$Date$"
 	revision: "$Revision $"
 
-class YES_SD
+class
+	YES_SD
 
 inherit
-
 	YES_OR_NO_SD
 		redefine
 			is_yes
@@ -16,10 +14,7 @@ inherit
 
 feature -- Properties
 
-	is_yes: BOOLEAN is
+	is_yes: BOOLEAN is True
 			-- Is the option value `yes' ?
-		do
-			Result := True;
-		end
 
 end -- class YES_SD 

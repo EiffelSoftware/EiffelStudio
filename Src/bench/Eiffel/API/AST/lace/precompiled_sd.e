@@ -17,10 +17,7 @@ inherit
 
 feature -- Access
 
-	option_name: STRING is
-		once
-			Result := "precompiled"
-		end
+	option_name: STRING is "precompiled"
 
 feature -- Status report
 

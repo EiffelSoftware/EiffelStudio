@@ -17,7 +17,7 @@ feature -- Access
 	Eiffel_ace: E_ACE is
 			-- Eiffel system
 		require
-			initialized: project_initialized
+			initialized: Eiffel_project.initialized
 		once
 			Result := Eiffel_project.ace
 		ensure
@@ -28,8 +28,8 @@ feature -- Access
 	Eiffel_system: E_SYSTEM is
 			-- Eiffel system
 		require
-			initialized: project_initialized
-			defined: system_defined
+			initialized: Eiffel_project.initialized
+			defined: Eiffel_project.system_defined
 		once
 			Result := Eiffel_project.system
 		ensure
@@ -40,26 +40,12 @@ feature -- Access
 	Eiffel_universe: UNIVERSE_I is
 			-- Eiffel project universe
 		require
-			initialized: project_initialized
+			initialized: Eiffel_project.initialized
 		once
 			Result := Eiffel_project.universe
 		ensure
 			result_is_universe: Result = Eiffel_project.universe;
 			result_is_not_void: Result /= Void
-		end;
-
-	project_initialized: BOOLEAN is
-			-- Is the Eiffel project initialized?
-		do
-			Result := Eiffel_project.initialized
-		ensure
-			initialized_means: Result implies Eiffel_project.initialized
-		end
-
-	system_defined: BOOLEAN is
-			-- Is the Ace file parsed?
-		do
-			Result := Eiffel_project.system_defined
 		end;
 
 feature {NONE} -- Implementation

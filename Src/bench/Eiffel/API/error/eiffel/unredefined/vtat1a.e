@@ -1,24 +1,15 @@
 indexing
-
-	description: 
-		"";
-	date: "$Date$";
+	description: ""
+	date: "$Date$"
 	revision: "$Revision $"
 
 class VTAT1A 
 
 inherit
-
-	VTAT1
-		rename
-			build_explain as old_build_explain
-		end;
 	VTAT1
 		redefine
 			build_explain
-		select
-			build_explain
-		end;
+		end
 
 feature -- Properties
 
@@ -29,18 +20,18 @@ feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is
 		do
-			st.add_string ("Anchor name: ");
-			st.add_string (argument_name);
-			st.add_new_line;
-			old_build_explain (st);
-		end;
+			st.add_string ("Anchor name: ")
+			st.add_string (argument_name)
+			st.add_new_line
+			{VTAT1} precursor (st)
+		end
 
 feature {COMPILER_EXPORTER} -- Setting
 
 	set_argument_name (s: STRING) is
 			-- Assign `s' to `argument_name'.
 		do
-			argument_name := s;
-		end;
+			argument_name := s
+		end
 
 end -- class VTAT1A

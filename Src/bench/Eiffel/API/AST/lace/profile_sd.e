@@ -8,25 +8,19 @@ indexing
 class PROFILE_SD
 
 inherit
-
 	OPTION_SD
 		redefine
 			is_profile
-		end;
+		end
+
 	SHARED_OPTION_LEVEL
 
 feature -- Properties
 
-	option_name: STRING is
-		once
-			Result := "profile"
-		end;
+	option_name: STRING is "profile"
 
-	is_profile: BOOLEAN is
+	is_profile: BOOLEAN is True
 			-- Is Current a profile option?
-		do
-			Result := True
-		end
 
 feature {COMPILER_EXPORTER} -- Update
 

@@ -1,50 +1,35 @@
 indexing
-
-	description: 
-		"Actual type for real type.";
-	date: "$Date$";
+	description: "Actual type for real type."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class DOUBLE_A
 
 inherit
-
-	BASIC_A
-		rename
-			internal_conform_to as old_conform_to
-		redefine
-			is_double, associated_class, same_as,
-			is_numeric, heaviest, associated_eclass
-		end;
 	BASIC_A
 		redefine
 			is_double, associated_class, same_as,
 			is_numeric, heaviest, internal_conform_to,
 			associated_eclass
-		select
-			internal_conform_to
 		end
 
 feature -- Property
 
-	is_double: BOOLEAN is
+	is_double: BOOLEAN is True
 			-- Is the current type a double type ?
-		do
-			Result := True;
-		end;
 
 feature -- Access
 
 	associated_eclass: E_CLASS is
 			-- Associated eiffel class
 		once
-			Result := System.double_class.compiled_eclass;
-		end;
+			Result := System.double_class.compiled_eclass
+		end
 
 	same_as (other: TYPE_A): BOOLEAN is
 			-- Is the current type the same as `other' ?
 		do
-			Result := other.is_double;
+			Result := other.is_double
 		end
 
 feature {COMPILER_EXPORTER}
@@ -53,37 +38,34 @@ feature {COMPILER_EXPORTER}
 			-- Does `other' conform to Current ?
 		do
 			if in_generics then
-				Result := other.is_double;
+				Result := other.is_double
 			else
-				Result := old_conform_to (other, False) or else
+				Result := {BASIC_A} precursor (other, False) or else
 				other.actual_type.is_real
-			end;
-		end;
+			end
+		end
 
-	is_numeric: BOOLEAN is
+	is_numeric: BOOLEAN is True
 			-- Is the current type a numeric type ?
-		do
-			Result := True;
-		end;
 
 	heaviest (type: TYPE_A): TYPE_A is
 			-- Heaviest numeric type for balancing rule
 		do	
 			Result := Current
-		end;
+		end
 
 	type_i: DOUBLE_I is
 			-- C type
 		once
-			Result := Double_c_type;
-		end;
+			Result := Double_c_type
+		end
 
 	associated_class: CLASS_C is
 			-- Class DOUBLE
 		require else
 			double_class_compiled: System.double_class.compiled
 		once
-			Result := System.double_class.compiled_class;
-		end;
+			Result := System.double_class.compiled_class
+		end
 
 end -- class DOUBLE_A

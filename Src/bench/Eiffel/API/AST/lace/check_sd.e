@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"";
-	date: "$Date$";
+	description: ""
+	date: "$Date$"
 	revision: "$Revision $"
 
-class CHECK_SD
+class
+	CHECK_SD
 
 inherit
-
 	OPT_VAL_SD
 		redefine
 			is_check
@@ -16,10 +14,7 @@ inherit
 
 feature -- Properties
 
-	is_check: BOOLEAN is
+	is_check: BOOLEAN is True
 			-- Is the option value `check' ?
-		do
-			Result := True;
-		end
 
 end -- class CHECK_SD

@@ -1,23 +1,20 @@
 indexing
- 
-	description:
-		"Class identifiers.";
-	date: "$Date$";
+	description: "Class identifiers."
+	date: "$Date$"
 	revision: "$Revision $"
 
-class CLASS_ID
+class
+	CLASS_ID
 
 inherit
-
 	COMPILER_ID
 		export
-			{COMPILER_EXPORTER} all;
-			{ANY} is_equal;
+			{COMPILER_EXPORTER} all
+			{ANY} is_equal
 			{CLASS_C_SERVER} internal_id, compilation_id
 		end
 
 creation
-
 	make
 
 feature -- Access
@@ -26,7 +23,7 @@ feature -- Access
 			-- Is the Id valid (i.e is it within the array class range)?
 		do
 			Result := internal_id > 0 and then internal_id <= class_array.count
-		end;
+		end
 
 	associated_eclass: E_CLASS is
 			-- Class associated with current id
@@ -45,8 +42,7 @@ feature {COMPILER_EXPORTER} -- Access
 			if System.in_final_mode then
 				Result := id // System.makefile_generator.Packet_number + 1
 			else
-				Result :=
-					internal_id // System.makefile_generator.Packet_number + 1
+				Result := internal_id // System.makefile_generator.Packet_number + 1
 			end
 		end
 
@@ -54,8 +50,8 @@ feature {COMPILER_EXPORTER} -- Access
 			-- Textual representation of class id
 			-- used in generated C code
 		do
-			!! Result.make (5);
-			Result.append_integer (id);
+			!! Result.make (5)
+			Result.append_integer (id)
 		ensure
 			generated_id_not_void: Result /= Void
 		end
@@ -86,7 +82,7 @@ feature {NONE} -- Implementation
 	class_array: ARRAY [CLASS_C] is
 			-- Classes compiled during compilation `compilation_id'
 		once
-			Result := System.project_classes
+			Result := System.classes.item (Normal_compilation)
 		end
 
 end -- class CLASS_ID

@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"";
-	date: "$Date$";
+	description: ""
+	date: "$Date$"
 	revision: "$Revision $"
 
-class NAME_SD
+class
+	NAME_SD
 
 inherit
-
 	OPT_VAL_SD
 		redefine
 			is_name
@@ -16,10 +14,7 @@ inherit
 
 feature -- Properties
 
-	is_name: BOOLEAN is
+	is_name: BOOLEAN is True
 			-- is the option value a name option ?
-		do
-			Result := True;
-		end
 
 end -- class NAME_SD

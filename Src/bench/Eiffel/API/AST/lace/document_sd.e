@@ -13,10 +13,7 @@ inherit
 
 feature -- Properties
 
-	option_name: STRING is
-		once
-			Result := "document"
-		end;
+	option_name: STRING is "document"
 
 feature {COMPILER_EXPORTER}
 

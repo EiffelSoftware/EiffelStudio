@@ -17,7 +17,7 @@ feature -- Properties
 			-- Path to the universe/system description
 		do
 			Result := Lace.file_name
-		end;
+		end
 
 	ace_options: ACE_OPTIONS is
 			-- Option explicitly set in the Ace file
@@ -31,19 +31,19 @@ feature -- Access
 			-- Has the date changed for the lace file
 		do
 			Result := Lace.date_has_changed
-		end;
+		end
 
 	ast: ACE_SD is
 			-- Ace AST description 
 		do
 			Result := Lace.root_ast
-		end;
+		end
 
 	successful: BOOLEAN is
 			-- Was the last compilation of the Ace file successful?
 		do
 			Result := Lace.successful
-		end;
+		end
 
 	text: STRING is
 			-- Text of the Lace file.
@@ -53,14 +53,14 @@ feature -- Access
 		local
 			a_file: RAW_FILE
 		do
-			!! a_file.make (file_name);
+			!! a_file.make (file_name)
 			if a_file.exists and then a_file.is_readable then
-				a_file.open_read;
-				a_file.readstream (a_file.count);
-				a_file.close;
+				a_file.open_read
+				a_file.readstream (a_file.count)
+				a_file.close
 				Result := clone (a_file.laststring)
 			end
-		end;
+		end
 
 	click_list: CLICK_LIST is
 			-- Click list for the lace file
@@ -72,7 +72,7 @@ feature -- Access
 			then
 				Result := Lace.root_ast.click_list
 			end
-		end;
+		end
 
 	valid_file_name (f_name: STRING): BOOLEAN is
 			-- Is `f_name' a valid file name (i.e
@@ -91,12 +91,11 @@ feature -- Setting
 	set_file_name (f_name: STRING) is
 			-- Set lace_file_name to `f_name'.
 		require
-			valid_f_name_if_not_void: f_name /= Void implies
-						valid_file_name (f_name)
+			valid_f_name_if_not_void: f_name /= Void implies valid_file_name (f_name)
 		do
 			Lace.set_file_name (f_name)
 		ensure
 			file_name_set: equal (f_name, file_name)
-		end;
+		end
 
 end -- class E_ACE

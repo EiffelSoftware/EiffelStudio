@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"";
-	date: "$Date$";
+	description: ""
+	date: "$Date$"
 	revision: "$Revision $"
 
-class ALL_SD
+class
+	ALL_SD
 
 inherit
-
 	OPT_VAL_SD
 		redefine
 			is_all
@@ -16,10 +14,7 @@ inherit
 
 feature -- Properties
 
-	is_all: BOOLEAN is
+	is_all: BOOLEAN is True
 			-- Is the option value `all' ?
-		do
-			Result := True;
-		end;
 
 end -- class ALL_SD

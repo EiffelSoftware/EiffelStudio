@@ -1,14 +1,12 @@
 indexing
-
-	description: 
-		"";
-	date: "$Date$";
+	description: ""
+	date: "$Date$"
 	revision: "$Revision $"
 
-class LOOP_SD
+class
+	LOOP_SD
 
 inherit
-
 	OPT_VAL_SD
 		redefine
 			is_loop
@@ -16,10 +14,7 @@ inherit
 
 feature -- Properties
 
-	is_loop: BOOLEAN is
-			-- is the option value `loop' ?
-		do
-			Result := True;
-		end
+	is_loop: BOOLEAN is True
+			-- Is the option value `loop' ?
 
 end -- class LOOP_SD

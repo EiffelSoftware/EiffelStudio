@@ -27,6 +27,7 @@ creation
 feature -- Access
 
 	hwnd: POINTER is
+			-- Window which has received the message
 		require
 			exists: exists
 		do
@@ -34,6 +35,7 @@ feature -- Access
 		end
 
 	message: INTEGER is
+			-- Message identifier
 		require
 			exists: exists
 		do
@@ -41,6 +43,7 @@ feature -- Access
 		end
 
 	wparam: INTEGER is
+			-- Additional information about `message'
 		require
 			exists: exists
 		do
@@ -48,6 +51,7 @@ feature -- Access
 		end
 
 	lparam: INTEGER is
+			-- Additional information about `message'
 		require
 			exists: exists
 		do
@@ -155,6 +159,15 @@ feature -- Basic operations
 		do
 			last_boolean_result :=
 				cwin_is_dialog_message (dialog.item, item)
+		end
+
+	process_dialog_message (dialog: POINTER) is
+			-- Process a dialog message for `dialog'.
+		require
+			exists: exists
+		do
+			last_boolean_result :=
+				cwin_is_dialog_message (dialog, item)
 		end
 
 feature {WEL_STRUCTURE} -- Measurement

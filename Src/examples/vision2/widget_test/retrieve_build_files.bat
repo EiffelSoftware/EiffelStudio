@@ -33,6 +33,7 @@ XCOPY /Y Src\Build2\utilities\gb_general_utilities.e .\interface
 XCOPY /Y Src\Build2\utilities\gb_widget_utilities.e .\interface
 XCOPY /Y Src\Build2\utilities\ordered_string_handler.e .\interface
 XCOPY /Y Src\Build2\main\gb_supported_events.e .\interface
+XCOPY /Y Src\Build2\utilities\object_default_state_checker.e .\interface
 
 REM Copy icons for different widget types across. The /E option moves the whole directory structure.
 XCOPY /Y /E /I Delivery\build\bitmaps .\bitmaps

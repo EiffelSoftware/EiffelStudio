@@ -42,6 +42,17 @@ inherit
 create
 	make
 
+feature {NONE} -- Dotnet debugger limitation (for now)
+
+	raise_dot_net_warning is
+			-- FIXME jfiat [2003/10/22 - 12:33] Soon to be implemented.
+		local
+			warning_dlg: EB_WARNING_DIALOG
+		do
+			create warning_dlg.make_with_text ("Sorry not yet available for Dotnet debugging")
+			warning_dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
+		end
+
 feature {NONE} -- Initialization
 
 	build_interface is
@@ -205,9 +216,13 @@ feature {NONE} -- Event handling
 		local
 			dlg: EB_EXPRESSION_DEFINITION_DIALOG
 		do
-			create dlg.make
-			dlg.set_callback (agent add_expression (dlg))
-			dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
+			if Application.is_dotnet then -- FIXME jfiat [2003/10/22 - 12:35] 
+				raise_dot_net_warning
+			else
+				create dlg.make
+				dlg.set_callback (agent add_expression (dlg))
+				dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
+			end
 		end
 
 	edit_expression is
@@ -255,12 +270,10 @@ feature {NONE} -- Event handling
 			ost: OBJECT_STONE
 			dlg: EB_EXPRESSION_DEFINITION_DIALOG
 			
-			warning_dlg: EB_WARNING_DIALOG
 		do
 			if Application.is_dotnet then
---| FIXME: JFIAT
-				create warning_dlg.make_with_text ("Sorry not yet available for Dotnet debugging")
-				warning_dlg.show_modal_to_window (Debugger_manager.debugging_window.window)
+					--| FIXME jfiat [2003/10/22 - 12:34]
+				raise_dot_net_warning
 			else
 				ost ?= s
 				if ost /= Void then

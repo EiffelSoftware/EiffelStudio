@@ -8,16 +8,6 @@ indexing
 class FINALIZE_PROJECT 
 
 inherit
-
-	UPDATE_PROJECT
-		rename
-			choose_template as update_project_choose_template,
-			warner_ok as update_project_warner_ok
-		redefine
-			c_code_directory, launch_c_compilation,
-			confirm_and_compile, name, menu_name, accelerator,
-			finalization_error, perform_compilation, license_frequency
-		end;
 	UPDATE_PROJECT
 		rename
 			choose_template as discard_assertions,
@@ -27,9 +17,8 @@ inherit
 			confirm_and_compile, name, menu_name, accelerator,
 			finalization_error, perform_compilation,
 			discard_assertions, keep_assertions, license_frequency
-		select
-			discard_assertions, keep_assertions
-		end;
+		end
+
 	SHARED_ERROR_HANDLER;
  
 creation
@@ -43,7 +32,7 @@ feature -- Callbacks
 			-- This is handled by keep_assertions.
 		do
 			if Eiffel_ace.file_name = Void then
-				update_project_choose_template
+				Precursor {UPDATE_PROJECT}
 			else
 				keep_assertions (Void)
 			end
@@ -54,7 +43,7 @@ feature -- Callbacks
 			-- If the question is answered with discard, it will come to here aswell.
 		do
 			if Eiffel_ace.file_name = Void then
-				update_project_warner_ok (argument)
+				Precursor {UPDATE_PROJECT} (argument)
 			elseif not assert_confirmed then
 				if argument = Void then
 						-- Called from `discard_assertions' after help button

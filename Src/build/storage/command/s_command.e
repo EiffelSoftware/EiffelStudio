@@ -100,6 +100,9 @@ feature
 				new_text := eiffel_text;
 			end;
 			c.storage_init (args, labs, new_text, p, in, visual_name);
+			if p /= Void then
+				c.update_inherited_label
+			end;	
 			if not internal_name.is_equal (c.eiffel_type) then
 				update_text (c.eiffel_type, new_text);
 			end;

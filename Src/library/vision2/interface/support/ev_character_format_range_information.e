@@ -22,7 +22,7 @@ create
 	
 feature -- Creation
 
-	make_with_values (family, weight, shape, height, a_color, a_background_color, striked_out, underlined: BOOLEAN) is
+	make_with_values (family, weight, shape, height, a_color, a_background_color, striked_out, underlined, vertical_offset: BOOLEAN) is
 			-- Create `Current' and apply all values to corresponding attributes.
 		do
 			font_family := family
@@ -33,6 +33,7 @@ feature -- Creation
 			background_color := a_background_color
 			effects_striked_out := striked_out
 			effects_underlined := underlined
+			effects_vertical_offset := vertical_offset
 		end
 
 feature -- Access
@@ -60,6 +61,9 @@ feature -- Access
 	
 	effects_underlined: BOOLEAN
 		-- Is underlined effect of font applicable?
+		
+	effects_vertical_offset: BOOLEAN
+		-- Is vertical offset effect of font applicable?
 
 end -- class EV_CHARACTER_FORMAT_INFORMATION
 

@@ -17,7 +17,8 @@ inherit
 			new_cell,
 			cleanup_after_remove,
 			merge_left,
-			merge_right
+			merge_right,
+			wipe_out
 		end
 
 feature {NONE} -- Initialization
@@ -62,6 +63,23 @@ feature -- Element Change
 			Precursor (other)
 		end
 
+feature -- Removal
+
+	wipe_out is
+			-- Remove all items.
+		do
+			from
+				start
+			until
+				after
+			loop
+				consistency_count := consistency_count - 1
+				on_item_removed (item)
+				forth
+			end
+			Precursor
+		end
+
 feature  {LINKED_LIST} -- Implementation
 
 	new_cell (v: like item): like first_element is
@@ -83,8 +101,11 @@ feature  {LINKED_LIST} -- Implementation
 feature {NONE} -- Implementation
 
 	add_all (other: like Current) is
-			-- Call add action sequence for all elements in `other'.
+			-- Call `on_item_added' for all elements in `other'.
+		local
+			cur: CURSOR
 		do
+			cur := other.cursor
 			from
 				other.start
 			until
@@ -92,6 +113,21 @@ feature {NONE} -- Implementation
 			loop
 				consistency_count := consistency_count + 1
 				on_item_added (other.item)
+				other.forth
+			end
+			other.go_to (cur)
+		end
+
+	remove_all (other: like Current) is
+			-- Call `on_item_removed' for all elements in `other'.
+		do
+			from
+				other.start
+			until
+				other.after
+			loop
+				consistency_count := consistency_count - 1
+				on_item_removed (other.item)
 				other.forth
 			end
 		end
@@ -127,6 +163,9 @@ end -- class ACTIVE_LIST
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.2  2000/03/24 16:22:57  brendel
+--| Fixed `wipe_out'.
+--|
 --| Revision 1.1  2000/03/23 16:42:25  brendel
 --| New list that does is designed to inherit from.
 --| One example is now the ACTIVE_LIST.

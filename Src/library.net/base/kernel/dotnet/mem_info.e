@@ -27,6 +27,7 @@ feature -- Initialization
 			total := mem_info (1)
 			used := mem_info (2)
 			overhead := mem_info (3)
+			chunk := mem_info (4)
 		ensure
 			Type_updated: type = memory
 		end
@@ -59,6 +60,8 @@ feature -- Measurement
 			-- Number of bytes used by memory management
 			-- scheme for `type' before last call to `update'
 
+	chunk: INTEGER
+			-- Number of allocated memory chunks.
 
 feature {NONE} -- Implementation
 

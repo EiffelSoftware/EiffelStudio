@@ -21,7 +21,7 @@ static char * information_pixmap_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 4 1",
 /* colors */
-"  c #C0C0C0",
+"  c None",
 "` c #000000",
 "a c #292900",
 "b c #00FFFF",
@@ -66,7 +66,7 @@ static char *error_pixmap_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 17 1",
 /* colors */
-"  c #C0C0C0",
+"  c None",
 "` c #000000",
 "a c #737300",
 "b c #292900",
@@ -124,7 +124,7 @@ static char *question_pixmap_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 24 1",
 /* colors */
-"  c #C0C0C0",
+"  c None",
 "` c #000000",
 "a c #737300",
 "b c #525200",
@@ -189,7 +189,7 @@ static char *warning_pixmap_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "32 32 17 1",
 /* colors */
-"  c #C0C0C0",
+"  c None",
 "` c #000000",
 "a c #A50000",
 "b c #DE0000",
@@ -246,7 +246,7 @@ static char *no_collate_pixmap_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "66 32 3 1",
 /* colors */
-"  c #C0C0C0",
+"  c None",
 "` c #000000",
 "a c #FFFFFF",
 /* pixels */
@@ -289,7 +289,7 @@ static char *collate_pixmap_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "66 32 3 1",
 /* colors */
-"  c #C0C0C0",
+"  c None",
 "` c #000000",
 "a c #FFFFFF",
 /* pixels */
@@ -332,7 +332,7 @@ static char *landscape_pixmap_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "21 21 3 1",
 /* colors */
-"  c #C0C0C0",
+"  c None",
 "` c #000000",
 "a c #FFFFFF",
 /* pixels */
@@ -364,7 +364,7 @@ static char *portrait_pixmap_xpm[] = {
 /* width height ncolors chars_per_pixel */
 "21 21 3 1",
 /* colors */
-"  c #C0C0C0",
+"  c None",
 "` c #000000",
 "a c #FFFFFF",
 /* pixels */
@@ -973,6 +973,9 @@ static char *wait_cursor_xpm[] = {
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.9  2001/10/10 18:00:23  king
+// Reinstated None for transparent colors
+//
 // Revision 1.8  2001/08/24 20:50:08  king
 // Removed unused external
 //

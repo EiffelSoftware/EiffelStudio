@@ -79,87 +79,87 @@ idr.$lib: $(OBJECTS)
 mtidr.$lib: $(MT_OBJECTS)
 	$link_mtline
 
-MTidr_double.obj: idr_double.c
+MTidr_double.$obj: idr_double.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_float.obj: idr_float.c
+MTidr_float.$obj: idr_float.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_array.obj: idr_array.c
+MTidr_array.$obj: idr_array.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_char.obj: idr_char.c
+MTidr_char.$obj: idr_char.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_getpos.obj: idr_getpos.c
+MTidr_getpos.$obj: idr_getpos.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_int.obj: idr_int.c
+MTidr_int.$obj: idr_int.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidrm_dstry.obj: idrm_dstry.c
+MTidrm_dstry.$obj: idrm_dstry.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidrm_creat.obj: idrm_creat.c
+MTidrm_creat.$obj: idrm_creat.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidrf_pos.obj: idrf_pos.c
+MTidrf_pos.$obj: idrf_pos.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidrf_dstry.obj: idrf_dstry.c
+MTidrf_dstry.$obj: idrf_dstry.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidrf_creat.obj: idrf_creat.c
+MTidrf_creat.$obj: idrf_creat.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_write.obj: idr_write.c
+MTidr_write.$obj: idr_write.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_void.obj: idr_void.c
+MTidr_void.$obj: idr_void.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_vector.obj: idr_vector.c
+MTidr_vector.$obj: idr_vector.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_ushort.obj: idr_ushort.c
+MTidr_ushort.$obj: idr_ushort.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_union.obj: idr_union.c
+MTidr_union.$obj: idr_union.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_ulong.obj: idr_ulong.c
+MTidr_ulong.$obj: idr_ulong.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_uint.obj: idr_uint.c
+MTidr_uint.$obj: idr_uint.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_uchar.obj: idr_uchar.c
+MTidr_uchar.$obj: idr_uchar.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_string.obj: idr_string.c
+MTidr_string.$obj: idr_string.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_stack.obj: idr_stack.c
+MTidr_stack.$obj: idr_stack.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_size.obj: idr_size.c
+MTidr_size.$obj: idr_size.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_short.obj: idr_short.c
+MTidr_short.$obj: idr_short.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_setpos.obj: idr_setpos.c
+MTidr_setpos.$obj: idr_setpos.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_read.obj: idr_read.c
+MTidr_read.$obj: idr_read.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_poly.obj: idr_poly.c
+MTidr_poly.$obj: idr_poly.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_opaque.obj: idr_opaque.c
+MTidr_opaque.$obj: idr_opaque.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 
-MTidr_long.obj: idr_long.c
+MTidr_long.$obj: idr_long.c
 	$(CC) -c $(JMTCFLAGS)  	$? $(OUTPUT_CMD)$@
 

@@ -4,7 +4,7 @@ CFLAGS= -W1 -nologo -Ox -I$(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\include
 LN = copy
 MAKE = make
 RANLIB = echo
-RM = del
+RM = -del
 
 SOURCES =  $(LSRCS)
 OBJECTS =  $(OBJS) $(WOBJS)
@@ -22,7 +22,7 @@ OBJS = \
 	network.obj network_r.obj hostname.obj syncpoll.obj storable.obj
 
 clean:
-	del *.obj
+	-del *.obj
 
 net.lib: $(OBJS)
 	$(RM) $@

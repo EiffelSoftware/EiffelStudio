@@ -53,6 +53,13 @@ inherit
 			{NONE} all
 		end
 
+	SHARED_BYTE_CONTEXT
+		rename
+			context as byte_context
+		export
+			{NONE} all
+		end
+		
 	PREFIX_INFIX_NAMES
 		export
 			{NONE} all
@@ -1039,6 +1046,7 @@ feature {NONE} -- Implementation
 			dv: ABSTRACT_DEBUG_VALUE
 			addr: STRING
 			at: TYPE_A
+			l_class_type: CLASS_TYPE
 		do
 			addr := o_addr
 			if addr = Void then
@@ -1046,7 +1054,8 @@ feature {NONE} -- Implementation
 			end
 			f := sf.ancestor_version (dtype)
 			if f = Void then
-				error_message := "No descendant of feature " + sf.name + " in class " + dtype.name_in_upper
+				error_message := "No descendant of feature " + sf.name +
+					" in class " + dtype.name_in_upper
 			elseif f.associated_feature_i.is_once and f.type /= Void then
 				evaluate_once (f)
 			elseif f.is_attribute then
@@ -1086,34 +1095,69 @@ feature {NONE} -- Implementation
 					loop
 						at := f.arguments.i_th (parameters.index).actual_type
 						if
-							at.associated_class /= Void and then not parameters.item.final_result_type.simple_conform_to (
-								at.associated_class
-							)
+							at.associated_class /= Void and then
+							not parameters.item.final_result_type.simple_conform_to (
+								at.associated_class)
 						then
 							error_message := "Invalid parameter: " + parameters.item.expression +
-											" (Class " + parameters.item.final_result_type.name_in_upper +
-											" does not conform to " + f.arguments.i_th (parameters.index).associated_class.name_in_upper + ")"
+								" (Class " + parameters.item.final_result_type.name_in_upper +
+								" does not conform to " +
+								f.arguments.i_th (parameters.index).associated_class.name_in_upper +
+								")"
 						end
 						parameters.forth
 					end
 				end
 					-- Initialize the communication.
 				Init_recv_c
-					-- Send the parameters.
-				realf := f.ancestor_version (f.written_class)
-				from
-					parameters.start
-				until
-					parameters.after or error_message /= Void
-				loop
-					dmp := parameters.item.final_result_value
-					dmp.send_value
-					if (not realf.arguments.i_th (parameters.index).is_basic) and dmp.is_basic then
-						send_rqst_0 (Rqst_metamorphose)
+				
+					-- First find out the generic derivation if any in which we are
+					-- evaluation `f'.
+				if dtype.types.count > 1 then
+					if addr /= Void then
+							-- The type has generic derivations: we need to find the precise type.
+						create obj.make (addr, 0, 1)
+						l_class_type := obj.class_type
+					else
+							--| Shouldn't happen: basic types are not generic.
+						error_message := "Cannot find complete dynamic type of a basic type"
 					end
-					parameters.forth
+				else
+					l_class_type := dtype.types.first
 				end
+					
 				if error_message = Void then
+					check
+						valid_class_type: l_class_type /= Void
+					end
+					
+						-- Send the parameters.
+					realf := f.ancestor_version (f.written_class)
+					from
+						parameters.start
+						Byte_context.set_class_type (l_class_type)
+					until
+						parameters.after or error_message /= Void
+					loop
+						dmp := parameters.item.final_result_value
+						dmp.send_value
+							-- We need to evaluate feature argument using BYTE_CONTEXT because
+							-- it might have some formal and the metamorphose should only appear
+							-- when there is indeed a type difference and not because the expected
+							-- argument is a formal parameter and the actual argument value is
+							-- a basic type.
+							-- This happen when evaluation `my_hash_table.item (1)' where
+							-- `my_hash_table' is of type `HASH_TABLE [STRING, INTEGER]'.
+						if
+							dmp.is_basic and
+							(not byte_context.real_type (
+								realf.arguments.i_th (parameters.index).type_i).is_basic)
+						then
+							send_rqst_0 (Rqst_metamorphose)
+						end
+						parameters.forth
+					end
+
 						-- Send the target object.
 					if o_addr /= Void then
 						create dmp.make_object (o_addr, dtype)
@@ -1133,19 +1177,8 @@ feature {NONE} -- Implementation
 						rout_info := System.rout_info_table.item (f.rout_id_set.first)
 						send_rqst_3 (Rqst_dynamic_eval, rout_info.offset, rout_info.origin, par)
 					else
-						if dtype.types.count > 1 then
-							if addr /= Void then
-									-- The type has generic derivations: we need to find the precise type.
-								create obj.make (addr, 0, 1)
-								send_rqst_3 (Rqst_dynamic_eval, f.feature_id, obj.class_type.static_type_id - 1, par)
-							else
-									--| Shouldn't happen: basic types are not generic.
-								error_message := "Cannot find complete dynamic type of a basic type"
-							end
-						else
-								-- No generic derivations: we can optimize and not create the debugged_object.
-							send_rqst_3 (Rqst_dynamic_eval, f.feature_id, dtype.types.first.static_type_id - 1, par)
-						end
+						send_rqst_3 (Rqst_dynamic_eval, f.feature_id,
+							l_class_type.static_type_id - 1, par)
 					end
 						-- Receive the Result.
 					c_recv_value (Current)
@@ -1218,13 +1251,17 @@ feature {NONE} -- Implementation
 				val := cv_cst.value
 				result_static_type := f.type.associated_class
 				if val.is_integer then
-					result_object := create {DUMP_VALUE}.make_integer (val.to_integer, result_static_type);
+					result_object := create {DUMP_VALUE}.make_integer (val.to_integer,
+						result_static_type);
 				elseif val.is_real then
-					result_object := create {DUMP_VALUE}.make_real (val.to_real, result_static_type);
+					result_object := create {DUMP_VALUE}.make_real (val.to_real,
+						result_static_type);
 				elseif val.is_double then
-					result_object := create {DUMP_VALUE}.make_double (val.to_double, result_static_type);
+					result_object := create {DUMP_VALUE}.make_double (val.to_double,
+						result_static_type);
 				elseif val.is_boolean then
-					result_object := create {DUMP_VALUE}.make_boolean (val.to_boolean, result_static_type);
+					result_object := create {DUMP_VALUE}.make_boolean (val.to_boolean,
+						result_static_type);
 				else
 					error_message := "Unknown constant type for " + feature_name
 				end
@@ -1337,10 +1374,13 @@ feature {NONE} -- Implementation
 						if f /= Void then
 							debug ("DEBUGGER_INTERFACE")
 								io.putstring ("cse.dtype: " + cse.dynamic_class.name_in_upper)
-								io.putstring ("%Ndtype: " + (create {DEBUGGED_OBJECT}.make (cse.object_address, 0, 1)).dtype.name_in_upper)
+								io.putstring ("%Ndtype: " +
+									(create {DEBUGGED_OBJECT}.make (cse.object_address, 0, 1))
+										.dtype.name_in_upper)
 								io.new_line
 							end
-							evaluate_feature_on_object (f, cse.object_address, cse.dynamic_class, Void)
+							evaluate_feature_on_object (f, cse.object_address, cse.dynamic_class,
+								Void)
 						end
 					else
 						result_object := dv.dump_value

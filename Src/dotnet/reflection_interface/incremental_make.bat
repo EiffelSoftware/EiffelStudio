@@ -460,8 +460,6 @@ cd ..
 cd ..
 :generate_assembly_manager
 gacutil -u ISE.AssemblyManager
-cd ..
-cd ..
 del *.epr
 rd /q /s EIFGEN
 ec -ace ace.ace

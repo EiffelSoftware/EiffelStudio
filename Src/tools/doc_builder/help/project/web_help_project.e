@@ -190,6 +190,7 @@ feature {NONE} -- Implementation
 			l_filter_count: INTEGER
 			l_toc_name: STRING
 			l_toc_url: FILE_NAME
+			l_toc_url_string: STRING
 			l_util: UTILITY_FUNCTIONS
 		do	
 			create Result.make_empty
@@ -211,7 +212,9 @@ feature {NONE} -- Implementation
 						end
 						l_toc_url.extend (l_toc_name)
 						l_toc_url.extend ("HTMLLeftContextTemplate.html")
-						Result.append ("<option value=%"" + l_toc_url + "%"")
+						l_toc_url_string := l_toc_url.string
+						l_toc_url_string.replace_substring_all ("\", "/")
+						Result.append ("<option value=%"" + l_toc_url_string + "%"")
 						Result.append (" name=%"" + filter_option_string (l_output_filter) + "%"")
 						Result.append (">")							
 						Result.append (l_output_filter.description)

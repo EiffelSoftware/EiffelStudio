@@ -51,14 +51,14 @@ feature -- Access
 			-- Neutral element for "*" and "/"
 		do
 			create Result
---			Result.set_item (1)
+			Result.set_item (1)
 		end
 
 	zero: like Current is
 			-- Neutral element for "+" and "-"
 		do
 			create Result
---			Result.set_item (0)
+			Result.set_item (0)
 		end
 
 	ascii_char: CHARACTER is
@@ -67,8 +67,8 @@ feature -- Access
 			Result := c_ascii_char (item) 
 		end
 
-	Min_value: INTEGER_16 is -128
-	Max_value: INTEGER_16 is 127
+	Min_value: INTEGER_8 is -128
+	Max_value: INTEGER_8 is 127
 			-- Minimum and Maximum value hold in `item'.
 
 feature -- Comparison

@@ -1602,6 +1602,8 @@ feature {NONE} -- Implementation
 		first_include: BOOLEAN) is
 			-- Add `a_class' to the diagram if not already present.
 			-- Do not re-create class if not `first_include'.
+		require
+			a_class_not_void: a_class /= Void
 		local
 			new_cluster_i: CLUSTER_I
 			new_clf: CLUSTER_FIGURE
@@ -1631,18 +1633,34 @@ feature {NONE} -- Implementation
 				a_class.point.set_position (a_class.width, a_class.height)
 				a_class.update
 			end
+			a_class.invalidate
 			refresh
 			context_editor.projector.project
+			context_editor.projector.update
 		end
 
 	remove_dropped_class_in_cluster (a_class: CLASS_FIGURE; new_cluster: CLUSTER_FIGURE) is
 			-- Undo `include_dropped_class'.
+		local
+			parent_group: EV_FIGURE_GROUP
 		do
+			if new_cluster /= Void then
+				parent_group := new_cluster.group
+			else
+				parent_group := a_class.group
+			end
+			if parent_group = Void then
+				parent_group := world
+			end
 			a_class.remove_from_diagram (False)
 			included_figures.prune_all (a_class)
 			if new_cluster /= Void then
 				new_cluster.recursive_remove_from_diagram (False) 
 			end
+			parent_group.invalidate
+			refresh
+			context_editor.projector.project
+			context_editor.projector.update
 		end
 		
 feature {NONE} -- Events

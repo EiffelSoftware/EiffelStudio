@@ -1,9 +1,12 @@
--- A binary operation.
+indexing
+	description: "Byte node for a binary operation."
+	date: "$Date$"
+	revision: "$Revision$"
 
-deferred class BINARY_B 
+deferred class
+	BINARY_B 
 
 inherit
-
 	EXPR_B
 		redefine
 			propagate, print_register,
@@ -12,20 +15,28 @@ inherit
 			has_call, allocates_memory, make_byte_code,
 			is_unsafe, optimized_byte_node, calls_special_features,
 			size, pre_inlined_code, inlined_byte_code,
-			has_separate_call, generate_il
+			has_separate_call, generate_il, is_simple_expr
 		end
 
 	IL_CONST
-	
-feature 
 
-	left: EXPR_B;
+feature -- Initialization
+
+	init (a: FEATURE_B) is
+			-- Initializes node
+		do
+			access := a
+		end
+
+feature -- Access
+
+	left: EXPR_B
 			-- Left expression operand
 
-	right: EXPR_B;
+	right: EXPR_B
 			-- Right expression operand
 
-	access: FEATURE_B;
+	access: FEATURE_B
 			-- Access when left is not a simple type
 
 	attachment: TYPE_I
@@ -35,26 +46,28 @@ feature
 	type: TYPE_I is
 			-- Type of the infixed feature
 		do
-			Result := access.type;
-		end;
+			Result := access.type
+		end
+
+feature -- Settings
 
 	set_left (l: EXPR_B) is
 			-- Assign `l' to `left'.
 		do
-			left := l;
-		end;
+			left := l
+		end
 
 	set_right (r: EXPR_B) is
 			-- Assign `r' to `right'.
 		do
-			right := r;
-		end;
+			right := r
+		end
 
 	set_access (a: FEATURE_B) is
 			-- Set `access' to `a'
 		do
-			access := a;
-		end;
+			access := a
+		end
 			
 	set_attachment (a: TYPE_I) is
 			-- Set `attachment' to `a'.
@@ -64,142 +77,69 @@ feature
 			attachment_set: attachment = a
 		end
 
-	init (a: FEATURE_B) is
-			-- Initializes node
+feature -- Status report
+
+	is_simple_expr: BOOLEAN is
+			-- Is the current expression a simple one ?
+			-- Definition: an expression <E> is simple if the assignment
+			-- target := <E> is generated as such in C when "target" is a
+			-- predefined entity propagated in <E>.
 		do
-			access := a;
-		end;
+			Result := left.is_simple_expr and right.is_simple_expr
+		end
 
 	is_commutative: BOOLEAN is
 			-- Is the operation commutative ?
 		do
-		end;
+		end
 
 	is_simple: BOOLEAN is
 			-- Is the operation a simple one (C's point of view).
 			-- Definition: An operation X is simple for C if it can be
 			-- combined in affectation under the shortcut X=.
 		do
-		end;
+		end
 
 	is_additive: BOOLEAN is
 			-- Is the operation additive (i.e. + or -) ?
 		do
-		end;
+		end
 
 	is_built_in: BOOLEAN is
 			-- Is the current binary operator a built-in one ?
 		deferred
-		end;
+		end
 
 	has_gcable_variable: BOOLEAN is
 			-- Is the expression using a GCable variable ?
 		do
-			Result := left.has_gcable_variable or right.has_gcable_variable;
-		end;
+			Result := left.has_gcable_variable or right.has_gcable_variable
+		end
 
 	has_call: BOOLEAN is
 			-- Is the expression using a call ?
 		do
-			Result := left.has_call or right.has_call;
-		end;
+			Result := left.has_call or right.has_call
+		end
 
 	allocates_memory: BOOLEAN is
 		do
 			Result := left.allocates_memory or right.allocates_memory
-		end;
+		end
 
 	used (r: REGISTRABLE): BOOLEAN is
 			-- Is `r' used in the expression ?
 		do
-			Result := left.used (r) or right.used (r);
-		end;
+			Result := left.used (r) or right.used (r)
+		end
 
-	propagate (r: REGISTRABLE) is
-			-- Propagate a register in expression.
-		do
-			if r = No_register or not used (r) then
-				if not context.propagated or r = No_register then
-					left.propagate (r);
-				end;
-				if not context.propagated or r = No_register then
-					right.propagate (r);
-				end;
-			elseif not left.used (r) then
-				if not context.propagated then
-					right.propagate (r);
-				end;
-			elseif not right.used (r) then
-				if not context.propagated then
-					left.propagate (r);
-				end;
-			end;
-		end;
-
-	free_register is
-			-- Free registers used by the expression
-		do
-			left.free_register;
-			right.free_register;
-		end;
-
-	analyze is
-			-- Analyze expression
-		do
-			left.analyze;
-			right.analyze;
-		end;
-	
-	unanalyze is
-			-- Undo the previous analysis
-		local
-			void_register: REGISTER;
-		do
-			left.unanalyze;
-			right.unanalyze;
-			set_register (void_register);
-		end;
-
-	generate is
-			-- Generate expression
-		do
-			left.generate;
-			right.generate;
-		end;
-
-	generate_plus_plus is
-			-- Generate things like ++ or --
-		do
-		end; -- generate_plus_plus
-
-	generate_simple is
-			-- Generate operator followed by assignment
-		do
-		end; -- generate_simple
-
-	print_register is
-			-- Print expression value
-		local
-			buf: GENERATION_BUFFER
-		do
-			buf := buffer
-			buf.putchar ('(')
-			left.print_register;
-			generate_operator;
-			right.print_register;
-			buf.putchar (')')
-		end;
-
-	generate_operator is
-			-- Generate operator in C
-		do
-		end;
+feature -- Code generation
 
 	nested_b: NESTED_B is
 		local
-			access_expr: ACCESS_EXPR_B;
-			p: PARAMETER_B;
-			param: BYTE_LIST [PARAMETER_B];
+			access_expr: ACCESS_EXPR_B
+			p: PARAMETER_B
+			param: BYTE_LIST [PARAMETER_B]
 		do
 				-- Access on expression
 			create access_expr
@@ -223,27 +163,109 @@ feature
 			p.set_attachment_type (attachment)
 			param.extend (p)
 			access.set_parameters (param)
-		end;
+		end
 
 	enlarged: EXPR_B is
 			-- Enlarge the left and right handsides
 		do
 			if not is_built_in then
 					-- Change this node into a nested call
-				Result := nested_b.enlarged;
+				Result := nested_b.enlarged
 			else
-				Result := built_in_enlarged;
-			end;
-		end;
+				Result := built_in_enlarged
+			end
+		end
 
 	built_in_enlarged: like Current is
 			-- Binary op enlarged node
 		do
-			left := left.enlarged;
-			right := right.enlarged;
-			access := access.enlarged;
-			Result := Current;
-		end;
+			left := left.enlarged
+			right := right.enlarged
+			access := access.enlarged
+			Result := Current
+		end
+
+feature -- C code generation
+
+	propagate (r: REGISTRABLE) is
+			-- Propagate a register in expression.
+		do
+			if r = No_register or not used (r) then
+				if not context.propagated or r = No_register then
+					left.propagate (r)
+				end
+				if not context.propagated or r = No_register then
+					right.propagate (r)
+				end
+			elseif not left.used (r) then
+				if not context.propagated then
+					right.propagate (r)
+				end
+			elseif not right.used (r) then
+				if not context.propagated then
+					left.propagate (r)
+				end
+			end
+		end
+
+	free_register is
+			-- Free registers used by the expression
+		do
+			left.free_register
+			right.free_register
+		end
+
+	analyze is
+			-- Analyze expression
+		do
+			left.analyze
+			right.analyze
+		end
+	
+	unanalyze is
+			-- Undo the previous analysis
+		local
+			void_register: REGISTER
+		do
+			left.unanalyze
+			right.unanalyze
+			set_register (void_register)
+		end
+
+	generate is
+			-- Generate expression
+		do
+			left.generate
+			right.generate
+		end
+
+	generate_plus_plus is
+			-- Generate things like ++ or --
+		do
+		end; -- generate_plus_plus
+
+	generate_simple is
+			-- Generate operator followed by assignment
+		do
+		end; -- generate_simple
+
+	print_register is
+			-- Print expression value
+		local
+			buf: GENERATION_BUFFER
+		do
+			buf := buffer
+			buf.putchar ('(')
+			left.print_register
+			generate_operator
+			right.print_register
+			buf.putchar (')')
+		end
+
+	generate_operator is
+			-- Generate operator in C
+		do
+		end
 
 feature -- IL code generation
 
@@ -307,7 +329,7 @@ feature -- IL code generation
 			-- Byte code constant associated to current binary
 			-- operation
 		deferred
-		end;
+		end
 
 feature -- Byte code generation
 
@@ -325,17 +347,17 @@ feature -- Byte code generation
 	make_standard_byte_code (ba: BYTE_ARRAY) is
 			-- Generate standard byte code for binary expression
 		do
-			left.make_byte_code (ba);
-			right.make_byte_code (ba);
+			left.make_byte_code (ba)
+			right.make_byte_code (ba)
 				-- Write binary operator
-			ba.append (operator_constant);
-		end;
+			ba.append (operator_constant)
+		end
 
 	operator_constant: CHARACTER is
 			-- Byte code constant associated to current binary
 			-- operation
 		deferred
-		end;
+		end
 
 feature -- Array optimization
 
@@ -396,14 +418,14 @@ feature -- concurrent Eiffel
 		-- is there separate feature call in the assertion?
 		do
 			if left /= Void then
-				Result := left.has_separate_call;
-			end;
+				Result := left.has_separate_call
+			end
 			if not Result and access /= Void then
-				Result := access.has_separate_call;
-			end;
+				Result := access.has_separate_call
+			end
 			if not Result and right /= Void then
-				Result := right.has_separate_call;
-			end;
+				Result := right.has_separate_call
+			end
 		end
 	
 end

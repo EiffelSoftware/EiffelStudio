@@ -1,9 +1,12 @@
--- Unary operation.
+indexing
+	description: "Byte node for unary operation."
+	date: "$Date$"
+	revision: "$Date$"
 
-deferred class UNARY_B 
+deferred class
+	UNARY_B 
 
 inherit
-
 	EXPR_B
 		redefine
 			analyze, unanalyze, generate,
@@ -14,18 +17,48 @@ inherit
 			is_unsafe, optimized_byte_node,
 			calls_special_features, size,
 			pre_inlined_code, inlined_byte_code,
-			has_separate_call, generate_il
+			has_separate_call, generate_il, is_simple_expr
 		end
 
 	IL_CONST
-	
-feature 
 
-	expr: EXPR_B;
+feature -- Initialization
+
+	init (a: like access) is
+			-- Initializes access
+		do
+			set_access (a)
+		end
+
+feature -- Access
+
+	expr: EXPR_B
 			-- Expression
 
-	access: ACCESS_B;
+	access: ACCESS_B
 			-- Access when expression is not a simple type
+
+	type: TYPE_I is
+			-- Type of the prefixed feature
+		do
+			Result := access.type
+		end
+
+feature -- Settings
+
+	set_expr (e: EXPR_B) is
+			-- Assign `e' to `expr'.
+		do
+			expr := e
+		end
+
+	set_access (a: like access) is
+			-- Set `access' to `a'
+		do
+			access := a
+		end
+
+feature -- Status report
 
 	is_built_in: BOOLEAN is
 			-- Is the unary operation a built-in one ?
@@ -33,112 +66,44 @@ feature
 			-- Do nothing
 		end
 
-	type: TYPE_I is
-			-- Type of the prefixed feature
+	is_simple_expr: BOOLEAN is
+			-- Is the current expression a simple one ?
+			-- Definition: an expression <E> is simple if the assignment
+			-- target := <E> is generated as such in C when "target" is a
+			-- predefined entity propagated
 		do
-			Result := access.type;
-		end;
-
-	set_expr (e: EXPR_B) is
-			-- Assign `e' to `expr'.
-		do
-			expr := e;
-		end;
-
-	set_access (a: like access) is
-			-- Set `access' to `a'
-		do
-			access := a;
-		end;
-
-	init (a: like access) is
-			-- Initializes access
-		do
-			set_access (a);
-		end;
+			Result := expr.is_simple_expr
+		end
 
 	has_gcable_variable: BOOLEAN is
 			-- Is the expression using a GCable variable ?
 		do
-			Result := expr.has_gcable_variable;
-		end;
+			Result := expr.has_gcable_variable
+		end
 
 	has_call: BOOLEAN is
 			-- Is the expression using a call ?
 		do
-			Result := expr.has_call;
-		end;
+			Result := expr.has_call
+		end
 
 	allocates_memory: BOOLEAN is
 		do
 			Result := expr.allocates_memory
-		end;
+		end
 
 	used (r: REGISTRABLE): BOOLEAN is
 			-- Is `r' used in the expression ?
 		do
-			Result := expr.used (r);
-		end;
+			Result := expr.used (r)
+		end
 
-	propagate (r: REGISTRABLE) is
-			-- Propagate a register in expression.
-		do
-			if r = No_register or not used (r) then
-				if not context.propagated or r = No_register then
-					expr.propagate (r);
-				end;
-			end;
-		end;
-
-	free_register is
-			-- Free register used by expression
-		do
-			expr.free_register;
-		end;
-
-	analyze is
-			-- Analyze expression
-		do
-			context.init_propagation;
-			expr.propagate (No_register);
-			expr.analyze;
-		end;
-	
-	unanalyze is
-			-- Undo the analysis of the expression
-		do
-			expr.unanalyze;
-		end;
-	
-	generate is
-			-- Generate expression
-		do
-			expr.generate;
-		end;
-
-	print_register is
-			-- Print expression value
-		do
-			generate_operator;
-			expr.print_register;
-		end;
-
-	generate_operator is
-			-- Generate operator in C
-		do
-				-- Should never be called directly. Descendant of UNARY_B
-				-- not redefining `generate_operator' usually redefine
-				-- `print_register' and thus they might choose not to
-				-- use `generate_operator'.
-			check
-				False
-			end
-		end;
+feature -- Code generation
 
 	nested_b: NESTED_B is
 			-- Change this node into a nested call
 		local
-			a_access_expr: ACCESS_EXPR_B;
+			a_access_expr: ACCESS_EXPR_B
 		do
 			create Result
 			create a_access_expr
@@ -154,17 +119,74 @@ feature
 		do
 			if not is_built_in then
 					-- Change this node into a nested call
-				Result := nested_b.enlarged;
+				Result := nested_b.enlarged
 			else
 					-- Enlarge current node
-				expr := expr.enlarged;
+				expr := expr.enlarged
 					-- Access is void in UN_OLD_B
 				if access /= Void then
-					access := access.enlarged;
-				end;
-				Result := Current;
-			end;
-		end;
+					access := access.enlarged
+				end
+				Result := Current
+			end
+		end
+
+feature -- C code generation
+
+	propagate (r: REGISTRABLE) is
+			-- Propagate a register in expression.
+		do
+			if r = No_register or not used (r) then
+				if not context.propagated or r = No_register then
+					expr.propagate (r)
+				end
+			end
+		end
+
+	free_register is
+			-- Free register used by expression
+		do
+			expr.free_register
+		end
+
+	analyze is
+			-- Analyze expression
+		do
+			context.init_propagation
+			expr.propagate (No_register)
+			expr.analyze
+		end
+	
+	unanalyze is
+			-- Undo the analysis of the expression
+		do
+			expr.unanalyze
+		end
+	
+	generate is
+			-- Generate expression
+		do
+			expr.generate
+		end
+
+	print_register is
+			-- Print expression value
+		do
+			generate_operator
+			expr.print_register
+		end
+
+	generate_operator is
+			-- Generate operator in C
+		do
+				-- Should never be called directly. Descendant of UNARY_B
+				-- not redefining `generate_operator' usually redefine
+				-- `print_register' and thus they might choose not to
+				-- use `generate_operator'.
+			check
+				False
+			end
+		end
 
 feature -- IL code generation
 
@@ -186,7 +208,7 @@ feature -- IL code generation
 			-- Byte code constant associated to current binary
 			-- operation
 		deferred
-		end;
+		end
 
 feature -- Byte code generation
 
@@ -195,20 +217,20 @@ feature -- Byte code generation
 		do
 			if is_built_in then
 					-- Polish notation
-				expr.make_byte_code (ba);
+				expr.make_byte_code (ba)
 
 					-- Write unary operator
-				ba.append (operator_constant);
+				ba.append (operator_constant)
 			else
-				nested_b.make_byte_code (ba);
-			end;
-		end;
+				nested_b.make_byte_code (ba)
+			end
+		end
 
 	operator_constant: CHARACTER is
 			-- Byte code constant associated to current binary
 			-- operation
 		deferred
-		end;
+		end
 
 feature -- Array optimization
 
@@ -269,11 +291,11 @@ feature -- concurrent Eiffel
 		-- Is there separate feature call in the assertion?
 		do
 			if expr /= Void then
-				Result := expr.has_separate_call;
-			end;
+				Result := expr.has_separate_call
+			end
 			if not Result and access /= Void then
-				Result := access.has_separate_call;
-			end;
+				Result := access.has_separate_call
+			end
 		end
 
 end

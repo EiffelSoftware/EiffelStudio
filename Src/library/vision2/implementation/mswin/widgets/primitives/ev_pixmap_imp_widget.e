@@ -137,6 +137,7 @@ feature {NONE} -- Initialization
 		do
 			wel_make (default_parent, "EV_PIXMAP")
 			{EV_PIXMAP_IMP_DRAWABLE} Precursor
+			is_initialized := False
 			widget_initialize
 		end
 
@@ -757,6 +758,10 @@ end -- class EV_PIXMAP_IMP_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.2  2000/04/12 17:30:10  brendel
+--| Setting is_initialized to False to avoid contracts being checked
+--| while interface is still Void.
+--|
 --| Revision 1.1  2000/04/12 01:34:56  pichery
 --| New pixmap implementation.
 --| Use 3 differents states depending on

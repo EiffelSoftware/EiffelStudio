@@ -122,12 +122,13 @@ feature
 				rescued := False
 			end
 		rescue
+			flat_ctxt.clear;
 			if Rescue_status.is_error_exception then
 				Rescue_status.set_is_error_exception (False);
 				Error_handler.trace;
 				rescued := True;
 				retry
-			end
+			end;
 		end;
 
 	execution_error: BOOLEAN;

@@ -136,6 +136,7 @@ feature -- Access
 			item_imp: EV_WIDGET_IMP
 			a_tab_label, a_hbox, a_list, a_pixmap: POINTER
 			pix_imp: EV_PIXMAP_IMP
+			a_pix, a_mask: POINTER
 		do
 			item_imp ?= an_item.implementation
 			a_tab_label := feature {EV_GTK_EXTERNALS}.gtk_notebook_get_tab_label (visual_widget, item_imp.c_object)
@@ -146,8 +147,8 @@ feature -- Access
 				create Result
 				pix_imp ?= Result.implementation
 				a_pixmap := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0)
-				--a_pixmap := feature {EV_GTK_EXTERNALS}.gtk_image_get_pixbuf (a_pixmap)
-				--pix_imp.set_pixmap_from_pixbuf (a_pixmap)
+				feature {EV_GTK_EXTERNALS}.gtk_pixmap_get (a_pixmap, $a_pix, $a_mask)
+				pix_imp.set_pixmap (a_pix, a_mask)
 			end
 			feature {EV_GTK_EXTERNALS}.g_list_free (a_list)
 		end
@@ -304,8 +305,9 @@ feature -- Element change
 				-- We already have a pixmap present so we remove it
 				feature {EV_GTK_EXTERNALS}.gtk_container_remove (a_hbox, feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0))
 			end
-			a_pix_imp ?= a_pixmap.implementation
-			--a_pix := feature {EV_GTK_EXTERNALS}.gtk_image_new_from_pixbuf (a_pix_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height))
+			a_pix_imp ?= a_pixmap.twin.implementation
+			a_pix_imp.stretch (pixmaps_width, pixmaps_height)
+			a_pix := feature {EV_GTK_EXTERNALS}.gtk_pixmap_new (a_pix_imp.drawable, a_pix_imp.mask)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_pix)
 			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (a_hbox, a_pix, False, False, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_box_reorder_child (a_hbox, a_pix, 0)

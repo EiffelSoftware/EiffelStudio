@@ -412,29 +412,6 @@ feature
 			Result := character_ref_class.compiled_class.types.first.type_id
 		end; 
 
-	generate_dynamic_ref_type is
-			-- Generate dynaminc reference types of basic classes.
-		do
-			Plug_file.putstring ("int egc_int_ref_dtype = ")
-			Plug_file.putint (integer_ref_dtype - 1)
-			Plug_file.putstring (";%N");	
-			Plug_file.putstring ("int egc_bool_ref_dtype = ")
-			Plug_file.putint (boolean_ref_dtype - 1)
-			Plug_file.putstring (";%N");	
-			Plug_file.putstring ("int egc_real_ref_dtype = ")
-			Plug_file.putint (real_ref_dtype - 1)
-			Plug_file.putstring (";%N");	
-			Plug_file.putstring ("int egc_char_ref_dtype = ")
-			Plug_file.putint (character_ref_dtype - 1)
-			Plug_file.putstring (";%N");	
-			Plug_file.putstring ("int egc_doub_ref_dtype = ")
-			Plug_file.putint (double_ref_dtype - 1)
-			Plug_file.putstring (";%N");	
-			Plug_file.put_string ("int egc_point_ref_dtype = ")
-			Plug_file.put_integer (pointer_ref_dtype - 1)
-			Plug_file.put_string (";%N");	
-		end
-
 feature -- DLE
 
 	dynamic_class: CLASS_I

@@ -64,10 +64,12 @@ feature {EV_ANY_IMP} -- Access
 			an_agent_not_void: an_agent /= Void
 			translate_not_void: translate /= Void
 		local
-			t: TUPLE []
+			t: TUPLE
 			gdk_event: POINTER
 		do
-			t := translate.item ([n_args, args])
+			integer_pointer_tuple.put (n_args, 1)
+			integer_pointer_tuple.put (args, 2)
+			t := translate.item (integer_pointer_tuple)
 			--FIXME
 			if t /= Void then
 				if
@@ -402,18 +404,32 @@ feature {NONE} -- Implementation
 			n_args_not_negative: n_args >= 0
 			args_not_null: n_args > 0 implies args /= NULL
 		do
-			if
-				type_conforms_to (dynamic_type (action), f_of_tuple_type_id) 
-			then
-				action.call ([[]])
+			if type_conforms_to (dynamic_type (action), f_of_tuple_type_id) then
+				action.call (empty_tuple_tuple)
 			else
-				action.call ([n_args, args])
+				check
+					not_for_empty_tuple: not type_conforms_to (dynamic_type (action), f_of_tuple_type_id)
+				end
+				integer_pointer_tuple.put (n_args, 1)
+				integer_pointer_tuple.put (args, 2)
+				action.call (integer_pointer_tuple)
 			end
+
 		end
 
 	f_of_tuple_type_id: INTEGER is
 		once
 			Result := dynamic_type (create {PROCEDURE [ANY, TUPLE [TUPLE]]})
+		end
+		
+	empty_tuple_tuple: TUPLE is
+		once
+			Result := [[]]
+		end
+
+	integer_pointer_tuple: TUPLE [INTEGER, POINTER] is
+		once
+			Result := [0, default_pointer]
 		end
 
 feature {NONE} -- Externals
@@ -472,3 +488,4 @@ feature {EV_APPLICATION_IMP} -- Externals
 		end
 
 end -- class EV_GTK_CALLBACK_MARSHAL
+

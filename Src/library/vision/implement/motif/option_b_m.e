@@ -58,7 +58,22 @@ creation
 
 	make
 
-feature 
+feature {NONE} -- Creation
+
+	make (an_option_menu: OPTION_B; man: BOOLEAN) is
+			-- Create a motif option menu button
+		local
+			ext_name: ANY
+		do
+			widget_index := widget_manager.last_inserted_position;
+			ext_name := an_option_menu.identifier.to_c;
+			screen_object := create_option_b ($ext_name, 
+					parent_screen_object (an_option_menu, widget_index),
+					man);
+			an_option_menu.set_font_imp (Current);
+		end;
+
+feature
 
 	selected_button: BUTTON is
             -- Current Push Button selected in the option menu
@@ -90,18 +105,6 @@ feature
 			menu_not_void: not (a_menu = Void)
 		do
 			xm_attach_menu (xm_option_button_gadget (screen_object), a_menu.implementation.screen_object)
-		end;
-
-	make (an_option_menu: OPTION_B) is
-			-- Create a motif option menu button
-		local
-			ext_name: ANY
-		do
-			widget_index := widget_manager.last_inserted_position;
-			ext_name := an_option_menu.identifier.to_c;
-			screen_object := create_option_b ($ext_name, 
-					parent_screen_object (an_option_menu, widget_index));
-			an_option_menu.set_font_imp (Current);
 		end;
 
 feature {NONE}
@@ -297,7 +300,8 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	create_option_b (i_name: ANY; scr_obj: POINTER): POINTER is
+	create_option_b (i_name: ANY; scr_obj: POINTER; 
+			man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

@@ -5,14 +5,7 @@ root
 	vision2_application: make_and_launch
 
 default
-	msil_assembly_compatibility ("None")
-	msil_assembly_compatibility ("None")
-	msil_assembly_compatibility ("None")
-	msil_assembly_compatibility ("None")
-	msil_assembly_compatibility ("None")
-	msil_assembly_compatibility ("None")
-	assertion (require)
-	arguments (" ")
+	assertion (no)
 	disabled_debug (yes)
 	disabled_debug ("dlg_dispatcher")
 	disabled_debug ("vision2_windows")
@@ -29,23 +22,22 @@ default
 	cls_compliant (yes)
 	dotnet_naming_convention (yes)
 	msil_generation_type ("exe")
-	msil_culture ("n/a")
 	msil_assembly_compatibility ("None")
 	check_vape (yes)
 	console_application (no)
 	array_optimization (no)
 	dead_code_removal (yes)
-	exception_trace (no)
+	exception_trace (yes)
 	inlining (no)
 
 
---	all system_generated:		"$EIFFEL_SRC\library.net\System"
---	all system_xml_generated:		"$EIFFEL_SRC\library.net\Xml"
-
 cluster
-	root_cluster:		"$EIFFEL_SRC\dotnet\eac_browser\root"
+	all root_cluster:		"$EIFFEL_SRC\dotnet\eac_browser\root"
 
 	all src:		"$EIFFEL_SRC\dotnet\eac_browser\src"
+		exclude
+			"assembly_informations_com"; 
+		end
 
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
@@ -84,9 +76,6 @@ cluster
 		exclude
 			"hact"; "se"; "ve"; "base"; "CVS"; 
 		end
-
-	thread:		"$EIFFEL_SRC\library\thread"
-	
 
 external
 

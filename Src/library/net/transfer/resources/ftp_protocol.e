@@ -100,9 +100,11 @@ feature -- Status setting
 					error_code := Connection_refused
 				else
 					receive (main_socket)
-					login
+					if not error then login end
 				end
 			end
+		rescue
+			error_code := Connection_refused
 		end
 
 	close is
@@ -140,7 +142,7 @@ feature -- Status setting
 			else
 				if not passive_mode then
 					create data_socket.make_server_by_port (0)
-					data_socket.listen (5)
+					data_socket.listen (1)
 				end
 				if send_transfer_command then
 					debug Io.error.put_string ("Accepting socket...%N") end
@@ -150,12 +152,13 @@ feature -- Status setting
 						data_socket.accept
 						accepted_socket ?= data_socket.accepted
 					end
-					debug Io.error.put_string ("Socket accepted%N") end
-						check
-							type_ok: accepted_socket /= Void
-						end
-					transfer_initiated := True
-					is_packet_pending := True
+					if accepted_socket /= Void then
+						debug Io.error.put_string ("Socket accepted%N") end
+						transfer_initiated := True
+						is_packet_pending := True
+					else
+						error_code := Connection_refused
+					end
 				end
 			end
 		ensure then
@@ -249,17 +252,24 @@ feature -- Output
 			if is_proxy_used then
 				proxy_connection.put (other)
 			else
-				from until not other.is_packet_pending loop
-					other.read
-					accepted_socket.put_string (other.last_packet)
-					if accepted_socket.socket_ok then
-						last_packet_size := other.last_packet.count
-					else
-						last_packet_size := 0
-					end
-					bytes_transferred := bytes_transferred + last_packet_size
-					if last_packet_size /= other.last_packet_size then
-						error_code := Write_error
+				from 
+				until 
+					error or else not other.is_packet_pending 
+				loop
+					check_socket (accepted_socket, Write_only)
+					if not error then
+						other.read
+						accepted_socket.put_string (other.last_packet)
+						if accepted_socket.socket_ok then
+							last_packet_size := other.last_packet.count
+						else
+							last_packet_size := 0
+						end
+						bytes_transferred := bytes_transferred + 
+							last_packet_size
+						if last_packet_size /= other.last_packet_size then
+							error_code := Write_error
+						end
 					end
 				end
 			end
@@ -275,21 +285,24 @@ feature -- Input
 			if is_proxy_used then
 				proxy_connection.read
 			else
-				accepted_socket.read_stream (read_buffer_size)
-				if accepted_socket.socket_ok then
-					last_packet := accepted_socket.last_string
-					last_packet_size := last_packet.count
-				else
-					error_code := Transfer_failed
-					last_packet := Void
-					last_packet_size := 0
-				end
-				bytes_transferred := bytes_transferred + last_packet_size
-				if not error and last_packet_size = 0 then 
-					is_packet_pending := False
-					receive (main_socket)
-					if not reply_code_ok (<<226>>) then
+				check_socket (accepted_socket, Read_only)
+				if not error then
+					accepted_socket.read_stream (read_buffer_size)
+					if accepted_socket.socket_ok then
+						last_packet := accepted_socket.last_string
+						last_packet_size := last_packet.count
+					else
 						error_code := Transfer_failed
+						last_packet := Void
+						last_packet_size := 0
+					end
+					bytes_transferred := bytes_transferred + last_packet_size
+					if not error and last_packet_size = 0 then 
+						is_packet_pending := False
+						receive (main_socket)
+						if not reply_code_ok (<<226>>) then
+							error_code := Transfer_failed
+						end
 					end
 				end
 			end
@@ -343,21 +356,24 @@ feature {NONE} -- Implementation
 			from 
 				last_reply := Void
 			until 
-				last_reply /= Void and not go_on
+				error or else (last_reply /= Void and not go_on)
 			loop
-				s.read_line
-				last_reply := clone (s.last_string)
-				last_reply.append ("%N")
-				debug
-					if not last_reply.is_empty then 
-						Io.putstring (last_reply) 
+				check_socket (s, Read_only)
+				if not error then
+					s.read_line
+					last_reply := clone (s.last_string)
+					last_reply.append ("%N")
+					debug
+						if not last_reply.is_empty then 
+							Io.putstring (last_reply) 
+						end
 					end
-				end
-				if has_num (last_reply) then
-					if dash_check (last_reply) then
-						go_on := True
-					else
-						go_on := False
+					if has_num (last_reply) then
+						if dash_check (last_reply) then
+							go_on := True
+						else
+							go_on := False
+						end
 					end
 				end
 			end
@@ -538,7 +554,9 @@ feature {NONE} -- Implementation
 		
 			create Result.make_client_by_port (port_number, ip_address)
 		ensure
-			socket_created: Result /= Void
+			socket_created_if_no_error: not error implies Result /= Void
+		rescue
+			error_code := Connection_refused
 		end
 
 	login is

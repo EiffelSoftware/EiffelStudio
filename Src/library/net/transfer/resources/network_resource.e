@@ -18,6 +18,11 @@ deferred class NETWORK_RESOURCE inherit
 			is_equal
 		end
 
+	EXCEPTIONS
+		undefine
+			is_equal
+		end
+
 feature -- Access
 
 	last_packet_size: INTEGER 
@@ -162,18 +167,21 @@ feature -- Output
 	put (other: DATA_RESOURCE) is
 			-- Write out resource `other'.
 		do
-			from until not other.is_packet_pending loop
-				other.read
-				main_socket.put_string (other.last_packet)
-				if main_socket.socket_ok then
-					last_packet := other.last_packet
-					last_packet_size := last_packet.count
-				else
-					last_packet := Void
-					last_packet_size := 0
-				end
-				if last_packet_size /= other.last_packet_size then
-					error_code := Write_error
+			from until error or else not other.is_packet_pending loop
+				check_socket (main_socket, Write_only)
+				if not error then
+					other.read
+					main_socket.put_string (other.last_packet)
+					if main_socket.socket_ok then
+						last_packet := other.last_packet
+						last_packet_size := last_packet.count
+					else
+						last_packet := Void
+						last_packet_size := 0
+					end
+					if last_packet_size /= other.last_packet_size then
+						error_code := Write_error
+					end
 				end
 			end
 		rescue
@@ -185,24 +193,32 @@ feature -- Input
 	read is
 			-- Read packet.
 		do
-			main_socket.read_stream (read_buffer_size)
-			if main_socket.socket_ok then
-				last_packet := main_socket.last_string
-				last_packet_size := last_packet.count
-			else
-				error_code := Transfer_failed
-				last_packet := Void
-				last_packet_size := 0
-			end
-			bytes_transferred := bytes_transferred + last_packet_size
-			if not error and then last_packet_size = 0 or 
-				(is_count_valid and bytes_transferred = count) then
-				is_packet_pending := False 
+			check_socket (main_socket, Read_only)
+			if not error then
+				main_socket.read_stream (read_buffer_size)
+				if main_socket.socket_ok then
+					last_packet := main_socket.last_string
+					last_packet_size := last_packet.count
+				else
+					error_code := Transfer_failed
+					last_packet := Void
+					last_packet_size := 0
+				end
+				bytes_transferred := bytes_transferred + last_packet_size
+				if not error and then last_packet_size = 0 or 
+					(is_count_valid and bytes_transferred = count) then
+					is_packet_pending := False 
+				end
 			end
 		rescue
 			error_code := Transfer_failed
 		end
 
+feature {NONE} -- Constants
+
+	Read_only, Write_only: INTEGER is unique
+			-- Constants determinint the transfer direction for `check_socket'
+			
 feature {DATA_RESOURCE} -- Implementation
 
 	main_socket: NETWORK_STREAM_SOCKET
@@ -221,6 +237,33 @@ feature {NONE} -- Implementation
 	writable_cached: BOOLEAN
 			-- Has a value für `is_writable' been cached?
 
+	check_socket (s: SOCKET; transfer_mode: INTEGER) is
+			-- Check, if it is possible to read from/write to `s' (depending on
+			-- `transfer_mode' within `timeout' seconds. If not, set an error.
+		require
+			no_error: not error
+			socket_exists: s /= Void
+			defined_mode: Read_only <= transfer_mode and
+						transfer_mode <= Write_only
+		local
+			retval: INTEGER
+			m: BOOLEAN
+		do
+			m := (transfer_mode = Read_only)
+			retval := c_select_poll_with_timeout (s.descriptor, m, timeout)
+			if retval = 0 then 
+				error_code := Connection_timeout 
+			end
+		end
+
+feature {NONE} -- Externals
+
+	c_select_poll_with_timeout (fd: INTEGER; is_read_mode: BOOLEAN;
+								timeout_secs: INTEGER): INTEGER is
+		external
+			"C"
+		end
+		
 invariant
 
 	main_socket_ok: (main_socket /= Void and not error) implies 

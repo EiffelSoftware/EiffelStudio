@@ -10,7 +10,7 @@ class
 inherit
 	WEL_APPLICATION
 
-creation
+create
 	make
 
 feature
@@ -18,7 +18,7 @@ feature
 	main_window: MAIN_WINDOW is
 			-- Application's main window
 		once
-			!! Result.make
+			create Result.make
 		end
 
 	dummy: EOLE_CALL_DISPATCHER

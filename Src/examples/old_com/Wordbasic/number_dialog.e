@@ -15,7 +15,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -27,8 +27,8 @@ feature {NONE} -- Initialization
 			a_parent_exists: a_parent.exists
 		do
 			make_by_id (a_parent, Number_dialog_constant)
-			!! number_edit.make_by_id (Current, Number_edit_constant)
-			!! id_ok.make_by_id (Current, Idok)
+			create number_edit.make_by_id (Current, Number_edit_constant)
+			create id_ok.make_by_id (Current, Idok)
 		end
 
 feature -- Behavior

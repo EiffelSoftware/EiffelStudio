@@ -19,7 +19,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 
 	make
 
@@ -33,7 +33,7 @@ feature -- Initialization
 			io.putstring ("Welcome to ISE Eiffel!%N");
 			com_make
 			if co_initialize = S_ok then
-				!!client
+				create client
 				client.initialize(Clsctx_inproc_server)
 			
 				print ("Enter first integer%N.")

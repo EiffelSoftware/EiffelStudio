@@ -18,7 +18,7 @@ inherit
 			{NONE} all
 		end
 		
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -30,8 +30,8 @@ feature {NONE} -- Initialization
 			a_parent_exists: a_parent.exists
 		do
 			make_by_id (a_parent, Text_dialog_constant)
-			!! id_ok.make_by_id (Current, Idok)
-			!! text_edit.make_by_id (Current, Text_edit_constant)
+			create id_ok.make_by_id (Current, Idok)
+			create text_edit.make_by_id (Current, Text_edit_constant)
 		end
 
 feature -- Behavior
@@ -46,7 +46,7 @@ feature -- Behavior
 				user_text := text_edit.text
 				terminate (Idok)
 			else
-				!! msg_box.make
+				create msg_box.make
 				msg_box.error_message_box (Current, "Text should not be empty !", "Input Error")
 			end
 		end

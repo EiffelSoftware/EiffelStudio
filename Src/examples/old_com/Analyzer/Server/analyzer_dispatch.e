@@ -20,7 +20,7 @@ inherit
 			{NONE} all
 		end
 		
-creation
+create
 	make
 				
 feature -- Initialization
@@ -77,7 +77,7 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 					res.set_integer2 (sentence_count)
 				when Dispid_occurrences then
 					occ := occurrences (params.argument (0).bstr.to_string)
-					!! txt.make (200)
+					create txt.make (200)
 					txt.append ("Number of occurrences(s) of ")
 					txt.append (params.argument (0).bstr.to_string)
 					txt.append (":")
@@ -94,7 +94,7 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 				end
 			elseif flags = Dispatch_propertyget then
 				if dispid = Dispid_text then
-					!! bstr.adapt (text)
+					create bstr.adapt (text)
 					res.set_bstr (bstr)
 				else
 					exception.set_ole_error_code (Disp_e_membernotfound)

@@ -34,11 +34,11 @@ feature -- Basic operations
 			function_exception.init
 			function_result.init
 
-			!!d_arg1
+			create d_arg1
 			d_arg1.init
 			d_arg1.set_integer4 (arg1)
 
-			!!d_arg2
+			create d_arg2
 			d_arg2.init
 			d_arg2.set_integer4 (arg2)
 
@@ -59,8 +59,8 @@ feature {NONE} -- Implementation
 			mess_box: WEL_MSG_BOX
 			error_string: STRING
 		do
-			!! mess_box.make
-			!! error_string.make (20)
+			create mess_box.make
+			create error_string.make (20)
 			if function_exception.error_code /= S_ok then
 				error_string.append ("Error #")
 				error_string.append_integer (function_exception.error_code)

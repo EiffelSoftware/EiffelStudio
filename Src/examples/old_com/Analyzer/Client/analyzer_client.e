@@ -48,8 +48,8 @@ feature -- Element change
 		do
 			dispparams.init
 			function_exception.init
-			!! bstr.adapt (txt)
-			!! arg
+			create bstr.adapt (txt)
+			create arg
 			arg.init
 			arg.set_bstr (bstr)
 			dispparams.add_argument (arg)
@@ -110,8 +110,8 @@ feature -- Element change
 			dispparams.init
 			function_exception.init
 			function_result.init
-			!! bstr.adapt (txt)
-			!! arg
+			create bstr.adapt (txt)
+			create arg
 			arg.init
 			arg.set_bstr (bstr)
 			dispparams.add_argument (arg)
@@ -156,8 +156,8 @@ feature {NONE} -- Implementation
 			mess_box: WEL_MSG_BOX
 			error_string: STRING
 		do
-			!! mess_box.make
-			!! error_string.make (20)
+			create mess_box.make
+			create error_string.make (20)
 			if function_exception.error_code /= S_ok then
 				error_string.append ("Error #")
 				error_string.append_integer (function_exception.error_code)

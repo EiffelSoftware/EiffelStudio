@@ -17,7 +17,7 @@ inherit
 
 	COMPONENT_DISPID
 
-creation
+create
 	make
 
 feature {EOLE_CALL_DISPATCHER} -- Callback
@@ -52,7 +52,7 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 			-- to parameter names.
 		do
 			if names.item(names.lower).is_equal("sum") then
-				!!Result.make (names.lower, names.lower)
+				create Result.make (names.lower, names.lower)
 				Result.force(Dispid_sum, names.lower)
 				set_last_hresult (Noerror)
 			else

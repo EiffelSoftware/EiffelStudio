@@ -31,7 +31,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -59,10 +59,10 @@ feature {NONE} -- Initialization
 			main_menu.disable_item (Cmd_spelling)
 			main_menu.disable_item (Cmd_grammar)	
 			resize (350, 150)
-			!! wordbasic
+			create wordbasic
 			wordbasic.initialize (Clsctx_local_server)
 			if not wordbasic.is_valid then
-				!! box.make
+				create box.make
 				box.error_message_box (Void, "Can not get IDispatch interface", "IDsipatch error")
 				on_destroy
 			end
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			when Cmd_border_line_style then
 				loc := enter_number
 				if loc < 0 or loc > 11 then
-					!! mess_box.make
+					create mess_box.make
 					mess_box.warning_message_box (Current, "Sorry, BorderLineStyle%
 					% should be less than 12 and greater than 0", "Input Error")
 					on_menu_command (Cmd_border_line_style)
@@ -139,14 +139,14 @@ feature {NONE} -- Implementation
 			when Cmd_grammar then
 				wordbasic.tools_grammar
 			when Cmd_count_windows then
-				!! message.make (0)
+				create message.make (0)
 				message.make_from_string ("Number of open document and macro-editing windows: ")
 				message.append_integer (wordbasic.count_windows)
-				!! mess_box.make
+				create mess_box.make
 				mess_box.information_message_box (Current, message, "Windows count")
 			when Cmd_get_id then
 				message := enter_text
-				!! mess_box.make
+				create mess_box.make
 				loc := wordbasic.get_id (message)
 				if loc = -1 then
 					mess_box.error_message_box (Current, "Sorry, not a WordBasic command ...", "Get ID Error")
@@ -156,10 +156,10 @@ feature {NONE} -- Implementation
 					mess_box.information_message_box (Current, message, "Dispatch Identifier")
 				end
 			when Cmd_exception then
-				!! message.make (100)
+				create message.make (100)
 				message.append ("Last HResult: ")
 				message.append_integer (wordbasic.error_code)
-				!! mess_box.make
+				create mess_box.make
 				mess_box.information_message_box (Current, message, wordbasic.error_description)
 			when Cmd_show then
 				wordbasic.app_show
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 		local
 			dialog: TEXT_DIALOG
 		do
-			!! dialog.make (Current)
+			create dialog.make (Current)
 			dialog.activate
 			Result := dialog.user_text
 		end
@@ -191,7 +191,7 @@ feature {NONE} -- Implementation
 		local
 			dialog: NUMBER_DIALOG
 		do
-			!! dialog.make (Current)
+			create dialog.make (Current)
 			dialog.activate
 			Result := dialog.number
 		end
@@ -199,13 +199,13 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			!! Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Id_ico_application)
 		end
 
 	main_menu: WEL_MENU is
 			-- Window's menu
 		once
-			!! Result.make_by_id (Id_main_menu)
+			create Result.make_by_id (Id_main_menu)
 		ensure
 			result_not_void: Result /= Void
 		end

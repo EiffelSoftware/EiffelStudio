@@ -48,7 +48,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 	make
 
 feature -- Initialization
@@ -61,18 +61,18 @@ feature -- Initialization
 			tvitem: WEL_TREE_VIEW_ITEM
 			tvinss: WEL_TREE_VIEW_INSERT_STRUCT
 		do
-			!! storage.make
+			create storage.make
 			if storage.is_compound_file (name) then
 				storage.open_compound_file (name, Stgm_share_deny_write)
 				if storage.status.last_hresult = STG_E_SHAREVIOLATION then
-					!! mess_box.make
+					create mess_box.make
 					mess_box.error_message_box (p, "Sharing Violation", "Read error")
 				elseif storage.status.last_hresult = S_OK then
 					storage.add_ref
 					mdi_child_window_make (p, name)
-					!! tree_view.make (Current, 0, 0, width - 8, height - 27, 0)
-					!! tvitem.make
-					!! tvinss.make
+					create tree_view.make (Current, 0, 0, width - 8, height - 27, 0)
+					create tvitem.make
+					create tvinss.make
 					tvitem.set_text ("Root")
 					tvinss.set_parent (tree_view.last_item)
 					tvinss.set_last
@@ -80,11 +80,11 @@ feature -- Initialization
 					tree_view.insert_item (tvinss)
 					create_tree_view (tree_view.last_item, storage)
 				else					
-					!! mess_box.make
+					create mess_box.make
 					mess_box.error_message_box (p, "Can not open file", "Open error")
 				end
 			else
-				!! mess_box.make
+				create mess_box.make
 				mess_box.error_message_box (p, "Sorry, not a compound file !!", "Read error")
 			end
 		end
@@ -104,9 +104,9 @@ feature -- Initialization
 			from
 				elements := stor.enum_elements
 				index := elements.lower
-				!! tvitem.make
-				!! tvinss.make
-				!! tex.make (0)
+				create tvitem.make
+				create tvinss.make
+				create tex.make (0)
 			until
 				index = elements.upper + 1
 			loop
@@ -118,7 +118,7 @@ feature -- Initialization
 				tvinss.set_tree_view_item (clone (tvitem))
 				tree_view.insert_item (tvinss)
 				if elements.item (index).element_type = STGTY_STORAGE then
-					!! substorage.make
+					create substorage.make
 					substorage := clone (stor).open_substorage (elements.item (index).element_name, STGM_SHARE_EXCLUSIVE)
 					create_tree_view (tree_view.last_item, substorage)
 				end
@@ -174,7 +174,7 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			!! Result.make_by_id (Id_ico_child_window)
+			create Result.make_by_id (Id_ico_child_window)
 		end
 
 end -- class CHILD_WINDOW

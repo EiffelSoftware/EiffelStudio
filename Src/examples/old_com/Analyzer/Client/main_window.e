@@ -55,7 +55,7 @@ inherit
 			{NONE} all
 		end
 		
-creation
+create
 	make
 
 feature {NONE} -- Initialization
@@ -66,7 +66,7 @@ feature {NONE} -- Initialization
 			bitmap_index1, bitmap_index2: INTEGER
 		do
 			if co_initialize = S_ok then
-				!! analyzer
+				create analyzer
 				analyzer.initialize (Clsctx_local_server)
 				analyzer.show
 				make_top (Title)
@@ -76,13 +76,13 @@ feature {NONE} -- Initialization
 				set_y (100)
 
 				-- Create a rich edit control
-				!! rich_edit.make (Current, "", 0, 28, 200, 200, -1)
+				create rich_edit.make (Current, "", 0, 28, 200, 200, -1)
 
 				-- Create a toolbar and buttons
-				!! tool_bar.make (Current, -1)
+				create tool_bar.make (Current, -1)
 
-				!! tool_bar_bitmap.make (Bmp_toolbar)
-				!! standard_tool_bar_bitmap.make_by_predefined_id (Idb_std_small_color)
+				create tool_bar_bitmap.make (Bmp_toolbar)
+				create standard_tool_bar_bitmap.make_by_predefined_id (Idb_std_small_color)
 
 				tool_bar.add_bitmaps (standard_tool_bar_bitmap, 1)
 				bitmap_index1 := tool_bar.last_bitmap_index
@@ -90,24 +90,24 @@ feature {NONE} -- Initialization
 				tool_bar.add_bitmaps (tool_bar_bitmap, 1)
 				bitmap_index2 := tool_bar.last_bitmap_index
 
-				!! tool_bar_button1.make_button (bitmap_index1 + Std_filenew, Cmd_new)
-				!! tool_bar_button2.make_button (bitmap_index1 + Std_fileopen, Cmd_open)
-				!! tool_bar_button3.make_button (bitmap_index1 + Std_filesave, Cmd_save)
-				!! tool_bar_button4.make_separator
-				!! tool_bar_button5.make_button (bitmap_index1 + Std_print, Cmd_print)
-				!! tool_bar_button6.make_separator
-				!! tool_bar_button7.make_check (bitmap_index2 + 0, Cmd_bold)
-				!! tool_bar_button8.make_check (bitmap_index2 + 1, Cmd_italic)
-				!! tool_bar_button9.make_check (bitmap_index2 + 2, Cmd_underline)
-				!! tool_bar_button10.make_separator
-				!! tool_bar_button11.make_button (bitmap_index2 + 3, Cmd_font)
-				!! tool_bar_button12.make_button (bitmap_index2 + 4, Cmd_color)
-				!! tool_bar_button13.make_separator
-				!! tool_bar_button14.make_check_group (bitmap_index2 + 5, Cmd_left)
-				!! tool_bar_button15.make_check_group (bitmap_index2 + 6, Cmd_center)
-				!! tool_bar_button16.make_check_group (bitmap_index2 + 7, Cmd_right)
-				!! tool_bar_button17.make_separator
-				!! tool_bar_button18.make_check (bitmap_index2 + 8, Cmd_bullet)
+				create tool_bar_button1.make_button (bitmap_index1 + Std_filenew, Cmd_new)
+				create tool_bar_button2.make_button (bitmap_index1 + Std_fileopen, Cmd_open)
+				create tool_bar_button3.make_button (bitmap_index1 + Std_filesave, Cmd_save)
+				create tool_bar_button4.make_separator
+				create tool_bar_button5.make_button (bitmap_index1 + Std_print, Cmd_print)
+				create tool_bar_button6.make_separator
+				create tool_bar_button7.make_check (bitmap_index2 + 0, Cmd_bold)
+				create tool_bar_button8.make_check (bitmap_index2 + 1, Cmd_italic)
+				create tool_bar_button9.make_check (bitmap_index2 + 2, Cmd_underline)
+				create tool_bar_button10.make_separator
+				create tool_bar_button11.make_button (bitmap_index2 + 3, Cmd_font)
+				create tool_bar_button12.make_button (bitmap_index2 + 4, Cmd_color)
+				create tool_bar_button13.make_separator
+				create tool_bar_button14.make_check_group (bitmap_index2 + 5, Cmd_left)
+				create tool_bar_button15.make_check_group (bitmap_index2 + 6, Cmd_center)
+				create tool_bar_button16.make_check_group (bitmap_index2 + 7, Cmd_right)
+				create tool_bar_button17.make_separator
+				create tool_bar_button18.make_check (bitmap_index2 + 8, Cmd_bullet)
 
 				tool_bar.add_buttons (<<
 					tool_bar_button1,
@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 		local
 			dialog: TEXT_DIALOG
 		do
-			!! dialog.make (Current)
+			create dialog.make (Current)
 			dialog.activate
 			Result := dialog.user_text
 		end
@@ -194,7 +194,7 @@ feature {NONE} -- Implementation
 			tt: WEL_TOOLTIP_TEXT
 		do
 			if msg = Wm_notify then
-				!! tt.make_by_pointer (cwel_integer_to_pointer (lparam))
+				create tt.make_by_pointer (cwel_integer_to_pointer (lparam))
 				if tt.hdr.code = Ttn_needtext then
 					-- Set resource string id.
 					tt.set_text_id (tt.hdr.id_from)
@@ -218,7 +218,7 @@ feature {NONE} -- Implementation
 				rich_edit.clear
 				file_name := Void
 				set_window_title
-				!! char_format.make
+				create char_format.make
 				char_format.set_face_name ("Arial")
 				char_format.set_height (10 * 20)
 				char_format.unset_bold
@@ -227,7 +227,7 @@ feature {NONE} -- Implementation
 				open_file_dialog.activate (Current)
 				if open_file_dialog.selected then
 					file_name := clone (open_file_dialog.file_name)
-					!! file.make_open_read (file_name)
+					create file.make_open_read (file_name)
 					if file_name.substring_index ("txt", 1) > 0 then
 						rich_edit.load_text_file (file)
 					else
@@ -238,7 +238,7 @@ feature {NONE} -- Implementation
 				end
 			when Cmd_save then
 				if file_name /= Void then
-					!! file.make_create_read_write (file_name)
+					create file.make_create_read_write (file_name)
 					if file_name.substring_index ("txt", 1) > 0 then
 						rich_edit.save_text_file (file)
 					else
@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 				if save_file_dialog.selected then
 					file_name := save_file_dialog.file_name
 					set_window_title
-					!! file.make_create_read_write (file_name)
+					create file.make_create_read_write (file_name)
 					if file_name.substring_index ("txt", 1) > 0 then
 						rich_edit.save_text_file (file)
 					else
@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 					rich_edit.print_all (print_dialog.dc, file_name)
 				end
 			when Cmd_bold then
-				!! char_format.make
+				create char_format.make
 				if tool_bar.button_checked (Cmd_bold) then
 					char_format.set_bold
 				else
@@ -273,7 +273,7 @@ feature {NONE} -- Implementation
 				end
 				rich_edit.set_character_format_selection (char_format)
 			when Cmd_italic then
-				!! char_format.make
+				create char_format.make
 				if tool_bar.button_checked (Cmd_italic) then
 					char_format.set_italic
 				else
@@ -281,7 +281,7 @@ feature {NONE} -- Implementation
 				end
 				rich_edit.set_character_format_selection (char_format)
 			when Cmd_underline then
-				!! char_format.make
+				create char_format.make
 				if tool_bar.button_checked (Cmd_underline) then
 					char_format.set_underline
 				else
@@ -292,7 +292,7 @@ feature {NONE} -- Implementation
 				choose_font.activate (Current)
 				choose_font.add_flag (Cf_ttonly)
 				if choose_font.selected then
-					!! char_format.make
+					create char_format.make
 					char_format.set_face_name (choose_font.log_font.face_name)
 					char_format.set_height (choose_font.log_font.height * -20)
 					char_format.set_char_set (choose_font.log_font.char_set)
@@ -302,24 +302,24 @@ feature {NONE} -- Implementation
 			when Cmd_color then
 				choose_color.activate (Current)
 				if choose_color.selected then
-					!! char_format.make
+					create char_format.make
 					char_format.set_text_color (choose_color.rgb_result)
 					rich_edit.set_character_format_selection (char_format)
 				end
 			when Cmd_left then
-				!! para_format.make
+				create para_format.make
 				para_format.set_left_alignment
 				rich_edit.set_paragraph_format (para_format)
 			when Cmd_center then
-				!! para_format.make
+				create para_format.make
 				para_format.set_center_alignment
 				rich_edit.set_paragraph_format (para_format)
 			when Cmd_right then
-				!! para_format.make
+				create para_format.make
 				para_format.set_right_alignment
 				rich_edit.set_paragraph_format (para_format)
 			when Cmd_bullet then
-				!! para_format.make
+				create para_format.make
 				if tool_bar.button_checked (Cmd_bullet) then
 					para_format.bullet_numbering
 				else
@@ -330,8 +330,8 @@ feature {NONE} -- Implementation
 				if rich_edit.modified then
 					analyzer.set_text (rich_edit.text)
 				end
-				!! txt.make (40)
-				!! msg.make
+				create txt.make (40)
+				create msg.make
 				txt.append ("Word count: ")
 				txt.append_integer (analyzer.word_count)
 				msg.information_message_box (Current, txt, "Analyzer")
@@ -339,8 +339,8 @@ feature {NONE} -- Implementation
 				if rich_edit.modified then
 					analyzer.set_text (rich_edit.text)
 				end
-				!! txt.make (40)
-				!! msg.make
+				create txt.make (40)
+				create msg.make
 				txt.append ("Line count: ")
 				txt.append_integer (analyzer.line_count)
 				msg.information_message_box (Current, txt, "Analyzer")
@@ -348,8 +348,8 @@ feature {NONE} -- Implementation
 				if rich_edit.modified then
 					analyzer.set_text (rich_edit.text)
 				end
-				!! txt.make (40)
-				!! msg.make
+				create txt.make (40)
+				create msg.make
 				txt.append ("Sentence count: ")
 				txt.append_integer (analyzer.sentence_count)
 				msg.information_message_box (Current, txt, "Analyzer")
@@ -357,8 +357,8 @@ feature {NONE} -- Implementation
 				if rich_edit.modified then
 					analyzer.set_text (rich_edit.text)
 				end
-				!! txt.make (100)
-				!! msg.make
+				create txt.make (100)
+				create msg.make
 				entered_text := enter_text
 				txt.append ("Number of occurrences of ")
 				txt.append (entered_text)
@@ -396,7 +396,7 @@ feature {NONE} -- Implementation
 	choose_color: WEL_CHOOSE_COLOR_DIALOG is
 			-- Dialog box to choose a text color.
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -404,7 +404,7 @@ feature {NONE} -- Implementation
 	choose_font: WEL_CHOOSE_FONT_DIALOG is
 			-- Dialog box to choose a text font.
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -414,8 +414,8 @@ feature {NONE} -- Implementation
 		local
 			ofn: WEL_OFN_CONSTANTS
 		once
-			!! ofn
-			!! Result.make
+			create ofn
+			create Result.make
 			Result.set_default_extension ("txt")
 			Result.set_filter (<<"Rich Text file (*.rtf)",
 				"Text file (*.txt)">>,
@@ -428,7 +428,7 @@ feature {NONE} -- Implementation
 	save_file_dialog: WEL_SAVE_FILE_DIALOG is
 			-- Dialog box to save a file.
 		once
-			!! Result.make
+			create Result.make
 			Result.set_default_extension ("txt")
 			Result.set_filter (<<"Rich Text file (*.rtf)",
 				"Text file (*.txt)">>,
@@ -440,7 +440,7 @@ feature {NONE} -- Implementation
 	print_dialog: WEL_PRINT_DIALOG is
 			-- Dialog box to select the printer.
 		once
-			!! Result.make
+			create Result.make
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -463,13 +463,13 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			!! Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Id_ico_application)
 		end
 
 	main_menu: WEL_MENU is
 			-- Window's menu
 		once
-			!! Result.make_by_id (Id_main_menu)
+			create Result.make_by_id (Id_main_menu)
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -67,10 +67,8 @@ cluster
 
 	all compiler:		"$EIFFEL_SRC/Eiffel/eiffel"
 		exclude
-			"CVS"; "com_il_generation"; "Clib"; "Core"; "junk"; "kernel"; "metadata_generation";
+			"CVS"; "com_il_generation"; "Clib"; "Core"; "junk"; "kernel"; "windows";
 		end
-
-	metadata_generation:	"$EIFFEL_SRC/Eiffel/eiffel/metadata_generation/unix"
 
 	all compiler_api:		"$EIFFEL_SRC/Eiffel/API"
 		exclude
@@ -104,6 +102,7 @@ cluster
 
 	profile_tool (interface):		"$/graphical/profile_tool"
 
+	all cli_writer:		"$EIFFEL_SRC/Eiffel/library/cli_writer"
 
 external
 

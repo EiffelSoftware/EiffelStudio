@@ -182,10 +182,8 @@ cluster
 
 	all compiler:		"$EIFFEL_SRC/Eiffel/eiffel"
 		exclude
-			"CVS"; "com_il_generation"; "kernel"; "metadata_generation"; "windows" 
+			"CVS"; "com_il_generation"; "kernel"; "windows" 
 		end
-
-	metadata_generation:		"$EIFFEL_SRC/Eiffel/eiffel/metadata_generation/unix"
 
 	all compiler_api:		"$EIFFEL_SRC/Eiffel/API"
 		exclude

@@ -95,10 +95,14 @@ feature -- Status report
 	current_line_number: INTEGER is
 			-- Returns the number of the line the cursor currently
 			-- is on.
+		local
+			p: POINTER
+			temp_string: STRING
 		do
-			check
-				To_be_implemented: False
-			end
+			p := C.gtk_editable_get_chars (c_object, 0, C.gtk_text_get_point (c_object))
+			create temp_string.make_from_c (p)
+			C.g_free (p)
+			Result := temp_string.occurrences ('%N') + 1
 		end
 
 	caret_position: INTEGER is

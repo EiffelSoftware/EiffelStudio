@@ -24,7 +24,8 @@ inherit
 			make,
 			interface,
 			call_close_request_actions,
-			client_area
+			client_area,
+			initialize
 		end
 		
 create
@@ -37,19 +38,24 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_new)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_set_has_separator (c_object, False)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (feature {EV_GTK_EXTERNALS}.gtk_dialog_struct_action_area (c_object))
-			feature {EV_GTK_EXTERNALS}.gtk_widget_realize (c_object)
-			feature {EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 0, 1) -- allow_shrink = False, allow_grow = False, auto_shrink = True
-			enable_closeable
 		end
 		
 	client_area: POINTER is
 			-- Pointer to the client area where the widgets are contained within the dialog.
 		do
 			Result := feature {EV_GTK_EXTERNALS}.gtk_dialog_struct_vbox (c_object)
-		end		
-		
+		end
+	
+	initialize is
+			-- Set up dialog
+		do
+			Precursor {EV_TITLED_WINDOW_IMP}
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_dialog_set_has_separator (c_object, False)
+			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (feature {EV_GTK_EXTERNALS}.gtk_dialog_struct_action_area (c_object))
+			feature {EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 0, 1) -- allow_shrink = False, allow_grow = False, auto_shrink = True
+			enable_closeable
+		end
+	
 feature -- Status Report
 
 	is_closeable: BOOLEAN is
@@ -141,7 +147,7 @@ feature {NONE} -- Implementation
 					if default_cancel_button.is_sensitive then
 							-- Escape key pressed and `default_cancel_button' is
 							-- sensitive so simulate a press.
-						default_cancel_button.select_actions.call ([])
+						default_cancel_button.select_actions.call (Void)
 					end
 	
 				elseif a_key_code = Key_constants.Key_enter and then
@@ -149,7 +155,7 @@ feature {NONE} -- Implementation
 					if current_push_button.is_sensitive and not current_push_button.has_focus then
 							-- Enter key pressed and `current_push_button' is
 							-- sensitive so simulate a press.
-						current_push_button.select_actions.call ([])
+						current_push_button.select_actions.call (Void)
 					end
 				end
 			end

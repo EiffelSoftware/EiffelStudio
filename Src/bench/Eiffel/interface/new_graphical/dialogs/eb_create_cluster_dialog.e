@@ -252,6 +252,9 @@ feature {NONE} -- Implementation
 	chosen_dir: FILE_NAME
 			-- The path to the created cluster.
 
+	dollar_path: STRING
+			-- The path with environment variables.
+
 	ace_path: FILE_NAME
 			-- The path written in the Ace file.
 
@@ -343,6 +346,8 @@ feature {NONE} -- Implementation
 					end
 					if cluster.is_library or cluster.is_precompiled then
 						create wd.make_with_text (Warning_messages.w_Cannot_add_to_library_cluster (cluster.cluster_name))
+						wd.show_modal_to_window (Current)
+						aok := False
 					elseif
 							-- FIXME XR: If the cluster is `all' in the Ace, but it has no child,
 							-- WE HAVE NO WAY OF KNOWING IT IS RECURSIVE except parsing the Ace again!!!!! (gr)
@@ -356,23 +361,25 @@ feature {NONE} -- Implementation
 						base_name := cluster.cluster_name + "." + base_name
 					end
 				end
-				create dir.make (chosen_dir)
-				create test_file.make (chosen_dir)
-				if test_file.exists and then not dir.exists then
-					create wd.make_with_text (Warning_messages.w_Not_a_directory (chosen_dir))
-					wd.show_modal_to_window (Current)
-				elseif not dir.exists then
-					create_directory (dir)
-					if aok then
-						real_create_cluster (in_recursive, base_name, chosen_dir, ace_path)
+				if aok then
+					create dir.make (chosen_dir)
+					create test_file.make (chosen_dir)
+					if test_file.exists and then not dir.exists then
+						create wd.make_with_text (Warning_messages.w_Not_a_directory (chosen_dir))
+						wd.show_modal_to_window (Current)
+					elseif not dir.exists then
+						create_directory (dir)
+						if aok then
+							real_create_cluster (in_recursive, base_name, dollar_path, ace_path)
+						else
+							create wd.make_with_text (Warning_messages.w_Cannot_create_directory (chosen_dir))
+							wd.show_modal_to_window (Current)
+						end
 					else
-						create wd.make_with_text (Warning_messages.w_Cannot_create_directory (chosen_dir))
-						wd.show_modal_to_window (target.window)
+						create cd.make_with_text (Warning_messages.w_Directory_already_in_cluster (chosen_dir))
+						cd.button ((create {EV_DIALOG_CONSTANTS}).ev_yes).select_actions.extend (~real_create_cluster (in_recursive, base_name, dollar_path, ace_path))
+						cd.show_modal_to_window (Current)
 					end
-				else
-					create cd.make_with_text (Warning_messages.w_Directory_already_in_cluster (chosen_dir))
-					cd.button ((create {EV_DIALOG_CONSTANTS}).ev_yes).select_actions.extend (~real_create_cluster (in_recursive, base_name, chosen_dir, ace_path))
-					cd.show_modal_to_window (Current)
 				end
 			end
 		end
@@ -392,13 +399,11 @@ feature {NONE} -- Implementation
 				create cluster_i.make_with_parent (path, cluster)
 				cluster_i.set_cluster_name (name)
 				cluster_i.set_belongs_to_all (rec)
-				manager.add_cluster_i (cluster_i, cluster, all_box.is_sensitive and all_box.is_selected, library_box.is_selected)
+				manager.add_cluster_i (cluster_i, cluster, ace_path, all_box.is_sensitive and all_box.is_selected, library_box.is_selected)
 			else
 				create cluster_i.make_with_parent (path, Void)
-				cluster_i.set_dollar_path (ace_pth)
-				cluster_i.set_path (path)
 				cluster_i.set_cluster_name (name)
-				manager.add_top_cluster_i (cluster_i, all_box.is_sensitive and all_box.is_selected, library_box.is_selected)
+				manager.add_top_cluster_i (cluster_i, ace_path, all_box.is_sensitive and all_box.is_selected, library_box.is_selected)
 			end
 			destroy
 		end
@@ -478,6 +483,7 @@ feature {NONE} -- Implementation
 			valid_state: aok and (sub_cluster implies cluster /= Void)
 		local
 			cp: STRING
+			icp: STRING
 			wd: EV_WARNING_DIALOG
 		do
 			cp := folder_entry.text
@@ -491,16 +497,18 @@ feature {NONE} -- Implementation
 					chosen_dir.set_file_name (cluster_name)
 					create ace_path.make_from_string ("$")
 					ace_path.set_file_name (cluster_name)
+					dollar_path := chosen_dir
 				end
 			else
-				cp := (create {ENV_INTERP}).interpreted_string (cp)
-				aok := Eiffel_universe.cluster_of_path (cp) = Void
+				icp := (create {ENV_INTERP}).interpreted_string (cp)
+				aok := Eiffel_universe.cluster_of_path (icp) = Void
 				if not aok then
-					create wd.make_with_text (Warning_messages.w_cluster_path_already_exists (cp))
+					create wd.make_with_text (Warning_messages.w_cluster_path_already_exists (icp))
 					wd.show_modal_to_window (target.window)
 				else
 					create ace_path.make_from_string (cp)
-					create chosen_dir.make_from_string (cp)
+					create chosen_dir.make_from_string (icp)
+					dollar_path := cp
 				end
 			end
 		ensure

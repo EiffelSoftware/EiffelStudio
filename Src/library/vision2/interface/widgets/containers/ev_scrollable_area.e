@@ -14,7 +14,8 @@ inherit
 	EV_CONTAINER 
 		redefine
 			make,
-			implementation
+			implementation,
+			manager
 		end
 
 creation
@@ -28,10 +29,17 @@ feature {NONE} -- Initialization
 		do
 			!EV_SCROLLABLE_AREA_IMP!implementation.make (par)
 			widget_make (par)
-		end	
+		end
+
+feature -- Access
+
+	manager: BOOLEAN is 
+		once
+			Result := False
+		end
 
 feature {EV_MENU_ITEM} -- Implementation
-	
+
 	implementation: EV_SCROLLABLE_AREA_I	
 
 end -- class EV_SCROLLABLE_AREA

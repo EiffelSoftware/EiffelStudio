@@ -15,7 +15,7 @@ inherit
 
 	ECOM_TYPE_KIND
 
-feature -- Access
+feature -- Basic operations
 
 	registration_class_name: STRING is
 			-- Registration class name
@@ -23,19 +23,18 @@ feature -- Access
 			Result := Ecom_prefix
 			Result.append (Shared_wizard_environment.system_name)
 			Result.append (Registration_suffix)
+			Result.to_upper
 		end
 
-	name_for_class (a_name: STRING; a_type: INTEGER; is_client: BOOLEAN): STRING is
-			-- Convert to Eiffel class name.
+	to_eiffel_name (a_name: STRING): STRING is
+			-- Convert `a_name' to Eiffel legitimate name.
 		require
 			non_void_name: a_name /= Void
 			valid_name: not a_name.empty
-			valid_type: is_valid_type_kind (a_type)
 		local
 			i: INTEGER
 			privious_upper: BOOLEAN
 		do
-
 			from
 				i := 1
 				create Result.make (0)
@@ -49,13 +48,23 @@ feature -- Access
 					Result.append (Underscore)
 				end
 				Result.extend (a_name.item (i))
-				if a_name.item (i).is_upper or (a_name.item (i) = '_') then
-					privious_upper := True
-				else
-					privious_upper := False
-				end
+				privious_upper := (a_name.item (i).is_upper or (a_name.item (i) = '_'))
 				i := i + 1
 			end
+		ensure
+			non_void_name: Result /= Void
+			valid_name: not Result.empty
+		end
+
+	name_for_class (a_name: STRING; a_type: INTEGER; is_client: BOOLEAN): STRING is
+			-- Convert to Eiffel class name.
+		require
+			non_void_name: a_name /= Void
+			valid_name: not a_name.empty
+			valid_type: is_valid_type_kind (a_type)
+		do
+			Result := to_eiffel_name (a_name)
+			
 			from
 			until
 				Result.item (1) /= '_'
@@ -92,30 +101,9 @@ feature -- Access
 		require
 			non_void_name: a_name /= Void
 			valid_name: not a_name.empty
-		local
-			i: INTEGER
-			privious_upper: BOOLEAN
 		do
-			from
-				i := 1
-				create Result.make (0)
-				privious_upper := True
-			variant 
-				a_name.count - i + 1
-			until
-				i > a_name.count
-			loop
-				if a_name.item (i).is_upper and not privious_upper then
-					Result.append (Underscore)
-				end
-				Result.extend (a_name.item (i))
-				if a_name.item (i).is_upper or (a_name.item (i) = '_') then
-					privious_upper := True
-				else
-					privious_upper := False
-				end
-				i := i + 1
-			end
+			Result := to_eiffel_name (a_name)
+
 			Result.to_lower
 		ensure
 			non_void_feature_name: Result /= Void

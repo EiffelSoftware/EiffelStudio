@@ -63,6 +63,13 @@ feature
 	postcondition: BYTE_LIST [BYTE_NODE];
 			-- List of ASSERT_B instances: can be Void.
 
+	old_expressions: LINKED_LIST [UN_OLD_B];
+			-- List of UN_OLD_B instances: can be Void.
+
+	c_old_expressions: LINKED_LIST [UN_OLD_BL];
+			-- List of UN_OLD_BL instances: can be Void.
+			-- Used when generating C code. 
+
 	rescue_clause: BYTE_LIST [BYTE_NODE];
 			-- List of INSTR_B instances: can be Void.
 
@@ -136,6 +143,12 @@ feature
 			-- Assign `var' to `postcondition'.
 		do
 			postcondition := var
+		end;
+
+	set_old_expressions (var: like old_expressions) is
+			-- Assign `var' to old_expressions.
+		do
+			old_expressions := var
 		end;
 
 	set_rescue_clause (var: like rescue_clause) is
@@ -244,18 +257,33 @@ feature
 	generate_old_variables is
 			-- Generate value for old variables
 		local
-			old_expressions: LINKED_LIST [UN_OLD_BL];
+			workbench_mode: BOOLEAN;
+			old_exp: UN_OLD_BL
 		do
-			old_expressions := context.old_expressions;
-			if context.has_postcondition and then old_expressions /= Void
+			workbench_mode:= Context.workbench_mode;
+			if context.has_postcondition and then (old_expressions /= Void)
+				and then (not old_expressions.empty)
 			then
-				from
-					old_expressions.start;
-				until
-					old_expressions.offright
-				loop
-					old_expressions.item.initialize;
-					old_expressions.forth;
+				if workbench_mode then
+						generated_file.putstring ("if (RTAL & CK_ENSURE) {");
+						generated_file.new_line;
+						generated_file.indent;
+				end;
+				if c_old_expressions /= Void then
+					from
+						c_old_expressions.start;
+					until
+						c_old_expressions.offright
+					loop
+						old_exp := c_old_expressions.item;
+						old_exp.initialize;
+						c_old_expressions.forth;
+					end;
+					if workbench_mode then
+						generated_file.putchar ('}');
+						generated_file.new_line;
+						generated_file.exdent;
+					end;
 				end;
 			end;
 		end;

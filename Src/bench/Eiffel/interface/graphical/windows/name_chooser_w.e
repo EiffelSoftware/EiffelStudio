@@ -7,7 +7,16 @@ inherit
 	NAMER;
 	FILE_SEL_D
 		rename
+			make as file_sel_d_create,
+			popup as file_sel_d_popup
+		end;
+	FILE_SEL_D
+		rename
 			make as file_sel_d_create
+		redefine
+			popup
+		select
+			popup
 		end;
 	LIC_EXITER
 
@@ -26,7 +35,25 @@ feature
 			add_ok_action (Current, Current);
 			add_cancel_action (Current, Void);
 			set_title (l_Select_a_file);
-			set_exclusive_grab
+			set_exclusive_grab;
+			parent.hide
+		end;
+
+	popup is
+			-- Popup file selection window.
+		do
+			if window /= Void then
+				parent.set_x_y (window.real_x, window.real_y);
+				parent.set_size (window.width, window.height);
+				window := Void
+			else
+				parent.set_x_y (0, 0);
+				parent.set_size (screen.width, screen.height);
+			end;
+			parent.hide;
+			if is_popped_up then popdown end;
+			file_sel_d_popup;
+			raise
 		end;
 
 	call (a_command: COMMAND_W) is
@@ -36,6 +63,11 @@ feature
 			popup
 		ensure
 			last_caller_recorded: last_caller = a_command
+		end;
+
+	set_window (wind: TEXT_WINDOW) is
+		do
+			window ?= wind.tool
 		end;
 
 feature {NONE}
@@ -57,5 +89,8 @@ feature {NONE}
 
 	last_caller: COMMAND_W
 			-- Last command which popped up current
+
+	window: WIDGET;
+			-- Window to which the file selection will apply
 
 end

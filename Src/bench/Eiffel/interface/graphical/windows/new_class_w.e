@@ -128,6 +128,7 @@ feature
 						fname.append ("Class ");
 						fname.append (str);
 						fname.append (" already exist in cluster");
+						warner.set_window (class_text);
 						warner.gotcha_call (fname);
 					elseif
 						(not file.exists and then not file.is_creatable)
@@ -136,6 +137,7 @@ feature
 						fname.wipe_out;
 						fname.append ("Cannot create file:%N");
 						fname.append (str);
+						warner.set_window (class_text);
 						warner.gotcha_call (fname);
 					else 
 						stone := class_i.stone;
@@ -155,6 +157,7 @@ feature
 						then
 							fname.prepend ("File ");
 							fname.append ("%N cannot be read");
+							warner.set_window (class_text);
 							warner.gotcha_call (fname);
 						else
 								--| Reading in existing file (created outside
@@ -184,6 +187,7 @@ feature
 			clu := Universe.cluster_of_name (clun);
 			if clu = Void then
 				aok := False;
+				warner.set_window (class_text);
 				warner.gotcha_call ("Invalid cluster name");
 			else
 				aok := True;

@@ -8,7 +8,16 @@ inherit
 	NAMER;
 	QUESTION_D
 		rename
+			make as question_create,
+			popup as question_popup
+		end;
+	QUESTION_D
+		rename
 			make as question_create
+		redefine
+			popup
+		select
+			popup
 		end
 
 creation
@@ -18,7 +27,7 @@ creation
 feature 
 
 	make (a_composite: COMPOSITE) is
-			-- Create a file selection dialog
+			-- Create a confirmer window.
 		local
 			void_argument: ANY
 		do
@@ -26,7 +35,25 @@ feature
 			set_title (l_Confirm);
 			hide_help_button;
 			add_ok_action (Current, Current);
-			add_cancel_action (Current, void_argument)
+			add_cancel_action (Current, void_argument);
+			parent.hide
+		end;
+
+	popup is
+			-- Popup corfimer window.
+		do
+			if window /= Void then
+				parent.set_x_y (window.real_x, window.real_y);
+				parent.set_size (window.width, window.height);
+				window := Void
+			else
+				parent.set_x_y (0, 0);
+				parent.set_size (screen.width, screen.height);
+			end;
+			parent.hide;
+			if is_popped_up then popdown end;
+			question_popup;
+			raise
 		end;
 
 	call (a_command: COMMAND_W; a_message, ok_label: STRING) is
@@ -42,6 +69,10 @@ feature
 			last_caller_recorded: last_caller = a_command
 		end;
 
+	set_window (wind: TEXT_WINDOW) is
+		do
+			window ?= wind.tool
+		end;
 	
 feature {NONE}
 
@@ -55,5 +86,8 @@ feature {NONE}
 
 	last_caller: COMMAND_W
 			-- Last command which popped up current
+
+	window: WIDGET;
+			-- Window to which the confirmation will apply
 
 end

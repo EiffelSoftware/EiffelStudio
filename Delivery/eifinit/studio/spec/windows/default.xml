@@ -1,8 +1,8 @@
 <EIFFEL_DOCUMENT>
 <TOPIC TOPIC_ID="Bench_preferences" ICON="icon_preferences_root">
 	<HEAD>EiffelBench Resources, version 4.8</HEAD>
-	<TOPIC TOPIC_ID="Applications_and_directories" ICON="icon_preferences_folder">
-		<HEAD>Applications and Directories</HEAD>
+	<TOPIC TOPIC_ID="Global_preferences" ICON="icon_preferences_folder">
+		<HEAD>Global preferences</HEAD>
 		<TEXT DESCRIPTION="Text files format: True = Windows / False = UNIX">text_mode_is_windows<BOOLEAN>True</BOOLEAN></TEXT>
 		<TEXT>editor<STRING>vi</STRING></TEXT>
 		<TEXT>temporary_directory<STRING>/tmp</STRING></TEXT>
@@ -12,6 +12,7 @@
 		<TEXT DESCRIPTION="Use an external command to print?">use_external_editor<BOOLEAN>False</BOOLEAN></TEXT>
 		<TEXT DESCRIPTION="Command invoked to print a text">print_shell_command<STRING>notepad /p $target</STRING></TEXT>
 		<TEXT DESCRIPTION="Send a postscript file to this command?">use_postscript<BOOLEAN>False</BOOLEAN></TEXT>
+		<TEXT DESCRIPTION="Number of projects kept in the recent projects">recent_projects_number<INTEGER>10</INTEGER></TEXT>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Tools" ICON="icon_preferences_folder">
 		<HEAD>Tools</HEAD>
@@ -459,7 +460,6 @@
 		<HEAD>Graphical Elements</HEAD>
 		<TEXT DESCRIPTION="All-purpose editor font" IMMEDIATE_EFFECT="no">editor_font<FONT>Courier New-r-regular-11-screen</FONT></TEXT>
 		<TEXT DESCRIPTION="Tabulation size" IMMEDIATE_EFFECT="no">tab_step<INTEGER>4</INTEGER></TEXT>
-		<TEXT DESCRIPTION="Number of projects kept in the recent projects">recent_projects_number<INTEGER>10</INTEGER></TEXT>
 		<TOPIC TOPIC_ID="Default_Colors" ICON="icon_preferences_folder">
 			<HEAD>Colors</HEAD>
 			<TEXT DESCRIPTION="Color used to display normal text">normal_text_color<COLOR>0;0;0</COLOR></TEXT>

@@ -8,12 +8,12 @@ inherit
 	WINDOWS;
 	SHARED_ERROR_HANDLER;
 	SHARED_RESCUE_STATUS
-	SPECIAL_AST_B;
+	SHARED_FORMAT_INFO;
 	S_CASE_INFO;
 	SHARED_CASE_INFO;
 	STORABLE
 
-feature
+feature -- Execution
 
 	rescued: BOOLEAN;
 
@@ -21,9 +21,12 @@ feature
 			-- Format storage structures
 			-- so it can be read in from EiffelCase.
 		local
-			d: DIRECTORY
+			d: DIRECTORY;
+			f: PLAIN_TEXT_FILE;
+			fn: FILE_NAME
 		do
 			if not rescued then
+				error_window.clear_window;
 				if workbench.successfull then
 					Error_handler.wipe_out;
 					Create_case_storage_directory;
@@ -33,39 +36,44 @@ feature
 						error_window.put_string (case_storage_path);
 						error_window.put_string ("%Nis not readable. Please check permission.%N")
 					else
-						is_short_bool.set_value (False);
-						in_bench_mode_bool.set_value (False);
-						in_assertion_bool.set_value (False);
-						order_same_as_text_bool.set_value (True);
-						initialize_view_ids;
-						process_clusters;
-						convert_to_case_format;
-						remove_old_classes;
-						clear_shared_case_information;
-						error_window.put_string ("Finished storing EiffelCase project.%N");
-					end
+						!! fn.make_from_string (Case_storage_path);
+						fn.set_file_name (System_name);	
+						!! f.make (fn);
+						if not f.exists or else need_to_reverse_engineer then;
+							reset_format_booleans;
+							set_order_same_as_text;
+							initialize_view_ids;
+							process_clusters;
+							convert_to_case_format;
+							remove_old_classes;
+							clear_shared_case_information;
+							error_window.put_string ("Finished storing EiffelCase project.%N");
+						else
+							error_window.put_string ("EiffelCase project is up to date.%N");
+						end;
+					end;
+					error_window.display
 				else
 					error_window.put_string ("Project is in an unstable state.%N");
 					error_window.put_string ("Make sure that the system has been%N");
 					error_window.put_string ("successfully compiled.%N");
+					error_window.display
 				end;
 			else
 				rescued := False
 			end
 		rescue
-			flat_ctxt.clear;
 			Case_file_server.remove_tmp_files;
 			clear_shared_case_information;
 			if Rescue_status.is_error_exception then
 				Rescue_status.set_is_error_exception (False);
-			else
-				error_window.put_string ("Internal error: Cannot generate EiffelCase project.%N")
+				Error_handler.trace;
+				rescued := True;
+				retry
 			end;
-			rescued := True;
-			retry
 		end
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	convert_to_case_format is	
 			-- Convert all the Eiffelbench structures into
@@ -79,28 +87,21 @@ feature {NONE}
 		do
 			Case_file_server.init (Case_storage_path);
 			root_cluster := cluster_info.storage_info;
-			if view_id_info.root_cluster_name.is_equal (root_cluster.name) then
-                view_id := View_id_info.root_cluster_view_id
-            else
-                View_id_info.decrement_cluster_view_number;
-                view_id := View_id_info.cluster_view_number;
-            end;
-			root_cluster.set_view_id (view_id);
 			!! s_system_data;
 			s_system_data.set_root_cluster (root_cluster);
-			s_system_data.set_class_view_number (View_id_info.class_view_number);
+			s_system_data.set_class_view_number (Old_case_info.class_view_number);
 			s_system_data.set_class_id_number (System.class_counter.value);
-			s_system_data.set_cluster_view_number (View_id_info.cluster_view_number);
+			s_system_data.set_cluster_view_number (Old_case_info.cluster_view_number);
 			Case_file_server.tmp_save_system (s_system_data);
 			io.error.putstring ("Saving EiffelCase project to CASEGEN directory.%N");
 			Case_file_server.save_eiffelcase_format;
+			io.error.putstring ("Updating EiffelBench project.%N");
+			update_eiffel_project;
 		rescue
 			if Case_file_server.had_io_problems then
-				Rescue_status.set_is_error_exception (True);
-				error_window.put_string ("Cannot store EiffelCase format to CASEGEN directory.%N");
+				io.error.put_string ("Cannot store EiffelCase format to CASEGEN directory.%N");
 			elseif Case_file_server.is_saving then
-				Rescue_status.set_is_error_exception (True);
-				error_window.put_string ("EiffelCase format maybe corrupted.%N");
+				io.error.put_string ("EiffelCase format maybe corrupted.%N");
 			end;
 		end;
 
@@ -108,10 +109,9 @@ feature {NONE}
 			-- Remove class information from disk which have been
 			-- removed since last reverse engineering.
 		do
-			View_id_info.remove_old_classes;
+			Old_case_info.remove_old_classes;
 		rescue
-			Rescue_status.set_is_error_exception (True);
-			error_window.put_string ("Error: Could not remove old classes from CASEGEN directory.%N");
+			io.error.put_string ("Error: Could not remove old classes from CASEGEN directory.%N");
 		end;
 
 	initialize_view_ids is
@@ -134,8 +134,8 @@ feature {NONE}
 						check
 							valid_s_system_data: s_system_data /= Void
 						end;
-						View_id_info.initialize (s_system_data);
-						View_id_info.fill (s_system_data.root_cluster);
+						Old_case_info.initialize (s_system_data);
+						Old_case_info.fill (s_system_data.root_cluster);
 						old_system_file.close;
 					else
 						Rescue_status.set_is_error_exception (True);
@@ -154,7 +154,8 @@ feature {NONE}
 			other_cluster_info: like cluster_info;
 			parent_cluster_info: like cluster_info;
 			s_name: STRING;
-			file_name: STRING
+			root_file_name, file_name: STRING;
+			full_path: DIRECTORY_NAME
 		do
 			io.error.putstring ("Processing clusters%N");
 			!! cluster_info.make;
@@ -165,10 +166,11 @@ feature {NONE}
 			s_name.append (System.system_name);
 			s_name.to_upper;
 			cluster_info.set_name (s_name);
-			!! file_name.make (s_name.count);
-			file_name.append (s_name);
-			file_name.to_lower;
-			cluster_info.set_file_name (file_name);
+			!! root_file_name.make (s_name.count);
+			root_file_name.append (s_name);
+			root_file_name.to_lower;
+			cluster_info.set_file_name (root_file_name);
+			cluster_info.set_full_path_name (root_file_name);
 			!! list.make;
 			list.merge (Universe.clusters);
 			from
@@ -179,20 +181,24 @@ feature {NONE}
 				parent_cluster_info := Void;
 				cluster_names_list := extract_clusters (list.item.path);
 				from
-					cluster_names_list.start
+					cluster_names_list.start;
+					!! full_path.make_from_string (root_file_name);
 				until
 					cluster_names_list.after
 				loop
+					file_name := cluster_names_list.item;
+					full_path.extend (file_name);
 					if parent_cluster_info = Void then
 						other_cluster_info := 
-							cluster_info.cluster_item (cluster_names_list.item);
+							cluster_info.cluster_item (full_path);
 					else
 						other_cluster_info := 
-							parent_cluster_info.cluster_item (cluster_names_list.item);
+							parent_cluster_info.cluster_item (full_path);
 					end
 					if other_cluster_info = Void then
 						!! other_cluster_info.make;
-						other_cluster_info.set_file_name (cluster_names_list.item);
+						other_cluster_info.set_file_name (file_name);
+						other_cluster_info.set_full_path_name (clone (full_path));
 						if parent_cluster_info = Void then
 							cluster_info.add_cluster (other_cluster_info);
 						else
@@ -212,7 +218,7 @@ feature {NONE}
 			check_cluster_names;
 		end;
 
-feature {NONE}
+feature {NONE} -- Implementation
 
 	cluster_info: CASE_CLUSTER_INFO;
 	
@@ -298,6 +304,68 @@ feature {NONE}
 				clusters.go_to (cursor);
 				clusters.forth
 			end
-		end
+		end;
+
+	need_to_reverse_engineer: BOOLEAN is
+			-- Do we need to reverse engineer?
+		local
+			classes: ARRAY [CLASS_C];
+			i: INTEGER;
+			c: CLASS_C;
+		do
+			classes := System.id_array;
+			from
+				i := classes.lower
+			until
+				i > classes.upper or else Result
+			loop
+				c := classes.item (i);
+				if c /= Void then
+					Result := not c.reverse_engineered
+				end;
+				i := i + 1
+			end;
+		end;
+
+	update_eiffel_project is
+			-- Mark the classes in the EiffelProject as
+			-- reversed engineered and save the 
+			-- project.
+		local
+			classes: ARRAY [CLASS_C];
+			i: INTEGER;
+			c: CLASS_C;
+			need_to_save: BOOLEAN
+		do
+			classes := System.id_array;
+			from
+				i := classes.lower
+			until
+				i > classes.upper
+			loop
+				c := classes.item (i);
+				if c /= Void then
+					need_to_save := True;
+					c.set_reverse_engineered (True)
+				end;
+				i := i + 1
+			end;
+			if need_to_save then
+				save_workbench_file
+			end
+		end;
+
+	save_workbench_file is
+			-- Save the `.workbench' file.
+		local
+			file: RAW_FILE
+		do
+			System.server_controler.wipe_out;
+			!!file.make (Project_file_name);
+			file.open_write;
+			workbench.basic_store (file);
+			file.close;
+		end;
+
 
 end	

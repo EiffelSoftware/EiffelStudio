@@ -120,6 +120,7 @@ feature {NONE}-- Initialization
 			l_ev_cell_3.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			l_ev_horizontal_box_3.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			l_ev_horizontal_box_3.disable_item_expand (l_ev_cell_4)
+			l_ev_horizontal_box_3.disable_item_expand (l_ev_cell_5)
 			l_ev_cell_4.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
 			l_ev_cell_4.set_minimum_width (20)
 			tip_label.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))

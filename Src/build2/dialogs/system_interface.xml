@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><application xsi="http://www.w3.org/1999/XMLSchema-instance">
-<item type="Constants"><Constant ><type >STRING</type>
+<item type="Constants"><Constant ><type >INTEGER</type>
+		<Name >small_padding</Name>
+		<Value >4</Value>
+		</Constant>
+	<Constant ><type >STRING</type>
 		<Name >new_button_text</Name>
 		<Value >New...</Value>
 		</Constant>
@@ -84,10 +88,6 @@
 		<Name >ok_button_text</Name>
 		<Value >OK</Value>
 		</Constant>
-	<Constant ><type >INTEGER</type>
-		<Name >large_spacing_width</Name>
-		<Value >12</Value>
-		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >next_tip_text</Name>
 		<Value >Next tip</Value>
@@ -108,11 +108,11 @@
 		<Value >Pixmap Selection</Value>
 		</Constant>
 	<Constant ><type >INTEGER</type>
-		<Name >small_padding</Name>
-		<Value >4</Value>
+		<Name >large_padding</Name>
+		<Value >12</Value>
 		</Constant>
 	<Constant ><type >INTEGER</type>
-		<Name >large_padding</Name>
+		<Name >large_spacing_width</Name>
 		<Value >12</Value>
 		</Constant>
 	</item>
@@ -2075,7 +2075,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 									</EV_COLORIZABLE>
 								<EV_SENSITIVE />
 								<EV_WIDGET />
-								<EV_BOX ><Is_item_expanded >011</Is_item_expanded>
+								<EV_BOX ><Is_item_expanded >010</Is_item_expanded>
 									</EV_BOX>
 								<EV_PIXMAPABLE />
 								<EV_CONTAINER />

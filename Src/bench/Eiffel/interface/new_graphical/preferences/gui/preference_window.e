@@ -104,15 +104,15 @@ feature -- Initialization
 			apply_button: EV_BUTTON
 			restore_defaults_button: EV_BUTTON
 		do
-			create ok_button.make_with_text ("OK")
+			create ok_button.make_with_text ("Save & Exit")
 			ok_button.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height) 
 			ok_button.select_actions.extend (~ok)
 
-			create cancel_button.make_with_text ("Cancel")
+			create cancel_button.make_with_text ("Exit")
 			cancel_button.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height) 
 			cancel_button.select_actions.extend (~destroy)
 
-			create apply_button.make_with_text ("Apply")
+			create apply_button.make_with_text ("Save")
 			apply_button.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height) 
 			apply_button.select_actions.extend (~apply)
 
@@ -126,12 +126,12 @@ feature -- Initialization
 			Result.extend (restore_defaults_button)
 			Result.disable_item_expand (restore_defaults_button)
 			Result.extend (create {EV_CELL})
+			Result.extend (apply_button)
+			Result.disable_item_expand (apply_button)
 			Result.extend (ok_button)
 			Result.disable_item_expand (ok_button)
 			Result.extend (cancel_button)
 			Result.disable_item_expand (cancel_button)
-			Result.extend (apply_button)
-			Result.disable_item_expand (apply_button)
 		end
 
 	make_then_direct_to (folder_name: STRING) is
@@ -381,12 +381,14 @@ feature -- Fill Lists
 				until
 					r.resource_list.after
 				loop
-					create it.make_resource (r.resource_list.item)
-					right_list.extend (it)
-					r.resource_list.forth
-					if selected_item /= Void and then selected_item.resource = it.resource then
-						it.enable_select						
+					if r.resource_list.item.description /= Void then
+						create it.make_resource (r.resource_list.item)
+						right_list.extend (it)
+						if selected_item /= Void and then selected_item.resource = it.resource then
+							it.enable_select						
+						end
 					end
+					r.resource_list.forth
 				end
 			end
 

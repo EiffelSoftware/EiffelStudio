@@ -33,8 +33,6 @@ fnptr c_set_put;			/* Pointer on Eiffel feature `put' of class
 char *suppliers;			/* Instance of SUPPLIERS_AS where all the 
 							 * supplier types are stored.
 							 */
-extern int nb_tilde;		/* Number of tildes */
-
 /*
  * Declarations for generic parameter managment
  */
@@ -373,7 +371,6 @@ char *create_routine_as(char *obsolete, int start_pos, char *precs, char *locals
 
 char *create_routine_object(char *type, char *name, char *parameters)
 {
-	int_arg[0] = nb_tilde;
 	return create_node3 (ROUTINE_CREATION_AS, type, name, parameters);
 }
 

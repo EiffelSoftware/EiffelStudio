@@ -260,7 +260,7 @@ feature -- Initialization
 				cur_text := "Tile test"
 			elseif cur_test = 4 then
 				my_device.clear
-				my_device.set_clip_area (create {EV_CLIP}.make (10, 30, 150, 190))
+				my_device.set_clip_area (create {EV_CLIP}.make (10, 30, 230, 220))
 				cur_text := "It's a clip area"
 			elseif cur_test = 5 then
 				my_device.enable_dashed_line_style
@@ -274,7 +274,6 @@ feature -- Initialization
 					Ev_font_weight_bold,
 					Ev_font_shape_italic,
 					19)
-				io.put_string (font.system_name + "%N")
 				my_device.set_font (font)
 				cur_text := "Different font...@#$"
 			end

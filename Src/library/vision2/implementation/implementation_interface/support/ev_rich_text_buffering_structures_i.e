@@ -390,6 +390,11 @@ feature -- Status Setting
 					is_start_of_group: rtf_text.substring (tag_start_position - 1, tag_start_position + 1).is_equal ("{\*")
 				end
 				move_to_end_of_tag (rtf_text, tag_start_position - 1)
+			elseif tag.is_equal (rtf_info) then
+				check
+					is_start_of_group: rtf_text.substring (tag_start_position - 1, tag_start_position).is_equal ("{\")
+				end
+				move_to_end_of_tag (rtf_text, tag_start_position - 1)
 			else
 				--print ("Unhandled tag : " + tag.out + "%N")
 			end	

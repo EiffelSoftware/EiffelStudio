@@ -69,7 +69,7 @@ feature -- Settings
 			end
 		end
 
-feature {IL_CODE_GENERATOR} -- Generation
+feature {CIL_CODE_GENERATOR} -- Generation
 
 	generate_custom_attributes (a_owner_token: INTEGER; ca: BYTE_LIST [BYTE_NODE]) is
 			-- Generate custom attributes represented by `ca'

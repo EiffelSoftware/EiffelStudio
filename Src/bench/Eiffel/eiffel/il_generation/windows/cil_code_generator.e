@@ -4,9 +4,11 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	IL_CODE_GENERATOR
+	CIL_CODE_GENERATOR
 
 inherit
+	IL_CODE_GENERATOR
+
 	IL_CONST
 
 	IL_PREDEFINED_CUSTOM_ATTRIBUTES
@@ -118,10 +120,10 @@ feature {IL_MODULE} -- Access
 	method_body: MD_METHOD_BODY
 			-- Body for currently generated routine.
 
-	local_start_offset, local_end_offset, local_count: INTEGER
-			-- Number of locals for current feature.
+	local_start_offset, local_end_offset: INTEGER
+			-- Data for debugging information for current feature.
 
-feature {IL_CODE_GENERATOR, IL_MODULE} -- Access
+feature {CIL_CODE_GENERATOR, IL_MODULE} -- Access
 
 	is_single_module: BOOLEAN
 			-- Is current module generated as just a single module?
@@ -1005,11 +1007,6 @@ feature -- Generation Info
 
 	set_version (build, major, minor, revision: INTEGER) is
 			-- Assign current generated assembly with given version details.
-		require
-			valid_build: build >= 0
-			valid_major: major >= 0
-			valid_minor: minor >= 0
-			valid_revision: revision >= 0
 		do
 			check
 				not_yet_implemented: False
@@ -3076,10 +3073,6 @@ feature -- IL Generation
 			is_virtual: BOOLEAN)
 		is
 			-- Generate call to `name' with signature `parameters_type' + `return_type'.
-		require
-			base_name_not_void: base_name /= Void
-			base_name_not_empty: not base_name.is_empty
-			valid_external_type: valid_type (ext_kind)
 		local
 			l_type_token: INTEGER
 		do
@@ -3093,12 +3086,6 @@ feature -- IL Generation
 			parameters_type: ARRAY [INTEGER]; return_type: INTEGER) : INTEGER
 		is
 			-- Get token for feature specified by `base_name' and `member_name'
-		require
-			base_name_not_void: base_name /= Void
-			base_name_empty: not base_name.is_empty
-			member_name_not_void: member_name /= Void
-			member_name_not_empty: not member_name.is_empty
-			valid_external_type: valid_type (ext_kind)
 		local
 			l_meth_sig: like method_sig
 			l_field_sig: like field_sig
@@ -3416,18 +3403,12 @@ feature -- Local variable info generation
 
 	set_local_count (a_count: INTEGER) is
 			-- Set `local_count' to `a_count'.
-		require
-			valid_count: a_count >= 0
 		do
 			local_count := a_count
-		ensure
-			local_count_set: local_count = a_count
 		end
 
 	put_result_info (type_i: TYPE_I) is
 			-- Specifies `type_i' of type of result.
-		require
-			type_i_not_void: type_i /= Void
 		do
 			if not once_generation then
 				result_position := 0
@@ -3437,8 +3418,6 @@ feature -- Local variable info generation
 
 	put_local_info (type_i: TYPE_I; name_id: INTEGER) is
 			-- Specifies `type_i' of type of local.
-		require
-			type_i_not_void: type_i /= Void
 		do
 			local_types.extend (create {PAIR [TYPE_I, STRING]}.make (type_i,
 				Names_heap.item (name_id)))
@@ -3446,16 +3425,12 @@ feature -- Local variable info generation
 
 	put_nameless_local_info (type_i: TYPE_I; name_id: INTEGER) is
 			-- Specifies `type_i' of type of local.
-		require
-			type_i_not_void: type_i /= Void
 		do
 			local_types.extend (create {PAIR [TYPE_I, STRING]}.make (type_i, "_" + name_id.out))
 		end
 
 	put_dummy_local_info (type_i: TYPE_I; name_id: INTEGER) is
 			-- Specifies `type_i' of type of local.
-		require
-			type_i_not_void: type_i /= Void
 		do
 			local_types.extend (create {PAIR [TYPE_I, STRING]}.make (type_i,
 				"_dummy_" + name_id.out))
@@ -3492,8 +3467,6 @@ feature -- Object creation
 
 	create_object (a_type_id: INTEGER) is
 			-- Create object of `a_type_id'.
-		require
-			valid_type_id: a_type_id > 0
 		do
 			method_body.put_newobj (constructor_token (a_type_id), 0)
 		end
@@ -3563,9 +3536,6 @@ feature -- Variables access
 
 	generate_attribute (need_target: BOOLEAN; type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate access to attribute of `a_feature_id' in `type_i'.
-		require
-			type_i_not_void: type_i /= Void
-			positive_feature_id: a_feature_id > 0
 		local
 			cl_type: CL_TYPE_I
 			l_class_type: CLASS_TYPE
@@ -3596,9 +3566,6 @@ feature -- Variables access
 			is_function, is_virtual: BOOLEAN)
 		is
 			-- Generate access to feature of `a_feature_id' in `type_i'.
-		require
-			type_i_not_void: type_i /= Void
-			positive_feature_id: a_feature_id > 0
 		local
 			l_type_id: INTEGER
 			l_virtual: BOOLEAN
@@ -3646,9 +3613,6 @@ feature -- Variables access
 			nb: INTEGER; is_function: BOOLEAN)
 		is
 			-- Generate access to feature of `a_feature_id' in `type_i' with `nb' arguments.
-		require
-			type_i_not_void: type_i /= Void
-			positive_feature_id: a_feature_id > 0
 		do
 			method_body.put_call ({MD_OPCODES}.Call,
 				implementation_feature_token (type_i.implementation_id, a_feature_id),
@@ -3664,8 +3628,6 @@ feature -- Variables access
 		
 	put_type_instance (a_type: TYPE_I) is
 			-- Put instance of System.Type corresponding to `a_type' on stack.
-		require
-			a_type_not_void: a_type /= Void
 		do
 			put_type_token (a_type.static_type_id)
 			internal_generate_external_call (current_module.mscorlib_token, 0,
@@ -3676,9 +3638,6 @@ feature -- Variables access
 
 	put_method_token (type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate access to feature of `a_feature_id' in `type_i'.
-		require
-			type_i_not_void: type_i /= Void
-			positive_feature_id: a_feature_id > 0
 		do
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldtoken,
 				feature_token (type_i.static_type_id, a_feature_id))
@@ -3686,8 +3645,6 @@ feature -- Variables access
 
 	generate_argument (n: INTEGER) is
 			-- Generate access to `n'-th variable arguments of current feature.
-		require
-			valid_n: n >= 0
 		do
 			inspect
 				n
@@ -3706,8 +3663,6 @@ feature -- Variables access
 
 	generate_local (n: INTEGER) is
 			-- Generate access to `n'-th local variable of current feature.
-		require
-			valid_n: n >= 0
 		local
 			l_pos: INTEGER
 		do
@@ -3732,9 +3687,6 @@ feature -- Variables access
 	generate_metamorphose (type_i: TYPE_I) is
 			-- Generate `metamorphose', ie boxing a basic type of `type_i' into its
 			-- corresponding reference type.
-		require
-			type_i_not_void: type_i /= Void
-			type_is_expanded: type_i.is_expanded
 		do
 				-- It has to be the `implementation_id' because for us `box'
 				-- can only be applied to expanded types and only `implementation_id'
@@ -3749,9 +3701,6 @@ feature -- Variables access
 	generate_unmetamorphose (type_i: TYPE_I) is
 			-- Generate `unmetamorphose', ie unboxing a reference to a basic type of `type_i'.
 			-- Load content of address resulting from unbox operation.
-		require
-			type_i_not_void: type_i /= Void
-			type_is_expanded: type_i.is_expanded
 		do
 				-- See comment on `generate_metamorphose' on why we chose `implementation_id'.
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Unbox,
@@ -3763,8 +3712,6 @@ feature -- Addresses
 
 	generate_local_address (n: INTEGER) is
 			-- Generate address of `n'-th local variable.
-		require
-			valid_n: n >= 0
 		local
 			l_pos: INTEGER
 		do
@@ -3778,8 +3725,6 @@ feature -- Addresses
 
 	generate_argument_address (n: INTEGER) is
 			-- Generate address of `n'-th argument variable.
-		require
-			valid_n: n >= 0
 		do
 			if n <= 255 then
 				method_body.put_opcode_integer_8 ({MD_OPCODES}.Ldarga_s, n.to_integer_8)
@@ -3806,10 +3751,6 @@ feature -- Addresses
 
 	generate_attribute_address (type_i: TYPE_I; attr_type: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate address to attribute of `a_feature_id' in `type_i'.
-		require
-			type_i_not_void: type_i /= Void
-			attr_type_not_void: attr_type /= Void
-			positive_feature_id: a_feature_id > 0
 		local
 			cl_type: CL_TYPE_I
 			local_number: INTEGER
@@ -3839,9 +3780,6 @@ feature -- Addresses
 
 	generate_routine_address (type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate address of routine of `a_feature_id' in class `type_i'.
-		require
-			type_i_not_void: type_i /= Void
-			positive_feature_id: a_feature_id > 0
 		do
 			method_body.put_opcode ({MD_OPCODES}.Dup)
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldvirtftn,
@@ -3850,9 +3788,6 @@ feature -- Addresses
 
 	generate_load_from_address (a_type: TYPE_I) is
 			-- Load value of `a_type' type from address pushed on stack.
-		require
-			type_not_void: a_type /= Void
-			type_is_expanded: a_type.is_expanded
 		do
 			inspect a_type.element_type
 			when {MD_SIGNATURE_CONSTANTS}.Element_type_i then
@@ -3893,8 +3828,6 @@ feature -- Assignments
 
 	generate_is_true_instance_of (type_i: TYPE_I) is
 			-- Generate `Isinst' byte code instruction.
-		require
-			type_i_not_void: type_i /= Void
 		local
 			l_token: INTEGER
 		do
@@ -3910,8 +3843,6 @@ feature -- Assignments
 
 	generate_is_instance_of (type_i: TYPE_I) is
 			-- Generate `Isinst' byte code instruction where ANY is replaced by SYSTEM_OBJECT.
-		require
-			type_i_not_void: type_i /= Void
 		local
 			l_token: INTEGER
 		do
@@ -3930,8 +3861,6 @@ feature -- Assignments
 
 	generate_check_cast (source_type, target_type: TYPE_I) is
 			-- Generate `checkcast' byte code instruction.
-		require
-			target_type_not_void: target_type /= Void
 		local
 			l_source, l_target: CL_TYPE_I
 			l_token: INTEGER
@@ -3956,9 +3885,6 @@ feature -- Assignments
 
 	generate_attribute_assignment (need_target: BOOLEAN; type_i: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate assignment to attribute of `a_feature_id' in current class.
-		require
-			type_i_not_void: type_i /= Void
-			positive_feature_id: a_feature_id > 0
 		local
 			cl_type: CL_TYPE_I
 			l_class_type: CLASS_TYPE
@@ -3987,10 +3913,6 @@ feature -- Assignments
 	generate_expanded_attribute_assignment (type_i, attr_type: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate assignment to attribute of `a_feature_id' in current class
 			-- when direct access to attribute is not possible.
-		require
-			type_i_not_void: type_i /= Void
-			attr_type_not_void: attr_type /= Void
-			positive_feature_id: a_feature_id > 0
 		local
 			cl_type: CL_TYPE_I
 			l_class_type: CLASS_TYPE
@@ -4012,8 +3934,6 @@ feature -- Assignments
 
 	generate_local_assignment (n: INTEGER) is
 			-- Generate assignment to `n'-th local variable of current feature.
-		require
-			valid_n: n >= 0
 		local
 			l_pos: INTEGER
 		do
@@ -4049,9 +3969,6 @@ feature -- Conversion
 
 	convert_to (type: TYPE_I) is
 			-- Convert top of stack into `type'.
-		require
-			type_not_void: type /= Void
-			type_is_basic: type.is_basic
 		do
 			inspect
 				type.element_type
@@ -4405,7 +4322,7 @@ feature -- Once management
 			--    generate_once_prologue
 			--    ... -- code of once feature body
 			--    generate_once_epilogue
-		require
+--		require
 			-- current_feature_not_void: byte_context.current_feature /= Void
 			-- current_feature_is_once: byte_context.current_feature.is_once
 		do
@@ -4477,7 +4394,7 @@ feature -- Once management
 			put_boolean_constant (True)
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Stsfld, done_token)
 			method_body.once_catch_block.set_try_offset (method_body.count)
-		ensure
+		ensure then
 			once_generation: once_generation
 			done_token_set: done_token /= 0
 			result_token_set: byte_context.current_feature.has_return_value = (result_token /= 0)
@@ -4489,7 +4406,7 @@ feature -- Once management
 
 	generate_once_epilogue is
 			-- Generate epilogue for once feature.
-		require
+--		require
 			-- current_feature_not_void: byte_context.current_feature /= Void
 			-- current_feature_is_once: byte_context.current_feature.is_once
 		local
@@ -4584,7 +4501,7 @@ feature -- Once management
 			once_done_label := Void
 			once_ready_label := Void
 			set_once_generation (False)
-		ensure
+		ensure then
 			not_once_generation: not once_generation
 			done_token_unset: done_token = 0
 			result_token_unset: result_token = 0
@@ -4605,8 +4522,8 @@ feature -- Once management
 	generate_once_result is
 			-- Generate access to static `result' variable to load last
 			-- computed value of current processed once function
-		require
-			result_token_set: result_token /= 0
+--		require
+--			result_token_set: result_token /= 0
 		do
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldsfld, result_token)
 		end
@@ -4614,8 +4531,6 @@ feature -- Once management
 	generate_once_store_result is
 			-- Generate setting of static `result' variable corresponding
 			-- to current processed once function.
-		require
-			result_token_set: result_token /= 0
 		do
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Stsfld, result_token)
 		end
@@ -4625,8 +4540,6 @@ feature -- Once manifest string manipulation
 	generate_once_string_allocation (count: INTEGER) is
 			-- Generate code that allocates memory required for `count'
 			-- once manifest strings of the current routine.
-		require
-			valid_count: count >= 0
 		local
 			allocate_array_label: IL_LABEL
 			done_label: IL_LABEL
@@ -4663,10 +4576,6 @@ feature -- Once manifest string manipulation
 			-- Generate code for once string in a current routine with the given
 			-- `number' and `value' using CIL string type if `is_cil_string' is `true' 
 			-- or Eiffel string type otherwise.
-		require
-			valid_number: number >= 0
-			non_void_value: value /= Void
-			non_empty_value: not value.is_empty
 		local
 			once_string_field_token: INTEGER
 			assign_string_label: IL_LABEL
@@ -4710,9 +4619,6 @@ feature -- Array manipulation
 
 	generate_array_access (kind: INTEGER; a_type_id: INTEGER) is
 			-- Generate call to `item' of NATIVE_ARRAY.
-		require
-			kind_positive: kind /= 0
-			type_id_valid: kind = il_expanded implies a_type_id > 0
 		local
 			l_opcode: INTEGER_16
 			l_token: INTEGER
@@ -4746,8 +4652,6 @@ feature -- Array manipulation
 
 	generate_array_write_preparation (a_type_id: INTEGER) is
 			-- Prepare call to `put' from NATIVE_ARRAY in case of expanded elements.
-		require
-			type_id_valid: a_type_id > 0
 		do
 			method_body.put_opcode_mdtoken ({MD_OPCODES}.Ldelema,
 				actual_class_type_token (a_type_id))
@@ -4755,9 +4659,6 @@ feature -- Array manipulation
 		
 	generate_array_write (kind: INTEGER; a_type_id: INTEGER) is
 			-- Generate call to `put' of NATIVE_ARRAY.
-		require
-			kind_positive: kind /= 0
-			type_id_valid: kind = il_expanded implies a_type_id > 0
 		local
 			l_opcode: INTEGER_16
 		do
@@ -4874,13 +4775,6 @@ feature -- Assertions
 
 	generate_is_assertion_checked (level: INTEGER) is
 			-- Check wether or not we need to check assertion for current type.
-		require
-			valid_level:
-				level = {ASSERTION_I}.ck_require or
-				level = {ASSERTION_I}.ck_ensure or
-				level = {ASSERTION_I}.ck_check or
-				level = {ASSERTION_I}.ck_loop or
-				level = {ASSERTION_I}.ck_invariant
 		do
 			if System.in_final_mode then
 				method_body.put_static_call (current_module.ise_in_assertion_token, 0, True)
@@ -5077,8 +4971,6 @@ feature -- Assertions
 
 	generate_invariant_checked_for (a_label: IL_LABEL) is
 			-- Generate check to find out if we should check invariant or not.
-		require
-			a_label_not_void: a_label /= Void
 		do
 			put_type_token (current_class_type.type.static_type_id)
 			method_body.put_static_call (current_module.ise_is_invariant_checked_for_token, 1, True)
@@ -5088,8 +4980,6 @@ feature -- Assertions
 	generate_invariant_checking (type_i: TYPE_I) is
 			-- Generate an invariant check after routine call, it assumes that
 			-- target has already been pushed onto evaluation stack.
-		require
-			type_i_not_void: type_i /= Void
 		do
 			put_boolean_constant (System.in_final_mode)
 			method_body.put_static_call (current_module.ise_check_invariant_token, 2, False)
@@ -5099,8 +4989,6 @@ feature -- Constants generation
 
 	put_default_value (type: TYPE_I) is
 			-- Put default value of `type' on IL stack.
-		require
-			type_not_void: type /= Void
 		do
 			inspect
 				type.element_type
@@ -5145,8 +5033,6 @@ feature -- Constants generation
 	put_manifest_string_from_system_string_local (n: INTEGER) is
 			-- Create a manifest string by using local at position `n' which 
 			-- should be of type SYSTEM_STRING.
-		require
-			valid_n: n >= 0
 		do
 			create_object (string_implementation_id)
 			duplicate_top
@@ -5156,8 +5042,6 @@ feature -- Constants generation
 	
 	put_manifest_string (s: STRING) is
 			-- Put `s' on IL stack.
-		require
-			valid_s: s /= Void
 		do
 			create_object (string_implementation_id)
 			duplicate_top
@@ -5167,8 +5051,6 @@ feature -- Constants generation
 
 	put_system_string (s: STRING) is
 			-- Put `System.String' object corresponding to `s' on IL stack.
-		require
-			valid_s: s /= Void
 		local
 			l_string_token: INTEGER
 		do
@@ -5179,9 +5061,6 @@ feature -- Constants generation
 
 	put_numeric_integer_constant (type: TYPE_I; i: INTEGER) is
 			-- Put `i' as a constant of type `type'.
-		require
-			type_not_void: type /= Void 
-			type_is_valid: type.is_integer or type.is_natural or type.is_real_32 or type.is_real_64
 		do
 			inspect
 				type.element_type
@@ -5301,8 +5180,6 @@ feature -- Labels and branching
 	branch_on_true (label: IL_LABEL) is
 			-- Generate a branch instruction to `label' if top of
 			-- IL stack is True.
-		require
-			label_not_void: label /= Void
 		do
 			method_body.put_opcode_label ({MD_OPCODES}.Brtrue, label.id)
 		end
@@ -5310,16 +5187,12 @@ feature -- Labels and branching
 	branch_on_false (label: IL_LABEL) is
 			-- Generate a branch instruction to `label' if top of
 			-- IL stack is False.
-		require
-			label_not_void: label /= Void
 		do
 			method_body.put_opcode_label ({MD_OPCODES}.Brfalse, label.id)
 		end
 
 	branch_to (label: IL_LABEL) is
 			-- Generate a branch instruction to `label'.
-		require
-			label_not_void: label /= Void
 		do
 			method_body.put_opcode_label ({MD_OPCODES}.Br, label.id)
 		end
@@ -5327,27 +5200,12 @@ feature -- Labels and branching
 	branch_on_condition (comparison: INTEGER_16; label: IL_LABEL) is
 			-- Generate a branch instruction to `label' if two top-level operands on
 			-- IL stack when compared using conditional instruction `comparison' yield True.
-		require
-			valid_comparison:
-				comparison = {MD_OPCODES}.beq or else
-				comparison = {MD_OPCODES}.bge or else
-				comparison = {MD_OPCODES}.bge_un or else
-				comparison = {MD_OPCODES}.bgt or else
-				comparison = {MD_OPCODES}.bgt_un or else
-				comparison = {MD_OPCODES}.ble or else
-				comparison = {MD_OPCODES}.ble_un or else
-				comparison = {MD_OPCODES}.blt or else
-				comparison = {MD_OPCODES}.blt_un or else
-				comparison = {MD_OPCODES}.bne_un
-			label_not_void: label /= Void
 		do
 			method_body.put_opcode_label (comparison, label.id)
 		end
 
 	mark_label (label: IL_LABEL) is
 			-- Mark a portion of code with `label'.
-		require
-			label_not_void: label /= Void
 		do
 			method_body.mark_label (label.id)
 		end
@@ -5360,31 +5218,19 @@ feature -- Labels and branching
 
 feature -- Switch instruction
 
-	switch_count: INTEGER
-			-- Number of switch labels to be generated
-
 	put_switch_start (count: INTEGER) is
 			-- Generate start of a switch instruction with `count' items.
-		require
-			valid_count: count > 0
 		do
 			method_body.put_opcode_integer ({MD_OPCODES}.switch, count)
 			switch_count := count
-		ensure
-			switch_count_set: switch_count = count
 		end
 
 	put_switch_label (label: IL_LABEL) is
 			-- Generate a branch to `label' in switch instruction.
-		require
-			label_not_void: label /= Void
-			positive_switch_count: switch_count > 0
 		do
 			switch_count := switch_count - 1
 				-- Labels of switch instruction are calculated relative to instruction end
 			method_body.put_label (label.id, - switch_count * 4)
-		ensure
-			switch_count_decremented: switch_count = old switch_count - 1
 		end
 
 feature -- Binary operator generation
@@ -5471,9 +5317,6 @@ feature -- Basic feature
 
 	generate_is_query_on_character (query_name: STRING) is
 			-- Generate is_`query_name' on CHARACTER returning a boolean.
-		require
-			query_name_not_void: query_name /= Void
-			query_name_not_empty: not query_name.is_empty
 		local
 			l_query_token: INTEGER
 			l_sig: like method_sig
@@ -5495,9 +5338,6 @@ feature -- Basic feature
 
 	generate_min (type: TYPE_I) is
 			-- Generate `min' on basic types.
-		require
-			type_not_void: type /= Void
-			basic_type: type.is_basic
 		local
 			l_min_token: INTEGER
 			l_sig: like method_sig
@@ -5520,9 +5360,6 @@ feature -- Basic feature
 
 	generate_max (type: TYPE_I) is
 			-- Generate `max' on basic types.
-		require
-			type_not_void: type /= Void
-			basic_type: type.is_basic
 		local
 			l_max_token: INTEGER
 			l_sig: like method_sig
@@ -5545,9 +5382,6 @@ feature -- Basic feature
 
 	generate_abs (type: TYPE_I) is
 			-- Generate `abs' on basic types.
-		require
-			type_not_void: type /= Void
-			basic_type: type.is_basic
 		local
 			l_abs_token: INTEGER
 			l_sig: like method_sig
@@ -5582,9 +5416,6 @@ feature -- Basic feature
 
 	generate_out (type: TYPE_I) is
 			-- Generate `out' on basic types.
-		require
-			type_not_void: type /= Void
-			basic_type: type.is_basic
 		local
 			local_number: INTEGER
 		do
@@ -5615,8 +5446,6 @@ feature -- Line info
 
 	put_line_info (n: INTEGER) is
 			-- Generate debug information at line `n'.
-		require
-			valid_n: n > 0
 		local
 			l_pos: INTEGER
 		do
@@ -5638,8 +5467,6 @@ feature -- Line info
 			-- Generate debug information at line `n'.			
 			-- But in case of dotnet debugger inside eStudio
 			-- ignore those 'dummy' nope.
-		require
-			valid_n: n > 0
 		do
 			if is_debug_info_enabled then
 				Il_debug_info_recorder.ignore_next_debug_info
@@ -5650,8 +5477,6 @@ feature -- Line info
 	put_debug_info (location: TOKEN_LOCATION) is
 			-- Generate debug information for `location' to enable to
 			-- find corresponding Eiffel class file in IL code.
-		require
-			location_not_void: location /= Void
 		local
 			l_pos: INTEGER
 		do
@@ -5673,8 +5498,6 @@ feature -- Line info
 			-- Generate `a_nb' ghost debug informations,
 			-- this is to deal with the not generated debug clauses
 			-- but displayed in eStudio during debugging
-		require
-			a_nb_positive_or_zero: a_nb >= 0
 		do
 			if is_debug_info_enabled then
 				Il_debug_info_recorder.record_ghost_debug_infos (current_class_type, Byte_context.current_feature, method_body.count, a_line_n, a_nb)
@@ -5686,8 +5509,6 @@ feature -- Line info
 			-- find corresponding Eiffel class file in IL code.
 			-- But in case of dotnet debugger inside eStudio
 			-- ignore those 'dummy' nope.
-		require
-			location_not_void: location /= Void
 		do
 			if is_debug_info_enabled then
 				Il_debug_info_recorder.ignore_next_debug_info
@@ -5697,8 +5518,6 @@ feature -- Line info
 
 	flush_sequence_points (a_class_type: CLASS_TYPE) is
 			-- Flush all sequence points.
-		require
-			a_class_type_not_void: a_class_type /= Void
 		local
 			l_sequence_point_list: LINKED_LIST [like sequence_point]
 		do
@@ -5738,9 +5557,6 @@ feature -- Convenience
 
 	implemented_type (implemented_in: INTEGER; current_type: CL_TYPE_I): CL_TYPE_I is
 			-- Return static_type_id of class that defined `feat'.
-		require
-			valid_implemented_in: implemented_in > 0
-			current_type_not_void: current_type /= Void
 		local
 			cl_type_a: CL_TYPE_A
 			written_class: CLASS_C
@@ -5781,8 +5597,6 @@ feature -- Generic conformance
 
 	generate_class_type_instance (cl_type: CL_TYPE_I) is
 			-- Generate a CLASS_TYPE instance corresponding to `cl_type'.
-		require
-			cl_type_not_void: cl_type /= Void
 		local
 			l_type_id: INTEGER
 		do
@@ -5801,8 +5615,6 @@ feature -- Generic conformance
 
 	generate_generic_type_instance (n: INTEGER) is
 			-- Generate a GENERIC_TYPE instance corresponding that will hold `n' items.
-		require
-			valid_n: n >= 0
 		do
 			create_object (generic_type_id)
 			duplicate_top
@@ -5812,8 +5624,6 @@ feature -- Generic conformance
 
 	generate_generic_type_settings (gen_type: GEN_TYPE_I) is
 			-- Generate a CLASS_TYPE instance corresponding to `cl_type'.
-		require
-			gen_type_not_void: gen_type /= Void
 		do
 			internal_generate_external_call (current_module.ise_runtime_token, 0,
 				generic_type_class_name,
@@ -5956,7 +5766,7 @@ feature {NONE} -- Implementation: generation
 			method_writer.write_current_body
 		end
 
-feature {IL_CODE_GENERATOR} -- Implementation: convenience
+feature {CIL_CODE_GENERATOR} -- Implementation: convenience
 
 	System_string_type: TYPE_I is
 			-- Type of string object
@@ -6161,7 +5971,7 @@ feature {IL_CODE_GENERATOR} -- Implementation: convenience
 			hash_code_feat_id_non_negative: Result >= 0
 		end
 		
-feature {IL_CODE_GENERATOR, IL_MODULE, CUSTOM_ATTRIBUTE_FACTORY} -- Custom attribute definition
+feature {CIL_CODE_GENERATOR, IL_MODULE, CUSTOM_ATTRIBUTE_FACTORY} -- Custom attribute definition
 
 	define_custom_attribute (token: INTEGER; ctor_token: INTEGER; data: MD_CUSTOM_ATTRIBUTE) is
 			-- Define a custom attribute on `token' using constructor `ctor_token' with
@@ -6610,4 +6420,4 @@ feature {NONE} -- Implementation
 			end
 		end
 
-end -- class IL_CODE_GENERATOR
+end -- class CIL_CODE_GENERATOR

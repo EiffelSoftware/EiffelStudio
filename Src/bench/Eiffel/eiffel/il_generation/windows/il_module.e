@@ -53,7 +53,7 @@ inherit
 
 	REFACTORING_HELPER
 
-create {IL_CODE_GENERATOR}
+create {CIL_CODE_GENERATOR}
 	make
 	
 feature {NONE} -- Initialization
@@ -113,7 +113,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	il_code_generator: IL_CODE_GENERATOR
+	il_code_generator: CIL_CODE_GENERATOR
 			-- To generate IL code.
 
 	md_emit: MD_EMIT
@@ -283,7 +283,7 @@ feature {NONE} -- Custom attributes: access
 			definition: Result implies thread_static_attribute_ctor_token /= 0
 		end
 
-feature {IL_CODE_GENERATOR} -- Custom attributes: modification
+feature {CIL_CODE_GENERATOR} -- Custom attributes: modification
 
 	define_thread_static_attribute (field_token: INTEGER) is
 			-- Define a ThreadStaticAttribute attribute for field identified by `field_token'.
@@ -306,7 +306,7 @@ feature {IL_CODE_GENERATOR} -- Custom attributes: modification
 			md_emit.define_custom_attribute (field_token, thread_static_attribute_ctor_token, Void).do_nothing
 		end
 
-feature {IL_CODE_GENERATOR} -- Synchronization tokens
+feature {CIL_CODE_GENERATOR} -- Synchronization tokens
 
 	define_monitor_method_token (method_name: STRING): INTEGER is
 			-- Define token for a procedure of type "System.Threading.Monitor" that takes one argument of type "System.Object"
@@ -332,7 +332,7 @@ feature {IL_CODE_GENERATOR} -- Synchronization tokens
 			defined: Result /= 0
 		end
 
-feature {IL_CODE_GENERATOR} -- Once manifest strings: access
+feature {CIL_CODE_GENERATOR} -- Once manifest strings: access
 
 	once_string_field_token (is_cil_string: BOOLEAN): INTEGER is
 			-- Token of a field that is used to store values of once manifest strings
@@ -406,7 +406,7 @@ feature {IL_CODE_GENERATOR} -- Once manifest strings: access
 			old_token_preserved: (old is_once_string_allocation_routine_defined) implies Result = old once_string_allocation_routine_token_value
 		end
 
-feature {IL_CODE_GENERATOR} -- Once manifest strings: status report
+feature {CIL_CODE_GENERATOR} -- Once manifest strings: status report
 
 	is_once_string_class_defined: BOOLEAN is
 			-- Is token of a run-time helper class to manage once strings defined?
@@ -440,7 +440,7 @@ feature {IL_CODE_GENERATOR} -- Once manifest strings: status report
 			definition: Result implies once_string_allocation_routine_token_value /= 0
 		end
 
-feature {IL_CODE_GENERATOR} -- Once manifest strings: management
+feature {CIL_CODE_GENERATOR} -- Once manifest strings: management
 
 	define_once_string_tokens is
 			-- Define tokens to work with once manifest strings:

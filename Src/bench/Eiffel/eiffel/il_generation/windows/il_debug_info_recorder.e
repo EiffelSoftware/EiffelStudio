@@ -93,7 +93,7 @@ feature {EIFNET_DEBUGGER} -- reset live data
 			end
 		end
 
-feature {IL_CODE_GENERATOR} -- Access
+feature {CIL_CODE_GENERATOR} -- Access
 
 	is_debug_info_enabled: BOOLEAN
 			-- Are we generating debug information ?
@@ -608,7 +608,7 @@ feature {NONE} -- Implementation for class token finder
 	internal_requested_class_tokens: HASH_TABLE [INTEGER, INTEGER]
 			-- [Class token] <= [Class type]
 
-feature {IL_CODE_GENERATOR} -- Recording context
+feature {CIL_CODE_GENERATOR} -- Recording context
 
 	is_single_class : BOOLEAN
 			-- Can current class only be single inherited?
@@ -631,7 +631,7 @@ feature {IL_CODE_GENERATOR} -- Recording context
 			in_interface := a_in_interface
 		end
 
-feature {IL_CODE_GENERATOR} -- line debug recording
+feature {CIL_CODE_GENERATOR} -- line debug recording
 
 	ignore_next_debug_info is
 			-- Ignore recording of debug info (nop) for next recording
@@ -695,7 +695,7 @@ feature {IL_CODE_GENERATOR} -- line debug recording
 			end
 		end
 
-feature {IL_CODE_GENERATOR} -- Token recording
+feature {CIL_CODE_GENERATOR} -- Token recording
 
 	record_once_info_for_class (a_data_class_token: INTEGER; 
 					a_once_done_token, a_once_result_token, a_once_exception_token: INTEGER;
@@ -870,7 +870,7 @@ feature {NONE} -- Class Specific info
 			dbg_info_modules.has (direct_module_key (a_module_filename))
 		end
 
-feature {IL_CODE_GENERATOR} -- Cleaning
+feature {CIL_CODE_GENERATOR} -- Cleaning
 
 	last_module_info_cleaned: STRING
 			-- Last cleaned Module
@@ -1027,7 +1027,7 @@ feature {NONE} -- Debugger Info List
 	dbg_info_class_types: HASH_TABLE [IL_DEBUG_INFO_FROM_CLASS_TYPE, INTEGER]
 			-- [CLASS_TYPE.static_type_id] => [IL_DEBUG_INFO_FROM_CLASS_TYPE]
 
-feature {IL_CODE_GENERATOR, APPLICATION_EXECUTION_DOTNET} -- {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
+feature {CIL_CODE_GENERATOR, APPLICATION_EXECUTION_DOTNET} -- {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 
 	load_data_for_debugging	is
 			-- Load workbench data (mainly for debugging)

@@ -185,11 +185,15 @@ feature
 			end;
 				-- Assertion byte code
 			expr.make_byte_code (ba);
+			if System.has_separate and then expr.has_separate_call then
+				ba.append (Bc_sep_set);
+			end
 			if context.is_prec_first_block then
 				ba.append (Bc_end_first_pre);
 			else
 				ba.append (Bc_end_pre);
 			end;
+			ba.mark_forward4;
 		end;
 
 	byte_for_end: CHARACTER is

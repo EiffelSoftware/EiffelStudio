@@ -84,6 +84,15 @@ feature -- Interface
 			behavior_editor.set_current_state (current_state);
 		end;
 
+	update_state_name (state: STATE) is
+			-- Update the state name if current_state
+			-- is `state'.
+		do
+			if behavior_editor.current_state = state then
+				behavior_editor.set_current_state (state)
+			end
+		end;
+
 feature {NONE}
 
 	event_catalog: EVENT_CATALOG;

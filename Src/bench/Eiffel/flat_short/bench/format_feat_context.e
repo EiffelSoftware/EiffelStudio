@@ -20,7 +20,7 @@ inherit
 		rename
 			execute as old_execute
 		redefine
-			chained_assertion, put_origin_comment
+			put_origin_comment, chained_assertion
 		select
 			put_origin_comment
 		end
@@ -130,23 +130,6 @@ feature -- Execution
 			end;
 		end;
 
-	chained_assertion: CHAINED_ASSERTIONS is
-			-- Chained assertion for current analyzed feature.
-		local
-			chained_prec: CHAINED_ASSERTIONS;
-			t_feat: FEATURE_I;
-			assert_id_set: ASSERT_ID_SET
-		do
-			t_feat := global_adapt.target_enclosing_feature;
-			assert_id_set := t_feat.assert_id_set
-			if assert_id_set /= Void and then
-				assert_id_set.count > 0
-			then
-				chained_prec :=
-					assert_server.chained_assertion_of_fid (t_feat.feature_id)
-			end
-		end;
-
 feature -- Element change
 
 	put_origin_comment is
@@ -155,6 +138,12 @@ feature -- Element change
 		do
 			old_put_origin_comment;
 			print_export_status
+		end;
+
+	chained_assertion: CHAINED_ASSERTIONS is
+			-- Chained assertion for current analyzed feature.
+		do
+			Result := assert_server.current_assertion
 		end;
 
 feature {NONE} -- Feature comments 

@@ -225,20 +225,22 @@ feature {NONE} -- Implementation
 				element.off
 			loop
 				current_element ?= element.item_for_iteration
-				current_name := current_element.name.to_utf8
-				if current_name.is_equal (Event_string) then
-					from
-						current_element.start
-					until
-						current_element.off
-					loop
-						current_data_element ?= current_element.item_for_iteration
-						if current_data_element /= Void then
-							data := current_data_element.content.to_utf8
-								-- Add data into `object'.
-							object.events.extend (string_to_action_sequence_info (data))
+				if current_element /= Void then
+					current_name := current_element.name.to_utf8
+					if current_name.is_equal (Event_string) then
+						from
+							current_element.start
+						until
+							current_element.off
+						loop
+							current_data_element ?= current_element.item_for_iteration
+							if current_data_element /= Void then
+								data := current_data_element.content.to_utf8
+									-- Add data into `object'.
+								object.events.extend (string_to_action_sequence_info (data))
+							end
+							current_element.forth
 						end
-						current_element.forth
 					end
 				end
 				element.forth

@@ -411,7 +411,7 @@ feature -- Implementation
 				end
 			end
 		end
-		Max_draw_ignore: INTEGER is 20
+		Max_draw_ignore: INTEGER is 80
 
 	erase_rubber_band is
 			-- Erase previously drawn rubber band.
@@ -488,9 +488,7 @@ feature -- Implementation
 	real_pointed_target: EV_PICK_AND_DROPABLE is
 			-- Hole at mouse position
 		local
-			env: EV_ENVIRONMENT
-			app_imp: EV_APPLICATION_IMP
-			gdkwin, gtkwid: POINTER
+			gdkwin: POINTER
 			x, y: INTEGER
 			widget_target_imp: EV_PICK_AND_DROPABLE_IMP
 		do
@@ -500,18 +498,6 @@ feature -- Implementation
 				if widget_target_imp /= Void and then widget_target_imp.pointer_over_widget (gdkwin, x, y) then
 						Result ?= last_pointed_target
 				else
-				--	C.gdk_window_get_user_data (gdkwin, $gtkwid)
-				--	check
-				--		gtkwid_not_null: gtkwid /= NULL
-				--	end
-				--	from
-				--		Result ?= eif_object_from_c (gtkwid)
-				--	until
-				--		Result /= Void
-				--	loop
-				--		gtkwid := C.gtk_widget_struct_parent (gtkwid)
-				--		Result ?= eif_object_from_c (gtkwid)
-				--	end
 					Result := app_implementation.pnd_target_from_gdk_window (gdkwin, x, y)
 				end			
 			end
@@ -628,6 +614,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2001/06/21 22:32:25  king
+--| Removed unused locals and implementation
+--|
 --| Revision 1.3  2001/06/16 01:07:33  king
 --| Slightly optimized
 --|

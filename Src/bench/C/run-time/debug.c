@@ -10,9 +10,9 @@
 	Debugging control.
 */
 
-#include "eif_confmagic.h"		/* %%ss added for bcopy, bzero */
 #include "eif_config.h"
 #include "eif_portable.h"
+#include "eif_confmagic.h"		/* %%ss added for bcopy, bzero */
 #include "eif_macros.h"
 #include "eif_debug.h"
 #include "eif_hashin.h"

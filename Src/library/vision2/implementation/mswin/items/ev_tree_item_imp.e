@@ -21,13 +21,11 @@ inherit
 		rename
 			parent as old_simple_parent
 		undefine
-			set_pointer_style,
-			pnd_press
+			set_pointer_style
 		redefine
 			parent_imp,
 			destroy,
 			interface,
-			pnd_press,
 			set_pixmap,
 			on_parented,
 			on_orphaned
@@ -39,6 +37,8 @@ inherit
 		end
 
 	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM]
+		undefine
+			pnd_press
 		redefine
 			initialize,
 			interface
@@ -581,6 +581,10 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.61  2000/04/14 17:37:15  rogers
+--| Pnd_press is now inherited from EV_ITEM_IMP, previously
+--| EV_ARRAYED_LIST_ITEM_HOLDER_IMP.
+--|
 --| Revision 1.60  2000/04/11 19:04:02  rogers
 --| Insert_item and remove_item no longer modify ev_children.
 --|

@@ -103,11 +103,13 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 		/* cecil.c */
 	unsigned char ign_invisible_cx;	/* Raise exception when class not visible? */
 
+#ifdef WORKBENCH
 		/* debug.c */
 	struct dbstack db_stack_cx;		/* Debugging stack. */
 	struct id_list once_list_cx;		/* Debugging once_list */
 	struct dbinfo d_data_cx;			/* Global debugger information */
 	struct pgcontext d_cxt_cx;			/* Main program context */
+#endif
 
 		/* eif_threads.c */
 	start_routine_ctxt_t *eif_thr_context_cx;
@@ -399,13 +401,14 @@ extern EIF_TSD_TYPE eif_global_key;
 #define EIF_END_GET_CONTEXT
 
 
+#ifdef WORKBENCH
 	/* debug.c */
 /* Debugging data structures */
 extern struct dbstack db_stack;	/* Calling context stack */
 extern struct id_list once_list;	/* Calling context once_list */
 extern struct dbinfo d_data;	/* Global debugger information */
 extern struct pgcontext d_cxt;	/* Program context */
-
+#endif
 
 	/* eif_err_msg.h */
 #ifdef EIF_WIN32

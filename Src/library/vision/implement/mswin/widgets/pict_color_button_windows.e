@@ -47,7 +47,7 @@ feature -- Status setting
 			-- Set the pixmap for the button
 		do
 			pixmap := a_pixmap
-			if (fixed_size and (pixmap.height + 6 > height or pixmap.width + 6 > width)) or not fixed_size then 
+			if (fixed_size_flag and (pixmap.height + 6 > height or pixmap.width + 6 > width)) or not fixed_size_flag then 
 				set_size (pixmap.width + 6, pixmap.height + 6)
 			end
 			if exists then
@@ -62,7 +62,7 @@ feature -- Status setting
 				set_size (pixmap.width + 6, pixmap.height + 6)
 			end
 		end
- 
+
 feature -- Element change 
 
 	add_draw_item_action (a_command: COMMAND; arg: ANY) is

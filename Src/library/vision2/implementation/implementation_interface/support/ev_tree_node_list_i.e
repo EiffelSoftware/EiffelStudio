@@ -25,11 +25,10 @@ Feature -- Status report
 			until
 				interface.after or Result /= Void
 			loop
-				if (interface.object_comparison and then (data = Void and then item.data = Void) or data /= void and item.data /= Void and then data.same_type (item.data) and then data.is_equal (item.data))
-				or (not interface.object_comparison and data = item.data) then
+				if (data = Void and then item.data = Void) or
+					data /= void and item.data /= Void and then data.same_type (item.data) and then
+					data.is_equal (item.data) then
 					Result := item
-				else
-					Result := item.implementation.find_item_recursively_by_data (data)
 				end
 				interface.forth
 			end
@@ -38,9 +37,36 @@ Feature -- Status report
 			index_not_changed: old interface.index = interface.index
 		end
 		
-	find_items_recursively_by_data (data: ANY): ARRAYED_LIST [EV_TREE_NODE] is
+	retrieve_item_recursively_by_data (data: ANY; should_compare_objects: BOOLEAN): EV_TREE_NODE is
+			-- If `data' contained in a tree item at any level then
+			-- assign this item to `Result'. Compare objects if
+			-- `should_compare_objects' otherwise compare references.
+		local
+			temp_cursor: CURSOR
+		do
+			temp_cursor := cursor
+			from
+				interface.start
+			until
+				interface.after or Result /= Void
+			loop
+				if (should_compare_objects and then (data = Void and then item.data = Void) or data /= void and item.data /= Void and then data.same_type (item.data) and then data.is_equal (item.data))
+				or (not should_compare_objects and data = item.data) then
+					Result := item
+				else
+					Result := item.implementation.retrieve_item_recursively_by_data (data, should_compare_objects)
+				end
+				interface.forth
+			end
+			go_to (temp_cursor)
+		ensure
+			index_not_changed: old interface.index = interface.index
+		end
+		
+	retrieve_items_recursively_by_data (data: ANY; should_compare_objects: BOOLEAN): ARRAYED_LIST [EV_TREE_NODE] is
 			-- `Result' is all tree items contained in `Current' at any level,
-			-- with data matching `data'.
+			-- with data matching `data'. Compare objects if
+			-- `should_compare_objects' otherwise compare references.
 		local
 			temp_cursor: CURSOR
 		do
@@ -51,11 +77,11 @@ Feature -- Status report
 			until
 				interface.after
 			loop
-				if (interface.object_comparison and then (data = Void and then item.data = Void) or data /= void and item.data /= Void and then data.same_type (item.data) and then data.is_equal (item.data))
-				or (not interface.object_comparison and data = item.data) then
+				if (should_compare_objects and then (data = Void and then item.data = Void) or data /= void and item.data /= Void and then data.same_type (item.data) and then data.is_equal (item.data))
+				or (not should_compare_objects and data = item.data) then
 					Result.extend (item)
 				end
-				Result.append (item.implementation.find_items_recursively_by_data (data))
+				Result.append (item.implementation.retrieve_items_recursively_by_data (data, should_compare_objects))
 				interface.forth
 			end
 			go_to (temp_cursor)

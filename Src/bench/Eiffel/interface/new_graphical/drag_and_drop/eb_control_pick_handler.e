@@ -66,7 +66,7 @@ feature {NONE} -- Implementation
 	chosen_receiver: STRING is
 			-- Where the stones should be sent (look up in the preferences).
 		do
-			Result := string_resource_value ("ctrl_right_click_receiver", "new_window").as_lower
+			Result := selected_array_resource_value ("ctrl_right_click_receiver", "new_window").as_lower
 		ensure
 			not_void: Result /= Void
 			lower_case: Result.is_equal (Result.as_lower)

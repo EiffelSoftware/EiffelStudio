@@ -373,7 +373,7 @@ feature -- Action
 			-- directory of EIFGEN.
 		local
 			parser: like eiffel_parser
-			file, copy_file: RAW_FILE
+			file: KL_BINARY_INPUT_FILE
 			f_name: FILE_NAME
 			class_file_name: STRING
 			vd21: VD21
@@ -412,14 +412,7 @@ feature -- Action
 				!! f_name.make_from_string (cluster.backup_directory)
 				f_name.extend (lace_class.name)
 				f_name.add_extension ("e")
-				!! copy_file.make (f_name)
-				if copy_file.is_creatable then
-					copy_file.open_write
-					file.readstream (file.count)
-					file.start
-					copy_file.putstring (file.laststring)
-					copy_file.close
-				end
+				file.copy_file (f_name)
 			end
 
 			has_unique := False

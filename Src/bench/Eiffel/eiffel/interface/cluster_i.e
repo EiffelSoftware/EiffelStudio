@@ -887,14 +887,15 @@ end;
 			-- Check if there is already a class with this name
 			-- in the cluster
 		local
-			class_file: EXTEND_FILE;
+			class_file: KL_BINARY_INPUT_FILE;
 			vd10: VD10;
 			vd21: VD21;
 			vd22: VD22;
 		do
 			create class_file.make (file_name)
 			if class_file.exists and then class_file.is_readable then
-				if class_file.open_read_error then
+				class_file.open_read
+				if not class_file.is_open_read then
 						-- Error when opening file
 					!!vd22;
 					vd22.set_cluster (Current);
@@ -1762,7 +1763,7 @@ feature {NONE} -- Implementation
 	build_indexes: EIFFEL_LIST [INDEX_AS] is
 			-- Parsing results of file "indexing.txt".
 		local
-			file: RAW_FILE
+			file: KL_BINARY_INPUT_FILE
 			fn: FILE_NAME
 		do
 			create fn.make_from_string (path)

@@ -41,11 +41,6 @@ default_make
 remtrace com run-time
 cd %EIFFEL_SRC\library\com\Clib_runtime
 default_make
-remtrace com_il_generation
-cd Eiffel\eiffel\com_il_generation\Core\clib
-default_make
-cd Eiffel\eiffel\com_il_generation\eac\clib
-default_make
 remtrace encryption
 cd %EIFFEL_SRC\library\encryption\Clib
 default_make

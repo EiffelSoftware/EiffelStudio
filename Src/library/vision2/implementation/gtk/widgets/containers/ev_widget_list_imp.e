@@ -75,6 +75,9 @@ feature -- Status report
 			wl_cursor: EV_WIDGET_LIST_CURSOR
 		do
 			wl_cursor ?= a_cursor;
+			check
+				wl_cursor_not_void: wl_cursor /= Void
+			end
 			Result := wl_cursor /= Void and then
 				(wl_cursor.index >= 0 and wl_cursor.index <= count + 1)
 		end
@@ -131,6 +134,9 @@ feature -- Element change
 				v.parent.prune (v)
 			end
 			imp ?= v.implementation
+			check
+				imp_not_void: imp /= Void
+			end
 			C.gtk_container_add (c_object, imp.c_object)
 			new_item_actions.call ([v])
 		end
@@ -144,6 +150,9 @@ feature -- Element change
 				v.parent.prune (v)
 			end
 			imp ?= v.implementation
+			check
+				imp_not_void: imp /= Void
+			end
 			remove
 			C.gtk_container_add (c_object, imp.c_object)
 			gtk_reorder_child (c_object, imp.c_object, index - 1)
@@ -160,6 +169,9 @@ feature -- Element change
 				v.parent.prune (v)
 			end
 			imp ?= v.implementation
+			check
+				imp_not_void: imp /= Void
+			end
 			if index /= 0 then
 				index := index + 1
 			end
@@ -178,6 +190,9 @@ feature -- Element change
 				v.parent.prune (v)
 			end
 			imp ?= v.implementation
+			check
+				imp_not_void: imp /= Void
+			end
 			C.gtk_container_add (c_object, imp.c_object)
 			gtk_reorder_child (c_object, imp.c_object, index)
 			new_item_actions.call ([v])
@@ -195,6 +210,9 @@ feature -- Removal
 			if pos > 0 then
 				remove_item_actions.call ([v])
 				imp ?= v.implementation
+				check
+					imp_not_void: imp /= Void
+				end
 				C.gtk_container_remove (c_object, imp.c_object)
 				if index > pos then
 					index := index - 1
@@ -209,9 +227,15 @@ feature -- Removal
 		local
 			p: POINTER
 			w: EV_WIDGET
+			w_imp: EV_WIDGET_IMP
 		do
-			p := C.g_list_nth_data (C.gtk_container_children (c_object), index - 1)
-			w ?= eif_object_from_c (p).interface
+			p := C.g_list_nth_data (
+			C.gtk_container_children (c_object), index - 1)
+			w_imp ?= eif_object_from_c (p)
+			check
+				w_imp_not_void: w_imp /= Void
+			end
+			w := w_imp.interface
 			remove_item_actions.call ([w])
 			C.gtk_container_remove (c_object, p)
 		end
@@ -222,9 +246,15 @@ feature -- Removal
 		local
 			p: POINTER
 			w: EV_WIDGET
+			w_imp: EV_WIDGET_IMP
 		do
-			p := C.g_list_nth_data (C.gtk_container_children (c_object), index - 2)
-			w ?= eif_object_from_c (p).interface
+			p := C.g_list_nth_data (
+				C.gtk_container_children (c_object), index - 2)
+			w_imp ?= eif_object_from_c (p)
+			check
+				w_imp_not_void: w_imp /= Void
+			end
+			w := w_imp.interface
 			remove_item_actions.call ([w])
 			C.gtk_container_remove (c_object, p)
 			index := index - 1
@@ -236,9 +266,14 @@ feature -- Removal
 		local
 			p: POINTER
 			w: EV_WIDGET
+			w_imp: EV_WIDGET_IMP
 		do
 			p := C.g_list_nth_data (C.gtk_container_children (c_object), index)
-			w ?= eif_object_from_c (p).interface
+			w_imp ?= eif_object_from_c (p)
+			check
+				w_imp_not_void: w_imp /= Void
+			end
+			w := w_imp.interface
 			remove_item_actions.call ([w])
 			C.gtk_container_remove (c_object, p)
 		end
@@ -277,6 +312,10 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/03/02 21:38:54  brendel
+--| Consistently added checks after every assignment attempt.
+--| Formatted for 80 columns.
+--|
 --| Revision 1.9  2000/03/02 01:34:52  brendel
 --| Instead of the interface, now this version of `prune' checks whether the
 --| item is present. Cursor does not move, unless it was on the removed item,

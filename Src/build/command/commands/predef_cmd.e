@@ -18,7 +18,7 @@ feature
 			fn, full_path: STRING;	
 			f: PLAIN_TEXT_FILE
 		do
-			full_path := clone (Environment.Commands_directory);
+			full_path := clone (Environment.predefined_commands_directory);
 			full_path.extend (Environment.directory_separator);
 				fn := clone (eiffel_type);
 				fn.to_lower;

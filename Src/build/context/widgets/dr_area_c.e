@@ -68,8 +68,6 @@ feature {NONE}
 	initialize_transport is
 		do
 			old_initialize_transport;
-			widget.scrolled_window.add_button_press_action (2, show_command, Current);
-			widget.scrolled_window.add_button_release_action (2, show_command, Void);
 			widget.scrolled_window.add_button_press_action (3, transport_command, Current);
 		end;
 

@@ -3,10 +3,7 @@ class FUNC_EV_IS
 
 inherit
 
-	EV_ICON_STONE
-		rename
-			make as ev_icon_stone_make
-		end;
+	EV_ICON_STONE;
 	FUNCTION_ELEMENT
 		rename
 			target as source

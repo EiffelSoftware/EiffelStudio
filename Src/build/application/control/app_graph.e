@@ -31,6 +31,11 @@ feature {NONE}
 
 feature 
 
+	exit_element: EXIT_ELEMENT is
+		once
+			!! Result
+		end;
+
 	state (name: STRING): STATE is
 			-- Find state with label `name';
 		local
@@ -122,7 +127,7 @@ feature
 					Result.append (", ");
 					if (dest_element = Void) then
 						Result.append ("Return_to_previous");
-					elseif (dest_element = Shared_app_exit_element) then
+					elseif (dest_element = Exit_element) then
 						Result.append ("Exit_from_application");
 					else
 						Result.append (dest_element.label);

@@ -3,7 +3,7 @@ class APP_RETURN_H
 
 inherit
 
-	ICON_HOLE
+	APP_EDITOR_HOLE
 		redefine
 			stone, compatible
 		end;
@@ -13,13 +13,16 @@ creation
 
 	make
 	
-feature 
+feature {NONE}
 
-	make (editor: APP_EDITOR) is
-			-- Create a return hole.
+	symbol: PIXMAP is
 		do
-			set_symbol (Pixmaps.return_pixmap);
-			set_label (Return_label);
+			Result := Pixmaps.return_pixmap
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.return_label
 		end;
 	
 feature {NONE}

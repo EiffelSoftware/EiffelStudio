@@ -283,7 +283,7 @@ feature
 
 	shown: BOOLEAN is
 		do
-			Result := widget.shown
+			Result := widget.realized and then widget.shown
 		end;
 
 	raise is
@@ -291,7 +291,7 @@ feature
 			if not shown then
 				show
 			end;
-			raise
+			widget.raise
 		end;
 
 	execute (argument: ANY) is

@@ -85,6 +85,15 @@ feature -- Interface
 			context_list.wipe_out
 		end;
 
+	unregister_holes is
+		do
+			if is_initialized then
+				reference.unregister;
+				align_hole.unregister;
+				context_list.unregister_holes
+			end;
+		end;
+
 feature {ALIGNMENT_HOLE}
 
 	reference_context: CONTEXT is

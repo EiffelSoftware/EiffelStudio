@@ -5,33 +5,19 @@ class CON_ICON_STONE
 inherit
 
 	ICON_STONE
-		rename
-			identifier as oui_identifier,
-			make_visible as make_icon_visible
 		export
 			{ANY} realized
 		undefine
 			stone_cursor
 		redefine
-			original_stone
-		end;
-	ICON_STONE
-		rename
-			identifier as oui_identifier
-		undefine
-			stone_cursor
-		redefine
-			make_visible, original_stone
-		select
-			make_visible
+			original_stone, set_widget_default
 		end;
 	CONTEXT_STONE
 	
 feature 
 
-	make_visible (a_parent: COMPOSITE) is
+	set_widget_default is
 		do
-			make_icon_visible (a_parent);
 			initialize_transport
 		end;
 			

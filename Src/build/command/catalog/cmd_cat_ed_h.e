@@ -3,30 +3,15 @@ class CMD_CAT_ED_H
 
 inherit
 
-	CMD_CAT_BUTTON
-		rename
-			button as source,
-			make_visible as make_button_visible,
-			make as cmd_cat_make,		
-			identifier as cmd_cat_identifier
+	HOLE
 		redefine
 			process_stone
 		end;
-	CMD_CAT_BUTTON
-		rename
-			button as source,
-			make as cmd_cat_make,
-			identifier as cmd_cat_identifier
-		redefine
-			make_visible, process_stone
-		select
-			make_visible
-		end;
+	EB_BUTTON_COM;
 	STONE
 		redefine
 			original_stone
 		end;	
-	COMMAND;
 
 creation
 
@@ -57,22 +42,35 @@ feature {NONE}
 			end
 		end;
 
-feature 
+feature {NONE}
 
-	make (f: STRING) is
+	label, focus_string: STRING is
 		do
-			focus_string := f;
+			Result := Focus_labels.create_edit_label
+		end;
+
+	target, source: WIDGET is
+		do
+			Result := Current
+		end;
+
+	focus_label: FOCUS_LABEL is
+		do
+			Result := command_catalog.focus_label
+		end;
+
+	make (a_parent: COMPOSITE) is
+		do
+			make_visible (a_parent);
+			initialize_transport;
+			initialize_focus;
 			register
 		end;
 
-	make_visible (a_parent: COMPOSITE) is
+	symbol: PIXMAP is
 		do
-			make_button_visible (a_parent);
-			set_symbol (Pixmaps.command_pixmap);
-			initialize_transport;
-			add_activate_action (Current, Void)
+			Result := Pixmaps.command_pixmap
 		end;
-
 	
 feature {NONE}
 

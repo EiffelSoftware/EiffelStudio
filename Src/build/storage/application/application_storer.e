@@ -110,7 +110,7 @@ feature {NONE}
 					if (g = Void) then
 							-- It is a Return transition.
 						new_table.put (Return_transition, subtab.key_for_iteration);
-					elseif (g = Shared_app_exit_element) then
+					elseif (g = Shared_app_graph.exit_element) then
 							-- It is an Exit transition.
 						new_table.put (Exit_transition, subtab.key_for_iteration);
 					else
@@ -175,7 +175,8 @@ feature
 			loop
 				subtab := stored_graph.item_for_iteration;
 				!!new_table.make (subtab.count);
-				Shared_app_graph.put (new_table, state_table.item (stored_graph.key_for_iteration));
+				Shared_app_graph.put (new_table, 
+					state_table.item (stored_graph.key_for_iteration));
 				from
 					subtab.start
 				until
@@ -183,11 +184,14 @@ feature
 				loop
 					subtab_item := subtab.item_for_iteration;
 					if (subtab_item = Return_transition) then
-						new_table.put (void_element, subtab.key_for_iteration);	
+						new_table.put (void_element, 
+							subtab.key_for_iteration);	
 					elseif (subtab_item = Exit_transition) then
-						new_table.put (Shared_app_exit_element, subtab.key_for_iteration);	
+						new_table.put (Shared_app_graph.exit_element, 
+							subtab.key_for_iteration);	
 					else
-						new_table.put (state_table.item (subtab_item), subtab.key_for_iteration);
+						new_table.put (state_table.item (subtab_item), 
+							subtab.key_for_iteration);
 					end;
 					subtab.forth
 				end;

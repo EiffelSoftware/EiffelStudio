@@ -11,7 +11,6 @@ inherit
 		redefine
 			contains, draw, select_figure, deselect
 		end;
-	COLORS
 
 creation
 
@@ -110,8 +109,8 @@ feature
 			show_children := True;
 			original_stone := a_context;
 			text_image_create;
-			set_foreground_color (black);
-			set_background_color (white);
+			set_foreground_color (App_const.black);
+			set_background_color (App_const.white);
 			set_text (a_context.label);
 			attach_drawing (tree);
 			tree.append (Current);
@@ -197,7 +196,7 @@ feature
 			parent_reference := a_point;
 		end;
 
-	select_action is
+	expand_action is
 		do
 			if original_stone.arity /= 0 then
 				set_children_visibility (not show_children);

@@ -18,7 +18,6 @@ feature {NONE}
 
 	edit_hole: FUNC_EDIT_HOLE;
 
-	
 feature 
 
 	make (a_name: STRING; a_parent: COMPOSITE; func: FUNC_EDITOR) is
@@ -27,6 +26,10 @@ feature
 		end;
 
 	set_function (f: FUNCTION) is
+		do
+		end;
+
+	unregister_holes is
 		do
 		end;
 		

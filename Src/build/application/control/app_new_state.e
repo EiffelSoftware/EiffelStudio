@@ -4,26 +4,11 @@ class APP_NEW_STATE
 inherit
 
 	COMMAND;
-	HOLE
+	APP_EDITOR_HOLE
 		rename
-			target as source
+			make as app_make
 		redefine
 			stone, compatible
-		end;
-	ICON
-		rename
-			button as source,
-			make_visible as make_icon_visible,
-			identifier as oui_identifier
-		end;
-	ICON
-		rename
-			button as source,
-			identifier as oui_identifier
-		redefine
-			make_visible
-		select
-			make_visible
 		end;
 	NEW_STATE_STONE
 
@@ -31,27 +16,32 @@ creation
 
 	make
 	
-feature -- Creation
+feature 
 
-	make is
+	source: WIDGET is
 		do
-			set_symbol (Pixmaps.state_pixmap);
-			set_label ("Create/edit");
-		end; 
+			Result := Current
+		end;
 
-feature
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.state_pixmap
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.create_edit_label
+		end;
+
+	make (a_parent: COMPOSITE) is
+		do
+			app_make (a_parent);
+			initialize_transport
+			add_activate_action (Current, Void)
+		end;
 
 	original_stone: STATE;
 
-	make_visible (a_parent: COMPOSITE) is
-		do
-			make_icon_visible (a_parent);
-			register;
-			add_activate_action (Current, Void);
-			initialize_transport
-		end;
-
-	
 feature {NONE}
 
 	stone: STATE_STONE;

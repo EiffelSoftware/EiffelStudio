@@ -35,6 +35,18 @@ feature
 		deferred
 		end;
 
+	unregister is
+			-- Unregister Current as a hole
+		do
+			transporter.unregister (Current)
+		end;
+
+	register is
+			-- Register Current as a hole
+		do
+			transporter.register (Current)
+		end;
+
 feature {NONE}
 
 	process_stone is
@@ -42,9 +54,4 @@ feature {NONE}
 		deferred
 		end;
 	
-	register is
-		do
-			transporter.register (Current)
-		end;
-
 end

@@ -41,6 +41,7 @@ inherit
 			stone, compatible
 		end;
 	REMOVABLE;
+	CLOSEABLE
 
 creation
 
@@ -60,6 +61,12 @@ feature
 			Result := Current
 		end;
 
+	close is
+			-- Close current window
+		do
+			main_panel.cont_tree_t.set_toggle_off;
+			top_shell.hide
+		end;
 	
 feature {NONE}
 
@@ -127,7 +134,7 @@ feature
 
 	realize is
 		do
-			top_shell.realize
+			top_shell.realize;
 		end;
 
 	
@@ -140,24 +147,60 @@ feature
 
 	make (a_screen: SCREEN) is
 		local
-			contin_command: ITER_COMMAND;
+			form: FORM;
+			del_com: DELETE_WINDOW;
+			close_button: CLOSE_WINDOW_BUTTON;
+			focus_label: FOCUS_LABEL;
+			con_ed_hole: CON_ED_HOLE;
+			cut_hole: CUT_HOLE;
+			raise_wiget_hole: RAISE_WIDGET_HOLE;
+			exp_parent_hole: EXPAND_PARENT_HOLE
 		do
-			!!top_shell.make (Widget_names.context_tree, a_screen);
-			!!scrolled_w.make (Widget_names.scrolledwindow, top_shell);
+			!! top_shell.make (Widget_names.context_tree, a_screen);
+			!! form.make (Widget_names.form, top_shell);
+			!! focus_label.make (form);
+			!! scrolled_w.make (Widget_names.scrolledwindow, form);
 			dr_area_create (Widget_names.drawingarea, scrolled_w);
-			!!current_position;
+			scrolled_w.set_working_area (Current);
+			!! close_button.make (Current, form, focus_label);
+			!! con_ed_hole.make (form, focus_label);
+			!! cut_hole.make (form, focus_label);
+			!! raise_wiget_hole.make (form, focus_label);
+			!! exp_parent_hole.make (form, focus_label);
+			!! current_position;
 			drawing_box_create (Current);
+				-- Attachments
+			form.attach_top (cut_hole, 0);
+			form.attach_top (con_ed_hole, 0);
+			form.attach_top (close_button, 0);
+			form.attach_top (focus_label, 5);
+			form.attach_top (raise_wiget_hole, 0);
+			form.attach_top (exp_parent_hole, 0);
+			form.attach_left (con_ed_hole, 0);
+			form.attach_left_widget (con_ed_hole, exp_parent_hole, 0);
+			form.attach_left_widget (exp_parent_hole, raise_wiget_hole, 0);
+			form.attach_left_widget (raise_wiget_hole, cut_hole, 0);
+			form.attach_left_widget (cut_hole, focus_label, 0);
+			form.attach_right_widget (close_button, focus_label, 0);
+			form.attach_right (close_button, 0);
+			form.attach_top_widget (focus_label, scrolled_w, 0);
+			form.attach_top_widget (cut_hole, scrolled_w, 0);
+			form.attach_top_widget (close_button, scrolled_w, 0);
+			form.attach_top_widget (con_ed_hole, scrolled_w, 0);
+			form.attach_top_widget (raise_wiget_hole, scrolled_w, 0);
+			form.attach_top_widget (exp_parent_hole, scrolled_w, 0);
+			form.attach_left (scrolled_w, 0);
+			form.attach_right (scrolled_w, 0);
+			form.attach_bottom (scrolled_w, 0);
 
 				-- Callbacks
 
 			add_expose_action (Current, Second);
-			add_button_press_action (2, Current, Third);
+			add_button_press_action (1, Current, Third);
 			add_button_press_action (3, Current, Third);
 			initialize_transport;
 
-			set_action ("<Btn1Down>", Current, select_action);
-			set_action ("Shift<Btn1Down>", Current, Nineth);
-			set_action ("Ctrl<Btn1Down>", Current, Fourth);
+			set_action ("!Ctrl<Btn1Down>", Current, Fourth);
 
 				-- Callbacks for arrow keys
 			set_action ("<Key>osfLeft", Current, Fifth);
@@ -168,8 +211,14 @@ feature
 			!!positions.make;
 			register;
 
-			!!contin_command;
-			top_shell.set_delete_command (contin_command);
+			!! del_com.make (Current);
+			top_shell.set_delete_command (del_com);
+				-- FIXME (use size from top_shell when
+				-- resources is implemented)
+			set_size (300, 300);
+			set_background_color (App_const.white)
+		ensure
+			target_is_current: target = Current
 		end;
 
 feature {TREE_ELEMENT}
@@ -277,9 +326,6 @@ feature {NONE}
 						-- Selection before show command or transport.
 					transportable := True;
 					original_stone := element.original_stone;
-				elseif (argument = select_action) then
-						-- selection
-					element.select_action;
 				elseif (argument = Fourth) then
 						-- Group
 					a_context := element.original_stone;
@@ -295,8 +341,6 @@ feature {NONE}
 						a_context.set_grouped (True);
 					end;
 					display (a_context);
-				elseif (argument = Nineth) then
-					element.original_stone.raise
 				else
 					a_context := element.original_stone;
 					if (a_context.parent = Void) or else

@@ -3,7 +3,7 @@ class APP_EXIT_HOLE
 
 inherit
 
-	ICON_HOLE
+	APP_EDITOR_HOLE
 		redefine
 			stone, compatible
 		end;
@@ -13,14 +13,17 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE}
 
-	make is
-			-- Create a self_hole.
+	symbol: PIXMAP is
 		do
-			set_label (Exit_label);
-			set_symbol (Pixmaps.exit_pixmap);
-		end; -- Create
+			Result := Pixmaps.exit_pixmap
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.exit_label
+		end;
 
 feature {NONE}
 

@@ -6,6 +6,7 @@ inherit
 	ROW_COLUMN
 		rename
 			make as make_row_col,
+			make_unmanaged as make_row_col_unmanaged,
 			cursor as row_column_cursor,
 			show as row_show,
 			hide as row_hide
@@ -15,6 +16,7 @@ inherit
 	ROW_COLUMN
 		rename 
 			make as make_row_col,
+			make_unmanaged as make_row_col_unmanaged,
 			cursor as row_column_cursor
 		redefine
 			show, hide
@@ -58,9 +60,19 @@ feature -- List operations
 			if icons = Void then
 				!!icons.make
 			end;
-			make_row_col(a_name, a_parent);
-	end;
-			
+			make_row_col (a_name, a_parent);
+		end;
+
+	make_box_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+		do
+			if first_element = Void then
+				linked_list_make;
+			end;
+			if icons = Void then
+				!!icons.make
+			end;
+			make_row_col_unmanaged (a_name, a_parent);
+		end;
 
 	go_i_th (i: INTEGER) is
 			-- Go to i position in Current and
@@ -119,32 +131,27 @@ feature -- List operations
 			next_icon, current_icon: like new_icon;
 		do
 			old_pos := index;
-			if not (icons = Void) then
+			if (icons /= Void) then
 				icons.go_i_th (relative_position);
-			end;
-			from
-				forth
-			until
-				(icons = Void) or finished or
-				icons.after
-			loop
-				current_icon := icons.item;
-				if
-				 	not after	
-				then
-					current_icon.set_original_stone (item);
-					icons.forth;
+				from
 					forth
-				else
-					current_icon.set_managed (False);
-					finished := True
+				until
+					finished or icons.after
+				loop
+					current_icon := icons.item;
+					if not after then
+						current_icon.set_original_stone (item);
+						icons.forth;
+						forth
+					else
+						current_icon.set_managed (False);
+						finished := True
+					end
 				end
 			end;
 			go_i_th (old_pos);
 			list_remove;
-			if
-				after and not empty
-			then
+			if after and then not empty then
 				back
 			end;
 		end; -- remove
@@ -179,7 +186,7 @@ feature {NONE}
 	clear_icons is
 			-- Unmanage all icons.
 		do
-			if not (icons = Void) then
+			if icons /= Void then
 				from
 					icons.start
 				until
@@ -196,6 +203,8 @@ feature {NONE}
 feature -- Other features
 
 	show is
+		local
+			icon: ICON
 		do
 			row_show
 			from
@@ -204,8 +213,11 @@ feature -- Other features
 			until
 				after
 			loop
-				if icons.item.realized and then not icons.item.shown then
-					icons.item.show
+				icon := icons.item;
+				if icon.realized and then not 
+					icon.shown 
+				then
+					icon.show
 				end;
 				forth
 				icons.forth
@@ -213,6 +225,8 @@ feature -- Other features
 		end;
 
 	hide is
+		local
+			icon: ICON
 		do
 			row_hide;
 			from
@@ -227,8 +241,6 @@ feature -- Other features
 				forth;
 				icons.forth;
 			end;
-		
-			
 		end;
 
 	insert_after (dest_stone, moved_stone: T) is
@@ -242,7 +254,7 @@ feature -- Other features
 		local
 			dest_pos, removed_pos: INTEGER
 		do
-			if not (dest_stone = moved_stone) then
+			if dest_stone /= moved_stone then
 				start;
 				search (moved_stone);
 				if not after then
@@ -301,9 +313,7 @@ feature {NONE}
 				i > Initial_count and i > count
 			loop
 				create_new_icon;	
-				new_icon.set_label ("dummy");
-				new_icon.make_visible (Current);
-				new_icon.set_managed (False);
+				new_icon.make_unmanaged (Current);
 				icons.extend (new_icon);
 				i := i + 1
 			end;
@@ -329,14 +339,10 @@ feature {NONE}
 				icons.after or after
 			loop
 				icon := icons.item;
-				if
-					not (icon.original_stone = item)
-				then
+				if icon.original_stone /= item then
 					icon.set_original_stone (item);
 				end;
-				if
-					not icon.managed
-				then
+				if not icon.managed then
 					icons.item.set_managed (True)
 				end;
 				icons.forth;
@@ -376,9 +382,27 @@ feature {NONE}
 			end
 		end; -- set_icons
 
-feature 
+feature -- Unregisting holes
 
-	invariant
-		not_void_icons: not (icons = Void)
+	unregister_holes is
+		local
+			hole: HOLE
+		do
+			from
+				icons.start
+			until
+				icons.after
+			loop
+				hole ?= icons.item;
+				if hole /= Void then
+					hole.unregister;
+				end;
+				icons.forth
+			end
+		end;
+
+invariant
+
+		not_void_icons: icons /= Void
 
 end -- class EB_BOX

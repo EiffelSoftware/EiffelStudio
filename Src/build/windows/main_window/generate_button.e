@@ -4,7 +4,7 @@ class GENERATE_BUTTON
 inherit
 
 	LICENCE_COMMAND;
-	EB_PICT_B
+	EB_BUTTON_COM
 		rename
 			make_visible as make
 		end;
@@ -16,7 +16,10 @@ creation
 
 feature {NONE}
 
-	focus_string: STRING is "Generate code"
+	focus_string: STRING is 
+		do
+			Result := Focus_labels.generate_code_label
+		end;
 
 	focus_label: LABEL is
 		do

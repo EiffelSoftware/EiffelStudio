@@ -2,22 +2,10 @@ class CON_EDIT_HOLE
 
 inherit
 
-	ICON_HOLE
-		rename
-			make_visible as make_icon_visible,
-			identifier as oui_identifier
-		export
-			{CONTEXT_EDITOR} main_panel
+	EB_BUTTON;
+	HOLE
 		redefine
 			stone, compatible
-		end
-	ICON_HOLE
-		rename
-			identifier as oui_identifier
-		redefine
-			stone, compatible, make_visible
-		select
-			make_visible
 		end
 	CONTEXT_STONE
 		redefine
@@ -29,7 +17,12 @@ creation
 	
 feature {NONE}
 
-	associated_editor: CONTEXT_EDITOR
+	associated_editor: CONTEXT_EDITOR;
+
+	target: WIDGET is
+		do
+			Result := Current
+		end;
 
 	identifier: INTEGER is
 		do
@@ -49,60 +42,39 @@ feature {NONE}
 	eiffel_text: STRING is
 		do
 			Result := original_stone.entity_name
-		end
+		end;
+
+	focus_label: FOCUS_LABEL is
+		do
+			Result := associated_editor.focus_label
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.context_label
+		end;
 
 feature 
 
-	source: PICT_COLOR_B is
+	original_stone: CONTEXT is
 		do
-			Result := button
-		end
-
-	make_visible (a_parent: COMPOSITE) is
-		do
-			make_icon_visible (a_parent)
-			initialize_transport
-		end
-			
-	original_stone: CONTEXT
-
+			Result := associated_editor.edited_context
+		end;
 	
-	reset is
+	source: WIDGET is
 		do
-			original_stone := Void
-			set_label ("")
-			set_symbol (Pixmaps.context_pixmap)
-		end
-
-	set_context (con: CONTEXT) is
-		do
-			original_stone := con.original_stone
-			if label = Void or else label.empty or else con.label.count >= label.count then
-				parent.unmanage
-			end
-			set_label (con.label)
-			set_symbol (con.symbol)
-			if not parent.managed then
-				parent.manage
-			end
+			Result := Current
 		end;
 
 	context_label: STRING is
 		do
 			Result := original_stone.label
-		end
-
-	update_name is
-		require
-			original_stone /= Void
-		do
-			set_label (context_label)
-		end
+		end;
 
 	transportable: BOOLEAN is
 		do
 			Result := original_stone /= Void
-	end
+		end;
 
 	stone: CONTEXT_STONE
 
@@ -112,11 +84,25 @@ feature
 			Result := stone /= Void
 		end
 
-	make (ed: CONTEXT_EDITOR) is
+	make (ed: CONTEXT_EDITOR; a_parent: COMPOSITE) is
+		require
+			valid_ed: ed /= Void
 		do
-			set_symbol (Pixmaps.context_pixmap)
-			associated_editor := ed
-		end
+			associated_editor := ed;
+			make_visible (a_parent);
+			register;
+			initialize_transport
+		end;
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.context_pixmap
+		end;
+
+	label: STRING is
+		do
+			Result := original_stone.label
+		end;
 
 feature {NONE}
 

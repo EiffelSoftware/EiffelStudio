@@ -11,25 +11,19 @@ inherit
 	COMMAND_ARGS;
 	ICON_STONE
 		rename
-			set_original_stone as old_set_original_stone,
-			make_visible as make_icon_visible,
-			identifier as oui_identifier,
-			make as icon_stone_make
+			set_original_stone as old_set_original_stone
 		undefine
 			stone_cursor
 		redefine
-			original_stone
+			original_stone, set_widget_default
 		end;
 	ICON_STONE
-		rename
-			identifier as oui_identifier,
-			make as icon_stone_make
 		undefine
 			stone_cursor
 		redefine
-			make_visible, set_original_stone, original_stone
+			set_original_stone, original_stone, set_widget_default
 		select
-			make_visible, set_original_stone
+			set_original_stone
 		end;
 	HOLE
 		rename
@@ -41,15 +35,14 @@ inherit
 
 feature 
 
-	make_visible (a_parent: COMPOSITE) is
+	set_widget_default is
 		do
-			make_icon_visible (a_parent);
 			register;
 			source.add_button_press_action (3, Current, First);
-			source.add_button_press_action (2, Current, Second);
+			source.add_button_press_action (1, Current, Second);
 			initialize_transport;
-			source.add_button_press_action (2, show_command, Current);
-			source.add_button_release_action (2, show_command, Void);
+			source.set_action ("!Shift<Btn1Down>", show_command, Current);
+			source.set_action ("!Shift<Btn1Up>", show_command, Void);
 		end;
 
 -- **************
@@ -104,16 +97,10 @@ feature {NONE}
 	
 	execute (argument: ANY) is
 		do
-			if
-				argument = First
-			then
+			if argument = First then
 				transportable := True
-			elseif
-				argument = Second
-			then
-				if
-					instantiated
-				then
+			elseif argument = Second then
+				if instantiated then
 					transportable := True
 				else
 					transportable := False

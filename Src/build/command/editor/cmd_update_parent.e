@@ -53,9 +53,6 @@ feature {NONE}
 					labels.forth
 				end;
 			end;
-			if edited_command.edited then
-				edited_command.reset_inherit_stone 
-			end;
 			edited_command.set_parent_type (Void)
 		end; -- undo
 
@@ -71,9 +68,6 @@ feature {NONE}
 				remove_parent
 			end;
 			edited_command.set_parent_type (c);
-			if edited_command.edited then
-				edited_command.update_inherit_stone (c);
-			end;
 			from
 				oal := c.arguments;
 				oal.start;

@@ -3,10 +3,7 @@ class FUNC_BEH_IS
 
 inherit
 
-	B_ICON_STONE
-		rename
-			make as b_icon_stone_make	
-		end;
+	B_ICON_STONE;
 	FUNCTION_ELEMENT
 		rename
 			target as source 

@@ -21,7 +21,7 @@ feature
 
 feature {NONE}
 
-	build is
+	build_interface is
 		local
 			scrolled_w: SCROLLED_W;
 			group_hole: GROUP_HOLE;
@@ -51,6 +51,21 @@ feature {NONE}
 			attach_left_widget (group_hole, group_name, 10);
 			attach_left_widget (group_name, text, 10);
 			attach_right (text, 1);
+		end;
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.groups_pixmap
+		end;
+
+	selected_symbol: PIXMAP is
+		do
+			Result := Pixmaps.selected_groups_pixmap
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.groups_label
 		end;
 
 end

@@ -3,44 +3,45 @@ class CMD_CAT_CREATE_INST_H
 
 inherit
 
-	CMD_CAT_BUTTON
-		rename
-			make as old_create,
-			make_visible as make_button_visible
+	HOLE
 		redefine
 			process_stone
 		end;
-	CMD_CAT_BUTTON
-		rename
-			make as old_create
-		redefine
-			process_stone, make_visible
-		select
-			make_visible
-		end;
-	COMMAND
+	EB_BUTTON_COM
 
 creation
 
 	make
 
-	
-feature 
+feature {NONE}
 
-	make (s: STRING) is
+	focus_string: STRING is
 		do
-			focus_string := s;
-            set_symbol (Pixmaps.create_command_instance_pixmap);
+			Result := Focus_labels.create_instance_label
+		end;
+
+	focus_label: FOCUS_LABEL is
+		do
+			Result := command_catalog.focus_label
+		end;
+
+	target: WIDGET is
+		do
+			Result := Current
+		end;
+
+	make (a_parent: COMPOSITE) is
+		do
+			make_visible (a_parent);
+			initialize_focus;
 			register
 		end; -- Create
-
-	
-    make_visible (a_parent: COMPOSITE) is
-		do
-			make_button_visible (a_parent);
-			add_activate_action (Current, Void)
-		end;
  
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.create_command_instance_pixmap
+		end;
+
 feature {NONE}
 
 	process_stone is

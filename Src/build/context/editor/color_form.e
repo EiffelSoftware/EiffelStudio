@@ -83,6 +83,14 @@ feature -- Interface
 			show_current
 		end;
 
+	unregister_holes is
+		do
+			if is_initialized then
+				backgr_color.unregister;
+				fgr_color.unregister;
+			end;
+		end;
+
 feature {NONE}
 
 	backgr_color: EB_BG_COLOR_TF;

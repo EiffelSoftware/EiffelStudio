@@ -4,25 +4,9 @@ class B_EDIT_HOLE
 inherit
 
 	FUNC_EDIT_HOLE
-		rename
-			make as func_edit_make,
-			button as source,
-			identifier as oui_identifier,
-			make_visible as make_icon_visible
 		redefine
 			process_stone, function_editor, stone,
-			compatible
-		end;
-	FUNC_EDIT_HOLE
-		rename
-			make as func_edit_make,
-			button as source,
-			identifier as oui_identifier
-		redefine
-			process_stone, function_editor, make_visible, stone,
-			compatible
-		select
-			make_visible
+			compatible, set_widget_default
 		end;
 	BEHAVIOR_STONE
 		export
@@ -47,24 +31,31 @@ feature {NONE}
 			Result := stone /= Void;
 		end;
 
-	
-feature 
-
-	make (ed: BEHAVIOR_EDITOR) is
+	set_widget_default is
 		do
-			func_edit_make (ed);
+			initialize_transport
 		end;
 
-	make_visible (a_parent: COMPOSITE) is
+	symbol: PIXMAP is
 		do
-			make_icon_visible (a_parent);
-			set_symbol (Pixmaps.behavior_pixmap);
-			initialize_transport
-		end; -- make_visible
+			Result := Pixmaps.behavior_pixmap
+		end;
 
-	-- ** Stone definitions ** --
+	focus_string: STRING is
+		do
+			Result := Focus_labels.behaviour_label
+		end;
 
-	
+	source: WIDGET is
+		do
+			Result := Current
+		end;
+
+	label: STRING is
+		do
+			Result := original_stone.label
+		end;
+
 feature {NONE}
 
 	original_stone: BEHAVIOR;

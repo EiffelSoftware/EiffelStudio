@@ -26,6 +26,8 @@ feature
 	stone_cursor: SCREEN_CURSOR is
 		do
 			Result := Cursors.state_cursor
-		end
+		end;
+
+	label: STRING is "";
 
 end

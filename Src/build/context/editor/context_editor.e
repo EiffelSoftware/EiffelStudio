@@ -5,24 +5,17 @@ inherit
 	TOP_SHELL
 		rename
 			make as shell_make,
-			realize as shell_realize,
-			show as shell_show,
-			hide as shell_hide
-		redefine
-			delete_window_action
+			destroy as shell_destroy
 		end
 	TOP_SHELL
-		export
-			{NONE} all
-			{ANY} hide, raise
 		redefine
-			realize, make, show, hide, 
-			delete_window_action
+			make, destroy
 		select
-			realize, make, show, hide
+			make, destroy
 		end
-	WINDOWS
-	CONSTANTS
+	WINDOWS;
+	CONSTANTS;
+	CLOSEABLE
 
 creation
 
@@ -42,10 +35,6 @@ feature
 
 	
 feature 
-	delete_window_action is
-		do
-			close
-		end
 
 	top_form: FORM
 
@@ -79,7 +68,7 @@ feature
 	make (a_name: STRING a_screen: SCREEN) is
 		local
 			i: INTEGER
-			close_button: CLOSE_CONTEXT_EDITOR
+			close_button: CLOSE_WINDOW_BUTTON
 			geometry_form: GEOMETRY_FORM
 			label_text_form: LABEL_TEXT_FORM
 			perm_wind_form: PERM_WIND_FORM
@@ -98,35 +87,42 @@ feature
 			color_form: COLOR_FORM
 			drawing_box_form: DRAWING_BOX_FORM
 			bull_resize_form: BULL_RESIZE_FORM
-			grid_form: GRID_FORM
+			grid_form: GRID_FORM;
+			del_com: DELETE_WINDOW
 		do
 			!!form_list.make (1, Context_const.total_nbr_of_forms);
 
-			shell_make (a_name, a_screen)
+			shell_make (a_name, a_screen);
+			set_title (Widget_names.context_editor);
+			set_icon_name (Widget_names.context_editor);
+			if Pixmaps.context_pixmap.is_valid then
+				set_icon_pixmap (Pixmaps.context_pixmap);
+			end;
 			!!top_form.make (Widget_names.form, Current)
 
-			!!context_hole.make (Current)
-			context_hole.make_visible (top_form)
+			!!context_hole.make (Current, top_form)
+			!! focus_label.make (top_form);
 			!!first_separator.make (Widget_names.separator, top_form)
 			first_separator.set_horizontal (True)
-			!!second_separator.make (Widget_names.separator1, top_form)
+			!! second_separator.make (Widget_names.separator1, top_form)
 			second_separator.set_horizontal (True)
-			!!close_button.make (Current, Current)
-			!!formats_rc.make (Widget_names.row_column, top_form) 
+			!! close_button.make (Current, top_form, focus_label)
+			!! formats_rc.make (Widget_names.row_column, top_form) 
 			formats_rc.set_row_layout
 			formats_rc.set_preferred_count (1)
 			formats_rc.set_spacing (5)
-			!! focus_label.make (top_form);
 
-			top_form.set_fraction_base (20)
-			top_form.attach_top (focus_label, 10)
-			top_form.attach_top (close_button, 10)
-			top_form.attach_top (context_hole, 10)
-			top_form.attach_right (close_button, 10)
-			top_form.attach_left (context_hole, 10)
-			top_form.attach_top_widget (focus_label, first_separator, 10)
+			top_form.attach_top (focus_label, 5)
+			top_form.attach_top (close_button, 0)
+			top_form.attach_top (context_hole, 0)
+			top_form.attach_right (close_button, 0)
+			top_form.attach_left (context_hole, 0)
+			top_form.attach_left_widget (context_hole, focus_label, 0)
+			top_form.attach_right_widget (close_button, focus_label, 0)
+			top_form.attach_top_widget (focus_label, first_separator, 0)
+			top_form.attach_top_widget (context_hole, first_separator, 0)
+			top_form.attach_top_widget (close_button, first_separator, 0)
 
-			top_form.attach_top (first_separator, 60)
 			top_form.attach_left (first_separator, 0)
 			top_form.attach_right (first_separator, 0)
 			top_form.attach_bottom (formats_rc, 1)
@@ -166,22 +162,9 @@ feature
 			!! format_list.make (formats_rc, Current)
 
 			current_form_number := 1;
+			!! del_com.make (Current);
+			set_delete_command (del_com)
 		end
-
-	realize is
-		do
-			shell_realize
-		end;
-
-	show is
-		do
-			shell_show
-		end;
-
-	hide is
-		do
-			shell_hide
-		end;
 
 	attach_attributes_form (a_form: EDITOR_FORM) is
 		do
@@ -230,7 +213,7 @@ feature
 								formats_rc.manage;
 							end;
 							edited_context := new_context;
-							context_hole.set_context (edited_context);
+							update_title;
 							set_form (option_list @ 1)
 						else
 							other_editor.raise
@@ -245,7 +228,7 @@ feature
 							formats_rc.manage;
 						end;	
 						edited_context := new_context;
-						context_hole.set_context (edited_context);
+						update_title;
 						format_list.update_buttons (option_list);
 						set_form (current_form_number)
 					end
@@ -253,6 +236,18 @@ feature
 			else
 				other_editor.raise
 			end
+		end;
+
+	update_title is
+		local
+			tmp: STRING
+		do
+			!! tmp.make (0);
+			tmp.append (Widget_names.Context_name);
+			tmp.append (": ");
+			tmp.append (edited_context.label)
+			set_title (tmp);
+			set_icon_name (tmp);
 		end;
 	
 	set_form (a_form_number: INTEGER) is
@@ -315,6 +310,14 @@ feature {FORMAT_BUTTON}
 
 feature -- Reseting
 
+	destroy is
+		do
+			behavior_form.unregister_holes;
+			alignment_form.unregister_holes;
+			context_hole.unregister;
+			shell_destroy
+		end;
+
 	close is
 			-- Close current editor
 		do
@@ -340,12 +343,9 @@ feature -- Reseting
 				current_form.hide
 				current_form := Void
 				current_form_number := 1
-				context_hole.reset
-			end
+			end;
+			set_title (Widget_names.context_editor);
+			set_icon_name (Widget_names.context_editor);
 		end
 
-	update_icon_name is
-		do
-			context_hole.update_name
-		end
 end

@@ -21,7 +21,10 @@ feature
 			Result := Pixmaps.submenu_pixmap
 		end
 
-	focus_string: STRING is "";
+	focus_string: STRING is 
+		do
+			Result := Focus_labels.submenu_label;
+		end;
 
 	set_form_number (nbr: INTEGER) is
 		do

@@ -59,7 +59,7 @@ feature {NONE}
 				if (dest_element = Void) then
 					is_return_label := True;
 				end;
-				if dest_element /=  Shared_app_exit_element then
+				if dest_element /= Shared_app_graph.exit_element then
 					do_specific_work;
 					update_history
 				end
@@ -75,7 +75,8 @@ feature {NONE}
 			transitions: TRANSITION
 		do	
 			transitions := application_editor.transitions;
-			transitions.update_label (source_element, cmd_label, Shared_app_exit_element);
+			transitions.update_label (source_element, cmd_label, 
+				Shared_app_graph.exit_element);
 			perform_update_display
 		end;
 

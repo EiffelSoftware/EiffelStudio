@@ -4,35 +4,17 @@ class S_EDIT_HOLE
 inherit
 
 	FUNC_EDIT_HOLE
-		rename
-			make as func_edit_make,
-			identifier as oui_identifier,
-			make_visible as make_icon_visible
 		export
 			{ANY} all
 		redefine
 			stone, function_editor, 
-			process_stone, compatible
-		end;
-	FUNC_EDIT_HOLE
-		rename
-			make as func_edit_make,
-			identifier as oui_identifier
-		export
-			{ANY} all
-		redefine
-			stone, function_editor, 
-			process_stone, compatible,
-			make_visible
-		select
-			make_visible
+			process_stone, compatible, set_widget_default
 		end;
 	STATE_STONE
 		redefine
 			transportable
 		end;
 	
-
 creation
 
 	make
@@ -43,15 +25,18 @@ feature {NONE}
 
 feature 
 
-	make (ed: STATE_EDITOR) is
+	symbol: PIXMAP is
 		do
-			func_edit_make (ed);
-			set_symbol (Pixmaps.state_pixmap)
+			Result := Pixmaps.state_pixmap
 		end;
 
-	make_visible (a_parent: COMPOSITE) is
+	focus_string: STRING is
 		do
-			make_icon_visible (a_parent);
+			Result := Focus_labels.state_label
+		end;
+
+	set_widget_default is
+		do
 			initialize_transport
 		end;
 			
@@ -77,8 +62,7 @@ feature
 			Result := original_stone.labels
 		end;
 
-
-	state_label: STRING is
+	label: STRING is
 		do
 			Result := original_stone.label
 		end;
@@ -86,26 +70,17 @@ feature
 	set_state_stone (state_stone: like original_stone) is
 		do
 			original_stone := state_stone.original_stone;
-			set_label (state_label);
-			set_symbol (Pixmaps.state_d_pixmap);
 		end;
 
 	reset is
 		do
-			set_symbol (Pixmaps.state_pixmap);
-			set_label ("");
 			original_stone := Void;
 		end;
 
 	update_name is
 		do
-			set_label (state_label)
 		end;
 
-
-	-- ** Hole definitions ** --
-
-	
 feature {NONE}
 
 	stone: STATE_STONE;

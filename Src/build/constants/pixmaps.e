@@ -32,6 +32,11 @@ feature -- General Pixmaps
 			Result := symbol_file_content ("behavior.symb")
 		end;
 
+	Behavior_format_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("beh_format.symb")
+		end;
+
  	Bg_bitmap_pixmap: PIXMAP is
  		once
  			Result := symbol_file_content ("bg_bitmap.symb")
@@ -104,12 +109,12 @@ feature -- General Pixmaps
 
 	Command_instance_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("command_instance.symb")
+			Result := symbol_file_content ("instance.symb")
 		end;
 
-	Command_o_pixmap: PIXMAP is
+	Command_page_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("command.icon")
+			Result := symbol_file_content ("cmd_page.symb")
 		end;
 
 	Command_i_icon_pixmap: PIXMAP is
@@ -135,6 +140,11 @@ feature -- General Pixmaps
 	Create_command_instance_b_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("create_instance.icon")
+		end;
+
+	Create_project_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("create_proj.symb")
 		end;
 
 	Cut_pixmap: PIXMAP is
@@ -180,6 +190,11 @@ feature -- General Pixmaps
 	Exit_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("exit.symb")
+		end;
+
+	Expand_parent_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("expand.symb")
 		end;
 
 	File_pixmap: PIXMAP is
@@ -257,9 +272,9 @@ feature -- General Pixmaps
 			Result := symbol_file_content ("initial_state.symb")
 		end;
 
-	Instance_pixmap: PIXMAP is
+	Load_project_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("instance.symb");
+			Result := symbol_file_content ("load_proj.symb")
 		end;
 
 	Menus_pixmap: PIXMAP is
@@ -282,11 +297,6 @@ feature -- General Pixmaps
 			Result := symbol_file_content ("ok_tick.symb")
 		end
 
-	Open_pixmap: PIXMAP is
-		once
-			Result := symbol_file_content ("open.symb")
-		end;
-
 	Parent_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("parent.symb")
@@ -307,9 +317,9 @@ feature -- General Pixmaps
 			Result := symbol_file_content ("quit.symb")
 		end;
 
-	Retrieve_pixmap: PIXMAP is
+	Raise_widget_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("retrieve.symb")
+			Result := symbol_file_content ("raise_widget.symb")
 		end;
 
 	Save_pixmap: PIXMAP is
@@ -320,6 +330,96 @@ feature -- General Pixmaps
  	Save_as_pixmap: PIXMAP is
  		once
  			Result := symbol_file_content ("save_as.symb")
+		end;
+
+	Selected_button_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_button.icon")
+		end;
+
+	Selected_command_page_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_cmd_page.symb")
+		end;
+
+	Selected_drawing_area_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_drawing_area.symb")
+		end;
+
+	Selected_file_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_file.symb");
+		end;
+
+	Selected_general_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_general.symb")
+		end;
+
+	Selected_list_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_scroll_list.symb")
+		end;
+
+	Selected_scrolled_w_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_scrolled_w.symb")
+		end;
+
+	Selected_windows_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_windows.symb")
+		end;
+
+	Selected_primitives_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_primitives.symb")
+		end;
+
+	Selected_menus_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_menus.symb")
+		end;
+
+	Selected_mouse_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_mouse.symb")
+		end;
+
+	Selected_scale_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_scale.symb")
+		end;
+ 
+ 	Selected_groups_pixmap: PIXMAP is
+ 		once
+ 			Result := symbol_file_content ("sel_groups.symb")
+ 		end;
+ 
+ 	Selected_sets_pixmap: PIXMAP is
+ 		once
+ 			Result := symbol_file_content ("sel_sets.symb")
+		end;
+
+	Selected_text_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_text.symb");
+		end;
+
+	Selected_text_field_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_text_field.symb")
+		end;
+
+	Selected_translation_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_translation.symb")
+		end;
+
+	Selected_user_defined_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("sel_user_defined.symb")
 		end;
 
  	Sets_pixmap: PIXMAP is

@@ -4,8 +4,6 @@ class S_MERGE_HOLE
 inherit
 
 	MERGE_HOLE
-		rename
-			make as merge_make
 		redefine
 			associated_function,
 			function,
@@ -15,16 +13,7 @@ inherit
 creation
 
 	make
-	
-feature 
-
-	make (func: STATE_EDITOR) is
-		do
-			merge_make (func);
-			set_symbol (Pixmaps.state_pixmap)
-		end;
-
-	
+		
 feature {NONE}
 
 	function: STATE;
@@ -35,6 +24,6 @@ feature {NONE}
 	set_function is
 		do
 			function ?= stone.original_stone
-		end; -- set_function
+		end; -- set_function;
 
 end

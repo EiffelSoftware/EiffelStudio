@@ -1,21 +1,12 @@
 
-class FUNC_EDIT_HOLE 
+deferred class FUNC_EDIT_HOLE 
 
 inherit
 
-	ICON_HOLE
-		export
-			{NONE} all;
-			{ANY} set_managed;
-		end;
-
+	HOLE;
+	EB_BUTTON;
 	REMOVABLE
 
-
-creation
-
-	make
-	
 feature 
 
 	remove_yourself is
@@ -26,17 +17,29 @@ feature
 			wipe_out_command.execute (function_editor.edited_function)
 		end;
 
+	focus_label: FOCUS_LABEL is
+		do			
+			Result := function_editor.focus_label
+		end;
 	
 feature {NONE}
 
 	function_editor: FUNC_EDITOR;
 
-feature 
-
-	make (ed: FUNC_EDITOR) is
+	make (ed: like function_editor; a_parent: COMPOSITE) is
 		do
 			function_editor := ed;
+			make_visible (a_parent);
+			register;
+			set_widget_default
 		end;
+
+	target: WIDGET is
+		do
+			Result := Current
+		end;
+
+	set_widget_default is do end;
 
 	process_stone is do end;
 

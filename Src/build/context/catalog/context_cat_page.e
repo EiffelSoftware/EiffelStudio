@@ -5,61 +5,50 @@ inherit
 
 	FORM
 		rename
-			make as form_create
+			make as make_visible
 		end;
 	CONSTANTS;
 	WINDOWS;
-	COMMAND_ARGS;
 	FOCUSABLE
-		rename
-			focus_string as page_name,
-			focus_source as button
-		end
 	
 feature 
 
-	page_name: STRING;
-
-	make (a_name: STRING; a_pixmap: PIXMAP) is
-		local
-			a_form: FORM;
-		do
-			a_form := context_catalog.top_form;
-			form_create (a_name, a_form);
-
-			!!button.make (a_name, a_form);
-			button.set_pixmap (a_pixmap);
-			button.add_activate_action (context_catalog, Current);
-			initialize_focus;
-
-			a_form.attach_top (button, 10);
-
-			a_form.attach_top_widget (context_catalog.second_separator, 
-					Current, 10);
-			a_form.attach_right (Current, 10);
-			a_form.attach_left (Current, 10);
-			a_form.attach_bottom (Current, 10);
-			page_name := a_name;
-			build;
-		end;
-
-	
-feature {NONE}
-
-	focus_label: LABEL is
+	focus_label: FOCUS_LABEL is
 		do
 			Result := context_catalog.focus_label
 		end;
 
-	
-feature 
+	symbol: PIXMAP is
+		deferred
+		end;
 
-	button: PICT_COLOR_B;
+	selected_symbol: PIXMAP is
+		deferred
+		end;
 
-	
+	focus_string: STRING is
+		deferred
+		end;
+
+	focus_source: WIDGET is
+		do
+			Result := button
+		end;
+
+	button: CON_CAT_BUTTON
+
 feature {NONE}
 
-	create_type (a_name: STRING; a_context: CONTEXT; a_pixmap: PIXMAP): CONTEXT_TYPE is
+	make (a_parent: COMPOSITE; button_parent: ROW_COLUMN) is
+		do
+			make_visible (Widget_names.form, a_parent);
+			!! button.make (Current, button_parent);
+			build_interface
+		end;
+
+	create_type (a_name: STRING; 
+			a_context: CONTEXT; 
+			a_pixmap: PIXMAP): CONTEXT_TYPE is
 		local
 			a_button: PICT_COLOR_B;
 		do
@@ -69,7 +58,8 @@ feature {NONE}
 			Result.initialize_callbacks (a_button);
 		end;
 
-	build is
+	build_interface is
+			-- Build the interface
 		deferred
 		end;
 

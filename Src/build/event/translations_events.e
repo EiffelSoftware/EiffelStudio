@@ -12,13 +12,13 @@ inherit
 	SHARED_TRANSLATIONS;
 	EVENT_PAGE 
 		rename
-			add_button_callback as page_add_button_callback
+			make_button_visible as page_make_button_visible
 		end;
 	EVENT_PAGE
 		redefine
-			add_button_callback
+			make_button_visible
 		select
-			add_button_callback
+			make_button_visible
 		end;	
 
 creation
@@ -80,16 +80,30 @@ feature
 	
 feature {CATALOG}
 
-	add_button_callback is
+	make_button_visible (button_rc: ROW_COLUMN) is
 		do
-			page_add_button_callback;
-			button.add_button_press_action (3, Current, Third);
+			page_make_button_visible (button_rc);
 			button.add_activate_action (Current, Second);
-			if translation_editor = Void then end;
+			button.add_button_press_action (3, Current, Third);
 		end;
 
 	
 feature {NONE}
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.translation_pixmap
+		end;
+
+	selected_symbol: PIXMAP is
+		do
+			Result := Pixmaps.selected_translation_pixmap
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.translation_label
+		end;
 
 	translation_editor: TRANSL_EDITOR is
 		once

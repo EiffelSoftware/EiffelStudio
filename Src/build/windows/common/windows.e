@@ -55,7 +55,7 @@ feature {NONE} -- Windows
 
 	history_window: HISTORY_WND is
 		once
-			!!Result.make (main_panel.base)
+			!!Result.make (eb_screen)
 		end
 
 	tree: CONTEXT_TREE is

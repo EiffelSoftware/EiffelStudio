@@ -10,15 +10,12 @@ inherit
 		export
 			{NONE} all;
 			{ANY} show, hide, shown
-		redefine
-			delete_window_action
 		end;
 	WINDOWS;
-	COMMAND;
-	COMMAND_ARGS;
 	SHARED_TRANSLATIONS;
 	CONSTANTS;
-	SHARED_CONTEXT
+	SHARED_CONTEXT;
+	CLOSEABLE
 
 creation
 
@@ -26,7 +23,7 @@ creation
 
 feature {NONE}
 
-	bottom_form: CONTEXT_CAT_PAGE;
+	current_button: CON_CAT_BUTTON;
 	
 feature 
 
@@ -39,112 +36,119 @@ feature
 
 	focus_label: FOCUS_LABEL;
 
-feature {NONE}
-
-	page_label: LABEL;
-
-	
 feature {CONTEXT_CAT_PAGE}
 
-	top_form: FORM;
+	form: FORM;
 
-	second_separator: SEPARATOR;
+	first_separator: SEPARATOR;
 
-	
+	second_separator: SEPARATOR
+
 feature 
 
 	make is 
 		local
-			first_separator: SEPARATOR;
-			edit_hole: CON_CAT_ED_H
+			edit_hole: CON_ED_HOLE;
+			del_com: DELETE_WINDOW;
+			cat_button: CON_CAT_BUTTON;
+			rc: ROW_COLUMN;
+			close_b: CLOSE_WINDOW_BUTTON
 		do
 			top_shell_create (Widget_names.context_catalog, eb_screen);
 			set_size (240, 260);
-			!!top_form.make (Widget_names.form, Current);
+			!! form.make (Widget_names.form, Current);
 
-			!!first_separator.make (Widget_names.Separator, top_form);
+			!! first_separator.make (Widget_names.Separator, form);
 			first_separator.set_horizontal (true);
-
-			!!second_separator.make (Widget_names.Separator, top_form);
+			!! second_separator.make (Widget_names.Separator2, form);
 			second_separator.set_horizontal (true);
+			!! rc.make (Widget_names.row_column, form);
+			rc.set_preferred_count (1);
+			rc.set_row_layout;
 
-			!!edit_hole.make (Widget_names.PCbutton, top_form);
+			!! focus_label.make (form);
 
-			!!window_page.make (Widget_names.windows_name, Pixmaps.windows_pixmap);
-			!!primitive_page.make (Widget_names.primitives_name, Pixmaps.primitives_pixmap);
-			!!menu_page.make (Widget_names.menus_name, Pixmaps.menus_pixmap);
-			!!group_page.make (Widget_names.groups_name, Pixmaps.groups_pixmap);
-			!!set_page.make (Widget_names.sets_name, Pixmaps.sets_pixmap);
-			!!scroll_page.make (Widget_names.scrolled_items_name, Pixmaps.scrolled_w_pixmap);
+			!! edit_hole.make (form, focus_label);
+			!! close_b.make (Current, form, focus_label);
 
-			!!page_label.make (Widget_names.label, top_form);
+			!! window_page.make (form, rc);
+			!! primitive_page.make (form, rc);
+			!! scroll_page.make (form, rc);
+			!! menu_page.make (form, rc);
+			!! set_page.make (form, rc);
+			!! group_page.make (form, rc);
+			current_button := window_page.button;
 
-			page_label.set_left_alignment;
-		
-		
-			!!focus_label.make (top_form);
-			page_label.set_text (primitive_page.page_name);
+			form.attach_top (edit_hole, 0);
+			form.attach_top (close_b, 0);
+			form.attach_top (focus_label, 5);
+			form.attach_left (edit_hole, 0);
+			form.attach_left (first_separator, 0);
+			form.attach_right (first_separator, 0);
+			form.attach_left (second_separator, 0);
+			form.attach_right (second_separator, 0);
+			form.attach_right (close_b, 0);
+			form.attach_left_widget (edit_hole, focus_label, 0);
+			form.attach_right_widget (close_b, focus_label, 0);
+			form.attach_top_widget (focus_label, first_separator, 0);
+			form.attach_top_widget (edit_hole, first_separator, 0);
+			form.attach_top_widget (close_b, first_separator, 0);
 
-			top_form.attach_top (window_page.button, 10);
-			top_form.attach_right (group_page.button, 10);
-			top_form.attach_right_widget (group_page.button, set_page.button, 10);
-			top_form.attach_top (primitive_page.button, 10);
-			top_form.attach_right_widget (set_page.button, menu_page.button, 10);
-			top_form.attach_top (scroll_page.button, 10);
-			top_form.attach_right_widget (menu_page.button, scroll_page.button, 10);
-			top_form.attach_top (menu_page.button, 10);
-			top_form.attach_right_widget (scroll_page.button, primitive_page.button, 10);
-			top_form.attach_top (set_page.button, 10);
-			top_form.attach_right_widget (primitive_page.button, window_page.button, 10);
-			top_form.attach_top (group_page.button, 10);
-			top_form.attach_top (edit_hole, 10);
-			top_form.attach_left (edit_hole, 10);
+			attach_page (window_page);
+			attach_page (group_page);
+			attach_page (primitive_page);
+			attach_page (set_page);
+			attach_page (scroll_page);
+			attach_page (menu_page);
+			form.attach_bottom_widget (rc, second_separator, 2);
+			form.attach_left (rc, 0);
+			form.attach_right (rc, 0);
+			form.attach_bottom (rc, 0);
 
-			top_form.attach_top (first_separator, 40);
-			top_form.attach_right (first_separator, 0);
-			top_form.attach_left (first_separator, 0);
-
-			top_form.attach_left (page_label, 10);
-			top_form.attach_top_widget (first_separator, page_label, 5);
-
-			top_form.attach_right (focus_label, 10);
-			top_form.attach_top_widget (first_separator, focus_label, 5);
-
-			top_form.attach_top_widget (focus_label, second_separator, 5);
-			top_form.attach_top_widget (page_label, second_separator, 5);
-			top_form.attach_right (second_separator, 0);
-			top_form.attach_left (second_separator, 0);
-
-			bottom_form := window_page;
-			page_label.set_text ("dummy initial value");
-			focus_label.unmanage;
-			focus_label.set_text ("dummy initial value");
-			focus_label.manage;
+			current_button.set_selected;
+			!! del_com.make (Current);
+			set_delete_command (del_com);
 		end;
 
-	delete_window_action is
-		do
-		end;
-	
 feature {NONE}
 
-	execute (argument: CONTEXT_CAT_PAGE) is
+	close is
 		do
-			-- Buttons in the top of the catalog
-			if argument /= bottom_form then
-				bottom_form.hide;
-				bottom_form := argument;
-	
-				page_label.set_text (bottom_form.page_name);
-				bottom_form.show
-			end
-		end; -- execute
+			hide;
+			main_panel.cont_cat_t.set_toggle_off
+		end;
 
-	-- *****************
-	-- * Context types *
-	-- *****************
+	attach_page (page: CONTEXT_CAT_PAGE) is
+		do
+			form.attach_top_widget (first_separator, page, 5);
+			form.attach_left (page, 0);
+			form.attach_right (page, 0);
+			form.attach_bottom_widget (second_separator, page, 5);
+		end;
 
-	
+feature
+
+	update_page (bt: like current_button) is
+		require
+			valid_page: bt /= Void;
+			not_same: not same_as (bt)
+		local
+			current_page: CONTEXT_CAT_PAGE
+		do
+			if current_button /= Void then
+				current_button.deselect;
+			end;
+			current_button := bt;
+			current_page := bt.catalog_page;
+			current_page.show	
+		end;
+
+	same_as (bt: like current_button): BOOLEAN is
+			-- Is `bt' same as current_button?
+		do
+			Result := current_button = bt
+		end;
+
 feature 
 
 	perm_wind_type: CONTEXT_TYPE is
@@ -248,12 +252,7 @@ feature
 			Result := set_page.check_box_type
 		end;
 
-
-
-
-	-- *******************
-	-- * Group managment *
-	-- *******************
+feature -- Group management
 
 	context_group_types: LINKED_LIST [CONTEXT_GROUP_TYPE] is
 		once
@@ -322,7 +321,7 @@ feature
 			loop
 				an_editor := editor_list.item;
 				if an_editor.edited_context =  a_context then
-					an_editor.update_icon_name;
+					an_editor.update_title;
 				end;
 				editor_list.forth;
 			end;
@@ -421,7 +420,7 @@ feature
 			-- catalog. 
 		local
 			editor_list: LINKED_LIST [CONTEXT_EDITOR];
-			form: BEHAVIOR_FORM
+			beh_form: BEHAVIOR_FORM
 		do
 			editor_list := window_mgr.context_editors;
 			from
@@ -430,8 +429,8 @@ feature
 				editor_list.after 
 			loop
 				if editor_list.item.behavior_form_shown then
-					form ?= editor_list.item.current_form;
-					form.update_translation_page
+					beh_form ?= editor_list.item.current_form;
+					beh_form.update_translation_page
 				end;
 				editor_list.forth;
 			end;
@@ -462,8 +461,6 @@ feature
 			group_page.hide;
 			set_page.hide;
 			scroll_page.hide;
-			page_label.set_text (window_page.page_name);
-			focus_label.set_text ("");
 		end;
 
 end

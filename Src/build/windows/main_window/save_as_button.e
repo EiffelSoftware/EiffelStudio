@@ -1,7 +1,7 @@
 class SAVE_AS_BUTTON 
 inherit
 
-	EB_PICT_B
+	EB_BUTTON_COM
 		rename
 			make_visible as make
 		end;
@@ -14,7 +14,10 @@ creation
 
 feature {NONE} -- Focusable
 
-	focus_string: STRING is "Save project as..."
+	focus_string: STRING is 
+		do
+			Result := Focus_labels.save_project_as_label
+		end;
 
 	symbol: PIXMAP is
 		do
@@ -33,7 +36,7 @@ feature {NONE} -- Execute
 			pw: SAVE_AS_PROJ_WIN	
 		do
 			if main_panel.project_initialized then
-				!!pw.make ("Save project as...", main_panel.base)
+				!!pw.make (Widget_names.save_project_as, main_panel.base)
 				pw.popup
 			end
 		end

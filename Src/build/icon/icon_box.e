@@ -88,6 +88,11 @@ feature
 			make_box_visible
 		end; -- Create
 
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+		do
+			make_box_unmanaged (a_name, a_parent);
+			make_box_visible
+		end;
 
 feature {CATALOG, CMD_CAT_BUTTON}
 
@@ -165,22 +170,17 @@ feature
 				after 
 			loop
 				icon := icons.item;
-				if
-					icon.original_stone /= item
-				then
+				if icon.original_stone /= item then
 					icon.set_original_stone (item);
-				end;
-				if
-					not icon.managed
-				then
-					icon.set_managed (True);
+					if not icon.managed then
+						icon.set_managed (True);
+					end;
 				end;
 				icons.forth;
 				forth;	
 			end;
 		end; -- add
 
-	
 feature {NONE}
 
 	update_number_of_icons is
@@ -196,8 +196,7 @@ feature {NONE}
 				i > incremental_amount
 			loop
 				create_new_icon;
-				new_icon.make_visible (Current);
-				new_icon.set_managed (False);
+				new_icon.make_unmanaged (Current);
 				icons.extend (new_icon);
 				icons.finish;
 				i := i + 1

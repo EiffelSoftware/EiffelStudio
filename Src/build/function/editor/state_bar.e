@@ -8,7 +8,7 @@ inherit
 		redefine
 			edit_hole,
 			set_function,
-			make
+			make, unregister_holes
 		end
 
 creation
@@ -18,29 +18,42 @@ creation
 feature {NONE}
 
 	edit_hole: S_EDIT_HOLE;
-	
-feature 
 
+	merge_hole: S_MERGE_HOLE;
+
+	unregister_holes is
+		do
+			edit_hole.unregister;
+			merge_hole.unregister;
+		end;
+	
 	make (a_name: STRING; a_parent: COMPOSITE; ed: STATE_EDITOR) is
 		local
-			merge_hole: S_MERGE_HOLE;
 			close_button: CLOSE_WINDOW_BUTTON;
 		do
 			form_create (a_name, a_parent);
-			!!edit_hole.make (ed);
-			edit_hole.make_visible (Current);
-			!!merge_hole.make (ed);
-			merge_hole.make_visible (Current);
-			!!close_button.make (ed, Current, Void);
-			io.error.putstring ("fixme STATEBAR%N");
-
+			!! focus_label.make (Current);
+			!! edit_hole.make (ed, Current);
+			!! merge_hole.make (ed, Current);
+			!! close_button.make (ed, Current, focus_label);
 			attach_top (edit_hole, 0);
 			attach_top (close_button, 0);
 			attach_top (merge_hole, 0);
+			attach_top (focus_label, 0);
 			attach_left (edit_hole, 0);
 			attach_right (close_button, 0);
-			attach_left_widget (edit_hole, merge_hole, 60);
+			attach_left_widget (edit_hole, merge_hole, 0);
+			attach_left_widget (merge_hole, focus_label, 60);
+			attach_right_widget (close_button, focus_label, 60);
+			attach_bottom (focus_label, 0);
+			attach_bottom (edit_hole, 0);
+			attach_bottom (close_button, 0);
+			attach_bottom (merge_hole, 0);
 		end;
+
+feature
+
+	focus_label: FOCUS_LABEL;
 
 	hide_edit_stone is
 		do

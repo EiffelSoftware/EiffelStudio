@@ -31,11 +31,4 @@ feature
 			Result := original_stone.stone_cursor
 		end;
 	
-feature {NONE}
-
-	make (a_parent: COMPOSITE) is
-		do
-			make_visible (a_parent)
-		end;
-
 end

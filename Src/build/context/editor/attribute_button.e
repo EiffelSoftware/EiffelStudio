@@ -21,7 +21,10 @@ feature
 
 	form_number: INTEGER;
 
-	focus_string: STRING is "";
+	focus_string: STRING is 
+		do
+			Result := Focus_labels.attribute_label
+		end;
 
 	set_form_number (nbr: INTEGER) is
 		do

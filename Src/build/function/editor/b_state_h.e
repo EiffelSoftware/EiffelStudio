@@ -4,16 +4,8 @@ class B_STATE_H
 inherit
 
 	ICON_HOLE
-		rename
-			make_visible as make_icon_visible
 		redefine
-			stone, compatible
-		end;
-	ICON_HOLE
-		redefine
-			stone, make_visible, compatible
-		select
-			make_visible
+			stone, set_widget_default, compatible
 		end;
 	WINDOWS;
 	SHARED_APPLICATION;
@@ -32,9 +24,9 @@ feature
 			set_symbol (Pixmaps.state_pixmap);
 		end;
 
-	make_visible (a_parent: COMPOSITE) is
+	set_widget_default is
 		do
-			make_icon_visible (a_parent);
+			register;
 			button.add_button_press_action (2, Current, Void);
 		end;
 

@@ -3,10 +3,7 @@ class ALIGNMENT_ICON
 
 inherit
 
-	CON_ICON_STONE
-		redefine
-			make
-		end;
+	CON_ICON_STONE;
 	HOLE
 		rename
 			target as source

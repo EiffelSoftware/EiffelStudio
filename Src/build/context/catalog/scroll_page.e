@@ -3,19 +3,8 @@ class SCROLL_PAGE
 
 inherit
 
-	COLORS
-		export
-			{NONE} all
-		end;
-	BASIC_ROUTINES
-		export
-			{NONE} all
-		end;
 	CONTEXT_CAT_PAGE;
-	COMMAND
-		export
-			{NONE} all
-		end
+	COMMAND;
 
 creation
 
@@ -23,17 +12,11 @@ creation
 
 feature 
 
-	to_string (i: INTEGER): STRING is 
-		do
-			!!Result.make (0);
-			Result.append_integer (i);	
-		end;
-
 	text_type: CONTEXT_TYPE;
 	drawing_area_type: CONTEXT_TYPE;
 	scroll_list_type: CONTEXT_TYPE;
+	drawing_area: EB_DRAWING_BOX;
 
-	
 feature {NONE}
 
 	create_figures is
@@ -54,9 +37,9 @@ feature {NONE}
 			circle.set_center (circle_coord);
 
 			!!interior.make;
-			interior.set_foreground_color (white);
+			interior.set_foreground_color (App_const.white);
 			!!path.make;
-			path.set_foreground_color (black);
+			path.set_foreground_color (App_const.black);
 			path.set_line_width(2);
 
 			rectangle.set_path (path);
@@ -77,9 +60,7 @@ feature {NONE}
 			circle.set_radius (10);
 		end;
 
-	drawing_area: EB_DRAWING_BOX;
-
-	build is
+	build_interface is
 		local
 			text_c: TEXT_C;
 			drawing_area_c: DR_AREA_C;
@@ -107,7 +88,7 @@ feature {NONE}
 			loop
 				!!text_item.make (0);
 				text_item.append (Widget_names.item_name);
-				text_item.append (to_string (i));
+				text_item.append_integer (i);
 				scroll_list.put_right (text_item);
 				scroll_list.forth;
 				i := i + 1
@@ -117,7 +98,7 @@ feature {NONE}
 
 			!!drawing_area_c;
 			!!drawing_area.make (drawing_area_c.eiffel_type, Current);
-			drawing_area.add_expose_action (Current, Second); 
+			drawing_area.add_expose_action (Current, Void); 
 			drawing_area.set_drawing_area_size (80, 80);
 			drawing_area.set_size (80, 80);
 			create_figures;
@@ -143,6 +124,21 @@ feature {NONE}
 	execute (argument: ANY) is
 		do
 			drawing_area.world.draw
+		end;
+
+	symbol: PIXMAP is
+		do
+			Result := Pixmaps.scrolled_w_pixmap
+		end;
+
+	selected_symbol: PIXMAP is
+		do
+			Result := Pixmaps.selected_scrolled_w_pixmap
+		end;
+
+	focus_string: STRING is
+		do
+			Result := Focus_labels.scroll_label
 		end;
 
 end

@@ -5,9 +5,6 @@ deferred class ATTRIB_STONE
 inherit
 
 	ICON_STONE
-		rename
-			identifier as oui_identifier,
-			make as old_make
 		undefine
 			stone_cursor
 		redefine

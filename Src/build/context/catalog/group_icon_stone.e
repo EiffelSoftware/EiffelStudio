@@ -5,23 +5,10 @@ class GROUP_ICON_STONE
 inherit
 
 	ICON_STONE
-		rename
-			identifier as oui_identifier,
-			make_visible as icon_make_visible
 		undefine
 			stone_cursor
 		redefine
-			original_stone
-		end;
-	ICON_STONE
-		rename
-			identifier as oui_identifier
-		undefine
-			stone_cursor
-		redefine
-			make_visible, original_stone
-		select
-			make_visible
+			original_stone, set_widget_default
 		end;
 	TYPE_STONE;
 	REMOVABLE
@@ -36,9 +23,8 @@ feature
 			cut_command.execute (original_stone)
 		end;
 
-	make_visible (a_parent: COMPOSITE) is
+	set_widget_default is
 		do
-			icon_make_visible (a_parent);
 			initialize_transport;
 		end;
 			

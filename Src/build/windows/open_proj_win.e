@@ -22,7 +22,7 @@ feature
 			if main_panel.project_initialized then
 				context_catalog.clear;
 				command_catalog.clear;
-				command_catalog.initial_pages;
+				command_catalog.initialize_pages;
 				app_editor.clear;
 				history_window.wipe_out;
 				main_panel.unset_project_initialized;

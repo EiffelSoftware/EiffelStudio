@@ -22,6 +22,8 @@ inherit
 	CONTEXT_STONE
 		rename
 			source as widget
+		redefine
+			initialize_transport
 		end;
 	EB_HASHABLE;
 	CALLBACK_GENE;
@@ -363,6 +365,12 @@ feature
 
 	
 feature {NONE}
+
+	initialize_transport is
+		do
+			widget.set_action ("!<Btn3Down>", transport_command, Current);
+			widget.set_action ("!Shift<Btn3Down>", name_command, Current)
+		end;
 
 	add_widget_callbacks is
 			-- Define the general behavior of the widget

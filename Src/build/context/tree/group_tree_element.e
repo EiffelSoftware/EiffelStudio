@@ -7,10 +7,9 @@ inherit
 		rename
 			make as tree_element_create
 		redefine
-			coord_calc, original_stone, select_action,
+			coord_calc, original_stone, expand_action,
 			select_figure, deselect
 		end
-
 
 creation
 
@@ -118,7 +117,7 @@ feature
 			end;
 		end;
 
-	select_action is
+	expand_action is
 		do
 			if original_stone.subtree.count /= 0 then
 				set_children_visibility (not show_children);

@@ -26,6 +26,12 @@ feature -- Anchors
 			-- Icons representing the edited
 			-- function visually
 
+feature -- Focus_label
+
+	focus_label: FOCUS_LABEL is
+		deferred
+		end;
+
 feature -- Edited function
 
 	edited_function: FUNCTION;
@@ -141,6 +147,15 @@ feature -- Display the page number details
 				temp.append_integer (number_of_pages);
 				page_label.set_text (temp)
 			end
+		end;
+
+	unregister_holes is
+		do
+			input_hole.unregister;
+			output_hole.unregister;
+			menu_bar.unregister_holes;
+			input_list.unregister_holes;
+			output_list.unregister_holes;
 		end;
 
 feature {ELMT_HOLE}

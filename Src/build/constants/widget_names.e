@@ -159,7 +159,6 @@ feature -- Widget Names used in context editor and catalog
 	Grid_form_name: STRING is "Grid Form";
 	Grid_options_name: STRING is "Grid Options";
 	Group_name: STRING is "Group name";
-	Groups_name: STRING is "Groups";
 	Height_name: STRING is "Height";
 	Height_resizable_name: STRING is "Height resizable";
 	Horizontal_scrollbar_name: STRING is "Horizontal scrollbar";
@@ -184,7 +183,6 @@ feature -- Widget Names used in context editor and catalog
 	Maximum_size_name: STRING is "Maximum size";
 	Menu_entry_name: STRING is "Menu entry";
 	Menu_form_name: STRING is "Menu_form";
-	Menus_name: STRING is "Menus";
 	Minimum_name: STRING is "Minimum";
 	No_grid_name: STRING is "off";
 	No_line_name: STRING is "No line";
@@ -198,7 +196,6 @@ feature -- Widget Names used in context editor and catalog
 	Pict_color_form_name: STRING is "Pict_color_form";
 	Pict_color_name: STRING is "Pict color button";
 	Pixmap_name: STRING is "Pixmap name";
-	Primitives_name: STRING is "Primitives";
 	Pulldown_form_name: STRING is "Pulldown_form";
 	Push_b_name: STRING is "Push button";
 	Radio_box_name: STRING is "Radio box";
@@ -212,13 +209,11 @@ feature -- Widget Names used in context editor and catalog
 	Scale_name: STRING is "Scale";
 	Scroll_list_form_name: STRING is "Scroll_list_form";
 	Scroll_list_name: STRING is "Scroll list";
-	Scrolled_items_name: STRING is "Scroll";
 	Selection_mode_name: STRING is "Selection mode";
 	Separator_form_name: STRING is "Separator_form";
 	Separator_name: STRING is "Separator";
 	Set_default_position_name: STRING is "Set default position";
 	Set_shown_name: STRING is "Start hidden";
-	Sets_name: STRING is "Sets";
 	Show_value_name: STRING is "Show value";
 	Single_dashed_name: STRING is "Single dashed";
 	Single_name: STRING is "Single";
@@ -249,12 +244,22 @@ feature -- Widget Names used in context editor and catalog
 	Widget_list_name: STRING is "Widget List";
 	Width_name: STRING is "Width";
 	Width_resizable_name: STRING is "Width resizable";
-	Windows_name: STRING is "Windows";
 	X_string_name: STRING is "x";
 	Y_string_name: STRING is "y";
 
+feature -- Command/Instance editors
+
+	Command_label: STRING is "Command";
+	Instance_label: STRING is "Instance";
+	New_label_label: STRING is "New label:";
+	Undoable_label: STRING is "Undoable";	
+
+feature -- Misc
+
 	Page_label: STRING is "Page";
+	Redo_label: STRING is "Redo";
 	Rows_label: STRING is "row(s)";
+	Undo_label: STRING is "Undo";
 
 feature -- Names for Widget Windows
 
@@ -281,7 +286,9 @@ feature -- Names for Main Panel
 	Create_project_label: STRING is "Creating new project...";
 	Interface_toggle: STRING is "Interface";
 	Interface_only_toggle: STRING is "Interface only";
-	Visibility_label:STRING is "visibility"
+	Load_project: STRING is "Load project";
+	Save_project_as: STRING is "Save project as...";
+	Visibility_label:STRING is "Visibility"
 
 feature -- Translation editor
 

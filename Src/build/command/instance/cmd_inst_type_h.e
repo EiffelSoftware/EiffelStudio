@@ -4,16 +4,8 @@ class CMD_INST_TYPE_H
 inherit
 
 	COMMAND;
-	ICON_HOLE
-		rename
-			make_visible as make_icon_visible
-		end;
-	ICON_HOLE
-		redefine
-			make_visible
-		select
-			make_visible
-		end;
+	EB_BUTTON_COM;
+	HOLE
 
 creation
 
@@ -28,22 +20,36 @@ feature {NONE}
 	
 feature 
 
-	make (ed: CMD_INST_EDITOR) is
+	make (ed: CMD_INST_EDITOR; a_parent: COMPOSITE) is
 			-- Create Current with `ed' 
 			-- as instance_editor.
 		require
 			not_void_ed: not (ed = Void)
 		do
 			instance_editor := ed;
-			set_symbol (Pixmaps.create_command_instance_pixmap);
+			make_visible (a_parent);
+			register;
 		end; -- Create
 
-	make_visible (a_parent: COMPOSITE) is
+	symbol: PIXMAP is
 		do
-			make_icon_visible (a_parent);
-			add_activate_action (Current, Void)
+			Result := Pixmaps.create_command_instance_pixmap
 		end;
 
+	focus_string: STRING is
+		do
+			Result := Focus_labels.command_type_label
+		end;
+
+	focus_label: FOCUS_LABEL is
+		do
+			Result := instance_editor.focus_label
+		end;
+
+	source, target: WIDGET is
+		do	
+			Result := Current
+		end
 	
 feature {NONE}
 

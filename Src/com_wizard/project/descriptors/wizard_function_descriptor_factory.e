@@ -58,9 +58,7 @@ feature -- Basic operations
 			description := a_type_info.documentation (member_id).doc_string
 			a_count  := a_func_desc.total_param_count
 			func_kind := a_func_desc.func_kind
-			if func_kind = func_virtual or func_kind = func_purevirtual then
-				vtbl_offset := a_func_desc.vtbl_offset
-			end
+			vtbl_offset := a_func_desc.vtbl_offset
 			invoke_kind := a_func_desc.invoke_kind
 			call_conv := a_func_desc.call_conv
 			return_type := data_type_descriptor_factory.create_data_type_descriptor (a_type_info,

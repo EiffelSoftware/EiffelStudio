@@ -44,9 +44,7 @@ feature -- Start output
 		local
 			tmp: STRING
 		do
-			if not exists then
-				create_window;
-			end;
+			create_window;
 			cancel_b.enable;
 			total_number := total_nbr;
 			processed := 0;
@@ -410,9 +408,6 @@ feature {NONE} -- Implementation
 	put_string (a_message: STRING) is
 			-- Put `a_message' in the output window.
 		do
-			if not exists then
-				create_window
-			end
 			put_non_degree_message (a_message)
 		end;
 
@@ -531,4 +526,4 @@ feature {NONE} -- User Interface Objects
 	percentage_text: WEL_STATIC
 
 end -- class GRAPHICAL_DEGREE_OUTPUT
-	
+

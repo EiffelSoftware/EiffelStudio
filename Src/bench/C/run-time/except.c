@@ -63,13 +63,69 @@
 /* For debugging */
 #define dprintf(n)		if (DEBUG & (n)) printf
 
+/*
+doc:<file name="except.c" header="eif_except.c">
+doc:	<attribute name="eif_stack" return_type="struct xstack">
+doc:		<summary>Stack of current execution. On entrance, each routine pushes the address of its own execution vector structure (held in the process's stack).</summary>
+doc:		<thread_safety>Per thread data.</thread_safety>
+doc:	</attribute>
+doc:	<attribute name="eif_trace" return_type="struct xstack">
+doc:		<summary>The exception trace records all the unresolved exceptions. For the case where multiple exceptions occurred and we entered different rescue clauses, we have to store the exception levels along with the unsolved exceptions.</summary>
+doc:		<thread_safety>Per thread data.</thread_safety>
+doc:	</attribute>
+doc:	<attribute name="ex_ign" return_type="char []">
+doc:		<summary>Array of ignored exceptions. The EN_BYE exception is a run-time panic that can never be caught, even by a rescue. The EN_OMEM cannot be ignored but can be caught. It is raised by the run-time system when there is not enough memory to ensure a correct Eiffel execution. The EN_FATAL exception is a run-time fatal error which cannot be caught nor ignored.</summary>
+doc:		<thread_safety>Per thread data.</thread_safety>
+doc:	</attribute>
+doc:	<attribute name="exdata" return_type="struct eif_exception">
+doc:		<summary>Stack of current exception flags. This is used to control the assertion checking (e.g. disable it when already in assertion checking).</summary>
+doc:		<thread_safety>Per thread data.</thread_safety>
+doc:	</attribute>
+doc:	<attribute name="db_ign" return_type="unsigned char []">
+doc:		<summary>Array of ignored exceptions, from the debugger's point of view. Normally an exception stops the program to allow user inspection of the objects.</summary>
+doc:		<thread_safety>Per thread data.</thread_safety>
+doc:	</attribute>
+doc:	<attribute name="eif_except" return_type="struct exprint">
+doc:		<summary>Structure used to store routine information during exception stack dumps (gathered thanks to stack look-ahead).</summary>
+doc:		<thread_safety>Not safe because not all accesses are protected through `eif_except_lock'.</thread_safety>
+doc:		<synchronization>eif_except_lock</synchronization>
+doc:		<fixme>We should protect access through `eif_except_lock' or use a private per thread data.</fixme>
+doc:	</attribute>
+doc:	<attribute name="eif_except_lock" return_type="EIF_LW_MUTEX_TYPE">
+doc:		<summary></summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<fixme>Creation is not thread safe. It should be created in `eif_thread.c'</fixme>
+doc:	</attribute>
+doc:	<attribute name="print_history_table" return_type="int">
+doc:		<summary>Enable/disable printing of history table.</summary>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>EXCEPTIONS</eiffel_classes>
+doc:		<fixme>We should protect access through a mutex or use a private per thread data.</fixme>
+doc:	</attribute>
+doc:	<attribute name="ex_string" return_type="SMART_STRING">
+doc:		<summary>Container of the exception trace</summary>
+doc:		<thread_safety>Note safe</thread_safety>
+doc:		<synchronization>None</synchronization>
+doc:		<eiffel_classes>EXCEPTIONS</eiffel_classes>
+doc:		<fixme>We should protect access through a mutex or use a private per thread data.</fixme>
+doc:	</attribute>
+doc:	<attribute name="ex_tag" return_type="char * []">
+doc:		<summary>Pre-defined exception tags. No restriction on size.</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since statically initialized.</synchronization>
+doc:	</attribute>
+doc:	<attribute name="ex_tagc" return_type="unsigned char []">
+doc:		<summary>Converts a vector's type in the stack to an exception code, i.e. given a vector in the stack, which exception has to be raised?</summary>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None since statically initialized.</synchronization>
+doc:	</attribute>
+doc:</file>
+*/
+
 #ifndef EIF_THREADS
-/* Stack of current execution. On entrance, each routine pushes the address
- * of its own execution vector structure (held in the process's stack).
- * The exception trace records all the unresolved exceptions. For the case where
- * multiple exceptions occurred and we entered different rescue clauses, we
- * have to store the exception levels along with the unsolved exceptions.
- */
+
 rt_public struct xstack eif_stack = {		/* Calling stack */
 	(struct stxchunk *) 0,				/* st_hd */
 	(struct stxchunk *) 0,				/* st_tl */
@@ -87,17 +143,8 @@ rt_public struct xstack eif_trace = {		/* Exception trace */
 	(struct ex_vect *) 0,				/* st_bot */
 };
 
-/* Array of ignored exceptions. The EN_BYE exception is a run-time panic that
- * can never be caught, even by a rescue. The EN_OMEM cannot be ignored but can
- * be caught. It is raised by the run-time system when there is not enough
- * memory to ensure a correct Eiffel execution. The EN_FATAL exception is a
- * run-time fatal error which cannot be caught nor ignored.
- */
 rt_public unsigned char ex_ign[EN_NEX];	/* Item set to 1 to ignore exception */ /* %%zmt */
 
-/* Stack of current exception flags. This is used to control the assertion
- * checking (e.g. disable it when already in assertion checking).
- */
 rt_public struct eif_exception exdata = {
 	0,				/* ex_val */
 	0,				/* ex_nomem */
@@ -113,15 +160,9 @@ rt_public struct eif_exception exdata = {
 };
 
 #ifdef WORKBENCH
-/* Array of ignored exceptions, from the debugger's point of view. Normally
- * an exception stops the program to allow user inspection of the objects.
- */
 rt_public unsigned char db_ign[EN_NEX];	/* Item set to 1 to ignore exception */
 #endif
 
-/* Structure used to store routine information during exception stack dumps
- * (gathered thanks to stack look-ahead).
- */
 rt_private struct exprint eif_except;		/* Where exception has been raised */
 #define EIF_EXCEPT_LOCK	
 #define EIF_EXCEPT_UNLOCK 
@@ -167,7 +208,7 @@ rt_private void exception(int how);		/* Debugger hook */
 #endif
 
 #ifndef EIF_THREADS
-rt_private int print_history_table = ~0;   /* Enable/disable printing of hist. table */ /* %%zmt added 'int' type */
+rt_private int print_history_table = ~0;
 #endif /* EIF_THREADS */
 
 /* Eiffel interface */
@@ -200,7 +241,7 @@ rt_private void extend_trace_string(char *line);	/* Extend exception trace strin
 
 #ifndef EIF_THREADS
 
-rt_public SMART_STRING ex_string = {	/* Container of the exception trace */ /* %%zmt */
+rt_public SMART_STRING ex_string = {	/* Container of the exception trace */
 	NULL,	/* No area */
 	0L,		/* No byte used yet */
 	0L		/* Null length */
@@ -208,8 +249,7 @@ rt_public SMART_STRING ex_string = {	/* Container of the exception trace */ /* %
 
 #endif /* EIF_THREADS */
 
-/* Pre-defined exception tags. No restriction on size.
- */
+/* Pre-defined exception tags. No restriction on size. */
 rt_private char *ex_tag[] = {
 	(char *) 0,							/* Nothing */
 	"Feature call on void target.",		/* EN_VOID */
@@ -262,26 +302,26 @@ rt_private unsigned char ex_tagc[] = {
 };
 
 /* Strings used as separator for Eiffel stack dumps */
-rt_private char *retried =
+rt_private char *RT_RETRIED_MSG =
 "===============================================================================";
 #ifdef EIF_THREADS
-rt_private char *thr_enter =
+rt_private char *RT_THREAD_ENTER_MSG =
 "******************************** Thread exception *****************************";
-rt_private char *thr_failed =
+rt_private char *RT_THREAD_FAILED_MSG =
 "*******************************************************************************";
 #endif	/* EIF_THREADS */
-rt_private char *failed =
+rt_private char *RT_FAILED_MSG =
 "-------------------------------------------------------------------------------";
-rt_private char *branch_enter =
+rt_private char *RT_BRANCH_ENTER_MSG =
 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ entering level %d ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
-rt_private char *branch_exit =
+rt_private char *RT_BRANCH_EXIT_MSG =
 "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ back to level %d ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
 
 /* Commonly used error messages */
 #ifdef MAY_PANIC
-rt_private char *botched = "Eiffel stack botched";
+rt_private char *RT_BOTCHED_MSG = "Eiffel stack botched";
 #endif
-rt_private char *vanished = "main entry point vanished";
+rt_private char *RT_VANISHED_MSG = "main entry point vanished";
 
 /* Compiled with -DTEST, we turn on DEBUG if not already done */
 #ifdef TEST
@@ -448,7 +488,7 @@ rt_public struct ex_vect *exret(register1 struct ex_vect *rout_vect)
 
 #ifdef MAY_PANIC
 	if (last_item->ex_type != EX_RESC)
-		eif_panic(botched);
+		eif_panic(RT_BOTCHED_MSG);
 #endif
 
 	SIGBLOCK;				/* Critical section, protected against signals */
@@ -472,7 +512,7 @@ rt_public struct ex_vect *exret(register1 struct ex_vect *rout_vect)
 
 #ifdef MAY_PANIC
 	if (rout_vect->ex_type != EN_ILVL)
-		eif_panic(botched);
+		eif_panic(RT_BOTCHED_MSG);
 #endif
 
 	expop(&eif_trace);					/* Remove EN_ILVL */
@@ -486,7 +526,7 @@ rt_public struct ex_vect *exret(register1 struct ex_vect *rout_vect)
 		rout_vect->ex_retry = 1;		/* Function has been retried */
 		break;							/* Ok for these two */
 	default:
-		eif_panic(botched);
+		eif_panic(RT_BOTCHED_MSG);
 	}
 #else
 	rout_vect->ex_retry = 1;		/* Function has been retried */
@@ -814,7 +854,7 @@ rt_public void exresc(register2 struct ex_vect *rout_vect)
 		trace->ex_rescue = 1;		/* Signals entry in rescue clause */
 		break;
 	default:
-		eif_panic(botched);
+		eif_panic(RT_BOTCHED_MSG);
 	}
 #else
 	trace->ex_rescue = 1;		/* Signals entry in rescue clause */
@@ -1231,7 +1271,7 @@ rt_shared void ereturn(void)
 	if (rescue != (jmp_buf *) 0)		/* %%zs was (char *) */
 		longjmp(*rescue, echval);	/* Setjmp will return the exception code */
 
-	eif_panic(vanished);				/* main() should have created a vector */
+	eif_panic(RT_VANISHED_MSG);				/* main() should have created a vector */
 	/* NOTREACHED */
 }
 
@@ -1349,7 +1389,7 @@ rt_private jmp_buf *backtrack(void)
 				if (!(echmem & MEM_SPEC))	/* Not in panic mode */
 					return top->ex_jbuf;	/* Address of env buffer */
 			} else
-				eif_panic(botched);				/* There has to be a buffer */
+				eif_panic(RT_BOTCHED_MSG);				/* There has to be a buffer */
 #else
 			if (!(echmem & MEM_SPEC))		/* Not in panic mode */
 				return top->ex_jbuf;		/* Address of env buffer */
@@ -1554,7 +1594,7 @@ rt_private void excur(void)
 
 #ifdef MAY_PANIC
 	if (echlvl < 1)				/* There has to be at least one nesting level */
-		eif_panic(botched);
+		eif_panic(RT_BOTCHED_MSG);
 #endif
 
 	memcpy (&context, &eif_trace, sizeof(struct xstack));
@@ -1587,7 +1627,7 @@ rt_private void exorig(void)
 
 #ifdef MAY_PANIC
 	if (echlvl < 1)				/* There has to be at least one nesting level */
-		eif_panic(botched);
+		eif_panic(RT_BOTCHED_MSG);
 #endif
 
 	/* If there is only one nesting level, then the exception which started it
@@ -1655,7 +1695,7 @@ rt_private void exorig(void)
 	 */
 
 	if (!(echmem & MEM_FSTK) && echorg == 0)
-		eif_panic(botched);
+		eif_panic(RT_BOTCHED_MSG);
 	else if (echorg == 0) {
 		echorg = EN_OMEM;				/* Default exception */
 		echotag = (char *) 0;			/* No known tag */
@@ -2110,7 +2150,7 @@ rt_private void dump_stack(void (*append_trace)(char *))
 	
 #ifdef EIF_THREADS
 	/* At first, if we are in the MT mode, print the thread id */
-	sprintf(buffer, "%s\n", thr_enter);
+	sprintf(buffer, "%s\n", RT_THREAD_ENTER_MSG);
 	append_trace(buffer);
 	
 	if (!(eif_thr_is_root()))
@@ -2121,17 +2161,17 @@ rt_private void dump_stack(void (*append_trace)(char *))
 				"Root thread", (unsigned long) 0, "(thread id)");
 		
 	append_trace(buffer);
-	sprintf(buffer, "%s\n", thr_failed);
+	sprintf(buffer, "%s\n", RT_THREAD_FAILED_MSG);
 	append_trace(buffer);
 
 #endif 	/* EIF_THREADS */
 
-	sprintf(buffer, "%s\n", failed);
+	sprintf(buffer, "%s\n", RT_FAILED_MSG);
 	append_trace(buffer);
 	sprintf(buffer, "%-19.19s %-22.22s %-29.29s %-6.6s\n",
 			"Class / Object", "Routine", "Nature of exception", "Effect");
 	append_trace(buffer);
-	sprintf(buffer, "%s\n", failed);
+	sprintf(buffer, "%s\n", RT_FAILED_MSG);
 	append_trace(buffer);
 
 	/* Print body of history table. A little look-ahead is necessary, in order
@@ -2169,14 +2209,14 @@ rt_private void recursive_dump(void (*append_trace)(char *), register1 int level
 			(void) exnext();			/* Skip pseudo-vector "New level" */
 			if (exend())
 				return;					/* Exit if at the end of the stack */
-			sprintf(buffer, branch_enter, trace->ex_lvl);
+			sprintf(buffer, RT_BRANCH_ENTER_MSG, trace->ex_lvl);
 			append_trace(buffer);
-			sprintf(buffer, "\n%s\n", failed);
+			sprintf(buffer, "\n%s\n", RT_FAILED_MSG);
 			append_trace(buffer);
 			recursive_dump(append_trace, level + 1);	/* Dump the new level */
-			sprintf(buffer, branch_exit, level);
+			sprintf(buffer, RT_BRANCH_EXIT_MSG, level);
 			append_trace(buffer);
-			sprintf(buffer, "\n%s\n", failed);
+			sprintf(buffer, "\n%s\n", RT_FAILED_MSG);
 			append_trace(buffer);
 			find_call();				/* Restore global exception structure */
 			break;
@@ -2470,29 +2510,29 @@ rt_private void print_top(void (*append_trace)(char *))
 
 	if (echval == EN_BYE) {		/* A run-time panic was raised */
 		if (eif_except.last) {
-			sprintf(buffer, "Bye\n%s\n", failed);	/* Good bye! */
+			sprintf(buffer, "Bye\n%s\n", RT_FAILED_MSG);	/* Good bye! */
 		} else {
-			sprintf(buffer, "Panic\n%s\n", failed);	/* Panic propagation */
+			sprintf(buffer, "Panic\n%s\n", RT_FAILED_MSG);	/* Panic propagation */
 		}
 		finished = 1;
 	} else if (echval == EN_FATAL) {
 		if (eif_except.last) {
-			sprintf(buffer, "Bye\n%s\n", failed);	/* Good bye! */
+			sprintf(buffer, "Bye\n%s\n", RT_FAILED_MSG);	/* Good bye! */
 		} else {
-			sprintf(buffer, "Fatal\n%s\n", failed);	/* Fatal propagation */
+			sprintf(buffer, "Fatal\n%s\n", RT_FAILED_MSG);	/* Fatal propagation */
 		}
 		finished = 1;
 	} else if (eif_except.last) {						/* Last record => exit */
-		sprintf(buffer, "Exit\n%s\n", failed);
+		sprintf(buffer, "Exit\n%s\n", RT_FAILED_MSG);
 		finished = 1;
 	} else if (code == EN_FAIL || code == EN_RES) {
 		if (eif_except.retried) {
-			sprintf(buffer, "Retry\n%s\n", retried);
+			sprintf(buffer, "Retry\n%s\n", RT_RETRIED_MSG);
 		} else
 			if (eif_except.rescued) {
-				sprintf(buffer, "Rescue\n%s\n", failed);
+				sprintf(buffer, "Rescue\n%s\n", RT_FAILED_MSG);
 			} else {
-				sprintf(buffer, "Fail\n%s\n", failed);
+				sprintf(buffer, "Fail\n%s\n", RT_FAILED_MSG);
 			}
 
 		finished = 1;
@@ -2512,12 +2552,12 @@ rt_private void print_top(void (*append_trace)(char *))
 
 		if (top->ex_type == EN_FAIL || top->ex_type == EN_RES) {
 			if (eif_except.retried) {
-				sprintf(buffer, "Retry\n%s\n", retried);
+				sprintf(buffer, "Retry\n%s\n", RT_RETRIED_MSG);
 			} else {
-				sprintf(buffer, "Fail\n%s\n", failed);
+				sprintf(buffer, "Fail\n%s\n", RT_FAILED_MSG);
 			}
 		} else {
-			sprintf(buffer, "Pass\n%s\n", failed);
+			sprintf(buffer, "Pass\n%s\n", RT_FAILED_MSG);
 		}
 	}
 
@@ -3043,13 +3083,11 @@ rt_private char eedefined(long ex)
 rt_private void cur_print_top(void);		/* Prints top value of the stack for Concurrency*/
 
 /* Strings used as separator for Eiffel stack dumps */
-rt_private char *cur_retried =
-"\n===============================================================================";
-rt_private char *cur_failed =
+rt_private char *RT_CUR_FAILED_MSG =
 "\n-------------------------------------------------------------------------------";
-rt_private char *cur_branch_enter =
+rt_private char *RT_CUR_BRANCH_ENTER_MSG =
 "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ entering level %d ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
-rt_private char *cur_branch_exit =
+rt_private char *RT_CUR_BRANCH_EXIT_MSG =
 "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ back to level %d ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~";
 
 void get_call_stack(void) {
@@ -3084,15 +3122,15 @@ void get_call_stack(void) {
 	eif_trace.st_end = eif_trace.st_cur->sk_end;
 
 	/* Print header of history table */
-	extend_string(&_concur_call_stack, cur_failed);
+	extend_string(&_concur_call_stack, RT_CUR_FAILED_MSG);
 	sprintf(buf, "\n%-19.19s %-22.22s %-29.29s %-6.6s",
 		"Class / Object", "Routine", "Nature of exception", "Effect");
 	extend_string(&_concur_call_stack, buf);
 
-	extend_string(&_concur_call_stack, cur_failed);
+	extend_string(&_concur_call_stack, RT_CUR_FAILED_MSG);
 
 	/* Print body of history table. A little look-ahead is necessary, in order
-	 * to give meaningful routine names and effects (retried, rescued, cur_failed).
+	 * to give meaningful routine names and effects (retried, rescued, failed).
 	 */
 
 	eif_except.previous = 0;		/* Previous exception code */
@@ -3128,13 +3166,13 @@ cur_recursive_dump(register1 int level)
 			(void) exnext();			/* Skip pseudo-vector "New level" */
 			if (exend())
 				return;				 /* Exit if at the end of the stack */
-			sprintf(buf, cur_branch_enter, trace->ex_lvl);
+			sprintf(buf, RT_CUR_BRANCH_ENTER_MSG, trace->ex_lvl);
 			extend_string(&_concur_call_stack, buf);
-			extend_string(&_concur_call_stack, cur_failed);
+			extend_string(&_concur_call_stack, RT_CUR_FAILED_MSG);
 			recursive_dump(level + 1);  /* Dump the new level */
-			sprintf(buf, cur_branch_exit, level);
+			sprintf(buf, RT_CUR_BRANCH_EXIT_MSG, level);
 			extend_string(&_concur_call_stack, buf);
-			extend_string(&_concur_call_stack, cur_failed);
+			extend_string(&_concur_call_stack, RT_CUR_FAILED_MSG);
 			find_call();				/* Restore global exception structure */
 			break;
 		case EN_OLVL:				   /* Exiting a level */
@@ -3191,7 +3229,7 @@ rt_private void cur_print_top(void)
 	struct ex_vect *top;			/* Top of stack */
 
 	/* Do not print anything if the retry flag is on and the previous exception
-	 * was not not a routine failure nor a resumption attempt cur_failed. Indeed,
+	 * was not not a routine failure nor a resumption attempt failed. Indeed,
 	 * the exception that led to a retry has already been printed and we do
 	 * not want to see two successive 'retry' lines.
 	 * Similarily, a rescued routine fails, and is not 'rescued' at the end
@@ -3291,37 +3329,37 @@ rt_private void cur_print_top(void)
 
 	if (echval == EN_BYE) {	 /* A run-time panic was raised */
 		if (eif_except.last)
-			extend_string(&_concur_call_stack, cur_failed); /* Good bye! */
+			extend_string(&_concur_call_stack, RT_CUR_FAILED_MSG); /* Good bye! */
 		else {
-			sprintf(cur_buf, "Panic%s", cur_failed);   /* Panic propagation */
+			sprintf(cur_buf, "Panic%s", RT_CUR_FAILED_MSG);   /* Panic propagation */
 			extend_string(&_concur_call_stack, cur_buf);
 		}
 		return;
 	} else if (echval == EN_FATAL) {
 		if (eif_except.last) {
-			sprintf(cur_buf, "Bye%s", cur_failed); /* Good bye! */
+			sprintf(cur_buf, "Bye%s", RT_CUR_FAILED_MSG); /* Good bye! */
 			extend_string(&_concur_call_stack, cur_buf);
 		}
 		else {
-			sprintf(cur_buf, "Fatal%s", cur_failed);   /* Fatal propagation */
+			sprintf(cur_buf, "Fatal%s", RT_CUR_FAILED_MSG);   /* Fatal propagation */
 			extend_string(&_concur_call_stack, cur_buf);
 		}
 		return;
 	} else if (eif_except.last) {					   /* Last record => exit */
-		sprintf(cur_buf, "Exit%s", cur_failed);
+		sprintf(cur_buf, "Exit%s", RT_CUR_FAILED_MSG);
 		extend_string(&_concur_call_stack, cur_buf);
 		return;
 	} else if (code == EN_FAIL || code == EN_RES) {
 		if (eif_except.retried) {
-			sprintf(cur_buf, "Retry%s", cur_retried);
+			sprintf(cur_buf, "Retry\n%s", RT_RETRIED_MSG);
 			extend_string(&_concur_call_stack, cur_buf);
 		}
 		else if (eif_except.rescued) {
-			sprintf(cur_buf, "Rescue%s", cur_failed);
+			sprintf(cur_buf, "Rescue%s", RT_CUR_FAILED_MSG);
 			extend_string(&_concur_call_stack, cur_buf);
 		}
 		else {
-			sprintf(cur_buf, "Fail%s", cur_failed);
+			sprintf(cur_buf, "Fail%s", RT_CUR_FAILED_MSG);
 			extend_string(&_concur_call_stack, cur_buf);
 		}
 		return;
@@ -3338,15 +3376,15 @@ rt_private void cur_print_top(void)
 
 	if (code == EN_FAIL || code == EN_RES) {
 		if (eif_except.retried) {
-			sprintf(cur_buf, "Retry%s", cur_retried);
+			sprintf(cur_buf, "Retry\n%s", RT_RETRIED_MSG);
 			extend_string(&_concur_call_stack, cur_buf);
 		}
 		else {
-			sprintf(cur_buf, "Fail%s", cur_failed);
+			sprintf(cur_buf, "Fail%s", RT_CUR_FAILED_MSG);
 			extend_string(&_concur_call_stack, cur_buf);
 		}
 	} else {
-		sprintf(cur_buf, "Pass%s", cur_failed);
+		sprintf(cur_buf, "Pass%s", RT_CUR_FAILED_MSG);
 		extend_string(&_concur_call_stack, cur_buf);
 	}
 }

@@ -8,7 +8,7 @@ class CL_TYPE_A
 inherit
 	TYPE_A
 		redefine
-			is_true_expanded, is_separate, instantiation_in, valid_generic,
+			is_true_expanded, is_separate, is_out, instantiation_in, valid_generic,
 			duplicate, meta_type, same_as, good_generics, error_generics,
 			has_expanded, is_valid, format
 		end
@@ -36,6 +36,9 @@ feature -- Properties
 
 	is_separate: BOOLEAN
 			-- Is the current actual type a separate one ?
+
+	is_out: BOOLEAN
+			-- Is current actual type represent a out parameter type?
 
 	is_valid: BOOLEAN is
 			-- Is Current still valid?
@@ -127,12 +130,21 @@ feature {COMPILER_EXPORTER}
 			is_separate_set: is_separate = b
 		end
 
+	set_is_out (b: BOOLEAN) is
+			-- Assign `b' to `is_out'.
+		do
+			is_out := b
+		ensure
+			is_out_set: is_out = b
+		end
+
 	type_i: CL_TYPE_I is
 			-- C type
 		do
 			create Result.make (class_id)
 			Result.set_is_true_expanded (is_true_expanded)
 			Result.set_is_separate (is_separate)
+			Result.set_is_out (is_out)
 		end
 
 	meta_type: TYPE_I is

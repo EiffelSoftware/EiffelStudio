@@ -229,6 +229,12 @@ feature -- Status report
 			-- Do nothing
 		end
 
+	is_out: BOOLEAN is
+			-- Is current actual type represent a out parameter type?
+		do
+			-- Do nothing
+		end
+
 	is_feature_pointer: BOOLEAN is
 			-- Is the type a feature pointer one ?
 		do

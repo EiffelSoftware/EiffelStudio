@@ -445,6 +445,24 @@ feature -- Miscellaneous
 		
 	Comment_start_string: STRING is "-- Actions to be performed when"
 		-- Text presumed to be at start of all action sequence comments.
+		
+	application: EV_APPLICATION is
+			-- Once instance of EV_APPLICATION.
+			-- Defined here for speed, so it can be accessed
+			-- without being re-created everywhere.
+			-- in Build, the application will never change.
+		once
+			Result := environment.application
+		end
+		
+	environment: EV_ENVIRONMENT is
+			-- Once instance of EV_ENVIRONMENT.
+			-- Defined here for speed, so it can be accessed
+			-- without being re-created everwhere.
+		once
+			create Result
+		end
+		
 	
 feature -- Warning Dialogs
 

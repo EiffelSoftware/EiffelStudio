@@ -44,9 +44,9 @@ feature -- Initialization
 			mw: MENU_WINDOWS
 		do
 			mw ?= parent
-			associated_root ?= mw.associated_root
 			realized := True
 			if mw /= Void and then mw.realized then
+				associated_root ?= mw.associated_root
 				mw.add_a_child (Current)
 				if insensitive then
 					set_insensitive (True)

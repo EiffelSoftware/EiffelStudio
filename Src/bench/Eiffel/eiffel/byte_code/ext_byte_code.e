@@ -61,6 +61,13 @@ feature -- Routines for externals
 			-- Is the current byte code a byte code for external
 			-- features ?
 
+feature -- IL code generation
+
+	generate_c_il is
+		do
+			generate
+		end
+
 feature -- Byte code generation
 
 	generate is

@@ -12,7 +12,7 @@ inherit
 		rename
 			argument_types as std_argument_types
 		redefine
-			generate
+			generate, generate_c_il
 		end
 
 feature -- Properties
@@ -22,6 +22,9 @@ feature -- Properties
 	header_files: ARRAY [INTEGER]
 
 	return_type: INTEGER
+	
+	is_during_il: BOOLEAN
+			-- Is current being generated for IL code generation?
 
 feature -- Setting
 
@@ -43,6 +46,17 @@ feature -- Setting
 			return_type := r
 		end
 
+feature -- IL code generation
+
+	generate_c_il is
+			-- IL C code generation
+		do
+			is_during_il := True
+			generate_include_files
+			generate_basic_signature
+			is_during_il := False
+		end
+		
 feature -- Code generation
 
 	generate is
@@ -221,6 +235,7 @@ feature -- Convenience
 
 	is_special: BOOLEAN is
 		do
+			Result := is_during_il
 		end
 
 	has_signature: BOOLEAN is

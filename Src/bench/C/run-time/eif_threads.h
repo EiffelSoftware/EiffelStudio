@@ -18,7 +18,6 @@
 extern void eif_init_root_thread(void);
 extern void eif_register_thread(void);
 
-
 #ifdef POSIX_THREADS
 
 /*-----------------------*/
@@ -70,13 +69,13 @@ extern void eif_register_thread(void);
 #include <thread.h>
 
 
-#define EIF_THR_ENTRY_TYPE		void *
+#define EIF_THR_ENTRY_TYPE		void 
 #define EIF_THR_ENTRY_ARG_TYPE	void *
 
 #define EIF_THR_CREATION_FLAGS	THR_NEW_LWP
 
 #define EIF_THR_TYPE						thread_t
-#define EIF_THR_CREATE(entry,arg,tid,msg)	if (thr_create(NULL,0,(entry),(EIF_THR_ENTRY_ARG_TYPE)(arg),EIF_THR_CREATION_FLAGS,&(tid)) panic(msg)
+#define EIF_THR_CREATE(entry,arg,tid,msg)	if (thr_create(NULL,0,entry,(EIF_THR_ENTRY_ARG_TYPE)(arg),EIF_THR_CREATION_FLAGS,&(tid))) panic(msg)
 #define EIF_THR_EXIT(arg)					thr_exit(arg)
 #define EIF_THR_JOIN(which)					thr_join(0,(which),NULL)
 

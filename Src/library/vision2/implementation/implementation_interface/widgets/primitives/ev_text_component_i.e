@@ -33,6 +33,8 @@ feature -- Access
 
 	selected_text: STRING is
 			-- Text currently selected in `Current'.
+		require
+			has_selection: has_selection
 		do
 			Result := text.substring (selection_start, selection_end)
 		end

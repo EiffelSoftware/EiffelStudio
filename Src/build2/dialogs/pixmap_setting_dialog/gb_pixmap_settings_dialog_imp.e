@@ -149,6 +149,7 @@ feature {NONE}-- Initialization
 			absolute_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
 			l_horizontal_box_16.disable_item_expand (relative_constant_radio_button)
 			l_vertical_box_16.merge_radio_button_groups (l_horizontal_box_16)
+			relative_constant_box.set_padding_width (5)
 			l_horizontal_box_17.disable_item_expand (l_label_4)
 			l_label_4.set_text ("Relative PIXMAP constant named:")
 			relative_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
@@ -160,8 +161,9 @@ feature {NONE}-- Initialization
 			l_vertical_box_17.disable_item_expand (cancel_button)
 			ok_button.disable_sensitive
 			ok_button.set_text (ok_button_text)
-			ok_button.set_minimum_width (80)
+			ok_button.set_minimum_width (default_button_width)
 			cancel_button.set_text (cancel_button_text)
+			cancel_button.set_minimum_width (default_button_width)
 			
 			select_pixmap_button.select_actions.extend (agent select_pixmap_pressed)
 			select_directory_button.select_actions.extend (agent select_directory_pressed)

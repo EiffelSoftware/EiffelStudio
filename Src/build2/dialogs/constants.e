@@ -35,6 +35,9 @@ feature -- Access
 	ok_button_text: STRING is "OK"
 		-- `Result' is STRING constant named ok_button_text.
 
+	default_button_width: INTEGER is 80
+		-- `Result' is INTEGER constant named default_button_width.
+
 
 feature -- Access
 

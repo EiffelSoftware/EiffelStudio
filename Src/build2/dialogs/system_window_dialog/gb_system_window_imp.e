@@ -134,9 +134,9 @@ feature {NONE}-- Initialization
 			l_vertical_box_11.disable_item_expand (ok_button)
 			l_vertical_box_11.disable_item_expand (cancel_button)
 			ok_button.set_text (ok_button_text)
-			ok_button.set_minimum_width (80)
+			ok_button.set_minimum_width (default_button_width)
 			cancel_button.set_text (cancel_button_text)
-			cancel_button.set_minimum_width (80)
+			cancel_button.set_minimum_width (default_button_width)
 			
 			show_actions.extend (agent display_project_information)
 			project_radio_button.select_actions.extend (agent project_build_type_selected)

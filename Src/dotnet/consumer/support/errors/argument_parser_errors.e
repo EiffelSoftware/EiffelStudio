@@ -49,12 +49,15 @@ feature -- Access
 			
 	Cannot_force_and_exclude_references: INTEGER is 0x03000011
 
+	Load_assembly_failure: INTEGER is 0x03000012
+			-- Unable to load assembly.
+
 feature {NONE} -- Implementation
 
 	error_message_table: HASH_TABLE [STRING, INTEGER] is
 			-- Table of correspondance between error codes and error messages
 		once
-			create Result.make (10)
+			create Result.make (13)
 			Result.put ("No error", No_error)
 			Result.put ("Invalid command line switch", Invalid_switch)
 			Result.put ("Invalid destination path", Invalid_destination_path)
@@ -67,6 +70,7 @@ feature {NONE} -- Implementation
 			Result.put ("Assemblies that are added to EAC, cannot have their dependancies consumed locally", Cannot_force_local_and_eac)
 			Result.put ("Assemblies that are added to EAC, must have their dependacies consumed", Dependancies_must_be_generated)
 			Result.put ("Cannot force assembly dependancies into local path if no dependancies are consumed", Cannot_force_and_exclude_references)
+			Result.put ("Unable to load assembly or one of its dependencies. ", Load_assembly_failure)
 		end
 
 end -- class ARGUMENT_PARSER_ERRORS

@@ -16,186 +16,186 @@
 		<table>
 			<row>
 				<cell>
-					<bold>agent</bold>
+					<code><keyword>agent</keyword></code>
 				</cell>
 				<cell>
-					<bold>alias</bold>
+					<code><keyword>alias</keyword></code>
 				</cell>
 				<cell>
-					<bold>all</bold>
+					<code><keyword>all</keyword></code>
 				</cell>
 				<cell>
-					<bold>and</bold>
+					<code><keyword>and</keyword></code>
 				</cell>
 				<cell>
-					<bold>as</bold>
+					<code><keyword>as</keyword></code>
 				</cell>
 				<cell>
-					<bold>assign</bold>
+					<code><keyword>assign</keyword></code>
 				</cell>
 				<cell>
-					<bold>check</bold>
-				</cell>
-			</row>
-			<row>
-				<cell>
-					<bold>class</bold>
-				</cell>
-				<cell>
-					<bold>convert</bold>
-				</cell>
-				<cell>
-					<bold>create</bold>
-				</cell>
-				<cell>
-					<bold>Current</bold>
-				</cell>
-				<cell>
-					<bold>debug</bold>
-				</cell>
-				<cell>
-					<bold>deferred</bold>
-				</cell>
-				<cell>
-					<bold>do</bold>
+					<code><keyword>check</keyword></code>
 				</cell>
 			</row>
 			<row>
 				<cell>
-					<bold>else</bold>
+					<code><keyword>class</keyword></code>
 				</cell>
 				<cell>
-					<bold>elseif</bold>
+					<code><keyword>convert</keyword></code>
 				</cell>
 				<cell>
-					<bold>end</bold>
+					<code><keyword>create</keyword></code>
 				</cell>
 				<cell>
-					<bold>ensure</bold>
+					<code><keyword>Current</keyword></code>
 				</cell>
 				<cell>
-					<bold>expanded</bold>
+					<code><keyword>debug</keyword></code>
 				</cell>
 				<cell>
-					<bold>export</bold>
+					<code><keyword>deferred</keyword></code>
 				</cell>
 				<cell>
-					<bold>external</bold>
-				</cell>
-			</row>
-			<row>
-				<cell>
-					<bold>False</bold>
-				</cell>
-				<cell>
-					<bold>feature</bold>
-				</cell>
-				<cell>
-					<bold>from</bold>
-				</cell>
-				<cell>
-					<bold>frozen</bold>
-				</cell>
-				<cell>
-					<bold>if</bold>
-				</cell>
-				<cell>
-					<bold>implies</bold>
-				</cell>
-				<cell>
-					<bold>indexing</bold>
+					<code><keyword>do</keyword></code>
 				</cell>
 			</row>
 			<row>
 				<cell>
-					<bold>infix</bold>
+					<code><keyword>else</keyword></code>
 				</cell>
 				<cell>
-					<bold>inherit</bold>
+					<code><keyword>elseif</keyword></code>
 				</cell>
 				<cell>
-					<bold>inspect</bold>
+					<code><keyword>end</keyword></code>
 				</cell>
 				<cell>
-					<bold>invariant</bold>
+					<code><keyword>ensure</keyword></code>
 				</cell>
 				<cell>
-					<bold>is</bold>
+					<code><keyword>expanded</keyword></code>
 				</cell>
 				<cell>
-					<bold>like</bold>
+					<code><keyword>export</keyword></code>
 				</cell>
 				<cell>
-					<bold>local</bold>
-				</cell>
-			</row>
-			<row>
-				<cell>
-					<bold>loop</bold>
-				</cell>
-				<cell>
-					<bold>not</bold>
-				</cell>
-				<cell>
-					<bold>obsolete</bold>
-				</cell>
-				<cell>
-					<bold>old</bold>
-				</cell>
-				<cell>
-					<bold>once</bold>
-				</cell>
-				<cell>
-					<bold>or</bold>
-				</cell>
-				<cell>
-					<bold>prefix</bold>
+					<code><keyword>external</keyword></code>
 				</cell>
 			</row>
 			<row>
 				<cell>
-					<bold>Precursor</bold>
+					<code><keyword>False</keyword></code>
 				</cell>
 				<cell>
-					<bold>pure</bold>
+					<code><keyword>feature</keyword></code>
 				</cell>
 				<cell>
-					<bold>redefine</bold>
+					<code><keyword>from</keyword></code>
 				</cell>
 				<cell>
-					<bold>reference</bold>
+					<code><keyword>frozen</keyword></code>
 				</cell>
 				<cell>
-					<bold>rename</bold>
+					<code><keyword>if</keyword></code>
 				</cell>
 				<cell>
-					<bold>require</bold>
+					<code><keyword>implies</keyword></code>
 				</cell>
 				<cell>
-					<bold>rescue</bold>
+					<code><keyword>indexing</keyword></code>
 				</cell>
 			</row>
 			<row>
 				<cell>
-					<bold>Result</bold>
+					<code><keyword>infix</keyword></code>
 				</cell>
 				<cell>
-					<bold>retry</bold>
+					<code><keyword>inherit</keyword></code>
 				</cell>
 				<cell>
-					<bold>separate</bold>
+					<code><keyword>inspect</keyword></code>
 				</cell>
 				<cell>
-					<bold>then</bold>
+					<code><keyword>invariant</keyword></code>
 				</cell>
 				<cell>
-					<bold>True</bold>
+					<code><keyword>is</keyword></code>
 				</cell>
 				<cell>
-					<bold>TUPLE</bold>
+					<code><keyword>like</keyword></code>
 				</cell>
 				<cell>
-					<bold>undefine</bold>
+					<code><keyword>local</keyword></code>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<code><keyword>loop</keyword></code>
+				</cell>
+				<cell>
+					<code><keyword>not</keyword></code>
+				</cell>
+				<cell>
+					<code><keyword>obsolete</keyword></code>
+				</cell>
+				<cell>
+					<code><keyword>old</keyword></code>
+				</cell>
+				<cell>
+					<code><keyword>once</keyword></code>
+				</cell>
+				<cell>
+					<code><keyword>or</keyword></code>
+				</cell>
+				<cell>
+					<code><keyword>prefix</keyword></code>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<code><keyword>Precursor</keyword></code>
+				</cell>
+				<cell>
+					<code><keyword>pure</keyword></code>
+				</cell>
+				<cell>
+					<code><keyword>redefine</keyword></code>
+				</cell>
+				<cell>
+					<code><keyword>reference</keyword></code>
+				</cell>
+				<cell>
+					<code><keyword>rename</keyword></code>
+				</cell>
+				<cell>
+					<code><keyword>require</keyword></code>
+				</cell>
+				<cell>
+					<code><keyword>rescue</keyword></code>
+				</cell>
+			</row>
+			<row>
+				<cell>
+					<code><keyword>Result</keyword></code>
+				</cell>
+				<cell>
+					<code><keyword>retry</keyword></code>
+				</cell>
+				<cell>
+					<code><keyword>separate</keyword></code>
+				</cell>
+				<cell>
+					<code><keyword>then</keyword></code>
+				</cell>
+				<cell>
+					<code><keyword>True</keyword></code>
+				</cell>
+				<cell>
+					<code><keyword>TUPLE</keyword></code>
+				</cell>
+				<cell>
+					<code><keyword>undefine</keyword></code>
 				</cell>
 			</row>
 		</table>

@@ -4,36 +4,32 @@
 # It generates the Vision2 and Precompilation wizards and puts them in the delivery.
 
 remtrace Vision2 wizard
-if [ $rep = y ]; then
-	echo Building the Vision2 wizard
-	clean_project
-	finalize vision2_wizard_linux.ace
-	tgz_ccode wizard
-	if [ ! -f wizard.tar.gz ]; then
-		remtrace Couldnt generate the Vision2 wizard
-		CANCEL
-	fi
-	safe_md $EXPORT_DIR/vision2_wizard
-	mv wizard.tar.gz $EXPORT_DIR/vision2_wizard
-	clean_project
-	echo Vision2 wizard Built!
+echo Building the Vision2 wizard
+clean_project
+finalize vision2_wizard_linux.ace
+tgz_ccode wizard
+if [ ! -f wizard.tar.gz ]; then
+	remtrace Couldnt generate the Vision2 wizard
+	CANCEL
 fi
+safe_md $EXPORT_DIR/vision2_wizard
+mv wizard.tar.gz $EXPORT_DIR/vision2_wizard
+clean_project
+echo Vision2 wizard Built!
 
 remtrace Precompilation wizard
-if [ $rep = y ]; then
-	echo Building the Precompilation wizard
-   clean_project
-   finalize precompile_wizard_linux.ace
-   tgz_ccode wizard
-   if [ ! -f wizard.tar.gz ]; then
-      remtrace Couldnt generate the Precompilation wizard
-      CANCEL
-   fi
-   safe_md $EXPORT_DIR/precomp_wizard
-   mv wizard.tar.gz $EXPORT_DIR/precomp_wizard
-   clean_project                                                                    
-	echo Precompilation wizard Built!
+echo Building the Precompilation wizard
+clean_project
+finalize precompile_wizard_linux.ace
+tgz_ccode wizard
+if [ ! -f wizard.tar.gz ]; then
+   remtrace Couldnt generate the Precompilation wizard
+   CANCEL
 fi
+safe_md $EXPORT_DIR/precomp_wizard
+mv wizard.tar.gz $EXPORT_DIR/precomp_wizard
+clean_project                                                                    
+echo Precompilation wizard Built!
 
 
 

@@ -36,7 +36,6 @@ feature -- Debug
 	print_contents is
 		do
 			io.put_string ("EV_EVENT_DATA: ")
-			print (widget)
 			io.put_string ("%N")
 		end
 

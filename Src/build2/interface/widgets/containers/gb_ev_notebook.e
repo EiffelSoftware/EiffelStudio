@@ -119,7 +119,9 @@ feature {GB_XML_STORE} -- Output
 				end
 				first.forth
 			end
-			add_element_containing_string (element, Item_text_string, names_string)
+			if not names_string.is_empty then
+				add_element_containing_string (element, Item_text_string, names_string)
+			end
 		end
 		
 	modify_from_xml (element: XML_ELEMENT) is

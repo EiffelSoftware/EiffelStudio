@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 		do
 			Result := check_interface_pointer (interface_name)
 
-			if func_desc.argument_count > 0 or else not func_desc.return_type.name.is_equal (Void_c_keyword) then
+			if func_desc.argument_count > 0 or else not (func_desc.return_type.type = Vt_void) then
 				create pointer_var.make
 
 
@@ -240,7 +240,7 @@ feature {NONE} -- Implementation
 					visitor := Void
 				end -- loop
 
-				if not func_desc.return_type.name.is_equal (Void_c_keyword) then
+				if not (func_desc.return_type.type = Vt_void) then
 
 					create visitor
 					visitor.visit (func_desc.return_type)
@@ -249,7 +249,7 @@ feature {NONE} -- Implementation
 					return_value.append (Return)
 
 					if not visitor.is_pointed then
-						if visitor.is_basic_type then
+						if visitor.is_basic_type or visitor.is_enumeration then
 							variables.append (visitor.c_type)
 							variables.append (Space)
 							variables.append (Return_value_name)
@@ -437,9 +437,7 @@ feature {NONE} -- Implementation
 				Result.append (Close_parenthesis)
 				Result.append (Semicolon)
 				Result.append (New_line)
-				if not (func_desc.return_type.type = Vt_void) then
-					Result.append (examine_hresult (Hresult_variable_name))
-				end
+				Result.append (examine_hresult (Hresult_variable_name))
 			end
 		end  -- function
 

@@ -20,6 +20,8 @@ feature -- Basic operations
 			valid_visitor: a_visitor /= Void
 		local
 			an_element_type: INTEGER
+			element_visitor: WIZARD_DATA_TYPE_VISITOR
+			tmp_string: STRING
 		do
 			create ce_function_name.make (0)
 			create ec_function_name.make (0)
@@ -33,19 +35,32 @@ feature -- Basic operations
 			an_element_type := a_safearray_descriptor.array_element_descriptor.type
 			vt_type := binary_or (an_element_type, Vt_array)
 
-			if is_unsigned_char (an_element_type) then
+			create element_visitor
+			element_visitor.visit (a_safearray_descriptor.array_element_descriptor)
+
+			if 
+				is_unsigned_char (an_element_type) or
+				is_character (an_element_type)
+			then
 				ce_function_name.append ("ccom_ce_safearray_char")
 				ec_function_name.append ("ccom_ec_safearray_char")
 				c_type.append ("SAFEARRAY * ")
 				eiffel_type.append ("ECOM_ARRAY %(CHARACTER%)")
 
-			elseif is_integer2 (an_element_type) then
+			elseif 
+				is_integer2 (an_element_type) or 
+				is_unsigned_short (an_element_type) or
+				element_visitor.is_enumeration 
+			then
 				ce_function_name.append ("ccom_ce_safearray_short")
 				ec_function_name.append ("ccom_ec_safearray_short")
 				c_type.append ("SAFEARRAY * ")
 				eiffel_type.append ("ECOM_ARRAY %(INTEGER%)")
 
-			elseif is_integer4 (an_element_type) then
+			elseif 
+				is_integer4 (an_element_type) or
+				is_unsigned_long (an_element_type)
+			then
 				ce_function_name.append ("ccom_ce_safearray_long")
 				ec_function_name.append ("ccom_ec_safearray_long")
 				c_type.append ("SAFEARRAY * ")
@@ -75,7 +90,10 @@ feature -- Basic operations
 				c_type.append ("SAFEARRAY * ")
 				eiffel_type.append ("ECOM_ARRAY %(DATE_TIME%)")
 
-			elseif is_error (an_element_type) then
+			elseif 
+				is_error (an_element_type) or
+				is_hresult (an_element_type)
+			then
 				ce_function_name.append ("ccom_ce_safearray_hresult")
 				ec_function_name.append ("ccom_ec_safearray_hresult")
 				c_type.append ("SAFEARRAY * ")
@@ -105,7 +123,11 @@ feature -- Basic operations
 				c_type.append ("SAFEARRAY * ")
 				eiffel_type.append ("ECOM_ARRAY %(ECOM_GENERIC_DISPINTERFACE%)")
 
-			elseif is_unknown (an_element_type) then
+			elseif 
+				is_unknown (an_element_type) or
+				element_visitor.is_interface_pointer or 
+				element_visitor.is_coclass_pointer
+			then
 				ce_function_name.append ("ccom_ce_safearray_unknown")
 				ec_function_name.append ("ccom_ec_safearray_unknown")
 				c_type.append ("SAFEARRAY * ")
@@ -118,7 +140,12 @@ feature -- Basic operations
 				eiffel_type.append ("ECOM_ARRAY %(ECOM_DECIMAL%)")
 
 			else
-				message_output.add_warning (Current, message_output.Unknown_type_of_safearray_element)
+				create tmp_string.make (0)
+				tmp_string.append (element_visitor.c_type)
+				tmp_string.append (Space)
+				tmp_string.append (message_output.Unknown_type_of_safearray_element)
+				message_output.add_warning (Current, tmp_string)
+
 			end
 			set_visitor_atributes (a_visitor)
 		end

@@ -278,6 +278,7 @@ feature {NONE} -- Implementation
 				if not (func_desc.return_type.type = Vt_void) then
 					Result.append (examine_hresult (Hresult_variable_name))
 				end
+				Result.append (tab)
 			end
 		ensure
 			non_void_feature_body: Result /= Void

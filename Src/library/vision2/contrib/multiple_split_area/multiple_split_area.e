@@ -230,6 +230,37 @@ feature -- Status setting
 			count_increased: linear_representation.count = old linear_representation.count + 1
 		end
 		
+	add_external (widget: EV_WIDGET; name: STRING; position, an_x, a_y, a_width, a_height: INTEGER) is
+			-- Add `widget' to `Current' as an external tool with name `name', a restore position of `position'
+			-- for when it is returned back to `Current', and a dialog screen size and position of `an_x', `a_y',
+			-- `a_width' and `a_height'. This effectively restores a tool as if it had already been dragged
+			-- out of `Current'.
+		require
+			widget_not_void: widget /= Void
+			widget_not_parented: widget.parent = Void
+			name_not_void: name /= Void
+			size_valid: a_width > 0 and a_height > 0
+		local
+			holder: MULTIPLE_SPLIT_AREA_TOOL_HOLDER
+			dialog: BUILD_DOCKABLE_DIALOG
+		do
+			create holder.make_with_tool (widget, name, Current)
+			external_representation.extend (widget)
+			create dialog
+			holder.main_box.parent.prune_all (holder.main_box)
+			dialog.extend (holder.main_box)
+			dialog.enable_closeable
+			dialog.close_request_actions.wipe_out
+			dialog.close_request_actions.extend (agent holder.destroy_dialog_and_restore (dialog))
+			dialog.set_position (an_x, a_y)
+			dialog.set_size (a_width, a_height)
+			dialog.show_relative_to_window (parent_window (Current))
+		ensure
+			added_externally: external_representation.has (widget)
+			not_in_linear_rep: not linear_representation.has (widget)
+		end
+		
+		
 	remove (a_widget: EV_WIDGET) is
 			-- Remove `a_widget' from `Current'
 		require
@@ -298,6 +329,8 @@ feature -- Status setting
 			-- ourself.
 		local
 			index: INTEGER
+			dockable_dialog: EV_DOCKABLE_DIALOG
+			tool: EV_WIDGET
 		do
 			if count /= 0 then
 				rebuilding_locked := True
@@ -311,6 +344,23 @@ feature -- Status setting
 					index := linear_representation.index
 					remove_implementation (linear_representation.item)
 					update_maximized_minimized_post_removal (all_holders.i_th (index))
+				end
+				from
+					external_representation.start
+				until
+					external_representation.off
+				loop
+					tool := external_representation.item
+					dockable_dialog ?= parent_window (tool)
+					check
+						parent_window_was_dialog: dockable_dialog /= Void
+					end
+					dockable_dialog.wipe_out
+					dockable_dialog.destroy
+					if tool.parent /= Void then
+						tool.parent.prune_all (tool)
+					end
+					external_representation.remove
 				end
 				rebuilding_locked := False
 			end

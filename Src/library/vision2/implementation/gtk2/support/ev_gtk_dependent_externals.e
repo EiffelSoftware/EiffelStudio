@@ -291,8 +291,14 @@ feature -- Externals
 		
 	gtk_text_buffer_paste_clipboard (a_text_buffer: POINTER; a_clipboard: POINTER; a_text_iter: POINTER; default_editable: BOOLEAN) is
 		external
-			"C signature (GtkTextBuffer*, GtkClipboard*,GtkTextIter*, gboolean) use <gtk/gtk.h>"
+			"C signature (GtkTextBuffer*, GtkClipboard*, GtkTextIter*, gboolean) use <gtk/gtk.h>"
 		end
+		
+	gtk_text_view_scroll_to_iter (a_text_view: POINTER; a_text_iter: POINTER; within_margin: DOUBLE; use_align: BOOLEAN; xalign: DOUBLE; yalign: DOUBLE) is
+		external
+			"C signature (GtkTextView*, GtkTextIter*, gdouble, gboolean, gdouble, gdouble) use <gtk/gtk.h> "
+		end
+		
 
 end
 

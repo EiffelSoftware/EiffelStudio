@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.CodeGenerationSupport"
+
 external class
 	ISE_REFLECTION_CODEGENERATIONSUPPORT
 
@@ -19,39 +20,74 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen xml_elements: ISE_REFLECTION_XMLELEMENTS is
-		external
-			"IL field signature :ISE.Reflection.XmlElements use ISE.Reflection.CodeGenerationSupport"
-		alias
-			"XmlElements"
-		end
-
-	frozen eiffel_feature: ISE_REFLECTION_EIFFELFEATURE is
-		external
-			"IL field signature :ISE.Reflection.EiffelFeature use ISE.Reflection.CodeGenerationSupport"
-		alias
-			"EiffelFeature"
-		end
-
-	frozen eiffel_class: ISE_REFLECTION_EIFFELCLASS is
+	frozen a_internal_eiffel_class: ISE_REFLECTION_EIFFELCLASS is
 		external
 			"IL field signature :ISE.Reflection.EiffelClass use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"EiffelClass"
+			"_internal_EiffelClass"
 		end
 
-	frozen type_description: SYSTEM_XML_XMLTEXTREADER is
-		external
-			"IL field signature :System.Xml.XmlTextReader use ISE.Reflection.CodeGenerationSupport"
-		alias
-			"TypeDescription"
-		end
-
-	frozen error_messages: ISE_REFLECTION_CODEGENERATIONSUPPORTERRORMESSAGES is
+	frozen a_internal_error_messages: ISE_REFLECTION_CODEGENERATIONSUPPORTERRORMESSAGES is
 		external
 			"IL field signature :ISE.Reflection.CodeGenerationSupportErrorMessages use ISE.Reflection.CodeGenerationSupport"
 		alias
-			"ErrorMessages"
+			"_internal_ErrorMessages"
+		end
+
+	frozen a_internal_type_description: SYSTEM_XML_XMLTEXTREADER is
+		external
+			"IL field signature :System.Xml.XmlTextReader use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"_internal_TypeDescription"
+		end
+
+	get_xml_elements: ISE_REFLECTION_XMLELEMENTS is
+		external
+			"IL signature (): ISE.Reflection.XmlElements use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"get_XmlElements"
+		end
+
+	frozen a_internal_eiffel_feature: ISE_REFLECTION_EIFFELFEATURE is
+		external
+			"IL field signature :ISE.Reflection.EiffelFeature use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"_internal_EiffelFeature"
+		end
+
+	frozen a_internal_xml_elements: ISE_REFLECTION_XMLELEMENTS is
+		external
+			"IL field signature :ISE.Reflection.XmlElements use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"_internal_XmlElements"
+		end
+
+	get_type_description: SYSTEM_XML_XMLTEXTREADER is
+		external
+			"IL signature (): System.Xml.XmlTextReader use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"get_TypeDescription"
+		end
+
+	get_eiffel_class: ISE_REFLECTION_EIFFELCLASS is
+		external
+			"IL signature (): ISE.Reflection.EiffelClass use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"get_EiffelClass"
+		end
+
+	get_error_messages: ISE_REFLECTION_CODEGENERATIONSUPPORTERRORMESSAGES is
+		external
+			"IL signature (): ISE.Reflection.CodeGenerationSupportErrorMessages use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"get_ErrorMessages"
+		end
+
+	get_eiffel_feature: ISE_REFLECTION_EIFFELFEATURE is
+		external
+			"IL signature (): ISE.Reflection.EiffelFeature use ISE.Reflection.CodeGenerationSupport"
+		alias
+			"get_EiffelFeature"
 		end
 
 feature -- Basic Operations

@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.TypeStorer"
+
 external class
 	ISE_REFLECTION_TYPESTORER
 
@@ -19,53 +20,102 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen text_writer: SYSTEM_XML_XMLTEXTWRITER is
-		external
-			"IL field signature :System.Xml.XmlTextWriter use ISE.Reflection.TypeStorer"
-		alias
-			"TextWriter"
-		end
-
-	frozen committed: BOOLEAN is
-		external
-			"IL field signature :System.Boolean use ISE.Reflection.TypeStorer"
-		alias
-			"Committed"
-		end
-
-	frozen eiffel_class: ISE_REFLECTION_EIFFELCLASS is
+	frozen a_internal_eiffel_class: ISE_REFLECTION_EIFFELCLASS is
 		external
 			"IL field signature :ISE.Reflection.EiffelClass use ISE.Reflection.TypeStorer"
 		alias
-			"EiffelClass"
+			"_internal_EiffelClass"
 		end
 
-	frozen assembly_folder_name: STRING is
-		external
-			"IL field signature :System.String use ISE.Reflection.TypeStorer"
-		alias
-			"AssemblyFolderName"
-		end
-
-	frozen error_messages: ISE_REFLECTION_TYPESTORERERRORMESSAGES is
+	frozen a_internal_error_messages: ISE_REFLECTION_TYPESTORERERRORMESSAGES is
 		external
 			"IL field signature :ISE.Reflection.TypeStorerErrorMessages use ISE.Reflection.TypeStorer"
 		alias
-			"ErrorMessages"
+			"_internal_ErrorMessages"
 		end
 
-	frozen parents: SYSTEM_COLLECTIONS_HASHTABLE is
+	get_last_error: ISE_REFLECTION_ERRORINFO is
 		external
-			"IL field signature :System.Collections.Hashtable use ISE.Reflection.TypeStorer"
+			"IL signature (): ISE.Reflection.ErrorInfo use ISE.Reflection.TypeStorer"
 		alias
-			"Parents"
+			"get_last_error"
 		end
 
-	frozen last_error: ISE_REFLECTION_ERRORINFO is
+	frozen a_internal_committed: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.TypeStorer"
+		alias
+			"_internal_Committed"
+		end
+
+	frozen a_internal_text_writer: SYSTEM_XML_XMLTEXTWRITER is
+		external
+			"IL field signature :System.Xml.XmlTextWriter use ISE.Reflection.TypeStorer"
+		alias
+			"_internal_TextWriter"
+		end
+
+	get_assembly_folder_name: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.TypeStorer"
+		alias
+			"get_AssemblyFolderName"
+		end
+
+	frozen a_internal_last_error: ISE_REFLECTION_ERRORINFO is
 		external
 			"IL field signature :ISE.Reflection.ErrorInfo use ISE.Reflection.TypeStorer"
 		alias
-			"last_error"
+			"_internal_last_error"
+		end
+
+	frozen a_internal_parents: SYSTEM_COLLECTIONS_HASHTABLE is
+		external
+			"IL field signature :System.Collections.Hashtable use ISE.Reflection.TypeStorer"
+		alias
+			"_internal_Parents"
+		end
+
+	get_text_writer: SYSTEM_XML_XMLTEXTWRITER is
+		external
+			"IL signature (): System.Xml.XmlTextWriter use ISE.Reflection.TypeStorer"
+		alias
+			"get_TextWriter"
+		end
+
+	frozen a_internal_assembly_folder_name: STRING is
+		external
+			"IL field signature :System.String use ISE.Reflection.TypeStorer"
+		alias
+			"_internal_AssemblyFolderName"
+		end
+
+	get_parents: SYSTEM_COLLECTIONS_HASHTABLE is
+		external
+			"IL signature (): System.Collections.Hashtable use ISE.Reflection.TypeStorer"
+		alias
+			"get_Parents"
+		end
+
+	get_committed: BOOLEAN is
+		external
+			"IL signature (): System.Boolean use ISE.Reflection.TypeStorer"
+		alias
+			"get_Committed"
+		end
+
+	get_eiffel_class: ISE_REFLECTION_EIFFELCLASS is
+		external
+			"IL signature (): ISE.Reflection.EiffelClass use ISE.Reflection.TypeStorer"
+		alias
+			"get_EiffelClass"
+		end
+
+	get_error_messages: ISE_REFLECTION_TYPESTORERERRORMESSAGES is
+		external
+			"IL signature (): ISE.Reflection.TypeStorerErrorMessages use ISE.Reflection.TypeStorer"
+		alias
+			"get_ErrorMessages"
 		end
 
 feature -- Basic Operations
@@ -173,6 +223,13 @@ feature -- Basic Operations
 			"IL signature (System.Collections.ArrayList, System.String): System.Void use ISE.Reflection.TypeStorer"
 		alias
 			"GenerateXmlElementsFromAssertions"
+		end
+
+	generate_xml_feature_element (a_feature: ISE_REFLECTION_EIFFELFEATURE) is
+		external
+			"IL signature (ISE.Reflection.EiffelFeature): System.Void use ISE.Reflection.TypeStorer"
+		alias
+			"GenerateXmlFeatureElement"
 		end
 
 	generate_xml_class_footer (invariants: SYSTEM_COLLECTIONS_ARRAYLIST) is

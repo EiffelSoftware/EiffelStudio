@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.Supports"
+
 external class
 	ISE_REFLECTION_SUPPORTS
 
@@ -16,25 +17,46 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT is
+	get_code_generation_support: ISE_REFLECTION_CODEGENERATIONSUPPORT is
+		external
+			"IL signature (): ISE.Reflection.CodeGenerationSupport use ISE.Reflection.Supports"
+		alias
+			"get_CodeGenerationSupport"
+		end
+
+	get_reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT is
+		external
+			"IL signature (): ISE.Reflection.ReflectionSupport use ISE.Reflection.Supports"
+		alias
+			"get_ReflectionSupport"
+		end
+
+	frozen a_internal_conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT is
 		external
 			"IL field signature :ISE.Reflection.ConversionSupport use ISE.Reflection.Supports"
 		alias
-			"ConversionSupport"
+			"_internal_ConversionSupport"
 		end
 
-	frozen code_generation_support: ISE_REFLECTION_CODEGENERATIONSUPPORT is
+	get_conversion_support: ISE_REFLECTION_CONVERSIONSUPPORT is
+		external
+			"IL signature (): ISE.Reflection.ConversionSupport use ISE.Reflection.Supports"
+		alias
+			"get_ConversionSupport"
+		end
+
+	frozen a_internal_code_generation_support: ISE_REFLECTION_CODEGENERATIONSUPPORT is
 		external
 			"IL field signature :ISE.Reflection.CodeGenerationSupport use ISE.Reflection.Supports"
 		alias
-			"CodeGenerationSupport"
+			"_internal_CodeGenerationSupport"
 		end
 
-	frozen reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT is
+	frozen a_internal_reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT is
 		external
 			"IL field signature :ISE.Reflection.ReflectionSupport use ISE.Reflection.Supports"
 		alias
-			"ReflectionSupport"
+			"_internal_ReflectionSupport"
 		end
 
 feature -- Basic Operations

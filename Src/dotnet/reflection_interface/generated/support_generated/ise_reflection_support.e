@@ -1,16 +1,24 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.Support"
+
 deferred external class
 	ISE_REFLECTION_SUPPORT
 
 feature -- Access
 
-	frozen last_error: ISE_REFLECTION_ERRORINFO is
+	frozen a_internal_last_error: ISE_REFLECTION_ERRORINFO is
 		external
 			"IL field signature :ISE.Reflection.ErrorInfo use ISE.Reflection.Support"
 		alias
-			"LastError"
+			"_internal_LastError"
+		end
+
+	get_last_error: ISE_REFLECTION_ERRORINFO is
+		external
+			"IL signature (): ISE.Reflection.ErrorInfo use ISE.Reflection.Support"
+		alias
+			"get_LastError"
 		end
 
 feature -- Basic Operations

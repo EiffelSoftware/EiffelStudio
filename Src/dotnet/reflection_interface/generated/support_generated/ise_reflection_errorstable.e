@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.ErrorsTable"
+
 external class
 	ISE_REFLECTION_ERRORSTABLE
 
@@ -16,11 +17,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen errors_table: SYSTEM_COLLECTIONS_HASHTABLE is
+	get_errors_table: SYSTEM_COLLECTIONS_HASHTABLE is
+		external
+			"IL signature (): System.Collections.Hashtable use ISE.Reflection.ErrorsTable"
+		alias
+			"get_ErrorsTable"
+		end
+
+	frozen a_internal_errors_table: SYSTEM_COLLECTIONS_HASHTABLE is
 		external
 			"IL field signature :System.Collections.Hashtable use ISE.Reflection.ErrorsTable"
 		alias
-			"ErrorsTable"
+			"_internal_ErrorsTable"
 		end
 
 feature -- Basic Operations

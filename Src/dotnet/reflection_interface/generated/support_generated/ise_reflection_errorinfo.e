@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.ErrorInfo"
+
 external class
 	ISE_REFLECTION_ERRORINFO
 
@@ -16,25 +17,46 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen code: INTEGER is
+	frozen a_internal_code: INTEGER is
 		external
 			"IL field signature :System.Int32 use ISE.Reflection.ErrorInfo"
 		alias
-			"Code"
+			"_internal_Code"
 		end
 
-	frozen description: STRING is
+	get_description: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ErrorInfo"
+		alias
+			"get_Description"
+		end
+
+	get_code: INTEGER is
+		external
+			"IL signature (): System.Int32 use ISE.Reflection.ErrorInfo"
+		alias
+			"get_Code"
+		end
+
+	frozen a_internal_name: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.ErrorInfo"
 		alias
-			"Description"
+			"_internal_Name"
 		end
 
-	frozen name: STRING is
+	frozen a_internal_description: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.ErrorInfo"
 		alias
-			"Name"
+			"_internal_Description"
+		end
+
+	get_name: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.ErrorInfo"
+		alias
+			"get_Name"
 		end
 
 feature -- Basic Operations

@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.Notifier"
+
 external class
 	ISE_REFLECTION_NOTIFIER
 
@@ -16,25 +17,46 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen add_observers: SYSTEM_COLLECTIONS_ARRAYLIST is
+	get_add_observers: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.Notifier"
+			"IL signature (): System.Collections.ArrayList use ISE.Reflection.Notifier"
 		alias
-			"AddObservers"
+			"get_AddObservers"
 		end
 
-	frozen replace_observers: SYSTEM_COLLECTIONS_ARRAYLIST is
+	get_remove_observers: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
-			"IL field signature :System.Collections.ArrayList use ISE.Reflection.Notifier"
+			"IL signature (): System.Collections.ArrayList use ISE.Reflection.Notifier"
 		alias
-			"ReplaceObservers"
+			"get_RemoveObservers"
 		end
 
-	frozen remove_observers: SYSTEM_COLLECTIONS_ARRAYLIST is
+	get_replace_observers: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL signature (): System.Collections.ArrayList use ISE.Reflection.Notifier"
+		alias
+			"get_ReplaceObservers"
+		end
+
+	frozen a_internal_add_observers: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
 			"IL field signature :System.Collections.ArrayList use ISE.Reflection.Notifier"
 		alias
-			"RemoveObservers"
+			"_internal_AddObservers"
+		end
+
+	frozen a_internal_remove_observers: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.Notifier"
+		alias
+			"_internal_RemoveObservers"
+		end
+
+	frozen a_internal_replace_observers: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL field signature :System.Collections.ArrayList use ISE.Reflection.Notifier"
+		alias
+			"_internal_ReplaceObservers"
 		end
 
 feature -- Basic Operations

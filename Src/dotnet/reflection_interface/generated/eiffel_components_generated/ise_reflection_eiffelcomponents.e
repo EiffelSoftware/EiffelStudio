@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.EiffelComponents"
+
 external class
 	ISE_REFLECTION_EIFFELCOMPONENTS
 
@@ -16,46 +17,88 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen rename_clause: ISE_REFLECTION_RENAMECLAUSE is
-		external
-			"IL field signature :ISE.Reflection.RenameClause use ISE.Reflection.EiffelComponents"
-		alias
-			"RenameClause"
-		end
-
-	frozen redefine_clause: ISE_REFLECTION_REDEFINECLAUSE is
-		external
-			"IL field signature :ISE.Reflection.RedefineClause use ISE.Reflection.EiffelComponents"
-		alias
-			"RedefineClause"
-		end
-
-	frozen export_clause: ISE_REFLECTION_EXPORTCLAUSE is
-		external
-			"IL field signature :ISE.Reflection.ExportClause use ISE.Reflection.EiffelComponents"
-		alias
-			"ExportClause"
-		end
-
-	frozen select_clause: ISE_REFLECTION_SELECTCLAUSE is
-		external
-			"IL field signature :ISE.Reflection.SelectClause use ISE.Reflection.EiffelComponents"
-		alias
-			"SelectClause"
-		end
-
-	frozen eiffel_assembly_factory: ISE_REFLECTION_EIFFELASSEMBLYFACTORY is
-		external
-			"IL field signature :ISE.Reflection.EiffelAssemblyFactory use ISE.Reflection.EiffelComponents"
-		alias
-			"EiffelAssemblyFactory"
-		end
-
-	frozen undefine_clause: ISE_REFLECTION_UNDEFINECLAUSE is
+	frozen a_internal_undefine_clause: ISE_REFLECTION_UNDEFINECLAUSE is
 		external
 			"IL field signature :ISE.Reflection.UndefineClause use ISE.Reflection.EiffelComponents"
 		alias
-			"UndefineClause"
+			"_internal_UndefineClause"
+		end
+
+	get_rename_clause: ISE_REFLECTION_RENAMECLAUSE is
+		external
+			"IL signature (): ISE.Reflection.RenameClause use ISE.Reflection.EiffelComponents"
+		alias
+			"get_RenameClause"
+		end
+
+	get_redefine_clause: ISE_REFLECTION_REDEFINECLAUSE is
+		external
+			"IL signature (): ISE.Reflection.RedefineClause use ISE.Reflection.EiffelComponents"
+		alias
+			"get_RedefineClause"
+		end
+
+	frozen a_internal_export_clause: ISE_REFLECTION_EXPORTCLAUSE is
+		external
+			"IL field signature :ISE.Reflection.ExportClause use ISE.Reflection.EiffelComponents"
+		alias
+			"_internal_ExportClause"
+		end
+
+	get_eiffel_assembly_factory: ISE_REFLECTION_EIFFELASSEMBLYFACTORY is
+		external
+			"IL signature (): ISE.Reflection.EiffelAssemblyFactory use ISE.Reflection.EiffelComponents"
+		alias
+			"get_EiffelAssemblyFactory"
+		end
+
+	get_export_clause: ISE_REFLECTION_EXPORTCLAUSE is
+		external
+			"IL signature (): ISE.Reflection.ExportClause use ISE.Reflection.EiffelComponents"
+		alias
+			"get_ExportClause"
+		end
+
+	frozen a_internal_select_clause: ISE_REFLECTION_SELECTCLAUSE is
+		external
+			"IL field signature :ISE.Reflection.SelectClause use ISE.Reflection.EiffelComponents"
+		alias
+			"_internal_SelectClause"
+		end
+
+	frozen a_internal_rename_clause: ISE_REFLECTION_RENAMECLAUSE is
+		external
+			"IL field signature :ISE.Reflection.RenameClause use ISE.Reflection.EiffelComponents"
+		alias
+			"_internal_RenameClause"
+		end
+
+	get_undefine_clause: ISE_REFLECTION_UNDEFINECLAUSE is
+		external
+			"IL signature (): ISE.Reflection.UndefineClause use ISE.Reflection.EiffelComponents"
+		alias
+			"get_UndefineClause"
+		end
+
+	get_select_clause: ISE_REFLECTION_SELECTCLAUSE is
+		external
+			"IL signature (): ISE.Reflection.SelectClause use ISE.Reflection.EiffelComponents"
+		alias
+			"get_SelectClause"
+		end
+
+	frozen a_internal_eiffel_assembly_factory: ISE_REFLECTION_EIFFELASSEMBLYFACTORY is
+		external
+			"IL field signature :ISE.Reflection.EiffelAssemblyFactory use ISE.Reflection.EiffelComponents"
+		alias
+			"_internal_EiffelAssemblyFactory"
+		end
+
+	frozen a_internal_redefine_clause: ISE_REFLECTION_REDEFINECLAUSE is
+		external
+			"IL field signature :ISE.Reflection.RedefineClause use ISE.Reflection.EiffelComponents"
+		alias
+			"_internal_RedefineClause"
 		end
 
 feature -- Basic Operations

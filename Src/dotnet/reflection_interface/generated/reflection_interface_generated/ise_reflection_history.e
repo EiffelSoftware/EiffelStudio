@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.History"
+
 external class
 	ISE_REFLECTION_HISTORY
 
@@ -16,46 +17,88 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen assemblies_table: SYSTEM_COLLECTIONS_HASHTABLE is
+	get_type_found: BOOLEAN is
+		external
+			"IL signature (): System.Boolean use ISE.Reflection.History"
+		alias
+			"get_TypeFound"
+		end
+
+	frozen a_internal_assemblies_table: SYSTEM_COLLECTIONS_HASHTABLE is
 		external
 			"IL field signature :System.Collections.Hashtable use ISE.Reflection.History"
 		alias
-			"AssembliesTable"
+			"_internal_AssembliesTable"
 		end
 
-	frozen type_found: BOOLEAN is
-		external
-			"IL field signature :System.Boolean use ISE.Reflection.History"
-		alias
-			"TypeFound"
-		end
-
-	frozen search_for_type_result: ISE_REFLECTION_EIFFELCLASS is
+	frozen a_internal_search_for_type_result: ISE_REFLECTION_EIFFELCLASS is
 		external
 			"IL field signature :ISE.Reflection.EiffelClass use ISE.Reflection.History"
 		alias
-			"SearchForTypeResult"
+			"_internal_SearchForTypeResult"
 		end
 
-	frozen assembly_found: BOOLEAN is
-		external
-			"IL field signature :System.Boolean use ISE.Reflection.History"
-		alias
-			"AssemblyFound"
-		end
-
-	frozen types_table: SYSTEM_COLLECTIONS_HASHTABLE is
+	frozen a_internal_types_table: SYSTEM_COLLECTIONS_HASHTABLE is
 		external
 			"IL field signature :System.Collections.Hashtable use ISE.Reflection.History"
 		alias
-			"TypesTable"
+			"_internal_TypesTable"
 		end
 
-	frozen search_for_assembly_result: ISE_REFLECTION_EIFFELASSEMBLY is
+	frozen a_internal_assembly_found: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.History"
+		alias
+			"_internal_AssemblyFound"
+		end
+
+	get_assembly_found: BOOLEAN is
+		external
+			"IL signature (): System.Boolean use ISE.Reflection.History"
+		alias
+			"get_AssemblyFound"
+		end
+
+	get_types_table: SYSTEM_COLLECTIONS_HASHTABLE is
+		external
+			"IL signature (): System.Collections.Hashtable use ISE.Reflection.History"
+		alias
+			"get_TypesTable"
+		end
+
+	get_search_for_assembly_result: ISE_REFLECTION_EIFFELASSEMBLY is
+		external
+			"IL signature (): ISE.Reflection.EiffelAssembly use ISE.Reflection.History"
+		alias
+			"get_SearchForAssemblyResult"
+		end
+
+	get_assemblies_table: SYSTEM_COLLECTIONS_HASHTABLE is
+		external
+			"IL signature (): System.Collections.Hashtable use ISE.Reflection.History"
+		alias
+			"get_AssembliesTable"
+		end
+
+	frozen a_internal_search_for_assembly_result: ISE_REFLECTION_EIFFELASSEMBLY is
 		external
 			"IL field signature :ISE.Reflection.EiffelAssembly use ISE.Reflection.History"
 		alias
-			"SearchForAssemblyResult"
+			"_internal_SearchForAssemblyResult"
+		end
+
+	frozen a_internal_type_found: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.History"
+		alias
+			"_internal_TypeFound"
+		end
+
+	get_search_for_type_result: ISE_REFLECTION_EIFFELCLASS is
+		external
+			"IL signature (): ISE.Reflection.EiffelClass use ISE.Reflection.History"
+		alias
+			"get_SearchForTypeResult"
 		end
 
 feature -- Basic Operations

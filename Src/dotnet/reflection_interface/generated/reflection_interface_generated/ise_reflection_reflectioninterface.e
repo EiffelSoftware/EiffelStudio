@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.ReflectionInterface"
+
 external class
 	ISE_REFLECTION_REFLECTIONINTERFACE
 
@@ -19,39 +20,74 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen last_read_successful: BOOLEAN is
+	get_found: BOOLEAN is
 		external
-			"IL field signature :System.Boolean use ISE.Reflection.ReflectionInterface"
+			"IL signature (): System.Boolean use ISE.Reflection.ReflectionInterface"
 		alias
-			"LastReadSuccessful"
+			"get_Found"
 		end
 
-	frozen search_result: ISE_REFLECTION_EIFFELASSEMBLY is
-		external
-			"IL field signature :ISE.Reflection.EiffelAssembly use ISE.Reflection.ReflectionInterface"
-		alias
-			"SearchResult"
-		end
-
-	frozen found: BOOLEAN is
-		external
-			"IL field signature :System.Boolean use ISE.Reflection.ReflectionInterface"
-		alias
-			"Found"
-		end
-
-	frozen last_error: ISE_REFLECTION_ERRORINFO is
-		external
-			"IL field signature :ISE.Reflection.ErrorInfo use ISE.Reflection.ReflectionInterface"
-		alias
-			"LastError"
-		end
-
-	frozen error_messages: ISE_REFLECTION_REFLECTIONINTERFACEERRORMESSAGES is
+	frozen a_internal_error_messages: ISE_REFLECTION_REFLECTIONINTERFACEERRORMESSAGES is
 		external
 			"IL field signature :ISE.Reflection.ReflectionInterfaceErrorMessages use ISE.Reflection.ReflectionInterface"
 		alias
-			"ErrorMessages"
+			"_internal_ErrorMessages"
+		end
+
+	get_last_read_successful: BOOLEAN is
+		external
+			"IL signature (): System.Boolean use ISE.Reflection.ReflectionInterface"
+		alias
+			"get_LastReadSuccessful"
+		end
+
+	frozen a_internal_last_read_successful: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.ReflectionInterface"
+		alias
+			"_internal_LastReadSuccessful"
+		end
+
+	get_error_messages: ISE_REFLECTION_REFLECTIONINTERFACEERRORMESSAGES is
+		external
+			"IL signature (): ISE.Reflection.ReflectionInterfaceErrorMessages use ISE.Reflection.ReflectionInterface"
+		alias
+			"get_ErrorMessages"
+		end
+
+	get_search_result: ISE_REFLECTION_EIFFELASSEMBLY is
+		external
+			"IL signature (): ISE.Reflection.EiffelAssembly use ISE.Reflection.ReflectionInterface"
+		alias
+			"get_SearchResult"
+		end
+
+	frozen a_internal_last_error: ISE_REFLECTION_ERRORINFO is
+		external
+			"IL field signature :ISE.Reflection.ErrorInfo use ISE.Reflection.ReflectionInterface"
+		alias
+			"_internal_LastError"
+		end
+
+	frozen a_internal_found: BOOLEAN is
+		external
+			"IL field signature :System.Boolean use ISE.Reflection.ReflectionInterface"
+		alias
+			"_internal_Found"
+		end
+
+	frozen a_internal_search_result: ISE_REFLECTION_EIFFELASSEMBLY is
+		external
+			"IL field signature :ISE.Reflection.EiffelAssembly use ISE.Reflection.ReflectionInterface"
+		alias
+			"_internal_SearchResult"
+		end
+
+	get_last_error: ISE_REFLECTION_ERRORINFO is
+		external
+			"IL signature (): ISE.Reflection.ErrorInfo use ISE.Reflection.ReflectionInterface"
+		alias
+			"get_LastError"
 		end
 
 feature -- Basic Operations
@@ -84,13 +120,6 @@ feature -- Basic Operations
 			"EiffelType"
 		end
 
-	eiffel_assembly (xml_filename: STRING): ISE_REFLECTION_EIFFELASSEMBLY is
-		external
-			"IL signature (System.String): ISE.Reflection.EiffelAssembly use ISE.Reflection.ReflectionInterface"
-		alias
-			"EiffelAssembly"
-		end
-
 	type (a_type: SYSTEM_TYPE): ISE_REFLECTION_EIFFELCLASS is
 		external
 			"IL signature (System.Type): ISE.Reflection.EiffelClass use ISE.Reflection.ReflectionInterface"
@@ -110,6 +139,13 @@ feature -- Basic Operations
 			"IL signature (): System.Int32 use ISE.Reflection.ReflectionInterface"
 		alias
 			"HasWriteLockCode"
+		end
+
+	eiffel_assembly (xml_filename: STRING): ISE_REFLECTION_EIFFELASSEMBLY is
+		external
+			"IL signature (System.String): ISE.Reflection.EiffelAssembly use ISE.Reflection.ReflectionInterface"
+		alias
+			"EiffelAssembly"
 		end
 
 	support: ISE_REFLECTION_CODEGENERATIONSUPPORT is

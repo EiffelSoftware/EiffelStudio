@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.EiffelCodeGeneratorDictionary"
+
 external class
 	ISE_REFLECTION_EIFFELCODEGENERATORDICTIONARY
 
@@ -152,11 +153,11 @@ feature -- Basic Operations
 			"BasicOperationsFeatureClause"
 		end
 
-	create_none: STRING is
+	semi_colon: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
 		alias
-			"CreateNone"
+			"SemiColon"
 		end
 
 	signature_keyword: STRING is
@@ -192,6 +193,13 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
 		alias
 			"AccessFeatureClause"
+		end
+
+	create_none: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"CreateNone"
 		end
 
 	integer8_class: STRING is
@@ -250,11 +258,25 @@ feature -- Basic Operations
 			"ClosingRoundBracket"
 		end
 
+	initialization_feature_clause_exported_to_none: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"InitializationFeatureClauseExportedToNone"
+		end
+
 	real_class: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
 		alias
 			"RealClass"
+		end
+
+	do_keyword: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
+		alias
+			"DoKeyword"
 		end
 
 	double_class: STRING is
@@ -376,11 +398,11 @@ feature -- Basic Operations
 			"ExternalKeyword"
 		end
 
-	semi_colon: STRING is
+	il: STRING is
 		external
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
 		alias
-			"SemiColon"
+			"IL"
 		end
 
 	dashes: STRING is
@@ -402,13 +424,6 @@ feature -- Basic Operations
 			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
 		alias
 			"Static"
-		end
-
-	il: STRING is
-		external
-			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorDictionary"
-		alias
-			"IL"
 		end
 
 	binary_operators_feature_clause: STRING is

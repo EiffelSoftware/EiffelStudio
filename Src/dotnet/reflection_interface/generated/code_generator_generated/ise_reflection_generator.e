@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.Generator"
+
 external class
 	ISE_REFLECTION_GENERATOR
 
@@ -16,25 +17,46 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen eiffel_generator: ISE_REFLECTION_EIFFELCODEGENERATOR is
+	get_eiffel_generator_from_xml: ISE_REFLECTION_EIFFELCODEGENERATORFROMXML is
 		external
-			"IL field signature :ISE.Reflection.EiffelCodeGenerator use ISE.Reflection.Generator"
+			"IL signature (): ISE.Reflection.EiffelCodeGeneratorFromXml use ISE.Reflection.Generator"
 		alias
-			"EiffelGenerator"
+			"get_EiffelGeneratorFromXml"
 		end
 
-	frozen xml_generator: ISE_REFLECTION_XMLCODEGENERATOR is
-		external
-			"IL field signature :ISE.Reflection.XmlCodeGenerator use ISE.Reflection.Generator"
-		alias
-			"XmlGenerator"
-		end
-
-	frozen eiffel_generator_from_xml: ISE_REFLECTION_EIFFELCODEGENERATORFROMXML is
+	frozen a_internal_eiffel_generator_from_xml: ISE_REFLECTION_EIFFELCODEGENERATORFROMXML is
 		external
 			"IL field signature :ISE.Reflection.EiffelCodeGeneratorFromXml use ISE.Reflection.Generator"
 		alias
-			"EiffelGeneratorFromXml"
+			"_internal_EiffelGeneratorFromXml"
+		end
+
+	get_xml_generator: ISE_REFLECTION_XMLCODEGENERATOR is
+		external
+			"IL signature (): ISE.Reflection.XmlCodeGenerator use ISE.Reflection.Generator"
+		alias
+			"get_XmlGenerator"
+		end
+
+	get_eiffel_generator: ISE_REFLECTION_EIFFELCODEGENERATOR is
+		external
+			"IL signature (): ISE.Reflection.EiffelCodeGenerator use ISE.Reflection.Generator"
+		alias
+			"get_EiffelGenerator"
+		end
+
+	frozen a_internal_eiffel_generator: ISE_REFLECTION_EIFFELCODEGENERATOR is
+		external
+			"IL field signature :ISE.Reflection.EiffelCodeGenerator use ISE.Reflection.Generator"
+		alias
+			"_internal_EiffelGenerator"
+		end
+
+	frozen a_internal_xml_generator: ISE_REFLECTION_XMLCODEGENERATOR is
+		external
+			"IL field signature :ISE.Reflection.XmlCodeGenerator use ISE.Reflection.Generator"
+		alias
+			"_internal_XmlGenerator"
 		end
 
 feature -- Basic Operations

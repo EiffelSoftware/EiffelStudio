@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.XmlCodeGenerator"
+
 external class
 	ISE_REFLECTION_XMLCODEGENERATOR
 
@@ -19,27 +20,41 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen cache_handler: ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLER is
+	get_type_storer: ISE_REFLECTION_TYPESTORER is
 		external
-			"IL field signature :ISE.Reflection.EiffelAssemblyCacheHandler use ISE.Reflection.XmlCodeGenerator"
+			"IL signature (): ISE.Reflection.TypeStorer use ISE.Reflection.XmlCodeGenerator"
 		alias
-			"CacheHandler"
+			"get_TypeStorer"
 		end
 
-	frozen type_storer: ISE_REFLECTION_TYPESTORER is
+	frozen a_internal_type_storer: ISE_REFLECTION_TYPESTORER is
 		external
 			"IL field signature :ISE.Reflection.TypeStorer use ISE.Reflection.XmlCodeGenerator"
 		alias
-			"TypeStorer"
+			"_internal_TypeStorer"
+		end
+
+	get_cache_handler: ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLER is
+		external
+			"IL signature (): ISE.Reflection.EiffelAssemblyCacheHandler use ISE.Reflection.XmlCodeGenerator"
+		alias
+			"get_CacheHandler"
+		end
+
+	frozen a_internal_cache_handler: ISE_REFLECTION_EIFFELASSEMBLYCACHEHANDLER is
+		external
+			"IL field signature :ISE.Reflection.EiffelAssemblyCacheHandler use ISE.Reflection.XmlCodeGenerator"
+		alias
+			"_internal_CacheHandler"
 		end
 
 feature -- Basic Operations
 
-	start_assembly_generation (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY) is
+	end_assembly_generation is
 		external
-			"IL signature (ISE.Reflection.EiffelAssemblyFactory): System.Void use ISE.Reflection.XmlCodeGenerator"
+			"IL signature (): System.Void use ISE.Reflection.XmlCodeGenerator"
 		alias
-			"StartAssemblyGeneration"
+			"EndAssemblyGeneration"
 		end
 
 	make_xml_code_generator is
@@ -49,11 +64,11 @@ feature -- Basic Operations
 			"MakeXmlCodeGenerator"
 		end
 
-	end_assembly_generation is
+	start_assembly_generation (an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLYFACTORY) is
 		external
-			"IL signature (): System.Void use ISE.Reflection.XmlCodeGenerator"
+			"IL signature (ISE.Reflection.EiffelAssemblyFactory): System.Void use ISE.Reflection.XmlCodeGenerator"
 		alias
-			"EndAssemblyGeneration"
+			"StartAssemblyGeneration"
 		end
 
 	replace_type (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS) is

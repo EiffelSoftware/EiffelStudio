@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.EiffelCodeGeneratorFromXml"
+
 external class
 	ISE_REFLECTION_EIFFELCODEGENERATORFROMXML
 
@@ -16,25 +17,46 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY is
+	get_eiffel_code_generator: ISE_REFLECTION_EIFFELCODEGENERATOR is
+		external
+			"IL signature (): ISE.Reflection.EiffelCodeGenerator use ISE.Reflection.EiffelCodeGeneratorFromXml"
+		alias
+			"get_EiffelCodeGenerator"
+		end
+
+	get_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY is
+		external
+			"IL signature (): ISE.Reflection.EiffelAssembly use ISE.Reflection.EiffelCodeGeneratorFromXml"
+		alias
+			"get_EiffelAssembly"
+		end
+
+	frozen a_internal_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY is
 		external
 			"IL field signature :ISE.Reflection.EiffelAssembly use ISE.Reflection.EiffelCodeGeneratorFromXml"
 		alias
-			"EiffelAssembly"
+			"_internal_EiffelAssembly"
 		end
 
-	frozen eiffel_code_generator: ISE_REFLECTION_EIFFELCODEGENERATOR is
-		external
-			"IL field signature :ISE.Reflection.EiffelCodeGenerator use ISE.Reflection.EiffelCodeGeneratorFromXml"
-		alias
-			"EiffelCodeGenerator"
-		end
-
-	frozen assembly_description_filename: STRING is
+	frozen a_internal_assembly_description_filename: STRING is
 		external
 			"IL field signature :System.String use ISE.Reflection.EiffelCodeGeneratorFromXml"
 		alias
-			"AssemblyDescriptionFilename"
+			"_internal_AssemblyDescriptionFilename"
+		end
+
+	frozen a_internal_eiffel_code_generator: ISE_REFLECTION_EIFFELCODEGENERATOR is
+		external
+			"IL field signature :ISE.Reflection.EiffelCodeGenerator use ISE.Reflection.EiffelCodeGeneratorFromXml"
+		alias
+			"_internal_EiffelCodeGenerator"
+		end
+
+	get_assembly_description_filename: STRING is
+		external
+			"IL signature (): System.String use ISE.Reflection.EiffelCodeGeneratorFromXml"
+		alias
+			"get_AssemblyDescriptionFilename"
 		end
 
 feature -- Basic Operations

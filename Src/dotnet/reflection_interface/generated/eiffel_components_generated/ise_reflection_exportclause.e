@@ -1,6 +1,7 @@
 indexing
-	Generator: "Eiffel Emitter 2.6b2"
+	Generator: "Eiffel Emitter 2.7b2"
 	external_name: "ISE.Reflection.ExportClause"
+
 external class
 	ISE_REFLECTION_EXPORTCLAUSE
 
@@ -19,11 +20,18 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	frozen exportation_list: SYSTEM_COLLECTIONS_ARRAYLIST is
+	frozen a_internal_exportation_list: SYSTEM_COLLECTIONS_ARRAYLIST is
 		external
 			"IL field signature :System.Collections.ArrayList use ISE.Reflection.ExportClause"
 		alias
-			"ExportationList"
+			"_internal_ExportationList"
+		end
+
+	get_exportation_list: SYSTEM_COLLECTIONS_ARRAYLIST is
+		external
+			"IL signature (): System.Collections.ArrayList use ISE.Reflection.ExportClause"
+		alias
+			"get_ExportationList"
 		end
 
 feature -- Basic Operations

@@ -60,7 +60,7 @@ creation
 
 feature {NONE} -- Creation
 
-	make (a_list: SCROLL_LIST; man: BOOLEAN) is
+	make (a_list: SCROLL_LIST; man, is_fixed: BOOLEAN) is
 			-- Create a motif list, get screen_object value of srolled
 			-- window which contains current list.
 		local
@@ -70,7 +70,7 @@ feature {NONE} -- Creation
 			ext_name := a_list.identifier.to_c;
 			list_screen_object := create_scroll_list ($ext_name,
 					parent_screen_object (a_list, widget_index),
-					man);
+					man, is_fixed);
 			screen_object := xt_parent (list_screen_object);
 			a_list.set_list_imp (Current);
 			a_list.set_font_imp (Current);
@@ -241,7 +241,7 @@ feature {NONE}
 feature {NONE} -- External features
 
 	create_scroll_list (l_name: POINTER; scr_obj: POINTER;
-			man: BOOLEAN): POINTER is
+			man: BOOLEAN; is_fixed: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

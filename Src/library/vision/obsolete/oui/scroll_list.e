@@ -28,18 +28,36 @@ inherit
 
 creation
 
-	make, make_unmanaged
+	make, make_unmanaged, make_fixed_size, make_fixed_size_unmanaged
 
 feature {NONE} -- Creation
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a scrolled list with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
+			-- Scroll list will attempt to resize if entries
+			-- are added.
 		require
 			valid_name: a_name /= Void;
 			valid_parent: a_parent /= Void
 		do
-			create_ev_widget (a_name, a_parent, True)
+			create_ev_widget (a_name, a_parent, True, False)
+		ensure
+			parent_set: parent = a_parent;
+			identifier_set: identifier.is_equal (a_name);
+			managed: managed
+		end;
+
+	make_fixed_size (a_name: STRING; a_parent: COMPOSITE) is
+			-- Create a scrolled list with `a_name' as identifier,
+			-- `a_parent' as parent and call `set_default'.
+			-- Scroll list will not resize if entries
+			-- are added.
+		require
+			valid_name: a_name /= Void;
+			valid_parent: a_parent /= Void
+		do
+			create_ev_widget (a_name, a_parent, True, True)
 		ensure
 			parent_set: parent = a_parent;
 			identifier_set: identifier.is_equal (a_name);
@@ -49,25 +67,44 @@ feature {NONE} -- Creation
 	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create an unmanaged scrolled list with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
+			-- Scroll list will attempt to resize if entries
+			-- are added.
 		require
 			valid_name: a_name /= Void;
 			valid_parent: a_parent /= Void
 		do
-			create_ev_widget (a_name, a_parent, False)
+			create_ev_widget (a_name, a_parent, False, False)
 		ensure
 			parent_set: parent = a_parent;
 			identifier_set: identifier.is_equal (a_name);
 			not_managed: not managed
 		end;
 
-	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+	make_fixed_size_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+			-- Create an unmanaged scrolled list with `a_name' as identifier,
+			-- `a_parent' as parent and call `set_default'.
+			-- Scroll list will not resize if entries
+			-- are added.
+		require
+			valid_name: a_name /= Void;
+			valid_parent: a_parent /= Void
+		do
+			create_ev_widget (a_name, a_parent, False, True)
+		ensure
+			parent_set: parent = a_parent;
+			identifier_set: identifier.is_equal (a_name);
+			not_managed: not managed
+		end;
+
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; 
+			man: BOOLEAN; is_fixed: BOOLEAN) is
 			-- Create a scrolled list with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier := clone (a_name);
-			implementation := toolkit.scroll_list (Current, man);
+			implementation := toolkit.scroll_list (Current, man, is_fixed);
 			list_imp.set_single_selection;
 		end;
 

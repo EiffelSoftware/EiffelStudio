@@ -194,10 +194,10 @@ feature
 			!! Result.make (a_scale, managed)
 		end; -- scale
 
-	scroll_list (a_list: SCROLL_LIST; managed: BOOLEAN): SCROLL_L_M is
+	scroll_list (a_list: SCROLL_LIST; managed, is_fixed: BOOLEAN): SCROLL_L_M is
 			-- Motif implementation of `a_list'
 		do
-			!! Result.make (a_list, managed)
+			!! Result.make (a_list, managed, is_fixed)
 		end; -- scroll_list
 
 	scrollbar (a_scrollbar: SCROLLBAR; managed: BOOLEAN): SCROLLBAR_M is

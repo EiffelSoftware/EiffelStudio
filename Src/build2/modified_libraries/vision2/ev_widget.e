@@ -380,15 +380,7 @@ feature {EV_ANY_I} -- Implementation
 	implementation: EV_WIDGET_I
 			-- Responsible for interaction with native graphics toolkit.
 			-- See `{EV_ANY}.implementation'.
-
-feature {NONE} -- Implementation
-
-	Default_pixmaps: EV_STOCK_PIXMAPS is
-			-- Default pixmaps and cursors.
-		once
-			create Result
-		end
-
+			
 invariant
 	pointer_position_not_void: is_usable and is_show_requested implies
 		pointer_position /= Void

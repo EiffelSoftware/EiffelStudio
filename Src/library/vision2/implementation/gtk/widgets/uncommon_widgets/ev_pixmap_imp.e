@@ -149,10 +149,10 @@ feature -- Element change
 			-- exceptions.
 			--|FIXME do this!
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
-			create a_gs.make (file_name)
-			c_ev_load_pixmap ($Current, a_gs.item, $update_fields)
+			create a_cs.make (file_name)
+			c_ev_load_pixmap ($Current, a_cs.item, $update_fields)
 		end
 
 	set_with_default is

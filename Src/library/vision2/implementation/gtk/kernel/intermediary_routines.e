@@ -461,12 +461,12 @@ feature {EV_ANY_IMP} -- Pick and Drop intermediary agent routines
 	signal_emit_stop_intermediary (a_c_object: POINTER; signal: STRING) is
 			-- Emit stop signal 
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 			a_pick_and_dropable_imp: EV_PICK_AND_DROPABLE_IMP
 		do
-			create a_gs.make (signal)
+			create a_cs.make (signal)
 			a_pick_and_dropable_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_emit_stop_by_name (a_c_object, a_gs.item)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_emit_stop_by_name (a_c_object, a_cs.item)
 		end
 
 	add_grab_cb_intermediary (a_c_object: POINTER) is

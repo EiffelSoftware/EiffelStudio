@@ -7,10 +7,10 @@ feature -- Output
 			-- Use puts to print a string on the console.
 			-- This can safely be used inside `dispose'.
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
-			create a_gs.make (s)
-			puts (a_gs.item)
+			create a_cs.make (s)
+			puts (a_cs.item)
 		end
 
 	puts (s: POINTER) is

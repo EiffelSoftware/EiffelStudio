@@ -125,12 +125,12 @@ feature {EV_ANY_I} -- Event handling
 			an_agent_not_void: an_agent /= Void
 		local
 			a_connection_id: INTEGER
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
-			create a_gs.make (a_signal_name)
+			create a_cs.make (a_signal_name)
 			a_connection_id := feature {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect_true (
 				c_object,
-				a_gs.item,
+				a_cs.item,
 				an_agent
 			)
 		end
@@ -149,19 +149,19 @@ feature {EV_ANY_I} -- Event handling
 			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_agent_not_void: an_agent /= Void
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
-			create a_gs.make (a_signal_name)
+			create a_cs.make (a_signal_name)
 			if translate /= Void then
 				last_signal_connection_id := feature {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
 					a_c_object,
-					a_gs.item,
+					a_cs.item,
 					agent (App_implementation.gtk_marshal).translate_and_call (an_agent, translate, ?, ?)
 				)
 			else
 				last_signal_connection_id := feature {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect (
 					a_c_object,
-					a_gs.item,
+					a_cs.item,
 					an_agent
 				)
 			end

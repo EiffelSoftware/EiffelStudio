@@ -31,10 +31,10 @@ feature {NONE} -- Implementation
 	load is
 			-- Load font specified in `full_name'.
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
-			create a_gs.make (full_name)
-			c_object := feature {EV_GTK_EXTERNALS}.gdk_font_load (a_gs.item)
+			create a_cs.make (full_name)
+			c_object := feature {EV_GTK_EXTERNALS}.gdk_font_load (a_cs.item)
 		end
 
 	destroy is

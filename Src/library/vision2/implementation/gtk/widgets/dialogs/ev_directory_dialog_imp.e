@@ -27,13 +27,13 @@ feature {NONE} -- Initialization
 	make (an_interface: like interface) is
 			-- Create a window with a parent.
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
 			base_make (an_interface)
-			create a_gs.make ("Select directory")
+			create a_cs.make ("Select directory")
 			set_c_object (
 				feature {EV_GTK_EXTERNALS}.gtk_file_selection_new (
-					a_gs.item
+					a_cs.item
 				)
 			)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (
@@ -101,17 +101,17 @@ feature -- Element change
 	set_start_directory (a_path: STRING) is
 			-- Make `a_path' the base directory.
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
 			start_directory := a_path
 			if start_directory.item (start_directory.count) /= '/' then
 				-- The path has no trailing / so we add one to internal string.
 				start_directory.append ("/")
 			end
-			create a_gs.make (start_directory)
+			create a_cs.make (start_directory)
 			feature {EV_GTK_EXTERNALS}.gtk_file_selection_set_filename (
 				c_object,
-				a_gs.item
+				a_cs.item
 			)
 		end
 

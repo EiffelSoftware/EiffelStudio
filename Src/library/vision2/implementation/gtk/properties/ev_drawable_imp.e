@@ -333,17 +333,17 @@ feature -- Drawing operations
 	draw_text (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with left of baseline at (`x', `y') using `font'.
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
 			if drawable /= NULL then
-				create a_gs.make (a_text)
+				create a_cs.make (a_text)
 				feature {EV_GTK_EXTERNALS}.gdk_draw_string (
 					drawable,
 					internal_font_imp.c_object,
 					gc,
 					x,
 					y,
-					a_gs.item
+					a_cs.item
 				)
 				flush
 			end
@@ -352,17 +352,17 @@ feature -- Drawing operations
 	draw_text_top_left (x, y: INTEGER; a_text: STRING) is
 			-- Draw `a_text' with top left corner at (`x', `y') using `font'.
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
 			if drawable /= NULL then
-				create a_gs.make (a_text)
+				create a_cs.make (a_text)
 				feature {EV_GTK_EXTERNALS}.gdk_draw_string (
 					drawable,
 					internal_font_imp.c_object,
 					gc,
 					x,
 					y + internal_font_ascent,
-					a_gs.item
+					a_cs.item
 				)
 				flush
 			end

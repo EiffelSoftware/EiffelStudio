@@ -24,10 +24,10 @@ feature {NONE} -- Initialization
 	textable_imp_initialize is
 			-- Create a GtkLabel to display the text.
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
-			create a_gs.make ("")
-			text_label := feature {EV_GTK_EXTERNALS}.gtk_label_new (a_gs.item)
+			create a_cs.make ("")
+			text_label := feature {EV_GTK_EXTERNALS}.gtk_label_new (a_cs.item)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
 			feature {EV_GTK_EXTERNALS}.gtk_misc_set_alignment (text_label, 0.0, 0.5)
 		end
@@ -91,20 +91,20 @@ feature -- Element change
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
-			create a_gs.make (a_text)
-			feature {EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_gs.item)
+			create a_cs.make (a_text)
+			feature {EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_cs.item)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (text_label)
 		end
 
 	remove_text is
 			-- Assign `Void' to `text'.
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
-			create a_gs.make ("")
-			feature {EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_gs.item)
+			create a_cs.make ("")
+			feature {EV_GTK_EXTERNALS}.gtk_label_set_text (text_label, a_cs.item)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (text_label)
 		end
 	

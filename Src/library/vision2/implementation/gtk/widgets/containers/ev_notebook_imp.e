@@ -192,17 +192,17 @@ feature -- Element change
 			-- Assign `a_text' to the label for `an_item'.
 		local
 			item_imp: EV_WIDGET_IMP
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
 			item_imp ?= an_item.implementation
 			check
 				an_item_has_implementation: item_imp /= Void
 			end
-			create a_gs.make (a_text)
+			create a_cs.make (a_text)
 			feature {EV_GTK_EXTERNALS}.gtk_notebook_set_tab_label_text (
 				c_object,
 				item_imp.c_object,
-				a_gs.item
+				a_cs.item
 			)
 		end
 

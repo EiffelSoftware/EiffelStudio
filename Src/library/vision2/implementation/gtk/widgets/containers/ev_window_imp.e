@@ -328,15 +328,15 @@ feature -- Element change
 			-- Set `title' to `new_title'.
 		local
 			a_title: STRING
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
 			a_title := new_title
 			if a_title.is_equal ("") then
 				-- Some window managers do not like empty strings as titles and show it as an error.
 				a_title := "%T"
 			end
-			create a_gs.make (a_title)
-			feature {EV_GTK_EXTERNALS}.gtk_window_set_title (c_object, a_gs.item)
+			create a_cs.make (a_title)
+			feature {EV_GTK_EXTERNALS}.gtk_window_set_title (c_object, a_cs.item)
 
 			-- Make sure the gtk window has a corresponding gdk window
 			if not has_struct_flag (c_object, feature {EV_GTK_EXTERNALS}.GTK_REALIZED_ENUM) then
@@ -349,14 +349,14 @@ feature -- Element change
 		local
 			mb_imp: EV_MENU_BAR_IMP
 			menu_imp: EV_MENU_IMP
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
 			menu_bar := a_menu_bar
 			mb_imp ?= menu_bar.implementation
 			mb_imp.set_parent_window_imp (Current)
 			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (vbox, mb_imp.list_widget, False, True, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_box_reorder_child (vbox, mb_imp.list_widget, 0)
-			create a_gs.make ("activate_item")
+			create a_cs.make ("activate_item")
 			from
 				menu_bar.start
 			until
@@ -365,7 +365,7 @@ feature -- Element change
 				menu_imp ?= menu_bar.item.implementation
 				if menu_imp /= Void and then menu_imp.key /= 0 then
 					feature {EV_GTK_EXTERNALS}.gtk_widget_add_accelerator (menu_imp.c_object,
-						a_gs.item,
+						a_cs.item,
 						accel_group,
 						menu_imp.key,
 						feature {EV_GTK_EXTERNALS}.gdk_mod1_mask_enum,
@@ -521,21 +521,21 @@ feature {NONE} -- Implementation
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
 			Precursor (a_key, a_key_string, a_key_press)
 			if focus_widget /= Void and then a_key /= Void and then focus_widget.has_focus then
 					-- Used to disable certain key behavior such as Tab focus.
 				if a_key_press then
 					if focus_widget.default_key_processing_blocked (a_key) then
-						create a_gs.make ("key-press-event")
-						feature {EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_gs.item)
+						create a_cs.make ("key-press-event")
+						feature {EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				else
 					if focus_widget.default_key_processing_blocked (a_key) then
-						create a_gs.make ("key-release-event")
-						feature {EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_gs.item)
+						create a_cs.make ("key-release-event")
+						feature {EV_GTK_EXTERNALS}.signal_emit_stop_by_name (c_object, a_cs.item)
 						focus_widget.on_key_event (a_key, a_key_string, a_key_press)
 					end
 				end	

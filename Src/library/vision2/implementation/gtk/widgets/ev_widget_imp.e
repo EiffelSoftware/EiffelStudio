@@ -633,12 +633,12 @@ feature {EV_ANY_IMP} -- Implementation
 
 	aux_info_struct: POINTER is
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
-			create a_gs.make ("gtk-aux-info")
+			create a_cs.make ("gtk-aux-info")
 			Result := feature {EV_GTK_EXTERNALS}.gtk_object_get_data (
 				c_object,
-				a_gs.item
+				a_cs.item
 			)
 		end
 		

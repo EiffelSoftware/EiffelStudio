@@ -66,21 +66,21 @@ feature -- Status setting
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		local
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
-			create a_gs.make (a_text)
-			feature {EV_GTK_EXTERNALS}.gtk_entry_set_text (entry_widget, a_gs.item)
+			create a_cs.make (a_text)
+			feature {EV_GTK_EXTERNALS}.gtk_entry_set_text (entry_widget, a_cs.item)
 		end
 
 	append_text (txt: STRING) is
 			-- Append `txt' to the end of the text.
 		local
 			temp_caret_pos: INTEGER
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
 			temp_caret_pos := caret_position
-			create a_gs.make (txt)
-			feature {EV_GTK_EXTERNALS}.gtk_entry_append_text (entry_widget, a_gs.item)
+			create a_cs.make (txt)
+			feature {EV_GTK_EXTERNALS}.gtk_entry_append_text (entry_widget, a_cs.item)
 			set_caret_position (temp_caret_pos)
 		end
 	
@@ -88,11 +88,11 @@ feature -- Status setting
 			-- Prepend `txt' to the end of the text.
 		local
 			temp_caret_pos: INTEGER
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
 			temp_caret_pos := caret_position
-			create a_gs.make (txt)
-			feature {EV_GTK_EXTERNALS}.gtk_entry_prepend_text (entry_widget, a_gs.item)
+			create a_cs.make (txt)
+			feature {EV_GTK_EXTERNALS}.gtk_entry_prepend_text (entry_widget, a_cs.item)
 			set_caret_position (temp_caret_pos)
 		end
 		
@@ -190,6 +190,7 @@ feature -- Status report
 	maximum_character_width: INTEGER is
 			-- Maximum width of a single character in `Current'.
 		do
+			Result := font.string_width ("W")
 		end
 
 	clipboard_content: STRING is
@@ -224,7 +225,8 @@ feature -- Resizing
 	set_minimum_width_in_characters (nb: INTEGER) is
 			-- Make `nb' characters visible on one line.
 		do
-			check not_implemented: False end
+			set_minimum_width (nb * maximum_character_width + 10)
+				-- 10 = size of handle
 		end
 
 feature -- Basic operation
@@ -233,13 +235,13 @@ feature -- Basic operation
 			-- Insert `txt' at the current position.
 		local
 			pos: INTEGER
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
 			pos := caret_position - 1
-			create a_gs.make (txt)
+			create a_cs.make (txt)
 			feature {EV_GTK_EXTERNALS}.gtk_editable_insert_text (
 				entry_widget,
-				a_gs.item,
+				a_cs.item,
 				txt.count,
 				$pos
 			)

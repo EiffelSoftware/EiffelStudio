@@ -813,10 +813,10 @@ feature {EV_TREE_NODE_IMP} -- Implementation
 	insert_ctree_node (a_item_imp: EV_TREE_NODE_IMP; par_node, a_sibling: POINTER): POINTER is
 		local
 			text_ptr: POINTER
-			a_gs: GEL_STRING
+			a_cs: C_STRING
 		do
-			create a_gs.make (a_item_imp.text)
-			text_ptr := a_gs.item
+			create a_cs.make (a_item_imp.text)
+			text_ptr := a_cs.item
 			Result := feature {EV_GTK_EXTERNALS}.gtk_ctree_insert_node (
 				list_widget,
 				par_node,

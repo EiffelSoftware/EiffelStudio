@@ -53,7 +53,6 @@ feature {NONE}
 							save_workbench_file;
 							finish_freezing;
 							error_window.put_string ("System recompiled%N");
-							error_window.display;
 						end;
 					end;
 					restore_cursors;
@@ -71,6 +70,7 @@ feature {NONE}
 					warner.custom_call (Current, l_Specify_ace,
 						"Choose", "Template", "Cancel");
 				end;
+				error_window.display;
 			elseif argument = name_chooser then
 				!!project_dir.make (name_chooser.selected_file);
 				if project_dir.valid then

@@ -215,20 +215,20 @@ feature -- Type check, byte code and dead code removal
 					obs_warn.set_feature (context.a_feature);
 					Error_handler.insert_warning (obs_warn);
 				end;
-				if context.level4 and then context.check_for_vape then
-					-- In precondition and checking for vape
-					context_export := context.a_feature.export_status;
-					feature_export := a_feature.export_status;
-					if 
-						not a_feature.feature_name.is_equal ("void") and then
-						not context_export.is_subset (feature_export) 
-					then
-						!!vape;
-						context.init_error (vape);
-						vape.set_exported_feature (a_feature);
-						Error_handler.insert_error (vape);
-					end;
-				end;
+--				if context.level4 and then context.check_for_vape then
+--					-- In precondition and checking for vape
+--					context_export := context.a_feature.export_status;
+--					feature_export := a_feature.export_status;
+--					if 
+--						not a_feature.feature_name.is_equal ("void") and then
+--						not context_export.is_subset (feature_export) 
+--					then
+--						!!vape;
+--						context.init_error (vape);
+--						vape.set_exported_feature (a_feature);
+--						Error_handler.insert_error (vape);
+--					end;
+--				end;
 					-- Access managment
 				access_b := a_feature.access (Result.type_i);
 				context.access_line.insert (access_b);

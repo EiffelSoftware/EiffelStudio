@@ -1532,6 +1532,7 @@ end;
 							temp := a_class.class_name.duplicate;
 							temp.to_upper;
 						io.error.putstring (temp);
+						io.error.new_line;
 	
 						a_class.generate_descriptor_tables;
 					end;
@@ -3216,7 +3217,7 @@ feature -- Conveniences
 	reset_system_level_options is
 		do
 			remover_off := False;
-			code_replication_off := False;
+			code_replication_off := True;
 			exception_stack_managed := False; 
 		end;
 

@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			non_void_name: record_name /= Void
 			valid_name: not record_name.empty
 		do
-			create Result.make (0)
+			create Result.make (100)
 
 			Result.append ("c_size_of_")
 			Result.append (name_for_feature (record_name))
@@ -136,7 +136,7 @@ feature {NONE} -- Implementation
 
 			Result.set_effective
 
-			create body.make (0)
+			create body.make (1000)
 
 			-- Result := `a_macro_accesser_name' (item)
 
@@ -186,13 +186,12 @@ feature {NONE} -- Implementation
 			an_argument_name, an_argument: STRING
 		do
 			create Result.make
-			create body.make (0)
+			create body.make (1000)
 
-			create a_name.make (0)
-			a_name.append ("set_")
-			a_name.append (name_for_feature_with_keyword_check (a_field_descriptor.name))
+			create a_name.make (1000)
+			a_name.append (name_for_feature_with_keyword_check ("set_" + a_field_descriptor.name))
 
-			create an_argument_name.make (0)
+			create an_argument_name.make (100)
 			an_argument_name.append ("a_")
 			an_argument_name.append (name_for_feature_with_keyword_check (a_field_descriptor.name))
 
@@ -202,7 +201,7 @@ feature {NONE} -- Implementation
 			a_data_type_visitor.visit (a_field_descriptor.data_type)
 
 			if a_data_type_visitor.is_array_basic_type then
-				create a_local_var.make (0)
+				create a_local_var.make (100)
 				a_local_var.append ("any: ANY")
 				body.append (tab_tab_tab)
 				body.append ("any := ")
@@ -213,7 +212,7 @@ feature {NONE} -- Implementation
 				Result.add_local_variable (a_local_var)
 			end
 
-			create an_argument.make (0)
+			create an_argument.make (100)
 			an_argument.append (an_argument_name)
 			an_argument.append (Colon)
 			an_argument.append (Space)
@@ -221,7 +220,7 @@ feature {NONE} -- Implementation
 		
 			Result.add_argument (an_argument)
 
-			create a_comment.make (0)
+			create a_comment.make (100)
 			a_comment.append ("Set ")
 			a_comment.append (Back_quote)
 			a_comment.append (name_for_feature_with_keyword_check (a_field_descriptor.name))
@@ -308,7 +307,7 @@ feature {NONE} -- Implementation
 
 			Result.set_result_type (a_data_visitor.eiffel_type)
 
-			create body.make (0)
+			create body.make (1000)
 			body.append (tab_tab_tab)
 			body.append (Double_quote)
 			body.append ("C++")
@@ -363,12 +362,12 @@ feature {NONE} -- Implementation
 			create a_data_visitor
 			a_data_visitor.visit (a_field_descriptor.data_type)
 
-			create an_argument.make (0)
+			create an_argument.make (100)
 			an_argument.append ("arg2")
 			an_argument.append (Colon)
 			an_argument.append (Space)
 
-			create body.make (0)
+			create body.make (1000)
 			body.append (tab_tab_tab)
 			body.append (Double_quote)
 			body.append ("C++")
@@ -446,7 +445,7 @@ feature {NONE} -- Implementation
 			Result.set_result_type (Integer_type)
 			Result.set_comment ("Size of structure")
 
-			create body.make (0)
+			create body.make (1000)
 
 			body.append (tab_tab_tab)
 			body.append (Result_keyword)
@@ -476,7 +475,7 @@ feature {NONE} -- Implementation
 			Result.set_name (an_external_size_name)
 			Result.set_result_type (Integer_type)
 
-			create body.make (0)
+			create body.make (1000)
 			body.append (tab_tab_tab)
 			body.append (Double_quote)
 			body.append ("C")

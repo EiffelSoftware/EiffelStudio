@@ -33,12 +33,12 @@ feature {NONE} -- Initialization
 			getter_or_setter: cp_getter = Void implies cp_setter /= Void
 			getter_or_setter: cp_setter = Void implies cp_getter /= Void
 		do
-			dotnet_name := dn
-			is_public := pub
-			is_static := stat
+			n := dn
+			p := pub
+			t := stat
 			entity_make (dn, pub, decl_type)
-			getter := cp_getter
-			setter := cp_setter
+			g := cp_getter
+			s := cp_setter
 		ensure
 			dotnet_name_set: dotnet_name = dn
 			getter_set: getter = cp_getter
@@ -60,12 +60,17 @@ feature -- ConsumerWrapper functions
 			Result := True
 		end
 		
-	is_public: BOOLEAN
+	is_public: BOOLEAN is
 			-- Is `Current' public.
+		do
+			Result := p
+		end
 			
-	is_static: BOOLEAN
+	is_static: BOOLEAN is
 			-- Is `Current' static.
-
+		do
+			Result := t
+		end
 
 feature -- Access
 
@@ -81,13 +86,39 @@ feature -- Access
 			end
 		end
 
-	dotnet_name: STRING
+	dotnet_name: STRING is
 			-- .NET property name
+		do
+			Result := n
+		end
 
-	getter: CONSUMED_FUNCTION
+	getter: CONSUMED_FUNCTION is
 			-- Property getter function
+		do
+			Result := g
+		end
 	
-	setter: CONSUMED_PROCEDURE
+	setter: CONSUMED_PROCEDURE is
 			-- Property setter procedure
+		do
+			Result := s
+		end
+
+feature {NONE} -- Access
+
+	n: like dotnet_name
+			-- Internal data for `dotnet_name'.
+	
+	g: like getter
+			-- Internal data for `getter'.
+	
+	s: like setter
+			-- Internal data for `setter'.
+	
+	p: like is_public
+			-- Internal data for `is_public'.
+	
+	t: like is_static
+			-- Internal data for `is_static'.
 
 end -- class CONSUMED_PROPERTY

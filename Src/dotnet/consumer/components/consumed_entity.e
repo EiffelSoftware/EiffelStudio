@@ -18,9 +18,9 @@ feature {NONE} -- Initialization
 			valid_eiffel_name: not en.is_empty
 			a_type_not_void: a_type /= Void
 		do
-			eiffel_name := en
+			e := en
 			set_is_public (pub)
-			declared_type := a_type
+			d := a_type
 		ensure
 			eiffel_name_set: eiffel_name = en
 			is_public_set: is_public = pub
@@ -29,8 +29,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	eiffel_name: STRING
+	eiffel_name: STRING is
 			-- Eiffel entity name
+		do
+			Result := e
+		end
 			
 	dotnet_name: STRING is
 			-- Dotnet name of entity
@@ -39,8 +42,11 @@ feature -- Access
 			dotnet_name_not_void: dotnet_name /= Void
 		end
 
-	declared_type: CONSUMED_REFERENCED_TYPE
+	declared_type: CONSUMED_REFERENCED_TYPE is
 			-- Type in which feature is written/declared.
+		do
+			Result := d
+		end
 		
 	arguments: ARRAY [CONSUMED_ARGUMENT] is
 			-- Arguments if any.
@@ -213,6 +219,14 @@ feature -- Settings
 			is_public_set: is_public = pub
 		end
 		
+feature {NONE} -- Access
+
+	e: like eiffel_name
+			-- Internal data for `eiffel_name'.
+			
+	d: like declared_type
+			-- Internal data for `declared_type'.
+
 invariant
 	non_void_eiffel_name: eiffel_name /= Void
 	valid_eiffel_name: not eiffel_name.is_empty

@@ -34,12 +34,12 @@ feature {NONE} -- Initialization
 			a_type_not_void: a_type /= Void
 		do
 			method_make (en, dn, args, froz, static, defer, pub, ns, virt, poe, a_type)
-			return_type := ret
+			r := ret
 			if inf then
-				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_infix
+				f := f | feature {FEATURE_ATTRIBUTE}.Is_infix
 			end
 			if pref then
-				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_prefix				
+				f := f | feature {FEATURE_ATTRIBUTE}.Is_prefix				
 			end
 		ensure
 			eiffel_name_set: eiffel_name = en
@@ -60,27 +60,35 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	return_type: CONSUMED_REFERENCED_TYPE
+	return_type: CONSUMED_REFERENCED_TYPE is
 			-- Function return type
+		do
+			Result := r
+		end
 
 feature -- Status report
 
 	is_infix: BOOLEAN is
 			-- Is function an infix feature?
 		do
-			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_infix =
+			Result := f & feature {FEATURE_ATTRIBUTE}.Is_infix =
 				feature {FEATURE_ATTRIBUTE}.Is_infix
 		end
 			
 	is_prefix: BOOLEAN is
 			-- Is function a prefix feature?
 		do
-			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_prefix = 
+			Result := f & feature {FEATURE_ATTRIBUTE}.Is_prefix = 
 				feature {FEATURE_ATTRIBUTE}.Is_prefix
 		end
 
 	has_return_value: BOOLEAN is True
 			-- A function always return a value.
+
+feature {NONE} -- Access
+
+	r: like return_type
+			-- Internal data for `return_type'.
 
 invariant
 	non_void_return_type: return_type /= Void

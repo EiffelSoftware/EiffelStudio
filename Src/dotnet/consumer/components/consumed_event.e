@@ -30,12 +30,12 @@ feature {NONE} -- Initialization
 			valid_dotnet_name: not dn.is_empty
 			non_void_declaring_type: decl_type /= Void
 		do
-			dotnet_name := dn
-			is_public := pub
+			n := dn
+			p := pub
 			entity_make (dn, pub, decl_type)
-			raiser := cp_raiser
-			adder := cp_adder
-			remover := cp_remover
+			i := cp_raiser
+			a := cp_adder
+			r := cp_remover
 		ensure
 			dotnet_name_set: dotnet_name = dn
 			raiser_set: raiser = cp_raiser
@@ -46,20 +46,17 @@ feature {NONE} -- Initialization
 
 feature -- ConsumerWrapper functions
 
-	is_event: BOOLEAN is
+	is_event: BOOLEAN is True
 			-- Is `Current' a .Net Event.
-		do
-			Result := True
-		end
 		
-	is_property_or_event: BOOLEAN is
+	is_property_or_event: BOOLEAN is True
 			-- Is 'Current' a .NET Property or Event?
-		do
-			Result := True
-		end
 		
-	is_public: BOOLEAN
+	is_public: BOOLEAN is
 			-- Is `Current' public.
+		do
+			Result := p
+		end
 
 feature -- Access
 
@@ -78,16 +75,45 @@ feature -- Access
 			end
 		end
 
-	dotnet_name: STRING
+	dotnet_name: STRING is
 			-- .NET event name
+		do
+			Result := n
+		end
 
-	adder: CONSUMED_PROCEDURE
+	adder: CONSUMED_PROCEDURE is
 			-- Property getter function
+		do
+			Result := a
+		end
 	
-	remover: CONSUMED_PROCEDURE
+	remover: CONSUMED_PROCEDURE is
 			-- Property setter procedure
+		do
+			Result := r
+		end
 
-	raiser: CONSUMED_PROCEDURE
+	raiser: CONSUMED_PROCEDURE is
 			-- Property setter procedure
+		do
+			Result := i
+		end
+
+feature {NONE} -- Access
+
+	n: like dotnet_name
+			-- Internal data for `dotnet_name'.
+	
+	a: like adder
+			-- Internal data for `adder'.
+	
+	r: like remover
+			-- Internal data for `remover'.
+	
+	i: like raiser
+			-- Internal data for `raiser'.
+	
+	p: like is_public
+			-- Internal data for `is_public'.
 
 end -- class CONSUMED_EVENT

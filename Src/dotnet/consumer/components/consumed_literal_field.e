@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			a_type_not_void: a_type /= Void
 		do
 			field_make (en, dn, rt, static, pub, True, a_type)
-			value := val
+			v := val
 		ensure
 			eiffel_name_set: eiffel_name = en
 			dotnet_name_set: dotnet_name = dn
@@ -46,13 +46,21 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	value: STRING
+	value: STRING is
 			-- Literal value
+		do
+			Result := v
+		end
 
 feature -- Status report
 
 	is_literal: BOOLEAN is True
 			-- Current is literal.
+
+feature {NONE} -- Access
+
+	v: like value
+			-- Internal data for `value'.
 
 invariant
 	is_static: is_static

@@ -33,12 +33,12 @@ feature {NONE} -- Initialization
 		do
 			member_make (en, dn, pub, a_type)
 			if static then
-				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_static
+				f := f | feature {FEATURE_ATTRIBUTE}.Is_static
 			end
 			if init_only then
-				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_init_only
+				f := f | feature {FEATURE_ATTRIBUTE}.Is_init_only
 			end
-			return_type := rt
+			r := rt
 		ensure
 			eiffel_name_set: eiffel_name = en
 			dotnet_name_set: dotnet_name = dn
@@ -50,8 +50,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	return_type: CONSUMED_REFERENCED_TYPE
+	return_type: CONSUMED_REFERENCED_TYPE is
 			-- Field type
+		do
+			Result := r
+		end
 
 feature -- Status report
 
@@ -64,7 +67,7 @@ feature -- Status report
 	is_init_only: BOOLEAN is
 			-- Is field a constant?
 		do
-			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_init_only =
+			Result := f & feature {FEATURE_ATTRIBUTE}.Is_init_only =
 				feature {FEATURE_ATTRIBUTE}.Is_init_only
 		end
 		
@@ -82,5 +85,10 @@ feature -- Status report
 		ensure
 			definition: Result = not is_static
 		end
-		
+
+feature {NONE} -- Access
+
+	r: like return_type
+			-- Internal data for `return_type'.
+
 end -- class CONSUMED_FIELD

@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			a_type_not_void: a_type /= Void
 		do
 			entity_make (en, pub, a_type)
-			dotnet_name := dn
+			n := dn
 		ensure
 			eiffel_name_set: eiffel_name = en
 			dotnet_name_set: dotnet_name = dn
@@ -39,64 +39,67 @@ feature {NONE} -- Initialization
 		
 feature -- Access
 
-	dotnet_name: STRING
+	dotnet_name: STRING is
 			-- .NET member name
+		do
+			Result := n
+		end
 
 feature -- Status report
 
 	is_public: BOOLEAN is
 			-- Is current member public?
 		do
-			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_public =
+			Result := f & feature {FEATURE_ATTRIBUTE}.Is_public =
 				feature {FEATURE_ATTRIBUTE}.Is_public
 		end
 
 	is_frozen: BOOLEAN is
 			-- Is feature frozen?
 		do
-			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_frozen =
+			Result := f & feature {FEATURE_ATTRIBUTE}.Is_frozen =
 				feature {FEATURE_ATTRIBUTE}.Is_frozen
 		end
 
 	is_static: BOOLEAN is
 			-- Is .NET member static?
 		do
-			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_static =
+			Result := f & feature {FEATURE_ATTRIBUTE}.Is_static =
 				feature {FEATURE_ATTRIBUTE}.Is_static
 		end
 
 	is_deferred: BOOLEAN is
 			-- Is feature deferred?
 		do
-			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_deferred =
+			Result := f & feature {FEATURE_ATTRIBUTE}.Is_deferred =
 				feature {FEATURE_ATTRIBUTE}.Is_deferred
 		end
 
 	is_artificially_added: BOOLEAN is
 			-- Is feature deferred?
 		do
-			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_artificially_added =
+			Result := f & feature {FEATURE_ATTRIBUTE}.Is_artificially_added =
 				feature {FEATURE_ATTRIBUTE}.Is_artificially_added
 		end
 	
 	is_property_or_event: BOOLEAN is
 			-- Is feature property or event related?
 		do
-			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_property_or_event =
+			Result := f & feature {FEATURE_ATTRIBUTE}.Is_property_or_event =
 				feature {FEATURE_ATTRIBUTE}.Is_property_or_event
 		end
 		
 	is_new_slot: BOOLEAN is
 			-- Is current marked with `new_slot' flag?
 		do
-			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_newslot =
+			Result := f & feature {FEATURE_ATTRIBUTE}.Is_newslot =
 				feature {FEATURE_ATTRIBUTE}.Is_newslot
 		end
 
 	is_virtual: BOOLEAN is
 			-- Is current marked with `new_slot' flag?
 		do
-			Result := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_virtual =
+			Result := f & feature {FEATURE_ATTRIBUTE}.Is_virtual =
 				feature {FEATURE_ATTRIBUTE}.Is_virtual
 		end
 			
@@ -106,9 +109,9 @@ feature -- Settings
 			-- Set `is_public' with `pub'.
 		do
 			if pub then
-				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_public
+				f := f | feature {FEATURE_ATTRIBUTE}.Is_public
 			else
-				internal_flags := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_public.bit_not
+				f := f & feature {FEATURE_ATTRIBUTE}.Is_public.bit_not
 			end
 		end
 
@@ -116,9 +119,9 @@ feature -- Settings
 			-- Set `is_artificially_added' with `val'.
 		do
 			if val then
-				internal_flags := internal_flags | feature {FEATURE_ATTRIBUTE}.Is_artificially_added
+				f := f | feature {FEATURE_ATTRIBUTE}.Is_artificially_added
 			else
-				internal_flags := internal_flags & feature {FEATURE_ATTRIBUTE}.Is_artificially_added.bit_not
+				f := f & feature {FEATURE_ATTRIBUTE}.Is_artificially_added.bit_not
 			end
 		ensure
 			is_artificially_added_set: is_artificially_added = val
@@ -126,9 +129,13 @@ feature -- Settings
 		
 feature {CONSUMED_MEMBER} -- Internal
 
-	internal_flags: INTEGER
+	f: INTEGER
 			-- Store status of current feature.
 
+feature {NONE} -- Access
+
+	n: like dotnet_name
+			-- Internal data for `dotnet_name'
 
 invariant
 	non_void_dotnet_name: dotnet_name /= Void

@@ -571,6 +571,7 @@ feature {GB_WINDOW_SELECTOR_ITEM} -- Implementation
 						-- `layout_constructor' is parented.
 					layout_constructor.first.enable_select
 				end
+				Command_handler.update
 			end
 		end
 
@@ -733,7 +734,7 @@ feature {GB_XML_LOAD} -- Implementation
 			end
 		end
 
-feature {GB_COMMAND_ADD_WINDOW} -- Implementation
+feature {GB_COMMAND_ADD_WINDOW, GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementation
 
 	change_root_window_to (titled_window_object: GB_TITLED_WINDOW_OBJECT) is
 			-- Change the root window of the project to `titled_window_object'.

@@ -58,7 +58,6 @@ feature -- Creation
 		local
 			top_form, form: FORM
 			del_com: DELETE_WINDOW
-			close_button: CLOSE_WINDOW_BUTTON
 			con_ed_hole: CON_ED_HOLE
 			cut_hole: CUT_HOLE
 			raise_widget_hole: RAISE_WIDGET_HOLE

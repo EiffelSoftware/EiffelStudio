@@ -14,6 +14,10 @@ feature -- Access
 	array_optimization_on: BOOLEAN
 			-- Is array optimization on?
 
+	manifest_integers_as_integer_32: BOOLEAN
+			-- Are manifest integers handled as INTEGERs and not
+			-- as INTEGER_XX depending on their value.
+	
 	inlining_on: BOOLEAN;
 			-- Is inlining on ?
 
@@ -316,6 +320,13 @@ feature -- Update
 			inlining_on := b
 		ensure
 			inlining_on_set: inlining_on = b
+		end
+
+	set_manifest_integers_as_integer_32 (b: BOOLEAN) is
+		do
+			manifest_integers_as_integer_32 := b
+		ensure
+			manifest_integers_as_integer_32_set: manifest_integers_as_integer_32 = b
 		end
 
 	set_array_optimization_on (b: BOOLEAN) is

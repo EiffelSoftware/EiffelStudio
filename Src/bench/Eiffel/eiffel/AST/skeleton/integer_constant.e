@@ -401,13 +401,17 @@ feature {NONE} -- Translation
 			else
 					-- Force size of integer constant depending on number
 					-- of hexadecimal character in hex string.
-				if j <= 3 then
-					size := 8
-				elseif j <= 5 then
-					size := 16
-				else
-					check j <= 9 end
+				if System.manifest_integers_as_integer_32 then
 					size := 32
+				else
+					if j <= 3 then
+						size := 8
+					elseif j <= 5 then
+						size := 16
+					else
+						check j <= 9 end
+						size := 32
+					end
 				end
 			end
 		end
@@ -457,15 +461,19 @@ feature {NONE} -- Translation
 					end
 					lower := last_integer
 
-					if -128 <= lower and lower <= 127 then
-						size := 8
-					elseif -32768 <= lower and lower <= 32767 then
-						size := 16
-					elseif -2147483648 <= lower and lower <= 2147483647 then
+					if System.manifest_integers_as_integer_32 then
 						size := 32
 					else
-						check False end
-					end	
+						if -128 <= lower and lower <= 127 then
+							size := 8
+						elseif -32768 <= lower and lower <= 32767 then
+							size := 16
+						elseif -2147483648 <= lower and lower <= 2147483647 then
+							size := 32
+						else
+							check False end
+						end
+					end
 				else
 					from
 					until

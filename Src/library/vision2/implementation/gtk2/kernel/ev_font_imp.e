@@ -273,13 +273,13 @@ feature {NONE} -- Implementation
 			from
 				i := try_string_array.lower
 			until
-				temp_font /= Void or i > try_string_array.upper
+				(temp_font /= Void and then temp_font.c_object /= default_pointer) or else i > try_string_array.upper
 			loop
 				temp_font := match_preferred_face (try_string_array.item (i))
 				i := i + 1
 			end
 
-			if temp_font.c_object = default_pointer then
+			if temp_font /= Void and then temp_font.c_object = default_pointer then
 				-- The font cannot be found so we do nothing and stick with the last found font.
 				--name := ""
 				--full_name := ""

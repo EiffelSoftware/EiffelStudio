@@ -35,9 +35,7 @@ feature
 
 feature
 
-	put_string (s: STRING) is do putstring (s) end;
-
-	put_clickable_string (a: ANY; s: STRING) is do putstring (s) end;
+	put_clickable_string (a: ANY; s: STRING) is do put_string (s) end;
 
 	put_char (c: CHARACTER) is do putchar (c) end;
 

@@ -30,7 +30,7 @@ feature {NONE}
 			Result.extend (c);
 			Result.append ("defaults");
 			Result.extend (c);
-			Result.append (Platform_constants.Default_ace_name);
+			Result.append ("default.ace");
 		end;
 
 	Default_precompiled_location: STRING is
@@ -41,7 +41,7 @@ feature {NONE}
 			!!Result.make (0);
 			Result.append ("$EIFFEL3");
 			Result.extend (c);
-			Result.append (Platform_constants.precompiled_directory);
+			Result.append ("precomp");
 			Result.extend (c);
 			Result.append ("spec");
 			Result.extend (c);
@@ -49,6 +49,8 @@ feature {NONE}
 			Result.extend (c);
 			Result.append ("base");
 		end;
+
+	Descriptor_file_suffix: CHARACTER is 'd'
 
 	Descriptor_suffix: STRING is "D"
 
@@ -73,10 +75,7 @@ feature {NONE}
 			Result := Platform_constants.Dot_o
 		end;
 
-	Dot_workbench: STRING is
-		once
-			Result := Platform_constants.Dot_workbench
-		end;
+	Dot_workbench: STRING is "project.eif"
 
 	Dot_x: STRING is ".x"
 
@@ -85,47 +84,44 @@ feature {NONE}
 			Result := Platform_constants.Driver
 		end;
 
-	Eattr: STRING is "Eattr"
+	Eattr: STRING is "eattr"
 
-	Ecall: STRING is "Ecall"
+	Ecall: STRING is "ecall"
 
-	Econform: STRING is "Econform"
+	Econform: STRING is "econform"
 
-	Edispatch: STRING is "Edisptch"
+	Edispatch: STRING is "edisptch"
 
-	Efrozen: STRING is "Efrozen"
+	Efrozen: STRING is "efrozen"
 
-	Ehisto: STRING is "Ehisto"
+	Ehisto: STRING is "ehisto"
 
-	Eiffelgen: STRING is
-		once
-			Result := Platform_constants.Eiffelgen
-		end;
+	Eiffelgen: STRING is "EIFGEN"
 
 	Eiffel_suffix: CHARACTER is
 		once
 			Result := Platform_constants.Eiffel_suffix
 		end;
 
-	Einit: STRING is "Einit"
+	Einit: STRING is "einit"
 
-	Emain: STRING is "Emain"
+	Emain: STRING is "emain"
 
-	Eoption: STRING is "Eoption"
+	Eoption: STRING is "eoption"
 
-	Epattern: STRING is "Epattern"
+	Epattern: STRING is "epattern"
 
-	Eplug: STRING is "Eplug"
+	Eplug: STRING is "eplug"
 
-	Eref: STRING is "Eref"
+	Eref: STRING is "eref"
 
-	Erout: STRING is "Erout"
+	Erout: STRING is "erout"
 
-	Esize: STRING is "Esize"
+	Esize: STRING is "esize"
 
-	Eskelet: STRING is "Eskelet"
+	Eskelet: STRING is "eskelet"
 
-	Evisib: STRING is "Evisib"
+	Evisib: STRING is "evisib"
 
 	Executable_suffix: STRING is
 		once
@@ -135,6 +131,8 @@ feature {NONE}
 	F_code: STRING is "F_code"
 
 	Finish_freezing_script: STRING is "finish_freezing"
+
+	Feature_table_file_suffix: CHARACTER is 'f'
 
 	Feature_table_suffix: STRING is "F"
 
@@ -147,14 +145,15 @@ feature {NONE}
 			Result := Platform_constants.Preobj
 		end;
 
+	Removed_log_file_name: STRING is "REMOVED";
+
 	System_object_prefix: STRING is "E";
 
-	Updt: STRING is
-		once
-			Result := Platform_constants.Updt
-		end;
+	Translation_log_file_name: STRING is "TRANSLAT";
 
-	Version_number: STRING is "3.2.6"
+	Updt: STRING is "melted.eif"
+
+	Version_number: STRING is "3.2.7"
 
 	W_code: STRING is "W_code"
 

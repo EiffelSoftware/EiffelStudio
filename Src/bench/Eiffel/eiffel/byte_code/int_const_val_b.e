@@ -55,7 +55,7 @@ feature -- Code generation
 			current_feature_table := System.class_of_id (written_in).feature_table
 			constant_i ?= current_feature_table.origin_table.item (rout_id)
 			integer_value ?= constant_i.value
-			Result := integer_value.value
+			Result := integer_value.integer_32_value
 		end
 
 end

@@ -49,12 +49,14 @@ inherit
 			on_mouse_move,
 			on_char,
 			on_key_up,
+			on_key_down,
 			on_draw_item,
 			on_menu_command
 		redefine
-			default_style,
 			default_ex_style,
-			adjust_items
+			default_style,
+			adjust_items,
+			on_tcn_selchange
 		end
 
 	WEL_TCIF_CONSTANTS
@@ -94,10 +96,13 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature {NONE} -- Access
+feature -- Status report
 
-	tab_pos: INTEGER
-			-- Actual position of the tab.
+	current_page: INTEGER is
+			-- One-based index of the currently opened page
+		do
+			Result := current_selection + 1
+		end
 
 feature -- Status setting
 	
@@ -183,7 +188,19 @@ feature -- Element change
 			end
 		end
 
+feature -- Event - command association
+	
+	add_switch_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Add 'cmd' to the list of commands to be executed
+			-- the a page is switch in the notebook.
+		do
+			add_command (Cmd_switch, cmd, arg)
+		end	
+
 feature -- Implementation
+
+	tab_pos: INTEGER
+			-- Actual position of the tab.
 
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite. In this container, `child' is the
@@ -294,10 +311,9 @@ feature {NONE} -- WEL Implementation
  		end
 
 	default_ex_style: INTEGER is
-	  			-- Default extented style used to create the window
- 		do
- 			Result := Ws_ex_controlparent
- 		end
+		do
+			Result := Ws_ex_controlparent
+		end
 
 	tab_height: INTEGER is
 			-- The height of the tabs in `Pos_top' ot `Pos_bottom' status,
@@ -315,6 +331,14 @@ feature {NONE} -- WEL Implementation
 			else
 				Result := 0
 			end
+		end
+
+	on_tcn_selchange is
+			-- Selection has changed.
+			-- Shows the current selected page by default.
+		do
+			show_current_selection
+			execute_command (Cmd_switch, Void)			
 		end
 
 end -- EV_NOTEBOOK_IMP

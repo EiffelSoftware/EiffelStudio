@@ -14,6 +14,8 @@
 #ifndef _eif_types_h_
 #define _eif_types_h_
 
+#include "eif_constants.h"
+
 	/* except.h */
 /* Structure used as the execution vector. This is for both the execution
  * stack (eif_stack) and the exception trace stack (eif_trace).
@@ -204,6 +206,20 @@ struct sc_zone {
 };
 
 
+	/* ----------------------------------------------------------------- */
+	/*	sig.h */
+	/* ----------------------------------------------------------------- */
+
+/* Structure used as FIFO stack for signal buffering. I really do not expect
+ * this stack to overflow, so it has a huge fixed size--RAM. Should it really
+ * overflow, we would panic immediately :-(.
+ */
+struct s_stack {
+	int s_min;				/* Minimum value of circular buffer */
+	int s_max;				/* Maximum value of circular buffer */
+	char s_pending;			/* Are any signals pending? */
+	char s_buf[SIGSTACK];	/* The circular buffer used as a FIFO stack */
+};
 
 
 #endif	 /* _eif_types_h */

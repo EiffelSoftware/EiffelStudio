@@ -15,7 +15,8 @@ inherit
 
 creation
 	make,
-	make_by_name
+	make_by_name,
+	make_by_system_name
 
 feature {NONE} -- Initialization
 
@@ -24,14 +25,24 @@ feature {NONE} -- Initialization
 			-- (By default, font allocated will be for 
 			-- the last created screen).
 		do
-			!EV_FONT_IMP!implementation.make (Current)
+			!EV_FONT_IMP! implementation.make
+			implementation.set_interface (Current)
 		end
 
 	make_by_name (str: STRING) is
-			-- Create the font corresponding to the given name.
-			-- The font is directly readed on a file.
+			-- Create the font corresponding to the given name
+			-- with the default values.
 		do
-			!EV_FONT_IMP!implementation.make_by_name (Current, str)
+			!EV_FONT_IMP! implementation.make_by_name (str)
+			implementation.set_interface (Current)
+		end
+
+	make_by_system_name (str: STRING) is
+			-- Create the font corresponding to the given system
+			-- name.
+		do
+			!EV_FONT_IMP! implementation.make_by_system_name (str)
+			implementation.set_interface (Current)
 		end
 
 feature -- Access
@@ -206,12 +217,6 @@ feature -- Implementation
 
 	implementation: EV_FONT_I
 			-- Implementation of font
-
-	set_implementation (imp: EV_FONT_IMP) is
-			-- Make `imp' the new implementation of the font.
-		do
-			implementation := imp
-		end
 
 end -- class EV_FONT
 

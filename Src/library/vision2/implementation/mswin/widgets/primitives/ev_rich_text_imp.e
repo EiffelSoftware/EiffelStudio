@@ -293,7 +293,6 @@ feature -- Status report
 			Result := internal_selected_character_format
 		end
 			
-			
 	internal_selected_character_format: EV_CHARACTER_FORMAT is
 			-- Implementation for `selected_character_format'. No preconditions permit
 			-- calling even when there is no selection as required by some implementation
@@ -406,12 +405,12 @@ feature -- Status report
 				range_already_selected := True
 			else
 				safe_store_caret
-				set_selection (start_index, end_index)
+				set_selection (start_index, end_index - 1)
 			end
 			create wel_character_format.make
 			cwin_send_message (wel_item, em_getcharformat, 1, wel_character_format.to_integer)
 			mask := wel_character_format.mask
-			Result := flag_set (mask, cfm_color | cfm_bold | cfm_face | cfm_size | cfm_strikeout | cfm_underline | cfm_italic | cfm_offset)
+			Result := flag_set (mask, cfm_color | cfm_bold | cfm_face | cfm_size | cfm_strikeout | cfm_underline | cfm_italic | cfm_offset | cfm_backcolor)
 			if not range_already_selected then
 				safe_restore_caret
 			end
@@ -420,17 +419,27 @@ feature -- Status report
 		
 	internal_character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
+			-- Internal version which permits optimizations as caret position and selection
+			-- does not need to be restored.
 		local
 			wel_character_format: WEL_CHARACTER_FORMAT2
 			mask: INTEGER
 		do
-			set_selection (start_index, end_index)
+			set_selection (start_index - 1, end_index - 1)
 			create wel_character_format.make
 			cwin_send_message (wel_item, em_getcharformat, 1, wel_character_format.to_integer)
 			mask := wel_character_format.mask
-			Result := flag_set (mask, cfm_color | cfm_bold | cfm_face | cfm_size | cfm_strikeout | cfm_underline | cfm_italic | cfm_offset)
+			Result := flag_set (mask, cfm_color | cfm_bold | cfm_face | cfm_size | cfm_strikeout | cfm_underline | cfm_italic | cfm_offset | cfm_backcolor)
 		end
-
+		
+	internal_character_format (pos: INTEGER): EV_CHARACTER_FORMAT is
+			-- `Result' is character format at position `pos'. On some platforms
+			-- this may be optimized to take the selected character format and therefore
+			-- should only be used by `next_change_of_character'.
+		do
+			Result := internal_selected_character_format
+		end
+		
 	initialize_for_saving is
 			-- Initialize `Current' for save operations, by performing
 			-- optimizations that prevent the control from slowing down due to
@@ -888,7 +897,7 @@ feature -- Status setting
 					-- character positions, and not caret positions.
 				set_selection (start_position - 1, end_position)
 			end
-			generate_rtf_heading_for_buffered_append
+			generate_complete_rtf_from_buffering
 			text_up_to_date := False
 			create stream.make (internal_text)
 			insert_rtf_stream_in (stream)
@@ -1045,7 +1054,7 @@ feature -- Status setting
 				insert_rtf_stream_in (stream)
 				stream.release_stream
 			elseif buffer_locked_in_append_mode then
-				generate_rtf_heading_for_buffered_append
+				generate_complete_rtf_from_buffering
 				create stream.make (internal_text)
 				rtf_stream_in (stream)
 				stream.release_stream
@@ -1372,8 +1381,6 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I}
 
 	font_char_set (a_font: EV_FONT): INTEGER is
 			-- `Result' is char set of font `a_font'.
-		require
-			a_font_not_void: a_font /= Void
 		local
 			font_imp: EV_FONT_IMP
 		do
@@ -1382,8 +1389,6 @@ feature {EV_RICH_TEXT_BUFFERING_STRUCTURES_I}
 				font_imp_not_void: font_imp /= Void
 			end
 			Result := font_imp.wel_font.log_font.char_set
-		ensure
-			result_not_void: Result >= 0
 		end
 
 feature {NONE} -- Implementation

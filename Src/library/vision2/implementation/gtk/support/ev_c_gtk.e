@@ -37,6 +37,25 @@ feature -- Externals
 			"XFreeFontNames"
 		end
 
+feature -- Externals
+
+	c_gdk_window_iconify (a_window: POINTER) is
+		external
+			"C (GdkWindow *) | %"ev_titled_window_imp.h%""
+		end
+
+	c_gdk_window_deiconify (a_window: POINTER) is
+		external
+			"C (GdkWindow *) | %"ev_titled_window_imp.h%""
+		end
+
+	c_gdk_window_is_iconified (a_window: POINTER): BOOLEAN is
+		external
+			"C (GdkWindow *): gboolean | %"ev_titled_window_imp.h%""
+		end
+
+feature {NONE} -- Externals
+
 	c_match_font_name (pattern: POINTER): POINTER is
 			-- Match to first in list or return NULL.
 			-- `pattern' and `Result': char *

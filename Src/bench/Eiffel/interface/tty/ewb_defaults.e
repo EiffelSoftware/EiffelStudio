@@ -43,7 +43,7 @@ feature {NONE} -- Execute
 		local
 			ewb_cmd: EWB_CMD;
 		do
-			clear_shared_query_values;
+			clear_values;
 			!EWB_NUMBER_OF_CALLS! ewb_cmd.make_loop;
 			main_menu.switches_menu.force (ewb_cmd, 1);
 			!EWB_FEATURENAME! ewb_cmd.make_loop;
@@ -69,24 +69,5 @@ feature {NONE} -- Attributes
 	main_menu: BASIC_EWB_LOOP
 		-- The manin menu with all sub menus.
 		-- Needed for reinitialization of the options in this menu.
-
-feature {NONE} -- Implementation
-
-	clear_shared_query_values is
-			-- Remove all old values, to be able to
-			-- reset values to their defaults.
-		local
-			empty_array: ARRAY [ STRING ]
-		do
-			!!empty_array.make (1, 0);
-			output_names.copy (empty_array);
-			filenames.copy (empty_array);
-			language_names.copy (empty_array);
-			column_names.copy (empty_array);
-			binary_operators.copy (empty_array);
-			values.copy (empty_array);
-			boolean_operators.copy (empty_array);
-			subqueries.wipe_out;
-		end;
 
 end -- class EWB_DEFAULTS

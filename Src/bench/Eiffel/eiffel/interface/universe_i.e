@@ -911,7 +911,7 @@ feature {COMPILER_EXPORTER} -- Precompilation
 		do
 			precomp_ids := Precompilation_directories.current_keys
 			nb := precomp_ids.count + 1
-			precomp_ids.resize (1, nb)
+			precomp_ids.conservative_resize (1, nb)
 			precomp_ids.put (System.compilation_id, nb)
 			from
 				clusters.start

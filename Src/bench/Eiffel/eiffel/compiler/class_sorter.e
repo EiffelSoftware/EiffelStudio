@@ -44,10 +44,10 @@ feature {NONE} -- Initialization
 		require
 			n_positive: n >= 0
 		do
-			order.resize (1, n)
-			precursor_count.resize (1, n)
-			successors.resize (1, n)
-			original.resize (1, n)
+			order.conservative_resize (1, n)
+			precursor_count.conservative_resize (1, n)
+			successors.conservative_resize (1, n)
+			original.conservative_resize (1, n)
 			outsides1.wipe_out
 			outsides2.wipe_out
 			count := n

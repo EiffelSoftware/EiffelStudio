@@ -73,8 +73,8 @@ feature -- Element change
 		do
  			class_id := id
  			if upper < class_id then
- 				resize (1, class_id + Chunk)
-				sorted_classes.resize (1, class_id + Chunk)
+ 				conservative_resize (1, class_id + Chunk)
+				sorted_classes.conservative_resize (1, class_id + Chunk)
  			end
  			array_put (class_c, class_id)
 			sorted_classes.put (class_c, class_c.topological_id)

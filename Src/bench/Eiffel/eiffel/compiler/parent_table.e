@@ -59,7 +59,7 @@ feature
 			valid_type: ptype /= Void
 		do
 			if crnt_pos > upper then
-				resize (1, crnt_pos + Increment);
+				conservative_resize (1, crnt_pos + Increment);
 			end;
 
 			put (ptype, crnt_pos);

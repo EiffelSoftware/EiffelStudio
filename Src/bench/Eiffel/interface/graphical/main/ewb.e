@@ -55,21 +55,24 @@ feature -- Initialization
 					die (-1)
 				end
 
-					--| Initialization of the run-time, so that at the end of a store/retrieve
-					--| operation (like retrieving or storing the project, creating the CASEGEN
-					--| directory, generating the profile information, ...) the run-time is initialized
-					--| back to the values which permits the compiler to access correctly the EIFGEN
-					--| directory
-				!! eifgen_init.make
+					-- Check then for the license and make sure that we are allowed to launch the
+					-- product.
+				if init_license then
 
-					-- Read the resource files
-				if argument_count > 0 and then
-					(argument (1).is_equal ("-bench") or
-					else argument (1).is_equal ("-from_bench"))
-				then
-					Eiffel_project.set_batch_mode (False)
-					init_connection (argument (1).is_equal ("-bench"))
-					if init_license then
+						--| Initialization of the run-time, so that at the end of a store/retrieve
+						--| operation (like retrieving or storing the project, creating the CASEGEN
+						--| directory, generating the profile information, ...) the run-time is initialized
+						--| back to the values which permits the compiler to access correctly the EIFGEN
+						--| directory
+					!! eifgen_init.make
+
+						-- Read the resource files
+					if argument_count > 0 and then
+						(argument (1).is_equal ("-bench") or
+						else argument (1).is_equal ("-from_bench"))
+					then
+						Eiffel_project.set_batch_mode (False)
+						init_connection (argument (1).is_equal ("-bench"))
 						if toolkit = Void then end
 						init_windowing
 						!! memory
@@ -87,10 +90,8 @@ feature -- Initialization
 							end
 						end
 						iterate
-					end
-				else
-					Eiffel_project.set_batch_mode (True)
-					if init_license then
+					else
+						Eiffel_project.set_batch_mode (True)
 						!! new_resources.initialize	
 						!! memory
 						memory.set_collection_period (Configure_resources.get_integer (r_collection_period, memory.collection_period))

@@ -1,4 +1,4 @@
-CORE_SRC = compiler.cs class.cs feature.cs compiler_proxy.cs core_assembly_info.cs custom_attribute_factory.cs compiler_proxy_i.cs feature_info.cs
+CORE_SRC = compiler.cs class.cs feature.cs compiler_proxy.cs core_assembly_info.cs custom_attribute_factory.cs compiler_proxy_i.cs feature_info.cs ca.cs
 
 RUNTIME_SRC = run-time/*.cs run-time/types/*.cs
 

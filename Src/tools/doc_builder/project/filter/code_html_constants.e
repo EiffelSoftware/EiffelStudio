@@ -29,12 +29,22 @@ feature -- File	Location
 		end	
 		
 	left_context_html_template_file_name: STRING is
-			-- HTML template file for left side context (i.e filter and TOC information)
+			-- HTML template file for left side context (TOC)
 		local
 			l_file_path: FILE_NAME
 		once
 			create l_file_path.make_from_string ((create {APPLICATION_CONSTANTS}).templates_path)
 			l_file_path.extend ("HTMLLeftContextTemplate.html")
+			Result := l_file_path.string
+		end	
+
+	filter_html_template_file_name: STRING is
+			-- HTML template file for left side filter code
+		local
+			l_file_path: FILE_NAME
+		once
+			create l_file_path.make_from_string ((create {APPLICATION_CONSTANTS}).templates_path)
+			l_file_path.extend ("HTMLFilterTemplate.html")
 			Result := l_file_path.string
 		end	
 		

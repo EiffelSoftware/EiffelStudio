@@ -181,6 +181,45 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 			end
 			pnd_targets.go_to (cur)
 		end
+	
+	target_menu (a_pebble: ANY): EV_MENU is
+			-- Menu of targets that accept `a_pebble'.
+		local
+			cur: CURSOR
+			imp: EV_ANY_IMP
+			trg: EV_PICK_AND_DROPABLE
+		do
+			create Result
+			cur := pnd_targets.cursor
+			from
+				pnd_targets.start
+			until
+				pnd_targets.after
+			loop
+				trg ?= id_object (pnd_targets.item)
+				if trg /= Void then
+					if
+						trg.drop_actions.accepts_pebble (a_pebble)
+					then
+						if trg.target_name /= Void then
+							Result.extend (
+								create {EV_MENU_ITEM}.make_with_text (
+									trg.target_name
+								)
+							)
+							Result.last.select_actions.extend (
+								(trg.drop_actions)~call ([a_pebble])
+							)
+						end
+					end
+					pnd_targets.forth
+				end
+			end
+			pnd_targets.go_to (cur)
+			if Result.empty then
+				Result.extend (create {EV_MENU_ITEM}.make_with_text ("empty"))
+			end
+		end
 
 	on_pick (a_pebble: ANY) is
 			-- Called by EV_PICK_AND_DROPABLE_IMP.start_transport
@@ -202,14 +241,12 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 					if
 						trg.drop_actions.accepts_pebble (a_pebble)
 					then
-						--| FIXME IEK No current prelight support for mcl rows.
-						--imp ?= trg.implementation
-						--check
-						--	imp_not_void: imp /= Void
-						--end
-						--C.gtk_widget_set_state
-						--	(imp.c_object, C.Gtk_state_prelight_enum)
-						--C.gtk_widget_draw (imp.c_object, Default_pointer)
+						imp ?= trg.implementation
+						if imp /= Void then
+							C.gtk_widget_set_state
+								(imp.c_object, C.Gtk_state_prelight_enum)
+							C.gtk_widget_draw (imp.c_object, Default_pointer)
+						end
 					end
 					pnd_targets.forth
 				end
@@ -238,14 +275,12 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 					if
 						trg.drop_actions.accepts_pebble (a_pebble)
 					then
-						--| FIXME IEK Mclist rows are not widgets.
-						--imp ?= trg.implementation
-						--check
-						--	imp_not_void: imp /= Void
-						--end
-						--C.gtk_widget_set_state
-						--	(imp.c_object, C.Gtk_state_normal_enum)
-						--C.gtk_widget_draw (imp.c_object, Default_pointer)
+						imp ?= trg.implementation
+						if imp /= Void then
+							C.gtk_widget_set_state
+								(imp.c_object, C.Gtk_state_normal_enum)
+							C.gtk_widget_draw (imp.c_object, Default_pointer)
+						end
 					end
 					pnd_targets.forth
 				end
@@ -409,6 +444,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/04/25 00:58:35  oconnor
+--| added support of right click PND menus
+--|
 --| Revision 1.28  2000/04/20 18:15:13  brendel
 --| Put comment on single line.
 --|

@@ -32,9 +32,6 @@ feature -- Access
 				else
 					Result := default_value
 				end;
-				if free_resource then
-					remove (name)
-				end
 			else
 				Result := default_value
 			end
@@ -56,9 +53,6 @@ feature -- Access
 				else
 					Result := default_value
 				end;
-				if free_resource then
-					remove (name)
-				end
 			else
 				Result := default_value
 			end
@@ -81,9 +75,6 @@ feature -- Access
 				else
 					Result := default_value
 				end;
-				if free_resource then
-					remove (name)
-				end
 			else
 				Result := default_value
 			end
@@ -104,9 +95,6 @@ feature -- Access
 				else
 					Result := default_value
 				end;
-				if free_resource then
-					remove (name)
-				end
 			else
 				Result := default_value
 			end
@@ -120,8 +108,55 @@ feature -- Access
 		do
 			if has (name) then
 				Result := item (name);
-				if free_resource then
-					remove (name)
+			else
+				Result := default_value
+			end
+		end;
+
+	get_array (name: STRING; default_value: ARRAY [STRING]): ARRAY [STRING] is
+			-- Array value of the resource `name';
+			-- `default_value' if this value is not known
+		require
+			name_not_void: name /= Void
+		local
+			a_text: STRING;
+			a_list: ARRAYED_LIST [STRING];
+			c, pos, last_pos: INTEGER;
+			an_entry: STRING
+		do
+			if has (name) then
+				a_text := item (name);
+				!! a_list.make (10);
+				from
+					c := a_text.count;
+					last_pos := 1;
+					pos := 1
+				until
+					last_pos >= c
+				loop
+					pos := a_text.index_of (';', pos);
+					if pos = 0 then
+						an_entry := a_text.substring (last_pos, c);
+						last_pos := c;
+						a_list.extend (an_entry);
+					elseif last_pos /= pos then
+						an_entry := a_text.substring (last_pos, pos - 1);
+						a_list.extend (an_entry);
+						pos := pos + 1;
+						last_pos := pos;
+					else
+						pos := pos + 1
+						last_pos := pos;
+					end;
+				end;
+				from
+					!! Result.make (1, a_list.count);
+					a_list.start
+				until
+					a_list.after
+				loop
+					Result.put (a_list.item, a_list.index);
+					a_list.forth
 				end
 			else
 				Result := default_value
@@ -143,26 +178,9 @@ feature -- Access
 				else
 					Result := default_value
 				end;
-				if free_resource then
-					remove (name)
-				end
 			else
 				Result := default_value
 			end
-		end;
-
-feature -- Status report
-
-	free_resource: BOOLEAN;
-			-- Should the resource be removed from the table
-			-- after it has been inspected?
-
-feature -- Status setting
-
-	set_free_resource (b: BOOLEAN) is
-			-- Assign `b' to `free_resource'.
-		do
-			free_resource := b
 		end;
 
 end -- class RESOURCE_TABLE

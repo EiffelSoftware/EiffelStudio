@@ -16,8 +16,6 @@ inherit
 		end;
 
 	EXPR_AS_B
-		undefine
-			simple_format
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
@@ -46,10 +44,8 @@ feature -- Type check, byte code and dead code removal
 	format (ctxt: FORMAT_CONTEXT_B) is
 		do
 			ctxt.begin;
-			ctxt.put_text_item (ti_L_parenthesis);
-			expr.format (ctxt);
+			simple_format (ctxt);
 			if ctxt.last_was_printed then
-				ctxt.put_text_item (ti_R_parenthesis);
 				ctxt.commit;
 			else
 				ctxt.rollback;

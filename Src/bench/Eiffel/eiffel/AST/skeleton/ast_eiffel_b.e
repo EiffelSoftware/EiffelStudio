@@ -56,11 +56,10 @@ feature -- Formatter
 
 	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconsitute text according to context.
+		require
+			valid_ctxt: ctxt /= Void
 		do
-			-- Do nothing
-
-			-- should do nothing. Now put AST class name
-			ctxt.put_string (generator);
+			simple_format (ctxt)
 		end;
 		
 feature -- Replication

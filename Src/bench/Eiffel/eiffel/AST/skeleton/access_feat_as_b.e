@@ -17,8 +17,6 @@ inherit
 		end;
 
 	ACCESS_AS_B
-		undefine
-			simple_format
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
@@ -388,8 +386,7 @@ end; -- System.do_not_check_vape
 			-- Reconstitute text.
 		do
 			ctxt.begin;
-			ctxt.prepare_for_feature (feature_name, parameters);
-			ctxt.put_current_feature;
+			simple_format (ctxt);
 			if ctxt.last_was_printed then
 				ctxt.commit
 			else

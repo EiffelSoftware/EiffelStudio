@@ -26,15 +26,6 @@ feature {NONE} -- Initialization
 			vertical_box.extend (text_field)
 			textable.set_text ("Default_text")
 			text_field.change_actions.extend (agent textable_set_text (textable))
-			create button.make_with_text ("Align text left")
-			button.select_actions.extend (agent textable.align_text_left)
-			vertical_box.extend (button)
-			create button.make_with_text ("Align text center")
-			button.select_actions.extend (agent textable.align_text_center)
-			vertical_box.extend (button)
-			create button.make_with_text ("Align text right")
-			button.select_actions.extend (agent textable.align_text_right)
-			vertical_box.extend (button)
 			box.extend (Current)
 		end
 
@@ -53,7 +44,6 @@ feature {NONE} -- Implementation
 		-- Widgets used to build controls.
 	vertical_box: EV_VERTICAL_BOX
 	text_field: EV_TEXT_FIELD
-	button: EV_BUTTON
 
 end -- class TEXTABLE_CONTROL
 

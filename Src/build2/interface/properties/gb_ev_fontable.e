@@ -95,6 +95,8 @@ feature {GB_CODE_GENERATOR} -- Output
 			-- in a compilable format.
 		local
 			element_info: ELEMENT_INFORMATION
+			value: INTEGER
+			temp_string: STRING
 		do
 			create Result.make (5)
 			full_information := get_unique_full_info (element)
@@ -109,15 +111,71 @@ feature {GB_CODE_GENERATOR} -- Output
 				else
 					info.enable_fonts_set
 					Result.extend ("create internal_font")
-					Result.extend ("internal_font.set_family (" + element_info.data + ")")
-	
+					temp_string := "internal_font.set_family (feature {EV_FONT_CONSTANTS}."
+					check
+						data_is_integer: element_info.data.is_integer
+					end
+					value := element_info.data.to_integer
+					inspect value
+					when feature {EV_FONT_CONSTANTS}.Family_screen then
+						temp_string.append ("Family_screen)")
+					when feature {EV_FONT_CONSTANTS}.Family_roman then
+						temp_string.append ("Family_roman)")
+					when feature {EV_FONT_CONSTANTS}.Family_sans then
+						temp_string.append ("Family_sans)")
+					when feature {EV_FONT_CONSTANTS}.Family_typewriter then
+						temp_string.append ("Family_typewriter)")
+					when feature {EV_FONT_CONSTANTS}.Family_modern then
+						temp_string.append ("Family_modern)")
+					else
+						check
+							Invalid_value: False
+						end
+					end
+					Result.extend (temp_string)
+
 					element_info := full_information @ (font_weight_string)
 					if element_info /= Void then
-						Result.extend ("internal_font.set_weight (" + element_info.data + ")")
+						temp_string := "internal_font.set_weight (feature {EV_FONT_CONSTANTS}."
+						check
+							data_is_integer: element_info.data.is_integer
+						end		
+						value := element_info.data.to_integer
+						inspect value
+						when feature {EV_FONT_CONSTANTS}.weight_thin then
+							temp_string.append ("Weight_thin)")
+						when feature {EV_FONT_CONSTANTS}.weight_regular then
+							temp_string.append ("Weight_regular)")
+						when feature {EV_FONT_CONSTANTS}.weight_bold then
+							temp_string.append ("Weight_bold)")
+						when feature {EV_FONT_CONSTANTS}.weight_black then
+							temp_string.append ("Weight_black)")
+						else
+							check
+								Invalid_value: False
+							end
+						end						
 					end
+					Result.extend (temp_string)
+					
 					element_info := full_information @ (font_shape_string)
 					if element_info /= Void then
-						Result.extend ("internal_font.set_shape (" + element_info.data + ")")
+						temp_string := "internal_font.set_shape (feature {EV_FONT_CONSTANTS}."
+						check
+							data_is_integer: element_info.data.is_integer
+						end		
+						value := element_info.data.to_integer
+						inspect value
+						when feature {EV_FONT_CONSTANTS}.shape_regular then
+							temp_string.append ("Shape_regular)")
+						when feature {EV_FONT_CONSTANTS}.shape_italic then
+							temp_string.append ("Shape_italic)")
+						else
+							check
+								Invalid_value: False
+							end
+						end
+						Result.extend (temp_string)
 					end
 					element_info := full_information @ (font_height_points_string)
 					if element_info /= Void then

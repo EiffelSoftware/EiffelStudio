@@ -149,7 +149,7 @@ feature -- Conversion
 	truncated_to_double: DOUBLE is
 			-- Double value
 		do
---			Result := ccom_decimal_to_double (item)
+			Result := ccom_decimal_to_double (item)
 		end
 
 feature -- Basic operations
@@ -222,10 +222,10 @@ feature -- Basic operations
 
 feature {NONE} -- Externals
 
---	ccom_decimal_to_double (a_ptr: POINTER): DOUBLE is
---		external
---			"C (DECIMAL *):EIF_DOUBLE|%"E_Decimal.h%""
---		end
+	ccom_decimal_to_double (a_ptr: POINTER): DOUBLE is
+		external
+			"C (DECIMAL *):EIF_DOUBLE|%"E_Decimal.h%""
+		end
 
 	ccom_decimal_from_double (dbl_value: DOUBLE; a_ptr: POINTER) is
 		external

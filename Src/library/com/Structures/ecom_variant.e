@@ -252,7 +252,7 @@ feature -- Access
 	decimal: ECOM_DECIMAL is
 			-- Decimal value
 		require
-			is_decimal: is_decimal (variable_type)
+		--	is_decimal: is_decimal (variable_type)
 		do
 			Result := ccom_decimal (initializer)
 		end
@@ -262,7 +262,7 @@ feature -- Access
 		require
 			is_decimal_ref: is_decimal (variable_type) and is_byref (variable_type)
 		do
-			Result := ccom_decimal_reference (initializer)
+			create Result.make_by_pointer (ccom_decimal_reference (initializer))
 		end
 
 	currency: ECOM_CURRENCY is
@@ -278,7 +278,7 @@ feature -- Access
 		require
 			is_currency_ref: is_currency (variable_type) and is_byref (variable_type)
 		do
-			Result := ccom_currency_reference (initializer)
+			create Result.make_by_pointer (ccom_currency_reference (initializer))
 		end
 
 	string_value: STRING is
@@ -297,7 +297,7 @@ feature -- Access
 			Result := ccom_bstr_reference (initializer)
 		end
 
-	value: ECOM_VARIANT is
+	variant_value: ECOM_VARIANT is
 			-- Variant value
 		require
 			is_variant: is_variant (variable_type)
@@ -1618,9 +1618,9 @@ feature {NONE} -- Externals
 			"C++ [ecom_variant %"E_variant.h%"](DECIMAL *)"
 		end
 
-	ccom_decimal_reference (a_ptr: POINTER): ECOM_DECIMAL is
+	ccom_decimal_reference (a_ptr: POINTER): POINTER is
 		external
-			"C++ [ecom_variant %"E_variant.h%"](): EIF_REFERENCE"
+			"C++ [ecom_variant %"E_variant.h%"](): EIF_POINTER"
 		end
 
 	ccom_set_decimal_reference (a_ptr: POINTER; a: POINTER) is
@@ -1638,9 +1638,9 @@ feature {NONE} -- Externals
 			"C++ [ecom_variant %"E_variant.h%"](CY *)"
 		end
 
-	ccom_currency_reference (a_ptr: POINTER): ECOM_CURRENCY is
+	ccom_currency_reference (a_ptr: POINTER): POINTER is
 		external
-			"C++ [ecom_variant %"E_variant.h%"](): EIF_REFERENCE"
+			"C++ [ecom_variant %"E_variant.h%"](): EIF_POINTER"
 		end
 
 	ccom_set_currency_reference (a_ptr: POINTER; a: POINTER) is

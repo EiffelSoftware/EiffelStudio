@@ -109,14 +109,14 @@ class ecom_variant
 
 		// decimal
 		EIF_REFERENCE ccom_decimal ();
-		EIF_REFERENCE ccom_decimal_reference ();
+		EIF_POINTER ccom_decimal_reference ();
 
 		void ccom_set_decimal (DECIMAL * a_value);
 		void ccom_set_decimal_reference (DECIMAL *a_value);
 
 		// currency
 		EIF_REFERENCE ccom_currency ();
-		EIF_REFERENCE ccom_currency_reference ();
+		EIF_POINTER ccom_currency_reference ();
 
 		void ccom_set_currency (CY *a_value);
 		void ccom_set_currency_reference (CY *a_value);

@@ -95,7 +95,6 @@ int nb_tilde;		/* To memorize the number of tilde in a routine creation */
 %token 		TE_RPARAN
 %token		TE_LCURLY
 %token		TE_RCURLY
-%token 		TE_CURLYDOTDOT
 %token		TE_LSQURE
 %token		TE_RSQURE
 %token		TE_CONSTRAIN
@@ -149,6 +148,9 @@ int nb_tilde;		/* To memorize the number of tilde in a routine creation */
 %token		TE_UNTIL
 %token		TE_VARIANT
 %token		TE_WHEN
+%token		TE_QUESTION
+%token		TE_TILDE
+%token 		TE_CURLYTILDE
 
 %token		EIF_ERROR2
 %token		EIF_ERROR3
@@ -1097,16 +1099,16 @@ Delayed_call:				Delayed_qualifier Identifier Delayed_actuals
 								{$$ = create_routine_object($1,$2,$3);}
 	;
 
-Delayed_qualifier:			Identifier TE_DOTDOT
+Delayed_qualifier:			Identifier TE_TILDE
 								{$$ = create_node1(OPERAND_AS,$1);}
-	|						TE_LPARAN Expression TE_RPARAN TE_DOTDOT
+	|						TE_LPARAN Expression TE_RPARAN TE_TILDE
 								{$$ = create_node1(OPERAND_AS,$2);}
-	|						TE_LCURLY Type TE_CURLYDOTDOT
+	|						TE_LCURLY Type TE_CURLYTILDE
 								{$$ = create_node1(OPERAND_AS,$2);}
-	|						TE_DOTDOT
+	|						TE_QUESTION TE_TILDE
 								{$$ = NULL;}
-	|						TE_DOT
-								{$$ = create_node1(OPERAND_AS,NULL);}
+	|						TE_TILDE
+								{$$ = create_node1(OPERAND_AS,NULL);} 
 	;
 
 Delayed_actuals:			/* empty */
@@ -1121,9 +1123,9 @@ Delayed_actual_list:		Delayed_actual
 								{list_push($3);}
 	;
 
-Delayed_actual:				TE_DOT
+Delayed_actual:				TE_QUESTION
 								{$$ = create_node1 (OPERAND_AS,NULL);}
-	|						Expression
+	|						Actual_parameter
 								{$$ = create_node1 (OPERAND_AS,$1);}
 	|						TE_LCURLY Type TE_RCURLY
 								{$$ = create_node1 (OPERAND_AS,$2);}

@@ -108,8 +108,10 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 ":"							{return process(TE_COLON);}
 ","							{return process(TE_COMMA);}
 ".."						{return process(TE_DOTDOT);}
+"?"							{return process(TE_QUESTION);}
+"~"							{return process(TE_TILDE);}
+"}~"						{return process(TE_CURLYTILDE);}
 "."							{return process(TE_DOT);}
-"}.."						{return process(TE_CURLYDOTDOT);}
 "$"							{return process(TE_ADDRESS);}
 ":="						{return process(TE_ASSIGN);}
 "?="						{return process(TE_ACCEPT);}

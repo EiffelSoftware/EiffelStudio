@@ -38,13 +38,18 @@ feature -- Basic operations
 		local
 			a_default_pointer: POINTER
 		do
-			item := item.memory_calloc (1, structure_size)
-			if item = a_default_pointer then
-					-- Memory allocation problem
-				(create {EXCEPTIONS}).raise ("No more memory")
+			if shared then
+					-- We need to allocate a block of memory as we don't want other
+					-- instances of WEL_STRUCTURE sharing the structure to get the
+					-- copied item from `other'.
+				item := item.memory_calloc (1, structure_size)
+				if item = a_default_pointer then
+						-- Memory allocation problem
+					(create {EXCEPTIONS}).raise ("No more memory")
+				end
+				shared := False
 			end
 			memory_copy (other.item, structure_size)
-			shared := False
 		end
 		
 	is_equal (other: like Current): BOOLEAN is

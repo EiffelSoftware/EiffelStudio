@@ -22,10 +22,10 @@ creation
 	
 feature -- Properties
 
---	symbol: EV_PIXMAP is 
---		once 
---			Result := Pixmaps.bm_Showshort 
---		end
+	symbol: EV_PIXMAP is 
+		once 
+			Result := Pixmaps.bm_Showshort 
+		end
  
 feature {NONE} -- Properties
 

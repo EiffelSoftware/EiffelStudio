@@ -18,10 +18,10 @@ creation
 	
 feature -- Properties
 
---	symbol: EV_PIXMAP is 
---		once 
---			Result := Pixmaps.bm_Showstatistics 
---		end
+	symbol: EV_PIXMAP is 
+		once 
+			Result := Pixmaps.bm_Showstatistics 
+		end
  
 feature {NONE} -- Properties
 

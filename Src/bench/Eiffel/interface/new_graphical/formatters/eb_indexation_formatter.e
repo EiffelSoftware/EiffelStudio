@@ -18,10 +18,10 @@ creation
 	
 feature -- Properties
 
---	symbol: EV_PIXMAP is 
---		once 
---			Result := Pixmaps.bm_Showindexing 
---		end
+	symbol: EV_PIXMAP is 
+		once 
+			Result := Pixmaps.bm_Showindexing 
+		end
  
 feature {NONE} -- Properties
 

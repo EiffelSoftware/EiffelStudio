@@ -94,7 +94,7 @@ FollowedHyperlink;}{\s22\widctlpar\adjustright \fs20\cgrid \sbasedon0 \snext22 f
 \listoverridecount0\ls3}{\listoverride\listid498232159\listoverridecount0\ls4}{\listoverride\listid1974023044\listoverridecount0\ls5}{\listoverride\listid32661687\listoverridecount0\ls6}{\listoverride\listid1199197799\listoverridecount0\ls7}
 {\listoverride\listid1120421225\listoverridecount0\ls8}{\listoverride\listid1324821558\listoverridecount0\ls9}{\listoverride\listid1246265313\listoverridecount0\ls10}{\listoverride\listid1434008439\listoverridecount0\ls11}{\listoverride\listid561797467
 \listoverridecount0\ls12}{\listoverride\listid1606956724\listoverridecount0\ls13}{\listoverride\listid1159154270\listoverridecount0\ls14}{\listoverride\listid429815926\listoverridecount0\ls15}}{\info{\title EiffelCOM}{\author Chee Yeen Chan}
-{\operator marina}{\creatim\yr2000\mo1\dy6\hr11\min7}{\revtim\yr2000\mo1\dy26\hr17\min2}{\printim\yr2000\mo1\dy18\hr16\min10}{\version57}{\edmins437}{\nofpages9}{\nofwords1376}{\nofchars7848}{\*\company Interactive Software Engineering}{\nofcharsws0}
+{\operator marina}{\creatim\yr2000\mo1\dy6\hr11\min7}{\revtim\yr2000\mo1\dy27\hr12\min1}{\printim\yr2000\mo1\dy18\hr16\min10}{\version58}{\edmins439}{\nofpages9}{\nofwords1376}{\nofchars7848}{\*\company Interactive Software Engineering}{\nofcharsws0}
 {\vern89}}\widowctrl\ftnbj\aenddoc\noxlattoyen\expshrtn\noultrlspc\dntblnsbdb\nospaceforul\hyphcaps0\formshade\viewkind4\viewscale100\pgbrdrhead\pgbrdrfoot \fet0\sectd 
 \linex0\headery708\footery708\colsx708\endnhere\pgbrdropt32\sectlinegrid360\sectdefaultcl {\*\pnseclvl1\pnucrm\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl2\pnucltr\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl3
 \pndec\pnstart1\pnindent720\pnhang{\pntxta .}}{\*\pnseclvl4\pnlcltr\pnstart1\pnindent720\pnhang{\pntxta )}}{\*\pnseclvl5\pndec\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}{\*\pnseclvl6\pnlcltr\pnstart1\pnindent720\pnhang{\pntxtb (}{\pntxta )}}
@@ -157,8 +157,8 @@ system_name.exe -Regserver}{\f1  where }{\i\f1 system_name}{\f1  is the name of 
 \par }\pard\plain \s1\sb100\sa100\widctlpar\outlinelevel0\adjustright \b\f1\fs48\kerning36\cgrid {\page }{\cs23\super #{\footnote \pard\plain \s22\widctlpar\adjustright \fs20\cgrid {\cs23\super #}{ IDH_createneweiffel}}${\footnote \pard\plain 
 \s22\widctlpar\adjustright \fs20\cgrid {\cs23\super $}{ Creating a new component from an Eiffel project.}}}{Creating a new component from an Eiffel project
 \par 
-\par }\pard\plain \qj\sb100\sa100\widctlpar\adjustright \cgrid {\f1 The second tutorial describes creating a COM component from an Eiffel system. The tutorial example }{\i\f1 String }{\f1 is almost identical to }{\i\f1 StringManipulator}{\f1 
- of the previous tutorial. In the }{\i\f1 StringManipulator}{\f1  example the wizard starts from IDL file and builds an Eiffel System; in contrast, the }{\i\f1 String}{\f1 
+\par }\pard\plain \qj\sb100\sa100\widctlpar\adjustright \cgrid {\f1 The second tutorial describes creating a COM component from an Eiffel system. The tutorial example }{\i\f1 String }{\f1 is almost identical to }{\i\f1 StringManipulator}{\f1  of the
+ previous tutorial. In the }{\i\f1 StringManipulator}{\f1  example the wizard starts from IDL file and builds an Eiffel System; in contrast, the }{\i\f1 String}{\f1 
  example takes an Eiffel system and generates an IDL file and the required plumbing code to make the Eiffel project accessible to COM runtime. You do not need to modify any Eiffel or C code.
 \par 
 \par }\pard\plain \s2\sb100\sa100\widctlpar\outlinelevel1\adjustright \b\f1\fs27\cf9\cgrid {Step by step instructions
@@ -174,8 +174,10 @@ e2idl\\eproject}{\f1  where $EIFFEL4 represents the path to your EIFFEL45 direct
 \par {\listtext\pard\plain\f3\fs20\cgrid \loch\af3\dbch\af0\hich\f3 \'b7\tab}Click the second Browse button and open the file }{\i\f1 $EIFFEL4\\examples\\com\\wizard\\e2idl\\ eproject\\Ace.ace}{\f1 
  where $EIFFEL4 represents the path to your EIFFEL45 directory. 
 \par {\listtext\pard\plain\f3\fs20\cgrid \loch\af3\dbch\af0\hich\f3 \'b7\tab}In the third entry field enter }{\i\f1 string_manipulator}{\f1 . 
-\par {\listtext\pard\plain\f3\fs20\cgrid \loch\af3\dbch\af0\hich\f3 \'b7\tab}Click the bottom Browse button and select the directory where you want to create the project (the destination folder). Choose }{\i\f1 $EIFFEL4\\examples\\com\\wizard\\e2idl\\generated
-}{\f1  where $EIFFEL4 represents the path to your EIFFEL45 directory. If you work on a Windows 9x machine, please choose a directory with a shorter path, for example c:\\e2idl.
+\par {\listtext\pard\plain\f3\fs20\cgrid \loch\af3\dbch\af0\hich\f3 \'b7\tab}In the forth entry field enter }{\i\f1 root_cluster}{\f1 .
+\par {\listtext\pard\plain\f3\fs20\cgrid \loch\af3\dbch\af0\hich\f3 \'b7\tab}Click }{\i\f1 Next}{\f1 .
+\par {\listtext\pard\plain\f3\fs20\cgrid \loch\af3\dbch\af0\hich\f3 \'b7\tab}Click the Browse button and select the directory where you want to create the project (the destination folder). Choose }{\i\f1 $EIFFEL4\\examples\\com\\wizard\\e2idl\\generated}{\f1 
+ where $EIFFEL4 represents the path to your EIFFEL45 directory. If you work on a Windows 9x machine, please choose a directory with a shorter path, for example c:\\e2idl.
 \par {\listtext\pard\plain\f3\fs20\cgrid \loch\af3\dbch\af0\hich\f3 \'b7\tab}Click }{\i\f1 Next}{\f1  
 \par {\listtext\pard\plain\f3\fs20\cgrid \loch\af3\dbch\af0\hich\f3 \'b7\tab}Choose Automation 
 \par {\listtext\pard\plain\f3\fs20\cgrid \loch\af3\dbch\af0\hich\f3 \'b7\tab}Click }{\i\f1 Next}{\f1  
@@ -187,9 +189,9 @@ e2idl\\eproject}{\f1  where $EIFFEL4 represents the path to your EIFFEL45 direct
 \par }\pard\plain \li720\widctlpar\adjustright \cgrid {\f1 
 \par }\pard\plain \s2\sb100\sa100\widctlpar\outlinelevel1\adjustright \b\f1\fs27\cf9\cgrid {Tips
 \par {\pntext\pard\plain\f3\cgrid \loch\af3\dbch\af0\hich\f3 \'b7\tab}}\pard\plain \fi-360\li360\sb100\sa100\widctlpar\jclisttab\tx360{\*\pn \pnlvlblt\ilvl0\ls15\pnrnot0\pnf3\pnstart1\pnindent360\pnhang{\pntxtb \'b7}}\ls15\adjustright \cgrid {\f1 
-In most Eiffel systems functionality is spread out throughout the system. No single class exposes the full functionalit
-y of the system and can serve as a Facade to the outside world. Running the wizard on any such class would not be practical. Before starting the wizard write an Eiffel class that acts as a Facade and forwards client calls to the appropriate sybsystems. En
-ter the Facade class name into \ldblquote Enter Eiffel class name\rdblquote  field of the third dialog (Eiffel Project File Dialog). The wizard generates an IDL file from this class. 
+In most Eiffel systems functionality is spread out throughout the system. No single class exposes the full functionali
+ty of the system and can serve as a Facade to the outside world. Running the wizard on any such class would not be practical. Before starting the wizard write an Eiffel class that acts as a Facade and forwards client calls to the appropriate sybsystems. E
+nter the Facade class name into \ldblquote Enter Eiffel class name\rdblquote  field of the third dialog (Eiffel Project File Dialog). The wizard generates an IDL file from this class. 
 \par }\pard \sb100\sa100\widctlpar\adjustright {\f1 
 \par }\pard\plain \s1\sb100\sa100\widctlpar\outlinelevel0\adjustright \b\f1\fs48\kerning36\cgrid {{\*\bkmkstart pgfId_375751}{\*\bkmkend pgfId_375751}\page }{\cs23\super #{\footnote \pard\plain \s22\widctlpar\adjustright \fs20\cgrid {\cs23\super #}{ IDH_access
 }}${\footnote \pard\plain \s22\widctlpar\adjustright \fs20\cgrid {\cs23\super $}{ Accessing a component}}}{Accessing a component
@@ -200,8 +202,8 @@ ter the Facade class name into \ldblquote Enter Eiffel class name\rdblquote  fie
 \par {\*\bkmkstart pgfId_375760}{\*\bkmkend pgfId_375760}{\listtext\pard\plain\f3\fs20\cgrid \loch\af3\dbch\af0\hich\f3 \'b7\tab}Choose }{\i\f1 Create a new project from a COM definition}{\f1  and click }{\i\f1 Next}{\f1  
 \par {\*\bkmkstart pgfId_375764}{\*\bkmkend pgfId_375764}{\listtext\pard\plain\f3\fs20\cgrid \loch\af3\dbch\af0\hich\f3 \'b7\tab}Click }{\i\f1 Next}{\f1  again 
 \par {\*\bkmkstart pgfId_375768}{\*\bkmkend pgfId_375768}{\listtext\pard\plain\f3\fs20\cgrid \loch\af3\dbch\af0\hich\f3 \'b7\tab}Click the top }{\i\f1 Browse}{\f1  button and open the file }{\i\f1 $EIFFEL4\\examples\\com\\wizard\\string_manipulator\\
-string_manipulator.idl}{\f1  where }{\i\f1 $EIFFEL4}{\f1  represents the path to your EIFFEL45 dire
-ctory. You could also choose to open the type library (.tlb) that was generated by the wizard when creating a new component in the destination folder of that first project. 
+string_manipulator.idl}{\f1  where }{\i\f1 $EIFFEL4}{\f1 
+ represents the path to your EIFFEL45 directory. You could also choose to open the type library (.tlb) that was generated by the wizard when creating a new component in the destination folder of that first project. 
 \par {\*\bkmkstart pgfId_375783}{\*\bkmkend pgfId_375783}{\listtext\pard\plain\f3\fs20\cgrid \loch\af3\dbch\af0\hich\f3 \'b7\tab}Click the bottom }{\i\f1 Browse}{\f1  button and select the destination directory. Choose }{\i\f1 $EIFFEL4\\examples\\com\\wizard\\
 string_manipulator\\generated}{\f1  where }{\i\f1 $EIFFEL4}{\f1  represents the path to your EIFFEL45 directory. 
 \par {\*\bkmkstart pgfId_375791}{\*\bkmkend pgfId_375791}{\listtext\pard\plain\f3\fs20\cgrid \loch\af3\dbch\af0\hich\f3 \'b7\tab}Click }{\i\f1 Next}{\f1  
@@ -209,10 +211,9 @@ string_manipulator\\generated}{\f1  where }{\i\f1 $EIFFEL4}{\f1  represents the 
 \par {\*\bkmkstart pgfId_375795}{\*\bkmkend pgfId_375795}{\listtext\pard\plain\f3\fs20\cgrid \loch\af3\dbch\af0\hich\f3 \'b7\tab}Wait until the wizard is done. 
 \par }\pard \li360\sb100\sa100\widctlpar\adjustright {\f1 
 \par }\pard\plain \s2\sb100\sa100\widctlpar\outlinelevel1\adjustright \b\f1\fs27\cf9\cgrid {{\*\bkmkstart pgfId_375840}{\*\bkmkend pgfId_375840}First look at the generated code
-\par }\pard\plain \s24\qj\sb100\sa100\widctlpar\adjustright \f1\cgrid {{\*\bkmkstart pgfId_375844}{\*\bkmkend pgfId_375844}
-At the and of the generation the wizard precompiles the generated code and open EiffelBench on the precompilation project. Note: a precompilat
-ion project is read-only, you need to start another EiffelBench to reuse the generated classes. The interesting classes are all related to the coclass proxy STRING_MANIPULATOR_PROXY. The proxy is the Eiffel class that gives access to the component. Each f
-eature on the proxy calls the corresponding interface function on the component. You can use the EiffelBench opened by the wizard to browse through the generated classes and study the class hierarchy. 
+\par }\pard\plain \s24\qj\sb100\sa100\widctlpar\adjustright \f1\cgrid {{\*\bkmkstart pgfId_375844}{\*\bkmkend pgfId_375844}At the and of the generation the wizard precompiles the generated code and open EiffelBench on the precomp
+ilation project. Note: a precompilation project is read-only, you need to start another EiffelBench to reuse the generated classes. The interesting classes are all related to the coclass proxy STRING_MANIPULATOR_PROXY. The proxy is the Eiffel class that g
+ives access to the component. Each feature on the proxy calls the corresponding interface function on the component. You can use the EiffelBench opened by the wizard to browse through the generated classes and study the class hierarchy. 
 \par 
 \par }\pard\plain \s2\sb100\sa100\widctlpar\outlinelevel1\adjustright \b\f1\fs27\cf9\cgrid {{\*\bkmkstart pgfId_375854}{\*\bkmkend pgfId_375854}Implementing a client
 \par }\pard\plain \li720\sb100\sa100\widctlpar\adjustright \cgrid {\f1 {\*\bkmkstart pgfId_375858}{\*\bkmkend pgfId_375858}To implement a client of the StringManipulator component open a new EiffelBench. Create the project in }{\i\f1 $EIFFEL4\\examples\\com\\
@@ -221,20 +222,20 @@ wizard\\string_manipulator\\client}{\f1  using the ace file found in that direct
 user_precondition}{\f1  features to implement your own preconditions. 
 \par 
 \par }\pard\plain \s2\sb100\sa100\widctlpar\outlinelevel1\adjustright \b\f1\fs27\cf9\cgrid {{\*\bkmkstart pgfId_375995}{\*\bkmkend pgfId_375995}Contracts
-\par }\pard\plain \li720\sb100\sa100\widctlpar\adjustright \cgrid {\f1 {\*\bkmkstart pgfId_375999}{\*\bkmkend pgfId_375999}Contracts can be broken directly on the proxy in which case you 
-will get a standard contract violation or in the server. If contracts are broken on the server, the exception is forwarded by the EiffelCOM runtime to the client. The feature }{\i\f1 replace_substring_user_precondition}{\f1  in }{\cs17\i\f1 
-MY_STRING_MANIPULATOR }{\f1 includes the following commented line: 
+\par }\pard\plain \li720\sb100\sa100\widctlpar\adjustright \cgrid {\f1 {\*\bkmkstart pgfId_375999}{\*\bkmkend pgfId_375999}Contracts can be broken dire
+ctly on the proxy in which case you will get a standard contract violation or in the server. If contracts are broken on the server, the exception is forwarded by the EiffelCOM runtime to the client. The feature }{\i\f1 replace_substring_user_precondition}
+{\f1  in }{\cs17\i\f1 MY_STRING_MANIPULATOR }{\f1 includes the following commented line: 
 \par }{\cs17\i\f1 -- Result := True}{\f1 
 \par {\*\bkmkstart pgfId_376012}{\*\bkmkstart pgfId_376009}{\*\bkmkend pgfId_376012}{\*\bkmkend pgfId_376009}Uncomment this line by removing the initial `}{\cs17\i\f1  --}{\f1  ' and comment out the rest of the feature. Now the contract of the }{\cs17\i\f1 
 replace_substring}{\f1  feature is wrong and erroneous calls can be made. Quick melt the changes and run the client. Enter some invalid numbers in the fields used to call this feature. After you click }{\i\f1 Replace}{\f1 
- you will see an error message box warning you that a precondition was violated on the s
-erver side. This is how you can use contracts `over the wire'. The preconditions violated in the server are caught by the EiffelCOM runtime and sent back to the client. 
+ you will see an error message box warning you that a precondition
+ was violated on the server side. This is how you can use contracts `over the wire'. The preconditions violated in the server are caught by the EiffelCOM runtime and sent back to the client. 
 \par \page 
 \par }\pard\plain \s2\sb100\sa100\widctlpar\outlinelevel1\adjustright \b\f1\fs27\cf9\cgrid {\cs23\super {\*\bkmkstart pgfId_376013}{\*\bkmkend pgfId_376013}#{\footnote \pard\plain \s22\widctlpar\adjustright \fs20\cgrid {\cs23\super #}{ IDH_summary_started}}$
 {\footnote \pard\plain \s22\widctlpar\adjustright \fs20\cgrid {\cs23\super $}{ Summary}}}{Summary
 \par }\pard\plain \s25\li360\sb100\sa100\widctlpar\adjustright \f1\cgrid {{\*\bkmkstart pgfId_376017}{\*\bkmkend pgfId_376017}
-You now have the basic knowledge needed to run the EiffelCOM wizard and produce or access COM components. The benefits of using the wizard are numerous including a fast and easy generation of "plumbing" code as well as enhanced debugging capabilities
- through the use of contracts. The wizard is generic, it can generate or wrap any kind of components. We hope you enjoy using it as much as we enjoyed developing it, 
+You now have the basic knowledge needed to run the EiffelCOM wizard and produce or access COM components. The benefits of using the wizard are numerous including a fast and easy generation of "plumbing" code as well as enhanced 
+debugging capabilities through the use of contracts. The wizard is generic, it can generate or wrap any kind of components. We hope you enjoy using it as much as we enjoyed developing it, 
 \par }\pard\plain \li360\sb100\sa100\widctlpar\adjustright \cgrid {\f1 {\*\bkmkstart pgfId_376018}{\*\bkmkend pgfId_376018}
 \par }\pard\plain \s25\li360\sb100\sa100\widctlpar\adjustright \f1\cgrid {{\*\bkmkstart pgfId_376019}{\*\bkmkend pgfId_376019}The EiffelCOM team. 
 \par }}

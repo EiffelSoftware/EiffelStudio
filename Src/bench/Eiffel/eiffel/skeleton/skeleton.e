@@ -5,6 +5,11 @@ class SKELETON
 
 inherit
 	TO_SPECIAL [ATTR_DESC]
+		rename
+			item as area_item,
+			put as area_put
+		end
+		
 	SHARED_LEVEL
 		export
 			{ANY} all

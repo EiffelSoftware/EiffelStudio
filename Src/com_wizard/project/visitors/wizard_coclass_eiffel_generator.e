@@ -6,20 +6,18 @@ indexing
 
 deferred class
 	WIZARD_COCLASS_EIFFEL_GENERATOR 
-		[COMPONENT_INTERFACE_GENERATOR -> WIZARD_COMPONENT_INTERFACE_EIFFEL_GENERATOR create make end]
 
 inherit
 	WIZARD_EIFFEL_WRITER_GENERATOR
 
 	WIZARD_COMPONENT_EIFFEL_GENERATOR
 
-feature -- Access
+feature -- Basic Operations
 
 	generate (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
 			-- Generate eiffel class for coclass.
 		local
 			generated_file: PLAIN_TEXT_FILE
-			interface_processor: WIZARD_COCLASS_INTERFACE_EIFFEL_PROCESSOR [COMPONENT_INTERFACE_GENERATOR]
 		do
 			create eiffel_writer.make
 			coclass_descriptor := a_coclass
@@ -28,14 +26,15 @@ feature -- Access
 			eiffel_writer.set_class_name (a_coclass.eiffel_class_name)
 			eiffel_writer.set_description (a_coclass.description)
 
-			-- Process interfaces.
-			create interface_processor.make (a_coclass, eiffel_writer)
-			interface_processor.process_interfaces
-			dispatch_interface := interface_processor.dispatch_interface
-			interface_processor := Void
+			process_interfaces (a_coclass)
 
 			set_default_ancestors (eiffel_writer)
 			add_creation
+		end
+
+	process_interfaces (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
+			-- Process coclass interfaces.
+		deferred
 		end
 
 feature {NONE} -- Implementation

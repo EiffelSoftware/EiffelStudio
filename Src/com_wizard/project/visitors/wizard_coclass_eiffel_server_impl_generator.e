@@ -8,7 +8,7 @@ class
 	WIZARD_COCLASS_EIFFEL_SERVER_IMPL_GENERATOR
 
 inherit
-	WIZARD_COCLASS_EIFFEL_GENERATOR [WIZARD_COCLASS_INTERFACE_EIFFEL_SERVER_IMPL_GENERATOR]
+	WIZARD_COCLASS_EIFFEL_GENERATOR 
 		redefine
 			generate,
 			set_default_ancestors
@@ -26,24 +26,19 @@ feature -- Basic operation
 		local
 			a_description: STRING
 			a_visible: WIZARD_WRITER_VISIBLE_CLAUSE
-			interface_processor: WIZARD_COCLASS_INTERFACE_EIFFEL_PROCESSOR 
-						[WIZARD_COCLASS_INTERFACE_EIFFEL_SERVER_IMPL_GENERATOR]
 		do
 			coclass_descriptor := a_coclass
 
 			if not shared_wizard_environment.new_eiffel_project then
 				create a_visible.make
 				a_visible.set_name (implemented_coclass_name (a_coclass.eiffel_class_name))
-				system_descriptor.add_visible_class_component (a_visible)
+				system_descriptor.add_visible_class_server (a_visible)
 
 				create eiffel_writer.make
 
 				eiffel_writer.set_class_name (implemented_coclass_name (a_coclass.eiffel_class_name))
 
-				-- Process interfaces.
-				create interface_processor.make (a_coclass, eiffel_writer)
-				interface_processor.process_interfaces
-				interface_processor := Void
+				process_interfaces (a_coclass)
 
 				create a_description.make (1000)
 				a_description.append (a_coclass.eiffel_class_name)
@@ -60,6 +55,16 @@ feature -- Basic operation
 			end
 
 			eiffel_writer := Void
+		end
+
+	process_interfaces (a_coclass: WIZARD_COCLASS_DESCRIPTOR) is
+			-- Process coclass interfaces.
+		local
+			interface_processor: WIZARD_COCLASS_INTERFACE_EIFFEL_SERVER_IMPL_PROCESSOR 
+		do
+			create interface_processor.make (a_coclass, eiffel_writer)
+			interface_processor.process_interfaces
+			dispatch_interface := interface_processor.dispatch_interface
 		end
 
 	add_creation is
@@ -100,13 +105,7 @@ feature {NONE} -- Implementation
 
 			create tmp_writer.make
 			tmp_writer.set_name ("ECOM_EXCEPTION")
-
 			an_eiffel_writer.add_inherit_clause (tmp_writer)
-
-			create tmp_writer.make
-			tmp_writer.set_name ("ECOM_STUB")
-			an_eiffel_writer.add_inherit_clause (tmp_writer)
-
 		end
 
 	ccom_create_item_feature (a_component: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE is

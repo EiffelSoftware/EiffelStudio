@@ -36,9 +36,8 @@ feature {NONE} -- Initialization
 			-- Set up the callback marshal and initialize GTK+.
 		do
 			base_make (an_interface)
-			--put ("ankara:0", "DISPLAY")
 			
-			enable_ev_gtk_log (2)
+			enable_ev_gtk_log (0)
 			-- 0 = No messages, 1 = Gtk Log Messages, 2 = Gtk Log Messages with Eiffel exception.
 		--	C.gdk_set_show_events (False)
 				

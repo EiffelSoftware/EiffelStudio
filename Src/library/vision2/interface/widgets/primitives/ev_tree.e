@@ -69,13 +69,13 @@ feature -- Access
 feature -- Status report
 
 	ensure_item_visible (an_item: EV_TREE_ITEM) is
-			-- Ensure `tree_item' is visible in `Current'.
+			-- Ensure `an_item' is visible in `Current'.
+			-- Tree nodes may be expanded to achieve this.
 		require
 			item_contained: has_recursively	(an_item)
 		do
 			implementation.ensure_item_visible (an_item)
 		end
-		
 
 	selected: BOOLEAN is
 			-- Is an item selected in `Current' ?

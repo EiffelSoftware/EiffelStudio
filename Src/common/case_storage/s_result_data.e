@@ -27,7 +27,7 @@ feature {NONE}
 feature 
 
 	text: STRING;
-			-- Text of Current	
+			-- Text of Current (for bon eg (n)).
 
 	type: S_TYPE_INFO;
 			-- Type of Current

@@ -166,7 +166,7 @@ feature -- Status report
 	is_selected (an_id: INTEGER): BOOLEAN is
 			-- Is item given by `an_id' selected?
 		do
-			Result := (an_id = wel_selected_item + 1)
+			Result := (an_id = wel_selected_item)
 		end
 
 	selected_item: EV_LIST_ITEM is
@@ -208,8 +208,18 @@ feature -- Status setting
 			-- postcondition is violated because of the change
 			-- of index.
 		do
-			wel_select_item (index - 1)
-			old_selected_item := ev_children @ (index)
+			if (not selected) or (selected and then not equal (wel_selected_item, index - 1)) then
+					-- Only select an item if it is not already selected.
+				wel_select_item (index - 1)
+				old_selected_item := ev_children @ (index)
+					-- Now send `Cbn_selchange' message to Current control
+					-- so that we know that a change occured and to handle
+					-- it as specified by user.
+				cwin_send_message (parent_item, Wm_command, Cbn_selchange * 65536 + id,
+					cwel_pointer_to_integer (item))
+				execute_command (Cmd_selection, Void)
+					-- Must now manually inform the combo box that a selection is taking place.
+			end
 		end
 
 	deselect_item (index: INTEGER) is
@@ -441,19 +451,20 @@ feature {NONE} -- WEL Implementation
 	on_cbn_selchange is
 			-- The selection is about to be changed.
 		do
-			-- Event on the ocmbo box
-			execute_command (Cmd_selection, Void)
-
 			-- Event for the unselected item
 			if old_selected_item /= Void then
 				old_selected_item.execute_command (Cmd_item_deactivate, Void)
 			end
 
 			-- Event for the newly selected item
-			if selected then
+			if selected and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
+					-- Only performed if an item is selected and the new selection is not equal to
+					-- the current selection.
 				old_selected_item := ev_children.i_th (wel_selected_item + 1)
 				old_selected_item.execute_command (Cmd_item_activate, Void)
-			else
+				execute_command (Cmd_selection, Void)
+					-- Must now manually inform combo box that a selection is taking place
+			elseif not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
 				old_selected_item := Void
 			end
 		end
@@ -470,7 +481,10 @@ feature {NONE} -- WEL Implementation
 			-- The edit control portion is about to
 			-- display altered text.
 		do
-			execute_command (Cmd_change, Void)
+			if not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
+				-- Only performed if the old selected item is not equal to the new selected item.
+				execute_command (Cmd_change, Void)
+			end
 		end
 
    	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is

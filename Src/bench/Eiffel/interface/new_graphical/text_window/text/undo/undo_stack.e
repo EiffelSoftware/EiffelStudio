@@ -16,18 +16,21 @@ feature {NONE} -- Initialization
 			-- Initialize the stack.
 		do
 			text := a_text
-			reset
-			notify_observers
+			initialize
 		end
 
 feature {EDITABLE_TEXT} -- Initialization
 
-	reset is
+	initialize is
 			-- Reinitialize the stack
 		do
 			create undo_list.make
 			create redo_list.make
+			has_mark := False
+			marked_cmd := Void
 			current_status := move
+			mark_enabled := True
+			notify_observers
 		end
 
 feature {EDITABLE_TEXT} -- Access
@@ -204,7 +207,6 @@ feature {EDITABLE_TEXT} -- Element change
 			notify_observers
 		end
 
-
 	record_replace_selection (s1, s2: STRING) is
 		local
 			urc: UNDO_REPLACE_CMD
@@ -233,7 +235,6 @@ feature {EDITABLE_TEXT} -- Element change
 			end
 			notify_observers
 		end
-
 
 	record_back_delete (c: CHARACTER) is
 		local
@@ -277,7 +278,9 @@ feature {EDITABLE_TEXT} -- Element change
 
 feature {EDITABLE_TEXT} -- Basic operations
 
-	undo	is
+	undo is
+			-- undo command at the beginning of `undo_list'.
+			-- update `undo_list' and `redo_list'.
 		local
 			uc: UNDO_CMD
 		do
@@ -298,10 +301,20 @@ feature {EDITABLE_TEXT} -- Basic operations
 				end
 				current_status := move
 				notify_observers
+				if undo_list.is_empty then
+					uc := Void
+				else
+					uc := undo_list.first
+				end
+				if has_mark and then marked_cmd = uc then
+					notify_text_of_mark_reached
+				end
 			end
 		end
 
 	redo is
+			-- redo command at the beginning of `redo_list'.
+			-- update `undo_list' and `redo_list'.
 		local
 			uc: UNDO_CMD
 		do
@@ -322,10 +335,14 @@ feature {EDITABLE_TEXT} -- Basic operations
 				end
 				current_status := move
 				notify_observers
+				if has_mark and then marked_cmd = undo_list.first then
+					notify_text_of_mark_reached
+				end
 			end
 		end
 
-	wipe_out is
+	reset is
+			-- empty the unde-redo stack.
 		do
 			undo_list.wipe_out
 			redo_list.wipe_out
@@ -362,6 +379,51 @@ feature {EDITABLE_TEXT} -- Basic operations
 			if redo_list.writable then
 				redo_list.remove
 			end
+		end
+		
+feature {EDITABLE_TEXT} -- Mark management
+
+	set_mark is
+			-- mark current item
+		do
+			if mark_enabled then
+				has_mark := True
+				record_move -- to ensure marked command in not modified later
+				if undo_list.is_empty then
+					marked_cmd := Void
+				else
+					marked_cmd := undo_list.first
+				end
+			end
+		end
+
+	disable_mark is
+			-- Disable marking
+		do
+			mark_enabled := False
+			has_mark := False
+			marked_cmd := Void
+		end
+
+	enable_mark is
+			-- Enable marking
+		do
+			mark_enabled := True
+		end
+	
+	mark_enabled: BOOLEAN
+			-- Is it possible to set a mark?
+
+	has_mark: BOOLEAN
+			-- Has a position in the stack been marked?
+	
+	marked_cmd: UNDO_CMD
+			-- Marked command.
+
+	notify_text_of_mark_reached is
+			-- Marked position was reached by calling `undo' and `redo'.
+		do
+			text.on_text_back_to_its_last_saved_state
 		end
 
 feature {NONE} -- Implementation

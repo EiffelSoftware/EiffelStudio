@@ -181,6 +181,25 @@ feature {NONE} -- Updates
 			is_notifying := False
 		end
 
+	on_text_back_to_its_last_saved_state is
+			-- Notify observers that text is in the same state as when it
+			-- was saved for the last time.
+		require
+			not_in_loop: not is_notifying
+		do
+			is_notifying := True
+			changed := False
+			from 
+				edition_observer_list.start
+			until
+				edition_observer_list.after
+			loop
+				edition_observer_list.item.on_text_back_to_its_last_saved_state
+				edition_observer_list.forth
+			end
+			is_notifying := False
+		end
+
 	on_text_loaded is
 			-- Notify observers that a new text has just been loaded.
 		require

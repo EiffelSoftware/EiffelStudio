@@ -15,7 +15,8 @@ inherit
 
 	TEXT_OBSERVER
 		redefine
-			on_text_reset, on_text_edited
+			on_text_reset, on_text_edited,
+			on_text_back_to_its_last_saved_state
 		end
 
 	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
@@ -190,6 +191,12 @@ feature {NONE} -- Implementation
 
 
 	on_text_reset is
+			-- make the command insensitive
+		do
+			disable_sensitive
+		end
+
+	on_text_back_to_its_last_saved_state is
 			-- make the command insensitive
 		do
 			disable_sensitive

@@ -35,8 +35,10 @@ feature -- Start output features
 			-- with `total_nbr' passes to be done.
 		local
 			just_created: BOOLEAN;
-			cursor_imp: SCREEN_CURSOR_X
+			cursor_imp: SCREEN_CURSOR_X;
+			i_name: STRING
 		do
+			icon_name := Project_tool.icon_name;
 			if is_destroyed then	
 				just_created := True;
 				create_window
@@ -75,6 +77,11 @@ feature -- Start output features
 				parent.set_min_height (height);
 				parent.set_min_width (width);
 			end;
+			i_name := clone (icon_name);
+			i_name.extend (' ');
+			i_name.append (l_Degree);
+			i_name.append (current_degree.out);
+			Project_tool.set_icon_name (i_name);
 			update_display;
 		end;
 
@@ -92,6 +99,8 @@ feature -- Start output features
 	put_start_degree (degree_nbr: INTEGER; total_nbr: INTEGER) is
 			-- Put message indicating the start of a degree 
 			-- with `total_nbr' passes to be done.
+		local
+			i_name: STRING
 		do
 			total_number := total_nbr;
 			current_degree := degree_nbr;
@@ -109,6 +118,12 @@ feature -- Start output features
 
 			percentage_l.set_label_as_string (Zero_percent);
 			progress_bar.reset_percentage;
+			i_name := clone (icon_name);
+			i_name.extend (' ');
+			i_name.append (l_Degree);
+			i_name.append (current_degree.out);
+			Project_tool.set_icon_name (i_name);
+			update_display
 		end;
 
 	put_end_degree is
@@ -123,23 +138,27 @@ feature -- Start output features
 
 	put_melting_changes_message  is
 			-- Put message indicating that melting changes is ocurring.
+		local
+			i_name: STRING
 		do
+			set_project_icon_name (melting_changes_message)
             put_non_degree_message (melting_changes_message);
 		end;
 
 	put_freezing_message is
 			-- Put message indicating that freezing is occurring.
 		do
+			set_project_icon_name (freezing_system_message)
 			put_non_degree_message (freezing_system_message);
 		end;
 
     put_start_dead_code_removal_message  is
             -- Put message indicating the start of dead code removal.
         do
+			set_project_icon_name (removing_dead_code_message)
             put_non_degree_message (removing_dead_code_message);
 			entity_l.unmanage;
-					--*** FIXME add constant string in INTERFACE_W
-			entity_l.set_label_as_string ("Features processed: ");
+			entity_l.set_label_as_string (l_features_processed);
 			entity_l.manage;
         end;
 
@@ -152,6 +171,7 @@ feature -- Start output features
 	finish_degree_output is
 			-- Process end degree output.
 		do
+			Project_tool.set_icon_name (icon_name);
 			unmanage
 		end;
 
@@ -255,6 +275,9 @@ feature {NONE} -- Implementation
 		end;
 
 feature {NONE} -- Implementation
+
+	icon_name: STRING;
+			-- Icon name of project tool
 
 	Zero_percent: STRING is "0%%    ";
 
@@ -388,6 +411,17 @@ feature {NONE} -- Implementation
 				end;
 				an_entry.free
 			end
+		end;
+
+	set_project_icon_name (message: STRING) is
+			-- Set icon name of project_tool to `message'.
+		local
+			i_name: STRING
+		do
+			i_name := clone (icon_name);
+			i_name.extend (' ');
+			i_name.append (message);
+			Project_tool.set_icon_name (i_name)
 		end;
 
 end -- class GRAPHICAL_DEGREE_OUTPUT

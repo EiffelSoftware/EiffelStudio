@@ -87,7 +87,7 @@ feature -- Status report
 feature -- Status setting
 	
 	position_tabs_top is
-			-- Display tabs at top of notebook.
+			-- Display tabs at top of `Current'.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -97,7 +97,7 @@ feature -- Status setting
 		end
 
 	position_tabs_bottom is
-			-- Display tabs at bottom of notebook.
+			-- Display tabs at bottom of `Current'.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -107,7 +107,7 @@ feature -- Status setting
 		end
 
 	position_tabs_left is
-			-- Display tabs at left of notebook.
+			-- Display tabs at left of `Current'.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -117,7 +117,7 @@ feature -- Status setting
 		end
 
 	position_tabs_right is
-			-- Display tabs at right of notebook.
+			-- Display tabs at right of `Current'.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -127,7 +127,7 @@ feature -- Status setting
 		end
 
 	set_tab_position (a_tab_position: INTEGER) is
-			-- Display tabes at `a_tab_position'.
+			-- Display tabs at `a_tab_position'.
 		require
 			not_destroyed: not is_destroyed
 			a_position_within_range:
@@ -163,21 +163,21 @@ feature -- Removal
 feature -- Constants
 	
 	Tab_left: INTEGER is unique
-			-- Value used to position tab on the left.
+			-- Value used to position tab at left.
 
 	Tab_right: INTEGER is unique
-			-- Value used to position tab on the right.
+			-- Value used to position tab at right.
 
 	Tab_top: INTEGER is unique
-			-- Value used to position tab at the top.
+			-- Value used to position tab at top.
 
 	Tab_bottom: INTEGER is unique
-			-- Value used to position tab at the bottom.
+			-- Value used to position tab at bottom.
 
 feature -- Element change
 
 	set_item_text (an_item: like item; a_text: STRING) is
-			-- Assign `a_text' to the label for `an_item'.
+			-- Assign `a_text' to label of `an_item'.
 		require
 			not_destroyed: not is_destroyed
 			has_an_item: has (an_item)

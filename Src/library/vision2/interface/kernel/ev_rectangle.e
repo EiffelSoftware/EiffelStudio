@@ -1,15 +1,12 @@
 indexing
-	description: "EiffelVision rectangle. Rectangular area.";
+	description: "EiffelVision clip. Rectangular area.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class
-	EV_RECTANGLE
+	EV_CLIP
 
-inherit
-	ANY
-	
 creation
 	make,
 	set
@@ -23,7 +20,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	upper_left: EV_POINT
+	upper_left: EV_COORDINATES
 			-- Upper-left coiner of the clip area
 
 	width: INTEGER
@@ -47,7 +44,7 @@ feature -- Debug
 
 feature -- Element change
 
-	set (upper_left_POINT: EV_POINT; new_width, new_height: INTEGER) is
+	set (upper_left_POINT: EV_COORDINATES; new_width, new_height: INTEGER) is
 			-- Set the clip
 		require
 			upper_left_POINT: upper_left_POINT /= Void
@@ -60,7 +57,6 @@ feature -- Element change
 		end
 
 end -- class EV_CLIP
-
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.

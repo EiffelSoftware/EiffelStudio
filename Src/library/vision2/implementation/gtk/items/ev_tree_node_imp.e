@@ -302,7 +302,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	insert_pixmap is
 			-- Insert 'pixmap' in to 'Current'
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 			is_leaf: INTEGER
 		do
 			create a_cs.make (text)

@@ -28,7 +28,7 @@ feature {NONE} -- Implementation
 	load is
 			-- Load font specified in `full_name'.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make (full_name)
 			c_object := feature {EV_GTK_EXTERNALS}.gdk_font_load (a_cs.item)

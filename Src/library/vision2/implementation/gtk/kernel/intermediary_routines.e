@@ -469,7 +469,7 @@ feature {EV_ANY_IMP} -- Pick and Drop intermediary agent routines
 	signal_emit_stop_intermediary (a_c_object: POINTER; signal: STRING) is
 			-- Emit stop signal 
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 			a_pick_and_dropable_imp: EV_PICK_AND_DROPABLE_IMP
 		do
 			create a_cs.make (signal)

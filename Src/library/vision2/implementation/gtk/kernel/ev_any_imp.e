@@ -119,7 +119,7 @@ feature {EV_ANY_I} -- Event handling
 			an_agent_not_void: an_agent /= Void
 		local
 			a_connection_id: INTEGER
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make (a_signal_name)
 			a_connection_id := feature {EV_GTK_CALLBACK_MARSHAL}.c_signal_connect_true (
@@ -143,7 +143,7 @@ feature {EV_ANY_I} -- Event handling
 			a_signal_name_not_empty: not a_signal_name.is_empty
 			an_agent_not_void: an_agent /= Void
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make (a_signal_name)
 			if translate /= Void then

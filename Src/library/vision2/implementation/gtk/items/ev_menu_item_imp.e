@@ -90,7 +90,7 @@ feature -- Element change
 			-- Assign `a_text' to `text'.
 		local
 			temp_string: STRING
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			a_text.replace_substring_all ("%T", " ")
 				-- Replace tab characters with spaces.

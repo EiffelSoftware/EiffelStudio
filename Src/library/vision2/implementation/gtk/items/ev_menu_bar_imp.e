@@ -64,7 +64,7 @@ feature {NONE} -- Implementation
 			-- Generic menu item insertion.
 		local
 			menu_imp: EV_MENU_IMP
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make ("activate_item")
 			if parent_imp /= Void then

@@ -18,7 +18,7 @@ CFLAGS= $(MODEL) -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib -P-C -K
 CC=$(ISE_EIFFEL)\BCC55\bin\bcc32
 LD=$(ISE_EIFFEL)\BCC55\bin\bcc32
 LIB=$(ISE_EIFFEL)\BCC55\bin\tlib
-LDFLAGS= $(MODEL)
+LDFLAGS= -L$(ISE_EIFFEL)\BCC55\lib $(MODEL)
 O=.obj
 
 # variables

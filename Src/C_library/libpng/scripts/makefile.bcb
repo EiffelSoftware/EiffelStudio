@@ -47,7 +47,7 @@ LDEBUG=$(LDEBUG) -N
 CFLAGS=-O2 -Z -X- -w -I$(ZLIB_DIR) -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib -$(TARGET_CPU) $(CDEBUG)
 
 # -M  generate map file
-LDFLAGS=-M -L$(ZLIB_DIR) $(LDEBUG)
+LDFLAGS=-M -L$(ISE_EIFFEL)\BCC55\lib -L$(ZLIB_DIR) $(LDEBUG)
 
 
 ## Variables

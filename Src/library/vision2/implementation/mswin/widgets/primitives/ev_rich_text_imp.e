@@ -201,8 +201,8 @@ feature {NONE} -- Initialization
 				-- Connect events to `tab_positions' to update `Current' as values
 				-- change.
 			create tab_positions
-			tab_positions.add_actions.extend (agent update_tab_positions)
-			tab_positions.remove_actions.extend (agent update_tab_positions)
+			tab_positions.internal_add_actions.extend (agent update_tab_positions)
+			tab_positions.internal_remove_actions.extend (agent update_tab_positions)
 			
 				-- Calculate the default tab space. In a rich edit control, it is
 				-- Half an Inch, so query the horizontal resolution and divide by 2. 

@@ -12,9 +12,9 @@ RM = del
 
 # Derived library object file names
 OBJECTS = \
-	listen.$obj \
-	proto.$obj \
-	server.$obj \
+	app_listen.$obj \
+	app_proto.$obj \
+	app_server.$obj \
 	$(LIBDIR)\$(LIBNAME)
 
 # Where shared archive is located (path and name)

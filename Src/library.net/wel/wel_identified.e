@@ -13,7 +13,7 @@ feature -- Access
 			-- Unique for current object in any given session
 		do
 			reference_list.extend (
-				create {CLI_CELL [WEAK_REFERENCE]}.put (create {WEAK_REFERENCE}.make (an_object)))
+				create {CLI_CELL [WEAK_REFERENCE]}.put (create {WEAK_REFERENCE}.make_from_target (an_object)))
 			Result := reference_list.count
 		end
 

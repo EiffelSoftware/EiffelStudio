@@ -1005,6 +1005,8 @@ feature -- Warning messages
 	
 	w_cannot_generate_png: STRING is "Could not generate PNG file.%NInsufficient video memory."
 	
+	w_does_not_have_enclosing_cluster: STRING is "This cluster does not have an enclosing cluster."
+	
 	w_Environment_not_initialized: STRING is "$ISE_EIFFEL is not initialized. Execution impossible%N"
 
 	w_Feature_not_compiled: STRING is "Feature is not compiled."

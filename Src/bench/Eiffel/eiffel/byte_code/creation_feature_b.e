@@ -9,7 +9,7 @@ class
 inherit
 	FEATURE_B
 		redefine
-			generate, enlarged, is_first
+			generate, enlarged, is_first, context_type
 		end
 
 feature -- C code generation
@@ -87,6 +87,12 @@ feature -- Access
 	set_info (i: CREATE_TYPE) is
 		do
 			info := i
+		end
+
+	context_type: TYPE_I is
+			-- Context type of the access (properly instantiated)
+		do
+			Result := info.type
 		end
 
 feature -- Copy

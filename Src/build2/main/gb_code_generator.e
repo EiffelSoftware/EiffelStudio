@@ -101,14 +101,10 @@ feature {NONE} -- Implementation
 				generate_ace_file (release_ace_file, "release.ace")
 				generate_ace_file (debug_ace_file, "debug.ace")
 			else
-				if Eiffel_platform.is_equal ("windows") then
-					platform_ace_file_name := clone (windows_ace_file_name)
-				else
-					platform_ace_file_name := clone (unix_ace_file_name)
-				end
-				generate_ace_file (platform_ace_file_name, "build_ace.ace")
-			end
-			
+					-- Now generate ace files on both platforms as standard.
+				generate_ace_file (clone (windows_ace_file_name), windows_ace_name)
+				generate_ace_file (clone (unix_ace_file_name), linux_ace_name)
+			end	
 		end
 		
 		generate_ace_file (template_file_name, file_name: STRING) is

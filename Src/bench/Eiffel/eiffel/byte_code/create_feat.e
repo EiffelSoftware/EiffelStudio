@@ -8,6 +8,7 @@ inherit
 	SHARED_ENCODER;
 	SHARED_TABLE;
 	SHARED_DECLARATIONS;
+	SHARED_GENERATION_CONSTANTS
 
 feature 
 
@@ -84,9 +85,9 @@ feature
                     gen_file.putchar (')');
 					gen_file.putchar ('[');
 					if context.dt_current > 1 then
-						gen_file.putstring ("dtype");
+						gen_file.putstring (gc_dtype);
 					else
-						gen_file.putstring ("Dtype(Current)");
+						gen_file.putstring (gc_dtype_current);
 					end;
 					gen_file.putchar (']');
 						-- Remember extern declaration
@@ -96,14 +97,15 @@ feature
 				gen_file.putstring ("RTWT(");
 				gen_file.putint
 					(context.current_type.associated_class_type.id - 1);
-				gen_file.putstring (", ");
+				gen_file.putstring (gc_comma);
 				gen_file.putint (feature_id);
-				gen_file.putstring (", ");
+				gen_file.putstring (gc_comma);
 				if context.dt_current > 1 then
-					gen_file.putstring ("dtype)");
+					gen_file.putstring (gc_dtype);
 				else
-					gen_file.putstring ("Dtype(Current))");
+					gen_file.putstring (gc_dtype_current);
 				end;
+				gen_file.putchar (')');
 			end;
 		end;
 

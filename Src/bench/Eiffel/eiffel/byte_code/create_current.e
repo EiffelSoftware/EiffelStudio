@@ -4,8 +4,9 @@ class CREATE_CURRENT
 
 inherit
 
-	CREATE_INFO
-	
+	CREATE_INFO;
+	SHARED_GENERATION_CONSTANTS
+
 feature 
 
 	analyze is
@@ -21,9 +22,9 @@ feature
 		do
 			gen_file := context.generated_file;
 			if context.dt_current > 1 then
-				gen_file.putstring ("dtype");
+				gen_file.putstring (gc_dtype);
 			else
-				gen_file.putstring ("Dtype(Current)");
+				gen_file.putstring (gc_dtype_current);
 			end;
 		end;
 

@@ -37,7 +37,7 @@ feature
 			left.print_register;
 			generated_file.putstring (",(double)");
 			right.print_register;
-			generated_file.putstring (")");
+			generated_file.putchar (')');
 		end;
 
 	operator_constant: CHARACTER is

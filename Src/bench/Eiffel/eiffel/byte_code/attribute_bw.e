@@ -51,7 +51,7 @@ feature
 			generated_file.putchar ('(');
 			reg.print_register;
 			if reg.is_predefined or reg.register /= No_register then
-				generated_file.putstring (" + ");
+				generated_file.putstring (gc_plus);
 			else
 				generated_file.putstring (" +");
 				generated_file.new_line;
@@ -63,9 +63,9 @@ feature
 				generated_file.putstring ("RTWA(");
 			end;
 			generated_file.putint (typ.associated_class_type.id - 1);
-			generated_file.putstring (", ");
+			generated_file.putstring (gc_comma);
 			generated_file.putint (real_feature_id);
-			generated_file.putstring (", ");
+			generated_file.putstring (gc_comma);
 			if is_nested then
 				generated_file.putchar ('"');
 				generated_file.putstring (attribute_name);
@@ -73,9 +73,9 @@ feature
 				reg.print_register;
 			else
 				if context.dt_current > 1 then
-					generated_file.putstring ("dtype");
+					generated_file.putstring (gc_dtype);
 				else
-					generated_file.putstring ("Dtype(");
+					generated_file.putstring (gc_upper_dtype_lparan);
 					context.Current_register.print_register_by_name;
 					generated_file.putchar (')');
 				end;

@@ -50,7 +50,7 @@ feature
 				left.print_register;
 				generate_operator;
 				right.print_register;
-				generated_file.putstring (")");
+				generated_file.putchar (')');
 			else
 				left.print_register;
 				generate_operator;

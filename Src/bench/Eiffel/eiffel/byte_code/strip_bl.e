@@ -40,7 +40,7 @@ feature
 			cl_type: CLASS_TYPE
 		do
 			cl_type := Context.class_type;
-			generated_file.putstring ("{");
+			generated_file.putchar ('{');
 			generated_file.new_line;
 			generated_file.indent;
 			generated_file.putstring ("static char *items[");
@@ -52,7 +52,7 @@ feature
 			generated_file.putstring (" = ");
 			generated_file.putstring ("RTST(");
 			Context.Current_register.print_register_by_name;
-			generated_file.putstring (", ");
+			generated_file.putstring (gc_comma);
 			generated_file.putint (cl_type.type_id - 1);
 			generated_file.putstring (", items, ");
 			generated_file.putint (feature_ids.count);
@@ -74,12 +74,12 @@ feature
 			until
 				attr_names.after
 			loop
-				generated_file.putstring ("%"");
+				generated_file.putchar ('"');
 				generated_file.putstring (attr_names.item);
-				generated_file.putstring ("%"");
+				generated_file.putchar ('"');
 				attr_names.forth;
 				if not attr_names.after then
-					generated_file.putstring (", ")
+					generated_file.putstring (gc_comma);
 				end;	
 			end;
 		end;

@@ -63,13 +63,13 @@ feature
 			else
 				left_register.print_register;
 			end;
-			generated_file.putstring (", ");
+			generated_file.putstring (gc_comma);
 			if right_register = Void then
 				right.print_register;
 			else
 				right_register.print_register;
 			end;
-			generated_file.putstring (")");
+			generated_file.putchar (')');
 		end;
 
 	generate_bit_equal is

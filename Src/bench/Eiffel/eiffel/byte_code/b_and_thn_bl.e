@@ -106,7 +106,7 @@ feature
 					-- Test first value. If it is false, then the whole
 					-- expression is false and the right handside is not evaled.
 				left.generate;
-				generated_file.putstring ("if (");
+				generated_file.putstring (gc_if_l_paran);
 				left.print_register;
 				generated_file.putstring (") {");
 				generated_file.new_line;

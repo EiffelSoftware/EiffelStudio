@@ -135,7 +135,7 @@ feature
 						info.generate;
 						generated_file.putstring ("), ");
 						print_register;
-						generated_file.putstring (");");
+						generated_file.putstring (gc_rparan_comma);
 						generated_file.new_line;
 						call.generate_creation_call;
 					else
@@ -178,7 +178,7 @@ feature
 						info.generate;
 						generated_file.putstring ("), ");
 						print_register;
-						generated_file.putstring (");");
+						generated_file.putstring (gc_rparan_comma);
 						generated_file.new_line;
 					else
 						-- We had to get a regiser because RTAR evaluates its
@@ -188,7 +188,7 @@ feature
 						print_register;
 						generated_file.putstring (" = RTLN(");
 						info.generate;
-						generated_file.putstring (");");
+						generated_file.putstring (gc_rparan_comma);
 						generated_file.new_line;
 					end;
 					if call /= Void then
@@ -200,7 +200,7 @@ feature
 							-- Target is an attribute then
 						generated_file.putstring ("RTAR(");
 						print_register;
-						generated_file.putstring (", ");
+						generated_file.putstring (gc_comma);
 						context.Current_register.print_register_by_name;
 						generated_file.putchar (')');
 						generated_file.putchar (';');
@@ -224,7 +224,7 @@ feature
 			then
 				generated_file.putstring ("RTCI(");
 				print_register;
-				generated_file.putstring(");");
+				generated_file.putstring (gc_rparan_comma);
 				generated_file.new_line;
 			end
 		end;
@@ -241,7 +241,7 @@ feature
 		do
 			generated_file.putstring ("RTLN(");
 			info.generate;
-			generated_file.putstring (");");
+			generated_file.putstring (gc_rparan_comma);
 			generated_file.new_line;
 		end;
 
@@ -257,7 +257,7 @@ feature
 				else
 					generated_file.putstring ("RTXA(");
 					print_register;
-					generated_file.putstring (", ");
+					generated_file.putstring (gc_comma);
 					target.print_register;
 					generated_file.putchar (')');
 				end;

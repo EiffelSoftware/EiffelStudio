@@ -22,7 +22,7 @@ feature
 	generate_operator is
 			-- Generate the operator
 		do
-			generated_file.putstring (" * ");
+			generated_file.putstring (gc_star);
 		end;
 
 	generate_simple is

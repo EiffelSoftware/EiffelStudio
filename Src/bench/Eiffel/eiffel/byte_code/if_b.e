@@ -142,7 +142,7 @@ feature
 				-- Outstanding of if..then..else..end
 			generated_file.new_line;
 			condition.generate;
-			generated_file.putstring ("if (");
+			generated_file.putstring (gc_if_l_paran);
 			condition.print_register;
 			generated_file.putstring (") {");
 			generated_file.new_line;

@@ -4,8 +4,9 @@ class CREATE_ARG
 
 inherit
 
-	CREATE_INFO
-	
+	CREATE_INFO;
+	SHARED_GENERATION_CONSTANTS
+
 feature 
 
 	position: INTEGER;
@@ -39,7 +40,7 @@ feature
 			cl_type_i ?= type_i;
 			gen_file.putstring ("RTCA(arg");
 			gen_file.putint (position);
-			gen_file.putstring (", ");
+			gen_file.putstring (gc_comma);
 			gen_file.putint (cl_type_i.type_id - 1);
 			gen_file.putchar (')');
 		end;

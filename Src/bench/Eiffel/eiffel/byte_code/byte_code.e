@@ -237,7 +237,7 @@ feature
 				until
 					i > count
 				loop
-					generated_file.putstring (", ");
+					generated_file.putstring (gc_comma);
 					generated_file.putstring ("arg");
 					generated_file.putint (i);
 					i := i + 1;

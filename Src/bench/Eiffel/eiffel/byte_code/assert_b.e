@@ -62,20 +62,20 @@ feature
 				generated_file.putchar ('"');
 				generated_file.putstring (tag);
 				generated_file.putchar ('"');
-				generated_file.putstring(", ");
+				generated_file.putstring (gc_comma);
 			else
 				generated_file.putstring ("RTCS(");
 			end;
 			generate_assertion_code (context.assertion_type);
-			generated_file.putstring(");");
+			generated_file.putstring (gc_rparan_comma);
 			generated_file.new_line;
 				-- Now evaluate the expression
 			expr.generate;
-			generated_file.putstring ("if (");
+			generated_file.putstring (gc_if_l_paran);
 			expr.print_register;
 			generated_file.putstring (") {");
 			generate_sucess;
-			generated_file.putstring ("} else {");
+			generated_file.putstring (gc_lacc_else_r_acc);
 			generate_failure;
 			generated_file.putchar ('}');
 			generated_file.new_line;

@@ -420,7 +420,7 @@ feature
 				generated_file.putstring (" = ");
 				generated_file.putstring ("RTCL(");
 				source.print_register;
-				generated_file.putstring (");");
+				generated_file.putstring (gc_rparan_comma);
 				generated_file.new_line;
 			end;
 		end;
@@ -447,7 +447,7 @@ feature
 					generated_file.new_line;
 					generated_file.putstring ("RTAR(");
 					print_register;
-					generated_file.putstring (", ");
+					generated_file.putstring (gc_comma);
 					context.Current_register.print_register_by_name;
 					generated_file.putchar (')');
 					generated_file.putchar (';');
@@ -455,7 +455,7 @@ feature
 				else
 					generated_file.putstring ("RTAR(");
 					source_print_register;
-					generated_file.putstring (", ");
+					generated_file.putstring (gc_comma);
 					context.Current_register.print_register_by_name;
 					generated_file.putchar (')');
 					generated_file.putchar (';');
@@ -483,7 +483,7 @@ feature
 						print_register;
 					else
 						if is_bit_assignment then
-							generated_file.putstring (", ");
+							generated_file.putstring (gc_comma);
 							target.print_register;
 							generated_file.putchar (')');
 						else
@@ -495,7 +495,7 @@ feature
 				else
 					if how = Simple_assignment or need_aging_tests then
 						if is_bit_assignment then
-							generated_file.putstring (", ");
+							generated_file.putstring (gc_comma);
 							target.print_register;
 							generated_file.putchar (')');
 						else
@@ -514,7 +514,7 @@ feature
 				else
 					source.print_register;
 				end;
-				generated_file.putstring (", ");
+				generated_file.putstring (gc_comma);
 				target.print_register;
 				generated_file.putchar (')');
 				generated_file.putchar (';');

@@ -102,24 +102,24 @@ feature -- Code generation
 				end;
 			end;
 			type_c (id).generate (generated_file)
-			generated_file.putstring (", ");
+			generated_file.putstring (gc_comma);
 			generated_file.putstring (reg_name (id));
-			generated_file.putstring (", ");
+			generated_file.putstring (gc_comma);
 			if not access_area then
 				generated_file.putstring (register_acces (id));
-				generated_file.putstring (", ");
+				generated_file.putstring (gc_comma);
 			end;
 
 			expr ?= parameters @ 1;
 			expr.print_register
 
 			if not is_item then
-				generated_file.putstring (", ");
+				generated_file.putstring (gc_comma);
 					-- Index
 				expr ?= parameters @ 2
 				expr.print_register
 			end
-			generated_file.putstring (");");
+			generated_file.putstring (gc_rparan_comma);
 		end
 
 end

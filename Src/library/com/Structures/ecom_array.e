@@ -380,22 +380,22 @@ feature {NONE} -- Implementation
 		do
 			from
 				Result := 0
-				i := 0
+				i := 1
 			variant
-				dimension_count - i 
+				dimension_count - i + 1
 			until
-				i = dimension_count
+				i = dimension_count + 1
 			loop
 				from
 					inter_dim := 1
 					j := i + 1
 				variant
-					dimension_count - i
+					dimension_count - j + 1
 				until
-					j = dimension_count
+					j = dimension_count + 1
 				loop
 					inter_dim := inter_dim * element_counts.item (j)
-					j := j +1
+					j := j + 1
 				end
 				Result := Result + 
 						(some_indeces.item (i) - lower_indeces.item (i)) * inter_dim

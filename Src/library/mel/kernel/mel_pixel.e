@@ -11,9 +11,14 @@ class
 
 inherit
 
-	ANY
+	MEL_RESOURCE
+		rename
+			handle as identifier,
+			make_from_existing as old_make_from_existing
+		export
+			{NONE} old_make_from_existing
 		redefine
-			is_equal
+			is_valid
 		end
 
 creation
@@ -23,151 +28,248 @@ creation
 
 feature {NONE} -- Initilization
 
-	make_by_name (a_color_name: STRING; a_screen: MEL_SCREEN) is
+	make_by_name (a_display: MEL_DISPLAY; a_colormap: MEL_COLORMAP;
+			a_color_name: STRING) is
 			-- Make a pixel from the name of a color.
 		require
-			a_color_name_not_void: a_color_name /= Void;
-			a_screen_not_void: a_screen /= Void
+			valid_display: a_display /= Void and then a_display.is_valid
+			valid_colormap: a_colormap /= Void and then a_colormap.is_valid
+			color_name_not_void: a_color_name /= Void;
 		local
 			temp: ANY
 		do
 			temp := a_color_name.to_c;
-			screen := a_screen;
-			id := get_color_by_name ($temp, a_screen.handle, $error);
+			display_handle := a_display.handle;
+			colormap_identifier := a_colormap.identifier;
+			identifier := get_color_by_name ($temp, 
+				display_handle, colormap_identifier);
+			status := last_color_alloc_status
+		ensure
+			has_valid_display: has_valid_display;
+			has_valid_colormap: has_valid_colormap
 		end;
 
-	make_by_rgb_value (red_value, green_value, blue_value: INTEGER;  
-				a_screen: MEL_SCREEN) is
+	make_by_rgb_value (a_display: MEL_DISPLAY; a_colormap: MEL_COLORMAP;
+				red_value, green_value, blue_value: INTEGER) is
 			-- Make a pixel from a rgb value.
 			-- Caution, red, green and blue are 16 bits int values.
 		require
+			valid_display: a_display /= Void and then a_display.is_valid;
+			valid_colormap: a_colormap /= Void and then a_colormap.is_valid
 			red_value_large_enough: red_value >= 0;
 			red_value_small_enough: red_value <= 65535;
 			green_value_large_enough: green_value >= 0;
 			green_value_small_enough: green_value <= 65535;
 			blue_value_large_enough: blue_value >= 0;
 			blue_value_small_enough: blue_value <= 65535;
-			a_screen_not_void: a_screen /= Void
 		do
-			screen := a_screen;
-			id := get_color_by_rgb_value (red_value, green_value, blue_value, a_screen.handle, $error)
+			colormap_identifier := a_colormap.identifier;
+			display_handle := a_display.handle;
+			identifier := get_color_by_rgb_value 
+				(red_value, green_value, blue_value, 
+					display_handle, colormap_identifier);
+			status := last_color_alloc_status;
+		ensure
+			has_valid_display: has_valid_display;
+			has_valid_colormap: has_valid_colormap
 		end;
 
-	make_from_existing (an_id: INTEGER; a_screen: MEL_SCREEN) is
+	make_from_existing (a_display: MEL_DISPLAY; an_id: like identifier) is
 			-- Make a pixel from an already existing value.
 		require
-			an_id_large_enough: an_id >= 0;
-			 a_screen_not_void: a_screen /= Void
+			valid_display: a_display /= Void and then a_display.is_valid
 		do
-			screen := a_screen;
-			id := an_id;
-			error := 0;
-		ensure
-			id_set: id = an_id;
-			pixel_is_valid: is_valid
+			identifier := an_id;
+			display_handle := a_display.handle;
+			status := 0;
+		ensure then
+			is_valid: is_valid
 		end;
 
 feature -- Access
 
-	id: INTEGER;
+	colormap_identifier: POINTER;
+			-- Associated color map identifier used to
+			-- allocate the colors
 
-	screen: MEL_SCREEN
-
-feature -- Comparison
-
-	is_equal (other:like Current): BOOLEAN is
-			-- Is Current color equal to `other' id value?
+	colormap: MEL_COLORMAP is
+			-- Associated color map
 		do
-			Result := id = other.id
+			if colormap_identifier /= default_pointer then	
+				!! Result.make_from_existing (colormap_identifier)
+			end
+		end;
+
+	is_bad_color_name: BOOLEAN is
+			-- Did the last attempt of allocating a color
+			-- could not be done successfully because the color
+			-- name did not exist?
+		do
+			Result := status = BAD_COLOR_NAME
+		end;
+
+	is_no_free_cell_available: BOOLEAN is
+			-- Did the last attempt of allocating a color
+			-- could not be done successfully because there were
+			-- no free cell available?
+		do
+			Result := status = NO_FREE_CELL_AVAILABLE
+		end;
+
+	has_valid_colormap: BOOLEAN is
+			-- Has the `colormap_identifier' been set?
+		do
+			Result := colormap_identifier /= default_pointer
+		ensure
+			valid_result: Result implies colormap_identifier /= default_pointer
 		end;
 
 feature -- Status report
 
 	is_valid: BOOLEAN is
-			-- Has this pixel been allocated ?
+			-- Is Current pixel valid?
 		do
-			Result := error = 0
+			Result := status = 0
 		end;
 
 	red: INTEGER is
-			-- Return the red component of this color.
+			-- Red component value of this color
 		require
-			pixel_is_valid: is_valid
+			pixel_is_valid: is_valid;
+			has_valid_colormap: has_valid_colormap
 		do
-			Result := red_component (id, screen.handle)
+			Result := red_component (identifier, display_handle, colormap_identifier)
 		ensure
 			red_value_large_enough: Result >= 0;
 			red_value_small_enough: Result <= 65535
 		end;
 
 	green: INTEGER is
-			-- Return the green component of this color.
+			-- Green component value of this color
 		require
-			pixel_is_valid: is_valid
+			pixel_is_valid: is_valid;
+			has_valid_colormap: has_valid_colormap
 		do
-			Result := green_component (id, screen.handle)
+			Result := green_component (identifier, 
+				display_handle, colormap_identifier)
 		ensure
 			green_value_large_enough: Result >= 0;
 			green_value_small_enough: Result <= 65535
 		end;
 
 	blue: INTEGER is
-			-- Return the blue component of this color.
+			-- Blue component value of this color
 		require
-			pixel_is_valid: is_valid
+			pixel_is_valid: is_valid;
+			has_valid_colormap: has_valid_colormap
 		do
-			Result := blue_component (id, screen.handle)
+			Result := blue_component (identifier, 
+				display_handle, colormap_identifier)
 		ensure
 			blue_value_large_enough: Result >= 0;
 			blue_value_small_enough: Result <= 65535
 		end;
 
+feature -- Status setting
+
+    set_colormap (a_colormap: MEL_COLORMAP) is
+            -- Set `colormap' to `a_colormap'.
+        require
+			colormap_not_set: not has_valid_colormap;
+            valid_colormap: a_colormap /= Void and then a_colormap.is_valid
+        do
+            colormap_identifier := a_colormap.identifier
+        ensure
+			set: equal (colormap, a_colormap);
+            valid_colormap: has_valid_colormap
+        end;
+
 feature -- Removal
 
-	destroy is
-			-- Free the cell.
+	free is
+			-- Free the cell from `colormap'.
+		require
+			has_valid_colormap: has_valid_colormap;
+			not_destroyed: not is_destroyed
 		do
-			-- Call
-			    --XFreeColors (temp, DefaultColormap (temp, DefaultScreen (temp)),
-                 --       (unsigned long *) &num, 1, 0);
-		
+			x_free_color (display_handle, 
+					colormap_identifier,
+					identifier);
+			identifier := default_pointer;
+			status := ALREADY_FREED
+		ensure
+			is_destroyed: is_destroyed
 		end;
-
-feature {NONE} -- Access implementation
-
-	error: INTEGER;
-			-- Possible values for error:
-			-- O: no error
-			-- 1: bad screen pointer given to the get_color function is black and white
-			-- 2: bad color name
-			-- 3: couldn't allocate the color (no more cells in the colormap)
 
 feature {NONE} -- Implementation
 
-	get_color_by_name (a_string: POINTER; screen_ptr: POINTER; error_ptr: POINTER): INTEGER is
+	status: INTEGER;
+			-- Possible values for error:
+			-- O: no error
+			-- -1: bad screen pointer given to the get_color function is black and white
+			-- -2: bad color name
+			-- -3: couldn't allocate the color (no more cells in the colormap)
+			-- -99: Alread freed
+
+	ALREADY_FREED: INTEGER is -99;	
+
+feature {NONE} -- Implementation
+
+	get_color_by_name (a_string: POINTER; a_display, cmap: POINTER): POINTER is
 		external
 			"C"
 		end;
 
-	get_color_by_rgb_value (red_value, green_value, blue_value: INTEGER; screen_ptr: POINTER; error_ptr: POINTER): INTEGER is
+	get_color_by_rgb_value (red_value, green_value, 
+			blue_value: INTEGER; a_display, cmap: POINTER): POINTER is
 		external
 			"C"
 		end;
 
-	red_component (pixel: INTEGER; screen_ptr: POINTER): INTEGER is
+	red_component (pixel: POINTER; a_display, a_colormap: POINTER): INTEGER is
 		external
 			"C"
 		end;
 
-	green_component (pixel: INTEGER; screen_ptr: POINTER): INTEGER is
+	green_component (pixel: POINTER; a_display, a_colormap: POINTER): INTEGER is
 		external
 			"C"
 		end;
 
-	blue_component (pixel: INTEGER; screen_ptr: POINTER): INTEGER is
+	blue_component (pixel: POINTER; a_display, a_colormap: POINTER): INTEGER is
 		external
 			"C"
 		end;
+
+	last_color_alloc_status: INTEGER is
+		external
+			"C [macro <pixel.h>]: EIF_INTEGER"
+		alias
+			"last_color_alloc_status"
+		end;
+
+	x_free_color (a_display, a_colormap, an_id: POINTER) is
+		external
+			"C"
+		end;
+
+	BAD_COLOR_NAME: INTEGER is
+		external
+			"C [macro <pixel.h>]: EIF_INTEGER"
+		alias
+			"BAD_COLOR_NAME"
+		end;
+
+	NO_FREE_CELL_AVAILABLE: INTEGER is
+		external
+			"C [macro <pixel.h>]: EIF_INTEGER"
+		alias
+			"NO_FREE_CELL_AVAILABLE"
+		end;
+
+invariant
+
+	valid_display: has_valid_display
 
 end -- class MEL_PIXEL
 

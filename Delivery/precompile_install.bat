@@ -39,7 +39,7 @@ echo %DEL% * >> cleanup.bat
 
 rem Precompiling EiffelBase
 cd precomp\spec\windows\base
-%RM% EIFGEN
+if exist EIFGEN %RM% EIFGEN
 %EC% -precompile
 cd EIFGEN\W_code
 copy ..\..\..\..\..\..\cleanup.bat .

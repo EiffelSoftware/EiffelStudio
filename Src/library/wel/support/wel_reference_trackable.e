@@ -102,15 +102,15 @@ feature {NONE} -- Removal
 			if exists and then not shared then
 				debug ("WEL")
 					if reference_tracked and references_count > 0 then
-						io.putstring ("----------------------------------------------------------------%N")
-						io.putstring ("Warning, reference tracking was enabled for the following object%N")
-						io.putstring ("but `reference_number' was not equal to zero at dispose time%N")
-						io.new_line
-						io.putstring ("Put a conditional breakpoint in `enable_reference_tracking' to%N")
-						io.putstring ("discover when the object with `internal_number_id'="+internal_number_id.out+" is created.%N%N")
+						print ("----------------------------------------------------------------%N")
+						print ("Warning, reference tracking was enabled for the following object%N")
+						print ("but `reference_number' was not equal to zero at dispose time%N%N")
+						print ("Put a conditional breakpoint in `enable_reference_tracking' to%N")
+						print ("discover when the object with `internal_number_id'=")
+						print (internal_number_id.out)
+						print (" is created.%N%N")
 						print (Current)
-						io.putstring ("----------------------------------------------------------------%N")
-						io.new_line
+						print ("----------------------------------------------------------------%N")
 					end
 				end
 				destroy_item

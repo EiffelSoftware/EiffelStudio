@@ -133,7 +133,7 @@ feature -- Basic operations
 			end
 			a_visitor.set_c_post_type (c_post_type)
 			a_visitor.set_c_type (c_type)
-			if is_basic_type or is_enumeration or is_boolean (vt_type) then
+			if is_basic_type or is_enumeration or (vt_type = Vt_bool) then
 				a_visitor.set_cecil_type (cecil_type)
 			end
 

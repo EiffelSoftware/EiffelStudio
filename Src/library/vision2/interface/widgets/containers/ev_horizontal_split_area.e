@@ -27,7 +27,7 @@ feature -- Initialization
 			create {EV_VERTICAL_SEPARATOR} sep
 			initialize_split_area
 			sep.pointer_button_press_actions.extend (~on_click)
-			is_initialized := True
+			Precursor
 		end
 	
 feature -- Access
@@ -126,9 +126,11 @@ feature {NONE} -- Implementation
 			if separator_in_motion then
 				scr.draw_segment (previous_split_position, first_cell_screen_y,
 					previous_split_position, first_cell_screen_y + sep.height)
-				scr.draw_segment (wid, first_cell_screen_y, wid, first_cell_screen_y + sep.height)
+				scr.draw_segment (wid, first_cell_screen_y, wid,
+					first_cell_screen_y + sep.height)
 			else
-				scr.draw_segment (wid, first_cell_screen_y, wid, first_cell_screen_y + sep.height)
+				scr.draw_segment (wid, first_cell_screen_y, wid,
+					first_cell_screen_y + sep.height)
 				separator_in_motion := True
 			end
 
@@ -140,9 +142,14 @@ feature {NONE} -- Implementation
 	previous_split_position: INTEGER
 		-- Previous split_position
 
+
 	first_cell_screen_x: INTEGER
+		-- Horizontal screen offset of first cell.
+		-- Used for speed optimization of motion routine.
+
 	first_cell_screen_y: INTEGER
-		-- Screen X/Y of first cell, used for speed optimization of motion routine.
+		-- Vertical screen offset of first cell.
+		-- Used for speed optimization of motion routine.
 
 	on_release (a_x, a_y, e: INTEGER; f, g, h: DOUBLE; scr_x, scr_y: INTEGER) is
 			-- End of the drag.
@@ -153,7 +160,8 @@ feature {NONE} -- Implementation
 					previous_split_position, first_cell_screen_y + sep.height)
 			end
 	
-			first_cell.set_minimum_width (valid_split_position (scr_x - mouse_screen_coord))
+			first_cell.set_minimum_width (valid_split_position (
+				scr_x - mouse_screen_coord))
 			sep.pointer_motion_actions.wipe_out
 			sep.disable_capture
 			separator_in_motion := False
@@ -175,7 +183,8 @@ feature {NONE} -- Implementation
 
 			if Result < first.minimum_width then
 				Result := first.minimum_width
-			elseif Result > (split_box.width - sep.width - sec_item_min_width) then
+			elseif Result > (split_box.width -
+					sep.width - sec_item_min_width) then
 				Result := (split_box.width - sep.width - sec_item_min_width)
 			end
 		end
@@ -203,6 +212,10 @@ end -- class EV_HORIZONTAL_SPLIT_AREA_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/03/03 20:32:24  brendel
+--| Fixed bug in initialize. Before, Precursor was not called.
+--| Formatted for 80 columns.
+--|
 --| Revision 1.8  2000/03/01 03:30:06  oconnor
 --| added make_for_test
 --|
@@ -210,7 +223,8 @@ end -- class EV_HORIZONTAL_SPLIT_AREA_I
 --| updated copyright date and formatting
 --|
 --| Revision 1.6  2000/02/21 20:11:17  rogers
---| There is no longer an EV_HORIZONTAL_SPLIT_AREA_I, so moved the appropriate implementation into this class.
+--| There is no longer an EV_HORIZONTAL_SPLIT_AREA_I, so moved the appropriate
+--| implementation into this class.
 --|
 --| Revision 1.5  2000/02/14 11:40:51  oconnor
 --| merged changes from prerelease_20000214

@@ -149,12 +149,36 @@ feature {EV_ANY_I} -- Implementation
 			-- Is the cursor over a target that accepts `pebble'?
 
 	accept_cursor: EV_CURSOR
+		-- Accept cursor set by user.
 		-- To be displayed when the screen pointer is over a target that accepts
 		-- `pebble' during pick and drop.
 
 	deny_cursor: EV_CURSOR
+		-- Deny cursor set by user.
 		-- To be displayed when the screen pointer is not over a valid target.
 
+	default_accept_cursor: EV_CURSOR is
+			-- Default accept cursor used when there is no accept cursor set by user.
+			-- To be displayed when the screen pointer is over a target that accepts
+			-- `pebble' during pick and drop.
+		local
+			cursor_code: EV_CURSOR_CODE
+		once
+			create cursor_code
+			create result.make_with_code (cursor_code.standard)
+		end
+
+	default_deny_cursor: EV_CURSOR is
+			-- Default deny cursor used when there is no deny cursor set by user.
+			-- Deny cursor set by user.
+			-- To be displayed when the screen pointer is not over a valid target.
+		local
+			cursor_code: EV_CURSOR_CODE
+		once
+			create cursor_code
+			create result.make_with_code (cursor_code.no)
+		end
+	
 	execute (
 			a_x, a_y: INTEGER;
 			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
@@ -272,6 +296,9 @@ end -- class EV_PICK_AND_DROPABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/20 18:04:06  rogers
+--| Added default_accept_cursor and default_deny_cursor.
+--|
 --| Revision 1.18  2000/03/17 23:09:53  rogers
 --| Fixed execute. Added set_pointer_style.
 --|

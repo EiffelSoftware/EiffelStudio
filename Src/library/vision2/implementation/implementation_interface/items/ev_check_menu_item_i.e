@@ -8,26 +8,12 @@ deferred class
 	EV_CHECK_MENU_ITEM_I
 
 inherit
-	EV_MENU_ITEM_I
+	EV_SELECT_MENU_ITEM_I
 		redefine
 			interface
 		end
 	
-feature -- Status report
-
-	is_selected: BOOLEAN is
-			-- Is this menu item checked?
-		deferred
-		end
-
 feature -- Status setting
-
-	enable_select is
-			-- Select this menu item.
-		deferred
-		ensure
-			is_selected: is_selected
-		end
 
 	disable_select is
 			-- Deselect this menu item.
@@ -70,6 +56,10 @@ end -- class EV_CHECK_MENU_ITEM_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/02/24 20:33:49  brendel
+--| Removed features `is_selected' and `enable_select', since they are now
+--| defined in EV_SELECT_MENU_ITEM_I.
+--|
 --| Revision 1.10  2000/02/24 16:51:35  brendel
 --| Restored old contract on `toggle'.
 --|

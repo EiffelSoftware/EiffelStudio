@@ -24,7 +24,7 @@ feature -- Access
 		do
 			if public_key_token /= Void then
 				last_call_success := c_define_assembly_ref (item, public_key_token.item.item,
-					public_key_token.item.size,
+					public_key_token.item.count,
 					assembly_name.item, assembly_info.item, null, 0, 0, $Result)
 			else
 				last_call_success := c_define_assembly_ref (item, null, 0,

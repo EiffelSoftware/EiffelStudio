@@ -215,6 +215,7 @@ ESRC = \
 
 
 MT_LOBJ = \
+	MTeif_special_table.o \
 	MTeif_once.o \
 	MTcompress.o \
 	MTconsole.o \
@@ -265,6 +266,7 @@ MT_LOBJ = \
 	MTrout_obj.o
 
 LOBJ = \
+	eif_special_table.o \
 	eif_once.o \
 	compress.o \
 	console.o \
@@ -316,6 +318,7 @@ LOBJ = \
 
 WOBJ = \
 	$(NETWORK) \
+	eif_special_table.o \
 	eif_once.o \
 	compress.o \
 	console.o \
@@ -371,6 +374,7 @@ WOBJ = \
 
 MT_WOBJ = \
 	$(MTNETWORK) \
+	MTeif_special_table.o \
 	MTeif_once.o \
 	MTcompress.o \
 	MTconsole.o \
@@ -426,6 +430,7 @@ MT_WOBJ = \
 
 EOBJ = \
 	woption.o \
+	eif_special_table.o \
 	eif_once.o \
 	compress.o \
 	console.o \
@@ -906,6 +911,9 @@ MTeif_rw_lock.o: eif_rw_lock.c
 	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTeif_threads.o: eif_threads.c
+	$(CC) -c $(JMTCFLAGS)  $? -o $@
+
+MTeif_special_table.o: eif_special_table.c
 	$(CC) -c $(JMTCFLAGS)  $? -o $@
 
 MTeif_once.o: eif_once.c

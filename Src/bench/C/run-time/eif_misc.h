@@ -37,6 +37,7 @@ extern "C" {
 #define conv_ri(v) ((EIF_INTEGER) (v))
 #define conv_dr(d) ((EIF_REAL) (d))
 #define conv_di(d) ((EIF_INTEGER) (d))
+#define conv_di64(d) ((EIF_INTEGER_64) (d))
 
 RT_LNK EIF_INTEGER bointdiv(EIF_INTEGER n1, EIF_INTEGER n2);
 RT_LNK EIF_INTEGER upintdiv(EIF_INTEGER n1, EIF_INTEGER n2);

@@ -72,7 +72,11 @@ rt_public bool_t idr_u_long(IDR *idrs, long unsigned int *lp)
 			idrs->i_ptr += size;
 		}
 		else {						/*decode an 8 byte long */
-			unsigned long upper, lower;
+			unsigned long lower;
+#if LNGSIZ == 4
+#else
+			unsigned long upper;
+#endif
 
 			bcopy(idrs->i_ptr, &value, 4);
 			lower = (unsigned long) ntohl(value);

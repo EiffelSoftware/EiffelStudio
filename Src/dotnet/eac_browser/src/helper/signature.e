@@ -46,7 +46,6 @@ feature -- Implementation
 				if i > 1 then
 					Result.append (",")
 				end
-				--Result.append (a_member.arguments.item (i).dotnet_name + ": " + a_member.arguments.item (i).type.name)
 				Result.append (a_member.arguments.item (i).type.name)
 
 				i := i + 1
@@ -244,7 +243,8 @@ feature -- Xml Documentation
 			i: INTEGER
 		do
 			create Result.make (80)
-			Result.append (a_full_dotnet_type_name + "." + a_member.dotnet_name)
+--			Result.append (a_full_dotnet_type_name + ".")
+			Result.append (a_member.dotnet_name)
 
 			from
 				i := 1
@@ -279,7 +279,8 @@ feature -- Xml Documentation
 			i: INTEGER
 		do
 			create Result.make (80)
-			Result.append (a_full_dotnet_type_name + "." + "#ctor")
+			--Result.append (a_full_dotnet_type_name + "." + 
+			Result.append ("#ctor")
 			from
 				i := 1
 			until

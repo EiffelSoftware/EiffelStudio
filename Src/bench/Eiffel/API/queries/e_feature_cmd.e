@@ -12,24 +12,21 @@ inherit
 
 	E_CLASS_CMD
 		rename
-			make as class_make,
-			set as class_set
+			make as class_make
 		export
-			{NONE} class_make, class_set
+			{NONE} class_make
 		redefine
 			executable
 		end
 
 feature -- Initialization
 
-	set, make (a_feature: E_FEATURE; st: like structured_text) is
-			-- Make current command with current_feature as
-			-- `a_feature' defined in current_class `a_class_c'.
+	make (a_feature: E_FEATURE) is
+			-- Make current command with current_feature as `a_feature'.
 		require
-			non_void_a_feature: a_feature /= Void;
-			non_void_st: st /= Void;
+			non_void_a_feature: a_feature /= Void
 		do
-			class_make (a_feature.associated_class, st);
+			class_make (a_feature.associated_class);
 			current_feature := a_feature
 		ensure
 			current_feature_set: current_feature = a_feature

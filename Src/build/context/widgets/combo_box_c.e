@@ -9,6 +9,9 @@ class
 
 inherit
 	TEXT_FIELD_C
+		undefine
+			add_pnd_callbacks,
+			remove_pnd_callbacks
 		redefine
 			gui_object,
 			symbol, type,
@@ -34,7 +37,7 @@ feature -- Type data
 			create Result.make_with_size (0, 0)
 		end
 
-	type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE [like Current] is
 		do
 			Result := context_catalog.text_page.combo_box_type
 		end

@@ -7,34 +7,15 @@ indexing
 deferred class CONTEXT_CAT_PAGE 
 
 inherit
-
  	CONSTANTS
 
---	FOCUSABLE
-	
 feature -- Focusable
 
---	Focus_labels: FOCUS_LABEL_CONSTANTS is
+--	tooltip: EV_TOOLTIP is
+--			-- Tooltip for the context catalog button
 --		once
---			!! Result
---		end
-
---	focus_label: FOCUS_LABEL_I is
---			-- has to be redefined, so that it returns correct toolkit initializer
---			-- to which object belongs for every instance of this class
---		local
---			ti: TOOLTIP_INITIALIZER
---		do
---			ti ?= top
---			check
---				valid_tooltip_initializer: ti/= void
---			end
---			Result := ti.label
---		end
-
---	focus_source: WIDGET is
---		do
---			Result := button
+--			create Result.make
+--			Result.enable
 --		end
 
 feature {NONE} -- Initialization
@@ -57,14 +38,15 @@ feature {NONE} -- Implementation
 
 	toolbar: EV_TOOL_BAR
 
- 	create_type (a_context: CONTEXT; a_pixmap: EV_PIXMAP): CONTEXT_TYPE is
+ 	create_button (type: CONTEXT_TYPE [CONTEXT]; pix: EV_PIXMAP) is
+			-- Add a button in the `toolbar'.
  		local
- 			a_button: EV_TOOL_BAR_BUTTON
+ 			butt: EV_TOOL_BAR_BUTTON
  		do
- 			create a_button.make_with_pixmap (toolbar, a_pixmap)
---			a_button.set_focus_string (a_context.full_type_name)
-			create Result.make (a_context)
-			Result.initialize_callbacks (a_button)
+ 			create butt.make_with_pixmap (toolbar, pix)
+--			tooltip.add_tip (butt, type.full_type_name)
+			--XX doesn't work on tool-bar button yet.
+			type.initialize_callbacks (butt)
  		end
 
 	build_interface is

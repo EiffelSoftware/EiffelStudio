@@ -19,7 +19,7 @@ inherit
 
 feature -- Type data
 
-	type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE [like Current] is
 		do
 			Result := context_catalog.text_page.rich_text_type
 		end

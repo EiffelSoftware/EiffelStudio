@@ -25,13 +25,7 @@ feature {NONE} -- Callbacks
 	add_gui_callbacks is
 			-- Define the general behavior of the GUI object.
 		do
-		end
-
-	initialize_transport is
-			-- Initialize the mechanism through which
-			-- the current context may be dragged and
-			-- dropped.
-		do
+			add_pnd_callbacks
 		end
 
 	remove_gui_callbacks is
@@ -39,11 +33,18 @@ feature {NONE} -- Callbacks
 			-- (Need to only remove callbacks part of a list
 			-- since set_action will overwrite previous callbacks).
 		do
+			remove_pnd_callbacks
 		end
 
-feature -- Status report
+feature {NONE} -- Pick and drop
 
-feature -- Status setting
+	add_pnd_callbacks is
+		do
+		end
+
+	remove_pnd_callbacks is
+		do
+		end
 
 feature -- Implementation
 

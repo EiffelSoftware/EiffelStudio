@@ -8,7 +8,7 @@ class
 	TOOL_BAR_RADIO_BUTTON_C
 
 inherit
-	TOOL_BAR_BUTTON_C
+	TOOL_BAR_TOGGLE_BUTTON_C
 		redefine
 			symbol, type,
 			namer, eiffel_type,
@@ -23,7 +23,7 @@ feature -- Type data
 --			Result := Pixmaps.toolbar_radio_pixmap
 		end
 
-	type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE [like Current] is
 		do
 			Result := context_catalog.toolbar_page.toolbar_radio_type
 		end

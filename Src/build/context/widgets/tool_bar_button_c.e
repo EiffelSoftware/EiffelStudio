@@ -22,9 +22,14 @@ feature -- Type data
 --			Result := Pixmaps.toolbar_button_pixmap
 		end
 
-	type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE [like Current] is
 		do
 			Result := context_catalog.toolbar_page.toolbar_button_type
+		end
+
+	data_type: EV_PND_TYPE is
+		do
+			Result := Pnd_types.toolbar_item_type
 		end
 
 feature -- Context creation

@@ -23,6 +23,7 @@ inherit
 			--retrieve_set_visual_name, 
 			update_visual_name_in_editor,
 			is_able_to_be_grouped, title_label,
+			add_pnd_callbacks,
 			add_gui_callbacks,
 			option_list
 		end
@@ -56,23 +57,14 @@ feature -- Context creation
 			create_cmd.update_history
 		end
 
---	remove_yourself is
---		local
---			command: CONTEXT_CUT_CMD
---		do
---			create command
---			command.execute (Current)
-----			tree.display (Current)
---		end
-
 feature -- Basic operations
 
 	raise is
 		do
---			if not shown then
+			if not shown then
 				show
---			end
---			gui_object.raise
+			end
+			gui_object.raise
 		end
 
 feature -- Access
@@ -325,10 +317,10 @@ feature -- Status setting
 
 feature -- Default event
 
---	default_event: MOUSE_ENTER_EV is
---		do
---			Result := mouse_enter_ev
---		end	
+	default_event: ENTER_NOTIFY_EV is
+		do
+			Result := enter_notify_ev
+		end	
 
 feature -- File names
 
@@ -411,6 +403,16 @@ feature -- Geometry management
 			-- Previously saved geometry values for configure event
 
 feature {NONE} -- Callbacks
+
+	add_pnd_callbacks is
+		local
+			rcmd: EV_ROUTINE_COMMAND
+		do
+			{CONTAINER_C} Precursor
+			create rcmd.make (~process_type)
+			gui_object.add_pnd_command (Pnd_types.window_child_type, rcmd, Void)
+			tree_element.add_pnd_command (Pnd_types.window_child_type, rcmd, Void)
+		end
 
 	add_gui_callbacks is
 			-- Define the general behavior of the GUI object.

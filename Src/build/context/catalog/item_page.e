@@ -15,41 +15,30 @@ creation
 
 feature -- Access
 
-	toolbar_type: CONTEXT_TYPE
-	toolbar_button_type: CONTEXT_TYPE
-	toolbar_toggle_type: CONTEXT_TYPE
-	toolbar_radio_type: CONTEXT_TYPE
-	toolbar_separator_type: CONTEXT_TYPE
+	toolbar_type: CONTEXT_TYPE [TOOL_BAR_C]
+	toolbar_button_type: CONTEXT_TYPE [TOOL_BAR_BUTTON_C]
+	toolbar_toggle_type: CONTEXT_TYPE [TOOL_BAR_TOGGLE_BUTTON_C]
+	toolbar_radio_type: CONTEXT_TYPE [TOOL_BAR_RADIO_BUTTON_C]
+	toolbar_separator_type: CONTEXT_TYPE [TOOL_BAR_SEPARATOR_C]
 
 feature {NONE} -- Initialization
 
 	build_interface is
-		local
-			toolbar_c: TOOL_BAR_C
-			toolbar_button_c: TOOL_BAR_BUTTON_C
-			toolbar_toggle_c: TOOL_BAR_TOGGLE_BUTTON_C
-			toolbar_radio_c: TOOL_BAR_RADIO_BUTTON_C
-			toolbar_separator_c: TOOL_BAR_SEPARATOR_C
 		do
- 			create toolbar_c
- 			toolbar_type := create_type (toolbar_c, Pixmaps.cat_toolbar_pixmap)
+ 			create toolbar_type.make (create {TOOL_BAR_C})
+ 			create_button (toolbar_type, Pixmaps.cat_toolbar_pixmap)
 
- 			create toolbar_button_c
- 			toolbar_button_type := create_type (toolbar_button_c,
-										Pixmaps.cat_toolbar_button_pixmap)
+ 			create toolbar_button_type.make (create {TOOL_BAR_BUTTON_C})
+			create_button (toolbar_button_type, Pixmaps.cat_toolbar_button_pixmap)
 
- 			create toolbar_toggle_c
- 			toolbar_toggle_type := create_type (toolbar_toggle_c,
-										Pixmaps.cat_toolbar_toggle_pixmap)
+ 			create toolbar_toggle_type.make (create {TOOL_BAR_TOGGLE_BUTTON_C})
+ 			create_button (toolbar_toggle_type, Pixmaps.cat_toolbar_toggle_pixmap)
 
- 			create toolbar_radio_c
- 			toolbar_radio_type := create_type (toolbar_radio_c,
-										Pixmaps.cat_toolbar_radio_pixmap)
+ 			create toolbar_radio_type.make (create {TOOL_BAR_RADIO_BUTTON_C})
+ 			create_button (toolbar_radio_type, Pixmaps.cat_toolbar_radio_pixmap)
 
- 			create toolbar_separator_c
- 			toolbar_separator_type := create_type (toolbar_separator_c,
-										Pixmaps.cat_toolbar_separator_pixmap)
-
+ 			create toolbar_separator_type.make (create {TOOL_BAR_SEPARATOR_C})
+ 			create_button (toolbar_separator_type, Pixmaps.cat_toolbar_separator_pixmap)
 		end
 
 	tab_label: STRING is

@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 			create routine_cmd.make (~process_context)
 			add_pnd_command (Pnd_types.context_type, routine_cmd, Void)
 			create routine_cmd.make (~process_type)
-			add_pnd_command (Pnd_types.window_type, routine_cmd, Void)
+			add_pnd_command (Pnd_types.perm_wind_type, routine_cmd, Void)
 		end
 
 feature {NONE} -- GUI attribute
@@ -104,7 +104,7 @@ feature {CONTEXT_TREE} -- Routine commands
 	process_type (arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
 			-- Create new permanent windows
 		local
-			context_type: CONTEXT_TYPE
+			context_type: CONTEXT_TYPE [CONTEXT]
 			new_context: CONTEXT
 		do
 			if main_window.project_initialized then

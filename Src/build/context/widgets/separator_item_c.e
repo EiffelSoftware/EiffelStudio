@@ -13,10 +13,6 @@ inherit
 			gui_object
 		end
 
-feature -- Status report
-
-feature -- Status setting
-
 feature -- Implementation
 
 	gui_object: EV_SEPARATOR_ITEM

@@ -26,9 +26,14 @@ feature -- Type data
 			create Result.make_with_size (0, 0)
 		end
 
-	type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE [like Current] is
 		do
 			Result := context_catalog.menu_page.status_bar_type
+		end
+
+	data_type: EV_PND_TYPE is
+		do
+			Result := Pnd_types.window_child_type
 		end
 
 feature -- Context creation
@@ -78,12 +83,22 @@ feature -- Status setting
 
 feature {NONE} -- Pick and drop
 
-	initialize_transport is
+	add_pnd_callbacks is
 		local
-			routine_cmd: EV_ROUTINE_COMMAND
+			rcmd: EV_ROUTINE_COMMAND
 		do
-			create routine_cmd.make (~process_context)
-			gui_object.add_pnd_command (Pnd_types.context_type, routine_cmd, Void)
+			create rcmd.make (~process_type)
+			gui_object.add_pnd_command (Pnd_types.status_bar_item_type, rcmd, Void)
+			tree_element.add_pnd_command (Pnd_types.status_bar_item_type, rcmd, Void)
+--			create rcmd.make (~process_context)
+--			gui_object.add_pnd_command (Pnd_types.context_type, rcmd, Void)
+		end
+
+	remove_pnd_callbacks is
+		do
+			gui_object.remove_pnd_commands (Pnd_types.status_bar_item_type)
+			tree_element.remove_pnd_commands (Pnd_types.status_bar_item_type)
+--			gui_object.remove_pnd_commands (Pnd_types.context_type)
 		end
 
 feature {NONE} -- Callbacks
@@ -91,6 +106,7 @@ feature {NONE} -- Callbacks
 	add_gui_callbacks is
 			-- Define the general behavior of the GUI object.
 		do
+			add_pnd_callbacks
 		end
 
 	remove_gui_callbacks is
@@ -98,6 +114,7 @@ feature {NONE} -- Callbacks
 			-- (Need to only remove callbacks part of a list
 			-- since set_action will overwrite previous callbacks).
 		do
+			remove_pnd_callbacks
 		end
 
 feature {NONE} -- Internal namer

@@ -4,7 +4,7 @@ indexing
 	Date: "$Date$"
 	Revision: "$Revision$"
 
-class CONTEXT_TYPE 
+class CONTEXT_TYPE [T -> CONTEXT]
 
 inherit
 	TYPE_DATA
@@ -47,7 +47,7 @@ feature -- Access
 
 feature {NONE} -- Implementation
 
-	dummy_context: CONTEXT
+	dummy_context: T
 			-- Reference to a context, descendant of current type
 
 	int_generator: INT_GENERATOR is
@@ -62,17 +62,13 @@ feature -- Callbacks
 			-- the context_type.
 		do
 			a_source.activate_pick_and_drop (Void, Void)
-			if dummy_context.is_window then
-				a_source.set_data_type (Pnd_types.window_type)
-			else
-				a_source.set_data_type (Pnd_types.type_data_type)
-			end
+			a_source.set_data_type (dummy_context.data_type)
 			a_source.set_transported_data (Current)
 		end
 	
 feature -- Context creation
 
-	create_context (a_parent: HOLDER_C): CONTEXT is
+	create_context (a_parent: HOLDER_C): like dummy_context is
 		do
 			Result := dummy_context.create_context (a_parent)
 		end
@@ -92,7 +88,7 @@ feature -- Context creation
 			Result := dummy_context.symbol
 		end
 
-	type: CONTEXT_TYPE is
+	type: like Current is
 		do
 			Result := Current
 		end

@@ -12,6 +12,8 @@ inherit
 		redefine
 			gui_object,
 			symbol, type,
+			add_pnd_callbacks,
+			remove_pnd_callbacks,
 			namer,
 			eiffel_type,
 			full_type_name
@@ -24,7 +26,9 @@ inherit
 			reset_modified_flags,
 			is_able_to_be_grouped
 		redefine
-			gui_object
+			gui_object,
+			add_pnd_callbacks,
+			remove_pnd_callbacks
 		end
 
 feature -- Type data
@@ -34,9 +38,26 @@ feature -- Type data
 			create Result.make_with_size (0, 0)
 		end
 
-	type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE [like Current] is
 		do
 			Result := context_catalog.menu_page.option_b_type
+		end
+
+feature {NONE} -- Pick and drop
+
+	add_pnd_callbacks is
+		local
+			rcmd: EV_ROUTINE_COMMAND
+		do
+			{MENU_HOLDER_C} Precursor
+			create rcmd.make (~process_type)
+			gui_object.add_pnd_command (Pnd_types.menu_child_type, rcmd, Void)
+		end
+
+	remove_pnd_callbacks is
+		do
+			{MENU_HOLDER_C} Precursor
+			gui_object.remove_pnd_commands (Pnd_types.menu_child_type)
 		end
 
 feature {NONE} -- Internal namer

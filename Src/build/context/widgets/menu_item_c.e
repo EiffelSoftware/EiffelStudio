@@ -9,6 +9,9 @@ class
 
 inherit
 	SIMPLE_ITEM_C
+		undefine
+			add_pnd_callbacks,
+			remove_pnd_callbacks
 		redefine
 			gui_object,
 			create_context
@@ -30,9 +33,14 @@ feature -- Type data
 			create Result.make_with_size (0, 0)
 		end
 
-	type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE [like Current] is
 		do
 			Result := context_catalog.menu_page.menu_item_type
+		end
+
+	data_type: EV_PND_TYPE is
+		do
+			Result := Pnd_types.menu_item_type
 		end
 
 feature -- Context creation

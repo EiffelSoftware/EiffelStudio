@@ -11,7 +11,8 @@ inherit
 	PRIMITIVE_C
 		redefine
 			gui_object,
-			initialize_transport --, stored_node
+			add_pnd_callbacks,
+			remove_pnd_callbacks
 		end
 
 	HOLDER_C
@@ -26,22 +27,29 @@ feature -- Type data
 --			Result := Pixmaps.toolbar_pixmap
 		end
 
-	type: CONTEXT_TYPE is
+	type: CONTEXT_TYPE [like Current] is
 		do
 			Result := context_catalog.toolbar_page.toolbar_type
 		end
 
 feature {NONE} -- Pick and drop
 
-	initialize_transport is
+	add_pnd_callbacks is
 		local
-			routine_cmd: EV_ROUTINE_COMMAND
+			rcmd: EV_ROUTINE_COMMAND
 		do
-			{PRIMITIVE_C} Precursor
---			create routine_cmd.make (~process_type)
---			gui_object.add_pnd_command (Pnd_types.type_data_type, routine_cmd, Void)
-			create routine_cmd.make (~process_context)
-			gui_object.add_pnd_command (Pnd_types.context_type, routine_cmd, Void)
+			create rcmd.make (~process_type)
+			gui_object.add_pnd_command (Pnd_types.toolbar_item_type, rcmd, Void)
+			tree_element.add_pnd_command (Pnd_types.toolbar_item_type, rcmd, Void)
+--			create rcmd.make (~process_context)
+--			gui_object.add_pnd_command (Pnd_types.context_type, rcmd, Void)
+		end
+
+	remove_pnd_callbacks is
+		do
+			gui_object.remove_pnd_commands (Pnd_types.toolbar_item_type)
+			tree_element.remove_pnd_commands (Pnd_types.toolbar_item_type)
+--			gui_object.remove_pnd_commands (Pnd_types.context_type)
 		end
 
 feature -- GUI object creation

@@ -88,6 +88,14 @@ feature -- Access
 			end;
 		end;
 
+	dump_value: DUMP_VALUE is
+			-- Dump_value corresponding to `Current'.
+		do
+			if address /= Void then
+				create Result.make_object (address)
+			end
+		end
+
 feature -- Output
 
 	append_type_and_value (st: STRUCTURED_TEXT) is 

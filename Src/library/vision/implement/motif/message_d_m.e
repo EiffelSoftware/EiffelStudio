@@ -130,15 +130,15 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-    xt_move_widget (scr_obj: POINTER; x_value, y_value: INTEGER) is
-        external
-            "C"
-        end;
+	xt_move_widget (scr_obj: POINTER; x_value, y_value: INTEGER) is
+		external
+			"C"
+		end;
 
-    xt_set_geometry (scr_obj: POINTER; x_value, y_value: INTEGER) is
-        external
-            "C"
-        end;
+	xt_set_geometry (scr_obj: POINTER; x_value, y_value: INTEGER) is
+		external
+			"C"
+		end;
 
 end
 

@@ -1,9 +1,9 @@
 system
-	hello_world
+	drawing
 
 root
 
-	hello_world (ROOT_CLUSTER): "make"
+	drawing (ROOT_CLUSTER): "make"
 
 default
 
@@ -12,7 +12,11 @@ default
 
 cluster
 
+<<<<<<< Ace.mswin.ace
+	ROOT_CLUSTER: 		"$EIFFEL4\examples\vision2\drawing";
+=======
 	ROOT_CLUSTER: 		"$EIFFEL4\examples\vision2\hello_world";
+>>>>>>> 1.7
 
 ------------------------ EiffelBase:
 

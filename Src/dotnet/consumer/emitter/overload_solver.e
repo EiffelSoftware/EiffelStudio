@@ -84,8 +84,8 @@ feature -- Basic Operations
 		local
 			method_list: SORTED_TWO_WAY_LIST [METHOD_SOLVER]
 			first_method, method: METHOD_SOLVER
-			name, type: STRING
-			i, index, param_count: INTEGER
+			name: STRING
+			i, param_count: INTEGER
 			is_unique, same_param_count: BOOLEAN
 			eiffel_args: HASH_TABLE [STRING, STRING]
 		do
@@ -240,8 +240,6 @@ feature -- Element Settings
 			-- Remove `get_' for properties getters.
 		require
 			non_void_meth: meth /= Void
-		local
-			name: STRING
 		do
 			internal_add_method (meth, False)
 		end
@@ -275,7 +273,6 @@ feature -- Element Settings
 			non_void_event: event /= Void
 		local
 			l_meth: METHOD_INFO
-			property_name: STRING
 		do
 			l_meth := event_raiser (event)
 			if l_meth /= Void then

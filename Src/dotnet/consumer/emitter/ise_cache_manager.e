@@ -182,8 +182,6 @@ feature {NONE} -- Basic Operations
 			non_empty_name: aname.count > 0
 			non_empty_version: aversion.count > 0
 			non_empty_culture: aculture.count > 0
-		local
-			full_name: STRING
 		do
 			Result := aname.twin
 			Result.append (", Version=" + aversion)

@@ -18,7 +18,6 @@ feature -- Access
 			valid_name: not name.is_empty
 		local
 			count: INTEGER
-			sb: SYSTEM_STRING
 		do
 			count := 2
 			from

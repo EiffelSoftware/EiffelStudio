@@ -40,7 +40,7 @@ feature -- Basic Operations
 			valid_destination_path: (create {DIRECTORY}.make (destination_path)).exists
 		local
 			referenced_assemblies: NATIVE_ARRAY [ASSEMBLY_NAME]
-			i, count: INTEGER
+			count: INTEGER
 			ca: CONSUMED_ASSEMBLY
 		do
 			referenced_assemblies := ass.get_referenced_assemblies
@@ -63,8 +63,6 @@ feature -- Basic Operations
 			non_void_path: a_path /= Void
 			valid_path: not a_path.is_empty
 		local
-			l_dir_time_stamp: INTEGER
-			l_tool_time_stamp: INTEGER
 			l_tool: RAW_FILE
 			l_directory: DIRECTORY
 			l_args: ARGUMENTS
@@ -172,7 +170,7 @@ feature {NONE} -- Implementation
 			assembly_mapping_object_comparison: assembly_mapping.object_comparison
 		local
 			referenced_assemblies: NATIVE_ARRAY [ASSEMBLY_NAME]
-			i, count, index: INTEGER
+			i, count: INTEGER
 			ca: CONSUMED_ASSEMBLY
 			l_ref_ass: ASSEMBLY
 		do

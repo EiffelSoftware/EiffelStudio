@@ -165,10 +165,8 @@ feature {NONE} -- Implementation
 		require
 			non_void_clr_version: clr_version /= Void
 		local
-			ct: CONSUMED_TYPE
 			assemblies: ARRAY [CONSUMED_ASSEMBLY]
 			i: INTEGER
-			dir: DIRECTORY
 			ass: ASSEMBLY
 			cr: CACHE_READER
 			l_exe_env: EXECUTION_ENVIRONMENT

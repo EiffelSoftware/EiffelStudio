@@ -224,7 +224,7 @@ feature
 			ext: ANY
 		do
 			ext := s.to_c
-			c_put_string (descriptor, $ext)
+			c_put_string (descriptor, $ext, s.count)
 		end
 
 	put_character, putchar (c: CHARACTER) is
@@ -451,7 +451,13 @@ feature -- Input
 			end
 			ext := last_string.to_c
 			return_val := c_read_stream (descriptor, nb_char, $ext)
-			last_string.set_count (return_val)
+			if return_val >= 0 then
+				last_string.set_count (return_val)
+			else
+					-- All errors except EWOULDBLOCK will raise an I/O
+					-- exception
+				last_string.set_count (0)
+			end
 		end
 
 	read_line, readline is
@@ -838,7 +844,7 @@ feature {NONE} -- Externals
 			"C"
 		end
 
-	c_put_string (fd: INTEGER; s: POINTER) is
+	c_put_string (fd: INTEGER; s: POINTER; length: INTEGER) is
 			-- external routine to write a string to a socket
 			-- identified by fd
 		external

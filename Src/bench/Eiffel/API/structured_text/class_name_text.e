@@ -1,14 +1,24 @@
+indexing
+
+	description: 
+		"Item to denote a class_name.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class CLASS_NAME_TEXT
 
 inherit
 
 	CLICKABLE_TEXT
+		redefine
+			append_to
+		end
 
 creation
 
 	make
 
-feature
+feature -- Access
 
 	file_name: STRING is
 			-- Name of the file where the class text is stored;
@@ -41,4 +51,12 @@ feature
 			Result /= Void
 		end;
 
-end
+feature {TEXT_FORMATTER} -- Implementation
+
+    append_to (text: TEXT_FORMATTER) is
+            -- Append Current class name text to `text'.
+        do
+			text.process_class_name_text (Current)
+        end
+
+end -- class CLASS_NAME_TEXT

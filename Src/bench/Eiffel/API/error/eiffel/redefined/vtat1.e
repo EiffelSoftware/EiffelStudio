@@ -15,7 +15,7 @@ class VTAT1 obsolete "NOT THE SAME MEANING AS THE BOOK"
 
 inherit
 
-	EIFFEL_ERROR
+	FEATURE_ERROR
 		redefine
 			build_explain, subcode
 		end

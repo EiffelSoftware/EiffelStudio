@@ -582,13 +582,37 @@ union overhead *hlist[];
 		if (CHUNK_TYPE(hlist) == C_T) {
 			if (nbytes <= (c_data.ml_total - c_data.ml_used)) {
 				if (nbytes >= full_coalesc(C_T))
+#ifdef HAS_SMART_MMAP
+				{
+					free_unused ();
+					result = allocate_from_core(nbytes, hlist);
+										/* Ask for more core */
+					if ((char *) 0 != result)
+						return result;				/* We got it */
+					else
+						return (char *) 0;		/* Not enough memory */
+				}
+#else
 					return (char *) 0;			/* Insufficient coalescing */
-			} else
+#endif
+			} else 
 				return (char *) 0;				/* Not enough memory */
 		} else {
 			if (nbytes <= (e_data.ml_total - e_data.ml_used)) {
 				if (nbytes >= full_coalesc(EIFFEL_T))
+#ifdef HAS_SMART_MMAP
+				{
+					free_unused ();
+					result = allocate_from_core(nbytes, hlist);
+										/* Ask for more core */
+					if ((char *) 0 != result)
+						return result;				/* We got it */
+					else
+						return (char *) 0;		/* Not enough memory */
+				}
+#else
 					return (char *) 0;			/* Insufficient coalescing */
+#endif
 			} else
 				return (char *) 0;				/* Not enough memory */
 		}
@@ -633,6 +657,11 @@ union overhead *hlist[];
 				if (nbytes)
 					panic(inconsistency);
 			}
+#ifdef HAS_SMART_MMAP
+			else {
+				free_unused ();
+			}
+#endif
 		}
 	} else {
 		if (nbytes <= (e_data.ml_total - e_data.ml_used)) {
@@ -643,12 +672,42 @@ union overhead *hlist[];
 				if (nbytes)
 					panic(inconsistency);
 			}
+#ifdef HAS_SMART_MMAP
+			else {
+				free_unused ();
+			}
+#endif
 		}
 	}
 
 	/* No other choice but to request for more core */
 	return allocate_from_core(nbytes, hlist);
 }
+
+#ifdef HAS_SMART_MMAP
+private void free_unused ()
+{
+	struct chunk *local_chunk;
+
+	if (cklst.ck_head == (struct chunk *) 0)
+		return;
+	for (local_chunk = cklst.ck_head; local_chunk != (struct chunk *) 0; 
+			local_chunk = local_chunk->ck_next) {
+		if (!chunk_free(local_chunk))
+			continue;
+		SIGBLOCK;
+		
+		SIGRESUME;
+	}
+}
+
+private int chunk_free (ck)
+struct chunk *ck;
+{
+	return 0;
+}
+
+#endif
 
 private char *allocate_free_list(nbytes, hlist)
 register6 unsigned int nbytes;

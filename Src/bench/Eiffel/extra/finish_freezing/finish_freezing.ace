@@ -2,7 +2,7 @@ system
 	FINISH_FREEZING
 
 root
-	FINISH_FREEZING (es4sh): "make"
+	FINISH_FREEZING (finish_freezing): "make"
 
 default
 
@@ -17,20 +17,20 @@ default
 --	debug ("translate_spit");
 --	debug ("translate_translate");
 --	debug ("translate_externals");
-	debug ("translate_application");
+--	debug ("translate_application");
 --	debug ("translate_dependencies");
 --	debug ("translate_line_subst");
 --	debug ("translate_line_change");
-	debug ("translate_appl");
+--	debug ("translate_appl");
 --	debug ("translate_cecil");
 
 	assertion (all);
-
+	multithreaded (no);
 --	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\base")
 
 cluster
 
-	es4sh:			"main";
+	finish_freezing:			"main";
 				
 	resources:		"..\..\API\resources\common";
 	

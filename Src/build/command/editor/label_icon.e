@@ -14,7 +14,9 @@ inherit
 		redefine
 			data, set_widget_default
 		end
+		
 	LABEL_STONE
+
 	REMOVABLE
 
 creation
@@ -25,8 +27,7 @@ feature {NONE}
 
 	cmd_editor: COMMAND_EDITOR
 
-	
-feature 
+feature
 
 	data: CMD_LABEL
 

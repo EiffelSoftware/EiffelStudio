@@ -159,7 +159,7 @@ feature {EV_WINDOW_IMP, EV_MENU_ITEM_IMP} -- Operations
 				-- Remove all items
 			from
 			until
-				wel_count = 0
+				wel_count <= 0
 			loop
 				remove_position (0)
 			end

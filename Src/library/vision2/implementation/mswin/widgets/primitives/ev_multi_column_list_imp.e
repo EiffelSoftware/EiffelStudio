@@ -295,8 +295,6 @@ feature -- Status setting
 			else
 				par_imp := default_parent
 			end
-			a_x := x
-			a_y := y
 			a_x := x_position
 			a_y := y_position
 			a_width := width
@@ -892,6 +890,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.51  2000/03/14 03:11:05  brendel
+--| Fixed implementation.
+--|
 --| Revision 1.50  2000/03/14 03:02:56  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

@@ -60,11 +60,13 @@ feature
 			del_com: DELETE_WINDOW;
 			cat_button: CON_CAT_BUTTON;
 			rc: ROW_COLUMN;
-			close_b: CLOSE_WINDOW_BUTTON
+			close_b: CLOSE_WINDOW_BUTTON;
+			top_form: FORM
 		do
 			top_shell_create (Widget_names.context_catalog, eb_screen);
 			set_size (240, 260);
 			!! form.make (Widget_names.form, Current);
+			!! top_form.make (Widget_names.form, form);
 
 			!! first_separator.make (Widget_names.Separator, form);
 			first_separator.set_horizontal (true);
@@ -74,10 +76,10 @@ feature
 			rc.set_preferred_count (1);
 			rc.set_row_layout;
 
-			!! focus_label.make (form);
+			!! focus_label.make (top_form);
 
-			!! edit_hole.make (form, focus_label);
-			!! close_b.make (Current, form, focus_label);
+			!! edit_hole.make (top_form, focus_label);
+			!! close_b.make (Current, top_form, focus_label);
 
 			!! window_page.make (form, rc);
 			!! primitive_page.make (form, rc);
@@ -88,20 +90,24 @@ feature
 			initialize_window_attributes;
 			current_button := window_page.button;
 
-			form.attach_top (edit_hole, 0);
-			form.attach_top (close_b, 0);
-			form.attach_top (focus_label, 5);
-			form.attach_left (edit_hole, 0);
+			top_form.attach_top (edit_hole, 0);
+			top_form.attach_top (close_b, 0);
+			top_form.attach_top (focus_label, 0);
+			top_form.attach_left (edit_hole, 0);
+			top_form.attach_right (close_b, 0);
+			top_form.attach_left_widget (edit_hole, focus_label, 0);
+			top_form.attach_right_widget (close_b, focus_label, 0);
+			top_form.attach_bottom (focus_label, 5);
+			top_form.attach_bottom (edit_hole, 0);
+			top_form.attach_bottom (close_b, 0);
+
 			form.attach_left (first_separator, 0);
 			form.attach_right (first_separator, 0);
 			form.attach_left (second_separator, 0);
 			form.attach_right (second_separator, 0);
-			form.attach_right (close_b, 0);
-			form.attach_left_widget (edit_hole, focus_label, 0);
-			form.attach_right_widget (close_b, focus_label, 0);
-			form.attach_top_widget (focus_label, first_separator, 0);
-			form.attach_top_widget (edit_hole, first_separator, 0);
-			form.attach_top_widget (close_b, first_separator, 0);
+			form.attach_left (top_form, 0);
+			form.attach_right (top_form, 0);
+			form.attach_top_widget (top_form, first_separator, 2);
 
 			attach_page (window_page);
 			attach_page (group_page);
@@ -109,6 +115,7 @@ feature
 			attach_page (set_page);
 			attach_page (scroll_page);
 			attach_page (menu_page);
+
 			form.attach_bottom_widget (rc, second_separator, 2);
 			form.attach_left (rc, 0);
 			form.attach_right (rc, 0);

@@ -150,7 +150,7 @@ feature
 
 	make (a_screen: SCREEN) is
 		local
-			form: FORM;
+			top_form, form: FORM;
 			del_com: DELETE_WINDOW;
 			close_button: CLOSE_WINDOW_BUTTON;
 			con_ed_hole: CON_ED_HOLE;
@@ -161,41 +161,48 @@ feature
 		do
 			!! top_shell.make (Widget_names.context_tree, a_screen);
 			!! form.make (Widget_names.form, top_shell);
-			!! focus_label.make (form);
+			!! top_form.make (Widget_names.form1, form);
+			!! focus_label.make (top_form);
 			!! scrolled_w.make (Widget_names.scrolledwindow, form);
 			dr_area_create (Widget_names.drawingarea, scrolled_w);
 			scrolled_w.set_working_area (Current);
-			!! close_button.make (Current, form, focus_label);
-			!! con_ed_hole.make (form, focus_label);
-			!! cut_hole.make (form, focus_label);
-			!! raise_widget_hole.make (form);
-			!! exp_parent_hole.make (form);
-			!! show_window_hole.make (form);
+			!! close_button.make (Current, top_form, focus_label);
+			!! con_ed_hole.make (top_form, focus_label);
+			!! cut_hole.make (top_form, focus_label);
+			!! raise_widget_hole.make (top_form);
+			!! exp_parent_hole.make (top_form);
+			!! show_window_hole.make (top_form);
 			!! current_position;
 			drawing_box_create (Current);
 				-- Attachments
-			form.attach_top (cut_hole, 0);
-			form.attach_top (con_ed_hole, 0);
-			form.attach_top (close_button, 0);
-			form.attach_top (focus_label, 5);
-			form.attach_top (raise_widget_hole, 0);
-			form.attach_top (show_window_hole, 0);
-			form.attach_top (exp_parent_hole, 0);
-			form.attach_left (con_ed_hole, 0);
-			form.attach_left_widget (con_ed_hole, exp_parent_hole, 0);
-			form.attach_left_widget (exp_parent_hole, raise_widget_hole, 0);
-			form.attach_left_widget (raise_widget_hole, show_window_hole, 0);
-			form.attach_left_widget (show_window_hole, cut_hole, 0);
-			form.attach_left_widget (cut_hole, focus_label, 0);
-			form.attach_right_widget (close_button, focus_label, 0);
-			form.attach_right (close_button, 0);
-			form.attach_top_widget (focus_label, scrolled_w, 0);
-			form.attach_top_widget (cut_hole, scrolled_w, 0);
-			form.attach_top_widget (close_button, scrolled_w, 0);
-			form.attach_top_widget (con_ed_hole, scrolled_w, 0);
-			form.attach_top_widget (raise_widget_hole, scrolled_w, 0);
-			form.attach_top_widget (show_window_hole, scrolled_w, 0);
-			form.attach_top_widget (exp_parent_hole, scrolled_w, 0);
+			top_form.attach_top (cut_hole, 0);
+			top_form.attach_top (con_ed_hole, 0);
+			top_form.attach_top (close_button, 0);
+			top_form.attach_top (focus_label, 0);
+			top_form.attach_top (raise_widget_hole, 0);
+			top_form.attach_top (show_window_hole, 0);
+			top_form.attach_top (exp_parent_hole, 0);
+			top_form.attach_left (con_ed_hole, 0);
+			top_form.attach_left_widget (con_ed_hole, exp_parent_hole, 0);
+			top_form.attach_left_widget (exp_parent_hole, raise_widget_hole, 0);
+			top_form.attach_left_widget (raise_widget_hole, show_window_hole, 0);
+			top_form.attach_left_widget (show_window_hole, cut_hole, 0);
+			top_form.attach_left_widget (cut_hole, focus_label, 0);
+			top_form.attach_right_widget (close_button, focus_label, 0);
+			top_form.attach_right (close_button, 0);
+
+			top_form.attach_bottom (focus_label, 0);
+			top_form.attach_bottom (cut_hole, 0);
+			top_form.attach_bottom (close_button, 0);
+			top_form.attach_bottom (con_ed_hole, 0);
+			top_form.attach_bottom (raise_widget_hole, 0);
+			top_form.attach_bottom (show_window_hole, 0);
+			top_form.attach_bottom (exp_parent_hole, 0);
+
+			form.attach_top (top_form, 0);
+			form.attach_left (top_form, 0);
+			form.attach_right (top_form, 0);
+			form.attach_top_widget (top_form, scrolled_w, 0);
 			form.attach_left (scrolled_w, 0);
 			form.attach_right (scrolled_w, 0);
 			form.attach_bottom (scrolled_w, 0);

@@ -396,6 +396,12 @@ public:
 	/*-----------------------------------------------------------
 	No description available.
 	-----------------------------------------------------------*/
+	virtual STDMETHODIMP generate_finalize_feature(  /* [in] */ LONG feature_id ) = 0;
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
 	virtual STDMETHODIMP GenerateMethodImpl(  /* [in] */ LONG feature_id, /* [in] */ LONG parent_type_id, /* [in] */ LONG parent_feature_id ) = 0;
 
 

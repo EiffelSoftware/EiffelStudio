@@ -485,6 +485,13 @@ feature -- Basic Operations
 			ccom_generate_implementation_feature_il (initializer, feature_id)
 		end
 
+	generate_finalize_feature (feature_id: INTEGER) is
+			-- No description available.
+			-- `feature_id' [in].  
+		do
+			ccom_generate_finalize_feature (initializer, feature_id)
+		end
+
 	generate_method_impl (feature_id: INTEGER; parent_type_id: INTEGER; parent_feature_id: INTEGER) is
 			-- No description available.
 			-- `feature_id' [in].  
@@ -1566,6 +1573,12 @@ feature {NONE}  -- Externals
 		end
 
 	ccom_generate_implementation_feature_il (cpp_obj: POINTER; feature_id: INTEGER) is
+			-- No description available.
+		external
+			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"
+		end
+
+	ccom_generate_finalize_feature (cpp_obj: POINTER; feature_id: INTEGER) is
 			-- No description available.
 		external
 			"C++ [ecom_EiffelCompiler::COMPILER_PROXY %"ecom_EiffelCompiler_COMPILER_PROXY.h%"](EIF_INTEGER)"

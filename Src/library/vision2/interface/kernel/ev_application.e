@@ -53,8 +53,19 @@ feature -- Basic operation
 		require
 			post_launch_actions_not_void: post_launch_actions /= Void
 			not_already_launched: not is_launched
+		local
+			dummy: EV_WINDOW
 		do
 			is_launched := True
+
+				-- This causes the once function to be executed,
+				-- otherwise, if the user does not access it in prepare,
+				-- the invariant fails.
+			dummy := first_window
+			check
+				first_window_not_void: first_window /= Void
+			end
+
 			prepare
 			post_launch_actions.extend (~remove_post_launch_actions)
 			implementation.launch
@@ -181,6 +192,11 @@ end -- class EV_APPLICATION
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/21 19:57:40  brendel
+--| Added dummy variable to `launch' that accesses `first_window', which
+--| should now resolve the problem that users have to use `first_window' in
+--| `prepare' in order not to violate the invariant (first_window /= Void).
+--|
 --| Revision 1.14  2000/03/16 01:11:25  oconnor
 --| Removed root window features.
 --|

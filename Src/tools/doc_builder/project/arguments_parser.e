@@ -84,6 +84,7 @@ feature -- Commands
 			op: OUTPUT_CONSTANTS
 		do
 			op := Shared_constants.Output_constants
+			shared_constants.help_constants.set_compile (True)
 			from
 				count := 1
 				is_gui := Argument_count = 0
@@ -104,6 +105,8 @@ feature -- Commands
 						help_generation := True
 					elseif equal (flag, "o") then
 						output_filtered := True
+					elseif equal (flag, "nohtml") then
+						shared_constants.help_constants.set_compile (False)
 					else
 						args_ok := False
 					end
@@ -156,6 +159,7 @@ feature -- Commands
 			io.putstring ("			/web 		HTML based help%N")
 			io.putstring ("			/mshtml 	Microsoft HTML 1.x Help (.chm)%N")
 			io.putstring ("			/vsip 		Microsoft Visual Studio .NET Integration Help (MSHelp 2.0)%N")
+			io.putstring ("	-nohtml	Do not compile HTML Help project after generation")
 			io.putstring (" project_file	Project file to open.%N")
 			io.putstring ("Press any key to finish terminate...")
 			io.read_character
@@ -322,7 +326,10 @@ feature {NONE} -- Implementation
 			-- Project file name
 
 	display_usage_prompt: BOOLEAN
-			-- show help?	
+			-- Show help?	
+			
+	compile_html: BOOLEAN
+			-- Compile HTML Help after generation?
 
 	generate_code_html is
 			-- Generate Eiffel code HTML

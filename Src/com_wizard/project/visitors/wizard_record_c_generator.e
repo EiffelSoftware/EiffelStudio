@@ -82,7 +82,7 @@ feature -- Access
 				pointed_data_type ?= a_descriptor.fields.item.data_type
 				if 
 					a_data_visitor.c_header_file /= Void and then 
-					not a_data_visitor.c_header_file.empty
+					not a_data_visitor.c_header_file.is_empty
 				then
 					if 
 						a_data_visitor.is_structure_pointer and
@@ -170,7 +170,7 @@ feature {NONE} -- Implementation
 			
 			if 
 				a_descriptor.namespace /= Void and then
-				not a_descriptor.namespace.empty
+				not a_descriptor.namespace.is_empty
 			then
 				Result.append ("namespace ")
 				Result.append (a_descriptor.namespace)
@@ -200,7 +200,7 @@ feature {NONE} -- Implementation
 			Result.append (Space)
 			if 
 				a_descriptor.namespace /= Void and then 
-				not a_descriptor.namespace.empty 
+				not a_descriptor.namespace.is_empty 
 			then
 				Result.append (a_descriptor.namespace)
 				Result.append ("::")
@@ -213,14 +213,14 @@ feature {NONE} -- Implementation
 			
 			if 
 				a_descriptor.namespace /= Void and then
-				not a_descriptor.namespace.empty
+				not a_descriptor.namespace.is_empty
 			then
 				Result.append (New_line)
 				Result.append (Close_curly_brace)
 			end
 		ensure
 			non_void_forward_definition: Result /= Void
-			valid_forward_definition: not Result.empty
+			valid_forward_definition: not Result.is_empty
 		end
 
 	access_macro (a_record_descriptor: WIZARD_RECORD_DESCRIPTOR;
@@ -329,7 +329,7 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			non_void_access_macro: Result /= Void
-			valid_access_macro: not Result.empty
+			valid_access_macro: not Result.is_empty
 		end
 
 	set_macro (a_record_descriptor: WIZARD_RECORD_DESCRIPTOR;
@@ -470,6 +470,27 @@ feature {NONE} -- Implementation
 				Result.append (Close_parenthesis)
 				
 			else
+				if a_data_visitor.need_free_memory then					
+					if a_data_visitor.need_generate_free_memory then
+						Result.append (Generated_ce_mapper)
+						Result.append (".")
+					end
+					Result.append (a_data_visitor.free_memory_function_name)
+					Result.append (Open_parenthesis)
+					Result.append (Open_parenthesis)
+					Result.append (Open_parenthesis)
+					Result.append (c_type)
+					Result.append (Space)
+					Result.append (Asterisk)
+					Result.append (Close_parenthesis)
+					Result.append ("_ptr_")
+					Result.append (Close_parenthesis)
+					Result.append (Struct_selection_operator)
+					Result.append (a_field_descriptor.name)
+					Result.append (Close_parenthesis)
+					Result.append (", ")
+				end
+				
 				Result.append (Open_parenthesis)
 				Result.append (Open_parenthesis)
 				Result.append (Open_parenthesis)
@@ -542,7 +563,7 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 		ensure
 			non_void_set_macro: Result /= Void
-			valid_set_macro: not Result.empty
+			valid_set_macro: not Result.is_empty
 		end
 
 end -- class WIZARD_RECORD_C_GENERATOR

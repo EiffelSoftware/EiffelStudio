@@ -12,12 +12,12 @@ feature
 
 	main_widget: WIDGET is
 		once
-			!SCROLL_LIST!Result.make ("Scroll_list", Current)
+			!SCROLLABLE_LIST!Result.make ("Scroll_list", Current)
 		end
 
 	set_widgets is
 		local
-			sl: SCROLL_LIST
+			sl: SCROLLABLE_LIST
 		do
 			set_size (200, 300)
 			main_widget.set_x_y (30, 30)

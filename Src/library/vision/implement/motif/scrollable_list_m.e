@@ -17,8 +17,7 @@ inherit
 
 feature -- Initialization
 
-	make (a_scrollable_list: SCROLL_LIST; is_managed, is_fixed: BOOLEAN;
-oui_parent: COMPOSITE) is
+	make (a_scrollable_list: SCROLL_LIST; is_managed, is_fixed: BOOLEAN; oui_parent: COMPOSITE) is
 		do
 		end
 

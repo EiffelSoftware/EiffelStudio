@@ -30,6 +30,8 @@ feature {NONE}
         do
 			if project_tool.initialized then
 				bench_error_window.clean;
+				bench_error_window.show_image;
+				bench_error_window.set_changed (false);
 				if Lace.file_name /= Void then
 					set_global_cursor (watch_cursor);
 					project_tool.set_changed (true);
@@ -70,7 +72,9 @@ feature {NONE}
 				else
 					warner.custom_call (Current, l_Specify_ace,
 						"Choose", "Template", "Cancel");
-				end
+				end;
+				bench_error_window.show_image;
+				bench_error_window.set_changed (false);
 			elseif argument = name_chooser then
 				!!project_dir.make (name_chooser.selected_file);
 				if project_dir.valid then

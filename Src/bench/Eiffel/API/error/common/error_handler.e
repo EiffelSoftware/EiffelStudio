@@ -198,7 +198,6 @@ feature -- Debug purpose
 			until
 				warning_list.offright
 			loop
-				error_window.put_string ("%T");
 				warning_list.item.trace;
 				error_window.put_string ("------------------------------%N");
 				warning_list.forth;

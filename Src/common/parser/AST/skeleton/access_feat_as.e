@@ -194,9 +194,10 @@ feature -- Type check, byte code and dead code removal
 					not context.a_feature.is_obsolete)
 				then
 					!!obs_warn;
+					obs_warn.set_class (context.a_class);
+					obs_warn.set_obsolete_class (context.last_class);
 					obs_warn.set_obsolete_feature (a_feature);
 					obs_warn.set_feature (context.a_feature);
-					obs_warn.set_class (context.last_class);
 					Error_handler.insert_warning (obs_warn);
 				end;
 					-- Access managment

@@ -32,8 +32,15 @@ feature {NONE}
 
 	display_info (i: INTEGER; f: FEATURE_STONE)  is
 			-- Display Senders of `c'.
+		local
+			cmd: EWB_SENDERS;
+			class_c: CLASS_C;
+			feature_i: FEATURE_I;
 		do
-			io.error.putstring ("Not implemented Yet%N");
+			feature_i := f.feature_i;
+			class_c := feature_i.written_class;
+			!!cmd.make (class_c.class_name, feature_i.feature_name);
+			cmd.display_senders (text_window, class_c, feature_i.feature_id);
 		end;
 
 end

@@ -300,6 +300,8 @@ end;
 						type_a.is_none = False and then
 							-- The result is not a formal argument
 						type_a.is_formal = False and then
+							-- The result is not a like argument
+						type_a.is_like = False and then
 							-- and the class associated with the result does not
 							-- exist in the system any more
 						type_a.associated_class = Void then
@@ -307,6 +309,7 @@ debug
 	io.error.putstring ("Update table: ");
 	io.error.putstring (key_for_iteration);
 	io.error.putstring (" removed%N");
+	io.error.putstring (type_a.out);
 end;
 						remove (key_for_iteration)
 					end;
@@ -406,8 +409,8 @@ end;
 			end;
 		end;
 
-	feature_of_body_index (i: INTEGER): FEATURE_I is
-			-- Feature of body index equal to `i'.
+	feature_of_rout_id (set: ROUT_ID_SET): FEATURE_I is
+			-- Feature found in routine id set
 		local
 			feat: FEATURE_I;
 		do
@@ -417,7 +420,7 @@ end;
 				offright or else Result /= Void
 			loop
 				feat := item_for_iteration;
-				if feat.body_index = i then
+				if set.has (feat.rout_id_set.first) then
 					Result := feat;
 				end;
 				forth;

@@ -426,7 +426,6 @@ feature -- GUI Updating
 			-- Update the output filter type
 		local
 			l_name: STRING
-			l_filters: ARRAYED_LIST [DOCUMENT_FILTER]
 		do
 			if toolbar_studio.is_selected then
 				l_name := "EiffelStudio"
@@ -435,17 +434,7 @@ feature -- GUI Updating
 			elseif toolbar_web.is_selected then
 				l_name := "Web"
 			end
-			l_filters := Shared_project.filter_manager.filters
-			from
-				l_filters.start
-			until
-				l_filters.after
-			loop
-				if l_filters.item.description.is_equal (l_name) then
-					Shared_project.filter_manager.set_filter (l_filters.item)
-				end
-				l_filters.forth
-			end
+			Shared_project.filter_manager.set_filter_by_description (l_name)
 		end
 
 feature -- Status Setting
@@ -500,7 +489,7 @@ feature {NONE} -- Implementation
 		do
 			create l_menu
 			l_tocs := Shared_toc_manager.displayed_tocs_list
-			l_curr_toc := Shared_toc_manager.loaded_toc.filename
+			l_curr_toc := Shared_toc_manager.loaded_toc.name
 			from
 				l_cnt := 1
 			until

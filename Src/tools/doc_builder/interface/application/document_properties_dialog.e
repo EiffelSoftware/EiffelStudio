@@ -1,5 +1,5 @@
 indexing
-	description: "Properties dialog for editor xml documents."
+	description: "Properties dialog for editor XML documents."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			l_outputs: ARRAYED_LIST [STRING]
 			l_item: EV_LIST_ITEM
 		do
-			l_outputs := Shared_constants.Application_constants.Output_list
+			l_outputs := Shared_constants.Output_constants.Output_list.linear_representation
 			from
 				l_outputs.start
 			until
@@ -251,13 +251,13 @@ feature {NONE} -- Commands
 			-- Toggle widgets used for overriding default TOC options
 			-- based on output type in `output_combo'
 		do
-			if output_combo.selected_item.text.is_equal ("all") then
+			if output_combo.selected_item.text.is_equal (Shared_constants.Output_constants.Web_flag) then
 				override_12_check.enable_sensitive
 				override_20_check.enable_sensitive
-			elseif output_combo.selected_item.text.is_equal ("studio") then
+			elseif output_combo.selected_item.text.is_equal (Shared_constants.Output_constants.Studio_flag) then
 				override_12_check.disable_sensitive
 				override_20_check.disable_sensitive
-			elseif output_combo.selected_item.text.is_equal ("envision") then
+			elseif output_combo.selected_item.text.is_equal (Shared_constants.Output_constants.Envision_flag) then
 				override_12_check.disable_sensitive
 				override_20_check.disable_sensitive
 			end

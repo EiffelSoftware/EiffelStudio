@@ -49,7 +49,6 @@ idrs/idrf_pos.c
 idrs/idrm_creat.c
 idrs/idrm_dstry.c
 idrs/idrs.h
-install.SH                   Installation script
 ipc/
 ipc/Jmakefile
 ipc/Makefile.SH

@@ -9,7 +9,7 @@ inherit
 	CREATE_INFO
 		redefine
 			generate_cid, make_gen_type_byte_code, generate_reverse,
-			generate_cid_array, generate_cid_init
+			generate_cid_array, generate_cid_init, is_explicit
 		end
 
 	SHARED_TABLE
@@ -232,6 +232,30 @@ feature -- Byte code generation
 		end
 
 feature -- Genericity
+
+	is_explicit: BOOLEAN is
+			-- Is Current type fixed at compile time?
+		local
+			table: POLY_TABLE [ENTRY]
+		do
+			if context.final_mode then
+				table := Eiffel_table.poly_table (routine_id)
+
+				if table = Void then
+					Result := True
+				else
+					-- Feature has at least one effective version
+					if table.has_one_type then
+							-- There is a table, but with only one type
+						Result := table.first.type.is_explicit
+					else
+						Result := False
+					end
+				end
+			else
+				Result := False
+			end
+		end
 
 	generate_gen_type_conversion (node : BYTE_NODE) is
 

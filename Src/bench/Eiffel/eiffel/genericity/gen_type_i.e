@@ -131,22 +131,25 @@ feature -- Access
 		end
 
 	is_explicit: BOOLEAN is
-
+			-- Is Current type fixed at compile time?
 		local
 			i, count: INTEGER
 			l_true: like true_generics
 		do
-			Result := (cr_info = Void)
-
-			from
-				i := 1
-				l_true := true_generics
-				count := l_true.count
-			until
-				i > count or else not Result
-			loop
-				Result := l_true.item (i).is_explicit
-				i := i + 1
+			if cr_info /= Void then
+				Result := cr_info.is_explicit
+			else
+				from
+					Result := True
+					i := 1
+					l_true := true_generics
+					count := l_true.count
+				until
+					i > count or else not Result
+				loop
+					Result := l_true.item (i).is_explicit
+					i := i + 1
+				end
 			end
 		end
 

@@ -236,13 +236,16 @@ feature -- C Code generation
 					buffer.new_line
 					buffer.indent
 
-					if gen_ptype.is_explicit then
-							-- Optimize: Use static array
-						buffer.putstring ("static int16 typarr [] = {")
-					else
-						buffer.putstring ("int16 typarr [] = {")
-						use_init := True
+					use_init := not gen_type.is_explicit
+			
+						-- Optimize: Use static array only when `typarr' is
+						-- not modified by generated code in multithreaded mode only.
+						-- It is safe in monothreaded code as we are guaranteed that
+						-- only one thread of execution will use the modified `typarr'.
+					if not System.has_multithreaded or else not use_init then
+						buffer.putstring ("static ")
 					end
+					buffer.putstring ("int16 typarr [] = {")
 
 					buffer.putint (byte_context.current_type.generated_id (final_mode))
 					buffer.putstring (", ")
@@ -256,8 +259,10 @@ feature -- C Code generation
 
 					buffer.putstring ("-1};")
 					buffer.new_line
-					buffer.putstring ("static int16 typcache = -1;")
-					buffer.new_line
+					if not use_init then
+						buffer.putstring ("static int16 typcache = -1;")
+						buffer.new_line
+					end
 					buffer.new_line
 					if use_init then
 						idx_cnt.set_value (1)
@@ -266,7 +271,11 @@ feature -- C Code generation
 						gen_ptype.generate_cid (buffer, final_mode, True)
 					end
 
-					buffer.putstring ("pdtype = RTCID2(&typcache, Dftype(Current),")
+					if not use_init then
+						buffer.putstring ("pdtype = RTCID2(&typcache, Dftype(Current),")
+					else
+						buffer.putstring ("pdtype = RTCID2(NULL, Dftype(Current),")
+					end
 					buffer.putint (gen_ptype.generated_id (final_mode))
 					buffer.putstring (", typarr);")
 					buffer.new_line

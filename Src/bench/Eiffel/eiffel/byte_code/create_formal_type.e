@@ -11,7 +11,7 @@ inherit
 		redefine
 			generate, generate_gen_type_conversion,
 			generate_cid, type_to_create, make_byte_code,
-			analyze, generate_il, type
+			analyze, generate_il, type, is_explicit
 		end
 
 create
@@ -76,6 +76,12 @@ feature -- Byte code generation
 		end
 
 feature -- Generic conformance
+
+	is_explicit: BOOLEAN is
+			-- Is Current type fixed at compile time?
+		do
+			Result := False
+		end
 
 	generate_gen_type_conversion (node : BYTE_NODE) is
 		do

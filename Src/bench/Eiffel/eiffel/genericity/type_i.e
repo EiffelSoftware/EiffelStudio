@@ -242,7 +242,7 @@ feature -- Status report
 		end
 
 	is_explicit: BOOLEAN is
-			-- Is type given without anchors or formals?
+			-- Is type fixed at compile time without anchors or formals?
 		do
 			Result := True
 		end

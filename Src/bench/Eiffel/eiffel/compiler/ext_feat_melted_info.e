@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 			Precursor {FEAT_MELTED_INFO} (f, associated_class)
 			ext_i ?= f
 
-			external_name := ext_i.external_name
+			external_name := ext_i.external_name_id
 			include_list := ext_i.include_list
 			is_encapsulated := ext_i.is_cpp or ext_i.is_special or ext_i.encapsulated
 
@@ -42,16 +42,16 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	external_name: STRING
+	external_name: INTEGER
 			-- Real name of external feature.
 
-	return_c_type: STRING
+	return_c_type: INTEGER
 			-- Type name of external return type.
 	
-	argument_types: ARRAY [STRING]
+	argument_types: ARRAY [INTEGER]
 			-- Type name of arguments
 
-	include_list: ARRAY [STRING]
+	include_list: ARRAY [INTEGER]
 			-- List of header file used by external feature.
 
 	is_encapsulated: BOOLEAN
@@ -70,12 +70,12 @@ feature {NONE} -- Implementation
 			if include_list /= Void then
 				create incl.make (class_type)
 				incl.set_include_list (include_list)
-				incl.set_external_name (external_name)
+				incl.set_external_name_id (external_name)
 				Result := incl
 			else
 				create ext.make (class_type)
-				ext.set_external_name (external_name)
-				ext.set_return_type (return_c_type)
+				ext.set_external_name_id (external_name)
+				ext.set_return_type_id (return_c_type)
 				ext.set_argument_types (argument_types)
 				Result := ext
 			end

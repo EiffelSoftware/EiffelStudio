@@ -47,7 +47,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 		do
 			Result := same_type (other) and then
-				equal (return_type, other.return_type) and then
+				return_type = other.return_type and then
 				array_is_equal (argument_types, other.argument_types) and then
 				array_is_equal (header_files, other.header_files) and then
 				class_name.is_equal (other.class_name) and then
@@ -162,8 +162,10 @@ feature {NONE} -- Code generation
 			expr: EXPR_B
 			i: INTEGER
 			generate_cast: BOOLEAN
-			arg_types: ARRAY [STRING]
+			arg_types: like argument_types
 			buffer: GENERATION_BUFFER
+			sep: STRING
+			l_names_heap: like Names_heap
 		do
 			if parameters /= Void then
 				from
@@ -171,8 +173,10 @@ feature {NONE} -- Code generation
 					if generate_parameter_cast then
 						generate_cast := True
 						arg_types := argument_types
+						l_names_heap := Names_heap
 						i := arg_types.lower
 					end
+					sep := ", "
 					parameters.start
 					if type = standard then
 							-- Skip C++ object
@@ -184,13 +188,14 @@ feature {NONE} -- Code generation
 					expr := parameters.item
 					if generate_cast then
 						buffer.putchar ('(')
-						buffer.putstring (arg_types.item (i))
-						buffer.putstring (") ")
+						buffer.putstring (l_names_heap.item (arg_types.item (i)))
+						buffer.putchar (')')
+						buffer.putchar (' ')
 						i := i + 1
 					end
 					expr.print_register;
 					if not parameters.islast then
-						buffer.putstring (", ")
+						buffer.putstring (sep)
 					end
 					parameters.forth
 				end

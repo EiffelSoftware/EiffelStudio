@@ -66,7 +66,7 @@ feature -- Access
 	feature_name: STRING is
 			-- Final name of the feature
 		require
-			feature_name_id_set: feature_name_id >= 1
+			feature_name_id_set: feature_name_id > 0
 		do
 			Result := Names_heap.item (feature_name_id)
 		ensure
@@ -113,14 +113,23 @@ feature -- Access
 			-- Is the feature a prefixed one ?
 
 	external_name: STRING is
+			-- External name
+		require
+			external_name_id_set: external_name_id > 0
+		do
+			Result := Names_heap.item (external_name_id)
+		ensure
+			Result_not_void: Result /= Void
+			Result_not_empty: not Result.is_empty
+		end;
+
+	external_name_id: INTEGER is
 			-- External name of feature if any generation.
 		do
-			Result := private_external_name
-			if Result = Void then
-				Result := feature_name
+			Result := private_external_name_id
+			if Result = 0 then
+				Result := feature_name_id
 			end
-		ensure
-			return_same_object: Result = external_name
 		end
 
 feature -- Debugger access
@@ -311,8 +320,8 @@ feature -- Setting
 			rout_id_set := set
 		end
 
-	set_external_name (n: like external_name) is
-			-- Assign `n' to `external_name'.
+	set_private_external_name (n: like private_external_name) is
+			-- Assign `n' to `private_external_name'.
 		require
 			n_not_empty: n /= Void implies not n.is_empty
 		local
@@ -322,7 +331,17 @@ feature -- Setting
 			l_names_heap.put (n)
 			private_external_name_id := l_names_heap.found_item
 		ensure
-			external_name_set: n /= Void implies equal (external_name, n)
+			private_external_name_set: n /= Void implies equal (private_external_name, n)
+		end
+
+	set_private_external_name_id (n_id: like private_external_name_id) is
+			-- Assign `n_id' to `private_external_name_id'.
+		require
+			valid_n: n_id > 0
+		do
+			private_external_name_id := n_id
+		ensure
+			private_external_name_set: private_external_name_id = n_id
 		end
 
 	generation_class_id: INTEGER is

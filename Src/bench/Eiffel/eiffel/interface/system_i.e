@@ -1656,9 +1656,9 @@ end
 				if exec_unit.is_external then
 					external_unit ?= exec_unit
 					check
-						externals.has (external_unit.external_name)
+						externals.has (external_unit.external_name_id)
 					end
-					info := externals.item (external_unit.external_name)
+					info := externals.item (external_unit.external_name_id)
 					info.set_execution_unit (external_unit)
 				end
 				exec_table.forth
@@ -1854,7 +1854,7 @@ feature {NONE} -- Implementation
 								-- the list of new externals in inherit_table. Same thing
 								-- if it has to be removed
 							if not ext.encapsulated then
-								Externals.remove_occurrence (ext.external_name)
+								Externals.remove_occurrence (ext.external_name_id)
 							end
 						end
 						ftable.forth

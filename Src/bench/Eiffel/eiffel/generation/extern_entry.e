@@ -26,7 +26,7 @@ feature -- from EXTERN_ENTRY
 			end;
 		end;
 
-	include_list: ARRAY [STRING]
+	include_list: ARRAY [INTEGER]
 			-- List of headers needed to specify an external routine.
 
 feature -- Settings

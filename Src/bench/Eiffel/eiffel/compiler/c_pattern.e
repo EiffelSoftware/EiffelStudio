@@ -18,6 +18,13 @@ inherit
 			is_equal
 		end;
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		redefine
+			is_equal
+		end
+
 creation
 
 	make
@@ -165,7 +172,7 @@ feature -- Pattern generation
 		do
 			nb := argument_count
 			if include_current then
-				!! Result.make (1, nb + 1)
+				create Result.make (1, nb + 1)
 				Result.put ("EIF_REFERENCE", 1)
 				j := 2
 			else
@@ -307,7 +314,7 @@ feature -- Pattern generation
 
 			buffer.generate_function_signature
 				(result_string, f_name, False, buffer,
-				 argument_name_array, arg_types);
+				 argument_name_array, arg_types)
 
 			buffer.putstring ("%Tstruct item *it;%N");
 			generate_toi_push (buffer);

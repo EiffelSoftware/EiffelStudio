@@ -17,7 +17,7 @@ feature -- Properties
 	is_cpp_code: BOOLEAN
 			-- Is current macro to be generated in a CPP context?
 
-	field_name: STRING
+	field_name_id: INTEGER
 			-- Name of struct.
 			--| Can be empty if parsed through the old syntax
 
@@ -31,12 +31,12 @@ feature -- Initialization
 			is_cpp_code_set: is_cpp_code = v
 		end
 
-	set_field_name (s: STRING) is
-			-- Assign `s' to `field_name'.
+	set_field_name_id (id: INTEGER) is
+			-- Assign `s' to `field_name_id'.
 		do
-			field_name := s
+			field_name_id := id
 		ensure
-			field_name_set: field_name = s
+			field_name_id_set: field_name_id = id
 		end
 
 feature -- Code generation
@@ -55,13 +55,14 @@ feature -- Code generation
 			name: STRING
 			setter: BOOLEAN
 			new_syntax: BOOLEAN
+			l_names_heap: like Names_heap
 		do
 			buf := buffer
 			if is_cpp_code then
 				context.set_has_cpp_externals_calls (True)
 			end
 			
-			name := field_name
+			name := Names_heap.item (field_name_id)
 			if name = Void then
 				name := external_name
 			else
@@ -70,6 +71,8 @@ feature -- Code generation
 
 			setter := (new_syntax and then argument_types.count = 2)
 					or else (not new_syntax and then not has_return_type)
+
+			l_names_heap := Names_heap
 
 			if not setter then
 				buf.putstring ("return ");
@@ -83,7 +86,7 @@ feature -- Code generation
 					--| External structure access will be generated as:
 					--| (type_2) (((type_1 *) arg1)->alias_name);
 				buf.putstring ("(((")
-				buf.putstring (argument_types.item(1))
+				buf.putstring (l_names_heap.item (argument_types.item(1)))
 				buf.putstring (" *) arg1");
 				buf.putstring (")->")
 				if not special_access then
@@ -97,12 +100,12 @@ feature -- Code generation
 					--| External structure setting will be generated as:
 					--| ((type_1 *) arg1)->alias_name = (type_2) (arg2);
 				buf.putstring ("((")
-				buf.putstring (argument_types.item(1))
+				buf.putstring (l_names_heap.item (argument_types.item(1)))
 				buf.putstring (" *) arg1");
 				buf.putstring (")->")
 				buf.putstring (name)
 				buf.putstring (" = (")
-				buf.putstring (argument_types.item(2))
+				buf.putstring (l_names_heap.item (argument_types.item(2)))
 				buf.putstring (")(arg2);");
 				buf.new_line;
 			end

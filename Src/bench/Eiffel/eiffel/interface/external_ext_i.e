@@ -11,16 +11,25 @@ inherit
 		redefine
 			is_equal
 		end
+
 	SHARED_DECLARATIONS
 		redefine
 			is_equal
 		end
+
 	SHARED_BYTE_CONTEXT
 		redefine
 			is_equal
 		end
 
-feature
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		redefine
+			is_equal
+		end
+
+feature -- Status report
 
 	is_cpp: BOOLEAN is
 		do
@@ -50,7 +59,7 @@ feature
 
 	has_return_type: BOOLEAN is
 		do
-			Result := return_type /= Void
+			Result := return_type > 0
 		end
 
 	has_include_list: BOOLEAN is
@@ -60,16 +69,19 @@ feature
 
 feature -- Properties
 
-	argument_types: ARRAY [STRING]
+	argument_types: ARRAY [INTEGER]
+			-- Argument types. Values are indexes in NAMES_HEAP.
 
-	return_type: STRING
+	return_type: INTEGER
+			-- Return type index in NAMES_HEAP
 
-	header_files: ARRAY [STRING]
+	header_files: ARRAY [INTEGER]
+			-- Header files. Values are indexes in NAMES_HEAP.
 
-	alias_name: STRING
-			-- Real name of external feature
+	alias_name_id: INTEGER
+			-- Real name index in NAMES_HEAP of external feature
 
-feature -- Initialization
+feature -- Settings
 
 	set_argument_types (a: like argument_types) is
 			-- Assign `a' to `argument_types'.
@@ -89,15 +101,14 @@ feature -- Initialization
 			return_type := r
 		end
 
-	set_alias_name (a_name: like alias_name) is
-			-- Set `alias_name' with `a_name'.
+	set_alias_name_id (name_id: like alias_name_id) is
+			-- Set `alias_name_id' with `name_id'.
 		require
-			a_name_not_void: a_name /= Void
-			valid_name: not a_name.is_empty
+			valid_name_id: name_id > 0
 		do
-			alias_name := a_name
+			alias_name_id := name_id
 		ensure
-			alias_name_set: alias_name = a_name
+			alias_name_id_set: alias_name_id = name_id
 		end
 
 feature -- Comparison
@@ -105,14 +116,14 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 		do
 			Result := same_type (other) and then
-				equal (return_type, other.return_type) and then
+				return_type = other.return_type and then
 				array_is_equal (argument_types, other.argument_types) and then
 				array_is_equal (header_files, other.header_files)
 		end
 
 feature {NONE} -- Comparison
 
-	array_is_equal (a, o_a: ARRAY [STRING]): BOOLEAN is
+	array_is_equal (a, o_a: ARRAY [INTEGER]): BOOLEAN is
 		local
 			i, nb: INTEGER
 		do
@@ -140,7 +151,6 @@ feature -- Code generation
 			-- Generate header files for the extension.
 		local
 			i, nb: INTEGER
-			header_file: STRING
 			queue: like shared_include_queue
 		do
 			if has_include_list then
@@ -151,8 +161,7 @@ feature -- Code generation
 				until
 					i > nb
 				loop
-					header_file := header_files @ i
-					queue.put (header_file)
+					queue.put (header_files @ i)
 					i := i + 1
 				end
 			end
@@ -165,7 +174,7 @@ feature -- Code generation
 			buffer.putstring (external_name)
 			if has_standard_prototype then
 				Extern_declarations.add_routine_with_signature (ret_type,
-								external_name, argument_types);
+								external_name, Names_heap.convert_to_string_array (argument_types))
 			end
 		end
 
@@ -189,20 +198,24 @@ feature -- Code generation
 			has_signature: has_arg_list
 		local
 			i, count: INTEGER;
-			arg_types: ARRAY [STRING]
+			arg_types: like argument_types
 			buffer: GENERATION_BUFFER
+			l_names_heap: like Names_heap
+			sep: STRING
 		do
 			buffer := Context.buffer
 			from
 				arg_types := argument_types
 				i := arg_types.lower
 				count := arg_types.upper
+				l_names_heap := Names_heap
+				sep := ", "
 			until
 				i > count	
 			loop
-				buffer.putstring (arg_types.item (i));
+				buffer.putstring (l_names_heap.item (arg_types.item (i)));
 				if i /= count then
-					buffer.putstring (", ");
+					buffer.putstring (sep);
 				end;
 				i := i + 1;
 			end;
@@ -214,16 +227,20 @@ feature -- Code generation
 			expr: EXPR_B;
 			i: INTEGER;
 			generate_cast: BOOLEAN
-			arg_types: ARRAY [STRING]
+			arg_types: like argument_types
 			buffer: GENERATION_BUFFER
+			sep: STRING
+			l_names_heap: like Names_heap
 		do
 			if parameters /= Void then
 				buffer := Context.buffer
+				sep := ", "
 
 				generate_cast := generate_parameter_cast
  
 				if generate_cast then
 					arg_types := argument_types
+					l_names_heap := Names_heap
 					i := arg_types.lower
 				end
  
@@ -236,12 +253,13 @@ feature -- Code generation
 						-- add cast before parameter
 					if generate_cast then
 						buffer.putchar ('(');
-						buffer.putstring (arg_types.item (i));
-						buffer.putstring (") ");
+						buffer.putstring (l_names_heap.item (arg_types.item (i)))
+						buffer.putchar (')')
+						buffer.putchar (' ')
 					end;
 					expr.print_register;
 					if not parameters.islast then
-						buffer.putstring (", ");
+						buffer.putstring (sep)
 					end;
 					parameters.forth;
 					i := i + 1;

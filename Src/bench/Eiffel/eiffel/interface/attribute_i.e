@@ -141,7 +141,7 @@ feature -- Element Change
 					create external_b
 					external_b.init (Current)
 					external_b.set_type (access_type)
-					external_b.set_external_name (external_name)
+					external_b.set_external_name_id (external_name_id)
 					external_b.set_extension (extension)
 					Result := external_b
 				else

@@ -126,11 +126,13 @@ feature -- Code generation
 		local
 			i, j, count: INTEGER
 			buf: GENERATION_BUFFER
+			l_names_heap: like Names_heap
 		do
 			from
 				buf := buffer
 				j := 1
 				count := arguments.count
+				l_names_heap := Names_heap
 				if type = standard then
 						-- First argument is the pointer to the C++ object
 					i := 2
@@ -146,7 +148,7 @@ feature -- Code generation
 				end
 				if has_arg_list then
 					buf.putchar ('(')
-					buf.putstring (argument_types.item (j))
+					buf.putstring (l_names_heap.item (argument_types.item (i)))
 					buf.putstring (") ")
 				end
 				buf.putstring ("arg")

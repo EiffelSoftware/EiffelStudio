@@ -33,9 +33,9 @@ feature  -- Initialization
 			use_list_not_empty: not use_list.is_empty
 		do
 			if sig /= Void then
-				argument_types := sig.arguments_array
+				argument_types := sig.arguments_id_array
 				if sig.return_type /= Void then
-					return_type := sig.return_type.value
+					return_type := sig.return_type.value_id
 				end
 			end
 			header_files := use_list.array_representation
@@ -107,7 +107,8 @@ feature {NONE} -- Implementation
 				else
 					header_files.force (header_files.item (header_files.lower), header_files.upper + 1)
 				end
-				header_files.put (special_file_name, header_files.lower)
+				Names_heap.put (special_file_name)
+				header_files.put (Names_heap.found_item, header_files.lower)
 			end
 		end
 

@@ -17,9 +17,9 @@ feature {EXTERNAL_FACTORY} -- Initialization
 			-- Create a new C_EXTENSION_AS node
 		do
 			if sig /= Void then
-				argument_types := sig.arguments_array
+				argument_types := sig.arguments_id_array
 				if sig.return_type /= Void then
-					return_type := sig.return_type.value
+					return_type := sig.return_type.value_id
 				end
 			end
 			if use_list /= Void then

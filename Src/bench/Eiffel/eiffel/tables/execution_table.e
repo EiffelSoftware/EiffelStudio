@@ -38,6 +38,13 @@ inherit
 			copy, is_equal
 		end
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+
 creation
 	make
 
@@ -276,6 +283,7 @@ feature -- C code generation
 			temp: GENERATION_BUFFER
 			frozen_file: INDENT_FILE
 			buffer: GENERATION_BUFFER
+			l_names_heap: like Names_heap
 		do
 			create frozen_file.make_c_code_file (workbench_file_name (Efrozen));
 
@@ -296,8 +304,7 @@ feature -- C code generation
 
 				-- Generation
 			from
-				!! include_set.make
-				include_set.compare_objects
+				create include_set.make
 				i := 1
 				buffer.putstring ("#include %"eif_project.h%"%N%
 								%#include %"eif_macros.h%"%N%
@@ -320,12 +327,13 @@ feature -- C code generation
 				-- is in one of the include files)
 			from
 				buffer.end_c_specific_code
+				l_names_heap := Names_heap
 				include_set.start
 			until
 				include_set.after
 			loop
 				buffer.putstring ("#include ")
-				buffer.putstring (include_set.item)
+				buffer.putstring (l_names_heap.item (include_set.item))
 
 				buffer.putstring ("%N%N")
 				include_set.forth
@@ -366,7 +374,7 @@ feature -- C code generation
 
 feature {EXT_INCL_EXEC_UNIT} -- Include set
 
-	include_set: LINKED_SET [STRING]
+	include_set: LINKED_SET [INTEGER]
 
 feature {NONE} -- Keep track of the holes in the table
 

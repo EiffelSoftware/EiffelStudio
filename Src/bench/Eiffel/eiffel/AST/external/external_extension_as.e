@@ -11,16 +11,21 @@ inherit
 	SHARED_AST_CONTEXT
 
 	SHARED_ERROR_HANDLER
+	
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
 
 feature -- Properties
 
-	argument_types: ARRAY [STRING]
+	argument_types: ARRAY [INTEGER]
 			-- Types of the arguments (extracted from the C signature)
 
-	return_type: STRING
+	return_type: INTEGER
 			-- Return type (extracted from the C signature)
 
-	header_files: ARRAY [STRING]
+	header_files: ARRAY [INTEGER]
 			-- Header files to include
 
 feature -- Conveniences
@@ -43,7 +48,7 @@ feature -- Conveniences
 	has_signature: BOOLEAN is
 			-- Does the extension define a c_signature?
 		do
-			Result := return_type /= Void or else argument_types /= Void
+			Result := return_type > 0 or else argument_types /= Void
 		end
 
 feature {EXTERNAL_LANG_AS} -- Implementation
@@ -103,7 +108,7 @@ feature -- Type check
 						error := True
 					end
 				end
-				if (return_type = Void) = context.a_feature.is_function then
+				if (return_type = 0) = context.a_feature.is_function then
 					error := True
 				end
 
@@ -191,7 +196,8 @@ feature {NONE} -- Implementation
 							raise_error ("Empty type declaration in signature")
 						else
 							arg_count := arg_count + 1
-							argument_types.force (a_type, arg_count)
+							Names_heap.put (a_type)
+							argument_types.force (Names_heap.found_item, arg_count)
 						end
 						pos := end_pos + 2 -- position after comma or after )
 					end
@@ -209,7 +215,8 @@ feature {NONE} -- Implementation
 						if a_type.is_empty then
 							raise_error ("Missing return type in signature")
 						else
-							return_type := a_type
+							Names_heap.put (a_type)
+							return_type := Names_heap.found_item
 						end
 					end
 				end
@@ -254,7 +261,8 @@ end
 					else
 						include_count := include_count + 1
 						header_f := unprocessed.substring (start_pos, end_pos)
-						header_files.put (header_f, include_count)
+						Names_heap.put (header_f)
+						header_files.put (Names_heap.found_item, include_count)
 						unprocessed.tail (unprocessed.count - end_pos)
 						unprocessed.left_adjust
 						if not unprocessed.is_empty then

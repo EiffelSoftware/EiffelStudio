@@ -11,7 +11,8 @@ inherit
 			is_dll,
 			is_equal, 
 			has_standard_prototype, 
-			generate_parameter_cast
+			generate_parameter_cast,
+			generate_external_name
 		end
 
 feature -- Access
@@ -54,7 +55,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 		do
 			Result := same_type (other) and then
-				equal (return_type, other.return_type) and then
+				return_type = other.return_type and then
 				array_is_equal (argument_types, other.argument_types) and then
 				array_is_equal (header_files, other.header_files) and then
 				equal (dll_name, other.dll_name) and then
@@ -66,5 +67,14 @@ feature -- Code generation
 	has_standard_prototype: BOOLEAN is True
 
 	generate_parameter_cast: BOOLEAN is False
+
+	generate_external_name (buffer: GENERATION_BUFFER; external_name: STRING;
+				cl_type: CL_TYPE_I; ret_type: TYPE_C) is
+			-- Generate the C name associated with the extension
+		do
+			check
+				final_mode: Context.final_mode
+			end
+		end
 
 end -- class DLL_EXTENSION_I

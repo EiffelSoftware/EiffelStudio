@@ -5,12 +5,12 @@ class EXTERNAL_I
 inherit
 	PROCEDURE_I
 		export
-			{NONE} set_external_name
+			{NONE} set_private_external_name
 		redefine
 			transfer_to, equiv, update_api,
 			melt, generate,
 			access, is_external, new_rout_entry, valid_body_id,
-			set_renamed_name, set_renamed_name_id, external_name, undefinable
+			set_renamed_name, set_renamed_name_id, external_name_id, undefinable
 		end;
 	
 feature -- Attributes for externals
@@ -57,7 +57,7 @@ feature -- Routines for externals
 			Result := extension /= Void and then extension.has_include_list
 		end;
 
-	include_list: ARRAY [STRING] is
+	include_list: ARRAY [INTEGER] is
 			-- Include list
 		do
 			if extension /= Void then
@@ -102,10 +102,10 @@ feature -- Incrementality
 
 feature 
 
-	alias_name: STRING is
+	alias_name_id: INTEGER is
 			-- Alias for the external
 		do
-			Result := extension.alias_name
+			Result := extension.alias_name_id
 		end
 
 	encapsulated: BOOLEAN;
@@ -114,8 +114,8 @@ feature
 	set_renamed_name (s: STRING) is
 			-- Assign `s' to `featurename'.
 		do
-			if alias_name = Void then
-				extension.set_alias_name (feature_name)
+			if alias_name_id = 0 then
+				extension.set_alias_name_id (feature_name_id)
 			end
 			Precursor {PROCEDURE_I} (s)
 		end
@@ -123,8 +123,8 @@ feature
 	set_renamed_name_id (id: INTEGER) is
 			-- Assign `id' to `feature_name_id'.
 		do
-			if alias_name = Void then
-				extension.set_alias_name (feature_name)
+			if alias_name_id = 0 then
+				extension.set_alias_name_id (feature_name_id)
 			end
 			Precursor {PROCEDURE_I} (id)
 		end
@@ -156,14 +156,20 @@ feature
 			Result := True;
 		end;
 
-	external_name: STRING is
-			-- External name
+	alias_name: STRING is
+			-- Alias name if any.
 		do
-			Result := alias_name
-			if Result = Void then
-				Result := feature_name
+			Result := Names_heap.item (alias_name_id)
+		end
+
+	external_name_id: INTEGER is
+			-- External_name ID
+		do
+			Result := alias_name_id
+			if Result = 0 then
+				Result := feature_name_id
 			end
-		end;
+		end
 
 	access (access_type: TYPE_I): ACCESS_B is
 			-- Byte code access for current feature
@@ -173,7 +179,7 @@ feature
 			!!external_b;
 			external_b.init (Current);
 			external_b.set_type (access_type);
-			external_b.set_external_name (external_name);
+			external_b.set_external_name_id (external_name_id);
 			external_b.set_encapsulated (encapsulated);
 			external_b.set_extension (extension);
 			

@@ -6,7 +6,7 @@ class
 
 feature
 
-	shared_include_queue: SEARCH_TABLE [STRING] is
+	shared_include_queue: SEARCH_TABLE [INTEGER] is
 		once
 			create Result.make (10)
 		end

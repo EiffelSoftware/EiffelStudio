@@ -39,7 +39,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 		do	
 			Result := same_type (other) and then
-				equal (return_type, other.return_type) and then
+				return_type = other.return_type and then
 				array_is_equal (argument_types, other.argument_types) and then
 				array_is_equal (header_files, other.header_files)
 		end

@@ -10,6 +10,11 @@ inherit
 			optimized_byte_node, inlined_byte_code,
 			has_separate_call, generate_il
 		end
+		
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
 	
 feature -- Access
 
@@ -454,15 +459,18 @@ feature -- Code generation
 							param ?= protect.expr
 						else
 								-- Shouldn't happen
---io.error.putstring ("Unknown type%N%N")
+							check
+								False
+							end
 						end
 					end
-	-- FIXME
-if param = Void then
-	type_c := real_type (expr.type).c_type
-else
-					type_c := real_type (param.attachment_type).c_type
-end
+						-- FIXME
+					if param = Void then
+						type_c := real_type (expr.type).c_type
+					else
+						type_c := real_type (param.attachment_type).c_type
+					end
+
 					Result.put (type_c.c_string, j)
 					i := i +1
 					j := j +1

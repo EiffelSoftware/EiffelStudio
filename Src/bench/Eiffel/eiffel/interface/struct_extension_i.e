@@ -34,8 +34,8 @@ feature -- Properties
 	is_cpp: BOOLEAN
 		-- Is Current struct a C++ one?
 
-	field_name: STRING
-			-- Name of struct.
+	field_name_id: INTEGER
+			-- Name ID of struct.
 			--| Can be empty if parsed through the old syntax
 
 feature -- Comparison
@@ -43,20 +43,20 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN is
 		do	
 			Result := same_type (other) and then
-				equal (return_type, other.return_type) and then
+				return_type = other.return_type and then
 				array_is_equal (argument_types, other.argument_types) and then
 				array_is_equal (header_files, other.header_files) and then
-				equal (field_name, other.field_name)
+				field_name_id = other.field_name_id
 		end
 
 feature -- Settings
 
-	set_field_name (s: STRING) is
-			-- Assign `s' to `field_name'.
+	set_field_name_id (id: INTEGER) is
+			-- Assign `id' to `field_name_id'.
 		do
-			field_name := s
+			field_name_id := id
 		ensure
-			field_name_set: field_name = s
+			field_name_id_set: field_name_id = id
 		end
 
 feature -- Code generation
@@ -77,7 +77,7 @@ feature -- Code generation
 						parameters: BYTE_LIST [EXPR_B]) is
 			-- Generate access to C structure
 		local
-			arg_types: ARRAY [STRING]
+			arg_types: like argument_types
 			special_access: BOOLEAN
 			name: STRING
 			setter: BOOLEAN
@@ -87,7 +87,7 @@ feature -- Code generation
 				context.set_has_cpp_externals_calls (True)
 			end
 
-			name := field_name
+			name := Names_heap.item (field_name_id)
 			if name = Void then
 				name := external_name
 			else
@@ -104,7 +104,7 @@ feature -- Code generation
 					special_access := True
 				end
 				buffer.putstring ("(((")
-				buffer.putstring (arg_types.item (1))
+				buffer.putstring (Names_heap.item (arg_types.item (1)))
 				buffer.putstring (" *)")
 				parameters.first.print_register
 				buffer.putstring (")->")
@@ -116,14 +116,14 @@ feature -- Code generation
 			else
 				parameters.start
 				buffer.putstring ("(((")
-				buffer.putstring (arg_types.item (1))
+				buffer.putstring (Names_heap.item (arg_types.item (1)))
 				buffer.putstring (" *)")
 				parameters.item.print_register
 				parameters.forth
 				buffer.putstring (")->")
 				buffer.putstring (name)
 				buffer.putstring (" = (")
-				buffer.putstring (arg_types.item (2))
+				buffer.putstring (Names_heap.item (arg_types.item (2)))
 				buffer.putstring (")(")
 				parameters.item.print_register
 				buffer.putchar (')')

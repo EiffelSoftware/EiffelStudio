@@ -19,6 +19,11 @@ inherit
 
 	IL_CONST
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	has (feature_name: STRING; compilation_type: BOOLEAN; target_type: BASIC_I): BOOLEAN is
@@ -437,7 +442,7 @@ feature {NONE} -- C code generation
 				buffer.putstring (" ? makestr (%"True%", 4) : makestr (%"False%", 5))")
 
 					-- Add `eif_plug.h' for C compilation where `makestr' is -- declared
-				shared_include_queue.put (eif_plug_header_file)
+				shared_include_queue.put (Names_heap.eif_plug_header_name_id)
 			else
 				inspect
 					type_of_basic
@@ -463,7 +468,7 @@ feature {NONE} -- C code generation
 				buffer.putchar (')')
 
 					-- Add `eif_out.h' for C compilation where all output functions are declared.
-				shared_include_queue.put (eif_out_header_file)
+				shared_include_queue.put (Names_heap.eif_out_header_name_id)
 			end
 		end
 
@@ -623,7 +628,7 @@ feature {NONE} -- C code generation
 				f_type = memory_set
 			valid_parameters: parameters.count = 2
 		do
-			shared_include_queue.put (string_header_file)
+			shared_include_queue.put (Names_heap.string_header_name_id)
 			if f_type = memory_move then
 				buffer.putstring ("memmove((void *)")
 			elseif f_type = memory_copy then
@@ -710,7 +715,7 @@ feature {NONE} -- C code generation
 			buffer.putchar (')')
 
 				-- Add `eif_misc.h' for C compilation where all bit functions are declared.
-			shared_include_queue.put (eif_misc_header_file)
+			shared_include_queue.put (Names_heap.eif_misc_header_name_id)
 		end
 
 	generate_zero (buffer: GENERATION_BUFFER; type_of_basic: INTEGER) is
@@ -810,19 +815,5 @@ feature {NONE} -- Type information
 						Result = integer_type or else Result = pointer_type or else
 						Result = real_type or else Result = double_type
 		end
-
-feature {NONE} -- Implementation
-
-	eif_misc_header_file: STRING is "%"eif_misc.h%""
-			-- Header file where bit functions are declared.
-
-	eif_out_header_file: STRING is "%"eif_out.h%""
-			-- Header file where out functions are declared.
-
-	eif_plug_header_file: STRING is "%"eif_plug.h%""
-			-- Header file where `makestr' is declared.
-
-	string_header_file: STRING is "<string.h>"
-			-- Header file where `memxxx' functions are declared.
 
 end

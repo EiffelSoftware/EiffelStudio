@@ -56,7 +56,7 @@ feature -- Call generation
 			-- of Current.
 		do
 			if type = enum_field_type then
-				il_generator.put_integer_32_constant (alias_name.to_integer)
+				il_generator.put_integer_32_constant (Names_heap.item (alias_name_id).to_integer)
 			else
 				il_generator.generate_external_call (base_class, n, type,
 					argument_types, return_type, is_polymorphic, type_i, feature_id)

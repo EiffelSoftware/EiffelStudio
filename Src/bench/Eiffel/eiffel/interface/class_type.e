@@ -36,6 +36,11 @@ inherit
 
 	SHARED_TYPE_I
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
 creation
 	make
 	
@@ -453,21 +458,25 @@ feature -- Generation
 			Result.append (Dot_h)
 		end
 
-	header_filename: STRING is
+	header_filename: INTEGER is
 			-- File name for external declarations in final mode
 			-- It is only a relativ path to F_code
+		local
+			s: STRING
 		do
-			create Result.make (17)
-			Result.append_character ('%"')
-			Result.append_character ('.')
-			Result.append_character ('.')
-			Result.append_character ('/')
-			Result.append_character (C_prefix)
-			Result.append_integer (packet_number)
-			Result.append_character ('/')
-			Result.append (base_file_name)
-			Result.append (Dot_h)
-			Result.append_character ('%"')
+			create s.make (17)
+			s.append_character ('%"')
+			s.append_character ('.')
+			s.append_character ('.')
+			s.append_character ('/')
+			s.append_character (C_prefix)
+			s.append_integer (packet_number)
+			s.append_character ('/')
+			s.append (base_file_name)
+			s.append (Dot_h)
+			s.append_character ('%"')
+			Names_heap.put (s)
+			Result := Names_heap.found_item
 		end
 
 	already_included_header: STRING is

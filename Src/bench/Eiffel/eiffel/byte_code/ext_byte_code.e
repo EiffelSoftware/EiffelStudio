@@ -23,7 +23,16 @@ inherit
 			generate
 		end
 
-	SHARED_INCLUDE;
+	SHARED_INCLUDE
+		export
+			{NONE} all
+		end
+
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
 	EXTERNAL_CONSTANTS
 	
 feature -- Attributes for externals

@@ -223,6 +223,9 @@ feature -- Implementation
 			mcl_imp: EV_MULTI_COLUMN_LIST_IMP
 			mcl_item: EV_MULTI_COLUMN_LIST_ROW_IMP
 			current_target_object_id: INTEGER
+			tb: EV_TOOL_BAR
+			tb_imp: EV_TOOL_BAR_IMP
+			tb_item: EV_TOOL_BAR_BUTTON_IMP
 		do
 			create wel_point.make (0, 0)
 			wel_point.set_cursor_position
@@ -306,6 +309,23 @@ feature -- Implementation
 					end
 				end
 
+				tb ?= current_target
+				if tb /= Void then
+					tb_imp ?= tb.implementation
+							-- Retrieve implementation of tree.
+					check	
+						tb_imp /= Void
+					end
+					tb_item := tb_imp.find_item_at_position (
+					wel_point.x - tb.screen_x, wel_point.y - tb.screen_y)
+							-- Return list item at cursor position.
+					if tb_item /= Void then
+						if not tb_item.interface.drop_actions.empty then
+							current_target_object_id :=
+								tb_item.interface.object_id
+						end
+					end
+				end
 					
 				global_pnd_targets.start
 				global_pnd_targets.search (current_target_object_id)
@@ -480,6 +500,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/04/03 18:19:02  rogers
+--| Added checks for toolbar items to pointed_target.
+--|
 --| Revision 1.22  2000/03/30 17:07:02  rogers
 --| Removed duplicate comments in pointed_target.
 --|

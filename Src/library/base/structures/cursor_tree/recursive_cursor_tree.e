@@ -15,7 +15,7 @@ deferred class RECURSIVE_CURSOR_TREE [G] inherit
 
 	CURSOR_TREE [G]
 		redefine
-			empty
+			empty, extendible
 		end
 
 feature -- Access
@@ -38,8 +38,8 @@ feature -- Access
 feature -- Measurement
 
 	arity: INTEGER is
-			-- Number of children of active node; if cursor is `above',
-			-- 0 if tree is empty, 1 otherwise.
+			-- Number of children of active node.
+			-- If cursor is `above', 0 if tree is empty, 1 otherwise.
 		do
 			Result := active.arity
 		end;
@@ -64,12 +64,6 @@ feature -- Measurement
 
 feature -- Status report
 
-	empty: BOOLEAN is
-			-- Is the tree empty?
-		do
-			Result := (above_node.arity = 0)
-		end;
-
 	after: BOOLEAN;
 			-- Is there no valid cursor position to the right of cursor?
 
@@ -82,6 +76,18 @@ feature -- Status report
 			if not below then
 				Result := (active_parent = Void)
 			end
+		end;
+
+	empty: BOOLEAN is
+			-- Is the tree empty?
+		do
+			Result := (above_node.arity = 0)
+		end;
+
+	extendible: BOOLEAN is
+			-- May new items be added on current level?
+		do
+			Result := (not above) and (not is_root)
 		end;
 
 	isfirst: BOOLEAN is

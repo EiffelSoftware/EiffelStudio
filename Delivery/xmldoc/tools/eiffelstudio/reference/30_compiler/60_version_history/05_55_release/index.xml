@@ -6,7 +6,7 @@
 		</heading>
 		<list ordered="false">
 			<item>Full support for new <code><keyword>convert</keyword></code> keyword.</item>
-			<item>Made <code><keyword>Void,</keyword></code> previously a feature of <code><class_name>ANY</class_name></code>, a keyword. This prevents the renaming of <code><feature_name>Void</feature_name></code> into <code><feature_name>not_void</feature_name></code> that was possible before when it was a routine of <code><class_name>ANY</class_name></code>.</item>			
+			<item>Made <code><keyword>Void,</keyword></code> previously a feature of <code><class_name>ANY</class_name></code>, a keyword. This prevents the renaming of <code><feature_name>Void</feature_name></code> into <code><feature_name>not_void</feature_name></code> previously possible when it was a routine of <code><class_name>ANY</class_name></code>.</item>			
 			<item>Added support for reference and expanded constraints on a formal generic parameter.</item>
 			<item>Added support for .NET 2.0 runtime.</item>
 		</list>
@@ -19,8 +19,8 @@
 			<size>2</size>Changes
 		</heading>
 		<list ordered="false">
-			<item></item>
 			<item>In multithreaded mode, fixed dead lock on Unix plaforms when evaluating global onces.</item>
+			<item>Removed obsolete <feature_name>eifcid</feature_name>, <feature_name>eif_expand</feature_na,e> and <feature_name>eifexp</feature_name> from the CECIL interface, one has to use <feature_name>eif_type_id</feature_name> instead.</item>
 		</list>
 		<heading>
 			<size>2</size>Bug fixes

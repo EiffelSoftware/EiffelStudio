@@ -16,6 +16,12 @@ call regasm -silent -nologo core.dll
 
 call dotnet_install_ami.bat
 
+rem Registering Eiffel Assembly Cache
+cd dotnet\assembly_manager
+call regasm -silent -nologo ISE.Reflection.EiffelComponents.dll
+call regasm -silent -nologo ISE.Reflection.CodeGenerator.dll
+cd ..\..
+
 @echo on
 rem Installation of .NET components terminated.
 rem

@@ -298,55 +298,24 @@ feature -- Status report
 			-- calling even when there is no selection as required by some implementation
 			-- features.
 		local
-			wel_character_format: WEL_CHARACTER_FORMAT2
-			a_font: EV_FONT
-			color_ref, back_color_ref: WEL_COLOR_REF
-			effects: INTEGER
-			font_imp: EV_FONT_IMP
-			a_wel_font: WEL_FONT
-			character_effects: EV_CHARACTER_FORMAT_EFFECTS
-			a_background_color: EV_COLOR
-			screen_dc: WEL_SCREEN_DC
+			char_imp: EV_CHARACTER_FORMAT_IMP
 		do
 				-- Create a screen DC for access to metrics
-			create screen_dc
-			screen_dc.get
-			create wel_character_format.make
-			cwin_send_message (wel_item, em_getcharformat, 1, wel_character_format.to_integer)
-			effects := wel_character_format.effects
-			color_ref := wel_character_format.text_color
-			if not flag_set (effects, cfe_autobackcolor) then
-				back_color_ref := wel_character_format.background_color		
-				create a_background_color.make_with_8_bit_rgb (back_color_ref.red, back_color_ref.green, back_color_ref.blue)
-			else
-				a_background_color := background_color.twin
-			end
-			create a_font
-			font_imp ?= a_font.implementation
-			create a_wel_font.make_indirect (wel_character_format.log_font)
-			font_imp.set_by_wel_font (a_wel_font)
-			if flag_set (effects, cfm_italic) then
-				font_imp.set_shape (feature {EV_FONT_CONSTANTS}.shape_italic)
-			end
-			if flag_set (effects, cfm_bold) then
-				font_imp.set_weight (feature {EV_FONT_CONSTANTS}.weight_bold)
-			end
-			
-			create character_effects
-			if flag_set (effects, cfm_strikeout) then
-				character_effects.enable_striked_out
-			end
-			if flag_set (effects, Cfm_underline) then
-				character_effects.enable_underlined
-			end
-			character_effects.set_vertical_offset (point_to_pixel (screen_dc, wel_character_format.offset, 20))
-			
-			create Result.make_with_values (a_font,
-				create {EV_COLOR}.make_with_8_bit_rgb (color_ref.red, color_ref.green, color_ref.blue),
-				a_background_color,
-				character_effects)
-			
-			screen_dc.release
+			create Result
+			char_imp ?= Result.implementation
+			cwin_send_message (wel_item, em_getcharformat, 1, char_imp.to_integer)
+		end
+		
+	internal_selected_character_format_i: EV_CHARACTER_FORMAT_IMP is
+			-- Implementation for `selected_character_format'. No preconditions permit
+			-- calling even when there is no selection as required by some implementation
+			-- features.
+		local
+			char_format: EV_CHARACTER_FORMAT
+		do
+			create char_format
+			Result ?= char_format.implementation
+			cwin_send_message (wel_item, em_getcharformat, 1, Result.to_integer)
 		end
 		
 	paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
@@ -370,8 +339,6 @@ feature -- Status report
 	
 	internal_paragraph_format (caret_index: INTEGER): EV_PARAGRAPH_FORMAT is
 			-- `Result' is paragraph_format at caret position `caret_index'.
-		local
-			already_set: BOOLEAN
 		do
 			set_selection (caret_index - 1, caret_index - 1)
 			Result := internal_selected_paragraph_format
@@ -441,19 +408,21 @@ feature -- Status report
 			Result := flag_set (mask, cfm_color | cfm_bold | cfm_face | cfm_size | cfm_strikeout | cfm_underline | cfm_italic | cfm_offset | cfm_backcolor)
 		end
 		
-	internal_character_format (pos: INTEGER): EV_CHARACTER_FORMAT is
+	internal_character_format (pos: INTEGER): EV_CHARACTER_FORMAT_I is
 			-- `Result' is character format at position `pos'. On some platforms
 			-- this may be optimized to take the selected character format and therefore
 			-- should only be used by `next_change_of_character'.
 		do
 			set_selection (pos - 1, pos - 1)
-			Result := internal_selected_character_format
+			Result := internal_selected_character_format_i
 		end
 		
 	initialize_for_saving is
 			-- Initialize `Current' for save operations, by performing
 			-- optimizations that prevent the control from slowing down due to
 			-- unecessary optimizations.
+		local
+			raw_file: RAW_FILE
 		do
 			Precursor {EV_RICH_TEXT_BUFFERING_STRUCTURES_I}
 			disable_redraw
@@ -463,6 +432,8 @@ feature -- Status report
 			if caret_move_actions_internal /= Void then
 				caret_move_actions_internal.block
 			end
+			create raw_file.make_create_read_write ("C:\Documents and Settings\rogers\Desktop\test1.rtf")
+			save_rtf_file (raw_file)
 		end
 		
 	complete_saving is
@@ -510,12 +481,10 @@ feature -- Status report
 	internal_paragraph_format_contiguous (start_position, end_position: INTEGER): BOOLEAN is
 			-- Is paragraph formatting from caret_position `start_position' to `end_position' contiguous?
 		local
-			current_selection: WEL_CHARACTER_RANGE
-			range_already_selected: BOOLEAN
 			wel_paragraph_format: WEL_PARAGRAPH_FORMAT2
 			mask: INTEGER
 		do
-				set_selection (start_position - 1, end_position - 1)
+			set_selection (start_position - 1, end_position - 1)
 			create wel_paragraph_format.make
 			cwin_send_message (wel_item, em_getparaformat, 1, wel_paragraph_format.to_integer)
 			mask := wel_paragraph_format.mask
@@ -902,7 +871,7 @@ feature -- Status setting
 				clear_structures
 				buffer_locked_in_append_mode := True
 			end
-			append_text_for_rtf (a_text, format)
+			append_text_for_rtf (a_text, format.implementation)
 		end
 		
 	flush_buffer_to (start_position, end_position: INTEGER) is
@@ -948,6 +917,7 @@ feature -- Status setting
 			temp_string, default_font_format: STRING
 			format_underlined, format_striked, format_bold, format_italic: BOOLEAN
 			screen_dc: WEL_SCREEN_DC
+			character_format_i: EV_CHARACTER_FORMAT_I
 		do
 				-- Store original caret position.
 			original_position := caret_position
@@ -979,7 +949,8 @@ feature -- Status setting
 				until
 					formats.off
 				loop
-					build_font_from_format (formats.item)
+					character_format_i ?= formats.item.implementation
+					build_font_from_format (character_format_i)
 					formats.forth
 				end
 				font_text.append ("}")
@@ -994,7 +965,7 @@ feature -- Status setting
 				until
 					formats.off
 				loop
-					build_color_from_format (formats.item)
+					build_color_from_format (formats.item.implementation)
 					formats.forth
 				end
 

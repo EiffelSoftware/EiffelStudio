@@ -858,8 +858,8 @@ rt_public char *irt_nmake(EIF_CONTEXT long int objectCount)
 rt_private void rt_clean(void)
 {
 	/* Clean the data structure before raising an exception of code `code'
-	/* after having cleaned the hash table */
-	/* and allocated memory and reset function pointers. */
+	 * after having cleaned the hash table 
+	 * and allocated memory and reset function pointers. */
 	EIF_GET_CONTEXT
 	/* struct rt_struct *rt_info;*/ /* %%ss unused */
 

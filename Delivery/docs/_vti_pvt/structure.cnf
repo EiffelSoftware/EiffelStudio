@@ -1,5 +1,5 @@
 3.0.0.507
-1074
+1076
 1033,release_notes.html,0,Release Notes,0,942281138,1
 vti_globalpage:BW|true
 1018,papers/index.html,0,Technology Papers,0,942202015,1
@@ -33,6 +33,8 @@ vti_globalpage:BW|true
 1042,Eiffel/language/inheritance.maker.html,0,Inheritance,1031,942285323,0
 1044,Eiffel/language/principles.maker.html,0,Principles,1031,942285323,0
 1045,Eiffel/language/types.maker.html,0,Types,1031,942285323,0
+1075,Eiffel/language/tuples.html,0,Tuples,1031,942344218,0
+1074,Eiffel/language/agents.html,0,Agents,1031,942344218,0
 1051,Eiffel/language/generic_creation.html,0,Generic Creation,1031,942296835,0
 1046,Eiffel/language/system.maker.html,0,An Invitation to Eiffel: Putting everything together,1031,942285323,0
 1043,Eiffel/language/polymorphism.maker.html,0,Polymorphism,1031,942285323,0

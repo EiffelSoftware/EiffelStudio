@@ -78,20 +78,18 @@ feature {EV_PND_SOURCE_IMP} -- Element change
 		local
 			list: LINKED_LIST [EV_INTERNAL_COMMAND]
 		do
-			if command_list /= Void and then 
-					(command_list @ event_id) /= Void then
+			if command_list /= Void
+			and then (command_list @ event_id) /= Void then
 				list := command_list @ event_id
 				from
 					list.start
-					if list.item.command = cmd then
-						list.remove
-					end
 				until
 					list.after
 				loop
-					list.forth
 					if list.item.command = cmd then
 						list.remove
+					else
+						list.forth
 					end
 				end
 			end

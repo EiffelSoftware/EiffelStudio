@@ -76,6 +76,8 @@ feature -- Generation
 			filtered_document: FILTERED_DOCUMENT
 			l_target_dir: DIRECTORY
 			l_link: DOCUMENT_LINK
+			l_link_manager: LINK_MANAGER
+			l_images: ARRAYED_LIST [DOCUMENT_LINK]
 		do				
 					-- First filter the document according to correct filter
 			filtered_document := Shared_project.filter_manager.filtered_document (a_doc)
@@ -99,14 +101,16 @@ feature -- Generation
 			last_generated_file.close
 			
 					-- Finally copy the images referenced in `a_doc' so they are still visible from new file. FIXME: Do copy actual images.
+			create l_link_manager.make_with_documents (shared_project.documents)
+			l_images := l_link_manager.document_images (a_doc)
 			from
-				a_doc.images.start
+				l_images.start
 			until
-				a_doc.images.after
+				l_images.after
 			loop
-				l_link := a_doc.images.item
+				l_link := l_images.item
 				create l_target_dir.make (temporary_html_location (l_link.url, False))
-				a_doc.images.forth
+				l_images.forth
 			end
 		ensure
 			has_last_generated_file: last_generated_file /= Void
@@ -150,7 +154,7 @@ feature {NONE} -- Implementation
 								create doc_file.make (l_filename.string)
 								create l_doc.make_from_file (doc_file)								
 							end
-							if not is_code_document (l_doc) and l_doc.can_transform then 
+							if not is_code_document (l_doc) and l_doc.is_valid_xml and l_doc.can_transform then 
 								generate_file (l_doc, target)											
 							end
 						elseif file_types.has (file_type (l_filename.string)) then

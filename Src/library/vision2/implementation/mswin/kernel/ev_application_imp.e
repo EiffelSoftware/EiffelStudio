@@ -17,8 +17,7 @@ inherit
  			make as wel_make
 		redefine
 			init_application,
-			message_loop,
-			run
+			message_loop
  		end
 
 	WEL_ICC_CONSTANTS
@@ -71,8 +70,7 @@ feature -- Basic operation
 			loop
 				msg.peek_all
 				if msg.last_boolean_result then
-					msg.translate
-					msg.dispatch
+					process_message (msg)
 				else
 					done := True
 				end
@@ -175,51 +173,15 @@ feature {NONE} -- Implementation
 			--| Redefined to add accelerator functionality.
 		local
 			msg: WEL_MSG
-			main_win: EV_TITLED_WINDOW_IMP
-			done: BOOLEAN
-			dlg: POINTER
 		do
-			main_win ?= main_window
-			check
-				main_win /= Void
-			end
-			main_win.show
-			
-			interface.post_launch_actions.call ([])
-
 			from
 				create msg.make
 			until
-				done or else root_windows.empty
+				root_windows.empty
 			loop
 				msg.peek_all
 				if msg.last_boolean_result then
-					if msg.quit then
-						done := True
-					else
-						dlg := cwin_get_last_active_popup (main_win.wel_item)
-						if is_dialog (dlg) then
-							msg.process_dialog_message (dlg)
-							if not msg.last_boolean_result then
-								msg.translate
-								msg.dispatch
-							end
-						else
-							--| FIXME Accelerators not working yet.
-							if main_win.accelerators /= Void then
-								msg.translate_accelerator (
-									main_win,
-									main_win.accelerators)
-								if not msg.last_boolean_result then
-									msg.translate
-									msg.dispatch
-								end
-							else
-								msg.translate
-								msg.dispatch
-							end
-						end
-					end
+					process_message (msg)
 				else
 					if not internal_idle_actions.empty then
 						internal_idle_actions.call ([])
@@ -232,22 +194,30 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	run is
-			-- Create `main_window' and start the message loop.
-			--| Redefined as Vision2 requires explicit showing of each window
-			--| Precursor automatically shows the main window.
-		require else
-			runable: runable
-			main_window_not_void: application_main_window /= Void
-			parent_main_window_is_void: application_main_window.parent = Void
+	process_message (msg: WEL_MSG) is
+			-- Dispatch `msg'.
+			--| Different from WEL because of accelerators.
 		local
-			d: WEL_MAIN_DIALOG
+			dlg: POINTER
 		do
-			d ?= application_main_window
-			if d /= Void then
-				d.activate
+			if msg.last_boolean_result then
+				if msg.quit then
+					root_windows.wipe_out
+				else
+					dlg := cwin_get_last_active_popup (main_window.wel_item)
+					if is_dialog (dlg) then
+						msg.process_dialog_message (dlg)
+						if not msg.last_boolean_result then
+							msg.translate
+							msg.dispatch
+						end
+					else
+						--| FIXME Accelerators to be implemented.
+						msg.translate
+						msg.dispatch
+					end
+				end
 			end
-			message_loop
 		end
 
 feature {NONE} -- Inapplicable
@@ -327,6 +297,10 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/04/20 00:40:47  brendel
+--| process_events now also uses extended message processing that message
+--| loop has.
+--|
 --| Revision 1.31  2000/04/13 19:36:14  brendel
 --| Improved add_root_window and remove_root_window.
 --| When destroy is called, wipes out root_windows.

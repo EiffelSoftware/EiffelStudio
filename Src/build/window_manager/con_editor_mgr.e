@@ -14,7 +14,7 @@ creation
 
 feature {NONE}
 
-	editor_type: CONTEXT_EDITOR;
+	editor_type: CONTEXT_EDITOR_TOP_SHELL
 
 	clear_editor (ed: like editor_type) is
 		do

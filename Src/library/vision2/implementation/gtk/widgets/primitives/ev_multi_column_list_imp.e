@@ -601,7 +601,7 @@ feature -- Element change
 	column_title_changed (a_txt: STRING; a_column: INTEGER) is
 			-- Make `a_txt' the title of the column number.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			if list_widget /= NULL then
 				create a_cs.make (a_txt)
@@ -972,7 +972,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			-- Set cell text at (a_column, a_row) to `a_text'.
 		local
 			pixmap_imp: EV_PIXMAP_IMP
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make (a_text)
 			if  a_column = 1 and then ev_children.i_th (a_row).internal_pixmap /= Void then

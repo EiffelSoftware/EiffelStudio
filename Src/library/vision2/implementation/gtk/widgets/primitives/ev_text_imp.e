@@ -194,7 +194,7 @@ feature -- Status setting
 		
 	insert_text_at_position (txt: STRING; a_position: INTEGER) is
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 			temp_caret_pos: INTEGER
 		do
 			temp_caret_pos := caret_position

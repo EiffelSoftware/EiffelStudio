@@ -63,7 +63,7 @@ feature -- Element change
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			real_text := a_text.twin
 			create a_cs.make (u_lined_filter (real_text))
@@ -105,7 +105,7 @@ feature {NONE} -- Implementation
 		local
 			accel_group: POINTER
 			menu_imp: EV_MENU_IMP
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			Precursor {EV_MENU_ITEM_LIST_IMP} (an_item_imp, pos)
 			if an_item_imp.key /= 0 then

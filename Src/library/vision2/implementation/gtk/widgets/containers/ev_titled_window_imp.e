@@ -152,7 +152,7 @@ feature -- Element change
 	set_icon_name (an_icon_name: STRING) is
 			-- Assign `an_icon_name' to `icon_name'.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make (an_icon_name)
 			feature {EV_GTK_EXTERNALS}.gdk_window_set_icon_name (

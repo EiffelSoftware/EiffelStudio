@@ -66,7 +66,7 @@ feature -- Status setting
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		local
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			create a_cs.make (a_text)
 			feature {EV_GTK_EXTERNALS}.gtk_entry_set_text (entry_widget, a_cs.item)
@@ -76,7 +76,7 @@ feature -- Status setting
 			-- Append `txt' to the end of the text.
 		local
 			temp_caret_pos: INTEGER
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			temp_caret_pos := caret_position
 			create a_cs.make (txt)
@@ -88,7 +88,7 @@ feature -- Status setting
 			-- Prepend `txt' to the end of the text.
 		local
 			temp_caret_pos: INTEGER
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			temp_caret_pos := caret_position
 			create a_cs.make (txt)
@@ -220,7 +220,7 @@ feature -- Basic operation
 			-- Insert `txt' at the current position.
 		local
 			pos: INTEGER
-			a_cs: C_STRING
+			a_cs: EV_GTK_C_STRING
 		do
 			pos := caret_position - 1
 			create a_cs.make (txt)

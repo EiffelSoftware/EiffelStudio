@@ -88,19 +88,25 @@ feature -- Status setting
         set_center_alignment is
                         -- Set text alignment of current label to center.
                 do
-			gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 0.5)
- 		end
+			if label_widget /= default_pointer then
+				gtk_misc_set_alignment (gtk_misc (label_widget), 0.5, 0.5)
+			end 
+		end
 
         set_right_alignment is
                 -- Set text alignment of current label to right.
                 do
-			gtk_misc_set_alignment (gtk_misc (label_widget), 1, 0.5)
+			if label_widget /= default_pointer then
+				gtk_misc_set_alignment (gtk_misc (label_widget), 1, 0.5)
+			end 
 		end
 
         set_left_alignment is
                         -- Set text alignment of current label to left.
                 do
-			gtk_misc_set_alignment (gtk_misc (label_widget), 0, 0.5)
+			if label_widget /= default_pointer then
+				gtk_misc_set_alignment (gtk_misc (label_widget), 0, 0.5)
+			end 
                 end
 	
 feature -- Element change	

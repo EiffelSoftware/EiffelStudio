@@ -42,7 +42,7 @@ feature -- Access
 			l_title,
 			l_icon: STRING
 		do			
-			if not e.is_root_node then
+			if not e.name.is_equal (root_string) then
 				l_parent ?= parent_stack.item
 				if e.has_attribute_by_name (Id_string) then
 					l_id := e.attribute_by_name (Id_string).value.to_integer

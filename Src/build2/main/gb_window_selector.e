@@ -178,7 +178,6 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 			not_completely_built: an_object.layout_item = Void
 		local
 			window_object: GB_TITLED_WINDOW_OBJECT
-			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			selector_item: GB_WINDOW_SELECTOR_ITEM
 		do
 			window_object ?= an_object
@@ -282,7 +281,6 @@ feature {NONE} -- Implementation
 		require
 			selector_item_not_void: selector_item /= Void
 		local
-			titled_window: EV_TITLED_WINDOW
 			display_win: GB_DISPLAY_WINDOW
 			builder_win: GB_BUILDER_WINDOW
 			builder_shown, display_shown: BOOLEAN

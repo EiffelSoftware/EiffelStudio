@@ -234,12 +234,9 @@ run-time/U
 run-time/U/workbench.H
 run-time/eif_project.h
 run-time/eif_project.c
-run-time/eif_once.c
-run-time/eif_once.h
 run-time/rout_obj.c
 run-time/eif_rout_obj.h
 run-time/eif_rw_lock.c
-run-time/eif_rw_lock.h
 run-time/gen_conf.c
 run-time/eif_gen_conf.h
 run-time/eif_special_table.c
@@ -297,7 +294,6 @@ run-time/plug.c
 run-time/eif_plug.h
 run-time/retrieve.c
 run-time/eif_retrieve.h
-run-time/eif_rtlimits.h
 run-time/run_idr.c
 run-time/eif_run_idr.h
 run-time/search.c
@@ -323,6 +319,21 @@ run-time/eif_urgent.h
 run-time/wbench.c
 run-time/eif_wbench.h
 run-time/x2c.c
+run-time/include/rt_assert.h
+run-time/include/rt_compress.h
+run-time/include/rt_garcol.h
+run-time/include/rt_gen_types.h
+run-time/include/rt_interp.h
+run-time/include/rt_macros.h
+run-time/include/rt_main.h
+run-time/include/rt_malloc.h
+run-time/include/rt_retrieve.h
+run-time/include/rt_rw_lock.h
+run-time/include/rt_store.h
+run-time/include/rt_threads.h
+run-time/include/rt_types.h
+run-time/include/rt_wbench.h
+run-time/include/x2c.h
 eif_confmagic.h                  Magic symbol remapping
 bench/Makefile.SH
 minilzo/Makefile.SH

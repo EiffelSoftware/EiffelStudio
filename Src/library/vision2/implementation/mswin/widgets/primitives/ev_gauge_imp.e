@@ -1,8 +1,5 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description:
-		" EiffelVision gauge, mswindows implementation."
+	description: "EiffelVision gauge. Mswindows implementation."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,12 +11,25 @@ inherit
 	EV_PRIMITIVE_IMP
 		redefine
 			on_key_down,
-			interface
+			interface,
+			initialize
 		end
 
 	EV_GAUGE_I
 		redefine
 			interface
+		end
+
+feature {NONE} -- Initialization
+
+	initialize is
+			-- Default initialization of every gauge.
+		do
+			Precursor
+			wel_set_range (1, 100)
+			wel_set_step (1)
+			wel_set_leap (10)
+			wel_set_value (1)
 		end
 
 feature -- Status setting
@@ -62,6 +72,12 @@ feature -- Element change
 			wel_set_step (a_step)
 		end
 
+	set_leap (a_leap: INTEGER) is
+			-- Set `leap' to `a_leap'.
+		do
+			wel_set_leap (a_leap)
+		end
+
 	set_minimum (a_minimum: INTEGER) is
 			-- Set `minimum' to `a_minimum'.
 		do
@@ -90,16 +106,15 @@ feature -- Element change
 
 feature -- Deferred
 
-	exists: BOOLEAN is
-		deferred
-		end
-
 	on_scroll (scroll_code, pos: INTEGER) is
-		deferred
+			-- Called when gauge changed.
+			--| Is called from EV_CONTAINER_IMP.
+			--| FIXME Not generated for EV_RANGE's at least.
+		do
 		end
 
 	on_key_down (virtual_key, key_data: INTEGER) is
-			-- A key has been pressed
+			-- A key has been pressed.
 		do
 			{EV_PRIMITIVE_IMP} Precursor (virtual_key, key_data)
 			process_tab_key (virtual_key)
@@ -110,6 +125,10 @@ feature -- Deferred
 		end
 
 	wel_set_step (a_step: INTEGER) is
+		deferred
+		end
+
+	wel_set_leap (a_leap: INTEGER) is
 		deferred
 		end
 
@@ -144,6 +163,10 @@ end -- class EV_GAUGE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/15 03:18:08  brendel
+--| Cleanup.
+--| Released.
+--|
 --| Revision 1.4  2000/02/14 22:30:34  brendel
 --| Changed to comply with signature change of `set_range' in EV_GAUGE.
 --| Now takes INTEGER_INTERVAL instead of 2 integers.

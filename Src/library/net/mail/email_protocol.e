@@ -26,9 +26,6 @@ feature -- Access
 	socket: NETWORK_STREAM_SOCKET
 		-- Socket use to communicate.
 
-	email: EMAIL
-		-- Email to be send using any protocol.
-
 	hostname: STRING
 		-- hostname .. ex: smtp.
 
@@ -39,11 +36,11 @@ feature -- Access
 
 feature -- Status setting
 
-	transfer_error: BOOLEAN 
-		-- Has the transfert failed?
-
-	initiated: BOOLEAN
+	is_initiated: BOOLEAN
 		-- Has the connection has been initiated?
+
+	is_connected: BOOLEAN
+		-- Is the connection done?
 
 
 feature -- Basic operations
@@ -52,17 +49,11 @@ feature -- Basic operations
 			-- Connect to the host machine.
 		do
 			init_socket
+			enable_connected
 		end
 
 	initiate is
 			-- initiate the connection with the server.
-		deferred
-		end
-
-	transfer is
-			-- Send or retrieve data from the server.
-		require
-			is_initiated: initiated = True
 		deferred
 		end
 
@@ -73,16 +64,16 @@ feature -- Basic operations
 
 feature -- Settings
 
-	set_email (an_email: EMAIL) is
-			-- Set an email to the protocol.
+	enable_initiated is
+			-- Set is_initiated.
 		do
-			email:= an_email
+			is_initiated:= True
 		end
 
-	enable_initiated is
-			-- Set initiated.
+	enable_connected is
+			-- Set is_connected.
 		do
-			initiated:= True
+			is_connected:= True
 		end
 
 	set_default_port (new_port: INTEGER) is

@@ -40,14 +40,6 @@ feature -- Initialization.
 			set_message (a_message)
 		end
 
-feature -- Status setting
-
-	is_sender: BOOLEAN is True
-		-- Can the resource be send.
-
-	is_receiver: BOOLEAN is True
-		-- Can the resource	be received.
-
 feature -- Access
 
 	subject: STRING
@@ -70,8 +62,6 @@ feature -- Access
 
 	signature: STRING
 		-- Email signature
-
-	mailer: MAILER
 
 feature -- Settings
 
@@ -112,6 +102,14 @@ feature -- Settings
 			signature:= s
 		end
 
+feature {NONE} -- Basic operations.
+
+	transfer (resource: PROTOCOL_RESOURCE) is
+			-- Used when the mailer will receive an email from 'resource'.
+		do
+			
+		end
+
 feature -- Basic operations.
 
 	add_mail_to (new_to: STRING) is
@@ -119,5 +117,15 @@ feature -- Basic operations.
 		do
 			mail_to.extend (new_to)
 		end
+
+feature -- Implementation (EMAIL_RESOURCE)
+
+	can_be_received: BOOLEAN is True
+		-- An email can be received.
+
+	can_be_sent: BOOLEAN is True
+		-- An email can be send.
+
+
 
 end -- class EMAIL

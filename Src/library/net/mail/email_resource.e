@@ -7,51 +7,47 @@ indexing
 deferred class
 	EMAIL_RESOURCE
 
-feature -- Initialization
 
 feature -- Access
 
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-	is_sender: BOOLEAN is
-		-- Can the resource be send.
+	can_receive: BOOLEAN is
+			-- Can resource can receive?
 		deferred
 		end
 
-	is_receiver: BOOLEAN is
-		-- Can the resource	be received.
+	can_send: BOOLEAN is
+			-- Can resource send?
 		deferred
 		end
 
-feature -- Cursor movement
+	can_be_received: BOOLEAN is
+			-- Can resource be received?
+		deferred
+		end
 
-feature -- Element change
+	can_be_sent: BOOLEAN is
+			-- Can resource be sent?
+		deferred
+		end
 
-feature -- Removal
+	transfer_error: BOOLEAN
+			-- Error during the transfer?
 
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
+	transfer_error_message: STRING
+			-- Error message.
 
 feature -- Basic operations
 
-feature -- Obsolete
+	transfer (resource: EMAIL_RESOURCE) is
+			-- Transfer the Current email resource to 'resource'
+		require
+			resource_exists: resource /= Void
+			valid_transfer: (can_be_sent and then resource.can_send) or
+							(can_receive and then resource.can_be_received)
+		deferred
+		end
 
-feature -- Inapplicable
-
-feature {NONE} -- Implementation
-
-invariant
-	invariant_clause: -- Your invariant here
+	resource_to_transfer: EMAIL_RESOURCE
+			-- Ressource to be transfered.
 
 end -- class EMAIL_RESOURCE

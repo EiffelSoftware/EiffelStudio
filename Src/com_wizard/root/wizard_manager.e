@@ -46,6 +46,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_REJECTED_TYPE_LIBRARIES
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -92,66 +97,71 @@ feature -- Basic Operations
 
 	run is
 			-- Start generation.
-		do
-
-			-- Compile IDL
+		do		
 			if shared_wizard_environment.abort then
 				finish
-			elseif shared_wizard_environment.idl then
+			else
 				set_parent (parent)
 				initialize_log_file
 				set_title (Idl_compilation_title)
 				start
-				set_range (5)
-				parent.add_title (Idl_compilation_title)
-				Idl_compiler.compile_idl
-				if shared_wizard_environment.abort then
-					finish
-				else
-					step
-					-- Create Proxy/Stub
-					if not shared_wizard_environment.use_universal_marshaller then
-						-- Compile c iid file
-						parent.add_title (Iid_compilation_title)
-						Idl_compiler.compile_iid
-						if shared_wizard_environment.abort then
-							finish
-						else
-							step
-							-- Compile c dlldata file
-							parent.add_title (Data_compilation_title)
-							Idl_compiler.compile_data
+				-- Compile IDL
+				if shared_wizard_environment.idl then
+					if shared_wizard_environment.use_universal_marshaller then
+						set_range (1)
+					else
+						set_range (5)
+					end
+					parent.add_title (Idl_compilation_title)
+					Idl_compiler.compile_idl
+					if shared_wizard_environment.abort then
+						finish
+					else
+						step
+						-- Create Proxy/Stub
+						if not shared_wizard_environment.use_universal_marshaller then
+							-- Compile c iid file
+							parent.add_title (Iid_compilation_title)
+							Idl_compiler.compile_iid
 							if shared_wizard_environment.abort then
 								finish
 							else
 								step
-								-- Compile c proxy/stub file
-								parent.add_title (Ps_compilation_title)
-								Idl_compiler.compile_ps
+								-- Compile c dlldata file
+								parent.add_title (Data_compilation_title)
+								Idl_compiler.compile_data
 								if shared_wizard_environment.abort then
 									finish
 								else
 									step
-									-- Final link
-									parent.add_title (Link_title)
-									Idl_compiler.link
+									-- Compile c proxy/stub file
+									parent.add_title (Ps_compilation_title)
+									Idl_compiler.compile_ps
 									if shared_wizard_environment.abort then
 										finish
 									else
 										step
-										generate
+										-- Final link
+										parent.add_title (Link_title)
+										Idl_compiler.link
+										if shared_wizard_environment.abort then
+											finish
+										else
+											step
+											generate
+										end
 									end
 								end
 							end
+						else
+							generate
 						end
 					end
+				else
+					generate
 				end
-			else
-				set_parent (parent)
-				initialize_log_file
-				generate
+				close_log_file
 			end
-			close_log_file
 		rescue
 			if not failed_on_rescue then
 				shared_wizard_environment.set_abort (Standard_abort_value)
@@ -172,7 +182,6 @@ feature {NONE} -- Implementation
 			set_range (0)
 			set_progress (0)
 			system_descriptor.generate (shared_wizard_environment.type_library_file_name)
-
 			intialize_file_directories
 			if directories_initialized and not Shared_wizard_environment.abort then
 				parent.add_title (Generation_title)
@@ -181,7 +190,9 @@ feature {NONE} -- Implementation
 				until
 					system_descriptor.after
 				loop
-					a_range := a_range + system_descriptor.library_descriptor_for_iteration.descriptors.count
+					if not Non_generated_type_libraries.has (system_descriptor.library_descriptor_for_iteration.guid) then
+						a_range := a_range + system_descriptor.library_descriptor_for_iteration.descriptors.count
+					end
 					system_descriptor.forth
 				end
 				set_range (a_range)
@@ -192,24 +203,26 @@ feature {NONE} -- Implementation
 				until
 					system_descriptor.after
 				loop
-					from
-						i := 1
-					until
-						i > system_descriptor.library_descriptor_for_iteration.descriptors.count or Shared_wizard_environment.abort
-					loop
-						if system_descriptor.library_descriptor_for_iteration.descriptors.item (i) /= Void then
-							if shared_wizard_environment.client then
-								c_client_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
-								eiffel_client_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+					if not Non_generated_type_libraries.has (system_descriptor.library_descriptor_for_iteration.guid) then
+						from
+							i := 1
+						until
+							i > system_descriptor.library_descriptor_for_iteration.descriptors.count or Shared_wizard_environment.abort
+						loop
+							if system_descriptor.library_descriptor_for_iteration.descriptors.item (i) /= Void then
+								if shared_wizard_environment.client then
+									c_client_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+									eiffel_client_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+								end
+								if shared_wizard_environment.server then
+									c_server_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+									eiffel_server_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+								end
 							end
-							if shared_wizard_environment.server then
-								c_server_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
-								eiffel_server_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
-							end
-						end
-						i := i + 1
-						step
-					end	
+							i := i + 1
+							step
+						end	
+					end
 					system_descriptor.forth
 				end
 				report_finish
@@ -272,34 +285,38 @@ feature {NONE} -- Implementation
 			initialize_directory (a_path2)
 
 			-- Initialize Client subdirectory
-			a_path := clone (Shared_wizard_environment.destination_folder)
-			a_path.append (Client)
-			initialize_directory (a_path)
-			a_path.append_character (Directory_separator)
-			a_path2 := clone (a_path)
-			a_path2.append (Clib)
-			initialize_directory (a_path2)
-			a_path2 := clone (a_path)
-			a_path2.append (Include)
-			initialize_directory (a_path2)
-			a_path2 := clone (a_path)
-			a_path2.append (Component)
-			initialize_directory (a_path2)
-			
+			if Shared_wizard_environment.client then
+				a_path := clone (Shared_wizard_environment.destination_folder)
+				a_path.append (Client)
+				initialize_directory (a_path)
+				a_path.append_character (Directory_separator)
+				a_path2 := clone (a_path)
+				a_path2.append (Clib)
+				initialize_directory (a_path2)
+				a_path2 := clone (a_path)
+				a_path2.append (Include)
+				initialize_directory (a_path2)
+				a_path2 := clone (a_path)
+				a_path2.append (Component)
+				initialize_directory (a_path2)
+			end
+	
 			-- Initialize Server subdirectory
-			a_path := clone (Shared_wizard_environment.destination_folder)
-			a_path.append (Server)
-			initialize_directory (a_path)
-			a_path.append_character (Directory_separator)
-			a_path2 := clone (a_path)
-			a_path2.append (Clib)
-			initialize_directory (a_path2)
-			a_path2 := clone (a_path)
-			a_path2.append (Include)
-			initialize_directory (a_path2)
-			a_path2 := clone (a_path)
-			a_path2.append (Component)
-			initialize_directory (a_path2)
+			if Shared_wizard_environment.server then
+				a_path := clone (Shared_wizard_environment.destination_folder)
+				a_path.append (Server)
+				initialize_directory (a_path)
+				a_path.append_character (Directory_separator)
+				a_path2 := clone (a_path)
+				a_path2.append (Clib)
+				initialize_directory (a_path2)
+				a_path2 := clone (a_path)
+				a_path2.append (Include)
+				initialize_directory (a_path2)
+				a_path2 := clone (a_path)
+				a_path2.append (Component)
+				initialize_directory (a_path2)
+			end
 		end
 
 	initialize_directory (a_path: STRING) is

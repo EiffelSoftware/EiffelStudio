@@ -33,6 +33,19 @@ feature -- Status settings
 			set_horizontal_resize (True)
 		end
 
+feature -- Basic operation
+
+	search (str: STRING): INTEGER is
+			-- Search the string `str' in the text.
+			-- If `str' is find, it returns its start
+			-- index in the text, otherwise, it returns
+			-- `Void'
+		require
+			exists: not destroyed
+			valid_string: str /= Void
+		deferred
+		end
+
 end -- class EV_TEXT_AREA_I
 
 --|----------------------------------------------------------------

@@ -40,7 +40,7 @@ feature
 			Result := False
 		end
 
-	container_type_id: INTEGER
+	container_type: STRING
 	
 feature {MT_CLASS} -- Schema initialization
 		
@@ -55,15 +55,12 @@ feature {MT_CLASS} -- Schema initialization
 		do
 			set_field_index (a_field_index)
 			database := a_db
-			container_type_id := get_container_type_id
+			container_type := get_container_type
 		end
 
-	get_container_type_id: INTEGER is
-		local
-			c_string: ANY
+	get_container_type: STRING is
 		do
-			c_string := container_class_for_relationship (name).to_c
-			Result := c_generic_type_id ($c_string)
+			Result := container_class_for_relationship (name)
 		end
 
 feature {MT_CLASS, MATISSE, MT_RS_CONTAINABLE} -- Successors loading
@@ -73,10 +70,12 @@ feature {MT_CLASS, MATISSE, MT_RS_CONTAINABLE} -- Successors loading
 			-- (If no object found, return empty collection).
 		local
 			keys_count: INTEGER
+			a: ANY
 		do
 			c_get_successors (an_object.oid, oid)
 			keys_count := c_keys_count
-			Result := c_create_empty_rs_container (container_type_id, an_object.oid, oid)
+			a := container_type.to_c
+			Result := c_create_empty_rs_container ($a, an_object.oid, oid)
 			Result.set_predecessor (an_object)
 			Result.set_relationship (Current)
 			c_free_keys
@@ -210,8 +209,11 @@ feature {MT_STORABLE} -- Container
 			-- Return an empty container object.
 			-- The container is initialized so that it can load successors later.
 			-- ('predecessor' and 'relationship' are set to `a_predecesor' and `Current'.)
+		local
+			a: ANY
 		do
-			Result := c_create_empty_rs_container (container_type_id, a_predecessor.oid, oid)
+			a := container_type.to_c
+			Result := c_create_empty_rs_container ($a, a_predecessor.oid, oid)
 			Result.set_predecessor (a_predecessor)
 			Result.set_relationship (Current)
 		end

@@ -346,7 +346,7 @@ feature -- Event : command association
 			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
 
 			-- We need the index so we pass it as the mouse button (Temporary: Alex.) XXXX.
-			add_command_with_event_data (parent_imp.widget, "select_row", cmd, arg, ev_data, index - 1, False)
+			add_command_with_event_data (parent_imp.widget, "select_row", cmd, arg, ev_data, index - 1, False, default_pointer)
 		end	
 
 	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -358,7 +358,7 @@ feature -- Event : command association
 			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
 
 			-- We need the index so we pass it as the mouse button (Temporary: Alex.) XXXX.
-			add_command_with_event_data (parent_imp.widget, "unselect_row", cmd, arg, ev_data, index - 1, False)
+			add_command_with_event_data (parent_imp.widget, "unselect_row", cmd, arg, ev_data, index - 1, False, default_pointer)
 		end
 
 feature -- Event -- removing command association

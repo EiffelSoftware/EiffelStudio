@@ -37,6 +37,7 @@ feature {NONE} -- Implementation
 			-- Note: You can remove this feature if you don't need
 			--       a progress bar.
 		do
+			main_window.hide_all_floating_tools
 			choice_box.wipe_out
 			choice_box.set_border_width (10)
 			create progress 

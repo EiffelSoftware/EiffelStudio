@@ -1,0 +1,69 @@
+Error code correctly read.
+8 NAG errors have occurred including 6 warning errors.
+The 6 most recent NAG errors are as follows (most recent first)
+NW_ERROR 8
+Code: 8
+Aux: 9
+
+NW_ERROR 7
+Code: 7
+Aux: 8
+
+NW_ERROR 6
+Code: 6
+Aux: 7
+
+NE_ERROR 5
+Code: 48
+Aux: 6
+
+NW_ERROR 4
+Code: 4
+Aux: 5
+
+NE_ERROR 3
+Code: 3
+Aux: 4
+
+9 NAG errors have occurred including 7 warning errors.
+The 7 most recent NAG errors are as follows (most recent first)
+NW_ERROR 9
+Code: 9
+Aux: 10
+
+NW_ERROR 8
+Code: 8
+Aux: 9
+
+NW_ERROR 7
+Code: 7
+Aux: 8
+
+NW_ERROR 6
+Code: 6
+Aux: 7
+
+NE_ERROR 5
+Code: 48
+Aux: 6
+
+NW_ERROR 4
+Code: 4
+Aux: 5
+
+NE_ERROR 3
+Code: 3
+Aux: 4
+
+9 NAG errors have occurred including 7 warning errors.
+The 2 most recent NAG errors are as follows (most recent first)
+NW_ERROR 9
+Code: 9
+Aux: 10
+
+NW_ERROR 8
+Code: 8
+Aux: 9
+
+10 NAG errors have occurred including 8 warning errors.
+No error history available.

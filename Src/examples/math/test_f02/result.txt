@@ -1,0 +1,300 @@
+
+ ***************************************** 
+Eigensystem tests - select one of the cases: 
+1 - SYMMETRIC REAL system 
+2 - UNSYMMETRIC REAL system 
+3 - SYMMETRIC COMPLEX system 
+
+ ***************************************** 
+
+ ******************************** 
+Testing REAL SYMMETRIC system 
+
+ ******************************** 
+ 
+
+ ---------------- 
+NAG tests f02aac and f02abc 
+System matrix 
+BASIC_MATRIX [4 x 4], real:
+Row/Col             1             2             3             4
+      1   5.0000e-001   0.0000e+000   2.3000e+000  -2.6000e+000
+      2   0.0000e+000   5.0000e-001  -1.4000e+000  -7.0000e-001
+      3   2.3000e+000  -1.4000e+000   5.0000e-001   0.0000e+000
+      4  -2.6000e+000  -7.0000e-001   0.0000e+000   5.0000e-001
+
+
+Eigenvalues 
+BASIC_VECTOR <4|, real:
+Index # Values
+      1  -3.0000e+000  -1.0000e+000   2.0000e+000   4.0000e+000
+
+
+Eigenvectors 
+BASIC_MATRIX [4 x 4], real:
+Row/Col             1             2             3             4
+      1   7.0000e-001   1.0000e-001   1.0000e-001  -7.0000e-001
+      2  -1.0000e-001   7.0000e-001   7.0000e-001   1.0000e-001
+      3  -5.0000e-001   5.0000e-001  -5.0000e-001  -5.0000e-001
+      4   5.0000e-001   5.0000e-001  -5.0000e-001   5.0000e-001
+
+
+Implicit assumption: extra matrix is unit matrix 
+since it was not defined yet. 
+Generalized eigenvectors and eigenvalues
+should match the previous results 
+These are the made up tests: f02adc and f02aec 
+Extra matrix - should be unit matrix 
+BASIC_MATRIX [4 x 4], real:
+Row/Col             1             2             3             4
+      1   1.0000e+000   0.0000e+000   0.0000e+000   0.0000e+000
+      2   0.0000e+000   1.0000e+000   0.0000e+000   0.0000e+000
+      3   0.0000e+000   0.0000e+000   1.0000e+000   0.0000e+000
+      4   0.0000e+000   0.0000e+000   0.0000e+000   1.0000e+000
+
+
+Generalized eigenvalues 
+BASIC_VECTOR <4|, real:
+Index # Values
+      1  -3.0000e+000  -1.0000e+000   2.0000e+000   4.0000e+000
+
+
+Generalized eigenvectors 
+BASIC_MATRIX [4 x 4], real:
+Row/Col             1             2             3             4
+      1   7.0000e-001   1.0000e-001   1.0000e-001  -7.0000e-001
+      2  -1.0000e-001   7.0000e-001   7.0000e-001   1.0000e-001
+      3  -5.0000e-001   5.0000e-001  -5.0000e-001  -5.0000e-001
+      4   5.0000e-001   5.0000e-001  -5.0000e-001   5.0000e-001
+
+
+NAG tests: f02adc and f02aec 
+New system matrix 
+BASIC_MATRIX [4 x 4], real:
+Row/Col             1             2             3             4
+      1   5.0000e-001   1.5000e+000   6.6000e+000   4.8000e+000
+      2   1.5000e+000   6.5000e+000   1.6200e+001   8.6000e+000
+      3   6.6000e+000   1.6200e+001   3.7600e+001   9.8000e+000
+      4   4.8000e+000   8.6000e+000   9.8000e+000  -1.7100e+001
+
+
+Extra matrix 
+BASIC_MATRIX [4 x 4], real:
+Row/Col             1             2             3             4
+      1   1.0000e+000   3.0000e+000   4.0000e+000   1.0000e+000
+      2   3.0000e+000   1.3000e+001   1.6000e+001   1.1000e+001
+      3   4.0000e+000   1.6000e+001   2.4000e+001   1.8000e+001
+      4   1.0000e+000   1.1000e+001   1.8000e+001   2.7000e+001
+
+
+Generalized eigenvalues 
+BASIC_VECTOR <4|, real:
+Index # Values
+      1  -3.0000e+000  -1.0000e+000   2.0000e+000   4.0000e+000
+
+
+Generalized eigenvectors 
+BASIC_MATRIX [4 x 4], real:
+Row/Col             1             2             3             4
+      1  -4.3500e+000  -2.0500e+000  -3.9500e+000   2.6500e+000
+      2   5.0000e-002   1.5000e-001   8.5000e-001   5.0000e-002
+      3   1.0000e+000   5.0000e-001   5.0000e-001  -1.0000e+000
+      4  -5.0000e-001  -5.0000e-001  -5.0000e-001   5.0000e-001
+
+
+
+ ******************************** 
+Testing REAL UNSYMMETRIC system 
+
+ ******************************** 
+ 
+
+ ---------------- 
+NAG tests f02afc and f02agc 
+System matrix 
+BASIC_MATRIX [4 x 4], real:
+Row/Col             1             2             3             4
+      1   1.5000e+000   1.0000e-001   4.5000e+000  -1.5000e+000
+      2  -2.2500e+001   3.5000e+000   1.2500e+001  -2.5000e+000
+      3  -2.5000e+000   3.0000e-001   4.5000e+000  -2.5000e+000
+      4  -2.5000e+000   1.0000e-001   4.5000e+000   2.5000e+000
+
+
+Eigenvalues 
+BASIC_VECTOR <4|, blended complex:
+Index # Values
+      1   3.0000e+000,   4.0000e+000   3.0000e+000,  -4.0000e+000
+      3   4.0000e+000,   0.0000e+000   2.0000e+000,   0.0000e+000
+
+
+Eigenvectors 
+BASIC_MATRIX [4 x 4], blended complex:
+Row/Col                           1                           2
+      1   1.1339e-001,  -1.5119e-001   1.1339e-001,   1.5119e-001
+      2   9.4491e-001,   0.0000e+000   9.4491e-001,   0.0000e+000
+      3   1.8898e-001,   5.3282e-017   1.8898e-001,  -5.3282e-017
+      4   1.1339e-001,  -1.5119e-001   1.1339e-001,   1.5119e-001
+Row/Col                           3                           4
+      1  -3.2917e-002,   0.0000e+000   6.2609e-002,   0.0000e+000
+      2   9.8752e-001,   0.0000e+000   9.9606e-001,   0.0000e+000
+      3   1.0972e-002,   0.0000e+000   5.6917e-003,   0.0000e+000
+      4   1.5361e-001,   0.0000e+000   6.2609e-002,   0.0000e+000
+
+
+Iterations 
+ARRAY [0xF68418]
+  area: SPECIAL [0xF68430]
+    -- begin special object --
+        0: INTEGER = 0
+        1: INTEGER = 0
+        2: INTEGER = 7
+        3: INTEGER = -7
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 4
+
+Implicit assumption: extra matrix is unit matrix 
+since it was not defined yet. 
+Generalized eigenvectors and eigenvalues
+should match the previous results 
+These are the made up tests: f02bjc  
+Extra matrix - should be unit matrix 
+BASIC_MATRIX [4 x 4], real:
+Row/Col             1             2             3             4
+      1   1.0000e+000   0.0000e+000   0.0000e+000   0.0000e+000
+      2   0.0000e+000   1.0000e+000   0.0000e+000   0.0000e+000
+      3   0.0000e+000   0.0000e+000   1.0000e+000   0.0000e+000
+      4   0.0000e+000   0.0000e+000   0.0000e+000   1.0000e+000
+
+
+Generalized eigenvalues 
+BASIC_VECTOR <4|, blended complex:
+Index # Values
+      1   3.0000e+000,   4.0000e+000   3.0000e+000,  -4.0000e+000
+      3   4.0000e+000,   0.0000e+000   2.0000e+000,   0.0000e+000
+
+
+Generalized eigenvectors 
+BASIC_MATRIX [4 x 4], blended complex:
+Row/Col                           1                           2
+      1   1.1339e-001,  -1.5119e-001   1.1339e-001,   1.5119e-001
+      2   9.4491e-001,   0.0000e+000   9.4491e-001,   0.0000e+000
+      3   1.8898e-001,   4.4757e-016   1.8898e-001,  -4.4757e-016
+      4   1.1339e-001,  -1.5119e-001   1.1339e-001,   1.5119e-001
+Row/Col                           3                           4
+      1   3.2917e-002,   0.0000e+000  -6.2609e-002,   0.0000e+000
+      2  -9.8752e-001,   0.0000e+000  -9.9606e-001,   0.0000e+000
+      3  -1.0972e-002,   0.0000e+000  -5.6917e-003,   0.0000e+000
+      4  -1.5361e-001,   0.0000e+000  -6.2609e-002,   0.0000e+000
+
+
+Iterations 
+ARRAY [0xF68418]
+  area: SPECIAL [0xF68430]
+    -- begin special object --
+        0: INTEGER = 0
+        1: INTEGER = 0
+        2: INTEGER = 1
+        3: INTEGER = 10
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 4
+
+NAG tests: f02bjc 
+New system matrix 
+BASIC_MATRIX [4 x 4], real:
+Row/Col             1             2             3             4
+      1   3.9000e+000   4.3000e+000   4.3000e+000   4.4000e+000
+      2   1.2500e+001   2.1500e+001   2.1500e+001   2.6000e+001
+      3  -3.4500e+001  -4.7500e+001  -4.3500e+001  -4.6000e+001
+      4  -5.0000e-001   7.5000e+000   3.5000e+000   6.0000e+000
+
+
+Extra matrix 
+BASIC_MATRIX [4 x 4], real:
+Row/Col             1             2             3             4
+      1   1.0000e+000   1.0000e+000   1.0000e+000   1.0000e+000
+      2   2.0000e+000   3.0000e+000   3.0000e+000   3.0000e+000
+      3  -3.0000e+000  -5.0000e+000  -4.0000e+000  -4.0000e+000
+      4   1.0000e+000   4.0000e+000   3.0000e+000   4.0000e+000
+
+
+Generalized eigenvalues 
+BASIC_VECTOR <4|, blended complex:
+Index # Values
+      1   3.0000e+000,   4.0000e+000   3.0000e+000,  -4.0000e+000
+      3   2.0000e+000,   0.0000e+000   4.0000e+000,   0.0000e+000
+
+
+Generalized eigenvectors 
+BASIC_MATRIX [4 x 4], blended complex:
+Row/Col                           1                           2
+      1  -2.4734e-001,  -7.0774e-002  -2.4734e-001,   7.0774e-002
+      2  -2.1981e-001,  -1.3771e-001  -2.1981e-001,   1.3771e-001
+      3   8.3585e-001,   0.0000e+000   8.3585e-001,   0.0000e+000
+      4  -3.6259e-001,   1.9083e-001  -3.6259e-001,  -1.9083e-001
+Row/Col                           3                           4
+      1  -4.1534e-001,   0.0000e+000  -2.6114e-014,   0.0000e+000
+      2   5.1917e-002,   0.0000e+000  -7.0711e-001,   0.0000e+000
+      3   7.7876e-001,   0.0000e+000   7.0711e-001,   0.0000e+000
+      4  -4.6726e-001,   0.0000e+000  -1.8658e-014,   0.0000e+000
+
+
+Iterations 
+ARRAY [0xF63C18]
+  area: SPECIAL [0xF63C30]
+    -- begin special object --
+        0: INTEGER = 0
+        1: INTEGER = 0
+        2: INTEGER = 3
+        3: INTEGER = 7
+    -- end special object --
+  object_comparison: BOOLEAN = False
+  lower: INTEGER = 1
+  upper: INTEGER = 4
+
+
+ ******************************** 
+Testing COMPLEX SYMMETRIC system 
+
+ ******************************** 
+ 
+
+ ---------------- 
+NAG tests f02awc and f02axc 
+System matrix 
+BASIC_MATRIX [4 x 4], blended complex:
+Row/Col                           1                           2
+      1   5.0000e-001,   0.0000e+000   0.0000e+000,   0.0000e+000
+      2   0.0000e+000,   0.0000e+000   5.0000e-001,   0.0000e+000
+      3   1.8400e+000,  -1.3800e+000   1.1200e+000,  -8.4000e-001
+      4   2.0800e+000,   1.5600e+000  -5.6000e-001,  -4.2000e-001
+Row/Col                           3                           4
+      1   1.8400e+000,   1.3800e+000   2.0800e+000,  -1.5600e+000
+      2   1.1200e+000,   8.4000e-001  -5.6000e-001,   4.2000e-001
+      3   5.0000e-001,   0.0000e+000   0.0000e+000,   0.0000e+000
+      4   0.0000e+000,   0.0000e+000   5.0000e-001,   0.0000e+000
+
+
+Eigenvalues 
+BASIC_VECTOR <4|, real:
+Index # Values
+      1  -3.0000e+000  -1.0000e+000   2.0000e+000   4.0000e+000
+
+
+Eigenvectors 
+BASIC_MATRIX [4 x 4], blended complex:
+Row/Col                           1                           2
+      1   7.0000e-001,   0.0000e+000  -1.0000e-001,   1.0472e-016
+      2   1.0000e-001,   5.6579e-018   7.0000e-001,   0.0000e+000
+      3  -4.0000e-001,   3.0000e-001  -4.0000e-001,   3.0000e-001
+      4  -4.0000e-001,  -3.0000e-001   4.0000e-001,   3.0000e-001
+Row/Col                           3                           4
+      1  -1.0000e-001,   1.0559e-016   7.0000e-001,   0.0000e+000
+      2   7.0000e-001,   0.0000e+000   1.0000e-001,   2.3381e-016
+      3   4.0000e-001,  -3.0000e-001   4.0000e-001,  -3.0000e-001
+      4  -4.0000e-001,  -3.0000e-001   4.0000e-001,   3.0000e-001
+
+

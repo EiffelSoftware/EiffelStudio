@@ -1,0 +1,47 @@
+system
+	fourie_t
+
+root
+	FOURIER_TRANSFORMER_TEST (root_cluster): "make"
+	
+default
+	assertion (all);
+--	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/wel")
+
+cluster
+
+	root_cluster:	".";
+
+	bvp:		"$EIFFEL4\library\math\bvp";
+	eifmath:	"$EIFFEL4\library\math\eifmath";
+	integrat:	"$EIFFEL4\library\math\integrat";
+	interpol:	"$EIFFEL4\library\math\interpol";
+	linear:		"$EIFFEL4\library\math\linear";
+	ode:		"$EIFFEL4\library\math\ode";
+	optima: 	"$EIFFEL4\library\math\optima";
+	random: 	"$EIFFEL4\library\math\random";
+	regress:	"$EIFFEL4\library\math\regress";
+	roots:		"$EIFFEL4\library\math\roots";
+	special:	"$EIFFEL4\library\math\special";
+	transp:		"$EIFFEL4\library\math\transp";
+	tsa:		"$EIFFEL4\library\math\tsa";
+
+external
+	Include_path: "$(NAGCL04_32)\include", "$(EIFFEL4)\library\math\clib";
+	Object: "$(EIFFEL4)\library\math\clib\eifmathc.lib", "$(NAGCL04_32)\dll\nagcl04.lib";
+		
+end
+
+--|----------------------------------------------------------------
+--| EiffelMath: library of reusable components for numerical
+--| computation ISE Eiffel 3.
+--| Copyright (C) 1995, Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|----------------------------------------------------------------

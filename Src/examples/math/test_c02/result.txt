@@ -1,0 +1,14 @@
+BASIC_VECTOR <5|, blended complex:
+Index # Values
+      1  -2.4328e+001,  -4.8555e+000   5.2487e+000,   2.2736e+001
+      3   1.4653e+001,  -1.6569e+001  -6.9264e-003,  -7.4434e-003
+      5   6.5264e-003,   7.4232e-003
+
+Compare to c02afc example.
+BASIC_VECTOR <5|, blended complex:
+Index # Values
+      1  -1.4918e+000,   0.0000e+000   5.5169e-001,   1.2533e+000
+      3   5.5169e-001,  -1.2533e+000  -8.0579e-001,   1.2229e+000
+      5  -8.0579e-001,  -1.2229e+000
+
+Compare to c02agc example.

@@ -1,0 +1,4 @@
+
+#include <windows.h>
+appl    ICON appl.ico
+

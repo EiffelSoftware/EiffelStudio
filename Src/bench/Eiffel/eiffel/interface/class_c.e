@@ -572,7 +572,7 @@ feature -- Third pass: byte code production and type check
 			melted_info: FEAT_MELTED_INFO
 			melt_set: like melted_set
 			type_check_error: BOOLEAN
-			byte_code_generated: BOOLEAN
+			byte_code_generated, has_default_rescue: BOOLEAN
 			body_id: BODY_ID
 			feat_dep: FEATURE_DEPENDANCE
 			rep_removed: BOOLEAN
@@ -648,12 +648,14 @@ end
 
 				if feature_i.to_melt_in (Current) then
 
+					has_default_rescue := False
 					if
 						def_resc /= Void
 						and then not def_resc.empty_body
 						and then not equal (def_resc.feature_name, feature_name)
 					then
 						feature_i.create_default_rescue (def_resc.feature_name)
+						has_default_rescue := True
 					end
 
 debug ("SEP_DEBUG", "ACTIVITY")
@@ -802,7 +804,7 @@ end
 										body_id_changed := True 
 										feature_i.change_body_id
 									end
-									feature_i.compute_byte_code
+									feature_i.compute_byte_code (has_default_rescue)
 									byte_code_generated := True
 
 							end

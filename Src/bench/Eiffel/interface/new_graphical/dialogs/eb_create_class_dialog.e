@@ -210,6 +210,9 @@ feature -- Status Report
 
 	cluster: CLUSTER_I
 			-- Selected cluster
+			
+	is_deferred: BOOLEAN
+			-- Is new class deferred?
 
 feature -- Status Settings
 
@@ -728,9 +731,11 @@ feature {NONE} -- Implementation
 				expanded_check.disable_select
 				creation_entry.disable_sensitive
 				creation_check.disable_sensitive
+				is_deferred := True
 			else
 				creation_entry.enable_sensitive
 				creation_check.enable_sensitive
+				is_deferred := False
 			end
 		end
 

@@ -97,6 +97,8 @@ feature -- Status setting
 	set_accept_cursor (a_cursor: EV_CURSOR) is
 			-- Set `a_cursor' to be displayed when the screen pointer is over a
 			-- target that accepts `pebble' during pick and drop.
+		require
+			a_cursor_not_void: a_cursor /= Void
 		deferred
 		ensure
 			accept_cursor_assigned: accept_cursor.is_equal (a_cursor)
@@ -105,6 +107,8 @@ feature -- Status setting
 	set_deny_cursor (a_cursor: EV_CURSOR) is
 			-- Set `a_cursor' to be displayed when the screen pointer is not
 			-- over a valid target.
+		require
+			a_cursor_not_void: a_cursor /= Void
 		deferred
 		ensure
 			deny_cursor_assigned: deny_cursor.is_equal (a_cursor)
@@ -150,6 +154,18 @@ feature {EV_ANY_I, EV_ABSTRACT_PICK_AND_DROPABLE} -- Initialization
 					pnd_targets.prune_all (object_id)
 			)
 		end
+		
+feature {NONE} -- Implementation
+
+	Default_pixmaps: EV_STOCK_PIXMAPS is
+			-- Default pixmaps and cursors.
+		once
+			create Result
+		end
+		
+invariant
+	accept_cursor_not_void: accept_cursor /= Void
+	deny_cursor_not_void: deny_cursor /= Void
 
 end -- class EV_ABSTRACT_PICK_AND_DROPABLE
 

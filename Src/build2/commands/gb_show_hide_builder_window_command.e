@@ -9,6 +9,9 @@ class
 inherit
 
 	GB_RESTORABLE_WINDOW_COMMAND
+		redefine
+			executable
+		end
 	
 	GB_SHARED_TOOLS
 		export
@@ -33,6 +36,13 @@ feature {GB_COMMAND_HANDLER} -- Initialization
 		end
 
 feature -- Access
+
+	executable: BOOLEAN is
+			-- Is executable?
+		do
+			Result := not Window_selector.objects.is_empty
+		end
+		
 
 	menu_name: STRING is
 			-- Name as it appears in menus.

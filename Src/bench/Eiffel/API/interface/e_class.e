@@ -489,5 +489,8 @@ feature {NONE} -- Implementation
 invariant
 
 	lace_class_exists: lace_class /= Void;
+	descendants_exists: descendants /= Void;
+	suppliers_exisis: suppliers /= Void;
+	clients_exists: clients /= Void
 
 end -- class E_CLASS

@@ -23,7 +23,6 @@ inherit
 			put_degree_6, put_degree_5, put_degree_4, put_degree_3, 
 			put_degree_2, put_degree_1, put_degree_minus_1, 
 			put_degree_minus_2, put_degree_minus_3,
-			put_degree_minus_4, put_degree_minus_5, 
 			put_dead_code_removal_message, finish_degree_output,
 			put_start_reverse_engineering, put_case_cluster_message,
 			put_case_class_message, put_case_message, put_string,
@@ -309,9 +308,7 @@ feature -- Output on per class
 	put_degree_1, 
 	put_degree_minus_1, 
 	put_degree_minus_2, 
-	put_degree_minus_3,
-	put_degree_minus_4, 
-	put_degree_minus_5 (a_class: CLASS_C nbr_to_go: INTEGER) is
+	put_degree_minus_3 (a_class: CLASS_C nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_class' is being
 			-- compiled during a degree pass with `nbr_to_go' 
 			-- classes to go.

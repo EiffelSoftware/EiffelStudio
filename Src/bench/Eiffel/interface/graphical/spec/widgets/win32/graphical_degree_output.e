@@ -14,8 +14,7 @@ inherit
 			put_start_degree, put_end_degree, put_degree_5,
 			put_degree_4, put_degree_3, put_degree_2,
 			put_degree_1, put_degree_minus_1, put_degree_minus_2,
-			put_degree_minus_3, put_degree_minus_4,
-			put_degree_minus_5, put_melting_changes_message,
+			put_degree_minus_3, put_melting_changes_message,
 			put_freezing_message, finish_degree_output,
 			put_start_dead_code_removal_message,
 			put_end_dead_code_removal_message,
@@ -319,9 +318,7 @@ feature -- Per entity output
 	put_degree_1,
 	put_degree_minus_1,
 	put_degree_minus_2,
-	put_degree_minus_3,
-	put_degree_minus_4,
-	put_degree_minus_5 (a_class: CLASS_C nbr_to_go: INTEGER) is
+	put_degree_minus_3 (a_class: CLASS_C nbr_to_go: INTEGER) is
 			-- Put message to inidcate that `a_class' is_being
 			-- compiled during `current_degree' with `nbr_to_go'
 			-- classes to go.

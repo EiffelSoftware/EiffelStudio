@@ -3,13 +3,8 @@ class FG_COLOR_CMD
 inherit
 
 	CONTEXT_CMD
-		redefine
-			context
-		end
 
 feature {NONE}
-
-	context: PRIMITIVE_C
 
 	associated_form: INTEGER is
 		do

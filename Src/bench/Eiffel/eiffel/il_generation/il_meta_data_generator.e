@@ -89,7 +89,7 @@ feature -- Generation
 		require
 			class_type_not_void: class_type /= Void
 		local
-			name, element_name, file_name: STRING
+			name, full_name, element_name, file_name: STRING
 			native_array: NATIVE_ARRAY_CLASS_TYPE
 			is_frozen_class: BOOLEAN
 			class_c: CLASS_C
@@ -106,14 +106,26 @@ feature -- Generation
 				class_c := class_type.associated_class
 				is_frozen_class := class_c.is_frozen
 
-				if class_c.is_external or else not is_frozen_class then
-						-- Generate mapping for external class or for the
-						-- interface representation of an Eiffel class.
+				if not class_c.is_external then
+					name := pascal_casing (name)
+					full_name := System.system_name + "." + class_c.cluster.cluster_name
+					full_name := namespace_casing (full_name)
+					full_name.append_character ('.')
+				end
+
+				if class_c.is_external then
+						-- Generate mapping for external class
 					il_generator.generate_class_mappings (name,
 						class_type.static_type_id, class_type.static_type_id,
 						class_c.lace_class.base_name, Empty_string)
 				end
 				if not class_c.is_external then
+						-- Generate mapping for the interface representation
+						-- of an Eiffel class.
+					il_generator.generate_class_mappings (full_name + name,
+						class_type.static_type_id, class_type.static_type_id,
+						class_c.lace_class.base_name, Empty_string)
+
 						-- Generate mapping for the implementation class
 						-- representation of an Eiffel class.
 					if System.line_generation then
@@ -122,11 +134,11 @@ feature -- Generation
 						file_name := Empty_string
 					end
 					if not is_frozen_class then
-						il_generator.generate_class_mappings ("Implementation." + name,
+						il_generator.generate_class_mappings (full_name + "Implementation." + name,
 							class_type.implementation_id,
 							class_type.static_type_id, file_name, Empty_string)
 					else
-						il_generator.generate_class_mappings (name,
+						il_generator.generate_class_mappings (full_name + name,
 							class_type.implementation_id,
 							class_type.static_type_id, file_name, Empty_string)
 					end
@@ -332,14 +344,14 @@ feature {IL_CODE_GENERATOR} -- Feature generation
 					if feat.is_c_external then
 						name := encoder.feature_name (current_class_type.static_type_id, feat.body_index)
 					else
-						name := "$$" + feat.external_name
+						if feat.is_attribute then
+							name := camel_casing (feat.feature_name)
+						else
+							name := "$$" + pascal_casing (feat.feature_name)
+						end
 					end
 				else
-					if feat.is_c_external then
-						name := feat.feature_name
-					else
-						name := feat.external_name
-					end
+					name := pascal_casing (feat.feature_name)
 				end
 
 				il_generator.generate_feature_identification (name, feat.feature_id,
@@ -471,64 +483,14 @@ feature {NONE} -- Feature generation
 					il_generator.start_feature_description (0)
 				end
 
-				if feat.is_c_external then
-					il_generator.generate_interface_feature_identification (feat.feature_name,
-						feat.feature_id, feat.is_attribute)
-				else
-					il_generator.generate_interface_feature_identification (feat.external_name,
-						feat.feature_id, feat.is_attribute)
-				end
+				il_generator.generate_interface_feature_identification (pascal_casing (feat.feature_name),
+					feat.feature_id, feat.is_attribute)
 
 				generate_arguments (feat)
 				generate_return_type (feat)
 
 				il_generator.create_feature_description
 
-				generate_feature_custom_attribute (current_class_type, feat)
-			end
-		end
-
-	generate_inherited_feature (feat: FEATURE_I; feat_id: INTEGER) is
-			-- Generate `feat' description.
-		require
-			feat_not_void: feat /= Void
-		local
-			is_deferred: BOOLEAN
-			is_redefined: BOOLEAN
-			is_frozen: BOOLEAN
-			is_static: BOOLEAN
-			inv: INVARIANT_FEAT_I
-			name: STRING
-		do
-			if feat.feature_name_id /= Names_heap.void_name_id then
-				if feat.has_arguments then
-					il_generator.start_feature_description (feat.arguments.count)
-				else
-					il_generator.start_feature_description (0)
-				end
-				is_deferred := False
-				inv ?= feat
-				is_redefined := not feat.is_origin and then inv = Void
-				is_frozen := feat.is_frozen
-				is_static := False
-				
-				if feat.is_c_external then
-					name := feat.feature_name
-				else
-					name := feat.external_name
-				end
-
-				il_generator.generate_feature_identification (name, feat_id,
-					is_redefined, is_deferred, is_frozen, feat.is_attribute,
-					is_static, is_static)
-				
-				generate_arguments (feat)
-				generate_return_type (feat)
-
-				if inv /= Void then
-					il_generator.mark_invariant (feat_id)
-				end
-				il_generator.create_feature_description
 				generate_feature_custom_attribute (current_class_type, feat)
 			end
 		end
@@ -611,6 +573,121 @@ feature {NONE} -- Implementation: ancestors description
 			il_generator.add_eiffel_interface (nb_generics)
 			il_generator.add_interface (class_type.static_type_id)
 			il_generator.end_parents_list
+		end
+
+feature {NONE} -- Implementation: naming convention
+
+	pascal_casing (name: STRING): STRING is
+			-- Convert `name' using PascalCasing convention.
+			--| Used for all names apart for attributes in
+			--| implementation classes.
+		require
+			name_not_void: name /= Void
+			name_not_empty: not name.is_empty
+		local
+			i, nb: INTEGER
+		do
+			Result := name
+			if System.cls_compliant_name then
+				Result := clone (Result)
+				from
+					i := 2
+					nb := Result.count
+					Result.put (Result.item (1).upper, 1)
+				until
+					i > nb
+				loop
+						-- When we encounter a '_' we delete it
+						-- if it is not the last one in `Result'
+						-- and the character following the `_'
+						-- has its case changed  to upper.
+					if Result.item (i) = '_' and i < nb then
+						Result.remove (i)
+						nb := nb - 1
+						Result.put (Result.item (i).upper, i)
+					end
+					i := i + 1
+				end
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	camel_casing (name: STRING): STRING is
+			-- Convert `name' using camelCasing convention.
+			--| Used only for attributes in implementation classes.
+		require
+			name_not_void: name /= Void
+			name_not_empty: not name.is_empty
+		local
+			i, nb: INTEGER
+		do
+			Result := name
+			if System.cls_compliant_name then
+				Result := clone (Result)
+				from
+					i := 2
+					nb := Result.count
+				until
+					i > nb
+				loop
+						-- When we encounter a '_' we delete it
+						-- if it is not the last one in `Result'
+						-- and the character following the `_'
+						-- has its case changed  to upper.
+					if Result.item (i) = '_' and i < nb then
+						Result.remove (i)
+						nb := nb - 1
+						Result.put (Result.item (i).upper, i)
+					end
+					i := i + 1
+				end
+			end
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	namespace_casing (name: STRING): STRING is
+			-- Convert `name' using PascalCasing convention
+			-- on namesapce. Different from `pascal_casing'
+			-- as we convert a character in upper after a
+			-- `.' or a `_'.
+		require
+			name_not_void: name /= Void
+			name_not_empty: not name.is_empty
+			not_dot_terminated: name.item (name.count) /= '.'
+		local
+			i, nb: INTEGER
+		do
+			Result := name
+			if System.cls_compliant_name then
+				Result := clone (Result)
+				from
+					i := 2
+					nb := Result.count
+					Result.put (Result.item (1).upper, 1)
+				until
+					i > nb
+				loop
+						-- When we encounter a '_' we delete it
+						-- if it is not the last one in `Result'
+						-- and the character following the `_'
+						-- has its case changed  to upper.
+					if Result.item (i) = '_' and i < nb then
+						Result.remove (i)
+						nb := nb - 1
+						Result.put (Result.item (i).upper, i)
+					elseif Result.item (i) = '.' then
+						i := i + 1
+							-- Precondition is there to prevent us
+							-- for accessing beyond the last element.
+						Result.put (Result.item (i).upper, i)
+					end
+					i := i + 1
+				end
+			end
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature {NONE} -- Implementation: Custom Attributes

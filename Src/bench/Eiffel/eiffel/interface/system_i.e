@@ -192,13 +192,9 @@ feature -- Properties
 			-- Set of class ids for which feature table needs to be updated
 			-- when melting
 
-	freeze_set1: SEARCH_TABLE [CLASS_C]
+	freeze_set: SEARCH_TABLE [CLASS_C]
 			-- List of class ids for which a source C compilation is
 			-- needed when freezing.
-
-	freeze_set2: SEARCH_TABLE [CLASS_C]
-			-- List of class ids for which a hash table recompilation
-			-- is needed when freezing
 
 	is_conformance_table_melted: BOOLEAN
 			-- Is the conformance table melted ?
@@ -320,8 +316,8 @@ feature -- Properties
 			!! pattern_table.make
 
 				-- Freeze control sets creation
-			!! freeze_set1.make (200)
-			!! freeze_set2.make (200)
+			!! melted_set.make (200)
+			!! freeze_set.make (200)
 
 				-- Body index table creation
 			!! body_index_table.make (System_chunk)
@@ -330,7 +326,6 @@ feature -- Properties
 				-- Run-time table creation
 			!! dispatch_table.make
 			!! execution_table.make
-			!! melted_set.make (200)
 			!! rout_info_table.make (500)
 			!! onbidt.make (50)
 			!! optimization_tables.make
@@ -465,11 +460,7 @@ end
 				-- included in `freeze_set1' after the second pass and so
 				-- not been generated. (we need a source file even if the
 				-- class is empty in terms of features written in it.).
-			freeze_set1.put (a_class)
-			freeze_set2.put (a_class)
-
 			melted_set.put (a_class)
-
 		ensure
 			class_id_set: a_class.id /= Void
 		end
@@ -591,8 +582,6 @@ end
 				Tmp_m_rout_id_server.remove (id)
 				Tmp_m_desc_server.remove (id)
 
-				freeze_set1.prune (a_class)
-				freeze_set2.prune (a_class)
 				melted_set.prune (a_class)
 				classes.remove (id)
 
@@ -1380,14 +1369,16 @@ debug ("COUNT")
 	i := i - 1
 end
 					deg_output.put_degree_1 (a_class, i)
-					a_class.melt_feature_table
-					a_class.melt_descriptor_tables
+					a_class.melt_feature_and_descriptor_tables
 					class_list.forth
 					i := i - 1
 				end
 				deg_output.put_end_degree
-				melted_set.wipe_out
 			end
+				-- Save the `melted_set' info in `freeze_set'. This way next time
+				-- we will freeze, all the melted classes will be in `freeze_set'
+			freeze_set.merge (melted_set)
+			melted_set.wipe_out
 		end
 
 	make_update (empty: BOOLEAN) is
@@ -1498,7 +1489,7 @@ debug ("ACTIVITY")
 end
 				-- Count of feature tables to update
 			from
-				class_list := freeze_set2
+				class_list := melted_set
 				class_list.start
 			until
 				class_list.after
@@ -1892,11 +1883,12 @@ end
 
 			deg_output := Degree_output
 				-- Generation of the descriptor tables
-			if First_compilation then
+			if First_compilation and Compilation_modes.is_precompiling then
 				from
-					class_list := freeze_set2
+					class_list := freeze_set
 					i := class_list.count
 					deg_output.put_start_degree (-1, i)
+					open_log_files
 					class_list.start
 				until
 					class_list.after
@@ -1909,30 +1901,40 @@ debug ("COUNT")
 	io.error.putstring ("] ")
 end
 					a_class.generate_descriptor_tables
+					a_class.pass4
 
 					i := i - 1
 					class_list.forth
 				end
-			else
+			elseif First_compilation then
 				from
-					descriptors := m_desc_server.current_keys
-					i := 1
-					nb := descriptors.count
+					class_list := freeze_set
+					i := class_list.count
+					deg_output.put_start_degree (-1, i)
+					open_log_files
+					class_list.start
 				until
-					i > nb
+					class_list.after
 				loop
-					a_class := class_of_id (descriptors.item (i))
-					if a_class /= Void then
-						melted_set.put (a_class)
-					end
-					i := i + 1
-				end
+					a_class := class_list.item_for_iteration
+					deg_output.put_degree_minus_1 (a_class, i)
+debug ("COUNT")
+	io.error.putstring ("[")
+	io.error.putint (i)
+	io.error.putstring ("] ")
+end
+					a_class.generate_workbench_files
 
+					i := i - 1
+					class_list.forth
+				end
+			elseif Compilation_modes.is_precompiling then
 				from
-					class_list := melted_set
+					class_list := freeze_set
 					i := class_list.count
 					deg_output.put_start_degree (-1, i)
 					class_list.start
+					open_log_files
 				until
 					class_list.after
 				loop
@@ -1945,46 +1947,18 @@ end
 					if a_class /= Void then
 						deg_output.put_degree_minus_1 (a_class, i)
 						a_class.generate_descriptor_tables
+						a_class.pass4
 					end
 					i := i - 1
 					class_list.forth
 				end
-			end
-			deg_output.put_end_degree
-
-			m_desc_server.clear
-			melted_set.wipe_out
-
-			from
-				class_list := freeze_set1
-				i := class_list.count
-				class_list.start
-				deg_output.put_start_degree (-2, i)
-				open_log_files
-			until
-				class_list.after
-			loop
-				a_class := class_list.item_for_iteration
-				deg_output.put_degree_minus_2 (a_class, i)
-debug ("COUNT")
-	io.error.putstring ("[")
-	io.error.putint (i)
-	io.error.putstring ("] ")
-end
-				a_class.pass4
-
-				class_list.forth
-				i := i - 1
-			end
-			deg_output.put_end_degree
-			close_log_files
-
-			if not Compilation_modes.is_precompiling then
+			else
 				from
-					class_list := freeze_set2
+					class_list := freeze_set
 					i := class_list.count
-					deg_output.put_start_degree (-3, i)
+					deg_output.put_start_degree (-1, i)
 					class_list.start
+					open_log_files
 				until
 					class_list.after
 				loop
@@ -1994,24 +1968,25 @@ debug ("COUNT")
 	io.error.putint (i)
 	io.error.putstring ("] ")
 end
-					if a_class.is_modifiable then
-						deg_output.put_degree_minus_3 (a_class, i)
-	
-						a_class.generate_feature_table
+					if a_class /= Void then
+						deg_output.put_degree_minus_1 (a_class, i)
+						a_class.generate_descriptor_tables
+						a_class.pass4
+						if a_class.is_modifiable then
+							a_class.generate_feature_table
+						end
 					end
-
-					class_list.forth
 					i := i - 1
+					class_list.forth
 				end
-				deg_output.put_end_degree
 			end
 
-debug ("ACTIVITY")
-io.error.putstring ("Generating tables...%N")
-end
+			deg_output.put_end_degree
+			m_desc_server.clear
+			close_log_files
 
-			freeze_set1.wipe_out
-			freeze_set2.wipe_out
+			melted_set.wipe_out
+			freeze_set.wipe_out
 			generate_main_eiffel_files
 		end
 
@@ -2082,7 +2057,7 @@ end
 				-- we don't need to update the body ids at the first compilation
 			if not (First_compilation and then classes.ht_count = 1) then
 				from
-					class_list := freeze_set1
+					class_list := melted_set
 					class_list.start
 				until
 					class_list.after
@@ -2159,6 +2134,13 @@ feature -- Final mode generation
 			old_inlining_on, old_array_optimization_on: BOOLEAN
 			deg_output: DEGREE_OUTPUT
 		do
+				-- Set `Server_control' to remove right away extra unused
+				-- files (especially done for the TMP_POLY_SERVER).
+			Server_controler.set_remove_right_away (True)
+
+				-- Initialize `TMP_POLY_SERVER' and `TMP_OPT_BYTE_SERVER'
+			Tmp_poly_server.make
+			Tmp_opt_byte_server.make
 
 			keep_assertions := keep_assert and then Lace.has_assertions
 
@@ -2211,6 +2193,13 @@ feature -- Final mode generation
 
 			remover := Void
 
+				-- Set `Server_control' not to remove right away extra unused
+				-- files (especially done for the TMP_POLY_SERVER, but since we
+				-- are back now to a normal compilation we should not remove the
+				-- useless files).
+			Server_controler.set_remove_right_away (False)
+
+				-- Restore previous value
 			remover_off := old_remover_off
 			exception_stack_managed := old_exception_stack_managed
 			inlining_on := old_inlining_on

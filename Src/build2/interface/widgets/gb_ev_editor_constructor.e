@@ -100,7 +100,6 @@ feature {NONE} -- Implementation
 	parent_window (widget: EV_WIDGET): EV_WINDOW is
 			-- `Result' is window parent of `widget'.
 			-- `Void' if none.
-		local
 		deferred
 		end
 		

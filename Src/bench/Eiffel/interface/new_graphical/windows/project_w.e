@@ -1123,8 +1123,8 @@ feature -- Graphical Interface
 			quick_update_button: EB_BUTTON
 --  			version_button: PUSH_B
 
---			about_menu_entry: EB_MENU_ENTRY
---			about_cmd: EB_LAUNCHER3
+			about_menu_entry: EB_MENU_ENTRY
+			about_cmd: EB_LAUNCHER3
 --			about_tool: EB_ABOUT_WINDOW
 			local_menu: MENU_PULL
 			do_nothing_cmd: DO_NOTHING_CMD
@@ -1134,9 +1134,10 @@ feature -- Graphical Interface
 			-- Help Menu
 --			!! version_button.make (Version_number, help_menu)
 
---			!! about_tool.make ("About_Dialog", screen)
+--			!! about_tool.make_default ("About_Dialog")
 --			!! about_cmd.make (about_tool)
---			!! about_menu_entry.make_default (about_cmd, help_menu)
+			!! about_cmd.make
+			!! about_menu_entry.make_default (about_cmd, help_menu)
 
 				-- Edit Menu
 			build_edit_menu (project_toolbar)
@@ -1222,8 +1223,8 @@ feature -- Graphical Interface
 			!! stop_points_status_menu_entry.make_default (stop_points_status_cmd, menus @ debug_menu)
 			!! sep.make (Interface_names.t_Empty, menus @ debug_menu)
 
-			!! show_prof_cmd
-			!! show_prof_menu_entry.make_default (show_prof_cmd, menus @ window_menu)
+--			!! show_prof_cmd
+--			!! show_prof_menu_entry.make_default (show_prof_cmd, menus @ window_menu)
 
 			!! display_feature_cmd.make (Current)
 			!! display_feature_button.make (display_feature_cmd, project_toolbar)

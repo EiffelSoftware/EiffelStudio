@@ -40,6 +40,7 @@ feature {NONE} -- Initialization
 		once
 			create resource_table.make (20)
 			create resource_files_parser.make (Short_studio_name)
+			setup_preferences
 				
 				-- Read `general' file
 			resource_files_parser.parse_files (resource_table)
@@ -69,5 +70,15 @@ feature {NONE} -- Initialization of resource categories
 --			Class_resources.initialize (a_table)
 --			Feature_resources.initialize (a_table)
 		end
+		
+	setup_preferences is
+			-- Setup the preferences
+		local
+			l_prefs: PREFERENCES
+			studio_prefs: EB_SHARED_PREFERENCES
+		do
+			create l_prefs.make_with_default_values_and_location (system_general, eiffel_preferences)			
+			create studio_prefs.make_preferences (l_prefs)						
+		end		
 
 end -- class TTY_RESOURCES

@@ -118,8 +118,7 @@ rt_private EIF_INTEGER private_object_id(EIF_REFERENCE object, struct stack *a_s
 		stack_number++)
 		end = end->sk_next;
 
-	Result = (EIF_INTEGER)
-		stack_number*STACK_SIZE+1-(a_set->st_cur->sk_arena-(char **)address);
+	Result = (EIF_INTEGER) stack_number*STACK_SIZE+1-(a_set->st_cur->sk_arena-(char **)address);
 
 	if (Result>*max_value_ptr)
 		*max_value_ptr = Result;

@@ -126,7 +126,7 @@ rt_public int send_str(STREAM *sp, char *buffer)
 	size = strlen(buffer);			/* Length of string */
 	pack.rq_type = EIF_OPAQUE;
 	CHECK("valid size", size <= INT32_MAX);
-	pack.rq_opaque.op_size = (int) size;	/* Send length without final null */
+	pack.rq_opaque.op_size = size;	/* Send length without final null */
 
 
 #ifdef USE_ADD_LOG
@@ -226,12 +226,13 @@ rt_public char *recv_str(STREAM *sp, size_t *sizeptr)
 		send_ack(writefd(sp), AK_ERROR);	/* Signal error to remote process */
 #endif
 		return (char *) 0;
-	} else
+	} else {
 #ifdef EIF_WIN32
 		send_ack(sp, AK_OK);		/* Ready to get string */
 #else
 		send_ack(writefd(sp), AK_OK);		/* Ready to get string */
 #endif
+	}
 
 #ifdef EIF_WIN32
 	if (-1 == net_recv(sp, buffer, size, TRUE)) {	/* Cannot receive string */

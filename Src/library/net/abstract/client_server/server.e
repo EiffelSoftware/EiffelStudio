@@ -45,7 +45,7 @@ feature -- Access
 
 	resend (msg: STORABLE) is
 		do
-			msg.general_store (outflow)
+			msg.independent_store (outflow)
 		end;
 
 	set_queued (n:INTEGER) is

@@ -101,7 +101,7 @@ feature -- Properties
 	class_types: ARRAY [CLASS_TYPE]
 			-- Array of class types indexed by their `type_id'
 
-	type_set: ROUT_ID_SET
+	type_set: SEARCH_TABLE [INTEGER]
 			-- Set of the routine ids for which a type table should
 			-- be generated
 
@@ -422,7 +422,7 @@ feature -- Properties
 			local_universe: UNIVERSE_I
 			a_cluster_list: LINKED_LIST [CLUSTER_I]
 			a_cluster: CLUSTER_I
-			a_class_table: EXTEND_TABLE [CLASS_I, STRING]
+			a_class_table: HASH_TABLE [CLASS_I, STRING]
 			a_class_i: CLASS_I
 			a_visible_i: VISIBLE_I
 		do
@@ -1546,7 +1546,6 @@ end
 			Byte_server.take_control (Tmp_byte_server)
 			Inv_byte_server.take_control (Tmp_inv_byte_server)
 			Depend_server.take_control (Tmp_depend_server)
-			Rep_depend_server.take_control (Tmp_rep_depend_server)
 			M_feat_tbl_server.take_control (Tmp_m_feat_tbl_server)
 			M_feature_server.take_control (Tmp_m_feature_server)
 			M_rout_id_server.take_control (Tmp_m_rout_id_server)
@@ -1941,7 +1940,6 @@ feature {NONE} -- Implementation
 				Class_info_server.remove (id)
 				Inv_ast_server.remove (id)
 				Depend_server.remove (id)
-				Rep_depend_server.remove (id)
 				M_rout_id_server.remove (id)
 				M_desc_server.remove (id)
 				if Compilation_modes.is_precompiling then
@@ -1957,7 +1955,6 @@ feature {NONE} -- Implementation
 				Tmp_class_info_server.remove (id)
 				Tmp_inv_ast_server.remove (id)
 				Tmp_depend_server.remove (id)
-				Tmp_rep_depend_server.remove (id)
 				Tmp_m_rout_id_server.remove (id)
 				Tmp_m_desc_server.remove (id)
 

@@ -299,8 +299,8 @@ feature {GB_CODE_GENERATOR} -- Implementation
 				constants_list.off
 			loop
 				new_type_element := new_child_element (window_element, constant_string, "")
-					window_element.force_last (new_type_element)
-					constants_list.item (constants_list.key_for_iteration).generate_xml (new_type_element)
+				window_element.force_last (new_type_element)
+				constants_list.item (constants_list.key_for_iteration).generate_xml (new_type_element)
 				constants_list.forth
 			end
 

@@ -3681,6 +3681,18 @@ rt_private EIF_REFERENCE scavenge(register EIF_REFERENCE root, struct sc_zone *t
 	REQUIRE ("Algorithm moves objects",
 			g_data.status & (GC_GEN | GC_PART) || g_data.status & GC_FAST);
 
+	REQUIRE ("In Generation Scavenge From zone",
+		(g_data.status & GC_PART) ||
+			((g_data.status & (GC_GEN | GC_FAST)) &&
+			(root > sc_from.sc_arena) && 
+			(root <= sc_from.sc_end)));
+
+	REQUIRE ("In Partial Scavenge From zone",
+		(g_data.status & (GC_GEN | GC_FAST)) ||
+			((g_data.status & GC_PART) &&
+			(root > ps_from.sc_arena) && 
+			(root <= ps_from.sc_end)));
+
 	zone = HEADER(root);
 
 	/* Expanded objects are held in one object, and a pseudo-reference field
@@ -6217,16 +6229,7 @@ rt_shared void gfree(register union overhead *zone)
 	int saved_in_assertion;		/* Saved in_assertion value */
 	register2 uint32 dtype;			/* Dynamic type of object */
 
-/*
-
-	* Object freed ?
-	* Yes, then return -- NEED TO CHECK WITH
-	* RAM - DINOV
-	* Does not seem necessary to me - FRED
-
-	if (!(zone->ov_size & B_BUSY))
-		return;					
-*/
+	REQUIRE("Busy", zone->ov_size & B_BUSY);
 							
 	if (!(zone->ov_size & B_FWD)) {	/* If object has not been forwarded
 									then call the dispose routine */
@@ -6524,6 +6527,62 @@ rt_shared int is_in_rem_set (EIF_REFERENCE obj)
 }
 
 #ifdef DEBUG
+rt_private void scavenge_statistics (struct sc_zone *to)
+{
+	char *arena = NULL;
+	char *top = NULL;
+	EIF_REFERENCE obj = NULL;
+	EIF_INTEGER size = 0, total_size = 0;
+	EIF_INTEGER nb = 0, i = 0;
+	EIF_INTEGER max_size = 0, min_size = 0x7fffffff, average_size = 0;
+	EIF_INTEGER alignmax = ((MEM_ALIGNBYTES < OVERHEAD) ? OVERHEAD : MEM_ALIGNBYTES);
+	EIF_INTEGER count = 100;
+	EIF_INTEGER *nb_allocated = (EIF_INTEGER *) malloc (sizeof (EIF_INTEGER) * (count + 1));
+
+	REQUIRE("to not null", to != NULL);
+
+	arean = to->sc_arena;
+	top = to->sc_top;
+
+	memset (nb_allocated, 0, sizeof(EIF_INTEGER) * (count + 1));
+
+	while ((arena + OVERHEAD) <= top) {
+		obj = arena + OVERHEAD;
+		nb++;
+		size = HEADER(obj)->ov_size & B_SIZE;
+		if (size > count) {
+			nb_allocated = realloc (nb_allocated, sizeof (EIF_INTEGER) * (size + 1));
+			memset (nb_allocated + count, 0, sizeof(EIF_INTEGER) * (size + 1 - count));
+			count = size;
+		}
+		nb_allocated [size] = nb_allocated [size] + 1;
+
+		if (size > max_size) {
+			max_size = size;
+		}
+		if (size < min_size) {
+			min_size = size;
+		}
+		total_size += size;
+		arena += size + OVERHEAD + (alignmax - OVERHEAD);
+	}
+
+	average_size = total_size / nb;
+
+	dprintf(1) ("Total size is %d\n", total_size);
+	dprintf(1) ("Number of objects is %d\n", nb);
+	dprintf(1) ("Occupied zone is %d\n", nb * OVERHEAD + total_size);
+	dprintf(1) ("Min size is %d\n", min_size);
+	dprintf(1) ("Max size is %d\n", max_size);
+	dprintf(1) ("Average size is %d\n", average_size);
+	for (i = 0; i <= count; i ++) {
+		if (nb_allocated [i] > 0) {
+			dprintf(1) (" Allocated %d objects of size %d\n", nb_allocated [i], i);
+		}
+	}
+	dprintf(1) ("\n");
+}
+
 rt_private int nb_items(register1 struct stack *stk)
 		/* The stack */
 {

@@ -397,6 +397,47 @@ feature -- Basic operations
 			new_widget_parented_correctly: new_widget.parent /= Void and old original_widget.parent = new_widget.parent
 			original_widget_not_parented: original_widget.parent = Void
 		end
+		
+	path_of_tree_node (root_node: EV_TREE_NODE): ARRAYED_LIST [STRING] is
+			-- Result is `text' of all parents of `Current' from the top down to
+			-- and including `node'.
+		require
+			node_not_void: root_node /= Void
+		local
+			temp_result: ARRAYED_LIST [STRING]
+			node: EV_TREE_NODE
+		do
+			create temp_result.make (4)
+				-- Firstly iterate upwards from `Current' to find all of the
+				-- parents in order.
+			from
+				node := root_node
+			until
+				node = Void
+			loop
+				temp_result.extend (node.text)
+				node ?= node.parent
+			end
+			
+				-- Now build `result' by reversing the structure recently traversed.
+				-- This is because we wish the higher level nodes to appear first.
+			create Result.make (temp_result.count)
+			from
+				temp_result.go_i_th (temp_result.count)
+			until
+				temp_result.off
+			loop
+				Result.extend (temp_result.item)
+				temp_result.back
+			end
+			check
+				results_consistent: temp_result.count = result.count
+			end
+		ensure
+			result_not_void: Result /= Void
+			node_not_parented_implies_result_has_single_item: root_node.parent = Void implies Result.count = 1
+		end
+		
 
 feature {NONE} -- Implementation
 

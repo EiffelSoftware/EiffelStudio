@@ -19,6 +19,10 @@
 #include "store.h"
 #include "garcol.h"
 
+#ifdef EIF_OS2
+#include <io.h>
+#endif
+
 private fnptr make_index;	/* Index building routine */
 private char *server;		/* Current server used */
 private long pst_store();	/* Recursive store */

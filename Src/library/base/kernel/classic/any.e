@@ -53,14 +53,6 @@ feature -- Status report
 										other.conforms_to (Current))
 		end
 
- 	consistent (other: like Current): BOOLEAN is
- 			-- Is current object in a consistent state so that `other'
- 			-- may be copied onto it? (Default answer: yes).
- 		obsolete
- 			"Not used anymore, please remove it from your inheritance clauses if it appears."
- 		do
- 		end
-
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
@@ -254,16 +246,6 @@ feature -- Duplication
 		ensure
 			deep_equal: deep_equal (Current, other)
 		end
-
- 	setup (other: like Current) is
- 			-- Assuming current object has just been created, perform
- 			-- actions necessary to ensure that contents of `other'
- 			-- can be safely copied onto it.
- 		obsolete
- 			"Not used anymore by `clone', please remove it from your inheritance clauses%N%
- 			%if it appears."
- 		do
- 		end
 
 feature {NONE} -- Retrieval
 

@@ -373,8 +373,12 @@ feature -- Measurements
 
 	row_count: INTEGER
 			-- Number of rows in Current
-			
+
 feature {NONE} -- Implementation
+
+	row_list: SPECIAL [SPECIAL [EV_GRID_ITEM]]
+	
+		-- Drawing object used to display `Current'
 
 	initialize_grid is
 			-- Initialize `Current'. To be called during `initialize' of

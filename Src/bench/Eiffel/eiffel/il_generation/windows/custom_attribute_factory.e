@@ -252,10 +252,10 @@ feature {NONE} -- Generation
 				int ?= e
 				if int /= Void then
 					inspect int.size
-					when 8 then a_ca_blob.put_integer_8 (int.value.to_integer_8)
-					when 16 then a_ca_blob.put_integer_16 (int.value.to_integer_16)
-					when 32 then a_ca_blob.put_integer_32 (int.value)
-					when 64 then a_ca_blob.put_integer_64 (int.to_integer_64)
+					when 8 then a_ca_blob.put_integer_8 (int.integer_8_value)
+					when 16 then a_ca_blob.put_integer_16 (int.integer_16_value)
+					when 32 then a_ca_blob.put_integer_32 (int.integer_32_value)
+					when 64 then a_ca_blob.put_integer_64 (int.integer_64_value)
 					end
 				else
 					string ?= e

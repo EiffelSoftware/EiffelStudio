@@ -14,8 +14,10 @@ inherit
 	SHARED_ENV
 
 	SHARED_EIFFEL_PROJECT
+		export {NONE} all end
 
 	SHARED_RESCUE_STATUS
+		export {NONE} all end
 
 create
 	initialize
@@ -367,8 +369,7 @@ feature {COMPILER_EXPORTER} -- Lace recompilation
 				cluster.set_is_library (is_library)
 				cluster.set_belongs_to_all (belongs_to_all)
 				cluster.set_is_override_cluster (
-					universe.has_override_cluster and then
-					universe.override_cluster_name.is_equal (cluster_name))
+					universe.has_override_cluster_of_name (cluster_name))
 
 				Universe.insert_cluster (cluster)
 				debug ("REMOVE_CLASS")

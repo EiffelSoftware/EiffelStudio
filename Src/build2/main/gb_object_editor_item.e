@@ -44,7 +44,7 @@ feature -- Status Setting
 		end
 		
 	set_creating_class (a_class: GB_EV_ANY) is
-			--
+			-- Assign `a_class' to `creating_class'.
 		do
 			creating_class := a_class
 		end

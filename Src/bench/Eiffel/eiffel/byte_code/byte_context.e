@@ -783,17 +783,17 @@ feature
 			inspect
 				ctype
 			when C_long then
-				generated_file.putstring ("long ti");
+				generated_file.putstring ("EIF_INTEGER ti");
 			when C_ref then
-				generated_file.putstring ("char *tp");
+				generated_file.putstring ("EIF_REFERENCE tp");
 			when C_float then
-				generated_file.putstring ("float tf");
+				generated_file.putstring ("EIF_REAL tf");
 			when C_char then
-				generated_file.putstring ("char tc");
+				generated_file.putstring ("EIF_CHARACTER tc");
 			when C_double then
-				generated_file.putstring ("double td");
+				generated_file.putstring ("EIF_DOUBLE td");
 			when C_pointer then
-				generated_file.putstring ("char *ta");
+				generated_file.putstring ("EIF_POINTER ta");
 			end;
 			generated_file.putint (num);
 			generated_file.putchar (';');

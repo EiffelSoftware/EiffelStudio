@@ -7,7 +7,7 @@ indexing
 class
 	SHARED_IL_DEBUG_INFO_RECORDER
 
-feature -- Token Recorder
+feature {NONE} -- Token Recorder
 
 	il_debug_info_recorder: IL_DEBUG_INFO_RECORDER is
 		once

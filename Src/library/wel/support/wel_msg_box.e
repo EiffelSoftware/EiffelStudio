@@ -42,7 +42,7 @@ feature -- Basic operations
 		local
 			a_msgboxparams: WEL_MSGBOXPARAMS
 		do
-			!! a_msgboxparams.make_basic (a_window, a_text, a_title, Mb_iconinformation + Mb_ok, language, sublanguage)
+			create a_msgboxparams.make_basic (a_window, a_text, a_title, Mb_iconinformation + Mb_ok, language, sublanguage)
 			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
 		end
 
@@ -55,7 +55,7 @@ feature -- Basic operations
 		local
 			a_msgboxparams: WEL_MSGBOXPARAMS
 		do
-			!! a_msgboxparams.make_basic (a_window, a_text, a_title, Mb_iconwarning + Mb_ok, language, sublanguage)
+			create a_msgboxparams.make_basic (a_window, a_text, a_title, Mb_iconwarning + Mb_ok, language, sublanguage)
 			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
 		end
 
@@ -68,7 +68,7 @@ feature -- Basic operations
  		local
  			a_msgboxparams: WEL_MSGBOXPARAMS
  		do
- 			!! a_msgboxparams.make_basic (a_window, a_text, a_title, Mb_iconerror + Mb_ok, language, sublanguage)
+ 			create a_msgboxparams.make_basic (a_window, a_text, a_title, Mb_iconerror + Mb_ok, language, sublanguage)
  			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
 		end
 
@@ -81,7 +81,7 @@ feature -- Basic operations
 		local
 			a_msgboxparams: WEL_MSGBOXPARAMS
 		do
-			!! a_msgboxparams.make_basic (a_window, a_text, a_title, Mb_iconquestion + Mb_yesno, language, sublanguage)
+			create a_msgboxparams.make_basic (a_window, a_text, a_title, Mb_iconquestion + Mb_yesno, language, sublanguage)
 			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
 		end
 
@@ -97,7 +97,7 @@ feature -- Basic operations
 		local
 			a_msgboxparams: WEL_MSGBOXPARAMS
 		do
-			!! a_msgboxparams.make_basic (a_window, a_text, a_title, a_style, language, sublanguage)
+			create a_msgboxparams.make_basic (a_window, a_text, a_title, a_style, language, sublanguage)
 			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
 		end
 
@@ -113,7 +113,7 @@ feature -- Basic operations
 		local
 			a_msgboxparams: WEL_MSGBOXPARAMS
 		do
-			!! a_msgboxparams.make_by_id (a_window, a_text, a_title, a_style, an_id, language, sublanguage)
+			create a_msgboxparams.make_by_id (a_window, a_text, a_title, a_style, an_id, language, sublanguage)
 			message_box_result := cwin_message_box_indirect (a_msgboxparams.item)
 		end
 

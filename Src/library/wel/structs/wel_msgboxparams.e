@@ -36,8 +36,8 @@ feature {NONE} -- initialization
 			a_wel_string1, a_wel_string2: WEL_STRING
 			handle: POINTER
 		do
-			!! a_wel_string1.make (a_text)
-			!! a_wel_string2.make (a_title)
+			create a_wel_string1.make (a_text)
+			create a_wel_string2.make (a_title)
 			if a_window /= Void then
 				handle := a_window.item
 			else
@@ -66,8 +66,8 @@ feature {NONE} -- initialization
 			a_wel_string1,a_wel_string2: WEL_STRING
 			handle: POINTER
 		do
-			!! a_wel_string1.make (a_text)
-			!! a_wel_string2.make (a_title)
+			create a_wel_string1.make (a_text)
+			create a_wel_string2.make (a_title)
 			if a_window /= Void then
 				handle := a_window.item
 			else
@@ -89,7 +89,7 @@ feature {NONE} -- Implementation
 
 	a_main_arguments: WEL_MAIN_ARGUMENTS is
 		once
-			!! Result
+			create Result
 		ensure
 			result_not_void: Result /= Void
 		end

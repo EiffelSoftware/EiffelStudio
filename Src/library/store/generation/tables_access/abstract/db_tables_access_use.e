@@ -1,6 +1,5 @@
 indexing
 	description: "Access to the class DB_TABLES_ACCESS"
-	author: "Cedric Reduron"
 	date: "$Date$"
 	revision: "$Revision$"
 

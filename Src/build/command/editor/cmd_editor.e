@@ -557,31 +557,31 @@ feature {NONE}
 			undo_cmd: CMD_UNDOABLE;
 			id: IDENTIFIER
 		do
-			if (argument = label_text) then
-				if not label_text.text.empty then
-					!! id.make (label_text.text.count);
-					id.append (label_text.text);
-					if id.is_valid then
-						add_label
-						label_text.set_text ("")
-					else
-						error_box.popup (Current, 
-							Messages.invalid_feature_name_er, 
-							label_text.text)
+			if edited_command /= Void then
+				if argument = label_text then
+					if not label_text.text.empty then
+						!! id.make (label_text.text.count);
+						id.append (label_text.text);
+						if id.is_valid then
+							add_label
+							label_text.set_text ("")
+						else
+							error_box.popup (Current, 
+								Messages.invalid_feature_name_er, 
+								label_text.text)
+						end
 					end
+				elseif argument = undoable_t then
+					if undoable_t.state then
+						!!undo_cmd
+						undo_cmd.execute (edited_command)
+					else
+						!!non_undo_cmd
+						non_undo_cmd.execute (edited_command)
+					end
+				elseif argument = edit_hole then
+					question_box.popup (Current, Messages.reset_text_qu, Void)
 				end
-			elseif (argument = undoable_t and then
-						(edited_command /= Void)) then
-				if undoable_t.state then
-					!!undo_cmd
-					undo_cmd.execute (edited_command)
-				else
-					!!non_undo_cmd
-					non_undo_cmd.execute (edited_command)
-				end
-			elseif (argument = edit_hole and then
-						(edited_command /= Void)) then
-				question_box.popup (Current, Messages.reset_text_qu, Void)
 			end
 		end 
 

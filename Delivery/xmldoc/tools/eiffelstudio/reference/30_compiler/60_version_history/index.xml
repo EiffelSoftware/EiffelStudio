@@ -38,6 +38,12 @@
 					<label>Major changes between ISE Eiffel 5.4 and ISE Eiffel 5.5</label>
 				</link>
 			</item>
+			<item>
+				<link>
+					<url>06_56_release/index.xml</url>
+					<label>Major changes between ISE Eiffel 5.5 and ISE Eiffel 5.6</label>
+				</link>
+			</item>
 		</list>
 	</paragraph>
 </document>

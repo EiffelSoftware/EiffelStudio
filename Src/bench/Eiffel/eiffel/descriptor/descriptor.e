@@ -71,7 +71,7 @@ feature -- Generation
 			class_id_string.prepend ("_")
 
 			is_precompiling := Compilation_modes.is_precompiling
-			buffer.append ("#include %"eif_macros.h%"%N%N");
+			buffer.append ("#include %"eif_macros.h%"%N");
 			if is_precompiling then
 				buffer.append ("#include %"eif_wbench.h%"%N%N")	
 			end

@@ -11,6 +11,7 @@ inherit
 	ANY_TAB
 		redefine
 			make,
+			current_widget,
 			set_current_widget
 		end
 
@@ -77,14 +78,18 @@ feature -- element change
 
 feature -- Access
 
-	name:STRING is
-			-- Returns the name of the tab
+	name: STRING is
+			-- Returns the name of the tab.
 		do
 			Result:="Widget"
 		end
+	
+	current_widget: EV_WIDGET
+			-- Current widget we are working on. 
 
 	f1, f2, f3, f4, f5, f6: TEXT_FEATURE_MODIFIER
 			-- Some modifiers.
+
 
 feature -- Execution feature
 

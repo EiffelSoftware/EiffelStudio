@@ -1,11 +1,15 @@
 indexing
-	description: "EiffelVision menu bar. Menu bar is a vertical the screen or in the window containing menu items."
+	description:
+		 "EiffelVision menu bar. Menu bar is a vertical bar with%
+		% a several menus inside. It can be moved by the user or%
+		% put back in the menu receptable."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EV_MENU_BAR
+class
+	EV_MENU_BAR
 
 inherit
 
@@ -33,10 +37,10 @@ feature {NONE} -- Initialization
 			-- window
 		do
 			!EV_MENU_BAR_IMP!implementation.make (par)
---			implementation.set_interface (Current)
---			implementation.test_and_set_parent (par)
---			implementation.build
---			managed := par.manager
+			implementation.set_interface (Current)
+			implementation.test_and_set_parent (par)
+			implementation.build
+			managed := par.manager
 			widget_make (par)
 		end	
 	
@@ -47,7 +51,7 @@ feature {NONE} -- Implementation
 end -- class EV_MENU BAR
 
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| EiffelVision : library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

@@ -56,10 +56,14 @@ feature
 			-- Is `other' the same access to constant ?
 		local
 			constant_b: CONSTANT_B;
+			o_value: like value
 		do
 			constant_b ?= other;
-			Result := not (constant_b = Void) and then
-							deep_equal (value, constant_b.value);
+			if constant_b /= Void then
+				o_value := constant_b.value
+				Result := value.same_type (o_value) and then
+					value.is_equivalent (o_value)
+			end
 		end;
 
 	has_gcable_variable: BOOLEAN is

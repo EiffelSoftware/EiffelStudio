@@ -37,6 +37,7 @@ feature -- Error messages
 	Update_text_er: STRING is
 			"System call failed%NCould not update %%X text";
 	Write_dir_er: STRING  is "Cannot write to directory%N%%X";
+	Write_file_er: STRING  is "Cannot write to file%N%%X";
 
 feature -- Question messages
 

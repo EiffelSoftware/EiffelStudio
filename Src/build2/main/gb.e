@@ -72,7 +72,10 @@ feature {NONE} -- Initialization
 			wizard_manager: WIZARD_PROJECT_MANAGER
 			project_settings: GB_PROJECT_SETTINGS
 			file_handler: GB_SIMPLE_XML_FILE_HANDLER
+			shared_preferences: GB_SHARED_PREFERENCES
 		do
+			create shared_preferences
+			shared_preferences.preferences.initialize_preferences
 			if command_line.argument_array.count = 1 then
 					-- If `argument_array' has one element,
 					-- then no argument was specified, only the

@@ -154,7 +154,7 @@ feature -- Access: file name
 			clr_version_not_void: clr_version /= Void
 		once
 			create Result.make_from_string ("$ISE_EIFFEL")
-			Result.extend_from_array (<<"dotnet", "assemblies">>)
+			Result.extend_from_array (<<"dotnet", "assemblies", clr_version>>)
 		end
 		
 	Default_class_file: FILE_NAME is

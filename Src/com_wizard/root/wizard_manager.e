@@ -10,6 +10,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_SHARED_VISITOR_FACTORIES
+		export
+			{NONE} all
+		end
+
 	WIZARD_SHARED_GENERATION_ENVIRONMENT
 		export
 			{NONE} all
@@ -72,7 +77,7 @@ feature -- Basic Operations
 			-- Compile IDL
 			if shared_wizard_environment.abort then
 				finish
-			else
+			elseif shared_wizard_environment.idl then
 				parent.add_title (Idl_compilation_title)
 				Idl_compiler.compile_idl
 				if shared_wizard_environment.abort then
@@ -111,6 +116,8 @@ feature -- Basic Operations
 						end
 					end
 				end
+			else
+				generate
 			end
 		rescue
 			shared_wizard_environment.set_abort (10)
@@ -120,11 +127,35 @@ feature -- Basic Operations
 feature {NONE} -- Implementation
 
 	generate is
-			-- Generate Eiffel/C++ code
+			-- Generate Eiffel/C++ code.
+		local
+			i: INTEGER
 		do
 			parent.add_title (Analysis_title)
 			set_system_descriptor (create {WIZARD_SYSTEM_DESCRIPTOR}.make)
 			system_descriptor.generate (shared_wizard_environment.type_library_file_name)
+			from
+				system_descriptor.start
+			until
+				system_descriptor.after
+			loop
+				from
+					i := 1
+				until
+					i > system_descriptor.library_descriptor_for_iteration.descriptors.count
+				loop
+					if shared_wizard_environment.client then
+						c_client_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+						eiffel_client_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+					end
+					if shared_wizard_environment.server then
+						c_server_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+						eiffel_server_visitor.visit (system_descriptor.library_descriptor_for_iteration.descriptors.item (i))
+					end
+					i := i + 1
+				end	
+				system_descriptor.forth
+			end
 		end
 		
 	finish is
@@ -144,4 +175,3 @@ feature {NONE} -- Implementation
 		end
 
 end -- class WIZARD_MANAGER
-	

@@ -49,12 +49,24 @@ feature -- Access
 		end
 
 	Default_metadata_cache_path: STRING is
-			-- Path to access eiffel compiler.
+			-- Default path to Eiffel metadata cache
 		once
 			if Codedom_installation_path /= Void then
 				create Result.make_from_string (Codedom_installation_path)
 				Result.append_character (Directory_separator)
 				Result.append ("assemblies")
+			end
+		ensure
+			do_not_end_with_directory_separator: Result /= Void implies Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator
+		end
+
+	Default_precompile_cache: STRING is
+			-- Default path to precompiled libraries
+		once
+			if Codedom_installation_path /= Void then
+				create Result.make_from_string (Codedom_installation_path)
+				Result.append_character (Directory_separator)
+				Result.append ("precomp")
 			end
 		ensure
 			do_not_end_with_directory_separator: Result /= Void implies Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator

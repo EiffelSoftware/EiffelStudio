@@ -122,6 +122,7 @@ feature {NONE} -- Initialization
 			else
 				create vb
 				vb.extend (hbox)
+				vb.disable_item_expand (hbox)
 				create output_line
 				output_line.align_text_right
 				vb.extend (output_line)
@@ -130,6 +131,7 @@ feature {NONE} -- Initialization
 				address_dialog.close_request_actions.extend (agent address_dialog.hide)
 				address_dialog.extend (vb)
 				generate_header_info
+				address_dialog.set_height (header_info.height)
 
 				cluster_address.key_release_actions.extend (agent cluster_key_up)
 				cluster_address.key_press_actions.extend (agent cluster_key_down)

@@ -159,9 +159,6 @@ feature -- Access
 
 	text: STRING is
 			-- Value of current text field
-		local
-			ext_text: ANY
-			size: INTEGER
 		do
 			if exists then
 				Result := wel_text
@@ -322,7 +319,6 @@ feature {NONE} -- Implementation
 		local
 			tf: TEXT_FIELD_IMP
 			found: BOOLEAN
-			p : POINTER
 			w: W_MANAGER
 			top_parent: WEL_WINDOW
 		do
@@ -376,7 +372,6 @@ feature {NONE} -- Implementation
 		local
 			tf: TEXT_FIELD_IMP
 			found: BOOLEAN
-			p : POINTER
 			w: W_MANAGER
 			top_parent: WEL_WINDOW
 		do
@@ -443,7 +438,6 @@ feature {NONE} -- Implementation
 			a_window_not_void: a_window /= Void
 		local
 			top_parent: WEL_WINDOW
-			i: INTEGER
 		do
 			from
 				Result := a_window

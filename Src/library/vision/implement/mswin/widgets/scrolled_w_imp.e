@@ -187,8 +187,6 @@ feature -- Removal
 	unrealize is
 			-- Unrealize current composite and its children.
 		local
-			ww: WIDGET_IMP
-			wp, wi: WIDGET
 			unrealize_list: LIST [WIDGET_IMP]
 		do
 			unrealize_list := children_list

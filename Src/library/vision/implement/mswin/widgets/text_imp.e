@@ -316,8 +316,6 @@ feature -- Status report
 
 	text: STRING is
 			-- Value of current text field
-		local
-			ext_text: ANY
 		do
 			if exists then
 				Result := wel_text
@@ -583,7 +581,6 @@ feature -- Status setting
 			-- Highlight the substring between `first' and `last' positions
 			-- leave the caret at `first'
 		local
-			previous_y_coord: INTEGER
 			size: INTEGER
 			last_line_position: INTEGER
 			number_line_to_scroll: INTEGER

@@ -422,7 +422,6 @@ feature -- {NONE} -- Implementation
 		local
 			new_position: INTEGER
 			value: INTEGER
-			limit_value: INTEGER
 		do
 			if button_down then
 				if is_vertical then
@@ -476,7 +475,6 @@ feature -- {NONE} -- Implementation
 			-- Respond to a left button up message.
 		local
 			value: INTEGER
-			limit_value: INTEGER
 		do
 			if button_down then
 				if is_vertical then

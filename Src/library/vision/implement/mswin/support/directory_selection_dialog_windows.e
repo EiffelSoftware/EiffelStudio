@@ -143,9 +143,6 @@ feature -- Basic operations
 
 	notify (control: WEL_CONTROL; notify_code: INTEGER) is
 			-- A `notify_code' is received for `control'.
-		local
-			tmp: STRING
-			d: DIRECTORY
 		do
 			if control = combo_box then
 				combo_box_action (notify_code)
@@ -271,7 +268,6 @@ feature {NONE} -- Implementation
 		require
 			string_exists: s /= Void
 		local
-			i: INTEGER
 			a_item : STRING
 		do
 			if remembered_list = Void then
@@ -393,9 +389,7 @@ feature {NONE} -- Implementation
 			-- and the text based on the value in `directory'
 		local
 			wildcard_dir, drive_to_find: STRING
-			d: DIRECTORY
 			select_item: INTEGER
-			a: ANY
 		do
 			wildcard_dir := clone (directory)
 			if wildcard_dir.item (wildcard_dir.count) = '\' then

@@ -90,7 +90,6 @@ feature -- Status setting
 	realize is
 			-- Realize current widget.
 		local
-			menu: MENU_IMP
 			wc: WEL_COMPOSITE_WINDOW
 			mp: MENU_PULL_IMP
 			op: OPT_PULL_IMP

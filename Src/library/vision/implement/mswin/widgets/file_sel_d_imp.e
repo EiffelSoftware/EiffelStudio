@@ -142,7 +142,6 @@ feature -- Status setting
 	popup is
 			-- Display a file selection dialog box
 		local
-			selected: BOOLEAN
 			wc: WEL_COMPOSITE_WINDOW
 		do
 			is_popped_up := true

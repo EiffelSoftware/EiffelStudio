@@ -886,7 +886,6 @@ feature -- Removal
 			-- Set an action according to `a_translation'.
 		local
 			translation: TRANSLATION_COMMAND;
-			tw: TOP_IMP
 		do
 			!! translation.make (a_translation, a_command, argument);
 			remove_equivalent_translation (translation);

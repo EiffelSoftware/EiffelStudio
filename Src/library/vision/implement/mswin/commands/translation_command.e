@@ -254,7 +254,6 @@ feature {WIDGET_ACTIONS, WIDGET_IMP, ACCELERABLE_WINDOWS}
 		local
 			bd: BUTTON_DATA
 			kd: KEY_DATA
-			rz : RESIZE_CONTEXT_DATA
 		do
 			bd ?= context_data
 			if bd /= Void then      

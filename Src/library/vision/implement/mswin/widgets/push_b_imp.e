@@ -95,7 +95,6 @@ feature {NONE} -- Initialization
 	realize is
 			-- Realize a push_button
 		local
-			menu: MENU_IMP
 			wc: WEL_COMPOSITE_WINDOW
 			mp: MENU_PULL_IMP
 			op: OPT_PULL_IMP

@@ -121,7 +121,6 @@ feature -- Status setting
 	realize is
 			-- Realize the current widget
 		local
-			h,w: INTEGER
 			xpos, ypos: INTEGER
 		do
 			if not exists then

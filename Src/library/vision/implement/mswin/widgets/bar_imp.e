@@ -79,9 +79,6 @@ feature -- Initialization
 		end
 
 	realize is
-		local
-			p: COMPOSITE_IMP
-			wm_shell: WM_SHELL_IMP
 		do
 			if not exists then
 				wel_make

@@ -167,8 +167,6 @@ feature -- Status setting
 
 	process (form : FORM_IMP) is
 			-- Position this attachment
-		local
-			s : STRING
 		do
 			processed := true
 			if left = Void and then right = Void and then top = Void and then bottom = Void then

@@ -260,9 +260,8 @@ feature {NONE} -- Implementation
 			-- Set the enclozing size.
 		local
 			c: ARRAYED_LIST [WIDGET_IMP]
-			i, maxxw, maxyh, tmp, w, h: INTEGER
+			maxxw, maxyh, tmp, w, h: INTEGER
 			current_item: WIDGET_IMP
-			fw: FORM_IMP
 			dw: DIALOG_IMP
 			psw: POPUP_SHELL_IMP
 		do
@@ -313,7 +312,6 @@ feature {NONE} -- Implementation
 		local
 			resize_data: RESIZE_CONTEXT_DATA
 			wa: WIDGET_ACTIONS
-			unresizable: BOOLEAN
 		do
 			if size_type = Size_minimized then
 				wa := unmap_actions.widget_actions (Current)

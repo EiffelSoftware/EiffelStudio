@@ -132,8 +132,6 @@ feature -- Element change
 	unrealize is
 			-- Unrealize current composite and its children.
 		local
-			ww: WIDGET_IMP
-			wp, wi: WIDGET
 			unrealize_list: LIST [WIDGET_IMP]
 		do
 			unrealize_list := children_list
@@ -262,7 +260,7 @@ feature {NONE} -- Implementation
 			-- Set the enclozing size.
 		local
 			c: ARRAYED_LIST [WIDGET_IMP]
-			i, maxxw, maxyh, tmp, w, h: INTEGER
+			maxxw, maxyh, tmp, w, h: INTEGER
 			current_item: WIDGET_IMP
 			a_dialog: DIALOG_IMP
 		do

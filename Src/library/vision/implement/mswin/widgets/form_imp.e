@@ -112,7 +112,6 @@ feature -- Status setting
 			-- Realize current form and children.
 		local
 			h, w: INTEGER
-			shell: SHELL_IMP
 		do
 			if not realized then
 				realize_current

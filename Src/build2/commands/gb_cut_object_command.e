@@ -67,16 +67,26 @@ feature -- Basic operations
 		execute is
 				-- Execute `Current'.
 			local
-				command_delete: GB_COMMAND_DELETE_OBJECT
+				command_delete: GB_DELETE_OBJECT_COMMAND
 				layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 				cut_object: GB_OBJECT
+				selector_item: GB_WINDOW_SELECTOR_ITEM
 			do
-					-- FIXME handle window selector item.
-				layout_item ?= layout_constructor.selected_item
-				cut_object := layout_item.object
+				if layout_constructor.has_focus then
+					layout_item ?= layout_constructor.selected_item
+					cut_object := layout_item.object
+				else
+					selector_item ?= window_selector.selected_window
+					check
+						selected_item_was_object: selector_item /= Void
+					end
+					cut_object := selector_item.object
+				end
 				clipboard.set_object (cut_object)
-				create command_delete.make (cut_object)
-				command_delete.execute
+				
+				create command_delete.make
+				command_delete.delete_object (cut_object)
+				
 				command_handler.update
 			end
 

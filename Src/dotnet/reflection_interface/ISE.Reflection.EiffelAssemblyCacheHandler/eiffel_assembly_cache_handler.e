@@ -150,6 +150,10 @@ feature -- Basic Operations
 			notifier: ISE_REFLECTION_NOTIFIER
 			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
 			retried: BOOLEAN
+			error_code: INTEGER
+		--	reflection_interface: ISE_REFLECTION_REFLECTIONINTERFACE
+			returned_value: INTEGER
+--			message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 		do	
 			if not retried then
 				create reflection_support.make_reflectionsupport
@@ -245,7 +249,23 @@ feature -- Basic Operations
 			retried := True
 			support.createerror (error_messages.Assembly_removal_failed, error_messages.Assembly_removal_failed_message)
 			last_error := support.lasterror
-			retry
+			retried := True
+			support.createerror (error_messages.Assembly_storage_failed, error_messages.Assembly_storage_failed_message)
+			last_error := support.lasterror
+			if not last_removal_successful then
+				error_code := last_error.code
+				if error_code = Has_read_lock_code or error_code = Has_write_lock_code then
+					--returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (Access_violation_error, Error_caption, Abort_retry_ignore_message_box_buttons, Error_icon)
+					--if returned_value = Retry_result then
+					--	retry
+					--elseif returned_value = Ignore then
+					--	create reflection_interface.make_reflectioninterface
+					--	reflection_interface.makereflectioninterface
+					--	reflection_interface.cleanassembly (a_descriptor)
+					--	retry
+					--end						
+				end
+			end
 		end
 	
 	replace_type (an_assembly_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; an_eiffel_class: ISE_REFLECTION_EIFFELCLASS): TYPE_STORER is
@@ -412,6 +432,10 @@ feature {NONE} -- Implementation
 			write_lock: SYSTEM_IO_FILESTREAM
 			retried: BOOLEAN
 			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
+			error_code: INTEGER
+		--	reflection_interface: ISE_REFLECTION_REFLECTIONINTERFACE
+			returned_value: INTEGER
+		--	message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 		do
 			if not retried then
 				check
@@ -468,12 +492,26 @@ feature {NONE} -- Implementation
 						last_write_successful := False
 					end
 				end
+			else
 			end
 		rescue
 			retried := True
 			support.createerror (error_messages.Assembly_storage_failed, error_messages.Assembly_storage_failed_message)
 			last_error := support.lasterror
-			retry
+			if not last_write_successful then
+				error_code := last_error.code
+				--if error_code = Has_read_lock_code or error_code = Has_write_lock_code then
+				--	returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (Access_violation_error, Error_caption, Abort_retry_ignore_message_box_buttons, Error_icon)
+				--	if returned_value = Retry_result then
+				--		retry
+				--	elseif returned_value = Ignore then
+				--		create reflection_interface.make_reflectioninterface
+				--		reflection_interface.makereflectioninterface
+				--		reflection_interface.cleanassemblies
+				--		retry
+				--	end						
+				--end
+			end
 		end			
 
 	update_index is
@@ -709,6 +747,10 @@ feature {NONE} -- Implementation
 			assembly_folder: SYSTEM_IO_DIRECTORYINFO
 			write_lock: SYSTEM_IO_FILESTREAM
 			retried: BOOLEAN
+			error_code: INTEGER
+		--	reflection_interface: ISE_REFLECTION_REFLECTIONINTERFACE
+			returned_value: INTEGER
+		--	message_box: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 		do
 			if not retried then
 				create reflection_support.make_reflectionsupport
@@ -750,7 +792,23 @@ feature {NONE} -- Implementation
 			retried := True
 			support.createerror (error_messages.Type_storage_failed, error_messages.Type_storage_failed_message)
 			last_error := support.lasterror
-			retry
+			retried := True
+			support.createerror (error_messages.Assembly_storage_failed, error_messages.Assembly_storage_failed_message)
+			last_error := support.lasterror
+			if not last_write_successful then
+				error_code := last_error.code
+				if error_code = Has_read_lock_code or error_code = Has_write_lock_code then
+				--	returned_value := message_box.show_string_string_messageboxbuttons_messageboxicon (Access_violation_error, Error_caption, Abort_retry_ignore_message_box_buttons, Error_icon)
+				--	if returned_value = Retry_result then
+				--		retry
+				--	elseif returned_value = Ignore then
+				--		create reflection_interface.make_reflectioninterface
+				--		reflection_interface.makereflectioninterface
+				--		reflection_interface.cleanassembly (an_assembly_descriptor)
+				--		retry
+				--	end						
+				end
+			end
 		end
 
 	assembly_types_from_xml (xml_filename: STRING): SYSTEM_COLLECTIONS_ARRAYLIST is
@@ -824,5 +882,38 @@ feature {NONE} -- Implementation
 			last_error := support.lasterror
 			retry
 		end
-		
+	
+	Retry_result: INTEGER is 4
+		indexing
+			description: "Returned value in case user clicked on `Retry'"
+			external_name: "RetryResult"
+		end
+
+	Error_caption: STRING is "ERROR - ISE Assembly Manager"
+		indexing
+			description: "Caption for error message boxes"
+			external_name: "ErrorCaption"
+		end
+	
+	Error_icon: INTEGER is 16
+		indexing
+			description: "Icon for error message boxes"
+			external_name: "ErrorIcon"
+		end
+
+	Abort_retry_ignore_message_box_buttons: INTEGER is 2
+		indexing
+			description: "Abort/Retry/Ignore message box buttons"
+			external_name: "AbortRetryIgnoreMessageBoxButtons"
+		end
+
+	Access_violation_error: STRING is "[The Eiffel Assembly Cache is currently accessed by another process. Do you want to force access anyway?%N%N%
+						%- Abort: To close this dialog without doing anything.%N%
+						%- Retry: To retry in case the other process has exited.%N%
+						%- Ignore: To ignore the access violation and force access to the Eiffel Assembly Cache.]"
+		indexing
+			description: "Message to the user in case there is a write or read lock in the currently accessed assembly folder"
+			external_name: "AccessViolationError"
+		end
+
 end -- EIFFEL_ASSEMBLY_CACHE_HANDLER

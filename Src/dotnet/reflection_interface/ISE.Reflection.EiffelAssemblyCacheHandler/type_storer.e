@@ -97,6 +97,8 @@ feature -- Basic Operations
 			filename: STRING
 			DTD_path: STRING
 			retried: BOOLEAN
+			notifier: ISE_REFLECTION_NOTIFIER
+			notifier_handle: ISE_REFLECTION_NOTIFIERHANDLE
 		do
 			if not retried then
 				eiffel_class := an_eiffel_class
@@ -139,6 +141,11 @@ feature -- Basic Operations
 						-- </class>
 					text_writer.WriteEndElement
 					text_writer.Close
+					if overwrite then
+						create notifier_handle.make1
+						notifier := notifier_handle.currentnotifier
+						notifier.NotifyReplace		
+					end
 				end
 				eiffel_class := Void
 			end
@@ -229,7 +236,14 @@ feature {NONE} -- Implementation
 			if not retried then
 					-- <header>
 				text_writer.writestartelement (HeaderElement)
-
+					
+					-- <modified>
+				if eiffel_class.modified then
+					text_writer.writeelementstring (ModifiedElement, TrueString)
+				else
+					text_writer.writeelementstring (ModifiedElement, FalseString)				
+				end
+				
 					-- <frozen>
 				if eiffel_class.IsFrozen then
 					text_writer.writeelementstring (FrozenElement, TrueString)
@@ -619,6 +633,13 @@ feature {NONE} -- Implementation
 							-- < feature>
 						text_writer.writestartelement (FeatureElement)
 
+							-- <modified_feature>
+						if a_feature.modified then
+							text_writer.writeelementstring (ModifiedFeatureElement, TrueString)
+						else
+							text_writer.writeelementstring (ModifiedFeatureElement, FalseString)
+						end	
+						
 							-- <frozen>
 						if a_feature.IsFrozen then
 							text_writer.writeelementstring (FrozenFeatureElement, TrueString)

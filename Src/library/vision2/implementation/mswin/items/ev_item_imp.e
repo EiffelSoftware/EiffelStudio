@@ -18,7 +18,7 @@ inherit
 			interface
 		end
 
-	EV_PICK_AND_DROPABLE_IMP
+	EV_PICK_AND_DROPABLE_ITEM_IMP
 		redefine
 			interface
 		end
@@ -53,18 +53,6 @@ feature {EV_PICK_AND_DROPABLE_I} -- Status report
 		end
 
 feature {EV_PICK_AND_DROPABLE_I} -- Implementation
-
-	--pnd_motion (x, y, a_x, a_y: INTEGER) is
-	--		-- Pointer moved over `Current' on position `x', `y'.
-	--		-- Screen coordinates are `a_x', a_y'.
-	--	deferred
-	--	end
-
-	--pnd_press (x, y, button, a_x, a_y: INTEGER) is
-	--		-- Pointer click happened on `Current' on position `x', `y'.
-	--		-- Screen coordinates are `a_x', a_y'.
-	--	deferred
-	--	end
 
 	invalidate is
 			-- Should invalidate the top parent.
@@ -124,6 +112,11 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/04/14 17:34:27  rogers
+--| Inheritance changed from EV_PICK_AND_DROPABLE_IMP to
+--| EV_PICK_AND_dROPABLE_ITEM_IMP. Removed commented pnd_motion
+--| and pnd_press.
+--|
 --| Revision 1.19  2000/04/07 22:31:14  brendel
 --| Revised.
 --|

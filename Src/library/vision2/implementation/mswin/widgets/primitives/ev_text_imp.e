@@ -143,6 +143,16 @@ feature -- Initialization
 
 feature -- Access
 
+	has_word_wrapping: BOOLEAN is
+			-- Is word wrapping enabled?
+			-- If enabled, lines that are too long to be displayed
+			-- in `Current' will be wrapped onto new lines.
+			-- If disabled, a horizontal scroll bar will be displayed
+			-- and lines will not be wrapped.
+		do
+			Result := not flag_set (style, Ws_hscroll)
+		end
+
 	line (i: INTEGER): STRING is
 			-- `Result' is content of the `i'th line.
 		do
@@ -235,6 +245,36 @@ feature -- Status Report
 		end
 	
 feature -- Status Settings
+
+	enable_word_wrapping is
+			-- Ensure `has_word_wrap' is True.
+		local
+			old_text: STRING
+		do
+			old_text := text
+			wel_destroy
+			internal_window_make (wel_parent, "", default_style, 0, 0, 0, 0, 0, default_pointer)
+			set_default_font
+			set_text (old_text)
+			cwin_send_message (wel_item, Em_limittext, 0, 0)
+			show_vertical_scroll_bar
+			parent_imp.notify_change (2 + 1, Current)
+		end
+		
+	disable_word_wrapping is
+			-- Ensure `has_word_wrap' is False.
+		local
+			old_text: STRING
+		do
+			old_text := text
+			wel_destroy
+			internal_window_make (wel_parent, "", default_style + Ws_hscroll, 0, 0, 0, 0, 0, default_pointer)
+			set_default_font
+			set_text (old_text)
+			cwin_send_message (wel_item, Em_limittext, 0, 0)
+			show_vertical_scroll_bar
+			parent_imp.notify_change (2 + 1, Current)
+		end
 
 	append_text (txt: STRING) is
 			-- Append `txt' to end of `text'.

@@ -507,6 +507,10 @@ feature -- Update
 			was_saved: successful and then not
 				error_occurred implies was_saved
 			error_implies: error_occurred implies save_error
+		rescue
+				-- Reset `is_compiling' as if we are here, it means that an internal
+				-- error occurred
+			is_compiling_ref.set_item (False)	
 		end
 
 	quick_melt is
@@ -619,6 +623,8 @@ feature -- Update
 		require
 			able_to_compile: able_to_compile
 			project_is_new: is_new
+		local
+			retried: BOOLEAN
 		do
 			set_error_status (ok_status)
 			Compilation_modes.set_is_precompiling (True)
@@ -638,11 +644,14 @@ feature -- Update
 					manager.on_project_loaded
 				end		
 			end
-			--Compilation_modes.reset_modes
 		ensure
 			was_saved: successful and then not error_occurred implies was_saved
 			error_implies: error_occurred implies save_error
 			successful_implies_freezing_occurred: successful implies freezing_occurred 
+		rescue
+				-- Reset `is_compiling' as if we are here, it means that an internal
+				-- error occurred
+			is_compiling_ref.set_item (False)
 		end
 	
 	finalize_precompile (licensed: BOOLEAN; keep_assertions: BOOLEAN) is

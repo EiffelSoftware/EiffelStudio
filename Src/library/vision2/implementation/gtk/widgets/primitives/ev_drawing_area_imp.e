@@ -183,7 +183,7 @@ feature {NONE} -- Implementation
 
 	destroy is
 		do
-			Precursor
+			Precursor {EV_PRIMITIVE_IMP}
 			C.gdk_gc_unref (gc)
 			gc := NULL
 		end

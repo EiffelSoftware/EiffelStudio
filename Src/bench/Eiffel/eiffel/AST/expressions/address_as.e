@@ -84,6 +84,8 @@ feature -- Type check, byte code and dead code removal
 				id_type := l_typed_ptr
 				Instantiator.dispatch (l_typed_ptr, Context.current_class)
 				Context.typed_pointer_line.insert (id_type)
+			else
+				Instantiator.dispatch (pointer_type, Context.current_class)
 			end
 
 			if access_b.is_external then

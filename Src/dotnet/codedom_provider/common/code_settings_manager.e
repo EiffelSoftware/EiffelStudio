@@ -99,7 +99,6 @@ feature -- Basic Operations
 			-- Set value stored under `a_name' in `registry_path' registry hive
 		require
 			non_void_name: a_name /= Void
-			valid_value: a_value > 0
 		local
 			l_key: REGISTRY_KEY
 		do 

@@ -434,8 +434,8 @@ feature -- Drawing operations
 		do
 			if drawable /= NULL then
 				C.gdk_draw_arc (drawable, gc, 0, x,
-					y, a_width,
-					a_height, 0, whole_circle)
+					y, a_width - 1,
+					a_height - 1, 0, whole_circle)
 			end
 		end
 
@@ -594,7 +594,7 @@ feature {NONE} -- Implementation
 	system_colormap: POINTER is
 			-- Default system color map used for allocating colors.
 		once
-			Result := C.gdk_colormap_get_system
+			Result := C.gdk_rgb_get_cmap
 		end
 
 invariant
@@ -624,6 +624,9 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2001/06/14 20:11:08  king
+--| Fixed the infamous black background problem, fixed ellipse problem
+--|
 --| Revision 1.16  2001/06/14 18:25:10  rogers
 --| Renamed EV_COORDINATES to EV_COORDINATE.
 --|

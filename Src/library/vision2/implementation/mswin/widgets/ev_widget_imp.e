@@ -801,8 +801,8 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 			-- Process key press represented by `virtual_key'.
 		local
 			key: EV_KEY
-			common_dialog_imp: EV_DIALOG_IMP_COMMON
-			l_current: EV_WIDGET_IMP
+			common_dialog_imp: EV_DIALOG_I
+			l_current: EV_WIDGET_I
 		do
 				-- If escape or tab has been pressed then end pick and drop.
 				--| This is to stop the user from ever using Alt + tab
@@ -816,13 +816,13 @@ feature {EV_DIALOG_IMP_COMMON} -- Implementation
 					-- Windows does not seem to generate any messages when a key is
 					-- pressed in a modal or modeless dialog, so if `Current' is parented
 					-- in one of these, we must force the calling of the key_press_actions.
-					-- We also handle the case where `Current' is a dialog, as the escape key is fired
-					-- and we need to ignore it, to avoid the actions being called twice.
+					-- We also handle the case where `Current' is a dialog, as the escape key
+					-- is fired and we need to ignore it, to avoid the actions being called twice.
 				common_dialog_imp ?= top_level_window_imp
 				l_current := Current
 				if common_dialog_imp /= Void and then common_dialog_imp /= l_current then
 					common_dialog_imp.key_press_actions.call ([key])
-				end							
+				end
 				if key_press_actions_internal /= Void then
 					key_press_actions_internal.call ([key])
 				end

@@ -13,10 +13,12 @@ MAKE = nmake
 
 all:: EiffelCompiler.dll ise_runtime.dll
 
-ise_runtime.dll: run-time\ise_runtime.dll
+run-time\ise_runtime.dll:
 	cd run-time
 	$(MAKE) $(NMAKEFLAGS)
 	cd ..
+
+ise_runtime.dll: run-time\ise_runtime.dll
 	$(CP) $? .
 
 EiffelCompiler.dll: $(CORE_SRC) makefile ise_runtime.dll

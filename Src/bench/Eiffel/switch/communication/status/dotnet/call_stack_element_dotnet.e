@@ -96,7 +96,7 @@ feature -- Filling
 
 			object_address := a_address
 			display_object_address := object_address
-			if display_object_address.is_equal ("0x00000000") then
+			if display_object_address = Void or else display_object_address.is_equal ("0x00000000") then
 				display_object_address := "Unavailable"
 			end
 

@@ -27,6 +27,11 @@ inherit
 		end
 		
 	GB_CONSTANTS
+	
+	GB_GENERAL_UTILITIES
+		undefine
+			default_create
+		end
 
 feature -- Access
 
@@ -158,6 +163,7 @@ feature {GB_XML_STORE} -- Output
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
+			escaped_text: STRING
 		do
 			Result := ""
 			full_information := get_unique_full_info (element)
@@ -182,7 +188,8 @@ feature {GB_XML_STORE} -- Output
 			
 			element_info := full_information @ (Title_string)
 			if element_info /= Void then
-				Result := Result + indent + info.name + ".set_title (%"" + element_info.data + "%")"
+				escaped_text := escape_special_characters (element_info.data)
+				Result := Result + indent + info.name + ".set_title (%"" + escaped_text + "%")"
 			end
 
 			Result := strip_leading_indent (Result)

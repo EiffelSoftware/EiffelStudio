@@ -31,6 +31,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	GB_GENERAL_UTILITIES
+		undefine
+			default_create
+		end
 
 feature -- Access
 
@@ -104,12 +109,14 @@ feature {GB_CODE_GENERATOR} -- Output
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
+			escaped_text: STRING
 		do
 			Result := ""
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (text_string)
 			if element_info /= Void and then element_info.data.count /= 0 then
-				Result := info.name + ".set_text (%"" + element_info.data + "%")"
+				escaped_text := escape_special_characters (element_info.data)
+				Result := info.name + ".set_text (%"" + escaped_text + "%")"
 			end
 			Result := strip_leading_indent (Result)
 		end

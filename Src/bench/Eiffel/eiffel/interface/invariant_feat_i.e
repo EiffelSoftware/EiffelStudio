@@ -36,7 +36,7 @@ feature -- IL code generation
 			byte_context.set_byte_code (create {STD_BYTE_CODE})
 			byte_context.set_current_feature (Current)
 			byte_code.generate_il
-			byte_context.clear_all
+			byte_context.clear_feature_data
 		end
 
 feature -- Byte Code generation

@@ -1111,7 +1111,7 @@ feature -- IL code generation
 				byte_context.set_byte_code (byte_code)
 				byte_context.set_current_feature (Current)
 				byte_code.generate_il
-				byte_context.clear_all
+				byte_context.clear_feature_data
 			end
 		end
 
@@ -1167,7 +1167,7 @@ feature -- Byte code computation
 			Byte_array.clear
 			byte_code.set_real_body_id (real_body_id)
 			byte_code.make_byte_code (Byte_array)
-			byte_context.clear_all
+			byte_context.clear_feature_data
 
 			melted_feature := Byte_array.melted_feature
 			melted_feature.set_real_body_id (exec.real_body_id)
@@ -2036,7 +2036,7 @@ feature -- C code generation
 				byte_code.analyze
 				byte_code.set_real_body_id (real_body_id)
 				byte_code.generate
-				byte_context.clear_all
+				byte_context.clear_feature_data
 
 			else
 				System.removed_log_file.add (class_type, feature_name)

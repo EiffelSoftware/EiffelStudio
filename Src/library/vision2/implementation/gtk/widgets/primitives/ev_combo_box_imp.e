@@ -56,9 +56,7 @@ inherit
 			selected,
 			clear_items,
 			add_selection_command,
-			add_double_click_selection_command,
 			remove_selection_commands,
-			remove_double_click_selection_commands,
 			add_item,
 			remove_item
 		end
@@ -115,8 +113,7 @@ feature -- Access
 feature -- Measurement
 
 	extended_height: INTEGER is
-			-- height of the combo-box when the children are
-			-- visible.
+			-- height of the combo-box when the list is shown
 		do
 		end
 
@@ -147,7 +144,7 @@ feature -- Status setting
 		local
 			a: ANY
 		do
-			a ?= txt.to_c
+			a := txt.to_c
 			gtk_entry_set_text (entry_widget, $a)
 		end
 	
@@ -155,7 +152,7 @@ feature -- Status setting
 		local
 			a: ANY
 		do
-			a ?= txt.to_c
+			a := txt.to_c
 			gtk_entry_append_text (entry_widget, $a)
 		end
 	
@@ -163,7 +160,7 @@ feature -- Status setting
 		local
 			a: ANY
 		do
-			a ?= txt.to_c
+			a := txt.to_c
 			gtk_entry_prepend_text (entry_widget, $a)
 		end
 	
@@ -205,18 +202,19 @@ feature -- Event : command association
 			widget := p
 		end
 
-	add_double_click_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is
-			-- Make `command' executed when an item is
-			-- selected.
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
+-- can't be implemented in GTK and Windows
+--	add_double_click_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is
+--			-- Make `command' executed when an item is
+--			-- selected.
+--		do
+--			check
+--				not_yet_implemented: False
+--			end
+--		end
 
 	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be
-			-- executed when the button is pressed
+			-- executed when the "Return" button is pressed
 		local
 			p: POINTER
 		do
@@ -243,30 +241,45 @@ feature -- Event -- removing command association
 	remove_selection_commands is	
 			-- Empty the list of commands to be executed
 			-- when the selection has changed.
+		local
+			p: POINTER
 		do
-			check False end
+			p := widget
+			widget := list_widget
+			remove_commands (selection_changed_id)
+			widget := p
 		end
 
-	remove_double_click_selection_commands is	
-			-- Empty the list of commands to be executed
-			-- when the selection has changed.
-		do
-			check False end
-		end
+--	remove_double_click_selection_commands is	
+--			-- Empty the list of commands to be executed
+--			-- when the selection has changed.
+--		do
+--			check False end
+--		end
 
 	remove_activate_commands is
 			-- Empty the list of commands to be executed
 			-- when the text field is activated, ie when the user
 			-- press the enter key.
+		local
+			p: POINTER
 		do
-			check False end
+			p := widget
+			widget := entry_widget
+			remove_commands (activate_id)
+			widget := p
 		end
 
 	remove_change_commands is
 			-- Empty the list of commands to be executed
 			-- when the text of the widget have changed.
+		local
+			p: POINTER
 		do
-			check False end
+			p := widget
+			widget := entry_widget
+			remove_commands (changed_id)
+			widget := p
 		end
 
 feature {EV_LIST_ITEM} -- Implementation
@@ -277,7 +290,7 @@ feature {EV_LIST_ITEM} -- Implementation
 			s: ANY
 		do
 			ev_children.extend (item_imp)
-			s ?= item_imp.text.to_c
+			s := item_imp.text.to_c
 			gtk_combo_set_item_string (widget, item_imp.widget, $s)
 			gtk_container_add (list_widget, item_imp.widget)
 		end

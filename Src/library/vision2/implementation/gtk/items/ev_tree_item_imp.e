@@ -181,6 +181,7 @@ feature {NONE} -- Implementation
 			item_subtree: POINTER
 		do
 			item_imp ?= v.implementation
+			item_imp.set_parent_imp (Current)
 			C.gtk_widget_show (item_imp.c_object)
 			item_subtree := C.gtk_tree_item_struct_subtree (c_object)
 
@@ -218,7 +219,11 @@ feature {NONE} -- Implementation
 
 	remove_item_from_position (a_position: INTEGER) is
 			-- Remove item at `a_position'
+		local
+			item_imp: EV_TREE_ITEM_IMP
 		do	
+			item_imp ?= interface.i_th (a_position).implementation
+			item_imp.set_parent_imp (Void)
 			--| FIXME Add code for dealing with subtree.
 			Precursor (a_position)
 		end
@@ -321,6 +326,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.46  2000/03/08 22:21:41  king
+--| Added set_parent_imp in addition/removal
+--|
 --| Revision 1.45  2000/03/01 23:41:57  king
 --| Corrected select_callback, check falsed set_selection
 --|

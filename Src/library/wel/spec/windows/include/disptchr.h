@@ -57,11 +57,19 @@ BOOL CALLBACK cwel_dialog_procedure (HWND, UINT, WPARAM, LPARAM);
 
 	extern void wel_set_dispatcher_object(EIF_OBJ _addr_);
 #	define cwel_set_dispatcher_object(_addr_) wel_set_dispatcher_object(_addr_) 
-		/* Set `dispather' with `addr' */
+		/* Set `dispather' with `eif_adopt (addr)' */
 
 	extern void wel_release_dispatcher_object();
 #	define cwel_release_dispatcher_object wel_release_dispatcher_object()  
-		/* Set `dispather' with `addr' */
+		/* Release `dispatcher' object. */
+
+	extern void wel_set_dispatcher_pointer (EIF_POINTER);
+#	define cwel_set_dispatcher_pointer(_addr_) wel_set_dispatcher_pointer (_addr_)
+		/* Set `dispatcher' with `addr'. */
+
+	extern EIF_POINTER wel_dispatcher_pointer ();
+#	define cwel_dispatcher_pointer wel_dispatcher_pointer()
+		/* Get `dispatcher' address. */
 
 #else
 
@@ -70,9 +78,13 @@ BOOL CALLBACK cwel_dialog_procedure (HWND, UINT, WPARAM, LPARAM);
 #	define cwel_set_dialog_procedure_address(_addr_) (wel_dlgproc = (EIF_DLGPROC) _addr_)
 		/* Set `wel_dlgproc' with `addr' */
 #	define cwel_set_dispatcher_object(_addr_) (dispatcher = (EIF_OBJ) eif_adopt (_addr_))
-		/* Set `dispather' with `addr' */
+		/* Set `dispather' with `eif_adopt (addr)' */
 #	define cwel_release_dispatcher_object (eif_wean (dispatcher)) 
-		/* Set `dispather' with `addr' */
+		/* Release `dispatcher' object. */
+#	define cwel_set_dispatcher_pointer(_addr_) (dispatcher = (_addr_))
+		/* Set `dispatcher' with `addr'. */
+#	define cwel_dispatcher_pointer ((EIF_POINTER) dispatcher)
+		/* Get `dispatcher' address. */
 
 #endif
 

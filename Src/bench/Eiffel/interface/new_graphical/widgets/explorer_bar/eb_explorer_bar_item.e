@@ -59,6 +59,7 @@ feature {NONE} -- Initialization
 			widget := a_widget
 			is_visible := False
 			menu_name := "Explorer bar item"
+			create show_actions
 
 				-- Build the header
 			build_header (a_widget, a_title)
@@ -89,6 +90,9 @@ feature -- Access
 		do
 			Result := parent.explorer_bar_manager
 		end
+
+	show_actions: EV_NOTIFY_ACTION_SEQUENCE
+			-- Actions called when the item becomes visible.
 
 feature -- Status Report
 
@@ -162,7 +166,10 @@ feature -- Status Setting
 		local
 			selectable_command: EB_SELECTABLE
 		do
-			is_visible := True
+			if not is_visible then
+				is_visible := True
+				show_actions.call ([])
+			end
 			rebuild_system_toolbar
 
 			selectable_command ?= associated_command

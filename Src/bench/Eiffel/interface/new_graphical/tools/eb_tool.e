@@ -148,6 +148,19 @@ feature {NONE} -- Implementation
 			explorer_bar_item.set_parent (a_bar)
 		end
 
+	on_bar_item_shown is
+			-- The explorer bar item is now displayed.
+			-- Call `on_shown' if necessary.
+		do
+			on_shown
+		end
+		
+
+	on_shown is
+			-- Perform update actions when the tool is displayed.
+		do
+		end
+
 feature -- Obsolete
 
 	icon_name: STRING is

@@ -30,11 +30,6 @@ inherit
 			copy, is_equal
 		end
 
-	SHARED_TEXT_ITEMS
-		redefine
-			copy, is_equal
-		end
-
 create {COMPILER_EXPORTER}
 	make
 

@@ -42,7 +42,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	frozen contains (value: STRING): BOOLEAN is
+	frozen has (value: STRING): BOOLEAN is
 		external
 			"IL signature (System.String): System.Boolean use System.Drawing.Design.CategoryNameCollection"
 		alias

@@ -33,7 +33,7 @@ feature -- Access
 
 feature -- Basic Operations
 
-	frozen contains (value: SYSTEM_WINDOWS_FORMS_INPUTLANGUAGE): BOOLEAN is
+	frozen has (value: SYSTEM_WINDOWS_FORMS_INPUTLANGUAGE): BOOLEAN is
 		external
 			"IL signature (System.Windows.Forms.InputLanguage): System.Boolean use System.Windows.Forms.InputLanguageCollection"
 		alias

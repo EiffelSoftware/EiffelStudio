@@ -108,7 +108,7 @@ feature -- Basic Operations
 			"Sort"
 		end
 
-	frozen add (value: SYSTEM_COMPONENTMODEL_EVENTDESCRIPTOR): INTEGER is
+	frozen extend (value: SYSTEM_COMPONENTMODEL_EVENTDESCRIPTOR): INTEGER is
 		external
 			"IL signature (System.ComponentModel.EventDescriptor): System.Int32 use System.ComponentModel.EventDescriptorCollection"
 		alias
@@ -143,14 +143,14 @@ feature -- Basic Operations
 			"Sort"
 		end
 
-	frozen contains (value: SYSTEM_COMPONENTMODEL_EVENTDESCRIPTOR): BOOLEAN is
+	frozen has (value: SYSTEM_COMPONENTMODEL_EVENTDESCRIPTOR): BOOLEAN is
 		external
 			"IL signature (System.ComponentModel.EventDescriptor): System.Boolean use System.ComponentModel.EventDescriptorCollection"
 		alias
 			"Contains"
 		end
 
-	frozen remove_at (index: INTEGER) is
+	frozen prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.ComponentModel.EventDescriptorCollection"
 		alias

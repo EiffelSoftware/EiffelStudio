@@ -78,7 +78,7 @@ feature -- Element Change
 			"set_Item"
 		end
 
-	set_item (table: SYSTEM_DATA_DATATABLE; value: SYSTEM_DATA_DATAVIEWSETTING) is
+	put_i_th (table: SYSTEM_DATA_DATATABLE; value: SYSTEM_DATA_DATAVIEWSETTING) is
 		external
 			"IL signature (System.Data.DataTable, System.Data.DataViewSetting): System.Void use System.Data.DataViewSettingCollection"
 		alias

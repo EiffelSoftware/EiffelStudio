@@ -9,9 +9,9 @@ inherit
 	SYSTEM_COLLECTIONS_IENUMERABLE
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			copy_to as system_collections_icollection_copy_to
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_sync_root as icollection_get_sync_root,
+			copy_to as icollection_copy_to
 		end
 	SYSTEM_RUNTIME_SERIALIZATION_ISERIALIZABLE
 	SYSTEM_RUNTIME_SERIALIZATION_IDESERIALIZATIONCALLBACK
@@ -82,7 +82,7 @@ feature -- Access
 
 feature -- Element Change
 
-	frozen set_item (name: STRING; value: STRING) is
+	frozen put_i_th (name: STRING; value: STRING) is
 		external
 			"IL signature (System.String, System.String): System.Void use System.Collections.Specialized.NameValueCollection"
 		alias
@@ -154,7 +154,7 @@ feature -- Basic Operations
 			"Get"
 		end
 
-	frozen add (c: SYSTEM_COLLECTIONS_SPECIALIZED_NAMEVALUECOLLECTION) is
+	frozen extend (c: SYSTEM_COLLECTIONS_SPECIALIZED_NAMEVALUECOLLECTION) is
 		external
 			"IL signature (System.Collections.Specialized.NameValueCollection): System.Void use System.Collections.Specialized.NameValueCollection"
 		alias

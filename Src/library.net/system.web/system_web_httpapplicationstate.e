@@ -9,9 +9,9 @@ inherit
 	SYSTEM_COLLECTIONS_IENUMERABLE
 	SYSTEM_COLLECTIONS_ICOLLECTION
 		rename
-			get_is_synchronized as system_collections_icollection_get_is_synchronized,
-			get_sync_root as system_collections_icollection_get_sync_root,
-			copy_to as system_collections_icollection_copy_to
+			get_is_synchronized as icollection_get_is_synchronized,
+			get_sync_root as icollection_get_sync_root,
+			copy_to as icollection_copy_to
 		end
 	SYSTEM_RUNTIME_SERIALIZATION_ISERIALIZABLE
 	SYSTEM_RUNTIME_SERIALIZATION_IDESERIALIZATIONCALLBACK
@@ -68,7 +68,7 @@ feature -- Access
 
 feature -- Element Change
 
-	frozen set_item (name: STRING; value: ANY) is
+	frozen put_i_th (name: STRING; value: ANY) is
 		external
 			"IL signature (System.String, System.Object): System.Void use System.Web.HttpApplicationState"
 		alias
@@ -119,7 +119,7 @@ feature -- Basic Operations
 			"UnLock"
 		end
 
-	frozen add (name: STRING; value: ANY) is
+	frozen extend (name: STRING; value: ANY) is
 		external
 			"IL signature (System.String, System.Object): System.Void use System.Web.HttpApplicationState"
 		alias
@@ -147,7 +147,7 @@ feature -- Basic Operations
 			"Lock"
 		end
 
-	frozen remove_at (index: INTEGER) is
+	frozen prune_i_th (index: INTEGER) is
 		external
 			"IL signature (System.Int32): System.Void use System.Web.HttpApplicationState"
 		alias

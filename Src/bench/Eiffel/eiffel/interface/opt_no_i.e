@@ -1,7 +1,7 @@
-class OPT_NO_I 
+class
+	OPT_NO_I 
 
 inherit
-
 	OPTIMIZE_I
 		redefine
 			is_no
@@ -9,10 +9,7 @@ inherit
 	
 feature 
 
-	is_no: BOOLEAN is
+	is_no: BOOLEAN is True
 			-- Is the option `no' ?
-		do
-			Result := True;
-		end;
 
 end

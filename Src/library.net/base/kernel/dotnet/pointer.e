@@ -7,93 +7,37 @@ frozen expanded external class
 	POINTER
 
 inherit
-	VALUE_TYPE
-		undefine
-			finalize,
-			get_hash_code,
-			equals,
-			to_string
-		end
-	ISERIALIZABLE
-		rename
-			get_object_data as system_runtime_serialization_iserializable_get_object_data
-		undefine
-			get_hash_code,
-			equals,
-			to_string
-		end
-
 	POINTER_REF
 
-create {NONE}
+create
+	default_create,
+	make_from_reference
 
-feature -- Initialization
+convert
+	make_from_reference ({reference POINTER}),
+	to_reference: {reference POINTER}
 
-	frozen make_pointer_1 (value: INTEGER_64) is
-		external
-			"IL creator signature (System.Int64) use System.IntPtr"
+feature {NONE} -- Initialization
+
+	make_from_reference (v: reference POINTER) is
+			-- Initialize `Current' with `v.item'.
+		require
+			v_not_void: v /= Void
+		do
+			item := v.item
+		ensure
+			item_set: item = v.item	
 		end
 
-	frozen make_pointer (value: INTEGER) is
-		external
-			"IL creator signature (System.Int32) use System.IntPtr"
-		end
+feature -- Conversion
 
-feature -- Access
-
-	frozen zero: POINTER is
-		external
-			"IL static_field signature :System.IntPtr use System.IntPtr"
-		alias
-			"Zero"
-		end
-
-	frozen get_size: INTEGER is
-		external
-			"IL static signature (): System.Int32 use System.IntPtr"
-		alias
-			"get_Size"
-		end
-
-feature -- Basic Operations
-
-	frozen to_int64: INTEGER_64 is
-		external
-			"IL signature (): System.Int64 use System.IntPtr"
-		alias
-			"ToInt64"
-		end
-
-	frozen to_int32: INTEGER is
-		external
-			"IL signature (): System.Int32 use System.IntPtr"
-		alias
-			"ToInt32"
-		end
-
-feature -- Specials
-
-	frozen from_integer (value: INTEGER): POINTER is
-		external
-			"IL static signature (System.Int32): System.IntPtr use System.IntPtr"
-		alias
-			"op_Explicit"
-		end
-
-	frozen from_integer_64 (value: INTEGER_64): POINTER is
-		external
-			"IL static signature (System.Int64): System.IntPtr use System.IntPtr"
-		alias
-			"op_Explicit"
-		end
-
-feature {NONE} -- Implementation
-
-	frozen system_runtime_serialization_iserializable_get_object_data (info: SERIALIZATION_INFO; context: STREAMING_CONTEXT) is
-		external
-			"IL signature (System.Runtime.Serialization.SerializationInfo, System.Runtime.Serialization.StreamingContext): System.Void use System.IntPtr"
-		alias
-			"System.Runtime.Serialization.ISerializable.GetObjectData"
+	to_reference: reference POINTER is
+			-- Associated reference of Current
+		do
+			create Result
+			Result.set_item (item)
+		ensure
+			to_reference_not_void: Result /= Void
 		end
 
 end -- class POINTER

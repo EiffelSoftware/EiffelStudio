@@ -800,7 +800,7 @@ feature -- Status setting
 			format_index: INTEGER
 			counter: INTEGER
 			character: CHARACTER
-			format_underlined, format_striked: BOOLEAN
+			format_underlined, format_striked, format_bold, format_italic: BOOLEAN
 		do
 			if not buffer_locked_in_append_mode then
 				start_formats.clear_all
@@ -815,6 +815,8 @@ feature -- Status setting
 				format_offsets.clear_all
 				is_current_format_underlined := False
 				is_current_format_striked_through := False
+				is_current_format_bold := False
+				is_current_format_italic := False
 			end
 			hashed_character_format := format.hash_value
 			if not hashed_formats.has (hashed_character_format) then
@@ -842,6 +844,23 @@ feature -- Status setting
 				temp_string.append ("\strikenone")
 				is_current_format_striked_through := False
 			end
+			format_bold := formats.i_th (format_index).font.weight = feature {EV_FONT_CONSTANTS}.weight_bold
+			if not is_current_format_bold and format_bold then
+				temp_string.append ("\b")
+				is_current_format_bold := True
+			elseif is_current_format_bold and not format_bold then
+				temp_string.append ("\b0")
+				is_current_format_bold := False
+			end
+			format_italic := formats.i_th (format_index).font.shape = feature {EV_FONT_CONSTANTS}.shape_italic
+			if not is_current_format_italic and format_italic then
+				temp_string.append ("\i")
+				is_current_format_italic := True
+			elseif is_current_format_italic and not format_italic then
+				temp_string.append ("\i0")
+				is_current_format_italic := False
+			end
+			
 			temp_string.append ("\f")
 			temp_string.append (format_index.out)
 			temp_string.append ("\fs")
@@ -911,7 +930,7 @@ feature -- Status setting
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
 			temp_string, font_text, color_text, default_font_format: STRING
 			a_color: EV_COLOR
-			format_underlined, format_striked: BOOLEAN
+			format_underlined, format_striked, format_bold, format_italic: BOOLEAN
 		do
 				-- Store original caret position.
 			original_position := caret_position
@@ -1006,6 +1025,23 @@ feature -- Status setting
 							temp_string.append ("\strikenone")
 							is_current_format_striked_through := False
 						end
+						format_bold := formats.i_th (format_index).font.weight = feature {EV_FONT_CONSTANTS}.weight_bold
+						if not is_current_format_bold and format_bold then
+							temp_string.append ("\b")
+							is_current_format_bold := True
+						elseif is_current_format_bold and not format_bold then
+							temp_string.append ("\b0")
+							is_current_format_bold := False
+						end						
+						format_italic := formats.i_th (format_index).font.shape = feature {EV_FONT_CONSTANTS}.shape_italic
+						if not is_current_format_italic and format_italic then
+							temp_string.append ("\i")
+							is_current_format_italic := True
+						elseif is_current_format_italic and not format_italic then
+							temp_string.append ("\i0")
+							is_current_format_italic := False
+						end
+
 						temp_string.append ("\f")
 						temp_string.append (format_index.out)
 						temp_string.append ("\fs")
@@ -1409,6 +1445,8 @@ feature {NONE} -- Implementation
 
 	is_current_format_underlined: BOOLEAN
 	is_current_format_striked_through: BOOLEAN
+	is_current_format_bold: BOOLEAN
+	is_current_format_italic: BOOLEAN
 
 	default_string_size: INTEGER is 50000
 		-- Default size used for all internal strings for buffering.

@@ -753,7 +753,7 @@ feature -- IL code generation
 							end
 							rout_locals.forth
 						else
-							il_generator.put_nameless_local_info (local_list.item, i)
+							il_generator.put_dummy_local_info (local_list.item, i)
 							i := i + 1
 							local_list.forth
 						end
@@ -764,9 +764,7 @@ feature -- IL code generation
 						-- using no debug information.
 					debug_generation := False
 				end
-			end
-
-			if not debug_generation then
+			else
 					-- Generation of local variable without debug information
 				from
 					local_list.start

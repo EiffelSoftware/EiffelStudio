@@ -25,7 +25,7 @@ feature {NONE}
 
 	symbol: PIXMAP is
 		do
-			Result := Pixmaps.behavior_pixmap_small
+			Result := Pixmaps.behavior_pixmap
 		end;
 
 	help_file_name: STRING is

@@ -278,7 +278,7 @@ feature {NONE} -- Contract support
 			from
 				start
 			until
-				after or Result = False
+				off or Result = False
 			loop
 				if item.parent /= Current then
 					Result := False
@@ -301,7 +301,7 @@ feature {NONE} -- Contract support
 			from
 				start
 			until
-				after or Result = False
+				off or Result = False
 			loop
 				if l.has (item) then
 					Result := False
@@ -345,6 +345,9 @@ end -- class EV_WIDGET_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/03/02 20:09:05  brendel
+--| Fixed minor bug in contract support features.
+--|
 --| Revision 1.8  2000/03/02 19:47:08  brendel
 --| Added redefinition of `merge_left' and `merge_right', because the
 --| original implementation removes the items explicitly and our versions

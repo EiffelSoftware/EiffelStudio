@@ -288,7 +288,7 @@ feature -- Execution
 						destroy
 					end
 				else
-					ebench_name := clone ((create {EIFFEL_ENV}).Estudio_command_name)
+					ebench_name := (create {EIFFEL_ENV}).Estudio_command_name.twin
 					ebench_name.append (" -create %"")
 					ebench_name.append (directory_name)
 					ebench_name.append ("%" -ace %"")
@@ -577,7 +577,7 @@ feature {NONE} -- Implementation
 				Eiffel_projects_directory /= Void and then
 				not Eiffel_projects_directory.is_empty
 			then
-				project_location := clone (Eiffel_projects_directory)
+				project_location := Eiffel_projects_directory.twin
 			else
 				if Platform_constants.is_windows then
 					project_location := Default_project_location_for_windows

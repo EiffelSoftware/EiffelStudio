@@ -245,8 +245,7 @@ feature -- Basic operations
 			if not cluster_preset then
 				cluster := target_cluster
 			end
-			str := clone (class_n)
-			str.to_upper
+			str := class_n.as_upper
 			class_entry.set_text (str)	
 			clus_list := Eiffel_universe.clusters_sorted_by_tag
 			if not clus_list.is_empty then
@@ -351,8 +350,7 @@ feature {NONE} -- Implementation
 	class_name: STRING is
 			-- Name of the class entered by the user.
 		do
-			Result := clone (class_entry.text)
-			Result.to_lower
+			Result := class_entry.text.as_lower
 		end
 
 	file_name: FILE_NAME is
@@ -516,7 +514,7 @@ feature {NONE} -- Implementation
 			tmp: STRING
 		do
 			if not retried then
-				clf := clone (Templates_path)
+				clf := Templates_path.twin
 				if not empty_check.is_selected then
 					clf.set_file_name ("empty")
 				else

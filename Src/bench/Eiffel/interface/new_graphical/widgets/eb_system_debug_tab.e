@@ -10,10 +10,12 @@ inherit
 	EV_VERTICAL_BOX
 
 	EB_SYSTEM_TAB
+		rename
+			make as tab_make
 		undefine
 			default_create, is_equal, copy
 		redefine
-			reset, make
+			reset
 		end
 
 	EIFFEL_ENV
@@ -80,12 +82,17 @@ feature -- Code generation access
 
 feature -- Execution option access
 
-	working_directory: EV_TEXT_FIELD
+	working_directory: EV_PATH_FIELD
 			-- Directory from where user wants to launch its application.
 
 	arguments: EV_COMBO_BOX
 			-- List of all arguments that can be given to current program execution.
 			-- Selected one is active.
+
+feature -- Parent access
+
+	system_window: EB_SYSTEM_WINDOW
+			-- Graphical parent of Current.
 
 feature -- Store/Retrieve
 
@@ -117,7 +124,7 @@ feature -- Store/Retrieve
 				defaults.extend (new_trace_option_sd (trace_check.is_selected))
 			end
 
-			wd := working_directory.text
+			wd := working_directory.path
 			if wd /= Void then
 				defaults.extend (new_special_option_sd ("working_directory", wd, True))
 			end
@@ -267,7 +274,7 @@ feature {NONE} -- Filling GUI
 					set_selected (line_generation, val.is_yes)
 
 				elseif free_option.code = free_option.working_directory then
-					working_directory.set_text (val.value)
+					working_directory.set_path (val.value)
 
 				elseif free_option.code = free_option.profile then
 					set_selected (profile_check, val.is_yes)
@@ -432,16 +439,19 @@ feature -- Initialization
 			disable_select (line_generation)
 			disable_select (profile_check)
 			disable_select (trace_check)
-			working_directory.remove_text
+			working_directory.remove_path
 		end
 
 feature {NONE} -- Graphical initialization
 
-	make is
+	make (top: like system_window) is
 			-- Create widget corresponding to `General' tab in notebook.
 		do
-			Precursor {EB_SYSTEM_TAB}
+			system_window := top
+
+			tab_make
 			default_create
+
 			set_border_width (Layout_constants.Small_border_size)
 			set_padding (Layout_constants.Small_padding_size)
 
@@ -488,27 +498,14 @@ feature {NONE} -- Graphical initialization
 			hbox: EV_HORIZONTAL_BOX
 			label: EV_LABEL
 			item_box: EV_VERTICAL_BOX
-			button: EV_BUTTON
 		do
 			create Result.make_with_text (st)
 			create vbox
 			vbox.set_border_width (Layout_constants.Small_border_size)
 			vbox.set_padding (Layout_constants.Small_padding_size)
 
-			create label.make_with_text ("Working directory: ")
-			label.align_text_left
-			create working_directory
-			create hbox
-			hbox.set_padding (Layout_constants.Small_padding_size)
-			hbox.extend (working_directory)
-			create button.make_with_text_and_action (Interface_names.b_Browse, ~browse_directory)
-			hbox.extend (button)
-			hbox.disable_item_expand (button)
-			create item_box
-			item_box.set_padding (Default_item_padding)
-			item_box.extend (label)
-			item_box.extend (hbox)
-			vbox.extend (item_box)
+			create working_directory.make_with_text_and_parent ("Working direcgory: ", system_window.window)
+			vbox.extend (working_directory)
 
 			create label.make_with_text ("Program arguments: ")
 			label.align_text_left
@@ -727,30 +724,6 @@ feature {NONE} -- Action
 				a_row.replace (enabled_text)
 			else
 				a_row.replace (disabled_text)
-			end
-		end
-
-	browse_directory is
-			-- Popup a "select directory" dialog.
-		local
-			dd: EV_DIRECTORY_DIALOG
-			start_directory: STRING
-		do
-			create dd
-			dd.set_title (Interface_names.t_Select_a_directory)
-			if working_directory /= Void then
-				start_directory := working_directory.text
-				if
-					start_directory /= Void and then
-					not start_directory.is_empty and then
-					(create {DIRECTORY}.make (start_directory)).exists
-				then
-					dd.set_start_directory(start_directory)
-				end
-			end
-			dd.show_modal_to_window (window_manager.last_focused_window.window)
-			if dd.directory /= Void and then not dd.directory.is_empty then
-				working_directory.set_text (dd.directory)
 			end
 		end
 

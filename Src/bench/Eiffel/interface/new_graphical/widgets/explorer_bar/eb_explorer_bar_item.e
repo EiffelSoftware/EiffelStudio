@@ -23,6 +23,10 @@ feature {NONE} -- Initialization
 
 	make (a_parent: EB_EXPLORER_BAR; a_widget: EV_WIDGET; a_title: STRING; closeable: BOOLEAN) is
 			-- Initialization
+		require
+			parent_not_void: a_parent /= Void
+			widget_not_void: a_widget /= Void
+			title_not_void: a_title /= Void
 		do
 			is_closeable := closeable
 			is_maximizable := True
@@ -35,16 +39,28 @@ feature {NONE} -- Initialization
 		a_title: STRING; closeable: BOOLEAN;
 		a_mini_toolbar: EV_TOOL_BAR) is
 			-- Initialization
+		require
+			parent_not_void: a_parent /= Void
+			widget_not_void: a_widget /= Void
+			title_not_void: a_title /= Void
+			mini_toolbar_not_void: a_mini_toolbar /= Void
 		do
 			mini_toolbar := a_mini_toolbar
 			make (a_parent, a_widget, a_title, closeable)
 		end
 
 	make_with_info (
-		a_parent: EB_EXPLORER_BAR; a_widget: EV_WIDGET;
-		a_title: STRING; closeable: BOOLEAN;
-		info: EV_HORIZONTAL_BOX; a_mini_toolbar: EV_TOOL_BAR) is
-			-- Initialization
+			a_parent: EB_EXPLORER_BAR; a_widget: EV_WIDGET;
+			a_title: STRING; closeable: BOOLEAN;
+			info: EV_HORIZONTAL_BOX; a_mini_toolbar: EV_TOOL_BAR)
+		is
+				-- Initialization
+		require
+			parent_not_void: a_parent /= Void
+			widget_not_void: a_widget /= Void
+			title_not_void: a_title /= Void
+			info_not_void: info /= Void
+			mini_toolbar_not_void: a_mini_toolbar /= Void
 		do
 			mini_toolbar := a_mini_toolbar
 			header_addon := info
@@ -53,16 +69,24 @@ feature {NONE} -- Initialization
 
 	generic_make (a_parent: EB_EXPLORER_BAR; a_widget: EV_WIDGET; a_title: STRING) is
 			-- Generic Initialization
+		require
+			a_parent_not_void: a_parent /= Void
+			a_widget_not_void: a_widget /= Void
+			a_title_not_void: a_title /= Void
 		do
 				-- Set the attributes
 			parent := a_parent
 			widget := a_widget
 			is_visible := False
 			menu_name := "Explorer bar item"
+			title := a_title
 			create show_actions
 
-				-- Build the header
-			build_header (a_widget, a_title)
+				-- Connect actions required to update `Current' which its state
+				-- has been changed in `parent'.
+			parent.minimize_actions.extend (agent internal_set_minimized_wrapper)
+			parent.maximize_actions.extend (agent internal_set_maximized_wrapper)
+			parent.restore_actions.extend (agent internal_set_restored_wrapper)
 		end
 
 feature -- Access
@@ -81,6 +105,9 @@ feature -- Access
 
 	menu_name: STRING
 			-- Name as it appears in menus.
+			
+	title: STRING
+			-- Name as displayed in tools.
 
 	parent: EB_EXPLORER_BAR
 		-- Associated outlook bar.
@@ -152,31 +179,157 @@ feature -- Status Setting
 		local
 			selectable_command: EB_SELECTABLE
 		do
+			if is_visible then
+				parent.remove (widget)	
+			end
 			is_visible := False
 			is_maximized := False
+			is_minimized := False
 			selectable_command ?= associated_command
 			if selectable_command /= Void then
 				selectable_command.disable_selected
 			end
+			if mini_toolbar /= Void and then mini_toolbar.parent /= Void then
+				mini_toolbar.parent.prune_all (mini_toolbar)
+			end
 			parent.on_item_hidden (Current)
 		end
+		
+	show_external (an_x, a_y, a_width, a_height: INTEGER) is
+			--
+		local
+			selectable_command: EB_SELECTABLE
+		do
+			is_visible := True
+			is_maximized := False
+			is_minimized := False
+			parent.add_external (widget, parent.explorer_bar_manager.window, title, 1, an_x, a_y, a_width, a_height)
+			parent.docked_external (widget)
+			
+			if is_closeable then
+					parent.enable_close_button (widget)
+					parent.close_actions.extend (agent close_wrapper)
+				else
+					parent.enable_close_button_as_grayed (widget)
+				end
+				if mini_toolbar /= Void then
+						-- As the tools are added and removed from the toolbar frequently,
+						-- `minimi_toolbar' may be parented, so must be unparented.
+					if mini_toolbar.parent /= Void then
+						mini_toolbar.parent.prune_all (mini_toolbar)
+					end
+					parent.customizeable_area_of_widget (widget).extend (mini_toolbar)
+					parent.customizeable_area_of_widget (widget).disable_item_expand (mini_toolbar)
+				end
+				if header_addon /= Void then
+					parent.customizeable_area_of_widget (widget).extend (header_addon)
+			end
+			
+			selectable_command ?= associated_command
+			if selectable_command /= Void then
+				selectable_command.enable_selected
+			end
+		end
+		
 
 	show is
 			-- Show current
 		local
 			selectable_command: EB_SELECTABLE
+			position_within_tools: INTEGER
+			insert_pos: INTEGER
+			current_item: EB_EXPLORER_BAR_ITEM
+			item_list: ARRAYED_LIST [EB_EXPLORER_BAR_ITEM]
+			must_add_as_external: BOOLEAN
+			external_window: EV_WINDOW
+			a_widget: EV_WIDGET
 		do
+			parent.explorer_bar_manager.lock_update
+			is_maximized := False
+			is_minimized := False
 			if not is_visible then
 				is_visible := True
 				show_actions.call (Void)
+				
+					-- Now calculate the insert position for `widget'.
+					-- This is non trivial, as it must match the order within `item_list' of
+					-- `parent', and some items in this list may not be displayed.
+					-- We iterate `item_list' to determine the last item displayed in `parent'
+					-- that should be displayed before `widget' and insert based on this.
+				position_within_tools := parent.item_list.index_of (Current, 1)
+				item_list := parent.item_list
+				insert_pos := 1
+				from
+					item_list.start
+				until
+					item_list.off
+				loop
+					current_item ?= item_list.item
+					check
+						current_item_not_void: current_item /= Void
+					end
+					if current_item.is_visible and item_list.index < position_within_tools then
+						insert_pos := insert_pos + 1
+					end
+					item_list.forth
+				end
+				if parent.explorer_style then
+					from
+						parent.item_list.start
+					until
+						parent.item_list.off
+					loop
+						if
+							parent.external_representation.has (parent.item_list.item.widget) and
+							parent.item_list.item.is_closeable and is_closeable
+						then
+							must_add_as_external := True
+							from
+								a_widget := parent.item_list.item.widget
+							until
+								external_window /= Void
+							loop
+								external_window ?= a_widget.parent
+								a_widget := a_widget.parent
+							end
+						end
+						parent.item_list.forth
+					end
+				end
+				if must_add_as_external then
+					parent.add_external (widget, parent.explorer_bar_manager.window, title, insert_pos.min (parent.count + 1), external_window.x_position, external_window.y_position, external_window.width, external_window.height)
+				else
+					parent.insert_widget (widget, title, insert_pos.min (parent.count + 1), widget.minimum_height.max (150))
+				end
+				if is_closeable then
+					parent.enable_close_button (widget)
+					parent.close_actions.extend (agent close_wrapper)
+				else
+					parent.enable_close_button_as_grayed (widget)
+				end
+				if mini_toolbar /= Void then
+						-- As the tools are added and removed from the toolbar frequently,
+						-- `mini_toolbar' may be parented, so must be unparented.
+					if mini_toolbar.parent /= Void then
+						mini_toolbar.parent.prune_all (mini_toolbar)
+					end
+					parent.customizeable_area_of_widget (widget).extend (mini_toolbar)
+					parent.customizeable_area_of_widget (widget).disable_item_expand (mini_toolbar)
+				end
+				if header_addon /= Void then
+					if header_addon.parent /= Void then
+						header_addon.parent.prune_all (header_addon)
+					end
+					parent.customizeable_area_of_widget (widget).extend (header_addon)
+				end
 			end
-			rebuild_system_toolbar
 
 			selectable_command ?= associated_command
 			if selectable_command /= Void then
 				selectable_command.enable_selected
 			end
 			parent.on_item_shown (Current)
+			parent.explorer_bar_manager.unlock_update
 		end
 	
 	minimize is
@@ -186,7 +339,6 @@ feature -- Status Setting
 		do
 			is_minimized := True
 			is_maximized := False
-			rebuild_system_toolbar
 
 				-- Notify the parent
 			parent.on_item_minimized (Current)
@@ -199,7 +351,6 @@ feature -- Status Setting
 		do
 			is_maximized := True
 			is_minimized := False
-			rebuild_system_toolbar
 
 				-- Notify the parent
 			parent.on_item_maximized (Current)
@@ -212,12 +363,10 @@ feature -- Status Setting
 		require
 			not_restored: not is_restored
 		do
-			is_minimized := False
-			is_maximized := False
-			rebuild_system_toolbar
-
 				-- Notify the parent
 			parent.on_item_restored (Current)
+			is_minimized := False
+			is_maximized := False
 		ensure
 			restored: is_restored
 		end
@@ -228,15 +377,23 @@ feature -- Status Setting
 			selectable_command: EB_SELECTABLE
 		do
 			if parent /= Void then
-					-- `parent' = `Void' iff we are already recycled.
+					-- `parent' = `Void' if we are already recycled.
 				is_visible := False
 				is_maximized := False
+				is_minimized := False
 				selectable_command ?= associated_command
 				if selectable_command /= Void then
 					selectable_command.disable_selected
 				end
-				parent.on_item_hidden (Current)
-				parent.prune (Current)
+				parent.prune_item (Current)
+				
+					-- In EiffelStudio, the `parent' of `Current'
+					-- does not have to contain `Current', as it may
+					-- not be shown, hence we only remove the widget
+					-- if actually inserted.
+				if parent.linear_representation.has (widget) then
+					parent.remove (widget)
+				end
 				parent := Void
 			end
 		end
@@ -274,145 +431,94 @@ feature {EB_TOOL} -- Status setting
 		do
 			parent := new_parent
 			new_parent.add (Current)
-			new_parent.repack_widgets
 		end
-
-feature {NONE} -- Controls
-
+		
+feature {EB_EXPLORER_BAR} -- Controls
+		
 	mini_toolbar: EV_TOOL_BAR
-
-	system_toolbar: EV_TOOL_BAR
-
-	minimize_button: EV_TOOL_BAR_BUTTON
-
-	maximize_button: EV_TOOL_BAR_BUTTON
-
-	restore_button: EV_TOOL_BAR_BUTTON
-
-	close_button: EV_TOOL_BAR_BUTTON
-
-feature {NONE} -- Implementation
-
+	
 	header_addon: EV_HORIZONTAL_BOX
 			-- Horizontal bar displayed in the header.
 
-	build_header (a_widget: EV_WIDGET; a_title: STRING) is
-			-- Create a header titled `a_title' for the widget `a_widget'.
-			--
-			-- Create a frame containing a label
-			-- with text `a_title'.
-		local
-			title_label: EV_LABEL
-			horizontal_box: EV_HORIZONTAL_BOX
-			cell: EV_CELL
+feature {EB_EXPLORER_BAR} -- Implementation
+
+	reset is
+			-- Reset `Current' to default state, non minimized, maximized or visible.
 		do
-				-- A small space
-			create cell
-			cell.set_minimum_width (3)
-			
-				-- Build the Title bar.
-			create title_label
-			title_label.set_text (a_title)
+			is_minimized := False
+			is_maximized := False
+			is_visible := False
+			is_maximizable := True
+			is_minimizable := True
+		end
+		
+feature {EB_EXPLORER_BAR, EB_EXPLORER_BAR_ITEM} -- Implementation
 
-				-- create the system tool bar & the buttons
-			build_system_toolbar
-
-				-- Pack everything
-			create horizontal_box
-			horizontal_box.extend (cell)
-			horizontal_box.disable_item_expand (cell)
-			horizontal_box.extend (title_label)
-			horizontal_box.disable_item_expand (title_label)
-
-			if mini_toolbar /= Void then
-				create cell
-				cell.set_minimum_width (6)
-				horizontal_box.extend (cell)
-				horizontal_box.disable_item_expand (cell)
-				horizontal_box.extend (mini_toolbar)
-				horizontal_box.disable_item_expand (mini_toolbar)
-			end
-
-			if header_addon /= Void then
-				create cell
-				cell.set_minimum_width (6)
-				horizontal_box.extend (cell)
-				horizontal_box.disable_item_expand (cell)
-				horizontal_box.extend (header_addon)
-			else
-				create cell
-				cell.set_minimum_width (6)
-				horizontal_box.extend (cell)
-			end
-
-			horizontal_box.extend (system_toolbar)
-			horizontal_box.disable_item_expand (system_toolbar)
-
-			create header
-			header.set_style (Frame_constants.Ev_frame_raised)
-			header.extend (horizontal_box)
+	internal_set_restored is
+			-- Flag current an non minimized or maximized.
+		do
+			is_minimized := False
+			is_maximized := False
 		end
 
-	build_system_toolbar is
-			-- Create system toolbar and fill it.
+feature {NONE} -- Implementation
+		
+	close_wrapper (closed_widget: EV_WIDGET) is
+			-- A wrapper between the actions of `parent', and `Current',
+			-- fired when the widget is closed. This message is
+			-- sent to all items, and we must only respond if the widget
+			-- is that of `Current'.
 		do
-			create system_toolbar
-
-			if is_minimizable then
-				create minimize_button
-				minimize_button.set_pixmap (Pixmaps.icon_minimize @ 1)
-				minimize_button.enable_sensitive
-				minimize_button.select_actions.extend (agent minimize)
-				minimize_button.set_tooltip (Interface_names.f_Minimize)
-
-				system_toolbar.extend (minimize_button)
+			if closed_widget = widget then
+				close
+			end			
+		end
+		
+	internal_set_minimized_wrapper (a_widget: EV_WIDGET) is
+			-- A wrapper between the actions of `parent', and `Current',
+			-- fired when the widget is minimized. This message is
+			-- sent to all items, and we must only respond if the widget
+			-- is that of `Current'.
+		do
+			if a_widget = widget then
+				internal_set_minimized
 			end
-
-			if is_maximizable then
-				create maximize_button
-				maximize_button.set_pixmap (Pixmaps.icon_maximize @ 1)
-				maximize_button.enable_sensitive
-				maximize_button.select_actions.extend (agent maximize)
-				maximize_button.set_tooltip (Interface_names.f_Maximize)
-
-				system_toolbar.extend (maximize_button)
-			end
-
-			if is_minimizable or is_maximizable then
-				create restore_button
-				restore_button.set_pixmap (Pixmaps.icon_restore @ 1)
-				restore_button.enable_sensitive
-				restore_button.select_actions.extend (agent restore)
-				restore_button.set_tooltip (Interface_names.f_Restore)
-			end
-
-			create close_button
-			close_button.set_pixmap (Pixmaps.icon_close @ 1)
-			close_button.set_tooltip (Interface_names.f_Close)
-			if is_closeable then
-				close_button.enable_sensitive
-				close_button.select_actions.extend (agent close)
-			else
-				close_button.disable_sensitive
-			end
-
-			system_toolbar.extend (close_button)
 		end
 
-	rebuild_system_toolbar is
-			-- Update buttons in `system_toolbar'.
+	internal_set_maximized_wrapper (a_widget: EV_WIDGET) is
+			-- A wrapper between the actions of `parent', and `Current',
+			-- fired when the widget is maximized. This message is
+			-- sent to all items, and we must only respond if the widget
+			-- is that of `Current'.
 		do
-			system_toolbar.wipe_out
-			if is_minimizable and then not is_minimized then
-				system_toolbar.extend (minimize_button)
+			if a_widget = widget then
+				internal_set_maximized
 			end
-			if (is_minimizable or is_maximizable) and then not is_restored then
-				system_toolbar.extend (restore_button)
+		end
+	
+	internal_set_restored_wrapper (a_widget: EV_WIDGET) is
+			-- A wrapper between the actions of `parent', and `Current',
+			-- fired when the widget is restored. This message is
+			-- sent to all items, and we must only respond if the widget
+			-- is that of `Current'.
+		do
+			if a_widget = widget then
+				internal_set_restored
 			end
-			if is_maximizable and then not is_maximized then
-				system_toolbar.extend (maximize_button)
-			end
-			system_toolbar.extend (close_button)
+		end
+
+	internal_set_minimized is
+			-- Set internal state to minimized.
+		do
+			is_minimized := True
+			is_maximized := False
+		end
+
+	internal_set_maximized is
+			-- Set internal state to maximized.
+		do
+			is_maximized := True
+			is_minimized := False
 		end
 
 feature {NONE} -- Constants

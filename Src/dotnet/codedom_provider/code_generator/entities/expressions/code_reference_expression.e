@@ -11,35 +11,10 @@ inherit
 
 feature -- Access
 
-	arguments: LINKED_LIST [CODE_EXPRESSION]
-			-- Arguments
-
 	code: STRING is
 			-- Will never be used because not in the Eiffel Tree.
 		deferred
 		end
-
-feature -- Status Report
-
-	ready: BOOLEAN is
-			-- Is entity ready to be generated?
-		deferred
-		end
-
-feature -- Status Setting
-
-	set_routine_arguments (an_argument_list: like arguments) is
-			-- Set `arguments' with `an_argument_list'.
-		require
-			non_void_an_argument_list: an_argument_list /= Void
-		do
-			arguments := an_argument_list
-		ensure
-			arguments_set: arguments = an_argument_list
-		end		
-
-invariant
-	non_void_arguments: arguments /= Void
 
 end -- class CODE_REFERENCE_EXPRESSION
 

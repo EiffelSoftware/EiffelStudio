@@ -14,56 +14,38 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Initialize `type'.
+	make (a_referenced_type: CODE_TYPE_REFERENCE) is
+			-- Initialize `referenced_type'.
+		require
+			non_void_referenced_type: a_referenced_type /= Void
 		do
-			create arguments.make
-			create referred_type.make_empty
+			referenced_type := a_referenced_type
 		ensure
-			non_void_referred_type: referred_type /= Void
+			referenced_type_set: referenced_type = a_referenced_type
 		end
 		
 feature -- Access
 
-	referred_type: STRING
+	referenced_type: CODE_TYPE_REFERENCE
 			-- Type which is referred to
 
 	code: STRING is
 			-- | Result := "`referred_type'"
 			-- Eiffel code of type reference expression
 		do
-			Result := Resolver.eiffel_type_name (referred_type).twin
+			Result := referenced_type.eiffel_name
 		end
 		
 feature -- Status Report
 
-	ready: BOOLEAN is
-			-- Is type reference expression ready to be generated?
-		do
-			Result := True
-		end
-
-	type: TYPE is
+	type: CODE_TYPE_REFERENCE is
 			-- Type
 		do
-			Result := referenced_type_from_name (referred_type)
+			Result := referenced_type
 		end
 
-feature -- Status Setting
-
-	set_referred_type (a_referred_type: like referred_type) is
-			-- Set `referred_type' with `a_referred_type'.
-		require
-			non_void_referred_type: a_referred_type /= Void
-			not_empty_referred_type: not a_referred_type.is_empty
-		do
-			referred_type := a_referred_type
-		ensure
-			referred_type_set: referred_type = a_referred_type
-		end		
-
 invariant
-	non_void_referred_type: referred_type /= Void
+	non_void_referenced_type: referenced_type /= Void
 	
 end -- class CODE_TYPE_REFERENCE_EXPRESSION
 

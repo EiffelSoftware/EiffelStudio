@@ -14,73 +14,45 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_target_type: like target_type; a_source: CODE_EXPRESSION) is
 			-- Initialize `target_type'.
+		require
+			non_void_target_type: a_target_type /= Void
+			non_void_source: a_source /= Void
 		do
-			create target_type.make_empty
+			target_type := a_target_type
+			source := a_source
 		ensure
-			non_void_target_type: target_type /= Void
+			target_type_set: target_type = a_target_type
+			source_set: source = a_source
 		end
 		
 feature -- Access
 
-	expression_to_cast: CODE_EXPRESSION
+	source: CODE_EXPRESSION
 			-- Expression to cast
 			
-	target_type: STRING
+	target_type: CODE_TYPE_REFERENCE
 			-- Key from CODE_generated_types table to cast type
 			
 	code: STRING is
 			-- | Result := " ?= `expression_to_cast'"
 			-- Eiffel code of cast expression
 		do
-			Check
-				not_empty_type: not target_type.is_empty
-				non_void_expression: expression_to_cast /= Void
-			end
-		
-			create Result.make (80)
-			Result.append (expression_to_cast.code)
+			Result := source.code
 		end
 		
 feature -- Status Report
 		
-	ready: BOOLEAN is
-			-- Is cast expression ready to be generated?
-		do
-			Result := expression_to_cast /= Void and then expression_to_cast.ready
-		end
-
-	type: TYPE is
+	type: CODE_TYPE_REFERENCE is
 			-- Type
 		do
-			Result := referenced_type_from_name (target_type)
+			Result := target_type
 		end
-
-feature -- Status Setting
-
-	set_expression_to_cast (an_expression: like expression_to_cast) is
-			-- Set `expression_to_cast' with `an_expression'.
-		require
-			non_void_expression: an_expression /= Void
-		do
-			expression_to_cast := an_expression
-		ensure
-			expression_to_cast_set: expression_to_cast = an_expression
-		end		
-		
-	set_target_type (a_type: like target_type) is
-			-- Set `target_type' with `a_type'.
-		require
-			non_void_type: a_type /= Void
-		do
-			target_type := a_type
-		ensure
-			target_type_set: target_type = a_type
-		end		
 		
 invariant
 	non_void_target_type: target_type /= Void
+	non_void_source: source /= Void
 	
 end -- class CODE_CAST_EXPRESSION
 

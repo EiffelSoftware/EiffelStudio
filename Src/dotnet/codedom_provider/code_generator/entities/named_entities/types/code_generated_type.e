@@ -9,8 +9,8 @@ class
 inherit
 	CODE_TYPE
 		redefine
-			ready,
-			code
+			code,
+			make
 		end
 	
 create
@@ -18,125 +18,90 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_type: CODE_TYPE_REFERENCE) is
 			-- | Call Precursor {CODE_TYPE}
 			-- Initialize attributes
 		do
-			default_create
-			create indexing_clauses.make
-			create parents.make
-			create creation_routines.make
-			create features.make
+			Precursor {CODE_TYPE} (a_type)
+			create {ARRAYED_LIST [CODE_INDEXING_CLAUSE]} indexing_clauses.make (4)
+			create parents.make (4)
+			create creation_routines.make (1)
+			create features.make (20)
+			create implementation_features.make (20)
 		ensure then
 			non_void_indexing_clauses: indexing_clauses /= Void
 			non_void_parents: parents /= Void
 			non_void_creation_routines: creation_routines /= Void
 			non_void_features: features /= Void
+			non_void_implementation_features: implementation_features /= Void
 		end
 		
 feature -- Access
 
-	indexing_clauses: LINKED_LIST [CODE_INDEXING_CLAUSE]
+	indexing_clauses: LIST [CODE_INDEXING_CLAUSE]
 			-- Type indexing clauses
 		
-	parents: LINKED_LIST [CODE_PARENT]
+	parents: HASH_TABLE [CODE_PARENT, STRING]
 			-- List of parents
+			-- Key is parent Eiffel name
 
-	creation_routines: LINKED_LIST [CODE_CREATION_ROUTINE]
+	creation_routines: HASH_TABLE [CODE_CREATION_ROUTINE, STRING]
 			-- Type creation routines
+			-- Key is eiffel creation routine name
 
-	features: LINKED_LIST [CODE_FEATURE]
+	dotnet_features: HASH_TABLE [LIST [CODE_FEATURE], STRING]
+			-- Features grouped by .NET name
+			-- Value: feature
+			-- Key: .NET feature name
+		
+	features: HASH_TABLE [CODE_FEATURE, STRING]
 			-- Type features
+			-- Value: feature
+			-- Key: feature eiffel name
 			
+	implementation_features: HASH_TABLE [CODE_FEATURE, STRING]
+			-- Type implementation features
+			-- These features are added during code generation (for example for try/catch statements)
+			-- Value: feature
+			-- Key: feature eiffel name
+			
+	parent (a_name: STRING): CODE_PARENT is
+			-- Parent with full Eiffel name `a_name' if any
+		require
+			non_void_name: a_name /= Void
+		do
+			parents.search (a_name)
+			if parents.found then
+				Result := parents.found_item
+			end
+		end
+
+	snippet_inherit_clause: STRING
+			-- Snippet inherit clause
+
 	code: STRING is
 			-- | Call `header', `body' and `footer' successively.
 			-- Eiffel code of type
-		do
-			Result := header
-			Result.append (body)
-			Result.append (footer)
-		end
-		
-feature -- Status Report
-
-	ready: BOOLEAN is
-			-- Is named entity ready to be generated?
-		do
-			Result := Precursor {CODE_TYPE}
-		end
-
-	has_immediate_feature (a_feature_name: STRING): BOOLEAN is
-			-- Does `features' or `creation_routines' contain `a_feature_name'?
 		local
-			l_feature_name: STRING
-			old_cursor: CURSOR
+			l_header, l_body, l_footer: STRING
 		do
-			from
-				old_cursor := creation_routines.cursor
-				creation_routines.start
-			until
-				creation_routines.after or Result
-			loop
-				Result := creation_routines.item.name.is_equal (a_feature_name)
-				creation_routines.forth
-			end
-			creation_routines.go_to (old_cursor)
-			
-			from
-				old_cursor := features.cursor
-				features.start
-			until
-				features.after or Result
-			loop
-				l_feature_name := features.item.name
-				Result := l_feature_name /= Void and then l_feature_name.is_equal (a_feature_name)
-				features.forth
-			end
-			features.go_to (old_cursor)
-		end	
-	
-	has_feature (a_feature_name: STRING; arguments: LINKED_LIST [CODE_EXPRESSION]): BOOLEAN is
-			-- Does `features' or `creation_routines' or `parents' contain `a_feature'?
-		local
-			l_old_cursor: CURSOR
-		do
-			Result := has_immediate_feature (a_feature_name)
-			
-			if not Result then
-				from
-					l_old_cursor := parents.cursor
-					parents.start
-				until
-					parents.after or Result
-				loop
-					Result := Feature_finder.has_feature (parents.item.name, a_feature_name, arguments)
-					parents.forth
-				end
-				parents.go_to (l_old_cursor)
-			end
+			l_body := body
+			l_header := header
+			l_footer := footer
+			create Result.make (l_body.count + l_header.count + l_footer.count)
+			Result.append (l_header)
+			Result.append (l_body)
+			Result.append (l_footer)
 		end
 
-feature -- Basic Operations
-
-	add_item (an_item: ANY; a_list: LINKED_LIST [ANY]) is
-			-- Add `an_item' to `a_list' if `a_list' doesn't have `an_item' yet.
-		require
-			non_void_item: an_item /= Void
-			non_void_list: a_list /= Void
-		do
-			if not a_list.has (an_item) then
-				a_list.extend (an_item)
-			end
-		ensure
-			item_added: a_list.has (an_item)
-		end
+feature -- Element Settings
 
 	add_indexing_clause (a_clause: CODE_INDEXING_CLAUSE) is
 			-- Add `a_clause' to `indexing_clauses'.
 		require
 			non_void_indexing_clause: a_clause /= Void
 		do
-			add_item (a_clause, indexing_clauses)
+			indexing_clauses.extend (a_clause)
 		ensure
 			a_clause_added: indexing_clauses.has (a_clause)
 		end
@@ -146,19 +111,40 @@ feature -- Basic Operations
 		require
 			non_void_parent: a_parent /= Void
 		do
-			parents.extend (a_parent)
+			parents.put (a_parent, a_parent.type.eiffel_name)
 		ensure
-			parent_added: parents.has (a_parent)
+			parent_added: parents.has (a_parent.type.eiffel_name)
 		end
 		
 	add_feature (a_feature: CODE_FEATURE) is
 			-- Add `a_feature' to `features'.
 		require
 			non_void_feature: a_feature /= Void
+		local
+			l_list: ARRAYED_LIST [CODE_FEATURE]
 		do
-			add_item (a_feature, features)
+			features.put (a_feature, a_feature.eiffel_name)
+			dotnet_features.search (a_feature.name)
+			if dotnet_features.found then
+				dotnet_features.found_item.extend (a_feature)
+			else
+				create l_list.make (1)
+				l_list.extend (a_feature)
+				dotnet_features.put (l_list, a_feature.name)
+			end
 		ensure
-			feature_added: features.has (a_feature)
+			feature_added: features.has (a_feature.eiffel_name)
+			dotnet_feature_added: dotnet_features.has (a_feature.name)
+		end
+
+	add_implementation_feature (a_feature: CODE_FEATURE) is
+			-- Add `a_feature' to `implementation_features'.
+		require
+			non_void_feature: a_feature /= Void
+		do
+			implementation_features.put (a_feature, a_feature.eiffel_name)
+		ensure
+			feature_added: features.has (a_feature.eiffel_name)
 		end
 
 	add_creation_routine (a_creation_routine: CODE_CREATION_ROUTINE) is
@@ -166,118 +152,53 @@ feature -- Basic Operations
 		require
 			non_void_creation_routine: a_creation_routine /= Void
 		do
-			add_item (a_creation_routine, creation_routines)
+			creation_routines.put (a_creation_routine, a_creation_routine.eiffel_name)
 		ensure
-			creation_routine_added: creation_routines.has (a_creation_routine)
+			creation_routine_added: creation_routines.has (a_creation_routine.eiffel_name)
 		end
 
-feature -- Basics Operations on inheritance clauses
-
-	parent (a_name: STRING): CODE_PARENT is
-			-- Parent with name `a_name' if any
-		require
-			non_void_name: a_name /= Void
-		do
-			from
-				parents.start
-			until
-				parents.after or Result /= Void
-			loop
-				if parents.item.name.is_equal (a_name) then
-					Result := parents.item
-				end
-				parents.forth
-			end
-		end
-
-	add_rename_clause (a_dotnet_parent_name, a_feature_name, a_new_feature_name: STRING) is
-			-- Add rename clause for parent `a_dotnet_parent_name'.
-		require
-			non_void_dotnet_parent_name: a_dotnet_parent_name /= Void
-			non_empty_dotnet_parent_name: not a_dotnet_parent_name.is_empty
-			non_void_feature_name: a_feature_name /= Void
-			non_empty_feature_name: not a_feature_name.is_empty
-			non_void_new_feature_name: a_new_feature_name /= Void
-			non_empty_new_feature_name: not a_new_feature_name.is_empty
-		local
-			l_parent: CODE_PARENT
-			l_clause: CODE_RENAME_CLAUSE
-		do
-			l_parent := parent (a_dotnet_parent_name)
-			if l_parent /= Void then
-				create l_clause.make
-				l_clause.set_name (a_feature_name)
-				l_clause.set_new_name (a_new_feature_name)
-				l_parent.add_rename_clause (l_clause)
-			end			
-		end
-
-	add_undefine_clause (a_dotnet_parent_name: STRING; a_feature_name: STRING) is
+	add_undefine_clause (a_parent: CODE_TYPE_REFERENCE; a_routine: CODE_MEMBER_REFERENCE) is
 			-- Add undefine clause for parent `a_dotnet_parent_name' and feature `a_feature_name'.
 		require
-			non_void_dotnet_parent_name: a_dotnet_parent_name /= Void
-			non_empty_dotnet_parent_name: not a_dotnet_parent_name.is_empty
-			non_void_a_feature_name: a_feature_name /= Void
-			non_empty_a_feature_name: not a_feature_name.is_empty
+			non_void_parent: a_parent /= Void
+			non_void_routine: a_routine /= Void
 		local
 			l_parent: CODE_PARENT
-			l_clause: CODE_UNDEFINE_CLAUSE
 		do
-			l_parent := parent (a_dotnet_parent_name)
+			l_parent := parent (a_parent.eiffel_name)
 			if l_parent /= Void then
-				create l_clause.make (a_feature_name)
-				l_parent.add_undefine_clause (l_clause)
+				l_parent.add_undefine_clause (create {CODE_UNDEFINE_CLAUSE}.make (a_routine, a_parent))
+			else
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_parent, [a_parent.eiffel_name + "(" + a_parent.full_name + ")", eiffel_name + "(" + name + ")"])
 			end			
 		end
 		
-	add_redefine_clause (a_dotnet_parent_name: STRING; a_feature_name: STRING) is
+	add_redefine_clause (a_parent: CODE_TYPE_REFERENCE; a_routine: CODE_MEMBER_REFERENCE) is
 			-- Add redefine clause for parent `a_dotnet_parent_name' and feature `a_feature_name'.
 		require
-			non_void_dotnet_parent_name: a_dotnet_parent_name /= Void
-			non_empty_dotnet_parent_name: not a_dotnet_parent_name.is_empty
-			non_void_a_feature_name: a_feature_name /= Void
-			non_empty_a_feature_name: not a_feature_name.is_empty
+			non_void_parent: a_parent /= Void
+			non_void_routine: a_routine /= Void
 		local
 			l_parent: CODE_PARENT
-			l_clause: CODE_REDEFINE_CLAUSE
 		do
-			l_parent := parent (a_dotnet_parent_name)
+			l_parent := parent (a_parent.eiffel_name)
 			if l_parent /= Void then
-				create l_clause.make (a_feature_name)
-				l_parent.add_redefine_clause (l_clause)
+				l_parent.add_redefine_clause (create {CODE_REDEFINE_CLAUSE}.make (a_routine, a_parent))
+			else
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_parent, [a_parent.eiffel_name + "(" + a_parent.full_name + ")", eiffel_name + "(" + name + ")"])
 			end			
 		end
 	
-	add_redefine_clause_from_dotnet (a_dotnet_feature_name: STRING; arguments: LINKED_LIST [CODE_PARAMETER_DECLARATION_EXPRESSION]): STRING is
-			-- Add `a_feature_name' to the parent that contains `a_feature_name'.
-			-- Loop on parents.
+	set_snippet_inherit_clause (a_text: STRING) is
+			-- Set `snippet_inherit_clause' with `a_text'.
 		require
-			non_void_a_dotnet_feature_name: a_dotnet_feature_name /= Void
-			non_empty_a_dotnet_feature_name: not a_dotnet_feature_name.is_empty
-		local
-			l_feature_name: STRING
+			non_void_text: a_text /= Void
 		do
-			from
-				parents.start
-			until
-				parents.after or Result /= Void
-			loop
-				if Feature_finder.has_feature (parents.item.name, a_dotnet_feature_name, arguments) then
-					if Resolver.is_generated_type (parents.item.name) then
-						l_feature_name := a_dotnet_feature_name
-					else
-						l_feature_name := Feature_finder.eiffel_feature_name_from_dynamic_args (Dotnet_types.dotnet_type (parents.item.name), a_dotnet_feature_name, arguments)
-					end
-					add_redefine_clause (parents.item.name, l_feature_name)
-					Result := l_feature_name
-				end
-				parents.forth
-			end
-			check
-				parent_has_feature_name: Result /= Void
-			end
+			snippet_inherit_clause := a_text
+		ensure
+			snippet_inherit_clause_set: snippet_inherit_clause = a_text
 		end
-			
+		
 feature -- Code generation
 
 	header: STRING is
@@ -296,9 +217,12 @@ feature -- Code generation
 			Result.append (class_declaration)
 			
 				-- inherit
+			if snippet_inherit_clause /= Void then
+				Result.append (snippet_inherit_clause)
+			end
 			if parents /= Void and then parents.count > 0 then
 				Result.append (inheritance_clause)
-				Result.append (dictionary.New_line)
+				Result.append_character ('%N')
 			end
 				-- create
 			Result.append (creation_clause)
@@ -317,8 +241,7 @@ feature -- Code generation
 			l_indexing_clause: CODE_INDEXING_CLAUSE
 		do
 			create Result.make (250)
-			Result.append (dictionary.Indexing_keyword)
-			Result.append (dictionary.New_line)
+			Result.append ("indexing%N")
 			from
 				indexing_clauses.start
 			until
@@ -326,13 +249,13 @@ feature -- Code generation
 			loop
 				l_indexing_clause := indexing_clauses.item
 				if l_indexing_clause /= Void then
-					Result.append (dictionary.Tab)
+					Result.append_character ('%T')
 					Result.append (l_indexing_clause.code)
-					Result.append (dictionary.New_line)
+					Result.append_character ('%N')
 				end
 				indexing_clauses.forth
 			end
-			Result.append (dictionary.New_line)
+			Result.append_character ('%N')
 		ensure
 			a_clause_generated: Result /= Void and Result.count > 0
 		end
@@ -341,18 +264,11 @@ feature -- Code generation
 			-- Class declaration (including class name and qualifiers like deferred, expanded or frozen)
 		require
 			ready: ready
-		local
-			formatter: NAME_FORMATTER
 		do
-			create Result.make (120)
-			Result.append (dictionary.Class_keyword)
-			Result.append (dictionary.New_line)
-			Result.append (dictionary.Tab)
-			create formatter
-			name.prune ('.')
-			Result.append (formatter.full_formatted_type_name (name))
-			Result.append (dictionary.New_line)
-			Result.append (dictionary.New_line)
+			create Result.make (9 + eiffel_name.count)
+			Result.append ("class%N%T")
+			Result.append (eiffel_name)
+			Result.append ("%N%N")
 		ensure
 			non_void_class_declaration: Result /= Void
 			not_empty_class_declaration: Result.count > 0
@@ -367,150 +283,78 @@ feature -- Code generation
 			not_empty_parents: parents.count > 0
 		do
 			create Result.make (200)
-			Result.append (dictionary.Inherit_keyword)
-			Result.append (dictionary.New_line)
+			if snippet_inherit_clause = Void then
+				Result.append ("inherit%N")
+			end
 			from
 				parents.start
 			until 
 				parents.after
 			loop
-				Result.append (parents.item.code)
+				Result.append (parents.item_for_iteration.code)
 				parents.forth
 			end
 		ensure
 			parents_generated: Result /= Void and not Result.is_empty
 		end
 								
-	inheritance_clauses_code (a_list: LINKED_LIST [CODE_INHERITANCE_CLAUSE]): STRING is
-			-- Code corresponding to `a_list'
-		require
-			non_void_list: a_list /= Void
-			not_empty_list: a_list.count > 0
-		do
-			create Result.make (120)
-			from
-				a_list.start
-				if not a_list.after then
-					Result.append (Dictionary.Tab)
-					Result.append (Dictionary.Tab)
-					Result.append (Dictionary.Tab)
-					Result.append (a_list.item.code)
-					a_list.forth
-				end
-			until
-				a_list.after
-			loop
-				Result.append (Dictionary.Comma)
-				Result.append (Dictionary.New_line)
-				Result.append (Dictionary.Tab)
-				Result.append (Dictionary.Tab)
-				Result.append (Dictionary.Tab)
-				Result.append (a_list.item.code)
-			end
-			Result.append (Dictionary.New_line)
-		ensure
-			generated: Result /= Void and then not Result.is_empty
-		end
-	
 	creation_clause: STRING is 
 			-- Code of creation clause
 		require
 			ready: ready
 		do
-			if creation_routines.count = 0 then
-				create Result.make (100)
-				Result.append (dictionary.Create_keyword)
-				Result.append (dictionary.Space)
-				Result.append (dictionary.Opening_brace_bracket)
-				Result.append (Dictionary.None_type)
-				Result.append (dictionary.Closing_brace_bracket)
-				Result.append (dictionary.New_line)
-				Result.append (dictionary.New_line)
-			else
-				if not special_classes.has (name) then
-					Result := creation_routines_declaration + dictionary.New_line
-				end
-			end			
-		end
-		
-	creation_routines_declaration: STRING is
-			-- | Loop on `creation_routines' names
-
-			-- Creation routines code (include `create' keyword)
-		require
-			ready: ready
-			not_empty_creation_routines: creation_routines.count > 0
-		do
 			create Result.make (100)
-			Result.append (dictionary.Create_keyword)
-			Result.append (dictionary.New_line)
-			Result.append (Dictionary.Tab)
-			from
-				creation_routines.start
-				if not creation_routines.after then
-					Result.append (Resolver.eiffel_entity_name (creation_routines.item.name))
+			if creation_routines.count = 0 then
+				Result.append ("create {NONE}%N%N")
+			else
+				Result.append ("create%N%T")
+				from
+					creation_routines.start
+					if not creation_routines.after then
+						Result.append (creation_routines.item_for_iteration.eiffel_name)
+						creation_routines.forth
+					end
+				until
+					creation_routines.after
+				loop
+					Result.append_character (',')
+					Result.append (creation_routines.item_for_iteration.eiffel_name)
+					Result.append ("%N%T")
 					creation_routines.forth
 				end
-			until
-				creation_routines.after
-			loop
-				Result.append (Dictionary.Comma)
-				Result.append (Resolver.eiffel_entity_name (creation_routines.item.name))
-				Result.append (Dictionary.New_line)
-				Result.append (Dictionary.Tab)
-				creation_routines.forth
-			end
-		ensure
-			creation_routines_declaration_generated: Result /= Void and then not Result.is_empty
+				Result.append_character ('%N')
+			end			
 		end
 
-	special_classes: HASH_TABLE [STRING, STRING]is
-			-- Kernel classes
-		do
-			create Result.make (9)
-			Result.put (dictionary.Any_type_name, dictionary.Any_type_name)
-			Result.put (dictionary.Integer_type_name, dictionary.Integer_type_name)
-			Result.put (dictionary.Integer_64_type_name, dictionary.Integer_64_type_name)
-			Result.put (dictionary.Integer_16_type_name, dictionary.Integer_16_type_name)
-			Result.put (dictionary.Integer_8_type_name, dictionary.Integer_8_type_name)
-			Result.put (dictionary.Character_type_name, dictionary.Character_type_name)
-			Result.put (dictionary.Double_type_name, dictionary.Double_type_name)
-			Result.put (dictionary.Real_type_name, dictionary.Real_type_name)
-			Result.put (dictionary.Boolean_type_name, dictionary.Boolean_type_name)
-		ensure
-			non_void_table: Result /= Void
-			valid_table: Result.count = 9
-		end
-		
 	body: STRING is
-			-- | Call `internal_features (creation_routines)'.
-			-- | Call `internal_features (features)'.
-
-			-- Eiffel code of type body (without invariants)
+			-- Eiffel code of type body
 		require
 			ready: ready
 		do
 			create Result.make (100)
-			if creation_routines /= Void and then creation_routines.count > 0 then
+			if creation_routines.count > 0 then
 				Result.append (features_code (creation_routines))
 			end
-			if features /= Void and then features.count > 0 then
+			if features.count > 0 then
 				Result.append (features_code (features))
 			end
+			if implementation_features.count > 0 then
+				Result.append (features_code (implementation_features))
+			end
 		ensure
-			body_generated: Result /= Void and then not Result.is_empty
+			body_generated: Result /= Void
 		end
 
-	features_code (a_list: LINKED_LIST [CODE_FEATURE]): STRING is 
-			-- Code corresponding to `a_list' of features.
+	features_code (a_features: HASH_TABLE [CODE_FEATURE, STRING]): STRING is 
+			-- Code corresponding to features `a_features'
 		require
-			non_void_list: a_list /= Void
+			non_void_features: a_features /= Void
 		local
-			l_clauses: HASH_TABLE [LINKED_LIST [CODE_FEATURE], STRING]
-			l_features: LINKED_LIST [CODE_FEATURE]
+			l_clauses: HASH_TABLE [LIST [CODE_FEATURE], STRING]
+			l_features: LIST [CODE_FEATURE]
 		do
 			create Result.make (1000)
-			l_clauses := features_per_clauses (a_list)
+			l_clauses := features_per_clauses (a_features)
 			from
 				l_clauses.start
 			until
@@ -521,14 +365,12 @@ feature -- Code generation
 					l_features.start
 					if not l_features.after then
 						Result.append (l_clauses.key_for_iteration)
-						Resolver.clear_all_local_variables
 						Result.append (l_features.item.code)
 						l_features.forth
 					end
 				until
 					l_features.after
 				loop
-					Resolver.clear_all_local_variables
 					Result.append (l_features.item.code)
 					l_features.forth
 				end
@@ -543,39 +385,35 @@ feature -- Code generation
 		require
 			ready: ready
 		do
-			create Result.make (200)
-			Result.append (Dictionary.New_line)
-			Result.append (Dictionary.End_keyword)
-			Result.append (Dictionary.Space)
-			Result.append (Dictionary.Dashes)
-			Result.append (Dictionary.Space)
-			Result.append (name.as_upper)
+			create Result.make (eiffel_name.count + 8)
+			Result.append ("%Nend -- ")
+			Result.append (eiffel_name)
 		ensure
 			footer_generated: Result /= Void and then not Result.is_empty
 		end
 
-	features_per_clauses (a_list: LINKED_LIST [CODE_FEATURE]): HASH_TABLE [LINKED_LIST [CODE_FEATURE], STRING] is
-			-- Order features by clause.
+	features_per_clauses (a_features: HASH_TABLE [CODE_FEATURE, STRING]): HASH_TABLE [LIST [CODE_FEATURE], STRING] is
+			-- Features ordered per feature clause
 		require
-			non_void_list: a_list /= Void
+			non_void_features: a_features /= Void
 		local
 			l_clause: STRING
 		do
-			create Result.make (a_list.count)
+			create {HASH_TABLE [ARRAYED_LIST [CODE_FEATURE], STRING]} Result.make (a_features.count)
 			from
-				a_list.start
+				a_features.start
 			until
-				a_list.after
+				a_features.after
 			loop
-				l_clause := a_list.item.feature_clause
+				l_clause := a_features.item_for_iteration.feature_clause
 				if not Result.has (l_clause) then
-					Result.extend (create {LINKED_LIST [CODE_FEATURE]}.make, l_clause)
+					Result.extend (create {ARRAYED_LIST [CODE_FEATURE]}.make (4), l_clause)
 				end
 				check
 					has_clause: Result.has (l_clause)
 				end
-				Result.item (l_clause).extend (a_list.item)
-				a_list.forth
+				Result.item (l_clause).extend (a_features.item_for_iteration)
+				a_features.forth
 			end
 		ensure
 			non_void_result: Result /= Void

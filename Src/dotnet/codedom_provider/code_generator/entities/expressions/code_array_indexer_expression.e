@@ -9,40 +9,46 @@ class
 inherit
 	CODE_EXPRESSION
 
+	CODE_SHARED_TYPE_REFERENCE_FACTORY
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_target: CODE_EXPRESSION; a_indices: LIST [CODE_EXPRESSION]) is
 			-- Initialize `target_object' and `indices'.
+		require
+			non_void_target: a_target /= Void
+			non_void_indices: a_indices /= Void
 		do
-			create indices.make
+			target := a_target
+			indices := a_indices
 		ensure
-			non_void_indices: indices /= Void
+			target_set: target = a_target
+			indices_set: indices = a_indices
 		end
 		
 feature -- Access
 
-	target_object: CODE_EXPRESSION
+	target: CODE_EXPRESSION
 			-- Array indexer target object
 	
-	indices: LINKED_LIST [CODE_EXPRESSION]
+	indices: LIST [CODE_EXPRESSION]
 			-- Array indexer indices
 
 	code: STRING is
 			-- | Result := "`target_object'.item (`indices')"
 			-- Eiffel code of array indexer expression
 		do
-			Check
-				non_void_target_object: target_object /= Void
-			end
-		
 			create Result.make (120)
-			Result.append (target_object.code)
-			Result.append (Dictionary.Dot_keyword)
-			Result.append ("item ")
-			Result.append (Dictionary.Opening_round_bracket)
+			Result.append (target.code)
+			Result.append (".item (")
 			from
 				indices.start
 				if not indices.after then
@@ -56,47 +62,27 @@ feature -- Access
 				Result.append (indices.item.code)
 				indices.forth
 			end
-			Result.append (Dictionary.Closing_round_bracket)
+			Result.append_character (')')
 		end
 		
 feature -- Status Report
 		
-	ready: BOOLEAN is
-			-- Is array indexer expression ready to be generated?
-		do
-			Result := target_object.ready and indices /= Void
-		end
-
-	type: TYPE is
+	type: CODE_TYPE_REFERENCE is
 			-- Type
+		local
+			l_type: TYPE
 		do
-			Result := target_object.type
+			l_type := target.type.dotnet_type
+			if l_type /= Void then
+				Result := Type_reference_factory.type_reference_from_type (l_type.get_element_type)
+			else
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_type, [target.type.full_name])
+			end
 		end
 
-feature -- Status Setting
-
-	set_target_object (an_expression: like target_object) is
-			-- Set `target_object' with `an_expression'.
-		require
-			non_void_expression: an_expression /= Void
-		do
-			target_object := an_expression
-		ensure
-			target_object_set: target_object = an_expression
-		end		
-		
-	add_indice (an_indice: CODE_EXPRESSION) is
-			-- Add `an_indice' to `indices'.
-		require
-			non_void_indice: an_indice /= Void
-		do
-			indices.extend (an_indice)
-		ensure
-			indices_set: indices.has (an_indice)
-		end	
-		
 invariant
 	non_void_indices: indices /= Void
+	non_void_target: target /= Void
 	
 end -- class CODE_ARRAY_INDEXER_EXPRESSION
 

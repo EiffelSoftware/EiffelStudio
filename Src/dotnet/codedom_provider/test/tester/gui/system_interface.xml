@@ -7,8 +7,8 @@
 		<Filename>compile_unit.png</Filename>
 		</Constant>
 	<Constant><type>STRING</type>
-		<Name>generate_namespace_label</Name>
-		<Value>Generate from namespace</Value>
+		<Name>generator_tab_title</Name>
+		<Value>Generator</Value>
 		</Constant>
 	<Constant><type>DIRECTORY</type>
 		<Name>icons_directory</Name>
@@ -22,8 +22,8 @@
 		<Filename>expression.png</Filename>
 		</Constant>
 	<Constant><type>STRING</type>
-		<Name>generator_tab_title</Name>
-		<Value>Generator</Value>
+		<Name>generate_namespace_label</Name>
+		<Value>Generate from namespace</Value>
 		</Constant>
 	<Constant><type>STRING</type>
 		<Name>generate_type_label</Name>
@@ -343,23 +343,10 @@
 <EV_WIDGET></EV_WIDGET>
 <EV_BOX><Padding>5</Padding>
 	<Border>5</Border>
-	<Is_item_expanded>10</Is_item_expanded>
+	<Is_item_expanded>0</Is_item_expanded>
 	</EV_BOX>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
-<item type="EV_TREE"><Internal_properties>
-	<id>19</id>
-	<name>codedoms_tree</name>
-	<Expanded>1</Expanded>
-	</Internal_properties>
-<EV_COLORIZABLE></EV_COLORIZABLE>
-<EV_SENSITIVE></EV_SENSITIVE>
-<EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET></EV_WIDGET>
-<Events><Event>select_actions EV_TREE_ACTION_SEQUENCES on_codedom_tree_select</Event>
-	<Event>deselect_actions EV_TREE_ACTION_SEQUENCES on_codedom_tree_deselect</Event>
-	</Events>
-</item>
 <item type="EV_HORIZONTAL_BOX"><Internal_properties>
 	<id>20</id>
 	<name>codedom_tree_buttons_box</name>
@@ -445,7 +432,11 @@
 <EV_FONTABLE></EV_FONTABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_WIDGET></EV_WIDGET>
-<EV_NOTEBOOK><Item_text>Generator^Compiler^Parser^Output</Item_text>
+<EV_NOTEBOOK><Item_texts><Item_text1><![CDATA[Generator]]></Item_text1>
+		<Item_text2><![CDATA[Compiler]]></Item_text2>
+		<Item_text3><![CDATA[Parser]]></Item_text3>
+		<Item_text4><![CDATA[Output]]></Item_text4>
+		</Item_texts>
 	</EV_NOTEBOOK>
 <EV_PIXMAPABLE></EV_PIXMAPABLE>
 <EV_CONTAINER></EV_CONTAINER>
@@ -458,8 +449,7 @@
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET><Is_show_requested>False</Is_show_requested>
-	</EV_WIDGET>
+<EV_WIDGET></EV_WIDGET>
 <EV_BOX><Padding>5</Padding>
 	<Border>5</Border>
 	<Is_item_expanded>0001</Is_item_expanded>
@@ -2103,8 +2093,7 @@
 	</Internal_properties>
 <EV_COLORIZABLE></EV_COLORIZABLE>
 <EV_SENSITIVE></EV_SENSITIVE>
-<EV_WIDGET><Is_show_requested>False</Is_show_requested>
-	</EV_WIDGET>
+<EV_WIDGET></EV_WIDGET>
 <EV_BOX><Padding>10</Padding>
 	<Border>5</Border>
 	<Is_item_expanded>001</Is_item_expanded>
@@ -2361,8 +2350,7 @@
 <EV_SENSITIVE></EV_SENSITIVE>
 <EV_TEXTABLE></EV_TEXTABLE>
 <EV_TOOLTIPABLE></EV_TOOLTIPABLE>
-<EV_WIDGET><Is_show_requested>False</Is_show_requested>
-	<Minimum_height>100</Minimum_height>
+<EV_WIDGET><Minimum_height>100</Minimum_height>
 	</EV_WIDGET>
 <EV_TEXT_COMPONENT><Is_editable>False</Is_editable>
 	</EV_TEXT_COMPONENT>

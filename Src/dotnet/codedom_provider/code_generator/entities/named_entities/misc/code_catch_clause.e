@@ -14,79 +14,57 @@ create
 	
 feature {NONE} -- Initialization
 
-	make is
-			-- | Call Precursor {CODE_NAMED_ENTITY}.
-
-			-- Initialize `exception_type' and `catch_statements'.
+	make (a_variable: CODE_VARIABLE_REFERENCE; a_statements: like statements) is
+			-- Initialize instance.
+		require
+			non_void_variable: a_variable /= Void
+			non_void_statements: a_statements /= Void
 		do
-			default_create
-			create exception_type.make_empty
-			create catch_statements.make
-		ensure then
-			non_void_exception_type: exception_type /= Void
-			non_void_catch_statements: catch_statements /= Void
+			create variable.make (a_variable)
+			statements := a_statements
+		ensure
+			variable_set: variable /= Void
+			statements_set: statements = a_statements
 		end
 
 feature -- Access
 
-	exception_type: STRING
+	variable: CODE_VARIABLE
 			-- exception type.
 	
-	catch_statements: LINKED_LIST [CODE_STATEMENT]
+	statements: LIST [CODE_STATEMENT]
 			-- Catch statements
 			
 	code: STRING is
 			-- Eiffel code of catch clause
-			-- TO BE DONE!!!
-		local
-			a_statement: CODE_STATEMENT
-			a_event_manager: CODE_EVENT_MANAGER
 		do
-			create a_event_manager
-			a_event_manager.raise_event (feature {CODE_EVENTS_IDS}.Not_implemented, ["catch clause entity"])
-			create Result.make (120) 
-			Result.append ("catch_clause: to be done")
-			Result.append (Dictionary.New_line)
+			create Result.make (120)
+			Result.append (indent_string)
+			Result.append (variable.variable.eiffel_name)
+			Result.append (" ?= feature {ISE_RUNTIME}.last_exception%N")
+			Result.append (indent_string)
+			Result.append ("if ")
+			Result.append (variable.variable.eiffel_name)
+			Result.append (" /= Void then%N")
+			increase_tabulation
 			from
-				catch_statements.start
+				statements.start
 			until
-				catch_statements.after
+				statements.after
 			loop
-				a_statement := catch_statements.item
-				if a_statement /= Void then
-					Result.append (a_statement.code)
-				end
-				catch_statements.forth
+				Result.append (statements.item.code)
+				statements.forth
 			end
-		end
-		
-feature -- Status Setting
-
-	set_exception_type (a_type: like exception_type) is
-			-- Set `exception_type' with `a_type'.
-		require
-			non_void_type: a_type /= Void
-		do
-			exception_type := a_type
-		ensure
-			exception_type_set: exception_type = a_type
-		end
-
-feature -- Basic Operations
-
-	add_catch_statement (a_statement: CODE_STATEMENT) is
-			-- Add `a_statement' to `catch_statements'.
-		require
-			non_void_statement: a_statement /= Void
-		do
-			catch_statements.extend (a_statement)
-		ensure
-			catch_statement_added: catch_statements.has (a_statement)
+			Result.append (indent_string)
+			Result.append ("retry%N")
+			decrease_tabulation
+			Result.append (indent_string)
+			Result.append ("end%N")
 		end
 
 invariant
-	non_void_exception_type: exception_type /= Void
-	non_void_catch_statements: catch_statements /= Void
+	non_void_variable: variable /= Void
+	non_void_statements: statements /= Void
 
 end -- class CODE_CATCH_CLAUSE
 

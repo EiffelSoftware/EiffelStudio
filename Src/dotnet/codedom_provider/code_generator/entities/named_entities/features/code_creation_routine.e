@@ -7,39 +7,10 @@ class
 	CODE_CREATION_ROUTINE
 
 inherit
-	CODE_PROCEDURE
+	CODE_ROUTINE_IMP
 
 create 
 	make
-
-feature -- Status Repport
-
-	has_arguments (a_list_of_arguments: LINKED_LIST [CODE_EXPRESSION]): BOOLEAN is
-			-- | if `constructor_arguments.count' equal `a_list_of_argments.count' then 
-			-- | compare each argument and return false if a_constructor.argument /= a_list_argument
-		require
-			non_void_list: a_list_of_arguments /= Void
-		local
-			stop: BOOLEAN
-			a_param: CODE_PARAMETER_DECLARATION_EXPRESSION
-		do
-			if arguments.count = a_list_of_arguments.count then
-				from
-					arguments.start
-					a_list_of_arguments.start
-					stop := False
-				until
-					arguments.after or a_list_of_arguments.after or stop
-				loop
-					stop := not a_list_of_arguments.item.type.equals_object (a_param.type)
-					arguments.forth
-					a_list_of_arguments.forth
-				end
-				Result := not stop
-			else
-				Result := False
-			end
-		end
 
 end -- class CODE_CREATION_ROUTINE
 

@@ -42,6 +42,20 @@ inherit
 			default_rescue
 		end
 
+	CODE_SHARED_TEMPORARY_FILES
+		export
+			{NONE} all
+		redefine
+			default_rescue
+		end
+
+	CODE_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		redefine
+			default_rescue
+		end
+
 create
 	default_create
 
@@ -234,10 +248,10 @@ feature {NONE} -- Implementation
 			l_sep_char: CHARACTER
 		do
 			-- First create temporary directory if needed
-			temp_files := a_options.temp_files
-			if temp_files = Void then
+			if a_options.temp_files = Void then
 				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_temporary_files, [])
-				create temp_files.make_from_temp_dir (Codedom_installation_path + (create {OPERATING_ENVIRONMENT}).Directory_separator.out + "temp")
+			else
+				set_temp_files (a_options.temp_files)
 			end
 			l_temp_dir := temp_files.temp_dir
 			if not feature {SYSTEM_DIRECTORY}.exists (l_temp_dir) then
@@ -379,8 +393,8 @@ feature {NONE} -- Implementation
 				end
 			end
 			cleanup
+			reset_temp_files
 			compiler := Void
-			temp_files := Void
 			source_generator := Void
 			compilation_directory := Void
 		ensure
@@ -411,11 +425,8 @@ feature {NONE} -- Implementation
 		
 	default_rescue is
 			-- Handle exceptions
-		local
-			l_event_manager: CODE_EVENT_MANAGER
 		do
-			create l_event_manager
-			l_event_manager.process_exception
+			Event_manager.process_exception
 		end
 
 feature {NONE} -- Compiler callbacks
@@ -451,9 +462,6 @@ feature {NONE} -- Private access
 			Result.set_else_on_closing (False)
 			Result.set_indent_string ("%T")
 		end
-
-	temp_files: SYSTEM_DLL_TEMP_FILE_COLLECTION
-			-- Temporary files collection used to create new temporary files
 
 	source_generator: CODE_EIFFEL_SOURCE_FILES_GENERATOR
 			-- Eiffel source files generator

@@ -54,13 +54,12 @@ feature -- Implementation
 		require
 			non_void_an_eiffel_type_name: an_eiffel_type_name /= Void
 			not_empty_an_eiffel_type_name: not an_eiffel_type_name.is_empty
-			referenced_assemblies_initialized: (create {CODE_REFERENCED_ASSEMBLIES}).assemblies_initialized
 		local
 			l_cache_reflection: CACHE_REFLECTION
 			l_cat: CONSUMED_ASSEMBLY_TYPES
 			l_counter: INTEGER
 			l_eiffel_type_name: STRING
-			l_referenced_assemblies: LINKED_LIST [CODE_REFERENCED_ASSEMBLY]
+			l_referenced_assemblies: LIST [CODE_REFERENCED_ASSEMBLY]
 			l_array_type: BOOLEAN
 		do
 			if Eiffel_base_types.has (an_eiffel_type_name) then
@@ -82,7 +81,7 @@ feature -- Implementation
 				until
 					l_referenced_assemblies.after or Result /= Void
 				loop
-					l_cat := l_cache_reflection.assembly_types (l_referenced_assemblies.item.assembly.get_name)
+			--		l_cat := l_cache_reflection.assembly_types (l_referenced_assemblies.item.assembly.get_name)
 					if l_cat /= Void then
 						from
 							l_counter := 1

@@ -1,18 +1,20 @@
-indexing 
-	description: "Eiffel procedure"
-	date: "$$"
-	revision: "$$"	
+indexing
+	description: "Shared instance of CODE_TYPE_REFERENCE_FACTORY"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
-	CODE_PROCEDURE
+	CODE_SHARED_TYPE_REFERENCE_FACTORY
 
-inherit
-	CODE_ROUTINE
+feature -- Access
 
-create 
-	make
-
-end -- class CODE_PROCEDURE
+	Type_reference_factory: CODE_TYPE_REFERENCE_FACTORY is
+			-- Type reference factory
+		once
+			create Result
+		end
+		
+end -- class CODE_SHARED_TYPE_REFERENCE_FACTORY
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider

@@ -34,6 +34,14 @@ inherit
 			copy
 		end
 
+	TESTER_SHARED_TREE_STORE
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy
+		end
+
 feature {NONE} -- Initialization
 
 	user_initialization is
@@ -47,6 +55,12 @@ feature {NONE} -- Initialization
 			l_string_list: LIST [STRING]
 			l_assemblies: STRING
 		do
+			create codedoms_tree.make
+			codedoms_tree.select_actions.extend (agent on_codedom_tree_select)
+			codedoms_tree.deselect_actions.extend (agent on_codedom_tree_deselect)
+			codedom_trees_box.put_front (codedoms_tree)
+			codedom_trees_box.extend (codedom_tree_buttons_box)
+			codedom_trees_box.disable_item_expand (codedom_tree_buttons_box)
 			Event_manager.set_output_displayer (agent display_output)
 			make
 			close_request_actions.extend (agent on_close)
@@ -110,9 +124,12 @@ feature {NONE} -- Initialization
 			serialized_folder_text_field.set_text (text_setting (Saved_serialized_folder_key))
 			output_text.append_text ("%N%N----------------------------------------------------------%N")
 			output_text.append_text ("Tool started " + feature {SYSTEM_DATE_TIME}.now.to_string)
-			create store.load
-			update_tree
 		end
+
+feature -- Access
+
+	codedoms_tree: TESTER_CODEDOM_TREE
+			-- Codedoms tree
 
 feature {NONE} -- Events
 
@@ -355,9 +372,14 @@ feature {NONE} -- Events
 	
 	on_remove_codedom_tree is
 			-- Add codedom tree to codedoms tree
+		local
+			l_selected: EV_TREE_NODE
 		do
-			store.remove (codedoms_tree.selected_item.tooltip)
-			update_tree
+			l_selected := codedoms_tree.selected_item
+			if l_selected /= Void then
+				Store.remove (l_selected.tooltip)
+				codedoms_tree.update
+			end
 		end
 
 	on_codedom_tree_select is
@@ -632,7 +654,7 @@ feature {NONE} -- Events
 			set_text_setting (Referenced_assemblies_key, l_string)
 			set_text_setting (Parsed_file_key, parse_file_text_field.text)
 			set_text_setting (Serialized_filename_key, serialized_filename_text_field.text)
-			store.store;
+			Store.store;
 			(create {EV_ENVIRONMENT}).application.destroy
 		end
 	
@@ -691,118 +713,6 @@ feature {NONE} -- Implementation
 				parse_button.disable_sensitive
 			end
 		end
-	
-	update_tree is
-			-- Update codedoms tree.
-		local
-			l_node: EV_TREE_ITEM
-			l_namespace: SYSTEM_DLL_CODE_NAMESPACE
-			i: INTEGER
-		do
-			codedoms_tree.wipe_out
-			Compile_units_node.wipe_out
-			Namespaces_node.wipe_out
-			Types_node.wipe_out
-			Expressions_node.wipe_out
-			Statements_node.wipe_out
-			if store.compile_units /= Void then
-				from
-					i := 1
-					store.compile_units.start
-					store.compile_units_paths.start
-				until
-					store.compile_units.after
-				loop
-					l_namespace := store.compile_units.item.namespaces.item (0)
-					if l_namespace /= Void then
-						create l_node.make_with_text (l_namespace.name)
-					else
-						create l_node.make_with_text ("Compile unit " + i.out)
-					end
-					l_node.set_pixmap (Compile_unit_png)
-					l_node.set_tooltip (store.compile_units_paths.item)
-					l_node.set_data (store.compile_units.item)
-					Compile_units_node.extend (l_node)
-					store.compile_units.forth
-					store.compile_units_paths.forth
-					i := i + 1
-				end
-				codedoms_tree.extend (Compile_units_node)
-				Compile_units_node.expand
-			end
-			if store.namespaces /= Void then
-				from
-					store.namespaces.start
-					store.namespaces_paths.start
-				until
-					store.namespaces.after
-				loop
-					create l_node.make_with_text (store.namespaces.item.name)
-					l_node.set_pixmap (Namespace_png)
-					l_node.set_tooltip (store.namespaces_paths.item)
-					l_node.set_data (store.namespaces.item)
-					Namespaces_node.extend (l_node)
-					store.namespaces.forth
-					store.namespaces_paths.forth
-				end
-				codedoms_tree.extend (Namespaces_node)
-				Namespaces_node.expand
-			end
-			if store.types /= Void then
-				from
-					store.types.start
-					store.types_paths.start
-				until
-					store.types.after
-				loop
-					create l_node.make_with_text (store.types.item.name)
-					l_node.set_pixmap (Type_png)
-					l_node.set_tooltip (store.types_paths.item)
-					l_node.set_data (store.types.item)
-					Types_node.extend (l_node)
-					store.types.forth
-					store.types_paths.forth
-				end
-				codedoms_tree.extend (Types_node)
-				Types_node.expand
-			end
-			if store.expressions /= Void then
-				from
-					store.expressions.start
-					store.expressions_paths.start
-				until
-					store.expressions.after
-				loop
-					create l_node.make_with_text ("Expression " + store.expressions.index.out)
-					l_node.set_pixmap (Expression_png)
-					l_node.set_tooltip (store.expressions_paths.item)
-					l_node.set_data (store.expressions.item)
-					Expressions_node.extend (l_node)
-					store.expressions.forth
-					store.expressions_paths.forth
-				end
-				codedoms_tree.extend (Expressions_node)
-				Expressions_node.expand
-			end
-			if store.statements /= Void then
-				from
-					store.statements.start
-					store.statements_paths.start
-				until
-					store.statements.after
-				loop
-					create l_node.make_with_text ("Statement " + store.expressions.index.out)
-					l_node.set_pixmap (Statement_png)
-					l_node.set_tooltip (store.statements_paths.item)
-					l_node.set_data (store.statements.item)
-					Statements_node.extend (l_node)
-					store.statements.forth
-					store.statements_paths.forth
-				end
-				codedoms_tree.extend (Statements_node)
-				Statements_node.expand
-			end
-		end
 		
 	display_output (a_output: STRING) is
 			-- Display output `a_output'.
@@ -818,9 +728,42 @@ feature {NONE} -- Implementation
 			-- Selected tree item type if any
 			-- 0 otherwise
 			-- See class TESTER_CODEDOM_TYPES for possible values
+		local
+			l_selected: ANY
+			l_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT
+			l_namespace: SYSTEM_DLL_CODE_NAMESPACE
+			l_type: SYSTEM_DLL_CODE_TYPE_DECLARATION
+			l_statement: SYSTEM_DLL_CODE_STATEMENT
+			l_expression: SYSTEM_DLL_CODE_EXPRESSION
 		do
-			if codedoms_tree.selected_item /= Void and then not codedoms_tree.selected_item.tooltip.is_empty then
-				Result := (create {TESTER_TREE_DESERIALIZER}).codedom_type_from_file (codedoms_tree.selected_item.tooltip)
+			if codedoms_tree.selected_item /= Void then
+				l_selected := codedoms_tree.selected_item.data
+			end
+			if l_selected /= Void then
+				l_compile_unit ?= l_selected
+				if l_compile_unit /= Void then
+					Result := Codedom_compile_unit_type
+				else
+					l_namespace ?= l_selected
+					if l_namespace /= Void then
+						Result := Codedom_namespace_type
+					else
+						l_type ?= l_selected
+						if l_type /= Void then
+							Result := Codedom_type_type
+						else
+							l_expression ?= l_selected
+							if l_expression /= Void then
+								Result := Codedom_expression_type
+							else
+								l_statement ?= l_selected
+								if l_statement /= Void then
+									Result := Codedom_statement_type
+								end
+							end
+						end
+					end
+				end
 			end
 		ensure
 			valid_type: Result = 0 or else is_valid_codedom_type (Result)
@@ -949,8 +892,8 @@ feature {NONE} -- Implementation
 			non_void_path: a_path /= Void
 			non_empty_path: not a_path.is_empty
 		do
-			store.add (a_path)
-			update_tree
+			Store.add (a_path)
+			codedoms_tree.update
 		end
 
 	compiler_options: SYSTEM_DLL_COMPILER_PARAMETERS is
@@ -1040,12 +983,15 @@ feature {NONE} -- Implementation
 			non_void_processor: a_processor /= Void
 		local
 			l_dialog: EV_FILE_OPEN_DIALOG
+			l_cur_dir: STRING
 		do
+			l_cur_dir := (create {EXECUTION_ENVIRONMENT}).Current_working_directory
 			create l_dialog.make_with_title (a_title)
 			if a_filter /= Void then
-				l_dialog.set_filter (a_filter)
+				l_dialog.filters.extend ([a_filter, a_filter])
 			end
 			l_dialog.show_modal_to_window (Current)
+			(create {EXECUTION_ENVIRONMENT}).change_working_directory (l_cur_dir)
 			if not l_dialog.file_name.is_empty then
 				a_processor.call ([l_dialog.file_name])
 			end
@@ -1095,9 +1041,6 @@ feature {NONE} -- Private Access
 	codedom_provider: SYSTEM_DLL_CODE_DOM_PROVIDER
 			-- Associated codedom provider
 		
-	store: TESTER_TREE_STORE
-			-- Associated codedom tree store
-
 	Serialized_file_extension: STRING is ".ecds"
 			-- Serialized file extension
 
@@ -1111,41 +1054,6 @@ feature {NONE} -- Private Access
 			-- Black
 		once
 			Result := (create {EV_STOCK_COLORS}).Red
-		end
-
-	Compile_units_node: EV_TREE_NODE is
-			-- Compile units tree node
-		once
-			create {EV_TREE_ITEM} Result.make_with_text ("Compile units")
-			Result.set_pixmap (Compile_unit_png)
-		end
-
-	Namespaces_node: EV_TREE_NODE is
-			-- Namespaces tree node
-		once
-			create {EV_TREE_ITEM} Result.make_with_text ("Namespaces")
-			Result.set_pixmap (Namespace_png)
-		end
-
-	Types_node: EV_TREE_NODE is
-			-- Types tree node
-		once
-			create {EV_TREE_ITEM} Result.make_with_text ("Types")
-			Result.set_pixmap (Type_png)
-		end
-
-	Expressions_node: EV_TREE_NODE is
-			-- Expressions tree node
-		once
-			create {EV_TREE_ITEM} Result.make_with_text ("Expressions")
-			Result.set_pixmap (Expression_png)
-		end
-
-	Statements_node: EV_TREE_NODE is
-			-- Statements tree node
-		once
-			create {EV_TREE_ITEM} Result.make_with_text ("Statements")
-			Result.set_pixmap (Statement_png)
 		end
 
 invariant

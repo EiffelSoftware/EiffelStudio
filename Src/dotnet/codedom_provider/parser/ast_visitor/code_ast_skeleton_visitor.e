@@ -15,8 +15,6 @@ feature {AST_YACC} -- Implementation
 			-- Process `l_as'.
 			-- | Create CODE_COMPILE_UNIT in which is a CODE_NAMESPACE
 			-- | in which is a CODE_TYPE_DECLARATION.
-		require else
-			referenced_assemblies_initialized: (create {CODE_REFERENCED_ASSEMBLIES}).assemblies_initialized
 		local
 			l_code_compile_unit: SYSTEM_DLL_CODE_COMPILE_UNIT
 			l_namespace: SYSTEM_DLL_CODE_NAMESPACE

@@ -7,97 +7,67 @@ class
 	CODE_ATTRIBUTE_ARGUMENT
 
 inherit
-	CODE_NAMED_ENTITY
-		redefine
-			ready,
-			set_name
-		end
-		
-	CODE_SHARED_CODE_GENERATOR_CONTEXT
+	CODE_ENTITY
+
+	CODE_SHARED_NAME_FORMATTER
+		export
+			{NONE} all
 		undefine
-			default_create,
 			is_equal
 		end
 
 create
-	default_create
-	
+	make
+
+feature {NONE} -- Initialization
+
+	make (a_value: like value; a_name: like name; a_type: like type) is
+			-- Initialize instance.
+		require
+			non_void_value: a_value /= Void
+			non_void_type: a_type /= Void
+		do
+			value := a_value
+			name := a_name
+			type := a_type
+		ensure
+			value_set: value = a_value
+			name_set: name = a_name
+			type_set: type = a_type
+		end
+
 feature -- Access
 
+	name: STRING
+			-- Name of property or attribute to set if any
+
 	value: CODE_EXPRESSION
-			-- List of arguments.
+			-- Argument or value to set property or attribute with name `name' with
 			
-	type: STRING
-			-- Dotnet type of the custom attribute.
+	type: CODE_TYPE_REFERENCE
+			-- Type of the custom attribute.
 			
 	code: STRING is
 			-- | Result := "`value'"	 if name.is_empty
 			-- | OR
 			-- | Result := "["`name'", `value']"
-		local
-			feature_arguments: LINKED_LIST [CODE_EXPRESSION]
-			l_eiffel_name: STRING
 		do
 			create Result.make (120)
-			if name.is_empty then
+			if name = Void then
 				Result.append (value.code)
 			else
 				Result.append ("[")
-				create feature_arguments.make
-				Result.append (Dictionary.Double_quotes)
-				l_eiffel_name := Feature_finder.eiffel_feature_name_from_dynamic_args (Dotnet_types.dotnet_type (type), name, feature_arguments)
-				if l_eiffel_name = Void then
-					l_eiffel_name := Feature_finder.eiffel_feature_name_from_dynamic_args (Dotnet_types.dotnet_type (type), "get_" + name, feature_arguments)
-				end
-				check
-					non_void_l_eiffel_name: l_eiffel_name /= Void
-					not_empty_l_eiffel_name: not l_eiffel_name.is_empty
-				end
-				Result.append (l_eiffel_name)
-				Result.append (Dictionary.Double_quotes)
-				Result.append (", ")
+				Result.append ("%"")
+				Result.append (Name_formatter.formatted_feature_name (name))
+				Result.append ("%", ")
 				Result.append (value.code)
 				Result.append ("]")
 			end
 		end
 
-feature -- Status Report
-			
-	ready: BOOLEAN is
-			-- Is comment ready to be generated?
-		do
-			Result := name /= Void and value /= Void
-		end
-
-feature -- Status Setting
-
-	set_name (a_name: like name) is
-			-- redefinition of preconditions of set_name.
-		require else
-			non_void_name: a_name /= Void
-		do
-			name := a_name
-		end
-
-	set_value (a_value: CODE_EXPRESSION) is
-			-- Set `value' to `a_value'.
-		require
-			non_void_a_value: a_value /= Void
-		do
-			value := a_value
-		ensure
-			a_value_set: value = a_value
-		end
-
-	set_type (a_type: STRING) is
-			-- Set `type' to `a_type'.
-		require
-			non_void_a_type: a_type /= Void
-		do
-			type := a_type
-		ensure
-			a_type_set: type = a_type
-		end
+invariant
+	non_void_value: value /= Void
+	non_void_type: type /= Void
 
 end -- class CODE_ATTRIBUTE_ARGUMENT
 

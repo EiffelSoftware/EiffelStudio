@@ -4,7 +4,7 @@ indexing
 	revision: "$$"		
 	
 class
-	CODE_ROUTINE_RETURN_STATEMENT
+	CODE_METHOD_RETURN_STATEMENT
 
 inherit
 	CODE_STATEMENT
@@ -14,9 +14,14 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_expression: like expression) is
 			-- Initialize `expression'.
+		require
+			non_void_expression: a_expression /= Void
 		do
+			expression := a_expression
+		ensure
+			expression_set: expression = a_expression
 		end
 		
 feature -- Access
@@ -26,8 +31,8 @@ feature -- Access
 			
 	code: STRING is
 			-- | 	Result := "Result := `expression'"
-			-- | OR Result := "Result := `expression'" if expression is `EG_CAST_EXPRESSION'.
-			-- | OR Result := "expression" if expression is `EG_OBJECT_CREATE_EXPRESSION'
+			-- | OR Result := "Result := `expression'" if expression is `CODE_CAST_EXPRESSION'.
+			-- | OR Result := "expression" if expression is `CODE_OBJECT_CREATE_EXPRESSION'
 			-- Eiffel code of routine return statement
 		local
 			l_cast_exp: CODE_CAST_EXPRESSION
@@ -38,7 +43,7 @@ feature -- Access
 			end
 			create Result.make (120)
 			Result.append (Indent_string)
-			Result.append (Dictionary.Result_keyword)
+			Result.append ("Result")
 			set_new_line (False)
 			l_cast_exp ?= expression
 			if l_cast_exp /= Void then
@@ -47,42 +52,20 @@ feature -- Access
 			else
 				l_object_creation_exp ?= expression
 				if l_object_creation_exp /= Void then
-					l_object_creation_exp.set_object_created ("Result")
+					l_object_creation_exp.set_target ("Result")
 					Result.append (l_object_creation_exp.code)	
 				else
-					Result.append (Dictionary.space)
-					Result.append (Dictionary.Colon)
-					Result.append (Dictionary.equal_keyword)
-					Result.append (Dictionary.space)
+					Result.append (" := ")
 					Result.append (expression.code)
 				end
 			end
-			Result.append (Dictionary.New_line)
+			Result.append_character ('%N')
 		end
-		
-feature -- Status Report
-
-	ready: BOOLEAN is
-			-- Is routine return statement ready to be generated?
-		do
-			Result := expression /= Void and then expression.ready 
-		end
-
-feature -- Status Setting	
-
-	set_expression (an_expression: like expression) is
-			-- Set `expression' with `an_expression'.
-		require
-			non_void_expression: an_expression /= Void
-		do
-			expression := an_expression
-		ensure
-			expression_set: expression = an_expression
-		end	
 
 invariant
-	
-end -- class CODE_ROUTINE_RETURN_STATEMENT
+	non_void_expression: expression /= Void
+
+end -- class CODE_METHOD_RETURN_STATEMENT
 
 --+--------------------------------------------------------------------
 --| Eiffel CodeDOM Provider

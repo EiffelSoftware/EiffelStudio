@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 		do
 			default_create
 			create text.make_empty
-			create custom_attributes.make
+			create {ARRAYED_LIST [CODE_ATTRIBUTE_DECLARATION]} custom_attributes.make (1)
 		ensure then
 			non_void_text: text /= Void
 			non_void_custom_attribute: custom_attributes /= Void
@@ -33,7 +33,7 @@ feature -- Access
 	text: STRING 
 			-- Indexing clause text
 			
-	custom_attributes: LINKED_LIST [CODE_ATTRIBUTE_DECLARATION]
+	custom_attributes: LIST [CODE_ATTRIBUTE_DECLARATION]
 			-- List of custom attributes.
 
 	code: STRING is
@@ -41,12 +41,9 @@ feature -- Access
 		do
 			create Result.make (120)
 			Result.append (tag)
-			Result.append (Dictionary.Colon)
-			Result.append (Dictionary.Space)
-			Result.append (Dictionary.Inverted_comma)
+			Result.append (": %"")
 			Result.append (text)
-			Result.append (Dictionary.Inverted_comma)
-			Result.append (Dictionary.New_line)
+			Result.append ("%"%N")
 			Result.append (custom_attributes_code)
 		end
 
@@ -81,9 +78,7 @@ feature {NONE} -- Implementation
 			if custom_attributes.count > 0 then
 				increase_tabulation
 				Result.append (indent_string)
-				Result.append (Dictionary.Attribute_keyword)
-				Result.append (Dictionary.Colon)
-				Result.append (Dictionary.Space)
+				Result.append ("metadata: ")
 				from
 					custom_attributes.start
 				until
@@ -92,14 +87,11 @@ feature {NONE} -- Implementation
 					Result.append (custom_attributes.item.code)
 					custom_attributes.forth
 					if not custom_attributes.after then
-						Result.append (",")
-						Result.append (Dictionary.New_line)
-						Result.append (Dictionary.Tab)
-						Result.append (Dictionary.Tab)
+						Result.append (",%N%T%T")
 					end
 				end
 				decrease_tabulation
-				Result.append (Dictionary.New_line)
+				Result.append_character ('%N')
 			end
 		ensure
 			non_void_result: Result /= Void

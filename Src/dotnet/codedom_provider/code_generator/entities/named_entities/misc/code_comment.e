@@ -13,7 +13,21 @@ inherit
 		end
 
 create
-	default_create
+	make
+
+feature {NONE} -- Initialization
+	
+	make (a_text: like text; a_is_implementation_comment: like is_implementation_comment) is
+			-- Set `text' with `a_text' and `is_implementation_comment' with `a_is_implementation_comment'.
+		require
+			non_void_text: a_text /= Void
+		do
+			text := a_text
+			is_implementation_comment := a_is_implementation_comment
+		ensure
+			text_set: text = a_text
+			is_implementation_comment_set: is_implementation_comment = a_is_implementation_comment
+		end
 		
 feature -- Access
 			
@@ -23,14 +37,12 @@ feature -- Access
 		do
 			create Result.make (120)
 			Result.append (Indent_string)
-			Result.append (dictionary.Dashes)
-			Result.append (dictionary.Space)
+			Result.append ("-- ")
 			if is_implementation_comment then
-				Result.append (dictionary.Vertical_bar)
-				Result.append (dictionary.Space)
+				Result.append ("| ")
 			end
 			Result.append (text)
-			Result.append (Dictionary.New_line)
+			Result.append ("%N")
 		end
 
 feature -- Status Report
@@ -38,16 +50,9 @@ feature -- Status Report
 	is_implementation_comment: BOOLEAN
 			-- Is it an implementation comment? (i.e. not visible in class documentation)
 
-feature -- Status Setting
+invariant
+	non_void_text: text /= Void
 
-	set_implementation_comment (a_value: like is_implementation_comment) is
-			-- Set `is_implementation_comment' with `a_value'.
-		do
-			is_implementation_comment := a_value
-		ensure
-			is_implementation_comment_set: is_implementation_comment = a_value
-		end
-	
 end -- class CODE_COMMENT
 
 --+--------------------------------------------------------------------

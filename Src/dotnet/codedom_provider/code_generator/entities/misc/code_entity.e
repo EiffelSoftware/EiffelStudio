@@ -7,37 +7,42 @@ deferred class
 	CODE_ENTITY
 
 inherit
-	CODE_SHARED_CODE_GENERATOR_CONTEXT
+	CODE_SHARED_GENERATION_HELPERS
+		export
+			{NONE} all
+		redefine
+			is_equal
+		end
 
-	CODE_GENERATION_CONTEXT
+	CODE_SHARED_GENERATION_CONTEXT
+		export
+			{NONE} all
+		redefine
+			is_equal
+		end
+
+	CODE_SHARED_EVENT_MANAGER
+		export
+			{NONE} all
+		redefine
+			is_equal
+		end
 
 feature -- Access
 
 	code: STRING is
 			-- Eiffel code of the entity
-		require
-			ready: ready
 		deferred
 		ensure
 			code_generated: Result /= Void
-			not_empty_code: not Result.is_empty
-		end
-		
-	Dictionary: CODE_DICTIONARY is
-			-- | Include Eiffel keywords and useful strings.
-
-			-- Eiffel code_generator dictionary
-		once
-			create Result
-		ensure
-			dictionary_created: Result /= Void
 		end
 
-feature -- Status Report
+feature -- Comparison
 
-	ready: BOOLEAN is
-			-- Is entity ready to be generated?
-		deferred
+	is_equal (obj: like Current): BOOLEAN is
+			-- Is `obj' equals to Current?
+		do
+			Result := code.as_lower.is_equal (obj.code.as_lower)
 		end
 
 end -- class CODE_ENTITY

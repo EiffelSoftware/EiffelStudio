@@ -19,7 +19,7 @@ inherit
 feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
 	generate_compile_unit (a_source: SYSTEM_DLL_CODE_COMPILE_UNIT) is
-			-- | Create an instance of `EG_COMPILE_UNIT'.
+			-- | Create an instance of `CODE_COMPILE_UNIT'.
 			-- | Initialize this instance with `a_source'
 			-- | Set `last_compile_unit'.
 
@@ -27,14 +27,58 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 		require
 			non_void_source: a_source /= Void
 		local
-			a_compile_unit: CODE_COMPILE_UNIT
+			l_namespaces: SYSTEM_DLL_CODE_NAMESPACE_COLLECTION
+			l_namespace: SYSTEM_DLL_CODE_NAMESPACE
+			l_types: SYSTEM_DLL_CODE_TYPE_DECLARATION_COLLECTION
+			l_code_namespaces: LIST [CODE_NAMESPACE]
+			i, j, l_count: INTEGER
+			l_referenced_assemblies: SYSTEM_DLL_STRING_COLLECTION
+			l_compile_unit: CODE_COMPILE_UNIT
 		do
-			create a_compile_unit.make
-			initialize_compile_unit (a_source, a_compile_unit)
-			set_last_compile_unit (a_compile_unit)
+			l_referenced_assemblies := a_source.referenced_assemblies
+			from
+				l_count := l_referenced_assemblies.count
+			until
+				i = l_count
+			loop
+				add_referenced_assembly (l_referenced_assemblies.item (i))
+				if not assembly_added then
+					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_reference, [l_referenced_assemblies.item (i)])
+				end
+				i := i + 1
+			end
+			l_namespaces := a_source.namespaces
+			if l_namespaces /= Void then
+				from
+					i := 0
+					l_count := l_namespaces.count
+					create {ARRAYED_LIST [CODE_NAMESPACE]} l_code_namespaces.make (l_count)
+				until
+					i = l_count
+				loop
+					l_namespace := l_namespaces.item (i)
+					from
+						j := 0
+						l_types := l_namespace.types
+						l_count := l_types.count
+					until
+						j = l_count
+					loop
+						Resolver.add_generated_type (Type_reference_factory.type_reference_from_declaration (l_types.item (j)))
+						j := j + 1
+					end
+					code_dom_generator.generate_namespace_from_dom (l_namespace)
+					l_code_namespaces.extend (last_namespace)
+					i := i + 1
+				end
+				create l_compile_unit.make (l_code_namespaces)
+			else
+				create l_compile_unit.make (create {ARRAYED_LIST [CODE_NAMESPACE]}.make (0))
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_namespaces, [])
+			end
+			set_last_compile_unit (l_compile_unit)
 		ensure
 			non_void_compile_unit: last_compile_unit /= Void
-			compile_unit_generated: last_compile_unit.ready
 		end
 
 	generate_snippet_compile_unit (a_source: SYSTEM_DLL_CODE_SNIPPET_COMPILE_UNIT) is
@@ -45,15 +89,10 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 			-- Generate Eiffel code from `a_source'.
 		require
 			non_void_source: a_source /= Void
-		local
-			a_snippet_compile_unit: CODE_SNIPPET_COMPILE_UNIT
 		do
-			create a_snippet_compile_unit.make
-			a_snippet_compile_unit.set_value (a_source.value)
-			set_last_compile_unit (a_snippet_compile_unit)
+			set_last_compile_unit (create {CODE_SNIPPET_COMPILE_UNIT}.make (a_source.value))
 		ensure
 			non_void_compile_unit: last_compile_unit /= Void
-			compile_unit_ready: last_compile_unit.ready
 		end
 
 	generate_namespace (a_source: SYSTEM_DLL_CODE_NAMESPACE) is
@@ -82,65 +121,6 @@ feature {CODE_CONSUMER_FACTORY} -- Visitor features.
 
 feature {NONE} -- Implementation
 
-	initialize_compile_unit (a_source: SYSTEM_DLL_CODE_COMPILE_UNIT; a_compile_unit: CODE_COMPILE_UNIT) is
-			-- | Initialize `assemblies'
-			-- | Call in loop `generate_namespace_from_dom'.
-			-- | Add all types found in Namespace in `eg_generated_types'
-			-- | Add `last_name_space' to `last_compile_unit'
-
-			-- Generate compile unit namespaces from `a_source'.
-		require
-			non_void_source: a_source /= Void
-			not_empty_namespaces_list: a_source.namespaces.count > 0
-			non_void_compil_unit: a_compile_unit /= Void
-		local
-			i, j, l_count: INTEGER
-			l_namespaces: SYSTEM_DLL_CODE_NAMESPACE_COLLECTION
-			l_namespace: SYSTEM_DLL_CODE_NAMESPACE
-			l_types: SYSTEM_DLL_CODE_TYPE_DECLARATION_COLLECTION
-			l_referenced_assemblies: SYSTEM_DLL_STRING_COLLECTION
-		do	
-			Resolver.clear_all_local_variables 
-
-			l_referenced_assemblies := a_source.referenced_assemblies
-			from
-				l_count := l_referenced_assemblies.count
-			until
-				i = l_count
-			loop
-				add_referenced_assembly (l_referenced_assemblies.item (i))
-				if not assembly_added then
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_reference, [l_referenced_assemblies.item (i)])
-				end
-				i := i + 1
-			end
-			l_namespaces := a_source.namespaces
-			if l_namespaces /= Void then
-				from
-					i := 0
-				until
-					i = l_namespaces.count
-				loop
-					l_namespace := l_namespaces.item (i)
-					from
-						j := 0
-						l_types := l_namespace.types
-						l_count := l_types.count
-					until
-						j = l_count
-					loop
-						Resolver.add_generated_type (l_types.item (j).name)
-						j := j + 1
-					end
-					code_dom_generator.generate_namespace_from_dom (l_namespace)
-					a_compile_unit.namespaces.extend (last_namespace)
-					i := i + 1
-				end
-			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_namespaces, [])
-			end
-		end	
-
 	initialize_namespace (a_source: SYSTEM_DLL_CODE_NAMESPACE; a_namespace: CODE_NAMESPACE) is
 			-- | Call in loop `generate_type_from_dom'.
 	
@@ -153,12 +133,23 @@ feature {NONE} -- Implementation
 			i, l_count: INTEGER
 			l_types: SYSTEM_DLL_CODE_TYPE_DECLARATION_COLLECTION
 			l_type: SYSTEM_DLL_CODE_TYPE_DECLARATION
+			l_imports: SYSTEM_DLL_CODE_NAMESPACE_IMPORT_COLLECTION
 		do
 			a_namespace.set_name (a_source.name)
+			from
+				l_imports := a_source.imports
+				l_count := l_imports.count
+			until
+				i = l_count
+			loop
+				a_namespace.add_import (l_imports.item (i).namespace)
+				i := i + 1
+			end
 			l_types := a_source.types
 			if l_types /= Void then
 				from
 					l_count := l_types.count
+					i := 0
 				until
 					i = l_count
 				loop

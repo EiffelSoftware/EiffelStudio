@@ -14,9 +14,13 @@ create
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Do nothing.
+	make (a_value: like value) is
+		require
+			non_void_value: a_value /= Void
 		do
+			value := a_value
+		ensure
+			value_set: value = a_value
 		end
 		
 feature -- Access
@@ -32,26 +36,6 @@ feature -- Access
 			Result.append (indent_string)
 			Result.append (value)
 			Result.append ("%N")
-		end
-		
-feature -- Status Report
-
-	ready: BOOLEAN is
-			-- Is snippet statement ready to be generated?
-		do
-			Result := value /= Void
-		end
-
-feature -- Status Setting
-
-	set_value (a_value: like value) is
-			-- Set `value' with `a_value'.
-		require
-			non_void_value: a_value /= Void
-		do
-			value := a_value
-		ensure
-			value_set: value = a_value
 		end
 	
 end -- class CODE_SNIPPET_STATEMENT

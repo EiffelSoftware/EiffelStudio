@@ -19,169 +19,107 @@ inherit
 			{NONE} all
 		end
 
+	CODE_REFERENCED_ASSEMBLIES
+		export
+			{NONE} all
+		end
+
+	CODE_SHARED_GENERATION_CONTEXT
+		export
+			{NONE} all
+		end
+
 create
 	default_create
 
 feature -- Access
 
-	generated_type (a_type_name: STRING): CODE_GENERATED_TYPE is
-			-- Generated type with name `a_type_name'
-		require
-			non_void_type_name: a_type_name /= Void
-			valid_type_name: not a_type_name.is_empty
-		do
-			Generated_types.search (a_type_name)
-			if Generated_types.found then
-				Result := Generated_types.found_item
-			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Non_generated_type, [a_type_name, "generated_type", "type cache"])
-			end
-		end
-		
-	type (a_type_name: STRING): CODE_TYPE is
-			-- Type with name `a_type_name'
-		require
-			non_void_type_name: a_type_name /= Void
-			valid_type_name: not a_type_name.is_empty
-		do
-			Types.search (a_type_name)
-			if Types.found then
-				Result := Types.found_item
-			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_type, [a_type_name])
-			end
-		end
-		
-	eiffel_type_name (a_dotnet_type_name: STRING): STRING is
-			-- Eiffel type name corresponding to `a_dotnet_type_name'
-			-- ex : System.Boolean -> BOOLEAN
-		require
-			non_void_a_dotnet_type_name: a_dotnet_type_name /= Void
-			not_empty_a_dotnet_type_namee: not a_dotnet_type_name.is_empty
-		local
-			l_type: TYPE
-			l_external_type: CODE_EXTERNAL_TYPE
-			l_cache_reflection: CACHE_REFLECTION
-		do
-			if Generated_types.has (a_dotnet_type_name) then
-				Result := (create {NAME_FORMATTER}).full_formatted_type_name (a_dotnet_type_name)
-			else
-				if Types.has (a_dotnet_type_name) then
-					l_external_type ?= Types.item (a_dotnet_type_name)
-					if l_external_type /= Void then
-						l_type := l_external_type.type
-						create l_cache_reflection.make (Clr_version)
-						Result := l_cache_reflection.type_name (l_type)
-						if Result = Void or else Result.is_empty then
-							Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_consumed_type, [a_dotnet_type_name])
-							Result := a_dotnet_type_name
-						end
-						if not Result.is_empty then
-							Result.prepend (assembly_of_type (a_dotnet_type_name).assembly_prefix)
-						end
-					else
-						Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Non_external_type, [a_dotnet_type_name])
-						Result := a_dotnet_type_name
-					end
-				else
-					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_type, [a_dotnet_type_name])
-					Result := a_dotnet_type_name
-				end
-			end
-		ensure
-			non_void_result: Result /= Void
-			not_empty_result: not Result.is_empty
-		end
+	found_type: CODE_TYPE
+			-- Last type found with `search'
+
+	found_generated_type: CODE_GENERATED_TYPE
+			-- Last generated type found with `search'
 
 feature -- Status Repport
 
-	is_generated_type (a_type_name: STRING): BOOLEAN is
+	has (a_type: CODE_TYPE_REFERENCE): BOOLEAN is
+			-- Is type `a_type' in cache?
+		do
+			Result := Types.has (a_type.full_name)
+		end
+		
+	is_generated (a_type: CODE_TYPE_REFERENCE): BOOLEAN is
 			-- Is type `a_type_name' declared in Codedom tree?
 		require
-			non_void_type_name: a_type_name /= Void
-			valid_type_name: not a_type_name.is_empty
+			non_void_type: a_type /= Void
 		do
-			Result := Generated_types.has (a_type_name) 
+			Result := Generated_types.has (a_type.full_name)
 		end
+
+	found: BOOLEAN
+			-- Was last call to `search' successful?
+
+	found_generated: BOOLEAN
+			-- Did last search yield a generated type?
 
 feature -- Basics Operations
 
-	update_generated_type (a_generated_type: CODE_GENERATED_TYPE) is
-			-- Add `a_generated_type' to `Generated_types' and `Types'.
+	search (a_type: CODE_TYPE_REFERENCE) is
+			-- Search for type `a_type' in caches.
+			-- Set `found', `found_generated', `found_type' and `found_generated_type' accordingly.
 		require
-			non_void_generated_type: a_generated_type /= Void 
+			non_void_type: a_type /= Void
 		do
-			Generated_types.force (a_generated_type, a_generated_type.name)
-			Types.force (a_generated_type, a_generated_type.name)
-		ensure
-			a_generated_type_set: generated_types.has_item (a_generated_type)
+			Generated_types.search (a_type.full_name)
+			found_generated := Generated_types.found
+			if found_generated then
+				found := True
+				found_type := Generated_types.found_item
+				found_generated_type := Generated_types.found_item
+			else
+				Types.search (a_type.full_name)
+				found := Types.found
+				if found then
+					found_type := Types.found_item
+				end
+			end
 		end
 
-	add_generated_type (a_generated_type_name: STRING) is
-			-- Add `a_generated_type_name' to `generated_types'.
+feature -- Element Settings
+
+	add_generated_type (a_type: CODE_TYPE_REFERENCE) is
+			-- Add `a_type' to `generated_types'.
 		require
-			non_void_generated_type_name: a_generated_type_name /= Void
-			not_empty_a_generated_type_name: not a_generated_type_name.is_empty
+			non_void_generated_type: a_type /= Void
 		local
 			a_generated_type: CODE_GENERATED_TYPE
 		do
-			if not generated_types.has (a_generated_type_name) then
-				create a_generated_type.make
-				a_generated_type.set_name (a_generated_type_name)
-				generated_types.put (a_generated_type, a_generated_type_name)
-				Types.put (a_generated_type, a_generated_type.name)
+			create a_generated_type.make (a_type)
+			Generated_types.force (a_generated_type, a_type.full_name)
+			Types.force (a_generated_type, a_type.full_name)
+			if Types.found then
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Type_in_cache, [a_type.full_name])
 			end
 		ensure
-			generated_types_set: generated_types.has (a_generated_type_name)
+			generated_types_set: generated_types.has (a_type.full_name)
 		end
 	
-	add_external_type (a_type_name: STRING) is
+	add_external_type (a_type: CODE_TYPE_REFERENCE) is
 			-- Add `an_external_type_name' to `types'.
 		require
-			non_void_type_name: a_type_name /= Void
-			valid_type_name: not a_type_name.is_empty
-			external_type: not is_generated_type (a_type_name)
+			non_void_type: a_type /= Void
 		local
-			l_type: CODE_EXTERNAL_TYPE
+			l_dotnet_type: TYPE
 		do
-			if not Types.has (a_type_name) then
-				create l_type.make
-				l_type.set_name (a_type_name)
-				Types.put (l_type, l_type.name)
-			end
-		ensure
-			type_added: types.has (a_type_name)
-		end
-
-feature {NONE} -- Implementation
-
-	assembly_of_type (a_dotnet_type_name: STRING): CODE_REFERENCED_ASSEMBLY is
- 			-- Return assembly in witch is `a_dotnet_type_name'.
-		require
-			non_void_a_dotnet_type_name: a_dotnet_type_name /= Void
-			not_empty_a_dotnet_type_name: not a_dotnet_type_name.is_empty
-		local
-			l_ref_ass: CODE_REFERENCED_ASSEMBLIES
-			l_assembly: CODE_REFERENCED_ASSEMBLY
-		do
-			if not is_generated_type (a_dotnet_type_name) then
-				create l_ref_ass
-				from
-					l_ref_ass.Referenced_assemblies.start
-				until
-					l_ref_ass.Referenced_assemblies.after or Result /= Void
-				loop
-					l_assembly := l_ref_ass.Referenced_assemblies.item
-					if l_assembly.assembly.get_type_string (a_dotnet_type_name) /= Void then
-						Result := l_assembly
-					end
-					l_ref_ass.Referenced_assemblies.forth
+			l_dotnet_type := a_type.dotnet_type
+			if l_dotnet_type /= Void then
+				Types.force (create {CODE_EXTERNAL_TYPE}.make (a_type), a_type.full_name)
+				if Types.found then
+					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Type_in_cache, [a_type.full_name])
 				end
 			else
-				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.No_assembly, [a_dotnet_type_name])
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_type, [a_type.full_name])
 			end
-		ensure
-			non_void_assembly: Result /= Void
 		end
 
 feature {NONE} -- Private access
@@ -189,22 +127,31 @@ feature {NONE} -- Private access
 	Generated_types: HASH_TABLE [CODE_GENERATED_TYPE, STRING] is
 			-- Types declared in Codedom tree
 			-- Value: `CODE_GENERATED_TYPE'
-			-- Key: .NET type name
+			-- Key: .NET full type name
 		once
 			create Result.make (128)
+			Result.compare_objects
 		ensure
-			non_void_result: Result /= Void
+			non_void_generated_types: Result /= Void
 		end
 
 	Types: HASH_TABLE [CODE_TYPE, STRING] is
-			-- All types in Codedom tree
+			-- All types referenced by Codedom tree
 			-- Value: dynamically `CODE_TYPE'
-			-- Key: .NET type name
+			-- Key: .NET full type name
 		once
 			create Result.make (128)
+			Result.compare_objects
 		ensure
-			non_void_result: Result /= Void
+			non_void_types: Result /= Void
 		end
+
+invariant
+	non_void_types: Types /= Void
+	non_void_types: Generated_types /= Void
+	found_type_if_found: found implies found_type /= Void
+	found_generated: found_generated implies found_generated_type /= Void
+	found_generated_iff_found: (found_generated implies found) and (not found implies not found_generated)
 
 end -- class CODE_TYPE_CACHE
 

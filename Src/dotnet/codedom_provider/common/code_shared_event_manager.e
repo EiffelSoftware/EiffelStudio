@@ -17,7 +17,7 @@ feature -- Access
 end -- class CODE_SHARED_EVENT_MANAGER
 
 --+--------------------------------------------------------------------
---| Eiffel CodeDOM Provider Manager
+--| Eiffel CodeDOM Provider
 --| Copyright (C) 2001-2004 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.

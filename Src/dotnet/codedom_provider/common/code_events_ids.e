@@ -31,6 +31,9 @@ feature -- General Errors
 
 	Missing_current_process_file_name: INTEGER is 8
 			-- No default configuration information could be found
+		
+	Cannot_load_type: INTEGER is 9
+			-- Type could not be loaded
 
 feature -- General Warning
 
@@ -82,6 +85,51 @@ feature -- Consumer Errors
 
 	Missing_implementing_type: INTEGER is 10007
 			-- Could not find implementing type for feature
+	
+	Missing_variable_type: INTEGER is 10008
+			-- Variable type is missing
+
+	Missing_feature_type: INTEGER is 10009
+			-- Feature type is missing
+
+	Missing_assignment_target: INTEGER is 10010
+			-- Statement is missing assignment target
+			
+	Missing_assignment_source: INTEGER is 10011
+			-- Statement is missing assignment source
+	
+	Missing_comment_text: INTEGER is 10012
+			-- Comment is missing text
+
+	Missing_condition: INTEGER is 10013
+			-- Condition statement is missing condition expression
+
+	Missing_expression: INTEGER is 10014
+			-- Expression statement is missing expression
+
+	Missing_right_operand: INTEGER is 10015
+			-- Binary expression is missing right operand
+
+	Missing_left_operand: INTEGER is 10016
+			-- Binary expression is missing left operand
+
+	Missing_variable_name: INTEGER is 10017
+			-- Variable name is missing
+
+	Missing_variable: INTEGER is 10018
+			-- Variable is missing
+
+	Missing_array_information: INTEGER is 10019
+			-- Array creation expression is missing some information
+
+	Missing_argument_name: INTEGER is 10020
+			-- Argument name is missing
+
+	Missing_argument_type: INTEGER is 10021
+			-- Argument type is missing
+
+	Missing_argument: INTEGER is 10022
+			-- Argument is missing
 
 feature -- Consumer Warnings
 
@@ -153,6 +201,27 @@ feature -- Consumer Warnings
 
 	Missing_reference: INTEGER is 20023
 			-- Reference was not found
+
+	Type_in_cache: INTEGER is 20024
+			-- Type is already in cache
+
+	Wrong_feature_kind: INTEGER is 20025
+			-- Feature is not of expected kind
+
+	Missing_return_expression: INTEGER is 20026
+			-- Return statement is missing expression
+
+	Missing_snippet_value: INTEGER is 20027
+			-- Snippet statement is missing value
+
+	Missing_test_expression: INTEGER is 20028
+			-- Iteration statement is missing test expression
+
+	Ambiguous_match: INTEGER is 20029
+			-- Multiple features with given name
+
+	Missing_parent: INTEGER is 20030
+			-- Parent routine is missing
 
 feature -- Consumer Information
 

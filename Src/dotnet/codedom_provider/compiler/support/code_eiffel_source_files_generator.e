@@ -12,6 +12,11 @@ inherit
 			{NONE} all
 		end
 
+	CODE_SHARED_CLASS_SEPARATOR
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -33,9 +38,6 @@ feature -- Access
 
 	destination_directory: DIRECTORY
 			-- Path to directory where generated Eiffel files should be written
-
-	Class_separator: STRING is "%N__end_class__%N"
-			-- Token used to separate class definition in single file
 
 	Eiffel_source_prefix: STRING is "generated"
 			-- Generated Eiffel source file name prefix
@@ -119,8 +121,8 @@ feature {NONE} -- Implementation
 end -- class CODE_EIFFEL_SOURCE_FILES_GENERATOR
 
 --+--------------------------------------------------------------------
---| Prepare Utility
---| Copyright (C) 2004 Eiffel Software
+--| Eiffel CodeDOM Provider
+--| Copyright (C) 2001-2004 Eiffel Software
 --| Eiffel Software Confidential
 --| All rights reserved. Duplication and distribution prohibited.
 --|

@@ -115,7 +115,7 @@ feature {NONE} -- Implementation
 			l_path: STRING
 		do
 			create l_dialog.make_with_title ("Browse for WSDL file")
-			l_dialog.set_filter ("*.wsdl")
+			l_dialog.filters.extend ("*.wsdl", "*.wsdl")
 			l_path := Wsdl_start_directory
 			if l_path /= Void then
 				l_dialog.set_start_directory (l_path)

@@ -9,37 +9,42 @@ class
 inherit
 	CODE_EXPRESSION
 
+	CODE_SHARED_TYPE_REFERENCE_FACTORY
+		export
+			{NONE} all
+		undefine
+			is_equal
+		end
+
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make is
+	make (a_target: like target; a_indices: like indices) is
 			-- Initialize `target_object' and `indices'.
 		do
-			create indices.make
+			indices := a_indices
+			target := a_target
 		ensure
-			non_void_indices: indices /= Void
+			target_set: target = a_target
+			indices_set: indices = a_indices
 		end
 		
 feature -- Access
 
-	target_object: CODE_EXPRESSION
+	target: CODE_EXPRESSION
 			-- Target object
 	
-	indices: LINKED_LIST [CODE_EXPRESSION]
+	indices: LIST [CODE_EXPRESSION]
 			-- Linked_list indexer indices
 		
 	code: STRING is
 			-- | Result := "`target_object'.item (`indices', ...)".
 			-- Eiffel code of indexer expression
 		do
-			Check
-				non_void_target_object: target_object /= Void
-			end
-		
 			create Result.make (120)
-			Result.append (target_object.code + ".item (")
+			Result.append (target.code + ".item (")
 			from
 				indices.start
 				if not indices.after then
@@ -49,57 +54,59 @@ feature -- Access
 			until
 				indices.after
 			loop
-				Result.append (Dictionary.comma)
-				Result.append (Dictionary.space)
+				Result.append (", ")
 				Result.append (indices.item.code)
 				indices.forth
 			end
-			Result.append (Dictionary.Closing_round_bracket)
+			Result.append_character (')')
 		end
 		
 feature -- Status Report
 
-	ready: BOOLEAN is
-			-- Is array indexer expression ready to be generated?
-		do
-			Result := target_object.ready and indices /= Void and then indices.for_all (agent is_index_ready)
-		end
-
-	is_index_ready (a_index: CODE_EXPRESSION): BOOLEAN is
-			-- Is expression `a_index' ready?
-		require
-			non_void_index: a_index /= Void
-		do
-			Result := a_index.ready
-		end
-		
-	type: TYPE is
+	type: CODE_TYPE_REFERENCE is
 			-- Type
+		local
+			l_type: TYPE
+			l_members: ARRAY [MEMBER_INFO]
+			i, j, l_count, l_par_count: INTEGER
+			l_parameters: ARRAY [PARAMETER_INFO]
+			l_method: METHOD_INFO
+			l_not_conform: BOOLEAN
 		do
-			Result := target_object.type
+			l_type := target.type.dotnet_type
+			if l_type /= Void then
+				l_members := l_type.get_default_members
+				from
+					l_count := l_members.count
+				until
+					i = l_count or Result /= Void
+				loop
+					l_method ?= l_members.item (i)
+					if l_method /= Void and then l_method.return_type /= Void then
+						l_parameters := l_method.get_parameters
+						l_par_count := l_parameters.count
+						if l_par_count = indices.count then
+							from
+								j := 0
+							until
+								j = l_par_count or l_not_conform
+							loop
+								l_not_conform := not Type_reference_factory.type_reference_from_type (l_parameters.item (j).parameter_type).conforms_to (indices.i_th (j + 1).type)
+								j := j + 1
+							end
+							if not l_not_conform then
+								Result := Type_reference_factory.type_reference_from_type (l_method.return_type)
+							end
+						end						
+					end
+					i := i + 1
+				end
+			end
+			if Result = Void then
+				Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Incorrect_result, ["type from indexer expression for indexer of " + target.type.name])
+				Result := target.type 
+			end
 		end
-
-feature -- Status Setting
-
-	set_target_object (an_expression: like target_object) is
-			-- Set `target_object' with `an_expression'.
-		require
-			non_void_expression: an_expression /= Void
-		do
-			target_object := an_expression
-		ensure
-			target_object_set: target_object = an_expression
-		end		
-		
-	add_indice (an_indice: CODE_EXPRESSION) is
-			-- Set `indices' with `a_list'.
-		require
-			non_void_list: an_indice /= Void
-		do
-			indices.extend (an_indice)
-		ensure
-			indices_set: indices.has (an_indice)
-		end	
 		
 invariant
 	non_void_indices: indices /= Void

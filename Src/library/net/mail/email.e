@@ -26,12 +26,10 @@ feature -- Initialization
 		require
 			needed_info: header_from /= Void
 						 and then header_to /= Void 
-		local
-			a_header: HEADER
 		do
 			create headers.make (3)
-			add_header_entry (header_from, H_from)
-			add_header_entry (header_to, H_to)
+			add_header_entry (H_from, header_from)
+			add_header_entry (H_to, header_to)
 		end
 
 feature {NONE} -- Basic operations.
@@ -45,7 +43,7 @@ feature {NONE} -- Basic operations.
 feature -- Basic operations
 
 	add_header_entry (header_key, header_entry: STRING) is
-			-- Add 'header_entry' to header 'header_key'.
+			-- Add 'header_entry' to header 'header_key',
 			-- If no such header exists, create it.
 		require
 			not_void: header_entry /= Void and then header_key /= Void
@@ -65,7 +63,7 @@ feature -- Basic operations
 		end
 
 	add_header_entries (header_key: STRING; header_entries: ARRAY [STRING]) is
-			-- Add multiple 'header_entries' at once  to 'header_key'.
+			-- Add multiple 'header_entries' at once  to 'header_key',
 			-- If not such header exists. create it.
 		local
 			a_header: HEADER
@@ -113,9 +111,9 @@ feature -- Basic operations
 feature -- Implementation (EMAIL_RESOURCE)
 
 	can_be_received: BOOLEAN is True
-		-- An email can be received.
+		-- Can an email received?
 
 	can_be_sent: BOOLEAN is True
-		-- An email can be send.
+		-- Can an email be send?
 
 end -- class EMAIL

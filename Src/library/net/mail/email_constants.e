@@ -23,8 +23,6 @@ feature -- Constants for SMTP Protocol
 
 	Mail_bcc: STRING is "RCPT BCC:"
 
-	Subject: STRING is "SUBJECT:"
-
 	Mail_reply_to: STRING is "RCPT REPLY TO:"
 
 	Quit: STRING is "QUIT"
@@ -47,17 +45,17 @@ feature -- Constants for SMTP Protocol
 
 feature -- Constants for email headers (Authorized keys for the Hashtables)
 
-	H_to: STRING is "To:"
+	H_to: STRING is "To"
 
-	H_from: STRING is "From:"
+	H_from: STRING is "From"
 
-	H_cc: STRING is "Cc:"
+	H_cc: STRING is "Cc"
 
-	H_bcc: STRING is "Bcc:"
+	H_bcc: STRING is "Bcc"
 
-	H_subject: STRING is "Subject:"
+	H_subject: STRING is "Subject"
 
-	H_reply_to: STRING is "Reply-to:"
+	H_reply_to: STRING is "Reply-to"
 
 	Default_headers: ARRAY [STRING] is 
 		once

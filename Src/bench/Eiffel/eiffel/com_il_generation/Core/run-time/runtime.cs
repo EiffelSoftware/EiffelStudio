@@ -565,7 +565,15 @@ feature {NONE} -- Implementation
 					}
 				}
 			} else {
-				Result = source.Equals (target);
+					// Bug in `System.Text.StringBuilder' with `Equals' which is
+					// not redefined properly.
+					// FIXME: Manu 12/22/2003: Maybe we should perform a recursion
+					// on .NET object too, not just on Eiffel objects.
+				if (source is StringBuilder) {
+					Result = ((StringBuilder) source).Equals ((StringBuilder) target);
+				} else {
+					Result = source.Equals (target);
+				}
 			}
 		} else {
 			Result = false;

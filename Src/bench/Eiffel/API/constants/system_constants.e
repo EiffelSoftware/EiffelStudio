@@ -41,6 +41,8 @@ feature {NONE}
 			Result := Operating_environment.Directory_separator
 		end
 
+	Documentation: STRING is "Documentation"
+
 	Dot: CHARACTER is '.'
 
 	Dot_c: STRING is ".c"

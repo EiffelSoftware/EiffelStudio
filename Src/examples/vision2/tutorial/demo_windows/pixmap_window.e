@@ -15,6 +15,8 @@ inherit
 
 	EV_COMMAND
 
+	PIXMAP_PATH
+
 creation
 	make
 
@@ -28,7 +30,6 @@ feature {NONE} -- Initialization
 			arg: EV_ARGUMENT1 [INTEGER]
 		do
 			{EV_VERTICAL_BOX} Precursor (Void)
-			set_parent (par)
 
 			set_spacing (5)
 			set_border_width (10)
@@ -61,18 +62,6 @@ feature {NONE} -- Initialization
 			treeItem3.set_text ("A second tree item")
 			treeItem2.set_text ("A first tree item")
 
-			-- a menu bar
---			create menubar.make (Current)
---			create menu.make_with_text (menubar, "menu")
---			create menuitem.make_with_text (menu, "Put/Remove pixmap")
---			create menuRadioItem1.make_with_text (menu, "Menu Radio 1")
---			create menuRadioItem2.make_peer_with_text (menu, "Menu Radio 2", menuRadioItem1)
-
-			-- a status bar
---			create statusbar.make (Current)
---			create statitem1.make_with_text (statusbar, "status bar item 1")
---			create statitem2.make_with_text (statusbar, "status bar item 2")
-
 			-- an option button
 			create option.make (Current)
 			create optionMenu.make_with_text (option, "An option button")
@@ -85,15 +74,13 @@ feature {NONE} -- Initialization
 			create mcrow2.make_with_text (mc, <<"I am", "row", "two">>)
 
 			-- Catch some events
---			create arg.make (1)
---			menuitem.add_select_command (Current, arg)
 			create arg.make (2)
 			button.add_click_command (Current, arg)
 
 			-- create the pixmaps
-			create buttonPix.make_from_file ("/miami3/buoy/EIFFEL4/examples/vision2/pixmaps/pixmaps/power_small.xpm")
-			create checkPix.make_from_file ("/miami3/buoy/EIFFEL4/examples/vision2/pixmaps/pixmaps/power_small.xpm")
-			create pix.make_from_file ("/miami3/buoy/EIFFEL4/examples/vision2/pixmaps/pixmaps/save.xpm")
+			create buttonPix.make_from_file (pixmap_path ("open.bmp"))
+			create checkPix.make_from_file (pixmap_path ("open.bmp"))
+			create pix.make_from_file (pixmap_path ("open.bmp"))
 
 			create pixArray.make (1,3)
 			pixArray.force (pix, 1)
@@ -103,12 +90,7 @@ feature {NONE} -- Initialization
 
 			-- atttach them to the widgets
 			button.set_pixmap (buttonPix)
---			menuitem.set_pixmap (pix)
 			treeItem3.set_pixmap (pix)
-
---			statitem1.set_pixmap (pix)
---			statitem1.set_width (150)
-
 			check_button.set_pixmap (checkPix)
 			optionMenuItem.set_pixmap (pix)
 			comboListItem.set_pixmap (pix)
@@ -119,7 +101,7 @@ feature {NONE} -- Initialization
 			create color.make_rgb (255, 0, 0)
 			mc.set_background_color (color)
 
---			set_parent (par)
+			set_parent (par)
 		end
 
 feature -- Test functions

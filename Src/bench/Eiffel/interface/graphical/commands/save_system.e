@@ -3,7 +3,7 @@ class SAVE_SYSTEM
 
 inherit
 	
-	SHARED_WORKBENCH;	
+	SHARED_EIFFEL_PROJECT;	
 	PROJECT_CONTEXT;
 	SAVE_FILE
 		redefine
@@ -69,7 +69,7 @@ feature {NONE}
 				if show_text /= Void then
 					--| Only set the file name if it is an Ace file
 					--| (and not the show_clusters file name).
-					Lace.set_file_name (file_name);
+					Eiffel_project.set_lace_file_name (file_name);
 				end;
 				text_window.clear_clickable;
 				text_window.set_changed (false)

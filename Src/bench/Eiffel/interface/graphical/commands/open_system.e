@@ -5,7 +5,7 @@ class OPEN_SYSTEM
 
 inherit
 
-	SHARED_WORKBENCH;
+	SHARED_EIFFEL_PROJECT;
 	OPEN_FILE
 		redefine
 			make, work
@@ -44,7 +44,7 @@ feature {NONE}
 					then
 						text_window.show_file (fn);
 						text_window.display_header (fn);
-						Lace.set_file_name (fn)
+						Eiffel_project.set_lace_file_name (fn)
 					elseif f.exists and then not f.is_plain then
 						warner (text_window).custom_call (Current,
 							w_Not_a_file_retry (fn), " OK ", Void, "Cancel")

@@ -39,19 +39,57 @@ feature {EV_BOX} -- Implementation
 	add_child (child_imp: EV_WIDGET_IMP) is
 			-- Add child into composite. Several children
 			-- possible.
+		local
+			hbox_wid: POINTER
 		do
-			gtk_box_pack_start (widget, child_imp.widget, 
+			-- creation of the gtk hbox where the widget will be placed
+			-- to allow horizontal resizing options.
+			hbox_wid := gtk_hbox_new (False, 0)
+			child_imp.set_box_widget (hbox_wid)
+			gtk_widget_show (child_imp.box_widget)
+
+			gtk_box_pack_start (child_imp.box_widget, child_imp.widget, 
+			    child_imp.expandable,
+			    child_imp.vertical_resizable, 0)
+
+			gtk_box_pack_start (widget, child_imp.box_widget, 
 			    child_imp.expandable,
 			    child_imp.vertical_resizable, 0)
 		end
 
-feature {EV_WIDGET_IMP} -- Implementation
+feature {EV_VERTICAL_BOX_IMP} -- Implementation
 
 	child_packing_changed (the_child: EV_WIDGET_IMP) is
+			-- changed the settings of his child `the_child'.
+			-- Redefined because the child is in a hbox to allow
+			-- horizontal resize options. 
 		do
-			c_gtk_box_set_child_options (widget, the_child.widget,
-				  the_child.expandable, the_child.expandable)
-		end	
+			if (not the_child.expandable) then
+				c_gtk_box_set_child_options (widget, the_child.box_widget, the_child.expandable, False)
+				c_gtk_box_set_child_options (the_child.box_widget, the_child.widget, True, True)
+			else
+				-- Here, the_child.expandable = True
+				inspect
+					the_child.resize_type
+				when 0 then
+					-- 0 : no resizing, the widget move
+					c_gtk_box_set_child_options (the_child.box_widget, the_child.widget, True, False)
+					c_gtk_box_set_child_options (widget, the_child.widget, True, False)
+				when 1 then
+					-- 1 : only the width changes
+					c_gtk_box_set_child_options (the_child.box_widget, the_child.widget, True, True)
+					c_gtk_box_set_child_options (widget, the_child.box_widget, True, False)
+				when 2 then
+					-- 2 : only the height changes
+					c_gtk_box_set_child_options (the_child.box_widget, the_child.widget, True, False)
+					c_gtk_box_set_child_options (widget, the_child.box_widget, True, True)
+				when 3 then
+					-- 3 : both width and height change
+					c_gtk_box_set_child_options (the_child.box_widget, the_child.widget, True, True)
+					c_gtk_box_set_child_options (widget, the_child.box_widget, True, True)
+				end
+			end
+		end
 
 
 end -- class EV_VERTICAL_BOX_IMP

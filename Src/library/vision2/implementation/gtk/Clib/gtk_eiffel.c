@@ -1564,23 +1564,34 @@ GtkWidget *c_gtk_pixmap_create_from_xpm (GtkWidget *widget, char *fname)
 GtkWidget* c_gtk_pixmap_create_with_size ( GtkWidget *window_parent,
 				  gint width, gint height)
 {
+	/* create GtkPixmap from GdkPixmap of def. size
+	   and put Mask (with all 1's) on. */
 	GdkPixmap *pixmap;
         GdkBitmap *mask;
-	char* empty_bitmap_data;
-	gint array_size;
+	GdkColor mask_pattern;
+	GdkGC *gc;
 
 	if (!GTK_WIDGET_REALIZED(window_parent)) {
 		gtk_widget_realize (window_parent);
 	}	
 	
-	array_size = ((width * height)/8)+1;
-	empty_bitmap_data = (char *)calloc(array_size,1);
-	memset (empty_bitmap_data, 255, array_size);
-	mask = (GdkBitmap *)gdk_bitmap_create_from_data (window_parent->window,
-				empty_bitmap_data, width, height);
-	pixmap = (GdkPixmap *) gdk_pixmap_new(window_parent->window, width, height, -1);
-	free (empty_bitmap_data);
+	/* Attempt to create mask... */
 	
+      
+      	mask = gdk_pixmap_new (window_parent->window, width, height, 1);
+      	gc = gdk_gc_new (mask);
+      
+      	mask_pattern.pixel = 0;
+      	gdk_gc_set_foreground (gc, &mask_pattern);
+      	gdk_draw_rectangle (mask, gc, TRUE, 0, 0, -1, -1);
+      
+      	mask_pattern.pixel = 1;
+      	gdk_gc_set_foreground (gc, &mask_pattern);
+
+/*	mask = (GdkBitmap *)gdk_bitmap_create_from_data (window_parent->window,
+				empty_bitmap_data, width, height);*/
+	pixmap = (GdkPixmap *) gdk_pixmap_new(window_parent->window, width, height, -1);
+
 	return (gtk_pixmap_new (pixmap, mask));
     }
 /*********************************

@@ -26,6 +26,7 @@ feature
 			!! com_list.make (0);
 			!! query_list.make (0);
 			!! const_list.make (0);
+			const_list.compare_objects;
 			features := s_class_data.public_features;
 			if features /= Void then
 				record_chart_information (features);
@@ -106,7 +107,9 @@ feature {NONE} -- Recording information for eiffelcase
 					text := tag_data.tag
 				end;
 				!! text_data.make (string_processed (text));
-				const_list.extend (text_data);
+				if not const_list.has (text_data) then
+					const_list.extend (text_data);
+				end;
 				assert_list.forth
 			end
 		end;

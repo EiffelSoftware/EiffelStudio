@@ -143,7 +143,7 @@ end;
 								cli_sup_data.set_implementation (False);
 							end
 							if sup_class_id = classc.id then
-								cli_sup_data.set_is_reflexive
+								cli_sup_data.set_reflexive (True)
 							end;
 							label := cli_sup_data.label;
 							if label = Void then
@@ -213,7 +213,7 @@ end
 									cli_sup_data.set_implementation (False)
 								end;
 								if sup_class_id = classc.id then
-									cli_sup_data.set_is_reflexive
+									cli_sup_data.set_reflexive (True)
 								end;
 								real_class_ids.forth
 							end

@@ -4,11 +4,13 @@ inherit
 
 	S_RELATION_DATA
 		rename
-			f_rom as client, t_o as supplier,
-			set_booleans as rel_set_boolens
+			f_rom as client, t_o as supplier
 		end	
 
 feature
+
+    label: STRING;
+            -- Label of relation
 
 	is_implementation: BOOLEAN;
 			-- Is this link a result of the implementation
@@ -22,16 +24,6 @@ feature
 
 feature -- Setting values
 
-	set_booleans (is_imp, is_ref: BOOLEAN) is
-			-- Set all the booleans for Current.
-		do
-			is_implementation := is_imp;
-			is_reflexive := is_ref;
-		ensure
-			booleans_are_set: is_implementation = is_imp and then
-								is_reflexive = is_ref 
-		end;
-
 	set_implementation (b: BOOLEAN) is
 			-- Set is_implementation to `b'.
 		do
@@ -40,12 +32,22 @@ feature -- Setting values
 			is_implementation_set: is_implementation = b
 		end;
 
-	set_is_reflexive is
+	set_reflexive (b: BOOLEAN) is
 			-- Set is_reflexive to `True'.
 		do
-			is_reflexive := True
+			is_reflexive := b
 		ensure
-			is_reflexive: is_reflexive
+			reflexive_set: is_reflexive = b
 		end;
+
+    set_label (l: STRING) is
+            -- Set label to `l'.
+        require
+            valid_arg: l /= Void
+        do
+            label := l
+        ensure
+            label_set: label = l
+        end;
 
 end

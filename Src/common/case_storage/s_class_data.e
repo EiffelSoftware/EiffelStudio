@@ -57,7 +57,7 @@ feature -- Comparable
 			Result := view_id < other.view_id
 		end;
 
-feature {CLASS_DATA, CLASS_CONTENT_SERVER}
+feature {CLASS_DATA, CLASS_CONTENT_SERVER, RESCUE_INFO}
 
 	disk_content: S_CLASS_CONTENT;
 			-- Information stored to disk

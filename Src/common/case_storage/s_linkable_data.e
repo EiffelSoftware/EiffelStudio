@@ -22,7 +22,7 @@ feature
 			-- List of supplier relations for which current
 			-- is the client
 
-	heir_links: ARRAYED_LIST [S_RELATION_DATA];
+	heir_links: ARRAYED_LIST [S_INHERIT_DATA];
 			-- List of inheritance relations for which current is the heir
 
 feature

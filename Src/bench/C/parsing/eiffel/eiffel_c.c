@@ -139,6 +139,11 @@ char *filename;
 #endif
 	cancel = yyparse();
 
+	/* Free Generic_name array */
+	if (nb_generics)
+		for (i=0; i < nb_generics; i++)
+			free(Generic_name[i]);
+
 #ifdef DEBUG
 	printf("Finished with object_top = %d\n", object_top);
 #endif

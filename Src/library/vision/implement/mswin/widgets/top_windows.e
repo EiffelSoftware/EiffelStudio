@@ -23,8 +23,6 @@ inherit
 
 	TOP_I
 
-	WEL_SIZE_CONSTANTS
-
 	MAIN_WINDOW_MANAGER_WINDOWS
 		rename 
 			make as main_window_manager_make
@@ -85,7 +83,12 @@ feature -- Status setting
 		end
 
 	realize_current is
+			-- Realize current widget.
+		local
+			call_configure_action: BOOLEAN
 		do
+			call_configure_action := x /= default_x or else y /= default_y or else
+				width /= default_width or else height /= default_height
 			if title /= Void then
 				if width = 0 then
 					if height = 0 then
@@ -102,6 +105,11 @@ feature -- Status setting
 				end
 			else
 				make_top_with_coordinates ("", x, y, width+shell_width, height+shell_height)
+			end
+			if call_configure_action then
+				shown := True
+				resize_actions.execute (Current, Void)
+				shown := False
 			end
 		end
 
@@ -156,33 +164,35 @@ feature -- Status report
 feature {NONE} -- Implementation
 
 	title_before_iconise: STRING
-			-- Storage for title befoe an iconise action
+			-- Storage for title before an iconise action
 			--| it will be changed to icon_name
 
 	on_size (size_type: INTEGER; a_width, a_height: INTEGER) is
 			-- Wm_size message
 			-- See class WEL_SIZE_CONSTANTS for `size_type' value
 		local
-			resize_context_data: RESIZE_CONTEXT_DATA
+			resize_data: RESIZE_CONTEXT_DATA
 		do
-			if adding_menu then
-				private_attributes.set_height (a_height)
-				private_attributes.set_width (a_width)
-			else
-				if size_type = size_minimized then
-					if icon_name /= Void then
-						title_before_iconise := title
-						set_title (icon_name)
-					end
-				else
-					if title_before_iconise /= Void then
-						set_title (title_before_iconise)
-						title_before_iconise := Void
-					end
-					resize_shell_children (a_width, a_height)					
+			if size_type = size_minimized then
+				if icon_name /= Void then
+					title_before_iconise := title
+					set_title (icon_name)
 				end
-				!! resize_context_data.make (owner, a_width, a_height, size_type)
-				resize_actions.execute (Current, resize_context_data)
+			else
+				if title_before_iconise /= Void then
+					set_title (title_before_iconise)
+					title_before_iconise := Void
+				end
+				resize_shell_children (a_width, a_height)					
+			end
+			if size_type = Size_minimized then
+				shown := False
+				unmap_actions.execute (Current,  Void)
+			elseif size_type = Size_restored or else size_type = Size_maximized then
+				shown := True
+				map_actions.execute (Current, Void)
+				!! resize_data.make (owner, a_width, a_height, size_type)
+				resize_actions.execute (Current, resize_data)
 			end
 		end
 

@@ -10,17 +10,14 @@
 #include <wel.h>
 #endif
 
+#include "eif_econsole.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 
 /* Eiffel run-time global variables */
-extern HINSTANCE eif_hInstance;
-extern HINSTANCE eif_hPrevInstance;
-extern LPSTR eif_lpCmdLine;
-extern int eif_nCmdShow;
-
 #define cwel_hinstance eif_hInstance
 #define cwel_previous_hinstance eif_hPrevInstance
 #define cwel_command_line eif_lpCmdLine

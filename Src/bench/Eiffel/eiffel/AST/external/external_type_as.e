@@ -58,6 +58,14 @@ feature {EXTERNAL_FACTORY} -- Initialization
 			value_id_set: value_id > 0
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			--v.process_external_type_as (Current)
+		end
+
 feature -- Access
 
 	value_id: INTEGER

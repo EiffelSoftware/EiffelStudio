@@ -34,6 +34,14 @@ feature {AST_FACTORY} -- Initialization
 			language_name_set: language_name = l
 		end
 
+feature -- Visitor
+
+	process (v: AST_VISITOR) is
+			-- process current element.
+		do
+			v.process_external_as (Current)
+		end
+
 feature -- Attributes
 
 	language_name: EXTERNAL_LANG_AS

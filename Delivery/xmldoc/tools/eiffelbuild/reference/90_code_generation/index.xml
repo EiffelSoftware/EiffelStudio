@@ -1,152 +1,106 @@
-<document title="Code Generation" output="studio">
+<document output="studio" title="Code Generation">
 	<meta_data/>
 	<paragraph>
 		<paragraph>To generate Eiffel code representing your system, select 
 			<bold>Generate code</bold> from the 
 			<bold>Project</bold> menu or click 
 			<image>
-				<url>/images/eiffelbuild/icons/icon_code_generation_color.png</url>
+				<url>/images/eiffelbuild/icons/icon_code_generation_color.png</url> 
 			</image> on the 
 			<link>
-				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.xml</url>
-				<label> main toolbar</label>
+				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.html</url>
+				<label>main toolbar</label>
 			</link>.
-		</paragraph>
-		<paragraph>The length of time taken to generate your code will be dependent on the speed of the system you are running, and the size of your interface, but typically takes a couple of seconds. A progress bar will be displayed during the generation of your system.</paragraph>
-		<paragraph>The code will be generated according to the options you selected in the 
-			<link>
-				<url>/tools/eiffelbuild/reference/80_project_settings/index.xml</url>
-				<label>project_settings</label>
-			</link> (the 
-			<link>
-				<url>/tools/eiffelbuild/reference/80_project_settings/10_general.xml</url>
-				<label> general</label>
-			</link> tab displays the location of all generated files.)
-		</paragraph>
-		<heading>
-			<size>2</size>Project build type
-		</heading>
-		<paragraph>If 
-			<link>
-				<url>/tools/eiffelbuild/reference/80_project_settings/20_build.xml#build_type</url>
-				<label> build type</label>
-			</link> is selected as 
-			<bold>Project</bold> in the 
-			<link>
-				<url>/tools/eiffelbuild/reference/80_project_settings/index.xml</url>
-				<label>project_settings</label>
-			</link>, then the following files will be generated:
-		</paragraph>
-		<list ordered="false">
-			<item>A class named as 
+			<paragraph>The length of time taken to generate your code will be dependent on the speed of the system you are running, and the size of your interface, but typically takes a couple of seconds. A progress bar will be displayed during the generation of your system.</paragraph>
+			<paragraph>The code will be generated according to the options you selected in the 
 				<link>
-					<url>/tools/eiffelbuild/reference/80_project_settings/20_build.xml#window_class_name</url>
-					<label> window class name</label>
-				</link> setting + '_IMP' representing the implementation of your window.
-			</item>
-			<item>A class named as 
+					<url>/tools/eiffelbuild/reference/80_project_settings/index.html</url>
+					<label>project settings</label>
+				</link>.
+			</paragraph>
+			<heading>
+				<size>2</size>Generated classes
+			</heading>
+			<paragraph>The generation of an EiffelBuild project causes the following files to be generated:</paragraph>
+			<list ordered="false">
+				<item>A constants class and its respective implementation class. For example, if the constants class is named as "constants" in the 
+					<link>
+						<url>/tools/eiffelbuild/reference/80_project_settings/index.html</url>
+						<label>project settings</label>
+					</link>, two classes, CONSTANTS and CONSTANTS_IMP are generated.
+				</item>
+				<item>A class and implementation class for each window and dialog in the system, named to correspond with the name attribute of the object. For example, for a window in the project named "main_window", the files MAIN_WINDOW and MAIN_WINDOW_IMP are generated.</item>
+				<item>An optional file named "constants.txt" which contains definitions of all INTEGER and STRING constants. This is only generated if "Load constants from file" is selected in the 
+					<link>
+						<url>/tools/eiffelbuild/reference/80_project_settings/index.html</url>
+						<label>project settings</label>
+					</link>. The generated code loads the constants from this file, and allows simple modification for localization, i.e. for foreign languages provide a different version of this file with all strings converted.
+				</item>
+			</list>
+			<paragraph>For each window or dialog class in the system, the following hierarchy is generated:</paragraph>
+			<paragraph>
+				<image>
+					<url>/images/eiffelbuild/screenshots/class_project_diagram.png</url>
+				</image>
+			</paragraph>
+			<paragraph>If "client of windows" is selected from the 
 				<link>
-					<url>/tools/eiffelbuild/reference/80_project_settings/20_build.xml#window_class_name</url>
-					<label> window class name</label>
-				</link> setting representing the interface of your window.
-			</item>
-			<item>A class named as 
+					<url>/tools/eiffelbuild/reference/80_project_settings/index.html</url>
+					<label>project settings</label>
+				</link>, a client supplier relationship exists between the generated window class and the EiffelVision window, as illustrated below:
+			</paragraph>
+			<paragraph>
+				<image>
+					<url>/images/eiffelbuild/screenshots/class_project_diagram_client.png</url>
+				</image>
+			</paragraph>
+			<note>
+				<bold>Note</bold>: All other diagrams on this page show only the non client version of the settings, where the generated window inherits from the EiffelVision class.
+			</note>
+			<heading>
+				<size>2</size>Project build type
+			</heading>
+			<paragraph>If 
 				<link>
-					<url>/tools/eiffelbuild/reference/80_project_settings/20_build.xml#application_class_name</url>
-					<label> application class name</label>
-				</link> setting which is an EV_APPLICATION which will launch your window class.
-			</item>
-			<item>An ace file "build_ace.ace" which will contain all the necessary information to compile your system.</item>
-		</list>
-		<paragraph>Below is a 
-			<link>
-				<url>http://www.eiffel.com/products/bon.xml</url>
-				<label>BON</label>
-			</link> diagram of the generated system using default names:
-		</paragraph>
-		<paragraph>
-			<image>
-				<url>/images/eiffelbuild/screenshots/complete_project_diagram.png</url>
-			</image>
-		</paragraph>
-		<paragraph>As the files generated enable you to compile a new 
-			<link>
-				<url>/libraries/vision2/00_introduction.xml</url>
-				<label>EiffelVision2</label>
-			</link> system, it is recommended that you use this option only when starting a new Vision2 system.
-		</paragraph>
-		<note>
-			<bold>Note</bold>:To compile the generated system, start 
-			<link>
-				<url>/tools/eiffelstudio/index.xml</url>
-				<label>EiffelStudio</label>
-			</link>, select 
-			<bold>open existing ace</bold> from the initial dialog displayed and specify the newly generated ace.
-		</note>
-		<heading>
-			<size>2</size>Class build type
-		</heading>
-		<paragraph>If 
-			<link>
-				<url>/tools/eiffelbuild/reference/80_project_settings/20_build.xml#build_type</url>
-				<label> build_type</label>
-			</link> is selected as 
-			<bold>Class</bold> in the 
-			<link>
-				<url>/tools/eiffelbuild/reference/80_project_settings/index.xml</url>
-				<label>project_settings</label>
-			</link>, then the following files will be generated:
-		</paragraph>
-		<list ordered="false">
-			<item>A class named as 
+					<url>/tools/eiffelbuild/reference/80_project_settings/20_build.html#build_type</url>
+					<label>build type</label>
+				</link> is selected as 
+				<bold>Project</bold> in the 
 				<link>
-					<url>/tools/eiffelbuild/reference/80_project_settings/20_build.xml#window_class_name</url>
-					<label> window class name</label>
-				</link> setting + '_IMP' representing the implementation of your window.
-			</item>
-			<item>A class named as 
-				<link>
-					<url>/tools/eiffelbuild/reference/80_project_settings/20_build.xml#window_class_name</url>
-					<label> window class name</label>
-				</link> setting representing the interface of your window.
-			</item>
-		</list>
-		<paragraph>Below is a 
-			<link>
-				<url>http://www.eiffel.com/products/bon.xml</url>
-				<label>BON</label>
-			</link> diagram of the generated system using default names:
-		</paragraph>
-		<paragraph>
-			<image>
-				<url>/images/eiffelbuild/screenshots/class_project_diagram.png</url>
-			</image>
-		</paragraph>
-		<paragraph>As the files generated are only sufficient for inclusion in an existing system, it is recommended that you use this option only when adding to an existing 
-			<link>
-				<url>/libraries/vision2/00_introduction.xml</url>
-				<label>EiffelVision2</label>
-			</link> system.
+					<url>/tools/eiffelbuild/reference/80_project_settings/index.html</url>
+					<label>project settings</label>
+				</link>, then all the classes listed above in "Generated classes" are generated, along with the following:
+			</paragraph>
+			<list ordered="false">
+				<item>Two ace files, "ace.Unix.ace" for unix based platforms, and "ace.Windows.ace" for Windows platforms.</item>
+				<item>An application class which launches the root window of the project.</item>
+			</list>
+			<paragraph>The generated files comprise a complete project, complete with .ace files, enabling you to compile and execute the generated system as is. The following diagram illustrates the hierarchy of the generated project, showing only the root window of the project:</paragraph>
+			<paragraph>
+				<image>
+					<url>/images/eiffelbuild/screenshots/complete_project_diagram.png</url>
+				</image>
+			</paragraph>
 		</paragraph>
 		<heading>
 			<size>2</size>Modifying code after generation
 		</heading>
-		<paragraph>The choice to generate an interface and an implementation class for the window was to enable modification of the interface using EiffelBuild, once you had hand edited code. The rule is that the implementation window class will be re-generated every time, but the interface will not. It follows from this that you should not add hand written code to the implementation of the window, as any changes you make will be lost when re-generation takes place.</paragraph>
+		<paragraph>The choice to generate an interface and an implementation class for the windows and constants was to enable modification of the interface using EiffelBuild, once you had hand edited code. The rule is that the implementation classes are not re-generated every time, but the interface classes are. It follows from this that you should not add hand written code to the implementation classes (ending in _IMP), as any changes you make will be lost when re-generation takes place.</paragraph>
 		<paragraph>Using this mechanism, you can generate your initial system using EiffelBuild, and implement any event features that have been generated (in the interface) by EiffelBuild. If you then decide that you wish to modify the look and the feel of the interface, you can return to EiffelBuild, make the necessary adjustments and then re-generate the system.</paragraph>
 		<note>
 			<bold>Note</bold>: When returning to EiffelBuild to modify the interface, if you delete or rename controls, then it is quite possible that you will break your existing code. Care should be taken with all changes of this type.
 		</note>
 		<paragraph>Looking at a generated system, you will see that the 
 			<link>
-				<url>/tools/eiffelbuild/reference/40_object_editor/index.xml#events</url>
-				<label> events</label>
+				<url>/tools/eiffelbuild/reference/40_object_editor/index.html#events</url>
+				<label>events</label>
 			</link> connected to your controls are defined as deferred in the implementation and actually implemented in the interface class. This means that if you return to EiffelBuild with a previously generated system, and add a new event to a control, then you will have to implement the definition in the interface class yourself (as the class interface class is not re-generated).
 		</paragraph>
 		<seealso>
-			<bold>See also</bold>
+			<bold>See also</bold>: 
 			<line_break/>
 			<link>
-				<url>/tools/eiffelbuild/reference/80_project_settings/index.xml</url>
+				<url>/tools/eiffelbuild/reference/80_project_settings/index.html</url>
 				<label>Project settings</label>
 			</link>
 		</seealso>

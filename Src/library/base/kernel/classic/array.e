@@ -87,32 +87,32 @@ feature -- Access
  			-- (Reference or object equality,
 			-- based on `object_comparison'.)
 		local
-			i: INTEGER
-			upper_bound: INTEGER
+			i, nb: INTEGER
+			l_area: like area
+			l_item: G
 		do
-			upper_bound := upper
+			l_area := area
+			nb := upper - lower
 			if object_comparison then
-				if v = Void then
-					i := upper_bound + 1
-				else
+				if v /= Void then
 					from
-						i := lower
 					until
-						i > upper_bound or else (item (i) /= Void and then item (i).is_equal (v))
+						i > nb or Result
 					loop
+						l_item := l_area.item (i)
+						Result := l_item /= Void and then l_item.is_equal (v)
 						i := i + 1
 					end
 				end
 			else
 				from
-					i := lower
 				until
-					i > upper_bound or else (item (i) = v)
+					i > nb or Result
 				loop
+					Result := l_area.item (i) = v
 					i := i + 1
 				end
 			end
-			Result := not (i > upper_bound)
 		end
 
 feature -- Measurement

@@ -118,28 +118,39 @@ feature {NONE} -- Implementation
 			sys_name: STRING
 			ace_path: STRING
 			already_precompiled: BOOLEAN_REF
+			rescued: BOOLEAN
+			error_dialog: EV_ERROR_DIALOG
 		do
-			progress.set_proportion (0)
-			progress_2.set_proportion (0)
-			progress_text.set_text ("Total Progress: ")
-			progress_text_2.set_text ("Preparing precompilations ...")
-
-			from 
-				wizard_information.l_to_precompile.start
-				n_lib_to_precompile:= wizard_information.l_to_precompile.count
-				n_lib_done:= 0
-			until
-				wizard_information.l_to_precompile.after
-			loop
-				current_it:= wizard_information.l_to_precompile.item
-				sys_name := current_it.i_th (1)
-				lib_info ?= current_it.data
-				ace_path ?= lib_info.item (1)
-				already_precompiled ?= lib_info.item (2)
-
-				precompile (sys_name, ace_path, already_precompiled.item)
-				wizard_information.l_to_precompile.forth
+			if not rescued then
+				progress.set_proportion (0)
+				progress_2.set_proportion (0)
+				progress_text.set_text ("Total Progress: ")
+				progress_text_2.set_text ("Preparing precompilations ...")
+	
+				from 
+					wizard_information.l_to_precompile.start
+					n_lib_to_precompile:= wizard_information.l_to_precompile.count
+					n_lib_done:= 0
+				until
+					wizard_information.l_to_precompile.after
+				loop
+					current_it:= wizard_information.l_to_precompile.item
+					sys_name := current_it.i_th (1)
+					lib_info ?= current_it.data
+					ace_path ?= lib_info.item (1)
+					already_precompiled ?= lib_info.item (2)
+	
+					precompile (sys_name, ace_path, already_precompiled.item)
+					wizard_information.l_to_precompile.forth
+				end
 			end
+		rescue
+			rescued := True
+			create error_dialog.make_with_text (
+				"An internal error has occurred.%N%
+				%The wizard will terminate.%N")
+			error_dialog.show_modal_to_window (first_window)
+			retry
 		end
 
 	precompile (lib_name, lib_ace: STRING; lib_compiled: BOOLEAN) is
@@ -162,15 +173,12 @@ feature {NONE} -- Implementation
 				-- We need to find the path, the exact name and the full name of the Ace file
 				-- knowing the full name. (Can be fixed .. )
 			lib_ace.mirror
-			if Eiffel_platform.is_equal ("windows") then
-				n_dir := lib_ace.index_of ('\', 1)
-			else
-				n_dir:= lib_ace.index_of ('/', 1)
-			end
+			n_dir := lib_ace.index_of (operating_environment.directory_separator, 1)
 			proj_path:= lib_ace.substring (n_dir + 1 , lib_ace.count)
 			proj_path.mirror
 			lib_ace.mirror
 
+				-- Create the callback file
 			create eifgen_path.make_from_string (proj_path)
 			eifgen_path.extend ("EIFGEN")
 			create progress_file_path.make_from_string (eifgen_path)
@@ -182,6 +190,7 @@ feature {NONE} -- Implementation
 				from
 					compt := 1 -- Not needed if the file is used....
 					to_end := False
+					time_left := 0
 					progress_text_2.set_text ("Precompiling " + lib_name + " library: ")
 					create command.make (50)
 					command.append (Eiffel_compiler_command)
@@ -201,7 +210,7 @@ feature {NONE} -- Implementation
 							to_end := True
 							time_left := 100
 						else
-							time_left := new_time_left
+							time_left := time_left.max(new_time_left)
 						end
 					end
 					progress_2.set_proportion (time_left / 100)

@@ -2,6 +2,7 @@
 	Generic conformance
 */
 
+
 #include "eif_struct.h"
 #include "eif_macros.h"
 #include "eif_gen_conf.h"
@@ -82,7 +83,7 @@ rt_private int16 egc_pointer_dtype = -1;
 
 /*------------------------------------------------------------------*/
 
-rt_private int16 eif_id_of (int16**, int16**, int16);
+rt_private int16 eif_id_of (int16**, int16**, int16, int16);
 rt_private EIF_GEN_DER *eif_new_gen_der(long, int16*, int16, char, char, int16);
 rt_private EIF_CONF_TAB *eif_new_conf_tab (int16, int16, int16, int16);
 rt_private void eif_expand_tables(int);
@@ -116,6 +117,7 @@ rt_public void eif_gen_conf_init (int max_dtype)
 	first_gen_id = next_gen_id = max_dtype + 1;
 
 	eif_cid_map = (int16 *) cmalloc(eif_cid_size * sizeof (int16));
+
 	if (eif_cid_map == (int16 *) 0)
 		enomem();
 
@@ -132,7 +134,7 @@ rt_public void eif_gen_conf_init (int max_dtype)
 	/* Setup a 1-1 mapping and initialize the arrays */
 
 	for (dt = 0; dt < eif_cid_size; ++dt)
-		eif_cid_map [dt] = (int16) dt;
+		eif_cid_map [dt]     = (int16) dt;
 
 	/* Now initialize egc_xxx_dtypes */
 
@@ -210,9 +212,9 @@ rt_public int16 eif_compound_id (char *Current, int16 base_id, int16 *types)
 		outtable = outtab;
 
 		if (Current != (char *) 0)
-			gresult = eif_id_of (&intable,&outtable,(int16)Dftype(Current));
+			gresult = eif_id_of (&intable,&outtable,(int16)Dftype(Current),1);
 		else
-			gresult = eif_id_of (&intable,&outtable,0);
+			gresult = eif_id_of (&intable,&outtable,0,1);
 
 		return gresult;
 	}
@@ -581,7 +583,7 @@ rt_public int eif_gen_conf (int16 stype, int16 ttype)
 }
 /*------------------------------------------------------------------*/
 
-rt_private int16 eif_id_of (int16 **intab, int16 **outtab, int16 obj_type)
+rt_private int16 eif_id_of (int16 **intab, int16 **outtab, int16 obj_type, int16 apply_rtud)
 
 {
 	int16   dftype, gcount, i, hcode, ltype;
@@ -644,7 +646,7 @@ rt_private int16 eif_id_of (int16 **intab, int16 **outtab, int16 obj_type)
 		/* Process static type now */
 
 		save_otab = *outtab;
-		dftype = eif_id_of (intab, outtab, obj_type);
+		dftype = eif_id_of (intab, outtab, obj_type, 0);
 		*outtab = save_otab;
 
 		if (ltype >= 0)
@@ -653,7 +655,7 @@ rt_private int16 eif_id_of (int16 **intab, int16 **outtab, int16 obj_type)
 		**outtab = dftype;
 		(*outtab)++;
 
-		return dftype;
+		return (apply_rtud ? RTUD(dftype) : dftype);
 	}
 
 	if ((dftype == -11) || (dftype == -12))
@@ -672,7 +674,7 @@ rt_private int16 eif_id_of (int16 **intab, int16 **outtab, int16 obj_type)
 		/* Process static type now */
 
 		save_otab = *outtab;
-		dftype = eif_id_of (intab, outtab, obj_type);
+		dftype = eif_id_of (intab, outtab, obj_type, 0);
 		*outtab = save_otab;
 
 		if (ltype >= 0)
@@ -681,9 +683,8 @@ rt_private int16 eif_id_of (int16 **intab, int16 **outtab, int16 obj_type)
 		**outtab = dftype;
 		(*outtab)++;
 
-		return dftype;
+		return (apply_rtud ? RTUD(dftype) : dftype);
 	}
-
 
 	if (dftype <= -16)
 	{
@@ -729,9 +730,9 @@ rt_private int16 eif_id_of (int16 **intab, int16 **outtab, int16 obj_type)
 	if (!is_tuple)
 		gcount = pt->nb_generics;
 
-	if (gcount == 0)
+	if (!is_tuple && (gcount == 0))
 	{
-		/* Not a generic type */
+		/* Neither a generic type nor a TUPLE type */
 		(*intab)++;
 
 		if (is_expanded)
@@ -739,7 +740,8 @@ rt_private int16 eif_id_of (int16 **intab, int16 **outtab, int16 obj_type)
 		else
 			**outtab = dftype;
 		(*outtab)++;
-		return dftype;
+
+		return (apply_rtud ? RTUD(dftype) : dftype);
 	}
 
 	save_otab = *outtab;
@@ -747,7 +749,7 @@ rt_private int16 eif_id_of (int16 **intab, int16 **outtab, int16 obj_type)
 
 	for (hcode = 0, i = gcount; i; --i)
 	{
-		hcode += eif_id_of (intab, outtab, obj_type);
+		hcode += eif_id_of (intab, outtab, obj_type, 0);
 	}
 
 	/* Search */
@@ -761,7 +763,10 @@ rt_private int16 eif_id_of (int16 **intab, int16 **outtab, int16 obj_type)
 			(is_expanded == gdp->is_expanded) &&
 			(gcount == gdp->size))
 		{
-			mcmp = memcmp((char*)save_otab, (char*)(gdp->typearr),gcount*sizeof(int16));
+			mcmp = 0;
+
+			if (gcount > 0)
+				mcmp = memcmp((char*)save_otab, (char*)(gdp->typearr),gcount*sizeof(int16));
 
 			if (mcmp == 0)
 			{
@@ -851,7 +856,10 @@ rt_private EIF_GEN_DER *eif_new_gen_der(long size, int16 *typearr, int16 base_id
 		tp = result->stypearr;
 	}
 
-	bcopy(typearr,tp,size*sizeof(int16));
+	if (size > 0)
+	{
+		bcopy(typearr,tp,size*sizeof(int16));
+	}
 
 	if (next_gen_id >= eif_cid_size)
 		eif_expand_tables (next_gen_id + 32);
@@ -1153,20 +1161,24 @@ rt_private void eif_create_typename (int16 dftype, char *result)
 	i = (int16) gdp->size;
 
 	strcat (result, parent_of(gdp->base_id)->class_name);
-	strcat (result, " [");
 
-	gp = gdp->typearr;
-
-	while (i--)
+	if (i > 0)
 	{
-		eif_create_typename (*gp, result);
-		++gp;
+		strcat (result, " [");
 
-		if (i)
-			strcat (result, ", ");
+		gp = gdp->typearr;
+
+		while (i--)
+		{
+			eif_create_typename (*gp, result);
+			++gp;
+
+			if (i)
+				strcat (result, ", ");
+		}
+
+		strcat(result, "]");
 	}
-
-	strcat(result, "]");
 }
 /*------------------------------------------------------------------*/
 
@@ -1226,12 +1238,14 @@ rt_private int eif_typename_len (int16 dftype)
 
 	i = (int16) gdp->size;
 
-	len = strlen (parent_of(gdp->base_id)->class_name) + 3 + (i-1)*2;
+	len = strlen (parent_of(gdp->base_id)->class_name);
 
-	if (i > 8)
-		gp = gdp->typearr;
-	else
-		gp = gdp->stypearr;
+	if (i == 0)         /* TUPLE without generics */
+		return len;
+
+	len += 3 + (i-1)*2;
+
+	gp = gdp->typearr;
 
 	while (i--)
 	{
@@ -1281,8 +1295,7 @@ rt_private int16 eif_gen_seq_len (int16 dftype)
 rt_private void eif_put_gen_seq (int16 dftype, int16 *typearr, int16 *idx)
 {
 	EIF_GEN_DER *gdp;
-	int16 i;
-	long len;
+	int16       i, len;
 
 	/* Simple id */
 
@@ -1348,6 +1361,7 @@ rt_private void eif_compute_ctab (int16 dftype)
 	/* Get parent table */
 
 	dtype = Deif_bid(dftype);
+
 	pt = parent_of (RTUD_INV(dtype));
 
 	is_expanded = pt->is_expanded;
@@ -1380,7 +1394,7 @@ rt_private void eif_compute_ctab (int16 dftype)
 
 	while (*intable != -1)
 	{
-		ptype = eif_id_of (&intable, &outtable, dftype);
+		ptype = eif_id_of (&intable, &outtable, dftype, 1);
 		++pcount;
 
 		ctab = eif_conf_tab [ptype];
@@ -1447,7 +1461,7 @@ rt_private void eif_compute_ctab (int16 dftype)
 
 	while (*intable != -1)
 	{
-		ptype = eif_id_of (&intable, &outtable, dftype);
+		ptype = eif_id_of (&intable, &outtable, dftype, 1);
 		pctab = eif_conf_tab [ptype];
 
 		/* Register parent type */

@@ -10,9 +10,6 @@ inherit
 	EV_COMMAND
 
 	EB_COMMAND_FEEDBACK
-		redefine
-			set_menu_item, set_button
-		end
 
 	EB_CONFIRM_SAVE_CALLBACK
 
@@ -31,20 +28,6 @@ feature -- Access
 	f: EB_FORMATTER
 
 	s: STONE
-
-feature -- Feedback
-
-	set_menu_item (m: like menu_item) is
-		do
-			precursor (m)
-			m.add_select_command (Current, Void)
-		end
-
-	set_button (b: like button) is
-		do
-			precursor (b)
-			b.add_click_command (Current, Void)
-		end
 
 feature {EB_CONFIRM_SAVE_DIALOG} -- Callbacks
 

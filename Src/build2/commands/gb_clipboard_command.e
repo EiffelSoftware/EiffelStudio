@@ -65,6 +65,14 @@ feature {NONE} -- Initialization
 			add_agent (agent execute)
 			drop_agent := agent drop_object
 			pebble_function := agent pick_object
+			
+				-- Set properties of `clipboard_dialog'.
+			clipboard_dialog.set_title ("Clipboard Contents")
+			clipboard_dialog.set_icon_pixmap (icon_clipboard @ 1)
+			fake_cancel_button (clipboard_dialog, agent close_dialog)
+			
+				-- Register for notification when contents of clipboard change.
+			clipboard.content_change_actions.extend (agent contents_changed)
 		end
 		
 feature -- Access	
@@ -79,78 +87,88 @@ feature -- Access
 		end
 
 feature -- Basic operations
-	
-		execute is
-				-- Execute `Current'.
-			local
-				dialog: EV_DIALOG
-				vertical_box: EV_VERTICAL_BOX
-				text: EV_TEXT
-				cancel_button: EV_BUTTON
-				namespace: XM_NAMESPACE
-				document: XM_DOCUMENT
-				formater: XM_FORMATTER
-				last_string: KL_STRING_OUTPUT_STREAM
-				string: STRING
-				window_object: GB_TITLED_WINDOW_OBJECT
-				widget: EV_WIDGET
-			do
-				new_clipboard_object := clipboard.internal_object
-				window_object ?= new_clipboard_object
-				if window_object /= Void then
-					widget ?= window_object.object.item
-					window_object.object.wipe_out
-					insert_into_window (widget, clipboard_dialog)	
-				else
-					insert_into_window (new_clipboard_object.object, clipboard_dialog)
-				end
-				clipboard_dialog.set_size (clipboard_dialog.minimum_width, clipboard_dialog.minimum_height)
-				clipboard_dialog.show_modal_to_window (main_window)
-				
-				if system_status.is_in_debug_mode then
-					create namespace.make_default
-					create document.make
-					document.set_root_element (clipboard.contents_cell.item)
-					create last_string.make ("")
-					create formater.make
-					formater.set_output (last_string)
-					formater.process_document (document)
 
-					create dialog
-					dialog.set_minimum_size (400, 600)
-					create vertical_box
-					dialog.extend (vertical_box)
-					create text
-					vertical_box.extend (text)
-					create cancel_button.make_with_text ("Cancel")
-					vertical_box.extend (cancel_button)
-					vertical_box.disable_item_expand (cancel_button)
-					cancel_button.select_actions.extend (agent dialog.destroy)
-					dialog.set_default_cancel_button (cancel_button)
-					string := last_string.string
-					process_xml_string (string)
-					text.set_text (string)
-					dialog.show_relative_to_window (main_window)
-				end
+	clipboard_dialog_up_to_date: BOOLEAN
+		-- Are the contents of `clipboard_dialog' up to date with the clipboard?
+		-- If not, then they must be rebuilt.
+
+	contents_changed is
+			-- Respond to the changing of the clipboard contents.
+		do
+			clipboard_dialog_up_to_date := False
+			if clipboard_dialog.is_show_requested then
+					-- Only rebuild contents of `clipboard_dialog' if it is shown,
+					-- otherwise wait until it is displayed.
+				update_clipboard_dialog
 			end
-			
-	close_dialog is
-			-- Destroy `a_dialog' and 
+		end
+
+	update_clipboard_dialog is
+			-- Update `clipboard_dialog' with a representation of
+			-- the clipboard contents.
 		local
+			window_object: GB_TITLED_WINDOW_OBJECT
+			widget: EV_WIDGET
+			menu_bar: EV_MENU_BAR
 			all_children: ARRAYED_LIST [GB_OBJECT]
 		do
-			clipboard_dialog.hide
-			create all_children.make (20)
-			new_clipboard_object.all_children_recursive (all_children)
-			all_children.extend (new_clipboard_object)
-			from
-				all_children.start
-			until
-				all_children.off
-			loop
-				all_children.item.destroy
-				all_children.forth
+			if last_clipboard_object /= Void then
+					-- Destroy the previous clipboard objects if any.
+				create all_children.make (20)
+				last_clipboard_object.all_children_recursive (all_children)
+				all_children.extend (last_clipboard_object)
+				from
+					all_children.start
+				until
+					all_children.off
+				loop
+					all_children.item.destroy
+					all_children.forth
+				end
 			end
+		
+				-- Store the new object into `last_clipboard_object' for future deletion.
+			last_clipboard_object := clipboard.internal_object
+			window_object ?= last_clipboard_object
+			if window_object /= Void then
+				widget := window_object.object.item
+				window_object.object.wipe_out
+				insert_into_window (widget, clipboard_dialog)
+				menu_bar := window_object.object.menu_bar
+				if menu_bar /= Void then
+					window_object.object.remove_menu_bar
+					insert_into_window (menu_bar, clipboard_dialog)
+				end
+			else
+				insert_into_window (last_clipboard_object.object, clipboard_dialog)
+			end
+			
+				-- Flag `clipboard_dialog' as up to date.
+			clipboard_dialog_up_to_date := True
+		end	
+	
+	execute is
+			-- Execute `Current'.
+		do
+			if not clipboard_dialog.is_show_requested then
+				if not clipboard_dialog_up_to_date then
+					update_clipboard_dialog
+				end
+				clipboard_dialog.set_size (clipboard_dialog.minimum_width, clipboard_dialog.minimum_height)
+				clipboard_dialog.show_relative_to_window (main_window)
+			end
+			
+			if system_status.is_in_debug_mode then
+				show_element (clipboard.contents_cell.item, main_window)
+			end
+		end
+			
+	close_dialog is
+			-- hide `clipboard_dialog'.
+		do
+			clipboard_dialog.hide
+		ensure
+			dialog_not_shown: not clipboard_dialog.is_displayed
 		end
 
 	drop_object (object_stone: GB_OBJECT_STONE) is
@@ -189,16 +207,7 @@ feature -- Basic operations
 				end
 			end
 			
-	new_clipboard_object: GB_OBJECT
-			
-	clipboard_dialog: EV_DIALOG is
-			-- Dialog to display contents of `clipboard'.
-		once
-			create Result
-			Result.set_title ("Clipboard Contents")
-			Result.set_icon_pixmap (icon_clipboard @ 1)
-			fake_cancel_button (Result, agent close_dialog)
-		end
-		
+	last_clipboard_object: GB_OBJECT
+		-- Last clipboard object built into the `clipboard_dialog'.
 
 end -- class GB_CLIPBOARD_COMMAND

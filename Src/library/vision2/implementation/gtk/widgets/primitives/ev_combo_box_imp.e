@@ -58,6 +58,8 @@ inherit
 			on_key_event
 		end
 
+	EV_KEY_CONSTANTS
+
 create
 	make
 
@@ -326,7 +328,7 @@ feature {NONE} -- Implementation
 			success: BOOLEAN
 		do
 			if 
-				a_key /= Void and then a_key.Key_down = a_key.code
+				a_key /= Void and then Key_down = a_key.code
 			then
 					C.gtk_signal_handler_unblock (entry_widget, activate_id)
 					success := C.gtk_widget_activate (entry_widget)
@@ -381,6 +383,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.43  2001/07/09 18:40:50  etienne
+--| Updated after changes in EV_KEY.
+--|
 --| Revision 1.42  2001/07/05 21:26:11  etienne
 --| Fixed problem in combo boxes `select_actions' and made combo boxes expandable by using the keyboard.
 --|

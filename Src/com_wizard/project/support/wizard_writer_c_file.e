@@ -55,24 +55,26 @@ feature -- Access
 			Result.append (header_protector (header_file_name))
 			Result.append (New_line)
 
-			Result.append (cpp_protector_start)
-			Result.append (New_line)
+			if not others_forward.empty then
+				Result.append (cpp_protector_start)
+				Result.append (New_line)
 
-			from
-				others_forward.start
-			until
-				others_forward.after
-			loop
+				from
+					others_forward.start
+				until
+					others_forward.after
+				loop
+					Result.append (New_line)
+					Result.append (New_line)
+					Result.append (others_forward.item)
+					others_forward.forth
+				end
 				Result.append (New_line)
 				Result.append (New_line)
-				Result.append (others_forward.item)
-				others_forward.forth
+
+				Result.append (cpp_protector_end)
+				Result.append (New_line)
 			end
-			Result.append (New_line)
-			Result.append (New_line)
-
-			Result.append (cpp_protector_end)
-			Result.append (New_line)
 			Result.append (New_line)
 
 			from

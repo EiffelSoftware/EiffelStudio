@@ -20,7 +20,7 @@ inherit
 			enable_select,
 			interface,
 			on_activate,
-			is_selected
+			initialize
 		end
 
 	EV_RADIO_PEER_IMP
@@ -31,16 +31,13 @@ inherit
 create
 	make
 
-feature -- Status report
+feature {NONE} -- Initialization
 
-	is_selected: BOOLEAN is
-			-- Is this menu item checked?
+	initialize is
+			-- Initialize with state `is_selected'.
 		do
-			--| If a radio menu item does not have a parent, it must appear
-			--| to be checked to satisfy radio grouping contracts.
-			--| (an unparented radio item is checked, or in other words: has
-			--| its own group and a group always has 1 selected item)
-			Result := (parent_imp = Void) or else Precursor
+			Precursor
+			is_selected := True
 		end
 
 feature -- Status setting
@@ -61,9 +58,7 @@ feature -- Status setting
 				end
 				radio_group.go_to (cur)
 			end
-			if parent_imp /= Void then
-				Precursor
-			end
+			Precursor
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -73,6 +68,7 @@ feature {EV_ANY_I} -- Implementation
 feature {NONE} -- Implementation
 
 	on_activate is
+			-- Enable this item and call `Precursor'.
 		do
 			enable_select
 			Precursor
@@ -101,6 +97,10 @@ end -- class EV_RADIO_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/02/25 20:29:59  brendel
+--| Does not need to redefine is_selected anymore, due to fix of
+--| EV_SELECT_MENU_ITEM_IMP.
+--|
 --| Revision 1.17  2000/02/25 02:19:26  brendel
 --| Removed implementation of features that are now inherited from
 --| EV_RADIO_PEER_IMP.

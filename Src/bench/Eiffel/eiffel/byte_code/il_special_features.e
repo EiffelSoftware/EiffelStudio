@@ -110,14 +110,32 @@ feature -- IL code generation
 			type_not_void: type /= Void
 		local
 			f_type: INTEGER
+			long: LONG_I
 		do
 			f_type := function_type
 			inspect f_type
-			when bit_and_type..bit_shift_right_type then
+			when
+				bit_and_type,
+				bit_or_type,
+				bit_xor_type,
+				bit_not_type,
+				bit_shift_right_type
+			then
 				if parameters /= Void then
 					parameters.generate_il
 				end
 				generate_il_operation_code (f_type)
+
+			when bit_shift_left_type then
+				if parameters /= Void then
+					parameters.generate_il
+				end
+				generate_il_operation_code (bit_shift_left_type)
+				long ?= feat.real_type (feat.type)
+				if long /= Void and then long.size < 32 then
+						-- IL extended "int8" and "int16" to "int32" which has to be converted back
+					il_generator.convert_to (long)
+				end
 
 			when bit_test_type then
 				check

@@ -138,6 +138,19 @@ feature -- Il code generation
 			end
 		end
 
+	is_il_promoted: BOOLEAN is
+			-- Can IL promote expression type to a type with higher precision?
+		local
+			real_expr_type: TYPE_I
+			long: LONG_I
+		do
+			real_expr_type := real_type (type)
+			if real_expr_type.is_long then
+				long ?= real_expr_type
+				Result := long.size < 32
+			end
+		end
+
 feature -- C generation
 
 	get_register is
@@ -235,6 +248,19 @@ feature -- C generation
 	register_name: STRING is
 			-- Do nothing
 		do
+		end
+
+	is_c_promoted: BOOLEAN is
+			-- Can C promote expression type to a type with higher precision?
+		local
+			real_expr_type: TYPE_I
+			long: LONG_I
+		do
+			real_expr_type := real_type (type)
+			if real_expr_type.is_long then
+				long ?= real_expr_type
+				Result := long.size < 32
+			end
 		end
 
 feature  -- Array optimization

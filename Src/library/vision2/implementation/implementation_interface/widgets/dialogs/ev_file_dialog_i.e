@@ -21,6 +21,12 @@ feature -- Access
 			-- Filter currently applied to file list.
 		deferred
 		end
+	
+	filters: ARRAYED_LIST [TUPLE [STRING, STRING]]
+			-- All filters currently applied to file list.
+			-- First STRING represents the filter e.g "*.txt".
+			-- Second STRING represents the displayed text
+			-- e.g. "Text files (*.txt)".
 
 	start_directory: STRING is
 			-- Base directory where browsing will start.
@@ -79,6 +85,9 @@ feature {EV_FILE_DIALOG} -- Contract support
 			-- Is `a_title' a valid file title on the current platform?
 		deferred
 		end
+		
+invariant
+	filters_not_void: filters /= Void
 
 end -- class EV_FILE_DIALOG_I
 

@@ -63,9 +63,11 @@ feature -- Basic operations
 
 	release, quick_release is
 			-- Release the device context
+		local
+			a_default_pointer: POINTER
 		do
 			cwin_end_paint (hwindow, paint_struct.item)
-			item := default_pointer
+			item := a_default_pointer
 		end
 
 feature {NONE} -- Implementation
@@ -78,14 +80,14 @@ feature {NONE} -- Removal
 	destroy_item is
 			-- Delete the current device context.
 		local
-			p: POINTER
+			a_default_pointer: POINTER
 		do
 				-- Protect the call to DeleteDC, because `destroy_item' can 
 				-- be called by the GC so without assertions.
-			if item /= p then
+			if item /= a_default_pointer then
 				unselect_all
 				cwin_end_paint (hwindow, paint_struct.item)
-				item := p
+				item := a_default_pointer
 			end
 		end
 

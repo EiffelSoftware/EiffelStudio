@@ -635,8 +635,10 @@ feature {NONE} -- WEL Implementation
 
 	wel_resize (a_width, a_height: INTEGER) is
 			-- Resize the window with `a_width', `a_height'.
+		local
+			a_default_pointer: POINTER
 		do
-			cwin_set_window_pos (wel_item, default_pointer,
+			cwin_set_window_pos (wel_item, a_default_pointer,
 				0, 0, a_width, a_height,
 				Swp_nomove + Swp_nozorder + Swp_noactivate)
 		end
@@ -933,6 +935,10 @@ end -- EV_NOTEBOOK_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.62  2001/07/08 19:22:20  pichery
+--| Speed optimization: `Default_pointer' is replaced with a local variable called
+--| `a_default_pointer' - initialized by default to 0 (= `Default_pointer').
+--|
 --| Revision 1.61  2001/07/02 21:02:36  rogers
 --| `insert_i_th' now calls the `new_item_actions'.
 --|

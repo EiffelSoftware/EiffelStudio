@@ -55,9 +55,11 @@ feature {NONE} -- Removal
 
 	destroy_item is
 			-- Free the library.
+		local
+			a_default_pointer: POINTER
 		do
 			cwin_free_library (item)
-			item := default_pointer
+			item := a_default_pointer
 		end
 
 feature {NONE} -- Implementation

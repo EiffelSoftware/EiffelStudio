@@ -214,6 +214,7 @@ feature -- Basic operations
 		local
 			handle: INTEGER
 			hwnd: POINTER
+			a_default_pointer: POINTER
 		do
 			create Result.make (1)
 			from
@@ -228,7 +229,7 @@ feature -- Basic operations
 					hwnd := cwel_integer_to_pointer (handle)
 				end
 			until
-				hwnd = default_pointer
+				hwnd = a_default_pointer
 			loop
 				Result.extend (all_ev_children @ hwnd)
 				handle := cwin_send_message_result (wel_item,
@@ -485,11 +486,12 @@ feature {EV_ANY_I} -- WEL Implementation
 			clist: HASH_TABLE [EV_TREE_NODE_IMP, POINTER]
 			p: POINTER
 			elem: EV_TREE_NODE_IMP
+			a_default_pointer: POINTER
 		do
 			clist := all_ev_children
 
 			p := info.old_item.h_item
-			if p /= default_pointer then
+			if p /= a_default_pointer then
 				elem := clist.item (p)
 				if elem /= Void then
 						-- Call the deselect actions on `elem'.
@@ -499,7 +501,7 @@ feature {EV_ANY_I} -- WEL Implementation
 			end
 
 			p := info.new_item.h_item
-			if p /= default_pointer then
+			if p /= a_default_pointer then
 				elem := clist.item (p)
 				if elem /= Void then
 						-- Call the select_actions on `elem'.
@@ -698,6 +700,10 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.74  2001/07/08 19:21:46  pichery
+--| Speed optimization: `Default_pointer' is replaced with a local variable called
+--| `a_default_pointer' - initialized by default to 0 (= `Default_pointer').
+--|
 --| Revision 1.73  2001/06/25 17:07:18  rogers
 --| Implemented ensure_item_visible.
 --|

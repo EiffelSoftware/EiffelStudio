@@ -95,8 +95,10 @@ feature -- Access
 
 	previous_cursor: WEL_CURSOR is
 			-- Previously assigned cursor
+		local
+			a_default_pointer: POINTER
 		do
-			if internal_previous_cursor /= default_pointer then
+			if internal_previous_cursor /= a_default_pointer then
 				create Result.make_by_pointer (internal_previous_cursor)
 			end
 		end
@@ -119,9 +121,10 @@ feature -- Basic operations
 			previous_cursor_not_void: previous_cursor /= Void
 		local
 			p: POINTER
+			a_default_pointer: POINTER
 		do
 			p := cwin_set_cursor (internal_previous_cursor)
-			internal_previous_cursor := default_pointer
+			internal_previous_cursor := a_default_pointer
 		ensure
 			previous_cursor_void: previous_cursor = Void
 		end

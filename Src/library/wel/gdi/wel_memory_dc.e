@@ -23,8 +23,10 @@ feature {NONE} -- Initialization
 	make is
 			-- Make a memory dc compatible with the application's
 			-- current screen.
+		local
+			a_default_pointer: POINTER
 		do
-			item := cwin_create_compatible_dc (default_pointer)
+			item := cwin_create_compatible_dc (a_default_pointer)
 		end
 
 	make_by_dc (a_dc: WEL_DC) is

@@ -3,22 +3,9 @@
 class SEARCH_TABLE [H -> HASHABLE]
 
 inherit
-	ARRAY [H]
-		rename
-			make as basic_make,
-			item as array_item,
-			put as array_put,
-			force as array_force,
-			has as array_has,
-			count as array_count
-		export
-			{SEARCH_TABLE} area, lower, upper
-		redefine
-			clear_all
-		end
+	TO_SPECIAL [H]
 
 creation
-
 	make
 
 feature -- Creation
@@ -29,15 +16,17 @@ feature -- Creation
 			-- if more than `n' items are inserted.
 		local
 			clever: PRIMES;
-			table_size: INTEGER
+			temp_array: ARRAY [BOOLEAN]
 		do
-			!!clever;
-			table_size := clever.higher_prime ((3 * n) // 2);
-			if table_size < 5 then
-				table_size := 5
+			!! clever;
+			capacity := clever.higher_prime ((3 * n) // 2);
+			if capacity < 5 then
+				capacity := 5
 			end;
-			basic_make (0, table_size - 1);
-			!! deleted_marks.make (0, table_size - 1);
+			make_area (capacity);
+
+			!! temp_array.make (0, capacity - 1)
+			deleted_marks := temp_array.area
 		ensure
 			capacity_big_enough: capacity >= n and capacity >= 5;
 		end;
@@ -50,7 +39,7 @@ feature -- Access and queries
 		do
 			internal_search (key);
 			if control = Found then
-				Result := array_item (position)
+				Result := area.item (position)
 			end
 		end;
 
@@ -65,7 +54,7 @@ feature -- Access and queries
 	key_at (n: INTEGER): H is
 			-- Key corresponding to entry `n'
 		do
-			Result := array_item (n)
+			Result := area.item (n)
 		end;
 
 feature -- Insertion, deletion
@@ -83,7 +72,7 @@ feature -- Insertion, deletion
 					add_space;
 					internal_search (key)
 				end;
-				array_put (key, position);
+				area.put (key, position);
 				count := count + 1;
 				control := Inserted
 			end
@@ -106,7 +95,7 @@ feature -- Insertion, deletion
 				end;
 				count := count + 1
 			end;
-			array_put (key, position);
+			area.put (key, position);
 			control := Inserted
 		ensure then
 			insertion_done: item (key) = key
@@ -121,7 +110,7 @@ feature -- Insertion, deletion
 		do
 			internal_search (old_key);
 			if control = Found then
-				array_put (new_key, position);
+				area.put (new_key, position);
 				if control /= Conflict then
 					remove (old_key);
 					control := Changed
@@ -141,7 +130,7 @@ feature -- Insertion, deletion
 		do
 			internal_search (key);
 			if control = Found then
-				array_put (dead_key, position);
+				area.put (dead_key, position);
 				deleted_marks.put (True, position);
 				count := count - 1;
 			end
@@ -152,7 +141,7 @@ feature -- Insertion, deletion
 	clear_all is
 			-- Reset all items to default values.
 		do
-			{ARRAY} precursor
+			area.clear_all
 			deleted_marks.clear_all
 			count := 0
 			control := 0
@@ -185,7 +174,7 @@ feature {NONE} -- Internal features
 		do
 			from
 				first_deleted_position := -1;
-				table_size := array_count;
+				table_size := capacity
 				hash_code := search_key.hash_code;
 				-- Increment computed for no cycle: `table_size' is prime
 				increment := 1 + hash_code \\ (table_size - 1);
@@ -195,7 +184,7 @@ feature {NONE} -- Internal features
 			loop
 				position := (position + increment) \\ table_size;
 				visited_count := visited_count + 1;
-				old_key := array_item (position);
+				old_key := area.item (position);
 				if not valid_key (old_key) then
 					if not deleted_marks.item (position) then
 						control := Not_found;
@@ -223,26 +212,24 @@ feature {NONE} -- Internal features
 			-- Double the capacity of `Current'.
 			-- Transfer everything except deleted keys.
 		local
-			i, table_size: INTEGER;
+			i: INTEGER;
 			current_key: H;
 			other: SEARCH_TABLE [H]
 		do
 			from
-				table_size := array_count;
-				!!other.make ((3 * table_size) // 2);
+				!!other.make ((3 * capacity) // 2);
 			until
-				i >= table_size
+				i >= capacity
 			loop
-				current_key := array_item (i);
+				current_key := area.item (i);
 				if valid_key (current_key) then
 					other.put (current_key)
 				end;
 				i := i + 1
 			end;
 			area := other.area;
-			lower := other.lower;
-			upper := other.upper;
 			deleted_marks := other.deleted_marks;
+			capacity := other.capacity
 		end;
 
 	Size_threshold: INTEGER is 80;
@@ -252,7 +239,7 @@ feature {NONE} -- Internal features
 			-- Is `Current' close to being filled?
 			-- (If so, resizing is needed to avoid performance degradation.)
 		do
-			Result := (array_count * Size_threshold <= 100 * count)
+			Result := (area.count * Size_threshold <= 100 * count)
 		end;
 
 feature -- Assertion check
@@ -292,10 +279,13 @@ feature {NONE} -- Status
 
 feature {SEARCH_TABLE}
 
-	deleted_marks: ARRAY [BOOLEAN];
+	capacity: INTEGER
+			-- Size of the table
+
+	deleted_marks: SPECIAL [BOOLEAN];
 			-- Deleted marks
 
-	set_deleted_marks (d: ARRAY [BOOLEAN]) is
+	set_deleted_marks (d: SPECIAL [BOOLEAN]) is
 			-- Assign `d' to `deleted_marks'.
 		do
 			deleted_marks := d
@@ -306,7 +296,7 @@ feature -- Iteration
 	start is
 			-- Iteration initialization
 		do
-			pos_for_iter := lower - 1;
+			pos_for_iter := -1;
 			forth;
 		end;
 
@@ -320,19 +310,14 @@ feature -- Iteration
 				stop
 			loop
 				pos_for_iter := pos_for_iter + 1;
-				stop := after or else valid_key (array_item (pos_for_iter));
+				stop := after or else valid_key (area.item (pos_for_iter));
 			end
 		end;
 
 	after: BOOLEAN is
 			-- Is the iteration cursor off ?
 		do
-			Result := pos_for_iter > upper
-		end;
-
-	offright: BOOLEAN is obsolete "Use `after'"
-		do
-			Result := after
+			Result := pos_for_iter > capacity - 1
 		end;
 
 	item_for_iteration: H is
@@ -340,7 +325,7 @@ feature -- Iteration
 		require
 			not_off: not after
 		do
-			Result := array_item (pos_for_iter)
+			Result := area.item (pos_for_iter)
 		end;
 
 feature {NONE} -- Iteration cursor

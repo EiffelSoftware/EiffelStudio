@@ -259,8 +259,8 @@ feature -- Element change
 			i: INTEGER
 			old_count: INTEGER
 		do
-			if column_titles.count > column_count then
-				expand_column_count_to (column_titles.count)
+			if titles.count > column_count then
+				expand_column_count_to (titles.count)
 			end
 			from
 				i := 1
@@ -316,9 +316,6 @@ feature -- Element change
 			i: INTEGER
 			old_count: INTEGER
 		do
-			if widths.count > column_count then
-				expand_column_count_to (widths.count)
-			end
 			from
 				i := 1
 				old_count := column_widths.count
@@ -349,9 +346,6 @@ feature -- Element change
 			i: INTEGER
 			old_count: INTEGER
 		do
-			if column_alignments.count > column_count then
-				expand_column_count_to (column_alignments.count)
-			end
 			from
 				i := 1
 				alignments.start
@@ -622,6 +616,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.54  2000/05/02 18:34:11  king
+--| Corrected set_column_titles, changed s_c_widths/alignments to fit specifications
+--|
 --| Revision 1.53  2000/04/27 17:48:57  pichery
 --| changed the type of `selected_items' from
 --| LINKED_LIST to DYNAMIC_LIST.

@@ -71,12 +71,6 @@ feature -- Basic Operation
 			end
 			debugging_information.select_actions.extend (agent update_debugging_information)
 			
-			create client_of_window.make_with_text ("Generated code is client of EV_TITLED_WINDOW")
-			if project_settings.client_of_window then
-				client_of_window.enable_select
-			end
-			client_of_window.select_actions.extend (agent update_client_information)
-			
 			-- Effectively removed from wizard, as it is not very important.
 			-- For now, it can just stay here, but if it is really going to be
 			-- removed for good, then just take it out.
@@ -140,17 +134,6 @@ feature {NONE} -- Implementation
 				project_settings.disable_debugging_output
 			end
 		end
-		
-	update_client_information is
-			-- Update project_Settings based on state of `client_of_window'.
-		do
-			if client_of_window.is_selected then
-				project_settings.enable_client_of_window
-			else
-				project_settings.disable_client_of_window
-			end
-		end
-		
 
 	locals_grouped: EV_CHECK_BUTTON
 		-- Should all local declarations be grouped, or individual?

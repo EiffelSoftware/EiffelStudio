@@ -60,7 +60,7 @@ feature {NONE} -- Initialization
 
 	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height,
 				an_id: INTEGER) is
-			-- Make a tree view control.
+			-- Make a List view control.
 		require
 			a_parent_not_void: a_parent /= Void
 		do
@@ -142,7 +142,7 @@ feature -- Status report
 			result_count: INTEGER
 		do
 			from
-				!! Result.make (0, selected_count - 1)
+				create Result.make (0, selected_count - 1)
 				result_count := 0
 				index := cwin_send_message_result (item, Lvm_getnextitem, - 1, Lvni_selected)
 			until
@@ -155,7 +155,6 @@ feature -- Status report
 			end
 		ensure
 			result_not_void: Result /= Void
-		--	count_ok: result_count = selected_count
 		end
 
 	get_column_width (column: INTEGER): INTEGER is
@@ -180,6 +179,17 @@ feature -- Status report
 			Result := cwin_send_message_result (item, Lvm_getitemstate, index, mask)
 		end
 
+	get_item_position (index: INTEGER): WEL_POINT is
+			-- Retrieves the position of the zero-based `index'-th item. 
+		require
+			exists: exists
+			index_large_enough: index >= 0
+			index_small_enough: index < count
+		do
+			create Result.make (0,0)
+			cwin_send_message (item, Lvm_getitemposition, index, cwel_pointer_to_integer(Result.item))
+		end
+
 	get_cell_text (i,j: INTEGER): STRING is
 			-- Get the label of the cell with coordinates `i', `j' with `txt'.
 		require
@@ -192,8 +202,8 @@ feature -- Status report
 			an_item: WEL_LIST_VIEW_ITEM
 			buffer: STRING
 		do
-			!! an_item.make
-			!! buffer.make (buffer_size)
+			create an_item.make
+			create buffer.make (buffer_size)
 			buffer.fill_blank
 			an_item.set_isubitem (j)
 			an_item.set_text (buffer)
@@ -214,7 +224,7 @@ feature -- Status report
 		local
 			buffer: STRING
 		do
-			!! Result.make
+			create Result.make
 			Result.set_mask (Lvif_text + Lvif_state + Lvif_image + Lvif_param)
 			Result.set_iitem (index)
 			Result.set_isubitem (subitem)
@@ -285,7 +295,7 @@ feature -- Status setting
 		local
 			an_item: WEL_LIST_VIEW_ITEM
 		do
-			!! an_item.make_with_attributes (Lvif_text, j, i, 0, txt)
+			create an_item.make_with_attributes (Lvif_text, j, i, 0, txt)
 			cwin_send_message (item, Lvm_setitemtext, j, an_item.to_integer)
 		end
 
@@ -298,7 +308,7 @@ feature -- Status setting
 		local
 			a_column: WEL_LIST_VIEW_COLUMN
 		do
-			!! a_column.make_with_attributes (Lvcf_text, index, 0, txt)
+			create a_column.make_with_attributes (Lvcf_text, index, 0, txt)
 			cwin_send_message (item, Lvm_setcolumn, index, a_column.to_integer)
 		end
 
@@ -601,7 +611,7 @@ feature {NONE} -- Implementation
 	class_name: STRING is
 			-- Window class name to create
 		once
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (cwin_wc_listview)
 		end
 

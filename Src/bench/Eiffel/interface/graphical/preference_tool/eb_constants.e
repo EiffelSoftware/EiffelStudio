@@ -15,7 +15,7 @@ feature {NONE} -- Resources
 			!! Result.make
 		end;
 
-	Project_resources: PROJECT_CATEGORY is
+	Project_tool_resources: PROJECT_CATEGORY is
 			-- Resources for the project tool
 		once
 			!! Result.make

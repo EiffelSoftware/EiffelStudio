@@ -1134,13 +1134,26 @@ feature -- Once management
 
 feature -- Array manipulation
 
-	generate_array_access (kind: INTEGER) is
+	generate_array_access (kind: INTEGER; a_type_id: INTEGER) is
 			-- Generate call to `item' of NATIVE_ARRAY.
+		require
+			kind_positive: kind /= 0
+			type_id_valid: kind = il_expanded implies a_type_id > 0
 		do
 		end
 
-	generate_array_write (kind: INTEGER) is
+	generate_array_write_preparation (a_type_id: INTEGER) is
+			-- Prepare call to `put' from NATIVE_ARRAY in case of expanded elements.
+		require
+			type_id_valid: a_type_id > 0
+		do
+		end
+
+	generate_array_write (kind: INTEGER; a_type_id: INTEGER) is
 			-- Generate call to `put' of NATIVE_ARRAY.
+		require
+			kind_positive: kind /= 0
+			type_id_valid: kind = il_expanded implies a_type_id > 0
 		do
 		end
 

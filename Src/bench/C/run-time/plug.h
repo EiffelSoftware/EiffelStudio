@@ -75,7 +75,7 @@ extern char *(**ecreate)();			/* Initialization routines */
 #else
 #define References(type)	esystem[type].nb_ref
 #define Size(type)			esystem[type].size
-#define Disp_rout(type)		esystem[type].cn_dispose
+#define Disp_rout(type)		esystem[type].cn_disposed
 											/* Does type have disp routine ? */
 #define Dispose(type) ((void (*)()) dispose_routine(type));
 											/* Dispose routine */

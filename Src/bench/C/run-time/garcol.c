@@ -263,6 +263,7 @@ typedef EIF_REFERENCE (*MARKER) (EIF_REFERENCE *);
 
 #ifdef EIF_THREADS
 rt_public EIF_LW_MUTEX_TYPE *eif_gc_mutex = NULL;	/* Mutex used to protect GC collection or allocation */
+rt_public EIF_LW_MUTEX_TYPE *eif_gc_set_mutex = NULL;	/* Mutex used to protect insertion into `rem_set' */
 rt_public EIF_MUTEX_TYPE *eif_global_once_mutex = NULL;	/* Mutex used to protect insertion and computation of global onces. */
 #endif
 
@@ -2147,6 +2148,7 @@ rt_shared void urgent_plsc(EIF_REFERENCE *object)
 		return;							/* Garbage collection stopped */
 
 	SIGBLOCK;				/* Block all signals during garbage collection */
+	GC_THREAD_PROTECT(eif_synchronize_gc(eif_globals));
 	init_plsc();			/* Initialize scavenging (find 'to' space) */
 
 	/* This object needs to be taken care of, because it might be dead from
@@ -2156,6 +2158,8 @@ rt_shared void urgent_plsc(EIF_REFERENCE *object)
 	*object = MARK_SWITCH(object);	/* Ensure object is alive */
 
 	run_plsc();				/* Normal sequence */
+
+	GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
 }
 
 rt_private void clean_zones(void)
@@ -4095,10 +4099,19 @@ rt_public void eremb(EIF_REFERENCE obj)
 	 * normally done by the RTAR macro.
 	 */
 
+	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
 	if (-1 == epush(&rem_set, obj)) {		/* Low on memory */
+		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 		urgent_plsc(&obj);					/* Compacting garbage collection */
-		if (-1 == epush(&rem_set, obj))		/* Still low on memory */
+		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
+		if (-1 == epush(&rem_set, obj)) {	/* Still low on memory */
+			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 			enomem(MTC_NOARG);						/* Critical exception */
+		} else {
+			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
+		}
+	} else {
+		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 	}
 
 #ifdef DEBUG
@@ -4122,8 +4135,13 @@ rt_public void erembq(EIF_REFERENCE obj)
 	 * on every 'put' operation).
 	 */
 
-	if (-1 == epush(&rem_set, obj))		/* Cannot record object */
+	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
+	if (-1 == epush(&rem_set, obj)) {		/* Cannot record object */
+		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 		enomem(MTC_NOARG);						/* Critical exception */
+	} else {
+		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
+	}
 
 	HEADER(obj)->ov_flags |= EO_REM;	/* Mark object as remembered */
 }

@@ -391,57 +391,14 @@ rt_private EIF_REFERENCE external_reallocation (EIF_REFERENCE obj, uint32 nbytes
 
 #endif
 
-#ifdef ISE_GC
-#ifdef EIF_THREADS
-extern EIF_REFERENCE safe_emalloc (uint32);
-extern EIF_REFERENCE safe_emalloc_size (uint32, uint32, uint32);
-extern EIF_REFERENCE safe_spmalloc (unsigned int, EIF_BOOLEAN);
-extern EIF_REFERENCE safe_tuple_malloc_specific (uint32, uint32, EIF_BOOLEAN);
-
-rt_public EIF_REFERENCE emalloc (uint32 ftype)
-{
-	EIF_REFERENCE result = NULL;
-	EIF_GC_MUTEX_LOCK;
-	result = safe_emalloc (ftype);
-	EIF_GC_MUTEX_UNLOCK;
-	return result;
-}
-
-rt_public EIF_REFERENCE emalloc_size (uint32 ftype, uint32 dtype, uint32 size)
-{
-	EIF_REFERENCE result = NULL;
-	EIF_GC_MUTEX_LOCK;
-	result = safe_emalloc_size (ftype, dtype, size);
-	EIF_GC_MUTEX_UNLOCK;
-	return result;
-}
-
-rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
-{
-	EIF_REFERENCE result = NULL;
-	EIF_GC_MUTEX_LOCK;
-	result = safe_spmalloc (nbytes, atomic);
-	EIF_GC_MUTEX_UNLOCK;
-	return result;
-}
-
-rt_public EIF_REFERENCE tuple_malloc_specific (uint32 ftype, uint32 count, EIF_BOOLEAN atomic)
-{
-	EIF_REFERENCE result = NULL;
-	EIF_GC_MUTEX_LOCK;
-	result = safe_tuple_malloc_specific (ftype, count, atomic);
-	EIF_GC_MUTEX_UNLOCK;
-	return result;
-}
-
-#define emalloc safe_emalloc
-#define emalloc_size safe_emalloc_size
-#define spmalloc safe_spmalloc
-#define tuple_malloc_specific safe_tuple_malloc_specific
-#endif
+#if defined(ISE_GC) && defined(EIF_THREADS)
+rt_public EIF_LW_MUTEX_TYPE *eif_gc_gsz_mutex = NULL;	/* Mutex used to protect GC allocation in scavenge zone*/
+#define EIF_GC_GSZ_LOCK EIF_LW_MUTEX_LOCK(eif_gc_gsz_mutex, "Could not lock GSZ mutex")
+#define EIF_GC_GSZ_UNLOCK EIF_LW_MUTEX_UNLOCK(eif_gc_gsz_mutex, "Could not lock GSZ mutex")
 #endif
 
-rt_public EIF_REFERENCE smart_emalloc (uint32 ftype) {
+rt_public EIF_REFERENCE smart_emalloc (uint32 ftype)
+{
 	int32 type = (int32) Deif_bid(ftype);
 	if (type == egc_tup_dtype) {
 		return tuple_malloc (ftype);
@@ -466,6 +423,7 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 	 * "No more memory" exception. The routine returns the pointer on a new
 	 * object holding at least 'nbytes'.
 	 */
+	EIF_GET_CONTEXT
 	EIF_REFERENCE object;				/* Pointer to the freshly created object */
 	
 #ifdef EMCHK
@@ -534,7 +492,9 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 	 * scavenge zones are freed. A last attempt is then made before raising
 	 * an exception if it also failed.
 	 */
+	GC_THREAD_PROTECT(eif_synchronize_gc(eif_globals));
 	object = xmalloc(nbytes, EIFFEL_T, GC_ON);
+	GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
 
 	if (object != (EIF_REFERENCE) 0) {
 		UNDISCARD_BREAKPOINTS
@@ -554,10 +514,12 @@ rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 #endif
 	}
 
+	GC_THREAD_PROTECT(eif_synchronize_gc(eif_globals));
 	if (gen_scavenge & GS_ON)		/* If generation scaveging was on */
 		sc_stop();					/* Free 'to' and explode 'from' space */
 
 	object = xmalloc(nbytes, EIFFEL_T, GC_OFF);		/* Retry */
+	GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
 
 	if (object != (EIF_REFERENCE) 0) {
 		UNDISCARD_BREAKPOINTS
@@ -688,6 +650,7 @@ rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 	 * `atomic' means that it is a special object without references.
 	 */
 
+	EIF_GET_CONTEXT
 	EIF_REFERENCE object;		/* Pointer to the freshly created special object */
 	
 	DISCARD_BREAKPOINTS
@@ -713,7 +676,9 @@ rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 #endif
 		/* New special object is too big to be created in generational scavenge zone.
 		 * So we allocate it in free list. */
+		GC_THREAD_PROTECT(eif_synchronize_gc(eif_globals));
 		object = xmalloc(nbytes, EIFFEL_T, GC_ON);
+		GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
 		UNDISCARD_BREAKPOINTS
 		if (object == (EIF_REFERENCE) 0)
 			eraise("Special allocation", EN_MEM);	/* No more memory */
@@ -731,7 +696,9 @@ rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 	}
 	
 		 /* No more space in scavenge zone: allocation in free list. */
+	GC_THREAD_PROTECT(eif_synchronize_gc(eif_globals));
 	object = xmalloc(nbytes, EIFFEL_T, GC_ON);
+	GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
 	if (object == (EIF_REFERENCE) 0) {
 		UNDISCARD_BREAKPOINTS
 		eraise("Special allocation", EN_MEM);	/* No more memory */
@@ -955,10 +922,19 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 
 		if (HEADER(ptr)->ov_flags & EO_NEW) {			/* Original was new, ie not allocated
 														 * in GSZ. */
+			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
 			if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
-				urgent_plsc(&object);					/* Full safe collection */
-				if (-1 == epush(&moved_set, object))	/* Still failed */
-					enomem(MTC_NOARG);					/* Critical exception */
+				GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
+				urgent_plsc(&object);					/* Full collection */
+				GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
+				if (-1 == epush(&moved_set, object)) {	/* Still failed */
+					GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
+					enomem(MTC_NOARG);							/* Critical exception */
+				} else {
+					GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
+				}
+			} else {
+				GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 			}
 		}
 	}
@@ -3055,11 +3031,17 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 	 * Note that either both zone are created or none at all, hence the test
 	 * for only one null pointer.
 	 */
-	if (sc_from.sc_arena == (EIF_REFERENCE) 0)
-		if (0 != create_scavenge_zones()) {
-			gen_scavenge = GS_OFF;	/* Turn off generation scavenging */
-			return (EIF_REFERENCE) 0;		/* No scavenge zone available */
+	if (sc_from.sc_arena == (EIF_REFERENCE) 0) {
+		/* FIXME THREAD: Lazy initialization issue here */
+		GC_THREAD_PROTECT(eif_synchronize_gc(eif_globals));
+		if (sc_from.sc_arena == NULL) {
+			if (0 != create_scavenge_zones()) {
+				gen_scavenge = GS_OFF;	/* Turn off generation scavenging */
+				return (EIF_REFERENCE) 0;		/* No scavenge zone available */
+			}
 		}
+		GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
+	}
 	
 	/* Pad to correct size -- see xmalloc() for a detailed explaination of
 	 * why this is desirable.
@@ -3075,14 +3057,26 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 	 * of occupation go below the watermark at the next collection. There is
 	 * enough room after the watermark to safely allocate the object, anyway.
 	 */
+	GC_THREAD_PROTECT(eif_globals->gc_thread_status = EIF_THREAD_GC_GSZ);
+	GC_THREAD_PROTECT(EIF_GC_GSZ_LOCK);
 	if (sc_from.sc_top >= sc_from.sc_mark) {
+		GC_THREAD_PROTECT(eif_synchronize_gc(eif_globals));
 		if (eiffel_usage > th_alloc) {	/* Above threshold */
-			if (0 == acollect())		/* Perform automatic collection */
+			if (0 == acollect()) {		/* Perform automatic collection */
 				eiffel_usage = 0;		/* Reset amount of allocated data */
-			else
+			} else {
+				GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
+				GC_THREAD_PROTECT(eif_globals->gc_thread_status = EIF_THREAD_RUNNING);
+				GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
 				return (EIF_REFERENCE) 0;		/* Collection failed */
-		} else if (0 != collect())		/* Simple generation scavenging */
+			}
+		} else if (0 != collect()) {	/* Simple generation scavenging */
+			GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
+			GC_THREAD_PROTECT(eif_globals->gc_thread_status = EIF_THREAD_RUNNING);
+			GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
 			return (EIF_REFERENCE) 0;			/* Collection failed */
+		}
+		GC_THREAD_PROTECT(eif_unsynchronize_gc(eif_globals));
 
 		/* When we're back from any of the GC call above, we're not sure
 		 * the scavenge zone has been freed from as much memory as we thought.
@@ -3099,6 +3093,8 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 		 */
 
 		if ((OVERHEAD+nbytes+sc_from.sc_top) > sc_from.sc_end) {
+			GC_THREAD_PROTECT(eif_globals->gc_thread_status = EIF_THREAD_RUNNING);
+			GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
 			return NULL;
 		}
 	}
@@ -3120,6 +3116,8 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 	flush;
 #endif
 
+	GC_THREAD_PROTECT(eif_globals->gc_thread_status = EIF_THREAD_RUNNING);
+	GC_THREAD_PROTECT(EIF_GC_GSZ_UNLOCK);
 	return (EIF_REFERENCE) (((union overhead *) object ) + 1);	/* Free data space */
 }
 
@@ -3198,6 +3196,7 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 
 	SIGBLOCK;				/* Beginning of critical section */
 
+	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
 	for (zone = next; (EIF_REFERENCE) zone < top; zone = next) {
 
 		/* Set the flags for the new block and compute the location of
@@ -3219,6 +3218,7 @@ rt_private void explode_scavenge_zone(struct sc_zone *sc)
 		zone->ov_flags |= EO_NEW;		/* Released object is young */
 		object++;						/* One more released object */
 	}
+	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 
 #ifdef MAY_PANIC
 	/* Consitency check. We must have reached the top of the zone */
@@ -3320,10 +3320,19 @@ rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 dftype, uint32 dty
 
 #ifdef ISE_GC
 	if (dftype & EO_NEW) {					/* New object outside scavenge zone */
+		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
 		if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
+			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 			urgent_plsc(&object);					/* Full collection */
-			if (-1 == epush(&moved_set, object))	/* Still failed */
+			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
+			if (-1 == epush(&moved_set, object)) {	/* Still failed */
+				GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 				enomem(MTC_NOARG);							/* Critical exception */
+			} else {
+				GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
+			}
+		} else {
+			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 		}
 	}
 	if (Disp_rout(dtype)) {
@@ -3388,11 +3397,19 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 #ifdef ISE_GC
 	if (in_scavenge == EIF_FALSE) {
 		zone->ov_flags = EO_SPEC | EO_NEW;	/* Object is special and new */
-
+		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
 		if (-1 == epush(&moved_set, object)) {		/* Cannot record object */
+			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 			urgent_plsc(&object);					/* Full collection */
-			if (-1 == epush(&moved_set, object)) 	/* Still failed */
+			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
+			if (-1 == epush(&moved_set, object)) {	/* Still failed */
+				GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 				enomem(MTC_NOARG);							/* Critical exception */
+			} else {
+				GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
+			}
+		} else {
+			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 		}
 	} else
 #endif
@@ -3412,12 +3429,20 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 rt_private void set_memory_object (EIF_REFERENCE object)
 	/* Add `object' into `memory_set'. */
 {
-	if (-1 == epush (&memory_set, object))
+	GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
 		/* Push it in the memory set.*/
-	{
+	if (-1 == epush (&memory_set, object)) {
+		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 		urgent_plsc(&object);			/* Full safe collection */
-		if (-1 == epush(&memory_set, object))	/* Still failed */
+		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_LOCK);
+		if (-1 == epush(&memory_set, object)) {	/* Still failed */
+			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 			enomem(MTC_NOARG);				/* Critical exception */
+		} else {
+			GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
+		}
+	} else {
+		GC_THREAD_PROTECT(EIF_GC_SET_MUTEX_UNLOCK);
 	}
 }
 	

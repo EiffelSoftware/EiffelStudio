@@ -36,11 +36,11 @@ struct stack_list {
 	int count;						/* Number of stacks in Current */
 	int capacity;					/* Number of possible stacks in Current */
 	union {
-		void **stack;				/* Array of stack */
-		struct stack **sstack;		/* Typed array of stack - GC stack */
-		struct xstack **xstack;		/* Typed array of xtack - exception stack */
+		void ** volatile data;				/* Array of data */
+		struct stack ** volatile sstack;		/* Typed array of stack - GC stack */
+		struct xstack ** volatile xstack;		/* Typed array of xtack - exception stack */
 #ifdef WORKBENCH
-		struct opstack **opstack;	/* Typed array of opstack - interpreter */
+		struct opstack ** volatile opstack;	/* Typed array of opstack - interpreter */
 #endif
 	} threads;
 };

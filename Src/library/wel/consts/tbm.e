@@ -1,5 +1,5 @@
 indexing
-	description: "Track Bar (common control) Message (TBM) constants."
+	description: "Common control Track Bar Message (TBM) constants."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

@@ -1,5 +1,5 @@
 indexing
-	description: "Receives and dispatch the Windows messages to the Eiffel %
+	description: "Receives and dispatch the Windows messages to the Eiffel%
 		% objects."
 	status: "See notice at end of class."
 	date: "$Date$"

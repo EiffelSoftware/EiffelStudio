@@ -294,7 +294,7 @@ feature -- Measurement
 		local
 			old_iteration_position: INTEGER
 		do
-			iteration_position := old_iteration_position
+			old_iteration_position := iteration_position
 			if object_comparison then
 				from
 					start
@@ -318,7 +318,7 @@ feature -- Measurement
 					forth
 				end
 			end
-			old_iteration_position := iteration_position
+			iteration_position := old_iteration_position
 		end
 
 feature -- Comparison

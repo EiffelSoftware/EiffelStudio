@@ -9,6 +9,8 @@
 #define Exit_String                     4
 #define Launch_String                   5
 #define Generate_String                 6
+#define About_string                    7
+#define Help_string                     8
 #define Wizard_Definition_File_Dialog   101
 #define Wizard_IDL_Dialog               102
 #define Wizard_Final_Dialog             104
@@ -27,6 +29,8 @@
 #define Splash_bitmap                   127
 #define Wizard_Eiffel_Project_Dialog    129
 #define Wizard_Eiffel_Project_File_Dialog 129
+#define IDD_DIALOG1                     130
+#define WIZARD_ABOUT_DIALOG             130
 #define Definition_File_Edit            1007
 #define Definition_File_Input_Static    1008
 #define Browse_Button                   1009
@@ -76,6 +80,7 @@
 #define Project_File_Edit               1064
 #define Project_File_Browse_Button      1065
 #define Eiffel_Class_Edit               1066
+#define ABOUT_STATIC                    1066
 #define Ace_File_Edit                   1067
 #define Ace_File_Browse_Button          1068
 
@@ -83,9 +88,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        130
+#define _APS_NEXT_RESOURCE_VALUE        131
 #define _APS_NEXT_COMMAND_VALUE         40014
-#define _APS_NEXT_CONTROL_VALUE         1066
+#define _APS_NEXT_CONTROL_VALUE         1067
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

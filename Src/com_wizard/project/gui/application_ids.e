@@ -10,9 +10,12 @@ feature -- Access
 	New_string_constant: INTEGER is 1
 	Open_string_constant: INTEGER is 2
 	Save_string_constant: INTEGER is 3
+	Clear_output_string_constant: INTEGER is 4
 	Exit_string_constant: INTEGER is 4
 	Launch_string_constant: INTEGER is 5
 	Generate_string_constant: INTEGER is 6
+	About_string_constant: INTEGER is 7
+	Help_string_constant: INTEGER is 8
 	Wizard_definition_file_dialog_constant: INTEGER is 101
 	Wizard_idl_dialog_constant: INTEGER is 102
 	Wizard_final_dialog_constant: INTEGER is 104
@@ -26,10 +29,13 @@ feature -- Access
 	Progress_dialog_constant: INTEGER is 121
 	Wizard_first_choice_dialog_constant: INTEGER is 123
 	Wizard0_bitmap_constant: INTEGER is 124
+	Splash_screen_dialog_constant: INTEGER is 125
 	Wizard_splash_dialog_constant: INTEGER is 125
 	Splash_bitmap_constant: INTEGER is 127
 	Wizard_eiffel_project_dialog_constant: INTEGER is 129
 	Wizard_eiffel_project_file_dialog_constant: INTEGER is 129
+	Idd_dialog1_constant: INTEGER is 130
+	Wizard_about_dialog_constant: INTEGER is 130
 	Definition_file_edit_constant: INTEGER is 1007
 	Definition_file_input_static_constant: INTEGER is 1008
 	Browse_button_constant: INTEGER is 1009
@@ -66,6 +72,7 @@ feature -- Access
 	Code_type_static_constant: INTEGER is 1052
 	Component_type_static_constant: INTEGER is 1054
 	Marshalling_question_static_constant: INTEGER is 1056
+	Out_of_proces_check2_constant: INTEGER is 1056
 	Out_of_process_check_constant: INTEGER is 1056
 	Virtual_table_universal_radio_constant: INTEGER is 1057
 	Virtual_table_standard_radio_constant: INTEGER is 1058
@@ -78,6 +85,7 @@ feature -- Access
 	Project_file_edit_constant: INTEGER is 1064
 	Project_file_browse_button_constant: INTEGER is 1065
 	Eiffel_class_edit_constant: INTEGER is 1066
+	About_static_constant: INTEGER is 1066
 	Ace_file_edit_constant: INTEGER is 1067
 	Ace_file_browse_button_constant: INTEGER is 1068
 

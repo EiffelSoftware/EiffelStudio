@@ -1,4 +1,8 @@
-class S_LINKABLE_DATA
+deferred class S_LINKABLE_DATA
+
+inherit
+
+	COMPARABLE
 
 feature
 

@@ -32,11 +32,6 @@ feature {NONE}
 
 	Default_Class_filename: STRING is "default.cls";
 
-	Descobj: STRING is
-		once
-			Result := Platform_constants.Descobj
-		end;
-
 	Descriptor_file_suffix: CHARACTER is 'd'
 
 	Descriptor_suffix: STRING is "D"

@@ -82,12 +82,10 @@ CFLAGS = $(DPFLAGS)
 
 LSRC = \
 	names.c \
-	sizes.c \
 	commands.c
 
 LOBJ = \
 	names.o \
-	sizes.o \
 	commands.o
 
 all:: libplatform.a

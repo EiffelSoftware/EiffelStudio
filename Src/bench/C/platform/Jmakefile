@@ -3,7 +3,7 @@
  */
 
 ;# Files used to build the daemon
-SRC = names.c sizes.c commands.c
+SRC = names.c commands.c
 
 ;# Derived object file names
 OBJ = \

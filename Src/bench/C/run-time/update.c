@@ -81,13 +81,13 @@ inipath = eif_getenv ("ES3INI");
 GetPrivateProfileString   ("Environment", "MELT_PATH", "", buf, 128, inipath);
 WritePrivateProfileString ("Environment", "MELT_PATH",NULL, inipath);
 if (strlen(buf)){
+	meltpath = buf;
 #else
 #define UPDTLEN 5
 #define UPDT_NAME "/.UPDT"
 meltpath = eif_getenv ("MELT_PATH");
 if (meltpath) {
 #endif
-	meltpath = buf;
 	filename = (char *)cmalloc (strlen (meltpath) + UPDTLEN + 2);
 	}
 else {

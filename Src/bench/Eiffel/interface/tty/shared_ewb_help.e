@@ -20,7 +20,7 @@ feature {NONE}
 
 	clusters_help: STRING is "show the system's classes, cluster by cluster";
 
-	compile_help: STRING is "compile the system";
+	compile_help: STRING is "compile or run the system";
 
 	deferred_help: STRING is "show the deferred features of a class";
 

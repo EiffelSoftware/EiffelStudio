@@ -71,14 +71,11 @@ feature
 	enlarged: ATTRIBUTE_BL is
 			-- Enlarges the tree to get more attributes and returns the
 			-- new enlarged tree node.
-		local
-			worbench_node: ATTRIBUTE_BW;
 		do
 			if context.final_mode then
 				!!Result;
 			else
-				!!worbench_node;
-				Result := worbench_node;
+				!ATTRIBUTE_BW!Result;
 			end;
 			Result.fill_from (Current);
 		end;

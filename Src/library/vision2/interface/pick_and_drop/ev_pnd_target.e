@@ -27,6 +27,14 @@ feature -- Access
 			implementation.add_pnd_command (type, cmd, args)
 		end
 
+	remove_pnd_commands (type: EV_PND_TYPE) is
+			-- Remove the list of commands to be executed when
+			-- a data of type `type' is dropped into current target.
+		require
+			valid_type: type /= Void
+		do
+			implementation.remove_pnd_commands (type)
+		end
 
 	add_default_pnd_command (cmd: EV_COMMAND; args: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be executed when
@@ -35,6 +43,15 @@ feature -- Access
 			valid_command: cmd /= Void
 		do
 			implementation.add_default_pnd_command (cmd, args)
+		end
+
+	remove_default_pnd_commands (type: EV_PND_TYPE) is
+			-- Remove the list of commands to be executed when
+			-- any data is dropped into current target.
+		require
+			valid_type: type /= Void
+		do
+			implementation.remove_default_pnd_commands (type)
 		end
 
 feature {NONE} -- Implementation

@@ -86,6 +86,17 @@ feature -- Transforming
 				l_icdv.clean_on_dispose
 			end
 		end
+		
+	icor_debug_value_to_boolean (a_data: ICOR_DEBUG_VALUE): BOOLEAN is
+		local
+			l_icdv: ICOR_DEBUG_VALUE
+		do
+			l_icdv := prepared_debug_value (a_data)
+			Result := prepared_icor_debug_value_as_boolean (l_icdv)
+			if l_icdv /= a_data then
+				l_icdv.clean_on_dispose
+			end
+		end
 
 feature {EIFNET_DEBUG_VALUE_FACTORY, SHARED_EIFNET_DEBUG_VALUE_FORMATTER, DEBUG_VALUE_EXPORTER} -- Dereferenced to Specialized Value
 

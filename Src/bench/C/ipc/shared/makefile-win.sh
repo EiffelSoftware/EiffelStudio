@@ -33,9 +33,9 @@ ipc.lib: $(OBJECTS)
 	$(RM) $@
 	$link_line
 
-com.obj: logfile.h
-logfile.obj: logfile.h
-network.obj: logfile.h
-select.obj: logfile.h
-transfer.obj: logfile.h
-identify.obj: logfile.h
+com.obj: eif_logfile.h
+logfile.obj: eif_logfile.h
+network.obj: eif_logfile.h
+select.obj: eif_logfile.h
+transfer.obj: eif_logfile.h
+identify.obj: eif_logfile.h

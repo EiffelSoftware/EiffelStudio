@@ -92,6 +92,16 @@ extern "C" {
 
 #define GC_OFF		0				/* Garbage collector is off */
 
+
+/* ALIGNMAX is the maximum between MEM_ALIGNBYTES and OVERHEAD. This is important
+ * because eif_malloc always allocates a multiple of MEM_ALIGNBYTES but we are sure
+ * there will always be room to split a block, even if we have to create a
+ * null size one (i.e. only an header). Although eif_malloc used to work without
+ * this feature, it appears to be essential for the scavenging process. The
+ * reason is too long to be explained here, though--RAM.
+ */
+#define ALIGNMAX	((MEM_ALIGNBYTES < OVERHEAD) ? OVERHEAD : MEM_ALIGNBYTES)
+
 /*
  * Global variables, not in a per thread basis.
  */

@@ -45,7 +45,8 @@ feature -- Access
 	set_step (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Sets the step of the spin button
 		do
-			current_widget.set_step(f1.get_text.to_integer)
+		--	current_widget.set_step(f1.get_text.to_integer)
+			f1.set_text("Inapplicable")
 		end
 
 	get_step (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is

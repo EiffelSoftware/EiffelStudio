@@ -160,6 +160,3 @@ feature -- Replication
 
 end
 
-
-
-			

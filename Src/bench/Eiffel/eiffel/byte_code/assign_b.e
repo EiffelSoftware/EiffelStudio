@@ -90,7 +90,7 @@ feature -- Inlining
 
 	size: INTEGER is
 		do
-			Result := 1+ source.size
+			Result := 1 + source.size
 		end
 
 	pre_inlined_code: like Current is

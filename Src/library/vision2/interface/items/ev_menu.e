@@ -76,6 +76,8 @@ feature {NONE} -- Contract support
 			-- consecutive separators?
 		do
 			Result := implementation.one_radio_item_selected_per_separator
+		ensure
+			index_not_changed: index = old index
 		end
 
 

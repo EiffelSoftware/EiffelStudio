@@ -93,7 +93,7 @@ feature -- Basic Operations
 				-- Build View menu item.
 			create show_name_menu_item.make_menuitem_1 (dictionary.Show_name_menu_item)
 			show_all_menu_item.set_shortcut (dictionary.Ctrl_A_shortcut)
-			show_name_menu_item.set_shortcut (dictionary.Ctrl_S_shortcut)
+			show_name_menu_item.set_shortcut (dictionary.Ctrl_W_shortcut)
 			separator := view_menu_item.menuitems.add_string ("-")
 			added := view_menu_item.menuitems.add (show_all_menu_item)	
 			added := view_menu_item.menuitems.add (show_name_menu_item)	
@@ -137,14 +137,28 @@ feature -- Basic Operations
 		do			
 			build_toolbar_assembly_viewer
 			
+			create open_toolbar_button.make_toolbarbutton
 			create import_toolbar_button.make_toolbarbutton
 			create separator.make_toolbarbutton
-			import_toolbar_button.set_imageindex (7)
+			
+			open_toolbar_button.set_imageindex (7)
+			open_toolbar_button.set_tooltiptext (dictionary.Open_menu_item)
+			open_toolbar_button.set_style (dictionary.Push_button)
+			
+			import_toolbar_button.set_imageindex (8)
 			import_toolbar_button.set_tooltiptext (dictionary.Import_menu_item)
 			import_toolbar_button.set_style (dictionary.Push_button)
 			separator.set_style (dictionary.Separator)
 				
 				-- Add buttons to `toolbar'.
+			toolbar.buttons.clear
+			added := toolbar.buttons.add_toolbarbutton (open_toolbar_button)
+			added := toolbar.buttons.add_toolbarbutton (separator)
+			added := toolbar.buttons.add_toolbarbutton (name_toolbar_button)
+			added := toolbar.buttons.add_toolbarbutton (version_toolbar_button)
+			added := toolbar.buttons.add_toolbarbutton (culture_toolbar_button)
+			added := toolbar.buttons.add_toolbarbutton (public_key_toolbar_button)
+			added := toolbar.buttons.add_toolbarbutton (dependancies_toolbar_button)
 			added := toolbar.buttons.add_toolbarbutton (separator)
 			added := toolbar.buttons.add_toolbarbutton (dependancy_viewer_toolbar_button)
 			added := toolbar.buttons.add_toolbarbutton (separator)
@@ -160,14 +174,19 @@ feature -- Basic Operations
 			external_name: "BuildImageList"
 		local
 			import_image: SYSTEM_DRAWING_IMAGE
+			open_image: SYSTEM_DRAWING_IMAGE
 			image_list: SYSTEM_WINDOWS_FORMS_IMAGELIST
 			images: IMAGECOLLECTION_IN_SYSTEM_WINDOWS_FORMS_IMAGELIST 
 		do
 			build_image_list_assembly_viewer
 			set_icon (dictionary.Import_tool_icon)		
+			
+			open_image := image_factory.fromfile (dictionary.Open_icon_filename)
 			import_image := image_factory.fromfile (dictionary.Import_icon_filename)
+			
 			image_list := toolbar.imagelist
 			images := image_list.images
+			images.add (open_image)
 			images.add (import_image)
 		end
 
@@ -256,6 +275,7 @@ feature -- Event handling
 					name_menu_item.set_checked (not checked)
 					name_toolbar_button.set_pushed (not checked)
 					resize_columns
+					fill_data_grid
 					controls.add (data_grid)
 					refresh		
 				end
@@ -302,6 +322,7 @@ feature -- Event handling
 					version_menu_item.set_checked (not checked)
 					version_toolbar_button.set_pushed (not checked)
 					resize_columns
+					fill_data_grid
 					controls.add (data_grid)
 					refresh		
 				end
@@ -348,6 +369,7 @@ feature -- Event handling
 					culture_menu_item.set_checked (not checked)
 					culture_toolbar_button.set_pushed (not checked)
 					resize_columns
+					fill_data_grid
 					controls.add (data_grid)
 					refresh		
 				end
@@ -394,6 +416,7 @@ feature -- Event handling
 					public_key_menu_item.set_checked (not checked)
 					public_key_toolbar_button.set_pushed (not checked)	
 					resize_columns
+					fill_data_grid
 					controls.add (data_grid)
 					refresh		
 				end
@@ -440,6 +463,7 @@ feature -- Event handling
 					dependancies_menu_item.set_checked (not checked)
 					dependancies_toolbar_button.set_pushed (not checked)
 					resize_columns
+					fill_data_grid
 					controls.add (data_grid)
 					refresh		
 				end
@@ -454,6 +478,7 @@ feature -- Event handling
 			show_all_assembly_viewer (sender, arguments)
 			display_assemblies
 			set_default_column_width
+			fill_data_grid
 			controls.add (data_grid)
 			refresh
 		ensure then
@@ -471,6 +496,7 @@ feature -- Event handling
 			show_name_assembly_viewer (sender, arguments)
 			display_assemblies
 			assembly_name_column_style.set_width (dictionary.Window_width - dictionary.Scrollbar_width)
+			fill_data_grid
 			controls.add (data_grid)
 			refresh
 		ensure
@@ -522,20 +548,22 @@ feature -- Event handling
 			inspect
 				index
 			when 0 then
-				display_name (sender, args)
-			when 1 then
-				display_version (sender, args)
+				open_assembly (sender, args)
 			when 2 then
-				display_culture (sender, args)
+				display_name (sender, args)
 			when 3 then
-				display_public_key (sender, args)
+				display_version (sender, args)
 			when 4 then
-				display_dependancies (sender, args)
+				display_culture (sender, args)
+			when 5 then
+				display_public_key (sender, args)
 			when 6 then
-				show_dependancy_viewer (sender, args)
+				display_dependancies (sender, args)
 			when 8 then
-				import (sender, args)
+				show_dependancy_viewer (sender, args)
 			when 10 then
+				import (sender, args)
+			when 12 then
 				display_help (sender, args)
 			end
 		end		
@@ -603,7 +631,7 @@ feature {NONE} -- Implementation
 				end
 				i := i + 1
 			end
-			fill_data_grid
+			--fill_data_grid
 		end
 
 	build_row (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; row_count: INTEGER) is 

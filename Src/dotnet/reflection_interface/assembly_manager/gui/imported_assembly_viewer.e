@@ -169,7 +169,7 @@ feature -- Basic Operations
 			create path_menu_item.make_menuitem_1 (dictionary.Path_menu_item)			
 			create show_name_and_path_menu_item.make_menuitem_1 (dictionary.Show_name_and_path_menu_item)
 			path_menu_item.set_shortcut (dictionary.Ctrl_P_shortcut)
-			show_name_and_path_menu_item.set_shortcut (dictionary.Ctrl_S_shortcut)			
+			show_name_and_path_menu_item.set_shortcut (dictionary.Ctrl_W_shortcut)			
 			path_menu_item.set_checked (True)
 			added := view_menu_item.menuitems.add (path_menu_item)	
 			separator := view_menu_item.menuitems.add_string ("-")
@@ -182,7 +182,7 @@ feature -- Basic Operations
 			create import_menu_item.make_menuitem_1 (dictionary.Import_menu_item)
 			create eiffel_generation_menu_item.make_menuitem_1 (dictionary.Eiffel_generation_menu_item)
 			edit_menu_item.set_shortcut (dictionary.Ctrl_E_shortcut)
-			remove_menu_item.set_shortcut (dictionary.Ctrl_R_shortcut)
+			remove_menu_item.set_shortcut (dictionary.Ctrl_M_shortcut)
 			import_menu_item.set_shortcut (dictionary.Ctrl_I_shortcut)
 			eiffel_generation_menu_item.set_shortcut (dictionary.Ctrl_G_shortcut)
 			added := tools_menu_item.menuitems.add (edit_menu_item)
@@ -394,6 +394,7 @@ feature -- Event handling
 					name_menu_item.set_checked (not checked)
 					name_toolbar_button.set_pushed (not checked)
 					resize_columns
+					fill_data_grid
 					controls.add (data_grid)
 					refresh
 				end
@@ -442,6 +443,7 @@ feature -- Event handling
 					version_menu_item.set_checked (not checked)
 					version_toolbar_button.set_pushed (not checked)
 					resize_columns
+					fill_data_grid
 					controls.add (data_grid)
 					refresh		
 				end
@@ -490,6 +492,7 @@ feature -- Event handling
 					culture_menu_item.set_checked (not checked)
 					culture_toolbar_button.set_pushed (not checked)
 					resize_columns
+					fill_data_grid
 					controls.add (data_grid)
 					refresh		
 				end
@@ -538,6 +541,7 @@ feature -- Event handling
 					public_key_menu_item.set_checked (not checked)
 					public_key_toolbar_button.set_pushed (not checked)	
 					resize_columns
+					fill_data_grid
 					controls.add (data_grid)
 					refresh		
 				end
@@ -586,6 +590,7 @@ feature -- Event handling
 					dependancies_toolbar_button.set_pushed (not checked)
 					display_assemblies
 					resize_columns
+					fill_data_grid
 					controls.add (data_grid)
 					refresh		
 				end
@@ -637,6 +642,7 @@ feature -- Event handling
 					path_menu_item.set_checked (not checked)
 					path_toolbar_button.set_pushed (not checked)	
 					resize_columns
+					fill_data_grid
 					controls.add (data_grid)
 					refresh	
 				end
@@ -657,6 +663,7 @@ feature -- Event handling
 			columns.add_datacolumn (eiffel_path_column)
 			display_assemblies
 			set_default_column_width
+			fill_data_grid
 			controls.add (data_grid)
 			refresh
 		ensure then
@@ -680,6 +687,7 @@ feature -- Event handling
 			columns.add_datacolumn (eiffel_path_column)	
 			display_assemblies
 			resize_columns
+			fill_data_grid
 			controls.add (data_grid)
 			refresh
 		ensure
@@ -707,19 +715,21 @@ feature -- Event handling
 			normal_cursor: SYSTEM_WINDOWS_FORMS_CURSOR
 		do
 			if not retried then
+				wait_cursor := cursors.WaitCursor
+				set_cursor (wait_cursor)
 				selected_row := data_grid.CurrentRowIndex
 				current_descriptor := current_assembly (selected_row)
 				if current_descriptor /= Void then
 					if is_non_editable_assembly (current_descriptor) then
+						normal_cursor := cursors.Arrow
+						set_cursor (normal_cursor)
 						returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (dictionary.Non_editable_assembly, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
 					else			
-						wait_cursor := cursors.WaitCursor
-						set_cursor (wait_cursor)
 						an_assembly := reflection_interface.assembly (current_descriptor)
 						if an_assembly /= Void then
 							a_type_list := an_assembly.types
-							if a_type_list /= Void then
-								create assembly_view.make (an_assembly)	
+							if a_type_list /= Void then								
+								create assembly_view.make (an_assembly)
 								normal_cursor := cursors.Arrow
 								set_cursor (normal_cursor)
 							end
@@ -733,6 +743,8 @@ feature -- Event handling
 					end
 				end
 			else
+				normal_cursor := cursors.Arrow
+				set_cursor (normal_cursor)
 				if reflection_interface.lasterror /= Void and then reflection_interface.lasterror.description /= Void and then reflection_interface.lasterror.description.length > 0 then
 					returned_value := windows_message_box.show_string_string_messageboxbuttons_messageboxicon (reflection_interface.lasterror.description, dictionary.Error_caption, dictionary.Ok_message_box_button, dictionary.Error_icon)
 				end
@@ -963,7 +975,7 @@ feature {NONE} -- Implementation
 				end
 				i := i + 1
 			end
-			fill_data_grid
+			--fill_data_grid
 		end
 
 	build_row (a_descriptor: ISE_REFLECTION_ASSEMBLYDESCRIPTOR; row_count: INTEGER; an_eiffel_path: STRING) is 
@@ -1140,6 +1152,7 @@ feature {NONE} -- Implementation
 					end
 					display_assemblies
 					resize_columns
+					fill_data_grid
 					controls.add (data_grid)
 					refresh
 				end
@@ -1168,6 +1181,7 @@ feature {NONE} -- Implementation
 			end
 			display_assemblies
 			resize_columns
+			fill_data_grid
 			controls.add (data_grid)
 			refresh		
 		end

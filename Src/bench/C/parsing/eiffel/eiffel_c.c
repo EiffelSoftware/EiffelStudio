@@ -179,14 +179,9 @@ void generic_inc(void)
 char *inspect_else(void)
 {
 	/* Return an instruction list as default part of a
-	 * multi-branch instruction. This list cannot be empty. */
+	 * multi-branch instruction. This list can be empty. */
  
 	char *result = list_new(CONSTRUCT_LIST_AS);
- 
-	if (result == (char *) 0) {
-		result = create_node(CONSTRUCT_LIST_AS);
-		(*init_array[CONSTRUCT_LIST_AS])(result,0L);
-	}
 	return result;
 }
 

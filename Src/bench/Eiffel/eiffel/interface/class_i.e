@@ -45,6 +45,7 @@ feature {NONE} -- Initialization
 			-- Create new CLASS_I object with name `a_name'.
 		require
 			a_name_not_void: a_name /= Void
+			a_name_in_upper: a_name.as_upper.is_equal (a_name)
 		do
 			reset_options
 			if not System.first_compilation then
@@ -533,6 +534,8 @@ feature {COMPILER_EXPORTER} -- Setting
 
 	set_visible_name (s: like visible_name) is
 			-- Assign `s' to `visible_name'.
+		require
+			visible_name_in_upper: s /= Void implies (s.as_upper.is_equal (s))
 		do
 			visible_name := s
 		ensure
@@ -547,6 +550,9 @@ feature {COMPILER_EXPORTER} -- Setting
 			else
 				Result := visible_name
 			end
+		ensure
+			external_name_not_void: Result /= Void
+			external_name_in_upper: Result.as_upper.is_equal (Result)
 		end
 
 feature {TEXT_FILTER} -- Document processing

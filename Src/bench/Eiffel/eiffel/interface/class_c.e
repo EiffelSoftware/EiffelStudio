@@ -3178,6 +3178,9 @@ feature -- Convenience features
 			-- External name
 		do
 			Result := lace_class.external_name
+		ensure
+			external_name_not_void: Result /= Void
+			external_name_in_upper: Result.as_upper.is_equal (Result)
 		end
 
 	assertion_level: ASSERTION_I is

@@ -173,4 +173,14 @@ feature {TEXT_ITEM} -- Implementation
 		deferred
 		end;
 
+	process_column_text (text: COLUMN_TEXT) is
+			-- Process `text'.
+		do
+		end;
+
+	process_call_stack_item (text: CALL_STACK_ITEM) is
+			-- Process the current callstack text.
+		do
+		end;
+
 end -- class TEXT_FORMATTER

@@ -112,7 +112,7 @@ feature {NONE} -- Implementation
 			-- Number of tabs
 
 	show_all_callers is
-			-- Show all the callers of `current_feature' and its descendents.
+			-- Show all the callers of `current_feature' and its descendants.
 		require
 			to_show_all_callers: to_show_all_callers
 		local
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			!! descendants.make; 
 			record_descendants (descendants, current_class);
 			from
-				!! a_list.make (descendants.count);
+				!! a_list.make_filled (descendants.count);
 				a_list.start;
 				descendants.start
 			until

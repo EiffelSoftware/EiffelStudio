@@ -17,6 +17,9 @@ inherit
 		end
 
 	EV_FONT_CONSTANTS
+		export
+			{NONE} all
+			{ANY} valid_family, valid_weight, valid_shape
 		undefine
 			default_create,
 			out

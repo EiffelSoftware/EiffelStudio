@@ -114,7 +114,7 @@ feature {EB_SAVE_FILE_COMMAND} -- Implementation
 		do
 			if argument = Void then
 				create fsd
-				fsd.ok_actions.extend (agent execute_with_dialog (fsd))
+				fsd.save_actions.extend (agent execute_with_dialog (fsd))
 				fsd.show_modal_to_window (window_manager.last_focused_development_window.window)
 			else
 				execute_with_filename (argument.file_name)

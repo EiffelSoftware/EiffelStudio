@@ -717,7 +717,7 @@ feature -- Archive
 			open_dialog.set_filter ("*.xml")
 			create ee
 			current_directory := ee.current_working_directory
-			open_dialog.ok_actions.extend (~import_archive_for_measure)
+			open_dialog.open_actions.extend (~import_archive_for_measure)
 			open_dialog.show_modal_to_window (development_window.window)
 			ee.change_working_directory (current_directory)
 		end

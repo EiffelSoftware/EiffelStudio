@@ -96,7 +96,7 @@ feature {NONE} -- Implementation
 		do
 			create fod
 			fod.set_filter ("*.e")
-			fod.ok_actions.extend (~execute_callback (fod))
+			fod.open_actions.extend (~execute_callback (fod))
 			fod.show_modal_to_window (window_manager.last_focused_development_window.window)
 		end
 	

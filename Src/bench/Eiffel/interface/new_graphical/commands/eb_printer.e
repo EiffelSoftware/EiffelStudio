@@ -174,7 +174,7 @@ feature -- Basic operations
 			dial: EV_PRINT_DIALOG
 		do
 			create dial
-			dial.ok_actions.extend (~call_print_from (dial))
+			dial.print_actions.extend (~call_print_from (dial))
 			dial.select_all_pages
 			dial.disable_page_numbers
 			dial.disable_selection

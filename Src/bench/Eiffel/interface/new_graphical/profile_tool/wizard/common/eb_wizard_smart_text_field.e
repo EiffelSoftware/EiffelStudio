@@ -325,7 +325,7 @@ feature {NONE} -- Implementation
 				file_selector.set_start_directory (starting_directory)
 			end
 			file_selector.set_filter (browse_file_filter)
-			file_selector.ok_actions.extend(~file_selected(file_selector))
+			file_selector.open_actions.extend(~file_selected(file_selector))
 			file_selector.show_modal_to_window (caller.first_window)
 		end
 

@@ -100,7 +100,7 @@ feature -- Actions
 		do
 			create file_dialog
 			file_dialog.set_filter ("*.ace")
-			file_dialog.ok_actions.extend (~retrieve_ace_file (file_dialog))
+			file_dialog.open_actions.extend (~retrieve_ace_file (file_dialog))
 			file_dialog.show_modal_to_window (window)
 		end
 

@@ -31,7 +31,7 @@ feature {NONE} -- Command Execution
 			fsd: EV_FILE_SAVE_DIALOG
 		do
 			create fsd
-			fsd.ok_actions.extend (agent save_in (fsd))
+			fsd.save_actions.extend (agent save_in (fsd))
 			fsd.show_modal_to_window (query_window)
 		end
 

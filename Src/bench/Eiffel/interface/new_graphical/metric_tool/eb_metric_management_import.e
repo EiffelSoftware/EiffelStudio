@@ -272,7 +272,7 @@ feature -- Importation
 		do
 			create open_dialog
 			open_dialog.set_filter ("*.xml")
-			open_dialog.ok_actions.extend (~import_file)
+			open_dialog.open_actions.extend (~import_file)
 			open_dialog.show_modal_to_window (interface.management_dialog)
 		end
 	

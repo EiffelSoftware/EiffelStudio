@@ -166,7 +166,7 @@ feature -- Settings
 		do
 			line_number := lnr
 		ensure then
-			line_number_set : line_number = lnr
+			line_number_set: line_number = lnr
 		end
 
 	set_type (t: like type) is

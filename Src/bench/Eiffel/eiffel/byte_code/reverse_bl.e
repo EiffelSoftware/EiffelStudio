@@ -19,9 +19,21 @@ inherit
 			enlarged
 		redefine
 			analyze, generate_regular_assignment,
-			generate_last_assignment
+			generate_last_assignment, make
 		end;
+
+create
+	make
 	
+feature {NONE} -- Initialization
+
+	make (other: REVERSE_B) is
+			-- Create new  instance from `other'.
+		do
+			Precursor {ASSIGN_BL} (other)
+			set_info (other.info)
+		end
+		
 feature 
 
 	analyze is

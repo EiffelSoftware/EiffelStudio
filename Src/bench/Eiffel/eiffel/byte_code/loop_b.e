@@ -36,7 +36,7 @@ feature -- Access
 	compound: BYTE_LIST [BYTE_NODE]
 			-- Compound {list of INSTR_B}; can be Void
 
-	end_location: TOKEN_LOCATION
+	end_location: LOCATION_AS
 			-- Line number where `end' keyword is located
 
 feature -- Setting
@@ -89,7 +89,6 @@ feature -- Setting
 		do
 			create Result
 			Result.fill_from (Current)
-			Result.set_line_number (line_number)
 		end
 
 feature -- IL code generation

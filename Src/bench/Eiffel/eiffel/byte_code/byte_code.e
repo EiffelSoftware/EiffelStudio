@@ -44,7 +44,7 @@ feature -- Access
 	start_line_number: INTEGER
 			-- Line where feature name is located.
 
-	end_location: TOKEN_LOCATION
+	end_location: LOCATION_AS
 			-- Position where `end' keyword is located.
 			
 	feature_name: STRING is

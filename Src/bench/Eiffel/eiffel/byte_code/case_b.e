@@ -24,7 +24,7 @@ feature -- Line number setting
 		do
 			line_number := lnr
 		ensure then
-			line_number_set : line_number = lnr
+			line_number_set: line_number = lnr
 		end
 
 feature  -- Status Report

@@ -23,7 +23,7 @@ feature -- Access
 	keys: ARRAYED_LIST [STRING]
 			-- Keys if any
 
-	end_location: TOKEN_LOCATION
+	end_location: LOCATION_AS
 			-- Line number where `end' keyword is located
 
 feature -- Status setting

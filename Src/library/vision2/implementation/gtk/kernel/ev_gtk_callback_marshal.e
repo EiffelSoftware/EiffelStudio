@@ -470,13 +470,6 @@ feature {EV_APPLICATION_IMP, EV_TIMEOUT_IMP} -- Externals
 			"C (gint, EIF_OBJECT) | %"ev_gtk_callback_marshal.h%""
 		end
 
-	c_ev_gtk_callback_marshal_idle_connect
-				(an_agent: PROCEDURE [ANY, TUPLE]): INTEGER is
-			-- Call `an_agent' when idle.
-		external
-			"C (EIF_OBJECT): guint | %"ev_gtk_callback_marshal.h%""
-		end
-
 end -- class EV_GTK_CALLBACK_MARSHAL
 
 --|----------------------------------------------------------------

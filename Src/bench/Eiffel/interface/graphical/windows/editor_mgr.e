@@ -113,6 +113,23 @@ feature -- Synchronization
 
 	synchronize is
 			-- Synchronize active editors.
+		local
+			ed: TOOL_W
+		do
+			from 
+				active_editors.start
+			until
+				active_editors.after
+			loop
+				ed := active_editors.item;
+				ed.initialize_text_window_resources;
+				ed.synchronize;
+				active_editors.forth
+			end
+		end;
+
+	synchronize_to_default is
+			-- Synchronize active editors.
 			-- Set them back to their default format.
 		do
 			from 

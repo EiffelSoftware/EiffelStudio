@@ -288,21 +288,21 @@ void ccom_set_unsigned_integer_reference (VARIANT * variant, EIF_OBJECT a_value)
 //-------------------------------------------------------------------
 
 
-EIF_REAL ccom_real4 (VARIANT * variant)
+EIF_REAL ccom_real (VARIANT * variant)
 {
 	return (EIF_REAL) V_R4(variant);
 };
 //-------------------------------------------------------------------
 
 
-EIF_REFERENCE ccom_real4_reference (VARIANT * variant)
+EIF_REFERENCE ccom_real_reference (VARIANT * variant)
 {
 	return rt_ce.ccom_ce_pointed_real(V_R4REF(variant), NULL);
 };
 //-------------------------------------------------------------------
 
 
-void ccom_set_real4 (VARIANT * variant, EIF_REAL a_value)
+void ccom_set_real (VARIANT * variant, EIF_REAL a_value)
 {
 	VariantClear (variant);
 	V_VT(variant) = VT_R4;
@@ -311,7 +311,7 @@ void ccom_set_real4 (VARIANT * variant, EIF_REAL a_value)
 //-------------------------------------------------------------------
 
 
-void ccom_set_real4_reference (VARIANT * variant, EIF_OBJECT a_value)
+void ccom_set_real_reference (VARIANT * variant, EIF_OBJECT a_value)
 {
 	VariantClear (variant);
 	V_VT(variant) = VT_R4|VT_BYREF;
@@ -320,21 +320,21 @@ void ccom_set_real4_reference (VARIANT * variant, EIF_OBJECT a_value)
 //-------------------------------------------------------------------
 
 
-EIF_DOUBLE ccom_real8 (VARIANT * variant)
+EIF_DOUBLE ccom_double (VARIANT * variant)
 {
 	return (EIF_DOUBLE) V_R8(variant);
 };
 //-------------------------------------------------------------------
 
 
-EIF_REFERENCE ccom_real8_reference (VARIANT * variant)
+EIF_REFERENCE ccom_double_reference (VARIANT * variant)
 {
 	return rt_ce.ccom_ce_pointed_double (V_R8REF(variant), NULL);
 };
 //-------------------------------------------------------------------
 
 
-void ccom_set_real8 (VARIANT * variant, EIF_DOUBLE a_value)
+void ccom_set_double (VARIANT * variant, EIF_DOUBLE a_value)
 {
 	VariantClear (variant);
 	V_VT(variant) = VT_R8;
@@ -343,7 +343,7 @@ void ccom_set_real8 (VARIANT * variant, EIF_DOUBLE a_value)
 //-------------------------------------------------------------------
 
 
-void ccom_set_real8_reference (VARIANT * variant, EIF_OBJECT a_value)
+void ccom_set_double_reference (VARIANT * variant, EIF_OBJECT a_value)
 {
 	VariantClear (variant);
 	V_VT(variant) = VT_R8|VT_BYREF;
@@ -547,7 +547,7 @@ EIF_POINTER ccom_variant (VARIANT * variant)
 {
 	VARIANT * a_result = (VARIANT *)CoTaskMemAlloc (sizeof (VARIANT));
 	VariantInit (a_result);
-	
+
 	HRESULT hr = VariantCopy (a_result, V_VARIANTREF(variant));
 	if (FAILED (hr))
 	{
@@ -562,13 +562,13 @@ void ccom_set_variant (VARIANT * variant, VARIANT *a_value)
 {
 	VARIANT * a_result = (VARIANT *)CoTaskMemAlloc (sizeof (VARIANT));
 	VariantInit (a_result);
-	
+
 	HRESULT hr = VariantCopy (a_result, a_value);
 	if (FAILED (hr))
 	{
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
-	
+
 	VariantClear (variant);
 	V_VT(variant) = VT_VARIANT|VT_BYREF;
 	V_VARIANTREF(variant) = a_result;
@@ -576,7 +576,7 @@ void ccom_set_variant (VARIANT * variant, VARIANT *a_value)
 //-------------------------------------------------------------------
 
 
-EIF_POINTER ccom_unknown_interface (VARIANT * variant)
+EIF_POINTER ccom_iunknown (VARIANT * variant)
 {
 	IUnknown * punk = V_UNKNOWN(variant);
 	punk->AddRef ();
@@ -585,7 +585,7 @@ EIF_POINTER ccom_unknown_interface (VARIANT * variant)
 //-------------------------------------------------------------------
 
 
-EIF_POINTER ccom_unknown_interface_reference (VARIANT * variant)
+EIF_POINTER ccom_iunknown_reference (VARIANT * variant)
 {
 	IUnknown * punk = *(V_UNKNOWNREF(variant));
 	punk->AddRef ();
@@ -594,7 +594,7 @@ EIF_POINTER ccom_unknown_interface_reference (VARIANT * variant)
 //-------------------------------------------------------------------
 
 
-void ccom_set_unknown_interface (VARIANT * variant, IUnknown *a_value)
+void ccom_set_iunknown (VARIANT * variant, IUnknown *a_value)
 {
 	VariantClear (variant);
 	V_VT(variant) = VT_UNKNOWN;
@@ -605,7 +605,7 @@ void ccom_set_unknown_interface (VARIANT * variant, IUnknown *a_value)
 //-------------------------------------------------------------------
 
 
-void ccom_set_unknown_interface_reference (VARIANT * variant, IUnknown *a_value)
+void ccom_set_iunknown_reference (VARIANT * variant, IUnknown *a_value)
 {
 	VariantClear (variant);
 	V_VT(variant) = VT_UNKNOWN|VT_BYREF;
@@ -616,7 +616,7 @@ void ccom_set_unknown_interface_reference (VARIANT * variant, IUnknown *a_value)
 //-------------------------------------------------------------------
 
 
-EIF_POINTER ccom_dispatch_interface (VARIANT * variant)
+EIF_POINTER ccom_idispatch (VARIANT * variant)
 {
 	IDispatch * pdisp = V_DISPATCH(variant);
 	pdisp->AddRef ();
@@ -625,7 +625,7 @@ EIF_POINTER ccom_dispatch_interface (VARIANT * variant)
 //-------------------------------------------------------------------
 
 
-EIF_POINTER ccom_dispatch_interface_reference (VARIANT * variant)
+EIF_POINTER ccom_idispatch_reference (VARIANT * variant)
 {
 	IDispatch * pdisp = *(V_DISPATCHREF(variant));
 	pdisp->AddRef ();
@@ -634,7 +634,7 @@ EIF_POINTER ccom_dispatch_interface_reference (VARIANT * variant)
 //-------------------------------------------------------------------
 
 
-void ccom_set_dispatch_interface (VARIANT * variant, IDispatch * a_value)
+void ccom_set_idispatch (VARIANT * variant, IDispatch * a_value)
 {
 	VariantClear (variant);
 	V_VT(variant) = VT_DISPATCH;
@@ -645,7 +645,7 @@ void ccom_set_dispatch_interface (VARIANT * variant, IDispatch * a_value)
 //-------------------------------------------------------------------
 
 
-void ccom_set_dispatch_interface_reference (VARIANT * variant, IDispatch *a_value)
+void ccom_set_idispatch_reference (VARIANT * variant, IDispatch *a_value)
 {
 	VariantClear (variant);
 	V_VT(variant) = VT_DISPATCH|VT_BYREF;
@@ -747,14 +747,14 @@ EIF_REFERENCE ccom_safearray_bstr (VARIANT * variant)
 //-------------------------------------------------------------------
 
 
-EIF_REFERENCE ccom_safearray_dispatch_interface (VARIANT * variant)
+EIF_REFERENCE ccom_safearray_idispatch (VARIANT * variant)
 {
 	return rt_ce.ccom_ce_safearray_dispatch(V_ARRAY(variant));
 };
 //-------------------------------------------------------------------
 
 
-EIF_REFERENCE ccom_safearray_hresult (VARIANT * variant)
+EIF_REFERENCE ccom_safearray_error (VARIANT * variant)
 {
 	return rt_ce.ccom_ce_safearray_hresult(V_ARRAY(variant));
 };
@@ -775,7 +775,7 @@ EIF_REFERENCE ccom_safearray_variant (VARIANT * variant)
 //-------------------------------------------------------------------
 
 
-EIF_REFERENCE ccom_safearray_unknown_interface (VARIANT * variant)
+EIF_REFERENCE ccom_safearray_iunknown (VARIANT * variant)
 {
 	return rt_ce.ccom_ce_safearray_unknown(V_ARRAY(variant));
 };
@@ -906,7 +906,7 @@ void ccom_set_safearray_bstr (VARIANT * variant, EIF_OBJECT a_value)
 //-------------------------------------------------------------------
 
 
-void ccom_set_safearray_dispatch_interface (VARIANT * variant, EIF_OBJECT a_value)
+void ccom_set_safearray_idispatch (VARIANT * variant, EIF_OBJECT a_value)
 {
 	VariantClear (variant);
 	V_VT(variant) = VT_ARRAY|VT_DISPATCH;
@@ -915,7 +915,7 @@ void ccom_set_safearray_dispatch_interface (VARIANT * variant, EIF_OBJECT a_valu
 //-------------------------------------------------------------------
 
 
-void ccom_set_safearray_hresult (VARIANT * variant, EIF_OBJECT a_value)
+void ccom_set_safearray_error (VARIANT * variant, EIF_OBJECT a_value)
 {
 	VariantClear (variant);
 	V_VT(variant) = VT_ARRAY|VT_ERROR;
@@ -942,7 +942,7 @@ void ccom_set_safearray_variant (VARIANT * variant, EIF_OBJECT a_value)
 //-------------------------------------------------------------------
 
 
-void ccom_set_safearray_unknown_interface (VARIANT * variant, EIF_OBJECT a_value)
+void ccom_set_safearray_iunknown (VARIANT * variant, EIF_OBJECT a_value)
 {
 	VariantClear (variant);
 	V_VT(variant) = VT_ARRAY|VT_UNKNOWN;
@@ -1051,14 +1051,14 @@ EIF_REFERENCE ccom_safearray_bstr_reference (VARIANT * variant)
 //-------------------------------------------------------------------
 
 
-EIF_REFERENCE ccom_safearray_dispatch_interface_reference (VARIANT * variant)
+EIF_REFERENCE ccom_safearray_idispatch_reference (VARIANT * variant)
 {
 	return rt_ce.ccom_ce_pointed_safearray_dispatch(V_ARRAYREF(variant));
 };
 //-------------------------------------------------------------------
 
 
-EIF_REFERENCE ccom_safearray_hresult_reference (VARIANT * variant)
+EIF_REFERENCE ccom_safearray_error_reference (VARIANT * variant)
 {
 	return rt_ce.ccom_ce_pointed_safearray_hresult(V_ARRAYREF(variant));
 };
@@ -1079,7 +1079,7 @@ EIF_REFERENCE ccom_safearray_variant_reference (VARIANT * variant)
 //-------------------------------------------------------------------
 
 
-EIF_REFERENCE ccom_safearray_unknown_interface_reference (VARIANT * variant)
+EIF_REFERENCE ccom_safearray_iunknown_reference (VARIANT * variant)
 {
 	return rt_ce.ccom_ce_pointed_safearray_unknown(V_ARRAYREF(variant));
 };
@@ -1209,7 +1209,7 @@ void ccom_set_safearray_bstr_reference (VARIANT * variant, EIF_OBJECT a_value)
 };
 //-------------------------------------------------------------------
 
-void ccom_set_safearray_dispatch_interface_reference (VARIANT * variant, EIF_OBJECT a_value)
+void ccom_set_safearray_idispatch_reference (VARIANT * variant, EIF_OBJECT a_value)
 {
 	VariantClear (variant);
 	V_VT(variant) = VT_ARRAY|VT_BYREF|VT_DISPATCH;
@@ -1218,7 +1218,7 @@ void ccom_set_safearray_dispatch_interface_reference (VARIANT * variant, EIF_OBJ
 //-------------------------------------------------------------------
 
 
-void ccom_set_safearray_hresult_reference (VARIANT * variant, EIF_OBJECT a_value)
+void ccom_set_safearray_error_reference (VARIANT * variant, EIF_OBJECT a_value)
 {
 	VariantClear (variant);
 	V_VT(variant) = VT_ARRAY|VT_BYREF|VT_ERROR;
@@ -1245,7 +1245,7 @@ void ccom_set_safearray_variant_reference (VARIANT * variant, EIF_OBJECT a_value
 //-------------------------------------------------------------------
 
 
-void ccom_set_safearray_unknown_interface_reference (VARIANT * variant, EIF_OBJECT a_value)
+void ccom_set_safearray_iunknown_reference (VARIANT * variant, EIF_OBJECT a_value)
 {
 	VariantClear (variant);
 	V_VT(variant) = VT_ARRAY|VT_BYREF|VT_UNKNOWN;

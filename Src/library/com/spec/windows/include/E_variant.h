@@ -77,18 +77,18 @@ void ccom_set_unsigned_integer (VARIANT * variant, EIF_INTEGER a_value);
 void ccom_set_unsigned_integer_reference (VARIANT * variant, EIF_OBJECT a_value);
 
 // float
-EIF_REAL ccom_real4 (VARIANT * variant);
-EIF_REFERENCE ccom_real4_reference (VARIANT * variant);
+EIF_REAL ccom_real (VARIANT * variant);
+EIF_REFERENCE ccom_real_reference (VARIANT * variant);
 
-void ccom_set_real4 (VARIANT * variant, EIF_REAL a_value);
-void ccom_set_real4_reference (VARIANT * variant, EIF_OBJECT a_value);
+void ccom_set_real (VARIANT * variant, EIF_REAL a_value);
+void ccom_set_real_reference (VARIANT * variant, EIF_OBJECT a_value);
 
 // double
-EIF_DOUBLE ccom_real8 (VARIANT * variant);
-EIF_REFERENCE ccom_real8_reference (VARIANT * variant);
+EIF_DOUBLE ccom_double (VARIANT * variant);
+EIF_REFERENCE ccom_double_reference (VARIANT * variant);
 
-void ccom_set_real8 (VARIANT * variant, EIF_DOUBLE a_value);
-void ccom_set_real8_reference (VARIANT * variant, EIF_OBJECT a_value);
+void ccom_set_double (VARIANT * variant, EIF_DOUBLE a_value);
+void ccom_set_double_reference (VARIANT * variant, EIF_OBJECT a_value);
 
 // boolean
 EIF_BOOLEAN ccom_bool (VARIANT * variant);
@@ -138,18 +138,18 @@ EIF_POINTER ccom_variant (VARIANT * variant);
 void ccom_set_variant (VARIANT * variant, VARIANT *a_value);
 
 // IUnknown
-EIF_POINTER ccom_unknown_interface (VARIANT * variant);
-EIF_POINTER ccom_unknown_interface_reference (VARIANT * variant);
+EIF_POINTER ccom_iunknown (VARIANT * variant);
+EIF_POINTER ccom_iunknown_reference (VARIANT * variant);
 
-void ccom_set_unknown_interface (VARIANT * variant, IUnknown *a_value);
-void ccom_set_unknown_interface_reference (VARIANT * variant, IUnknown *a_value);
+void ccom_set_iunknown (VARIANT * variant, IUnknown *a_value);
+void ccom_set_iunknown_reference (VARIANT * variant, IUnknown *a_value);
 
 // IDispatch
-EIF_POINTER ccom_dispatch_interface (VARIANT * variant);
-EIF_POINTER ccom_dispatch_interface_reference (VARIANT * variant);
+EIF_POINTER ccom_idispatch (VARIANT * variant);
+EIF_POINTER ccom_idispatch_reference (VARIANT * variant);
 
-void ccom_set_dispatch_interface (VARIANT * variant, IDispatch * a_value);
-void ccom_set_dispatch_interface_reference (VARIANT * variant, IDispatch * a_value);
+void ccom_set_idispatch (VARIANT * variant, IDispatch * a_value);
+void ccom_set_idispatch_reference (VARIANT * variant, IDispatch * a_value);
 
 // safearray
 EIF_REFERENCE ccom_safearray_unsigned_integer (VARIANT * variant);
@@ -165,11 +165,11 @@ EIF_REFERENCE ccom_safearray_double (VARIANT * variant);
 EIF_REFERENCE ccom_safearray_currency (VARIANT * variant);
 EIF_REFERENCE ccom_safearray_date (VARIANT * variant);
 EIF_REFERENCE ccom_safearray_bstr (VARIANT * variant);
-EIF_REFERENCE ccom_safearray_dispatch_interface (VARIANT * variant);
-EIF_REFERENCE ccom_safearray_hresult (VARIANT * variant);
+EIF_REFERENCE ccom_safearray_idispatch (VARIANT * variant);
+EIF_REFERENCE ccom_safearray_error (VARIANT * variant);
 EIF_REFERENCE ccom_safearray_boolean (VARIANT * variant);
 EIF_REFERENCE ccom_safearray_variant (VARIANT * variant);
-EIF_REFERENCE ccom_safearray_unknown_interface (VARIANT * variant);
+EIF_REFERENCE ccom_safearray_iunknown (VARIANT * variant);
 EIF_REFERENCE ccom_safearray_decimal (VARIANT * variant);
 
 // set SAFEARRAY
@@ -186,11 +186,11 @@ void ccom_set_safearray_double (VARIANT * variant, EIF_OBJECT a_value);
 void ccom_set_safearray_currency (VARIANT * variant, EIF_OBJECT a_value);
 void ccom_set_safearray_date (VARIANT * variant, EIF_OBJECT a_value);
 void ccom_set_safearray_bstr (VARIANT * variant, EIF_OBJECT a_value);
-void ccom_set_safearray_dispatch_interface (VARIANT * variant, EIF_OBJECT a_value);
-void ccom_set_safearray_hresult (VARIANT * variant, EIF_OBJECT a_value);
+void ccom_set_safearray_idispatch (VARIANT * variant, EIF_OBJECT a_value);
+void ccom_set_safearray_error (VARIANT * variant, EIF_OBJECT a_value);
 void ccom_set_safearray_boolean (VARIANT * variant, EIF_OBJECT a_value);
 void ccom_set_safearray_variant (VARIANT * variant, EIF_OBJECT a_value);
-void ccom_set_safearray_unknown_interface (VARIANT * variant, EIF_OBJECT a_value);
+void ccom_set_safearray_iunknown (VARIANT * variant, EIF_OBJECT a_value);
 void ccom_set_safearray_decimal (VARIANT * variant, EIF_OBJECT a_value);
 
 // safearray reference
@@ -207,11 +207,11 @@ EIF_REFERENCE ccom_safearray_double_reference (VARIANT * variant);
 EIF_REFERENCE ccom_safearray_currency_reference (VARIANT * variant);
 EIF_REFERENCE ccom_safearray_date_reference (VARIANT * variant);
 EIF_REFERENCE ccom_safearray_bstr_reference (VARIANT * variant);
-EIF_REFERENCE ccom_safearray_dispatch_interface_reference (VARIANT * variant);
-EIF_REFERENCE ccom_safearray_hresult_reference (VARIANT * variant);
+EIF_REFERENCE ccom_safearray_idispatch_reference (VARIANT * variant);
+EIF_REFERENCE ccom_safearray_error_reference (VARIANT * variant);
 EIF_REFERENCE ccom_safearray_boolean_reference (VARIANT * variant);
 EIF_REFERENCE ccom_safearray_variant_reference (VARIANT * variant);
-EIF_REFERENCE ccom_safearray_unknown_interface_reference (VARIANT * variant);
+EIF_REFERENCE ccom_safearray_iunknown_reference (VARIANT * variant);
 EIF_REFERENCE ccom_safearray_decimal_reference (VARIANT * variant);
 
 // set SAFEARRAY reference
@@ -228,11 +228,11 @@ void ccom_set_safearray_double_reference (VARIANT * variant, EIF_OBJECT a_value)
 void ccom_set_safearray_currency_reference (VARIANT * variant, EIF_OBJECT a_value);
 void ccom_set_safearray_date_reference (VARIANT * variant, EIF_OBJECT a_value);
 void ccom_set_safearray_bstr_reference (VARIANT * variant, EIF_OBJECT a_value);
-void ccom_set_safearray_dispatch_interface_reference (VARIANT * variant, EIF_OBJECT a_value);
-void ccom_set_safearray_hresult_reference (VARIANT * variant, EIF_OBJECT a_value);
+void ccom_set_safearray_idispatch_reference (VARIANT * variant, EIF_OBJECT a_value);
+void ccom_set_safearray_error_reference (VARIANT * variant, EIF_OBJECT a_value);
 void ccom_set_safearray_boolean_reference (VARIANT * variant, EIF_OBJECT a_value);
 void ccom_set_safearray_variant_reference (VARIANT * variant, EIF_OBJECT a_value);
-void ccom_set_safearray_unknown_interface_reference (VARIANT * variant, EIF_OBJECT a_value);
+void ccom_set_safearray_iunknown_reference (VARIANT * variant, EIF_OBJECT a_value);
 void ccom_set_safearray_decimal_reference (VARIANT * variant, EIF_OBJECT a_value);
 
 

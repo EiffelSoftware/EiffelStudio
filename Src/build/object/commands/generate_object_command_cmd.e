@@ -173,6 +173,7 @@ feature -- Command generation
 			if not arg_list.empty then
 				Result.append ("(")
 				from
+					i := 1
 					arg_list.start
 				until
 					arg_list.after
@@ -225,13 +226,13 @@ feature -- Command generation
 		do
 			arg_list := application_routine.argument_list
 			!! Result.make (0)
-			Result.append ("feature -- Basic operations%N%N%Texecute is%N%T%Trequire%N%T%T%Ttarget_set: target_set%N%T%Tdo%N%T%T%Tif target /= Void then%N%T%T%T%Ttarget.")
+			Result.append ("feature -- Basic operations%N%N%Texecute is%N%T%Trequire%N%T%T%Ttarget_set: target_set%N%T%Tdo%N%T%T%Ttarget.")
 			Result.append (application_routine.routine_name)
 			if not arg_list.empty then
 				Result.append (" (")
 				from 
 					arg_list.start
-					i := 0
+					i := 1
 				until
 					arg_list.after
 				loop
@@ -245,7 +246,7 @@ feature -- Command generation
 				Result.remove (Result.count)
 				Result.append (")")
 			end
-			Result.append ("%N%T%T%Tend%N%T%Tend%N%N")
+			Result.append ("%N%T%Tend%N%N")
 		end
 
 	invariant_clause: STRING is

@@ -20,7 +20,19 @@ inherit
 			set_mode_for_editing, hide, editable_text_window,
 			set_editable_text_window, has_editable_text, read_only_text_window,
 			set_read_only_text_window, realized
-		end
+		end;
+	EB_CONSTANTS;
+	RESOURCE_USER
+
+creation
+	make
+
+feature -- Initialization
+
+	make is
+		do
+			System_tool_resources.add_user (Current)
+		end;
 
 feature -- Properties
 
@@ -269,19 +281,37 @@ feature {NONE} -- Implementation; Graphical Interface
 		end;
 
 	build_widgets is
+		local
+			popup_cmd: TOOLBAR_CMD
 		do
 			if eb_shell /= Void then
 				set_default_size
 			end;
+
+			!! toolbar_parent.make (new_name, global_form, Current);
+			toolbar_parent.set_column_layout;
+			toolbar_parent.set_free_size;
+			!! popup_cmd.make (Current);
+			toolbar_parent.add_button_press_action (3, popup_cmd, Void);
+
 			build_text_windows;
 			build_menus;
-			!! edit_bar.make (new_name, global_form);
+			!! edit_bar.make (l_Command_bar_name, toolbar_parent, Current);
 			build_bar;
-			!! format_bar.make (new_name, global_form);
+			!! toolbar_separator.make (new_name, toolbar_parent);
+			!! format_bar.make (l_Format_bar_name, toolbar_parent, Current);
 			build_format_bar;
 			build_command_menu;
 			fill_menus;
 			set_last_format (default_format);
+
+			if System_tool_resources.command_bar.actual_value = False then
+				edit_bar.remove
+			end;
+			if System_tool_resources.format_bar.actual_value = False then
+				format_bar.remove
+			end;
+
 			attach_all
 		end;
 
@@ -396,7 +426,7 @@ feature {NONE} -- Attributes; Commands
 
 	open_cmd_holder: COMMAND_HOLDER;
 
-	save_cmd_holder: COMMAND_HOLDER;
+	save_cmd_holder: TWO_STATE_CMD_HOLDER;
 
 	save_as_cmd_holder: COMMAND_HOLDER;
 

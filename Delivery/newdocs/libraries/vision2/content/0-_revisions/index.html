@@ -88,10 +88,11 @@ modifications are relative to the previously released version.</p>
         are now only fired when the selection changes.</li>
       <li><b>EV_TREE_ITEM</b> - calling `set_pixmap' twice successively with the same EV_PIXMAP caused a postcondition failure.</LI>
 	<li><b>EV_DIALOG</b> - If a dialog with a default cancel button was displayed using `show', then minimizing the dialog would cause the system to fail internally. Fix bug in `show_relative_to_window' which would cause any associated menus to be removed.</li>
-	<li><b>EV_TEXT</b> - Fixed `put_new_line', although it has been made obsolete, as you should just use `set_text ("%N") instead.</li>
+	<li><b>EV_TEXT</b> - Fixed `put_new_line', although it has been made obsolete, as you should just use `append_text ("%N") instead.</li>
 	<li><b>EV_SPLIT_AREA</b> - Fixed crash reproducable by inserting an EV_PIXMAP directly into the split area.</li>
 	<li><b>EV_CONTAINER</b> - Fixed `propagate_foreground_color' and `propagate_background_color' which failed when one of the children was a descendent of EV_CELL.</li>
 	<li><b>EV_APPLICATION_ACTION_SEQUENCES</b> - `drop_actions' was being fired even when the pick and drop was cancelled.</li>
+	<li><b>EV_PIXMAP</b> - Previously, if you were to add an agent to an action sequence of the pixmap, before it was parented, the agent would be removed during the parenting.</li>
     </ul>
   <li><b>Gtk</b>
     <ul>

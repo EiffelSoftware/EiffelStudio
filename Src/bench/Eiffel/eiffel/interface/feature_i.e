@@ -1724,13 +1724,17 @@ feature -- Debug purpose
 			io.error.putint (body_index);
 			io.error.putstring ("}");;
 			io.error.putstring (" {");
+			io.error.putstring ("written in = ");
+			io.error.putstring (written_class.class_name);
+			io.error.putstring ("}");;
+			io.error.putstring (" {");
 			io.error.putstring ("body_id = ");
 			if body_index /= 0 and then Body_index_table.has (body_index) then
 				io.error.putint (body_id);
 			else
 				io.error.putint (0)
 			end;
-			io.error.putstring ("}%N");;
+			io.error.new_line
 		end;
 
 	trace_signature is
@@ -1860,19 +1864,8 @@ feature -- PS
 		end;
 
 	stone (c: CLASS_C): FEATURE_STONE is
-		local
-			bd: INTEGER;
-			body_as: FEATURE_AS_B
 		do
-			if body_index /= 0 then
-				body_as := body;
-			end;
-			if body_as /= Void then
-				!!Result.make (Current, c, body_as.start_position, body_as.end_position);
-			else
-				-- FIXME
-				!!Result.make (Void, c, 0, 0);
-			end;
+			!! Result.make (Current, c);
 		end;
 
 feature -- Debugging

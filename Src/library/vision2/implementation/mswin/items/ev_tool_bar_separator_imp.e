@@ -10,28 +10,29 @@ class
 
 inherit
 	EV_TOOL_BAR_SEPARATOR_I
-		redefine
-			parent_imp
+		rename
+			parent_imp as tb_parent_imp
+		undefine
+			parent
 		end
 
 	EV_SEPARATOR_ITEM_IMP
-		redefine
-			parent_imp
+		rename
+			parent_imp as old_item_parent_imp
+		undefine
+			parent
 		end
 
 	EV_TOOL_BAR_BUTTON_IMP
 		redefine
-			type,
+			type
+		select
+			old_parent_imp,
 			parent_imp
 		end
 
 creation
 	make
-
-feature -- Access
-
-	parent_imp: EV_TOOL_BAR_IMP
-			-- Parent implementation
 
 feature -- Status report
 

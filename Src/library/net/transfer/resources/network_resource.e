@@ -73,7 +73,7 @@ feature -- Status report
 			end
 			mode := m
 		rescue
-			if is_developer_exception then
+			if not assertion_violation then
 				mode := m
 				failed := True
 				retry
@@ -107,7 +107,7 @@ feature -- Status report
 			end
 			mode := m
 		rescue
-			if is_developer_exception then
+			if not assertion_violation then
 				mode := m
 				failed := True
 				retry

@@ -1,0 +1,79 @@
+system
+	"selector_odbc"
+
+root
+	selector_odbc: make
+
+default
+	assertion (no)
+	msil_generation (yes)
+	disabled_debug (yes)
+	debug (no)
+	line_generation (no)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	dotnet_naming_convention (no)
+	use_cluster_name_as_namespace (yes)
+	use_all_cluster_name_as_namespace (yes)
+	msil_generation_type ("exe")
+	msil_assembly_compatibility ("None")
+	check_vape (yes)
+	console_application (yes)
+
+cluster
+	root_cluster:		"$ISE_EIFFEL/examples/store/select"
+
+	estore_examples_objects:		"$ISE_EIFFEL/examples/store/Utilities"
+
+	odbc_handle:		"$ISE_EIFFEL/examples/store/Utilities/odbc"
+
+-- EiffelBase
+
+	all base:		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3"; "desc"; "classic"; 
+		end
+
+	all base_net:		"$ISE_EIFFEL\library.net\base"
+
+-- EiffelStore
+
+	estore_support:		"$ISE_EIFFEL/library/store/support"
+
+	estore_interface:		"$ISE_EIFFEL/library/store/interface"
+
+	estore_db_support:		"$ISE_EIFFEL/library/store/dbms/support"
+
+	estore_odbc:		"$ISE_EIFFEL/library/store/dbms/rdbms/odbc"
+
+-- EiffelTime
+
+	time:		"$ISE_EIFFEL/library/time"
+
+	time_format (time):		"$/format"
+
+	english_format (time_format):		"$/english"
+
+assembly
+	"mscorlib":	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"
+
+	"system_":	"System","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			system_dll_
+		end
+
+	"system_xml":	"System.Xml","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			xml_
+		end
+
+external
+
+	include_path:
+		"$(ISE_EIFFEL)\library\store\dbms\rdbms\odbc\Clib"
+
+	object:
+		"$(ISE_EIFFEL)/library/store/spec/$(ISE_C_COMPILER)/lib/odbc_store.lib",
+		"odbc32.lib"	-- To be specified
+
+end

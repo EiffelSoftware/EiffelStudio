@@ -21,7 +21,6 @@ feature -- Resource names
 
 	r_AutomaticBackup: STRING is		"automatic_backup";
 	r_Fail_on_rescue: STRING is			"fail_on_rescue";
-	r_Trace_debug: STRING is			"trace_debug";
 	r_Cache_size: STRING is				"cache_size";
 	r_Graphics_disabled: STRING is		"graphics_disabled";
 	r_Tabs_disabled: STRING is			"tabs_disabled"
@@ -29,12 +28,6 @@ feature -- Resource names
 	r_Metamorphosis_disabled: STRING is	"metamorphosis_disabled"
 
 feature {NONE} -- Convenient access
-
-	Enabled_debug_trace: BOOLEAN is
-			-- Enable debug trace
-		once
-			Result := Configure_resources.get_boolean (r_trace_debug, False)
-		end;
 
 	Fail_on_rescue: BOOLEAN is
 			-- Fail on rescue?

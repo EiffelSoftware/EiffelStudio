@@ -57,6 +57,7 @@ feature -- Element change
 			-- current character format.
 		require
 			exists: not destroyed
+			valid_format: format /= Void
 		do
 			implementation.set_character_format (format)
 --		ensure

@@ -116,7 +116,9 @@ feature
 	close is
 			-- close the popup
 		do
-			popdown
+			if realized then
+				popdown
+			end
 		end
 
 	set_name is
@@ -140,7 +142,9 @@ feature
 			!! tmp.make (0);
 			tmp.append (Widget_names.visual_name_label);
 			tmp.append (namable.title_label);
-			text.set_text (namable.label);
+			if not text.text.is_equal (namable.label) then
+				text.set_text (namable.label);
+			end;
 			set_title (tmp)
 			set_icon_name (tmp)
 		end;
@@ -151,9 +155,6 @@ feature {NONE} -- Command Actions
 		do
 			if not equal (text.text, namable.visual_name) then
 				set_name;
-				if namable.is_valid_new_name then
-					popdown;
-				end;
 			end
 		end
 

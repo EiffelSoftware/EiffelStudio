@@ -196,7 +196,7 @@ feature -- Removal
 
 feature -- Output
 
-	new_line, put_new_line is
+	put_new_line, new_line is
 			-- Write a new line character to medium
 		require
 			extendible: extendible

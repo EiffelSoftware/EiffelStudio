@@ -993,7 +993,7 @@ feature -- Element change
 			file_pc (file_pointer, c);
 		end;
 
-	new_line is
+	put_new_line, new_line is
 			-- Write a new line character at current position.
 		do
 			file_tnwl (file_pointer);

@@ -84,7 +84,8 @@ feature -- Access
 								-- This if statement cheks for invalid ids in
 								-- the component.
 							if Id_compressor.lookup.has (values.item) then
-								values.replace (Id_compressor.lookup.item (values.item))	
+								values.replace (Id_compressor.lookup.item (values.item))
+								values.forth
 							else
 								values.remove
 							end

@@ -44,62 +44,7 @@ feature -- Access
 			Result ?= internal_child_window
 		end
 		
-	item_minimum_height: INTEGER is
-			-- Minimum height of `item'.
-		do
-			Result := internal_item_minimum_height
-			--Result := implementation.item_minimum_height
-		end
-		
-	item_minimum_width: INTEGER is
-			-- Minimum width of `item'.
-		do
-			Result := internal_item_minimum_width
-		end
-		
 feature -- Status setting
-
-	set_item_minimum_height (a_height: INTEGER) is
-			-- Set minimum height of `item' to `a_height.
-		local
-			h_cd: BOOLEAN
-		do
-			h_cd := internal_item_minimum_height /= a_height
-			if h_cd then
-				internal_item_minimum_height := a_height
-				notify_change (Nc_minheight, Current)
-			end
-		end
-		
-	set_item_minimum_width (a_width: INTEGER) is
-			-- Set minimum height of `item' to `a_height.
-		local
-			w_cd: BOOLEAN
-		do
-			w_cd := internal_item_minimum_width /= a_width
-			if w_cd then
-				internal_item_minimum_width := a_width
-				notify_change (Nc_minwidth, Current)			
-			end
-		end
-		
-	set_item_minimum_size (a_width, a_height: INTEGER) is
-			-- Set minimum size of `item' to `a_width' and `a_height.
-		local
-			w_cd, h_cd: BOOLEAN
-		do
-			w_cd := internal_item_minimum_width /= a_width
-			h_cd := internal_item_minimum_height /= a_height
-			internal_item_minimum_height := a_height
-			internal_item_minimum_width := a_width
-			if w_cd and h_cd then
-				notify_change (Nc_minsize, Current)
-			elseif w_cd then
-				notify_change (Nc_minwidth, Current)
-			elseif h_cd then
-				notify_change (Nc_minheight, Current)
-			end
-		end
 		
 	replace (a_window: WEL_WINDOW) is
 			-- Replace `item' with `a_window'
@@ -117,13 +62,6 @@ feature {NONE} -- Implementation
 
 	internal_child_window: WEL_WINDOW
 		-- WEL_WINDOW contained in `Current'.
-		
-	internal_item_minimum_width: INTEGER
-		-- Minimum width of `item'.
-		
-	internal_item_minimum_height: INTEGER
-		-- Minimum height of `item'.
-
 
 	connect_window (a_window: WEL_WINDOW) is
 			-- Parent `a_window' to `Current' and
@@ -137,23 +75,14 @@ feature {NONE} -- Implementation
 			internal_child_window.resize (width, height)
 		end
 		
-	compute_minimum_width is
-			-- Recompute the minimum_width of `Current'.
-		do
-			ev_set_minimum_width (internal_item_minimum_width)
-		end
-
-	compute_minimum_height is
-			-- Recompute the minimum_width of `Current'.
-		do
-			ev_set_minimum_height (internal_item_minimum_height)
-		end
-
+	compute_minimum_width, compute_minimum_height,
 	compute_minimum_size is
-			-- Recompute both the minimum_width the
-			-- minimum_height of `Current'.
+			-- Recompute the minimum dimensions of `Current'.
 		do
-			ev_set_minimum_size (internal_item_minimum_width, internal_item_minimum_height)
+			-- There is nothing to be done here. The minimum size
+			-- of `Current' is set using `set_minimum_size', and
+			-- as the child is a WEL_WINDOW, there is no minimum size
+			-- for the child to take into account here.
 		end
 		
 	on_size (size_type, a_width, a_height: INTEGER) is

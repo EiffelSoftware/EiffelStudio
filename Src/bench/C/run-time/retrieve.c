@@ -2118,9 +2118,7 @@ rt_private long get_expanded_pos (uint32 o_type, uint32 num_attrib)
 #endif
 }
 
-int char_read(pointer, size)
-char *pointer;
-int size;
+int char_read(char *pointer, int size)
 {
 	return read(r_fides, pointer, size);
 }

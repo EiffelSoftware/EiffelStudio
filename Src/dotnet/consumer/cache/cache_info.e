@@ -20,52 +20,51 @@ feature {NONE} -- Initalization
 			info_path := (create {CACHE_READER}).Absolute_info_path
 			create di.make (info_path.substring (1, info_path.last_index_of ('\', info_path.count)).to_cil)
 			di.create_
-			create assemblies.make (1, 0)
+			create assemblies_info.make (1, 0)
 		ensure
-			non_void_assemblies: assemblies /= Void
+			non_void_assemblies_info: assemblies_info /= Void
 		end
 		
 feature -- Access
 
-	assemblies: ARRAY [CONSUMED_ASSEMBLY]
+	assemblies_info: ARRAY [CONSUMED_ASSEMBLY_INFO]
 			-- Array of assemblies in EAC
 
 feature {CACHE_WRITER} -- Element Settings
 	
-	add_assembly (ass: CONSUMED_ASSEMBLY) is
-			-- Add `ass' to `assemblies'.
+	add_assembly (ass_info: CONSUMED_ASSEMBLY_INFO) is
+			-- Add `ass_info' to `assemblies'.
 		require
-			non_void_assembly: ass /= Void
-			valid_assembly: not assemblies.has (ass)
+			non_void_assembly_info: ass_info /= Void
+			valid_assembly: not assemblies_info.has (ass_info)
 		do
-			assemblies.force (ass, assemblies.count + 1)
+			assemblies_info.force (ass_info, assemblies_info.count + 1)
 		end
 
-	remove_assembly (ass: CONSUMED_ASSEMBLY) is
-			-- Remove `ass' from `assemblies'.
+	remove_assembly_from_location (ass_location: STRING) is
+			-- Remove `ass_location' from `assemblies'.
 		require
-			non_void_assembly: ass /= Void
-			valid_assembly: assemblies.has (ass)
+			non_void_ass_location: ass_location /= Void
+			not_empty_ass_location: not ass_location.is_empty
 		local
 			i, j: INTEGER
-			new: ARRAY [CONSUMED_ASSEMBLY]
+			new: ARRAY [CONSUMED_ASSEMBLY_INFO]
 		do
-			create new.make (1, assemblies.count - 1)
+			create new.make (1, assemblies_info.count - 1)
+			ass_location.to_lower
 			from
 				i := 1
 				j := 1
 			until
-				i > assemblies.count
+				i > assemblies_info.count
 			loop
-				if not assemblies.item (i).is_equal (ass) then
-					new.put (assemblies.item (i), j)
+				if not assemblies_info.item (i).location.is_equal (ass_location) then
+					new.put (assemblies_info.item (i), j)
 					j := j + 1
 				end
 				i := i + 1
 			end
-			assemblies := new
-		ensure
-			removed: not assemblies.has (ass)
+			assemblies_info := new
 		end
 
 end -- class CACHE_INFO

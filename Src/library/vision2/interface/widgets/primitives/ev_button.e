@@ -61,7 +61,6 @@ feature -- Event handling
 	select_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions to be performed when button is pressed and then released.
 
-
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_BUTTON_I
@@ -126,6 +125,9 @@ end -- class EV_BUTTON
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/04/19 00:46:40  brendel
+--| Cosmetics.
+--|
 --| Revision 1.29  2000/03/22 22:16:02  oconnor
 --| renamed press_actions -> select_actions to be consistant with everything else
 --|

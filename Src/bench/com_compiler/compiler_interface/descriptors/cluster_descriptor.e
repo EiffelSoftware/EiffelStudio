@@ -19,7 +19,8 @@ inherit
 			cluster_path,
 			relative_path,
 			is_override_cluster,
-			is_library
+			is_library,
+			parent
 		end
 		
 create
@@ -191,6 +192,15 @@ feature -- Access
 		do
 			Result := compiler_cluster.is_library
 		end
+		
+	parent: like current is
+			-- Parent cluster
+		do
+			if compiler_cluster.parent_cluster /= Void then
+				create Result.make_with_cluster_i (compiler_cluster.parent_cluster)
+			end
+		end
+		
 		
 	is_external_cluster: BOOLEAN is
 			-- Is this cluster used for external classes?

@@ -224,8 +224,9 @@ feature -- Basic operation
 			implementation.select_region (start_pos, end_pos)
 		ensure
 			has_selection: has_selection
-			selection_start_set: selection_start = start_pos
-			selection_end_set: selection_end = end_pos
+			selection_set: (start_pos <= end_pos implies
+				selection_start = start_pos and selection_end = end_pos) or
+				selection_start = end_pos and selection_end = start_pos
 		end
 
 	select_all is

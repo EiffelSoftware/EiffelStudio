@@ -155,9 +155,10 @@ feature -- Basic operation
 			valid_end: end_pos >= 1 and end_pos <= text_length
 		deferred
 		ensure
-			has_selection: (start_pos /= end_pos) implies has_selection
-			selection_start_set: selection_start = start_pos
-			selection_end_set: selection_end = end_pos
+			has_selection: has_selection
+			selection_set: (start_pos <= end_pos implies
+				selection_start = start_pos and selection_end = end_pos) or
+				selection_start = end_pos and selection_end = start_pos
 		end	
 
 	select_all is

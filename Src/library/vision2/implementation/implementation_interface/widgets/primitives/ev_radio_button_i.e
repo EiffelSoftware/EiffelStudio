@@ -1,4 +1,3 @@
---| FIXME Not for release
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description: "General radio button implementation."
@@ -17,27 +16,13 @@ inherit
 			interface
 		end
 
-feature -- Status Setting
-
-	set_peer (peer: EV_RADIO_BUTTON) is
-			-- Put radio button in group of `peer'.
-		require
-			peer_not_void: peer /= Void
-		deferred
-		end
-
-	remove_from_group is
-			-- Remove radio button from its current group, if any.
-		deferred
-		end
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_RADIO_BUTTON
 
 end -- class EV_RADIO_BUTTON_I
 
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
 --! Copyright (C) 1986-1999 Interactive Software Engineering Inc.
 --! All rights reserved. Duplication and distribution prohibited.
@@ -51,13 +36,16 @@ end -- class EV_RADIO_BUTTON_I
 --! Electronic mail <info@eiffel.com>
 --! Customer support e-mail <support@eiffel.com>
 --! For latest info see award-winning pages: http://www.eiffel.com
---!----------------------------------------------------------------
+--!-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/02/17 02:19:54  oconnor
+--| removed set_peer and remove_from_group, obsolete
+--|
 --| Revision 1.4  2000/02/14 11:40:38  oconnor
 --| merged changes from prerelease_20000214
 --|
@@ -72,7 +60,6 @@ end -- class EV_RADIO_BUTTON_I
 --|
 --| Revision 1.3.2.2  1999/11/02 17:20:06  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

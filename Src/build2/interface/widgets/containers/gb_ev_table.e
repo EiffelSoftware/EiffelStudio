@@ -468,6 +468,7 @@ feature {NONE} -- Implementation
 			cell: EV_CELL
 		do
 			create Result
+			Result.set_title ("EV_TABLE child positioner")
 			create vertical_box
 			Result.extend (vertical_box)
 			create horizontal_box

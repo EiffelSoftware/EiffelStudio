@@ -75,6 +75,7 @@ feature {NONE} -- Initialization
 			rmanager.add_observer ("local_background_color", Current)
 
 			rmanager.add_observer ("underscore_is_separator", Current)
+			rmanager.add_observer ("once_and_constant_in_upper", Current)
 			rmanager.add_observer ("smart_indent", Current)
 			rmanager.add_observer ("automatic_update", Current)
 			rmanager.add_observer ("autocomplete_brackets_and_parenthesis", Current)
@@ -205,6 +206,9 @@ feature
 
 	font, keyword_font: EDITOR_FONT
 			-- Current text font and keyword font.
+
+	once_and_constant_in_upper: BOOLEAN
+			-- Is first letter of once or constant in upper case?
 
 	automatic_update: BOOLEAN
 			-- if the text has been emodified by an external editor, should we
@@ -498,6 +502,7 @@ feature -- Update
 			smart_identation := boolean_resource_value ("smart_indent", True)
 			automatic_update := boolean_resource_value ("automatic_update", True)
 			underscore_is_separator := boolean_resource_value ("underscore_is_separator", False)
+			once_and_constant_in_upper := boolean_resource_value ("once_and_constant_in_upper", False)
 			autocomplete_brackets_and_parenthesis := boolean_resource_value ("autocomplete_brackets_and_parenthesis", False)
 			autocomplete_quotes := boolean_resource_value ("autocomplete_quotes", False)
 			show_any_features := boolean_resource_value ("call_complete_with_any_features", False)

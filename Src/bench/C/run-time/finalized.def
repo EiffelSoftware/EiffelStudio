@@ -429,4 +429,7 @@ EXPORTS
 	eifsibit
 	eifribit
 	eifbcln
+	eifvisexp
+	eifuvisexp
+	eifreturntype
 

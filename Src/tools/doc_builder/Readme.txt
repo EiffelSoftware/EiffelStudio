@@ -41,12 +41,9 @@ DIFFERENCES BETWEEN CLASSIC AND .NET
 KNOWN ISSUES
 ------------
 
-- HTML generation incomplete.  HTML should be generated, but not necessarily in a nice, pretty
-  format.  Working on it.
-  
-- TOC automatic node moving and alphabetical sorting not implemented yet.
+- When generating HTML in browser images are not shown for root-relative paths, i.e, '/project_root/my_image.png'
+- When clicking a hyperlink in browser does not work			
+- After pretty printing the XML in the editor 'code_block' tags don't format correctly in the HTML view(?!)
+- Font changes when file error dialog pops up	
 
-- No documentation yet.
-
-- XSLT support removed.
 

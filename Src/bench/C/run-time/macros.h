@@ -35,6 +35,16 @@ extern int in_assertion;
 #define longjmp _longjmp
 #endif
 
+/* Convenience macros:
+ * EIF_TRUE representation of True in Eiffel (shouldn't be used in tests, always compare to False)
+ * EIF_FALSE representation of False in Eiffel
+ * EIF_TEST boolean test on an expression
+ */
+
+#define EIF_TRUE (EIF_BOOLEAN) '\01'
+#define EIF_FALSE (EIF_BOOLEAN) '\0'
+#define EIF_TEST(x) ((EIF_BOOLEAN)((x)?EIF_TRUE:EIF_FALSE))
+
 /* Macro used for initialization of GC profiling:
  *  RTGC calls initialization of GC profiling
  */

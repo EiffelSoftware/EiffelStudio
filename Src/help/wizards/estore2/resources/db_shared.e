@@ -6,9 +6,17 @@ class
 
 feature -- Access
 
-	db_manager: DATABASE_MANAGER is
+	db_manager: DATABASE_MANAGER [DATABASE] is
+			-- Interface with the database.
 		once
-			create Result
+			create {DATABASE_MANAGER [<FL_HANDLE>]}Result
 		end
 
+	db_table_manager: DB_TABLE_MANAGER is
+			-- Interface with the database using tables
+			-- description.
+		once
+			create Result.make (db_manager)
+		end
+		
 end -- Class DB_SHARED

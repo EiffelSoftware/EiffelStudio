@@ -268,14 +268,12 @@ feature {EV_ANY_I} -- Implementation
 			
 			target := pointed_target
 			real_target ?= target
-			if real_target /= Void then
-				application ?= (create {EV_ENVIRONMENT}).application.implementation
-				check
-					application_not_void: application /= Void
-				end
-				if application.pnd_motion_actions_internal /= Void then
-					application.pnd_motion_actions_internal.call ([a_x, a_y, real_target])
-				end
+			application ?= (create {EV_ENVIRONMENT}).application.implementation
+			check
+				application_not_void: application /= Void
+			end
+			if application.pnd_motion_actions_internal /= Void then
+				application.pnd_motion_actions_internal.call ([a_x, a_y, real_target])
 			end
 			
 			--| FIXME we should only need to call update_pointer_style

@@ -496,6 +496,7 @@ char *parent;	/* Parent (enclosing object) */
 			zone->ov_size = offset + (l[0] - l[1]);
 			
 			*(uint32 *)(l[0] + offset) = type & SK_BMASK; /* Write bit size */
+
 			}
 			break;
 		default:

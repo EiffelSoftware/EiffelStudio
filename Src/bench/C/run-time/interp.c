@@ -28,7 +28,7 @@
 #include "bits.h"
 #include <math.h>
 
-/*#define DEBUG 6	/**/
+/*#define DEBUG 1	/**/
 #define TEST
 #ifdef TEST
 #include <stdio.h>

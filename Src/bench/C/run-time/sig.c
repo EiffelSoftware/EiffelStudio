@@ -591,6 +591,7 @@ private int spop()
  */
 
 struct sig_desc {			/* Signal description structure */
+	int idx;				/* Index for Eiffel/C mapping */
 	int s_num;				/* Signal number */
 	char *s_desc;			/* English description */
 };
@@ -604,117 +605,117 @@ struct sig_desc {			/* Signal description structure */
 
 private struct sig_desc sig_name[] = {
 #ifdef SIGHUP
-	{ SIGHUP, "Hangup" },
+	{ 1, SIGHUP, "Hangup" },
 #endif
 #ifdef SIGINT
-	{ SIGINT, "Interrupt" },
+	{ 2, SIGINT, "Interrupt" },
 #endif
 #ifdef SIGQUIT
-	{ SIGQUIT, "Quit" },
+	{ 3, SIGQUIT, "Quit" },
 #endif
 #ifdef SIGILL
-	{ SIGILL, "Illegal instruction" },
+	{ 4, SIGILL, "Illegal instruction" },
 #endif
 #ifdef SIGTRAP
-	{ SIGTRAP, "Trace trap" },
+	{ 5, SIGTRAP, "Trace trap" },
 #endif
 #ifdef SIGABRT
-	{ SIGABRT, "Abort" },
+	{ 6, SIGABRT, "Abort" },
 #endif
 #ifdef SIGIOT
-	{ SIGIOT, "IOT instruction" },
+	{ 7, SIGIOT, "IOT instruction" },
 #endif
 #ifdef SIGEMT
-	{ SIGEMT, "EMT instruction" },
+	{ 8, SIGEMT, "EMT instruction" },
 #endif
 #ifdef SIGFPE
-	{ SIGFPE, "Floating point exception" },
+	{ 9, SIGFPE, "Floating point exception" },
 #endif
 #ifdef SIGKILL
-	{ SIGKILL, "Terminator" },
+	{ 10, SIGKILL, "Terminator" },
 #endif
 #ifdef SIGBUS
-	{ SIGBUS, "Bus error" },
+	{ 11, SIGBUS, "Bus error" },
 #endif
 #ifdef SIGSEGV
-	{ SIGSEGV, "Segmentation violation" },
+	{ 12, SIGSEGV, "Segmentation violation" },
 #endif
 #ifdef SIGSYS
-	{ SIGSYS, "Bad argument to system call" },
+	{ 13, SIGSYS, "Bad argument to system call" },
 #endif
 #ifdef SIGPIPE
-	{ SIGPIPE, "Broken pipe" },
+	{ 14, SIGPIPE, "Broken pipe" },
 #endif
 #ifdef SIGALRM
-	{ SIGALRM, "Alarm clock" },
+	{ 15, SIGALRM, "Alarm clock" },
 #endif
 #ifdef SIGTERM
-	{ SIGTERM, "Software termination" },
+	{ 16, SIGTERM, "Software termination" },
 #endif
 #ifdef SIGUSR1
-	{ SIGUSR1, "User-defined signal #1" },
+	{ 17, SIGUSR1, "User-defined signal #1" },
 #endif
 #ifdef SIGUSR2
-	{ SIGUSR2, "User-defined signal #2" },
+	{ 18, SIGUSR2, "User-defined signal #2" },
 #endif
 #ifdef SIGCHLD
-	{ SIGCHLD, "Death of a child" },
+	{ 19, SIGCHLD, "Death of a child" },
 #endif
 #ifdef SIGCLD
-	{ SIGCLD, "Death of a child" },
+	{ 20, SIGCLD, "Death of a child" },
 #endif
 #ifdef SIGIO
-	{ SIGIO, "Pending I/O on a descriptor" },
+	{ 21, SIGIO, "Pending I/O on a descriptor" },
 #endif
 #ifdef SIGPOLL
-	{ SIGPOLL, "Selectable event pending" },
+	{ 22, SIGPOLL, "Selectable event pending" },
 #endif
 #ifdef SIGTTIN
-	{ SIGTTIN, "Tty input from background" },
+	{ 23, SIGTTIN, "Tty input from background" },
 #endif
 #ifdef SIGTTOU
-	{ SIGTTOU, "Tty output from background" },
+	{ 24, SIGTTOU, "Tty output from background" },
 #endif
 #ifdef SIGSTOP
-	{ SIGSTOP, "Stop" },
+	{ 25, SIGSTOP, "Stop" },
 #endif
 #ifdef SIGTSTP
-	{ SIGTSTP, "Stop from tty" },
+	{ 26, SIGTSTP, "Stop from tty" },
 #endif
 #ifdef SIGXCPU
-	{ SIGXCPU, "Cpu time limit exceeded" },
+	{ 27, SIGXCPU, "Cpu time limit exceeded" },
 #endif
 #ifdef SIGXFSZ
-	{ SIGXFSZ, "File size limit exceeded" },
+	{ 28, SIGXFSZ, "File size limit exceeded" },
 #endif
 #ifdef SIGVTALARM
-	{ SIGVTALARM, "Virtual time alarm" },
+	{ 29, SIGVTALARM, "Virtual time alarm" },
 #endif
 #ifdef SIGPWR
-	{ SIGPWR, "Power-fail" },
+	{ 30, SIGPWR, "Power-fail" },
 #endif
 #ifdef SIGPROF
-	{ SIGPROF, "Profiling timer alarm" },
+	{ 31, SIGPROF, "Profiling timer alarm" },
 #endif
 #ifdef SIGWINCH
-	{ SIGWINCH, "Window size changed" },
+	{ 32, SIGWINCH, "Window size changed" },
 #endif
 #ifdef SIGWIND
-	{ SIGWIND, "Window change" },
+	{ 33, SIGWIND, "Window change" },
 #endif
 #ifdef SIGPHONE
-	{ SIGPHONE, "Line status change" },
+	{ 34, SIGPHONE, "Line status change" },
 #endif
 #ifdef SIGLOST
-	{ SIGLOST, "Resource lost" },
+	{ 35, SIGLOST, "Resource lost" },
 #endif
 #ifdef SIGURG
-	{ SIGURG, "Urgent condition on socket" },
+	{ 36, SIGURG, "Urgent condition on socket" },
 #endif
 #ifdef SIGCONT
-	{ SIGCONT, "Continue after stop" },
+	{ 37, SIGCONT, "Continue after stop" },
 #endif
-	{ 0, "Unknown signal" }
+	{ 38, 0, "Unknown signal" }
 };
 
 public char *signame(sig)
@@ -740,6 +741,90 @@ int sig;
 			return sig_name[i].s_desc;
 }
 
+/*
+ * Eiffel interface
+ */
+
+public long esigmap(idx)
+long idx;
+{
+	/* C signal code for signal of index `idx' */
+
+	int i;
+
+	for (i = 0; /*empty */ ; i++)
+		if (((int) idx) == sig_name[i].idx || 0 == sig_name[i].s_num)
+			return (long) (sig_name[i].s_num);
+}
+
+public char *esigname(sig)
+long sig;
+{
+	/* Returns a description of a signal given its number. If sys_siglist[]
+	 * is available and gives a non-null description, then use it. Otherwise
+	 * use our own description as found in the sig_name array.
+	 * Same as `signame' with proper casting for Eiffel.
+	 */
+
+	return (signame((int) sig));
+} 
+
+public long esignum()
+{
+	/* Number of last signal */
+
+	return (long) echsig;
+}
+
+public void esigcatch(sig)
+long sig;
+{
+	/* Catch signal `sig'.
+	 * Check that the signal is defined
+     */
+
+	if (esigdefined(sig) == (char) 1)
+		sig_ign[sig] = 0;
+}
+
+public void esigignore(sig)
+{
+	/* Ignore signal `sig'.
+	 * Check that the signal is defined
+     */
+
+	if (esigdefined(sig) == (char) 1)
+		sig_ign[sig] = 1;
+}
+
+public char esigiscaught(sig)
+{
+	/* Is signal of number `sig' caught?
+	 * Check that the signal is defined
+     */
+
+	if (esigdefined(sig) == (char) 1)
+		return ((sig_ign[sig] == 1)?(char)0:(char)1);
+	else
+		return (char) 0;
+}
+
+public char esigdefined (sig)
+{
+	/* Id signal of number `sig' defined? */
+
+	int i;
+
+	if (sig < 1 || sig > NSIG-1)
+		return (char) 0;
+	for (i = 0; /*empty */; i++) {
+		if (sig == sig_name[i].s_num) 
+			return (char) 1;
+		else
+			if (0 == sig_name[i].s_num)
+				return (char) 0;
+	}
+}
 
 #ifdef TEST
 

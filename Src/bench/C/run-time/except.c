@@ -1290,6 +1290,7 @@ public void esfail()
 }
 
 #ifdef WORKBENCH
+extern int debug_mode;
 private void exception(how)
 int how;		/* Implicit or explicit exception? */
 {
@@ -1305,6 +1306,9 @@ int how;		/* Implicit or explicit exception? */
 
 	if (db_ign[echval])		/* Current exception to be ignored */
 		return;				/* Do not stop execution */
+
+	if (!debug_mode)
+		return;
 
 	dbreak(how);			/* Stop execution */
 }
@@ -2138,14 +2142,14 @@ struct ex_vect *vector;	/* The vector to be dumped */
  * Eiffel interface
  */
 
-public long eecode()
+public long eeocode()
 {
 	/* Return the code of the first exception at this nesting level */
 
 	return (long) echorg;	/* Original exception code */
 }
 
-public char *eetag()
+public char *eeotag()
 {
 	/* Return the tag of the first exception at this nesting level */
 
@@ -2158,12 +2162,12 @@ public char *eetag()
 	return (char *) 0;
 }
 
-public long ecode()
+public long eelcode()
 {
 	return (long) echval;	/* Last exception code */
 }
 
-public char *etag()
+public char *eeltag()
 {
 	if (echval == 0)		/* No current exception */
 		return (char *) 0;
@@ -2173,6 +2177,12 @@ public char *etag()
 
 	return (char *) 0;
 }
+
+public void eetrace(b)
+char b;
+{
+}
+
 
 #ifdef TEST
 

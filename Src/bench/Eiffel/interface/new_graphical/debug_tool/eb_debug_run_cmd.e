@@ -271,7 +271,8 @@ feature -- Execution
 	
 					if uf.exists then
 						if Eiffel_system.system.il_generation then
-							(create {COMMAND_EXECUTOR}).execute (eiffel_system.application_name (True))
+							(create {COMMAND_EXECUTOR}).execute_with_args (eiffel_system.application_name (True),
+								current_cmd_line_argument)
 						else
 							if make_f.exists and then make_f.date > uf.date then
 									-- The Makefile file is more recent than the 

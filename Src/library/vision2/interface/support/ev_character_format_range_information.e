@@ -15,7 +15,6 @@ inherit
 	EV_CHARACTER_FORMAT_CONSTANTS
 		rename
 			effects_vertical_offset as effects_vertical_offset_flag,
-			effects_double_underlined as effects_double_underlined_flag,
 			effects_underlined as effects_underlined_flag,
 			effects_striked_out as effects_striked_out_flag,
 			background_color as background_color_flag,
@@ -51,7 +50,6 @@ feature -- Creation
 			background_color := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.background_color = flags
 			effects_striked_out := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_striked_out = flags
 			effects_underlined := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_underlined = flags
-			effects_double_underlined := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_double_underlined = flags
 			effects_vertical_offset := flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset = flags
 		ensure
 			attributes_set: font_family = (flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_family = flags) and
@@ -62,7 +60,6 @@ feature -- Creation
 			background_color = (flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.background_color = flags) and
 			effects_striked_out = (flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_striked_out = flags) and
 			effects_underlined = (flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_underlined = flags) and
-			effects_double_underlined = (flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_double_underlined = flags) and
 			effects_vertical_offset = (flags | feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset = flags)
 		end
 
@@ -91,9 +88,6 @@ feature -- Access
 	
 	effects_underlined: BOOLEAN
 		-- Is underlined effect of font applicable?
-		
-	effects_double_underlined: BOOLEAN
-		-- Is double underlined effect of font applicable?
 		
 	effects_vertical_offset: BOOLEAN
 		-- Is vertical offset effect of font applicable?

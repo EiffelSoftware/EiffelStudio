@@ -30,28 +30,14 @@ feature -- Initialization
 	prepare is
 			-- Initialize world.
 		local
-			basic_interval: INTEGER_INTERVAL
-			a_menu_bar: EV_MENU_BAR
-			a_menu: EV_MENU
-			a_menu_item: EV_MENU_ITEM
-			a_menu_separator: EV_MENU_SEPARATOR
-			a_toolbar_button: EV_TOOL_BAR_BUTTON
-			a_toolbar_separator: EV_TOOL_BAR_SEPARATOR
-			a_icon: EV_PIXMAP
-			a_gray_icon: EV_PIXMAP
-			
 			a_color: EV_COLOR
 			a_label: EV_LABEL
 		do
-			create a_color
-			a_color.set_rgb (1.0, 0.0, 0.0)
-
 				-- Create the container
 			create my_container
 
-			create a_icon
-			a_icon.set_with_named_file("d:\car.png")
-			create a_toolbar_separator
+			create my_pixmap
+			my_pixmap.set_with_named_file ("car.png")
 
 			initialize_drawing_operations			
 
@@ -89,6 +75,8 @@ feature -- Initialization
 
 feature {NONE} -- Graphical interface
 
+	my_pixmap: EV_PIXMAP
+ 
 	my_container: EV_HORIZONTAL_BOX
 			-- Container that groups the da.
 
@@ -114,7 +102,7 @@ feature {NONE} -- Implementation
 			da_paint.flush
 		end
 
-	draw(da: EV_DRAWING_AREA) is
+	draw (da: EV_DRAWING_AREA) is
 		local
 			random_int: INTEGER
 			drawing_primitive: PROCEDURE[DA_TEST,TUPLE]
@@ -128,7 +116,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Drawing Operations
 
-	draw_polyline(da: EV_DRAWING_AREA) is
+	draw_polyline (da: EV_DRAWING_AREA) is
 		local
 			i: INTEGER
 			ev_coord: EV_COORDINATES
@@ -178,6 +166,17 @@ feature {NONE} -- Drawing Operations
 		do
 			da.draw_point (
 				get_random_x(da), get_random_y(da)
+				)
+		end
+
+	draw_pixmap (da: EV_DRAWING_AREA) is
+		local
+			is_segment: BOOLEAN
+		do
+			da.draw_pixmap (
+				get_random_x(da), 
+				get_random_y(da),
+				my_pixmap
 				)
 		end
 
@@ -281,9 +280,10 @@ feature {NONE} -- Random Drawing
 			drawing_operations.put (~draw_point, 3)
 			drawing_operations.put (~draw_ellipse, 4)
 			drawing_operations.put (~draw_rectangle, 5)
+			drawing_operations.put (~draw_pixmap, 6)
 		end
 
-	Number_drawing_operations: INTEGER is 6
+	Number_drawing_operations: INTEGER is 7
 
 feature {NONE} -- Random Implementation
 

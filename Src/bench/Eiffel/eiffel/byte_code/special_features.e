@@ -120,6 +120,9 @@ feature -- Byte code special generation
 			when bit_and_type..bit_test_type then
 				check integer_type: type_of (basic_type) = integer_type end
 				make_bit_operation_code (ba, function_type)
+			when three_way_comparison_type then
+				ba.append (bc_basic_operations)
+				ba.append (bc_three_way_comparison)
 			end
 		end
 
@@ -174,6 +177,8 @@ feature -- C special code generation
 				generate_max (buffer, type_of (basic_type), target, parameter)
 			when min_type then
 				generate_min (buffer, type_of (basic_type), target, parameter)
+			when three_way_comparison_type then
+				generate_three_way_comparison (buffer, type_of (basic_type), target, parameter)
 			when abs_type then
 				generate_abs (buffer, type_of (basic_type), target)
 			when generator_type then
@@ -251,6 +256,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (lower_type, feature {PREDEFINED_NAMES}.lower_name_id)
 			Result.put (upper_type, feature {PREDEFINED_NAMES}.upper_name_id)
 			Result.put (is_digit_type, feature {PREDEFINED_NAMES}.is_digit_name_id)
+			Result.put (three_way_comparison_type, feature {PREDEFINED_NAMES}.three_way_comparison_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.copy_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.deep_copy_name_id)
@@ -291,6 +297,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_integer_64_type, feature {PREDEFINED_NAMES}.to_integer_64_name_id)
 			Result.put (to_double_type, feature {PREDEFINED_NAMES}.to_double_name_id)
 			Result.put (to_real_type, feature {PREDEFINED_NAMES}.to_real_name_id)
+			Result.put (three_way_comparison_type, feature {PREDEFINED_NAMES}.three_way_comparison_name_id)
 --			Result.put (set_item_type, feature {PREDEFINED_NAMES}.set_item_name_id)
 		end
 
@@ -333,7 +340,8 @@ feature {NONE} -- Fast access to feature name
 	memory_calloc: INTEGER is 34
 	to_double_type: INTEGER is 35
 	to_real_type: INTEGER is 36
-	max_type_id: INTEGER is 36
+	three_way_comparison_type: INTEGER is 37
+	max_type_id: INTEGER is 37
 
 feature {NONE} -- Byte code generation
 
@@ -619,6 +627,44 @@ feature {NONE} -- C code generation
 				buffer.put_string ("eif_min_real (")
 			when Double_type then
 				buffer.put_string ("eif_min_double (")
+			end
+			
+			target.print_register
+			buffer.put_character (',')
+			parameter.print_register
+			buffer.put_character (')')
+
+				-- Add `eif_helpers.h' for C compilation where all bit functions are declared.
+			shared_include_queue.put (feature {PREDEFINED_NAMES}.eif_helpers_header_name_id)
+		end
+
+	generate_three_way_comparison (buffer: GENERATION_BUFFER; type_of_basic: INTEGER; target, parameter: REGISTRABLE) is
+			-- Generate fast wrapper for call on `three_way_comparison' where target and parameter
+			-- are both basic types.
+		require
+			buffer_not_void: buffer /= Void
+			target_not_void: target /= Void
+			parameter_not_void: parameter /= Void
+		do
+			inspect
+				type_of_basic
+			when character_type then
+				if is_wide then
+					buffer.put_string ("eif_twc_wide_char (")
+				else
+					buffer.put_string ("eif_twc_char (")
+				end
+			when integer_type then
+				inspect integer_size
+				when 8 then buffer.put_string ("eif_twc_int8 (")
+				when 16 then buffer.put_string ("eif_twc_int16 (")
+				when 32 then buffer.put_string ("eif_twc_int32 (")					
+				when 64 then buffer.put_string ("eif_twc_int64 (")
+				end
+			when real_type then
+				buffer.put_string ("eif_twc_real (")
+			when Double_type then
+				buffer.put_string ("eif_twc_double (")
 			end
 			
 			target.print_register

@@ -171,6 +171,7 @@ feature -- IL code generation
 			when min_type then
 				check
 					parameters_not_void: parameters /= Void
+					valid_count: parameters.count = 1
 				end
 				parameters.generate_il
 				il_generator.generate_min (type)
@@ -178,9 +179,17 @@ feature -- IL code generation
 			when max_type then
 				check
 					parameters_not_void: parameters /= Void
+					valid_count: parameters.count = 1
 				end
 				parameters.generate_il
 				il_generator.generate_max (type)
+
+			when three_way_comparison_type then
+				check
+					parameters_not_void: parameters /= Void
+					valid_count: parameters.count = 1
+				end
+				generate_three_way_comparison (type, parameters.i_th (1))
 
 			when offset_type then
 				check
@@ -277,6 +286,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (is_digit_type, is_digit_name_id)
  			Result.put (generator_type, generator_name_id)
  			Result.put (generator_type, generating_type_name_id)
+ 			Result.put (three_way_comparison_type, three_way_comparison_name_id)
 
 -- FIXME: Manu 10/24/2001. Not yet implemented.
 -- 			Result.put (memory_copy, memory_copy_name_id)
@@ -320,7 +330,8 @@ feature -- Fast access to feature name
 	From_enum_to_integer_type: INTEGER is 31
 	is_digit_type: INTEGER is 32
 	to_double_type: INTEGER is 33
-	max_type_id: INTEGER is 33
+	three_way_comparison_type: INTEGER is 34
+	max_type_id: INTEGER is 34
 
 feature {NONE} -- IL code generation
 
@@ -366,6 +377,65 @@ feature {NONE} -- IL code generation
 					-- proper computation to get a positive hash-code.
 				il_generator.generate_hash_code
 			end
+		end
+
+	generate_three_way_comparison (a_type: CL_TYPE_I; a_expr: EXPR_B) is
+			-- Generate three_way_comparison computation for basic type objects
+			-- at top of evaluation stack.
+		require
+			a_type_not_void: a_type /= Void
+			a_expr_not_void: a_expr /= Void
+		local
+			l_local: INTEGER
+			l_elseif_label, l_else_label, l_end_label: IL_LABEL
+		do
+				-- We will generate the code below for Current.three_way_comparison (x)
+				-- if Current < x then
+				--   Result := - 1
+				-- elseif x < Current
+				--   Result := 1
+				-- else
+				--   Result := 0
+				-- end
+				
+				-- Label for branching		
+			l_elseif_label := il_generator.create_label
+			l_else_label := il_generator.create_label
+			l_end_label := il_generator.create_label
+
+				-- Duplicate Current.
+			il_generator.duplicate_top
+
+				-- Generate parameter and store it in a local variable
+			a_expr.generate_il
+			il_generator.duplicate_top
+			context.add_local (a_type)
+			l_local := context.local_list.count
+			il_generator.put_dummy_local_info (a_type, l_local)
+			il_generator.generate_local_assignment (l_local)
+
+				-- Generate: if Current < x then Result := -1
+			il_generator.generate_binary_operator (feature {IL_CONST}.il_lt)
+			il_generator.branch_on_false (l_elseif_label)
+				-- Remove duplicate occurrence of `Current' that we push in case
+				-- we had to perform one more comparison.
+			il_generator.pop
+			il_generator.put_integer_32_constant (-1)
+			il_generator.branch_to (l_end_label)
+			
+				-- Generate: elseif x < Current then Result := 1
+			il_generator.mark_label (l_elseif_label)
+			il_generator.generate_local (l_local)
+			il_generator.generate_binary_operator (feature {IL_CONST}.il_gt)
+			il_generator.branch_on_false (l_else_label)
+			il_generator.put_integer_32_constant (1)
+			il_generator.branch_to (l_end_label)
+			
+				-- Generate: else Result := 0
+			il_generator.mark_label (l_else_label)
+			il_generator.put_integer_32_constant (0)
+			
+			il_generator.mark_label (l_end_label)
 		end
 
 	generate_set_item (feat: FEATURE_B; type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is

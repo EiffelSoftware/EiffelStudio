@@ -248,7 +248,7 @@ feature -- Removal
 
 feature -- Basic operations
 
-	hilite_menu_item (window: WEL_WINDOW; an_id: INTEGER) is
+	hilite_menu_item (window: WEL_COMPOSITE_WINDOW; an_id: INTEGER) is
 			-- Hilite the item identified by `an_id' in the
 			-- `window''s menu.
 		require
@@ -262,7 +262,7 @@ feature -- Basic operations
 				an_id, Mf_bycommand + Mf_hilite)
 		end
 
-	unhilite_menu_item (window: WEL_WINDOW; an_id: INTEGER) is
+	unhilite_menu_item (window: WEL_COMPOSITE_WINDOW; an_id: INTEGER) is
 			-- unhilite the item identified by `an_id' in the
 			-- `window''s menu.
 		require
@@ -276,10 +276,10 @@ feature -- Basic operations
 				an_id, Mf_bycommand + Mf_unhilite)
 		end
 
-	show_track (x, y: INTEGER; window: WEL_WINDOW) is
+	show_track (x, y: INTEGER; window: WEL_COMPOSITE_WINDOW) is
 			-- Show a track popup menu at the `x' and `y' absolute
 			-- position. `window' will receive the selection in
-			-- `on_command_menu'
+			-- `on_menu_command'.
 		require
 			exists: exists
 			not_empty: count > 0
@@ -290,12 +290,12 @@ feature -- Basic operations
 				x, y, 0, window.item, default_pointer)
 		end
 
-	show_track_with_option (x, y: INTEGER; window: WEL_WINDOW;
+	show_track_with_option (x, y: INTEGER; window: WEL_COMPOSITE_WINDOW;
 				option: INTEGER; rect: WEL_RECT) is
 			-- Show a track popup menu with `option' at
 			-- the `x' and `y' absolute position.
 			-- `window' will receive the selection in
-			-- `on_command_menu'.
+			-- `on_menu_command'.
 			-- `rect' specifies the portion of the screen
 			-- in which the user can select without
 			-- dismissing the popup menu. If this parameter

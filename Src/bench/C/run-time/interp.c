@@ -1497,11 +1497,21 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 	 * Creation instruction.
 	 */
 	case BC_CREATE:
+		{
+			char need_push = (char) 0;
 #ifdef DEBUG
 		dprintf(2)("BC_CREATE\n");
 #endif
 		switch (*IC++) {
 		case BC_CTYPE:				/* Hardcoded creation type */
+			type = get_short();
+/* GENERIC CONFORMANCE */
+			type = get_compound_id(MTC icurrent->it_ref,(short)type);
+			break;
+		case BC_CREATE_EXP:			/* Hardcoded creation expression type */
+			need_push = *IC++;		/* If there is a creation routine to call
+									   we need to push twice the created object */
+			*IC++;
 			type = get_short();
 /* GENERIC CONFORMANCE */
 			type = get_compound_id(MTC icurrent->it_ref,(short)type);
@@ -1534,6 +1544,16 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 		case BC_CCUR:				/* Like Current creation type */
 			type = icur_dftype;
 			break;
+		case BC_GEN_PARAM_CREATE:
+			{
+			int32 current_type, formal_position;
+
+			current_type = get_long ();		/* Get static type of caller */
+			formal_position = get_long ();	/* Get position of formal generic
+											   we want to create */
+			type = (int) RTGPTID(current_type, icurrent->it_ref, formal_position);
+			}
+			break;
 		default:
 			eif_panic(MTC "creation type lost");
 			/* NOTREACHED */
@@ -1550,6 +1570,8 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			last = iget();				/* Push a new value onto the stack */
 			last->type = SK_REF;	
 			last->it_ref = new_obj;		/* Now it's safe for GC to see it */
+			if (need_push == (char) 1)
+				opush (last);
 			if (tagval != stagval)		/* If type is expanded we may
 										 * need to sync the registers if it
 										 * called the interpreter for the
@@ -1559,6 +1581,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 										 * has to be called. 
 										 */
 				sync_registers(MTC scur, stop);
+		}
 		}
 		break;
 

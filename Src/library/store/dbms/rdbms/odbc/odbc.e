@@ -374,15 +374,14 @@ feature -- For DATABASE_REPOSITORY
 			Result.append(")")
 		end
 
-	Selection_string (rep_qualifier, rep_owner, repository_name: STRING): STRING is
+	selection_string (rep_qualifier, rep_owner, repository_name: STRING): STRING is
 		local
 			c_tmp: ANY
-			i: INTEGER
 		do
 			c_tmp := rep_qualifier.to_c
-			i := odbc_set_qualifier($c_tmp)
+			odbc_set_qualifier($c_tmp)
 			c_tmp := rep_owner.to_c
-			i := odbc_set_owner($c_tmp)
+			odbc_set_owner($c_tmp)
 			!!Result.make(1)
 			Result.append("SQLColumns(")
 			Result.append(repository_name)
@@ -644,20 +643,24 @@ feature -- External
 
 	support_proc: INTEGER is
 		do
-
 			Result := odbc_support_proc
 		end
 
 feature {NONE} -- External features
 
 	odbc_get_error_message: POINTER is
+			-- C buffer which contains the error_message
 		external
-			"C"
+			"C [macro %"odbc.h%"]"
+		alias
+			"error_message"
 		end
 
 	odbc_get_warn_message: POINTER is
 		external
-			"C"
+			"C [macro %"odbc.h%"]"
+		alias
+			"warn_message"
 		end
 
 	odbc_new_descriptor: INTEGER is
@@ -797,37 +800,51 @@ feature {NONE} -- External features
 
 	odbc_c_string_type: INTEGER is
 		external
-			"C"
+			"C [macro %"odbc.h%"]"
+		alias
+			"STRING_TYPE"
 		end
 
 	odbc_c_character_type: INTEGER is
 		external
-			"C"
+			"C [macro %"odbc.h%"]"
+		alias
+			"CHARACTER_TYPE"
 		end
 
 	odbc_c_integer_type: INTEGER is
 		external
-			"C"
+			"C [macro %"odbc.h%"]"
+		alias
+			"INTEGER_TYPE"
 		end
 
 	odbc_c_float_type: INTEGER is
 		external
-			"C"
+			"C [macro %"odbc.h%"]"
+		alias
+			"FLOAT_TYPE"
 		end
 
    	odbc_c_real_type: INTEGER is
 		external
-			"C"
-        	end
+			"C [macro %"odbc.h%"]"
+		alias
+			"REAL_TYPE"
+      	end
 
 	odbc_c_boolean_type: INTEGER is
 		external
-			"C"
+			"C [macro %"odbc.h%"]"
+		alias
+			"BOOLEAN_TYPE"
 		end
 
 	odbc_c_date_type: INTEGER is
 		external
-			"C"
+			"C [macro %"odbc.h%"]"
+		alias
+			"DATE_TYPE"
 		end
 
 	c_odbc_make (i: INTEGER) is
@@ -835,19 +852,14 @@ feature {NONE} -- External features
 			"C"
 		end
 
-
 	odbc_disconnect: INTEGER is
 		external
 			"C"
-		alias
-			"odbc_disconnect"
 		end
 
 	odbc_commit: INTEGER is
 		external
 			"C"
-		alias
-			"odbc_commit"
 		end
 
 	odbc_rollback: INTEGER is
@@ -1080,12 +1092,12 @@ feature {NONE} -- External features
 			Result := test /= Void
 		end
 
-	odbc_set_qualifier(qlf: POINTER): INTEGER is
+	odbc_set_qualifier(qlf: POINTER) is
 		external
 			"C"
 		end
 
-	odbc_set_owner(owner: POINTER): INTEGER is
+	odbc_set_owner(owner: POINTER) is
 		external
 			"C"
 		end

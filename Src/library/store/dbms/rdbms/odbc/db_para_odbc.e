@@ -67,9 +67,11 @@ feature  -- Status
 	
 feature { NONE} -- External Features
 
-	odbc_c_free ( p: POINTER ) is
+	odbc_c_free (p: POINTER) is
 		external
-			"C"
+			"C [macro %"odbc.h%"]"
+		alias
+			"ODBC_C_FREE"
 		end
 
 end -- class DB_PARA_ODBC

@@ -298,6 +298,15 @@ feature -- Access
 			"VT_LPWSTR"
 		end
 
+	Vt_record: INTEGER is
+			-- Record
+			-- may appear in TYPEDESC only
+		external
+			"C [macro <wtypes.h>]"
+		alias
+			"VT_RECORD"
+		end
+
 	Vt_typemask: INTEGER is
 			-- Typemask.
 		external

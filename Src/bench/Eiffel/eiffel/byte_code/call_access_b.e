@@ -66,10 +66,10 @@ feature
 			metamorphosed := inst_cont_type.is_basic 
 							and then not inst_cont_type.is_bit
 			if metamorphosed then
-				if is_feature_special then
-					make_special_byte_code (ba)
+				basic_type ?= inst_cont_type
+				if is_feature_special (False) then
+					make_special_byte_code (ba, basic_type)
 				else
-					basic_type ?= inst_cont_type
 						-- Process the feature id of `feature_name' in the
 						-- associated reference type
 					associated_class :=
@@ -175,7 +175,7 @@ end
 			-- Nothing by default.
 		end
 
-	make_special_byte_code (ba: BYTE_ARRAY) is
+	make_special_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_I) is
 			-- Make byte code for special calls.
 			-- (To be redefined in FEATURE_B).
 		do
@@ -304,13 +304,13 @@ end
 		do
 		end
 
-	generate_special_feature (reg: REGISTRABLE) is
+	generate_special_feature (reg: REGISTRABLE; basic_type: BASIC_I) is
 			-- Generate code for special routines (is_equal, copy ...).
 			-- (Only for feature calls)
 		do
 		end
 
-	is_feature_special: BOOLEAN is
+	is_feature_special (compilation_type: BOOLEAN): BOOLEAN is
 			-- Is feature a special routine 
 			-- (Only for feature calls)
 		do
@@ -330,8 +330,9 @@ end
 				-- Special provision is made for calls on basic types
 				-- (they have to be themselves known by the compiler).
 			if type_i.is_basic then
-				if is_feature_special and not type_i.is_bit then
-					generate_special_feature (reg)
+				basic_type ?= type_i
+				if not basic_type.is_bit and then is_feature_special (True) then
+					generate_special_feature (reg, basic_type)
 				else
 					buf := buffer
 						-- Generation of metamorphosis is enclosed between (), and
@@ -339,7 +340,6 @@ end
 						-- keeps only the last expression, i.e. the function call.
 						-- That way, statements like "s := i.out" are correctly
 						-- generated with a minimum of temporaries.
-					basic_type ?= type_i
 					class_type := basic_type.associated_reference.type
 						-- If an invariant is to be checked however, the
 						-- metamorphosis was already made by the invariant

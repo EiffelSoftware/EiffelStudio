@@ -56,6 +56,11 @@ inherit
 			{NONE} all
 		end
 
+	WEL_DIB_COLORS_CONSTANTS
+		export
+			{NONE} all
+		end
+
 feature -- Access 
 
 	parent: COMPOSITE_IMP;
@@ -337,6 +342,9 @@ feature -- Status setting
 			always_true: True
 		do
 			background_pixmap := a_pixmap
+			if exists then
+				invalidate
+			end
 		ensure then
 			pixmap_set: valid_background_pixmap (a_pixmap) implies background_pixmap = a_pixmap
 		end;
@@ -1551,9 +1559,21 @@ feature {NONE} -- Implementation
 	class_background, background_brush: WEL_BRUSH is
 			-- Default background.
 		local
+			pixmap_color: PIXMAP_IMP
 			windows_color: COLOR_IMP
+			wel_window: WEL_WINDOW
+			wel_client_dc: WEL_CLIENT_DC
+			wel_bitmap: WEL_BITMAP
 		do
-			if private_background_color = Void then
+			wel_window ?= Current
+			if background_pixmap /= Void and then wel_window /= Void then
+				pixmap_color ?= background_pixmap.implementation
+				!! wel_client_dc.make (wel_window)
+				wel_client_dc.get
+				!! wel_bitmap.make_by_dib (wel_client_dc, pixmap_color.dib, dib_rgb_colors)
+				!! Result.make_by_pattern (wel_bitmap)
+				wel_client_dc.release
+			elseif private_background_color = Void then
 				!! Result.make_by_sys_color (Color_btnface + 1)
 			else
 				windows_color ?= private_background_color.implementation

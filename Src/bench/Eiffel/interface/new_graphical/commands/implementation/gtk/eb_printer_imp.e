@@ -67,7 +67,6 @@ feature {EB_PRINTER} -- Basic operations
 			file: PLAIN_TEXT_FILE
 			retried: BOOLEAN
 			wd: EV_WARNING_DIALOG
-			tmp_dir: STRING
 			sent_text: STRING
 		do
 			if not retried then

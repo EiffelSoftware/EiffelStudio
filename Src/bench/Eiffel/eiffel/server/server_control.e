@@ -168,13 +168,12 @@ end;
 			good_argument: f /= Void;
 			is_closed: not f.is_open
 		do
-			if is_full then
-					-- Remove one opened file from cache
-				item.close;
-				remove;
-			end;
 			f.open;
-			put (f);
+			force (f)
+			opened_file := last_removed_item
+			if last_removed_item /= Void then
+				opened_file.close
+			end
 debug ("SERVER")
 	io.error.put_string ("Opening file: ");
 	io.error.put_string (f.id.file_name);
@@ -190,13 +189,18 @@ end;
 			-- Empty the cache
 		do
 			from
+				start
 			until
-				empty
+				after
 			loop
-				item.close;
-				remove;
-			end;
-		end;
+				item_for_iteration.close
+				forth
+			end
+			{CACHE} Precursor
+		end
+
+
+
 
 feature -- Status report
 

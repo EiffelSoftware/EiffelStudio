@@ -15,7 +15,8 @@ inherit
 	WEL_CONTROL
 		undefine
 			process_message,
-			on_wm_notify
+			on_wm_notify,
+			on_wm_erase_background
 		redefine
 			process_notification_info,
 			set_parent

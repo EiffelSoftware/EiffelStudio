@@ -17,9 +17,19 @@ inherit
 		end
 		
 	GB_TIPS
+		export
+			{NONE} all
 		undefine
 			default_create, copy
 		end
+		
+	GB_SHARED_PIXMAPS
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+		
 
 feature {NONE} -- Initialization
 
@@ -41,6 +51,7 @@ feature {NONE} -- Initialization
 			tip_label.resize_actions.force_extend (agent show_tip)
 			tip_label.set_minimum_width (100)
 			show_actions.force_extend (agent set_text (all_tips @ tip_counter))
+			set_icon_pixmap (Icon_build_window @ 1)
 		end			
 
 feature {NONE} -- Implementation

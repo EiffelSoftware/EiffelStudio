@@ -26,6 +26,27 @@ feature -- Parsing
 			end
 		end;
 			
+	parse_file (file_name: STRING; table: RESOURCE_TABLE) is
+			-- Parse file `file_name' and put result in `table'
+		require
+			file_name_not_void: file_name /= Void;
+			file_name_not_empty: not file_name.empty
+		do
+			open_file (file_name)
+			if resource_file.is_open_read and then resource_file.readable then
+				from
+				until
+					end_of_file
+				loop
+					parse (table)
+					if not end_of_file and then not is_last_token_valid then
+						print_syntax_error
+					end
+				end
+				close_file
+			end
+		end;
+
 	parse (table: RESOURCE_TABLE) is
 			-- Parse the resource file `filename' and store the
 			-- information in the resource table `table'.

@@ -10,8 +10,11 @@ inherit
 			parameters, enlarged,
 			is_feature_special, make_special_byte_code,
 			is_unsafe, optimized_byte_node,
-			calls_special_features, is_special_feature
+			calls_special_features, is_special_feature,
+			size, pre_inlined_code, inlined_byte_code
 		end;
+	SHARED_TABLE;
+	SHARED_SERVER
 
 feature 
 
@@ -78,16 +81,19 @@ feature
 			end;
 		end;
 
-	enlarged: FEATURE_BL is
+	enlarged: FEATURE_B is
 			-- Enlarge the tree to get more attributes and return the
 			-- new enlarged tree node.
+		local
+			feature_bl: FEATURE_BL
 		do
 			if context.final_mode then
-				!!Result;
+				!!feature_bl;
 			else
-				!FEATURE_BW!Result.make;
+				!FEATURE_BW!feature_bl.make;
 			end;
-			Result.fill_from (Current);
+			feature_bl.fill_from (Current);
+			Result := feature_bl
 		end;
 
 feature -- Byte code generation
@@ -187,5 +193,85 @@ feature {NONE} -- Array optimization
 		do
 			Result := System.remover.array_optimizer
 		end
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			if parameters /= Void then
+				Result := 1 + parameters.size
+			else
+				Result := 1
+			end
+		end
+
+	pre_inlined_code: CALL_B is
+		local
+			nested_b: NESTED_B
+			inlined_current_b: INLINED_CURRENT_B
+		do
+			if parent /= Void then
+				Result := Current
+			else
+				!!nested_b;
+				!!inlined_current_b;
+				nested_b.set_target (inlined_current_b);
+				inlined_current_b.set_parent (nested_b);
+
+				nested_b.set_message (Current);
+				parent := nested_b;
+
+				Result := nested_b;
+			end
+			if parameters /= Void then
+				parameters := parameters.pre_inlined_code
+			end
+		end
+
+	inlined_byte_code: like Current is
+		local
+			inlined_feat_b: INLINED_FEAT_B
+			inline: BOOLEAN
+			inliner: INLINER
+			type_i: TYPE_I;
+			cl_type: CL_TYPE_I
+			base_class: CLASS_C
+			entry: POLY_TABLE [ENTRY];
+			f: FEATURE_I
+			inlined_bc: INLINED_BYTE_CODE
+		do
+			type_i := context_type;
+			if not type_i.is_basic then
+				cl_type ?= type_i; -- Cannot fail
+				base_class := cl_type.base_class;
+				if not (base_class.is_basic or else base_class.is_special) then
+					f := base_class.feature_table.item (feature_name);
+
+						-- Is it a polymorphic call ?
+					entry := Eiffel_table.item_id (rout_id);
+					if not entry.is_polymorphic (cl_type.type_id) then
+						inliner := System.remover.inliner;
+						inline := inliner.inline (f)
+					end;
+				end;
+			end
+
+			if inline then
+					-- Creation of a special node for the entire
+					-- feature (descendant of STD_BYTE_CODE)
+				inliner.set_current_feature_inlined;
+
+				!!inlined_feat_b;
+				inlined_feat_b.fill_from (Current)
+				inlined_bc ?= Byte_server.item (f.body_id).pre_inlined_code;
+				inlined_feat_b.set_inlined_byte_code (inlined_bc);
+				Result := inlined_feat_b
+			else
+				Result := Current
+				if parameters /= Void then
+					parameters := parameters.inlined_byte_code
+				end
+			end;
+		end;
 
 end

@@ -9,7 +9,8 @@ inherit
 			analyze, generate, enlarge_tree,
 			find_assign_result, last_all_in_result, make_byte_code,
 			has_loop, assigns_to, is_unsafe,
-			optimized_byte_node, calls_special_features
+			optimized_byte_node, calls_special_features,
+			size, inlined_byte_code, pre_inlined_code
 		end;
 	VOID_REGISTER
 		export
@@ -312,6 +313,52 @@ feature -- Array optimization
 			end
 			if elsif_list /= Void then
 				elsif_list := elsif_list.optimized_byte_node
+			end
+		end
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			Result := 1 + condition.size
+			if compound /= Void then
+				Result := Result + compound.size
+			end
+			if else_part /= Void then
+				Result := Result + else_part.size
+			end
+			if elsif_list /= Void then
+				Result := Result + elsif_list.size
+			end
+		end
+
+	pre_inlined_code: like Current is
+		do
+			Result := Current
+			condition := condition.pre_inlined_code;
+			if compound /= Void then
+				compound := compound.pre_inlined_code
+			end
+			if else_part /= Void then
+				else_part := else_part.pre_inlined_code
+			end
+			if elsif_list /= Void then
+				elsif_list := elsif_list.pre_inlined_code
+			end
+		end
+
+	inlined_byte_code: like Current is
+		do
+			Result := Current
+			condition := condition.inlined_byte_code;
+			if compound /= Void then
+				compound := compound.inlined_byte_code
+			end
+			if else_part /= Void then
+				else_part := else_part.inlined_byte_code
+			end
+			if elsif_list /= Void then
+				elsif_list := elsif_list.inlined_byte_code
 			end
 		end
 

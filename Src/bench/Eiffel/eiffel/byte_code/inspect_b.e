@@ -8,7 +8,8 @@ inherit
 		redefine
 			analyze, generate, enlarge_tree, make_byte_code,
 			has_loop, assigns_to, is_unsafe,
-			optimized_byte_node, calls_special_features
+			optimized_byte_node, calls_special_features,
+			size, inlined_byte_code, pre_inlined_code
 		end;
 	VOID_REGISTER
 		export
@@ -187,5 +188,42 @@ feature -- Array optimization
 				else_part := else_part.optimized_byte_node
 			end
 		end;
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			Result := 1 + switch.size
+			if case_list /= Void then
+				Result := Result + case_list.size
+			end
+			if else_part /= Void then
+				Result := Result + else_part.size
+			end
+		end
+
+	pre_inlined_code: like Current is
+		do
+			Result := Current
+			if case_list /= Void then
+				case_list := case_list.pre_inlined_code
+			end
+			if else_part /= Void then
+				else_part := else_part.pre_inlined_code
+			end
+			switch := switch.pre_inlined_code
+		end
+
+	inlined_byte_code: like Current is
+		do
+			Result := Current
+			if case_list /= Void then
+				case_list := case_list.inlined_byte_code
+			end
+			if else_part /= Void then
+				else_part := else_part.inlined_byte_code
+			end
+			switch := switch.inlined_byte_code
+		end
 
 end

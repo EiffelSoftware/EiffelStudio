@@ -10,13 +10,13 @@ inherit
 			free_register as old_free_register
 		redefine
 			has_gcable_variable, propagate, generate, unanalyze,
-			optimized_byte_node
+			optimized_byte_node, inlined_byte_code
 		end;
 	CALL_B
 		redefine
 			free_register, print_register,
 			has_gcable_variable, propagate, generate, unanalyze,
-			optimized_byte_node
+			optimized_byte_node, inlined_byte_code
 		select
 			print_register, free_register
 		end;
@@ -567,6 +567,14 @@ feature -- Array optimization
 			-- Array description
 			-- argument:<0; Result:0; local:>0
 		do
+		end
+
+feature -- Inlining
+
+	inlined_byte_code: ACCESS_B is
+			-- Redefined for type check
+		do
+			Result := Current
 		end
 
 end

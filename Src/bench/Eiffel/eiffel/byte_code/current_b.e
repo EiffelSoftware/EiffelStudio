@@ -7,7 +7,7 @@ inherit
 	ACCESS_B
 		redefine
 			enlarged, is_current, make_byte_code,
-			register_name
+			register_name, pre_inlined_code
 		end;
 	
 feature 
@@ -30,12 +30,12 @@ feature
 			Result := current_b /= Void
 		end;
 
-	enlarged: CURRENT_BL is
+	enlarged: CURRENT_B is
 			-- Enlarges the tree to get more attributes and returns the
 			-- new enlarged tree node.
 		do
 				-- This is the root of the call tree
-			!!Result;
+			!CURRENT_BL!Result;
 		end;
 
 	register_name: STRING is
@@ -53,5 +53,12 @@ feature -- Byte code generation
 		do
 			ba.append (Bc_current);
 		end;
+
+feature -- Inlining
+
+	pre_inlined_code: like Current is
+		do
+			!INLINED_CURRENT_B!Result
+		end
 
 end

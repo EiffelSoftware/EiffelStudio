@@ -6,7 +6,7 @@ inherit
 
 	EXPR_B
 		redefine
-			make_byte_code, enlarged
+			make_byte_code, enlarged, size
 		end;
 	SHARED_INSTANTIATOR
 
@@ -87,6 +87,13 @@ feature
 			ba.append_short_integer (cl_type.type_id - 1);
 			ba.append_integer (attr_names.count);
 		end;
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			Result := feature_ids.count + 1
+		end
 
 invariant
 

@@ -554,6 +554,10 @@ feature
 						-- need an execution vector, hence GC hooks
 						-- are really needed.
 					Result := Result or has_rescue;
+
+						-- If some calls are inlined, we need to save Current, Result,
+						-- the arguments and locals in registers
+					Result := Result or byte_code.has_inlined_code;
 				end;
 				need_gc_hook_saved := Result;
 			end;

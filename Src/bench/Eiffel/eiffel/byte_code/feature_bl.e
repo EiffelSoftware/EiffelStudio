@@ -23,7 +23,6 @@ inherit
 		select
 			free_register
 		end;
-	SHARED_TABLE;
 	SHARED_ENCODER;
 	SHARED_DECLARATIONS;
 

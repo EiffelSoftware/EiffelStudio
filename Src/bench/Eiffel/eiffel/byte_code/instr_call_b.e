@@ -7,7 +7,8 @@ inherit
 	INSTR_B
 		redefine
 			enlarge_tree, analyze, generate, make_byte_code,
-			is_unsafe, optimized_byte_node, calls_special_features
+			is_unsafe, optimized_byte_node, calls_special_features,
+			size, inlined_byte_code, pre_inlined_code
 		end
 	
 feature 
@@ -62,6 +63,25 @@ feature -- Array optimization
 		do
 			Result := Current
 			call := call.optimized_byte_node
+		end
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			Result := call.size
+		end
+
+	pre_inlined_code: like Current is
+		do
+			Result := Current;
+			call := call.pre_inlined_code
+		end
+
+	inlined_byte_code: like Current is
+		do
+			Result := Current
+			call := call.inlined_byte_code
 		end
 
 end

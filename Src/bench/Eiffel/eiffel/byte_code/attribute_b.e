@@ -12,7 +12,7 @@ inherit
 			reverse_code, expanded_assign_code, assign_code,
 			make_end_assignment, make_end_reverse_assignment,
 			creation_access, enlarged, is_creatable, is_attribute, read_only,
-			assigns_to
+			assigns_to, pre_inlined_code
 		end;
 
 feature 
@@ -69,16 +69,19 @@ feature
 			end;
 		end;
 
-	enlarged: ATTRIBUTE_BL is
+	enlarged: ATTRIBUTE_B is
 			-- Enlarges the tree to get more attributes and returns the
 			-- new enlarged tree node.
+		local
+			attr_bl: ATTRIBUTE_BL
 		do
 			if context.final_mode then
-				!!Result;
+				!!attr_bl;
 			else
-				!ATTRIBUTE_BW!Result;
+				!ATTRIBUTE_BW!attr_bl;
 			end;
-			Result.fill_from (Current);
+			attr_bl.fill_from (Current);
+			Result := attr_bl
 		end;
 
 feature -- Byte code generation
@@ -165,6 +168,21 @@ feature -- Array optimization
 	assigns_to (i: INTEGER): BOOLEAN is
 		do
 			Result := attribute_id = i
+		end
+
+feature -- Inlining
+
+	pre_inlined_code: ATTRIBUTE_B is
+		local
+			inlined_attr_b: INLINED_ATTR_B
+		do
+			if parent /= Void then
+				Result := Current
+			else
+				!!inlined_attr_b;
+				inlined_attr_b.fill_from (Current);
+				Result := inlined_attr_b;
+			end
 		end
 
 end

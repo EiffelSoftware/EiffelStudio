@@ -9,7 +9,8 @@ inherit
 			analyze, generate, enlarge_tree,
 			find_assign_result, last_all_in_result,
 			has_loop, assigns_to, is_unsafe,
-			optimized_byte_node, calls_special_features
+			optimized_byte_node, calls_special_features,
+			size, pre_inlined_code, inlined_byte_code
 		end;
 	VOID_REGISTER
 		export
@@ -128,6 +129,34 @@ feature -- Array optimization
 				compound := compound.optimized_byte_node
 			end
 			expr := expr.optimized_byte_node
+		end
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			Result := expr.size + 1;
+			if compound /= Void then
+				Result := Result + compound.size
+			end
+		end
+
+	pre_inlined_code: like Current is
+		do
+			Result := Current
+			expr := expr.pre_inlined_code
+			if compound /= Void then
+				compound := compound.pre_inlined_code
+			end
+		end
+
+	inlined_byte_code: like Current is
+		do
+			Result := Current
+			expr := expr.inlined_byte_code
+			if compound /= Void then
+				compound := compound.inlined_byte_code
+			end
 		end
 
 end

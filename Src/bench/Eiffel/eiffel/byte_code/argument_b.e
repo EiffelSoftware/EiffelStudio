@@ -7,7 +7,8 @@ inherit
 	ACCESS_B
 		redefine
 			enlarged, type, is_argument, is_local, is_creatable,
-			make_byte_code, register_name, array_descriptor
+			make_byte_code, register_name, array_descriptor,
+			pre_inlined_code
 		end;
 	
 feature 
@@ -47,11 +48,14 @@ feature
 			end;
 		end;
 
-	enlarged: ARGUMENT_BL is
+	enlarged: ARGUMENT_B is
 			-- Enlarge current node
+		local
+			arg_bl: ARGUMENT_BL
 		do
-			!!Result;
-			Result.fill_from (Current);
+			!!arg_bl;
+			arg_bl.fill_from (Current);
+			Result := arg_bl
 		end;
 
 	register_name: STRING is
@@ -77,6 +81,14 @@ feature -- Array optimization
 	array_descriptor: INTEGER is
 		do
 			Result := position
+		end
+
+feature -- Inlining
+
+	pre_inlined_code: INLINED_ARG_B is
+		do
+			!!Result;
+			Result.fill_from (Current)
 		end
 
 end

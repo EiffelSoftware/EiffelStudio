@@ -7,7 +7,8 @@ inherit
 		redefine
 			make_byte_code, enlarge_tree, analyze, generate,
 			has_loop, assigns_to, is_unsafe,
-			optimized_byte_node, calls_special_features
+			optimized_byte_node, calls_special_features,
+			size, inlined_byte_code, pre_inlined_code
 		end
 	
 feature 
@@ -182,6 +183,31 @@ feature -- Array optimization
 			Result := Current;
 			if compound /= Void then
 				compound := compound.optimized_byte_node
+			end
+		end
+
+feature -- Inlining
+
+	size: INTEGER is
+		do
+			if compound /= Void then
+				Result := compound.size
+			end
+		end
+
+	pre_inlined_code: like Current is
+		do
+			Result := Current
+			if compound /= Void then
+				compound := compound.pre_inlined_code
+			end
+		end
+
+	inlined_byte_code: like Current is
+		do
+			Result := Current
+			if compound /= Void then
+				compound := compound.inlined_byte_code
 			end
 		end
 

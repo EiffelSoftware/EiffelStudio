@@ -814,7 +814,7 @@ feature -- Generation (Linking rules)
 				Make_file.putint (i);
 				Make_file.putstring (".o: $(EOBJ")
 				Make_file.putint (i);
-				Make_file.putchar (')');
+				Make_file.putstring (") Makefile");
 				Make_file.new_line;
 					-- The following is not portable (if people want to use
 					-- their own linker).
@@ -847,7 +847,7 @@ feature -- Generation (Linking rules)
 			Make_file.putstring (System_object_prefix);
 			Make_file.putint (1);
 			Make_file.putchar (Directory_separator);
-			Make_file.putstring ("Emain.o:%N%T cd ");
+			Make_file.putstring ("Emain.o: Makefile%N%T cd ");
 			Make_file.putstring (System_object_prefix);
 			Make_file.putint (1);
 			Make_file.putstring (" ; $(SHELL) Makefile.SH ; ")
@@ -859,7 +859,7 @@ feature -- Generation (Linking rules)
 				Make_file.putstring (System_object_prefix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
-				Make_file.putstring (".o:%N%Tcd ");
+				Make_file.putstring (".o: Makefile%N%Tcd ");
 				Make_file.putstring (System_object_prefix);
 				Make_file.putint (1);
 				Make_file.putstring (" ; $(SHELL) Makefile.SH ; $(MAKE) ")
@@ -889,7 +889,7 @@ feature -- Generation (Linking rules)
 				Make_file.putstring (Feature_table_suffix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
-				Make_file.putstring (".o:%N%Tcd ");
+				Make_file.putstring (".o: Makefile%N%Tcd ");
 				Make_file.putstring (Feature_table_suffix);
 				Make_file.putint (i);
 				Make_file.putstring (" ; $(SHELL) Makefile.SH ; ")
@@ -909,7 +909,7 @@ feature -- Generation (Linking rules)
 				Make_file.putstring (Descriptor_suffix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
-				Make_file.putstring (".o:%N%Tcd ");
+				Make_file.putstring (".o: Makefile%N%Tcd ");
 				Make_file.putstring (Descriptor_suffix);
 				Make_file.putint (i);
 				Make_file.putstring (" ; $(SHELL) Makefile.SH ; ");
@@ -929,7 +929,7 @@ feature -- Generation (Linking rules)
 				Make_file.putstring (Class_suffix);
 				Make_file.putstring ("obj");
 				Make_file.putint (i);
-				Make_file.putstring (".o:%N%Tcd ");
+				Make_file.putstring (".o: Makefile%N%Tcd ");
 				Make_file.putstring (Class_suffix);
 				Make_file.putint (i);
 				Make_file.putstring (" ; $(SHELL) Makefile.SH ; ");

@@ -859,8 +859,10 @@ end;
 					else
 						feature_i.set_body_index (old_feature.body_index);
 						if
-							(feature_i.is_attribute and then not old_feature.is_attribute) or else
-							(feature_i.is_deferred and then not old_feature.is_deferred)
+							(feature_i.is_attribute and not old_feature.is_attribute) or else
+							(feature_i.is_deferred and then not old_feature.is_deferred) or else
+							(feature_i.is_attribute and old_feature.is_attribute and
+								feature_i.is_origin /= old_feature.is_origin)
 						then
 							System.execution_table.add_dead_function (old_feature.body_index)	
 						end

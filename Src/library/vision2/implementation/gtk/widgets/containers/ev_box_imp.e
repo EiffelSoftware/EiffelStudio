@@ -41,6 +41,30 @@ feature -- Access
 			Result := c_gtk_box_spacing (widget)
 		end
 	
+feature -- Status report
+
+	is_child_expandable (child: EV_WIDGET): BOOLEAN is
+			-- Is the child corresponding to `index' expandable. ie: does it
+			-- accept the parent to resize or move it.
+		local
+			child_imp: EV_WIDGET_IMP
+		do
+			child_imp ?= child.implementation
+			Result := c_gtk_box_is_child_expandable (widget, child_imp.box_widget)
+		end
+	
+feature -- Status settings
+
+	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN) is
+			-- Make the child corresponding to `index' expandable if `flag',
+			-- not expandable otherwise.
+		local
+			child_imp: EV_WIDGET_IMP
+		do
+			child_imp ?= child.implementation
+			c_gtk_box_set_child_expandable (widget, child_imp.box_widget, flag)
+		end	
+	
 feature -- Element change (box specific)
 	
 	set_homogeneous (flag: BOOLEAN) is

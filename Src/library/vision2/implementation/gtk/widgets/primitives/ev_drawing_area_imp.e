@@ -14,8 +14,6 @@ inherit
 		end
 
 	EV_DRAWABLE_IMP
-		undefine
-			C
 		redefine
 			interface
 		end

@@ -489,7 +489,7 @@ feature {NONE} -- Implementation
 	assembly_information: ASSEMBLY_INFORMATION is
 			-- 
 		once
-			create Result.make
+			create Result.make (Eiffel_project.system.System.clr_runtime_version)
 		end
 
 end -- class SYSTEM_BROWSER

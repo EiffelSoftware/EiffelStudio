@@ -215,6 +215,7 @@ cluster
 	all preferences:		"$EIFFEL_SRC\library\preferences"
 		exclude
 			"CVS"; "xml_implementation"
+		end
 
 	encryption:		"$EIFFEL_SRC\library\encryption"
 

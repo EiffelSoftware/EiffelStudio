@@ -19,7 +19,7 @@ inherit
 feature {AST_FACTORY} -- Initialization
 
 	initialize (s: like bits_symbol) is
-			-- Create a mew BITS_SYMBOL AST node.
+			-- Create a new BITS_SYMBOL AST node.
 		require
 			s_not_void: s /= Void
 		do

@@ -38,13 +38,13 @@ feature {EV_ANY_IMP} -- Timeout intermediary agent routine
 
 feature {EV_ANY_IMP} -- Notebook intermediary agent routines
 
-	on_notebook_page_switch_intermediary (a_c_object: POINTER; a_tuple: TUPLE [INTEGER]) is
+	on_notebook_page_switch_intermediary (a_c_object: POINTER; a_page: INTEGER) is
 			-- Notebook page is switched
 		local
 			a_notebook_imp: EV_NOTEBOOK_IMP
 		do
 			a_notebook_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_notebook_imp.page_switch (a_tuple)
+			a_notebook_imp.page_switch (a_page)
 		end
 
 feature {EV_ANY_IMP} -- Drawing Area intermediary agent routines
@@ -160,7 +160,7 @@ feature {EV_ANY_IMP} -- Text component intermediary agent routines
 			a_text_field_imp: EV_TEXT_FIELD_IMP
 		do
 			a_text_field_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_text_field_imp.return_actions_internal.call (Empty_tuple)
+			a_text_field_imp.return_actions_internal.call (Void)
 		end	 	
 		
 feature {EV_ANY_IMP} -- Button intermediary agent routines	
@@ -176,7 +176,7 @@ feature {EV_ANY_IMP} -- Button intermediary agent routines
 			if a_rad_imp /= Void and then not a_rad_imp.is_selected then
 				-- Do nothing as we shouldn't call the select actions of a radio button if it isn't selected
 			elseif a_button_imp.select_actions_internal /= Void and then a_button_imp.parent_imp /= Void then
-				a_button_imp.select_actions_internal.call (Empty_tuple)
+				a_button_imp.select_actions_internal.call (Void)
 			end
 		end
 		
@@ -334,7 +334,7 @@ feature {EV_ANY_IMP} -- Pointer intermediary agent routines
 			widget: EV_WIDGET_IMP
 		do
 			widget ?= c_get_eif_reference_from_object_id (a_c_object)
-			if widget /= Void then
+			if widget /= Void and then a_pressure > 0 then
 				widget.pointer_motion_actions_internal.call 
 					([a_screen_x - widget.screen_x, a_screen_y - widget.screen_y, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y])
 				
@@ -457,7 +457,7 @@ feature {EV_ANY_IMP} -- Accelerator intermediary agent routines
 			a_accelerator_imp: EV_ACCELERATOR_IMP
 		do
 			a_accelerator_imp ?= c_get_eif_reference_from_object_id (a_c_object)
-			a_accelerator_imp.actions_internal.call (empty_tuple)
+			a_accelerator_imp.actions_internal.call (Void)
 		end
 
 end -- class EV_INTERMEDIARY_ROUTINES

@@ -77,15 +77,6 @@ feature -- Event -- removing command association
 			remove_command (Cmd_help)
 		end
 
-feature {NONE} -- Implementation for events handling
-
-	dispatch_events is
-			-- Execute the command associated to the action of the user.
-			-- As in `process_message' of WEL_WINDOW, we can't use
-			-- `inspect' here.
-		do
-		end
-
 end -- class EV_COLOR_DIALOG_IMP
 
 --|----------------------------------------------------------------

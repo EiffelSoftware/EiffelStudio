@@ -2,13 +2,8 @@ indexing
 	description: 
 		"EiffelVision multi-column-list, implementation interface."
 	status: "See notice at end of class"
-<<<<<<< ev_multi_column_list_imp.e
 	date: "$Date$"
 	revision: "$Revision$"
-=======
-	date: "$Date$"
-	revision: "$Revision$"
->>>>>>> 1.10.2.4
 
 class
 	EV_MULTI_COLUMN_LIST_IMP
@@ -238,6 +233,12 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
 			if a_type = feature {EV_GTK_EXTERNALS}.gDK_BUTTON_PRESS_ENUM then
 				if pointer_button_press_actions_internal /= Void then
 					pointer_button_press_actions_internal.call (t)
+				end
+				if
+					clicked_row /= Void and then 
+					clicked_row.pointer_button_press_actions_internal /= Void
+				then
+					clicked_row.pointer_button_press_actions_internal.call (t)
 				end
 			elseif a_type = feature {EV_GTK_EXTERNALS}.gDK_2BUTTON_PRESS_ENUM then
 				if pointer_double_press_actions_internal /= Void then

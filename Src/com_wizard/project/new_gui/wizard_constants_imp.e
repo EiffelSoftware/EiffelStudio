@@ -29,13 +29,53 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	icons_png: EV_PIXMAP is
+	icons_directory: STRING is
+			-- `Result' is DIRECTORY constant named `icons_directory'.
+		once
+			Result := "E:\com_wizard\project\new_gui\resources"
+		end
+
+	help_png: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
 		once
 			create Result
 			create a_file_name.make_from_string (icons_directory)
-			a_file_name.set_file_name ("icons.PNG")
+			a_file_name.set_file_name ("help.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	link_label: EV_COLOR is
+			-- `Result' is EV_COLOR constant named `link_label'.
+		once
+			Result := create {EV_COLOR}.make_with_8_bit_rgb (86, 140, 231)
+		end
+
+	inactive_background: EV_COLOR is
+			-- `Result' is EV_COLOR constant named `inactive_background'.
+		once
+			Result := create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 185)
+		end
+
+	active_background: EV_COLOR is
+			-- `Result' is EV_COLOR constant named `active_background'.
+		once
+			Result := create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255)
+		end
+
+	invalid_value_color: EV_COLOR is
+			-- `Result' is EV_COLOR constant named `invalid_value_color'.
+		once
+			Result := create {EV_COLOR}.make_with_8_bit_rgb (255, 0, 0)
+		end
+
+	settings_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		once
+			create Result
+			create a_file_name.make_from_string (icons_directory)
+			a_file_name.set_file_name ("settings.png")
 			set_with_named_file (Result, a_file_name)
 		end
 
@@ -45,28 +85,14 @@ feature -- Access
 			Result := create {EV_COLOR}.make_with_8_bit_rgb (0, 0, 0)
 		end
 
-	active_background: EV_COLOR is
-			-- `Result' is EV_COLOR constant named `active_background'.
+	output_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
 		once
-			Result := create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255)
-		end
-
-	icons_directory: STRING is
-			-- `Result' is DIRECTORY constant named `icons_directory'.
-		once
-			Result := "E:\com_wizard\project\new_gui\resources"
-		end
-
-	inactive_background: EV_COLOR is
-			-- `Result' is EV_COLOR constant named `inactive_background'.
-		once
-			Result := create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 185)
-		end
-
-	invalid_value_color: EV_COLOR is
-			-- `Result' is EV_COLOR constant named `invalid_value_color'.
-		once
-			Result := create {EV_COLOR}.make_with_8_bit_rgb (255, 0, 0)
+			create Result
+			create a_file_name.make_from_string (icons_directory)
+			a_file_name.set_file_name ("output.png")
+			set_with_named_file (Result, a_file_name)
 		end
 
 

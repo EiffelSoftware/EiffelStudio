@@ -8,7 +8,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EV_POPUP_MENU
+class
+	EV_POPUP_MENU
 
 inherit
 

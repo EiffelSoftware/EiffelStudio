@@ -7,10 +7,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EV_SCROLLABLE_AREA
+class
+	EV_SCROLLABLE_AREA
 
 inherit
-
 	EV_CONTAINER 
 		redefine
 			make,
@@ -19,13 +19,12 @@ inherit
 
 creation
 	make
-	
 
 feature {NONE} -- Initialization
 
-        make (par: EV_CONTAINER) is
-                        -- Create a fixed widget with, `par' as
-                        -- parent
+		make (par: EV_CONTAINER) is
+			-- Create a fixed widget with, `par' as
+			-- parent
 		do
 			!EV_SCROLLABLE_AREA_IMP!implementation.make (par)
 			widget_make (par)

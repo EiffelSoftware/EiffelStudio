@@ -17,8 +17,7 @@ inherit
 		redefine
 			lace, system, universe
 		end;
-	COMPILER_EXPORTER;
-	WINDOWS
+	COMPILER_EXPORTER
 
 feature -- Attributes
 
@@ -412,9 +411,9 @@ feature -- Automatic backup
 			!! file.make_open_write (backup_info_file_name)
 			file.putstring ("Compiler version: ")
 			file.putstring (Version_number)
-			file.new_line
-			file.putstring ("batch mode: ")
-			file.putbool (batch_mode)
+			--file.new_line
+			--file.putstring ("batch mode: ")
+			--file.putbool (batch_mode)
 			file.new_line
 			file.putstring ("new session: ")
 			file.putbool (new_session)

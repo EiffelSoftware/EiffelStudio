@@ -24,22 +24,22 @@ creation
 
 feature -- Access
  
-	generated_id: STRING is
-			-- Textual representation of real body index
-			-- used in generated C code
+	generated_id (f: INDENT_FILE) is
+			-- Generate textual representation of real body index
+			-- in generated C code
 		local
-			buff: STRING
+			statement, buff: STRING
 		do
 			if Compilation_modes.is_precompiling then
 				buff := Real_body_index_offset_buffer;
 				eif011 ($buff, compilation_id);
-				!! Result.make (15);
-				Result.append (buff);
-				Result.extend ('+');
-				Result.append_integer (internal_id - 1)
+				!! statement.make (15);
+				statement.append (buff);
+				statement.extend ('+');
+				statement.append_integer (internal_id - 1)
+				f.putstring (statement)
 			else
-				!! Result.make (5);
-				Result.append_integer (id - 1)
+				f.putint (id - 1)
 			end
 		end
 

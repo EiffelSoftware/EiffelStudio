@@ -12,14 +12,11 @@ creation
 
 feature -- Access
 
-	generated_id: STRING is
-			-- Textual representation of real body index
-			-- used in generated C code
+	generated_id (f: INDENT_FILE) is
+			-- Generate textual representation of real body index
+			-- in generated C code
 		do
-			!! Result.make (5);
-			Result.append_integer (id - 1)
-		ensure
-			generated_id_not_void: Result /= Void
+			f.putint (id - 1)
 		end
 
 feature {NONE} -- Implementation

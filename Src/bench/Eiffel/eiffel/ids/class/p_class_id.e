@@ -26,22 +26,22 @@ creation
 
 feature {COMPILER_EXPORTER} -- Access
 
-	generated_id: STRING is
-			-- Textual representation of class id
-			-- used in generated C code
+	generated_id (f: INDENT_FILE) is
+			-- Generate textual representation of class id
+			-- in generated C code
 		local
-			buff: STRING
+			statement, buff: STRING
 		do
 			if Compilation_modes.is_precompiling then
 				buff := Offset_buffer;
 				eif011 ($buff, compilation_id);
-				!! Result.make (15);
-				Result.append (buff);
-				Result.extend ('+');
-				Result.append_integer (internal_id)
+				!! statement.make (15);
+				statement.append (buff);
+				statement.extend ('+');
+				statement.append_integer (internal_id)
+				f.putstring (statement)
 			else
-				!! Result.make (5);
-				Result.append_integer (id)
+				f.putint (id)
 			end
 		end
 

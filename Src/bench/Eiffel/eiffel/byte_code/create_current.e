@@ -30,7 +30,7 @@ feature -- C code generation
 			-- Mark we need the dynamic type of current
 		do
 			context.mark_current_used
-			context.add_dt_current
+			context.add_dftype_current
 		end
 
 	generate is
@@ -42,6 +42,14 @@ feature -- C code generation
 			buffer.putstring ("RTLNC(")
 			context.Current_register.print_register
 			buffer.putchar (')')
+		end
+
+feature -- Assignment attempt
+
+	generate_reverse (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
+
+		do
+			context.generate_current_dftype
 		end
 
 feature -- Il code generation
@@ -80,9 +88,7 @@ feature -- Generic conformance
 	generate_cid (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 
 		do
-			buffer.putstring ("Dftype(")
-			context.Current_register.print_register
-			buffer.putstring ("), ")
+			context.generate_current_dftype
 		end
 
 	make_gen_type_byte_code (ba : BYTE_ARRAY) is
@@ -107,9 +113,9 @@ feature -- Generic conformance
 		do
 			buffer.putstring ("typarr[")
 			buffer.putint (idx_cnt.value)
-			buffer.putstring ("] = RTID(Dftype(")
-			context.Current_register.print_register
-			buffer.putstring ("));")
+			buffer.putstring ("] = RTID(")
+			context.generate_current_dftype
+			buffer.putstring (");")
 			buffer.new_line
 			dummy := idx_cnt.next
 		end
@@ -120,16 +126,6 @@ feature -- Generic conformance
 			-- None.
 			-- If Current is generic it already
 			-- carries all the info in it's header.
-		end
-
-feature -- Assignment attempt
-
-	generate_reverse (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
-
-		do
-			buffer.putstring ("Dftype(")
-			context.Current_register.print_register
-			buffer.putstring (")")
 		end
 
 end -- class CREATE_CURRENT

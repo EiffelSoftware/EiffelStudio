@@ -89,6 +89,7 @@ feature -- Event -- removing command association
 feature -- Implementation
 	
 	implementation: EV_TREE_I	
+			-- Platform dependent access.
 
 end -- class EV_TREE
 

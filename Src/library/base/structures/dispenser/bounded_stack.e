@@ -52,6 +52,14 @@ feature -- Access
 			Result := fl.item (count)
 		end
 
+	item_for_iteration: G is
+			-- Element at current iteration position
+		require
+			not_off: not off
+		do
+			Result := fl.item (index)
+		end
+
 feature -- Measurement
 
 	count: INTEGER
@@ -152,7 +160,7 @@ feature -- Conversion
 			end
 		end
 
-feature {STACK} -- Implementation
+feature -- Iteration
 
 	start is
 			-- Move to first position.
@@ -183,6 +191,8 @@ feature {STACK} -- Implementation
 		do
 			Result := (index < 1) or else (index > count)
 		end
+
+feature {NONE} -- Implementation
 
 	fl: ARRAY [G]
 			-- Storage

@@ -691,8 +691,7 @@ rt_public void widr_multi_float (EIF_REAL *obj, int num)
 }
 
 #if DBLSIZ != 8
-"Warning there is a problem with the current platform which does not
-have a 8 bytes EIF_DOUBLE"
+"Warning there is a problem with the current platform which does not have a 8 bytes EIF_DOUBLE"
 #endif
 
 rt_public void ridr_multi_double (EIF_DOUBLE *obj, int num)

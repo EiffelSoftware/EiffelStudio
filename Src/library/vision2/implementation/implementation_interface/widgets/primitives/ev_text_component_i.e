@@ -10,12 +10,12 @@ deferred class
 	
 inherit
 	EV_PRIMITIVE_I
-		rename
-			interface as primitive_interface
+		redefine
+			interface
 		end
 	
 	EV_TEXTABLE_I
-		select
+		redefine
 			interface
 		end
 
@@ -220,6 +220,12 @@ feature -- Basic operation
 			is_editable: is_editable
 		deferred
 		end
+		
+feature {NONE} -- Implementation
+
+	interface: EV_TEXT_COMPONENT
+            -- Provides a common user interface to platform dependent
+			-- functionality implemented by `Current'
 
 end -- class EV_TEXT_COMPONENT_I
 

@@ -1,9 +1,29 @@
-<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN"><HTML><HEAD><TITLE>Component selector</TITLE><LINK REL=StyleSheet HREF="/default.css"></HEAD>
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN"><HTML><HEAD><TITLE>Component selector</TITLE><LINK REL=StyleSheet HREF="../../../../default.css"></HEAD>
 <BODY><H1>Window Selector</H1>
-<P>The Window Selector allows you to manage windows and dialogs within the EiffelBuild project.</P>
+<P>The Window Selector allows you to manage windows and dialogs within the EiffelBuild project and all windows are accessible through this tool. Using the window selector, you may add new windows to your project; delete windows; assign a root window (launched from the generated application); and group windows into directories. The Window Selector has the following appearence:</P>
 <P align="center"><IMG SRC="/images/eiffelbuild/screenshots/window_selector.png"></p>
 <H2>Adding Windows</H2>
-<H2><A NAME="root_window">Root Window</H2>
+<P>To add a window or dialog to your project, <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">pick</A> the window or dialog type from the <A HREF="/tools/eiffelbuild/reference/30_type_selector/index.html">type selector</A>, and <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">drop</A> into the Window Selector. There are two possible drop targets within the window selector:
+<ul>
+	<li><B>The Window Selector itself</B> - The newly created window object is added to the root directory of the project.</li>
+	<li><B>A Directory node</B> - The newly created window object is added to the directory that was the target of the drop.</li>
+</ul>
+Both of these outcomes create a new window or dialog in your project.
+<P CLASS="Note"><b>Note</b>: The selected window in the Window Selector is automatically targeted as the root window of the <A HREF="/tools/eiffelbuild/reference/20_layout_constructor/index.html">layout constructor</A>, permitting building. You may not build directly into the representation of a window within the Window Constructor.</P>
+</p>
+<A NAME="root_window"></A><H2>Root Window</H2>
+<P>The root window of a project is launched by the application class of the generated EiffelBuild project when executed. By assigning a window as a root, you ensure that it will be displayed on screen as the "root" window of the generated system when the system is launched.</P>
+<P>The root window of the project is highlighted with a star, indicating that it is the root. Looking at the screenshot at the top of this page, the window named "main_window" is currently flagged as the root window of the project. To set a window as the the root window of the project, select the window in the Window Selector, and press the <img SRC="/images/eiffelbuild/screenshots/icon_titled_window_main_small_color.png" >button displayed at the top of the Window Selector.
 <H2>Directories</H2>
-<P CLASS="seealso"><B>See also</B>: </P>
+<P>The ability to add directories to your project permit organization of windows into sub groups as necessitated by your design. To add a directory to the project, select the <img SRC="/images/eiffelbuild/screenshots/icon_new_cluster_small_color.png" > button displayed at the top of the Window selector, which displays the following dialog, prompting for the name of the directory to add:</P>
+<P align="center"><IMG SRC="/images/eiffelbuild/screenshots/new_directory_dialog.png"></p>
+<P>Enter a unique name that is not already in use, and select "OK" to add the directory to your project. The newly added directory is then visible, as a node in the Window Selector.</P>
+<P CLASS="Note"><b>Note</b>: Creating a new directory in the Window Selector causes the actual directory on the disk to be created immediately.</P>
+<P>You may insert windows into a directory, or move a window between directories by <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">picking</A> the window from its representation in the Window Selector, and <A HREF="/tools/eiffelbuild/reference/02_notation.html#pick_and_drop">dropping</A> on the desired directory.
+<P CLASS="Note"><b>Note</b>: If you move a window between directories within an EiffelBuild project that has already generated the Eiffel code for that window, the code files are moved on the disk.</P>
+<P>It is not possible to nest directories, only a single level of directories is permitted in the root of the project.</P>
+<H2>Expanding</H2>
+<P>The 
+<img SRC="/images/eiffelbuild/screenshots/icon_expand_all_small_color.png" > button displayed at the top of the Window Selector expands all nodes contained.</P>
+<P CLASS="seealso"><B>See also</B>:<BR><A HREF="/tools/eiffelbuild/reference/20_layout_constructor/index.html">Layout Constructor</A></P>
 </BODY></HTML>

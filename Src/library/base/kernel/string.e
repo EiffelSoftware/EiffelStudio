@@ -710,7 +710,7 @@ feature -- Element change
 			area.put (c, i - 1)
 		end
 
-	precede (c: CHARACTER) is
+	precede, prepend_character (c: CHARACTER) is
 			-- Add `c' at front.
 		do
 			if count = capacity then
@@ -745,12 +745,6 @@ feature -- Element change
 			-- Prepend the string representation of `b' at front.
 		do
 			prepend (b.out)
-		end
-
-	prepend_character (c: CHARACTER) is
-			-- Prepend the string representation of `c' at front.
-		do
-			prepend (c.out)
 		end
 
 	prepend_double (d: DOUBLE) is

@@ -6,7 +6,7 @@ inherit
 		redefine
 			is_trace
 		end;
-	SHARED_TRACE_LEVEL
+	SHARED_OPTION_LEVEL
 
 feature
 
@@ -25,21 +25,21 @@ feature
 			classes:EXTEND_TABLE [CLASS_I, STRING];
 			list: LACE_LIST [ID_SD]) is
 		local
-			v: TRACE_I;
+			v: OPTION_I;
 			class_name: STRING;
 		do
 			if value /= Void then
 				if value.is_no then
-					v := No_trace;
+					v := No_option;
 				elseif value.is_yes then
-					v := All_trace;
+					v := All_option;
 				elseif value.is_all then
-					v := All_trace;
+					v := All_option;
 				else
 					error (value);
 				end;
 			else
-				v := No_trace;
+				v := No_option;
 			end;
 			if v /= Void then
 				if list = Void then

@@ -728,6 +728,14 @@ feature -- Element change
 				create d_option.initialize (ass, v)
 				new_defaults.put_front (d_option)	
 			end
+			
+			-- need to place assertion(no) at the beginning to reset all assertion levels for clusters
+			if evaluate_require or evaluate_ensure or evaluate_check or evaluate_loop or evaluate_invariant then
+				create v.make_no
+				create ass
+				create d_option.initialize (ass, v)
+				new_defaults.put_front (d_option)
+			end	
 		end
 
 	set_parent_name (a_parent_name: STRING) is

@@ -59,7 +59,7 @@ feature -- Display
 				end
 			else
 				realize;
-				focus_label.initialize_focusables
+				focus_label.initialize_focusables (Current)
 			end
 		end;
 

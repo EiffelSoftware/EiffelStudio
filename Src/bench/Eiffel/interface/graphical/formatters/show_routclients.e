@@ -10,10 +10,19 @@ class SHOW_ROUTCLIENTS
 inherit
 
 	FILTERABLE
+		rename
+			execute as old_execute	
 		redefine
 			dark_symbol, display_temp_header
 		end;
-	SHARED_SERVER
+	FILTERABLE
+		redefine
+			dark_symbol, display_temp_header, execute
+		select
+			execute
+		end;
+	SHARED_SERVER;
+	CUSTOM_CALLER
 
 creation
 
@@ -28,6 +37,9 @@ feature -- Initialization
 
 feature -- Properties
 
+	to_show_all_callers: BOOLEAN;
+			-- Is the format going to show all callers?
+
 	symbol: PIXMAP is 
 		once 
 			Result := bm_Showcallers 
@@ -37,17 +49,69 @@ feature -- Properties
 		once 
 			Result := bm_Dark_showcallers 
 		end;
- 
+
+feature -- Executions
+
+	execute_apply_action (a_cust_tool: like associated_custom_tool) is
+			-- Action performed when apply button is activated
+		do
+			if a_cust_tool.is_first_option_selected = to_show_all_callers then
+				to_show_all_callers := 
+					not a_cust_tool.is_first_option_selected;
+				if tool.last_format.associated_command = Current then
+					tool.synchronize
+				end
+			end
+		end;	
+
+	execute_ok_action (a_cust_tool: like associated_custom_tool) is
+			-- Action performed when ok button is activated
+		do
+			-- *** FIXME need to save resource
+			execute_apply_action (a_cust_tool)
+		end;
+
+	execute (arg: ANY) is
+			-- Execute the format.
+		local
+			rcw: ROUTINE_CUSTOM_W
+		do
+			if arg = button_three_action then
+				rcw := routine_custom_window (popup_parent);
+				rcw.set_window (popup_parent);
+				rcw.call (Current, 
+						l_Showcallers, 	
+						l_Showallcallers,
+						not to_show_all_callers)
+			else
+				old_execute (arg)
+			end
+		end
+
 feature {NONE} -- Properties
+
+	associated_custom_tool: ROUTINE_CUSTOM_W is
+			-- Associated custom tool
+			-- (Used for type checking and system validity)
+		do
+		end;	   
 
 	name: STRING is
 		do
-			Result := l_Showsenders
+			if to_show_all_callers then
+				Result := l_Showallcallers
+			else
+				Result := l_Showcallers
+			end
 		end;
 
 	title_part: STRING is
 		do
-			Result := l_Senders
+			if to_show_all_callers then
+				Result := l_All_callers
+			else
+				Result := l_callers
+			end
 		end;
 
 	create_structured_text (f: FEATURE_STONE): STRUCTURED_TEXT is
@@ -56,9 +120,10 @@ feature {NONE} -- Properties
 			cmd: E_SHOW_CALLERS;
 		do
 			!! Result.make;
-			!! cmd.make (f.e_feature, f.e_class, Result);
-			-- **** FIXME make this configurable
-			cmd.set_all_callers;
+			!! cmd.make (f.e_feature, Result);
+			if to_show_all_callers then
+				cmd.set_all_callers;
+			end;
 			if cmd.has_valid_feature then
 				cmd.execute
 			end

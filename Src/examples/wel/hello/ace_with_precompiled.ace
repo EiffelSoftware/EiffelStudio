@@ -19,14 +19,14 @@ cluster
 		end
 
 		-- WEL
-	all wel: 		"$EIFFEL_SRC\library\wel"
+	all wel: 		"$ISE_EIFFEL\library\wel"
 		exclude
 			"spec"
 			"clib"
 		end
 
 external
-	include_path:	"$(EIFFEL_SRC)\library\wel\spec\windows\include"
-	object: 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
+	include_path:	"$(ISE_EIFFEL)\library\wel\spec\windows\include"
+	object: 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
 
 end -- hello_demo

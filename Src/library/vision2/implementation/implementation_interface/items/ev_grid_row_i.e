@@ -97,7 +97,7 @@ feature -- Access
 			i_within_bounds: i > 0 and i <= count
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_ROW.item")
+			Result := parent_grid_i.item (index, i)
 		ensure
 			item_not_void: Result /= Void
 		end

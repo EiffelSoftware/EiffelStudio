@@ -76,11 +76,7 @@ feature -- Access
 		local
 			grid_row: SPECIAL [EV_GRID_ITEM]
 		do
-			grid_row :=  parent_grid_i.row_list @ i
-			if grid_row = Void then
-					-- The row is new, so no item existed
-					
-			end
+			Result := parent_grid_i.item (i, index)
 		ensure
 			item_not_void: Result /= Void
 		end

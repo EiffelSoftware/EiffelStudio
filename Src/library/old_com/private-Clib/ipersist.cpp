@@ -125,4 +125,3 @@ extern "C" EIF_REFERENCE eole2_get_class_id (EIF_POINTER pIPersistThis) {
 }
 
 /////// END OF FILE /////////////////////////////////////////////////////////
-

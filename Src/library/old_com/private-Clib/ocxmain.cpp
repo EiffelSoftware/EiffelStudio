@@ -9,10 +9,9 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 // $Log$
-// Revision 1.2  1998/02/02 18:05:21  raphaels
-// Added TypeComp support.
-// Updated TypeLib and TypeInfo support.
-// Modified some file names.
+// Revision 1.3  1998/02/02 18:10:43  raphaels
+// Added ITypeComp support.
+// Corrected some bugs in ITypeLib and ITypeInfo.
 //
 // Revision 1.1.1.1  1998/01/15 23:32:17  raphaels
 // First version of EiffelCOM
@@ -112,5 +111,4 @@ extern "C" STDAPI DllCanUnloadNow( void )
 
 /*---------------------------------------------------------------------------*/
 /*---------------------------------------------------------------------------*/
-
 

@@ -27,4 +27,3 @@ extern "C" EIF_INTEGER eole2_safearraybound_lower_bound (EIF_POINTER ptr) {
 	SAFEARRAYBOUND* pSAB = (SAFEARRAYBOUND*)ptr;
 	return (EIF_INTEGER)(pSAB->lLbound);
 	}
-

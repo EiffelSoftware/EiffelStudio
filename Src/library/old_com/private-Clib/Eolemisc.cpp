@@ -9,10 +9,9 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 // $Log$
-// Revision 1.4  1998/02/02 18:05:03  raphaels
-// Added TypeComp support.
-// Updated TypeLib and TypeInfo support.
-// Modified some file names.
+// Revision 1.5  1998/02/02 18:10:29  raphaels
+// Added ITypeComp support.
+// Corrected some bugs in ITypeLib and ITypeInfo.
 //
 // Revision 1.2  1998/01/20 00:25:55  raphaels
 // Modified sources to be compatible with Borland compiler.
@@ -552,4 +551,3 @@ extern "C" EIF_INTEGER eole2_occsite_transform_coords (
 }
 
 /////// END OF FILE /////////////////////////////////////////////////////////
-

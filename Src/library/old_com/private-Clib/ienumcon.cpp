@@ -8,10 +8,9 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 //-- $Log$
-//-- Revision 1.5  1998/02/02 18:05:12  raphaels
-//-- Added TypeComp support.
-//-- Updated TypeLib and TypeInfo support.
-//-- Modified some file names.
+//-- Revision 1.6  1998/02/02 18:10:37  raphaels
+//-- Added ITypeComp support.
+//-- Corrected some bugs in ITypeLib and ITypeInfo.
 //--
 //-- Revision 1.3  1998/01/20 23:47:59  raphaels
 //-- Removed obsolete files.

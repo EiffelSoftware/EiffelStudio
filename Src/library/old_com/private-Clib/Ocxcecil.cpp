@@ -915,4 +915,3 @@ extern "C" EIF_REFERENCE EStringFromCString( char* cstring )
 }
 
 /////// END OF FILE /////////////////////////////////////////////////////////
-

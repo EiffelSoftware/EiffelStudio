@@ -8,10 +8,9 @@
 //   external_name: "$RCSfile$";
 //---------------------------------------------------------------------------
 //-- $Log$
-//-- Revision 1.2  1998/02/02 18:05:17  raphaels
-//-- Added TypeComp support.
-//-- Updated TypeLib and TypeInfo support.
-//-- Modified some file names.
+//-- Revision 1.3  1998/02/02 18:10:41  raphaels
+//-- Added ITypeComp support.
+//-- Corrected some bugs in ITypeLib and ITypeInfo.
 //--
 //-- Revision 1.1.1.1  1998/01/15 23:32:16  raphaels
 //-- First version of EiffelCOM
@@ -73,4 +72,3 @@ extern "C" EIF_POINTER eole2_provide_class_info_get_class_info( EIF_POINTER ip)
 
 
 /////// END OF FILE /////////////////////////////////////////////////////////
-

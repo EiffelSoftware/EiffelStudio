@@ -1610,4 +1610,3 @@ extern "C" EIF_INTEGER eole2_filetime_get_low_date_time (EIF_POINTER _this) {
 }
 
 /////// END OF FILE /////////////////////////////////////////////////////////
-

@@ -152,14 +152,16 @@ feature {NONE} -- Private Access
 	searched_line: EDITOR_LINE
 			-- line containing `searched_token'
 
+	current_feature_as: FEATURE_AS
+			-- `FEATURE_AS' corresponding to the feature containing `searched_token'
+
+feature {EB_ADDRESS_MANAGER} -- Private Access
+
 	current_token: EDITOR_TOKEN
 			-- token being analyzed
 
 	current_line: EDITOR_LINE
 			-- line containing `current_token'
-
-	current_feature_as: FEATURE_AS
-			-- `FEATURE_AS' corresponding to the feature containing `searched_token'
 
 feature {NONE} -- Private Status
 
@@ -400,7 +402,6 @@ feature {NONE}-- Clickable/Editable implementation
 			end
 		end
 
-
 	searched_feature: E_FEATURE is
 			-- analyze class text from `current_token' to find feature associated with `searched_token'
 		require
@@ -598,6 +599,8 @@ feature {NONE}-- Implementation
 							Result := assertion_part
 						elseif token_image_is_in_array (token, feature_executable_keywords) then
 							Result := instruction_part
+						elseif token_image_is_in_array (token, feature_local_keywords) then
+							Result := local_part
 						end
 					end
 				end
@@ -618,6 +621,8 @@ feature {NONE}-- Implementation
 
 	instruction_part: INTEGER is unique
 
+	local_part: INTEGER is unique
+	
 	no_interesting_part: INTEGER is unique
 
 	find_expression_start is
@@ -842,6 +847,8 @@ feature {NONE}-- Implementation
 		require
 			infix_list_not_void: infix_list /= Void
 			type_list_not_void: type_list /= Void
+			current_class_i_not_void: current_class_i /= Void
+			current_class_i_compiled: current_class_i.is_compiled
 		local
 			priority: LINKED_LIST[INTEGER]
 			index: INTEGER
@@ -1059,10 +1066,13 @@ feature {NONE}-- Implementation
 		require
 			a_type_not_void: a_type /= Void
 			a_name_not_void: a_name /= Void
+			current_class_i_not_void: current_class_i /= Void
+			current_class_i_compiled: current_class_i.is_compiled
 		local
 			name: STRING
 			feat: E_FEATURE
 			cls_c: CLASS_C
+			formal: FORMAL_A
 		do
 			name := a_name.as_lower
 			if name.is_equal (Equal_sign) or name.is_equal (Different_sign) then
@@ -1073,6 +1083,10 @@ feature {NONE}-- Implementation
 					feat := cls_c.feature_with_name (infix_feature_name_with_symbol (name))
 					if feat /= Void and then feat.type /= Void then
 						Result := feat.type
+						if Result.is_formal then
+							formal ?= Result
+							Result := current_class_i.compiled_class.constraint (formal.position)
+						end
 					end
 				end
 			end
@@ -1094,6 +1108,7 @@ feature {NONE}-- Implementation
 			ent_list: LINKED_LIST [STRING]
 			tst, lower_name: STRING
 			class_i: CLASS_I
+			formal: FORMAL_A
 			l_current_class_c: CLASS_C
 		do
 			if retried then
@@ -1143,6 +1158,10 @@ feature {NONE}-- Implementation
 								index := current_feature.arguments.argument_names.index_of (name, 1)
 								if index > 0 then
 									Result := current_feature.arguments.i_th (index)
+									if Result.is_formal then
+										formal ?= Result
+										Result := l_current_class_c.constraint (formal.position)
+									end
 								end
 							end
 						end
@@ -1193,6 +1212,7 @@ feature {NONE}-- Implementation
 			nb: EDITOR_TOKEN_NUMBER
 			ch: EDITOR_TOKEN_CHARACTER
 			current_feature: E_FEATURE
+			formal: FORMAL_A
 			l_current_class_c: CLASS_C
 		do
 			if is_keyword (token) then
@@ -1207,6 +1227,10 @@ feature {NONE}-- Implementation
 						current_feature_as.feature_name)
 					if current_feature /= Void then
 						Result := current_feature.type
+						if Result.is_formal then
+							formal ?= Result
+							Result := l_current_class_c.constraint (formal.position)
+						end
 					end
 				elseif token_image_is_in_array (token, boolean_values) then
 					create {BOOLEAN_A} Result
@@ -1593,6 +1617,12 @@ feature {NONE} -- Constants
 		once
 			Result := <<"do", "once", "rescue">>
 		end
+
+	feature_local_keywords: ARRAY [STRING] is 
+		once
+			Result := <<"local">>
+		end
+
 	
 	special_keywords: ARRAY [STRING] is 
 		once

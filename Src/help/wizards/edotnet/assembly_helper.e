@@ -5,7 +5,7 @@ indexing
 	revision	: "$Revision$"
 
 class
-	ASSEMBLY_HELPER
+	ASSEMBLY_INFORMATION
 
 create
 	make
@@ -18,6 +18,7 @@ feature -- Initialization
 			filename_ptr: ANY
 			filename_for_c: STRING
 		do
+			internal_path := clone (a_filename)
 			filename_for_c := clone (a_filename)
 			filename_ptr := filename_for_c.to_c
 			c_get_assembly_properties ($Current, $filename_ptr, $update_assembly_properties)
@@ -84,7 +85,17 @@ feature -- Access
 		do
 			Result := clone (internal_name)
 		ensure
-			Result_not_void: Result /= Void and then not Result.is_empty
+			Result_not_empty: Result /= Void and then not Result.is_empty
+		end
+		
+	path: STRING is
+			-- Path for the assembly
+		require
+			valid_assembly: valid_assembly
+		do
+			Result := clone (internal_path)
+		ensure
+			Result_not_empty: Result /= Void and then not Result.is_empty
 		end
 	
 feature {NONE} -- Implementation
@@ -118,6 +129,9 @@ feature {NONE} -- Implementation
 			
 	internal_name: STRING
 			-- Name for the assembly
+			
+	internal_path: STRING
+			-- Path for the assembly
 	
 feature {NONE} -- Externals
 

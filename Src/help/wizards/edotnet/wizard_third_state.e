@@ -24,13 +24,7 @@ feature -- Basic Operation
 			-- Build entries.
 		local
 			label: EV_LABEL
-			vbox: EV_VERTICAL_BOX
-			left_box: EV_VERTICAL_BOX
-			right_box: EV_VERTICAL_BOX
-			hbox: EV_HORIZONTAL_BOX
 			up_box, down_box: EV_HORIZONTAL_BOX
-			add_button: EV_BUTTON
-			remove_button: EV_BUTTON
 			add_button_box: EV_VERTICAL_BOX
 			remove_button_box: EV_VERTICAL_BOX
 			padding_cell: EV_CELL
@@ -39,16 +33,25 @@ feature -- Basic Operation
 			references_to_add.set_column_titles (<< "Name", "Version", "Path" >>)
 			references_to_add.set_column_widths (<<100, 60, 135>>)
 			references_to_add.set_minimum_height (120)
-			fill_lists
+			references_to_add.select_actions.extend (agent update_buttons_state)
+			references_to_add.deselect_actions.extend (agent update_buttons_state)
 			
 			create added_references
 			added_references.set_column_titles (<< "Name", "Version", "Path" >>)
+			added_references.set_column_widths (<<100, 60, 135>>)
 			added_references.set_minimum_height (60)
+			added_references.select_actions.extend (agent update_buttons_state)
+			added_references.deselect_actions.extend (agent update_buttons_state)
+			fill_lists
 			
 			create add_button.make_with_text ("Add")
+			add_button.select_actions.extend (agent select_assembly)
 			set_default_size_for_button (add_button)
+			
 			create remove_button.make_with_text ("Remove")
+			remove_button.select_actions.extend (agent unselect_assembly)
 			set_default_size_for_button (remove_button)
+			
 			create add_button_box
 			add_button_box.extend (add_button)
 			add_button_box.disable_item_expand (add_button)
@@ -58,7 +61,7 @@ feature -- Basic Operation
 			remove_button_box.disable_item_expand (remove_button)
 			remove_button_box.extend (create {EV_CELL})
 
-			create label.make_with_text ("External assemblies")
+			create label.make_with_text ("Selected assemblies")
 			label.align_text_left
 			
 			create up_box
@@ -82,20 +85,22 @@ feature -- Basic Operation
 			padding_cell.set_minimum_height (Small_border_size)
 			choice_box.extend (padding_cell)
 			choice_box.extend (down_box)
+			
+			if not references_to_add.is_empty then
+				references_to_add.first.enable_select
+			end
+			update_buttons_state (Void)
 
---			set_updatable_entries(<<location.browse_actions,
---									location.change_actions,
---									to_compile_b.select_actions>>)
+			set_updatable_entries(<<add_button.select_actions,
+									remove_button.select_actions>>)
 		end
 
 	proceed_with_current_info is 
 		local
-			dir: DIRECTORY
-			dir_name: DIRECTORY_NAME
 			next_window: WIZARD_FINAL_STATE
-			rescued: BOOLEAN
 		do
 			Precursor
+			message_box.show
 			create next_window.make (wizard_information)
 			proceed_with_new_state (next_window)
 		end
@@ -107,64 +112,153 @@ feature -- Basic Operation
 		end
 
 
+feature {NONE} -- Vision2 controls
+
+	references_to_add: EV_MULTI_COLUMN_LIST
+
+	added_references: EV_MULTI_COLUMN_LIST
+
+	add_button: EV_BUTTON
+
+	remove_button: EV_BUTTON
+	
 feature {NONE} -- Implementation
 
 	display_state_text is
 		do
 			title.set_text ("Project Location")
 			subtitle.set_text ("Where should the Eiffel project be created?")
---			message.remove_text
 			message_box.hide
 		end
 
-	references_to_add: EV_MULTI_COLUMN_LIST
-
-	added_references: EV_MULTI_COLUMN_LIST
-	
 	fill_lists is
-			-- 
+			-- Fill 
 		local
-			cur_filename: FILE_NAME
-			assembly_helper: ASSEMBLY_HELPER
-			a_row: EV_MULTI_COLUMN_LIST_ROW
-			corpath_directory_name: STRING
-			corpath_directory: DIRECTORY
-			assembly_files: ARRAYED_LIST [STRING]
+			assemblies: LIST [ASSEMBLY_INFORMATION]
 		do
-			corpath_directory_name := execution_environment.get ("CORPATH")
-			if corpath_directory_name /= Void then
-				if (corpath_directory_name @ corpath_directory_name.count) = Operating_environment.Directory_separator then
-					corpath_directory_name := corpath_directory_name.substring (1, corpath_directory_name.count - 1)
+			assemblies := wizard_information.available_assemblies
+			from
+				assemblies.start
+			until
+				assemblies.after
+			loop
+				references_to_add.extend (build_list_row_from_assembly (assemblies.item))
+				assemblies.forth
+			end
+
+			assemblies := wizard_information.selected_assemblies
+			from
+				assemblies.start
+			until
+				assemblies.after
+			loop
+				added_references.extend (build_list_row_from_assembly (assemblies.item))
+				assemblies.forth
+			end
+		end
+		
+	select_assembly is
+			-- Add the selected assembly in `selected_assemblies'
+		local
+			selected_item: EV_MULTI_COLUMN_LIST_ROW
+			assembly_info: ASSEMBLY_INFORMATION
+		do
+			selected_item := references_to_add.selected_item
+			if selected_item /= Void then
+					-- Modify the multi-column lists
+				references_to_add.prune_all (selected_item)
+				added_references.extend (selected_item)
+				
+					-- Modify the internal data
+				assembly_info ?= selected_item.data
+				check
+					assembly_info_not_void: assembly_info /= Void 
 				end
-				create corpath_directory.make (corpath_directory_name)
-				if corpath_directory.exists then
-					assembly_files := corpath_directory.linear_representation
-					
-					from
-						assembly_files.start
-					until
-						assembly_files.after
-					loop
-						create cur_filename.make_from_string (corpath_directory_name)
-						cur_filename.set_file_name (assembly_files.item) -- "mscorlib.dll")
-						create assembly_helper.make (cur_filename)
-						if assembly_helper.valid_assembly then
-							create a_row
-							a_row.extend (assembly_helper.name)
-							a_row.extend (assembly_helper.version)
-							a_row.extend (cur_filename)
-							references_to_add.extend (a_row)
-						end
-						assembly_files.forth
+				wizard_information.available_assemblies.prune_all (assembly_info)
+				wizard_information.selected_assemblies.extend (assembly_info)
+			end
+		end
+		
+	unselect_assembly is
+			-- Check and remove the selected assembly from `selected_assemblies'
+		local
+			selected_item: EV_MULTI_COLUMN_LIST_ROW
+			assembly_info: ASSEMBLY_INFORMATION
+			warning_dialog: EV_CONFIRMATION_DIALOG
+		do
+			selected_item := added_references.selected_item
+			if selected_item /= Void then
+				assembly_info ?= selected_item.data
+				check
+					assembly_info_not_void: assembly_info /= Void 
+				end
+				
+				if assembly_info.name.is_equal ("mscorlib") then
+					create warning_dialog.make_with_text (
+						"The assembly `mscorlib' contains the Eiffel# kernel and must not be removed.%N%
+						% %N%
+						%Are you sure you want to remove it?")
+					warning_dialog.show_modal_to_window (first_window)
+					if warning_dialog.selected_button.is_equal ("OK") then
+						remove_assembly (selected_item)
 					end
+				else
+					remove_assembly (selected_item)
 				end
 			end
 		end
 
-	execution_environment: EXECUTION_ENVIRONMENT is
-			-- Shared execution environment object
-		once
+	remove_assembly (a_list_item: EV_MULTI_COLUMN_LIST_ROW) is
+			-- Remove the selected assembly from `selected_assemblies'
+		local
+			assembly_info: ASSEMBLY_INFORMATION
+		do
+				-- Modify the multi-column lists
+			added_references.prune_all (a_list_item)
+			references_to_add.extend (a_list_item)
+			
+				-- Modify the internal data
+			assembly_info ?= a_list_item.data
+			check
+				assembly_info_not_void: assembly_info /= Void 
+			end
+			wizard_information.selected_assemblies.prune_all (assembly_info)
+			wizard_information.available_assemblies.extend (assembly_info)
+		end
+		
+	update_buttons_state (a_row: EV_MULTI_COLUMN_LIST_ROW)is
+			-- Update the state of `Add' and `Remove' buttons
+		do
+			synchronize_button_state_with_list_selection (add_button, references_to_add)
+			synchronize_button_state_with_list_selection (remove_button, added_references)
+		end
+		
+	synchronize_button_state_with_list_selection (a_button: EV_BUTTON; a_list: EV_MULTI_COLUMN_LIST) is
+			-- Synchronize `a_button' state with selected state of `a_list'.
+		local
+			selected_item: EV_MULTI_COLUMN_LIST_ROW
+			button_sensitive: BOOLEAN
+		do
+			selected_item := a_list.selected_item
+			button_sensitive := a_button.is_sensitive
+			if selected_item = Void and then button_sensitive then
+				a_button.disable_sensitive
+			elseif selected_item /= Void and then not button_sensitive then
+				a_button.enable_sensitive
+			end
+		end
+		
+	build_list_row_from_assembly (an_assembly_info: ASSEMBLY_INFORMATION): EV_MULTI_COLUMN_LIST_ROW is
+			-- Create an EV_MULTI_COLUMN_LIST_ROW object representing `an_assembly_info'.
+		require
+			valid_assembly_info: an_assembly_info.valid_assembly
+		do
 			create Result
-		end		
+			Result.extend (an_assembly_info.name)
+			Result.extend (an_assembly_info.version)
+			Result.extend (an_assembly_info.path)
+			
+			Result.set_data (an_assembly_info)
+		end
 
 end -- class WIZARD_THIRD_STATE

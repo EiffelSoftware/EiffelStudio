@@ -241,7 +241,8 @@ feature {NONE} -- Implementation
 			if 
 				not is_quick_melt or else 
 				not System_defined or else
-				not Eiffel_ace.successful
+				not Eiffel_ace.successful or else
+				Eiffel_ace.date_has_changed
 			then
 				Eiffel_project.melt
 			else

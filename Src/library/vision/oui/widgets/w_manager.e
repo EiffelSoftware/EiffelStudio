@@ -128,7 +128,6 @@ feature -- Basic operations
 			-- Add `widget' to the list as a child of `parent'.
 		require
 			widget_exists: widget /= Void;
-			implementation_not_created: widget.implementation = Void;
 			a_parent_exists_unless_depth_null: (a_parent = Void) 
 								implies (widget.depth = 0);
 			depth_not_null_unless_parent_exists: (widget.depth > 0) 
@@ -139,6 +138,9 @@ feature -- Basic operations
 			widget_area: like area;
 			moved_widget: WIDGET;
 		do
+			check
+				implementation_not_created: widget.implementation = Void;
+			end
 			if widget.depth = 0 then
 				if count >= array_count then
 					resize (1, array_count + Chunk)

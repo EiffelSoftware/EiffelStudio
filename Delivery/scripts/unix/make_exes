@@ -48,6 +48,7 @@ move gobo_16.tar.gz $EXPORT_DIR/build
 tgz exml
 move exml.tar.gz $EXPORT_DIR/build
 cd ..
+remtrace Enterprise Build
 clean_project
 finalize Ace.unix.ace
 tgz_ccode build
@@ -57,6 +58,21 @@ if [ ! -f build.tar.gz ]; then
 fi
 clean_project
 move build.tar.gz $EXPORT_DIR/build
+
+
+if [ "$MULTIPLE_EDITIONS" ]; then
+	remtrace Free Build
+	clean_project
+	finalize evaluation_ace.unix.ace
+	tgz_ccode build
+	if [ ! -f build.tar.gz ]; then
+		echo Could not finalize a new EiffelBuild
+		CANCEL
+	fi
+	clean_project
+	move build.tar.gz $EXPORT_DIR/build/build_free.tar.gz
+fi
+
 
 if [ ! "$NO_NEW_EC" ]; then
 	remtrace Recompile EiffelStudio

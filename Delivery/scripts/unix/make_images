@@ -53,6 +53,11 @@ if [ "$MULTIPLE_EDITIONS" ]; then
 	chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 	chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
 
+	remtrace copying Build
+	gunzip -c $EXPORT_DIR/build/build_free.gz > $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build
+	chmod a+rx $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build
+	chmod go-w $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build 
+
 	remtrace Building Home CD image
 	mv Eiffel53 cdrom
 	cp cdrom/Eiffel53/INSTALL cdrom	
@@ -68,7 +73,7 @@ chmod a+rx $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec
 chmod go-w $INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/ec 
 
 remtrace copying Build
-gunzip -c $EXPORT_DIR/build/build.gz > $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build
+gunzip -c $EXPORT_DIR/build/build_enterprise.gz > $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build
 chmod a+rx $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build
 chmod go-w $INSTALL_DIR/build/spec/$ISE_PLATFORM/bin/build 
 

@@ -129,9 +129,9 @@ feature {NONE} -- Implementation
 			item_imp: EV_TREE_ITEM_IMP
 		do
 			item_imp ?= v.implementation
-			item_imp.set_tree_widget_imp (Current)
 			C.gtk_widget_show (item_imp.c_object)
 			C.gtk_tree_append (list_widget, item_imp.c_object)
+			item_imp.set_tree_widget_imp (Current)
 		end
 
 	remove_item_from_position (a_position: INTEGER) is
@@ -185,6 +185,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/02/24 20:11:05  king
+--| corrected indentation
+--|
 --| Revision 1.22  2000/02/24 01:50:37  king
 --| Implemented event handling
 --|

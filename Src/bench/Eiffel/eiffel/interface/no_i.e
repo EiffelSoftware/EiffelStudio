@@ -1,7 +1,7 @@
-class NO_I 
+class
+	NO_I 
 
 inherit
-
 	ASSERTION_I
 	
 feature
@@ -9,13 +9,13 @@ feature
 	generation_value: STRING is
 			-- Generation value associated to the current assertion
 			-- level
-		do
-			Result := "AS_NO";
-		end;
+		once
+			Result := "AS_NO"
+		end
 
 	byte_code: CHARACTER is
 		do
 			Result := As_no
-		end;
+		end
 
 end

@@ -1,7 +1,7 @@
-class LOOP_I 
+class
+	LOOP_I 
 
 inherit
-
 	INVARIANT_I
 		redefine
 			check_loop, generation_value, byte_code
@@ -9,23 +9,20 @@ inherit
 	
 feature 
 
-	check_loop: BOOLEAN is
+	check_loop: BOOLEAN is True
 			-- Must loop assertions be checked ?
-		do
-			Result := True;
-		end;
 
 	generation_value: STRING is
 			-- Generation value associated to the current assertion
 			-- level
-		do
-			Result := "AS_LOOP";
-		end; -- generation_value
+		once
+			Result := "AS_LOOP"
+		end
 
 	byte_code: CHARACTER is
 			-- Byte code value
 		do
-			Result := As_loop;
-		end; -- byte_code
+			Result := As_loop
+		end
 
 end

@@ -255,7 +255,7 @@ feature -- Conversion
 			l_current: like Current
 		do
 			from
-				l_current := clone (Current)
+				l_current := twin
 				create Result.make (count)
 			until
 				l_current.is_empty
@@ -279,7 +279,7 @@ feature -- Duplication
 		do
 				--| Extract `n' greatest items of Current.
 			from
-				l_current := clone (Current)
+				l_current := twin
 				create l_tmp.make (n)
 				i := 1
 			until

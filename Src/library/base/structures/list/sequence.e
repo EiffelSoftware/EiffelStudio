@@ -59,7 +59,7 @@ feature -- Element change
 			l: like s
 		do
 			if s = Current then
-				l := clone (s)
+				l := s.twin
 			else
 				l := s
 			end

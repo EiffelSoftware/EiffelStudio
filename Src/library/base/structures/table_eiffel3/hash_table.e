@@ -545,9 +545,9 @@ feature -- Duplication
 			-- Re-initialize from `other'.
 		do
 			standard_copy (other)
-			set_keys (clone (other.keys))
-			set_content (clone (other.content))
-			set_deleted_marks (clone (other.deleted_marks))
+			set_keys (other.keys.twin)
+			set_content (other.content.twin)
+			set_deleted_marks (other.deleted_marks.twin)
 		end
 
 feature {HASH_TABLE} -- Implementation
@@ -731,6 +731,9 @@ feature {NONE} -- Implementation
 invariant
 
 	count_big_enough: 0 <= count
+	content_not_void: content /= Void
+	keys_not_void: keys /= Void
+	deleted_marks_not_void: deleted_marks /= Void
 
 indexing
 

@@ -138,8 +138,7 @@ feature -- Graphical Interface
 			!! edit_menu.make (Interface_names.m_Edit, menu_bar);
 			!! special_menu.make (Interface_names.m_Special, menu_bar);
 			!! window_menu.make (Interface_names.m_Windows, menu_bar);
-			!! help_menu.make (Interface_names.m_Help, menu_bar);
-			menu_bar.set_help_button (help_menu.menu_button);
+			build_help_menu;
 			fill_menus
 		end;
 

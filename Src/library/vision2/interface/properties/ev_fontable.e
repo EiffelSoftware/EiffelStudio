@@ -26,42 +26,32 @@ feature -- Access
 
 feature -- Element change
 
-	set_font (a_font: EV_FONT) is
+	set_font (ft: EV_FONT) is
 			-- Set font label to `font_name'.
 		require
-			exists: not destroyed;
-			a_font_exists: a_font /= Void
-			a_font_specified: a_font.is_specified
+			exists: not destroyed
+			valid_font: is_valid (ft)
 		do
-			implementation.set_font (a_font)
+			implementation.set_font (ft)
 		end
 
-	set_font_name (a_font_name: STRING) is
-			-- Set font label to `a_font_name'.
+	set_font_name (str: STRING) is
+			-- Set font label to `str'.
 		require
-			exists: not destroyed;
-			a_font_name_exists: a_font_name /= Void
+			exists: not destroyed
+			valid_name: str /= Void
 		local
-			a_font: EV_FONT
+			ft: EV_FONT
 		do
-			!! a_font.make
-			a_font.set_name (a_font_name)
-			set_font (a_font)
+			!! ft.make
+			ft.set_name (str)
+			set_font (ft)
 		end
 
 feature {NONE} -- Implementation
 
-	set_font_imp (an_implementation: EV_FONTABLE_I) is
-			-- Set `implementation' to `an_implementation'.
-		require
-			an_implementation_exists: an_implementation /= Void
-		do
-			implementation := an_implementation
-		end
-
 	implementation: EV_FONTABLE_I
 			-- Implementation of widget
-
 
 end -- class EV_FONTABLE
 

@@ -122,7 +122,9 @@ feature -- Access
 	top_level_window: EV_WINDOW is
 			-- Top level window that contains `Current'.
 		do
-			Result ?= top_level_window_imp.interface
+			if top_level_window_imp /= Void then
+				Result ?= top_level_window_imp.interface
+			end
 		end
 
 	Default_parent: EV_INTERNAL_SILLY_WINDOW_IMP is

@@ -56,7 +56,6 @@ feature -- Basic Operation
 		local
 			temp_file_name: FILE_NAME
 			directory: DIRECTORY
-			layout_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 			create temp_file_name.make_from_string (generated_path.string)
 			temp_file_name.extend (directory_name)	
@@ -74,8 +73,6 @@ feature -- Basic Operation
 	execute is
 			-- Execute `Current'.
 		local
-			temp_file_name: FILE_NAME
-			directory: DIRECTORY
 			layout_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
 			create layout_item.make_with_name (directory_name)

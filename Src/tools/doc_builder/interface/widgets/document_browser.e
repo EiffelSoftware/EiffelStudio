@@ -226,6 +226,6 @@ feature {NONE} -- Implementation
 			end
 		end				
 	
-	events: DOCUMENT_BROWSER_EVENTS
+--	events: DOCUMENT_BROWSER_EVENTS
 
 end -- class DOCUMENT_BROWSER

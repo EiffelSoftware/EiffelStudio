@@ -9,22 +9,33 @@ inherit
 	SHARED_CODE_FILES;
 	SHARED_BYTE_CONTEXT;
 	SHARED_GENERATION
+	SHARED_WORKBENCH
+
+feature -- Initialization
+
+	init (buffer: GENERATION_BUFFER) is
+			-- Initialization
+		do
+			file_counter_cell.set_item (1)
+			current_buffer := buffer
+			current_buffer.clear_all
+		ensure
+			file_counter_set: file_counter = 1
+		end;
 	
-feature
+feature -- Access
+
+	file_counter: INTEGER is
+			-- Count of generated files.
+		do
+			Result := file_counter_cell.item
+		end
 
 	size: INTEGER;
 			-- Estimation of the size of the current generated file
 
-	file_counter: INTEGER;
-			-- Count of generated files
-
 	current_buffer: GENERATION_BUFFER;
 			-- Current buffer
-
-	infix_file_name: STRING is
-			-- Infix string for file names
-		deferred
-		end;
 
 	postfix_file_name: STRING is
 			-- Postfix string for file names;
@@ -34,27 +45,21 @@ feature
 	Size_limit: INTEGER is 30000;
 			-- Limit of size for each generated file
 
-	init (buffer: GENERATION_BUFFER) is
-			-- Initialization
-		do
-			file_counter := 1;
-			current_buffer := buffer
-			current_buffer.clear_all
-			init_file;
-		end;
 
 	new_file: INDENT_FILE is
 			-- New file for generation
 		local
 			temp: STRING
+			n, packet_number: INTEGER
 		do
-			temp := clone (infix_file_name);
-			temp.append_integer (file_counter);
-			!! Result.make_open_write (final_file_name (temp, postfix_file_name))
-			file_counter := file_counter + 1;
+			temp := clone (Epoly);
+			n := file_counter
+			temp.append_integer (n);
+			packet_number := n // System.makefile_generator.System_packet_number + 2
+			!! Result.make_open_write (final_file_name (temp, postfix_file_name, packet_number))
 		end;
 
-	init_file is
+	init_file (file: INDENT_FILE) is
 			-- Initialization of new file
 		deferred
 		end; -- init_file
@@ -89,7 +94,6 @@ feature
 			if size > Size_limit then
 				size := 0;
 				finish
-				init_file;
 			end;
 		end;
 
@@ -101,9 +105,11 @@ feature
 			file: INDENT_FILE
 		do
 			file := new_file
+			init_file (file)
 			file.put_string (current_buffer)
 			file.close
 			finish_file;
+			increment_file_counter
 		end;
 
 	finish_file is
@@ -112,5 +118,23 @@ feature
 				-- Clear buffer for Current generation
 			current_buffer.clear_all
 		end;
+
+feature -- Settings
+
+	increment_file_counter is
+			-- Increment `file_counter' from 1.
+		do
+			file_counter_cell.set_item (file_counter + 1)
+		ensure
+			file_counter_incremented: file_counter = (old file_counter + 1)
+		end
+
+feature {NONE} -- Implementation
+
+	file_counter_cell: INTEGER_REF is
+			-- Shared value for file name generation in final mode only.
+		once
+			create Result
+		end
 
 end

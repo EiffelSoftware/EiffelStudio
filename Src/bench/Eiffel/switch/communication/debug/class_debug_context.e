@@ -60,9 +60,14 @@ feature {NONE}
 		local
 			bp: BREAKPOINT_ITEM
 		do
-			create bp.make (current_e_feature, breakpoint_index)
-			added_breakpoint := True
-			text.add (bp)
+			if
+				current_e_feature /= Void and then
+				current_e_feature.is_debuggable
+			then
+				create bp.make (current_e_feature, breakpoint_index)
+				added_breakpoint := True
+				text.add (bp)
+			end
 			breakpoint_index := breakpoint_index + 1
 		end
 

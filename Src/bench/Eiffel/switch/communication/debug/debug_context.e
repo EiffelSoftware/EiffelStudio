@@ -57,9 +57,11 @@ feature {NONE}
 			bp: BREAKPOINT_ITEM
 		do
 			breakpoint_index := breakpoint_index + 1
-			create bp.make (e_feature, breakpoint_index)
-			added_breakpoint := True
-			text.add (bp)
+			if e_feature /= Void and then e_feature.is_debuggable then
+				create bp.make (e_feature, breakpoint_index)
+				added_breakpoint := True
+				text.add (bp)
+			end
 		end
 
 	emit_tabs is

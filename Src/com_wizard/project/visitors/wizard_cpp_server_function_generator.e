@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 
 				Result.append (arg_name)
 			elseif is_boolean (visitor.vt_type) then
-				Result.append (visitor.cecil_type)
+				Result.append (Eif_boolean)
 				Result.append (Space)
 				Result.append (Tmp_clause)
 				Result.append (arg_name)

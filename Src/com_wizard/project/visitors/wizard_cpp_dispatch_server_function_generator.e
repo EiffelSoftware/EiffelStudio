@@ -83,10 +83,17 @@ feature {NONE} -- Implementation
 					else
 						variables.append (in_variable_set_up (func_desc.arguments.item.name, visitor))
 						variables.append (New_line_tab)
-						if visitor.is_basic_type or is_boolean (visitor.vt_type) then
+						if visitor.is_basic_type then
 							arguments.append (Comma_space)
 							arguments.append (Open_parenthesis)
 							arguments.append (visitor.cecil_type)
+							arguments.append (Close_parenthesis)
+							arguments.append (Tmp_clause)
+							arguments.append (func_desc.arguments.item.name)
+						elseif is_boolean (visitor.vt_type)  then
+							arguments.append (Comma_space)
+							arguments.append (Open_parenthesis)
+							arguments.append (Eif_boolean)
 							arguments.append (Close_parenthesis)
 							arguments.append (Tmp_clause)
 							arguments.append (func_desc.arguments.item.name)

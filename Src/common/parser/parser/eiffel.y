@@ -109,7 +109,7 @@ creation
 %type <OPERAND_AS>			Delayed_actual
 %type <PARENT_AS>			Parent Parent_clause
 %type <PRECURSOR_AS>		A_precursor
-%type <STATIC_ACCESS_AS>	A_static_call
+%type <STATIC_ACCESS_AS>	A_static_call A_static_constant_call
 %type <REAL_AS>				Real_constant
 %type <RENAME_AS>			Rename_pair
 %type <REQUIRE_AS>			Precondition
@@ -1262,24 +1262,37 @@ Choices: Choice
 
 Choice: Integer_constant
 			{ $$ := new_interval_as ($1, Void) }
-	|	Character_constant
-			{ $$ := new_interval_as ($1, Void) }
-	|	Identifier
-			{ $$ := new_interval_as ($1, Void) }
 	|	Integer_constant TE_DOTDOT Integer_constant
 			{ $$ := new_interval_as ($1, $3) }
-	|	Integer_constant TE_DOTDOT Identifier
+	|	Character_constant
+			{ $$ := new_interval_as ($1, Void) }
+	|	Character_constant TE_DOTDOT Character_constant
+			{ $$ := new_interval_as ($1, $3) }
+	|	Identifier
+			{ $$ := new_interval_as ($1, Void) }
+	|	Identifier TE_DOTDOT Identifier
 			{ $$ := new_interval_as ($1, $3) }
 	|	Identifier TE_DOTDOT Integer_constant
 			{ $$ := new_interval_as ($1, $3) }
-	|	Identifier TE_DOTDOT Identifier
-			{ $$ := new_interval_as ($1, $3) }
-	|	Character_constant TE_DOTDOT Character_constant
+	|	Integer_constant TE_DOTDOT Identifier
 			{ $$ := new_interval_as ($1, $3) }
 	|	Identifier TE_DOTDOT Character_constant
 			{ $$ := new_interval_as ($1, $3) }
 	|	Character_constant TE_DOTDOT Identifier
 			{ $$ := new_interval_as ($1, $3) }
+	|	A_static_constant_call
+			{ $$ := new_interval_as ($1, Void) }
+	|	A_static_constant_call TE_DOTDOT A_static_constant_call
+			{ $$ := new_interval_as ($1, $3) }
+	|	A_static_constant_call TE_DOTDOT Integer_constant
+			{ $$ := new_interval_as ($1, $3) }
+	|	Integer_constant TE_DOTDOT A_static_constant_call
+			{ $$ := new_interval_as ($1, $3) }
+	|	A_static_constant_call TE_DOTDOT Character_constant
+			{ $$ := new_interval_as ($1, $3) }
+	|	Character_constant TE_DOTDOT A_static_constant_call
+			{ $$ := new_interval_as ($1, $3) }
+
 	;
 
 Inspect_default: -- Empty
@@ -1745,6 +1758,13 @@ A_static_call:
 		TE_FEATURE TE_LCURLY Clickable_identifier TE_RCURLY TE_DOT Identifier Parameters
 			{
 				$$ := new_static_access_as (new_class_type ($3, Void), $6, $7);
+			}
+	;
+
+A_static_constant_call:
+		TE_FEATURE TE_LCURLY Clickable_identifier TE_RCURLY TE_DOT Identifier
+			{
+				$$ := new_static_access_as (new_class_type ($3, Void), $6, Void);
 			}
 	;
 

@@ -186,6 +186,7 @@ feature
 			int_const_val: INT_CONST_VAL_B
 			int_bound: INTEGER_AS
 			id: ID_AS
+			static: STATIC_ACCESS_AS
 			constant_i: CONSTANT_I
 			integer_value: INT_VALUE_I
 			constant_name: STRING
@@ -207,7 +208,12 @@ feature
 				end;
 			else
 				id ?= bound;
-				constant_i ?= feature_table.item (id);
+				if id /= Void then
+					constant_i ?= feature_table.item (id);
+				else
+					static ?= bound
+					constant_i := static.associated_constant
+				end
 				integer_value ?= constant_i.value;
 				int_value := integer_value.int_val;
 				!!int_const_val.make (int_value, constant_i);

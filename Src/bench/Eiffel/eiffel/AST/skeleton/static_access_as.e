@@ -10,13 +10,22 @@ class STATIC_ACCESS_AS
 inherit
 	ACCESS_FEAT_AS
 		rename
-			initialize as feat_initialize
+			initialize as feat_initialize,
+			associated_class as assoc_class
 		export
 			{NONE} feat_initialize
 		redefine
 			type_check, is_equivalent, simple_format,
 			valid_feature, report_error_for_feature,
-			associated_class, byte_node, context_last_type
+			assoc_class, byte_node, context_last_type
+		end
+		
+	ATOMIC_AS
+		undefine
+			fill_calls_list, replicate, format
+		redefine
+			type_check, byte_node,
+			good_integer, good_character, make_integer, make_character
 		end
 
 create
@@ -58,12 +67,10 @@ feature -- Comparison
 
 feature -- Query
 
-	associated_class (a_constraint: TYPE_A): CLASS_C is
+	associated_class: CLASS_C is
 			-- Associated CLASS_C object to `class_type'.
-		require else
-			a_constraint_can_be_void: True
 		do
-			Result := context_last_type.associated_class
+			Result := assoc_class (Void)
 		end
 
 	context_last_type: TYPE_A is
@@ -78,6 +85,19 @@ feature -- Query
 			Result := class_type_as.actual_type
 		end
 
+	associated_constant: CONSTANT_I is
+			-- Associated constant if static access is performed on
+			-- constant, otherwise Void.
+		do
+			Result ?= associated_feature
+		end
+
+	associated_feature: FEATURE_I is
+			-- Associated feature.
+		do
+			Result := context_last_type.associated_class.feature_table.item (feature_name)
+		end
+		
 feature -- Type check, byte code and dead code removal
 
 	type_check is
@@ -153,22 +173,82 @@ feature -- Type check, byte code and dead code removal
 				ext_not_void: ext /= Void
 			end
 			ext.enable_static_call
-			ext.set_written_in (associated_class (Void).class_id)
+			ext.set_written_in (associated_class.class_id)
 			cl_type_i ?= class_type.actual_type.type_i
 			ext.set_static_class_type (cl_type_i)
 		end
 		
+feature -- Conveniences
+
+	good_integer: BOOLEAN is
+			-- Is the atomic a good integer bound for multi-branch ?
+		local
+			constant_i: CONSTANT_I
+		do
+			constant_i := associated_constant
+			Result := constant_i /= Void and then constant_i.value.is_integer
+		end
+
+	good_character: BOOLEAN is
+			-- Is the atomic a good character bound for multi-branch ?
+		local
+			constant_i: CONSTANT_I
+		do
+			constant_i := associated_constant
+			Result := constant_i /= Void and then constant_i.value.is_character
+		end
+
+	make_integer: INT_CONST_VAL_B is
+			-- Integer value
+		local
+			constant_i: CONSTANT_I
+			integer_value: INT_VALUE_I
+		do
+			constant_i := associated_constant
+			integer_value ?= constant_i.value
+			create Result.make (integer_value.int_val, constant_i)
+		end
+
+	make_character: CHAR_CONST_VAL_B is
+			-- Character value
+		local
+			constant_i: CONSTANT_I
+			char_value: CHAR_VALUE_I
+		do
+			constant_i := associated_constant
+			char_value ?= constant_i.value
+			create Result.make (char_value.char_val, constant_i)
+		end
+		
 feature {AST_EIFFEL} -- Output
 
+	string_value: STRING is
+			-- Printed value of Current
+		do
+			check
+				not_implemented: False
+			end
+		end
+		
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
 			ctxt.put_text_item (ti_L_curly)
-			ctxt.put_class_name (associated_class (Void).name)
+			ctxt.put_class_name (associated_class.name)
 			ctxt.put_text_item (ti_R_curly)
 			ctxt.put_text_item (ti_space)
 
 			Precursor {ACCESS_FEAT_AS} (ctxt)
+		end
+
+feature {NONE} -- Implementation
+
+	assoc_class (a_constraint: TYPE_A): CLASS_C is
+			-- Associated CLASS_C object to `class_type'.
+		require else
+			a_constraint_can_be_void: True
+		do
+			Result := context_last_type.associated_class
 		end
 
 invariant

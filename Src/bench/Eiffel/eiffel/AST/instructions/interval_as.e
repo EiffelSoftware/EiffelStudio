@@ -41,7 +41,7 @@ feature -- Attributes
 	upper: ATOMIC_AS
 			-- Upper bound
 			-- Void if constant rather than interval
-
+			
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -56,8 +56,10 @@ feature -- Type check and byte code
 	check_for_veen (at_as: ATOMIC_AS) is
 		local
 			id_as: ID_AS
+			static: STATIC_ACCESS_AS
 			veen: VEEN
 			vomb2: VOMB2
+			vomb6: VOMB6
 		do
 			id_as ?= at_as
 			if (id_as /= Void) then
@@ -78,6 +80,26 @@ feature -- Type check and byte code
 					context.init_error (veen)
 					veen.set_identifier (id_as)
 					Error_handler.insert_error (veen)
+				end
+			else
+				static ?= at_as
+				if static /= Void then
+					static.type_check
+					Error_handler.checksum
+					if not static.associated_feature.is_constant then
+							-- Not a valid constant
+						create vomb6
+						context.init_error (vomb6)
+						vomb6.set_unique_feature (static.associated_feature)
+						vomb6.set_written_class (static.associated_class)
+						Error_handler.insert_error (vomb6)
+					else
+							-- Since we do not need the CONSTANT_B object,
+							-- we simply remove it from access_line. Not
+							-- doing so, shift the code generation of one
+							-- instruction.
+						context.access_line.remove
+					end
 				end
 			end
 		end

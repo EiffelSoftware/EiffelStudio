@@ -8,7 +8,8 @@ indexing
 class TOOLBAR_CMD
 
 inherit
-	COMMAND
+	COMMAND;
+	SET_WINDOW_ATTRIBUTES
 
 creation
 	make
@@ -35,12 +36,20 @@ feature -- Execution
 			sep: SEPARATOR;
 			screen: SCREEN
 		do
+			popup := tool.popup_cell.item;
+			if popup /= Void then
+				if argument = destroy_action or else 
+					popup.parent /= tool.toolbar_parent 
+				then
+					tool.popup_cell.put (Void);
+					popup.destroy;
+					popup := Void
+				end
+			end;
 			screen := tool.toolbar_parent.screen;
-
-			if tool.popup_cell.item /= Void and then tool.popup_cell.item.parent = tool.toolbar_parent then
-				popup := tool.popup_cell.item
-			else
+			if popup = Void then
 				!! popup.make ("", tool.toolbar_parent);
+				popup.set_action ("<Unmap>", Current, destroy_action);
 				popup.set_title ("Toolbars");
 				!! sep.make ("", popup);
 
@@ -66,6 +75,7 @@ feature -- Execution
 					end
 					bars.back
 				end;
+				set_composite_attributes (popup);
 				tool.popup_cell.put (popup)
 			end;
 			popup.set_x_y (screen.x, screen.y);
@@ -76,5 +86,10 @@ feature {NONE} -- Properties
 
 	tool: TOOL_W
 			-- Tool window that holds the popup.
+
+	destroy_action: ANY is
+		once
+			!! Result
+		end
 
 end -- class TOOLBAR_CMD

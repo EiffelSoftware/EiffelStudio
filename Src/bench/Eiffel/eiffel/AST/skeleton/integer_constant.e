@@ -177,14 +177,32 @@ feature -- Conveniences
 			-- build an INTEGER_64.
 		require
 			valid_size: size = 64
+		local
+			l_lower_64: INTEGER_64
+			l_lower: INTEGER
 		do
-				-- FIXME: Manu 12/24/2001: lower needs to be converted to
-				-- an unsigned INTEGER_32 before conversion to INTEGER_64
-				-- as we don't want the bit sign to be marked in the conversion
-				-- as it is `upper' that holds the sign of the resulting
-				-- INTEGER_64. We need to have UNSIGNED_INTEGER_32 to do
-				-- this.
-			Result := (upper.to_integer_64 |<< 32) | lower.to_integer_64
+				-- Since we are converting `lower' to an INTEGER_64, we do not want the
+				-- sign bit to be reflected on the INTEGER_64 value. So first we need
+				-- to detect it and if it is there, we are going to remove it, convert
+				-- then to an INTEGER_64 and then add back the missing bit to the new
+				-- INTEGER_64 value.
+			
+			l_lower := lower
+			
+			if (l_lower & 0x80000000 = 0x80000000) then
+					-- Let's clear the sign bit.
+				l_lower := l_lower & 0x7FFFFFFF
+					
+					-- Get the INTEGER_64 value and restore the bit sign at
+					-- the appropriate location in `lower_64'.
+				l_lower_64 := l_lower.to_integer_64 | 0x0000000080000000
+			else
+					-- `lower' is not negative we can safely
+					-- convert it to an INTEGER_64.
+				l_lower_64 := l_lower.to_integer_64
+			end
+			
+			Result := (upper.to_integer_64 |<< 32) | l_lower_64
 		end
 
 	is_propagation_equivalent (other: like Current): BOOLEAN is

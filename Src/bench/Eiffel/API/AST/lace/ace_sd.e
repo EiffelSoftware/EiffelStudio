@@ -413,8 +413,11 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 		local
 			l_assembly: ASSEMBLY_SD
 			l_compiled_assembly, l_old_assembly: ASSEMBLY_I
+			l_precomp_assembly: ASSEMBLY_I
 			l_new_assemblies: ARRAYED_LIST [ASSEMBLY_I]
 		do
+				-- FIXME: Manu we should raise an error before processing
+				-- assemblies, if we are not in a  .NET code generation
 			if assemblies /= Void then
 					-- Read available assemblies from Ace file.
 				from
@@ -430,15 +433,19 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					l_old_assembly ?= Lace.old_universe.
 						cluster_of_name (l_compiled_assembly.cluster_name)
 						
+					l_precomp_assembly ?= Lace.Universe.cluster_of_name
+						(l_compiled_assembly.cluster_name)
+						
 						-- Add it to top cluster list of system and to universe.
-
 					if l_old_assembly = Void then
 						l_new_assemblies.extend (l_compiled_assembly)
 						Eiffel_system.add_sub_cluster (l_compiled_assembly)
 						Universe.insert_cluster (l_compiled_assembly)
 					else
-						Eiffel_system.add_sub_cluster (l_old_assembly)
-						Universe.insert_cluster (l_old_assembly)
+						if l_precomp_assembly = Void or else not l_precomp_assembly.is_precompiled then
+							Eiffel_system.add_sub_cluster (l_old_assembly)
+							Universe.insert_cluster (l_old_assembly)
+						end
 					end
 					assemblies.forth
 				end

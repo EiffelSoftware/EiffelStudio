@@ -14,8 +14,15 @@ inherit
 
 feature -- Element change
 	
-	add_item (an_item: EV_MENU_ITEM_IMP) is
-			-- Add `an_item' into container.
+	add_item (item_imp: EV_MENU_ITEM_IMP) is
+			-- Add `item_imp' into container.
+		require
+			exist: not destroyed
+		deferred
+		end
+
+	remove_item (item_imp: EV_MENU_ITEM_IMP) is
+			-- Add `item_imp' into container.
 		require
 			exist: not destroyed
 		deferred

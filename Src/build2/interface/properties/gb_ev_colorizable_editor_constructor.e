@@ -268,62 +268,6 @@ feature {NONE} -- Implementation
 			update_editors
 			update_foreground_display
 		end
-		
-	build_string_from_color (color: EV_COLOR): STRING is
-			-- `Result' is string representation of `color'.
-		require
-			color_not_void: color /= Void
-		do
-			create Result.make (0)
-			if color.red_8_bit.out.count < 3 then
-				Result := Result + add_leading_zeros (3 - color.red_8_bit.out.count)
-			end
-			Result.append_string (color.red_8_bit.out)
-			if color.green_8_bit.out.count < 3 then
-				Result := Result + add_leading_zeros (3 - color.green_8_bit.out.count)
-			end
-			Result.append_string (color.green_8_bit.out)
-			if color.blue_8_bit.out.count < 3 then
-				Result := Result + add_leading_zeros (3 - color.blue_8_bit.out.count)
-			end
-			Result.append_string (color.blue_8_bit.out)
-		end
-		
-	build_color_from_string (a_string: STRING): EV_COLOR is
-			-- `Result' is an EV_COLOR built from contents of `a_string'.
-		require
-			string_correct_length: a_string.count = 9
-			a_string_is_integer: a_string.is_integer
-		do
-			create Result
-			Result.set_rgb_with_8_bit (a_string.substring (1, 3).to_integer,
-				a_string.substring (4, 6).to_integer,
-				a_string.substring (7, 9).to_integer)
-		ensure
-			Result_not_void: Result /= Void
-		end
-		
-		
-	add_leading_zeros (count: INTEGER): STRING is
-			-- `Result' is `a_string' with `count' '0's added.
-		require
-			count_ok: count > 0 and count <= 2
-		local
-			counter: INTEGER
-		do
-			create Result.make (0)
-			from
-				counter := 0
-			until
-				counter = count
-			loop
-				Result.append_string ("0")
-				counter := counter + 1
-			end
-		ensure
-			Result_not_void: Result /= Void
-			Result_correct_length: Result.count = count
-		end
 
 	foreground_color: EV_COLOR
 	background_color: EV_COLOR

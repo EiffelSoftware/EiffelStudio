@@ -152,7 +152,7 @@ system_dynlib: "%T/def:$(DEF_FILE) \%N%
 	%%T/OUT:$(SYSTEM_IN_DYNAMIC_LIB) /IMPLIB:dll_$appl.lib $appl.res%N"
 
 il_system_compilation_line: "%
-	%$(IL_SYSTEM): $(OBJECTS) $(EXTERNALS) $(IL_RESOURCE).res%N%
+	%$(IL_SYSTEM): $(OBJECTS) $(IL_RESOURCE).res%N%
 	%%T$(FILE_EXIST) $(IL_SYSTEM) $(RM) $(IL_SYSTEM) %N%
 	%%T$(SHAREDLINK) $(LDSHAREDFLAGS) -out:$(IL_SYSTEM) $(OBJECTS) $(SHAREDLIBS) $(EXTERNALS) $(IL_RESOURCE).res %N%
 	%%T$(RM) $(OBJECTS)%N%

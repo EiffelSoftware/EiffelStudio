@@ -22,25 +22,47 @@ inherit
 
 creation
 
-	make
+	make, make_unmanaged
 	
-feature -- Creation 
+feature {NONE} -- Creation 
 
 	make (a_name: STRING; a_parent: COMPOSITE) is
 			-- Create a label with `a_name' as identifier,
 			-- `a_parent' as parent and call `set_default'.
 		require
-			Valid_name: a_name /= Void;
-			Valid_parent: a_parent /= Void
+			valid_name: a_name /= Void;
+			valid_parent: a_parent /= Void
+		do
+			create_ev_widget (a_name, a_parent, True);
+		ensure
+			parent_set: parent = a_parent;
+			identifier_set: identifier.is_equal (a_name);
+			managed: managed
+		end;
+
+	make_unmanaged (a_name: STRING; a_parent: COMPOSITE) is
+			-- Create a unmanaged label with `a_name' as identifier,
+			-- `a_parent' as parent and call `set_default'.
+		require
+			valid_name: a_name /= Void;
+			valid_parent: a_parent /= Void
+		do
+			create_ev_widget (a_name, a_parent, False);
+		ensure
+			parent_set: parent = a_parent;
+			identifier_set: identifier.is_equal (a_name);
+			not_managed: not managed
+		end;
+
+	create_ev_widget (a_name: STRING; a_parent: COMPOSITE; man: BOOLEAN) is
+			-- Create a label with `a_name' as identifier,
+			-- `a_parent' as parent and call `set_default'.
 		do
 			depth := a_parent.depth+1;
 			widget_manager.new (Current, a_parent);
 			identifier:= clone (a_name);
-			implementation:= toolkit.label (Current);
+			implementation:= toolkit.label (Current, man);
 			set_default
-		ensure
-			Parent_set: parent = a_parent;
-			Identifier_set: identifier.is_equal (a_name)
 		end;
 
 feature -- Resizing policies
@@ -62,9 +84,15 @@ feature -- Resizing policies
 feature -- Text 
 	
 	set_center_alignment is
-			-- Set text alignment of current label to center
+			-- Set text alignment of current label to center.
 		do
 			implementation.set_center_alignment
+		end;
+
+	set_right_alignment is
+			-- Set text alignment of current label to right.
+		do
+			implementation.set_right_alignment
 		end;
 	
 	set_left_alignment is

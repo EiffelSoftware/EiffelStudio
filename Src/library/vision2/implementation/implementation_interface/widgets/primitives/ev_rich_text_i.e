@@ -338,17 +338,32 @@ feature -- Status setting
 			buffer: EV_RICH_TEXT_BUFFERING_STRUCTURES_I
 			last_counter: INTEGER
 			text_file: PLAIN_TEXT_FILE
-			start_indexes: ARRAYED_LIST [INTEGER]
+			paragraph_indexes: ARRAYED_LIST [INTEGER]
 			current_lower_line_index: INTEGER
-			current_upper_line_index: INTEGER
+			last_paragraph_change: INTEGER
+			paragraph_formats: ARRAYED_LIST [STRING]
+			current_paragraph_index: INTEGER
+			paragraphs_exhausted: BOOLEAN
 		do
 			create buffer.set_rich_text (Current)
 			initialize_for_saving
 			l_text := text
 			l_text_length := l_text.count
-			start_indexes := buffer.start_line_indexes (l_text)
+			
+				-- Now retreive paragraph information for `l_text'.
+			buffer.generate_paragraph_information (l_text)
+			paragraph_indexes := buffer.paragraph_start_indexes
+			paragraph_formats := buffer.paragraph_formats
+
 			current_lower_line_index := 1
-			current_upper_line_index := 2
+			last_paragraph_change := 1
+			buffer.internal_text.append (paragraph_formats.i_th (current_lower_line_index))
+			if paragraph_formats.count = 1 then
+					-- If there was no change of paragraph in the document, we must
+					-- flag that we have exhausted all paragraphs.
+				paragraphs_exhausted := True
+			end
+			current_lower_line_index := current_lower_line_index + 1
 			from
 				counter := 1
 				last_counter := 1
@@ -357,20 +372,47 @@ feature -- Status setting
 			loop
 					-- Retrieve next character change index.
 				counter := next_change_of_character (counter)
-				if counter > start_indexes.i_th (current_upper_line_index) then
-					if paragraph_format_contiguous (current_lower_line_index, current_upper_line_index) then
-						current_upper_line_index := current_upper_line_index + 1
-					else
-						do_nothing
-					end
-				end
 				
 					-- Retrieve last character format found while executing `next_change_of_character'.
 				current_format := last_format
+				current_paragraph_index := paragraph_indexes.i_th (current_lower_line_index)
+				if counter > current_paragraph_index and not paragraphs_exhausted then
+					if current_paragraph_index /= last_counter then
+						buffer.append_text_for_rtf (l_text.substring (last_counter, current_paragraph_index - 1), current_format)
+						last_counter := current_paragraph_index
+					end
+					from
+					until
+						current_lower_line_index + 1 > paragraph_formats.count or else paragraph_indexes.i_th (current_lower_line_index) >= counter
+					loop
+						buffer.internal_text.append (paragraph_formats.i_th (current_lower_line_index))
+						current_lower_line_index := current_lower_line_index + 1
+						current_paragraph_index := paragraph_indexes.i_th (current_lower_line_index).min (counter)
+						buffer.append_text_for_rtf (l_text.substring (paragraph_indexes.i_th (current_lower_line_index - 1), current_paragraph_index - 1), current_format)
+						last_counter := current_paragraph_index
+					end
+					if counter > paragraph_indexes.i_th (current_lower_line_index) then
+						current_lower_line_index := current_lower_line_index + 1	
+					end
+					if current_lower_line_index > paragraph_indexes.count then
+							-- We have now exhausted all paragraph formatting, so set this flag this as so.
+						paragraphs_exhausted := True
+							-- Now write the final paragraph format into the document
+						buffer.internal_text.append (paragraph_formats.i_th (paragraph_formats.count))
+						
+							-- It is possible that we have just exhausted all paragraph formats, but still not encountered the final
+							-- characters in the text.
+						if last_counter < counter then
+							buffer.append_text_for_rtf (l_text.substring (last_counter, counter - 1), current_format)
+							last_counter := counter
+						end
+					end
+				else	
 				
-					-- Now process based on this character format spanning `counter' positions.
-				buffer.append_text_for_rtf (l_text.substring (last_counter, counter - 1), current_format)
-				last_counter := counter
+						-- Now process based on this character format spanning `counter' positions.
+					buffer.append_text_for_rtf (l_text.substring (last_counter, (counter - 1).min (l_text.count)), current_format)
+					last_counter := counter
+				end
 			end
 			buffer.generate_complete_rtf_from_buffering
 			complete_saving

@@ -47,6 +47,7 @@ feature -- Access
 			-- Is `a_row' a child of Current?
 		require
 			a_row_not_void: a_row /= Void
+			is_parented: parent /= Void
 		do
 			to_implement ("EV_GRID_ROW.has_subrow")
 		ensure
@@ -74,6 +75,7 @@ feature -- Access
 			-- Item at `i'-th column
 		require
 			i_within_bounds: i > 0 and i <= count
+			is_parented: parent /= Void
 		do
 			to_implement ("EV_GRID_ROW.item")
 		ensure
@@ -82,6 +84,8 @@ feature -- Access
 		
 	selected_items: ARRAYED_LIST [EV_GRID_ITEM] is
 			-- All items selected in `Current'.
+		require
+			is_parented: parent /= Void
 		do
 			to_implement ("EV_GRID_ROW.selected_items")
 		ensure
@@ -96,6 +100,8 @@ feature -- Access
 		
 	height: INTEGER is
 			-- Height of `Current'.
+		require
+			is_parented: parent /= Void
 		do
 			to_implement ("EV_GRID_ROW.height")
 		ensure
@@ -140,6 +146,7 @@ feature -- Status setting
 			-- Display all subrows of `Current'.
 		require
 			has_subrows: subrow_count > 0
+			is_parented: parent /= Void
 		do
 			to_implement ("EV_GRID_ROW.expand")
 		ensure
@@ -148,6 +155,8 @@ feature -- Status setting
 		
 	collapse is
 			-- Hide all subrows of `Current'.
+		require
+			is_parented: parent /= Void
 		do
 			to_implement ("EV_GRID_ROW.collapse")
 		ensure
@@ -156,6 +165,8 @@ feature -- Status setting
 		
 	set_height (a_height: INTEGER) is
 			-- Assign `a_height' to `height'.
+		require
+			is_parented: parent /= Void
 		do
 			to_implement ("EV_GRID_ROW.set_height")
 		ensure
@@ -169,6 +180,7 @@ feature -- Element change
 		require
 			i_positive: i > 0
 			a_item_not_void: a_item /= Void
+			is_parented: parent /= Void
 		do
 			to_implement ("EV_GRID_ROW.set_item")
 		ensure
@@ -178,6 +190,7 @@ feature -- Element change
 	add_subrow (a_row: EV_GRID_ROW) is
 			-- Make `a_row' a child of Current
 		require
+			is_parented: parent /= Void
 			a_row_not_void: a_row /= Void
 			a_row_is_parented: a_row.parent /= Void
 			a_row_is_not_current: a_row /= Current
@@ -199,6 +212,7 @@ feature -- Element change
 	set_background_color (a_color: EV_COLOR) is
 			-- Set `a_color' to all items in Current
 		require
+			is_parented: parent /= Void
 			a_color_not_void: a_color /= Void
 		do
 			to_implement ("EV_GRID_ROW.set_background_color")
@@ -206,17 +220,19 @@ feature -- Element change
 			--color_set: forall (item(i).background_color  = a_color)
 		end
 
-feature {EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
+feature {EV_GRID_I} -- Implementation
 
-	set_parent_grid_i (a_parent_grid_i: EV_GRID_I) is
-			-- Set `parent_grid_i' to `a_parent_grid_i'
+	remove_parent_grid_i  is
+			-- Set `parent_grid_i' to `Void.
 		require
-			a_parent_grid_i_not_void: a_parent_grid_i /= Void
+			is_parented: parent /= Void
 		do
-			parent_grid_i := a_parent_grid_i
+			parent_grid_i := Void
 		ensure
-			parent_grid_i_set: parent_grid_i = a_parent_grid_i
+			parent_grid_i_unset: parent_grid_i = Void
 		end
+
+feature {EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 
 	parent_grid_i: EV_GRID_I
 		-- Grid that `Current' resides in.

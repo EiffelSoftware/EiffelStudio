@@ -39,8 +39,7 @@ feature -- Output
 	build_explain (st: STRUCTURED_TEXT) is
 		do
 			st.add_string ("Creation feature: ");
-			creation_feature.append_signature (st,
-				creation_feature.written_class);
+			creation_feature.append_signature (st);
 			st.add_new_line;
 		end;
 

@@ -45,7 +45,7 @@ feature -- Output
 		do
 			wclass := deferred_feature.written_class;
 			st.add_string ("Deferred feature: ");
-			deferred_feature.append_name (st, wclass);
+			deferred_feature.append_name (st);
 			st.add_string (" From: ");
 			wclass.append_name (st);
 			st.add_new_line;

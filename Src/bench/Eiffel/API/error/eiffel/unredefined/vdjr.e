@@ -48,13 +48,13 @@ feature -- Output
 			oclass := old_feature.written_class;
 			nclass := new_feature.written_class;
 			st.add_string ("First feature: ");
-			old_feature.append_signature (st, oclass);
+			old_feature.append_signature (st);
 			st.add_new_line;
 			st.add_string ("Version from: ");
 			oclass.append_name (st);
 			st.add_new_line;
 			st.add_string ("Second feature: ");
-			new_feature.append_signature (st, nclass);
+			new_feature.append_signature (st);
 			st.add_new_line;
 			st.add_string ("Version from: ");
 			nclass.append_name (st);

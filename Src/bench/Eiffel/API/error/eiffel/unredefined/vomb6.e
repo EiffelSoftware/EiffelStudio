@@ -47,7 +47,7 @@ feature -- Output
 		do
 			wclass := unique_feature.written_class;
 			st.add_string ("Constant: ");
-			unique_feature.append_name (st, wclass);
+			unique_feature.append_name (st);
 			st.add_string (" From: ");
 			wclass.append_name (st);
 			st.add_new_line;

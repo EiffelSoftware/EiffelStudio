@@ -32,7 +32,7 @@ feature -- Output
 			print_name (st);
 			st.add_string ("Feature name: ");
 			if creation_feature /= Void then
-				creation_feature.append_signature (st, creation_feature.written_class);
+				creation_feature.append_signature (st);
 			end;
 			st.add_new_line;
 		end;

@@ -53,7 +53,7 @@ feature -- Output
 					info.item2.append_name (st);
 					st.add_string (": ");
 				end;
-				info.item1.append_signature (st, info.item1.written_class);
+				info.item1.append_signature (st);
 				st.add_new_line;
 
 				selection_list.forth;

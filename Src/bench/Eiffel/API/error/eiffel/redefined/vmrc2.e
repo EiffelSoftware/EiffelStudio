@@ -47,12 +47,12 @@ feature -- Output
 			u_class := invalid_feature.written_class;
 			s_class := selected_feature.written_class;
 			st.add_string ("First version: ");
-			selected_feature.append_name (st, s_class);
+			selected_feature.append_name (st);
 			st.add_string (" from class: ");
 			s_class.append_name (st);
 			st.add_new_line;
 			st.add_string ("Second version: ");
-			invalid_feature.append_name (st, u_class);
+			invalid_feature.append_name (st);
 			st.add_string (" from class: ");
 			u_class.append_name (st);
 		end;

@@ -43,12 +43,12 @@ feature -- Output
 			-- in `st'.
 		do
 			st.add_string ("Feature: ");
-			a_feature.append_signature (st, a_feature.written_class);
+			a_feature.append_signature (st);
 			st.add_string (" Version from: ");
 			a_feature.written_class.append_name (st);
 			st.add_new_line;
 			st.add_string ("Feature: ");
-			inherited_feature.append_signature (st, inherited_feature.written_class);
+			inherited_feature.append_signature (st);
 			st.add_string (" inherited from: ");
 			parent.append_name (st);
 			st.add_string (" Version from: ");

@@ -55,7 +55,7 @@ feature -- Output
 				parent := feature_info.item2;
 
 				st.add_string ("Feature: ");
-				feat.append_signature (st, parent);
+				feat.append_signature (st);
 				st.add_string (" inherited from: ");
 				parent.append_name (st);
 				st.add_string (" Version from: ");

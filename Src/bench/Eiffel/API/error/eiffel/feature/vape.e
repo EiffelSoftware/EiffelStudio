@@ -41,7 +41,7 @@ feature -- Output
 		do
 			ec := exported_feature.written_class;
 			st.add_string ("Insufficiently exported feature: ");
-			exported_feature.append_name (st, ec);
+			exported_feature.append_name (st);
 			st.add_string (" from ");
 			ec.append_name (st);
 			st.add_new_line;

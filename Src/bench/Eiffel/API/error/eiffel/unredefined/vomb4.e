@@ -39,7 +39,7 @@ feature -- Output
 	build_explain (st: STRUCTURED_TEXT) is
 		do
 			st.add_string ("Duplicate name: ");
-			unique_feature.append_name (st, unique_feature.written_class);
+			unique_feature.append_name (st);
 			st.add_new_line;
 		end;
 

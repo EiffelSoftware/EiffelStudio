@@ -49,7 +49,7 @@ feature -- Output
 			-- in `st'.
 		do
 			st.add_string ("Feature: ");
-			undefined_feature.append_signature (st, undefined_feature.written_class);
+			undefined_feature.append_signature (st);
 			st.add_new_line;
 			st.add_string ("In Undefine clause for parent: ");
 			parent.append_name (st);

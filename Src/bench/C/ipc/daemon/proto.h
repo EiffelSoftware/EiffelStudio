@@ -43,6 +43,7 @@ extern struct d_flags daemon_data;	/* Global daemon's status */
 extern void drqsthandle(EIF_LPSTREAM);	/* General request processor */
 extern void send_packet(STREAM *s, Request *dans);
 extern int recv_packet(STREAM *s, Request *rqst, BOOL reset);
+extern void prt_destroy (void);
 #else
 extern void drqsthandle(int s);	/* General request processor */
 extern void send_packet(int s, Request *dans);	/* Send an asnwer to client */

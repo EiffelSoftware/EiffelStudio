@@ -288,25 +288,26 @@ feature {GB_CODE_GENERATOR} -- Output
 			if element_info /= Void then
 				Result := Result + indent + a_name + ".set_border_width (" + element_info.data + ")"
 			end
-			
-				-- This is always saved, so there is no check.
+
 			element_info := full_information @ (Is_item_expanded_string)
-			check
-				consistent: children_names.count = element_info.data.count
-			end
-			from
-				children_names.start
-			until
-				children_names.off
-			loop
-					-- We only generate code for all the children that are disabled as they
-					-- are expanded by default.
-				if element_info.data @ children_names.index /= '1' then
-					Result := Result + indent + a_name + ".disable_item_expand (" + children_names.item + ")"
+				-- We have to check that there is an `is_item_expanded' string.
+			if element_info /= Void then
+				check
+					consistent: children_names.count = element_info.data.count
 				end
-				children_names.forth
-			end
-	
+				from
+					children_names.start
+				until
+					children_names.off
+				loop
+						-- We only generate code for all the children that are disabled as they
+						-- are expanded by default.
+					if element_info.data @ children_names.index /= '1' then
+						Result := Result + indent + a_name + ".disable_item_expand (" + children_names.item + ")"
+					end
+					children_names.forth
+				end
+			end	
 			Result := strip_leading_indent (Result)
 		end
 		

@@ -1,3 +1,7 @@
+cd idl
+call make.bat
+cd ..
+
 call generating.bat
 
 del *.e
@@ -42,5 +46,4 @@ copy to_replace\*.h Clib
 
 cd Clib
 call make_msc.bat
-
-cd ..
+cd..

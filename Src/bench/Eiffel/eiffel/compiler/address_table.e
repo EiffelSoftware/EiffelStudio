@@ -507,7 +507,7 @@ feature {NONE} -- Generation
 								buffer.put_string (")(")
 								buffer.put_string (l_current_name)
 								extern_declarations.add_routine_with_signature (c_return_type,
-									function_name, <<>>)
+									function_name, a_types)
 							else
 									-- Function pointer associated to a deferred feature
 									-- without any implementation. We mark `l_is_implemented'

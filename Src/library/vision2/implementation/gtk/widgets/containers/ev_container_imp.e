@@ -35,6 +35,9 @@ feature -- Access
                                 not_yet_implemented: False
                         end		
 		end
+
+	background_pixmap: EV_PIXMAP
+			-- the background pixmap
 	
 feature {EV_RADIO_BUTTON_IMP} -- Access
 	
@@ -68,6 +71,19 @@ feature -- Element change
 			-- the container.
 		do
 			gtk_container_remove (GTK_CONTAINER (widget), child_imp.widget)
+		end
+
+	set_background_pixmap (pixmap: EV_PIXMAP) is
+			-- Set the container background pixmap to `pixmap'.
+		local
+			pix_imp: EV_PIXMAP_IMP
+		do
+			pix_imp ?= pixmap.implementation
+
+			c_gtk_container_set_bg_pixmap (widget, pix_imp.widget)
+			gtk_widget_show (pix_imp.widget)
+
+			background_pixmap := pixmap
 		end
 
 feature -- Basic operations

@@ -83,7 +83,7 @@ feature
 
 	-- labels
 	visibility_label: LABEL;
-	focus_label: FOCUS_LABEL
+	--focus_label: FOCUS_LABEL
 
 feature
 
@@ -121,7 +121,7 @@ feature
 
 			-- icon form
 			!! top_form.make (Widget_names.form1, form)
-			!! focus_label.initialize (top_form)
+--			!! focus_label.initialize (top_form)
 			!! quit_b.make (Current, top_form)
 			!! con_b.make (top_form)
 			!! cmd_b.make (top_form)

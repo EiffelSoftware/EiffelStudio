@@ -37,8 +37,7 @@ inherit
 			ready_for_pnd_menu,
 			set_to_drag_and_drop,
 			button_press_switch,
-			create_pointer_motion_actions,
-			disconnect_all_signals
+			create_pointer_motion_actions
 		end
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
@@ -52,7 +51,6 @@ inherit
 			destroy,
 			list_widget,
 			interface,
-			disconnect_all_signals,
 			wipe_out,
 			append,
 			initialize
@@ -161,29 +159,29 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				list_widget,
 				"select_row",
-				agent gtk_marshal.mcl_event_intermediary (c_object, 1, ?),
-				agent gtk_marshal.gtk_value_int_to_tuple
+				agent (App_implementation.gtk_marshal).mcl_event_intermediary (c_object, 1, ?),
+				agent (App_implementation.gtk_marshal).gtk_value_int_to_tuple
 			)
 			real_signal_connect (
 				list_widget,
 				"unselect_row",
-				agent gtk_marshal.mcl_event_intermediary (c_object, 2, ?),
-				agent gtk_marshal.gtk_value_int_to_tuple
+				agent (App_implementation.gtk_marshal).mcl_event_intermediary (c_object, 2, ?),
+				agent (App_implementation.gtk_marshal).gtk_value_int_to_tuple
 			)
 			real_signal_connect (
 				list_widget,
 				"click_column",
-				agent gtk_marshal.mcl_event_intermediary (c_object, 3, ?),
-				agent gtk_marshal.gtk_value_int_to_tuple
+				agent (App_implementation.gtk_marshal).mcl_event_intermediary (c_object, 3, ?),
+				agent (App_implementation.gtk_marshal).gtk_value_int_to_tuple
 			)
 			real_signal_connect (
 				list_widget,
 				"resize_column",
-				agent gtk_marshal.mcl_event_intermediary (c_object, 3, ?),
-				agent gtk_marshal.column_resize_callback_translate
+				agent (App_implementation.gtk_marshal).mcl_event_intermediary (c_object, 3, ?),
+				agent (App_implementation.gtk_marshal).column_resize_callback_translate
 			)
 			
-			on_key_event_intermediary_agent := agent gtk_marshal.on_key_event_intermediary (c_object, ?, ?, ?)
+			on_key_event_intermediary_agent := agent (App_implementation.gtk_marshal).on_key_event_intermediary (c_object, ?, ?, ?)
 			real_signal_connect (list_widget, "key_press_event", on_key_event_intermediary_agent, key_event_translate_agent)
 			real_signal_connect (list_widget, "key_release_event", on_key_event_intermediary_agent, key_event_translate_agent)
 			
@@ -315,7 +313,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 				an_item := (ev_children @ a_position)
 				if an_item /= previously_selected_node then
 					if an_item.select_actions_internal /= Void then
-						an_item.select_actions_internal.call (empty_tuple)
+						an_item.select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 					end
 					if select_actions_internal /= Void then
 						select_actions_internal.call ([an_item.interface])
@@ -338,7 +336,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			a_position := temp_int.item + 1
 			an_item := (ev_children @ a_position)
 			if an_item.deselect_actions_internal /= Void then
-				an_item.deselect_actions_internal.call (empty_tuple)
+				an_item.deselect_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 			end
 			if deselect_actions_internal /= Void then
 				deselect_actions_internal.call ([an_item.interface])
@@ -759,8 +757,8 @@ feature -- Implementation
 			end
 			real_signal_connect (c_object,
 				"button-press-event", 
-				agent Gtk_marshal.mcl_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
-				default_translate)
+				agent (App_implementation.gtk_marshal).mcl_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
+				App_implementation.default_translate)
 			button_press_connection_id := last_signal_connection_id
 			is_transport_enabled := True
 		end
@@ -1178,11 +1176,6 @@ feature {NONE} -- Implementation
 			if list_widget /= NULL then
 				Result := C.gtk_clist_struct_row_height (list_widget)
 			end			
-		end
-
-	disconnect_all_signals is
-		do
-			--| FIXME
 		end
 
 feature {NONE} -- Externals

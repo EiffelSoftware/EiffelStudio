@@ -170,7 +170,7 @@ feature {NONE} -- implementation
 						if temp_item_pointer = radio_imp.c_object then
 							temp_item_pointer := C.g_slist_nth_data (radio_imp.radio_group, 1)
 						end
-						radio_imp ?= c_get_eif_reference_from_object_id (temp_item_pointer)
+						radio_imp ?= eif_object_from_c (temp_item_pointer)
 						if radio_imp /= Void then
 							radio_imp.enable_select
 						end

@@ -27,7 +27,6 @@ inherit
 			set_background_color
 		redefine
 			interface,
-			disconnect_all_signals,
 			default_key_processing_blocked,
 			set_focus,
 			dispose,
@@ -50,9 +49,9 @@ feature {NONE} -- Initialization
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_drawing_area_new)
-			real_signal_connect (c_object, "button-press-event", agent Gtk_marshal.on_drawing_area_event_intermediary (c_object, 1), Void)
-			real_signal_connect (c_object, "focus-out-event", agent Gtk_marshal.on_drawing_area_event_intermediary (c_object, 2), Void)
-			gc := C.gdk_gc_new (default_gdk_window)
+			real_signal_connect (c_object, "button-press-event", agent (App_implementation.gtk_marshal).on_drawing_area_event_intermediary (c_object, 1), Void)
+			real_signal_connect (c_object, "focus-out-event", agent (App_implementation.gtk_marshal).on_drawing_area_event_intermediary (c_object, 2), Void)
+			gc := C.gdk_gc_new (App_implementation.default_gdk_window)
 			init_default_values
 		end
 

@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 	connect_signals is
 			-- Connect on_activate to toggled signal.
 		do
-			real_signal_connect (c_object, "toggled", agent Gtk_marshal.on_tool_bar_radio_button_activate (c_object), Void)
+			real_signal_connect (c_object, "toggled", agent (App_implementation.gtk_marshal).on_tool_bar_radio_button_activate (c_object), Void)
 		end
 		
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
@@ -123,7 +123,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 					a_peers.forth
 				end
 				if select_actions_internal /= Void then
-					select_actions_internal.call (empty_tuple)
+					select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 				end
 			end
 

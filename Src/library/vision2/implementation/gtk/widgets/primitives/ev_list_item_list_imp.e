@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				list_widget,
 				"unselect_child",
-				agent gtk_marshal.list_item_deselect_callback_intermediary (c_object, ?, ?),
+				agent (App_implementation.gtk_marshal).list_item_deselect_callback_intermediary (c_object, ?, ?),
 				Void
 			)
 		end
@@ -81,14 +81,14 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				list_widget,
 				"select_child",
-				agent gtk_marshal.list_item_select_callback_intermediary (c_object, ?, ?),
+				agent (App_implementation.gtk_marshal).list_item_select_callback_intermediary (c_object, ?, ?),
 				Void
 			)
 			real_signal_connect (
 				visual_widget,
 				"button-press-event",
-				agent gtk_marshal.list_clicked_intermediary (c_object),
-				Default_translate
+				agent (App_implementation.gtk_marshal).list_clicked_intermediary (c_object),
+				App_implementation.default_translate
 			)
 		end
 
@@ -109,10 +109,10 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Initialization
 			l_item: EV_LIST_ITEM_IMP
 		do
 		 	l_item ?= eif_object_from_c (
-				gtk_marshal.gtk_value_pointer (args)
+				(App_implementation.gtk_marshal).gtk_value_pointer (args)
 			)
 			if l_item.deselect_actions_internal /= Void then
-				l_item.deselect_actions_internal.call (empty_tuple)
+				l_item.deselect_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 			end
 
 			if deselect_actions_internal /= Void then
@@ -264,14 +264,14 @@ feature {NONE} -- Implementation
 				previous_selected_item_imp.parent = interface and then
 				previous_selected_item_imp /= selected_item_imp then
 				if previous_selected_item_imp.deselect_actions_internal /= Void then
-					previous_selected_item_imp.deselect_actions_internal.call (empty_tuple)
+					previous_selected_item_imp.deselect_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 				end
 			end
 			
 			if selected_item_imp.parent /= Void and then selected_item_imp.is_selected then
 					-- Parent check due to bug in combo box.
 				if selected_item_imp.select_actions_internal /= Void then
-					selected_item_imp.select_actions_internal.call (empty_tuple)
+					selected_item_imp.select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 				end
 				if select_actions_internal /= Void then
 					select_actions_internal.call ([selected_item_imp.interface])
@@ -323,14 +323,14 @@ feature {NONE} -- Implementation
 			v_imp.real_signal_connect (
 				v_imp.c_object,
 				"key-press-event",
-				agent gtk_marshal.list_key_pressed_intermediary (c_object, ?, ?, ?),
+				agent (App_implementation.gtk_marshal).list_key_pressed_intermediary (c_object, ?, ?, ?),
 				key_event_translate_agent
 			)	
 			v_imp.real_signal_connect (
 				v_imp.c_object,
 				"button-press-event",
-				agent gtk_marshal.list_item_clicked_intermediary (c_object),
-				Default_translate
+				agent (App_implementation.gtk_marshal).list_item_clicked_intermediary (c_object),
+				App_implementation.default_translate
 				)
 			v_imp.key_press_actions.extend (agent on_key_pressed)
 		end

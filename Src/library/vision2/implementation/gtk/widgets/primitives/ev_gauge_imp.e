@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				adjustment,
 				"value-changed",
-				agent Gtk_marshal.on_gauge_value_changed_intermediary (c_object),
+				agent (App_implementation.gtk_marshal).on_gauge_value_changed_intermediary (c_object),
 				Void
 			)
 		end

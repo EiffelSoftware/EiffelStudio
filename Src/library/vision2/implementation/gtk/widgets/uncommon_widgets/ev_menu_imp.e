@@ -155,7 +155,7 @@ feature {EV_ANY_I} -- Implementation
 				end
 			end
 			if select_actions_internal /= Void then
-				select_actions_internal.call (empty_tuple)
+				select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 			end
 		end
 

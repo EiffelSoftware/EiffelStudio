@@ -477,6 +477,34 @@ feature {EV_ANY_IMP} -- Externals
 			"C | %"ev_c_util.h%""
 		end
 		
+	set_eif_oid_in_c_object (a_c_object: POINTER; eif_oid: INTEGER;
+		c_object_dispose_address: POINTER) is
+				-- Store Eiffel object_id in `gtk_object'.
+				-- Set up signal handlers.
+		external
+			"C (GtkWidget*, int, void*) | %"ev_any_imp.h%""
+		alias
+			"c_ev_any_imp_set_eif_oid_in_c_object"
+		end
+
+	c_signal_connect (a_c_object: POINTER; a_signal_name: POINTER;
+		an_agent: PROCEDURE [ANY, TUPLE]): INTEGER is
+			-- Connect `an_agent' to 'a_signal_name' on `a_c_object'.
+		external
+			"C (GtkObject*, gchar*, EIF_OBJECT): guint | %"ev_gtk_callback_marshal.h%""
+		alias
+			"c_ev_gtk_callback_marshal_signal_connect"
+		end
+
+	c_signal_connect_true (a_c_object: POINTER; a_signal_name: POINTER;
+		an_agent: PROCEDURE [ANY, TUPLE]): INTEGER is
+			-- Connect `an_agent' to 'a_signal_name' on `a_c_object'.
+		external
+			"C (GtkObject*, gchar*, EIF_OBJECT): guint | %"ev_gtk_callback_marshal.h%""
+		alias
+			"c_ev_gtk_callback_marshal_signal_connect_true"
+		end
+		
 feature {EV_APPLICATION_IMP, EV_TIMEOUT_IMP} -- Externals
 
 	c_ev_gtk_callback_marshal_timeout_connect

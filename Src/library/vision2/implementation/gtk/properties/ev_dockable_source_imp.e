@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 --				c_object,
 --				"motion-notify-event",
 --				agent Gtk_marshal.add_grab_cb_intermediary (c_object),
---				default_translate
+--				App_implementation.default_translate
 --			)
 --			grab_callback_connection_id := last_signal_connection_id
 
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 --				c_object,
 --				"button-press-event",
 --				agent Gtk_marshal.end_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
---				default_translate
+--				App_implementation.default_translate
 --			)
 --			button_press_connection_id := last_signal_connection_id
 --			if set_to_drag_and_drop then
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 					c_object,
 					"button-release-event",
 					agent end_dragable (?, ?, ?, ?, ?, ?, ?, ?),
-					default_translate
+					App_implementation.default_translate
 				)
 				drag_button_release_connection_id := last_signal_connection_id
 --			end
@@ -199,21 +199,21 @@ feature {NONE} -- Implementation
 				c_object,
 				"motion-notify-event",
 				agent execute_dragging (?,?,?,?,?,?,?),--Gtk_marshal.temp_execute_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?),
-				default_translate
+				App_implementation.default_translate
 			)
 			drag_motion_notify_connection_id := last_signal_connection_id
 --			real_signal_connect (
 --				c_object,
 --				"enter_notify_event",
 --				agent Gtk_marshal.signal_emit_stop_intermediary (c_object, "enter_notify_event"),
---				default_translate
+--				App_implementation.default_translate
 --			)
 --			enter_notify_connection_id := last_signal_connection_id
 --			real_signal_connect (
 --				c_object,
 --				"leave_notify_event",
 --				agent Gtk_marshal.signal_emit_stop_intermediary (c_object, "leave_notify_event"),
---				default_translate
+--				App_implementation.default_translate
 --			)
 --			leave_notify_connection_id := last_signal_connection_id
 --			check

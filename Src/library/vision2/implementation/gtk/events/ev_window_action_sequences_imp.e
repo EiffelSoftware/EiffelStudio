@@ -41,7 +41,7 @@ feature -- Event handling
 			-- Attach to GTK "map-event" signal.
 		do
 			create Result
-			real_signal_connect (c_object, "map-event", agent Gtk_marshal.on_window_show (c_object), default_translate)
+			real_signal_connect (c_object, "map-event", agent (App_implementation.gtk_marshal).on_window_show (c_object), App_implementation.default_translate)
 		end
 
 end

@@ -24,8 +24,8 @@ feature -- Event handling
 			real_signal_connect (
 					c_object,
 					"motion-notify-event",
-					agent gtk_marshal.pointer_motion_action_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?),
-					default_translate
+					agent (App_implementation.gtk_marshal).pointer_motion_action_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?),
+					App_implementation.default_translate
 				)
 		end
 
@@ -49,8 +49,8 @@ feature -- Event handling
 			real_signal_connect (
 					c_object,
 					"button-release-event",
-					agent gtk_marshal.pointer_button_release_action_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?),
-					default_translate
+					agent (App_implementation.gtk_marshal).pointer_button_release_action_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?),
+					App_implementation.default_translate
 				)
 		end
 
@@ -62,8 +62,8 @@ feature -- Event handling
 			real_signal_connect (
 				c_object,
 				"enter-notify-event", 
-				agent Gtk_marshal.pointer_enter_actions_intermediary (c_object),
-				default_translate
+				agent (App_implementation.gtk_marshal).pointer_enter_actions_intermediary (c_object),
+				App_implementation.default_translate
 			)
 		end
 
@@ -75,8 +75,8 @@ feature -- Event handling
 			real_signal_connect (
 				c_object,
 				"leave-notify-event",
-				agent gtk_marshal.pointer_leave_action_intermediary (c_object),
-				default_translate
+				agent (App_implementation.gtk_marshal).pointer_leave_action_intermediary (c_object),
+				App_implementation.default_translate
 			)
 		end
 
@@ -103,7 +103,7 @@ feature -- Event handling
 			-- Attach to GTK "focus-in-event" signal.
 		do
 			create Result
-			real_signal_connect (visual_widget, "focus-in-event", agent gtk_marshal.widget_focus_in_intermediary (c_object), Void)
+			real_signal_connect (visual_widget, "focus-in-event", agent (App_implementation.gtk_marshal).widget_focus_in_intermediary (c_object), Void)
 		end
 
 	create_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
@@ -111,7 +111,7 @@ feature -- Event handling
 			-- Attach to GTK "focus-out-event" signal.
 		do
 			create Result
-			real_signal_connect (visual_widget, "focus-out-event", agent gtk_marshal.widget_focus_out_intermediary (c_object), Void)
+			real_signal_connect (visual_widget, "focus-out-event", agent (App_implementation.gtk_marshal).widget_focus_out_intermediary (c_object), Void)
 		end
 
 	create_resize_actions: EV_GEOMETRY_ACTION_SEQUENCE is

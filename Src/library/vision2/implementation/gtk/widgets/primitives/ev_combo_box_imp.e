@@ -92,7 +92,7 @@ feature {NONE} -- Initialization
 			C.gtk_combo_set_use_arrows (container_widget, 0)
 			C.gtk_combo_set_case_sensitive (container_widget, 1)
 			
-			on_key_event_intermediary_agent := agent gtk_marshal.on_key_event_intermediary (c_object, ?, ?, ?)
+			on_key_event_intermediary_agent := agent (App_implementation.gtk_marshal).on_key_event_intermediary (c_object, ?, ?, ?)
 
 			real_signal_connect (
 					entry_widget,
@@ -112,8 +112,8 @@ feature {NONE} -- Initialization
 			activate_id := C.gtk_combo_struct_activate_id (container_widget)
 			C.gtk_signal_handler_block (entry_widget, activate_id)
 			
-			on_key_pressed_intermediary_agent := agent Gtk_marshal.on_list_item_list_key_pressed_intermediary (c_object, ?, ?, ?)
-			on_item_clicked_intermediary_agent := agent Gtk_marshal.on_list_item_list_item_clicked_intermediary (c_object)
+			on_key_pressed_intermediary_agent := agent (App_implementation.gtk_marshal).on_list_item_list_key_pressed_intermediary (c_object, ?, ?, ?)
+			on_item_clicked_intermediary_agent := agent (App_implementation.gtk_marshal).on_list_item_list_item_clicked_intermediary (c_object)
 		end
 
 	initialize is
@@ -129,12 +129,12 @@ feature {NONE} -- Initialization
 				list_widget,
 				C.GTK_SELECTION_SINGLE_ENUM
 			)
-			real_signal_connect (entry_widget, "focus-in-event", agent gtk_marshal.widget_focus_in_intermediary (c_object), Void)
-			real_signal_connect (entry_widget, "focus-out-event", agent gtk_marshal.widget_focus_out_intermediary (c_object), Void)
+			real_signal_connect (entry_widget, "focus-in-event", agent (App_implementation.gtk_marshal).widget_focus_in_intermediary (c_object), Void)
+			real_signal_connect (entry_widget, "focus-out-event", agent (App_implementation.gtk_marshal).widget_focus_out_intermediary (c_object), Void)
 			real_signal_connect (
 					list_widget,
 					"button-release-event",
-					agent Gtk_marshal.on_combo_box_button_release (c_object),
+					agent (App_implementation.gtk_marshal).on_combo_box_button_release (c_object),
 					Void
 			)
 		
@@ -228,12 +228,12 @@ feature {NONE} -- Implementation
 			if a_has_focus then
 				top_level_window_imp.set_focus_widget (Current)
 				if focus_in_actions_internal /= Void then
-					focus_in_actions_internal.call (empty_tuple)				
+					focus_in_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)				
 				end
 			else
 				top_level_window_imp.set_focus_widget (Void)
 				if focus_out_actions_internal /= Void then
-					focus_out_actions_internal.call (empty_tuple)
+					focus_out_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 				end			
 			end
 		end
@@ -302,7 +302,7 @@ feature {NONE} -- Implementation
 			--| FIXME IEK Remove hacks when gtk+ 2.0 is out
 			if is_displayed then
 				if not avoid_callback then			
-				 	triggering_item ?= eif_object_from_c (gtk_marshal.gtk_value_pointer (an_item))
+				 	triggering_item ?= eif_object_from_c ((App_implementation.gtk_marshal).gtk_value_pointer (an_item))
 				 	if not button_pressed then
 						popwin := C.gtk_combo_struct_popwin (container_widget)
 						C.gtk_widget_hide (popwin)

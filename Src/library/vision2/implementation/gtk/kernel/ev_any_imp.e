@@ -44,7 +44,7 @@ feature {EV_ANY_I} -- Access
 			debug ("EV_GTK_CREATION")
 				print (generator + " created%N")
 			end
-			set_eif_oid_in_c_object (c_object, object_id, $c_object_dispose)
+			App_implementation.gtk_marshal.set_eif_oid_in_c_object (c_object, object_id, $c_object_dispose)
 		ensure
 			c_object_assigned: c_object = a_c_object
 		end
@@ -54,31 +54,15 @@ feature {EV_ANY_I} -- Access
 		require
 			a_c_object_not_null: a_c_object /= NULL
 		do
-			Result := c_get_eif_reference_from_object_id (a_c_object)
+			Result := App_implementation.gtk_marshal.c_get_eif_reference_from_object_id (a_c_object)
 		end
 
 feature {EV_ANY, EV_ANY_IMP} -- Command
-
-	disconnect_all_signals is
-		local
-			i, l: INTEGER
-		do
-			l := signal_ids.count
-			from
-				i := 1
-			until
-				i > l
-			loop
-				C.gtk_signal_disconnect (c_object, signal_ids.i_th (i))
-				i := i + 1
-			end
-		end
 
 	destroy is
 			-- Destroy `c_object'.
 			-- Render `Current' unusable.
 		local
-			i, l: INTEGER
 			item_imp: EV_ITEM_IMP
 			widget_imp: EV_WIDGET_IMP
 		do
@@ -95,14 +79,7 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 						widget_imp.parent_imp.interface.prune_all (widget_imp.interface)
 					end
 				end
-				
-				l := action_sequences.count
-				from i := 1 until i > l loop
-					action_sequences.i_th (i).block
-					i := i + 1
-				end
 				is_destroyed := True
-	--			disconnect_all_signals
 				if C.gtk_is_window (c_object) then
 					C.gtk_object_unref (c_object)
 				end
@@ -147,12 +124,11 @@ feature {EV_ANY_I} -- Event handling
 			a_gs: GEL_STRING
 		do
 			create a_gs.make (a_signal_name)
-			a_connection_id := c_signal_connect_true (
+			a_connection_id := App_implementation.gtk_marshal.c_signal_connect_true (
 				c_object,
 				a_gs.item,
 				an_agent
 			)
-			signal_ids.extend (a_connection_id)
 		end
 
 	real_signal_connect (
@@ -173,50 +149,21 @@ feature {EV_ANY_I} -- Event handling
 		do
 			create a_gs.make (a_signal_name)
 			if translate /= Void then
-				last_signal_connection_id := c_signal_connect (
+				last_signal_connection_id := App_implementation.gtk_marshal.c_signal_connect (
 					a_c_object,
 					a_gs.item,
-					agent gtk_marshal.translate_and_call (an_agent, translate, ?, ?)
+					agent (App_implementation.gtk_marshal).translate_and_call (an_agent, translate, ?, ?)
 				)
 			else
-				last_signal_connection_id := c_signal_connect (
+				last_signal_connection_id := App_implementation.gtk_marshal.c_signal_connect (
 					a_c_object,
 					a_gs.item,
 					an_agent
 				)
 			end
-			signal_ids.extend (last_signal_connection_id)
 		ensure
 			signal_connection_id_positive: last_signal_connection_id > 0
 		end
-	
-	signal_ids: ARRAYED_LIST [INTEGER] is
-			-- Ids of GTK signal connections.
-		do
-			if opo_signal_ids = Void then
-				create opo_signal_ids.make (2)
-			end
-			Result := opo_signal_ids
-		ensure
-			Result /= Void
-		end
-
-	opo_signal_ids: ARRAYED_LIST [INTEGER]
-			-- Once per object for implementation for `signal_ids'.
-	
-	action_sequences: ARRAYED_LIST [ACTION_SEQUENCE [TUPLE]] is
-			-- Action sequences connected to GTK signals.
-		do
-			if opo_action_sequences = Void then
-				create opo_action_sequences.make (2)
-			end
-			Result := opo_action_sequences
-		ensure
-			Result /= Void
-		end
-
-	opo_action_sequences: ARRAYED_LIST [ACTION_SEQUENCE [TUPLE]]
-			-- Once per object for implementation for `action_sequences'.
 
 	last_signal_connection_id: INTEGER
 			-- GTK signal connection id of the most recent `signal_connect'.
@@ -227,12 +174,6 @@ feature {EV_ANY_I} -- Event handling
 			a_connection_id_positive: a_connection_id > 0
 		do
 			C.gtk_signal_disconnect (c_object, a_connection_id)
-			signal_ids.prune_all (a_connection_id)
-		end
-
-	default_translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE] is		
-		once
-			Result := agent gtk_marshal.gdk_event_to_tuple
 		end
 		
 feature {NONE} -- Implementation
@@ -248,7 +189,7 @@ feature {NONE} -- Implementation
 			debug ("EV_GTK_DISPOSE")
 				safe_print (generator + ".dispose")
 			end
-			if c_object /= NULL and then not is_in_final_collect and then not gtk_marshal.is_destroyed then
+			if c_object /= NULL and then not is_in_final_collect and then not App_implementation.gtk_marshal.is_destroyed then
 				-- Destroy has been explicitly called.
 				if internal_id /= 0 then
 					gtk_signal_disconnect_by_data (c_object, internal_id)
@@ -283,51 +224,9 @@ feature {NONE} -- Implementation
 			Result := c_object
 		end
 
-	default_gtk_window: POINTER is
-			-- Pointer to a default GtkWindow.
-		do
-			Result := App_implementation.default_gtk_window
-		end
-
-	default_gdk_window: POINTER is
-			-- Pointer to a default GdkWindow that may be used to
-			-- access default visual information (color depth).
-		do
-			Result := App_implementation.default_gdk_window
-		end
-		
-	default_window: EV_WINDOW is
-			-- Default Window used for creation of agents and holder of clipboard widget.
-		do
-			Result := App_implementation.default_window
-		end
-		
-	default_window_imp: EV_WINDOW_IMP is
-			--
-		do
-			Result := App_implementation.default_window_imp
-		end
-		
-	default_font_height: INTEGER is
-			--
-		do
-			Result := App_implementation.default_font_height
-		end
-
-	gtk_marshal: EV_GTK_CALLBACK_MARSHAL is
-			-- 
-		once
-			create Result
-		end
-		
-	empty_tuple: TUPLE is
-		once
-			Result := []
-		end
-		
 feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 
-	app_implementation: EV_APPLICATION_IMP is
+	App_implementation: EV_APPLICATION_IMP is
 			-- 
 		local
 			env: EV_ENVIRONMENT
@@ -341,73 +240,28 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		
 feature {NONE} -- External implementation
 
-	set_eif_oid_in_c_object (a_c_object: POINTER; eif_oid: INTEGER;
-		c_object_dispose_address: POINTER) is
-				-- Store Eiffel object_id in `gtk_object'.
-				-- Set up signal handlers.
-		external
-			"C (GtkWidget*, int, void*) | %"ev_any_imp.h%""
-		alias
-			"c_ev_any_imp_set_eif_oid_in_c_object"
-		end
-
-	c_get_eif_reference_from_object_id (a_c_object: POINTER): EV_ANY_IMP is
-			-- Get Eiffel object from `a_c_object'.
-		external
-			"C (GtkWidget*): EIF_REFERENCE | %"ev_any_imp.h%""
-		alias
-			"c_ev_any_imp_get_eif_reference_from_object_id"
-		end
-
-	c_invariant (a_c_object: POINTER): BOOLEAN is
-			-- External invariant implementation
-		external
-			"C (GtkWidget*): gboolean | %"ev_any_imp.h%""
-		alias
-			"c_ev_any_imp_invariant"
-		end
-
-	c_signal_connect (a_c_object: POINTER; a_signal_name: POINTER;
-		an_agent: PROCEDURE [ANY, TUPLE]): INTEGER is
-			-- Connect `an_agent' to 'a_signal_name' on `a_c_object'.
-		external
-			"C (GtkObject*, gchar*, EIF_OBJECT): guint | %"ev_gtk_callback_marshal.h%""
-		alias
-			"c_ev_gtk_callback_marshal_signal_connect"
-		end
-
-	c_signal_connect_true (a_c_object: POINTER; a_signal_name: POINTER;
-		an_agent: PROCEDURE [ANY, TUPLE]): INTEGER is
-			-- Connect `an_agent' to 'a_signal_name' on `a_c_object'.
-		external
-			"C (GtkObject*, gchar*, EIF_OBJECT): guint | %"ev_gtk_callback_marshal.h%""
-		alias
-			"c_ev_gtk_callback_marshal_signal_connect_true"
-		end
-
 	gtk_object_destroy (a_c_object: POINTER) is
 			-- Only for use in dispose.
 			-- (Dispose cannot call C.gtk_object_destroy)
-        	external
-            		"C (GtkObject*) | <gtk/gtk.h>"
-        	end
+		external
+			"C (GtkObject*) | <gtk/gtk.h>"
+		end
 
 	gtk_object_unref (a_c_object: POINTER) is
 			-- Only for use in dispose.
 			-- (Dispose cannot call C.gtk_object_destroy)
-        	external
-            		"C (GtkObject*) | <gtk/gtk.h>"
-        	end
+		external
+			"C (GtkObject*) | <gtk/gtk.h>"
+		end
 
 	gtk_signal_disconnect_by_data (a_c_object: POINTER; data: INTEGER) is
 			-- Only for use in dispose.
 			-- (Dispose cannot call C.gtk_signal_disconnect_by_data)
-        	external
-            		"C (GtkObject*, gpointer) | <gtk/gtk.h>"
-        	end
+		external
+			"C (GtkObject*, gpointer) | <gtk/gtk.h>"
+		end
 
 invariant
-	c_invariant: c_object /= NULL implies c_invariant (c_object)
 	c_object_coupled: c_object /= NULL implies
 		eif_object_from_c (c_object) = Current
 	c_externals_object_not_void: C /= Void

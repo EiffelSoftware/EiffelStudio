@@ -128,29 +128,29 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				list_widget,
 				"tree-select-row",
-				agent gtk_marshal.on_tree_event_intermediary (c_object, 1, ?),
-				agent gtk_marshal.gtk_value_pointer_to_tuple
+				agent (App_implementation.gtk_marshal).on_tree_event_intermediary (c_object, 1, ?),
+				agent (App_implementation.gtk_marshal).gtk_value_pointer_to_tuple
 			)
 			
 			real_signal_connect (
 				list_widget,
 				"tree-unselect-row",
-				agent gtk_marshal.on_tree_event_intermediary (c_object, 2, ?),
-				agent gtk_marshal.gtk_value_pointer_to_tuple
+				agent (App_implementation.gtk_marshal).on_tree_event_intermediary (c_object, 2, ?),
+				agent (App_implementation.gtk_marshal).gtk_value_pointer_to_tuple
 			)
 
 			real_signal_connect (
 				list_widget,
 				"tree-expand",
-				agent gtk_marshal.on_tree_event_intermediary (c_object, 3, ?),
-				agent gtk_marshal.gtk_value_pointer_to_tuple
+				agent (App_implementation.gtk_marshal).on_tree_event_intermediary (c_object, 3, ?),
+				agent (App_implementation.gtk_marshal).gtk_value_pointer_to_tuple
 			)
 
 			real_signal_connect (
 				list_widget,
 				"tree-collapse",
-				agent gtk_marshal.on_tree_event_intermediary (c_object, 4, ?),
-				agent gtk_marshal.gtk_value_pointer_to_tuple
+				agent (App_implementation.gtk_marshal).on_tree_event_intermediary (c_object, 4, ?),
+				agent (App_implementation.gtk_marshal).gtk_value_pointer_to_tuple
 			)
 			connect_button_press_switch
 				-- Needed so items are always hooked up, even though widget may not need to be.
@@ -165,9 +165,9 @@ feature {NONE} -- Initialization
 	gtk_value_pointer_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [POINTER] is
 			-- Tuple containing integer value from first of `args'.
 		do
-			gtk_marshal.pointer_tuple.put (gtk_marshal.gtk_value_pointer (args), 1)
-			Result := gtk_marshal.pointer_tuple
-			--	Result := [gtk_marshal.gtk_value_pointer (args)]
+			(App_implementation.gtk_marshal).pointer_tuple.put ((App_implementation.gtk_marshal).gtk_value_pointer (args), 1)
+			Result := (App_implementation.gtk_marshal).pointer_tuple
+			--	Result := [(App_implementation.gtk_marshal).gtk_value_pointer (args)]
 		end
 
 	button_press_switch (
@@ -315,10 +315,10 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			--C.gtk_clist_freeze (list_widget)
 			if a_tree_node_imp /= Void and then a_tree_node_imp /= selected_node then
 				if select_actions_internal /= Void then
-					select_actions_internal.call (empty_tuple)
+					select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 				end
 				if a_tree_node_imp.select_actions_internal /= Void then
-					a_tree_node_imp.select_actions_internal.call (empty_tuple)
+					a_tree_node_imp.select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 				end
 			end
 			--C.gtk_clist_thaw (list_widget)
@@ -334,10 +334,10 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			C.gtk_clist_freeze (list_widget)
 			if a_tree_node_imp /= Void and selected_node /= Void then
 				if deselect_actions_internal /= Void then
-					deselect_actions_internal.call (empty_tuple)
+					deselect_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 				end
 				if a_tree_node_imp.deselect_actions_internal /= Void then
-					a_tree_node_imp.deselect_actions_internal.call (empty_tuple)
+					a_tree_node_imp.deselect_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 				end
 			end
 			C.gtk_clist_thaw (list_widget)
@@ -424,8 +424,8 @@ feature -- Implementation
 			real_signal_connect (
 				c_object,
 				"button-press-event", 
-				agent Gtk_marshal.tree_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), 
-				default_translate)
+				agent (App_implementation.gtk_marshal).tree_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?), 
+				App_implementation.default_translate)
 			button_press_connection_id := last_signal_connection_id
 			is_transport_enabled := True
 		end

@@ -62,7 +62,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			
 				-- Create a new pixmap
-			gdkpix := C.gdk_pixmap_new (default_gdk_window, 1, 1, Default_color_depth)
+			gdkpix := C.gdk_pixmap_new (App_implementation.default_gdk_window, 1, 1, Default_color_depth)
 				-- Box the pixmap into a container to receive events
 			set_c_object (C.gtk_event_box_new)
 			gtk_pixmap := C.gtk_pixmap_new (gdkpix, gdkmask)
@@ -105,7 +105,7 @@ feature {NONE} -- Initialization
 			gdkpix, gdkmask: POINTER
 			loc_default_pointer: POINTER
 		do
-			gdkpix := C.gdk_pixmap_new (default_gdk_window, a_x, a_y, Default_color_depth)
+			gdkpix := C.gdk_pixmap_new (App_implementation.default_gdk_window, a_x, a_y, Default_color_depth)
 			if mask /= loc_default_pointer then
 				gdkmask := C.gdk_pixmap_new (NULL, a_x, a_y, Monochrome_color_depth)
 			end
@@ -180,7 +180,7 @@ feature -- Element change
 			pixgc, maskgc: POINTER
 			loc_default_pointer: POINTER
 		do
-			gdkpix := C.gdk_pixmap_new (default_gdk_window, a_x, a_y, Default_color_depth)
+			gdkpix := C.gdk_pixmap_new (App_implementation.default_gdk_window, a_x, a_y, Default_color_depth)
 			pixgc := C.gdk_gc_new (gdkpix)
 			C.gdk_gc_set_function (pixgc, C.GDK_COPY_INVERT_ENUM)
 			C.gdk_draw_rectangle (gdkpix, pixgc, 1, 0, 0, -1, -1)
@@ -253,8 +253,8 @@ feature -- Access
 				end		
 				if 
 					local_c.gdk_color_struct_red (a_color) > 0
-					or else local_c.gdk_color_struct_green (a_color) > 0
-					or else local_c.gdk_color_struct_blue (a_color) > 0
+					--or else local_c.gdk_color_struct_green (a_color) > 0
+					--or else local_c.gdk_color_struct_blue (a_color) > 0
 				then
 					character_result := character_result + (2 ^ (n_character)).rounded
 					-- Bitmap data is stored in a way that pixel 1 is bit 1 (2 ^ 0).
@@ -339,7 +339,7 @@ feature {EV_ANY_I} -- Implementation
 			gdkpix, gdkmask: POINTER
 			pixgc, maskgc: POINTER
 		do
- 			gdkpix := C.gdk_pixmap_new (default_gdk_window, a_width, a_height, Default_color_depth)
+ 			gdkpix := C.gdk_pixmap_new (App_implementation.default_gdk_window, a_width, a_height, Default_color_depth)
 			pixgc := C.gdk_gc_new (gdkpix)
 			C.gdk_draw_pixmap (gdkpix, pixgc, a_src_pix, 0, 0, 0, 0, a_width, a_height)
 			C.gdk_gc_unref (pixgc)
@@ -390,8 +390,8 @@ feature {EV_STOCK_PIXMAPS_IMP, EV_PIXMAPABLE_IMP} -- Implementation
 			gdkpix, gdkmask: POINTER
 			a_style: POINTER
 		do
-			a_style := C.gtk_widget_get_style (default_gtk_window)
-			gdkpix := C.gdk_pixmap_create_from_xpm_d (default_gdk_window, $gdkmask, NULL, a_xpm_data)
+			a_style := C.gtk_widget_get_style (App_implementation.default_gtk_window)
+			gdkpix := C.gdk_pixmap_create_from_xpm_d (App_implementation.default_gdk_window, $gdkmask, NULL, a_xpm_data)
 			set_pixmap (gdkpix, gdkmask)
 		end
 
@@ -438,10 +438,10 @@ feature {NONE} -- Implementation
 			if error_code /= Loadpixmap_error_noerror then
 				(create {EXCEPTIONS}).raise ("Could not load image file.")
 			end
-			gdkpix := C.gdk_pixmap_new (default_gdk_window, pixmap_width, pixmap_height, Default_color_depth)
+			gdkpix := C.gdk_pixmap_new (App_implementation.default_gdk_window, pixmap_width, pixmap_height, Default_color_depth)
 			C.gdk_draw_rgb_image (gdkpix, gc, 0, 0, pixmap_width, pixmap_height, C.Gdk_rgb_dither_normal_enum, rgb_data, pixmap_width * 3)
 			if alpha_data /= Default_pointer then
-				gdkmask := C.gdk_bitmap_create_from_data (default_gdk_window, alpha_data, pixmap_width, pixmap_height)
+				gdkmask := C.gdk_bitmap_create_from_data (App_implementation.default_gdk_window, alpha_data, pixmap_width, pixmap_height)
 			end
 			set_pixmap (gdkpix, gdkmask)
 		end

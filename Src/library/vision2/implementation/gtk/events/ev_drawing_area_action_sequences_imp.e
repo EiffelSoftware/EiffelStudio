@@ -27,7 +27,7 @@ feature -- Event handling
 			-- Attach to GTK "expose-event" signal.
 		do
 			create Result
-			real_signal_connect (c_object, "expose-event", agent gtk_marshal.create_expose_actions_intermediary (c_object, ?, ?, ?, ?), default_translate)
+			real_signal_connect (c_object, "expose-event", agent (App_implementation.gtk_marshal).create_expose_actions_intermediary (c_object, ?, ?, ?, ?), App_implementation.default_translate)
 		end
 end
 

@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 	initialize is
 			-- Call to both precursors.		
 		do
-			real_signal_connect (c_object, "activate", agent gtk_marshal.menu_item_activate_intermediary (c_object), Void)
+			real_signal_connect (c_object, "activate", agent (App_implementation.gtk_marshal).menu_item_activate_intermediary (c_object), Void)
 			textable_imp_initialize
 			pixmapable_imp_initialize
 			initialize_menu_item_box
@@ -208,7 +208,7 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 			end
 			C.gtk_menu_item_deselect (c_object)
 			if select_actions_internal /= Void then
-				select_actions_internal.call (empty_tuple)
+				select_actions_internal.call ((App_implementation.gtk_marshal).empty_tuple)
 			end
 		end
 

@@ -54,8 +54,27 @@ feature -- Access
 		
 	pointer_style: EV_CURSOR is
 			-- Cursor displayed when screen pointer is over current widget.
+			-- Void if none has been set using `set_pointer_position'.
 		deferred
 		end
+		
+	internal_pointer_style: EV_CURSOR is
+			-- Cursor displayed when screen pointer is over current widget,
+			-- as seen from interface.
+		local
+			text_component: EV_TEXT_COMPONENT
+		do
+			Result := pointer_style
+			if Result = Void then
+				text_component ?= Current
+				if text_component /= Void then
+					Result := Default_pixmaps.Ibeam_cursor
+				else
+					Result := Default_pixmaps.Standard_cursor
+				end
+			end
+		end
+		
 
 	actual_drop_target_agent: FUNCTION [ANY, TUPLE [INTEGER, INTEGER], EV_ABSTRACT_PICK_AND_DROPABLE]
 			-- Overrides default drop target on a certain position.

@@ -14,6 +14,7 @@ inherit
 			eiffelized_consumed_entities,
 			dotnet_name,
 			is_property,
+			is_property_or_event,
 			is_public,
 			is_static
 		end
@@ -69,6 +70,12 @@ feature -- ConsumerWrapper functions
 
 	is_property: BOOLEAN is
 			-- Is `Current' a .Net Property.
+		do
+			Result := True
+		end
+		
+	is_property_or_event: BOOLEAN is
+			-- Is 'Current' a .NET Property or Event?
 		do
 			Result := True
 		end

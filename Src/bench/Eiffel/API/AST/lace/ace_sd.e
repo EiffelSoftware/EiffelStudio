@@ -207,7 +207,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 	process_system_level_options is
 				-- Process the system level options
 		do
-			System.reset_system_level_options;
+			reset_system_level_options;
 			Universe.set_override_cluster_name (Void)
 			if defaults /= Void then
 				from
@@ -472,5 +472,19 @@ feature {NONE} -- Incrementality
 				end
 			end
 		end;
+
+	reset_system_level_options is
+			-- Reset all system level options to their default value.
+		do
+			System.set_remover_off (False)
+			System.set_array_optimization_on (False)
+			System.set_inlining_on (False)
+			System.set_inlining_size (4)			
+			System.set_code_replication_off (True)
+			System.set_exception_stack_managed (False)
+			System.server_controler.set_block_size (1024)
+			System.set_do_not_check_vape (False)
+			System.allow_address_expression (False)			
+		end
 
 end -- class ACE_SD

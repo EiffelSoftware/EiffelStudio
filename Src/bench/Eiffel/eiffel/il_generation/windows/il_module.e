@@ -247,9 +247,10 @@ feature -- Access: tokens
 	ise_none_type_token,
 	ise_basic_type_token,
 	ise_eiffel_derivation_type_token,
-	ise_eiffel_class_name_attr_token,
 	ise_eiffel_class_name_attr_ctor_token,
-	type_handle_class_token: INTEGER
+	ise_assertion_level_attr_ctor_token,
+	type_handle_class_token,
+	ise_assertion_level_enum_token: INTEGER
 			-- Token for run-time types used in code generation.
 
 feature -- Access: types
@@ -470,8 +471,9 @@ feature -- Code generation
 			entry_type_token: INTEGER
 			l_sig: like method_sig
 			l_type_id: INTEGER
+			l_assertion_initialize_token: INTEGER
 		do
-			l_type_id := a_class_type.static_type_id
+			l_type_id := a_class_type.implementation_id
 
 			entry_type_token := md_emit.define_type (
 				create {UNI_STRING}.make ("MAIN"), feature {MD_TYPE_ATTRIBUTES}.Ansi_class |
@@ -498,10 +500,26 @@ feature -- Code generation
 			end
 
 			il_code_generator.start_new_body (entry_point_token)
+			
+				-- Initialize assertions for runtime in workbench mode.
+			if not System.in_final_mode then
+				il_code_generator.put_type_token (l_type_id)
+				il_code_generator.internal_generate_external_call (ise_runtime_token, 0,
+					Runtime_class_name, "assertion_initialize",
+					feature {SHARED_IL_CONSTANTS}.static_type, <<type_handle_class_name>>,
+					Void, False)
+			end
+
+				-- Create root object and call creation procedure.
 			il_code_generator.method_body.put_call (feature {MD_OPCODES}.Newobj,
 				constructor_token (creation_type_id), 0, True)
-			il_code_generator.method_body.put_call (feature {MD_OPCODES}.Callvirt,
-				feature_token (l_type_id, a_feature_id), 0, False)
+			if a_class_type.associated_class.is_single then
+				il_code_generator.method_body.put_call (feature {MD_OPCODES}.Callvirt,
+					feature_token (l_type_id, a_feature_id), 0, False)
+			else
+				il_code_generator.method_body.put_call (feature {MD_OPCODES}.Call,
+					implementation_feature_token (l_type_id, a_feature_id), 0, False)
+			end
 			il_code_generator.method_body.put_opcode (feature {MD_OPCODES}.Ret)
 
 			method_writer.write_current_body
@@ -1462,7 +1480,7 @@ feature -- Mapping between Eiffel compiler and generated tokens
 					if l_name.is_equal ("mscorlib") then
 						internal_assemblies.put (mscorlib_token, a_class_type.implementation_id)
 						defined_assemblies.put (mscorlib_token, l_name)
-					elseif l_name.is_equal ("ISE.Runtime") then
+					elseif l_name.is_equal (runtime_namespace) then
 						internal_assemblies.put (ise_runtime_token, a_class_type.implementation_id)
 						defined_assemblies.put (ise_runtime_token, l_name)
 					else
@@ -1551,6 +1569,7 @@ feature {NONE} -- Once per modules being generated.
 			class_mapping.put (ise_none_type_token, l_gen.none_type_id)
 			class_mapping.put (ise_eiffel_type_info_type_token, l_gen.eiffel_type_info_type_id)
 			class_mapping.put (ise_generic_conformance_token, l_gen.generic_conformance_type_id)
+			class_mapping.put (ise_assertion_level_enum_token, l_gen.assertion_level_enum_type_id)
 
 			internal_external_token_mapping.put (ise_type_token, Type_class_name)
 			internal_external_token_mapping.put (ise_class_type_token, Class_type_class_name)
@@ -1564,6 +1583,8 @@ feature {NONE} -- Once per modules being generated.
 				Generic_conformance_class_name)
 			internal_external_token_mapping.put (type_handle_class_token,
 				Type_handle_class_name)
+			internal_external_token_mapping.put (ise_assertion_level_enum_token,
+				Assertion_level_enum_class_name)
 
 			l_sig := default_sig
 			uni_string.set_string (".ctor")
@@ -1807,6 +1828,9 @@ feature {NONE} -- Once per modules being generated.
 			l_excep_man_token: INTEGER
 			l_sig: like field_sig
 			l_meth_sig: like method_sig
+			l_ise_eiffel_class_name_attr_token: INTEGER
+			l_ise_assertion_level_attr_token: INTEGER
+			l_system_type_token: INTEGER
 		do
 				-- Define `ise_runtime_token'.
 			create l_ass_info.make
@@ -1817,11 +1841,11 @@ feature {NONE} -- Once per modules being generated.
 				<<0xDE, 0xF2, 0x6F, 0x29, 0x6E, 0xFE, 0xF4, 0x69>>)
 
 			ise_runtime_token := md_emit.define_assembly_ref (
-				create {UNI_STRING}.make ("ISE.Runtime"), l_ass_info, l_pub_key)
+				create {UNI_STRING}.make (runtime_namespace), l_ass_info, l_pub_key)
 
 				-- Define `ise_last_exception_token'.
 			l_excep_man_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make ("ISE.Runtime.EXCEPTION_MANAGER"),
+				create {UNI_STRING}.make (exception_manager_class_name),
 				ise_runtime_token)
 
 			l_sig := field_sig
@@ -1878,10 +1902,11 @@ feature {NONE} -- Once per modules being generated.
 			ise_basic_type_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (basic_type_class_name), ise_runtime_token)
 			ise_eiffel_derivation_type_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make ("ISE.Runtime.EIFFEL_DERIVATION"), ise_runtime_token)
-			ise_eiffel_class_name_attr_token := md_emit.define_type_ref (
-				create {UNI_STRING}.make ("ISE.Runtime.EIFFEL_CLASS_NAME_ATTRIBUTE"),
-				ise_runtime_token)
+				create {UNI_STRING}.make (eiffel_derivation_class_name), ise_runtime_token)
+			l_ise_eiffel_class_name_attr_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make (eiffel_class_name_attribute), ise_runtime_token)
+			l_ise_assertion_level_attr_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make (assertion_level_class_name_attribute), ise_runtime_token)
 			ise_generic_conformance_token := md_emit.define_type_ref (
 				create {UNI_STRING}.make (Generic_conformance_class_name), ise_runtime_token)
 
@@ -1927,7 +1952,25 @@ feature {NONE} -- Once per modules being generated.
 
 			uni_string.set_string (".ctor")
 			ise_eiffel_class_name_attr_ctor_token := md_emit.define_member_ref (uni_string,
-				ise_eiffel_class_name_attr_token, l_meth_sig)
+				l_ise_eiffel_class_name_attr_token, l_meth_sig)
+
+			l_system_type_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make ("System.Type"), mscorlib_token)
+			ise_assertion_level_enum_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make (Assertion_level_enum_class_name), ise_runtime_token)
+
+			l_meth_sig.reset
+			l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_meth_sig.set_parameter_count (2)
+			l_meth_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+				l_system_type_token)
+			l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype,
+				ise_assertion_level_enum_token)
+
+			uni_string.set_string (".ctor")
+			ise_assertion_level_attr_ctor_token := md_emit.define_member_ref (uni_string,
+				l_ise_assertion_level_attr_token, l_meth_sig)
 		end
 
 feature {NONE} -- Cleaning

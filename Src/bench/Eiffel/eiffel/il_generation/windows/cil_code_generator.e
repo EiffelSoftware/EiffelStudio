@@ -154,7 +154,7 @@ feature {NONE} -- Access
 	type_count: INTEGER is
 			-- Number of generated types in Current system.
 		do
-			Result := (create {SHARED_COUNTER}).static_type_id_counter.count + 8
+			Result := (create {SHARED_COUNTER}).static_type_id_counter.count + 9
 		ensure
 			type_count_positive: type_count >= 0
 		end
@@ -255,6 +255,9 @@ feature -- Access
 
 	generic_conformance_type_id: INTEGER
 			-- Identifier for class ISE.Runtime.GENERIC_CONFORMANCE.
+			
+	assertion_level_enum_type_id: INTEGER
+			-- Identifier for class ISE.Runtime.Enums.ASSERTION_LEVEL_ENUM.
 
 	public_key: MD_PUBLIC_KEY
 			-- Public key if used of current assembly.
@@ -339,6 +342,16 @@ feature -- Settings
 			generic_conformance_type_id := an_id
 		ensure
 			generic_conformance_type_id_set: generic_conformance_type_id = an_id
+		end
+
+	set_assertion_level_enum_type_id (an_id: like assertion_level_enum_type_id) is
+			-- Set `an_id' to `assertion_level_enum_type_id'.
+		require
+			valid_id: an_id > 0
+		do
+			assertion_level_enum_type_id := an_id
+		ensure
+			assertion_level_enum_type_id_set: assertion_level_enum_type_id = an_id
 		end
 
 	set_once_generation (v: BOOLEAN) is
@@ -487,7 +500,7 @@ feature -- Generation Structure
 				Current,
 				assembly_info,
 				1,
-				debug_mode,
+				is_debug_info_enabled,
 				True -- Main assembly
 				)
 			current_module := main_module
@@ -587,6 +600,8 @@ feature -- Generation Structure
 							file_token.put (l_file_token, l_module)
 						end
 						
+						define_assertion_level (l_type)
+
 						l_uni_string.set_string (l_type.full_il_type_name)
 						l_token := md_emit.define_exported_type (l_uni_string, l_file_token,
 							l_type.last_type_token, feature {MD_TYPE_ATTRIBUTES}.Public)
@@ -615,6 +630,28 @@ feature -- Generation Structure
 			main_module.save_to_disk
 		end
 
+	define_assertion_level (class_type: CLASS_TYPE) is
+			-- Define assertion level for `class_type'.
+		require
+			class_type_not_void: class_type /= Void
+		local
+			l_assert_ca: MD_CUSTOM_ATTRIBUTE
+		do
+			check
+				main_module_not_void: main_module /= Void
+			end
+			create l_assert_ca.make
+			if class_type.implementation_id /= class_type.static_type_id then
+				l_assert_ca.put_string (class_type.full_il_implementation_type_name)
+			else
+				l_assert_ca.put_string (class_type.full_il_type_name)
+			end
+			l_assert_ca.put_integer_32 (class_type.associated_class.assertion_level.level)
+			l_assert_ca.put_integer_16 (0)
+			define_custom_attribute (main_module.associated_assembly_token,
+				main_module.ise_assertion_level_attr_ctor_token, l_assert_ca)
+		end
+		
 	end_module_generation (has_root_class: BOOLEAN) is
 			-- Finish creation of current module.
 		local
@@ -635,7 +672,7 @@ feature -- Generation Structure
 
 					current_module.dbg_writer.set_user_entry_point (
 						current_module.implementation_feature_token (
-							l_decl_type.associated_class_type.static_type_id,
+							l_decl_type.associated_class_type.implementation_id,
 							root_feat.origin_feature_id))
 				end
 					-- Save module.
@@ -2449,8 +2486,14 @@ feature -- IL Generation
 					if l_type /= Void then
 						set_signature_type (l_meth_sig, l_type)
 					else
-						l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
-							current_module.external_token_mapping (l_real_type))
+							-- A runtime type.
+						if l_real_type.is_equal (Assertion_level_enum_class_name) then
+							l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_valuetype,
+								current_module.external_token_mapping (l_real_type))
+						else
+							l_meth_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+								current_module.external_token_mapping (l_real_type))
+						end
 					end
 					i := i + 1
 				end
@@ -3367,6 +3410,32 @@ feature -- Assertions
 		do
 			method_body.put_call (feature {MD_OPCODES}.Call, current_module.ise_in_assertion_token,
 				0, True)
+		end
+
+	generate_is_assertion_checked (level: INTEGER) is
+			-- Check wether or not we need to check assertion for current type.
+		require
+			valid_level:
+				level = feature {ASSERTION_I}.ck_require or
+				level = feature {ASSERTION_I}.ck_ensure or
+				level = feature {ASSERTION_I}.ck_check or
+				level = feature {ASSERTION_I}.ck_loop or
+				level = feature {ASSERTION_I}.ck_invariant
+		do
+			if System.in_final_mode then
+				method_body.put_call (feature {MD_OPCODES}.Call, current_module.ise_in_assertion_token,
+					0, True)
+				method_body.put_opcode (feature {MD_OPCODES}.ldc_i4_0);
+				method_body.put_opcode (feature {MD_OPCODES}.ceq)
+			else
+				generate_current
+				internal_generate_external_call (current_module.mscorlib_token, 0, System_object_class_name,
+					"GetType", Normal_type, <<>>, System_type_class_name, False)
+				put_integer_32_constant (level)
+				internal_generate_external_call (current_module.ise_runtime_token, 0,
+					runtime_class_name, "is_assertion_checked", Static_type,
+					<<System_type_class_name, Assertion_level_enum_class_name>>, "System.Boolean", False)
+			end
 		end
 
 	generate_set_assertion_status is

@@ -42,7 +42,7 @@ feature -- Access bytes size
 	Boolean_bytes: INTEGER is
 			-- Number of bytes in a value of type `BOOLEAN'
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C macro use %"eif_misc.h%""
 		alias
 			"sizeof(EIF_BOOLEAN)"
 		end
@@ -50,7 +50,7 @@ feature -- Access bytes size
 	Character_bytes: INTEGER is
 			-- Number of bytes in a value of type `CHARACTER'
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C macro use %"eif_misc.h%""
 		alias
 			"sizeof(EIF_CHARACTER)"
 		end
@@ -58,7 +58,7 @@ feature -- Access bytes size
 	Wide_character_bytes: INTEGER is
 			-- Number of bytes in a value of type `WIDE_CHARACTER'
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C macro use %"eif_misc.h%""
 		alias
 			"sizeof(EIF_WIDE_CHAR)"
 		end
@@ -66,7 +66,7 @@ feature -- Access bytes size
 	Integer_8_bytes: INTEGER is
 			-- Number of bytes in a value of type `INTEGER_8'
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C macro use %"eif_misc.h%""
 		alias
 			"sizeof(EIF_INTEGER_8)"
 		end
@@ -74,7 +74,7 @@ feature -- Access bytes size
 	Integer_16_bytes: INTEGER is
 			-- Number of bytes in a value of type `INTEGER_16'
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C macro use %"eif_misc.h%""
 		alias
 			"sizeof(EIF_INTEGER_16)"
 		end
@@ -82,7 +82,7 @@ feature -- Access bytes size
 	Integer_32_bytes, Integer_bytes: INTEGER is
 			-- Number of bytes in a value of type `INTEGER'
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C macro use %"eif_misc.h%""
 		alias
 			"sizeof(EIF_INTEGER)"
 		end
@@ -90,7 +90,7 @@ feature -- Access bytes size
 	Integer_64_bytes: INTEGER is
 			-- Number of bytes in a value of type `INTEGER_64'
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C macro use %"eif_misc.h%""
 		alias
 			"sizeof(EIF_INTEGER_64)"
 		end
@@ -98,7 +98,7 @@ feature -- Access bytes size
 	Real_bytes: INTEGER is
 			-- Number of bytes in a value of type `REAL'
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C macro use %"eif_misc.h%""
 		alias
 			"sizeof(EIF_REAL)"
 		end
@@ -106,7 +106,7 @@ feature -- Access bytes size
 	Double_bytes: INTEGER is
 			-- Number of bytes in a value of type `DOUBLE'
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C macro use %"eif_misc.h%""
 		alias
 			"sizeof(EIF_DOUBLE)"
 		end
@@ -114,7 +114,7 @@ feature -- Access bytes size
 	Pointer_bytes: INTEGER is
 			-- Number of bytes in a value of type `POINTER'
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C macro use %"eif_misc.h%""
 		alias
 			"sizeof(EIF_POINTER)"
 		end
@@ -124,7 +124,7 @@ feature -- Access bits size
 	Boolean_bits: INTEGER is
 			-- Number of bits in a value of type `BOOLEAN'
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C macro use %"eif_misc.h%""
 		alias
 			"esbool_size"
 		end
@@ -132,23 +132,44 @@ feature -- Access bits size
 	Character_bits: INTEGER is
 			-- Number of bits in a value of type `CHARACTER'
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C macro use %"eif_misc.h%""
 		alias
 			"eschar_size"
 		end
 
-	Integer_bits: INTEGER is
+	Integer_8_bits: INTEGER is
+		external
+			"C macro use %"eif_misc.h%""
+		alias
+			"esint8_size"
+		end
+
+	Integer_16_bits: INTEGER is
+		external
+			"C macro use %"eif_misc.h%""
+		alias
+			"esint16_size"
+		end
+
+	Integer_32_bits, Integer_bits: INTEGER is
 			-- Number of bits in a value of type `INTEGER'
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C macro use %"eif_misc.h%""
 		alias
 			"esint_size"
+		end
+
+	Integer_64_bits: INTEGER is
+		external
+			"C macro use %"eif_misc.h%""
+		alias
+			"esint64_size"
 		end
 
 	Real_bits: INTEGER is
 			-- Number of bits in a value of type `REAL'
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C macro use %"eif_misc.h%""
 		alias
 			"esreal_size"
 		end
@@ -156,7 +177,7 @@ feature -- Access bits size
 	Double_bits: INTEGER is
 			-- Number of bits in a value of type `DOUBLE'
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C macro use %"eif_misc.h%""
 		alias
 			"esdouble_size"
 		end
@@ -164,7 +185,7 @@ feature -- Access bits size
 	Pointer_bits: INTEGER is
 			-- Number of bits in a value of type `POINTER'
 		external
-			"C [macro %"eif_misc.h%"]"
+			"C macro use %"eif_misc.h%""
 		alias
 			"esptr_size"
 		end

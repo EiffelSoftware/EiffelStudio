@@ -1,14 +1,14 @@
 indexing
 	description: 
-		"Displays a labeled border around a widget"
+		"Displays an optionally labeled border around a widget."
 	appearance:
-		"-<`text'>------%N%
+		"+<`text'>-----+%N%
 		%|             |%N%
 		%|   `item'    |%N%
 		%|             |%N%
-		%---------------"
+		%+-------------+"
 	status: "See notice at end of class"
-	keywords: "container, frame, box, border"
+	keywords: "container, frame, box, border, bevel, outline, raised, lowered"
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -20,7 +20,8 @@ inherit
 		undefine
 			create_implementation
 		redefine
-			implementation
+			implementation,
+			make_for_test
 		end
 
 	EV_TEXTABLE
@@ -28,21 +29,75 @@ inherit
 			implementation
 		end
 
+	EV_FRAME_CONSTANTS
+		undefine
+			default_create
+		end
+
 create
 	default_create,
 	make_with_text,
 	make_for_test
 
-feature {NONE} -- Implementation
-
-	implementation: EV_FRAME_I
-			-- Responsible for interaction with the native graphics toolkit.
+feature {NONE} -- Initialization
 
 	create_implementation is
 			-- Create implementation of frame.
 		do
 			create {EV_FRAME_IMP} implementation.make (Current)
 		end
+
+	make_for_test is
+			-- Create interesting to display.
+		local
+			style_timer: EV_TIMEOUT
+		do
+			Precursor
+			create style_timer.make_with_interval (2500)
+			style_timer.actions.extend (~cycle_style)
+		end
+
+feature -- Access
+
+	style: INTEGER is
+			-- Visual appearance. See: EV_FRAME_CONSTANTS.
+		do
+			Result := implementation.style
+		ensure
+			bridge_ok: Result = implementation.style
+		end
+
+feature -- Element change
+
+	set_style (a_style: INTEGER) is
+			-- Assign `a_style' to `style'.
+		require
+			a_style_valid: valid_frame_border (a_style)
+		do
+			implementation.set_style (a_style)
+		ensure
+			style_assigned: style = a_style
+		end
+
+feature {NONE} -- Implementation
+
+	cycle_style is
+			-- Set another `style'.
+		local
+			next_style: INTEGER
+		do
+			next_style := style + 1
+			if not valid_frame_border (next_style) then
+				next_style := Ev_frame_lowered
+			end
+			set_style (next_style)
+		end
+
+	implementation: EV_FRAME_I
+			-- Responsible for interaction with the native graphics toolkit.
+
+invariant
+	valid_style: is_useable implies valid_frame_border (style)
 
 end -- class EV_FRAME
 
@@ -67,6 +122,9 @@ end -- class EV_FRAME
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/27 17:11:58  brendel
+--| Added `style' and `set_style'.
+--|
 --| Revision 1.11  2000/03/17 23:48:19  oconnor
 --| comments
 --|

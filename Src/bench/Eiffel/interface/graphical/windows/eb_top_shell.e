@@ -21,24 +21,23 @@ inherit
 		redefine
 			implementation
 		end;
-	WINDOWS
+	WINDOWS;
+	INTERFACE_W
 
 creation
 	make
 
 feature -- Initialization
 
-	make (a_name: STRING; a_screen: SCREEN) is
+	make (a_screen: SCREEN) is
 			-- Initialize Current.
 		require
-			valid_name: a_name /= Void
 			valid_screen: a_screen /= Void
 		do
-			old_make (a_name, a_screen);
+			old_make (l_X_resourse_name, a_screen);
 			!! associated_form.make ("", Current);
 		ensure
-			screen_set: equal (screen, a_screen);
-			identifier_set: identifier.is_equal (a_name)
+			screen_set: equal (screen, a_screen)
 		end;
 
 feature -- Properties

@@ -11,48 +11,38 @@ deferred class
 
 	EV_MENU_ITEM_CONTAINER
 
-inherit
+feature -- Element change
 
-	EV_CONTAINER
-		redefine
-			implementation,
-			add_child,
-			add_child_ok
-		end
-	
-
-feature -- Status report
-	
-	add_child_ok: BOOLEAN is
-			-- True, if it is ok to add a child to
-			-- container. With menu item container, it is
-			-- always ok.
+	add_menu (sub_menu: EV_MENU) is
+			-- Add a menu in the container.
 		do
-			Result := True
+			implementation.add_menu (sub_menu)
 		end
 
-
-feature {EV_WIDGET}
-	
-	add_child (c: EV_WIDGET) is
-			-- If c is menu item, add it as a menu item, 
-			-- otherwise use normal add_child of container
-
-		local
-			i: EV_MENU_ITEM
+	add_menu_item (menu_item: EV_MENU_ITEM) is
+			-- Add an item in the container.
 		do
-			i ?= c
-			if i = Void then
-				implementation.add_child (c.implementation)
-			else
-				implementation.add_menu_item (i.implementation)
-			end
-			child := c
+			implementation.add_menu_item (menu_item)
 		end
-	
-	-- feature child in this class means the last child
-feature {NONE} -- Implementation
-	
+
+feature -- Implementation
+
 	implementation: EV_MENU_ITEM_CONTAINER_I
 			
 end 
+
+--|----------------------------------------------------------------
+--| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

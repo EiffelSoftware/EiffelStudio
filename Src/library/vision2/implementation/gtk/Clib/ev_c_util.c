@@ -135,8 +135,8 @@ char * information_pixmap_data[] = {
 "              ````              "
 };
 
-char *information_pixmap_xpm (void) {
-        return (char *) information_pixmap_data;
+char **information_pixmap_xpm (void) {
+        return information_pixmap_data;
 }
 
 /* XPM */
@@ -197,8 +197,8 @@ char *error_pixmap_data[] = {
 };
 
 
-char *error_pixmap_xpm (void) {
-        return (char *) error_pixmap_data;
+char **error_pixmap_xpm (void) {
+        return error_pixmap_data;
 }
 
 /* XPM */
@@ -265,8 +265,8 @@ char *question_pixmap_data[] = {
 "              ````              "
 };
 
-char *question_pixmap_xpm (void) {
-        return (char *) question_pixmap_data;
+char **question_pixmap_xpm (void) {
+        return question_pixmap_data;
 }
 
 /* XPM */
@@ -326,8 +326,8 @@ char *warning_pixmap_data[] = {
 "              ````              "
 };
 
-char *warning_pixmap_xpm (void) {
-        return (char *) warning_pixmap_data;
+char **warning_pixmap_xpm (void) {
+        return warning_pixmap_data;
 }
 
 /* XPM */
@@ -373,8 +373,8 @@ char *no_collate_pixmap_data[] = {
 "                                                                  "
 };
 
-char *no_collate_pixmap_xpm (void) {
-        return (char *) no_collate_pixmap_data;
+char **no_collate_pixmap_xpm (void) {
+        return no_collate_pixmap_data;
 }
 
 /* XPM */
@@ -420,8 +420,8 @@ char *collate_pixmap_data[] = {
 "                                                                  "
 };
 
-char *collate_pixmap_xpm (void) {
-        return (char *) collate_pixmap_data;
+char **collate_pixmap_xpm (void) {
+        return collate_pixmap_data;
 }
 
 /* XPM */
@@ -456,8 +456,8 @@ char *landscape_pixmap_data[] = {
 "                     "
 };
 
-char *landscape_pixmap_xpm (void) {
-        return (char *) landscape_pixmap_data;
+char **landscape_pixmap_xpm (void) {
+        return landscape_pixmap_data;
 }
 
 /* XPM */
@@ -492,8 +492,8 @@ char *portrait_pixmap_data[] = {
 "                     "
 };
 
-char *portrait_pixmap_xpm (void) {
-        return (char *) portrait_pixmap_data;
+char **portrait_pixmap_xpm (void) {
+        return portrait_pixmap_data;
 }
 
 /* XPM */
@@ -539,8 +539,8 @@ char *busy_cursor_data[] = {
 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 };
 
-char *busy_cursor_xpm (void) {
-        return (char *) busy_cursor_data;
+char **busy_cursor_xpm (void) {
+        return busy_cursor_data;
 }
 
 /* XPM */
@@ -586,8 +586,8 @@ char *crosshair_cursor_data[] = {
 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 };
 
-char *crosshair_cursor_xpm (void) {
-        return (char *) crosshair_cursor_data;
+char **crosshair_cursor_xpm (void) {
+        return crosshair_cursor_data;
 }
 
 /* XPM */
@@ -633,8 +633,8 @@ char *help_cursor_data[] = {
 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 };
 
-char *help_cursor_xpm (void) {
-        return (char *) help_cursor_data;
+char **help_cursor_xpm (void) {
+        return help_cursor_data;
 }
 
 /* XPM */
@@ -680,8 +680,8 @@ char *ibeam_cursor_data[] = {
 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 };
 
-char *ibeam_cursor_xpm (void) {
-        return (char *) ibeam_cursor_data;
+char **ibeam_cursor_xpm (void) {
+        return ibeam_cursor_data;
 }
 
 /* XPM */
@@ -724,8 +724,8 @@ char * no_cursor_data[] = {
 "                                " 
 };
 
-char *no_cursor_xpm (void) {
-        return (char *) no_cursor_data;
+char **no_cursor_xpm (void) {
+        return no_cursor_data;
 }
 
 /* XPM */
@@ -771,8 +771,8 @@ char *sizeall_cursor_data[] = {
 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 };
 
-char *sizeall_cursor_xpm (void) {
-        return (char *) sizeall_cursor_data;
+char **sizeall_cursor_xpm (void) {
+        return sizeall_cursor_data;
 }
 
 /* XPM */
@@ -818,8 +818,8 @@ char *sizenesw_cursor_data[] = {
 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 };
 
-char *sizenesw_cursor_xpm (void) {
-        return (char *) sizenesw_cursor_data;
+char **sizenesw_cursor_xpm (void) {
+        return sizenesw_cursor_data;
 }
 
 /* XPM */
@@ -865,8 +865,8 @@ char *sizens_cursor_data[] = {
 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 };
 
-char *sizens_cursor_xpm (void) {
-        return (char *) sizens_cursor_data;
+char **sizens_cursor_xpm (void) {
+        return sizens_cursor_data;
 }
 
 /* XPM */
@@ -912,8 +912,8 @@ char *sizenwse_cursor_data[] = {
 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 };
 
-char *sizenwse_cursor_xpm (void) {
-        return (char *) sizenwse_cursor_data;
+char **sizenwse_cursor_xpm (void) {
+        return sizenwse_cursor_data;
 }
 /* XPM */
 char *sizewe_cursor_data[] = {
@@ -958,8 +958,8 @@ char *sizewe_cursor_data[] = {
 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 };
 
-char *sizewe_cursor_xpm (void) {
-        return (char *) sizewe_cursor_data;
+char **sizewe_cursor_xpm (void) {
+        return sizewe_cursor_data;
 }
 
 /* XPM */
@@ -1005,8 +1005,8 @@ char *standard_cursor_data[] = {
 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 };
 
-char *standard_cursor_xpm (void) {
-        return (char *) standard_cursor_data;
+char **standard_cursor_xpm (void) {
+        return standard_cursor_data;
 }
 
 /* XPM */
@@ -1052,8 +1052,8 @@ char *uparrow_cursor_data[] = {
 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 };
 
-char *uparrow_cursor_xpm (void) {
-        return (char *) uparrow_cursor_data;
+char **uparrow_cursor_xpm (void) {
+        return uparrow_cursor_data;
 }
 /* XPM */
 char *wait_cursor_data[] = {
@@ -1098,8 +1098,8 @@ char *wait_cursor_data[] = {
 "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 };
 
-char *wait_cursor_xpm (void) {
-        return (char *) wait_cursor_data;
+char **wait_cursor_xpm (void) {
+        return wait_cursor_data;
 }
 
 
@@ -1124,6 +1124,9 @@ char *wait_cursor_xpm (void) {
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.17  2001/11/06 02:12:28  king
+// Corrected pixmap externals
+//
 // Revision 1.16  2001/11/06 00:17:13  king
 // Added public functions to private xpm data
 //

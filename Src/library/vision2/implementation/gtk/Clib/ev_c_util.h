@@ -17,27 +17,27 @@ GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index);
 void enable_ev_gtk_log (int a_mode);
 
 /* XPM */
-char *information_pixmap_xpm (void);
-char *error_pixmap_xpm (void);
-char *question_pixmap_xpm (void);
-char *warning_pixmap_xpm (void);
-char *no_collate_pixmap_xpm (void);
-char *collate_pixmap_xpm (void);
-char *landscape_pixmap_xpm (void);
-char *portrait_pixmap_xpm (void);
-char *busy_cursor_xpm (void);
-char *crosshair_cursor_xpm (void);
-char *help_cursor_xpm (void);
-char *ibeam_cursor_xpm (void);
-char *no_cursor_xpm (void);
-char *sizeall_cursor_xpm (void);
-char *sizenesw_cursor_xpm (void);
-char *sizens_cursor_xpm (void);
-char *sizenwse_cursor_xpm (void);
-char *sizewe_cursor_xpm (void);
-char *standard_cursor_xpm (void);
-char *uparrow_cursor_xpm (void);
-char *wait_cursor_xpm (void);
+char **information_pixmap_xpm (void);
+char **error_pixmap_xpm (void);
+char **question_pixmap_xpm (void);
+char **warning_pixmap_xpm (void);
+char **no_collate_pixmap_xpm (void);
+char **collate_pixmap_xpm (void);
+char **landscape_pixmap_xpm (void);
+char **portrait_pixmap_xpm (void);
+char **busy_cursor_xpm (void);
+char **crosshair_cursor_xpm (void);
+char **help_cursor_xpm (void);
+char **ibeam_cursor_xpm (void);
+char **no_cursor_xpm (void);
+char **sizeall_cursor_xpm (void);
+char **sizenesw_cursor_xpm (void);
+char **sizens_cursor_xpm (void);
+char **sizenwse_cursor_xpm (void);
+char **sizewe_cursor_xpm (void);
+char **standard_cursor_xpm (void);
+char **uparrow_cursor_xpm (void);
+char **wait_cursor_xpm (void);
 
 #endif
 
@@ -62,6 +62,9 @@ char *wait_cursor_xpm (void);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.13  2001/11/06 02:12:28  king
+// Corrected pixmap externals
+//
 // Revision 1.12  2001/11/06 00:17:13  king
 // Added public functions to private xpm data
 //

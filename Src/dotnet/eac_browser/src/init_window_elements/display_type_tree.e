@@ -140,6 +140,7 @@ feature -- Basic Operations
 			eac: EAC_BROWSER
 			l_node: EV_COMPARABLE_TREE_ITEM
 			l_inherited_entities: ARRAY [CONSUMED_ENTITY]
+			l_entity: CONSUMED_ENTITY
 			l_property: CONSUMED_PROPERTY
 			l_event: CONSUMED_EVENT
 			l_feature: CONSUMED_MEMBER
@@ -178,7 +179,6 @@ feature -- Basic Operations
 			end
 			right_tree.append (classify_tree_nodes (l_inherited_features))				
 		end
-
 
 	print_constructors (assembly_of_dotnet_type: CONSUMED_ASSEMBLY; a_full_dotnet_type_name: STRING) is
 			-- Set `assembly_of_type' with `assembly_of_dotnet_type' 
@@ -256,7 +256,6 @@ feature -- Basic Operations
 					l_methods_list.extend (l_tree_item)
 					i := i + 1
 				end
---				right_tree.append (classify_tree_nodes (l_fields_list))
 
 				from
 					i := 1
@@ -271,7 +270,6 @@ feature -- Basic Operations
 
 					i := i + 1
 				end
---				right_tree.append (classify_tree_nodes (l_procedures_list))
 
 				from
 					i := 1
@@ -334,6 +332,8 @@ feature {NONE} -- Implementation
 			path: CACHE_PATH
 			l_constructors_node, l_attributes_node, l_features_node, l_properties_node, l_events_node: EV_TREE_ITEM
 			l_constructors_list, l_fields_list, l_procedures_list, l_functions_list, l_properties_list, l_events_list: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
+			l_procedures: ARRAY [CONSUMED_PROCEDURE]
+			l_functions: ARRAY [CONSUMED_FUNCTION]
 		do
 			right_tree.wipe_out
 			create eac
@@ -379,17 +379,17 @@ feature {NONE} -- Implementation
 				end
 				l_attributes_node.append (classify_tree_nodes (l_fields_list))
 				right_tree.extend (l_attributes_node)
---				right_tree.append (classify_tree_nodes (l_fields_list))
 
 				from
 					i := 1
 					create l_procedures_list.make
+					l_procedures := ct.procedures
 				until
 					ct.procedures = Void
-					or else i > ct.procedures.count
+					or else i > l_procedures.count
 				loop
-					if not ct.procedures.item (i).is_property_or_event then
-						l_tree_item := initialize_tree_item_feature (ct.procedures.item (i), a_full_dotnet_type_name)
+					if not l_procedures.item (i).is_property_or_event then
+						l_tree_item := initialize_tree_item_feature (l_procedures.item (i), a_full_dotnet_type_name)
 						l_procedures_list.extend (l_tree_item)
 					end
 	
@@ -401,18 +401,17 @@ feature {NONE} -- Implementation
 					l_features_node.set_pixmap (l_ico)
 				end
 				l_features_node.append (classify_tree_nodes (l_procedures_list))
---				right_tree.extend (l_features_node)
---				right_tree.append (classify_tree_nodes (l_procedures_list))
 
 				from
 					i := 1
 					create l_functions_list.make
+					l_functions := ct.functions
 				until
 					ct.functions = Void
-					or else i > ct.functions.count
+					or else i > l_functions.count
 				loop
-					if not ct.functions.item (i).is_property_or_event then
-						l_tree_item := initialize_tree_item_feature (ct.functions.item (i), a_full_dotnet_type_name)
+					if not l_functions.item (i).is_property_or_event then
+						l_tree_item := initialize_tree_item_feature (l_functions.item (i), a_full_dotnet_type_name)
 						l_functions_list.extend (l_tree_item)
 					end
 	
@@ -424,7 +423,6 @@ feature {NONE} -- Implementation
 				end
 				l_features_node.append (classify_tree_nodes (l_functions_list))
 				right_tree.extend (l_features_node)
---				right_tree.append (classify_tree_nodes (l_functions_list))
 
 				from
 					i := 1
@@ -445,7 +443,6 @@ feature {NONE} -- Implementation
 				end
 				l_properties_node.append (classify_tree_nodes (l_properties_list))
 				right_tree.extend (l_properties_node)
---				right_tree.append (classify_tree_nodes (l_properties_list))
 
 				from
 					i := 1
@@ -466,35 +463,8 @@ feature {NONE} -- Implementation
 				end
 				l_events_node.append (classify_tree_nodes (l_events_list))
 				right_tree.extend (l_events_node)
---				right_tree.append (classify_tree_nodes (l_events_list))
-
 			end
 		end
-
---	display_features (an_array: ARRAY [CONSUMED_ENTITY]) is
---			-- 
---		require
---			non_void_an_array: an_array /= Void
---		local
---			i: INTEGER
---			l_tree_item: EV_COMPARABLE_TREE_ITEM
---			l_list: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]
---		do
---			from
---				i := 1
---				create l_list.make
---			until
---				an_array = Void
---				or else i > an_array.count
---			loop
---				l_tree_item := initialize_tree_item_feature (an_array.item (i))
---				
---				l_list.extend (l_tree_item)
---				i := i + 1
---			end
---			right_tree.append (classify_tree_nodes (l_list))
---		end
-
 
 	initialize_tree_item_constructor (a_member: CONSUMED_CONSTRUCTOR; a_full_dotnet_type_name: STRING): EV_COMPARABLE_TREE_ITEM is
 			-- init a_tree_item_type.
@@ -511,7 +481,6 @@ feature {NONE} -- Implementation
 			l_icon_path := Path_icon_constructor
 			
 				-- Add action to node
---			Result.pointer_button_press_actions.force_extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_constructor_information (assembly_of_type, a_member, a_full_dotnet_type_name))
 			Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_constructor_information (assembly_of_type, a_member, a_full_dotnet_type_name))
 
 				-- Add type icon.
@@ -551,8 +520,6 @@ feature {NONE} -- Implementation
 					else
 						l_icon_path := Path_icon_public_attribute
 					end
---				elseif a_member.is_constant then
---					l_icon_path := Path_icon_public_constant
 				elseif a_member.is_event then
 					l_icon_path := Path_icon_public_event
 				elseif a_member.is_method then
@@ -568,8 +535,6 @@ feature {NONE} -- Implementation
 					else
 						l_icon_path := Path_icon_protected_attribute
 					end
---				elseif a_member.is_constant then
---					l_icon_path := Path_icon_protected_constant
 				elseif a_member.is_event then
 					l_icon_path := Path_icon_protected_event
 				elseif a_member.is_method then
@@ -579,9 +544,10 @@ feature {NONE} -- Implementation
 				end
 			end
 			
-				-- Add action to node
+				-- Add action to nodes
 			Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_feature_information (assembly_of_type, a_member, a_full_dotnet_type_name))
 			Result.expand_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_feature_information (assembly_of_type, a_member, a_full_dotnet_type_name))
+			l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_feature_information (assembly_of_type, a_member, a_full_dotnet_type_name))
 
 				-- Add type icon.
 			l_ico := load_icon (l_icon_path)
@@ -612,6 +578,8 @@ feature {NONE} -- Implementation
 				if l_ico /= Void then
 					l_tree_node.set_pixmap (l_ico)
 				end
+					-- Add action to node
+				l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_property_information (assembly_of_type, a_property, a_full_dotnet_type_name))
 			end
 			if a_property.setter /= Void then
 				create l_tree_node.make_with_text (eiffel_signature_member (assembly_of_type, a_property.setter))
@@ -619,9 +587,11 @@ feature {NONE} -- Implementation
 				if l_ico /= Void then
 					l_tree_node.set_pixmap (l_ico)
 				end
+					-- Add action to node
+				l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_property_information (assembly_of_type, a_property, a_full_dotnet_type_name))
 			end
 			
-				-- Add action to node
+				-- Add action to principal node
 			Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_property_information (assembly_of_type, a_property, a_full_dotnet_type_name))
 			Result.expand_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_property_information (assembly_of_type, a_property, a_full_dotnet_type_name))
 
@@ -659,6 +629,8 @@ feature {NONE} -- Implementation
 				if l_ico /= Void then
 					l_tree_node.set_pixmap (l_ico)
 				end
+					-- Add action to node
+				l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_event_information (assembly_of_type, an_event, a_full_dotnet_type_name))
 			end
 			if an_event.remover /= Void then
 				create l_tree_node.make_with_text (eiffel_signature_member (assembly_of_type, an_event.remover))				
@@ -666,6 +638,8 @@ feature {NONE} -- Implementation
 				if l_ico /= Void then
 					l_tree_node.set_pixmap (l_ico)
 				end
+					-- Add action to node
+				l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_event_information (assembly_of_type, an_event, a_full_dotnet_type_name))
 			end
 			if an_event.adder /= Void then
 				create l_tree_node.make_with_text (eiffel_signature_member (assembly_of_type, an_event.adder))
@@ -673,9 +647,11 @@ feature {NONE} -- Implementation
 				if l_ico /= Void then
 					l_tree_node.set_pixmap (l_ico)
 				end
+					-- Add action to node
+				l_tree_node.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_event_information (assembly_of_type, an_event, a_full_dotnet_type_name))
 			end
 
-				-- Add action to node
+				-- Add action to principal node
 			Result.select_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_event_information (assembly_of_type, an_event, a_full_dotnet_type_name))
 			Result.expand_actions.extend (agent (create {DISPLAY_COMMENTS}.make (parent_window.edit_comments_area)).display_event_information (assembly_of_type, an_event, a_full_dotnet_type_name))
 
@@ -692,7 +668,6 @@ feature {NONE} -- Implementation
 		ensure
 			non_void_result: Result /= Void		
 		end
-
 
 	classify_tree_nodes (nodes: LINKED_LIST [EV_COMPARABLE_TREE_ITEM]): LINKED_LIST [EV_COMPARABLE_TREE_ITEM] is
 			-- Classify `nodes'.
@@ -729,7 +704,6 @@ feature {NONE} -- Implementation
 			non_void_result: Result /= Void
 			same_number_nodes: nodes.count = Result.count
 		end
-		
 
 invariant
 	non_void_parent_window: parent_window /= Void

@@ -254,9 +254,32 @@ feature -- Generation constants
 		-- Extension to be added to generated class name,
 		-- for the implementation class.
 		
-	connect_events_comment: STRING is "%T--Connect events."
-		-- Comment to be inserted into generated code before
-		-- the event connections are declared.
+	connect_events_comment: STRING is 
+			-- Comment to be inserted into generated code before
+			-- the event connections are declared.
+		once
+			Result := indent + "%T--Connect events."
+		end
+		
+	build_widgets_comment: STRING is
+			-- Comment to be inserted into generated code before
+			-- the widgets are parented.
+		once
+			Result := indent + "%T-- Build_widget_structure."
+		end
+	create_widgets_comment: STRING is
+			-- Comment to be inserted into generated code before
+			-- the widgets are created.
+		once
+			Result := indent + "%T-- Create all widgets."
+		end
+		
+	set_widgets_comment: STRING is
+			-- Comment to be inserted into generated code before the
+			-- widgets attributes are set.
+		once
+			Result := indent + "%T-- Initialize properties of all widgets."
+		end
 		
 feature -- XML saving
 

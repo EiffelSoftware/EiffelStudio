@@ -577,6 +577,7 @@ feature {NONE} -- Implementation
 			node_ptr: POINTER
 			item_imp: EV_TREE_NODE_IMP
 		do
+			C.gtk_clist_freeze (list_widget)
 			tree_item_imp ?= an_item.implementation
 			node_ptr := tree_item_imp.tree_node_ptr
 			if not C.gtk_ctree_is_viewable (list_widget, node_ptr) then
@@ -587,7 +588,7 @@ feature {NONE} -- Implementation
 
 				-- Show the node `an_item'
 			C.gtk_ctree_node_moveto (list_widget, item_imp.tree_node_ptr, 0, 0.0, 1.0)
-
+			C.gtk_clist_thaw (list_widget)
 		end
 
 	expand_to_node (a_node: POINTER) is
@@ -597,6 +598,7 @@ feature {NONE} -- Implementation
 		local
 			row, parent_node: POINTER
 		do
+			C.gtk_clist_freeze (list_widget)
 			if not C.gtk_ctree_is_viewable (list_widget, a_node) then
 				row := C.glist_struct_data (a_node)
 				parent_node := C.gtk_ctree_row_struct_parent (row)
@@ -605,6 +607,7 @@ feature {NONE} -- Implementation
 					C.gtk_ctree_expand (list_widget, parent_node)
 				end
 			end
+			C.gtk_clist_thaw (list_widget)
 		end
 
 	spacing: INTEGER is 5

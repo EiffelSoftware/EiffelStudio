@@ -405,37 +405,6 @@ feature -- Element change
 			end
 		end
 
-feature -- Event : command association
-
---|FIXME	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when a row has been selected.
---|FIXME		local
---|FIXME			i: INTEGER
---|FIXME		do
---|FIXME			-- We pass 0 as the extra_data to have a different handling in 'c_gtk_signal_connect_general'.
---|FIXME			i := 0
---|FIXME			--add_command (list_widget, "select_row", cmd, arg, C.c_gtk_integer_to_pointer (i))
---|FIXME		end
-
---|FIXME	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when a row has been unselected.
---|FIXME		local
---|FIXME			i: INTEGER
---|FIXME		do
---|FIXME			-- We pass 0 as the extra_data to have a different handling in 'c_gtk_signal_connect_general'.
---|FIXME			i := 0
---|FIXME			--add_command (list_widget, "unselect_row", cmd, arg, c_gtk_integer_to_pointer (i))
---|FIXME		end
-
---|FIXME	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when a column is clicked.
---|FIXME		do
---|FIXME			--add_command (list_widget, "click_column", cmd, arg, default_pointer)
---|FIXME		end
-
 feature {NONE} -- Implementation
 
 	add_to_container (v: EV_MULTI_COLUMN_LIST_ROW) is
@@ -539,6 +508,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/02/24 01:50:03  king
+--| Removed redundant command association routines
+--|
 --| Revision 1.30  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
 --|

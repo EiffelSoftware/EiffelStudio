@@ -34,6 +34,13 @@ feature -- Access
 			end
 
 			create type_definition.make (100)
+			type_definition.append ("namespace ")
+			type_definition.append (alias_descriptor.namespace)
+			type_definition.append (Space)
+			type_definition.append (New_line)
+			type_definition.append (Open_curly_brace)
+			type_definition.append (New_line_tab)
+			
 			type_definition.append (Typedef)
 			type_definition.append (Space)
 			type_definition.append (a_data_visitor.c_type)
@@ -41,6 +48,9 @@ feature -- Access
 			type_definition.append (alias_descriptor.c_type_name)
 			type_definition.append (a_data_visitor.c_post_type)
 			type_definition.append (Semicolon)
+			type_definition.append (New_line)
+			
+			type_definition.append (Close_curly_brace)
 
 			c_writer.add_other (type_definition)
 

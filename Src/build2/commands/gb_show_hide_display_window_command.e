@@ -53,7 +53,6 @@ feature -- Execution
 				display_window.hide
 			end
 			set_selected (not is_selected)
-			command_handler.update
 		end
 
 end -- class GB_SHOW_HIDE_DISPLAY_WINDOW_COMMAND

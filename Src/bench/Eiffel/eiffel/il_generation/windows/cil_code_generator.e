@@ -1343,7 +1343,7 @@ feature -- Features info
 				else
 					if is_static then
 						if l_is_c_external then
-							l_name := encoder.feature_name (current_class_type.static_type_id,
+							l_name := encoder.feature_name (l_class_type.static_type_id,
 								l_feat.body_index)
 						else
 							if l_is_attribute then
@@ -1778,109 +1778,6 @@ feature -- Features info
 				end
 				feats.forth
 			end
-		end
-
-feature -- Custom attribute
-
-	add_ca (target_type_id: INTEGER; attribute_type_id: INTEGER; arg_count: INTEGER) is
-			-- No description available.
-			-- `target_type_id' [in].  
-			-- `attribute_type_id' [in].  
-			-- `arg_count' [in].  
-		do
---			implementation.add_ca (target_type_id, attribute_type_id, arg_count)
-		end
-
-	generate_class_ca is
-			-- No description available.
-		do
---			implementation.generate_class_ca
-		end
-
-	generate_feature_ca (a_feature_id: INTEGER) is
-			-- No description available.
-			-- `a_feature_id' [in].  
-		do
---			implementation.generate_feature_ca (a_feature_id)
-		end
-
-	add_cainteger_arg (a_value: INTEGER) is
-			-- No description available.
-			-- `a_value' [in].  
-		do
---			implementation.add_cainteger_arg (a_value)
-		end
-
-	add_castring_arg (a_value: STRING) is
-			-- No description available.
-			-- `a_value' [in].  
-		do
---			implementation.add_castring_arg (a_value)
-		end
-
-	add_careal_arg (a_value: REAL) is
-			-- No description available.
-			-- `a_value' [in].  
-		do
---			implementation.add_careal_arg (a_value)
-		end
-
-	add_cadouble_arg (a_value: DOUBLE) is
-			-- No description available.
-			-- `a_value' [in].  
-		do
---			implementation.add_cadouble_arg (a_value)
-		end
-
-	add_cacharacter_arg (a_value: CHARACTER) is
-			-- No description available.
-			-- `a_value' [in].  
-		do
---			implementation.add_cacharacter_arg (a_value)
-		end
-
-	add_caboolean_arg (a_value: BOOLEAN) is
-			-- No description available.
-			-- `a_value' [in].  
-		do
---			implementation.add_caboolean_arg (a_value)
-		end
-
-	add_caarray_integer_arg (a_value: ARRAY [INTEGER]) is
-			-- Add custom attribute constructor integer array argument `a_value'.
-		do
-		end
-
-	add_caarray_string_arg (a_value: ARRAY [STRING]) is
-			-- Add custom attribute constructor string array argument `a_value'.
-		do
-		end
-
-	add_caarray_real_arg (a_value: ARRAY [REAL]) is
-			-- Add custom attribute constructor real array argument `a_value'.
-		do
-		end
-
-	add_caarray_double_arg (a_value: ARRAY [DOUBLE]) is
-			-- Add custom attribute constructor double array argument `a_value'.
-		do
-		end
-
-	add_caarray_character_arg (a_value: ARRAY [CHARACTER]) is
-			-- Add custom attribute constructor character array argument `a_value'.
-		do
-		end
-
-	add_caarray_boolean_arg (a_value: ARRAY [BOOLEAN]) is
-			-- Add custom attribute constructor boolean array argument `a_value'.
-		do
-		end
-
-	add_catyped_arg (a_value: INTEGER; a_type_id: INTEGER) is
-			-- No description available.
-			-- `a_value' [in].  
-			-- `a_type_id' [in].  
-		do
 		end
 
 feature -- IL Generation

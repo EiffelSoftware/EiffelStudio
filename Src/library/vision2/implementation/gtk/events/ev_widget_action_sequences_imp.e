@@ -82,16 +82,18 @@ feature -- Event handling
 			-- Create a focus_in action sequence.
 			-- Attach to GTK "focus-in-event" signal.
 		do
+			--real_connect_signal_to_actions (visual_widget, "focus-in-event", Result, default_translate)
 			create Result
-			real_connect_signal_to_actions (visual_widget, "focus-in-event", Result, default_translate)
+			real_signal_connect (visual_widget, "focus-in-event", agent gtk_marshal.widget_focus_in_intermediary (c_object), Void)
 		end
 
 	create_focus_out_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a focus_out action sequence.
 			-- Attach to GTK "focus-out-event" signal.
 		do
+			--real_connect_signal_to_actions (visual_widget, "focus-out-event", Result, default_translate)
 			create Result
-			real_connect_signal_to_actions (visual_widget, "focus-out-event", Result, default_translate)
+			real_signal_connect (visual_widget, "focus-out-event", agent gtk_marshal.widget_focus_out_intermediary (c_object), Void)
 		end
 
 	create_resize_actions: EV_GEOMETRY_ACTION_SEQUENCE is

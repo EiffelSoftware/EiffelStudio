@@ -37,6 +37,10 @@ inherit
 		end
 
 	EV_WIDGET_ACTION_SEQUENCES_IMP
+		export
+			{EV_GTK_CALLBACK_MARSHAL} 
+				focus_in_actions_internal,
+				focus_out_actions_internal
 		redefine
 			interface
 		end

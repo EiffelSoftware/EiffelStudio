@@ -162,7 +162,7 @@ feature -- IL code generation
 
 				if is_first and need_target then
 						-- Accessing attribute written in current analyzed class.
-					if address_required then
+					if address_required and not context.associated_class.is_single then
 							-- We need current target which will be used later on in
 							-- NESTED_B.generate_il to assign back the new value of the attribute.
 						il_generator.generate_current
@@ -180,20 +180,13 @@ feature -- IL code generation
 							il_generator.generate_metamorphose (cl_type)
 						end
 					end
-				else
-					if address_required then
-							-- We need to duplicate top object which will be used later on in
-							-- NESTED_B.generate_il to assign back the new value of the attribute.
-						il_generator.duplicate_top
-					end
-					if not cl_type.is_reference then
-							-- Current attribute coming from an expanded class need a special
-							-- transformation of the `parent' if we want to access it.
-							-- If `need_real_metamorphose (cl_type)' a box operation will
-							-- occur meaning that current attribute was written in a
-							-- non-expanded class.
-						generate_il_metamorphose (cl_type, target_type, need_real_metamorphose (cl_type))
-					end
+				elseif not cl_type.is_reference then
+						-- Current attribute coming from an expanded class need a special
+						-- transformation of the `parent' if we want to access it.
+						-- If `need_real_metamorphose (cl_type)' a box operation will
+						-- occur meaning that current attribute was written in a
+						-- non-expanded class.
+					generate_il_metamorphose (cl_type, target_type, need_real_metamorphose (cl_type))
 				end
 
 					-- Let's try to prepare call to `XXX.attribute.copy' in

@@ -738,6 +738,20 @@ feature {EB_CONTEXT_EDITOR, EB_SELECT_DEPTH_COMMAND} -- Status setting
 		ensure
 			is_cancelled: cancelled
 		end
+		
+feature -- Basic opereations
+
+	crop is
+			-- Crop diagram.
+		local
+			t: EV_RECTANGLE
+		do
+			t := bounds
+			point.set_position (point.x - t.x + 20, point.y - t.y + 20)
+			t := bounds
+			context_editor.update_size (Current)
+		end
+		
 
 feature -- Factory
 

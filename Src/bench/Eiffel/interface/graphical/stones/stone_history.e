@@ -1,26 +1,13 @@
 indexing
-
-	description: 
-		"Lists of a given number of stones. Stones are added %
-		%to the end and older stones are thrown away.";
+	description: "Lists of a given number of stones. Stones are added %
+			%to the end and older stones are thrown away.";
 	date: "$Date$";
 	revision: "$Revision $"
 
 class
-
 	STONE_HISTORY
 
 inherit
-
-	TWO_WAY_LIST [STONE]
-		rename
-			extend as twl_extend,
-			make as twl_make
-		export
-			{NONE} all;
-			{ANY} item, forth, back, isfirst, islast, wipe_out, empty, go_to;
-			{ANY} after, before, index, go_i_th, start, finish, has, cursor
-		end;
 	TWO_WAY_LIST [STONE]
 		rename
 			extend as twl_extend
@@ -30,17 +17,16 @@ inherit
 			{ANY} after, before, index, go_i_th, start, finish, make, has, cursor
 		redefine
 			make
-		select
-			make
-		end;
-	EB_CONSTANTS;
+		end
+
+	EB_CONSTANTS
+
 	RESOURCE_USER
 		redefine
 			update_integer_resource
 		end
 
 creation
-
 	make
 
 feature -- Initialization
@@ -48,7 +34,7 @@ feature -- Initialization
 	make is
 			-- Initialze Current
 		do
-			twl_make;
+			{TWO_WAY_LIST} precursor
 			General_resources.add_user (Current)
 		end
 
@@ -120,7 +106,7 @@ feature {NONE} -- Measurement
 			Result := General_resources.history_size.actual_value;
 			if Result < 1 or Result > 100 then
 					-- Just in case the user specified some weird values.
-				Result := 10
+				Result := 20
 			end
 		end;
 
@@ -134,7 +120,7 @@ feature {NONE} -- Resizing
 			until
 				count <= capacity 
 			loop
-				remove;
+				remove
 				start
 			end				
 		end
@@ -148,7 +134,11 @@ feature -- Synchronization
 		local
 			new_stone: STONE
 		do
-			from start until after loop
+			from
+				start
+			until
+				after
+			loop
 				new_stone := item.synchronized_stone;
 				if new_stone /= Void then
 					put (new_stone)

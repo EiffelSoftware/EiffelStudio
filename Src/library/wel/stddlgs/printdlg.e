@@ -176,6 +176,232 @@ feature -- Status report
 			Result := flag_set (flags, a_flags)
 		end
 
+	all_pages_selected: BOOLEAN is
+			-- Is the "All pages" radio button selected?
+		do
+			Result := not has_flag (Pd_pagenums) and then
+				not has_flag (Pd_selection)
+		end
+
+	page_numbers_selected: BOOLEAN is
+			-- Is the "Page" radio button selected?
+		do
+			Result := has_flag (Pd_pagenums)
+		end
+
+	selection_selected: BOOLEAN is
+			-- Is the "Selection" radio box selected?
+		do
+			Result := has_flag (Pd_selection)
+		end
+
+	page_numbers_enabled: BOOLEAN is
+			-- Is the "Page numbers" radio button enabled?
+		do
+			Result := not has_flag (Pd_nopagenums)
+		end
+
+	selection_enabled: BOOLEAN is
+			-- Is the "Selection" radio button enabled?
+		do
+			Result := not has_flag (Pd_noselection)
+		end
+
+	collate_checked: BOOLEAN is
+			-- Is the "Collate" check box checked?
+		do
+			Result := has_flag (Pd_collate)
+		end
+
+	print_to_file_enabled: BOOLEAN is
+			-- Is the "Print to file" check box enabled?
+		do
+			Result := not has_flag (Pd_disableprinttofile)
+		end
+
+	print_to_file_shown: BOOLEAN is
+			-- Is the "Print to file" check box shown?
+		do
+			Result := not has_flag (Pd_hideprinttofile)
+		end
+
+	print_to_file_checked: BOOLEAN is
+			-- Is the "Print to file" check box checked?
+		do
+			Result := has_flag (Pd_printtofile)
+		end
+
+	warning_enabled: BOOLEAN is
+			-- Is the warning message from being displayed when
+			-- there is no default printer enabled?
+		do
+			Result := not has_flag (Pd_nowarning)
+		end
+
+	print_setup_enabled: BOOLEAN is
+			-- Is the Print setup dialog box enabled?
+		do
+			Result := has_flag (Pd_printsetup)
+		end
+
+feature -- Status setting
+
+	select_all_pages is
+			-- Select the "All pages" radio button.
+		do
+			remove_flag (Pd_pagenums + Pd_selection)
+		ensure
+			all_pages_selected: all_pages_selected
+		end
+
+	select_page_numbers is
+			-- Select the "Page numbers" radio button.
+		do
+			add_flag (Pd_pagenums)
+		ensure
+			page_numbers_selected: page_numbers_selected
+		end
+
+	select_selection is
+			-- Select the "Selection" radio button.
+		do
+			add_flag (Pd_selection)
+		ensure
+			selection_selected: selection_selected
+		end
+
+	enable_page_numbers is
+			-- Enable the "Page numbers" radio button.
+		do
+			remove_flag (Pd_nopagenums)
+		ensure
+			page_numbers_enabled: page_numbers_enabled
+		end
+
+	disable_page_numbers is
+			-- Disable the "Page numbers" radio button.
+		do
+			add_flag (Pd_nopagenums)
+		ensure
+			page_numbers_disabled: not page_numbers_enabled
+		end
+
+	enable_selection is
+			-- Enable the "Selection" radio button.
+		do
+			remove_flag (Pd_noselection)
+		ensure
+			selection_enabled: selection_enabled
+		end
+
+	disable_selection is
+			-- Disable the "Selection" radio button.
+		do
+			add_flag (Pd_noselection)
+		ensure
+			selection_disabled: not selection_enabled
+		end
+
+	check_collate is
+			-- Check the "Collate" check box.
+		do
+			add_flag (Pd_collate)
+		ensure
+			collate_checked: collate_checked
+		end
+
+	uncheck_collate is
+			-- Uncheck the "Collate" check box.
+		do
+			remove_flag (Pd_collate)
+		ensure
+			collate_unchecked: not collate_checked
+		end
+
+	enable_print_to_file is
+			-- Enable the "Print to file" check box.
+		do
+			remove_flag (Pd_disableprinttofile)
+		ensure
+			print_to_file_enabled: print_to_file_enabled
+		end
+
+	disable_print_to_file is
+			-- Disable the "Print to file" check box.
+		do
+			add_flag (Pd_disableprinttofile)
+		ensure
+			print_to_file_disabled: not print_to_file_enabled
+		end
+
+	show_print_to_file is
+			-- Show the "Print to file" check box.
+		do
+			remove_flag (Pd_hideprinttofile)
+		ensure
+			print_to_file_shown: print_to_file_shown
+		end
+
+	hide_print_to_file is
+			-- Hide the "Print to file" check box.
+		do
+			add_flag (Pd_hideprinttofile)
+		ensure
+			print_to_file_hidden: not print_to_file_shown
+		end
+
+	check_print_to_file is
+			-- Check the "Print to file" check box.
+		do
+			add_flag (Pd_printtofile)
+		ensure
+			print_to_file_checked: print_to_file_checked
+		end
+
+	uncheck_print_to_file is
+			-- Uncheck the "Print to file" check box.
+		do
+			remove_flag (Pd_printtofile)
+		ensure
+			print_to_file_unchecked: not print_to_file_checked
+		end
+
+	enable_warning is
+			-- Enable the warning message from being displayed when
+			-- there is no default printer.
+		do
+			remove_flag (Pd_nowarning)
+		ensure
+			warning_enabled: warning_enabled
+		end
+
+	disable_warning is
+			-- Disable the warning message from being displayed when
+			-- there is no default printer.
+		do
+			add_flag (Pd_nowarning)
+		ensure
+			warning_disabled: not warning_enabled
+		end
+
+	enable_print_setup is
+			-- Enable the system to display the Print setup dialog
+			-- box rather than the Print dialog box.
+		do
+			add_flag (Pd_printsetup)
+		ensure
+			print_setup_enabled: print_setup_enabled
+		end
+
+	disable_print_setup is
+			-- Disable the system to display the Print setup dialog
+			-- box rather than the Print dialog box.
+		do
+			remove_flag (Pd_printsetup)
+		ensure
+			print_setup_disabled: not print_setup_enabled
+		end
+
 feature -- Basic operations
 
 	activate (a_parent: WEL_COMPOSITE_WINDOW) is
@@ -205,7 +431,7 @@ feature {NONE} -- Implementation
 	private_dc: WEL_PRINTER_DC
 			-- Device context associated to the selected printer
 
-feature {NONE} -- Measurement
+feature -- Measurement
 
 	structure_size: INTEGER is
 			-- Size to allocate (in bytes)

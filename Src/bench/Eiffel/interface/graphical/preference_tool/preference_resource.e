@@ -16,15 +16,15 @@ inherit
 
 feature {NONE} -- Initialization
 
-    make (a_resource: like associated_resource) is
-            -- Initialize Current with `a_resource' as `associated_resource'.
+	make (a_resource: like associated_resource) is
+			-- Initialize Current with `a_resource' as `associated_resource'.
 		require
 			resource_not_void: a_resource /= Void
-        do
-            associated_resource := a_resource
+		do
+			associated_resource := a_resource
 		ensure
 			set: associated_resource = a_resource
-        end
+		end
 
 feature -- Validation
 

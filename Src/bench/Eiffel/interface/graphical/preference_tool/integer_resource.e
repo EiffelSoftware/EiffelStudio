@@ -16,12 +16,12 @@ creation
 
 feature {NONE} -- Initialization
 
-    make_with_values (a_name: STRING; a_value: INTEGER) is
-            -- Initialie Current
-        do
-            name := a_name;
-            actual_value := a_value
-        end;
+	make_with_values (a_name: STRING; a_value: INTEGER) is
+			-- Initialie Current
+		do
+			name := a_name;
+			actual_value := a_value
+		end;
 
 	make (a_name: STRING; rt: RESOURCE_TABLE; def_value: INTEGER) is
 			-- Initialize Current
@@ -42,11 +42,11 @@ feature -- Access
 			Result := actual_value.out
 		end;
 
-    has_changed: BOOLEAN is
-            -- Has the resource changed from the default value?
-        do
+	has_changed: BOOLEAN is
+			-- Has the resource changed from the default value?
+		do
 			Result := default_value /= actual_value
-        end;
+		end;
 
 	is_valid (a_value: STRING): BOOLEAN is
 			-- Is `a_value' valid for use in Current?

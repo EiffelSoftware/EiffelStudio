@@ -2409,7 +2409,7 @@ rt_shared char *eif_typename (int16 dftype)
 				l_name [0] = '\0';
 				strcat (l_name, "reference ");
 			} else {
-				l_name = eif_malloc (strlen (l_class_name));
+				l_name = eif_malloc (strlen (l_class_name) + 1);
 				l_name [0] = '\0';
 			}
 			strcat (l_name, l_class_name);

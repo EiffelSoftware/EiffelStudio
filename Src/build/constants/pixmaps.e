@@ -242,7 +242,7 @@ feature -- General Pixmaps
 
 	Load_project_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("load_prj.bm")
+			Result := symbol_file_content ("open.xpm")
 		end;
 
 	Menus_pixmap: PIXMAP is
@@ -302,7 +302,7 @@ feature -- General Pixmaps
 
 	Quit_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("quit.bm")
+			Result := symbol_file_content ("quit.xpm")
 		end;
 
 	Raise_widget_pixmap: PIXMAP is
@@ -312,12 +312,12 @@ feature -- General Pixmaps
 
 	Save_pixmap: PIXMAP is
 		once
-			Result := symbol_file_content ("save.bm")
+			Result := symbol_file_content ("save.xpm")
 		end;
 
  	Save_as_pixmap: PIXMAP is
  		once
- 			Result := symbol_file_content ("save_as.bm")
+ 			Result := symbol_file_content ("save_as.xpm")
 		end;
 
 	Selected_alignment_pixmap: PIXMAP is
@@ -831,7 +831,7 @@ feature {NONE} -- Read from file
 			if full_name.is_valid then
 				Result.read_from_file (full_name);
 				if not Result.is_valid then 
-					io.error.putstring ("Warning: can not read pixmap file ");
+					io.error.putstring ("Warning: cannot read pixmap file ");
 					io.error.putstring (full_name);
 					io.error.new_line;
 				end

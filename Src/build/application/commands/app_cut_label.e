@@ -83,7 +83,10 @@ feature {NONE}
 	worked_on: STRING is
 		do
 			!!Result.make (0);
-			Result.append (cmd_label);
+			-- if added by samik
+			if cmd_label /= Void then	
+				Result.append (cmd_label);
+			end
 		end; -- worked_on
 
 end -- class APP_CUT_LABEL

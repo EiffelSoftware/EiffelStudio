@@ -110,10 +110,14 @@ feature {NONE}
 
 	worked_on: STRING is
 		do
-			!!Result.make (0);
-			Result.append (line.source.label);
-			Result.append (" -> ");
-			Result.append (line.destination.label);
+			-- if added by samik
+			if line /= Void and then line.source /= Void and then line.destination /= Void then
+
+				!!Result.make (0);
+				Result.append (line.source.label);
+				Result.append (" -> ");
+				Result.append (line.destination.label);
+			end
 		end; -- worked_on
 
 end 

@@ -1,8 +1,6 @@
 class MERGER
 
 inherit
-	COMPILER_EXPORTER
-
 	MEMORY
 	SHARED_ERROR_HANDLER
 	SHARED_RESCUE_STATUS
@@ -12,6 +10,7 @@ inherit
 				continue_after_error_popdown
 			end
 	WINDOWS
+	COMPILER_EXPORTER
 
 feature -- Result of merging the three files
 
@@ -23,7 +22,7 @@ feature {NONE}
 
 	init is
 		local
-			yacc_eiffel: YACC_EIFFEL
+			yacc_eiffel: EXT_YACC_EIFFEL
 			feature_as: FEATURE_AS;
 			invariant_as: INVARIANT_AS;
 		once
@@ -52,7 +51,7 @@ feature {NONE}
 
 feature 
 
-	old_temp_ast, user_ast, new_temp_ast: CLASS_AS
+	old_temp_ast, user_ast, new_temp_ast: EXT_CLASS_AS
 
 	require_merge: BOOLEAN;
 			-- Does Current require a merge based on
@@ -112,7 +111,8 @@ feature
 				retried := False;
 				if Rescue_status.is_error_exception then
 					Rescue_status.set_is_error_exception (False);
-					Error_handler.trace;
+					Error_box.put_string ("Parsing error:%N"); --samik (this is temporary)
+		--samik			Error_handler.trace;
 					if command_caller /= Void then
 						Error_box.put_string ("Class: ");
 						Error_box.put_string 
@@ -149,41 +149,41 @@ feature
 		local
 			class_merger: CLASS_MERGER
 			merge_as: CLASS_AS;
-		--	file: RAW_FILE;
+			file: RAW_FILE;
 			comment_server: EIFFEL_FILE
 		do
 			if not retried then
-			--	!! file.make (user);
-			--	if file.exists and then 
-			--		file.is_readable and then
-			--		not file.empty
-			--	then
-					!! comment_server.make (user, merge_as.end_position);
-					user_ast.set_comments (comment_server)
---				end;
+				!! file.make (user);
+				if file.exists and then 
+					file.is_readable and then
+					not file.empty
+				then
+					!! comment_server.make (file.name, file.count);
+					user_ast.extract_comments (comment_server)
+				end;
 	
-			--	!! file.make (old_template);
-			--	if file.exists and then 
-			--		file.is_readable and then
-			--		not file.empty 
-			--	then
-					!! comment_server.make (old_template, merge_as.end_position)
-					old_temp_ast.set_comments (comment_server)
-	--			end;
+				!! file.make (old_template);
+				if file.exists and then 
+					file.is_readable and then
+					not file.empty 
+				then
+					!! comment_server.make (file.name, file.count)
+					old_temp_ast.extract_comments (comment_server)
+				end;
 	
-			--	!! file.make (new_template)
-			--	if file.exists and then 
-			--		file.is_readable and then
-			--		not file.empty
-			--	then
-					!! comment_server.make (new_template, merge_as.end_position)
-					new_temp_ast.set_comments (comment_server)
-		--		end;
+				!! file.make (new_template)
+				if file.exists and then 
+					file.is_readable and then
+					not file.empty
+				then
+					!! comment_server.make (file.name, file.count)
+					new_temp_ast.extract_comments (comment_server)
+				end;
 	
 				!! class_merger
 				class_merger.merge3 (old_temp_ast, user_ast, new_temp_ast)
 				merge_as := class_merger.merge_result
-				merge_result := ast_to_string (merge_as)
+				merge_result := ast_to_string (merge_as, user)
 			else
 				retried := False;
 				Error_box.popup (Current, Messages.update_text_er,
@@ -195,15 +195,15 @@ feature
 			retry
 		end;
 
-	ast_to_string (ast: CLASS_AS): STRING is
+	ast_to_string (ast: CLASS_AS; file_name: STRING): STRING is
 		local
 			ctxt: FORMAT_CONTEXT
 		do
-			!! ctxt.make (ast, "this should be a file name")
---samik			ctxt.set_ast (ast)
-	--samik		ctxt.execute
+                       !! ctxt.make (ast, file_name)
+ --samik                       ctxt.set_ast (ast)
+       --samik         ctxt.execute
 
-			ast.simple_format (ctxt)
+	--samik		ast.simple_format (ctxt)
 
 			Result := ctxt.text.image
 		end;
@@ -283,7 +283,7 @@ feature {NONE} -- Integrate Command
 
 feature {NONE} -- Externals
 
-	c_parse (f: POINTER; s: POINTER): CLASS_AS is
+	c_parse (f: POINTER; s: POINTER): EXT_CLASS_AS is
 		external
 			"C"
 		end

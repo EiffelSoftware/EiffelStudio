@@ -42,6 +42,8 @@ feature {NONE} -- Initialization
 
 	set_start_position is
 		do
+			--| No need to test whether feature_names is empty, because the class is
+			--| FEATURE_AS and there is allwas at least one feature name
 			start_position := start_position - feature_names.first.offset
 		end;
 
@@ -233,7 +235,13 @@ feature {COMPILER_EXPORTER} -- Conveniences
 
 	infix "<" (other: like Current): BOOLEAN is
 		do	
-			Result := feature_names.first < other.feature_names.first;
+			if feature_names = Void then
+				Result := False
+			elseif other.feature_names = Void then
+				Result := True
+			else
+				Result := feature_names.first < other.feature_names.first;
+			end
 		end;
 
 feature {COMPILER_EXPORTER} -- Incrementality

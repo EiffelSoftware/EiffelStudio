@@ -25,8 +25,6 @@ feature -- Initialization
 			-- placing the result into `text'.
 		require
 			valid_ast: ast /= Void;
-		local
-			file: PLAIN_TEXT_FILE
 		do
 			make_for_case;
 			!! eiffel_file.make (file_name, ast.end_position);

@@ -10,15 +10,25 @@ deferred class FEATURE_NAME
 
 inherit
 
-	AST_EIFFEL;
+	AST_EIFFEL
+        undefine
+            is_equal
+		end
 	COMPARABLE
 		undefine
-			is_equal
+--samik			is_equal
 		end;
 	CLICKABLE_AST
+		undefine
+			is_equal
 		redefine
 			is_feature
 		end
+
+-- Undefined is_equal of AST_EIFFEL and CLICKABLE_AST because these are
+-- not consistent with infix < operator
+-- < is defined by the terms of < of feature name and is_equal 
+-- (from general is c_standard_is_equal)
 
 feature -- Properties
 

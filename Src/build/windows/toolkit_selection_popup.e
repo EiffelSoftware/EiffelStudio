@@ -78,7 +78,7 @@ feature {NONE}
 			else
 				!! toggle.make (Shared_toolkit_name, rb);
 				toggle.set_toggle_on;
-				io.error.putstring ("Warning: can not read ");
+				io.error.putstring ("Warning: cannot read ");
 				io.error.putstring (temp);
 				io.error.new_line;
 			end;

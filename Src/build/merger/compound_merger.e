@@ -59,7 +59,7 @@ feature
 						from
 							old_c.start
 						until
-							old_c.after or else old_c.item.is_equivalent (inst)
+							old_c.after or else (old_c.item.conforms_to (inst) and then old_c.item.is_equivalent (inst))
 						loop
 							old_c.forth
 						end;

@@ -73,7 +73,7 @@ feature {NONE}
 				end;
 				file.close;
 			else
-				io.error.putstring ("Warning: can not read ");
+				io.error.putstring ("Warning: cannot read ");
 				io.error.putstring (temp);
 				io.error.new_line;
 			end

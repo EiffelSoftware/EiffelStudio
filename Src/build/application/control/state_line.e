@@ -180,10 +180,10 @@ feature {NONE}
 			p_high.xytranslate (- point.x, - point.y);
 			p_low.xytranslate (point.x, point.y);
 			!!Result.make (2);
-			Result.put_i_th (p_low, 1);
-			Result.put_i_th (p_high, 2);
+			Result.extend (p_low);
+			Result.extend (p_high);
 		ensure
-			Result.count = 2;
+			two_points_in_list: Result.count = 2;
 		end; 
 
 	init_line is

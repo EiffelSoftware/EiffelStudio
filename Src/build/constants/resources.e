@@ -105,7 +105,7 @@ feature {NONE} -- Initialize font values
 				if font.is_font_valid then
 					Result := Font;	
 				else
-					io.error.putstring ("Warning: can not load font ");
+					io.error.putstring ("Warning: cannot load font ");
 					io.error.putstring (font.name);
 					io.error.new_line;
 				end;

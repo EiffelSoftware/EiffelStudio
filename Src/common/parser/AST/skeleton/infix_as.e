@@ -145,13 +145,17 @@ feature -- Comparison
 		do
 			normal_feature ?= other;
 			infix_feature ?= other;
-			if infix_feature /= void then
-				Result := fix_operator < infix_feature.fix_operator
-			else
+			if infix_feature = void then
 				check
-					normal_feature /= void
+					normal_feature /= Void
 				end;
 				Result := false;
+			elseif fix_operator = Void then
+				Result := False
+			elseif infix_feature.fix_operator = Void then
+				Result := True
+			else
+				Result := fix_operator < infix_feature.fix_operator				
 			end;
 		end;
 

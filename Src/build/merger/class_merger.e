@@ -5,7 +5,7 @@ inherit
 
 feature 
 
-	merge3 (old_tmp: CLASS_AS; user: CLASS_AS; new_tmp: CLASS_AS) is
+	merge3 (old_tmp: EXT_CLASS_AS; user: EXT_CLASS_AS; new_tmp: EXT_CLASS_AS) is
 			-- Merge `new_tmp' and `user', depending on `old_tmp'.
 			-- Actual merging is done in specific mergers.
 		local

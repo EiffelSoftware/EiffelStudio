@@ -13,7 +13,7 @@ feature -- Directory name constants
 	Ace_name: STRING is "Ace";
 	Application_name: STRING is "app";
 	-- Old Application_name: STRING is "Application";
-	Bitmaps_name: STRING is "bitmaps";
+	Bitmaps_name: STRING is "bitmaps/xpm";
 	Bin_name: STRING is "bin";
 	Build_name: STRING is "build";
 	Buildgen_name: STRING is "BUILDGEN";
@@ -23,7 +23,7 @@ feature -- Directory name constants
 	-- old Command_name: STRING is "Command";
 	Commands_name: STRING is "commands";
 	--old Commands_name: STRING is "Commands";
-	Eiffel3_variable_name: STRING is "EIFFEL3";
+	Eiffel_variable_name: STRING is "EIFFEL4";
 	Groups_name: STRING is "groups";
 	--old Groups_name: STRING is "Groups";
 	Help_name: STRING is "help";
@@ -124,16 +124,16 @@ feature -- Directory names for EiffelBuild
 			Result.extend (Bitmaps_name);
 		end;
 
-	Eiffel3_directory: DIRECTORY_NAME is
+	Eiffel_directory: DIRECTORY_NAME is
 		once	
-			!! Result.make_from_string (get (Eiffel3_variable_name));
+			!! Result.make_from_string (get (Eiffel_variable_name));
 		end;
 
 	EiffelBuild_directory: DIRECTORY_NAME is
 			-- Directory referenced by the 
-			-- Eiffel3_var_name
+			-- Eiffel_var_name
 		once
-			!! Result.make_from_string (Eiffel3_directory);
+			!! Result.make_from_string (Eiffel_directory);
 			Result.extend (Build_name);
 		end;
 

@@ -109,6 +109,7 @@ feature
 			set_symbol (selected_symbol);
 		ensure
 			selected: selected
+	-- PIXMAP:read_from_file should throw an exception
 		end;
 
 end

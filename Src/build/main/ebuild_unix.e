@@ -11,7 +11,7 @@ feature
 
 	new_license: LICENCE is
 		do
-			!BUILD_LICENCE!Result.make (Environment.get("EIFFEL3"))
+			!BUILD_LICENCE!Result.make (Environment.get(Eiffel_variable_name))
 		end
 
 end

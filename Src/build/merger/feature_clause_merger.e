@@ -6,7 +6,7 @@ end
 
 feature
 	
-	merge3 (old_tmp, user, new_cl: EIFFEL_LIST [FEATURE_CLAUSE_AS]) is
+	merge3 (old_tmp, user, new_cl: EIFFEL_LIST [EXT_FEATURE_CLAUSE_AS]) is
 			-- Merge feature clauses `old_tmp', `user' and `new_cl'.
 			-- No further abstraction possible, because
 			-- features can appear in different clauses, i.e.
@@ -60,14 +60,14 @@ feature {NONE} -- Internal
 			end
 		end;
 
-	merge_keeping_order (user_cl_list, new_cl_list: EIFFEL_LIST [FEATURE_CLAUSE_AS]) is
+	merge_keeping_order (user_cl_list, new_cl_list: EIFFEL_LIST [EXT_FEATURE_CLAUSE_AS]) is
 			-- Merge two lists of feature clauses. Order of features and
 				-- clauses will be the order of `new_cl_list'.
 		local
-			ordered_result: EIFFEL_LIST [FEATURE_CLAUSE_AS]
-			result_features, features: EIFFEL_LIST [FEATURE_AS]
-			result_clause: FEATURE_CLAUSE_AS
-			u_feature, old_feature: FEATURE_AS	
+			ordered_result: EIFFEL_LIST [EXT_FEATURE_CLAUSE_AS]
+			result_features, features: EIFFEL_LIST [EXT_FEATURE_AS]
+			result_clause: EXT_FEATURE_CLAUSE_AS
+			u_feature, old_feature: EXT_FEATURE_AS	
 			feature_as_merger: FEATURE_AS_MERGER
 			clause_ebuild: FEATURE_CLAUSE_AS_EBUILD
 			user_clause: FEATURE_CLAUSE_AS_EBUILD
@@ -128,11 +128,11 @@ feature {NONE} -- Internal
 					features.forth
 				end;
 				clause_ebuild ?= new_cl_list.item
-				if clause_ebuild /= Void then
+			--samik	if clause_ebuild /= Void then
 					!FEATURE_CLAUSE_AS_EBUILD! result_clause
-				else
-					!! result_clause
-				end
+			--samik	else
+			--samik		!! result_clause
+			--samik	end
 				result_clause.set_features (result_features)
 				result_clause.set_clients (new_cl_list.item.clients)
 				
@@ -150,7 +150,7 @@ feature {NONE} -- Internal
 			merge_result := ordered_result
 		end;
 
-	matching_feature (f: FEATURE_AS; fl: ARRAYED_LIST [FEATURE_AS]): FEATURE_AS is
+	matching_feature (f: EXT_FEATURE_AS; fl: ARRAYED_LIST [FEATURE_AS]): EXT_FEATURE_AS is
 			-- Occurrence of feature `f' that matches a feature in feature list `fl'.
 		local
 			f_names: EIFFEL_LIST [FEATURE_NAME]
@@ -167,7 +167,7 @@ feature {NONE} -- Internal
 					f_names.after or else Result /= Void
 				loop
 					if fl.item.has_feature_name (f_names.item) then
-						Result := fl.item
+						Result ?= fl.item
 					end
 					f_names.forth
 				end

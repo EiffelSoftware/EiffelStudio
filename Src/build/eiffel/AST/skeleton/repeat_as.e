@@ -1,7 +1,7 @@
 -- Abstract description of a repeated class export
 
 class REPEAT_AS
-obsolete "No repeat in Eiffel3. What is this class for"
+obsolete "No repeat in Eiffel. What is this class for"
 inherit
 
 	EXPORT_AS

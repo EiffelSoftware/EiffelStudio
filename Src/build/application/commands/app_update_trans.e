@@ -152,10 +152,13 @@ feature {NONE}
 
 	worked_on: STRING is
 		do
-			!!Result.make (0);
-			Result.append (source_element.label);
-			Result.append (" - ");
-			Result.append (cmd_label);
+			-- if added by samik
+			if source_element /= Void and then cmd_label /= Void then	
+				!!Result.make (0);
+				Result.append (source_element.label);
+				Result.append (" - ");
+				Result.append (cmd_label)
+			end
 		end;
 
 end 

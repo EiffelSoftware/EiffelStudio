@@ -44,7 +44,7 @@ feature -- Status setting
 
 feature -- Inapplicable
 
-	set_default_size is
+	set_default_minimum_size is
 			-- Set to the size of the text
 		do
 		end
@@ -55,7 +55,7 @@ feature -- Element change
 		do
 	--		{WEL_WINDOW} Precursor (t)
 			wel_set_text (str)
-			set_default_size
+			set_default_minimum_size
 		end
 
 feature {NONE} -- Implementation : the wel values, are deferred here, but

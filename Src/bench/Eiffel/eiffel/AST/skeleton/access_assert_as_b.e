@@ -1,20 +1,32 @@
--- Abstract description of an access (argument or feature) in a
--- precondition or a postcondition. It is necessary the first call
--- in a nested expression.
+indexing
 
-class ACCESS_ASSERT_AS
+	description:
+		"Abstract description of an access (argument or feature) in a %
+		%precondition or a postcondition. It is necessary the first call %
+		%in a nested expression. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class ACCESS_ASSERT_AS_B
 
 inherit
 
-	ACCESS_INV_AS
+	ACCESS_ASSERT_AS
+		rename
+			feature_name as old_assert_feature_name,
+			parameters as old_assert_parameters
+		end;
+
+	ACCESS_INV_AS_B
 		rename
 			access_type as feature_access_type
 		end;
-	ACCESS_INV_AS
+
+	ACCESS_INV_AS_B
 		redefine
 			access_type
 		select
-			access_type
+			access_type, parameters, feature_name
 		end
 
 feature
@@ -69,4 +81,4 @@ feature
 			end;
 		end;
 		
-end
+end -- class ACCESS_ASSERT_AS_B

@@ -1,10 +1,16 @@
--- Abstract class for instruction AS node
+indexing
 
-deferred class INSTRUCTION_AS
+	description: "Abstract class for instruction AS node. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+deferred class INSTRUCTION_AS_B
 
 inherit
 
-	AST_EIFFEL
+	INSTRUCTION_AS;
+
+	AST_EIFFEL_B
 		undefine
 			byte_node
 		redefine
@@ -28,4 +34,4 @@ feature -- Debugger
 			record_break_node;		-- Most node are atomic instructions
 		end;
  
-end
+end -- class INSTRUCTION_AS_B

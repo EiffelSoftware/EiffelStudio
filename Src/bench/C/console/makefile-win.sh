@@ -1,4 +1,4 @@
-TOP = ..
+TOP = ..\..\..
 CC = $cc
 JCFLAGS = $(CFLAGS) $ccflags $optimize
 LN = copy
@@ -9,10 +9,10 @@ RM = del
 	$(RM) $@
 	$(CC) -c $(JCFLAGS) $<
 
-CFLAGS = /I$(TOP)\..\..\run-time /I$(TOP)\..\.. /I$(TOP)\ipc\shared
+CFLAGS = /I$(TOP)\run-time /I$(TOP) /I$(TOP)\ipc\shared
 DPFLAGS = /I$(TOP)
 
-OBJECTS = argcargv.obj econsole.obj ..\ipc\shared\shword.obj
+OBJECTS = argcargv.obj econsole.obj ..\..\..\ipc\shared\shword.obj
 
 all:: econsole.lib
 

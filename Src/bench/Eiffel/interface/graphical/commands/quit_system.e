@@ -4,7 +4,7 @@ inherit
 
 	QUIT_FILE
 		redefine 
-			work, make
+			work, make, text_window
 		end
 
 creation
@@ -13,10 +13,12 @@ creation
 	
 feature 
 
-	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+	make (c: COMPOSITE; a_text_window: like text_window) is
 		do
 			init (c, a_text_window)
 		end;
+
+	text_window: SYSTEM_TEXT;
 
 feature {NONE}
 
@@ -27,6 +29,7 @@ feature {NONE}
 				-- The user has been warned that he will lose his stuff
 				text_window.clean;
 				text_window.tool.hide;
+				text_window.set_in_use (false)
 			else
 				-- First click on open
 				if text_window.changed then
@@ -35,6 +38,7 @@ feature {NONE}
 					text_window.clean;
 					text_window.tool.hide;
 					text_window.tool.close_windows;
+					text_window.set_in_use (false)
 				end
 			end
 		end;

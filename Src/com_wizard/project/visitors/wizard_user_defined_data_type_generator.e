@@ -148,9 +148,9 @@ feature -- Processing
 	process_coclass (coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR ) is
 			-- process coclass
 		do
-			c_type := clone (coclass_descriptor.name)
+			c_type := clone (coclass_descriptor.default_interface_descriptor.c_type_name)
 			create c_post_type.make (0)
-			c_header_file := clone (coclass_descriptor.c_header_file_name)
+			c_header_file := clone (coclass_descriptor.default_interface_descriptor.c_header_file_name)
 			eiffel_type := name_for_class (coclass_descriptor.name, coclass_descriptor.type_kind, shared_wizard_environment.client)
 
 			is_coclass := True

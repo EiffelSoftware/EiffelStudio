@@ -25,7 +25,7 @@ feature -- Initialization
 			par.set_child_position (combo, top, left + 1, top + 1, left + 2)
 			combo.set_editable (False)
 			if cmd1 /= Void then
-				combo.add_selection_command (cmd1, Void)
+				combo.add_select_command (cmd1, Void)
 			end
 		end
 

@@ -3,21 +3,18 @@
 		<help>
 			<toc>
 				<envision_pseudo_name>10</envision_pseudo_name>
-				<envision_location>Samples\Threading</envision_location>
+				<envision_location>Samples\.NET Framework Samples\Threading</envision_location>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Timers example
-		</heading>
-		<paragraph>This sample consist in a command line demonstrating the use of the 
+		<paragraph>This sample consist in a command line demonstrating the use of the
 			<code>
 				<class_name>TIMER</class_name>
-			</code> (Timer) class to generate a periodic callback to a method. The sample creates a 
+			</code> (Timer) class to generate a periodic callback to a method. The sample creates a
 			<code>
 				<class_name>TIMER</class_name>
-			</code> object and passes to it a delegate object. When the 
+			</code> object and passes to it a delegate object. When the
 			<code>
 				<class_name>TIMER</class_name>
 			</code> fires, the delegate is invoked, and a static method is called asynchronously by a worker thread in the thread pool.
@@ -29,7 +26,8 @@
 		<heading>
 			<size>2</size>Running
 		</heading>
-		<paragraph>After you launch the sample, the following output appears: </paragraph><code_block>
+		<paragraph>After you launch the sample, the following output appears: </paragraph>
+		<code_block>
 Checking for status updates every two seconds
      &lt;Hit Enter to terminate the sample&gt;
 Checking Status.
@@ -43,13 +41,13 @@ Checking Status.
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>This application shows how to use the thread 
+		<paragraph>This application shows how to use the thread
 			<code>
 				<class_name>TIMER</class_name>
 			</code>. The timer is launched (
 			<code>
 				<keyword>create</keyword>
-			</code> 
+			</code>
 			<code>
 				<local_variable>my_timer</local_variable>
 			</code>.
@@ -67,21 +65,21 @@ Checking Status.
 			</code> (Current, $
 			<code>
 				<feature_name>check_status</feature_name>
-			</code>), Void, 0, 2000)) and call the feature 
+			</code>), Void, 0, 2000)) and call the feature
 			<code>
 				<feature_name>check_status</feature_name>
-			</code> that displays the message 
+			</code> that displays the message
 			<code>
 				<string>"Checking Status."</string>
 			</code> every two seconds.
 		</paragraph>
 		<paragraph>This sample contains the following class: </paragraph>
-		<list ordered="false">  
+		<list ordered="false">
 			<item>
 				<code>
 					<class_name>TIMER</class_name>
 				</code>
-			</item>  
+			</item>
 			<item>
 				<code>
 					<class_name>TIMER_CALLBACK</class_name>

@@ -1,9 +1,6 @@
 <document title="Build Tab" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Build Tab
-		</heading>
 		<paragraph>This tab contains information about the type of project you wish to build, and associated information.</paragraph>
 		<paragraph>Here is the appearence of the Build tab when 'build type' is selected as 'Project':</paragraph>
 		<paragraph>
@@ -44,27 +41,26 @@
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>/tools/eiffelbuild/reference/90_code_generation/index.xml</url>
 				<label>Code generation</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>index.xml</url>
 				<label>Project settings window</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>10_general.xml</url>
 				<label>General tab</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>30_generation.xml</url>
 				<label>Generation tab</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

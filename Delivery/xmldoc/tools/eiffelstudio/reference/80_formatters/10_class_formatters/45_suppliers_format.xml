@@ -1,14 +1,11 @@
 <document title="Suppliers" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Suppliers
-		</heading>
 		<paragraph>The suppliers view 
 			<image>
 				<url>/images/eiffelstudio/icons/icon_format_suppliers_color.gif</url>
 			</image>displays all the classes from which the current class is calling features.
-			<line_break></line_break>It is available through the 
+			<line_break/>It is available through the 
 			<bold>Class</bold> tab of the 
 			<link>
 				<url>/tools/eiffelstudio/reference/05_general_interface_description/20_eiffelstudio_window_overview.xml</url>
@@ -17,11 +14,10 @@
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>./40_clients_format.xml</url>
 				<label>Clients</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="Exploring an application dynamic state" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Exploring an application dynamic state
-		</heading>
 		<paragraph>To view the dynamic state of a debugged application, just stop it at the point where you want to see its context. The debugger tools will automatically be popped up then, yielding the call stack of the application, as well as the state of the objects located in the object tree, which include at least the object corresponding to the level of the call stack where the call stack cursor 
 			<image>
 				<url>/images/eiffelstudio/icons/icon_green_arrow.gif</url>
@@ -14,26 +11,25 @@
 		<paragraph>You can also query features dynamically by using the evaluation tool, which can be very useful to have glimpses of the C memory of the system, for instance.</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>20_interrupting_an_application.xml</url>
 				<label>Pausing an application</label>
 			</link>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>/tools/eiffelstudio/reference/40_debugger/30_call_stack_tool/00_introduction.xml</url>
 				<label>Call stack tool</label>
 			</link>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>/tools/eiffelstudio/reference/40_debugger/40_object_tool/00_introduction.xml</url>
 				<label>Object tool</label>
 			</link>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>/tools/eiffelstudio/reference/40_debugger/50_expression_evaluation/00_introduction.xml</url>
 				<label>Evaluation tool</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -3,14 +3,11 @@
 		<help>
 			<toc>
 				<envision_pseudo_name>80</envision_pseudo_name>
-				<envision_location>Samples\Windows Forms</envision_location>
+				<envision_location>Samples\.NET Framework Samples\Windows Forms</envision_location>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Calculator
-		</heading>
 		<div>
 			<paragraph>
 				<image>
@@ -22,8 +19,8 @@
 			</paragraph>
 		</div>
 		<paragraph>
-			<line_break></line_break>
-			<line_break></line_break>
+			<line_break/>
+			<line_break/>
 		</paragraph>
 		<heading>
 			<size>2</size>Compiling
@@ -32,7 +29,7 @@
 			<size>2</size>Running
 		</heading>
 		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. This is a really simple calculator that can take only two operands. So you should enter the first operand, then enter an operator, then the second operand. Click the "Calculate" button to generate the result. </paragraph>
-		<paragraph></paragraph>
+		<paragraph/>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
@@ -64,7 +61,6 @@
 			<size>2</size>Notes
 		</heading>
 		<paragraph>This sample is translated from the example located in the Tutorials\resources and localization\worldcalc subdirectory of the.NET Framework SDK samples directory of Microsoft Visual Studio.NET. </paragraph>
-		<paragraph></paragraph>
-		<paragraph></paragraph>
-	</paragraph>
-</document>
+		<paragraph/>
+		<paragraph/>
+	</paragraph></document>

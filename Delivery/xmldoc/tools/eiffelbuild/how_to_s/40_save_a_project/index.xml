@@ -1,9 +1,6 @@
 <document title="Save a project" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Save a project
-		</heading>
 		<paragraph>To save the project that is currently open, select 
 			<bold>Save</bold> from the 
 			<bold>File</bold> menu or click on 
@@ -23,11 +20,10 @@
 		</note>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>/tools/eiffelbuild/reference/10_general_interface_description/40_key_shortcuts.html</url>
 				<label>Key shortcuts</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,99 +1,140 @@
-<document title="HTML Report Project Wizard" output="envision">
+<document output="envision" title="HTML Report Wizard">
 	<meta_data>
 		<help>
 			<toc>
-				<envision_pseudo_name>70</envision_pseudo_name>
+				<envision_pseudo_name>50</envision_pseudo_name>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>HTML Report Project Wizard
-		</heading>
-		<paragraph>Availability: Enterprise version only.</paragraph>
-		<paragraph>
-			<line_break></line_break> This wizard will generate the requested HTML documentation for all or part of you compiled ENViSioN! project.
-		</paragraph>
-		<heading>
-			<size>2</size>Page content
-		</heading>
-		<paragraph>
-			<line_break></line_break> The wizard comprises of the following pages:
-		</paragraph>
-		<list ordered="false">
-			<item> Introduction Page - Introducing the wizard and its requirements </item>
-			<item> Select ENViSioN! Project - The compiled ENViSioN! to document </item>
-			<item> Choose Clusters - Select the clusters to generate documentation for </item>
-			<item>  Summary - The summary of the wizard, and what happens next</item>
-		</list>
-		<heading>
-			<size>2</size>Requirements
-		</heading>
-		<paragraph>
-			<line_break></line_break> The HTML Report Wizard requires that you use a compiled ENViSioN! project. For the best results ensure that you compile in the release configuration mode, or a configurationmode that has the '
-			<link>
-				<url>/10_Developing\20_Managing_Projects\10_Configuring_A_Project\10_Project_Property_Pages\GeneralPage.htm#OptimizeCode</url>
-				<label>
-					<italic>Optimize  Code</italic>
-				</label>
-			</link>' project property set in the 
-			<link>
-				<url>/10_Developing\20_Managing_Projects\10_Configuring_A_Project\10_Project_Property_Pages\GeneralPage.xml</url>
-				<label>  Genera</label>
-			</link>l properties.
-		</paragraph>
-		<heading>
-			<size>2</size>HTML Report Wizard Overview
-		</heading>
-		<paragraph>
-			<line_break></line_break> The HTML Report Wizard will generate a set of HTML documents corresponding to the selected clusters you wish to document. A Table of Contents (TOC) will also begenerated with these files.
-		</paragraph>
-		<heading>
-			<size>2</size>Eiffel ENViSioN Project Selection
-		</heading>
-		<paragraph>
-			<line_break></line_break> The first page of the wizard asks for a compiled ENViSioN! project to generated the HTML documentation for. Simple enter the path compiled Eiffel Project File (*.epr)located in the relevant configuration directory of your project directory, or use the provided browse button.
-		</paragraph>
-		<paragraph>
-			<image>
-				<alt_text>Import EiffelStudio Wizard</alt_text>
-				<url>html_report_wizard.png</url>
-			</image>
-		</paragraph>
-		<heading>
-			<size>2</size> Clusters Selection
-		</heading>
-		<paragraph>
-			<line_break></line_break> You may generate documentation for all or a subset of the clusters in your Project. The Clusters To Generate page allows you to select the project clusters containing thoseclasses to generate the documentation for.
-		</paragraph>
-		<paragraph>The 'Excluded Clusters' list is the list of clusters that will not have documentation generated for them and the 'Included Clusters' list will. You can include/exclude clusters using one of thefour selection buttons '
-			<bold>&lt;&lt;</bold>', '
-			<bold>&lt;</bold>', '&gt;' or '&gt;&gt;'. 
-		</paragraph>
-		<list ordered="false">
-			<item> '&lt;&lt;' will exclude all of clusters. </item>
-			<item> '&lt;' will exclude only those selected clusters in the Included Clusters list. </item>
-			<item> '&gt;' will include only those selected clusters in the Excluded Clusters list. </item>
-			<item>  '&gt;&gt;' will include all of the clusters.</item>
-		</list>
-		<paragraph>
-			<image>
-				<alt_text>Import EiffelStudio Wizard</alt_text>
-				<url>html_report_wizard_clusters.png</url>
-			</image>
-		</paragraph>
-		<seealso>
-			<bold>See Also</bold>
-			<line_break></line_break>
-			<link>
-				<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/index.xml</url>
-				<label>  Adding a New Project</label>
-			</link>
-			<line_break></line_break>
-			<link>
-				<url>/10_Developing/10_Getting_Started/20_Managing_Projects/30_Documenting_A_Project/documenting_a_project.xml</url>
-				<label>  Documenting ENViSioN! Projects</label>
-			</link>
-		</seealso>
-	</paragraph>
-</document>
+		<table>
+			<row>
+				<cell>
+					<paragraph>This wizardwill generatethe requested HTML documentation for all or  part of you compiled ENViSioN! project.</paragraph>
+					<heading>
+						<size>2</size>Page content
+					</heading>
+					<paragraph>  The wizard comprises of the following pages:</paragraph>
+					<list ordered="false">
+						<item>
+							<link>
+								<url>#introduction</url>
+								<label>Introduction Page</label>
+							</link>
+						</item>
+						<item>
+							<link>
+								<url>#select_project</url>
+								<label>Select Eiffel ENViSioN! Project</label>
+							</link>
+						</item>
+						<item>
+							<link>
+								<url>#select_configuration</url>
+								<label>Select Project Configration</label>
+							</link>
+						</item>
+						<item>
+							<link>
+								<url>#select_clusters</url>
+								<label>Select Clusters</label>
+							</link>
+						</item>
+						<item>
+							<link>
+								<url>#summary</url>
+								<label>Generate Documentation</label>
+							</link>
+						</item>
+					</list>
+					<heading>
+						<size>2</size>Requirements
+					</heading>
+					<paragraph>TheHTML Report Wizard requires that you use a compiled ENViSioN! project.  For the best results ensure that you compile in the release configuration mode,  or a configuration mode that has the
+						<link>
+							<url>/10_Developing\20_Managing_Projects\10_Configuring_A_Project\10_Project_Property_Pages\GeneralPage.htm#OptimizeCode</url>
+							<label>Optimize  Code</label>
+						</link> project property set in the
+						<link>
+							<url>/10_Developing\20_Managing_Projects\10_Configuring_A_Project\10_Project_Property_Pages\GeneralPage.htm</url>
+							<label>  Genera</label>
+						</link>l property page.
+					</paragraph>
+					<heading>
+						<size>2</size>  Introduction
+					</heading>
+					<paragraph>  The HTML Report Wizard will generate a set of HTML documents corresponding to  the selected clusters you wish to document. A Table of Contents (TOC) will also  be generated with these files.</paragraph>
+					<heading>
+						<size>2</size>Select Eiffel ENViSioN!  Project
+					</heading>
+					<paragraph>The first step of the wizard is to select the Eiffel ENViSioN! project you want  to generate your report documentation for. Enter an Eiffel ENViSioN! project  file (eifp) full path into
+						<bold>Project File</bold> or click
+						<bold>Browse  </bold>to browse for a file on disk. Once you have select a file you can move  on the next step by clicking
+						<bold>Next</bold>.
+					</paragraph>
+					<paragraph>
+						<image>
+							<alt_text>Import EiffelStudio Wizard</alt_text>
+							<url>html_report_project_select.PNG</url>
+						</image>
+					</paragraph>
+					<heading>
+						<size>2</size>Select Project Configuration
+					</heading>
+					<paragraph>The wizard now requires the configuration you wish to generate your projects  report documentation for. Select the desired configuration name from the
+						<bold>Configurations</bold>  list and click
+						<bold>Next</bold> to continue.
+					</paragraph>
+					<heading>
+						<size>2</size>  Select Clusters
+					</heading>
+					<paragraph>You may generate documentation for all or a subset of the clusters in your  Project. TheSelect Clusterpage allows you to selectyour  project's configurationclusters containing those classes to generate the  documentation for.</paragraph>
+					<paragraph>The
+						<bold>Excluded Clusters</bold>list is the list of clusters that  will not have documentation generated for them and the
+						<bold>Included Clusters </bold>  list will. You can include/exclude clusters using one of the four selection  buttons
+						<bold>&lt;&lt;</bold> ,
+						<bold>&lt;</bold>, &gt; or &gt;&gt;.
+					</paragraph>
+					<list ordered="false">
+						<item>
+							<bold>&lt;&lt; </bold>  - Exclude all of clusters.
+						</item>
+						<item>
+							<bold>&lt;</bold>  - Exclude only those selected clusters in the Included Clusters list.
+						</item>
+						<item>
+							<bold>&gt;</bold>  - Include only those selected clusters in the Excluded Clusters list.
+						</item>
+						<item>
+							<bold>&gt;&gt;</bold> - Include all of the clusters.
+						</item>
+					</list>
+					<paragraph>
+						<image>
+							<alt_text>Import EiffelStudio Wizard</alt_text>
+							<url>html_report_cluster_select.PNG</url>
+						</image>
+					</paragraph>
+					<heading>
+						<size>2</size>Generate Documentation
+					</heading>
+					<paragraph>Now that you have configured the HTML Report Wizard to generate the  desired amount of documentation for the selected project configuration, click
+						<bold>  Finish</bold> to generate the documentation in the choosen path and  complete the wizard.
+					</paragraph>
+					<seealso>
+						<bold>See Also</bold>
+						<line_break/>
+						<link>
+							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/index.html</url>
+							<label>  Adding a New Project</label>
+						</link>
+						<line_break/>
+						<link>
+							<url>/10_Developing/10_Getting_Started/20_Managing_Projects/30_Documenting_A_Project/documenting_a_project.htm</url>
+							<label>  Documenting ENViSioN! Projects</label>
+						</link>
+					</seealso>
+				</cell>
+			</row>
+		</table>
+	</paragraph></document>

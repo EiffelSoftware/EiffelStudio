@@ -1,35 +1,31 @@
 <document title="General interface description" output="studio">
-	<meta_data >
-		<help >
-			<meta >
-				<meta_content >general interface description</meta_content>
-				<name >MS-HKWD</name>
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>general interface description</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph >
-		<heading >
-			<size >1</size>General interface description
-		</heading>
+	<paragraph>
 		<list ordered="false">
-			<item >
-				<link >
-					<url >10_eiffelbuild_window_overview.xml</url>
-					<label >EiffelBuild window overview</label>
+			<item>
+				<link>
+					<url>10_eiffelbuild_window_overview.xml</url>
+					<label>EiffelBuild window overview</label>
 				</link>
 			</item>
-			<item >
-				<link >
-					<url >20_main_toolbars.xml</url>
-					<label >Main toolbars</label>
+			<item>
+				<link>
+					<url>20_main_toolbars.xml</url>
+					<label>Main toolbars</label>
 				</link>
 			</item>
-			<item >
-				<link >
-					<url >40_key_shortcuts.xml</url>
-					<label >Key shortcuts</label>
+			<item>
+				<link>
+					<url>40_key_shortcuts.xml</url>
+					<label>Key shortcuts</label>
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

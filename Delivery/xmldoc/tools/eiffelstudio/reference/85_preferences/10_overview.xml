@@ -1,9 +1,6 @@
 <document title="Preference window overview" output="studio">
 	<meta_data/>
-	<paragraph>
-		<heading>
-			<size>1</size>Preference window overview
-		</heading>The preferences dialog window is divided into two parts (plus a button bar at the bottom). 
+	<paragraph>The preferences dialog window is divided into two parts (plus a button bar at the bottom). 
 		<paragraph>
 			<image>
 				<url>/images/eiffelstudio/dialogs_and_wizards/preferences_dialog.png</url>
@@ -29,5 +26,4 @@
 		<warning>
 			<bold>Caution</bold>: You can restore preferences default values by clicking on the "Restore Default" button. ALL preferences will be reset.
 		</warning>
-	</paragraph>
-</document>
+	</paragraph></document>

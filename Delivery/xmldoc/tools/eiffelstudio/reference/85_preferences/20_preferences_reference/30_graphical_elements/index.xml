@@ -1,9 +1,6 @@
 <document title="Graphical elements" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Graphical elements
-		</heading>
 		<list ordered="false">
 			<item>
 				<link>
@@ -24,5 +21,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -2,17 +2,14 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_pseudo_name>40</envision_pseudo_name>
+				<envision_pseudo_name>70</envision_pseudo_name>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Advanced GUI Project Wizard
-		</heading>
 		<paragraph>Availability: Enterprise version only.</paragraph>
 		<paragraph>
-			<line_break></line_break> This wizard enables you to create a Vision2 application with an advanced GUI. During the execution of the wizard, you will be able to design the interface for your Vision2 application.
+			<line_break/> This wizard enables you to create a Vision2 application with an advanced GUI. During the execution of the wizard, you will be able to design the interface for your Vision2 application.
 		</paragraph>
 		<heading>
 			<size>2</size>Navigation
@@ -74,18 +71,17 @@
 			</link>
 			<seealso>
 				<bold>See Also</bold>
-				<line_break></line_break>
+				<line_break/>
 				<link>
 					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/index.xml</url>
 					<label>  Adding a New Project</label>
 				</link>
-				<line_break></line_break>
+				<line_break/>
 				<link>
 					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/advanced_graphics_project.xml</url>
 					<label>  GUI Project Wizard</label>
 				</link>
-				<line_break></line_break>
+				<line_break/>
 			</seealso>
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

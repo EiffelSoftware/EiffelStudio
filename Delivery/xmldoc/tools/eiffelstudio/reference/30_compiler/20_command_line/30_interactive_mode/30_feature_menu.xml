@@ -1,10 +1,8 @@
 <document title="Feature menu" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Feature menu
-		</heading>
-		<paragraph>The Feature Menu enables you to find properties of a feature:</paragraph><code_block>
+		<paragraph>The Feature Menu enables you to find properties of a feature:</paragraph>
+		<code_block>
 	(A) Ancestors    : show the ancestor versions of a feature.
 	(C) Callers      : show the callers of a feature.
 	(D) Descendants  : show the descendant versions of a feature.

@@ -1,33 +1,29 @@
 <document title="Introduction" output="studio">
-	<meta_data >
-		<help >
-			<meta >
-				<meta_content >feature tool</meta_content>
-				<name >MS-HKWD</name>
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>feature tool</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph >
-		<heading >
-			<size >1</size>Introduction
-		</heading>
-		<paragraph >
-			<image >
-				<url >/images/eiffelstudio/browsing_tools/feature_tool.png</url>
+	<paragraph>
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/browsing_tools/feature_tool.png</url>
 			</image>
-		</paragraph>The feature tool ( 
-		<image >
-			<url >/images/eiffelstudio/icons/icon_features_color.gif</url>
-		</image> ) gives a summary of all written-in features of the currently edited class. They are listed in a 
-		<link >
-			<url >10_feature_tree.xml</url>
-			<label >tree representation</label>
+		</paragraph>The feature tool (
+		<image>
+			<url>/images/eiffelstudio/icons/icon_features_color.gif</url>
+		</image> ) gives a summary of all written-in features of the currently edited class. They are listed in a
+		<link>
+			<url>10_feature_tree.xml</url>
+			<label>tree representation</label>
 		</link>, where the nodes are the feature clauses, and the leaves are the features.
-		<paragraph >In the tool mini-toolbar, a 
-			<link >
-				<url >20_new_feature_command.xml</url>
-				<label >new feature command</label>
+		<paragraph>In the tool mini-toolbar, a
+			<link>
+				<url>20_new_feature_command.xml</url>
+				<label>new feature command</label>
 			</link> is available, which adds a new feature in the edited class.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

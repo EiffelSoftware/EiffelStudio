@@ -1,9 +1,6 @@
 <document title="Attributes, metrics and measures" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Attributes, metrics and measures
-		</heading>
 		<paragraph>The most general notion is "attribute":</paragraph>
 		<note>
 			<bold>Attribute</bold>: An 
@@ -47,5 +44,4 @@
 			<bold>Measure</bold>:A 
 			<bold>measure</bold> is the value of a metric for a certain process or product.
 		</note>
-	</paragraph>
-</document>
+	</paragraph></document>

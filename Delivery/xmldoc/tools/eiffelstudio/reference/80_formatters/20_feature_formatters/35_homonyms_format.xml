@@ -1,9 +1,6 @@
 <document title="Homonyms" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Homonyms
-		</heading>
 		<paragraph>The homonyms view 
 			<image>
 				<url>/images/eiffelstudio/icons/icon_format_feature_homonyms_color.gif</url>
@@ -14,11 +11,10 @@
 		</warning>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>./20_implementers_format.xml</url>
 				<label>Implementers</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

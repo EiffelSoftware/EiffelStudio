@@ -1,9 +1,6 @@
 <document title="Editing a project" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Editing a project
-		</heading>
 		<list ordered="false">
 			<item>
 				<link>
@@ -60,5 +57,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

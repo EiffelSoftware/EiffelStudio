@@ -1,4 +1,4 @@
-<document title="Documenting ENViSioN! Projects" output="envision">
+<document output="envision" title="Documenting a Project">
 	<meta_data>
 		<help>
 			<toc>
@@ -7,38 +7,32 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Documenting ENViSioN! Projects
-		</heading>
-		<paragraph>
-			<line_break></line_break> Documenting an ENViSioN! project is made easy through using the 
-			<link>
-				<url>\10_Developing\10_Getting_Started\10_Using_ENViSioN\10_Adding_A_New_Project\html_report_wizard.xml</url>
-				<label>  HTML Report Project Wizard</label>
-			</link> in the Add New Project dialog.
-		</paragraph>
-		<heading>
-			<size>2</size>Documentation Checklist
-		</heading>
-		<paragraph>
-			<line_break></line_break> Before choosing to document your ENViSioN! project please use this checklist to ensure that your project can be documented successfully. Ensure that...
-		</paragraph>
-		<list ordered="false">
-			<item>  The ENViSioN! project have been successfully compiled</item>
-		</list>
-		<heading>
-			<size>2</size>Visual Studio.NET Help Projects
-		</heading>
-		<paragraph>
-			<line_break></line_break> The HTML Report Project Wizard creates a new Visual Studio.NET Help project when it is completed. From this you can add or remove items at your discretion and even modify the default Cascading Style Sheet (CSS) to present the project documentation differently from the default. A Help project can then be complied and distributed as a Microsoft Help Collection. 
-		</paragraph>
-		<seealso>
-			<bold>See Also:</bold>
-			<line_break></line_break>
-			<link>
-				<url>\10_Developing\10_Getting_Started\10_Using_ENViSioN\10_Adding_A_New_Project\html_report_wizard.xml</url>
-				<label>  HTML Report Project Wizard</label>
-			</link>
-		</seealso>
-	</paragraph>
-</document>
+		<table>
+			<row>
+				<cell>
+					<paragraph>  Documenting an Eiffel ENViSioN! project can be done only through using the
+						<link>
+							<url>\10_Developing\10_Getting_Started\10_Using_ENViSioN\10_Adding_A_New_Project\html_report_wizard.htm</url>
+							<label>  HTML Report Project Wizard</label>
+						</link> from the Add New Project dialog. This  project wizard is only available in the Eiffel ENViSioN! Enterprise Edition.
+					</paragraph>
+					<heading>
+						<size>2</size>Documentation Checklist
+					</heading>
+					<paragraph>  The only prerequiste of documenting an Eiffel ENViSioN! project is that the  project be compiled successfully as the HTML Report Project Wizard requires and  makes use of the compiled project epr file. </paragraph>
+					<heading>
+						<size>2</size>Visual Studio.NET Help Projects
+					</heading>
+					<paragraph>  The HTML Report Project Wizard does not create a new project once it has  completed. Instead, on successful completion, you will be presented with  generated files, at the location specified, in a new Windows Explorer. From  there you can add and remove items at your discretion and even modify the  default.css Cascading Style Sheet (CSS) to present the documentation in the  manner best suited to you. </paragraph>
+					<seealso>
+						<bold>See Also:</bold>
+						<line_break/>
+						<link>
+							<url>\10_Developing\10_Getting_Started\10_Using_ENViSioN\10_Adding_A_New_Project\html_report_wizard.htm</url>
+							<label>  HTML Report Project Wizard</label>
+						</link>
+					</seealso>
+				</cell>
+			</row>
+		</table>
+	</paragraph></document>

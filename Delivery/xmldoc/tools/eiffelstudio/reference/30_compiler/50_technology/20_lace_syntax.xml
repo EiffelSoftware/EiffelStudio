@@ -1,35 +1,32 @@
 <document title="Lace syntax" output="studio">
-	<meta_data >
-		<help >
-			<meta >
-				<meta_content >Lace syntax</meta_content>
-				<name >MS-HKWD</name>
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>Lace syntax</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
-			<meta >
-				<meta_content >ace file, syntax</meta_content>
-				<name >MS-HKWD</name>
+			<meta>
+				<meta_content>ace file, syntax</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph >
-		<heading >
-			<size >1</size>Lace syntax
+	<paragraph>
+		<heading>
+			<size>2</size>Introduction
 		</heading>
-		<heading >
-			<size >2</size>Introduction
-		</heading>
-		<paragraph >Ace files are central control files for Eiffel projects. They mainly describe the compilation options of the project, its clusters and the external references to C files necessary to compile the system successfully.</paragraph>
-		<paragraph >From EiffelStudio 5.0 on, modifying Ace files manually is not necessary any more. The 
-			<link >
-				<url >/tools/eiffelstudio/reference/25_project_settings/index.xml</url>
-				<label >project settings dialog</label>
+		<paragraph>Ace files are central control files for Eiffel projects. They mainly describe the compilation options of the project, its clusters and the external references to C files necessary to compile the system successfully.</paragraph>
+		<paragraph>From EiffelStudio 5.0 on, modifying Ace files manually is not necessary any more. The
+			<link>
+				<url>/tools/eiffelstudio/reference/25_project_settings/index.xml</url>
+				<label>project settings dialog</label>
 			</link> takes care of everything graphically. If for some reason you need to modify manually Ace files, the syntax is described beneath.
 		</paragraph>
-		<heading >
-			<size >2</size>Overview
+		<heading>
+			<size>2</size>Overview
 		</heading>
-		<paragraph >Here is a standard Ace file:</paragraph>
-<code_block >
+		<paragraph>Here is a standard Ace file:</paragraph>
+		<code_block>
 system
 	sample
 
@@ -76,240 +73,393 @@ external
 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
 end
 </code_block>
-		<paragraph >The first part, introduced by the keyword 
-			<code >
-				<keyword >system</keyword>
+		<paragraph>The first part, introduced by the keyword
+			<code>
+				<keyword>system</keyword>
 			</code>, gives the name of the system.
 		</paragraph>
-		<paragraph >The part starting with 
-			<code >
-				<keyword >root</keyword>
+		<paragraph>The part starting with
+			<code>
+				<keyword>root</keyword>
 			</code> names the root class and the feature that starts the execution of the system.
 		</paragraph>
-		<paragraph >Afterwards comes the list of the clusters of the system, introduced by 
-			<code >
-				<keyword >cluster</keyword>
+		<paragraph>Afterwards comes the list of the clusters of the system, introduced by
+			<code>
+				<keyword>cluster</keyword>
 			</code>.
 		</paragraph>
-		<paragraph >The last part, after 
-			<code >
-				<keyword >external</keyword>
+		<paragraph>The last part, after
+			<code>
+				<keyword>external</keyword>
 			</code>,describes the files needed by the C compilation. They include header files needed by the external features of the system, and the library files.
 		</paragraph>
-		<paragraph >Ace files always finish with the 
-			<code >
-				<keyword >end</keyword>
+		<paragraph>Ace files always finish with the
+			<code>
+				<keyword>end</keyword>
 			</code> keyword, like Eiffel classes.
 		</paragraph>
-		<paragraph >The commenting conventions for Ace files are similar to the ones of classes: comments are introduced by -- and include the end of the line.</paragraph>
-		<heading >
-			<size >2</size>Default options
+		<paragraph>The commenting conventions for Ace files are similar to the ones of classes: comments are introduced by -- and include the end of the line.</paragraph>
+		<heading>
+			<size>2</size>Default options
 		</heading>
-		<paragraph >We will describe each option as they are presented in the Ace file above, in the option section, in alphabetical order. The default value for each option is shown in bold.</paragraph>
+		<paragraph>We will describe each option as they are presented in the Ace file above, in the option section, in alphabetical order. The default value for each option is shown in bold.</paragraph>
 		<list ordered="false">
-			<item >
-				<span >address_expression (yes |
-					<bold >no</bold>)
+			<item>
+				<span>address_expression (yes |
+					<bold>no</bold>)
 				</span>: enables you to pass `
-				<bold >$(s.to_c)</bold>' to a feature instead of declaring `a' of type 
-				<bold >ANY</bold>, and then assigning `
-				<bold >s.to_c</bold>' to `a' and passing `
-				<bold >$a</bold>'. Turn this option on only if you have advanced knowledge of the garbage collector insides, since using this syntax illegally can lead to bugs very hard to trace.
+				<bold>$(s.to_c)</bold>' to a feature instead of declaring `a' of type
+				<bold>ANY</bold>, and then assigning `
+				<bold>s.to_c</bold>' to `a' and passing `
+				<bold>$a</bold>'. Turn this option on only if you have advanced knowledge of the garbage collector insides, since using this syntax illegally can lead to bugs very hard to trace.
 			</item>
-			<item >
-				<span >array_optimization (yes |
-					<bold >no</bold>)
+			<item>
+				<span>array_optimization (yes |
+					<bold>no</bold>)
 				</span>: enables array optimization which increases performance of array computation in loops. It is enabled only if arrays are used as local variables or arguments of an Eiffel feature.
 			</item>
-			<item >
-				<span >assertion (no |
-					<bold >require</bold> | ensure |invariant | loop | check | all)
+			<item>
+				<span>assertion (no |
+					<bold>require</bold> | ensure |invariant | loop | check | all)
 				</span>: sets the assertion level of an Eiffel system. Contrary to previous versions of the Eiffel language, levels do not include the previous level, thus specifying`loop' will no longer check for preconditions, postconditions ,class invariants, loop variants and loop invariants. With the new syntax, you are free to decide which assertions are to be tested independently from the others. Thus, it is now possible to check preconditions and checks by writing
-				<line_break /> assertion (require)
-				<line_break /> assertion (check)
-				<line_break /> in the Ace file, without having invariants and postconditions checked.
-				<line_break /> The all specification includes all checks.
+				<line_break/> assertion (require)
+				<line_break/> assertion (check)
+				<line_break/> in the Ace file, without having invariants and postconditions checked.
+				<line_break/> The all specification includes all checks.
 			</item>
-			<item >
-				<span >check_vape (
-					<bold >yes</bold> | no)
-				</span>:enables you to disable type checking for 
-				<bold >VAPE</bold> errors in preconditions, which correspond to unsufficiently exported features used in preconditions (ETL 2nd edition page 122).
+			<item>
+				<span>check_vape (
+					<bold>yes</bold> | no)
+				</span>:enables you to disable type checking for
+				<bold>VAPE</bold> errors in preconditions, which correspond to unsufficiently exported features used in preconditions (ETL 2nd edition page 122).
 			</item>
-			<item >
-				<span >console_application (yes |
-					<bold >no</bold>)
+			<item>
+				<span>console_application (yes |
+					<bold>no</bold>)
 				</span>: has no effects on Unix and it was made for Windows users. It enables Windows users to choose between creating a console application or a GUI application (in which case a console will be created if needed, instead of using the console the program was launched from).
 			</item>
-			<item >
-				<span >collect (
-					<bold >yes</bold> | no)
-				</span>: not applicable. One has to use the 
-				<bold >MEMORY</bold> class to activate or stop the garbage collector.
+			<item>
+				<span>collect (
+					<bold>yes</bold> | no)
+				</span>: not applicable. One has to use the
+				<bold>MEMORY</bold> class to activate or stop the garbage collector.
 			</item>
-			<item >
-				<span >dead_code_removal (
-					<bold >yes</bold> | no)
+			<item>
+				<span>dead_code_removal (
+					<bold>yes</bold> | no)
 				</span>:it is a finalization option only. It enables you to not generate the C code for Eiffel routines that are not called in your code, and thus reducing the size of the generated application.
 			</item>
-			<item >
-				<span >debug (yes |
-					<bold >no</bold> |"DEBUG_TAG")
+			<item>
+				<span>debug (yes |
+					<bold>no</bold> |"DEBUG_TAG")
 				</span>: enables you to activate or disable the code written inside `
-				<span >
-					<bold >debug</bold>
+				<span>
+					<bold>debug</bold>
 				</span>' statement in your Eiffel code. If you marked your code with tagged `
-				<span >
-					<bold >debug</bold>
+				<span>
+					<bold>debug</bold>
 				</span>' statement and if you specify atag in the Ace file, only this kind of `
-				<code >
-					<keyword >debug</keyword>
+				<code>
+					<keyword>debug</keyword>
 				</code>' statement will be executed. You can put several lines of `
-				<span >
-					<bold >debug</bold>
+				<span>
+					<bold>debug</bold>
 				</span>' in the Ace file to enable several kinds of `
-				<span >
-					<bold >debug</bold>
+				<span>
+					<bold>debug</bold>
 				</span>' statements.
 			</item>
-			<item >
-				<span >document ("path")</span>: specifies in which directory the documentation generated by EiffelStudio should be put (when using the
-				<bold >Project</bold>/
-				<bold >Generate documentation...</bold> menu). If no directory is specified, the documentation will be generated at the same level as your EIFGEN directory in a directory called `Documentation'.
+			<item>
+				<span>document ("path")</span>: specifies in which directory the documentation generated by EiffelStudio should be put (when using the
+				<bold>Project</bold>/
+				<bold>Generate documentation...</bold> menu). If no directory is specified, the documentation will be generated at the same level as your EIFGEN directory in a directory called `Documentation'.
 			</item>
-			<item >
-				<span >dynamic_runtime (yes |
-					<bold >no</bold>)
+			<item>
+				<span>dynamic_runtime (yes |
+					<bold>no</bold>)
 				</span>:enables the use of a shared library version of the runtime on both Windows (DLL) and Unix platforms (.so) that supports shared libraries.
 			</item>
-			<item >
-				<span >exception_trace (yes |
-					<bold >no</bold>)
+			<item>
+				<span>exception_trace (yes |
+					<bold>no</bold>)
 				</span>:it is a finalization option only. It enables you to see a complet eexception trace when your finalized application is crashing. Because it is adding some code to remember where the application was during the crash it can slow down the performance of your application by a factor of 5% to 30% depending of your platform.
 			</item>
-			<item >
-				<span >inlining (yes |
-					<bold >no</bold>)
+			<item>
+				<span>inlining (yes |
+					<bold>no</bold>)
 				</span>: it is a finalization option only. It enables to inline functions that can be inlined (see `inlining_size' below). The ISE Eiffel inlining is very powerful since it can inline a function in all your Eiffel code, without scope limitation as in C or C++ compilers.
 			</item>
-			<item >
-				<span >inlining_size ("value")</span>: it is a finalization option only, used in conjunction with the inlining option. It enables to specify the size under which the compiler mayinline a function. The value given in parameter corresponds to the number of instructions as the Eiffel compiler sees them (for example a := b.f corresponds to 2 instructions for the Eiffel compiler).
+			<item>
+				<span>inlining_size ("value")</span>: it is a finalization option only, used in conjunction with the inlining option. It enables to specify the size under which the compiler mayinline a function. The value given in parameter corresponds to the number of instructions as the Eiffel compiler sees them (for example a := b.f corresponds to 2 instructions for the Eiffel compiler).
 			</item>
-			<item >
-				<span >line_generation (yes |
-					<bold >no</bold>)
+			<item>
+				<span>line_generation (yes |
+					<bold>no</bold>)
 				</span>:enables the generation of C pragmas `#line x' in the C generated code. This option is mostly used by embedded Eiffel developers who could not run the ISE EiffelStudio environment on their target platform.
 			</item>
-			<item >
-				<span >multithreaded (yes |
-					<bold >no</bold>)
+			<item>
+				<span>multithreaded (yes |
+					<bold>no</bold>)
 				</span>:enables the generation of a multithreaded application. This option cannot be changed during the development of your project and has to be set correctly at the first compilation of your system.
 			</item>
-			<item >
-				<span >override_cluster (cluster_name)</span>:enables you to specify a certain `cluster_name' as override cluster. As a result, all classes in `cluster_name' will override the classes with the same names located in other clusters. Very useful when used in conjunction with configuration management tools.
+			<item>
+				<span>override_cluster (cluster_name)</span>:enables you to specify a certain `cluster_name' as override cluster. As a result, all classes in `cluster_name' will override the classes with the same names located in other clusters. Very useful when used in conjunction with configuration management tools.
 			</item>
-			<item >
-				<span >profile (yes |
-					<bold >no</bold>)
-				</span>: enables the Eiffel profiling (to know more about Eiffel profiling click 
-				<link >
-					<url >../../70_wizards_and_dialogs/10_profiler_wizard/00_introduction.xml</url>
-					<label >here</label>
+			<item>
+				<span>profile (yes |
+					<bold>no</bold>)
+				</span>: enables the Eiffel profiling (to know more about Eiffel profiling click
+				<link>
+					<url>../../70_wizards_and_dialogs/10_profiler_wizard/00_introduction.xml</url>
+					<label>here</label>
 				</link>).
 			</item>
-			<item >
-				<span >shared_library_definition("file_name.def")</span>: enables you to specify `file_name.def' asfile where the Eiffel compiler will look when trying to generate the exported function of the shared library you are developing. To have more information concerning definition files, see the 
-				<link >
-					<url >../40_dynamic_library_generation/00_introduction.xml</url>
-					<label >Dynamic library builder reference</label>
+			<item>
+				<span>shared_library_definition("file_name.def")</span>: enables you to specify `file_name.def' asfile where the Eiffel compiler will look when trying to generate the exported function of the shared library you are developing. To have more information concerning definition files, see the
+				<link>
+					<url>../40_dynamic_library_generation/00_introduction.xml</url>
+					<label>Dynamic library builder reference</label>
 				</link>.
 			</item>
-			<item >
-				<span >precompiled("precompiled_library_path")</span>: enables you to specify a precompiled library. Most examples given in the ISE EiffelStudio delivery are using a precompiled library. It makes the development of small application incredibly fast.
+			<item>
+				<span>precompiled("precompiled_library_path")</span>: enables you to specify a precompiled library. Most examples given in the ISE EiffelStudio delivery are using a precompiled library. It makes the development of small application incredibly fast.
 			</item>
 		</list>
-		<heading >
-			<size >2</size>External options
+		<heading>
+			<size>2</size>External options
 		</heading>
 		<list ordered="false">
-			<item >
-				<span >include_path</span>: enables you to specify the path to the header files you are using in external clauses of your Eiffel based source code.
+			<item>
+				<span>include_path</span>: enables you to specify the path to the header files you are using in external clauses of your Eiffel based source code.
 			</item>
-			<item >
-				<span >object</span>: enables you to link your application with specified object files.
+			<item>
+				<span>object</span>: enables you to link your application with specified object files.
 			</item>
 		</list>
-		<seealso >
-			<bold >See also</bold>
-			<line_break />
-			<link >
-				<url >../30_external_features/index.xml</url>
-				<label >External features</label>
+		<seealso>
+			<bold>See also</bold>
+			<line_break/>
+			<link>
+				<url>../30_external_features/index.xml</url>
+				<label>External features</label>
 			</link>
 		</seealso>
-		<heading >
-			<size >2</size>Keywords
+		<heading>
+			<size>2</size>Keywords
 		</heading>
-		<paragraph >
-			<table >
-				<row >
-					<cell ><code ><keyword >adapt</keyword></code></cell>
-					<cell ><code ><keyword >all</keyword></code></cell>
-					<cell ><code ><keyword >assertion</keyword></code></cell>
-					<cell ><code ><keyword >c</keyword></code></cell>
-					<cell ><code ><keyword >check</keyword></code></cell>
-					<cell ><code ><keyword >cluster</keyword></code></cell>
+		<paragraph>
+			<table>
+				<row>
+					<cell>
+						<code>
+							<keyword>adapt</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>all</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>assertion</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>c</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>check</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>cluster</keyword>
+						</code>
+					</cell>
 				</row>
-				<row >
-					<cell ><code ><keyword >colon</keyword></code></cell>
-					<cell ><code ><keyword >comma</keyword></code></cell>
-					<cell ><code ><keyword >creation</keyword></code></cell>
-					<cell ><code ><keyword >debug</keyword></code></cell>
-					<cell ><code ><keyword >default</keyword></code></cell>
-					<cell ><code ><keyword >end</keyword></code></cell>
+				<row>
+					<cell>
+						<code>
+							<keyword>colon</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>comma</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>creation</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>debug</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>default</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>end</keyword>
+						</code>
+					</cell>
 				</row>
-								<row >
-					<cell ><code ><keyword >ensure</keyword></code></cell>
-					<cell ><code ><keyword >exclude</keyword></code></cell>
-					<cell ><code ><keyword >executable</keyword></code></cell>
-					<cell ><code ><keyword >export</keyword></code></cell>
-					<cell ><code ><keyword >external</keyword></code></cell>
-					<cell ><code ><keyword >generate</keyword></code></cell>
+				<row>
+					<cell>
+						<code>
+							<keyword>ensure</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>exclude</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>executable</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>export</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>external</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>generate</keyword>
+						</code>
+					</cell>
 				</row>
-				<row >
-					<cell ><code ><keyword >identifier</keyword></code></cell>
-					<cell ><code ><keyword >ignore</keyword></code></cell>
-					<cell ><code ><keyword >include</keyword></code></cell>
-					<cell ><code ><keyword >include_path</keyword></code></cell>
-					<cell ><code ><keyword >invariant</keyword></code></cell>
-					<cell ><code ><keyword >loop</keyword></code></cell>
-				</row>				<row >
-					<cell ><code ><keyword >make</keyword></code></cell>
-					<cell ><code ><keyword >no</keyword></code></cell>
-					<cell ><code ><keyword >object</keyword></code></cell>
-					<cell ><code ><keyword >optimize</keyword></code></cell>
-					<cell ><code ><keyword >option</keyword></code></cell>
-					<cell ><code ><keyword >precompiled</keyword></code></cell>
+				<row>
+					<cell>
+						<code>
+							<keyword>identifier</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>ignore</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>include</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>include_path</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>invariant</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>loop</keyword>
+						</code>
+					</cell>
 				</row>
-				<row >
-					<cell ><code ><keyword >rename</keyword></code></cell>
-					<cell ><code ><keyword >require</keyword></code></cell>
-					<cell ><code ><keyword >root</keyword></code></cell>
-					<cell ><code ><keyword >system</keyword></code></cell>
-					<cell ><code ><keyword >trace</keyword></code></cell>
-					<cell ><code ><keyword >use</keyword></code></cell>
+				<row>
+					<cell>
+						<code>
+							<keyword>make</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>no</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>object</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>optimize</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>option</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>precompiled</keyword>
+						</code>
+					</cell>
 				</row>
-				<row >
-					<cell ><code ><keyword >visible</keyword></code></cell>
-					<cell ><code ><keyword >yes</keyword></code></cell>
+				<row>
+					<cell>
+						<code>
+							<keyword>rename</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>require</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>root</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>system</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>trace</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>use</keyword>
+						</code>
+					</cell>
+				</row>
+				<row>
+					<cell>
+						<code>
+							<keyword>visible</keyword>
+						</code>
+					</cell>
+					<cell>
+						<code>
+							<keyword>yes</keyword>
+						</code>
+					</cell>
 				</row>
 			</table>
 		</paragraph>
-		<paragraph >Introduced with ISE EiffelBench 4.5 the keyword `
-			<code >
-				<keyword >all</keyword>
+		<paragraph>Introduced with ISE EiffelBench 4.5 the keyword `
+			<code>
+				<keyword>all</keyword>
 			</code>' can appear before the name of a cluster. This new keyword is now used in most Ace files given with your distribution. One example can be found above and it is reproduced below with some explanations:
-<code_block >
+			<code_block>
 		-- EiffelBase
 	all base: "$ISE_EIFFEL\library\base"
 		exclude
@@ -317,13 +467,12 @@ end
 		end
 </code_block>
 		</paragraph>
-		<paragraph >The meaning of `
-			<code >
-				<keyword >all</keyword>
+		<paragraph>The meaning of `
+			<code>
+				<keyword>all</keyword>
 			</code>' is to take into account all Eiffel files located below the directory pointed by the `base' cluster. In addition, the example above uses `
-			<code >
-				<keyword >exclude</keyword>
+			<code>
+				<keyword>exclude</keyword>
 			</code>' to make sure that the directory called `table_eiffel3' and its descendants won't be traversed. This is very useful when you have two clusters which are used through a switch in your Ace file.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

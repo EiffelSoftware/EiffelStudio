@@ -1,9 +1,6 @@
 <document title="Debug/Profile Tab" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Debug/Profile Tab
-		</heading>
 		<paragraph> </paragraph>
 		<paragraph>Here is what the debug tab looks like when you have not yet compiled the system you just created. It comprises two tabs, the first and default tab for debugging options and the second for program execution options.</paragraph>
 		<paragraph>
@@ -51,5 +48,4 @@
 		<note>
 			<bold>Note</bold>: The profiler is only available in the Enterprise edition of EiffelStudio.
 		</note>
-	</paragraph>
-</document>
+	</paragraph></document>

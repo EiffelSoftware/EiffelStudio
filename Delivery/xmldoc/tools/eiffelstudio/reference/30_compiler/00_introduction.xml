@@ -1,9 +1,6 @@
 <document title="Compiler" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Compiler
-		</heading>
 		<paragraph>EiffelStudio naturally includes a powerful Eiffel compiler, which is at the core of the IDE. It supports the entire Eiffel language as defined in the third edition of Eiffel: The Language.</paragraph> 
 		<paragraph>This compiler uses the 
 			<link>
@@ -25,11 +22,10 @@
 		</paragraph>        
 		<seealso>
 			<bold>See also</bold>:
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>/general/guided_tour/language/index.xml</url>
 				<label>General        overview of the Eiffel language</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

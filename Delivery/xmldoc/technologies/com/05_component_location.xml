@@ -1,14 +1,11 @@
 <document title="The Component Location" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>The Component Location
-		</heading>
 		<div>
 			<heading>
 				<size>2</size>Types of Components
 			</heading>
-			<link></link> ActiveX, DirectX, OCX, COM+, ADO+, ASP etc. who never heard of these technologies? They all represent yet another use of the COM standard. This paragraph will focus on categorizing COM components according to their own properties as well as the context in which they are used. The categorization will define how the EiffelCOM wizard should be used to wrap or create a component. 
+			<link/> ActiveX, DirectX, OCX, COM+, ADO+, ASP etc. who never heard of these technologies? They all represent yet another use of the COM standard. This paragraph will focus on categorizing COM components according to their own properties as well as the context in which they are used. The categorization will define how the EiffelCOM wizard should be used to wrap or create a component. 
 		</div>The first criteria that defines the type of component is from where it will be accessed: will the component be loaded in the client process or will the component be a remote server for a distributed application? In the former case, the component is compiled as a Dynamic Link Libraries (DLL) while in the latter case it is a standard executable. 
 		<div>
 			<heading>
@@ -22,46 +19,45 @@
 			</heading>These components are standard executable acting as servers that can be accessed locally or over a network. Typically used in a three tier client server architecture, the major difference with in-process servers (other than the module type - executable instead of DLL) is their lifetime. In-process components are typically loaded to achieve a specific task and unloaded just after while out-of-process components are servers supposed to run continuously. The EiffelCOM wizard allows to build clients for such servers in Eiffel. It also provides the ability to create such servers. 
 		</div>
 		<seealso>See Also 
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>../../tools/wizards/com/index.html</url>
 				<label>EiffelCOM wizard</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>../../libraries/com/index.html</url>
 				<label> EiffelCOM library</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>01_introduction.html</url>
 				<label> Introduction</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>03_interfaces.html</url>
 				<label> COM Interfaces</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>04_coclass.html</url>
 				<label> Coclasses</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>05_component_location.html</url>
 				<label> Component Location</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>06_access_type.html</url>
 				<label> Access Type</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>07_deeper_into_com.html</url>
 				<label> Deeper into COM</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

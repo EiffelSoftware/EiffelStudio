@@ -1,9 +1,6 @@
 <document title="Introduction" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Introduction
-		</heading>
 		<paragraph>The Diagram Tool of EiffelStudio is your graphical interface to system structures. You can use it both to 
 			<italic>examine</italic> systems already built or under development, and to 
 			<italic>build</italic> these systems graphically. EiffelStudio supports complete seamlessness and reversibility between the Diagram Tool's graphical view and the text view of other EiffelStudio tools: whenever you make a change or addition with the graphical tool, EiffelStudio will update the text; and when you change the text, EiffelStudio will update the Diagram Tool's representation on the next compilation.
@@ -19,5 +16,4 @@
 				<url>/images/eiffelstudio/diagram/devel-diagram.png</url>
 			</image>
 		</div>
-	</paragraph>
-</document>
+	</paragraph></document>

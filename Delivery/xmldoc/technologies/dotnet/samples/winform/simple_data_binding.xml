@@ -7,9 +7,6 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Simple data binding
-		</heading>
 		<div>
 			<paragraph>
 				<image>
@@ -21,8 +18,8 @@
 			</paragraph>
 		</div>
 		<paragraph>
-			<line_break></line_break>
-			<line_break></line_break>
+			<line_break/>
+			<line_break/>
 		</paragraph>
 		<heading>
 			<size>2</size>Compiling
@@ -36,11 +33,11 @@
 		<paragraph>Clicking on the left button (&lt;) will bring you on the precedent customer in the list. </paragraph>
 		<paragraph>Clicking on the right button (&gt;) will bring you on the next customer in the list. </paragraph>
 		<paragraph>Clicking on the right button (&gt;|) will bring you on the last customer of the list. </paragraph>
-		<paragraph></paragraph>
+		<paragraph/>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph></paragraph>
+		<paragraph/>
 		<paragraph>This sample contains the following class:</paragraph>
 		<list ordered="false">
 			<item>
@@ -51,7 +48,6 @@
 			<size>2</size>Notes
 		</heading>
 		<paragraph>This sample is translated from the example located in the QuickStart\winforms\samples\dataBinding subdirectory of the .NET Framework SDK samples directory of Microsoft Visual Studio.NET. </paragraph>
-		<paragraph></paragraph>
-		<paragraph></paragraph>
-	</paragraph>
-</document>
+		<paragraph/>
+		<paragraph/>
+	</paragraph></document>

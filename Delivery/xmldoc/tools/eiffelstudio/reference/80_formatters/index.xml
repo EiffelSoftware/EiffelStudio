@@ -1,35 +1,31 @@
 <document title="Formatted information about compiled classes and features" output="studio">
-	<meta_data >
-		<help >
-			<meta >
-				<meta_content >view</meta_content>
-				<name >MS-HKWD</name>
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>view</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph >
-		<heading >
-			<size >1</size>Formatted information about compiled classes and features
-		</heading>
+	<paragraph>
 		<list ordered="false">
-			<item >
-				<link >
-					<url >00_introduction.xml</url>
-					<label >Introduction</label>
+			<item>
+				<link>
+					<url>00_introduction.xml</url>
+					<label>Introduction</label>
 				</link>
 			</item>
-			<item >
-				<link >
-					<url >10_class_formatters/index.xml</url>
-					<label >Class views</label>
+			<item>
+				<link>
+					<url>10_class_formatters/index.xml</url>
+					<label>Class views</label>
 				</link>
 			</item>
-			<item >
-				<link >
-					<url >20_feature_formatters/index.xml</url>
-					<label >Feature views</label>
+			<item>
+				<link>
+					<url>20_feature_formatters/index.xml</url>
+					<label>Feature views</label>
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

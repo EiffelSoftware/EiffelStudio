@@ -1,90 +1,89 @@
-<document title="Class View Context Menu" output="envision">
+<document output="envision" title="Class View Context Menu">
 	<meta_data>
 		<help>
 			<toc>
+				<envision_title>Context Menu</envision_title>
 				<envision_pseudo_name>20</envision_pseudo_name>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Class View Context Menu
-		</heading>
-		<paragraph>
-			<paragraph>Right clicking on any item displayed in the 
-				<help_link>
-					<tab_index>0</tab_index>
-					<keywords>Eiffel Class View</keywords>
-					<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;Class View
-				</help_link> will open a context menu  for that item, as demonstrated in the followingscreenshot:
-			</paragraph>
-			<paragraph>
-				<image>
-					<alt_text>class_view_context_menu</alt_text>
-					<url>class_view_context_menu.png</url>
-				</image>
-			</paragraph>
-			<paragraph>In this example, the tree node representing the Eiffel class ROOT_CLASS is the  subject of the context menu, which was opened as the result of a right click.  The entriesavailable on the context menu perform the following actions:</paragraph>
-			<list ordered="false">
-				<item>   Go to Definition - Opens the Eiffel class containing the definition in the   
-					<help_link>
-						<tab_index>0</tab_index>
-						<index_moniker>!DefaultAssociativeIndex</index_moniker>
-						<keywords>Eiffel Editor</keywords>&gt;Editor
-					</help_link>.
-				</item>
-				<item>   Browse Definition - Sends the current target of the menu, to the   
-					<help_link>
-						<tab_index>0</tab_index>
-						<index_moniker>!DefaultAssociativeIndex</index_moniker>
-						<keywords>Eiffel Object Browser</keywords>&gt;Object Browser
-					</help_link>.
-				</item>
-				<item>   Quick Find Symbol - Performs a quick find using the text of the current target   as the search argument.</item>
-				<item>   Copy - Copies the text of the current target to the clipboard.</item>
-				<item>   Sort Alphabetically - Sorts all items in the 
-					<help_link>
-						<tab_index>0</tab_index>
-						<keywords>Eiffel Class View</keywords>
-						<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;Class View
-					</help_link> alphabetically.
-				</item>
-				<item>   Sort By Type - Sorts all items in the 
-					<help_link>
-						<tab_index>0</tab_index>
-						<keywords>Eiffel Class View</keywords>
-						<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;Class View
-					</help_link> by type.
-				</item>
-				<item>   Sort By Access - Sorts all items in the 
-					<help_link>
-						<tab_index>0</tab_index>
-						<keywords>Eiffel Class View</keywords>
-						<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;Class View
-					</help_link> by access type.
-				</item>
-				<item>   Group By Type - Sorts all items in the 
-					<help_link>
-						<tab_index>0</tab_index>
-						<keywords>Eiffel Class View</keywords>
-						<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;Class View
-					</help_link> by type.
-				</item>
-				<item>   Properties - Displays the properties of the current target of the menu in the   properties window.</item>
-			</list>
-			<seealso>
-				<bold>See Also</bold>
-				<line_break></line_break>
-				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.xml</url>
-					<label>Class View</label>
-				</link>
-				<line_break></line_break>
-				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.xml</url>
-					<label>Using ENViSioN! Within Visual Studio.NET</label>
-				</link>
-			</seealso>
-		</paragraph>
-	</paragraph>
-</document>
+		<table>
+			<row>
+				<cell>
+					<paragraph>  Right clicking on any item displayed in the
+						<link>
+							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.html</url>
+							<label>Class View</label>
+						</link>  will open a context menu for that item, as demonstrated in the following screenshot:
+					</paragraph>
+					<paragraph>
+						<image>
+							<alt_text>class_view_context_menu</alt_text>
+							<url>class_view_context_menu.PNG</url>
+						</image>
+					</paragraph>
+					<paragraph>  In this example, the tree node representing the Eiffel class
+						<code>
+							<class_name>APPLICATION</class_name>
+						</code> is the  subject of the context menu, which was opened as the result of a right click.  The entries available on the context menu perform the following actions:
+					</paragraph>
+					<list ordered="false">
+						<item>  Go to Definition - Opens the Eiffel class containing the definition in the
+							<link>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/50_The_Eiffel_Editor/index.htm</url>
+								<label>Editor</label>
+							</link>.
+						</item>
+						<item>  Browse Definition - Sends the current target of the menu, to the
+							<link>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/40_object_browser/index.htm</url>
+								<label>Object Browser</label>
+							</link>.
+						</item>
+						<item>  Quick Find Symbol - Performs a quick find using the text of the curent target as the search argument.  </item>
+						<item>  Copy - Copies the text of the current target to the clipboard.  </item>
+						<item>  Sort Alphabetically - Sorts all items in the
+							<link>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.html</url>
+								<label>Class View</label>
+							</link> alphabetically.
+						</item>
+						<item>  Sort By Type - Sorts all items in the
+							<link>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.html</url>
+								<label>Class View</label>
+							</link> by type.
+						</item>
+						<item>  Sort By Access - Sorts all items in the
+							<link>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.html</url>
+								<label>Class View</label>
+							</link> by access type.
+						</item>
+						<item>  Group By Type - Sorts all items in the
+							<link>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.html</url>
+								<label>Class View</label>
+							</link> by type.
+						</item>
+						<item>  Properties - Displays the properties of the current target of the menu in the properties window.  </item>
+					</list>
+					<seealso>
+						<bold>See also</bold>
+						<line_break/>
+						<link>
+							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/30_Class_View/index.html</url>
+							<label>Class View</label>
+						</link>
+						<line_break/>
+						<link>
+							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.htm</url>
+							<label>Using ENViSioN! Within Visual Studio.NET</label>
+						</link>
+						<line_break/>
+					</seealso>
+				</cell>
+			</row>
+		</table>
+	</paragraph></document>

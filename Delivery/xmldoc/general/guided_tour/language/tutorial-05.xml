@@ -1,47 +1,158 @@
-<document title="4 Hello World"><meta_data ><help ><toc ><envision_location >Eiffel, The Language\Tutorials\An Eiffel Tutorial</envision_location><envision_pseudo_name>40</envision_pseudo_name><envision_title >Hello World</envision_title><studio_location /><studio_title /></toc></help></meta_data><paragraph ><heading ><size >1</size><content >4 HELLO WORLD</content></heading><paragraph >When discovering any approach to software construction, however ambitious its goals, it is reassuring to see first a small example of the big picture -- a complete program to print the famous "Hello World" string.  Here is how to perform this fascinating task in the Eiffel notation.  </paragraph><paragraph >You write a class <code ><string >HELLO</string></code> with a single procedure, say <code ><string >make</string></code>, also serving as creation procedure.  If you like short texts, here is a minimal version:</paragraph>
-
-
-<code_block >
-class HELLO
-	create make
-feature
-
-    make is
-
-         do print (" Hello World%N ") end
-
-end
-</code_block>
-
-<paragraph >In practice, however, the Eiffel style rules suggest a better documented version:</paragraph>
-
-
-<code_block >
-indexing
-
-    description: "Root for trivial system printing a message"
-
-    author : " Elizabeth W. Brown "
-
-class HELLO create
-
-    make
-
-feature
-
-    make is
-
-            -- Print a simple message.
-
-         do
-
-            io . put_string (" Hello World ")
-
-            io . put_new_line
-
-         end
-
-end - - class HELLO
-</code_block>
-
-<paragraph >The two versions perform identically; the following comments will cover the more complete second one.  </paragraph><paragraph >Note the absence of semicolons and other syntactic clatter or clutter.  You may in fact use semicolons to separate instructions and declarations.  But the language's syntax is designed to make the semicolon optional (regardless of text layout) and it's best for readability to omit it, except in the special case of successive elements on a single line.  </paragraph><paragraph >The <code ><keyword >indexing</keyword></code> clause does not affect execution semantics; you may use it to associate documentation with the class, so that browsers and other indexing and retrieval tools can help users in search of reusable components satisfying certain properties.  Here we see two indexing entries, labeled <code ><string >description</string></code> and <code ><string >author</string></code> .  </paragraph><paragraph >The name of the class is <code ><string >HELLO</string></code> .  Any class may contain "features"; <code ><string >HELLO </string></code>has just one, called <code ><string >make</string></code> .  The <code ><keyword >create</keyword></code> clause indicates that <code ><string >make</string></code> is a "creation procedure", that is to say an operation to be executed at class instantiation time.  The class could have any number of creation procedures.  </paragraph><paragraph >The definition of <code ><string >make</string></code> appears in a <code ><keyword >feature</keyword></code> clause.  There may be any number of such clauses (to separate features into logical categories), and each may contain any number of feature declarations.  Here we have only one.  </paragraph><paragraph >The line starting with <code ><comment >--</comment></code> (two hyphen signs) is a comment; more precisely it is a "header comment", which style rules invite software developers to write for every such feature, just after the <code ><keyword >is</keyword></code> .  As will be seen in <link ><url >tutorial-09.html#78482</url></link>, the tools of EiffelStudio know about this convention and use it to include the header comment in the automatically generated class documentation.  </paragraph><paragraph >The body of the feature is introduced by the <code ><keyword >do</keyword></code> keyword and terminated by <code ><keyword >end</keyword></code> .  It consists of two output instructions.  They both use <code ><string >io</string></code>, a generally available reference to an object that provides access to standard input and output mechanisms; the notation <code ><string >io</string></code> <span >.  </span> <code ><string >f</string></code>, for some feature <code ><string >f</string></code> of the corresponding library class (<code ><string >STD_FILES</string></code> ), means "apply <code ><string >f</string></code> to <code ><string >io</string></code> ".  Here we use two such features:</paragraph><list ordered="false"><item ><code ><string >put_string</string></code> outputs a string, passed as argument, here <code ><comment >"</comment></code> <code ><string >World Hello</string></code> <code ><comment >"</comment></code> .  </item><item ><code ><string >put_new_line</string></code> terminates the line.  </item></list><paragraph >Rather than using a call to <code ><string >put_new_line</string></code>, the first version of the class simply includes a new-line character, denoted as <code ><string >%N</string></code>, at the end of the string.  Either technique is acceptable.  </paragraph><paragraph >To build the system and execute it:</paragraph><list ordered="false"><item >Start EiffelStudio</item><item >When prompted, ask EiffelStudio to build a system for you; specify <code ><string >HELLO</string></code> as the "root class" and <code ><string >make</string></code> as the "root procedure".  </item><item >You can either use EiffelStudio to type in the above class text, or you may use any text editor and store the result into a file <code ><keyword >hello.e</keyword></code> in the current directory.  </item><item >Click the "Compile" icon.  </item><item >Click the "Run" icon.  </item></list><paragraph >Execution starts and outputs <code ><string >Hello World</string></code> on the appropriate medium: under Windows, a Console; under Unix or VMS, the windows from which you started EiffelStudio.  </paragraph></paragraph></document>
+<document title="4 Hello World">
+	<meta_data>
+		<help>
+			<toc>
+				<envision_location>Eiffel\Getting Started</envision_location>
+				<envision_pseudo_name>40</envision_pseudo_name>
+				<envision_title>Hello World</envision_title>
+				<studio_location/>
+				<studio_title/>
+			</toc>
+		</help>
+	</meta_data>
+	<paragraph>
+		<paragraph>When discovering any approach to software construction, however ambitious its goals, it is reassuring to see first a small example of the big picture -- a complete program to print the famous "Hello World" string.  Here is how to perform this fascinating task in the Eiffel notation.  </paragraph>
+		<paragraph>You write a class 
+			<code>
+				<string>HELLO</string>
+			</code> with a single procedure, say 
+			<code>
+				<string>make</string>
+			</code>, also serving as creation procedure.  If you like short texts, here is a minimal version:
+		</paragraph>
+		<code_block>class HELLOcreate makefeature    make is         do print (" Hello World%N ") endend</code_block>
+		<paragraph>In practice, however, the Eiffel style rules suggest a better documented version:</paragraph>
+		<code_block>indexing    description: "Root for trivial system printing a message"    author : " Elizabeth W. Brown "class HELLO create    makefeature    make is            -- Print a simple message.         do            io . put_string (" Hello World ")            io . put_new_line         endend - - class HELLO</code_block>
+		<paragraph>The two versions perform identically; the following comments will cover the more complete second one.  </paragraph>
+		<paragraph>Note the absence of semicolons and other syntactic clatter or clutter.  You may in fact use semicolons to separate instructions and declarations.  But the language's syntax is designed to make the semicolon optional (regardless of text layout) and it's best for readability to omit it, except in the special case of successive elements on a single line.  </paragraph>
+		<paragraph>The 
+			<code>
+				<keyword>indexing</keyword>
+			</code> clause does not affect execution semantics; you may use it to associate documentation with the class, so that browsers and other indexing and retrieval tools can help users in search of reusable components satisfying certain properties.  Here we see two indexing entries, labeled 
+			<code>
+				<string>description</string>
+			</code> and 
+			<code>
+				<string>author</string>
+			</code> .  
+		</paragraph>
+		<paragraph>The name of the class is 
+			<code>
+				<string>HELLO</string>
+			</code> .  Any class may contain "features"; 
+			<code>
+				<string>HELLO </string>
+			</code>has just one, called 
+			<code>
+				<string>make</string>
+			</code> .  The 
+			<code>
+				<keyword>create</keyword>
+			</code> clause indicates that 
+			<code>
+				<string>make</string>
+			</code> is a "creation procedure", that is to say an operation to be executed at class instantiation time.  The class could have any number of creation procedures.  
+		</paragraph>
+		<paragraph>The definition of 
+			<code>
+				<string>make</string>
+			</code> appears in a 
+			<code>
+				<keyword>feature</keyword>
+			</code> clause.  There may be any number of such clauses (to separate features into logical categories), and each may contain any number of feature declarations.  Here we have only one.  
+		</paragraph>
+		<paragraph>The line starting with 
+			<code>
+				<comment>--</comment>
+			</code> (two hyphen signs) is a comment; more precisely it is a "header comment", which style rules invite software developers to write for every such feature, just after the 
+			<code>
+				<keyword>is</keyword>
+			</code> .  As will be seen in 
+			<link>
+				<url>tutorial-09.html#78482</url>
+			</link>, the tools of EiffelStudio know about this convention and use it to include the header comment in the automatically generated class documentation.  
+		</paragraph>
+		<paragraph>The body of the feature is introduced by the 
+			<code>
+				<keyword>do</keyword>
+			</code> keyword and terminated by 
+			<code>
+				<keyword>end</keyword>
+			</code> .  It consists of two output instructions.  They both use 
+			<code>
+				<string>io</string>
+			</code>, a generally available reference to an object that provides access to standard input and output mechanisms; the notation 
+			<code>
+				<string>io</string>
+			</code> 
+			<span>.  </span> 
+			<code>
+				<string>f</string>
+			</code>, for some feature 
+			<code>
+				<string>f</string>
+			</code> of the corresponding library class (
+			<code>
+				<string>STD_FILES</string>
+			</code> ), means "apply 
+			<code>
+				<string>f</string>
+			</code> to 
+			<code>
+				<string>io</string>
+			</code> ".  Here we use two such features:
+		</paragraph>
+		<list ordered="false">
+			<item>
+				<code>
+					<string>put_string</string>
+				</code> outputs a string, passed as argument, here 
+				<code>
+					<comment>"</comment>
+				</code> 
+				<code>
+					<string>World Hello</string>
+				</code> 
+				<code>
+					<comment>"</comment>
+				</code> .  
+			</item>
+			<item>
+				<code>
+					<string>put_new_line</string>
+				</code> terminates the line.  
+			</item>
+		</list>
+		<paragraph>Rather than using a call to 
+			<code>
+				<string>put_new_line</string>
+			</code>, the first version of the class simply includes a new-line character, denoted as 
+			<code>
+				<string>%N</string>
+			</code>, at the end of the string.  Either technique is acceptable.  
+		</paragraph>
+		<paragraph>To build the system and execute it:</paragraph>
+		<list ordered="false">
+			<item>Start EiffelStudio</item>
+			<item>When prompted, ask EiffelStudio to build a system for you; specify 
+				<code>
+					<string>HELLO</string>
+				</code> as the "root class" and 
+				<code>
+					<string>make</string>
+				</code> as the "root procedure".  
+			</item>
+			<item>You can either use EiffelStudio to type in the above class text, or you may use any text editor and store the result into a file 
+				<code>
+					<keyword>hello.e</keyword>
+				</code> in the current directory.  
+			</item>
+			<item>Click the "Compile" icon.  </item>
+			<item>Click the "Run" icon.  </item>
+		</list>
+		<paragraph>Execution starts and outputs 
+			<code>
+				<string>Hello World</string>
+			</code> on the appropriate medium: under Windows, a Console; under Unix or VMS, the windows from which you started EiffelStudio.  
+		</paragraph>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title=".NET Assembly Tab" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>.NET Assembly Tab
-		</heading>
 		<paragraph>This tab is only available when you have the .NET generation enabled. Here is what you will see if you have .NET generation enabled.</paragraph>
 		<paragraph>
 			<image>
@@ -36,5 +33,4 @@
 				<url>../../../../images/eiffelstudio/project_settings/dotnet_assembly_tab_editing.png</url>
 			</image>
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="Introduction" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Introduction
-		</heading>
 		<paragraph>With ISE EiffelStudio you can encapsulate features written in 
 			<link>
 				<url>10_c_externals.xml</url>
@@ -20,16 +17,15 @@
 		</paragraph>
 		<seealso>
 			<bold>See also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>/technologies/cecil/index.xml</url>
 				<label>The CECIL library: exporting Eiffel to C</label>
 			</link>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>../40_dynamic_library_generation/index.xml</url>
 				<label>C shared libraries generation</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

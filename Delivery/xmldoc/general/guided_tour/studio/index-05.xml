@@ -1,9 +1,6 @@
 <document title="4 COMPILING AND EXECUTING A SYSTEM" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>5 Compiling and Executing a System
-		</heading>
 		<paragraph>
 			<link>
 				<url>tour-help.xml</url>
@@ -19,7 +16,7 @@
 				<width>100</width>
 			</image>
 		</image_link>
-		<paragraph>As this is our first project we want to 
+		<paragraph>As this is our first project we want to
 			<code>
 				<keyword>Create a new project</keyword>
 			</code> The three possibilities are:
@@ -28,46 +25,46 @@
 			<item>"
 				<code>
 					<keyword>Create a new project</keyword>
-				</code>", which would let you select one among the common schemes -- basic application, graphical Windows application, graphical multi-platform application, Microsoft .  NET application -- and set up everything for you.  
+				</code>", which would let you select one among the common schemes -- basic application, graphical Windows application, graphical multi-platform application, Microsoft .  NET application -- and set up everything for you.
 			</item>
 			<item>"
 				<code>
 					<keyword>Open existing Ace (control file)</keyword>
-				</code>", which finds the setup in a control file, called an Assembly of Classes in Eiffel or Ace.  
+				</code>", which finds the setup in a control file, called an Assembly of Classes in Eiffel or Ace.
 			</item>
 			<item>"
 				<code>
 					<keyword>Open compiled project</keyword>
-				</code>", which will work once you have compiled a project.  
+				</code>", which will work once you have compiled a project.
 			</item>
 		</list>
 		<paragraph>In future sessions you'll probably use the first option for a new project, as it takes care of generating everything for you, and the third option for an existing project.  Right now, though, we want you (like an expert EiffelStudio user!) to use an existing Ace that exists precisely for the purpose of this Tour.  So please select the second option</paragraph>
-<code_block>	<keyword>Open existing Ace (control file)</keyword></code_block>
-		<paragraph>and click 
-<code>	<keyword>Next</keyword>
+		<code_block>	<keyword>Open existing Ace (control file)</keyword></code_block>
+		<paragraph>and click
+			<code>
+				<keyword>Next</keyword>
 			</code> .  This brings up a File Explorer inviting you to select an Ace file.  The file you want is, depending on your platform, one of
 		</paragraph>
-<code_block>	<keyword>$ISE_EIFFEL\examples\studio\tour\Ace.mswin.ace</keyword>	
+		<code_block>	<keyword>$ISE_EIFFEL\examples\studio\tour\Ace.mswin.ace</keyword>
 	<keyword>$ISE_EIFFEL/examples/studio/tour/Ace.unix.ace</keyword></code_block>
-
-		<paragraph>(the first one for Windows, the second for Unix; remember that 
+		<paragraph>(the first one for Windows, the second for Unix; remember that
 			<code>
 				<keyword>$ISE_EIFFEL</keyword>
-			</code> stands for the location of the Eiffel installation, such as 
+			</code> stands for the location of the Eiffel installation, such as
 			<code>
 				<keyword>C:\Eiffel50</keyword>
-			</code> ; Ace files are normally marked by the 
+			</code> ; Ace files are normally marked by the
 			<code>
 				<keyword>.ace</keyword>
-			</code> file extension).  For VMS, select the Unix variant.  
+			</code> file extension).  For VMS, select the Unix variant.
 		</paragraph>
-		<paragraph>Use the File Explorer to go to the directory 
+		<paragraph>Use the File Explorer to go to the directory
 			<code>
 				<keyword>$ISE_EIFFEL/examples/studio/tour/</keyword>
 			</code> and select the appropriate file,
 			<code>
 				<keyword> mswin.ace</keyword>
-			</code> or 
+			</code> or
 			<code>
 				<keyword>unix.ace</keyword>
 			</code>, for your platform.  A confirmation window comes up:
@@ -80,21 +77,18 @@
 				<width>100</width>
 			</image>
 		</image_link>
-		<paragraph>Click 
+		<paragraph>Click
 			<code>
 				<keyword>OK</keyword>
-			</code> to confirm.  This selects the Ace file and starts compilation of your project.  
+			</code> to confirm.  This selects the Ace file and starts compilation of your project.
 		</paragraph>
 		<paragraph>During Eiffel compilation, a progress bar displays the successive compilation steps, or "degrees".  The bulk of our little project is the EiffelBase library, which the EiffelStudio installation procedure has precompiled; so just now there's only a few extra classes to compile, and the process is almost instantaneous on a state-of-the-art computer.  Even if you had to compile the EiffelBase classes, EiffelStudio compilation is so fast that you would hardly have the time to read the "degree" messages; you can see them later in compilations of bigger classes and systems.  </paragraph>
-
-<code_block><italic>On an IBM Thinkpad, Pentium III 850 MHz, 256 MB, running Windows 2000 Professional, Eiffel compilation 
+		<code_block><italic>On an IBM Thinkpad, Pentium III 850 MHz, 256 MB, running Windows 2000 Professional, Eiffel compilation
 takes about 9 seconds for the entire Guided Tour system including non-precompiled EiffelBase.   </italic></code_block>
 		<paragraph>After Eiffel compilation completes you will see the message</paragraph>
-
-<code_block>	<keyword>System had to be frozen to include new externals.   </keyword>
+		<code_block>	<keyword>System had to be frozen to include new externals.   </keyword>
 	<keyword>Eiffel compilation system recompiled.   </keyword>
 	<keyword>Background C compilation launched</keyword></code_block>
-
 		<paragraph>At this stage you can start using EiffelStudio, e.  g.  for browsing, but since C compilation won't take long either (about 15 seconds on our test machine), it's just as well to let it finish.  C compilation messages will appear:</paragraph>
 		<list ordered="false">
 			<item>On Windows, in a new console.  </item>
@@ -117,10 +111,10 @@ takes about 9 seconds for the entire Guided Tour system including non-precompile
 		</heading>
 		<paragraph>The system doesn't do anything exciting, but let's execute it anyway.  Find the execution icon ("Run with breakpoints") at the top of the EiffelStudio window:</paragraph>
 		<paragraph>It would be OK too to use the neighboring icon to the left, "Run without breakpoints", since we haven't set any breakpoints.  Click either icon to execute the system.  </paragraph>
-		<paragraph>This little application doesn't use graphics or anything fancy but simply creates some objects and displays some information.  Output done using the default Eiffel I/O (from the EiffelBase classes 
+		<paragraph>This little application doesn't use graphics or anything fancy but simply creates some objects and displays some information.  Output done using the default Eiffel I/O (from the EiffelBase classes
 			<code>
 				<string>ANY</string>
-			</code> and 
+			</code> and
 			<code>
 				<string>STANDARD_FILES</string>
 			</code> ) goes to a console.  On Unix/Linux and VMS it's the window from which you started EiffelStudio.  On Windows it's by default a new console window that comes up when and if the system does its first output operation, and stays up:
@@ -141,6 +135,6 @@ takes about 9 seconds for the entire Guided Tour system including non-precompile
 		<paragraph>If before closing the console window you look at the main EiffelStudio window (by moving away the console window) you will notice that it looks different from before, since it now shows the fields useful in monitoring execution and debugging.  But we'll look at this later.  For the moment just dismiss the console by following the advice to "
 			<code>
 				<keyword>Press Return</keyword>
-			</code>": hit the Return or Enter key.   
+			</code>": hit the Return or Enter key.
 		</paragraph>
 	</paragraph></document>

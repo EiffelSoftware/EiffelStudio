@@ -1,14 +1,11 @@
 <document title="Attributes" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Attributes
-		</heading>
 		<paragraph>The attributes view 
 			<image>
 				<url>/images/eiffelstudio/icons/icon_format_attributes_color.gif</url>
 			</image> displays all the attributes of the current class, including inherited attributes.
-			<line_break></line_break>It is available through the 
+			<line_break/>It is available through the 
 			<bold>Class</bold> tab of the 
 			<link>
 				<url>/tools/eiffelstudio/reference/05_general_interface_description/20_eiffelstudio_window_overview.xml</url>
@@ -17,11 +14,10 @@
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>./55_routines_format.xml</url>
 				<label>Routines</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

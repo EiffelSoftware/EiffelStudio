@@ -1,9 +1,6 @@
 <document title="Generating XMI documentation" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Generating XMI documentation
-		</heading>
 		<paragraph>EiffelStudio can generate an 
 			<bold>XMI</bold> description of a system; 
 			<bold>XMI</bold> (XML Metadata Interchange) format is the new industry standard way to describe and exchange object-oriented systems, further information can be found 
@@ -38,11 +35,10 @@
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>10_generating_documentation_files.xml</url>
 				<label>Generating multi-format documentation</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

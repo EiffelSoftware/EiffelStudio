@@ -1,9 +1,6 @@
 <document title="IDL Marshalling Definition Dialog" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>IDL Marshalling Definition Dialog
-		</heading>
 		<paragraph> This dialog is displayed only for a server project and if the chosen definition file is an IDL file. It is used to specify how marshalling will work for the component. The first choice that has to be made is whether the component will be accessed through Automation (using IDispatch) or through the interface's virtual table (for additional information on Automation versus virtual table access, please consult COM).</paragraph>
 		<heading>
 			<size>2</size>IDL Marshalling Definition Dialog
@@ -85,5 +82,4 @@
 				<label>Building a Component</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

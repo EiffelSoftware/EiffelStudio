@@ -1,9 +1,6 @@
 <document title="Building a .NET application" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Building a .NET application
-		</heading>
 		<paragraph>Eiffel for .NET has some specific functionality meant to leverage necessary aspects of the .NET Framework. </paragraph>
 		<paragraph>For that reason, the 
 			<link>
@@ -25,5 +22,4 @@
 				<label>project settings</label>
 			</link>. 
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

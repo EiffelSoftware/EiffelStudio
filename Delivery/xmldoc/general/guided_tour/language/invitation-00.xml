@@ -2,13 +2,10 @@
 	<meta_data/>
 	<paragraph>
 		<heading>
-			<size>1</size>Invitation to Eiffel
-		</heading>
-		<heading>
 			<size>2</size>Interactive Software Engineering
 		</heading>
 		<link>
-			<url></url>
+			<url/>
 			<label>MANUAL IDENTIFICATION AND COPYRIGHT</label>
 		</link>
 		<note>This document is available both locally, as part of the ISE Eiffel delivery, and on the 
@@ -150,5 +147,4 @@
 				</link>
 			</content>
 		</heading>
-	</paragraph>
-</document>
+	</paragraph></document>

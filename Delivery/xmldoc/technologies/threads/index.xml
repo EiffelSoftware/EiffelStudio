@@ -1,9 +1,6 @@
 <document title="Threads" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Multithreaded applications
-		</heading>
 		<list ordered="false">
 			<item>
 				<link>
@@ -42,5 +39,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

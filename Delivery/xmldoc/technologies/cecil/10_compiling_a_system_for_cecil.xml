@@ -1,87 +1,55 @@
 <document title="Compiling an Eiffel system for CECIL" output="studio">
-	<meta_data >
-		<help >
-			<meta >
-				<meta_content >CECIL from Eiffel</meta_content>
-				<name >MS-HKWD</name>
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>CECIL from Eiffel</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph >
-		<heading >
-			<size >1</size>Compiling an Eiffel System for CECIL
-		</heading>
-		<heading >
-			<size >2</size>Compiling your Eiffel system for CECIL
-		</heading>It is very simple to "Cecilize" your Eiffel system, that is to say make its features available from the outside through CECIL. You will compile it as you normally would - either freeze it or finalize it. The only supplementary precaution is to protect from the dead-code remover any Eiffel features that are not called from the Eiffel system's root, and might thus be dead-code-removed by the optimization mechanism. 
-		<paragraph >To do this, include the appropriate features and classes in the 
-			<italic >visible</italic> clause of the Ace file, as in
-		</paragraph><code_block >
-system
-	system_name
-root
-	...
-default
-	...
-cluster
-	...
-        your_cluster: "..."
-            adapt
-                ...
-            visible
-                CLASS1;
-                CLASS2
-                    creation
-                        "other_make"
-                    export
-                        "other_make", "feat1", "feat2"
-                    end
-            end
-
-        ... Other clusters ...
-
-    ...
-end
-</code_block>Here all features of 
-		<italic >CLASS1</italic> are available to the external software; for 
-		<italic >CLASS2</italic>, only 
-		<italic >other_make</italic> (for creation) and 
-		<italic >feat1</italic> and 
-		<italic >feat2</italic> (for normal call) are available. For the full set of 
-		<code >
-			<keyword >visible</keyword>
-		</code> options, see appendix D of 
-		<italic >Eiffel: The Language</italic>. If you omit the clause 
-		<code >
-			<keyword >export</keyword>
-		</code>, only the features with no export clause in the Eiffel code, will be available. The creation procedure of a visible class is always available. 
-		<heading >
-			<size >2</size>Building a CECIL archive
-		</heading>The ISE-EiffelBench 5.0 compiler produces both C code and a "Makefile". The Makefile compiles and links that C code in a subdirectory one level below the EIFGEN directory of a project. For frozen/melted code, the Makefile is located in the W_code subdirectory. For finalized code, it is in the F_code subdirectory. 
-		<paragraph >To produce a CECIL library, you must: open a shell (unix) or the MS-DOS prompt (Windows), go to the subdirectory that contains the Makefile, and then type:</paragraph>
-		<code_block >	<bold >make cecil</bold> (on unix and on windows with Borland)
-	<bold >nmake cecil</bold> (on windows with VC++)</code_block>
-		<paragraph >This generates a CECIL archive whose name derived from the name &amp;lt;system name&amp;gt; of the Eiffel system, as follows:</paragraph>
-		<code_block >	lib&amp;lt;system name&amp;gt;.a (on unix)
-	lib&amp;lt;system name&amp;gt;. lib (on Windows)</code_block>
-
-For example, the corresponding archive for an Eiffel system called "test", would be called either "libtest. a" (Unix) or libtest. lib (Windows). 
-		<paragraph >Note that through CECIL you can use an Eiffel system compiled in any of the Eiffel compilation modes:</paragraph>
+	<paragraph>
+		<heading>
+			<size>2</size>Compiling your Eiffel system for CECIL
+		</heading>It is very simple to "Cecilize" your Eiffel system, that is to say make its features available from the outside through CECIL. You will compile it as you normally would - either freeze it or finalize it. The only supplementary precaution is to protect from the dead-code remover any Eiffel features that are not called from the Eiffel system's root, and might thus be dead-code-removed by the optimization mechanism.
+		<paragraph>To do this, include the appropriate features and classes in the
+			<italic>visible</italic> clause of the Ace file, as in
+		</paragraph>
+		<code_block>systemsystem_nameroot...default...cluster...        your_cluster: "..."            adapt                ...            visible                CLASS1;                CLASS2                    creation                        "other_make"                    export                        "other_make", "feat1", "feat2"                    end            end        ... Other clusters ...    ...end</code_block>Here all features of
+		<italic>CLASS1</italic> are available to the external software; for
+		<italic>CLASS2</italic>, only
+		<italic>other_make</italic> (for creation) and
+		<italic>feat1</italic> and
+		<italic>feat2</italic> (for normal call) are available. For the full set of
+		<code>
+			<keyword>visible</keyword>
+		</code> options, see appendix D of
+		<italic>Eiffel: The Language</italic>. If you omit the clause
+		<code>
+			<keyword>export</keyword>
+		</code>, only the features with no export clause in the Eiffel code, will be available. The creation procedure of a visible class is always available.
+		<heading>
+			<size>2</size>Building a CECIL archive
+		</heading>The ISE-EiffelBench 5.0 compiler produces both C code and a "Makefile". The Makefile compiles and links that C code in a subdirectory one level below the EIFGEN directory of a project. For frozen/melted code, the Makefile is located in the W_code subdirectory. For finalized code, it is in the F_code subdirectory.
+		<paragraph>To produce a CECIL library, you must: open a shell (unix) or the MS-DOS prompt (Windows), go to the subdirectory that contains the Makefile, and then type:</paragraph>
+		<code_block><bold>make cecil</bold> (on unix and on windows with Borland)<bold>nmake cecil</bold> (on windows with VC++)</code_block>
+		<paragraph>This generates a CECIL archive whose name derived from the name &amp;lt;system name&amp;gt; of the Eiffel system, as follows:</paragraph>
+		<code_block>lib&amp;lt;system name&amp;gt;.a (on unix)lib&amp;lt;system name&amp;gt;. lib (on Windows)</code_block>For example, the corresponding archive for an Eiffel system called "test", would be called either "libtest. a" (Unix) or libtest. lib (Windows).
+		<paragraph>Note that through CECIL you can use an Eiffel system compiled in any of the Eiffel compilation modes:</paragraph>
 		<list ordered="false">
-			<item >Finalized C code. </item>
-			<item >Workbench (melted/frozen) code, usually for development purposes. In this case you must copy the 
-				<italic >&amp;lt;system name&amp;gt;. melted</italic> file ( where 
-				<italic >&amp;lt;system name&amp;gt;</italic> is the name of your system) located in EIFGEN\W_code to the directory where you intend to execute your C application from. 
+			<item>Finalized C code. </item>
+			<item>Workbench (melted/frozen) code, usually for development purposes. In this case you must copy the
+				<italic>&amp;lt;system name&amp;gt;. melted</italic> file ( where
+				<italic>&amp;lt;system name&amp;gt;</italic> is the name of your system) located in EIFGEN\W_code to the directory where you intend to execute your C application from.
 			</item>
 		</list>
-		<note >
-			<bold >Note</bold>: each time you melt the Eiffel system, the 
-			<italic >&amp;lt;system name&amp;gt;. melted</italic> file is updated. 
+		<note>
+			<bold>Note</bold>: each time you melt the Eiffel system, the
+			<italic>&amp;lt;system name&amp;gt;. melted</italic> file is updated.
 		</note>
-		<warning >
-			<bold >Caution</bold>: in the second case (workbench mode), it is not possible to call through the CECIL interface any routine that has been melted in the last compilation; this would raise the run-time exception:
-			<line_break />
-			<bold > $ applied to melted routine</bold>
-			<line_break /> The solution is simply to refreeze the system. 
+		<warning>
+			<bold>Caution</bold>: in the second case (workbench mode), it is not possible to call through the CECIL interface any routine that has been melted in the last compilation; this would raise the run-time exception:
+			<line_break/>
+			<bold> $ applied to melted routine</bold>
+			<line_break/> The solution is simply to refreeze the system.
 		</warning>
 	</paragraph></document>

@@ -1,15 +1,12 @@
 <document title="Browsing tools" output="studio">
 	<meta_data/>
-	<paragraph>
-		<heading><size>1</size>Browsing Tools</heading>
-		This sub-category gathers the preferences related to the tools in the left part of EiffelStudio development window. There are four of them: 
+	<paragraph>This sub-category gathers the preferences related to the tools in the left part of EiffelStudio development window. There are four of them: 
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>index.xml</url>
 				<label>Preferences for other tools</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -2,46 +2,43 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_location>Eiffel, The Language\The Eiffel for .NET Language</envision_location>
+				<envision_location>Eiffel\Eiffel for .NET</envision_location>
 				<envision_pseudo_name>10</envision_pseudo_name>
 				<envision_title>Eiffel Classes</envision_title>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Eiffel Classes
-		</heading>
-		<paragraph>The unit of software reuse in Eiffel is the 
+		<paragraph>The unit of software reuse in Eiffel is the
 			<link>
-				<url></url>
+				<url/>
 				<label>class</label>
 			</link>.
 		</paragraph>
-		<paragraph>The unit of 
+		<paragraph>The unit of
 			<link>
-				<url></url>
+				<url/>
 				<label>modularity</label>
 			</link> in Eiffel is the class.
 		</paragraph>
-		<paragraph>The unit of 
+		<paragraph>The unit of
 			<link>
-				<url></url>
+				<url/>
 				<label>type</label>
 			</link> modeling in Eiffel is the class.
 		</paragraph>
 		<paragraph>All Eiffel code must exist within the context of a class.</paragraph>
-		<paragraph>In Eiffel, application systems, or simply 
+		<paragraph>In Eiffel, application systems, or simply
 			<link>
-				<url></url>
+				<url/>
 				<label>systems,</label>
-			</link> are created by assembling a set of related classes. The classes in a system will be related only by one or both of the two allowable 
+			</link> are created by assembling a set of related classes. The classes in a system will be related only by one or both of the two allowable
 			<link>
-				<url></url>
+				<url/>
 				<label>relationships</label>
 			</link> in object-oriented design.
 		</paragraph>
-		<paragraph>Having read the above, you should be convinced that the concept of class is important and far-reaching. The fact that we have precise rules about classes simplifies life a lot. The only kind of module in Eiffel is a class. Each class exists in one source file (which contains only that class), and contains the code necessary to provide a static definition of a data type. Every runtime entity, i.e. every object, must be an instance of a class. Because we can depend upon these things in Eiffel, we have consistency and predictabililty in the inherently complex world of software development.</paragraph> 
+		<paragraph>Having read the above, you should be convinced that the concept of class is important and far-reaching. The fact that we have precise rules about classes simplifies life a lot. The only kind of module in Eiffel is a class. Each class exists in one source file (which contains only that class), and contains the code necessary to provide a static definition of a data type. Every runtime entity, i.e. every object, must be an instance of a class. Because we can depend upon these things in Eiffel, we have consistency and predictabililty in the inherently complex world of software development.</paragraph>
 		<paragraph>Let's take a look at how classes are structured.</paragraph>
 		<heading>
 			<size>2</size>Structure of a Class
@@ -97,12 +94,14 @@
 				</link>
 			</item>
 		</list>
-		<paragraph>All of the above, except Class header, are optional.  So the simplest Eiffel class you could build would look like this:</paragraph><code_block>
+		<paragraph>All of the above, except Class header, are optional.  So the simplest Eiffel class you could build would look like this:</paragraph>
+		<code_block>
 class
 	SIMPLE
 end
 </code_block>
-		<paragraph>Okay, so class SIMPLE is only interesting in its simplicity. Let's look at a more useful example:</paragraph><code_block>
+		<paragraph>Okay, so class SIMPLE is only interesting in its simplicity. Let's look at a more useful example:</paragraph>
+		<code_block>
 indexing
     description: Objects that model lists
     revision: $Revision$
@@ -148,14 +147,15 @@ invariant
 </code_block>Here is a class that, although somewhat contrived, utilizes all of the required and optional parts of the class. Let's look at each part individually.
 		<heading>
 			<size>3</size>Indexing
-		</heading><code_block>
+		</heading>
+		<code_block>
 indexing
     description: Objects that model lists
     revision: $Revision$
 </code_block>
 		<paragraph>The indexing part of a class is there to allow you as a producer to record information of your choice which will help you or other reuse consumers at some later time to locate understand the class. This important in Eiffel because we try to treat every class as if someday it will become reusable. </paragraph>
 		<paragraph>Information in indexing does not change the semantics of the class.</paragraph>
-		<paragraph>The indexing in the class above is typical. It is introduced with the language keyword 
+		<paragraph>The indexing in the class above is typical. It is introduced with the language keyword
 			<code>
 				<keyword>indexing</keyword>
 			</code>, and contains two index clauses, each of which is comprised of an index and a single index value. You can code index clauses with indexes that you devise yourself, so there is nothing inherently special about "
@@ -168,26 +168,27 @@ indexing
 		</paragraph>
 		<heading>
 			<size>3</size>Class Header
-		</heading><code_block>
+		</heading>
+		<code_block>
 class
     OLD_FASHIONED_LIST [G]
 </code_block>
-		<paragraph>The class header is introduced by the keyword "class", which in turn can be preceded by one of three keywords which mark the class as 
+		<paragraph>The class header is introduced by the keyword "class", which in turn can be preceded by one of three keywords which mark the class as
 			<code>
 				<keyword>deferred</keyword>
-			</code>, 
+			</code>,
 			<code>
 				<keyword>expanded</keyword>
-			</code>, or 
+			</code>, or
 			<code>
 				<keyword>external</keyword>
-			</code>. In our example, the class has none of these markings, so it is an 
+			</code>. In our example, the class has none of these markings, so it is an
 			<link>
-				<url></url>
+				<url/>
 				<label>effective class</label>
-			</link> whose instances are access by 
+			</link> whose instances are access by
 			<link>
-				<url></url>
+				<url/>
 				<label>reference</label>
 			</link>.
 		</paragraph>
@@ -195,66 +196,68 @@ class
 			<code>
 				<class_name>OLD_FASHIONED_LIST</class_name>
 			</code>".
-		</paragraph> 
-		<paragraph>Of the three keywords for header marks, the one which you will encounter most often is 
+		</paragraph>
+		<paragraph>Of the three keywords for header marks, the one which you will encounter most often is
 			<code>
 				<keyword>deferred</keyword>
-			</code>. A class is 
+			</code>. A class is
 			<link>
-				<url></url>
+				<url/>
 				<label>deferred</label>
-			</link> if it contains one or more 
+			</link> if it contains one or more
 			<link>
-				<url></url>
+				<url/>
 				<label>features that are deferred</label>
-			</link>, that is, features which have been specified in the class but for which no implementation has been provided. 
+			</link>, that is, features which have been specified in the class but for which no implementation has been provided.
 			<link>
-				<url></url>
+				<url/>
 				<label>Proper descendants</label>
 			</link> of a deferred class will provide implementations for its deferred features.
 		</paragraph>
 		<heading>
 			<size>3</size>Formal Generics
-		</heading><code_block>
+		</heading>
+		<code_block>
 class
     OLD_FASHIONED_LIST [G]
 </code_block>
 		<paragraph>In this example the class name is followed by the specification of one formal generic parameter "
 			<code>
 				<generics>G</generics>
-			</code>". The presence of one or more formal generic parameters will designate a class as a 
+			</code>". The presence of one or more formal generic parameters will designate a class as a
 			<link>
-				<url></url>
+				<url/>
 				<label>generic class</label>
-			</link>. The formal generic parameter is a place holder for a class name which will be provided by reuse consumers. For example if we wrote a class which was a client to 
+			</link>. The formal generic parameter is a place holder for a class name which will be provided by reuse consumers. For example if we wrote a class which was a client to
 			<code>
 				<class_name>OLD_FASHIONED_LIST</class_name>
-			</code> we would substitute the class name for the type of objects that we would want to build an 
+			</code> we would substitute the class name for the type of objects that we would want to build an
 			<code>
 				<class_name>OLD_FASHIONED_LIST</class_name>
 			</code> of. We might make this declaration:
-		</paragraph><code_block>
+		</paragraph>
+		<code_block>
 	my_list_of_cats: OLD_FASHION_LIST [CAT]
 </code_block>
-		<paragraph>The entity 
+		<paragraph>The entity
 			<code>
 				<feature_name>my_list_of_cats</feature_name>
-			</code> could then be attached at runtime to an 
+			</code> could then be attached at runtime to an
 			<code>
 				<class_name>OLD_FASHIONED_LIST</class_name>
-			</code> of objects of type 
+			</code> of objects of type
 			<code>
 				<class_name>CAT</class_name>
-			</code>. So the class 
+			</code>. So the class
 			<code>
 				<class_name>CAT</class_name>
-			</code> becomes an actual generic parameter and substitutes for 
+			</code> becomes an actual generic parameter and substitutes for
 			<code>
 				<generics>G</generics>
 			</code> in the declaration.
 		</paragraph>
 		<paragraph>Of course formal generic parameters cannot be the same name as a class name in the same universe. If multiple formal generic parameters are used, they are separated by commas.</paragraph>
-		<paragraph>You will learn more about generic classes in the section titled 
+		<paragraph>You will learn more about generic classes in the section titled
 			<link>
 				<url>40_genericity.xml</url>
 				<label>Genercity</label>
@@ -262,55 +265,57 @@ class
 		</paragraph>
 		<heading>
 			<size>3</size>Obsolete
-		</heading><code_block>
+		</heading>
+		<code_block>
 obsolete "This class is obsolete, use LINKED_LIST [G] instead"
 </code_block>
 		<paragraph>
 			<code>
 				<class_name>OLD_FASHION_LIST</class_name>
 			</code>s are obsolete ... and the class is marked as such by include the line above. The manifest string contains an explanation, instructions, and/or recommended alternatives. Compilers and other language tools can deliver this message to potential reuse consumers. As with indexing, obsolete has no effect on the semantics of the class.
-		</paragraph> 
+		</paragraph>
 		<paragraph>Obsolete is rarely used because of the nature of certain elements of the Eiffel methodology. For example, if implementations are well-hidden behind implementation-independent specifications, then those implementations may be changed to adapt the class to changing execution environments in such a way that clients are unaffected.</paragraph>
 		<heading>
 			<size>3</size>Inheritance
-		</heading><code_block>
+		</heading>
+		<code_block>
 inherit
     DYNAMIC_LIST [G]
 </code_block>
-		<paragraph>One of the two possible 
+		<paragraph>One of the two possible
 			<link>
-				<url></url>
+				<url/>
 				<label>relationships</label>
-			</link> between classes, 
+			</link> between classes,
 			<link>
-				<url></url>
+				<url/>
 				<label>inheritance</label>
-			</link> is also a powerful software reuse mechanism. In this example class 
+			</link> is also a powerful software reuse mechanism. In this example class
 			<code>
 				<class_name>OLD_FASHIONED_LIST</class_name>
-			</code> declares itself to be a 
+			</code> declares itself to be a
 			<link>
-				<url></url>
+				<url/>
 				<label>proper descendant</label>
-			</link> of class 
+			</link> of class
 			<code>
 				<class_name>DYNAMIC_LIST</class_name>
 			</code>.
 		</paragraph>
 		<paragraph>There will be more in the section called . For now though, be aware of two important implications of this declaration:</paragraph>
 		<list ordered="false">
-			<item>Every feature of 
+			<item>Every feature of
 				<code>
 					<class_name>DYNAMIC_LIST</class_name>
-				</code> is available to 
+				</code> is available to
 				<code>
 					<class_name>OLD_FASHIONED_LIST</class_name>
 				</code> and potentially available to its clients.
 			</item>
-			<item>Whenever an instance of 
+			<item>Whenever an instance of
 				<code>
 					<class_name>DYNAMIC_LIST</class_name>
-				</code> is called for, then an instance of 
+				</code> is called for, then an instance of
 				<code>
 					<class_name>OLD_FASHIONED_LIST</class_name>
 				</code> will suffice.
@@ -318,15 +323,16 @@ inherit
 		</list>
 		<heading>
 			<size>3</size>Creators
-		</heading><code_block>
+		</heading>
+		<code_block>
 create
     make
 </code_block>
-		<paragraph>The creators part of a class declares a procedure as being a 
+		<paragraph>The creators part of a class declares a procedure as being a
 			<link>
-				<url></url>
+				<url/>
 				<label>creation procedure</label>
-			</link>. In this case the procedure in question is the one named 
+			</link>. In this case the procedure in question is the one named
 			<code>
 				<feature_name>make</feature_name>
 			</code>. By convention, creation procedure names begin with the word "
@@ -334,51 +340,53 @@ create
 				<feature_name>make</feature_name>
 			</code>".
 		</paragraph>
-		<paragraph>Let's take a quick look at object creation. Consider this declaration:</paragraph><code_block>
+		<paragraph>Let's take a quick look at object creation. Consider this declaration:</paragraph>
+		<code_block>
 	my_list_of_cats: OLD_FASHION_LIST [CAT]
 </code_block>
-		<paragraph>Here the entity 
+		<paragraph>Here the entity
 			<code>
 				<feature_name>my_list_of_cats</feature_name>
-			</code> can be attached to an object of type 
+			</code> can be attached to an object of type
 			<code>
 				<class_name>OLD_FASHION_LIST</class_name>
 			</code> [
 			<code>
 				<class_name>CAT</class_name>
-			</code>] at runtime. The process of converting 
+			</code>] at runtime. The process of converting
 			<code>
 				<feature_name>my_list_of_cats</feature_name>
 			</code> from holding a void reference to holding a reference to a object modeling a list of cats, starts when a creation instruction is executed. The creation instruction creates the instance and may apply a creation procedure to initialize the instance. A creation instruction for the declaration above would look like this:
-		</paragraph><code_block>
+		</paragraph>
+		<code_block>
 	create my_list_of_cats.make
 </code_block>
-		<paragraph>The 
+		<paragraph>The
 			<code>
 				<keyword>create</keyword>
 			</code> keyword is used to introduce a creation instruction. This instruction causes the following four things to happen:
 		</paragraph>
 		<list ordered="false">
-			<item>A shell of a new instance of 
+			<item>A shell of a new instance of
 				<code>
 					<class_name>OLD_FASHION_LIST</class_name>
 				</code> [
 				<code>
 					<class_name>CAT</class_name>
-				</code>] is created in memory with a memory field for every 
+				</code>] is created in memory with a memory field for every
 				<link>
-					<url></url>
+					<url/>
 					<label>attribute</label>
 				</link>
 			</item>
 			<item>Each field is initialized with standard default values
 				<list ordered="false">
-					<item>False for type 
+					<item>False for type
 						<code>
 							<class_name>BOOLEAN</class_name>
 						</code>
 					</item>
-					<item>Null character for type 
+					<item>Null character for type
 						<code>
 							<class_name>CHARACTER</class_name>
 						</code>
@@ -391,25 +399,25 @@ create
 					</item>
 				</list>
 			</item>
-			<item>Attach the new instance to the entity 
+			<item>Attach the new instance to the entity
 				<code>
 					<feature_name>my_list_of_cats</feature_name>
 				</code>
 			</item>
-			<item>Apply the creation procedure 
+			<item>Apply the creation procedure
 				<code>
 					<feature_name>make</feature_name>
 				</code>
 			</item>
 		</list>
-		<paragraph>Once these steps complete successfully, 
+		<paragraph>Once these steps complete successfully,
 			<code>
 				<feature_name>my_list_of_cats</feature_name>
-			</code> will be attached to a valid instance (i.e., an instance in which the 
+			</code> will be attached to a valid instance (i.e., an instance in which the
 			<link>
-				<url></url>
+				<url/>
 				<label>class invariant</label>
-			</link> is true) of 
+			</link> is true) of
 			<code>
 				<class_name>OLD_FASHIONED_LIST</class_name>
 			</code> [
@@ -419,7 +427,8 @@ create
 		</paragraph>
 		<heading>
 			<size>3</size>Features
-		</heading><code_block>
+		</heading>
+		<code_block>
 feature -- Initialization
 
     make is
@@ -444,7 +453,7 @@ feature -- Access
             Result := first_element.item
         end
 </code_block>
-		<paragraph>The features part of a class is the area in which we feel that most of the "programming" is done. It is here that we define those things that instances of a class have and can do. We will learn more about features in the next section 
+		<paragraph>The features part of a class is the area in which we feel that most of the "programming" is done. It is here that we define those things that instances of a class have and can do. We will learn more about features in the next section
 			<link>
 				<url>../../eiffel_dotnet_language/20_language/20_adding_class_features.xml</url>
 				<label>Adding Class Features</label>
@@ -453,12 +462,12 @@ feature -- Access
 		<paragraph>Until then let's just take a quick look at how features fit into a class. Notice that in our example the features part is introduced by the keyword "
 			<code>
 				<keyword>feature</keyword>
-			</code>". In fact there are two occurrences of 
+			</code>". In fact there are two occurrences of
 			<code>
 				<keyword>feature</keyword>
 			</code> in this example, each followed by a comment.
 		</paragraph>
-		<paragraph>You may declare multiple 
+		<paragraph>You may declare multiple
 			<code>
 				<keyword>feature</keyword>
 			</code> statements. This helps you group features in a manner that makes sense. Here we see the first group contains those features which are listed as creation procedures in the creators part of the class. The second group of features labeled "
@@ -472,10 +481,10 @@ feature -- Access
 			</code>" and "
 			<code>
 				<comment>Access</comment>
-			</code>" are actually in comments after the 
+			</code>" are actually in comments after the
 			<code>
 				<keyword>feature</keyword>
-			</code> keyword, some language processing tools apply some significance to these, for example, ordering the groups in "pretty-printed" views of a class. Also, some tools allow you to build templates for creating new classes which have 
+			</code> keyword, some language processing tools apply some significance to these, for example, ordering the groups in "pretty-printed" views of a class. Also, some tools allow you to build templates for creating new classes which have
 			<code>
 				<keyword>feature</keyword>
 			</code> clauses already in place for predetermined groups.
@@ -487,7 +496,8 @@ feature -- Access
 		</paragraph>
 		<heading>
 			<size>3</size>Invariant
-		</heading><code_block>
+		</heading>
+		<code_block>
 invariant
     before_constraint: before implies (active = first_element)
     after_constraint: after implies (active = last_element)
@@ -497,11 +507,11 @@ invariant
 				<keyword>invariant</keyword>
 			</code>", is that portion of the class in which we can state what it means for an object to be a valid instance of this class.
 		</paragraph>
-		<paragraph>We will learn more about 
+		<paragraph>We will learn more about
 			<link>
-				<url></url>
+				<url/>
 				<label>class invariants</label>
-			</link> in the section titled 
+			</link> in the section titled
 			<link>
 				<url>../../eiffel_dotnet_language/20_language/50_design_by_contract.xml</url>
 				<label>Design by Contract and Assertions</label>

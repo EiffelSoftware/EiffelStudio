@@ -1,9 +1,6 @@
 <document title="Deeper into COM" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Deeper into COM
-		</heading>
 		<paragraph>The next paragraph gives some details on the COM internals. The understanding of these details are not required to use the EiffelCOM wizard but might help making better decisions when designing new EiffelCOM components. </paragraph>
 		<heading>
 			<size>2</size>Apartments
@@ -29,7 +26,7 @@
 		<paragraph>Last explanation is not totally accurate: the call will not be forwarded to the actual interface but to its stub. The stub is the counterpart of the proxy, it represents the client for the interface. The interface doesn't know either whether it is communicating with the actual client or a stub. Although it is not totally true that the component implementation is independent from the location of the client, the stub pattern still helps keeping code identical for the implementation of the interface themselves. The implementation of a component will still be different whether it is an in-process or out-of-process component since it will have to be a DLL in one case and a executable in the other. The design of the interfaces might also differ since out-of-process servers will tend to avoid too many round trips. </paragraph>
 		<div>
 			<span>
-				<link></link> Cross Apartment Calls
+				<link/> Cross Apartment Calls
 			</span>
 		</div>
 		<div>
@@ -45,42 +42,42 @@
 			</heading>This brief introduction to the Component Object Model should be enough to get started with the EiffelCOM wizard. It specifies the main characteristics that define the type of a component and that need to be given to the wizard along with the definition file. 
 		</div>
 		<seealso>See Also 
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>../../tools/wizards/com/index.html</url>
 				<label>EiffelCOM wizard</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>../../libraries/com/index.html</url>
 				<label> EiffelCOM library</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>01_introduction.html</url>
 				<label> Introduction</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>03_interfaces.html</url>
 				<label> COM Interfaces</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>04_coclass.html</url>
 				<label> Coclasses</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>05_component_location.html</url>
 				<label> Component Location</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>06_access_type.html</url>
 				<label> Access Type</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>07_deeper_into_com.html</url>
 				<label> Deeper into COM</label>

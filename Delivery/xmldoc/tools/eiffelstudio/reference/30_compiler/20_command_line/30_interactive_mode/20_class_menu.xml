@@ -1,10 +1,8 @@
 <document title="Class menu" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Class menu
-		</heading>
-		<paragraph>The Class command (c or C) in the main menu will only work if the system has been successfully compiled, and will give you information based on the result of the last successful compilation. It produces the following menu:</paragraph><code_block>
+		<paragraph>The Class command (c or C) in the main menu will only work if the system has been successfully compiled, and will give you information based on the result of the last successful compilation. It produces the following menu:</paragraph>
+		<code_block>
 	(B) Attributes   : show the attributes of a class.
 	(C) Clients      : show the clients of a class.
 	(E) Deferred     : show the deferred features of a class.

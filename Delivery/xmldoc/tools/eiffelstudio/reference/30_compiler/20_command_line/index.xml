@@ -1,9 +1,6 @@
 <document title="Command line" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Command line
-		</heading>
 		<list ordered="false">
 			<item>
 				<link>
@@ -30,5 +27,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

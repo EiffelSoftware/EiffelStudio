@@ -1,9 +1,6 @@
 <document title=".NET Tab" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>.NET Tab
-		</heading>
 		<paragraph> </paragraph>
 		<paragraph>This tab is only available when you have the .NET generation enabled. Here is what you will see if you have .NET generation enabled.</paragraph>
 		<paragraph>
@@ -120,5 +117,4 @@
 		</heading>
 		<paragraph>This table shows how the class name generation is affected by the naming options using the CURSOR class found in '$ISE_EIFFEL\library\base\structures\cursors' as an example.</paragraph>
 		<paragraph> </paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,15 +1,12 @@
 <document title="Reference for `attribute_exists'" output="studio">
-	<meta_data></meta_data>
+	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Reference for `attribute_exists'
-		</heading>
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
 		<code>
 			<bold>#include "eif_cecil. h"</bold>
-			<bold></bold>
+			<bold/>
 			<bold>EIF_BOOLEAN attribute_exists (EIF_REFERENCE</bold> 
 			<italic>object</italic>
 			<bold>, char *</bold> 
@@ -37,5 +34,5 @@
 			<size>2</size>SEE ALSO
 		</heading>
 		<bold>eif_attribute</bold> (1). 
-		<bold></bold> Markup created by  1. 0, November 15, 1999. 
+		<bold/> Markup created by  1. 0, November 15, 1999. 
 	</paragraph></document>

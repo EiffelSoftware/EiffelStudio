@@ -1,68 +1,64 @@
 <document title="Updating recorded measures" output="studio">
-	<meta_data >
-		<help >
-			<meta >
-				<meta_content >Measure,update</meta_content>
-				<name >MS-HKWD</name>
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>Measure,update</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph >
-		<heading >
-			<size >1</size>Updating recorded measures
-		</heading>
-		<paragraph >After recompilation, some of the 
-			<link >
-				<url >20_saving_a_measure.xml</url>
-				<label >saved</label>
-			</link> measures are no longer accurate. They are pointed by the icon 
-			<image >
-				<height >16</height>
-				<width >16</width>
-				<url >/images/eiffelstudio/icons/icon_red_cross.gif</url>
-				<border >0</border>
+	<paragraph>
+		<paragraph>After recompilation, some of the
+			<link>
+				<url>20_saving_a_measure.xml</url>
+				<label>saved</label>
+			</link> measures are no longer accurate. They are pointed by the icon
+			<image>
+				<height>16</height>
+				<width>16</width>
+				<url>/images/eiffelstudio/icons/icon_red_cross.gif</url>
+				<border>0</border>
 			</image> in the multi column list. It is possible to update the previously saved measures.
 		</paragraph>
-		<paragraph >
-			<image >
-				<height >303</height>
-				<width >738</width>
-				<url >/images/eiffelstudio/metrics_png/update.png</url>
-				<border >0</border>
+		<paragraph>
+			<image>
+				<height>303</height>
+				<width>738</width>
+				<url>/images/eiffelstudio/metrics_png/update.png</url>
+				<border>0</border>
 			</image>
 		</paragraph>
-		<paragraph >To update a result (or a set of result):</paragraph>
+		<paragraph>To update a result (or a set of result):</paragraph>
 		<list ordered="true">
-			<item >Select a row or a set of rows (using SHIFT or CTRL keys) from multi column list.</item>
-			<item >Right click on the multi column list.</item>
-			<item >Choose from the pop up menu to update either selected rows or all rows.</item>
+			<item>Select a row or a set of rows (using SHIFT or CTRL keys) from multi column list.</item>
+			<item>Right click on the multi column list.</item>
+			<item>Choose from the pop up menu to update either selected rows or all rows.</item>
 		</list>
-		<paragraph >Updated rows will be pointed by a green tick
-			<image >
-				<height >16</height>
-				<width >16</width>
-				<url >/images/eiffelstudio/icons/icon_green_tick.gif</url>
-				<border >0</border>
+		<paragraph>Updated rows will be pointed by a green tick
+			<image>
+				<height>16</height>
+				<width>16</width>
+				<url>/images/eiffelstudio/icons/icon_green_tick.gif</url>
+				<border>0</border>
 			</image>. New measures will also be updated in the file located in the "Metrics" subdirectory of current project.
 		</paragraph>
-		<seealso >
-			<bold >See Also</bold>
-			<line_break />
-			<link >
-				<url >10_calculating_a_measure.xml</url>
-				<label >Calculating measures</label>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>10_calculating_a_measure.xml</url>
+				<label>Calculating measures</label>
 			</link>
-			<line_break />
-			<link >
-				<url >20_saving_a_measure.xml</url>
-				<label >Saving measures</label>
+			<line_break/>
+			<link>
+				<url>20_saving_a_measure.xml</url>
+				<label>Saving measures</label>
 			</link>
-			<line_break />
-			<link >
-				<url >30_deleting_measures.xml</url>
-				<label >Deleting measures</label>
+			<line_break/>
+			<link>
+				<url>30_deleting_measures.xml</url>
+				<label>Deleting measures</label>
 			</link>
-			<line_break />
+			<line_break/>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

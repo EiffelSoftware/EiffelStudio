@@ -1,9 +1,6 @@
 <document title="Destination Folder Dialog" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Destination Folder Dialog
-		</heading>
 		<paragraph> The Destination Folder Dialog asks for the destination folder path where the wizard can safe generated files.</paragraph>
 		<heading>
 			<size>2</size>Destination Folder Dialog
@@ -84,5 +81,4 @@
 				<label>Building a Component</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

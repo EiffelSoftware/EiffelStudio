@@ -8,26 +8,22 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Advanced Projects
-		</heading>
 		<paragraph> A number of advanced wizards have been provided which allow you to take an  existing Eiffel for .NET Project created in EiffelStudio and convert them into  ENViSioN! Projects. The following wizards are available for this purpose: </paragraph>
 		<list ordered="false">
 			<item>
 				<link>
 					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/10_Adding_A_New_Project/import_eiffelstudio_project.xml</url>
 					<label>  Import Eiffel Studio Project</label>
-				</link> - Allows you to create a project from an   existing EiffelStudio Project. 
+				</link> - Allows you to create a project from an   existing EiffelStudio Project.
 			</item>
 		</list>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>./index.xml</url>
 				<label>Adding A New Project</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

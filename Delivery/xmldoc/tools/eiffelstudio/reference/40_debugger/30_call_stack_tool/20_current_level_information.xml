@@ -1,9 +1,6 @@
 <document title="Information relative to a stack element" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Information relative to a stack element
-		</heading>
 		<paragraph>In addition to the 
 			<link>
 				<url>10_call_stack_tool.xml</url>
@@ -28,5 +25,4 @@
 				<label>left part of the object tool</label>
 			</link> gives valuable information concerning parameters that were passed to the feature corresponding to the current call stack, the current value of the local variables, and, if it is a function, the current value of its result.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

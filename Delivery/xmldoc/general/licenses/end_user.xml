@@ -1,12 +1,9 @@
 <document title="End user License Agreement" output="studio">
 	<meta_data/>
-	<paragraph>
-		<heading>
-			<size>1</size>End user Licence Agreement for the ISE Eiffel Programming System
-		</heading> 
+	<paragraph> 
 		<paragraph> Carefully read all of the terms and conditions of this agreement prior to opening or downloading the software package, or starting its installation procedure. Opening or downloading the software package, or starting its installation procedure, indicates your acceptance of these terms and conditions. 
-			<line_break></line_break> This software agreement governs your use of THE ISE EIFFEL PROGRAMMING SYSTEM (hereinafter referred to as ISE EIFFEL) from Interactive Software Engineering, Inc., a California Corporation with offices in Goleta, California 93117 (hereinafter Interactive). 
-			<line_break></line_break> By using the enclosed ISE EIFFEL software package, you agree to the following terms and conditions:
+			<line_break/> This software agreement governs your use of THE ISE EIFFEL PROGRAMMING SYSTEM (hereinafter referred to as ISE EIFFEL) from Interactive Software Engineering, Inc., a California Corporation with offices in Goleta, California 93117 (hereinafter Interactive). 
+			<line_break/> By using the enclosed ISE EIFFEL software package, you agree to the following terms and conditions:
 			<list ordered="true">
 				<item>GRANT OF LICENSE Interactive grants to you a nonexclusive, nontransferable temporary license to use ISE EIFFEL solely on the computer system(s) designated in your purchase order.</item>
 				<item>PERMITTED USES You may use the ISE EIFFEL software solely on the single computer system for which it is purchased. In addition, if the license is for a company of which you are an employee, you may use the ISE EIFFEL software on one personal (home or laptop) computer for each designated company computer system, provided that personal computer is used by the same user as the company computer, and not concurrently with it. </item>
@@ -33,11 +30,11 @@
 				<item>MISCELLANEOUS PROVISIONS 
 					<list ordered="true">
 						<item>a. All correspondence shall be directed to Interactive at the following address: 
-							<line_break></line_break> Customer Service Department 
-							<line_break></line_break> Interactive Software Engineering Inc. 
-							<line_break></line_break> ISE Building 
-							<line_break></line_break> 360 Storke Road, Goleta, CA 93117 USA 
-							<line_break></line_break> tel. (805) 685-1006, fax. (805) 685-6869 or through the world-wide Web at http://support.eiffel.com 
+							<line_break/> Customer Service Department 
+							<line_break/> Interactive Software Engineering Inc. 
+							<line_break/> ISE Building 
+							<line_break/> 360 Storke Road, Goleta, CA 93117 USA 
+							<line_break/> tel. (805) 685-1006, fax. (805) 685-6869 or through the world-wide Web at http://support.eiffel.com 
 						</item>
 						<item>b. This agreement shall succeed any previous agreement relevant to the subject between the parties and shall be controlling. </item>
 						<item>c. The terms and conditions of this agreement shall be interpreted and enforced according to the laws of the State of California and shall be subject to the appropriate jurisdiction in and of the county of Santa Barbara, California, U.S.A. </item>

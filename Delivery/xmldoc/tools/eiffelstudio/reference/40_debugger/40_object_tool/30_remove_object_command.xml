@@ -1,9 +1,6 @@
 <document title="Remove object command" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Remove object command
-		</heading>
 		<paragraph>Located in the 
 			<link>
 				<url>00_introduction.xml</url>
@@ -31,5 +28,4 @@
 				<label>drop</label>
 			</link> an object onto the button to remove the object.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

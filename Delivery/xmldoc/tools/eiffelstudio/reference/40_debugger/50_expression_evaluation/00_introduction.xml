@@ -1,22 +1,19 @@
 <document title="Introduction" output="studio">
 	<meta_data>
-		<help></help>
+		<help/>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Introduction
-		</heading>
 		<paragraph>
 			<image>
 				<url>../../../../../images/eiffelstudio/debugger/expression_evaluation_tool.png</url>
 			</image>
 		</paragraph>
 		<paragraph>The expression evaluation tool makes it possible to evaluate expressions while the application is stopped. A typical use for it is if you would like to know the result an external feature would return. Since you do not have access to the C memory of the application, doing this is impossible. You may also want to know the result of an Eiffel feature whose body is too complex for you to evaluate.</paragraph>
-		<paragraph>In these cases (and any other that suits you), you should use the dynamic expression evaluation. Simply 
+		<paragraph>In these cases (and any other that suits you), you should use the dynamic expression evaluation. Simply
 			<link>
 				<url>20_new_expression_dialog.xml</url>
 				<label>define the expression</label>
-			</link> and its result will be immediately available in the 
+			</link> and its result will be immediately available in the
 			<link>
 				<url>10_expression_list.xml</url>
 				<label>list of expressions</label>
@@ -25,5 +22,4 @@
 		<warning>
 			<bold>Caution</bold>: During the evaluation of an expression, all features that are necessary to obtain the result are called. Therefore, you should avoid calling queries that have side-effects, since doing so may alter the program execution. The Eiffel methodology recommends not to define side-effects queries anyway.
 		</warning>
-	</paragraph>
-</document>
+	</paragraph></document>

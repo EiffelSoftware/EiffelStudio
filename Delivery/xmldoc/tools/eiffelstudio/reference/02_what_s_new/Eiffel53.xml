@@ -1,11 +1,8 @@
 <document title="Release notes of EiffelStudio 5.3" output="studio">
 	<meta_data>
-		<help></help>
+		<help/>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Release notes of EiffelStudio 5.3
-		</heading>
 		<heading>
 			<size>2</size>Graphical environment
 		</heading>
@@ -33,7 +30,7 @@
 			<size>2</size>Compiler
 		</heading>
 		<list ordered="false">
-			<item>Click 
+			<item>Click
 				<link>
 					<url>../30_compiler/60_version_history/03_53_release/00_52_to_53_changes.xml</url>
 					<label>here</label>
@@ -56,80 +53,80 @@
 			<size>3</size>EiffelBase
 		</heading>
 		<list ordered="false">
-			<item>Added in 
+			<item>Added in
 				<code>
 					<class_name>INTERNAL</class_name>
-				</code> the following new features: 
+				</code> the following new features:
 				<code>
 					<feature_name>field_static_type_of_type</feature_name>
 				</code>,
 				<code>
 					<feature_name>class_name_of_type</feature_name>
-				</code>, 
+				</code>,
 				<code>
 					<feature_name>type_name</feature_name>
-				</code> and 
+				</code> and
 				<code>
 					<feature_name>type_name_of_type</feature_name>
 				</code>.
 			</item>
-			<item>Added 
+			<item>Added
 				<code>
 					<feature_name>truncated_to_integer_64</feature_name>
 				</code> in
 				<code>
 					<class_name>REAL</class_name>
-				</code> and 
+				</code> and
 				<code>
 					<class_name>DOUBLE</class_name>
 				</code>.
 			</item>
-			<item>Added 
+			<item>Added
 				<code>
 					<feature_name>to_integer_64</feature_name>
-				</code> in 
+				</code> in
 				<code>
 					<class_name>STRING</class_name>
 				</code>.
 			</item>
-			<item>Added new classes 
+			<item>Added new classes
 				<code>
 					<class_name>MEMORY_STRUCTURE</class_name>
 				</code>,
 				<code>
 					<class_name>MANAGED_POINTER</class_name>
-				</code> and 
+				</code> and
 				<code>
 					<class_name>C_STRING</class_name>
 				</code> to better manage access to C and C++ memory structure.
 			</item>
-			<item>Fixed incorrect implementation of 
+			<item>Fixed incorrect implementation of
 				<code>
 					<feature_name>area</feature_name>
-				</code> and 
+				</code> and
 				<code>
 					<feature_name>substring</feature_name>
-				</code> for 
+				</code> for
 				<code>
 					<class_name>STRING</class_name>
 				</code> in dotnet mode.
 			</item>
-			<item>Fixed bug in 
+			<item>Fixed bug in
 				<code>
 					<feature_name>copy</feature_name>
-				</code> from 
+				</code> from
 				<code>
 					<class_name>STRING</class_name>
-				</code> where following code was violating `valid_count' invariant from 
+				</code> where following code was violating `valid_count' invariant from
 				<code>
 					<class_name>STRING</class_name>
-				</code>: 
+				</code>:
 				<code>
-					<keyword>local</keyword>    s, t: 
+					<keyword>local</keyword>    s, t:
 					<class_name>STRING</class_name>
-					<keyword>do</keyword>    
+					<keyword>do</keyword>
 					<keyword>create</keyword> s.
-					<feature_name>make</feature_name> (9)    
+					<feature_name>make</feature_name> (9)
 					<keyword>create</keyword> t.
 					<feature_name>make</feature_name> (10)    t.
 					<feature_name>append</feature_name> ("1234567890")    s.
@@ -137,25 +134,25 @@
 					<keyword>end</keyword>
 				</code>
 			</item>
-			<item>Added support for storable in .NET. However .NET and classic implementation are completely different and 
+			<item>Added support for storable in .NET. However .NET and classic implementation are completely different and
 				<code>
 					<feature_name>independent_store</feature_name>
 				</code> will not be able to retrieve a storable file if not made using the same code generation.
 			</item>
-			<item>Fixed a bug in 
+			<item>Fixed a bug in
 				<code>
 					<feature_name>is_equal</feature_name>
 				</code> from
 				<code>
 					<class_name>LIST</class_name>
 				</code> where comparing two lists of different counts could break the comparison:
-				<line_break></line_break>
+				<line_break/>
 				<code>
-					<feature_name>make</feature_name> 
-					<keyword>is</keyword>    
-					<keyword>local</keyword>        a, b: 
+					<feature_name>make</feature_name>
+					<keyword>is</keyword>
+					<keyword>local</keyword>        a, b:
 					<class_name>LIST</class_name> [
-					<class_name>INTEGER</class_name>]    
+					<class_name>INTEGER</class_name>]
 					<keyword>do</keyword>        create {
 					<class_name>ARRAYED_LIST</class_name> [
 					<class_name>INTEGER</class_name>]} a.
@@ -165,19 +162,19 @@
 					<class_name>INTEGER</class_name>]} b.
 					<feature_name>make</feature_name> (2)        b.
 					<feature_name>extend</feature_name> (10)        b.
-					<feature_name>extend</feature_name> (11)        
+					<feature_name>extend</feature_name> (11)
 					<feature_name>print</feature_name> (
-					<feature_name>equal</feature_name> (b, a))    
+					<feature_name>equal</feature_name> (b, a))
 					<keyword>end</keyword>
 				</code>
 			</item>
-			<item>Fixed .NET implementation of 
+			<item>Fixed .NET implementation of
 				<code>
 					<feature_name>open_write</feature_name>
-				</code> and 
+				</code> and
 				<code>
 					<feature_name>create_read_write</feature_name>
-				</code> in 
+				</code> in
 				<code>
 					<class_name>FILE</class_name>
 				</code>. They were not resetting the file size to zero if file already existed.
@@ -199,13 +196,13 @@
 			<size>3</size>EiffelNet
 		</heading>
 		<list ordered="false">
-			<item>Fixed assertion violation of call to 
+			<item>Fixed assertion violation of call to
 				<code>
 					<feature_name>to_integer</feature_name>
-				</code> in feature 
+				</code> in feature
 				<code>
 					<feature_name>get_content_length</feature_name>
-				</code> from 
+				</code> from
 				<code>
 					<class_name>HTTP_PROTOCOL</class_name>
 				</code> if assertions are enabled onEiffelBase.
@@ -217,10 +214,10 @@
 		<list ordered="false">
 			<item>Updated library so that it works both in classic and dotnet mode.</item>
 			<item>Fixed issue with oracle handle which did not work with the included Borland C compiler.</item>
-			<item>Removed 
+			<item>Removed
 				<code>
 					<feature_name>nb_classes</feature_name>
-				</code> from 
+				</code> from
 				<code>
 					<class_name>EXT_INTERNAL</class_name>
 				</code>.
@@ -242,13 +239,13 @@
 			<size>3</size>WEL
 		</heading>
 		<list ordered="false">
-			<item>Removed inheritance to 
+			<item>Removed inheritance to
 				<code>
 					<class_name>WEL_STRUCTURE</class_name>
-				</code> in 
+				</code> in
 				<code>
 					<class_name>WEL_STRING</class_name>
-				</code>, it now inherits from new 
+				</code>, it now inherits from new
 				<code>
 					<class_name>C_STRING</class_name>
 				</code> class.
@@ -273,5 +270,4 @@
 				<label>Click here to check out what was new in Eiffel 5.0</label>
 			</link>
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="Using breakpoints" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Using breakpoints
-		</heading>
 		<paragraph>To change the status of one breakpoint, it is possible to use the 
 			<link>
 				<url>/tools/eiffelstudio/reference/40_debugger/20_breakpoints/10_breakpoint_menu.xml</url>
@@ -18,21 +15,20 @@
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>10_running_an_application.xml</url>
 				<label>Running an application</label>
 			</link>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>20_interrupting_an_application.xml</url>
 				<label>Interrupting an application</label>
 			</link>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>/tools/eiffelstudio/reference/40_debugger/20_breakpoints/00_introduction.xml</url>
 				<label>Breakpoints reference</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

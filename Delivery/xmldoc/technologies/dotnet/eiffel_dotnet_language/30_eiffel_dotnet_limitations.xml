@@ -2,9 +2,6 @@
 	<meta_data/>
 	<paragraph>
 		<heading>
-			<size>1</size>Differences between Eiffel, Eiffel for .NET and .NET
-		</heading>
-		<heading>
 			<size>2</size>Differences between Eiffel and Eiffel for .NET
 		</heading>
 		<heading>
@@ -31,7 +28,8 @@
 		<heading>
 			<size>3</size>Added to Eiffel and Eiffel for .NET
 		</heading>
-		<paragraph>The following syntax can be used to declare .NET custom attributes on Eiffel entities (features and classes):</paragraph><code_block>
+		<paragraph>The following syntax can be used to declare .NET custom attributes on Eiffel entities (features and classes):</paragraph>
+		<code_block>
 empty: BOOLEAN is
 	indexing
 		description: "Is Current empty?"
@@ -42,16 +40,16 @@ empty: BOOLEAN is
 		Result := is_empty
 	end
 </code_block>
-		<paragraph>The previous example shows the declaration of the obsolete feature 
+		<paragraph>The previous example shows the declaration of the obsolete feature
 			<code>
 				<feature_name>empty</feature_name>
-			</code> . The custom attribute defined by 
+			</code> . The custom attribute defined by
 			<code>
 				<class_name>SYSTEM_OBSOLETEATTRIBUTE</class_name>
-			</code> is used to ensure that any consumer of the resulting assembly will see the feature as being obsolete. The custom attribute is defined in the indexing clause 
+			</code> is used to ensure that any consumer of the resulting assembly will see the feature as being obsolete. The custom attribute is defined in the indexing clause
 			<code>
 				<contract_tag>attribute</contract_tag>
-			</code>. The definition consists of a creation expression that creates the custom attribute with the right parameters. 
+			</code>. The definition consists of a creation expression that creates the custom attribute with the right parameters.
 		</paragraph>
 		<heading>
 			<size>2</size>Differences between Eiffel for .NET and .NET
@@ -91,13 +89,13 @@ empty: BOOLEAN is
 				</code>
 			</item>
 		</list>
-		<paragraph>Meaning that if one wants to reuse an Eiffel generic class from another language than Eiffel for .NET, one has to use either 
+		<paragraph>Meaning that if one wants to reuse an Eiffel generic class from another language than Eiffel for .NET, one has to use either
 			<code>
 				<class_name>LIST_ANY</class_name>
-			</code> or 
+			</code> or
 			<code>
 				<class_name>LIST_Int32</class_name>
-			</code>. 
+			</code>.
 		</paragraph>
 		<heading>
 			<size>3</size>Enum types

@@ -1,9 +1,6 @@
 <document title="Select the Compilation mode" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Select the Compilation mode
-		</heading>
 		<paragraph>The first screen of the wizard lets you specify the mode in which the profiled system was compiled.</paragraph>
 		<paragraph>If you have run a finalized system under the control of the profiler then select 
 			<bold>Finalized mode</bold> and click 
@@ -11,12 +8,12 @@
 			<bold>Workbench mode</bold> and click 
 			<bold>Next</bold>.
 		</paragraph>
-		<line_break></line_break>
+		<line_break/>
 		<image>
 			<url>/images/eiffelstudio/dialogs_and_wizards/profiler_wizard_first_state.png</url>
 		</image> 
-		<line_break></line_break>
-		<line_break></line_break>
+		<line_break/>
+		<line_break/>
 		<paragraph>Clicking 
 			<bold>Next</bold> will lead you to the 
 			<link>
@@ -38,10 +35,10 @@
 				<label>Second state</label>
 			</link>.
 		</paragraph>
-		<line_break></line_break>
+		<line_break/>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>../00_introduction.xml</url> 
 			</link>
@@ -50,5 +47,4 @@
 				<label>How to profile a system</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

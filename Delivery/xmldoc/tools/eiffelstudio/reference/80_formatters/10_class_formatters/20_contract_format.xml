@@ -1,9 +1,6 @@
 <document title="Contract view" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Contract view
-		</heading>
 		<paragraph>The contract view 
 			<image>
 				<url>/images/eiffelstudio/icons/icon_format_contract_color.gif</url>
@@ -20,11 +17,10 @@
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>./25_interface_format.xml</url>
 				<label>Flat contract view</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

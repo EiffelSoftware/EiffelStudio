@@ -1,81 +1,77 @@
 <document title="Main address bar" output="studio">
-	<meta_data >
-		<help >
-			<meta >
-				<meta_content >address bar</meta_content>
-				<name >MS-HKWD</name>
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>address bar</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
-			<meta >
-				<meta_content >main address bar</meta_content>
-				<name >MS-HKWD</name>
+			<meta>
+				<meta_content>main address bar</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph >
-		<heading >
-			<size >1</size>Main address bar
-		</heading>
-		<paragraph >The main address bar is located in the top part of windows, between the two 
-			<link >
-				<url >../../05_general_interface_description/30_main_toolbars.xml</url>
-				<label >main toolbars</label>
+	<paragraph>
+		<paragraph>The main address bar is located in the top part of windows, between the two
+			<link>
+				<url>../../05_general_interface_description/30_main_toolbars.xml</url>
+				<label>main toolbars</label>
 			</link> (when they are displayed).
 		</paragraph>
-		<paragraph >
-			<image >
-				<url >/images/eiffelstudio/browsing_tools/main_address_bar.png</url>
+		<paragraph>
+			<image>
+				<url>/images/eiffelstudio/browsing_tools/main_address_bar.png</url>
 			</image>
 		</paragraph>
-		<paragraph >It has several components:</paragraph>
+		<paragraph>It has several components:</paragraph>
 		<list ordered="false">
-			<item >History back and forth arrows 
-				<image >
-					<height >16</height>
-					<width >16</width>
-					<url >/images/eiffelstudio/icons/icon_back_color.gif</url>
-				</image> and 
-				<image >
-					<height >16</height>
-					<width >16</width>
-					<url >/images/eiffelstudio/icons/icon_forth_color.gif</url>
+			<item>History back and forth arrows
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>/images/eiffelstudio/icons/icon_back_color.gif</url>
+				</image> and
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>/images/eiffelstudio/icons/icon_forth_color.gif</url>
 				</image>
 			</item>
-			<item >Fields where the current class or feature name is displayed</item>
-			<item >View icons to change the view displayed in the editor 
-				<image >
-					<height >16</height>
-					<width >16</width>
-					<url >/images/eiffelstudio/icons/icon_format_text_color.gif</url>
-				</image>, 
-				<image >
-					<height >16</height>
-					<width >16</width>
-					<url >/images/eiffelstudio/icons/icon_format_clickable_color.gif</url>
-				</image>, 
-				<image >
-					<height >16</height>
-					<width >16</width>
-					<url >/images/eiffelstudio/icons/icon_format_flat_color.gif</url>
-				</image>, 
-				<image >
-					<height >16</height>
-					<width >16</width>
-					<url >/images/eiffelstudio/icons/icon_format_contract_color.gif</url>
-				</image> and 
-				<image >
-					<height >16</height>
-					<width >16</width>
-					<url >/images/eiffelstudio/icons/icon_format_interface_color.gif</url>
+			<item>Fields where the current class or feature name is displayed</item>
+			<item>View icons to change the view displayed in the editor
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>/images/eiffelstudio/icons/icon_format_text_color.gif</url>
+				</image>,
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>/images/eiffelstudio/icons/icon_format_clickable_color.gif</url>
+				</image>,
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>/images/eiffelstudio/icons/icon_format_flat_color.gif</url>
+				</image>,
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>/images/eiffelstudio/icons/icon_format_contract_color.gif</url>
+				</image> and
+				<image>
+					<height>16</height>
+					<width>16</width>
+					<url>/images/eiffelstudio/icons/icon_format_interface_color.gif</url>
 				</image>
 			</item>
 		</list>
-		<paragraph >It is possible to type a class or feature name to center the editor on it. Typing a class name that does not exist in the set of known classes pops up a dialog to create a class of that name.</paragraph>
-		<tip >
-			<bold >Tip</bold>: Wildcards (* and ?) are available in these fields.
+		<paragraph>It is possible to type a class or feature name to center the editor on it. Typing a class name that does not exist in the set of known classes pops up a dialog to create a class of that name.</paragraph>
+		<tip>
+			<bold>Tip</bold>: Wildcards (* and ?) are available in these fields.
 		</tip>
-		<tip >
-			<bold >Tip</bold>: The history is also accessible in the 
-			<bold >View/Go to</bold> menu.
+		<tip>
+			<bold>Tip</bold>: The history is also accessible in the
+			<bold>View/Go to</bold> menu.
 		</tip>
-	</paragraph>
-</document>
+	</paragraph></document>

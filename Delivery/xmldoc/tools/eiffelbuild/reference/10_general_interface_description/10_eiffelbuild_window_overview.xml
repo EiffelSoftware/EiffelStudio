@@ -2,9 +2,6 @@
 	<meta_data/>
 	<paragraph>
 		<heading>
-			<size>1</size>EiffelBuild window overview
-		</heading>
-		<heading>
 			<size>2</size>Window layout
 		</heading>
 		<paragraph>The use of EiffelBuild is based around one main window which remains throughout the execution. The appearance of the main window is as follows:</paragraph>
@@ -54,32 +51,31 @@
 		</list>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.xml</url>
 				<label> Main toolbar</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>/tools/eiffelbuild/reference/20_layout_constructor/index.xml</url>
 				<label> Layout constructor</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>/tools/eiffelbuild/reference/30_type_selector/index.xml</url>
 				<label>Type selector</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>/tools/eiffelbuild/reference/40_object_editor/index.xml</url>
 				<label>Object editor</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>/tools/eiffelbuild/reference/63_component_selector/index.xml</url>
 				<label> Component_selector</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,11 +1,6 @@
 <document title="Getting started with Eiffel" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>
-			<content>Getting started with Eiffel: Language and Environment
-			</content>
-		</heading>
 		<paragraph>This introductory documentation will let you become familiar with the essentials of the Eiffel language and method, and the EiffelStudio environment.  </paragraph>
 		<paragraph>The online documents listed here are available as part of the delivery.  If you are reading this page as part of an Eiffel installation or on a CD, the links below will take you to the local versions of the documents.  You can also find all these documents on the Eiffel site at 
 			<link>
@@ -50,7 +45,8 @@
 				<string>$ISE_EIFFEL</string>
 			</code>
 			<code>
-				<keyword>/library/base/structures/list</keyword></code>.  
+				<keyword>/library/base/structures/list</keyword>
+			</code>.  
 		</paragraph>
 		<paragraph>To become truly proficient in the method, read the book 
 			<link>
@@ -101,5 +97,4 @@
 				</list>
 			</paragraph>
 		</div>
-	</paragraph>
-</document>
+	</paragraph></document>

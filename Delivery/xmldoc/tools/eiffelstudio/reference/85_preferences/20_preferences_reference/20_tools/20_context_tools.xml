@@ -1,9 +1,6 @@
 <document title="Context tools" output="studio">
 	<meta_data/>
-	<paragraph>
-		<heading>
-			<size>1</size>Context tools
-		</heading>This sub-categories gathers the preferences related to context tools. 
+	<paragraph>This sub-categories gathers the preferences related to context tools. 
 		<paragraph>There are ten of them :</paragraph>
 		<table>
 			<row>
@@ -70,9 +67,8 @@
 				</cell>
 			</row>
 		</table>  
-		<paragraph>
-			Class views indices
-			<table>				
+		<paragraph>Class views indices
+			<table>
 				<row>
 					<cell>Index</cell>
 					<cell>Class view</cell>
@@ -135,9 +131,8 @@
 				</row>
 			</table>
 		</paragraph>
-		<paragraph>
-			Feature views indices
-			<table>				
+		<paragraph>Feature views indices
+			<table>
 				<row>
 					<cell>Index</cell>
 					<cell>Feature view</cell>
@@ -174,7 +169,7 @@
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>index.xml</url>
 				<label>Preferences for other tools</label>

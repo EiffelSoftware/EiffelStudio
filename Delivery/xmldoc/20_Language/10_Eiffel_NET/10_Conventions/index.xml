@@ -8,27 +8,24 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Eiffel for .NET Conventions
-		</heading>
 		<paragraph>In this section, you'll find information about how the conventions that are normally used in Eiffel programming are affected by working in the presence of .NET. </paragraph>
 		<paragraph>Also, you'll find out how .NET types sometimes look a little different in the presence of Eiffel. </paragraph>
 		<paragraph>Because there are differences in the underlying object models upon which .NET and Eiffel have been designed, before .NET types can be made available to Eiffel developers, the assemblies in which they reside must be processed by a utility called the Eiffel Metadata Consumer. Fortunately, this all happens behind the scenes for you. You need only be aware that when you are looking at .NET types from within ENViSioN, you're seeing them through Eiffel-tinted lenses. </paragraph>
-		<paragraph>This is really the same thing that happens with other .NET languages with Visual Studio .NET support. For example, if you look at a constructor in a .NET type using the "ildasm" utility, the constructor will be named 
+		<paragraph>This is really the same thing that happens with other .NET languages with Visual Studio .NET support. For example, if you look at a constructor in a .NET type using the "ildasm" utility, the constructor will be named
 			<code>
 				<feature_name>.ctor</feature_name>
-			</code>. But, if you're in C# and look at the same constructor in the Visual Studio .NET Object Browser, the constructor will have the same name as the type ...it's a C# convention. Likewise, the same constructor viewed in Visual Basic .NET will have the name 
+			</code>. But, if you're in C# and look at the same constructor in the Visual Studio .NET Object Browser, the constructor will have the same name as the type ...it's a C# convention. Likewise, the same constructor viewed in Visual Basic .NET will have the name
 			<code>
 				<feature_name>New</feature_name>
-			</code> ...that's the Visual Basic .NET convention. So, when you use ENViSioN, you see things as presented using Eiffel Conventions. 
+			</code> ...that's the Visual Basic .NET convention. So, when you use ENViSioN, you see things as presented using Eiffel Conventions.
 		</paragraph>
-		<paragraph>Consider what happens when you look at .NET types using ENViSioN. When you look, for example at the type 
+		<paragraph>Consider what happens when you look at .NET types using ENViSioN. When you look, for example at the type
 			<code>
 				<class_name>System. EventArgs</class_name>
-			</code>, you will see it represented as an Eiffel class called 
+			</code>, you will see it represented as an Eiffel class called
 			<code>
 				<class_name>EVENT_ARGS</class_name>
-			</code>. The members of the .NET type will show up as features of the Eiffel class. Of course, you can also see the corresponding .NET names as they exist in the assembly metadata. 
+			</code>. The members of the .NET type will show up as features of the Eiffel class. Of course, you can also see the corresponding .NET names as they exist in the assembly metadata.
 		</paragraph>
 		<paragraph>The documents in this section tell you what you need to know in order to use .NET types in Eiffel, and vice versa. </paragraph>
 		<heading>
@@ -72,5 +69,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

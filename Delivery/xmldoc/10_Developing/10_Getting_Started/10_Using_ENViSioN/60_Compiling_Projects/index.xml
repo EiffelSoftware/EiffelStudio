@@ -1,102 +1,98 @@
-<document title="Compiling Projects" output="envision">
-	<meta_data>
-		<help>
-			<toc>
-				<envision_pseudo_name>50</envision_pseudo_name>
-			</toc>
-		</help>
-	</meta_data>
+<document output="envision" title="Compiling Projects">
+	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Compiling Projects
-		</heading>
-		<paragraph>
-			<paragraph>Compiling is the process of building a project into an executable file which may  be then executed externally to ENViSioN!. To compile a project, select 
-				<bold>BuildSolution</bold> fromthe 
-				<bold>Build</bold> menu as demonstrated below:
-			</paragraph>
-			<paragraph>
-				<image>
-					<alt_text>Build Menu</alt_text>
-					<url>BuildMenu.png</url>
-				</image>
-			</paragraph>
-			<paragraph>There are six entries on the 
-				<bold>Build</bold> menu, each described below:
-			</paragraph>
-			<list ordered="false">
-				<item>
-					<bold>Build Solution</bold> - Compiles the current solution. All projects in the   current solution will be built. This process attempts to minimize the   compilationthat must beundertaken, by only re-compiling files that have been   modified.  
-				</item>
-				<item>
-					<bold>Rebuild Solution</bold> - Compiles the current solution from scratch. All   projects in the current solution will be built. There is no optimization of   whichfiles will be compiled,and it is equivalent to compiling a project for   the very first time.  
-				</item>
-				<item>
-					<bold>Build Selection</bold> - Compiles only the currently selected project in the   
-					<help_link>
-						<tab_index>0</tab_index>
-						<index_moniker>!DefaultAssociativeIndex</index_moniker>
-						<keywords>Eiffel Solution Explorer</keywords>&gt;Solution Explorer
-					</help_link>.   The compilation method of this project is equivalent to that performedby 
-					<bold>BuildSolution</bold>. This menu entry is grayed out when there is no project   selected in the   
-					<help_link>
-						<tab_index>0</tab_index>
-						<index_moniker>!DefaultAssociativeIndex</index_moniker>
-						<keywords>Eiffel Solution Explorer</keywords>&gt;Solution Explorer
-					</help_link>.  
-				</item>
-				<item>
-					<bold>Rebuild Selection</bold> - Compiles only the currently selected project in the   
-					<help_link>
-						<tab_index>0</tab_index>
-						<index_moniker>!DefaultAssociativeIndex</index_moniker>
-						<keywords>Eiffel Solution Explorer</keywords>&gt;Solution Explorer
-					</help_link>.The   compilation method of this project is equivalent to that performedby 
-					<bold>RebuildSolution</bold>. This menu entry is grayed out when there is no project   selected in the   
-					<help_link>
-						<tab_index>0</tab_index>
-						<index_moniker>!DefaultAssociativeIndex</index_moniker>
-						<keywords>Eiffel Solution Explorer</keywords>&gt;Solution Explorer
-					</help_link>.
-				</item>
-				<item>
-					<bold>Batch Build...</bold> - Displays a dialog allowing you to specify which   Projects are to be compiled. This allows you to compile selected projects   withinthe currentSolution.
-				</item>
-				<item>
-					<bold>Configuration Manager...</bold> - Displays a dialog allowing you to specify   Project configuration information for each Project in the Solution.
-				</item>
-			</list>
-			<paragraph>The  
-				<help_link>
-					<tab_index>0</tab_index>
-					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel Property Pages</keywords>&gt;Project Property Pages
-				</help_link>  allow you to adjust the properties of your project, many of which applydirectly to thecompilation.
-			</paragraph>
-			<paragraph>If your compilation fails, see  
-				<help_link>
-					<tab_index>0</tab_index>
-					<index_moniker>!DefaultAssociativeIndex</index_moniker>
-					<keywords>Eiffel Compilation Error</keywords>&gt;Compilation Errors
-				</help_link>  for more information on correcting such errors.
-			</paragraph>
-			<heading>
-				<size>2</size>Resources
-			</heading>
-			<paragraph>To include the contents of a resource file into your Project, a resource file   matching the name of the system must be placed in both the "debug" and   "release"directories. Duringcompilation, the contents of these files will be   included in the unmanaged .dll.</paragraph>
-			<seealso>
-				<bold>See Also</bold>
-				<line_break></line_break>
-				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.xml</url>
-					<label>Using   ENViSioN! Within Visual Studio.NET</label>
-				</link>
-				<line_break></line_break>
-				<link>
-					<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/index.xml</url>
-					<label>   Debugging</label>
-				</link>
-			</seealso>
-		</paragraph>
-	</paragraph>
-</document>
+		<table>
+			<row>
+				<cell>
+					<paragraph>Compiling is the process of building a project into an executable file which may  be then executed externally to ENViSioN!. To compile a project, select 
+						<bold>Build  Solution</bold> from the 
+						<bold>Build</bold> menu as demonstrated below:
+					</paragraph>
+					<paragraph>
+						<image> 
+							<alt_text>Build Menu</alt_text> 
+							<url>BuildMenu.PNG</url>
+						</image>
+					</paragraph>
+					<paragraph>There are eight entries on the 
+						<bold>Build</bold> menu, each described below:
+					</paragraph>
+					<list ordered="false">
+						<item>
+							<bold>Build Solution</bold> - Compiles the current solution. All projects in the  current solution will be built. This process attempts to minimize the  compilation that must be undertaken, by only re-compiling files that have been  modified.  
+						</item>
+						<item>
+							<bold>Rebuild Solution</bold> - Compiles the current solution from scratch. All  projects in the current solution will be built. There is no optimization of  which files will be compiled, and it is equivalent to compiling a project for  the very first time.  
+						</item>
+						<item>
+							<bold>Clean Solution</bold> - Deletes all built/compiled outputs from the Solution.  
+						</item>
+						<item>
+							<bold>Build Selection</bold> - Compiles only the currently selected project in the  
+							<link>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
+								<label>Solution Explorer</label>
+							</link>.  The compilation method of this project is equivalent to that performed by 
+							<bold>Build   Solution</bold>. This menu entry is greyed out when there is no project  selected in the  
+							<link>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
+								<label>Solution Explorer</label>
+							</link>.  
+						</item>
+						<item>
+							<bold>Rebuild Selection</bold> - Compiles only the currently selected project in the  
+							<link>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
+								<label>Solution Explorer</label>
+							</link>.The  compilation method of this project is equivalent to that performed by 
+							<bold>Rebuild   Solution</bold>. This menu entry is greyed out when there is no project  selected in the  
+							<link>
+								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
+								<label>Solution Explorer</label>
+							</link>.  
+						</item>
+						<item>
+							<bold>Clean Selection</bold> - Removes all built/compiled outputs from the selected project.  
+						</item>
+						<item>
+							<bold>Batch Build...</bold> - Displays a dialog allowing you to specify which  Projects are to be compiled. This allows you to compile selected projects  within the current Solution.  
+						</item>
+						<item>
+							<bold>Configuration Manager...</bold> - Displays a dialog allowing you to specify  Project configuration information for each Project in the Solution.  
+						</item>
+					</list>
+					<paragraph>  The 
+						<link>
+							<url>/10_Developing/20_Managing_Projects/10_Configuring_A_Project/10_Project_Property_Pages/ProjectConfiguration.htm</url>
+							<label>Project Property Pages</label>
+						</link>  allow you to adjust the properties of your project, many of which apply  directly to the compilation. 
+					</paragraph>
+					<paragraph>  If your compilation fails, see  
+						<link>
+							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/60_Compiling_Projects/CompilationErrors.htm</url>
+							<label>Compilation Errors</label>
+						</link>  for more information on correcting such errors. 
+					</paragraph>
+					<seealso>
+						<bold>See also</bold>
+						<line_break/>
+						<link>
+							<url>/10_Using_ENViSioN/60_Compiling_Projects/CompilationErrors.htm</url>
+							<label>Compilation Errors</label>
+						</link>
+						<line_break/>
+						<link>
+							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/index.htm</url>
+							<label>Using ENViSioN! Within Visual Studio.NET</label>
+						</link>
+						<line_break/>
+						<link>
+							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/70_Debugging_Projects/index.htm</url>
+							<label>Debugging</label>
+						</link>
+						<line_break/>
+					</seealso>
+				</cell>
+			</row>
+		</table>
+	</paragraph></document>

@@ -1,13 +1,13 @@
 <document title="Reference for `eif_attribute'. " output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading></heading>
+		<heading/>
 		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
 		<code>
 			<bold>#include "eif_cecil. h"</bold>
-			<bold></bold>
+			<bold/>
 			<bold>EIFFEL_TYPE eif_attribute (EIF_REFERENCE</bold> 
 			<italic>object</italic>
 			<bold>, char *</bold> 
@@ -50,7 +50,7 @@
 		</heading>If the return value is an 
 		<bold>EIF_REFERENCE</bold>, you must protect it with 
 		<bold>eif_protect()</bold>.  
-		<line_break></line_break>You cannot access a constant attribute, or the result of a once function with 
+		<line_break/>You cannot access a constant attribute, or the result of a once function with 
 		<bold>eif_attribute()</bold>.  
 		<heading>
 			<size>2</size>CONFORMANCE
@@ -67,8 +67,8 @@
 		<bold>,</bold> 
 		<italic>NULL</italic>
 		<bold>)</bold> 
-		<line_break></line_break>is equivalent to: 
-		<line_break></line_break>
+		<line_break/>is equivalent to: 
+		<line_break/>
 		<bold>eif_field (</bold> 
 		<italic>object</italic>
 		<bold>,</bold> 
@@ -76,7 +76,7 @@
 		<bold>,</bold>
 		<italic>type</italic>
 		<bold>)</bold> 
-		<line_break></line_break>which is deprecated.  
+		<line_break/>which is deprecated.  
 		<heading>
 			<size>2</size>SEE ALSO
 		</heading>

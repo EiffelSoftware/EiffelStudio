@@ -3,7 +3,7 @@
 		<help>
 			<toc>
 				<envision_pseudo_name>30</envision_pseudo_name>
-				<envision_location>Developing With ENViSioN!\Using ENViSioN! within Visual Studio.Net\Adding a New Project\Advanced GUI Project Wizard\Interface Construction Page</envision_location>
+				<envision_location>Eiffel ENViSioN!\Developing with Eiffel ENViSioN!\Adding a New Project\Advanced GUI Project Wizard\Interface Construction Page</envision_location>
 				<envision_title>Reference</envision_title>
 			</toc>
 		</help>
@@ -92,5 +92,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

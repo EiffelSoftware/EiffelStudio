@@ -2,9 +2,6 @@
 	<meta_data/>
 	<paragraph>
 		<heading>
-			<size>1</size>Known issues with the Eiffel for .NET compiler
-		</heading>
-		<heading>
 			<size>2</size>Eiffel issues
 		</heading>
 		<list ordered="false">
@@ -20,5 +17,4 @@
 				</code>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

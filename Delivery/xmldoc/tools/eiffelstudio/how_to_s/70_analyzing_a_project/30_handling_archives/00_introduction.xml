@@ -1,72 +1,68 @@
 <document title="Handling archives" output="studio">
-	<meta_data >
-		<help >
-			<meta >
-				<meta_content >Metric,archive,handle</meta_content>
-				<name >MS-HKWD</name>
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>Metric,archive,handle</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph >
-		<heading >
-			<size >1</size>Handling archives
-		</heading>
-		<paragraph >The archive file for a system contains all the values of measures resulting from evaluating all metrics over the "system" scope when evaluation is possible. It also contains the definitions of non elementary metrics (the one user has 
-			<link >
-				<url >/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/10_defining_new_metrics/00_introduction.xml</url>
-				<label >defined</label>
-			</link> or 
-			<link >
-				<url >/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/20_managing_new_metrics/40_importing_new_metrics.xml</url>
-				<label >imported</label>
+	<paragraph>
+		<paragraph>The archive file for a system contains all the values of measures resulting from evaluating all metrics over the "system" scope when evaluation is possible. It also contains the definitions of non elementary metrics (the one user has
+			<link>
+				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/10_defining_new_metrics/00_introduction.xml</url>
+				<label>defined</label>
+			</link> or
+			<link>
+				<url>/tools/eiffelstudio/how_to_s/70_analyzing_a_project/20_handling_new_metrics/20_managing_new_metrics/40_importing_new_metrics.xml</url>
+				<label>imported</label>
 			</link>) in order to be sure of what is being measured.
 		</paragraph>
-		<paragraph >The archive files are entitled to achieve comparisons between systems. And then, user can compare systems to evaluate their own projects.</paragraph>
-		<paragraph >When clicking on 
-			<image >
-				<height >16</height>
-				<width >16</width>
-				<url >/images/eiffelstudio/icons/icon_delete_small_color.gif</url>
-				<border >0</border>
+		<paragraph>The archive files are entitled to achieve comparisons between systems. And then, user can compare systems to evaluate their own projects.</paragraph>
+		<paragraph>When clicking on
+			<image>
+				<height>16</height>
+				<width>16</width>
+				<url>/images/eiffelstudio/icons/icon_delete_small_color.gif</url>
+				<border>0</border>
 			</image> in the metric tool, the following interface will help you in:
 		</paragraph>
 		<list ordered="false">
-			<item >
-				<link >
-					<url >10_creating_an_archive.xml</url>
-					<label >Creating an archive</label>
+			<item>
+				<link>
+					<url>10_creating_an_archive.xml</url>
+					<label>Creating an archive</label>
 				</link>
 			</item>
-			<item >
-				<link >
-					<url >20_updating_an_archive.xml</url>
-					<label >Updating an existing archive</label>
+			<item>
+				<link>
+					<url>20_updating_an_archive.xml</url>
+					<label>Updating an existing archive</label>
 				</link>
 			</item>
-			<item >
-				<link >
-					<url >30_comparing_to_an_archive.xml</url>
-					<label >Comparing to an archive</label>
+			<item>
+				<link>
+					<url>30_comparing_to_an_archive.xml</url>
+					<label>Comparing to an archive</label>
 				</link>
 			</item>
 		</list>
-		<paragraph >
-			<image >
-				<height >526</height>
-				<width >279</width>
-				<url >/images/eiffelstudio/metrics_png/archive.png</url>
-				<border >0</border>
+		<paragraph>
+			<image>
+				<height>526</height>
+				<width>279</width>
+				<url>/images/eiffelstudio/metrics_png/archive.png</url>
+				<border>0</border>
 			</image>
 		</paragraph>
-		<paragraph > </paragraph>
-		<paragraph >An archive can also be considered as a scope even if it is not a sub-element of the loaded system users are working on. Indeed, an archive contains measures, for another system than the current one, previously calculated and registered that could be retrieved. Consequently, evaluating a metric over an archive is nothing but retrieving the corresponding recorded measure.</paragraph>
+		<paragraph> </paragraph>
+		<paragraph>An archive can also be considered as a scope even if it is not a sub-element of the loaded system users are working on. Indeed, an archive contains measures, for another system than the current one, previously calculated and registered that could be retrieved. Consequently, evaluating a metric over an archive is nothing but retrieving the corresponding recorded measure.</paragraph>
 		<list ordered="false">
-			<item >
-				<link >
-					<url >40_evaluating_a_metric_over_an_archive.xml</url>
-					<label >evaluating a metric over an archive</label>
+			<item>
+				<link>
+					<url>40_evaluating_a_metric_over_an_archive.xml</url>
+					<label>evaluating a metric over an archive</label>
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

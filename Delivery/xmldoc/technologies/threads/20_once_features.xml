@@ -2,9 +2,6 @@
 	<meta_data/>
 	<paragraph>
 		<heading>
-			<size>1</size>Once features in multithreaded mode
-		</heading>
-		<heading>
 			<size>2</size>
 			<content>
 				<link>
@@ -37,7 +34,8 @@
 				</link>
 			</content>
 		</heading>
-		<paragraph>Here is what you will do to implement a once per process feature:</paragraph><code_block>
+		<paragraph>Here is what you will do to implement a once per process feature:</paragraph>
+		<code_block>
 class
 		TEST_ONCE_PER_PROCESS
 
@@ -60,7 +58,8 @@ class
 			end
 
 	end -- class TEST_ONCE_PER_PROCESS
-</code_block><code_block>
+</code_block>
+		<code_block>
 	You can do the same with once procedures.
 </code_block>
 	</paragraph></document>

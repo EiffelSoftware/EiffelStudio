@@ -1,9 +1,6 @@
 <document title="Feature clauses" output="studio">
 	<meta_data/>
-	<paragraph>
-		<heading>
-			<size>1</size>Feature clauses
-		</heading>The feature you create will be inserted in the feature clause you specified. If the feature clause was not already in your class, or not in the right place, EiffelStudio adds the feature clause to the class text based on the feature clause order specified in the 
+	<paragraph>The feature you create will be inserted in the feature clause you specified. If the feature clause was not already in your class, or not in the right place, EiffelStudio adds the feature clause to the class text based on the feature clause order specified in the 
 		<link>
 			<url>../../../../85_preferences/20_preferences_reference/20_tools/20_context_tools.xml</url>
 			<label>preferences</label>
@@ -40,25 +37,26 @@
 		<heading>
 			<size>2</size>Generated code
 		</heading>The code that is inserted in your class as a result of the selections made for the feature clause, is of the form: 
-		<line_break></line_break>
-		<code>
-			feature <class_name>{EXPORT}</class_name><comment> -- Clause name</comment>
+		<line_break/>
+		<code>feature 
+			<class_name>{EXPORT}</class_name>
+			<comment> -- Clause name</comment>
 		</code>
-		<line_break></line_break>except if you specified 
+		<line_break/>except if you specified 
 		<code>
 			<class_name>ANY</class_name>
 		</code> as export status, which is similar to having no export status. 
-		<line_break></line_break>
-		<code>
-			feature <comment> --Clause name</comment>
+		<line_break/>
+		<code>feature 
+			<comment> --Clause name</comment>
 		</code>
-		<line_break></line_break>For example, if you specified a the "Initialization" feature clause name, and specified 
+		<line_break/>For example, if you specified a the "Initialization" feature clause name, and specified 
 		<code>
 			<class_name>NONE</class_name>
 		</code> as export status, you get: 
-		<line_break></line_break>
-		<code>
-			feature <class_name>{NONE}</class_name><comment> --Initialization</comment>
+		<line_break/>
+		<code>feature 
+			<class_name>{NONE}</class_name>
+			<comment> --Initialization</comment>
 		</code>
-	</paragraph>
-</document>
+	</paragraph></document>

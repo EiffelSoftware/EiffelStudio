@@ -1,14 +1,11 @@
 <document title="Basic text view" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Basic text view
-		</heading>
 		<paragraph>Basic text view 
 			<image>
 				<url>/images/eiffelstudio/icons/icon_format_text_color.gif</url>
 			</image>displays the text of the current feature as it is written in the enclosing class.
-			<line_break></line_break>It does not allow to work with 
+			<line_break/>It does not allow to work with 
 			<link>
 				<url>/tools/eiffelstudio/reference/40_debugger/20_breakpoints/index.xml</url>
 				<label>breakpoints</label>
@@ -23,11 +20,10 @@
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>/tools/eiffelstudio/reference/80_formatters/10_class_formatters/05_basic_text_format.xml</url>
 				<label>Class basic text view</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

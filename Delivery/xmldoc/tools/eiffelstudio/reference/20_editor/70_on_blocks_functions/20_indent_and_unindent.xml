@@ -1,9 +1,6 @@
 <document title="Indent and un indent  selection" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Indent and un indent selection
-		</heading>
 		<paragraph>EiffelStudio editor offers the possibility to indent or unindent selected lines.</paragraph>
 		<list ordered="false">
 			<item>
@@ -44,13 +41,12 @@
 						<url>../20_selection.xml</url>
 						<label>selected</label>
 					</link> line if there is such a character.
-					<line_break></line_break>
+					<line_break/>
 				</paragraph>
 			</item>
 		</list>
 		<note>
 			<bold>Note</bold>: If there is no selection, you may still use the unindent shortcut "Shift+Tab". The command will be applied to the current line.
-			<line_break></line_break>
+			<line_break/>
 		</note>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,110 +1,106 @@
 <document title="Generating libraries" output="studio">
-	<meta_data >
-		<help >
-			<meta >
-				<meta_content >Generating libraries</meta_content>
-				<name >MS-HKWD</name>
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>Generating libraries</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
-			<meta >
-				<meta_content >Compiling libraries</meta_content>
-				<name >MS-HKWD</name>
+			<meta>
+				<meta_content>Compiling libraries</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
-			<meta >
-				<meta_content >Precompiling libraries</meta_content>
-				<name >MS-HKWD</name>
+			<meta>
+				<meta_content>Precompiling libraries</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
-			<meta >
-				<meta_content >Library, generating</meta_content>
-				<name >MS-HKWD</name>
+			<meta>
+				<meta_content>Library, generating</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph >
-		<heading >
-			<size >1</size>Generating libraries
-		</heading>
-		<paragraph >There are two main types of libraries in Eiffel: precompiled Eiffel libraries and C libraries. Both kinds of libraries can be created via EiffelStudio. The former can only be used in Eiffel projects, C libraries can be used either in Eiffel programs, or in standard C programs.</paragraph>
-		<paragraph >To generate an Eiffel precompiled library:</paragraph>
+	<paragraph>
+		<paragraph>There are two main types of libraries in Eiffel: precompiled Eiffel libraries and C libraries. Both kinds of libraries can be created via EiffelStudio. The former can only be used in Eiffel projects, C libraries can be used either in Eiffel programs, or in standard C programs.</paragraph>
+		<paragraph>To generate an Eiffel precompiled library:</paragraph>
 		<list ordered="false">
-			<item >Select the 
-				<bold >Precompilation Wizard</bold> in the 
-				<bold >Tools</bold> menu and follow the instructions,
+			<item>Select the
+				<bold>Precompilation Wizard</bold> in the
+				<bold>Tools</bold> menu and follow the instructions,
 			</item>
 		</list>
-		<paragraph >or</paragraph>
+		<paragraph>or</paragraph>
 		<list ordered="false">
-			<item >Launch a new EiffelStudio session,</item>
-			<item >Select 
-				<bold >Open existing Ace</bold>, 
-				<image >
-					<height >40</height>
-					<width >209</width>
-					<url >/images/eiffelstudio/open_existing_ace.png</url>
+			<item>Launch a new EiffelStudio session,</item>
+			<item>Select
+				<bold>Open existing Ace</bold>,
+				<image>
+					<height>40</height>
+					<width>209</width>
+					<url>/images/eiffelstudio/open_existing_ace.png</url>
 				</image>.
 			</item>
-			<item >Click 
-				<bold >Next</bold>,
+			<item>Click
+				<bold>Next</bold>,
 			</item>
-			<item >Select the Ace file of the library you want to precompile,</item>
-			<item >Give a location where to put the precompiled library,</item>
-			<item > the 
-				<bold >Compile the generated project</bold> checkbox in the next dialog:
+			<item>Select the Ace file of the library you want to precompile,</item>
+			<item>Give a location where to put the precompiled library,</item>
+			<item> the
+				<bold>Compile the generated project</bold> checkbox in the next dialog:
 			</item>
 		</list>
-		<paragraph >
-			<image >
-				<height >251</height>
-				<width >350</width>
-				<url >/images/eiffelstudio/dialogs_and_wizards/choose_existing_ace.png</url>
+		<paragraph>
+			<image>
+				<height>251</height>
+				<width>350</width>
+				<url>/images/eiffelstudio/dialogs_and_wizards/choose_existing_ace.png</url>
 			</image>
 		</paragraph>
 		<list ordered="false">
-			<item >Click OK</item>
-			<item >Choose 
-				<bold >Precompile</bold> in the 
-				<bold >Project</bold> menu.
+			<item>Click OK</item>
+			<item>Choose
+				<bold>Precompile</bold> in the
+				<bold>Project</bold> menu.
 			</item>
 		</list>
-		<paragraph >To generate a dynamically linked C library using Eiffel code:</paragraph>
+		<paragraph>To generate a dynamically linked C library using Eiffel code:</paragraph>
 		<list ordered="false">
-			<item >Generate a definition file for this library, via the 
-				<link >
-					<url >/tools/eiffelstudio/reference/30_compiler/40_dynamic_library_generation/10_dynamic_library_builder.xml</url>
-					<label >Dynamic library Builder</label>
+			<item>Generate a definition file for this library, via the
+				<link>
+					<url>/tools/eiffelstudio/reference/30_compiler/40_dynamic_library_generation/10_dynamic_library_builder.xml</url>
+					<label>Dynamic library Builder</label>
 				</link>,
 			</item>
-			<item >Open the 
-				<link >
-					<url >/tools/eiffelstudio/reference/25_project_settings/60_advanced.xml</url>
-					<label >Project Settings</label>
+			<item>Open the
+				<link>
+					<url>/tools/eiffelstudio/reference/25_project_settings/60_advanced.xml</url>
+					<label>Project Settings</label>
 				</link> dialog,
 			</item>
-			<item >In the 
-				<bold >Advanced</bold> tab, check 
-				<bold >Shared library definition</bold>,
+			<item>In the
+				<bold>Advanced</bold> tab, check
+				<bold>Shared library definition</bold>,
 			</item>
-			<item >Enter the name of the definition you created in the first step(including the path if necessary),</item>
-			<item >Compile the current project.</item>
+			<item>Enter the name of the definition you created in the first step(including the path if necessary),</item>
+			<item>Compile the current project.</item>
 		</list>
-		<paragraph >The generated C library should be located in the EIFGEN|W_code directory in the directory of your project.</paragraph>
-		<paragraph >To generate a C library from a C compiler, please refer to the documentation of your C compiler.</paragraph>
-		<seealso >
-			<bold >See Also</bold>
-			<line_break />
-			<link >
-				<url >40_using_libraries.xml</url>
-				<label >Using libraries</label>
+		<paragraph>The generated C library should be located in the EIFGEN|W_code directory in the directory of your project.</paragraph>
+		<paragraph>To generate a C library from a C compiler, please refer to the documentation of your C compiler.</paragraph>
+		<seealso>
+			<bold>See Also</bold>
+			<line_break/>
+			<link>
+				<url>40_using_libraries.xml</url>
+				<label>Using libraries</label>
 			</link>
-			<line_break />
-			<link >
-				<url >/technologies/cecil/index.xml</url>
-				<label >CECIL library: calling Eiffel routines from C programs</label>
+			<line_break/>
+			<link>
+				<url>/technologies/cecil/index.xml</url>
+				<label>CECIL library: calling Eiffel routines from C programs</label>
 			</link>
-			<line_break />
-			<link >
-				<url >/tools/eiffelstudio/reference/30_compiler/20_command_line/00_introduction.xml</url>
-				<label >Command line options</label>
+			<line_break/>
+			<link>
+				<url>/tools/eiffelstudio/reference/30_compiler/20_command_line/00_introduction.xml</url>
+				<label>Command line options</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

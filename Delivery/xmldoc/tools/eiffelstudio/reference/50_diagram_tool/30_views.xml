@@ -1,9 +1,6 @@
 <document title="Views" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Views
-		</heading>
 		<paragraph>Every class or cluster has one or more view. Every view shows the 
 			<link>
 				<url>40_contexts.xml</url>
@@ -91,7 +88,6 @@
 				</link>
 			</item>
 		</list>
-		<line_break></line_break>
-		<line_break></line_break>
-	</paragraph>
-</document>
+		<line_break/>
+		<line_break/>
+	</paragraph></document>

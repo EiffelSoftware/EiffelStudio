@@ -2,9 +2,6 @@
 	<meta_data/>
 	<paragraph>
 		<heading>
-			<size>1</size>Reference for `eif_type_by_reference'
-		</heading>
-		<heading>
 			<size>2</size>SYNOPSYS
 		</heading>
 		<code>
@@ -32,5 +29,4 @@
 		<bold>eif_type</bold>(1) ,
 		<bold>eif_name</bold>(1),
 		<bold>eif_type_id</bold>(1). Markup created by  1. 0, November 15, 1999.
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -2,14 +2,11 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_pseudo_name>40</envision_pseudo_name>
+				<envision_pseudo_name>50</envision_pseudo_name>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Licenses
-		</heading>
 		<list ordered="false">
 			<item>
 				<link>
@@ -24,5 +21,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

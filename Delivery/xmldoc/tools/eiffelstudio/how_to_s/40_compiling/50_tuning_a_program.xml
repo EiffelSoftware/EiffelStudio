@@ -1,9 +1,6 @@
 <document title="Tuning a program" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Tuning a program
-		</heading>
 		<paragraph>The best way to speed up a program is of course to improve the algorithms and data structures you are using. Spotting the functions that slow down the execution and improving can change a lot in a program. 
 			<link>
 				<url>../50_running_and_debugging/70_profiling.xml</url>
@@ -52,11 +49,10 @@
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>/tools/eiffelstudio/reference/70_wizards_and_dialogs/10_profiler_wizard/00_introduction.xml</url>
 				<label>Profiler reference</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="How to analyze a project" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>How to analyze a project
-		</heading>
 		<paragraph>The metric tab in the context tool allows project analyzing. Built on a suitable metric theory, this tool provides a set of elementary metrics that can be evaluated to test projects design and implementation.</paragraph>
 		<paragraph>The metric tool provides the following interface to evaluate measures, save them or delete some of them when no longerneeded.</paragraph>
 		<image>
@@ -35,5 +32,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="EiffelStudio Editor Introduction" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>EiffelStudio Editor Introduction
-		</heading>
 		<paragraph>EiffelStudio includes an editor which allows you to read and modify the text of Eiffel classes.</paragraph>
 		<paragraph>It offers usual 
 			<link>
@@ -27,5 +24,4 @@
 				<label>Operations on text blocks</label>
 			</link>" sections.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

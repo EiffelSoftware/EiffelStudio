@@ -1,9 +1,6 @@
 <document title="Project settings window" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Project settings window
-		</heading>
 		<paragraph>This is where global settings regarding your project are going to be made. In here you can specify:</paragraph>
 		<list ordered="false">
 			<item>The type of project you wish to generate</item>
@@ -46,11 +43,10 @@
 		<paragraph>All options are enabled and saved into the project settings file, 'project_settings.xml' as soon as the window is closed.</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>/tools/eiffelbuild/reference/90_code_generation/index.xml</url>
 				<label>Code generation</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

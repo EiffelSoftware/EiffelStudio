@@ -1,9 +1,6 @@
 <document title="Introduction" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Introduction
-		</heading>
 		<paragraph>Editing the text of classes sometimes implies highly repetitive tasks, such as commenting or indenting several lines at the same time.</paragraph>
 		<paragraph>The new commands of the editor of EiffelStudio should allow the user to perform these tasks faster and more easily. In addition to text block 
 			<link>
@@ -19,5 +16,4 @@
 				<label>embed</label>
 			</link> several lines of code in "if ... then ... end" or "debug ... end" structures.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

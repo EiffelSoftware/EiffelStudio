@@ -1,9 +1,6 @@
 <document title="Pause an application" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Pause an application
-		</heading>
 		<paragraph>This command stops the execution of a running debugged application.</paragraph>
 		<paragraph>This gives access to dynamic information concerning the application, such as the current 
 			<link>
@@ -24,11 +21,10 @@
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>00_introduction.xml</url>
 				<label>Execution commands</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

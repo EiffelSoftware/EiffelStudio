@@ -1,9 +1,6 @@
 <document title="Kill a debugged application" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Kill a debugged application
-		</heading>
 		<paragraph>This command kills the debugged application, if any. This stops the debugging session.</paragraph>
 		<paragraph>It is accessible through the 
 			<bold>project</bold> toolbar ( 
@@ -14,11 +11,10 @@
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>00_introduction.xml</url>
 				<label>Execution commands</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

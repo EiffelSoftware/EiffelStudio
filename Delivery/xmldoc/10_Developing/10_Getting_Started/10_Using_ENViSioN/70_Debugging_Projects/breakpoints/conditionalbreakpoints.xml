@@ -1,45 +1,42 @@
 <document title="Conditional Break Points" output="envision">
 	<meta_data>
-		<help></help>
+		<help/>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Conditional Break Points
-		</heading>
-		<paragraph>A Conditional  
+		<paragraph>A Conditional
 			<help_link>
 				<tab_index>0</tab_index>
 				<keywords>Eiffel break points</keywords>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;Break Point
-			</help_link>  is a  
+			</help_link>  is a
 			<help_link>
 				<tab_index>0</tab_index>
 				<keywords>Eiffel break points</keywords>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;Break Point
 			</help_link>  that will only halt the execution of the system when a specific condition is  met.
 		</paragraph>
-		<paragraph>You may turn any regular  
+		<paragraph>You may turn any regular
 			<help_link>
 				<tab_index>0</tab_index>
 				<keywords>Eiffel break points</keywords>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;Break Point
-			</help_link>  into conditional  
+			</help_link>  into conditional
 			<help_link>
 				<tab_index>0</tab_index>
 				<keywords>Eiffel break points</keywords>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;Break Point
-			</help_link>  by modifying its properties. The properties of the  
+			</help_link>  by modifying its properties. The properties of the
 			<help_link>
 				<tab_index>0</tab_index>
 				<keywords>Eiffel break points</keywords>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;BreakPoint
-			</help_link>  are accessed through the Breakpoint Properties dialog, accessed by right  clicking on a  
+			</help_link>  are accessed through the Breakpoint Properties dialog, accessed by right  clicking on a
 			<help_link>
 				<tab_index>0</tab_index>
 				<keywords>Eiffel break points</keywords>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;BreakPoint
-			</help_link>  representation, often in the editor or the breakpoint window, and selecting 
-			<bold>BreakpointProperties...</bold>  from the context menu.  
+			</help_link>  representation, often in the editor or the breakpoint window, and selecting
+			<bold>BreakpointProperties...</bold>  from the context menu.
 		</paragraph>
 		<paragraph>
 			<image>
@@ -47,29 +44,29 @@
 				<url>BreakPointProperties.png</url>
 			</image>
 		</paragraph>
-		<paragraph>The top half of the dialog displays read only information regarding the  
+		<paragraph>The top half of the dialog displays read only information regarding the
 			<help_link>
 				<tab_index>0</tab_index>
 				<keywords>Eiffel break points</keywords>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;BreakPoint
-			</help_link>, corresponding to its position in the source code. The buttons 
-			<bold>Condition...</bold>  and 
-			<bold>HitCount..</bold> both display dialogs which allow you to specify the  condition, or the hit count for the  
+			</help_link>, corresponding to its position in the source code. The buttons
+			<bold>Condition...</bold>  and
+			<bold>HitCount..</bold> both display dialogs which allow you to specify the  condition, or the hit count for the
 			<help_link>
 				<tab_index>0</tab_index>
 				<keywords>Eiffel break points</keywords>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;BreakPoint
-			</help_link>, turning it into a conditional  
+			</help_link>, turning it into a conditional
 			<help_link>
 				<tab_index>0</tab_index>
 				<keywords>Eiffel break points</keywords>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;Break Point
-			</help_link>.  
+			</help_link>.
 		</paragraph>
 		<heading>
 			<size>2</size>Break Point Condition
 		</heading>
-		<paragraph>This dialog allows you to specify a condition that must be satisfied for the execution of the  system to stop at the  
+		<paragraph>This dialog allows you to specify a condition that must be satisfied for the execution of the  system to stop at the
 			<help_link>
 				<tab_index>0</tab_index>
 				<keywords>Eiffel break points</keywords>
@@ -81,27 +78,27 @@
 					<url>BreakPointCondition.png</url>
 				</image>
 			</paragraph>
-			<paragraph>The condition may be contain any of the  
+			<paragraph>The condition may be contain any of the
 				<help_link>
 					<tab_index>0</tab_index>
 					<keywords>Eiffel argument</keywords>
 					<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;arguments
-				</help_link>,  locals or  
+				</help_link>,  locals or
 				<help_link>
 					<tab_index>0</tab_index>
 					<keywords>Eiffel attribute</keywords>
 					<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;attributes
-				</help_link>  of the  
+				</help_link>  of the
 				<help_link>
 					<tab_index>0</tab_index>
 					<keywords>Eiffel routine</keywords>
 					<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;routine
-				</help_link>  in which the  
+				</help_link>  in which the
 				<help_link>
 					<tab_index>0</tab_index>
 					<index_moniker>!DefaultAssociativeIndex</index_moniker>
 					<keywords>Eiffel break points</keywords>&gt;Break Point
-				</help_link>  is defined. Current is also a valid item for the expression, and when the  
+				</help_link>  is defined. Current is also a valid item for the expression, and when the
 				<help_link>
 					<tab_index>0</tab_index>
 					<index_moniker>!DefaultAssociativeIndex</index_moniker>
@@ -191,16 +188,16 @@
 			<list ordered="false">
 				<item>   my_array @ 5</item>
 			</list>
-			<paragraph>You may also qualify the condition with either is true or has changed:  
+			<paragraph>You may also qualify the condition with either is true or has changed:
 				<list ordered="false">
-					<item>   Is True - Stop at the   
+					<item>   Is True - Stop at the
 						<help_link>
 							<tab_index>0</tab_index>
 							<keywords>Eiffel break points</keywords>
 							<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;Break Point
 						</help_link>   when the expression evaluates to True.
 					</item>
-					<item>   Has Changed - Stop at the   
+					<item>   Has Changed - Stop at the
 						<help_link>
 							<tab_index>0</tab_index>
 							<keywords>Eiffel break points</keywords>
@@ -208,7 +205,7 @@
 						</help_link>   when the result of evaluating the expression changes.
 					</item>
 				</list>
-				<paragraph>A 
+				<paragraph>A
 					<help_link>
 						<tab_index>0</tab_index>
 						<keywords>Eiffel break points</keywords>
@@ -219,19 +216,19 @@
 			<heading>
 				<size>2</size>Break Point Hit Count
 			</heading>
-			<paragraph>This dialog allows you to specify a hit count for the 
+			<paragraph>This dialog allows you to specify a hit count for the
 				<help_link>
 					<tab_index>0</tab_index>
 					<keywords>Eiffel break points</keywords>
 					<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;Break Point
-				</help_link>. A hit count specifies the number of times that the breakpoint must be reached before theexecution will stop. If you also have a condition on the 
+				</help_link>. A hit count specifies the number of times that the breakpoint must be reached before theexecution will stop. If you also have a condition on the
 				<help_link>
 					<tab_index>0</tab_index>
 					<keywords>Eiffel break points</keywords>
 					<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;Break Point
 				</help_link>, then the current hit count will only be incremented if the condition is satisfied.
 			</paragraph>
-			<paragraph>There are four options available for the condition of the hit count:   
+			<paragraph>There are four options available for the condition of the hit count:
 				<list ordered="false">
 					<item>Break always</item>
 					<item>Break when the hit count is equal to</item>
@@ -248,22 +245,21 @@
 			</paragraph>
 			<seealso>
 				<bold>See Also</bold>
-				<line_break></line_break>
+				<line_break/>
 				<link>
 					<url>./breakpoints.xml</url>
 					<label>Break Points</label>
 				</link>
-				<line_break></line_break>
+				<line_break/>
 				<link>
 					<url>./index.xml</url>
 					<label>Debugging</label>
 				</link>
-				<line_break></line_break>
+				<line_break/>
 				<link>
 					<url>./BreakPointWindow.xml</url>
 					<label>Break Point Window</label>
 				</link>
 			</seealso>
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

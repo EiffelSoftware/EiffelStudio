@@ -1,13 +1,10 @@
-<document title="Documenting ENViSioN! Projects" output="envision">
+<document title="HTML Report Wizard" output="envision">
 	<meta_data>
-		<help></help>
+		<help/>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Documenting ENViSioN! Projects
-		</heading>
 		<paragraph>
-			<line_break></line_break> Documenting an ENViSioN! project is made easy through using the 
+			<line_break/> Documenting an ENViSioN! project is made easy through using the
 			<link>
 				<url>\10_Developing\10_Getting_Started\10_Using_ENViSioN\10_Adding_A_New_Project\html_report_wizard.xml</url>
 				<label>  HTML Report Project Wizard</label>
@@ -17,7 +14,7 @@
 			<size>2</size>Documentation Checklist
 		</heading>
 		<paragraph>
-			<line_break></line_break> Before choosing to document your ENViSioN! project please use this checklist to ensure that your project can be documented successfully. Ensure that...
+			<line_break/> Before choosing to document your ENViSioN! project please use this checklist to ensure that your project can be documented successfully. Ensure that...
 		</paragraph>
 		<list ordered="false">
 			<item>  The ENViSioN! project have been successfully compiled</item>
@@ -26,15 +23,14 @@
 			<size>2</size>Visual Studio.NET Help Projects
 		</heading>
 		<paragraph>
-			<line_break></line_break> The HTML Report Project Wizard creates a new Visual Studio.NET Help project when it is completed. From this you can add or remove items at your discretion and even modify the default Cascading Style Sheet (CSS) to present the project documentation differently from the default. A Help project can then be complied and distributed as a Microsoft Help Collection. 
+			<line_break/> The HTML Report Project Wizard creates a new Visual Studio.NET Help project when it is completed. From this you can add or remove items at your discretion and even modify the default Cascading Style Sheet (CSS) to present the project documentation differently from the default. A Help project can then be complied and distributed as a Microsoft Help Collection.
 		</paragraph>
 		<seealso>
 			<bold>See Also:</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>\10_Developing\10_Getting_Started\10_Using_ENViSioN\10_Adding_A_New_Project\html_report_wizard.xml</url>
 				<label>  HTML Report Project Wizard</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

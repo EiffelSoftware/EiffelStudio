@@ -1,9 +1,6 @@
 <document title="Create favorite folder command" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Create favorite folder command
-		</heading>
 		<paragraph>This command 
 			<image>
 				<url>/images/eiffelstudio/browsing_tools/favorites_dialog_new_folder.png</url>
@@ -17,5 +14,4 @@
 		<paragraph>After typing the name of the new folder, pressing 
 			<bold>OK</bold> adds it to the root of the favorites.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,15 +1,12 @@
-<document title="The Eiffel for .NET Language" output="envision">
+<document title="Eiffel for .NET" output="envision">
 	<meta_data>
 		<help>
 			<toc>
-				<envision_pseudo_name>30</envision_pseudo_name>
+				<envision_pseudo_name>20</envision_pseudo_name>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>The Eiffel for .NET Language
-		</heading>
 		<paragraph>These pages contain documentation that describes the Eiffel programming language.</paragraph>
 		<paragraph>Eiffel is considered both a development methodology and a programming language.</paragraph>
 		<paragraph>Eiffel the methodology is a recipe for constructing quality software which is based on a small number of powerful concepts. Eiffel the programming language is a notation which is designed to support the methodology.</paragraph>
@@ -18,7 +15,7 @@
 			<size>2</size>Eiffel for .NET Conventions Documentation
 		</heading>
 		<paragraph>In Eiffel, as in other languages, certain conventions have evolved which constitute "the way things are done". Conventions provide consistency and therefore predictability and readability of software text.</paragraph>
-		<paragraph>When working in the .NET components, particularly when using components from .NET assemblies delivered from Microsoft or produced by other parties, the conventions of Eiffel are maintained in the view of these components. The first section, titled 
+		<paragraph>When working in the .NET components, particularly when using components from .NET assemblies delivered from Microsoft or produced by other parties, the conventions of Eiffel are maintained in the view of these components. The first section, titled
 			<link>
 				<url>\20_Language\10_Eiffel_NET\10_Conventions.xml</url>
 				<label>  Conventions</label>
@@ -77,10 +74,9 @@
 		</list>
 		<paragraph>
 			<help_link>
-				<tab_index>0</tab_index> 
-				<keywords>Eiffel reserved keywords</keywords> 
+				<tab_index>0</tab_index>
+				<keywords>Eiffel reserved keywords</keywords>
 				<index_moniker>!DefaultAssociativeIndex</index_moniker>&gt;
 			</help_link>
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

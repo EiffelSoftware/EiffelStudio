@@ -146,9 +146,11 @@ H6 {
 
 A {
 	COLOR: #003399;
+	text-decoration: none;
 }
 A:hover {
 	COLOR: #006633;
+	text-decoration: none;
 }
 BLOCKQUOTE {
 	color:c90000;

@@ -1,9 +1,6 @@
 <document title="Type Library Marshalling Definition Dialog" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Type Library Marshalling Definition Dialog
-		</heading>
 		<paragraph>The Type Library Definition Dialog is displayed only for a server project when the definition file is a Type Library. You have to choose between Automation and Virtual Table access and between Universal and Standard marshaling.</paragraph>
 		<heading>
 			<size>2</size>Type Library Marshalling Definition Dialog
@@ -85,5 +82,4 @@
 				<label>Building a Component</label>
 			</link>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

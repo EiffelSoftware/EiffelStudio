@@ -1,9 +1,6 @@
 <document title="Set slice size command" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Set slice size command
-		</heading>
 		<paragraph>Located in the object tool toolbar, this command 
 			<image>
 				<url>../../../../../images/eiffelstudio/icons/icon_slice_limits_vsmall_color.gif</url>
@@ -27,5 +24,4 @@
 				<url>../../../../../images/eiffelstudio/dialogs_and_wizards/set_slice_size_dlg.png</url>
 			</image>
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

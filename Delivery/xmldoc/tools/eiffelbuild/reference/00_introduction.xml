@@ -1,9 +1,6 @@
 <document title="EiffelBuild Introduction" output="studio">
 	<meta_data/>
-	<paragraph>
-		<heading>
-			<size>1</size>EiffelBuild Introduction
-		</heading>        
+	<paragraph>        
 		<paragraph>EiffelBuild is the new graphical builder by 
 			<link>
 				<url>http://www.eiffel</url>
@@ -14,5 +11,4 @@
 				<label>Vision2</label>
 			</link> GUI.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

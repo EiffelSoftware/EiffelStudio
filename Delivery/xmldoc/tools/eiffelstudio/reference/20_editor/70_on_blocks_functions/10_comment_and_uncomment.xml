@@ -1,9 +1,6 @@
 <document title="Comment and uncomment lines" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Comment and uncomment lines
-		</heading>
 		<paragraph>EiffelStudio editor offers the possibility to comment or uncomment several lines at a time.</paragraph>
 		<list ordered="false">
 			<item>
@@ -44,12 +41,11 @@
 						<url>../20_selection.xml</url>
 						<label>selected</label>
 					</link> line if there are such characters.
-					<line_break></line_break>
+					<line_break/>
 				</paragraph>
 			</item>
 		</list>
 		<note>
 			<bold>Note</bold>: If there is no selection, these commands will be applied to the current line.
 		</note>
-	</paragraph>
-</document>
+	</paragraph></document>

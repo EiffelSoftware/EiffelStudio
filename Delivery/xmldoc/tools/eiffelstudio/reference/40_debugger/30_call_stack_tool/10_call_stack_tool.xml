@@ -1,9 +1,6 @@
 <document title="Call stack tool" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Call stack tool
-		</heading>
 		<paragraph>
 			<image>
 				<url>../../../../../images/eiffelstudio/debugger/call_stack_tool.png</url>
@@ -31,5 +28,4 @@
 				<url>../../../../../images/eiffelstudio/icons/icon_set_stack_depth_color.gif</url>
 			</image> button makes it possible to choose which call stack depth should be displayed in the list (the default is to display the 100 top stack elements, but it is configurable with the same button).
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

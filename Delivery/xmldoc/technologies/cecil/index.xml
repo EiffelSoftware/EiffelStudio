@@ -1,9 +1,6 @@
 <document title="CECIL" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>CECIL Library
-		</heading>
 		<list ordered="false">
 			<item>
 				<link>
@@ -42,5 +39,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

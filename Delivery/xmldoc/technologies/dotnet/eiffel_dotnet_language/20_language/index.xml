@@ -1,10 +1,7 @@
 <document title="Eiffel for .NET" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>The Eiffel for .NET Language
-		</heading>
-		<paragraph></paragraph>
+		<paragraph/>
 		<list ordered="false">
 			<item>
 				<link>
@@ -61,5 +58,4 @@
 				</link>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

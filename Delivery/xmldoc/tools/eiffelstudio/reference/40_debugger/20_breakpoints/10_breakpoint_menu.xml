@@ -1,9 +1,6 @@
 <document title="Breakpoint menu" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Breakpoint menu
-		</heading>
 		<paragraph>In all flat views (
 			<link>
 				<url>../../80_formatters/20_feature_formatters/10_flat_format.xml</url>
@@ -45,21 +42,20 @@
 		</paragraph>
 		<paragraph>Clicking one of the three first entries of the context menu changes the state of the breakpoint that was right-clicked. The last entry (
 			<bold>Run to breakpoint</bold>) launches the debugged application so that it will stop as soon as the selected breakpoint is encountered, as if the breakpoint had been enabled.
-			<line_break></line_break>
+			<line_break/>
 		</paragraph>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>20_breakpoint_commands.xml</url>
 				<label>Breakpoint commands</label>
 			</link>
-			<line_break></line_break> 
+			<line_break/> 
 			<link>
 				<url>30_breakpoint_information.xml</url>
 				<label>Breakpoint information command</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

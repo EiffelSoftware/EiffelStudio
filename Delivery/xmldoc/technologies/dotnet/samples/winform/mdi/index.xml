@@ -2,15 +2,12 @@
 	<meta_data>
 		<help>
 			<toc>
-				<envision_location>Samples\Windows Forms</envision_location>
+				<envision_location>Samples\.NET Framework Samples\Windows Forms</envision_location>
 				<envision_pseudo_name>60</envision_pseudo_name>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>MDI
-		</heading>
 		<div>
 			<paragraph>
 				<image>
@@ -22,8 +19,8 @@
 			</paragraph>
 		</div>
 		<paragraph>
-			<line_break></line_break>
-			<line_break></line_break> 
+			<line_break/>
+			<line_break/>
 		</paragraph>
 		<heading>
 			<size>2</size>Compiling
@@ -35,15 +32,15 @@
 		<paragraph>In the "File" entry, you can add a child window (Document),display the active child window, and exit the program. </paragraph>
 		<paragraph>You can change the format of the text displayed in the child windows using the entry "Format" in the menu. </paragraph>
 		<paragraph>You can choose the organization (cascade, title horizontal or title vertical) of the child windows using the entry "Window" in the menu. </paragraph>
-		<paragraph></paragraph>
+		<paragraph/>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph>This application demonstrates how to create a multiple document interface. More information regarding the use of a MDI, is available 
+		<paragraph>This application demonstrates how to create a multiple document interface. More information regarding the use of a MDI, is available
 			<link>
 				<url>mdi_detail.xml</url>
 				<label>here</label>
-			</link>. 
+			</link>.
 		</paragraph>
 		<paragraph>This sample contains the following class:</paragraph>
 		<list ordered="false">
@@ -55,7 +52,6 @@
 			<size>2</size>Notes
 		</heading>
 		<paragraph>This sample is translated from the example located in the QuickStart\winforms\samples\MDI subdirectory of the .NET Framework SDK samples directory of Microsoft Visual Studio .NET. </paragraph>
-		<paragraph></paragraph>
-		<paragraph></paragraph>
-	</paragraph>
-</document>
+		<paragraph/>
+		<paragraph/>
+	</paragraph></document>

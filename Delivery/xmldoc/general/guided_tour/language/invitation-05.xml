@@ -9,200 +9,196 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>
-			<content>4 Classes</content>
-		</heading>
-		<paragraph>A class, it was said above, is an implementation of an abstract data type.  This means that it describes a set of run-time objects, characterized by the 
-			<bold> features</bold>(operations) applicable to them, and by the formal properties of these features.  
+		<paragraph>A class, it was said above, is an implementation of an abstract data type.  This means that it describes a set of run-time objects, characterized by the
+			<bold> features</bold>(operations) applicable to them, and by the formal properties of these features.
 		</paragraph>
-		<paragraph>Such objects are called the 
-			<bold>direct instances</bold> of the class.  Classes and objects should not be confused: "class" is a compile-time notion, whereas objects only exist at run time.  This is similar to the difference that exists in classical programming between a program and one execution of that program, or between a type and a run-time value of that type.  
+		<paragraph>Such objects are called the
+			<bold>direct instances</bold> of the class.  Classes and objects should not be confused: "class" is a compile-time notion, whereas objects only exist at run time.  This is similar to the difference that exists in classical programming between a program and one execution of that program, or between a type and a run-time value of that type.
 		</paragraph>
 		<info>"Object-Oriented" is a misnomer; "Class-Oriented Analysis, Design and Programming" would be a more accurate description of the method.  </info>
-		<paragraph>To see what a class looks like, let us look at a simple example, 
+		<paragraph>To see what a class looks like, let us look at a simple example,
 			<code>
 				<string>ACCOUNT</string>
-			</code>, which describes bank accounts.  But before exploring the class itself it is useful to study how it maybe used by other classes, called it's 
-			<bold>clients</bold>.  
+			</code>, which describes bank accounts.  But before exploring the class itself it is useful to study how it maybe used by other classes, called it's
+			<bold>clients</bold>.
 		</paragraph>
-		<paragraph>A class 
+		<paragraph>A class
 			<code>
 				<string>X</string>
-			</code> may become a client of 
+			</code> may become a client of
 			<code>
 				<string>ACCOUNT</string>
-			</code> by declaring one or more 
-			<bold>entities</bold> of type 
+			</code> by declaring one or more
+			<bold>entities</bold> of type
 			<code>
 				<string>ACCOUNT</string>
 			</code>.  Such a declaration is of the form:
 		</paragraph>
-<code_block>	<local_variable>acc</local_variable>: <class_name>ACCOUNT</class_name>
+		<code_block>	<local_variable>acc</local_variable>: <class_name>ACCOUNT</class_name>
 </code_block>
-		<paragraph>The term "entity" generalizes the more common notion of "variable".  An entity declared of a reference type, such as 
+		<paragraph>The term "entity" generalizes the more common notion of "variable".  An entity declared of a reference type, such as
 			<code>
 				<string>acc</string>
 			</code>, may at any time during execution become "
-			<bold>attached to</bold> "an object; the type rules imply that this object must be a direct instance of 
+			<bold>attached to</bold> "an object; the type rules imply that this object must be a direct instance of
 			<code>
 				<string>ACCOUNT</string>
-			</code> -- or, as seen below, of a "descendant" of that class.  
+			</code> -- or, as seen below, of a "descendant" of that class.
 		</paragraph>
 		<image>
 			<url>invitation-2.png</url>
 		</image>
-		<paragraph>An entity is said to be void if it is not attached to any object.  By default, entities are void at initialization.  To obtain objects at run-time, a routine 
+		<paragraph>An entity is said to be void if it is not attached to any object.  By default, entities are void at initialization.  To obtain objects at run-time, a routine
 			<code>
 				<string>r</string>
-			</code> appearing in the client class 
+			</code> appearing in the client class
 			<code>
 				<string>X</string>
-			</code> may use a 
+			</code> may use a
 			<bold>creation instruction</bold> of the form
 		</paragraph>
 		<paragraph>
-<code_block>	<keyword>create</keyword> acc</code_block>
+			<code_block>	<keyword>create</keyword> acc</code_block>
 		</paragraph>
 		<paragraph>which creates a new direct instance of
 			<code>
 				<string> ACCOUNT</string>
-			</code>, attaches 
+			</code>, attaches
 			<code>
 				<string>acc</string>
-			</code> to that instance, and initializes all its fields to default values.  A variant of this notation, studied below, makes it possible to override the default initializations.  
+			</code> to that instance, and initializes all its fields to default values.  A variant of this notation, studied below, makes it possible to override the default initializations.
 		</paragraph>
-		<paragraph>Once the client has attached 
+		<paragraph>Once the client has attached
 			<code>
 				<string>acc</string>
-			</code> to an object, it may call on this object the features defined in class 
+			</code> to an object, it may call on this object the features defined in class
 			<code>
 				<string>ACCOUNT</string>
-			</code>.  Here is an extract with some feature calls using 
+			</code>.  Here is an extract with some feature calls using
 			<code>
 				<string>acc</string>
 			</code> as their target:
 		</paragraph>
-<code_block>acc.open ("Jill")
+		<code_block>acc.open ("Jill")
 acc.deposit (5000)
 if acc.may_withdraw (3000) then
 	acc.withdraw (3000)
 	print (acc.balance)
 end
 </code_block>
-		<paragraph>These feature calls use dot notation, of the form 
+		<paragraph>These feature calls use dot notation, of the form
 			<code>
 				<string>target</string>
-			</code> 
+			</code>
 			<span>
 				<code>
 					<keyword>.</keyword>
 				</code>
-			</span> 
+			</span>
 			<code>
 				<string>feature_name</string>
 			</code>, possibly followed by a list of arguments in parentheses.  Features are of two kinds:
 		</paragraph>
 		<list ordered="false">
 			<item>
-				<bold>Routines</bold>, such as 
+				<bold>Routines</bold>, such as
 				<code>
 					<string>open</string>
-				</code>, 
+				</code>,
 				<code>
 					<string>deposit</string>
-				</code>, 
+				</code>,
 				<code>
 					<string>may_withdraw</string>
-				</code>, 
+				</code>,
 				<code>
 					<string>withdraw</string>
-				</code>, represent computations applicable to instances of the class.  
+				</code>, represent computations applicable to instances of the class.
 			</item>
 			<item>
-				<bold>Attributes</bold> represent data items associated with these instances.  
+				<bold>Attributes</bold> represent data items associated with these instances.
 			</item>
 		</list>
-		<paragraph>Routines are further divided into 
-			<bold>procedures</bold> (commands, which do not return a value) and 
-			<bold>functions</bold> (queries, returning a value).  Here 
+		<paragraph>Routines are further divided into
+			<bold>procedures</bold> (commands, which do not return a value) and
+			<bold>functions</bold> (queries, returning a value).  Here
 			<code>
 				<string>may_withdraw</string>
-			</code> is a function returning a boolean; the other three-routines called are procedures.  
+			</code> is a function returning a boolean; the other three-routines called are procedures.
 		</paragraph>
 		<info>A note on syntax: you may separate instructions by semicolons, and indeed you should when, as on the next-to-last line of the example, two or more instructions appear on a line.  But the language's syntax has been designed so that the semicolon is almost always
-			<span> optional</span>, regardless of the layout.  Indeed the practice is to omit it between instructions or declarations on separate lines, as this results in lighter, clearer software texts.  
+			<span> optional</span>, regardless of the layout.  Indeed the practice is to omit it between instructions or declarations on separate lines, as this results in lighter, clearer software texts.
 		</info>
-		<paragraph>In class 
+		<paragraph>In class
 			<code>
 				<string>ACCOUNT</string>
-			</code>, is feature 
+			</code>, is feature
 			<code>
 				<string>balance</string>
-			</code> an attribute, or is it a function with no argument? The above extract of the client class 
+			</code> an attribute, or is it a function with no argument? The above extract of the client class
 			<code>
 				<string>X</string>
-			</code> doesn't say, and this ambiguity is intentional.  A client of 
+			</code> doesn't say, and this ambiguity is intentional.  A client of
 			<code>
 				<string>ACCOUNT</string>
-			</code> must not need to know how class 
+			</code> must not need to know how class
 			<code>
 				<string>ACCOUNT</string>
-			</code>delivers an account's balance when requested: by looking up a field present in each account object, or by calling a function that computes the balance from other fields.  Choosing between these techniques is the business of class 
+			</code>delivers an account's balance when requested: by looking up a field present in each account object, or by calling a function that computes the balance from other fields.  Choosing between these techniques is the business of class
 			<code>
 				<string>ACCOUNT</string>
-			</code>, not anybody else's.  Because such implementation choices are often changed over the lifetime of a project, it is essential to protect clients against their effects.  This is known as the 
-			<bold>Uniform Access Principle</bold>, stating that the choice between representing a property through memory (an attribute) or through an algorithm (function) shall not affect how clients use it.  
+			</code>, not anybody else's.  Because such implementation choices are often changed over the lifetime of a project, it is essential to protect clients against their effects.  This is known as the
+			<bold>Uniform Access Principle</bold>, stating that the choice between representing a property through memory (an attribute) or through an algorithm (function) shall not affect how clients use it.
 		</paragraph>
-		<paragraph>So much for how client classes will typically use 
+		<paragraph>So much for how client classes will typically use
 			<code>
 				<string>ACCOUNT.  </string>
-			</code>  Below is a first sketch of how class 
+			</code>  Below is a first sketch of how class
 			<code>
 				<string>ACCOUNT</string>
-			</code>itself might look.  Line segments beginning with 
+			</code>itself might look.  Line segments beginning with
 			<code>
 				<comment>--</comment>
-			</code> are comments.  The class includes two 
+			</code> are comments.  The class includes two
 			<code>
 				<keyword>feature</keyword>
-			</code> clauses, introducing its features.  The first begins with just the keyword 
+			</code> clauses, introducing its features.  The first begins with just the keyword
 			<code>
 				<keyword>feature</keyword>
-			</code>, without further qualification; this means that the features declared in this clause are available (or "exported") to all clients of the class.  The second clause is introduced by 
+			</code>, without further qualification; this means that the features declared in this clause are available (or "exported") to all clients of the class.  The second clause is introduced by
 			<code>
 				<keyword>feature</keyword>
 			</code> {
 			<code>
 				<string>NONE</string>
-			</code>} to indicate that the feature that follows, called 
+			</code>} to indicate that the feature that follows, called
 			<code>
 				<string>add</string>
-			</code>, is available to no client.  What appears between the braces is a list of client classes to which the corresponding features are available; 
+			</code>, is available to no client.  What appears between the braces is a list of client classes to which the corresponding features are available;
 			<code>
 				<string>NONE</string>
-			</code> is a special class of the Kernel Library, which has no instances, so that 
+			</code> is a special class of the Kernel Library, which has no instances, so that
 			<code>
 				<string>add</string>
-			</code> is in effect a secret feature, available only locally to the other routines of class 
+			</code> is in effect a secret feature, available only locally to the other routines of class
 			<code>
 				<string>ACCOUNT</string>
-			</code>.  So in a client class such as 
+			</code>.  So in a client class such as
 			<code>
 				<string>X</string>
-			</code>, the call 
+			</code>, the call
 			<code>
 				<string>acc</string>
 			</code>
-			<span>.  </span> 
+			<span>.  </span>
 			<code>
 				<string>add</string>
 			</code> (
 			<code>
 				<string>-3000</string>
-			</code> ) would be invalid.  
+			</code> ) would be invalid.
 		</paragraph>
-<code_block>class ACCOUNT 
+		<code_block>class ACCOUNT
 
 feature
 
@@ -244,157 +240,157 @@ feature {NONE}
 
 end -- class ACCOUNT
 </code_block>
-		<paragraph>Let us examine the features in sequence.  The 
+		<paragraph>Let us examine the features in sequence.  The
 			<code>
 				<keyword>is</keyword>
-			</code> 
+			</code>
 			<code>
 				<string>...</string>
-			</code> 
+			</code>
 			<code>
 				<keyword>do</keyword>
-			</code> 
+			</code>
 			<code>
 				<string>...</string>
-			</code> 
+			</code>
 			<code>
 				<keyword>end</keyword>
-			</code> distinguishes routines from attributes.  So here the class has implemented 
+			</code> distinguishes routines from attributes.  So here the class has implemented
 			<code>
 				<string>balance</string>
-			</code> as an attribute, although, as noted, a function would also have been acceptable.  Feature 
+			</code> as an attribute, although, as noted, a function would also have been acceptable.  Feature
 			<code>
 				<string>owner</string>
-			</code> is also an attribute.  
+			</code> is also an attribute.
 		</paragraph>
-		<paragraph>The language definition guarantees automatic initialization, so that the initial balance of an account object will be zero after a creation instruction.  Each type has a default initial value: zero for 
+		<paragraph>The language definition guarantees automatic initialization, so that the initial balance of an account object will be zero after a creation instruction.  Each type has a default initial value: zero for
 			<code>
 				<string>INTEGER</string>
-			</code> and 
+			</code> and
 			<code>
 				<string>REAL</string>
-			</code>, false for 
+			</code>, false for
 			<code>
 				<string>BOOLEAN</string>
-			</code>, null character for 
+			</code>, null character for
 			<code>
 				<string>CHARACTER</string>
-			</code>, and a void reference for reference types.  The class designer may also provide clients with different initialization options, as will be seen below in a revised version of this example.  
+			</code>, and a void reference for reference types.  The class designer may also provide clients with different initialization options, as will be seen below in a revised version of this example.
 		</paragraph>
-		<paragraph>The other public features, 
+		<paragraph>The other public features,
 			<code>
 				<string>withdraw deposit, open, </string>
-			</code> and 
+			</code> and
 			<code>
 				<string>may_withdraw</string>
-			</code> are straight-forward routines.  The special entity 
+			</code> are straight-forward routines.  The special entity
 			<code>
 				<string>Result</string>
-			</code>, used in 
+			</code>, used in
 			<code>
 				<string>may_withdraw</string>
-			</code>, denotes the function result; it is initialized on function entry to the default value of the function's result type.  You may only use 
+			</code>, denotes the function result; it is initialized on function entry to the default value of the function's result type.  You may only use
 			<code>
 				<string>Result</string>
-			</code> in functions.  
+			</code> in functions.
 		</paragraph>
-		<paragraph>The secret procedure 
+		<paragraph>The secret procedure
 			<code>
 				<string>add</string>
-			</code> serves for the implementation of the public procedures 
+			</code> serves for the implementation of the public procedures
 			<code>
 				<string>deposit</string>
-			</code> and 
+			</code> and
 			<code>
 				<string>withdraw</string>
-			</code>; the designer of 
+			</code>; the designer of
 			<code>
 				<string>ACCOUNT</string>
-			</code> judged it too general to be exported by itself.  The clause 
+			</code> judged it too general to be exported by itself.  The clause
 			<code>
 				<keyword>is</keyword>
-			</code> 
+			</code>
 			<code>
 				<string>1000</string>
-			</code> introduces 
+			</code> introduces
 			<code>
 				<string>minimum_balance</string>
-			</code> as a constant attribute, which will not occupy any space in instances of the class; in contrast, every instance has a field for every non-constant attribute such as 
+			</code> as a constant attribute, which will not occupy any space in instances of the class; in contrast, every instance has a field for every non-constant attribute such as
 			<code>
 				<string>balance</string>
-			</code>.  
+			</code>.
 		</paragraph>
-		<paragraph>In Eiffel's object-oriented programming style any operation is relative to a certain object.  A client invoking the operation specifies this object by writing the corresponding entity on the left of the dot, as 
+		<paragraph>In Eiffel's object-oriented programming style any operation is relative to a certain object.  A client invoking the operation specifies this object by writing the corresponding entity on the left of the dot, as
 			<code>
 				<string>acc</string>
-			</code> in 
+			</code> in
 			<code>
 				<string>acc</string>
 			</code>
-			<span>.  </span> 
+			<span>.  </span>
 			<code>
 				<string>open</string>
 			</code> (
 			<code>
 				<string>"Jill"</string>
-			</code> ).  Within the class, however, the "current" instance to which operations apply usually remains implicit, so that unqualified feature names, such as 
+			</code> ).  Within the class, however, the "current" instance to which operations apply usually remains implicit, so that unqualified feature names, such as
 			<code>
 				<string>owner</string>
-			</code> in procedure 
+			</code> in procedure
 			<code>
 				<string>open</string>
-			</code> or 
+			</code> or
 			<code>
 				<string>add</string>
 			</code> in
 			<code>
 				<string> deposit</string>
-			</code>, mean "the 
+			</code>, mean "the
 			<code>
 				<string>owner</string>
-			</code> attribute or 
+			</code> attribute or
 			<code>
 				<string>add</string>
-			</code> routine relative to the current instance".  
+			</code> routine relative to the current instance".
 		</paragraph>
-		<paragraph>If you need to denote the current object explicitly, you may use the special entity 
+		<paragraph>If you need to denote the current object explicitly, you may use the special entity
 			<code>
 				<string>Current</string>
-			</code>.  For example the unqualified occurrences of 
+			</code>.  For example the unqualified occurrences of
 			<code>
 				<string>add</string>
-			</code> appearing in the class text above are equivalent to 
+			</code> appearing in the class text above are equivalent to
 			<code>
 				<string>Current</string>
-			</code> 
-			<span>.  </span> 
+			</code>
+			<span>.  </span>
 			<code>
 				<string>add</string>
-			</code> .  
+			</code> .
 		</paragraph>
-		<paragraph>In some cases, infix or prefix notation will be more convenient than dot notation.  For example, if a class 
+		<paragraph>In some cases, infix or prefix notation will be more convenient than dot notation.  For example, if a class
 			<code>
 				<string>VECTOR</string>
-			</code> offers an addition routine, most people will feel more comfortable with calls of the form 
+			</code> offers an addition routine, most people will feel more comfortable with calls of the form
 			<code>
 				<string>w + v</string>
-			</code> than with the dot-notation call 
+			</code> than with the dot-notation call
 			<code>
 				<string>v</string>
-			</code> 
-			<span>.  </span> 
+			</code>
+			<span>.  </span>
 			<code>
 				<string>plus</string>
 			</code> (
 			<code>
 				<string>w</string>
-			</code> ).  To make this possible it suffices to give the routine a name of the form 
+			</code> ).  To make this possible it suffices to give the routine a name of the form
 			<code>
 				<keyword>infix</keyword>
-			</code>  "+" rather than 
+			</code>  "+" rather than
 			<code>
 				<string>plus</string>
-			</code>; internally, however, the operation is still a normal routine call.  Prefix operators are similarly available.  
+			</code>; internally, however, the operation is still a normal routine call.  Prefix operators are similarly available.
 		</paragraph>
 		<paragraph>The above simple example has shown the basic structuring mechanism of the language: the class.  A class describes objects accessible to clients through an official interface comprising some of the class features.  Features are implemented as attributes or routines; the implementation of exported features may rely on other, secret ones.  </paragraph>
 	</paragraph></document>

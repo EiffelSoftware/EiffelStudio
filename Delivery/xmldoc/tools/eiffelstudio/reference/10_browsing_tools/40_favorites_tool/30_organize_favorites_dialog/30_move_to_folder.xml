@@ -1,9 +1,6 @@
 <document title="Move to Folder command" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Move to Folder command
-		</heading>
 		<paragraph>The Move to Folder command 
 			<image>
 				<url>/images/eiffelstudio/browsing_tools/favorites_dialog_move_to.png</url>
@@ -29,12 +26,11 @@
 		</tip>
 		<seealso>
 			<bold>See Also</bold>
-			<line_break></line_break>
+			<line_break/>
 			<link>
 				<url>../10_favorites_tree.xml</url>
 				<label>Favorites tree</label>
 			</link>
-			<line_break></line_break>
+			<line_break/>
 		</seealso>
-	</paragraph>
-</document>
+	</paragraph></document>

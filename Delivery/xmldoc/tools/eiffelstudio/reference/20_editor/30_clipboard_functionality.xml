@@ -1,9 +1,6 @@
 <document title="Clipboard functionality" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Clipboard functionality
-		</heading>
 		<paragraph>EiffelStudio editor provides common clipboard functionality, i.e. Cut, Copy and Paste commands.</paragraph>
 		<list ordered="false">
 			<item>
@@ -42,5 +39,4 @@
 				</paragraph>
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

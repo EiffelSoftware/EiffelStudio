@@ -1,29 +1,25 @@
 <document title="Iconifying and restoring a cluster" output="studio">
-	<meta_data >
-		<help >
-			<meta >
-				<meta_content >Cluster,Iconify</meta_content>
-				<name >MS-HKWD</name>
+	<meta_data>
+		<help>
+			<meta>
+				<meta_content>Cluster,Iconify</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
-			<meta >
-				<meta_content >Cluster,Restore</meta_content>
-				<name >MS-HKWD</name>
+			<meta>
+				<meta_content>Cluster,Restore</meta_content>
+				<name>MS-HKWD</name>
 			</meta>
 		</help>
 	</meta_data>
-	<paragraph >
-		<heading >
-			<size >1</size>Iconifying and restoring a cluster
-		</heading>
+	<paragraph>
 		<list ordered="false">
-			<item >If you do not want to hide the cluster, only its contents, iconify it by double clicking on the cluster label. Double clicking it again returns the cluster to its normal state.</item>
+			<item>If you do not want to hide the cluster, only its contents, iconify it by double clicking on the cluster label. Double clicking it again returns the cluster to its normal state.</item>
 		</list>
-		<tip >
-			<bold >Tip</bold>: If the entire cluster is of no relevance to your diagram, 
-			<link >
-				<url >../20_altering_the_system/40_remove_from_system.xml</url>
-				<label >hide it from the view</label>
+		<tip>
+			<bold>Tip</bold>: If the entire cluster is of no relevance to your diagram,
+			<link>
+				<url>../20_altering_the_system/40_remove_from_system.xml</url>
+				<label>hide it from the view</label>
 			</link> altogether.
 		</tip>
-	</paragraph>
-</document>
+	</paragraph></document>

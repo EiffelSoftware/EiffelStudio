@@ -1,13 +1,10 @@
 <document title="EiffelStudio" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>EiffelStudio
-		</heading>
 		<paragraph>Type: Tool
-			<line_break></line_break> Platform: Any
-			<line_break></line_break> Version: 5.0
-			<line_break></line_break> Availability: Basic Package
+			<line_break/> Platform: Any
+			<line_break/> Version: 5.0
+			<line_break/> Availability: Basic Package
 		</paragraph>
 		<paragraph>See:</paragraph>
 		<list ordered="false">
@@ -36,5 +33,4 @@
 				</link>  
 			</item>
 		</list>
-	</paragraph>
-</document>
+	</paragraph></document>

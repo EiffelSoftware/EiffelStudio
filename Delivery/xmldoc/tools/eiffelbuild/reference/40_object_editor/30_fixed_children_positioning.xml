@@ -3,19 +3,16 @@
 		<help>
 			<toc>
 				<envision_pseudo_name>10</envision_pseudo_name>
-				<envision_location>Developing With ENViSioN!\Using ENViSioN! within Visual Studio.Net\Adding a New Project\Advanced GUI Project Wizard\Interface Construction Page\Reference\Object editor</envision_location>
+				<envision_location>Eiffel ENViSioN!\Developing with Eiffel ENViSioN!\Adding a New Project\Advanced GUI Project Wizard\Interface Construction Page\Reference\Object editor</envision_location>
 			</toc>
 		</help>
 	</meta_data>
 	<paragraph>
-		<heading>
-			<size>1</size>Positioning fixed children
-		</heading>
-		<paragraph>If the current 
+		<paragraph>If the current
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> in the object editor is of type EV_FIXED, 
+			</link> in the object editor is of type EV_FIXED,
 			<image>
 				<url>/images/eiffelbuild/screenshots/position_children_button.png</url>
 			</image> will be contained in the object editor. Click this button, to display the following window:
@@ -51,10 +48,9 @@
 				<bold>Grid size</bold> - The spacing between grid elements in pixels.
 			</item>
 		</list>
-		<paragraph>When you have finished manipulating the children of the table, click 
+		<paragraph>When you have finished manipulating the children of the table, click
 			<image>
 				<url>/images/eiffelbuild/screenshots/done_button.png</url>
 			</image>to close the dialog.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -1,9 +1,6 @@
 <document title="Introduction" output="studio">
 	<meta_data/>
 	<paragraph>
-		<heading>
-			<size>1</size>Introduction
-		</heading>
 		<paragraph>
 			<image>
 				<url>../../../../../images/eiffelstudio/debugger/object_tool.png</url>
@@ -37,5 +34,4 @@
 				<url>../../../../../images/eiffelstudio/icons/icon_expand_string_color.gif</url>
 			</image> can give an expanded display of the string relative to an object, by dropping the object onto the button. Use it if an object has a very long string representation or a string representation that contains carriage returns, for example.
 		</paragraph>
-	</paragraph>
-</document>
+	</paragraph></document>

@@ -263,8 +263,8 @@ feature {NONE} -- Constants
 	Is_free_version: BOOLEAN is False
 			-- Is this a free version?
 
-	Beta_limit: INTEGER is 1028297106
-			-- Hard coded time which corresponds to August 1st 2002.
+	Beta_limit: INTEGER is 1030889106
+			-- Hard coded time which corresponds to end of August 2002.
 
 feature {NONE} -- Externals
 

@@ -3,7 +3,7 @@
 // typelib filename: <could not determine filename>
 
 [
-  uuid(FCD94257-1E25-39A6-89C3-E0C5D02870B1),
+  uuid(779B0AC4-D5DF-33BA-B5AF-7E54240BC6C9),
   version(0.1)
 ]
 library AssemblyManagerInterface
@@ -18,13 +18,14 @@ library AssemblyManagerInterface
 
     [
       odl,
-      uuid(4AA92D94-873F-381F-A476-3476DD816448),
+      uuid(232A7E85-2357-386E-A37D-1D957E41AFFD),
       version(1.0),
-      oleautomation 
+      oleautomation
 
     ]
     interface IAssemblyManagerInterface : IUnknown {
         HRESULT _stdcall ImportedAssemblies([out, retval] SAFEARRAY(BSTR)* pRetVal);
+        HRESULT _stdcall LastImportationSuccessful([out, retval] VARIANT_BOOL* pRetVal);
         HRESULT _stdcall AssemblyLocation(
                         [in] BSTR Name, 
                         [in] BSTR Version, 
@@ -37,10 +38,11 @@ library AssemblyManagerInterface
                         [in] BSTR Culture, 
                         [in] BSTR PublicKey, 
                         [out, retval] SAFEARRAY(BSTR)* pRetVal);
+        HRESULT _stdcall CleanAssemblies();
     };
 
     [
-      uuid(AFA79485-2EE0-3DF5-90C4-DEB77902F511),
+      uuid(4EC8298C-C855-3CE4-9E1C-353BEF121D5E),
       version(1.0)
     ]
     coclass AssemblyManagerInterface {

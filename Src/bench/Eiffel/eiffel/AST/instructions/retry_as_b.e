@@ -14,7 +14,7 @@ inherit
 
 	INSTRUCTION_AS_B
 		redefine
-			type_check, byte_node
+			byte_node
 		end
 
 feature -- Type check and byte code
@@ -25,7 +25,7 @@ feature -- Type check and byte code
 			!!Result
 		end;
 
-	type_check is
+	perform_type_check is
 			-- Type check a retry instruction
 		local
 			vxrt: VXRT;

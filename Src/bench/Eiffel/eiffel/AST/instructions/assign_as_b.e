@@ -15,8 +15,7 @@ inherit
 
 	INSTRUCTION_AS_B
 		redefine
-			type_check, byte_node, 
-			fill_calls_list, replicate
+			byte_node, fill_calls_list, replicate
 		end
 
 feature -- Attributes
@@ -27,9 +26,9 @@ feature -- Attributes
 	source: EXPR_AS_B;
 			-- Source of the assignment
 
-feature -- Type check, byte code production, dead_code_removal
+feature {NONE} -- Type check, byte code production, dead_code_removal
 
-	type_check is
+	perform_type_check is
 			-- Type check an assignment
 		local
 			source_type, target_type: TYPE_A;

@@ -16,7 +16,7 @@ creation
 feature -- Initialization
 
 	make (dbm: DATABASE_MANAGER [DATABASE]) is
-			-- Create and set `dbm' to manage database
+			-- Set `dbm' to manage database
 			-- interactions.
 		require
 			database_manager_not_void: dbm /= Void
@@ -29,16 +29,17 @@ feature -- Initialization
 
 feature -- Connection
 
-	set_connection_information (a_name, a_psswd, data_source: STRING) is
-			-- Try to connect the database
+	set_connection_information (user_name, password, data_source: STRING) is
+			-- Set database connection information: `user_name', `password'
+			-- and `data_source'.
 		require
-			not_void: a_name /= Void and a_psswd /= Void
+			not_void: user_name /= Void and password /= Void and data_source /= Void
 		do
-			database_manager.set_connection_information (a_name, a_psswd, data_source)
+			database_manager.set_connection_information (user_name, password, data_source)
 		end
 
 	establish_connection is
-			-- Establish Connection
+			-- Establish connection to database.
 		do
 			database_manager.establish_connection
 		ensure
@@ -46,6 +47,7 @@ feature -- Connection
 		end
 
 	disconnect is
+			-- Disconnect from database.
 		require
 			is_connected: is_connected
 		do

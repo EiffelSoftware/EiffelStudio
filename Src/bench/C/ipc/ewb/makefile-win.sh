@@ -14,16 +14,16 @@ LIBDIR = ..\shared
 LIBIDR = $(TOP)\idrs
 
 # Files used to build the ewb
-SRC = proto.c eproto.c eif_in.c eif_out.c init.c dumped.c
+SRC = ewb_proto.c eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c
 
 # Derived object file names
 OBJECTS = \
-	dumped.$obj \
-	proto.$obj \
+	ewb_dumped.$obj \
+	ewb_proto.$obj \
 	eproto.$obj \
 	eif_in.$obj \
 	eif_out.$obj \
-	init.$obj
+	ewb_init.$obj
 
 .c.$obj:
 	$(CC) -c $(JCFLAGS) $<

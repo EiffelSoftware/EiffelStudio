@@ -77,16 +77,16 @@ all:: .FORCE_DEPEND
 # Start of Jmakefile
 
 # Files used to build the daemon
-SRC = proto.c eproto.c eif_in.c eif_out.c init.c dumped.c
+SRC = ewb_proto.c eproto.c eif_in.c eif_out.c ewb_init.c ewb_dumped.c
 
 # Derived object file names
 OBJ = \
-	proto.o \
+	ewb_proto.o \
 	eproto.o \
 	eif_in.o \
 	eif_out.o \
-	init.o \
-	dumped.o 
+	ewb_init.o \
+	ewb_dumped.o 
 
 # Where shared archive is located (path and name)
 LIBDIR = ../shared

@@ -141,7 +141,7 @@ feature {NONE}
 				cdfd_not_freed: not is_cdfd_freed
 			end;
 			c_free_cdfd (cdfd);
-			cdfd := null_pointer
+			cdfd := default_pointer
 		ensure then
 			is_cdfd_freed: is_cdfd_freed
 		end;
@@ -149,7 +149,7 @@ feature {NONE}
 	is_cdfd_freed: BOOLEAN is
 			 -- Is `cdfd' freed ?
 		do
-			Result := null_pointer = cdfd
+			Result := default_pointer = cdfd
 		end;
 
 feature {NONE} -- External features

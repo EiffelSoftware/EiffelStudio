@@ -36,7 +36,7 @@ feature -- Access
 		end;
 
 	width: INTEGER is
-			-- New widget of window
+			-- New width of window
 		do
 			Result := c_event_width (handle)
 		end

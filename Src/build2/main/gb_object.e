@@ -243,33 +243,13 @@ feature {GB_OBJECT_HANDLER, GB_COMMAND_DELETE_OBJECT, GB_OBJECT, GB_COMMAND_ADD_
 			unparent_ev_object (object)
 			unparent_ev_object (display_object)
 
-			unparent_layout_item
+			layout_item.unparent
 			
 				-- Notify the system that we have modified something.
 			system_status.enable_project_modified
 			command_handler.update
 		ensure
 			layout_item_parent_void: layout_item.parent = Void
-		end
-		
-feature {GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementation
-		
-	unparent_layout_item is
-			-- Remove layout item representation from its parent.
-		local
-			parent_item: EV_TREE_NODE_LIST
-		do
-				-- Remove `layout_item' from its parent.
-			parent_item ?= layout_item.parent
-			if parent_item /= Void then
-				check
-						-- No longer perform this check, as window object layout items
-						-- will have no parent unless they are currently being edited.
-					--parent_item_not_void: parent_item /= Void
-					--item_contained_in_parent: parent_item.has (layout_item)
-				end
-				parent_item.prune (layout_item)			
-			end
 		end
 
 feature {GB_OBJECT_HANDLER} -- Status setting

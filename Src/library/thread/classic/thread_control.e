@@ -40,6 +40,19 @@ feature -- Basic operations
 			thread_join (term)
 		end
 
+feature -- Sleep
+
+	sleep (nanoseconds: INTEGER_64) is
+			-- Suspend thread execution for interval specified in
+			-- `nanoseconds' (1 nanosecond = 10^(-9) second).
+		require
+			non_negative_nanoseconds: nanoseconds >= 0
+		external
+			"C | %"eif_threads.h%""
+		alias
+			"eif_thr_sleep"
+		end
+
 feature {NONE} -- Implementation
 
 	terminated: BOOLEAN

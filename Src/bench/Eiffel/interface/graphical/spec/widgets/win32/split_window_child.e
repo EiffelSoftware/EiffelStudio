@@ -26,17 +26,17 @@ feature {NONE} -- Initialization
 	make (a_name: STRING; a_parent: SPLIT_WINDOW) is
 			-- Initialize Current.
 		do
+			parent := a_parent
 			form_make (a_name, a_parent);
 			a_parent.implementation.add_child (Current);
-			parent := a_parent
 		end;
 
 	make_unmanaged (a_name: STRING; a_parent: SPLIT_WINDOW) is
 			-- Initialize Current.
 		do
+			parent := a_parent
 			form_make_unmanaged (a_name, a_parent);
 			a_parent.implementation.add_child (Current);
-			parent := a_parent
 		end
 
 feature -- Access

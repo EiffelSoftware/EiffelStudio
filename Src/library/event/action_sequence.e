@@ -6,11 +6,11 @@ indexing
 		%An action is a procedure of ANY class that takes EVENT_DATA. %
 		%When `call' is called the actions in the list will be executed %
 		%in order stating at `first'. %
-		%An action may call `abort' which will cause `call' to stop exectuing %
-		%actions in the sequence. (Untill the next call to `call'). %
-		%Decendants may redefine `initialize' to arrange for `call' to %
+		%An action may call `abort' which will cause `call' to stop executing %
+		%actions in the sequence. (Until the next call to `call'). %
+		%Descendants may redefine `initialize' to arrange for `call' to %
 		%be called by an event source. %
-		%Use `block', `pause', `flush' and `resume' to change the behaviour %
+		%Use `block', `pause', `flush' and `resume' to change the behavior %
 		%of `call'.%
 		%eg. %
 		% birthday_data: TUPLE [INTEGER, STRING] -- (age, name) %
@@ -20,7 +20,7 @@ indexing
 		% buy_gift (age: INTEGER, name, gift, from: STRING) is ...%
 		% birthday_actions.extend (~send_card (?, ?, %"Sam%") %
 		% birthday_actions.extend (~buy_gift (?, ?, %"Wine%", %"Sam%") %
-		% birthday_actions.call ([35, %"Bretrand%"]) %
+		% birthday_actions.call ([35, %"Bertrand%"]) %
 		% causes call to: send_card (35, %"Bertrand%", %"Sam%") %
 		%                 buy_gift (35, %"Bertrand%", %"Wine%", %"Sam%")"
 
@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 
 	make (a_name: STRING; some_event_data_names: ARRAY [STRING]) is
 			-- Create with `a_name' and
-			-- `some_event_data_names' decribing each event datum.
+			-- `some_event_data_names' describing each event datum.
 			-- Begin in `Normal_state'.
 		require
 			name_not_void: a_name /= Void
@@ -209,7 +209,7 @@ feature -- Status setting
 		end
 
 	flush is
-			-- Disgard any buffered `call's.
+			-- Discard any buffered `call's.
 		do
 			debug ("EVENT_TRACE") print (name_internal + ".flush%N") end
 			call_buffer.wipe_out
@@ -227,7 +227,7 @@ feature -- Status report
 	Blocked_state: INTEGER is 3
 
 	is_initialized: BOOLEAN
-			-- Initiailze has been called
+			-- Initialize has been called
 
 	call_is_underway: BOOLEAN is
 			-- Is `call' currently being executed?
@@ -369,6 +369,9 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.6  1999/10/27 18:01:51  oconnor
+--| spelling
+--|
 --| Revision 1.5  1999/10/27 17:57:13  oconnor
 --| merged instructions in indexing clause
 --|

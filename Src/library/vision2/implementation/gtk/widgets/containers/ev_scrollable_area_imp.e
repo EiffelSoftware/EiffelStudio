@@ -17,6 +17,7 @@ inherit
 	EV_CONTAINER_IMP
 		redefine
 			add_child,
+			remove_child,
 			child_added,
 			is_child
 		end
@@ -101,9 +102,19 @@ feature -- Element change
 			-- We redefine this feature because, there
 			-- is 2 ways to add a child in a scrollable
 			-- window depending on whether the child is scrollable
-			-- or not.
+			-- or not so we can not use directly `gtk_container_add'.
 		do
 			c_gtk_scrollable_area_add (widget, child_imp.widget)
+		end
+
+	remove_child (child_imp: EV_WIDGET_IMP) is	
+			-- Remove the given child from the children of
+			-- the container.
+			-- Redefined because we do not have any
+			-- resizing options in an EV_SCROLLABLE_AREA.
+		do
+			-- Remove the child from the current container. 			
+			gtk_container_remove (GTK_CONTAINER (widget), child_imp.widget)
 		end
 
 	set_horizontal_step (value: INTEGER) is

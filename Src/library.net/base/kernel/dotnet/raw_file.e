@@ -178,15 +178,15 @@ feature -- Input
 	read_character, readchar is
 			-- Read a new character.
 			-- Make result available in `last_character'.
-		local 
-		  	a_code: INTEGER 
-		do 
-		  	a_code := reader.read 
-		  	if a_code = - 1 then 
-				internal_end_of_file := True 
-		  	else 
-				last_character := a_code.to_character 
-		  	end 
+		local
+		  	a_code: INTEGER
+		do
+		  	a_code := reader.read
+		  	if a_code = - 1 then
+				internal_end_of_file := True
+		  	else
+				last_character := a_code.to_character
+		  	end
 		end
 	
 	read_data (p: POINTER; nb_bytes: INTEGER) is

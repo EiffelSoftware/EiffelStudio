@@ -1281,16 +1281,16 @@ feature -- Input
 			-- Read a new character.
 			-- Make result available in `last_character'.
 		require else
-			is_readable: file_readable			
-		local 
-		  	a_code: INTEGER 
-		do 
-		  	a_code := reader.read 
-		  	if a_code = - 1 then 
-				internal_end_of_file := True 
-		  	else 
-				last_character := a_code.to_character 
-		  	end 
+			is_readable: file_readable
+		local
+		  	a_code: INTEGER
+		do
+		  	a_code := reader.read
+		  	if a_code = - 1 then
+				internal_end_of_file := True
+		  	else
+				last_character := a_code.to_character
+		  	end
 		end
 
 	read_integer, readint is

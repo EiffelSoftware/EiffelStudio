@@ -38,28 +38,31 @@ feature -- Enlarging
 					if l_bool_val.boolean_value then
 						Result := right
 					else
-							-- Expression will always be False. We simply
-							-- return computation that yields to False value.
-							-- case of: False and expression
-						create {CONSTANT_B} Result.make (l_bool_val)
+							-- Expression will always be False.
+							-- case of: False_expression and XXX
+							--       or False_expression and then XXX
+						create {BOOL_CONST_B} Result.make (False)
 					end
 				else
 					l_bool_val := right.evaluate
 					if l_bool_val.is_boolean then
 						if l_bool_val.boolean_value or not is_and then
-								-- Right expression is always true, we only need to return
-								-- left expression
+								-- case of: XXX and True_expression
+								--       or XXX and then True_expression
+								--       or XXX and then False_expression
+								-- We always need to return left-hand side, even
+								-- for third case because `and then' implies a certain
+								-- order of evaluation.
 							Result := left
 						else
 							check
 								valid_simplification: not l_bool_val.boolean_value and is_and
 							end
-								-- Expression will always be False. We simply
-								-- return computation that yields to False value.
-								-- case of: expression and False
+								-- Expression will always be False.
+								-- case of: XXX and False_expression
 								-- Note: you cannot do such an optimization with a `and then'
-								-- statement as the order matter.
-							create {CONSTANT_B} Result.make (l_bool_val)
+								-- statement as the order matter (see above comments).
+							create {BOOL_CONST_B} Result.make (False)
 						end
 					else
 						l_is_normal := True

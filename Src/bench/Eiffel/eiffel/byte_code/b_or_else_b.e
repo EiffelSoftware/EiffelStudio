@@ -35,10 +35,10 @@ feature -- Enlarging
 				l_bool_val := left.evaluate
 				if l_bool_val.is_boolean then
 					if l_bool_val.boolean_value then
-							-- Expression will always be True. We simply
-							-- return computation that yields to True value.
+							-- Expression will always be True.
 							-- case of: True_expression or XXX
-						Result := left
+							--       or True_expression or else XXX
+						create {BOOL_CONST_B} Result.make (True)
 					else
 						Result := right
 					end
@@ -46,22 +46,22 @@ feature -- Enlarging
 					l_bool_val := right.evaluate
 					if l_bool_val.is_boolean then
 						if not l_bool_val.boolean_value or not is_or then
+								-- case of: XXX or False_expression
+								--       or XXX or else False_expression
+								--       or XXX or else True_expression
+								-- We always need to return left-hand side, even for third
+								-- case because `or else' implies a certain order of
+								-- evaluation.
 							Result := left
 						else
-							create {CONSTANT_B} Result.make (l_bool_val)
-						end
-						if is_or then
-								-- Note: below optimization is only allowed with `or', not with `or else'
-								-- as the order matter in a `or else' statement.
-							l_bool_val := right.evaluate
-							if l_bool_val.is_boolean then
-									-- Expression will always be True. We simply
-									-- return computation that yields to True value.
-									-- case of: XXX or True_expression
-								Result := right
-							else
-								Result := left
+							check
+								valid_simplification: l_bool_val.boolean_value and is_or
 							end
+								-- Expression will always be True.
+								-- case of: XXX or True_expression
+								-- Note: you cannot do such an optimization with a `or else'
+								-- statement as the order matter (see above comments).
+							create {BOOL_CONST_B} Result.make (True)
 						end
 					else
 						l_is_normal := True

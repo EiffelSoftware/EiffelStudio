@@ -47,7 +47,7 @@ feature -- Enlarging
 				expr := expr.enlarged
 				l_val := expr.evaluate
 				if l_val.is_boolean then
-					create {CONSTANT_B} Result.make (l_val.unary_not)
+					create {BOOL_CONST_B} Result.make (not l_val.boolean_value)
 				else
 					if access /= Void then
 						access := access.enlarged

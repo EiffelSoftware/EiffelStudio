@@ -212,7 +212,7 @@ feature -- Code generation
 			if not Shared_include_queue.is_empty then
 				extern_declarations.generate_header_files (header_buffer)
 			end
-			header_file.put_string (header_buffer)
+			header_buffer.put_in_file (header_file)
 			header_file.close
 
 			if is_cpp then
@@ -223,7 +223,7 @@ feature -- Code generation
 			
 			create external_file.make_open_write (
 				full_file_name ("lib" + System.name + l_extension, final_mode))
-			external_file.put_string (buffer)
+			buffer.put_in_file (external_file)
 			external_file.close
 			
 				-- Clean allocated data.

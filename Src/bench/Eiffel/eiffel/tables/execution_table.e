@@ -365,8 +365,8 @@ feature -- C code generation
 			temp.putstring ("};%N")
 			temp.end_c_specific_code
 
-			frozen_file.put_string (buffer)
-			frozen_file.put_string (temp)
+			buffer.put_in_file (frozen_file)
+			temp.put_in_file (frozen_file)
 
 			frozen_file.close
 		end

@@ -222,7 +222,7 @@ feature -- Generation
 			buffer.end_c_specific_code
 
 			create pattern_file.make_c_code_file (workbench_file_name (Epattern));
-			pattern_file.put_string (buffer)
+			buffer.put_in_file (pattern_file)
 			pattern_file.close
 		end
 
@@ -314,7 +314,7 @@ feature -- Concurrent Eiffel
 			buffer.end_c_specific_code
 
 			create final_pattern_file.make_c_code_file (gen_file_name (True, Epattern))
-			final_pattern_file.put_string (buffer)
+			buffer.put_in_file (final_pattern_file)
 			final_pattern_file.close
 		end
 

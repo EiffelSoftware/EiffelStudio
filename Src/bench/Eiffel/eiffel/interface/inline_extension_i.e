@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 							create l_temp.make (32)
 							context.set_buffer (l_temp)
 							parameters.item.print_register
-							l_values.put (l_temp, i)
+							l_values.put (l_temp.as_string, i)
 							parameters.forth
 							i := i + 1
 						end

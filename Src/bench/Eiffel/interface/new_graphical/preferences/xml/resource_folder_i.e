@@ -69,7 +69,7 @@ feature -- Initialization
 					load_default_attributes (xml_data)
 				end
 			else
-				error_message := "does not exist%N"
+				error_message := " does not exist%N"
 				error_message.prepend (file_name)
 			end
 			if error_message /= Void then

@@ -43,24 +43,29 @@ feature -- Status setting
 			-- Set cursor to `new_type'.
 			-- This new type must be pre-defined
 		do
-			inspect new_type
-				when Arrow then
-					make_by_predefined_id (idc_arrow)
-				when Based_arrow_up then
-					make_by_predefined_id (idc_uparrow)
-				when Bottom_left_corner, Top_right_corner then
-					make_by_predefined_id (idc_sizenesw)
-				when Bottom_right_corner, top_left_corner then
-					make_by_predefined_id (idc_sizenwse)
-				when Clock, Watch then
-					make_by_predefined_id (idc_wait)
-				when Crosshair,Fleur then
-					make_by_predefined_id (idc_size)
-				when Sb_h_double_arrow then
-					make_by_predefined_id (idc_sizewe)
-				when Sb_v_double_arrow then
-					make_by_predefined_id (idc_sizens)
-				else
+			inspect
+				new_type
+			when Arrow then
+				make_by_predefined_id (idc_arrow)
+			when Based_arrow_up then
+				make_by_predefined_id (idc_uparrow)
+			when Bottom_left_corner, Top_right_corner then
+				make_by_predefined_id (idc_sizenesw)
+			when Bottom_right_corner, top_left_corner then
+				make_by_predefined_id (idc_sizenwse)
+			when Clock, Watch then
+				make_by_predefined_id (idc_wait)
+			when Crosshair,Fleur then
+				make_by_predefined_id (idc_size)
+			when Sb_h_double_arrow then
+				make_by_predefined_id (idc_sizewe)
+			when Sb_v_double_arrow then
+				make_by_predefined_id (idc_sizens)
+			else
+				make_by_predefined_id (idc_arrow)				
+			end
+			check
+				exists: exists
 			end
 			type := new_type
 		end

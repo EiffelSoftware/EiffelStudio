@@ -11,6 +11,7 @@
 */
 
 #include "timer.h"
+#include "config.h"
 #include "portable.h"
 
 #ifndef HAS_GETRUSAGE

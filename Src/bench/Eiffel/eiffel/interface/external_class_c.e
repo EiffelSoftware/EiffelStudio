@@ -813,7 +813,7 @@ feature {NONE} -- Implementation
 				if l_type_a /= Void then
 					create l_generics.make (1, 1)
 					l_generics.put (l_type_a, 1)
-					create {GEN_TYPE_A} Result.make (
+					create {NATIVE_ARRAY_TYPE_A} Result.make (
 						System.native_array_class.compiled_class.class_id, l_generics)				
 				end
 			else

@@ -1,11 +1,18 @@
 /*
 
- ######     #    ######           #####  #    #  #####   ######    ##    #####    ####            ####
- #          #    #                  #    #    #  #    #  #        #  #   #    #  #               #    #
- #####      #    #####              #    ######  #    #  #####   #    #  #    #   ####           #
- #          #    #                  #    #    #  #####   #       ######  #    #       #   ###    #
- #          #    #                  #    #    #  #   #   #       #    #  #    #  #    #   ###    #    #
- ######     #    #      #######     #    #    #  #    #  ######  #    #  #####    ####    ###     ####
+ ######    #    ######
+ #         #    #
+ #####     #    #####
+ #         #    #
+ #         #    #
+ ######    #    #      #######
+
+ #####  #    #  #####   ######    ##    #####    ####           ####
+   #    #    #  #    #  #        #  #   #    #  #              #    #
+   #    ######  #    #  #####   #    #  #    #   ####          #
+   #    #    #  #####   #       ######  #    #       #   ###   #
+   #    #    #  #   #   #       #    #  #    #  #    #   ###   #    #
+   #    #    #  #    #  ######  #    #  #####    ####    ###    ####
 
 	Thread management routines.
 
@@ -187,23 +194,19 @@ rt_public EIF_BOOLEAN eif_thr_mutex_trylock(EIF_MUTEX_TYPE a_mutex_pointer) {
 #endif /* EIF_THREADS */
 
 rt_public void eif_thr_panic(char *msg) {
-	printf("eif_thr_panic!\n");
-	print_err_msg(stderr,"%s\n",msg);
+	print_err_msg(stderr,"Thread panic! Following information may be completely incoherent\n");
+	panic(msg);
 	exit(0);
 }
 
 
-rt_public void eif_thr_efreeze(EIF_OBJ object) {
-	char *obj;
-
-	obj = efreeze(object);
-	if (!obj)
-		eif_thr_panic("cannot freeze\n");
+rt_public void eif_thr_freeze(EIF_OBJ object) {
+	if (!efreeze(eif_access(object))) {
+		if (!spfreeze(eif_access(object)))
+			eif_thr_panic("cannot freeze\n");
+	}
 }
 
-rt_public void eif_thr_eufreeze(char *object) {
-    eufreeze(object);
-}
 
 	/******************************/
 	/* class PROXY implementation */

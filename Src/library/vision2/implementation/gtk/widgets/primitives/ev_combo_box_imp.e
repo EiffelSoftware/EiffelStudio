@@ -29,7 +29,9 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create a combo-box with `par' as parent.
 		do
+			!!ev_children.make
 			widget := gtk_combo_new
+			show
 			entry_widget := c_gtk_combo_entry (widget)
 			list_widget := c_gtk_combo_list (widget)
 		end
@@ -234,14 +236,19 @@ feature {EV_LIST_ITEM} -- Implementation
 	add_item (item: EV_LIST_ITEM) is
 			-- Add `item' to the list
 		local
-			item_imp: EV_LIST_ITEM_IMP
+			item_imp: EV_LIST_ITEM_IMP 
+			s: ANY
 		do
 			item_imp ?= item.implementation
 			check
 				correct_imp: item_imp /= Void
 			end
 			ev_children.extend (item_imp)
-			c_gtk_add_list_item (widget, item_imp.widget)
+			s ?= item.text.to_c
+			gtk_combo_set_item_string (widget, item_imp.widget, $s)
+			gtk_widget_show (item_imp.widget)
+			gtk_container_add (list_widget, item_imp.widget)
+			--c_gtk_list_add_item (list_widget, item_imp.widget)
 		end
 
 feature {NONE} -- Implementation

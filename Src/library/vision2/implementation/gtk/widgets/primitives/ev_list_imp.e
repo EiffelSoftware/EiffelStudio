@@ -142,7 +142,8 @@ feature {EV_LIST_ITEM} -- Implementation
 				correct_imp: item_imp /= Void
 			end
 			ev_children.extend (item_imp)
-			c_gtk_add_list_item (widget, item_imp.widget)
+			gtk_container_add (widget, item_imp.widget)
+			--c_gtk_list_add_item (widget, item_imp.widget)
 		end
 
 end -- class EV_LIST_IMP

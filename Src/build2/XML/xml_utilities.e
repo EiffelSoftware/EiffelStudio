@@ -149,6 +149,8 @@ feature -- Access
 			-- `Result' provides access to all child_elements and XML character
 			-- data of `Current' referenced by their unique names.
 			-- Ignores `item'.
+		require
+			element_not_void: element /= Void
 		local
 			current_element, inner_element: XM_ELEMENT
 			current_data_element: XM_CHARACTER_DATA
@@ -209,6 +211,8 @@ feature -- Access
 				end
 				element.forth
 			end
+		ensure
+			result_not_void: Result /= Void
 		end
 		
 	all_child_element_names (element: XM_ELEMENT): ARRAYED_LIST [STRING] is
@@ -397,12 +401,14 @@ feature -- Access
 		do		
 			create namespace.make_default
 			create document.make
-			document.set_root_element (element)
+				-- If we do not twin the element, the parent is changed which
+				-- is a side effect that we do not wish.
+			document.set_root_element (element.deep_twin)
 			create last_string.make ("")
 			create formater.make
 			formater.set_output (last_string)
 			formater.process_document (document)
-
+			
 			create dialog
 			dialog.set_minimum_size (400, 600)
 			create vertical_box

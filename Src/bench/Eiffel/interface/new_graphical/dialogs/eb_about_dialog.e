@@ -170,7 +170,9 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (50)
 			if license.is_licensed then
-				Result := l_Registered + license.username + "%R%N%R%N"
+				if license.username /= Void then
+					Result := l_Registered + license.username + "%R%N%R%N"
+				end
 			else
 				Result := l_Unregistered_version
 			end
@@ -222,7 +224,7 @@ feature {NONE} -- Constant strings
 
 		end
 
-	l_Unregistered_version: STRING is "Unregistered version.%NPlease contact ISE on http://eiffel.com/forms/secure.html."
+	l_Unregistered_version: STRING is "Unregistered version.%NPlease contact ISE <sales@eiffel.com>."
 			-- User has not registered his version.
 
 	l_Registered: STRING is "Version registered to "

@@ -32,5 +32,5 @@
 					<label>Creating a function</label>
 				</link> using the feature wizard for more information.
 			</item>
-		</list><seealso><bold>See Also</bold><line_break></line_break><link><url>20_new_client_link.html</url><label>Creating client/supplier links</label></link><line_break></line_break><link><url>10_new_inheritance_link.html</url><label>Creating Inheritance links</label></link><line_break></line_break><link><url>/tools/eiffelstudio/reference/70_wizards_and_dialogs/30_dialogs/10_new_feature_dialog/00_introduction.html</url><label>Feature wizard</label></link></seealso>
+		</list><seealso><bold>See Also</bold><line_break></line_break><link><url>20_new_client_link.xml</url><label>Creating client/supplier links</label></link><line_break></line_break><link><url>10_new_inheritance_link.xml</url><label>Creating Inheritance links</label></link><line_break></line_break><link><url>/tools/eiffelstudio/reference/70_wizards_and_dialogs/30_dialogs/10_new_feature_dialog/00_introduction.xml</url><label>Feature wizard</label></link></seealso>
 	</paragraph></document>

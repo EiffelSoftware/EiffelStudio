@@ -2,7 +2,7 @@
 	<meta_data/>
 	<paragraph>
 		<paragraph>The environment should make it possible, for any project, to apply the elementary metrics in the following table, each with an associated unit and a one-identifier name. Each of the major divisions of the table starts with a raw metric, for example Classes, and, when appropriate, continues with selection criteria that yield derived metrics based on that raw metric, for example Deferred_classes.</paragraph>
-		<paragraph>The last column specifies the <link><url>70_scopes_scope_types.html</url><label>"basic scope types"</label></link> of the metric; this notion, discussed in more detail in a later section, denotes the set of scope types on which the metric will need to get its information directly from the software product (rather than being simply computed by adding the corresponding values on a scope''s constituents).</paragraph>
+		<paragraph>The last column specifies the <link><url>70_scopes_scope_types.xml</url><label>"basic scope types"</label></link> of the metric; this notion, discussed in more detail in a later section, denotes the set of scope types on which the metric will need to get its information directly from the software product (rather than being simply computed by adding the corresponding values on a scope''s constituents).</paragraph>
 		<table>
 			<row>
 				<cell>Basic Count</cell>

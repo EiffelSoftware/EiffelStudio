@@ -30,7 +30,7 @@
 		</heading>
 		<paragraph>Modification to all constant types is performed from the constants dialog, accessible from the 
 			<link>
-				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.html</url>
+				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.xml</url>
 				<label>main toolbar</label>
 			</link> via the 
 			<image> 
@@ -181,13 +181,13 @@
 		</heading>
 		<paragraph>The generation of an EiffelBuild project creates two constants classes, an interface class and an implementation class, named to match the setting from the 
 			<link>
-				<url>/tools/eiffelbuild/reference/80_project_settings/index.html</url>
+				<url>/tools/eiffelbuild/reference/80_project_settings/index.xml</url>
 				<label>project settings</label>
 			</link>. For example, if you have specified the name "constants" for the constants, two classes are generated, <code><class_name>CONSTANTS</class_name></code> and the implementation, <code><class_name>CONSTANTS_IMP</class_name></code>.
 		</paragraph>
 		<paragraph>By default, all constant values are hard coded into the implementation class, but it is possible to set these to be loaded from an external file upon execution of the generated system. To do this, the "Load constants from file" setting of the 
 			<link>
-				<url>/tools/eiffelbuild/reference/80_project_settings/index.html</url>
+				<url>/tools/eiffelbuild/reference/80_project_settings/index.xml</url>
 				<label>project settings</label>
 			</link> must be checked, which causes a file "constants.txt" to be generated, containing the definitions of all Integer an String constant values. As the system is executed, the values of these constants are loaded from the file, and by providing different versions of the file, at the time of deployment, multiple languages may be accounted for in your generated system.
 		</paragraph>
@@ -196,32 +196,32 @@
 		</heading>
 		<paragraph>Constants may be associated to properties of your 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>objects</label>
 			</link> via an 
 			<link>
-				<url>/tools/eiffelbuild/reference/40_object_editor/index.html</url>
+				<url>/tools/eiffelbuild/reference/40_object_editor/index.xml</url>
 				<label>object editor</label>
 			</link> targeted to that 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#object</url>
 				<label>object</label>
 			</link>. The 
 			<image> 
 				<url>/images/eiffelbuild/icons/icon_format_onces_color.png</url>
 			</image> button denotes the use of a constant value. For more information regarding using constants, in 
 			<link>
-				<url>/tools/eiffelbuild/reference/40_object_editor/index.html</url>
+				<url>/tools/eiffelbuild/reference/40_object_editor/index.xml</url>
 				<label>object editors</label>
 			</link>, see 
 			<link>
-				<url>/tools/eiffelbuild/reference/40_object_editor/index.html</url>
+				<url>/tools/eiffelbuild/reference/40_object_editor/index.xml</url>
 				<label>object editor</label>
 			</link>.
 		</paragraph>
 		<paragraph>When an EiffelBuild project is generated, all constants are added to a class, inherited by each window class. There is an "_IMP" and interface versions of these classes as with each window. For more information regarding the generation of constants, see 
 			<link>
-				<url>/tools/eiffelbuild/reference/90_code_generation/index.html</url>
+				<url>/tools/eiffelbuild/reference/90_code_generation/index.xml</url>
 				<label>code generation</label>
 			</link>.
 			<note>
@@ -231,17 +231,17 @@
 				<bold>See also</bold>: 
 				<line_break/>
 				<link>
-					<url>/tools/eiffelbuild/reference/90_code_generation/index.html</url>
+					<url>/tools/eiffelbuild/reference/90_code_generation/index.xml</url>
 					<label>Code generation</label>
 				</link>
 				<line_break/>
 				<link>
-					<url>/tools/eiffelbuild/reference/40_object_editor/index.html</url>
+					<url>/tools/eiffelbuild/reference/40_object_editor/index.xml</url>
 					<label>Object editor</label>
 				</link>
 				<line_break/>
 				<link>
-					<url>/tools/eiffelbuild/reference/80_project_settings/index.html</url>
+					<url>/tools/eiffelbuild/reference/80_project_settings/index.xml</url>
 					<label>Project settings</label>
 				</link>
 			</seealso>

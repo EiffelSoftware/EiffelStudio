@@ -10,7 +10,7 @@
 				<cell>Maximum number of items in history combo boxes</cell>
 				<cell>This sets the maximum number of items that will be displayed in the history  combo boxes in the 
 					<link>
-						<url>/tools/eiffelstudio/reference/10_browsing_tools/10_address_bars/index.html</url>
+						<url>/tools/eiffelstudio/reference/10_browsing_tools/10_address_bars/index.xml</url>
 						<label>address bars</label>
 					</link>. The default value is 10.
 				</cell>
@@ -19,7 +19,7 @@
 				<cell>Allow class name completion in the address combo boxes</cell>
 				<cell>This boolean preference enables or disables the completion of names in the  combo boxes in the 
 					<link>
-						<url>/tools/eiffelstudio/reference/10_browsing_tools/10_address_bars/index.html</url>
+						<url>/tools/eiffelstudio/reference/10_browsing_tools/10_address_bars/index.xml</url>
 						<label>address bars</label>
 					</link>.  The default value is True.
 				</cell>
@@ -28,7 +28,7 @@
 				<cell>Show only one tool.</cell>
 				<cell>If this is True, only one of the 
 					<link>
-						<url>../../../10_browsing_tools/index.html</url>
+						<url>../../../10_browsing_tools/index.xml</url>
 						<label>browsing tools</label>
 					</link> (i.e. Features, Clusters, Search, Windows and Favorites tools) will be displayed at a time. If it is False up to three tools can be shown simultaneously. The default value is False.
 				</cell>
@@ -37,7 +37,7 @@
 				<cell>Automatically expand the feature tree</cell>
 				<cell>If this is True, the 
 					<link>
-						<url>../../../10_browsing_tools/30_feature_tool/10_feature_tree.html</url>
+						<url>../../../10_browsing_tools/30_feature_tool/10_feature_tree.xml</url>
 						<label>feature tree</label>
 					</link>, which contains feature names sorted by feature clauses, will be expanded so that you can see all the features immediately. If it is False, you will only see the feature clauses at first and have to expand them to reach feature names. The default value is True
 				</cell>

@@ -6,25 +6,25 @@
 		<list ordered = "false">
 			<item>
 				<link>
-					<url>00_introduction.html</url>
+					<url>00_introduction.xml</url>
 					<label>Introduction</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>10_general_editor_preferences.html</url>
+					<url>10_general_editor_preferences.xml</url>
 					<label>General preferences</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>20_keyboard_shortcuts_preferences.html</url>
+					<url>20_keyboard_shortcuts_preferences.xml</url>
 					<label>User-definable keyboard shortcuts</label>
 				</link>
 			</item>
 			<item>
 				<link>
-					<url>30_automatic_completion_preferences/index.html</url>
+					<url>30_automatic_completion_preferences/index.xml</url>
 					<label>Automatic completion preferences</label>
 				</link>
 			</item>

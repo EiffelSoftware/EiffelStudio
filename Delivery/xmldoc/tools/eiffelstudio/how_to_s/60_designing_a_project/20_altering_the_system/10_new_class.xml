@@ -16,5 +16,5 @@
 				</image> Then drop on the diagram where you want to place the class bubble. A dialog now appears where you can enter a name and specify the cluster.
 			</item>
 		</list>
-		<seealso><bold>See Also</bold><line_break></line_break><link><url>/tools/eiffelstudio/reference/10_browsing_tools/20_cluster_tool/30_new_class_command.html</url><label>Creating a new class using the address bar</label></link></seealso>
+		<seealso><bold>See Also</bold><line_break></line_break><link><url>/tools/eiffelstudio/reference/10_browsing_tools/20_cluster_tool/30_new_class_command.xml</url><label>Creating a new class using the address bar</label></link></seealso>
 	</paragraph></document>

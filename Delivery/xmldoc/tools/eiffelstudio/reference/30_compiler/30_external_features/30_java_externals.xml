@@ -18,7 +18,7 @@
 		<paragraph>The Java interface allows you to call Java routines or attributes from your Eiffel code. It uses the Java Native Interface (JNI) provided by the Java Development Kit (JDK) 1.1.4. You can get more information about the JNI at:</paragraph>
 		<paragraph>
 			<link>
-				<label>http://java.sun.com/products/jdk/1.1/docs/guide/jni/index.html</label>
+				<label>http://java.sun.com/products/jdk/1.1/docs/guide/jni/index.xml</label>
 				<url>http://java.sun.com/products/jdk/1.1/docs/guide/jni/index.xml</url>
 			</link>
 		</paragraph>
@@ -29,7 +29,7 @@
 			<item>JDK 1.1.4 correctly set (download it at 
 				<link>
 					<url>http://java.sun.com/products/jdk/1.1/index.xml</url>
-					<label>http://java.sun.com/products/jdk/1.1/index.html</label>
+					<label>http://java.sun.com/products/jdk/1.1/index.xml</label>
 				</link>).
 			</item>
 			<item>The Java classes you want to use must be in the environment variable CLASSPATH.</item>

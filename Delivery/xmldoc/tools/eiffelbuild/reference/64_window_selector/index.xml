@@ -19,15 +19,15 @@
 		</heading>
 		<paragraph>To add a window or dialog to your project, 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
 				<label>pick</label>
 			</link> the window or dialog type from the 
 			<link>
-				<url>/tools/eiffelbuild/reference/30_type_selector/index.html</url>
+				<url>/tools/eiffelbuild/reference/30_type_selector/index.xml</url>
 				<label>type selector</label>
 			</link>, and 
 			<link>
-				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+				<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
 				<label>drop</label>
 			</link> into the Window Selector. There are two possible drop targets within the window selector:
 			<list ordered="false">
@@ -41,7 +41,7 @@
 			<note>
 				<bold>Note</bold>: The selected window in the Window Selector is automatically targeted as the root window of the 
 				<link>
-					<url>/tools/eiffelbuild/reference/20_layout_constructor/index.html</url>
+					<url>/tools/eiffelbuild/reference/20_layout_constructor/index.xml</url>
 					<label>layout constructor</label>
 				</link>, permitting building. You may not build directly into the representation of a window within the Window Constructor.
 			</note>
@@ -73,11 +73,11 @@
 			</note>
 			<paragraph>You may insert windows into a directory, or move a window between directories by 
 				<link>
-					<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+					<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
 					<label>picking</label>
 				</link> the window from its representation in the Window Selector, and 
 				<link>
-					<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
+					<url>/tools/eiffelbuild/reference/02_notation.xml#pick_and_drop</url>
 					<label>dropping</label>
 				</link> on the desired directory.
 				<note>
@@ -96,7 +96,7 @@
 					<bold>See also</bold>:
 					<line_break/>
 					<link>
-						<url>/tools/eiffelbuild/reference/20_layout_constructor/index.html</url>
+						<url>/tools/eiffelbuild/reference/20_layout_constructor/index.xml</url>
 						<label>Layout constructor</label>
 					</link>
 				</seealso>

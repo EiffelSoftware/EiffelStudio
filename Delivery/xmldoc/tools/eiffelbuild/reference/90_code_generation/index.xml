@@ -8,13 +8,13 @@
 				<url>/images/eiffelbuild/icons/icon_code_generation_color.png</url> 
 			</image> on the 
 			<link>
-				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.html</url>
+				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars.xml</url>
 				<label>main toolbar</label>
 			</link>.
 			<paragraph>The length of time taken to generate your code will be dependent on the speed of the system you are running, and the size of your interface, but typically takes a couple of seconds. A progress bar will be displayed during the generation of your system.</paragraph>
 			<paragraph>The code will be generated according to the options you selected in the 
 				<link>
-					<url>/tools/eiffelbuild/reference/80_project_settings/index.html</url>
+					<url>/tools/eiffelbuild/reference/80_project_settings/index.xml</url>
 					<label>project settings</label>
 				</link>.
 			</paragraph>
@@ -25,14 +25,14 @@
 			<list ordered="false">
 				<item>A constants class and its respective implementation class. For example, if the constants class is named as "constants" in the 
 					<link>
-						<url>/tools/eiffelbuild/reference/80_project_settings/index.html</url>
+						<url>/tools/eiffelbuild/reference/80_project_settings/index.xml</url>
 						<label>project settings</label>
 					</link>, two classes, CONSTANTS and CONSTANTS_IMP are generated.
 				</item>
 				<item>A class and implementation class for each window and dialog in the system, named to correspond with the name attribute of the object. For example, for a window in the project named "main_window", the files MAIN_WINDOW and MAIN_WINDOW_IMP are generated.</item>
 				<item>An optional file named "constants.txt" which contains definitions of all INTEGER and STRING constants. This is only generated if "Load constants from file" is selected in the 
 					<link>
-						<url>/tools/eiffelbuild/reference/80_project_settings/index.html</url>
+						<url>/tools/eiffelbuild/reference/80_project_settings/index.xml</url>
 						<label>project settings</label>
 					</link>. The generated code loads the constants from this file, and allows simple modification for localization, i.e. for foreign languages provide a different version of this file with all strings converted.
 				</item>
@@ -45,7 +45,7 @@
 			</paragraph>
 			<paragraph>If "client of windows" is selected from the 
 				<link>
-					<url>/tools/eiffelbuild/reference/80_project_settings/index.html</url>
+					<url>/tools/eiffelbuild/reference/80_project_settings/index.xml</url>
 					<label>project settings</label>
 				</link>, a client supplier relationship exists between the generated window class and the EiffelVision window, as illustrated below:
 			</paragraph>
@@ -62,12 +62,12 @@
 			</heading>
 			<paragraph>If 
 				<link>
-					<url>/tools/eiffelbuild/reference/80_project_settings/20_build.html#build_type</url>
+					<url>/tools/eiffelbuild/reference/80_project_settings/20_build.xml#build_type</url>
 					<label>build type</label>
 				</link> is selected as 
 				<bold>Project</bold> in the 
 				<link>
-					<url>/tools/eiffelbuild/reference/80_project_settings/index.html</url>
+					<url>/tools/eiffelbuild/reference/80_project_settings/index.xml</url>
 					<label>project settings</label>
 				</link>, then all the classes listed above in "Generated classes" are generated, along with the following:
 			</paragraph>
@@ -92,7 +92,7 @@
 		</note>
 		<paragraph>Looking at a generated system, you will see that the 
 			<link>
-				<url>/tools/eiffelbuild/reference/40_object_editor/index.html#events</url>
+				<url>/tools/eiffelbuild/reference/40_object_editor/index.xml#events</url>
 				<label>events</label>
 			</link> connected to your controls are defined as deferred in the implementation and actually implemented in the interface class. This means that if you return to EiffelBuild with a previously generated system, and add a new event to a control, then you will have to implement the definition in the interface class yourself (as the class interface class is not re-generated).
 		</paragraph>
@@ -100,7 +100,7 @@
 			<bold>See also</bold>: 
 			<line_break/>
 			<link>
-				<url>/tools/eiffelbuild/reference/80_project_settings/index.html</url>
+				<url>/tools/eiffelbuild/reference/80_project_settings/index.xml</url>
 				<label>Project settings</label>
 			</link>
 		</seealso>

@@ -18,7 +18,7 @@ inherit
 		rename
 			same_type as general_same_type
 		export {CLASS_C, COMPILED_CLASS_INFO}
-			iteration_position
+			pos_for_iter
 		end
 	SHARED_WORKBENCH
 		rename
@@ -444,7 +444,7 @@ end;
 			until
 				after
 			loop
-				pos := iteration_position
+				pos := pos_for_iter
 				feature_i := item_for_iteration;
 				if feature_i.is_deferred then
 					deferred_found := True;
@@ -515,7 +515,7 @@ end;
 			feat: FEATURE_I;
 			pos: INTEGER
 		do
-			pos := iteration_position
+			pos := pos_for_iter
 			from
 				start
 			until
@@ -536,7 +536,7 @@ end;
 			feat: FEATURE_I;
 			pos: INTEGER
 		do
-			pos := iteration_position
+			pos := pos_for_iter
 			from
 				start
 			until
@@ -557,7 +557,7 @@ end;
 			feat: FEATURE_I;
 			pos: INTEGER
 		do
-			pos := iteration_position
+			pos := pos_for_iter
 			from
 				start
 			until
@@ -807,10 +807,13 @@ feature -- API
 			feat: FEATURE_I;
 			other_content: ARRAY [E_FEATURE];
 		do
+			!! Result;
+			c_id := feat_tbl_id;
+			Result.basic_copy_from (Current);
+			Result.set_class_id (c_id);
 			from
-				c_id := feat_tbl_id;
 				cont := content;
-				c := cont.upper;
+				c := cont.count;
 				!! other_content.make (0, c);
 				i := 0
 			until
@@ -822,13 +825,6 @@ feature -- API
 				end;
 				i := i + 1
 			end;
-
-			!! Result.make ((i * Low_ratio) // High_ratio);
-			Result.set_capacity (Current.capacity)
-
-			Result.basic_copy_from (Current);
-			Result.set_class_id (c_id);
-
 			Result.set_content (other_content);
 			Result.set_deleted_marks (clone (deleted_marks));
 			Result.set_keys (clone (keys));

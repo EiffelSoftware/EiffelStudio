@@ -15,10 +15,10 @@ feature
 
 	attribute_help_fn: STRING is "ATTRIBUTE";
 	behavior_help_fn: STRING is "BEHAVIOR";
-	color_help_fn: STRING is "COMMAND";
+	color_help_fn: STRING is "COLOR";
 	event_help_fn: STRING is "EVENT";
 	group_help_fn: STRING is "GROUP";
-	label_help_fn: STRING is "LABEL";
+	label_help_fn: STRING is "TRANS_LABEL";
 	instance_help_fn: STRING is "INSTANCE";
 	pred_command_help_fn: STRING is "PRED_CMD";
 	state_help_fn: STRING is "STATE";

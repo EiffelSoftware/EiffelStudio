@@ -41,7 +41,9 @@ feature -- Access
 			a_bstr := c_get_bstr (a_loc.item)
 			last_call_success := c_get_assembly_info_from_assembly (item, a_bstr, $p)
 			c_free_bstr (a_bstr)
-			create Result.make_by_pointer (p)
+			if is_successful and then p /= default_pointer then
+				create Result.make_by_pointer (p)
+			end
 		end
 
 feature -- Definition

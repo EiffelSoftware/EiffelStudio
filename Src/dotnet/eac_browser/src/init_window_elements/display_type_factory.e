@@ -80,6 +80,8 @@ feature {NONE} -- Implementation
 				print_attributes (type.type.fields)
 				print_procedures (type.type.procedures)
 				print_functions (type.type.functions)
+				print_properties (type.type.properties)
+				print_events (type.type.events)
 			end
 
 		end
@@ -112,20 +114,35 @@ feature {NONE} -- Implementation
 			-- Store signatures procedures contained in `array'.
 		local
 			i: INTEGER
+			procedures_list: LINKED_LIST [COMPARABLE_CONSUMED_PROCEDURE]
 			procedures: SORTABLE_ARRAY [COMPARABLE_CONSUMED_PROCEDURE]
 		do
 			l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("Procedure(s) :", title_color))
 			new_line
 			from
 				i := 1
-				create procedures.make (1, array.count)
+				create procedures_list.make
 			until
 				array = Void 
 				or else i > array.count
 			loop
-				procedures.put (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (array.item (i)), i)
-
+				if not array.item (i).is_property_or_event then
+					procedures_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (array.item (i)))
+				end
+				
 				i := i + 1
+			end
+			
+			from
+				procedures_list.start
+				create procedures.make (1, procedures_list.count)
+				i := 1
+			until
+				procedures_list.after
+			loop
+				procedures.put (procedures_list.item, i)
+				i := i + 1
+				procedures_list.forth
 			end
 			
 			from
@@ -158,6 +175,12 @@ feature {NONE} -- Implementation
 				l_line.set_selected (False)
 			end
 			l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (Tabulation, text_color))
+			
+			if a_feature.is_public then
+				l_line.set_path_icon ("Public   ")
+			else
+				l_line.set_path_icon ("Protected   ")
+			end
 
 			l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (a_feature.dotnet_name, dotnet_feature_color))
 
@@ -305,6 +328,7 @@ feature {NONE} -- Implementation
 			signature_function: STRING
 			l_returned_type: CONSUMED_REFERENCED_TYPE
 			l_array_returned_type: CONSUMED_ARRAY_TYPE
+			functions_list: LINKED_LIST [COMPARABLE_CONSUMED_PROCEDURE]
 			functions: SORTABLE_ARRAY [COMPARABLE_CONSUMED_PROCEDURE]
 			output_string: STRING
 			l_entity: ENTITY_LINE
@@ -313,15 +337,44 @@ feature {NONE} -- Implementation
 			new_line
 			from
 				i := 1
-				create functions.make (1, array.count)
+				create functions_list.make
 			until
 				array = Void 
 				or else i > array.count
 			loop
-				functions.put (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (array.item (i)), i)
+				if not array.item (i).is_property_or_event then
+					functions_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (array.item (i)))
+				end
 
 				i := i + 1
 			end
+
+			from
+				i := 1
+				functions_list.start
+				create functions.make (1, functions_list.count)
+			until
+				functions_list.after
+			loop
+				functions.put (functions_list.item, i)
+
+				i := i + 1
+				functions_list.forth
+			end
+			
+--			from
+--				i := 1
+--				create functions.make (1, array.count)
+--			until
+--				array = Void 
+--				or else i > array.count
+--			loop
+--				if not array.item (i).is_property_or_event then
+--					functions.put (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (array.item (i)), i)
+--				end
+--
+--				i := i + 1
+--			end
 			
 			from
 				i := 1
@@ -361,6 +414,182 @@ feature {NONE} -- Implementation
 			
 			new_line
 		end
+
+	print_properties (array: ARRAY [CONSUMED_PROPERTY]) is
+			-- Store all signatures properties contained in `array'.
+		local
+			i, j: INTEGER
+			signature_property: STRING
+			l_returned_type: CONSUMED_REFERENCED_TYPE
+			l_array_returned_type: CONSUMED_ARRAY_TYPE
+			properties_list: LINKED_LIST [COMPARABLE_CONSUMED_PROCEDURE]
+			properties: SORTABLE_ARRAY [COMPARABLE_CONSUMED_PROCEDURE]
+			output_string: STRING
+			l_entity: ENTITY_LINE
+			a_property: CONSUMED_PROPERTY
+		do
+			l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("Property(ies) :", title_color))
+			new_line
+			from
+				i := 1
+				create properties_list.make
+			until
+				array = Void 
+				or else i > array.count
+			loop
+				a_property := array.item (i)
+				properties_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (a_property.getter))
+				if a_property.setter /= Void then
+					properties_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (a_property.setter))
+				end
+
+				i := i + 1
+			end
+			from
+				i := 1
+				properties_list.start
+				create properties.make (1, properties_list.count)
+			until
+				properties_list.after
+			loop
+				properties.put (properties_list.item, i)
+				i := i + 1
+				properties_list.forth
+			end
+			
+			from
+				i := 1
+				properties.sort
+			until
+				i > properties.count
+			loop
+				print_feature (properties.item (i))
+				
+				l_returned_type := properties.item (i).return_type
+				l_array_returned_type := Void
+				l_array_returned_type ?= l_returned_type
+					-- Is it a Getter>
+				if l_returned_type /= Void then
+						-- Is it a NATIVE_ARRAY?
+					if l_array_returned_type /= Void then
+						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (": NATIVE_ARRAY", type_color))
+	
+						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (" [", text_color))
+	
+						output_string := eiffel_type_name (type.assembly, l_array_returned_type.element_type.name)
+						create l_entity.make_with_image_and_color (output_string, type_color)
+						l_entity.set_data (l_array_returned_type.element_type)
+						l_line.entities.extend (l_entity)
+	
+						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("]", text_color))
+					else
+						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (": ", text_color))
+	
+						output_string := eiffel_type_name (type.assembly, l_returned_type.name)
+						create l_entity.make_with_image_and_color (output_string, type_color)
+						l_entity.set_data (l_returned_type)
+						l_line.entities.extend (l_entity)
+					end
+				end
+
+				new_line
+				i := i + 1
+			end
+			
+			new_line
+		end
+
+	print_events (array: ARRAY [CONSUMED_EVENT]) is
+			-- Store all signatures events contained in `array'.
+		local
+			i, j: INTEGER
+			signature_event: STRING
+			l_returned_type: CONSUMED_REFERENCED_TYPE
+			l_array_returned_type: CONSUMED_ARRAY_TYPE
+			events_list: LINKED_LIST [COMPARABLE_CONSUMED_PROCEDURE]
+			events: SORTABLE_ARRAY [COMPARABLE_CONSUMED_PROCEDURE]
+			output_string: STRING
+			l_entity: ENTITY_LINE
+			an_event: CONSUMED_EVENT
+		do
+			l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("Event(s) :", title_color))
+			new_line
+			from
+				i := 1
+				create events_list.make
+			until
+				array = Void 
+				or else i > array.count
+			loop
+				an_event := array.item (i)
+				if an_event.adder /= Void then
+					events_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (an_event.adder))	
+					j := j + 1
+				end
+				if an_event.remover /= Void then
+					events_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (an_event.remover))	
+					j := j + 1
+				end
+				if an_event.raiser /= Void then
+					events_list.extend (create {COMPARABLE_CONSUMED_PROCEDURE}.make_with_consumed_procedure (an_event.raiser))	
+					j := j + 1
+				end
+				
+				i := i + 1
+			end
+			from
+				events_list.start
+				i := 1
+				create events.make (1, events_list.count)
+			until
+				events_list.after
+			loop
+				events.put (events_list.item, i)
+				i := i + 1
+				events_list.forth
+			end
+			
+			from
+				i := 1
+				events.sort
+			until
+				i > events.count
+			loop
+				print_feature (events.item (i))
+				
+				l_returned_type := events.item (i).return_type
+				l_array_returned_type := Void
+				l_array_returned_type ?= l_returned_type
+				if l_returned_type /= Void then
+						-- Is it a NATIVE_ARRAY?
+					if l_array_returned_type /= Void then
+						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (": NATIVE_ARRAY", type_color))
+	
+						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (" [", text_color))
+	
+						output_string := eiffel_type_name (type.assembly, l_array_returned_type.element_type.name)
+						create l_entity.make_with_image_and_color (output_string, type_color)
+						l_entity.set_data (l_array_returned_type.element_type)
+						l_line.entities.extend (l_entity)
+	
+						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color ("]", text_color))
+					else
+						l_line.entities.extend (create {ENTITY_LINE}.make_with_image_and_color (": ", text_color))
+	
+						output_string := eiffel_type_name (type.assembly, l_returned_type.name)
+						create l_entity.make_with_image_and_color (output_string, type_color)
+						l_entity.set_data (l_returned_type)
+						l_line.entities.extend (l_entity)
+					end
+				end
+
+				new_line
+				i := i + 1
+			end
+			
+			new_line
+		end
+
 
 	print_attributes (array: ARRAY [CONSUMED_FIELD]) is
 			-- Store all signatures attributes contained in `array'.

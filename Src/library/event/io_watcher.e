@@ -22,9 +22,9 @@ feature {NONE} -- Initialization
 	default_create is
 			-- Create action sequences.
 		do
-			create read_actions.make ("read", <<>>)
-			create error_actions.make ("error", <<>>)
-			create exception_actions.make ("exception", <<>>)
+			create read_actions.make
+			create error_actions.make
+			create exception_actions.make
 		end
 
 	make_with_medium (a_medium: IO_MEDIUM) is
@@ -199,6 +199,9 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.2  2000/07/25 17:13:32  rogers
+--| Removed arguments from calls to make from the action sequences.
+--|
 --| Revision 1.1  2000/05/16 16:05:10  oconnor
 --| initial
 --|

@@ -43,11 +43,13 @@ feature -- Element change
 			exception: EXCEPTIONS
 			dispatch_ptr, class_factory_ptr: POINTER
 			class_factory: EOLE_CLASS_FACTORY
+			msg_box: WEL_MSG_BOX
 		do
 			make
 			!! class_factory.make
-			if co_initialize /= S_ok then
-				exception.raise ("Could not initialize COM")
+			if co_initialize = S_false then
+				!! msg_box.make
+				msg_box.warning_message_box (Void, "CoInitialize returned S_FALSE", "COM Initialization")
 			end
 			class_factory_ptr := co_get_class_object (class_id, 
 					Clsctx_local_server, Iid_class_factory)
@@ -81,7 +83,7 @@ feature -- Element change
 			dispatch := dispsrc
 		end
 
-	destroy is
+	terminate is
 			-- End Automation.
 		local
 			ref_counter: INTEGER

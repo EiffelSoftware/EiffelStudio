@@ -231,16 +231,16 @@ feature -- Generation
 			inv_byte_code: INVARIANT_B
 			final_mode: BOOLEAN
 			generate_c_code: BOOLEAN
-			type_list: TYPE_LIST
 			once_count:INTEGER
 		do
 			final_mode := byte_context.final_mode
 
 			current_class := associated_class
 
-			type_list := current_class.types
-			type_list.search (type)
-			if type_list.item = Current then
+				--| The search on `types' is changing types' cursor position
+				--| Keep this in Mind
+				--| ES
+			if current_class.types.search_item (type) = Current then
 					-- Do not generate twice the same type if it has
 					-- been derived in two different merged precompiled
 					-- libraries.
@@ -984,12 +984,12 @@ feature -- Cecil generation
 			external_i: EXTERNAL_I
 			feature_i: FEATURE_I
 			feature_table: FEATURE_TABLE
-			type_list: TYPE_LIST
 		do
 			current_class := associated_class
-			type_list := current_class.types
-			type_list.search (type)
-			if type_list.item = Current then
+				--| The search on `types' is changing types' cursor position
+				--| Keep this in Mind
+				--| ES
+			if current_class.types.search_item (type) = Current then
 				feature_table := current_class.feature_table
 				from
 					feature_table.start
@@ -998,11 +998,9 @@ feature -- Cecil generation
 				loop
 					feature_i := feature_table.item_for_iteration
 					if
-						(
-							byte_context.final_mode and then
-							feature_i.to_generate_in (current_class)
-						) or else
-						is_modifiable
+						(byte_context.final_mode
+						and then feature_i.to_generate_in (current_class))
+						or else is_modifiable
 					then
 						external_i ?= feature_i
 						if external_i /= Void then

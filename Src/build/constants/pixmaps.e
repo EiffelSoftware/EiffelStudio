@@ -648,6 +648,11 @@ feature -- Context Pixmaps
 			Result := symbol_file_content ("scrll_l")
 		end;
 
+	Scrollable_list_pixmap: PIXMAP is
+		once
+			Result := symbol_file_content ("scrll_l")
+		end;
+
 	Text_pixmap: PIXMAP is
 		once
 			Result := symbol_file_content ("text");

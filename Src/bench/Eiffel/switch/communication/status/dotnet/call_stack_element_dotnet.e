@@ -76,7 +76,11 @@ feature -- Filling
 			if dynamic_type /= Void then
 				dynamic_class := dynamic_type.associated_class	
 			end
-			origin_class := a_org_class
+			if a_org_class /= Void then
+				origin_class := a_org_class
+			else
+				origin_class := dynamic_class
+			end
 			break_index := a_line_number
 
 			object_address := a_address

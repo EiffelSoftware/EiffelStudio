@@ -55,15 +55,18 @@ feature {NONE} -- Initialization
 			elem: CALL_STACK_ELEMENT
 			prev_feat: E_FEATURE
 			cur_feat: E_FEATURE
+			l_dynclass: CLASS_C
 		do
 			level_number := level_num
 			elem := Application.status.where.i_th (level_num)
-			obj_make (elem.object_address, " ", elem.dynamic_class)
+			l_dynclass := elem.dynamic_class
+			
+			obj_make (elem.object_address, " ", l_dynclass)
 				--| We try to give the feature relative to the dynamic class.
 				--| However, in case of a Precursor, we fall back to the feature in its static context.
 			prev_feat := elem.routine
-			if elem.dynamic_class.has_feature_table then
-				cur_feat := elem.dynamic_class.feature_with_body_index (prev_feat.body_index)
+			if l_dynclass /= Void and then l_dynclass.has_feature_table then
+				cur_feat := l_dynclass.feature_with_body_index (prev_feat.body_index)
 			end
 			if cur_feat = Void then
 					-- We are in a Precursor.

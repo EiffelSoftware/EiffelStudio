@@ -417,7 +417,7 @@ feature {NONE} -- Implementation
 --				Result.extend (elem.break_index.out)
 --				Result.extend (elem.object_address)
 				oc := elem.origin_class
-				if not oc.is_equal (dc) then
+				if oc /= Void and then not oc.is_equal (dc) then
 					l_tooltip.prepend_string (" (from " + oc.name_in_upper + ")")
 					Result.extend (oc.name_in_upper)
 				else

@@ -948,7 +948,7 @@ object from being disposed by a thread, which is not its creator thread.
 
 
 
-   - That would mean heavy signatures in thread creation procedures and&nbsp;inelegant lines of code. However, in some case, we need to share&nbsp;once features. For example, features such as a once function returning&nbsp;a STD_FILES where we want to put all the output of our execution&nbsp;should not be initialized in each thread but once during a process.&nbsp;
+   - That would mean heavy signatures in thread creation procedures and&nbsp;inelegant lines of code. However, in some case, we need to share&nbsp;once features. 
 
 <p>
 
@@ -980,20 +980,18 @@ object from being disposed by a thread, which is not its creator thread.
 		...
 	feature
 	
-		file_per_thread: STD_FILES is
-				-- former implementation of 'io'
-				-- (once per thread)
+		object_per_thread: OBJECT is
+				-- once per thread
 			once
 				!! Result.make
-				Result.set_output_default
 			end
 
-		file_per_process: STD_FILES is
-				-- new 'file' (once per process)
+		object_per_process: OBJECT is
+				-- new 'object' (once per process)
 				-- that could be shared between threads
 				-- without reinitializing it
 			once
-				Result ?= global_once_function (Current, $file_per_thread
+				Result ?= global_once_function (Current, $object_per_thread)
 			end
 			
 		...
@@ -1010,7 +1008,7 @@ object from being disposed by a thread, which is not its creator thread.
 				-- pointed by 'once_func' which will be&nbsp;
 				-- evaluated once per process
 			external
-				&quot;C [macro %&quot;eif_once.h%&quot;]&quot;
+				&quot;C | %&quot;eif_once.h%&quot;&quot;
 			alias
 				&quot;eif_global_function&quot;
 			end
@@ -1022,7 +1020,7 @@ object from being disposed by a thread, which is not its creator thread.
 
 
 
-	- Note that file_per_thread is passed through a pointer so as&nbsp;not to be computed once more, at the first call in a new thread.
+	- Note that object_per_thread is passed through a pointer so as&nbsp;not to be computed once more, at the first call in a new thread.
 
 <p>
 
@@ -1030,7 +1028,7 @@ object from being disposed by a thread, which is not its creator thread.
 
    - We admit that passing 'Current' as a formal argument of global_once&nbsp;is not very elegant, but this is necessary to evaluate
 
-   'file_per_thread'.
+   'object_per_thread'.
 
 <p>
 
@@ -1052,7 +1050,7 @@ object from being disposed by a thread, which is not its creator thread.
  	in class ONCE_CONTROL:<pre> 	...
 	global_once_procedure (Currt: ANY; once_proc: POINTER) is
  		external
- 			&quot;C [macro %&quot;eif_once.h%&quot;]&quot;
+ 			&quot;C | %&quot;eif_once.h%&quot;&quot;
  		alias
  			&quot;eif_global_procedure&quot;&nbsp;
  		end

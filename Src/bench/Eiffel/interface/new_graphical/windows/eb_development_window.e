@@ -2636,15 +2636,19 @@ feature {NONE} -- Implementation
 			dialog_w: EB_WARNING_DIALOG
 		do
 			if editor_tool /= Void and then editor_tool.text_area /= Void and then changed and then not confirmed then
-				Exit_application_cmd.set_already_save_confirmed (True)
-				create dialog_w.make_with_text (Interface_names.l_Close_warning)
-				dialog_w.set_buttons_and_actions (<<"Yes", "No", "Cancel">>, <<~save_and_destroy, ~force_destroy, Exit_application_cmd~set_already_save_confirmed (False)>>)
-				dialog_w.set_default_push_button (dialog_w.button("Yes"))
-				dialog_w.set_default_cancel_button (dialog_w.button("Cancel"))
-				dialog_w.show_modal_to_window (window)
+				if Window_manager.development_windows_count > 1 then
+					create dialog_w.make_with_text (Warning_messages.w_Save_before_closing)
+					dialog_w.set_buttons_and_actions (<<"Yes", "No", "Cancel">>, <<~save_and_destroy, ~force_destroy, ~do_nothing>>)
+					dialog_w.set_default_push_button (dialog_w.button("Yes"))
+					dialog_w.set_default_cancel_button (dialog_w.button("Cancel"))
+					dialog_w.show_modal_to_window (window)
+				else
+						-- We let the window manager handle the saving, along with other windows
+						-- (not development windows)
+					force_destroy
+				end
 			else
 				Precursor {EB_TOOL_MANAGER}
-				Exit_application_cmd.set_already_save_confirmed (False)
 			end
 		end
 

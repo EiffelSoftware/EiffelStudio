@@ -9,7 +9,7 @@ deferred class
 	EV_OPTION_BUTTON_I
 
 inherit
-	EV_MENU_ITEM_CONTAINER_I
+	EV_MENU_CONTAINER_I
 
 	EV_BUTTON_I
 

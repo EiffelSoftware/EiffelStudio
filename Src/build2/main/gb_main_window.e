@@ -82,6 +82,7 @@ feature {NONE} -- Implementation
 			split_area: EV_HORIZONTAL_SPLIT_AREA
 			vertical_box1: EV_VERTICAL_BOX
 			horizontal_box: EV_HORIZONTAL_BOX
+			vertical_split_area: EV_VERTICAL_SPLIT_AREA
 		do
 			create vertical_box
 			extend (vertical_box)
@@ -97,10 +98,16 @@ feature {NONE} -- Implementation
 			create horizontal_box
 			vertical_box.extend (horizontal_box)
 			horizontal_box.extend (split_area)
-			split_area.extend (type_selector)
-			type_selector.set_minimum_width (100)
+			create vertical_split_area
+			split_area.extend (vertical_split_area)
+			vertical_split_area.set_minimum_width (100)
+			type_selector.set_minimum_size (100, 100)
+			vertical_split_area.extend (type_selector)
+			vertical_split_area.extend (component_selector)
+			component_selector.set_minimum_height (100)
 			create vertical_box1
 			split_area.extend (vertical_box1)
+			layout_constructor.set_minimum_size (100, 100)
 			vertical_box1.extend (layout_constructor)
 			horizontal_box.extend (docked_object_editor)
 			horizontal_box.disable_item_expand (docked_object_editor)

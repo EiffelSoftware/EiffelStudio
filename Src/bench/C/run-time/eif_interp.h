@@ -49,6 +49,8 @@ extern void sync_registers(struct stochunk *stack_cur, struct item *stack_top);	
 /* Macro used to prepare a cell on top of the stack */
 #define iget()	opush((struct item *) 0)	/* Push empty cell on stack */
 
+extern void metamorphose_top(); /* Converts the top-level item on the operational stack from a basic type to a reference type */
+
 extern void idump(FILE *fd, char *start);
 
 #ifdef __cplusplus

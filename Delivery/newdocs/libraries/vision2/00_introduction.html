@@ -11,7 +11,7 @@
 
 		<H2>Preface</H2>
 
-		<P>The EiffelVision library offers an object-oriented framework for graphical user interface (GUI) development. Using EiffelVision, developers can access all necessary GUI components, called <B>widgets</B> (buttons, windows, listviews) as well as truly graphical elements such as points, lines, arcs, polygons and the like -- to develop a modern, functional and good-looking graphical interactive application.</P>
+		<P>The EiffelVision library offers an object-oriented framework for graphical user interface (GUI) development. Using EiffelVision, developers can access all necessary GUI components, called <A HREF="/libraries/vision2/content/10_widgets/index.html">widgets</A> (buttons, windows, listviews) as well as truly graphical elements such as points, lines, arcs, polygons and the like -- to develop a modern, functional and good-looking graphical interactive application.</P>
 
         <P>EiffelVision has played a major role in ISE Eiffel and provided numerous Eiffel projects with a powerful, portable graphics development platform.&nbsp;
         EiffelStudio is totally reliant on EiffelVision for its graphical
@@ -37,29 +37,27 @@
 			<LI>At the lower level, platform-specific libraries cover the graphical mechanisms of graphics platforms such as Windows and GTK.</LI>
 		</UL>
 
-		<P>The lower tier serves for the implementation of the upper tier, but can also be used independently. For example WEL has had a resounding success with Windows developers who need an advanced mechanism for building Windows-specific graphical applications, taking advantage of every facility of the Windows API
+		<P>The lower tier serves for the implementation of the upper tier, but can also be used independently. For example <A HREF="/libraries/WEL/00_introduction.html">WEL</A> has had a resounding success with Windows developers who need an advanced mechanism for building Windows-specific graphical applications, taking advantage of every facility of the Windows API
 		(Application Programming Interface) and of the Eiffel approach, but do not need portability on the client side. The GEL library is a <B>wrapper</B> library, automatically generated from the entire GTK API by a tool named <B>The Gote Converter</B>.</P>
-
-		<P>This flexibility of the EiffelVision architecture, enabling users to work at their level of choice -- EiffelVision level for portable graphics, lower tier for platform-specific development, and possibly a mix of the two -- has proven to be a key attraction of the library.</P>
 
 		<H3>Features</H3>
 
 		<P>As stated before, the library has undergone some drastic changes since the previous release. Names have been changed to improve consistency. Contracts are added whereever possible. Following is a summary of the other re-engineered aspects of the library:</P>
 
 		<UL>
-			<LI>Taking full advantage of the <B>agent</B> mechanism of Eiffel, events are now triggered through <B>action sequences</B> (lists of actions) that will be executed in order. This system does not require separate classes to be written for each event, however the command pattern can still be used if desired.</LI>
-			<LI>The pick-and-drop mechanism now relies on the Eiffel type system. A <B>stone</B> (some transportable object) is now any Eiffel class and can always be dropped on a widget that accepts the type (or a more general type) of that stone.</LI>
-			<LI>Containers (widgets that contain other widgets) are now derived from EiffelBase classes. For example you can now insert widgets in any position and iterate over them.</LI>
+			<LI>Taking full advantage of the <B>agent</B> mechanism of Eiffel, <A HREF="/libraries/vision2/content/30_events/index.html">events</A> are now triggered through <B>action sequences</B> (lists of actions) that will be executed in order. This system does not require separate classes to be written for each event, however the command pattern can still be used if desired.</LI>
+			<LI>The <A HREF="/libraries/vision2/content/40_properties/ev_pick_and_dropable.html">pick-and-drop</A> mechanism now relies on the Eiffel type system. A <B>stone</B> (some transportable object) is now any Eiffel class and can always be dropped on a widget that accepts the type (or a more general type) of that stone.</LI>
+			<LI><A HREF="/libraries/vision2/content/10_widgets/10_containers/index.html">containers</A> (<A HREF="/libraries/vision2/content/10_widgets/index.html">widgets</A> that contain other <A HREF="/libraries/vision2/content/10_widgets/index.html">widgets</A>) are now derived from <A HREF="/libraries/base/00_introduction.html">EiffelBase</A> classes. For example you can now insert <A HREF="/libraries/vision2/content/10_widgets/index.html">widgets</A> in any position and iterate over them.</LI>
 		</UL>
 
 		<H2>Design</H2>
 
 		<P>EiffelVision provides programmers with high-level classes, that provide all mechanism and data structures needed to build advanced user interfaces for deployment on almost all platforms without having to worry about detailed requirements of toolkits.</P>
 
-		<P>The abstract design has been derived from an analysis of user interfaces. Therefore we have classes with names like MENU, WINDOW, BUTTON, LINE or POLYGON. The features of these classes are simple, clearly defined properties or commands, like the feature `minimize' (a command) on WINDOW or `text' (a property of type STRING) on BUTTON.</P>
+		<P>The abstract design has been derived from an analysis of user interfaces. Therefore we have classes with names like MENU, WINDOW, BUTTON, LINE or POLYGON. The features of these classes are simple, clearly defined properties or commands, like the feature `minimize' (a command) on WINDOW or `text' (a property of type <A CLASS="eclass" HREF="/libraries/base/reference/kernel/string_chart.html">STRING</A>) on BUTTON.</P>
 
 		<P CLASS="note"><B>Note</B>: all class names in EiffelVision are
-        pre-pended with EV_ to avoid name clashes with existing classes. BUTTON hence becomes EV_BUTTON, etc.</P>
+        pre-pended with EV_ to avoid name clashes with existing classes. BUTTON hence becomes <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/primitives/ev_button_chart.html">EV_BUTTON</A>, etc.</P>
 
 		<H3>Properties</H3>
 
@@ -81,7 +79,7 @@
 
 		<H2>Implementation</H2>
 
-		<P>For flexibility, EiffelVision is built using the bridge pattern. This means that every platform-dependant component of the library consist of two classes, plus an implementation class for each platform (currently two). One is the interface. All the features of interfaces do nothing except delegate the call to the implementation object which is coupled to it. This object has the static type of the implementation-interface with the name of the interface class, with _I appended to it. From this implementation-interface, implementation classes inherit to implement platform-specific features.</P>
+		<P>For flexibility, EiffelVision is built using the bridge pattern. This means that every platform-dependant component of the library consist of two classes, plus an implementation class for each platform (currently two). One is the <A HREF="/libraries/vision2/reference/interface/index.html">interface</A>. All the features of interfaces do nothing except delegate the call to the implementation object which is coupled to it. This object has the static type of the implementation-interface with the name of the interface class, with _I appended to it. From this implementation-interface, implementation classes inherit to implement platform-specific features.</P>
 
 
 

@@ -30,6 +30,15 @@ feature -- Access
 				Result := 1000
 			end
 		end
+		
+	default_expanded_view_size: INTEGER is
+			-- Default size for expanded view dialog
+		do
+			Result := integer_resource_value ("debugger__default_expanded_view_size", 500)
+			if Result < 1 then
+				Result := 500
+			end
+		end			
 
 	show_text_in_project_toolbar: BOOLEAN is
 			-- Show selected text in the project toolbar?

@@ -502,7 +502,8 @@
 			<HEAD>Debugging tools</HEAD>
 			<TEXT DESCRIPTION="Display DEBUG_OUTPUT.debug_output value">debug_output_evaluation<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display ANY.generating_type value">generating_type_evaluation<BOOLEAN>True</BOOLEAN></TEXT>
-			<TOPIC TOPIC_ID="Dotnet_debugging_tools" ICON="icon_preferences_folder">
+			<TEXT DESCRIPTION="Expanded view: default display size">debugger__default_expanded_view_size<INTEGER>500</INTEGER></TEXT>
+			<TOPIC TOPIC_ID="Dotnet_debugging_tools" ICON="icon_preferences_folder" VISIBILITY="hidden">
 				<HEAD>Dotnet</HEAD>
 				<TEXT DESCRIPTION="Enable optimized JIT debugging">enable_optimized_jit_debugging<BOOLEAN>False</BOOLEAN></TEXT>
 			</TOPIC>

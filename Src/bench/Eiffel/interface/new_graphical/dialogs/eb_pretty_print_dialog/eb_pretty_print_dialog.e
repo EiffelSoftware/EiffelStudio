@@ -9,6 +9,8 @@ class
 
 inherit
 	EB_PRETTY_PRINT_DIALOG_IMP
+		rename
+			window as dialog
 		redefine
 			default_create
 		end
@@ -34,8 +36,6 @@ inherit
 		end
 
 create
-	default_create,
-	make_with_window,
 	make
 
 feature {NONE} -- Initialization
@@ -47,35 +47,26 @@ feature {NONE} -- Initialization
 		do
 			parent := cmd
 
-			slice_min_ref := 0 									-- slice_cmd.slice_min
-			slice_max_ref := application.displayed_string_size 	-- slice_cmd.slice_max
+			slice_min_ref := 0
+			slice_max_ref := default_slice_max_value
 			default_create
-		end
-
-	make_with_window (a_window: EV_DIALOG) is
-			-- Create `Current' in `a_window'.
-		require
-			window_not_void: a_window /= Void
-			window_empty: a_window.is_empty
-			no_menu_bar: a_window.menu_bar = Void
-		do
-			window := a_window
-			initialize
-		ensure
-			window_set: window = a_window
-			window_not_void: window /= Void
 		end
 
 	default_create is
 			 -- Create `Current'.
 		do
-			create window
+			create dialog
 			initialize
 		ensure then
-			window_not_void: window /= Void
+			dialog_not_void: dialog /= Void
 		end
 
 feature {NONE} -- Initialization
+
+	default_slice_max_value: INTEGER is
+		do
+			Result := parent.tool.debugger_manager.default_expanded_view_size
+		end		
 
 	user_initialization is
 			-- called by `initialize'.
@@ -141,7 +132,7 @@ feature -- Status Setting
 	is_destroyed: BOOLEAN is
 			-- Is `dialog' destroyed?
 		do
-			Result := window = Void
+			Result := dialog = Void
 		end
 
 	has_object: BOOLEAN is
@@ -158,7 +149,7 @@ feature -- Status setting
 	raise is
 			-- Display `dialog' and put it in front.
 		do
-			window.show_relative_to_window (parent.associated_window)
+			dialog.show_relative_to_window (parent.associated_window)
 		end
 
 	set_stone (st: OBJECT_STONE) is
@@ -220,12 +211,12 @@ feature -- Status setting
 					if current_dump_value /= Void then
 						editor.set_text (current_dump_value.formatted_truncated_string_representation (slice_min, slice_max))
 						l_str_length := "Complete length = " + current_dump_value.last_string_representation_length.out
-						window.set_title ("Expanded display : " + l_str_length)
+						dialog.set_title ("Expanded display : " + l_str_length)
 						upper_slice_field.set_tooltip (l_str_length)						
 					else
 						editor.remove_text
 						create l_dlg.make_with_text ("Sorry a problem occurred, %Nwe are not able to show you the value ...%N")
-						l_dlg.show_modal_to_window (window)
+						l_dlg.show_modal_to_window (dialog)
 					end
 				else
 					editor.remove_text
@@ -241,8 +232,8 @@ feature -- Status setting
 			not is_destroyed
 		do
 			clean_dialog_data			
-			window.destroy
-			window := Void
+			dialog.destroy
+			dialog := Void
 			parent.remove_dialog (Current)
 		ensure
 			destroyed: is_destroyed
@@ -341,13 +332,13 @@ feature {NONE} -- Event handling
 	word_wrap_toggled is
 			-- Called by `select_actions' of `word_wrap_button'.
 		do
-			window.lock_update
+			dialog.lock_update
 			if word_wrap_button.is_selected then
 				editor.enable_word_wrapping
 			else
 				editor.disable_word_wrapping
 			end
-			window.unlock_update
+			dialog.unlock_update
 		end
 
 	on_stone_dropped (st: OBJECT_STONE) is
@@ -360,8 +351,8 @@ feature {NONE} -- Event handling
 			-- Close dialog
 		do
 			clean_dialog_data			
-			window.destroy
-			window := Void
+			dialog.destroy
+			dialog := Void
 			parent.remove_dialog (Current)
 		ensure then
 			destroyed: is_destroyed

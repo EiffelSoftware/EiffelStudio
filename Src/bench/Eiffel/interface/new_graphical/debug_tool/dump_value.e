@@ -650,9 +650,9 @@ feature -- Access
 			when Type_string_dotnet , Type_object then
 				if value_address /= Void then
 					create Result.make (value_address.count + 2)
-					Result.append_character ('[')
+					Result.append_character ('<')
 					Result.append (value_address)
-					Result.append_character (']')
+					Result.append_character ('>')
 				else
 					Result := "Void"
 				end

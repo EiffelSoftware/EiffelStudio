@@ -74,6 +74,11 @@ feature -- Status report
 			Result := type >= 0 and then type <= Max_type
 		end
 
+	has_id (tablerow: DB_TABLE): BOOLEAN is
+			-- Does `tablerow' have an ID and can it be found?
+		deferred
+		end
+
 feature -- Basic operations: selection
 
 	load_result is
@@ -117,6 +122,7 @@ feature -- Basic operations: update
 			-- same ID.
 		require
 			not_void: description /= Void
+			has_id: has_id (description)
 		deferred
 		end
 
@@ -125,6 +131,7 @@ feature -- Basic operations: update
 			-- a valid ID.
 		require
 			not_void: a_tablerow /= Void
+			has_id: has_id (a_tablerow)
 		deferred
 		end
 
@@ -134,6 +141,7 @@ feature -- Basic operations: update
 			--| Warning: delete all dependent table rows.
 		require
 			not_void: a_tablerow /= Void
+			has_id: has_id (a_tablerow)
 		deferred
 		end
 		

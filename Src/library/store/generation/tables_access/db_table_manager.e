@@ -62,8 +62,6 @@ feature -- Status report
 			Result := session_control /= Void and then session_control.is_connected
 		end
 
-feature -- Status report
-
 	has_error: BOOLEAN
 			-- Has an error occured during last database operation?
 
@@ -82,7 +80,16 @@ feature -- Status report
 		do
 			Result := type >= Prefix_type and then type <= Max_type
 		end
-			
+
+	has_id (tablerow: DB_TABLE): BOOLEAN is
+			-- Does `tablerow' have an ID and can it be found?
+		local
+			td: DB_TABLE_DESCRIPTION
+		do
+			td := tablerow.table_description
+			Result := td.Id_code /= td.No_id
+		end
+
 feature -- Access
 
 	select_query: STRING is
@@ -198,10 +205,10 @@ feature -- Basic operations
 		do
 			attr := select_table_descr.description_list.i_th (column)
 			val := clone (value)
+			coltype := select_table_descr.type_list.i_th (column)
 			if case_sens or else not database_handle_name.is_equal (Oracle_handle_name) then
 				q := clone (attr)
 			else
-				coltype := select_table_descr.type_list.i_th (column)
 				if coltype = select_table_descr.string_type or else
 						coltype = select_table_descr.character_type then
 					q := to_lower (attr)
@@ -236,13 +243,19 @@ feature -- Basic operations
 				q.append (Space)
 			end
 					-- Gives a valid SQL string representation to `val'.
-			val := string_format (val)
+			if like_type (type) or else
+					coltype = select_table_descr.string_type or else
+					coltype = select_table_descr.character_type then
+				val := string_format (val)
+			end
 			q.append (val)
 			add_qualifier (q)
 		end
 
 	set_id_qualifier (id_value: STRING) is
 			-- Prepared select query will select table row with id `id_value'.
+		require
+			has_id: select_table_descr.id_code /= select_table_descr.No_id
 		do
 			remove_qualifiers
 			add_value_qualifier (select_table_descr.Id_code, id_value)
@@ -257,7 +270,7 @@ feature -- Basic operations
 			select_query_prepared: select_query_prepared
 		do
 			if select_qualifiers = Void then
-				select_qualifiers := value
+				select_qualifiers := clone (value)
 			else
 				select_qualifiers.append (Space + And_operator + Space + value)
 			end
@@ -393,7 +406,7 @@ feature -- Update
 				error_message := Update_failed + Unexpected_error
 			end
 		rescue
-			rescued := TRUE
+			rescued := True
 			retry		
 		end
 
@@ -403,6 +416,7 @@ feature -- Creation
 			-- Next available ID for table described by `table_descr'.
 		require
 			not_void: table_descr /= Void
+			has_id: table_descr.id_code /= table_descr.No_id
 		local
 			res: ANY
 			double_ref: DOUBLE_REF
@@ -526,6 +540,7 @@ feature {NONE} -- Update implementation
 			-- SQL query corresponding to a database update.
 		require
 			not_void: td /= Void
+			has_id: td.id_code /= td.No_id
 		local
 			code: INTEGER
 			parameter_list: ARRAYED_LIST [STRING]
@@ -605,6 +620,7 @@ feature {NONE} -- Creation implementation
 			-- Query to find maximum ID for table described by `table_descr'.
 		require
 			not_void: table_descr /= Void
+			has_id: table_descr.id_code /= table_descr.No_id
 		do
 			Result := "select max(" + table_descr.id_name
 					+ ") from " + table_descr.table_name

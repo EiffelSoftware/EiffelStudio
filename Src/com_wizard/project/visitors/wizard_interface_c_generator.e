@@ -6,6 +6,7 @@ indexing
 
 deferred class
 	WIZARD_INTERFACE_C_GENERATOR
+	
 inherit
 	WIZARD_CPP_WRITER_GENERATOR
 

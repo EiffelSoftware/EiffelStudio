@@ -49,6 +49,7 @@ feature
 			as39: LANGUAGE_NAME_SD;
 			as40: CLICK_LIST;
 			as41: CLICK_AST;
+			as42: EXECUTABLE_NAME_SD;
 		do
 			!!as_1.make (0);
 			as_1.pass_address(id_sd);
@@ -123,6 +124,8 @@ feature
 			!!as41;
 			as41.pass_address (click_elem_sd);
 			as41.pass_click_set;
+			!!as42;
+			as42.pass_address (executable_name_sd);
 		end;
 
 end

@@ -85,6 +85,9 @@ feature
 			end;
 			context.set_original_body_index (body_index)
 
+				-- Generate extern clauses for once manifest strings.
+			context.generate_once_manifest_string_import (once_manifest_string_count)
+
 			internal_name := Encoder.feature_name (
 				System.class_type_of_id (context.current_type.type_id).static_type_id,
 				body_index)
@@ -125,16 +128,8 @@ feature
 				-- Generate GC hooks
 			context.generate_gc_hooks (True);
 
-				-- Allocate memory for once manifest strings if required
-			if once_manifest_string_count > 0 then
-				buf.put_string ("RTAOMS(")
-				buf.put_integer (body_index - 1)
-				buf.put_character (',')
-				buf.put_integer (once_manifest_string_count)
-				buf.put_character (')')
-				buf.put_character (';')
-				buf.put_new_line
-			end
+				-- Allocate memory for once manifest strings.
+			context.generate_once_manifest_string_allocation (once_manifest_string_count)
 
 			byte_list.generate;
 		

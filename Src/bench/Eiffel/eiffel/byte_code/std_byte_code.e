@@ -248,6 +248,9 @@ feature -- Analyzis
 				generate_once_declaration (internal_name, type_i.c_type.c_string, type_i.c_type.is_void)
 			end
 
+				-- Generate reference to once manifest string field
+			context.generate_once_manifest_string_import (once_manifest_string_count)
+
 			if rescue_clause /= Void then
 				buf.put_string ("#undef EIF_VOLATILE")
 				buf.put_new_line
@@ -307,15 +310,7 @@ feature -- Analyzis
 			end
 
 				-- Allocate memory for once manifest strings if required
-			if context.byte_code.once_manifest_string_count > 0 then
-				buf.put_string ("RTAOMS(")
-				buf.put_integer (context.original_body_index - 1)
-				buf.put_character (',')
-				buf.put_integer (context.byte_code.once_manifest_string_count)
-				buf.put_character (')')
-				buf.put_character (';')
-				buf.put_new_line
-			end
+			context.generate_once_manifest_string_allocation (once_manifest_string_count)
 
 				-- Generate the saving of the workbench mode assertion level
 			if context.workbench_mode then

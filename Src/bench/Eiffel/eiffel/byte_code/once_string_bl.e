@@ -48,28 +48,9 @@ feature
 
 	generate is
 			-- Generate the string.
-		local
-			buf: GENERATION_BUFFER
 		do
 			check register /= No_register end
-			buf := buffer
-				-- RTCOMS is the macro used to retrieve previously created once manifest strings
-				-- or to create a new one if this is the first acceess to the string
-			buf.put_string ("RTCOMS(")
-			register.print_register
-			buf.put_character (',')
-			buf.put_integer (body_index - 1)
-			buf.put_character (',')
-			buf.put_integer (number - 1)
-			buf.put_character (',')
-			buf.put_character ('%"')
-			buf.escape_string (value)
-			buf.put_character ('%"')
-			buf.put_character (',')
-			buf.put_integer (value.count)
-			buf.put_character (')')
-			buf.put_character (';')
-			buf.put_new_line
+			context.generate_once_manifest_string_access (register, value, number)
 		end
 
 	print_register is

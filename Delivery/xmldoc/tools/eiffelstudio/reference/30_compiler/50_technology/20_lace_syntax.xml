@@ -441,7 +441,7 @@
 				</row>
 			</table>
 		</paragraph>
-		<paragraph>Introduced with  Eiffel Software  EiffelBench 4.5 the keyword <code><keyword>all</keyword></code> can appear before the name of a cluster. This new keyword is now used in most Ace files given with your distribution. One example can be found above and it is reproduced below with some explanations:
+		<paragraph>Introduced with the 4.5 release of the Eiffel Software environment the keyword <code><keyword>all</keyword></code> can appear before the name of a cluster. This new keyword is now used in most Ace files given with your distribution. One example can be found above and it is reproduced below with some explanations:
 			<code_block>
 		<comment>-- EiffelBase</comment>
 	<keyword>all</keyword> base: "$ISE_EIFFEL\library\base"

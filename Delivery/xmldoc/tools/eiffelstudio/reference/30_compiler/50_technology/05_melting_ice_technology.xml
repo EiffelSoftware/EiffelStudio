@@ -16,7 +16,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>EiffelStudio relies on Melting Ice Technology, the proprietary compilation mechanism of ISE Eiffel, which offers three forms of compilation:</paragraph>
+		<paragraph>EiffelStudio relies on Melting Ice Technology, the proprietary compilation mechanism of Eiffel Software, which offers three forms of compilation:</paragraph>
 		<list ordered="false">
 			<item>
 				<italic>melting</italic> for making a few changes. The fastest of the mechanisms, typically taking a few seconds after small changes. Melting time is proportional to the size of the changed parts and affected classes, while the time needed to freeze or finalize is partly proportional to the size of the whole system. As long as you do not include new external C/C++ code, a C/C++ compiler is not required. However, execution speed is not optimal. The generated executable is debuggable.

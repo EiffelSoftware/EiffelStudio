@@ -3,12 +3,12 @@
 		<help/>
 	</meta_data>
 	<paragraph>
-		<paragraph>The ISE Eiffel compiler offers now the possibility to generate a 
+		<paragraph>The Eiffel compiler offers the possibility to generate a 
 			<bold>dynamic shared library</bold> based on the system.
 		</paragraph>
 		<paragraph>Thanks to this dynamic library, it is possible to call Eiffel features from a C program, by using the real names of the features.</paragraph>
 		<paragraph>In other words, the user can generate a DLL 
-			<italic>(*.dll)</italic> using features of the system on windows, and a shared library 
+			<italic>(*.dll)</italic> using features of the system on windows, and/or a shared library 
 			<italic>(*.so)</italic> on Unix.
 		</paragraph>
 		<paragraph>For that, the user has first to describe what he wants to export in his dynamic library. This is done via a definition file 

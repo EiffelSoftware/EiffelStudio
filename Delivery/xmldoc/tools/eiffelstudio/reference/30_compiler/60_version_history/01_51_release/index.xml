@@ -23,7 +23,7 @@
 				<paragraph>Those limitations should disappear with 5.2 which will be the official release that fully supports .NET</paragraph>
 				<list ordered="false">
 					<item>Support for INTEGER_64 constants. Now a manifest integer value that is written in decimal or hexadecimal format that can't fit into an INTEGER_32 will be automatically promoted to an INTEGER_64 constant value.</item>
-					<item>New feature access syntax for accessing constants, C/C++ externals and IL static externals.
+					<item>New feature access syntax for accessing constants, C/C++ externals and IL static externals. 
 						<link>
 							<url>../../10_ise_eiffel_specific/10_language_specificity.xml</url>
 							<label>Check out more here</label>
@@ -42,32 +42,39 @@
 			<size>2</size>Bug fixes
 		</heading>
 		<list ordered="false">
-			<item>Fixed
-				<compiler_error>VAPE</compiler_error> errors that were not previously reported. Now
+			<item>Fixed 
+				<compiler_error>VAPE</compiler_error> errors that were not previously reported. Now 
 				<compiler_error>VAPE</compiler_error> errors are checked against arguments of a feature used in a precondition and are also checked for a qualified call.
 			</item>
 			<item>Fixed a conformance bug that made a manifest array not conform to ANY.</item>
 			<item>Fixed a generic conformance bug where an assignment attempt would change the behavior of the execution.</item>
 			<item>Fixed a wrongly reported error by the compiler in the following case:
-				<paragraph>In a system that has a generic class CLIENT with constraint `G -&gt; SUPPLIER create make end', where the creation procedure of SUPPLIER is exported to {CLIENT}. If another class has an attribute `x: CLIENT [SUPPLIER]' the compiler reports a
+				<paragraph>In a system that has a generic class CLIENT with constraint `G -&gt; SUPPLIER create make end', where the creation procedure of SUPPLIER is exported to {CLIENT}. If another class has an attribute `x: CLIENT [SUPPLIER]' the compiler reports a 
 					<compiler_error>VTCG</compiler_error> error, though it should accept the classes.
 				</paragraph>
 			</item>
 			<item>Fixed a crash when one of the following command lines was used in a directory with no existing project that contains a file named "Ace":
-				<paragraph>ec -flat -allec -short -allec -flatshort -allec -flat -all_and_parentsec -short     -all_and_parentsec -flatshort -all_and_parents</paragraph>
+				<code_block>ec -flat      -all
+ec -short     -all
+ec -flatshort -all
+ec -flat      -all_and_parents
+ec -short     -all_and_parents
+ec -flatshort -all_and_parents</code_block>
 			</item>
 			<item>Fixed a bug in output display between standard output and error output. Doing the following:
-				<paragraph>io.put_string ("foo%N")io.error.put_string ("bar%N")</paragraph>
+				<code_block>io.put_string ("foo%N")
+io.error.put_string ("bar%N")</code_block>
 				<paragraph>you get the following output when simply launched from the command line:</paragraph>
-				<paragraph>foobar
-					<paragraph>however if you do:</paragraph>
-					<paragraph>my_program &gt;&amp; RESULT</paragraph>
-					<paragraph>to redirect both standard and error outputs to RESULT you get in the RESULT file this incorrect content:</paragraph>
-					<paragraph>barfoo</paragraph>
-				</paragraph>
+				<code_block>foo
+bar</code_block>
+				<paragraph>however if you do:</paragraph>
+				<code_block>my_program &gt;&amp; RESULT</code_block>
+				<paragraph>to redirect both standard and error outputs to RESULT you get in the RESULT file this incorrect content:</paragraph>
+				<code_block>bar
+foo</code_block>
 			</item>
-			<item>Fixed a non reported
-				<compiler_error>VTEC</compiler_error> or
+			<item>Fixed a non reported 
+				<compiler_error>VTEC</compiler_error> or 
 				<compiler_error>VTCG</compiler_error> error when an invalid type used as actual generic parameters in an explicit type in a creation instruction.
 			</item>
 		</list>

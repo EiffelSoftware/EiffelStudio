@@ -23,17 +23,17 @@
 			</link> takes care of everything graphically. If for some reason you need to modify manually Ace files, the syntax is described beneath.
 		</paragraph>
 		<heading>
-			<size>2</size>Overview
+			<size>2</size>Overview		
 		</heading>
 		<paragraph>Here is a standard Ace file:</paragraph>
 		<code_block>
-system
+<keyword>system</keyword>
 	sample
 
-root
+<keyword>root</keyword>
 	ROOT_CLASS: "make"
 
-default
+<keyword>default</keyword>
 	address_expression (no)
 	array_optimization (no)
 	assertion (all)
@@ -55,10 +55,10 @@ default
 	shared_library_definition ("file_name.def")
 	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\base");
 
-cluster
+<keyword>cluster</keyword>
 	root_cluster: "c:\temp";
 
-		-- EiffelBase
+		<comment>-- EiffelBase</comment>
 	all base:	"$ISE_EIFFEL\library\base"
 		exclude
 			"desc";"table_eiffel3"
@@ -66,12 +66,12 @@ cluster
 
 	thread:	"$ISE_EIFFEL\library\thread"
 
-external
+<keyword>external</keyword>
 	include_path:
 		"$(ISE_EIFFEL)\library\wel\spec\windows\include"
 	object:
 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
-end
+<keyword>end</keyword>
 </code_block>
 		<paragraph>The first part, introduced by the keyword 
 			<code>
@@ -105,135 +105,121 @@ end
 		<paragraph>We will describe each option as they are presented in the Ace file above, in the option section, in alphabetical order. The default value for each option is shown in bold.</paragraph>
 		<list ordered="false">
 			<item>
-				<span>address_expression (yes |
-					<bold>no</bold>)
-				</span>: enables you to pass ` 
+				<italic>address_expression</italic> (yes | <bold>no</bold>): enables you to pass ` 
 				<bold>$(s.to_c)</bold>' to a feature instead of declaring `a' of type 
 				<bold>ANY</bold>, and then assigning ` 
 				<bold>s.to_c</bold>' to `a' and passing ` 
 				<bold>$a</bold>'. Turn this option on only if you have advanced knowledge of the garbage collector insides, since using this syntax illegally can lead to bugs very hard to trace.
 			</item>
+			<item><italic>arguments</italic> ("value"): command line argument to use when executing system. You may have several of those, the first one to appear in the Ace file is the default one.</item>
 			<item>
-				<span>array_optimization (yes |
+				<italic>array_optimization </italic>(yes |
 					<bold>no</bold>)
-				</span>: enables array optimization which increases performance of array computation in loops. It is enabled only if arrays are used as local variables or arguments of an Eiffel feature.
+				: enables array optimization which increases performance of array computation in loops. It is enabled only if arrays are used as local variables or arguments of an Eiffel feature.
 			</item>
 			<item>
-				<span>assertion (no |
+				<italic>assertion </italic>(no |
 					<bold>require</bold> | ensure |invariant | loop | check | all)
-				</span>: sets the assertion level of an Eiffel system. Contrary to previous versions of the Eiffel language, levels do not include the previous level, thus specifying`loop' will no longer check for preconditions, postconditions ,class invariants, loop variants and loop invariants. With the new syntax, you are free to decide which assertions are to be tested independently from the others. Thus, it is now possible to check preconditions and checks by writing
-				<line_break/> assertion (require)
-				<line_break/> assertion (check)
-				<line_break/> in the Ace file, without having invariants and postconditions checked.
-				<line_break/> The all specification includes all checks.
+				: sets the assertion level of an Eiffel system. Contrary to previous versions of the Eiffel language, levels do not include the previous level, thus specifying`loop' will no longer check for preconditions, postconditions ,class invariants, loop variants and loop invariants. With the new syntax, you are free to decide which assertions are to be tested independently from the others. Thus, it is now possible to check preconditions and checks by writing
+				<code_block>
+	assertion (require)
+	assertion (check)</code_block>
+				in the Ace file, without having invariants and postconditions checked. The all specification includes all checks.
 			</item>
 			<item>
-				<span>check_vape (
+				<italic>check_vape </italic>(
 					<bold>yes</bold> | no)
-				</span>:enables you to disable type checking for 
-				<bold>VAPE</bold> errors in preconditions, which correspond to unsufficiently exported features used in preconditions (ETL 2nd edition page 122).
+				: enables you to disable type checking for 
+				<code><compiler_error>VAPE</compiler_error></code> errors in preconditions, which correspond to unsufficiently exported features used in preconditions (ETL 2nd edition page 122).
 			</item>
 			<item>
-				<span>console_application (yes |
+				<italic>console_application </italic>(yes |
 					<bold>no</bold>)
-				</span>: has no effects on Unix and it was made for Windows users. It enables Windows users to choose between creating a console application or a GUI application (in which case a console will be created if needed, instead of using the console the program was launched from).
+				: has no effects on Unix and it was made for Windows users. It enables Windows users to choose between creating a console application or a GUI application (in which case a console will be created if needed, instead of using the console from which the program was launched).
 			</item>
 			<item>
-				<span>collect (
+				<italic>collect </italic>(
 					<bold>yes</bold> | no)
-				</span>: not applicable. One has to use the 
-				<bold>MEMORY</bold> class to activate or stop the garbage collector.
+				: not applicable. One has to use the 
+				<code><class_name>MEMORY</class_name></code> class to activate or stop the garbage collector.
 			</item>
 			<item>
-				<span>dead_code_removal (
+				<italic>dead_code_removal </italic>(
 					<bold>yes</bold> | no)
-				</span>:it is a finalization option only. It enables you to not generate the C code for Eiffel routines that are not called in your code, and thus reducing the size of the generated application.
+				: it is a finalization option only. It enables you to not generate the C code for Eiffel routines that are not called in your code, and thus reducing the size of the generated application.
 			</item>
 			<item>
-				<span>debug (yes |
+				<italic>debug </italic>(yes |
 					<bold>no</bold> |"DEBUG_TAG")
-				</span>: enables you to activate or disable the code written inside ` 
-				<span>
-					<bold>debug</bold>
-				</span>' statement in your Eiffel code. If you marked your code with tagged ` 
-				<span>
-					<bold>debug</bold>
-				</span>' statement and if you specify atag in the Ace file, only this kind of ` 
-				<code>
-					<keyword>debug</keyword>
-				</code>' statement will be executed. You can put several lines of ` 
-				<span>
-					<bold>debug</bold>
-				</span>' in the Ace file to enable several kinds of ` 
-				<span>
-					<bold>debug</bold>
-				</span>' statements.
+				: enables you to activate or disable the code written inside <code><keyword>debug</keyword></code> statement in your Eiffel code. If you marked your code with tagged <code><keyword>debug</keyword></code> statement and if you specify a tag in the Ace file, only this kind of <code><keyword>debug</keyword></code>' statement will be executed. You can put several lines of <code><keyword>debug</keyword></code> in the Ace file to enable several kinds of <code><keyword>debug</keyword></code> statements.
 			</item>
 			<item>
-				<span>document ("path")</span>: specifies in which directory the documentation generated by EiffelStudio should be put (when using the 
+				<italic>document </italic>("path"): specifies in which directory the documentation generated by EiffelStudio should be put (when using the 
 				<bold>Project</bold>/ 
 				<bold>Generate documentation...</bold> menu). If no directory is specified, the documentation will be generated at the same level as your EIFGEN directory in a directory called `Documentation'.
 			</item>
 			<item>
-				<span>dynamic_runtime (yes |
+				<italic>dynamic_runtime </italic>(yes |
 					<bold>no</bold>)
-				</span>:enables the use of a shared library version of the runtime on both Windows (DLL) and Unix platforms (.so) that supports shared libraries.
+				: enables the use of a shared library version of the runtime on both Windows (DLL) and Unix platforms (.so) that supports shared libraries.
 			</item>
 			<item>
-				<span>exception_trace (yes |
+				<italic>exception_trace </italic>(yes |
 					<bold>no</bold>)
-				</span>:it is a finalization option only. It enables you to see a complet eexception trace when your finalized application is crashing. Because it is adding some code to remember where the application was during the crash it can slow down the performance of your application by a factor of 5% to 30% depending of your platform.
+				: it is a finalization option only. It enables you to see a complete exception trace when your finalized application is crashing. Because it is adding some code to remember where the application was during the crash it can slow down the performance of your application by a factor of 5% to 30% depending of your platform.
 			</item>
+			<item><italic>il_verifiable</italic> (<bold>yes</bold> | no): generates verifiable code for .NET code generation.</item>
 			<item>
-				<span>inlining (yes |
+				<italic>inlining </italic>(yes |
 					<bold>no</bold>)
-				</span>: it is a finalization option only. It enables to inline functions that can be inlined (see `inlining_size' below). The ISE Eiffel inlining is very powerful since it can inline a function in all your Eiffel code, without scope limitation as in C or C++ compilers.
+				: it is a finalization option only. It enables to inline functions that can be inlined (see `inlining_size' below). The inlining is very powerful since it can inline a function in all your Eiffel code, without scope limitation as in C or C++ compilers.
 			</item>
 			<item>
-				<span>inlining_size ("value")</span>: it is a finalization option only, used in conjunction with the inlining option. It enables to specify the size under which the compiler mayinline a function. The value given in parameter corresponds to the number of instructions as the Eiffel compiler sees them (for example a := b.f corresponds to 2 instructions for the Eiffel compiler).
+				<italic>inlining_size </italic>("value"): it is a finalization option only, used in conjunction with the inlining option. It enables to specify the size under which the compiler may inline a function. The value given in parameter corresponds to the number of instructions as the Eiffel compiler sees them (for example a := b.f corresponds to 2 instructions for the Eiffel compiler).
 			</item>
 			<item>
-				<span>line_generation (yes |
+				<italic>line_generation </italic>(yes |
 					<bold>no</bold>)
-				</span>:enables the generation of C pragmas `#line x' in the C generated code. This option is mostly used by embedded Eiffel developers who could not run the ISE EiffelStudio environment on their target platform.
+				: enables the generation of C pragmas `#line x' in the C generated code and equipped finalized .NET systems with the ability to be debugged by a .NET debugger. In the C code generation, this option is mostly used by embedded Eiffel developers who could not run EiffelStudio environment on their target platform.
 			</item>
 			<item>
-				<span>multithreaded (yes |
+				<italic>multithreaded </italic>(yes |
 					<bold>no</bold>)
-				</span>:enables the generation of a multithreaded application. This option cannot be changed during the development of your project and has to be set correctly at the first compilation of your system.
+				: enables the generation of a multithreaded application. This option cannot be changed during the development of your project and has to be set correctly at the first compilation of your system.
 			</item>
 			<item>
-				<span>override_cluster (cluster_name)</span>:enables you to specify a certain `cluster_name' as override cluster. As a result, all classes in `cluster_name' will override the classes with the same names located in other clusters. Very useful when used in conjunction with configuration management tools.
+				<italic>override_cluster </italic>(cluster_name):enables you to specify a certain `cluster_name' as override cluster. As a result, all classes in `cluster_name' will override the classes with the same names located in other clusters. Very useful when used in conjunction with configuration management tools.
 			</item>
 			<item>
-				<span>profile (yes |
+				<italic>profile </italic>(yes |
 					<bold>no</bold>)
-				</span>: enables the Eiffel profiling (to know more about Eiffel profiling click 
+				: enables the Eiffel profiling (to know more about Eiffel profiling click 
 				<link>
 					<url>../../70_wizards_and_dialogs/10_profiler_wizard/00_introduction.xml</url>
 					<label>here</label>
 				</link>).
 			</item>
 			<item>
-				<span>shared_library_definition("file_name.def")</span>: enables you to specify `file_name.def' asfile where the Eiffel compiler will look when trying to generate the exported function of the shared library you are developing. To have more information concerning definition files, see the 
+				<italic>shared_library_definition </italic>("file_name.def"): enables you to specify `file_name.def' as file where the Eiffel compiler will look when trying to generate the exported function of the shared library you are developing. To have more information concerning definition files, see the 
 				<link>
 					<url>../40_dynamic_library_generation/00_introduction.xml</url>
 					<label>Dynamic library builder reference</label>
 				</link>.
 			</item>
 			<item>
-				<span>precompiled("precompiled_library_path")</span>: enables you to specify a precompiled library. Most examples given in the ISE EiffelStudio delivery are using a precompiled library. It makes the development of small application incredibly fast.
+				<italic><italic>precompiled </italic>("precompiled_library_path"): </italic>enables you to specify a precompiled library. Most examples given in the EiffelStudio delivery are using a precompiled library. It makes the development of small application incredibly fast.
 			</item>
+			<item><italic>syntax_warning</italic> (yes | <bold>no</bold>): displays warning each time an obsolete syntactical construct is used in your code. This is needed if you want to upgrade your source code to the most recent version of the Eiffel specification</item>
 		</list>
 		<heading>
 			<size>2</size>External options
 		</heading>
 		<list ordered="false">
 			<item>
-				<span>include_path</span>: enables you to specify the path to the header files you are using in external clauses of your Eiffel based source code.
+				<italic>include_path</italic>: enables you to specify the path to the header files you are using in external clauses of your Eiffel based source code.
 			</item>
 			<item>
-				<span>object</span>: enables you to link your application with specified object files.
+				<italic>object</italic>: enables you to link your application with specified object files.
 			</item>
 		</list>
 		<seealso>
@@ -455,24 +441,15 @@ end
 				</row>
 			</table>
 		</paragraph>
-		<paragraph>Introduced with ISE EiffelBench 4.5 the keyword ` 
-			<code>
-				<keyword>all</keyword>
-			</code>' can appear before the name of a cluster. This new keyword is now used in most Ace files given with your distribution. One example can be found above and it is reproduced below with some explanations:
+		<paragraph>Introduced with ISE EiffelBench 4.5 the keyword <code><keyword>all</keyword></code> can appear before the name of a cluster. This new keyword is now used in most Ace files given with your distribution. One example can be found above and it is reproduced below with some explanations:
 			<code_block>
-		-- EiffelBase
-	all base: "$ISE_EIFFEL\library\base"
-		exclude
+		<comment>-- EiffelBase</comment>
+	<keyword>all</keyword> base: "$ISE_EIFFEL\library\base"
+		<keyword>exclude</keyword>
 			"table_eiffel3"
-		end
+		<keyword>end</keyword>
 </code_block>
 		</paragraph>
-		<paragraph>The meaning of ` 
-			<code>
-				<keyword>all</keyword>
-			</code>' is to take into account all Eiffel files located below the directory pointed by the `base' cluster. In addition, the example above uses ` 
-			<code>
-				<keyword>exclude</keyword>
-			</code>' to make sure that the directory called `table_eiffel3' and its descendants won't be traversed. This is very useful when you have two clusters which are used through a switch in your Ace file.
+		<paragraph>The meaning of <code><keyword>all</keyword></code> is to take into account all Eiffel files located below the directory pointed by the `base' cluster. In addition, the example above uses <code><keyword>exclude</keyword></code> to make sure that the directory called `table_eiffel3' and its descendants won't be traversed. This is very useful when you have two clusters which are used through a switch in your Ace file.
 		</paragraph>
 	</paragraph></document>

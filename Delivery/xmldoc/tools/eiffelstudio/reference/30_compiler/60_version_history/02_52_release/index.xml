@@ -12,7 +12,7 @@
 					<item>Partial implementation of generic conformance </item>
 					<item>Support for tuples and agents.</item>
 					<item>Support for any existing Eiffel code that does not use C externals.</item>
-					<item>Support for compiling Eiffel libraries using C externals that are not related to the ISE C runtime.</item>
+					<item>Support for compiling Eiffel libraries using C externals that are not related to the Eiffel Software C runtime.</item>
 				</list>
 				<paragraph>And the following limitations:
 					<list ordered="false">
@@ -95,18 +95,18 @@
 					<size>2</size>Bug fixes
 				</heading>
 				<list ordered="false">
-					<item>Fixed memory corruption issue when trying to access an
+					<item>Fixed memory corruption issue when trying to access an 
 						<code>
 							<class_name>INTEGER_64</class_name>
 						</code> value.
 					</item>
-					<item>Fixed a problem with manifest
+					<item>Fixed a problem with manifest 
 						<code>
 							<class_name>INTEGER_64</class_name>
 						</code> constants whose values were incorrectly interpreted.
 					</item>
-					<item>          Fixed VAPE errors that were not previously reported in 5.1. Now
-						<compiler_error>VAPE </compiler_error> errors are checked against call to infix and prefix features.
+					<item>          Fixed <code><compiler_error>VAPE</compiler_error></code> errors that were not previously reported in 5.1. Now 
+						<compiler_error>VAPE</compiler_error> errors are checked against call to infix and prefix features.
 					</item>
 				</list>
 	</paragraph></document>

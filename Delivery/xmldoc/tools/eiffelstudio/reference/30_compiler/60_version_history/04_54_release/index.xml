@@ -5,11 +5,6 @@
 			<size>2</size>What's new
 		</heading>
 		<list ordered="false">
-			<item>Limited support for new 
-				<code>
-					<keyword>convert</keyword>
-				</code> keyword           (only on argument passing and assignments. Not supported when used           with infix routines).
-			</item>
 			<item>Support for assertion checking on external routines.</item>
 			<item>Removed limitation about implementing or redefining a non-external           routine by an external one and vice versa.</item>
 			<item>Support for new C/C++ inline specification.</item>
@@ -18,6 +13,12 @@
 			<item>Launch C compilation when needed if 
 				"-c_compile" option is specified on the 
 				"ec" command line.
+			</item>
+			<item>Added ability to define custom attributes on assembly. One as to define custom attributes under the new `assembly_metadata' index clause of the root class.</item>
+			<item>Limited support for new 
+				<code>
+					<keyword>convert</keyword>
+				</code> keyword           (only on argument passing and assignments. Not supported when used           with infix routines).
 			</item>
 		</list>
 		<heading>
@@ -45,41 +46,29 @@
 			<item>Changed the way we generate calls to C/C++ external routines. It           is possible that because of this change, code that used to C compile,           will not compile anymore. This happens mostly when mixing C and C++           code and the C call being made is incorrect but was not previously           checked against the C header files if provided.</item>
 			<item>In multithreaded mode, all C externals that could potentially           block the execution of the system should be marked `blocking' as in:
 				<line_break/>
-				<paragraph>
-					<code>
-						<feature_name>sleep</feature_name>
-					</code> (m: 
-					<code>
-						<class_name>INTEGER</class_name>
-					</code>) 
-					<code>
-						<keyword>is</keyword>
-					</code>
-					<code>
-						<keyword>external</keyword>
-					</code> "C blocking"          
-					<code>
-						<keyword>end</keyword>
-					</code>
-				</paragraph>Not doing it could generate dead-lock during the execution of a multithreaded system.
+				<code_block>	<feature_name>sleep</feature_name> (m: <class_name>INTEGER</class_name>) <keyword>is</keyword>
+		<keyword>external</keyword>
+			"C blocking"          
+		<keyword>end</keyword></code_block>
+				Not doing it could generate dead-lock during the execution of a multithreaded system.
 			</item>
 			<item>Static access on externals is now only authorized when external is           a frozen external without assertions.</item>
 			<item>Compiler will now report a warning for assignments like those:
 				<line_break/>
-				<paragraph>td: 
-					<code>
-						<class_name>TUPLE</class_name>
-					</code> [
-					<code>
-						<class_name>DOUBLE</class_name>
-					</code>]ti: 
-					<code>
-						<class_name>TUPLE</class_name>
-					</code> [
-					<code>
-						<class_name>INTEGER</class_name>
-					</code>]td := ti
-				</paragraph>          The warning will help you correct code using this pattern, because in           the next release this will be rejected in order to conform to the           Eiffel language specification.          
+				<code_block>td: <class_name>TUPLE</class_name> [<class_name>DOUBLE</class_name>]
+ti: <class_name>TUPLE</class_name> [<class_name>INTEGER</class_name>]
+
+td := ti</code_block>
+				The warning will help you correct code using this pattern, because in           the next release this will be rejected in order to conform to the           Eiffel language specification.          
+			</item>
+			<item>Now we do not generate by default the .NET attribute <code><class_name>ComVisibleAttribute</class_name></code> with a False value. If needed it has to be done through the new compiler functionality to add custom attributes on assembly.</item>
+			<item>Changed indexing clause tag for specifying custom attributes for .NET systems. Now `attribute' is replaced by `metadata'. Now you can have:
+				<list ordered="false">
+					<item>metadata: generated for both interface and implementation classes </item>
+					<item>assembly_metadata: generated for assembly only when specified in root class of system </item>
+					<item>class_metadata: generated only for implementation class </item>
+					<item>interface_metadata: generated only for interface class</item>
+				</list>
 			</item>
 		</list>
 		<heading>
@@ -95,7 +84,7 @@
 				</code>, the following agent creation          
 				<code>
 					<keyword>agent</keyword>
-				</code>
+				</code> 
 				<code>
 					<feature_name>target</feature_name>
 				</code>.
@@ -112,7 +101,7 @@
 			<item>Allowed type specification for open operands in agent creation,           i.e. one can now write: 
 				<code>
 					<keyword>agent</keyword>
-				</code>
+				</code> 
 				<code>
 					<feature_name>f</feature_name>
 				</code> ({
@@ -126,10 +115,10 @@
 				</code>: 
 				<code>
 					<class_name>CHARACTER</class_name>
-				</code>
+				</code> 
 				<code>
 					<keyword>is</keyword>
-				</code>
+				</code> 
 				<code>
 					<string>"rdsf"</string>
 				</code>
@@ -150,13 +139,13 @@
 			<item>Fixed non-detection of changes when changing code from          
 				<code>
 					<keyword>agent</keyword>
-				</code>
+				</code> 
 				<code>
 					<feature_name>call </feature_name>
 				</code>to          
 				<code>
 					<keyword>agent</keyword>
-				</code>
+				</code> 
 				<code>
 					<keyword>Current</keyword>
 				</code>.
@@ -167,6 +156,7 @@
 					<feature_name>call </feature_name>
 				</code>  to current class.
 			</item>
+			<item>Fixed creation and assignment attempts on generic types that have anchored types in their generic parameter, and the anchor is itself generic.</item>
 		</list>
 		<heading>
 			<size>3</size>Runtime/code generation issues
@@ -181,6 +171,7 @@
 					<class_name>ANY</class_name>
 				</code> would crash.
 			</item>
+			<item>Fixed issue when retrieving storable files that contain TUPLE instances.</item>
 			<item>Fixed issues when using agents in a multithreaded application,           they will sometimes disable the garbage collector and the application           might quickly run out of memory.</item>
 			<item>Fixed random crashes when EIF_MEMORY_CHUNK, EIF_MEMORY_SCAVENGE           and EIF_STACK_CHUNK environment variables had an incorrect value.           Instead the runtime will now fix the value to an appropriate one.</item>
 		</list>
@@ -190,22 +181,11 @@
 		<list ordered="false">
 			<item>Fixed bug in code generation  with following statement:
 				<line_break/>
-				<paragraph>l_time: 
-					<code>
-						<class_name>TIME_SPAN</class_name>
-					</code>
-					<code>
-						<feature_name>print</feature_name>
-					</code> (l_time.
-					<code>
-						<feature_name>total_milliseconds</feature_name>
-					</code>.
-					<code>
-						<feature_name>out</feature_name>
-					</code>)
-				</paragraph>
+				<code_block>l_time: <class_name>TIME_SPAN</class_name>
+<feature_name>print</feature_name> (l_time.<feature_name>total_milliseconds</feature_name>.<feature_name>out</feature_name>)</code_block>
 			</item>
-			<item/>
+			<item>Fixed incorrect code generation with code accessing attributes of .NET expanded types.</item>
+			<item>Fixed incorrect computation of equal when used with basic types, e.g. equal (1, 1) would return False instead of True. </item>
 		</list>
 		<heading>
 			<size>3</size>Store/Retrieve issues
@@ -213,5 +193,6 @@
 		<list ordered="false">
 			<item>Fixed memory corruption bug with recoverable storable when a           mismatch was detected</item>
 			<item>Fixed issue where mismatch was not detected if attributes were           dropped</item>
+			<item>Fixed issue with independent store when storing <code><class_name>TUPLE</class_name></code> objects where it would crash if storable did not include a reference to <code><class_name>ANY</class_name></code>. </item>
 		</list>
 	</paragraph></document>

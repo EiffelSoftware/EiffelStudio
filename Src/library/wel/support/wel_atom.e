@@ -8,7 +8,10 @@ class
 	WEL_ATOM
 
 inherit
-	WEL_ANY
+	MEMORY
+		redefine
+			dispose
+		end
 
 creation
 	make
@@ -27,15 +30,13 @@ feature {NONE} -- Initialization
 			!! a_wel_string.make (a_name)
 			item := cwin_add_atom (a_wel_string.item)
 		ensure
-			name_is_equal: exists implies name.is_equal (a_name)
+			name_is_equal: item /= 0 implies name.is_equal (a_name)
 		end
 
 feature -- Access
 
 	name: STRING is
 			-- Atom name
-		require
-			exists: exists
 		local
 			a_wel_string: WEL_STRING
 			nb: INTEGER
@@ -55,37 +56,40 @@ feature -- Access
 	Max_name_length: INTEGER is 80
 			-- Maximum atom name length
 
+	item: INTEGER
+			-- Eiffel representation of ATOM.
+
 feature {NONE} -- Removal
 
-	destroy_item is
+	dispose is
 			-- Delete atom.
 		do
-			cwin_delete_atom (item)
-			item := default_pointer
+			item := cwin_delete_atom (item)
+			item := 0
 		end
 
 feature {NONE} -- Externals
 
-	cwin_add_atom (str: POINTER): POINTER is
+	cwin_add_atom (str: POINTER): INTEGER is
 			-- SDK AddAtom
 		external
-			"C [macro <wel.h>] (LPCSTR): EIF_POINTER"
+			"C [macro <wel.h>] (LPCTSTR): EIF_INTEGER"
 		alias
 			"AddAtom"
 		end
 
-	cwin_delete_atom (atom: POINTER) is
+	cwin_delete_atom (atom: INTEGER): INTEGER is
 			-- SDK DeleteAtom
 		external
-			"C [macro <wel.h>] (ATOM)"
+			"C [macro <wel.h>] (ATOM): EIF_INTEGER"
 		alias
 			"DeleteAtom"
 		end
 
-	cwin_get_atom_name (atom, buffer: POINTER; length: INTEGER): INTEGER is
+	cwin_get_atom_name (atom: INTEGER; buffer: POINTER; length: INTEGER): INTEGER is
 			-- SDK GetAtomName
 		external
-			"C [macro <wel.h>] (ATOM, LPSTR, int): EIF_INTEGER"
+			"C [macro <wel.h>] (ATOM, LPTSTR, int): EIF_INTEGER"
 		alias
 			"GetAtomName"
 		end

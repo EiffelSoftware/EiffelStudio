@@ -163,15 +163,38 @@ feature -- Status report
 			Result := cwin_send_message_result (item, Lvm_getcolumnwidth, index, 0)
 		end
 
-	get_item_state (index: INTEGER): INTEGER is
-			-- State of the zero-based `index'-th item. See WEL_LVIS_CONSTANTS for
-			-- the state constants.
+	get_item_state (index, mask: INTEGER): INTEGER is
+			-- State of the zero-based `index'-th item. The mask give
+			-- the state informations to retrieve.See WEL_LVIS_CONSTANTS for
+			-- the value of the mask.
 		require
 			exists: exists
 			index_large_enough: index >= 0
 			index_small_enough: index < column_count
 		do
-			Result := cwin_send_message_result (item, Lvm_getitemstate, index, 0)
+			Result := cwin_send_message_result (item, Lvm_getitemstate, index, mask)
+		end
+
+	get_cell_text (i,j: INTEGER): STRING is
+			-- Get the label of the cell with coordinates `i', `j' with `txt'.
+		require
+			exists: exists
+			i_large_enough: i >= 0
+			j_large_enough: j >= 0
+			i_small_enough: i < column_count
+			j_small_enough: j < count
+		local
+			an_item: WEL_LIST_VIEW_ITEM
+			buffer: STRING
+		do
+			!! an_item.make
+			!! buffer.make (buffer_size)
+			buffer.fill_blank
+			an_item.set_isubitem (j)
+			an_item.set_text (buffer)
+			an_item.set_cchtextmax (buffer_size)
+			cwin_send_message (an_item.item, Lvm_getitemtext, i, an_item.to_integer)
+			Result := an_item.text			
 		end
 
 	get_item (index, subitem: INTEGER): WEL_LIST_VIEW_ITEM is
@@ -218,9 +241,10 @@ feature -- Status setting
 			cwin_send_message (item, Lvm_update, index, 0)
 		end	
 
-	set_item_state (index, value: INTEGER) is
-			-- Make `vaue' the new state of the zero-based `index'-th item.
-			-- See WEL_LVIF_CONSTANTS for the state constants.
+	set_item_state (index, state, mask: INTEGER) is
+			-- Make `value' the new state of the zero-based `index'-th item.
+			-- The mask give the state informations to retrieve.See 
+			-- WEL_LVIS_CONSTANTS for the value of the state and the mask.
 		require
 			exists: exists
 			index_large_enough: index >= 0
@@ -228,8 +252,9 @@ feature -- Status setting
 		local
 			an_item: WEL_LIST_VIEW_ITEM
 		do
-			!! an_item.make_with_attributes (value, index, 0, 0, "")
-			cwin_send_message (item, Lvm_setitemstate, index, an_item.to_integer)
+			!! an_item.make_with_attributes (state, index, 0, 0, "")
+			an_item.set_statemask (mask)
+			cwin_send_message (item, Lvm_setitemstate, state, an_item.to_integer)
 		end
 
 	set_item_count (value: INTEGER) is

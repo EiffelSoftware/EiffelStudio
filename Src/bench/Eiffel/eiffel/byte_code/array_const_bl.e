@@ -41,7 +41,7 @@ feature
 			require_meta: BOOLEAN
 		do
 			-- We need 'Current'
-			context.mark_current_used;
+			context.add_dftype_current;
 
 			real_ty ?= context.real_type (type);
 			target_gen_type := real_ty.meta_generic.item (1);

@@ -418,15 +418,12 @@ feature -- Generic conformance
 				gtype.generate_cid_init (l_buffer, context.final_mode, True, idx_cnt)
 			end
 
-			l_buffer.putstring ("typres = RTCID(&typcache,")
-
-			context.Current_register.print_register
-
+			l_buffer.putstring ("typres = RTCID2(&typcache,")
+			context.generate_current_dftype
 			l_buffer.putstring (", ")
 			l_buffer.putint (gtype.generated_id (context.final_mode))
 			l_buffer.putstring (", typarr);")
 			l_buffer.new_line
 			l_buffer.new_line
 		end
-
 end

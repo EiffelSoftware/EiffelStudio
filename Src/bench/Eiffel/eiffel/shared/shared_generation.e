@@ -19,10 +19,13 @@ feature
 	gc_lacc_else_r_acc: STRING is "} else {"
 
 	gc_dtype: STRING is "dtype"
-
-	gc_dtype_current: STRING is "Dtype(Current)"
-
+	gc_dftype: STRING is "dftype"
+	gc_inlined_dtype: STRING is "inlined_dtype"
+	gc_inlined_dftype: STRING is "inlined_dftype"
 	gc_upper_dtype_lparan: STRING is "Dtype("
+	gc_upper_dftype_lparan: STRING is "Dftype("
+			-- String used to buffer value of current dynamic type and current full
+			-- dynamic type.
 
 	generation_buffer: GENERATION_BUFFER is
 			-- String where all the generation will happen

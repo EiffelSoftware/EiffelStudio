@@ -187,6 +187,7 @@ feature {NONE} -- Implementation
 			end
 
 			buf.new_line
+			init_dftype
 			init_dtype
 		end
 
@@ -230,6 +231,7 @@ feature {NONE} -- Implementation
 			buf.putstring ("%N#define Result ")
 			buf.putstring (result_name)
 			buf.new_line
+			init_dftype
 			init_dtype
 		end;
 		
@@ -315,6 +317,7 @@ feature {NONE} -- Implementation
 				buf.putstring (gc_rparan_semi_c);
 				buf.new_line
 			end;
+			init_dftype
 			init_dtype;
 		end;
 

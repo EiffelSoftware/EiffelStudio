@@ -1003,7 +1003,7 @@ feature -- Generation
 				gen_type.generate_cid_init (buffer, final_mode, False, idx_cnt)
 			end
 
-			buffer.putstring ("typres = RTCID(&typcache, Current,")
+			buffer.putstring ("typres = RTCID2(&typcache, Dftype(Current),")
 			buffer.putint (gen_type.generated_id (final_mode))
 			buffer.putstring (", typarr);")
 			buffer.new_line

@@ -121,6 +121,12 @@ feature -- Access
 	inlined_dt_current: INTEGER
 			-- Number of time we need to compute Current's type
 
+	dftype_current: INTEGER
+			-- Number of time we need to compute Current's full dynamic type
+
+	inlined_dftype_current: INTEGER
+			-- Number of time we need to compute Current's full dynamic type
+
 	local_index_counter: INTEGER
 			-- Index for local reference variables
 
@@ -499,7 +505,7 @@ feature -- Setting
 		end
 
 	add_dt_current is
-			-- One more time we need to compute Current's type
+			-- One more time we need to compute Current's type.
 		do
 			if in_inlined_code then
 				inlined_dt_current := inlined_dt_current + 1
@@ -507,27 +513,51 @@ feature -- Setting
 				dt_current := dt_current + 1
 			end
 		end
-
-	add_to_dt_current (i: INTEGER) is
-			-- Add `i' to dt_current.
-		require
-			valid_i: i > 0
+		
+	add_dftype_current is
+			-- On more time we need to compute Current's full dynamic type.
 		do
-			dt_current := dt_current + i
-		ensure
-			added: old dt_current + i = dt_current
+			if in_inlined_code then
+				inlined_dftype_current := inlined_dftype_current + 1
+			else
+				dftype_current := dftype_current + 1
+			end
 		end
 
 	set_inlined_dt_current (i: INTEGER) is
 			-- Set the value of `inlined_dt_current' to `i'
+		require
+			i_non_negative: i >= 0
 		do
 			inlined_dt_current := i
+		ensure
+			inlined_dt_current_set: inlined_dt_current = i
+		end
+
+	set_inlined_dftype_current (i: INTEGER) is
+			-- Set value of `inlined_dftype_current' to `i'.
+		require
+			i_non_negative: i >= 0
+		do
+			inlined_dftype_current := i
+		ensure
+			inlined_dftype_current_set: inlined_dftype_current = i
 		end
 
 	reset_inlined_dt_current is
 			-- Reset `inlined_dt_current' to 0
 		do
 			inlined_dt_current := 0
+		ensure
+			inlined_dt_current_set: inlined_dt_current = 0
+		end
+
+	reset_inlined_dftype_current is
+			-- Reset `inlined_dftype_current' to 0
+		do
+			inlined_dftype_current := 0
+		ensure
+			inlined_dftype_current_set: inlined_dftype_current = 0
 		end
 
 	mark_current_used is
@@ -783,6 +813,8 @@ feature -- Setting
 			exp_args := 0
 			dt_current := 0
 			inlined_dt_current := 0
+			dftype_current := 0
+			inlined_dftype_current := 0
 			is_first_precondition_block_generated := False
 			is_new_precondition_block := False
 			has_separate_call_in_precondition := False
@@ -847,6 +879,8 @@ feature -- Setting
 			result_used := saved_context.result_used
 			dt_current := saved_context.dt_current
 			inlined_dt_current := saved_context.inlined_dt_current
+			dftype_current := saved_context.dftype_current
+			inlined_dftype_current := saved_context.inlined_dftype_current
 			non_gc_reg_vars := saved_context.non_gc_reg_vars
 			non_gc_tmp_vars := saved_context.non_gc_tmp_vars
 			local_index_table := saved_context.local_index_table
@@ -875,11 +909,25 @@ feature -- Setting
 			-- Generate the dynamic type of `Current'
 		do
 			if inlined_dt_current > 1 then
-				buffer.putstring ("inlined_dtype")
+				buffer.putstring (gc_inlined_dtype)
 			elseif dt_current > 1 then
 				buffer.putstring (gc_dtype)
 			else
 				buffer.putstring (gc_upper_dtype_lparan)
+				Current_register.print_register
+				buffer.putchar (')')
+			end
+		end
+
+	generate_current_dftype is
+			-- Generate the dynamic type of `Current'
+		do
+			if inlined_dftype_current > 1 then
+				buffer.putstring (gc_inlined_dftype)
+			elseif dftype_current > 1 then
+				buffer.putstring (gc_dftype)
+			else
+				buffer.putstring (gc_upper_dftype_lparan)
 				Current_register.print_register
 				buffer.putchar (')')
 			end

@@ -125,10 +125,16 @@ feature {NONE} -- Initialization
 					original_parent_window.lock_update
 				end
 			end		
-			
-			
+
 			dialog := parent_dockable_dialog (tool)
 			if dialog /= Void then
+				if is_minimized then
+						-- Remove minimized state from `Current' as it has
+						-- been docked out of the multiple split area.
+					disable_minimized
+					tool.show
+					dialog.set_height (default_external_docked_height)
+				end
 				dialog.close_request_actions.wipe_out
 				dialog.close_request_actions.extend (agent destroy_dialog_and_restore (dialog))
 				position_docked_from := parent_area.linear_representation.index_of (tool, 1)
@@ -532,6 +538,9 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER, MULTIPLE_SPLIT_AREA} -- Implementation
 		-- A cell contained in `Current' which permits a minimum size to be simulated
 		-- without altering the resizing behaviour of `Current'. Has no screen space,
 		-- but force `height' of current to be adjusted as necessary.
+		
+	default_external_docked_height: INTEGER is 100
+		-- Default height applied to all tools docked externally if they were minimized.
 	
 invariant
 	minimum_size_cell_empty: minimum_size_cell.is_empty

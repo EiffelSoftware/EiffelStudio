@@ -1,0 +1,56 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+
+<HTML>
+	<HEAD>
+		<TITLE>New function layout</TITLE>
+		<META NAME="MS-HKWD" CONTENT="new feature dialog, new function layout">
+		<LINK REL=StyleSheet HREF="/default.css">
+	</HEAD>
+
+	<BODY>
+		<H1>New function layout</H1>
+
+		<CENTER>
+		<IMG SRC="/images/eiffelstudio/feature-wizard-function.png" border="0">
+		</CENTER>
+
+		<P>When clicking <B>Function</B>, the dialog changes to the function layout. It has the following components:
+		<UL>
+			<LI><A HREF="50_feature_properties_modification/00_feature_clauses.html">Feature clause selection</A>
+			<LI><A HREF="50_feature_properties_modification/10_name_field.html">Feature name field</A>
+			<LI><A HREF="50_feature_properties_modification/20_argument_list.html">Argument list</A>
+			<LI><A HREF="50_feature_properties_modification/80_type_selection.html">Type selection</A>
+			<LI><A HREF="50_feature_properties_modification/30_comment_field.html">Header comment field</A>
+			<LI><A HREF="50_feature_properties_modification/40_precondition.html">Precondition field</A>
+			<LI><A HREF="50_feature_properties_modification/50_local_field.html">Local variable field</A>
+			<LI><A HREF="50_feature_properties_modification/60_feature_body.html">Selection for: normal, once, deferred or external routine</A>
+			<LI><A HREF="50_feature_properties_modification/70_postcondition.html">Postcondition field</A>
+
+
+		</UL>
+
+		<H2>Example</H2>
+
+		<CENTER>
+		<IMG SRC="/images/eiffelstudio/feature-wizard-function-example.png">
+		</CENTER>
+		<CODE><PRE>class
+    PRODUCT
+
+feature -- Status report
+
+    order_price (quantity: INTEGER): DOUBLE is
+            -- Total price when ordering `quantity'.
+        require
+            quantity_non_negative: quantity >= 0
+        do
+            Result := quantity * price
+        ensure
+            correct: Result = quantity * price
+        end
+
+end -- class PRODUCT</PRE></CODE>
+
+
+</BODY>
+</HTML>

@@ -217,7 +217,7 @@ LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
 LINK32_OBJS= $(WOBJECTS)
 mtwkbench.dll : $(DLLDIR) $(DEF_FILE) $(LINK32_OBJS)
 	$(RM) $(DLLDIR)\mtwkbench.dll
-    $(LINK32) $(LINK32_FLAGS) $(LINK32_OBJS)
+	$(LINK32) $(LINK32_FLAGS) $(LINK32_OBJS)
 
 mtdll:: mtfinalized.dll
 
@@ -231,7 +231,7 @@ LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
 LINK32_OBJS= $(OBJECTS)
 mtfinalized.dll : $(DLLDIR) $(DEF_FILE) $(LINK32_OBJS)
 	$(RM) $(DLLDIR)\mtfinalized.dll
-    $(LINK32) $(LINK32_FLAGS) $(LINK32_OBJS)
+	$(LINK32) $(LINK32_FLAGS) $(LINK32_OBJS)
 
 dll:: wkbench.dll
 
@@ -245,7 +245,7 @@ LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
 LINK32_OBJS= $(WOBJECTS)
 wkbench.dll : $(DLLDIR) $(DEF_FILE) $(LINK32_OBJS)
 	$(RM) $(DLLDIR)\wkbench.dll
-    $(LINK32) $(LINK32_FLAGS) $(LINK32_OBJS)
+	$(LINK32) $(LINK32_FLAGS) $(LINK32_OBJS)
 
 dll:: finalized.dll
 
@@ -259,7 +259,7 @@ LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
 LINK32_OBJS= $(OBJECTS)
 finalized.dll : $(DLLDIR) $(DEF_FILE) $(LINK32_OBJS)
 	$(RM) $(DLLDIR)\finalized.dll
-    $(LINK32) $(LINK32_FLAGS) $(LINK32_OBJS)
+	$(LINK32) $(LINK32_FLAGS) $(LINK32_OBJS)
 
 
 ..\console\winconsole.$lib: ..\console\econsole.c ..\console\argcargv.c
@@ -286,7 +286,7 @@ $(OUTDIR)\ebench.$lib: $(EOBJECTS)
 all:: x2c.exe
 
 x2c.exe: x2c.c
-	$(CC) -I$(TOP) x2c.c
+	$(CC) -I$(TOP) x2c.c -o x2c.exe
 
 all:: 
 	@echo WARNING: If you want to generate or to update DLLs : USE "make dll".

@@ -15,10 +15,10 @@ DEF_FILE=
 LINK32_OBJS= ise_desc.$obj
 
 ise_desc.dll : $(DEF_FILE) $(LINK32_OBJS)
-    $(LINK32) $(LINK32_FLAGS) $(LINK32_OBJS)
+	$(LINK32) $(LINK32_FLAGS) $(LINK32_OBJS)
 
 .c.$obj:
-   $(CPP) $(CPP_PROJ) $<  
+	$(CPP) $(CPP_PROJ) $<  
 
 # Begin Source File
 

@@ -35,7 +35,7 @@
 			<TEXT DESCRIPTION="Indexing items that need not be included in formatted texts">excluded_indexing_items<LIST_STRING>revision;date;status</LIST_STRING></TEXT>
 			<TEXT DESCRIPTION="Class format that is selected by default">default_class_formatter_index<INTEGER>5</INTEGER></TEXT>
 			<TEXT DESCRIPTION="Feature format that is selected by default">default_feature_formatter_index<INTEGER>2</INTEGER></TEXT>			
-			<TEXT DESCRIPTION="Receiver of control-right-click">ctrl_right_click_receiver<LIST_SELECTED_STRING>new_window;among editor;context;new_editor;new_context;external</LIST_SELECTED_STRING></TEXT>
+			<TEXT DESCRIPTION="Receiver of control-right-click">ctrl_right_click_receiver<LIST_SELECTED_STRING>new_window;editor;context;new_editor;new_context;external</LIST_SELECTED_STRING></TEXT>
 			<TEXT>formatters_history_size<INTEGER>60</INTEGER></TEXT>
 		</TOPIC>
 		<TOPIC TOPIC_ID="Editor" ICON="icon_preferences_folder">

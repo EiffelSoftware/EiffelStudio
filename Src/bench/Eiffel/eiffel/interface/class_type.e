@@ -232,7 +232,7 @@ feature -- Generation
 			file.putstring ("/*");
 			file.new_line;
 			file.putstring (" * Code for class ");
-			file.putstring (current_class.class_name);
+			type.dump (file);
 			file.new_line;
 			file.putstring (" */");
 			file.new_line;
@@ -326,7 +326,7 @@ feature -- Generation
 			file_name: STRING;
 		do
 			file_name := full_file_name (Descriptor_suffix);
-			file_name.append (Descriptor_suffix);
+			file_name.append_character (Descriptor_file_suffix);
 			file_name.append (Dot_c);
 			!!Result.make (file_name);
 		end;
@@ -379,6 +379,19 @@ feature -- Generation
 						// System.makefile_generator.Packet_number) + 1
 			end
 		end;
+
+	relative_file_name: STRING is
+		do
+			!!Result.make (10);
+			Result.append (Class_suffix);
+			Result.append_integer (packet_number);
+			Result := build_path (Result, base_file_name);
+			if byte_context.final_mode then
+				Result.append (Dot_x)
+			else
+				Result.append (Dot_c);
+			end;
+		end
 
 	has_creation_routine: BOOLEAN is
 			-- Does the class type need an initialization routine ?

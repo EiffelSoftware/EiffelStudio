@@ -248,7 +248,11 @@ feature -- Basic operations
 		do
 			create Result.make_by_date_time (date + other.date, 
 				time + other.time)
-			Result.set_origin_date_time (clone (origin_date_time))
+			if origin_date_time /= Void then
+				Result.set_origin_date_time (origin_date_time.twin)
+			else
+				Result.set_origin_date_time (Void)
+			end
 		ensure then
 			origin_date_time: equal (origin_date_time, Result.origin_date_time)
 		end
@@ -257,7 +261,11 @@ feature -- Basic operations
 			-- Unary minus
 		do
 			create Result.make_by_date_time (-date, -time)
-			Result.set_origin_date_time (clone (origin_date_time))
+			if origin_date_time /= Void then
+				Result.set_origin_date_time (origin_date_time.twin)
+			else
+				Result.set_origin_date_time (Void)
+			end
 		ensure then
 			origin_date_time: equal (origin_date_time, Result.origin_date_time)
 		end

@@ -216,7 +216,7 @@ feature -- Basic operations
 		require
 			t_exists: t /= Void
 		do
-			Result := clone (Current)
+			Result := twin
 			Result.fine_second_add (t.fine_second)
 			Result.minute_add (t.minute)
 			Result.hour_add (t.hour)

@@ -10,16 +10,10 @@ deferred class
 
 inherit
 	EV_ITEM_I
-
+	
 	EV_EVENT_HANDLER_IMP
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
-
-feature -- Access
-
-	parent_imp: EV_ITEM_HOLDER_IMP
-			-- The parent of the Current widget
-			-- Can be void.
 
 feature -- Status setting
 

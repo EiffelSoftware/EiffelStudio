@@ -27,7 +27,6 @@ inherit
 		redefine
 			type
 		select
-			old_parent_imp,
 			parent_imp
 		end
 

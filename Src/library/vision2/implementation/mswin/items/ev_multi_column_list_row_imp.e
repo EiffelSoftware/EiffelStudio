@@ -9,20 +9,20 @@ class
 
 inherit
 	EV_MULTI_COLUMN_LIST_ROW_I
-		select
+		redefine
 			parent_imp
 		end
 
 	EV_COMPOSED_ITEM_IMP
 		rename
 			count as columns,
-			set_count as set_columns,
-			parent_imp as old_parent_imp
+			set_count as set_columns
 		undefine
 			parent
 		redefine
 			destroy,
-			set_cell_text
+			set_cell_text,
+			parent_imp
 		end
 
 	EV_PND_SOURCE_IMP
@@ -38,6 +38,8 @@ feature -- Access
 		do
 			Result := parent_imp.internal_get_index (Current)
 		end
+
+	parent_imp: EV_MULTI_COLUMN_LIST_IMP
 
 feature -- Status report
 	

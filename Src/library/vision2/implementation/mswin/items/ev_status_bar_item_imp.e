@@ -9,17 +9,16 @@ class
 
 inherit
 	EV_STATUS_BAR_ITEM_I
-		select
+		redefine
 			parent_imp
 		end
 	
 	EV_SIMPLE_ITEM_IMP
-		rename
-			parent_imp as old_parent_imp
 		undefine
 			parent
 		redefine
-			set_text
+			set_text,
+			parent_imp
 		end
 
 creation
@@ -49,6 +48,8 @@ feature -- Access
 		do
 			Result := parent_imp.internal_get_index (Current) + 1
 		end
+
+	parent_imp: EV_STATUS_BAR_IMP
 
 feature -- Status report
 

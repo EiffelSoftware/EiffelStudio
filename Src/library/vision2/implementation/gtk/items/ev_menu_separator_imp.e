@@ -10,13 +10,13 @@ class
 
 inherit
 	EV_MENU_SEPARATOR_I
-		select
+		redefine
 			parent_imp
 		end
 
 	EV_SEPARATOR_ITEM_IMP
-		rename
-			parent_imp as old_parent_imp
+		redefine
+			parent_imp
 		end
 
 create
@@ -46,6 +46,8 @@ feature -- Access
 				To_be_implemented: False
 			end
 		end
+
+	parent_imp: EV_MENU_ITEM_HOLDER_IMP
 
 feature -- Element change
 

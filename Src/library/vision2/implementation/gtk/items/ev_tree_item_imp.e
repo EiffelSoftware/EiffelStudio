@@ -9,6 +9,9 @@ class
 
 inherit
 	EV_TREE_ITEM_I
+		redefine
+			parent_imp
+		end
 	
 	EV_SIMPLE_ITEM_IMP
 		export {NONE}
@@ -20,6 +23,7 @@ inherit
 			has_parent,
 			set_parent,
 			set_pixmap,
+			parent_imp,
 			unset_pixmap,
 			set_text,
 			text,
@@ -117,6 +121,8 @@ feature -- Status report
 
 	destroyed: BOOLEAN
 			-- Is screen widget destroyed?
+
+	parent_imp: EV_TREE_ITEM_HOLDER_IMP
 
 feature -- Status setting
 

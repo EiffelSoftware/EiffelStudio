@@ -10,8 +10,7 @@ deferred class
 inherit
 	EV_SIMPLE_ITEM_I
 		redefine
-			parent,
-			parent_imp
+			parent
 		end
 
 	EV_TREE_ITEM_HOLDER_I
@@ -28,9 +27,6 @@ feature -- Access
 		do
 			Result ?= {EV_SIMPLE_ITEM_I} Precursor
 		end
-
-	parent_imp: EV_TREE_ITEM_HOLDER_IMP
-			-- Parent implementation
 
 	top_parent_imp: EV_TREE_IMP is
 			-- Top item holder containing the current item.

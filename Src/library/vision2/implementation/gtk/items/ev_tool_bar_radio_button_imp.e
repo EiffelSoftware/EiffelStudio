@@ -11,8 +11,14 @@ class
 
 inherit
 	EV_TOOL_BAR_RADIO_BUTTON_I
+		redefine
+			parent_imp
+		end
 
 	EV_TOOL_BAR_TOGGLE_BUTTON_IMP
+		redefine
+			parent_imp
+		end
 
 create
 	make
@@ -23,6 +29,8 @@ feature -- Status report
 			-- Is this item in same group as peer
 		do
 		end
+
+	parent_imp: EV_TOOL_BAR_IMP
 
 feature -- Status Setting
 

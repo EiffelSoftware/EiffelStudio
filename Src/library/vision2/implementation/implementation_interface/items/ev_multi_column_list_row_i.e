@@ -29,8 +29,7 @@ feature -- Access
 			Result ?= {EV_COMPOSED_ITEM_I} Precursor
 		end
 
-	parent_imp: EV_MULTI_COLUMN_LIST_IMP
-			-- List implementation that contain this row
+
 
 feature -- Status report
 	

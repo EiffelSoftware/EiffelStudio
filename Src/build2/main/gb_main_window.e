@@ -101,8 +101,8 @@ feature -- Basic operation
 		do
 			set_title (Product_name)
 				-- Initialize the menu bar for `Current'.
-			create a_menu_bar
-			set_menu_bar (a_menu_bar)
+			create main_menu_bar
+			set_menu_bar (main_menu_bar)
 				-- Initialize menu
 			initialize_menu
 				-- Build the menu
@@ -265,7 +265,7 @@ feature -- Basic operation
 				counter := counter + 1
 			end
 		end
-		
+
 feature {NONE} -- Implementation
 
 	open_named_project (project_name: STRING) is
@@ -327,7 +327,7 @@ feature {NONE} -- Implementation
 
 				-- Initialize the view menu.
 			create view_menu.make_with_text (Gb_view_menu_text)
-			a_menu_bar.extend (view_menu)
+			main_menu_bar.extend (view_menu)
 			create view_tools.make_with_text (Gb_view_tools_text)
 			view_menu.extend (view_tools)
 			view_tools.extend (command_handler.show_hide_builder_window_command.new_menu_item)
@@ -376,19 +376,19 @@ feature {NONE} -- Implementation
 		require
 			menus_intitialized : menus_initialized
 		do
-			a_menu_bar.wipe_out
+			main_menu_bar.wipe_out
 				-- No file menu options are available
 				-- for the wizard.
 			if not system_status.is_wizard_system then
-				a_menu_bar.extend (file_menu)	
+				main_menu_bar.extend (file_menu)	
 			end
 			if system_status.project_open then
-				a_menu_bar.extend (view_menu)
+				main_menu_bar.extend (view_menu)
 				if not system_status.is_wizard_system then
-					a_menu_bar.extend (project_menu)	
+					main_menu_bar.extend (project_menu)	
 				end
 			end
-			a_menu_bar.extend (help_menu)
+			main_menu_bar.extend (help_menu)
 		end
 		
 	build_widget_structure (a_tool_holder: EV_VERTICAL_BOX) is
@@ -577,8 +577,34 @@ feature {NONE} -- Implementation
 			create about_dialog.make
 			about_dialog.show_modal_to_window (Current)
 		end
+		
+feature {GB_XML_HANDLER} -- Implementation
+
+	disable_menus is
+			-- Ensure all items of `main_menu_bar' are disabled.
+		do
+			main_menu_bar.do_all (agent update_menu_sensitivity (?, False))
+		end
+		
+	enable_menus is
+			-- Ensure all items of `main_menu_bar' are enabled.
+		do
+			main_menu_bar.do_all (agent update_menu_sensitivity (?, True))
+		end
 
 feature {NONE} -- Implementation
+
+	update_menu_sensitivity (a_menu_item: EV_MENU_ITEM; enabled: BOOLEAN) is
+			-- Update sensitive state of `a_menu_item', to `enabled'.
+		require
+			a_menu_item_not_void: a_menu_item /= Void
+		do
+			if enabled then
+				a_menu_item.enable_sensitive
+			else
+				a_menu_item.disable_sensitive
+			end
+		end
 
 	show_tip_of_day is
 			-- Display tip of day dialog.
@@ -885,7 +911,7 @@ feature {NONE} -- Implementation
 		-- To be placed in `Current' when we do not want
 		-- the tools to be available.
 		
-	a_menu_bar: EV_MENU_BAR
+	main_menu_bar: EV_MENU_BAR
 		-- The menu bar of `Current'.
 		
 	file_menu, project_menu, view_menu, help_menu: EV_MENU

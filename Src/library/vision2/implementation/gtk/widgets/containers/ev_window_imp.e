@@ -282,6 +282,7 @@ feature -- Status setting
 			-- Map the Window to the screen.
 		do
 			if not is_show_requested then
+				call_show_actions := True
 				if is_positioned or positioned_by_user then
 					feature {EV_GTK_EXTERNALS}.gtk_window_set_position (c_object, feature {EV_GTK_EXTERNALS}.Gtk_win_pos_none_enum)
 					app_implementation.process_events
@@ -300,6 +301,9 @@ feature -- Status setting
 		
 	is_positioned: BOOLEAN
 		-- Has the Window been previously positioned on screen?
+		
+	call_show_actions: BOOLEAN
+		-- Should the show actions be called?
 
 	hide is
 			-- Unmap the Window from the screen.
@@ -517,9 +521,10 @@ feature {NONE} -- Implementation
 	on_widget_mapped is
 			-- `Current' has been mapped to the screen.
 		do
-			if show_actions_internal /= Void then
+			if show_actions_internal /= Void and call_show_actions then
 				show_actions_internal.call (Void)
 			end
+			call_show_actions := False
 		end
 
 	has_wm_decorations: BOOLEAN is

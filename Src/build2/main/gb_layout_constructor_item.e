@@ -41,6 +41,27 @@ create
 
 create
 	make_root
+	
+feature {GB_RADIO_GROUP_LINK} -- Access
+
+	is_animated: BOOLEAN
+		-- Is `Current' presently being animated?
+
+feature {GB_RADIO_GROUP_LINK}-- Status setting
+
+	enable_animation is
+			-- Assign `True' to `is_animated'.
+		do
+			is_animated := True
+		end
+		
+	disable_animation is
+			-- Assign `False' to `is_animated'.
+		do
+			is_animated := False
+		end
+		
+		
 
 feature {NONE} -- Initialization
 

@@ -90,6 +90,6 @@ feature -- Implementation
 		-- Buttons.
 
 invariant
-	color_b_exists: color_b /= Void
-	color_tool_consistent: color_tool /= Void implies resource /= Void
+	COLOR_SELECTION_BOX_color_b_exists: color_b /= Void
+	--COLOR_SELECTION_BOX_color_tool_consistent: color_tool /= Void implies resource /= Void
 end -- class COLOR_SELECTION_BOX

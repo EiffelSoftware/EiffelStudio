@@ -1,6 +1,6 @@
 mkdir %TEMP%\vision2_precompile
 XCOPY /Y root_none.ace %TEMP%\Vision2_precompile
-%ISE_EIFFEL%\studio\spec\windows\bin\ec -precompile -ace %TEMP%\Vision2_precompile\root_none.ace -project_path %TEMP%\vision2_precompile
+%ISE_EIFFEL%\studio\spec\windows\bin\ec -precompile -ace %TEMP%\Vision2_precompile\win32_root_none.ace -project_path %TEMP%\vision2_precompile
 %ISE_EIFFEL%\studio\spec\windows\bin\ec -project %TEMP%\Vision2_precompile\precomp.epr -flatshort -all
 
 REM copy all flatshorts to flatshort directory

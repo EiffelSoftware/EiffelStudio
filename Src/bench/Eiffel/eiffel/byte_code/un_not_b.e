@@ -16,8 +16,7 @@ feature
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			expr.c_type.generate_cast (buf)
-			buf.putchar ('!')
+			buf.putstring ("(EIF_BOOLEAN) !")
 			expr.print_register
 		end
 

@@ -496,7 +496,7 @@ feature {NONE} -- Implementation
 				Result := ""
 			else
 				create cluster_info.make
-				create Result.make (0)
+				create Result.make (10000)
 
 				create input_file.make_open_read (shared_wizard_environment.ace_file_name)
 
@@ -751,7 +751,7 @@ feature {NONE} -- Implementation
 	Partial_ace_file_part_two: STRING is
 			-- Ace file used to precompile generated Eiffel system
 		do
-			create Result.make (0)
+			create Result.make (10000)
 			from
 				Standard_clusters.start
 			until

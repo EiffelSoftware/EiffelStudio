@@ -44,7 +44,7 @@ feature -- Basic operations
 			tmp_guid := tmp_type_lib.library_attributes.guid
 			tmp_lib_descriptor := system_descriptor.library_descriptor (tmp_guid)
 			if name = Void or else name.count = 0 then
-				create name.make (0)
+				create name.make (30)
 				name.append ("alias_")
 				name.append (tmp_lib_descriptor.name)
 				name.append ("_")
@@ -56,18 +56,18 @@ feature -- Basic operations
 			end
 
 
-			create eiffel_class_name.make (0)
+			create eiffel_class_name.make (50)
 			eiffel_class_name.append (name_for_class (name, type_kind, False))
 			eiffel_class_name.to_upper
 
 			if is_forbidden_c_word (name) then
 				name.prepend ("a_")
 			end
-			create c_type_name.make (0)
+			create c_type_name.make (30)
 			c_type_name.append (name)
 			system_descriptor.add_c_type (name)
 			
-			create c_header_file_name.make (0)
+			create c_header_file_name.make (30)
 			if not Non_generated_type_libraries.has (tmp_lib_descriptor.guid) then
 				c_header_file_name.append (clone (Alias_header_file_name))
 			end

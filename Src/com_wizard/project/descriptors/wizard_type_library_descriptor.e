@@ -182,6 +182,7 @@ feature -- Basic operations
 				i := 0
 				progress_report.set_range (progress_report.range + type_lib.type_info_count)
 				progress_report.set_title (Generation_title)
+				progress_report.start
 			until
 				i = type_lib.type_info_count or Shared_wizard_environment.abort
 			loop
@@ -212,7 +213,7 @@ feature -- Basic operations
 				if descriptors.item (i) /= Void then
 					if system_descriptor.eiffel_names.has (descriptors.item (i).eiffel_class_name) then
 						local_counter := counter
-						create tmp_string.make (0)
+						create tmp_string.make (30)
 						tmp_string.append_integer (local_counter)
 						descriptors.item (i).eiffel_class_name.append (tmp_string)
 						if not (descriptors.item (i).type_kind = Tkind_alias) then

@@ -50,7 +50,7 @@ feature -- Basic operations
 				tmp_type_lib := a_type_info.containing_type_lib
 				tmp_guid := tmp_type_lib.library_attributes.guid
 				tmp_lib_descriptor := system_descriptor.library_descriptor (tmp_guid)
-				create name.make (0)
+				create name.make (100)
 				name.append ("property_")
 				name.append (tmp_lib_descriptor.name)
 				name.append ("_")

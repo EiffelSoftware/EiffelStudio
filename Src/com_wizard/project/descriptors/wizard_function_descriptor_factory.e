@@ -78,7 +78,7 @@ feature -- Basic operations
 				tmp_type_lib := a_type_info.containing_type_lib
 				tmp_guid := tmp_type_lib.library_attributes.guid
 				tmp_lib_descriptor := system_descriptor.library_descriptor (tmp_guid)
-				create name.make (0)
+				create name.make (100)
 				name.append ("func_")
 				name.append (tmp_lib_descriptor.name)
 				name.append ("_")
@@ -131,7 +131,7 @@ feature -- Basic operations
 			loop
 				arg_name := clone (some_names.item (i))
 				if arg_name = Void or else arg_name.empty then
-					create arg_name.make (0)
+					create arg_name.make (100)
 					arg_name.append ("arg_")
 					arg_name.append_integer (i - 1)
 				end

@@ -6,53 +6,18 @@ indexing
 	revision: "$Revision$"
 
 class 
-	
 	EV_DIALOG_IMP
 
 inherit
-
 	EV_DIALOG_I
-		rename
-			expandable as never_displayed
-		end
 
 	EV_WINDOW_IMP
-		redefine
-			plateform_build
+		undefine
+			build
 		end
 
 creation
 	make
-
-feature -- Initialization
-
-	plateform_build (par: EV_CONTAINER_IMP) is
-			-- Put the component inside the dialog
-		local
-			vbox: EV_VERTICAL_BOX
-			container_interface: EV_CONTAINER
-		do
-			container_interface ?= interface
-			check
-				container_not_void: container_interface /= Void
-		end
-			{EV_WINDOW_IMP} Precursor (par)
-
-			!! vbox.make (container_interface)
-			vbox.set_homogeneous (False)
-			vbox.set_spacing (10)
-
-			!! display_area.make (vbox)
-			display_area.set_minimum_height (100)
-			display_area.set_minimum_width (100)
-
-			!! action_area.make (vbox)
-			action_area.set_expand (False)
-			action_area.set_minimum_height (20)
-			action_area.set_minimum_width (100)
-
-			show
-		end
 
 end -- class EV_DIALOG_IMP
 

@@ -67,12 +67,12 @@ feature -- Initialize
 		
 feature -- Status Report
 
-		has_focus: BOOLEAN
+	has_focus: BOOLEAN
 			-- Does the list have the focus?
 
 feature -- Status setting
 
-	ensure_i_th_visible (an_index: INTEGER) is
+	ensure_item_visible (an_item: EV_LIST_ITEM) is
 			-- Ensure item `an_index' is visible in `Current'.
 		do
 			--| FIXME To be implemented.
@@ -275,6 +275,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.49  2001/06/29 22:28:07  king
+--| Added ensure_i_th_visible
+--|
 --| Revision 1.48  2001/06/15 17:42:26  etienne
 --| Fixed problem with focus_in/out_actions in combo boxes.
 --|

@@ -112,16 +112,17 @@ feature -- Basic operation
 			initialize_load_output
 				-- Clear History, as it is no longer possible to go back
 				-- after importing a system.
-			Object_handler.deleted_objects.wipe_out
+			Object_handler.reset_deleted_objects
 			History_dialog.History.wipe_out
 
 				-- Update all ids, to avoid clashes between the two sets.
 			shift_all_ids_upwards
 			
 			create a_file_name.make_from_string (file_name)
-			load_and_parse_xml_file (a_file_name)
+			load_and_parse_xml_file (a_file_name)			
 			if parser.is_correct then
 				import_system
+				object_handler.update_all_associated_objects
 			end
 				-- Build deferred parts.
 			deferred_builder.build
@@ -165,15 +166,16 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			current_element, root_window_element: XM_ELEMENT
 			gb_ev_any: GB_EV_ANY
 			current_name: STRING
-			window_object: GB_TITLED_WINDOW_OBJECT
+			an_object: GB_OBJECT
 			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 			cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			a_display_object: GB_DISPLAY_OBJECT
 		do
-			window_object := object_handler.add_root_window (window.attribute_by_name (type_string).value)
+			an_object := object_handler.add_root_window (window.attribute_by_name (type_string).value)
 			if not directory_name.is_empty then
 				directory_item := Window_selector.directory_object_from_name (directory_name)
-				unparent_tree_node (window_object.window_selector_item)
-				directory_item.extend (window_object.window_selector_item)
+				unparent_tree_node (an_object.window_selector_item)
+				directory_item.extend (an_object.window_selector_item)
 				directory_item.expand
 			end
 			
@@ -186,7 +188,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 				if current_element /= Void then
 					current_name := current_element.name
 					if current_name.is_equal (Item_string) then
-						build_new_object (current_element, window_object)
+						build_new_object (current_element, an_object)
 					else
 							-- We must check for internal properties, else set the properties of the component
 						if current_name.is_equal (Internal_properties_string) then
@@ -203,12 +205,12 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 								current_element.delete (root_window_element)
 								current_element.go_to (cursor)
 							end
-								
-							window_object.modify_from_xml (current_element)
+							an_object.modify_from_xml (current_element)
+							object_handler.add_object_to_objects (an_object)
 						elseif current_name.is_equal (Events_string) then
 								-- We now add the event information from `current_element'
 								-- into `window_object'.
-							extract_event_information (current_element, window_object)						
+							extract_event_information (current_element, an_object)						
 						else						
 							-- Create the class.
 						gb_ev_any ?= new_instance_of (dynamic_type_from_string ("GB_" + current_name))
@@ -216,7 +218,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 							-- Call default_create on `gb_ev_any'
 						gb_ev_any.default_create
 						
-						gb_ev_any.set_object (window_object)
+						gb_ev_any.set_object (an_object)
 						
 							-- Ensure that the new class exists.
 						check
@@ -224,8 +226,15 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 						end
 						
 							-- Add the appropriate objects to `objects'.
-						gb_ev_any.add_object (window_object.object)
-						gb_ev_any.add_object (window_object.display_object)
+						gb_ev_any.add_object (an_object.object)
+							-- Now that we support widgets at the top level, we must
+							-- check and support display objects correctly.
+						a_display_object ?= an_object.display_object
+						if a_display_object /= Void then
+							gb_ev_any.add_object (a_display_object.child)
+						else
+							gb_ev_any.add_object (an_object.display_object)
+						end
 						
 							-- Call `modify_from_xml' which should modify the objects.
 						gb_ev_any.modify_from_xml (current_element)
@@ -295,6 +304,7 @@ feature {NONE} -- Implementation
 			new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value)
 			object_handler.add_object (object, new_object, object.children.count + 1)
 			modify_from_xml (element, new_object)
+			object_handler.add_object_to_objects (new_object)
 		end
 		
 	modify_from_xml (element: XM_ELEMENT; object: GB_OBJECT) is
@@ -433,7 +443,7 @@ feature {NONE} -- Implementation
 			create all_constant_names.make (100)
 			create all_names_post_import.make (100)
 			create renamed_constants.make (20)
-			objects := Object_handler.objects
+			objects := Object_handler.objects.linear_representation
 			from
 				objects.start
 			until

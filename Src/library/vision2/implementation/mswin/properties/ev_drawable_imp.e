@@ -74,7 +74,9 @@ feature {NONE} -- Initialization
 		do
 			create font
 			create foreground_color.make_with_rgb (0, 0, 0)
+			set_foreground_color (foreground_color)
 			create background_color.make_with_rgb (1, 1, 1)
+			set_background_color (background_color)
 			dc.set_background_opaque
 			dc.set_background_transparent
 			dc.set_text_alignment (Ta_baseline)
@@ -157,6 +159,10 @@ feature -- Element change
 			-- Assign `a_color' to `background_color'.
 		do
 			background_color.copy (a_color)
+			if background_brush /= Void then
+				background_brush.delete
+			end
+			create background_brush.make_solid (wel_bg_color)
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is
@@ -418,7 +424,6 @@ feature -- Drawing operations
 		local
 			left, top, right, bottom: INTEGER
 			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
-			null_brush: WEL_NULL_BRUSH
 		do
 			left := x - a_horizontal_radius
 			right := x + a_horizontal_radius
@@ -511,6 +516,7 @@ feature {NONE} -- Implementation
 			-- The WEL equivalent for the Ev_drawing_mode_* selected.
 
 	wel_bg_color: WEL_COLOR_REF is
+			-- Get implementation object of `background_color'.
 		do
 			Result ?= background_color.implementation
 		ensure
@@ -518,33 +524,37 @@ feature {NONE} -- Implementation
 		end
 
 	wel_fg_color: WEL_COLOR_REF is
+			-- Get implementation object of `foreground_color'.
 		do
 			Result ?= foreground_color.implementation
 		ensure
 			not_void: Result /= Void
 		end
 
-	background_brush: WEL_BRUSH is
+	background_brush: WEL_BRUSH
 			-- Current window background color used to refresh the window when
-			-- requested by the WM_ERASEBKGND windows message.
-		do
-			if background_color /= Void then
-				create Result.make_solid (wel_bg_color)
-			end
-		end
+			-- requested by the Wm_erasebkgnd windows message.
 
 	set_background_brush is
 			-- Set background-brush. For clear-operations.
 		do
+			dc.unselect_brush
 			dc.select_brush (background_brush)
 		end
+
+	pen: WEL_PEN
+
+	brush: WEL_BRUSH
 
 	reset_brush is
 			-- Restore brush to tile or color.
 		local
-			brush: WEL_BRUSH
 			pix_imp: EV_PIXMAP_IMP
 		do
+			if brush /= Void then
+				dc.unselect_brush
+				brush.delete
+			end
 			if tile /= Void then
 				pix_imp ?= tile.implementation
 				create brush.make_by_pattern (pix_imp.bitmap)
@@ -557,7 +567,6 @@ feature {NONE} -- Implementation
 	reset_pen is
 			-- Restore pen to correct line width and color
 		local
-			pen: WEL_PEN
 			dmode: INTEGER
 		do
 			if line_width = 0 then
@@ -568,31 +577,43 @@ feature {NONE} -- Implementation
 				else
 					dmode := Ps_solid
 				end
+				if pen /= Void then
+					dc.unselect_pen
+					pen.delete
+				end
 				create pen.make (dmode, line_width, wel_fg_color)
 				dc.select_pen (pen)
 			end
 		end
 
+	null_pen: WEL_PEN is
+			-- Pen that appears as if no pen is used.
+		local
+			log_pen: WEL_LOG_PEN
+		once
+			create log_pen.make (Ps_null, 1, wel_fg_color)
+			create Result.make_indirect (log_pen)
+		end			
+
 	remove_pen is
 			-- Draw without outline.
-		local
-			pen: WEL_PEN
-			log_pen: WEL_LOG_PEN
 		do
-			create log_pen.make (Ps_null, 1, wel_fg_color)
-			create pen.make_indirect (log_pen)
-			dc.select_pen (pen)
+			dc.select_pen (null_pen)
 		end
 
-	remove_brush is
-			-- Draw without filling.
+	null_brush: WEL_BRUSH is
+			-- Brush that appears as if no brush is used.
 		local
-			brush: WEL_BRUSH
 			log_brush: WEL_LOG_BRUSH
 		do
 			create log_brush.make (Bs_null, wel_fg_color, Hs_horizontal)
-			create brush.make_indirect (log_brush)
-			dc.select_brush (brush)
+			create Result.make_indirect (log_brush)
+		end			
+
+	remove_brush is
+			-- Draw without filling.
+		do
+			dc.select_brush (null_brush)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -622,6 +643,17 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/02/15 17:41:13  brendel
+--| Changed to avoid any memory leak. Changes:
+--|  - For `reset_pen' and `reset_brush', once-functions are used to create
+--|    resp. `null_pen' and `null_brush'.
+--|  - In `reset_pen' and `reset_brush', a reference to the old pen/brush
+--|    object is stored so that it can be deleted when it has to be recreated.
+--|  - Feature `background_brush' is now an attribute that is reinstantiated
+--|    every time the background color is changed.
+--|  - The leak caused by font turned out to be a bug in WEL and should be
+--|    fixed now.
+--|
 --| Revision 1.15  2000/02/14 11:40:40  oconnor
 --| merged changes from prerelease_20000214
 --|

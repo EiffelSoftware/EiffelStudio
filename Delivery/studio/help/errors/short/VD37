@@ -1,4 +1,0 @@
-Lace warning: ``collect'' option has no effect.
-What to do: garbage collection cannot be disabled statically.
-  Use the procedures `collection_off' and `collection_on' from class
-  MEMORY to disable and re-enable garbage collection at run time.

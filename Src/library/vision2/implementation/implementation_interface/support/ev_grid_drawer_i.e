@@ -282,7 +282,8 @@ feature -- Basic operations
 			node_pixmap_vertical_center: INTEGER
 			row_node_clipped: BOOLEAN
 			l_x_start, l_x_end: INTEGER
-			
+			current_horizontal_pos: INTEGER
+			loop_current_row, loop_parent_row: EV_GRID_ROW_I
 		do
 			dynamic_content_function := grid.dynamic_content_function
 			
@@ -534,23 +535,51 @@ feature -- Basic operations
 												l_x_end := horizontal_node_pixmap_left_offset
 												if l_x_start < current_item_x_position + current_column_width and
 													l_x_end < current_item_x_position + current_column_width then
+														fixme ("Clip this line correctly as required")
 													grid.drawable.draw_segment (l_x_start, row_vertical_center, l_x_end, row_vertical_center)
 												end
 											 		-- Draw a horizontal line from the left edge of the item to the either the node horizontal offset or the edge of the actual item position
 												 	-- if the node to which we are connected is within a different column.
 											end
 											 
-											if drawing_subrow and then parent_node_index = current_column_index and not row_node_clipped then
+											if drawing_subrow and then parent_node_index = current_column_index then
 												
 --												print ("Parent subrow count : " + parent_row_i.subrow_count.out + "%N")
 --												print ("Parent subrow count recursive : " + parent_row_i.subnode_count_recursive.out + "%N")
 --												print ("Item index : " + current_row.index.out + "%N")
 --												print ("Parent row index : " + parent_row_i.index.out + "%N")
 --												print ("index diff : " + (current_row.index - parent_row_i.index).out + "%N")
-												if parent_row_i.subnode_count_recursive > ((current_row.index + current_row.subnode_count_recursive) - parent_row_i.index) then
-													grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_bottom, current_item_x_position.max (parent_x_indent_position), current_item_y_position)
-												else	
-													grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_center, current_item_x_position.max (parent_x_indent_position), current_item_y_position)
+												current_horizontal_pos := current_item_x_position.max (parent_x_indent_position)
+												if not row_node_clipped then
+													
+													if parent_row_i.subnode_count_recursive > ((current_row.index + current_row.subnode_count_recursive) - parent_row_i.index) then
+														grid.drawable.draw_segment (current_horizontal_pos, row_vertical_bottom, current_horizontal_pos, current_item_y_position)
+													else	
+														grid.drawable.draw_segment (current_horizontal_pos, row_vertical_center, current_horizontal_pos, current_item_y_position)
+													end
+												end
+
+													-- Now we draw all of the horizontal lines required to fill in the lines of parents at any level.
+													-- We iterate backwards from the current position and for each subsequent parent node, determine
+													-- if a line must be drawn.
+												from
+													loop_current_row := parent_row_i
+													loop_parent_row := parent_row_i.parent_row_i
+												until
+													current_horizontal_pos < current_item_x_position or loop_parent_row = Void
+												loop
+													current_horizontal_pos := current_horizontal_pos - subrow_indent
+													if loop_parent_row.subnode_count_recursive > ((loop_current_row.index + loop_current_row.subnode_count_recursive) - loop_parent_row.index) then
+															-- If the current item is the last one contained within the parent then a line must be drawn. As this is
+															-- computed in a nested fashion, the subnode count is used recursively.
+															
+														grid.drawable.draw_segment (current_horizontal_pos, row_vertical_bottom, current_horizontal_pos, current_item_y_position)
+															-- Draw the vertical line from the bottom of the item to the top.
+													end
+													
+														-- Move one position upwards within the parenting node structure
+													loop_current_row := loop_parent_row
+													loop_parent_row := loop_parent_row.parent_row_i
 												end
 											end
 										end
@@ -584,6 +613,7 @@ feature -- Basic operations
 												-- In this case, there are more subrows of `parent_row_i' to be drawn,
 												-- so the vertical line is drawn to span the complete height of the current row.
 											grid.drawable.draw_segment (current_item_x_position.max (parent_x_indent_position), row_vertical_bottom, current_item_x_position.max (parent_x_indent_position), current_item_y_position)
+											
 										else
 												-- There are no subsequent rows for `parent_row_i' so we must draw the vertical line
 												-- from the start of the current row to the center only.

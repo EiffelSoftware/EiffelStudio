@@ -1031,6 +1031,7 @@ feature -- Class info
 			-- `____copy', `____is_equal' and `____standard_twin'.
 		require
 			class_type_not_void: class_type /= Void
+			not_external_class_type: not class_type.is_external
 		local
 			l_meth_token: INTEGER
 			l_sig: like method_sig
@@ -1226,6 +1227,140 @@ feature -- Class info
 			end
 		end
 
+	define_system_object_features (class_type: CLASS_TYPE) is
+			-- Define all features of SYSTEM_OBJECT on Eiffel types so that
+			-- they have a meaning. It includes:
+			-- to_string, finalize, equals, get_hash_code
+		require
+			class_type_not_void: class_type /= Void
+			not_external_class_type: not class_type.is_external
+		local
+			l_feat_tbl: FEATURE_TABLE
+			l_select_tbl: SELECT_TABLE
+			l_feat: FEATURE_I
+			l_class_id: INTEGER
+		do
+				-- To generate those routines, we first check if they are
+				-- redefined in the current class. If they are, we keep the
+				-- definition given by the user, otherwise we put the Eiffel one.
+
+				-- Gets current feature table.
+			l_feat_tbl := class_type.associated_class.feature_table
+			l_select_tbl := l_feat_tbl.origin_table
+			l_class_id := class_type.associated_class.class_id
+			
+				-- Process `equals'
+			if l_select_tbl.has (equals_rout_id) then
+				l_feat := l_select_tbl.found_item
+				if l_feat.written_in /= l_class_id then
+					define_equals_routine (class_type)
+				end
+			else
+				define_equals_routine (class_type)
+			end
+
+				-- Process `finalize'
+			if l_select_tbl.has (finalize_rout_id) then
+				l_feat := l_select_tbl.found_item
+				if l_feat.written_in /= l_class_id then
+					define_finalize_routine (class_type)
+				end
+			else
+				define_finalize_routine (class_type)
+			end
+
+				-- Process `get_hash_code'
+			if l_select_tbl.has (get_hash_code_rout_id) then
+				l_feat := l_select_tbl.found_item
+				if l_feat.written_in /= l_class_id then
+					define_get_hash_code_routine (class_type)
+				end
+			else
+				define_get_hash_code_routine (class_type)
+			end
+
+				-- Process `to_string'
+			if l_select_tbl.has (to_string_rout_id) then
+				l_feat := l_select_tbl.found_item
+				if l_feat.written_in /= l_class_id then
+					define_to_string_routine (class_type)
+				end
+			else
+				define_to_string_routine (class_type)
+			end
+		end
+
+feature {NONE} -- SYSTEM_OBJECT features
+
+	define_equals_routine (class_type: CLASS_TYPE) is
+			-- Define Eiffel implementation of `equals' from SYSTEM_OBJECT.
+		require
+			class_type_not_void: class_type /= Void
+			not_external_class_type: not class_type.is_external
+		do
+			-- FIXME: Manu 07/04/2004
+		end
+
+	define_finalize_routine (class_type: CLASS_TYPE) is
+			-- Define Eiffel implementation of `finalize' from SYSTEM_OBJECT.
+		require
+			class_type_not_void: class_type /= Void
+			not_external_class_type: not class_type.is_external
+		local
+			l_meth_token: INTEGER
+			l_sig: like method_sig
+			l_class_token: INTEGER
+			l_meth_attr: INTEGER
+			l_feat: FEATURE_I
+			l_code: FEATURE_B
+		do
+			if System.disposable_descendants.has (class_type.associated_class) then
+				l_class_token := actual_class_type_token (class_type.implementation_id)
+				l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.public |
+					feature {MD_METHOD_ATTRIBUTES}.hide_by_signature |
+					feature {MD_METHOD_ATTRIBUTES}.virtual
+				
+				l_sig := method_sig
+				l_sig.reset
+				l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.has_current)
+				l_sig.set_parameter_count (0)
+				l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.element_type_void, 0)
+				
+				uni_string.set_string ("Finalize")
+				l_meth_token := md_emit.define_method (uni_string, l_class_token,
+					l_meth_attr, l_sig, feature {MD_METHOD_ATTRIBUTES}.managed)
+				
+				l_feat := system.disposable_class.compiled_class.feature_table.item_id (feature {PREDEFINED_NAMES}.dispose_name_id)
+				l_code ?= l_feat.access (void_c_type)
+				check
+					l_code_not_void: l_code /= Void
+				end
+				
+				start_new_body (l_meth_token)
+				l_code.generate_il
+				generate_return (False)
+				method_writer.write_current_body
+			end
+		end
+
+	define_get_hash_code_routine (class_type: CLASS_TYPE) is
+			-- Define Eiffel implementation of `get_hash_code' from SYSTEM_OBJECT.
+		require
+			class_type_not_void: class_type /= Void
+			not_external_class_type: not class_type.is_external
+		do
+			-- FIXME: Manu 07/04/2004
+		end
+
+	define_to_string_routine (class_type: CLASS_TYPE) is
+			-- Define Eiffel implementation of `to_string' from SYSTEM_OBJECT.
+		require
+			class_type_not_void: class_type /= Void
+			not_external_class_type: not class_type.is_external
+		do
+			-- FIXME: Manu 07/04/2004
+		end
+
 feature {NONE} -- Class info
 
 	clean_implementation_class_data is
@@ -1352,6 +1487,7 @@ feature -- Features info
 			end
 
 			define_runtime_features (class_type)
+			define_system_object_features (class_type)
 			current_module.define_default_constructor (class_type, False)
 			generate_invariant_feature (class_c.invariant_feature)
 
@@ -4925,6 +5061,42 @@ feature {IL_CODE_GENERATOR} -- Implementation: convenience
 				feature_table.item_id (feature {PREDEFINED_NAMES}.copy_name_id).rout_id_set.first
 		ensure
 			copy_rout_id_positive: Result > 0
+		end
+
+	equals_rout_id: INTEGER is
+			-- Routine ID of `equals' of SYSTEM_OBJECT.
+		once
+			Result := System.system_object_class.compiled_class.feature_table.
+				item_id (feature {PREDEFINED_NAMES}.equals_name_id).rout_id_set.first
+		ensure
+			equals_rout_id_positive: Result > 0
+		end
+
+	finalize_rout_id: INTEGER is
+			-- Routine ID of `finalize' of SYSTEM_OBJECT.
+		once
+			Result := System.system_object_class.compiled_class.feature_table.
+				item_id (feature {PREDEFINED_NAMES}.finalize_name_id).rout_id_set.first
+		ensure
+			finalize_rout_id_positive: Result > 0
+		end
+
+	get_hash_code_rout_id: INTEGER is
+			-- Routine ID of `get_hash_code' of SYSTEM_OBJECT.
+		once
+			Result := System.system_object_class.compiled_class.feature_table.
+				item_id (feature {PREDEFINED_NAMES}.get_hash_code_name_id).rout_id_set.first
+		ensure
+			get_hash_code_rout_id_positive: Result > 0
+		end
+
+	to_string_rout_id: INTEGER is
+			-- Routine ID of `to_string' of SYSTEM_OBJECT.
+		once
+			Result := System.system_object_class.compiled_class.feature_table.
+				item_id (feature {PREDEFINED_NAMES}.to_string_name_id).rout_id_set.first
+		ensure
+			to_string_rout_id_positive: Result > 0
 		end
 
 feature {IL_CODE_GENERATOR, IL_MODULE, CUSTOM_ATTRIBUTE_FACTORY} -- Custom attribute definition

@@ -80,7 +80,8 @@ inherit
 			on_sys_key_up,
 			default_process_message
 		redefine
-			default_style
+			default_style,
+			wel_set_range
 		end
 
 feature {NONE} -- Implementation
@@ -155,6 +156,41 @@ feature {EV_ANY_I} -- Implementation
 			wel_set_range (value_range.lower, value_range.upper + a_leap - 1)
 			Precursor (a_leap)
 		end
+		
+	wel_set_range (a_minimum, a_maximum: INTEGER) is
+			-- Set `minimum' and `maximum' with
+			-- `a_minimum' and `a_maximum'
+		local
+			must_adjust: BOOLEAN
+			adjusted_value: INTEGER
+		do
+				--| This has been redefined to fic the following bug:
+				--| run the vision2 Gauges sample, without redefining this feature,
+				--| and before doing anythign else, click on the right hand arrow of
+				--| the horizontal scroll bar.
+				--| This redefinition ensures that if the range of `Current' changes, the
+				--| `value' remains valid.
+			if value < a_minimum then
+				must_adjust := True
+				adjusted_value := a_minimum
+			elseif value > a_maximum then
+				must_adjust := True
+				adjusted_value := a_maximum
+			end
+			
+			scroll_info_struct.set_mask (Sif_range)
+			scroll_info_struct.set_minimum (a_minimum)
+			scroll_info_struct.set_maximum (a_maximum)
+			cwin_set_scroll_info (wel_item, Sb_ctl, scroll_info_struct.item, True)
+			
+				-- If previous `value' is now out of range then
+				-- assign `adjusted_value' to `value'.
+			if must_adjust then
+				scroll_info_struct.set_mask (Sif_pos)
+				scroll_info_struct.set_position (adjusted_value)
+				cwin_set_scroll_info (wel_item, Sb_ctl, scroll_info_struct.item, True)
+			end
+		end
 
 	set_range is
 		do
@@ -189,6 +225,11 @@ end -- class EV_RANGE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2001/07/10 16:57:40  rogers
+--| Redefined `wel_set_range' to adjust `value' if necessary. This fixes a bug
+--| exhibited in the vision2 gauges examples, see comment of `wel_set_range'
+--| for more information.
+--|
 --| Revision 1.10  2001/06/07 23:08:17  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -721,9 +721,19 @@ feature {NONE} -- Implementation
 		local
 			l_interpreter: ENV_INTERP
 		do
+			debug ("console_output")
+				io.put_string ("Original was: ")
+				io.put_string (a_path)
+				io.new_line
+			end
 			create l_interpreter
 			Result := l_interpreter.interpreted_string (a_path)
 			Result.replace_substring_all ("\", "/")
+			debug ("console_output")
+				io.put_string ("Updated path is: ")
+				io.put_string (Result)
+				io.new_line
+			end
 		end		
 
 invariant

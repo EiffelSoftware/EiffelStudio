@@ -743,6 +743,24 @@ feature {NONE} -- Implementation
 			-- Dialog that gives the user the choice between possible classes, clusters or features.
 			-- It may be Void, destroyed, anything, so use with care.
 
+	drop_class (cst: CLASSI_STONE) is
+			-- Attempt to drop a class into the address bar.
+		do
+			parent.advanced_set_stone (cst)
+		end
+
+	drop_feature (fst: FEATURE_STONE) is
+			-- Attempt to drop a class into the address bar.
+		do
+			parent.advanced_set_stone (fst)
+		end
+
+	drop_cluster (cst: CLUSTER_STONE) is
+			-- Attempt to drop a class into the address bar.
+		do
+			parent.advanced_set_stone (cst)
+		end
+
 	display_cluster_choice is
 				-- Display cluster names from `cluster_list' to `choice'.
 		require
@@ -1888,6 +1906,10 @@ feature {NONE} -- Implementation of the clickable labels for `header_info'
 			cluster_label.pointer_button_release_actions.extend (~button_action (cluster_address, ?, ?, ?, ?, ?, ?, ?, ?))
 			class_label.pointer_button_release_actions.extend (~button_action (class_address, ?, ?, ?, ?, ?, ?, ?, ?))
 			feature_label.pointer_button_release_actions.extend (~button_action (feature_address, ?, ?, ?, ?, ?, ?, ?, ?))
+			
+			class_label.drop_actions.extend (~drop_class)
+			feature_label.drop_actions.extend (~drop_feature)
+			cluster_label.drop_actions.extend (~drop_cluster)
 
 			cluster_label.enable_sensitive
 			class_label.enable_sensitive

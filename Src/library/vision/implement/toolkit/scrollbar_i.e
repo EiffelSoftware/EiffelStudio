@@ -23,14 +23,22 @@ feature -- Access
 			positive_value: Result > 0
 		end;
 
-	granularity: INTEGER is
-			-- Value of the amount to move the slider and modifie the
-			-- slide position value when a move action occurs
+	line_increment: INTEGER is
+			-- Distance (amount) to scroll on arrows
 		deferred
 		ensure
-			granularity_large_enough: Result >= 1;
-			granularity_small_enough: Result <= (maximum - minimum)
+			increment_large_enough: Result >= 1;
+			increment_small_enough: Result <= (maximum - minimum)
 		end;
+
+	page_increment: INTEGER is
+			-- Distance (amount) to scroll on page down or up
+		deferred
+		ensure
+			increment_large_enough: Result >= 1;
+			increment_small_enough: Result <= (maximum - minimum)
+		end;		
+
 
 	maximum: INTEGER is
 			-- Maximum value of slider position
@@ -73,7 +81,7 @@ feature -- Access
 feature -- Status report
 
 	is_horizontal: BOOLEAN is
-			-- Is scrollbar oriented horizontal?
+			-- Is scrollbar oriented horizontaly?
 		deferred
 		end;
 
@@ -92,7 +100,9 @@ feature -- Status setting
 		deferred
 		ensure
 			value_correctly_set: is_horizontal = flag
-		end;feature -- Element change
+		end;
+
+feature -- Element change
 
 	set_maximum_right_bottom (flag: BOOLEAN) is
 			-- Set maximum value on the right side when orientation
@@ -105,15 +115,24 @@ feature -- Status setting
 
 feature -- Element change
 
-	set_granularity (new_granularity: INTEGER) is
-			-- Set amount to move the slider and modifie the slide
-			-- position value when a move action occurs to `new_granularity'.
+	set_line_increment (inc: INTEGER) is
+			-- Set amount (distance) to scroll when on arrows
 		require
-			granularity_large_enough: new_granularity >= 1;
-			granularity_small_enough: new_granularity <= (maximum - minimum)
+			increment_large_enough: inc >= 1;
+			increment_small_enough: inc <= (maximum - minimum)
 		deferred
 		ensure
-			granularity = new_granularity
+			line_increment = inc
+		end;
+
+	set_page_increment (inc: INTEGER) is
+			-- Set amount (distance) to move on page up or down
+		require
+			increment_large_enough: inc >= 1;
+			increment_small_enough: inc <= (maximum - minimum)
+		deferred
+		ensure
+			page_increment = inc
 		end;
 
 	add_move_action (a_command: COMMAND; argument: ANY) is

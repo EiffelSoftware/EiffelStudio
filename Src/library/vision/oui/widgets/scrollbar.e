@@ -65,16 +65,32 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	granularity: INTEGER is
-			-- Value of the amount to move the slider of the current
-			-- scrollbar when a move action occurs
+		obsolete "Use line_increment"
+		do
+			Result := line_increment
+		end
+
+	line_increment: INTEGER is
+			-- Distance (amount) to scroll on arrows
 		require
 			exists: not destroyed;
 		do
-			Result := implementation.granularity
+			Result := implementation.line_increment
 		ensure
-			granularity_large_enough: Result >= 1;
-			granularity_small_enough: Result <= (maximum - minimum)
+			increment_large_enough: Result >= 1;
+			increment_small_enough: Result <= (maximum - minimum)
 		end;
+
+	page_increment: INTEGER is
+			-- Distance (amount) to scroll on page down or up
+		require
+			exists: not destroyed;
+		do
+			Result := implementation.page_increment
+		ensure
+			increment_large_enough: Result >= 1;
+			increment_small_enough: Result <= (maximum - minimum)
+		end;		
 
 	maximum: INTEGER is
 			-- Maximum value of slider value
@@ -146,6 +162,14 @@ feature -- Status report
 			Result := implementation.is_horizontal
 		end;
 
+	is_maximum_right_bottom: BOOLEAN is
+			-- Is maximum value on the right side when orientation
+			-- is horizontal or on the bottom side when orientation
+			-- is vertical?
+		do
+			Result := implementation.is_maximum_right_bottom
+		end;
+
 feature -- Status setting
 
 	set_horizontal (flag: BOOLEAN) is
@@ -157,20 +181,47 @@ feature -- Status setting
 			value_correctly_set: is_horizontal = flag
 		end;
 
+	set_maximum_right_bottom (flag: BOOLEAN) is
+			-- Set maximum value on the right side when orientation
+			-- is horizontal or on the bottom side when orientation
+			-- is vertical if `flag', and at the opposite side otherwise.
+		do
+			implementation.set_maximum_right_bottom (flag)
+		ensure
+			maximum_value_on_right_bottom: is_maximum_right_bottom = flag
+		end;
+
 feature -- Element change
 
 	set_granularity (new_granularity: INTEGER) is
-			-- Set amount to move the slider when a move action 
-			-- occurs to `new_granularity'.
+		obsolete "Use 'set_line_increment'."
+		do
+			set_line_increment (new_granularity)
+		end
+
+	set_line_increment (inc: INTEGER) is
+			-- Set amount (distance) to scroll when on arrows
 		require
 			exists: not destroyed;
-			granularity_large_enough: new_granularity >= 1;
-			granularity_small_enough: new_granularity <= (maximum - minimum)
+			increment_large_enough: inc >= 1;
+			increment_small_enough: inc <= (maximum - minimum)
 		do
-			implementation.set_granularity (new_granularity)
+			implementation.set_line_increment (inc)
 		ensure
-			granularity = new_granularity
-		end; 
+			line_increment = inc
+		end;
+
+	set_page_increment (inc: INTEGER) is
+			-- Set amount (distance) to move on page up or down
+		require
+			exists: not destroyed;
+			increment_large_enough: inc >= 1;
+			increment_small_enough: inc <= (maximum - minimum)
+		do
+			implementation.set_page_increment (inc)
+		ensure
+			page_increment = inc
+		end;
 
 	set_maximum (new_maximum: INTEGER) is
 			-- Set maximum value of slider value to `new_maximum'.
@@ -297,6 +348,7 @@ feature {NONE} -- Implementation
 	set_default is
 			-- Set default values tu current scrollbar.
 		do
+			set_maximum_right_bottom (True)
 		end;
 
 end -- class SCROLLBAR

@@ -313,7 +313,9 @@ feature {EV_WIDGET_IMP} -- Position retrieval
 			a_aux_info: POINTER
 			i: INTEGER
 		do
+			
 			if is_displayed then
+					
 					i := feature {EV_GTK_EXTERNALS}.gdk_window_get_origin (
 						feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object),
 				    	$a_x, NULL)

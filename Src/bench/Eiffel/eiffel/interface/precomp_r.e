@@ -14,7 +14,8 @@ inherit
 	PROJECT_CONTEXT;
 	COMPILER_EXPORTER;
 	SHARED_EIFFEL_PROJECT;
-	SHARED_WORKBENCH
+	SHARED_WORKBENCH;
+	SHARED_RESOURCES
 
 feature
 
@@ -95,7 +96,9 @@ feature
 				Error_handler.raise_error
 			end
 		rescue
-			if Rescue_status.is_unexpected_exception then
+			if Rescue_status.is_unexpected_exception and then
+				not resources.get_boolean (r_Fail_on_rescue, False)
+			then
 				retried := True;
 				retry
 			end;
@@ -196,7 +199,9 @@ feature {NONE} -- Implementation
 		ensure
 			valid_project: Result /= Void implies Result.is_valid
 		rescue
-			if Rescue_status.is_unexpected_exception then
+			if Rescue_status.is_unexpected_exception and then
+				not resources.get_boolean (r_Fail_on_rescue, False) 
+			then
 				retried := True;
 				retry
 			end
@@ -263,7 +268,9 @@ feature {NONE} -- Implementation
 				Error_handler.raise_error
 			end
 		rescue
-			if Rescue_status.is_unexpected_exception then
+			if Rescue_status.is_unexpected_exception and then
+				not resources.get_boolean (r_Fail_on_rescue, False) 
+			then
 				retried := True;
 				retry
 			end

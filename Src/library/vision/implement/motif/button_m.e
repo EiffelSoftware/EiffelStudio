@@ -51,10 +51,7 @@ feature -- Status report
 		do
 			Result := label_as_string
 			keysym := mnemonic;
-			if keysym /= '%U' then
-				check
-					string_has_mnemonic: Result.has (keysym)
-				end;
+			if Result.has (keysym) then
 				pos := Result.index_of (keysym, 1);
 				Result.insert ("&", pos)
 			end;
@@ -86,8 +83,8 @@ feature -- Status setting
 			else
 				set_mnemonic_from_text (a_text, True)
 			end
-		ensure
-			text_set: text.is_equal (a_text)
+		ensure 
+			text_set: equal (without_ampersands (text), without_ampersands (a_text))
 		end;
 
 	set_left_alignment is
@@ -104,6 +101,14 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
+	without_ampersands (a_text: STRING): STRING is
+			-- Returns a string which is a_text without ampersands
+		do
+			Result := clone(a_text)
+			Result.prune_all('&')
+		end
+	
+			
 	is_able_have_accerlators: BOOLEAN is
 			-- Can the button able to have accelerators?
 			-- True if it is not a label and not in an

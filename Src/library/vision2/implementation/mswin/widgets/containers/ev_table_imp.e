@@ -435,10 +435,12 @@ feature {NONE} -- Access features for implementation
 			-- The last cell represent the total.
 
 	columns_sum: INTEGER
-			-- Sum of the minimums.
+			-- Sum of the minimum column values.
+			-- Used during sizing computations.
 
 	rows_sum: INTEGER
-			-- Sum of  the minimum.
+			-- Sum of the minimum row values.
+			-- Used during sizing computations.
 
 feature {NONE} -- Resize Implementation
 

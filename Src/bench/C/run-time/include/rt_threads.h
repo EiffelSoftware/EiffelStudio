@@ -108,10 +108,12 @@ extern void eif_unsynchronize_gc(eif_global_context_t *);
     if (pthread_cond_timedwait (pcond, pmutex, timeout)) eraise (msg, EN_EXT)
 #else
 #define EIF_COND_WAIT_WITH_TIMEOUT(pcond, pmutex, timeout, msg) \
+	{ \
 	struct timespec tspec; \
 	tspec.tv_sec = time(NULL) + a_timeout; \
 	tspec.tv_nsec = 0; \
-    if (pthread_cond_timedwait (pcond, pmutex, &tspec)) eraise (msg, EN_EXT)
+    if (pthread_cond_timedwait (pcond, pmutex, &tspec)) eraise (msg, EN_EXT); \
+	}
 #endif
 
 #define EIF_COND_BROADCAST(pcond, msg) \

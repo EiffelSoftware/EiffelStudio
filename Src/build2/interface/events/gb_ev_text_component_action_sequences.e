@@ -37,7 +37,7 @@ feature -- Access
 		
 	connect_event_output_agent (object: EV_ANY; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER) is
 			-- If `adding', then connect an agent to `action_sequence' actions of `object' which will display name of 
-			-- action sequence and all arguments in `string_handler'. If no `adding' then `wipe_out' `action_sequence'.
+			-- action sequence and all arguments in `string_handler'. If no `adding' then `remove_only_added' `action_sequence'.
 		local
 			notify_sequence: GB_EV_NOTIFY_ACTION_SEQUENCE
 			text_component: EV_TEXT_COMPONENT
@@ -59,9 +59,9 @@ feature -- Access
 				else
 					spin_button ?= text_component
 					if spin_button /= Void then
-						spin_button.text_change_actions.wipe_out
+						remove_only_added (spin_button.text_change_actions)
 					else
-						text_component.change_actions.wipe_out
+						remove_only_added (text_component.change_actions)
 					end
 				end
 			end

@@ -37,7 +37,7 @@ feature -- Access
 		
 	connect_event_output_agent (object: EV_ANY; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER) is
 			-- If `adding', then connect an agent to `action_sequence' actions of `object' which will display name of 
-			-- action sequence and all arguments in `string_handler'. If not `adding' then `wipe_out' `action_sequence'.
+			-- action sequence and all arguments in `string_handler'. If not `adding' then `remove_only_added' `action_sequence'.
 		local
 			value_change_sequence: GB_EV_VALUE_CHANGE_ACTION_SEQUENCE
 			gauge: EV_GAUGE
@@ -51,7 +51,7 @@ feature -- Access
 					value_change_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_VALUE_CHANGE_ACTION_SEQUENCE"))
 					gauge.change_actions.extend (value_change_sequence.display_agent (action_sequence, string_handler))
 				else
-					gauge.change_actions.wipe_out
+					remove_only_added (gauge.change_actions)
 				end
 			end
 		end

@@ -40,7 +40,7 @@ feature -- Access
 		
 	connect_event_output_agent (widget: EV_WIDGET; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER) is
 			-- If `adding', then connect an agent to `action_sequence' actions of `widget' which will display name of 
-			-- action sequence and all arguments in `textable'. If no `adding' then `wipe_out' `action_sequence'.
+			-- action sequence and all arguments in `textable'. If no `adding' then `remove_only_added' `action_sequence'.
 		local
 			item_check_sequence: GB_EV_LIST_ITEM_CHECK_ACTION_SEQUENCE
 			checkable_list: EV_CHECKABLE_LIST
@@ -54,14 +54,14 @@ feature -- Access
 					create item_check_sequence
 					checkable_list.check_actions.extend (item_check_sequence.display_agent (action_sequence, string_handler))
 				else
-					checkable_list.check_actions.wipe_out
+					remove_only_added (checkable_list.check_actions)
 				end
 			elseif action_sequence.is_equal (names @ 2) then
 				if adding then
 					create item_check_sequence
 					checkable_list.uncheck_actions.extend (item_check_sequence.display_agent (action_sequence, string_handler))
 				else
-					checkable_list.uncheck_actions.wipe_out
+					remove_only_added (checkable_list.uncheck_actions)
 				end
 			end	
 		end

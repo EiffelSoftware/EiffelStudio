@@ -42,7 +42,7 @@ feature -- Creation
 			-- individual descriptors to `s'.
 		local
 			desc: DESCRIPTOR
-			local_class_types: LINKED_LIST [CLASS_TYPE]
+			local_class_types: TYPE_LIST
 		do
 			base_class := c
 			class_types := c.types
@@ -67,7 +67,7 @@ feature
 	base_class: CLASS_C
 			-- Base class of current descriptor list
 
-	class_types: LINKED_LIST [CLASS_TYPE]
+	class_types: TYPE_LIST
 			-- Class types associated with base class of
 			-- Current descriptor list
 	
@@ -76,7 +76,7 @@ feature -- Insertion
 	put_invariant (f: INVARIANT_FEAT_I) is
 		local
 			u: ENTRY
-			local_class_types: LINKED_LIST [CLASS_TYPE]
+			local_class_types: TYPE_LIST
 		do
 			if f.has_entry then
 				u := f.new_entry (System.routine_id_counter.invariant_rout_id)
@@ -112,7 +112,7 @@ feature -- Insertion
 			desc: DESCRIPTOR
 			du: DESC_UNIT
 			void_entry: ENTRY
-			local_class_types: LINKED_LIST [CLASS_TYPE]
+			local_class_types: TYPE_LIST
 		do
 				-- Get the polymorphical unit corresponding to `f'
 				--|Note: see if and how `has_entry' may be used.

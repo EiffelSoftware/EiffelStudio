@@ -31,11 +31,9 @@ feature -- Initialization
 
 	make (a_screen_name: STRING) is
 			-- Create a screen specified by `a_screen_name'.
-		require
-			screen_name_exists: a_screen_name /= Void
 		do
 			screen_name := clone (a_screen_name);
-			!SCREEN_IMP!implementation.make (current)
+			!SCREEN_IMP! implementation.make (Current)
 		end;
 
 feature -- Access

@@ -80,7 +80,7 @@ feature
 		end;
 
 	delete (info: INHERIT_INFO) is
-			-- Insert information `info' in the table.
+			-- Delete information `info' in the table.
 		require
 			good_argument: info /= Void;
 			good_context: not	(	info.a_feature = Void

@@ -1,0 +1,203 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>An Invitation to Eiffel: Deferred classes</TITLE>
+   <META NAME="GENERATOR" CONTENT="Mozilla/3.0Gold (X11; I; SunOS 4.1.3 sun4c) [Netscape]">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<P><LINK REV="made" HREF="mailto:webmaster@eiffel.com"></P>
+
+<H5><A HREF="system.maker.html"><IMG SRC="fm2html-next.gif" ALT="Next page" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" ALT="Table ofContents" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A HREF="geninh.maker.html"><IMG SRC="fm2html-previous.gif" ALT="Previous section" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A NAME="REF98317"></A>AN INVITATION TO EIFFEL </H5>
+
+<P>
+<HR><!-- This file was created with the fm2html filter.
+The filter is copyright Norwegian Telecom Research and
+was programmed by Jon Stephenson von Tetzchner. --></P>
+
+<H3><A NAME="HDR0"></A>11 DEFERRED CLASSES</H3>
+
+<P>The inheritance mechanism includes one more major component: deferred
+routines and classes. </P>
+
+<P>Declaring a routine <I>r</I> as deferred in a class <I>C</I> expresses
+that there is no default implementation of<I> r</I> in <I>C</I>; such implementations
+will appear in eventual descendants of <I>C</I>. A class which has one
+or more deferred routines is itself said to be deferred. A non-deferred
+routine or class is said to be <B>effective</B>. </P>
+
+<P>For example, a system used by a Department of Motor Vehicles to register
+vehicles could include a class of the form </P>
+
+<UL>
+<DL>
+<DT><B><FONT COLOR="#0000FF">deferred class </FONT></B><I>VEHICLE </I><B><FONT COLOR="#0000FF">feature
+</FONT></B><BR>
+<BR>
+</DT>
+
+<DD><I>dues_paid (year: INTEGER): BOOLEAN </I><B><FONT COLOR="#0000FF">is
+</FONT></B></DD>
+
+<DL>
+<DD><B><FONT COLOR="#0000FF">do</FONT></B><I>... </I><B><FONT COLOR="#0000FF">end</FONT></B></DD>
+</DL>
+
+<P><BR>
+</P>
+
+<DD><I>valid_plate (year: INTEGER): BOOLEAN </I><B>is </B></DD>
+
+<DL>
+<DD><B><FONT COLOR="#0000FF">do</FONT></B><I>... </I><FONT COLOR="#0000FF"><B>end</B><I>
+</I></FONT></DD>
+</DL>
+
+<P><BR>
+</P>
+
+<DD><I>register (year: INTEGER) </I><B>is </B></DD>
+
+<DL>
+<DL>
+<DL>
+<DT><FONT COLOR="#FF0000"><B><I>-- </I></B>Register vehicle for </FONT><I>year</I><FONT COLOR="#FF0000">.
+</FONT></DT>
+</DL>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">require </FONT></B></DD>
+
+<DL>
+<DD><I>dues_paid (year) </I></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">deferred </FONT></B></DD>
+
+<DD><B><FONT COLOR="#0000FF">ensure </FONT></B></DD>
+
+<DL>
+<DD><I>valid_plate (year) </I></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">end</FONT></B><BR>
+<BR>
+</DD>
+
+<DT>... Other features, deferred or effective... <BR>
+<BR>
+</DT>
+</DL>
+</DL>
+</UL>
+
+<P><B><FONT COLOR="#0000FF">end </FONT></B><I>-- </I>class<I> VEHICLE</I>
+</P>
+
+<P>This example assumes that no single registration algorithm applies to
+all kinds of vehicle; passenger cars, motorcycles, trucks etc. are all
+registered differently. But the same precondition and postcondition apply
+in all cases. The solution is to treat <I>register</I> as a deferred routine,
+making <I>VEHICLE</I> a deferred class. Descendants of class <I>VEHICLE</I>,
+such as <I>CAR</I> or <I>TRUCK</I>, <B>effect</B> this routine, that is
+to say, give effective versions. An effecting is similar to a redefinition;
+only here there is no effective definition in the original class, just
+a specification in the form of a deferred routine. The term <B>redeclaration</B>
+covers both redefinition and effecting. </P>
+
+<CENTER><P><IMG SRC="deferred.maker.fig_1.gif" HEIGHT=139 WIDTH=367> </P></CENTER>
+
+<H3 ALIGN=CENTER><B><I>Vehicle inheritance hierarchy</I></B></H3>
+
+<P>Deferred classes describe a group of implementations of an abstract
+data type rather than just a single implementation. A deferred class may
+not be instantiated: !! <I>v</I> is invalid if <I>v</I> is an entity declared
+of type <I>VEHICLE</I>. But such an entity may be assigned a reference
+to an instance of a non-deferred descendant of <I>VEHICLE</I>. For example,
+assuming <I>CAR</I> and <I>TRUCK</I> provide effective definitions for
+all deferred routines of <I>VEHICLE</I>, the following will be valid: </P>
+
+<UL>
+<DL>
+<DT><I>v: VEHICLE; c: CAR; t: TRUCK; </I></DT>
+
+<DT><I>... </I></DT>
+
+<DT>!!<I> c ...; </I>!! <I>t ...;... </I><BR>
+<BR>
+</DT>
+
+<DT><B><FONT COLOR="#0000FF">if </FONT></B>&quot;Some test&quot; <B><FONT COLOR="#0000FF">then
+</FONT></B></DT>
+
+<DL>
+<P><I>v := c </I></P>
+</DL>
+
+<P><B><FONT COLOR="#0000FF">else </FONT></B></P>
+
+<DL>
+<P><I>v := t </I></P>
+</DL>
+
+<P><B><FONT COLOR="#0000FF">end</FONT></B><BR>
+</P>
+
+<DT><I>v.register (1996) </I></DT>
+</DL>
+</UL>
+
+<P>This example fully exploits polymorphism: depending on the outcome of
+&quot;Some test&quot;, <I>v</I> will be treated as a car or a truck, and
+the appropriate registration algorithm will be applied. Also, &quot;Some
+test&quot; may depend on some event whose outcome is impossible to predict
+until run-time, for example the user clicking with the mouse to select
+one among several vehicle icons displayed on the screen. </P>
+
+<P>Deferred classes are particularly useful at the <B>design</B> stage.
+The first version of a module may be a deferred class, which will later
+be refined into one or more effective (non-deferred) classes. Particularly
+important for this application is the possibility of associating a precondition
+and a postcondition with a routine even though it is a deferred routine
+(as with <I>register</I> above), and an invariant with a class even though
+it is a deferred class. This enables the designer to attach precise semantics
+to a module at the design stage, long before making any implementation
+choices. </P>
+
+<P>These possibilities make Eiffel an attractive alternative to PDLs (Program
+Design Languages). The combination of deferred classes to capture partially
+understood concepts, assertions to express what is known about their semantics,
+and the language's other structuring facilities (information hiding, inheritance,
+genericity) to obtain clear, convincing architectures, yields a higher-level
+design method. A further benefit, of course, is that the notation is also
+a programming language, making the development cycle smoother by reducing
+the gap between design and implementation. </P>
+
+<P>The role of Eiffel in this cycle is not limited to design and implementation
+but extends to the earliest stage of development, <B>analysis</B>. Deferred
+classes written at that stage describe not software objects, but objects
+from the external reality's model -- documents, airplanes, investments.
+Here again the presence of assertions to express constraints, and the language's
+other structuring facilities, provide an attractive alternative to older
+methods and notations. </P>
+
+<P><A HREF="geninh.maker.html"><IMG SRC="fm2html-previous.gif" HEIGHT=16 WIDTH=16></A><A HREF="geninh.maker.html">Previous
+Chapter</A> <A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" HEIGHT=16 WIDTH=16></A><A HREF="BOOK.maker.html">Table
+of Contents</A> <A HREF="system.maker.html"><IMG SRC="fm2html-next.gif" HEIGHT=16 WIDTH=16></A><A HREF="system.maker.html">Next
+Chapter</A> </P>
+
+<CENTER><P><!-- FOOTER --><BR>
+<IMG SRC="rainban.gif" ALT="" HEIGHT=5 WIDTH=558>
+<!-- END ICON BAR --><!-- COPYRIGHT --></P></CENTER>
+
+<CENTER><P><B><FONT SIZE=-1>- Copyright &copy; 1985-1996 ISE Inc. <A HREF="mailto:info@eiffel.com">&lt;info@eiffel.com&gt;</A>
+- <BR>
+</FONT></B><FONT SIZE=-1>Please send comments to <A HREF="mailto:webmaster@eiffel.com">&lt;webmaster@eiffel.com&gt;</A>
+<BR>
+Last update: December 1996 </FONT><!-- END COPYRIGHT --><!-- END FOOTER --></P></CENTER>
+
+</BODY>
+</HTML>

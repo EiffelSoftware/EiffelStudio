@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>An Invitation to Eiffel: Types</TITLE>
+   <META NAME="GENERATOR" CONTENT="Mozilla/3.0Gold (X11; I; SunOS 4.1.3 sun4c) [Netscape]">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<P><LINK REV="made" HREF="mailto:webmaster@eiffel.com"></P>
+
+<H5><A HREF="assertions.maker.html"><IMG SRC="fm2html-next.gif" ALT="Next page" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" ALT="Table ofContents" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A HREF="classes.maker.html"><IMG SRC="fm2html-previous.gif" ALT="Previous section" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A NAME="REF98317"></A>AN INVITATION TO EIFFEL </H5>
+
+<P>
+<HR><!-- This file was created with the fm2html filter.
+The filter is copyright Norwegian Telecom Research and
+was programmed by Jon Stephenson von Tetzchner. --></P>
+
+<H3><A NAME="REF22513"></A>4 TYPES </H3>
+
+<P>Eiffel is strongly typed for readability and reliability. Every entity
+is declared of a certain type, which may be either a reference type or
+an expanded type. </P>
+
+<P>Any type <I>T</I> is based on a class, which defines the operations
+that will be applicable to instances of <I>T</I>. The difference between
+the two categories of type affects the semantics of an entity<I> x</I>
+declared of type <I>T</I>: for a reference type, the most common case,
+possible values for <I>x</I> are references to objects; for an expanded
+type, the values are objects. In both cases, the type rules guarantee that
+the objects will be instances of <I>T</I>. </P>
+
+<P>A non-expanded class such as <I>ACCOUNT</I> yields a reference type.
+As a result, an entity of type <I>ACCOUNT</I>, such as <I>acc </I>in the
+earlier client example (see the declaration of <I>acc</I> and the accompanying
+picture as given earlier), denotes possible run-time references to objects
+of type <I>ACCOUNT. </I></P>
+
+<P>In contrast, the value of an entity <I>acc</I> declared of type <B><FONT COLOR="#0000FF">expanded
+</FONT></B><I>ACCOUNT</I> is an object such as the one shown on the figure
+below, with no reference. The only difference with the earlier figure is
+that the value of <I>acc</I> is now an <I>ACCOUNT</I> object, not a reference
+to such an object. No creation instruction is needed in this case. (The
+figure does not show the <I>PERSON</I> object to which the <I>owner </I>field
+of the<I> ACCOUNT</I> object -- itself a reference -- is attached.) <BR>
+<BR>
+</P>
+
+<CENTER><P><IMG SRC="types.maker.fig_1.gif" HEIGHT=105 WIDTH=393> </P></CENTER>
+
+<H3 ALIGN=CENTER><B><I>An entity of expanded type</I></B></H3>
+
+<P>An important group of expanded types, based on library classes, includes
+the basic types <I>INTEGER, REAL, DOUBLE, CHARACTER</I> and <I>BOOLEAN</I>.
+Clearly, the value of an entity declared of type <I>INTEGER</I> should
+be an integer, not a reference to an object containing an integer value.
+Operations on these types are defined by prefix and infix operators such
+as &quot;+&quot; and &quot;&lt;&quot;. </P>
+
+<P>As a result of these conventions, the type system is uniform and consistent:
+all types, including the basic types, are defined from classes, either
+as reference types or as expanded types. </P>
+
+<P>In the case of basic types, for obvious reasons of efficiency, the ISE
+Eiffel compilation mechanism implements the standard arithmetic and boolean
+operations directly through the corresponding machine operations, not through
+routine calls. But this is only a compiler optimization, which does not
+hamper the conceptual homogeneity of the type edifice. </P>
+
+<P><A HREF="classes.maker.html"><IMG SRC="fm2html-previous.gif" HEIGHT=16 WIDTH=16></A><B><A HREF="classes.maker.html">Previous
+Chapter</A> <A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" HEIGHT=16 WIDTH=16></A><A HREF="BOOK.maker.html">Table
+of Contents</A> <A HREF="assertions.maker.html"><IMG SRC="fm2html-next.gif" HEIGHT=16 WIDTH=16></A><A HREF="assertions.maker.html">Next
+Chapter</A>
+<CENTER>
+<!-- FOOTER --><BR>
+<IMG SRC="rainban.gif" ALT="" HEIGHT=5 WIDTH=558></B> <!-- ICON BAR -->
+<BR>
+<!-- END ICON BAR --><!-- COPYRIGHT --><B><FONT SIZE=-1>-
+<BR>
+Copyright &copy;
+1985-1996 ISE Inc. <A HREF="mailto:info@eiffel.com">&lt;info@eiffel.com&gt;</A>
+- <BR>
+</FONT></B><FONT SIZE=-1>Please send comments to <A HREF="mailto:webmaster@eiffel.com">&lt;webmaster@eiffel.com&gt;</A>
+<BR>
+Last update: December 1996 </FONT>
+</CENTER>
+<!-- END COPYRIGHT --><!-- END FOOTER --></P>
+
+</BODY>
+</HTML>

@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>An Invitation to Eiffel: Exceptions</TITLE>
+   <META NAME="GENERATOR" CONTENT="Mozilla/3.0Gold (X11; I; SunOS 4.1.3 sun4c) [Netscape]">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<P><LINK REV="made" HREF="mailto:webmaster@eiffel.com"></P>
+
+<H5><A HREF="genericity.maker.html"><IMG SRC="fm2html-next.gif" ALT="Next page" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" ALT="Table ofContents" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A HREF="assertions.maker.html"><IMG SRC="fm2html-previous.gif" ALT="Previous section" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A NAME="REF98317"></A>AN INVITATION TO EIFFEL </H5>
+
+<P>
+<HR><!-- This file was created with the fm2html filter.
+The filter is copyright Norwegian Telecom Research and
+was programmed by Jon Stephenson von Tetzchner. --></P>
+
+<H3><A NAME="HDR0"></A>6 EXCEPTIONS </H3>
+
+<P>Whenever there is a contract, the risk exists that someone will break
+it. This is where exceptions come in. </P>
+
+<P>Exceptions -- contract violations -- may arise from several causes.
+One is assertion violations, if assertions are monitored. Another is the
+occurrence of a signal triggered by the hardware or operating system to
+indicate an abnormal condition such as arithmetic overflow or lack of memory
+to create a new object. </P>
+
+<P>Unless a routine has made specific provision to handle exceptions, it
+will <B>fail</B> if an exception arises during its execution. Failure of
+a routine is a third cause of exception: a routine that fails triggers
+an exception in its caller. </P>
+
+<P>A routine may, however, handle an exception through a <B><FONT COLOR="#0000FF">rescue
+</FONT></B>clause. This optional clause attempts to &quot;patch things
+up&quot; by bringing the current object to a stable state (one satisfying
+the class invariant). Then it can terminate in either of two ways: </P>
+
+<UL>
+<LI>The <B><FONT COLOR="#0000FF">rescue </FONT></B>clause may execute a
+<B><FONT COLOR="#0000FF">retry </FONT></B>instruction, which causes the
+routine to restart its execution from the beginning, attempting again to
+fulfil its contract, usually through another strategy. This assumes that
+the instructions of the <B><FONT COLOR="#0000FF">rescue </FONT></B>clause,
+before the <B><FONT COLOR="#0000FF">retry </FONT></B>, have attempted to
+correct the cause of the exception. <BR>
+</LI>
+
+<LI>If the <B><FONT COLOR="#0000FF">rescue </FONT></B>clause does not end
+with <B><FONT COLOR="#0000FF">retry </FONT></B>, then the routine fails:
+it returns to its caller, immediately signaling an exception. (The caller's
+<B><FONT COLOR="#0000FF">rescue </FONT></B>clause will be executed according
+to the same rules.) <BR>
+</LI>
+</UL>
+
+<P>The principle is that <B>a routine must either succeed or fail</B>:
+either it fulfils its contract, or it does not; in the latter case it must
+notify its caller by triggering an exception. </P>
+
+<P>Usually, only a few routines of a system will include explicit <B><FONT COLOR="#0000FF">rescue
+</FONT></B>clauses. An exception occurring during the execution of a routine
+with no <B><FONT COLOR="#0000FF">rescue </FONT></B>clause will trigger
+a predefined rescue procedure, which does nothing, and so will cause the
+routine to fail immediately, propagating the exception to the routine's
+caller. </P>
+
+<P>An example using the exception mechanism is a routine <I>attempt_transmission</I>
+which tries to transmit a message over a phone line. The actual transmission
+is performed by an external, low-level routine <I>transmit</I>; once started,
+however, <I>transmit</I> may abruptly fail, triggering an exception, if
+the line is disconnected. Routine <I>attempt_transmission</I> tries the
+transmission at most 50 times; before returning to its caller, it sets
+a boolean attribute <I>successful</I> to <B><I>true </I></B>or <B><I>false
+</I></B>depending on the outcome. Here is the text of the routine: </P>
+
+<UL>
+<DL>
+<DT><I>attempt_transmission </I>(<I>message: STRING</I>)<I> </I><B><FONT COLOR="#0000FF">is
+</FONT></B></DT>
+
+<DL>
+<DL>
+<DL>
+<DT><FONT COLOR="#FF0000"><I>-- </I>Try to transmit </FONT><I><FONT COLOR="#000000">message</FONT></I><FONT COLOR="#FF0000">,
+at most 50 times. </FONT></DT>
+
+<DT><FONT COLOR="#FF0000">-- Set </FONT><FONT COLOR="#000000"><I>successful</I>
+</FONT><FONT COLOR="#FF0000">accordingly. </FONT></DT>
+</DL>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">local </FONT></B></DD>
+
+<DL>
+<DD><I>failures: INTEGER </I></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">do </FONT></B></DD>
+
+<DL>
+<DD><B><FONT COLOR="#0000FF">if </FONT></B><I>failures &lt; 50 </I><B><FONT COLOR="#0000FF">then
+</FONT></B></DD>
+
+<DL>
+<DD><I>transmit (message); successful := </I><B><FONT COLOR="#0000FF">true
+</FONT></B></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">else </FONT></B></DD>
+
+<DL>
+<DD><I>successful := </I><B><FONT COLOR="#0000FF">false </FONT></B></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">end </FONT></B></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">rescue </FONT></B></DD>
+
+<DL>
+<DD><I>failures := failures + 1; </I><B><FONT COLOR="#0000FF">retry </FONT></B></DD>
+</DL>
+
+<DD><B><FONT COLOR="#0000FF">end </FONT></B></DD>
+</DL>
+</DL>
+</UL>
+
+<P>Initialization rules ensure that <I>failures</I>, a local entity, is
+set to zero on entry. </P>
+
+<P>This example illustrates the simplicity of the mechanism: the <B><FONT COLOR="#0000FF">rescue
+</FONT></B>clause never attempts to achieve the routine's original intent;
+this is the sole responsibility of the body (the <B><FONT COLOR="#0000FF">do
+</FONT></B>clause). The only role of the <B><FONT COLOR="#0000FF">rescue
+</FONT></B>clause is to clean up the objects involved, and then either
+to fail or to retry. </P>
+
+<P>This disciplined exception mechanism is essential for software developers,
+who need protection against unexpected events, but cannot be expected to
+sacrifice safety and simplicity to pay for this protection. </P>
+
+<P><A HREF="assertions.maker.html"><IMG SRC="fm2html-previous.gif" HEIGHT=16 WIDTH=16></A><A HREF="assertions.maker.html">Previous
+Chapter</A> <A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" HEIGHT=16 WIDTH=16></A><A HREF="BOOK.maker.html">Table
+of Contents</A> <A HREF="genericity.maker.html"><IMG SRC="fm2html-next.gif" HEIGHT=16 WIDTH=16></A><A HREF="genericity.maker.html">Next
+Chapter</A>
+<CENTER>
+<!-- FOOTER --><BR>
+<IMG SRC="rainban.gif" ALT="" HEIGHT=5 WIDTH=558>
+<BR>
+Copyright &copy;
+1985-1996 ISE Inc. <A HREF="mailto:info@eiffel.com">&lt;info@eiffel.com&gt;</A>
+- <BR>
+</FONT></B><FONT SIZE=-1>Please send comments to <A HREF="mailto:webmaster@eiffel.com">&lt;webmaster@eiffel.com&gt;</A>
+<BR>
+Last update: December 1996 </FONT><!-- END COPYRIGHT --><!-- END FOOTER --></P>
+</CENTER>
+
+</BODY>
+</HTML>

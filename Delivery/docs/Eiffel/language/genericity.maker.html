@@ -1,0 +1,67 @@
+<HTML>
+<HEAD>
+<TITLE>An Invitation to Eiffel: Genericity</TITLE>
+<LINK REV="made" HREF="mailto:webmaster@eiffel.com">
+</HEAD>
+
+<BODY BGCOLOR="#FFFFFF" >
+<H5>
+<A HREF="inheritance.maker.html"><IMG ALIGN=RIGHT SRC="fm2html-next.gif" ALT="Next page" width="16" height="16"></A>
+<A HREF="BOOK.maker.html"><IMG ALIGN=RIGHT SRC="fm2html-toc.gif" ALT="Table of
+Contents" width="16" height="16"></A>
+<A HREF="exceptions.maker.html"><IMG ALIGN=RIGHT SRC="fm2html-previous.gif" ALT="Previous section" width="16" height="16"></A>
+<A NAME="REF98317">
+AN INVITATION TO EIFFEL</A>
+</H5>
+<HR>
+<!-- This file was created with the fm2html filter.
+The filter is copyright Norwegian Telecom Research and
+was programmed by Jon Stephenson von Tetzchner. -->
+
+<H3><A NAME="HDR0"> 7  GENERICITY</A></H3>
+<P>Building software components (classes) as implementations of abstract data types yields systems with a solid architecture but does not in itself suffice to ensure reusability and extendibility. Two key techniques address the problem: genericity (unconstrained or constrained) and inheritance. Let us look first at the unconstrained form. 
+<P>To make a class generic is to give it <B>formal generic parameters</B> representing arbitrary types, as in these examples from the Kernel and Data Structure Libraries of EiffelBase: 
+<UL><DL>
+<DT><I>ARRAY </I>[<I>G</I>]
+<DT><I>LIST </I>[<I>G</I>]
+<DT><I>LINKED_LIST </I>[<I>G</I>]
+</DL></UL>
+<P>These classes describe data structures -- arrays, lists without commitment to a specific representation, lists in linked representation -- containing objects of a certain type. The formal generic parameter <I>G</I> represents this type. 
+<P>Each of these classes describes a type template. To derive a directly usable type, you must provide a type corresponding to <I>G</I>, called an <B>actual generic parameter</B>; this may be either a basic expanded type (such as <I>INTEGER</I>) or a reference type. Here are some possible generic derivations: 
+<UL><DL>
+<DT><I>il</I>:<I> LIST</I> [<I>INTEGER</I>]<I>
+<DT>aa: ARRAY</I> [<I>ACCOUNT</I>]<I>
+<DT>aal: LIST</I> [<I>ARRAY </I>[[<I>G</I>]]<I></I>
+</DL></UL>
+<P>As the last example indicates, an actual generic parameter may itself be generically derived. 
+<P>Without genericity, it would be impossible to obtain static type checking in a realistic object-oriented language. 
+<P>A variant of this mechanism, <I>constrained</I> genericity, will enable
+a class to place specific requirements on possible actual generic
+parameters. Constrained genericity will be introduced <A
+HREF="geninh.maker.html">below</A>, after inheritance. 
+
+<P>
+<A HREF="exceptions.maker.html"><IMG SRC="fm2html-previous.gif" width="16" height="16">Previous Chapter</A>
+<A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" width="16" height="16">Table of Contents</A>
+<A HREF="inheritance.maker.html"><IMG SRC="fm2html-next.gif" width="16" height="16">Next Chapter</A>
+  
+ 
+<!-- FOOTER -->
+<BR>
+<CENTER>
+<IMG SRC="rainban.gif" WIDTH="100%" ALT="">
+</CENTER>
+<!-- COPYRIGHT -->
+<CENTER><FONT SIZE=-1><STRONG>
+- Copyright &copy; 1985-1996 ISE Inc. <A HREF="mailto:info@eiffel.com">
+&lt;info@eiffel.com&gt;</A> -
+</STRONG><BR>
+Please send comments to <A HREF="mailto:webmaster@eiffel.com">
+&lt;webmaster@eiffel.com&gt;</A>
+<BR><FONT SIZE=-1>
+Last update: December 1996 
+</FONT></FONT></CENTER>
+<!-- END COPYRIGHT -->
+<!-- END FOOTER -->
+</BODY>
+</HTML>

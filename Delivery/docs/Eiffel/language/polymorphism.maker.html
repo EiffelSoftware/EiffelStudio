@@ -1,0 +1,229 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML>
+<HEAD>
+   <TITLE>An Invitation to Eiffel: Polymorphism</TITLE>
+   <META NAME="GENERATOR" CONTENT="Mozilla/3.0Gold (X11; I; SunOS 4.1.3 sun4c) [Netscape]">
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+
+<P><LINK REV="made" HREF="mailto:webmaster@eiffel.com"></P>
+
+<H5><A HREF="geninh.maker.html"><IMG SRC="fm2html-next.gif" ALT="Next page" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" ALT="Table ofContents" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A HREF="inheritance.maker.html"><IMG SRC="fm2html-previous.gif" ALT="Previous section" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
+<A NAME="REF98317"></A>AN INVITATION TO EIFFEL </H5>
+
+<P>
+<HR><!-- This file was created with the fm2html filter.
+The filter is copyright Norwegian Telecom Research and
+was programmed by Jon Stephenson von Tetzchner. --></P>
+
+<H3><A NAME="HDR0"></A>9 POLYMORPHISM AND DYNAMIC BINDING </H3>
+
+<P>Inheritance is not just a module combination and enrichment mechanism.
+It also enables the definition of flexible entities that may become attached
+to objects of various forms at run time, a property known as polymorphism.
+</P>
+
+<P>This remarkable facility must be reconciled with static typing. The
+language convention is simple: an assignment of the form <I>a </I>:= <I>b</I>
+is permitted not only if <I>a</I> and <I>b</I> are of the same type, but
+more generally if <I>a</I> and <I>b</I> are of reference types <I>A</I>
+and <I>B</I>, based on classes<I> A</I> and <I>B</I> such that <I>B</I>
+is a descendant of <I>A</I>. </P>
+
+<P>This corresponds to the intuitive idea that a value of a more specialized
+type may be assigned to an entity of a less specialized type -- but not
+the reverse. (As an analogy, consider that if you request vegetables, getting
+green vegetables is fine, but if you ask for green vegetables, receiving
+a dish labeled just &quot;vegetables&quot; is not acceptable, as it could
+include, say, carrots.) </P>
+
+<P>What makes this possibility particularly powerful is the complementary
+facility: <B>feature redefinition</B>. A class may redefine some or all
+of the features which it inherits from its parents. For an attribute or
+function, the redefinition may affect the type, replacing the original
+by a descendant; for a routine it may also affect the implementation, replacing
+the original's routine body by a new one. </P>
+
+<P>Assume for example a class <I>POLYGON</I>, describing polygons, whose
+features include an array of points representing the vertices and a function
+<I>perimeter</I> which computes a polygon's perimeter by summing the successive
+distances between adjacent vertices. An heir of <I>POLYGON</I> may begin
+as: </P>
+
+<UL>
+<DL>
+<DT><B><FONT COLOR="#0000FF">class </FONT></B><I>RECTANGLE </I><B><FONT COLOR="#0000FF">inherit
+</FONT></B><BR>
+<BR>
+</DT>
+
+<DL>
+<DT><DD</B><I>POLYGON </I></DT>
+
+<DL>
+<DT><B><FONT COLOR="#0000FF">redefine </FONT></B><I>perimeter </I><B><FONT COLOR="#0000FF">end
+</FONT></B></DT>
+<B><FONT COLOR="#0000FF"></FONT></B><B><FONT COLOR="#0000FF"></FONT></B></DL>
+</DL>
+
+<DT><B><FONT COLOR="#0000FF">feature </FONT></B><FONT COLOR="#FF0000">--
+Specific features of rectangles, such as:<I> </I></FONT><BR>
+<BR>
+</DT>
+
+<DD><I>side1: REAL; side2: REAL</I><BR>
+<BR>
+</DD>
+
+<DD><I>perimeter: REAL </I><B><FONT COLOR="#0000FF">is </FONT></B></DD>
+
+<DL>
+<DL>
+<DL>
+<DT><FONT COLOR="#FF0000"><I>-- </I>Rectangle-specific version</FONT> </DT>
+</DL>
+
+<DT><B><FONT COLOR="#0000FF">do </FONT></B></DT>
+
+<DL>
+<DT><I>Result := 2 * (side1 + side2) </I></DT>
+</DL>
+
+<DT><B><FONT COLOR="#0000FF">end</FONT></B></DT>
+<B></B><B></B></DL>
+</DL>
+
+<DD><I>... </I>Other<I> RECTANGLE</I> features ... </DD>
+</DL>
+</UL>
+
+<P>Here it is appropriate to redefine <I>perimeter</I> for rectangles as
+there is a simpler and more efficient algorithm. Note the explicit <B><I>redefine</I></B>
+subclause (which would come after the <B><I>rename</I></B> if present).
+</P>
+
+<P>Other descendants of <I>POLYGON</I> may also have their own redefinitions
+of <I>perimeter</I>. The version to use in any call is determined by the
+run-time form of the target. Consider the following class fragment: </P>
+
+<UL>
+<DL>
+<DD><I>p: POLYGON; r: RECTANGLE <BR>
+<BR>
+... </I><BR>
+</DD>
+
+<DD>!! <I>p; </I>!! <I>r; <BR>
+... </I><BR>
+</DD>
+
+<DD><B><FONT COLOR="#0000FF">if </FONT></B><I>c </I><B><FONT COLOR="#0000FF">then
+</FONT></B></DD>
+
+<DL>
+<DD><I>p := r </I></DD>
+</DL>
+
+<DD><FONT COLOR="#0000FF"><B>end</B><I> </I></FONT><BR>
+<BR>
+</DD>
+
+<DD><I>print (p.perimeter) </I></DD>
+</DL>
+</UL>
+
+<P>The polymorphic assignment <I>p </I>:= <I>r</I> is valid because of
+the above rule. If condition c is false, <I>p</I> will be attached to an
+object of type <I>POLYGON</I> for the computation of <I>p.perimeter</I>,
+which will thus use the polygon algorithm. In the opposite case, however,
+<I>p</I> will be attached to a rectangle; then the computation will use
+the version redefined for <I>RECTANGLE</I>. This is known as <B>dynamic
+binding</B>. </P>
+
+<P>Dynamic binding provides a high degree of flexibility. The advantage
+for clients is the ability to request an operation (such as perimeter computation)
+without explicitly selecting one of its variants; the choice only occurs
+at run-time. This is essential in large systems, where many variants may
+be available; each component must be protected against changes in other
+components. </P>
+
+<P>This technique is particularly attractive when compared to its closest
+equivalent in traditional approaches. In Pascal or Ada, you would need
+records with variant components, and <B><I>case</I></B> instructions to
+discriminate between variants. This means that every client must know about
+every possible case, and that any extension may invalidate a large body
+of existing software. </P>
+
+<P>These techniques support a development mode in which every module is
+open and incremental. When you want to reuse an existing class but need
+to adapt it to a new context, you can always define a new descendant of
+that class (with new features, redefined ones, or both) without any change
+to the original. This facility is of great importance in software development,
+an activity which -- whether by design or by circumstance -- is invariably
+incremental. </P>
+
+<P>The power of polymorphism and dynamic binding demands adequate controls.
+First, feature redefinition, as seen above, is explicit. Second, because
+the language is typed, a compiler can check statically whether a feature
+application <I>a.f </I>is correct. In contrast, dynamically typed object-oriented
+languages defer checks until run-time and hope for the best: if an object
+&quot;sends a message&quot; to another (that is to say, calls one of its
+routines) one just expects that the corresponding class, or one of its
+ancestors, will happen to include an appropriate routine; if not, a run-time
+error will occur. Such errors will not happen during the execution of a
+type-checked Eiffel system. </P>
+
+<P>In other words, the language reconciles dynamic <I>binding</I> with
+static <I>typing</I>. Dynamic binding guarantees that whenever more than
+one version of a routine is applicable the <I>right</I> version (the one
+most directly adapted to the target object) will be selected. Static typing
+means that the compiler makes sure there is <I>at least one</I> such version.
+</P>
+
+<P>This policy also yields an important performance benefit: in contrast
+with the costly run-time searches that may be needed with dynamic typing
+(since a requested routine may not be defined in the class of the target
+object but inherited from a possibly remote ancestor), the EiffelBench
+implementation always finds the appropriate routine in constant-bounded
+time. </P>
+
+<P>Assertions provide a further mechanism for controlling the power of
+redefinition. In the absence of specific precautions, redefinition may
+be dangerous: how can a client be sure that evaluation of<I> p.perimeter</I>
+will not in some cases return, say, the area? Preconditions and postconditions
+provide the answer by limiting the amount of freedom granted to eventual
+redefiners. The rule is that any redefined version must satisfy a weaker
+or equal precondition and ensure a stronger or equal postcondition than
+in the original. In other words, it must stay within the semantic boundaries
+set by the original assertions. </P>
+
+<P>The rules on redefinition and assertions are part of the Design by Contract
+theory, where redefinition and dynamic binding introduce subcontracting.
+<I>POLYGON</I>, for example, subcontracts the implementation of perimeter
+to <I>RECTANGLE</I> when applied to any entity that is attached at run-time
+to a rectangle object. An honest subcontractor is bound to honor the contract
+accepted by the prime contractor. This means that it may not impose stronger
+requirements on the clients, but may accept more general requests, so that
+the precondition may be weaker; and that it must achieve at least as much
+as promised by the prime contractor, but may achieve more, so that the
+postcondition may be stronger. </P>
+
+<P><A HREF="inheritance.maker.html"><IMG SRC="fm2html-previous.gif" HEIGHT=16 WIDTH=16></A><A HREF="inheritance.maker.html">Previous
+Chapter</A> <A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" HEIGHT=16 WIDTH=16></A><A HREF="BOOK.maker.html">Table
+of Contents</A> <A HREF="geninh.maker.html"><IMG SRC="fm2html-next.gif" HEIGHT=16 WIDTH=16></A><A HREF="geninh.maker.html">Next
+Chapter</A> </P>
+
+<CENTER><P><!-- FOOTER --><BR>
+<IMG SRC="rainban.gif" ALT="" HEIGHT=5 WIDTH=558>
+<!-- END ICON BAR --><!-- COPYRIGHT --></P></CENTER>
+
+<CENTER><P><B><FONT SIZE=-1>- Copyright &copy; 1985-1996 ISE Inc. <A HREF="mailto:info@eiffel.com">&lt;info@eiffel.com&gt;</A>
+- <BR>
+</FONT></B><FONT SIZE=-1>Please send comments to <A HREF="mailto:webmaster@eiffel.com">&lt;webmaster@eiffel.com&gt;</A>
+<BR>
+Last update: December 1996 </FONT><!-- END COPYRIGHT --><!-- END FOOTER --></P></CENTER>
+
+</BODY>
+</HTML>

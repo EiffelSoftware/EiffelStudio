@@ -8,9 +8,12 @@ class
 	WIZARD_SHARED
 
 inherit
-	PROJECT_WIZARD_SHARED
+	WIZARD_PROJECT_SHARED
 
 	ARGUMENTS
+		export
+			{NONE} all
+		end
 
 feature -- Access
 

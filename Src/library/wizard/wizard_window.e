@@ -131,7 +131,7 @@ feature -- Basic Operations
 	previous_page is
 			-- Go to the previous page.
 		do
-			if history.count>1 then
+			if history.count > 1 then
 				back
 			end
 			update_navigation

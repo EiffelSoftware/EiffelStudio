@@ -19,7 +19,7 @@ feature {NONE} -- Initialization
 		require
 			info_exists: an_info /= Void
 		do
-			wizard_information := clone(an_info)
+			wizard_information := clone (an_info)
 			change_entries
 		ensure
 			information_set: wizard_information /= Void
@@ -68,7 +68,7 @@ feature -- Basic Operations
 			-- perform actions accordingly.
 			-- This is executed when user press 'Next'.
 		do
-			entries_changed := FALSE
+			entries_changed := False
 		ensure
 			entries_processed: not entries_changed
 		end
@@ -78,7 +78,7 @@ feature -- Basic Operations
 		require
 			user_types_something: entries_changed
 		do
-			entries_checked := TRUE
+			entries_checked := True
 		ensure
 			read_the_entries: entries_checked	
 		end
@@ -110,7 +110,7 @@ feature -- Settings
 			until
 				i > tab.count
 			loop
-				tab.item(i).extend(~change_entries)
+				tab.item(i).extend (~change_entries)
 				i := i + 1
 			end
 		end
@@ -119,7 +119,7 @@ feature -- Settings
 			-- The user clicked on the page, which 
 			-- implies state_information re-computation.
 		do
-			entries_changed := TRUE
+			entries_changed := True
 		ensure
 			entries_changed: entries_changed
 		end

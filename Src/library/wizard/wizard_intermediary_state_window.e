@@ -59,7 +59,7 @@ feature {NONE} -- Basic Operations
 			create hb
 			create cell
 			cell.set_minimum_width(Subtitle_border_width)
-			cell.set_background_color(white_color)
+			cell.set_background_color (white_color)
 			hb.extend (cell)
 			hb.disable_item_expand (cell)
 			create subtitle

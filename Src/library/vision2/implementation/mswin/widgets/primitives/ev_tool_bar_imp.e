@@ -121,6 +121,15 @@ feature -- Access
 	ev_children: HASH_TABLE [EV_TOOL_BAR_BUTTON_IMP, INTEGER]
 			-- The buttons of the tool-bar.
 
+	children: ARRAYED_LIST [EV_TOOL_BAR_BUTTON_IMP] is
+			-- List of the direct children of the item holder.
+			-- Should be define here, but is not because we cannot
+			-- do the hastable deferred, it doesn't work, it should,
+			-- but it doesn't.
+		do
+			Result := ev_children.linear_representation
+		end
+
 	parent_imp: EV_CONTAINER_IMP is
 			-- Parent container of this tool-bar.
 		do
@@ -245,6 +254,21 @@ feature -- Element change
 			notify_change (2 + 1)
 		end
 
+	clear_items is
+			-- Clear all the items of the list.
+		local
+			list: ARRAYED_LIST [EV_TOOL_BAR_BUTTON_IMP]
+		do
+			from
+				list ?= ev_children
+				list.start
+			until
+				list.empty
+			loop
+				remove_item (list.item)
+			end
+		end
+
 feature -- Basic operation
 
 	internal_get_index (button: EV_TOOL_BAR_BUTTON_IMP): INTEGER is
@@ -345,14 +369,14 @@ feature {NONE} -- WEL Implementation
 		end
 
 	resize (a_width, a_height: INTEGER) is
-			-- We must not resize the hight of the tool-bar.
+			-- We must not resize the height of the tool-bar.
 		do
 			bar.resize (a_width, height)
 			reposition
 		end
 
 	move (a_x, a_y: INTEGER) is
-			-- We must move the bar before repositioning the tool-bar.
+			-- We need to move the bar only.
 		do
 			bar.move (a_x, a_y)
 		end
@@ -551,32 +575,6 @@ feature {NONE} -- Feature that should be directly implemented by externals
 			-- it would be implemented by an external.
 		do
 			cwin_show_window (bar.item, cmd_show)
-		end
-
-feature -- TEMP
-
-	clear_items is
-			-- Clear all the items of the list.
-		local
-			list: ARRAYED_LIST [EV_TOOL_BAR_BUTTON_IMP]
-		do
---			from
---				list := ev_children
---				list.start
---			until
---				list.after or Result /= Void
---			loop
---				remove_item (list.item)
---				list.forth
---			end
-		end
-
-	children: ARRAYED_LIST [like item_type] is
-			-- List of the direct children of the item holder.
-			-- Should be define here, but is not because we cannot
-			-- do the hastable deferred, it doesn't work, it should,
-			-- but it doesn't.
-		do
 		end
 
 end -- class EV_TOOL_BAR_IMP

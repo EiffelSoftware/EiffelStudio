@@ -904,14 +904,21 @@ feature -- Externals
 			"gtk_tree_view_row_expanded ((GtkTreeView*) $a_tree_view, (GtkTreePath*) $a_tree_path)"
 		end
 
-	frozen gtk_tree_view_expand_row (a_tree_view, a_tree_path: POINTER; open_all: BOOLEAN) is
+	frozen gtk_tree_view_expand_row (a_tree_view, a_tree_path: POINTER; open_all: BOOLEAN): BOOLEAN is
 		external
 			"C inline use <gtk/gtk.h>"
 		alias
 			"gtk_tree_view_expand_row ((GtkTreeView*) $a_tree_view, (GtkTreePath*) $a_tree_path, (gboolean) $open_all)"
 		end
 
-	frozen gtk_tree_view_collapse_row (a_tree_view, a_tree_path: POINTER) is
+	frozen gtk_tree_view_expand_to_path (a_tree_view, a_tree_path: POINTER) is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gtk_tree_view_expand_to_path ((GtkTreeView*) $a_tree_view, (GtkTreePath*) $a_tree_path)"
+		end
+
+	frozen gtk_tree_view_collapse_row (a_tree_view, a_tree_path: POINTER): BOOLEAN is
 		external
 			"C inline use <gtk/gtk.h>"
 		alias

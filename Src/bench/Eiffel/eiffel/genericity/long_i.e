@@ -1,3 +1,8 @@
+indexing
+	description: "C type for integers."
+	date: "$Date$"
+	revision: "$Revision$"
+	
 class LONG_I
 
 inherit
@@ -29,11 +34,11 @@ create
 feature -- Initialization
 
 	make (n: INTEGER) is
-			-- Create instance of LONG_I represented on `n' bits.
+			-- Create instance of LONG_I represented by `n' bits.
 		require
 			valid_n: n = 8 or n = 16 or n = 32 or n = 64
 		do
-			size := n
+			size := n.to_integer_8
 		ensure
 			size_set: size = n
 		end
@@ -58,9 +63,9 @@ feature -- Status report
 
 feature -- Access
 
-	size: INTEGER
+	size: INTEGER_8
 			-- Current is stored on `size' bits.
-
+	
 	level: INTEGER is
 			-- Internal code for generation
 		do

@@ -211,7 +211,11 @@ feature -- Processing
 
 			eiffel_writer.add_creation_routine ("make_from_alias")
 
-			if a_data_type_visitor.is_basic_type_ref then
+			if a_data_type_visitor.is_basic_type then
+				eiffel_writer := Void
+				no_need_create_class := True
+
+			elseif a_data_type_visitor.is_basic_type_ref then
 				eiffel_writer.add_creation_routine ("default_create")
 				writer_feature := create_from_basic_type_ref (an_eiffel_type)
 
@@ -233,7 +237,9 @@ feature -- Processing
 				writer_feature := create_from_array (an_eiffel_type)
 
 			end
-			eiffel_writer.add_feature (writer_feature, Initialization)
+			if not no_need_create_class then
+				eiffel_writer.add_feature (writer_feature, Initialization)
+			end
 		end
 
 feature {NONE} -- Implementation

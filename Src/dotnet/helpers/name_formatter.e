@@ -295,44 +295,68 @@ feature {NONE} -- Implementation
 		ensure
 			trimmed: s.item (s.count) = '_'
 		end
-		
+
 	eiffel_format (s: STRING): STRING is
 			-- Format from CamelCase to eiffel_case
 		require
 			non_void_value: s /= Void
+			valid_value: not s.is_empty
 			first_char: s.item (1) /= '_'
 		local
-			previous_underscore: BOOLEAN
-			previous_digit: BOOLEAN
-			i, nb: INTEGER
-			c: CHARACTER
+			p, c, n: CHARACTER
+			nb, i: INTEGER
+			put_us: BOOLEAN
 		do
-			previous_underscore := True
-			previous_digit := False
-				-- Allocate just a little bit more to avoid useless resizing
-			create Result.make (s.count + 5)
-			from
-				i := 1
-				nb := s.count
-			until
-				i > nb
-			loop
-				c := s.item (i)
-				if
-					(c.is_upper and not previous_underscore) or else
-					(previous_digit and c /= '_' and not c.is_digit)
-				then
-					Result.append_character ('_')
-				elseif c.is_digit and not previous_digit and not previous_underscore then
+			create Result.make (s.count + (s.count // 2)) 
+				-- Allocate an extra 1/3 to avoid unecessary resizing
+			Result.append_character (s.item (1).lower)
+			if s.count >= 2 then
+				from
+					i := 2
+					p := s.item (i - 1) 
+					c := s.item (i) 
+					nb := s.count
+				until
+					i >= nb
+				loop
+					put_us := False
+					n := s.item (i + 1)
+					if c /= '_' then
+						if c.is_digit and not p.is_digit and p /= '_' and not p.is_upper then
+							-- add '_' before a digit only if nor preceeded by uppercase characters
+							-- UTF8Decoder = UTF8_DECODER, Border3D = BORDER_3D
+							put_us := True
+						elseif p.is_digit and not c.is_digit then
+							if n /= '_' and not n.is_digit then
+								-- 3dd = 3_dd, 3Dd = 3_Dd, 3DD = 3DD, 3dD = 3d_D, 3D_ = 3D_, 3d_ = 3d_
+								put_us := (c.is_lower and n.is_lower) or (c.is_upper and n.is_lower)
+							end
+						elseif p.is_upper and c.is_upper and n.is_lower then
+							put_us := (i = 2 implies p /= 'I') or i > 2 -- allows IInterfaceName = IINTERFACE_NAME but FBar = F_BAR as per other rules, but allows UICues = UI_CUES
+						elseif p.is_lower and c.is_upper then
+							put_us := True
+						end
+					else
+						put_us := False
+					end	
+	
+					if put_us then
+						Result.append_character ('_')				
+					end					
+					Result.append_character (c.lower)
+					i := i + 1
+					
+					p := c
+					c := n
+				end
+				
+				if (p.is_alpha and p.is_lower and c.is_digit) or (p.is_lower and c.is_upper) then
 					Result.append_character ('_')
 				end
-				previous_underscore := c.is_upper or c = '_'
-				previous_digit := c.is_digit
 				Result.append_character (c.lower)
-				i := i + 1
 			end
 		end
-
+		
 	type_mapping_table: HASH_TABLE [STRING, STRING] is
 			-- Special types
 		once

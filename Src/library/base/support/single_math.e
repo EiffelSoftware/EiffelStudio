@@ -23,7 +23,7 @@ feature -- Access
 		require
 			v > 0.0
 		do
-			Result := log (v)/ log (2.0)
+			Result := log (v) / log (2.0)
 		end
 
 	cosine (v: REAL): REAL is

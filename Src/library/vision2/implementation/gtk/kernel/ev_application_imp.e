@@ -83,7 +83,7 @@ feature {NONE} -- Initialization
 			end
 			
 			if gtk_mic_ver < 8 then
-				print ("This application is designed for Gtk 1.2.8 and above, this version is 1.2." + gtk_mic_ver.out + " and may cause some unexpected behavior%N")
+				print ("This application is designed for Gtk 1.2.8 and above, your current version is 1.2." + gtk_mic_ver.out + " and may cause some unexpected behavior%N")
 			end
 			is_in_gtk_main := True
 			C.gtk_main
@@ -252,7 +252,6 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 			-- Called by EV_PICK_AND_DROPABLE_IMP.start_transport
 		local
 			cur: CURSOR
-			imp: EV_PICK_AND_DROPABLE_IMP
 			trg: EV_PICK_AND_DROPABLE
 			i: INTEGER
 		do
@@ -277,10 +276,6 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 		
 	on_drop (a_pebble: ANY) is
 			-- Called by EV_PICK_AND_DROPABLE_IMP.end_transport
-		local
-			cur: CURSOR
-			imp: EV_PICK_AND_DROPABLE_IMP
-			trg: EV_PICK_AND_DROPABLE
 		do
 			--| Do nothing, for future implementation
 		end

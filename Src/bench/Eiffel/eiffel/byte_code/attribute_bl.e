@@ -265,7 +265,7 @@ end;
 		end;
 
 	has_call: BOOLEAN is true;
-			-- The expression as at least one call
+			-- The expression has at least one call
 			-- Not really true but it should accelerate semi-strict boolean
 			-- operations on attributes (avoid useless access).
 

@@ -1,6 +1,6 @@
 indexing
-	description: "General notions of a Windows application. All WEL%
-		%application must create a WEL_APPLICATION object."
+	description: "General notions of a Windows application. All WEL %
+		%applications must create a WEL_APPLICATION object."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"

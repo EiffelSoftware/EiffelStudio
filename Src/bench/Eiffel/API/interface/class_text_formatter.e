@@ -9,7 +9,9 @@ class CLASS_TEXT_FORMATTER
 
 inherit
 
-	E_TEXT_FORMATTER
+	E_TEXT_FORMATTER;
+	SHARED_INST_CONTEXT;
+	SHARED_WORKBENCH
 
 feature -- Properties
 
@@ -103,14 +105,23 @@ feature -- Output
 		require
 			valid_e_class: e_class /= Void
 		local
-			f: FORMAT_CONTEXT_B
+			f: FORMAT_CONTEXT_B;
+			old_cluster: CLUSTER_I;
+			old_class, class_c: CLASS_C;
 		do
 			!! f.make (e_class);
 			if is_clickable then
 				f.set_in_bench_mode
 			end;
+			old_class := System.current_class;
+			old_cluster := Inst_context.cluster;
+			class_c ?= e_class;
+			System.set_current_class (class_c);
+			Inst_context.set_cluster (e_class.cluster);
 			f.register_ancestors_invariants;
 			f.format_invariants;
+			System.set_current_class (old_class);
+			Inst_context.set_cluster (old_cluster);
 			text := f.text;
 			error := f.execution_error
 		end;

@@ -1,14 +1,11 @@
 indexing
-	description: "time value in a day"
-	status: "See notice at end of class";
+	description: "Values of time"
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
-	access: date, time
+	access: time
 
-class
-	TIME_VALUE
-
-inherit
+class TIME_VALUE inherit
 
 	TIME_MEASUREMENT
 		
@@ -17,20 +14,20 @@ feature -- Access
 	hour: INTEGER is
 			-- Hour of the current time
 		do
-			Result := c_hour (compact_time);
+			Result := c_hour (compact_time)
 		end
 	
 	minute: INTEGER is
 			-- Minute of the current time
 		do
-			Result := c_minute (compact_time);
+			Result := c_minute (compact_time)
 		end
 	
 	second: INTEGER is
 			-- Second of the current time
 		do
-			Result := c_second (compact_time);
-		end;
+			Result := c_second (compact_time)
+		end
 
 	fractional_second: DOUBLE 
 			-- Fractional part of `fine_second'
@@ -41,26 +38,26 @@ feature -- Access
 	fine_second: DOUBLE is
 			-- Representation of second with decimals 
  		do
-			Result := second + fractional_second;
+			Result := second + fractional_second
 		end
 
 	milli_second: INTEGER is 
 			-- Millisecond of the current time
 		do 
 			Result := (fractional_second * 1000).truncated_to_integer 
-		end;
+		end
 
 	micro_second: INTEGER is 
 			-- Microsecond of the current time
 		do 
-			Result := (fractional_second * 1_000_000).truncated_to_integer;
+			Result := (fractional_second * 1_000_000).truncated_to_integer
 			Result := Result \\ 1000
 		end; 
  
 	nano_second: INTEGER is 
 			-- Nanosecond of the current time
 		do 
-			Result := (fractional_second * 1_000_000_000).truncated_to_integer;
+			Result := (fractional_second * 1_000_000_000).truncated_to_integer
 			Result := Result \\ 1000
 		end 
  
@@ -117,20 +114,20 @@ feature {NONE} -- Externals
 			"C"
 		end
 
-	c_set_hour (h:INTEGER; c_t: POINTER) is
+	c_set_hour (h: INTEGER; c_t: POINTER) is
 		external
 			"C"
-		end;
+		end
 
-	c_set_minute (h:INTEGER; c_t: POINTER) is
+	c_set_minute (h: INTEGER; c_t: POINTER) is
 		external
 			"C"
-		end;
+		end
 
-	c_set_second (h:INTEGER;c_t: POINTER) is
+	c_set_second (h: INTEGER;c_t: POINTER) is
 		external
 			"C"
-		end;
+		end
 
 end -- class TIME_VALUE
 

@@ -3,7 +3,6 @@ indexing
 	status:	"See note at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
-	access: date, time
 
 class DATE_VALIDITY_CHECKER inherit
 
@@ -87,14 +86,14 @@ feature -- Preconditions
 			d := c_day (c_d)
 			Result := (m >= 1 and m <= Months_in_year and
 			d >= 1 and d <= days_in_i_th_month (m, y) and
-			y <= 65535);
+			y <= 65535)
 		end
 
 	is_correct_date (y, m, d: INTEGER): BOOLEAN is
 			-- Is date specified by `y', `m', and `d' a correct date?
 		do
 			Result := m >= 1 and m <= Months_in_year and then d >= 1 and 
-				d <= days_in_i_th_month (m, y) and then y > 0 and y <= 65535
+				d <= days_in_i_th_month (m, y) and then y >= 0
 		end
 
 end -- class DATE_VALIDITY_CHECKER

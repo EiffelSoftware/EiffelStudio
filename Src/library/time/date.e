@@ -1,20 +1,18 @@
 indexing
-	description: "absolute date"
+	description: "Absolute dates"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
-	access: date, time
+	access: date
 
-class
-	DATE
+class DATE inherit
 
-inherit
 	ABSOLUTE
 		undefine
 			out
 		redefine
 			infix "<"
-		end;
+		end
 
 	DATE_VALUE
 		undefine
@@ -50,10 +48,10 @@ feature {DATE_TIME} -- Initialization
 		do
 			compact_date := c_make_date (d, m, y)
 		ensure
-			year_set: year = y;
-			month_set: month = m;
+			year_set: year = y
+			month_set: month = m
 			day_set: day = d
-		end;
+		end
 
 	make_month_day_year (m, d, y: INTEGER) is
 			-- Set `month', `day' and `year' to `m', `d' and `y' respectively.
@@ -62,10 +60,10 @@ feature {DATE_TIME} -- Initialization
 		do
 			make (y, m, d)
 		ensure
-			year_set: year = y;
-			month_set: month = m;
+			year_set: year = y
+			month_set: month = m
 			day_set: day = d
-		end;
+		end
 
 	make_day_month_year (d, m, y: INTEGER) is
 			-- Set `day', `month' and `year' to `d', `m' and `y' respectively.
@@ -74,22 +72,22 @@ feature {DATE_TIME} -- Initialization
 		do
 			make (y, m, d)
 		ensure
-			year_set: year = y;
-			month_set: month = m;
+			year_set: year = y
+			month_set: month = m
 			day_set: day = d
-		end;
+		end
 
 	make_now is
 			-- Set the current object to today's date.
 		local
 			y, m, d: INTEGER
 		do
-			c_get_date_time;
-			y := c_year_now;
-			m := c_month_now;
-			d := c_day_now;
+			c_get_date_time
+			y := c_year_now
+			m := c_month_now
+			d := c_day_now
 			make (y, m, d)
-		end;
+		end
 
 	make_by_days (n: INTEGER) is
 			-- Set the current date with the number of days `n' since `origin'.
@@ -97,23 +95,23 @@ feature {DATE_TIME} -- Initialization
 			i, j: INTEGER
 			y, m, d: INTEGER
 		do
-			i := 4 * (n - 59) - 1;
-			j := (4 * div ((mod (i, 146097)), 4)) + 3;
-			y := (100 * (div (i, 146097))) + (div (j, 1461));
-			i := (5 * (div (((mod (j, 1461)) + 4), 4))) - 3;
-			m := div (i, 153);
-			d := div (((mod (i, 153)) + 5 ), 5);
+			i := 4 * (n - 59) - 1
+			j := (4 * div ((mod (i, 146097)), 4)) + 3
+			y := (100 * (div (i, 146097))) + (div (j, 1461))
+			i := (5 * (div (((mod (j, 1461)) + 4), 4))) - 3
+			m := div (i, 153)
+			d := div (((mod (i, 153)) + 5), 5)
 			if m < 10 then
 				m := m + 3
 			else
-				m := m - 9;
-				y := y + 1;
-			end;
-			y := y + 1600;
+				m := m - 9
+				y := y + 1
+			end
+			y := y + 1600
 			make (y, m, d)
 		ensure
 			days_set: days = n
-		end;
+		end
 
 	make_from_string_default (s: STRING) is
 			-- Initialize from a "standard" string of form
@@ -121,7 +119,7 @@ feature {DATE_TIME} -- Initialization
 			-- (For 2-digit year specifications, the current century is used as
 			-- base century.)
 		require
-			s_exists: s /= Void;
+			s_exists: s /= Void
 			date_valid: date_valid (s, Date_default_format_string)
 		do
 			make_from_string (s, Date_default_format_string)
@@ -131,7 +129,7 @@ feature {DATE_TIME} -- Initialization
 			-- Initialize from a "standard" string of form
 			-- `date_default_format_string' with base century `base'.
 		require
-			s_exists: s /= Void;
+			s_exists: s /= Void
 			base_valid: base > 0 and (base \\ 100 = 0)
 			date_valid: 
 				date_valid_with_base (s, Date_default_format_string, base)
@@ -145,7 +143,7 @@ feature {DATE_TIME} -- Initialization
 			-- (For 2-digit year specifications, the current century is used as
 			-- base century.)
 		require
-			s_exists: s /= Void;
+			s_exists: s /= Void
 			c_exists: code /= Void
 			date_valid: date_valid (s, code)
 		local
@@ -161,7 +159,7 @@ feature {DATE_TIME} -- Initialization
 			-- Initialize from a "standard" string of form
 			-- `code' with base century `base'.
 		require
-			s_exists: s /= Void;
+			s_exists: s /= Void
 			c_exists: code /= Void
 			base_valid: base > 0 and (base \\ 100 = 0)
 			date_valid: date_valid_with_base (s, code, base)
@@ -192,7 +190,7 @@ feature -- Access
 			-- Origin date
 		once
 			create Result.make (1600, 1, 1)
-		end;
+		end
 
 feature -- Comparison
 
@@ -204,7 +202,7 @@ feature -- Comparison
 				(month < other.month or else
 				(month = other.month and then
 				(day < other.day))))
-		end;
+		end
 
 feature -- Measurement
 
@@ -216,7 +214,7 @@ feature -- Measurement
 		ensure then
 			definite_result: Result.definite
 			duration_set: ((Current - origin).duration).is_equal (Result)
-		end;
+		end
 
 	days: INTEGER is
 			-- Number of days elapsed since `origin'
@@ -224,27 +222,27 @@ feature -- Measurement
 			Result := days_from (origin.year) + year_day - origin.year_day
 		ensure
 			same_duration: Result = duration.day
-		end;
+		end
 
 feature -- Status report
 
 	leap_year: BOOLEAN is
 			-- Is the current year a leap year?
 		do
-			Result := i_th_leap_year (year)
+			Result := is_leap_year (year)
 		end
 
 	days_at_month: INTEGER is
 			-- Number of days from the beginning of the year
 			-- until the beginning of the current month
 		do
-			Result := days_at_months @ month;
+			Result := days_at_months @ month
 			if leap_year and then month > 2 then
-				Result := Result +1
+				Result := Result + 1
 			end
 		ensure
 			positive_result: Result >= 0
-		end;
+		end
 		
 	year_day: INTEGER is
 			-- Number of days from the beginning of the year
@@ -253,7 +251,7 @@ feature -- Status report
 		ensure
 			result_large_enough: Result >= 1
 			result_small_enough: Result <= days_in_year
-		end;
+		end
 
 	week_of_year: INTEGER is
 			-- Number of weeks from the beginning of the year
@@ -271,9 +269,9 @@ feature -- Status report
 				Result := 0
 			end
 		ensure
-			positive_result: Result >= 0;
+			positive_result: Result >= 0
 			Result_small_enough: Result < Max_weeks_in_year	
-		end;
+		end
 
 	days_in_year: INTEGER is
 			-- Number of days in the current year
@@ -287,7 +285,7 @@ feature -- Status report
 			valid_result: 
 				(leap_year implies Result = days_in_leap_year) and then
 					(not leap_year implies Result = days_in_non_leap_year)
-		end;
+		end
 
 	day_of_the_week: INTEGER is
 			-- Number of day from the beginning of the week
@@ -296,24 +294,24 @@ feature -- Status report
 			Result := mod (days - 1, 7) + 1
 		ensure
 			day_of_the_week_range: Result > 0 and then Result < 8
-		end;
+		end
 
 	day_of_january_1st: INTEGER is
 			-- Day of the week of january 1st of the current year
 		local
 			january_1st: DATE
 		do
-			create january_1st.make (year,1,1);
+			create january_1st.make (year, 1, 1)
 			Result := january_1st.day_of_the_week 
 		ensure
 			day_of_the_week_definition: Result > 0 and then Result < 8
-		end;
+		end
 
 	days_from (y: INTEGER): INTEGER is
 			-- Days between the current year and year `y'
 		do
 			Result := (year - y) * days_in_non_leap_year +
-				(div (year - 1, 4) - div(y - 1, 4)) -
+				(div (year - 1, 4) - div (y - 1, 4)) -
 				(div (year - 1, 100) - div (y - 1, 100)) +
 				(div (year - 1, 400) - div (y - 1, 400))
 		end
@@ -332,13 +330,13 @@ feature -- Basic operations
 			-- Sum to current date the duration `d'
 			-- if duration not define, add years and then months and then days.
 		do
-			Result := deep_clone (Current);
+			Result := deep_clone (Current)
 			Result.add (d)
 		ensure
-			result_exists: Result /= Void;
+			result_exists: Result /= Void
 			definite_set: d.definite implies 
 					(Result - Current).duration.is_equal (d)
-		end;
+		end
 
 	add (d: DATE_DURATION) is
 			-- Adds `d' to the current date.
@@ -347,47 +345,49 @@ feature -- Basic operations
 			if d.definite then
 				day_add (d.day)
 			else
-				year_month_add (d.year, d.month);
+				year_month_add (d.year, d.month)
 				day_add (d.day)
 			end
-		end;
+		end
 
 	relative_duration (other: like Current): DATE_DURATION is
-			-- Duration from `other' to the current date, expressed in year, month and day
+			-- Duration from `other' to the current date
 		do
-			create Result.make_by_days (days - other.days);
+			create Result.make_by_days (days - other.days)
 			Result := Result.to_canonical (other)
+			Result.set_origin_date (clone (other))
 		ensure then
-			exact_duration: (other + Result).is_equal (Current);
+			exact_duration: (other + Result).is_equal (Current)
 			canonical_duration: Result.canonical (other)
-		end;
+			origin_date_set: equal (Result.origin_date, other)
+		end
 
 	day_forth is
 			-- Move to next day.
 			-- days is from the origin, day is current.
 		do
 			if day = days_in_month then
-				set_day (1);
+				set_day (1)
 				month_forth
 			else
 				set_day (day + 1)
 			end
 		ensure
 			days_set: days = old days + 1
-		end;
+		end
 
 	day_back is
 			-- Move to previous day.
 		do
 			if day = 1 then
-				month_back;
+				month_back
 				set_day (days_in_month)
 			else
 				set_day (day - 1)
 			end
 		ensure
 			days_set: days = old days - 1
-		end;
+		end
 
 	day_add (d: INTEGER) is
 			-- Add `d' days to the current date.
@@ -403,7 +403,7 @@ feature -- Basic operations
 			-- current month.
 		do
 			if month = Months_in_year then
-				set_month (1);
+				set_month (1)
 				year_forth
 			else
 				set_month (month + 1)
@@ -411,7 +411,7 @@ feature -- Basic operations
 					set_day (days_in_month)
 				end
 			end
-		end;
+		end
 
 	month_back is
 			-- Move to previous month.
@@ -430,10 +430,10 @@ feature -- Basic operations
 				end
 				set_month (month - 1)
 			end
-		end;
+		end
 
 	month_add (m: INTEGER) is
-			-- add `m' months to the current date.
+			-- Add `m' months to the current date.
 			-- Can move days backward.
 		local
 			new_month: INTEGER
@@ -441,12 +441,12 @@ feature -- Basic operations
 		do
 			new_month := mod ((month + m - 1), Months_in_year) + 1
 			days_in_new_month := days_in_i_th_month (new_month, year)
+			set_year (year + div ((month + m - 1), Months_in_year))
+			set_month (new_month)
 			if day > days_in_new_month then
 				set_day (days_in_new_month)
 			end
-			set_month (new_month)
-			set_year (year + div ((month + m - 1), Months_in_year))
-		end;
+		end
 
 	year_forth is
 			-- Move to next year.
@@ -459,7 +459,7 @@ feature -- Basic operations
 		
 		ensure
 			year_increased: year = old year + 1
-		end;
+		end
 
 	year_back is
 			-- Move to previous year.
@@ -471,7 +471,7 @@ feature -- Basic operations
 			set_year (year - 1)
 		ensure
 			year_decreased: year = old year - 1
-		end;
+		end
 
 	year_add (y: INTEGER) is
 			-- Add `y' years to the current date.
@@ -483,26 +483,26 @@ feature -- Basic operations
 			set_year (year + y)
 		ensure
 			year_set: year = old year + y
-		end;
+		end
 
 	year_month_add (y, m: INTEGER) is
 			-- Add `y' years and `m' months to the current date.
 			-- Check the number of days after.
 		do
 			month_add (y * Months_in_year + m)
-		end;
+		end
 
 feature -- Output
 
 	out: STRING is
-			-- printable representation of `Current' with "standard"
+			-- Printable representation of `Current' with "standard"
 			-- Form: `date_default_format_string'
 		do
 			Result := formatted_out (date_default_format_string)
 		end
 
 	formatted_out (s: STRING): STRING is
-			-- printable representation of `Current' with "standard"
+			-- Printable representation of `Current' with "standard"
 			-- Form: `s'
 		require
 			s_exists: s /= Void
@@ -522,16 +522,16 @@ feature {NONE} -- Implementation
 			Result := <<0, 31, 59, 90, 120, 151, 181, 212, 243,
 				273, 304, 334>>
 		ensure
-			result_exists: Result /= Void;
+			result_exists: Result /= Void
 			count_is_months_in_year: Result.count = Months_in_year
-		end;
+		end
 
 	c_get_date_time is
 			-- get the date from the intern clock
 			-- and save it in a local variable.
 		external
 			"C"
-		end;
+		end
 	
 	c_year_now: INTEGER is
 			-- Current year recorded by c_get_date_time.
@@ -544,13 +544,13 @@ feature {NONE} -- Implementation
 			-- Current month recorded by c_get_date_time.
 		external
 			"C"
-		end;
+		end
 
 	c_day_now: INTEGER is
 			-- Current day recorded by c_get_date_time.
 		external
 			"C"
-		end;
+		end
 
 	c_make_date (d, m, y: INTEGER): INTEGER is
 			-- Initialize the integer `compact_date'.
@@ -560,11 +560,11 @@ feature {NONE} -- Implementation
 
 invariant
 
-	day_large_enough: day >= 1;
-	day_small_enough: day <= days_in_month;
-	month_large_enough: month >= 1;
-	month_small_enough: month <= Months_in_year;
-	year_small_enough: year <= 65535;
+	day_large_enough: day >= 1
+	day_small_enough: day <= days_in_month
+	month_large_enough: month >= 1
+	month_small_enough: month <= Months_in_year
+	year_small_enough: year <= 65535
 	year_positive: year > 0
 
 end -- class DATE

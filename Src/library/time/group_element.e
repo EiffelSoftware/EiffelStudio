@@ -1,10 +1,9 @@
 indexing
 	description: "Invertible object with an internal + operation"
 	note: "The model is that of a commutative group."
-	status: "See notice at end of class";
+	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
-	access: algebra
 
 deferred class
 	GROUP_ELEMENT
@@ -16,7 +15,7 @@ feature -- Access
 		deferred
 		ensure
 			result_exists: Result /= Void
-		end;
+		end
 
 feature -- Basic operations
 
@@ -26,9 +25,9 @@ feature -- Basic operations
 			other_exists: other /= Void
 		deferred
 		ensure
-			result_exists: Result /= Void;
+			result_exists: Result /= Void
 			commutative: Result.is_equal (other + Current)
-		end;
+		end
 
 	infix "-" (other: like Current): like Current is
 			-- Result of subtracting `other'
@@ -37,28 +36,28 @@ feature -- Basic operations
 		deferred
 		ensure
 			result_exists: Result /= Void
-		end;
+		end
 
 	prefix "+": like Current is
 			-- Unary plus
 		deferred
 		ensure
-			result_exists: Result /= Void;
+			result_exists: Result /= Void
 			result_definition: Result.is_equal (Current)
-		end;
+		end
 
 	prefix "-": like Current is
 			-- Unary minus
 		deferred
 		ensure
-			result_exists: Result /= Void;
+			result_exists: Result /= Void
 			result_definition: (Result + Current).is_equal (zero)
-		end;
+		end
 
 invariant
 
-	neutral_addition: Current.is_equal (Current + zero);
-	self_subtraction: zero.is_equal (Current - Current);
+	neutral_addition: Current.is_equal (Current + zero)
+	self_subtraction: zero.is_equal (Current - Current)
 
 end -- class GROUP_ELEMENT
 

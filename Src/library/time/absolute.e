@@ -1,5 +1,5 @@
 indexing
-	description: "absolute temporal notion"
+	description: "Absolute temporal values"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -21,14 +21,14 @@ feature -- Access
 		deferred
 		ensure
 			result_exists: Result /= Void
-		end;
+		end
 	
 feature -- Measurement
 
 	duration: DURATION is
 			-- Length of the interval of time since `origin'
 		deferred
-		end;
+		end
 	
 feature -- Comparison
 
@@ -36,22 +36,22 @@ feature -- Comparison
 			-- Is the current object before `other'?
 		do
 			Result := duration < other.duration
-		end;
+		end
 	
 feature -- Basic operations
 	
 	infix "-" (other: like Current): INTERVAL [like Current] is
 			-- Interval between current object and `other' 
 		require
-			other_exists: other /= Void;
+			other_exists: other /= Void
 			other_smaller_than_current: other <= Current
 		do
 			create Result.make (other, Current)
 		ensure
-			result_exists: Result /= Void;
+			result_exists: Result /= Void
 			result_set: Result.start_bound.is_equal (other) and then 
 					Result.end_bound.is_equal (Current)
-		end;
+		end
 
 	relative_duration (other: like Current): DURATION is
 			-- Relative duration from `Current' to `other'
@@ -60,7 +60,7 @@ feature -- Basic operations
 		deferred
 		ensure
 			Result_exists: Result /= Void
-		end;
+		end
 
 end -- class ABSOLUTE
 

@@ -1,21 +1,21 @@
 indexing
-	description: "Sets of compactly coded date-time pairs";
-	date: "$Date$";
+	description: "Sets of compactly coded date-time pairs"
+	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	DATE_TIME_SET
 
 create
+
 	make
 
-feature -- Creation
+feature -- Initalization
 
 	make (n: INTEGER) is
-			-- Create structure for initial
-			-- estimate of `n' date-time pairs.
+			-- Create set for `n' date-time pairs.
 		require
-			n_not_void: n /= Void
+			positive: n > 0
 		do
 			create date_set.make (n)
 			create time_set.make (n)
@@ -25,30 +25,30 @@ feature -- Creation
 feature -- Access
 
 	item (i: INTEGER): DATE_TIME is
-			-- Element at index `i'
+			-- Item at index `i'
 		require
-			i_not_void: i /= Void
+			index_in_range: 1 <= i and i <= last
 		do
-			create Result.make_by_date_time (date_set.item (i), time_set.item (i))
+			create Result.make_by_date_time (date_set.item (i), 
+				time_set.item (i))
 		end
 
 	last: INTEGER
-			-- Index of the last element inserted
+			-- Index of the last item inserted
 
 feature -- Element change
 
 	put (dt: DATE_TIME) is
-			-- Insert `dt';
-			-- Index will be given by `last'.
+			-- insert `dt' as last item.
 		require 
-			dt_not_void: dt /= Void
+			exists: dt /= Void
 		do
 			last := last + 1
 			date_set.put (dt.date)
 			time_set.put (dt.time)
 		ensure
-			inserted_date: date_set.item (last).is_equal (dt.date);
-			inserted_time: time_set.item (last).is_equal (dt.time);
+			inserted_date: equal (date_set.item (last), dt.date)
+			inserted_time: equal (time_set.item (last), dt.time)
 		end
 
 feature {NONE} -- Implementation
@@ -58,6 +58,7 @@ feature {NONE} -- Implementation
 	time_set: TIME_SET
 
 invariant
+
 	last_non_negative: last >= 0
 	last1: last = date_set.last
 	last2: last = time_set.last

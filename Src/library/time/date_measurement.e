@@ -3,22 +3,26 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-deferred class
-	DATE_MEASUREMENT
+deferred class DATE_MEASUREMENT inherit
 
-inherit
 	DATE_CONSTANTS
 
 feature -- Access
 
-	day: INTEGER is deferred end
-		-- Number of days associated with current object.
+	day: INTEGER is
+		-- Number of days associated with current object
+		deferred
+		end
 
-	month: INTEGER is deferred end
-		-- Number of monthes associated with current object.
-
-	year: INTEGER is deferred end
-		-- Number of years associated with current object.
+	month: INTEGER is
+		-- Number of monthes associated with current object
+		deferred
+		end
+	 
+	year: INTEGER is
+		-- Number of years associated with current object
+		deferred
+		end
 
 feature -- Element change
 

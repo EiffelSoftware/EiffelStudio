@@ -193,8 +193,15 @@ feature {NONE} -- Implementation
 	
 					end
 					if is_paramflag_fout (arguments.item.flags)  and not is_paramflag_fretval(arguments.item.flags)  then  -- if out or inout
-						if visitor.is_interface or visitor.is_structure or visitor.is_interface_pointer or
-									visitor.is_structure_pointer or visitor.is_array_basic_type then
+						if 
+							visitor.is_interface or 
+							visitor.is_structure or 
+							visitor.is_interface_pointer or
+							visitor.is_structure_pointer or 
+							visitor.is_array_basic_type or
+							visitor.is_coclass or 
+							visitor.is_coclass_pointer
+						then
 							signature.append (arguments.item.name)
 						else
 							variables.append (visitor.c_type)
@@ -223,7 +230,7 @@ feature {NONE} -- Implementation
 					end
 	
 					if is_paramflag_fin (arguments.item.flags) and not is_paramflag_fout (arguments.item.flags) then -- in parameter
-						signature.append (in_parameter_set_up (arguments.item.name, arguments.item.type.type, visitor))
+						signature.append (in_parameter_set_up (arguments.item.name, arguments.item.type, visitor))
 						signature.append (Comma)
 					end
 					
@@ -327,7 +334,7 @@ feature {NONE} -- Implementation
 					end
 				end
 
-				if not visitor.writable then
+				if visitor.writable then
 					Result.append (Comma_space)
 					Result.append (Null)
 				end
@@ -339,15 +346,18 @@ feature {NONE} -- Implementation
 			non_void_inout_parameter: Result /= Void
 		end
 
-	in_parameter_set_up (name: STRING; argument_type: INTEGER; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
+	in_parameter_set_up (name: STRING; argument_type: WIZARD_DATA_TYPE_DESCRIPTOR; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Code to set up "in" parameter
 			--	Arguments
 			-- `name' - argument name.
-			-- `argument_type' - argument type, see ECOM_VAR_TYPE for values
+			-- `argument_type' - argument type
 		require
 			non_void_name: name /= Void
 			valid_name: not name.empty
 			non_void_visitor: visitor /= Void
+			non_void_argument_type: argument_type /= Void
+		local
+			array_data_type: WIZARD_ARRAY_DATA_TYPE_DESCRIPTOR
 		do
 			create Result.make (0)
 
@@ -368,8 +378,8 @@ feature {NONE} -- Implementation
 				Result.append (Ampersand)
 				Result.append (name)
 
-			elseif is_boolean (argument_type) then
-				if is_byref (argument_type) then
+			elseif is_boolean (visitor.vt_type) then
+				if is_byref (visitor.vt_type) then
 					Result.append (Ampersand)
 					Result.append (Ec_mapper)
 					Result.append (Dot)
@@ -386,9 +396,14 @@ feature {NONE} -- Implementation
 					Result.append (Close_parenthesis)
 				end
 
-			elseif visitor.is_interface or visitor.is_structure or 
-					visitor.is_interface_pointer or visitor.is_structure_pointer or 
-					visitor.is_array_basic_type then
+			elseif 
+				visitor.is_interface or visitor.is_structure or 
+				visitor.is_interface_pointer or 
+				visitor.is_structure_pointer or 
+				visitor.is_array_basic_type or 
+				visitor.is_coclass or
+				visitor.is_coclass_pointer
+			then
 				Result.append (name)
 
 			else
@@ -404,6 +419,23 @@ feature {NONE} -- Implementation
 				Result.append (Space_open_parenthesis)
 				Result.append (name)
 				Result.append (Close_parenthesis)
+
+				if visitor.is_array_type then
+					array_data_type ?= argument_type
+					if array_data_type /= Void then
+						Result.append (Comma_space)
+						Result.append_integer (array_data_type.dimension_count)
+					else
+						add_warning (Current, "Warning!! Can not find array dimension")
+					end
+				end
+
+				if visitor.writable then
+					Result.append (Comma_space)
+					Result.append (Null)
+				end
+
+
 				Result.append (Close_parenthesis)
 			end
 		ensure

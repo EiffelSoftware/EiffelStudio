@@ -245,7 +245,11 @@ feature {NONE} -- Implementation
 				Result.append (Close_parenthesis)
 				Result.append ("_field_")
 
-			elseif a_data_visitor.is_structure_pointer or a_data_visitor.is_interface_pointer then
+			elseif 
+				a_data_visitor.is_structure_pointer or 
+				a_data_visitor.is_interface_pointer or
+				a_data_visitor.is_coclass_pointer 
+			then
 				Result.append (Open_parenthesis)
 				Result.append (a_data_visitor.c_type)
 				Result.append (Close_parenthesis)

@@ -141,7 +141,11 @@ feature {NONE}
 		do
 			pointed_descriptor ?= type
 			if pointed_descriptor /= Void and not (visitor.vt_type = binary_or (Vt_ptr, Vt_byref)) then
-				if visitor.is_structure_pointer or visitor.is_interface_pointer then
+				if 
+					visitor.is_structure_pointer or 
+					visitor.is_interface_pointer or
+					visitor.is_coclass_pointer 
+				then
 					tmp_tag := "valid_"
 					tmp_tag.append (a_name)
 					tmp_body := clone (a_name)
@@ -193,8 +197,11 @@ feature {NONE}
 					tmp_body.append (".item /= default_pointer")
 					create Result.make (tmp_tag, tmp_body)
 
-				elseif ret_val and (visitor.is_structure_pointer or
-						visitor.is_interface_pointer) 
+				elseif 
+					ret_val and 
+					(visitor.is_structure_pointer or
+					visitor.is_interface_pointer or 
+					visitor.is_coclass_pointer) 
 				then
 					tmp_tag := "valid_"
 					tmp_tag.append (a_name)
@@ -202,9 +209,11 @@ feature {NONE}
 					tmp_body.append (".item /= default_pointer")
 					create Result.make (tmp_tag, tmp_body)
 
-				elseif not visitor.is_basic_type_ref and
-						not visitor.is_structure_pointer and
-						not visitor.is_interface_pointer 
+				elseif 
+					not visitor.is_basic_type_ref and
+					not visitor.is_structure_pointer and
+					not visitor.is_interface_pointer and
+					not visitor.is_coclass_pointer 
 				then
 					tmp_tag := "valid_"
 					tmp_tag.append (a_name)

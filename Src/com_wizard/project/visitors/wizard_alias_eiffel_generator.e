@@ -230,7 +230,10 @@ feature -- Processing
 				eiffel_writer.add_creation_routine ("make_by_pointer")
 				writer_feature := create_from_structure (an_eiffel_type)
 
-			elseif a_data_type_visitor.is_interface_pointer then
+			elseif 
+				a_data_type_visitor.is_interface_pointer or 
+				a_data_type_visitor.is_coclass_pointer 
+			then
 				eiffel_writer.add_creation_routine ("make_from_pointer")
 				eiffel_writer.add_creation_routine ("make_from_other")
 				writer_feature := create_from_interface (an_eiffel_type)

@@ -244,13 +244,26 @@ feature {NONE} -- WEL Implementation
 		local
 			brush: WEL_BRUSH
 			w: EV_WIDGET_IMP
+			theme_drawer: EV_THEME_DRAWER_IMP
+			label: EV_LABEL_IMP
 		do
+			theme_drawer := application_imp.theme_drawer
+
 			w ?= control
 			check
 					-- Everything inherits from EV_WIDGET.
 				is_a_widget: w /= Void
 			end
-			if w.background_color_imp /= Void or 
+			label ?= w
+			if application_imp.themes_active and label /= Void then
+				disable_default_processing
+				brush := background_brush
+				theme_drawer.draw_widget_background (label, paint_dc, create {WEL_RECT}.make (0, 0, w.width, w.height), brush)
+					-- Set background of `paint_dc' to transparant so that Windows does not draw
+					-- over the background we have just drawn.
+				paint_dc.set_background_transparent
+				brush.delete
+			elseif w.background_color_imp /= Void or 
 				w.foreground_color_imp /= Void
 			then	
 					-- Not the default color, we need to do something here
@@ -365,13 +378,20 @@ feature {NONE} -- WEL Implementation
 			rich_text: EV_RICH_TEXT_IMP
 			selchange: WEL_RICH_EDIT_SELCHANGE
 			list: EV_LIST_IMP
+			radio_button: EV_RADIO_BUTTON_IMP
+			check_button: EV_CHECK_BUTTON_IMP
+			button: EV_BUTTON_IMP
 			lvninfotip: WEL_NM_LIST_VIEW_GETINFOTIP
 			string: WEL_STRING
 			multi_column_list: EV_MULTI_COLUMN_LIST_IMP
 			multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW_I
 			l_zero: INTEGER
 			checkable_tree: EV_CHECKABLE_TREE_IMP
+			custom: WEL_NM_CUSTOM_DRAW
+			theme_drawer: EV_THEME_DRAWER_IMP
+			bk_brush: WEL_BRUSH
 		do
+			theme_drawer := application_imp.theme_drawer
 			if info.code = (feature {WEL_TVN_CONSTANTS}.Tvn_getinfotip) then
 					-- Create the relevent WEL_TOOLTIP_TEXT.
 				create tooltip_text.make_by_nmhdr (info)
@@ -436,9 +456,32 @@ feature {NONE} -- WEL Implementation
 				if checkable_tree /= Void then
 					checkable_tree.on_nm_click				
 				end
+			elseif info.code = feature {WEL_NM_CONSTANTS}.nm_customdraw then
+				radio_button ?= info.window_from
+				if radio_button = Void then
+					check_button ?= info.window_from
+					if check_button /= Void then
+						button := check_button
+					end
+				else
+					button := radio_button
+				end
+					-- Note that this message is only sent on Windows XP if visual styles
+					-- are being used. On other versions, this does not matter as the
+					-- background is updated here to use the correct visual style.
+					-- On older versions, nothing needs to be performed here.
+				if button /= Void and application_imp.themes_active then
+					create custom.make_by_pointer (info.item)
+					if custom.dwdrawstage = feature {WEL_CDDS_CONSTANTS}.cdds_preerase then
+						create bk_brush.make_solid (button.wel_background_color)
+						theme_drawer.draw_widget_background (button, custom.hdc, button.client_rect, bk_brush)
+						set_message_return_value (to_lresult (feature {WEL_CDRF_CONSTANTS}.cdrf_dodefault))
+						bk_brush.delete
+					end
+				end
 			end
 		end
-		
+
 	update_tab_ordering_for_dialog (w: EV_WIDGET) is
 			-- If `Current' is an EV_DIALOG_IMP_MODAL or an 
 			-- EV_DIALOG_IMP_MODELESS
@@ -771,8 +814,7 @@ feature -- Status setting
 					peer.select_first_radio_button
 				end
 			end
-		end
-		
+		end	
 
 feature -- Event handling
 

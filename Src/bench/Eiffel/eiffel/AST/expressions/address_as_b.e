@@ -32,8 +32,10 @@ feature -- Type check, byte code and dead code removal
 			-- Type check an address access.
 		local
 			internal_name: ID_AS_B;
+			access_b: ACCESS_B;
 			access_address: ACCESS_ADDRESS_AS_B;
 			id_type: TYPE_A;
+			not_supported: NOT_SUPPORTED;
 		do
 				-- Initialization of the type stack
 			context.begin_expression;
@@ -43,9 +45,19 @@ feature -- Type check, byte code and dead code removal
 			!!access_address.make (internal_name);
 			id_type := access_address.access_type;
 
-			if not context.access_line.access.is_feature then
+			access_b := context.access_line.access;
+
+			if not access_b.is_feature then
 				id_type := pointer_type;
 			end;
+
+			if access_b.is_external then
+				!!not_supported;
+				context.init_error (not_supported);
+				not_supported.set_message ("The $ operator is not supported on external features");
+				Error_handler.insert_error (not_supported);
+				Error_handler.raise_error;
+			end
 
 				-- Update the type stack
 			context.replace (id_type);
@@ -68,7 +80,7 @@ feature -- Type check, byte code and dead code removal
 				a_feature :=
 					context.feature_table.item(feature_name.internal_name);
 				!!address;
-				address.init (a_feature);
+				address.init (context.a_class.id, a_feature);
 				Result := address;
 			else
 				!!hector.make (access);

@@ -17,12 +17,10 @@ feature -- Access
 			-- Text displayed in label.
 		do
 			Result := wel_text
-			if Result /= Void then
-				if Result.empty then
-					Result := Void
-				else
-					unescape_ampersands (Result)
-				end
+			if Result.empty then
+				Result := Void
+			else
+				unescape_ampersands (Result)
 			end
 		end 
 
@@ -37,7 +35,7 @@ feature -- Element change
 	remove_text is
 			-- Make `text' `Void'.
 		do
-			set_text ("")
+			wel_set_text (create {STRING}.make (0))
 		end
 
 feature {NONE} -- Implementation
@@ -49,10 +47,9 @@ feature {NONE} -- Implementation
 
 	wel_text: STRING is
 			-- Text from WEL object.
-			-- Note: may be Void.
 		deferred
---		ensure
---			not_void: Result /= Void
+		ensure
+			not_void: Result /= Void
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -89,8 +86,8 @@ feature {EV_ANY_I} -- Implementation
 				end
 			end
 		ensure
-			ampersand_occurrences_doubled: (old clone (s)).occurrences ('&') =
-				s.occurrences ('&') * 2
+			ampersand_occurrences_doubled: s.occurrences ('&') =
+				(old clone (s)).occurrences ('&') * 2
 		end
 
 	unescape_ampersands (s: STRING) is
@@ -121,8 +118,8 @@ feature {EV_ANY_I} -- Implementation
 				end
 			end
 		ensure
-			ampersand_occurrences_halved: s.occurrences ('&') =
-				(old clone (s)).occurrences ('&') * 2
+			ampersand_occurrences_halved: (old clone (s)).occurrences ('&') =
+				s.occurrences ('&') * 2
 		end
 
 	line_count: INTEGER is
@@ -181,6 +178,9 @@ end -- class EV_TEXTABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/29 20:32:56  brendel
+--| Fixed bugs in implementation and postconditions.
+--|
 --| Revision 1.19  2000/03/29 07:00:49  pichery
 --| Commented bad postcondition after discussion with Sam.
 --| Should be fixed by Vincent.

@@ -14,9 +14,6 @@ inherit
 		end
 
 feature -- Access
-
-	Gb_main_window_title: STRING is "EiffelBuild"
-		-- Title to be displayed in GB_MAIN_WINDOW.
 		
 	Gb_display_window_title: STRING is "Display window"
 		-- Title to be displayed in GB_DISPLAY_WINDOW.
@@ -27,7 +24,8 @@ feature -- Access
 	Gb_object_editor_window_title: STRING is "Object editor"
 		-- Title to be displayed in GB_OBJECT_EDITOR.
 
-	
+	Product_name: STRING is "EiffelBuild"
+		-- Name of system displayed to users.
 	
 feature -- Menu texts.
 	

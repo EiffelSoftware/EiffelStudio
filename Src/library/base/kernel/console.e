@@ -276,78 +276,78 @@ feature {NONE} -- Implementation
 			-- Convert `number' to the corresponding
 			-- file descriptor.
 		external
-			"C"
+			"C | <console.h>"
 		end;
 
 	console_eof (file: POINTER): BOOLEAN is
 		external
-			"C"
+			"C | <console.h>"
 		end;
 
 	console_separator (file: POINTER): CHARACTER is
 			-- ASCII code of character following last word read
 		external
-			"C"
+			"C | <console.h>"
 		end;
 
 	console_ps (file: POINTER; s_name: POINTER; length: INTEGER) is
 			-- Write string `s' at end of `file'
 		external
-			"C"
+			"C | <console.h>"
 		end;
 
 	console_pr (file: POINTER; r: REAL) is
 			-- Write real `r' at end of `file'
 		external
-			"C"
+			"C | <console.h>"
 		end;
 
 	console_pc (file: POINTER; c: CHARACTER) is
 			-- Write character `c' at end of `file'
 		external
-			"C"
+			"C | <console.h>"
 		end;
 
 	console_pd (file: POINTER; d: DOUBLE) is
 			-- Write double `d' at end of `file'
 		external
-			"C"
+			"C | <console.h>"
 		end;
 
 	console_pi (file: POINTER; i: INTEGER) is
 			-- Write integer `i' at end of `file'
 		external
-			"C"
+			"C | <console.h>"
 		end;
 
 	console_tnwl (file: POINTER) is
 			-- Write a new_line to `file'
 		external
-			"C"
+			"C | <console.h>"
 		end;
 
 	console_readreal (file: POINTER): REAL is
 			-- Read a real number from the console
 		external
-			"C"
+			"C | <console.h>"
 		end;
 
 	console_readchar (file: POINTER): CHARACTER is
 			-- Read a character from the console
 		external
-			"C"
+			"C | <console.h>"
 		end;
 
 	console_readint (file: POINTER): INTEGER is
 			-- Read an integer from the console
 		external
-			"C"
+			"C | <console.h>"
 		end;
 
 	console_readdouble (file: POINTER): DOUBLE is
 			-- Read a double from the console
 		external
-			"C"
+			"C | <console.h>"
 		end;
 
 	console_readword (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
@@ -358,31 +358,31 @@ feature {NONE} -- Implementation
 			-- If it does not fit, result is `length' - `begin' + 1,
 			-- otherwise result is number of characters read.
 		external
-			"C"
+			"C | <console.h>"
 		end;
 
 	console_readline (file: POINTER; a_string: POINTER; length, begin: INTEGER): INTEGER is
 			-- Read a stream from the console
 		external
-			"C"
+			"C | <console.h>"
 		end;
 
 	console_next_line (file: POINTER) is
 			-- Move to next input line on standard input.
 		external
-			"C"
+			"C | <console.h>"
 		end;
 
 	console_readstream (file: POINTER; a_string: POINTER; length: INTEGER): INTEGER is
 			-- Read a stream from the console
 		external
-			"C"
+			"C | <console.h>"
 		end;
 
 	file_close (file: POINTER) is
 			-- Close `file'
 		external
-			"C"
+			"C | <console.h>"
 		alias
 			"console_file_close"
 		end

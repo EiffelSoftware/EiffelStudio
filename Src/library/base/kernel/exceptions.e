@@ -19,7 +19,7 @@ feature -- Status report
 	meaning (except: INTEGER): STRING is
 			-- A message in English describing what `except' is
 		external
-			"C"
+			"C | <except.h>"
 		alias
 			"eename"
 		end;
@@ -79,7 +79,7 @@ feature -- Status report
 	tag_name: STRING is
 			-- Tag of last violated asssertion clause
 		external
-			"C"
+			"C | <except.h>"
 		alias
 			"eeltag"
 		end;
@@ -88,7 +88,7 @@ feature -- Status report
 			-- Name of the routine whose execution was
 			-- interrupted by last exception
 		external
-			"C"
+			"C | <except.h>"
 		alias
 			"eelrout"
 		end;
@@ -97,7 +97,7 @@ feature -- Status report
 			-- Name of the class that includes the recipient
 			-- of original form of last exception
 		external
-			"C"
+			"C | <except.h>"
 		alias
 			"eelclass"
 		end;
@@ -105,7 +105,7 @@ feature -- Status report
 	exception: INTEGER is
 			-- Code of last exception that occurred
 		external
-			"C"
+			"C | <except.h>"
 		alias
 			"eelcode"
 		end;
@@ -113,7 +113,7 @@ feature -- Status report
 	exception_trace: STRING is
 			-- String representation of the exception trace
 		external
-			"C"
+			"C | <except.h>"
 		alias
 			"stack_trace_string"
 		end;
@@ -122,7 +122,7 @@ feature -- Status report
 			-- Assertion tag for original form of last
 			-- assertion violation.
 		external
-			"C"
+			"C | <except.h>"
 		alias
 			"eeotag"
 		end;
@@ -131,7 +131,7 @@ feature -- Status report
 			-- Original code of last exception that triggered
 			-- current exception
 		external
-			"C"
+			"C | <except.h>"
 		alias
 			"eeocode"
 		end;
@@ -140,7 +140,7 @@ feature -- Status report
 			-- Name of the routine whose execution was
 			-- interrupted by original form of last exception
 		external
-			"C"
+			"C | <except.h>"
 		alias
 			"eeorout"
 		end;
@@ -149,7 +149,7 @@ feature -- Status report
 			-- Name of the class that includes the recipient
 			-- of original form of last exception
 		external
-			"C"
+			"C | <except.h>"
 		alias
 			"eeoclass"
 		end;
@@ -160,7 +160,7 @@ feature -- Status setting
 			-- Make sure that any exception of code `code' will be
 			-- caught. This is the default.
 		external
-			"C"
+			"C | <except.h>"
 		alias
 			"eecatch"
 		end;
@@ -169,7 +169,7 @@ feature -- Status setting
 			-- Make sure that any exception of code `code' will be
 			-- ignored. This is not the default.
 		external
-			"C"
+			"C | <except.h>"
 		alias
 			"eeignore"
 		end;
@@ -189,7 +189,7 @@ feature -- Status setting
 			-- Terminate execution with exit status `code',
 			-- without triggering an exception.
 		external
-			"C"
+			"C | <except.h>"
 		alias
 			"esdie"
 		end;
@@ -198,7 +198,7 @@ feature -- Status setting
 			-- Terminate execution with exit status `code',
 			-- without triggering an exception.
 		external
-			"C"
+			"C | <except.h>"
 		alias
 			"esdie"
 		end;
@@ -223,12 +223,12 @@ feature {NONE} -- Implementation
 	eraise (str: POINTER; code: INTEGER) is
 			-- Raise an exception
 		external
-			"C"
+			"C | <except.h>"
 		end;
 
 	c_trace_exception (b: BOOLEAN) is
 		external
-			"C"
+			"C | <except.h>"
 		alias
 			"eetrace"
 		end;

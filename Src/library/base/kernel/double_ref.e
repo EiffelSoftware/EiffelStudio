@@ -315,14 +315,14 @@ feature {NONE} -- Implementation
 	c_outd (d: DOUBLE): STRING is
 			-- Printable representation of double value
 		external
-			"C"
+			"C | <out.h>"
 		end;
 
 	c_truncated_to_integer (d: DOUBLE): INTEGER is
 			-- Integer part of `d' (same sign, largest absolute
 			-- value no greater than `d''s)
 		external
-			"C"
+			"C | <misc.h>"
 		alias
 			"conv_di"
 		end;
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation
 			-- Real part of `d' (same sign, largest absolute
 			-- value no greater than `d''s)
 		external
-			"C"
+			"C | <misc.h>"
 		alias
 			"conv_dr"
 		end;
@@ -339,7 +339,7 @@ feature {NONE} -- Implementation
 	c_ceiling (d: DOUBLE): DOUBLE is
 			-- Smallest integral value no smaller than `d'
 		external
-			"C"
+			"C | %"math.h%""
 		alias
 			"ceil"
 		end;
@@ -347,7 +347,7 @@ feature {NONE} -- Implementation
 	c_floor (d: DOUBLE): DOUBLE is
 			-- Greatest integral value no greater than `d'
 		external
-			"C"
+			"C | %"math.h%""
 		alias
 			"floor"
 		end;

@@ -229,6 +229,21 @@ feature -- Basic operations
 				cursor.go_end_line
 				invalidate
 				update
+			elseif  virtual_key = Vk_delete and then cursor /= Void then
+	   			io.putstring("delete%N")
+				cursor.delete_char
+				invalidate
+				update
+			elseif  virtual_key = Vk_Back and then cursor /= Void then
+	   			io.putstring("delete previous%N")
+				cursor.delete_previous
+				invalidate
+				update
+			elseif  virtual_key = Vk_Insert and then cursor /= Void then
+	   			io.putstring("toggle insertion mode%N")
+				insert_mode := not insert_mode
+				invalidate
+				update
 			else
 				-- Key not handled, do nothing
 			end
@@ -237,7 +252,19 @@ feature -- Basic operations
  	on_char (character_code, key_data: INTEGER) is
    			-- Wm_char message
    			-- See class WEL_VK_CONSTANTS for `character_code' value.
+		local
+			c: CHARACTER
    		do
+			if character_code /= Vk_Back then
+				c := character_code.ascii_char
+				if insert_mode then
+					cursor.replace_char (c)
+				else
+					cursor.insert_char (c)
+				end
+				invalidate
+				update
+			end
  		end
 
 feature {NONE} -- Display functions

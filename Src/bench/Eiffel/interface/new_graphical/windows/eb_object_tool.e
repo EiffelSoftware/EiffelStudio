@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "EiffelBench Object tool"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -7,20 +7,20 @@ class
 	EB_OBJECT_TOOL
 
 inherit
-	EB_MULTIFORMAT_EDIT_TOOL
+	EB_MULTIFORMAT_TOOL
 		rename
-			edit_bar as object_toolbar,
-			build_edit_bar as build_object_toolbar
+			toolbar as object_toolbar,
+			build_toolbar as build_object_toolbar
 --			Object_type as stone_type
 		redefine
 			make, init_commands,
 --			hole,
- close_windows,
+			close_windows,
 			empty_tool_name,
 			set_default_format,
 			stone, synchronize, -- process_object,
 			destroy, reset, format_list,
- history_window_title,
+--			history_window_title,
 			build_special_menu
 		end
 
@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 		end
 
 --	form_create (a_form: FORM; file_m, edit_m, format_m, special_m: MENU_PULL) is
---			-- Create a feature tool from a form.
+--			-- Create an object tool from a form.
 --		require
 --			valid_args: a_form /= Void and then edit_m /= Void and then
 --				format_m /= Void and then special_m /= Void
@@ -56,28 +56,32 @@ feature {NONE} -- Initialization
 --			set_composite_attributes (edit_m)
 --			set_composite_attributes (format_m)
 --			set_composite_attributes (special_m)
---			init_text_window
+--			init_text_area
 --		end
 
 	init_formatters is
+			-- Create the list of formats,
+			-- initialize default format values.
 		do
 			create format_list.make (Current)
 			set_last_format (format_list.default_format)
 		end
 
 	init_commands is
+			-- Initialize commands.
 		do
 			Precursor
 			create slice_cmd.make (Current)
 			create current_target_cmd.make (Current)
 			create previous_target_cmd.make (Current)
 			create next_target_cmd.make (Current)
---			!! history_list_cmd.make (Current)
+--			create history_list_cmd.make (Current)
 		end
 
 feature -- Window Properties
 
 	empty_tool_name: STRING is
+			-- Name given to the tool when no object is in.
 		do
 			Result := Interface_names.t_Empty_object
 		end
@@ -85,21 +89,15 @@ feature -- Window Properties
 	stone: OBJECT_STONE
 			-- Stone in tool
  
-	history_window_title: STRING is
-			-- Title of the history window
-		do
-			Result := Interface_names.t_Select_object
-		end
-
---	help_index: INTEGER is 4
-
---	icon_id: INTEGER is
---			-- Icon id of Current window (only for windows)
+--	history_window_title: STRING is
+--			-- Title of the history window
 --		do
---			Result := Interface_names.i_Object_id
+--			Result := Interface_names.t_Select_object
 --		end
 
 	format_bar_is_used: BOOLEAN is False
+			-- Do the tool need an effective format_bar?
+			-- (i.e. not included in the edit bar)
 
 feature -- Access
  
@@ -111,7 +109,7 @@ feature -- Access
 			history_list: LINEAR [STONE]
 			pos: INTEGER
 		do
-			Result := text_window.kept_objects
+			Result := text_area.kept_objects
 			from
 				pos := history.index
 				history.start
@@ -162,23 +160,30 @@ feature -- Status seting
 feature -- Update
 
 	register is
+			-- Ask the resource manager to notify Current (i.e. to call `update') each
+			-- time one of the resources he needs has changed.
+			-- Is called by `make'.
 		do
 			register_to ("object_tool_bar")
 		end
 
 	update is
+			-- Update Current with the registred resources.
 		do
 			if object_tool_bar then
 				object_toolbar.show
 			else
 				object_toolbar.hide
 			end
-			if edit_bar_menu_item /= Void then
-				edit_bar_menu_item.set_selected (object_tool_bar)
+			if toolbar_menu_item /= Void then
+				toolbar_menu_item.set_selected (object_tool_bar)
 			end
 		end
 
 	unregister is
+			-- Ask the resource manager not to notify Current anymore
+			-- when a resource has changed.
+			-- Is called by `destroy'.
 		do
 			unregister_to ("object_tool_bar")
 		end
@@ -186,7 +191,7 @@ feature -- Update
 	hang_on is
 			-- Make object addresses unclickable.
 		do
-			text_window.hang_on
+			text_area.hang_on
 		end
 
 	reset is
@@ -194,10 +199,10 @@ feature -- Update
 		do
 			Precursor
 			set_default_sp_bounds
-			init_text_window
+			init_text_area
 		end
  
-	process_object (a_stone: like stone) is
+	process_object (s: like stone) is
 			-- Set `s' to stone.
 		local
 			status: APPLICATION_STATUS
@@ -210,12 +215,12 @@ feature -- Update
 			elseif not status.is_stopped then
 				create wd.make_default (parent, Interface_names.t_Warning,
 					Warning_messages.w_System_not_stopped)
-			elseif not a_stone.is_valid then
+			elseif not s.is_valid then
 				create wd.make_default (parent, Interface_names.t_Warning,
 					Warning_messages.w_Object_not_inspectable)
 			else
---				last_format.execute (a_stone)
---				add_to_history (a_stone)
+--				last_format.execute (s)
+--				add_to_history (s)
 			end
 		end
  
@@ -238,9 +243,9 @@ feature -- Update
 				create wd.make_default (parent, Interface_names.t_Warning,
 					Warning_messages.w_System_not_stopped)
 			else
-				cur := text_window.position
+				cur := text_area.position
 				synchronise_stone
-				text_window.go_to (cur)
+				text_area.go_to (cur)
 			end
 		end
 
@@ -295,27 +300,6 @@ feature {NONE} -- Properties; Forms And Holes
 
 feature {NONE} -- Implementation; Graphical Interface
 
---	create_toolbar (a_parent: COMPOSITE) is
---			-- Create a toolbar_parent with parent `a_parent'.
---		local
---			sep: THREE_D_SEPARATOR
---		do
---			!! toolbar_parent.make (new_name, a_parent)
---			if not is_in_project_tool then
---				!! sep.make (interface_names.t_empty, toolbar_parent)
---			end
---			toolbar_parent.set_column_layout
---			toolbar_parent.set_free_size	
---			toolbar_parent.set_margin_height (0)
---			toolbar_parent.set_spacing (1)
---			!! object_toolbar.make (Interface_names.n_Tool_bar_name, toolbar_parent)
---			if not Platform_constants.is_windows then
---				!! sep.make (Interface_names.t_Empty, toolbar_parent)
---			else
---				object_toolbar.set_height (22)
---			end
---		end
-
 	build_object_toolbar (a_toolbar: EV_BOX) is
 			-- Build top bar.
 		local
@@ -336,19 +320,19 @@ feature {NONE} -- Implementation; Graphical Interface
 			create format_bar.make (a_toolbar)
 
 --				-- Creation of all the commands, holes, buttons, and menu entries
---			!! hole.make (Current)
+--			create hole.make (Current)
 --
 --				-- Should we have a close button?
 --			has_close_button := General_resources.close_button.actual_value
 --
---			!! quit_cmd.make (Current)
+--			create quit_cmd.make (Current)
 --			if not is_in_project_tool then
 --				if has_close_button then
---					!! quit_button.make (quit_cmd, object_toolbar)
+--					create quit_button.make (quit_cmd, object_toolbar)
 --				end
---				!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
+--				create quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
 --
---				!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
+--				create exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
 --				exit_cmd_holder.set_menu_entry (exit_menu_entry)
 --			end
 --
@@ -381,10 +365,13 @@ feature {NONE} -- Implementation; Graphical Interface
 feature {NONE} -- Properties
 
 	format_list: EB_OBJECT_FORMATTER_LIST
+			-- List of all formats, with the data used
+			-- to build the associated toolbar.
 
 feature {EB_SLICE_COMMAND} -- Format report
 
 	format_is_show_attibutes: BOOLEAN is
+			-- is current format the "show attribute" one?
 		do
 			Result := (last_format = format_list.first)
 		end
@@ -392,6 +379,7 @@ feature {EB_SLICE_COMMAND} -- Format report
 feature {EB_TOOL_MANAGER} -- Menus Implementation
 
 	build_special_menu (a_menu: EV_MENU_ITEM_HOLDER) is
+			-- Build the "special menu" entries in `a_menu'.
 		local
 			i: EV_MENU_ITEM
 		do

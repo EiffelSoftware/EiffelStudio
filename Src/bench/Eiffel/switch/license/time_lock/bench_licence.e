@@ -66,7 +66,7 @@ feature -- Registration
 				demo_mode := False
 
 					-- Display dialog information
-				!! shareware_prompt.make (Current, duration)
+				!! shareware_prompt.make (Current, duration, time_left)
 				shareware_prompt.activate
 				if licensed then
 						-- The user seems to have enter the correct information
@@ -163,34 +163,37 @@ feature {NONE} -- Implementation
 
 	key: STRING is
 		once
-			Result := "%/28/%/05/%/37/%/16/%/01/%/03/%/07/%/39/%/63/%/25/%
-					%%/37/%/34/%/23/%/19/%/54/%/63/%/21/%/53/%/32/%/40/%
-					%%/30/%/06/%/12/%/21/%/53/%/35/%/59/%/19/%/57/%/03/%
-					%%/44/%/10/%/12/%/01/%/25/%/35/%/16/%/19/%/21/%/02/%
-					%%/37/%/21/%/16/%/01/%/98/%/55/%/44/%/09/%/37/%/49/%
-					%%/11/%/62/%/09/%/46/%/32/%/45/%/15/%/53/%/46/%/25/%
-					%%/07/%/05/%/54/%/38/%/61/%/48/%/76/%/03/%/59/%/38/%
-					%%/35/%/24/%/38/%/39/%/12/%/02/%/53/%/10/%/40/%/19/%
+			Result := "%/44/%/55/%/66/%/22/%/11/%/34/%/45/%/56/%/34/%/56/%
+					%%/34/%/21/%/76/%/89/%/54/%/63/%/25/%/53/%/32/%/40/%
+					%%/45/%/06/%/12/%/25/%/53/%/35/%/59/%/54/%/57/%/03/%
+					%%/44/%/88/%/12/%/01/%/90/%/35/%/16/%/54/%/25/%/02/%
+					%%/37/%/25/%/16/%/01/%/98/%/55/%/44/%/09/%/37/%/49/%
+					%%/11/%/62/%/09/%/46/%/32/%/45/%/15/%/53/%/46/%/90/%
+					%%/07/%/05/%/54/%/53/%/61/%/48/%/76/%/03/%/59/%/53/%
+					%%/35/%/24/%/53/%/39/%/12/%/02/%/53/%/88/%/40/%/54/%
 					%%/39/%/51/%/36/%/02/%/57/%/62/%/39/%/24/%/82/%/56/%
-					%%/09/%/01/%/31/%/19/%/20/%/49/%/25/%/29/%/49/%/09/%
-					%%/36/%/61/%/10/%/03/%/45/%/34/%/42/%/10/%/31/%/39/%
-					%%/50/%/02/%/30/%/17/%/17/%/49/%/63/%/10/%/58/%/38/%
-					%%/14/%/21/%/14/%/18/%/13/%/04/%/11/%/57/"
+					%%/09/%/01/%/31/%/54/%/20/%/49/%/90/%/29/%/49/%/09/%
+					%%/36/%/61/%/88/%/03/%/45/%/34/%/42/%/88/%/31/%/39/%
+					%%/50/%/02/%/45/%/17/%/17/%/49/%/63/%/88/%/58/%/53/%
+					%%/14/%/25/%/14/%/18/%/13/%/04/%/11/%/57/"
 		end
 
-	Default_waiting_time: INTEGER is 10
+	Default_waiting_time: INTEGER is 15
 			-- Number of seconds to wait before using EiffelBench for the first time.
 
 	waiting_time: INTEGER is
 			-- Number of seconds to wait before executing a command in the Trial edition.
 			-- The value is etween 5 seconds and 30 seconds maximum.
-		local
-			number_of_days: INTEGER
 		do
-			number_of_days := ((time - installation_date) // 3600) // 24
 			Result := 5 + (30).min ((0).max ((number_of_days - 10) // 2))
 		ensure
 			result_in_range: Result >= 5 and Result <= 30
+		end
+
+	number_of_days: INTEGER is
+			-- Number of days since the first installation
+		do
+			Result := ((time - installation_date - 1) // 3600) // 24
 		end
 
 	installation_date: INTEGER is

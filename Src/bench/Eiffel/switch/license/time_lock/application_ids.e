@@ -10,6 +10,7 @@ feature -- Access
 	Idd_register_constant: INTEGER is 203
 	Idc_register_constant: INTEGER is 2000
 	Idc_key_constant: INTEGER is 2002
+	Idc_progress_constant: INTEGER is 1000
 
 end -- class APPLICATION_IDS
 

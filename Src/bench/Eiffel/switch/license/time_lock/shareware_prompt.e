@@ -29,19 +29,22 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (license: LICENSE; duration: INTEGER) is
+	make (license: LICENSE; duration: INTEGER; time_left: INTEGER) is
 			-- Create the dialog.
 		local
 			dispatcher: WEL_DISPATCHER
 		do
 				-- In order to initialize the WEL message handling.
-			!! dispatcher.make 
+			create dispatcher.make 
 
 				-- Creation of the dialog.
 			make_by_id (Void, Idd_prompt_constant)
-			!! id_ok.make_by_id (Current, Idok)
-			!! id_cancel.make_by_id (Current, Idcancel)
-			!! idc_register.make_by_id (Current, Idc_register_constant)
+			create id_ok.make_by_id (Current, Idok)
+			create id_cancel.make_by_id (Current, Idcancel)
+			create idc_register.make_by_id (Current, Idc_register_constant)
+			create idc_progress.make_by_id (Current, Idc_progress_constant)
+
+			remaining_time := time_left
 
 				-- Storing license information
 			license_info := license
@@ -54,11 +57,17 @@ feature -- Behavior
 
 	setup_dialog is
 		do
+			idc_progress.set_range (0, Max_days)
 			registered_user := False
 			id_ok.set_text (nb_seconds.out)
 			id_ok.disable
 			id_cancel.disable
 			set_timer (id_ok.id, Timer_interval)	
+			if remaining_time >= 0 then
+				idc_progress.set_position (Max_days - remaining_time)
+			else
+				idc_progress.set_position (Max_days)
+			end
 		end
 
 	notify (control: WEL_CONTROL; notify_code: INTEGER) is
@@ -66,7 +75,7 @@ feature -- Behavior
 			register_dialog: REGISTER_PROMPT
 		do
 			if control = idc_register and then notify_code = Bn_clicked then
-				!! register_dialog.make (Current, license_info)
+				create register_dialog.make (Current, license_info)
 				register_dialog.activate
 				if registered_user then
 						-- We have successfully been registered
@@ -79,9 +88,13 @@ feature -- Behavior
 	on_timer (timer_id: INTEGER) is
 		do
 			nb_seconds := nb_seconds - 1
-			if nb_seconds = 0 then
+			if nb_seconds <= 0 then
 				kill_timer (id_ok.id)
-				id_ok.set_text ("OK")
+				if remaining_time >= 0 then
+					id_ok.set_text ("OK")
+				else
+					id_ok.set_text ("Quit")
+				end
 				id_ok.enable
 				id_cancel.enable
 			else
@@ -91,7 +104,11 @@ feature -- Behavior
 
 	on_ok is
 		do
-			license_info.set_demo_mode (True)
+			if remaining_time = -1 then
+				license_info.set_demo_mode (False)
+			else
+				license_info.set_demo_mode (True)
+			end
 			destroy
 		end
 
@@ -106,6 +123,10 @@ feature -- Access
 	id_ok: WEL_PUSH_BUTTON
 	id_cancel: WEL_PUSH_BUTTON
 	idc_register: WEL_PUSH_BUTTON
+
+	idc_progress: WEL_PROGRESS_BAR
+
+	remaining_time: INTEGER
 
 	license_info: LICENSE
 
@@ -132,6 +153,9 @@ feature {NONE} -- Implementation
 
 	nb_seconds: INTEGER
 			-- Number of seconds after which the product can be launched.
+	
+	Max_days: INTEGER is 30
+			-- Number of days where the user can try the product.
 
 end -- class SHAREWARE_PROMPT
 

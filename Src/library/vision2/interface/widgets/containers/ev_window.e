@@ -46,36 +46,36 @@ feature {NONE} -- Initialization
 		
 feature  -- Access
 
-	   icon_name: STRING is
-                        -- Short form of application name to be
-                        -- displayed by the window manager when
-                        -- application is iconified 
-                require
-                        exists: not destroyed
-                do
-                        Result := implementation.icon_name
-                end 
+	icon_name: STRING is
+			-- Short form of application name to be
+			-- displayed by the window manager when
+			-- application is iconified 
+		require
+			exists: not destroyed
+		do
+			Result := implementation.icon_name
+		end 
 	
-        icon_mask: EV_PIXMAP is
-                        -- Bitmap that could be used by window manager
-                        -- to clip `icon_pixmap' bitmap to make the
-                        -- icon nonrectangular 
-                require
-                        exists: not destroyed
-                do
-                        Result := implementation.icon_mask
-                end
+	icon_mask: EV_PIXMAP is
+			-- Bitmap that could be used by window manager
+			-- to clip `icon_pixmap' bitmap to make the
+			-- icon nonrectangular 
+		require
+			exists: not destroyed
+		do
+			Result := implementation.icon_mask
+		end
 
         icon_pixmap: EV_PIXMAP is
-                        -- Bitmap that could be used by the window manager
-                        -- as the application's icon
-                require
-                        exists: not destroyed
-                do
-                        Result := implementation.icon_pixmap
-                ensure
-                        valid_result: Result /= Void
-                end
+			-- Bitmap that could be used by the window manager
+			-- as the application's icon
+		require
+			exists: not destroyed
+		do
+			Result := implementation.icon_pixmap
+		ensure
+			valid_result: Result /= Void
+		end
 	
         title: STRING is
                         -- Application name to be displayed by
@@ -137,6 +137,30 @@ feature -- Element change
                         implementation.set_widget_group (group_widget)
                 end
 
+feature -- Measurement
+
+	maximum_width: INTEGER is
+			-- Maximum width that application wishes widget
+			-- instance to have
+		require
+			exists: not destroyed
+		do
+			Result := implementation.maximum_width
+		ensure
+			Result >= 0
+		end
+
+	maximum_height: INTEGER is
+			-- Maximum height that application wishes widget
+			-- instance to have
+		require
+			exists: not destroyed
+		do
+			Result := implementation.maximum_height
+		ensure
+			Result >= 0
+		end
+
 feature -- Status report
 
         is_iconic_state: BOOLEAN is
@@ -150,7 +174,8 @@ feature -- Status report
 feature -- Status setting
 
         set_iconic_state is
-                        -- Set start state of the application to be iconic.
+			-- Set start state of the application
+			-- to be iconic.
                 require
                         exists: not destroyed
                 do
@@ -164,6 +189,15 @@ feature -- Status setting
                 do
                         implementation.set_normal_state
                 end
+
+	set_maximize_state is
+			-- Set start state of the application to be
+			-- maximized.
+		require
+			exists: not destroyed
+		do
+			implementation.set_maximize_state
+		end
 
 feature -- Element change
 
@@ -180,6 +214,30 @@ feature -- Element change
                 do
                         implementation.set_close_command (c)
                 end
+
+feature -- Resizing
+
+	set_maximum_width (max_width: INTEGER) is
+			-- Make `max_width' the new `maximum_width'.
+		require
+			exists: not destroyed
+			large_enough: max_width >= 0
+		do
+			implementation.set_maximum_width (max_width)
+		ensure
+			max_width = max_width
+		end 
+
+	set_maximum_height (max_height: INTEGER) is
+			-- Make `max_height' the new `maximum_height'.
+		require
+			exists: not destroyed
+			large_enough: max_height >= 0
+		do
+			implementation.set_maximum_height (max_height)
+		ensure
+			max_height = max_height
+		end
 
 feature {EV_APPLICATION_IMP} -- Implementation
 

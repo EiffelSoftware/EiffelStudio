@@ -97,6 +97,7 @@ feature -- Command Editor commands
 
 	Cmd_add_argument_cmd_name: STRING is "Add Argument";
 	Cmd_add_label_cmd_name: STRING is "Add Label";
+	Cmd_create_instance_cmd_name: STRING is "Create instance";
 	Cmd_cut_argument_cmd_name: STRING is "Cut Argument";
 	Cmd_cut_parent_cmd_name: STRING is "Cut parent";
 	Cmd_cut_label_cmd_name: STRING is "Cut Label";

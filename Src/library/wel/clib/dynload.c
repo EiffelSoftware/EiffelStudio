@@ -154,9 +154,7 @@ DWORD cwin_get_shellcomctrl_dll_version(char *pszDllName)
 	else
 		{
 		// DllGetVersion is not supported --> Win95 (4.00) or Win95+IE4 (4.70)
-		void *pInitCommonCtrlEx_addr = NULL;
-
-		pInitCommonCtrlEx_addr = cwin_get_function_address("Comctl32.dll", "InitCommonControlsEx");
+		void* pInitCommonCtrlEx_addr = cwin_get_function_address("Comctl32.dll", "InitCommonControlsEx");
 		if (pInitCommonCtrlEx_addr == NULL)
 			{
 			// InitCommonCtrlEx do NOT exist on the system --> Win95 alone

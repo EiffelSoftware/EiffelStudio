@@ -74,14 +74,23 @@ feature {NONE} -- Implementation
 			new_pixmap: EV_PIXMAP
 			shown_once, opened_file: BOOLEAN
 			error_dialog: EV_WARNING_DIALOG
+			retried: BOOLEAN
 		do
 			if first.pixmap = Void and first.pixmap_path = Void then
 				from
-					create dialog
+					if not retried then
+						create dialog
+					end
 				until
 					(dialog.file_name.is_empty and shown_once) or opened_file
 				loop
 					shown_once := True
+					if retried then
+						retried := False
+						create error_dialog
+						error_dialog.set_text ("'" + dialog.file_name + "'" + invalid_pixmap_contents_warning)
+						error_dialog.show_modal_to_window (parent_window (parent_editor))
+					end
 					dialog.show_modal_to_window (parent_window (parent_editor))
 					if not dialog.file_name.is_empty and then valid_file_extension (dialog.file_name.substring (dialog.file_name.count -2, dialog.file_name.count)) then
 						create new_pixmap
@@ -110,6 +119,9 @@ feature {NONE} -- Implementation
 					-- as the pixmap will now be no longer visible.
 				filler_label.remove_tooltip
 			end	
+		rescue
+			retried := True
+			retry
 		end
 
 end -- class GB_EV_PIXMAPABLE_EDITOR_CONSTRUCTOR

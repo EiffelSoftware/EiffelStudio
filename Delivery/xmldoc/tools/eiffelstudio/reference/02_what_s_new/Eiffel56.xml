@@ -78,6 +78,7 @@ list.<feature_name>put_i_th</feature_name> (3, 3)</code_block></item>
 			<item>Implemented features <feature_name>collect</feature_name> and <feature_name>full_collect</feature_name> of class <class_name>MEMORY</class_name> for .NET.</item>
 			<item>Changed type of feature <feature_name>sign</feature_name> in classes <class_name>INTEGER_8</class_name> and <class_name>INTEGER_16</class_name> to <class_name>INTEGER_8</class_name> and <class_name>INTEGER_16</class_name> respectively.</item>
 			<item>Added a subcluster <cluster_name>refactoring</cluster_name> with classes that can be helpful for performing code refactoring.</item>
+			<item>Added precondition to <feature_name>set_reference_field</feature_name> from <class_name>INTERNAL</class_name> to ensure validity of reattachement to attributes.</item>
 		</list>
 		<heading><size>3</size>EiffelNet</heading>
 		<list ordered="false">

@@ -41,7 +41,7 @@ feature -- Comparison
 	is_equivalent (other: like Current): BOOLEAN is
 			-- Is `other' equivalent to the current object ?
 		do
-				-- FIXME: equiv should be done on EXTERNAL_EXTENSION_AS
+				-- FIXME: is_equivalent should be done on EXTERNAL_EXTENSION_AS
 			Result := language_name.is_equivalent (other.language_name)
 		end
 

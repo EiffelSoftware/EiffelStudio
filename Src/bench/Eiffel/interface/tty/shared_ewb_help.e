@@ -18,6 +18,8 @@ feature {NONE}
 
 	class_help: STRING is "class formats and information";
 
+	class_list_help: STRING is "show the classes in alphabetic order";
+
 	clients_help: STRING is "show the clients of a class";
 
 	clusters_help: STRING is "show the system's classes, cluster by cluster";
@@ -87,6 +89,8 @@ feature {NONE}
 	run_help: STRING is "execute the system";
 
 	short_help: STRING is "show the short form of a class";
+
+	statistics_help: STRING is "show system statistics";
 
 	stop_help: STRING is "stop on error";
 

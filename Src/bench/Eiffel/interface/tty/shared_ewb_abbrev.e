@@ -14,6 +14,8 @@ feature
 
 	Class_abb: CHARACTER is 'c';
 
+	Class_list_abb: CHARACTER is 'l';
+
 	Clients_abb: CHARACTER is 'c';
 
 	Clusters_abb: CHARACTER is 'c';
@@ -67,6 +69,8 @@ feature
 	Run_abb: CHARACTER is 'r';
 
 	Short_abb: CHARACTER is 's';
+
+	Statistics_abb: CHARACTER is 't';
 
 	Storage_abb: CHARACTER is 's';
 

@@ -20,26 +20,19 @@ creation
 
 feature -- Initialization
 
-	make (c: like class_c) is
-			-- Initialize Current with class_c `c'
+	make (c: like e_class) is
+			-- Initialize Current with e_class `c'
 		do
-			class_c := c;
+			e_class := c;
 		ensure
-			class_c = c
+			set: e_class = c
 		end;
 
 feature -- Properties
 
-	class_c: CLASS_C;
+	e_class: E_CLASS;
 			-- Associated compiled class
 
-	class_name: STRING is
-			-- Class name of compiled class
-		do
-			Result := clone (class_c.class_name);
-			Result.to_upper
-		end;
-			
 feature {TEXT_FORMATTER} -- Implementation
 
     append_to (text: TEXT_FORMATTER) is

@@ -3733,7 +3733,7 @@ rt_private void eif_interp_generator (void)
 		case SK_UINT64: first->it_ref = RTMS_EX("NATURAL_64", 10); break;
 		case SK_INT8: first->it_ref = RTMS_EX("INTEGER_8", 9); break;
 		case SK_INT16: first->it_ref = RTMS_EX("INTEGER_16", 10); break;
-		case SK_INT32: first->it_ref = RTMS_EX("INTEGER_32", 10); break;
+		case SK_INT32: first->it_ref = RTMS_EX("INTEGER", 7); break;
 		case SK_INT64: first->it_ref = RTMS_EX("INTEGER_64", 10); break;
 		case SK_REAL32: first->it_ref = RTMS_EX("REAL_32", 7); break;
 		case SK_REAL64: first->it_ref = RTMS_EX("REAL_64", 7); break;

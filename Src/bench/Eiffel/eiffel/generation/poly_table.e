@@ -53,6 +53,12 @@ inherit
 
 feature -- Initialization
 
+	make (routine_id: ROUTINE_ID) is
+			-- Create table with associated `routine_ioid'
+		do
+			rout_id := routine_id
+		end
+
 	create_block (n: INTEGER) is
 			-- Create an array of `n' elements.
 		require
@@ -77,10 +83,9 @@ feature
 	rout_id: ROUTINE_ID
 			-- Routine id of the table
 
-	set_rout_id (i: ROUTINE_ID) is
-			-- Assign `i' to `rout_id'.
+	set_rout_id (id: ROUTINE_ID) is
 		do
-			rout_id := i
+			rout_id := id
 		end
 
 	is_polymorphic (type_id: INTEGER): BOOLEAN is
@@ -102,21 +107,10 @@ feature
 		require
 			writer_exists: writer /= Void
 		do
-			if generable then
-				writer.generate (Current)
-			end
+			writer.generate (Current)
 			if has_type_table and then not has_one_type then
 				writer.generate_type_table (Current)
 			end
-		end
-
-	generable: BOOLEAN is
-			-- Has the table to be generated ?
-		require
-			not_empty: not empty
-		do
---			Result := used and then is_polymorphic (min_used)
-			Result := used
 		end
 
 	generate (buffer: GENERATION_BUFFER) is
@@ -282,20 +276,24 @@ feature
 		require
 			not_empty: not empty
 		local
-			i, nb, first_type: INTEGER
+			i, nb: INTEGER
 			local_copy: POLY_TABLE [T]
+			first_type, this_type: TYPE_I
 		do
 			from
 				local_copy := Current
 				i := lower
-				first_type := local_copy.array_item (i).feature_type_id
+				first_type := local_copy.array_item (i).type
 				i := i + 1
 				nb := max_position
 				Result := true
 			until
 				i > nb or else not Result
 			loop
-				Result := local_copy.array_item (i).feature_type_id = first_type
+				this_type := local_copy.array_item (i).type
+				Result := (first_type = Void and then this_type = Void) or else
+						((first_type /= Void and then this_type /= Void) and then
+						first_type.is_identical (this_type))
 				i := i + 1
 			end
 		end

@@ -94,6 +94,13 @@ inherit
 			default_create, copy, is_equal
 		end
 		
+	GB_NAMING_UTILITIES
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+		
 feature {NONE} -- Implementation
 
 	initialize is
@@ -158,9 +165,11 @@ feature -- Access
 				forth
 			end
 			go_to (a_cursor)
+			Result.compare_objects
 		ensure
 			Result_not_void: Result /= Void
 			Cursor_not_moved: old index = index
+			object_comparison_on: Result.object_comparison
 		end		
 
 	selected_item: GB_WINDOW_SELECTOR_ITEM is
@@ -770,14 +779,21 @@ feature {NONE} -- Implementation
 			-- not contained in `directory_names'. Create a new dialog
 			-- from the name as entered by the user.
 		local
-			dialog: GB_COMPONENT_NAMER_DIALOG
+			dialog: GB_NAMING_DIALOG
 		do
-			create dialog.make_with_names_and_prompts (directory_names, "directory", "New directory namer", " is an invalid directory name. Please ensure that it is valid and is not already in use.")
+			create dialog.make_with_values (unique_name (directory_names, "directory"), "New directory", "Please specify the directory name:"," is an invalid directory name. Please ensure that it is valid and is not already in use.", agent valid_directory_name)
 			dialog.show_modal_to_window (parent_window (current))
-			if not dialog.name.is_empty then
+			if not dialog.cancelled then
 				add_named_directory (dialog.name)
 			end
 		end
+		
+	valid_directory_name (a_name: STRING): BOOLEAN is
+			-- Is `a_name' a valid name for a new directory?
+		do
+			Result := not directory_names.has (a_name)
+		end
+		
 
 	selected_window_changed (selector_item: GB_WINDOW_SELECTOR_ITEM) is
 			-- `selector_item' has become selected so we must update

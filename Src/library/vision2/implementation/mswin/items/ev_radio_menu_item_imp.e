@@ -1,5 +1,3 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing	
 	description: 
 		"Eiffel Vision radio menu item. Implementation interface."
@@ -18,55 +16,55 @@ inherit
 
 	EV_CHECK_MENU_ITEM_IMP
 		redefine
-			interface,
 			on_activate,
-			set_selected,
-			destroy
+			interface
 		end
-
---	EV_RADIO_IMP [EV_RADIO_MENU_ITEM]
 
 create
 	make
 
+feature -- Access
+
+	radio_group: LINKED_LIST [like Current]
+
 feature -- Status setting
 
-	destroy is
-			-- Destroy the current item.
+	set_radio_group (a_list: like radio_group) is
+			-- Remove `Current' from `radio_group'.
+			-- Set `radio_group' to `a_list'.
+			-- Extend `Current' in `a_list'.
 		do
---			group.remove_item (Current)
---			{EV_CHECK_MENU_ITEM_IMP} Precursor
-		end
-
-	set_selected (flag: BOOLEAN) is
-			-- Make `flag' the new state of the menu-item.
-		do
---			{EV_CHECK_MENU_ITEM_IMP} Precursor (flag)
---			if group /= Void then
---				group.set_selection_at_no_event (Current)
---			end
-		end
-
-feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
-
-	on_activate is
-			-- Is called by the menu when the item is activate.
-		do
-			Precursor
---			if group /= Void then
---				group.set_selection_at (Current)
---			end
---			set_selected (True)
---			execute_command (Cmd_item_activate, Void)
-		end
-
-	on_unselect is
-			-- Is called when the item is unselected.
-		do
---			execute_command (Cmd_item_deactivate, Void)
+			if radio_group /= Void then
+				radio_group.search (Current)
+				radio_group.remove
+			end
+			radio_group := a_list
+			radio_group.extend (Current)
 		end
 
 feature {NONE} -- Implementation
+
+	on_activate is
+		do
+			if not is_selected then
+				enable_select
+				if radio_group /= Void then
+					from
+						radio_group.start
+					until
+						radio_group.off
+					loop
+						if radio_group.item /= Current then
+							if radio_group.item.is_selected then
+								radio_group.item.disable_select
+							end
+						end
+						radio_group.forth
+					end
+				end
+			end
+			interface.press_actions.call ([])
+		end
 
 	interface: EV_RADIO_MENU_ITEM
 
@@ -93,6 +91,9 @@ end -- class EV_RADIO_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/02/23 02:16:35  brendel
+--| Revised. Implemented.
+--|
 --| Revision 1.12  2000/02/22 20:14:46  brendel
 --| Commented out old implementation.
 --|

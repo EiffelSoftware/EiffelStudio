@@ -1,9 +1,7 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing	
 	description: 
 		"EiffelVision check menu item. Mswindows implementation."
 	status: "See notice at end of class"
-	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -13,87 +11,56 @@ class
 inherit
 	EV_CHECK_MENU_ITEM_I
 		redefine
-			interface,
-			parent_imp
+			interface
 		end
 
 	EV_MENU_ITEM_IMP
 		redefine
-			interface,
 			on_activate,
-			is_selected,
-			set_selected,
-			parent_imp
+			interface
 		end
 	
-creation
+create
 	make
-
-feature --  Access
-
-	parent_imp: EV_MENU_IMP
-		-- Parent of `Current'.
 
 feature -- Status report
 	
 	is_selected: BOOLEAN is
 			-- Is current menu-item selected?
 		do
---			Result := parent_imp.internal_selected (Current)	
+			Result := parent_imp.item_checked (id)	
 		end
 	
 feature -- Status setting
 
 	enable_select is
 		do
---			parent_imp.internal_set_selected (Current, True)
+			parent_imp.check_item (id)
 		end
 
 	disable_select is
 		do
---			parent_imp.internal_set_selected (Current, False)
-		end
-
-	set_selected (flag: BOOLEAN) is
-			-- Make `flag' the new state of the menu-item.
-		do
---			parent_imp.internal_set_selected (Current, flag)
+			parent_imp.uncheck_item (id)
 		end
 
 	toggle is
-			-- Change the state of the menu-item to
-			-- opposite
+			-- Change the checked state of the menu-item.
 		do
-			set_selected (not is_selected)
+			if is_selected then
+				disable_select
+			else
+				enable_select
+			end
 		end
 
-feature -- Event : command association
-
---|FIXME	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
---|FIXME			-- Add `cmd' to the list of commands to be executed
---|FIXME			-- when the item is unselected.
---|FIXME		do
---|FIXME			add_command (Cmd_item_deactivate, cmd, arg)		
---|FIXME		end
-
-feature -- Event -- removing command association
-
---|FIXME	remove_unselect_commands is
---|FIXME			-- Empty the list of commands to be executed when
---|FIXME			-- the item is unselected.
---|FIXME		do
---|FIXME			remove_command (Cmd_item_deactivate)		
---|FIXME		end
-
-feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
+feature {NONE} -- Implementation
 
 	on_activate is
-			-- Is called by the menu when th item is activate.
 		do
 			toggle
---			execute_command (Cmd_item_activate, Void)
+			Precursor
 		end
-	
+
 	interface: EV_CHECK_MENU_ITEM
 
 end -- class EV_CHECK_MENU_ITEM_IMP
@@ -119,6 +86,9 @@ end -- class EV_CHECK_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/02/23 02:13:26  brendel
+--| Revised. Implemented.
+--|
 --| Revision 1.12  2000/02/19 06:20:41  oconnor
 --| removed command stuff
 --|

@@ -143,8 +143,8 @@ feature {NONE} -- Implementation
 	
 			if child /= Void then
 				child.set_move_and_size (0, 0, client_width, client_height)
-				cw := child.height - client_height
-				ch := child.width - client_width
+				cw := child.width - client_width
+				ch := child.height - client_height
 
 				if cw > 0 then
 					enable_horizontal_scroll_bar
@@ -187,6 +187,9 @@ end -- class EV_SCROLLABLE_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/04/21 18:14:06  brendel
+--| Mixed up width and height.
+--|
 --| Revision 1.20  2000/04/21 00:50:09  brendel
 --| Scrollbars are always visible, but disabled. To be implemented tomorrow.
 --|

@@ -9,35 +9,35 @@ class
 
 feature -- Access
 
-	Odt_menu: INTEGER is
+	frozen Odt_menu: INTEGER is
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"ODT_MENU"
 		end
 
-	Odt_listbox: INTEGER is
+	frozen Odt_listbox: INTEGER is
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"ODT_LISTBOX"
 		end
 
-	Odt_combobox: INTEGER is
+	frozen Odt_combobox: INTEGER is
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"ODT_COMBOBOX"
 		end
 
-	Odt_button: INTEGER is
+	frozen Odt_button: INTEGER is
 		external
 			"C [macro %"wel.h%"]"
 		alias
 			"ODT_BUTTON"
 		end
 
-	Odt_static: INTEGER is
+	frozen Odt_static: INTEGER is
 		external
 			"C [macro %"wel.h%"]"
 		alias

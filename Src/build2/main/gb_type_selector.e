@@ -132,11 +132,32 @@ feature {GB_LAYOUT_NODE, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_EV_EDITOR_CONSTRUC
 			-- Generate correct drop_actions for every child in `Current' when
 			-- `a_node' is the type to be transported. This sets up for a standard drop
 			-- which inserts into `Current'.
+		local
+			figure_picture: FIGURE_PICTURE_WITH_DATA
 		do
-			tree.recursive_do_all (agent set_up_drop_actions (an_object,  ?))
+			if is_in_classic_view_mode then
+				tree.recursive_do_all (agent set_up_drop_actions_tree_node_wrapper (an_object,  ?))
+			else
+				from
+					figure_world.start
+				until
+					figure_world.off
+				loop
+					figure_picture ?= figure_world.item
+					if figure_picture /= Void then
+						set_up_drop_actions (an_object, figure_picture.data)
+					end
+					figure_world.forth
+				end
+			end
 		end
 
-	set_up_drop_actions (an_object: GB_OBJECT; an_item: EV_TREE_ITEM) is
+	set_up_drop_actions_tree_node_wrapper (an_object: GB_OBJECT; an_item: EV_TREE_NODE) is
+		do
+			set_up_drop_actions (an_object, an_item.data)
+		end
+
+	set_up_drop_actions (an_object: GB_OBJECT; an_item: ANY) is
 			-- Generate correct drop actions for `an_item' when `a_node'
 			-- is the type to be transported.
 			-- If `an_object' object is void, then we must have picked from
@@ -186,7 +207,7 @@ feature {NONE} -- Implementation
 		end
 		
 	build_classic_view is
-			--
+			-- Build classic view mode.
 		local
 			tree_item1, tree_item2, tree_item3, tree_item4: EV_TREE_ITEM
 		do
@@ -216,7 +237,7 @@ feature {NONE} -- Implementation
 		
 
 	build_icon_view is
-			--
+			-- Build icon view mode.
 		local
 			figure_line: EV_FIGURE_LINE
 			line_color: EV_COLOR
@@ -226,6 +247,7 @@ feature {NONE} -- Implementation
 			create figure_world
 			create buffer_pixmap
 			create projector.make_with_buffer (figure_world, buffer_pixmap, drawing_area)
+			projector.register_figure (create {FIGURE_PICTURE_WITH_DATA}, agent projector.draw_figure_picture)
 			drawing_area.set_background_color ((create {EV_STOCK_COLORS}).white)
 			figure_world.extend (create {EV_FIGURE_TEXT}.make_with_text ("Containers : "))
 			add_figure_items (containers, figure_world)
@@ -264,7 +286,7 @@ feature {NONE} -- Implementation
 			-- and re-projecting.
 		local
 			x_counter, y_counter: INTEGER
-			figure_picture: EV_FIGURE_PICTURE
+			figure_picture: FIGURE_PICTURE_WITH_DATA
 			figure_text: EV_FIGURE_TEXT
 			figure_line: EV_FIGURE_LINE
 			display_on_multiple_line: BOOLEAN

@@ -300,6 +300,7 @@ feature {NONE} -- Implementation
 						maximum_x := working_area.width - width + 2
 					end
 					set_horizontal_range (0, maximum_x)
+					show_horizontal_scroll_bar
 				else
 					hide_horizontal_scroll_bar
 					working_area.set_x_y (0, working_area.y)
@@ -312,6 +313,7 @@ feature {NONE} -- Implementation
 						maximum_y := working_area.height - height + 2
 					end
 					set_vertical_range (0, maximum_y)
+					show_vertical_scroll_bar
 				else
 					hide_vertical_scroll_bar
 					working_area.set_x_y (working_area.x, 0)

@@ -20,7 +20,7 @@
 
 # $Id$
 #
-# Generated on Mon Sep 19 11:39:30 PDT 1994 [metaconfig 3.0 PL35]
+# Generated on Wed Oct 26 08:44:23 PDT 1994 [metaconfig 3.0 PL35]
 
 cat >/tmp/c1$$ <<EOF
 ARGGGHHHH!!!!!
@@ -330,6 +330,8 @@ i_varargs=''
 i_varhdr=''
 i_xm_protocols=''
 intsize=''
+lex=''
+lexflags=''
 libc=''
 glibpth=''
 libpth=''
@@ -729,7 +731,7 @@ defvoidused=15
 
 : libraries wanted for XDR support and socket support
 libswanted="c_s rpc xdr bsd socket inet nsl m"
-
+lexflags="-lB8 -C"
 : Some greps do not return status, grrr.
 echo "grimblepritz" >grimble
 if grep blurfldyick grimble >/dev/null 2>&1 ; then
@@ -1118,6 +1120,7 @@ bison
 byacc
 cpp
 date
+flex
 nroff
 test
 uname
@@ -4598,6 +4601,34 @@ rp="What is the size of an integer (in bytes)?"
 intsize="$ans"
 $rm -f try.c try
 
+: determine lexical analyser generator
+case "$lex" in
+'')
+	dflt=lex;;
+*)
+	dflt="$lex";;
+esac
+echo " "
+if $test -f "$flex"; then
+	rp='Which lexical analyser generator (lex or flex) shall I use?'
+else
+	rp='Which lexical analyser generator shall I use?'
+fi
+. ./myread
+lex="$ans"
+
+: if using lex this will normally be useless, but flex frequently takes args
+echo " "
+case "$lexflags" in
+'') dflt='none';;
+*) dflt="$lexflags";;
+esac
+rp="What flags should be given to $lex?"
+. ./myread
+case "$ans" in
+none) lexflags='';;
+*) lexflags="$ans";;
+esac
 : check for length of long
 echo " "
 case "$longsize" in
@@ -6196,6 +6227,8 @@ i_varargs='$i_varargs'
 i_varhdr='$i_varhdr'
 i_xm_protocols='$i_xm_protocols'
 intsize='$intsize'
+lex='$lex'
+lexflags='$lexflags'
 libc='$libc'
 glibpth='$glibpth'
 libpth='$libpth'

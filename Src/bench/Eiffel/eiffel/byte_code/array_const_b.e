@@ -210,22 +210,13 @@ feature -- Byte code generation
 					ba.append (Bc_void);
 				elseif need_metamorphosis (actual_type) then
 						-- Simple type objects are metamorphosed
-					basic_i ?= actual_type;	
 					ba.append (Bc_metamorphose);
-				elseif not actual_type.same_as (target_type) then
-						-- A conversion integer => real, integer => double
+				elseif target_type.is_basic and not actual_type.same_as (target_type) then
+						-- A conversion integer_xx => integer_yy,
+						-- integer => real, integer => double
 						-- or real => double is needed
-					if target_type.is_double then
-						if actual_type.is_long or else
-							actual_type.is_float
-						then
-							ba.append (Bc_cast_double)
-						end
-					elseif target_type.is_float and then
-						(actual_type.is_long or else actual_type.is_double)
-					then
-						ba.append (Bc_cast_float)
-					end
+					basic_i ?= target_type
+					basic_i.generate_byte_code_cast (ba)
 				end;
 				expressions.back;
 			end;
@@ -237,14 +228,14 @@ feature -- Byte code generation
 				ba.append_integer (rout_info.offset);	
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
 				ba.append_short_integer (context.class_type.static_type_id - 1)
-				real_ty.make_gen_type_byte_code (ba, true)
+				real_ty.make_gen_type_byte_code (ba, True)
 				ba.append_short_integer (-1);
 			else
 				ba.append (Bc_array);
 				ba.append_short_integer (real_ty.associated_class_type.static_type_id - 1);
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
 				ba.append_short_integer (context.current_type.associated_class_type.static_type_id - 1)
-				real_ty.make_gen_type_byte_code (ba, true)
+				real_ty.make_gen_type_byte_code (ba, True)
 				ba.append_short_integer (-1);
 				feat_id := feat_i.feature_id;
 				ba.append_short_integer (feat_id);

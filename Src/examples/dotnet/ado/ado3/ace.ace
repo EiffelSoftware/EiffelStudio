@@ -13,6 +13,7 @@ default
 	line_generation (yes)
 	il_verifiable (yes)
 	msil_generation_type ("exe")
+	msil_clr_version ("v1.0.3705")
 	check_vape (yes)
 	console_application (yes)
 	dotnet_naming_convention (yes)

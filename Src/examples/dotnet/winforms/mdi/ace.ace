@@ -16,6 +16,7 @@ default
 	use_cluster_name_as_namespace (yes)
 	use_all_cluster_name_as_namespace (yes)
 	msil_generation_type ("exe")
+	msil_clr_version ("v1.0.3705")
 	msil_assembly_compatibility ("None")
 	check_vape (yes)
 	console_application (no)

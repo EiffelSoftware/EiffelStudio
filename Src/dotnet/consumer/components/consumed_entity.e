@@ -77,6 +77,48 @@ feature -- Access
 		do
 		end
 		
+feature -- ConsumerWrapper functions
+
+	is_method: BOOLEAN is
+			-- Is entity a .Net method?
+		do
+			Result := not is_property and then not is_event and then not is_constant
+		end
+
+	is_property: BOOLEAN is
+			-- Is entity a .Net property?
+		local
+			a_prop: CONSUMED_PROPERTY
+		do
+			a_prop ?= Current
+			Result := a_prop /= Void
+		end
+		
+	is_event: BOOLEAN is
+			-- Is entity a .Net event?
+		local
+			an_event: CONSUMED_EVENT
+		do
+			an_event ?= Current
+			Result := an_event /= Void
+		end
+		
+	is_constant: BOOLEAN is
+			-- Is entity a .Net method?
+		do
+			Result := is_literal or is_init_only
+		end
+	
+	eiffelized_consumed_entities: ARRAYED_LIST [CONSUMED_ENTITY] is
+			-- List of Eiffel mapped Consumed Entities relative to `Current'.
+			-- For CONSUMED_PROPERTY this would be `setter' and `getter'
+			-- FIXME IEK Temporary solution until better design is implemented.
+		do
+			create Result.make (0)
+			Result.extend (Current)
+		end
+		
+		
 feature -- Status report
 
 	has_arguments: BOOLEAN is

@@ -11,6 +11,7 @@ inherit
 		rename
 			make as entity_make
 		redefine
+			eiffelized_consumed_entities,
 			dotnet_name
 		end
 
@@ -61,6 +62,19 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	eiffelized_consumed_entities: ARRAYED_LIST [CONSUMED_ENTITY] is
+			-- List of eiffelized Consumed Entities relative to `Current'.
+		do
+			create Result.make (0)
+			if getter /= Void then
+				Result.extend (getter)
+			end
+			if setter /= Void then
+				Result.extend (setter)
+			end
+		end
+		
 
 	dotnet_name: STRING
 			-- .NET property name

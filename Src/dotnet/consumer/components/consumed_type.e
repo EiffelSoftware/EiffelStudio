@@ -85,23 +85,6 @@ feature -- Access
 	events: ARRAY [CONSUMED_EVENT]
 			-- Events
 
-	entities: ARRAYED_LIST [CONSUMED_ENTITY] is
-			-- All constructors, fields, procedures and functions implemented by type.
-		require
-			constructors_not_void: constructors /= Void
-			fields_not_void: fields /= Void
-			functions_not_void: functions /= Void
-			procedures_not_void: procedures /= Void
-		do
-			create Result.make (0)
-			Result.fill (constructors)
-			Result.fill (fields)
-			Result.fill (functions)
-			Result.fill (procedures)
-		ensure
-			entities_not_void: Result /= Void
-		end		
-
 	is_interface: BOOLEAN is
 			-- Is .NET type an interface?
 		do
@@ -194,6 +177,59 @@ feature {TYPE_CONSUMER} -- Element settings
 			events_set: events = ev
 		end
 		
+feature -- Functions used for easy browsing of data from ConsumerWrapper.
+
+	consumed_constructors: ARRAYED_LIST [CONSUMED_ENTITY] is
+			-- All constructors implemented by type/
+		require
+			constructors_not_void: constructors /= Void
+		do
+			create Result.make (0)
+			Result.fill (constructors)
+		end
+		
+	entities: ARRAYED_LIST [CONSUMED_ENTITY] is
+			-- All fields, procedures and functions implemented by type.
+		require
+			fields_not_void: fields /= Void
+			functions_not_void: functions /= Void
+			procedures_not_void: procedures /= Void
+		local
+			i: INTEGER
+		do
+			create Result.make (0)
+			Result.fill (fields)
+			
+			-- Filter out PROPERTY and EVENT Eiffelized entities.
+
+			from 
+				i := 1
+			until
+				i > functions.count or else functions.item (i) = Void
+			loop
+				if not functions.item (i).is_property_or_event then
+					Result.extend (functions @ i)
+				end
+				i := i + 1
+			end
+
+			from 
+				i := 1
+			until
+				i > procedures.count or else procedures.item (i) = Void
+			loop
+				if not procedures.item (i).is_property_or_event then
+					Result.extend (procedures @ i)
+				end
+				i := i + 1
+			end
+		
+			Result.fill (events)
+			Result.fill (properties)
+		ensure
+			entities_not_void: Result /= Void
+		end		
+
 feature {NONE} -- Internal
 
 	internal_flags: INTEGER

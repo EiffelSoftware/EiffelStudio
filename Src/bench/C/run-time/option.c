@@ -18,7 +18,7 @@
 #include <strings.h>
 #endif
 #ifndef HAS_GETRUSAGE
-#ifdef HAS_TIMES
+#if defined HAS_TIMES && !defined EIF_VMS
 #include <sys/param.h>      /* For value of HZ */
 #endif
 #endif

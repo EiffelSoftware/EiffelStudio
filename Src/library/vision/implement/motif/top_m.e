@@ -19,12 +19,12 @@ inherit
 		rename
 			clean_up as shell_clean_up
 		redefine
-			set_x, set_y, set_x_y
+			set_x, set_y, set_x_y, set_background_color
 		end
 
 	SHELL_M
 		redefine
-			set_x, set_y, set_x_y, clean_up
+			set_x, set_y, set_x_y, clean_up, set_background_color
 		select
 			clean_up
 		end
@@ -37,7 +37,7 @@ feature {NONE}
 			if a_string /= Void then
 				Result := a_string.to_c
 			end
-        end;
+		end;
 
 feature 
 
@@ -94,6 +94,30 @@ feature
 					xt_move_widget (screen_object, new_x, new_y)
 				end
 			end;
+		end;
+
+	set_background_color (a_color: COLOR) is
+			-- Set background_color to `a_color'.
+		local
+			pixmap_implementation: PIXMAP_X;
+			color_implementation: COLOR_X;
+			ext_name: ANY
+		do
+			if bg_pixmap /= Void then
+				pixmap_implementation ?= bg_pixmap.implementation;
+				pixmap_implementation.remove_object (Current);
+				bg_pixmap := Void
+			end;
+			if bg_color /= Void then
+				color_implementation ?= background_color.implementation;
+				color_implementation.remove_object (Current)
+			end;
+			bg_color := a_color;
+			color_implementation ?= background_color.implementation;
+			color_implementation.put_object (Current);
+			ext_name := Mbackground.to_c;
+			c_set_color (screen_object, color_implementation.pixel (screen),
+						$ext_name)
 		end;
 
 	set_icon_name (a_name: STRING) is

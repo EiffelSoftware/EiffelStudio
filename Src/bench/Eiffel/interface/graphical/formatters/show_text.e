@@ -64,8 +64,11 @@ feature
 					display_header (stone);
 					text_window.set_root_stone (stone);
 					text_window.put_string (stone_text);
-					if stone.clickable and (stone.click_list /= Void) then
-						text_window.share (stone.click_list)
+					if stone.clickable then
+						click_list := stone.click_list;
+						if (click_list /= Void) then
+							text_window.share (click_list)
+						end
 					end;
 					text_window.set_editable;
 					text_window.show_image;
@@ -74,6 +77,8 @@ feature
 				end
 			end
 		end;
+
+	click_list: ARRAY [CLICK_STONE]
 
 	
 feature {NONE}

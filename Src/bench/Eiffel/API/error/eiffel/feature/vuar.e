@@ -24,7 +24,7 @@ feature
 			c_class := called_feature.written_class;
 			put_string ("Called feature: ");
 			called_feature.append_clickable_signature (error_window, c_class);
-			put_string (" written in ");
+			put_string (" from ");
 			c_class.append_clickable_name (error_window);
 			new_line;
 		end;

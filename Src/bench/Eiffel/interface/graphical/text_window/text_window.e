@@ -149,7 +149,7 @@ feature
 			no_stone: root_stone = Void
 		end;
 
-	receive (a_stone: like focus) is
+	receive (a_stone: STONE) is
 			-- Change `root_stone' if compatible, refresh screen.
 		require
 			a_stone_not_void: a_stone /= Void
@@ -324,7 +324,7 @@ feature
 	
 feature {NONE}
 
-	compatible (dropped: like focus): BOOLEAN is
+	compatible (dropped: STONE): BOOLEAN is
 			-- Can current accept `dropped'?  
 		do
 			Result := dropped /= Void and then (stone_type = dropped.stone_type)

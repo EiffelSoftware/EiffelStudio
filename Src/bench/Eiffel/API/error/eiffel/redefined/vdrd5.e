@@ -43,11 +43,11 @@ feature
 			p_class := precursor.written_class;
 			put_string ("Redefined feature: ");
 			redeclaration.append_clickable_signature (error_window, r_class);
-			put_string (" written in ");
+			put_string (" From: ");
 			r_class.append_clickable_name (error_window);
 			put_string ("%NPrecursor: ");
 			precursor.append_clickable_signature (error_window, p_class);
-			put_string (" written in ");
+			put_string (" From: ");
 			p_class.append_clickable_name (error_window);
 			new_line;
 		end;

@@ -45,15 +45,44 @@ feature -- dragging
 
 	origin_text: STRING is
 			-- Text of the feature
+		local
+			temp: STRING;
+			cn: STRING;
 		do
 			Result := normal_origin_text;
 			if (Result /= Void) then
-				Result := Result.substring (start_position, end_position)
+				Result := Result.substring (start_position, end_position);
+				!! temp.make (0);
+				temp.append ("-- Version from class: ");
+					cn := feature_i.written_class.class_name.duplicate;
+					cn.to_upper;
+				temp.append (cn);
+				temp.append ("%N%N");
+				temp.append (Result);
+				Result := temp	
 			end;
 		end;
 
-	click_list: ARRAY [CLICK_STONE] is do end;
+	click_list: ARRAY [CLICK_STONE] is
 			-- Structure to make clickable the display of Current, nothing yet
+			-- Now yeah
+		local
+			cs: CLICK_STONE;
+			sp, ep: INTEGER;
+			temp: STRING
+		do 
+			!! Result.make (1, 2);
+				temp := "-- Version from class: ";
+				sp := temp.count;
+				ep :=  feature_i.written_class.class_name.count;
+				ep := ep + sp;
+			!! cs.make (feature_i.written_class.stone, sp, ep);
+			Result.put (cs, 1);
+				sp := ep + 2;
+				ep := sp + end_position - start_position + 1;
+			!! cs.make (Current, sp, ep);
+			Result.put (cs, 2);
+		end;
  
 	file_name: STRING is
 			-- The one from class origin of `feature_i'

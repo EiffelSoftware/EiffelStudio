@@ -33,6 +33,22 @@ feature -- Initialization
 
 feature -- Type check and byte code
 
+	check_for_veen (at_as: ATOMIC_AS) is
+		local
+			id_as: ID_AS;
+			veen: VEEN
+		do
+			id_as ?= at_as;
+			if (id_as /= Void) then
+				if not context.a_class.feature_table.has (id_as) then
+					!! veen;
+					context.init_error (veen);
+					veen.set_identifier (id_as)
+					Error_handler.insert_error (veen);
+				end;
+			end
+		end;
+
 	type_check is
 			-- Type check interval
 		local
@@ -40,6 +56,9 @@ feature -- Type check and byte code
 			error_found: BOOLEAN;
 			error_type: TYPE_A;
 		do
+			check_for_veen (lower);	
+			check_for_veen (upper);
+			Error_handler.checksum;
 			Inspect_control.set_interval (Current);
 			if Inspect_control.integer_type then
 				if not good_integer_interval then
@@ -61,11 +80,12 @@ feature -- Type check and byte code
 				context.init_error (vomb2);
 				vomb2.set_type (error_type);
 				Error_handler.insert_error (vomb2);
-			end;
-			lower.record_dependances;
-			if upper /= Void then
-				upper.record_dependances
-			end;
+			else
+				lower.record_dependances;
+				if upper /= Void then
+					upper.record_dependances
+				end;
+			end
 		end;
 
 	good_integer_interval: BOOLEAN is

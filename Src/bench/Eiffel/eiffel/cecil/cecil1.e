@@ -39,6 +39,15 @@ feature
 					class_type := System.class_type_of_id (type_id);
 					routine_name := Encoder.feature_name
 										(class_type.id, feat.body_id);
+debug ("CECIL")
+	io.putstring ("Generating entry for feature: ");
+	io.putstring (feat.feature_name);
+	io.putstring (" of class: ");
+	io.putstring (class_type.associated_class.class_name);
+	io.putstring (", encoded name is: ");
+	io.putstring (routine_name);
+	io.new_line;
+end;
 					file.putstring ("(char *(*)()) ");
 					file.putstring (routine_name);
 

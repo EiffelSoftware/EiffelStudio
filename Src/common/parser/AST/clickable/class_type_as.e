@@ -135,7 +135,7 @@ feature -- Conveniences
 	check_constraint_type (a_class: CLASS_C) is
 		local
 			associated_class: CLASS_C;
-			cl_generics: EIFFEL_LIST [FORMAL_DEC_AS];
+			temp, cl_generics: EIFFEL_LIST [FORMAL_DEC_AS];
 			class_i: CLASS_I;
 			cluster: CLUSTER_I;
 			vcfg3: VCFG3;
@@ -143,7 +143,8 @@ feature -- Conveniences
 			vtug: VTUG;
 			error: BOOLEAN;
 			nb_errors: INTEGER;
-			t1, t2: TYPE
+			t1, t2: TYPE;
+			pos: INTEGER
 		do
 			if has_like then
 				!!vcfg3;
@@ -176,6 +177,18 @@ feature -- Conveniences
 						vtug.set_base_class (associated_class);
 						Error_handler.insert_error (vtug);
 					elseif generics /= Void then
+						from
+							temp := cl_generics;
+							!! cl_generics.make (temp.count);
+							pos := temp.index;
+							temp.start
+						until
+							temp.after
+						loop
+							cl_generics.put_i_th (temp.item, temp.index);
+							temp.forth
+						end;
+						temp.go_i_th (pos);
 						from
 							generics.start;
 							cl_generics.start

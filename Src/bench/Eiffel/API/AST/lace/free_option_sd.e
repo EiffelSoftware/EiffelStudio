@@ -110,6 +110,7 @@ feature -- Properties
 	product,
 	server_file_size,
 	shared_library_definition,
+	syntax_warning,
 	title,
 	trademark,
 	use_cluster_name_as_namespace,
@@ -207,6 +208,7 @@ feature {NONE} -- Codes and names.
 			Result.force (profile, "profile")
 			Result.force (server_file_size, "server_file_size")
 			Result.force (shared_library_definition, "shared_library_definition")
+			Result.force (syntax_warning, "syntax_warning")
 			Result.force (title, "title")
 			Result.force (trademark, "trademark")
 			Result.force (working_directory, "working_directory")
@@ -510,6 +512,15 @@ feature {COMPILER_EXPORTER}
 						System.set_ise_gc_runtime (False)
 					elseif value.is_yes or else value.is_all then
 						System.set_ise_gc_runtime (True)
+					else
+						error_found := True
+					end
+
+				when syntax_warning then
+					if value.is_no then
+						System.set_has_syntax_warning (False)
+					elseif value.is_yes or else value.is_all then
+						System.set_has_syntax_warning (True)
 					else
 						error_found := True
 					end

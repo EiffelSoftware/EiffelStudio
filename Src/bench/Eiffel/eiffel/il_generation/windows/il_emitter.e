@@ -92,7 +92,6 @@ feature -- XML generation
 			non_void_path: an_assembly /= Void
 			non_empty_path: not an_assembly.is_empty
 			non_void_dest: a_destination /= Void
-			assembly_exists: (create {RAW_FILE}.make (an_assembly.string)).exists
 			dest_exists: (create {DIRECTORY}.make (a_destination.string)).exists
 		do
 			implementation.consume_local_assembly (

@@ -149,12 +149,5 @@ else
 	cd ..
 
 fi
-if [ -f run-time/config.sh ]; then
-	echo No link done.
-else
-	echo Linking with headers in C
-	cd run-time; make link; cd ..
-	
-fi
 
 echo quick_configure terminated.

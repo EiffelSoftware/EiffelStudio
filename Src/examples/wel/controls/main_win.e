@@ -72,13 +72,15 @@ feature {NONE} -- Implementation
 	on_vertical_scroll_control (scroll_code, position: INTEGER;
 			bar: WEL_SCROLL_BAR) is
 		do
-			scroll_process (scroll_code, position, bar)
+			bar.on_scroll (scroll_code, position)
+			static.set_text (bar.position.out)
 		end
 
 	on_horizontal_scroll_control (scroll_code, position: INTEGER;
 			bar: WEL_SCROLL_BAR) is
 		do
-			scroll_process (scroll_code, position, bar)
+			bar.on_scroll (scroll_code, position)
+			static.set_text (bar.position.out)
 		end
 
 	on_menu_command (menu_id: INTEGER) is
@@ -435,7 +437,7 @@ feature {NONE} -- Implementation
 
 	menu_combo_box_delete is
 		do
-			combo_box.hide_drop_down
+			combo_box.hide_list
 			combo_box.destroy
 			combo_box_menu.enable_item (Cmd_combo_box_create)
 			combo_box_menu.disable_item (Cmd_combo_box_delete)
@@ -482,12 +484,12 @@ feature {NONE} -- Implementation
 
 	menu_combo_show_list is
 		do
-			combo_box.show_drop_down
+			combo_box.show_list
 		end
 
 	menu_combo_hide_list is
 		do
-			combo_box.hide_drop_down
+			combo_box.hide_list
 		end
 
 	menu_button_create is
@@ -739,35 +741,6 @@ feature {NONE} -- Implementation
 				text_info.append ("unchecked.")
 			end
 			information_message_box (text_info, "State")
-		end
-
-	scroll_process (scroll_code, position: INTEGER; bar: WEL_SCROLL_BAR) is
-		local
-			pos: INTEGER
-		do
-			pos := bar.position
-			if scroll_code = Sb_pagedown then
-				pos := pos + 20
-			elseif scroll_code = Sb_pageup then
-				pos := pos - 20
-			elseif scroll_code = Sb_linedown then
-				pos := pos + 1
-			elseif scroll_code = Sb_lineup then
-				pos := pos - 1
-			elseif scroll_code = Sb_thumbposition then
-				pos := position
-			elseif scroll_code = Sb_thumbtrack then
-				pos := position
-			end
-			if pos > bar.maximum then
-				pos := bar.maximum
-			elseif pos < bar.minimum then
-				pos := bar.minimum
-			end
-			bar.set_position (pos)
-			text_info.wipe_out
-			text_info.append_integer (pos)
-			static.set_text (text_info)
 		end
 
 	Title: STRING is "WEL Controls"

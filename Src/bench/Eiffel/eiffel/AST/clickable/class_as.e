@@ -378,22 +378,9 @@ feature {CLASS_C, COMPILED_CLASS_INFO} -- Class information
 	info: CLASS_INFO is
 			-- Compiled information about the class produced after
 			-- parsing (useful for second pass).
-		local
-			parent_list: PARENT_LIST
-			ancestor_class_name: STRING
 		do
-			ancestor_class_name := System.ancestor_class_to_all_classes.name
 			create Result
-			if parents /= Void and not parents.is_empty then
-				create parent_list.make_filled (parents.count)
-			elseif not ancestor_class_name.is_equal (class_name) then
-				create parent_list.make_filled (1)
-			else
-				create parent_list.make (0)
-			end
-			Result.set_parents (parent_list)
-				-- List `parent_list' will be filled by feature `init'
-				-- of CLASS_C
+			Result.set_parents (parents)
 			Result.set_creators (creators)
 			Result.set_convertors (convertors)
 		end
@@ -647,11 +634,7 @@ feature {CLASS_C} -- Update
 feature {COMPILER_EXPORTER} -- Output
 
 	simple_format (ctxt: FORMAT_CONTEXT) is
-		local
-			c_name: STRING
 		do
-			c_name := class_name.string_value
-			c_name.to_upper
 			format_indexes (ctxt, top_indexes)
 			if is_expanded then
 				ctxt.put_text_item (ti_Expanded_keyword)
@@ -666,7 +649,7 @@ feature {COMPILER_EXPORTER} -- Output
 			ctxt.put_text_item (ti_Class_keyword)
 			ctxt.indent
 			ctxt.new_line
-			ctxt.put_class_name (c_name)
+			ctxt.put_class_name (class_name)
 			ctxt.exdent
 
 			if generics /= Void then
@@ -727,7 +710,7 @@ feature {COMPILER_EXPORTER} -- Output
 			ctxt.put_text_item_without_tabs (ti_Class_keyword)
 
 			ctxt.put_space
-			ctxt.put_class_name (c_name)
+			ctxt.put_class_name (class_name)
 			ctxt.new_line
 		end
 

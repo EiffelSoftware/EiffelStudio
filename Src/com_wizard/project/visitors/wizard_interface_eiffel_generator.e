@@ -21,6 +21,7 @@ feature -- Access
 			-- Generate eiffel writer
 		local
 			inherit_clause_writer: WIZARD_WRITER_INHERIT_CLAUSE
+			item_writer: WIZARD_WRITER_FEATURE
 		do	
 			create eiffel_writer.make
 			eiffel_writer.set_deferred
@@ -34,6 +35,13 @@ feature -- Access
 				inherit_clause_writer.set_name (a_descriptor.inherited_interface.eiffel_class_name)
 				eiffel_writer.add_inherit_clause (inherit_clause_writer)
 			end
+
+			create item_writer.make
+			item_writer.set_deferred
+			item_writer.set_name ("item")
+			item_writer.set_comment ("Pointer to C interface.")
+			item_writer.set_result_type (Pointer_type)
+			eiffel_writer.add_feature (item_writer, Access)
 
 			if a_descriptor.properties /= Void and then not a_descriptor.properties.empty then
 				process_properties (a_descriptor.properties)

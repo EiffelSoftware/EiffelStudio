@@ -397,18 +397,18 @@ feature {NONE} -- Translation
 					i := i + 1
 				end
 				upper := last_integer
-			end
-
-				-- Force size of integer constant depending on number
-				-- of hexadecimal character in hex string.
-			if j <= 3 then
-				size := 8
-			elseif j <= 5 then
-				size := 16
-			elseif j <= 9 then
-				size := 32
-			else
 				size := 64
+			else
+					-- Force size of integer constant depending on number
+					-- of hexadecimal character in hex string.
+				if j <= 3 then
+					size := 8
+				elseif j <= 5 then
+					size := 16
+				else
+					check j <= 9 end
+					size := 32
+				end
 			end
 		end
 

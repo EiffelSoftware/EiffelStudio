@@ -541,7 +541,9 @@ Parent_clause: Clickable_identifier Generics_opt
 			}
 	;
 
-Rename: TE_RENAME Rename_list
+Rename: TE_RENAME
+			-- { $$ := Void }
+	|	TE_RENAME Rename_list
 			{ $$ := $2 }
 	;
 

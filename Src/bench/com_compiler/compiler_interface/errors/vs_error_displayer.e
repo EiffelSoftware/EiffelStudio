@@ -263,9 +263,11 @@ feature {NONE} -- Implementation
 			if eif_err /= Void then
 				feat_err ?= err
 				if feat_err /= Void then
-					-- Feature error
-					file_name := feat_err.e_feature.written_class.file_name
-					line_pos := feat_Err.line_number
+						-- Feature error
+					line_pos := feat_err.line_number
+					if feat_err.e_feature /= Void then
+						file_name := feat_err.e_feature.written_class.file_name
+					end
 					if is_valid_error_string (feat_err.error_string) then
 						short_error := "Error: " + feat_err.error_string
 					end

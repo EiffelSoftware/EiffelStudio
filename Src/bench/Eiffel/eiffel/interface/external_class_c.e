@@ -13,6 +13,7 @@ inherit
 		redefine
 			lace_class,
 			is_true_external,
+			is_removable,
 			make,
 			assembly
 		end
@@ -267,6 +268,13 @@ feature -- Status report
 	is_true_external: BOOLEAN is True
 			-- Is class an instance of EXTERNAL_CLASS_C?
 			-- If yes, we do not generate it.
+
+	is_removable: BOOLEAN is False
+			-- FIXME: Manu 08/07/2002: because of the way we initialize
+			-- EXTERNAL_CLASS_C from the XML, we are missing some information
+			-- that will generate incorrect VHPR error when removing an external
+			-- class from the system. Therefore, we never remove EXTERNAL_CLASS_C
+			-- from the system after they have been added.
 
 feature -- Query
 

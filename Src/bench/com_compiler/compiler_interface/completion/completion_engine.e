@@ -89,6 +89,7 @@ feature -- Element settings
 		require
 			non_void_feature_name: a_feature_name /= void
 			valid_feature_name: not a_feature_name.is_empty
+			lower_case: a_feature_name.as_lower.is_equal (a_feature_name)
 		local
 			cf: COMPLETION_FEATURE
 		do
@@ -171,6 +172,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_feature_name: a_feature_name /= void
 			valid_feature_name: not a_feature_name.is_empty
+			lower_case: a_feature_name.as_lower.is_equal (a_feature_name)
 		local
 			l_features: LIST [COMPLETION_FEATURE]
 			temp: STRING
@@ -181,12 +183,11 @@ feature {NONE} -- Implementation
 				l_features := completion_features.found_item
 				from
 					l_features.start
-					temp := a_feature_name.as_lower
 				until
 					l_features.after or Result /= void
 				loop
 					comp_feature := l_features.item
-					if comp_feature.name.is_equal (temp) then
+					if comp_feature.name.is_equal (a_feature_name) then
 						Result := comp_feature
 					end
 					l_features.forth
@@ -241,6 +242,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_target: a_target /= void
 			valid_target: not a_target.is_empty
+			lower_case: a_target.as_lower.is_equal (a_target)
 		local
 			cf: COMPLETION_FEATURE
 			variables: HASH_TABLE [TYPE, STRING]

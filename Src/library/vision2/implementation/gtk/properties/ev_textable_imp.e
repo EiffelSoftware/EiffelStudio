@@ -124,7 +124,7 @@ feature {EV_ANY_I} -- Implementation
 		deferred
 		end
 
-feature {EV_PIXMAP_CONTAINER_IMP} -- Implementation
+feature {EV_PIXMAPABLE_IMP} -- Implementation
 	
 	box: POINTER
 			-- Box inside the text container

@@ -107,36 +107,33 @@ feature -- Element change
 	put_character, putchar (c: CHARACTER) is
 			-- Write `c' at end of default output.
 		do
-			console_pc (standard_default.file_pointer, c)
+			standard_default.put_character (c)
 		end;
 
 	put_string, putstring (s: STRING) is
 			-- Write `s' at end of default output.
 		require
 			s /= Void
-		local
-			external_s: ANY;
 		do
-			external_s := s.to_c;
-			console_ps (standard_default.file_pointer, $external_s, s.count)
+			standard_default.put_string (s)
 		end;
 
 	put_real, putreal (r: REAL) is
 			-- Write `r' at end of default output.
 		do
-			console_pr (standard_default.file_pointer, r)
+			standard_default.put_real (r)
 		end;
 
 	put_double, putdouble (d: DOUBLE) is
 			-- Write `d' at end of default output.
 		do
-			console_pd (standard_default.file_pointer, d)
+			standard_default.put_double (d)
 		end;
 
 	put_integer, putint (i: INTEGER) is
 			-- Write `i' at end of default output.
 		do
-			console_pi (standard_default.file_pointer, i)
+			standard_default.put_integer (i)
 		end;
 
 	put_boolean, putbool (b: BOOLEAN) is
@@ -152,7 +149,7 @@ feature -- Element change
 	new_line is
 			-- Write line feed at end of default output.
 		do
-			console_tnwl (standard_default.file_pointer)
+			standard_default.new_line
 		end;
 
 feature -- Input
@@ -212,44 +209,6 @@ feature -- Input
 			-- Move to next input line on standard input.
 		do
 			input.next_line
-		end;
-
-feature {NONE} -- Implementation
-
-	console_pc (file: POINTER; c: CHARACTER) is
-			-- Write character `c' at end of `file'
-		external
-			"C"
-		end;
-
-	console_ps (file: POINTER; s_name: POINTER; lenght: INTEGER) is
-			-- Write string `s' at end of `file'
-		external
-			"C"
-		end;
-
-	console_pr (file: POINTER; r: REAL) is
-			-- Write real `r' at end of `file'
-		external
-			"C"
-		end;
-
-	console_pd (file: POINTER; d: DOUBLE) is
-			-- Write double `d' at end of `file'
-		external
-			"C"
-		end;
-
-	console_pi (file: POINTER; i: INTEGER) is
-			-- Write integer `i' at end of `file'
-		external
-			"C"
-		end;
-
-	console_tnwl (file: POINTER) is
-			-- Write a new_line to `file'
-		external
-			"C"
 		end;
 
 end -- class STD_FILES

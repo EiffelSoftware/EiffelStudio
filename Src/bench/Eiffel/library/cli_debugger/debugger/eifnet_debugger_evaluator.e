@@ -432,7 +432,9 @@ feature {NONE}
 			if 
 				eifnet_debugger.last_managed_callback_is_exception 
 			then
-				check False end
+				-- FIXME jfiat [2004/12/17] : for now we consider an exception durign evaluation
+				--			as an Eval exception, maybe we should manage this differently
+				last_eval_is_exception := True
 				debug ("DEBUGGER_TRACE_EVAL")
 					display_last_exception
 					io.error.put_string ("EIFNET_DEBUGGER.debug_output_.. :: WARNING Exception occurred %N")
@@ -465,7 +467,9 @@ feature {NONE}
 			if 
 				eifnet_debugger.last_managed_callback_is_exception 
 			then
-				check False end
+				-- FIXME jfiat [2004/12/17] : for now we consider an exception durign evaluation
+				--			as an Eval exception, maybe we should manage this differently
+				last_eval_is_exception := True
 				Result := Void --"WARNING: Could not evaluate output"
 				debug ("DEBUGGER_TRACE_EVAL")
 					display_last_exception
@@ -481,7 +485,6 @@ feature {NONE}
 			else				
 				Result := l_icd_eval.get_result
 			end
-
 			evaluation_termination (True)
 		end
 

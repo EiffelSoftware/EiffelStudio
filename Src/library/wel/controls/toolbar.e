@@ -437,7 +437,7 @@ feature {NONE} -- Implementation
 		end
 
 	set_button_struct_size is
-			-- Set the size of the TBBUTTON strucutre in order to
+			-- Set the size of the TBBUTTON structure in order to
 			-- determine which version of the common control
 			-- dynamic-link library (DLL) is being used.
 		require

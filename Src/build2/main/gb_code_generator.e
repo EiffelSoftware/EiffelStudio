@@ -118,12 +118,8 @@ feature -- Basic operation
 			-- Generate the project as per settings in `project_settings'.
 		local	
 			directory: DIRECTORY
-			root_element, current_element, window_element: XM_ELEMENT
-			current_name, current_type: STRING
-			name_counter: INTEGER
-			window_file_name, directory_name, directory_file_name: FILE_NAME
-			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
-			element_info: ELEMENT_INFORMATION
+			root_element: XM_ELEMENT
+			directory_file_name: FILE_NAME			
 			warning_dialog: EV_WARNING_DIALOG
 			error_message: STRING
 		do
@@ -161,67 +157,7 @@ feature -- Basic operation
 			end
 			
 			root_element ?= current_document.first
-			from
-				root_element.start
-			until
-				root_element.off
-			loop
-				current_element ?= root_element.item_for_iteration
-				if current_element /= Void then
-				
-				current_name := current_element.name
-					if current_name.is_equal (Item_string) then
-						current_type := current_element.attribute_by_name (type_string).value
-						if current_type.is_equal (directory_string) then
-							from
-								current_element.start
-							until
-								current_element.off
-							loop
-								window_element ?= current_element.item_for_iteration
-								if window_element /= Void then
-									current_name := window_element.name
-									if current_name.is_equal (Internal_properties_string)  then
-										full_information := get_unique_full_info (window_element)
-										element_info := full_information @ (name_string)
-										directory_name := generated_path.twin
-										directory_name.extend (element_info.data)
-										create directory.make (directory_name)
-										if not directory.exists then
-											directory.create_dir
-										end
-									else
-											-- We must now parse the generated file, and build a representation
-											-- that is contained within. This is then used by the generator,
-											-- to find paticular information regarding the structure.
-										reset_generation_constants_for_class
-									
-										prepass_xml (window_element, document_info, 1)
-											-- Generate the window implementation for the project.
-										name_counter := name_counter + 1
-										build_main_window_implementation (directory_name)
-										
-										build_main_window (directory_name)
-									end
-								end
-								current_element.forth
-							end
-						elseif current_type.is_equal (Constants_string) then
-							
-						else
-							reset_generation_constants_for_class
-							directory_name := generated_path.twin
-							prepass_xml (current_element, document_info, 1)
-							window_file_name := generated_path.twin
-							build_main_window_implementation (directory_name)
-							build_main_window (directory_name)
-						end
-					end
-				
-				end
-				
-				root_element.forth
-			end
+			parse_directories (root_element, create {ARRAYED_LIST [STRING]}.make (4))
 			
 				-- Now display error dialog if one or more templates could not be found.
 			if missing_files /= Void then
@@ -257,6 +193,87 @@ feature -- Basic operation
 				create warning_dialog.make_with_text (error_message)
 				warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 				warning_dialog.show_modal_to_window (parent_window (progress_bar))
+			end
+		end
+		
+	parse_directories (an_element: XM_ELEMENT; parent_directories: ARRAYED_LIST [STRING]) is
+			-- Parse `an_element' and build windows and directories found. `parent_directories' holds
+			-- the current position in the directory structure where the data for `an_element_resides'.
+		require
+			an_element_not_void: an_element /= Void
+			parent_directories_not_void: parent_directories /= Void
+		local
+			current_element, window_element: XM_ELEMENT
+			current_name, current_type: STRING
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			element_info: ELEMENT_INFORMATION
+			directory_name, window_file_name: FILE_NAME
+			directory: DIRECTORY
+		do
+			from
+				an_element.start
+			until
+				an_element.off
+			loop
+				current_element ?= an_element.item_for_iteration
+				if current_element /= Void then				
+				current_name := current_element.name
+					if current_name.is_equal (Item_string) then
+						current_type := current_element.attribute_by_name (type_string).value
+						if current_type.is_equal (directory_string) then
+							from
+								current_element.start
+							until
+								current_element.off
+							loop
+								window_element ?= current_element.item_for_iteration
+								if window_element /= Void then
+									current_name := window_element.name
+									if current_name.is_equal (Internal_properties_string)  then
+										full_information := get_unique_full_info (window_element)
+										element_info := full_information @ (name_string)
+										directory_name := generated_path.twin
+										parent_directories.extend (element_info.data)
+										from
+											parent_directories.start
+										until
+											parent_directories.off
+										loop
+											directory_name.extend (parent_directories.item)
+											parent_directories.forth
+										end
+										create directory.make (directory_name)
+										if not directory.exists then
+											directory.create_dir
+										end
+									end
+								end
+								current_element.forth
+							end
+							parse_directories (current_element, parent_directories)
+							parent_directories.prune_all (parent_directories.last)
+						elseif current_type.is_equal (Constants_string) then
+							
+						else
+							directory_name := generated_path.twin
+							from
+								parent_directories.start
+							until
+								parent_directories.off
+							loop
+								directory_name.extend (parent_directories.item)
+								parent_directories.forth
+							end
+							reset_generation_constants_for_class
+							prepass_xml (current_element, document_info, 1)
+							window_file_name := generated_path.twin
+							build_main_window_implementation (directory_name)
+							build_main_window (directory_name)
+						end
+					end
+				
+				end				
+				an_element.forth
 			end
 		end
 		

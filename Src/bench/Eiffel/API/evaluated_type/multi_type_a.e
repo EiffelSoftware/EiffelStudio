@@ -189,9 +189,9 @@ feature {COMPILER_EXPORTER}
 				gen_type /= Void and then
 				gen_type.class_id = System.array_id
 			then
+				generic_param := gen_type.generics.item (1).actual_type
 				Result := True
 				if nb > 0 then
-					generic_param := gen_type.generics.item (1)
 					from
 						i := 1
 					until
@@ -204,7 +204,8 @@ feature {COMPILER_EXPORTER}
 					end
 				end
 				if Result then
-					last_type := gen_type
+						-- Update the actual generic parameter to match the target type.
+					last_type.generics.put (generic_param, 1)
 				end
 			else
 				check
@@ -254,5 +255,8 @@ feature {COMPILER_EXPORTER}
 				False
 			end
 		end
+
+invariant
+	last_type_valid: last_type /= Void implies last_type.generics.count = 1
 	
 end -- class MULTI_TYPE_A

@@ -608,9 +608,13 @@ feature {NONE} -- Implementation
 			-- Set height of `widget' in `first' to `new_height'.
 		local
 			second: like ev_type
+			combo_box: EV_COMBO_BOX
 		do
 				-- Only set if height changed.
-			if widget.height /= new_height then
+				-- We cannot resize the height of a combo box, so it is disallowed.
+				-- This is a Vision2 Windows limitation.
+			combo_box ?= widget
+			if widget.height /= new_height and combo_box = Void then
 				first.set_item_height (widget, new_height)
 				second := objects @ 2
 					-- Only set height of second if greater than minimum_width.

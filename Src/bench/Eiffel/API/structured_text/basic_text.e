@@ -10,9 +10,6 @@ class BASIC_TEXT
 inherit
 
 	TEXT_ITEM
-		redefine
-			image
-		end
 
 creation
 

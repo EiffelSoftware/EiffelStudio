@@ -141,6 +141,8 @@ feature -- Formatting
 								bar_and_text_tool.showtext_frmt_holder.execute (stone)
 							end
 						end
+					else
+						holder.set_selected (False);
 					end
 				end
 			else

@@ -215,7 +215,6 @@ feature {NONE} -- Implementation
 	actually_set_background_color (color: EV_COLOR) is
 			-- Actually update the background colors.
 		local
-			container: EV_CONTAINER
 			p: PROCEDURE [EV_ANY, TUPLE]
 		do
 			p := agent {EV_COLORIZABLE}.set_background_color (color)
@@ -331,10 +330,5 @@ feature {NONE} -- Implementation
 	b_area, f_area: EV_DRAWING_AREA
 	
 	color_dialog: EV_COLOR_DIALOG
-
-	-- Constants for XML
-	
-	background_color_string: STRING is "Background_color"
-	foreground_color_string: STRING is "Foreground_color"
 
 end -- class GB_EV_COLORIZABLE_EDITOR_CONSTRUCTOR

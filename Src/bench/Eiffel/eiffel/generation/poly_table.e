@@ -1,5 +1,10 @@
--- Abstract representation of a routine-or-attribute offset table for
---the final Eiffel executable.
+indexing
+	description: "[
+		Abstract representation of a routine-or-attribute offset table for
+		the final Eiffel executable.
+		]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class POLY_TABLE [T -> ENTRY]
 
@@ -38,11 +43,6 @@ inherit
 		end
 
 	SHARED_SERVER
-		undefine
-			copy, is_equal
-		end
-
-	SH_DEBUG
 		undefine
 			copy, is_equal
 		end

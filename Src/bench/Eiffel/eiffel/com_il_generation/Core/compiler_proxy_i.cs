@@ -16,15 +16,28 @@ namespace ISE.Compiler {
 [InterfaceTypeAttribute (ComInterfaceType.InterfaceIsIUnknown)]
 public interface COMPILER_PROXY_I
 {
-	// Set console application generation
-	void SetConsoleApplication();
+/*
+feature -- Settings
+*/
+	void set_console_application();
+		// Set console application generation
 
-	// Set window application generation
-	void SetWindowApplication();
+	void set_window_application();
+		// Set window application generation
 
-	// Set dll generation
-	void SetDll();
+	void set_dll();
+		// Set dll generation
 
+	void set_version (int build, int major, int minor, int revision);
+		// Set assembly version.
+
+	void set_verifiability (bool v);
+		// Set verifiability of code generation. If `v' is True, generate
+		// verifiable code, otherwise code is not verifiable.
+
+/*
+feature -- Generation structure
+*/
 	// Create Assembly with name `Name'.
 	void StartAssemblyGeneration( string Name, string FName, string Location );
 

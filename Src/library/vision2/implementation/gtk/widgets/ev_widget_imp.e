@@ -203,6 +203,17 @@ feature {EV_WINDOW_IMP, EV_GTK_CALLBACK_MARSHAL} -- Implementation
 				in_resize_event := False
 			end
 		end
+		
+	on_focus_changed (a_has_focus: BOOLEAN) is
+			-- Called from focus intemediary agents when focus for `Current' has changed.
+			-- if `a_has_focus' then `Current' has just received focus.
+		do
+			if a_has_focus then
+				focus_in_actions_internal.call (Gtk_marshal.Empty_tuple)
+			else
+				focus_out_actions_internal.call (Gtk_marshal.Empty_tuple)
+			end
+		end
 
 feature -- Access
 

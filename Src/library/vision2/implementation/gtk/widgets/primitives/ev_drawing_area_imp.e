@@ -50,27 +50,14 @@ feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
 			-- Create an empty drawing area.
-		local
-			temp_sig_id: INTEGER
-			a_gs: GEL_STRING
 		do
 			base_make (an_interface)
 			set_c_object (C.gtk_drawing_area_new)
-			create a_gs.make ("button-press-event")
-			temp_sig_id := c_signal_connect (
-					c_object,
-					a_gs.item,
-					agent set_focus
-			)
-			create a_gs.make ("focus-out-event")
-			temp_sig_id := c_signal_connect (
-					c_object,
-					a_gs.item,
-					agent lose_focus
-			)
+			real_signal_connect (c_object, "button-press-event", agent Gtk_marshal.on_drawing_area_event_intermediary (c_object, 1), Void)
+			real_signal_connect (c_object, "focus-out-event", agent Gtk_marshal.on_drawing_area_event_intermediary (c_object, 2), Void)
 			gc := C.gdk_gc_new (default_gdk_window)
 			init_default_values
-		end	
+		end
 
 feature -- Access
 
@@ -119,25 +106,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	lose_focus is
-		do
-			top_level_window_imp.set_focus_widget (Void)
-			GTK_WIDGET_UNSET_FLAGS (c_object, C.GTK_HAS_FOCUS_ENUM)
-			-- This is a hack to make sure focus flag is unset.
-		end
-		
-	set_focus is
-			-- Grab keyboard focus.
-		do
-			if not has_focus then
-				GTK_WIDGET_SET_FLAGS (c_object, C.GTK_CAN_FOCUS_ENUM)
-				C.gtk_widget_grab_focus (c_object)
-				GTK_WIDGET_SET_FLAGS (c_object, C.GTK_HAS_FOCUS_ENUM)
-				top_level_window_imp.set_focus_widget (Current)
-				GTK_WIDGET_UNSET_FLAGS (c_object, C.GTK_CAN_FOCUS_ENUM)
-			end
-		end
-
 	interface: EV_DRAWING_AREA
 
 	redraw is
@@ -177,6 +145,27 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 	drawable: POINTER is
 		do
 			Result := C.gtk_widget_struct_window (c_object)
+		end
+		
+feature {EV_GTK_CALLBACK_MARSHAL} -- Implementation
+
+	lose_focus is
+		do
+			top_level_window_imp.set_focus_widget (Void)
+			GTK_WIDGET_UNSET_FLAGS (c_object, C.GTK_HAS_FOCUS_ENUM)
+			-- This is a hack to make sure focus flag is unset.
+		end
+		
+	set_focus is
+			-- Grab keyboard focus.
+		do
+			if not has_focus then
+				GTK_WIDGET_SET_FLAGS (c_object, C.GTK_CAN_FOCUS_ENUM)
+				C.gtk_widget_grab_focus (c_object)
+				GTK_WIDGET_SET_FLAGS (c_object, C.GTK_HAS_FOCUS_ENUM)
+				top_level_window_imp.set_focus_widget (Current)
+				GTK_WIDGET_UNSET_FLAGS (c_object, C.GTK_CAN_FOCUS_ENUM)
+			end
 		end
 		
 feature {NONE} -- Implementation

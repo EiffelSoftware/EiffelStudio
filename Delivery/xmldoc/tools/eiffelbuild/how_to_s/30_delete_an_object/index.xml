@@ -11,22 +11,22 @@
 		<heading>
 			<size>1</size>Delete an object
 		</heading>
-		<paragraph>To remove an
+		<paragraph>To remove an 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#object</url>
 				<label>object</label>
-			</link> from your EiffelBuild system,
+			</link> from your EiffelBuild system, 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>pick</label>
-			</link> the object you wish to delete, and
+			</link> the object you wish to delete, and 
 			<link>
 				<url>/tools/eiffelbuild/reference/02_notation.html#pick_and_drop</url>
 				<label>drop</label>
 			</link> it on
 			<image>
 				<url>/images/eiffelbuild/icons/icon_delete_small_color.png</url>
-			</image>in the
+			</image>in the 
 			<link>
 				<url>/tools/eiffelbuild/reference/10_general_interface_description/20_main_toolbars</url>
 				<label>main toolbar</label>

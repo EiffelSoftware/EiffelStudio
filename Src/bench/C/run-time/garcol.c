@@ -203,6 +203,7 @@ extern int split_block();			/* Block spliting */
 extern void lxtract();				/* Extraction from free list */
 extern void rel_core();				/* Give memory back to kernel */
 extern int chunk_coalesc();			/* Coalescing to reduce fragmentation */
+extern char *get_to_from_core();	/* Get to_space from core for partial scavenging */
 
 extern uint32 gen_scavenge;			/* Is Generation Scavenging running ? */
 extern struct sc_zone sc_from;		/* Scavenging 'from' zone */
@@ -2045,16 +2046,24 @@ private int find_scavenge_spaces()
 	if (g_data.gc_to >= TO_MAX || e_data.ml_chunk < CHUNK_MIN)
 		return -1;						/* Cannot allocate a 'to' space */
 
-	/* Find a 'to' space. This block is malloced, if possible, otherwise we ask
-	 * for more core, I repeat: we ask for more core. If this fails, then no
+	/* Find a 'to' space.
+	 * We ask for more core, I repeat: we ask for more core. If this fails, then no
 	 * scavenging will be done. This is why it is so important to be able to
 	 * always have a 'to' handy for the next scavenge (i.e. no C blocks in the
 	 * 'from' space).
 	 * It's necessary to have the 'to' space in the Eiffel space, so I call a
 	 * somewhat low-level malloc routine.
+	 *
+	 * The get_to_from_core replaces the previous call to gmalloc which used
+	 * to get a to_space anywhere in the free list. But we want a standard
+	 * empty chunk and if we arrive here, the only way to get a free chunk
+	 * is to get it from the kernel. It does not happen so often. Usually
+	 * it happens the first time partial scavenging is called.
+	 * Fixes random-string-blank-panic and random-array-alloc-loop.
+	 * -- Fabrice.
 	 */
 
-	to_space = gmalloc(from_size - OVERHEAD);	/* Allocation from free list */
+	to_space = get_to_from_core(from_size - OVERHEAD);	/* Allocation from free list */
 	if ((char *) 0 == to_space)
 		return -1;			/* Unable to find a 'to' space */
 	

@@ -13,6 +13,7 @@
 #ifndef _struct_h_
 #define _struct_h_
 
+#include "eif_globals.h"
 #include "config.h"
 #include "portable.h"
 
@@ -146,7 +147,7 @@ extern int16 fdtypes[];					/* Dynamic type  array indexed by old
  * Nested call global variable: signals a nested call and trigger an
  * invariant check in generated C routines.
  */
-extern int nstcall;
+/* extern int nstcall; */ /* %%ss */
 
 /* Conformance table array used by Eiffel feature `conforms_to' of
  * class ANY.

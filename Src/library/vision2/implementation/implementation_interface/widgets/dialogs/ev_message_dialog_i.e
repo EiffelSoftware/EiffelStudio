@@ -19,7 +19,7 @@ feature {EV_MESSAGE_DIALOG} -- Initialization
 			-- Normal build and load icon
 		do
 			Precursor
-			icon_build (display_area)			
+			icon_build (display_area)		
 		end
 
 feature -- Status settings

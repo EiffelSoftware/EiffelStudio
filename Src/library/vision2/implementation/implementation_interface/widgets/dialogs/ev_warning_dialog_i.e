@@ -4,14 +4,11 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class 
+deferred class 
 	EV_WARNING_DIALOG_I
 
 inherit
 	EV_MESSAGE_DIALOG_I
-
-creation
-	make
 
 feature {NONE} -- Implementation		
 

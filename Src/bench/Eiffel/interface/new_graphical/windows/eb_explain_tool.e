@@ -12,31 +12,16 @@ inherit
 			edit_bar as explain_toolbar
 --			Any_type as stone_type
 		redefine
-			empty_tool_name,
+			empty_tool_name
 -- hole, 
 --			process_any, build_menus,
 --			build_toolbar_menu,
--- help_index,
- icon_id
 		end
 
 	EB_EXPLAIN_TOOL_DATA
-		rename
-			Explain_resources as resources
-		end			
 
 creation
 	make
-
-feature -- Properties
-
---	help_index: INTEGER is 5
-
-	icon_id: INTEGER is
-			-- Icon id of Current window (only for windows)
-		do
-			Result := Interface_names.i_Explain_id
-		end
 
 feature -- Status setting
 
@@ -133,4 +118,7 @@ feature {NONE} -- Attributes Forms And Holes
 
 init_formatters is do end
 close_windows is do end
+update is do end
+register is do end
+unregister is do end
 end -- class EB_EXPLAIN_TOOL

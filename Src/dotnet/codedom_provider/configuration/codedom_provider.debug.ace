@@ -5,6 +5,7 @@ root
 	CODE_DOM_PROVIDER: default_create
 
 default
+	multithreaded (yes)
 	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio_debug\EiffelSoftware.CodeDom.CacheBrowser")
 	msil_use_optimized_precompile (yes)
 	assertion (all)

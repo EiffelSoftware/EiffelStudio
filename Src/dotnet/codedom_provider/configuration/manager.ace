@@ -5,6 +5,7 @@ root
 	ECDM_APPLICATION (root_cluster): "make_and_launch"
 
 default
+	multithreaded (yes)
 	assertion (no)
 	msil_generation (yes)
 	il_verifiable (yes)

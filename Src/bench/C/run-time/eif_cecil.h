@@ -154,7 +154,7 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
  * Creation an Eiffel string.
  */
 
-#define	eif_string(x) RTMS(x)	i
+#define	eif_string(x) RTMS(x)	
 		/* Create an Eiffel string from a C string `x' */
 
 /* 

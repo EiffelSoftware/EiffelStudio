@@ -106,6 +106,14 @@ feature -- Generation constants
 			Result.extend ("build_class_template.e")
 		end
 		
+	window_template_imp_file_name: FILE_NAME is
+			-- `Result' is location of build template file,
+			-- including the name.
+		do
+			Result := template_file_location
+			Result.extend ("build_class_template_imp.e")
+		end
+		
 	application_template_file_name: FILE_NAME is
 			-- `Result' is location of build application template file,
 			-- including the name.
@@ -136,6 +144,14 @@ feature -- Generation constants
 		once
 			Result := "<CLASS_NAME>"
 		end
+		
+	inherited_class_name_tag: STRING is
+			-- `Result' is tag used in templates
+			-- for the inherited class name.
+		once
+			Result := "<INHERITED_CLASS_NAME>"
+		end
+		
 		
 	create_tag: STRING is
 			-- `Result' is tag used in templates
@@ -198,9 +214,23 @@ feature -- Generation constants
 			-- String representing standard indent
 			-- for code generation.
 		once
-			Result := "%R%N%T%T%T"
+			Result := indent_less_one + "%T"
 		end
 		
+	indent_less_one: STRING is
+			-- String representing an indent one
+			-- tabs less than `indent'.
+		once
+			Result := indent_less_two + "%T"
+		end
+		
+	indent_less_two: STRING is
+			-- String representing an indent two
+			-- tabs less than `indent'.
+		once
+			Result := "%R%N%T"
+		end
+
 	Local_object_name_prepend_string: STRING is "l_"
 			-- generated local variables are of the form
 			-- `Result' + short type + number.

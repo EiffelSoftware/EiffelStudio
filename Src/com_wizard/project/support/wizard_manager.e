@@ -218,6 +218,9 @@ feature {NONE} -- Implementation
 		local
 			Clib_folder_name: STRING
 		do
+			-- Set ISE_EIFFEL environment variable.
+			execution_environment.put (Eiffel4_location, Ise_eiffel)
+			
 			-- Compiling generated C code
 			message_output.add_title (Current, Compilation_title_c)
 			execution_environment.change_working_directory (shared_wizard_environment.destination_folder)
@@ -251,7 +254,6 @@ feature {NONE} -- Implementation
 			
 			-- Compiling Eiffel
 			if not Shared_wizard_environment.abort and Shared_wizard_environment.compile_eiffel then
-	--			message_output.set_forced_display
 				message_output.add_title (Current, Compilation_title_eiffel)
 				if Shared_wizard_environment.client then
 					progress_report.set_title (Eiffel_compilation_title)

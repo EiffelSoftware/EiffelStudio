@@ -65,14 +65,14 @@ feature -- Element change
 			pos_in_token := a_position
 			
 				-- Compute the size of the current token.
-			current_width := a_token.get_substring_width(a_position)
+			current_width := a_token.get_substring_width(a_position - 1)
 
 				-- Rewind the tokens of the line to get
 				-- the width of each one.
 			from
 				current_token := a_token.previous
 			until
-				current_token = Void or else current_token.previous = Void
+				current_token = Void
 			loop
 				current_width := current_width + current_token.width
 				current_token := current_token.previous
@@ -118,8 +118,10 @@ feature -- Cursor movement
 					-- Go to next token, first character.
 				if token.next = Void then
 						-- No next token? Go to next line.
-					set_line_to_next
-					set_current_char (line.first_token, 1)
+					if line.next /= Void then
+						set_line_to_next
+						set_current_char (line.first_token, 1)
+					end
 				else
 					set_current_char (token.next, 1)
 				end
@@ -135,8 +137,10 @@ feature -- Cursor movement
 					-- Go to previous token, last character.
 				if token.previous = Void then
 						-- No previous token? Go to previous line.
-					set_line_to_previous
-					set_current_char (line.end_token, line.end_token.length)
+					if line.previous /= Void then
+						set_line_to_previous
+						set_current_char (line.end_token, line.end_token.length)
+					end
 				else
 					set_current_char (token.previous, token.previous.length)
 				end
@@ -342,6 +346,8 @@ feature {NONE} -- Implementation
 	set_line_to_next is
 			-- Make `line.next' the new value of `line'.
 			-- Change `y_in_lines' accordingly.
+			-- Do not update `pos' and `token',
+			-- as it is done at a higher level.
 		do
 			if line.next /= Void then
 				line := line.next
@@ -352,6 +358,8 @@ feature {NONE} -- Implementation
 	set_line_to_previous is
 			-- Make `line.previous' the new value of `line'.
 			-- Change `y_in_lines' accordingly.
+			-- Do not update `pos' and `token',
+			-- as it is done at a higher level.
 		do
 			if line.previous /= Void then
 				line := line.previous
@@ -412,6 +420,7 @@ feature {NONE} -- Implementation
 invariant
 	x_in_pixels_positive_or_null	: x_in_pixels >= 0
 	y_in_lines_positive_or_null		: y_in_lines >= 0
+	pos_in_token_positive			: pos_in_token > 0
 	whole_text_not_void				: whole_text /= Void
 
 end -- class TEXT_CURSOR

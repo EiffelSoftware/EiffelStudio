@@ -127,10 +127,11 @@ feature -- Tree features
 			-- Sub items for widgets node
 			primitive, container, dialog, uncommon: EV_TREE_ITEM
 
+			demo,gauges: EV_TREE_ITEM
+
 			-- Sub items for items node
 			-- simple, composed, separator: EV_TREE_ITEM
 			
-			demo: EV_TREE_ITEM
 		do
 			-- The main topics
 			!! figures.make_with_text (tree, "figures")
@@ -175,6 +176,12 @@ feature -- Tree features
 			!TEXT_FIGURE_ITEM! demo.make (figures)
 -- Do not work
 --			--!PICTURE_ITEM! demo.make (figures)
+
+			-- items for gauge tree
+			!GAUGE_ITEM! gauges.make (primitive)
+			!RANGE_ITEM! demo.make (gauges)
+			!SPIN_BUTTON_ITEM! demo.make (gauges)
+			!SCROLL_BAR_ITEM! demo.make (gauges)
 
 			!BUTTON_ITEM! demo.make (primitive)
 			!OPTION_ITEM! demo.make (primitive)

@@ -169,6 +169,7 @@ feature
 			pass3_control: PASS3_CONTROL;
 			depend_unit: DEPEND_UNIT;
 			old_creators, new_creators: HASH_TABLE [EXPORT_I, STRING];
+			old_convert_to, old_convert_from: DS_HASH_TABLE [INTEGER, CL_TYPE_A]
 			creation_name: STRING;
 			equiv_tables: BOOLEAN;
 		do
@@ -273,6 +274,15 @@ feature
 		   	a_class.set_creators (class_info.creation_table (resulting_table));
 				-- No update of `Instantiator' if there is an error
 			Error_handler.checksum;
+
+				-- Convertibility processing
+			old_convert_to := a_class.convert_to
+			old_convert_from := a_class.convert_from;
+				-- Note: Manu 04/23/2003: Do we need to make a once of `CONVERTIBILITY_CHECKER'?
+				-- At the moment no as it does not seem expensive to create it all the time.
+			(create {CONVERTIBILITY_CHECKER}).init_and_check_convert_tables (
+				a_class, resulting_table, class_info.convertors)
+			Error_handler.checksum
 
 				-- Track generic types in the result and arguments of
 				-- features of a changed class

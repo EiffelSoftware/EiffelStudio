@@ -5,9 +5,7 @@
 #ifndef __WEL_CHARRANGE__
 #define __WEL_CHARRANGE__
 
-#ifndef __WEL_RICHEDIT__
-#	include <richedit.h>
-#endif
+#include "redit.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -5,7 +5,7 @@
 #ifndef __WEL_MSGFILTER__
 #define __WEL_MSGFILTER__
 
-#include <richedit.h>
+#include "redit.h"
 
 #ifdef __cplusplus
 extern "C" {

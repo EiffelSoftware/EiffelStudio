@@ -65,19 +65,19 @@ feature {NONE} -- Implementation
 
 	c_size_of_edit_selchange: INTEGER is
 		external
-			"C [macro <richedit.h>]"
+			"C [macro %"redit.h%"]"
 		alias
 			"sizeof (SELCHANGE)"
 		end
 
 	cwel_selchange_get_seltyp (ptr: POINTER): INTEGER is
 		external
-			"C struct SELCHANGE access seltyp use <richedit.h>"
+			"C struct SELCHANGE access seltyp use %"redit.h%""
 		end
 		
 	cwel_selchange_get_chrg (ptr: POINTER): POINTER is
 		external
-			"C struct SELCHANGE access &chrg use <richedit.h>"
+			"C struct SELCHANGE access &chrg use %"redit.h%""
 		end
 
 end -- class WEL_RICH_EDIT_SELCHANGE

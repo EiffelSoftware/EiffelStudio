@@ -832,7 +832,7 @@ feature {NONE} -- Externals
 
 	Class_name_pointer: POINTER is
 		external
-			"C [macro %"richedit.h%"]"
+			"C [macro %"redit.h%"]"
 		alias
 			"RICHEDIT_CLASS"
 		end

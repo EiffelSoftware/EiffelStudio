@@ -41,7 +41,7 @@ feature -- Status setting
 
 	set_type (new_type: INTEGER) is
 			-- Set cursor to `new_type'.
-			-- This new type must be pre-defined
+			-- If this type is not predefined, the type will be Arrow.
 		do
 			inspect
 				new_type

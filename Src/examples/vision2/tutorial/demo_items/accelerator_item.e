@@ -23,6 +23,9 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_ACCELERATOR")
+			set_example_path("demo_windows/accelerator_window.e")
+			set_docs_path("documentation/accelerator_documentation.txt")
+			set_class_path("ev_accelerator")
 		end
 
 	create_demo is

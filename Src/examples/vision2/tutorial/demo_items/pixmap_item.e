@@ -1,6 +1,6 @@
 indexing
 	description:
-		"A Demo for buttons";
+		"A Demo for pixmaps";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -23,6 +23,9 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_PIXMAP")
+			set_example_path("demo_windows/pixmap_window.e")
+			set_docs_path("documentation/pixmap_documentation.txt")
+			set_class_path("ev_pixmap")
 		end
 
 	create_demo is
@@ -30,6 +33,10 @@ feature {NONE} -- Initialization
 		do
 			!! demo_window.make (demo_page)
 		end
+
+
+
+
 
 feature -- Access
 

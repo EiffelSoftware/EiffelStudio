@@ -23,6 +23,9 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_SPLIT_AREA")
+			set_example_path("demo_windows/split_area_window.e")
+			set_docs_path("documentation/split_area_documentation.txt")
+			set_class_path("ev_split_area")
 		end
 
 	create_demo is
@@ -30,6 +33,8 @@ feature {NONE} -- Initialization
 		do
 			!! demo_window.make (demo_page)
 		end
+
+	
 
 feature -- Access
 

@@ -23,6 +23,9 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_ACCELERATOR_SELECTION_DIALOG")
+			set_example_path("demo_windows/ACCELERATOR_SELECTION_WINDOW.e")
+			set_docs_path("documentation/accelerator_selection_documentation.txt")
+			set_class_path("ev_accelerator_selection_dialog")
 		end
 
 	create_demo is
@@ -30,6 +33,11 @@ feature {NONE} -- Initialization
 		do
 			!! demo_window.make (demo_page)
 		end
+
+
+
+
+
 
 feature -- Access
 

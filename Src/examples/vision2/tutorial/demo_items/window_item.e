@@ -9,9 +9,12 @@ class
 
 inherit
 	DEMO_ITEM
+
+		
 		redefine
 			demo_window
 		end
+	
 
 creation
 	make
@@ -23,6 +26,9 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_WINDOW")
+			set_example_path("demo_windows/window_window.e")
+			set_docs_path("documentation/window_documentation.txt")
+			set_class_path("ev_window")
 		end
 
 	create_demo is
@@ -30,6 +36,10 @@ feature {NONE} -- Initialization
 		do
 			!! demo_window.make (demo_page)
 		end
+
+
+
+
 
 feature -- Access
 

@@ -23,6 +23,9 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_FRAME")
+			set_example_path("demo_windows/frame_window.e")
+			set_docs_path("documentation/frame_documentation.txt")
+			set_class_path("ev_frame")
 		end
 
 	create_demo is
@@ -30,6 +33,9 @@ feature {NONE} -- Initialization
 		do
 			!! demo_window.make (demo_page)
 		end
+
+	
+
 
 feature -- Access
 

@@ -23,6 +23,9 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_PROGRESS_BAR")
+			set_example_path("demo_windows/progress_window.e")
+			set_docs_path("documentation/progress_documentation.txt")
+			set_class_path("ev_progress_bar")
 		end
 
 	create_demo is

@@ -23,6 +23,9 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_SPIN_BUTTON")
+			set_example_path("demo_windows/spin_button_window.e")
+			set_docs_path("documentation/spin_button_documentation.txt")
+			set_class_path("ev_spin_button")
 		end
 
 	create_demo is

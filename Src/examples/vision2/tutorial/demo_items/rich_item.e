@@ -23,6 +23,9 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_RICH_TEXT")
+			set_example_path("demo_windows/rich_window.e")
+			set_docs_path("documentation/rich_documentation.txt")
+			set_class_path("ev_rich_text")
 		end
 
 	create_demo is

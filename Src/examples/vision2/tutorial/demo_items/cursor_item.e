@@ -23,6 +23,9 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_CURSOR")
+			set_example_path("demo_windows/cursor_window.e")
+			set_docs_path("documentation/cursor_documentation.txt")
+			set_class_path("ev_cursor")
 		end
 
 	create_demo is

@@ -20,7 +20,13 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_STRAIGHT_LINE")
+			set_example_path("demo_items/straight_line_item.e")
+			set_class_path("ev_straight_line")
+
 		end
+
+
+
 
 feature -- Access
 

@@ -20,7 +20,14 @@ feature {NONE} -- Initialization
 			-- goes with it.
 		do
 			make_with_title (par, "EV_POLYLINE")
+			set_example_path("demo_items/polyline_item.e")
+			set_class_path("ev_polyline")
+
 		end
+
+
+			
+
 
 feature -- Access
 

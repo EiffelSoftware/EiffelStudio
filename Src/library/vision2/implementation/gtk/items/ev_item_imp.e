@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 				if pointer_button_press_actions_internal /= Void then
 					pointer_button_press_actions_internal.call (t)
 				end
-			else -- a_type = feature {EV_GTK_EXTERNALS}.gDK_2BUTTON_PRESS_ENUM
+			else -- a_type = {EV_GTK_EXTERNALS}.gDK_2BUTTON_PRESS_ENUM
 				if pointer_double_press_actions_internal /= Void then
 					pointer_double_press_actions_internal.call (t)
 				end

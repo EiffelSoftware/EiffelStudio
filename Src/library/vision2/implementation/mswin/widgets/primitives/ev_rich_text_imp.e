@@ -309,7 +309,7 @@ feature -- Status report
 			unlock_window_update
 		end	
 		
-	formatting_contiguous (start_index, end_index: INTEGER): BOOLEAN is
+	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
 			-- Is formatting from caret position `start_index' to `end_index' contiguous?
 		local
 			mask: INTEGER
@@ -330,8 +330,28 @@ feature -- Status report
 			end
 			unlock_window_update
 		end
+
+	paragraph_format_contiguous (start_line, end_line: INTEGER): BOOLEAN is
+			-- Is paragraph formatting from line `start_line' to `end_line' contiguous?
+		local
+			wel_paragraph_format: WEL_PARAGRAPH_FORMAT2
+			alignment: INTEGER
+			mask: INTEGER
+		do
+			lock_window_update
+			safe_store_caret
+			
+			set_selection (first_position_from_line_number (start_line), last_position_from_line_number (end_line))
+			create wel_paragraph_format.make
+			cwin_send_message (wel_item, em_getparaformat, 1, wel_paragraph_format.to_integer)
+			mask := wel_paragraph_format.mask
+			Result := flag_set (mask, Pfm_alignment)
+
+			safe_restore_caret
+			unlock_window_update
+		end		
 		
-	formatting_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
+	character_format_range_information (start_index, end_index: INTEGER): EV_CHARACTER_FORMAT_RANGE_INFORMATION is
 			-- Formatting range information from caret position `start_index' to `end_index'.
 			-- All attributes in `Result' are set to `True' if they remain consitent from `start_index' to
 			--`end_index' and `False' otherwise.
@@ -1094,7 +1114,7 @@ feature -- Status setting
 	safe_restore_caret is
 			-- Restore caret position stored by last call to `safe_store_caret' and restore
 			-- change events.
-		do
+		do	
 			internal_set_caret_position (original_caret_position)
 			if must_restore_selection then
 				if last_known_caret_position < original_selection_end then

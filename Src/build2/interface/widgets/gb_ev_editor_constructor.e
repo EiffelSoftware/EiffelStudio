@@ -210,5 +210,14 @@ feature {GB_INTEGER_INPUT_FIELD, GB_STRING_INPUT_FIELD} -- Implementation
 			-- Object referenced by `Current'.
 		deferred
 		end
+		
+	set_object (an_object: GB_OBJECT) is
+			-- Assign `an_object' to `object'.
+		require
+			an_object_not_void: an_object /= Void
+		deferred
+		ensure
+			object_set: object = an_object
+		end
 
 end -- class GB_EV_EDITOR

@@ -112,8 +112,7 @@ feature
 						attribute.set_has_function_origin (True);
 						attribute.set_generate_in (new_tbl.feat_tbl_id);
 							-- Remember to process a pattern for this
-						pattern_list.start;
-						pattern_list.put_right (attribute.feature_name);
+						pattern_list.put_front (attribute.feature_name);
 					end;
 					rout_id_set := attribute.rout_id_set;
 					if not rout_id_set.has_attribute_origin then
@@ -152,8 +151,7 @@ feature
 						attribute.set_generate_in (new_tbl.feat_tbl_id);
 							-- Remember to process a pattern for this
 							-- function
-						pattern_list.start;
-						pattern_list.put_right (attribute.feature_name);
+						pattern_list.put_front (attribute.feature_name);
 					end;
 				end;
 			end;

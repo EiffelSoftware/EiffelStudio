@@ -52,6 +52,11 @@ feature -- Access
 			end
 		end
 		
+	last_bool: BOOLEAN is
+			-- last boolean entered by user
+		do
+			Result := last_boolean_internal.item
+		end
 		
 feature -- Basic Operations
 
@@ -66,13 +71,10 @@ feature -- Basic Operations
 			if not project_loaded then
 				project_manager_internal.put (create {TESTING_PROJECT_MANAGER}.make)
 				project_manager.retrieve_project (a_epr_filename)
-				if project_manager.last_error_message /= Void and not project_manager.last_error_message.is_empty then
-					put_string ("%N# Could not load project due to: '" + project_manager.last_error_message + "'")	
-				else
-					project_loaded_internal.set_item (True)
-					epr_filename_internal.put (a_epr_filename)
-					ace_filename_internal.put (project_manager.ace_file_name)
-				end
+				project_loaded_internal.set_item (True)
+				epr_filename_internal.put (a_epr_filename)
+				ace_filename_internal.put (project_manager.ace_file_name)
+				Result := True
 			else
 				io.putstring ("%N# A project has already been loaded - exit to restart")
 			end
@@ -350,6 +352,24 @@ feature -- Output
 		
 feature -- Input
 
+	read_bool is
+			-- read a boolean from console
+		local
+			l_last_string: STRING
+		do
+			io.read_line
+			l_last_string := io.last_string.clone (io.last_string)
+			l_last_string.to_lower
+			if l_last_string.is_equal ("true") then
+				last_boolean_internal := True
+			elseif l_last_string.is_equal ("false") then
+				last_boolean_internal := False
+			else
+				io.put_string ("%NPlease use true or false!")
+				read_bool
+			end
+		end
+
 	read_line is
 			-- read a line from console
 		local
@@ -433,5 +453,10 @@ feature {NONE} -- Implementation
 		once
 			create Result.put (Void)
 		end
+		
+	last_boolean_internal: BOOLEAN_REF
+			-- last bool entered by user
+		
+		
 
 end -- class COMPILER_TESTER_SHARED

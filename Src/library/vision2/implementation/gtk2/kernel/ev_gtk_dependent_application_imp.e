@@ -129,12 +129,14 @@ feature -- Implementation
 			font_names: ARRAYED_LIST [STRING]
 			exit_loop: BOOLEAN
 			split_values: LIST [STRING]
+			a_cursor: CURSOR
 		do
 			font_desc := default_font_description.as_lower
 			font_names := font_names_on_system
 			
 			from
 				font_names.start
+				a_cursor := font_names.cursor
 			until
 				exit_loop or else font_names.after
 			loop
@@ -144,6 +146,7 @@ feature -- Implementation
 				end
 				font_names.forth
 			end
+			font_names.go_to (a_cursor)
 			
 			split_values := font_desc.split (' ')
 			split_values.compare_objects

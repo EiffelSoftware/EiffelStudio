@@ -3,7 +3,7 @@
 EIFFEL_SRC="d:\butte_project"
 EIFFEL_SRC2="d:\Eiffel43"
 CC = cl
-CFLAGS = -c -Zi -I$(EIFFEL_SRC)\library\wel\spec\windows\include -I$(EIFFEL_SRC2)\bench\spec\windows\include
+CFLAGS = -c -Ox -I$(EIFFEL_SRC)\library\wel\spec\windows\include -I$(EIFFEL_SRC2)\bench\spec\windows\include
 
 .c.obj:
 	$(CC) $(CFLAGS) $<

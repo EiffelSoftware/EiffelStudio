@@ -70,34 +70,44 @@ feature -- Status setting
 feature -- Basic operations
 
 	new_menu_item: EB_COMMAND_MENU_ITEM is
-			-- Create a new menu entry for this command.
+			-- 
+		do
+			create Result.make (Current)
+			initialize_menu_item (Result)
+			Result.select_actions.extend (agent execute)
+		end
+
+	initialize_menu_item (a_menu_item: EB_COMMAND_MENU_ITEM) is
+			-- Initialize `a_menu_item'
 		local
 			mname: STRING
 		do
-				-- Add it to the managed menu items
-			if managed_menu_items = Void then
-				create managed_menu_items.make (1)
-			end
-				-- Create the menu item
-			create Result.make (Current)
 			mname := menu_name.twin
 			if accelerator /= Void then
 				mname.append (Tabulation)
 				mname.append (accelerator.out)
 			end
-			Result.set_text (mname)
-			Result.select_actions.extend (agent execute)
+			a_menu_item.set_text (mname)
 			if is_sensitive then
-				Result.enable_sensitive
+				a_menu_item.enable_sensitive
 			else
-				Result.disable_sensitive
+				a_menu_item.disable_sensitive
 			end
 		end
 
 feature {EB_COMMAND_MENU_ITEM} -- Implementation
 
-	managed_menu_items: ARRAYED_LIST [like new_menu_item]
+	managed_menu_items: ARRAYED_LIST [like new_menu_item] is
 			-- Menu items associated with this command.
+		do
+			if internal_managed_menu_items = Void then
+				create internal_managed_menu_items.make (1)
+			end
+			Result := internal_managed_menu_items
+		end
+	
+	internal_managed_menu_items: ARRAYED_LIST [like new_menu_item]
+		-- Menu items associated with this command.
 	
 	Tabulation: STRING is "%T"
 

@@ -75,7 +75,7 @@ cluster
 
 	all preferences:		"$EIFFEL_SRC/library/preferences"
 		exclude
-			"xml_implementation"; 
+			"registry"; 
 		end
 		
 	all patterns: "$EIFFEL_SRC/library/patterns"

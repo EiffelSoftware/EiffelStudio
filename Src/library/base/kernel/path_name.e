@@ -117,6 +117,8 @@ feature
 
 	is_directory_name_valid (dir_name: STRING): BOOLEAN is
 			-- Is `dir_name' a valid subdirectory part for the operating system?
+		require
+			exists: dir_name /= Void
 		local
 			any: ANY
 		do
@@ -126,6 +128,8 @@ feature
 
 	is_volume_name_valid (vol_name: STRING): BOOLEAN is
 			-- Is `vol_name' a valid volume name for the operating system?
+		require
+			exists: vol_name /= Void
 		local
 			any: ANY
 		do

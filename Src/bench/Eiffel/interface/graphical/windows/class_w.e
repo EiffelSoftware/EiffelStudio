@@ -488,8 +488,6 @@ feature -- Grahpical Interface
 	build_widgets is
 		do
 			create_toolbar (global_form)
-			format_bar.set_height (22)
-
 			build_text_windows (global_form)
 			build_menus
 			build_command_bar
@@ -732,6 +730,7 @@ feature {NONE} -- Implementation Graphical Interface
 			edit_bar.attach_left_widget (previous_target_button, next_target_button, 2)
 
 			edit_bar.attach_top (class_text_field, 0)
+			edit_bar.attach_right (class_text_field, 0)
 			edit_bar.attach_left_widget (next_target_button, class_text_field, 3)
 		end
 

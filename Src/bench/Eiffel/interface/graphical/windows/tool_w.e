@@ -689,6 +689,7 @@ feature {NONE} -- Implementation
 			!! edit_bar.make (Interface_names.n_Command_bar_name, toolbar_parent)
 			!! sep.make (Interface_names.t_Empty, toolbar_parent)
 			!! format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent)
+			!! sep.make (Interface_names.t_Empty, toolbar_parent)
 		end
 
 feature {PROJECT_W} -- Implementation

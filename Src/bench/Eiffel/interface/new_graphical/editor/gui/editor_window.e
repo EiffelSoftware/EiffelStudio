@@ -52,6 +52,7 @@ feature -- Initialization
 			my_device.pointer_button_release_actions.extend(~on_mouse_button_up)
 			my_device.expose_actions.extend (~on_repaint)
 			my_device.pointer_motion_actions.extend (~on_mouse_move)
+			my_device.resize_actions.extend(~on_size)
 
 				-- create the scrollbar
 			create my_scrollbar
@@ -68,16 +69,19 @@ feature -- Initialization
 			my_container.disable_child_expand (my_scrollbar)
 			first_window.extend(my_container)
 
-
 				-- create Menus & menu items
 			create a_menu_bar
 			create a_menu.make_with_text ("File")
+
 			create a_menu_item.make_with_text ("Load")
 			a_menu_item.press_actions.extend (~on_menu_file_load)
-
-				-- Link menus & menu items to menu bar.
-			a_menu_bar.extend (a_menu)
 			a_menu.extend (a_menu_item)
+
+			create a_menu_item.make_with_text ("Close")
+			a_menu_item.press_actions.extend (~on_menu_file_close)
+			a_menu.extend (a_menu_item)
+
+			a_menu_bar.extend (a_menu)
 			first_window.set_menu_bar (a_menu_bar)
 
 			----------------------------
@@ -109,6 +113,8 @@ feature -- Initialization
 			my_device.set_background_color(editor_preferences.normal_background_color)
 			my_device.disable_sensitive
 			my_scrollbar.disable_sensitive
+
+			initialized := True
 		end
 
 	idle_action: BOOLEAN is
@@ -199,6 +205,27 @@ feature -- Process Vision2 events
 			ofd.show_modal
 		end
 	
+	on_menu_file_close is
+			-- Feature executed when the user select file/load
+			-- in the menu. Open the dialog box and let the
+			-- user choose its file to load.
+		do
+			text_displayed := Void
+
+				-- Setup the scroll bars.
+			my_scrollbar.set_maximum (vertical_range_max)
+
+				-- Reset cursor, history, ...
+			history := Void
+			cursor := Void 
+			selection_start := Void
+
+				-- reset the displayed thing.
+			my_device.clear_and_redraw
+			my_device.disable_sensitive
+			my_scrollbar.disable_sensitive
+		end
+	
 	on_repaint (x, y, width, height: INTEGER) is
 			-- Paint the window
 		do
@@ -206,19 +233,27 @@ feature -- Process Vision2 events
 			my_device.draw_pixmap(0,0,buffered_screen)
 		end
 
-	on_size (size_type: INTEGER; a_width: INTEGER; a_height: INTEGER) is
+	on_size (a_x, a_y: INTEGER; a_width, a_height: INTEGER) is
 			-- The size of the screen has changed (this feature can be
 			-- called before the creation of the window)
 		do
---				-- Recompute the number of displayed lines.
---			number_of_lines_displayed := height // line_increment
---
---				-- Setup the scroll bars.
---			my_scrollbar.set_maximum (vertical_range_max)
---
---				-- Compute the first line to be displayed [ = max (0, min (vpos, vmax)) ]
---			first_line_displayed := (first_line_displayed.min (vertical_range_max)).max (1)
---			my_scrollbar.set_value (first_line_displayed)
+				-- Resize & redraw the buffered screen.
+			if buffered_screen /= Void then
+				buffered_screen.set_size(a_width, a_height)
+				update_buffered_screen(0, a_height)
+			end
+
+			if Initialized then
+					-- Recompute the number of displayed lines.
+				number_of_lines_displayed := a_height // line_increment
+
+					-- Setup the scroll bars.
+				my_scrollbar.set_maximum (vertical_range_max)
+	
+					-- Compute the first line to be displayed [ = max (0, min (vpos, vmax)) ]
+				first_line_displayed := (first_line_displayed.min (vertical_range_max)).max (1)
+				my_scrollbar.set_value (first_line_displayed)
+			end
 		end
 
  	on_vertical_scroll is
@@ -991,8 +1026,7 @@ feature {NONE} -- Load/Save File handling
 			from
 				file.start
 			until
---				text_displayed.count > number_of_lines_displayed or else file.after
-				file.after
+				text_displayed.count > number_of_lines_displayed or else file.after
 			loop
 				file.read_line
 				curr_string := clone (file.last_string)
@@ -1001,8 +1035,10 @@ feature {NONE} -- Load/Save File handling
 				text_displayed.extend (line_item)
 			end
 
-			if file.after then
-				file_loaded := True
+			if not file.after then
+					-- the file has not been entirely loaded, so we will
+					-- finish loading the file on idle actions.
+				idle_actions.extend(Finish_reading_file_agent)
 			end
 		end
 
@@ -1017,7 +1053,7 @@ feature {NONE} -- Load/Save File handling
 			from
 				lines_read := 1
 			until
-				lines_read > 10 or else file.after
+				lines_read > Lines_read_per_idle_action or else file.after
 			loop
 				file.read_line
 				curr_string := clone (file.last_string)
@@ -1029,12 +1065,14 @@ feature {NONE} -- Load/Save File handling
 				lines_read := lines_read + 1
 			end
 
-			if file.after then
-				file_loaded := True
-			end
-
 				-- Update the scroll bars.
 			my_scrollbar.set_maximum (vertical_range_max)
+
+			if file.after then
+					-- We have finished reading the file, so we remove
+					-- ourself from the idle actions.
+				idle_actions.prune_all(Finish_reading_file_agent)
+			end
 		end
 
 feature {NONE} -- Private Characteristics of the window
@@ -1102,6 +1140,16 @@ feature {NONE} -- Private Constants
 	Token_not_selected	: INTEGER is 0
 	Token_selected		: INTEGER is 1
 	Token_half_selected	: INTEGER is 4
+
+	Lines_read_per_idle_action : INTEGER is 25
+		-- Number of lines read each time finish_reading_file
+		-- is called on an idle action.
+
+	Finish_reading_file_agent: PROCEDURE[EDITOR_WINDOW, TUPLE] is
+		once
+			Result := ~finish_reading_file
+		end
+
 
 end -- class CHILD_WINDOW
 

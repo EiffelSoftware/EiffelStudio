@@ -61,7 +61,7 @@ feature {NONE} -- Implementation
 	yy_execute_action (yy_act: INTEGER) is
 			-- Execute semantic action.
 		do
-if yy_act <= 67 then
+if yy_act <= 68 then
 if yy_act <= 34 then
 if yy_act <= 17 then
 if yy_act <= 9 then
@@ -95,9 +95,10 @@ if yy_act = 4 then
 						i_ := i_ + 1
 					end
 					in_comments := False
+					disabled_comments := False
 					
 else
---|#line 68
+--|#line 69
  
 						-- comments
 					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -109,10 +110,10 @@ end
 else
 if yy_act <= 7 then
 if yy_act = 6 then
---|#line 77
+--|#line 78
 
 						-- Symbols
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -120,10 +121,10 @@ if yy_act = 6 then
 					update_token_list
 					
 else
---|#line 78
+--|#line 79
 
 						-- Symbols
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -133,10 +134,10 @@ else
 end
 else
 if yy_act = 8 then
---|#line 79
+--|#line 80
 
 						-- Symbols
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -144,10 +145,10 @@ if yy_act = 8 then
 					update_token_list
 					
 else
---|#line 80
+--|#line 81
 
 						-- Symbols
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -161,10 +162,10 @@ else
 if yy_act <= 13 then
 if yy_act <= 11 then
 if yy_act = 10 then
---|#line 81
+--|#line 82
 
 						-- Symbols
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -172,10 +173,10 @@ if yy_act = 10 then
 					update_token_list
 					
 else
---|#line 82
+--|#line 83
 
 						-- Symbols
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -185,10 +186,10 @@ else
 end
 else
 if yy_act = 12 then
---|#line 83
+--|#line 84
 
 						-- Symbols
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -196,10 +197,10 @@ if yy_act = 12 then
 					update_token_list
 					
 else
---|#line 84
+--|#line 85
 
 						-- Symbols
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -211,10 +212,10 @@ end
 else
 if yy_act <= 15 then
 if yy_act = 14 then
---|#line 85
+--|#line 86
 
 						-- Symbols
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -222,10 +223,10 @@ if yy_act = 14 then
 					update_token_list
 					
 else
---|#line 86
+--|#line 87
 
 						-- Symbols
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -235,10 +236,10 @@ else
 end
 else
 if yy_act = 16 then
---|#line 87
+--|#line 88
 
 						-- Symbols
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -246,10 +247,10 @@ if yy_act = 16 then
 					update_token_list
 					
 else
---|#line 88
+--|#line 89
 
 						-- Symbols
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -266,10 +267,10 @@ if yy_act <= 22 then
 if yy_act <= 20 then
 if yy_act <= 19 then
 if yy_act = 18 then
---|#line 98
+--|#line 99
  
 						-- Operator Symbol
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -277,10 +278,10 @@ if yy_act = 18 then
 					update_token_list
 					
 else
---|#line 99
+--|#line 100
  
 						-- Operator Symbol
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -289,10 +290,10 @@ else
 					
 end
 else
---|#line 100
+--|#line 101
  
 						-- Operator Symbol
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -302,10 +303,10 @@ else
 end
 else
 if yy_act = 21 then
---|#line 101
+--|#line 102
  
 						-- Operator Symbol
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -313,10 +314,10 @@ if yy_act = 21 then
 					update_token_list
 					
 else
---|#line 102
+--|#line 103
  
 						-- Operator Symbol
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -328,10 +329,10 @@ end
 else
 if yy_act <= 24 then
 if yy_act = 23 then
---|#line 103
+--|#line 104
  
 						-- Operator Symbol
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -339,10 +340,10 @@ if yy_act = 23 then
 					update_token_list
 					
 else
---|#line 104
+--|#line 105
  
 						-- Operator Symbol
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -352,10 +353,10 @@ else
 end
 else
 if yy_act = 25 then
---|#line 105
+--|#line 106
  
 						-- Operator Symbol
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -363,10 +364,10 @@ if yy_act = 25 then
 					update_token_list
 					
 else
---|#line 106
+--|#line 107
  
 						-- Operator Symbol
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -380,10 +381,10 @@ else
 if yy_act <= 30 then
 if yy_act <= 28 then
 if yy_act = 27 then
---|#line 107
+--|#line 108
  
 						-- Operator Symbol
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -391,10 +392,10 @@ if yy_act = 27 then
 					update_token_list
 					
 else
---|#line 108
+--|#line 109
  
 						-- Operator Symbol
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -404,10 +405,10 @@ else
 end
 else
 if yy_act = 29 then
---|#line 109
+--|#line 110
  
 						-- Operator Symbol
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -415,10 +416,10 @@ if yy_act = 29 then
 					update_token_list
 					
 else
---|#line 110
+--|#line 111
  
 						-- Operator Symbol
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -430,10 +431,10 @@ end
 else
 if yy_act <= 32 then
 if yy_act = 31 then
---|#line 111
+--|#line 112
  
 						-- Operator Symbol
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -441,10 +442,10 @@ if yy_act = 31 then
 					update_token_list
 					
 else
---|#line 112
+--|#line 113
  
 						-- Operator Symbol
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -454,10 +455,10 @@ else
 end
 else
 if yy_act = 33 then
---|#line 113
+--|#line 114
  
 						-- Operator Symbol
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -465,10 +466,10 @@ if yy_act = 33 then
 					update_token_list
 					
 else
---|#line 114
+--|#line 115
  
 						-- Operator Symbol
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -487,10 +488,10 @@ if yy_act <= 39 then
 if yy_act <= 37 then
 if yy_act <= 36 then
 if yy_act = 35 then
---|#line 115
+--|#line 116
  
 						-- Operator Symbol
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -498,10 +499,10 @@ if yy_act = 35 then
 					update_token_list
 					
 else
---|#line 116
+--|#line 117
  
 						-- Operator Symbol
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_OPERATOR} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -510,10 +511,10 @@ else
 					
 end
 else
---|#line 128
+--|#line 129
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -523,10 +524,10 @@ else
 end
 else
 if yy_act = 38 then
---|#line 129
+--|#line 130
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -534,10 +535,10 @@ if yy_act = 38 then
 										update_token_list
 										
 else
---|#line 130
+--|#line 131
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -549,10 +550,10 @@ end
 else
 if yy_act <= 41 then
 if yy_act = 40 then
---|#line 131
+--|#line 132
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -560,10 +561,10 @@ if yy_act = 40 then
 										update_token_list
 										
 else
---|#line 132
+--|#line 133
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -573,10 +574,10 @@ else
 end
 else
 if yy_act = 42 then
---|#line 133
+--|#line 134
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -584,10 +585,10 @@ if yy_act = 42 then
 										update_token_list
 										
 else
---|#line 134
+--|#line 135
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -601,10 +602,10 @@ else
 if yy_act <= 47 then
 if yy_act <= 45 then
 if yy_act = 44 then
---|#line 135
+--|#line 136
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -612,10 +613,10 @@ if yy_act = 44 then
 										update_token_list
 										
 else
---|#line 136
+--|#line 137
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -625,10 +626,10 @@ else
 end
 else
 if yy_act = 46 then
---|#line 137
+--|#line 138
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -636,10 +637,10 @@ if yy_act = 46 then
 										update_token_list
 										
 else
---|#line 138
+--|#line 139
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -651,10 +652,10 @@ end
 else
 if yy_act <= 49 then
 if yy_act = 48 then
---|#line 139
+--|#line 140
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -662,10 +663,10 @@ if yy_act = 48 then
 										update_token_list
 										
 else
---|#line 140
+--|#line 141
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -675,51 +676,21 @@ else
 end
 else
 if yy_act = 50 then
---|#line 141
-
-										-- Keyword
-										if not in_comments then
-											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										else
-											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
-										end
-										update_token_list
-										
-else
 --|#line 142
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 										end
 										update_token_list
 										
-end
-end
-end
-end
 else
-if yy_act <= 59 then
-if yy_act <= 55 then
-if yy_act <= 53 then
-if yy_act = 52 then
 --|#line 143
 
 										-- Keyword
-										if not in_comments then
-											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										else
-											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
-										end
-										update_token_list
-										
-else
---|#line 144
-
-										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -727,23 +698,42 @@ else
 										update_token_list
 										
 end
+end
+end
+end
 else
-if yy_act = 54 then
---|#line 145
+if yy_act <= 60 then
+if yy_act <= 56 then
+if yy_act <= 54 then
+if yy_act <= 53 then
+if yy_act = 52 then
+--|#line 144
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 										end
 										update_token_list
 										
+else
+--|#line 145
+
+										-- Keyword
+										if not in_comments or disabled_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
+										update_token_list
+										
+end
 else
 --|#line 146
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -751,14 +741,12 @@ else
 										update_token_list
 										
 end
-end
 else
-if yy_act <= 57 then
-if yy_act = 56 then
+if yy_act = 55 then
 --|#line 147
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -769,7 +757,7 @@ else
 --|#line 148
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -777,12 +765,14 @@ else
 										update_token_list
 										
 end
+end
 else
-if yy_act = 58 then
+if yy_act <= 58 then
+if yy_act = 57 then
 --|#line 149
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -793,7 +783,7 @@ else
 --|#line 150
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -801,16 +791,12 @@ else
 										update_token_list
 										
 end
-end
-end
 else
-if yy_act <= 63 then
-if yy_act <= 61 then
-if yy_act = 60 then
+if yy_act = 59 then
 --|#line 151
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -821,7 +807,7 @@ else
 --|#line 152
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -829,12 +815,16 @@ else
 										update_token_list
 										
 end
+end
+end
 else
-if yy_act = 62 then
+if yy_act <= 64 then
+if yy_act <= 62 then
+if yy_act = 61 then
 --|#line 153
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -845,7 +835,7 @@ else
 --|#line 154
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -853,14 +843,12 @@ else
 										update_token_list
 										
 end
-end
 else
-if yy_act <= 65 then
-if yy_act = 64 then
+if yy_act = 63 then
 --|#line 155
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -871,7 +859,7 @@ else
 --|#line 156
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -879,12 +867,14 @@ else
 										update_token_list
 										
 end
+end
 else
-if yy_act = 66 then
+if yy_act <= 66 then
+if yy_act = 65 then
 --|#line 157
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -895,7 +885,7 @@ else
 --|#line 158
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -903,23 +893,12 @@ else
 										update_token_list
 										
 end
-end
-end
-end
-end
-end
 else
-if yy_act <= 101 then
-if yy_act <= 84 then
-if yy_act <= 76 then
-if yy_act <= 72 then
-if yy_act <= 70 then
-if yy_act <= 69 then
-if yy_act = 68 then
+if yy_act = 67 then
 --|#line 159
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -930,7 +909,7 @@ else
 --|#line 160
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -938,11 +917,34 @@ else
 										update_token_list
 										
 end
+end
+end
+end
+end
+end
 else
+if yy_act <= 102 then
+if yy_act <= 85 then
+if yy_act <= 77 then
+if yy_act <= 73 then
+if yy_act <= 71 then
+if yy_act <= 70 then
+if yy_act = 69 then
 --|#line 161
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
+										update_token_list
+										
+else
+--|#line 162
+
+										-- Keyword
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -950,23 +952,11 @@ else
 										update_token_list
 										
 end
-else
-if yy_act = 71 then
---|#line 162
-
-										-- Keyword
-										if not in_comments then
-											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										else
-											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
-										end
-										update_token_list
-										
 else
 --|#line 163
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -974,14 +964,12 @@ else
 										update_token_list
 										
 end
-end
 else
-if yy_act <= 74 then
-if yy_act = 73 then
+if yy_act = 72 then
 --|#line 164
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -992,7 +980,7 @@ else
 --|#line 165
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1000,12 +988,14 @@ else
 										update_token_list
 										
 end
+end
 else
-if yy_act = 75 then
+if yy_act <= 75 then
+if yy_act = 74 then
 --|#line 166
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1016,7 +1006,7 @@ else
 --|#line 167
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1024,16 +1014,12 @@ else
 										update_token_list
 										
 end
-end
-end
 else
-if yy_act <= 80 then
-if yy_act <= 78 then
-if yy_act = 77 then
+if yy_act = 76 then
 --|#line 168
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1044,7 +1030,7 @@ else
 --|#line 169
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1052,12 +1038,16 @@ else
 										update_token_list
 										
 end
+end
+end
 else
-if yy_act = 79 then
+if yy_act <= 81 then
+if yy_act <= 79 then
+if yy_act = 78 then
 --|#line 170
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1068,7 +1058,7 @@ else
 --|#line 171
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1076,14 +1066,12 @@ else
 										update_token_list
 										
 end
-end
 else
-if yy_act <= 82 then
-if yy_act = 81 then
+if yy_act = 80 then
 --|#line 172
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1094,7 +1082,7 @@ else
 --|#line 173
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1102,12 +1090,14 @@ else
 										update_token_list
 										
 end
+end
 else
-if yy_act = 83 then
+if yy_act <= 83 then
+if yy_act = 82 then
 --|#line 174
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1118,7 +1108,7 @@ else
 --|#line 175
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1126,19 +1116,12 @@ else
 										update_token_list
 										
 end
-end
-end
-end
 else
-if yy_act <= 93 then
-if yy_act <= 89 then
-if yy_act <= 87 then
-if yy_act <= 86 then
-if yy_act = 85 then
+if yy_act = 84 then
 --|#line 176
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1149,7 +1132,7 @@ else
 --|#line 177
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1157,11 +1140,30 @@ else
 										update_token_list
 										
 end
+end
+end
+end
 else
+if yy_act <= 94 then
+if yy_act <= 90 then
+if yy_act <= 88 then
+if yy_act <= 87 then
+if yy_act = 86 then
 --|#line 178
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
+										update_token_list
+										
+else
+--|#line 179
+
+										-- Keyword
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1169,23 +1171,11 @@ else
 										update_token_list
 										
 end
-else
-if yy_act = 88 then
---|#line 179
-
-										-- Keyword
-										if not in_comments then
-											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
-										else
-											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
-										end
-										update_token_list
-										
 else
 --|#line 180
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1193,14 +1183,12 @@ else
 										update_token_list
 										
 end
-end
 else
-if yy_act <= 91 then
-if yy_act = 90 then
+if yy_act = 89 then
 --|#line 181
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1211,7 +1199,7 @@ else
 --|#line 182
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1219,12 +1207,14 @@ else
 										update_token_list
 										
 end
+end
 else
-if yy_act = 92 then
+if yy_act <= 92 then
+if yy_act = 91 then
 --|#line 183
 
 										-- Keyword
-										if not in_comments then
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1232,9 +1222,32 @@ if yy_act = 92 then
 										update_token_list
 										
 else
---|#line 196
+--|#line 184
 
-										if not in_comments then
+										-- Keyword
+										if not in_comments or disabled_comments then
+											create {EDITOR_TOKEN_KEYWORD} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
+										update_token_list
+										
+end
+else
+if yy_act = 93 then
+--|#line 197
+
+										if not in_comments or disabled_comments then
+											create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+										else
+											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+										end
+										update_token_list
+										
+else
+--|#line 209
+
+										if not in_comments or disabled_comments then
 											create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 										else
 											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1245,34 +1258,12 @@ end
 end
 end
 else
-if yy_act <= 97 then
-if yy_act <= 95 then
-if yy_act = 94 then
---|#line 208
-
-										if not in_comments then
-											create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-										else
-											create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
-										end
-										update_token_list
-										
-else
---|#line 222
-
-					if not in_comments then
-						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					else
-						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
-					end
-					update_token_list
-					
-end
-else
-if yy_act = 96 then
+if yy_act <= 98 then
+if yy_act <= 96 then
+if yy_act = 95 then
 --|#line 223
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1282,7 +1273,7 @@ if yy_act = 96 then
 else
 --|#line 224
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1290,13 +1281,11 @@ else
 					update_token_list
 					
 end
-end
 else
-if yy_act <= 99 then
-if yy_act = 98 then
+if yy_act = 97 then
 --|#line 225
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1306,7 +1295,7 @@ if yy_act = 98 then
 else
 --|#line 226
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1314,11 +1303,13 @@ else
 					update_token_list
 					
 end
+end
 else
-if yy_act = 100 then
+if yy_act <= 100 then
+if yy_act = 99 then
 --|#line 227
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1328,7 +1319,7 @@ if yy_act = 100 then
 else
 --|#line 228
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1336,20 +1327,11 @@ else
 					update_token_list
 					
 end
-end
-end
-end
-end
 else
-if yy_act <= 118 then
-if yy_act <= 110 then
-if yy_act <= 106 then
-if yy_act <= 104 then
-if yy_act <= 103 then
-if yy_act = 102 then
+if yy_act = 101 then
 --|#line 229
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1359,7 +1341,7 @@ if yy_act = 102 then
 else
 --|#line 230
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1367,10 +1349,30 @@ else
 					update_token_list
 					
 end
+end
+end
+end
+end
 else
+if yy_act <= 119 then
+if yy_act <= 111 then
+if yy_act <= 107 then
+if yy_act <= 105 then
+if yy_act <= 104 then
+if yy_act = 103 then
 --|#line 231
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
+					update_token_list
+					
+else
+--|#line 232
+
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1378,21 +1380,10 @@ else
 					update_token_list
 					
 end
-else
-if yy_act = 105 then
---|#line 232
-
-					if not in_comments then
-						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
-					else
-						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
-					end
-					update_token_list
-					
 else
 --|#line 233
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1400,13 +1391,11 @@ else
 					update_token_list
 					
 end
-end
 else
-if yy_act <= 108 then
-if yy_act = 107 then
+if yy_act = 106 then
 --|#line 234
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1416,7 +1405,7 @@ if yy_act = 107 then
 else
 --|#line 235
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1424,11 +1413,13 @@ else
 					update_token_list
 					
 end
+end
 else
-if yy_act = 109 then
+if yy_act <= 109 then
+if yy_act = 108 then
 --|#line 236
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1438,7 +1429,7 @@ if yy_act = 109 then
 else
 --|#line 237
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1446,15 +1437,11 @@ else
 					update_token_list
 					
 end
-end
-end
 else
-if yy_act <= 114 then
-if yy_act <= 112 then
-if yy_act = 111 then
+if yy_act = 110 then
 --|#line 238
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1464,7 +1451,7 @@ if yy_act = 111 then
 else
 --|#line 239
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1472,11 +1459,15 @@ else
 					update_token_list
 					
 end
+end
+end
 else
-if yy_act = 113 then
+if yy_act <= 115 then
+if yy_act <= 113 then
+if yy_act = 112 then
 --|#line 240
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1486,7 +1477,7 @@ if yy_act = 113 then
 else
 --|#line 241
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1494,13 +1485,11 @@ else
 					update_token_list
 					
 end
-end
 else
-if yy_act <= 116 then
-if yy_act = 115 then
+if yy_act = 114 then
 --|#line 242
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1510,7 +1499,7 @@ if yy_act = 115 then
 else
 --|#line 243
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1518,11 +1507,23 @@ else
 					update_token_list
 					
 end
+end
 else
-if yy_act = 117 then
---|#line 252
+if yy_act <= 117 then
+if yy_act = 116 then
+--|#line 244
 
-					if not in_comments then
+					if not in_comments or disabled_comments then
+						create {EDITOR_TOKEN_CHARACTER} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
+					update_token_list
+					
+else
+--|#line 253
+
+					if not in_comments or disabled_comments then
 						code_ := text_substring (4, text_count - 2).to_integer
 						if code_ > Platform.Maximum_character_code then
 							-- Character error. Consedered as text.
@@ -1535,30 +1536,13 @@ if yy_act = 117 then
 					end
 					update_token_list
 					
-else
---|#line 267
-
-					-- Character error. Catch-all rules (no backing up)
-					if not in_comments then
-						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
-					else
-						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
-					end
-					update_token_list
-					
-end
-end
-end
 end
 else
-if yy_act <= 126 then
-if yy_act <= 122 then
-if yy_act <= 120 then
-if yy_act = 119 then
+if yy_act = 118 then
 --|#line 268
 
 					-- Character error. Catch-all rules (no backing up)
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1566,23 +1550,30 @@ if yy_act = 119 then
 					update_token_list
 					
 else
---|#line 281
+--|#line 269
 
-					-- Eiffel String
-					if not in_comments then
-						create {EDITOR_TOKEN_STRING} curr_token.make(text)
+					-- Character error. Catch-all rules (no backing up)
+					if not in_comments or disabled_comments then
+						create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
 					end
 					update_token_list
 					
 end
+end
+end
+end
 else
-if yy_act = 121 then
+if yy_act <= 128 then
+if yy_act <= 124 then
+if yy_act <= 122 then
+if yy_act <= 121 then
+if yy_act = 120 then
 --|#line 282
 
 					-- Eiffel String
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_STRING} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1593,7 +1584,7 @@ else
 --|#line 283
 
 					-- Eiffel String
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_STRING} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1601,14 +1592,24 @@ else
 					update_token_list
 					
 end
+else
+--|#line 284
+
+					-- Eiffel String
+					if not in_comments or disabled_comments then
+						create {EDITOR_TOKEN_STRING} curr_token.make(text)
+					else
+						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+					end
+					update_token_list
+					
 end
 else
-if yy_act <= 124 then
 if yy_act = 123 then
---|#line 295
+--|#line 296
 
 					-- Eiffel Bit
-					if not in_comments then
+					if not in_comments or disabled_comments then
 						create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
 					else
 						create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1616,10 +1617,10 @@ if yy_act = 123 then
 					update_token_list
 					
 else
---|#line 307
+--|#line 308
 
 						-- Eiffel Integer
-						if not in_comments then
+						if not in_comments or disabled_comments then
 							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
 						else
 							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1627,12 +1628,14 @@ else
 						update_token_list
 						
 end
+end
 else
+if yy_act <= 126 then
 if yy_act = 125 then
---|#line 308
+--|#line 309
 
 						-- Eiffel Integer
-						if not in_comments then
+						if not in_comments or disabled_comments then
 							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
 						else
 							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1640,10 +1643,10 @@ if yy_act = 125 then
 						update_token_list
 						
 else
---|#line 317
+--|#line 318
 
 						-- Eiffel Integer Error (considered as text)
-						if not in_comments then
+						if not in_comments or disabled_comments then
 							create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 						else
 							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1651,28 +1654,24 @@ else
 						update_token_list
 						
 end
-end
-end
 else
-if yy_act <= 130 then
-if yy_act <= 128 then
 if yy_act = 127 then
 	yy_position := yy_position - 1
---|#line 329
-
-							-- Eiffel reals & doubles
-						if not in_comments then
-							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-						else
-							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
-						end
-						update_token_list
-						
-else
 --|#line 330
 
 							-- Eiffel reals & doubles
-						if not in_comments then
+						if not in_comments or disabled_comments then
+							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+						end
+						update_token_list
+						
+else
+--|#line 331
+
+							-- Eiffel reals & doubles
+						if not in_comments or disabled_comments then
 							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
 						else
 							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1680,39 +1679,16 @@ else
 						update_token_list
 						
 end
-else
-if yy_act = 129 then
---|#line 331
-
-							-- Eiffel reals & doubles
-						if not in_comments then
-							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-						else
-							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
-						end
-						update_token_list
-						
-else
-	yy_position := yy_position - 1
---|#line 332
-
-							-- Eiffel reals & doubles
-						if not in_comments then
-							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
-						else
-							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
-						end
-						update_token_list
-						
 end
 end
 else
 if yy_act <= 132 then
-if yy_act = 131 then
---|#line 333
+if yy_act <= 130 then
+if yy_act = 129 then
+--|#line 332
 
 							-- Eiffel reals & doubles
-						if not in_comments then
+						if not in_comments or disabled_comments then
 							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
 						else
 							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1720,10 +1696,11 @@ if yy_act = 131 then
 						update_token_list
 						
 else
---|#line 334
+	yy_position := yy_position - 1
+--|#line 333
 
 							-- Eiffel reals & doubles
-						if not in_comments then
+						if not in_comments or disabled_comments then
 							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
 						else
 							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1732,11 +1709,57 @@ else
 						
 end
 else
+if yy_act = 131 then
+--|#line 334
+
+							-- Eiffel reals & doubles
+						if not in_comments or disabled_comments then
+							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+						end
+						update_token_list
+						
+else
+--|#line 335
+
+							-- Eiffel reals & doubles
+						if not in_comments or disabled_comments then
+							create {EDITOR_TOKEN_NUMBER} curr_token.make(text)
+						else
+							create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
+						end
+						update_token_list
+						
+end
+end
+else
+if yy_act <= 134 then
 if yy_act = 133 then
 --|#line 351
 
+					if in_comments then
+						disabled_comments := True
+					end
+					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					update_token_list
+					
+else
+--|#line 359
+
+					if in_comments then
+						disabled_comments := False
+					end
+					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
+					update_token_list
+					
+end
+else
+if yy_act = 135 then
+--|#line 370
+
 					-- Error (considered as text)
-				if not in_comments then
+				if not in_comments or disabled_comments then
 					create {EDITOR_TOKEN_TEXT} curr_token.make(text)
 				else
 					create {EDITOR_TOKEN_COMMENT} curr_token.make(text)
@@ -1779,102 +1802,103 @@ feature {NONE} -- Table templates
 			   23,   24,   25,   26,   27,   28,   29,   30,   31,   32,
 			   33,   34,   35,   36,   37,   37,   38,   37,   37,   39,
 			   37,   40,   41,   42,   37,   43,   44,   45,   46,   47,
-			   48,   49,   37,   37,   50,   51,   52,   53,   54,   31,
-			   32,   33,   34,   36,   37,   39,   40,   37,   43,   44,
-			   45,   46,   47,   55,   56,   63,   69,   70,   64,   71,
-			   73,   75,   74,   74,   83,   84,  116,   76,   72,   77,
-			  124,   78,   79,   77,   97,   79,   79,   85,   86,  109,
+			   48,   49,   37,   37,   50,   51,   52,   53,   54,   55,
+			   31,   32,   33,   34,   36,   37,   39,   40,   37,   43,
+			   44,   45,   46,   47,   56,   57,   64,   70,   71,   65,
+			   72,   74,   76,   75,   75,   84,   85,  175,   77,   73,
+			   78,  103,   79,   80,   78,  104,   80,   80,   86,   87,
 
-			   80,   99,  319,  100,   98,  110,  118,   93,   89,  116,
-			   90,   94,  328,  101,  345,   91,  123,   95,  346,  124,
-			   96,  119,  102,  211,  211,  122,  103,   99,  100,   81,
-			  339,   80,  319,   81,   89,   90,   93,   94,   91,  104,
-			   95,  105,  328,   96,  119,  112,  120,  123,  106,  107,
-			  122,  127,  127,  102,  108,  113,  121,  114,  156,  156,
-			   63,  115,  104,   64,   63,   63,  293,   64,   64,   91,
-			  157,  105,  160,  160,  107,  120,  112,  108,  174,  121,
-			  276,  113,  114,  286,  115,  152,  152,  426,  161,  127,
-			  130,  162,   91,  131,  132,  133,  134,  153,   77,  425,
+			   90,   81,   91,   98,  340,   94,  119,   92,  105,   95,
+			  100,  110,  101,   99,  175,   96,  121,  111,   97,  117,
+			  124,  120,  102,  103,  320,  123,  122,   90,   91,  125,
+			   82,   92,  105,   81,   82,   94,   95,  100,  101,   96,
+			  106,  294,   97,  117,  113,  120,  121,  107,  108,  287,
+			  122,  123,  124,  109,  114,  320,  115,  128,  128,  125,
+			  116,   64,   64,   64,   65,   65,   65,  153,  153,   92,
+			   78,  106,  160,  160,  108,  163,  113,  109,  427,  154,
+			  165,  114,  115,  426,  116,  157,  157,  161,  161,  425,
+			  167,  162,  170,   92,  163,  128,  131,  158,  424,  132,
 
-			  159,  159,  135,  162,  174,  276,  164,  136,  175,  137,
-			  127,  138,  139,  140,  141,  424,  142,  162,  143,  166,
-			  169,  167,  144,  154,  145,  168,  170,  146,  147,  148,
-			  149,  150,  151,   77,  162,  158,  159,  164,   81,  175,
-			  185,  171,  166,  169,   80,  172,  183,  178,  186,  173,
-			  187,  179,  167,  188,  423,  168,  195,  170,  184,  422,
-			  196,  420,  180,  185,  171,  181,  401,  197,  127,  127,
-			  199,  186,  173,   81,  203,   80,  190,  183,  178,  205,
-			  179,  187,  195,  392,  188,  180,  191,  240,  181,  192,
-			  197,  193,  194,  199,  200,  231,  231,  203,   77,  201,
+			  133,  134,  135,  212,  212,  155,  423,  163,  136,  176,
+			   82,  171,  165,  137,  167,  138,  170,  139,  140,  141,
+			  142,  163,  143,  168,  144,  128,  172,  169,  145,   78,
+			  146,  159,  160,  147,  148,  149,  150,  151,  152,  184,
+			   81,  176,  173,  171,  179,  421,  174,  188,  180,  186,
+			  172,  185,  189,  187,  255,  168,  198,  200,  169,  181,
+			  196,  241,  182,  242,  197,  128,  128,  256,  204,   82,
+			  174,  184,   81,  186,  206,  191,  179,  187,  180,  188,
+			  198,  200,  402,  181,  189,  192,  182,  196,  193,  201,
+			  194,  195,  204,  241,  202,  242,  229,  229,  206,  232,
 
-			  238,  238,  205,  390,  228,  228,  127,  190,  232,  232,
-			  202,  191,  192,  241,  193,  194,  153,  229,  240,  229,
-			  233,  243,  230,  230,  235,  200,  235,  239,  239,  236,
-			  236,  242,   77,  202,  237,  238,  244,  245,   81,  248,
-			  252,  253,  154,   80,  241,  254,  234,  249,  260,  256,
-			  262,  266,  243,  268,  242,  270,  274,  269,  255,  244,
-			  245,  250,  248,  252,  253,  127,  272,  279,  282,  283,
-			  211,  211,   81,  271,   80,  256,  284,  284,  249,  260,
-			  269,  262,  266,  389,  268,  387,  270,  274,  153,  272,
-			  279,  230,  230,  282,  285,  285,  271,  287,  287,  288,
+			  232,  233,  233,  128,  230,  203,  230,  191,  154,  231,
+			  231,  192,  193,  234,  194,  195,  243,  236,  244,  236,
+			  245,  201,  237,  237,   78,  246,  238,  239,   78,  203,
+			  239,  239,  240,  240,  155,   81,  249,  250,  253,  235,
+			  243,  254,  261,  263,  245,  257,  267,  269,  271,  246,
+			  244,  251,  270,  273,  275,  277,  393,  283,  280,  346,
+			  249,  391,  253,  347,   82,  254,  272,   81,   82,  250,
+			  128,  297,  257,  390,  261,  263,  270,  273,  267,  269,
+			  271,  277,  280,  283,  285,  285,  275,  284,  212,  212,
+			  272,  231,  231,  286,  286,  297,  154,  288,  288,  289,
 
-			  288,  289,  296,  289,  291,  291,  290,  290,  236,  236,
-			  298,  233,  292,  292,  154,  294,  299,  237,  238,  294,
-			  302,  238,  238,  295,  295,  296,   80,  305,  304,  371,
-			  306,  307,  286,  298,  316,  309,  317,  234,  325,  299,
-			  313,  315,  318,  302,  322,  323,  331,  326,  330,  329,
-			  293,  304,  305,  306,  307,  127,  370,   80,  309,  127,
-			  316,  127,  317,  313,  315,  318,  366,  322,  364,  325,
-			  326,  323,  329,  363,  330,  284,  284,  331,  334,  334,
-			  335,  335,  336,  336,  337,  337,  348,  333,  290,  290,
-			  338,  338,  340,  340,  341,  341,  233,  342,  342,  337,
+			  289,  290,  299,  290,  292,  292,  291,  291,  237,  237,
+			  300,  234,  293,  293,  295,  303,  238,  239,  295,  305,
+			  239,  239,  155,  296,  296,   81,  299,  306,  307,  336,
+			  336,  287,  308,  326,  300,  310,  314,  235,  316,  303,
+			  317,  318,  319,  305,  324,  323,  327,  329,  330,  331,
+			  294,  332,  307,  306,  128,  388,  308,   81,  128,  310,
+			  314,  128,  316,  285,  285,  326,  319,  317,  318,  323,
+			  327,  324,  330,  335,  335,  334,  331,  348,  329,  337,
+			  337,  338,  338,  332,  291,  291,  339,  339,  341,  341,
+			  342,  342,  349,  234,  343,  343,  338,  338,  345,  350,
 
-			  337,  344,  347,  127,  127,  349,  351,  352,  353,  348,
-			  361,  343,  359,  354,  355,  362,  286,  365,  369,  367,
-			  372,  368,  234,  374,  374,  375,  375,  347,  339,  376,
-			  352,  360,  293,  353,  358,  349,  354,  351,  362,  355,
-			  365,   81,  367,  359,  368,  372,  373,  391,  373,  369,
-			  397,  374,  374,  337,  337,  154,  378,  378,  379,  379,
-			  388,  286,  380,  380,  393,  377,  381,  381,  382,  382,
-			  383,  394,  383,  385,  385,  381,  381,  395,  391,  396,
-			  398,  397,  399,  388,  400,  386,  357,  393,  402,  403,
-			  404,  374,  374,  416,  339,  417,  394,  374,  374,  356,
+			  128,  128,  352,  348,  360,  353,  354,  355,  344,  356,
+			  372,  287,  370,  363,  373,  366,  349,  368,  369,  235,
+			  374,  371,  374,  377,  340,  375,  375,  367,  294,  353,
+			  350,  355,  354,  365,  352,  356,  360,  363,   82,  366,
+			  373,  368,  369,  392,  370,  375,  375,  376,  376,  155,
+			  338,  338,  379,  379,  380,  380,  381,  381,  382,  382,
+			  383,  383,  378,  384,  389,  384,  386,  386,  382,  382,
+			  394,  395,  398,  401,  396,  392,  397,  399,  387,  400,
+			  404,  403,  364,  287,  405,  375,  375,  362,  389,  361,
+			  340,  375,  375,  412,  394,  359,  294,  395,  396,  401,
 
-			  395,  411,  396,  398,  293,  399,  405,  405,  418,  400,
-			  406,  402,  406,  404,  403,  407,  407,  408,  416,  408,
-			  409,  409,  409,  409,  410,  410,  417,  234,  381,  381,
-			  412,  412,  381,  381,  413,  413,  414,  419,  414,  418,
-			  421,  415,  415,  407,  407,  350,  411,  427,  427,  409,
-			  409,  409,  409,  428,  428,  429,  432,  429,  339,  433,
-			  430,  430,  332,  419,  327,  421,  380,  380,  415,  415,
-			  431,  431,  234,  405,  405,  430,  430,  324,  411,  432,
-			  434,  434,  433,  412,  412,  286,  428,  428,   62,   62,
-			  321,   62,   62,   62,   62,   62,   62,   62,   62,   88,
+			  397,  399,  358,  400,  398,  403,  404,  357,  405,  406,
+			  406,  407,  418,  407,  410,  410,  408,  408,  409,  235,
+			  409,  411,  411,  410,  410,  382,  382,  413,  413,  382,
+			  382,  414,  414,  415,  417,  415,  419,  420,  416,  416,
+			  422,  408,  408,  412,  418,  428,  428,  410,  410,  410,
+			  410,  351,  340,  429,  429,  433,  430,  434,  430,  333,
+			  417,  431,  431,  328,  420,  325,  422,  322,  419,  235,
+			  381,  381,  416,  416,  432,  432,  406,  406,  321,  433,
+			  315,  434,  412,  287,  431,  431,  435,  435,  413,  413,
+			  429,  429,   63,   63,  313,   63,   63,   63,   63,   63,
 
-			   88,   88,   88,  320,  234,  314,   65,  312,  293,  311,
-			  310,  286,   65,   65,   65,   65,   65,  308,  339,  303,
-			  301,  293,   66,   66,  339,   66,   66,   66,   66,   66,
-			   66,   66,   66,   68,   68,  300,   68,   68,   68,   68,
-			   68,   68,   68,   68,  128,  128,  297,  128,  128,  128,
-			  128,  128,  128,  128,  128,  155,  155,  155,  155,  155,
-			  155,  281,  155,  155,  155,  155,  384,  384,  384,  384,
-			  384,  384,  280,  384,  384,  384,  384,  278,  277,  275,
-			  273,  267,  265,  264,  263,  261,  259,  258,  257,  251,
-			  247,  246,  227,  226,  225,  224,  223,  222,  221,  220,
+			   63,   63,   63,   63,  312,  311,  309,  304,  235,   66,
+			  302,  301,  294,  298,  287,   66,   66,   66,   66,   66,
+			   66,  282,  281,  279,  340,  278,  294,  276,  340,   67,
+			   67,  274,   67,   67,   67,   67,   67,   67,   67,   67,
+			   67,   69,   69,  268,   69,   69,   69,   69,   69,   69,
+			   69,   69,   69,   89,   89,   89,   89,   89,  129,  129,
+			  266,  129,  129,  129,  129,  129,  129,  129,  129,  129,
+			  156,  156,  156,  156,  156,  156,  265,  156,  156,  156,
+			  156,  156,  385,  385,  385,  385,  385,  385,  264,  385,
+			  385,  385,  385,  385,  262,  260,  259,  258,  252,  248,
 
-			  219,  218,  217,  216,  215,  214,  213,  212,  210,  209,
-			  208,  207,  206,  204,  198,  189,  182,  177,  176,  165,
-			  163,  129,   67,   67,   60,   59,   58,   57,  126,  125,
-			  117,  111,   92,   87,   82,   67,   61,   60,   59,   58,
-			   57,  435,    3,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  247,  228,  227,  226,  225,  224,  223,  222,  221,  220,
+			  219,  218,  217,  216,  215,  214,  213,  211,  210,  209,
+			  208,  207,  205,  199,  190,  183,  178,  177,  166,  164,
+			  130,   68,   68,   61,   60,   59,   58,  127,  126,  118,
+			  112,   93,   88,   83,   68,   62,   61,   60,   59,   58,
+			  436,    3,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
 
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435>>)
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436>>)
 		end
 
 	yy_chk_template: ANY is
@@ -1889,100 +1913,101 @@ feature {NONE} -- Table templates
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    1,   10,   14,   14,   10,   20,
-			   21,   22,   21,   21,   27,   27,   42,   22,   20,   23,
-			   48,   23,   23,   24,   34,   24,   24,   29,   29,   39,
+			    1,    1,    1,    1,    1,    1,   10,   14,   14,   10,
+			   20,   21,   22,   21,   21,   27,   27,  103,   22,   20,
+			   23,   36,   23,   23,   24,   36,   24,   24,   29,   29,
 
-			   23,   35,  267,   35,   34,   39,   44,   33,   31,   42,
-			   31,   33,  278,   35,  299,   31,   47,   33,  299,   48,
-			   33,   44,   36,  135,  135,   46,   36,   35,   35,   23,
-			  428,   23,  267,   24,   31,   31,   33,   33,   31,   36,
-			   33,   38,  278,   33,   44,   41,   45,   47,   38,   38,
-			   46,   54,   54,   36,   38,   41,   45,   41,   77,   77,
-			   62,   41,   36,   62,   63,   64,  412,   63,   64,   92,
-			   77,   38,   81,   81,   38,   45,   41,   38,  102,   45,
-			  198,   41,   41,  405,   41,   74,   74,  403,   89,   54,
-			   69,   89,   92,   69,   69,   69,   69,   74,   79,  402,
+			   31,   23,   31,   34,  429,   33,   44,   31,   36,   33,
+			   35,   39,   35,   34,  103,   33,   45,   39,   33,   42,
+			   47,   44,   35,   36,  268,   46,   45,   31,   31,   48,
+			   23,   31,   36,   23,   24,   33,   33,   35,   35,   33,
+			   38,  413,   33,   42,   41,   44,   45,   38,   38,  406,
+			   45,   46,   47,   38,   41,  268,   41,   54,   54,   48,
+			   41,   63,   64,   65,   63,   64,   65,   75,   75,   93,
+			   80,   38,   80,   80,   38,   91,   41,   38,  404,   75,
+			   95,   41,   41,  403,   41,   78,   78,   82,   82,  401,
+			   97,   90,  100,   93,   90,   54,   70,   78,  400,   70,
 
-			   79,   79,   69,   90,  102,  198,   94,   69,  103,   69,
-			   81,   69,   69,   69,   69,  400,   69,   89,   69,   96,
-			   99,   97,   69,   74,   69,   97,  100,   69,   69,   69,
-			   69,   69,   69,   78,   90,   78,   78,   94,   79,  103,
-			  111,  100,   96,   99,   78,  101,  110,  107,  112,  101,
-			  113,  107,   97,  114,  399,   97,  118,  100,  110,  398,
-			  118,  394,  107,  111,  100,  107,  365,  119,  127,  127,
-			  121,  112,  101,   78,  123,   78,  117,  110,  107,  125,
-			  107,  113,  118,  354,  114,  107,  117,  161,  107,  117,
-			  119,  117,  117,  121,  122,  154,  154,  123,  159,  122,
+			   70,   70,   70,  136,  136,   75,  399,   91,   70,  104,
+			   80,  101,   95,   70,   97,   70,  100,   70,   70,   70,
+			   70,   90,   70,   98,   70,   82,  101,   98,   70,   79,
+			   70,   79,   79,   70,   70,   70,   70,   70,   70,  111,
+			   79,  104,  102,  101,  108,  395,  102,  114,  108,  112,
+			  101,  111,  115,  113,  177,   98,  120,  122,   98,  108,
+			  119,  162,  108,  164,  119,  128,  128,  177,  124,   79,
+			  102,  111,   79,  112,  126,  118,  108,  113,  108,  114,
+			  120,  122,  366,  108,  115,  118,  108,  119,  118,  123,
+			  118,  118,  124,  162,  123,  164,  153,  153,  126,  155,
 
-			  159,  159,  125,  351,  152,  152,  127,  117,  156,  156,
-			  122,  117,  117,  163,  117,  117,  152,  153,  161,  153,
-			  156,  165,  153,  153,  157,  122,  157,  160,  160,  157,
-			  157,  164,  158,  122,  158,  158,  166,  167,  159,  171,
-			  174,  175,  152,  158,  163,  176,  156,  172,  181,  177,
-			  183,  189,  165,  191,  164,  193,  196,  192,  176,  166,
-			  167,  172,  171,  174,  175,  160,  194,  201,  204,  211,
-			  211,  211,  158,  193,  158,  177,  228,  228,  172,  181,
-			  192,  183,  189,  348,  191,  346,  193,  196,  228,  194,
-			  201,  229,  229,  204,  230,  230,  193,  231,  231,  232,
+			  155,  157,  157,  128,  154,  123,  154,  118,  153,  154,
+			  154,  118,  118,  157,  118,  118,  165,  158,  166,  158,
+			  167,  123,  158,  158,  159,  168,  159,  159,  160,  123,
+			  160,  160,  161,  161,  153,  159,  172,  173,  175,  157,
+			  165,  176,  182,  184,  167,  178,  190,  192,  194,  168,
+			  166,  173,  193,  195,  197,  199,  355,  205,  202,  300,
+			  172,  352,  175,  300,  159,  176,  194,  159,  160,  173,
+			  161,  241,  178,  349,  182,  184,  193,  195,  190,  192,
+			  194,  199,  202,  205,  229,  229,  197,  212,  212,  212,
+			  194,  230,  230,  231,  231,  241,  229,  232,  232,  233,
 
-			  232,  233,  240,  233,  234,  234,  233,  233,  235,  235,
-			  242,  232,  236,  236,  228,  237,  243,  237,  237,  238,
-			  246,  238,  238,  239,  239,  240,  237,  249,  248,  329,
-			  250,  251,  230,  242,  262,  253,  264,  232,  273,  243,
-			  258,  260,  266,  246,  270,  271,  281,  274,  280,  279,
-			  236,  248,  249,  250,  251,  237,  328,  237,  253,  238,
-			  262,  239,  264,  258,  260,  266,  322,  270,  320,  273,
-			  274,  271,  279,  319,  280,  284,  284,  281,  285,  285,
-			  286,  286,  287,  287,  288,  288,  302,  284,  289,  289,
-			  290,  290,  291,  291,  292,  292,  288,  293,  293,  294,
+			  233,  234,  243,  234,  235,  235,  234,  234,  236,  236,
+			  244,  233,  237,  237,  238,  247,  238,  238,  239,  249,
+			  239,  239,  229,  240,  240,  238,  243,  250,  251,  287,
+			  287,  231,  252,  274,  244,  254,  259,  233,  261,  247,
+			  263,  265,  267,  249,  272,  271,  275,  279,  280,  281,
+			  237,  282,  251,  250,  238,  347,  252,  238,  239,  254,
+			  259,  240,  261,  285,  285,  274,  267,  263,  265,  271,
+			  275,  272,  280,  286,  286,  285,  281,  301,  279,  288,
+			  288,  289,  289,  282,  290,  290,  291,  291,  292,  292,
+			  293,  293,  303,  289,  294,  294,  295,  295,  296,  304,
 
-			  294,  295,  300,  295,  295,  303,  305,  306,  307,  302,
-			  317,  294,  314,  309,  310,  318,  285,  321,  326,  323,
-			  331,  325,  288,  334,  334,  335,  335,  300,  290,  336,
-			  306,  315,  292,  307,  313,  303,  309,  305,  318,  310,
-			  321,  295,  323,  314,  325,  331,  333,  353,  333,  326,
-			  360,  333,  333,  337,  337,  336,  338,  338,  339,  339,
-			  347,  334,  340,  340,  356,  337,  341,  341,  342,  342,
-			  343,  357,  343,  344,  344,  343,  343,  358,  353,  359,
-			  361,  360,  362,  347,  363,  344,  312,  356,  369,  370,
-			  372,  373,  373,  387,  338,  389,  357,  374,  374,  311,
+			  296,  296,  306,  301,  315,  307,  308,  310,  295,  311,
+			  330,  286,  327,  319,  332,  322,  303,  324,  326,  289,
+			  334,  329,  334,  337,  291,  334,  334,  323,  293,  307,
+			  304,  310,  308,  321,  306,  311,  315,  319,  296,  322,
+			  332,  324,  326,  354,  327,  335,  335,  336,  336,  337,
+			  338,  338,  339,  339,  340,  340,  341,  341,  342,  342,
+			  343,  343,  338,  344,  348,  344,  345,  345,  344,  344,
+			  357,  358,  361,  364,  359,  354,  360,  362,  345,  363,
+			  371,  370,  320,  335,  373,  374,  374,  318,  348,  316,
+			  339,  375,  375,  381,  357,  314,  342,  358,  359,  364,
 
-			  358,  380,  359,  361,  341,  362,  375,  375,  390,  363,
-			  376,  369,  376,  372,  370,  376,  376,  377,  387,  377,
-			  378,  378,  377,  377,  379,  379,  389,  380,  381,  381,
-			  382,  382,  383,  383,  385,  385,  386,  391,  386,  390,
-			  397,  386,  386,  406,  406,  304,  385,  407,  407,  408,
-			  408,  409,  409,  410,  410,  411,  421,  411,  378,  423,
-			  411,  411,  283,  391,  275,  397,  413,  413,  414,  414,
-			  415,  415,  385,  427,  427,  429,  429,  272,  413,  421,
-			  430,  430,  423,  431,  431,  407,  434,  434,  436,  436,
-			  269,  436,  436,  436,  436,  436,  436,  436,  436,  440,
+			  360,  362,  313,  363,  361,  370,  371,  312,  373,  376,
+			  376,  377,  390,  377,  379,  379,  377,  377,  378,  381,
+			  378,  380,  380,  378,  378,  382,  382,  383,  383,  384,
+			  384,  386,  386,  387,  388,  387,  391,  392,  387,  387,
+			  398,  407,  407,  386,  390,  408,  408,  409,  409,  410,
+			  410,  305,  379,  411,  411,  422,  412,  424,  412,  284,
+			  388,  412,  412,  276,  392,  273,  398,  270,  391,  386,
+			  414,  414,  415,  415,  416,  416,  428,  428,  269,  422,
+			  260,  424,  414,  408,  430,  430,  431,  431,  432,  432,
+			  435,  435,  437,  437,  258,  437,  437,  437,  437,  437,
 
-			  440,  440,  440,  268,  413,  259,  437,  257,  415,  256,
-			  255,  427,  437,  437,  437,  437,  437,  252,  430,  247,
-			  245,  431,  438,  438,  434,  438,  438,  438,  438,  438,
-			  438,  438,  438,  439,  439,  244,  439,  439,  439,  439,
-			  439,  439,  439,  439,  441,  441,  241,  441,  441,  441,
-			  441,  441,  441,  441,  441,  442,  442,  442,  442,  442,
-			  442,  203,  442,  442,  442,  442,  443,  443,  443,  443,
-			  443,  443,  202,  443,  443,  443,  443,  200,  199,  197,
-			  195,  190,  188,  186,  184,  182,  180,  179,  178,  173,
-			  169,  168,  151,  150,  149,  148,  147,  146,  145,  144,
+			  437,  437,  437,  437,  257,  256,  253,  248,  414,  438,
+			  246,  245,  416,  242,  428,  438,  438,  438,  438,  438,
+			  438,  204,  203,  201,  431,  200,  432,  198,  435,  439,
+			  439,  196,  439,  439,  439,  439,  439,  439,  439,  439,
+			  439,  440,  440,  191,  440,  440,  440,  440,  440,  440,
+			  440,  440,  440,  441,  441,  441,  441,  441,  442,  442,
+			  189,  442,  442,  442,  442,  442,  442,  442,  442,  442,
+			  443,  443,  443,  443,  443,  443,  187,  443,  443,  443,
+			  443,  443,  444,  444,  444,  444,  444,  444,  185,  444,
+			  444,  444,  444,  444,  183,  181,  180,  179,  174,  170,
 
-			  143,  142,  141,  140,  139,  138,  137,  136,  134,  133,
-			  132,  131,  130,  124,  120,  116,  109,  106,  104,   95,
-			   93,   68,   67,   66,   60,   59,   58,   57,   51,   49,
-			   43,   40,   32,   30,   25,   13,    9,    8,    7,    6,
-			    5,    3,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
+			  169,  152,  151,  150,  149,  148,  147,  146,  145,  144,
+			  143,  142,  141,  140,  139,  138,  137,  135,  134,  133,
+			  132,  131,  125,  121,  117,  110,  107,  105,   96,   94,
+			   69,   68,   67,   61,   60,   59,   58,   51,   49,   43,
+			   40,   32,   30,   25,   13,    9,    8,    7,    6,    5,
+			    3,  436,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
 
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435>>)
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436>>)
 		end
 
 	yy_base_template: ANY is
@@ -1990,55 +2015,55 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    0,    0,  841,  842,  838,  836,  834,  832,  830,
-			   68,    0,  842,  828,   66,  842,  842,  842,  842,  842,
-			   62,   62,   62,   71,   75,  809,  842,   60,  842,   72,
-			  808,   69,  796,   72,   62,   62,   94,    0,  108,   63,
-			  789,  116,   41,  798,   74,  111,   84,   88,   55,  787,
-			  842,  773,  842,  842,  131,  842,  842,  825,  823,  821,
-			  819,  842,  153,  157,  158,    0,  816,  815,  810,  183,
-			    0,  842,  842,  842,  165,  842,  842,  138,  215,  180,
-			  842,  152,  842,  842,  842,  842,  842,  842,    0,  152,
-			  172,    0,  122,  788,  178,  787,  174,  192,    0,  174,
+			    0,    0,    0,  850,  851,  847,  845,  843,  841,  839,
+			   69,    0,  851,  837,   67,  851,  851,  851,  851,  851,
+			   63,   63,   63,   72,   76,  818,  851,   61,  851,   73,
+			  817,   61,  805,   70,   71,   71,   63,    0,  107,   75,
+			  798,  115,   74,  807,   74,   81,   84,   92,   94,  796,
+			  851,  782,  851,  851,  137,  851,  851,  851,  834,  832,
+			  830,  828,  851,  154,  155,  156,    0,  825,  824,  819,
+			  189,    0,  851,  851,  851,  147,  851,  851,  165,  211,
+			  152,  851,  167,  851,  851,  851,  851,  851,  851,    0,
+			  155,  144,    0,  122,  797,  152,  796,  145,  194,    0,
 
-			  195,  202,  139,  180,  776,    0,  774,  216,    0,  778,
-			  216,  193,  202,  219,  223,    0,  783,  245,  217,  222,
-			  782,  222,  263,  229,  781,  234,  842,  248,  842,  842,
-			  801,  800,  799,  798,  797,  103,  796,  795,  794,  793,
-			  792,  791,  790,  789,  788,  787,  786,  785,  784,  783,
-			  782,  781,  284,  302,  275,  842,  288,  309,  314,  280,
-			  307,  259,    0,  283,  285,  293,  291,  289,  759,  758,
-			    0,  291,  319,  757,  294,  294,  305,  310,  756,  755,
-			  743,  320,  753,  322,  741,    0,  741,    0,  750,  321,
-			  749,  325,  309,  325,  321,  748,  328,  743,  139,  746,
+			  146,  180,  199,   48,  181,  785,    0,  783,  213,    0,
+			  787,  209,  202,  207,  216,  222,    0,  792,  244,  221,
+			  211,  791,  209,  258,  223,  790,  229,  851,  245,  851,
+			  851,  810,  809,  808,  807,  806,  183,  805,  804,  803,
+			  802,  801,  800,  799,  798,  797,  796,  795,  794,  793,
+			  792,  791,  790,  276,  289,  279,  851,  281,  302,  306,
+			  310,  312,  233,    0,  233,  270,  290,  275,  277,  768,
+			  767,    0,  288,  309,  766,  292,  294,  214,  306,  765,
+			  764,  752,  314,  762,  315,  745,    0,  734,    0,  728,
+			  316,  711,  319,  304,  318,  308,  699,  326,  691,  314,
 
-			  745,  323,  736,  725,  327,    0,  842,  842,  842,  842,
-			  842,  350,  842,  842,  842,  842,  842,  842,  842,  842,
-			  842,  842,  842,  842,  842,  842,  842,  842,  356,  371,
-			  374,  377,  379,  386,  384,  388,  392,  397,  401,  403,
-			  356,  708,  364,  369,  703,  686,  375,  683,  383,  386,
-			  385,  386,  685,  387,    0,  678,  673,  656,  395,  673,
-			  396,    0,  395,    0,  397,    0,  394,   69,  663,  654,
-			  396,  406,  625,  408,  402,  621,    0,    0,   79,  401,
-			  409,  418,    0,  651,  455,  458,  460,  462,  464,  468,
-			  470,  472,  474,  477,  479,  483,    0,    0,    0,   82,
+			  693,  691,  314,  686,  685,  316,    0,  851,  851,  851,
+			  851,  851,  368,  851,  851,  851,  851,  851,  851,  851,
+			  851,  851,  851,  851,  851,  851,  851,  851,  851,  364,
+			  371,  373,  377,  379,  386,  384,  388,  392,  396,  400,
+			  403,  325,  675,  356,  363,  679,  676,  370,  671,  374,
+			  386,  383,  387,  674,  387,    0,  673,  668,  643,  391,
+			  648,  393,    0,  401,    0,  402,    0,  394,   91,  638,
+			  631,  397,  405,  613,  403,  401,  620,    0,    0,  414,
+			  400,  410,  423,    0,  648,  443,  453,  409,  459,  461,
+			  464,  466,  468,  470,  474,  476,  480,    0,    0,    0,
 
-			  461,    0,  441,  472,  613,  475,  460,  467,    0,  468,
-			  473,  567,  550,  498,  482,  495,    0,  478,  470,  437,
-			  436,  472,  434,  472,    0,  474,  490,    0,  420,  397,
-			    0,  479,  842,  531,  503,  505,  497,  533,  536,  538,
-			  542,  546,  548,  555,  553,    0,  343,  513,  351,    0,
-			    0,  271,    0,  519,  251,    0,  518,  530,  530,  532,
-			  522,  533,  536,  543,    0,  234,    0,    0,    0,  541,
-			  548,    0,  543,  571,  577,  586,  595,  602,  600,  604,
-			  569,  608,  610,  612,  842,  614,  621,  552,    0,  564,
-			  577,  598,    0,    0,  227,    0,    0,  599,  227,  212,
+			  327,  436,    0,  447,  466,  619,  471,  458,  465,    0,
+			  462,  468,  575,  566,  559,  474,  553,    0,  555,  468,
+			  546,  501,  470,  495,  470,    0,  471,  484,    0,  485,
+			  478,    0,  473,  851,  505,  525,  527,  491,  530,  532,
+			  534,  536,  538,  540,  548,  546,    0,  413,  517,  341,
+			    0,    0,  329,    0,  515,  324,    0,  524,  530,  527,
+			  529,  544,  530,  533,  532,    0,  250,    0,    0,    0,
+			  534,  539,    0,  537,  565,  571,  589,  596,  603,  594,
+			  601,  561,  605,  607,  609,  851,  611,  618,  593,    0,
+			  581,  605,  598,    0,    0,  211,    0,    0,  599,  174,
 
-			  183,    0,  167,  155,    0,  125,  623,  627,  629,  631,
-			  633,  640,  108,  646,  648,  650,    0,    0,    0,    0,
-			    0,  609,    0,  614,    0,    0,    0,  653,   72,  655,
-			  660,  663,    0,    0,  666,  842,  687,  705,  721,  732,
-			  691,  743,  754,  765>>)
+			  156,  157,    0,  151,  146,    0,   91,  621,  625,  627,
+			  629,  633,  641,   83,  650,  652,  654,    0,    0,    0,
+			    0,    0,  608,    0,  612,    0,    0,    0,  656,   46,
+			  664,  666,  668,    0,    0,  670,  851,  691,  708,  728,
+			  740,  745,  757,  769,  781>>)
 		end
 
 	yy_def_template: ANY is
@@ -2046,55 +2071,55 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,  435,    1,  435,  435,  435,  435,  435,  435,  435,
-			  436,  437,  435,  438,  439,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  440,  440,  440,  440,  440,  440,  440,  440,  440,
-			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  436,  436,  436,  437,  438,  438,  441,  441,
-			  441,  435,  435,  435,  435,  435,  435,  442,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435,  435,  440,  440,
-			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
+			    0,  436,    1,  436,  436,  436,  436,  436,  436,  436,
+			  437,  438,  436,  439,  440,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  441,  441,  441,  441,  441,  441,  441,  441,  441,
+			  441,  441,  441,  441,  441,  441,  441,  441,  441,  441,
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  437,  437,  437,  438,  439,  439,  442,
+			  442,  442,  436,  436,  436,  436,  436,  436,  443,  436,
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  441,
+			  441,  441,  441,  441,  441,  441,  441,  441,  441,  441,
 
-			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
-			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
-			  440,  440,  440,  440,  440,  440,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  440,  440,  440,  440,  440,  440,  440,  440,  440,
-			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
-			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
-			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
+			  441,  441,  441,  441,  441,  441,  441,  441,  441,  441,
+			  441,  441,  441,  441,  441,  441,  441,  441,  441,  441,
+			  441,  441,  441,  441,  441,  441,  441,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  436,  441,  441,  441,  441,  441,  441,  441,  441,
+			  441,  441,  441,  441,  441,  441,  441,  441,  441,  441,
+			  441,  441,  441,  441,  441,  441,  441,  441,  441,  441,
+			  441,  441,  441,  441,  441,  441,  441,  441,  441,  441,
 
-			  440,  440,  440,  440,  440,  440,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435,  435,  435,  435,
-			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
-			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
-			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
-			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
-			  440,  440,  440,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  442,  435,  440,  440,  440,  440,
+			  441,  441,  441,  441,  441,  441,  441,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436,  436,  436,  436,
+			  436,  441,  441,  441,  441,  441,  441,  441,  441,  441,
+			  441,  441,  441,  441,  441,  441,  441,  441,  441,  441,
+			  441,  441,  441,  441,  441,  441,  441,  441,  441,  441,
+			  441,  441,  441,  441,  441,  441,  441,  441,  441,  441,
+			  441,  441,  441,  441,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  443,  436,  441,  441,  441,
 
-			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
-			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
-			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
-			  440,  440,  435,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  443,  440,  440,  440,  440,  440,
-			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
-			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
-			  440,  440,  440,  435,  435,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  435,  440,  440,  440,
-			  440,  440,  440,  440,  440,  440,  440,  440,  440,  440,
+			  441,  441,  441,  441,  441,  441,  441,  441,  441,  441,
+			  441,  441,  441,  441,  441,  441,  441,  441,  441,  441,
+			  441,  441,  441,  441,  441,  441,  441,  441,  441,  441,
+			  441,  441,  441,  436,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  444,  441,  441,  441,  441,
+			  441,  441,  441,  441,  441,  441,  441,  441,  441,  441,
+			  441,  441,  441,  441,  441,  441,  441,  441,  441,  441,
+			  441,  441,  441,  441,  436,  436,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436,  436,  441,  441,
+			  441,  441,  441,  441,  441,  441,  441,  441,  441,  441,
 
-			  440,  440,  440,  440,  440,  435,  435,  435,  435,  435,
-			  435,  435,  435,  435,  435,  435,  440,  440,  440,  440,
-			  440,  440,  440,  440,  440,  440,  440,  435,  435,  435,
-			  435,  435,  440,  440,  435,    0,  435,  435,  435,  435,
-			  435,  435,  435,  435>>)
+			  441,  441,  441,  441,  441,  441,  436,  436,  436,  436,
+			  436,  436,  436,  436,  436,  436,  436,  441,  441,  441,
+			  441,  441,  441,  441,  441,  441,  441,  441,  436,  436,
+			  436,  436,  436,  441,  441,  436,    0,  436,  436,  436,
+			  436,  436,  436,  436,  436>>)
 		end
 
 	yy_ec_template: ANY is
@@ -2111,11 +2136,11 @@ feature {NONE} -- Table templates
 			   24,   25,   26,   27,    8,   28,   29,   30,   31,   32,
 			   33,   34,   35,   36,   37,   38,   39,   40,   41,   42,
 			   43,   44,   45,   46,   47,   48,   49,   50,   51,   52,
-			   53,   54,   55,   56,   57,   58,    1,   59,   60,   61,
+			   53,   54,   55,   56,   57,   58,   59,   60,   61,   62,
 
-			   62,   32,   63,   34,   64,   36,   37,   38,   65,   40,
-			   66,   42,   43,   67,   68,   69,   70,   71,   72,   50,
-			   51,   52,   53,   73,    8,   74,    1,    1,    1,    1,
+			   63,   32,   64,   34,   65,   36,   37,   38,   66,   40,
+			   67,   42,   43,   68,   69,   70,   71,   72,   73,   50,
+			   51,   52,   53,   74,    8,   75,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -2142,9 +2167,9 @@ feature {NONE} -- Table templates
 			    8,    9,    1,    1,    1,    1,    1,    1,    8,    8,
 			    8,    8,    8,    8,    8,    8,    8,    8,    8,    8,
 			    8,    8,    8,    8,    8,    8,    8,    8,    8,    8,
-			    8,    8,    8,   10,    1,    1,    1,    1,    8,    8,
+			    8,    8,    8,   10,    1,    1,    1,    1,   11,    1,
 			    8,    8,    8,    8,    8,    8,    8,    8,    8,    8,
-			    8,    8,   11,    1,    1>>)
+			    8,    8,    8,   12,    1,    1>>)
 		end
 
 	yy_accept_template: ANY is
@@ -2152,66 +2177,66 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    0,    0,  135,  133,    3,    4,    1,    2,   10,
-			  133,   94,   17,  133,  133,   11,   12,   31,   30,    8,
+			    0,    0,    0,  137,  135,    3,    4,    1,    2,   10,
+			  135,   94,   17,  135,  134,   11,   12,   31,   30,    8,
 			   29,    6,   32,  124,  124,    9,    7,   36,   34,   35,
-			  133,   93,   93,   93,   93,   93,   93,   93,   93,   93,
+			  135,   93,   93,   93,   93,   93,   93,   93,   93,   93,
 			   93,   93,   93,   93,   93,   93,   93,   93,   93,   93,
-			   15,  133,   16,   33,  126,   13,   14,    3,    4,    1,
-			    2,   37,    0,  120,  122,   94,    0,  121,  118,  118,
-			  118,    5,   23,   24,  129,   18,   20,    0,  124,  124,
-			  123,  126,   28,   25,   22,   21,   26,   27,   93,   93,
-			   93,   42,   93,   93,   93,   93,   93,   93,   48,   93,
+			   15,  135,   16,   33,  126,  133,   13,   14,    3,    4,
+			    1,    2,   37,    0,  120,  122,   94,    0,  121,  118,
+			  118,  118,    5,   23,   24,  129,   18,   20,    0,  124,
+			  124,  123,  126,   28,   25,   22,   21,   26,   27,   93,
+			   93,   93,   42,   93,   93,   93,   93,   93,   93,   48,
 
-			   93,   93,   93,   93,   93,   60,   93,   93,   66,   93,
-			   93,   93,   93,   93,   93,   74,   93,   93,   93,   93,
-			   93,   93,   93,   93,   93,   93,   19,  126,  118,   95,
+			   93,   93,   93,   93,   93,   93,   60,   93,   93,   66,
+			   93,   93,   93,   93,   93,   93,   74,   93,   93,   93,
+			   93,   93,   93,   93,   93,   93,   93,   19,  126,  118,
+			   95,  118,  118,  118,  118,  118,  118,  118,  118,  118,
 			  118,  118,  118,  118,  118,  118,  118,  118,  118,  118,
-			  118,  118,  118,  118,  118,  118,  118,  118,  118,  118,
-			  118,  118,  129,    0,    0,  127,  129,  127,  124,  124,
-			  126,   93,   41,   93,   93,   93,   93,   93,   93,   93,
-			   51,   93,   93,   93,   93,   93,   93,   93,   93,   93,
-			   93,   93,   93,   93,   93,   70,   93,   72,   93,   93,
+			  118,  118,  118,  129,    0,    0,  127,  129,  127,  124,
+			  124,  126,   93,   41,   93,   93,   93,   93,   93,   93,
+			   93,   51,   93,   93,   93,   93,   93,   93,   93,   93,
+			   93,   93,   93,   93,   93,   93,   70,   93,   72,   93,
 			   93,   93,   93,   93,   93,   93,   93,   93,   93,   93,
 
-			   93,   93,   93,   93,   93,   92,  112,  110,  111,  113,
-			  114,  119,  115,  116,   96,   97,   98,   99,  100,  101,
-			  102,  103,  104,  105,  106,  107,  108,  109,  129,    0,
-			  129,    0,  129,    0,    0,    0,  128,  124,  124,  126,
-			   93,   93,   93,   93,   93,   93,   93,   49,   93,   93,
-			   93,   93,   93,   93,   58,   93,   93,   93,   93,   93,
-			   93,   67,   93,   69,   93,   73,   93,   93,   93,   93,
-			   93,   93,   93,   93,   93,   93,   85,   86,   93,   93,
-			   93,   93,   91,  119,  129,  129,    0,    0,  129,    0,
-			  128,    0,  128,    0,    0,  125,   40,   43,   44,   93,
+			   93,   93,   93,   93,   93,   93,   92,  112,  110,  111,
+			  113,  114,  119,  115,  116,   96,   97,   98,   99,  100,
+			  101,  102,  103,  104,  105,  106,  107,  108,  109,  129,
+			    0,  129,    0,  129,    0,    0,    0,  128,  124,  124,
+			  126,   93,   93,   93,   93,   93,   93,   93,   49,   93,
+			   93,   93,   93,   93,   93,   58,   93,   93,   93,   93,
+			   93,   93,   67,   93,   69,   93,   73,   93,   93,   93,
+			   93,   93,   93,   93,   93,   93,   93,   85,   86,   93,
+			   93,   93,   93,   91,  119,  129,  129,    0,    0,  129,
+			    0,  128,    0,  128,    0,    0,  125,   40,   43,   44,
 
-			   93,   46,   93,   93,   93,   93,   93,   93,   56,   93,
-			   93,   93,   93,   93,   93,   93,   68,   93,   93,   93,
-			   93,   93,   93,   93,   81,   93,   93,   84,   93,   93,
-			   89,   93,  117,    0,  129,    0,  132,  129,  128,    0,
-			    0,  128,    0,  127,    0,   39,   93,   93,   93,   50,
-			   52,   93,   54,   93,   93,   59,   93,   93,   93,   93,
-			   93,   93,   93,   93,   77,   93,   79,   80,   82,   93,
-			   93,   88,   93,    0,  129,    0,    0,    0,  128,    0,
-			  132,  128,    0,    0,  130,  132,  130,   93,   45,   93,
-			   93,   93,   57,   61,   93,   63,   64,   93,   93,   93,
+			   93,   93,   46,   93,   93,   93,   93,   93,   93,   56,
+			   93,   93,   93,   93,   93,   93,   93,   68,   93,   93,
+			   93,   93,   93,   93,   93,   81,   93,   93,   84,   93,
+			   93,   89,   93,  117,    0,  129,    0,  132,  129,  128,
+			    0,    0,  128,    0,  127,    0,   39,   93,   93,   93,
+			   50,   52,   93,   54,   93,   93,   59,   93,   93,   93,
+			   93,   93,   93,   93,   93,   77,   93,   79,   80,   82,
+			   93,   93,   88,   93,    0,  129,    0,    0,    0,  128,
+			    0,  132,  128,    0,    0,  130,  132,  130,   93,   45,
+			   93,   93,   93,   57,   61,   93,   63,   64,   93,   93,
 
-			   93,   78,   93,   93,   90,  132,    0,  132,    0,  128,
-			    0,    0,  131,  132,    0,  131,   38,   47,   53,   55,
-			   62,   93,   71,   93,   76,   83,   87,  132,  131,    0,
-			  131,  131,   65,   75,  131,    0>>)
+			   93,   93,   78,   93,   93,   90,  132,    0,  132,    0,
+			  128,    0,    0,  131,  132,    0,  131,   38,   47,   53,
+			   55,   62,   93,   71,   93,   76,   83,   87,  132,  131,
+			    0,  131,  131,   65,   75,  131,    0>>)
 		end
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER is 842
+	yyJam_base: INTEGER is 851
 			-- Position in `yy_nxt'/`yy_chk' tables
 			-- where default jam table starts
 
-	yyJam_state: INTEGER is 435
+	yyJam_state: INTEGER is 436
 			-- State id corresponding to jam state
 
-	yyTemplate_mark: INTEGER is 436
+	yyTemplate_mark: INTEGER is 437
 			-- Mark between normal states and templates
 
 	yyNull_equiv_class: INTEGER is 1
@@ -2230,10 +2255,10 @@ feature {NONE} -- Constants
 			-- regular expression with both leading
 			-- and trailing parts having variable length?
 
-	yyNb_rules: INTEGER is 134
+	yyNb_rules: INTEGER is 136
 			-- Number of rules
 
-	yyEnd_of_buffer: INTEGER is 135
+	yyEnd_of_buffer: INTEGER is 137
 			-- End of buffer rule code
 
 	INITIAL: INTEGER is 0
@@ -2277,6 +2302,7 @@ feature -- Start Job / Reinitialization
 			end_token := Void
 			first_token := Void
 			in_comments := False
+			disabled_comments := False
 		end
 
 feature -- Access
@@ -2317,6 +2343,10 @@ feature {NONE} -- Constants
 
 	in_comments: BOOLEAN
 			-- Are we inside a comment?
+
+	disabled_comments: BOOLEAN
+			-- Are comments disabled?
+			-- Notes: comments are disabled inside `...'
 
 invariant
 

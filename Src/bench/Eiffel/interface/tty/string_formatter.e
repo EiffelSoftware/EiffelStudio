@@ -42,7 +42,7 @@ feature -- Output
 			output.extend (c)
 		end
 
-	new_line is
+	new_line, put_new_line is
 		do
 			output.extend ('%N')
 		end

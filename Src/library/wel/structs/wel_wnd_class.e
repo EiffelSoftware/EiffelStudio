@@ -384,7 +384,6 @@ feature -- Basic operations
 			cwin_register_class (item)
 		ensure
 			registered: registered
-			registered: registered
 		end
 
 	unregister is

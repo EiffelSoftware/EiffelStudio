@@ -36,6 +36,7 @@ doc:<file name="eif_thread.c" header="eif_thread.h" version="$Id$" summary="Thre
 #include "rt_interp.h"
 #include "rt_assert.h"
 #include "rt_retrieve.h"
+#include "rt_gen_conf.h"
 #include "rt_run_idr.h"
 #include "rt_store.h"
 #include "rt_except.h"
@@ -328,6 +329,9 @@ rt_private rt_global_context_t *eif_new_context (void)
 		/* except.c */
 	eif_except_thread_init ();
 
+		/* gen_conf.c */
+	eif_gen_conf_thread_init ();
+
 		/* retrieve.c */
 	eif_retrieve_thread_init ();
 
@@ -590,6 +594,8 @@ rt_public void eif_thr_exit(void)
 	}
 
 		/* Clean GC of non-used data that were used to hold objects */
+		/* gen_conf.c */
+	eif_gen_conf_thread_cleanup ();
 	eif_destroy_gc_stacks(rt_globals);
 
 	if (eif_thr_is_root ())	{	/* Is this the root thread */

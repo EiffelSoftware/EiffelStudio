@@ -123,7 +123,7 @@ feature -- Initialization
 		local
 			tool_bar: EV_TOOL_BAR
 			separator: EV_HORIZONTAL_SEPARATOR
-			vertical_box1: EV_VERTICAL_BOX			
+			vertical_box1: EV_VERTICAL_BOX
 		do
 			Precursor {EV_VERTICAL_BOX}
 			set_border_width (3)
@@ -444,6 +444,7 @@ feature {NONE} -- Implementation
 			locked_in_here: BOOLEAN
 			horizontal_box: EV_HORIZONTAL_BOX
 			flatten_button, shallow_flatten_button: EV_BUTTON
+			tool_bar: EV_TOOL_BAR
 		do
 			current_window_parent := parent_window (Current)
 			if current_window_parent /= Void and ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
@@ -534,6 +535,13 @@ feature {NONE} -- Implementation
 							gb_ev_any.add_object (object.display_object)
 						end
 						
+							-- Now add a separator between each attribute editor.
+						create separator
+						separator.set_minimum_height (Object_editor_padding_width * 2)
+						item_parent.extend (separator)
+						item_parent.disable_item_expand (separator)
+						
+							-- Add the new editor to `item_parent'.
 						item_parent.extend (gb_ev_any.attribute_editor)
 					end
 					supported_types.forth
@@ -545,10 +553,13 @@ feature {NONE} -- Implementation
 				if not object.type.is_equal ("EV_TOOL_BAR_SEPARATOR") and
 				not object.type.is_equal ("EV_MENU_SEPARATOR") then
 					create event_selection_button
+					create tool_bar
+					tool_bar.disable_vertical_button_style
+					tool_bar.extend (event_selection_button)
 					update_event_selection_button_text
 					create horizontal_box
-					horizontal_box.extend (event_selection_button)
-					horizontal_box.disable_item_expand (event_selection_button)
+					horizontal_box.extend (tool_bar)
+					horizontal_box.disable_item_expand (tool_bar)
 					attribute_editor_box.extend (horizontal_box)
 					event_selection_button.select_actions.extend (agent show_event_dialog)
 				end
@@ -784,7 +795,7 @@ feature {NONE} -- Implementation
 	name_field: EV_TEXT_FIELD
 		-- Entry for the object name.
 		
-	event_selection_button: EV_BUTTON
+	event_selection_button: EV_TOOL_BAR_BUTTON
 		-- Brings up the event selection dialog.
 		
 	attribute_editor_box: EV_VERTICAL_BOX

@@ -202,13 +202,15 @@ feature -- Access
 			name_query: STRING
 			name_item: STRING
 			a_dev: EB_DEVELOPMENT_WINDOW
+			cur: CURSOR
 		do
-			create {LINKED_LIST [EB_DEVELOPMENT_WINDOW]} Result.make
+			create {ARRAYED_LIST [EB_DEVELOPMENT_WINDOW]} Result.make (managed_windows.count)
 
 			name_query := clone (cl_name)
 			name_query.to_upper
 
 			from
+				cur := managed_windows.cursor
 				managed_windows.start
 			until
 				managed_windows.after
@@ -225,6 +227,7 @@ feature -- Access
 				end
 				managed_windows.forth
 			end
+			managed_windows.go_to (cur)
 		ensure
 			not_void: Result /= Void
 		end
@@ -239,8 +242,10 @@ feature -- Status report
 			-- number of visible development windows
 		local
 			a_dev: EB_DEVELOPMENT_WINDOW
+			cur: CURSOR
 		do
 			from
+				cur := managed_windows.cursor
 				managed_windows.start
 			until
 				managed_windows.after
@@ -251,6 +256,7 @@ feature -- Status report
 				end
 				managed_windows.forth
 			end
+			managed_windows.go_to (cur)
 		end	
 
 	has_active_development_windows: BOOLEAN is
@@ -263,8 +269,10 @@ feature -- Status report
 			-- Are there any window having been modified and not yet saved?
 		local
 			a_dev: EB_DEVELOPMENT_WINDOW
+			cur: CURSOR
 		do
 			from
+				cur := managed_windows.cursor
 				managed_windows.start
 			until
 				Result or else managed_windows.after
@@ -278,6 +286,7 @@ feature -- Status report
 			if not Result then
 				Result := (dynamic_lib_window_is_valid and then dynamic_lib_window.changed)
 			end
+			managed_windows.go_to (cur)
 		end
 				
 	is_class_opened (cl_name: STRING): BOOLEAN is
@@ -287,11 +296,13 @@ feature -- Status report
 			name_query: STRING
 			name_item: STRING
 			a_dev: EB_DEVELOPMENT_WINDOW
+			cur: CURSOR
 		do
 			name_query := clone (cl_name)
 			name_query.to_upper
 
 			from
+				cur := managed_windows.cursor
 				managed_windows.start
 			until
 				Result or else managed_windows.after
@@ -304,12 +315,16 @@ feature -- Status report
 				end
 				managed_windows.forth
 			end
+			managed_windows.go_to (cur)
 		end
 
 	development_window_from_window (a_window: EV_WINDOW): EB_DEVELOPMENT_WINDOW is
 			-- Return the development window whose widget is `a_window'.
+		local
+			cur: CURSOR
 		do
 			from
+				cur := managed_windows.cursor
 				managed_windows.start
 			until
 				managed_windows.after or else
@@ -323,6 +338,7 @@ feature -- Status report
 				end
 				managed_windows.forth
 			end
+			managed_windows.go_to (cur)
 		end
 
 	last_focused_development_window: EB_DEVELOPMENT_WINDOW is
@@ -357,8 +373,10 @@ feature -- Status report
 		local
 			conv_dev: EB_DEVELOPMENT_WINDOW
 			found: BOOLEAN
+			cur: CURSOR
 		do
 			from
+				cur := managed_windows.cursor
 				managed_windows.start
 			until
 				managed_windows.after or found
@@ -368,6 +386,7 @@ feature -- Status report
 				managed_windows.forth
 			end
 			Result := conv_dev
+			managed_windows.go_to (cur)
 		end
 
 feature -- Actions on a given window
@@ -412,9 +431,7 @@ feature -- Actions on a given window
 			-- Destroy the window.
 		do
 				-- Remove this window from managed windows.
-			managed_windows.start
 			managed_windows.prune_all (a_window)
-			focused_windows.start
 			focused_windows.prune_all (a_window)
 
 			if last_created_window = a_window then
@@ -517,6 +534,7 @@ feature -- Actions on all windows
 					managed_windows.forth
 				end
 			end
+			managed_windows.go_to (saved_cursor)
 		end
 
 
@@ -553,8 +571,10 @@ feature -- Actions on all windows
 			one_line_message: m /= Void and then (not m.has ('%N') and not m.has ('%R'))
 		local
 			cv_dev: EB_DEVELOPMENT_WINDOW
+			cur: CURSOR
 		do
 			from
+				cur := managed_windows.cursor
 				managed_windows.start
 			until
 				managed_windows.after
@@ -565,14 +585,17 @@ feature -- Actions on all windows
 				end
 				managed_windows.forth
 			end
+			managed_windows.go_to (cur)
 		end
 
 	for_all_development_windows (p: PROCEDURE [EB_DEVELOPMENT_WINDOW, TUPLE]) is
 			-- Call `p' on all development windows.
 		local
 			cv_dev: EB_DEVELOPMENT_WINDOW
+			cur: CURSOR
 		do
 			from
+				cur := managed_windows.cursor
 				managed_windows.start
 			until
 				managed_windows.after
@@ -583,6 +606,7 @@ feature -- Actions on all windows
 				end
 				managed_windows.forth
 			end
+			managed_windows.go_to (cur)
 		end
 
 feature {EB_WINDOW} -- Events
@@ -590,7 +614,6 @@ feature {EB_WINDOW} -- Events
 	set_focused_window (w: EB_WINDOW) is
 			-- Tell `Current' `w' has been given the focus.
 		do
-			focused_windows.start
 			focused_windows.prune_all (w)
 			focused_windows.extend (w)
 		end

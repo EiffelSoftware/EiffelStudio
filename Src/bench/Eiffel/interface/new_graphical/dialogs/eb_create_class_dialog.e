@@ -264,7 +264,7 @@ feature -- Basic operations
 				else
 					i := Void
 					if cluster /= Void then
-						i := cluster_list.item_by_data (cluster)
+						i := cluster_list.retrieve_item_by_data (cluster, True)
 						cluster_list.start
 						cluster_list.search (i)
 					end

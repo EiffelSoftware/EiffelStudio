@@ -205,7 +205,7 @@ feature -- Observer pattern
 			item_name := a_item.name
 			item_list := get_tree_item_from_path (Current, a_path)
 			if item_list /= Void then
-				tree_item_to_remove ?= item_list.item_by_data (a_item)
+				tree_item_to_remove ?= item_list.retrieve_item_by_data (a_item, True)
 				if tree_item_to_remove /= Void then
 					item_list.prune_all (tree_item_to_remove)
 				end
@@ -279,7 +279,7 @@ feature {NONE} -- Implementation
 				curr_folder_name := new_path.item.name
 				new_path.remove
 
-				sub_tree ?= item_list.item_by_data (curr_item)
+				sub_tree ?= item_list.retrieve_item_by_data (curr_item, True)
 				Result := get_tree_item_from_path (sub_tree, new_path)
 			end
 		end

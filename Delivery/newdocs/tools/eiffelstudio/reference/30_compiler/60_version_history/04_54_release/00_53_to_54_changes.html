@@ -37,7 +37,7 @@
           <li>Launch C compilation when needed if <span class="equoted">-c_compile</span> option is 
           specified on the <span class="equoted">ec</span> command line.</li>
           <li>Added ability to define custom attributes on assembly. One as to 
-          define custom attributes under the new `assembly_attribute' index 
+          define custom attributes under the new `assembly_metadata' index 
           clause of the root class.</li>
 </ul>
         
@@ -88,9 +88,21 @@ td := ti</pre>
           the next release this will be rejected in order to conform to the 
           Eiffel language specification.
           </li>
-          <li>Now we do not generate by default the ComVisibleAttribute with a 
+          <li>Now we do not generate by default the .NET attribute <span class="eclass">ComVisibleAttribute</span> with a 
           False value. If needed it has to be done through the new compiler 
           functionality to add custom attributes on assembly.</li>
+          <li>Changed indexing clause tag for specifying custom attributes for 
+          .NET systems. Now `attribute' is replaced by `metadata'. Now you can 
+          have:<ul>
+          <li>metadata: generated for both interface and implementation classes</li>
+          <li>assembly_metadata: generated for assembly only when specified in 
+          root class of system</li>
+          <li>class_metadata: generated only for implementation class</li>
+          <li>interface_metadata: generated only for interface class</li>
+</ul>
+        
+        
+          </li>
 </ul>
         
         
@@ -137,6 +149,8 @@ td := ti</pre>
           <li>Fixed bug in recoverable storable when there is a mismatch. The 
           first assignment attempt in 
           <span class="efeature">internal_correct_mismatch</span> from <span class="eclass">ANY</span> would crash.</li>
+          <li>Fixed issue when retrieving storable files that contain TUPLE 
+          instances.</li>
           <li>Fixed issues when using agents in a multithreaded application, 
           they will sometimes disable the garbage collector and the application 
           might quickly run out of memory.</li>

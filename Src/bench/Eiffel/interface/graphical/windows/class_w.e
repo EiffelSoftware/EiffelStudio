@@ -17,8 +17,8 @@ inherit
 			close_windows as old_close_windows
 		redefine
 			text_window, build_format_bar, hole,
-			tool_name, open_command, save_command,
-			save_as_command, editable,
+			tool_name, open_cmd_holder, save_cmd_holder,
+			save_as_cmd_holder, editable,
 			create_edit_buttons, set_default_size,
 			build_widgets, resize_action,
 			build_edit_bar
@@ -26,8 +26,8 @@ inherit
 	BAR_AND_TEXT
 		redefine
 			text_window, build_format_bar, hole,
-			tool_name, open_command, save_command,
-			save_as_command, editable,
+			tool_name, open_cmd_holder, save_cmd_holder,
+			save_as_cmd_holder, editable,
 			build_edit_bar, create_edit_buttons, reset,
 			make, set_default_size, build_widgets, attach_all,
 			close_windows, resize_action
@@ -73,13 +73,18 @@ feature -- Window Settings
 
 	close_windows is
 			-- Close sub-windows.
+		local
+			fw: FILTER_W;
+			fc: FILTER_COMMAND
 		do
 			old_close_windows;
 			if change_class_command.choice.is_popped_up then
 				change_class_command.choice.popdown
 			end;
-			if filter_command.filter_window.is_popped_up then
-				filter_command.filter_window.popdown
+			fc ?= filter_cmd_holder.associated_command;
+			fw ?= fc.filter_window;
+			if fw.is_popped_up then
+				fw.popdown
 			end
 		end;
 
@@ -121,31 +126,31 @@ feature -- Formats
 
 	showflatshort_command: SHOW_FS;
 
-	showancestors_command: SHOW_ANCESTORS;
+	showancestors_frmt_holder: FORMAT_HOLDER;
 
-	showdescendants_command: SHOW_DESCENDANTS;
+	showdescendants_frmt_holder: FORMAT_HOLDER;
 
-	showclients_command: SHOW_CLIENTS;
+	showclients_frmt_holder: FORMAT_HOLDER;
 
-	showsuppliers_command: SHOW_SUPPLIERS;
+	showsuppliers_frmt_holder: FORMAT_HOLDER;
 
-	showattributes_command: SHOW_ATTRIBUTES;
+	showattributes_frmt_holder: FORMAT_HOLDER;
 
-	showroutines_command: SHOW_ROUTINES;
+	showroutines_frmt_holder: FORMAT_HOLDER;
 
 	showshort_command: SHOW_SHORT;
 
 	showclick_command: SHOW_CLICK_CL;
 
-	showdeferreds_command: SHOW_DEFERREDS;
+	showdeferreds_frmt_holder: FORMAT_HOLDER;
 
-	showexternals_command: SHOW_EXTERNALS;
+	showexternals_frmt_holder: FORMAT_HOLDER;
 
-	showonces_command: SHOW_ONCES;
+	showonces_frmt_holder: FORMAT_HOLDER;
 
-	showexported_command: SHOW_EXPORTED;
+	showexported_frmt_holder: FORMAT_HOLDER;
 
-	showcustom_command: SHOW_CUSTOM
+	showcustom_frmt_holder: FORMAT_HOLDER;
 
 feature -- Grahpical Interface
 
@@ -182,8 +187,10 @@ feature -- Grahpical Interface
 			-- Raise the shell command popup window if it is popped up.
 		local
 			shell_window: SHELL_W
+			shell_cmd: SHELL_COMMAND
 		do
-			shell_window := shell_command.shell_window;
+			shell_cmd ?= shell.associated_command;
+			shell_window := shell_cmd.shell_window;
 			if shell_window.is_popped_up then
 				shell_window.raise
 			end
@@ -235,21 +242,21 @@ feature {NONE} -- Implemetation; Window Settings
 
 feature {NONE} -- Commands
 
-	open_command: OPEN_FILE;
+	open_cmd_holder: COMMAND_HOLDER;
 
-	save_command: SAVE_FILE;
+	save_cmd_holder: COMMAND_HOLDER;
 
-	save_as_command: SAVE_AS_FILE;
+	save_as_cmd_holder: COMMAND_HOLDER;
 
-	shell_command: SHELL_COMMAND;
+	shell: COMMAND_HOLDER;
 
-	current_target: CURRENT_CLASS;
+	current_target_cmd_holder: COMMAND_HOLDER;
 
-	previous_target: PREVIOUS_TARGET;
+	previous_target_cmd_holder: COMMAND_HOLDER;
 
-	next_target: NEXT_TARGET;
+	next_target_cmd_holder: COMMAND_HOLDER;
 
-	filter_command: FILTER_COMMAND
+	filter_cmd_holder: COMMAND_HOLDER
 
 feature {NONE} -- Forms And Holes
 
@@ -259,54 +266,153 @@ feature {NONE} -- Forms And Holes
 feature {NONE} -- Implementation; Graphical Interface
 
 	create_edit_buttons is
+		local
+			quit_cmd: QUIT_FILE
+			quit_button: EB_BUTTON
+			change_font_cmd: CHANGE_FONT
+			change_font_button: EB_BUTTON
+			search_cmd: SEARCH_STRING
+			search_button: EB_BUTTON
+			open_cmd: OPEN_FILE;
+			open_button: EB_BUTTON;
+			save_cmd: SAVE_FILE;
+			save_button: EB_BUTTON;
+			save_as_cmd: SAVE_AS_FILE;
+			save_as_button: EB_BUTTON;
 		do
 			!! change_class_form.make (new_name, edit_bar);
 			!! change_class_command.make (change_class_form, text_window);
-			!! open_command.make (edit_bar, text_window);
-			!! save_command.make (edit_bar, text_window);
-			!! save_as_command.make (edit_bar, text_window);
-			!! quit_command.make (edit_bar, text_window);
+			!! open_cmd.make (text_window);
+			!! open_button.make (open_cmd, edit_bar);
+			!! open_cmd_holder.make (open_cmd, open_button);
+			!! save_cmd.make (text_window);
+			!! save_button.make (save_cmd, edit_bar);
+			!! save_cmd_holder.make (save_cmd, save_button);
+			!! save_as_cmd.make (text_window);
+			!! save_as_button.make (save_as_cmd, edit_bar);
+			!! save_as_cmd_holder.make (save_as_cmd, save_as_button);
+			!! quit_cmd.make (text_window);
+			!! quit_button.make (quit_cmd, edit_bar);
+			!! quit.make (quit_cmd, quit_button);
+			!! change_font_cmd.make (text_window);
+			!! change_font_button.make (change_font_cmd, edit_bar);
+			if not change_font_cmd.tabs_disabled then
+				change_font_button.add_button_click_action (3, change_font_cmd, change_font_cmd.tab_setting)
+			end;
+			!! change_font_cmd_holder.make (change_font_cmd, change_font_button);
+			!! search_cmd.make (edit_bar, text_window);
+			!! search_button.make (search_cmd, edit_bar);
+			!! search_cmd_holder.make (search_cmd, search_button);
 		end;
 
 	build_command_bar is
+		local
+			shell_cmd: SHELL_COMMAND;
+			shell_button: EB_BUTTON;
+			previous_target_cmd: PREVIOUS_TARGET;
+			previous_target_button: EB_BUTTON
+			next_target_cmd: NEXT_TARGET;
+			next_target_button: EB_BUTTON
+			current_target_cmd: CURRENT_CLASS;
+			current_target_button: EB_BUTTON;
+			filter_cmd: FILTER_COMMAND;
+			filter_button: EB_BUTTON
 		do
-			!! shell_command.make (command_bar, text_window);
-			command_bar.attach_left (shell_command, 0);
-			command_bar.attach_bottom (shell_command, 10);
-			!! filter_command.make (command_bar, text_window);
-			command_bar.attach_left (filter_command, 0);
-			command_bar.attach_right (filter_command, 0);
-			command_bar.attach_bottom_widget (shell_command, filter_command, 0);
-			!! current_target.make (command_bar, text_window);
-			command_bar.attach_left (current_target, 0);
-			command_bar.attach_bottom_widget (filter_command, current_target, 10);
-			!! next_target.make (command_bar, text_window);
-			command_bar.attach_left (next_target, 0);
-			command_bar.attach_bottom_widget (current_target, next_target, 0);
-			!! previous_target.make (command_bar, text_window);
-			command_bar.attach_left (previous_target, 0);
-			command_bar.attach_bottom_widget (next_target, previous_target, 0)
+			!! shell_cmd.make (command_bar, text_window);
+			!! shell_button.make (shell_cmd, command_bar);
+			shell_button.add_button_click_action (3, shell_cmd, Void);
+			!! shell.make (shell_cmd, shell_button);
+			command_bar.attach_left (shell_button, 0);
+			command_bar.attach_bottom (shell_button, 10);
+			!! filter_cmd.make (command_bar, text_window);
+			!! filter_button.make (filter_cmd, command_bar);
+			filter_button.add_button_click_action (3, filter_cmd, Void);
+			!! filter_cmd_holder.make (filter_cmd, filter_button);
+			command_bar.attach_left (filter_button, 0);
+			command_bar.attach_right (filter_button, 0);
+			command_bar.attach_bottom_widget (shell_button, filter_button, 0);
+			!! current_target_cmd.make (text_window);
+			!! current_target_button.make (current_target_cmd, command_bar);
+			!! current_target_cmd_holder.make (current_target_cmd, current_target_button);
+			command_bar.attach_left (current_target_button, 0);
+			command_bar.attach_bottom_widget (filter_button, current_target_button, 10);
+			!! next_target_cmd.make (text_window);
+			!! next_target_button.make (next_target_cmd, command_bar);
+			!! next_target_cmd_holder.make (next_target_cmd, next_target_button);
+			command_bar.attach_left (next_target_button, 0);
+			command_bar.attach_bottom_widget (current_target_button, next_target_button, 0);
+			!! previous_target_cmd.make (text_window);
+			!! previous_target_button.make (previous_target_cmd, command_bar);
+			!! previous_target_cmd_holder.make (previous_target_cmd, previous_target_button);
+			command_bar.attach_left (previous_target_button, 0);
+			command_bar.attach_bottom_widget (next_target_button, previous_target_button, 0)
 		end;
 
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
+		local
+			anc_cmd: SHOW_ANCESTORS;
+			anc_button: EB_BUTTON;
+			des_cmd: SHOW_DESCENDANTS;
+			des_button: EB_BUTTON;
+			cli_cmd: SHOW_CLIENTS;
+			cli_button: EB_BUTTON;
+			sup_cmd: SHOW_SUPPLIERS;
+			sup_button: EB_BUTTON;
+			att_cmd: SHOW_ATTRIBUTES;
+			att_button: EB_BUTTON;
+			rou_cmd: SHOW_ROUTINES;
+			rou_button: EB_BUTTON;
+			def_cmd: SHOW_DEFERREDS;
+			def_button: EB_BUTTON;
+			ext_cmd: SHOW_EXTERNALS;
+			ext_button: EB_BUTTON;
+			onc_cmd: SHOW_ONCES;
+			onc_button: EB_BUTTON;
+			exp_cmd: SHOW_EXPORTED;
+			exp_button: EB_BUTTON;
+			cus_cmd: SHOW_CUSTOM;
+			cus_button: EB_BUTTON
 		do
 			!! showtext_command.make (format_bar, text_window);
 			!! showflat_command.make (format_bar, text_window);
 			!! showflatshort_command.make (format_bar, text_window);
 			!! showshort_command.make (format_bar, text_window);
 			!! showclick_command.make (format_bar, text_window);
-			!! showancestors_command.make (format_bar, text_window);
-			!! showdescendants_command.make (format_bar, text_window);
-			!! showclients_command.make (format_bar, text_window);
-			!! showsuppliers_command.make (format_bar, text_window);
-			!! showattributes_command.make (format_bar, text_window);
-			!! showroutines_command.make (format_bar, text_window);
-			!! showdeferreds_command.make (format_bar, text_window);
-			!! showexternals_command.make (format_bar, text_window);
-			!! showexported_command.make (format_bar, text_window);
-			!! showonces_command.make (format_bar, text_window);
-			!! showcustom_command.make (format_bar, text_window);
+			!! anc_cmd.make (text_window);
+			!! anc_button.make (anc_cmd, format_bar);
+			!! showancestors_frmt_holder.make (anc_cmd, anc_button);
+			!! des_cmd.make (text_window);
+			!! des_button.make (des_cmd, format_bar);
+			!! showdescendants_frmt_holder.make (des_cmd, des_button);
+			!! cli_cmd.make (text_window);
+			!! cli_button.make (cli_cmd, format_bar);
+			!! showclients_frmt_holder.make (cli_cmd, cli_button);
+			!! sup_cmd.make (text_window);
+			!! sup_button.make (sup_cmd, format_bar);
+			!! showsuppliers_frmt_holder.make (sup_cmd, sup_button);
+			!! att_cmd.make (text_window);
+			!! att_button.make (att_cmd, format_bar);
+			!! showattributes_frmt_holder.make (att_cmd, att_button);
+			!! rou_cmd.make (text_window);
+			!! rou_button.make (rou_cmd, format_bar);
+			!! showroutines_frmt_holder.make (rou_cmd, rou_button);
+			!! def_cmd.make (text_window);
+			!! def_button.make (def_cmd, format_bar);
+			!! showdeferreds_frmt_holder.make (def_cmd, def_button);
+			!! ext_cmd.make (text_window);
+			!! ext_button.make (ext_cmd, format_bar);
+			!! showexternals_frmt_holder.make (ext_cmd, ext_button);
+			!! exp_cmd.make (text_window);
+			!! exp_button.make (exp_cmd, format_bar);
+			!! showexported_frmt_holder.make (exp_cmd, exp_button);
+			!! onc_cmd.make (text_window);
+			!! onc_button.make (onc_cmd, format_bar);
+			!! showonces_frmt_holder.make (onc_cmd, onc_button);
+			!! cus_cmd.make (text_window);
+			!! cus_button.make (cus_cmd, format_bar);
+			cus_button.add_button_press_action (3, cus_cmd, cus_cmd);
+			!! showcustom_frmt_holder.make (cus_cmd, cus_button);
 
 			format_bar.attach_top (showtext_command, 0);
 			format_bar.attach_left (showtext_command, 0);
@@ -318,27 +424,27 @@ feature {NONE} -- Implementation; Graphical Interface
 			format_bar.attach_left_widget (showflat_command, showshort_command, 0);
 			format_bar.attach_top (showclick_command, 0);
 			format_bar.attach_left_widget (showshort_command, showflatshort_command, 0);
-			format_bar.attach_top (showancestors_command, 0);
-			format_bar.attach_left_widget (showflatshort_command, showancestors_command, 15);
-			format_bar.attach_top (showdescendants_command, 0);
-			format_bar.attach_left_widget (showancestors_command, showdescendants_command, 0);
-			format_bar.attach_top (showclients_command, 0);
-			format_bar.attach_left_widget (showdescendants_command, showclients_command, 0);
-			format_bar.attach_top (showsuppliers_command, 0);
-			format_bar.attach_left_widget (showclients_command, showsuppliers_command, 0);
-			format_bar.attach_top (showattributes_command, 0);
-			format_bar.attach_right_widget (showroutines_command, showattributes_command, 0);
-			format_bar.attach_top (showroutines_command, 0);
-			format_bar.attach_right_widget (showdeferreds_command, showroutines_command, 0);
-			format_bar.attach_top (showdeferreds_command, 0);
-			format_bar.attach_right_widget (showonces_command, showdeferreds_command, 0);
-			format_bar.attach_top (showonces_command, 0);
-			format_bar.attach_right_widget (showexternals_command, showonces_command, 0);
-			format_bar.attach_top (showexternals_command, 0);
-			format_bar.attach_right_widget (showexported_command, showexternals_command, 0);
-			format_bar.attach_right_widget (showcustom_command, showexported_command, 0);
-			format_bar.attach_top (showcustom_command, 0);
-			format_bar.attach_right (showcustom_command, 0);
+			format_bar.attach_top (anc_button, 0);
+			format_bar.attach_left_widget (showflatshort_command, anc_button, 15);
+			format_bar.attach_top (des_button, 0);
+			format_bar.attach_left_widget (anc_button, des_button, 0);
+			format_bar.attach_top (cli_button, 0);
+			format_bar.attach_left_widget (des_button, cli_button, 0);
+			format_bar.attach_top (sup_button, 0);
+			format_bar.attach_left_widget (cli_button, sup_button, 0);
+			format_bar.attach_top (att_button, 0);
+			format_bar.attach_right_widget (rou_button, att_button, 0);
+			format_bar.attach_top (rou_button, 0);
+			format_bar.attach_right_widget (def_button, rou_button, 0);
+			format_bar.attach_top (def_button, 0);
+			format_bar.attach_right_widget (onc_button, def_button, 0);
+			format_bar.attach_top (onc_button, 0);
+			format_bar.attach_right_widget (ext_button, onc_button, 0);
+			format_bar.attach_top (ext_button, 0);
+			format_bar.attach_right_widget (exp_button, ext_button, 0);
+			format_bar.attach_right_widget (cus_button, exp_button, 0);
+			format_bar.attach_top (cus_button, 0);
+			format_bar.attach_right (cus_button, 0);
 		end;
 
 	build_edit_bar is
@@ -347,18 +453,9 @@ feature {NONE} -- Implementation; Graphical Interface
 			edit_bar.set_fraction_base (21);
 			!! hole.make (edit_bar, Current);
 			create_edit_buttons;
-			!! type_teller.make (new_name, edit_bar);
-			type_teller.set_center_alignment;
-			clean_type
-			!! search_command.make (edit_bar, text_window);
-			!! change_font_command.make (edit_bar, text_window);
 
 			edit_bar.attach_left (hole, 0);
 			edit_bar.attach_top (hole, 0);
-			edit_bar.attach_left_widget (hole, type_teller, 0);
-			edit_bar.attach_top (type_teller, 0);
-			edit_bar.attach_bottom (type_teller, 0);
-			edit_bar.attach_right_position (type_teller, 7);
 
 			change_class_form.attach_left (change_class_command, 0);
 			change_class_form.attach_right (change_class_command, 0);
@@ -367,19 +464,19 @@ feature {NONE} -- Implementation; Graphical Interface
 
 			edit_bar.attach_top (change_class_form, 0);
 			edit_bar.attach_left_position (change_class_form, 7);
-			edit_bar.attach_right_widget (open_command, change_class_form, 2);
-			edit_bar.attach_right (quit_command, 0);
-			edit_bar.attach_top (quit_command, 0);
-			edit_bar.attach_top (change_font_command, 0);
-			edit_bar.attach_right_widget (quit_command, change_font_command, 5);
-			edit_bar.attach_top (search_command, 0);
-			edit_bar.attach_right_widget (change_font_command, search_command, 0);
-			edit_bar.attach_top (save_as_command, 0);
-			edit_bar.attach_right_widget (search_command, save_as_command, 0);
-			edit_bar.attach_top (save_command, 0);
-			edit_bar.attach_right_widget (save_as_command, save_command, 0);
-			edit_bar.attach_top (open_command, 0);
-			edit_bar.attach_right_widget (save_command, open_command, 0)
+			edit_bar.attach_right_widget (open_cmd_holder.associated_button, change_class_form, 2);
+			edit_bar.attach_right (quit.associated_button, 0);
+			edit_bar.attach_top (quit.associated_button, 0);
+			edit_bar.attach_top (change_font_cmd_holder.associated_button, 0);
+			edit_bar.attach_right_widget (quit.associated_button, change_font_cmd_holder.associated_button, 5);
+			edit_bar.attach_top (search_cmd_holder.associated_button, 0);
+			edit_bar.attach_right_widget (change_font_cmd_holder.associated_button, search_cmd_holder.associated_button, 0);
+			edit_bar.attach_top (save_as_cmd_holder.associated_button, 0);
+			edit_bar.attach_right_widget (search_cmd_holder.associated_button, save_as_cmd_holder.associated_button, 0);
+			edit_bar.attach_top (save_cmd_holder.associated_button, 0);
+			edit_bar.attach_right_widget (save_as_cmd_holder.associated_button, save_cmd_holder.associated_button, 0);
+			edit_bar.attach_top (open_cmd_holder.associated_button, 0);
+			edit_bar.attach_right_widget (save_cmd_holder.associated_button, open_cmd_holder.associated_button, 0)
 		end;
 
 end -- class CLASS_W

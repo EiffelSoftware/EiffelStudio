@@ -12,7 +12,7 @@ inherit
 	SHARED_APPLICATION_EXECUTION;
 	SHARED_EIFFEL_PROJECT;
 	PROJECT_CONTEXT;
-	ICONED_COMMAND
+	ICONED_COMMAND_2
 		redefine
 			text_window
 		end;
@@ -31,11 +31,10 @@ creation
 
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+	make (a_text_window: TEXT_WINDOW) is
 			-- Initialize the command, and set an action.
 		do
-			init (c, a_text_window);
-			set_action ("!c<Btn1Down>", Current, generate_code_only)
+			init (a_text_window);
 		end;
 
 feature -- Callbacks
@@ -111,7 +110,7 @@ feature {NONE} -- Implementation
 						temp.append (Project_file_name);
 						temp.append ("%NPlease check permissions and disk space%
 									%%NThen press ");
-						temp.append (command_name);
+						temp.append (name);
 						temp.append (" again%N");
 						error_window.put_string (temp);
 					else
@@ -198,7 +197,7 @@ feature {NONE} -- Implementation
 				then
 						-- The system has been successfully melted.
 						-- The system can be executed as required.
-					text_window.tool.debug_run_command.execute (text_window)
+					text_window.tool.debug_run_cmd_holder.associated_command.execute (text_window)
 				end
 			else
 				end_run_confirmed := true;
@@ -278,7 +277,7 @@ feature {NONE} -- Attributes
 			Result := Workbench_generation_path
 		end;
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := l_Update

@@ -11,7 +11,7 @@ inherit
 
 	HOLE
 		redefine
-			compatible, symbol, stone_type, command_name,
+			compatible, symbol, stone_type, name,
 			full_symbol, transport_stone
 		end
 
@@ -61,7 +61,7 @@ feature {NONE} -- Properties
 				(dropped.stone_type = Class_type)
 		end;
 
-	command_name: STRING is
+	name: STRING is
 		do
 			Result := l_Class
 		end;

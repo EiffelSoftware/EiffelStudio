@@ -43,7 +43,7 @@ feature {NONE} -- Attributes
 			Result := No_stop_points
 		end;
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := l_Exec_nostop

@@ -29,6 +29,7 @@ feature -- Initialization
 		do
 			text_window := a_text_window
 		end;
+
 feature -- Callbacks
 
 	exit_bench is
@@ -183,7 +184,7 @@ feature -- Project Initialization
 
 feature {NONE} -- Attributes
 
-	command_name: STRING is
+	name: STRING is
 			-- Name fo the command.
 		do
 			Result := l_Open_project

@@ -40,7 +40,7 @@ feature -- Porperties
  
 feature {NONE} -- Properties
 
-	command_name: STRING is
+	name: STRING is
 		do
 			Result := l_Showhomonyms
 		end;

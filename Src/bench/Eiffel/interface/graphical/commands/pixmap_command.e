@@ -1,7 +1,7 @@
 indexing
 
 	description:	
-		"Command with an icon associated.";
+		"Command with an associated icon.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -24,6 +24,7 @@ inherit
 			parent_window as Project_tool
 		end;
 	SHARED_ACCELERATOR
+	FOCUSABLE
 
 feature {NONE} -- Implementation
 
@@ -36,14 +37,30 @@ feature {NONE} -- Implementation
 		do
 			pict_create (new_name, a_composite);
 			set_symbol (symbol);
-			add_enter_action (Current, get_in);
-			add_leave_action (Current, get_out);
+			initialize_focus;
 			add_activate_action (Current, a_text_window);
 			text_window := a_text_window
 		ensure
 			parent = a_composite
 		end;
 	
+feature -- Access
+
+	focus_source: WIDGET is
+			-- Widget representing
+			-- Current on the screen
+		do
+			Result := Current;
+		end;
+
+	focus_string: STRING is
+			-- String to be associated
+			-- with Current when it is
+			-- in focus
+		do
+			Result := name;
+		end;
+
 feature -- Status Setting
 
 	darken (b: BOOLEAN) is
@@ -69,7 +86,7 @@ feature -- Properties
 
 feature {TEXT_WINDOW} -- Restricted Properties
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		deferred
 		end;
@@ -80,16 +97,10 @@ feature -- Execute
 			-- Execute current command but don't change the cursor into
 			-- watch shape.
 		do
-			if argument = get_in then
-				text_window.tool.tell_type (command_name)
-			elseif argument = get_out then
-				text_window.tool.clean_type
-			else
-				if last_warner /= Void then
-					last_warner.popdown
-				end;
-				execute_licenced (argument)
-			end
+			if last_warner /= Void then
+				last_warner.popdown
+			end;
+			execute_licenced (argument)
 		end;
 	
 feature {NONE} -- Implementation
@@ -104,27 +115,10 @@ feature {NONE} -- Implementation
 			end;
 		end;
 
-
 	dark_symbol: PIXMAP is
 			-- Dark version of `symbol'
 		do
 			Result := symbol
-		end;
-
-feature {NONE} -- Attributes
-
-	get_in: ANY is
-			-- To be used as argument for callbacks on enter
-			-- and leave actions
-		once
-			!!Result
-		end;
-
-	get_out: ANY is
-			-- To be used as argument for callbacks on enter
-			-- and leave actions
-		once
-			!!Result
 		end;
 
 invariant

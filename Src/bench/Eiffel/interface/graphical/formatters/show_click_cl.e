@@ -123,7 +123,7 @@ feature -- Formatting
 
 feature {NONE} -- Properties
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := l_Showclick

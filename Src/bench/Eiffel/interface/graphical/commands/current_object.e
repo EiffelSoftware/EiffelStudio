@@ -10,7 +10,7 @@ class CURRENT_OBJECT
 
 inherit
 
-	ICONED_COMMAND;
+	ICONED_COMMAND_2;
 	SHARED_APPLICATION_EXECUTION
 
 creation
@@ -19,10 +19,10 @@ creation
 
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+	make (a_text_window: TEXT_WINDOW) is
 			-- Initialize the associated window.
 		do 
-			init (c, a_text_window)
+			init (a_text_window)
 		end;
 
 feature -- Properties
@@ -33,7 +33,7 @@ feature -- Properties
 			Result := bm_Current
 		end;
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := l_Current

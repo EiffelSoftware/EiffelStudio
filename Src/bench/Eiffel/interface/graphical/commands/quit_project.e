@@ -11,7 +11,7 @@ inherit
 
 	PROJECT_CONTEXT;
 	SHARED_APPLICATION_EXECUTION;
-	ICONED_COMMAND
+	ICONED_COMMAND_2
 		redefine
 			licence_checked
 		end;
@@ -28,10 +28,10 @@ creation
 	
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+	make (a_text_window: TEXT_WINDOW) is
 			-- Initialize the command.
 		do
-			init (c, a_text_window)
+			init (a_text_window)
 		end;
 
 feature -- Callbacks
@@ -102,10 +102,10 @@ feature {NONE} -- Attributes
 			-- Should be called: `must_exit' OR comment has to change
 			-- Do we really have to exit?
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
-			Result := l_Exit_project
+			Result := l_Exit_project;
 		end;
  
 end -- class QUIT_PROJECT

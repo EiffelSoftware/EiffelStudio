@@ -13,7 +13,7 @@ inherit
 	PROJECT_CONTEXT;
 	HOLE
 		redefine
-			work, symbol, stone_type, command_name,
+			work, symbol, stone_type, name,
 			full_symbol
 		end;
 	WARNER_CALLBACKS
@@ -60,7 +60,7 @@ feature -- Properties
 			Result := System_type
 		end;
 
-	command_name: STRING is
+	name: STRING is
 		do
 			Result := l_System
 		end;

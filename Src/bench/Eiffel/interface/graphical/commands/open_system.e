@@ -21,10 +21,10 @@ creation
 	
 feature -- Implementation
 
-	make (c: COMPOSITE; a_text_window: SYSTEM_TEXT) is
+	make (a_text_window: SYSTEM_TEXT) is
 			-- Initialize the command.
 		do
-			init (c, a_text_window)
+			init (a_text_window)
 		end;
 
 feature {NONE} -- Implementation

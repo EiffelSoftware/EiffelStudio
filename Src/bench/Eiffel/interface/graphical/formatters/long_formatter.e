@@ -45,17 +45,10 @@ feature -- Execution
 	execute (argument: ANY) is
 			-- Ask for a confirmation before executing the format.
 		do
-			if
-				(argument /= get_in and argument /= get_out) and
-				last_warner /= Void
-			then
+			if last_warner /= Void then
 				last_warner.popdown
 			end;
-			if argument = get_in then
-				text_window.tool.tell_type (command_name)
-			elseif argument = get_out then
-				text_window.tool.clean_type
-			elseif last_confirmer /= Void and argument = last_confirmer then
+			if last_confirmer /= Void and argument = last_confirmer then
 					-- The user wants to execute this format,
 					-- even though it's a long format.
 				if not text_window.changed then

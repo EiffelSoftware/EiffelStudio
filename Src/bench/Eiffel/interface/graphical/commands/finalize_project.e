@@ -15,7 +15,7 @@ inherit
 			warner_ok as update_project_warner_ok
 		redefine
 			c_code_directory, launch_c_compilation,
-			confirm_and_compile, command_name, symbol, 
+			confirm_and_compile, name, symbol, 
 			compilation_allowed, finalization_error, perform_compilation
 		end;
 	UPDATE_PROJECT
@@ -24,7 +24,7 @@ inherit
 			warner_ok as keep_assertions
 		redefine
 			c_code_directory, launch_c_compilation,
-			confirm_and_compile, command_name, symbol,
+			confirm_and_compile, name, symbol,
 			compilation_allowed, finalization_error, perform_compilation,
 			discard_assertions, keep_assertions
 		select
@@ -110,7 +110,7 @@ feature {NONE} -- Attributes
 			-- finalization? This happens with DLE dealing
 			-- with statically bound feature calls
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := l_Finalize

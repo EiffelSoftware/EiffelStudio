@@ -9,7 +9,7 @@ class FILTER_COMMAND
 
 inherit
 
-	ICONED_COMMAND
+	ICONED_COMMAND_2
 		redefine
 			text_window
 		end;
@@ -31,8 +31,7 @@ feature -- Initialization
 			-- button click action for button number 3.
 		do
 			!!filter_window.make (c, Current);
-			init (c, a_text_window);
-			add_button_click_action (3, Current, Void)
+			init (a_text_window);
 		end;
 
 feature -- Callbacks
@@ -202,7 +201,7 @@ feature {NONE} -- Attributes
 			Result := bm_Filter 
 		end;
  
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := l_Filter
@@ -211,6 +210,6 @@ feature {NONE} -- Attributes
 invariant
 
 	filter_name_not_void: filter_name /= Void;
-	shell_command_name_not_void: shell_command_name /= Void
+	shell_command_name: shell_command_name /= Void
 
 end -- class FILTER_COMMAND

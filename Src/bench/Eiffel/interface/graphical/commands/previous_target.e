@@ -9,7 +9,7 @@ class PREVIOUS_TARGET
 
 inherit
 
-	ICONED_COMMAND
+	ICONED_COMMAND_2
 		redefine
 			execute
 		end;
@@ -24,10 +24,10 @@ creation
 
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+	make (a_text_window: TEXT_WINDOW) is
 			-- Initialize the command.
 		do 
-			init (c, a_text_window)
+			init (a_text_window)
 		end;
 
 feature -- Callbacks
@@ -51,19 +51,13 @@ feature -- Execution
 	execute (argument: ANY) is
 			-- Execute the command.
 		do
-			if argument = get_in then
-				text_window.tool.tell_type (command_name)
-			elseif argument = get_out then
-				text_window.tool.clean_type
-			else
-				if last_warner /= Void then
-					last_warner.popdown
-				end;
-				if not text_window.changed then
-					execute_licenced (argument)
-				 else
-					warner (text_window).call (Current, l_File_changed)
-				end
+			if last_warner /= Void then
+				last_warner.popdown
+			end;
+			if not text_window.changed then
+				execute_licenced (argument)
+			 else
+				warner (text_window).call (Current, l_File_changed)
 			end
 		end;
 
@@ -75,7 +69,7 @@ feature -- Properties
 			Result := bm_Previous_target
 		end;
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := l_Previous_target

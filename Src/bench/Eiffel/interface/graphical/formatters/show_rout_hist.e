@@ -1,7 +1,7 @@
 indexing
 
 	description:	
-		"Command to display the the class history of a feature/";
+		"Command to display the the class history of a feature.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -9,7 +9,7 @@ class SHOW_ROUT_HIST
 
 inherit
 
-	FORMATTER
+	FORMATTER_2
 		redefine
 			dark_symbol, display_temp_header
 		end;
@@ -21,9 +21,9 @@ creation
 	
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+	make (a_text_window: TEXT_WINDOW) is
 		do
-			init (c, a_text_window)
+			init (a_text_window)
 		end;
 
 feature -- Properties
@@ -40,7 +40,7 @@ feature -- Properties
  
 feature {NONE} -- Properties
 
-	command_name: STRING is
+	name: STRING is
 		do
 			Result := l_Showhistory
 		end;

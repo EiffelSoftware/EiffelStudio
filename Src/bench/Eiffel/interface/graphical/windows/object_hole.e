@@ -11,7 +11,7 @@ inherit
 
 	HOLE
 		redefine
-			symbol, stone_type, command_name, icon_symbol,
+			symbol, stone_type, name, icon_symbol,
 			full_symbol
 		end
 
@@ -46,7 +46,7 @@ feature -- Properties
 
 feature {NONE} -- Properties
 
-	command_name: STRING is
+	name: STRING is
 		do
 			Result := l_Object
 		end;

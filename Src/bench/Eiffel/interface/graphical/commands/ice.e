@@ -55,7 +55,7 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Attrbitues
 
-	command_name: STRING is
+	name: STRING is
 			-- Name of the command.
 		do
 			Result := "Purge system"

@@ -9,7 +9,7 @@ class SHOW_ROUT_FLAT
 
 inherit
 
-	FORMATTER
+	FORMATTER_2
 		redefine
 			dark_symbol, display_temp_header
 		end;
@@ -22,9 +22,9 @@ creation
 
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: TEXT_WINDOW) is
+	make (a_text_window: TEXT_WINDOW) is
 		do
-			init (c, a_text_window)
+			init (a_text_window)
 		end;
 
 feature -- Properties
@@ -46,7 +46,7 @@ feature {NONE} -- Properties
 			Result := l_Feature_flat_form_of
 		end;
 
-	command_name: STRING is
+	name: STRING is
 		do
 			Result := l_Showflat
 		end;

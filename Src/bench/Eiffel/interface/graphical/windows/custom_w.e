@@ -547,7 +547,6 @@ feature -- Execution Implementation
 					end
 				end;
 				ungrab;
-				clean_type
 			elseif argument = ok_push then
 				update_user_format;
 				if last_caller.last_format /= user_format then
@@ -718,19 +717,5 @@ feature -- Updating
 			end;
 			indent_scale.set_value (user_format.indent)
 		end;
-
-feature -- Focus Lable
-
-	tell_type (a_type_name: STRING) is
-			-- Display `a_type_name' in type teller.
-		do
-			project_tool.tell_type (a_type_name)
-		end;
- 
-	clean_type is
-			-- Clean what's said in the type teller window.
-		do
-			project_tool.clean_type
-		end
 
 end -- CUSTOM_W

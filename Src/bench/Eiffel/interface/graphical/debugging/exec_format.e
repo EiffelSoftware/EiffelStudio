@@ -32,22 +32,14 @@ feature -- Execution
 	execute (argument: ANY) is
 			-- Execute the command.
 		do
-			if argument /= get_in and argument /= get_out then
-				if last_warner /= Void then
-					last_warner.popdown
-				end
-			end;
-			if argument = get_in then
-				text_window.tool.tell_type (command_name)
-			elseif argument = get_out then
-				text_window.tool.clean_type
-			else
-				format (Void);
-				if argument = Format_and_run then
-					text_window.tool.debug_run_command.execute (Void)
-				end;
-				text_window.set_last_format (Current)
+			if last_warner /= Void then
+				last_warner.popdown
 			end
+			format (Void);
+			if argument = Format_and_run then
+				text_window.tool.debug_run_cmd_holder.associated_command.execute (Void)
+			end;
+			text_window.set_last_format (Current)
 		end;
 
 feature -- Formatting

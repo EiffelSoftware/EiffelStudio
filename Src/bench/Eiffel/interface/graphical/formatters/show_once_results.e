@@ -2,7 +2,7 @@ indexing
 
 	description:	
 		"Command to display results (if any) of once %
-			%functions relevant to a given object.";
+		%functions relevant to a given object.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -12,7 +12,7 @@ class
 
 inherit
 
-	FORMATTER
+	FORMATTER_2
 		redefine
 			dark_symbol, display_temp_header
 		end;
@@ -24,9 +24,9 @@ creation
 
 feature -- Initialization
 
-	make (c: COMPOSITE; a_text_window: OBJECT_TEXT) is
+	make (a_text_window: OBJECT_TEXT) is
 		do
-			init (c, a_text_window);
+			init (a_text_window);
 			indent := 2
 		end;
 
@@ -44,7 +44,7 @@ feature -- Properties
 	
 feature {NONE} -- Properties
 
-	command_name: STRING is
+	name: STRING is
 		do
 			Result := l_Showoncefunc
 		end;

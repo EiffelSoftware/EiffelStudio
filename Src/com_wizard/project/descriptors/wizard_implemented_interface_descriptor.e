@@ -25,8 +25,8 @@ feature -- Initialization
 			interface_descriptor := a_descriptor
 			type_kind := Tkind_coclass
 			name := clone (a_descriptor.name)
-			c_type_name := clone (name)
 			name.append ("_impl")
+			c_type_name := clone (name)
 			
 			eiffel_class_name := name_for_class (name, type_kind, Shared_wizard_environment.client)
 

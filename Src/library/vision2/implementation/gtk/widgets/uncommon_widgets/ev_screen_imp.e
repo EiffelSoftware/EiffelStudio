@@ -104,7 +104,7 @@ feature -- Basic operation
 			check
 				x_test_capable: x_test_capable
 			end
-			a_success_flag := C.x_test_fake_button_event (C.gdk_display, a_button, True, 1000)
+			a_success_flag := C.x_test_fake_button_event (C.gdk_display, a_button, True, 0)
 			check
 				fake_pointer_button_press_success: a_success_flag
 			end		
@@ -118,7 +118,7 @@ feature -- Basic operation
 			check
 				x_test_capable: x_test_capable
 			end
-			a_success_flag := C.x_test_fake_button_event (C.gdk_display, a_button, True, 0)
+			a_success_flag := C.x_test_fake_button_event (C.gdk_display, a_button, False, 0)
 			check
 				fake_pointer_button_release_success: a_success_flag
 			end		
@@ -216,6 +216,9 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/04/21 20:22:18  oconnor
+--| Fixed button relase faking
+--|
 --| Revision 1.13  2000/04/18 19:55:37  king
 --| Correctly implemented fake key event features
 --|

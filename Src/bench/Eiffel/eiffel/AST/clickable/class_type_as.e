@@ -407,7 +407,7 @@ feature -- Output
 		local
 			class_i: CLASS_I
 		do
-			class_i := associated_classi
+			class_i := Universe.class_named (class_name, Inst_context.cluster)
 			if class_i = Void then
 				st.add_string (class_name)
 			else
@@ -430,29 +430,10 @@ feature -- Output
 			end
 		end
  
-	associated_eiffel_class (reference_class: CLASS_C): CLASS_C is
-		local
-			aclassi: CLASS_I
+	associated_eiffel_class (reference_class: CLASS_I): CLASS_I is
+			-- Search for Current compiled class in context of `reference_class'.
 		do
-				-- Check if we can find the class in the cluster.
-				-- If the class is not compiled anymore (or doesnot
-				-- exist at all), the resulting stone will not be
-				-- valid (`is_valid' = false because `class_c' = Void).
-			aclassi := Universe.class_named (class_name, reference_class.cluster)
-			if aclassi /= Void then
-				Result := aclassi.compiled_class
-			end
-		end
-
-	associated_classi: CLASS_I is
-			-- Associated class_i
-			-- require: `Inst_context.cluster' not `Void'.
-		do
-			check
-				Inst_context.cluster /= Void
-			end
-			Result := Universe.class_named (class_name,
-						Inst_context.cluster)
+			Result := Universe.class_named (class_name, reference_class.cluster)
 		end
 
 feature {AST_EIFFEL} -- Output

@@ -387,9 +387,9 @@ feature {CLASS_C, COMPILED_CLASS_INFO} -- Class information
 
 feature -- Stoning
  
-	associated_eiffel_class (reference_class: CLASS_C): CLASS_C is
+	associated_eiffel_class (reference_class: CLASS_I): CLASS_I is
 		do
-			Result := Universe.class_named (class_name, reference_class.cluster).compiled_class
+			Result := Universe.class_named (class_name, reference_class.cluster)
 		end
 
 feature -- Formatting

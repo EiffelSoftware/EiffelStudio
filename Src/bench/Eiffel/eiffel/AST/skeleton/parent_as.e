@@ -93,7 +93,7 @@ feature -- Comparison
 
 feature -- Access
 
-	associated_class (reference_class: CLASS_C): CLASS_C is
+	associated_class (reference_class: CLASS_I): CLASS_I is
 			-- Compiled class associated with `type'.
 		do
 			Result := type.associated_eiffel_class (reference_class)

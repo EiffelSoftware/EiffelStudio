@@ -79,14 +79,9 @@ feature -- Comparison
 
 feature -- Stoning
 
-	associated_eiffel_class (reference_class: CLASS_C): CLASS_C is
-		local
-			class_i: CLASS_I
+	associated_eiffel_class (reference_class: CLASS_I): CLASS_I is
 		do
-			class_i :=  Universe.class_named (parent_name, reference_class.cluster)
-			if class_i /= Void then
-				Result := class_i.compiled_class
-			end
+			Result :=  Universe.class_named (parent_name, reference_class.cluster)
 		end
 
 feature -- Type check, byte code and dead code removal

@@ -112,9 +112,9 @@ feature -- Output
 
 feature -- Stoning
  
-	associated_eiffel_class (ref_class: CLASS_C): CLASS_C is
+	associated_eiffel_class (ref_class: CLASS_I): CLASS_I is
 		do  
-			Result := actual_type.associated_class
+			Result := actual_type.associated_class.lace_class
 		end
 
 feature -- Output

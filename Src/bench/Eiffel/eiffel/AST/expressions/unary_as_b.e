@@ -7,7 +7,7 @@ inherit
 
 	EXPR_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node, format
 		end
 
 feature -- Attributes
@@ -119,4 +119,35 @@ feature -- Type check, byte code and dead code removal
 			False
 		end;
 
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			expr.format (ctxt);
+			ctxt.need_dot;
+			ctxt.prepare_for_prefix (prefix_feature_name);
+			ctxt.put_current_feature;
+			if ctxt.last_was_printed then
+				ctxt.commit
+			else
+				ctxt.rollback
+			end
+		end;
+
+
+
+	operator_name: STRING is
+		deferred
+		end;
+
+	
+	operator_is_special: BOOLEAN is
+		do
+			Result := true;
+		end;
+	
+	operator_is_keyword: BOOLEAN is 
+		do
+			Result := false;
+		end;
 end

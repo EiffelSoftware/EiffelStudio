@@ -52,7 +52,7 @@ feature -- Access
 			external_name: "ClassName"
 		end
 		
-	Class_color: SYSTEM_DRAWING_COLOR is
+	Class_color: DRAWING_COLOR is
 		indexing
 			description: "Class color"
 			external_name: "ClassColor"
@@ -78,7 +78,7 @@ feature -- Access
 			external_name: "Colon"
 		end
 		
-	Comment_color: SYSTEM_DRAWING_COLOR is
+	Comment_color: DRAWING_COLOR is
 		indexing
 			description: "Comment color"
 			external_name: "CommentColor"
@@ -86,7 +86,7 @@ feature -- Access
 			Result := Result.get_Dark_Red
 		end
 
-	Editable_color: SYSTEM_DRAWING_COLOR is
+	Editable_color: DRAWING_COLOR is
 		indexing
 			description: "Color for editable text fields"
 			external_name: "EditableColor"
@@ -112,7 +112,7 @@ feature -- Access
 			external_name: "Error"
 		end
 		
-	Feature_color: SYSTEM_DRAWING_COLOR is
+	Feature_color: DRAWING_COLOR is
 		indexing
 			description: "Feature color"
 			external_name: "FeatureColor"
@@ -144,7 +144,7 @@ feature -- Access
 			external_name: "InitializationComment"
 		end
 
-	Keyword_color: SYSTEM_DRAWING_COLOR is
+	Keyword_color: DRAWING_COLOR is
 		indexing
 			description: "Keyword color"
 			external_name: "KeywordColor"
@@ -176,7 +176,7 @@ feature -- Access
 			external_name: "OpeningRoundBracket"
 		end
 		
-	Red_color: SYSTEM_DRAWING_COLOR is
+	Red_color: DRAWING_COLOR is
 		indexing
 			description: "Red color"
 			external_name: "RedColor"
@@ -196,7 +196,7 @@ feature -- Access
 			external_name: "SpecialsComment"
 		end
 		
-	Text_color: SYSTEM_DRAWING_COLOR is
+	Text_color: DRAWING_COLOR is
 		indexing
 			description: "Color for type view text"
 			external_name: "TextColor"
@@ -216,7 +216,7 @@ feature -- Access
 			external_name: "UinaryOperatorsComment"
 		end
 		
-	White_color: SYSTEM_DRAWING_COLOR is
+	White_color: DRAWING_COLOR is
 		indexing
 			description: "White color"
 			external_name: "WhiteColor"

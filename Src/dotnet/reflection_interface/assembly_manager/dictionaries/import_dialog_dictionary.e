@@ -36,15 +36,14 @@ feature -- Access
 			description: "Default generation path"
 			external_name: "DefaultGenerationPath"
 		local
-			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
+			reflection_support: REFLECTION_SUPPORT
 		once
-			create reflection_support.make_reflectionsupport
-			reflection_support.make
+			reflection_support := create {REFLECTION_SUPPORT}.make
 			Result := reflection_support.Eiffel_delivery_path
-			Result := Result.Concat_string_string (Result, Dotnet_library_relative_path)
+			Result.append(Dotnet_library_relative_path)
 		ensure
 			non_void_path: Result /= Void
-			not_empty_path: Result.get_length > 0
+			not_empty_path: Result.count > 0
 		end
 		
 	Dependancies_check_box_text: STRING is "Import assembly dependencies"
@@ -65,12 +64,12 @@ feature -- Access
 			external_name: "ImportationError"
 		end
 
-	Import_icon: SYSTEM_DRAWING_ICON is
+	Import_icon: DRAWING_ICON is
 		indexing
 			description: "Icon appearing in import dialog header"
 			external_name: "ImportIcon"
 		once
-			create Result.make_icon (Import_icon_filename)
+			create Result.make_drawing_icon (Import_icon_filename.to_cil)
 		ensure
 			icon_created: Result /= Void
 		end
@@ -80,11 +79,11 @@ feature -- Access
 			description: "Filename of icon appearing in import tool header"
 			external_name: "ImportIconFilename"
 		once
-			Result := Base_filename
-			Result := Result.concat_string_string (Result, Import_icon_relative_filename)
+			Result := Base_filename.clone (Base_filename)
+			Result.append (Import_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.get_length > 0
+			not_empty_filename: Result.count > 0
 		end
 
 	Pixmap_not_found_error: STRING is
@@ -92,8 +91,9 @@ feature -- Access
 			description: "Error message in case the dialog pixmap has not been found"
 			external_name: "PixmapNotFoundError"
 		once
-			Result ?= Pixmap_not_found_error_part_1.clone
-			Result := Result.concat_string_string_string (Result, Import_icon_filename, Pixmap_not_found_error_part_2)
+			Result := Pixmap_not_found_error_part_1.clone (Pixmap_not_found_error_part_1)
+			Result.append (Import_icon_filename)
+			Result.append (Pixmap_not_found_error_part_2)
 		end
 		
 	Title: STRING is "Import a .NET assembly"

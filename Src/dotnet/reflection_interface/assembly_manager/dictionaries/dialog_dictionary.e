@@ -6,7 +6,7 @@ class
 	DIALOG_DICTIONARY
 
 inherit
-	DICTIONARY
+	ASSEMBLY_MANAGER_DICTIONARY
 	
 feature -- Access
 

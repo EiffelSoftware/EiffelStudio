@@ -53,11 +53,11 @@ feature -- Toolbar icons filename
 			description: "Filename of icon on eiffel path toolbar button"
 			external_name: "PathIconFilename"
 		once
-			Result := base_filename
-			Result := Result.concat_string_string (Result, Path_icon_relative_filename)
+			Result := base_filename.clone (base_filename)
+			Result.append (Path_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.get_length > 0
+			not_empty_filename: Result.count > 0
 		end
 		
 	Edit_icon_filename: STRING is 
@@ -65,11 +65,11 @@ feature -- Toolbar icons filename
 			description: "Filename of icon on edit toolbar button"
 			external_name: "EditIconFilename"
 		once
-			Result := base_filename
-			Result := Result.concat_string_string (Result, Edit_icon_relative_filename)
+			Result := base_filename.clone (base_filename)
+			Result.append (Edit_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.get_length > 0
+			not_empty_filename: Result.count > 0
 		end
 		
 	Remove_icon_filename: STRING is 
@@ -77,11 +77,11 @@ feature -- Toolbar icons filename
 			description: "Filename of icon on remove toolbar button"
 			external_name: "RemoveIconFilename"
 		once
-			Result := base_filename
-			Result := Result.concat_string_string (Result, Remove_icon_relative_filename)
+			Result := base_filename.clone (base_filename)
+			Result.append (Remove_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.get_length > 0
+			not_empty_filename: Result.count > 0
 		end
 		
 	Eiffel_generation_icon_filename: STRING is 
@@ -89,11 +89,11 @@ feature -- Toolbar icons filename
 			description: "Filename of icon on Eiffel generation toolbar button"
 			external_name: "EiffelGenerationIconFilename"
 		once
-			Result := base_filename
-			Result := Result.concat_string_string (Result, Eiffel_generation_icon_relative_filename)
+			Result := base_filename.clone (base_filename)
+			Result.append (Eiffel_generation_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.get_length > 0
+			not_empty_filename: Result.count > 0
 		end
 
 	Import_icon_filename: STRING is 
@@ -101,11 +101,11 @@ feature -- Toolbar icons filename
 			description: "Filename of icon on import toolbar button"
 			external_name: "ImportIconFilename"
 		once
-			Result := base_filename
-			Result := Result.concat_string_string (Result, Import_icon_relative_filename)
+			Result := base_filename.clone (base_filename)
+			Result.append (Import_icon_relative_filename)
 		ensure
 			non_void_filename: Result /= Void
-			not_empty_filename: Result.get_length > 0
+			not_empty_filename: Result.count > 0
 		end
 
 feature -- Column Names
@@ -129,11 +129,12 @@ feature -- Messages
 			description: "Error message in case the path toolbar icon has not been found"
 			external_name: "PathIconNotFoundError"
 		once
-			Result ?= Pixmap_not_found_error_part_1.clone
-			Result := Result.concat_string_string_string (Result, Path_icon_filename, Pixmap_not_found_error_part_2)
+			Result := Pixmap_not_found_error_part_1.clone (Pixmap_not_found_error_part_1)
+			Result.append (Path_icon_filename)
+			Result.append (Pixmap_not_found_error_part_2)
 		ensure
 			non_void_message: Result /= Void
-			not_empty_message: Result.get_length > 0
+			not_empty_message: Result.count > 0
 		end
 		
 	Edit_icon_not_found_error: STRING is
@@ -141,11 +142,12 @@ feature -- Messages
 			description: "Error message in case the edit toolbar icon has not been found"
 			external_name: "EditIconNotFoundError"
 		once
-			Result ?= Pixmap_not_found_error_part_1.clone
-			Result := Result.concat_string_string_string (Result, Edit_icon_filename, Pixmap_not_found_error_part_2)
+			Result := Pixmap_not_found_error_part_1.clone (Pixmap_not_found_error_part_1)
+			Result.append (Edit_icon_filename)
+			Result.append (Pixmap_not_found_error_part_2)
 		ensure
 			non_void_message: Result /= Void
-			not_empty_message: Result.get_length > 0
+			not_empty_message: Result.count > 0
 		end
 		
 	Remove_icon_not_found_error: STRING is
@@ -153,11 +155,12 @@ feature -- Messages
 			description: "Error message in case the remove toolbar icon has not been found"
 			external_name: "RemoveIconNotFoundError"
 		once
-			Result ?= Pixmap_not_found_error_part_1.clone
-			Result := Result.concat_string_string_string (Result, Remove_icon_filename, Pixmap_not_found_error_part_2)
+			Result := Pixmap_not_found_error_part_1.clone (Pixmap_not_found_error_part_1)
+			Result.append (Remove_icon_filename)
+			Result.append (Pixmap_not_found_error_part_2)
 		ensure
 			non_void_message: Result /= Void
-			not_empty_message: Result.get_length > 0
+			not_empty_message: Result.count > 0
 		end
 		
 	Eiffel_generation_icon_not_found_error: STRING is
@@ -165,11 +168,12 @@ feature -- Messages
 			description: "Error message in case the Eiffel generation toolbar icon has not been found"
 			external_name: "EiffelGenerationIconNotFoundError"
 		once
-			Result ?= Pixmap_not_found_error_part_1.clone
-			Result := Result.concat_string_string_string (Result, Eiffel_generation_icon_filename, Pixmap_not_found_error_part_2)
+			Result := Pixmap_not_found_error_part_1.clone (Pixmap_not_found_error_part_1)
+			Result.append (Eiffel_generation_icon_filename)
+			Result.append (Pixmap_not_found_error_part_2)
 		ensure
 			non_void_message: Result /= Void
-			not_empty_message: Result.get_length > 0
+			not_empty_message: Result.count > 0
 		end
 		
 	Import_icon_not_found_error: STRING is
@@ -177,11 +181,12 @@ feature -- Messages
 			description: "Error message in case the Import toolbar icon has not been found"
 			external_name: "ImportIconNotFoundError"
 		once
-			Result ?= Pixmap_not_found_error_part_1.clone
-			Result := Result.concat_string_string_string (Result, Import_icon_filename, Pixmap_not_found_error_part_2)
+			Result := Pixmap_not_found_error_part_1.clone (Pixmap_not_found_error_part_1)
+			Result.append (Import_icon_filename)
+			Result.append (Pixmap_not_found_error_part_2)
 		ensure
 			non_void_message: Result /= Void
-			not_empty_message: Result.get_length > 0
+			not_empty_message: Result.count > 0
 		end
 	
 	No_assembly_in_the_EAC: STRING is "There is no assembly in the Eiffel Assembly Cache. Please reinstall the Eiffel delivery."

@@ -2409,6 +2409,30 @@ feature -- Order relation for inheritance and topological sort
 			end;
 		end;
 
+feature -- Propagation
+
+	recompile_syntactical_clients is
+			-- Order relation on classes
+		local
+			class_i: CLASS_I
+		do
+			from
+				syntactical_clients.start
+			until
+				syntactical_clients.after
+			loop
+				class_i := syntactical_clients.item.lace_class;
+				debug ("REMOVE_CLASS")
+					io.error.putstring ("Propagation to client: ");
+					io.error.putstring (class_i.class_name);
+					io.error.new_line
+				end;
+				workbench.add_class_to_recompile (class_i);
+				class_i.set_changed (true);
+				syntactical_clients.forth
+			end
+		end;
+
 feature -- Convenience features
 
 	set_topological_id (i: INTEGER) is

@@ -11,7 +11,7 @@
 			<item>It should have acreation routine "make" without arguments. The wizard does not enforce the rule, but breaking it causes a runtime error.</item>
 			<item>Features of the class may only have arguments and return values of the following types: 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/character.xml</url>
+					<url>../../../../libraries/base/reference/kernel/classic/CHARACTER_chart.xml</url>
 					<label>
 						<code>
 							<class_name>CHARACTER</class_name>
@@ -19,7 +19,7 @@
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/integer.xml</url>
+					<url>../../../../libraries/base/reference/kernel/classic/INTEGER_chart.xml</url>
 					<label>
 						<code>
 							<class_name>INTEGER</class_name>
@@ -27,7 +27,7 @@
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/real.xml</url>
+					<url>../../../../libraries/base/reference/kernel/classic/REAL_chart.xml</url>
 					<label>
 						<code>
 							<class_name>REAL</class_name>
@@ -35,7 +35,7 @@
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/double.xml</url>
+					<url>../../../../libraries/base/reference/kernel/classic/DOUBLE_chart.xml</url>
 					<label>
 						<code>
 							<class_name>DOUBLE</class_name>
@@ -43,7 +43,7 @@
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/boolean.xml</url>
+					<url>../../../../libraries/base/reference/kernel/classic/BOOLEAN_chart.xml</url>
 					<label>
 						<code>
 							<class_name>BOOLEAN</class_name>
@@ -51,7 +51,7 @@
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/integer_ref.xml</url>
+					<url>../../../../libraries/base/reference/kernel/INTEGER_REF_chart.xml</url>
 					<label>
 						<code>
 							<class_name>INTEGER_REF</class_name>
@@ -59,7 +59,7 @@
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/boolean_ref.xml</url>
+					<url>../../../../libraries/base/reference/kernel/classic/BOOLEAN_REF_chart.xml</url>
 					<label>
 						<code>
 							<class_name>BOOLEAN_REF</class_name>
@@ -67,7 +67,7 @@
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/real_ref.xml</url>
+					<url>../../../../libraries/base/reference/kernel/classic/REAL_REF_chart.xml</url>
 					<label>
 						<code>
 							<class_name>REAL_REF</class_name>
@@ -75,7 +75,7 @@
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/character_ref.xml</url>
+					<url>../../../../libraries/base/reference/kernel/classic/CHARACTER_REF_chart.xml</url>
 					<label>
 						<code>
 							<class_name>CHARACTER_REF</class_name>
@@ -83,7 +83,7 @@
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/double_ref.xml</url>
+					<url>../../../../libraries/base/reference/kernel/classic/DOUBLE_REF_chart.xml</url>
 					<label>
 						<code>
 							<class_name>DOUBLE_REF</class_name>
@@ -91,7 +91,7 @@
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/base/reference/kernel/string.xml</url>
+					<url>../../../../libraries/base/reference/kernel/classic/STRING_chart.xml</url>
 					<label>
 						<code>
 							<class_name>STRING</class_name>
@@ -99,7 +99,7 @@
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/com/reference/structures/ecom_currency.xml</url>
+					<url>../../../../libraries/com/reference/Structures/ECOM_CURRENCY_chart.xml</url>
 					<label>
 						<code>
 							<class_name>ECOM_CURRENCY</class_name>
@@ -107,7 +107,7 @@
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/com/reference/structures/ecom_decimal.xml</url>
+					<url>../../../../libraries/com/reference/Structures/ECOM_DECIMAL_chart.xml</url>
 					<label>
 						<code>
 							<class_name>ECOM_DECIMAL</class_name>
@@ -115,11 +115,11 @@
 					</label>
 				</link>, 
 				<link>
-					<url>../../../../libraries/com/reference/interfaces/ecom_interface.xml</url>
+					<url>../../../../libraries/com/reference/Interfaces/ECOM_INTERFACE_chart.xml</url>
 					<label><code><class_name>ECOM_INTERFACE</class_name></code></label>
 				</link>, and 
 				<link>
-					<url>../../../../libraries/base/reference/structures/list/cell.xml</url>
+					<url>../../../../libraries/base/reference/structures/list/CELL_chart.xml</url>
 					<label>
 						<code>
 							<class_name>CELL</class_name>
@@ -127,7 +127,7 @@
 					</label>
 				</link> and 
 				<link>
-					<url>../../../../libraries/com/reference/structures/ecom_array.xml</url>
+					<url>../../../../libraries/com/reference/Structures/ECOM_ARRAY_chart.xml</url>
 					<label><code><class_name>ECOM_ARRAY</class_name></code></label>
 				</link> of above types. Features with arguments or return values ofother types are excluded from the generated IDL file and are not accessible to the COM runtime.
 			</item>

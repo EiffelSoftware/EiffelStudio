@@ -22,7 +22,7 @@ feature -- Initialization
 	init is
 			-- Initialization of the Eiffel-Yacc interface
 		local
-			as1: CLASS_AS;
+			as1: like anchor_class_as
 			as2: ID_AS;
 			as3: EIFFEL_LIST[AST_EIFFEL];
 			as4: STRING_AS;
@@ -101,7 +101,7 @@ feature -- Initialization
 			as82: ROUTINE_AS;
 			as83: EXTERNAL_AS;
 			as85: CONSTANT_AS;
-			as86: FEATURE_AS;
+			as86: like anchor_feature_as;
 			as87: SUPPLIERS_AS;
 			as88: INVARIANT_AS;
 			as89: VARIANT_AS;
@@ -113,7 +113,7 @@ feature -- Initialization
 			as95: REQUIRE_ELSE_AS;
 			as96: ENSURE_AS;
 			as97: ENSURE_THEN_AS;
-			as98: FEATURE_CLAUSE_AS;
+			as98: like anchor_feature_clause_as;
 			as99: CREATION_AS;
 			as100: ARRAY_AS;
 			as101: UN_STRIP_AS;

@@ -196,6 +196,17 @@ feature -- Window Implementation
 			reset
 		end;
 
+	initialize_text_window_resources is
+			-- Initialize the graphical resources for the text window.
+		do
+			if read_only_text_window /= editable_text_window then
+				read_only_text_window.init_resource_values;
+				editable_text_window.init_resource_values
+			else
+				text_window.init_resource_values
+			end
+		end;
+
 feature -- Window settings
 
 	set_last_format (f: like last_format) is
@@ -258,12 +269,11 @@ feature -- Window settings
 
 	set_tab_length_to_default is
 			-- Set `tab_length' to the default tab length.
+		local
+			was_changed: BOOLEAN
 		do
-			if read_only_text_window /= editable_text_window then
-				read_only_text_window.set_tab_length_to_default
-				editable_text_window.set_tab_length_to_default
-			else
-				text_window.set_tab_length_to_default
+			if tab_length /= default_tab_length.item then
+				set_tab_length (default_tab_length.item)
 			end
 		end;
 
@@ -277,7 +287,13 @@ feature -- Window settings
 				read_only_text_window.set_tab_length (new_length);
 				editable_text_window.set_tab_length (new_length);
 			else
-				text_window.set_tab_length (new_length)
+				text_window.set_tab_length (new_length);
+				if 
+					text_window.is_graphical and then 
+					not text_window.text.empty 
+				then
+					synchronize
+				end
 			end
 		ensure
 			assigned: tab_length = new_length;
@@ -339,23 +355,23 @@ feature -- Text window creation
 		do
 			if is_graphics_disabled then
 				if tabs_disabled then
-					!SCROLLED_TEXT_WINDOW! ro_text_window.make (new_name, Current)
+					!SCROLLED_TEXT_WINDOW! ro_text_window.make_from_tool (new_name, Current)
 				else
-					!TABBED_TEXT_WINDOW! ro_text_window.make (new_name, Current)
+					!TABBED_TEXT_WINDOW! ro_text_window.make_from_tool (new_name, Current)
 				end;
 			else
 				!GRAPHICAL_TEXT_WINDOW! 
-					ro_text_window.make (new_name, Current)
+					ro_text_window.make (new_name, global_form)
 			end;
 			set_read_only_text_window (ro_text_window);
 			--if has_editable_text and then not text_window.is_editable then
 			if has_editable_text then 
 				if tabs_disabled then
 					!SCROLLED_TEXT_WINDOW! 
-						ed_text_window.make (new_name, Current)
+						ed_text_window.make_from_tool (new_name, Current)
 				else
 					!TABBED_TEXT_WINDOW! 
-						ed_text_window.make (new_name, Current)
+						ed_text_window.make_from_tool (new_name, Current)
 				end;
 				set_editable_text_window (ed_text_window)
 				text_window := ed_text_window;
@@ -366,7 +382,6 @@ feature -- Text window creation
 				text_window_set: text_window /= Void
 			end;
 			set_mode_for_editing;
-			set_tab_length_to_default
 		end;
 
 feature -- Update
@@ -434,7 +449,7 @@ feature -- Update
 			synchronise_stone
 		end;
 
-	 show_file (f: PLAIN_TEXT_FILE) is
+	show_file (f: PLAIN_TEXT_FILE) is
 			-- Display content of file `f' and its name as the title
 			-- of the ancestor tool. Forget about clicking and stones.
 		require
@@ -448,6 +463,7 @@ feature -- Update
 			set_editable_text;
 			show_editable_text;
 			text_window.set_text (f.laststring);
+			set_mode_for_editing
 			update_save_symbol;
 			set_file_name (f.name);
 			set_title (f.name);
@@ -489,6 +505,8 @@ feature -- Update
 				end;
 				set_default_format;
 				text_window.clear_window;
+				set_file_name (Void);
+				set_stone (Void);
 				text_window.display;
 				update_save_symbol;
 				set_title (tool_name);
@@ -498,17 +516,26 @@ feature -- Update
 			end
 		end;
 
+	parse_file is
+			-- Parse the file if possible.
+			-- (By default, do nothing).
+		require
+			valid_stone: stone /= Void
+		do
+		end;
+
 feature -- Pick and Throw Implementation
 
 	reset is
 			-- Reset the window contents.
 		do
 			set_title (tool_name);
-			set_tab_length_to_default;
 			set_font_to_default;
 			set_default_format;
 			set_default_size;
 			text_window.clear_window;
+			update_save_symbol;
+			set_file_name (Void);
 			reset_stone;
 			history.wipe_out;
 			close_windows;
@@ -584,22 +611,36 @@ feature {NONE} -- Implementation
 
 feature {PROJECT_W} -- Implementation
 
-	build_edit_menu (a_parent: COMPOSITE) is
+	build_edit_menu (search_button_parent: COMPOSITE) is
 			-- Build a standard edit menu with `a_parent'
+		require
+			edit_menu_exits: edit_menu /= Void
+			parent_exists: search_button_parent /= Void
 		local
-			cut_b: EB_MENU_ENTRY;
-			copy_b: EB_MENU_ENTRY;
-			paste_b: EB_MENU_ENTRY;
-			sep: SEPARATOR
-			search_b: EB_MENU_ENTRY;
-			search_cmd: SEARCH_STRING
+			cut_button: EB_MENU_ENTRY;
+			cut_cmd: EDIT_OPERATIONS;
+			copy_button: EB_MENU_ENTRY;
+			copy_com: EDIT_OPERATIONS;
+			paste_button: EB_MENU_ENTRY;
+			paste_cmd: EDIT_OPERATIONS;
+			sep: SEPARATOR;
+			search_button: EB_BUTTON;
+			search_cmd: SEARCH_STRING;
+			search_menu_entry: EB_MENU_ENTRY
 		do
-			--!! edit_menu.make ("", a_parent);
-			--!! sep.make ("", edit_menu);
-			--!! search_cmd_holder.make_plain (search_cmd);
-				--!! search_b.make (search_cmd, edit_menu);
-				--!! search_cmd.make (a_parent, Current);
-				--search_cmd_holder.set_menu_entry (search_b);
+			!! cut_cmd.make_cut (Current);
+			!! cut_button.make (cut_cmd, edit_menu);
+			!! copy_com.make_copy (Current);
+			!! copy_button.make (copy_com, edit_menu);
+			!! paste_cmd.make_paste (Current);
+			!! paste_button.make (paste_cmd, edit_menu);
+
+			!! sep.make ("", edit_menu);
+
+            !! search_cmd.make (Current);
+            !! search_button.make (search_cmd, search_button_parent);
+            !! search_menu_entry.make (search_cmd, edit_menu);
+            !! search_cmd_holder.make (search_cmd, search_button, search_menu_entry);
 		end;
 
 	init_text_window is
@@ -608,7 +649,8 @@ feature {PROJECT_W} -- Implementation
 			realized: realized
 		do
 			if read_only_text_window /= editable_text_window then
-				-- If both are the same then do nothing
+				editable_text_window.init_resource_values;
+				read_only_text_window.init_resource_values;
 				if text_window = editable_text_window then
 					read_only_text_window.hide
 					editable_text_window.show
@@ -616,7 +658,10 @@ feature {PROJECT_W} -- Implementation
 					editable_text_window.hide
 					read_only_text_window.show
 				end
+			else
+				text_window.init_resource_values
 			end
+			set_tab_length_to_default
 		end;
 
 	set_editable_text_window (ed: like editable_text_window) is
@@ -639,6 +684,13 @@ feature {PROJECT_W} -- Implementation
 			set: read_only_text_window = ed
 		end;
 
+feature {TEXT_WINDOW} -- Initialization
+
+	init_modify_action (a_text_window: SCROLLED_TEXT_WINDOW) is
+			-- Initialization of the text window action.
+		do
+		end;
+ 
 invariant
 
 	non_void_history: history /= Void

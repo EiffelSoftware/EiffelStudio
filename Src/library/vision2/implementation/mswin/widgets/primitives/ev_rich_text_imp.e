@@ -751,7 +751,11 @@ feature -- Status setting
 			-- are equal, insert the contents of the buffer at caret position `start_position'.
 		local
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
+			original_position: INTEGER
 		do
+				-- Store original caret position.
+			original_position := caret_position
+			
 				-- If `start_position' and `end_position' are equal, the
 				-- text must be inserted. If not, the appropriate area is
 				-- selected, and will be replaced.
@@ -767,24 +771,25 @@ feature -- Status setting
 			insert_rtf_stream_in (stream)
 			stream.release_stream
 			buffer_locked_in_append_mode := False
+			
+				-- Ensure there is no selection, and the caret is restored.			
+			unselect
+			set_caret_position (original_position)
 		end
 		
 
 	flush_buffer is
 			-- Flush any buffered operations.
 		local
-			counter: INTEGER
-			last_end_value: INTEGER
+			last_end_value, counter, insert_pos, format_index, original_position: INTEGER
 			stream: WEL_RICH_EDIT_BUFFER_LOADER
-			insert_pos: INTEGER
-			temp_string: STRING
-			format_index: INTEGER
-			font_text: STRING
-			color_text: STRING
+			temp_string, font_text, color_text, default_font_format: STRING
 			a_color: EV_COLOR
-			default_font_format: STRING
 			format_underlined, format_striked: BOOLEAN
 		do
+				-- Store original caret position.
+			original_position := caret_position
+			
 				-- Do nothing if buffer is not is format mode or append mode,
 				-- as there is nothing to flush. A user may call them however, as there
 				-- is no need to restrict against such calls.
@@ -909,6 +914,10 @@ feature -- Status setting
 			end
 			buffer_locked_in_append_mode := False
 			buffer_locked_in_format_mode := False
+			
+				-- Ensure there is no selection, and the caret is restored.			
+			unselect
+			set_caret_position (original_position)
 		end
 		
 	generate_rtf_heading is

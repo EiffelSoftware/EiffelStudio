@@ -20,18 +20,31 @@ feature -- Initialization
 			test_accelerators
 		end
 
+	list: EV_LIST
+	but: EV_BUTTON
+
 	test_accelerators is
 		local
 			box: EV_HORIZONTAL_BOX
-			tf: EV_TEXT_FIELD
-			but: EV_BUTTON
 		do
 			create box
 			create but.make_with_text ("Test")
-			create tf
+			but.press_actions.extend (~on_click)
+			create list
 			box.extend (but)
-			box.extend (tf)
+			box.extend (list)
 			first_window.extend (box)
+		end
+
+	on_click is
+		do
+			list.extend (create {EV_LIST_ITEM}.make_with_text ("Tadaa"))
+		end
+
+	first_window: EV_TITLED_WINDOW is
+		once
+			create Result
+			Result.set_title ("Accel")
 		end
 
 end -- class ACCEL_TEST

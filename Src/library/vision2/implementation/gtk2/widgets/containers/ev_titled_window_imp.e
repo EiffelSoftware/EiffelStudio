@@ -57,10 +57,10 @@ feature {NONE} -- Initialization
 				accel_group,
 				"accel-activate",
 				agent (App_implementation.gtk_marshal).accel_activate_intermediary (internal_id, ?, ?),
-				agent (App_implementation.gtk_marshal).gtk_args_to_tuple
+				Void
 			)
 			{EV_GTK_EXTERNALS}.gtk_window_add_accel_group (c_object, accel_group)
-			real_signal_connect (c_object, "window-state-event", agent (App_implementation.gtk_marshal).window_state_intermediary (internal_id, ? , ?), agent (App_implementation.gtk_marshal).gtk_args_to_tuple)
+			real_signal_connect (c_object, "window-state-event", agent (App_implementation.gtk_marshal).window_state_intermediary (internal_id, ? , ?), Void)
 		end
 
 	initialize_client_area is

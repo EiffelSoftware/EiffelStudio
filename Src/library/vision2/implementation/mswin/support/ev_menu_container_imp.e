@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 				Result := True
 			elseif msg = (feature {WEL_WINDOW_CONSTANTS}.Wm_menuchar) then
 				if (cwin_hi_word (wparam) /= feature {WEL_MF_CONSTANTS}.Mf_sysmenu) then
-					char_code := chconv (cwin_lo_word(wparam))
+					char_code := cwin_lo_word(wparam).to_character
 					create corresponding_menu.make_by_pointer (lparam)
 					on_menu_char (char_code, corresponding_menu)
 				end
@@ -103,12 +103,6 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (EIF_INTEGER): EIF_POINTER"
 		alias
 			"cwel_integer_to_pointer"
-		end
-
-	chconv (i: INTEGER): CHARACTER is
-			-- Character associated with integer value `i'
-		external
-			"C [macro %"eif_misc.h%"]"
 		end
 
 end -- class EV_MENU_CONTAINER_IMP

@@ -10,6 +10,14 @@ import "oaidl.idl";
 interface IEiffelProjectProperties;
 interface IEiffelClusterProperties;
 
+typedef enum __EIF_COMPILATON_TYPES
+{
+	is_application,
+	is_library,
+	is_precompilation
+	
+} EIF_COMPILATON_TYPES;
+
 [
   dual, object,
   uuid (C212FAAB-FAA8-48b9-9D4E-2D0CA4EB3354),
@@ -20,11 +28,11 @@ interface IEiffelProjectProperties: IDispatch
   [id (101), propget, helpstring ("Open Ace file.")]
   HRESULT open_ace_file ([in] BSTR ace_file_name);
   
-  [id (DISPID_VALUE), propget, helpstring ("Application name.")]
-  HRESULT application_name ([out, retval] BSTR * return_value);
+  [id (DISPID_VALUE), propget, helpstring ("System name.")]
+  HRESULT system_name ([out, retval] BSTR * return_value);
 
-  [id (DISPID_VALUE), propput, helpstring ("Application name.")]
-  HRESULT application_name ([in] BSTR a_name);
+  [id (DISPID_VALUE), propput, helpstring ("System name.")]
+  HRESULT system_name ([in] BSTR a_name);
 
   [id (103), propget, helpstring ("Root class name.")]
   HRESULT root_class_name ([out, retval] BSTR * return_value);
@@ -37,6 +45,18 @@ interface IEiffelProjectProperties: IDispatch
   
   [id (104), propput, helpstring ("Creation routine name.")]
   HRESULT creation_routine ([in] BSTR a_routine);
+  
+  [id (121), propget, helpstring ("Compilation type.")]
+  HRESULT compilation_type ([out, retval] EIF_COMPILATON_TYPES * return_value);
+  
+  [id (121), propput, helpstring ("Compilation type.")]
+  HRESULT compilation_type ([in] EIF_COMPILATON_TYPES new_value);  
+  
+  [id (122), propget, helpstring ("Is console application?")]
+  HRESULT console_application ([out, retval] VARIANT_BOOL * return_value);
+  
+  [id (122), propput, helpstring ("Is console application?")]
+  HRESULT console_application ([in] VARIANT_BOOL new_value);  
   
   [id (105), propget, helpstring ("Should preconditions be evaluated?")]
   HRESULT evaluate_require ([out, retval] VARIANT_BOOL * return_value);
@@ -68,17 +88,23 @@ interface IEiffelProjectProperties: IDispatch
   [id (109), propput, helpstring ("Should class invariants be evaluated?")]
   HRESULT evaluate_invariant ([in] VARIANT_BOOL new_value);
   
+  [id (120), propget, helpstring ("Working directory.")]
+  HRESULT working_directory ([out, retval] BSTR * return_value);
+  
+  [id (120), propput, helpstring ("Working directory.")]
+  HRESULT working_directory ([in] BSTR new_directory); 
+  
   [id (110), propget, helpstring ("Program arguments.")]
   HRESULT arguments ([out, retval] BSTR * return_value);
   
   [id (110), propput, helpstring ("Program arguments.")]
   HRESULT arguments ([in] BSTR new_arguments); 
 
-  [id (111), propget, helpstring ("Are line numbers generated?")]
-  HRESULT generate_line_numbers ([out, retval] VARIANT_BOOL * return_value);
+  [id (111), propget, helpstring ("Generate debug info?")]
+  HRESULT debug_info ([out, retval] VARIANT_BOOL * return_value);
   
-  [id (111), propput, helpstring ("Define whether line numbers should be generated.")]
-  HRESULT generate_line_numbers ([in] VARIANT_BOOL new_value);
+  [id (111), propput, helpstring ("Generate debug info?")]
+  HRESULT debug_info ([in] VARIANT_BOOL new_value);
   
   [id (112), propget, helpstring ("List of clusters in current project (list of IEiffelClusterProperties*).")]
   HRESULT clusters ([out, retval] VARIANT * return_value);

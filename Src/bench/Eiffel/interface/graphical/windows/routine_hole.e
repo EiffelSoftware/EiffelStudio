@@ -9,7 +9,7 @@ class ROUTINE_HOLE
 
 inherit
 
-	HOLE
+	EB_BUTTON_HOLE
 		redefine
 			symbol, stone_type, name, icon_symbol,
 			full_symbol
@@ -43,8 +43,6 @@ feature -- Properties
 		do
 			Result := Routine_type
 		end;
-
-feature {NONE} -- Properties
 
 	name: STRING is
 		do

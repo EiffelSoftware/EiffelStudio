@@ -513,4 +513,86 @@ feature -- Commands
 
 	change_font_cmd_holder: COMMAND_HOLDER;
 
+ 
+  feature -- Hole access
+ 
+	compatible (dropped_stone: STONE): BOOLEAN is
+			-- Is current hole compatible with `dropped_stone'?
+		local
+			t: INTEGER
+		do
+			t := dropped_stone.stone_type;
+			Result :=  t = Class_type or else
+				t = Routine_type or else
+				t = Explain_type or else
+				t = Object_type or else
+				t = Breakable_type or else
+				t = System_type
+		end;
+ 
+  feature -- Update
+ 
+	process_classi (a_stone: CLASSI_STONE) is
+			-- Process dropped stone `a_stone'.
+		local
+			new_tool: CLASS_W
+		do
+			new_tool := window_manager.class_window;
+			new_tool.process_classi (a_stone);
+			new_tool.display
+		end;
+ 
+	process_class (a_stone: CLASSC_STONE) is
+			-- Process dropped stone `a_stone'.
+		local
+			new_tool: CLASS_W
+		do
+			new_tool := window_manager.class_window;
+			new_tool.process_class (a_stone);
+			new_tool.display
+		end;
+ 
+	process_feature (a_stone: FEATURE_STONE) is
+			-- Process dropped stone `a_stone'.
+		local
+			new_tool: ROUTINE_W
+		do
+			new_tool := window_manager.routine_window;
+			new_tool.process_feature (a_stone);
+			new_tool.display
+		end;
+ 
+	process_breakable (a_stone: BREAKABLE_STONE) is
+			-- Process dropped stone `a_stone'.
+		do
+			stop_points_hole.receive (a_stone)
+		end;
+ 
+	process_object (a_stone: OBJECT_STONE) is
+			-- Process dropped stone `a_stone'.
+		local
+			new_tool: OBJECT_W
+		do
+			new_tool := window_manager.object_window;
+			new_tool.process_object (a_stone);
+			new_tool.display
+		end;
+ 
+	process_error (a_stone: ERROR_STONE) is
+			-- Process dropped stone `a_stone'.
+		local
+			new_tool: EXPLAIN_W
+		do
+			new_tool := window_manager.explain_window
+			new_tool.process_error (a_stone)
+			new_tool.display
+		end;
+ 
+	process_system (a_stone: SYSTEM_STONE) is
+			-- Process dropped stone `a_stone'.
+		do
+			System_tool.process_system (a_stone)
+			System_tool.display
+		end;
+ 
 end -- class PROJECT_W

@@ -16,13 +16,18 @@ inherit
 		redefine
 			hole, build_format_bar, build_widgets,
 			open_cmd_holder, save_as_cmd_holder, save_cmd_holder,
-			text_window, tool_name, editable, create_edit_buttons
+			text_window, tool_name, editable, create_edit_buttons,
+			display, stone, stone_type, synchronise_stone, process_system,
+			process_class, process_classi, process_ace_syntax, compatible
 		end;
 	BAR_AND_TEXT
 		redefine
 			hole, build_format_bar, attach_all, build_widgets,
 			open_cmd_holder, save_as_cmd_holder, save_cmd_holder,
-			text_window, tool_name, editable, create_edit_buttons
+			text_window, tool_name, editable, create_edit_buttons,
+			display, stone, stone_type, synchronise_stone, process_system,
+			process_class, process_classi, process_ace_syntax,
+			compatible
 		select
 			attach_all
 		end
@@ -31,9 +36,89 @@ creation
 
 	make
 
-feature -- Window Properties
+feature -- Properties
 
 	text_window: SYSTEM_TEXT;
+
+	stone: SYSTEM_STONE
+
+	stone_type: INTEGER is
+			-- Accept any type stone
+		do
+			Result := system_type
+		end
+
+feature -- Access
+
+	compatible (a_stone: STONE): BOOLEAN is
+			-- Is Current hole compatible with `a_stone'?
+		do
+			Result :=
+				a_stone.stone_type = System_type or else
+				a_stone.stone_type = Class_type 
+		end;
+
+feature -- Update
+
+	process_system (s: SYSTEM_STONE) is
+			-- Process system stone.
+		do
+			if text_window.changed then
+				showtext_command.execute (s);
+			else
+				last_format.execute (s);
+				history.extend (s)
+			end
+		end;
+
+	process_ace_syntax (syn: ACE_SYNTAX_STONE) is
+			-- Process syntax error.
+		do
+			if text_window.changed then
+				showtext_command.execute (syn);
+			else
+				showtext_command.execute (syn);
+				text_window.deselect_all;
+				text_window.set_cursor_position (syn.start_position);
+				text_window.highlight_selected (syn.start_position,
+							syn.end_position);
+				text_window.set_changed (false);
+				update_save_symbol
+			end
+		end;
+
+	process_class (a_stone: CLASSC_STONE) is
+		do
+			if text_window.changed then
+				showtext_command.execute (a_stone);
+			else
+				text_window.search_stone (a_stone)
+			end
+		end;
+
+	process_classi (a_stone: CLASSI_STONE) is
+		do
+			if text_window.changed then
+				showtext_command.execute (a_stone);
+			else
+				text_window.search_stone (a_stone)
+			end
+		end;
+
+	synchronise_stone is
+			-- Synchronize the root stone of the window.
+		local
+			system_stone: SYSTEM_STONE;
+			old_do_format: BOOLEAN
+		do
+			if stone /= Void then
+				!! system_stone;
+				old_do_format := last_format.do_format;
+				last_format.set_do_format (true);
+				last_format.execute (system_stone);
+				last_format.set_do_format (old_do_format)
+			end
+		end;
 
 feature -- Graphical Interface
 

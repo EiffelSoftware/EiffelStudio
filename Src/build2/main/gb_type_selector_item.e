@@ -150,7 +150,6 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			-- type `text'.
 		local
 			command: GB_COMMAND_CHANGE_TYPE
-			layout_parent_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do	
 			create command.make (an_object, an_object.type, type)
 			history.cut_off_at_current_position

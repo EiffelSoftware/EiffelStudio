@@ -109,6 +109,7 @@ void eif_net_check (int retcode) {
 	int errcode;
 	if (retcode == SOCKET_ERROR) {
 		errcode = WSAGetLastError();
+		errno = errcode;
 		if (errcode==WSANOTINITIALISED)
 			eraise("WSANOTINITIALISED A successful WSAStartup must occur before using this function.",EN_PROG);
 		if (errcode==WSAENETDOWN)

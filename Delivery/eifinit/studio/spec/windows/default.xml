@@ -241,6 +241,15 @@
 						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_ensure_then_space_later<STRING> $cursor$</STRING></TEXT>
 						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_ensure_then_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
 					</TOPIC>
+					<TOPIC TOPIC_ID="alias" ICON="icon_preferences_folder">
+						<HEAD>alias</HEAD>
+						<TEXT DESCRIPTION="Autocomplete variant">autocomplete_alias<BOOLEAN>True</BOOLEAN></TEXT>
+						<TEXT DESCRIPTION="Use default autocomplete">use_default_alias<BOOLEAN>True</BOOLEAN></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space after keyword was typed)">custom_alias_space<STRING> "$cursor$"</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return after keyword was typed)">custom_alias_return<STRING>%N$indent$%T"$cursor$"</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space, other cases)">custom_alias_space_later<STRING> $cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return, other cases)">custom_alias_return_later<STRING>%N$indent$$cursor$</STRING></TEXT>
+					</TOPIC>
 				</TOPIC>
 				<TOPIC TOPIC_ID="control_structures_completion" ICON="icon_preferences_folder">
 					<HEAD>Control structures keywords</HEAD>

@@ -16,8 +16,7 @@ inherit
 
 	EV_INVISIBLE_CONTAINER_IMP
 		redefine
-			on_size,
-			parent_ask_resize
+			on_size
 		end
 		
 creation
@@ -36,15 +35,6 @@ feature {NONE} -- Initialization
 			end
 			initialize
 			make_with_coordinates (par_imp, "Fixed", 0, 0, 0, 0)
-		end
-
-feature {NONE} -- Implementation
-
-	parent_ask_resize (new_width, new_height: INTEGER) is
-			-- When the parent asks the resize, it's not 
-			-- necessary to send him back the information
-		do
-			resize (new_width, new_height)
 		end
 
 feature {NONE} -- Implementation : WEL features

@@ -26,13 +26,16 @@ feature -- Access
 		local
 			child: POINTER
 			imp: EV_ANY_IMP
+			a_child_list: POINTER
 		do
+			a_child_list := C.gtk_container_children (list_widget)
 			child := C.g_list_nth_data (
-				C.gtk_container_children (list_widget),
+				a_child_list,
 				i - 1)
 			check
 				child_not_void: child /= NULL
 			end
+			C.g_list_free (a_child_list)
 			imp := eif_object_from_c (child)
 			check
 				imp_not_void: imp /= Void

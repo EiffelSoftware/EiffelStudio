@@ -59,11 +59,14 @@ feature {NONE} -- Implementation
 		local
 			p: POINTER
 			v_imp: EV_WIDGET_IMP
+			a_child_list: POINTER
 		do
+			a_child_list := C.gtk_container_children (list_widget)
 			p := C.g_list_nth_data (
-				C.gtk_container_children (list_widget),
+				a_child_list,
 				i - 1)
 			v_imp ?= eif_object_from_c (p)
+			C.g_list_free (a_child_list)
 			check
 				v_imp_not_void: v_imp /= Void
 			end

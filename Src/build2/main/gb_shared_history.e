@@ -10,7 +10,7 @@ class
 
 feature -- Access
 
-	history: GLOBAL_HISTORY is
+	history: GB_GLOBAL_HISTORY is
 			-- `Result' is history of the building process.
 		once
 			create Result

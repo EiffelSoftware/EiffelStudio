@@ -7,6 +7,16 @@ inherit
 	BYTE_CONST;
 	SHARED_ARRAY_BYTE
 	
+feature -- Comparison
+
+	is_equivalent (other: like Current): BOOLEAN is
+			-- Is `other' equivalent to the current object ?
+		require
+			arg_non_void: other /= Void
+			same_type: same_type (other)
+		deferred
+		end
+
 feature 
 
 	valid_type (t: TYPE_A): BOOLEAN is
@@ -58,10 +68,8 @@ feature
 			-- Do nothing
 		end;
 
-	equiv (other: like Current): BOOLEAN is
-			-- Equiv for propagation of pass2/pass3
-			-- character and integer values must be
-			-- propagated
+	is_propagation_equivalent (other: like Current): BOOLEAN is
+			-- Is `Current' equivalent for propagation of pass2/pass3?
 		do
 			Result := True;
 		end;

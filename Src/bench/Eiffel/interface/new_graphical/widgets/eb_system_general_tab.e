@@ -112,7 +112,7 @@ feature -- Store/Retrieve
 
 				-- Set name of root class and creation procedure if any.
 			create root_sd
-			root_sd.set_root_name (new_id_sd (root_class_field.text, False))
+			root_sd.set_root_name (new_id_sd (to_upper(root_class_field.text), False))
 			if root_creation_field.text /= Void then
 				root_sd.set_creation_procedure_name (new_id_sd (root_creation_field.text, False))
 			end

@@ -188,7 +188,7 @@ feature {NONE} -- Initialization
 									if l_frame.last_call_succeed and then l_frame_il /= Void then
 	
 	-- FIXME jfiat 2004-07-08 : maybe optimize by using external on pointer
-										l_func := l_frame_il.get_function
+										l_func := l_frame.get_function
 										l_feature_token := l_func.get_token
 										l_class         := l_func.get_class
 										l_module        := l_func.get_module
@@ -198,7 +198,6 @@ feature {NONE} -- Initialization
 										l_module.clean_on_dispose
 										l_func.clean_on_dispose
 	
-										l_frame.clean_on_dispose --| Not needed anymore
 	
 										if il_debug_info_recorder.has_info_about_module (l_module_name) then
 											l_class_type := Il_debug_info_recorder.class_type_for_module_class_token (l_module_name, l_class_token)
@@ -241,14 +240,16 @@ feature {NONE} -- Initialization
 												call.set_private_current_object (l_stack_adv)
 												call.set_routine (
 													l_chain,
-													l_frame_il,
+													l_frame,
 													False, 			-- is_melted (No since this is a dotnet system)
 													l_hexaddress,
 													l_class_type, 	-- dynmic class type
 													l_feature_i.written_class, 	-- origin class
 													l_feature_i, 	-- routine, routine_name ...
+													l_frame_il.get_ip,
 													l_line_number 	-- break_index / line number
 													)
+												l_frame_il.clean_on_dispose --| l_frame_il : Not needed anymore
 												extend (call)
 												level := level + 1
 											end

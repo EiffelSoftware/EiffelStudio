@@ -64,17 +64,19 @@ feature {NONE} -- Initialization
 
 feature -- Filling
 
-	set_routine (a_chain: ICOR_DEBUG_CHAIN; a_frame_il: ICOR_DEBUG_IL_FRAME; melted: BOOLEAN; a_address: STRING; 
+	set_routine (a_chain: ICOR_DEBUG_CHAIN; a_frame: ICOR_DEBUG_FRAME; melted: BOOLEAN; a_address: STRING; 
 			a_dyn_type: CLASS_TYPE; a_org_class: CLASS_C; 
-			a_feature: FEATURE_I; a_line_number: INTEGER) is
+			a_feature: FEATURE_I; a_il_offset: INTEGER; a_line_number: INTEGER) is
+		local
+			l_icd_il_frame: ICOR_DEBUG_IL_FRAME
 		do
 			icd_chain := a_chain
 			icd_chain.add_ref
 			
-			icd_il_frame := a_frame_il
-			icd_il_frame.add_ref
+			icd_frame := a_frame
+			icd_frame.add_ref
 			
-			il_offset := icd_il_frame.get_ip
+			il_offset := a_il_offset
 			
 			dynamic_type := a_dyn_type
 			if dynamic_type /= Void then
@@ -107,13 +109,13 @@ feature -- Cleaning
 -- FIXME jfiat 2004-07-07 : seems to cause issue regarding ref
 -- so for now we remove it, but please check deeper how to better handle ICorDebugFrame and so on
 --					--| FIXME JFIAT: please check if it is safe ...
-			icd_il_frame := Void
+			icd_frame := Void
 			icd_chain := Void				
 		end
 
 feature -- Dotnet Properties
 
-	icd_il_frame: ICOR_DEBUG_IL_FRAME
+	icd_frame: ICOR_DEBUG_FRAME
 	
 	icd_chain: ICOR_DEBUG_CHAIN
 	
@@ -219,9 +221,19 @@ feature {NONE} -- Implementation
 			l_function: ICOR_DEBUG_FUNCTION
 			l_class: ICOR_DEBUG_CLASS
 			l_module: ICOR_DEBUG_MODULE
+			l_icd: ICOR_DEBUG_THREAD
 		do
 -- FIXME jfiat 2004-07-08: maybe optimize by calling directly external on pointer
-			l_function := icd_il_frame.get_function
+--			l_function := icd_il_frame.get_function
+			
+			l_function := icd_frame.get_function
+			if not icd_frame.last_call_succeed then
+					--| FIXME jfiat: Nasty fix, since we use the top level stack frame
+				l_icd := application.imp_dotnet.eifnet_debugger.icor_debug_thread
+				icd_frame := l_icd.get_active_frame
+				l_function := icd_frame.get_function
+				io.put_string ("BUEARK !!!!%N")
+			end
 
 			private_dotnet_feature_token := l_function.get_token		
 			l_class := l_function.get_class
@@ -273,105 +285,106 @@ feature {NONE} -- Implementation
 	
 					--| ARGUMENTS |--
 					l_list := internal_arg_list
-	
-					--| Get Current Object
-					l_list.start
-					
-					set_private_current_object (l_list.first)
-					private_current_object.set_name ("Current")
-	
-					object_address := private_current_object.address
-					display_object_address := object_address
-	
-					l_list.remove
-	
-					l_count := rout.argument_count
-	--				check
-	--					l_list.count = l_count
-	--				end
-					if l_count > 0 then
-						create args_list.make_filled (l_count)	
-						arg_names := rout.argument_names
-						from
-							arg_names.start
-							args_list.start
-							l_list.start
-						until
-							args_list.after
-						loop
-							value := l_list.item
-							value.set_name (arg_names.item)
-							args_list.replace (value)
-							args_list.forth
-							arg_names.forth
-							l_list.forth
+					if l_list /= Void and then not l_list.is_empty then
+						--| Get Current Object
+						l_list.start
+						
+						set_private_current_object (l_list.first)
+						private_current_object.set_name ("Current")
+		
+						object_address := private_current_object.address
+						display_object_address := object_address
+		
+						l_list.remove
+		
+						l_count := rout.argument_count
+--						check
+--							l_list.count = l_count
+--						end
+						if l_count > 0 then
+							create args_list.make_filled (l_count)	
+							arg_names := rout.argument_names
+							from
+								arg_names.start
+								args_list.start
+								l_list.start
+							until
+								args_list.after
+							loop
+								value := l_list.item
+								value.set_name (arg_names.item)
+								args_list.replace (value)
+								args_list.forth
+								arg_names.forth
+								l_list.forth
+							end
 						end
 					end
-	
 					--| LOCAL |--
 	
 					-- First Local is the Result value, so we take it first
 					l_list := internal_local_list
-					if 
-						rout.is_function 
-					then
-						if not rout.is_once then
-							--| In IL generated code .. for once function 
-							--| no local variable to store the Result
-							--| using directly  "ret value"
-							l_list.start
-							private_result := l_list.first
-							l_list.remove
-							private_result.set_name ("Result")
-						else
-							--| at this stæge, the private_current_object is known
-							l_dotnet_ref_value ?= private_current_object
-							if l_dotnet_ref_value /= Void then
-								l_dotnet_ref_value.get_object_value
-								private_result := l_dotnet_ref_value.once_function_value (rout)
-								l_dotnet_ref_value.release_object_value
-								if private_result /= Void then
+					if l_list /= Void and then not l_list.is_empty then
+							if 
+								rout.is_function 
+							then
+								if not rout.is_once then
+									--| In IL generated code .. for once function 
+									--| no local variable to store the Result
+									--| using directly  "ret value"
+									l_list.start
+									private_result := l_list.first
+									l_list.remove
 									private_result.set_name ("Result")
+								else
+									--| at this stæge, the private_current_object is known
+									l_dotnet_ref_value ?= private_current_object
+									if l_dotnet_ref_value /= Void then
+										l_dotnet_ref_value.get_object_value
+										private_result := l_dotnet_ref_value.once_function_value (rout)
+										l_dotnet_ref_value.release_object_value
+										if private_result /= Void then
+											private_result.set_name ("Result")
+										end
+									else
+										private_result := Void
+									end
 								end
-							else
-								private_result := Void
+							end
+		
+							--| Then real Local variables |--
+							local_decl_grps := rout.locals
+							if local_decl_grps /= Void then
+								l_count := l_list.count
+								create locals_list.make (l_count)
+								from
+									l_index := 0
+									local_decl_grps.start
+									l_names_heap := Names_heap
+									l_list.start
+								until
+									local_decl_grps.after 
+									or l_index > l_count
+								loop 
+									from
+										id_list := local_decl_grps.item.id_list
+										id_list.start
+									until
+										id_list.after or
+										l_index > l_count
+									loop
+										value := l_list.item
+										value.set_name (l_names_heap.item (id_list.item))
+										locals_list.extend (value)
+										id_list.forth
+										l_list.forth
+										l_index := l_index + 1
+									end
+									local_decl_grps.forth
+								end
 							end
 						end
-					end
-	
-					--| Then real Local variables |--
-					local_decl_grps := rout.locals
-					if local_decl_grps /= Void then
-						l_count := l_list.count
-						create locals_list.make (l_count)
-						from
-							l_index := 0
-							local_decl_grps.start
-							l_names_heap := Names_heap
-							l_list.start
-						until
-							local_decl_grps.after 
-							or l_index > l_count
-						loop 
-							from
-								id_list := local_decl_grps.item.id_list
-								id_list.start
-							until
-								id_list.after or
-								l_index > l_count
-							loop
-								value := l_list.item
-								value.set_name (l_names_heap.item (id_list.item))
-								locals_list.extend (value)
-								id_list.forth
-								l_list.forth
-								l_index := l_index + 1
-							end
-							local_decl_grps.forth
-						end
-					end
-				end
-				
+					end				
 					--| initialize item numbers for arguments
 				if args_list /= Void then
 					from
@@ -419,18 +432,21 @@ feature {NONE} -- Implementation
 
 	internal_arg_list: LIST [EIFNET_ABSTRACT_DEBUG_VALUE]  is
 		require
-			icd_il_frame /= Void
+			icd_frame /= Void
 		local
 			l_il_frame: ICOR_DEBUG_IL_FRAME
 			l_enum_args: ICOR_DEBUG_VALUE_ENUM
 		do
-			l_il_frame := icd_il_frame
-			l_il_frame.add_ref
-			l_enum_args := l_il_frame.enumerate_arguments
-			if l_enum_args /= Void then
---				l_enum_args.skip (1)  -- Ignore first element which is Current Object
-				Result := debug_value_list_from_enum (l_enum_args)
-				l_enum_args.clean_on_dispose
+			l_il_frame := icd_frame.query_interface_icor_debug_il_frame
+			if l_il_frame /= Void then
+				l_il_frame.add_ref
+				l_enum_args := l_il_frame.enumerate_arguments
+				if l_enum_args /= Void then
+--					l_enum_args.skip (1)  -- Ignore first element which is Current Object
+					Result := debug_value_list_from_enum (l_enum_args)
+					l_enum_args.clean_on_dispose
+				end
+				l_il_frame.clean_on_dispose
 			end
 		ensure
 			arg_list_not_void: Result /= Void
@@ -442,19 +458,22 @@ feature {NONE} -- Implementation
 			-- including the Result if there is one, in this case
 			-- this will be the first value
 		require
-			icd_il_frame /= Void
+			icd_frame /= Void
 		local
 			l_il_frame: ICOR_DEBUG_IL_FRAME
 			l_enum_locals: ICOR_DEBUG_VALUE_ENUM
 		do
-			l_il_frame := icd_il_frame
-			l_il_frame.add_ref
-			l_enum_locals := l_il_frame.enumerate_local_variables
-			if l_enum_locals /= Void then
-				Result := debug_value_list_from_enum (l_enum_locals)
-				l_enum_locals.clean_on_dispose
-			else
-				create {LINKED_LIST[EIFNET_ABSTRACT_DEBUG_VALUE]} Result.make
+			l_il_frame := icd_frame.query_interface_icor_debug_il_frame
+			if l_il_frame /= Void then
+				l_il_frame.add_ref
+				l_enum_locals := l_il_frame.enumerate_local_variables
+				if l_enum_locals /= Void then
+					Result := debug_value_list_from_enum (l_enum_locals)
+					l_enum_locals.clean_on_dispose
+				else
+					create {LINKED_LIST[EIFNET_ABSTRACT_DEBUG_VALUE]} Result.make
+				end
+				l_il_frame.clean_on_dispose				
 			end
 --		ensure
 --			local_list_not_void: Result /= Void

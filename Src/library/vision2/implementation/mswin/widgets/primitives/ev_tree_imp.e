@@ -40,6 +40,7 @@ inherit
 			on_key_down,
 			on_key_up
 		redefine
+			default_style,
 			on_tvn_selchanged,
 			on_tvn_itemexpanded
 		end
@@ -49,16 +50,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
-			-- Create a new tree with `par' as parent.
-		local
-			par_imp: WEL_WINDOW
+	make is
+			-- Create a new tree.
 		do
-			par_imp ?= par.implementation
-			check
-				parent_not_void: par_imp /= Void
-			end
-			wel_make (par_imp, 0, 0, 0, 0, 0)
+			wel_make (default_parent.item, 0, 0, 0, 0, 0)
 			!! ev_children.make (1)
 		end
 
@@ -106,6 +101,14 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- WEL Implementation
+
+	default_style: INTEGER is
+			-- Default style used to create the control
+		do
+			Result := Ws_child + Ws_visible + Ws_group
+				+ Ws_tabstop + Ws_border + Tvs_haslines
+				+ Tvs_hasbuttons + Tvs_linesatroot
+		end
 
 	on_tvn_selchanged (info: WEL_NM_TREE_VIEW) is
 			-- Selection has changed from one item to another.

@@ -50,36 +50,25 @@ inherit
 			set_column_title,
 			set_column_width,
 			on_lvn_columnclick,
-			on_lvn_itemchanged
+			on_lvn_itemchanged,
+			default_style
 		end
 		
 creation
-	make_with_size
+	make_with_size,
+	make_with_text
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
-		do
-			check
-				Inapplicable: False
-			end
-		end
-
-	make_with_size (par: EV_CONTAINER; col_nb: INTEGER) is         
-			-- Create a list widget with `par' as
-			-- parent and `col_nb' columns.
+	make_with_size (col_nb: INTEGER) is         
+			-- Create a list widget with `col_nb' columns.
 			-- By default, a list allow only one selection.
 		local
-			par_imp: WEL_WINDOW
 			a_column: WEL_LIST_VIEW_COLUMN
 			i: INTEGER
 		do
 			!! ev_children.make (0)
-			par_imp ?= par.implementation
-			check
-				par_imp /= Void
-			end
-			wel_make (par_imp, 0, 0, 0, 0, 0)
+			wel_make (default_parent.item, 0, 0, 0, 0, 0)
 			from
 				i := 1
 			until
@@ -91,6 +80,15 @@ feature {NONE} -- Initialization
 				append_column (a_column)
 				i := i + 1
 			end
+		end
+
+	make_with_text (txt: ARRAY [STRING]) is         
+			-- Create a list widget with `par' as parent,
+			-- and as many columns as the number of titles
+			-- given.
+		do
+			make_with_size (txt.count)
+			set_columns_title (txt)
 		end
 
 feature -- Access
@@ -224,10 +222,46 @@ feature -- Element change
 			{WEL_LIST_VIEW} Precursor (txt, column - 1)
 		end
 
+	set_columns_title (txt: ARRAY [STRING]) is         
+			-- Make `txt' the new titles of the columns.
+		local
+			i: INTEGER
+			list_i: INTEGER
+		do
+			from
+				i := txt.lower
+				list_i := 1
+			until
+				i = txt.upper + 1
+			loop
+				set_column_title (txt @ i, list_i)
+				i := i + 1
+				list_i := list_i + 1
+			end
+		end
+
 	set_column_width (value: INTEGER; column: INTEGER) is
 			-- Make `value' the new width of the one-based column.
 		do
 			{WEL_LIST_VIEW} Precursor (value, column - 1)
+		end
+
+	set_columns_width (value: ARRAY [INTEGER]) is         
+			-- Make `value' the new values of the columns width.
+		local
+			i: INTEGER
+			list_i: INTEGER
+		do
+			from
+				i := value.lower
+				list_i := 1
+			until
+				i = value.upper + 1
+			loop
+				set_column_width (value @ i, list_i)
+				i := i + 1
+				list_i := list_i + 1
+			end
 		end
 
 	set_rows_height (value: INTEGER) is
@@ -300,6 +334,15 @@ feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
+	default_style: INTEGER is
+			-- No ws_child and ws_visible at creation,
+			-- but ws_popup because it has no parent.
+		do
+			Result := Ws_child + Ws_visible + Ws_group 
+				+ Ws_tabstop + Ws_border + Ws_clipchildren
+				+ Lvs_report + Lvs_showselalways
+		end
+
 	on_lvn_columnclick (info: WEL_NM_LIST_VIEW) is
 			-- A column was tapped.
 		do
@@ -340,6 +383,16 @@ feature {NONE} -- WEL Implementation
 			-- external feature.
 		do
 			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
+		end
+
+feature {NONE} -- Inapplicable
+
+	make is
+			-- Do nothing here
+		do
+			check
+				Inapplicable: False
+			end
 		end
 
 end -- class EV_MULTI_COLUMN_LIST_IMP

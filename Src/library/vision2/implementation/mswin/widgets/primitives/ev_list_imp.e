@@ -22,7 +22,7 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		undefine
-			build
+			set_default_colors
 		redefine
 			make
 		end
@@ -118,19 +118,13 @@ creation
 	
 feature {NONE} -- Initialization
 	
-	make (par: EV_CONTAINER) is         
-			-- Create a list widget with `par' as parent.
+	make is         
+			-- Create a list widget.
 			-- By default, it is a single selection list,
 			-- use set_selection to change it into a multiple
 			-- selection list.
-		local
-			par_imp: WEL_WINDOW
 		do
-			par_imp ?= par.implementation
-			check
-				parent_not_void: par_imp /= Void
-			end
-			wel_make (par_imp, 0, 0, 0, 0, 0)
+			wel_make (default_parent.item, 0, 0, 0, 0, 0)
 			!! ev_children.make
 			is_multiple_selection := False
 		end	
@@ -307,13 +301,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Implementation : WEL features
 
-	default_style : INTEGER is
+	default_style: INTEGER is
 		do
-			Result := Lbs_ownerdrawfixed + Lbs_hasstrings + Lbs_nointegralheight
+			Result := Ws_child + Ws_visible + Ws_group 
+						+ Ws_tabstop + Ws_border + Ws_vscroll
+						+ Lbs_notify --+ Lbs_ownerdrawfixed 
+						+ Lbs_hasstrings --+ Lbs_nointegralheight
 			if is_multiple_selection then
-				Result := Result + {WEL_MULTIPLE_SELECTION_LIST_BOX} Precursor
-			else
-				Result := Result + {WEL_SINGLE_SELECTION_LIST_BOX} Precursor
+				Result := Result + Lbs_multiplesel
 			end
 		end
 

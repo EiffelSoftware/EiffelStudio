@@ -13,7 +13,7 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		undefine
-			build,
+			set_default_options,
 			on_key_down
 		end
 
@@ -41,18 +41,16 @@ inherit
 			on_kill_focus,
 			on_paint
 		redefine
+			default_style,
 			background_brush
 		end
 
 feature {NONE} -- Initialization
 
- 	make (par: EV_CONTAINER) is
- 			-- Make seperator
-		local
-			par_imp: WEL_COMPOSITE_WINDOW
+ 	make is
+ 			-- Make a separator
 		do
-			par_imp ?= par.implementation
-			make_with_coordinates (par_imp, "Separator", 0, 0, 2, 0)
+			wel_make (default_parent.item, "EV_SEPARATOR")
  		end
 
 feature {NONE} -- Implementation
@@ -65,6 +63,11 @@ feature {NONE} -- Implementation
 			if background_color /= Void then
 				!! Result.make_solid (background_color_imp)
 			end
+		end
+
+	default_style: INTEGER is
+		do
+			Result := Ws_child + Ws_visible
 		end
 
 feature {NONE} -- Inapplicable

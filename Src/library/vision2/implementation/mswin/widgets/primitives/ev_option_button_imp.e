@@ -21,7 +21,8 @@ inherit
 			on_bn_clicked,
 			draw_body,
 			draw_edge,
-			draw_focus
+			draw_focus,
+			set_parent
 		end
 
 creation
@@ -29,12 +30,21 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make is
 			-- Create the option button with `par' as parent.
+		do
+			{EV_BUTTON_IMP} Precursor
+			!! menu_container.make_track
+		end
+
+feature -- Status setting
+
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the screen.
 		do
 			{EV_BUTTON_IMP} Precursor (par)
 			ev_children := parent_imp.menu_items
-			!! menu_container.make_track
 		end
 
 feature -- Event association

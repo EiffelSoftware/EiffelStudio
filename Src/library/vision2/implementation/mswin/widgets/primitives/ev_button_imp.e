@@ -7,22 +7,24 @@ indexing
 
 class
 	EV_BUTTON_IMP
-        
+
 inherit
 	EV_BUTTON_I
 
 	EV_PRIMITIVE_IMP
+		undefine
+			set_default_minimum_size
 		redefine
-			plateform_build
+			widget_make
 		end
-       
+   
 	EV_BAR_ITEM_IMP
-        
+    
 	EV_TEXTABLE_IMP
 		redefine
-			set_default_size
+			set_default_minimum_size
 		end
-	
+
 	EV_PIXMAPABLE_IMP
 		undefine
 			pixmap_size_ok
@@ -32,12 +34,12 @@ inherit
 
 	EV_FONTABLE_IMP
 
-	WEL_BN_CONSTANTS
+	WEL_BS_CONSTANTS
 		export
 			{NONE} all
 		end
 
-	WEL_OWNER_DRAW_BUTTON
+	WEL_BUTTON
 		rename
 			make as wel_make,
 			set_parent as wel_set_parent,
@@ -74,32 +76,62 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make is
 			-- Create the label with an empty label.
 		do
-			make_with_text (par, "")
+			make_with_text ("")
 		end
 
-	make_with_text (par: EV_CONTAINER; txt: STRING) is
+	make_with_text (txt: STRING) is
 			-- Create the label with `txt' as label.
-		local
-			par_imp: WEL_WINDOW
 		do
-			par_imp ?= par.implementation
-			check
-				par_imp /= Void
-			end
-			wel_make (par_imp, txt, 0, 0, 0, 0, 0)
+			wel_make (default_parent.item, txt,	0, 0, 0, 0, 0)
 			extra_width := 10
 		end
 
-	plateform_build (par: EV_CONTAINER_IMP) is
-			-- Called after creation. Set the current size and
-			-- notify the parent.
+	widget_make (an_interface: EV_WIDGET) is
+			-- Creation of the widget.
 		do
-			{EV_PRIMITIVE_IMP} Precursor (par)
 			set_font (font)
-			set_default_size
+			{EV_PRIMITIVE_IMP} Precursor (an_interface)
+		end
+
+feature -- Access
+
+	extra_width: INTEGER
+		-- Extra width on the size
+
+feature -- Status setting
+
+	set_default_minimum_size is
+		-- Resize to a default size.
+		local
+			fw: EV_FONT_IMP
+			w,h: INTEGER
+		do
+			-- A minimum width to be sure.
+			w := extra_width
+			h := 0
+
+			-- The pixmap must go in,
+			if pixmap_imp /= Void then
+				w := w + pixmap_imp.width
+				h := h + pixmap_imp.height + 11
+			end
+
+			-- the text too.
+			if text /= "" then
+				fw ?= font.implementation
+				check
+					font_not_void: fw /= Void
+				end
+				w := w + fw.string_width (Current, text)
+				h := h.max (7 * fw.string_height (Current, text) // 4 )
+			end
+
+			-- Finaly, we set the minimum values.
+			set_minimum_width (w)
+			set_minimum_height (h)
 		end
 
 feature -- Event - command association
@@ -120,40 +152,7 @@ feature -- Event -- removing command association
 			remove_command (Cmd_click)
 		end
 
-feature {NONE} -- Implementation	
-	
-	extra_width: INTEGER
-
-	set_default_size is
-		-- Resize to a default size.
-		local
-			fw: EV_FONT_IMP
-			w,h: INTEGER
-		do
-			-- A minimum width to be sure.
-			w := extra_width
-	
-			-- The pixmap must go in,
-			if pixmap_imp /= Void then
-				w := w + pixmap_imp.width
-				h := h + pixmap_imp.height + 11
-			end
-
-			-- the text too.
-			if text /= "" then
-				fw ?= font.implementation
-				check
-					font_not_void: fw /= Void
-				end
-				w := w + fw.string_width (Current, text)
-				h := h.max (fw.string_height (Current, text) + 11)
-				--7 * fw.string_height (Current, text) // 4 - 2)
-			end
-
-			-- Finaly, we set the minimum values.
-			set_minimum_width (w)
-			set_minimum_height (h)
-		end
+feature {NONE} -- WEL Implementation
 
 	on_bn_clicked is
 			-- When the button is pressed
@@ -172,9 +171,14 @@ feature {NONE} -- Implementation
 
 	add_pixmap (pixmap: EV_PIXMAP) is
 			-- Add a pixmap in the container
+		local
+			local_style: INTEGER
 		do
 			{EV_PIXMAPABLE_IMP} Precursor (pixmap)
-			set_default_size
+--			local_style := clear_flag (style, Bs_pushbutton)
+--			local_style := set_flag (style, Bs_ownerdraw)
+--			set_style (local_style)
+			set_default_minimum_size
 		end
 
 	background_brush: WEL_BRUSH is
@@ -266,9 +270,9 @@ feature {NONE} -- Basic operation
 			-- First, we set the rectangle we will draw in, it depends if the
 			-- button is up or down
 			if is_down then
-				!! inrect.make (5, 6, width - 5, height - 5)
+				!! inrect.make (5, 5, width - 5, height - 4)
 			else
-				!! inrect.make (5, 5, width - 5, height - 6)
+				!! inrect.make (5, 4, width - 5, height - 5)
 			end
 
 			-- We select the brushes and color
@@ -322,6 +326,14 @@ feature {NONE} -- WEL Implementation
 			-- external feature.
 		do
 			Result := cwin_get_next_dlggroupitem (hdlg, hctl, previous)
+		end
+
+	default_style: INTEGER is
+			-- Not visible or child at creation
+		do
+			Result := Ws_child + Ws_visible + Ws_group
+						+ Ws_tabstop --+ Bs_pushbutton
+							 + Bs_ownerdraw
 		end
 
 end -- class EV_BUTTON_IMP

@@ -10,9 +10,6 @@ class
 
 inherit
 	EV_CHECK_BUTTON_I
-		undefine
-			build
-		end
 		
 	EV_TOGGLE_BUTTON_IMP
 		undefine
@@ -53,30 +50,26 @@ inherit
 			on_set_focus,
 			on_kill_focus,
 			on_bn_clicked
+		redefine
+			default_style
 		end	
 
 creation
 	make,
 	make_with_text
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make is
 			-- Create the label with an empty label.
 		do
-			make_with_text (par, "")
+			make_with_text ("")
 		end
 
-	make_with_text (par: EV_CONTAINER; txt: STRING) is
+	make_with_text (txt: STRING) is
 			-- Create the label with `txt' as label.
-		local
-			par_imp: WEL_WINDOW
 		do
-			par_imp ?= par.implementation
-			check
-				par_imp /= Void
-			end
-			wel_make (par_imp, txt, 0, 0, 0, 0, 0)
+			wel_make (default_parent.item, txt, 0, 0, 0, 0, 0)
 			extra_width := 20
 		end
 
@@ -106,6 +99,15 @@ feature -- Status setting
 			-- opposite
 		do
 			set_state (not state)
+		end
+
+feature {NONE} -- WEL Implementation
+
+	default_style: INTEGER is
+			-- Not visible or child at creation
+		do
+			Result := Ws_child + Ws_visible + Ws_group
+						+ Ws_tabstop + Bs_autocheckbox
 		end
 
 end -- class EV_CHECK_BUTTON_IMP

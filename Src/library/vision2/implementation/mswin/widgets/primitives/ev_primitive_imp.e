@@ -18,22 +18,12 @@ inherit
 
 	WEL_VK_CONSTANTS
 
-feature -- Status setting
-
-	destroy is
-			-- Destroy the widget, but set the parent sensitive
-			-- in case it was set insensitive by the child.
-		do
-			if parent_imp /= Void then
-				parent_imp.set_insensitive (False)
-			end
-			wel_destroy
-		end
-
-feature {NONE} -- Implementation
+feature -- Access
 
 	top_level_window_imp: WEL_WINDOW
 			-- Top level window that contains the current widget.
+
+feature -- Element change
 
 	set_top_level_window_imp (a_window: WEL_WINDOW) is
 			-- Make `a_window' the new `top_level_window_imp'
@@ -52,27 +42,21 @@ feature {NONE} -- WEL Implementation
 			window: WEL_WINDOW
 		do
 			if virtual_key = Vk_tab then
-				hwnd := next_dlgtabitem (top_level_window_imp.item, item, False)
+				hwnd := next_dlgtabitem (top_level_window_imp.item, item, True)
 				window := windows.item (hwnd)
 				window.set_focus
 			elseif virtual_key = Vk_down then
-				hwnd := next_dlggroupitem (top_level_window_imp.item, item, False)
+				hwnd := next_dlggroupitem (top_level_window_imp.item, item, True)
 				window := windows.item (hwnd)
 				window.set_focus
 			elseif virtual_key = Vk_up then
-				hwnd := next_dlggroupitem (top_level_window_imp.item, item, True)
+				hwnd := next_dlggroupitem (top_level_window_imp.item, item, False)
 				window := windows.item (hwnd)
 				window.set_focus
 			end
 		end
 
 feature {NONE} -- Deferred features
-
-	wel_destroy is
-			-- Destroy the window and quit the application
-			-- if `Current' is the application's main window.
-		deferred
-		end
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is
 			-- Encapsulation of the SDK GetNextDlgTabItem,

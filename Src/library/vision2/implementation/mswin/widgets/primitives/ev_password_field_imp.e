@@ -15,7 +15,8 @@ inherit
 			default_style
 		end
 creation
-	make
+	make,
+	make_with_text
 
 feature -- Access
 

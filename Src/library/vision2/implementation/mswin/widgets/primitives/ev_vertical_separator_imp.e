@@ -13,20 +13,19 @@ inherit
 
 	EV_SEPARATOR_IMP
 		undefine
-			build
+			set_default_options
 		redefine
-			plateform_build
+			set_default_minimum_size
 		end
 
 creation
 	make
 
-feature {NONE} -- Initialization
+feature -- Status setting
 
-   	plateform_build (par: EV_CONTAINER_I) is
+   	set_default_minimum_size is
    			-- Plateform dependant initializations.
    		do
-			{EV_SEPARATOR_IMP} Precursor (par)
 			set_minimum_width (2)
  		end
 

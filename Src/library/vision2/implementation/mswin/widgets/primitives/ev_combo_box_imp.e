@@ -19,8 +19,6 @@ inherit
 	EV_LIST_ITEM_CONTAINER_IMP
 
 	EV_TEXT_COMPONENT_IMP
-		undefine
-			build
 		redefine
 			set_editable,
 			move_and_resize
@@ -69,17 +67,11 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
-			-- Create a combo-box with `par' as parent.
-		local
-			par_imp: WEL_WINDOW
+	make is
+			-- Create a combo-box.
 		do
-			par_imp ?= par.implementation
-			check
-				parent_not_void: par_imp /= Void
-			end
 			is_editable := True
-			wel_make (par_imp, 0, 0, 0, 90, 0)
+			wel_make (default_parent.item, 0, 0, 0, 90, 0)
 			!! ev_children.make
 		end
 
@@ -278,7 +270,7 @@ feature {NONE} -- Implementation
 				!! temp_list.make (0)
 				save_list (temp_list)
 				wel_destroy
-				wel_make (par_imp, 0, 0, 0, 90, 0)
+				wel_make (par_imp, 0, 0, 0, 90,	0)
 				copy_list (temp_list)
 			end
 		end
@@ -315,6 +307,17 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {NONE} -- Inapplicable
+
+	make_with_text (txt: STRING) is
+			-- Create a text area with `par' as
+			-- parent and `txt' as text.
+		do
+			check
+				Inapplicable: False
+			end
+		end
+
 feature {NONE} -- Wel implementation
 
    	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
@@ -338,9 +341,10 @@ feature {NONE} -- Wel implementation
 
 	default_style: INTEGER is
 		do
-			Result := Ws_visible + Ws_child + Ws_group +
-					  Ws_tabstop + Ws_vscroll + Cbs_autohscroll +
-					  Cbs_ownerdrawfixed + Cbs_hasstrings
+			Result := Ws_child + Ws_visible + Ws_group 
+						+ Ws_tabstop + Ws_vscroll
+						+ Cbs_autohscroll --+ Cbs_ownerdrawfixed
+						+ Cbs_hasstrings
 			if is_editable then
 				Result := Result + Cbs_dropdown
 			else

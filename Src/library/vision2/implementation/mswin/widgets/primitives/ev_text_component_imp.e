@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			set_minimum_width (30)
 		end
 
-feature -- Access
+feature -- Status report
 
 	position: INTEGER is
 			-- Current position of the caret.
@@ -91,14 +91,6 @@ feature -- Status setting
 			set_caret_position (pos)
 		end
 
-	set_maximum_line_length (length: INTEGER) is
-			-- Maximum number of charachters on line
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
 	select_region (start_pos, end_pos: INTEGER) is
 			-- Select (hilight) the text between 
 			-- 'start_pos' and 'end_pos'
@@ -117,53 +109,21 @@ feature -- Resizing
 
 feature -- Basic operation
 
-	search (str: STRING): INTEGER is
-			-- Search the string `str' in the text.
-			-- If `str' is find, it returns its start
-			-- index in the text, otherwise, it returns
-			-- `Void'
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
-	cut_selection is
-			-- Cut the `selected_region' by erasing it from
-			-- the text and putting it in the Clipboard 
-			-- to paste it later.
-			-- If the `selectd_region' is empty, it does
-			-- nothing.
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
-	copy_selection is
-			-- Copy the `selected_region' in the Clipboard
-			-- to paste it later.
-			-- If the `selected_region' is empty, it does
-			-- nothing.
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-
 	paste (index: INTEGER) is
 			-- Insert the string which is in the 
 			-- Clipboard at the `index' postion in the
 			-- text.
 			-- If the Clipboard is empty, it does nothing. 
+		local
+			pos: INTEGER
 		do
-			check
-				not_yet_implemented: False
-			end
+			pos := caret_position
+			set_caret_position (index)
+			clip_paste
+			set_caret_position (pos)
 		end
 
-feature -- Implementation : deferred features of WEL_EDIT that 
-		-- are used here but not defined
+feature {NONE} -- Deferred features
 
 	caret_position: INTEGER is
 			-- Caret position
@@ -193,6 +153,12 @@ feature -- Implementation : deferred features of WEL_EDIT that
 
 	set_read_write is
 			-- Set the read-write state.
+		deferred
+		end
+
+	clip_paste is
+			-- Paste at the current caret position the
+			-- content of the clipboard.
 		deferred
 		end
 

@@ -27,7 +27,7 @@
             To run the word count example, you must first open a console window.
             Here is the normal usage of the word count example:
 		</P>
-		<pre>Usage: WordCount [-a] [-o] [-f&lt;output-pathname>] input-pathname...
+		<pre>Usage: WordCount [-a] [-o] [-f&lt;output-pathname&gt;] input-pathname...
 	-? Show this usage information
 	-a Word usage sorted alphabetically
 	-o Word usage sorted by occurrence and then alphabetically
@@ -93,11 +93,28 @@ Let us assume that you want to store the results of the word count test in a
 file rather than displaying it in the main console, for e.g. WordCountResult.txt
 file.You have then to use the -f option:
 		</p>
-		<PRE>Wordcount.exe -f c:\WordCountResult.txt c:\WordCountTest.txt</PRE>
+		<PRE>Wordcount.exe -fc:\WordCountResult.txt c:\WordCountTest.txt</PRE>
 		<P>
             No results is displayed in the main console, but they are all stored
             in the specified output file that is: WordCountResult.txt.
 		</P>
 		<H2>Under the Hood</H2>
+        <p>This is another example to show how to use EiffelBase.NET data
+        structures to build a simple Eiffel.NET system. The root class <a href="root_cluster/application_chart.html">APPLICATION</a>
+        launches the word counter. It needs a parser to read the command line
+        and retrieve pertinent information, that is, options, input and output
+        files. <a href="root_cluster/arg_parser_chart.html">ARG_PARSER</a> and <a href="root_cluster/word_count_arg_parser_chart.html">WORD_COUNT_ARG_PARSER</a>
+        are provided for that purpose.</p>
+        <p><a href="root_cluster/word_counter_chart.html">WORD_COUNTER</a>
+        performs the calculation. It returns the number of words, characters,
+        lines and bytes in a given file. It too handles alphabetical sorting.
+        Occurrence sorting is also made possible thanks to the <a href="root_cluster/word_occurence_chart.html">WORD_OCCURENCE</a>
+        class.</p>
+        <p><a href="root_cluster/application_chart.html">APPLICATION</a>
+        displays then all the calculated results either in a console window, or
+        in a file if user asked to, using the -f option. In that case, the
+        specified file is either created or overwritten (if it already exists).</p>
+        <p>See the <a href="root_cluster/index.html">reference</a> for the class
+        interfaces.</p>
 	</BODY>
 </HTML>

@@ -59,7 +59,7 @@ cluster
 
 	all gobo:		"$EIFFEL_SRC/library/gobo/library"
 		exclude
-			"hact"; "se"; "ve"; "base"; "CVS"; "others";
+			"hact"; "se"; "ve"; "base"; "CVS"; "other";
 		end
 
 	all documentation:		"$EIFFEL_SRC/Eiffel/case/documentation"

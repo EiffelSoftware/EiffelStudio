@@ -3,24 +3,10 @@
 class B_AND_THN_BL 
 
 inherit
-
-	B_AND_THEN_B
-		rename
-			analyze as old_analyze,
-			generate as old_generate,
-			free_register as old_free_register,
-			print_register as old_print_register,
-			propagate as old_propagate
-		redefine
-			c_type, register, set_register
-		end;
-
 	B_AND_THEN_B
 		redefine
 			propagate, free_register, print_register, generate, analyze,
 			c_type, register, set_register
-		select
-			propagate, free_register, print_register, generate, analyze
 		end;
 
 feature 
@@ -46,7 +32,7 @@ feature
 			if has_call then
 				register.free_register
 			else
-				old_free_register;
+				{B_AND_THEN_B} Precursor;
 			end;
 		end;
 
@@ -56,7 +42,7 @@ feature
 			if has_call then
 				register.print_register;
 			else
-				old_print_register;
+				{B_AND_THEN_B} Precursor;
 			end;
 		end;
 
@@ -73,7 +59,7 @@ feature
 					context.set_propagated;
 				end;
 			else
-				old_propagate (r);
+				{B_AND_THEN_B} Precursor (r);
 			end;
 		end;
 
@@ -91,7 +77,7 @@ feature
 				right.analyze;
 				right.free_register;
 			else
-				old_analyze;
+				{B_AND_THEN_B} Precursor;
 			end;
 		end;
 
@@ -123,7 +109,7 @@ feature
 				generated_file.putchar ('}');
 				generated_file.new_line;
 			else
-				old_generate;
+				{B_AND_THEN_B} Precursor;
 			end;
 		end;
 

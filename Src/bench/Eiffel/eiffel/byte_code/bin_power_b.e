@@ -1,8 +1,9 @@
 class BIN_POWER_B 
 
 inherit
-
 	NUM_BINARY_B
+		rename
+			Bc_power as operator_constant
 		redefine
 			print_register
 		end
@@ -16,18 +17,11 @@ feature
 			right_type: TYPE_I;
 			result_type: TYPE_I;
 		do
-			generated_file.putstring ("(double) math_power((double)");
+			generated_file.putstring ("(EIF_DOUBLE) math_power ((EIF_DOUBLE)");
 			left.print_register;
-			generated_file.putstring (",(double)");
+			generated_file.putstring (",(EIF_DOUBLE)");
 			right.print_register;
 			generated_file.putchar (')');
-		end;
-
-	operator_constant: CHARACTER is
-			-- Byte code constant associated to current binary
-			-- operation
-		do
-			Result := Bc_power
 		end;
 
 end

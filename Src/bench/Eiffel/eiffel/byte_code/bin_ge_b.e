@@ -3,6 +3,8 @@ class BIN_GE_B
 inherit
 
 	COMP_BINARY_B
+		rename
+			Bc_ge as operator_constant
 		redefine
 			generate_operator
 		end;
@@ -13,13 +15,6 @@ feature
 			-- Generate the operator
 		do
 			generated_file.putstring (" >= ");
-		end;
-
-	operator_constant: CHARACTER is
-			-- Byte code constant associated to current binary
-			-- operation
-		do
-			Result := Bc_ge;
 		end;
 
 end

@@ -5,6 +5,8 @@ class B_OR_ELSE_B
 inherit
 
 	BOOL_BINARY_B
+		rename
+			Bc_or as operator_constant
 		redefine
 			built_in_enlarged, generate_operator, make_standard_byte_code,
 			is_commutative
@@ -35,13 +37,6 @@ feature
 
 feature -- Byte code generation
 
-	operator_constant: CHARACTER is
-			-- Byte code constant associated to current binary
-			-- operation
-		do
-			Result := Bc_or
-		end;
-
 	make_standard_byte_code (ba: BYTE_ARRAY) is
 			-- Generate standard byte code for binary expression
 		do
@@ -49,7 +44,7 @@ feature -- Byte code generation
 			ba.append (Bc_or_else);
 			ba.mark_forward;
 			right.make_byte_code (ba);
-			ba.append (Bc_or);
+			ba.append (operator_constant); -- Bc_or
 			ba.write_forward;
 		end;
 

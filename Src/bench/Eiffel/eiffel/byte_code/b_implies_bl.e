@@ -3,28 +3,11 @@
 class B_IMPLIES_BL 
 
 inherit
-
-	B_IMPLIES_B
-		rename
-			analyze as old_analyze,
-			generate as old_generate,
-			free_register as old_free_register,
-			print_register as old_print_register,
-			propagate as old_propagate
-		redefine
-			register, set_register, c_type
-		end;
-
 	B_IMPLIES_B
 		redefine
 			propagate, free_register, print_register, generate, analyze,
 			register, set_register, c_type
-		select
-			propagate, free_register, print_register, generate, analyze
 		end;
-
-
-
 	
 feature 
 
@@ -49,7 +32,7 @@ feature
 			if has_call then
 				register.free_register
 			else
-				old_free_register;
+				{B_IMPLIES_B} Precursor;
 			end;
 		end;
 
@@ -59,7 +42,7 @@ feature
 			if has_call then
 				register.print_register;
 			else
-				old_print_register;
+				{B_IMPLIES_B} Precursor;
 			end;
 		end;
 
@@ -77,7 +60,7 @@ feature
 					context.set_propagated;
 				end;
 			else
-				old_propagate (r);
+				{B_IMPLIES_B} Precursor (r);
 			end;
 		end;
 
@@ -95,7 +78,7 @@ feature
 				right.analyze;
 				right.free_register;
 			else
-				old_analyze;
+				{B_IMPLIES_B} Precursor;
 			end;
 		end;
 
@@ -127,7 +110,7 @@ feature
 				generated_file.putchar ('}');
 				generated_file.new_line;
 			else
-				old_generate;
+				{B_IMPLIES_B} Precursor;
 			end;
 		end;
 

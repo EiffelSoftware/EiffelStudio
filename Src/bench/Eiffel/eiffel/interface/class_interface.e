@@ -256,7 +256,19 @@ feature {NONE} -- Implementation
 					i := 0
 					nb := p.count
 					l_rout_id_set := feat.rout_id_set
-					count := l_rout_id_set.count	
+					if not feat.is_attribute then
+							-- We are guarantee to find in parents a feature
+							-- with routine id `feat.rout_id_set.first'
+						count := 1
+					else
+							-- This is an attribute. It is possible, that the
+							-- attribute is a result of the redefinition of a
+							-- function and therefore the attribute gets more
+							-- routine ids:
+							--  * one for itself
+							--  * one or more for the function it implements
+						count := l_rout_id_set.count	
+					end
 				until
 					i >= nb or else found
 				loop

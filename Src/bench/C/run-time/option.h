@@ -70,7 +70,7 @@ extern EIF_BOOLEAN eif_profiler_on;		/* Is the Eiffel profiler on */
 
 extern int trace_call_level;			/* Call level to report at E-TRACE output */
 
-extern struct profile_stack *prof_stack;		/* Stack that maintains profile information */
+extern struct stack *prof_stack;		/* Stack that maintains profile information */
 
 extern void check_options();			/* Dispatches to start_profile and start_trace */
 extern void check_options_stop();		/* Dispatches to stop_profile and stop_trace */

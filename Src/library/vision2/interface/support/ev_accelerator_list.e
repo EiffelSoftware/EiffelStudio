@@ -19,7 +19,7 @@ feature -- Initialization
 	default_create is
 			-- Standard creation procedure.
 		do
-			Precursor
+			Precursor {EV_ACTIVE_LIST}
 			internal_add_actions.extend (agent enable_item_parented (?))
 			internal_remove_actions.extend (agent disable_item_parented (?))
 		end

@@ -76,8 +76,6 @@ feature -- Type check, byte code and dead code removal
 			a_feature: FEATURE_I
 			export_status: EXPORT_I
 			create_info: CREATE_INFO
-			create_type: CREATE_TYPE
-			create_formal_type: CREATE_FORMAL_TYPE
 			create_feat: CREATE_FEAT
 			feature_type, local_type: TYPE_A
 			local_b: LOCAL_B
@@ -100,10 +98,8 @@ feature -- Type check, byte code and dead code removal
 			gen_type: GEN_TYPE_A
 			formal_type: FORMAL_A
 			formal_dec: FORMAL_DEC_AS
-			formal_position: INTEGER
 			is_formal_creation, is_default_creation: BOOLEAN
 			dcr_feat: FEATURE_I
-			dcr_id: ID_AS
 			the_call: like call
 		do
 				-- Init the type stack
@@ -136,9 +132,8 @@ feature -- Type check, byte code and dead code removal
 			if creation_type.is_formal then
 					-- Cannot be Void
 				formal_type ?= creation_type
-				formal_position := formal_type.position
 					-- Get the corresponding constraint type of the current class
-				formal_dec := context.a_class.generics.i_th (formal_position)
+				formal_dec := context.a_class.generics.i_th (formal_type.position)
 				if formal_dec.has_constraint and then formal_dec.has_creation_constraint then
 					creation_type := formal_dec.constraint_type
 					is_formal_creation := True
@@ -291,8 +286,7 @@ feature -- Type check, byte code and dead code removal
 						-- creation (because we need to keep the call for polymorphic
 						-- reasons).
 					if is_formal_creation or else not dcr_feat.is_empty then
-						dcr_id := default_call.feature_name
-						dcr_id.load (dcr_feat.feature_name)
+						default_call.feature_name.load (dcr_feat.feature_name)
 						the_call := default_call
 					else
 							-- We insert creation without call to creation procedure
@@ -383,12 +377,9 @@ feature -- Type check, byte code and dead code removal
 
 				-- Compute creation information
 			if formal_type /= Void then
-				create create_formal_type.make (formal_position)
-				create_info := create_formal_type
+				create {CREATE_FORMAL_TYPE} create_info.make (formal_type.type_i)
 			elseif type /= Void then
-				create create_type
-				create_type.set_type (creation_type.type_i)
-				create_info := create_type
+				create {CREATE_TYPE} create_info.make (creation_type.type_i)
 			elseif access.is_result then
 				feature_type ?= context.a_feature.type
 				create_info := feature_type.create_info

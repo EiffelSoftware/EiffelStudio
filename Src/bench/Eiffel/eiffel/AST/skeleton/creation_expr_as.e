@@ -137,9 +137,7 @@ feature -- Type check
 			not_supported: NOT_SUPPORTED
 			formal_type: FORMAL_A
 			formal_dec: FORMAL_DEC_AS
-			formal_position: INTEGER
 			is_formal_creation, is_default_creation: BOOLEAN
-			dcr_id: ID_AS
 			dcr_feat: FEATURE_I
 			the_call: like call
 		do
@@ -184,9 +182,8 @@ feature -- Type check
 			if new_creation_type.is_formal then
 					-- Cannot be Void
 				formal_type ?= new_creation_type
-				formal_position := formal_type.position
 					-- Get the corresponding constraint type of the current class
-				formal_dec := context.a_class.generics.i_th (formal_position)
+				formal_dec := context.a_class.generics.i_th (formal_type.position)
 				if formal_dec.has_constraint and then formal_dec.has_creation_constraint then
 					new_creation_type := formal_dec.constraint_type
 					is_formal_creation := True
@@ -264,8 +261,7 @@ feature -- Type check
 				end
 				is_default_creation := True
 				if is_formal_creation or else not dcr_feat.is_empty then
-					dcr_id := default_call.feature_name
-					dcr_id.load (dcr_feat.feature_name)
+					default_call.feature_name.load (dcr_feat.feature_name)
 					the_call := default_call
 				else
 						-- We insert creation without call to creation procedure
@@ -382,11 +378,10 @@ feature -- Type check
 
 				-- Compute creation information
 			if is_formal_creation then
-				create {CREATE_FORMAL_TYPE} create_type.make (formal_position)
+				create {CREATE_FORMAL_TYPE} create_type.make (formal_type.type_i)
 			else
-				create create_type
+				create create_type.make (creation_type.type_i)
 			end
-			create_type.set_type (creation_type.type_i)
 
 			context.creation_types.insert (create_type)
 		end

@@ -1786,7 +1786,6 @@ feature {NONE} -- XML
 	xml_element: XM_ELEMENT is
 			-- XML representation.
 		local
-			xml_elt_node: XM_ELEMENT
 			cf: CLASS_FIGURE
 			hf: BON_INHERITANCE_FIGURE
 			csf: BON_CLIENT_SUPPLIER_FIGURE

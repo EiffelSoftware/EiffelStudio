@@ -331,7 +331,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 	EIF_REFERENCE o_ref;
 	EIF_REFERENCE reference;
 	long old_count;
-	int dt_type;
+	uint32 dtype;
 
 	zone = HEADER(object);
 	o_ref = (EIF_REFERENCE) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
@@ -339,7 +339,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 	old_count = count;
 	elem_size = *(long *) (o_ref + sizeof(long));
 	flags = zone->ov_flags;
-	dt_type = (int) Deif_bid(flags);
+	dtype = (int) Deif_bid(flags);
 
 	if (!(flags & EO_REF)) 
 		if (flags & EO_COMP) 
@@ -366,23 +366,37 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 				write_tab(tab + 1);
 				sprintf(buffero, "%ld: ", (long) (old_count - count));
 				write_out();
-				if (dt_type == egc_sp_char) {
+				if (dtype == egc_sp_char) {
 					write_char(*o_ref, buffero);
 					write_out();
-				} else if (dt_type == egc_sp_int32) {
+				} else if (dtype == egc_sp_wchar) {
+					sprintf(buffero, "WIDE_CHARACTER = %lu\n", *(EIF_WIDE_CHAR *)o_ref);
+					write_out ();
+				} else if (dtype == egc_sp_int8) {
+					sprintf(buffero, "INTEGER_8 = %d\n", *(EIF_INTEGER_8 *)o_ref);
+					write_out();
+				} else if (dtype == egc_sp_int16) {
+					sprintf(buffero, "INTEGER_16 = %d\n", *(EIF_INTEGER_16 *)o_ref);
+					write_out();
+				} else if (dtype == egc_sp_int32) {
 					sprintf(buffero, "INTEGER = %d\n", *(EIF_INTEGER_32 *)o_ref);
 					write_out();
-				} else if (dt_type == egc_sp_bool) {
+				} else if (dtype == egc_sp_int64) {
+					sprintf(buffero, "INTEGER_64 = %" EIF_INTEGER_64_DISPLAY "\n",
+						*(EIF_INTEGER_64 *)o_ref);
+					write_out();
+				} else if (dtype == egc_sp_bool) {
 					sprintf(buffero, "BOOLEAN = %s\n", (*o_ref ? "True" : "False"));
 					write_out();
-				} else if (dt_type == egc_sp_real) {
+				} else if (dtype == egc_sp_real) {
 					sprintf(buffero, "REAL = %g\n", *(EIF_REAL *)o_ref);
 					write_out();
-				} else if (dt_type == egc_sp_double) {
+				} else if (dtype == egc_sp_double) {
 					sprintf(buffero, "DOUBLE = %.17g\n", *(EIF_DOUBLE *)o_ref);
 					write_out();
-				} else if (dt_type == egc_sp_pointer) {
-					sprintf(buffero, "POINTER = C pointer 0x%lX\n", (unsigned long) (*(fnptr *)o_ref));
+				} else if (dtype == egc_sp_pointer) {
+					sprintf(buffero, "POINTER = C pointer 0x%lX\n",
+						(unsigned long) (*(fnptr *)o_ref));
 					write_out();
 				} else {
 					/* Must be bit */

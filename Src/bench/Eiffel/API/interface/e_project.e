@@ -569,7 +569,7 @@ feature -- Update
 				error_occurred implies was_saved
 			error_implies: error_occurred implies save_error
 			successful_implies_freezing_occurred: 
-					successful implies freezing_occurred 
+					successful implies (freezing_occurred or else workbench.system.il_generation)
 		end
 
 	finalize (keep_assertions: BOOLEAN) is

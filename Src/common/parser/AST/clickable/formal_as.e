@@ -15,11 +15,7 @@ inherit
 		redefine
 			simple_format
 		end;
-	BASIC_ROUTINES
-		export
-			{NONE}
-				all
-		end;
+
 	CLICKABLE_AST
 		redefine
 			is_class

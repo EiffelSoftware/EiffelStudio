@@ -59,6 +59,7 @@ class FIXED_LIST [G] inherit
 				occurrences,
 				valid_index,
 				copy,
+				area,
 				has,
 				consistent;
 			{FIXED_LIST}

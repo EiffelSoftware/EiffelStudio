@@ -3,6 +3,7 @@
 indexing
 	description:
 		"Angle accessable in either degrees or radians."
+	status: "See notice at end of class"
 	keywords: "angle degrees radians"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -180,6 +181,9 @@ end -- class EV_ANGLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/02/29 18:44:38  oconnor
+--| added status message
+--|
 --| Revision 1.12  2000/02/29 18:09:07  oconnor
 --| reformatted indexing cluase
 --|

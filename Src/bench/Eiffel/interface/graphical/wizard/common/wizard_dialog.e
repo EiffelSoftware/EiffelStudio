@@ -18,12 +18,19 @@ creation
 feature -- Graphical User Interface
 
 	set_default is
+		local	
+			sep: SEPARATOR
 		do
 			set_width (300);
 			!! action_form.make ("action_form", Current);
+			!! sep.make ("", Current);
+			sep.set_horizontal (True);
 			!! button_form.make ("button_form", Current);
 
 			button_form.set_fraction_base (3);
+
+			attach_left (sep, 5);
+			attach_right (sep, 5);
 
 			attach_bottom (button_form, 0);
 			attach_left (button_form, 0);
@@ -33,7 +40,8 @@ feature -- Graphical User Interface
 			attach_left (action_form, 0);
 			attach_right (action_form, 0);
 
-			attach_bottom_widget (button_form, action_form, 0);
+			attach_bottom_widget (sep, action_form, 5);
+			attach_bottom_widget (button_form, sep, 5);
 
 --			!! previous_button.make ("Previous", button_form);
 			!! abort_button.make ("Cancel", button_form);

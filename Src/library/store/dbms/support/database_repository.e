@@ -65,8 +65,6 @@ feature -- Basic operations
 	generate_class(f: FILE) is
 			-- Generate Eiffel class template according to data
 			-- representation given by `repository_name'.
-		obsolete
-			"Wrong location for this feature: please use class DB_CLASS_GENERATOR instead."
 		require
 			file_exists: f /= Void and then f.exists
 		local

@@ -25,9 +25,9 @@ feature
 	code: STRING is "VMFN";
 			-- Error code
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
-			-- in `error_window'.
+			-- in `ow'.
 		local
 			feature_info: INHERIT_INFO;
 			feature_i: FEATURE_I;
@@ -42,13 +42,13 @@ feature
 				feature_i := feature_info.a_feature;
 				parent := feature_info.parent.parent;
 
-				put_string ("Feature: ");
-				feature_i.append_clickable_signature (error_window, parent);
-				put_string (" inherited from: ");
-				parent.append_clickable_name (error_window);
-				put_string (" Version from: ");
-				feature_i.written_class.append_clickable_name (error_window);
-				new_line;
+				ow.put_string ("Feature: ");
+				feature_i.append_signature (ow, parent);
+				ow.put_string (" inherited from: ");
+				parent.append_name (ow);
+				ow.put_string (" Version from: ");
+				feature_i.written_class.append_name (ow);
+				ow.new_line;
 				features.forth;
 			end;
 		end;

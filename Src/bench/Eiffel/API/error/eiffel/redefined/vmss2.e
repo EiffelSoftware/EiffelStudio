@@ -40,15 +40,15 @@ feature
 			Result := 3
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
-			-- in `error_window'.
+			-- in `ow'.
 		do
-			put_string ("Feature name: ");
-			put_string (feature_name);
-			put_string ("%NIn Select subclause for parent: ");
-			parent.e_class.append_clickable_signature (error_window);
-			new_line;
+			ow.put_string ("Feature name: ");
+			ow.put_string (feature_name);
+			ow.put_string ("%NIn Select subclause for parent: ");
+			parent.e_class.append_signature (ow);
+			ow.new_line;
 		end;
 
 end

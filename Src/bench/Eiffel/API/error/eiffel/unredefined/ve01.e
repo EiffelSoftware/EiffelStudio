@@ -26,19 +26,19 @@ feature
 
 	subcode: INTEGER is 7
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		local
 			wclass: CLASS_C
 		do
 			wclass := old_feature.written_class;
-			put_string ("Redeclared routine: ");
-			old_feature.append_clickable_name (error_window, wclass);
-			put_string (" from ");
-			wclass.append_clickable_name (error_window);
+			ow.put_string ("Redeclared routine: ");
+			old_feature.append_name (ow, wclass);
+			ow.put_string (" from ");
+			wclass.append_name (ow);
 			if old_feature.is_external then
-				put_string (" is an external routine%N")
+				ow.put_string (" is an external routine%N")
 			else
-				put_string (" is not an external routine%N")
+				ow.put_string (" is not an external routine%N")
 			end;
 		end;
 

@@ -29,20 +29,20 @@ feature
 			old_type := t;
 		end;
 
-	print_types is
+	print_types (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("First type: ");
-			old_type.append_clickable_signature (error_window);
-			put_string ("%NSecond type: ");
-			type.append_clickable_signature (error_window);
-			new_line;
+			ow.put_string ("First type: ");
+			old_type.append_to (ow);
+			ow.put_string ("%NSecond type: ");
+			type.append_to (ow);
+			ow.new_line;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Result types are different%N");
-			print_types;
-			print_signatures;
+			ow.put_string ("Result types are different%N");
+			print_types (ow);
+			print_signatures (ow);
 		end;
 
 end

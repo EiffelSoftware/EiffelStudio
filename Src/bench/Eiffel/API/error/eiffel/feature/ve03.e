@@ -24,11 +24,11 @@ feature
 	code: STRING is "VJAW";
 			-- Error code
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Target: ");
-			put_string (target.access_name);
-			new_line;
+			ow.put_string ("Target: ");
+			ow.put_string (target.access_name);
+			ow.new_line;
 		end;
 
 end

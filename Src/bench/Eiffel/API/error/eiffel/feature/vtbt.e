@@ -19,12 +19,12 @@ feature
 			value := i;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
 			if value < 0 then
-				put_string ("Constant: ");
-				put_int (value);
-				new_line;
+				ow.put_string ("Constant: ");
+				ow.put_int (value);
+				ow.new_line;
 			end;
 		end;
 

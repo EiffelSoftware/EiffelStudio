@@ -23,11 +23,11 @@ feature
 	code: STRING is "NOT_SUPPORTED";
 			-- Error code
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Error message: ");
-			put_string (message);
-			new_line;
+			ow.put_string ("Error message: ");
+			ow.put_string (message);
+			ow.new_line;
 		end
 
 end

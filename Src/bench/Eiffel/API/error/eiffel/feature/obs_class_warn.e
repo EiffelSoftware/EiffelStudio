@@ -49,15 +49,15 @@ feature
 
 feature 
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Class: ");
-			associated_class.e_class.append_clickable_name (error_window);
-			put_string ("%NObsolete class: ");
-			obsolete_class.e_class.append_clickable_name (error_window);
-			put_string ("%NObsolete message: ");
-			put_string (obsolete_class.obsolete_message);
-			new_line;
+			ow.put_string ("Class: ");
+			associated_class.e_class.append_name (ow);
+			ow.put_string ("%NObsolete class: ");
+			obsolete_class.e_class.append_name (ow);
+			ow.put_string ("%NObsolete message: ");
+			ow.put_string (obsolete_class.obsolete_message);
+			ow.new_line;
 		end;
 
 end

@@ -16,13 +16,13 @@ feature
 
 	subcode: INTEGER is 4;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Duplicate name: ");
-			put_string (feature_name);
-			put_string ("%NIn Undefine clause for parent: ");
-			put_string (parent_name);
-			new_line;
+			ow.put_string ("Duplicate name: ");
+			ow.put_string (feature_name);
+			ow.put_string ("%NIn Undefine clause for parent: ");
+			ow.put_string (parent_name);
+			ow.new_line;
 		end;
 
 end 

@@ -26,24 +26,24 @@ feature
 
 	subcode: INTEGER is 1;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
             -- Build specific explanation explain for current error
-            -- in `error_window'.
+            -- in `ow'.
         do
-			put_string ("Names of classes involved in cycle:%N");
+			ow.put_string ("Names of classes involved in cycle:%N");
 			from
 				involved_classes.start
 			until
 				involved_classes.after
 			loop
 				if involved_classes.item /= involved_classes.first then
-					put_string (", ");
+					ow.put_string (", ");
 				end;
 				System.class_of_id (involved_classes.item)
-							.append_clickable_name (error_window);
+							.append_name (ow);
 				involved_classes.forth;
 			end;
-			new_line;
+			ow.new_line;
 		end;
 
 end

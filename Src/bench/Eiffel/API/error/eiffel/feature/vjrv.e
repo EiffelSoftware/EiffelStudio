@@ -30,12 +30,12 @@ feature
 	code: STRING is "VJRV";
 			-- Error code
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Target name: ");
-			put_string (target_name);
-			put_string ("%NTarget type: ");
-			target_type.append_clickable_signature (error_window);
+			ow.put_string ("Target name: ");
+			ow.put_string (target_name);
+			ow.put_string ("%NTarget type: ");
+			target_type.append_to (ow);
 		end;
 
 end 

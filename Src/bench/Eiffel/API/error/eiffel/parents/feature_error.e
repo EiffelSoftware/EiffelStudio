@@ -31,22 +31,22 @@ feature
 			feature_name := s;
 		end;
 
-	trace is
+	trace (ow: OUTPUT_WINDOW) is
 		do
-			print_error_message;
-			put_string ("Class: ");
-			class_c.e_class.append_clickable_signature (error_window);
+			print_error_message (ow);
+			ow.put_string ("Class: ");
+			class_c.e_class.append_signature (ow);
 			if feature_i /= Void then
-				put_string ("%NFeature: ");
-				feature_i.append_clickable_name (error_window, class_c);
+				ow.put_string ("%NFeature: ");
+				feature_i.append_name (ow, class_c);
 			elseif feature_name /= Void then
-				put_string ("%NFeature: ");
-				put_string (feature_name);
+				ow.put_string ("%NFeature: ");
+				ow.put_string (feature_name);
 			else
-				put_string ("%NFeature: invariant");
+				ow.put_string ("%NFeature: invariant");
 			end;
-			new_line;
-			build_explain;
+			ow.new_line;
+			build_explain (ow);
 		end;
 
 end

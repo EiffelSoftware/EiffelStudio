@@ -25,11 +25,11 @@ feature
 			unique_feature := f;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Duplicate name: ");
-			unique_feature.append_clickable_name (error_window, unique_feature.written_class);
-			new_line;
+			ow.put_string ("Duplicate name: ");
+			unique_feature.append_name (ow, unique_feature.written_class);
+			ow.new_line;
 		end;
 
 end

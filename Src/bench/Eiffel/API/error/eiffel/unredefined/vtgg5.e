@@ -11,29 +11,29 @@ inherit
 
 feature 
 
-	actual_type: TYPE_B;
+	actual_type: TYPE_A;
 
-	c_type: TYPE_B;
+	c_type: TYPE_A;
 
-	set_actual_type (a_type: TYPE_B) is
+	set_actual_type (a_type: TYPE_A) is
 		do
 			actual_type := a_type;
 		end;
 
-	set_constraint_type (a_type: TYPE_B) is
+	set_constraint_type (a_type: TYPE_A) is
 		do
 			c_type := a_type;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
-			-- in `error_window'.
+			-- in `ow'.
 		do
-			put_string ("In constraint genericity clause%NActual type: ");
-			actual_type.append_clickable_signature (error_window);
-			put_string ("%NType to which it should conform: ");
-			c_type.append_clickable_signature (error_window);
-			error_window.new_line;
+			ow.put_string ("In constraint genericity clause%NActual type: ");
+			actual_type.append_to (ow);
+			ow.put_string ("%NType to which it should conform: ");
+			c_type.append_to (ow);
+			ow.new_line;
 		end;
 
 	code: STRING is "VTCG";

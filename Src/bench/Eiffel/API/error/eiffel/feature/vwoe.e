@@ -41,15 +41,15 @@ feature
 	code: STRING is "VWOE";
 			-- Error code
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation image for current error
-			-- in `error_window'.
+			-- in `ow'.
 		do
-			put_string ("%TThere is no feature ");
-			put_string (op_name);
-			put_string (" in class ");
-			other_class.append_clickable_name (error_window);
-			new_line;
+			ow.put_string ("%TThere is no feature ");
+			ow.put_string (op_name);
+			ow.put_string (" in class ");
+			other_class.append_name (ow);
+			ow.new_line;
 		end
 
 end

@@ -31,12 +31,12 @@ feature
 	code: STRING is "Special_error";
 			-- Error code
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation image for current error
-			-- in `error_window'.
+			-- in `ow'.
 		do
-			put_string (error_case);
-			new_line;
+			ow.put_string (error_case);
+			ow.new_line;
 		end;
 
 end

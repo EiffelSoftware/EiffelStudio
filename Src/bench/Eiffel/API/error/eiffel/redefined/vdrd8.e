@@ -40,20 +40,20 @@ feature
 
 	subcode: INTEGER is 3;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
-			-- in `error_window'.
+			-- in `ow'.
 		do
-			put_string ("Feature: ");
-			a_feature.append_clickable_name (error_window, a_feature.written_class);
+			ow.put_string ("Feature: ");
+			a_feature.append_name (ow, a_feature.written_class);
 			if postcondition then
 				if precondition then
-					put_string ("%NInvalid assertion clauses: precondition and postcondition%N")
+					ow.put_string ("%NInvalid assertion clauses: precondition and postcondition%N")
 				else
-					put_string ("%NInvalid assertion clause: postcondition%N")
+					ow.put_string ("%NInvalid assertion clause: postcondition%N")
 				end;
 			else
-				put_string ("%NInvalid assertion clause: precondition%N")
+				ow.put_string ("%NInvalid assertion clause: precondition%N")
 			end;
 		end;
 

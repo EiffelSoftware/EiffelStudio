@@ -41,17 +41,17 @@ feature
 			Result := "VJAR";
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation image for current error
-			-- in `error_window'.
+			-- in `ow'.
 		do
-			put_string ("Target name: ");
-			put_string (target_name);
-			put_string ("%NTarget type: ");
-			target_type.append_clickable_signature (error_window);
-			put_string ("%NSource_type: ");
-			source_type.append_clickable_signature (error_window);
-			new_line
+			ow.put_string ("Target name: ");
+			ow.put_string (target_name);
+			ow.put_string ("%NTarget type: ");
+			target_type.append_to (ow);
+			ow.put_string ("%NSource_type: ");
+			source_type.append_to (ow);
+			ow.new_line
 		end
 
 end

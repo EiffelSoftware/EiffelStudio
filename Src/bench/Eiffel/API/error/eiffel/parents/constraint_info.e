@@ -38,21 +38,20 @@ feature
 			formal_number := i;
 		end;
 
-	build_explain (error_window: CLICK_WINDOW) is
+	build_explain (ow: OUTPUT_WINDOW) is
 		require
-			type /= Void;
 			actual_type /= Void;
 			c_type /= Void;
 		do
-			error_window.put_string ("For type: ");
-			type.append_clickable_signature (error_window);
-			error_window.put_string ("%NArgument number: ");
-			error_window.put_int (formal_number);
-			error_window.put_string (":%NActual generic parameter: ");
-			actual_type.append_clickable_signature (error_window);
-			error_window.put_string ("%NType to which it should conform: ");
-			c_type.append_clickable_signature (error_window);
-			error_window.new_line;
+			ow.put_string ("For type: ");
+			type.append_to (ow);
+			ow.put_string ("%NArgument number: ");
+			ow.put_int (formal_number);
+			ow.put_string (":%NActual generic parameter: ");
+			actual_type.append_to (ow);
+			ow.put_string ("%NType to which it should conform: ");
+			c_type.append_to (ow);
+			ow.new_line;
 		end
 
 end

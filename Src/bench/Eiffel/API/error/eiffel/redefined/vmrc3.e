@@ -22,9 +22,9 @@ feature
 
 	subcode: INTEGER is 2;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
-			-- in `error_window'.
+			-- in `ow'.
 		local
 			info: INHERIT_INFO;
 		do
@@ -35,14 +35,14 @@ feature
 			loop
 				info := selection_list.item;
 				if (info.parent = Void) then
-					put_string ("In current class: ");
+					ow.put_string ("In current class: ");
 				else
-					put_string ("In parent ");
-					info.parent.parent.append_clickable_name (error_window);
-					put_string (": ");
+					ow.put_string ("In parent ");
+					info.parent.parent.append_name (ow);
+					ow.put_string (": ");
 				end;
-				info.a_feature.append_clickable_signature (error_window, info.a_feature.written_class);
-				new_line;
+				info.a_feature.append_signature (ow, info.a_feature.written_class);
+				ow.new_line;
 
 				selection_list.forth;
 			end;

@@ -29,12 +29,12 @@ feature
 			formal_name := s;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
 			if formal_name /= Void then
-				put_string ("Parameter name: ");
-				put_string (formal_name);
-				new_line;
+				ow.put_string ("Parameter name: ");
+				ow.put_string (formal_name);
+				ow.new_line;
 			end;
 		end;
 

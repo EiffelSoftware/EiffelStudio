@@ -21,11 +21,11 @@ feature
 			type := t;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Expression type: ");
-			type.append_clickable_signature (error_window);
-			new_line;
+			ow.put_string ("Expression type: ");
+			type.append_to (ow);
+			ow.new_line;
 		end;
 
 end

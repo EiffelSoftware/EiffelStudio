@@ -21,16 +21,16 @@ feature
 			error_list := e;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
-			-- in `error_window'.
+			-- in `ow'.
 		do
 			from
 				error_list.start
 			until
 				error_list.after
 			loop
-				error_list.item.build_explain (error_window);
+				error_list.item.build_explain (ow);
 				error_list.forth;
 			end;
 		end;

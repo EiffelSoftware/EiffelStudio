@@ -28,13 +28,13 @@ feature
 	code: STRING is "VWST";
 			-- Error code
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation image for current error
-			-- in `error_window'.
+			-- in `ow'.
 		do
-			put_string ("Name: ");
-			put_string (attribute_name);
-			new_line
+			ow.put_string ("Name: ");
+			ow.put_string (attribute_name);
+			ow.new_line
 		end
 
 end

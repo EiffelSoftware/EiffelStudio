@@ -28,11 +28,11 @@ feature
 			Result := 1;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Local entity name: ");
-			put_string (local_name);
-			new_line;
+			ow.put_string ("Local entity name: ");
+			ow.put_string (local_name);
+			ow.new_line;
 		end;
 
 end

@@ -16,10 +16,10 @@ inherit
 
 feature
 
-	type: TYPE_B;
+	type: TYPE;
 			-- Type non evaluated
 
-	set_type (t: TYPE_B) is
+	set_type (t: like type) is
 			-- Assign `t' to `type'.
 		do
 			type := t;
@@ -30,13 +30,13 @@ feature
 
 	subcode: INTEGER is 1;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 			-- Build specific explanation explain for current error
-			-- in `error_window'.
+			-- in `ow'.
 		do
-			put_string ("Anchor type: ");
-			type.append_clickable_signature (error_window);
-			new_line;
+			ow.put_string ("Anchor type: ");
+			type.append_to (ow);
+			ow.new_line;
 		end;
 
 end

@@ -39,23 +39,24 @@ feature
 			a_feature := f
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Class: ");
-			associated_class.append_clickable_name (error_window);
+			ow.put_string ("Class: ");
+			associated_class.append_name (ow);
 			if a_feature /= Void then
-				put_string ("%NFeature: ");
-				a_feature.append_clickable_name (error_window, associated_class);
+				ow.put_string ("%NFeature: ");
+				a_feature.append_name (ow, associated_class);
 			else
-				put_string ("%NFeature: invariant")
+				ow.put_string ("%NFeature: invariant")
 			end;
-			put_string ("%NObsolete feature: ");
-			obsolete_feature.append_clickable_signature (error_window, obsolete_feature.written_class);
-			put_string (" (class ");
-			obsolete_class.append_clickable_name (error_window);
-			put_string (")%NObsolete message: ");
-			put_string (obsolete_feature.obsolete_message);
-			new_line;
+			ow.put_string ("%NObsolete feature: ");
+			obsolete_feature.append_signature 
+					(ow, obsolete_feature.written_class);
+			ow.put_string (" (class ");
+			obsolete_class.append_name (ow);
+			ow.put_string (")%NObsolete message: ");
+			ow.put_string (obsolete_feature.obsolete_message);
+			ow.new_line;
 		end;
 
 end

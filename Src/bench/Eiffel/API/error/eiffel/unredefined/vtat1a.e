@@ -24,12 +24,12 @@ feature
 			argument_name := s;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Anchor name: ");
-			put_string (argument_name);
-			new_line;
-			old_build_explain;
+			ow.put_string ("Anchor name: ");
+			ow.put_string (argument_name);
+			ow.new_line;
+			old_build_explain (ow);
 		end;
 
 end

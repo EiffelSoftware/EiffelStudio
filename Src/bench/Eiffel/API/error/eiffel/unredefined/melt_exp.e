@@ -22,10 +22,10 @@ feature
 			generic_type := g;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Type: ");
-			generic_type.append_clickable_signature (error_window);
+			ow.put_string ("Type: ");
+			generic_type.append_signature (ow);
 		end;
 
 end

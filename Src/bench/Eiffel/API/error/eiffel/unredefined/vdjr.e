@@ -30,27 +30,27 @@ feature
 			class_c := System.current_class;
 		end;
 
-	print_signatures is
+	print_signatures (ow: OUTPUT_WINDOW) is
 		local
 			oclass, nclass: CLASS_C
 		do
 			oclass := old_feature.written_class;
 			nclass := new_feature.written_class;
-			put_string ("First feature: ");
-			old_feature.append_clickable_signature (error_window, oclass);
-			put_string ("%NVersion from: ");
-			oclass.append_clickable_name (error_window);
-			put_string ("%NSecond feature: ");
-			new_feature.append_clickable_signature (error_window, nclass);
-			put_string ("%NVersion from: ");
-			nclass.append_clickable_name (error_window);
-			new_line;
+			ow.put_string ("First feature: ");
+			old_feature.append_signature (ow, oclass);
+			ow.put_string ("%NVersion from: ");
+			oclass.append_name (ow);
+			ow.put_string ("%NSecond feature: ");
+			new_feature.append_signature (ow, nclass);
+			ow.put_string ("%NVersion from: ");
+			nclass.append_name (ow);
+			ow.new_line;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Different numbers of arguments%N");
-			print_signatures;
+			ow.put_string ("Different numbers of arguments%N");
+			print_signatures (ow);
 		end;
 
 end

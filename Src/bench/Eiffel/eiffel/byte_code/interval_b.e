@@ -52,7 +52,7 @@ feature
 			Result := lower < other.lower;
 		end;
 
-	display (a_clickable: CLICK_WINDOW) is
+	display (a_clickable: OUTPUT_WINDOW) is
 		do
 			lower.display (a_clickable);
 			a_clickable.put_string ("..");

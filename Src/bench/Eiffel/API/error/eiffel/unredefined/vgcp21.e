@@ -25,11 +25,11 @@ feature
 			creation_feature := s;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Creation procedure name: ");
-			put_string (creation_feature);
-			new_line;
+			ow.put_string ("Creation procedure name: ");
+			ow.put_string (creation_feature);
+			ow.new_line;
 		end;
 
 end

@@ -22,11 +22,11 @@ feature
 			client := c;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		do
-			put_string ("Name of class involved in cycle: ");
-			client.append_clickable_name (error_window);
-			new_line;
+			ow.put_string ("Name of class involved in cycle: ");
+			client.append_name (ow);
+			ow.new_line;
 		end;
 
 end

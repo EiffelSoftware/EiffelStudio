@@ -34,18 +34,18 @@ feature
 			written_class := c;
 		end;
 
-	build_explain is
+	build_explain (ow: OUTPUT_WINDOW) is
 		local
 			wclass: CLASS_C
 		do
 			wclass := unique_feature.written_class;
-			put_string ("Constant: ");
-			unique_feature.append_clickable_name (error_window, wclass);
-			put_string (" From: ");
-			wclass.append_clickable_name (error_window);
-			put_string ("%NOrigin of conflicting constants: ");
-			written_class.append_clickable_name (error_window);
-			new_line;
+			ow.put_string ("Constant: ");
+			unique_feature.append_name (ow, wclass);
+			ow.put_string (" From: ");
+			wclass.append_name (ow);
+			ow.put_string ("%NOrigin of conflicting constants: ");
+			written_class.append_name (ow);
+			ow.new_line;
 		end;
 
 end

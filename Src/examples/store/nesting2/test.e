@@ -22,10 +22,6 @@ feature
 			my_action: ACTION_1_I
 		do
 				-- Ask for user's name and password
-			io.putstring ("Database user authentication:%N")
-			io.putstring("Data Source Name: ");
-			io.readline;
-			set_data_source (io.laststring);
 			io.putstring ("Name: ")
 			io.readline
 			tmp_string := clone (io.laststring)
@@ -51,7 +47,6 @@ feature
 			else
 				io.error.putstring ("Invalid user/password!%N")
 			end
-			io.readline
 		end
 
 	select_string: STRING is

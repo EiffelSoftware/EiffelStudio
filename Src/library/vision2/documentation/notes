@@ -50,6 +50,9 @@ To do:
 - Look into recursive radio events problem.
 - Look into destroyed tree item problem.
 - Test all state variables in non-parented widgets.
+- The event `expose_actions' is triggered twice on a container when a window is resized.
+
+
 
 Feature/Bug requests:
 - EV_LABEL.vertical align_text_center. (jfiat@capgemini.fr)

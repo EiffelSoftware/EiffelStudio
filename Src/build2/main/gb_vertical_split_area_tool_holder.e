@@ -91,6 +91,25 @@ feature -- Basic operation
 			-- Maximize `tool_holder'.
 		do
 			update_restore_position
+			
+				-- If the other tool is minimized, then
+				-- we need to restore its state first.
+			if tool_holder = first_tool_holder then
+				if second_tool_holder.minimized then
+					remove_second_cell
+					second_tool_holder.disable_minimized
+					second_tool_holder.reset_minimize_button
+				end
+			else
+				if first_tool_holder.minimized then
+					remove_first_cell
+					first_tool_holder.disable_minimized
+					first_tool_holder.reset_minimize_button
+				end
+			end
+			
+				-- If the tool is currently minimized then
+				-- we must disable this.
 			if tool_holder.minimized then
 				tool_holder.disable_minimized
 				tool_holder.reset_minimize_button

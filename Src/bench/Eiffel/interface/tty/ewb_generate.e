@@ -55,7 +55,7 @@ feature {NONE} -- Execution
 
 	execute is
 		local
-			prof_converter: PROF_CONVERTER
+			prof_converter: CONVERTER_CALLER
 			conf_load: CONFIGURATION_LOADER
 			prof_invoker: PROFILER_INVOKER
 		do

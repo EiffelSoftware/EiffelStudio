@@ -18,11 +18,15 @@ feature
 		local
 			a_file: UNIX_FILE
 		do
-			if file_name /= Void then
-				!!a_file.make_open_read (file_name);
-				a_file.readstream (a_file.count);
-				a_file.close;
-				Result :=  a_file.laststring
+			if 
+				(file_name /= Void)
+			then
+				!!a_file.make (file_name);
+				if a_file.exists and then a_file.is_readable then
+					a_file.readstream (a_file.count);
+					a_file.close;
+					Result :=  a_file.laststring
+				end;
 			end
 		end
 

@@ -40,7 +40,12 @@ feature -- Access
 		do
 			Result := "Diagram command"
 		end
-		
+
+	description: STRING is
+			-- Description for this command.
+		do
+			Result := description
+		end
 
 end -- class EB_CONTEXT_DIAGRAM_COMMAND
 

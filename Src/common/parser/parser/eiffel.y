@@ -65,7 +65,7 @@ create
 %type <ACCESS_INV_AS>		Creation_call
 %type <ARRAY_AS>			Manifest_array
 %type <ASSIGN_AS>			Assignment
-%type <ATOMIC_AS>			Index_value Manifest_constant Expression_constant
+%type <ATOMIC_AS>			Index_value Manifest_constant Non_integer_expression_constant
 %type <BIT_CONST_AS>		Bit_constant
 %type <BODY_AS>				Declaration_body
 %type <BOOL_AS>				Boolean_constant
@@ -83,7 +83,7 @@ create
 %type <ELSIF_AS>			Elseif_part
 %type <ENSURE_AS>			Postcondition
 %type <EXPORT_ITEM_AS>		New_export_item
-%type <EXPR_AS>				Expression
+%type <EXPR_AS>				Expression Factor
 %type <EXTERNAL_AS>			External
 %type <EXTERNAL_LANG_AS>	External_language
 %type <FEATURE_AS>			Feature_declaration
@@ -97,7 +97,7 @@ create
 %type <INSPECT_AS>			Multi_branch
 %type <INSTR_CALL_AS>		Call
 %type <INSTRUCTION_AS>		Instruction Instruction_impl
-%type <INTEGER_CONSTANT>	Integer_constant
+%type <INTEGER_CONSTANT>	Integer_constant Signed_integer Unsigned_integer
 %type <INTERNAL_AS>			Internal
 %type <INTERVAL_AS>			Choice
 %type <INVARIANT_AS>		Class_invariant
@@ -1729,20 +1729,11 @@ Check: Position TE_CHECK Assertion TE_END
 -- Expression
  
 
-Expression: Expression_constant
+Expression:
+		Unsigned_integer
 			{ create {VALUE_AS} $$.initialize ($1) }
-	|	TE_VOID
-			{ create {VOID_AS} $$ }
-	|	Manifest_array
-			{ create {VALUE_AS} $$.initialize ($1) }
-	|	Manifest_tuple
-			{ create {VALUE_AS} $$.initialize ($1) }
-	|	Feature_call
-			{ $$ := new_expr_call_as ($1) }
-	|	Agent_call
+	|	Factor
 			{ $$ := $1 }
-	|	TE_LPARAN Expression TE_RPARAN
-			{ $$ := new_paran_as ($2) }
 	|	Expression TE_PLUS Expression
 			{ $$ := new_bin_plus_as ($1, $3) }
 	|	Expression TE_MINUS Expression
@@ -1783,9 +1774,28 @@ Expression: Expression_constant
 			{ $$ := new_bin_ne_as ($1, $3) }
 	|	Expression Free_operator Expression %prec TE_FREE
 			{ $$ := new_bin_free_as ($1, $2, $3) }
-	|	TE_MINUS Expression %prec TE_NOT
+	;
+
+Factor:
+		Non_integer_expression_constant
+			{ create {VALUE_AS} $$.initialize ($1) }
+	|	Signed_integer
+			{ create {VALUE_AS} $$.initialize ($1) }
+	|	TE_VOID
+			{ create {VOID_AS} $$ }
+	|	Manifest_array
+			{ create {VALUE_AS} $$.initialize ($1) }
+	|	Manifest_tuple
+			{ create {VALUE_AS} $$.initialize ($1) }
+	|	Feature_call
+			{ $$ := new_expr_call_as ($1) }
+	|	Agent_call
+			{ $$ := $1 }
+	|	TE_LPARAN Expression TE_RPARAN
+			{ $$ := new_paran_as ($2) }
+	|	TE_MINUS Factor
 			{ $$ := new_un_minus_as ($2) }
-	|	TE_PLUS Expression %prec TE_NOT
+	|	TE_PLUS Factor
 			{ $$ := new_un_plus_as ($2) }
 	|	TE_NOT Expression
 			{ $$ := new_un_not_as ($2) }
@@ -1990,25 +2000,11 @@ Manifest_constant: Boolean_constant
 			{ $$ := $1 }
 	;
 
-Expression_constant: Boolean_constant
+Non_integer_expression_constant:
+		Boolean_constant
 			{ $$ := $1 }
 	|	Character_constant
 			{ $$ := $1 }
-	|	TE_INTEGER
-			{
-				if token_buffer.is_integer then
-					$$ := new_integer_as (False, token_buffer)
-				elseif
-					token_buffer.item (1) = '0' and then
-					token_buffer.item (2).lower = 'x'
-				then
-					$$ := new_integer_as_from_hexa (false, token_buffer)
-				else
-					report_integer_too_large_error (token_buffer)
-						-- Dummy code (for error recovery) follows:
-					$$ := new_integer_as (False, "0")
-				end
-			}
 	|	TE_REAL
 			{ $$ := new_real_as (cloned_string (token_buffer)) }
 	|	Bit_constant
@@ -2036,7 +2032,14 @@ Character_constant: TE_CHAR
 			}
 	;
 
-Integer_constant: TE_INTEGER
+Integer_constant:
+		Signed_integer
+			{ $$ := $1 }
+	|	Unsigned_integer
+			{ $$ := $1 }
+	;
+
+Unsigned_integer: TE_INTEGER
 			{
 				if token_buffer.is_integer then
 					$$ := new_integer_as (False, token_buffer)
@@ -2044,14 +2047,19 @@ Integer_constant: TE_INTEGER
 					token_buffer.item (1) = '0' and then
 					token_buffer.item (2).lower = 'x'
 				then
-					$$ := new_integer_as_from_hexa (false, token_buffer)
+					$$ := new_integer_as_from_hexa ('%U', token_buffer)
 				else
 					report_integer_too_large_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
 					$$ := new_integer_as (False, "0")
 				end
+				if not $$.is_initialized then
+					report_integer_too_large_error (token_buffer)
+				end
 			}
-	|	TE_PLUS TE_INTEGER
+	;
+
+Signed_integer: TE_PLUS TE_INTEGER
 			{
 				if token_buffer.is_integer then
 					$$ := new_integer_as (False, token_buffer)
@@ -2059,11 +2067,14 @@ Integer_constant: TE_INTEGER
 					token_buffer.item (1) = '0' and then
 					token_buffer.item (2).lower = 'x'
 				then
-					$$ := new_integer_as_from_hexa (false, token_buffer)
+					$$ := new_integer_as_from_hexa ('+', token_buffer)
 				else
 					report_integer_too_large_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
 					$$ := new_integer_as (False, "0")
+				end
+				if not $$.is_initialized then
+					report_integer_too_large_error (token_buffer)
 				end
 			}
 	|	TE_MINUS TE_INTEGER
@@ -2074,12 +2085,16 @@ Integer_constant: TE_INTEGER
 					token_buffer.item (1) = '0' and then
 					token_buffer.item (2).lower = 'x'
 				then
-					$$ := new_integer_as_from_hexa (true, token_buffer)
+					$$ := new_integer_as_from_hexa ('-', token_buffer)
 				else
 					token_buffer.precede ('-')
 					report_integer_too_small_error (token_buffer)
 						-- Dummy code (for error recovery) follows:
 					$$ := new_integer_as (False, "0")
+				end
+				if not $$.is_initialized then
+					token_buffer.precede ('-')
+					report_integer_too_small_error (token_buffer)
 				end
 			}
 	;

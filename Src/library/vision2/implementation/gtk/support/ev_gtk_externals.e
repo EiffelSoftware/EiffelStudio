@@ -78,12 +78,6 @@ feature {NONE} -- GTK C functions for toolbars
 	gtk_toolbar_set_tooltips (t: POINTER; fl: BOOLEAN) is
 		external "C | <gtk/gtk.h>"
 		end
-			
-feature {NONE} -- GTK C functions for frames
-
-	gtk_frame_new (l: POINTER): POINTER is
-		external "C | <gtk/gtk.h>"
-		end
 	
 feature {NONE} -- GTK C functions for gtkeditable
 
@@ -191,6 +185,20 @@ feature {NONE} -- GTK C functions for menu item
 		external "C | <gtk/gtk.h>"
 		end	
 
+feature {NONE} -- GTK C functions for option buttons
+
+	gtk_option_menu_new: POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_option_menu_set_menu (widget: POINTER; menu: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_option_menu_set_history (widget: POINTER; index: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
 feature {NONE} -- GTK C functions for list
 
 	gtk_list_new: POINTER is
@@ -202,6 +210,16 @@ feature {NONE} -- GTK C functions for list
 		end
 
 	gtk_list_set_selection_mode (list: POINTER; mode: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+feature {NONE} -- GTK C functions for tree
+
+	gtk_tree_new: POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_tree_append (tree: POINTER; item: POINTER) is
 		external "C | <gtk/gtk.h>"
 		end
 
@@ -254,3 +272,19 @@ feature {NONE} -- Implementation
 			Result := routine
 		end
 end
+
+--|----------------------------------------------------------------
+--| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building, 2nd floor
+--| 270 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|---------------------------------------------------------------

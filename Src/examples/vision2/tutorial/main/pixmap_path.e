@@ -8,18 +8,37 @@ indexing
 deferred class
 	PIXMAP_PATH
 
-inherit
-	EXECUTION_ENVIRONMENT
-
 feature -- Access
 
 	pixmap_path (name: STRING): STRING is
-			-- A pixmap
+			-- Return the full name of the given pixmap of EiffelBench.
+		local
+			env: EXECUTION_ENVIRONMENT
 		do
-			Result := "c:\Eiffel44\examples\vision2\tutorial"
---			Result := current_working_directory
-			Result.append ("\bmp\")
+			create env
+			Result := env.get ("$EIFFEL4")
+--			Result := "d:\Eiffel45"
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append ("bench")
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append ("bitmaps")
+			Result.append_character (Operating_environment.directory_separator)
+			Result.append (pixmap_extension)
+			Result.append_character (Operating_environment.directory_separator)
 			Result.append (name)
+			Result.append (".")
+			Result.append (pixmap_extension)
+		end
+
+feature {NONE} -- Implementation
+
+	pixmap_extension: STRING is
+		once
+			if Operating_environment.directory_separator = '\' then
+				Result := "bmp"
+			else
+				Result := "xpm"
+			end
 		end
 
 end -- class PIXMAP_PATH

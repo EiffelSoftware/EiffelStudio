@@ -17,15 +17,17 @@ inherit
 				-- Provisoire
 		redefine
 			make, tool_name, icon_id
---			tool_name, process_system, process_error,
+--			process_system, process_error,
 --			process_object, process_breakable, process_class,
 --			process_classi, compatible, process_feature,
---			process_class_syntax, process_ace_syntax, display,
+--			process_class_syntax, process_ace_syntax,
 --			process_call_stack,
 --			update_graphical_resources, help_index, icon_id
 		end
 
 	EB_PROJECT_TOOL_DATA
+
+	EB_GENERAL_DATA
 
 	EV_COMMAND
 
@@ -59,7 +61,7 @@ feature -- Initialization
 	make (man: EB_TOOL_MANAGER) is
 			-- Create a project application.
 		local
-			app_stopped_cmd: APPLICATION_STOPPED_CMD
+			app_stopped_cmd: EB_APPLICATION_STOPPED_CMD
 			t_s: EB_TOOL_SUPERVISOR
 		do
 			General_resources.add_user (Current)
@@ -126,7 +128,7 @@ feature -- Resource Update
 	update_boolean_resource (old_res, new_res: EB_BOOLEAN_RESOURCE) is
 		local
 --			rout_cli_cmd: SHOW_ROUTCLIENTS
---			display_routine_cmd: DISPLAY_ROUTINE_PORTION
+--			display_feature_cmd: DISPLAY_ROUTINE_PORTION
 --			display_object_cmd: DISPLAY_OBJECT_PORTION
 --			stop_cmd: SHOW_BREAKPOINTS
 --			pr: like Project_resources
@@ -152,11 +154,11 @@ feature -- Resource Update
 --					selector_part.hide_selector
 --				end
 --			elseif old_res = pr.feature_window then
---				display_routine_cmd ?= display_feature_cmd_holder.associated_command
+--				display_feature_cmd ?= display_feature_cmd_holder.associated_command
 --				if new_res.actual_value then
---					display_routine_cmd.show
+--					display_feature_cmd.show
 --				else
---					display_routine_cmd.hide
+--					display_feature_cmd.hide
 --				end
 --			elseif old_res = pr.object_window then
 --				display_object_cmd ?= display_object_cmd_holder.associated_command
@@ -216,10 +218,10 @@ feature -- Resource Update
 --					feature_form.set_height (new.actual_value)
 --				elseif old_res = General_resources.tab_step then
 --					set_tab_length (new.actual_value)
---					tool_supervisor.routine_win_mgr.set_tab_length (tab_length)
---					tool_supervisor.class_win_mgr.set_tab_length (tab_length)
---					tool_supervisor.object_win_mgr.set_tab_length (tab_length)
---					tool_supervisor.explain_win_mgr.set_tab_length (tab_length)
+--					tool_supervisor.feature_tool_mgr.set_tab_length (tab_length)
+--					tool_supervisor.class_tool_mgr.set_tab_length (tab_length)
+--					tool_supervisor.object_tool_mgr.set_tab_length (tab_length)
+--					tool_supervisor.explain_tool_mgr.set_tab_length (tab_length)
 --					if system_tool_is_valid then
 --						System_tool.set_tab_length (tab_length)
 --						System_tool.update_save_symbol
@@ -334,19 +336,19 @@ feature -- Window Properties
 
 feature -- Window Holders
 
-	stop_points_hole_holder: HOLE_HOLDER
+--	stop_points_hole_holder: HOLE_HOLDER
 
-	system_hole_holder: HOLE_HOLDER
+--	system_hole_holder: HOLE_HOLDER
 
-	class_hole_holder: HOLE_HOLDER
+--	class_hole_holder: HOLE_HOLDER
 
-	routine_hole_holder: HOLE_HOLDER
+--	routine_hole_holder: HOLE_HOLDER
 
-	dynamic_lib_hole_holder: HOLE_HOLDER
+--	dynamic_lib_hole_holder: HOLE_HOLDER
 
-	object_hole_holder: HOLE_HOLDER
+--	object_hole_holder: HOLE_HOLDER
 
-	explain_hole_holder: HOLE_HOLDER
+--	explain_hole_holder: HOLE_HOLDER
 
 feature -- Pulldown Menus
 
@@ -365,19 +367,19 @@ feature -- Pulldown Menus
 
 feature -- Modifiable menus
 
-	melt_menu_entry: EB_MENU_ENTRY
+--	melt_menu_entry: EV_MENU_ITEM
 			-- Melt menu entry
 
-	quick_melt_menu_entry: EB_MENU_ENTRY
+--	quick_melt_menu_entry: EV_MENU_ITEM
 			-- Quick-Melt menu entry
 
-	freeze_menu_entry: EB_MENU_ENTRY
+--	freeze_menu_entry: EV_MENU_ITEM
 			-- Freeze menu entry
 
-	finalize_menu_entry: EB_MENU_ENTRY
+--	finalize_menu_entry: EV_MENU_ITEM
 			-- Finalize menu entry
 
-	precompile_menu_entry: EB_MENU_ENTRY
+--	precompile_menu_entry: EV_MENU_ITEM
 			-- Precompile menu entry
 
 feature -- Window Forms
@@ -476,7 +478,7 @@ feature -- Execution Implementation
 feature -- Update
 
 --	synchronize_routine_tool_to_default is
---			-- Synchronize the routine tool to the debug format.
+--			-- Synchronize the feature tool to the debug format.
 --		do
 --			if feature_part /= Void and then feature_form.managed then	
 --				feature_part.set_debug_format
@@ -498,19 +500,19 @@ feature -- Update
 
 	add_feature_entry (f_t: EB_FEATURE_TOOL) is
 		do
---			add_tool_to_menu (f_t, menus @ open_routines_menu)
+--			add_tool_to_menu (f_t, menus @ open_features_menu)
 			selector_part.add_tool_entry (f_t)
 		end
 
 	change_feature_entry (f_t: EB_FEATURE_TOOL) is
 		do
---			change_tool_in_menu (f_t, menus @ open_routines_menu)
+--			change_tool_in_menu (f_t, menus @ open_features_menu)
 			selector_part.change_tool_entry (f_t)
 		end
 
 	remove_feature_entry (f_t: EB_FEATURE_TOOL) is
 		do
---			remove_tool_from_menu (f_t, menus @ open_routines_menu)
+--			remove_tool_from_menu (f_t, menus @ open_features_menu)
 			selector_part.remove_tool_entry (f_t)
 		end
 
@@ -571,14 +573,18 @@ feature -- Graphical Interface
 			-- Build widget.
 		local
 			hide_split_windows: BOOLEAN
-			display_routine_cmd: DISPLAY_ROUTINE_PORTION
-			display_object_cmd: DISPLAY_OBJECT_PORTION
+--			display_feature_cmd: DISPLAY_ROUTINE_PORTION
+--			display_object_cmd: DISPLAY_OBJECT_PORTION
 
 			v_split: EV_VERTICAL_SPLIT_AREA
 		do
 			shown_portions := 1
 
 			create container.make (parent)
+
+				-- toolbar creation
+			create project_toolbar.make (container)
+			container.set_child_expandable (project_toolbar, False)
 
 			create global_verti_split_window.make (container)
 
@@ -597,15 +603,11 @@ feature -- Graphical Interface
 			set_debug_tool (debug_part)
 			create object_part.make (Current)
 
-			set_default_size
+				-- now that the debug tool is created,
+				-- we can make the toolbar.
+			build_top (project_toolbar)
 
---			create_toolbar (container)
---			build_menu
---			build_text_windows (project_form)
---			build_top
---			build_compile_menu
---			build_format_bar
---			build_toolbar_menu
+			set_default_size
 
 -- 			create feature_part.form_create (feature_form, 
 --					menus @ special_feature_menu, 
@@ -627,13 +629,13 @@ feature -- Graphical Interface
 --				format_bar.remove
 --			end
 
---			display_routine_cmd ?= display_feature_cmd_holder.associated_command
+--			display_feature_cmd ?= display_feature_cmd_holder.associated_command
 --			display_object_cmd ?= display_object_cmd_holder.associated_command
 --
 --			if hide_split_windows or else not Project_resources.feature_window.actual_value then
---				display_routine_cmd.hide
+--				display_feature_cmd.hide
 --			else
---				display_routine_cmd.show
+--				display_feature_cmd.show
 --			end
 --
 --			if hide_split_windows or else not Project_resources.object_window.actual_value then
@@ -646,44 +648,30 @@ feature -- Graphical Interface
 			disable_menus
 		end
 		
-	build_top is
+	build_top (a_toolbar: EV_BOX) is
 			-- Build top bar
 		local
 --			tool_action: TOOLS_MANAGEMENT
---			explain_cmd: EXPLAIN_HOLE
---			explain_button: EB_BUTTON_HOLE
---			system_cmd: SYSTEM_HOLE
---			system_button: EB_BUTTON_HOLE
---			class_cmd: CLASS_HOLE
---			class_button: EB_BUTTON_HOLE
---			routine_cmd: ROUTINE_HOLE
---			routine_button: EB_BUTTON_HOLE
---			shell_cmd: SHELL_COMMAND
---			shell_button: EB_BUTTON_HOLE
---			object_cmd: OBJECT_HOLE
---			object_button: EB_BUTTON_HOLE
---			clear_bp_cmd: DEBUG_CLEAR_STOP_POINTS_HOLE
---			clear_bp_button: EB_BUTTON_HOLE
---			stop_points_cmd: DEBUG_STOPIN_HOLE
---			stop_points_button: EB_BUTTON_HOLE
---			stop_points_status_cmd: STOPPOINTS_STATUS
+			explain_cmd: EB_CREATE_EXPLAIN_CMD
+			system_cmd: EB_SHOW_SYSTEM_TOOL
+			class_cmd: EB_CREATE_CLASS_CMD
+			feature_cmd: EB_CREATE_FEATURE_CMD
+			dynamic_lib_cmd: EB_SHOW_DYNAMIC_LIB_TOOL
+			shell_cmd: EB_OPEN_SHELL_CMD
+			object_cmd: EB_CREATE_OBJECT_CMD
+			clear_bp_cmd: EB_CLEAR_STOP_POINTS_CMD
+			stop_points_cmd: EB_DEBUG_STOPIN_HOLE_CMD
 
---			dynamic_lib_cmd: DYNAMIC_LIB_HOLE
---			dynamic_lib_button: EB_BUTTON_HOLE
+			sep: EV_VERTICAL_SEPARATOR
 
---			sep: SEPARATOR
---			sep1, sep2: THREE_D_SEPARATOR
 --			display_feature_cmd: DISPLAY_ROUTINE_PORTION
---			display_feature_button: EB_BUTTON
 --			display_object_cmd: DISPLAY_OBJECT_PORTION
---			display_object_button: EB_BUTTON
---			update_cmd: UPDATE_PROJECT
---			update_button: EB_BUTTON
---			quick_update_cmd: UPDATE_PROJECT
---			quick_update_button: EB_BUTTON
---  			version_button: PUSH_B
+			melt_cmd: EB_MELT_PROJECT_CMD
+			quick_melt_cmd: EB_QUICK_MELT_PROJECT_CMD
 
 --			do_nothing_cmd: DO_NOTHING_CMD
+
+			b: EV_BUTTON
 		do
 --			build_file_menu
 
@@ -694,56 +682,56 @@ feature -- Graphical Interface
 --			create about_cmd.make (about_tool)
 --			create about_menu_entry.make_default (about_cmd, help_menu)
 
-				-- Edit Menu
---			build_edit_menu (project_toolbar)
-
---			create sep.make (Interface_names.t_Empty, edit_menu)
---			create show_pref_cmd.make (Project_resources)
---			create show_pref_menu_entry.make_default (show_pref_cmd, edit_menu)
-
 				-- Close all command
 
 				-- Regular menu entries.
---			create explain_cmd.make (Current)
---			create explain_button.make (explain_cmd, project_toolbar)
---			create explain_hole_holder.make (explain_cmd, explain_button, explain_menu_entry)
+			create explain_cmd.make (Current)
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Explain)
+			b.add_click_command (explain_cmd, Void)
 
---			create system_cmd.make (Current)
---			create system_button.make (system_cmd, project_toolbar)
---			create system_hole_holder.make (system_cmd, system_button, system_menu_entry)
+			create system_cmd.make (parent_window)
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_System)
+			b.add_click_command (system_cmd, Void)
 			
---			create class_cmd.make (Current)
---			create class_button.make (class_cmd, project_toolbar)
---			create class_hole_holder.make (class_cmd, class_button, class_menu_entry)
+			create class_cmd.make (Current)
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Class)
+			b.add_click_command (class_cmd, Void)
 
---			create dynamic_lib_cmd.make (Current)
---			create dynamic_lib_button.make (dynamic_lib_cmd, project_toolbar)
---			create dynamic_lib_hole_holder.make (dynamic_lib_cmd, dynamic_lib_button, dynamic_lib_menu_entry)
+			create feature_cmd.make (Current)
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Routine)
+			b.add_click_command (feature_cmd, Void)
 
---			create routine_cmd.make (Current)
---			create routine_button.make (routine_cmd, project_toolbar)
---			create routine_hole_holder.make (routine_cmd, routine_button, routine_menu_entry)
+			create dynamic_lib_cmd.make (parent_window)
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Dynamic_lib)
+			b.add_click_command (dynamic_lib_cmd, Void)
 
---			create shell_cmd.make (Current)
---			create shell_button.make (shell_cmd, project_toolbar)
+			create shell_cmd.make (Current)
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Shell)
+			b.add_click_command (shell_cmd, Void)
 --			shell_button.add_third_button_action
 
---			create object_cmd.make (Current)
---			create object_button.make (object_cmd, project_toolbar)
---			create object_hole_holder.make (object_cmd, object_button, object_menu_entry)
+			create object_cmd.make (Current)
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Object)
+			b.add_click_command (object_cmd, Void)
 
---			create stop_points_cmd.make (Current)
---			create stop_points_button.make (stop_points_cmd, project_toolbar)
---			create stop_points_hole_holder.make (stop_points_cmd, stop_points_button, stop_points_menu_entry)
-
---			create clear_bp_cmd.make (Current)
---			create clear_bp_button.make (clear_bp_cmd, project_toolbar)
+			create clear_bp_cmd.make (debug_tool)
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Clear_breakpoints)
 --			clear_bp_button.set_action ("c<Btn1Down>", 
 --						clear_bp_cmd, clear_bp_cmd.clear_it_action)
---			create clear_bp_cmd_holder.make (clear_bp_cmd, clear_bp_button, clear_bp_menu_entry)
+			b.add_click_command (clear_bp_cmd, Void)
 
---			create stop_points_status_cmd.make_enabled
---			create stop_points_status_cmd.make_disabled
+			create stop_points_cmd
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Setstop)
+			b.add_click_command (stop_points_cmd, Void)
 
 --			create display_feature_cmd.make (Current)
 --			create display_feature_button.make (display_feature_cmd, project_toolbar)
@@ -754,24 +742,21 @@ feature -- Graphical Interface
 --			create display_object_button.make (display_object_cmd, project_toolbar)
 --			create display_object_cmd_holder.make (display_object_cmd, display_object_button, display_object_menu_entry)
 --			display_object_cmd.set_holder (display_object_cmd_holder)
---
---			create update_cmd.make (Current)
---			create update_button.make (update_cmd, project_toolbar)
---			update_button.set_action ("c<Btn1Down>", update_cmd, update_cmd.generate_code_only)
---			create update_cmd_holder.make (update_cmd, update_button, melt_menu_entry)
---
---			create quick_update_cmd.make (Current)
---			quick_update_cmd.set_quick_melt
---			create quick_update_button.make (quick_update_cmd, project_toolbar)
+
+			create sep.make (a_toolbar)
+
+			create melt_cmd.make (Current)
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Update)
+--			update_button.set_action ("c<Btn1Down>", melt_cmd, update_cmd.generate_code_only)
+			b.add_click_command (melt_cmd, Void)
+
+			create quick_melt_cmd.make (Current)
+			create b.make (a_toolbar)
+			b.set_pixmap (Pixmaps.bm_Quick_update)
 --			quick_update_button.set_action ("c<Btn1Down>", quick_update_cmd, quick_update_cmd.generate_code_only)
---			create quick_update_cmd_holder.make (quick_update_cmd, quick_update_button, quick_melt_menu_entry)
---
---			create sep1.make (interface_names.t_empty, project_toolbar)
---			sep1.set_horizontal (False)
---
---			create sep2.make (interface_names.t_empty, project_toolbar)
---			sep2.set_horizontal (False)
---
+			b.add_click_command (quick_melt_cmd, Void)
+
 --			create do_nothing_cmd
 --			project_toolbar.set_action ("c<Btn1Down>", do_nothing_cmd, Void)
 		end
@@ -781,8 +766,8 @@ feature -- Graphical Interface
 			-- Save the current environment
 			--| ie, save windows positions, save breakpoints
 		require
-			recent_project_list_exists: recent_project_list /= Void
-			recent_project_list_compare_objects: recent_project_list.object_comparison
+--			recent_project_list_exists: recent_project_list /= Void
+--			recent_project_list_compare_objects: recent_project_list.object_comparison
 		local
 			environment_variable: EXECUTION_ENVIRONMENT
 			last_opened_projects: STRING
@@ -854,61 +839,61 @@ feature {NONE} -- Properties
 
 feature -- System Execution Modes
 
-	exec_stop_frmt_holder: COMMAND_HOLDER
+--	exec_stop_frmt_holder: COMMAND_HOLDER
 			-- Set execution format so that user-defined stop
 			-- points will be taken into account
 
-	exec_nostop_frmt_holder: COMMAND_HOLDER
+--	exec_nostop_frmt_holder: COMMAND_HOLDER
 			-- Set execution format so that no stop points will
 			-- be taken into account
 
-	exec_step_frmt_holder: COMMAND_HOLDER
+--	exec_step_frmt_holder: COMMAND_HOLDER
 			-- Set execution format so that each breakable points
-			-- of the current routine will be taken into account
+			-- of the current feature will be taken into account
 
-	exec_last_frmt_holder: COMMAND_HOLDER
+--	exec_last_frmt_holder: COMMAND_HOLDER
 			-- Set execution format so that only the last
-			-- breakable point of the current routine will be
+			-- breakable point of the current feature will be
 			-- taken into account
 
 feature -- Commands
 
-	new_cmd_holder: COMMAND_HOLDER
+--	new_cmd_holder: COMMAND_HOLDER
 			-- To create a new project
 
-	open_cmd_holder: COMMAND_HOLDER
+--	open_cmd_holder: COMMAND_HOLDER
 			-- To open an existing project
 
-	quit_cmd_holder: COMMAND_HOLDER
+--	quit_cmd_holder: COMMAND_HOLDER
 			-- To quit the current project
 
-	update_cmd_holder: COMMAND_HOLDER
+--	update_cmd_holder: COMMAND_HOLDER
 
-	quick_update_cmd_holder: COMMAND_HOLDER
+--	quick_update_cmd_holder: COMMAND_HOLDER
 
-	debug_run_cmd_holder: COMMAND_HOLDER
+--	debug_run_cmd_holder: COMMAND_HOLDER
 
-	debug_status_cmd_holder: COMMAND_HOLDER
+--	debug_status_cmd_holder: COMMAND_HOLDER
 
-	debug_quit_cmd_holder: COMMAND_HOLDER
+--	debug_quit_cmd_holder: COMMAND_HOLDER
 
-	clear_bp_cmd_holder: COMMAND_HOLDER
+--	clear_bp_cmd_holder: COMMAND_HOLDER
 
-	special_cmd_holder: COMMAND_HOLDER
+--	special_cmd_holder: COMMAND_HOLDER
 
-	freeze_cmd_holder: COMMAND_HOLDER
+--	freeze_cmd_holder: COMMAND_HOLDER
 
-	finalize_cmd_holder: COMMAND_HOLDER
+--	finalize_cmd_holder: COMMAND_HOLDER
 
-	precompile_cmd_holder: COMMAND_HOLDER
+--	precompile_cmd_holder: COMMAND_HOLDER
 
-	display_feature_cmd_holder: COMMAND_HOLDER
+--	display_feature_cmd_holder: COMMAND_HOLDER
 
-	display_object_cmd_holder: COMMAND_HOLDER
+--	display_object_cmd_holder: COMMAND_HOLDER
 
-	up_exception_stack_holder: COMMAND_HOLDER
+--	up_exception_stack_holder: COMMAND_HOLDER
 
-	down_exception_stack_holder: COMMAND_HOLDER
+--	down_exception_stack_holder: COMMAND_HOLDER
 
 feature -- Hole access
 
@@ -924,7 +909,7 @@ feature -- Hole access
 		do
 --			t := dropped_stone.stone_type
 --			Result := t = Class_type or else
---				t = Routine_type or else
+--				t = feature_type or else
 --				t = Explain_type or else
 --				t = Object_type or else
 --				t = Breakable_type or else
@@ -984,10 +969,10 @@ feature -- Update
 	process_breakable (a_stone: BREAKABLE_STONE) is
 			-- Process dropped stone `a_stone'.
 		local
-			stop_points_button: EB_BUTTON_HOLE		
+--			stop_points_button: EB_BUTTON_HOLE		
 		do
-			stop_points_button := stop_points_hole_holder.associated_button
-			stop_points_button.associated_command.process_breakable (a_stone)
+--			stop_points_button := stop_points_hole_holder.associated_button
+--			stop_points_button.associated_command.process_breakable (a_stone)
 		end
  
 	process_object (a_stone: OBJECT_STONE) is
@@ -1084,6 +1069,8 @@ feature {NONE} -- Implementation
 
 	container: EV_VERTICAL_BOX
 
+	project_toolbar: EV_HORIZONTAL_BOX
+
 	hide_class_portion is
 			-- Hide the class potion and hide the menu entries
 			-- regarding the feature tool.
@@ -1159,12 +1146,12 @@ feature -- Tool management features
 		end
 
 	raise_tool (t: EB_TOOL) is
-			-- destroys the tool.
+			-- raises the tool.
 		do
 		end
 
 	hide_tool (t: EB_TOOL) is
-			-- destroys the tool.
+			-- hides the tool.
 		do
 			t.hide_imp
 		end

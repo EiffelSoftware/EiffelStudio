@@ -58,17 +58,35 @@ Then, execute launch.bat<br>
 <i>However, you can directly run the exe file in the directory exe, with as parameter the&nbsp;path where you have unzipped the wizard.<br>
 <br>
 Example: store_wizard_odbc c:\store_wizard_odbc</i><br>
-<H2>Details:</H2>
-The generated files are:
+<H2>Generated Files:</H2>
+    <p>The Wizard will generate an Eiffel example using your database and your
+    tables.</p>
+    The generated classes are:
     <ul>
-      <p class=space><li>one Class for each Table you have chosen to use with your Project</li>
-      <p class=space><li>The class DATABASE_MANAGER which help you to do any queries on the database</li>
-      <p class=space><li>The classes: DB_ACTION, DB_ACTION_DYN, REPOSITORIES and DB_SHARED which are
-        used by the DATABASE_MANAGER classes.</li>
-      <p class=space><li>The classes ESTORE_EXAMPLE and ESTORE_ROOT</li>
-      <p class=space><li>The generated project is: sample.epr</li>
+      <p class=space><li>One class for each chosen table.&nbsp;</li>
     </ul>
-    <p>&nbsp;</p>
+    <p>These classes will be use to retrieve the data from the database.<br>
+    There is a mapping from your RDBMS database to these Eiffel classes.<br>
+    Thus, each classes will have the same name as the tables in your database
+    and for each their attributes there will be an Eiffel attribute with the
+    same name and type.</p>
+    <ul>
+      <p class=space><li>The class DATABASE_MANAGER which help you to do any queries on the database</li>
+      <li>The classes: DB_ACTION, DB_ACTION_DYN, REPOSITORIES and DB_SHARED which are
+        used by the DATABASE_MANAGER classes.</li>
+    </ul>
+    <p>These are the core classes to access and modify the Database.</p>
+    <ul>
+      <p class=space><li>The classes ESTORE_EXAMPLE and ESTORE_ROOT</li>
+    </ul>
+    <p>These class are the main classes of the Example.<br>
+    You can modify and add any queries by editing ESTORE_EXAMPLE.</p>
+    <ul>
+      <p class=space>
+    </ul>
+    <p>In the Directory <b>resources</b> of the EiffelStore Wizard, you can find
+    the skeletons of the Generated files.<br>
+    You can modify them to fit with your project.</p>
 <H2>Known Limitations:</H2>
     <ul>
       <p class=space><li>An Ace file in generated , and so the link to ODBC32.lib is: "$EIFFEL4\library\store\spec\$(COMPILER)\lib\odbc32.lib".

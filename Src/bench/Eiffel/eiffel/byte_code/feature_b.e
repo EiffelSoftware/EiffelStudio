@@ -520,13 +520,11 @@ feature -- Byte code generation
 	make_precursor_byte_code (ba: BYTE_ARRAY) is
 			-- Add dynamic type of parent.
 		local
-			gen_type_i: GEN_TYPE_I
 			cl_type_i: CL_TYPE_I
 		do
 			if precursor_type /= Void then
-					gen_type_i ?= context.current_type
-					if gen_type_i /= Void then
-						cl_type_i := precursor_type.instantiation_in (gen_type_i)
+					if context.class_type.is_generic then
+						cl_type_i := precursor_type.instantiation_in (context.class_type)
 						ba.append_short_integer (cl_type_i.associated_class_type.static_type_id - 1)
 					else
 						ba.append_short_integer (precursor_type.associated_class_type.static_type_id - 1)
@@ -675,7 +673,7 @@ feature -- Inlining
 			type_i: TYPE_I
 			cl_type: CL_TYPE_I
 			bc: STD_BYTE_CODE
-			old_c_t: CL_TYPE_I
+			old_c_t: CLASS_TYPE
 		do
 			if not is_once then
 				type_i := context_type
@@ -701,10 +699,10 @@ feature -- Inlining
 				inlined_feat_b.fill_from (Current)
 				bc ?= Byte_server.disk_item (body_index)
 
-				old_c_t := Context.current_type
-				Context.set_current_type (current_type)
+				old_c_t := Context.class_type
+				Context.set_class_type (current_class_type)
 				bc := bc.pre_inlined_code
-				Context.set_current_type (old_c_t)
+				Context.set_class_type (old_c_t)
 
 				inlined_feat_b.set_inlined_byte_code (bc)
 				Result := inlined_feat_b
@@ -716,18 +714,15 @@ feature -- Inlining
 			end
 		end
 
-	current_type: CL_TYPE_I is
+	current_class_type: CLASS_TYPE is
 			-- Current type for the call (NOT the static type but the
 			-- type corresponding to the written in class)
 		local
 			written_class	: CLASS_C
 			tuple_class		: TUPLE_CLASS_B
 			original_feature: FEATURE_I
-			gen_type_i		: GEN_TYPE_I
-			tuple_type_i	: TUPLE_TYPE_I
 			m				: META_GENERIC
 			true_gen		: ARRAY [TYPE_I]
-			actual_gen		: ARRAY [TYPE_A]
 			real_target_type: TYPE_A
 			actual_type		: TYPE_A
 			constraint		: TYPE_A
@@ -740,47 +735,39 @@ feature -- Inlining
 			written_class := original_feature.written_class
 
 			if written_class.generics = Void then
-				Result := written_class.types.first.type
+				Result := written_class.types.first
 			else
-
-				real_target_type := context_type.type_a
-					-- LINKED_LIST [STRING] is recorded as LINKED_LIST [REFERENCE_I]
-					-- => LINKED_LIST [ANY] after previous call
-
-				from
-					i := 1
-					nb_generics := written_class.generics.count
-					create m.make (nb_generics)
-					create true_gen.make (1, nb_generics)
-					create actual_gen.make (1, nb_generics)
-				until
-					i > nb_generics
-				loop
-					l_formal_dec := written_class.generics.i_th (1)
-					create formal_a.make (l_formal_dec.is_reference, l_formal_dec.is_expanded, i)
-					actual_type := formal_a.instantiation_in (real_target_type, written_class.class_id)
-					actual_gen.put (actual_type, i)
-					if actual_type.is_expanded then
-						m.put (actual_type.type_i, i)
-					else
-						constraint := written_class.constraint (i)
-						m.put (constraint.type_i, i)
-					end
-					true_gen.put (actual_type.type_i, i)
-					i := i + 1
-				end
-
 				tuple_class ?= written_class
-				if tuple_class = Void then
-					create gen_type_i.make (written_class.class_id)
-					gen_type_i.set_meta_generic (m)
-					gen_type_i.set_true_generics (true_gen)
-					Result := gen_type_i
+				if tuple_class /= Void then
+					Result := tuple_class.types.first
 				else
-					create tuple_type_i.make (written_class.class_id)
-					tuple_type_i.set_meta_generic (m)
-					tuple_type_i.set_true_generics (true_gen)
-					Result := tuple_type_i
+					real_target_type := context_type.type_a
+						-- LINKED_LIST [STRING] is recorded as LINKED_LIST [REFERENCE_I]
+						-- => LINKED_LIST [ANY] after previous call
+
+					from
+						i := 1
+						nb_generics := written_class.generics.count
+						create m.make (nb_generics)
+						create true_gen.make (1, nb_generics)
+					until
+						i > nb_generics
+					loop
+						l_formal_dec := written_class.generics.i_th (1)
+						create formal_a.make (l_formal_dec.is_reference, l_formal_dec.is_expanded, i)
+						actual_type := formal_a.instantiation_in (real_target_type, written_class.class_id)
+
+						if actual_type.is_expanded then
+							m.put (actual_type.type_i, i)
+						else
+							constraint := written_class.constraint (i)
+							m.put (constraint.type_i, i)
+						end						
+						true_gen.put (actual_type.type_i, i)
+						i := i + 1
+					end
+
+					Result := (create {GEN_TYPE_I}.make (written_class.class_id, m, true_gen)).associated_class_type
 				end
 			end
 		end

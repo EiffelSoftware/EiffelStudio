@@ -22,14 +22,15 @@ feature -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create the tab and initialise objects
-		local
-			cmd1,cmd2: EV_ROUTINE_COMMAND
+
 		once
 			{ANY_TAB} Precursor (Void)
 			
 				-- Creates the objects and their commands
+			create label.make_with_text(Current, "All features are inherited from EV_TOGGLE_BUTTON,%Ntherefore there are no features unique to EV_CHECK_BUTTON to modify")
 			set_parent(par)
 		end
+
 
 feature -- Access
 
@@ -45,6 +46,5 @@ feature -- Execution feature
 feature -- Access
 
 	current_widget: EV_CHECK_BUTTON
-	f1: FEATURE_MODIFIER	
-	b1: EV_BUTTON
+	label: EV_LABEL
 end -- class CHECK_BUTTON_TAB

@@ -22,12 +22,12 @@ feature -- Initialization
 
 	make (par: EV_CONTAINER) is
 			-- Create the tab and initialise objects
-		local
-			cmd1,cmd2: EV_ROUTINE_COMMAND
+
 		once
 			{ANY_TAB} Precursor (Void)
 			
 				-- Creates the objects and their commands
+			create label.make_with_text(Current, "All features are inherited from EV_CHECK_BUTTON,%Ntherefore there are no features unique to EV_RADIO_BUTTON to modify")
 			set_parent(par)
 		end
 
@@ -39,6 +39,7 @@ feature -- Access
 			Result:="Radio Button"
 		end
 
+	label: EV_LABEL
 
 feature -- Execution feature  
 

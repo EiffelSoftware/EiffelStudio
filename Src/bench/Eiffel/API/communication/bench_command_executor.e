@@ -22,10 +22,10 @@ feature -- Command Execution
 			valid_command: command /= Void
 		do
 			if server_mode then
-				Execution_environment.system (command)
-			else
 				request.set_command_name (command);
 				request.send
+			else
+				Execution_environment.system (command)
 			end;
 		end;
 

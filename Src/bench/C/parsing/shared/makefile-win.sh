@@ -54,6 +54,7 @@ yacc_err.obj: $(TOP)\run-time\eif_struct.h
 yacc_err.obj: $(TOP)\run-time\eif_rtlimits.h
 yacc_err.obj: typenode.h
 yacc_err.obj: yacc.h
+yacc_err.obj: yacc_error_message.h
 yacc_err.obj: yacc_err.c
 click.obj: $(TOP)\eif_config.h
 click.obj: $(TOP)\eif_portable.h

@@ -158,7 +158,7 @@ typedef union
 #include <memory.h>
 #endif
 
-/*#include <values.h>*/
+/* #include <values.h> */
 
 #ifdef __cplusplus
 
@@ -196,7 +196,7 @@ YYSTYPE *yyv;
 static int yymaxdepth = YYMAXDEPTH;
 # define YYERRCODE 256
 
-# line 1419 "parser.y"
+# line 1422 "parser.y"
 
 char deferred;					/* Boolean mark for deferred class */
 char expanded;					/* Boolean mark for expanded class */
@@ -1773,208 +1773,210 @@ int yyparse()
 		
 case 1:
 # line 198 "parser.y"
-{click_list_init();} break;
+{click_list_init();yacc_error_code=1; } break;
 case 2:
 # line 200 "parser.y"
 {
 			/* node is set at the Eiffel level for root class */
 			rn_ast = create_class(click_list_elem (yypvt[-7].value),deferred,expanded,separate,yypvt[-11].node,yypvt[-6].node,yypvt[-5].node,yypvt[-4].node,yypvt[-3].node,yypvt[-2].node,yypvt[-1].node,click_list_new(), current_location->start_position);
+			yacc_error_code=2; 
 		} break;
 case 3:
-# line 208 "parser.y"
+# line 209 "parser.y"
 {
+		yacc_error_code=4; 
 		yyval.value = click_list_push ();
 		click_list_set (create_id (token_str), yyval.value);
 		} break;
 case 4:
-# line 219 "parser.y"
-{yyval.node = NULL;} break;
-case 5:
-# line 220 "parser.y"
-{list_init();} break;
-case 6:
 # line 221 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
-case 7:
+{yyval.node = NULL; yacc_error_code=5; } break;
+case 5:
+# line 222 "parser.y"
+{list_init();yacc_error_code=6; } break;
+case 6:
 # line 223 "parser.y"
-{yyval.node = NULL;} break;
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=7; } break;
+case 7:
+# line 225 "parser.y"
+{yyval.node = NULL;yacc_error_code=8; } break;
 case 8:
-# line 227 "parser.y"
-{list_push(yypvt[-0].node);} break;
-case 9:
 # line 229 "parser.y"
-{list_push(yypvt[-0].node);} break;
+{list_push(yypvt[-0].node);yacc_error_code=9; } break;
+case 9:
+# line 231 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=10; } break;
 case 10:
-# line 232 "parser.y"
-{list_init();} break;
+# line 234 "parser.y"
+{list_init();yacc_error_code=11; } break;
 case 11:
-# line 233 "parser.y"
-{yyval.node = create_node2(INDEX_AS,yypvt[-3].node,list_new(CONSTRUCT_LIST_AS));} break;
+# line 235 "parser.y"
+{yyval.node = create_node2(INDEX_AS,yypvt[-3].node,list_new(CONSTRUCT_LIST_AS));yacc_error_code=12; } break;
 case 12:
-# line 237 "parser.y"
-{yyval.node = yypvt[-1].node;} break;
-case 13:
 # line 239 "parser.y"
-{yyval.node = NULL;} break;
+{yyval.node = yypvt[-1].node;yacc_error_code=13;} break;
+case 13:
+# line 241 "parser.y"
+{yyval.node = NULL;yacc_error_code=14;} break;
 case 14:
-# line 243 "parser.y"
-{list_push(yypvt[-0].node);} break;
-case 15:
 # line 245 "parser.y"
-{list_push(yypvt[-0].node);} break;
+{list_push(yypvt[-0].node);yacc_error_code=15;} break;
+case 15:
+# line 247 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=16;} break;
 case 17:
-# line 250 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
-case 18:
 # line 252 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+{yyval.node = yypvt[-0].node;yacc_error_code=17;} break;
+case 18:
+# line 254 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=18;} break;
 case 19:
-# line 260 "parser.y"
-{deferred = FALSE; expanded = FALSE; separate = FALSE;} break;
-case 20:
 # line 262 "parser.y"
-{deferred = TRUE; expanded = FALSE; separate = FALSE;} break;
-case 21:
+{deferred = FALSE; expanded = FALSE; separate = FALSE;yacc_error_code=19;} break;
+case 20:
 # line 264 "parser.y"
-{expanded = TRUE; deferred = FALSE; separate = FALSE;} break;
-case 22:
+{deferred = TRUE; expanded = FALSE; separate = FALSE;yacc_error_code=20;} break;
+case 21:
 # line 266 "parser.y"
-{expanded = FALSE; deferred = FALSE; separate = TRUE;} break;
+{expanded = TRUE; deferred = FALSE; separate = FALSE;yacc_error_code=21;} break;
+case 22:
+# line 268 "parser.y"
+{expanded = FALSE; deferred = FALSE; separate = TRUE;yacc_error_code=22;} break;
 case 23:
-# line 275 "parser.y"
-{yyval.node = NULL;} break;
-case 24:
 # line 277 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+{yyval.node = NULL;yacc_error_code=23;} break;
+case 24:
+# line 279 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=24;} break;
 case 25:
-# line 286 "parser.y"
-{yyval.node = NULL;} break;
-case 26:
-# line 287 "parser.y"
-{list_init();} break;
-case 27:
 # line 288 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
+{yyval.node = NULL;yacc_error_code=25;} break;
+case 26:
+# line 289 "parser.y"
+{list_init();yacc_error_code=26;} break;
+case 27:
+# line 290 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=27;} break;
 case 28:
-# line 293 "parser.y"
-{list_push(yypvt[-0].node);} break;
-case 29:
 # line 295 "parser.y"
-{list_push(yypvt[-0].node);} break;
+{list_push(yypvt[-0].node); yacc_error_code=28;} break;
+case 29:
+# line 297 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=29;} break;
 case 30:
-# line 299 "parser.y"
-{fclause_pos = current_location->end_position;} break;
+# line 301 "parser.y"
+{fclause_pos = current_location->end_position;yacc_error_code=30;} break;
 case 31:
-# line 299 "parser.y"
-{list_init();} break;
+# line 301 "parser.y"
+{list_init();yacc_error_code=31;} break;
 case 32:
-# line 300 "parser.y"
+# line 302 "parser.y"
 {
 		yyval.node = list_new(CONSTRUCT_LIST_AS);
 		yyval.node = (yyval.node == NULL)?NULL:create_fclause_as(yypvt[-2].node,yyval.node,fclause_pos);
-		} break;
+		yacc_error_code=32;} break;
 case 33:
-# line 308 "parser.y"
-{yyval.node = NULL;} break;
-case 34:
 # line 310 "parser.y"
+{yyval.node = NULL;yacc_error_code=33;} break;
+case 34:
+# line 312 "parser.y"
 {
 			yyval.node = create_node1(CLIENT_AS,yypvt[-0].node);
-			} break;
+			yacc_error_code=34;} break;
 case 35:
-# line 316 "parser.y"
+# line 318 "parser.y"
 {	list_init();
 								list_push(create_id("none"));
 								yyval.node = list_new(CONSTRUCT_LIST_AS);
-							} break;
+							yacc_error_code=35;} break;
 case 36:
-# line 320 "parser.y"
-{list_init();} break;
+# line 322 "parser.y"
+{list_init();yacc_error_code=36;} break;
 case 37:
-# line 321 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
+# line 323 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=37;} break;
 case 38:
-# line 325 "parser.y"
+# line 327 "parser.y"
 {
 							list_push(yypvt[-0].node);
-							} break;
+							yacc_error_code=38;} break;
 case 39:
-# line 329 "parser.y"
+# line 331 "parser.y"
 {
 							list_push(yypvt[-0].node);
-							} break;
+							yacc_error_code=39;} break;
 case 41:
-# line 336 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 338 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=40;} break;
 case 44:
-# line 343 "parser.y"
-{list_init();} break;
+# line 346 "parser.y"
+{list_init();yacc_error_code=41;} break;
 case 45:
-# line 343 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
+# line 346 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=42;} break;
 case 46:
-# line 344 "parser.y"
+# line 347 "parser.y"
 {
 		yyval.node = create_feature_as(yypvt[-2].node,yypvt[-1].node,click_list_start(yypvt[-3].value),current_location->start_position);
 		click_list_set (yyval.node, yypvt[-3].value);
-		} break;
+		yacc_error_code=43;} break;
 case 47:
-# line 352 "parser.y"
+# line 355 "parser.y"
 {
 		yyval.value = yypvt[-0].value;
 		list_push(click_list_elem(yyval.value));
-		} break;
+		yacc_error_code=44;} break;
 case 48:
-# line 357 "parser.y"
+# line 360 "parser.y"
 {
 		yyval.value = yypvt[-2].value;
 		list_push(click_list_elem(yypvt[-0].value));
-		} break;
+		yacc_error_code=45;} break;
 case 49:
-# line 365 "parser.y"
+# line 368 "parser.y"
 {
 		yyval.value = yypvt[-0].value;
-		} break;
+		yacc_error_code=46;} break;
 case 50:
-# line 371 "parser.y"
+# line 374 "parser.y"
 {
 		is_frozen = FALSE;
-		} break;
+		yacc_error_code=47;} break;
 case 51:
-# line 375 "parser.y"
+# line 378 "parser.y"
 {
 		is_frozen = TRUE;
-		} break;
+		yacc_error_code=48;} break;
 case 52:
-# line 382 "parser.y"
+# line 385 "parser.y"
 {
 		yyval.value = yypvt[-0].value;
 		click_list_set (create_feature_name(FEAT_NAME_ID_AS,click_list_elem(yyval.value),is_frozen), yyval.value);
-		} break;
+		yacc_error_code=49;} break;
 case 53:
-# line 387 "parser.y"
+# line 390 "parser.y"
 {
 		yyval.value = yypvt[-0].value;
-		} break;
+		yacc_error_code=50;} break;
 case 54:
-# line 391 "parser.y"
+# line 394 "parser.y"
 {
 		yyval.value = yypvt[-0].value;
-		} break;
+		yacc_error_code=51;} break;
 case 55:
-# line 398 "parser.y"
+# line 401 "parser.y"
 {
 		yyval.value = yypvt[-0].value;
 		click_list_set (create_feature_name(INFIX_AS,click_list_elem(yyval.value),is_frozen), yyval.value);
-		} break;
+		yacc_error_code=52;} break;
 case 56:
-# line 407 "parser.y"
+# line 410 "parser.y"
 {
 		yyval.value = yypvt[-0].value;
 		click_list_set (create_feature_name(PREFIX_AS,click_list_elem(yyval.value),is_frozen), yyval.value);
-		} break;
+		yacc_error_code=53;} break;
 case 57:
-# line 415 "parser.y"
+# line 418 "parser.y"
 {
 		extern int is_infix(char *s);
 
@@ -1983,9 +1985,9 @@ case 57:
 
 		if (0 == is_infix(token_str))	/* Check infixed declaration */
 			yyerror((char *) 0);
-		} break;
+		yacc_error_code=54;} break;
 case 58:
-# line 428 "parser.y"
+# line 431 "parser.y"
 {
 		extern int is_prefix(char *s);
 
@@ -1994,9 +1996,9 @@ case 58:
 
 		if (0 == is_prefix(token_str))	/* Check prefixed declaration */
 			yyerror((char *) 0);
-		} break;
+		yacc_error_code=55;} break;
 case 59:
-# line 440 "parser.y"
+# line 443 "parser.y"
 {yyval.node = create_node3(BODY_AS,yypvt[-2].node,yypvt[-1].node,yypvt[-0].cr_node.cr_node);
 	/* Validity test for feature declaration */
 		if 	(
@@ -2012,955 +2014,955 @@ case 59:
 		{
 			yyerror((char *) 0);
 		}
-	} break;
+	yacc_error_code=56;} break;
 case 60:
-# line 460 "parser.y"
-{yyval.cr_node.cr_node = NULL; yyval.cr_node.cr_type = CR_EMPTY;} break;
+# line 463 "parser.y"
+{yyval.cr_node.cr_node = NULL; yyval.cr_node.cr_type = CR_EMPTY;yacc_error_code=57;} break;
 case 61:
-# line 462 "parser.y"
-{yyval.cr_node.cr_node = yypvt[-0].cr_node.cr_node;yyval.cr_node.cr_type = yypvt[-0].cr_node.cr_type;} break;
+# line 465 "parser.y"
+{yyval.cr_node.cr_node = yypvt[-0].cr_node.cr_node;yyval.cr_node.cr_type = yypvt[-0].cr_node.cr_type;yacc_error_code=58;} break;
 case 62:
-# line 466 "parser.y"
-{yyval.cr_node.cr_node = create_node1(CONSTANT_AS,create_node1(VALUE_AS,yypvt[-0].node));yyval.cr_node.cr_type = CR_CONSTANT;} break;
+# line 469 "parser.y"
+{yyval.cr_node.cr_node = create_node1(CONSTANT_AS,create_node1(VALUE_AS,yypvt[-0].node));yyval.cr_node.cr_type = CR_CONSTANT;yacc_error_code=59;} break;
 case 63:
-# line 468 "parser.y"
-{yyval.cr_node.cr_node = create_node1(CONSTANT_AS,create_node1(VALUE_AS,create_node(UNIQUE_AS)));yyval.cr_node.cr_type = CR_CONSTANT;} break;
+# line 471 "parser.y"
+{yyval.cr_node.cr_node = create_node1(CONSTANT_AS,create_node1(VALUE_AS,create_node(UNIQUE_AS)));yyval.cr_node.cr_type = CR_CONSTANT;yacc_error_code=60;} break;
 case 64:
-# line 470 "parser.y"
-{yyval.cr_node.cr_node = yypvt[-0].node;yyval.cr_node.cr_type = CR_ROUTINE;} break;
+# line 473 "parser.y"
+{yyval.cr_node.cr_node = yypvt[-0].node;yyval.cr_node.cr_type = CR_ROUTINE;yacc_error_code=61;} break;
 case 65:
-# line 479 "parser.y"
-{yyval.node = NULL;} break;
+# line 482 "parser.y"
+{yyval.node = NULL;yacc_error_code=62;} break;
 case 66:
-# line 480 "parser.y"
-{list_init();} break;
+# line 483 "parser.y"
+{list_init();yacc_error_code=63;} break;
 case 67:
-# line 481 "parser.y"
+# line 484 "parser.y"
 {
 		yyval.node = list_new(CONSTRUCT_LIST_AS);
-		} break;
+		yacc_error_code=64;} break;
 case 68:
-# line 485 "parser.y"
-{ yyval.node = NULL;} break;
+# line 488 "parser.y"
+{ yyval.node = NULL;yacc_error_code=65;} break;
 case 69:
-# line 490 "parser.y"
-{list_push(yypvt[-1].node);} break;
+# line 493 "parser.y"
+{list_push(yypvt[-1].node);yacc_error_code=66;} break;
 case 70:
-# line 492 "parser.y"
-{list_push(yypvt[-1].node);} break;
+# line 495 "parser.y"
+{list_push(yypvt[-1].node);yacc_error_code=67;} break;
 case 71:
-# line 497 "parser.y"
+# line 500 "parser.y"
 {
 		rn_ast = create_node2(CLASS_TYPE_AS,click_list_elem(yypvt[-1].value),yypvt[-0].node);
 		yyval.node = create_node6(PARENT_AS,rn_ast,NULL,NULL,NULL,NULL,NULL);
 		click_list_set (rn_ast, yypvt[-1].value);
-		} break;
+		yacc_error_code=68;} break;
 case 72:
-# line 503 "parser.y"
+# line 506 "parser.y"
 {
 		inherit_context = 1;
 		rn_ast = create_node2(CLASS_TYPE_AS,click_list_elem(yypvt[-2].value),yypvt[-1].node);
 		yyval.node = create_node6(PARENT_AS,rn_ast,NULL,NULL,NULL,NULL,NULL);
 		click_list_set (rn_ast, yypvt[-2].value);
-		} break;
+		yacc_error_code=69;} break;
 case 73:
-# line 510 "parser.y"
+# line 513 "parser.y"
 {
 		inherit_context = (yypvt[-5].node==NULL)&&(yypvt[-4].node==NULL)&&(yypvt[-3].node==NULL)&&(yypvt[-2].node==NULL)&&(yypvt[-1].node==NULL);
 		rn_ast = create_node2(CLASS_TYPE_AS,click_list_elem(yypvt[-7].value),yypvt[-6].node);
 		yyval.node = create_node6(PARENT_AS,rn_ast,yypvt[-5].node,yypvt[-4].node,yypvt[-3].node,yypvt[-2].node,yypvt[-1].node);
 		click_list_set (rn_ast, yypvt[-7].value);
-		} break;
+		yacc_error_code=70;} break;
 case 74:
-# line 519 "parser.y"
-{yyval.node = NULL;} break;
+# line 522 "parser.y"
+{yyval.node = NULL;yacc_error_code=71;} break;
 case 75:
-# line 521 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 524 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=72;} break;
 case 76:
-# line 525 "parser.y"
-{yyval.node = NULL;} break;
-case 77:
-# line 527 "parser.y"
-{yyval.node = NULL;} break;
-case 78:
 # line 528 "parser.y"
-{list_init();} break;
+{yyval.node = NULL;yacc_error_code=73;} break;
+case 77:
+# line 530 "parser.y"
+{yyval.node = NULL;yacc_error_code=74;} break;
+case 78:
+# line 531 "parser.y"
+{list_init();yacc_error_code=75;} break;
 case 79:
-# line 529 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
+# line 532 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=76;} break;
 case 80:
-# line 534 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 537 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=77;} break;
 case 81:
-# line 536 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 539 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=78;} break;
 case 82:
-# line 541 "parser.y"
+# line 544 "parser.y"
 {
 		yyval.node = create_node2(RENAME_AS,click_list_elem(yypvt[-2].value),click_list_elem(yypvt[-0].value));
 		click_list_set (click_list_elem(yypvt[-0].value), yypvt[-2].value);
-		} break;
+		yacc_error_code=79;} break;
 case 83:
-# line 548 "parser.y"
-{yyval.node = NULL;} break;
+# line 551 "parser.y"
+{yyval.node = NULL;yacc_error_code=80;} break;
 case 84:
-# line 549 "parser.y"
-{list_init();} break;
-case 85:
-# line 550 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
-case 86:
 # line 552 "parser.y"
-{yyval.node = NULL;} break;
+{list_init();yacc_error_code=81;} break;
+case 85:
+# line 553 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=82;} break;
+case 86:
+# line 555 "parser.y"
+{yyval.node = NULL;yacc_error_code=83;} break;
 case 87:
-# line 557 "parser.y"
-{list_push(yypvt[-1].node);} break;
+# line 560 "parser.y"
+{list_push(yypvt[-1].node);yacc_error_code=84;} break;
 case 88:
-# line 559 "parser.y"
-{list_push(yypvt[-1].node);} break;
+# line 562 "parser.y"
+{list_push(yypvt[-1].node);yacc_error_code=85;} break;
 case 89:
-# line 563 "parser.y"
+# line 566 "parser.y"
 {	yyval.node = create_node1(CLIENT_AS,yypvt[-1].node);
 			yyval.node = create_node2(EXPORT_ITEM_AS,yyval.node,yypvt[-0].node);
-		} break;
+		yacc_error_code=86;} break;
 case 90:
-# line 570 "parser.y"
-{yyval.node = create_node(ALL_AS);} break;
+# line 573 "parser.y"
+{yyval.node = create_node(ALL_AS);yacc_error_code=87;} break;
 case 91:
-# line 571 "parser.y"
-{list_init();} break;
+# line 574 "parser.y"
+{list_init();yacc_error_code=88;} break;
 case 92:
-# line 572 "parser.y"
-{yyval.node = create_node1 (FEATURE_LIST_AS,list_new(CONSTRUCT_LIST_AS));} break;
+# line 575 "parser.y"
+{yyval.node = create_node1 (FEATURE_LIST_AS,list_new(CONSTRUCT_LIST_AS));yacc_error_code=89;} break;
 case 93:
-# line 577 "parser.y"
-{list_push(click_list_elem(yypvt[-0].value));} break;
+# line 580 "parser.y"
+{list_push(click_list_elem(yypvt[-0].value));yacc_error_code=90;} break;
 case 94:
-# line 579 "parser.y"
-{list_push(click_list_elem(yypvt[-0].value));} break;
+# line 582 "parser.y"
+{list_push(click_list_elem(yypvt[-0].value));yacc_error_code=91;} break;
 case 95:
-# line 583 "parser.y"
-{yyval.node = NULL;} break;
-case 96:
-# line 585 "parser.y"
-{yyval.node = NULL;} break;
-case 97:
 # line 586 "parser.y"
-{list_init();} break;
+{yyval.node = NULL;yacc_error_code=92;} break;
+case 96:
+# line 588 "parser.y"
+{yyval.node = NULL;yacc_error_code=93;} break;
+case 97:
+# line 589 "parser.y"
+{list_init();yacc_error_code=94;} break;
 case 98:
-# line 587 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
+# line 590 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=95;} break;
 case 99:
-# line 591 "parser.y"
-{yyval.node = NULL;} break;
-case 100:
-# line 593 "parser.y"
-{yyval.node = NULL;} break;
-case 101:
 # line 594 "parser.y"
-{list_init();} break;
+{yyval.node = NULL;yacc_error_code=96;} break;
+case 100:
+# line 596 "parser.y"
+{yyval.node = NULL;yacc_error_code=97;} break;
+case 101:
+# line 597 "parser.y"
+{list_init();yacc_error_code=98;} break;
 case 102:
-# line 595 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
+# line 598 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=99;} break;
 case 103:
-# line 599 "parser.y"
-{yyval.node = NULL;} break;
-case 104:
-# line 601 "parser.y"
-{yyval.node = NULL;} break;
-case 105:
 # line 602 "parser.y"
-{list_init();} break;
+{yyval.node = NULL;yacc_error_code=100;} break;
+case 104:
+# line 604 "parser.y"
+{yyval.node = NULL;yacc_error_code=101;} break;
+case 105:
+# line 605 "parser.y"
+{list_init();yacc_error_code=102;} break;
 case 106:
-# line 603 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
+# line 606 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=103;} break;
 case 107:
-# line 611 "parser.y"
-{yyval.node = NULL;} break;
-case 108:
-# line 613 "parser.y"
-{yyerror((char *)0);} break;
-case 109:
 # line 614 "parser.y"
-{list_init();} break;
+{yyval.node = NULL;yacc_error_code=104;} break;
+case 108:
+# line 616 "parser.y"
+{yyerror((char *)0);yacc_error_code=105;} break;
+case 109:
+# line 617 "parser.y"
+{list_init();yacc_error_code=106;} break;
 case 110:
-# line 615 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
+# line 618 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=107;} break;
 case 112:
-# line 620 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 623 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=108;} break;
 case 113:
-# line 623 "parser.y"
-{list_init();} break;
+# line 626 "parser.y"
+{list_init();yacc_error_code=109;} break;
 case 114:
-# line 623 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
+# line 626 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=110;} break;
 case 115:
-# line 624 "parser.y"
-{yyval.node = create_node2(TYPE_DEC_AS,yypvt[-3].node,yypvt[-1].node);} break;
+# line 627 "parser.y"
+{yyval.node = create_node2(TYPE_DEC_AS,yypvt[-3].node,yypvt[-1].node);yacc_error_code=111;} break;
 case 116:
-# line 628 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 631 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=112;} break;
 case 117:
-# line 630 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 633 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=113;} break;
 case 120:
-# line 638 "parser.y"
-{yyval.node = NULL;} break;
+# line 641 "parser.y"
+{yyval.node = NULL;yacc_error_code=114;} break;
 case 121:
-# line 640 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 643 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=115;} break;
 case 122:
-# line 644 "parser.y"
-{fbody_pos = current_location->start_position;} break;
-case 123:
 # line 647 "parser.y"
-{yyval.node = create_routine_as(yypvt[-7].node,fbody_pos,yypvt[-5].node,yypvt[-4].node,yypvt[-3].node,yypvt[-2].node,yypvt[-1].node);} break;
+{fbody_pos = current_location->start_position;yacc_error_code=116;} break;
+case 123:
+# line 650 "parser.y"
+{yyval.node = create_routine_as(yypvt[-7].node,fbody_pos,yypvt[-5].node,yypvt[-4].node,yypvt[-3].node,yypvt[-2].node,yypvt[-1].node);yacc_error_code=117;} break;
 case 124:
-# line 651 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 654 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=118;} break;
 case 125:
-# line 653 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 656 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=119;} break;
 case 126:
-# line 655 "parser.y"
-{yyval.node = create_node(DEFERRED_AS);} break;
+# line 658 "parser.y"
+{yyval.node = create_node(DEFERRED_AS);yacc_error_code=120;} break;
 case 127:
-# line 659 "parser.y"
-{yyval.node = create_node2(EXTERNAL_AS,yypvt[-1].node,yypvt[-0].node);} break;
-case 128:
 # line 662 "parser.y"
-{SET_POS(current_location);} break;
+{yyval.node = create_node2(EXTERNAL_AS,yypvt[-1].node,yypvt[-0].node);yacc_error_code=121;} break;
+case 128:
+# line 665 "parser.y"
+{SET_POS(current_location);yacc_error_code=122;} break;
 case 129:
-# line 663 "parser.y"
-{yyval.node = create_node1(EXTERNAL_LANG_AS, yypvt[-0].node);} break;
+# line 666 "parser.y"
+{yyval.node = create_node1(EXTERNAL_LANG_AS, yypvt[-0].node);yacc_error_code=123;} break;
 case 130:
-# line 667 "parser.y"
-{yyval.node = NULL;} break;
+# line 670 "parser.y"
+{yyval.node = NULL;yacc_error_code=124;} break;
 case 131:
-# line 669 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
-case 132:
 # line 672 "parser.y"
-{list_init();} break;
-case 133:
-# line 673 "parser.y"
-{yyval.node = create_node1(DO_AS,list_new(CONSTRUCT_LIST_AS));} break;
-case 134:
-# line 674 "parser.y"
-{list_init();} break;
-case 135:
+{yyval.node = yypvt[-0].node;yacc_error_code=125;} break;
+case 132:
 # line 675 "parser.y"
+{list_init();yacc_error_code=126;} break;
+case 133:
+# line 676 "parser.y"
+{yyval.node = create_node1(DO_AS,list_new(CONSTRUCT_LIST_AS));yacc_error_code=127;} break;
+case 134:
+# line 677 "parser.y"
+{list_init();yacc_error_code=128;} break;
+case 135:
+# line 678 "parser.y"
 {yyval.node =
-create_node1(ONCE_AS,list_new(CONSTRUCT_LIST_AS));} break;
+create_node1(ONCE_AS,list_new(CONSTRUCT_LIST_AS));yacc_error_code=129;} break;
 case 136:
-# line 681 "parser.y"
-{yyval.node = NULL;} break;
+# line 684 "parser.y"
+{yyval.node = NULL;yacc_error_code=130;} break;
 case 137:
-# line 682 "parser.y"
-{list_init();} break;
+# line 685 "parser.y"
+{list_init();yacc_error_code=131;} break;
 case 138:
-# line 683 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
+# line 686 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=132;} break;
 case 139:
-# line 687 "parser.y"
-{list_push(yypvt[-1].node);} break;
+# line 690 "parser.y"
+{list_push(yypvt[-1].node);yacc_error_code=133;} break;
 case 143:
-# line 694 "parser.y"
-{list_push(yypvt[-1].node);} break;
+# line 697 "parser.y"
+{list_push(yypvt[-1].node);yacc_error_code=134;} break;
 case 145:
-# line 699 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 702 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=135;} break;
 case 146:
-# line 701 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 704 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=136;} break;
 case 147:
-# line 703 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 706 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=137;} break;
 case 148:
-# line 705 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 708 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=138;} break;
 case 149:
-# line 707 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 710 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=139;} break;
 case 150:
-# line 709 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 712 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=140;} break;
 case 151:
-# line 711 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 714 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=141;} break;
 case 152:
-# line 713 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 716 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=142;} break;
 case 153:
-# line 715 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 718 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=143;} break;
 case 154:
-# line 717 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 720 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=144;} break;
 case 155:
-# line 721 "parser.y"
-{yyval.node = NULL;} break;
+# line 724 "parser.y"
+{yyval.node = NULL;yacc_error_code=145;} break;
 case 156:
-# line 722 "parser.y"
-{id_level = ASSERT_LEVEL;} break;
+# line 725 "parser.y"
+{id_level = ASSERT_LEVEL;yacc_error_code=146;} break;
 case 157:
-# line 723 "parser.y"
+# line 726 "parser.y"
 {	id_level = NORMAL_LEVEL;
 									yyval.node = create_node1(REQUIRE_AS,yypvt[-0].node);
-								} break;
+								yacc_error_code=147;} break;
 case 158:
-# line 726 "parser.y"
-{id_level = ASSERT_LEVEL;} break;
+# line 729 "parser.y"
+{id_level = ASSERT_LEVEL;yacc_error_code=148;} break;
 case 159:
-# line 727 "parser.y"
+# line 730 "parser.y"
 {	id_level = NORMAL_LEVEL;
 									yyval.node = create_node1(REQUIRE_ELSE_AS,yypvt[-0].node);
-								} break;
+								yacc_error_code=149;} break;
 case 160:
-# line 733 "parser.y"
-{yyval.node = NULL;} break;
+# line 736 "parser.y"
+{yyval.node = NULL;yacc_error_code=150;} break;
 case 161:
-# line 734 "parser.y"
-{id_level = ASSERT_LEVEL;} break;
+# line 737 "parser.y"
+{id_level = ASSERT_LEVEL;yacc_error_code=151;} break;
 case 162:
-# line 735 "parser.y"
+# line 738 "parser.y"
 {	id_level = NORMAL_LEVEL;
 									yyval.node = create_node1(ENSURE_AS,yypvt[-0].node);
-								} break;
+								yacc_error_code=152;} break;
 case 163:
-# line 738 "parser.y"
-{id_level = ASSERT_LEVEL;} break;
+# line 741 "parser.y"
+{id_level = ASSERT_LEVEL;yacc_error_code=153;} break;
 case 164:
-# line 739 "parser.y"
+# line 742 "parser.y"
 {	id_level = NORMAL_LEVEL;
 									yyval.node = create_node1(ENSURE_THEN_AS,yypvt[-0].node);
-								} break;
+								yacc_error_code=154;} break;
 case 165:
-# line 745 "parser.y"
-{list_init();} break;
+# line 748 "parser.y"
+{list_init();yacc_error_code=155;} break;
 case 166:
-# line 746 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
+# line 749 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=156;} break;
 case 169:
-# line 753 "parser.y"
-{list_push(yypvt[-1].node);} break;
+# line 756 "parser.y"
+{list_push(yypvt[-1].node);yacc_error_code=157;} break;
 case 170:
-# line 755 "parser.y"
-{list_push(yypvt[-1].node);} break;
+# line 758 "parser.y"
+{list_push(yypvt[-1].node);yacc_error_code=158;} break;
 case 171:
-# line 759 "parser.y"
+# line 762 "parser.y"
 {
 									yyval.node = create_node2(TAGGED_AS,NULL,yypvt[-0].node);
-								} break;
+								yacc_error_code=159;} break;
 case 172:
-# line 763 "parser.y"
+# line 766 "parser.y"
 {
 									yyval.node = create_node2(TAGGED_AS,yypvt[-2].node,yypvt[-0].node);
-								} break;
+								yacc_error_code=160;} break;
 case 173:
-# line 767 "parser.y"
-{ yyval.node = NULL;} break;
+# line 770 "parser.y"
+{ yyval.node = NULL;yacc_error_code=161;} break;
 case 174:
-# line 777 "parser.y"
+# line 780 "parser.y"
 {
 		yyval.node = create_type_class(click_list_elem(yypvt[-0].value),NULL);
 		click_list_set (yyval.node, yypvt[-0].value);
-		} break;
+		yacc_error_code=162;} break;
 case 175:
-# line 782 "parser.y"
+# line 785 "parser.y"
 {
 		yyval.node = create_type_class(click_list_elem(yypvt[-1].value),yypvt[-0].node);
 		click_list_set (yyval.node, yypvt[-1].value);
-		} break;
+		yacc_error_code=163;} break;
 case 176:
-# line 787 "parser.y"
+# line 790 "parser.y"
 {
 		yyval.node = create_exp_class_type(click_list_elem(yypvt[-0].value),NULL);
 		click_list_set (yyval.node, yypvt[-0].value);
-		} break;
+		yacc_error_code=164;} break;
 case 177:
-# line 792 "parser.y"
+# line 795 "parser.y"
 {
 		yyval.node = create_exp_class_type(click_list_elem(yypvt[-1].value),yypvt[-0].node);
 		click_list_set (yyval.node, yypvt[-1].value);
-		} break;
+		yacc_error_code=165;} break;
 case 178:
-# line 797 "parser.y"
+# line 800 "parser.y"
 {
 		yyval.node = create_separate_class_type(click_list_elem(yypvt[-0].value),NULL);
 		click_list_set (yyval.node, yypvt[-0].value);
-		} break;
+		yacc_error_code=166;} break;
 case 179:
-# line 802 "parser.y"
+# line 805 "parser.y"
 {
 		yyval.node = create_separate_class_type(click_list_elem(yypvt[-1].value),yypvt[-0].node);
 		click_list_set (yyval.node, yypvt[-1].value);
-		} break;
+		yacc_error_code=167;} break;
 case 180:
-# line 807 "parser.y"
+# line 810 "parser.y"
 {
 		yyval.node = create_node1(BITS_AS,yypvt[-0].node);
-		} break;
+		yacc_error_code=168;} break;
 case 181:
-# line 811 "parser.y"
+# line 814 "parser.y"
 {
 		yyval.node = create_node1(BITS_SYMBOL_AS,yypvt[-0].node);
-		} break;
+		yacc_error_code=169;} break;
 case 182:
-# line 815 "parser.y"
+# line 818 "parser.y"
 {
 		yyval.node = create_node1(LIKE_ID_AS, yypvt[-0].node);
-		} break;
+		yacc_error_code=170;} break;
 case 183:
-# line 819 "parser.y"
+# line 822 "parser.y"
 {
 		yyval.node = create_node(LIKE_CUR_AS);
-		} break;
+		yacc_error_code=171;} break;
 case 184:
-# line 826 "parser.y"
+# line 829 "parser.y"
 {
         yyval.node = create_type_class(click_list_elem(yypvt[-0].value),NULL);
         click_list_set (yyval.node, yypvt[-0].value);
-        } break;
+        yacc_error_code=172;} break;
 case 185:
-# line 831 "parser.y"
+# line 834 "parser.y"
 {
         yyval.node = create_type_class(click_list_elem(yypvt[-1].value),yypvt[-0].node);
         click_list_set (yyval.node, yypvt[-1].value);
-        } break;
+        yacc_error_code=173;} break;
 case 186:
-# line 839 "parser.y"
-{yyval.node = NULL;} break;
+# line 842 "parser.y"
+{yyval.node = NULL;yacc_error_code=174;} break;
 case 187:
-# line 840 "parser.y"
-{list_init();} break;
+# line 843 "parser.y"
+{list_init();yacc_error_code=175;} break;
 case 188:
-# line 841 "parser.y"
+# line 844 "parser.y"
 {
 		yyval.node = list_new(CONSTRUCT_LIST_AS);
-		} break;
+		yacc_error_code=176;} break;
 case 189:
-# line 848 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 851 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=177;} break;
 case 190:
-# line 850 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 853 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=178;} break;
 case 191:
-# line 858 "parser.y"
+# line 861 "parser.y"
 {
 		yyval.node = NULL;
-		} break;
+		yacc_error_code=179;} break;
 case 192:
-# line 861 "parser.y"
-{list_init();} break;
+# line 864 "parser.y"
+{list_init();yacc_error_code=180;} break;
 case 193:
-# line 862 "parser.y"
+# line 865 "parser.y"
 {
 		yyval.node = list_new(CONSTRUCT_LIST_AS);
-		} break;
+		yacc_error_code=181;} break;
 case 195:
-# line 870 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 873 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=182;} break;
 case 196:
-# line 872 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 875 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=183;} break;
 case 197:
-# line 876 "parser.y"
-{strcpy(generic_name, token_str);} break;
+# line 879 "parser.y"
+{strcpy(generic_name, token_str);yacc_error_code=184;} break;
 case 198:
-# line 877 "parser.y"
-{generic_inc(); yyval.node = create_generic(generic_name, yypvt[-1].node, yypvt[-0].node);} break;
+# line 880 "parser.y"
+{generic_inc(); yyval.node = create_generic(generic_name, yypvt[-1].node, yypvt[-0].node);yacc_error_code=185;} break;
 case 199:
-# line 882 "parser.y"
-{yyval.node = NULL;} break;
+# line 885 "parser.y"
+{yyval.node = NULL;yacc_error_code=186;} break;
 case 200:
-# line 884 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 887 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=187;} break;
 case 201:
-# line 889 "parser.y"
-{ yyval.node = NULL;} break;
+# line 892 "parser.y"
+{ yyval.node = NULL;yacc_error_code=188;} break;
 case 202:
-# line 890 "parser.y"
-{list_init ();} break;
+# line 893 "parser.y"
+{list_init ();yacc_error_code=189;} break;
 case 203:
-# line 891 "parser.y"
-{yyval.node = create_node2 (CREATE_AS, NULL, list_new (CONSTRUCT_LIST_AS));} break;
+# line 894 "parser.y"
+{yyval.node = create_node2 (CREATE_AS, NULL, list_new (CONSTRUCT_LIST_AS));yacc_error_code=190;} break;
 case 204:
-# line 898 "parser.y"
-{yyval.loc = current_location;} break;
+# line 901 "parser.y"
+{yyval.loc = current_location;yacc_error_code=191;} break;
 case 205:
-# line 898 "parser.y"
-{list_init();} break;
+# line 901 "parser.y"
+{list_init();yacc_error_code=192;} break;
 case 206:
-# line 898 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
+# line 901 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=193;} break;
 case 207:
-# line 899 "parser.y"
-{SET_POS(yypvt[-9].loc); yyval.node = create_node4(IF_AS,yypvt[-7].node,yypvt[-3].node,yypvt[-2].node,yypvt[-1].node);} break;
+# line 902 "parser.y"
+{SET_POS(yypvt[-9].loc); yyval.node = create_node4(IF_AS,yypvt[-7].node,yypvt[-3].node,yypvt[-2].node,yypvt[-1].node);yacc_error_code=194;} break;
 case 208:
-# line 903 "parser.y"
-{yyval.node = NULL;} break;
+# line 906 "parser.y"
+{yyval.node = NULL;yacc_error_code=195;} break;
 case 209:
-# line 904 "parser.y"
-{list_init();} break;
+# line 907 "parser.y"
+{list_init();yacc_error_code=196;} break;
 case 210:
-# line 905 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
+# line 908 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=197;} break;
 case 211:
-# line 909 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 912 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=198;} break;
 case 212:
-# line 911 "parser.y"
-{list_push(yypvt[-0].node);} break;
-case 213:
 # line 914 "parser.y"
-{list_init();} break;
+{list_push(yypvt[-0].node);yacc_error_code=199;} break;
+case 213:
+# line 917 "parser.y"
+{list_init();yacc_error_code=200;} break;
 case 214:
-# line 915 "parser.y"
-{yyval.node = create_node2(ELSIF_AS,yypvt[-3].node,list_new(CONSTRUCT_LIST_AS));} break;
+# line 918 "parser.y"
+{yyval.node = create_node2(ELSIF_AS,yypvt[-3].node,list_new(CONSTRUCT_LIST_AS));yacc_error_code=201;} break;
 case 215:
-# line 919 "parser.y"
-{yyval.node = NULL;} break;
+# line 922 "parser.y"
+{yyval.node = NULL;yacc_error_code=202;} break;
 case 216:
-# line 920 "parser.y"
-{list_init();} break;
+# line 923 "parser.y"
+{list_init();yacc_error_code=203;} break;
 case 217:
-# line 921 "parser.y"
-{yyval.node = inspect_else();} break;
+# line 924 "parser.y"
+{yyval.node = inspect_else();yacc_error_code=204;} break;
 case 218:
-# line 925 "parser.y"
-{yyval.node = NULL;} break;
+# line 928 "parser.y"
+{yyval.node = NULL;yacc_error_code=205;} break;
 case 219:
-# line 926 "parser.y"
-{list_init();} break;
+# line 929 "parser.y"
+{list_init();yacc_error_code=206;} break;
 case 220:
-# line 927 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
-case 221:
 # line 930 "parser.y"
-{yyval.loc = current_location;} break;
-case 222:
-# line 931 "parser.y"
-{list_init();} break;
-case 223:
-# line 931 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
-case 224:
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=207;} break;
+case 221:
 # line 933 "parser.y"
-{SET_POS(yypvt[-7].loc); yyval.node = create_node3(INSPECT_AS,yypvt[-5].node,yypvt[-2].node,yypvt[-1].node);} break;
+{yyval.loc = current_location;yacc_error_code=208;} break;
+case 222:
+# line 934 "parser.y"
+{list_init();yacc_error_code=209;} break;
+case 223:
+# line 934 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=210;} break;
+case 224:
+# line 936 "parser.y"
+{SET_POS(yypvt[-7].loc); yyval.node = create_node3(INSPECT_AS,yypvt[-5].node,yypvt[-2].node,yypvt[-1].node);yacc_error_code=211;} break;
 case 226:
-# line 946 "parser.y"
-{list_push(yypvt[-1].node);} break;
+# line 949 "parser.y"
+{list_push(yypvt[-1].node);yacc_error_code=214;} break;
 case 227:
-# line 949 "parser.y"
-{list_init();} break;
+# line 952 "parser.y"
+{list_init();yacc_error_code=215;} break;
 case 228:
-# line 949 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
+# line 952 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=216;} break;
 case 229:
-# line 949 "parser.y"
-{list_init();} break;
+# line 952 "parser.y"
+{list_init();yacc_error_code=217;} break;
 case 230:
-# line 950 "parser.y"
-{yyval.node = create_node2(CASE_AS,yypvt[-3].node,list_new(CONSTRUCT_LIST_AS));} break;
+# line 953 "parser.y"
+{yyval.node = create_node2(CASE_AS,yypvt[-3].node,list_new(CONSTRUCT_LIST_AS));yacc_error_code=218;} break;
 case 231:
-# line 954 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 957 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=219;} break;
 case 232:
-# line 956 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 959 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=220;} break;
 case 233:
-# line 960 "parser.y"
-{yyval.node = create_node2(INTERVAL_AS,yypvt[-0].node,NULL);} break;
+# line 963 "parser.y"
+{yyval.node = create_node2(INTERVAL_AS,yypvt[-0].node,NULL);yacc_error_code=221;} break;
 case 234:
-# line 962 "parser.y"
-{yyval.node = create_node2(INTERVAL_AS,yypvt[-0].node,NULL);} break;
+# line 965 "parser.y"
+{yyval.node = create_node2(INTERVAL_AS,yypvt[-0].node,NULL);yacc_error_code=222;} break;
 case 235:
-# line 964 "parser.y"
-{yyval.node = create_node2(INTERVAL_AS,yypvt[-0].node,NULL);} break;
+# line 967 "parser.y"
+{yyval.node = create_node2(INTERVAL_AS,yypvt[-0].node,NULL);yacc_error_code=223;} break;
 case 236:
-# line 966 "parser.y"
-{yyval.node = create_node2(INTERVAL_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 969 "parser.y"
+{yyval.node = create_node2(INTERVAL_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=224;} break;
 case 237:
-# line 968 "parser.y"
-{yyval.node = create_node2(INTERVAL_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 971 "parser.y"
+{yyval.node = create_node2(INTERVAL_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=225;} break;
 case 238:
-# line 970 "parser.y"
-{yyval.node = create_node2(INTERVAL_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 973 "parser.y"
+{yyval.node = create_node2(INTERVAL_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=226;} break;
 case 239:
-# line 972 "parser.y"
-{yyval.node = create_node2(INTERVAL_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 975 "parser.y"
+{yyval.node = create_node2(INTERVAL_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=227;} break;
 case 240:
-# line 974 "parser.y"
-{yyval.node = create_node2(INTERVAL_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 977 "parser.y"
+{yyval.node = create_node2(INTERVAL_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=228;} break;
 case 241:
-# line 976 "parser.y"
-{yyval.node = create_node2(INTERVAL_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 979 "parser.y"
+{yyval.node = create_node2(INTERVAL_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=229;} break;
 case 242:
-# line 978 "parser.y"
-{yyval.node = create_node2(INTERVAL_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 981 "parser.y"
+{yyval.node = create_node2(INTERVAL_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=230;} break;
 case 243:
-# line 981 "parser.y"
-{yyval.loc = current_location;} break;
+# line 984 "parser.y"
+{yyval.loc = current_location;yacc_error_code=231;} break;
 case 244:
-# line 981 "parser.y"
-{list_init();} break;
+# line 984 "parser.y"
+{list_init();yacc_error_code=232;} break;
 case 245:
-# line 981 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
+# line 984 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=233;} break;
 case 246:
-# line 981 "parser.y"
-{list_init();} break;
+# line 984 "parser.y"
+{list_init();yacc_error_code=234;} break;
 case 247:
-# line 982 "parser.y"
-{SET_POS(yypvt[-12].loc); yyval.node = create_node5(LOOP_AS,yypvt[-8].node,yypvt[-7].node,yypvt[-6].node,yypvt[-4].node,list_new(CONSTRUCT_LIST_AS));} break;
+# line 985 "parser.y"
+{SET_POS(yypvt[-12].loc); yyval.node = create_node5(LOOP_AS,yypvt[-8].node,yypvt[-7].node,yypvt[-6].node,yypvt[-4].node,list_new(CONSTRUCT_LIST_AS));yacc_error_code=235;} break;
 case 248:
-# line 986 "parser.y"
-{yyval.node = NULL;} break;
+# line 989 "parser.y"
+{yyval.node = NULL;yacc_error_code=236;} break;
 case 249:
-# line 988 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 991 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=237;} break;
 case 250:
-# line 992 "parser.y"
-{yyval.node = NULL;} break;
+# line 995 "parser.y"
+{yyval.node = NULL;yacc_error_code=238;} break;
 case 251:
-# line 993 "parser.y"
-{id_level = INVARIANT_LEVEL;} break;
+# line 996 "parser.y"
+{id_level = INVARIANT_LEVEL;yacc_error_code=239;} break;
 case 252:
-# line 994 "parser.y"
+# line 997 "parser.y"
 {
 		id_level = NORMAL_LEVEL;
 		yyval.node = create_node1(INVARIANT_AS,yypvt[-0].node);
-		} break;
+		yacc_error_code=240;} break;
 case 253:
-# line 1002 "parser.y"
-{yyval.node = NULL;} break;
+# line 1005 "parser.y"
+{yyval.node = NULL;yacc_error_code=241;} break;
 case 254:
-# line 1004 "parser.y"
-{yyval.node = create_node2(VARIANT_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1007 "parser.y"
+{yyval.node = create_node2(VARIANT_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=242;} break;
 case 255:
-# line 1006 "parser.y"
-{yyval.node = create_node2(VARIANT_AS,NULL,yypvt[-0].node);} break;
+# line 1009 "parser.y"
+{yyval.node = create_node2(VARIANT_AS,NULL,yypvt[-0].node);yacc_error_code=243;} break;
 case 256:
-# line 1009 "parser.y"
-{yyval.loc = current_location; } break;
+# line 1012 "parser.y"
+{yyval.loc = current_location; yacc_error_code=244;} break;
 case 257:
-# line 1009 "parser.y"
-{list_init();} break;
+# line 1012 "parser.y"
+{list_init();yacc_error_code=245;} break;
 case 258:
-# line 1010 "parser.y"
-{SET_POS(yypvt[-5].loc); yyval.node = create_node2(DEBUG_AS,yypvt[-3].node,list_new(CONSTRUCT_LIST_AS));} break;
+# line 1013 "parser.y"
+{SET_POS(yypvt[-5].loc); yyval.node = create_node2(DEBUG_AS,yypvt[-3].node,list_new(CONSTRUCT_LIST_AS));yacc_error_code=246;} break;
 case 259:
-# line 1014 "parser.y"
-{yyval.node = NULL;} break;
-case 260:
-# line 1016 "parser.y"
-{yyval.node = NULL;} break;
-case 261:
 # line 1017 "parser.y"
-{list_init();} break;
+{yyval.node = NULL;yacc_error_code=247;} break;
+case 260:
+# line 1019 "parser.y"
+{yyval.node = NULL;yacc_error_code=248;} break;
+case 261:
+# line 1020 "parser.y"
+{list_init();yacc_error_code=249;} break;
 case 262:
-# line 1018 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
+# line 1021 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=250;} break;
 case 263:
-# line 1022 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 1025 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=251;} break;
 case 264:
-# line 1024 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 1027 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=252;} break;
 case 265:
-# line 1028 "parser.y"
-{yyval.node = create_node(RETRY_AS);} break;
+# line 1031 "parser.y"
+{yyval.node = create_node(RETRY_AS);yacc_error_code=253;} break;
 case 266:
-# line 1032 "parser.y"
-{yyval.node = NULL;} break;
+# line 1035 "parser.y"
+{yyval.node = NULL;yacc_error_code=254;} break;
 case 267:
-# line 1033 "parser.y"
-{list_init();} break;
+# line 1036 "parser.y"
+{list_init();yacc_error_code=255;} break;
 case 268:
-# line 1034 "parser.y"
-{yyval.node = rescue_instr();} break;
+# line 1037 "parser.y"
+{yyval.node = rescue_instr();yacc_error_code=256;} break;
 case 269:
-# line 1051 "parser.y"
-{yyval.node = create_node2(ASSIGN_AS,create_node2(ACCESS_ID_AS,yypvt[-2].node,NULL),yypvt[-0].node);} break;
+# line 1054 "parser.y"
+{yyval.node = create_node2(ASSIGN_AS,create_node2(ACCESS_ID_AS,yypvt[-2].node,NULL),yypvt[-0].node);yacc_error_code=261;} break;
 case 270:
-# line 1053 "parser.y"
-{yyval.node = create_node2(ASSIGN_AS,create_node(RESULT_AS),yypvt[-0].node);} break;
+# line 1056 "parser.y"
+{yyval.node = create_node2(ASSIGN_AS,create_node(RESULT_AS),yypvt[-0].node);yacc_error_code=262;} break;
 case 271:
-# line 1057 "parser.y"
-{yyval.node = create_node2(REVERSE_AS,create_node2(ACCESS_ID_AS,yypvt[-2].node,NULL),yypvt[-0].node);} break;
+# line 1060 "parser.y"
+{yyval.node = create_node2(REVERSE_AS,create_node2(ACCESS_ID_AS,yypvt[-2].node,NULL),yypvt[-0].node);yacc_error_code=263;} break;
 case 272:
-# line 1059 "parser.y"
-{yyval.node = create_node2(REVERSE_AS,create_node(RESULT_AS),yypvt[-0].node);} break;
+# line 1062 "parser.y"
+{yyval.node = create_node2(REVERSE_AS,create_node(RESULT_AS),yypvt[-0].node);yacc_error_code=264;} break;
 case 273:
-# line 1064 "parser.y"
-{yyval.node = NULL;} break;
+# line 1067 "parser.y"
+{yyval.node = NULL;yacc_error_code=265;} break;
 case 274:
-# line 1065 "parser.y"
-{list_init();} break;
+# line 1068 "parser.y"
+{list_init();yacc_error_code=266;} break;
 case 275:
-# line 1066 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
+# line 1069 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=267;} break;
 case 276:
-# line 1070 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 1073 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=268;} break;
 case 277:
-# line 1072 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 1075 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=269;} break;
 case 278:
-# line 1076 "parser.y"
-{yyval.node = create_node2(CREATE_AS,NULL,NULL);} break;
+# line 1079 "parser.y"
+{yyval.node = create_node2(CREATE_AS,NULL,NULL);yacc_error_code=270;} break;
 case 279:
-# line 1077 "parser.y"
-{list_init();} break;
-case 280:
-# line 1078 "parser.y"
-{yyval.node = create_node2(CREATE_AS,yypvt[-2].node,list_new(CONSTRUCT_LIST_AS));} break;
-case 281:
 # line 1080 "parser.y"
+{list_init();yacc_error_code=271;} break;
+case 280:
+# line 1081 "parser.y"
+{yyval.node = create_node2(CREATE_AS,yypvt[-2].node,list_new(CONSTRUCT_LIST_AS));yacc_error_code=272;} break;
+case 281:
+# line 1083 "parser.y"
 {
 									yyval.node = create_node1(CLIENT_AS,yypvt[-0].node);
 									yyval.node = create_node2(CREATE_AS,yyval.node,NULL);
-								} break;
+								yacc_error_code=273;} break;
 case 282:
-# line 1087 "parser.y"
-{yyval.node = create_node3(CREATION_AS,yypvt[-3].node,yypvt[-1].node,yypvt[-0].node);} break;
+# line 1090 "parser.y"
+{yyval.node = create_node3(CREATION_AS,yypvt[-3].node,yypvt[-1].node,yypvt[-0].node);yacc_error_code=274;} break;
 case 283:
-# line 1091 "parser.y"
-{yyval.node = NULL;} break;
+# line 1094 "parser.y"
+{yyval.node = NULL;yacc_error_code=275;} break;
 case 284:
-# line 1093 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1096 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=276;} break;
 case 285:
-# line 1097 "parser.y"
-{yyval.node = create_node2(ACCESS_ID_AS,yypvt[-0].node,NULL);} break;
+# line 1100 "parser.y"
+{yyval.node = create_node2(ACCESS_ID_AS,yypvt[-0].node,NULL);yacc_error_code=277;} break;
 case 286:
-# line 1099 "parser.y"
-{yyval.node = create_node(RESULT_AS);} break;
+# line 1102 "parser.y"
+{yyval.node = create_node(RESULT_AS);yacc_error_code=278;} break;
 case 287:
-# line 1103 "parser.y"
-{yyval.node = NULL;} break;
+# line 1106 "parser.y"
+{yyval.node = NULL;yacc_error_code=279;} break;
 case 288:
-# line 1105 "parser.y"
-{yyval.node = create_node2(ACCESS_INV_AS,yypvt[-1].node,yypvt[-0].node);} break;
+# line 1108 "parser.y"
+{yyval.node = create_node2(ACCESS_INV_AS,yypvt[-1].node,yypvt[-0].node);yacc_error_code=280;} break;
 case 289:
-# line 1113 "parser.y"
-{yyval.node = create_node1(INSTR_CALL_AS,yypvt[-0].node);} break;
+# line 1116 "parser.y"
+{yyval.node = create_node1(INSTR_CALL_AS,yypvt[-0].node);yacc_error_code=281;} break;
 case 290:
-# line 1115 "parser.y"
-{yyval.node = create_node1(INSTR_CALL_AS,yypvt[-0].node);} break;
+# line 1118 "parser.y"
+{yyval.node = create_node1(INSTR_CALL_AS,yypvt[-0].node);yacc_error_code=282;} break;
 case 291:
-# line 1117 "parser.y"
-{yyval.node = create_node1(INSTR_CALL_AS,yypvt[-0].node);} break;
+# line 1120 "parser.y"
+{yyval.node = create_node1(INSTR_CALL_AS,yypvt[-0].node);yacc_error_code=283;} break;
 case 292:
-# line 1119 "parser.y"
-{yyval.node = create_node1(INSTR_CALL_AS,yypvt[-0].node);} break;
+# line 1122 "parser.y"
+{yyval.node = create_node1(INSTR_CALL_AS,yypvt[-0].node);yacc_error_code=284;} break;
 case 293:
-# line 1121 "parser.y"
-{yyval.node = create_node1(INSTR_CALL_AS,yypvt[-0].node);} break;
+# line 1124 "parser.y"
+{yyval.node = create_node1(INSTR_CALL_AS,yypvt[-0].node);yacc_error_code=285;} break;
 case 294:
-# line 1123 "parser.y"
-{yyval.node = create_node1(INSTR_CALL_AS,yypvt[-0].node);} break;
+# line 1126 "parser.y"
+{yyval.node = create_node1(INSTR_CALL_AS,yypvt[-0].node);yacc_error_code=286;} break;
 case 295:
-# line 1125 "parser.y"
-{yyval.node = create_node1(INSTR_CALL_AS,yypvt[-0].node);} break;
-case 296:
 # line 1128 "parser.y"
-{yyval.loc = current_location; } break;
+{yyval.node = create_node1(INSTR_CALL_AS,yypvt[-0].node);yacc_error_code=287;} break;
+case 296:
+# line 1131 "parser.y"
+{yyval.loc = current_location; yacc_error_code=288;} break;
 case 297:
-# line 1129 "parser.y"
-{SET_POS(yypvt[-3].loc); yyval.node = create_node1(CHECK_AS,yypvt[-1].node);} break;
+# line 1132 "parser.y"
+{SET_POS(yypvt[-3].loc); yyval.node = create_node1(CHECK_AS,yypvt[-1].node);yacc_error_code=289;} break;
 case 298:
-# line 1137 "parser.y"
-{yyerrok;yyval.node = create_node1(VALUE_AS,yypvt[-0].node);} break;
+# line 1140 "parser.y"
+{yyerrok;yyval.node = create_node1(VALUE_AS,yypvt[-0].node);yacc_error_code=290;} break;
 case 299:
-# line 1139 "parser.y"
-{yyerrok;yyval.node = create_node1(VALUE_AS,yypvt[-0].node);} break;
+# line 1142 "parser.y"
+{yyerrok;yyval.node = create_node1(VALUE_AS,yypvt[-0].node);yacc_error_code=291;} break;
 case 300:
-# line 1141 "parser.y"
-{yyval.node = create_node1(EXPR_CALL_AS, yypvt[-0].node);} break;
+# line 1144 "parser.y"
+{yyval.node = create_node1(EXPR_CALL_AS, yypvt[-0].node);yacc_error_code=292;} break;
 case 301:
-# line 1143 "parser.y"
-{yyval.node = create_node1(PARAN_AS, yypvt[-1].node);} break;
+# line 1146 "parser.y"
+{yyval.node = create_node1(PARAN_AS, yypvt[-1].node);yacc_error_code=293;} break;
 case 302:
-# line 1145 "parser.y"
-{yyerrok;yyval.node = create_node2(BIN_PLUS_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1148 "parser.y"
+{yyerrok;yyval.node = create_node2(BIN_PLUS_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=294;} break;
 case 303:
-# line 1147 "parser.y"
-{yyerrok;yyval.node = create_node2(BIN_MINUS_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1150 "parser.y"
+{yyerrok;yyval.node = create_node2(BIN_MINUS_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=295;} break;
 case 304:
-# line 1149 "parser.y"
-{yyerrok;yyval.node = create_node2(BIN_STAR_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1152 "parser.y"
+{yyerrok;yyval.node = create_node2(BIN_STAR_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=296;} break;
 case 305:
-# line 1151 "parser.y"
-{yyerrok;yyval.node = create_node2(BIN_SLASH_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1154 "parser.y"
+{yyerrok;yyval.node = create_node2(BIN_SLASH_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=297;} break;
 case 306:
-# line 1153 "parser.y"
-{yyerrok;yyval.node = create_node2(BIN_MOD_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1156 "parser.y"
+{yyerrok;yyval.node = create_node2(BIN_MOD_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=298;} break;
 case 307:
-# line 1155 "parser.y"
-{yyerrok;yyval.node = create_node2(BIN_DIV_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1158 "parser.y"
+{yyerrok;yyval.node = create_node2(BIN_DIV_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=299;} break;
 case 308:
-# line 1157 "parser.y"
-{yyerrok;yyval.node = create_node2(BIN_POWER_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1160 "parser.y"
+{yyerrok;yyval.node = create_node2(BIN_POWER_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=300;} break;
 case 309:
-# line 1159 "parser.y"
-{yyerrok;yyval.node = create_node2(BIN_AND_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1162 "parser.y"
+{yyerrok;yyval.node = create_node2(BIN_AND_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=301;} break;
 case 310:
-# line 1161 "parser.y"
-{yyerrok;yyval.node = create_node2(BIN_AND_THEN_AS,yypvt[-3].node,yypvt[-0].node);} break;
+# line 1164 "parser.y"
+{yyerrok;yyval.node = create_node2(BIN_AND_THEN_AS,yypvt[-3].node,yypvt[-0].node);yacc_error_code=302;} break;
 case 311:
-# line 1163 "parser.y"
-{yyerrok;yyval.node = create_node2(BIN_OR_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1166 "parser.y"
+{yyerrok;yyval.node = create_node2(BIN_OR_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=303;} break;
 case 312:
-# line 1165 "parser.y"
-{yyerrok;yyval.node = create_node2(BIN_OR_ELSE_AS,yypvt[-3].node,yypvt[-0].node);} break;
+# line 1168 "parser.y"
+{yyerrok;yyval.node = create_node2(BIN_OR_ELSE_AS,yypvt[-3].node,yypvt[-0].node);yacc_error_code=304;} break;
 case 313:
-# line 1167 "parser.y"
-{yyerrok;yyval.node = create_node2(BIN_IMPLIES_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1170 "parser.y"
+{yyerrok;yyval.node = create_node2(BIN_IMPLIES_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=304;} break;
 case 314:
-# line 1169 "parser.y"
-{yyerrok;yyval.node = create_node2(BIN_XOR_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1172 "parser.y"
+{yyerrok;yyval.node = create_node2(BIN_XOR_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=305;} break;
 case 315:
-# line 1171 "parser.y"
-{yyerrok;yyval.node = create_node2(BIN_GE_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1174 "parser.y"
+{yyerrok;yyval.node = create_node2(BIN_GE_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=306;} break;
 case 316:
-# line 1173 "parser.y"
-{yyerrok;yyval.node = create_node2(BIN_GT_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1176 "parser.y"
+{yyerrok;yyval.node = create_node2(BIN_GT_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=307;} break;
 case 317:
-# line 1175 "parser.y"
-{yyerrok;yyval.node = create_node2(BIN_LE_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1178 "parser.y"
+{yyerrok;yyval.node = create_node2(BIN_LE_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=308;} break;
 case 318:
-# line 1177 "parser.y"
-{yyerrok;yyval.node = create_node2(BIN_LT_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1180 "parser.y"
+{yyerrok;yyval.node = create_node2(BIN_LT_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=309;} break;
 case 319:
-# line 1179 "parser.y"
-{yyerrok;yyval.node = create_node2(BIN_EQ_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1182 "parser.y"
+{yyerrok;yyval.node = create_node2(BIN_EQ_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=310;} break;
 case 320:
-# line 1181 "parser.y"
-{yyerrok;yyval.node = create_node2(BIN_NE_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1184 "parser.y"
+{yyerrok;yyval.node = create_node2(BIN_NE_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=311;} break;
 case 321:
-# line 1183 "parser.y"
-{	yyerrok;
-									yyval.node = create_node3(BIN_FREE_AS,yypvt[-2].node,yypvt[-1].node,yypvt[-0].node);} break;
-case 322:
 # line 1186 "parser.y"
-{yyerrok;yyval.node = create_node1(UN_MINUS_AS,yypvt[-0].node);} break;
+{	yyerrok;
+									yyval.node = create_node3(BIN_FREE_AS,yypvt[-2].node,yypvt[-1].node,yypvt[-0].node);yacc_error_code=312;} break;
+case 322:
+# line 1189 "parser.y"
+{yyerrok;yyval.node = create_node1(UN_MINUS_AS,yypvt[-0].node);yacc_error_code=313;} break;
 case 323:
-# line 1188 "parser.y"
-{yyerrok;yyval.node = create_node1(UN_PLUS_AS,yypvt[-0].node);} break;
+# line 1191 "parser.y"
+{yyerrok;yyval.node = create_node1(UN_PLUS_AS,yypvt[-0].node);yacc_error_code=314;} break;
 case 324:
-# line 1190 "parser.y"
-{yyerrok;yyval.node = create_node1(UN_NOT_AS, yypvt[-0].node);} break;
+# line 1193 "parser.y"
+{yyerrok;yyval.node = create_node1(UN_NOT_AS, yypvt[-0].node);yacc_error_code=315;} break;
 case 325:
-# line 1192 "parser.y"
-{yyerrok;yyval.node = create_node1(UN_OLD_AS,yypvt[-0].node);} break;
-case 326:
-# line 1194 "parser.y"
-{yyerrok;yyval.node = create_node2(UN_FREE_AS,yypvt[-1].node,yypvt[-0].node);} break;
-case 327:
 # line 1195 "parser.y"
-{yyerrok;list_init();} break;
+{yyerrok;yyval.node = create_node1(UN_OLD_AS,yypvt[-0].node);yacc_error_code=316;} break;
+case 326:
+# line 1197 "parser.y"
+{yyerrok;yyval.node = create_node2(UN_FREE_AS,yypvt[-1].node,yypvt[-0].node);yacc_error_code=317;} break;
+case 327:
+# line 1198 "parser.y"
+{yyerrok;list_init();yacc_error_code=318;} break;
 case 328:
-# line 1196 "parser.y"
-{yyerrok;yyval.node = create_node1(UN_STRIP_AS,list_new(CONSTRUCT_LIST_AS));} break;
+# line 1199 "parser.y"
+{yyerrok;yyval.node = create_node1(UN_STRIP_AS,list_new(CONSTRUCT_LIST_AS));yacc_error_code=319;} break;
 case 329:
-# line 1200 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1203 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=320;} break;
 case 330:
-# line 1202 "parser.y"
+# line 1205 "parser.y"
 {
 								yyerrok;
 								yyval.node = create_node1(ADDRESS_AS,click_list_elem(yypvt[-0].value));
-								} break;
+								yacc_error_code=321;} break;
 case 331:
-# line 1207 "parser.y"
+# line 1210 "parser.y"
 {
 								yyerrok;
 								yyval.node = create_node1(EXPR_ADDRESS_AS,yypvt[-1].node);
-								} break;
+								yacc_error_code=322;} break;
 case 332:
-# line 1212 "parser.y"
-{yyerrok;yyval.node = create_node(ADDRESS_CURRENT_AS);} break;
+# line 1215 "parser.y"
+{yyerrok;yyval.node = create_node(ADDRESS_CURRENT_AS);yacc_error_code=323;} break;
 case 333:
-# line 1214 "parser.y"
-{yyerrok;yyval.node = create_node(ADDRESS_RESULT_AS);} break;
+# line 1217 "parser.y"
+{yyerrok;yyval.node = create_node(ADDRESS_RESULT_AS);yacc_error_code=324;} break;
 case 334:
-# line 1218 "parser.y"
-{yyval.node = create_id(token_str);} break;
+# line 1221 "parser.y"
+{yyval.node = create_id(token_str);yacc_error_code=325;} break;
 case 335:
-# line 1226 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1229 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=326;} break;
 case 336:
-# line 1228 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1231 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=327;} break;
 case 337:
-# line 1230 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1233 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=328;} break;
 case 338:
-# line 1232 "parser.y"
-{yyval.node = create_node(CURRENT_AS);} break;
+# line 1235 "parser.y"
+{yyval.node = create_node(CURRENT_AS);yacc_error_code=329;} break;
 case 339:
-# line 1234 "parser.y"
-{yyval.node = create_node(RESULT_AS);} break;
+# line 1237 "parser.y"
+{yyval.node = create_node(RESULT_AS);yacc_error_code=330;} break;
 case 340:
-# line 1236 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1239 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=331;} break;
 case 341:
-# line 1238 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1241 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=332;} break;
 case 342:
-# line 1240 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1243 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=333;} break;
 case 343:
-# line 1242 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1245 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=334;} break;
 case 344:
-# line 1246 "parser.y"
-{yyval.node = create_node2(NESTED_AS,create_node(CURRENT_AS),yypvt[-0].node);} break;
+# line 1249 "parser.y"
+{yyval.node = create_node2(NESTED_AS,create_node(CURRENT_AS),yypvt[-0].node);yacc_error_code=335;} break;
 case 345:
-# line 1250 "parser.y"
-{yyval.node = create_node2(NESTED_AS,create_node(RESULT_AS),yypvt[-0].node);} break;
+# line 1253 "parser.y"
+{yyval.node = create_node2(NESTED_AS,create_node(RESULT_AS),yypvt[-0].node);yacc_error_code=336;} break;
 case 346:
-# line 1254 "parser.y"
-{yyval.node = create_node2(NESTED_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1257 "parser.y"
+{yyval.node = create_node2(NESTED_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=337;} break;
 case 347:
-# line 1258 "parser.y"
-{yyval.node = create_node2(NESTED_EXPR_AS,yypvt[-3].node,yypvt[-0].node);} break;
+# line 1261 "parser.y"
+{yyval.node = create_node2(NESTED_EXPR_AS,yypvt[-3].node,yypvt[-0].node);yacc_error_code=338;} break;
 case 348:
-# line 1262 "parser.y"
-{yyval.node = create_node2(NESTED_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1265 "parser.y"
+{yyval.node = create_node2(NESTED_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=339;} break;
 case 349:
-# line 1266 "parser.y"
-{yyval.node = create_node2(PRECURSOR_AS,NULL,yypvt[-0].node);} break;
+# line 1269 "parser.y"
+{yyval.node = create_node2(PRECURSOR_AS,NULL,yypvt[-0].node);yacc_error_code=340;} break;
 case 350:
-# line 1268 "parser.y"
+# line 1271 "parser.y"
 {
 								yyval.node = create_node2(PRECURSOR_AS,click_list_elem (yypvt[-3].value),yypvt[-0].node);
 								click_list_set (yyval.node, yypvt[-3].value);
-								} break;
+								yacc_error_code=341;} break;
 case 351:
-# line 1273 "parser.y"
+# line 1276 "parser.y"
 {
 								yyval.node = create_node2(PRECURSOR_AS,click_list_elem (yypvt[-4].value),yypvt[-0].node);
 								click_list_set (yyval.node, yypvt[-4].value);
-								} break;
+								yacc_error_code=342;} break;
 case 352:
-# line 1280 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1283 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=343;} break;
 case 353:
-# line 1282 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1285 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=344;} break;
 case 354:
-# line 1286 "parser.y"
-{yyval.node = create_node2(NESTED_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1289 "parser.y"
+{yyval.node = create_node2(NESTED_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=345;} break;
 case 355:
-# line 1288 "parser.y"
-{yyval.node = create_node2(NESTED_AS,yypvt[-2].node,yypvt[-0].node);} break;
+# line 1291 "parser.y"
+{yyval.node = create_node2(NESTED_AS,yypvt[-2].node,yypvt[-0].node);yacc_error_code=346;} break;
 case 356:
-# line 1292 "parser.y"
+# line 1295 "parser.y"
 {	switch(id_level) {
 							case NORMAL_LEVEL:
 								yyval.node = create_node2(ACCESS_ID_AS, yypvt[-1].node,yypvt[-0].node);
@@ -2972,119 +2974,119 @@ case 356:
 								yyval.node = create_node2(ACCESS_INV_AS,yypvt[-1].node,yypvt[-0].node);
 								break;
 							}
-						} break;
+						yacc_error_code=347;} break;
 case 357:
-# line 1307 "parser.y"
-{yyval.node = create_node2(ACCESS_FEAT_AS,yypvt[-1].node,yypvt[-0].node);} break;
+# line 1310 "parser.y"
+{yyval.node = create_node2(ACCESS_FEAT_AS,yypvt[-1].node,yypvt[-0].node);yacc_error_code=348;} break;
 case 358:
-# line 1311 "parser.y"
-{yyval.node = NULL;} break;
-case 359:
-# line 1313 "parser.y"
-{yyval.node = NULL;} break;
-case 360:
 # line 1314 "parser.y"
-{list_init();} break;
+{yyval.node = NULL;yacc_error_code=349;} break;
+case 359:
+# line 1316 "parser.y"
+{yyval.node = NULL;yacc_error_code=350;} break;
+case 360:
+# line 1317 "parser.y"
+{list_init();yacc_error_code=351;} break;
 case 361:
-# line 1315 "parser.y"
-{yyval.node = list_new(CONSTRUCT_LIST_AS);} break;
+# line 1318 "parser.y"
+{yyval.node = list_new(CONSTRUCT_LIST_AS);yacc_error_code=352;} break;
 case 362:
-# line 1319 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 1322 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=353;} break;
 case 363:
-# line 1321 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 1324 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=354;} break;
 case 364:
-# line 1325 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 1328 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=355;} break;
 case 365:
-# line 1327 "parser.y"
-{list_push(yypvt[-0].node);} break;
+# line 1330 "parser.y"
+{list_push(yypvt[-0].node);yacc_error_code=356;} break;
 case 368:
-# line 1339 "parser.y"
+# line 1342 "parser.y"
 {
 				yyval.node = create_id(token_str);
-				} break;
+				yacc_error_code=357;} break;
 case 369:
-# line 1345 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1348 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=358;} break;
 case 370:
-# line 1347 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1350 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=359;} break;
 case 371:
-# line 1349 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1352 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=360;} break;
 case 372:
-# line 1351 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1354 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=361;} break;
 case 373:
-# line 1353 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1356 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=362;} break;
 case 374:
-# line 1355 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1358 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=363;} break;
 case 375:
-# line 1359 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1362 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=364;} break;
 case 376:
-# line 1361 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1364 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=365;} break;
 case 377:
-# line 1363 "parser.y"
-{yyval.node = create_int(token_str,0);} break;
+# line 1366 "parser.y"
+{yyval.node = create_int(token_str,0);yacc_error_code=366;} break;
 case 378:
-# line 1365 "parser.y"
-{yyval.node = create_real(token_str,0);} break;
+# line 1368 "parser.y"
+{yyval.node = create_real(token_str,0);yacc_error_code=367;} break;
 case 379:
-# line 1367 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1370 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=368;} break;
 case 380:
-# line 1369 "parser.y"
-{yyval.node = yypvt[-0].node;} break;
+# line 1372 "parser.y"
+{yyval.node = yypvt[-0].node;yacc_error_code=369;} break;
 case 381:
-# line 1373 "parser.y"
-{yyval.node = create_bool(0);} break;
+# line 1376 "parser.y"
+{yyval.node = create_bool(0);yacc_error_code=370;} break;
 case 382:
-# line 1375 "parser.y"
-{yyval.node = create_bool(1);} break;
+# line 1378 "parser.y"
+{yyval.node = create_bool(1);yacc_error_code=371;} break;
 case 383:
-# line 1379 "parser.y"
-{yyval.node = create_char(token_str);} break;
+# line 1382 "parser.y"
+{yyval.node = create_char(token_str);yacc_error_code=372;} break;
 case 384:
-# line 1383 "parser.y"
-{yyval.node = create_int(token_str,yypvt[-1].value);} break;
+# line 1386 "parser.y"
+{yyval.node = create_int(token_str,yypvt[-1].value);yacc_error_code=373;} break;
 case 385:
-# line 1387 "parser.y"
-{yyval.value = 0;} break;
+# line 1390 "parser.y"
+{yyval.value = 0;yacc_error_code=374;} break;
 case 386:
-# line 1389 "parser.y"
-{yyval.value = 0;} break;
+# line 1392 "parser.y"
+{yyval.value = 0;yacc_error_code=375;} break;
 case 387:
-# line 1391 "parser.y"
-{yyval.value = 1;} break;
+# line 1394 "parser.y"
+{yyval.value = 1;yacc_error_code=376;} break;
 case 388:
-# line 1395 "parser.y"
-{yyval.node = create_real(token_str,yypvt[-1].value);} break;
+# line 1398 "parser.y"
+{yyval.node = create_real(token_str,yypvt[-1].value);yacc_error_code=377;} break;
 case 389:
-# line 1399 "parser.y"
-{yyval.node = create_node1(BIT_CONST_AS,create_id(token_str));} break;
+# line 1402 "parser.y"
+{yyval.node = create_node1(BIT_CONST_AS,create_id(token_str));yacc_error_code=378;} break;
 case 390:
-# line 1403 "parser.y"
-{yyval.node = create_string(token_str);} break;
+# line 1406 "parser.y"
+{yyval.node = create_string(token_str);yacc_error_code=379;} break;
 case 391:
-# line 1405 "parser.y"
-{yyval.node = create_string(token_str);} break;
+# line 1408 "parser.y"
+{yyval.node = create_string(token_str);yacc_error_code=380;} break;
 case 392:
-# line 1409 "parser.y"
-{yyval.node = create_string(token_str);} break;
-case 393:
 # line 1412 "parser.y"
-{list_init();} break;
+{yyval.node = create_string(token_str);yacc_error_code=381;} break;
+case 393:
+# line 1415 "parser.y"
+{list_init();yacc_error_code=382;} break;
 case 394:
-# line 1413 "parser.y"
-{yyval.node = create_node1(ARRAY_AS,list_new(CONSTRUCT_LIST_AS));} break;
-case 395:
 # line 1416 "parser.y"
+{yyval.node = create_node1(ARRAY_AS,list_new(CONSTRUCT_LIST_AS));yacc_error_code=383;} break;
+case 395:
+# line 1419 "parser.y"
 {SET_POS (current_location) ; yyval.loc = current_location;} break;
 	}
 	goto yystack;		/* reset registers in driver code */

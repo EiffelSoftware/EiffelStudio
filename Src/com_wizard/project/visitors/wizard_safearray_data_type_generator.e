@@ -63,7 +63,9 @@ feature -- Basic operations
 			elseif 
 				is_integer4 (an_element_type) or
 				is_unsigned_long (an_element_type) or
-				element_visitor.is_enumeration 
+				element_visitor.is_enumeration or
+				is_int (an_element_type) or
+				is_unsigned_int (an_element_type)
 			then
 				ce_function_name.append ("ccom_ce_safearray_long")
 				ec_function_name.append ("ccom_ec_safearray_long")

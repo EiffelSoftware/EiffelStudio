@@ -77,6 +77,9 @@ feature -- Access
 			if first.pixmap_exists then
 				add_pixmap_to_pixmap_container (clone (first))
 				for_all_objects (agent {EV_PIXMAP}.enable_pixmap_exists)
+			elseif first.pixmap_path = Void then 
+				-- `pixmap_path' is Void when we have not assigned a path yet,
+				-- so we do nothing.
 			else
 				create error_label.make_with_text ("Error - named pixmap missing.")
 				error_label.set_tooltip (first.pixmap_path)

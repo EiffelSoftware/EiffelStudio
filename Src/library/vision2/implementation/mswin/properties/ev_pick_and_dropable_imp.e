@@ -333,6 +333,7 @@ feature {EV_ANY_I} -- Implementation
 			env: EV_ENVIRONMENT
 			target: EV_ABSTRACT_PICK_AND_DROPABLE
 			pick_and_dropable: EV_PICK_AND_DROPABLE
+			text_component: EV_TEXT_COMPONENT_IMP
 		do
 			modify_widget_appearance (False)
 				-- Remove the capture (as soon as possible because we can't
@@ -348,13 +349,22 @@ feature {EV_ANY_I} -- Implementation
 				-- Remove the line drawn from source position to Pointer.
 			erase_rubber_band
 
+			text_component ?= Current
 				-- Restore the cursor.
 			if pnd_stored_cursor /= Void then
 					-- Restore the cursor style of `Current' if necessary.
 				internal_set_pointer_style (pnd_stored_cursor)
 			else
-					-- Restore the standard cursor style.
-				internal_set_pointer_style (Default_pixmaps.Standard_cursor)
+					-- Restore standard cursor style.
+				if text_component /= Void then
+					internal_set_pointer_style (Default_pixmaps.Ibeam_cursor)
+				else
+					internal_set_pointer_style (Default_pixmaps.Standard_cursor)
+				end
+			end
+				-- We must now stop the context menu from appearing, as a result of this click.
+			if text_component /= Void then
+				text_component.disable_context_menu
 			end
 
 				-- Update `application_imp' to reflect end of transport.
@@ -425,6 +435,7 @@ feature {EV_ANY_I} -- Implementation
 			item_list_imp: EV_ITEM_LIST_IMP [EV_ITEM]
 			item_imp: EV_ITEM_IMP
 			sensitive: EV_SENSITIVE
+			combo_field: EV_INTERNAL_COMBO_FIELD_IMP
 		do
 			create wel_point.make (0, 0)
 			wel_point.set_cursor_position
@@ -437,6 +448,15 @@ feature {EV_ANY_I} -- Implementation
 				widget_imp_at_cursor_position ?= wel_window_at_cursor_position
 					-- Retrieve the implementation of the Vision2 Widget at
 					-- Cursor position and check it is not Void.
+				
+				if widget_imp_at_cursor_position = Void then
+					-- We must now check for an internal combo field, and 
+					-- use its parent as the widget.
+					combo_field ?= wel_window_at_cursor_position
+					if combo_field /= Void then
+						widget_imp_at_cursor_position := combo_field.parent
+					end
+				end
 				
 				if widget_imp_at_cursor_position /= Void then	
 					current_target := widget_imp_at_cursor_position.interface
@@ -480,7 +500,12 @@ feature {EV_ANY_I} -- Implementation
 				end
 			end
 		end
+		
+feature {EV_ANY_I, EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- Implementation
 
+	cursor_pixmap: EV_CURSOR
+			-- Cursor used on the widget.
+			
 feature {EV_ANY_I} -- Implementation
 
 	is_pnd_in_transport: BOOLEAN
@@ -525,9 +550,6 @@ feature {EV_ANY_I} -- Implementation
 
 	drag_and_drop_starting_movement: INTEGER is 3
 		-- Pointer movement in pixels required to start a drag and drop.
-
-	cursor_pixmap: EV_CURSOR
-			-- Cursor used on the widget.
 
 	pnd_stored_cursor: EV_CURSOR
 			-- Cursor used on the widget before PND started.
@@ -707,7 +729,7 @@ feature {EV_ANY_I} -- Implementation
 			Create Result
 		end
 
-feature {EV_ANY_I} -- Implementation 
+feature {EV_ANY_I, WEL_WINDOW} -- Implementation 
 
 	application_imp: EV_APPLICATION_IMP is
 			-- `Result' is implementation of application from environment.

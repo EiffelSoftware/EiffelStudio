@@ -23,6 +23,8 @@ feature -- Access
 				Precursor (a_descriptor)
 				Shared_file_name_factory.create_file_name (Current, c_writer)
 				c_writer.save_header_file (Shared_file_name_factory.last_created_header_file_name)
+				Shared_file_name_factory.create_file_name (Current, c_writer_impl)
+				c_writer_impl.save_header_file (Shared_file_name_factory.last_created_header_file_name)
 			end
 		end
 

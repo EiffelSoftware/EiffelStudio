@@ -283,7 +283,7 @@ end;
 						is_c := false;
 						is_cycle := false
 					elseif function_name.substring_index (" from ", 1) > 0 then
-						feature_n := function_name.substring (1, function_name.substring_index (" from ", 1));
+						feature_n := function_name.substring (1, function_name.substring_index (" from ", 1) - 1);
 debug("PROFILE_CONVERT")
 	io.error.putstring ("Total token: ");
 	io.error.putstring (function_name);

@@ -6,7 +6,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class FUNCTION
+deferred class LANGUAGE_FUNCTION
 
 inherit
 	ANY
@@ -66,4 +66,4 @@ feature {NONE} -- Attributes
 	cycle_num: INTEGER
 			-- Number of the cycle of which this function is a member.
 
-end -- class FUNCTION
+end -- class LANGUAGE_FUNCTION

@@ -172,7 +172,7 @@ end;
 			update_cycle (data);
 		end;
 
-	add_function_to_cycle (function: FUNCTION; number: INTEGER) is
+	add_function_to_cycle (function: LANGUAGE_FUNCTION; number: INTEGER) is
 		local
 			function_added: BOOLEAN;
 		do

@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"Implementation of Colormap";
+		"Implementation of Colormap.";
 	status: "See notice at end of class.";
 	date: "$Date$";
 	revision: "$Revision$"
@@ -12,26 +12,55 @@ class
 creation
 	make_from_existing
 
+creation {MEL_SCREEN} 
+
+	make_default
+
 feature {NONE} -- Initialization
 
-    make_from_existing (an_id: like identifier) is
-            -- Initialize atom with C pointer `an_id'.
-        require
-            an_id_not_null: an_id /= default_pointer
-        do
-            identifier := an_id
-        ensure
-            set: identifier = an_id
-        end;
+	make_from_existing (an_id: like identifier) is
+			-- Initialize `identifier' with C pointer `an_id'.
+		require
+			id_not_null: an_id /= default_pointer
+		do
+			identifier := an_id
+		ensure
+			set: identifier = an_id
+		end;
+
+	make_default (a_screen: MEL_SCREEN) is
+			-- Initialize to default colormap of `screen'.
+		require
+			valid_screen: a_screen /= Void and then a_screen.is_valid
+		do
+			identifier := DefaultColormapOfScreen (a_screen.handle);
+		end;
 
 feature -- Access
 
 	identifier: POINTER;
 			-- Associated C identifier
 
+	is_valid: BOOLEAN is
+			-- Is the resource valid?
+		do
+			Result := identifier /= default_pointer
+		ensure
+			valid_result: Result implies identifier /= default_pointer
+		end;
+
+feature {NONE} -- External features
+
+	DefaultColormapOfScreen (a_screen: POINTER): POINTER is
+		external
+			"C [macro <X11/Xlib.h>] (Screen *): EIF_POINTER"
+		alias
+			"DefaultColormapOfScreen"
+		end;
+
 invariant
 
-    non_null_identifier: identifier /= default_pointer
+	identifier_not_null: identifier /= default_pointer
 
 end -- class MEL_COLORMAP
 

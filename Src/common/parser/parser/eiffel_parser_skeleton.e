@@ -214,7 +214,8 @@ feature {NONE} -- Actions
 			parents_set: Result.parents = p
 			creators_set: Result.creators = c
 			features_set: Result.features = f
-			invariant_part_set: Result.invariant_part = inv
+			empty_invariant_part: Result.invariant_part = Void implies inv = Void or else inv.assertion_list = Void
+			invariant_part_set: Result.invariant_part /= Void implies Result.invariant_part = inv
 			suppliers_set: Result.suppliers = s
 			obsolete_message_set: Result.obsolete_message = o
 			click_list_set: Result.click_list = cl

@@ -12,8 +12,9 @@ inherit
 
 	EV_MENU_HOLDER_IMP
 		undefine
+			add_menu_ok,
 			set_foreground_color,
-			add_menu_ok
+			set_background_color
 		end
 
 	EV_BUTTON_IMP
@@ -28,12 +29,15 @@ inherit
 			set_center_alignment,
 			set_left_alignment, 
 			set_right_alignment,
-			set_text
+			set_text,
+			set_foreground_color,
+			set_background_color
 		redefine
 			make,
 			add_popup_command,
 			text,
-			set_foreground_color			
+			set_foreground_color,
+			set_background_color
 		end
 
 creation
@@ -124,6 +128,64 @@ feature {NONE} -- Status report
 
 feature {EV_MENU_ITEM_HOLDER} -- Element change	
 	
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'.
+			-- Redefined because the text is in a gtk_label.
+		local
+			list: ARRAYED_LIST [EV_MENU_ITEM_IMP]
+		do
+--			{EV_BUTTON_IMP} Precursor (color)
+			c_gtk_option_button_set_fg_color (widget, color.red, color.green, color.blue)
+
+			-- Color for the menu.
+			if menu /= Void then
+				c_gtk_widget_set_fg_color (menu.widget, color.red, color.green, color.blue)
+			end
+
+			-- Color for the menu items.
+			if menu_title_widget /= default_pointer then
+				c_gtk_widget_set_fg_color (menu_title_widget, color.red, color.green, color.blue)
+			end
+			from
+				list := menu_items_array
+				list.start
+			until
+				list.after
+			loop
+				c_gtk_widget_set_fg_color (list.item.widget, color.red, color.green, color.blue)
+				list.forth
+			end
+		end
+
+	set_background_color (color: EV_COLOR) is
+			-- Assign `color' as new `foreground_color'.
+			-- Redefined because the text is in a gtk_label.
+		local
+			list: ARRAYED_LIST [EV_MENU_ITEM_IMP]
+		do
+--			{EV_BUTTON_IMP} Precursor (color)
+			c_gtk_option_button_set_bg_color (widget, color.red, color.green, color.blue)
+
+			-- Color for the menu.
+			if menu /= Void then
+				c_gtk_widget_set_bg_color (menu.widget, color.red, color.green, color.blue)
+			end
+
+			-- Color for the menu items.
+			if menu_title_widget /= default_pointer then
+				c_gtk_widget_set_bg_color (menu_title_widget, color.red, color.green, color.blue)
+			end
+			from
+				list := menu_items_array
+				list.start
+			until
+				list.after
+			loop
+				c_gtk_widget_set_bg_color (list.item.widget, color.red, color.green, color.blue)
+				list.forth
+			end
+		end
+
 	add_menu (menu_imp: EV_MENU_IMP) is
 			-- Set menu for menu item
 		local
@@ -145,13 +207,21 @@ feature {EV_MENU_ITEM_HOLDER} -- Element change
 			-- Add the menu to the option button.
 			gtk_option_menu_set_menu (widget, menu_imp.widget)
 
+			-- Set the menu colors to the same ones as the option button's.
+			c_gtk_widget_set_fg_color (menu_imp.widget, foreground_color.red, foreground_color.green, foreground_color.blue)
+			c_gtk_widget_set_bg_color (menu_imp.widget, background_color.red, background_color.green, background_color.blue)
+
 			-- Status setting.
 			menu := menu_imp
 			menu_items_array := menu.ev_children
 		end
 	
 	remove_menu (menu_imp: EV_MENU_IMP) is
-			-- Remove menu from option button. 
+			-- Remove menu from option button.
+		local
+			default_colors: EV_DEFAULT_COLORS
+				-- Needed to reset the menu's colors to
+				-- the default colors.
 		do
 			-- Remove the menu_item added for the menu title.
 			gtk_container_remove (GTK_CONTAINER (menu_imp.widget), menu_title_widget)
@@ -159,16 +229,17 @@ feature {EV_MENU_ITEM_HOLDER} -- Element change
 			-- Remove the gtk_menu from the gtk_option_menu.
 			gtk_option_menu_remove_menu (widget)
 
+			-- Set the menu colors to the default colors. We set it to those colors
+			-- because for now, the user can not set colors on EV_MENU.
+			c_gtk_widget_set_fg_color (menu_imp.widget, default_colors.default_foreground_color.red,
+				default_colors.default_foreground_color.green, default_colors.default_foreground_color.blue)
+			c_gtk_widget_set_bg_color (menu_imp.widget, default_colors.default_background_color.red,
+				default_colors.default_background_color.green, default_colors.default_background_color.blue)
+
 			-- Status setting.
 			menu := Void
 			menu_items_array := Void
 			menu_title_widget := default_pointer
-		end
-
-	set_foreground_color (color: EV_COLOR) is
-			-- Make `color' the new `foreground_color'.
-		do
-			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
 		end
 
 feature -- Event - command association

@@ -67,6 +67,14 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
+	cursor: EV_CURSOR is
+			-- Cursor used currently on the widget.
+		do
+			check
+				not_yet_implemented: False
+			end
+		end
+
 	background_color: EV_COLOR is
 			-- Color used for the background of the widget
 		local
@@ -248,6 +256,14 @@ feature -- Element change
 					-- the widget is not contained in a box.
 					gtk_object_unref (widget)
 				end
+			end
+		end
+
+	set_cursor (cur: EV_CURSOR) is
+			-- Make `value' the new cursor of the widget
+		do
+			check
+				not_yet_implemented: False
 			end
 		end
 

@@ -540,6 +540,8 @@ void c_gtk_box_set_child_expandable (GtkWidget *box, GtkWidget *child, gint flag
 /* Give the position of a window. */
 EIF_INTEGER c_gtk_window_x (GtkWidget *w);
 EIF_INTEGER c_gtk_window_y (GtkWidget *w);
+EIF_INTEGER c_gtk_absolute_x (GtkWidget *w);
+EIF_INTEGER c_gtk_absolute_y (GtkWidget *w);
 
 /* Information about the window. */
 typedef struct {

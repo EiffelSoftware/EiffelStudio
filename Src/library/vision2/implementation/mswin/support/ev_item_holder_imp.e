@@ -21,10 +21,9 @@ inherit
 feature -- Access
 
 	item: G is
+			-- Item pointed to by `index'.
 		local
-			p: EV_ITEM
 			p_imp: EV_ITEM_IMP
-			index_value: INTEGER
 			aa: ASSIGN_ATTEMPT [G]
 		do
 			p_imp := ev_children.item
@@ -244,6 +243,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/24 17:31:38  brendel
+--| Improved comment. Removed unused local variables.
+--|
 --| Revision 1.21  2000/02/24 21:32:00  rogers
 --| Fixed bug in put_front which would cause the cursor to point to the first item, after the insertion, if the original position was off at the start, i.e. index 0.
 --|

@@ -610,27 +610,11 @@ feature {NONE} -- Implementation
 			create Result.make (0)
 			Result.append (Tab)
 
-			-- EIF_TYPE_ID type_id;
-
-			Result.append (Eif_type_id)
-			Result.append (Space)
-			Result.append ("type_id")
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
 			-- EIF_OBJECT eif_object;
 
 			Result.append (Eif_object)
 			Result.append (Space)
-			Result.append ("eif_object")
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- EIF_REFERENCE_FUNCTION item;
-
-			Result.append (Eif_reference_function)
-			Result.append (Space)
-			Result.append ("item")
+			Result.append (Eif_object_variable)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
@@ -649,7 +633,7 @@ feature {NONE} -- Implementation
 
 			-- eif_object = eif_protect (eif_ref);
 
-			Result.append ("eif_object")
+			Result.append (Eif_object_variable)
 			Result.append (Space)
 			Result.append (Equal_sign)
 			Result.append (Space)
@@ -657,46 +641,6 @@ feature {NONE} -- Implementation
 			Result.append (Space)
 			Result.append (Open_parenthesis)
 			Result.append ("eif_ref")
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- type_id = eif_type_id ("CELL [element_eiffel_name]");
-			--                          value of ^
-
-			Result.append ("type_id")
-			Result.append (Space)
-			Result.append (Equal_sign)
-			Result.append (Space)
-			Result.append (Eif_type_id_function_name)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Double_quote)
-			Result.append (Cell_type)
-			Result.append (Space)
-			Result.append (Open_bracket)
-			Result.append (element_eiffel_type)
-			Result.append (Close_bracket)
-			Result.append (Double_quote)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- item = eif_reference_function ("item", type_id);
-
-			Result.append ("item")
-			Result.append (Space)
-			Result.append (Equal_sign)
-			Result.append (Space)
-			Result.append (Eif_reference_function_name)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Double_quote)
-			Result.append ("item")
-			Result.append (Double_quote)
-			Result.append (Comma)
-			Result.append (Space)
-			Result.append ("type_id")
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
@@ -765,14 +709,18 @@ feature {NONE} -- Implementation
 			Result.append (element_ec_function)
 			Result.append (Space)
 			Result.append (Open_parenthesis)
-			Result.append ("item")
-			Result.append (Space)
-			Result.append (Open_parenthesis)
+			Result.append (Eif_field)
+			Result.append (Space_open_parenthesis)
 			Result.append (Eif_access)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append ("eif_object")
+			Result.append (Space_open_parenthesis)
+			Result.append (Eif_object_variable)
 			Result.append (Close_parenthesis)
+			Result.append (Comma_space)
+			Result.append (Double_quote)
+			Result.append ("item")
+			Result.append (Double_quote)
+			Result.append (Comma_space)
+			Result.append (Eif_reference)
 			Result.append (Close_parenthesis)
 			if element_writable then
 				Result.append (Comma_space)
@@ -787,7 +735,7 @@ feature {NONE} -- Implementation
 			Result.append (Eif_wean)
 			Result.append (Space)
 			Result.append (Open_parenthesis)
-			Result.append ("eif_object")
+			Result.append (Eif_object_variable)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
@@ -815,14 +763,6 @@ feature {NONE} -- Implementation
 			create Result.make (0)
 			Result.append (Tab)
 
-			-- EIF_TYPE_ID type_id;
-
-			Result.append (Eif_type_id)
-			Result.append (Space)
-			Result.append ("type_id")
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
 			-- EIF_OBJECT eif_object;
 
 			Result.append (Eif_object)
@@ -831,18 +771,9 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- EIF_POINTER_FUNCTION item;
-			-- 
-			Result.append (Eif_pointer_function)
-			Result.append (Space)
-			Result.append ("item")
-			Result.append (Semicolon)
-			Result.append (New_line)
-			Result.append (New_line_tab)
-
 			-- eif_object = eif_protect (eif_ref);
 
-			Result.append ("eif_object")
+			Result.append (Eif_object_variable)
 			Result.append (Space)
 			Result.append (Equal_sign)
 			Result.append (Space)
@@ -854,42 +785,7 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- type_id = eif_type_id (`eiffel_type_name');
-
-			Result.append ("type_id")
-			Result.append (Space)
-			Result.append (Equal_sign)
-			Result.append (Space)
-			Result.append (Eif_type_id_function_name)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Double_quote)
-			Result.append (eiffel_type_name)
-			Result.append (Double_quote)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- item = eif_pointer_function ("item", type_id);
-
-			Result.append ("item")
-			Result.append (Space)
-			Result.append (Equal_sign)
-			Result.append (Space)
-			Result.append (Eif_pointer_function_name)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Double_quote)
-			Result.append ("item")
-			Result.append (Double_quote)
-			Result.append (Comma)
-			Result.append (Space)
-			Result.append ("type_id")
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-			Result.append (New_line_tab)
-
-			-- return (`c_type_name') item (eif_wean (eif_object));
+			-- return (`c_type_name') eif_field (eif_access (eif_object), "item", EIF_POINTER);
 
 			Result.append (Return)
 			Result.append (Space)
@@ -897,14 +793,18 @@ feature {NONE} -- Implementation
 			Result.append (c_type_name)
 			Result.append (Close_parenthesis)
 			Result.append (Space)
-			Result.append ("item")
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Eif_wean)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append ("eif_object")
+			Result.append (Eif_field)
+			Result.append (Space_open_parenthesis)
+			Result.append (Eif_access)
+			Result.append (Space_open_parenthesis)
+			Result.append (Eif_object_variable)
 			Result.append (Close_parenthesis)
+			Result.append (Comma_space)
+			Result.append (Double_quote)
+			Result.append ("item")
+			Result.append (Double_quote)
+			Result.append (Comma_space)
+			Result.append (Eif_pointer)
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 		ensure

@@ -10,9 +10,6 @@ inherit
 	ANY
 
 	MARSHAL_BY_REF_OBJECT
-		undefine
-			to_string, equals, finalize, get_hash_code
-		end
 
 feature -- Access
 

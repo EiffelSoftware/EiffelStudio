@@ -18,21 +18,21 @@ create {NONE}
 
 feature -- Equality
 
-	frozen deep_equal (target, source: SYSTEM_OBJECT): BOOLEAN is
-			-- Copy `source' onto `target'.
+	frozen deep_equal (a_context, target, source: SYSTEM_OBJECT): BOOLEAN is
+			-- Compare `target' and `source' in context of `a_context'
 		external
-			"IL static signature (System.Object, System.Object): System.Boolean use ISE.Runtime.RUN_TIME"
+			"IL static signature (System.Object, System.Object, System.Object): System.Boolean use ISE.Runtime.RUN_TIME"
 		alias
 			"deep_equal"
 		end
 
-	frozen standard_equal (target, source: SYSTEM_OBJECT): BOOLEAN is
+	frozen standard_is_equal (target, source: SYSTEM_OBJECT): BOOLEAN is
 			-- Is `target' attached to an object of the same type
 			-- as `source', and field-by-field identical to it?
 		external
 			"IL static signature (System.Object, System.Object): System.Boolean use ISE.Runtime.RUN_TIME"
 		alias
-			"standard_equal"
+			"standard_is_equal"
 		end
 
 feature -- Duplication

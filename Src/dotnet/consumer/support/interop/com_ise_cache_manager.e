@@ -228,10 +228,10 @@ feature {NONE} -- Implementation
 				l_private_bin_path := feature {SYSTEM_STRING}.concat_string_string (
 					";" , l_private_bin_path)
 				l_private_bin_path := feature {SYSTEM_STRING}.concat_string_string (
-					feature {PATH}.get_directory_name (get_type.assembly.location) ,
+					feature {PATH}.get_directory_name (to_dotnet.get_type.assembly.location) ,
 					l_private_bin_path)
 			else
-				l_private_bin_path := feature {PATH}.get_directory_name (get_type.assembly.location)
+				l_private_bin_path := feature {PATH}.get_directory_name (to_dotnet.get_type.assembly.location)
 			end
 			create Result.make
 				-- `application_base' needs to be setup to the magic "file://" so
@@ -271,7 +271,7 @@ feature {NONE} -- Implementation
 			a_app_domain_not_void: a_app_domain /= Void
 		do
 			Result ?= a_app_domain.create_instance_from_and_unwrap (
-				get_type.assembly.location,
+				to_dotnet.get_type.assembly.location,
 				"ISE.Cache.MARSHAL_ISE_CACHE_MANAGER")
 			
 			check

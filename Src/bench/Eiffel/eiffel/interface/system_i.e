@@ -239,6 +239,10 @@ feature -- Properties
 			-- New classes in the system
 			-- Used during the time check
 
+	removed_classes: SEARCH_TABLE [CLASS_C]
+			-- List of removed classes from system. Filled during degree 6, processed
+			-- after degree 5
+
 	moved: BOOLEAN
 			-- Has the system potentially moved in terms of classes ?
 			-- [Each time a new class is inserted/removed in/from the system
@@ -562,7 +566,10 @@ end
 		require
 			 good_argument: a_class /= Void
 		do
-			internal_remove_class (a_class, 0)
+			if removed_classes = Void then
+				create removed_classes.make (10)
+			end
+			removed_classes.put (a_class)
 		end
 
 	class_of_id (id: INTEGER): CLASS_C is
@@ -803,7 +810,7 @@ end
 						-- before the recompilation
 				end
 				new_class := False
-
+				
 				if
 					not Compilation_modes.is_precompiling and
 					not Lace.compile_all_classes
@@ -817,6 +824,9 @@ end
 						-- syntactical clients
 					remove_useless_classes
 				end
+
+					-- Let's get rid of the classes that have been really removed.
+				process_removed_classes
 
 debug ("ACTIVITY")
 	io.error.putstring ("%Tmoved = ")
@@ -1049,8 +1059,24 @@ end
 			Error_handler.checksum
 		end
 
+	process_removed_classes is
+			-- Remove classes that disappeared after a recompilation.
+		do
+			if removed_classes /= Void then
+				from
+					removed_classes.start
+				until
+					removed_classes.after
+				loop
+					internal_remove_class (removed_classes.item_for_iteration, 0)
+					removed_classes.forth
+				end
+				removed_classes.wipe_out
+			end
+		end
+		
 	remove_useless_classes is
-			-- Remove useless classes.
+			-- Add useless classes to `removed_classes'.
 		local
 			a_class: CLASS_C
 			class_array: ARRAY [CLASS_C]

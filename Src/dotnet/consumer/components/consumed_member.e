@@ -16,6 +16,7 @@ inherit
 			set_is_public
 		end
 
+
 feature {NONE} -- Initialization
 
 	make (en, dn: STRING; pub: BOOLEAN; a_type: CONSUMED_REFERENCED_TYPE) is
@@ -109,10 +110,11 @@ feature -- Settings
 			is_artificially_added_set: is_artificially_added = val
 		end
 		
-feature {NONE} -- Internal
+feature {CONSUMED_MEMBER} -- Internal
 
 	internal_flags: INTEGER
 			-- Store status of current feature.
+
 
 invariant
 	non_void_dotnet_name: dotnet_name /= Void

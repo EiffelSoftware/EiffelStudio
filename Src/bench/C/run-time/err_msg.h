@@ -10,7 +10,19 @@
 #include <stdio.h>
 #define print_err_msg fprintf
 #else
-extern int print_err_msg();
+#ifdef __WINDOWS_386__
+extern int print_err_msg(FILE *err, char *StrFmt, ...);
+#else
+#include <stdio.h>
+#include <stdarg.h>
+int print_err_msg (FILE *err, char *StrFmt, ...)
+{
+	va_list ap;
+
+	va_start (ap, StrFmt);
+	return vprintf (StrFmt, ap);
+}
+#endif
 #endif
 
 #endif

@@ -6,11 +6,14 @@ root
 
 default
 	assertion (require);
+	console_application (yes);
 	--debug (all)
 
 cluster
 
-	converter:   ".";
+	converter:   "$EIFFEL_SRC\eiffel\extra\converter";
+
+		-- EiffelBase
 	kernel:			"$EIFFEL4\library\base\kernel";
 	support:		"$EIFFEL4\library\base\support";
 	access:			"$EIFFEL4\library\base\structures\access";

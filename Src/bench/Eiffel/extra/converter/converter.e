@@ -15,15 +15,15 @@ feature {NONE} -- Initialization
 
 	make (arguments: ARRAY [STRING]) is
 			-- Converts input file to a `Makefile'.
-			-- Arguments: <input_file>.
+			-- Arguments: <input_file> [<output_file>].
 			-- The input_file is the name of file to be converted.
 		local
 			i_file_name: FILE_NAME
 		do
-			if arguments.count /= 2 then
+			if not (arguments.count = 2 or else arguments.count = 3) then
 				print ("Incorrect usage: ")
 				print (arguments.item (0));
-				print (" <input file>");
+				print (" <input file> [<output_file>]");
 				error := True
 			else
 				!! i_file_name.make_from_string (arguments.item (1));
@@ -43,6 +43,10 @@ feature {NONE} -- Initialization
 					print (i_file_name);
 					error := True
 				end
+
+				if arguments.count = 3 then
+					output_file_name := clone (arguments.item (2))
+				end
 			end;
 			if not error then
 				process_configure_file;
@@ -50,10 +54,6 @@ feature {NONE} -- Initialization
 					convert_file
 				end
 			end;
-			if error then
-				io.new_line;
-				io.read_line
-			end		
 		end
 
 feature {NONE} -- Access
@@ -80,12 +80,19 @@ feature {NONE} -- Access
 	configure_list: LINKED_LIST [CONFIGURE_VALUE]
 			-- List of configure value found in `configure_file'
 
+	output_file_name: STRING
+			-- Specified output name
+
 	makefile: RAW_FILE is
 			-- Makefile file
 		local	
 			f_name: FILE_NAME
 		once
-			!! f_name.make_from_string ("makefile");
+			if output_file_name /= Void then
+				!! f_name.make_from_string (output_file_name);
+			else
+				!! f_name.make_from_string ("makefile");
+			end
 			!! Result.make (f_name)
 		end
 

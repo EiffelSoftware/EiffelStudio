@@ -197,6 +197,15 @@ feature -- Status setting
 			--| different colors so there is no postcondition.
 		end
 
+	center_pointer is
+			-- Position screen pointer over center of `Current'.
+		do
+			(create {EV_SCREEN}).set_pointer_position (
+				(screen_x + (width/2)).truncated_to_integer,
+				(screen_y + (height/2)).truncated_to_integer
+			)
+		end
+
 feature -- Element change
 
 	set_pointer_style (a_cursor: like pointer_style) is
@@ -500,7 +509,8 @@ feature {EV_ANY} -- Contract support
 				asq ?= t.item_for_iteration
 				if asq /= Void then
 					asq.force_extend (
-						~print (t.key_for_iteration + " fired %N")
+						~print (generating_type + " "
+							+ t.key_for_iteration + " fired %N")
 					)
 				end
 				t.forth
@@ -797,6 +807,10 @@ end -- class EV_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.78  2000/04/25 00:48:23  oconnor
+--| added center_pointer is
+--| Position screen pointer over center of `Current'.
+--|
 --| Revision 1.77  2000/04/21 21:13:24  oconnor
 --| added create_test_actions
 --|

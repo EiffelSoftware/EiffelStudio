@@ -25,19 +25,9 @@ feature -- Access
 	do_test (wgt: EV_WIDGET) is
 		local
 			s: EV_SCREEN
-			x, y: INTEGER
-			w, h: INTEGER
 		do
 			create s
-			x := wgt.screen_x
-			y := wgt.screen_y
-			w := wgt.width
-			h := wgt.height
-			
-			s.set_pointer_position (
-				(x+(w/2)).truncated_to_integer,
-				(y+(h/2)).truncated_to_integer
-			)
+			wgt.center_pointer
 			process_events
 			sleep (1000)
 			process_events

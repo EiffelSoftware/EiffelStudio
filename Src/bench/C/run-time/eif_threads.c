@@ -11,13 +11,12 @@
 
 */
 
-#ifdef EIF_THREADS
-
 #include "eiffel.h"
 #include "eif_threads.h"
 #include "eif_globals.h"
 #include "except.h"				/* for panic () */
 
+#ifdef EIF_THREADS
 
 rt_public void eif_init_root_thread(void);
 rt_public void eif_register_thread(void);

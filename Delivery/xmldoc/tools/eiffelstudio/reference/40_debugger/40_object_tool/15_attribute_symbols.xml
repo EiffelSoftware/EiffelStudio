@@ -16,12 +16,12 @@
 			<image>
 				<height>16</height>
 				<width>16</width>
-				<url>../../../../../images/eiffelstudio/icons/icon_attribute_symbol.gif</url>
+				<url>/images/eiffelstudio/icons/icon_attribute_symbol.gif</url>
 			</image> ) and its once routines (grouped under the `once routines' folder
 			<image>
 				<height>16</height>
 				<width>16</width>
-				<url>../../../../../images/eiffelstudio/icons/icon_once_symbol.gif</url>
+				<url>/images/eiffelstudio/icons/icon_once_symbol.gif</url>
 			</image> ).
 		</paragraph>
 		<paragraph>All follow the following symbol scheme to describe the kind of each item:</paragraph>
@@ -30,18 +30,18 @@
 				<image>
 					<height>16</height>
 					<width>16</width>
-					<url>../../../../../images/eiffelstudio/icons/icon_immediate_value.gif</url>
+					<url>/images/eiffelstudio/icons/icon_immediate_value.gif</url>
 				</image> An attribute of a basic type, such as 
 				<code>
 					<class_name>
 						<label>INTEGER</label>
-						<url>/libraries/base/reference/kernel/integer.xml</url>
+						<url>/libraries/base/reference/kernel/INTEGER_chart.xml</url>
 					</class_name>
 				</code>, 
 				<code>
 					<class_name>
 						<label>DOUBLE</label>
-						<url>/libraries/base/reference/kernel/double.xml</url>
+						<url>/libraries/base/reference/kernel/DOUBLE_chart.xml</url>
 					</class_name>
 				</code>,...
 			</item>
@@ -49,21 +49,21 @@
 				<image>
 					<height>16</height>
 					<width>16</width>
-					<url>../../../../../images/eiffelstudio/icons/icon_object_symbol.gif</url>
+					<url>/images/eiffelstudio/icons/icon_object_symbol.gif</url>
 				</image> An attribute that is a reference to anobject
 			</item>
 			<item>
 				<image>
 					<height>16</height>
 					<width>16</width>
-					<url>../../../../../images/eiffelstudio/icons/icon_void_pointer.gif</url>
+					<url>/images/eiffelstudio/icons/icon_void_pointer.gif</url>
 				</image> A Void reference
 			</item>
 			<item>
 				<image>
 					<height>16</height>
 					<width>16</width>
-					<url>../../../../../images/eiffelstudio/icons/icon_expanded_object.gif</url>
+					<url>/images/eiffelstudio/icons/icon_expanded_object.gif</url>
 				</image> An object that is expanded
 			</item>
 		</list>

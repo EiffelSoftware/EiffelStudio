@@ -33,7 +33,7 @@ cluster
 	tree (base):               "$/structures/tree";
 
 	--mel: 			"$EIFFEL4/library/mel";
-	mel:             "/ankara2/samik/src/mel";
+	mel:             "/boston/samik/src/mel";
 	mel_callback_structs (mel):   "$/callback_structs";
 	mel_constants (mel):          "$/constants";
 	mel_events (mel):             "$/events";
@@ -42,17 +42,26 @@ cluster
 	mel_implementation (mel):     "$/implementation";
 	mel_kernel (mel):             "$/kernel";
 	mel_resources (mel):          "$/resources";
-	mel_widgets (mel):            "$/widgets";
-            
+	mel_widgets (mel):            "$/widgets"
+         	default
+			assertion(no);
+		end ;  
 
 --	vision:			 "$EIFFEL4/library/vision/";
-	vision:             "/ankara2/samik/src/vision";
+	vision:             "/boston/samik/src/vision";
 	vision_figures (vision):             "$/figures";
-	vision_imp_motif (vision):           "$/implement/motif";
+	vision_imp_motif (vision):           "$/implement/motif"
+         	default
+			assertion(no);
+		end ;  
     	vision_imp_toolkit (vision):         "$/implement/toolkit";
     	vision_context_data (vision):        "$/oui/context_data";
     	vision_kernel (vision):              "$/oui/kernel";
-    	vision_widgets (vision):             "$/oui/widgets";
+    	vision_widgets (vision):             "$/oui/widgets"
+         	default
+			assertion(no);
+		end ;  
+
     	vision_tools (vision):               "$/tools";
     	vision_obsolete_motif (vision):      "$/obsolete/motif";
     	vision_obsolete_oui (vision):        "$/obsolete/oui";
@@ -68,7 +77,7 @@ cluster
 --	motif_widgets:	"$EV3/implement/motif/widgets";
 --	figures: 		"$EV3/figures";
 
-	build:				"/ankara2/samik/src/build";
+	build:				"/boston/samik/src/build";
     
 	build_merger (build):		"$/merger";
 	build_shared (build):		"$/Shared";
@@ -76,10 +85,7 @@ cluster
 	build_catalog_commands (build):	"$/Catalog/Commands";
 	build_utility (build):		"$/Utility";
 	build_constants (build):	"$/Constants";
-	build_icon (build):		"$/Icon"
-		default
-			assertion (all)
-		end;
+	build_icon (build):		"$/Icon";
 
 	build_structures (build):	"$/Structures";
 	build_windows (build):		"$/Windows";
@@ -105,7 +111,11 @@ cluster
 	build_context_editor (build):	"$/Context/Editor";
 	build_context_catalog (build):	"$/Context/Catalog";
 	build_context_widgets (build):	"$/Context/Widgets";
-	build_context_new_widgets (build):	"$/Context/NewWidgets";
+	build_context_new_widgets (build):	"$/Context/NewWidgets"
+		default
+			assertion (no)
+		end;
+
 	build_context_tree (build):	"$/Context/Tree";
 
 
@@ -131,7 +141,7 @@ cluster
 	build_command_stones (build):		"$/Command/Stones";
 	build_command_instance (build):		"$/Command/Instance";
 
-	eiffel_special_ast (build):	"$/eiffel/special_ast";
+	eiffel_special_ast (build):	"$/eiffel/AST/special_ast";
 
 	-- Common
 
@@ -189,7 +199,7 @@ end;
 
 
 -- Patches from case: syntax_error, compiler_exporter
-	case_patches:	"/ankara2/samik/src/case/eiffel/patches";
+	case_patches:	"/boston/samik/src/case/eiffel/patches";
   --              exclude
     --                    "syntax_error.e" 
 	--        end;
@@ -206,7 +216,10 @@ end;
 
         common_parser (common):              "$/parser";
 
-        common_flat_short (common_parser):   "$/flat_short";
+        common_flat_short (common_parser):   "$/flat_short"
+		default
+			assertion (no)
+		end;
 
 	liman (build):				"$/limand";
 
@@ -218,18 +231,18 @@ end;
 --	liman_client(liman):		"$/client";--unix
 
 external
---	include_path: 	"/ankara2/samik/src/RT.$(PLATFORM)/parsing/shared",
+--	include_path: 	"/boston/samik/src/RT.$(PLATFORM)/parsing/shared",
 
-	include_path: 	"\$(RUNTIME)/parsing/shared",
+	include_path: 	"\$(BENCH)/C/parsing/shared",
 			"\$(EIFFEL4)/library/mel/Clib";
 
 
         object:
 		"$(EIFFEL4)/library/mel/spec/$(PLATFORM)/lib/libMel.a", 
-	    	"$(RUNTIME)/parsing/eiffel/libweiffel.a",
-	    	"$(RUNTIME)/parsing/shared/libparsing.a",
-	    	"$(RUNTIME)/parsing/lace/liblace.a",
-	    	"$(RUNTIME)/platform/libplatform.a",
+	    	"$(BENCH)/C/parsing/eiffel/libweiffel.a",
+	    	"$(BENCH)/C/parsing/shared/libparsing.a",
+	    	"$(BENCH)/C/parsing/lace/liblace.a",
+	    	"$(BENCH)/C/platform/libplatform.a",
 --	    	"/ankara2/samik/src/RT.$(PLATFORM)/parsing/eiffel/libeiffel.a",
 --	    	"/ankara2/samik/src/RT.$(PLATFORM)/parsing/shared/libparsing.a",
 --	    	"/ankara2/samik/src/RT.$(PLATFORM)/parsing/lace/liblace.a",

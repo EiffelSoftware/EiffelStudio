@@ -21,7 +21,7 @@ inherit
 create
 	default_create
 
-feature {EV_FONT_IMP} -- Basic operations
+feature {EV_FONT_IMP, EV_ENVIRONMENT_IMP} -- Basic operations
 	
 	is_font_face_supported (a_face_name: STRING): BOOLEAN is
 			-- Is `a_font_face' supported on the current system?
@@ -44,6 +44,8 @@ feature {EV_FONT_IMP} -- Basic operations
 		do
 			if internal_font_faces = Void then
 				create internal_font_faces.make (20)
+				create text_metrics.make (20)
+				create log_fonts.make (20)
 				internal_font_faces.compare_objects
 			
 					-- Enumerate installed fonts
@@ -55,6 +57,16 @@ feature {EV_FONT_IMP} -- Basic operations
 
 			Result := internal_font_faces
 		end
+		
+	text_metrics: HASH_TABLE [WEL_TEXT_METRIC, STRING]
+			-- Text metrics found on system, accessible by face name.
+			-- Any metrics that share the same face name will not be accessible,
+			-- only the first found.
+			
+	log_fonts: HASH_TABLE [WEL_LOG_FONT, STRING]
+			-- Log fonts found on system accessible by face name.
+			-- Any metrics that share the same face name will not be accessible,
+			-- only the first found.
 
 feature {NONE} -- Basic operations
 
@@ -72,10 +84,12 @@ feature {NONE} -- Basic operations
 			if not internal_font_faces.has (face_found) then
 				internal_font_faces.extend (face_found)
 			end
+			text_metrics.put (tm, face_found)
+			log_fonts.put (elf.log_font, face_found)
 		end
 
 	internal_font_faces: ARRAYED_LIST [STRING]
-			-- Font faces found on the current system.
+			-- Font faces found on the current system.		
 
 end -- class EV_WEL_FONT_ENUMERATOR_IMP
 

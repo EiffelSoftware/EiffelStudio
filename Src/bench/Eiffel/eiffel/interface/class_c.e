@@ -51,9 +51,12 @@ feature
 			Result := e_class.lace_class
 		end;
 
-	obsolete_message: STRING;
+	obsolete_message: STRING is
 			-- Obsolete message
 			-- (Void if Current is not obsolete)
+		do
+			Result := e_class.obsolete_message
+		end;
 
 	parents: FIXED_LIST [CL_TYPE_A] is
 			-- Parent classes
@@ -194,7 +197,7 @@ feature
 	is_obsolete: BOOLEAN is
 			-- Is the class obsolete ?
 		do
-			Result := obsolete_message /= Void
+			Result := e_class.is_obsolete
 		end;
 
 	changed: BOOLEAN is
@@ -1519,16 +1522,17 @@ feature -- Class initialization
 			changed_generics: BOOLEAN
 			changed_expanded: BOOLEAN;
 			pars: like parents;
-			gens: like generics
+			gens: like generics;
+			obs_msg: like obsolete_message
 		do
 				-- Check if obsolete clause was present.
 				-- (Void if none was present)
 			if ast.obsolete_message /= Void then
-				obsolete_message := ast.obsolete_message.value;
+				obs_msg := ast.obsolete_message.value;
 			else
-				obsolete_message := Void
+				obs_msg := Void
 			end;
-
+			e_class.set_obsolete_message (obs_msg);
 			old_parents := parents;
 
 			if old_parents /= Void then
@@ -2348,7 +2352,7 @@ feature -- Supplier checking
 			then
 				!!vd27;
 				vd27.set_creation_routine (system_creation);
-				vd27.set_root_class (Current);
+				vd27.set_root_class (e_class);
 				Error_handler.insert_error (vd27);
 			end;
 			if (system_creation = Void)
@@ -2356,7 +2360,7 @@ feature -- Supplier checking
 			then
 				!!vd27;
 				vd27.set_creation_routine ("");
-				vd27.set_root_class (Current);
+				vd27.set_root_class (e_class);
 				Error_handler.insert_error (vd27);
 			end;
 			Error_handler.checksum;
@@ -3066,18 +3070,6 @@ feature {NONE} -- External features
 		end;
 
 feature -- PS
-
-	signature: STRING is
-		obsolete "Use `append_signature'"
-		do
-			Result := e_class.signature
-		end;
-
-	append_name (a_clickable: OUTPUT_WINDOW) is
-			-- Append the name ot the current class in `a_clickable'
-		do
-			e_class.append_name (a_clickable)
-		end;
 
 	feature_named (n: STRING): FEATURE_I is
 			-- Feature whose internal name is `n'

@@ -87,7 +87,7 @@ feature
 			-- Exit from the application
 		do
 			xt_destroy_application_context (application_context);
-			c_exit (0)
+			die (0)
 		end;
 
 	font (a_font: FONT): FONT_X is

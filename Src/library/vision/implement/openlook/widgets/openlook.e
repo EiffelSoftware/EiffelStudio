@@ -115,7 +115,7 @@ feature
 			-- Exit from the application
 		do
 			xt_destroy_application_context (application_context);
-			c_exit (0)
+			die (0)
 		end;
 
 	file_sel_d (a_file_sel_dialog: FILE_SEL_D): FILE_SEL_D_O is

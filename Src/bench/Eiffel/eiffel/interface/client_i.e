@@ -28,6 +28,7 @@ feature
 	set_clients (c: like clients) is
 			-- Assign `c' to `clients'.
 		do
+			c.compare_objects;
 			clients := c;
 		end;
 
@@ -98,7 +99,6 @@ feature -- Incrementality
 			loop
 				other_cur := other_clients.cursor;
 				other_clients.start;
-				other_clients.compare_objects
 				other_clients.search (clients.item);
 				Result := not other_clients.after;
 				other_clients.go_to (other_cur);
@@ -127,7 +127,6 @@ feature -- Incrementality
 					i > c or else not Result
 				loop
 					other_clients.start;
-					other_clients.compare_objects
 					other_clients.search (clients.i_th (i));
 					Result := not other_clients.after;
 					i := i + 1;

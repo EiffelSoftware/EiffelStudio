@@ -19,7 +19,6 @@ feature
 			derivations := item (an_id);
 			if derivations /= Void then
 				derivations.start;
-				derivations.compare_objects
 				derivations.search (a_type);
 				if not derivations.after then
 					Result := True
@@ -41,6 +40,7 @@ end;
 			derivations := item (an_id);
 			if derivations = Void then
 				!!derivations.make;
+				derivations.compare_objects
 				put (derivations, an_id);
 			end;
 			derivations.put_front (a_type);

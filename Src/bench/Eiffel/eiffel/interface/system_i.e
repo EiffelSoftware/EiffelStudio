@@ -363,6 +363,7 @@ feature
 				-- Routine table controler creation
 			!!history_control.make;
 			!!instantiator.make;
+			instantiator.compare_objects;
 				-- Type set creation
 			!!type_set.make (100);
 				-- External table creation

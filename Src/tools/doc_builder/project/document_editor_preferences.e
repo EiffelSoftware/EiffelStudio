@@ -40,7 +40,9 @@ feature -- Commands
 			l_dialog: EV_FONT_DIALOG	
 		do
 			create l_dialog.make_with_title ("Choose Font")
-			l_dialog.set_font (font)
+			if font /= Void then				
+				l_dialog.set_font (font)	
+			end
 			l_dialog.show_modal_to_window (editor.parent_window)
 			if l_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_ok) then
 				font := l_dialog.font

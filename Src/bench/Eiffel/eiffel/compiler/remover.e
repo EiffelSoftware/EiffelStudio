@@ -87,23 +87,30 @@ feature {NONE}
 				depend_list.after
 			loop
 				depend_unit := depend_list.item
-				if not depend_unit.is_special then
 DEBUG ("DEAD_CODE")
-	print_dep (depend_unit)
-end
-					body_id := body_index_table.item (depend_unit.body_index)
-					if not is_treated (body_id.id, depend_unit.rout_id) then
-						mark_treated (body_id.id, depend_unit.rout_id)
-						control.extend (depend_unit)
-					end
-DEBUG ("DEAD_CODE")
-	if is_treated (body_id.id, depend_unit.rout_id) then
-		io.putstring ("previously treated%N")
-	end
 	if depend_unit.is_special then
 		io.putstring ("special%N")
 	end
 end
+				if not depend_unit.is_special then
+					body_id := body_index_table.item (depend_unit.body_index)
+DEBUG ("DEAD_CODE")
+	if is_treated (body_id.id, depend_unit.rout_id) then
+		io.putstring ("previously treated%N")
+	else
+		print_dep (depend_unit)
+	end
+end
+					if not is_treated (body_id.id, depend_unit.rout_id) then
+						mark_treated (body_id.id, depend_unit.rout_id)
+						-- we mark dead because if it was already alive and not
+						-- treated then we are in the case of a double inheritance
+						-- with one redefine, one rename (cf the doc I MAY write 
+						-- about it)
+						mark_dead (body_id.id)
+						control.extend (depend_unit)
+					end
+
 				end
 				depend_list.forth
 			end
@@ -145,6 +152,7 @@ feature -- for debug purpose
 		do
 			body_id := body_index_table.item (dep.body_index)
 			a_class := dep.id.associated_class
+			io.putstring (a_class.feature_table.feature_of_body_id (body_id).feature_name)
 			io.putstring (" (bid: ")
 			io.putint (body_id.id)
 			io.putstring ("; fid: ")

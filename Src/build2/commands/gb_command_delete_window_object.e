@@ -140,7 +140,11 @@ feature -- Basic Operation
 				directory_item.extend (window_object.window_selector_item)
 				directory_item.expand
 			end
-			
+				-- If this is the only window contained, select it.
+			if window_selector.objects.count = 1 then
+				window_object.window_selector_item.enable_select
+				window_selector.change_root_window_to (window_object)
+			end
 				-- Restore all files associated with `window_object' if any.
 			restore_files
 			

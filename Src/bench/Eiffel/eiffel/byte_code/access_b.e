@@ -509,14 +509,22 @@ feature -- IL code generation
 		local
 			cl_type: CL_TYPE_I
 			call_access: CALL_ACCESS_B
+			l_nested: NESTED_B
 		do
 			cl_type ?= real_type (type)
 			Result := is_target_of_call and then cl_type.is_expanded
 			
 			if Result then
 				call_access ?= parent.message
+
+				if call_access = Void then
+						-- Find out if it is a nested call.
+					l_nested ?= parent.message
+					call_access ?= l_nested.target
+				end
+
 					-- We do not load the address if it is an optimized call of the compiler.
-				Result := call_access = Void or else not call_access.is_il_feature_special (cl_type)
+				Result := not call_access.is_il_feature_special (cl_type)
 				if Result and then call_access /= Void and then cl_type.is_basic then
 					if call_access.written_in > 0 then
 							-- Find location of feature to find out if the address needs
@@ -544,7 +552,7 @@ feature -- IL code generation
 			attr: ATTRIBUTE_B
 			loc: LOCAL_B
 			res: RESULT_B
-			target_type: TYPE_I
+			target_type, l_type: TYPE_I
 			cl_type: CL_TYPE_I
 			feat_tbl: FEATURE_TABLE
 			feat: FEATURE_I
@@ -552,6 +560,13 @@ feature -- IL code generation
 			target_type := Context.real_type (type)
 			if target_type.is_reference and then source_type.is_expanded then
 				generate_il_metamorphose (source_type, target_type, True)
+			elseif target_type.is_numeric then
+				if not source_type.same_type (target_type) then
+					l_type := target_type.heaviest (source_type)
+					if l_type = target_type then
+						il_generator.convert_to (l_type)
+					end
+				end
 			end
 
 					-- Generate cast if we have to generate verifiable code

@@ -152,11 +152,17 @@ feature
 			end
 		end
 
-	is_deferred: BOOLEAN;
+	is_deferred: BOOLEAN is
 			-- Is the class deferred ?
+		do
+			Result := e_class.is_deferred
+		end
 
-	is_expanded: BOOLEAN;
+	is_expanded: BOOLEAN is
 			-- Is the class expanded ?
+		do
+			Result := e_class.is_expanded
+		end
 
 	is_separate: BOOLEAN is
 			-- Is the class separate ?
@@ -544,13 +550,6 @@ feature -- Third pass: byte code production and type check
 			changed_body_ids: EXTEND_TABLE [CHANGED_BODY_ID_INFO, BODY_ID];
 			changed_body_id_info: CHANGED_BODY_ID_INFO
 		do
-				-- Verbose
-			io.error.putstring ("Degree 3: class ");
-				temp := clone (class_name)
-				temp.to_upper;
-			io.error.putstring (temp);
-			io.error.new_line;
-
 			from
 				system.changed_body_ids.clear_all
 
@@ -1547,7 +1546,7 @@ feature -- Class initialization
 			parent_list: PARENT_LIST;
 			parent_c: PARENT_C;
 			ve04: VE04;
-			old_is_expanded: BOOLEAN;
+			is_exp, old_is_expanded: BOOLEAN;
 			old_is_separate: BOOLEAN;
 			old_is_deferred: BOOLEAN;
 			a_client: CLASS_C;
@@ -1578,18 +1577,19 @@ feature -- Class initialization
 			end;
 
 				-- Deferred mark
-			old_is_deferred := is_deferred;
-			is_deferred := ast.is_deferred;
+			old_is_deferred := e_class.is_deferred;
+			e_class.set_is_deferred (ast.is_deferred);
 			if (old_is_deferred /= is_deferred and then old_parents /= Void) then
 				pass2_controler.set_deferred_modified (Current);
 				changed_status := True;
 			end;
 
 				-- Expanded mark
-			old_is_expanded := is_expanded;
-			is_expanded := ast.is_expanded;
+			old_is_expanded := e_class.is_expanded;
+			is_exp := ast.is_expanded;
+			e_class.set_is_expanded (is_exp);
 
-			if is_expanded then
+			if is_exp then
 					-- Record the fact that an expanded is in the system
 					-- Extra check must be done after pass2
 				if
@@ -1604,7 +1604,7 @@ feature -- Class initialization
 				end;
 			end;
 
-			if (is_expanded /= old_is_expanded and then old_parents /= Void) then
+			if (is_exp /= old_is_expanded and then old_parents /= Void) then
 					-- The expanded status has been modifed
 					-- (`old_parents' is Void only for the first compilation of the class)
 				pass2_controler.set_expanded_modified (Current);
@@ -2335,7 +2335,7 @@ feature -- Supplier checking
 				Error_handler.insert_error (vsrc1);
 				Error_handler.checksum;
 			end;
-			if is_deferred then
+			if e_class.is_deferred then
 				!!vsrc2;
 				vsrc2.set_class (Current);
 				Error_handler.insert_error (vsrc2);
@@ -2503,18 +2503,6 @@ feature -- Convenience features
 			-- Assign `b' to `changed4'.
 		do
 			changed4 := b;
-		end;
-
-	set_is_deferred (b: BOOLEAN) is
-			-- Assign `b' to `is_deferred'.
-		do
-			is_deferred := b;
-		end;
-
-	set_is_expanded (b: BOOLEAN) is
-			-- Assign `b' to `is_expanded'.
-		do
-			is_expanded := b;
 		end;
 
 	set_has_expanded is
@@ -3006,7 +2994,7 @@ feature -- Cecil
 			cecil_file: INDENT_FILE;
 		do
 			cecil_file := System.cecil_file;
-			if is_expanded then
+			if e_class.is_expanded then
 				Cecil_file.putstring ("SK_EXP + ");
 			end;
 			Cecil_file.putstring ("(uint32) ");
@@ -3019,7 +3007,7 @@ feature -- Cecil
 			no_generics: generics = Void;
 			one_type_only: types.count = 1;
 		do
-			if is_expanded then
+			if e_class.is_expanded then
 				Result := Sk_exp;
 			end;
 			Result := Result + types.first.type_id - 1;

@@ -56,8 +56,7 @@ feature -- Status setting
 			-- Join radio grouping of `a_container' to Current.
 		require
 			a_container_not_void: a_container /= Void
-		do
-			check to_be_implemented: False end
+		deferred
 		end
 
 feature -- Basic operations
@@ -137,6 +136,9 @@ end -- class EV_CONTAINER_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/02/28 23:19:42  brendel
+--| Declared `connect_radio_groups' as deferred.
+--|
 --| Revision 1.11  2000/02/22 18:39:43  oconnor
 --| updated copyright date and formatting
 --|

@@ -389,7 +389,7 @@ feature {NONE} -- Type description
 				i := classes.lower
 				nb := classes.upper
 				j := compiled_classes_count
-				degree_output.put_start_degree ((-1).to_integer_8, j)
+				degree_output.put_start_degree (-1, j)
 			variant
 				nb - i + 1
 			until

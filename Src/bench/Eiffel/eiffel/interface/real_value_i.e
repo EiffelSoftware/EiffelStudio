@@ -64,8 +64,21 @@ feature -- Code generation
 
 	generate (buffer: GENERATION_BUFFER) is
 			-- Generate value in `buffer'.
+		local
+			l_buf: like buffer
+			l_val: STRING
+			l_nb: INTEGER
 		do
-			buffer.putstring (double_value.out)
+			l_buf := buffer
+			l_val := double_value.out
+			l_buf.putstring (l_val)
+			l_nb := l_val.count
+			if
+				l_val.last_index_of ('.', l_nb) = 0 and
+				l_val.last_index_of ('e', l_nb) = 0
+			then
+				l_buf.putchar ('.')
+			end			
 		end
 
 	generate_il is

@@ -1,6 +1,10 @@
 -- Basic classes in a system
 
 class BASIC_SYSTEM_I 
+
+inherit
+
+	shared_code_files
 	
 feature 
 
@@ -345,5 +349,82 @@ feature
         do
             Result := pointer_ref_class.compiled_class.id;
         end; -- pointer_ref_id
+
+	pointer_ref_dtype: INTEGER is
+            -- Id of class POINTER_REF
+        require
+            pointer_ref_class_exists: pointer_ref_class /= Void;
+            compiled: pointer_ref_class.compiled;
+        do
+            Result := pointer_ref_class.compiled_class.types.first.type_id;
+        end; 
+
+	double_ref_dtype: INTEGER is
+            -- Dynamic type_id of class DOUBLE_REF
+        require
+            double_ref_class_exists: double_ref_class /= Void;
+            compiled: double_ref_class.compiled;
+        do
+            Result := double_ref_class.compiled_class.types.first.type_id;
+        end; 
+
+	real_ref_dtype: INTEGER is
+            -- Dynamic type_id of class REAL_REF
+        require
+            real_ref_class_exists: real_ref_class /= Void;
+            compiled: real_ref_class.compiled;
+        do
+            Result := real_ref_class.compiled_class.types.first.type_id;
+        end; 
+
+	integer_ref_dtype: INTEGER is
+            -- Dynamic type_id of class INTEGER_REF
+        require
+            int_ref_class_exists: integer_ref_class /= Void;
+            compiled: integer_ref_class.compiled;
+        do
+            Result := integer_ref_class.compiled_class.types.first.type_id;
+        end; 
+
+	boolean_ref_dtype: INTEGER is
+            -- Dynamic type_id of class BOOLEAN_REF
+        require
+            bool_ref_class_exists: boolean_ref_class /= Void;
+            compiled: boolean_ref_class.compiled;
+        do
+            Result := boolean_ref_class.compiled_class.types.first.type_id;
+        end; 
+
+	character_ref_dtype: INTEGER is
+            -- Dynamic type_id of class CHARACTER_REF
+        require
+            char_ref_class_exists: character_ref_class /= Void;
+            compiled: character_ref_class.compiled;
+        do
+            Result := character_ref_class.compiled_class.types.first.type_id;
+        end; 
+
+	generate_dynamic_ref_type is
+			-- Generate dynaminc reference types of basic classes.
+		do
+			Plug_file.putstring ("int int_ref_dtype = ");
+			Plug_file.putint (integer_ref_dtype - 1);
+			Plug_file.putstring (";%N");	
+			Plug_file.putstring ("int bool_ref_dtype = ");
+			Plug_file.putint (boolean_ref_dtype - 1);
+			Plug_file.putstring (";%N");	
+			Plug_file.putstring ("int real_ref_dtype = ");
+			Plug_file.putint (real_ref_dtype - 1);
+			Plug_file.putstring (";%N");	
+			Plug_file.putstring ("int char_ref_dtype = ");
+			Plug_file.putint (character_ref_dtype - 1);
+			Plug_file.putstring (";%N");	
+			Plug_file.putstring ("int doub_ref_dtype = ");
+			Plug_file.putint (double_ref_dtype - 1);
+			Plug_file.putstring (";%N");	
+			Plug_file.putstring ("int point_ref_dtype = ");
+			Plug_file.putint (pointer_ref_dtype - 1);
+			Plug_file.putstring (";%N");	
+		end;
 
 end -- class BASIC_SYSTEM_I

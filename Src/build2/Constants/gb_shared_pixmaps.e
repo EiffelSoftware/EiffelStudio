@@ -221,14 +221,25 @@ feature -- Reading
 
 			if not retried then
 					-- Initialize the pathname & load the file
-				if Eiffel_platform.as_lower.is_equal ("windows") then
-					create full_path.make_from_string (Icon_path)
+
+					-- Note that if we have launched from
+					-- VisualStudio, then we look for the pixmaps
+					-- relative to the current directory, which is the location
+					-- of build.exe
+				if is_visual_studio_wizard then
+					create full_path.make_from_string (".\bitmaps\ico")
 					full_path.set_file_name (fn)
 					full_path.add_extension ("ico")
 				else
-					create full_path.make_from_string (Bitmap_path)
-					full_path.set_file_name (fn)
-					full_path.add_extension (Pixmap_suffix)
+					if Eiffel_platform.as_lower.is_equal ("windows") then
+						create full_path.make_from_string (Icon_path)
+						full_path.set_file_name (fn)
+						full_path.add_extension ("ico")
+					else
+						create full_path.make_from_string (Bitmap_path)
+						full_path.set_file_name (fn)
+						full_path.add_extension (Pixmap_suffix)
+					end
 				end
 				Result.set_with_named_file (full_path)
 			else
@@ -241,6 +252,21 @@ feature -- Reading
 		rescue
 			retried := True
 			retry
+		end
+		
+	is_visual_studio_wizard: BOOLEAN is
+			-- Has Build been launched from
+			-- VisualStudio in Wizard mode?
+			-- This is a Once, as it will
+			-- never change during the execution of
+			-- the system.
+		local
+			shared_system_status: GB_SHARED_SYSTEM_STATUS
+		once
+			create shared_system_status
+			if shared_system_status.system_status.is_wizard_system then
+				Result := True
+			end
 		end
 
 feature {NONE} -- Update

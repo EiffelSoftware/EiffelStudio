@@ -84,6 +84,7 @@ default
 	exception_trace (yes)
 	inlining (no)
 
+
 cluster
 	all base:		"$EIFFEL_SRC\library\base"
 		exclude
@@ -216,6 +217,10 @@ cluster
 	new_tty:		"$EIFFEL_SRC\Eiffel\interface\new_tty"
 
 	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
+
+	all xml_deserializer:		"$EIFFEL_SRC\Eiffel\library\xml_deserializer"
+
+	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
 
 external
 

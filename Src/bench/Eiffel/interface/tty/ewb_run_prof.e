@@ -47,7 +47,8 @@ feature {NONE} -- Execute
 			else
 				st.add_string ("No active queries");
 				st.add_new_line;
-				st.add_string ("You should first manipulate the subqueries%N")
+				st.add_string ("You should first manipulate the subqueries")
+				st.add_new_line;
 			end;
 			output_window.put_string (st.image);
 			output_window.new_line
@@ -93,7 +94,11 @@ feature {NONE} -- Implementation
 	print_active_query (st: STRUCTURED_TEXT) is
 		do
 			from
-				st.add_string ("Query:%N======%N%N");
+				st.add_string ("Query:");
+				st.add_new_line;
+				st.add_string ("======");
+				st.add_new_line;
+				st.add_new_line;
 				subqueries.start;
 				subquery_operators.start;
 			until
@@ -111,7 +116,7 @@ feature {NONE} -- Implementation
 							st.add_string (subquery_operators.item.actual_operator);
 						end;
 					end;
-					st.add_char ('%N');
+					st.add_new_line;
 				end;
 				subqueries.forth;
 				if not subquery_operators.after then

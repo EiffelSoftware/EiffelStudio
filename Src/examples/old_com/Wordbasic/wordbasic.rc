@@ -1,0 +1,150 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+#include <windows.h>
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+ID_ICO_APPLICATION      ICON    DISCARDABLE     "wordbasic.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+ID_MAIN_MENU MENU DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "&New",                        CMD_NEW
+        MENUITEM "&Save",                       CMD_SAVE
+	MENUITEM "&Open",			CMD_OPEN
+        MENUITEM SEPARATOR
+        MENUITEM "&Exit",                       CMD_EXIT
+    END
+    POPUP "&Insert"
+    BEGIN
+        MENUITEM "&Insert Text",                CMD_INSERT_TEXT
+    END
+    POPUP "F&ormat"
+    BEGIN
+        MENUITEM "&Center Paragraph",           CMD_CENTER
+        MENUITEM "&Right Paragraph",            CMD_RIGHT
+        MENUITEM "&Left Paragraph",             CMD_LEFT
+        MENUITEM SEPARATOR
+        MENUITEM "Line &Up",                    CMD_LINE_UP
+        MENUITEM "Line &Down",                  CMD_LINE_DOWN
+    END
+    POPUP "&Style"
+    BEGIN
+        MENUITEM "&Bold",                       CMD_BOLD
+        MENUITEM "&Italic",                     CMD_ITALIC
+        MENUITEM "&Underline",                  CMD_UNDERLINE
+        MENUITEM SEPARATOR
+        MENUITEM "Border Line &Style",          CMD_BORDER_LINE_STYLE
+        MENUITEM "Border &Top",                 CMD_BORDER_TOP
+    END
+    POPUP "&Tools"
+    BEGIN
+        MENUITEM "Check &Spelling",             CMD_SPELLING
+        MENUITEM "Check &Grammar",              CMD_GRAMMAR
+        MENUITEM SEPARATOR
+        MENUITEM "&Number of open windows",     CMD_COUNT_WINDOWS
+    END
+    POPUP "&Automation"
+    BEGIN
+        MENUITEM "&Get ID of name",             CMD_GET_ID
+    END
+    POPUP "&Window"
+    BEGIN
+        MENUITEM "&Show",                       CMD_SHOW
+        MENUITEM "&Hide",                       CMD_HIDE
+    END
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+NUMBER_DIALOG DIALOG DISCARDABLE  0, 0, 157, 60
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION
+CAPTION "Enter number"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        NUMBER_EDIT,7,7,145,15,ES_AUTOHSCROLL | ES_NUMBER
+    PUSHBUTTON      "OK",IDOK,54,40,50,14
+END
+
+TEXT_DIALOG DIALOG DISCARDABLE  0, 0, 157, 60
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION
+CAPTION "Enter Text"
+FONT 8, "MS Sans Serif"
+BEGIN
+    EDITTEXT        TEXT_EDIT,7,7,145,15,ES_AUTOHSCROLL
+    PUSHBUTTON      "OK",IDOK,54,40,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    "NUMBER_DIALOG", DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 57
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

@@ -276,6 +276,7 @@ feature -- Processing
 	process_record (record_descriptor: WIZARD_RECORD_DESCRIPTOR) is
 			-- process structure
 		do
+			vt_type := Vt_record
 			c_type := clone (record_descriptor.c_type_name)
 			create c_post_type.make (100)
 			c_header_file := clone (record_descriptor.c_header_file_name)

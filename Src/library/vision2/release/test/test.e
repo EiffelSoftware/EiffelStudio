@@ -51,9 +51,11 @@ feature
 			first_window.set_title ("Eiffel Vision Widgets")
 			create menu_bar
 			first_window.set_menu_bar (menu_bar)
+			first_window.set_status_bar (create {EV_STATUS_BAR}.make_for_test)
 			create object_menu.make_with_text ("Other objects")
 			menu_bar.extend (object_menu)
 			create {EV_VERTICAL_BOX} box
+			box.extend (create {EV_TOOL_BAR}.make_for_test)
 			create hb
 			hb.extend (non_widgets_frame)
 			hb.disable_item_expand (non_widgets_frame)
@@ -484,6 +486,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.32  2000/04/26 21:09:44  brendel
+--| Added tool bar and status bar.
+--|
 --| Revision 1.31  2000/04/26 20:37:57  brendel
 --| Added select actions in non-widget menu.
 --|

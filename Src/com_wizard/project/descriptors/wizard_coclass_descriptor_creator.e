@@ -64,16 +64,13 @@ feature -- Basic operations
 				name.prepend (type_library_descriptor.name)
 			end
 
+			add_c_type
 			create eiffel_class_name.make (100)
 			eiffel_class_name.append (name_for_class (name, type_kind, False))
 			eiffel_class_name.to_upper
 
-			if is_forbidden_c_word (name) then
-				name.prepend ("a_")
-			end
 			create c_type_name.make (100)
 			c_type_name.append (name)
-			system_descriptor.add_c_type (name)
 			
 			create c_header_file_name.make (100)
 			if not Non_generated_type_libraries.has (type_library_descriptor.guid) then

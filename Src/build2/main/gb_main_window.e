@@ -656,13 +656,17 @@ feature {GB_XML_HANDLER} -- Implementation
 	disable_menus is
 			-- Ensure all items of `main_menu_bar' are disabled.
 		do
-			main_menu_bar.do_all (agent update_menu_sensitivity (?, False))
+			if main_menu_bar /= Void then
+				main_menu_bar.do_all (agent update_menu_sensitivity (?, False))
+			end
 		end
 		
 	enable_menus is
 			-- Ensure all items of `main_menu_bar' are enabled.
 		do
-			main_menu_bar.do_all (agent update_menu_sensitivity (?, True))
+			if main_menu_bar /= Void then
+				main_menu_bar.do_all (agent update_menu_sensitivity (?, True))
+			end
 		end
 		
 feature {WIZARD_STATE_WINDOW}

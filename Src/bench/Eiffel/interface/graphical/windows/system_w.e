@@ -267,13 +267,17 @@ feature -- Update
 feature -- Graphical Interface
 
 	display is
+			-- Display the system tool
 		local
-			ts: EB_TOP_SHELL
+			ts: EB_TOP_SHELL;
+			mp: MOUSE_PTR
 		do
 			if not realized then
+				!! mp.set_watch_cursor
 				!! ts.make ("", project_tool.screen);
 				make_shell (ts);
-				ts.set_title (tool_name)
+				ts.set_title (tool_name);
+				mp.restore
 			end;
 			if not realized then
 				set_default_format;
@@ -354,29 +358,23 @@ feature {NONE} -- Implementation; Graphical Interface
 		end;
 
 	build_widgets is
-		local
-			popup_cmd: TOOLBAR_CMD
 		do
 			if eb_shell /= Void then
 				set_default_size
 			end;
 
-			!! toolbar_parent.make (new_name, global_form, Current);
-			toolbar_parent.set_column_layout;
-			toolbar_parent.set_free_size;
-			!! popup_cmd.make (Current);
-			toolbar_parent.add_button_press_action (3, popup_cmd, Void);
+			create_toolbar_parent (global_form);
 
 			build_text_windows;
 			build_menus;
-			!! edit_bar.make (l_Command_bar_name, toolbar_parent, Current);
+			!! edit_bar.make (l_Command_bar_name, toolbar_parent);
 			build_bar;
-			!! toolbar_separator.make (new_name, toolbar_parent);
-			!! format_bar.make (l_Format_bar_name, toolbar_parent, Current);
+			!! format_bar.make (l_Format_bar_name, toolbar_parent);
 			build_format_bar;
 			build_command_menu;
 			fill_menus;
 			set_last_format (default_format);
+			build_toolbar_menu;
 
 			if System_tool_resources.command_bar.actual_value = False then
 				edit_bar.remove
@@ -460,18 +458,12 @@ feature {NONE} -- Implementation; Graphical Interface
 			case_storage_cmd: CASE_STORAGE;
 			case_storage_button: EB_BUTTON;
 			case_storage_menu_entry: EB_MENU_ENTRY;
-			sep: SEPARATOR
 		do
-			!! shell_cmd.make (edit_bar, text_window);
+			!! shell_cmd.make (text_window);
 			!! shell_button.make (shell_cmd, edit_bar);
 			shell_button.add_button_press_action (3, shell_cmd, Void);
 			!! shell_menu_entry.make (shell_cmd, special_menu);
 			!! shell.make (shell_cmd, shell_button, shell_menu_entry);
-			!! case_storage_cmd.make (text_window);
-			!! sep.make (new_name, special_menu);
-			!! case_storage_menu_entry.make (case_storage_cmd, special_menu);
-			!! case_storage_cmd_holder.make_plain (case_storage_cmd);
-			case_storage_cmd_holder.set_menu_entry (case_storage_menu_entry);
 
 			edit_bar.attach_top (shell_button, 0);
 			edit_bar.attach_left_widget (hole_button, shell_button, 0)
@@ -492,7 +484,7 @@ feature {NONE} -- Attributes
 
 feature {NONE} -- Attributes; Forms And Holes
 
-	hole: SYSTEM_CMD;
+	hole: SYSTEM_HOLE;
 			-- Hole charaterizing current
 
 feature {NONE} -- Attributes; Commands
@@ -516,7 +508,5 @@ feature {NONE} -- Attributes; Commands
 	showstatistics_frmt_holder: FORMAT_HOLDER;
 
 	shell: COMMAND_HOLDER;
-
-	case_storage_cmd_holder: COMMAND_HOLDER;
 
 end -- class SYSTEM_W

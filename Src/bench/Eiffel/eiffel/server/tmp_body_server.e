@@ -63,13 +63,18 @@ feature -- Update
 			-- present, otherwise nothing.
 		require
 			body_index_positive: a_body_index >= 0
+		local
+			l_useless: like useless_body_indexes
 		do
 			debug
 				io.error.putstring ("TMP_BODY_SERVER.reactivate ")
 				io.error.putint (a_body_index)
 				io.error.new_line
 			end
-			useless_body_indexes.remove (a_body_index)
+			l_useless := useless_body_indexes
+			if l_useless.count > 0 then
+				useless_body_indexes.remove (a_body_index)
+			end
 		end
 
 	finalize is

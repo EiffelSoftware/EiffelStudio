@@ -1,14 +1,16 @@
 indexing
 	description: "Objects that ..."
 	author: ""
-	date: "$Date: $"
-	revision: "$Revision: $"
+	date: "$Date: 1999/01/12 01:57:05 $"
+	revision: "$Revision: 1.3 $"
 
 class
 	$classname
 
+	-- Replace ANY below by the name of parent class if any (adding more parents
+	-- if necessary); otherwise you can remove inheritance clause altogether.
 inherit
-	ENTER_CLASS_HERE_IF_NEEDED
+	ANY
 		rename
 		export
 		undefine
@@ -16,8 +18,11 @@ inherit
 		select
 		end
 
-creation
-	make
+-- The following Creation_clause can be removed if you need no other
+-- procedure than `default_create':
+
+create
+	default_create
 
 feature -- Initialization
 

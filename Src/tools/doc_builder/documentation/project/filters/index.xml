@@ -30,6 +30,6 @@
 			</code_block>
 			<paragraph>Now using the <italic>output</italic> tag and setting the corresponding <italic>output="tagname"</italic> attribute you can dictate the resulting output.  The customer filter simply has the tag 'customer', the executives has 'executive', and the manager filter has both 'customer' and 'executive'.  You can think of the manager filter as inheriting the customer and executive filters, being therefore an instance of both.</paragraph>
 		<paragraph>All filters containg the default filter tag 'all', which simply means unfiltered.  Using an 'all' tag is equivalent to not using the filter at all since it will always be included in transformed output.</paragraph>
-		<paragraph>Filters are an easy but powerful way to create complete document structures the differ according to the type of output you require for different document sets.</paragraph>
+		<paragraph>Filters are an easy but powerful way to create complete document structures that differ according to the type of output you require for different document sets.</paragraph>
 			</paragraph>
 	</paragraph></document>

@@ -30,7 +30,7 @@ feature {NONE}-- Initialization
 			l_ev_menu_bar_1: EV_MENU_BAR
 			l_ev_menu_2: EV_MENU
 			l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
-			l_ev_tool_bar_separator_1: EV_TOOL_BAR_SEPARATOR
+			l_ev_tool_bar_separator_1, l_ev_tool_bar_separator_2: EV_TOOL_BAR_SEPARATOR
 			l_ev_horizontal_separator_1: EV_HORIZONTAL_SEPARATOR
 			l_ev_cell_1: EV_CELL
 			l_ev_frame_1, l_ev_frame_2: EV_FRAME
@@ -57,6 +57,12 @@ feature {NONE}-- Initialization
 			create italic_button
 			create underlined_button
 			create striked_through_button
+			create paragraph_toolbar
+			create l_ev_tool_bar_separator_2
+			create left_alignment_button
+			create center_alignment_button
+			create right_alignment_button
+			create justified_button
 			create tab_control_holder
 			create l_ev_horizontal_separator_1
 			create rich_text
@@ -86,6 +92,12 @@ feature {NONE}-- Initialization
 			format_toolbar.extend (italic_button)
 			format_toolbar.extend (underlined_button)
 			format_toolbar.extend (striked_through_button)
+			l_ev_horizontal_box_1.extend (paragraph_toolbar)
+			paragraph_toolbar.extend (l_ev_tool_bar_separator_2)
+			paragraph_toolbar.extend (left_alignment_button)
+			paragraph_toolbar.extend (center_alignment_button)
+			paragraph_toolbar.extend (right_alignment_button)
+			paragraph_toolbar.extend (justified_button)
 			main_vertical_box.extend (tab_control_holder)
 			tab_control_holder.extend (l_ev_horizontal_separator_1)
 			main_vertical_box.extend (rich_text)
@@ -117,11 +129,15 @@ feature {NONE}-- Initialization
 			font_selection.set_minimum_width (font_selection_combo_box_width)
 			size_selection.set_minimum_width (font_size_combo_box_width)
 			bold_button.enable_select
-			bold_button.set_text ("B")
-			italic_button.set_text ("I")
-			underlined_button.set_text ("U")
-			striked_through_button.set_text ("S")
-			rich_text.set_text ("Some sample text.%N%NTab samples:%N%N1st tab		3rd tab		5th tab		7th tab%N%NData		Data		Data		Data%N%NSome more text.%N%NAnd a little more.%N%NFinally all available fonts:%N")
+			bold_button.set_pixmap (bold_png)
+			italic_button.set_pixmap (italic_png)
+			underlined_button.set_pixmap (underline_png)
+			striked_through_button.set_pixmap (strike_png)
+			left_alignment_button.set_pixmap (left_alignment_png)
+			center_alignment_button.set_pixmap (center_alignment_png)
+			right_alignment_button.set_pixmap (right_alignment_png)
+			justified_button.set_pixmap (justified_png)
+			rich_text.set_text ("Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1 Line 1%NLine  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2 Line  2%NLine 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 Line 3 %NLine 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   Line 4   %NSome sample text.%N%NTab samples:%N%N1st tab		3rd tab		5th tab		7th tab%N%NData		Data		Data		Data%N%NSome more text. %N%NAnd a little more.%N%NFinally all available fonts:%N")
 			l_ev_cell_1.set_minimum_height (tiny_padding)
 			l_ev_horizontal_box_2.set_padding_width (tiny_padding)
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_frame_2)
@@ -141,6 +157,10 @@ feature {NONE}-- Initialization
 			italic_button.select_actions.extend (agent italic_selected)
 			underlined_button.select_actions.extend (agent underline_selected)
 			striked_through_button.select_actions.extend (agent strike_through_selected)
+			left_alignment_button.select_actions.extend (agent left_alignment_selected)
+			center_alignment_button.select_actions.extend (agent center_alignment_selected)
+			right_alignment_button.select_actions.extend (agent right_alignment_selected)
+			justified_button.select_actions.extend (agent justified_selected)
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 
@@ -155,9 +175,10 @@ feature -- Access
 	word_wrapping_menu_item, show_tab_control_menu_item: EV_CHECK_MENU_ITEM
 	main_vertical_box, tab_control_holder: EV_VERTICAL_BOX
 	font_selection, size_selection: EV_COMBO_BOX
-	color_toolbar, format_toolbar: EV_TOOL_BAR
+	color_toolbar, format_toolbar, paragraph_toolbar: EV_TOOL_BAR
 	color_button: EV_TOOL_BAR_BUTTON
-	bold_button, italic_button, underlined_button, striked_through_button: EV_TOOL_BAR_TOGGLE_BUTTON
+	bold_button, italic_button, underlined_button, striked_through_button, left_alignment_button, 
+	center_alignment_button, right_alignment_button, justified_button: EV_TOOL_BAR_TOGGLE_BUTTON
 	rich_text: EV_RICH_TEXT
 	general_label, caret_position_label: EV_LABEL
 
@@ -223,6 +244,26 @@ feature {NONE} -- Implementation
 	
 	strike_through_selected is
 			-- Called by `select_actions' of `striked_through_button'.
+		deferred
+		end
+	
+	left_alignment_selected is
+			-- Called by `select_actions' of `left_alignment_button'.
+		deferred
+		end
+	
+	center_alignment_selected is
+			-- Called by `select_actions' of `center_alignment_button'.
+		deferred
+		end
+	
+	right_alignment_selected is
+			-- Called by `select_actions' of `right_alignment_button'.
+		deferred
+		end
+	
+	justified_selected is
+			-- Called by `select_actions' of `justified_button'.
 		deferred
 		end
 	

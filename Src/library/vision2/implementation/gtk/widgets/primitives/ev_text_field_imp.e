@@ -53,25 +53,39 @@ feature -- Status setting
 			-- Assign `a_text' to `text'.
 		local
 			tf_text: STRING
+			temp_text: ANY
 		do
 			if a_text /= Void then
 				tf_text := a_text
 			else
 				tf_text := ""
 			end
-			C.gtk_entry_set_text (entry_widget, eiffel_to_c (tf_text))
+			temp_text := tf_text.to_c
+			C.gtk_entry_set_text (entry_widget, $temp_text)
 		end
 
 	append_text (txt: STRING) is
 			-- Append `txt' to the end of the text.
+		local
+			temp_caret_pos: INTEGER
+			temp_text: ANY
 		do
-			C.gtk_entry_append_text (entry_widget, eiffel_to_c (txt))
+			temp_caret_pos := caret_position
+			temp_text := txt.to_c
+			C.gtk_entry_append_text (entry_widget, $temp_text)
+			set_caret_position (temp_caret_pos)
 		end
 	
 	prepend_text (txt: STRING) is
 			-- Prepend `txt' to the end of the text.
+		local
+			temp_caret_pos: INTEGER
+			temp_text: ANY
 		do
-			C.gtk_entry_prepend_text (entry_widget, eiffel_to_c (txt))
+			temp_caret_pos := caret_position
+			temp_text := txt.to_c
+			C.gtk_entry_prepend_text (entry_widget, $temp_text)
+			set_caret_position (temp_caret_pos)
 		end
 		
 	set_capacity (len: INTEGER) is

@@ -57,22 +57,6 @@ feature {NONE} -- Initialization
 			real_text := ""
 			{EV_ITEM_IMP} Precursor
 		end
-		
---	on_activate_callback_as: EV_NOTIFY_ACTION_SEQUENCE is
---			-- 
---		once
---			create Result
---			Result.extend (agent on_activate_callback (?))
---		end
-		
---	on_activate_callback (a_c_object: POINTER) is
---			-- 
---		local
---			menu_item_imp: EV_MENU_ITEM_IMP
---		do
---			menu_item_imp ?= eif_object_from_c (a_c_object)
---			menu_item_imp.on_activate
---		end
 
 	initialize_menu_item_box is
 			-- Create and initialize menu item box.

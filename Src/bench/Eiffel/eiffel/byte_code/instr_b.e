@@ -3,7 +3,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class INSTR_B 
+deferred class INSTR_B 
 
 inherit
 	BYTE_NODE

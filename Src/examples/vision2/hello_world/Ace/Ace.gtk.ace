@@ -58,7 +58,7 @@ cluster
 
 
 	-- Implementation
-	vision_imp (vision):		"$/implementation/";
+	vision_imp (vision):		"$/implementation";
 
 	-- Implementation Interface
 	vision_ii (vision_imp):		"$/implementation_interface";

@@ -32,7 +32,6 @@
 /* Exported feature */
 rt_public long store_append (EIF_INTEGER f_desc, char *object, fnptr mid, fnptr nid, char *s);
 rt_public void parsing_store_initialize (void);
-rt_public void parsing_store_reset (void);
 
 /* Internal variables */
 rt_private fnptr make_index;	/* Index building routine */
@@ -70,10 +69,6 @@ rt_public void parsing_store_initialize (void) {
 	}
 	parsing_buffer_size = EIF_BUFFER_SIZE;
 	parsing_position = 0;
-}
-
-rt_public void parsing_store_reset (void) {
-	rt_reset_store ();
 }
 
 rt_public long store_append(EIF_INTEGER f_desc, char *object, fnptr mid, fnptr nid, char *s)

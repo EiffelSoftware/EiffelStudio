@@ -26,11 +26,10 @@
 #endif
 
 /* Public features */
-rt_public char *partial_retrieve (EIF_INTEGER f_desc, size_t file_size, long position, long nb_obj);
-rt_public char *retrieve_all(EIF_INTEGER f_desc, size_t file_size, long position);
+rt_public char *partial_retrieve (EIF_INTEGER f_desc, long position, long nb_obj);
+rt_public char *retrieve_all(EIF_INTEGER f_desc, long position);
 
 rt_public void parsing_retrieve_initialize (void);
-rt_public void parsing_retrieve_reset (void);
 
 /* Private features */
 rt_private void stream_buffer_initialization (EIF_INTEGER file_desc, size_t file_size, long position);
@@ -54,12 +53,7 @@ rt_public void parsing_retrieve_initialize (void)
 	allocate_gen_buffer();
 }
 
-rt_public void parsing_retrieve_reset (void)
-{
-	rt_reset_retrieve();
-}
-
-rt_public char *partial_retrieve(EIF_INTEGER f_desc, size_t file_size, long position, long nb_obj)
+rt_public char *partial_retrieve(EIF_INTEGER f_desc, long position, long nb_obj)
 	/* Return `nb_obj' retrieved in file `file_ptr' read at `position'. */
 {
 	char *result;
@@ -79,7 +73,7 @@ rt_public char *partial_retrieve(EIF_INTEGER f_desc, size_t file_size, long posi
 	return result;
 }
 
-rt_public char *retrieve_all(EIF_INTEGER f_desc, size_t file_size, long position)
+rt_public char *retrieve_all(EIF_INTEGER f_desc, long position)
 {
 	/* Return object graph retrieved in file `file_ptr' read at
 	 * position. */

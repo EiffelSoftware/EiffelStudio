@@ -62,6 +62,10 @@ feature -- Typing
 			if has_externals then
 				system.set_freeze
 			end
+			if already_compiled then
+					-- Melt all the code written in the associated class of the new class type
+				melt_all
+			end
 		end
 
 feature -- Status report

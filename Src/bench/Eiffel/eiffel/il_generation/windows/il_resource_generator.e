@@ -46,14 +46,13 @@ feature -- Generation
 	generate is
 			-- Generate `resources' in `module'. Compile `resources' items if necessary.
 		local
-			l_resources: ARRAYED_LIST [STRING]
 			l_name: STRING
 			l_new_name: STRING
 			nb: INTEGER
 			l_not_is_resource_generated: BOOLEAN
 		do
 			from
-				create l_resources.make (resources.count)
+				last_resource_offset := 0
 				resources.start
 			until
 				resources.after
@@ -67,25 +66,19 @@ feature -- Generation
 					l_new_name := new_compiled_resource_file_name (l_name)
 					generate_resource (l_name, l_new_name)
 					if (create {RAW_FILE}.make (l_new_name)).exists then
-						l_resources.extend (l_new_name)
+						l_name := resource_name (l_name, True)
+						l_name.append_character ('.')
+						l_name.append (resources_extension)
+						define_resource (module, l_new_name, l_name)
 					else
 						Error_handler.insert_warning (create {VIRC}.make_failed (l_name))
 					end
 				else
-					l_resources.extend (l_name)
+						-- It is either a compiled resource or another type of files,
+						-- we simply embed them in the generated assembly.
+					define_resource (module, l_name, resource_name (l_name, False))
 				end
 				resources.forth
-			end
-			
-			from
-				l_resources.start
-				last_resource_offset := 0
-			until
-				l_resources.after
-			loop
-				l_name := l_resources.item
-				define_resource (module, l_name, resource_name (l_name))
-				l_resources.forth
 			end
 		end
 
@@ -139,8 +132,8 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	resource_name (a_resource: STRING): STRING is
-			-- Extract name of `a_resource' file without its extension.
+	resource_name (a_resource: STRING; remove_extension: BOOLEAN): STRING is
+			-- Extract name of `a_resource' file without its extension if `remove_extension'.
 		require
 			a_resource_not_void: a_resource /= Void
 		local
@@ -152,11 +145,15 @@ feature {NONE} -- Implementation
 				dir_pos := a_resource.last_index_of ('/', nb) + 1
 			end
 			
-			dot_pos := a_resource.last_index_of ('.', nb)
-			if dot_pos = 0 then
-				dot_pos := nb
+			if remove_extension then
+				dot_pos := a_resource.last_index_of ('.', nb)
+				if dot_pos = 0 then
+					dot_pos := nb
+				else
+					dot_pos := dot_pos - 1
+				end
 			else
-				dot_pos := dot_pos - 1
+				dot_pos := nb
 			end
 			
 			Result := a_resource.substring (dir_pos.max (1), dot_pos)
@@ -175,7 +172,7 @@ feature {NONE} -- Implementation
 			else
 				create Result.make_from_string (System.Workbench_generation_path)
 			end
-			Result.set_file_name (resource_name (a_resource))
+			Result.set_file_name (resource_name (a_resource, True))
 			Result.add_extension (resources_extension)
 		end
 

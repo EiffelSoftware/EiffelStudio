@@ -1106,7 +1106,8 @@ feature {SHARED_IL_DEBUG_INFO_RECORDER} -- Persistence
 					l_precomp_dirs.after
 				loop
 					l_remote_project_directory := l_precomp_dirs.item_for_iteration
-					l_pfn := l_remote_project_directory.precomp_il_info_file
+					l_pfn := l_remote_project_directory.precomp_il_info_file (
+						l_remote_project_directory.is_precompile_finalized and system.msil_use_optimized_precompile)
 					debug ("debugger_il_info_trace_extra")
 						print (l_pfn)
 						io.put_new_line

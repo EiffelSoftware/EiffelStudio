@@ -9,7 +9,7 @@ inherit
 
 	FORMATTER
 		redefine
-			dark_symbol
+			dark_symbol, display_temp_header
 		end;
 	SHARED_DEBUG
 
@@ -129,6 +129,12 @@ feature {NONE}
 			Result := (f.written_class > System.any_class.compiled_class or
 					dynamic_class <= System.any_class.compiled_class)
 					and then (f.is_once and f.is_function)
+		end;
+
+	display_temp_header (stone: STONE) is
+			-- Display a temporary header during the format processing.
+		do
+			text_window.display_header ("Finding values of once functions...")
 		end;
 
 end -- class SHOW_ONCE_RESULTS

@@ -6,7 +6,7 @@ inherit
 
 	FORMATTER
 		redefine
-			dark_symbol
+			dark_symbol, display_temp_header
 		end;
 	SHARED_SERVER;
 	SHARED_FORMAT_TABLES
@@ -42,6 +42,12 @@ feature {NONE}
 			-- Display flat form of `stone'.
 		do 
 			text_window.process_text (rout_flat_context (stone).text)
-		end
+		end;
+
+	display_temp_header (stone: STONE) is
+			-- Display a temporary header during the format processing.
+		do
+			text_window.display_header ("Exploring ancestors to produce flat form...")
+		end;
 
 end

@@ -8,7 +8,7 @@ inherit
 
 	FORMATTER
 		redefine
-			dark_symbol, text_window
+			dark_symbol, text_window, display_temp_header
 		end;
 	SHARED_DEBUG
 
@@ -97,6 +97,12 @@ feature {NONE}
 					text_window.new_line
 				end
 			end
+		end;
+
+	display_temp_header (stone: STONE) is
+			-- Display a temporary header during the format processing.
+		do
+			text_window.display_header ("Looking up fields...")
 		end;
 
 end -- class SHOW_ATTR_VALUES

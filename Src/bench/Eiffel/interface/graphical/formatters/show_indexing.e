@@ -5,9 +5,9 @@ class SHOW_INDEXING
 inherit
 
 	SHARED_WORKBENCH;
-	FORMATTER
+	LONG_FORMATTER
 		redefine
-			file_name, dark_symbol
+			file_name, dark_symbol, display_temp_header
 		end
 
 creation
@@ -59,6 +59,12 @@ feature {NONE}
 			!! ewb_indexing;
 			ewb_indexing.set_output_window (text_window)
 			ewb_indexing.display
+		end;
+
+	display_temp_header (stone: STONE) is
+			-- Display a temporary header during the format processing.
+		do
+			text_window.display_header ("Searching system for indexing clauses...")
 		end;
 
 end -- class SHOW_INDEXING

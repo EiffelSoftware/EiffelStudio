@@ -93,16 +93,18 @@ feature
 				then
 					if stone /= Void and then stone.is_valid then
 						if stone.clickable then
+							display_temp_header (stone);
 							set_global_cursor (watch_cursor);
 							text_window.clean;
 							text_window.set_root_stone (stone);
-							display_header (stone);
+							text_window.set_file_name (file_name (stone));
 							display_info (0, stone);
 							text_window.set_editable;
 							text_window.show_image;
 							text_window.set_read_only;
 							text_window.set_last_format (Current);
 							filtered := false;
+							display_header (stone);
 							restore_cursors
 						else
 							tool ?= text_window.tool;
@@ -169,8 +171,19 @@ feature {NONE}
 			!!new_title.make (50);
 			new_title.append (title_part);
 			new_title.append (stone.signature);
-			text_window.display_header (new_title);
-			text_window.set_file_name (file_name (stone));
+			text_window.display_header (new_title)
+		end;
+
+	display_temp_header (stone: STONE) is
+			-- Display a temporary header during the format processing.
+		local
+			new_title: STRING
+		do
+			!!new_title.make (50);
+			new_title.append (title_part);
+			new_title.append (stone.signature);
+			new_title.append (" ...");
+			text_window.display_header (new_title)
 		end;
 
 	file_name (stone: STONE): STRING is

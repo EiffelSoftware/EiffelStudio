@@ -8,7 +8,7 @@ inherit
 		rename
 			filter_context as short_context
 		redefine
-			dark_symbol
+			dark_symbol, display_temp_header
 		end;
 	SHARED_FORMAT_TABLES
 
@@ -44,5 +44,11 @@ feature {NONE}
 		do
 			text_window.process_text (short_context (c).text)
 		end
+
+	display_temp_header (stone: STONE) is
+			-- Display a temporary header during the format processing.
+		do
+			text_window.display_header ("Producing short form...")
+		end;
 
 end

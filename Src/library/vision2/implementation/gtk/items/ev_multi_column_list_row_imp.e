@@ -93,23 +93,6 @@ pointed_target: EV_PICK_AND_DROPABLE is do check to_be_implemented: False end en
 
 set_pointer_style (curs: EV_CURSOR) is do end
 
-feature -- Element Change
-
-	set_pixmap (a_pix: EV_PIXMAP) is
-			-- Set the rows `pixmap' to `a_pix'.
-		do
-			pixmap.copy (a_pix)
-		end
-
-	pixmap: EV_PIXMAP
-			-- Pixmap used at the start of the row.
-
-	remove_pixmap is
-			-- Remove the rows pixmap.
-		do
-			pixmap := Void
-		end
-
 feature {EV_ANY_I} -- Implementation
 
 	set_parent_imp (par_imp: EV_MULTI_COLUMN_LIST_IMP) is
@@ -162,6 +145,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.42  2000/03/29 01:41:22  king
+--| Moved pixmapping features up
+--|
 --| Revision 1.41  2000/03/28 01:08:58  king
 --| Updated pixmap features
 --|

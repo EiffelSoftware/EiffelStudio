@@ -26,25 +26,42 @@ feature -- Output
 			-- feature is defined. If not, generate
 			-- true tag.
 		local
-			gen_prec, is_not_first: BOOLEAN;
+			is_not_first: BOOLEAN
 		do
 			ctxt.save_global_adapt;
 			ctxt.begin;
-			from
-				--| Detect if there are preconditions for non origin
-				--| routines 
-				start
-			until
-				after or else
-				gen_prec
-			loop
-				gen_prec := item.precondition /= Void and then
-							(not item.origin.is_origin)
-				forth
+			start;
+			if not empty then
+					--| The chained assertion can be empty:
+					--| There are no precursors (and thus no origins detected)
+					--| plus the current feature dosn't have aby preconditions itself.
+					--| This means the feature is the origin of a branch not defining
+					--| a precondition.
+				if item.precondition = Void and then count > 1 then
+						--| Void precondition is generated in `ASSERTION_SERVER'
+						--| and means: no origin with an assertion (and thus
+						--| the require is true.
+						--| `count' must be greater than one.
+						--| If there is just one assertion in the list without a precondition,
+						--| then that item comes from the origin(s), where all of them doesn't
+						--| have a precondition. And thus we may not generate any precondition.
+						--| This relies on the fact that we only record features that have an assertion
+						--| and *one* origin if all origins doesn't have a precondition.
+					ctxt.put_text_item (ti_Require_keyword);
+					ctxt.put_space;
+					ctxt.put_text_item (ti_Dashdash);
+					ctxt.put_space;
+					ctxt.put_class_name (item.origin.written_class);
+					ctxt.indent;
+					ctxt.new_line;
+					ctxt.put_string ("precursor: True");
+					ctxt.new_line;
+					ctxt.exdent;
+					ctxt.set_first_assertion (False);
+					is_not_first := True
+				end
 			end;
-			set_in_assertion;
 			from
-				start
 			until
 				after
 			loop
@@ -57,18 +74,6 @@ feature -- Output
 					else 
 						ctxt.rollback 
 					end;
-				elseif (gen_prec) and then item.origin.is_origin then
-					ctxt.put_text_item (ti_Require_keyword);
-					ctxt.put_space;
-					ctxt.put_text_item_without_tabs (ti_Else_keyword);
-					ctxt.put_space;
-					ctxt.put_text_item (ti_Dashdash);
-					ctxt.put_space;
-					ctxt.put_class_name (item.origin.written_class);
-					ctxt.indent;
-					ctxt.new_line;
-					ctxt.put_string ("precursor: True");
-					ctxt.new_line;
 				end;
 				forth;
 			end;

@@ -404,7 +404,7 @@ feature {NONE} -- Implementation
 
  	global_xevent_ptr: POINTER is
 		external
-			"C : XEvent * | %"mel.h%""
+			"C [macro %"mel.h%"]: XEvent *"
 		end;
 
 end -- class MEL_APPLICATION_CONTEXT

@@ -48,8 +48,6 @@ feature -- Comparison
 			-- Is the path name equal to `other'?
 		local
 			l_a: PATH
-			a_sys_str: SYSTEM_STRING
-			a_str: STRING
 		do
 			--| .Net exceptions may be raised due to invalid characters or io problems.
 			Result := l_a.get_full_path (other.to_cil).equals (l_a.get_full_path (to_cil))
@@ -107,7 +105,6 @@ feature -- Status setting
 			valid_directory_name: is_directory_name_valid (directory_name)
 		local
 			new_size: INTEGER
-			a_new_path: STRING
 		do
 			new_size := count + directory_name.count + 5
 			if capacity < new_size then

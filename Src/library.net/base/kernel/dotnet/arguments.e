@@ -300,7 +300,6 @@ feature {NONE} -- Implementation
 	arg_number: INTEGER is
 		local
 			cmd_line: NATIVE_ARRAY [SYSTEM_STRING]
-			dum: ENVIRONMENT
 		do
 			cmd_line := feature {ENVIRONMENT}.get_command_line_args
 			Result := cmd_line.count

@@ -58,7 +58,6 @@ feature -- Status report
 		require
 			applicable: is_developer_exception
 		local
-			le: EXCEPTION
 			conv_de: EIFFEL_EXCEPTION
 		do
 			conv_de ?= feature {ISE_RUNTIME}.last_exception

@@ -1105,8 +1105,6 @@ feature -- Element change
 			-- Stamp with `time' (access only).
 		require
 			file_exists: exists
-		local
-			t: SYSTEM_DATE_TIME
 		do
 			internal_file.refresh
 			internal_file.set_last_access_time (dot_net_file_date_time (time))
@@ -1119,8 +1117,6 @@ feature -- Element change
 			-- Stamp with `time' (modification time only).
 		require
 			file_exists: exists
-		local
-			t: SYSTEM_DATE_TIME
 		do
 			internal_file.refresh
 			internal_file.set_last_write_time (dot_net_file_date_time (time))

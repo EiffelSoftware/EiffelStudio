@@ -109,13 +109,13 @@ feature -- Status report
 						res.set_proxy_information (source_proxy)
 					end
 					Result := add_reference 
-						(readable_set, res, res~is_readable)
+						(readable_set, res, agent res.is_readable)
 				when Writable then
 					if res.is_proxy_supported then
 						res.set_proxy_information (target_proxy)
 					end
 					Result := add_reference 
-						(writable_set, res, res~is_writable)
+						(writable_set, res, agent res.is_writable)
 				end
 				if Result and not resource_hash.found then
 					resource_hash.put (res, res.location)

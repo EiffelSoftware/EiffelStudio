@@ -88,7 +88,7 @@ feature -- Status report
 		require
 			not_empty: not is_empty
 		do
-			Result := check_query (transaction~error)
+			Result := check_query (agent transaction.error)
 		end
 		
 	error_reason: STRING is
@@ -122,7 +122,7 @@ feature -- Status report
 			not_empty: not is_empty
 		do
 			if transfer_finished then
-				Result := check_query (transaction~succeeded)
+				Result := check_query (agent transaction.succeeded)
 			end
 		end
 		
@@ -141,7 +141,7 @@ feature -- Status setting
 			-- Reset status flags.
 		do
 			transfer_finished := False
-			execute_command (~reset_error)
+			execute_command (agent reset_error)
 		ensure
 			finished_flag_reset: not transfer_finished
 			no_error: not error
@@ -178,7 +178,7 @@ feature -- Basic operations
 			flags_reset: not (transfer_finished and transactions_succeeded)
 		do
 			transfer_finished := True
-			execute_command (~execute_transaction)
+			execute_command (agent execute_transaction)
 		ensure
 			transfer_flag_set: transfer_finished
 		end

@@ -33,6 +33,12 @@ feature -- Synchro Initialization
 			c_terminate_dbg_synchronisation
 		end
 		
+	is_dbg_synchronizing: BOOLEAN is
+			-- Are we still synchronizing ?
+		do
+			Result := c_dbg_is_synchronizing
+		end		
+		
 feature -- eStudio callback
 
 	estudio_callback_event is
@@ -97,6 +103,13 @@ feature -- Evaluation
 		end			
 
 feature {NONE} -- External DBG Timer
+
+	c_dbg_is_synchronizing: BOOLEAN is
+		external
+			"C signature (): EIF_BOOLEAN use %"cli_debugger.h%" "
+		alias
+			"dbg_is_synchronizing"
+		end
 
 	c_init_dbg_synchronisation is
 		external

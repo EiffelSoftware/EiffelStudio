@@ -277,6 +277,12 @@ rt_public void dbg_resume_estudio_thread () {
 /// Synch initialization and estudio callback  ///
 //////////////////////////////////////////////////
 */
+
+rt_public EIF_BOOLEAN dbg_is_synchronizing () {
+	/* Are we still synchronizing ? */
+	return EIF_TEST(dbg_keep_synchro == 1);
+}
+
 rt_public void dbg_init_synchro () {
 	/* Initialize synchronisation */
 	DBG_INIT_ESTUDIO_THREAD_HANDLE;

@@ -26,7 +26,7 @@
 extern XEvent global_xevent; 	
 						/* Global variable for Event processing */
 
-#define global_xevent_ptr &global_xevent
+#define global_xevent_ptr (&global_xevent)
 						/* Pointer to global_xevent */
 
 #define c_trans_routine "handle_translation" 

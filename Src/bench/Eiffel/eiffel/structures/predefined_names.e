@@ -95,7 +95,7 @@ feature -- Constants
 	to_integer_name_id: INTEGER is 85
 	to_character_name_id: INTEGER is 86
 	ascii_char_name_id: INTEGER is 87
-	internal_duplicate_name_id: INTEGER is 88
+	standard_twin_name_id: INTEGER is 88
 	internal_copy_name_id: INTEGER is 89
 	put_value_at_name_id: INTEGER is 90
 	set_bit_with_mask_name_id: INTEGER is 91

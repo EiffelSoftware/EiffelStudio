@@ -41,7 +41,7 @@ feature -- Final mode
 					rout_id := key_for_iteration;
 					new_unit := feature_i.new_entry (rout_id);
 					new_unit.set_id (id);
-					History_control.add_new (new_unit, rout_id, feature_i.pattern_id);
+					History_control.add_new (new_unit, rout_id);
 				end;
 				forth;
 			end;

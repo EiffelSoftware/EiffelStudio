@@ -198,6 +198,9 @@ feature {EV_LIST_ITEM_IMP} -- Implementation
 			-- insert `item_imp' at the position
 			-- `value' of list.
 		do
+			check
+				To_be_implemented: False
+			end
 		end
 
 	remove_item (item_imp: EV_LIST_ITEM_IMP) is

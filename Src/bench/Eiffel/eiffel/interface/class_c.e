@@ -3870,6 +3870,16 @@ feature -- IL code generation
 			precompiled_class_name := il_casing.type_name (Void, Void, name.as_lower, is_dotnet_naming)
 		end
 
+	set_assembly_info (a: like assembly_info) is
+			-- Set `assembly_info' with `a'.
+		require
+			a_not_void: a /= Void
+		do
+			assembly_info := a
+		ensure
+			assembly_info_set: assembly_info = a
+		end
+
 	assembly_info: ASSEMBLY_INFO
 			-- Information about assembly in which current class is being generated
 

@@ -57,6 +57,9 @@ feature -- Properties
 		do
 		end
 
+	is_expanded: BOOLEAN;
+			-- Is Current feature an expanded one?
+
 	is_redefined: BOOLEAN;
 			-- Is Current feature redefine?
 

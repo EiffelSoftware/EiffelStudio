@@ -14,20 +14,20 @@ inherit
 			proceed_with_current_info,
 			build
 		end
-		
+
 	BENCH_WIZARD_CONSTANTS
 		export
 			{NONE} all
 		end
-		
+
 create
 	make
-			
+
 feature -- Basic Operation
 
 	build is 
 			-- Build entries.
-		do 
+		do
 			create project_name.make (Current)
 			project_name.set_label_string_and_size (Bench_interface_names.l_Project_name, 10)
 			project_name.set_textfield_string (wizard_information.project_name)
@@ -46,7 +46,7 @@ feature -- Basic Operation
 			else
 				to_compile_b.disable_select
 			end
-			
+
 			choice_box.set_padding (dialog_unit_to_pixels(10))
 			choice_box.extend (project_name.widget)
 			choice_box.disable_item_expand (project_name.widget)
@@ -61,7 +61,7 @@ feature -- Basic Operation
 				project_location.change_actions,
 				to_compile_b.select_actions>>)
 		end
-		
+
 	proceed_with_current_info is 
 		local
 			next_window: WIZARD_STATE_WINDOW
@@ -89,7 +89,6 @@ feature -- Basic Operation
 							Precursor
 							create {WIZARD_SECOND_STATE} next_window.make (wizard_information)
 						end
-		
 					end
 				end
 			else
@@ -130,15 +129,15 @@ feature {NONE} -- Implementation
 			curr_project_name := project_name.text
 			if curr_project_location /= Void then
 				sep_index := curr_project_location.last_index_of (Operating_environment.Directory_separator, curr_project_location.count)
-				curr_project_location.head (sep_index)
+				curr_project_location.keep_head (sep_index)
 				if curr_project_name /= Void then
 					curr_project_location.append (curr_project_name)
 				end
-	
+
 				project_location.set_text (curr_project_location)
 			end
 		end
-		
+
 	validate_directory_string (a_directory: STRING): DIRECTORY_NAME is
 			-- Validate the directory `a_directory' and return the
 			-- validated version of `a_directory'.
@@ -158,7 +157,7 @@ feature {NONE} -- Implementation
 		ensure
 			valid_Result: Result /= Void
 		end
-		
+
 	is_project_name_valid (a_project_name: STRING): BOOLEAN is
 			-- Is `a_project_name' valid as project name?
 		local
@@ -188,7 +187,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-		
+
 	display_state_text is
 			-- Display message text relative to current state.
 		do
@@ -207,4 +206,3 @@ feature {NONE} -- Implementation
 			-- Should compilation be launched?.
 
 end -- class WIZARD_PROJECT_NAME_AND_LOCATION_STATE
-

@@ -6,6 +6,7 @@ root
 
 default
 	precompiled ("$ISE_EIFFEL\precomp\spec\dotnet\vision2")
+	msil_use_optimized_precompile (no)
 	assertion (no)
 	msil_generation (yes)
 	disabled_debug (yes)

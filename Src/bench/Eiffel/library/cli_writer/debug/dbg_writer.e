@@ -64,6 +64,28 @@ feature -- Update
 		ensure
 			success: last_call_success = 0
 		end
+
+	open_scope (start_offset: INTEGER) is
+			-- Create a new scope for defining local variables.
+		require
+			valid_start_offset: start_offset >= 0
+		local
+			l_scope_id: INTEGER
+		do
+			last_call_success := c_open_scope (item, start_offset, $l_scope_id)
+		ensure
+			success: last_call_success = 0
+		end
+
+	close_scope (end_offset: INTEGER) is
+			-- Close most recently opened scope.
+		require
+			valid_end_offset: end_offset >= 0
+		do
+			last_call_success := c_close_scope (item, end_offset) 
+		ensure
+			success: last_call_success = 0
+		end
 		
 feature -- PE file data
 
@@ -136,6 +158,20 @@ feature -- Definition
 			l_end_columns := end_columns.to_c
 			last_call_success := c_define_sequence_points (item, document.item, count,
 				$l_offsets, $l_start_lines, $l_start_columns, $l_end_lines, $l_end_columns)
+		ensure
+			success: last_call_success = 0
+		end
+
+	define_local_variable (name: UNI_STRING; pos: INTEGER; signature: MD_TYPE_SIGNATURE) is
+			-- Define local variable `name' at position `pos' in current method using
+			-- `signature' of current method.
+		require
+			name_not_void: name /= Void
+			valid_pos: pos >= 0
+			signature_not_void: signature /= Void
+		do
+			last_call_success := c_define_local_variable (item, name.item, 0,
+				signature.count, signature.item.item, 1, pos, 0, 0, 0, 0)
 		ensure
 			success: last_call_success = 0
 		end
@@ -213,6 +249,22 @@ feature {NONE} -- Implementation
 			]"
 		alias
 			"DefineDocument"
+		end
+
+	c_define_local_variable (an_item: POINTER; name: POINTER; attributes, signature_length: INTEGER;
+			signature: POINTER; Addresskind, local_pos, unused2, unused3,
+			start_offset, end_offset: INTEGER): INTEGER
+		is
+			-- Call `ISymUnmanagedWriter->DefineLocalVariable'.
+		external
+			"[
+				C++ ISymUnmanagedWriter signature
+					(LPWSTR, ULONG32, ULONG32, char *, ULONG32, ULONG32, ULONG32,
+					ULONG32, ULONG32, ULONG32): EIF_INTEGER
+				use "cli_headers.h"
+			]"
+		alias
+			"DefineLocalVariable"
 		end
 
 	c_define_sequence_points (an_item: POINTER; document: POINTER; count: INTEGER;

@@ -415,6 +415,33 @@ feature -- Access
 			dialog.show_modal_to_window (window)
 		end
 		
+	remove_nodes_recursive (element: XM_ELEMENT; node_name: STRING) is
+			-- Recursively remove all nodes named `node_name' from `element'.
+		require
+			element_not_void: element /= Void
+			node_name_not_void: node_name /= Void
+		local
+			current_element: XM_ELEMENT
+			current_name: STRING
+		do
+			from
+				element.start
+			until
+				element.off
+			loop
+				current_element ?= element.item_for_iteration
+				if current_element /= Void then
+					current_name := current_element.name
+					if current_name.is_equal (node_name) then
+						element.remove_at
+					else
+						remove_nodes_recursive (current_element, node_name)
+					end
+				end
+				element.forth
+			end
+		end
+		
 feature {NONE} -- Implementation
 
 	data_valid (current_data: STRING):BOOLEAN is

@@ -32,7 +32,8 @@ inherit
 			default_create,
 			move
 		redefine
-			start
+			start,
+			finish
 		select
 			dl_put
 		end
@@ -96,6 +97,16 @@ feature -- Cursor movement
 			-- Move cursor to first position.
 		do
 			go_i_th (1)
+		ensure then
+			empty_implies_after: empty implies after
+		end
+
+	finish is
+			-- Move cursor to first position.
+		do
+			go_i_th (count)
+		ensure then
+			empty_implies_before: empty implies before
 		end
 
 	back is
@@ -301,6 +312,9 @@ end -- class EV_WIDGET_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/26 06:26:07  oconnor
+--| added extra postconditions to start and finish
+--|
 --| Revision 1.3  2000/02/22 18:39:51  oconnor
 --| updated copyright date and formatting
 --|

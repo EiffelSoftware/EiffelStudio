@@ -232,7 +232,7 @@ feature -- Output on per class
 		do
 			total_number := nbr_to_go + processed
 			a_per := percentage_calculation (nbr_to_go)
-			update_interface (a_class.name_in_upper, nbr_to_go, a_per)
+			update_interface (a_class.name, nbr_to_go, a_per)
 			processed := processed + 1
 		end
 
@@ -248,7 +248,7 @@ feature -- Output on per class
 				-- though it is doing the same here because of
 				-- the precondition.
 			a_per := percentage_calculation (nbr_to_go)
-			update_interface (a_class.name_in_upper, nbr_to_go, a_per)
+			update_interface (a_class.name, nbr_to_go, a_per)
 		end
 
 	put_degree_2,
@@ -263,7 +263,7 @@ feature -- Output on per class
 			a_per: INTEGER
 		do
 			a_per := percentage_calculation (nbr_to_go)
-			update_interface (a_class.name_in_upper, nbr_to_go, a_per)
+			update_interface (a_class.name, nbr_to_go, a_per)
 		end
 
 	put_dead_code_removal_message (features_done, nbr_to_go: INTEGER) is
@@ -299,7 +299,7 @@ feature -- Output on per class
 			to_go := total_number - processed
 			a_per := percentage_calculation (to_go)
 			processed := processed + 1
-			update_interface (a_class.name_in_upper, to_go, a_per)
+			update_interface (a_class.name, to_go, a_per)
 		end
 
 	display_degree_output (deg_nbr: STRING to_go: INTEGER; total: INTEGER) is

@@ -17,6 +17,13 @@ inherit
 			default_create, copy, is_equal
 		end
 		
+	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
+		undefine
+			default_create, copy, is_equal
+		end
+		
 	GB_SHARED_SYSTEM_STATUS
 		export
 			{NONE} all
@@ -88,18 +95,7 @@ feature {GB_XML_LOAD} -- Implementation
 			tree: EV_TREE
 			tree_item: EV_TREE_ITEM
 		do
-			tree ?= an_item.parent
-			if tree /= Void then
-				tree.prune_all (an_item)
-			else
-				tree_item ?= an_item.parent
-				if tree_item /= Void then
-					tree_item.prune_all (an_item)
-				end
-			end
-			check
-				item_not_parented: an_item.parent = Void
-			end
+			unparent_tree_node (an_item)
 			extend (an_item)
 				-- Ensure that `Current' is expanded
 			expand

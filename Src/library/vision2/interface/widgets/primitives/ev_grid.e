@@ -327,7 +327,7 @@ feature -- Status setting
 		do
 			implementation.select_column (a_column)
 		ensure
-			-- column_selected: column (a_column).forall (item (j).is_selected
+			column_selected: column (a_column).is_selected
 		end
 		
 	select_row (a_row: INTEGER) is
@@ -339,7 +339,27 @@ feature -- Status setting
 		do
 			implementation.select_row (a_row)
 		ensure
-			-- column_selected: column (a_row).forall (item (i).is_selected
+			row_selected: row (a_row).is_selected
+		end
+
+	enable_selection_on_click is
+			-- Enable selection handling of items when clicked upon
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.enable_selection_on_click
+		ensure
+			selection_on_click_enabled:is_selection_on_click_enabled
+		end
+
+	disable_selection_on_click is
+			-- Disable selection handling when items are clicked upon
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.disable_selection_on_click
+		ensure
+			selection_on_click_disabled: not is_selection_on_click_enabled
 		end
 		
 	enable_single_row_selection is
@@ -350,7 +370,7 @@ feature -- Status setting
 		do
 			implementation.enable_single_row_selection
 		ensure
-			single_row_selection_enabled: single_row_selection_enabled
+			single_row_selection_enabled: is_single_row_selection_enabled
 		end
 		
 	enable_multiple_row_selection is
@@ -361,7 +381,7 @@ feature -- Status setting
 		do
 			implementation.enable_multiple_row_selection
 		ensure
-			multiple_row_selection_enabled: multiple_row_selection_enabled
+			multiple_row_selection_enabled: is_multiple_row_selection_enabled
 		end
 		
 	enable_single_item_selection is
@@ -372,7 +392,7 @@ feature -- Status setting
 		do
 			implementation.enable_single_item_selection
 		ensure
-			single_item_selection_enabled: single_item_selection_enabled
+			single_item_selection_enabled: is_single_item_selection_enabled
 		end
 		
 	enable_multiple_item_selection is
@@ -383,7 +403,7 @@ feature -- Status setting
 		do
 			implementation.enable_multiple_item_selection
 		ensure
-			multiple_item_selection_enabled: multiple_item_selection_enabled
+			multiple_item_selection_enabled: is_multiple_item_selection_enabled
 		end
 		
 	show_header is
@@ -677,42 +697,48 @@ feature -- Status report
 			Result := implementation.column_displayed (a_column)
 		end
 		
-	single_row_selection_enabled: BOOLEAN is
+	is_single_row_selection_enabled: BOOLEAN is
 			-- Does clicking an item select the whole row, unselecting
 			-- any previous rows?
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.single_row_selection_enabled
+			Result := implementation.is_single_row_selection_enabled
 		end
 
-	multiple_row_selection_enabled: BOOLEAN is
+	is_multiple_row_selection_enabled: BOOLEAN is
 			-- Does clicking an item select the whole row, with multiple
 			-- row selection permitted?
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.multiple_row_selection_enabled
+			Result := implementation.is_multiple_row_selection_enabled
 		end
 		
-	single_item_selection_enabled: BOOLEAN is
+	is_single_item_selection_enabled: BOOLEAN is
 			-- Does clicking an item select the item, unselecting
 			-- any previous items?
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.single_item_selection_enabled
+			Result := implementation.is_single_item_selection_enabled
 		end
 
-	multiple_item_selection_enabled: BOOLEAN is
+	is_multiple_item_selection_enabled: BOOLEAN is
 			-- Does clicking an item select the item, with multiple
 			-- item selection permitted?
 		require
 			not_destroyed: not is_destroyed
 		do
-			Result := implementation.multiple_item_selection_enabled
+			Result := implementation.is_multiple_item_selection_enabled
 		end
-		
+
+	is_selection_on_click_enabled: BOOLEAN is
+			-- Will an item be selected if clicked upon?
+		do
+			Result := implementation.is_selection_on_click_enabled
+		end
+
 	first_visible_row: INTEGER is
 			-- Index of first row visible in `Current' or 0 if `row_count' = 0.
 		require
@@ -897,7 +923,8 @@ feature {NONE} -- Contract support
 		do
 			Result := not is_horizontal_scrolling_per_item and
 				is_vertical_scrolling_per_item and is_header_displayed and
-				is_row_height_fixed and subrow_indent = 0 and are_tree_node_connectors_shown
+				is_row_height_fixed and subrow_indent = 0 and is_single_item_selection_enabled and is_selection_on_click_enabled and
+				are_tree_node_connectors_shown
 		end
 			
 feature {EV_ANY, EV_ANY_I} -- Implementation
@@ -920,8 +947,8 @@ invariant
 	selected_columns_not_void: selected_columns /= Void
 	selected_rows_not_void: selected_rows /= Void
 	selected_items_not_void: selected_items /= Void
-	single_row_selection_enabled_implies_selected_count_no_more_than_one: single_row_selection_enabled implies selected_rows.count <= 1
-	single_item_selection_enabled_implies_selected_count_no_more_than_one: single_item_selection_enabled implies selected_rows.count <= 1
+	single_row_selection_enabled_implies_selected_count_no_more_than_one: is_single_row_selection_enabled implies selected_rows.count <= 1
+	single_item_selection_enabled_implies_selected_count_no_more_than_one: is_single_item_selection_enabled implies selected_rows.count <= 1
 end
 
 --|----------------------------------------------------------------

@@ -290,6 +290,21 @@ feature {EV_GRID_ROW, EV_ANY_I}-- Element change
 			item_set: item (i) = a_item
 		end
 
+	remove_subrow (a_row: EV_GRID_ROW) is
+			-- Updarent `a_row' from `Current'
+		require
+			is_parented: parent /= Void
+			a_row_not_void: a_row /= Void
+			is_child: a_row.parent_row = interface
+		local
+			row_imp: EV_GRID_ROW_I
+		do
+			row_imp := a_row.implementation
+			subrows.prune_all (row_imp)
+			row_imp.internal_set_parent_row (Void)
+		end
+		
+
 	add_subrow (a_row: EV_GRID_ROW) is
 			-- Make `a_row' a child of Current
 		require
@@ -394,13 +409,18 @@ feature {EV_GRID_I} -- Implementation
 feature {EV_GRID_ROW_I} -- Implementation
 
 	internal_set_parent_row (a_parent_row: EV_GRID_ROW_I) is
-			--
+			-- Set the `parent_row' of `Current'
 		do
 			parent_row_i := a_parent_row
-			depth_in_tree := a_parent_row.depth_in_tree + 1
-			indent_depth_in_tree := a_parent_row.indent_depth_in_tree + 1
-			if parent_row_i.first_set_item_index /= first_set_item_index then
-				indent_depth_in_tree := 1
+			if parent_row_i /= Void then
+				depth_in_tree := a_parent_row.depth_in_tree + 1
+				indent_depth_in_tree := a_parent_row.indent_depth_in_tree + 1
+				if parent_row_i.first_set_item_index /= first_set_item_index then
+					indent_depth_in_tree := 1
+				end				
+			else
+				depth_in_tree := 0
+				indent_depth_in_tree := 0
 			end
 		end
 

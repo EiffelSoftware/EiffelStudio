@@ -100,7 +100,7 @@ feature -- Status setting
 			-- Set `is_selected' `True'.
 		do
 			if not is_selected then
-				if parent_i.single_row_selection_enabled or else parent_i.multiple_row_selection_enabled then
+				if parent_i.is_single_row_selection_enabled or else parent_i.is_multiple_row_selection_enabled then
 						-- We are in row selection mode so we manipulate the parent row directly
 					parent_row_i.enable_select
 				else

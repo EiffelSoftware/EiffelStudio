@@ -671,13 +671,13 @@ feature -- Basic operations
 		
 	white: EV_COLOR is
 			-- Once access to the color white.
-		do
+		once
 			Result := (create {EV_STOCK_COLORS}).white
 		end
 		
 	black: EV_COLOR is
-			-- Once acces to the color black.
-		do
+			-- Once access to the color black.
+		once
 			Result := (create {EV_STOCK_COLORS}).black
 		end
 		

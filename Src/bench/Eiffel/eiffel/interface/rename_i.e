@@ -18,6 +18,7 @@ feature
 	make is
 		do
 			!!renamings.make (1);
+			renamings.compare_objects
 		end;
 
 	set_cluster (c: CLUSTER_I) is

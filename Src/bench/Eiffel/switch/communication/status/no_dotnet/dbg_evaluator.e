@@ -20,6 +20,12 @@ feature {NONE} -- Initialization
 		do
 		end
 
+feature
+
+	init is
+		do
+		end
+
 feature -- Access
 
 	dotnet_metamorphose_basic_to_ref (dmp: DUMP_VALUE): DUMP_VALUE is

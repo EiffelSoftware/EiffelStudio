@@ -92,30 +92,30 @@ feature {NONE} -- Text processing
 
 	process_basic_text (text: BASIC_TEXT) is
 			-- Check first if a format has been specified for `text'.
-		local
-			format: CELL2 [STRING, STRING];
-			text_image: STRING
+		--local
+			--format: CELL2 [STRING, STRING];
+			--text_image: STRING
 		do
-			if text.is_keyword or text.is_special then
-				text_image := text.image;
-				text_image.to_lower;
-				if format_table.has (text_image) then
-					format := format_table.item (text.image)
-				elseif text.is_keyword and format_table.has (f_Keyword) then
-					format := format_table.item (f_Keyword)
-				elseif text.is_special and format_table.has (f_Symbol) then
-					format := format_table.item (f_Symbol)
-				end
-			end;
-			if format /= Void then
-				image.append (format.item1);
-				if format.item2 /= Void then
-					print_escaped_text (text.image);
-					image.append (format.item2)
-				end
-			else
-				print_escaped_text (text.image)
-			end
+			--if text.is_keyword or text.is_special then
+				--text_image := text.image;
+				--text_image.to_lower;
+				--if format_table.has (text_image) then
+					--format := format_table.item (text.image)
+				--elseif text.is_keyword and format_table.has (f_Keyword) then
+					--format := format_table.item (f_Keyword)
+				--elseif text.is_special and format_table.has (f_Symbol) then
+					--format := format_table.item (f_Symbol)
+				--end
+			--end;
+			--if format /= Void then
+				--image.append (format.item1);
+				--if format.item2 /= Void then
+					--print_escaped_text (text.image);
+					--image.append (format.item2)
+				--end
+			--else
+				--print_escaped_text (text.image)
+			--end
 		end;
 
 	process_comment_text (text: COMMENT_TEXT) is
@@ -279,15 +279,15 @@ feature {NONE} -- Text processing
 		end;
 
 	process_after_class (text: AFTER_CLASS) is
-		local
-			item: COMMENT_TEXT
+		--local
+			--item: COMMENT_TEXT
 		do
-			print_escaped_text (" ");
-			process_basic_text (ti_Dashdash);
-			print_escaped_text (" ");
-			!! item.make ("class ");
-			process_comment_text (item);
-			print_escaped_text (text.class_name)
+			--print_escaped_text (" ");
+			--process_basic_text (ti_Dashdash);
+			--print_escaped_text (" ");
+			--!! item.make ("class ");
+			--process_comment_text (item);
+			--print_escaped_text (text.class_name)
 		end;
 
 	print_escaped_text (str: STRING) is

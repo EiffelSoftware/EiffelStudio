@@ -49,7 +49,6 @@ feature -- Basic operations
 			non_void_name: a_feature_name /= Void
 		local
 			l_ctxt: FEATURE_TEXT_FORMATTER;
-			l_reader: EIFFEL_XML_DESERIALIZER
 			l_file_name, l_docs: STRING
 			l_dictionary: IDM_DICTIONARY_INTERFACE
 			l_external_class: EXTERNAL_CLASS_I
@@ -385,7 +384,6 @@ feature {NONE} -- Implementation
 		local
 			i: INTEGER
 			found: BOOLEAN
-			l_lines: LIST [STRING]
 		do
 			create Result.make (a_text.count)
 			if a_text.count <= a_wrap_count then

@@ -175,7 +175,6 @@ feature {NONE} -- Implementation
 			lower_case: a_feature_name.as_lower.is_equal (a_feature_name)
 		local
 			l_features: LIST [COMPLETION_FEATURE]
-			temp: STRING
 			comp_feature: COMPLETION_FEATURE
 		do
 			completion_features.search (file_name)

@@ -44,7 +44,7 @@ feature
 			-- Print register or generate
 		do
 			if real_type (type).is_none then
-				buffer.putstring ("(char *) 0")
+				buffer.putstring ("(EIF_REFERENCE) 0")
 			else
 				{ATTRIBUTE_B} Precursor
 			end
@@ -164,7 +164,7 @@ end
 			r: REGISTER;	-- For debug
 		do
 			if type.is_none then
-				buffer.putstring ("(char *) 0")
+				buffer.putstring ("(EIF_REFERENCE) 0")
 			else
 					-- Generate attribute
 				do_generate (reg)

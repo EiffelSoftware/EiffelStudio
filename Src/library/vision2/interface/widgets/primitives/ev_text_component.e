@@ -171,7 +171,7 @@ feature -- Element change
 		end
 
 	remove_text is
-			-- Make `text' `Void'.
+			-- Make `text' empty.
 		require
 			not_destroyed: not is_destroyed
 		do

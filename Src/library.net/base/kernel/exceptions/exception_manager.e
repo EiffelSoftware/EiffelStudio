@@ -1,7 +1,9 @@
 indexing
 	Generator: "Eiffel Emitter 2.7b2"
-	assembly: "mscorlib", "1.0.2411.0", "neutral", "b77a5c561934e089"
+	assembly: "ise_runtime", "5.2.0.0", "neutral", "def26f296efef469"
 	external_name: "ISE.Runtime.EXCEPTION_MANAGER"
+	date: "$Date$"
+	revision: "$Revision$"
 
 external class
 	EXCEPTION_MANAGER

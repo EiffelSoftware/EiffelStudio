@@ -85,8 +85,7 @@ feature {NONE} -- Implementation
 	launch_c_compilation (argument: ANY) is
 			-- Launch the C compilation in the background.
 		do
-			error_window.put_string ("System recompiled");
-			error_window.new_line;
+			process_end_compilation;
 			if start_c_compilation then
 				error_window.put_string ("Launching C compilation in background...");
 				error_window.new_line;

@@ -111,7 +111,6 @@ feature {NONE} -- Implementation
 						st.add_string (" again");
 						st.add_new_line;
 						error_window.process_text (st);
-						error_window.display
 					else
 						if not finalization_error then
 							launch_c_compilation (argument)
@@ -124,6 +123,7 @@ feature {NONE} -- Implementation
 					-- becomes read-only.
 				warner (popup_parent).gotcha_call (w_Project_may_be_corrupted);
 			end;
+			Degree_output.finish_degree_output;
 			error_window.display;
 			mp.restore
 		rescue
@@ -168,8 +168,7 @@ feature {NONE} -- Implementation
 	launch_c_compilation (argument: ANY) is
 			-- Launch the C compilation.
 		do
-			error_window.put_string ("System recompiled");
-			error_window.new_line;
+			process_end_compilation;
 			if start_c_compilation then
 				if Eiffel_project.freezing_occurred then
 					error_window.put_string
@@ -299,6 +298,15 @@ feature {NONE} -- Attributes
 			-- Name of the command.
 		do
 			Result := l_Update
+		end;
+
+feature {NONE} -- Implementation
+
+	process_end_compilation is
+			-- Process the end of the compilation
+		do
+			Error_window.put_string ("System recompiled");
+			Error_window.new_line;
 		end;
 
 feature {NONE} -- Implementation; Execution

@@ -110,7 +110,6 @@ feature -- Project Initialization
 			temp: STRING;
 			fn: FILE_NAME;
 			title: STRING;
-			e_displayer: DEFAULT_ERROR_DISPLAYER;
 			mp: MOUSE_PTR
 		do
 			ok := True;
@@ -129,8 +128,7 @@ feature -- Project Initialization
 				else
 						-- Create a new project.
 					Eiffel_project.make (project_dir);
-					!! e_displayer.make (Error_window);
-					Eiffel_project.set_error_displayer (e_displayer)
+					init_project;
 					title := clone (l_New_project);
 					title.append (": ");
 					title.append (project_dir.name);
@@ -152,8 +150,7 @@ feature -- Project Initialization
 					mp.set_watch_cursor;
 					retrieve_project (project_dir);
 					if not Eiffel_project.error_occurred then
-						!! e_displayer.make (Error_window);
-						Eiffel_project.set_error_displayer (e_displayer)
+						init_project;
 						title := clone (l_Project);
 						title.append (": ");
 						title.append (project_dir.name);
@@ -186,6 +183,20 @@ feature -- Project Initialization
 				warner (popup_parent).custom_call (Current,
 						w_Read_only_project, " OK ", "Exit", Void)
 			end;
+		end;
+
+	init_project is
+			-- Initialize project.
+		local
+			e_displayer: DEFAULT_ERROR_DISPLAYER;
+			g_degree_output: GRAPHICAL_DEGREE_OUTPUT;
+		do
+			!! e_displayer.make (Error_window);
+			Eiffel_project.set_error_displayer (e_displayer);
+			if not resources.get_boolean (r_Graphical_degree_output_disabled, False) then
+				!! g_degree_output;
+				Eiffel_project.set_degree_output (g_degree_output)
+			end
 		end;
 
 feature {NONE} -- Attributes

@@ -46,7 +46,6 @@ feature {NONE} -- Initialization
 			end
 			!! child_cell
 			set_top_level_window_imp (par_imp.top_level_window_imp)
-			initialize_list (command_count)
 			par_imp.add_child (Current)
 			plateform_build (par_imp)
 			build

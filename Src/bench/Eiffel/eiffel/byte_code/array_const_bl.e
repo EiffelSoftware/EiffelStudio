@@ -166,13 +166,13 @@ feature {NONE} -- C code generation
 				buf.putchar ('{');
 				buf.new_line;
 				buf.indent;
-				buf.putstring ("long elem_size;");
+				buf.putstring ("EIF_INTEGER elem_size;");
 				buf.new_line;
-				buf.putstring ("elem_size = *(long *) (");
+				buf.putstring ("elem_size = *(EIF_INTEGER *) (");
 				array_area_reg.print_register;
 				buf.putstring (" + (HEADER(");
 				array_area_reg.print_register;
-				buf.putstring (")->ov_size & B_SIZE) - LNGPAD(2) + sizeof(long));");
+				buf.putstring (")->ov_size & B_SIZE) - LNGPAD(2) + sizeof(EIF_INTEGER));");
 				buf.new_line;
 			end;
 			from

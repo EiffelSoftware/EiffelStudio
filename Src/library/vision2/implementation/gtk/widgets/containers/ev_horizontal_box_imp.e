@@ -44,8 +44,6 @@ feature {EV_BOX} -- Implementation
 			-- creation of the gtk vbox where the widget will be placed
 			-- to allow vertical resizing options.
 			vbox_wid := gtk_vbox_new (False, 0)
-			gtk_object_ref (vbox_wid)
-				-- setting the number of references to 1
 
 			child_imp.set_box_widget (vbox_wid)
 			gtk_widget_show (child_imp.box_widget)
@@ -62,6 +60,7 @@ feature {EV_BOX} -- Implementation
 				-- After putting child_imp.widget in child_imp.box_widget
 				-- its number of references reached 2, so we have to
 				-- decrease it to 1.
+				-- The number of reference of box_widget is 1 (its parent).
 		end
 
 feature {EV_HORIZONTAL_BOX_IMP} -- Implementation

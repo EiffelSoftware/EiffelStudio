@@ -83,8 +83,10 @@ feature {EV_BOX} -- Implementation
 			
 			gtk_container_remove (GTK_CONTAINER (child_imp.box_widget), child_imp.widget)
 			gtk_container_remove (GTK_CONTAINER (widget), child_imp.box_widget)
+			child_imp.set_box_widget (default_pointer)
 				-- This destroys child_imp.box_widget as it has no more reference.
-				-- We destroy it as we do not use it any longer.
+				-- We destroy it as we do not use it any longer, and set it to
+				-- `default_pointer'.
 		end
 
 end -- class EV_BOX_IMP

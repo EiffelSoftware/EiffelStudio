@@ -427,22 +427,7 @@ feature {NONE} -- Implementation
 				system_status.enable_project_modified
 				command_handler.update	
 			else
-				current_caret_position := name_field.caret_position
-				name_field.change_actions.block
-					-- We must handle three different cases in order to restore the text if an
-					-- invalid character was received.
-				if current_caret_position = name_field.text.count + 1 then
-					name_field.set_text (name_field.text.substring (1, name_field.text.count - 1))
-					name_field.set_caret_position (current_caret_position - 1)
-				elseif current_caret_position = 2 then
-					name_field.set_text (name_field.text.substring (2, name_field.text.count))	
-					name_field.set_caret_position (1)
-				else
-						--| FIXME, this still allows us to enter invalid names.
-					name_field.set_text (name_field.text.substring (1, current_caret_position - 2) + name_field.text.substring (current_caret_position, name_field.text.count))
-					name_field.set_caret_position (current_caret_position)
-				end
-				name_field.change_actions.resume
+				undo_last_character (name_field)
 			end
 		end
 		

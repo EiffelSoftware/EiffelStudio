@@ -39,6 +39,14 @@ feature -- Status setting
 			implementation.show
 		end
 
+	hide is
+			-- Hide the window.
+		require
+			exists: not destroyed
+		do
+			implementation.hide
+		end
+
 feature -- Element change
 
 	set_parent (par: EV_CONTAINER) is

@@ -608,6 +608,13 @@ feature -- IL Generation
 		deferred
 		end
 
+	generate_empty_body (a_feat: FEATURE_I) is
+			-- Generate a valid empty body for `a_feat' in `current_type_id'.
+		require
+			feature_not_void: a_feat /= Void
+		do
+		end
+
 	generate_feature_il (feat: FEATURE_I; a_type_id, code_feature_id: INTEGER) is
 			-- Specifies for which feature `feat' of `feat.feature_id' written in class of
 			-- `a_type_id' IL code will be generated. If `a_type_id' is different from current
@@ -1521,6 +1528,14 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 			check
 				not_implemented: False
 			end
+		end
+
+	signatures (a_type_id, a_feature_id: INTEGER): ARRAY [INTEGER] is
+			-- Given a `a_feature_id' in `a_type_id' retrieves its associated
+			-- signature.
+		require
+			valid_type_id: a_type_id > 0
+		do
 		end
 
 feature {NONE} -- Implementation

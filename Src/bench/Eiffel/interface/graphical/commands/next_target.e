@@ -8,13 +8,13 @@ indexing
 class NEXT_TARGET
 
 inherit
-
-	PIXMAP_COMMAND
+	TWO_STATE_CMD
 		rename
 			init as make
 		redefine
-			execute
-		end;
+			execute, inactive_symbol
+		end
+
 	WARNER_CALLBACKS
 		rename
 			execute_warner_ok as save_changes,
@@ -22,7 +22,6 @@ inherit
 		end
 
 creation
-
 	make
 
 feature -- Callbacks
@@ -46,12 +45,18 @@ feature -- Callbacks
 
 feature -- Properties
 
-	symbol: PIXMAP is
+	active_symbol: PIXMAP is
 			-- Symbol for the button
 		once
 			Result := Pixmaps.bm_Next_target
 		end;
 
+	inactive_symbol: PIXMAP is
+			-- Symbol for the button
+		once
+			Result := Pixmaps.bm_Disabled_next_target
+		end
+	
 	name: STRING is
 			-- Name of the command
 		do
@@ -94,9 +99,7 @@ feature {NONE} -- Implementation
 			history: STONE_HISTORY
 		do
 			history := tool.history;
-			if history.empty or else (history.islast or history.after) then
-				warner (popup_parent).gotcha_call (Warning_messages.w_End_of_history)
-			else
+			if not (history.empty or else (history.islast or history.after)) then
 				history.forth;
 				history.set_do_not_update (True);
 				tool.receive (history.item);

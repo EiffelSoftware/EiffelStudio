@@ -26,13 +26,13 @@ feature -- State Changing
 		do
 			if b then
 				associated_button.set_insensitive
-				if associated_button.pixmap /= associated_command.true_state_symbol then
-					associated_button.set_symbol (associated_command.true_state_symbol)
+				if associated_button.pixmap /= associated_command.inactive_symbol then
+					associated_button.set_symbol (associated_command.inactive_symbol)
 				end	
 			else
 				associated_button.set_sensitive
-				if associated_button.pixmap /= associated_command.false_state_symbol then
-					associated_button.set_symbol (associated_command.false_state_symbol)
+				if associated_button.pixmap /= associated_command.active_symbol then
+					associated_button.set_symbol (associated_command.active_symbol)
 				end
 			end
 		end

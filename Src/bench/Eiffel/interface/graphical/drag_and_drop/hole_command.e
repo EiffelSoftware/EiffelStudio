@@ -3,8 +3,8 @@ deferred class HOLE_COMMAND
 inherit
 	TWO_STATE_CMD
 		rename
-			true_state_symbol as symbol,
-			false_state_symbol as full_symbol,
+			active_symbol as symbol,
+			inactive_symbol as full_symbol,
 			init as make
 		redefine
 			full_symbol

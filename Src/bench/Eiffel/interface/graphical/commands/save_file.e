@@ -11,10 +11,10 @@ inherit
 	TWO_STATE_CMD
 		rename
 			init as make,
-			true_state_symbol as unmodified_pixmap,
-			false_state_symbol as modified_pixmap
+			inactive_symbol as unmodified_pixmap,
+			active_symbol as modified_pixmap
 		redefine
-			license_checked, modified_pixmap
+			license_checked, unmodified_pixmap
 		end
 
 creation

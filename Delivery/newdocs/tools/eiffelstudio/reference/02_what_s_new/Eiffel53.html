@@ -9,10 +9,16 @@
 	<BODY>
 		<H1>What's new in EiffelStudio 5.3</H1>
 		<h2>Graphical environment</h2>
-		<h3>Changes</h3>
+		<h3>Improvements</h3>
 		<ul>
           <li>In project settings, we now accept a root class without creation 
           procedure.</li>
+          <li>In .NET code generation, we do not force the C compilation at each 
+          compilation. It is only done when necessary (for example when a C 
+          external has been added).</li>
+          <li>Incremental .NET code generation (See
+          <a href="../30_compiler/60_version_history/03_53_release/00_52_to_53_changes.html">
+          compiler release notes</a> for more info).</li>
         </ul>
 		<h3>Bug fixes</h3>
 		<ul>
@@ -38,6 +44,8 @@
           `infix' or `prefix' in which an exception was raised. This issue was 
           only occurring with melted code (usually noticeable when using a 
           precompiled library).</li>
+          <li>Changing the project specific command line arguments will not 
+          touch the project settings configuration file (ace file).</li>
         </ul>
 		<h2>Compiler</h2>
         <ul>
@@ -45,7 +53,6 @@
           <a href="../30_compiler/60_version_history/03_53_release/00_52_to_53_changes.html">here</a> 
           for the compiler release notes.</li>
         </ul>
-		<h2>Debugger</h2>
 		<h2>Libraries</h2>
         <h3>CECIL</h3>
         <ul>
@@ -102,7 +109,11 @@
 </pre><li>
           Fixed  .NET implementation of <span class="efeature">open_write</span> and <span class="efeature">create_read_write</span> 
           in <span class="eclass">FILE</span>. They 
-          were not resetting the file size to zero if file already existed.</ul>
+          were not resetting the file size to zero if file already existed.<li>
+          Added <span class="efeature">correct_mismatch</span> on
+          <span class="eclass">ANY</span> used for `recoverable storable'.<li>
+          Added <span class="efeature">correct_mismatch</span> on <span class="eclass">HASH_TABLE</span> to enable retrieval of the 
+          5.1 and older version of <span class="eclass">HASH_TABLE</span>.</ul>
         <h3>Eiffel2Java</h3>
         <ul>
           <li>Updated library so that it works both in classic and dotnet mode.</li>

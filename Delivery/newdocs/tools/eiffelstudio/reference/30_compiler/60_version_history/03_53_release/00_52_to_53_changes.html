@@ -28,6 +28,15 @@
           number in the routine) being executed when a failure occurred. It was 
           already displaying this information in workbench/melted mode, we have 
           just extended this feature to finalize mode.</li>
+          <li>Incremental compilation is now available for .NET code generation. 
+          Meaning that if you modify one class, only this class is being 
+          recompiled. It dramatically improves development time when targeting 
+          .NET.</li>
+          <li>In .NET code generation, assertions can be turned on or off on a 
+          class per class basis without having to recompile those classes.</li>
+          <li>Implemented recoverable storable to enable the retrieval of 
+          slightly different version of an object. It only applies for classic 
+          Eiffel.</li>
 </ul>
         
         <H2>Improvements</H2>
@@ -35,7 +44,10 @@
         
         <ul>
           <li>Enabled support for Borland C compiler in .NET.</li>
-          <li>Removed too many warnings during C compilation on Tru64</li>
+          <li>Removed too many warnings during C compilation on Tru64.</li>
+          <li>Improved formatting of exception traces so that class names, 
+          feature names, exception tags are not truncated. Display limit has 
+          been pushed at about 256 characters.</li>
 </ul>
         
         
@@ -53,6 +65,9 @@
         
         
         <h2>Bug fixes</h2>
+        
+        
+        <h3>Language issues</h3>
         
         
         <ul>
@@ -75,10 +90,29 @@ x: <span class="eclass">X</span>
           properly, i.e.  <span class="efeature">make</span> gets the old value of x, not the new one<br>
 <pre><span class="ekeyword">create</span> x.<span class="efeature">make</span> (x)</pre>
           </li>
+          <li>Fixed undetected <span class="eerror">VDRD(3)</span> errors: compiler was not strict enough and accepted 
+          <span class="ekeyword">ensure</span> where only  
+          <span class="ekeyword">ensure then</span> was valid.</li>
+</ul>
+        
+        
+        <h3>Store/Retrieve issues</h3>
+        
+        
+        <ul>
           <li>Fixed issue in storable mechanism when retrieving expanded 
           objects.</li>
           <li>Fixed issue with independent_store where storing arrays of objects 
           whose count was greater than 65536 will cause a memory corruption.</li>
+          <li>Added <span class="efeature">correct_mismatch</span> on <span class="eclass">HASH_TABLE</span> to enable retrieval of the 
+          5.1 and older version of <span class="eclass">HASH_TABLE</span>.</li>
+</ul>
+        
+        
+        <h3>Runtime/code generation issues</h3>
+        
+        
+        <ul>
           <li>Fixed incorrect C code generation in final mode when creating an 
           <span class="eclass">ARRAY</span> of expanded type.</li>
           <li>Fixed incorrect C code generation in final mode when creating a 
@@ -99,6 +133,62 @@ x: <span class="eclass">X</span>
           project configuration includes a precompiled library and that you 
           cancel finalization process at degree -2, and then restart a 
           finalization.</li>
+          <li>Fixed issue with incorrect C code generation of inspect 
+          instruction based on character values above 128.</li>
+          <li>Fixed compilation crash at degree 3 with following code:
+          <pre>	<span class="ekeyword">local</span>
+		i: <span class="eclass">INTEGER</span>
+	<span class="ekeyword">do</span>
+		i := &lt;&lt; 1 &gt;&gt; <span class="efeature">@</span> 2
+	<span class="ekeyword">end</span></pre></li>
+          <li>Fixed a crash in finalized mode with invariant checking enabled 
+          with following code and when checking the invariant triggers a garbage 
+          collection cycle:<br>
+<pre>	<span class="efeature">value</span>: <span class="eclass">INTEGER</span>
+	<span class="efeature">is_value_required</span>: <span class="eclass">BOOLEAN</span> <span class="ekeyword">is</span>
+		<span class="ekeyword">do</span>
+			Result := <span class="efeature">value</span> = 1
+		<span class="ekeyword">end</span>
+</pre></li>
+          <li>Fixed crash of compiler at degree 4 while trying to compile this incorrect 
+          class:<br>
+<pre><span class="ekeyword">class</span> <span class="eclass">CRASH</span>
+
+<span class="ekeyword">inherit</span>
+	<span class="eclass">CHAIN</span>	<span class="ecomment">-- Missing generic parameter</span>
+
+<span class="ekeyword">create</span>
+	<span class="efeature">make</span>
+
+<span class="ekeyword">feature</span> -- Initialization
+
+	<span class="efeature">make</span> <span class="ekeyword">is</span>
+		<span class="ekeyword">do</span>
+		<span class="ekeyword">end</span>
+
+	<span class="efeature">index</span>: <span class="eclass">INTEGER</span> <span class="ekeyword">is</span>
+		<span class="ekeyword">do</span>
+		<span class="ekeyword">end</span>
+
+	<span class="efeature">duplicate</span> (n: <span class="eclass">INTEGER</span>): <span class="ekeyword">like Current is</span>
+		<span class="ekeyword">do</span>
+		<span class="ekeyword">end</span>
+
+<span class="ekeyword">end</span></pre>
+</li>
+          <li>Fixed issue with pathological memory allocation scheme that could 
+          trigger an `out of memory' exception where enough memory is still 
+          available.</li>
+          <li>Fixed incorrect allocation of expanded arrays where creation 
+          routine of expanded class was not called on all items of the newly 
+          created array.</li>
+</ul>
+        
+        
+        <h3>.NET issues</h3>
+        
+        
+        <ul>
           <li>Fixed issue in IL code generation where having a class that 
           inherits from a non-Eiffel .NET class. And the class has the following 
           features:<br>
@@ -107,8 +197,6 @@ x: <span class="eclass">X</span>
 		<span class="ekeyword">do</span>
 		<span class="ekeyword">end</span></pre>
           Then you could neither load nor execute the generated code.</li>
-          <li>Fixed issue with incorrect C code generation of inspect 
-          instruction based on character values above 128.</li>
           <li>Fixed incorrect C file naming when generating a .NET system that 
           uses a C++ external (it should be .cpp, not just .c).</li>
           <li>Fixed incorrect .NET code generation with following assignment 
@@ -151,51 +239,11 @@ x: <span class="eclass">X</span>
 			should_be_checked: False	
 		<span class="ekeyword">do</span>
 		<span class="ekeyword">end</span></pre></li>
-          <li>Fixed compilation crash at degree 3 with following code:
-          <pre>	<span class="ekeyword">local</span>
-		i: <span class="eclass">INTEGER</span>
-	<span class="ekeyword">do</span>
-		i := &lt;&lt; 1 &gt;&gt; <span class="efeature">@</span> 2
-	<span class="ekeyword">end</span></pre></li>
-          <li>Fixed a crash in finalized mode with invariant checking enabled 
-          with following code and when checking the invariant triggers a garbage 
-          collection cycle:<br>
-<pre>	<span class="efeature">value</span>: <span class="eclass">INTEGER</span>
-	<span class="efeature">is_value_required</span>: <span class="eclass">BOOLEAN</span> <span class="ekeyword">is</span>
-		<span class="ekeyword">do</span>
-			Result := <span class="efeature">value</span> = 1
-		<span class="ekeyword">end</span>
-</pre></li>
-          <li>Fixed crash of compiler at degree 4 while trying to compile this incorrect 
-          class:<br>
-<pre><span class="ekeyword">class</span> <span class="eclass">CRASH</span>
-
-<span class="ekeyword">inherit</span>
-	<span class="eclass">CHAIN</span>	<span class="ecomment">-- Missing generic parameter</span>
-
-<span class="ekeyword">create</span>
-	<span class="efeature">make</span>
-
-<span class="ekeyword">feature</span> -- Initialization
-
-	<span class="efeature">make</span> <span class="ekeyword">is</span>
-		<span class="ekeyword">do</span>
-		<span class="ekeyword">end</span>
-
-	<span class="efeature">index</span>: <span class="eclass">INTEGER</span> <span class="ekeyword">is</span>
-		<span class="ekeyword">do</span>
-		<span class="ekeyword">end</span>
-
-	<span class="efeature">duplicate</span> (n: <span class="eclass">INTEGER</span>): <span class="ekeyword">like Current is</span>
-		<span class="ekeyword">do</span>
-		<span class="ekeyword">end</span>
-
-<span class="ekeyword">end</span></pre>
-</li>
           <li>Fixed .NET verification issue where sometimes you could get the 
           following message when checking an Eiffel assembly against peverify: 
           [IL]: Error: Unverifiable PE Header/native stub.</li>
-          <li>&nbsp;</li>
+          <li>Fixed incorrect code generation when creating and accessing a 
+          <span class="eclass">NATIVE_ARRAY</span> of expanded type.</li>
 </ul>
         
         

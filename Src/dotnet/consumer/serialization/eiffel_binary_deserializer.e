@@ -27,20 +27,22 @@ feature -- Basic Operation
 			binary_path: STRING
 			f: RAW_FILE
 		do
-			if not retried then		
+			if not retried then
 				last_error := No_error
 				last_error_context := Void
 				binary_path := clone (path)
 				binary_path.remove_tail (4)
 				binary_path.append (".bin")
-				create f.make_open_read (binary_path)
-				if 
-					f.exists and then 
-					f.Support_storable
-				then
-					deserialized_object := f.retrieved
+				if feature {SYSTEM_FILE}.exists (binary_path.to_cil) then
+					create f.make_open_read (binary_path)
+					if 
+						f.exists and then 
+						f.Support_storable
+					then
+						deserialized_object := f.retrieved
+					end
+					f.close
 				end
-				f.close
 			end
 		rescue
 			retried := True

@@ -15,6 +15,7 @@ inherit
 			target as tool
 		redefine
 			tool,
+			initialize,
 			make
 		end
 
@@ -28,6 +29,12 @@ feature {NONE} -- Initialization
 			Precursor (a_target)
 		ensure then
 			tool /= Void
+		end
+
+	initialize is
+			-- Enable the sensitivity.
+		do
+			enable_sensitive
 		end
 
 feature -- Access

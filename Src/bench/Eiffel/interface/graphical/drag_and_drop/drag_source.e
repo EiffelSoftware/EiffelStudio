@@ -27,29 +27,24 @@ feature -- Properties
 		end;
 
 	want_initial_position: BOOLEAN is
-			-- Use `initial_x' and `initial_y' to define
-			-- initial drawing point?
+			-- Use `initial_coord' to define initial drawing point?
 			-- (Otherwize, the absolute coordinates are used)
 		do
 			Result := True
 		end;
 
-	initial_x: INTEGER is
+	initial_coord: COORD_XY is
 			-- Initial x starting point.
 			-- By default it is in the middle of the widget.
 		require
 			want_initial_position: want_initial_position
+		local
+			x1, y1: INTEGER
 		do
-			Result := source.real_x + source.width // 2
-		end;
-
-	initial_y: INTEGER is
-			-- Initial y starting point.
-			-- By default it is in the middle of the widget.
-		require
-			want_initial_position: want_initial_position
-		do
-			Result := source.real_y + source.height // 2
+			x1 := source.real_x + source.width // 2;
+			y1 := source.real_y + source.height // 2;
+			!! Result;
+			Result.set (x1, y1)
 		end;
 
 feature -- Update

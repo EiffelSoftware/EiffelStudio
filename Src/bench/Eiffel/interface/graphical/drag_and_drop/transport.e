@@ -24,7 +24,8 @@ feature -- Execution
 	execute (s: DRAG_SOURCE) is
 			-- Initiate transort if `s' is transportable.
 		local
-			x0, y0: INTEGER;
+			coord: COORD_XY;
+			x0, y0: INTEGER
 		do
 			if last_warner /= Void then
 				last_warner.popdown
@@ -32,8 +33,9 @@ feature -- Execution
 			s.update_before_transport (context_data);
 			if s.transportable then
 				if s.want_initial_position then
-					x0 := s.initial_x;
-					y0 := s.initial_y;
+					coord := s.initial_coord;
+					x0 := coord.x;
+					y0 := coord.y;
 				else
 					x0 := context_data.absolute_x;
 					y0 := context_data.absolute_y

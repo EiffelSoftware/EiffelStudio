@@ -564,7 +564,7 @@ feature -- Basic Operations
 				if p_module /= Default_pointer then
 					create l_module.make_by_pointer (p_module)
 					l_module.add_ref
-					Eifnet_debugger_info.register_new_module (l_module)	
+					Eifnet_debugger_info.register_new_module (l_module)
 				end
 				end_of_managed_callback (Cst_managed_cb_load_module)
 			end
@@ -846,6 +846,10 @@ feature -- Basic Operations
 			if not retried then
 				begin_of_managed_callback (Cst_managed_cb_breakpoint_set_error)
 				set_last_app_domain_by_pointer (p_app_domain)
+				debug ("debugger_trace_callstack")
+					io.put_string ("DBG callback : breakpoint_set_error %N")
+					io.put_string ("  error = " + (dw_error & 0x0FFFF).to_hex_string + "%N")
+				end
 				set_last_thread_by_pointer (p_thread)
 				end_of_managed_callback (Cst_managed_cb_breakpoint_set_error)
 			end

@@ -15,19 +15,22 @@
 #define _wbench_h_
 
 extern fnptr **eif_address_table;		/* Table of $ operator encapsulation functions */
-extern uint32 *onceadd();					/* Add once-routine body_id in a list */
+extern uint32 *onceadd();				/* Add once-routine body_id in a list */
 extern char *(*wfeat())();				/* Feature call */
 extern char *(*wpfeat())();				/* Precompiled feature call */
 extern char *(*wfeat_inv())();			/* Nested feature call */
 extern char *(*wpfeat_inv())();			/* Nested precompiled feature call */
 extern void wexp();						/* Creation call for expanded types */
+extern void wpexp();			/* Creation call for precomp expanded types */
 extern char *(*wdisp())();          	/* Feature call for dispose routine */ 
 extern fnptr wpointer();				/* Feature pointer */
+extern fnptr wppointer();				/* Precompiled feature pointer */
 extern long	wattr();					/* Attribute access */
 extern long	wpattr();					/* Precompiled attribute access */
 extern long wattr_inv();				/* Nested attribute access */
 extern long wpattr_inv();				/* Nested precompiled attribute access*/
 extern int wtype();						/* Creation type */
+extern int wptype();					/* Creation type of a precomp feature */
 
 extern void update();					/* Dynamic byte code loading */
 

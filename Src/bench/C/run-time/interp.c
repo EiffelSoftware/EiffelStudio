@@ -905,6 +905,24 @@ end:
 		}
 		break;
 
+	/*
+	 * Assignment to a precompiled attribute.
+	 */
+	case BC_PASSIGN:
+#ifdef DEBUG
+		dprintf(2)("BC_PASSIGN\n");
+#endif
+		{
+			int32 origin, ooffset;
+			uint32 type;
+
+			origin = get_long();		/* Get the origin class id */
+			ooffset = get_long();		/* Get the offset in origin */
+			type = get_uint32();		/* Get attribute meta-type */
+			passign(origin, ooffset, type);
+		}
+		break;
+
 	/* 
 	 * Attachment to an expanded attribute
 	 */
@@ -923,6 +941,29 @@ end:
 			code = get_short();			/* Get the static type */
 			type = get_uint32();		/* Get attribute meta-type */
 			offset = RTWA(code, offset, icur_dtype);
+			ecopy (ref, icurrent->it_ref + offset);
+		}
+		break;
+
+	/* 
+	 * Attachment to a precompiled expanded attribute
+	 */
+	case BC_PEXP_ASSIGN:
+#ifdef DEBUG
+		dprintf(2)("BC_PEXP_ASSIGN\n");
+#endif
+		{
+			struct ac_info *info;
+			char *ref;
+			int32 origin, ooffset;
+
+			ref = opop()->it_ref;		/* Expression type */
+			if (ref == (char *) 0)
+				xraise(EN_VEXP);		/* Void assigned to expanded */
+			origin = get_long();		/* Get the origin class id */
+			ooffset = get_long();		/* Get the offset in origin */
+			type = get_uint32();		/* Get attribute meta-type */
+			offset = RTWPA(origin, ooffset, icur_dtype);
 			ecopy (ref, icurrent->it_ref + offset);
 		}
 		break;
@@ -1001,6 +1042,28 @@ end:
 			if (!RTRA(type, last->it_ref))
 				last->it_ref = (char *) 0;
 			assign(offset, code, meta);
+		}
+		break;
+
+	/*
+	 * Reverse assignment to a precompiled attribute.
+	 */
+	case BC_PREVERSE:
+#ifdef DEBUG
+		dprintf(2)("BC_PREVERSE\n");
+#endif
+		{
+			int32 origin, ooffset;
+			uint32 meta;
+
+			origin = get_long();		/* Get the origin class id */
+			ooffset = get_long();		/* Get the offset in origin */
+			meta = get_uint32();		/* Get the attribute meta-type */
+			type = get_short();			/* Get the reverse type */
+			last = otop();
+			if (!RTRA(type, last->it_ref))
+				last->it_ref = (char *) 0;
+			passign(origin, ooffset, meta);
 		}
 		break;
 
@@ -1287,6 +1350,15 @@ end:
 			offset = get_long();	/* Get the feature id of the anchor */
 			type = RTWT(code, offset, icur_dtype);
 			break;
+		case BC_PCLIKE:				/* Like feature creation type */
+			{
+			int32 origin, ooffset;
+
+			origin = get_long();			/* Get the origin class id */
+			ooffset = get_long();			/* Get the offset in origin */
+			type = RTWPT(origin, ooffset, icur_dtype);
+			break;
+			}
 		case BC_CCUR:				/* Like Current creation type */
 			type = icur_dtype;
 			break;
@@ -1572,6 +1644,24 @@ end:
 		break;
 
 	/*
+	 * Access to a precompiled attribute.
+	 */
+	case BC_PATTRIBUTE:
+#ifdef DEBUG
+		dprintf(2)("BC_PATTRIBUTE\n");
+#endif
+		{
+			int32 origin, ooffset;
+			uint32 type;
+
+			origin = get_long();		/* Get the origin class id */
+			ooffset = get_long();		/* Get the offset in origin */
+			type = get_uint32();		/* Get attribute meta-type */
+			interp_paccess(origin, ooffset, type);
+		}
+		break;
+
+	/*
 	 * Accessing an attribute in a nested expression (need void ref. check).
 	 */
 	case BC_ATTRIBUTE_INV:
@@ -1589,6 +1679,29 @@ end:
 			code = get_short();				/* Get static type */
 			type = get_uint32();			/* Get attribute meta-type */
 			interp_access((int)offset, code, type);
+		}
+		break;
+			
+	/*
+	 * Accessing a precompiled attribute in a nested expression
+	 * (need void ref. check).
+	 */
+	case BC_PATTRIBUTE_INV:
+#ifdef DEBUG
+		dprintf(2)("BC_PATTRIBUTE_INV\n");
+#endif
+		{
+			int32 origin, ooffset;
+			uint32 type;
+
+			string = IC;					/* Get the attribute name */
+			IC += strlen(IC) + 1;			
+			if (otop()->it_ref == (char *) 0)
+				eraise(string, EN_VOID);
+			origin = get_long();			/* Get the origin class id */
+			ooffset = get_long();			/* Get the offset in origin */
+			type = get_uint32();			/* Get attribute meta-type */
+			interp_paccess(origin, ooffset, type);
 		}
 		break;
 			
@@ -1917,16 +2030,28 @@ end:
 				pointed_object = iresult;
 				break;
 			case BC_CURRENT:
-				if (*IC++ != BC_ATTRIBUTE)
+				switch (*IC++) {
+				case BC_ATTRIBUTE:
+					is_attribute = (EIF_BOOLEAN) 1;
+					offset = get_long();		/* Get feature id */
+					code = get_short();			/* Get static type */
+					type = get_uint32();		/* Get attribute meta-type */
+					offset = RTWA(code, (int)offset, Dtype(icurrent->it_ref));
+					break;
+				case BC_PATTRIBUTE:
+					{
+					int32 origin, ooffset;
+
+					is_attribute = (EIF_BOOLEAN) 1;
+					origin = get_long();		/* Get the origin class id */
+					ooffset = get_long();		/* Get the offset in origin */
+					type = get_uint32();		/* Get attribute meta-type */
+					offset = RTWPA(origin, ooffset, Dtype(icurrent->it_ref));
+					break;
+					}
+				default:
 					panic("illegal access to Current");
-
-				is_attribute = (EIF_BOOLEAN) 1;
-
-				offset = get_long();		/* Get feature id */
-				code = get_short();			/* Get static type */
-				type = get_uint32();		/* Get attribute meta-type */
-
-				offset = RTWA(code, (int)offset, Dtype(icurrent->it_ref));
+				}
 
 				last = iget();
 				last->type = SK_POINTER;
@@ -1983,6 +2108,94 @@ end:
 			new_obj = RTLN(dtype);			/* Create new object */
 			epush (&loc_stack, &new_obj);   /* Protect new_obj */
 			((void (*)()) RTWF(stype, feat_id, dtype))
+									(new_obj, 1L, nbr_of_items);
+
+			IC = OLD_IC;
+			if (tagval != stagval)
+				sync_registers(scur, stop); /* If calls melted make of array */ 
+		
+			sp_area = *(char **) new_obj;
+			while ((curr_pos++) != nbr_of_items) {
+				/* Fill the special area with the expressions
+			 	* for the manifest array.
+			 	*/
+				it = opop();		/* Pop expression off stack */
+				switch (it->type & SK_HEAD) {
+					case SK_BOOL:
+					case SK_CHAR:
+						*(char *) sp_area = it->it_char;
+						sp_area += sizeof(char);
+						break;
+					case SK_BIT:
+						*(char **) sp_area = it->it_bit;
+						sp_area += BITOFF(LENGTH(it->it_bit)); 
+						break;
+					case SK_EXP:
+						elem_size = *(long *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD(2) + sizeof(long));
+						ecopy(it->it_ref, sp_area + OVERHEAD + elem_size * curr_pos);
+						break;
+					case SK_REF:
+						/* No need to call RTAS as the area is the last object allocated and is thus in the NEW set */
+						*(char **) sp_area = it->it_ref;
+						sp_area += sizeof(char *);
+						break;
+					case SK_INT:
+						*(long *) sp_area = it->it_long;
+						sp_area += sizeof(long);
+						break;
+					case SK_FLOAT:
+						*(float *) sp_area = it->it_float;
+						sp_area += sizeof(float);
+						break;
+					case SK_DOUBLE:
+						*(double *) sp_area = it->it_double;
+						sp_area += sizeof(double);
+						break;
+					case SK_POINTER:
+						*(char **) sp_area = it->it_ptr;
+						sp_area += sizeof(fnptr);
+						break;
+					default:
+						panic(botched);
+				}
+			}
+			epop (&loc_stack, 1);			/* Release protection of `new_obj' */
+			last = iget();
+			last->type = SK_REF;
+			last->it_ref = new_obj;
+			break;
+		}
+
+	/*
+	 * Manifest array (when ARRAY is precompiled)
+	 */
+ 
+	case BC_PARRAY:
+#ifdef DEBUG
+		dprintf(2)("BC_PARRAY\n");
+#endif
+		{
+			int32 origin, ooffset;
+			long nbr_of_items;
+			char *new_obj;
+			char *sp_area;
+			short dtype;
+			unsigned long stagval;
+			int curr_pos = 0;
+			struct item *it;
+			long elem_size;
+			char *OLD_IC;
+ 
+			origin = get_long();		/* Get the origin class id */
+			ooffset = get_long();		/* Get the offset in origin */
+			dtype = get_short();			/* Get the static type */
+			nbr_of_items = get_long();	  	/* Number of items in array */
+			stagval = tagval;
+			OLD_IC = IC;					/* Save IC counter */
+ 
+			new_obj = RTLN(dtype);			/* Create new object */
+			epush (&loc_stack, &new_obj);   /* Protect new_obj */
+			((void (*)()) RTWPF(origin, ooffset, dtype))
 									(new_obj, 1L, nbr_of_items);
 
 			IC = OLD_IC;
@@ -4619,6 +4832,23 @@ char *start;
 		break;
 
 	/*
+	 * Assignment to a precompiled attribute.
+	 */
+	case BC_PASSIGN:
+	{ 								/* No new indent level--RAM */
+		int32 origin, ooffset;
+		uint32 type;
+
+		origin = get_long();		/* Get the origin class id */
+		ooffset = get_long();		/* Get the offset in origin */
+		type = get_uint32();		/* Get attribute meta-type */
+		fprintf(fd, "0x%lX %s origin=%ld, offset=%ld, meta-type=0x%lx\n",
+			IC - sizeof(long) - sizeof(long) -sizeof(uint32) - 1,
+			"BC_PASSIGN", origin, ooffset, type);
+	}
+		break;
+
+	/*
 	 * Assignment to an expanded attribute
 	 */
 	case BC_EXP_ASSIGN:
@@ -4629,6 +4859,22 @@ char *start;
 			IC - sizeof(short) - sizeof(long) - sizeof(uint32) - 1,
 			"BC_EXP_ASSIGN", offset, code);
 		break;
+
+	/*
+	 * Assignment to a precompiled expanded attribute
+	 */
+	case BC_PEXP_ASSIGN:
+		{
+			int32 origin, ooffset;
+
+			origin = get_long();		/* Get the origin class id */
+			ooffset = get_long();		/* Get the offset in origin */
+			type = get_short();			/* Get attribute meta-type */
+			fprintf(fd, "0x%lX %s origin=%ld, offset=%d\n",
+				IC - sizeof(long) - sizeof(long) - sizeof(uint32) - 1,
+				"BC_PEXP_ASSIGN", origin, ooffset);
+			break;
+		}
 
 	/*
 	 * Assignment to a NONE entity
@@ -4669,6 +4915,24 @@ char *start;
 			fprintf(fd, "0x%lX %s fid=%d, st=%d, rt=%d\n",
 				IC - 2 * sizeof(short) - sizeof(long) - 1,
 				"BC_REVERSE", offset, code, type);
+		}
+		break;
+
+	/*
+	 * Reverse assignment to a precompiled attribute.
+	 */
+	case BC_PREVERSE:
+		{
+			int32 origin, ooffset;
+			uint32 meta;
+
+			origin = get_long();		/* Get the origin class id */
+			ooffset = get_long();		/* Get the offset in origin */
+			meta = get_uint32();		/* Get the attribute meta-type */
+			type = get_short();			/* Get the reverse type */
+			fprintf(fd, "0x%lX %s origin=%ld, offset=%ld, rt=%d\n",
+				IC - 2 * sizeof(long) - sizeof(long) - 1,
+				"BC_PREVERSE", origin, ooffset, type);
 		}
 		break;
 
@@ -4856,11 +5120,21 @@ char *start;
 				type, code);
 			break;
 		case BC_CLIKE:				/* Like feature creation type */
-			type = get_short();
+			code = get_short();
 			offset = get_long();	/* Get the routine id of the anchor */
 			fprintf(fd, "0x%lX BC_CREATE fid=%d\n", 
 				IC - sizeof(short) - sizeof(long) - 2, offset);
 			break;
+		case BC_CLIKE:				/* Like (precomp) feature creation type */
+			{
+			int32 origin, ooffset;
+
+			origin = get_long();			/* Get the origin class id */
+			ooffset = get_long();			/* Get the offset in origin */
+			fprintf(fd, "0x%lX BC_CREATE origin =%ld, offset = %ld\n", 
+				IC - sizeof(long) - sizeof(long) - 2, origin, ooffset);
+			break;
+			}
 		case BC_CCUR:				/* Like Current creation type */
 			fprintf(fd, "0x%lX BC_CREATE current\n", IC - 2);
 			break;
@@ -4914,6 +5188,25 @@ char *start;
 			fprintf(fd, "0x%lX %s, st=%d dt=%d fid=%d nbr=%d\n",
 				 	IC - (2*sizeof(short)) - sizeof(long) - 1, 
 					"BC_ARRAY", stype, dtype, feat_id, nbr_of_items);
+		}
+		break;
+
+	/* 
+	 * Creation of a manifest array (when ARRAY is precompiled)
+	 */
+	case BC_PARRAY:
+		{
+			int32 origin, ooffset;
+			short dtype;
+			long nbr_of_items;
+
+			origin = get_long();		/* Get the origin class id */
+			ooffset = get_long();		/* Get the offset in origin */
+			dtype = get_short();		/* Get the dynamic type*/
+			nbr_of_items = get_long();	/* Get the nbr of items in array*/
+			fprintf(fd, "0x%lX %s, origin=%ld dt=%d offset=%ld nbr=%d\n",
+				 	IC - (sizeof(short)) - (3*sizeof(long)) - 1, 
+					"BC_PARRAY", origin, dtype, ooffset, nbr_of_items);
 		}
 		break;
 
@@ -5095,6 +5388,23 @@ char *start;
 	}
 
 	/*
+	 * Access to a precompiled attribute.
+	 */
+	case BC_PATTRIBUTE:
+	{
+		int32 origin, ooffset;
+		uint32 type;
+
+		origin = get_long();		/* Get the origin class id */
+		ooffset = get_long();		/* Get the offset in origin */
+		type = get_uint32();				/* Get attribute meta-type */
+		fprintf(fd, "0x%lX %s origin=%ld, offset=%ld, meta-type=0x%lx\n",
+			IC - sizeof(long) - sizeof(long) - sizeof(uint32) - 1,
+			"BC_PATTRIBUTE", origin, ooffset, type);
+		break;
+	}
+
+	/*
 	 * Accessing an attribute in a nested expression (need invariant check).
 	 */
 	case BC_ATTRIBUTE_INV:
@@ -5107,6 +5417,25 @@ char *start;
 			string - sizeof(long) - sizeof(short) - sizeof(uint32) - 1,
 			"BC_ATTRIBUTE_INV", offset, code, string);
 		break;
+			
+	/*
+	 * Accessing a precompiled attribute in a nested expression
+	 * (need invariant check).
+	 */
+	case BC_PATTRIBUTE_INV:
+		{
+			int32 origin, ooffset;
+
+			string = IC;						/* Get the attribute name */
+			IC += strlen(IC) + 1;			
+			origin = get_long();		/* Get the origin class id */
+			ooffset = get_long();		/* Get the offset in origin */
+			type = get_uint32();				/* Get attribute meta-type */
+			fprintf(fd, "0x%lX %s origin=%ld, offset=%ld, \"%s\"\n", 
+				string - sizeof(long) - sizeof(long) - sizeof(uint32) - 1,
+				"BC_PATTRIBUTE_INV", origin, ooffset, string);
+			break;
+		}
 			
 	/*
 	 * Rotate the operational stack.

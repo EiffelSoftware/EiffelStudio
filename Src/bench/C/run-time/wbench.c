@@ -27,11 +27,13 @@
  * `wfeat_inv (static_type, feature_id, name, object)'
  * `wpfeat_inv (origin, offset, name, object)'
  * `wpointer (static_type, feature_id, dyn_type)'
+ * `wppointer (origin, offset, dyn_type)'
  * `wattr (static_type, feature_id, dyn_type)'
  * `wpattr (origin, offset, dyn_type)'
  * `wattr_inv (static_type, feature_id, name, object)'
  * `wpattr_inv (origin, offset, name, object)'
  * `wtype (static_type, feature_id, dyn_type)'
+ * `wptype (origin, offset, dyn_type)'
  * `wdisp (dyn_type)'
  */
 
@@ -88,12 +90,10 @@ int32 origin, offset;
 	 * Return a function pointer.
 	 */
 
-	int16 body_index;
 	uint32 body_id;
 
 	nstcall = 0;								/* No invariant check */
-	body_index = desc_tab[origin][dyn_type][offset].info;
-	body_id = dispatch[body_index];
+	body_id = dispatch[desc_tab[origin][dyn_type][offset].info];
 
 	if (body_id < zeroc) {
 		return frozen[body_id];			 /* Frozen feature */
@@ -183,7 +183,6 @@ char *name;
 	 */
 
 	int dyn_type;
-	int16 body_index;
 	uint32 body_id;
 
 	if (object == (char *) 0)			/* Void reference check */
@@ -195,8 +194,7 @@ char *name;
 
 	dyn_type = Dtype(object);
 
-	body_index = desc_tab[origin][dyn_type][offset].info;
-	body_id = dispatch[body_index];
+	body_id = dispatch[desc_tab[origin][dyn_type][offset].info];
 
 	if (body_id < zeroc)
 		return frozen[body_id];
@@ -281,6 +279,61 @@ char *object;
 									 */
 }
 
+public void wpexp(origin, offset, dyn_type, object)
+int32 origin, offset;
+int dyn_type;
+char *object;
+{
+	/* Call the creation of the expanded (when precompiled).
+	 * with origin class `origin', dynamic type `dtype' and
+	 * offset `offset'. Apply the function to `object'
+	 */
+
+	int16 body_index;
+	uint32 body_id;
+	char *OLD_IC;
+
+	nstcall = 0;								/* No invariant check */
+	body_id = dispatch[desc_tab[origin][dyn_type][offset].info];
+
+	OLD_IC = IC;								/* Save old IC */
+	if (body_id < zeroc) 
+		((void (*)()) (frozen[body_id])) (object);	/* Frozen feature */
+									/* Call frozen creation routine */
+	else 
+#ifndef DLE
+	{
+		IC = melt[body_id];	 		/* Position byte code to interpret */
+		((void (*)()) (pattern[MPatId(body_id)].toi)) (object);
+									/* Call melted creation routine */
+	}
+#else
+	if (body_id < dle_level) {
+			/* Static melted routine */
+		IC = melt[body_id];	 		/* Position byte code to interpret */
+		((void (*)()) (pattern[MPatId(body_id)].toi)) (object);
+									/* Call melted creation routine */
+	} else if (body_id < dle_zeroc) {
+			/* Dynamic frozen routine */
+		((void (*)()) (dle_frozen[body_id])) (object);	/* Frozen feature */
+									/* Call frozen creation routine */
+	} else {
+			/* Dynamic melted routine */
+		IC = dle_melt[body_id];	 		/* Position byte code to interpret */
+		((void (*)()) (pattern[DLEMPatId(body_id)].toi)) (object);
+									/* Call melted creation routine */
+	}
+#endif
+	IC = OLD_IC;					/* Restore old IC.
+									 * This was needed if expanded objects
+									 * had expanded objects (which has a
+									 * creation routine which in turn call
+									 * the interpreter) so that 
+									 * the IC was return to the previous 
+									 * state.
+									 */
+}
+
 public fnptr wpointer(static_type, feature_id, dyn_type)
 int static_type, dyn_type;
 int32 feature_id;
@@ -298,6 +351,36 @@ int32 feature_id;
 	rout_id = Routids(static_type)[feature_id];
 	CBodyIdx(body_index,rout_id,dyn_type);
 	body_id = dispatch[body_index];
+
+	if (body_id < zeroc)
+		/* Frozen feature */
+		return frozen[body_id];
+	else
+#ifndef DLE
+		xraise(EN_DOL);
+#else
+	if (body_id < dle_level) xraise(EN_DOL);
+	else if (body_id < dle_zeroc)
+			/* Dynamic frozen feature */
+		return dle_frozen[body_id];
+	else
+		xraise(EN_DOL);
+#endif	
+}
+
+public fnptr wppointer(origin, offset, dyn_type)
+int32 origin, offset;
+int dyn_type;
+{
+	/* Function pointer associated to Eiffel feature identified by `offset'
+	 * in its origin class `origin' and to be applied on an object of
+	 * dynamic type `dyn_type'.
+	 * Return a function pointer if not melted.
+	 */
+
+	uint32 body_id;
+
+	body_id = dispatch[desc_tab[origin][dyn_type][offset].info];
 
 	if (body_id < zeroc)
 		/* Frozen feature */
@@ -334,9 +417,8 @@ int32 feature_id;
 }
 
 public long wpattr(origin, offset, dyn_type)
-int32 origin;
+int32 origin, offset;
 int dyn_type;
-int32 offset;
 {
 	/* Offset of precompiled attribute of origin class `origin', identified by
 	 * `offset' in that class, in an object of dynamic type `dyn_type'.
@@ -434,6 +516,21 @@ int32 feature_id;
 	rout_id = Routids(static_type)[feature_id];
 	CFeatType(type,rout_id,dyn_type);
 	type = RTUD(type);
+	return (type & SK_DTYPE);
+}
+
+public int wptype(origin, offset, dyn_type)
+int32 origin, offset;
+int dyn_type;
+{
+	/* Type of feature of routine identified by `offset' in its origin class
+	 * `origin' and to be applied on an object of dynamic type `dyn_type'.
+	 * Return an integer.
+	 */ 
+
+	int type;
+
+	type = RTUD(desc_tab[origin][dyn_type][offset].type);
 	return (type & SK_DTYPE);
 }
 

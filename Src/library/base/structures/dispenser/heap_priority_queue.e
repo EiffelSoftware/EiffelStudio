@@ -140,7 +140,7 @@ feature -- Element change
 			from
 				i := count
 			until
-				i <= 1 or else i_th (i // 2) >= v
+				i <= 1 or else not safe_less_than (i_th (i // 2), v)
 			loop
 				put_i_th (i_th (i // 2), i)
 				i := i // 2
@@ -167,10 +167,10 @@ feature -- Removal
 					stop or i > count // 2
 				loop
 					j := 2 * i
-					if (j < count) and i_th (j) < i_th (j + 1) then
+					if (j < count) and safe_less_than (i_th (j), i_th (j + 1)) then
 						j := j + 1
 					end
-					stop := i_th (j) <= up
+					stop := not safe_less_than (up, i_th (j))
 					if not stop then
 						put_i_th (i_th (j), i)
 						i := j
@@ -201,7 +201,7 @@ feature -- Removal
 					i > nb
 				loop
 					l_item := i_th (i)
-					if not l_done and l_item.is_equal (v) then
+					if not l_done and equal (l_item, v) then
 						l_done := True
 					else
 						l_tmp.extend (l_item)
@@ -306,6 +306,26 @@ feature {NONE} -- Inapplicable
 
 	replace (v: like item) is
 		do
+		end
+
+feature {NONE} -- Comparison
+
+	safe_less_than (a, b: G): BOOLEAN is
+			-- Same as `a < b' when `a' and `b' are not Void.
+			-- If `a' is Void and `b' is not, then True
+			-- Otherwise False
+		do
+			if a /= Void and b /= Void then
+				Result := a < b
+			elseif a = Void and b /= Void then
+				Result := True
+			else
+				Result := False
+			end
+		ensure
+			definition: (a /= Void and b /= Void) implies Result = (a < b)
+			left_void_definition: (a = Void and b /= Void) implies Result
+			right_void_definition: (a /= Void and b = Void) implies not Result
 		end
 
 invariant

@@ -13,12 +13,26 @@ feature {NONE}
 			--! file name
 		local
 			file_name: STRING;
+			subdir_name: STRING;
+			subdir: DIRECTORY
 		do
+			subdir_name := clone (System_object_prefix);
+			subdir_name.append_integer (1);
 			if final_mode then
-				file_name := build_path (Final_generation_path, Esize);
+				file_name := build_path (Final_generation_path, subdir_name);
+				!! subdir.make (file_name);
+				if not subdir.exists then
+					subdir.create
+				end;
+				file_name := build_path (file_name, Esize);
 				file_name.append (Dot_x);
 			else
-				file_name := build_path (Workbench_generation_path, Esize);
+				file_name := build_path (Workbench_generation_path, subdir_name);
+				!! subdir.make (file_name);
+				if not subdir.exists then
+					subdir.create
+				end;
+				file_name := build_path (file_name, Esize);
 				file_name.append (Dot_c);
 			end;
 			!!Result.make (file_name);
@@ -126,14 +140,34 @@ feature {NONE}
 feature {NONE}
 
 	final_file_name (base_name: STRING): STRING is
+		local
+			subdir_name: STRING;
+			subdir: DIRECTORY
 		do
-			Result := build_path (Final_generation_path, base_name);
+			subdir_name := clone (System_object_prefix);
+			subdir_name.append_integer (1);
+			Result := build_path (Final_generation_path, subdir_name);
+			!! subdir.make (Result);
+			if not subdir.exists then
+				subdir.create
+			end;
+			Result := build_path (Result, base_name);
 			Result.append (Dot_c);
 		end;
 
 	workbench_file_name (base_name: STRING): STRING is
+		local
+			subdir_name: STRING;
+			subdir: DIRECTORY
 		do
-			Result := build_path (Workbench_generation_path, base_name);
+			subdir_name := clone (System_object_prefix);
+			subdir_name.append_integer (1);
+			Result := build_path (Workbench_generation_path, subdir_name);
+			!! subdir.make (Result);
+			if not subdir.exists then
+				subdir.create
+			end;
+			Result := build_path (Result, base_name);
 			Result.append (Dot_c);
 		end;
 

@@ -2299,6 +2299,7 @@ end;
 				-- cltype_array is indexed by `id' not by `type_id'
 				-- as `class_types'
 			cltype_array: ARRAY [CLASS_TYPE];
+			subdir: DIRECTORY
 		do
 			nb := Type_id_counter.value;
 			final_mode := byte_context.final_mode;
@@ -2324,7 +2325,14 @@ if class_types.item (i) /= Void then
 end;
 					i := i + 1;
 				end;
-				f_name := build_path (Final_generation_path, Eskelet);
+				f_name := clone (System_object_prefix);
+				f_name.append_integer (1);
+				f_name := build_path (Final_generation_path, f_name);
+				!! subdir.make (f_name);
+				if not subdir.exists then
+					subdir.create
+				end;
+				f_name := build_path (f_name, Eskelet);
 				f_name.append (Dot_h);
 				Extern_declarations.generate (f_name);
 				Extern_declarations.wipe_out;
@@ -2478,6 +2486,7 @@ end;
 			a_class: CLASS_C;
 			final_mode: BOOLEAN;
 			f_name: STRING;
+			subdir: DIRECTORY
 		do
 			final_mode := byte_context.final_mode;
 
@@ -2504,9 +2513,14 @@ end;
 
 			if final_mode then
 					-- Extern declarations for previous file
-				f_name := clone (Final_generation_path);
-				f_name.extend (Directory_separator);
-				f_name.append ("Ececil.h");
+				f_name := clone (System_object_prefix);
+				f_name.append_integer (1);
+				f_name := build_path (Final_generation_path, f_name);
+				!! subdir.make (f_name);
+				if not subdir.exists then
+					subdir.create
+				end;
+				f_name := build_path (f_name, "Ececil.h");
 				Extern_declarations.generate (f_name);
 				Extern_declarations.wipe_out;
 				Cecil_file.putstring ("%Nstruct ctable ce_rname[] = {%N");

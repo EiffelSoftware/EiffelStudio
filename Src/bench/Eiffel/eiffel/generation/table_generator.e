@@ -49,9 +49,18 @@ feature
 			-- New file for generation
 		local
 			file_name: STRING;
+			subdir_name: STRING;
+			subdir: DIRECTORY
 		do
+			subdir_name := clone (System_object_prefix);
+			subdir_name.append_integer (1);
 			file_counter := file_counter + 1;
-			file_name := build_path (Final_generation_path, infix_file_name);
+			file_name := build_path (Final_generation_path, subdir_name);
+			!! subdir.make (file_name);
+			if not subdir.exists then
+				subdir.create
+			end;
+			file_name := build_path (file_name, infix_file_name);
 			file_name.append_integer (file_counter);
 			file_name.append (postfix_file_name);
 			!!Result.make (file_name);

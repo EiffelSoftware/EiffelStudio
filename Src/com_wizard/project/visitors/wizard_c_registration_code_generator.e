@@ -53,28 +53,29 @@ feature -- Basic operations
 			until
 				system_descriptor.coclasses.after
 			loop
-				-- Import/include header file
-				-- Coclass header file
-				c_writer.add_import (system_descriptor.coclasses.item.c_header_file_name)
+				if not Non_generated_type_libraries.has (system_descriptor.coclasses.item.type_library_descriptor.guid) then
+					-- Import/include header file
+					-- Coclass header file
+					c_writer.add_import (system_descriptor.coclasses.item.c_header_file_name)
 
-				-- Class factory header file
-				tmp_string := clone (system_descriptor.coclasses.item.c_type_name)
-				tmp_string.append (Underscore)
-				tmp_string.append (Factory)
-				tmp_string.append (Header_file_extension)
-				c_writer.add_import (tmp_string)
-				
-				create tmp_string.make (0)
-				tmp_string.append (Dword)
-				tmp_string.append (Space)
-				tmp_string.append (Class_object_registration_token)
-				tmp_string.append (Underscore)
-				tmp_string.append (system_descriptor.coclasses.item.c_type_name)
-				tmp_string.append (Semicolon)
-				tmp_string.append (New_line)
-				
-				c_writer.add_other_source (tmp_string)
+					-- Class factory header file
+					tmp_string := clone (system_descriptor.coclasses.item.c_type_name)
+					tmp_string.append (Underscore)
+					tmp_string.append (Factory)
+					tmp_string.append (Header_file_extension)
+					c_writer.add_import (tmp_string)
 
+					create tmp_string.make (0)
+					tmp_string.append (Dword)
+					tmp_string.append (Space)
+					tmp_string.append (Class_object_registration_token)
+					tmp_string.append (Underscore)
+					tmp_string.append (system_descriptor.coclasses.item.c_type_name)
+					tmp_string.append (Semicolon)
+					tmp_string.append (New_line)
+
+					c_writer.add_other_source (tmp_string)
+				end
 				system_descriptor.coclasses.forth
 			end
 			
@@ -1172,13 +1173,6 @@ feature {NONE} -- Implementation
 
 	registry_entries_data: STRING is
 			-- Registry entries for both dll and application
-		require
-			non_void_guid: coclass_guid /= Void
-			valid_guid: not coclass_guid.empty
-			non_void_name: coclass_descriptor.name /= Void
-			valid_coclass_name: not coclass_descriptor.name.empty
-			non_void_library_name: type_library_name /= Void
-			valid_type_library_name: not type_library_name.empty
 		local
 			string_one, string_two: STRING
 		do
@@ -1198,107 +1192,108 @@ feature {NONE} -- Implementation
 				system_descriptor.coclasses.start
 			until
 				system_descriptor.coclasses.after
-			loop	
-				coclass_descriptor := system_descriptor.coclasses.item
-				coclass_guid := clone (coclass_descriptor.guid.to_string)
-				type_library_name := coclass_descriptor.type_library_descriptor.name
-				type_library_guid := coclass_descriptor.type_library_descriptor.guid.to_string
+			loop
+				if not Non_generated_type_libraries.has (system_descriptor.coclasses.item.type_library_descriptor.guid) then
+					coclass_descriptor := system_descriptor.coclasses.item
+					coclass_guid := clone (coclass_descriptor.guid.to_string)
+					type_library_name := coclass_descriptor.type_library_descriptor.name
+					type_library_guid := coclass_descriptor.type_library_descriptor.guid.to_string
 
-				string_one := clone (Clsid_type)
-				string_one.append (Registry_field_seperator)
-				string_one.append (coclass_guid)
+					string_one := clone (Clsid_type)
+					string_one.append (Registry_field_seperator)
+					string_one.append (coclass_guid)
 
-				string_two := clone (system_descriptor.coclasses.item.name)
-				string_two.append (Space)
-				string_two.append ("Class")
+					string_two := clone (system_descriptor.coclasses.item.name)
+					string_two.append (Space)
+					string_two.append ("Class")
 
-				Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator (string_two), C_true))
-				Result.append (Comma)
-				Result.append (New_line_tab)
+					Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator (string_two), C_true))
+					Result.append (Comma)
+					Result.append (New_line_tab)
 
-				if shared_wizard_environment.in_process_server then
-					Result.append (dll_specific_registry_entries)
-				else
-					Result.append (application_specific_registry_entries)
+					if shared_wizard_environment.in_process_server then
+						Result.append (dll_specific_registry_entries)
+					else
+						Result.append (application_specific_registry_entries)
+					end
+					Result.append (Comma)
+					Result.append (New_line_tab)
+
+					string_one := clone (Clsid_type)
+					string_one.append (Registry_field_seperator)
+					string_one.append (coclass_guid)				
+					string_one.append (Registry_field_seperator)
+					string_one.append (Prog_id)
+
+					string_two := clone (type_library_name)
+					string_two.append (Dot)
+					string_two.append (coclass_descriptor.name)
+					string_two.append (Dot)
+					string_two.append (One)
+
+					Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator (string_two), C_true))
+					Result.append (Comma)
+					Result.append (New_line_tab)
+
+					string_one := clone (Clsid_type)
+					string_one.append (Registry_field_seperator)
+					string_one.append (coclass_guid)
+					string_one.append (Registry_field_seperator)
+					string_one.append (Version_independent_prog_id)
+
+					string_two := clone (type_library_name)
+					string_two.append (Dot)
+					string_two.append (coclass_descriptor.name)
+
+					Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator (string_two), C_true))
+					Result.append (Comma)
+					Result.append (New_line_tab)
+
+					string_two.append (Dot)
+					string_two.append (One)
+
+					Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (coclass_descriptor.name), C_true))
+					Result.append (Comma)
+					Result.append (New_line_tab)
+
+					string_two.append (Registry_field_seperator)
+					string_two.append (Clsid_type)
+
+					Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (coclass_guid), C_true))
+					Result.append (Comma)
+					Result.append (New_line_tab)
+
+					string_one := clone (type_library_name)
+					string_one.append (Dot)
+					string_one.append (coclass_descriptor.name)
+
+					Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator (coclass_descriptor.name), C_true))
+					Result.append (Comma)
+					Result.append (New_line_tab)
+
+					string_two := clone (string_one)
+					string_two.append (Registry_field_seperator)
+					string_two.append (Clsid_type)
+
+					Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (coclass_guid), C_true))
+					Result.append (Comma)
+					Result.append (New_line_tab)
+
+					string_two := clone (string_one)
+					string_one.append (Registry_field_seperator)
+					string_one.append (Current_version)
+
+					string_two.append (Dot)
+					string_two.append (One)
+
+					Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator (string_two), C_true))
+
+					if shared_wizard_environment.use_universal_marshaller then
+						Result.append (universal_marshaling_registration_code)
+					else
+						Result.append (standard_marshaling_registration_code)
+					end
 				end
-				Result.append (Comma)
-				Result.append (New_line_tab)
-
-				string_one := clone (Clsid_type)
-				string_one.append (Registry_field_seperator)
-				string_one.append (coclass_guid)				
-				string_one.append (Registry_field_seperator)
-				string_one.append (Prog_id)
-
-				string_two := clone (type_library_name)
-				string_two.append (Dot)
-				string_two.append (coclass_descriptor.name)
-				string_two.append (Dot)
-				string_two.append (One)
-
-				Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator (string_two), C_true))
-				Result.append (Comma)
-				Result.append (New_line_tab)
-
-				string_one := clone (Clsid_type)
-				string_one.append (Registry_field_seperator)
-				string_one.append (coclass_guid)
-				string_one.append (Registry_field_seperator)
-				string_one.append (Version_independent_prog_id)
-
-				string_two := clone (type_library_name)
-				string_two.append (Dot)
-				string_two.append (coclass_descriptor.name)
-
-				Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator (string_two), C_true))
-				Result.append (Comma)
-				Result.append (New_line_tab)
-
-				string_two.append (Dot)
-				string_two.append (One)
-
-				Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (coclass_descriptor.name), C_true))
-				Result.append (Comma)
-				Result.append (New_line_tab)
-
-				string_two.append (Registry_field_seperator)
-				string_two.append (Clsid_type)
-
-				Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (coclass_guid), C_true))
-				Result.append (Comma)
-				Result.append (New_line_tab)
-
-				string_one := clone (type_library_name)
-				string_one.append (Dot)
-				string_one.append (coclass_descriptor.name)
-
-				Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator (coclass_descriptor.name), C_true))
-				Result.append (Comma)
-				Result.append (New_line_tab)
-
-				string_two := clone (string_one)
-				string_two.append (Registry_field_seperator)
-				string_two.append (Clsid_type)
-
-				Result.append (struct_creator (tchar_creator (string_two), Zero, tchar_creator (coclass_guid), C_true))
-				Result.append (Comma)
-				Result.append (New_line_tab)
-
-				string_two := clone (string_one)
-				string_one.append (Registry_field_seperator)
-				string_one.append (Current_version)
-
-				string_two.append (Dot)
-				string_two.append (One)
-
-				Result.append (struct_creator (tchar_creator (string_one), Zero, tchar_creator (string_two), C_true))
-
-				if shared_wizard_environment.use_universal_marshaller then
-					Result.append (universal_marshaling_registration_code)
-				else
-					Result.append (standard_marshaling_registration_code)
-				end
-				
 				system_descriptor.coclasses.forth
 			end
 			Result.append (New_line)

@@ -28,6 +28,11 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_REJECTED_TYPE_LIBRARIES
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	generate is 

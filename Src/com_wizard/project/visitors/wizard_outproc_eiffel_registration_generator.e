@@ -39,11 +39,17 @@ feature -- Basic operations
 			eiffel_writer.add_feature (make_feature, Initialization)
 			eiffel_writer.add_feature (main_window_feature, Access)
 			eiffel_writer.add_feature (default_show_command_feature, Access)
+
 			eiffel_writer.add_feature (default_show_cmd_feature, Implementation)
 			eiffel_writer.add_feature (initialize_com_feature, Implementation)
 			eiffel_writer.add_feature (cleanup_com_feature, Implementation)
 			eiffel_writer.add_feature (register_server_feature, Implementation)
 			eiffel_writer.add_feature (unregister_server_feature, Implementation)
+
+			eiffel_writer.add_feature (ccom_initialize_com_feature, Externals)
+			eiffel_writer.add_feature (ccom_cleanup_com_feature, Externals)
+			eiffel_writer.add_feature (ccom_register_server_feature, Externals)
+			eiffel_writer.add_feature (ccom_unregister_server_feature, Externals)
 
 			-- Generate code and file name.
 			Shared_file_name_factory.create_registration_file_name (Current, eiffel_writer)
@@ -59,8 +65,8 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	description_message: STRING is 
-		"Objectes of this class set the registry keys necessary for COM to access the component%%%N%T%T%T %
-		% %%and activate a new instance of the component whenever COM asks for if.%%%N%T%T%T %
+		"Objectes of this class set the registry keys necessary for COM to access the component%%%N%T%T%T%T  %
+		% %%and activate a new instance of the component whenever COM asks for if.%%%N%T%T%T%T  %
 		% %%User may inherit from this class and redifine `main_window'."
 
 	default_show_cmd: STRING is "default_show_cmd"
@@ -329,7 +335,7 @@ feature {NONE} -- Implementation
 			tmp_body.append (Space)
 			tmp_body.append (Then_keyword)
 			tmp_body.append (New_line_tab_tab_tab)
-			tmp_body.append (Tab)
+			tmp_body.append (Tab_tab)
 
 			-- 		default_show_cmd := Sw_hide
 
@@ -464,7 +470,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 			Result.set_name (initialize_com)
-			Result.set_once
+			Result.set_effective
 			create tmp_comment.make (0)
 			tmp_comment.append ("Initialize COM ")
 			Result.set_comment (tmp_comment)
@@ -485,7 +491,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 			Result.set_name (Cleanup_com)
-			Result.set_once
+			Result.set_effective
 			create tmp_comment.make (0)
 			tmp_comment.append ("Clean up COM ")
 			Result.set_comment (tmp_comment)
@@ -506,7 +512,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 			Result.set_name (Register_server)
-			Result.set_once
+			Result.set_effective
 			create tmp_comment.make (0)
 			tmp_comment.append ("Register Server")
 			Result.set_comment (tmp_comment)
@@ -527,13 +533,113 @@ feature {NONE} -- Implementation
 		do
 			create Result.make
 			Result.set_name (Unregister_server)
-			Result.set_once
+			Result.set_effective
 			create tmp_comment.make (0)
 			tmp_comment.append ("Unregister Server")
 			Result.set_comment (tmp_comment)
 
 			tmp_body := clone (Tab_tab_tab)
 			tmp_body.append (Ccom_unregister_server)
+
+			Result.set_body (tmp_body)
+		ensure
+			non_void_writer: Result /= Void
+			valid_writer: Result.can_generate
+		end
+
+	ccom_initialize_com_feature: WIZARD_WRITER_FEATURE is
+			-- External Clean up COM feature.
+		local
+			tmp_body: STRING
+		do
+			create Result.make
+			Result.set_name (Ccom_initialize_com)
+			Result.set_external
+
+			Result.set_comment ("Initialize COM.")
+
+			tmp_body := clone (Tab_tab_tab)
+			tmp_body.append (Double_quote)
+			tmp_body.append ("C |")
+			tmp_body.append (Percent_double_quote)
+			tmp_body.append ("server_registration.h")
+			tmp_body.append (Percent_double_quote)
+			tmp_body.append (Double_quote)
+
+			Result.set_body (tmp_body)
+		ensure
+			non_void_writer: Result /= Void
+			valid_writer: Result.can_generate
+		end
+
+	ccom_cleanup_com_feature: WIZARD_WRITER_FEATURE is
+			-- External Initialize COM feature.
+		local
+			tmp_body: STRING
+		do
+			create Result.make
+			Result.set_name (Ccom_cleanup_com)
+			Result.set_external
+
+			Result.set_comment ("Clean up COM.")
+
+			tmp_body := clone (Tab_tab_tab)
+			tmp_body.append (Double_quote)
+			tmp_body.append ("C |")
+			tmp_body.append (Percent_double_quote)
+			tmp_body.append ("server_registration.h")
+			tmp_body.append (Percent_double_quote)
+			tmp_body.append (Double_quote)
+
+			Result.set_body (tmp_body)
+		ensure
+			non_void_writer: Result /= Void
+			valid_writer: Result.can_generate
+		end
+
+	ccom_register_server_feature: WIZARD_WRITER_FEATURE is
+			-- External Register server feature.
+		local
+			tmp_body: STRING
+		do
+			create Result.make
+			Result.set_name (Ccom_register_server)
+			Result.set_external
+
+			Result.set_comment ("Register server.")
+
+			tmp_body := clone (Tab_tab_tab)
+			tmp_body.append (Double_quote)
+			tmp_body.append ("C |")
+			tmp_body.append (Percent_double_quote)
+			tmp_body.append ("server_registration.h")
+			tmp_body.append (Percent_double_quote)
+			tmp_body.append (Double_quote)
+
+			Result.set_body (tmp_body)
+		ensure
+			non_void_writer: Result /= Void
+			valid_writer: Result.can_generate
+		end
+
+	ccom_unregister_server_feature: WIZARD_WRITER_FEATURE is
+			-- External Unregister Server feature.
+		local
+			tmp_body: STRING
+		do
+			create Result.make
+			Result.set_name (Ccom_unregister_server)
+			Result.set_external
+
+			Result.set_comment ("Unregister server.")
+
+			tmp_body := clone (Tab_tab_tab)
+			tmp_body.append (Double_quote)
+			tmp_body.append ("C |")
+			tmp_body.append (Percent_double_quote)
+			tmp_body.append ("server_registration.h")
+			tmp_body.append (Percent_double_quote)
+			tmp_body.append (Double_quote)
 
 			Result.set_body (tmp_body)
 		ensure

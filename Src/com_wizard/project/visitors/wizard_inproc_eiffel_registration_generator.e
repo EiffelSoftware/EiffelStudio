@@ -8,39 +8,73 @@ class
 	WIZARD_INPROC_EIFFEL_REGISTRATION_GENERATOR
 
 inherit
-	WIZARD_EIFFEL_REGISTRATION_GENERATOR
+	WIZARD_REGISTRATION_GENERATOR
+
+	WIZARD_VARIABLE_NAME_MAPPER
 
 feature -- Access
 
-feature -- Measurement
-
-feature -- Status report
-
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
+	eiffel_writer: WIZARD_WRITER_EIFFEL_CLASS
 
 feature -- Basic operations
 
-feature -- Obsolete
+	generate is
+			-- Generate Eiffel registration code for in-process server.
+		local
+			tmp_name: STRING
+		do
+			create eiffel_writer.make
 
-feature -- Inapplicable
+			tmp_name := to_eiffel_name (shared_wizard_environment.project_name)
+			tmp_name.prepend ("ECOM_")
+			tmp_name.append ("_REGISTRATION")
+			tmp_name.to_upper
+
+			eiffel_writer.set_class_name (tmp_name)
+
+			-- Generate code and file name.
+			Shared_file_name_factory.create_registration_file_name (Current, eiffel_writer)
+			eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
+		end
+
+	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is
+		do
+			a_factory.process_coclass_eiffel_server
+		end
 
 feature {NONE} -- Implementation
+
+	description_message: STRING is 
+		"Objectes of this class set the registry keys necessary for COM to access the component%%%N%T%T%T%T  %
+		% %%and activate a new instance of the component whenever COM asks for if.%%%N%T%T%T%T  %
+		% %%User should not inherit from this class or modify it."
+
+	Local_string_var: STRING is "local_string"
+			-- Used for code generation.
+
+	dll_register_server_name: STRING is "dll_register_server"
+			-- Used for code generation.
+
+	ccom_dll_register_server: STRING is "ccom_dll_register_server"
+			-- Used for code generation.
+
+	dll_unregister_server_name: STRING is "dll_unregister_server"
+			-- Used for code generation.
+
+	ccom_dll_unregister_server: STRING is "ccom_dll_unregister_server"
+			-- Used for code generation.
+
+	dll_get_class_object_name: STRING is "dll_get_class_object"
+			-- Used for code generation.
+
+	ccom_dll_get_class_object: STRING is "ccom_dll_get_class_object"
+			-- Used for code generation.
+
+	dll_can_unload_now_name: STRING is "dll_can_unload_now"
+			-- Used for code generation.
+
+	ccom_dll_can_unload_now: STRING is "ccom_dll_can_unload_now"
+			-- Used for code generation.
 
 invariant
 	invariant_clause: -- Your invariant here

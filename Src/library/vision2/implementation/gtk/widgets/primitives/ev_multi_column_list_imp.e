@@ -194,17 +194,35 @@ feature -- Element change
 
 feature -- Event : command association
 
-	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
-			-- Make `command' executed when an item is
-			-- selected.
+	add_selection_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
+			-- Add `cmd' to the list of commands to be executed
+			-- when the selection has changed.
 		do
-			add_command ("select_row", a_command, arguments)
-			add_command ("unselect_row", a_command, arguments)
+			add_command ("select_row", cmd, arg)
+			add_command ("unselect_row", cmd, arg)
 		end
 
-	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
-			-- Make `cmd' the executed command when a column is clicked.
+	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed
+			-- when a column is clicked.
 		do
+			add_command ("click_column", cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_selection_commands is	
+			-- Empty the list of commands to be executed
+			-- when the selection has changed.
+		do
+			check False end
+		end
+
+	remove_column_click_commands is
+			-- Empty the list of commands to be executed
+			-- when a column is clicked.
+		do
+			Check False end
 		end
 
 feature {EV_MULTI_COLUMN_LIST_ROW} -- Implementation

@@ -222,32 +222,55 @@ feature -- Element change
 
 feature -- Event - command association
 
-	add_close_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+	add_close_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 		local
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make-- temporary, craeta a correct object here XX
-			add_command_with_event_data ("delete_event", command, arguments, ev_data, 0, False)
+			add_command_with_event_data ("delete_event", cmd, arg, ev_data, 0, False)
 		end
 
-	add_resize_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add `command' to the list of commands to be executed when the
+	add_resize_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed when the
 			-- widget is resized.
 		local
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-			add_command_with_event_data ("configure_event", command, arguments, ev_data, 2, False)
+			add_command_with_event_data ("configure_event", cmd, arg, ev_data, 2, False)
 		end
 
-	add_move_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add `command' to the list of commands to be executed when the
+	add_move_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands to be executed when the
 			-- widget is resized.
 		local
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-			add_command_with_event_data ("configure_event", command, arguments, ev_data, 1, False)
+			add_command_with_event_data ("configure_event", cmd, arg, ev_data, 1, False)
+		end
+
+feature -- Event -- removing command association
+
+	remove_close_commands is
+			-- Empty the list of commands to be executed
+			-- when the window is closed.
+		do
+			check False end
+		end
+
+	remove_resize_commands is
+			-- Empty the list of commands to be executed
+			-- when the window is resized.
+		do
+			check False end
+		end
+
+	remove_move_commands is
+			-- Empty the list of commands to be executed
+			-- when the widget is resized.
+		do
+			check False end
 		end
 
 feature {NONE} -- Implementation

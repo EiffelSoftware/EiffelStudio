@@ -1,99 +1,108 @@
-#include <errno.h>
-#include <sys/types.h>
-
+#include "except.h"		/* eraise */
 #include "store.h"
 #include "retrieve.h"
 #include "compress.h"
-#include "except.h"
-#include "error.h"
 
 #ifdef EIF_WIN32
 #include "winsock.h"
+#define GET_SOCKET_ERROR WSAGetLastError()
 #else
-#include <unistd.h>
-#include <sys/time.h>
+#include <sys/time.h>		/* select */
+#define SOCKET_ERROR -1
+#define GET_SOCKET_ERROR errno
 #endif
 
 #define SOCKET_UNAVAILLABLE_FOR_WRITING "Socket unavaillable for writing"
 #define SOCKET_UNAVAILLABLE_FOR_READING "Socket unavaillable for reading"
 
-int write_to_socket (const void *buf, unsigned int nbytes)
+
+/* Returns nonzero if the socket is ready for, zero otherwise */
+/* read = 0, check the socket to be rrready for writing */
+/* read = 1, check the socket to be ready for reading */ 
+int net_socket_ready (int read)
 {
-	int i = 0;
 	struct timeval tm;
 	fd_set fdset;
-
-	errno = 0;
+	int num_active;
 
 	/* Maximum time we should wait for the socket to be ready */
-	tm.tv_sec = 10;
+	tm.tv_sec = 60;
 	tm.tv_usec = 0;
 
-	FD_ZERO (&fdset);
-	FD_SET (fides, &fdset);
 	
-	/* Wait until the socket is ready for writing*/
-	if (select (fides + 1, NULL, &fdset, NULL, &tm) == -1) {
-		eio();
-	}
+	/* If the select call is interrupted (GET_SOCKET_ERROR =
+           EINTR), we have to do the select again */
+	for (;;)
+	{
+		FD_ZERO (&fdset);
+		FD_SET (fides, &fdset);
+		if (read) {
+			/* Wait until the socket is ready for reading*/
+			num_active = select (fides + 1, &fdset, NULL, NULL,
+					     &tm);
+		} else {
+				/* Wait until the socket is ready for writing*/
+			num_active = select (fides + 1, NULL, &fdset, NULL,
+					     &tm);
+		}
+		
+		if (num_active != SOCKET_ERROR) {
+			break;
+		} else if (GET_SOCKET_ERROR != EINTR)  {
+			eio();
+		}
+	} 
 
-	if (FD_ISSET (fides, &fdset)) {
-		errno = 0;
-#ifdef EIF_WIN32
-		i = send (fides, buf, nbytes, 0);
-#else
-		i = write(fides, buf, nbytes);
-#endif
-	} else {
-				/* The desired socket is not
-                                   ready. Raise an exception. */
-		eraise(SOCKET_UNAVAILLABLE_FOR_WRITING, EN_RETR);
-	}
-	return i;
+	return (FD_ISSET (fides, &fdset));
 }
 
 int net_char_read(char *pointer, int size)
 {
-	int i = 0;
-	struct timeval tm;
-	fd_set fdset;
+	int i;
 
-	errno = 0;
-
-	/* Maximum time we should wait for the socket to be ready */
-	tm.tv_sec = 10;	
-	tm.tv_usec = 0;
-
-	FD_ZERO (&fdset);
-	FD_SET (r_fides, &fdset);
-	
-	/* Wait until the socket is ready for reading */
-	if (select (r_fides + 1,  &fdset, NULL, NULL, &tm) == -1) {
-		eio();
-	}
-
-	if (FD_ISSET (r_fides, &fdset)) {
-		errno = 0;
 #ifdef EIF_WIN32
-		i = recv(r_fides, pointer, size, 0);
+	i = recv(r_fides, pointer, size, 0);
 #else
-		i = read(r_fides, pointer, size);
+	i = read(r_fides, pointer, size);
 #endif
-	} else {
-		/* The desired socket is not ready. Raise an
-		   exception. */
-		eraise(SOCKET_UNAVAILLABLE_FOR_READING, EN_RETR);
+	if (i == SOCKET_ERROR && GET_SOCKET_ERROR == EAGAIN)
+	{
+		if (!net_socket_ready(1))
+		{
+			/* The desired socket is not ready. Raise an
+			   exception. */
+			eraise(SOCKET_UNAVAILLABLE_FOR_READING, EN_RETR);
+		} else {	
+			i = net_char_read(pointer, size);
+		}
 	}
-
 	return i;
 }
  
 int net_char_write(char *pointer, int size)
 {
-	return write_to_socket(pointer, size);
+	int i;
+
+#ifdef EIF_WIN32
+	i = send (fides, pointer, size, 0);
+#else
+	i = write(fides, pointer, size);
+#endif
+	if (i == SOCKET_ERROR && GET_SOCKET_ERROR == EAGAIN)
+	{
+	 	if (!net_socket_ready(0))
+		{
+			/* The desired socket is not ready. Raise an
+			   exception. */
+			eraise(SOCKET_UNAVAILLABLE_FOR_WRITING, EN_RETR);
+		}else {	
+			i = net_char_write(pointer, size);
+		}
+	}
+	return i;
 }
 
-void net_store_write(void)
+void net_store_write()
 {
 	char* cmps_in_ptr = (char *)0;
 	char* cmps_out_ptr = (char *)0;
@@ -116,7 +125,7 @@ void net_store_write(void)
 	number_left = cmps_out_size + EIF_CMPS_HEAD_SIZE;
 
 	while (number_left > 0) {
-		number_writen = write_to_socket (ptr, number_left);
+		number_writen = net_char_write (ptr, number_left);
 
 		if (number_writen <= 0)
 			eio();
@@ -155,3 +164,4 @@ rt_public void eif_net_independent_store(EIF_INTEGER file_desc, char *object)
 	sstore (file_desc, object);
 	rt_reset_store();
 }
+

@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			create referers.make (4)
 		ensure
 			name_set: name.is_equal (a_name) and name /= a_name
-			value_set: value.is_equal (a_Value)
+			value_set: value.is_equal (a_value)
 		end
 
 feature -- Access

@@ -12,7 +12,7 @@ feature -- Access
 	Lvis_cut: INTEGER is
 		-- The item is marked for a cut and paste operation.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVIS_CUT"
 		end
@@ -20,7 +20,7 @@ feature -- Access
 	Lvis_drophilited: INTEGER is
 		-- The item is highlighted as a drag-and-dop target.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVIS_DROPHILITED"
 		end
@@ -28,7 +28,7 @@ feature -- Access
 	Lvis_focused: INTEGER is
 		-- The item has the focus.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVIS_FOCUSED"
 		end
@@ -36,7 +36,7 @@ feature -- Access
 	Lvis_selected: INTEGER is
 		-- The item is selected.
 		external
-			"C [macro <cctrl.h>]"
+			"C [macro %"cctrl.h%"]"
 		alias
 			"LVIS_SELECTED"
 		end

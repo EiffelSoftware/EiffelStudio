@@ -22,23 +22,23 @@ inherit
 
 feature -- Initialization
 
-	set, make (a_class_c: CLASS_C; display: like output_window) is
+	set, make (a_class: E_CLASS; display: like output_window) is
 			-- Make current command with current_class as
-			-- `class_c'.
+			-- `a_class'.
 		require
-			valid_a_class_c: a_class_c /= Void;
+			valid_a_class_c: a_class /= Void;
 			valid_display: display /= Void
 		do
-			current_class := a_class_c;	
+			current_class := a_class;	
 			set_output_window (display)
 		ensure
-			class_set: current_class = a_class_c;
+			class_set: current_class = a_class;
 			display_set: output_window = display
 		end;
 
 feature -- Property
 
-	current_class: CLASS_C
+	current_class: E_CLASS
 			-- Class for current action
 
 	executable: BOOLEAN is
@@ -52,9 +52,9 @@ feature -- Property
 
 feature -- Execution
 
-    execute is
-            -- Execute Current command.
-        deferred
-        end;
+	execute is
+			-- Execute Current command.
+		deferred
+		end;
 
 end -- class E_CLASS_CMD

@@ -75,7 +75,7 @@ feature -- IL Generation
 			set_current_class (class_c)
 			set_current_class_type (class_type)
 			set_current_type_id (class_type.implementation_id)
-			current_class_token := class_mapping.item (current_type_id)
+			current_class_token := class_type_token (current_type_id)
 
 				-- Generate current features implement locally in `current_class_type'
 				-- and traverse parents to define inherited features.

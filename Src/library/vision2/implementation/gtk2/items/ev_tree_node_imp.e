@@ -11,22 +11,14 @@ inherit
 	EV_TREE_NODE_I
 		redefine
 			interface
-		select
-			interface
 		end
 	
 	EV_ITEM_LIST_IMP [EV_TREE_NODE]
-		rename
-			interface as item_list_interface
 		export
 			{EV_TREE_IMP}
 				child_array
 		redefine
-			add_to_container,
-			insert_i_th,
-			remove_i_th,
-			reorder_child,
-			dispose
+			interface
 		end
 
 	EV_ITEM_ACTION_SEQUENCES_IMP
@@ -49,25 +41,27 @@ create
 
 feature {NONE} -- Initialization
 
-	needs_event_box: BOOLEAN is False
+	destroy is
+			-- Clean up `Current'
+		do
+			if parent_imp /= Void then
+				parent_imp.interface.prune_all (interface)
+			end
+			is_destroyed := True
+		end
 
 	make (an_interface: like interface) is
 			-- Create the tree item.
 		do
 			base_make (an_interface)
+			internal_text := ""
 		end
 		
 	dispose is
 			-- Clean up
 		do
-			Precursor {EV_ITEM_LIST_IMP}
-			if not is_in_final_collect then
-				if gdk_pixmap /= NULL then
-					feature {EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdk_pixmap)
-				end
-				if gdk_mask /= NULL then
-					feature {EV_GTK_EXTERNALS}.gdk_pixmap_unref (gdk_mask)
-				end				
+			if not is_in_final_collect and then gdk_pixbuf /= default_pointer then
+					feature {EV_GTK_EXTERNALS}.object_unref (gdk_pixbuf)
 			end
 		end
 
@@ -299,12 +293,6 @@ feature {EV_ANY_I} -- Implementation
 
 feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 
-	expand_callback, collapse_callback is
-			-- Called when `Current' is expanded.
-		do
-			--| FIXME IEK Move up to gtk dependent externals
-		end
-
 	add_item_and_children_to_parent_tree (a_parent_tree: EV_TREE_IMP; a_parent_node: EV_TREE_NODE_IMP; a_index: INTEGER)  is
 			-- Used for setting items within parent tree
 		local
@@ -320,10 +308,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			set_list_iter (a_tree_iter)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_store_insert (a_parent_tree.tree_store, a_tree_iter.item, a_parent_iter, a_index - 1)
 			a_parent_tree.set_text_on_position (Current, text)
-			if pixmap /= Void then
-				a_parent_tree.set_row_pixmap (Current, pixmap)
-			end
-			
+			a_parent_tree.update_row_pixmap (Current)
 			from
 				i := 1
 			until
@@ -335,13 +320,16 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			end
 		end
 
-feature {EV_TREE_IMP} -- Implementation
+feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	
 	text: STRING is
 			-- Text displayed.
+		local
+			par_t_imp: EV_TREE_IMP
 		do
 			if internal_text = Void then
-				create Result.make (0)
+				par_t_imp := parent_tree_imp
+				Result := par_t_imp.get_text_from_position (Current)
 			else
 				Result := internal_text.twin
 			end
@@ -359,6 +347,18 @@ feature {EV_TREE_IMP} -- Implementation
 			end
 		ensure then
 			tooltip_not_void: Result /= Void
+		end
+
+	remove_internal_text is
+			-- Make `internal_text' Void
+		do
+			internal_text := Void
+		end
+
+	set_internal_text (a_text: STRING) is
+			-- Set `internal_text' to `a_text'
+		do
+			internal_text := a_text
 		end
 
 	internal_text: STRING
@@ -385,21 +385,12 @@ feature {EV_TREE_IMP} -- Implementation
 			a_pix_imp: EV_PIXMAP_IMP
 			par_tree: EV_TREE_IMP
 		do
-			--| FIXME An intelligent image list needs to be implemented instead of
-			--| just retaining a pointer to passed pixmap.
 			a_pix_imp ?= a_pixmap.implementation
-			gdk_pixmap := feature {EV_GTK_EXTERNALS}.gdk_pixmap_ref (a_pix_imp.drawable)
-			if a_pix_imp.mask /= NULL then
-				gdk_mask := feature {EV_GTK_EXTERNALS}.gdk_bitmap_ref (a_pix_imp.mask)
-			end
-			pix_width := a_pix_imp.width
-			pix_height := a_pix_imp.height
-			
+			gdk_pixbuf := a_pix_imp.pixbuf_from_drawable
 			par_tree := parent_tree_imp
 			if par_tree /= Void then
-				par_tree.set_row_pixmap (Current, pixmap)
+				par_tree.update_row_pixmap (Current)
 			end
-
 		end
 		
 	pix_width, pix_height: INTEGER
@@ -415,15 +406,15 @@ feature {EV_TREE_IMP} -- Implementation
 		local
 			pix_imp: EV_PIXMAP_IMP
 		do
-			if gdk_pixmap /= NULL then
+			if gdk_pixbuf /= default_pointer then
 				create Result
 				pix_imp ?= Result.implementation
-				pix_imp.copy_from_gdk_data (gdk_pixmap, gdk_mask, pix_width, pix_height)				
+				pix_imp.set_pixmap_from_pixbuf (gdk_pixbuf)
 			end
 		end
 
-	gdk_pixmap, gdk_mask: POINTER
-		-- Stored gdk pixmap data.
+	gdk_pixbuf: POINTER
+		-- Stored gdk pixbuf data
 		
 	insert_i_th (v: like item; i: INTEGER) is
 			-- Insert `v' at position `i'.
@@ -440,6 +431,7 @@ feature {EV_TREE_IMP} -- Implementation
 			par_t_imp := parent_tree_imp
 			if par_t_imp /= Void then
 				item_imp.add_item_and_children_to_parent_tree (par_t_imp, Current, i)
+				item_imp.remove_internal_text
 				if item_imp.is_transport_enabled_iterator then
 					par_t_imp.update_pnd_connection (True)
 				end	
@@ -467,9 +459,10 @@ feature {EV_TREE_IMP} -- Implementation
 			end
 			item_imp ?= (child_array @ (a_position)).implementation
 
-			-- Remove from tree if present
+				-- Remove from tree if present
 			par_tree_imp := parent_tree_imp
 			if par_tree_imp /= Void then
+				item_imp.set_internal_text (par_tree_imp.get_text_from_position (item_imp))
 				feature {EV_GTK_EXTERNALS}.gtk_tree_store_remove (par_tree_imp.tree_store, item_imp.list_iter.item)
 			end
 			item_imp.set_parent_imp (Void)
@@ -489,28 +482,6 @@ feature {NONE} -- Redundant implementation
 	real_pointed_target: EV_PICK_AND_DROPABLE is
 		do
 			check do_not_call: False end
-		end
-
-	gtk_reorder_child (a_container, a_child: POINTER; a_pos: INTEGER) is
-			-- Not needed in this class.
-		do
-			check dont_call: False end
-		end
-
-	add_to_container (v: like item; v_imp: EV_ITEM_IMP) is
-			-- Add `v' to tree items tree at position `i'.
-		do
-			check
-				do_not_call: False
-			end
-		end
-
-	reorder_child (v: like item; v_imp: EV_ITEM_IMP; a_position: INTEGER) is
-			-- Move `v' to `a_position' in Current.
-		do
-			check
-				do_not_call: False
-			end
 		end
 			
 feature {EV_ANY_I} -- Implementation

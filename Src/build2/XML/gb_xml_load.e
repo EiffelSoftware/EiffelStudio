@@ -117,6 +117,8 @@ feature -- Basic operation
 				window_selector.mark_first_window_as_root
 			end
 			
+			Window_selector.select_main_window
+			
 				-- Flag to the system that a load is no longer underway.
 			System_status.disable_loading_project
 		end

@@ -44,6 +44,30 @@ feature
 
 	eiffel_type: STRING is "RADIO_BOX";
 
+	unarm_all_toggles_except (t: TOGGLE_B_C) is
+			-- Unarm all toggles in Current except for `t'.
+		local
+			toggle_b_c: TOGGLE_B_C
+			other_editor: CONTEXT_EDITOR
+		do
+			from
+				child_start
+			until
+				child_offright
+			loop
+				toggle_b_c ?= child;
+				if toggle_b_c /= Void and then toggle_b_c /= t then
+					toggle_b_c.set_toggle_state (False);
+					other_editor := context_catalog.editor 
+									(toggle_b_c, Context_const.toggle_att_form_nbr)
+					if other_editor /= Void then
+						other_editor.reset_current_form
+					end
+				end;
+				child_forth
+			end;
+		end;
+
 -- ****************
 -- Storage features
 -- ****************

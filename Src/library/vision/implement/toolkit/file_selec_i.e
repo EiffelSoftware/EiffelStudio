@@ -236,10 +236,22 @@ feature
 	set_file_list_width (new_width: INTEGER) is
 		deferred
 		end;
-
-	set_file_sel_mask (choice: INTEGER) is
+  
+       set_directory_selection is
+               -- Sets selection to directories only.
+           deferred
+           end;
+ 
+	set_file_selection is
+			-- Sets selection to files (default value).
 		deferred
 		end;
+
+	set_all_selection is
+			 -- Sets selection to files and directories.
+		deferred
+		end;
+
 end -- class FILE_SELEC
 
 

@@ -140,10 +140,24 @@ feature
 			implementation.hide_ok_button
 		end;
 
-	set_file_sel_mask (choice: INTEGER) is
+	set_directory_selection is
+			-- Sets selection to directories only.
 		do
-			implementation.set_file_sel_mask (choice);
-		end;
+			implementation.set_directory_selection
+	end;
+
+    	set_file_selection is
+        	    -- Sets selection to files (default value). 
+        	do
+            		implementation.set_file_selection
+        	end;
+
+    	set_all_selection is
+        	    -- Sets selection to files and directories.
+        	do
+            		implementation.set_all_selection
+        	end;
+
 
 	
 feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}

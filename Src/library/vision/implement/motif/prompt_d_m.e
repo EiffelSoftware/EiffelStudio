@@ -23,6 +23,7 @@ inherit
 
 	DIALOG_M
         rename
+		c_set_pixmap as cc_set_pixmap,
             xt_window as d_xt_window,
             x_define_cursor as d_x_define_cursor,
             set_boolean as d_set_boolean,

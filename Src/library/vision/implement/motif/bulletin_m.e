@@ -38,6 +38,7 @@ feature
 			screen_object := create_bulletin ($ext_name_bull, a_bulletin.parent.implementation.screen_object);
 		end;
 
+
 	set_default_button (but: POINTER) is
 		do
 			set_xt_widget (screen_object, but, MdefaultButton);

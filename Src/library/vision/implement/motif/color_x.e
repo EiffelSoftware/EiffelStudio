@@ -197,7 +197,7 @@ feature
 				Result := allocate (a_screen);
 				!!a_resource.make (a_screen, Result, is_real_allocated);
 				finish;
-				add_right (a_resource)
+				put_right (a_resource)
 			else
 				Result := a_resource.identifier
 			end

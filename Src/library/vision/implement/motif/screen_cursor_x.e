@@ -68,7 +68,7 @@ feature
 				end;
 				!!a_resource.make (a_screen, Result, true);
 				finish;
-				add_right (a_resource)
+				put_right (a_resource)
 			else
 				Result := a_resource.identifier
 			end

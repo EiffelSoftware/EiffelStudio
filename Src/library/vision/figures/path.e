@@ -32,8 +32,8 @@ feature -- Initialization
 			-- Create a path
 		do
 			!! dash_pattern.make;
-			dash_pattern.add_right (4);
-			dash_pattern.add_right (4);
+			dash_pattern.put_right (4);
+			dash_pattern.put_right (4);
 			logical_function_mode := GXcopy;
 			!! foreground_color.make;
 		end;

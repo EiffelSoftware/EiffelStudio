@@ -21,7 +21,7 @@ inherit
 feature 
 
 	option_button: OPTION_B;
-			-- option button wich contains the pulldown
+			-- option button which contains the pulldown
 
 	selected_button: BUTTON is
             		-- Current Push Button selected in the option menu
@@ -36,6 +36,13 @@ feature
 	        end; -- set_selected_button
 
 feature
+	caption: STRING is
+		deferred
+		end;
+
+	set_caption (a_caption: STRING) is
+		deferred
+		end;
 
 	add_activate_action (a_command: COMMAND; argument: ANY) is
 		do

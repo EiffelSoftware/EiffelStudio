@@ -150,15 +150,52 @@ feature
 	set_icon_pixmap (a_pixmap: PIXMAP) is
 			-- Set `icon_pixmap' to `a_pixmap'.
 		require else
-			not_a_pixmap_void: not (a_pixmap = Void)
+			not_a_pixmap_void: not (a_pixmap = Void);
+
+		local
+			pixmap_implementation: PIXMAP_X;
+			ext_name: ANY
 		do
+			if not (icon_pixmap = Void) then
+				pixmap_implementation ?= icon_pixmap.implementation;
+				pixmap_implementation.remove_object (Current)
+			end;
+			icon_pixmap := a_pixmap;
+			pixmap_implementation ?= icon_pixmap.implementation;
+			pixmap_implementation.put_object (Current);
+			ext_name := MiconPixmap.to_c;
+			c_set_pixmap (screen_object, pixmap_implementation.resource_pixmap (screen), $ext_name)
+		ensure then
+			icon_pixmap = a_pixmap
+
 		end;
 
-	icon_pixmap: PIXMAP is
+	icon_pixmap: PIXMAP;
 			-- Bitmap that could be used by the window manager
 			-- as the application's icon
-		do
+
+feature {NONE}
+
+	screen: SCREEN_I is
+			--widget screen
+		deferred
+		ensure
+			valid_screen: Result /= Void;
 		end;
+
+	update_pixmap is
+			-- Update the X pixmap after a change inside the Eiffel pixmap.
+		local
+			ext_name: ANY;
+			pixmap_implementation: PIXMAP_X
+		do
+			ext_name := MiconPixmap.to_c;
+			pixmap_implementation ?= icon_pixmap.implementation;
+			c_set_pixmap (screen_object, pixmap_implementation.resource_pixmap (screen), $ext_name)
+		end
+
+
+feature
 
 	set_icon_x (x_value: INTEGER) is
 			-- Set `icon_x' to `x_value'.
@@ -420,20 +457,26 @@ feature {NONE} -- External features
 			"C"
 		end;
 
-	m_wm_shell_get_string (scr_obj: POINTEr; name: ANY): STRING is
+	m_wm_shell_get_string (scr_obj: POINTER; name: ANY): STRING is
 		external
 			"C"
 		end;
 
-	m_wm_shell_set_string (scr_obj: POINTEr; name1, name2: ANY) is
+	m_wm_shell_set_string (scr_obj: POINTER; name1, name2: ANY) is
 		external
 			"C"
 		end;
 
-	m_wm_shell_get_int (scr_obj: POINTEr; name: ANY): INTEGER is
+	m_wm_shell_get_int (scr_obj: POINTER; name: ANY): INTEGER is
 		external
 			"C"
 		end;
+
+	c_set_pixmap (scr_obj, pix: POINTER; resource: ANY) is
+		external
+			"C"
+		end; 
+
 
 end
 

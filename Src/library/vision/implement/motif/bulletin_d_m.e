@@ -15,6 +15,7 @@ inherit
 
 	DIALOG_M
 		rename
+			c_set_pixmap as cc_set_pixmap,
 			xt_window as d_xt_window,
 			x_define_cursor as d_x_define_cursor,
 			set_boolean as d_set_boolean,
@@ -27,6 +28,8 @@ inherit
 				d_xt_window, d_x_define_cursor,
 				d_set_boolean, d_xt_unmanage_child, d_x_flush,
 				d_xt_manage_child, d_xt_display
+		redefine
+			set_title, title
 		end;
 
 	BULLETIN_M
@@ -57,6 +60,30 @@ feature -- Creation
             a_bulletin_d.set_dialog_imp (Current);
             forbid_resize
         end;
+
+	set_title (a_title: STRING) is
+			-- Set `title' to `a_title'.
+		require else
+			not_a_title_void: not (a_title = Void)
+		local
+			ext_name, ext_name_title: ANY
+		do
+			ext_name_title := a_title.to_c;
+			ext_name := Mtitle.to_c;
+			m_wm_shell_set_string (xt_parent(screen_object), $ext_name_title,
+$ext_name)
+		end;
+
+	title: STRING is
+			-- Application name to be displayed by
+			-- the window manager
+		local
+			ext_name: ANY
+		do
+			ext_name := Mtitle.to_c;
+			Result := m_wm_shell_get_string (xt_parent (screen_object), $ext_name)
+		end;
+
 
 feature {NONE}
 

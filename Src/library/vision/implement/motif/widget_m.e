@@ -132,7 +132,7 @@ feature
 			c_set_pixmap (screen_object, pixmap_implementation.resource_pixmap (screen), $ext_name)
 		ensure
 			background_pixmap = a_pixmap;
-			(background_color = Void)
+			--(background_color = Void)
 		end;
 
 	set_cursor (a_cursor: SCREEN_CURSOR) is

@@ -332,6 +332,23 @@ feature
  set_filter_default is
   do
   end;
+
+  
+
+ set_directory_selection is
+            -- Sets selection to directories only.
+  do
+  end;
+
+ set_file_selection is
+   -- Sets selection to files (default value). 
+  do
+  end;
+
+ set_all_selection is
+   -- Sets selection to files and directories.
+  do
+  end;
    
 
 end

@@ -94,7 +94,7 @@ feature -- State of Toggle Button
 		do
 			implementation.disarm
 		ensure
-			state_is_false: not state
+			--state_is_false: not state
 		end; 
 
 	

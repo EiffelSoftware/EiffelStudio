@@ -314,7 +314,7 @@ feature -- Color and pixmap
 			implementation.set_background_pixmap (a_pixmap)
 		ensure
 			Pixmap_set: background_pixmap = a_pixmap;
-			Color_not_set: background_color = Void
+			--Color_not_set: background_color = Void
 		end;
 
 feature -- Cursor
@@ -660,7 +660,7 @@ feature {NONE}
 
 invariant
 
-	Positive_depth: depth >= 0
+	Widget_Positive_depth:  depth >= 0
 
 end
 

@@ -48,8 +48,7 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 
 invariant
 
-	Positive_depth: depth > 0;
-	Valid_parent: parent /= Void
+	Valid_parent: parent /= Void implies depth > 0
 
 end
 

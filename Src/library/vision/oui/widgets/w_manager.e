@@ -105,32 +105,30 @@ feature -- Widget
 		require
 			widget_exists: not (widget = Void);
 			a_parent_exists_unless_depth_null: (a_parent = Void) implies (widget.depth = 0);
-			depth_not_null_unless_parent_exists: (widget.depth > 0) implies (not (a_parent = Void))
+			depth_not_null_unless_parent_exists: (widget.depth > 0) implies (not (a_parent = Void));
+			list_has_parent: (a_parent /= Void) implies list.has (a_parent);
 		local
 			i, j: INTEGER
 		do
 			if widget.depth = 0 then
 				count := count+1;
-				if count > list.upper then
-					list.resize (list.lower, count)
-				end;
-				list.put (widget, count)
+				list.force (widget, count)
 			else
 				from
 					i := 1
 				until
-					(not (list.item (i) = Void)) and then a_parent.same (list.item (i))
+					list.item (i) /= Void and then a_parent.same (list.item (i))
 				loop
 					i := i+1
 				end;
 				from
 					j := i
 				until
-					(list.item (j) = Void) or (j = count)
+					(j = count) or list.item (j) = Void
 				loop
 					j := j+1
 				end;
-				if not (list.item (j) = Void) then
+				if (list.item (j) /= Void) then
 					count := count+1;
 					if count > list.upper then
 						list.resize (list.lower, count)
@@ -148,8 +146,11 @@ feature -- Widget
 					list.put (list.item (j-1), j);
 					j := j-1
 				end;
-				list.put (widget, i+1)
-			end
+				list.put (widget, i+1);
+			end;
+		ensure
+			valid_count: not (count > list.upper);
+			widget_added: list.has (widget);
 		end;
 
 	implementation_to_oui (widget_i: WIDGET_I): WIDGET is

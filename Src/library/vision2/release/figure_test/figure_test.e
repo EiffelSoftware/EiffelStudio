@@ -96,7 +96,7 @@ feature -- Initialization
 			my_world.extend (text)
 
 			-- This is where it all comes together:
-			create my_device
+			create my_device.make_with_size (300, 300)
 			first_window.extend (my_device)
 			my_device.set_minimum_size (300, 300)
 
@@ -164,7 +164,7 @@ feature -- Initialization
 feature -- Access
 
 	my_world: EV_FIGURE_WORLD
-	my_device: EV_DRAWING_AREA
+	my_device: EV_PIXMAP
 
 	dot: EV_FIGURE_DOT
 	ellipse: EV_FIGURE_ELLIPSE

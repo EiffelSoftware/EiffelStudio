@@ -70,10 +70,11 @@ feature -- Basic Operation
 			else
 				Window_selector.extend (window_object.window_selector_item)
 			end
+			window_selector.update_class_files_location (window_object.window_selector_item, original_directory, new_directory)
 				-- Record `Current' in the history list.
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
-			end
+			end	
 			command_handler.update
 		end
 
@@ -96,6 +97,7 @@ feature -- Basic Operation
 			else
 				Window_selector.extend (window_object.window_selector_item)
 			end
+			window_selector.update_class_files_location (window_object.window_selector_item, new_directory, original_directory)
 		end
 		
 	textual_representation: STRING is

@@ -9,7 +9,7 @@ class
 
 feature -- Access
 
-	Idi_application: INTEGER is 1
+	Idi_wel_application: INTEGER is 1
 		-- Icon resource
 
 	Idm_aboutbox: INTEGER is 16

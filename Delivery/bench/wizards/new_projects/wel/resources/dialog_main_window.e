@@ -52,7 +52,7 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			create Result.make_by_id (Idi_application)
+			create Result.make_by_id (Idi_wel_application)
 		end
 
 end -- class MAIN_WINDOW

@@ -20,9 +20,9 @@ inherit
 			height as drawing_area_height,
 			real_x as old_real_x,
 			real_y as old_real_y,
-			set_foreground_color as old_set_foreground_color,
-			set_background_color as old_set_background_color,
-			set_background_pixmap as old_set_background_pixmap
+			set_foreground_color as drawing_area_set_foreground_color,
+			set_background_color as drawing_area_set_background_color,
+			set_background_pixmap as drawing_area_set_background_pixmap
 		export
 			{ANY} set_drawing_area_size, drawing_area_width, 
 			drawing_area_height
@@ -120,21 +120,18 @@ feature
 	set_foreground_color (a_color: COLOR) is
 			-- Set foreground color to `a_color'.
 		do
-			old_set_foreground_color (a_color);
 			scrolled_window.set_foreground_color (a_color);
 		end;
 
 	set_background_color (a_color: COLOR) is
 			-- Set background color to `a_color'.
 		do
-			old_set_background_color (a_color);
 			scrolled_window.set_background_color (a_color);
 		end;
 
 	set_background_pixmap (a_pixmap: PIXMAP) is
 			-- Set background pixmap to `a_pixmap'.
 		do
-			old_set_background_pixmap (a_pixmap);
 			scrolled_window.set_background_pixmap (a_pixmap);
 		end;
 
@@ -265,5 +262,5 @@ end
 --| Telephone 805-685-1006
 --| Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <eiffel@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
 --|----------------------------------------------------------------

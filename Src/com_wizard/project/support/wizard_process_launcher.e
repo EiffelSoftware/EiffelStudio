@@ -52,6 +52,7 @@ feature -- Basic Operations
 			a_wel_string1, a_wel_string2: WEL_STRING
 			a_boolean: BOOLEAN
 			an_integer: INTEGER
+			a_last_process_result: INTEGER
 		do
 			if not (a_command_line.item (1) = '"') then
 				a_command_line.prepend ("%"")
@@ -79,16 +80,17 @@ feature -- Basic Operations
 			end
 			an_integer := cwin_wait_for_single_object (process_info.process_handle, cwin_infinite)
 			check
-				valid_result: an_integer = cwin_wait_object_0
+				valid_external_call: an_integer = cwin_wait_object_0
 			end
-			a_boolean := cwin_exit_code_process (process_info.process_handle, $last_process_result)
+			a_boolean := cwin_exit_code_process (process_info.process_handle, $a_last_process_result)
 			check
-				valid_call: a_boolean
+				valid_external_call: a_boolean
 			end
 			cwin_close_handle (process_info.process_handle)
 			output_pipe.close_output
 			input_pipe.close_input
 			input_pipe.close_output
+			last_process_result := a_last_process_result
 		end
 		
 feature -- Access

@@ -22,7 +22,9 @@ inherit
 
 	SHARED_AST_CONTEXT;
 
-	SHARED_TEXT_ITEMS
+	SHARED_TEXT_ITEMS;
+
+	COMPILER_EXPORTER
 
 feature -- Type check, byte code and dead code removal
 

@@ -431,6 +431,9 @@ feature
 			expr_b: PARAMETER_B;
 			protect_b: PROTECT_B;
 		do
+			is_static_call := e.is_static_call
+			static_class_type := e.static_class_type
+			written_in := e.written_in
 			external_name_id := e.external_name_id;
 			type := e.type;
 			parameters := e.parameters;

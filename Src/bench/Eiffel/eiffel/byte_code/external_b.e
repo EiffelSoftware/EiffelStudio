@@ -4,6 +4,10 @@ class EXTERNAL_B
 
 inherit
 	CALL_ACCESS_B
+		rename
+			precursor_type as static_class_type,
+			set_precursor_type as set_static_class_type,
+			make_precursor_byte_code as make_static_call_byte_code
 		redefine
 			same, is_external, set_parameters, parameters, enlarged,
 			is_unsafe, optimized_byte_node,
@@ -11,7 +15,8 @@ inherit
 			pre_inlined_code, inlined_byte_code,
 			has_separate_call, reset_added_gc_hooks,
 			make_end_byte_code, make_end_precomp_byte_code,
-			make_precursor_byte_code, need_target
+			make_static_call_byte_code, need_target,
+			standard_make_code
 		end
 
 	SHARED_INCLUDE
@@ -55,6 +60,17 @@ feature -- Attributes for externals
 
 	is_external: BOOLEAN is True;
 			-- Access is an external call
+			
+	is_static_call: BOOLEAN
+			-- Is current external call made through a static access?
+
+	precursor_type: like static_class_type is
+		require
+			il_generation: System.il_generation
+			not_a_static_call: not is_static_call
+		do
+			Result := static_class_type
+		end
 
 feature -- Routines for externals
 
@@ -75,6 +91,15 @@ feature -- Routines for externals
 		do
 			type := t;
 		end;
+
+	enable_static_call is
+			-- Set `is_static_call' to `True'.
+		do
+			is_static_call := True
+			set_need_invariant (False)
+		ensure
+			is_static_call_set: is_static_call
+		end
 
 	init (f: FEATURE_I) is
 			-- Initialization
@@ -105,6 +130,20 @@ feature -- Routines for externals
 		do
 			encapsulated := b;
 		end;
+
+feature {STATIC_ACCESS_AS} -- Settings
+
+	set_written_in (id: INTEGER) is
+			-- Set `written_in' to `id'.
+		require
+			valid_id: id > 0
+		do
+			written_in := id
+		ensure
+			written_in_set: written_in = id
+		end
+
+feature -- Status report
 
 	same (other: ACCESS_B): BOOLEAN is
 			-- Is `other' the same access as Current ?
@@ -325,11 +364,33 @@ feature -- Byte code generation
 			end
 		end;
 
-	make_precursor_byte_code (ba: BYTE_ARRAY) is
+	make_static_call_byte_code (ba: BYTE_ARRAY) is
 			-- Add dynamic type of parent.
+		local
+			gen_type_i: GEN_TYPE_I
+			cl_type_i: CL_TYPE_I
 		do
-			ba.append_short_integer (-1)
-		end;
+			if is_static_call then
+				ba.append_short_integer (static_class_type.associated_class_type.static_type_id - 1)
+			else
+				ba.append_short_integer (-1)
+			end
+		end
+
+	standard_make_code (ba: BYTE_ARRAY; flag: BOOLEAN) is
+			-- Generate byte code for a feature call. If not `flag', generate
+			-- an invariant check before the call.
+			-- Doesn't process the parameters
+		do
+			if is_static_call then
+					-- Push a fake Object on execution stack.
+				ba.append (bc_current)
+				make_end_byte_code (ba, flag,
+					real_feature_id, static_class_type.associated_class_type.static_type_id - 1)
+			else
+				Precursor {CALL_ACCESS_B} (ba, flag)
+			end
+		end
 
 	code_first: CHARACTER is
 			-- Code when external call is first (no invariant)
@@ -580,6 +641,7 @@ feature -- Concurrent Eiffel
 				-- Generate feature id
 			ba.append_integer (real_feat_id);
 			ba.append_short_integer (static_type);
+			make_static_call_byte_code (ba)
 		end;
 
 	make_end_precomp_byte_code (ba: BYTE_ARRAY; flag: BOOLEAN;
@@ -624,6 +686,7 @@ feature -- Concurrent Eiffel
 			end;
 			ba.append_integer (origin);
 			ba.append_integer (offset);
+			make_static_call_byte_code (ba)
 		end;
 																	  
 end

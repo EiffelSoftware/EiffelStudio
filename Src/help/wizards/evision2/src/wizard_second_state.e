@@ -64,15 +64,15 @@ feature -- Basic Operation
 			end
 				
 			create preview_pixmap
---			change_preview -- set the right pixmap depending on `dialog_information'.
---			preview_pixmap.set_minimum_size (preview_pixmap.width, preview_pixmap.height)
+			change_preview -- set the right pixmap depending on `dialog_information'.
+			preview_pixmap.set_minimum_size (preview_pixmap.width, preview_pixmap.height)
 
 			create hbox
 			hbox.extend (radio_box)
+			hbox.disable_item_expand (radio_box)
 			hbox.extend (preview_pixmap)
 
 			choice_box.extend (hbox)
-			choice_box.disable_item_expand (hbox)
 
 			set_updatable_entries(<<
 				add_menu_bar.select_actions, 
@@ -89,7 +89,30 @@ feature -- Basic Operation
 
 	change_preview is
 			-- Change the pixmap used to preview the application.
+		local
+			fn: FILE_NAME
+			bn: STRING
+			index: INTEGER
 		do
+			create fn.make_from_string (wizard_pixmaps_path)
+			bn := "Image0000"
+				--| Number of characters in "Image"
+			index := 5
+			if add_menu_bar.is_selected then
+				bn.put ('1', index + 1)
+			end
+			if add_tool_bar.is_selected then
+				bn.put ('1', index + 2)
+			end
+			if add_status_bar.is_selected then
+				bn.put ('1', index + 3)
+			end
+			if add_about_dialog.is_selected then
+				bn.put ('1', index + 4)
+			end
+			fn.set_file_name (bn)
+			fn.add_extension ("bmp")
+			preview_pixmap.set_with_named_file (fn)
 		end
 
 	proceed_with_current_info is 

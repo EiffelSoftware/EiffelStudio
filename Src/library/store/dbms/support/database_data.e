@@ -96,8 +96,7 @@ feature -- Element change
 			-- Fill attributes of Current with results obtained
 			-- from server after execution of query statement.
 		local
-			i, ind: INTEGER
-			d_year, d_month, d_day, d_hour, d_min, d_sec, d_ms: INTEGER
+			ind: INTEGER
 			date: DATE
 			time: TIME
 			get_metadata : BOOLEAN

@@ -28,6 +28,10 @@ inherit
 		redefine
 			delete_window_action
 		end;
+	EXCEPTIONS
+		rename
+			raise as raise_exception
+		end
 
 creation
 
@@ -50,15 +54,17 @@ feature
 			display_name: STRING;
 		do
 			!!Result.make ("");
-		rescue
-			io.error.putstring ("Cannot open display %"");
-			display_name := Execution_environment.get ("DISPLAY");
-			if display_name /= Void then
-				io.error.putstring (display_name);
+			if not Result.is_valid then
+				io.error.putstring ("Cannot open display %"");
+				display_name := Execution_environment.get ("DISPLAY");
+				if display_name /= Void then
+					io.error.putstring (display_name);
+				end;
+				io.error.putstring ("%"%N%
+					%Check that $DISPLAY is properly set and that you are%N%
+					%authorized to connect to the corresponding server%N");
+				raise_exception ("Invalid display");
 			end;
-			io.error.putstring ("%"%N%
-				%Check that $DISPLAY is properly set and that you are%N%
-				%authorized to connect to the corresponding server%N");
 		end;
 
 	make is
@@ -139,7 +145,7 @@ feature -- xterminal
 				end;
 				if initialized then
 					raise
-					if warner.is_poped_up then
+					if warner.is_popped_up then
 						warner.raise
 					end
 				end

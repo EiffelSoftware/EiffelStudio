@@ -1721,7 +1721,7 @@ feature -- Unary operator generation
 		do
 			inspect
 				code
-			when il_uplus then implementation.generate_uplus
+			when il_uplus then -- Nothing to be done here.
 			when il_uminus then implementation.generate_uminus
 			when il_not then implementation.generate_not
 			when il_bitwise_not then implementation.generate_bitwise_not

@@ -83,6 +83,7 @@ feature -- Element change
 			-- Destroy `Current'.
 		do
 			destroy_item
+			is_destroyed := True
 		end
 
 feature {EV_ANY_I}

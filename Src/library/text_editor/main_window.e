@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 			accelerator: EV_ACCELERATOR
 		do
 			create accelerator.make (rich_window.Key_s, False, False, True)
-			create {EV_ROUTINE_COMMAND} cmd.make (~on_save)
+--			create {EV_ROUTINE_COMMAND} cmd.make (~on_save)
 			--add_accelerator_command (accelerator, cmd, Void)
 
 			create {EV_ROUTINE_COMMAND} cmd.make (~on_save)

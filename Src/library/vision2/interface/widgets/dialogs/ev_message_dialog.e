@@ -19,7 +19,6 @@ inherit
 create
 	default_create,
 	make_with_text,
-	make_with_text_and_actions
 
 feature {NONE} -- Initialization
 
@@ -230,6 +229,10 @@ end -- class EV_MESSAGE_DIALOG
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/06 19:25:55  oconnor
+--| removed make_with_text_and_actions from
+--| create clause, it only makes sense for decendants.
+--|
 --| Revision 1.15  2000/03/06 19:17:42  oconnor
 --| Added make_with_text_and_actions,
 --| moved make_with_text from decendants to EV_MESSAGE_DIALOG.

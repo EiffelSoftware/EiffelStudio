@@ -33,6 +33,7 @@ feature {NONE} -- Implementation
 			component_button: EV_TOOL_BAR_BUTTON
 			separator: EV_HORIZONTAL_SEPARATOR
 			tool_bar_separator: EV_TOOL_BAR_SEPARATOR
+			horizontal_box: EV_HORIZONTAL_BOX
 		do
 			set_title ("Component viewer ")
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_component_window @ 1)
@@ -56,9 +57,17 @@ feature {NONE} -- Implementation
 			builder_button.set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_component_build_view)
 			builder_button.select_actions.extend (agent set_build_view)
 			tool_bar.extend (builder_button)
+			create tool_bar_separator
+			tool_bar.extend (tool_bar_separator)
 			
-			vertical_box.extend (tool_bar)
-			vertical_box.disable_item_expand (tool_bar)
+			create horizontal_box
+			vertical_box.extend (horizontal_box)
+			create type_display
+			type_display.align_text_left
+			horizontal_box.extend (tool_bar)
+			horizontal_box.extend (type_display)
+			horizontal_box.disable_item_expand (tool_bar)
+			vertical_box.disable_item_expand (horizontal_box)
 			create separator
 			vertical_box.extend (separator)
 			vertical_box.disable_item_expand (separator)
@@ -92,6 +101,8 @@ feature -- Basic operation
 			component := a_component
 				-- Update the title of `Current'.
 			set_title ("Component viewer - " + component.name)
+				-- Display type
+			type_display.set_text ("Type : " + component.root_element_type)
 			lock_update
 				-- Remove any exisiting displayed component.
 			component_holder.wipe_out
@@ -223,5 +234,8 @@ feature {NONE} -- Implementation
 		-- Builder widget of `component'. Used so that if a user
 		-- keeps toggling between the display and builder views, we only
 		-- have to build the builder widget once as it is slow.
+		
+	type_display: EV_LABEL
+		-- Displays root type of `component'.
 
 end -- class GB_COMPONENT_VIEWER

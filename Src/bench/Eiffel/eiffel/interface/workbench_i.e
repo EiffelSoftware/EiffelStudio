@@ -136,6 +136,36 @@ io.error.putstring ("Workbench retry%N");
 			class_to_recompile.set_date;
 		end;
 		
+	change_all is
+			-- Record all the classes in the universe as
+			-- changed (for precompilation)
+		local
+			class_list: EXTEND_TABLE [CLASS_I, STRING];
+			i: INTEGER
+		do
+			from
+				Universe.clusters.start
+			until
+				Universe.clusters.after
+			loop
+				from
+					class_list := Universe.clusters.item.classes;
+					class_list.start
+				until
+					class_list.offright
+				loop
+					i := i + 1;
+					change_class (class_list.item_for_iteration);
+					class_list.forth
+				end;
+				Universe.clusters.forth
+			end;
+io.error.putstring ("Precompiling ");
+io.error.putint (i);
+io.error.putstring (" classes%N");
+		end;
+
+
 	add_class_to_recompile (cl: CLASS_I) is
 			-- Recompile the class but do not do the parsing
 		require

@@ -81,13 +81,16 @@ feature
 		end;
 		
 	open is
-			-- Open file in read-write mode
+			-- Open file in read mode if precompiled
+			-- in read-write otherwise.
 		require
 			is_closed: not is_open
-		local
-			f_name: ANY;
 		do
-			open_read_write;
+			if precompiled then
+				open_read
+			else
+				open_read_write;
+			end;
 			is_open := True;
 		ensure
 			is_open
@@ -102,6 +105,34 @@ feature
 			is_open := False;
 		ensure then
 			is_closed: not is_open
+		end;
+
+	update_path (prec: BOOLEAN) is
+			-- Update the file path of Current 
+			-- server file. (It might have changed 
+			-- between compilations)
+		local
+			path: STRING;
+		do
+			if prec then
+				path := Precompilation_path
+			else
+				path := Compilation_path;
+			end;
+			!!name.make (path.count + 6);
+			name.append (path);
+			name.append ("/E");
+			name.append_integer (id);
+		end;
+
+	precompiled: BOOLEAN;
+			-- Does the Current server file contain
+			-- precompiled information?
+
+	set_precompiled is
+			-- Set `precompiled' to True.
+		do
+			precompiled := True
 		end;
 
 end

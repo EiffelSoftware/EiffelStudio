@@ -102,7 +102,10 @@ feature -- Status setting
 			index_large_enough: index >= 0
 			index_small_enough: index < count
 		do
+			an_item.set_index (index)
 			cwin_send_message (item, Cbem_setitem, to_wparam (0), an_item.item)
+		ensure
+			an_item_updated: an_item.index = index
 		end
 
 	show_list is

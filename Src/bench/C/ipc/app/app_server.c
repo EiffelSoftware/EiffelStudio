@@ -38,8 +38,6 @@ extern HANDLE global_ewbin, global_ewbout, global_event_r, global_event_w;
 #define USE_SIGNAL
 #endif
 
-extern char *ename;			/* Eiffel executable base name (run-time var) */
-
 rt_shared void dserver(void)
 {
 	/* This routine is called by the debugger once the program context has
@@ -167,7 +165,7 @@ rt_shared void winit(void)
 #ifndef EIF_WIN32
 	progpid = getpid();					/* Program's PID */
 #endif
-	progname = ename;					/* Computed by Eiffel run-time */
+	progname = egc_system_name;					/* Computed by Eiffel run-time */
 
 	/* Open a logfile in /tmp */
 #ifdef EIF_WIN32

@@ -1,9 +1,15 @@
+indexing
+
+	description: 
+		"Displays deferred routines in output_window.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EWB_DEFERRED 
 
 inherit
 
-	EWB_FORMAT
+	EWB_COMPILED_CLASS
 		rename
 			name as deferred_cmd_name,
 			help_message as deferred_help,
@@ -12,14 +18,16 @@ inherit
 
 creation
 
-	make, null
+	make, do_nothing
 
-feature
+feature {NONE} -- Properties
 
-	criterium (f: FEATURE_I): BOOLEAN is
-		do
-			Result := any_criterium (f);
-			Result := Result and f.is_deferred
-		end
+	associated_cmd: E_SHOW_DEFERRED_ROUTINES is
+			-- Associated class command to be executed
+			-- after successfully retrieving the compiled
+			-- class
+		once
+			!! Result.do_nothing
+		end;
 
-end
+end -- class EWB_DEFERRED

@@ -1,16 +1,52 @@
+indexing
+
+	description: 
+		"Melt eiffel system.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class EWB_COMP
 
 inherit
 
+	PROJECT_CONTEXT;
 	EWB_CMD
 		redefine
-			loop_execute, check_permissions
+			loop_action
 		end;
 	EIFFEL_ENV;
-	SHARED_MELT_ONLY
+	SHARED_MELT_ONLY;
+	SHARED_ERROR_BEHAVIOR
 
-feature
+creation
+
+	make
+
+feature -- Initialization
+
+	make (proj: COMMAND_LINE_PROJECT) is
+		require
+			valid_proj: proj /= Void
+		do
+			project := proj
+		ensure
+			project = proj
+		end;
+
+	init is
+		do
+			if Lace.file_name = Void then
+				select_ace_file;
+			end;
+			if Lace.file_name /= Void then
+				print_header;
+			end;
+		end;
+
+feature -- Properties
+
+	project: COMMAND_LINE_PROJECT;
+			-- Command line project for current command
 
 	name: STRING is
 		do
@@ -27,41 +63,12 @@ feature
 			Result := melt_abb
 		end;
 
-feature
-
-	init is
-		do
-			init_project;
-			if not error_occurred then
-				if project_is_new then
-					make_new_project
-					if Lace.file_name = Void then
-						select_ace_file;
-					end;
-					if Lace.file_name /= Void then
-						print_header;
-					end;
-				else
-					if initialized.item then
-							-- application started by es3 -loop
-						retrieve_project;
-						if Lace.file_name = Void then
-							select_ace_file;
-						end;
-						if Lace.file_name /= Void then
-							print_header;
-						end;
-					else
-						print_header;
-						retrieve_project;
-					end;
-				end;
-			end;
-		end;
-
-feature -- Compilation
+feature {NONE} -- Update
 
 	select_ace_file is
+			-- Select an Ace if it hasn't been specified.
+		require
+			no_lace_file: Lace.file_name = Void
 		local
 			file_name, cmd: STRING;
 			option: CHARACTER;
@@ -108,7 +115,7 @@ feature -- Compilation
 							end
 						end
 					end;
-					check_ace_file (Lace.file_name);
+					project.check_ace_file (Lace.file_name);
 				when 't' then
 					io.putstring ("File name: ");
 					io.readline;
@@ -133,26 +140,15 @@ feature -- Compilation
 			end;
 		end;
 
-	check_permissions is
-		do
-			if is_project_writable then
-				Project_read_only.set_item (false)
-			else
-				io.error.put_string (
-					"Project is not writable; check permissions.%N");
-				error_occurred := true
-			end
-		end
-
 	compile is
-			-- Regular compilation
+			-- Melt system.
 		local
 			exit: BOOLEAN;
 			str: STRING
 		do
 			from
 					-- Is the Ace file still there?
-				check_ace_file (Lace.file_name)
+				project.check_ace_file (Lace.file_name)
 			until
 				exit
 			loop
@@ -161,7 +157,7 @@ feature -- Compilation
 					if stop_on_error then
 						lic_die (-1);
 					end;
-					if termination_requested then
+					if command_line_io.termination_requested then
 						--lic_die (0);
 						-- es3 -loop does NOT like lic_die(0)
 						exit := True
@@ -172,46 +168,33 @@ feature -- Compilation
 			end;
 		end;
 
-	loop_execute is
+	loop_action is
 		do
-			if Project_read_only.item then
-				io.error.put_string ("Read-only project: cannot compile.%N")
-			else
-				execute
-			end
+			execute
 		end;
 
 	execute is
 		do
-			init;
-			if not error_occurred and then Lace.file_name /= Void then
-				compile;
-				if Workbench.successfull then
-					terminate_project;
-					print_tail;
-					if System.is_dynamic then
-						dle_link_system
-					end;
-					if System.freezing_occurred then
-						prompt_finish_freezing (False)
-					else
-						link_driver
-					end
-				end;
-			end;
-		end;
-
-	prompt_finish_freezing (finalized_dir: BOOLEAN) is
-		do
-			io.error.putstring ("You must now run %"");
-			io.error.putstring (Finish_freezing_script);
-			io.error.putstring ("%" in:%N%T");
-			if finalized_dir then
-				io.error.putstring (Final_generation_path)
+			if Project_read_only.item then
+				io.error.put_string ("Read-only project: cannot compile.%N")
 			else
-				io.error.putstring (Workbench_generation_path)
-			end;
-			io.error.new_line;
+				init;
+				if Lace.file_name /= Void then
+					compile;
+					if Workbench.successfull then
+						project.save_project;
+						print_tail;
+						if System.is_dynamic then
+							dle_link_system
+						end;
+						if System.freezing_occurred then
+							prompt_finish_freezing (False)
+						else
+							link_driver
+						end
+					end;
+				end;
+			end
 		end;
 
 	link_driver is
@@ -244,6 +227,38 @@ feature -- Compilation
 			end;
 		end;
 
+feature {NONE} -- Output
+
+	prompt_finish_freezing (finalized_dir: BOOLEAN) is
+			-- Display message for finish_freezing script.
+		do
+			io.error.putstring ("You must now run %"");
+			io.error.putstring (Finish_freezing_script);
+			io.error.putstring ("%" in:%N%T");
+			if finalized_dir then
+				io.error.putstring (Final_generation_path)
+			else
+				io.error.putstring (Workbench_generation_path)
+			end;
+			io.error.new_line;
+		end;
+
+	print_header is
+			-- Print header information of compilation.
+		do
+			io.putstring ("%
+				%Eiffel compilation manager%N%
+				%  (version ");
+			io.putstring (Version_number);
+			io.putstring (")%N");
+		end;
+
+	print_tail is
+			-- Print completion message of compilation.
+		do
+			io.error.putstring ("System recompiled.%N")
+		end;
+
 feature {NONE} -- Externals
 
 	eif_link_driver (c_code_dir, system_name, prelink_cmd_name, driver_name: ANY) is
@@ -251,7 +266,7 @@ feature {NONE} -- Externals
 			"C"
 		end
 
-feature -- DLE
+feature {NONE} -- DLE
 
 	dle_link_system is
 			-- Link executable and melted.eif files from the static system.

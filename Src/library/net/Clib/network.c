@@ -338,7 +338,6 @@ EIF_POINTER net_host(EIF_POINTER addr)
 
 	res =  (char *) inet_ntoa(*((struct in_addr *) addr));
 	address = makestr(res, strlen(res));
-	free(res);
 	return address;
 }
 

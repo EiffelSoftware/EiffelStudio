@@ -62,11 +62,14 @@ feature -- Access
 
 feature -- Basic operations
 
+		project_settings: GB_PROJECT_SETTINGS
+			-- Last project settings loaded by `execute' or
+			-- `execute_with_name'.
+
 		execute_with_name (file_name: STRING) is
 				-- execute `Current' to load file `file_name'. This is used when
 				-- starting build by double clicking on a .bpr file.
 			local
-				project_settings: GB_PROJECT_SETTINGS
 				file_handler: GB_SIMPLE_XML_FILE_HANDLER
 				test_file: RAW_FILE
 				error_dialog: EV_ERROR_DIALOG
@@ -102,7 +105,9 @@ feature -- Basic operations
 							create test_file.make (filename)
 							if test_file.exists then
 								xml_handler.load
-								main_window.show_tools
+								if not system_status.current_project_settings.is_envision_project then
+									main_window.show_tools	
+								end
 								command_handler.update
 									-- Compress all used ids.
 								id_compressor.compress_all_id
@@ -118,6 +123,9 @@ feature -- Basic operations
 					(error_dialog.button (dialog_constants.ev_ignore)).hide
 					error_dialog.show_modal_to_window (main_window)
 					system_status.close_current_project
+					if project_settings.is_envision_project then
+						Environment.application.destroy
+					end
 				end
 			end
 			
@@ -126,7 +134,6 @@ feature -- Basic operations
 				-- Execute `Current'.
 			local
 				dialog: EV_FILE_OPEN_DIALOG
-				project_settings: GB_PROJECT_SETTINGS
 				opened: BOOLEAN
 				file_handler: GB_SIMPLE_XML_FILE_HANDLER
 				test_file: RAW_FILE
@@ -230,6 +237,12 @@ feature {NONE} -- Implementation
 		do
 			location_update_cancelled := True
 			system_status.close_current_project
+				-- If we are in wizard mode, and they have clicked cancel, to
+				-- the update of the .bpr project location, then we end Build
+				-- as there is nothing to do.
+			if project_settings.is_envision_project then
+				Environment.application.destroy
+			end
 		end
 	
 	location_update_cancelled: BOOLEAN

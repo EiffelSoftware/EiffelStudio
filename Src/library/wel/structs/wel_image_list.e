@@ -182,7 +182,7 @@ feature -- Basic operations
 			last_position := cwel_imagelist_add_masked(item, bitmap_to_add.item, mask_color.item)
 		end
 
-	add_icon (icon_to_add: WEL_ICON) is
+	add_icon (icon_to_add: WEL_GRAPHICAL_RESOURCE) is
 			-- Adds the icon or cursor `icon_to_add' to this image list
 		require
 			icon_not_void: icon_to_add /= Void
@@ -191,9 +191,9 @@ feature -- Basic operations
 			last_position := cwel_imagelist_add_icon(item, icon_to_add.item)
 		end
 
-	replace_icon (icon_to_add: WEL_ICON; index: INTEGER) is
+	replace_icon (icon_to_add: WEL_GRAPHICAL_RESOURCE; index: INTEGER) is
 			-- Replace the bitmap at position `index' in the imageList by
-			-- `icon_to_add'.
+			-- the cursor or icon `icon_to_add'.
 		require
 			icon_not_void: icon_to_add /= Void
 			index_not_too_small: index >= 0

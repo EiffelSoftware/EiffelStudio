@@ -292,7 +292,7 @@ feature {NONE} -- Implementation
 	position_is_over_splitter (y_pos: INTEGER): BOOLEAN is
 			-- Does `y_position' fall within the splitter?
 		require
-			y_pos_valid: y_pos >= 0 and y_pos <= width
+			y_pos_valid: y_pos >= 0 and y_pos <= height
 		do
 			Result := y_pos - (split_position + 1) <= splitter_width
 		end

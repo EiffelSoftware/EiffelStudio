@@ -31,6 +31,11 @@ inherit
 			is_equal, copy
 		end
 
+	SHARED_GENERATION
+		undefine
+			is_equal, copy
+		end
+
 creation {SYSTEM_I}
 	make
 
@@ -90,20 +95,24 @@ feature -- Generation
 			class_id: CLASS_ID
 			feature_id: INTEGER
 			features: TWO_WAY_SORTED_SET [INTEGER]
+			buffer: GENERATION_BUFFER
+			address_file: INDENT_FILE
+			a_class: CLASS_C
+			a_feature: FEATURE_I
 		do
-			gen_file := Address_table_file (final_mode)
-			gen_file.open_write
+			buffer := Generation_buffer
+			buffer.clear_all
 
-			gen_file.putstring ("#include %"eif_eiffel.h%"%N")
+			buffer.putstring ("#include %"eif_eiffel.h%"%N")
 
 			if final_mode then
-				gen_file.putstring ("#include %"eaddress")
-				gen_file.putstring (Dot_h)
-				gen_file.putstring ("%"%N%N")
+				buffer.putstring ("#include %"eaddress")
+				buffer.putstring (Dot_h)
+				buffer.putstring ("%"%N%N")
 			elseif Compilation_modes.is_precompiling then
-				System.class_counter.generate_extern_offsets (gen_file)
-				System.static_type_id_counter.generate_extern_offsets (gen_file)
-				gen_file.new_line
+				System.class_counter.generate_extern_offsets (buffer)
+				System.static_type_id_counter.generate_extern_offsets (buffer)
+				buffer.new_line
 			end
 
 			from
@@ -137,7 +146,7 @@ debug ("DOLLAR")
 	io.putstring (a_feature.feature_name)
 	io.new_line
 end
-								generate_feature (final_mode)
+								generate_feature (a_class, a_feature, final_mode, buffer)
 							end
 							features.forth
 						end
@@ -153,61 +162,53 @@ end
 				forth
 			end
 
+			!! address_file.make_open_write (gen_file_name (final_mode, Ececil));
 			if final_mode then
-				gen_file.close
+				address_file.put_string (buffer)
+				address_file.close
 
 					-- Generate the extern declarations
-				!! gen_file.make (final_file_name ("eaddress", Dot_h))
 
-				gen_file.open_write
+				buffer.clear_all
+				buffer.putstring ("#include %"eif_eiffel.h%"%N")
 
-				gen_file.putstring ("#include %"eif_eiffel.h%"%N")
-
-				Extern_declarations.generate_header (gen_file)
-				Extern_declarations.generate (gen_file)
+				Extern_declarations.generate_header (buffer)
+				Extern_declarations.generate (buffer)
 				Extern_declarations.wipe_out
 
-				gen_file.close
+				!! address_file.make_open_write (final_file_name ("eaddress", Dot_h))
 			else
-
 					-- Generate the dispatch table in Workbench mode
-				generate_dispatch_table
-
-				gen_file.close
+				generate_dispatch_table (buffer)
 			end
+			address_file.put_string (buffer)
+			address_file.close
 
 			clean_up
 		end
 
 feature {NONE} -- Attribues
 
-	gen_file: INDENT_FILE
-
-	a_class: CLASS_C
-
 	a_type: CLASS_TYPE
-
-	a_feature: FEATURE_I
 
 	clean_up is
 			-- Set all the attributes to Void
 		do
-			gen_file := Void
-			a_feature := Void
+			a_type := Void
 		end
 
 feature {NONE} -- Generation
 
-	generate_dispatch_table is
+	generate_dispatch_table (buffer: GENERATION_BUFFER) is
 		require
-			file_exists: gen_file /= Void
-			file_is_open: gen_file.is_open_write
+			buffer_exists: buffer /= Void
 		local
 			types: TYPE_LIST
 			sorted_set: TWO_WAY_SORTED_SET [INTEGER]
 			i, nb, type_id: INTEGER
 			type_id_array: ARRAY [INTEGER]
 			cursor: CURSOR
+			a_class: CLASS_C
 		do
 			!! type_id_array.make (0, System.static_type_id_counter.total_count)
 
@@ -231,11 +232,9 @@ feature {NONE} -- Generation
 
 					type_id_array.put (a_type.type_id, a_type.id.id)
 
-					gen_file.putstring ("char *(*")
-					gen_file.putstring ("f")
-					gen_file.putstring ("eif_address_t")
-					gen_file.putint (a_type.id.id)
-					gen_file.putstring ("[])() = {%N")
+					buffer.putstring ("char *(*feif_address_t")
+					buffer.putint (a_type.id.id)
+					buffer.putstring ("[])() = {%N")
 
 					from
 						i := sorted_set.first
@@ -244,16 +243,16 @@ feature {NONE} -- Generation
 						i > nb
 					loop
 						if sorted_set.has (i) then
-							gen_file.putstring ("(char *(*)())")
-							gen_file.putstring ("f")
-							gen_file.putstring (a_type.id.address_table_name (i))
-							gen_file.putstring (",%N")
+							buffer.putstring ("(char *(*)())")
+							buffer.putstring ("f")
+							buffer.putstring (a_type.id.address_table_name (i))
+							buffer.putstring (",%N")
 						else
-							gen_file.putstring ("(char *(*)()) 0,%N")
+							buffer.putstring ("(char *(*)()) 0,%N")
 						end
 						i := i + 1
 					end
-					gen_file.putstring ("};%N%N")
+					buffer.putstring ("};%N%N")
 
 					types.go_to (cursor)
 					types.forth
@@ -262,9 +261,7 @@ feature {NONE} -- Generation
 				forth
 			end
 
-			gen_file.putstring ("%N%Nstatic fnptr *")
-			gen_file.putstring ("f")
-			gen_file.putstring ("eif_address_table[] = {%N")
+			buffer.putstring ("%N%Nstatic fnptr *feif_address_table[] = {%N")
 
 			from
 				i := 1
@@ -278,26 +275,26 @@ feature {NONE} -- Generation
 					if a_type /= Void then
 						a_class := a_type.associated_class
 						if class_has_dollar_operator (a_class.id) then
-							gen_file.putstring ("(fnptr *) ")
-							gen_file.putstring ("f")
-							gen_file.putstring ("eif_address_t")
-							gen_file.putint (a_type.id.id)
-							gen_file.putstring (" - ")
-							gen_file.putint (found_item.first)
-							gen_file.putstring (",%N")
+							buffer.putstring ("(fnptr *) ")
+							buffer.putstring ("f")
+							buffer.putstring ("eif_address_t")
+							buffer.putint (a_type.id.id)
+							buffer.putstring (" - ")
+							buffer.putint (found_item.first)
+							buffer.putstring (",%N")
 						else
-							gen_file.putstring ("(fnptr *) 0,%N")
+							buffer.putstring ("(fnptr *) 0,%N")
 						end
 					else
-						gen_file.putstring ("(fnptr *) 0,%N")
+						buffer.putstring ("(fnptr *) 0,%N")
 					end
 				else
-					gen_file.putstring ("(fnptr *) 0,%N")
+					buffer.putstring ("(fnptr *) 0,%N")
 				end
 				i := i + 1
 			end
 
-			gen_file.putstring ("};%N%Nfnptr **egc_address_table_init = feif_address_table;%N%N")
+			buffer.putstring ("};%N%Nfnptr **egc_address_table_init = feif_address_table;%N%N")
 		end
 
 	solved_type (type_a: TYPE_A): TYPE_C is
@@ -352,7 +349,7 @@ feature {NONE} -- Generation
 			end
 		end
 
-	generate_arg_list (nb: INTEGER) is
+	generate_arg_list (buffer: GENERATION_BUFFER; nb: INTEGER) is
 			-- Generate declaration of `n' arguments.
 		local
 			i: INTEGER
@@ -362,13 +359,13 @@ feature {NONE} -- Generation
 			until
 				i > nb
 			loop
-				gen_file.putstring (", arg")
-				gen_file.putint (i)
+				buffer.putstring (", arg")
+				buffer.putint (i)
 				i := i + 1
 			end
 		end
 
-	generate_feature (final_mode: BOOLEAN) is
+	generate_feature (a_class: CLASS_C; a_feature: FEATURE_I; final_mode: BOOLEAN; buffer: GENERATION_BUFFER) is
 		local
 			types: TYPE_LIST
 			feature_id: INTEGER
@@ -407,11 +404,11 @@ feature {NONE} -- Generation
 
 				function_name := a_type.id.address_table_name (feature_id)
 
-				gen_file.putstring ("%T/* ")
-				a_type.type.dump (gen_file)
-				gen_file.putstring (" ")
-				gen_file.putstring (a_feature.feature_name)
-				gen_file.putstring (" */%N")
+				buffer.putstring ("%T/* ")
+				a_type.type.dump (buffer)
+				buffer.putstring (" ")
+				buffer.putstring (a_feature.feature_name)
+				buffer.putstring (" */%N")
 
 				c_return_type := solved_type (return_type)
 				return_type_string := c_return_type.c_string
@@ -421,42 +418,42 @@ feature {NONE} -- Generation
 
 				if has_arguments then
 					a_types := arg_types (args)
-					gen_file.generate_function_signature
-						(return_type_string, f_name, True, gen_file,
+					buffer.generate_function_signature
+						(return_type_string, f_name, True, buffer,
 					 	arg_names (args.count), a_types)
 				else
 					a_types := <<"EIF_REFERENCE">>
-					gen_file.generate_function_signature
-						(return_type_string, f_name, True, gen_file,
+					buffer.generate_function_signature
+						(return_type_string, f_name, True, buffer,
 						<<"Current">>, a_types)
 				end
-				gen_file.putstring ("%N%T")
+				buffer.putstring ("%N%T")
 
 				if final_mode then
 					entry :=  Eiffel_table.poly_table (rout_id)
 					if entry = Void then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
-						gen_file.putstring ("RTNR();")
+						buffer.putstring ("RTNR();")
 					else
 						if a_feature.is_function then
-							gen_file.putstring ("return ")
+							buffer.putstring ("return ")
 						end
 
-						gen_file.putchar ('(')
-						c_return_type.generate_function_cast (gen_file, a_types)
+						buffer.putchar ('(')
+						c_return_type.generate_function_cast (buffer, a_types)
 						table_name := rout_id.table_name
-						gen_file.putchar ('(')
-						gen_file.putstring (table_name)
-						gen_file.putchar ('-')
-						gen_file.putint (entry.min_used - 1)
-						gen_file.putstring (")[Dtype(Current)])(Current")
+						buffer.putchar ('(')
+						buffer.putstring (table_name)
+						buffer.putchar ('-')
+						buffer.putint (entry.min_used - 1)
+						buffer.putstring (")[Dtype(Current)])(Current")
 
 						if has_arguments then
-							generate_arg_list (args.count)
+							generate_arg_list (buffer, args.count)
 						end
 
-						gen_file.putstring (");%N")
+						buffer.putstring (");%N")
 
 							-- Mark table used.
 						Eiffel_table.mark_used (rout_id)
@@ -468,35 +465,35 @@ feature {NONE} -- Generation
 						-- Workbench mode
 
 					if a_feature.is_function then
-						gen_file.putstring ("return ")
+						buffer.putstring ("return ")
 					end
 
-					gen_file.putchar ('(')
-					c_return_type.generate_function_cast (gen_file, a_types)
+					buffer.putchar ('(')
+					c_return_type.generate_function_cast (buffer, a_types)
 
 					if
 						Compilation_modes.is_precompiling or else
 						a_type.associated_class.is_precompiled
 					then
 						rout_info := System.rout_info_table.item (rout_id)
-						gen_file.putstring ("RTWPF(")
-						rout_info.origin.generated_id (gen_file)
-						gen_file.putstring (", ")
-						gen_file.putint (rout_info.offset)
+						buffer.putstring ("RTWPF(")
+						rout_info.origin.generated_id (buffer)
+						buffer.putstring (", ")
+						buffer.putint (rout_info.offset)
 					else
-						gen_file.putstring ("RTWF(")
-						gen_file.putint (a_type.id.id - 1)
-						gen_file.putstring (", ")
-						gen_file.putint (feature_id)
+						buffer.putstring ("RTWF(")
+						buffer.putint (a_type.id.id - 1)
+						buffer.putstring (", ")
+						buffer.putint (feature_id)
 					end
-					gen_file.putstring (", Dtype (Current)))(Current")
+					buffer.putstring (", Dtype (Current)))(Current")
 					if has_arguments then
-						generate_arg_list (args.count)
+						generate_arg_list (buffer, args.count)
 					end
-					gen_file.putstring (");%N")
+					buffer.putstring (");%N")
 				end
 
-				gen_file.putstring ("%N}%N%N") -- ss MT
+				buffer.putstring ("%N}%N%N") -- ss MT
 
 				types.go_to (cursor)
 				types.forth

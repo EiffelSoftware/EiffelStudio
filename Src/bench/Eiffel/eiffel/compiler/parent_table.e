@@ -66,17 +66,16 @@ feature
 			crnt_pos := crnt_pos + 1
 		end;
 
-	generate (parents_file : INDENT_FILE; final_mode : BOOLEAN) is
+	generate (buffer: GENERATION_BUFFER; final_mode : BOOLEAN) is
 			-- Generates the current parent table
 		require
-			valid_file: parents_file /= Void
-			is_open_write: parents_file.is_open_write;
+			valid_file: buffer /= Void
 		local
 			i, j, n : INTEGER;
 		do
-			parents_file.putstring ("static int16 ptf");
-			parents_file.putint (type_id);
-			parents_file.putstring ("[] = {%N");
+			buffer.putstring ("static int16 ptf");
+			buffer.putint (type_id);
+			buffer.putstring ("[] = {%N");
 
 			from
 				i := 1;
@@ -85,32 +84,32 @@ feature
 			until
 				i >= n
 			loop
-				item (i).generate_cid (parents_file, final_mode, false);
+				item (i).generate_cid (buffer, final_mode, false);
 
 				i := i + 1;
 				j := j + 1;
 
 				if (j \\ 8) = 0 then
-					parents_file.put_string ("%N")
+					buffer.new_line
 				end
 			end;
 
-			parents_file.putint (-1);
-			parents_file.putstring ("};%N%Nstatic struct eif_par_types par");
-			parents_file.putint (type_id);
-			parents_file.putstring (" = {(int16) ");
-			parents_file.putint (generic_count);
-			parents_file.putstring (", %"");
-			parents_file.putstring (classname);
+			buffer.putint (-1);
+			buffer.putstring ("};%N%Nstatic struct eif_par_types par");
+			buffer.putint (type_id);
+			buffer.putstring (" = {(int16) ");
+			buffer.putint (generic_count);
+			buffer.putstring (", %"");
+			buffer.putstring (classname);
 
 			if is_expanded then
-				parents_file.putstring ("%", (char)1, ptf");
+				buffer.putstring ("%", (char)1, ptf");
 			else
-				parents_file.putstring ("%", (char)0, ptf");
+				buffer.putstring ("%", (char)0, ptf");
 			end
 
-			parents_file.putint (type_id);
-			parents_file.putstring ("};%N%N");
+			buffer.putint (type_id);
+			buffer.putstring ("};%N%N");
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is

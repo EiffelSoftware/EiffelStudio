@@ -672,10 +672,10 @@ end;
 			end;
 		end;
 			
-	generate (file: INDENT_FILE) is
-			-- Generate routine id array in `file'.
+	generate (buffer: GENERATION_BUFFER) is
+			-- Generate routine id array in `buffer'.
 		require
-			good_argument: file /= Void;
+			good_argument: buffer /= Void;
 		local
 			tab: ARRAY [FEATURE_I];
 			feat: FEATURE_I;
@@ -683,10 +683,10 @@ end;
 			rout_id: ROUTINE_ID
 		do
 			tab := routine_id_array;
-			file.putstring ("int32 ra");
-			file.putint (feat_tbl_id.id);
-			file.putstring ("[] = {");
-			file.new_line;
+			buffer.putstring ("int32 ra");
+			buffer.putint (feat_tbl_id.id);
+			buffer.putstring ("[] = {");
+			buffer.new_line;
 			from
 				i := 0;
 				nb := tab.upper;
@@ -694,22 +694,22 @@ end;
 				i > nb
 			loop
 				feat := tab.item (i);
-				file.putstring ("(int32) ");
+				buffer.putstring ("(int32) ");
 				if feat = Void then
-					file.putint (0);
+					buffer.putint (0);
 				else
 					rout_id := feat.rout_id_set.first;
-					file.putint (rout_id.id);
+					buffer.putint (rout_id.id);
 debug
-file.putstring (" /* `");
-file.putstring (feat.feature_name);
-file.putstring ("' */");
+buffer.putstring (" /* `");
+buffer.putstring (feat.feature_name);
+buffer.putstring ("' */");
 end;
 				end;
-				file.putstring (",%N");
+				buffer.putstring (",%N");
 				i := i + 1
 			end;
-			file.putstring ("};%N%N");
+			buffer.putstring ("};%N%N");
 		end;
 
 	routine_id_array: ARRAY [FEATURE_I] is

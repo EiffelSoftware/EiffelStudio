@@ -45,15 +45,24 @@ inherit
 			merge_left,
 			merge_right,
 			cleanup_after_remove,
-			wipe_out
+			wipe_out,
+			default_create
 		end
 
 creation
+	default_create,
 	make
 
 feature {NONE} -- Initialization
 
 	make is
+		obsolete
+			"use default_create"
+		do
+			default_create
+		end
+
+	default_create is
 			-- Begin in `Normal_state'.
 		do
 			linked_list_make
@@ -384,6 +393,9 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.22  2000/10/02 19:08:44  oconnor
+--| added default create
+--|
 --| Revision 1.21  2000/09/18 22:23:19  oconnor
 --| fixed kamikazes
 --|

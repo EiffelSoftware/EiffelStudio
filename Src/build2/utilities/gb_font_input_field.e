@@ -33,6 +33,8 @@ feature {NONE} -- Initialization
 			label_text_not_void_or_empty: label_text /= Void
 			an_agent_not_void: an_execution_agent /= Void
 			a_validate_agent_not_void: a_validate_agent /= Void
+		local
+			tool_bar: EV_TOOL_BAR
 		do
 			call_default_create (any)
 			if not label_text.is_empty then
@@ -50,11 +52,12 @@ feature {NONE} -- Initialization
 			validate_agent := a_validate_agent
 			
 			create horizontal_box
-			horizontal_box.set_padding_width (object_editor_padding_width)
-			create select_button.make_with_text ("Select...")
+			create select_button.make_with_text (select_button_text)
+			create tool_bar
+			tool_bar.extend (select_button)
 			select_button.select_actions.extend (agent select_font)
-			horizontal_box.extend (select_button)
-			horizontal_box.disable_item_expand (select_button)
+			horizontal_box.extend (tool_bar)
+			horizontal_box.disable_item_expand (tool_bar)
 			create constants_combo_box
 			constants_combo_box.disable_edit
 			constants_combo_box.hide
@@ -62,9 +65,12 @@ feature {NONE} -- Initialization
 			create spacing_cell
 			horizontal_box.extend (spacing_cell)
 			create_constants_button
-			horizontal_box.extend (constants_button)
-			horizontal_box.disable_item_expand (constants_button)
+			create tool_bar
+			tool_bar.extend (constants_button)
+			horizontal_box.extend (tool_bar)
+			horizontal_box.disable_item_expand (tool_bar)
 			extend (horizontal_box)
+			horizontal_box.set_padding_width (object_editor_padding_width)
 			
 			a_parent.extend (Current)
 			populate_constants
@@ -85,7 +91,7 @@ feature -- Access
 feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 
 	update_constant_display (a_value: EV_FONT) is
-			--
+			-- Update `Current' to display font `a_value'.
 		local
 			constant_context: GB_CONSTANT_CONTEXT
 			list_item: EV_LIST_ITEM
@@ -125,7 +131,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 	horizontal_box: EV_HORIZONTAL_BOX
 		-- Main box used in creation of `Current'.
 		
-	select_button: EV_BUTTON
+	select_button: EV_TOOL_BAR_BUTTON
 		-- Button used to select a font.
 		
 	spacing_cell: EV_CELL
@@ -145,20 +151,20 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 			-- update the displayed input fields accordingly.
 		do
 			if constants_button.is_selected then
-				select_button.hide
+				select_button.parent.hide
 				constants_combo_box.show
 				constants_combo_box.first.enable_select
 				spacing_cell.hide
 			else
 				constants_combo_box.hide
-				select_button.show
+				select_button.parent.show
 				constants_combo_box.remove_selection
 				spacing_cell.show
 			end
 		end
 		
-	populate_constants  is
-			-- Populate all
+	populate_constants is
+			-- Populate all constants
 		local
 			font_constants: ARRAYED_LIST [GB_CONSTANT]
 			list_item: EV_LIST_ITEM

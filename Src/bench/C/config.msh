@@ -55,5 +55,6 @@ dllflags='-nologo -subsystem:WINDOWS -dll -incremental:no'
 cc='cl'
 link32='$compiler_path\bin\link'
 compiler_path='d:\apps\MSVC\VC98'
+###compiler_path='%MSVCDIR%'
 all_dependency='*.obj: eif_config.h eif_portable.h eif_globals.h eif_eiffel.h eif_macros.h'
 #

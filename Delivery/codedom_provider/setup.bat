@@ -11,11 +11,11 @@ ECHO Setting up C libraries
 CD checkout\C_library\libpng
 REM in "checkout\C_library\libpng"
 CALL make_msc.bat
-COPY %ISE_EIFFEL%\library\vision2\spec\msc\lib\libpng.lib ..\..\library\vision2\spec\msc\lib\libpng.lib
+COPY %ISE_EIFFEL%\library\vision2\spec\msc\lib\libpng.lib ..\..\library\vision2\spec\msc\lib
 CD ..\zlib
 REM in "checkout\C_library\zlib"
 CALL make_msc.bat
-COPY %ISE_EIFFEL%\library\vision2\spec\msc\lib\zlib.lib ..\..\library\vision2\spec\msc\lib\zlib.lib
+COPY %ISE_EIFFEL%\library\vision2\spec\msc\lib\zlib.lib ..\..\library\vision2\spec\msc\lib
 
 ECHO Setting up libraries
 
@@ -38,7 +38,7 @@ ECHO Setting up runtime
 CD ..\..\..\..\C
 REM in "checkout\C"
 REM **************************************************
-sed -e "s/d:\\\apps\\\MSVC\\\VC98/C:\\\Progra~1\\\Micros~3\\\VC98/g" config.msh > new_config.msh
+sed -e "s/d:\\\apps\\\MSVC\\\VC98/C:\\\Progra~1\\\Micros~2\\\VC98/g" config.msh > new_config.msh
 REM **************************************************
 COPY /Y new_config.msh config.msh
 ECHO "\N" | configure win32 m

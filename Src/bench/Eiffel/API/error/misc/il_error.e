@@ -14,7 +14,8 @@ inherit
 		end
 
 create
-	make
+	make,
+	make_com_error
 
 feature {NONE} -- Initialization
 
@@ -28,6 +29,15 @@ feature {NONE} -- Initialization
 			Error_string_set: Error_string = description
 		end
 
+	make_com_error is
+			-- Error when .NET COM component is not properly installed.
+		do
+			internal_error_string := "%
+				%Unable to load .NET components. Make sure .NET and Eiffel for .NET%N%
+				%are properly installed%N%N%
+				%See http://docs.eiffel.com/technologies/dotnet for more details.%N"
+		end
+		
 feature -- Properties
 
 	code: STRING is

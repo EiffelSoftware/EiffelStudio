@@ -17,7 +17,8 @@ inherit
 			header,
 			stone_signature,
 			history_name,
-			synchronized_stone
+			synchronized_stone,
+			is_storable
 		redefine
 			same_as,
 			is_valid

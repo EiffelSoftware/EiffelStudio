@@ -22,7 +22,8 @@ class
 inherit
 	FILED_STONE
 		redefine
-			help_text
+			help_text,
+			is_storable
 		end
 
 creation
@@ -92,6 +93,11 @@ feature -- Access
 			-- when widget at cursor position is not compatible with Current stone
 		do
 			Result := Cursors.cur_X_interro
+		end
+
+	is_storable: BOOLEAN is
+		do
+			Result := False
 		end
 
 end -- class SYNTAX_STONE

@@ -81,7 +81,6 @@ feature {NONE} -- Implementation
 			client_type: CLASS_TYPE
 			client: CLASS_C
 			current_id: INTEGER
-			id: INTEGER
 			vlec: VLEC
 			finished: BOOLEAN
 			attr_desc: ATTR_DESC
@@ -111,7 +110,6 @@ feature {NONE} -- Implementation
 					expanded_desc ?= attr_desc
 					client_type := System.class_type_of_id (expanded_desc.type_id)
 					client := client_type.associated_class
-					id := client.class_id
 					if System.il_generation then
 							-- In IL code generation, static fields are handled as Eiffel
 							-- attribute, but they do not follow the rule about cycles
@@ -124,7 +122,7 @@ feature {NONE} -- Implementation
 						end
 					end
 					if
-						id = current_type.associated_class.class_id and then
+						client_type.type.same_as (current_type.type) and then
 						(not System.il_generation or else (attr.extension = Void or else
 						attr.extension.type /= feature {SHARED_IL_CONSTANTS}.static_field_type))
 					then
@@ -134,13 +132,6 @@ feature {NONE} -- Implementation
 						vlec.set_client (class_type.associated_class)
 						Error_handler.insert_error (vlec)
 					else
-						debug
-							io.error.putstring ("Inserting ")
-							io.error.putint (id)
-							io.error.putstring (" for class ")
-							io.error.putstring (client.name)
-							io.error.new_line
-						end
 						id_set.put (current_id)
 						if not stop_recursion then
 							recursive_check (client_type)
@@ -161,7 +152,7 @@ feature {NONE} -- Implementation
 			vlec: VLEC
 		do
 			if a_type.has_generics then
-				if a_type.is_true_expanded then
+				if a_type.is_expanded then
 					ass_c := a_type.associated_class
 					if not id_set.has (ass_c.class_id) then
 						if ass_c.is_expanded then

@@ -349,7 +349,6 @@ feature {NONE} -- Logging
 		local
 			st: STRUCTURED_TEXT
 		do
-			jfiat_tools.out_string (Current, m + "%N")
 			if context_output_tool /= Void then
 				create st.make
 				st.add_string (m)
@@ -468,7 +467,9 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 			r: INTEGER
 			l_module: ICOR_DEBUG_MODULE
 		do
-			context_output_message ("Callback :: " + managed_callback_name (cb_id))
+			debug ("debugger_trace_callback")
+				context_output_message ("Callback :: " + managed_callback_name (cb_id))
+			end
 			check dbg_cb_info_get_callback_id = cb_id end				
 			
 			inspect cb_id
@@ -487,6 +488,8 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				set_last_thread_by_pointer (p)
 				p := dbg_cb_info_pointer_item (3) -- p_breakpoint
 				set_last_breakpoint_by_pointer (p)
+				context_output_message ("Breakpoint occurred")
+				
 			when Cst_managed_cb_breakpoint_set_error then
 					--| p_app_domain, p_thread, p_breakpoint, dw_error
 				p := dbg_cb_info_pointer_item (1) -- p_app_domain
@@ -500,7 +503,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 					io.put_string ("  error = " + (r & 0x0FFFF).to_hex_string + "%N")
 				end
 				r := dbg_cb_info_integer_item (4) -- dw_error
-				context_output_message (" -> BreakpointSetError occurred : error = " + (r & 0x0FFFF).to_hex_string )
+				context_output_message ("BreakpointSetError occurred : error = " + (r & 0x0FFFF).to_hex_string )
 				dbgsync_cb_without_stopping := True
 			when Cst_managed_cb_control_ctrap then
 					--| p_process
@@ -576,9 +579,11 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 					--| unhandled /= 1 --> FALSE
 				p := dbg_cb_info_pointer_item (4) -- pExceptionValue
 				set_last_exception_by_pointer (p)
---				if eifnet_debugger_info.last_exception_is_handled then
---					dbgsync_cb_without_stopping := not ask_if_break_on_first_chance_exception
---				end
+				if eifnet_debugger_info.last_exception_is_handled then
+					context_output_message ("First chance exception occurred")
+				else					
+					context_output_message ("Unhandled exception occurred")
+				end
 			when Cst_managed_cb_exit_app_domain then
 					--| p_process, p_app_domain
 				p := dbg_cb_info_pointer_item (1) -- p_process
@@ -626,7 +631,7 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 						io.error.put_string ("Loading module : " + l_module.get_name + "%N")
 					end
 					Eifnet_debugger_info.register_new_module (l_module)
-					context_output_message (" -> module : " + l_module.module_name)
+					context_output_message ("Load module : " + l_module.module_name)
 				end
 				
 			when Cst_managed_cb_log_message then

@@ -124,8 +124,10 @@ cluster
 		-- Eiffel compilation:
 	all compiler:		"$EIFFEL_SRC/Eiffel/eiffel"
 		exclude
-			"CVS";"com_il_generation";"kernel"
+			"CVS";"com_il_generation";"kernel";"metadata_generation"
 		end
+
+	metadata_generation: "$EIFFEL_SRC/Eiffel/eiffel/metadata_generation/unix"
 
 		-- API cluster
 	all compiler_api:				"$EIFFEL_SRC/Eiffel/API"
@@ -138,7 +140,6 @@ cluster
 		exclude
 			"CVS";"win32";"new_tty";"new_graphical"
 		end
-
 		-- SWITCH clusters (chose one cluster per directory in switch directory)
 	switch:			"$EIFFEL_SRC/Eiffel/switch";
 	interface_switch(switch):	"$/interface/graphical";

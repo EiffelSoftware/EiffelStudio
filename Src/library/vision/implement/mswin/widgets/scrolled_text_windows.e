@@ -65,6 +65,7 @@ feature -- Initialization
 				resize_for_shell
 				wc ?= parent
 				wel_make (wc, text, x, y, width, height, id_default)
+				set_text_limit (90000)
 				enable_standard_notifications
 				if private_background_color /= Void then
 					set_background_color (private_background_color)
@@ -84,7 +85,7 @@ feature -- Initialization
 				if is_multi_line_mode then
 					show_vertical_scrollbar
 				end
-				if not managed and wel_shown then
+				if not managed then
 					wel_hide
 				elseif parent.shown then
 					shown := true

@@ -132,23 +132,27 @@ feature -- Element change
 	set_text (a_text: STRING) is
 			-- Assign `a_text' to `text'.
 		do
-			if a_text.is_empty then
-				set_default_minimum_size
-			else
-				accomodate_text (a_text)
+			if not text.is_equal (a_text) then
+				if a_text.is_empty then
+					set_default_minimum_size
+				else
+					accomodate_text (a_text)
+				end
+				Precursor {EV_TEXT_ALIGNABLE_IMP} (a_text)
+				invalidate
 			end
-			Precursor {EV_TEXT_ALIGNABLE_IMP} (a_text)
-			invalidate
 		end
 
 	set_font (ft: EV_FONT) is
 			-- Make `ft' new font of `Current'.
 		do
-			Precursor {EV_FONTABLE_IMP} (ft)
-			if not text.is_empty then
-				accomodate_text (text)
+			if not font.is_equal (ft) then
+				Precursor {EV_FONTABLE_IMP} (ft)
+				if not text.is_empty then
+					accomodate_text (text)
+				end
+				invalidate
 			end
-			invalidate
 		end
 
 feature -- Status setting

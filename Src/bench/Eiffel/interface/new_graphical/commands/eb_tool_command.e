@@ -9,8 +9,8 @@ deferred class
 
 inherit
 	EV_COMMAND
-		export
-			{EB_TOOL_COMMAND} execute
+--		export
+--			{EB_TOOL_COMMAND} execute
 		end
 
 feature {NONE} -- Initialization

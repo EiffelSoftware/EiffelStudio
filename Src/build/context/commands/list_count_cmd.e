@@ -20,7 +20,7 @@ feature {NONE}
 			Result := Command_names.cont_list_count_cmd_name
 		end;
 
-	context: SCROLL_LIST_C;
+	context: SCROLLABLE_LIST_C;
 
 	old_visible_item_count: INTEGER;
 

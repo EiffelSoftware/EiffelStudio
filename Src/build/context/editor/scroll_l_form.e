@@ -16,7 +16,7 @@ feature {NONE}
 
 	visible_item_count: INTEGER_TEXT_FIELD;
 	
-	context: SCROLL_LIST_C is
+	context: SCROLLABLE_LIST_C is
 		do
 			Result ?= editor.edited_context
 		end;

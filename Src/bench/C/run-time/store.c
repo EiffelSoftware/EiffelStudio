@@ -413,7 +413,7 @@ rt_private void internal_store(char *object)
 			xraise(EN_MEM);
 		bzero(account, scount * sizeof(char));
 		if (accounting == INDEPEND_ACCOUNT)
-			c = INDEPENDENT_STORE_4_3;
+			c = INDEPENDENT_STORE_4_4;
 		else {
 			c = GENERAL_STORE_4_0;
 

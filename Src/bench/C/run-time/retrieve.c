@@ -243,7 +243,9 @@ rt_public char *portable_retrieve(int (*char_read_function)(char *, int))
 			rt_kind = INDEPENDENT_STORE;
 			independent_retrieve_init (4096, 1);
 			break;
-		case INDEPENDENT_STORE_4_3:		/* New Independent store */
+		case INDEPENDENT_STORE_4_3:
+			eraise("Cannot retrieve 4.3 independent storable", EN_RETR);
+		case INDEPENDENT_STORE_4_4:		/* New Independent store */
 			rt_init_retrieve(retrieve_read_with_compression, char_read_function, RETRIEVE_BUFFER_SIZE);
 			rt_kind = INDEPENDENT_STORE;
 			independent_retrieve_init (RETRIEVE_BUFFER_SIZE, 0);

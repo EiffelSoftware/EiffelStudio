@@ -11,29 +11,21 @@ inherit
 			pass_address
 		end;
 	FIXED_LIST [T]
+		export
+			{NONE} make
 		redefine
-			make,
 			sequential_index_of
 		end;
 
 creation
-	make
-
-feature -- Initialization
-	
-	make (n: INTEGER) is
-			-- Replace `make' by `make_filled' from FIXED_LIST in order
-			-- to minimize the change on the compiler due to the new FIXED_LIST
-		do
-			make_filled (n)
-		end
+	make_filled
 
 feature
 
 	pass_address (n: INTEGER) is
 			-- Eiffel-yacc interface
 		do
-			c_get_address (n, $Current, $make);
+			c_get_address (n, $Current, $make_filled);
 			c_get_list_area ($to_c);
 		end;
 

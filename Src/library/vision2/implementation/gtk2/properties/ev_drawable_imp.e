@@ -469,7 +469,7 @@ feature -- Drawing operations
 			pix_imp: EV_PIXMAP_IMP
 			a_src_pixbuf, a_dest_pixbuf: POINTER
 		do
-			create Result.make_with_size (area.width, area.height)
+			create Result
 			pix_imp ?= Result.implementation
 			pix_imp.set_pixmap_from_pixbuf (pixbuf_from_drawable_at_position (area.x, area.y, 0, 0, area.width, area.height))
 		end
@@ -713,7 +713,7 @@ feature {EV_GTK_DEPENDENT_APPLICATION_IMP, EV_ANY_I} -- Implementation
 			if mask /= default_pointer then
 				mask_pixbuf1 := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, mask, default_pointer, src_x, src_y, dest_x, dest_y, a_width, a_height)
 				mask_pixbuf2 := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (mask_pixbuf1, True, '%/255/', '%/255/', '%/255/')
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_composite (mask_pixbuf2, a_pix, 0, 0, a_width, a_height, 0, 0, 1, 1, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear, 254)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_composite (mask_pixbuf2, a_pix, 0, 0, a_width, a_height, 0, 0, 1, 1, feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_interp_bilinear, 255)
 				Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_add_alpha (a_pix, False, '%/0/', '%/0/', '%/0/')
 				feature {EV_GTK_DEPENDENT_EXTERNALS}.object_unref (a_pix)
 				draw_mask_on_pixbuf (Result, mask_pixbuf2)

@@ -110,7 +110,6 @@ feature -- Initialization
 						-- Rename the old project to EIFGEN so that we can
 						-- delete it.
 					d.change_name (Eiffel_gen_path)
-					delete_generation_directory (Local_assembly_path, deletion_agent, cancel_agent)
 					delete_generation_directory (Backup_path, deletion_agent, cancel_agent)
 					delete_generation_directory (Compilation_path, deletion_agent, cancel_agent)
 					delete_generation_directory (Final_generation_path, deletion_agent,

@@ -20,11 +20,14 @@ inherit
 	EV_SIMPLE_ITEM_IMP
 		rename
 			parent as old_simple_parent
+		undefine
+			set_pointer_style
 		redefine
 			parent_imp,
 			set_text,
 			destroy,
-			interface
+			interface,
+			pnd_press
 		end
 
 	EV_ARRAYED_LIST_ITEM_HOLDER_IMP [EV_TREE_ITEM]
@@ -32,12 +35,12 @@ inherit
 			interface
 		end
 
-	EV_PICK_AND_DROPABLE_IMP
-		undefine
-			set_pointer_style
-		redefine
-			interface
-		end
+	--EV_PICK_AND_DROPABLE_IMP
+	--	undefine
+	--		set_pointer_style
+	--	redefine
+	--		interface
+	--	end
 
 	WEL_TREE_VIEW_ITEM
 		rename
@@ -84,6 +87,46 @@ feature {NONE} -- Initialization
 			create ev_children.make (1)
 			is_initialized := True
 		end
+
+feature -- {EV_TREE_IMP}
+
+	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+		local
+			tree_imp: EV_TREE_IMP
+		do
+			tree_imp ?= parent_imp
+			check
+				parent_not_void: tree_imp /= Void
+			end
+			if press_action = Ev_pnd_start_transport then
+				start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)
+				tree_imp.set_source_true
+				tree_imp.set_pnd_child_source (Current)
+				tree_imp.set_t_item_true
+			elseif press_action = Ev_pnd_end_transport then
+				end_transport (a_x, a_y, a_button)
+				tree_imp.set_source_false
+				tree_imp.set_pnd_child_source (Void)
+				tree_imp.set_t_item_false
+			else
+				tree_imp.set_source_false
+				tree_imp.set_pnd_child_source (Void)
+				tree_imp.set_t_item_false
+				check
+					disabled: press_action = Ev_pnd_disabled
+				end
+			end
+		end
+
+	set_pointer_style (c: EV_CURSOR) is
+			-- Assign `c' to `parent_imp' pointer style.
+		do
+			if top_parent_imp /= Void then
+				top_parent_imp.set_pointer_style (c)
+			end
+		end
+
+
 
 feature -- Access
 
@@ -324,6 +367,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/03/22 20:23:05  rogers
+--| Removed repeated inheritance from EV_PICK_AND_DROPABLE_IMP. Added pnd_press and set_pointer_style.
+--|
 --| Revision 1.37  2000/03/17 23:25:18  rogers
 --| Undefined set_pointer_style from EV_PICK_AND_AND_DROPABLE_IMP.
 --|

@@ -143,7 +143,7 @@ feature -- Element change
 			if new_position >= count then
 				resize (count + Chunk)
 			end
-			put (c, position)
+			area.put (c, position)
 			position := new_position
 		end
 

@@ -13,16 +13,6 @@ class
 	NAMES_HEAP
 
 inherit
-	TO_SPECIAL [STRING]
-		rename
-			put as area_put,
-			valid_index as area_valid_index,
-			item as area_item,
-			infix "@" as area_infix_at
-		export
-			{NONE} all
-		end
-	
 	PREDEFINED_NAMES
 		
 create {SYSTEM_I, SHARED_NAMES_HEAP}
@@ -34,7 +24,7 @@ feature {NONE} -- Initialization
 			-- Create new instance of NAMES_HEAP
 		do
 			top_index := 1
-			make_area (Chunk)
+			create area.make (Chunk)
 			create lookup_table.make (Chunk)
 			initialize_constants
 		end
@@ -157,6 +147,9 @@ feature -- Convenience
 		end
 
 feature {NONE} -- Implementation: access
+
+	area: SPECIAL [STRING]
+			-- Store string names indexed by their ID.
 
 	lookup_table: HASH_TABLE [INTEGER, STRING]
 			-- Hash-table indexed by string names

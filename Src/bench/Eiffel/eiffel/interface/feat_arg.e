@@ -39,12 +39,9 @@ feature {NONE} -- Implementation
 
 	make (n: INTEGER) is
 			-- Arrays creation
-		local
-			to: TO_SPECIAL [INTEGER]
 		do
 			make_filled (n)
-			create to.make_area (n)
-			argument_names := to.area
+			create argument_names.make (n)
 		end
 	
 feature -- Access

@@ -38,7 +38,7 @@ feature {NONE}
 			position := input_list.index;
 			input_data := input_list.item;
 			output_data := output_list.item;
-			update_history
+			history.record (Current);
 		end; -- function_work
 
 	worked_on: STRING is

@@ -171,18 +171,21 @@ feature -- Cursor movement
 feature -- Transformation
 
 	insert_char (c: CHARACTER) is
+		local
+			t_before, t_after: EDITOR_TOKEN
+			s: STRING
 		do
 			if c = '%N' then
 				insert_eol (False)
 			else
 				s := clone (token.image)
-				s.insert (c, pos_in_token)
+				s.insert (c.out, pos_in_token)
 				t_before := token.previous
 				if (t_before /= Void) then
 					s.prepend (t_before.image)
 					t_before := t_before.previous
 				end
-				t_after := token.after
+				t_after := token.next
 				if (t_after /= line.end_token) then
 					s.append (t_after.image)
 					t_after := t_after.next
@@ -201,6 +204,7 @@ feature -- Transformation
 	delete_char is
 		local
 			t_before, t_after: EDITOR_TOKEN
+			s: STRING
 		do
 			if token = line.end_token then
 					line.merge_with_next_line (whole_text.lexer)
@@ -212,7 +216,7 @@ feature -- Transformation
 					s.prepend (t_before.image)
 					t_before := t_before.previous
 				end
-				t_after := token.after
+				t_after := token.next
 				if (t_after /= line.end_token) then
 					s.append (t_after.image)
 					t_after := t_after.next
@@ -228,6 +232,9 @@ feature -- Transformation
 		end
 
 	replace_char (c: CHARACTER) is
+		local
+			s: STRING
+			t_before, t_after: EDITOR_TOKEN
 		do
 			if c = '%N' then
 				insert_eol (True)
@@ -239,7 +246,7 @@ feature -- Transformation
 					s.prepend (t_before.image)
 					t_before := t_before.previous
 				end
-				t_after := token.after
+				t_after := token.next
 				if (t_after /= line.end_token) then
 					s.append (t_after.image)
 					t_after := t_after.next
@@ -264,7 +271,7 @@ feature -- Transformation
 
 	insert_eol (overwrite_current_char : BOOLEAN) is
 		local
-			t_image, s, s2: STRING
+			t_image, s: STRING
 			i_t: EDITOR_TOKEN
 			new_line : EDITOR_LINE
 		do
@@ -273,26 +280,26 @@ feature -- Transformation
 			else
 				t_image := token.image
 				if overwrite_current_char then
-					s2 := t_image.substring (pos_in_token + 1, t_image.count)
+					s := t_image.substring (pos_in_token + 1, t_image.count)
 				else
-					s2 := t_image.substring (pos_in_token, t_image.count)
+					s := t_image.substring (pos_in_token, t_image.count)
 				end
 				from
 					i_t := token.next
 				until
 					i_t = line.end_token
 				loop
-					s2.append (i_t.image)
+					s.append (i_t.image)
 					i_t := i_t.next
 				end
 				check
-					s2_non_empty: not (s2.empty)
+					s_non_empty: not (s.empty)
 				end
 				delete_after_cursor
-				whole_text.lexer.execute (s2)
-				create new_line.make_from_lexer (lexer)
+				whole_text.lexer.execute (s)
+				create new_line.make_from_lexer (whole_text.lexer)
 			end
-			line.add_next (new_line)
+			line.add_right (new_line)
 		end
 
 	delete_after_cursor is
@@ -300,6 +307,7 @@ feature -- Transformation
 		local
 			t_eol: EDITOR_TOKEN_EOL
 			prev_token: EDITOR_TOKEN
+			s: STRING
 			
 		do
 			if token /= line.end_token then

@@ -35,7 +35,8 @@ feature -- Element change
 			exists: not destroyed
 			valid_pixmap: is_valid (pix)
 			valid_size: implementation.pixmap_size_ok (pix)
-			unlocked_pixmap: not pix.is_locked
+			valid_lock: not pix.is_locked
+			valid_drawable: implementation.pixmap_drawable_ok (pix)
 		do
 			implementation.set_pixmap (pix)
 		ensure then

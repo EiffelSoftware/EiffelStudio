@@ -29,7 +29,8 @@ feature -- Element change
 			exists: not destroyed
 			valid_pixmap: is_valid (pix)
 			valid_size: pixmap_size_ok (pix)
-			unlocked_pixmap: not pix.is_locked
+			valid_lock: not pix.is_locked
+			valid_drawable: pixmap_drawable_ok (pix)
 		deferred
 		ensure then
 			pixmap_set: pixmap = pix
@@ -52,6 +53,13 @@ feature -- Assertion features
 			-- the container.
 		do
 			Result := (pix.width <= 16) and (pix.height <= 16)
+		end
+
+	pixmap_drawable_ok (pix: EV_PIXMAP): BOOLEAN is
+			-- Check if the size of the pixmap is ok for
+			-- the container.
+		do
+			Result := True
 		end
 
 end -- class EV_PIXMAP_CONTAINER_I

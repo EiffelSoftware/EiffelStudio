@@ -7,7 +7,7 @@ class
 inherit
 	EV_HELP_ENGINE
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

@@ -25,7 +25,7 @@ inherit
 			out
 		end
 
-creation
+create
 
 	default_create
 

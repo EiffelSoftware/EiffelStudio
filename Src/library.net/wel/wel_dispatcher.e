@@ -28,7 +28,7 @@ inherit
 	WEL_EN_CONSTANTS	
 		-- debug
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization

@@ -183,7 +183,6 @@ feature {NONE} -- Initialization
 			end
 		end
 
-
 feature -- Access
 
 	parent: EV_CONTAINER is
@@ -381,6 +380,7 @@ feature -- Element change
 		do
 			--| FIXME Needs implementing to use set_pointer_style
 		end
+		
 	set_minimum_width (a_minimum_width: INTEGER) is
 			-- Set the minimum horizontal size to `a_minimum_width'.
 		do
@@ -714,7 +714,6 @@ feature {NONE} -- Implementation
 			temp_int: INTEGER
 		do
 				if is_displayed then
-					C.gtk_widget_queue_resize (a_child)
 					temp_int := C.gtk_main_iteration_do (False)
 				end
 		end
@@ -848,6 +847,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.74  2001/06/29 22:22:54  king
+--| Removed redundant queue_resize
+--|
 --| Revision 1.73  2001/06/21 22:32:59  king
 --| Added update_child_requisition feature
 --|

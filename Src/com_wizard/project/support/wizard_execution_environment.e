@@ -9,6 +9,12 @@ class
 
 feature -- Access
 
+	use_bcb: BOOLEAN is
+			-- SHould wizard use Borland C compiler?
+		once
+			Result := Ise_c_compiler_value.is_equal ("bcb")
+		end
+		
 	Ise_c_compiler_value: STRING is
 			-- ISE_C_COMPILER value
 		once
@@ -38,7 +44,7 @@ feature -- Access
 			Result.append ("\studio\spec\windows\bin\ec.exe")
 		end
 	
-	Ise_c_compiler: STRING is "ISE_C_COMPLIER"
+	Ise_c_compiler: STRING is "ISE_C_COMPILER"
 			-- ISE_C_COMPLIER environmnent variable.
 
 feature {NONE} -- Implementation

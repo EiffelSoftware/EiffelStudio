@@ -1,5 +1,5 @@
 system
-	"ISE.CodedomSerializer"
+	"EiffelSoftware.CodedomSerializer"
 
 root 
 	none
@@ -19,7 +19,7 @@ default
 	il_verifiable (yes)
 	console_application (no)
 	line_generation (no)
-	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build\ISE.EiffelVision2\obj\Debug")
+	precompiled ("$EIFFEL_SRC\dotnet\codedom_provider\build_studio\EiffelSoftware.EiffelVision2")
 
 cluster 
 		-- The application

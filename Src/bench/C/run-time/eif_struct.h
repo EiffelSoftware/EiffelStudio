@@ -126,8 +126,6 @@ struct rout_info {						/* Routine information */
 /* Array of class node (indexed by dynamic type). It is statically allocated
  * in production mode and dynamically in workbench mode.
  */
-
-
 #ifndef WORKBENCH
 extern struct cnode *esystem;	/* Describes a full Eiffel system (with DLE) */
 #else
@@ -148,11 +146,7 @@ extern struct desc_info ***desc_tab;	/* Global descriptor table */
 /* Conformance table array used by Eiffel feature `conforms_to' of
  * class ANY.
  */
-#ifdef WORKBENCH
 extern struct conform **co_table;
-#else
-extern struct conform **co_table;
-#endif
 
 typedef char *(*fnptr)(EIF_REFERENCE, ...); /* The function pointer type */
 

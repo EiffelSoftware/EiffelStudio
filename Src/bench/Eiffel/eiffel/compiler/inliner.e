@@ -14,6 +14,7 @@ feature
 			nb: INTEGER
 		do
 			inlining_on := System.inlining_on
+			onbidt := System.onbidt
 
 			nb := System.body_id_counter.total_count
 			!! processed_features.make (1, nb)
@@ -23,6 +24,8 @@ feature
 		end
 
 feature {NONE}
+
+	onbidt: O_N_TABLE [BODY_ID] 
 
 	min_inlining_threshold: INTEGER
 			-- Byte code smaller than `min_inlining_threshold' will be inlined
@@ -66,6 +69,11 @@ feature -- Conversion
 			Result := Depend_server.bid_cid_table
 		end
 
+	updated_id (bid: BODY_ID): BODY_ID is
+		do
+			Result := onbidt.item (bid)
+		end
+
 feature -- Status
 
 	inline (type: TYPE_I; body_id: BODY_ID): BOOLEAN is
@@ -74,11 +82,13 @@ feature -- Status
 			is_inlining_enabled: inlining_on
 		local
 			body_id_id: INTEGER
+			new_body_id: BODY_ID
 		do
-			body_id_id := body_id.id
+			new_body_id := updated_id (body_id)
+			body_id_id := new_body_id.id
 			if not processed_features.item (body_id_id) then
 				processed_features.put (True, body_id_id)
-				if can_be_inlined (type, body_id) then
+				if can_be_inlined (type, new_body_id) then
 					to_be_inlined.put (True, body_id_id)
 					Result := True
 				end
@@ -95,6 +105,7 @@ feature -- Status
 			type_i: TYPE_I	
 			types: ARRAY [TYPE_I]
 			wc: CLASS_C
+			cid: CLASS_ID
 		do
  			if byte_server.server_has (body_id) then
  				byte_code := Byte_server.disk_item (body_id)
@@ -135,6 +146,7 @@ feature -- Status
 				end
 
 				if Result then
+					cid := bid_cid_table.item (body_id)
 					wc := System.class_of_id (bid_cid_table.item (body_id))
 					Result := not (wc.is_basic or else (wc.is_special
 							and then byte_code.feature_name.is_equal ("make_area")))

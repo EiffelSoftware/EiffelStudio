@@ -22,6 +22,16 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#ifdef __VMS
+#define lib$rename_file		LIB$RENAME_FILE
+#include <lib$routines.h>
+#include <descrip.h>
+#include <rmsdef.h>
+#include <unixlib.h>		/* for mkdir, geteuid, getegid,... */
+#include <unixio.h>			/* for access(),chown() */
+#include <processes.h>		/* for system() */
+#endif
+
 #include "err_msg.h"
 #ifdef I_PWD
 #include <pwd.h>
@@ -924,6 +934,8 @@ int op;
 }
 
 public EIF_BOOLEAN file_access(name, op)
+char *name;
+EIF_INTEGER op;
 {
 	/* Check whether access permission 'op' are possible on file 'name' using
 	 * real UID and real GID. This is probably only useful to setuid or setgid
@@ -1375,13 +1387,36 @@ public int rename(from, to)
 char *from;		/* Orginal name */
 char *to;		/* Target name */
 {
+
 	/* Emulates the system call rename() */
+
+#ifdef __VMS
+	char	old[256];
+	char	new[256];
+	int		status;
+
+	DESCRIPTOR(olddsc,old);                
+	DESCRIPTOR(newdsc,new);
+
+	strcpy(old,from);
+	strcpy(new,to);
+	olddsc.dsc$w_length = strlen(old);
+	newdsc.dsc$w_length = strlen(new);
+	status  = lib$rename_file(&olddsc,&newdsc,
+		/* default, related filespec */ 0,0, /*flags*/ 0,
+		/* success,fail,confirm routines */ 0,0,0,
+		/* user arg */ 0, /* old,new result */ 0,0,/*context*/ 0);
+	if ((status & 1) != 1) return -1;
+		/* if no error, use the default return, as does the nonVMS code */
+
+#else /* ifdef __VMS */
 
 	(void) unlink(to);
 	if (-1 == link(from, to))
 		return -1;
 	if (-1 == unlink(from))
 		return -1;
+#endif
 }
 #endif
 
@@ -1421,5 +1456,29 @@ char *path;
 	
 	return 0;
 }
+#endif
+
+#ifndef HAS_UTIME
+int utime(path, times);
+char *path;
+struct utimbuf *times;
+{
+	/* Emulation of utime */
+
+	...
+
+}
+#endif
+
+#ifndef HAS_LINK
+#ifndef unlink
+
+int unlink(path)
+char *path;
+{
+	return -1
+}
+
+#endif
 #endif
 

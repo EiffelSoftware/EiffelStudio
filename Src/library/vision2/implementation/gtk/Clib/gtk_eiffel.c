@@ -35,6 +35,7 @@ void c_free_call_back_block (callback_data_t *p)
 void c_gtk_init_toolkit () 
 {
     gtk_init (&eif_argc, &eif_argv);
+	gtk_rc_parse("gtkrc");
 }
 
 /*********************************
@@ -53,6 +54,7 @@ void c_signal_callback (GtkObject *w, gpointer data)
     
     /* Call Eiffel routine 'rtn' of object 'obj' with argument 'argument' */
     /*(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));*/
+	printf("c_signal_callback (%d, %d)\n", w, data); 
 	(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument), eif_access(pcbd->ev_data));
 }
 
@@ -70,6 +72,8 @@ void c_event_callback (GtkObject *w, GdkEvent *ev,  gpointer data)
 {
     callback_data_t *pcbd;
     pcbd = (callback_data_t *)data;
+
+	printf("c_event_callback (%d, %d, %d)\n", w, ev, data); 
 
     if (pcbd->ev_data != NULL)
     {
@@ -486,12 +490,12 @@ EIF_BOOLEAN c_gtk_widget_minimum_size_set (GtkWidget *w, guint width, guint heig
 void c_gtk_widget_set_size (GtkWidget *widget, int width, int height) 
 {
   GtkAllocation allocation;
-
+  
   allocation.x = widget->allocation.x;
   allocation.y = widget->allocation.y;
   allocation.width = width;
   allocation.height = height;
-
+  
   gtk_widget_size_allocate (widget, &allocation);
 }
 
@@ -557,64 +561,6 @@ void c_gtk_widget_set_name (GtkWidget *widget, const gchar *name)
 {
     gtk_widget_set_name (widget, name);
 }
-
-/*********************************
- *
- * Function : `c_gtk_create_message_d_buttons'
- *
- * Note : Create message dialog buttons
- *
- *********************************/
-
-void c_gtk_create_message_d_buttons (GtkWidget *dialog, GtkWidget *ok,
-				     GtkWidget *cancel, GtkWidget *help)
-{
-    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->action_area), ok,
-			TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->action_area), cancel,
-			TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->action_area), help,
-			TRUE, TRUE, 0);
-}
-
-/*********************************
- *
- * Function : `c_gtk_create_message_d_label'
- *
- * Note : Message dialog text
- *
- *********************************/
-
-void c_gtk_create_message_d_label (GtkWidget *dialog, GtkWidget *label)
-{
-    gtk_box_pack_start (GTK_BOX (GTK_DIALOG (dialog)->vbox), label, TRUE,
-			TRUE, 0);
-}
-
-/*********************************
- *
- * Function : `c_gtk_create_button_with_label'
- *
- * out : label_widget pointer to buttons label widget
- * in  : label_text  text of label
- *
- *********************************/
-
-/*GtkWidget* c_gtk_create_button_with_label (GtkWidget *label_widget,
-					  const gchar *label_text)
-{
-    GtkWidget *button;
-
-    button = gtk_button_new ();
-    label_widget = gtk_label_new (label_text);
-    gtk_misc_set_alignment (GTK_MISC (label_widget), 0.5, 0.5);
-    
-    gtk_container_add (GTK_CONTAINER (button), label_widget);
-    gtk_widget_show (label_widget);
-    
-    return button;
-}
-*/
 
 /*********************************
  *
@@ -957,3 +903,101 @@ void c_gtk_box_set_child_options (GtkWidget *box, GtkWidget *child,
 
 }
 
+/*
+EIF_REFERENCE ev_color_make_rgb (int r, int g, int b)
+{
+		EIF_REFERENCE ev_color;
+		EIF_TYPE_ID ev_color_type;
+		EIF_PROC set_rgb;
+		EIF_INTEGER er = r;
+		EIF_INTEGER eg = g;
+		EIF_INTEGER eb = b;
+
+		ev_color_type = eif_type_id("EV_COLOR");
+		ev_color = eif_access(eif_create(ev_color_type));
+		set_rgb = eif_proc("make_rgb", ev_color_type);
+		(set_rgb)(ev_color, er, eg, eb);
+		return ev_color;
+}
+*/
+
+
+void c_gtk_style_default_bg_color (EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b)
+{
+		GtkStyle* style;
+
+		style = gtk_widget_get_default_style();
+		*r = style->bg[GTK_STATE_NORMAL].red;
+		*g = style->bg[GTK_STATE_NORMAL].green;
+		*b = style->bg[GTK_STATE_NORMAL].blue;
+		
+		*r /= 257; *g /= 257; *b /= 257;
+}
+
+void c_gtk_widget_set_bg_color (GtkWidget* widget, int r, int g, int b)
+{
+		GtkStyle* style;
+		int or, og, ob;
+
+		style = gtk_widget_get_style(GTK_WIDGET(widget));
+
+		r *= 257; g *= 257; b *= 257;
+		
+		or = style->base[GTK_STATE_NORMAL].red;
+		og = style->base[GTK_STATE_NORMAL].green;
+		ob = style->base[GTK_STATE_NORMAL].blue;
+		
+		if(or != r || og != g || ob != b) {
+			style = gtk_style_copy (style);
+			style->base[GTK_STATE_NORMAL].red = r;
+			style->base[GTK_STATE_NORMAL].green = g;
+			style->base[GTK_STATE_NORMAL].blue = b;
+			gtk_widget_set_style(GTK_WIDGET(widget), style);
+		}
+}
+
+void c_gtk_widget_get_bg_color (GtkWidget* widget, EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b)
+{
+		GtkStyle* style;
+		style = GTK_WIDGET(widget)->style;
+
+		*r = style->base[GTK_STATE_NORMAL].red;
+		*g = style->base[GTK_STATE_NORMAL].green;
+		*b = style->base[GTK_STATE_NORMAL].blue;
+
+		*r /= 257; *g /= 257; *b /= 257;
+}
+
+void c_gtk_widget_set_fg_color (GtkWidget* widget, int r, int g, int b)
+{
+		GtkStyle* style;
+		int or, og, ob;
+
+		style = gtk_widget_get_style(GTK_WIDGET(widget));
+
+		r *= 257; g *= 257; b *= 257;
+		
+		or = style->text[GTK_STATE_NORMAL].red;
+		og = style->text[GTK_STATE_NORMAL].green;
+		ob = style->text[GTK_STATE_NORMAL].blue;
+		
+		if(or != r || og != g || ob != b) {
+			style = gtk_style_copy (style);
+			style->text[GTK_STATE_NORMAL].red = r;
+			style->text[GTK_STATE_NORMAL].green = g;
+			style->text[GTK_STATE_NORMAL].blue = b;
+			gtk_widget_set_style(GTK_WIDGET(widget), style);
+		}
+}
+
+void c_gtk_widget_get_fg_color (GtkWidget* widget, EIF_INTEGER* r, EIF_INTEGER* g, EIF_INTEGER* b)
+{
+		GtkStyle* style;
+		style = GTK_WIDGET(widget)->style;
+
+		*r = style->text[GTK_STATE_NORMAL].red;
+		*g = style->text[GTK_STATE_NORMAL].green;
+		*b = style->text[GTK_STATE_NORMAL].blue;
+
+		*r /= 257; *g /= 257; *b /= 257;
+}

@@ -2,13 +2,26 @@
 #include <stdio.h>
 #include <eif_eiffel.h>
 #include <time.h>
+#include <sys/timeb.h>
+
+#ifdef EIF_WIN32
+	struct _timeb date_time_fine;
+#else
+	struct timeb date_time_fine;
+#endif
 
 struct tm *date_time;
 	
-void c_get_date_time ()	
+void c_get_date_time () 
 {
-	time_t t = time (NULL);
-	date_time = localtime (&t);	
+	
+	const time_t *tmp;
+#ifdef EIF_WIN32
+	_ftime (&date_time_fine);
+#else
+	ftime (&date_time_fine);
+#endif
+	date_time = localtime (&(date_time_fine).time);   
 }
 
 EIF_INTEGER c_year ()
@@ -39,4 +52,9 @@ EIF_INTEGER c_minute ()
 EIF_INTEGER c_second ()
 {
 	return ((EIF_INTEGER)(date_time->tm_sec));
+}
+
+EIF_INTEGER c_millisecond ()
+{
+	return ((EIF_INTEGER)(date_time_fine.millitm));
 }

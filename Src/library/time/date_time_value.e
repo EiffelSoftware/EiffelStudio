@@ -95,10 +95,11 @@ feature -- Conversion
 
 	out: STRING is
 			-- Printable representation of the current object
+			-- With "standard" form: "dd/mm/yyyy hh:mm:ss.sss"
 		do
 			Result := clone (date.out);
 			Result.extend (' ');
-			Result.append (time.out)
+			Result.append (time.out_fine(3))
 		end
 
 	out_fine (p: INTEGER): STRING is 

@@ -62,19 +62,29 @@ feature -- Access
 feature -- Conversion
  
 	out: STRING is 
-			-- Printable representation of time
+			-- Printable representation of time with "standard"
+			-- Form: "hh:mm:ss"
 		do 
 			Result := hour.out; 
+			if hour < 10 then
+				Result.prepend("0")
+			end
 			Result.extend (':');
+			if minute < 10 then
+				Result.append("0")
+			end
 			Result.append (minute.out);
 			Result.extend (':');
-			Result.append (second.out);
-			Result.extend ('.')
+			if second < 10 then
+				Result.append("0")
+			end
+			Result.append ((second).out);
 		end;
  
 	out_fine (p: INTEGER): STRING is
-			-- Printable representation of time
-			-- `p' is the number of decimals shown
+			-- Printable representation of time with "standard"
+			-- Form: "hh:mm:ss.sss"
+			-- `p' is the number of decimals shown 
 		require
 			p_strictly_positive: p > 0
 		local
@@ -82,9 +92,18 @@ feature -- Conversion
 			format: FORMAT_DOUBLE
 		do
 			Result := hour.out;
+			if hour < 10 then
+				Result.prepend("0")
+			end
 			Result.extend (':'); 
-			Result.append (minute.out); 
+			if minute < 10 then
+				Result.append("0")
+			end	
+			Result.append (minute.out);
 			Result.extend (':');
+			if fine_second < 10 then
+				Result.append("0")
+			end
 			!! format.make (p + 1, p)
 			Result.append (format.formatted (fine_second));
 		end;			 

@@ -114,6 +114,16 @@ feature -- Status setting
 			implementation.set_single_selection
 		end
 
+feature -- Element change
+
+	clear_items is
+			-- Clear all the items of the list.
+		require
+			exists: not destroyed
+		do
+			implementation.clear_items
+		end
+
 feature -- Event : command association
 
 	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	

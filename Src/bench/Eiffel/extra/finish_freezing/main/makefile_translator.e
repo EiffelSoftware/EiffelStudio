@@ -57,6 +57,9 @@ feature -- Access
 	concurrent: BOOLEAN
 			-- Is this a concurrent application?
 
+	multithreaded: BOOLEAN
+			-- Is this a multithreaded application?
+
 	appl: STRING			
 			-- Application name
 
@@ -353,6 +356,7 @@ feature {NONE} -- Translation
 					subst_dir_sep (lastline)
 					lastline.replace_substring_all ("$ (CC) $ (CFLAGS) -c", options.get_string ("cc_text", "Void"))
 					lastline.replace_substring_all (".c.o:", options.get_string ("cobj_text", Void))
+					lastline.replace_substring_all (".cpp.o:", options.get_string ("cppobj_text", Void))
 					if lastline.count>4 and then lastline.substring (1,5).is_equal (".x.o:") then
 						lastline.replace_substring_all (".x.o:", options.get_string ("xobj_text", Void))
 					end
@@ -491,6 +495,7 @@ feature {NONE} -- Translation
 			dir: STRING -- the directory
 			filename: STRING -- the filename of the sub makefile
 			number: INTEGER -- the number of the Eobj file
+			F_done, D_done, C_done: BOOLEAN
 		do
 			debug ("progress")
 				io.putstring ("%Tdependencies%N")
@@ -564,6 +569,7 @@ feature {NONE} -- Translation
 				lastline := clone (makefile_sh.laststring)
 			end
 
+				-- Generate the `OBJECTS = ' line
 			from
 				dependent_directories.start
 				if not dependent_directories.after then
@@ -571,8 +577,6 @@ feature {NONE} -- Translation
 				end
 
 				makefile.putstring (options.get_string ("objects_text", Void))
-				makefile.putstring (options.get_string ("continuation", Void))
-				makefile.putstring ("%N%T")
 			until
 				dir.item (1) = 'E' or else dependent_directories.after
 			loop		
@@ -591,12 +595,47 @@ feature {NONE} -- Translation
 				end
 			end
 
-			makefile.putstring ("%N%N")
-
+				-- Generate the `x_OBJECTS = ' lines
 			from
+				dependent_directories.start
+				if not dependent_directories.after then
+				dir := dependent_directories.item
+				end
+			until
+				dir.item (1) = 'E' or else dependent_directories.after
+			loop		
+				if not F_done and then dir.item (1) = 'F' then
+					F_done := true
+					makefile.putstring ("%N%N");
+					makefile.putstring (options.get_string ("f_objects_text", Void))
+				elseif not D_done and then dir.item (1) = 'D' then
+					D_done := true
+					makefile.putstring ("%N%N");
+					makefile.putstring (options.get_string ("d_objects_text", Void))
+				elseif not C_done and then dir.item (1) = 'C' then
+					C_done := true
+					makefile.putstring ("%N%N");
+					makefile.putstring (options.get_string ("c_objects_text", Void))
+				end
+
+				makefile.putstring (dir)
+				makefile.putchar (operating_environment.directory_separator)
+				makefile.putchar (dir.item (1))
+				makefile.putstring (options.get_string ("obj_file_ext", Void))
+				makefile.putstring (dir.substring (2, dir.count))
+				makefile.putchar ('.')
+				makefile.putstring (options.get_string ("intermediate_file_ext", Void))
+				makefile.putchar (' ')
+
+				dependent_directories.forth
+				if not dependent_directories.after then
+					dir := dependent_directories.item
+				end
+			end
+	
+			from
+				makefile.putstring ("%N%N")
 				makefile.putstring (options.get_string ("eobjects_text", Void))
-				makefile.putstring (options.get_string ("continuation", Void))
-				makefile.putstring ("%N%T")
 				number := 0
 			until
 				dependent_directories.after
@@ -695,6 +734,7 @@ feature {NONE} -- Translation
 			-- replace all occurrences of certain strings
 			lastline.replace_substring_all ("$ (CC) $ (CFLAGS) -c", options.get_string ("cc_text", Void))
 			lastline.replace_substring_all (".c.o:", options.get_string ("cobj_text", Void))
+			lastline.replace_substring_all (".cpp.o:", options.get_string ("cppobj_text", Void))
 			lastline.replace_substring_all (".o ", options.get_string ("obj_text", Void))
 			
 			-- replace .o:
@@ -709,7 +749,7 @@ feature {NONE} -- Translation
 			subst_dir_sep (lastline)
 
 			-- intermediate files
-			if lastline.count>8 and then lastline.substring_index ("ld -r -o", 1) >0 then
+			if lastline.count>8 and then lastline.substring_index ("$(LD) $(LDFLAGS) -r -o", 1) >0 then
 				lastline := clone  (options.get_string ("make_intermediate", Void))
 
 				debug ("translate_line_change")
@@ -823,7 +863,6 @@ feature {NONE} -- Translation
 			subst_eiffel (lastline)
 			subst_platform (lastline)
 			subst_compiler (lastline)
-			subst_dir_sep (lastline)
 
 			subst_precomp_libs (lastline, precompile_libs)
 			if lastline.substring_index ("$precompile_libs_command", 1) > 0 then
@@ -1059,7 +1098,6 @@ feature {NONE}	-- substitutions
 					lib := clone (libs.substring (1, lib_start_pos))
 					command.append (options.get_string ("precomp_lib_command_text", Void))
 					command.replace_substring_all ("$precompiled_library", lib)
-					command.append ("%N%T")
 					
 					libs.tail (libs.count - lib_start_pos)
 					lib_start_pos := libs.substring_index (" ", 1)
@@ -1067,7 +1105,6 @@ feature {NONE}	-- substitutions
 
 				command.append (options.get_string ("precomp_lib_command_text", Void))
 				command.replace_substring_all ("$precompiled_library", libs)
-				command.append ("%N")
 				
 				line.replace_substring_all ("$precompile_libs_command", command)
 			else
@@ -1175,15 +1212,11 @@ feature {NONE} -- Implementation
 			end
 
 			if options.has (word) then			
-				if word.is_equal ("eiffel4") then
-					Result := clone (eiffel4)
-				else
-					replacement := clone (options.get_string (word, Void))
-					if not replacement.is_equal("$(INCLUDE_PATH)") then
-						search_and_replace (replacement)
-					end
-					Result := replacement
+				replacement := clone (options.get_string (word, Void))
+				if not replacement.is_equal("$(INCLUDE_PATH)") then
+					search_and_replace (replacement)
 				end
+				Result := replacement
 			else
 				Result := clone (env.get (word))
 			end
@@ -1362,10 +1395,10 @@ feature {NONE} -- Implementation
 			Result.append ("spec")
 			Result.append_character (operating_environment.directory_separator)
 			Result.append (platform)
+			Result.append_character (operating_environment.directory_separator)
+			Result.append ("config")
       	  	Result.append_character (operating_environment.directory_separator)
 			Result.append (compiler)
-	        	Result.append_character (operating_environment.directory_separator)
-			Result.append ("config")
 			Result.append_character (operating_environment.directory_separator)
 			Result.append ("config.eif")
 

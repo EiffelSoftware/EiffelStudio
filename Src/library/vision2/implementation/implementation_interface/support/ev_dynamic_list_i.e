@@ -14,6 +14,8 @@ inherit
 			interface
 		end
 
+	ASSIGN_ATTEMPT [G]
+
 feature -- Access
 
 	item: G is
@@ -409,23 +411,6 @@ feature {EV_ANY_I} -- Implementation
 			not_void: Result /= Void
 		end
 
-feature {NONE} -- Implementation
-
-	attempt (an_object: ANY): G is
-		-- Attempt to return an object of type `G' from `an_object'
-		do
-			Result := generize ($an_object)
-		end
-
-feature {NONE} -- External
-
-	generize (an_object: POINTER): G is
-		external
-			"C macro signature (EIF_REFERENCE): EIF_REFERENCE use %"eif_eiffel.h%""
-		alias
-			" "
-		end
-		
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_DYNAMIC_LIST [G]

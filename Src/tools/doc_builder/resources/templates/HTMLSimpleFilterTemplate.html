@@ -11,16 +11,13 @@ for (var i = 0; i < tH.length; i++) {
 function synchronize(aUrl)
 //Synchronize the TOC with the 'aUrl' displayed
 {	
-	alert ('synchronize called in ' + location.href);
 	tocName = getCookie ("tocName");
 	if (tocName == null)
 	{
-		alert ('tocName for content file not known');
 		tocName = top.content_frame.toc;
 	}
 	if (fileMatchesTocHash() || tocName == null)
 	{
-		alert ('tocName for content file is ' + tocName);
 		var subToc = parent.filter_frame.location.href.substring (0, parent.filter_frame.location.href.lastIndexOf ("/") + 1);							
 	}
 	else
@@ -28,9 +25,7 @@ function synchronize(aUrl)
 		var subToc = '../../' + tocName + '/';		
 	}
 	subToc += "sub_tocs/";
-	
-	alert (subToc + ':' + aUrl);
-	
+		
 	if (tH[aUrl] != null)
 	{
 		subToc += tH[aUrl].s;

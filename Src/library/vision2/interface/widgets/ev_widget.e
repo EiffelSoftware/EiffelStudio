@@ -229,6 +229,8 @@ feature -- Element change
 			-- Set `minimum_width' to `a_minimum_width' in pixels.
 			-- If `width' is less than `a_minimim_width', resize.
 			-- This setting takes effect next time application is idle.
+			-- From now, `minimum_width' is fixed and will not be changed
+			-- dynamically by the application anymore.
 		require
 			a_minimum_width_positive: a_minimum_width > 0
 		do
@@ -241,6 +243,8 @@ feature -- Element change
 			-- Set `minimum_height' to `a_minimum_height' in pixels.
 			-- If `height' is less than `a_minimim_height', resize.
 			-- This setting takes effect next time application is idle.
+			-- From now, `minimum_height' is fixed and will not be changed
+			-- dynamically by the application anymore.
 		require
 			a_minimum_height_positive: a_minimum_height > 0
 		do
@@ -254,6 +258,8 @@ feature -- Element change
 			-- and `minimum_width' to `a_minimum_width' in pixels.
 			-- If `width' or `height' is less than minimum size, resize.
 			-- This setting takes effect next time application is idle.
+			-- From now, minimum size is fixed and will not be changed
+			-- dynamically by the application anymore.
 		require
 			a_minimum_width_positive: a_minimum_width > 0
 			a_minimum_height_positive: a_minimum_height > 0
@@ -765,6 +771,9 @@ end -- class EV_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.72  2000/03/09 16:37:06  brendel
+--| Improved comments on minimum size setting routines.
+--|
 --| Revision 1.71  2000/03/09 16:09:10  brendel
 --| Improved comments on minimim size setting functions.
 --|

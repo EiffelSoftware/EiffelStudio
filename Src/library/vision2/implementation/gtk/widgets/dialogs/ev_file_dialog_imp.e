@@ -56,13 +56,13 @@ feature {NONE} -- Initialization
 			real_signal_connect (
 				C.gtk_file_selection_struct_ok_button (c_object),
 				"clicked",
-				~on_ok,
+				agent on_ok,
 				Void
 			)
 			real_signal_connect (
 				C.gtk_file_selection_struct_cancel_button (c_object),
 				"clicked",
-				~on_cancel,
+				agent on_cancel,
 				Void
 			)
 			enable_closeable

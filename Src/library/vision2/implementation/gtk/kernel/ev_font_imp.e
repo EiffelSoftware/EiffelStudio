@@ -42,8 +42,8 @@ feature {NONE} -- Initialization
 			height := 10
 
 			create preferred_families
-			preferred_families.add_actions.extend (~update_preferred_faces)
-			preferred_families.remove_actions.extend (~update_preferred_faces)
+			preferred_families.add_actions.extend (agent update_preferred_faces)
+			preferred_families.remove_actions.extend (agent update_preferred_faces)
 
 			update_font_face
 		end
@@ -114,8 +114,8 @@ feature -- Element change
 			preferred_families.add_actions.wipe_out
 			preferred_families.remove_actions.wipe_out
 			preferred_families := a_preferred_families
-			preferred_families.add_actions.extend (~update_preferred_faces)
-			preferred_families.remove_actions.extend (~update_preferred_faces)
+			preferred_families.add_actions.extend (agent update_preferred_faces)
+			preferred_families.remove_actions.extend (agent update_preferred_faces)
 			update_font_face
 		end
 
@@ -364,12 +364,12 @@ feature {NONE} -- Implementation
 				-- Create and setup the preferred font face mechanism
 		once
 			create Result.make (1, 6)
-			Result.put ({EV_FONT_IMP}~try_string, 1)
-			Result.put ({EV_FONT_IMP}~rescue_string_one, 2)
-			Result.put ({EV_FONT_IMP}~rescue_string_two, 3)
-			Result.put ({EV_FONT_IMP}~non_optimal, 4)
-			Result.put ({EV_FONT_IMP}~last_resort_match, 5)
-			Result.put ({EV_FONT_IMP}~default_font, 6)
+			Result.put (agent {EV_FONT_IMP}.try_string, 1)
+			Result.put (agent {EV_FONT_IMP}.rescue_string_one, 2)
+			Result.put (agent {EV_FONT_IMP}.rescue_string_two, 3)
+			Result.put (agent {EV_FONT_IMP}.non_optimal, 4)
+			Result.put (agent {EV_FONT_IMP}.last_resort_match, 5)
+			Result.put (agent {EV_FONT_IMP}.default_font, 6)
 		end
 
 	family_string: STRING is

@@ -855,6 +855,18 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
+			-- EIF_POINTER a_pointer = 0;
+			-- 
+
+			Result.append (Eif_pointer)
+			Result.append (Space)
+			Result.append (A_pointer)
+			Result.append (Space_equal_space)
+			Result.append (Zero)
+			Result.append (Semicolon)
+			Result.append (New_line)
+			Result.append (New_line_tab)
+
 			-- eif_object = eif_protect (eif_ref);
 
 			Result.append (Eif_object_variable)
@@ -869,12 +881,12 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- return (`c_type_name') eif_field (eif_access (eif_object), "item", EIF_POINTER);
+			-- a_pointer =  (EIF_POINTER) eif_field (eif_access (eif_object), "item", EIF_POINTER);
 
-			Result.append (Return)
-			Result.append (Space)
+			Result.append (A_pointer)
+			Result.append (Space_equal_space)
 			Result.append (Open_parenthesis)
-			Result.append (c_type_name)
+			Result.append (Eif_pointer)
 			Result.append (Close_parenthesis)
 			Result.append (Space)
 			Result.append (Eif_field)
@@ -890,6 +902,30 @@ feature {NONE} -- Implementation
 			Result.append (Comma_space)
 			Result.append (Eif_pointer)
 			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+
+			-- eif_wean (eif_object);
+
+			Result.append (Eif_wean)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (Eif_object_variable)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+
+			-- return (`c_type_name ') a_pointer;
+
+			Result.append (Return)
+			Result.append (Space)
+			Result.append (Space)
+			Result.append (Open_parenthesis)
+			Result.append (c_type_name)
+			Result.append (Space)
+			Result.append (Close_parenthesis)
+			Result.append (Space)
+			Result.append (A_pointer)
 			Result.append (Semicolon)
 		ensure
 			non_void_result: Result /= Void

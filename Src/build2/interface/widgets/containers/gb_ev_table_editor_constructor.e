@@ -27,11 +27,6 @@ inherit
 			default_create
 		end
 		
-	GB_SHARED_OBJECT_HANDLER
-		undefine
-			default_create
-		end
-		
 feature -- Access
 
 	ev_type: EV_TABLE

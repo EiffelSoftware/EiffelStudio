@@ -1057,7 +1057,6 @@ feature -- Features info
 		local
 			select_tbl: SELECT_TABLE
 			features: SEARCH_TABLE [INTEGER]
-			feat: FEATURE_I
 			i, nb: INTEGER
 			sorted_array: SORTABLE_ARRAY [FEATURE_I]
 		do
@@ -1108,7 +1107,6 @@ feature -- Features info
 		local
 			select_tbl: SELECT_TABLE
 			features: SEARCH_TABLE [INTEGER]
-			feat: FEATURE_I
 			i, nb: INTEGER
 			sorted_array: SORTABLE_ARRAY [FEATURE_I]
 		do

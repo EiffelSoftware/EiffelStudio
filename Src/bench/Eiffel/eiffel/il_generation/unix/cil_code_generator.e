@@ -116,6 +116,9 @@ feature -- Access
 	generic_conformance_type_id: INTEGER
 			-- Identifier for class ISE.Runtime.GENERIC_CONFORMANCE.
 
+	assertion_level_enum_type_id: INTEGER
+			-- Identifier for class ISE.Runtime.Enums.ASSERTION_LEVEL_ENUM.
+
 	once_generation: BOOLEAN
 			-- Are we currently generating a once feature?
 
@@ -265,6 +268,16 @@ feature -- Settings
 			generic_conformance_type_id := an_id
 		ensure
 			generic_conformance_type_id_set: generic_conformance_type_id = an_id
+		end
+
+	set_assertion_level_enum_type_id (an_id: like assertion_level_enum_type_id) is
+			-- Set `an_id' to `assertion_level_enum_type_id'.
+		require
+			valid_id: an_id > 0
+		do
+			assertion_level_enum_type_id := an_id
+		ensure
+			assertion_level_enum_type_id_set: assertion_level_enum_type_id = an_id
 		end
 
 	set_once_generation (v: BOOLEAN) is
@@ -1185,6 +1198,18 @@ feature -- Assertions
 
 	generate_in_assertion_status is
 			-- Generate value of `in_assertion' on stack.
+		do
+		end
+
+	generate_is_assertion_checked (level: INTEGER) is
+			-- Check wether or not we need to check assertion for current type.
+		require
+			valid_level:
+				level = feature {ASSERTION_I}.ck_require or
+				level = feature {ASSERTION_I}.ck_ensure or
+				level = feature {ASSERTION_I}.ck_check or
+				level = feature {ASSERTION_I}.ck_loop or
+				level = feature {ASSERTION_I}.ck_invariant
 		do
 		end
 

@@ -1,95 +1,100 @@
-<script src="../instal.js"></script>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+		<TITLE>Threads Pools Sample</TITLE>
+	<XML>
+		<MSHelp:Keyword Index="K" Term="Threads Pools" />
+		<MSHelp:Keyword Index="K" Term="Samples, Threads Pools" />
+		<MSHelp:Attr Name="Product" Value="Eiffel"/>
+		<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+	</XML>
+		<LINK HREF="../../../../default.css" TYPE="text/css" REL="STYLESHEET"></HEAD>
+	<BODY LANGUAGE="vbscript" ONLOAD="onLoadHandler">
+		<TABLE CLASS="HEADER" ID="Table1">
+			<TR>
+				<TD CLASS="HEADER">Eiffel ENViSioN!</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD CLASS="SUBHEADER">Threads Pools Sample</TD>
+				<TD ALIGN=right>
+					<A CLASS="bold" HREF="#NONEXISTANT" OnClick="LoadSample()">Load in Eiffel ENViSioN! </A>
+				</TD>
+			</TR>
+		</TABLE>
+		<TABLE CLASS="FRAME" ID="Table2">
+			<TR>
+				<TD>
+					<SCRIPT LANGUAGE=VBScript SRC="sample.vbs"></SCRIPT>
+					<SCRIPT LANGUAGE=VBScript>
+						Sub onLoadHandler()
+							'Initialize global variables
+							SampleDir = "\threading\pools"
+							SamplePrj = "pools.eifp"
+						End Sub							
+					</SCRIPT>
 
-<html>
+					<p>This sample demonstrates use of the <SPAN CLASS="eclass">THREAD_POOL</SPAN>
+					class. The sample queues up an asynchronous method call that is executed by a
+					thread from the thread pool managed by the Common Language Runtime. The method
+					"does some work" and then sets an event indicating that the work has finished.
+					The main thread waits on the event and then exits.</p>
 
-<head>
-<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
-<meta name="ProgId" content="FrontPage.Editor.Document">
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<title>Pools</title>
-<LINK REL=StyleSheet HREF="../../../../default.css">
-<style>
-<!--
-    .FixedText{MARGIN-LEFT: 3ex;FONT-FAMILY: Lucida Console;FONT-SIZE: x-small;FONT-WEIGHT: Bold}
--->
-</style>
-</head>
+					<h2>Running</h2>
 
-<body>
+					<P>After you launch the sample, the following output appears:</P>
+					
+					<CODE>
+						Main thread: Queuing an asynchronous operation.<BR >
+						Main thread: Performing other operations.<BR >
+						WorkItem thread: Performing asynchronous operation<BR >
+						Main thread: Waiting for asynchronous operation to complete.<BR >
+					</CODE>
 
-<h1>
-Pools example</h1>
+					<P>After displaying these messages, the application waits for the
+					return key to be pressed to terminate.</P>
 
-<p class="Text">This sample demonstrates use of the <span class="eClass">THREAD_POOL</span> (ThreadPool)
-class. The sample queues up an asynchronous method call that is executed by a
-thread from the thread pool managed by the Common Language Runtime. The method
-&quot;does some work&quot; and then sets an event indicating that the work has finished.
-The main thread waits on the event and then exits.</p>
-<p class="Text">&nbsp;</p>
+					<h2>Under the Hood</h2>
+					
+					<p>This application shows how to use the class
+					<SPAN CLASS="eclass">THREAD_POOL</SPAN>. An asynchronous thread is launched:</p>
+					
+					<code>
+						<SPAN CLASS="ekeyword">feature</SPAN> {<SPAN CLASS="eclass">THREAD_POOL</SPAN>}.<SPAN CLASS="efeature">queue_user_work_item</SPAN>
+						(<SPAN CLASS="ekeyword">create</SPAN> {<SPAN CLASS="eclass">WAIT_CALLBACK</SPAN>}.<SPAN CLASS="efeature">make</SPAN> (<SPAN CLASS="ekeyword">Current</SPAN>, $<SPAN CLASS="efeature">my_async_operation</SPAN>),
+						<SPAN CLASS="elocal">l_async_operation_done</SPAN>))
+					</code>
+					
+					<p>and is associated to the local variable <SPAN CLASS="elocal">l_async_operation_done</SPAN>.
+					Both threads perform simultaneously some operations. The
+					main thread wait for the asynchronous thread to complete his own operations (<SPAN CLASS="elocal">l_async_operation_done</SPAN>.<SPAN CLASS="efeature">wait_one</SPAN>)
+					to close the application.</p>
+					
+					<p>This sample uses the following classes: </p>
+					
+					<ul>
+						<li>
+						<SPAN CLASS="eclass">
+						THREAD_POOL</SPAN>
+						<li>
+						<SPAN CLASS="eclass">
+						WAIT_CALLBACK</SPAN>
+						<li>
+						<SPAN CLASS="eclass">
+						AUTO_RESET_EVENT</SPAN></li>
+					</ul>
 
-<H2>Compiling</H2>
-<script language="JavaScript">
-<!--
-var path_to_ace_file = Eiffel_version + "\\examples\\dotnet\\threading\\pools\\";
-var ace_file_name = "Ace";
-var path_eifp_file = "..\\..\\Samples\\threading\\pools\\"
-var eifp_name = "pools.eifp";
+					<p class="note"><b>Note</b>:
+					This sample is translated from the example located in the
+					Samples\Technologies\Threading\Pools subdirectory of the .NET Framework SDK
+					samples directory of Microsoft Visual Studio .NET. </p>
 
-if (eiffel_studio) {
-	write_eiffel_studio_compiling_instruction (path_to_ace_file, ace_file_name)
-}
-else {
-	write_envision_compiling_instruction (path_eifp_file, eifp_name)
-}
--->
-</script>
-<noscript>
-<p>To see compiling instructions, you have to enable javascript.</p></noscript>
-
-<h2>Running</h2>
-		<P>
-			After you launch the sample, the following output appears:
-		</P>
-<pre>Main thread: Queuing an asynchronous operation.
-Main thread: Performing other operations.
-WorkItem thread: Performing asynchronous operation
-Main thread: Waiting for asynchronous operation to complete.</PRE>
-		<P>
-			When the display is finished, the application wait for you to
-            pressed the return key to finished the application.</P>
-		<P>
-			&nbsp;</P>
-<h2>Under the Hood</h2>
-<p>This application shows how to use the thread
-  <span class="eClass">
-  THREAD_POOL</span>. An asynchronous thread is launched (<span class="eKeyword">feature</span> {<span class="eClass">THREAD_POOL</span>}.<span class="eFeature">queue_user_work_item_wait_callback_object</span>
-(<span class="eKeyword">create</span> {<span class="eClass">WAIT_CALLBACK</span>}.<span class="eFeature">make</span> (<span class="eKeyword">Current</span>, $<span class="eFeature">my_async_operation</span>),
-<span class="eLocal">l_async_operation_done</span>)) and is associated to the
-local variable
-<span class="eLocal">l_async_operation_done. </span>Both threads perform
-simultaneously some operations. The
-main thread wait for the asynchronous thread to complete his own operations (<span class="eLocal">l_async_operation_done</span>.<span class="eFeature">wait_one</span>)
-to close the application.</p>
-<p>This sample contains the following class: </p>
-<ul>
-  <li>
-  <span class="eClass">
-  THREAD_POOL</span></li>
-  <li>
-  <span class="eClass">
-  WAIT_CALLBACK</span></li>
-  <li>
-  <span class="eClass">
-  AUTO_RESET_EVENT</span></li>
-</ul>
-
-<p>&nbsp;</p>
-
-<h2>Notes</h2></a>
-<p class="Text">This sample is translated from the example located in the
-Samples\Technologies\Threading\Pools subdirectory of the .NET Framework SDK
-samples directory of Microsoft Visual Studio .NET. </p>
-
-</body>
-
-</html>
+				</TD>
+			</TR>
+		</TABLE>
+		<TABLE CLASS="FOOTER">
+			<TR>
+				<TD>© 2003-2004 Eiffel Software. All rights reserved.</TD>
+			</TR>
+		</TABLE>
+	</BODY>
+</HTML>

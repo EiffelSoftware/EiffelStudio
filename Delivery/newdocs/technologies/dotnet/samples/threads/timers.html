@@ -1,91 +1,103 @@
-<script src="../instal.js"></script>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<HTML XMLNS:MSHelp="http://msdn.microsoft.com/mshelp"><HEAD>
+		<TITLE>Threads Timers Sample</TITLE>
+	<XML>
+		<MSHelp:Keyword Index="K" Term="Threads Timers" />
+		<MSHelp:Keyword Index="K" Term="Samples, Threads Timers" />
+		<MSHelp:Attr Name="Product" Value="Eiffel"/>
+		<MSHelp:Attr Name="Locale" Value="kbEnglish"/>
+	</XML>
+		<LINK HREF="../../../../default.css" TYPE="text/css" REL="STYLESHEET"></HEAD>
+	<BODY LANGUAGE="vbscript" ONLOAD="onLoadHandler">
+		<TABLE CLASS="HEADER">
+			<TR>
+				<TD CLASS="HEADER">Eiffel ENViSioN!</TD>
+				<TD></TD>
+			</TR>
+			<TR>
+				<TD CLASS="SUBHEADER">Threads Timers Sample</TD>
+				<TD ALIGN=right>
+					<A CLASS="bold" HREF="#NONEXISTANT" OnClick="LoadSample()">Load in Eiffel ENViSioN! </A>
+				</TD>
+			</TR>
+		</TABLE>
+		<TABLE CLASS="FRAME">
+			<TR>
+				<TD>
+					<SCRIPT LANGUAGE=VBScript SRC="sample.vbs"></SCRIPT>
+					<SCRIPT LANGUAGE=VBScript>
+						Sub onLoadHandler()
+							'Initialize global variables
+							SampleDir = "\threading\timers"
+							SamplePrj = "timers.eifp"
+						End Sub							
+					</SCRIPT>
 
-<html>
+					<p>This sample consists of a command line application which uses
+					the <SPAN CLASS="eclass">TIMER</SPAN> class to generate a periodic callback
+					to a method. The sample creates a <SPAN CLASS="eclass">TIMER</SPAN> object
+					and passes to it a delegate object. When the <SPAN CLASS="eclass">TIMER</SPAN> fires, the
+					delegate is invoked, and a static method is called asynchronously by a worker
+					thread in the thread pool.</p>
 
-<head>
-<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
-<meta name="ProgId" content="FrontPage.Editor.Document">
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<title>Timers</title>
-<LINK REL=StyleSheet HREF="../../../../default.css">
-<style>
-<!--
-    .FixedText{MARGIN-LEFT: 3ex;FONT-FAMILY: Lucida Console;FONT-SIZE: x-small;FONT-WEIGHT: Bold}
--->
-</style>
-</head>
+					<h2>Running</h2>
+					
+					<P>After you launch the sample, the following output appears:</P>
+					
+					<CODE>
+						Checking for status updates every two seconds<BR >
+						&lt;Hit Enter to terminate the sample&gt;<BR >
+						Checking Status.<BR >
+						Checking Status.<BR >
+						Checking Status.<BR >
+						Checking Status.<BR >
+						Checking Status.<BR >
+						...
+					</CODE>
+					
+					<P>After displaying these messages, the application waits for the
+					return key to be pressed to terminate.</P>
+					
+					<h2>Under the Hood</h2>
+					
+					<p>This application shows how to use the class
+					<SPAN CLASS="eclass">TIMER</SPAN>. The timer is launched as follows:</p>
+					
+					<code>
+						<SPAN CLASS="ekeyword">create</SPAN> 
+						<SPAN CLASS="elocal">my_timer</SPAN>.<SPAN CLASS="efeature">make</SPAN>
+						(<SPAN CLASS="ekeyword">create</SPAN>
+						{<SPAN CLASS="eclass">TIMER_CALLBACK</SPAN>}.<SPAN CLASS="efeature">make</SPAN>
+						(<SPAN CLASS="ekeyword">Current</SPAN>,
+						$<SPAN CLASS="efeature">check_status</SPAN>),
+						<SPAN CLASS="ekeyword">Void</SPAN>, 0, 2000))
+					</code>
+						
+					<P>The feature <SPAN CLASS="efeature">check_status</SPAN> is then called every
+					2 seconds (2000 milliseconds) and displays the message
+					<SPAN CLASS="estring">"Checking Status."</SPAN></P>
+					
+					<p>This sample uses the following classes: </p>
+					<ul>
+					<li>
+					<SPAN CLASS="eclass">
+					TIMER</SPAN>
+					<li>
+					<SPAN CLASS="eclass">
+					TIMER_CALLBACK</SPAN></li>
+					</ul>
 
-<body>
-
-<h1>
-Timers example</h1>
-
-<p>This sample consist in a command line demonstrating the use of the <span class="eClass">TIMER</span>
-(Timer) class to generate a periodic callback to a method. The sample creates a
-<span class="eClass">TIMER</span> object and passes to it a delegate object. When the <span class="eClass">TIMER</span> fires, the
-delegate is invoked, and a static method is called asynchronously by a worker
-thread in the thread pool.</p>
-
-<p>&nbsp;</p>
-
-<H2>Compiling</H2>
-<script language="JavaScript">
-<!--
-var path_to_ace_file = Eiffel_version + "\\examples\\dotnet\\threading\\timers";
-var ace_file_name = "Ace";
-var path_eifp_file = "..\\..\\Samples\\threading\\timers\\"
-var eifp_name = "timers.eifp";
-
-if (eiffel_studio) {
-	write_eiffel_studio_compiling_instruction (path_to_ace_file, ace_file_name)
-}
-else {
-	write_envision_compiling_instruction (path_eifp_file, eifp_name)
-}
--->
-</script>
-<noscript>
-<p>To see compiling instructions, you have to enable javascript.</p></noscript>
-
-<h2>Running</h2>
-		<P>
-			After you launch the sample, the following output appears:
-		</P>
-<pre>Checking for status updates every two seconds
-     &lt;Hit Enter to terminate the sample&gt;
-Checking Status.
-Checking Status.
-Checking Status.
-Checking Status.
-Checking Status.
-...</PRE>
-		<P>
-			When the display is finished, the application wait for you to
-            pressed the return key to finished the application.</P>
-		<P>
-			&nbsp;</P>
-<h2>Under the Hood</h2>
-<p>This application shows how to use the thread
-<span class="eclass">TIMER</span>. The timer is launched (<span class="eKeyword">create</span> <span class="eLocal">my_timer</span>.<span class="eFeature">make_with_callback</span> (<span class="eKeyword">create</span> {<span class="eClass">TIMER_CALLBACK</span>}.<span class="eFeature">make</span>
-(Current, $<span class="eFeature">check_status</span>), Void, 0, 2000)) and call the feature <span class="eFeature">check_status</span> that
-displays the message <span class="eString">&quot;Checking Status.&quot;</span> every two seconds.</p>
-<p>This sample contains the following class: </p>
-<ul>
-  <li>
-  <span class="eClass">
-  TIMER</span></li>
-  <li>
-  <span class="eClass">
-  TIMER_CALLBACK</span></li>
-</ul>
-
-<p>&nbsp;</p>
-
-<h2>Notes</h2></a>
-<p class="Text">This sample is translated from the example located in the
-Samples\Technologies\Threading\Timers subdirectory of the .NET Framework SDK
-samples directory of Microsoft Visual Studio .NET.</p>
-
-</body>
-
-</html>
+					<p class="note"><b>Note</b>:
+					This sample is translated from the example located in the
+					Samples\Technologies\Threading\Timers subdirectory of the .NET Framework SDK
+					samples directory of Microsoft Visual Studio .NET.</p>
+				</TD>
+			</TR>
+		</TABLE>
+		<TABLE CLASS="FOOTER">
+			<TR>
+				<TD>© 2003-2004 Eiffel Software. All rights reserved.</TD>
+			</TR>
+		</TABLE>
+	</BODY>
+</HTML>

@@ -211,7 +211,9 @@ feature -- Access
 		do
 			!!file.make (file_name);
 				-- Check if the file to parse is readable
-			if not file.is_readable then
+			if not file.exists or else not file.is_readable then
+					-- Need to check for existance for the quick melt operation
+					-- since it doesn't remove unused classes.
 				!!vd21;
 				vd21.set_cluster (cluster);
 				vd21.set_file_name (file_name);

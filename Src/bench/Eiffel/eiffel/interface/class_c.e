@@ -1547,6 +1547,7 @@ feature -- Class initialization
 			class_i: CLASS_I;
 			changed_generics: BOOLEAN
 			changed_expanded: BOOLEAN;
+			changed_separate: BOOLEAN;
 			pars: like parents;
 			gens: like generics;
 			obs_msg: like obsolete_message
@@ -1614,10 +1615,11 @@ feature -- Class initialization
 				e_class.set_is_separate (False);
 			end
 
-
-			--if (old_is_separate) then
-				--FIXME
-			--end
+			if (is_separate /= old_is_separate and then old_parents /= Void) then
+				pass2_controler.set_separate_modified (Current);
+				changed_status := True;
+				changed_separate := True;
+			end;
 
 			if changed_status then
 				pass2_controler.add_changed_status (Current);
@@ -1627,7 +1629,7 @@ feature -- Class initialization
 					syntactical_clients.after
 				loop
 					a_client := syntactical_clients.item;
-					if changed_expanded then
+					if changed_expanded or changed_separate then
 							-- `changed' is set to True so that a complete
 							-- pass2 is done on the client. `feature_unit'
 							-- will find the type changes
@@ -2637,7 +2639,11 @@ feature -- Convenience features
 	visible_level: VISIBLE_I is
 			-- Visible level
 		do
-			Result := lace_class.visible_level
+			if is_used_as_separate or else  class_name.is_equal ("sep_obj") then
+				!VISIBLE_EXPORT_I! Result
+			else
+				Result := lace_class.visible_level
+			end
 		end;
 
 feature -- Actual class type

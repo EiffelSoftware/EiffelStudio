@@ -55,7 +55,7 @@ feature -- Measurement
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
-			-- Is current address equal to `other' ?
+			-- Is current address equal to `other'?
 		do
 			Result := socket_address.is_equal (other.socket_address)
 		end

@@ -164,13 +164,13 @@ feature
 		end;
 
 	is_closed: BOOLEAN is
-			-- Is socket closed ?
+			-- Is socket closed?
 		do
 			Result := descriptor = -2
 		end;
 
 	descriptor_available: BOOLEAN;
-			-- Is descriptor available ?
+			-- Is descriptor available?
 
 
 	family: INTEGER;
@@ -373,45 +373,43 @@ feature -- Ouput
 		end;
 
 	exists: BOOLEAN is
-			-- Does socket exist ?
+			-- Does socket exist?
 		do
 			Result := descriptor >= 0
 		end;
 
 	is_open_write: BOOLEAN;
-			-- Is socket opened for writing ?
+			-- Is socket opened for writing?
 
 	is_open_read: BOOLEAN;
-			-- Is socket opened for reading ?
+			-- Is socket opened for reading?
 
 	is_readable: BOOLEAN is
-			-- Is socket a readable medium ?
+			-- Is socket a readable medium?
 		do
 			Result := True
 		end;
 
 	is_executable: BOOLEAN is
-			-- Is socket an executable ?
+			-- Is socket an executable?
 		do
 			Result := False
 		end;
 
 	is_writable: BOOLEAN is
-			-- Is socket a writable medium ?
+			-- Is socket a writable medium?
 		do
 			Result := True
 		end;
 
 	readable: BOOLEAN is
-			-- Is there currently any data available on socket ?
-		local
-			was_blocking: BOOLEAN
+			-- Is there currently any data available on socket?
 		do
 			Result := c_select_poll (descriptor) /= 0
 		end;
 
 	extendible: BOOLEAN is
-			-- May new items be added ?
+			-- May new items be added?
 		do
 			Result := True
 		end
@@ -614,7 +612,7 @@ feature -- socket options
 		end;
 
 	debug_enabled: BOOLEAN is
-			-- Is socket system debugging enabled ?
+			-- Is socket system debugging enabled?
 		require
 			socket_exists: exists
 		local
@@ -641,7 +639,7 @@ feature -- socket options
 		end;
 
 	route_enabled: BOOLEAN is
-			-- Is routing enabled ?
+			-- Is routing enabled?
 		require
 			socket_exists: exists
 		local
@@ -688,7 +686,7 @@ feature -- socket options
 		end;
 
 	is_socket_stream: BOOLEAN is
-			-- Is the socket a stream ?
+			-- Is the socket a stream?
 		require
 			socket_exists: exists
 		local
@@ -721,7 +719,7 @@ feature -- socket options
 		end;
 
 	is_blocking: BOOLEAN
-			-- Is the socket blocking ?
+			-- Is the socket blocking?
 
 	set_owner (own: INTEGER) is
 			-- Negative value sets group process id.
@@ -739,7 +737,7 @@ feature -- socket options
 		end;
 
 	is_group_id: BOOLEAN is
-			-- Is the owner id the socket group id ?
+			-- Is the owner id the socket group id?
 		require
 			socket_exists: exists
 		local
@@ -750,7 +748,7 @@ feature -- socket options
 		end;
 
 	is_process_id: BOOLEAN is
-			-- Is the owner id the socket process id ?
+			-- Is the owner id the socket process id?
 		require
 			socket_exists: exists
 		local

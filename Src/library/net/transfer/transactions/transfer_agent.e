@@ -107,9 +107,6 @@ feature -- Status setting
 
 	reset_status is
 			-- Reset status flags.
-		local
-			idx: INTEGER
-			i: INTEGER
 		do
 			transfer_finished := False
 			execute_command (~reset_error)

@@ -67,7 +67,7 @@ feature -- Measurement
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
-			-- Is current packet equal to `other' ?
+			-- Is current packet equal to `other'?
 		do
 			Result := data.is_equal (other.data)
 		end
@@ -75,7 +75,7 @@ feature -- Comparison
 feature -- Status report
 
 	valid_position (pos: INTEGER): BOOLEAN is
-			-- Is position `pos' valid for this packet ?
+			-- Is position `pos' valid for this packet?
 		do
 			Result := (pos >= 0 and pos < count)
 		end

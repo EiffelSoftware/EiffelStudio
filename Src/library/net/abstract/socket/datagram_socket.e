@@ -74,7 +74,7 @@ feature -- Basic operations
 feature -- Status report
 
 	bound: BOOLEAN
-			-- Has socket been bound ?
+			-- Has socket been bound?
 
 feature -- Input
 

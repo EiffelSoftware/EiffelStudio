@@ -51,13 +51,13 @@ feature -- Activation
 		end;
 
 	is_poller_active: BOOLEAN is
-			-- Is poller called back ?
+			-- Is poller called back?
 		deferred
 		end;
 
 	is_poll_all: BOOLEAN;
 			-- Are all subscribed socket polled at each timer call-
-			-- back or just one ?
+			-- back or just one?
 
 	set_poll_one is
 			-- Only one subscribed listening socket and one service
@@ -286,19 +286,19 @@ feature {NONE} -- implementation
 		end;
 
 	listen_list_empty: BOOLEAN is
-			-- Is listen list empty ?
+			-- Is listen list empty?
 		do
 			Result := listen_socket_list.empty
 		end;
 
 	listen_list_after: BOOLEAN is
-			-- Is underlying linked_list after ?
+			-- Is underlying linked_list after?
 		do
 			Result := listen_socket_list.after
 		end;
 
 	listen_list_isfirst: BOOLEAN is
-			-- Is underlying linked_list pointing first item ?
+			-- Is underlying linked_list pointing first item?
 		do
 			Result := listen_socket_list.isfirst
 		end;
@@ -341,7 +341,7 @@ feature {NONE} -- implementation
 		end;
 
 	listen_list_exhausted: BOOLEAN;
-			-- Has listen_list been exhausted by traversal ?
+			-- Has listen_list been exhausted by traversal?
 
 	listen_list_start: INTEGER;
 			-- Index of start mark in underlying linked_list.

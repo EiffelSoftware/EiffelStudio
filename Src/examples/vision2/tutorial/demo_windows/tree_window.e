@@ -33,8 +33,7 @@ feature {NONE} -- Initialization
 			!! tree_item1.make_with_text (tree_item2, "Click Me !")
 			tree_item2.set_expand (True)
 			!! cmd.make (~execute1)
-			tree_item1.add_activate_command (cmd, Void)
-
+			tree_item1.add_select_command (cmd, Void)
 		end
 
 feature -- Access

@@ -76,6 +76,8 @@ feature {NONE} -- Execution
 
 	execute (arg: ANY) is
 			-- Execute the command.
+			--| The three commented lines are for the futur when the class
+			--| KMP_WILD will be fully functional
 		local
 			classi_stone: CLASSI_STONE;
 			classc_stone: CLASSC_STONE;

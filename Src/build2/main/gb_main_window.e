@@ -14,8 +14,6 @@ inherit
 			{NONE} all
 			{ANY} is_empty, is_show_requested, show, hide, accelerators,
 				item
-		undefine
-			is_in_default_state
 		redefine
 			initialize
 		end
@@ -33,11 +31,6 @@ inherit
 		end
 		
 	GB_SHARED_OBJECT_EDITORS
-		export
-			{NONE} all
-		end
-		
-	GB_DEFAULT_STATE
 		export
 			{NONE} all
 		end
@@ -301,6 +294,7 @@ feature {NONE} -- Implementation
 			constructor_box: EV_HORIZONTAL_BOX
 			vertical_holder: GB_VERTICAL_SPLIT_AREA_THREE_PART_TOOL_HOLDER
 			temp_tool_bar: EV_TOOL_BAR
+			sa: EV_SPLIT_AREA
 		do
 				-- Now we perform a large hack. In Wizard, mode, the
 				-- fourth state may be re-built, if we go back and change a setting
@@ -349,11 +343,15 @@ feature {NONE} -- Implementation
 			temp_tool_bar.extend (window_selector.expand_all_button)
 			temp_tool_bar.extend (window_selector.assign_root_window_button)
 			vertical_holder.third_holder.add_command_tool_bar (temp_tool_bar)
+				--| FIXME temporary
+			sa ?= vertical_holder.third_holder.parent
+			sa.set_split_position (sa.minimum_split_position)
 			
 			create constructor_box
 			create horizontal_split_area.make_with_tools (vertical_holder, layout_constructor, "Layout constructor")
 			create temp_tool_bar
 			temp_tool_bar.extend (Layout_constructor.expand_all_button)
+			temp_tool_bar.extend (Layout_constructor.view_object_button)
 			horizontal_split_area.tool_holder.add_command_tool_bar (temp_tool_bar)
 			horizontal_box.extend (horizontal_split_area)
 			horizontal_box.extend (docked_object_editor)

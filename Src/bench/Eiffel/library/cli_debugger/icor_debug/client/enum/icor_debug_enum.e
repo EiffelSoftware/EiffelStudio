@@ -31,7 +31,7 @@ feature {ICOR_EXPORTER} -- Access Property
 	
 	is_empty: BOOLEAN is
 		do
-			Result := get_count > 0
+			Result := get_count = 0
 		end
 
 feature {ICOR_EXPORTER} -- Access

@@ -3,7 +3,7 @@
 //  EiffelCOM
 //  Copyright (C) Interactive Software Engineering, 2001.
 //
-//  File:   ecom_generated_rt_globals.h
+//  File:   ecom_server_rt_globals.h
 //
 //  Contents:   Global variables used by EiffelCOM wizard
 //

@@ -8,8 +8,10 @@ class
 	ECOM_LARGE_INTEGER
 
 inherit
-	
 	ECOM_STRUCTURE
+		redefine
+			make
+		end
 
 creation
 	make,
@@ -18,13 +20,10 @@ creation
 
 feature {NONE} -- Initialization
 
-	make_from_integer (integer:INTEGER) is
-			-- Creation routine
+	make is
+			-- Make.
 		do
-			make
-			ccom_set_large_integer (item, integer)
-		ensure	
-			exists
+			Precursor {ECOM_STRUCTURE}
 		end
 
 	make_from_pointer (a_pointer: POINTER) is
@@ -33,28 +32,61 @@ feature {NONE} -- Initialization
 			make_by_pointer (a_pointer)
 		end
 
+	make_from_integer (integer:INTEGER) is
+			-- Creation routine
+		do
+			make
+			set_quad_part (integer)
+		ensure	
+			exists
+		end
+
+feature -- Access
+
+	quad_part: INTEGER_64 is
+			-- `QuadPart' field.
+		do
+			Result := ccom_x_large_integer_quad_part (item)
+		end
+
 feature -- Measurement
 
 	structure_size: INTEGER is
-			-- Size of LARGE_INTEGER structure
+			-- Size of structure
 		do
-			Result := c_size_of_large_integer 
+			Result := c_size_of_x_large_integer
 		end
 
-feature {NONE} -- Externals 
+feature -- Basic Operations
 
-	c_size_of_large_integer: INTEGER is
-		external 
-			"C [macro <objbase.h>]"
+	set_quad_part (a_quad_part: INTEGER_64) is
+			-- Set `quad_part' with `a_quad_part'.
+		do
+			ccom_x_large_integer_set_quad_part (item, a_quad_part)
+		end
+
+feature {NONE}  -- Externals
+
+	c_size_of_x_large_integer: INTEGER is
+			-- Size of structure
+		external
+			"C [macro %"ecom__LARGE_INTEGER_impl.h%"]"
 		alias
 			"sizeof(LARGE_INTEGER)"
 		end
 
-	ccom_set_large_integer (ptr: POINTER; i: INTEGER) is
+	ccom_x_large_integer_quad_part (a_pointer: POINTER): INTEGER_64 is
+			-- `QuadPart' field.
 		external
-			"C [macro %"E_Large_Integer.h%"](EIF_POINTER, EIF_INTEGER)"
+			"C++ [macro %"ecom__LARGE_INTEGER_impl.h%"](LARGE_INTEGER *):EIF_INTEGER_64"
 		end
 
+	ccom_x_large_integer_set_quad_part (a_pointer: POINTER; arg2: INTEGER_64) is
+			-- Set `quad_part' with `a_quad_part'.
+		external
+			"C++ [macro %"ecom__LARGE_INTEGER_impl.h%"](LARGE_INTEGER *, LONGLONG)"
+		end
+		
 end -- class ECOM_LARGE_INTEGER
 
 --|----------------------------------------------------------------

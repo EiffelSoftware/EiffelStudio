@@ -53,7 +53,8 @@ RT_LNK EIF_REFERENCE argarr(int argc, char **argv);		/* ARRAY[STRING] creation f
 extern long *eif_lower_table;		/* ARRAY `lower' (array optimization) */
 extern long *eif_area_table;		/* ARRAY `area' (array optimization) */
 
-extern EIF_REFERENCE cr_exp(uint32 type);				/* Creation of expanded objects */
+RT_LNK EIF_REFERENCE cr_exp(uint32 type);				/* Creation of expanded objects */
+RT_LNK void init_exp(EIF_REFERENCE obj);		/* Initialization of expanded objects */
 
 #ifdef WORKBENCH
 extern void wstdinit(EIF_REFERENCE obj, EIF_REFERENCE parent);				/* Composite objects initialization */

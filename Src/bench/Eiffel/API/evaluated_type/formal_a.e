@@ -17,12 +17,25 @@ inherit
 			format
 		end;
 
-feature -- Access
+feature -- Property
 
 	is_formal: BOOLEAN is
 			-- Is the current actual type a formal generic type ?
 		do
 			Result := True;
+		end;
+
+feature -- Access
+
+	same_as (other: TYPE_A): BOOLEAN is
+			-- Is `other' the same as Current ?
+		local
+			other_formal: FORMAL_A;
+		do
+			if other.is_formal then
+				other_formal ?= other;
+				Result := base_type = other_formal.base_type;
+			end;
 		end;
 
 	associated_eclass: E_CLASS is
@@ -40,13 +53,13 @@ feature -- Output
 			Result.append_integer (base_type);
 		end;
 
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+	append_to (ow: OUTPUT_WINDOW) is
 		do
-			a_clickable.put_string ("Generic #");
-			a_clickable.put_int (base_type);
+			ow.put_string ("Generic #");
+			ow.put_int (base_type);
 		end;
 
-feature 
+feature {COMPILER_EXPORTER}
 
 	has_formal_generic: BOOLEAN is
 			-- Does the current actual type have formal generic type ?
@@ -71,17 +84,6 @@ feature
 				end;
 				constrain := System.current_class.constraint (base_type);
 				Result := constrain.internal_conform_to (other, in_generics);
-			end;
-		end;
-
-	same_as (other: TYPE_A): BOOLEAN is
-			-- Is `other' the same as Current ?
-		local
-			other_formal: FORMAL_A;
-		do
-			if other.is_formal then
-				other_formal ?= other;
-				Result := base_type = other_formal.base_type;
 			end;
 		end;
 
@@ -132,7 +134,7 @@ feature
 			ctxt.put_string (ctxt.formal_name (base_type));
 		end;
 
-feature -- Storage information for EiffelCase
+feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 
 	storage_info_with_name, storage_info (classc: CLASS_C): S_BASIC_TYPE_INFO is
 			-- Storage info for Current type in class `classc'

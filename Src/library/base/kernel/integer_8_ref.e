@@ -36,7 +36,7 @@ feature -- Access
 			Result := item.to_integer.hash_code
 		end
 
-	sign: INTEGER is
+	sign: INTEGER_8 is
 			-- Sign value (0, -1 or 1)
 		do
 			if item > 0 then

@@ -12,7 +12,7 @@ inherit
 
 feature 
 
-	put__right (p: CLICK_STONE) is
+	add_click_stone (p: CLICK_STONE) is
 			-- Move cursor one position forward, then
 			-- put element `p' at cursor position, resize if necessary.
 		do

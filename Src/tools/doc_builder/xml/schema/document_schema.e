@@ -9,10 +9,9 @@ class
 inherit
 	SHARED_OBJECTS
 
-	DOCUMENT_XML
+	XML_ROUTINES
 		rename
-			validator as xml_validator,
-			initialize as xml_initialize
+			is_valid_xml as is_valid_xml_text
 		end
 
 create
@@ -29,10 +28,11 @@ feature -- Initialization
 			reader: XML_XML_TEXT_READER
 			event_handler: XML_VALIDATION_EVENT_HANDLER
 		do
-			create validator
-			make_from_filename (a_filename)
+			create validator			
+			name := a_filename
+			document := deserialize_document (name)
 			if is_valid_xml then
-				create reader.make_from_url (name.to_cil)
+				create reader.make_from_url (name)
 				create event_handler.make (Current, $validation_callback)
 				internal_schema := internal_schema.read_xml_reader_validation_event_handler (reader, event_handler)
 				validator.validate_by_filename (name)
@@ -124,15 +124,33 @@ feature -- Elements
 
 feature -- Access
 
+	name: STRING
+			-- Name od schema
+			
+	document: XM_DOCUMENT
+			-- XML document structure
+
+	text: STRING is
+			-- Text of `document'
+		do
+			Result := document_text (document)	
+		end		
+
 	validator: SCHEMA_VALIDATOR
 			-- Schema validation
 
 feature -- Query	
 
+	is_valid_xml: BOOLEAN is
+			-- Is Current valid xml?
+		do
+			Result := document /= Void
+		end
+
 	is_valid: BOOLEAN is
 			-- Is Current valid schema definition according to W3C?
 		require
-			is_valid_xml
+			valid_xml: is_valid_xml
 		do
 			create validator
 			validator.validate_by_filename (name)

@@ -69,7 +69,7 @@ Project settings,,,,,,,
 ,3,"When manually editing the Ace file, the project settings dialog should vanish automatically",Xavier,SET001,Emmanuel,1,Done
 ,3,Add cluster too complex in the project settings dialog,Arnaud,SET002,,,
 ,3,It would be nice to sort clusters alphabetically in the projects settings,Xavier,SET003,,,
-,3,Add a text box coupled to the combo box when entering command line arguments in project settings. Text box has to be on more than one line as arguments can be very big,Manu,SET004,,,
+,3,Add a text box coupled to the combo box when entering command line arguments in project settings. Text box has to be on more than one line as arguments can be very big,Manu,SET004,Manu,1,Done
 
 
 

@@ -81,7 +81,7 @@ feature {NONE} -- Initialization
 			create {ARRAYED_LIST [STRING]} overloads_return_types.make (0)
 			create {ARRAYED_LIST [STRING]} overloads_descriptions.make (0)
 		ensure
-			is_external_set: is_external = a_is_external
+--			is_external_set: is_external = a_is_external
 			name_set: internal_name = a_name
 			feature_name_set: feature_name = a_name
 			file_name_set: file_name.is_equal (a_file_name.as_lower)

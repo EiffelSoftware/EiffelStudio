@@ -38,7 +38,7 @@ feature
 			parent := p
 		end
 
-	is_feature_call: BOOLEAN is true
+	is_feature_call: BOOLEAN is True
 			-- Access is a feature call
 
 	free_register is

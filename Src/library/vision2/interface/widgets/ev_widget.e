@@ -256,7 +256,7 @@ feature -- Status setting
 			-- Adapt `resize_type' to `flag'.
 		require
 			exists: not destroyed
-			managed: managed
+			managed: managed or is_window
 		do
 			implementation.set_horizontal_resize (flag)
 		ensure
@@ -267,7 +267,7 @@ feature -- Status setting
 			-- Adapt `resize_type' to `flag'.
 		require
 			exists: not destroyed
-			managed: managed
+			managed: managed or is_window
 		do
 			implementation.set_vertical_resize (flag)
 		ensure

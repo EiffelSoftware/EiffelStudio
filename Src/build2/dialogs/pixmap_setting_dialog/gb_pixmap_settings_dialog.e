@@ -10,6 +10,9 @@ class
 
 inherit
 	GB_PIXMAP_SETTINGS_DIALOG_IMP
+		redefine
+			is_in_default_state
+		end
 	
 	GB_EV_PIXMAP_HANDLER
 		export
@@ -86,6 +89,11 @@ inherit
 			{NONE} all
 		undefine
 			default_create, copy
+		end
+		
+	GB_FILE_UTILITIES
+		undefine
+			default_create, copy, is_equal
 		end
 		
 create
@@ -384,7 +392,7 @@ feature {NONE} -- Implementation
 			pixmap_constant.set_attributes (pixmap_constant.name, pixmap_constant.value, directory_name, pixmap_constant.filename, pixmap_constant.is_absolute)
 			add_relative_constant (pixmap_constant)
 			check
-				cross_referer_set: directory_constant.cross_referers.has (pixmap_constant)	
+				cross_referer_set: directory_constant.cross_referers.has (pixmap_constant)
 			end			
 		end
 		
@@ -499,7 +507,7 @@ feature {NONE} -- Implementation
 			text: STRING
 		do
 			text := relative_directory_combo.text.as_lower
-			if basic_valid_name (text) and not existing_names.has (text) then	
+			if basic_valid_name (text) and (not existing_names.has (text) or Constants.directory_constant_by_name (text) /= Void) then	
 				--| FIXME check current names also.
 				relative_directory_combo.set_foreground_color (black)
 				ok_button.enable_sensitive
@@ -525,6 +533,7 @@ feature {NONE} -- Implementation
 			new_pixmap: EV_PIXMAP
 			rescued: BOOLEAN
 		do
+			reset_labels
 			from
 				if not rescued then
 					create dialog
@@ -555,6 +564,7 @@ feature {NONE} -- Implementation
 					list_item.select_actions.extend (agent display_pixmap_info (list_item))
 					list_item.deselect_actions.extend (agent item_unselected (list_item))
 					built_from_frame.enable_sensitive
+					pixmap_location_label.enable_sensitive
 					ok_button.enable_sensitive
 					opened_file := True
 					check_buttons_box.enable_sensitive
@@ -580,6 +590,7 @@ feature {NONE} -- Implementation
 					relative_directory_combo.extend (list_item)
 				end
 			end
+			update_ok_button
 		rescue
 			rescued := True
 			Show_invalid_file_warning
@@ -612,6 +623,7 @@ feature {NONE} -- Implementation
 			rescued: BOOLEAN
 			rescued_index: INTEGER
 		do
+			reset_labels
 			if not rescued then
 				create dialog
 				dialog.show_modal_to_window (Current)
@@ -665,7 +677,7 @@ feature {NONE} -- Implementation
 				if pixmap_list.count > 1 then
 					check_buttons_box.show
 					check_buttons_cell.show
-					pixmap_list.check_actions.block
+					pixmap_list.check_actions.resume
 					pixmap_list.i_th (1).enable_select
 				else
 					-- Display warning that there are no files found?
@@ -687,6 +699,7 @@ feature {NONE} -- Implementation
 			matching_directory_names: ARRAYED_LIST [STRING]
 		do		
 			built_from_frame.enable_sensitive
+			pixmap_location_label.enable_sensitive
 			ok_button.enable_sensitive
 			pixmap_constant ?= a_list_item.data
 			check
@@ -695,6 +708,8 @@ feature {NONE} -- Implementation
 				-- Now remove name from `existing_names' so it does not clash with itself.
 				-- The current name must be replaced after modification is complete.
 			existing_names.remove (pixmap_constant.name)
+			
+			pixmap_path_label.set_text (directory_with_separator (pixmap_constant.directory) + pixmap_constant.filename)
 			
 			if pixmap_constant.is_absolute then
 				absolute_constant_radio_button.enable_select
@@ -740,6 +755,7 @@ feature {NONE} -- Implementation
 			-- `a_list_item' has been unselected in `Current'
 		local
 			pixmap_constant: GB_PIXMAP_CONSTANT
+			directory_location: STRING
 		do
 			pixmap_constant ?= a_list_item.data
 			check
@@ -750,7 +766,13 @@ feature {NONE} -- Implementation
 					-- Add new name to `exising_names' so clashes may be determined.
 				existing_names.put (pixmap_constant.name, pixmap_constant.name)
 			elseif not relative_text.foreground_color.is_equal (red) and not relative_directory_combo.foreground_color.is_equal (red) then
-				pixmap_constant.set_attributes (relative_text.text.as_lower, pixmap_constant.value, relative_directory_combo.text, pixmap_constant.filename, False)	
+				directory_location := relative_directory_combo.text
+					-- If the directory entry is empty, reset it back to the
+					-- directory of the files.
+				if directory_location.is_empty then
+					directory_location := pixmap_constant.directory
+				end
+				pixmap_constant.set_attributes (relative_text.text.as_lower, pixmap_constant.value, directory_location, pixmap_constant.filename, False)	
 					-- Add new name to `exising_names' so clashes may be determined.
 				existing_names.put (pixmap_constant.name, pixmap_constant.name)
 			end
@@ -796,7 +818,30 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-		
+	reset_labels is
+			-- `Reset' labels back to their original state, as a new selection is taking place.
+		do
+			pixmap_location_label.disable_sensitive
+			pixmap_path_label.remove_text
+			absolute_text.remove_text
+			relative_directory_combo.remove_text
+			relative_text.remove_text
+			built_from_frame.disable_sensitive
+		ensure
+			is_in_default_state: is_in_default_state
+		end
+	
+	is_in_default_state: BOOLEAN is
+			-- Is `Current' in its default state?
+		do
+			Result := not pixmap_location_label.is_sensitive and
+				pixmap_path_label.text.is_empty and
+				absolute_text.text.is_empty and
+				relative_directory_combo.text.is_empty and
+				relative_text.text.is_empty and
+				not built_from_frame.is_sensitive
+		end
+
 	add_to_existing_names (current_name: STRING) is
 		require
 			current_name_not_void: current_name /= Void

@@ -20,6 +20,7 @@
 #include "eif_config.h"
 #ifdef EIF_WIN32
 #define WIN32_LEAN_AND_MEAN
+#include "eif_console.h"
 #include <direct.h>		/* %%ss added for chdir, getcwd */
 #include <windows.h>
 #endif
@@ -148,7 +149,7 @@ rt_public void update(char ignore_updt)
 		print_err_msg(stderr, "From directory %s\n", getcwd(NULL, PATH_MAX));
 		print_err_msg(stderr, "Error %d: %s\n", err, error_tag(err));
 #ifdef EIF_WIN32
-		eif_console_cleanup();
+		eif_console_cleanup(EIF_TRUE);
 #endif
 		exit(1);
 	}

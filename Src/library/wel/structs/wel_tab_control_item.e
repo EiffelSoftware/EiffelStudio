@@ -116,6 +116,7 @@ feature -- Element change
 			-- Associate `a_window' to the current item.
 		require
 			a_window_not_void: a_window /= Void
+			inside_window: a_window.is_inside
 		do
 			cwel_tc_item_set_lparam (item, a_window.to_integer)
 		ensure

@@ -975,6 +975,7 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 	EIF_GET_CONTEXT	
 	register1 union overhead *oldbrk;		/* Previous break value */
 	register2 int32 asked = (int32) nbytes;	/* Bytes requested */
+	int over_chunk;
 
 	/* We want at least 'nbytes' bytes for use, so we must add the overhead
 	 * for each block and for each chunk. The memory made available to us
@@ -996,9 +997,9 @@ rt_private union overhead *add_core(register unsigned int nbytes, int type)
 		asked = CHUNK +
 			(((asked - CHUNK) / PAGESIZE_VALUE) + 1) * PAGESIZE_VALUE;
 	else {
-		type = (asked % CHUNK);		/* Don't want another variable */
-		if (type != 0)
-			asked += CHUNK - type;
+		over_chunk = (asked % CHUNK);
+		if (over_chunk != 0)
+			asked += CHUNK - over_chunk;
 	}
 
 	/* If we request for more than a CHUNK, we'll loop only once (for Eiffel,
@@ -1610,6 +1611,8 @@ rt_public void xfreechunk(char *ptr)
 	m_data.ml_used -= i;		/* At least this is free */
 	if (r & B_CTYPE)
 		c_data.ml_used -= i;
+	else
+		e_data.ml_used -= i;
 
 #ifdef DEBUG
 	dprintf(1)("free: on a %s %s block starting at 0x%lx (%d bytes)\n",

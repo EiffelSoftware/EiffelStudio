@@ -271,6 +271,29 @@ feature -- Access
 			-- forall x : Result..last, item (x) /= c
 		end
 
+	substring_index_in_bounds (other: STRING; start_pos, end_pos: INTEGER): INTEGER is
+			-- Position of first occurrence of `other' at or after `start_pos'
+			-- and to or before `end_pos';
+			-- 0 if none.
+		require
+			other_nonvoid: other /= Void
+			other_notempty: not other.is_empty
+			start_pos_large_enough: start_pos >= 1
+			start_pos_small_enough: start_pos <= count
+			end_pos_large_enough: end_pos >= start_pos
+			end_pos_small_enough: end_pos <= count
+		local
+			a: ANY
+		do
+			a := other.area
+			Result := str_str ($area, $a, end_pos, other.count, start_pos, 0)
+		ensure
+			correct_place: Result > 0 implies
+				substring (Result, Result + other.count - 1).is_equal (other)
+			-- forall x : start_pos..Result
+			--	not substring (x, x+other.count -1).is_equal (other)
+		end
+
 	substring_index (other: STRING; start: INTEGER): INTEGER is
 			-- Position of first occurrence of `other' at or after `start';
 			-- 0 if none.

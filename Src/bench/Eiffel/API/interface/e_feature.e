@@ -34,7 +34,7 @@ feature -- Initialization
 			-- identification `i'.
 		require
 			valid_n: n /= Void;
-			positive_i: i > 0
+			positive_i: i >= 0
 		do
 			name := n;
 			id := i;

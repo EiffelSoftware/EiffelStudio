@@ -881,17 +881,17 @@ feature {ROUTINE, TUPLE}
 			Result := generic_typecode (index - 1)
 		end
 
-	boolean_code: INTEGER_8 is 0
-	character_code: INTEGER_8 is 1
-	double_code: INTEGER_8 is 2
-	real_code: INTEGER_8 is 3
-	integer_code: INTEGER_8 is 4
-	pointer_code: INTEGER_8 is 5
-	reference_code: INTEGER_8 is 6
-	integer_8_code: INTEGER_8 is 7
-	integer_16_code: INTEGER_8 is 8
-	integer_64_code: INTEGER_8 is 9
-	any_code: INTEGER_8 is 10
+	reference_code: INTEGER_8 is 0x00
+	boolean_code: INTEGER_8 is 0x01
+	character_code: INTEGER_8 is 0x02
+	double_code: INTEGER_8 is 0x03
+	real_code: INTEGER_8 is 0x04
+	pointer_code: INTEGER_8 is 0x05
+	integer_8_code: INTEGER_8 is 0x06
+	integer_16_code: INTEGER_8 is 0x07
+	integer_code: INTEGER_8 is 0x08
+	integer_64_code: INTEGER_8 is 0x09
+	any_code: INTEGER_8 is 0xFF
 			-- Code used to identify type in tuple.
 
 	valid_typecode (code: INTEGER_8): BOOLEAN is

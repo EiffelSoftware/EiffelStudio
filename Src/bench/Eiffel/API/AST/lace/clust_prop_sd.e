@@ -229,7 +229,7 @@ feature -- Lace compilation
 				else
 					!!vd32;
 					vd32.set_option_name (d.option.option_name);
-					Error_handler.insert_warning (vd32);
+					Error_handler.insert_error (vd32);
 				end
 				l.forth
 			end;

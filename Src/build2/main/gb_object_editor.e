@@ -150,7 +150,6 @@ feature -- Status setting
 				if object.name /= object.edited_name then
 					if object_handler.name_in_use (object.edited_name, object) then
 						object.cancel_edited_name
-						update_editors_for_name_change (object.object, Current)
 					else
 						create command_name_change.make (object, object.edited_name, object.name)
 						object.accept_edited_name
@@ -238,6 +237,17 @@ feature -- Status setting
 			end
 		end
 
+	update_event_selection_button_text is
+			-- Change text displayed on `event_selection_button',
+			-- dependent on number of items in events from `object'.
+		do
+			if object.events.is_empty then
+				event_selection_button.set_text (Event_selection_text)
+			else
+				event_selection_button.set_text (Event_modification_text)
+			end
+		end
+
 feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 		
 	end_name_change_on_object is
@@ -261,7 +271,7 @@ feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 					object.layout_item.set_text (object.name + ": " + object.type.substring (4, object.type.count))			
 				end
 				set_title_from_name
-				update_editors_for_name_change (object.object, Current)
+				update_editors_for_name_change
 				name_field.set_foreground_color ((create {EV_STOCK_COLORS}).black)
 				name_field.set_text (object.name)
 			else
@@ -405,21 +415,9 @@ feature {NONE} -- Implementation
 			create event_dialog.make_with_object (object)
 			event_dialog.show_modal_to_window (parent_window (Current))
 			update_event_selection_button_text
+			update_editors_by_calling_feature (object.object, Current, agent {GB_OBJECT_EDITOR}.update_event_selection_button_text)
 		end
-		
-	update_event_selection_button_text is
-			-- Change text displayed on `event_selection_button',
-			-- dependent on number of items in events from `object'.
-		do
-			if object.events.is_empty then
-				event_selection_button.set_text (Event_selection_text)
-			else
-				event_selection_button.set_text (Event_modification_text)
-			end
-		end
-		
-		
-		
+	
 	update_visual_representations_on_name_change is
 			-- Update visual representations of `object' to reflect new name
 			-- in `name_field'.
@@ -440,7 +438,7 @@ feature {NONE} -- Implementation
 					-- Update title of window.
 				set_title_from_name
 					-- Must be performed after we have actually changed the name of the object.
-				update_editors_for_name_change (object.object, Current)
+				update_editors_for_name_change
 					-- We now inform the system that the user has modified something
 				system_status.enable_project_modified
 				command_handler.update	
@@ -448,6 +446,14 @@ feature {NONE} -- Implementation
 				undo_last_character (name_field)
 			end
 		end
+		
+	update_editors_for_name_change is
+			-- Call `update_editors_by_calling_feature' with object.object,
+			-- `Current', and the procedure update_name_field as arguments.
+		do
+			update_editors_by_calling_feature (object.object, Current, agent {GB_OBJECT_EDITOR}.update_name_field)			
+		end
+		
 		
 	start_name_change_on_object is
 			-- Inform object that a name change has begun.
@@ -484,7 +490,7 @@ feature {NONE} -- Implementation
 						-- Restore name as edit was "cancelled".
 					restore_name_field (object.name, object.name.count + 1)
 						-- Reflect changes in all editors.
-					update_editors_for_name_change (object.object, Current)
+					update_editors_for_name_change
 				end
 			elseif not object.edited_name.is_equal (object.name) then
 				

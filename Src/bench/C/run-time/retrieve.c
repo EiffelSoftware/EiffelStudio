@@ -1496,7 +1496,7 @@ public int retrieve_read ()
 #else
 	if ((read (r_fides, &read_size, sizeof (short))) < sizeof (short))
                 eio();
-#end
+#endif
 
 	while (end_of_buffer < read_size) {
 #ifdef EIF_WINDOWS

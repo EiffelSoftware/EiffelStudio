@@ -1,8 +1,6 @@
 indexing
-	description: 
-		"EiffelVision window, implementation interface."
-	status: "See notice at end of class"
-	id: "$Id$"
+	description: "EiffelVision window, implementation interface."
+	keywords: window
 	date: "$Date$"
 	revision: "$Revision$"
 	
@@ -26,7 +24,7 @@ feature  -- Access
 	icon_name: STRING is
 			-- Short form of application name to be
 			-- displayed by the window manager when
-			-- application is iconified
+			-- application is iconified.
 		require
 			exists: not destroyed
 		deferred
@@ -35,7 +33,7 @@ feature  -- Access
 	icon_mask: EV_PIXMAP is
 			-- Bitmap that could be used by window manager
 			-- to clip `icon_pixmap' bitmap to make the
-			-- icon nonrectangular 
+			-- icon nonrectangular.
 		require
 			exists: not destroyed
 		deferred
@@ -43,7 +41,7 @@ feature  -- Access
 
 	icon_pixmap: EV_PIXMAP is
 			-- Bitmap that could be used by the window manager
-			-- as the application's icon
+			-- as the application's icon.
 		require
 			exists: not destroyed
 		deferred
@@ -110,6 +108,7 @@ feature -- Status setting
 			exists: not destroyed
 		deferred
 		ensure
+			--| FIXME  post-conditions do not match the state of restore
 			not_minimized: not is_minimized
 			not_maximized: not is_maximized
 		end

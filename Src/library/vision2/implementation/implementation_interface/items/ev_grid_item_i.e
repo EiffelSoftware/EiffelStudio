@@ -93,6 +93,39 @@ feature -- Access
 		ensure
 			row_not_void: Result /= Void
 		end
+		
+	virtual_x_position: INTEGER is
+			-- Horizontal offset of `Current' in relation to the
+			-- the virtual area of `parent' grid in pixels.
+			-- `Result' is 0 if `parent' is `Void'.
+		do
+			if parent_i /= Void then
+					-- If there is no parent, then return 0
+					
+				Result := parent_i.column_offsets @ (row_i.index)
+			end
+		end
+		
+	virtual_y_position: INTEGER is
+			-- Vertical offset of `Current' in relation to the
+			-- the virtual area of `parent' grid in pixels.
+			-- `Result' is 0 if `parent' is `Void'.
+		do
+			if parent_i /= Void then
+					-- If there is no parent then return 0.
+					
+				parent_i.perform_vertical_computation
+					-- Recompute vertically if required.
+					
+				if parent_i.row_offsets /= Void then
+						-- As `row_offsets' exists, we can look it up,
+						-- otherwise it must be computed.
+					Result := parent_i.row_offsets @ (row_i.index)
+				else
+					Result := (row_i.index - 1) * parent_i.row_height
+				end
+			end
+		end
 
 feature -- Status setting
 

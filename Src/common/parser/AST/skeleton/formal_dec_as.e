@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 		do
 			formal_name ?= yacc_arg (0)
 			constraint ?= yacc_arg (1)
-			creation_constraint ?= yacc_arg (2)
+			creation_feature_list ?= yacc_arg (2)
 			position := yacc_int_arg (0)
 		ensure then
 			formal_name_exists: formal_name /= Void
@@ -35,7 +35,7 @@ feature -- Properties
 	constraint: TYPE
 			-- Constraint of the formal generic
 
-	creation_constraint: CREATE_AS
+	creation_feature_list: EIFFEL_LIST [FEATURE_NAME]
 			-- Constraint on the creation routine
 
 feature -- Comparison
@@ -44,8 +44,9 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := equivalent (formal_name, other.formal_name)
-				and then position = other.position
 				and then equivalent (constraint, other.constraint)
+				and then equivalent (creation_feature_list, other.creation_feature_list)
+				and then position = other.position
 		end
 
 feature {AST_EIFFEL} -- Output
@@ -54,6 +55,7 @@ feature {AST_EIFFEL} -- Output
 			-- Reconstitute text.
 		local
 			s: STRING
+			feature_name: FEAT_NAME_ID_AS
 		do
 			s := clone (formal_name)
 			s.to_upper
@@ -63,6 +65,23 @@ feature {AST_EIFFEL} -- Output
 				ctxt.put_text_item_without_tabs (ti_Constraint)
 				ctxt.put_space
 				ctxt.format_ast (constraint)
+				if creation_feature_list /= Void then
+					from
+						creation_feature_list.start
+						ctxt.put_space
+						feature_name ?= creation_feature_list.item
+						ctxt.put_string (feature_name.feature_name)
+						creation_feature_list.forth
+					until
+						creation_feature_list.after
+					loop
+						ctxt.put_text_item (ti_Comma)
+						ctxt.put_space
+						feature_name ?= creation_feature_list.item
+						ctxt.put_string (feature_name.feature_name)
+						creation_feature_list.forth
+					end
+				end
 			end
 		end
 

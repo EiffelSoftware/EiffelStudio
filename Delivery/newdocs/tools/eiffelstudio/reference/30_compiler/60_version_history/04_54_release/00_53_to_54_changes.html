@@ -123,6 +123,8 @@ td := ti</pre>
           <span class="ekeyword">agent</span> <span class="ekeyword">Current</span>.<span class="efeature">call</span>. 
   Which should check for the validity of export of <span class="efeature">call </span>
   to current class.</li>
+  <li>Fixed creation and assignment attempts on generic types that have anchored 
+  types in their generic parameter, and the anchor is itself generic.</li>
 </ul>
         
         
@@ -154,7 +156,6 @@ td := ti</pre>
 	<span class="efeature">print</span> (l_time.<span class="efeature">total_milliseconds</span>.<span class="efeature">out</span>)
 </pre>
 </li>
-          <li>&nbsp;</li>
 </ul>
         
         

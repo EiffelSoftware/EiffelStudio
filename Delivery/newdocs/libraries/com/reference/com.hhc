@@ -1,4 +1,4 @@
-	<LI><OBJECT type="text/sitemap"><param name="Name" value="Reference"><param name="Local" value="libraries\com\Reference\index.html"></OBJECT>
+	<LI><OBJECT type="text/sitemap"><param name="Name" value="EiffelCOM Reference"><param name="Local" value="libraries\com\Reference\index.html"></OBJECT>
 	<UL>
 		<LI><OBJECT type="text/sitemap"><param name="Name" value="Constants"><param name="Local" value="libraries\com\Reference\Constants\index.html"></OBJECT>
 		<UL>

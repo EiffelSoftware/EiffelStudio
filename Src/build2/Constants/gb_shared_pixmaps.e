@@ -224,7 +224,6 @@ feature {NONE} -- Update
 
 	pixmap_file_content (fn: STRING): EV_PIXMAP is
 		local
-			retried: BOOLEAN
 			file_name: FILE_NAME
 			file: RAW_FILE
 		do

@@ -40,10 +40,7 @@
 #include <strings.h>
 #endif
 
-#ifndef USE_ADD_LOG
-public char *progname = "ram";	/* Program name */
-public Pid_t progpid = 0;		/* Program PID */
-#else
+#ifdef USE_ADD_LOG
 
 #define MAX_STRING	1024			/* Maximum length for logging string */
 
@@ -234,3 +231,4 @@ char *where;
 }
 
 #endif
+

@@ -46,6 +46,7 @@ typedef struct {			/* Position in program execution flow */
 typedef struct {			/* Stopping notification */
 	Where st_where;			/* Where we are now */
 	int st_why;				/* Why did we stop? */
+	int st_code;			/* Exception code */
 	char *st_tag;			/* Exception tag, if appropriate */
 } Stop;
 
@@ -74,6 +75,9 @@ typedef struct dump Dump;	/* Structure returned by dumps */
  *	KPALIVE		15		Dummy request to keep connection alive
  *	ASYNCMD		16		Run command asynchronously
  *	ASYNACK		17		Status of the asynchronous job
+ *  DEAD		18		Application is dead
+ *  LOAD		19		Load byte code information
+ *  BYTECODE	20		A byte code transfer
  */
 
 typedef struct {			/* General client request format */

@@ -16,6 +16,8 @@
 #include "logfile.h"
 #include "stream.h"
 #include "ewbio.h"
+#include "proto.h"
+#include "transfer.h"
 
 #ifdef I_STRING
 #include <string.h>
@@ -24,12 +26,7 @@
 #endif
 
 extern int identify();			/* Make sure we are started via the wrapper */
-
-public void dexit(status)
-int status;
-{
-    exit(status);
-}
+extern char *ename;				/* Eiffel program name */
 
 public void welcome()
 {
@@ -52,4 +49,17 @@ public void init_connect()
 	sp = new_stream(EWBIN, EWBOUT);
 	if (sp == (STREAM *) 0)
 		dexit(1);
+
+	prt_init();				/* Initialize IDR filters */
+	tpipe(sp);				/* Initialize transfers with application */
+
+#ifdef USE_ADD_LOG
+	progpid = getpid();					/* Program's PID */
+	progname = ename;					/* Computed by Eiffel run-time */
+
+	/* Open a logfile in /tmp */
+	(void) open_log("/tmp/ised.log");
+	set_loglvl(LOGGING_LEVEL);			/* Set debug level */
+#endif
 }
+

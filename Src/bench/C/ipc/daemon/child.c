@@ -20,6 +20,9 @@
 #include <signal.h>
 #include <setjmp.h>
 
+#ifdef I_SYS_FILE
+#include <sys/file.h>
+#endif
 #ifdef I_FCNTL
 #include <fcntl.h>
 #endif
@@ -102,17 +105,36 @@ Pid_t *child_pid;	/* Where pid of the child is writtten */
 		close(pdn[PIPE_WRITE]);
 		close(pup[PIPE_READ]);
 		/* Start duping first allocated pipe, otherwise good luck!--RAM.
+		 * Be careful about the case where the pipe you want to dup on is 
+		 * already used by the other pipe.
 		 * (Hint #1: dup2 closes its target fd before duping file)
 		 * (Hint #2: pipe() takes the lowest two file descriptors available)
 		 */
-		dup2(pup[PIPE_WRITE], EWBOUT);	/* Child writes to ewbout */
-		if (pup[PIPE_WRITE] != EWBOUT)	/* File descriptor was really dup'ed */
-			close(pup[PIPE_WRITE]);		/* Close dup'ed files before exec */
-		dup2(pdn[PIPE_READ], EWBIN);	/* and reads from ewbin */
-		if (pdn[PIPE_READ] != EWBIN)	/* File descriptor was really dup'ed */
-			close(pdn[PIPE_READ]);		/* (avoid child running out of fd!) */
+		if (pdn[PIPE_READ] != EWBOUT) {
+			if (pup[PIPE_WRITE] != EWBOUT) {
+				dup2(pup[PIPE_WRITE], EWBOUT);	/* Child writes to ewbout */
+				close(pup[PIPE_WRITE]);			/* Close dup'ed files before exec */
+			}
+			if (pdn[PIPE_READ] != EWBIN) {
+				dup2(pdn[PIPE_READ], EWBIN);	/* Child reads from ewbin */
+				close(pdn[PIPE_READ]);			/* (avoid child running out of fd!) */
+			}
+		} else {
+			/* Bad case: pdn[PIPE_READ] == EWBOUT. We cannot use the code above since
+			 * the first dup2 will close EWBOUT, which unfortunately is used by a pipe
+			 * end which also need to be kept alive until dup2'ed! Ouch--RAM
+			 */
+			if (pdn[PIPE_READ] != EWBIN) {
+				dup2(pdn[PIPE_READ], EWBIN);	/* Child reads from ewbin */
+				close(pdn[PIPE_READ]);			/* (avoid child running out of fd!) */
+			}
+			if (pup[PIPE_WRITE] != EWBOUT) {
+				dup2(pup[PIPE_WRITE], EWBOUT);	/* Child writes to ewbout */
+				close(pup[PIPE_WRITE]);			/* Close dup'ed files before exec */
+			}
+		}
 		/* Now exec command. A successful launch should not return */
-		argv = shword(cmd);				/* Split command into words */
+		argv = shword(cmd);					/* Split command into words */
 		if (argv != (char **) 0) {
 			execvp(argv[0], argv);
 #ifdef USE_ADD_LOG
@@ -237,7 +259,7 @@ STREAM *sp;		/* Stream used to talk to the child */
 	/* Now wait for the acknowledgment -- no SIGPIPE to be feared */
 
 	mask = (1 << readfd(sp));			/* We want to read from child */
-	tm.tv_sec = 2;						/* Child should answer quickly */
+	tm.tv_sec = TIMEOUT;				/* Child should answer quickly */
 	tm.tv_usec = 0;
 	if (-1 == select(32, &mask, (int *) 0, (int *) 0, &tm)) {
 #ifdef USE_ADD_LOG

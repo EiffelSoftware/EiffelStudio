@@ -28,11 +28,21 @@
 
 extern char token_str[];
 
+#define CR_EMPTY	0
+#define CR_ROUTINE	1
+#define CR_CONSTANT	2
+
 %}
 
 %union {
 	char *node;
 	int32  value;
+	struct cr_struct {		/* Structure used for resolving conflicts on
+							 * feature declaration body 
+							 */
+		char *cr_node;		/* either node ROUTINE_AS or CONSTANT_AS */
+		int cr_type;		/* either CR_ROUTINE  or CR_CONSTANT */
+	} cr_node;
 }
 
 %start		Class_declaration;
@@ -145,7 +155,7 @@ Feature_clause_list
 Clients Feature_declaration
 Declaration_body Inheritance Parent Rename New_exports New_export_item
 Feature_set Undefine Redefine Select Formal_arguments Type_mark
-Feature_value Routine Routine_body External
+Routine Routine_body External
 External_name Internal Local_declarations Instruction Precondition
 Postcondition Assertion_clause Type Existing_generics
 Actual_generics
@@ -158,10 +168,12 @@ Entity_declaration_group Call Check Assertion A_feature Call_on_result
 Call_on_current Call_on_feature Feature_call Remote_call Parameters
 Expression_constant Empty_or_feature Empty_or_dec_group Client_list
 Call_on_feature_access Feature_access Class_invariant Free_operator
-Call_on_expression Constant_or_routine Inspect_default
+Call_on_expression Inspect_default
 
-%type <value> Sign Pushing_id Fix_operator New_feature Feature_name
+%type <value> Sign Pushing_id Infix_operator Prefix_operator New_feature Feature_name
 Infix Prefix New_feature_list
+
+%type <cr_node> Feature_value Constant_or_routine
 
 %%
 
@@ -367,7 +379,7 @@ Feature_name:
 	;
 
 Infix:
-	TE_INFIX Fix_operator
+	TE_INFIX Infix_operator
 		{
 		$$ = $<value>2;
 		click_list_set (create_feature_name(INFIX_AS,click_list_elem($$),is_frozen), $$);
@@ -376,38 +388,71 @@ Infix:
 
 
 Prefix:
-	TE_PREFIX Fix_operator
+	TE_PREFIX Prefix_operator
 		{
 		$$ = $<value>2;
 		click_list_set (create_feature_name(PREFIX_AS,click_list_elem($$),is_frozen), $$);
 		}
 	;
 
-Fix_operator:
+Infix_operator:
 	TE_STRING
 		{
+		extern int is_infix();
+
 		$$ = click_list_push ();
 		click_list_set (create_string (token_str), $$);
+
+		if (0 == is_infix(token_str))	/* Check infixed declaration */
+			yyerror((char *) 0);
+		}
+	;
+
+Prefix_operator:
+	TE_STRING
+		{
+		extern int is_prefix();
+
+		$$ = click_list_push ();
+		click_list_set (create_string (token_str), $$);
+
+		if (0 == is_prefix(token_str))	/* Check prefixed declaration */
+			yyerror((char *) 0);
 		}
 	;
 
 Declaration_body:		Formal_arguments Type_mark Constant_or_routine
-							{$$ = create_node3(BODY_AS,$1,$2,$3);}
+							{$$ = create_node3(BODY_AS,$1,$2,$3.cr_node);
+	/* Validity test for feature declaration */
+		if 	(
+			/* either arguments or type or body */
+			(($1 == NULL) && ($2 == NULL) && ($3.cr_node == NULL))
+			||
+			/* constant implies no argument but type */
+			(($3.cr_type == CR_CONSTANT) && (($1 != NULL) || ($2 == NULL)))
+			||
+			/* arguments implies non-void routine */
+			(($1 != NULL) && (($3.cr_type != CR_ROUTINE) || ($3.cr_node == NULL)))
+			)
+		{
+			yyerror((char *) 0);
+		}
+	}
 	;
 
 
 Constant_or_routine:	/* empty */
-							{$$ = NULL;}
+							{$$.cr_node = NULL; $$.cr_type = CR_EMPTY;}
 	|					TE_IS Feature_value
-							{$$ = $2;}
+							{$$.cr_node = $2.cr_node;$$.cr_type = $2.cr_type;}
 	;
 
 Feature_value:			Manifest_constant
-							{$$ = create_node1(CONSTANT_AS,create_node1(VALUE_AS,$1));}
+					{$$.cr_node = create_node1(CONSTANT_AS,create_node1(VALUE_AS,$1));$$.cr_type = CR_CONSTANT;}
 	|					TE_UNIQUE
-							{$$ = create_node1(CONSTANT_AS,create_node1(VALUE_AS,create_node(UNIQUE_AS)));}
+					{$$.cr_node = create_node1(CONSTANT_AS,create_node1(VALUE_AS,create_node(UNIQUE_AS)));$$.cr_type = CR_CONSTANT;}
 	|					Routine
-							{$$ = $1;}
+							{$$.cr_node = $1;$$.cr_type = CR_ROUTINE;}
 	;
 
 
@@ -817,14 +862,21 @@ Else_part:					/* empty */
 
 Multi_branch:				TE_INSPECT
 							Expression {list_init();} When_part_list {$$ = list_new(CONSTRUCT_LIST_AS);}
-							Else_part Inspect_default TE_END
+							Inspect_default TE_END
 								{$$ = create_node3(INSPECT_AS,$2,$<node>5,$6);}
 	;
 
+/*
 When_part_list:				When_part
 								{list_push($1);}
 	|						When_part_list When_part
 								{list_push($2);}
+	;
+*/
+
+When_part_list:				/* empty */
+	|						When_part When_part_list
+								{list_push($1);}
 	;
 
 When_part:					TE_WHEN {list_init();} Choices {$$ = list_new(CONSTRUCT_LIST_AS);} TE_THEN {list_init();} Compound
@@ -892,6 +944,8 @@ Debug:						TE_DEBUG Debug_keys {list_init();} Compound TE_END
 	;
 
 Debug_keys:					/* empty */
+								{$$ = NULL;}
+	|						TE_LPARAN TE_RPARAN
 								{$$ = NULL;}
 	|						TE_LPARAN {list_init();} Debug_key_list TE_RPARAN
 								{$$ = list_new(CONSTRUCT_LIST_AS);}

@@ -7,11 +7,12 @@
  */
 
 LIBRUN = ../../run-time
-DPFLAGS = -I$(TOP) -I$(LIBRUN)
+LIBIDR = ../../idrs
+DPFLAGS = -I$(TOP) -I$(LIBRUN) -I$(LIBIDR)
 CFLAGS = $(DPFLAGS) -DWORKBENCH
 
 LSRC = com.c identify.c lock.c logfile.c network.c select.c shword.c stack.c \
-	stream.c system.c transfer.c
+	stream.c system.c transfer.c rqst_idrs.c
 
 /* Object files are derived from source files */
 LOBJ = \

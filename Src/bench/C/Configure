@@ -24,7 +24,7 @@
 
 # $Id$
 #
-# Generated on Fri Dec 11 12:13:33 PST 1992 [metaconfig 2.9dev PL0]
+# Generated on Tue Jan 26 13:51:28 PST 1993 [metaconfig 2.9dev PL0]
 
 cat >/tmp/c1$$ <<EOF
 ARGGGHHHH!!!!!
@@ -53,7 +53,7 @@ rm -f /tmp/c1$$ /tmp/c2$$
 : Sanity checks
 PATH=".:$PATH:/bin:/usr/bin:/usr/local/bin:/usr/ucb:/usr/local:/usr/lbin"
 PATH=$PATH:'/usr/5bin:/etc:/usr/gnu/bin:/usr/new:/usr/new/bin:/usr/nbin'
-PATH=$PATH:'/sys5.3/bin:/sys5.3/usr/bin /bsd4.3/bin /bsd4.3/usr/ucb'
+PATH=$PATH:'/sys5.3/bin:/sys5.3/usr/bin:/bsd4.3/bin:/bsd4.3/usr/ucb'
 PATH=$PATH:'/bsd4.3/usr/bin:/usr/bsd:/bsd43/bin:/usr/ccs/bin'
 PATH=$PATH:'/etc:/usr/lib:/lib:/usr/ccs/lib'
 export PATH
@@ -543,6 +543,42 @@ libpth=$libpth' /usr/lib/small /lib/small'
 : libraries wanted for XDR support and socket support
 libswanted="c_s rpc xdr bsd socket inet nsl m"
 
+: Now test for existence of everything in MANIFEST
+echo " "
+if test -f ../MANIFEST; then
+	echo "First let's make sure your kit is complete.  Checking..." >&3
+	awk '$1 !~ /PACK[A-Z]+/ {print $1}' ../MANIFEST | split -50
+	rm -f missing
+	for filelist in x??; do
+		(cd ..; ls `cat UU/$filelist` >/dev/null 2>>UU/missing)
+	done
+	if test -s missing; then
+		cat missing
+		cat >&3 <<'EOM'
+
+THIS PACKAGE SEEMS TO BE INCOMPLETE.
+
+To continue the configuration process AT YOUR OWN RISKS, you may press the
+RETURN key now. If you wish to stop the script, enter 'no' and press RETURN.
+
+PRESS RETURN TO CONTINUE OR ENTER 'n' TO STOP.
+EOM
+		read ans
+		if test "$ans"; then
+			echo "ABORTING..." >&3
+			kill $$
+		else
+			echo "Continuing..." >&3
+			rm -f missing
+		fi
+	else
+		echo "Looks good..." >&3
+	fi
+else
+	echo "There is no MANIFEST file.  I hope your kit is complete !"
+fi
+rm -f missing x??
+
 : Some greps do not return status, grrr.
 echo "grimblepritz" >grimble
 if grep blurfldyick grimble >/dev/null 2>&1 ; then
@@ -997,7 +1033,11 @@ EOM
 
 		case "$5" in
 		fps*) dflt="$dflt fps";;
-		mips*) dflt="$dflt mips";;
+		mips*)
+			case "$4" in
+			umips) dflt="$dflt umips";;
+			*) dflt="$dflt mips";;
+			esac;;
 		[23]100) dflt="$dflt mips";;
 		next*) dflt="$dflt next" ;;
 		news*) dflt="$dflt news" ;;
@@ -2960,7 +3000,9 @@ fi
 echo " "
 case "$d_oldsock" in
 "$undef")
-	if $contains SO_KEEPALIVE `./findhdr sys/socket.h` >/dev/null 2>&1; then
+	if $contains SO_KEEPALIVE `./findhdr sys/socket.h` \
+		/dev/null >/dev/null 2>&1
+	then
 		echo "OK, let's see if SO_KEEPALIVE works as advertised..." >&3
 		$cat > socket.c <<EOP
 #include <sys/types.h>
@@ -3944,6 +3986,29 @@ EOM
 		$contains 'dep\.o:.*dep\.h' dep.out >/dev/null 2>&1
 	then
 		echo "Looks like we can use $cpp -M."
+	else
+		mkdep=
+	fi
+	;;
+esac
+
+case "$mkdep" in
+'')
+	$spitshell > ../mkdep <<EOM
+$startsh
+$takeflags
+for srcfile
+do
+	$cc -MM -I. $cppflags \$flags \$srcfile 2>/dev/null
+done
+EOM
+	mkdep=$toplev/mkdep
+	chmod +x $mkdep
+	$eunicefix $mkdep
+	if $mkdep dep.c >dep.out 2>/dev/null &&
+		$contains 'dep\.o:.*dep\.h' dep.out >/dev/null 2>&1
+	then
+		echo "Looks like we can use $cc -MM."
 	else
 		mkdep=
 	fi

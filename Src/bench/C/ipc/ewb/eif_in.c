@@ -1,108 +1,157 @@
+#include "eif_io.h"
+#include "ewb.h"
+#include "macros.h"
+
 /*
-
- ######     #    ######             #    #    #           ####
- #          #    #                  #    ##   #          #    #
- #####      #    #####              #    # #  #          #
- #          #    #                  #    #  # #   ###    #
- #          #    #                  #    #   ##   ###    #    #
- ######     #    #      #######     #    #    #   ###     ####
-
-	External for dealing with received (incoming) requests.
+	Eiffel/C interface routines
 */
 
-#include "eif_io.h"
-#include "cecil.h"
-#include "plug.h"
-#include "hector.h"
+EIF_OBJ db_info_handler; 
+EIF_OBJ job_done_handler;
+EIF_OBJ failure_handler;
+EIF_OBJ melt_handler;
 
-EIF_OBJ app_break_request;
-EIF_OBJ app_except_request;
-EIF_OBJ app_exit_request;
-EIF_OBJ job_done_request;
+EIF_PROC db_info_hdlr_set;
+EIF_PROC job_done_hldr_set;
+EIF_PROC failure_hdlr_set;
+EIF_PROC melt_hdlr_set;
 
-EIF_PROC break_set;
-EIF_PROC except_set;
-EIF_PROC exit_set;
-EIF_PROC jobdone_set;
-
-
-char *received_request()
+void rqst_handler_to_c(eif_rqst_hdlr, rqst_type, eif_set)
+EIF_OBJ eif_rqst_hdlr;
+EIF_INTEGER rqst_type;
+EIF_PROC eif_set;
 {
-	/*
-	 * Eiffel object descendant of IN_REQUEST, built from what's in the pipe.
-	 * Called from Eiffel when the callback is triggered
-	 * one of the globally declared EIF_OBJ
+	/* Keep a reference in C to the Eiffel objects 
+	 * handling the requests from ised.
+	 */
+
+	switch (rqst_type) {
+		case REP_DB_INFO:
+			db_info_handler = eif_adopt (eif_rqst_hdlr);
+			db_info_hdlr_set = eif_set;
+			break;
+		case REP_JOB_DONE:
+			job_done_handler = eif_adopt (eif_rqst_hdlr);
+			job_done_hldr_set = eif_set;
+			break;
+		case REP_FAILURE:
+			failure_handler = eif_adopt (eif_rqst_hdlr);
+			failure_hdlr_set = eif_set;
+			break;
+		case REP_MELT:
+			melt_handler = eif_adopt (eif_rqst_hdlr);
+			melt_hdlr_set = eif_set;
+			break;
+	}
+}
+
+EIF_OBJ request_handler ()
+{
+	/* Dispatch request from ised to
+	 * proper RQST_HANDLER Eiffel object 
 	 */
 
 	Request rqst;
 	STREAM *sp = stream_by_fd[EWBOUT];
-	int request_type, app_message_type;
-	char buf[20];
-	char *eiffel_string;
+	char *buf;
+	char *eif_string;
 
 	recv_packet (readfd(sp), &rqst);
-	request_type = rqst.rq_type;
 
-printf ("In eif_in.c, request type got on pipe is: %d", request_type);
-
-	switch (request_type) {
-		case APP_MSG:
-			app_message_type = rqst.rq_opaque.op_first;
-			switch (app_message_type) {
-				case APP_BREAK:
-					eiffel_string = makestr("2", 1);
-					(break_set)(eif_access(app_break_request), eiffel_string);
-					return eif_access(app_break_request);
-					break;
-				case APP_EXECPT:
-					eiffel_string = makestr("2", 1);
-					(except_set)(eif_access(app_except_request), eiffel_string);
-					return eif_access(app_except_request);
-					break;
-				case APP_EXIT:
-					eiffel_string = makestr("2", 1);
-					(exit_set)(eif_access(app_exit_request), eiffel_string);
-					return eif_access(app_exit_request);
-					break;
-				}
-		case ASYNACK:
-			/*
-			sprintf(buf,"%d (%s)",rqst.rq_opaque.op_first,
-				rqst.rq_opaque.op_second == AK_OK ? "Succeeded":"Failed");
-			*/
-sprintf(buf,"%d",rqst.rq_opaque.op_first);
-			eiffel_string = makestr(buf, strlen(buf));
-			(jobdone_set)(eif_access(job_done_request), eiffel_string);
-			return eif_access(job_done_request);
+	switch (rqst.rq_type) {
+		case DEAD:
+			eif_string = makestr("Nothing", 7);
+			(failure_hdlr_set)(eif_access(failure_handler), eif_string); 
+			return eif_access(failure_handler);
 			break;
-		}
+		default:
+			break;
+	}
+/*
+		case APP_JOB_DONE:
+			sprintf(buf, "%d", rqst.rq_opaque.op_first);
+			eif_string = makestr(buf, strlen(buf));
+			(job_done_hldr_set)(eif_access(job_done_handler), eif_string);
+			return eif_access(job_done_handler);
+		case APP_FAILURE:
+			eif_string = makestr("Nothing", 7);
+			(failure_hdlr_set)(eif_access(failure_handler), eif_string);
+			return eif_access(failure_handler);
+		case APP_MELT:
+			eif_string = makestr("Nothing", 7);
+			(melt_hdlr_set)(eif_access(failure_handler), eif_string);
+			return eif_access(failure_handler);
+	}
+*/
 }
 
-/*
- * Initialization routines for `received_request'
- */
+/* 
+	External C routines for the various Eiffel
+	request handlers (RQST_HANDLER classes).
+*/
 
-void eifin_set(eiffel_request, request_type, setid_function)
-EIF_OBJ eiffel_request;
-EIF_INTEGER request_type;
-EIF_PROC setid_function;
-	{
-	switch (request_type) {
-		case APP_BREAK:
-			app_break_request = eif_adopt(eiffel_request);
-			break_set = setid_function;
-			break;
-		case APP_EXECPT:
-			app_except_request = eif_adopt(eiffel_request);
-			except_set = setid_function;
-			break;
-		case APP_EXIT:
-			app_exit_request = eif_adopt(eiffel_request);
-			exit_set = setid_function;
-			break;
-		case APP_JOBSTATUS:
-			job_done_request = eif_adopt(eiffel_request);
-			jobdone_set = setid_function;
-			break;
-		}
-	}
+public void send_byte_code (real_body_index, real_body_id, byte_array, size)
+EIF_INTEGER real_body_index, real_body_id;
+char *byte_array;
+EIF_INTEGER size;
+{
+
+/*
+	STREAM *sp;
+	Request rqst;
+
+	sp = stream_by_fd [EWBOUT];
+
+	rqst.rq_type = BCODE;
+	rqst.rq_opaque.op_first = (int) real_body_index;
+	rqst.rq_opaque.op_second = (int) real_body_id;
+
+	if (-1 == send_packet (writefd(sp), &rqst))
+			printf ("error\n");
+
+	if (-1 == twrite (byte_array, size))
+			printf ("error\n");
+
+	if (-1 == recv_packet (readfd(sp), &rqst))
+			printf ("error\n");
+	if (rqst.rq_type != ACK || rqst.rq_ack.ak_type != AK_OK)
+			printf ("error\n");
+
+*/
+
+}
+
+public int send_breakpoint (real_body_id, offset, opcode)
+long real_body_id;
+long offset;
+EIF_BOOLEAN opcode;
+{
+
+/*
+	STREAM *sp;
+	Request rqst;
+
+	sp = stream_by_fd [EWBOUT];
+
+	rqst.rq_type = BREAK_ON;
+	rqst.rq_opaque.op_first = (int) real_body_index;
+	rqst.rq_opaque.op_second = (int) real_body_id;
+	rqst.rq_opaque.op_third = (long) offset;
+
+	if (-1 == send_packet (writefd(sp), &rqst))
+		error
+	if (rqst.rq_type != ACK || rqst.rq_ack.ak_type != AK_OK)
+			printf ("error\n");
+
+*/
+}
+
+public void send_ack_end ()
+{
+/*
+	STREAM *sp = stream_by_fd [EWBOUT];
+
+	send_ack (writefd(sp), AK_OK);
+*/
+
+}

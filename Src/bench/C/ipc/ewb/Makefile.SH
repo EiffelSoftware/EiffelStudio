@@ -59,7 +59,6 @@ OBJECTS =  \$(OBJ)
 
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
-
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
 # $X-Id: Jmake.rules,v 2.8.1.4 91/11/18 13:19:07 ram Exp Locker: ram $
@@ -75,21 +74,23 @@ all:: .FORCE_DEPEND
 # Start of Jmakefile
 
 # Files used to build the daemon
-SRC = connect.c proto.c eif_in.c eif_out.c init.c
+SRC = proto.c eproto.c eif_in.c eif_out.c init.c new.c
 
 # Derived object file names
 OBJ = \
-	connect.o \
 	proto.o \
+	eproto.o \
 	eif_in.o \
 	eif_out.o \
-	init.o 
+	init.o \
+	new.o 
 
 # Where shared archive is located (path and name)
 LIBDIR = ../shared
+LIBIDR = ../../idrs
 
 RUN_TIME = ../../run-time
-DPFLAGS = -I$(TOP) -I$(LIBDIR) -I$(RUN_TIME)
+DPFLAGS = -I$(TOP) -I$(LIBDIR) -I$(RUN_TIME) -I$(LIBIDR)
 CFLAGS = $(DPFLAGS)
 
 depend:: ../../mkdep
@@ -135,12 +136,12 @@ local_clobber:: local_realclean
 
 Makefile.SH: Jmakefile
 	-@if test -f $(TOP)/.package; then \
-		if test -f Makefile.SH; then \
-			echo "	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~"; \
-			$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~; \
-		fi; \
-		echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" ; \
-		$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) ; \
+	if test -f Makefile.SH; then \
+	echo "	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~"; \
+	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~; \
+	fi; \
+	echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" ; \
+	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) ; \
 	else touch $@; exit 0; fi
 
 Makefile: Makefile.SH

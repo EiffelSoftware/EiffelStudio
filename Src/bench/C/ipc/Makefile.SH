@@ -53,7 +53,7 @@ $spitshell >>Makefile <<'!NO!SUBS!'
 ########################################################################
 # Start of Jmakefile
 
-SUB = shared daemon ewb
+SUB = shared daemon ewb app
 
 all::
 

@@ -44,6 +44,10 @@ public struct d_flags d_data = {	/* Internal daemon's flags */
 	(STREAM *) 0,		/* d_as */
 };
 
+#ifndef USE_ADD_LOG
+public char *progname;	/* Otherwise defined in logfile.c */
+#endif
+
 public void main(argc, argv)
 int argc;
 char **argv;
@@ -61,9 +65,10 @@ char **argv;
 	progname = rindex(argv[0], '/');	/* Only last name if '/' found */
 	if (progname++ == (char *) 0)		/* There were no '/' */
 		progname = argv[0];				/* This must be the filename then */
-	progpid = getpid();					/* Program's PID */
 
 #ifdef USE_ADD_LOG
+	progpid = getpid();					/* Program's PID */
+
 	/* Open a logfile in /tmp */
 	(void) open_log("/tmp/ised.log");
 	set_loglvl(LOGGING_LEVEL);			/* Set debug level */
@@ -102,6 +107,7 @@ char **argv;
 
 	d_data.d_cs = sp;				/* Record workbench stream */
 	d_data.d_ewb = (int) pid;		/* And keep track of the child pid */
+	prt_init();						/* Initialize IDR filters */
 	wide_listen();					/* Enter server mode... */
 
 	dexit(0);		/* Workbench died, so do we */

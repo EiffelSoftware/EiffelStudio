@@ -29,6 +29,12 @@
 #endif
 #endif
 
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
+
 #define GEN_MAX	4				/* Maximum number of generic parameters */
 
 /* Function declarations */
@@ -598,7 +604,7 @@ register1 char *key;
 	/* Jump from one hashed position to another until we find the value or
 	 * go to an empty entry or reached the end of the table.
 	 */
-	inc = hashcode(key);
+	inc = hashcode(key, strlen(key));
 	for (
 		pos = inc % hsize, inc = 1 + (inc % (hsize - 1));
 		try < hsize;

@@ -12,8 +12,10 @@
 
 #ifndef _logfile_h_
 #define _logfile_h_
+#ifdef USE_ADD_LOG
 
 #include "config.h"
+
 
 /* Routine defined by logging package */
 extern void add_log();			/* Add logging message */
@@ -26,5 +28,6 @@ extern int reopen_log();		/* Re-open same logfile */
 extern char *progname;			/* Program name */
 extern Pid_t progpid;			/* Program PID */
 
+#endif
 #endif
 

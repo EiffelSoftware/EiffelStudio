@@ -12,7 +12,6 @@
 	If this file is compiled with -DTEST, it will produce a standalone
 	executable.
 */
-
 #include "config.h"
 #include "garcol.h"
 #include "malloc.h"
@@ -21,15 +20,6 @@
 #include "local.h"
 #include "plug.h"
 #include "except.h"
-
-/* Bits are stored in unsigned 32 bits integer, and padding occurs if needed.
- * This means some garbage bits may be found at the end of the bit field.
- * BIT_NBPACK computes the number of 'uint32' fields (bit units) needed to
- * store a given amount of bits.
- */
-#define BIT_PACKSIZE	sizeof(uint32)		/* Size of a bit unit in bytes */
-#define BIT_UNIT		32					/* Size of a bit unit in bits */
-#define BIT_NBPACK(s)	(((s) / BIT_UNIT) + (((s) % BIT_UNIT) ? 1 : 0))
 
 /* Bit shifting */
 private char *b_left_shift();		/* Shift bit field to the left */
@@ -43,13 +33,55 @@ private char *b_right_rotate();		/* Rotate bit field to the right */
  * Public declarations for bits manipulations
  */
 
+public char *b_eout(bit)
+char *bit;
+{
+	/* Eiffel string for out representation of a bit */
+	char *c_string, *result;
+
+	c_string = b_out(bit);					/* Build C string */
+	result = makestr(c_string,LENGTH(bit));	/* Build Eiffel string */
+	xfree(c_string);						/* Free C string */
+
+	return result;
+}
+	
+public char *b_out(bit)
+char *bit;
+{
+	/* String value for bit attribute `bit' */
+	uint32 len, val;
+	char *result, *ptr;
+	uint32 *last, *arena;
+	int i;
+
+	len = LENGTH(bit);
+	arena = ARENA(bit);
+	result = cmalloc((len + 1) * sizeof(char));
+	ptr = result;
+	last = arena + (BIT_NBPACK(len) - 1);
+	for (; arena < last; arena++) {			/* Print fulled packs */
+		val = *arena;
+		for (i=BIT_UNIT-1; i>=0; i--)
+			*ptr++ = (val & (1 << i)) ? '1':'0'; 
+	}
+	len %= BIT_UNIT;
+	if (len == (uint32) 0)
+		len = BIT_UNIT;
+	val = *last;
+	for(i=BIT_UNIT-1; i>=(int)(BIT_UNIT-len); i--)	/* Print last bits */
+		*ptr++ = (val & (1 << i)) ? '1':'0';
+	*ptr++ = 'b';
+	*ptr = '\0';
+	return result;
+}
+
 public long b_count(bit)
 char *bit;
 {
 	return ((struct bit *) bit)->b_length;		/* Size of a BIT object */
 }
 
-#ifndef TEST
 public char *bmalloc(size)
 long size;
 {
@@ -72,14 +104,15 @@ long size;
 	object = xmalloc (nbytes, EIFFEL_T, GC_ON);		/* Allocate Eiffel object */
 
 	if (object != (char *) 0) {
-		LENGTH(object) = size;						/* Record size */
-		return eif_set(object, nbytes, bit_dtype);	/* And set up the dtype */
+		char *result = eif_set(object, nbytes, bit_dtype);
+
+		LENGTH(result) = (uint32) size;				/* Record size */
+		return result;
 	}
 
 	eraise("object allocation", EN_MEM);	/* Signals no more memory */
 	/* NOTREACHED */
 }
-#endif
 
 public char b_equal(a, b)
 char *a;
@@ -133,9 +166,40 @@ char *b;
 	 * correct and 'b' must be a valid pointer (i.e. not void).
 	 */
 
-	register1 int len = LENGTH(a);	/* Macro evaluates its argument twice */
+	register1 int len1 = LENGTH(a);	/* Macro evaluates its argument twice */
+	register2 int len2 = LENGTH(b);
+	register3 uint32 *arena1;
+	register4 uint32 *arena2;
+	int nb_pack1, nb_pack2, gap, idx;
+	uint32 mask, val;
 
-	bcopy(a, b, BIT_NBPACK(len) * BIT_PACKSIZE + sizeof(uint32));
+#ifdef MAY_PANIC
+	if (len1 > len2)
+		panic("bits conformance violated");
+#endif
+
+	if (len1 == len2) {
+		bcopy(a, b, BIT_NBPACK(len1) * BIT_PACKSIZE + sizeof(uint32));
+		return;
+	}
+
+	/* Different bit sizes: copy `a' at the start of longer field of `b' */
+	arena1 = ARENA(a);
+	arena2 = ARENA(b);
+	nb_pack1 = BIT_NBPACK(len1);
+	idx = nb_pack1 - 1;				/* Index of last pack of `arena1' */
+	/* First, copy first fulled packs of `arena1' into `arena2' (if any) */
+	if (nb_pack1 > 1)
+		bcopy(arena1,arena2,idx * BIT_PACKSIZE);
+	/* Copy last pack of `arena1' with garbage bits set to zero */
+	mask = len1 % BIT_UNIT;
+	val = arena1[idx];
+	arena2[idx] = (mask == (uint32) 0) ? val : val & ~((1<<(BIT_UNIT-mask))- 1);
+	/* Set last fields of `arena2' to zero */
+	nb_pack2 = BIT_NBPACK(len2);
+	gap = nb_pack2 - nb_pack1;
+	if (gap > 0)
+		bzero((char *) (arena2 + nb_pack1), gap * BIT_PACKSIZE);
 }
 
 public char *b_clone(bit)
@@ -156,7 +220,7 @@ char *bit;
 	return new;			/* Freshly allocated bit field object */
 }
 
-public void b_put(bit, at, value)
+public void b_put(bit, value, at)
 char *bit;				/* The Eiffel bit object */
 int at;					/* The position in the bit field (starting at 1) */
 char value;				/* The boolean value to be set */
@@ -182,7 +246,10 @@ char value;				/* The boolean value to be set */
 	mask = at % BIT_UNIT;				/* Bit position (usual 0 rightmost) */
 	mask = mask ? BIT_UNIT - mask : 0;	/* Correct if multiple of BIT_UNIT */
 
-	addr[idx] |= value << mask;			/* Value must be 0 or 1 */
+	if (value)
+		addr[idx] |= 1 << mask;
+	else
+		addr[idx] &= ~(1 << mask);
 }
 
 public char b_item(bit, at)
@@ -248,7 +315,9 @@ long s;
 	char *new;					/* New bit object */
 
 	len = LENGTH(bit);			/* Length of bit field */
+	epush(&loc_stack, &bit);
 	new = bmalloc(len);			/* Returned bit object */
+	epop(&loc_stack,1);
 	arena = ARENA(new);			/* Where bit array starts */
 	units = BIT_NBPACK(len);	/* Amount of bit units needed */
 
@@ -305,7 +374,9 @@ long s;
 	char *new;					/* New bit object */
 
 	len = LENGTH(bit);			/* Length of bit field */
+	epush(&loc_stack,&bit);
 	new = bmalloc(len);			/* Returned bit object */
+	epop(&loc_stack,1);
 	arena = ARENA(new);			/* Where bit array starts */
 	units = BIT_NBPACK(len);	/* Ampunt of bit units needed */
 
@@ -397,7 +468,9 @@ int s;
 	if (s > (len / 2))		/* Rotating more than half the length */
 		return b_left_rotate(bit, len - s);
 
+	epush(&loc_stack,&bit);
 	new = bmalloc(len);			/* The bit object which will be rotated */
+	epop(&loc_stack,1);
 	arena = ARENA(new);			/* Where bit array starts */
 	units = BIT_NBPACK(len);	/* Ampunt of bit units needed */
 
@@ -449,6 +522,8 @@ int s;
 	if (bshift > 0) {
 		last = arena[units - 1];			/* Save last bit unit */
 		idx = BIT_UNIT - len % BIT_UNIT;	/* Save number of garbage bits */
+		if (idx == BIT_UNIT)
+			idx = 0;						/* No garbage: size % BIT_UNIT = 0 */
 		previous = 0;
 		mask = (1 << bshift) - 1;		/* Bits to be kept for later */
 		for (i = 0; i < units; i++) {
@@ -500,7 +575,9 @@ long s;
 	if (s > (len / 2))		/* Rotating more than half the length */
 		return b_right_rotate(bit, len - s);
 
+	epush(&loc_stack,&bit);
 	new = bmalloc(len);			/* The new bit object which will be rotated */
+	epop(&loc_stack,1);
 	arena = ARENA(new);			/* Where bit array starts */
 	units = BIT_NBPACK(len);	/* Ampunt of bit units needed */
 
@@ -554,6 +631,8 @@ long s;
 	if (bshift > 0) {
 		last = arena[0];					/* Save first bit unit */
 		idx = BIT_UNIT - len % BIT_UNIT;	/* Save number of garbage bits */
+		if (idx == BIT_UNIT)
+			idx = 0;						/* No garbage: size % BIT_UNIT = 0 */
 		buffer = arena[units - 1];			/* Get last bit unit */
 		buffer &= ~((1 << idx) -1);			/* Clear garbage bits */
 		arena[units - 1] = buffer | (last >> (BIT_UNIT - idx));
@@ -592,7 +671,9 @@ char *a, *b;
 	register4 uint32 *addr_b;	/* Pointer into the arena of 'b' */
 	register5 uint32 *last;		/* Last bit unit in 'b' */
 
+	epush(&loc_stack,&b);
 	a = b_clone(a);
+	epop(&loc_stack,1);
 	len_a = LENGTH(a);
 	len_b = LENGTH(b);
 
@@ -622,7 +703,7 @@ char *a, *b;
 	 */
 
 	last = ARENA(a) + (BIT_NBPACK(len_a) - 1);
-	for (; addr_a < last; addr_a++)
+	for (; addr_a <= last; addr_a++)
 		*addr_a = 0;
 
 	return a;
@@ -644,7 +725,9 @@ char *a, *b;
 	register4 uint32 *addr_b;	/* Pointer into the arena of 'b' */
 	register5 uint32 *last;		/* Last bit unit in 'b' */
 
+	epush(&loc_stack,&b);
 	a = b_clone(a);
+	epop(&loc_stack,1);
 	len_a = LENGTH(a);
 	len_b = LENGTH(b);
 
@@ -674,7 +757,7 @@ char *a, *b;
 	 */
 
 	last = ARENA(a) + (BIT_NBPACK(len_a) - 1);
-	for (; addr_a < last; addr_a++)
+	for (; addr_a <= last; addr_a++)
 		*addr_a = ~(*addr_a);
 
 	return a;
@@ -696,7 +779,9 @@ char *a, *b;
 	register4 uint32 *addr_b;	/* Pointer into the arena of 'b' */
 	register5 uint32 *last;		/* Last bit unit in 'b' */
 
+	epush(&loc_stack,&b);
 	a = b_clone(a);
+	epop(&loc_stack,1);
 	len_a = LENGTH(a);
 	len_b = LENGTH(b);
 
@@ -744,7 +829,9 @@ char *a, *b;
 	register4 uint32 *addr_b;	/* Pointer into the arena of 'b' */
 	register5 uint32 *last;		/* Last bit unit in 'b' */
 
+	epush(&loc_stack,&b);
 	a = b_clone(a);
+	epop(&loc_stack,1);
 	len_a = LENGTH(a);
 	len_b = LENGTH(b);
 
@@ -792,6 +879,30 @@ char *a;
 
 	for (; addr_a <= last; addr_a++)
 		*addr_a = ~(*addr_a);			/* Perform the NOT operation */
+
+	return a;
+}
+
+public char *b_mirror(a)
+char *a;
+{
+	/* Mirror the bits, 110b -> 011b. This is done the slow way. I leave the
+	 * fast way as an exercice to the reader--RAM.
+	 */
+
+	uint32 left;		/* Position on the left side */
+	uint32 right;		/* Position on the right side */
+	char bl;			/* Current left bit value */
+	char br;			/* Current right bit value */
+
+	a = b_clone(a);
+
+	for (right = LENGTH(a), left = 1; right > left; right--, left++) {
+		br = b_item(a, right);
+		bl = b_item(a, left);
+		b_put(a, right, bl);
+		b_put(a, left, br);
+	}
 
 	return a;
 }

@@ -13,6 +13,7 @@
 #include "config.h"
 #include "portable.h"
 #include <sys/types.h>
+#include <sys/stat.h>
 #include "logfile.h"
 #include "timehdr.h"
 #include "ewbio.h"
@@ -20,13 +21,27 @@
 public int identify()
 {
 	/* Identification protocol, to make sure we have been started via the
-	 * ised wrapper. We expect a null character from file descriptor #4 and
-	 * write a ^A on #3.
+	 * ised wrapper. We expect a null character from file descriptor EWBIN and
+	 * write a ^A on EWBOUT.
 	 */
 
 	char c;
 	int mask = 1 << EWBIN;		/* Want to select of fd ewbin */
 	struct timeval tm;			/* Timeout for select */
+	struct stat buf;			/* Statistics buffer */
+
+	/* Cut off the whole process if file EWBIN is not a valid file descriptor,
+	 * something the kernel will gladly tell us by making the fstat() system
+	 * call fail.
+	 */
+
+	if (-1 == fstat(EWBIN, &buf)) {
+#ifdef USE_ADD_LOG
+		add_log(1, "SYSERR fstat: %m (%e)");
+		add_log(2, "ERROR file EWBIN not initialized by parent");
+#endif
+		return -1;
+	}
 
 	/* Quickly poll on ewbin to see whether it's worth attempting a read on
 	 * it or not. Wait at most 2 seconds (to let our parent initialize) and

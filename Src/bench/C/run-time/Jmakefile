@@ -6,7 +6,6 @@ CFLAGS = -I$(TOP)
 DPFLAGS = -I$(TOP)
 
 NETWORK_OBJ = ../ipc/app/network.o
-NETWORK_LIB = ../ipc/shared/libshared.a
 
 /*
  * Main source files for run-time archive
@@ -14,30 +13,50 @@ NETWORK_LIB = ../ipc/shared/libshared.a
 LSRC = math.c malloc.c garcol.c local.c except.c store.c retrieve.c \
 	hash.c traverse.c hashin.c tools.c internal.c plug.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
-	hector.c cecil.c bits.c file.c dir.c string.c misc.c main.c \
+	hector.c cecil.c bits.c file.c dir.c string.c misc.c \
 	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c
 
 /*
- * Files addedd only for workbench archive
+ * The following files need a special treatment.
+ */
+OTHER = main.c
+
+/*
+ * Files addedd only for workbench-type archive
  */
 WADD = debug.c interp.c option.c update.c wbench.c
 
-;# NETWORK = network.o
+/*
+ * File belonging to workbench archive but built externally (no source).
+ */
+NETWORK = network.o
 
 /*
  * Files for workbench have a 'w' pre-pended if they already exist for
  * the normal run-time archive.
  */
 WSRC = \
+|expand f!$(LSRC) $(OTHER)!
+	w!f \
+-expand \\
+
+/*
+ * Ebench archive does not provide debugging (used to compile the workbench
+ * and avoid eating its own tail..., when using ebench in workbench mode).
+ */
+ESRC = \
 |expand f!$(LSRC)!
 	w!f \
+-expand
+|expand f!$(OTHER)!
+	b!f \
 -expand \\
 
 /*
  * Object files for run-time archive
  */
 LOBJ = \
-|expand f!$(LSRC)!
+|expand f!$(LSRC) $(OTHER)!
 	!f:\.c=.o \
 -expand \\
 
@@ -50,11 +69,20 @@ WOBJ = \
 	!f:\.c=.o \
 -expand \\
 
+/*
+ * Object files for ebench archive
+ */
+EOBJ = \
+|expand f!$(ESRC) $(WADD)!
+	!f:\.c=.o \
+-expand \\
+
 #include "U/workbench.H"
 
 ShellScriptLongTarget(size_h,size.h)
 NormalLibraryTarget(runtime,$(LSRC),$(LOBJ))
 SpecialLibraryTarget(wkbench,$(WOBJ),/**/)
+SpecialLibraryTarget(ebench,$(EOBJ),/**/)
 
 SimpleProgramTarget(x2c)
 
@@ -79,6 +107,7 @@ AddSourceFileC(interp)
 AddSourceFileC(option)
 AddSourceFileC(update)
 AddSourceFileC(wbench)
+AddSourceFileC(main)
 
 DependTarget()
 LintTarget()
@@ -91,7 +120,7 @@ LintTarget()
 
 >LN
 >RM
-|expand f!$(LSRC)!
+|expand f!$(LSRC) $(OTHER)!
 w!f: !f
 	$(RM) w!f
 	$(LN) !f w!f
@@ -118,20 +147,38 @@ local_clean:: remove
 final: libruntime.a
 work: libwkbench.a
 
-#ifdef NEVER
 /*
  * The network object is pre-linked with all the needed libraries.
  */
 
-RemoteTargetDependency(network.o,../ipc/shared,libshared.a)
 RemoteTargetDependency(network.o,../ipc/app,network.o)
 
 >LIBS
 
 network.o:
-	$(LD) $(JLKFLAGS) -r -o $@ $(NETWORK_OBJ) $(NETWORK_LIB) $(LIBS)
+	$(LN) $(NETWORK_OBJ) $@
 
-#endif
+/*
+ * Other files to be compiled with -DNOHOOK.
+ */
+
+>LN
+>RM
+|expand f!$(OTHER)!
+b!f: !f
+	$(RM) b!f
+	$(LN) !f b!f
+remove::
+	$(RM) b!f
+
+-expand
+
+|expand f!$(OTHER)!
+b!f:\.c=.o: b!f
+	$(CC) -c $(JCFLAGS) -DWORKBENCH -DNOHOOK $*.c
+	$(RM) $*.c
+
+-expand
 
 /*
  * Run-time tests

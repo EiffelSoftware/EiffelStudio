@@ -1,11 +1,11 @@
 /*
 
- ######	 #	######  ######  ######  #				####			####
- #		  #	#	   #	   #	   #			   #	#		  #	#
- #####	  #	#####   #####   #####   #			   #			   #
- #		  #	#	   #	   #	   #			   #		###	#
- #		  #	#	   #	   #	   #			   #	#   ###	#	#
- ######	 #	#	   #	   ######  ###### #######   ####	###	 ####
+ ######     #    ######  ######  ######  #                ####            ####
+ #          #    #       #       #       #               #    #          #    #
+ #####      #    #####   #####   #####   #               #               #
+ #          #    #       #       #       #               #        ###    #
+ #          #    #       #       #       #               #    #   ###    #    #
+ ######     #    #       #       ######  ###### #######   ####    ###     ####
 
 	External C routine for Eiffel syntax analysis
 */
@@ -44,6 +44,8 @@ static int generic_count;
 static char *formals[MAXG];			/* Array of formals: Shared Eiffel instances
 									 * of class FORMAL_AS.
 									 */
+
+static int is_free();
 
 /*
  * Definitions
@@ -472,4 +474,54 @@ char is_frozen;
 	(*init_array[dyn_type])(result);
 
 	return result;
+}
+
+/*
+ * Prefix/Infix operator analysis primitives
+ */
+
+public int is_infix(s)
+char *s;
+{
+	/* Is `s' a valid infix operator ? */
+
+	extern char *std_infix();	/* Hash table query */
+
+	/*
+	 * gperf cannot generate hash table with backslashs as keys: so we have to
+	 * perform the extra test with `strcmp' 
+	 */
+	return ((std_infix(s,strlen(s)) != (char *) 0) || (0 == strcmp(s,"\\\\")))
+				? 1 : is_free(s);
+}
+
+public int is_prefix(s)
+char *s;
+{
+	/* Is `s' a valid prefix operator ? */
+
+	extern char *std_prefix();	/* Hash table query */
+
+	return (std_prefix(s,strlen(s)) != (char *) 0) ? 1 : is_free(s);
+}
+
+
+private int is_free(s)
+char *s;
+{
+	/* Is `s' a free operator ? */
+
+	switch (s[0]) {
+	case '@':
+	case '#':
+	case '|':
+	case '&':
+		s++;
+		while (*s)
+			if (*s++ == '%')
+				return 0;
+		return 1;
+	default:
+		return 0;
+	}
 }

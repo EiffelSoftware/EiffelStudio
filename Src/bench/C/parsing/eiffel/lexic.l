@@ -221,6 +221,7 @@ static int get_char()
 	s = token_str;		/* Statically allocated buffer */
 	inherit_context = 0;
 	start_position = end_position;
+	end_position++;
 
 	c = input(); end_position++;
 	if (!c)
@@ -256,6 +257,7 @@ static int get_string()
 	s = token_str;			/* Statically allocated buffer */
 	inherit_context = 0;
 	start_position = end_position;
+	end_position++;
 
 	while ((c = input()) != 0 && c != '"' && n < STRINGLENGTH) {
 		end_position++;
@@ -297,6 +299,7 @@ static int get_string()
 			/* No final double-quote */
 		return EIF_ERROR4;
 	} else {
+		end_position++;
 		*s= '\0';
 		return TE_STRING;
 	}

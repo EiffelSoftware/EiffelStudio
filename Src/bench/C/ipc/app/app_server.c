@@ -13,12 +13,17 @@
 #include "config.h"
 #include "portable.h"
 #include "proto.h"
-#include "hector.h"
-#include "local.h"			/* For epop() */
-#include "out.h"			/* For build_out() */
-#include "debug.h"
+#include "ewbio.h"
+#include "stream.h"
+#include "transfer.h"
+#include "logfile.h"
 
-extern int ised;			/* Socket used to talk with daemon */
+/* This variable records whether the workbench application was launched via
+ * the ised wrapper (i.e. in debug mode) or not.
+ */
+private int debug_mode = 0;	/* Assume not in debug mode */
+
+extern char *ename;			/* Eiffel executable base name (run-time var) */
 
 shared void dserver()
 {
@@ -27,27 +32,62 @@ shared void dserver()
 	 * sent a stop notification to the remote workbench.
 	 */
 
-	stop_rqst(ised);		/* Notify workbench we stopped */
+	if (!debug_mode)		/* If not in debugging mode */
+		return;				/* Resume execution immediately */
+
+#ifdef USE_ADD_LOG
+	add_log(9, "STOPPED");
+#endif
+
+#ifdef NEVER
+	stop_rqst(EWBOUT);		/* Notify workbench we stopped */
+#endif
 	wide_listen();			/* Listen on the socket, waiting for requests */
 
 	/* Exiting from this routine resumes control to the debugger */
 }
 
-shared char *dview(root)
-char *root;
+shared void winit()
 {
-	/* Compute the tagged out form for object 'root' and return a pointer to
-	 * the location of the C buffer holding the string. Note that the
-	 * build_out() run-time routine expects an EIF_OBJ pointer.
+	/* Initialize the workbench process, by checking whether it has been
+	 * started under debugger control or not. This routine is called early
+	 * in the process execution by main().
 	 */
 
-	EIF_OBJ object;				/* The hector pointer */
-	char *out;					/* Where out form is stored */
+	STREAM *sp;					/* Stream used to talk to ised */
 
-	object = hrecord(root);		/* Protect object against GC effects */
-	out = build_out(object);	/* Build `tagged_out' (I hate that name--RAM) */
-	epop(&hec_stack);			/* Release object from hector stack */
+#ifdef USE_ADD_LOG
+	progpid = getpid();					/* Program's PID */
+	progname = ename;					/* Computed by Eiffel run-time */
 
-	return out;		/* To-be-freed pointer to the tagged out representation */
+	/* Open a logfile in /tmp */
+	(void) open_log("/tmp/ised.log");
+	set_loglvl(LOGGING_LEVEL);			/* Set debug level */
+	add_log(7, "identifying...");
+#endif
+
+	if (-1 == identify())		/* Did ised start us? */
+		return;					/* No, then debugging is not allowed */
+
+	debug_mode = 1;				/* Debugging is allowed */
+
+	/* Create a stream, which associates the two ends of the pair of pipes
+	 * opened with the parent. The STREAM provides a bidrectional abstraction.
+	 * (A pipe is only a one-way communication channel, but a pair of pipes is
+	 * a two-way stream, unlike a socket which is already a two-way stream).
+	 */
+
+	sp = new_stream(EWBIN, EWBOUT);
+	if (sp == (STREAM *) 0)
+		enomem();				/* A run-time critical exception */
+
+	tpipe(sp);					/* Initialize tread/twrite transfer pipe */
+	prt_init();					/* Initialize IDR filters */
+
+#ifdef USE_ADD_LOG
+	add_log(7, "application started in debug mode");
+#endif
+
+	wide_listen();				/* Listen to incoming request from ewb */
 }
 

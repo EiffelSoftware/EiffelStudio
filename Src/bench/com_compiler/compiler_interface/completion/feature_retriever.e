@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 				loop
 					l_feature_i := l_overloaded_features.item
 					if is_listed (l_feature_i, class_i, l_class_i) then
-						extract_description (l_feature_i, l_class_i)
+						extract_description (l_feature_i, l_class_i, a_name)
 						if Result = Void then
 							create Result.make_with_return_type (a_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), clone (extracted_description), l_feature_i.written_class.file_name, feature_location (l_feature_i))
 						else
@@ -107,7 +107,7 @@ feature {NONE} -- Implementation
 				if feature_table.found then
 					l_feature_i := feature_table.found_item
 					if is_listed (l_feature_i, class_i, l_class_i) then
-						extract_description (l_feature_i, l_class_i)
+						extract_description (l_feature_i, l_class_i, a_name)
 						create Result.make_with_return_type (l_feature_i.feature_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), clone (extracted_description), l_feature_i.written_class.file_name, feature_location (l_feature_i))
 					end
 				end

@@ -120,9 +120,9 @@ feature {EV_SPIN_BUTTON_I}-- Status setting
 			-- Assign `i`' to `value'. 
 		do
 			internal_arrows_control.set_position (i)
-			last_value := i
 				-- We must now store the value
-			manually_updating := False
+			last_value := i
+			manually_updating := True
 		end
 
 	wel_set_range (i, j: INTEGER) is
@@ -300,6 +300,11 @@ end -- class EV_SPIN_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/19 19:06:47  rogers
+--| Manually updating is now set to true in wel_set_value. Fixes
+--| bug where setting the value would set the value to step - 1
+--| higher than required.
+--|
 --| Revision 1.9  2000/04/19 18:42:03  rogers
 --| Improved comments and formatting.Renamed up_down to
 --| internal_arrows_control. Altered the export status of some

@@ -221,6 +221,7 @@ feature {NONE} -- implementation
 			-- if `a_has_focus' then `Current' has just received focus.
 		local
 			top_level_dialog_imp: EV_DIALOG_IMP
+			rad_but: EV_RADIO_BUTTON_IMP
 		do
 			Precursor {EV_PRIMITIVE_IMP} (a_has_focus)
 			top_level_dialog_imp ?= top_level_window_imp
@@ -228,7 +229,11 @@ feature {NONE} -- implementation
 				top_level_dialog_imp /= Void
 			then
 				if a_has_focus then
-					top_level_dialog_imp.set_current_push_button (interface)
+					rad_but ?= Current
+					if rad_but = Void then
+						-- We do want radio buttons to affect current push button behavior
+						top_level_dialog_imp.set_current_push_button (interface)
+					end
 				elseif top_level_dialog_imp.internal_current_push_button = interface  then
 					top_level_dialog_imp.set_current_push_button (Void)
 				end

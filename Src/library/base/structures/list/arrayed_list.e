@@ -22,7 +22,8 @@ class ARRAYED_LIST [G] inherit
 			put as put_i_th,
 			wipe_out as array_wipe_out,
 			count as array_count,
-			bag_put as put
+			bag_put as put,
+			copy as array_copy
 		export
 			{NONE}
 				all;
@@ -32,10 +33,10 @@ class ARRAYED_LIST [G] inherit
 				capacity
 		undefine
 			linear_representation, prunable, put,
-			prune, consistent, is_equal, occurrences,
-			extendible, has
+			prune, consistent, occurrences,
+			extendible, has, is_equal
 		redefine
-			extend, setup, copy, prune_all, full, valid_index
+			extend, setup, prune_all, full, valid_index
 		end;
 
 	ARRAY [G]
@@ -45,7 +46,8 @@ class ARRAYED_LIST [G] inherit
 			make as array_make,
 			put as put_i_th,
 			count as array_count,
-			bag_put as put
+			bag_put as put,
+			copy as array_copy
 		export
 			{NONE}
 				all;
@@ -55,11 +57,11 @@ class ARRAYED_LIST [G] inherit
 				capacity
 		undefine
 			linear_representation, prunable, full, put,
-			prune, consistent, is_equal, occurrences,
-			extendible, has
+			prune, consistent, occurrences,
+			extendible, has, is_equal
 		redefine
 			wipe_out, extend,
-			setup, copy, prune_all, valid_index
+			setup, prune_all, valid_index
 		select
 			wipe_out
 		end;
@@ -67,7 +69,7 @@ class ARRAYED_LIST [G] inherit
 	DYNAMIC_LIST [G]
 		undefine
 			valid_index, infix "@", i_th, put_i_th,
-			force
+			force, is_equal
 		redefine
 			first, last, swap, wipe_out,
 			go_i_th, move, prunable, start, finish,
@@ -75,7 +77,7 @@ class ARRAYED_LIST [G] inherit
 			setup, copy, put_left, merge_left,
 			merge_right, duplicate, prune_all
 		select
-			count
+			count, copy
 		end;
 
 creation
@@ -176,6 +178,33 @@ feature -- Status report
 			Result := (1 <= i) and (i <= count)
 		end
 
+feature -- Comparison
+
+	is_equal (other: like Current): BOOLEAN is
+			--Is other equal to Current?
+	local
+			c1,c2: like cursor;
+		do
+			c1 := cursor;
+			c2 := other.cursor;
+			from
+				other.start
+				start
+				Result := True
+			until
+				after or other.after or not Result
+			loop
+				if not item.is_equal (other.item) then
+					Result := False
+				end
+				forth
+				other.forth
+			end;
+			go_to (c1);
+			other.go_to (c2);
+		end;
+
+			
 feature -- Cursor movement
 
 	move (i: INTEGER) is

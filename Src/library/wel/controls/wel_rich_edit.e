@@ -118,9 +118,9 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make_empty
-			cwin_send_message (item, Em_exgetsel, 0,
-				Result.to_integer)
+			create Result.make_empty
+			cwin_send_message (item, Em_exgetsel, 0, Result.to_integer)
+			
 		end
 
 	caret_position: INTEGER is

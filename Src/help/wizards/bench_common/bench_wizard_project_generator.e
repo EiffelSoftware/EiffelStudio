@@ -64,8 +64,11 @@ feature {NONE} -- Implementation
 			s, s1, s2: STRING
 			fi: PLAIN_TEXT_FILE
 			f_name: FILE_NAME
+			f_n1: FILE_NAME
 		do
-			create fi.make_open_read_write(template_path + "\" + template_name)
+			create f_n1.make_from_string (template_path)
+			f_n1.set_file_name (template_name)
+			create fi.make_open_read_write(f_n1)
 			fi.read_stream (fi.count)
 			s:= clone (fi.last_string)
 			if map_list /= Void then
@@ -84,7 +87,8 @@ feature {NONE} -- Implementation
 				end
 			end
 			fi.close
-			create f_name.make_from_string (resource_path + "\" + resource_name)
+			create f_name.make_from_string (resource_path)
+			f_name.set_file_name (resource_name)
 			create fi.make_open_write (f_name)
 			fi.put_string (s)
 			fi.close

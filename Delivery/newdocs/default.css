@@ -122,6 +122,10 @@ A:hover {
     COLOR:black;
 }
 
+.eerror {
+	COLOR:#FF0000;
+}
+
 .ekeyword {
     COLOR:navy;
 }

@@ -96,7 +96,7 @@ rt_public void eif_thr_register(void)
 	eif_init_context(eif_globals);
 	EIF_TSD_SET(eif_global_key,eif_globals,"Couldn't bind context to TSD.");
 
-	/* Set the default chunk and scavenge zone size */
+	/* Set the default GC parameters. */
 	eif_alloc_init();
 
 	if (once) {
@@ -185,8 +185,6 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 	gen_scavenge = GS_SET;
 		/* main.c */
 	in_assertion = 0;
-		/* memory.c */
-	clsc_per = CLSC_PER;	/* Full coalescing period. */
 }
 
 

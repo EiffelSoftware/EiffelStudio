@@ -147,6 +147,20 @@ feature -- Event handling
 		ensure
 			not_void: Result /= Void
 		end
+
+	uncaught_exception_actions: ACTION_SEQUENCE [TUPLE [EXCEPTION]] is
+		-- Actions to be performed when an
+		-- action sequence called via callback
+		-- from the underlying toolkit raises an
+		-- exception that is not caught
+		do
+			if uncaught_exception_actions_internal = Void then
+				create uncaught_exception_actions_internal
+			end
+			Result := uncaught_exception_actions_internal
+		ensure
+			not_void: Result /= Void
+		end
 		
 feature {EV_ANY_I} -- Implementation
 		
@@ -157,6 +171,9 @@ feature {EV_ANY_I} -- Implementation
 		
 	pnd_motion_actions_internal: EV_PND_MOTION_ACTION_SEQUENCE
 		-- Implementation of once per object `pnd_motion_actions'.
+
+	uncaught_exception_actions_internal: ACTION_SEQUENCE [TUPLE [EXCEPTION]]
+		-- Implementation of once per object `uncaught_exception_actions'.
 		
 end
 

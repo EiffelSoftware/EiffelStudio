@@ -37,17 +37,19 @@ feature -- Basic operations
 		local
 			inherit_clause: WIZARD_WRITER_INHERIT_CLAUSE
 		do
-			if 
-				an_interface.dispinterface and 
-				not an_interface.dual
-			then
-				dispatch_interface := True
-			end
-			create inherit_clause.make
-			inherit_clause.set_name (an_interface.eiffel_class_name)
+			if not has_descendants_in_coclass (coclass, an_interface) then
+				if 
+					an_interface.dispinterface and 
+					not an_interface.dual
+				then
+					dispatch_interface := True
+				end
+				create inherit_clause.make
+				inherit_clause.set_name (an_interface.eiffel_class_name)
 
-			generate_functions_and_properties (an_interface, inherit_clause)
-			eiffel_writer.add_inherit_clause (inherit_clause)
+				generate_functions_and_properties (an_interface, inherit_clause)
+				eiffel_writer.add_inherit_clause (inherit_clause)
+			end
 		end
 
 feature {NONE} -- Implementation

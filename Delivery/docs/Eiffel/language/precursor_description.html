@@ -1,0 +1,181 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>The Precursor construct</title>
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
+</head>
+
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">The Precursor construct</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="center"><nobr>[&nbsp;<a href="../../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../papers/index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+<hr>
+
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<table cols="1" cellpadding="5" cellspacing="0" border="0">
+  <tr>
+    <td>
+      <h1>The Precursor construct</h1>
+      <p>This document describes a proposal, initially by Bertrand Meyer, to the
+      language committee of NICE, the Nonprofit International Consortium for
+      Eiffel. The proposal was approved by the language committee by vote in
+      October of 1997. The Board of NICE is expected to ratify it shortly.
+      <p>This short document describes the mechanism informally. It is an ISE
+      document and does not commit NICE. A companion document contains the text
+      of the <a HREF="old_precursor_construct.html">formal proposal</a> as adopted by the NICE
+      language committee, and you will find <a href="precursor_construct.html">here</a>
+      the modification that ISE did with version 4.5.
+      <h2>Overview</h2>
+      <p>This is a proposal for an extension to the Eiffel language. The author
+      takes full responsibility for the wording of the proposal and for any
+      error or inconsistency in it.
+      <p>The credit for the basic invention, however, is to be shared between
+      the following people (in alphabetical order): Roger Browne, James McKim,
+      Bertrand Meyer, Frieder Monninger, Steve Tynor and Kim Waldén.
+      <h2>Rationale and background</h2>
+      <p>In writing classes, it frequently occurs that the redefinition of a
+      routine <i>r</i> must rely on the original algorithm. A typical scheme is
+      <pre><font color="#0000a0">
+	<i>r</i> (<i>arguments</i>) <b>is</b>
+			<font COLOR="#FF0000">-- Redefined version</font>
+		<b>do</b>
+			&quot;Parent version of <i>r</i>&quot; (arguments)
+			&quot;Some complementary actions&quot;
+		<b>end</b>
+</pre>
+      </font>
+      <p>although other variants also occur (for example the actual arguments
+      might be different from the formal ones, or the complementary actions
+      might come before rather than after the call to the original version).
+      <p>In the language defined by the book &quot;Eiffel: The Language&quot;
+      (Prentice Hall, 1992, hereafter &quot;ETL&quot;), the mechanism that
+      achieves this result is based on repeated inheritance. The redefining
+      class inherits a second time from the parent containing the original
+      version of <i>r</i>; that second inheritance clause does not redefine <i>r</i>,
+      so that the original version remains available. That version will be
+      renamed, and typically it will be neither selected nor exported. The
+      scheme is
+      <pre><font color="#0000a0">
+	<b>indexing</b><i>
+			description</i>:<i>
+				&quot;A class that redefines r while using the %
+				 original A version in the redefinition&quot;
+	</i><b>class</b> <i>B</i> <b>inherit</b><i>
+
+			A
+				</i><b>redefine</b><i>
+					r
+				</i><b>select</b><i>
+					r
+				</i><b>end</b><i>
+	
+			A
+				</i><b>rename</b><i>
+					r </i><b>as</b><i> original_r
+				</i><b>export</b><i>
+					</i>{<i>NONE</i>}<i> </i><b>all</b><i>
+				</i><b>end</b>
+	<b>feature</b><i>
+
+			r </i>(<i>...</i>)<i> </i><b>is</b><i>
+				</i><b>do</b><i>
+					original_r </i>(<i>...</i>)<i>
+					other_actions
+				</i><b>end</b>
+	
+			... Other feature declarations or redeclarations
+
+	<b>end</b> <font COLOR="#FF0000">-- class</font> B
+</pre>
+      </font>
+      <p>This mechanism clearly works, and has not been a major impediment to
+      the development of large, highly successful Eiffel systems, or to the
+      teaching of Eiffel to tens of thousands of students of all levels.
+      <p>It has been criticized, however, particularly on the basis of the
+      following considerations:
+      <ul>
+        <li> 1. It is a little difficult to
+        explain to beginners. There is a discrepancy between the relative
+        simplicity of the goal (gaining access to the original version of a
+        redefined feature) and the heaviness of the solution, involving a new
+        Parent clause, <i>export</i>, <i>rename</i> and <i>select</i>.</li>
+        <li> 2. Even for non-novices, the
+        heaviness may become a nuisance when a non-trivial inheritance structure
+        is involved. For example B may redefine other features beyond <i>A</i>,
+        or may already be a repeated descendant of <i>A</i>. This can make the
+        Inheritance clause more complicated than would seem desirable.</li>
+      </ul>
+      <p>The present proposal - resulting from extensive discussions on both
+      comp.lang.eiffel and the NICE Language Committee, initiated by a detailed
+      posting by Roger Browne on comp.lang.eiffel in June of 1995 - is an
+      attempt to address the issue simply and effectively. The challenge was to
+      simplify the task at hand - providing access to the original version of a
+      redefined feature - while respecting the following uncontrovertible
+      obligations:
+      <ul>
+        <li> Keeping the language simple.</li>
+        <li> Not introducing redundancy.</li>
+        <li> Not violating correctness
+        requirements.</li>
+        <li> Not violating information hiding
+        (which excludes in particular a Smalltalk-like <i>super</i> mechanism).</li>
+        <li> Not impairing the ability to produce
+        efficient compilers.</li>
+        <li> Not complicating in any significant
+        way the structure of existing compilers.</li>
+      </ul>
+      <p>The result is based on the following idea: do <b>not</b> define the
+      original <i>r</i> as a &quot;feature of the class&quot; <i>B</i>; instead,
+      provide a limited mechanism that allows the body of a redefined routine
+      such as <i>r</i> - and <b>only</b> such a body - to refer to the original,
+      under a special syntax.
+      <p>This, we hope, achieves the goal of a minimal extension that solves one
+      of the very few reported sore points of Eiffel development without
+      complicating the language significantly or affecting the spirit of its
+      design.
+      <h2>Auxiliary effect</h2>
+      <p>It has been stated that a good language extension should whenever
+      possible solve several problems at once. One of the consequences of the
+      &quot;Precursor&quot; extension described below is a slight change to the
+      inheritance mechanism which, we think, will improve the language. (This
+      change conforms to the semantics which was already implemented by ISE
+      Eiffel, departing from the ETL semantics.)
+      <p>This secondary change is a generalization of the Join mechanism, used
+      to merge <i>n</i> inherited features with <i>n</i> &gt;= 2. Under the ETL
+      semantics at most one of these features may be effective. Under the new
+      semantics this rule is removed; any number of effective and deferred
+      routines may be &quot;joined&quot; (merged) provided all the effective
+      ones figure in Redefine clauses in the corresponding Parent parts.
+      <p>This appears to simplify both the semantic description of the language
+      and its practical use, avoiding the need to undefine n-1 effective
+      routines, artificially chosen, out of <i>n</i> that one may want to join.
+      <h2>A practical note for OOSC-2 readers</h2>
+      <p>The book <a HREF="../books.html"><i>Object-Oriented Software
+      Construction, second edition</i></a> (Prentice Hall, 1997) describes the
+      mechanism with a small syntactic differences: it uses double braces, as in
+      {{<i>PARENT</i>}}, rather than single braces as in {<i>PARENT</i>}.
+      <p>To avoid any confusion, ISE's compiler accepts both form. The
+      single-brace form is the recommended form.
+      <h2>The formal proposal</h2>
+      <p>The precise proposal as approved by the NICE language committee appears
+      in a <a HREF="old_precursor_construct.html">separate page</a>.
+      <p>&nbsp;</td>
+  </tr>
+</table>
+&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
+
+</html>

@@ -1,6 +1,6 @@
 indexing
 	description: "Hole in the top left corner of a command %
-			% tool used to retarget the tool."
+				% tool used to retarget the tool."
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"

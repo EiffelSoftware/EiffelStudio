@@ -9,7 +9,9 @@ class
 inherit
 	CLASS_C
 		redefine
-			lace_class, make
+			lace_class,
+			is_true_external,
+			make
 		end
 		
 create
@@ -139,6 +141,10 @@ feature -- Status report
 
 	is_nested: BOOLEAN
 			-- Is current external class a nested type?
+			
+	is_true_external: BOOLEAN is True
+			-- Is class an instance of EXTERNAL_CLASS_C?
+			-- If yes, we do not generate it.		
 			
 feature {NONE} -- Initialization
 

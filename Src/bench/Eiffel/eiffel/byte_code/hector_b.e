@@ -65,8 +65,46 @@ feature -- IL code generation
 
 	generate_il is
 			-- Generate IL code for unprotected external call argument.
+		local
+			l_local: LOCAL_B
+			l_argument: ARGUMENT_B
+			l_type: TYPE_I
+			l_local_number: INTEGER
 		do
-			expr.generate_il
+			l_type := context.real_type (expr.type)
+			if l_type.is_basic then
+				check
+					not_current: not expr.is_current
+				end
+				if expr.is_predefined  then
+					if expr.is_local then
+						l_local ?= expr
+						il_generator.generate_local_address (l_local.position)
+					elseif expr.is_argument then
+						l_argument ?= expr
+						il_generator.generate_argument_address (l_argument.position)
+					else
+						check
+							expr.is_result
+						end
+						il_generator.generate_result_address
+					end
+				else
+					expr.generate_il
+					if expr.is_attribute then
+							-- We generate a read only address operator, i.e. that if
+							-- the calls that receives the value write to it, it is not
+							-- going to affect the original attribute value.
+						context.add_local (l_type)
+						l_local_number := context.local_list.count
+						il_generator.put_dummy_local_info (l_type, l_local_number)
+						il_generator.generate_local_assignment (l_local_number)
+						il_generator.generate_local_address (l_local_number)
+					end
+				end
+			else
+				expr.generate_il
+			end
 			il_generator.convert_to (type)
 		end
 

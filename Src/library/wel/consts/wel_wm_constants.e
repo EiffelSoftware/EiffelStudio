@@ -78,6 +78,9 @@ feature -- Access
 	Wm_wininichange, Wm_settingchange: INTEGER is 26
 			-- Declared in Windows as WM_WININICHANGE
 
+	Wm_settingchange: INTEGER is 26
+			-- Declared in Windows as WM_SETTINGCHANGE
+
 	Wm_devmodechange: INTEGER is 27
 			-- Declared in Windows as WM_DEVMODECHANGE
 

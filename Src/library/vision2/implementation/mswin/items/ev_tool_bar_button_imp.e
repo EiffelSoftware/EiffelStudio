@@ -430,6 +430,12 @@ feature {NONE} -- Implementation
 		do
 			Precursor {EV_TOOLTIPABLE_IMP}
 			Precursor {EV_TOOL_BAR_ITEM_IMP}
+			if private_pixmap /= Void then
+				private_pixmap.destroy
+			end
+			if private_gray_pixmap /= Void then
+				private_gray_pixmap.destroy
+			end
 		end
 		
 

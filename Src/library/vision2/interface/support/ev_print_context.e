@@ -1,3 +1,9 @@
+indexing
+	description:
+		"EiffelVision 2 Printer Context, see EV_PRINT_DIALOG"
+	status: "See notice at end of class"
+	keywords: "print, printer, context"
+
 class
 	EV_PRINT_CONTEXT
 													

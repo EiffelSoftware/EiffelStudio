@@ -71,7 +71,6 @@ inherit
 			on_kill_focus,
 			on_set_cursor,
 			on_size,
-			on_move,
 			process_notification,
 			wel_set_text,
 			show,
@@ -167,6 +166,9 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/06/09 01:41:37  manus
+--| Merged version 1.17.8.2 from DEVEL branch to trunc
+--|
 --| Revision 1.34  2000/06/07 17:28:01  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

@@ -71,15 +71,6 @@ feature {SHARED_APPLICATION_EXECUTION} -- Initialization
 
 feature {NONE} -- Watcher/Timer
 
-	create_watcher is
-		do
-			if dbg_watcher = Void then
-				create dbg_watcher.make_with_action (agent event_timer_notify)
-			end
-		end
-		
-	dbg_watcher: DOTNET_DEBUGGER_WATCHER
-	
 	event_timer_notify is
 			-- 
 		do
@@ -96,7 +87,6 @@ feature {NONE} -- Watcher/Timer
 						eifnet_debugger.reset_data_changed
 						if Eifnet_debugger_info.last_managed_callback_is_exit_process then --| Exit Process |--	
 							notify_execution_on_exit_process
-
 						else
 							notify_execution_on_stopped
 						end
@@ -732,7 +722,7 @@ feature {NONE} -- Events on notification
 			--| We need to stop
 			--| Already "stopped" but let's be sure ..
 	
-			status.set_is_stopped (True)						
+			status.set_is_stopped (True)
 			eifnet_debugger.on_exit_process
 		end
 		

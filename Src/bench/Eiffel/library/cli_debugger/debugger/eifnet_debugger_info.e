@@ -141,6 +141,7 @@ feature -- Current CallStack
 				if current_stack_info = Void then
 					create current_stack_info					
 				end
+				current_stack_info.set_synchronized (False)
 				
 				debug ("DEBUGGER_TRACE_EIFNET")
 					print ("[!] Initialize Current Stack in EIFNET_DEBUGGER_INFO.%N")
@@ -158,6 +159,7 @@ feature -- Current CallStack
 					else
 						l_il_frame := l_frame.query_interface_icor_debug_il_frame
 						if l_il_frame /= Void then
+							current_stack_info.set_synchronized (True)
 							l_chain := l_frame.get_chain
 							l_func 	:= l_il_frame.get_function
 							current_stack_info.set_current_stack_pseudo_depth (l_chain.enumerate_frames.count)

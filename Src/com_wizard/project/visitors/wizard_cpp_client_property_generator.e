@@ -150,22 +150,22 @@ feature {NONE} -- Implementation
 
 			-- Set up "invoke" function call
 
-			l_body.append ("%R%N%TDISPID disp = (DISPID) ")
+			l_body.append ("%N%TDISPID disp = (DISPID) ")
 			l_body.append_integer (member_id)
-			l_body.append (";%R%N%TLCID lcid = (LCID) ")
+			l_body.append (";%N%TLCID lcid = (LCID) ")
 			l_body.append_integer (lcid)
-			l_body.append (";%R%N%TDISPPARAMS args = {NULL, NULL, 0, 0};%R%N%TVARIANT pResult; %R%N%TVariantInit (&pResult);%R%N%R%N")
+			l_body.append (";%N%TDISPPARAMS args = {NULL, NULL, 0, 0};%N%TVARIANT pResult; %N%TVariantInit (&pResult);%N%N")
 			l_body.append (initialize_excepinfo)
-			l_body.append ("%R%N%Tunsigned int nArgErr;%R%N%R%N%Thr = p_")
+			l_body.append ("%N%Tunsigned int nArgErr;%N%N%Thr = p_")
 			l_body.append (interface_name)
-			l_body.append ("->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYGET, &args, &pResult, excepinfo, &nArgErr);%R%N%T")
+			l_body.append ("->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYGET, &args, &pResult, excepinfo, &nArgErr);%N%T")
 
 			-- if argument error
 			l_body.append (examine_parameter_error ("hr"))
-			l_body.append ("%R%N%T")
+			l_body.append ("%N%T")
 			l_body.append (examine_hresult_with_pointer ("hr", l_var))
 
-			l_body.append ("%R%N%R%N%T")
+			l_body.append ("%N%N%T")
 
 			-- return result from each type
 			l_body.append (retval_return_value_set_up (visitor))
@@ -190,13 +190,13 @@ feature {NONE} -- Implementation
 			l_body := check_interface_pointer (interface_name)
 
 			-- Set up "invoke" function call
-			l_body.append ("%R%N%TDISPID disp = (DISPID) ")
+			l_body.append ("%N%TDISPID disp = (DISPID) ")
 			l_body.append_integer (member_id)
-			l_body.append (";%R%N%TLCID lcid = (LCID) ")
+			l_body.append (";%N%TLCID lcid = (LCID) ")
 			l_body.append_integer (lcid)
 
 			-- Set up parameter
-			l_body.append (";%R%N%TDISPPARAMS args;%R%N%TVARIANTARG arg;%R%N%R%N%T")
+			l_body.append (";%N%TDISPPARAMS args;%N%TVARIANTARG arg;%N%N%T")
 
 			if not visitor.is_structure then
 				if visitor.is_interface_pointer or visitor.is_coclass_pointer then
@@ -213,7 +213,7 @@ feature {NONE} -- Implementation
 				if visitor.is_interface_pointer or visitor.is_coclass_pointer or visitor.is_structure_pointer then
 					l_body.append (" = 0")
 				end
-				l_body.append (";%R%N%T")
+				l_body.append (";%N%T")
 
 				if visitor.vt_type = Vt_dispatch then
 					l_body.append ("hr = a_value->QueryInterface (IID_IDispatch, (void**)&tmp_value)")
@@ -243,12 +243,12 @@ feature {NONE} -- Implementation
 						l_body.append (" (a_value)")
 					end
 				end
-				l_body.append (";%R%N%T")
+				l_body.append (";%N%T")
 			end
 
 			l_body.append ("arg.vt = ")
 			l_body.append_integer (type)
-			l_body.append (";%R%N%T")
+			l_body.append (";%N%T")
 
 			if visitor.is_structure then
 				l_body.append ("memcpy (&(arg.")
@@ -261,27 +261,27 @@ feature {NONE} -- Implementation
 				l_body.append (vartype_namer.variant_field_name (visitor))
 				l_body.append (" = tmp_value")
 			end
-			l_body.append (";%R%N%Targs.rgvarg = &arg;%R%N%T")
-			l_body.append ("args.rgdispidNamedArgs = NULL;%R%N%T")
-			l_body.append ("args.cArgs = 1;%R%N%T")
-			l_body.append ("args.cNamedArgs = 0;%R%N%R%N%T")
-			l_body.append ("VARIANT pResult; %R%N%TVariantInit (&pResult);%R%N%R%N")
+			l_body.append (";%N%Targs.rgvarg = &arg;%N%T")
+			l_body.append ("args.rgdispidNamedArgs = NULL;%N%T")
+			l_body.append ("args.cArgs = 1;%N%T")
+			l_body.append ("args.cNamedArgs = 0;%N%N%T")
+			l_body.append ("VARIANT pResult; %N%TVariantInit (&pResult);%N%N")
 			l_body.append (initialize_excepinfo)
-			l_body.append ("%R%N%Tunsigned int nArgErr;")
-			l_body.append ("%R%N%R%N%Thr = p_")
+			l_body.append ("%N%Tunsigned int nArgErr;")
+			l_body.append ("%N%N%Thr = p_")
 			l_body.append (interface_name)
-			l_body.append ("->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYPUT, &args, &pResult, excepinfo, &nArgErr);%R%N%T")
+			l_body.append ("->Invoke (disp, IID_NULL, lcid, DISPATCH_PROPERTYPUT, &args, &pResult, excepinfo, &nArgErr);%N%T")
 
 			-- if argument error
 			l_body.append (examine_parameter_error ("hr"))
 			l_body.append (examine_hresult_with_pointer ("hr", l_var))
 
 			if not l_var.is_empty then
-				l_body.append ("%R%N%TCoTaskMemFree ((void *)")
+				l_body.append ("%N%TCoTaskMemFree ((void *)")
 				l_body.append (l_var.first)
 				l_body.append (");")
 			end
-			l_body.append ("%R%N%T")
+			l_body.append ("%N%T")
 			c_setting_feature.set_body (l_body)
 		end
 

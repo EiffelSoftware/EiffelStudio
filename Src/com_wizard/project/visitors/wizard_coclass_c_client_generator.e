@@ -109,11 +109,11 @@ feature {NONE} -- Implementation
 			l_descriptors: LIST [WIZARD_INTERFACE_DESCRIPTOR]
 		do
 			create Result.make (10000)
-			Result.append ("%Tp_unknown->Release ();%R%N%T")
+			Result.append ("%Tp_unknown->Release ();%N%T")
 
 			-- Release "excepinfo" if allocated
 			if dispatch_interface then
-				Result.append ("%R%N%TCoTaskMemFree ((void *)excepinfo);%R%N%T")
+				Result.append ("%N%TCoTaskMemFree ((void *)excepinfo);%N%T")
 			end
 
 			l_descriptors := a_coclass_descriptor.interface_descriptors
@@ -148,10 +148,10 @@ feature {NONE} -- Implementation
 			create Result.make
 
 			create l_constructor.make (1000)
-			l_constructor.append ("%THRESULT hr;%R%N")
+			l_constructor.append ("%THRESULT hr;%N")
 			l_constructor.append (co_initialize_ex_function)
 			l_constructor.append (examine_hresult ("hr"))
-			l_constructor.append ("%R%N")
+			l_constructor.append ("%N")
 			l_constructor.append (co_create_instance_ex_function (a_coclass_descriptor))
 
 			l_descriptors := a_coclass_descriptor.interface_descriptors
@@ -162,9 +162,9 @@ feature {NONE} -- Implementation
 			loop
 				l_interface := l_descriptors.item
 				if not l_interface.is_idispatch and not l_interface.is_iunknown and l_interface.is_implementing_coclass (a_coclass_descriptor) then
-					l_constructor.append ("%R%N%Tp_")
+					l_constructor.append ("%N%Tp_")
 					l_constructor.append (l_interface.name)
-					l_constructor.append (" = 0;%R%N")
+					l_constructor.append (" = 0;%N")
 				end
 				l_descriptors.forth
 			end
@@ -194,13 +194,13 @@ feature {NONE} -- Implementation
 			Result.set_signature (l_signature)
 
 			create l_constructor.make (1000)
-			l_constructor.append ("%T HRESULT hr, hr2;%R%N")
+			l_constructor.append ("%T HRESULT hr, hr2;%N")
 			l_constructor.append (co_initialize_ex_function)
 			l_constructor.append (examine_hresult ("hr"))
 
-			l_constructor.append ("%R%N%Thr = a_pointer->QueryInterface(IID_IUnknown, (void**)&p_unknown);%R%N")
+			l_constructor.append ("%N%Thr = a_pointer->QueryInterface(IID_IUnknown, (void**)&p_unknown);%N")
 			l_constructor.append (examine_hresult ("hr"))
-			l_constructor.append ("%R%N")
+			l_constructor.append ("%N")
 
 			l_descriptors := a_coclass_descriptor.interface_descriptors
 			from 
@@ -210,15 +210,15 @@ feature {NONE} -- Implementation
 			loop
 				l_interface := l_descriptors.item
 				if not l_interface.is_idispatch and not l_interface.is_iunknown and l_interface.is_implementing_coclass (a_coclass_descriptor) then
-					l_constructor.append ("%R%N%Tp_")
+					l_constructor.append ("%N%Tp_")
 					l_constructor.append (l_interface.name)
-					l_constructor.append (" = 0;%R%N%Thr = a_pointer->QueryInterface(")
+					l_constructor.append (" = 0;%N%Thr = a_pointer->QueryInterface(")
 					l_constructor.append (iid_name (l_interface.name))
 					l_constructor.append (", (void**)&p_")
 					l_constructor.append (l_interface.name)
-					l_constructor.append (");%R%N")
+					l_constructor.append (");%N")
 					l_constructor.append (examine_hresult ("hr"))
-					l_constructor.append ("%R%N")
+					l_constructor.append ("%N")
 				end
 				l_descriptors.forth
 			end
@@ -237,7 +237,7 @@ feature {NONE} -- Implementation
 			create Result.make (1000)
 			Result.append ("%T")
 			Result.append (multiple_query_interfaces)
-			Result.append ("%R%N%Thr = CoCreateInstanceEx ")
+			Result.append ("%N%Thr = CoCreateInstanceEx ")
 			Result.append (Open_parenthesis)
 			Result.append (clsid_name (a_coclass_descriptor.name))
 			Result.append (", NULL, ")
@@ -248,17 +248,17 @@ feature {NONE} -- Implementation
 				Result.append ("CLSCTX_LOCAL_SERVER|CLSCTX_REMOTE_SERVER")
 			end
 
-			Result.append (", NULL, 1, &a_qi);%R%N")
+			Result.append (", NULL, 1, &a_qi);%N")
 			Result.append (examine_hresult (Hresult_variable_name))
-			Result.append ("%R%N")
+			Result.append ("%N")
 			Result.append (examine_hresult ("a_qi.hr"))
-			Result.append ("%R%N%Tp_unknown = a_qi.pItf;%R%N")
+			Result.append ("%N%Tp_unknown = a_qi.pItf;%N")
 		ensure
 			non_void_cocreate_instance: Result /= Void
 			valid_cocreate_instance: not Result.is_empty
 		end
 
-	multiple_query_interfaces: STRING is "p_unknown = NULL;%R%N%TMULTI_QI a_qi = {&IID_IUnknown, NULL, 0};%R%N";
+	multiple_query_interfaces: STRING is "p_unknown = NULL;%N%TMULTI_QI a_qi = {&IID_IUnknown, NULL, 0};%N";
 			-- MULTI_QI
 
 end -- class WIZARD_COCLASS_C_CLIENT_GENERATOR

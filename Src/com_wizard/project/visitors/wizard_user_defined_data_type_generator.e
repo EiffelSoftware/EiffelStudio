@@ -444,11 +444,11 @@ feature {NONE} -- Implementation
 			valid_c_type: not a_c_type.is_empty
 		do
 			create Result.make (1000)
-			Result.append ("%TEIF_OBJECT eif_object = 0;%R%N%T")
-			Result.append ("EIF_POINTER a_pointer = 0;%R%N%R%N%T")
-			Result.append ("eif_object = eif_protect (eif_ref);%R%N%T")
-			Result.append ("a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), %"item%", EIF_POINTER);%R%N%T")
-			Result.append ("eif_wean (eif_object);%R%N%T")
+			Result.append ("%TEIF_OBJECT eif_object = 0;%N%T")
+			Result.append ("EIF_POINTER a_pointer = 0;%N%N%T")
+			Result.append ("eif_object = eif_protect (eif_ref);%N%T")
+			Result.append ("a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), %"item%", EIF_POINTER);%N%T")
+			Result.append ("eif_wean (eif_object);%N%T")
 			Result.append ("return * (")
 			Result.append (a_c_type)
 			Result.append (" *) a_pointer;")
@@ -467,14 +467,14 @@ feature {NONE} -- Implementation
 			valid_ce_function: not ce_function_for_alias.is_empty
 		do
 			create Result.make (1000)
-			Result.append ("EIF_TYPE_ID type_id = -1;%R%N%T")
-			Result.append ("EIF_PROCEDURE make = 0;%R%N%T")
-			Result.append ("EIF_OBJECT result = 0;%R%N%%R%NT")
+			Result.append ("EIF_TYPE_ID type_id = -1;%N%T")
+			Result.append ("EIF_PROCEDURE make = 0;%N%T")
+			Result.append ("EIF_OBJECT result = 0;%N%%NT")
 			Result.append ("type_id = eif_type_id (%"")
 			Result.append (a_class_name)
-			Result.append ("%");%R%N%T")
-			Result.append ("result = eif_create (type_id);%R%N%T")
-			Result.append ("make = eif_procedure (%"make_from_alias%", type_id);%R%N%R%N%T")
+			Result.append ("%");%N%T")
+			Result.append ("result = eif_create (type_id);%N%T")
+			Result.append ("make = eif_procedure (%"make_from_alias%", type_id);%N%N%T")
 			Result.append ("make (eif_access (result), ")
 			if need_generate_alias then
 				Result.append (Generated_ce_mapper)
@@ -488,7 +488,7 @@ feature {NONE} -- Implementation
 				Result.append (", ")
 				Result.append ("NULL")
 			end
-			Result.append ("));%R%N%R%N%Treturn eif_wean (result);")
+			Result.append ("));%N%N%Treturn eif_wean (result);")
 		ensure
 			non_void_body: Result /= Void
 			valid_body: not Result.is_empty

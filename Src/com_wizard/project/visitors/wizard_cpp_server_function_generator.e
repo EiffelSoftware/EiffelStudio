@@ -98,21 +98,17 @@ feature {NONE} -- Implementation
 			create free_object.make (1000)
 			create variables.make (1000)
 			
-			if 
-				func_desc.argument_count > 0 or
-				is_return_data
-			then
+			if func_desc.argument_count > 0 or is_return_data then
 				generate_cecil_call_code
-				
-				Result.append (New_line_tab)
+				Result.append ("%N%T")
 				Result.append (variables)
-				Result.append (New_line_tab)
+				Result.append ("%N%T")
 				Result.append (cecil_call)
-				Result.append (New_line_tab)
+				Result.append ("%N%T")
 
 				if protect_object /= Void then
 					Result.append (protect_object)
-					Result.append (New_line_tab)
+					Result.append ("%N%T")
 				end
 
 				Result.append (return_value)
@@ -121,43 +117,30 @@ feature {NONE} -- Implementation
 				Result.append (empty_argument_procedure_body)
 			end
 
-			Result.append (New_line_tab)
+			Result.append ("%N%T")
 
 			if is_return_hresult then
-				Result.append (End_ecatch)
-				Result.append (Return)
-				Result.append (Space)
-				Result.append (S_ok)
-				Result.append (Semicolon)
+				Result.append ("END_ECATCH;%N%Treturn S_OK;")
 			elseif is_return_data then
-				Result.append (Return)
-				Result.append (Space)
-				Result.append (Open_parenthesis)
+				Result.append ("return (")
 				Result.append (func_desc.return_type.visitor.c_type)
-				Result.append (Close_parenthesis)
+				Result.append (")")
 
-				if 
-					func_desc.return_type.visitor.is_basic_type or 
-					func_desc.return_type.visitor.is_enumeration 
-				then
-					Result.append (Tmp_variable_name)
-					Result.append (Semicolon)
+				if func_desc.return_type.visitor.is_basic_type or func_desc.return_type.visitor.is_enumeration then
+					Result.append ("tmp_value;")
 				else
 					if func_desc.return_type.visitor.need_generate_ec then
 						Result.append (Generated_ec_mapper)
 					else
-						Result.append (Ec_mapper)
+						Result.append ("rt_ec")
 					end
-					Result.append (Dot)
+					Result.append (".")
 					Result.append (func_desc.return_type.visitor.ec_function_name)
-					Result.append (Space_open_parenthesis)
-					Result.append (Tmp_variable_name)
+					Result.append (" (tmp_value")
 					if func_desc.return_type.visitor.writable then
-						Result.append (Comma_space)
-						Result.append (Null)
+						Result.append (", NULL")
 					end
-					Result.append (Close_parenthesis)
-					Result.append (Semicolon)
+					Result.append (");")
 				end
 			end
 		end
@@ -388,7 +371,7 @@ feature {NONE} -- Implementation
 						visitor.is_coclass_pointer_pointer
 					then
 						Result.append (New_line_tab_tab)
-						Result.append ("if (*" + arg_name + " != NULL)%R%N%T%T%T(*")
+						Result.append ("if (*" + arg_name + " != NULL)%N%T%T%T(*")
 						Result.append (arg_name)
 						Result.append (")->AddRef ();")
 					end
@@ -423,9 +406,9 @@ feature {NONE} -- Implementation
 					visitor.is_coclass_pointer_pointer
 				then
 					Result.append (New_line_tab)
-					Result.append ("if (*" + arg_name + " != NULL)%R%N%T%T(*")
+					Result.append ("if (*" + arg_name + " != NULL)%N%T%T(*")
 					Result.append (arg_name)
-					Result.append (")->Release ();%R%N%T")
+					Result.append (")->Release ();%N%T")
 				
 				elseif visitor.is_pointed then
 					pointed_descriptor ?= descriptor
@@ -433,12 +416,12 @@ feature {NONE} -- Implementation
 						pointed_visitor := pointed_descriptor.pointed_data_type_descriptor.visitor
 						if pointed_visitor.need_free_memory then
 							Result.append (New_line_tab)
-							Result.append ("if (*" + arg_name + " != NULL)%R%N%T%T")
+							Result.append ("if (*" + arg_name + " != NULL)%N%T%T")
 							if pointed_visitor.need_generate_free_memory then
 								Result.append (Generated_ce_mapper + ".")
 							end
 							Result.append (pointed_visitor.free_memory_function_name)
-							Result.append (" (*" + arg_name + ");%R%N%T")
+							Result.append (" (*" + arg_name + ");%N%T")
 						end
 					end
 				end
@@ -486,13 +469,13 @@ feature {NONE} -- Implementation
 				not visitor.is_enumeration and
 				visitor.vt_type /= Vt_bool
 			then
-				Result.append ("if (" + Tmp_variable_name + " != NULL)%R%N%T{%R%N%T%T")
-				Result.append ("EIF_OBJECT tmp_object = eif_protect (" + Tmp_variable_name + ");%R%N%T%T")
+				Result.append ("if (" + Tmp_variable_name + " != NULL)%N%T{%N%T%T")
+				Result.append ("EIF_OBJECT tmp_object = eif_protect (" + Tmp_variable_name + ");%N%T%T")
 				if visitor.is_structure_pointer then
 					Result.append ("EIF_TYPE_ID retval_type_id = eif_type_id (%"" + 
-								visitor.eiffel_type + "%");%R%N%T%T")
-					Result.append ("EIF_PROCEDURE set_shared = eif_procedure (%"set_shared%", retval_type_id);%R%N%T%T")
-					Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE)) set_shared) (eif_access (tmp_object));%R%N%T%T")
+								visitor.eiffel_type + "%");%N%T%T")
+					Result.append ("EIF_PROCEDURE set_shared = eif_procedure (%"set_shared%", retval_type_id);%N%T%T")
+					Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE)) set_shared) (eif_access (tmp_object));%N%T%T")
 				end
 			end
 			
@@ -502,12 +485,12 @@ feature {NONE} -- Implementation
 				Result.append (arg_name)
 				Result.append (" = (")
 				Result.append (visitor.c_type)
-				Result.append (" *) eif_field (eif_access(tmp_object), %"item%", EIF_POINTER);%R%N%T%T")
+				Result.append (" *) eif_field (eif_access(tmp_object), %"item%", EIF_POINTER);%N%T%T")
 				
 				if is_variant (visitor.vt_type) then
-					Result.append ("VariantCopy (" + arg_name + ", tmp" + arg_name + ");%R%N%T%T")
+					Result.append ("VariantCopy (" + arg_name + ", tmp" + arg_name + ");%N%T%T")
 				else
-					Result.append ("memcpy (" + arg_name + ", tmp" + arg_name + ", sizeof (" + visitor.c_type + "));%R%N%T%T")
+					Result.append ("memcpy (" + arg_name + ", tmp" + arg_name + ", sizeof (" + visitor.c_type + "));%N%T%T")
 				end
 			else
 				Result.append (Asterisk)
@@ -548,9 +531,9 @@ feature {NONE} -- Implementation
 				not visitor.is_enumeration and
 				visitor.vt_type /= Vt_bool
 			then
-				Result.append ("%R%N%T%Teif_wean (tmp_object);%R%N%T}")
+				Result.append ("%N%T%Teif_wean (tmp_object);%N%T}")
 				if not visitor.is_structure then
-					Result.append ("%R%N%Telse%R%N%T%T*" + arg_name + " = NULL;")
+					Result.append ("%N%Telse%N%T%T*" + arg_name + " = NULL;")
 				end
 			end
 		end
@@ -625,7 +608,7 @@ feature {NONE} -- Implementation
 					Result := cecil_function_declaration_code (Eif_double_function, Eif_double_function_name)
 					
 				elseif 
-					is_byref (visitor.vt_type) and 
+					is_byref (visitor.vt_type) or 
 					is_void (visitor.vt_type) 
 				then
 					Result := cecil_function_declaration_code (Eif_pointer_function, Eif_pointer_function_name)

@@ -235,20 +235,23 @@ feature -- Basic operations
 					ec_function_name.append ("ccom_ec_pointed_boolean")
 					ce_function_name.append ("ccom_ce_pointed_boolean")
 
-				elseif 
-					is_void (a_type) or (a_type = Vt_empty) 
-				then
+				elseif is_byref (a_type) then
 					is_basic_type_ref := False
-					if is_byref (a_type ) then
-						eiffel_type.append (Cell_pointer)
-						ec_function_name.append ("ccom_ec_pointed_pointer")
-						ce_function_name.append ("ccom_ce_pointed_pointer")
-						writable := True
-					else
-						eiffel_type.append (Pointer_type)
-						is_basic_type := True
-						cecil_type := (Eif_pointer)
-						writable := False
+					eiffel_type.append (Cell_pointer)
+					ec_function_name.append ("ccom_ec_pointed_pointer")
+					ce_function_name.append ("ccom_ce_pointed_pointer")
+					writable := True
+
+				elseif is_void (a_type) or a_type = Vt_empty then
+					is_basic_type_ref := False
+					eiffel_type.append (Pointer_type)
+					is_basic_type := True
+					cecil_type := Eif_pointer
+					writable := False
+
+				else
+					check
+						should_not_be_here: False
 					end
 				end
 				free_memory_function_name.append ("ccom_free_memory_pointed_")
@@ -256,7 +259,7 @@ feature -- Basic operations
 				create free_memory_function_signature.make (100)
 				free_memory_function_signature.append (c_type)
 				free_memory_function_signature.append (" a_pointer")
-				free_memory_function_body := "%Tif (a_pointer != NULL)%R%N%T%T%
+				free_memory_function_body := "%Tif (a_pointer != NULL)%N%T%T%
 												%CoTaskMemFree (a_pointer);"
 
 			elseif is_hresult (pointed_visitor.vt_type) or is_error (pointed_visitor.vt_type) then
@@ -269,7 +272,7 @@ feature -- Basic operations
 				create free_memory_function_signature.make (100)
 				free_memory_function_signature.append (c_type)
 				free_memory_function_signature.append (" a_pointer")
-				free_memory_function_body := "%Tif (a_pointer != NULL)%R%N%T%T%
+				free_memory_function_body := "%Tif (a_pointer != NULL)%N%T%T%
 												%CoTaskMemFree (a_pointer);"
 
 			else
@@ -287,17 +290,17 @@ feature -- Basic operations
 				free_memory_function_signature.append (c_type)
 				free_memory_function_signature.append (Space)
 				free_memory_function_signature.append ("a_pointer")
-				free_memory_function_body := "%Tif (a_pointer != NULL)%R%N%T{%R%N%T%T"
+				free_memory_function_body := "%Tif (a_pointer != NULL)%N%T{%N%T%T"
 				if pointed_visitor.need_free_memory then
 					if pointed_visitor.need_generate_free_memory then
 						free_memory_function_body.append (Generated_ce_mapper)
 						free_memory_function_body.append (".")
 					end
 					free_memory_function_body.append (pointed_visitor.free_memory_function_name)
-					free_memory_function_body.append (" (*a_pointer);%R%N%T%T")
-					free_memory_function_body.append ("*a_pointer = NULL;%R%N%T%T")
+					free_memory_function_body.append (" (*a_pointer);%N%T%T")
+					free_memory_function_body.append ("*a_pointer = NULL;%N%T%T")
 				end
-				free_memory_function_body.append ("CoTaskMemFree (a_pointer);%R%N%T};")
+				free_memory_function_body.append ("CoTaskMemFree (a_pointer);%N%T};")
 
 				create eiffel_type.make (100)
 				eiffel_type.append ("CELL")
@@ -341,9 +344,9 @@ feature {NONE} -- Implementation
 			valid_name: a_class_name /= Void and then not a_class_name.is_empty
 		do
 			create Result.make (128)
-			Result.append ("%Tif (a_record_pointer != NULL)%R%N%T%Treturn rt_ce.ccom_ce_pointed_record (a_record_pointer, %"")
+			Result.append ("%Tif (a_record_pointer != NULL)%N%T%Treturn rt_ce.ccom_ce_pointed_record (a_record_pointer, %"")
 			Result.append (a_class_name)
-			Result.append ("%");%R%N%Telse%R%N%T%Treturn NULL;")
+			Result.append ("%");%N%Telse%N%T%Treturn NULL;")
 		ensure
 			valid_result: Result /= Void and then not Result.is_empty
 		end
@@ -354,9 +357,9 @@ feature {NONE} -- Implementation
 			valid_name: a_class_name /= Void and then not a_class_name.is_empty
 		do
 			create Result.make (128)
-			Result.append ("%Tif (a_interface_pointer != NULL)%R%N%T%Treturn rt_ce.ccom_ce_pointed_interface (a_interface_pointer, %"")
+			Result.append ("%Tif (a_interface_pointer != NULL)%N%T%Treturn rt_ce.ccom_ce_pointed_interface (a_interface_pointer, %"")
 			Result.append (a_class_name)
-			Result.append ("%");%R%N%Telse%R%N%T%Treturn NULL;")
+			Result.append ("%");%N%Telse%N%T%Treturn NULL;")
 		ensure
 			valid_result: Result /= Void and then not Result.is_empty
 		end
@@ -380,25 +383,25 @@ feature {NONE} -- Implementation
 			valid_element_eiffel_name: not element_eiffel_name.is_empty
 		do
 			create Result.make (10000)
-			Result.append ("%TEIF_TYPE_ID type_id = -1;%R%N%T")
-			Result.append ("EIF_PROCEDURE set_item = 0;%R%N%T")
-			Result.append ("EIF_OBJECT result = 0;%R%N%T")
-			Result.append ("EIF_OBJECT tmp_object = 0;%R%N%R%N%T")
+			Result.append ("%TEIF_TYPE_ID type_id = -1;%N%T")
+			Result.append ("EIF_PROCEDURE set_item = 0;%N%T")
+			Result.append ("EIF_OBJECT result = 0;%N%T")
+			Result.append ("EIF_OBJECT tmp_object = 0;%N%N%T")
 			Result.append ("type_id = eif_type_id (%"CELL [")
 			Result.append (element_eiffel_name)
-			Result.append ("]%");%R%N%T")
-			Result.append ("set_item = eif_procedure (%"put%", type_id);%R%N%R%N%T")
-			Result.append ("if ((an_object == NULL) || (eif_access (an_object) == NULL))%R%N%T")
-			Result.append ("{%R%N%T%T")
-			Result.append ("result = eif_create (type_id);%R%N%T")
-			Result.append ("}%R%N%T")
-			Result.append ("else%R%N%T%T")
-			Result.append ("result = an_object;%R%N%T")
+			Result.append ("]%");%N%T")
+			Result.append ("set_item = eif_procedure (%"put%", type_id);%N%N%T")
+			Result.append ("if ((an_object == NULL) || (eif_access (an_object) == NULL))%N%T")
+			Result.append ("{%N%T%T")
+			Result.append ("result = eif_create (type_id);%N%T")
+			Result.append ("}%N%T")
+			Result.append ("else%N%T%T")
+			Result.append ("result = an_object;%N%T")
 			-- if (*(a_c_type) a_pointer != NULL)
 			-- tmp_object = eif_protect ( cpp_object_name.element_ce_function (*(a_c_type) a_pointer));
 			--                 			       value of ^               value of ^             value of ^
 			
-			Result.append ("if (*(" + a_c_type + ") a_pointer != NULL)%R%N%T%T")
+			Result.append ("if (*(" + a_c_type + ") a_pointer != NULL)%N%T%T")
 			
 			Result.append ("tmp_object = eif_protect (")
 			if not need_generate_ce_element then
@@ -411,13 +414,13 @@ feature {NONE} -- Implementation
 			if a_writable then
 				Result.append (", NULL")
 			end
-			Result.append ("));%R%N%T")
-			Result.append ("set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));%R%N%T")
-			Result.append ("if (tmp_object != NULL)%R%N%T%T")
-			Result.append ("eif_wean (tmp_object);%R%N%T")
-			Result.append ("if ((an_object == NULL) || (eif_access (an_object) == NULL))%R%N%T%T")
-			Result.append ("return eif_wean (result);%R%N%T")
-			Result.append ("else%R%N%T%T")
+			Result.append ("));%N%T")
+			Result.append ("set_item (eif_access (result), ((tmp_object != NULL) ? eif_access (tmp_object) : NULL));%N%T")
+			Result.append ("if (tmp_object != NULL)%N%T%T")
+			Result.append ("eif_wean (tmp_object);%N%T")
+			Result.append ("if ((an_object == NULL) || (eif_access (an_object) == NULL))%N%T%T")
+			Result.append ("return eif_wean (result);%N%T")
+			Result.append ("else%N%T%T")
 			Result.append ("return NULL;")
 		ensure
 			non_void_result: Result /= Void
@@ -438,33 +441,33 @@ feature {NONE} -- Implementation
 			valid_element_ec_function: not element_ec_function.is_empty
 		do
 			create Result.make (10000)
-			Result.append ("%TEIF_OBJECT eif_object = 0;%R%N%T")
+			Result.append ("%TEIF_OBJECT eif_object = 0;%N%T")
 			Result.append (element_c_type)
-			Result.append (" * result = 0;%R%N%T")
-			Result.append ("EIF_REFERENCE cell_item = 0;%R%N%R%N%T")
-			Result.append ("eif_object = eif_protect (eif_ref);%R%N%T")
-			Result.append ("if (old != NULL)%R%N%T%T")
-			Result.append ("result = old;%R%N%T")
-			Result.append ("else%R%N%T%T")
+			Result.append (" * result = 0;%N%T")
+			Result.append ("EIF_REFERENCE cell_item = 0;%N%N%T")
+			Result.append ("eif_object = eif_protect (eif_ref);%N%T")
+			Result.append ("if (old != NULL)%N%T%T")
+			Result.append ("result = old;%N%T")
+			Result.append ("else%N%T%T")
 			Result.append ("result = (")
 			Result.append (element_c_type)
 			Result.append (" *) CoTaskMemAlloc (sizeof (")
 			Result.append (element_c_type)
-			Result.append ("));%R%N%T")
-			Result.append ("cell_item = eif_field (eif_access (eif_object), %"item%", EIF_REFERENCE);%R%N%T")
+			Result.append ("));%N%T")
+			Result.append ("cell_item = eif_field (eif_access (eif_object), %"item%", EIF_REFERENCE);%N%T")
 			if element_visitor.need_free_memory then
-				Result.append ("if (*result != NULL)%R%N%T%
-							%{%R%N%T%T")
+				Result.append ("if (*result != NULL)%N%T%
+							%{%N%T%T")
 				if element_visitor.need_generate_free_memory then
 					Result.append (Generated_ce_mapper)
 					Result.append (".")
 				end
 				Result.append (element_visitor.free_memory_function_name) 
-				Result.append ("(*result);%R%N%T%T%
-								%*result = NULL;%R%N%T%
-							%}%R%N%T")
+				Result.append ("(*result);%N%T%T%
+								%*result = NULL;%N%T%
+							%}%N%T")
 			end
-			Result.append ("if (cell_item != NULL)%R%N%T%T")
+			Result.append ("if (cell_item != NULL)%N%T%T")
 			Result.append ("*result = ")
 			if not need_generate_element_ec_function then
 				Result.append ("rt_ec.")
@@ -474,8 +477,8 @@ feature {NONE} -- Implementation
 			if element_writable then
 				Result.append (", NULL")
 			end
-			Result.append (");%R%N%T")
-			Result.append ("eif_wean (eif_object);%R%N%T")
+			Result.append (");%N%T")
+			Result.append ("eif_wean (eif_object);%N%T")
 			Result.append ("return result;")
 		ensure
 			non_void_result: Result /= Void
@@ -491,18 +494,18 @@ feature {NONE} -- Implementation
 			valid_c_name: not c_type_name.is_empty
 		do
 			create Result.make (10000)
-			Result.append ("%TEIF_OBJECT eif_object = 0;%R%N%T")
-			Result.append ("EIF_POINTER a_pointer = 0;%R%N%R%N%T")
-			Result.append ("if (eif_ref != NULL)%R%N%T{%R%N%T%T")
-			Result.append ("eif_object = eif_protect (eif_ref);%R%N%T%T")
-			Result.append ("a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), %"item%", EIF_POINTER);%R%N%T%T")
+			Result.append ("%TEIF_OBJECT eif_object = 0;%N%T")
+			Result.append ("EIF_POINTER a_pointer = 0;%N%N%T")
+			Result.append ("if (eif_ref != NULL)%N%T{%N%T%T")
+			Result.append ("eif_object = eif_protect (eif_ref);%N%T%T")
+			Result.append ("a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), %"item%", EIF_POINTER);%N%T%T")
 			if is_interface_wrapper then
 				Result.append (addition_for_interface (c_type_name))
 			else
 				Result.append (addition_for_structure (eiffel_type_name))
 			end
-			Result.append ("eif_wean (eif_object);%R%N%T")
-			Result.append ("}%R%N%T")
+			Result.append ("eif_wean (eif_object);%N%T")
+			Result.append ("}%N%T")
 			Result.append ("return (")
 			Result.append (c_type_name)
 			Result.append (") a_pointer;")
@@ -518,11 +521,11 @@ feature {NONE} -- Implementation
 			valid_eiffel_type: not eiffel_type_name.is_empty
 		do
 			create Result.make (300)
-			Result.append ("%R%N%T%TEIF_TYPE_ID type_id = eif_type_id (%"")
+			Result.append ("%N%T%TEIF_TYPE_ID type_id = eif_type_id (%"")
 			Result.append (eiffel_type_name)
-			Result.append ("%");%R%N%T%T")
-			Result.append ("EIF_PROCEDURE set_shared =  eif_procedure (%"set_shared%", type_id);%R%N%T%T")
-			Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE))set_shared) (eif_access (eif_object));%R%N%T%T")
+			Result.append ("%");%N%T%T")
+			Result.append ("EIF_PROCEDURE set_shared =  eif_procedure (%"set_shared%", type_id);%N%T%T")
+			Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE))set_shared) (eif_access (eif_object));%N%T%T")
 		ensure
 			non_void_addition: Result /= Void
 			valid_addition: not Result.is_empty
@@ -535,17 +538,17 @@ feature {NONE} -- Implementation
 			valid_c_type: not c_type_name.is_empty
 		do
 			create Result.make (1000)		
-			Result.append ("if (a_pointer == NULL)%R%N%T%T")
-			Result.append ("{%R%N%T%T")
-			Result.append ("EIF_PROCEDURE create_item = 0;%R%N%T%T%T")
-			Result.append ("EIF_TYPE_ID type_id = eif_type (eif_object);%R%N%T%T%T")
-			Result.append ("create_item = eif_procedure (%"create_item%", type_id);%R%N%T%T%T")
-			Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));%R%N%T%T")
-			Result.append ("a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), %"item%", EIF_POINTER);%R%N%T%T")
-			Result.append ("}%R%N%T%T")
+			Result.append ("if (a_pointer == NULL)%N%T%T")
+			Result.append ("{%N%T%T")
+			Result.append ("EIF_PROCEDURE create_item = 0;%N%T%T%T")
+			Result.append ("EIF_TYPE_ID type_id = eif_type (eif_object);%N%T%T%T")
+			Result.append ("create_item = eif_procedure (%"create_item%", type_id);%N%T%T%T")
+			Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE)) create_item) (eif_access (eif_object));%N%T%T")
+			Result.append ("a_pointer = (EIF_POINTER) eif_field (eif_access (eif_object), %"item%", EIF_POINTER);%N%T%T")
+			Result.append ("}%N%T%T")
 			Result.append ("((")
 			Result.append (c_type_name)
-			Result.append (") a_pointer)->AddRef ();%R%N%T%T")
+			Result.append (") a_pointer)->AddRef ();%N%T%T")
 		ensure
 			non_void_addition: Result /= Void
 			valid_addition: not Result.is_empty

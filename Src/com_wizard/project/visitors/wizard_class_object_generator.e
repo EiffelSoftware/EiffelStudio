@@ -142,7 +142,7 @@ feature {NONE} -- Implementations
 			create l_body.make (1000)
 			l_body.append ("%Ttype_id = eif_type_id (%"")
 			l_body.append (implemented_coclass_name (coclass_descriptor.eiffel_class_name))
-			l_body.append ("%");%R%N%TIsInitialized = (type_id >= 0);")
+			l_body.append ("%");%N%TIsInitialized = (type_id >= 0);")
 			Result.set_body (l_body)
 		end
 
@@ -154,7 +154,7 @@ feature {NONE} -- Implementations
 			Result.set_comment ("Lock Server")
 			Result.set_result_type (Std_method_imp)
 			Result.set_signature ("BOOL tmp_value")
-			Result.set_body ("%Tif (tmp_value)%R%N%T%TLockModule ();%R%N%Telse%R%N%T%TUnlockModule ();%R%N%Treturn S_OK;")
+			Result.set_body ("%Tif (tmp_value)%N%T%TLockModule ();%N%Telse%N%T%TUnlockModule ();%N%Treturn S_OK;")
 		end
 
 	create_instance_feature: WIZARD_WRITER_C_FUNCTION is
@@ -168,11 +168,11 @@ feature {NONE} -- Implementations
 			Result.set_result_type ("STDMETHODIMP")
 			Result.set_signature ("IUnknown *pIunknown, REFIID riid, void **ppv")
 			create l_body.make (10000)
-			l_body.append ("%Tif (ppv == 0)%R%N%T%T")
-			l_body.append ("return E_POINTER;%R%N%T")
-			l_body.append ("*ppv = 0;%R%N%T")
-			l_body.append ("if (pIunknown)%R%N%T%T")
-			l_body.append ("return CLASS_E_NOAGGREGATION;%R%N")
+			l_body.append ("%Tif (ppv == 0)%N%T%T")
+			l_body.append ("return E_POINTER;%N%T")
+			l_body.append ("*ppv = 0;%N%T")
+			l_body.append ("if (pIunknown)%N%T%T")
+			l_body.append ("return CLASS_E_NOAGGREGATION;%N")
 			if coclass_descriptor.namespace /= Void and then not coclass_descriptor.namespace.is_empty then
 				l_body.append (coclass_descriptor.namespace)
 				l_body.append ("::")
@@ -184,12 +184,12 @@ feature {NONE} -- Implementations
 				l_body.append ("::")
 			end
 			l_body.append (coclass_descriptor.c_type_name)
-			l_body.append ("(type_id);%R%N%T")
-			l_body.append ("if (!pUnknown)%R%N%T%T")
-			l_body.append ("return E_OUTOFMEMORY;%R%N%T")
-			l_body.append ("pUnknown->AddRef ();%R%N%T")
-			l_body.append ("HRESULT tmp_hr = pUnknown->QueryInterface (riid, ppv);%R%N%T")
-			l_body.append ("pUnknown->Release ();%R%N%T")
+			l_body.append ("(type_id);%N%T")
+			l_body.append ("if (!pUnknown)%N%T%T")
+			l_body.append ("return E_OUTOFMEMORY;%N%T")
+			l_body.append ("pUnknown->AddRef ();%N%T")
+			l_body.append ("HRESULT tmp_hr = pUnknown->QueryInterface (riid, ppv);%N%T")
+			l_body.append ("pUnknown->Release ();%N%T")
 			l_body.append ("return tmp_hr;")
 			Result.set_body (l_body)
 		end
@@ -205,13 +205,13 @@ feature {NONE} -- Implementations
 			Result.set_result_type (Std_method_imp)
 			Result.set_signature (Query_interface_signature)
 			create l_body.make (260)
-			l_body.append ("%Tif (riid == IID_IClassFactory)%R%N%T%T")
-			l_body.append ("*ppv = static_cast<IClassFactory*>(this);%R%N%T")
-			l_body.append ("else if (riid == IID_IUnknown)%R%N%T%T")
-			l_body.append ("*ppv = static_cast<IClassFactory*>(this);%R%N%T")
-			l_body.append ("else%R%N%T%T")
-			l_body.append ("return (*ppv = 0), E_NOINTERFACE;%R%N%T")
-			l_body.append ("reinterpret_cast<IUnknown *>(this)->AddRef ();%R%N%T")
+			l_body.append ("%Tif (riid == IID_IClassFactory)%N%T%T")
+			l_body.append ("*ppv = static_cast<IClassFactory*>(this);%N%T")
+			l_body.append ("else if (riid == IID_IUnknown)%N%T%T")
+			l_body.append ("*ppv = static_cast<IClassFactory*>(this);%N%T")
+			l_body.append ("else%N%T%T")
+			l_body.append ("return (*ppv = 0), E_NOINTERFACE;%N%T")
+			l_body.append ("reinterpret_cast<IUnknown *>(this)->AddRef ();%N%T")
 			l_body.append ("return S_OK;")
 			Result.set_body (l_body)
 		end
@@ -228,7 +228,7 @@ feature {NONE} -- Implementations
 			create l_body.make (10000)
 			l_body.append ("%T")
 			if environment.is_in_process then
-				l_body.append ("UnlockModule ();%R%N%T")
+				l_body.append ("UnlockModule ();%N%T")
 			end
 			l_body.append ("return 1;")
 			Result.set_body (l_body)
@@ -246,7 +246,7 @@ feature {NONE} -- Implementations
 			create l_body.make (10000)
 			l_body.append ("%T")
 			if environment.is_in_process then
-				l_body.append ("LockModule ();%R%N%T")
+				l_body.append ("LockModule ();%N%T")
 			end
 			l_body.append ("return 2;")
 			Result.set_body (l_body)

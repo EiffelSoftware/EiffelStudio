@@ -88,9 +88,11 @@ feature -- IL Generation
 			generate_il_implementation_parents (class_interface)
 
 				-- Define all features used by ISE runtime.
-			if class_c.simple_conform_to (System.any_class.compiled_class) then
-				define_runtime_features (class_type)
-			end
+			define_runtime_features (class_type)
+			
+				-- Define definition of SYSTEM_OBJECT features for
+				-- .NET types
+			define_system_object_features (class_type)
 
 				-- Generate invariant routine.
 			generate_invariant_feature (class_c.invariant_feature)

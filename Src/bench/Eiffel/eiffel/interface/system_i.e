@@ -1252,30 +1252,18 @@ end
 debug ("ACTIVITY")
 	io.error.putstring ("Updating name.eif%N")
 end
-			if empty then
-					-- We are generating an empty melted file, this means that
-					-- we froze our system.
-				l_name := clone (name)
+				-- Find the correct melted name when there is no freeze
+				--
+				-- When there is no precompiled library, we need to use the `name'.
+				-- When there is one, we need to check if a freeze/finalize occurred during
+				-- the life cycle of the project, this can be detected by checking that
+				-- `melted_file_name' from WORKBENCH_I has not been reset.
+			if workbench.melted_file_name /= Void then
+				l_name := clone (Workbench.melted_file_name)
 			else
-					-- Find the correct melted name when there is no freeze
-					--
-					-- When there is no precompiled library, we need to use the `name'.
-					-- When there is one, we need to check if a freeze occurred during
-					-- the life cycle of the project, this can be detected by checking the
-					-- type of `makefile_generator' which should be either WKBENCH_MAKER or
-					-- FINAL_MAKER.
-				precomp_makefile ?= makefile_generator
-				if precomp_makefile = Void then
-						-- We already froze our project, so we can keep `name'
-					l_name := clone (name)
-				else
-					check
-						Uses_precompiled_library: Workbench.precompiled_directories /= Void	
-						Not_multiple_precompiled: Workbench.precompiled_directories.count = 1
-					end
-					l_name := clone (Workbench.melted_file_name)
-				end	
+				l_name := clone (name)
 			end
+
 			l_name.append (".melted")
 			create file_name.make_from_string (Workbench_generation_path)
 			file_name.set_file_name (l_name)
@@ -1701,6 +1689,11 @@ feature -- Freeezing
 			root_class.is_compiled
 		do
 			freezing_occurred := True
+			
+				-- We are freezing our project, we need to reset `melted_file_name'
+				-- to use `name'.
+			Workbench.set_melted_file_name (Void)
+			
 			if Compilation_modes.is_precompiling then
 				!PRECOMP_MAKER!makefile_generator.make
 			else

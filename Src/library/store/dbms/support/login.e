@@ -9,7 +9,7 @@ class
 inherit
 	HANDLE_SPEC [G]
 
-creation -- Creation procedure
+create -- Creation procedure
 
 	make
 

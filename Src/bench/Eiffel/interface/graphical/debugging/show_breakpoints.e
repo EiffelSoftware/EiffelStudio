@@ -16,7 +16,7 @@ inherit
 		select
 			format
 		end;
-	SHARED_DEBUG;
+	SHARED_APPLICATION_EXECUTION;
 	SHARED_FORMAT_TABLES
 
 creation

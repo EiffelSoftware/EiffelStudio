@@ -1,0 +1,24 @@
+.TH CECIL 1  "1999 November 10" "ISE" "CECIL Programmer's Manual"
+.SH NAME
+eif_adopt	\- adopt an Eiffel object.
+.SH SYNOPSYS
+.nf
+\fB#include "eif_hector.h"\fB
+.sp
+.BI "EIF_OBJECT eif_adopt (EIF_OBJECT " obj ");"
+.fi
+.SH DESCRIPTION
+The \fBeif_adopt()\fP function adopts \fIobj\fP. By adopting
+it, the user prevents \fIobj\fP from being   
+unprotected automatically by the Eiffel run-time. The run-time protects
+automatically the Eiffel objects passed to a C external before entering in
+it and unprotects them after exiting the C external. 
+To keep this protection later on, you must call \fBeif_adopt()\fP.
+.SH RETURN VALUE
+The \fBeif_adopt()\fP function returns an EIF_OBJECT. 
+This return value can be used later on to access the nested protected 
+Eiffel reference with \fBeif_access()\fP.
+.SH CONFORMANCE
+ISE Eiffel 4.1 and later.
+.SH SEE ALSO
+.BR "eif_access "(1), "eif_protect "(1), "eif_wean "(1). "

@@ -1,0 +1,85 @@
+.TH CECIL 1  "November 10, 1999" "ISE" "CECIL Programmer's Manual"
+.SH NAME
+eif_reference_function, eif_integer_function, eif_real_function, eif_double_function, eif_character_function, eif_boolean_function, eif_pointer_function, eif_bit_function	
+.br
+\- return the address of an Eiffel function. 
+.SH SYNOPSYS
+.nf
+\fB#include "eif_cecil.h"\fP
+.sp
+.BI "EIF_REFERENCE_FUNCTION eif_reference_function (char * " name ", int * " tid ");"
+.sp
+.BI "EIF_INTEGER_FUNCTION eif_integer_function (char * " name ", int * " tid ");"
+.sp
+.BI "EIF_CHARACTER_FUNCTION eif_character_function (char * " name ", int * " tid ");"
+.sp
+.BI "EIF_REAL_FUNCTION eif_real_function (char * " name ", int * " tid ");"
+.sp
+.BI "EIF_DOUBLE_FUNCTION eif_double_function (char * " name ", int * " tid ");"
+.sp
+.BI "EIF_BOOLEAN_FUNCTION eif_boolean_function (char * " name ", int * " tid ");"
+.sp
+.BI "EIF_POINTER_FUNCTION eif_pointer_function (char * " name ", int * " tid ");"
+.sp
+.BI "EIF_BIT_FUNCTION eif_bit_function (char * " name ", int * " tid ");"
+.fi
+.SH DESCRIPTION
+These functions return the address of the Eiffel 
+function of name \fIname\fP from the class, which type identifier is \fItid\fP.
+.br
+Use \fBeif_reference_function\fP for an Eiffel function returning an Eiffel reference.
+.br
+Use \fBeif_integer_function\fP for an Eiffel function returning an Eiffel integer.
+.br
+Use \fBeif_character_function\fP for an Eiffel function returning an Eiffel character.
+.br
+Use \fBeif_real_function\fP for an Eiffel function returning an Eiffel real.
+.br
+Use \fBeif_double_function\fP for an Eiffel function returning an Eiffel double.
+.br
+Use \fBeif_boolean_function\fP for an Eiffel function returning an Eiffel boolean.
+.br
+Use \fBeif_pointer_function\fP for an Eiffel function returning an Eiffel pointer.
+.br
+Use \fBeif_bit_function\fP for an Eiffel function returning an Eiffel bit.
+.PP
+If the visible exception is enabled, it raises an visible exception
+upon failure.
+.SH RETURN VALUE
+It returns NULL when it fails ( the function does not exist or is not visible). Otherwise, the address of the function
+is returned. 
+.SH NOTES
+The Eiffel function cannot be a C external. In this case, you must directly 
+call the C routine.
+.br 
+The return value is an address: to use it as a routine, you must call it with arguments or at least with \fP()\fP.
+.br 
+No argument type checking is done. You may cast the address of 
+an Eiffel routine, obtained with these functions, when calling it with real
+arguments.  
+.br
+If the function returns an Eiffel reference, you must protect it with 
+\fBeif_protect()\fP.
+.SH CONFORMANCE
+ISE Eiffel 4.4 and later.
+.SH COMPATIBILITY
+.br
+\fBeif_reference_function()\fP is equivalent to \fBeif_fn_ref()\fP, which is deprecated.
+.br
+\fBeif_integer_function()\fP is equivalent to \fBeif_fn_int()\fP, which is deprecated.
+.br
+\fBeif_real_function()\fP is equivalent to \fBeif_fn_float()\fP, which is deprecated.
+.br
+\fBeif_double_function()\fP is equivalent to \fBeif_fn_double()\fP, which is deprecated.
+.br
+\fBeif_character_function()\fP is equivalent to \fBeif_fn_char()\fP, which is deprecated.
+.br
+\fBeif_bit_function()\fP is equivalent to \fBeif_fn_bit()\fP, which is deprecated.
+.br
+\fBeif_boolean_function()\fP is equivalent to \fBeif_fn_bool()\fP, which is deprecated.
+.br
+\fBeif_pointer_function()\fP is equivalent to \fBeif_fn_pointer()\fP, which is deprecated.
+.SH SEE ALSO
+.BR eif_type_id "(1), "eif_protect "(1), " eif_procedure "(1)." 
+
+

@@ -1,0 +1,22 @@
+.TH CECIL 1  "November 10, 1999" "ISE" "CECIL Programmer's Manual"
+.SH NAME
+eif_name	\- return the class name for a type identifier. 
+.SH SYNOPSYS
+.nf
+\fB#include "eif_cecil.h"\fP
+.sp
+.BI "char *eif_name (EIF_TYPE_ID " tid ");"
+.fi
+.SH DESCRIPTION
+The \fBeif_name()\fP function returns the name of the class corresponding to \fItid\fP. 
+.SH RETURN VALUE
+A statically allocated C string which is the name of the class. If \fItid\fP is invalid, it
+returns NULL. 
+.SH CONFORMANCE
+ISE Eiffel 4.4 and later.
+.SH COMPATIBILITY
+\fBeif_name()\fP is equivalent to \fBeif_name_by_tid()\fP.
+.SH SEE ALSO
+.BR eif_type "(1) , "eif_type_by_reference "(1), "eif_type_id "(1). " 
+
+

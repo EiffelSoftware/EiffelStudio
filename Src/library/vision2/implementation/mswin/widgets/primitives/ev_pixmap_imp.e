@@ -747,7 +747,7 @@ feature -- Drawing primitives
 		a_y					: INTEGER
 		a_vertical_radius	: INTEGER
 		a_horizontal_radius	: INTEGER
-		a_start_angle		: INTEGER
+		a_start_angle		: REAL
 		an_aperture			: REAL
 		) is
 			-- Call precursor and apply bitmap.
@@ -969,6 +969,9 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/28 20:08:59  pichery
+--| fixed compilation bug
+--|
 --| Revision 1.23  2000/03/28 19:18:27  pichery
 --| - Implemented `set_size'
 --| - Formatting

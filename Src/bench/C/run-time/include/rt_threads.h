@@ -338,7 +338,12 @@ extern void eif_unsynchronize_gc(rt_global_context_t *);
 
 #define EIF_THR_JOIN(which)
 #define EIF_THR_JOIN_ALL
-#define EIF_THR_YIELD	(yield_address ? (FUNCTION_CAST_TYPE(BOOL,WINAPI,()) yield_address)() : Sleep(0))
+#define EIF_THR_YIELD \
+		if (yield_address) {\
+			(FUNCTION_CAST_TYPE(BOOL,WINAPI,(void)) yield_address)(); \
+		} else { \
+			Sleep(0); \
+		}
 
 #define EIF_THR_SET_PRIORITY(tid,prio)
 #define EIF_THR_GET_PRIORITY(tid,prio)

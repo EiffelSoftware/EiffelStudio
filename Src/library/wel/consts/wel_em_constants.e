@@ -76,6 +76,14 @@ feature -- Access
 	Em_settypographyoptions: INTEGER is 1226
 	
 	Em_gettypographyoptions: INTEGER is 1227
+	
+	To_simplelinebreak: INTEGER is 2
+		-- Simple line settings for use with `Em_settypographyoptions' and
+		-- `Em_gettypographyoptions'.
+	
+	To_advancedtypography: INTEGER is 1
+		-- Advanced typography settings for use with `Em_settypographyoptions' and
+		-- `Em_gettypographyoptions'.
 
 end -- class WEL_EM_CONSTANTS
 

@@ -9,14 +9,15 @@ inherit
 			create_context as button_create_context
 		redefine
 			add_widget_callbacks, initialize_transport,
-			stored_node, is_selectionnable, widget, add_to_option_list
+			stored_node, is_selectionable, widget, add_to_option_list,
+			is_valid_parent, is_able_to_be_grouped
 		end;
 
 	BUTTON_C
 		redefine
 			add_widget_callbacks, initialize_transport,
-			stored_node, is_selectionnable, create_context, widget,
-			add_to_option_list
+			stored_node, is_selectionable, create_context, widget,
+			add_to_option_list, is_valid_parent, is_able_to_be_grouped
 		select
 			create_context
 		end
@@ -32,6 +33,20 @@ feature
 		do
 			Result := Pixmaps.menu_entry_pixmap
 		end;
+
+    is_valid_parent (parent_context: COMPOSITE_C): BOOLEAN is
+            -- Is `parent_context' a valid parent?
+			--| Valid if parent is menu_c
+        local
+            menu_c: MENU_C
+        do
+            menu_c ?= parent_context;
+            Result := menu_c /= Void
+		end
+
+	is_able_to_be_grouped: BOOLEAN is
+		do
+		end
 
 feature {NONE}
 
@@ -69,14 +84,27 @@ feature
 	create_context (a_parent: COMPOSITE_C): like Current is
 		local
 			menu: MENU_C;
+			opt_pull_c: OPT_PULL_C
+			was_managed: BOOLEAN
 		do
 			menu ?= a_parent;
-			if not (menu = Void) then
+			if menu /= Void then
+				if menu.widget.managed then
+					menu.widget.unmanage;
+					was_managed := True;
+				end;
 				Result := button_create_context (a_parent);
+				opt_pull_c ?= menu;
+				if opt_pull_c /= Void then	
+					opt_pull_c.set_default_selected_button (Result)
+				end
+				if was_managed then
+					menu.widget.manage;
+				end
 			end;
 		end;
 
-	is_selectionnable: BOOLEAN is
+	is_selectionable: BOOLEAN is
 			-- Is current context selectionnable
 		do
 			Result := False

@@ -29,11 +29,6 @@ inherit
 			{NONE} all
 		end
 
-	SHARED_BENCH_LICENSES
-		export
-			{NONE} all
-		end
-
 	SHARED_CONFIGURE_RESOURCES
 		export
 			{NONE} all
@@ -47,6 +42,11 @@ inherit
 	SHARED_RESOURCES
 		rename
 			initialize as initialize_resources
+		export
+			{NONE} all
+		end
+
+	SHARED_LICENSE
 		export
 			{NONE} all
 		end
@@ -123,22 +123,21 @@ feature {NONE} -- Initialization
 						-- Formatting includes breakpoints
 					set_is_with_breakable
 	
-						-- Check then for the license and make sure that we are allowed to launch the
-						-- product.
-					if init_license then
-
-						create graphic_compiler.make_and_launch
-					end
+					create graphic_compiler.make_and_launch
 				else
+					Eiffel_project.set_batch_mode (True)
 					if
-						(argument_count > 0 and then 
-						argument (1).is_equal ("-precompile")) or else init_license
+						(argument_count > 1 and then 
+						argument (1).is_equal ("-precompile") and then
+						argument (2).is_equal ("-ace"))
 					then
-						Eiffel_project.set_batch_mode (True)
-	
 							-- Start the compilation in batch mode from the bench executable.
-						create compiler.make_unlicensed
-						discard_licenses
+						create compiler.make
+					else
+						license.check_activation
+						if license.is_licensed or license.can_run then
+							create compiler.make
+						end
 					end
 				end
 				eifgen_init.dispose

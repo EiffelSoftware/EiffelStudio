@@ -9,7 +9,17 @@ class
 inherit 
 	WINFORMS_TREE_NODE
 		rename
-			make_from_text as make_tree_node
+			make_from_text as make_from_node
+		undefine
+			equals,
+			get_hash_code,
+			to_string,
+			finalize
+		end
+
+	ANY
+		rename
+			clone as any_clone
 		end
 
 create
@@ -17,11 +27,16 @@ create
 
 feature {NONE} -- Initialization
 
-	make_from_text (a_text: SYSTEM_STRING) is
+	make_from_text (a_text: STRING) is
+			-- Set `text' with `a_text'.
+		require
+			non_void_text: a_text /= Void
 		do
-			make_tree_node (a_text)
+			set_text (a_text)
+		ensure
+			text_set: a_text.is_equal (text)
 		end
-
+		
 feature -- Access
 
 	sub_directories_added: BOOLEAN

@@ -101,7 +101,7 @@ feature -- Conveniences
 		do
 			constant_i ?= context.current_class.feature_table.item (Current)
 			char_value ?= constant_i.value
-			!! Result.make (context.current_class, char_value.char_val, constant_i)
+			!! Result.make (context.current_class, char_value.character_value, constant_i)
 		end
 
 feature {COMPILER_EXPORTER, FEAT_NAME_ID_AS} -- Conveniences

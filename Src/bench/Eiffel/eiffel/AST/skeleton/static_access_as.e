@@ -222,7 +222,7 @@ feature -- Conveniences
 		do
 			constant_i := associated_constant
 			char_value ?= constant_i.value
-			create Result.make (associated_class, char_value.char_val, constant_i)
+			create Result.make (associated_class, char_value.character_value, constant_i)
 		end
 		
 feature {AST_EIFFEL} -- Output

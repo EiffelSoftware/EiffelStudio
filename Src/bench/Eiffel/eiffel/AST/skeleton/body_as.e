@@ -221,8 +221,7 @@ feature -- New feature description
 						cvi := constant.value_i
 						if cvi.is_double then
 							rvi ?= cvi
-							create fvi
-							fvi.set_real_value (rvi.double_value)
+							create fvi.make (rvi.double_value)
 							const.set_value (fvi)
 						else
 							const.set_value (cvi)

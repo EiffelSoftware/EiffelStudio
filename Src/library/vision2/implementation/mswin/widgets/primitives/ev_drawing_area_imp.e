@@ -117,12 +117,14 @@ feature -- Element change
 		do
 			pixmap_imp ?= pix.implementation
 			pixmap_imp.lock
+			pixmap_imp.set_parent (Current)
 			set_minimum_size (pixmap_imp.width, pixmap_imp.height)
 		end
 
 	unset_pixmap is
 			-- Remove the pixmap from the container
 		do
+			pixmap_imp.set_parent (Void)
 			pixmap_imp.unlock
 			pixmap_imp := Void
 			set_minimum_size (0, 0)
@@ -183,6 +185,12 @@ feature {NONE} -- Implementation
 		do
 			{EV_PRIMITIVE_IMP} Precursor (color)
 			{EV_DRAWABLE_IMP} Precursor (color)
+		end
+
+	redraw is
+			-- Redraw the area if necessary.
+		do
+			-- Nothing to do here
 		end
 
 feature {NONE} -- WEL Implementation

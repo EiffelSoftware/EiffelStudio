@@ -41,6 +41,7 @@ feature -- Copy
 			-- Fill in node with call `f'
 		do
 			feature_name_id := f.feature_name_id
+			external_name_id := f.external_name_id
 			feature_id := f.feature_id
 			type := f.type
 			parameters := f.parameters

@@ -297,6 +297,9 @@ feature {COMPILER_EXPORTER} -- Access
 	valid_generic (type: TYPE_A): BOOLEAN is
 			-- Do the generic parameter of `type' conform to those of
 			-- Current ?
+		require
+			type_not_void: type /= Void
+			conforming_type: type.associated_class.conform_to (associated_class)
 		do
 		end
 

@@ -13,7 +13,7 @@ inherit
 			error_generics, check_constraints, has_formal_generic, instantiated_in,
 			has_expanded, is_valid, expanded_deferred, valid_expanded_creation,
 			same_as, same_class_type, format, is_equivalent,
-			deep_actual_type,
+			deep_actual_type, instantiation_in,
 			conformance_type, update_dependance
 		end
 
@@ -353,6 +353,35 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
+	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
+			-- Instantiation of Current in the context of `class_type'
+			-- assuming that Current is written in the associated class
+			-- of `class_type'.
+		local
+			i, count: INTEGER
+			new_generics: like generics
+			class_type: CL_TYPE_A
+		do
+			class_type ?= type
+			if class_type /= Void then
+					-- Same code as in CL_TYPE_A
+				Result := class_type.instantiation_of (Current, written_id)
+			else
+				from
+					Result := duplicate
+					i := 1
+					count := generics.count
+					new_generics := Result.generics
+				until
+					i > count
+				loop
+					new_generics.put
+						(generics.item (i).instantiation_in (type, written_id), i)
+					i := i + 1
+				end
+			end
+		end
+
 	instantiated_in (class_type: CL_TYPE_A): like Current is
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in the associated class
@@ -377,9 +406,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 
 	valid_generic (type: CL_TYPE_A): BOOLEAN is
 			-- Check generic parameters
-		require else
-			good_argument: type /= Void
-			type.associated_class.conform_to (associated_class)
 		local
 			i, count: INTEGER
 			gen_type: GEN_TYPE_A

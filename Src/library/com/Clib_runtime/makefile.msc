@@ -11,7 +11,6 @@ com_runtime.lib: $(OBJ)
 	if not exist ..\spec\msc mkdir ..\spec\msc
 	if not exist ..\spec\msc\lib mkdir ..\spec\msc\lib
 	copy $@ ..\spec\msc\lib
-	del $@
 	del *.obj
 
 .cpp.obj:

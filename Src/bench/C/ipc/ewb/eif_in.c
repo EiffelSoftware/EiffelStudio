@@ -6,17 +6,11 @@
 	Eiffel/C interface routines
 */
 
-EIF_OBJ db_info_handler; 
-EIF_OBJ job_done_handler;
 EIF_OBJ failure_handler;
-EIF_OBJ melt_handler;
 EIF_OBJ dead_handler;
 EIF_OBJ stopped_handler;
 
-EIF_PROC db_info_hdlr_set;
-EIF_PROC job_done_hldr_set;
 EIF_PROC failure_hdlr_set;
-EIF_PROC melt_hdlr_set;
 EIF_PROC dead_hdlr_set;
 EIF_PROC stopped_hdlr_set;
 
@@ -30,21 +24,9 @@ EIF_PROC eif_set;
 	 */
 
 	switch (rqst_type) {
-		case REP_DB_INFO:
-			db_info_handler = eif_adopt (eif_rqst_hdlr);
-			db_info_hdlr_set = eif_set;
-			break;
-		case REP_JOB_DONE:
-			job_done_handler = eif_adopt (eif_rqst_hdlr);
-			job_done_hldr_set = eif_set;
-			break;
 		case REP_FAILURE:
 			failure_handler = eif_adopt (eif_rqst_hdlr);
 			failure_hdlr_set = eif_set;
-			break;
-		case REP_MELT:
-			melt_handler = eif_adopt (eif_rqst_hdlr);
-			melt_hdlr_set = eif_set;
 			break;
 		case REP_DEAD:
 			dead_handler = eif_adopt (eif_rqst_hdlr);

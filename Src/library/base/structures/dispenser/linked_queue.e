@@ -93,7 +93,7 @@ feature -- Conversion
 			until
 				after
 			loop
-				Result.replace (item)
+				Result.replace (ll_item)
 				forth
 				Result.back
 			end

@@ -114,6 +114,13 @@ feature -- Access
 			"EM_GETLINE"
 		end
 
+	Em_getlimittext: INTEGER is
+		external
+			"C [macro %"wel.h%"]"
+		alias
+			"EM_GETLIMITTEXT"
+		end
+
 	Em_limittext: INTEGER is
 		external
 			"C [macro %"wel.h%"]"

@@ -1010,10 +1010,12 @@ feature {NONE} -- Inapplicable
 			Result := substring_index (other, start);
 		end;
 
-feature {STRING, IO_MEDIUM, TEXT_FILLER} -- Implementation
+feature {STRING, IO_MEDIUM} -- Implementation
 
 	frozen set_count (number: INTEGER) is
 			-- Set `count' to `number' of characters.
+		require
+			valid_count: 0 <= number and number <= capacity
 		do
 			count := number
 		ensure

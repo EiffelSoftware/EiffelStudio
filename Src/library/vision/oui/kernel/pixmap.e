@@ -113,7 +113,7 @@ feature
 			-- Load the bitmap described in `a_file_name'.
 			-- Set `last_operation_correct'.
 		require
-			a_file_name_exists: not (a_file_name = Void)
+			a_file_name_exists: a_file_name /= Void
 		do
 			implementation.read_from_file (a_file_name)
 		ensure
@@ -121,12 +121,14 @@ feature
 		end;
 
 	retrieve (a_file_name: STRING) is
-			-- Retreive the pixmap from a file named `a_file_name'.
+			-- Retrieve the pixmap from a file named `a_file_name'.
 			-- Set `last_operation_correct'.
+		obsolete
+			"Use read_from_file instead."
 		require
-			a_file_name_exists: not (a_file_name = Void)
+			a_file_name_exists: a_file_name /= Void
 		do
-			implementation.retrieve (a_file_name)
+			read_from_file (a_file_name)
 		ensure
 			valid_when_correct: last_operation_correct implies is_valid
 		end;
@@ -136,7 +138,7 @@ feature
 			-- Create the file if it doesn't exist and override else.
 			-- Set `last_operation_correct'.
 		require
-			a_file_name_exists: not (a_file_name = Void);
+			a_file_name_exists: a_file_name /= Void;
 			is_valid: is_valid
 		do
 			implementation.store (a_file_name)

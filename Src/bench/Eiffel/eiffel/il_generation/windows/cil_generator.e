@@ -358,9 +358,9 @@ feature {NONE} -- Type description
 			until
 				ordered_classes.after
 			loop
-				Il_generator.start_module_generation (ordered_classes.key_for_iteration)
+				cil_generator.start_module_generation (ordered_classes.key_for_iteration)
 				generate_types (ordered_classes.item_for_iteration)
-				Il_generator.end_module_generation (has_root_class)
+				cil_generator.end_module_generation (has_root_class)
 				ordered_classes.forth
 			end
 			if not is_single_module then
@@ -510,8 +510,8 @@ feature {NONE} -- Type description
 								-- Generate correspondance between Eiffel IDs and
 								-- CIL information.
 							if cl_type.is_generated then
-								Il_generator.set_current_module_with (cl_type)
-								Il_generator.generate_class_mappings (cl_type, for_interface)
+								cil_generator.set_current_module_with (cl_type)
+								cil_generator.generate_class_mappings (cl_type, for_interface)
 							end
 
 							types.forth
@@ -555,8 +555,8 @@ feature {NONE} -- Type description
 							-- Generate correspondance between Eiffel IDs and
 							-- CIL information.
 						if types.item.is_generated then
-							Il_generator.set_current_module_with (types.item)
-							Il_generator.generate_class_attributes (types.item)
+							cil_generator.set_current_module_with (types.item)
+							cil_generator.generate_class_attributes (types.item)
 							if not l_class_processed then
 								j := j - 1
 								l_class_processed := True
@@ -611,7 +611,7 @@ feature {NONE} -- Type description
 
 						if cl_type.is_generated then
 							context.init (cl_type)
-							Il_generator.set_current_module_with (cl_type)
+							cil_generator.set_current_module_with (cl_type)
 
 							if not l_class_processed then
 								if is_single_module then
@@ -680,7 +680,7 @@ feature {NONE} -- Type description
 						cl_type := types.item
 						if cl_type.is_generated then
 							context.init (cl_type)
-							Il_generator.set_current_module_with (cl_type)
+							cil_generator.set_current_module_with (cl_type)
 
 							if not l_class_processed then
 								if is_single_module then
@@ -751,7 +751,7 @@ feature {NONE} -- Type description
 						cl_type := types.item
 						if cl_type.is_generated then
 							context.init (cl_type)
-							Il_generator.set_current_module_with (cl_type)
+							cil_generator.set_current_module_with (cl_type)
 
 								-- Generate entity to represent current Eiffel implementation class
 							cil_generator.generate_creation_procedures (class_c, cl_type)

@@ -83,7 +83,7 @@ feature {EV_PND_SOURCE_I} -- Transport
 			args.first.widget_source.release_capture
 			draw_segment (origin, destination)
 				-- Reset the cursor
-			args.first.widget_source.set_cursor (Void)
+			--args.first.widget_source.set_cursor (Void)
 		end
 
 feature {NONE} -- Implementation
@@ -93,9 +93,10 @@ feature {NONE} -- Implementation
 		local
 			screen: EV_SCREEN
 		do
-			create screen.make
-			screen.set_logical_mode (10)
-			screen.draw_segment (pt1, pt2)
+			io.putstring ("Hello%N")
+			--create screen.make
+			--screen.set_logical_mode (10)
+			--screen.draw_segment (pt1, pt2)
 		end
 
 	pointed_target: EV_PND_TARGET_I is

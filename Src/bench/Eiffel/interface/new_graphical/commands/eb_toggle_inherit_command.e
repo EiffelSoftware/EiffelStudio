@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 			if current_button.is_selected then
 				Result := Interface_names.f_diagram_hide_inheritance
 			else
-				Result := Interface_names.f_diagram_hide_inheritance
+				Result := Interface_names.f_diagram_show_inheritance
 			end
 		end
 

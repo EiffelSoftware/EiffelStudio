@@ -1,19 +1,21 @@
 --- Compiled class ARRAY
 
-class ARRAY_CLASS_B 
+class
+	ARRAY_CLASS_B 
 
 inherit
 
 	CLASS_C
 		redefine
 			check_validity, mark_all_used
-		end;
+		end
+
 	SPECIAL_CONST
 
+	SHARED_TYPES
+
 creation
-
 	make
-
 	
 feature 
 
@@ -112,10 +114,10 @@ feature {NONE}
 		local
 			args: FEAT_ARG;
 		once
-			!!args.make (2);
+			!! args.make (2);
 			args.put_i_th (Integer_type, 1);
 			args.put_i_th (Integer_type, 2);
-			!!Result;
+			!! Result;
 			Result.set_arguments (args);
 			Result.set_feature_name ("make");
 		end;

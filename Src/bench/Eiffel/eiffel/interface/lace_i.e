@@ -4,39 +4,39 @@ class LACE_I
 
 inherit
 
-	SHARED_WORKBENCH;
-	SHARED_ERROR_HANDLER;
-	SHARED_RESCUE_STATUS;
-	SHARED_LACE_PARSER;
-	COMPILER_EXPORTER;
+	SHARED_WORKBENCH
+	SHARED_ERROR_HANDLER
+	SHARED_RESCUE_STATUS
+	SHARED_LACE_PARSER
+	COMPILER_EXPORTER
 	SHARED_EIFFEL_PROJECT
 
 feature -- Access
 
-	file_name: STRING;
+	file_name: STRING
 			-- Path to the universe/system description
 
-	date: INTEGER;
+	date: INTEGER
 			-- Time stamp of file named `file_name'
 
-	successful: BOOLEAN;
+	successful: BOOLEAN
 			-- Is the last compilation successful?
 
-	not_first_parsing: BOOLEAN;
+	not_first_parsing: BOOLEAN
 
-	old_universe: UNIVERSE_I;
+	old_universe: UNIVERSE_I
 			-- Universe of the previous compilation
 			-- usefull for checking  the removed clusters
 
 	date_has_changed: BOOLEAN is
 		local
-			str: ANY;
+			str: ANY
 			new_date: INTEGER
 		do
-			str := file_name.to_c;
-			new_date := eif_date ($str);
-			Result := new_date /= date;
-		end;
+			str := file_name.to_c
+			new_date := eif_date ($str)
+			Result := new_date /= date
+		end
 
 feature -- Status setting
 
@@ -45,45 +45,45 @@ feature -- Status setting
 		do
 debug
 	if s = Void then
-		io.error.putstring ("LACE.file_name: void%N");
+		io.error.putstring ("LACE.file_name: void%N")
 	else
-		io.error.putstring ("LACE.file_name: ");
-		io.error.putstring (s);
-		io.error.new_line;
+		io.error.putstring ("LACE.file_name: ")
+		io.error.putstring (s)
+		io.error.new_line
 	end
-end;
+end
 			file_name := s
-		end;
+		end
 
 	recompile is
 			-- Recompile ACE description
 		require
-			file_name_exists: file_name /= Void;
+			file_name_exists: file_name /= Void
 		local
-			new_date: like date;
-			ptr: ANY;
-			file: PLAIN_TEXT_FILE;
+			new_date: like date
+			ptr: ANY
+			file: PLAIN_TEXT_FILE
 			vd22: VD22
 		do
-			ptr := file_name.to_c;
-			!!file.make (file_name);
+			ptr := file_name.to_c
+			!!file.make (file_name)
 			if not file.exists then
-				successful := False;
-				!!vd22;
-				vd22.set_file_name (file_name);
-				Error_handler.insert_error (vd22);
+				successful := False
+				!!vd22
+				vd22.set_file_name (file_name)
+				Error_handler.insert_error (vd22)
 				Error_handler.raise_error
 			end
-			new_date := eif_date ($ptr);
+			new_date := eif_date ($ptr)
 			if root_ast = Void or else new_date /= date then
-				do_recompilation;
-				date := new_date;
+				do_recompilation
+				date := new_date
 			else
-				build_universe;
-			end;
-		end;
+				build_universe
+			end
+		end
 
-	root_ast: ACE_SD;
+	root_ast: ACE_SD
 			-- Root of last parsed ACE
 
 	ace_options: ACE_OPTIONS is
@@ -96,25 +96,25 @@ end;
 			-- Recompile ACE description
 		do
 				-- Lace parsing
-			root_ast := Void;
-			Parser.parse_file (file_name);
-			root_ast ?= Parser.ast;
-			build_universe;
+			root_ast := Void
+			Parser.parse_file (file_name)
+			root_ast ?= Parser.ast
+			build_universe
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Reset `Workbench'
-				successful := False;
+				successful := False
 			end
-		end;
+		end
 
 	build_universe is
 			-- Build the universe using the AST
 		local
-			precomp_r: PRECOMP_R;
-			extendible_r: EXTENDIBLE_R;
-			old_system: SYSTEM_I;
-			precompiled_options: HASH_TABLE [D_PRECOMPILED_SD, STRING];
-			extendible_project_name: STRING;
+			precomp_r: PRECOMP_R
+			extendible_r: EXTENDIBLE_R
+			old_system: SYSTEM_I
+			precompiled_options: HASH_TABLE [D_PRECOMPILED_SD, STRING]
+			extendible_project_name: STRING
 			sys: SYSTEM_I
 		do
 			if root_ast /= Void then
@@ -123,67 +123,67 @@ end;
 				ace_options.reset
 
 				if not_first_parsing = False then
-					precompiled_options := root_ast.precompiled_options;
-					extendible_project_name := root_ast.extendible_project_name;
+					precompiled_options := root_ast.precompiled_options
+					extendible_project_name := root_ast.extendible_project_name
 					if extendible_project_name /= Void then
 							-- DLE: retrieve the dynamically extendible project.
-						!!extendible_r;
+						!!extendible_r
 						extendible_r.retrieve_extendible (extendible_project_name)
 					elseif not precompiled_options.empty then
 						Degree_output.put_string ("Retrieving precompile...")
-						!!precomp_r;
-						precomp_r.retrieve_precompiled (precompiled_options);
+						!!precomp_r
+						precomp_r.retrieve_precompiled (precompiled_options)
 					else
-						!! sys;
+						!! sys
 						Workbench.set_system (sys)
-						Eiffel_project.init_system;
-						sys.make;
+						Eiffel_project.init_system
+						sys.make
 					end
 				else
 						-- This is just for validity check wrt DLE.
 					extendible_project_name := root_ast.extendible_project_name
-				end;
+				end
 				System.set_extendible (Compilation_modes.is_extendible)
-				not_first_parsing := True;
+				not_first_parsing := True
 
 					-- When finalizing a DC-set, the DR-set must
 					-- have been finalized as well.
-				System.check_dle_finalize;
+				System.check_dle_finalize
 
-				old_universe := clone (Universe);
-				old_system := clone (System);
+				old_universe := clone (Universe)
+				old_system := clone (System)
 
-				Universe.clusters.wipe_out;
+				Universe.clusters.wipe_out
 
 					-- Recompilation
-				root_ast.build_universe;
+				root_ast.build_universe
 
 					-- Check presence of basic classes in the universe
-				Universe.check_universe;
+				Universe.check_universe
 
 					-- Check sum error
-				Error_handler.checksum;
+				Error_handler.checksum
 
-				old_universe := Void;
+				old_universe := Void
 
-				successful := True;
+				successful := True
 			end
 		rescue
 			if Rescue_status.is_error_exception then
 					-- Reset `Workbench'
 				if old_system /= Void then
-					Universe.copy (old_universe);
+					Universe.copy (old_universe)
 					if System.is_dynamic then
 						Universe.reset_dle_clusters
 					else
 						Universe.reset_clusters
-					end;
+					end
 					System.copy (old_system)
-				end;
-				old_universe := Void;
-				successful := False;
+				end
+				old_universe := Void
+				successful := False
 			end
-		end;
+		end
 
 	parsed: BOOLEAN is
 			-- Was last parsing successful?
@@ -197,7 +197,7 @@ end;
 			parsed: parsed
 		do
 			Result := root_ast.compile_all_classes
-		end;
+		end
 
 feature -- Access
 
@@ -212,6 +212,6 @@ feature {NONE} -- Externals
 			-- Time stamp primitive
 		external
 			"C"
-		end;
+		end
 
 end

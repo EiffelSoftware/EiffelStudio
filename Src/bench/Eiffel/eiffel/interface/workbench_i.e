@@ -3,39 +3,39 @@
 class WORKBENCH_I
 
 inherit
-
 	SHARED_ERROR_HANDLER
 		export
 			{ANY} Error_handler
-		end;
-	SHARED_RESCUE_STATUS;
-	SHARED_PASS;
-	SHARED_CONFIGURE_RESOURCES;
+		end
+
+	SHARED_RESCUE_STATUS
+
+	SHARED_PASS
+
+	SHARED_COMPILATION_MODES
+
+	SHARED_CONFIGURE_RESOURCES
+
 	PROJECT_CONTEXT
 		rename
 			extendible_directory as shared_extendible_directory
-		end;
-	SHARED_WORKBENCH
-		redefine
-			lace, system, universe
-		end;
-	COMPILER_EXPORTER;
-	SHARED_EIFFEL_PROJECT
-		rename
-			system_defined as eiffel_system_defined
 		end
+
+	COMPILER_EXPORTER
+
+	SHARED_EIFFEL_PROJECT
 
 	SHARED_ID
 
 feature -- Attributes
 
-	universe: UNIVERSE_I;
+	universe: UNIVERSE_I
 			-- Universe of the workbench
 
-	system: SYSTEM_I;
+	system: SYSTEM_I
 			-- Current system of the workbench
 
-	lace: LACE_I;
+	lace: LACE_I
 			-- Current lace description
 
 	precompiled_directories: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
@@ -44,7 +44,7 @@ feature -- Attributes
 	precompiled_driver: FILE_NAME
 			-- Full file name of the precompilation driver
 
-	compilation_counter: INTEGER;
+	compilation_counter: INTEGER
 			-- Number of recompilations
 
 	system_defined: BOOLEAN is
@@ -65,7 +65,7 @@ feature -- Conveniences
 			valid_s: s /= Void
 		do
 			system := s
-		end;
+		end
 
 	set_precompiled_directories (directories: like precompiled_directories) is
 			-- Set `precompiled_directories' to `directories'.
@@ -92,45 +92,45 @@ feature -- Initialization
 			-- (Do not create system until the
 			-- first compilation).
 		do
-			!! universe.make;
-			!! precompiled_directories.make (5);
-			!! lace;
-			compilation_counter := 1;
+			!! universe.make
+			!! precompiled_directories.make (5)
+			!! lace
+			compilation_counter := 1
 			init
 		ensure
 			initialized: universe /= Void and then
 					lace /= Void
-		end;
+		end
 
 	init is
 			-- Create an eiffel workbench.
 		local
-			eiffel_init: EBENCH_YACC_EIFFEL;
-			lace_init: YACC_LACE;
-			feature_as: FEATURE_AS_B;
-			invariant_as: INVARIANT_AS_B;
+			eiffel_init: EBENCH_YACC_EIFFEL
+			lace_init: YACC_LACE
+			feature_as: FEATURE_AS_B
+			invariant_as: INVARIANT_AS_B
 		once
 				-- Initialization of Yacc-Eiffel interface
-			!!eiffel_init.init;
-			!!lace_init.init;
+			!!eiffel_init.init
+			!!lace_init.init
 
 				-- Record dynamic types for instances of FEATURE_AS and
 				-- INVARIANT_AS (See routine `make_index' of class
 				-- TMP_AST_SERVER).
-			!!feature_as;
-			set_dtype1 ($feature_as);
-			!!invariant_as;
-			set_dtype2 ($invariant_as);
+			!!feature_as
+			set_dtype1 ($feature_as)
+			!!invariant_as
+			set_dtype2 ($invariant_as)
 
 				-- Parsers initialization
-			eiffel_parser_init;
-			lace_parser_init;
+			eiffel_parser_init
+			lace_parser_init
 
 				-- Error handler initialization
-			Error_handler.send_yacc_information;
+			Error_handler.send_yacc_information
 
 			new_session := True
-		end;
+		end
 
 feature -- Commands
 
@@ -150,20 +150,20 @@ feature -- Commands
 				if Compilation_modes.is_quick_melt then
 					record_changed_classes
 				else 
-					Lace.recompile;
-				end;
+					Lace.recompile
+				end
 
 					-- If it was the first compilation and if the ace file
 					-- was incorrect we need to raise again the exception
 					-- which was made first by yacc, since it has been forget
 					-- during the rescue processing within the Lace.
 				if System /= Void and then Lace.successful then
-					System.recompile;
+					System.recompile
 				else
 					Error_handler.raise_error
 				end
 
-				Compilation_modes.reset_modes;
+				Compilation_modes.reset_modes
 
 					-- If the compilation is successful we are going to print the warnings only
 					-- If there was an error during the compilation, this feature won't never be called
@@ -172,68 +172,69 @@ feature -- Commands
 			else
 
 				retried := False
-			end;
+			end
 
-				-- Store the System info even after an error
-				-- (the next compilation will be stored in a different
-				-- directory)
-			if automatic_backup then
-				save_backup_info
+			if successful then
 				compilation_counter := compilation_counter + 1
-				create_backup_directory
-			else
-				compilation_counter := compilation_counter + 1
-			end;
+
+					--| Store the System info even after an error
+					--|	(the next compilation will be stored in a different
+					--| directory)
+				if automatic_backup then
+					save_backup_info
+					create_backup_directory
+				end
+			end
 		ensure
 			increment_compilation_counter: compilation_counter = old compilation_counter + 1
 		rescue
 			if Rescue_status.is_error_exception then
-				Compilation_modes.reset_modes;
-				Rescue_status.set_is_error_exception (False);
-				retried := True;
-				Error_handler.trace;
+				Compilation_modes.reset_modes
+				Rescue_status.set_is_error_exception (False)
+				retried := True
+				Error_handler.trace
 				if System /= Void then
 						-- System is created if precompilation is valid
-					System.set_current_class (Void);
-				end;
+					System.set_current_class (Void)
+				end
 				retry
 			end
-		end;
+		end
 
 	successful: BOOLEAN is
 			-- Is the last compilation successful?
 		do
 			Result := lace.successful and then system.successful
-		end;
+		end
 
 	change_class (cl: CLASS_I) is
 			-- Change a class of the system.
 		require
-			good_argument: cl /= Void;
+			good_argument: cl /= Void
 		do
-			add_class_to_recompile (cl);
+			add_class_to_recompile (cl)
 
 				-- Mark the class syntactically changed
-			cl.set_changed (True);
+			cl.set_changed (True)
 
 				-- Syntax analysis must be done
-			pass1_controler.insert_new_class (cl.compiled_class);
-		end;
+			pass1_controler.insert_new_class (cl.compiled_class)
+		end
 		
 	record_changed_classes is
 			-- Record all the classes in the universe that
 			-- have changed.
 		local
-			classes: ARRAY [CLASS_C];
-			classc: CLASS_C;
-			classi: CLASS_I;
+			classes: ARRAY [CLASS_C]
+			classc: CLASS_C
+			classi: CLASS_I
 			i,c : INTEGER
 		do
 			from
 				Degree_output.put_start_degree_6 (0)
 
 					-- Get the array with all the classes in the system
-				classes := System.project_classes;
+				classes := System.classes.item (Normal_compilation)
 
 					-- Get the number of element in the array
 				c := System.class_counter.item (Normal_compilation).count
@@ -244,21 +245,21 @@ feature -- Commands
 					-- We are looking to all the classes of a Normal compilation
 				classc := classes.item (i)
 				if classc /= Void then
-					classi := classc.lace_class;
+					classi := classc.lace_class
 					if classi.date_has_changed then
-						change_class (classi);
+						change_class (classi)
 						classi.set_date	
 					end
 				end
 				i := i + 1
-			end;
-		end;
+			end
+		end
 
 	change_all is
 			-- Record all the classes in the universe as
 			-- changed (for precompilation)
 		local
-			class_list: EXTEND_TABLE [CLASS_I, STRING];
+			class_list: EXTEND_TABLE [CLASS_I, STRING]
 			c: CLUSTER_I
 		do
 			from
@@ -266,86 +267,86 @@ feature -- Commands
 			until
 				Universe.clusters.after
 			loop
-				c := Universe.clusters.item;
+				c := Universe.clusters.item
 				if not c.is_precompiled then
 					from
-						class_list := c.classes;
+						class_list := c.classes
 						class_list.start
 					until
 						class_list.after
 					loop
-						change_class (class_list.item_for_iteration);
+						change_class (class_list.item_for_iteration)
 						class_list.forth
 					end
-				end;
+				end
 				Universe.clusters.forth
-			end;
-		end;
+			end
+		end
 
 	change_all_new_classes is
 			-- Record all the classes in the universe as
 			-- changed (for compilation using `NONE' as root class)
 		local
-			class_list: EXTEND_TABLE [CLASS_I, STRING];
-			c: CLUSTER_I;
-			cl: CLASS_I;
-			file_date: INTEGER;
-			str: ANY;
+			class_list: EXTEND_TABLE [CLASS_I, STRING]
+			c: CLUSTER_I
+			cl: CLASS_I
+			file_date: INTEGER
+			str: ANY
 		do
 			from
 				Universe.clusters.start
 			until
 				Universe.clusters.after
 			loop
-				c := Universe.clusters.item;
+				c := Universe.clusters.item
 				if not c.is_precompiled then
 					from
-						class_list := c.classes;
+						class_list := c.classes
 						class_list.start
 					until
 						class_list.after
 					loop
-						cl := class_list.item_for_iteration;
+						cl := class_list.item_for_iteration
 						if cl.compiled then
-							str := cl.file_name.to_c;
-							file_date := eif_date ($str);
+							str := cl.file_name.to_c
+							file_date := eif_date ($str)
 							if file_date /= cl.date then
-								change_class (class_list.item_for_iteration);
-							end;
+								change_class (class_list.item_for_iteration)
+							end
 						else
-							change_class (class_list.item_for_iteration);
-						end;
+							change_class (class_list.item_for_iteration)
+						end
 						class_list.forth
-					end;
-				end;
+					end
+				end
 				Universe.clusters.forth
-			end;
-		end;
+			end
+		end
 
 	add_class_to_recompile (cl: CLASS_I) is
 			-- Recompile the class but do not do the parsing
 		require
-			good_argument: cl /= Void;
+			good_argument: cl /= Void
 		local
-			class_to_recompile: CLASS_C;
+			class_to_recompile: CLASS_C
 		do
-			class_to_recompile := cl.compiled_class;
+			class_to_recompile := cl.compiled_class
 			if class_to_recompile = Void then
 					-- Creation of a new instance of a class to recompile:
 				   -- a class neither compiled must be compiled.
-				class_to_recompile := cl.class_to_recompile;
+				class_to_recompile := cl.class_to_recompile
 					-- Update universe
-				cl.set_compiled_class (class_to_recompile);
+				cl.set_compiled_class (class_to_recompile)
 					-- Update system
-				system.insert_new_class (class_to_recompile);
-			end;
+				system.insert_new_class (class_to_recompile)
+			end
 
 				-- Insertion in the pass controlers
-			pass1_controler.insert_changed_class (class_to_recompile);
-			pass2_controler.insert_new_class (class_to_recompile);
-			pass3_controler.insert_new_class (class_to_recompile);
-			pass4_controler.insert_new_class (class_to_recompile);
-		end;
+			pass1_controler.insert_changed_class (class_to_recompile)
+			pass2_controler.insert_new_class (class_to_recompile)
+			pass3_controler.insert_new_class (class_to_recompile)
+			pass4_controler.insert_new_class (class_to_recompile)
+		end
 
 feature -- Merging
 
@@ -355,21 +356,21 @@ feature -- Merging
 		require
 			other_not_void: other /= Void
 		do
-			precompiled_directories.merge (other.precompiled_directories);
-			Precompilation_directories.copy (precompiled_directories);
-			universe.merge (other.universe);
+			precompiled_directories.merge (other.precompiled_directories)
+			Precompilation_directories.copy (precompiled_directories)
+			universe.merge (other.universe)
 			system.merge (other.system)
 		end
 
 feature -- DLE
 
-	extendible_directory: REMOTE_PROJECT_DIRECTORY;
+	extendible_directory: REMOTE_PROJECT_DIRECTORY
 			-- Dynamically extendible directory
 
 	set_extendible_directory (d: like extendible_directory) is
 		do
 			extendible_directory := d
-		end;
+		end
 
 	change_all_new_dynamic_classes is
 			-- Record all the dynamic classes which have been changed
@@ -377,10 +378,10 @@ feature -- DLE
 		require
 			dynamic_system: System.is_dynamic
 		local
-			class_list: EXTEND_TABLE [CLASS_I, STRING];
-			c: CLUSTER_I;
-			cl: CLASS_I;
-			file_date: INTEGER;
+			class_list: EXTEND_TABLE [CLASS_I, STRING]
+			c: CLUSTER_I
+			cl: CLASS_I
+			file_date: INTEGER
 			str: ANY
 		do
 			from
@@ -388,30 +389,30 @@ feature -- DLE
 			until
 				Universe.clusters.after
 			loop
-				c := Universe.clusters.item;
+				c := Universe.clusters.item
 				if c.is_dynamic then
 					from
-						class_list := c.classes;
+						class_list := c.classes
 						class_list.start
 					until
 						class_list.after
 					loop
-						cl := class_list.item_for_iteration;
+						cl := class_list.item_for_iteration
 						if cl.compiled then
-							str := cl.file_name.to_c;
-							file_date := eif_date ($str);
+							str := cl.file_name.to_c
+							file_date := eif_date ($str)
 							if file_date /= cl.date then
-								change_class (class_list.item_for_iteration);
-							end;
+								change_class (class_list.item_for_iteration)
+							end
 						else
-							change_class (class_list.item_for_iteration);
-						end;
+							change_class (class_list.item_for_iteration)
+						end
 						class_list.forth
-					end;
-				end;
+					end
+				end
 				Universe.clusters.forth
-			end;
-		end;
+			end
+		end
 
 feature -- Automatic backup
 
@@ -427,16 +428,16 @@ feature -- Automatic backup
 			d: DIRECTORY
 		do
 				-- Create the EIFGEN/BACKUP directory
-			!!d.make (Backup_path);
+			!!d.make (Backup_path)
 			if not d.exists then
 				d.create
-			end;
+			end
 
 				-- Create the EIFGEN/BACKUP/COMP<n> directory
-			!!d.make (backup_subdirectory);
+			!!d.make (backup_subdirectory)
 			if not d.exists then
 				d.create
-			end;
+			end
 		end
 
 	backup_subdirectory: DIRECTORY_NAME is
@@ -445,16 +446,16 @@ feature -- Automatic backup
 			temp: STRING
 		do
 			!! Result.make_from_string (Backup_path)
-			!! temp.make (9);
-			temp.append (Comp);
-			temp.append_integer (compilation_counter);
+			!! temp.make (9)
+			temp.append (Comp)
+			temp.append_integer (compilation_counter)
 			Result.extend (temp)
 		end
 
 	backup_info_file_name: FILE_NAME is
 			-- File where info about the compilation is saved
 		do
-			!! Result.make_from_string (backup_subdirectory);
+			!! Result.make_from_string (backup_subdirectory)
 			Result.set_file_name (Backup_info)
 		end
 
@@ -513,7 +514,7 @@ feature {NONE} -- Externals
 			"C"
 		alias
 			"eif_init"
-		end;
+		end
 
 	lace_parser_init is
 			-- Lace parser initialization
@@ -521,24 +522,24 @@ feature {NONE} -- Externals
 			"C"
 		alias 
 			"lp_init"
-		end;
+		end
 
 	set_dtype1 (o: POINTER) is
 			-- Record dynamic type of FEATURE_AS
 		external	
 			"C"
-		end;
+		end
 
 	set_dtype2 (o: POINTER) is
 			-- Record dynamic type of INVARIANT_AS
 		external
 			"C"
-		end;
+		end
 
 	eif_date (s: POINTER): INTEGER is
 			-- Date of file of name `str'.
 		external
 			"C"
-		end;
+		end
 
 end

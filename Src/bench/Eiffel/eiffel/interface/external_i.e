@@ -126,15 +126,10 @@ feature
 		do
 			encapsulated := b;
 				-- FIXME
-				-- FIXME
-				-- FIXME
-				-- FIXME
-				-- FIXME
 				-- The test for freezing is done in `equiv' from FEATURE_TABLE
 				-- This is a TEMPORARY solution (3.3 beta bootstrap)!!!!!!
 
-
-				-- for a macro or a signature in an external declaration
+				-- For a macro or a signature in an external declaration
 				-- the external is not handled as a `standard' external
 				-- and the system does not freeze by itself. We have to
 				-- tell it. In fact, this doesn't take the incrementality 
@@ -260,8 +255,8 @@ feature
 	execution_unit (cl_type: CLASS_TYPE): EXECUTION_UNIT is
 			-- Execution unit
 		do
-			if is_cpp or is_special or has_signature then
-				!!Result.make (cl_type, Current);
+			if is_cpp or is_special then
+				!! Result.make (cl_type, Current);
 			elseif has_include_list then
 				!EXT_INCL_EXEC_UNIT! Result.make (cl_type, Current)
 			else
@@ -281,14 +276,15 @@ feature
 feature -- Inlining
 
 	can_be_inlined: BOOLEAN is False
+			-- An external feature cannot be inlined.
 
 feature {NONE} -- Api
-
-    update_api (f: E_ROUTINE) is
-            -- Update the attributes of api feature `f'.
-        do	
-			old_update_api (f);
+	
+	update_api (f: E_ROUTINE) is
+			-- Update the attributes of api feature `f'.
+		do
+			old_update_api (f)
 			f.set_external (True)
-		end;
+		end
 
 end

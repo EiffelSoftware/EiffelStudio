@@ -1,5 +1,5 @@
 Windows Registry Editor Version 5.00
 
-[HKEY_CURRENT_USER\Software\ISE\Eiffel50\string_manipulator]
-"MELT_PATH"="c:\\eiffel50\\examples\\com\\wizard\\string_manipulator\\generated\\server\\eifgen\\w_code"
+[HKEY_CURRENT_USER\Software\ISE\Eiffel51\string_manipulator]
+"MELT_PATH"="c:\\eiffel51\\examples\\com\\wizard\\string_manipulator\\generated\\server\\eifgen\\w_code"
 

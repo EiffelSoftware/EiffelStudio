@@ -73,11 +73,23 @@ feature -- Debuggables (Byte code,...)
 			-- to prevent any overriding of once's memory (i.e. already
 			-- called and result value if any)
 
+	new_once_debuggables: EXTEND_TABLE [LINKED_LIST [DEBUGGABLE], INTEGER];
+			-- Debuggable structures of once routines which have already
+			-- been called, but were not recorded in `once_debuggables' last
+			-- time we sent information to the application
+			--| This table is useful to figure out the number of new melted
+			--| routines, an dbe able to reallocate the corresponding
+			--| data structures once and for all.
+			--| The structures held in this table are also held in
+			--| `once_debuggables', and this table must be cleared each
+			--| information are sent to the application.
+
 	make_debuggables is
 		do
 			!! new_debuggables.make (10);
 			!! sent_debuggables.make (10);
-			!! once_debuggables.make (10)
+			!! once_debuggables.make (10);
+			!! new_once_debuggables.make (10)
 		end;
 
 	tenure_debuggables is
@@ -86,6 +98,9 @@ feature -- Debuggables (Byte code,...)
 		do
 			sent_debuggables.merge (new_debuggables);
 			new_debuggables.clear_all;
+				-- Get rid of the new once routines already called.
+				-- These routines were already stored in `new_debuggables'.
+			new_once_debuggables.clear_all
 		end; -- tenure_debuggables
 
 	restore_debuggables is
@@ -96,7 +111,8 @@ feature -- Debuggables (Byte code,...)
 			new_debuggables := sent_debuggables;
 			new_debuggables.merge (once_debuggables);
 			!! sent_debuggables.make (10);
-			once_debuggables.clear_all
+			once_debuggables.clear_all;
+			new_once_debuggables.clear_all
 		end; -- restore_debuggables
 
 	clear_debuggables is
@@ -104,17 +120,22 @@ feature -- Debuggables (Byte code,...)
 		do
 			sent_debuggables.clear_all;
 			new_debuggables.clear_all;
-			once_debuggables.clear_all
+			once_debuggables.clear_all;
+			new_once_debuggables.clear_all
 		end; -- clear_debuggables
 
 	add_feature (f: FEATURE_I) is
 			-- Generate debuggable byte code corresponding to
 			-- `feature_i' and record the corresponding information.
 			-- Do nothing if `f' has previously been added.
+		local
+			f_debuggables: LINKED_LIST [DEBUGGABLE]
 		do
 			if not has_feature (f) then
 				if f.is_once and then Once_request.already_called (f) then
-					once_debuggables.put (f.debuggables, f.body_id)
+					f_debuggables := f.debuggables;
+					once_debuggables.put (f_debuggables, f.body_id);
+					new_once_debuggables.put (f_debuggables, f.body_id)
 				else
 					new_debuggables.put (f.debuggables, f.body_id)
 				end;
@@ -182,7 +203,29 @@ feature -- Debuggables (Byte code,...)
 				end;
 				new_debuggables.forth
 			end;
-		end; -- new_extension
+				-- We have to make room for once routines in the melt
+				-- table, even if we do not send the corresponding
+				-- byte code (the body id is used anyway, shifting the
+				-- other body ids).
+			from
+				new_once_debuggables.start
+			until
+				new_once_debuggables.after
+			loop
+				ll := new_once_debuggables.item_for_iteration;	
+				from
+					ll.start
+				until
+					ll.after
+				loop
+					if ll.item.was_frozen then
+						Result := Result + 1;
+					end;
+					ll.forth
+				end;
+				new_once_debuggables.forth
+			end
+		end;
 
 	has_feature (feature_i: FEATURE_I): BOOLEAN is
 			-- Has debuggable byte code already been 

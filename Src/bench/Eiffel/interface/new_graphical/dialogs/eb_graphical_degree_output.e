@@ -97,9 +97,10 @@ feature -- Start output features
 					-- Cannot cancel a compilation after end of degree 3
 					-- because we do not save a compilation context after.
 				dialog.disable_cancel
-			elseif current_degree = -2 then
+			elseif current_degree = -2 or current_degree = 5 then
 					-- A finalization can be stopped at any time since it implies
 					-- to always recompile everything all the time.
+					-- Added the enabling at degree 5 for the quick compile command.
 				dialog.enable_cancel
 			end
 			dialog.start (100)

@@ -100,7 +100,7 @@ feature {EV_ITEM_IMP, EV_ITEM_LIST_IMP} -- Implementation
 		-- items in a list widget instead of the c_object.
 
 	set_parent_imp (a_parent: EV_ITEM_LIST_IMP [EV_ITEM]) is
-			-- Set the `combo_parent_imp' to `a_parent'.
+			-- Set `item_parent_imp' to `a_parent'.
 		do
 			item_parent_imp := a_parent
 		end
@@ -130,8 +130,8 @@ end -- class EV_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.22  2000/03/08 22:32:25  king
---| Changed combo_parent_imp -> item_parent_imp
+--| Revision 1.23  2000/03/09 01:15:27  king
+--| Corrected comment of set_parent_imp
 --|
 --| Revision 1.21  2000/03/08 22:20:39  king
 --| Made set_combo_parent_imp generic to deal with tree items

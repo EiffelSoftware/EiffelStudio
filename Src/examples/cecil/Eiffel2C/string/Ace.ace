@@ -1,36 +1,26 @@
 system
-	tst 
+	cecil 
 
 root
-
 	ROOT_CLASS (ROOT_CLUSTER): "make"
 
 default
 
 	assertion (require);
 	console_application (yes);
-	precompiled ("$ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/base")
 
 cluster
 
 	ROOT_CLUSTER: 		"$ISE_EIFFEL/examples/cecil/Eiffel2C/string";
-				-- If you intend to modify any part of the example,
-				-- copy all the files of $ISE_EIFFEL/examples/Eiffel2C/string
-				-- into one of your directories, and replace
-				-- $ISE_EIFFEL/examples/Eiffel2C/string by the name of
-				-- that directory on the above line.
 
--- EiffelBase
+		-- EiffelBase
 
-    all base:           "$ISE_EIFFEL/library/base"
+	all base:           "$ISE_EIFFEL/library/base"
 		exclude
 			"desc";"table_eiffel3"
 		end
 
 external
-
-	-- Comment the proper line acoording to your platform
---	object: "../../fext.o";	-- on Unix
-	object: "../../fext.obj"; -- on Windows
+	object: "../../fext.obj";
 	include_path: "../../.."
 end

@@ -229,7 +229,7 @@ feature -- Status report
 			-- Answer: yes if and only if `k' is not the default
 			-- value of type `H'.
 		local
-			dkey: like dead_key
+			dkey: H
 		do
 			Result := k /= dkey and then k.is_hashable
 		ensure then
@@ -307,15 +307,19 @@ feature -- Cursor movement
 		local
 			stop: BOOLEAN
 			local_keys: ARRAY [H]
+			pos_for_iter, table_size: INTEGER
 		do
 			from
 				local_keys := keys
+				table_size := keys.upper
+				pos_for_iter := iteration_position
 			until
 				stop
 			loop
-				iteration_position := iteration_position + 1;
-				stop := off or else valid_key (local_keys.item (iteration_position))
+				pos_for_iter := pos_for_iter + 1
+				stop := pos_for_iter > table_size or else valid_key (local_keys.item (pos_for_iter))
 			end
+			iteration_position := pos_for_iter
 		end;
 
 	go_to (c: CURSOR) is
@@ -408,7 +412,7 @@ feature -- Element change
 		local
 			old_index: INTEGER;
 			dead_item: G;
-			dkey: like dead_key
+			dkey: H
 		do
 			internal_search (old_key);
 			if control = Found_constant then
@@ -437,7 +441,7 @@ feature -- Removal
 		require
 			valid_key: valid_key (key)
 		local
-			dkey: like dead_key;
+			dkey: H;
 			dead_item: G
 		do
 			internal_search (key);
@@ -454,6 +458,8 @@ feature -- Removal
 
 	wipe_out, clear_all is
 			-- Reset all items to default values.
+		local
+			default_value: G
 		do
 			content.clear_all;
 			keys.clear_all;
@@ -461,6 +467,7 @@ feature -- Removal
 			count := 0;
 			control := 0;
 			position := 0
+			found_item := default_value
 		end;
 
 feature -- Conversion
@@ -571,9 +578,9 @@ feature {NONE} -- Implementation
 		require
 			good_key: valid_key (search_key)
 		local
-			increment, hash_code, table_size: INTEGER;
+			increment, hash_code, table_size, pos: INTEGER;
 			first_deleted_position, trace_deleted, visited_count: INTEGER;
-			old_key: H;
+			old_key, default_key: H;
 			stop: BOOLEAN
 			local_keys: ARRAY [H]
 			local_deleted_marks: ARRAY [BOOLEAN]
@@ -586,22 +593,22 @@ feature {NONE} -- Implementation
 				hash_code := search_key.hash_code;
 				-- Increment computed for no cycle: `table_size' is prime
 				increment := 1 + hash_code \\ (table_size - 1);
-				position := (hash_code \\ table_size) - increment;
+				pos := (hash_code \\ table_size) - increment;
 			until
 				stop or else visited_count >= table_size
 			loop
-				position := (position + increment) \\ table_size;
+				pos := (pos + increment) \\ table_size;
 				visited_count := visited_count + 1;
-				old_key := local_keys.item (position);
-				if not valid_key (old_key) then
-					if not local_deleted_marks.item (position) then
+				old_key := local_keys.item (pos);
+				if old_key = default_key then
+					if not local_deleted_marks.item (pos) then
 						control := Not_found_constant;
 						stop := true;
 						if first_deleted_position >= 0 then
-							position := first_deleted_position
+							pos := first_deleted_position
 						end
 					elseif first_deleted_position < 0 then
-						first_deleted_position := position
+						first_deleted_position := pos
 					end
 				elseif search_key.is_equal (old_key) then
 					control := Found_constant;
@@ -611,9 +618,10 @@ feature {NONE} -- Implementation
 			if not stop then
 				control := Not_found_constant;
 				if first_deleted_position >= 0 then
-					position := first_deleted_position
+					pos := first_deleted_position
 				end;
 			end;
+			position := pos
 		end;
 
 	Inserted_constant: INTEGER is unique;

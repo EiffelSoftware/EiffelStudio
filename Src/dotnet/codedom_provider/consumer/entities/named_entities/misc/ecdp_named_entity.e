@@ -36,7 +36,7 @@ feature -- Status Report
 			Result := name /= Void and not name.is_empty
 		end
 
-	is_equal (obj: ECDP_NAMED_ENTITY): BOOLEAN is
+	is_equal (obj: like Current): BOOLEAN is
 			-- Is `obj' equals to Current?
 		do
 			Result := code.as_lower.is_equal (obj.code.as_lower)

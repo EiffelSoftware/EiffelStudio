@@ -73,9 +73,9 @@ feature -- Execution
 			-- stopped in a breakpoint or an exception
 			-- occurred
 		local
-			mp: MOUSE_PTR
+--			mp: MOUSE_PTR
 			stack_num: INTEGER
-			app_cmd: APPLICATION_STOPPED_CMD
+			app_cmd: EB_APPLICATION_STOPPED_CMD
 				--oops! to be redefined: app_cmd uses old features.
 		do
 			if Application.is_running and then Application.is_stopped then

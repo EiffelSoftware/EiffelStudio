@@ -7,13 +7,13 @@
  #    #  #    #     #    #   ##   ###    #    #
  #    #  #    #     #    #    #   ###     ####
 
-	Therein lie paths I would not have dared tredding alone.
+	Therein lie paths I would not have dared treading alone.
 */
 
+#include "eif_portable.h"	/* Must be first include (gets eif_config.h) */
 #include <stdio.h>
 #include <stdlib.h>
 #include <signal.h>
-#include "eif_portable.h"	/* Must be before assert.h */
 #include <assert.h>
 
 #include "eif_project.h"

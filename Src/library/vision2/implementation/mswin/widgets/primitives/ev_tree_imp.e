@@ -23,11 +23,11 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		undefine
-			pnd_press
-		redefine
+			on_right_button_down,
 			on_left_button_down,
 			on_middle_button_down,
-			on_right_button_down,
+			pnd_press
+		redefine
 			on_mouse_move,
 			on_key_down,
 			interface,
@@ -434,43 +434,6 @@ feature {EV_ANY_I} -- WEL Implementation
 				a_height])
 		end
 
-	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
-			-- Wm_lbuttondown message
-			-- See class WEL_MK_CONSTANTS for `keys' value
-		do
-			internal_propagate_pointer_press (keys, x_pos, y_pos, 1)
-			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
-		end
-
-	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
-			-- Wm_mbuttondown message
-			-- See class WEL_MK_CONSTANTS for `keys' value
-		do
-			internal_propagate_pointer_press (keys, x_pos, y_pos, 2)
-			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
-		end
-
-	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
-			-- Wm_rbuttondown message
-			-- See class WEL_MK_CONSTANTS for `keys' value
-		local
-			pt: WEL_POINT
-			it: EV_TREE_ITEM_IMP
-			a: BOOLEAN
-		do
-			a:= item_is_pnd_source
-			create pt.make (x_pos, y_pos)
-			pt := client_to_screen (x_pos, y_pos)
-			internal_propagate_pointer_press (keys, x_pos, y_pos, 3)
-			it := find_item_at_position (x_pos, y_pos)
-
-			if item_is_pnd_source = a then
-				pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
-			end
-			interface.pointer_button_press_actions.call (
-				[x_pos, y_pos, 3, 0.0, 0.0, 0.0, pt.x, pt.y])
-		end
-
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- A key has been pressed
 		do
@@ -584,6 +547,11 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.60  2000/03/31 00:24:51  rogers
+--| Removed on_left_button_down, on_middle_button_down and
+--| on_right_button_down as they are now inherited from
+--| EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
+--|
 --| Revision 1.59  2000/03/30 19:59:13  rogers
 --| Removed commented pnd_press.
 --|

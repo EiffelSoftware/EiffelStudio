@@ -17,7 +17,6 @@ inherit
 
 	ANY
 
-
 create
 	make
 
@@ -531,4 +530,4 @@ invariant
 	non_void_image_list_combo_box: image_list_combo_box /= Void
 	non_void_grp_tree_view: grp_tree_view /= Void
 
-end -- class DATE_TIME_PICKER_CTL
+end -- class TREE_VIEW_CTL

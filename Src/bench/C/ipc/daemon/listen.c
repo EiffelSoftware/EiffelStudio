@@ -142,6 +142,8 @@ rt_public void dwide_listen(void)
 #endif
 			daemon_data.d_app = 0;
 			close_stream(daemon_data.d_as);
+			free(daemon_data.d_as);
+			daemon_data.d_as = NULL;
 			dead_app();				/* Send a DEAD notification to ewb */
 		}
 
@@ -169,6 +171,8 @@ rt_public void dwide_listen(void)
 				(void) rem_input(daemon_data.d_as);
 #endif
 				close_stream(daemon_data.d_as);
+				free(daemon_data.d_as);
+				daemon_data.d_as = NULL;
 				dead_app();			/* Send a DEAD notification to ewb */
 			}
 		}

@@ -381,6 +381,74 @@ feature -- Widget
 	index: INTEGER;
 			-- Current cursor index
 
+feature {COMPOSITE} -- Child/descendents widgets
+
+	children_of (w: WIDGET): ARRAYED_LIST [WIDGET] is
+			-- Children of widget `w'
+		require
+			valid_w: w /= Void;
+			w_not_destroyed: not w.destroyed
+		local
+			position, wc: INTEGER;
+			widget: WIDGET;
+			wd, current_depth: INTEGER;
+			finished: BOOLEAN;
+			widget_area: like area
+		do
+			widget_area := area;
+			!! Result.make (10);
+			wc := count;
+			position := index_of (w);
+			current_depth := w.depth;
+			from
+				position := position + 1;
+			until
+				position = wc or else finished
+			loop
+				widget := widget_area.item (position);
+				wd := widget.depth;
+				if wd = current_depth + 1 then
+					Result.extend (widget)
+				elseif wd <= current_depth then
+					finished := True
+				end;
+				position := position + 1
+			end
+		ensure
+			valid_result: Result /= Void
+		end;
+
+	descendents_of (w: WIDGET; desc: ARRAYED_LIST [WIDGET]) is
+			-- Add all descendent children of widget `w' into
+			-- `desc'. 
+		require
+			valid_w: w /= Void;
+			valid_desc: desc /= Void
+		local
+			position, wc: INTEGER;
+			current_depth: INTEGER;
+			finished: BOOLEAN;
+			widget: WIDGET;
+			widget_area: like area
+		do
+			widget_area := area;
+			wc := count;
+			position := index_of (w);
+			current_depth := w.depth;
+			from
+				position := position + 1;
+			until
+				position = wc or else finished
+			loop
+				widget := widget_area.item (position);
+				desc.extend (widget);
+				if widget.depth <= current_depth then
+					finished := True
+				end;
+				position := position + 1
+			end
+		end;
+
 feature -- Using widget_index information
 
 	widget_at (i: INTEGER): WIDGET is

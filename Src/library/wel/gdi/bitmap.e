@@ -23,7 +23,8 @@ creation
 	make_by_id,
 	make_by_name,
 	make_by_dib,
-	make_compatible
+	make_compatible,
+	make_indirect
 
 feature {NONE} -- Initialization
 
@@ -55,6 +56,14 @@ feature {NONE} -- Initialization
 				Cbm_init, dib.item_bits, dib.item, mode)
 		end
 
+	make_indirect (a_log_bitmap: WEL_LOG_BITMAP) is
+			-- Make a bitmap using `a_log_bitmap'.
+		require
+			a_log_bitmap_not_void: a_log_bitmap /= Void
+		do
+			item := cwin_create_bitmap_indirect (a_log_bitmap.item)
+		end
+
 feature -- Access
 
 	width: INTEGER is
@@ -78,7 +87,7 @@ feature -- Access
 		end
 
 	log_bitmap: WEL_LOG_BITMAP is
-			-- Create a bitmap structure for `Current'
+			-- Log bitmap structure associated to `Current'
 		require
 			exists: exists
 		do
@@ -149,6 +158,14 @@ feature {NONE} -- Externals
 			"C [macro <wel.h>] (HINSTANCE, LPCSTR): EIF_POINTER"
 		alias
 			"LoadBitmap"
+		end
+
+	cwin_create_bitmap_indirect (a_log_bitmap: POINTER): POINTER is
+			-- SDK CreateBitmapIndirect
+		external
+			"C [macro <wel.h>] (BITMAP *): EIF_POINTER"
+		alias
+			"CreateBitmapIndirect"
 		end
 
 	Cbm_init: INTEGER is

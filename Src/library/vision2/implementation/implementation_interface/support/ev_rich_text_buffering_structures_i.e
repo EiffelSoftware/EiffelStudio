@@ -288,7 +288,6 @@ feature {EV_ANY_I} -- Status Setting
 					elseif current_character = '{' then
 							-- Store state on stack
 						format_stack.extend (current_format.twin)
-						current_depth := current_depth + 1
 						found_opening_brace := True
 					end
 					
@@ -399,16 +398,21 @@ feature {NONE} -- Implementation
 						text_completed := True
 					elseif current_character = '{' then
 						text_completed := True
+							-- If the text is ending with `{', we reduce
+							-- the offset by one so that the `{' is included within
+							-- the main iteration
+						l_index := l_index - 1
 					elseif current_character = '\' then
 						next_character := rtf_text.item (l_index + index + 1)
 							-- The following three characters are reserved in RTF, and therefore
 							-- if they appear in the text they must be escaped with the '\'.
-							-- We preform this here.
+							-- We perform this here.
 						if next_character = '}' or next_character = '{' or next_character = '\' then
 							current_character := next_character
 							l_index := l_index + 1
 						else
 							text_completed := True
+							l_index := l_index - 1
 						end
 					end
 					if not text_completed then
@@ -417,9 +421,8 @@ feature {NONE} -- Implementation
 				end
 				l_index := l_index + 1
 			end
-			
 			if current_text.count > 0 then
-				move_main_iterator (l_index - 1)			
+				move_main_iterator (l_index - 1)
 				buffer_formatting (current_text)
 			end			
 		end
@@ -506,9 +509,6 @@ feature {NONE} -- Implementation
 					current_depth := current_depth + 1
 				elseif Result = '}' then
 					current_depth := current_depth - 1
-					if current_depth = 1 then
-						current_depth := 0
-					end
 				end
 			end
 		ensure
@@ -804,10 +804,6 @@ feature {NONE} -- Implementation
 				end
 				move_main_iterator (1)
 			end
-				-- Decrease `current_depth' as the opening "{" for the fonttable
-				-- was found in the keyword loop, but the keyword loop will not
-				-- process the "}"
-			current_depth := current_depth - 1
 		end
 		
 	process_colortable (rtf_text: STRING) is
@@ -851,11 +847,6 @@ feature {NONE} -- Implementation
 				end
 				move_main_iterator (1)
 			end
-			
-				-- Decrease `current_depth' as the opening "{" for the fonttable
-				-- was found in the keyword loop, but the keyword loop will not
-				-- process the "}"
-			current_depth := current_depth - 1
 		end
 		
 	first_color_is_auto: BOOLEAN
@@ -925,11 +916,9 @@ feature {NONE} -- Implementation
 					move_main_iterator (1)
 				else
 					if current_character = ';' then
-						current_depth := current_depth + 1
 					elseif current_character = '}' then
 						temp_iterator := temp_iterator - 1
 						main_iterator := main_iterator - 1
-						current_depth := current_depth + 1
 					else
 						check
 							unhandled_condition: False

@@ -64,11 +64,15 @@ feature -- Error messages
 feature -- Question messages
 
 	Exit_qu: STRING is "Do you wish to exit?";
+	Internal_error_qu: STRING is 
+		"Internal Error: %%X!%NProject may be unstable.%NDo you wish to continue?";
 	Override_qu: STRING is "Directory %%X%Nalready exists, Override it ?";
 	Retrieve_crash_qu: STRING is 
 			"Project saved from system crash. %N%
 			%Do you wish to retrieve backup files?%N";
 	Reset_text_qu: STRING is "Do you wish to reset%Ncommand text";
-	Save_project_qu: STRING is "Do you wish to save the project?";
+	Save_project_qu: STRING is "Project is not saved. Save project?";
+	Open_project_qu: STRING is "Application not saved, open a new application ?"
+	Create_project_qu: STRING is "Application not saved, create a new application ?"
 
 end

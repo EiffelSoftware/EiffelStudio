@@ -9,7 +9,7 @@ indexing
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
-	
+
 deferred class
 	EV_BOX_IMP
 
@@ -17,13 +17,10 @@ inherit
 	EV_BOX_I
 
 	EV_INVISIBLE_CONTAINER_IMP
-		undefine
-			move_and_resize
 		redefine
 			make,
 			client_width,
-			client_height,
-			on_first_display
+			client_height
 		end
 
 feature {NONE} -- Initialization
@@ -73,41 +70,13 @@ feature -- Access
 			Result := spacing * ( children.count - 1 )
 		end
 
-feature -- Status setting
-
-	set_homogeneous (flag: BOOLEAN) is
-			-- set `is_homogeneous' to `flag'.
-			-- Need to be resized
-		do
-			is_homogeneous := flag
-			if not ev_children.empty then
-				update_display
-			end
-		end
-
-	set_spacing (value: INTEGER) is
-			-- Make `value' the new spacing of the box.
-		do
-			spacing := value
-			if not ev_children.empty then
-				update_display
-			end
-		end
-
-	set_border_width (value: INTEGER) is
-			-- Make `value' the new border width.
-		do
-			border_width := value
-			-- Update view
-		end
 feature -- Element change
 
 	add_child (child_imp: EV_WIDGET_IMP) is
+			-- Add a child to the box.
 		do
 			ev_children.extend (child_imp)
-			child_minheight_changed (child_imp.minimum_height, child_imp)
-			child_minwidth_changed (child_imp.minimum_width, child_imp)
-			update_display
+			notify_change (2 + 1)
 		end
 
 	remove_child (child_imp: EV_WIDGET_IMP) is
@@ -116,8 +85,7 @@ feature -- Element change
 		do
 			ev_children.prune_all (child_imp)
 			if not ev_children.empty then
-				update_minimum_size
-				update_display
+				notify_change (2 + 1)
 			end
 		end
 
@@ -176,35 +144,7 @@ feature {EV_WIDGET_I} -- Implementation
  			Result := ev_children.has (child_imp)
  		end
 
-	update_display is
-			-- Feature that update the actual container.
-			-- It check the size of the child and resize
-			-- the child or the container itself depending
-			-- on the case.
-		do
-			if already_displayed then
-				initialize_length_at_minimum
-				parent_ask_resize (child_cell.width, child_cell.height)
-			end
-		end
-
-	on_first_display is
-			-- Called by the top_level window.
-		local
-			i: INTEGER
-		do
-			{EV_INVISIBLE_CONTAINER_IMP} Precursor
-			already_displayed := True
-			resize (minimum_width, minimum_height)
-			initialize_length_at_minimum
-			parent_ask_resize (child_cell.width, child_cell.height)
-		end
-
 feature {NONE} -- Deferred features
-
-	update_minimum_size is
-		deferred
-		end
 
 	set_local_width (new_width: INTEGER) is
 		deferred

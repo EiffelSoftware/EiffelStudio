@@ -135,6 +135,7 @@ gccversion='2.7.2.1'
 cppflags=$ccflags
 mtcppflags=$mtccflags
 ldsharedflags='-shared'
+mtldsharedflags='-shared'
 sharedlink='ld'
 ldflags=''
 lkflags=''

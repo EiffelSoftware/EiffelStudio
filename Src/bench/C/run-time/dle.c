@@ -526,6 +526,7 @@ rt_public EIF_REFERENCE dle_instance(EIF_CONTEXT int dtype, EIF_REFERENCE arg) /
 	 * `dtype' must conform to `dynamic_dtype'.
 	 */
 
+	EIF_GET_CONTEXT
 #ifdef WORKBENCH
 	struct cnode *dle_node;
 	RTLD;
@@ -560,6 +561,7 @@ rt_public EIF_REFERENCE dle_instance(EIF_CONTEXT int dtype, EIF_REFERENCE arg) /
 	RTLE;
 	return l[0];
 #endif
+	EIF_END_GET_CONTEXT
 }
 
 rt_public EIF_INTEGER dle_search(EIF_REFERENCE obj, EIF_REFERENCE class_name)

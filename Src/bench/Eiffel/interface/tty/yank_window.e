@@ -8,8 +8,8 @@ indexing
 class YANK_WINDOW
 
 inherit
+	EB_SHARED_OUTPUT_TOOLS
 
-	WINDOWS;
 	OUTPUT_WINDOW
 
 creation

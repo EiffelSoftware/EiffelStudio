@@ -512,7 +512,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 					-- We append the list coming from the recursive call
 				error_list := gen_param.check_constraints (context_class)
 				if error_list /= Void then
-					if Result = void then
+					if Result = Void then
 						!! Result.make
 					end
 					Result.append (error_list)

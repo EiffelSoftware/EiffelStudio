@@ -134,14 +134,17 @@ feature -- Execution
 						end
 					end;
 					!! st.make;
-					st.add (ti_Before_class_declaration);
+					st.add (ti_Before_cluster_declaration);
+					st.add (ti_Before_cluster_header);
 					s_name := clone (Eiffel_System.name);
 					s_name.to_upper;
 					st.add_string (s_name);
+					st.add (ti_After_cluster_header);
 					st.add_new_line;
 					st.add_new_line;
 					generate_cluster_list (st, Eiffel_system.sub_clusters, 1);
-					generate_output (filter, file_name, st)
+					generate_output (filter, file_name, st);
+					st.add (ti_After_cluster_declaration);
 				end;
 				!! list.make;
 				from 
@@ -164,7 +167,6 @@ feature -- Execution
 								!! st.make;
 								a_cluster.generate_class_list (st);
 								generate_output (filter, file_name, st)
-								st.add (ti_After_class_declaration);
 							end
 						end;
 						classes := a_cluster.classes;

@@ -718,6 +718,13 @@ feature {NONE} -- Externals
 		alias
 			"TreeView_SetToolTips"
 		end
+		
+	cwin_index_to_state_image_mask (i: INTEGER): INTEGER is
+		external
+			"C [macro %"commctrl.h%"] (UINT): EIF_INTEGER"
+		alias
+			"INDEXTOSTATEIMAGEMASK"
+		end
 
 end -- class WEL_TREE_VIEW
 

@@ -11,14 +11,29 @@ class
 inherit
 	
 	INTERNAL
+		export
+			{NONE} all
+		end
 	
 	GB_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 	GB_XML_UTILITIES
+		export
+			{NONE} all
+		end
 	
 	TOE_TREE_FACTORY
+		export
+			{NONE} all
+		end
 	
 	GB_SHARED_TOOLS
+		export
+			{NONE} all
+		end
 	
 feature -- Access
 

@@ -1,3 +1,4 @@
+#define _WIN32_DCOM
 #include "cli_writer.h"
 #include "vs_support.h"
 #include "ise_cache_manager.h"
@@ -38,8 +39,12 @@ rt_public void com_initialize ()
 {
 	HRESULT hr;
 	hr = CoInitialize (NULL);
+/*
+	hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED);
+	hr = CoInitializeEx(NULL, COINIT_MULTITHREADED);
+*/
 
-	CHECK ((hr == S_OK) || (hr == S_FALSE), "CoInitialize failed");
+	CHECK ((((hr == S_OK) || (hr == S_FALSE)) ? 0 : 1), "CoInitialize failed");
 }
 
 // ISE_COM_CACHE_MANAGER---------------------------------------------------------------------

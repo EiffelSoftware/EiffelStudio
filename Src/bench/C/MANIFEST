@@ -18,10 +18,6 @@ clicking/openlook
 clicking/openlook/Jmakefile
 clicking/openlook/Makefile.SH
 clicking/openlook/click.c
-clicking/shared
-clicking/shared/Jmakefile
-clicking/shared/Makefile.SH
-clicking/shared/archix.c
 config_h.SH
 hints/
 hints/dgux.sh

@@ -41,9 +41,9 @@ feature -- Output
 				const ?= f;	--| Cannot fail
 				ec := const.type.associated_eclass;
 				if equal (ec.name, "character") then
-					str := "%""
-				elseif equal (ec.name, "string") then
 					str := "'"
+				elseif equal (ec.name, "string") then
+					str := "%""
 				else
 					str := ""
 				end;

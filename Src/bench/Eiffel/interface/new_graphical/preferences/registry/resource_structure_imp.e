@@ -28,7 +28,7 @@ feature -- Initialization
 			file_name: FILE_NAME
 		do
 			make_default (default_file)
-			if root_folder /= Void then
+			if root_folder_imp /= Void then
 				update_from_location ("HKEY_CURRENT_USER\Software\ISE\Eiffel46")
 			else
 				make_from_location ("HKEY_CURRENT_USER\Software\ISE\Eiffel46")
@@ -44,7 +44,6 @@ feature -- Initialization
 			create table.make (100)
 			create root_folder_imp.make_root (loc, interface)
 			root_folder_imp.create_interface
-			root_folder := root_folder_imp.interface
 		end
 
 	update_from_location (loc: STRING) is

@@ -216,7 +216,7 @@ feature -- Element change
 			currently_searched := word
 			if keyword_field /= Void then
 				if keyword_field.text /= Void and then not keyword_field.text.is_empty then
-					update_combo_box (keyword_field.text.out)
+					update_combo_box (keyword_field.text)
 				end
 				if word = Void or else word.is_empty then
 					keyword_field.remove_text
@@ -545,7 +545,7 @@ feature {NONE} -- Implementation
 					-- user choices are taken into account
 				search_performer.set_editor (editor)
 				currently_searched := keyword_field.text
-				update_combo_box (currently_searched.out)
+				update_combo_box (currently_searched)
 				search_performer.set_search_whole_word (whole_word_button.is_selected)
 				search_performer.set_case_sensitive (case_sensitive_button.is_selected)
 				search_performer.set_use_wildcards (use_wildcards_button.is_selected)
@@ -581,7 +581,7 @@ feature {NONE} -- Implementation
 					search_performer.set_editor (editor)
 					currently_replacing := replace_field.text
 					currently_searched := keyword_field.text
-					update_combo_box (currently_searched.out)
+					update_combo_box (currently_searched)
 					search_performer.set_search_whole_word (whole_word_button.is_selected)
 					search_performer.set_case_sensitive (case_sensitive_button.is_selected)
 					search_performer.set_replace_all (replace_all_button.is_selected)

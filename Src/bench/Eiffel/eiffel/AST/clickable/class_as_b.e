@@ -93,7 +93,7 @@ feature -- Initialization
 			suppliers_exists: suppliers /= Void;
 		end;
 
-feature {CLASS_C} -- Class information
+feature {CLASS_C, COMPILED_CLASS_INFO} -- Class information
 
 	info: CLASS_INFO is
 			-- Compiled information about the class produced after
@@ -117,37 +117,16 @@ feature {CLASS_C} -- Class information
 
 feature -- Stoning
  
-	stone (reference_class: CLASS_C): CLASSC_STONE is
+	stone (reference_class: E_CLASS): CLASSC_STONE is
 		local
-			aclass: CLASS_C;
+			aclass: E_CLASS
 		do
 			aclass := Universe.class_named 
-						(class_name, reference_class.cluster).compiled_class;
-			!!Result.make (aclass)
+						(class_name, reference_class.cluster).compiled_eclass;
+			!! Result.make (aclass)
 		end;
 
 	click_list: CLICK_LIST;
-
-feature -- Access
-
-	feature_with_name (n: STRING): FEATURE_AS_B is
-			-- Feature ast with internal name `n'
-		local
-			cur: CURSOR
-		do
-			if features /= Void then
-				cur := features.cursor
-				from
-					features.start
-				until
-					features.after or else Result /= Void
-				loop
-					Result := features.item.feature_with_name (n)
-					features.forth
-				end
-				features.go_to (cur)
-			end;
-		end;
 
 feature -- Formatting
 

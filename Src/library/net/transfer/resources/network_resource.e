@@ -117,8 +117,8 @@ feature -- Status report
 			Result := address.is_correct
 		end
 	 
-	 is_proxy_used: BOOLEAN is
-	 		-- Is a proxy used?
+	is_proxy_used: BOOLEAN is
+			-- Is a proxy used?
 		do
 			Result := address.is_proxy_used and is_readable
 		end

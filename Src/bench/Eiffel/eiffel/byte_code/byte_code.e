@@ -231,35 +231,130 @@ feature
 			end
 		end;
 
+	argument_names: ARRAY [STRING] is
+			-- Names of the arguments
+		local
+			i, j, count: INTEGER;
+			temp: STRING
+		do
+			if arguments /= Void then
+				count := arguments.count;
+				if generate_current then
+					!! Result.make (1, count + 1)
+					Result.put ("Current", 1)
+					j := 2
+				else
+					!! Result.make (1, count)
+					j := 1
+				end
+				from
+					i := 1
+				until
+					i > count
+				loop
+					temp := "arg"
+					temp.append_integer (i)
+					Result.put (temp, j)
+					i := i + 1
+					j := j + 1
+				end
+			elseif generate_current then
+				!! Result.make (1, 1)
+				Result.put ("Current", 1)
+			else
+				!! Result.make (1, 0)
+			end
+		end
+
 	generate_arguments is
 			-- Generate C arguments, if any, in the definition.
 		local
 			i, count: INTEGER;
+			a: like argument_names
 		do
-			generated_file.putstring ("Current");
+			from
+				a := argument_names
+				i := 1;
+				count := a.count;
+			until
+				i > count
+			loop
+				if (i /= 1) then generated_file.putstring (gc_comma) end
+				generated_file.putstring (a @ i);
+				i := i + 1;
+			end;
+		end;
+
+	generate_current: BOOLEAN is
+			-- Is Current included in argument generatin?
+		do
+			Result := True
+		end
+
+	argument_types: ARRAY [STRING] is
+			-- Declare C parameters, if any, as part of the definition.
+		local
+			arg: TYPE_I;
+			i, j, count: INTEGER;
+		do
 			if arguments /= Void then
+				count := arguments.count;
+				if generate_current then
+					!! Result.make (1, count + 1)
+					Result.put ("char *", 1)
+					j := 2
+				else
+					!! Result.make (1, count)
+					j := 1
+				end
 				from
-					i := arguments.lower;
-					count := arguments.count;
+					i := 1
 				until
 					i > count
 				loop
-					generated_file.putstring (gc_comma);
-					generated_file.putstring ("arg");
-					generated_file.putint (i);
-					i := i + 1;
-				end;
+					arg := real_type (arguments.item (i));
+					Result.put (arg.c_type.c_string, j)
+					i := i + 1
+					j := j + 1
+				end
+			elseif generate_current then
+				!! Result.make (1, 1)
+				Result.put ("char *", 1)
+			else
+				!! Result.make (1, 0)
 			end;
-		end;
+		end
 
 	generate_arg_declarations is
 			-- Declare C parameters, if any, as part of the definition.
 		local
+			i, count: INTEGER;
+			a_types: like argument_types
+			a_names: like argument_names
+		do
+			from
+				a_types := argument_types
+				a_names := argument_names
+				i := 1;
+				count := argument_names.count;
+			until
+				i > count
+			loop
+				if (i /= 1) then generated_file.putstring (gc_comma) end
+				generated_file.putstring (argument_types @ i);
+				generated_file.putchar (' ');
+				generated_file.putstring (argument_names @ i);
+				generated_file.putchar (';');
+				i := i + 1;
+			end;
+		end;
+
+	process_expanded is
+			-- Enlarge expanded arguements
+		local
 			arg: TYPE_I;
 			i, count: INTEGER;
 		do
-			generated_file.putstring ("char *Current;");
-			generated_file.new_line;
 			if arguments /= Void then
 				from
 					i := arguments.lower;
@@ -268,21 +363,16 @@ feature
 					i > count
 				loop
 					arg := real_type (arguments.item (i));
-					arg.c_type.generate (generated_file);
-					generated_file.putstring ("arg");
-					generated_file.putint (i);
-					generated_file.putchar (';');
 					if arg.is_expanded then
 						context.inc_exp_args;
 						context.Arg_var.set_position (i);
 						context.set_local_index (context.Arg_var.register_name,
 							context.Arg_var.enlarged);
 					end;
-					generated_file.new_line;
 					i := i + 1;
 				end;
 			end;
-		end;
+		end
 
 	finish_compound is
 			-- Generate the end of the compound
@@ -433,7 +523,7 @@ feature -- Byte code generation
 			inh_assert := Context.inherited_assertion;
 			inh_assert.init;
 			Context.set_origin_has_precondition (True);
-			if  not Context.associated_class.is_basic and then
+			if not Context.associated_class.is_basic and then
 				feat.assert_id_set /= Void 
 			then
 					--! Do not get inherited pre & post for basic types

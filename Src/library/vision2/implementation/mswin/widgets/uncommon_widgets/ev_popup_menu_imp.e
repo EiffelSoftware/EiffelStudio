@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision popup menu. Mswindows implementation."
 	status: "See notice at end of class"
@@ -8,17 +7,12 @@ indexing
 	revision: "$Revision$"
 
 class 
-	
 	EV_POPUP_MENU_IMP
 
 inherit
-
 	EV_POPUP_MENU_I
 
-	EV_MENU_ITEM_CONTAINER_IMP
-		rename
-			make as wel_make
-		end
+	EV_MENU_CONTAINER_IMP
 	
 	EV_WIDGET_IMP
 

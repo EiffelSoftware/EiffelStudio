@@ -804,7 +804,7 @@ feature -- Status report
 		end
 		
 	column_displayed (a_column: INTEGER): BOOLEAN is
-			-- Is column `a_column' displayed in `Current'?
+			-- Is column `a_column' displayable in `Current'?
 		require
 			not_destroyed: not is_destroyed
 			a_column_within_bounds: a_column > 0 and a_column <= column_count

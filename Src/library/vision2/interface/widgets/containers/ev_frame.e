@@ -26,7 +26,8 @@ inherit
 
 	EV_TEXTABLE
 		redefine
-			implementation
+			implementation,
+			make_for_test
 		end
 
 	EV_FRAME_CONSTANTS
@@ -53,6 +54,7 @@ feature {NONE} -- Initialization
 			style_timer: EV_TIMEOUT
 		do
 			default_create
+			{EV_TEXTABLE} Precursor
 			extend (create {EV_LABEL})
 			create style_timer.make_with_interval (2500)
 			style_timer.actions.extend (~cycle_style)
@@ -138,6 +140,9 @@ end -- class EV_FRAME
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/04/28 00:41:56  brendel
+--| Incorporated {EV_TEXTABLE}.make_for_test.
+--|
 --| Revision 1.14  2000/04/27 18:29:38  brendel
 --| Improved make_for_test.
 --|

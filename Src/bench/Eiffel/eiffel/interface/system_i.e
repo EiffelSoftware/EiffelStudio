@@ -655,7 +655,10 @@ end
 				end
 				add_visible_classes
 			end
-			if Lace.compile_all_classes or Compilation_modes.is_precompiling then
+			if
+				Lace.compile_all_classes or
+				(Compilation_modes.is_precompiling and root_class = any_class)
+			then
 					-- `None' is specified as the root class
 				Workbench.change_all_new_classes
 			end

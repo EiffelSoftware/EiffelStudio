@@ -79,14 +79,14 @@ feature -- Output
 			f_name: FILE_NAME;
 			file: PLAIN_TEXT_FILE;
 		do
-			!!f_name.make_from_string (help_path);
+			create f_name.make_from_string (help_path);
 			f_name.extend ("short");
 			f_name.set_file_name (help_file_name);
 			file_name := f_name
 			if subcode /= 0 then
 				file_name.append_integer (subcode)
 			end;
-			!!file.make (file_name);
+			create file.make (file_name);
 			if file.exists then
 				from
 					file.open_read;

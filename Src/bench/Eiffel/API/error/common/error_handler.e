@@ -10,7 +10,7 @@ inherit
 
 	SHARED_RESCUE_STATUS
 
-creation {SHARED_ERROR_HANDLER}
+create {SHARED_ERROR_HANDLER}
 
 	make
 
@@ -19,8 +19,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialization
 		do
-			!!error_list.make
-			!!warning_list.make
+			create error_list.make
+			create warning_list.make
 		end
 
 feature -- Properties
@@ -58,7 +58,7 @@ feature {E_PROJECT, COMPILER_EXPORTER, SHARED_ERROR_HANDLER} -- Element change
 		local
 			interrupt_error: INTERRUPT_ERROR
 		do
-			!! interrupt_error
+			create interrupt_error
 			if is_during_comp then
 				interrupt_error.set_during_compilation
 			end
@@ -205,7 +205,7 @@ feature {EXPR_ADDRESS_AS} -- Passed to C
 		local
 			syntax_error: SYNTAX_ERROR
 		do
-			!!syntax_error.init
+			create syntax_error.init
 			insert_error (syntax_error)
 			raise_error
 		end
@@ -218,7 +218,7 @@ feature {COMPILER_EXPORTER}
 		local
 			separate_error: SEPARATE_SYNTAX_ERROR
 		do
-			!! separate_error.init
+			create separate_error.init
 			insert_error (separate_error)
 			raise_error
 		end

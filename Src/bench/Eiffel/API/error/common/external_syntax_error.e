@@ -15,7 +15,7 @@ inherit
 			external_error_message
 		end
 
-creation {EXTERNAL_LANG_AS, EXTERNAL_EXTENSION_AS}
+create {EXTERNAL_LANG_AS, EXTERNAL_EXTENSION_AS}
 
 	init
 

@@ -30,7 +30,6 @@
 #endif
 
 extern int identify(void);		/* Make sure we are started via the wrapper */
-extern char *ename;				/* Eiffel program name */
 
 #ifdef EIF_WIN32
 extern HANDLE global_ewbin, global_ewbout, global_event_r, global_event_w;
@@ -41,7 +40,7 @@ rt_public void init_connect(void)
 	STREAM *sp;		/* Stream used for communications with ised */
 
 #ifdef USE_ADD_LOG
-	progname = ename;					/* Computed by Eiffel run-time */
+	progname = egc_system_name;					/* Computed by Eiffel run-time */
 
 	/* Open a logfile in /tmp */
 	(void) open_log("\\tmp\\ewb.log");
@@ -69,7 +68,7 @@ rt_public void init_connect(void)
 
 #ifdef USE_ADD_LOG
 	progpid = getpid();					/* Program's PID */
-	progname = ename;					/* Computed by Eiffel run-time */
+	progname = egc_system_name;					/* Computed by Eiffel run-time */
 
 	/* Open a logfile in /tmp */
 	(void) open_log("/tmp/ised.log");

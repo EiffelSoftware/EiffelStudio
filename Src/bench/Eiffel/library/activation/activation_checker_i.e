@@ -84,6 +84,17 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
+	not_initialized_error_message: STRING is
+			-- Standard message when product has not been installed correctly with license information.
+"[
+The installation of this product has been corrupted.
+Please run the installation program again.
+
+If this problem still persists, please send a problem
+report to Eiffel Software support through
+http://support.eiffel.com.
+]"
+
 	launch_gc_cycle is
 			-- Launch a GC cycle to move objects around that way it
 			-- is harder to hack the value of `is_licensed'.

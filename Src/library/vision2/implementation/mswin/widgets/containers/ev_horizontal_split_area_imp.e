@@ -46,6 +46,7 @@ feature {NONE} -- Status Setting
 				set_split_position (maximum_split_position)
 			end
 			notify_change (Nc_minsize, Current)
+			new_item_actions.call ([v])
 		end
 
 	set_second (v: like item) is
@@ -68,6 +69,7 @@ feature {NONE} -- Status Setting
 				--| again after the split position has been set,
 				--| to reflect these changes.
 			notify_change (NC_minsize, Current)
+			new_item_actions.call ([v])
 		end
 
 feature {NONE} -- Implementation
@@ -379,6 +381,9 @@ end -- class EV_HORIZONTAL_SPLIT_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2001/07/02 21:08:08  rogers
+--| `set_first' and `set_second' now call `new_item_actions'.
+--|
 --| Revision 1.21  2001/06/07 23:08:15  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

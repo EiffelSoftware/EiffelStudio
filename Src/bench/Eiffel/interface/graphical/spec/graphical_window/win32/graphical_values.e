@@ -17,6 +17,9 @@ feature {NONE} -- Initialization
 			-- Initialize all graphical values from 
 			-- `Graphical_resources'.
 		do
+			text_format := format_creation (
+					Graphical_resources.default_text_color.valid_actual_value,
+					Graphical_resources.text_font.valid_actual_value)
 			comment_format :=	format_creation (
 					Graphical_resources.comment_color.valid_actual_value,
 					Graphical_resources.comment_font.valid_actual_value)
@@ -56,6 +59,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	text_format: WEL_CHARACTER_FORMAT;
+			-- Standard text format
 
 	comment_format: WEL_CHARACTER_FORMAT;
 			-- Comment format

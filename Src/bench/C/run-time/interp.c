@@ -1763,7 +1763,7 @@ rt_private void interpret(int flag, int where)
 			uint32 elem_size = 0, bit_size = 0, i = 0;
 			uint32 flags = 0;
 			struct item *nb_item;
-			uint32 nb;
+			uint32 nb = 0;
 
 			type = get_creation_type ();
 
@@ -2784,7 +2784,7 @@ rt_private void interpret(int flag, int where)
 #endif
 		last = opop();
 		code = get_short();     /* Get the local number (from 1 to locnum) */
-		if (last->type & SK_EXP == SK_EXP) {
+		if ((last->type & SK_EXP) == SK_EXP) {
 				/* Case of an expanded, then we need to copy its original value. */
 			eif_std_ref_copy(last->it_ref, loc(code)->it_ref);
 		} else {

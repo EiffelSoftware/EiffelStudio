@@ -188,7 +188,7 @@ private char *ex_tag[] = {
 	"Developer exception.",				/* EN_PROG */
 	"Eiffel run-time fatal error.",		/* EN_FATAL */
 #ifdef WORKBENCH
-	"$ applied on melted feature.",		/* EN_DOL */
+	"CECIL cannot call melted code",	/* EN_DOL */
 #endif
 };
 

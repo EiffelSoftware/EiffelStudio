@@ -12,7 +12,7 @@ inherit
 			proceed_with_current_info
 		end
 
-creation
+create
 	make
 
 feature {NONE} -- Implementation

@@ -170,7 +170,7 @@ set_maximum
 CLASS: ev_static_menu_bar_imp
 DATE:	19990909
 WHO:	king
-
+remove_menu
 =========================================================================
 CLASS: 
 DATE:	

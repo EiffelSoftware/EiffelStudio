@@ -269,6 +269,17 @@ feature -- Status setting
 			tree_item /= Void implies tree_item.is_expanded
 		end
 		
+	expand_recursive is
+			-- Expand `Current'.
+		require
+			tree_item /= Void implies tree_item.is_expandable
+		do
+			expand
+			recursive_do_all (agent internal_expand_recursive)
+		ensure
+			tree_item /= Void implies tree_item.is_expanded
+		end
+		
 	set_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Assign `a_pixmap' to graphical representations of `Current'.
 		require
@@ -341,6 +352,16 @@ feature {NONE} -- Implementation
 			l_children.go_to (children_cursor)
 		ensure
 			children_index_unchanged: old parent_object.children.index = parent_object.children.index
+		end
+		
+	internal_expand_recursive (window_selector_common_item: GB_WINDOW_SELECTOR_COMMON_ITEM) is
+			-- Expand `Current' .
+		require
+			window_selector_common_item_not_void: window_selector_common_item /= Void
+		do
+			if window_selector_common_item.tree_item.is_expandable then
+				window_selector_common_item.expand
+			end
 		end
 
 invariant

@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 	internal_data: INTEGER_16
 			-- To hold `size' of current and `flags'.
 
-	Header_size: INTEGER_16 is 0x0B00
+	Header_size: INTEGER_16 is 0x3000
 			-- Size of current structure.
 
 invariant

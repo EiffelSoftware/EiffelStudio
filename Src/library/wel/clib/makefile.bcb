@@ -9,12 +9,13 @@ CFLAGS = -q -w-8064 -w-8065 -w-8057 -c -O2 -I$(ISE_EIFFEL)\library\wel\spec\wind
 	$(CFLAGS) $<
 |
 
-OBJ = disptchr.obj enumfont.obj choose_folder.obj estream.obj msgboxpa.obj diskspace.obj dynload.obj drawstate.obj mousehook.obj
+OBJ = disptchr.obj enumfont.obj enum_child_windows.obj choose_folder.obj estream.obj msgboxpa.obj diskspace.obj dynload.obj drawstate.obj mousehook.obj
 
 wel.lib: $(OBJ)
 	if exist $@ del $@
 	$(AR) $@ +disptchr.obj
 	$(AR) $@ +enumfont.obj
+	$(AR) $@ +enum_child_windows.obj
 	$(AR) $@ +estream.obj
 	$(AR) $@ +choose_folder.obj
 	$(AR) $@ +msgboxpa.obj

@@ -461,7 +461,7 @@ feature -- Third pass: byte code production and type check
 		local
 			feat_table: FEATURE_TABLE;
 				-- Feature table of the class
-			feature_i: FEATURE_I;
+			feature_i, def_resc: FEATURE_I;
 				-- A feature of the class
 			feature_changed, not_empty: BOOLEAN;
 				-- Is the current feature `feature_i' changed ?
@@ -478,7 +478,6 @@ feature -- Third pass: byte code production and type check
 			body_id: BODY_ID;
 			feat_dep: FEATURE_DEPENDANCE;
 			rep_removed: BOOLEAN;
-			temp: STRING
 
 				-- Invariant
 			invar_clause: INVARIANT_AS_B;
@@ -493,7 +492,10 @@ feature -- Third pass: byte code production and type check
 
 				-- For Concurrent Eiffel
 			body_id_changed: BOOLEAN
+			def_resc_depend: DEPEND_UNIT
 		do
+			def_resc := default_rescue_feature
+
 			from
 				system.changed_body_ids.clear_all
 
@@ -530,6 +532,7 @@ feature -- Third pass: byte code production and type check
 			loop
 				feature_i := feat_table.item_for_iteration;
 				feature_name := feature_i.feature_name;
+
 debug ("SEP_DEBUG")
 io.error.putstring ("CLASS_C.PASS3 Feature ");
 io.error.putstring (feature_name);
@@ -537,7 +540,14 @@ io.error.putstring (" whose FEATURE_ID: ");
 io.error.putint (feature_i.feature_id);
 io.error.new_line;
 end;
+
 				if feature_i.to_melt_in (Current) then
+
+					if def_resc /= Void and then
+						not def_resc.empty_body and then
+							not equal (def_resc.feature_name, feature_name) then
+						feature_i.create_default_rescue (def_resc.feature_name)
+					end
 
 debug ("SEP_DEBUG", "ACTIVITY")
 	io.error.putstring ("%TTo melt_in true: ");
@@ -664,7 +674,18 @@ end;
 								if not feature_i.is_code_replicated then
 										-- Dependances update: add new
 										-- dependances for `feature_name'.
+
 									f_suppliers := clone (ast_context.supplier_ids);
+
+									if def_resc /= Void and then
+									   not feature_i.is_deferred and then
+									   not feature_i.is_external and then
+									   not feature_i.is_attribute and then
+									   not feature_i.is_constant then
+										-- Make it dependant on `default_rescue'
+										!!def_resc_depend.make (id, def_resc.feature_id)
+										f_suppliers.extend (def_resc_depend)
+									end
 									dependances.put (f_suppliers, feature_name);
 									if new_suppliers = Void then
 										new_suppliers := suppliers.same_suppliers;
@@ -745,7 +766,7 @@ end;
 				end;
 
 				feat_table.forth;
-			end;
+			end; -- Main loop
 
 				-- Recomputation of invariant clause
 
@@ -960,10 +981,10 @@ end;
 
 					--| The other servers are READ_SERVERs.
 
-				tmp_ast_server.cache.wipe_out
-				tmp_body_server.cache.wipe_out
-				tmp_rep_feat_server.cache.wipe_out
-				tmp_inv_ast_server.cache.wipe_out
+				Tmp_ast_server.cache.wipe_out
+				Tmp_body_server.cache.wipe_out
+				Tmp_rep_feat_server.cache.wipe_out
+				Tmp_inv_ast_server.cache.wipe_out
 			end;
 		end;
 
@@ -2800,6 +2821,39 @@ feature -- Validity class
 		do
 			-- Do nothing
 		end;
+
+feature -- default_rescue routine
+
+	default_rescue_feature: FEATURE_I is
+			-- The version of `default_rescue' from GENERAL.
+			-- Void if GENERAL has not been compiled yet or
+			-- does not posess the feature.
+		local
+			ftab: FEATURE_TABLE
+			item: FEATURE_I
+			pos : INTEGER
+		do
+			if (System.general_class /= Void) then
+				from
+					ftab := feature_table
+					pos  := ftab.pos_for_iter
+					ftab.start
+				until
+					ftab.after or (Result /= Void)
+				loop
+					item := ftab.item_for_iteration
+
+					if equal (item.rout_id_set.first,
+							  System.default_rescue_id) then
+						Result := item
+					end
+
+					ftab.forth
+				end
+
+				ftab.go (pos)
+			end
+		end
 
 feature -- Dispose routine
 

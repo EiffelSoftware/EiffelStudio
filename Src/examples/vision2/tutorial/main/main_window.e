@@ -49,6 +49,7 @@ feature -- Initialization
 			color: EV_COLOR
 			bc: EV_BASIC_COLORS
 			sitem: EV_STATUS_BAR_ITEM
+			tooltip: EV_TOOLTIP
 			action_button: EV_BUTTON
 			cmd: EV_ROUTINE_COMMAND
 		do
@@ -79,6 +80,7 @@ feature -- Initialization
 			tree.set_minimum_size (200, 250)
 			fill_tree
 			create action_button.make_with_text(vbox,"Actions")
+			action_button.set_expand (False)
 
 			-- We set the notebook
 			!! item.make (Void)
@@ -94,7 +96,14 @@ feature -- Initialization
 			item.destroy
 			notebook.set_minimum_size (250, 250)
 
-
+			-- We create a tooltip
+			create tooltip.make
+			create color.make_rgb (0, 255, 0)
+			tooltip.set_background_color (color)
+			create color.make_rgb (0, 0, 255)
+			tooltip.set_foreground_color (color)
+	--		tooltip.add_tips (tree, "EiffelVision components")
+			tooltip.add_tip (notebook, "Demo Area")
 
 			--create cmd.make(~execute1)
 			--action_button.add_click_command (cmd, Void)

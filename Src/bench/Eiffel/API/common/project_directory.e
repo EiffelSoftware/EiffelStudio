@@ -1,7 +1,5 @@
 indexing
-
-	description: 
-		"Directory for an eiffelbench project.";
+	description: "Directory for an eiffelbench project.";
 	date: "$Date$";
 	revision: "$Revision $"
 
@@ -15,11 +13,11 @@ inherit
 
 	DIRECTORY
 		rename
-			mode as file_mode
-		export
-			{NONE} all
-			{ANY} is_readable, is_writable, exists, name,
-				is_executable, is_closed, close
+			mode as file_mode,
+			exists as base_exists,
+			is_readable as is_base_readable,
+			is_writable as is_base_writable,
+			is_executable as is_base_executable
 		end
 
 	SHARED_WORKBENCH
@@ -83,20 +81,25 @@ feature -- Access
 					project_eif_file.is_plain
 		end;
 
-	Project_read_only: BOOLEAN_REF is
-			-- Is the project only usable for browing and debugging
-			-- (no compilation)?
-		once
-			!! Result
-		end;
-
-	is_project_readable: BOOLEAN is
+	is_readable: BOOLEAN is
 			-- May the project be used for browsing and debugging?
+		local
+			w_code_dir, f_code_dir, comp_dir: DIRECTORY;
+			project_file: RAW_FILE
 		do
-			Result := System.server_controler.is_readable
+			!! w_code_dir.make (Workbench_generation_path);
+			!! f_code_dir.make (Final_generation_path);
+			!! comp_dir.make (Compilation_path);
+			!! project_file.make (Project_file_name);
+			Result := is_base_readable and then w_code_dir.is_readable
+					and then f_code_dir.is_readable and then comp_dir.is_readable
+					and then project_file.is_readable
+			if initialized then
+				Result := Result and then System.server_controler.is_readable
+			end
 		end;
 
-	is_project_writable: BOOLEAN is
+	is_writable: BOOLEAN is
 			-- May the project be both compiled and used for browsing?
 		local
 			w_code_dir, f_code_dir, comp_dir: DIRECTORY;
@@ -106,20 +109,58 @@ feature -- Access
 			!! f_code_dir.make (Final_generation_path);
 			!! comp_dir.make (Compilation_path);
 			!! project_file.make (Project_file_name);
-			Result := project_file.is_writable and then
-				(w_code_dir.exists and then w_code_dir.is_writable) and then
-				(f_code_dir.exists and then f_code_dir.is_writable) and then
-				(comp_dir.exists and then comp_dir.is_writable) and then
-				System.server_controler.is_writable;
-			if System.is_dynamic then
-				Result := Result and then 
-					(not Update_dle_file.exists or else 
-					Update_dle_file.is_writable)
-			else
-				Result := Result and then 
-					(not Update_file.exists or else Update_file.is_writable)
+			Result := is_base_writable and then w_code_dir.is_writable
+					and then f_code_dir.is_writable and then comp_dir.is_writable
+					and then project_file.is_writable
+			if initialized then
+				Result := Result and then System.server_controler.is_writable
+				if System.is_dynamic then
+					Result := Result and then 
+						(not Update_dle_file.exists or else 
+						Update_dle_file.is_writable)
+				else
+					Result := Result and then 
+						(not Update_file.exists or else Update_file.is_writable)
+				end
 			end
 		end;
+
+	exists: BOOLEAN is
+			-- Does the project exist?
+			--| Ie, Comp, F_code, W_code exist?
+		local
+			w_code_dir, f_code_dir, comp_dir: DIRECTORY;
+			project_file: RAW_FILE
+		do
+			!! w_code_dir.make (Workbench_generation_path);
+			!! f_code_dir.make (Final_generation_path);
+			!! comp_dir.make (Compilation_path);
+			!! project_file.make (Project_file_name);
+			Result := base_exists and then w_code_dir.exists
+				and then f_code_dir.exists and then comp_dir.exists
+				and then project_file.exists
+			if initialized then
+				Result := Result and then System.server_controler.exists
+			end
+		end
+               
+	has_base_full_access: BOOLEAN is
+		do
+			Result := is_base_readable and then is_base_writable and then
+					is_base_executable                      
+		end                                                              
+
+feature -- Update
+
+	set_initialized is
+			-- Set a flag to know wether or not the project has been initialized
+			-- correctly, ie `system' has been correctly created.
+		do
+			initialized := True
+		end
+
+	initialized: BOOLEAN
+			-- Has the project correctly initialized?
 
 feature {NONE} -- Implementation
 

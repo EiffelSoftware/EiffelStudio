@@ -20,7 +20,7 @@ feature -- Basic operations
 		deferred
 		end
 
-feature {NONE} -- Implementation
+feature {EV_WIDGET_IMP} -- Implementation
 
 	execute_address: POINTER is
 			-- Address of feature execute 

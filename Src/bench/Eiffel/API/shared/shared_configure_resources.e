@@ -23,7 +23,6 @@ feature -- Resource names
 	r_Fail_on_rescue: STRING is			"fail_on_rescue";
 	r_Trace_debug: STRING is			"trace_debug";
 	r_Cache_size: STRING is				"cache_size";
-	r_Concurrent_eiffel: STRING is		"concurrent_eiffel";
 	r_Graphics_disabled: STRING is		"graphics_disabled";
 	r_Tabs_disabled: STRING is			"tabs_disabled"
 	r_Windows_timer_delay: STRING is	"windows_timer_delay"

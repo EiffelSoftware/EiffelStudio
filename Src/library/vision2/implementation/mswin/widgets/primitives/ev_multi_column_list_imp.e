@@ -23,7 +23,10 @@ inherit
 			on_key_down
 		end
 
-	EV_ITEM_HOLDER_IMP
+	EV_ARRAYED_LIST_ITEM_HOLDER_IMP
+		redefine
+			move_item
+		end
 
 	EV_ITEM_EVENTS_CONSTANTS_IMP
 		rename
@@ -39,7 +42,6 @@ inherit
 			shown as displayed,
 			font as wel_font,
 			set_font as wel_set_font,
-			count as rows,
 			column_count as columns,
 			selected_items as wel_selected_items,
 			get_item as wel_get_item,
@@ -358,10 +360,12 @@ feature -- Event -- removing command association
 
 feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
-	add_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP) is
-			-- Add `item_imp' at the end of the list
+	item_type: EV_MULTI_COLUMN_LIST_ROW_IMP is
+			-- An empty feature to give a type.
+			-- We don't use the genericity because it is
+			-- too complicated with the multi-platform design.
+			-- Need to be redefined.
 		do
-			insert_item (item_imp, rows + 1)
 		end
 
 	insert_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; index: INTEGER) is

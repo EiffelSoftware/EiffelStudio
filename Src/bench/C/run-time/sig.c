@@ -46,7 +46,7 @@
  * reset to its default behaviour (of course, we do this only when the
  * default behaviour is not SIG_IGN).
  */
-rt_public Signal_t (*esig[NSIG])(int);	/* Array of signal handlers */
+rt_public Signal_t (*esig[EIF_NSIG])(int);	/* Array of signal handlers */
 
 #ifndef EIF_THREADS
 
@@ -55,8 +55,8 @@ rt_public Signal_t (*esig[NSIG])(int);	/* Array of signal handlers */
  * record the original signal status to know whether by default a signal is
  * ignored or not.
  */
-rt_public char sig_ign[NSIG];			/* Is signal ignored by default? */
-rt_public char osig_ign[NSIG];		/* Original signal default (1 = ignored) */
+rt_public char sig_ign[EIF_NSIG];			/* Is signal ignored by default? */
+rt_public char osig_ign[EIF_NSIG];		/* Original signal default (1 = ignored) */
 
 /* Global signal handler status. If set to 0, then signal handler is activated
  * an normal processing occurs. Otherwise, signals are queued if they are not
@@ -183,7 +183,7 @@ rt_shared void trapsig(Signal_t (*handler) (int))
 
 	int sig;						/* Signal number to be set */
 
-	for (sig = 1; sig < NSIG; sig++)
+	for (sig = 1; sig < EIF_NSIG; sig++)
 #ifdef EIF_THREADS
 	/* In Multi-threaded mode, we do not want to call
      * signal () on some specific signals.
@@ -339,7 +339,7 @@ rt_public Signal_t (*esignal(int sig, Signal_t (*func) (int)))(int)
 	Signal_t (*oldfunc)(int);		/* Previous signal handler set */
 	int ignored;				/* Ignore status for previous handler */
 
-	if (sig >= NSIG)
+	if (sig >= EIF_NSIG)
 		return ((Signal_t (*)(int)) -1); /* %%ss added cast int */
 
 	oldfunc = esig[sig];		/* Get previous handler */
@@ -399,7 +399,7 @@ rt_public int esigvec(int sig, struct sigvec *vec, struct sigvec *ovec)
 	Signal_t (*oldfunc)(int);		/* Previous signal handler set */
 	/*	int ignored;	*/			/* Ignore status for previous handler */
 
-	if (sig >= NSIG) {		/* Bad signal, don't bother issuing system call */
+	if (sig >= EIF_NSIG) {		/* Bad signal, don't bother issuing system call */
 		errno = EINVAL;
 		return -1;
 	}
@@ -464,7 +464,7 @@ rt_shared void initsig(void)
 	sig_stk.s_max = 0;				/* First free location */
 	sig_stk.s_pending = '\0';		/* No signals pending yet */
 
-	for (sig = 1; sig < NSIG; sig++) {
+	for (sig = 1; sig < EIF_NSIG; sig++) {
 #ifdef EIF_THREADS
 	/* In Multi-threaded mode, we do not want to call
      * signal () on some specific signals.
@@ -629,7 +629,7 @@ rt_shared void initsig(void)
 	 * "default" state.
 	 */
 
-	for (sig = 1; sig < NSIG; sig++)
+	for (sig = 1; sig < EIF_NSIG; sig++)
 		osig_ign[sig] = sig_ign[sig];
 
 	EIF_END_GET_CONTEXT
@@ -894,7 +894,7 @@ rt_public char *signame(int sig)
 	int i;
 
 #ifdef HAS_SYS_SIGLIST
-	if (sig >= 0 && sig < NSIG && 0 < (unsigned int)strlen(sys_siglist[sig]))
+	if (sig >= 0 && sig < EIF_NSIG && 0 < (unsigned int)strlen(sys_siglist[sig]))
 		return (char *) sys_siglist[sig];
 #endif
 
@@ -1085,7 +1085,7 @@ rt_public char esigdefined (long int sig)
 
 	int i;
 
-	if (sig < 1 || sig > NSIG-1)
+	if (sig < 1 || sig > EIF_NSIG-1)
 		return (char) 0;
 	for (i = 0; /*empty */; i++) {
 		if ((int) sig == sig_name[i].s_num) 
@@ -1101,7 +1101,7 @@ void esigresall(void)
 	/* Reset all the signals to their default handling */
 	EIF_GET_CONTEXT
 	int sig;
-	for (sig = 1; sig < NSIG; sig++)
+	for (sig = 1; sig < EIF_NSIG; sig++)
 #ifdef SIGPROF
 		if (sig != SIGPROF)
 			sig_ign[sig] = osig_ign[sig];

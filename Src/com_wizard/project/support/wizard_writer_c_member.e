@@ -55,9 +55,9 @@ feature -- Access
 	can_generate: BOOLEAN is
 			-- Can code be generated?
 		do
-			Result := (name /= Void and then not name.empty) and
-						(result_type /= Void and then not result_type.empty) and
-						(comment /= Void and then not comment.empty)
+			Result := (name /= Void and then not name.is_empty) and
+						(result_type /= Void and then not result_type.is_empty) and
+						(comment /= Void and then not comment.is_empty)
 		end
 
 feature -- Element Change
@@ -66,7 +66,7 @@ feature -- Element Change
 			-- Set `name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			name := a_name
 		ensure
@@ -77,7 +77,7 @@ feature -- Element Change
 			-- Set `result_type' with `a_result_type'.
 		require
 			non_void_result_type: a_result_type /= Void
-			valid_result_type: not a_result_type.empty
+			valid_result_type: not a_result_type.is_empty
 		do
 			result_type := clone (a_result_type)
 		ensure

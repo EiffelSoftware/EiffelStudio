@@ -48,7 +48,7 @@ feature -- Access
 		do
 			Result := clone (Tab)
 			Result.append (name_for_feature (name))
-			if not constant and then not arguments.empty then
+			if not constant and then not arguments.is_empty then
 				Result.append (Space)
 				from
 					arguments.start
@@ -65,11 +65,11 @@ feature -- Access
 					Result.append (arguments.item)
 					arguments.forth
 				end
-				if not arguments.empty then
+				if not arguments.is_empty then
 					Result.append (Close_parenthesis)
 				end
 			end
-			if result_type /= Void and then not result_type.empty then
+			if result_type /= Void and then not result_type.is_empty then
 				Result.append (Colon)
 				Result.append (Space)
 				Result.append (result_type)
@@ -101,7 +101,7 @@ feature -- Access
 					Result.append (preconditions.item.generated_code)
 					preconditions.forth
 				end
-				if not preconditions.empty then
+				if not preconditions.is_empty then
 					Result.append (New_line_tab_tab)
 				end
 				if not is_deferred then
@@ -117,7 +117,7 @@ feature -- Access
 						Result.append (local_variables.item)
 						local_variables.forth
 					end
-					if not local_variables.empty then
+					if not local_variables.is_empty then
 						Result.append (New_line_tab_tab)
 					end
 				end
@@ -147,7 +147,7 @@ feature -- Access
 					Result.append (postconditions.item.generated_code)
 					postconditions.forth
 				end
-				if postconditions /= Void and then not postconditions.empty then
+				if postconditions /= Void and then not postconditions.is_empty then
 					Result.append (New_line_tab_tab)
 				end
 				Result.append (End_keyword)
@@ -218,7 +218,7 @@ feature -- Element Change
 			-- Add `a_argument' to `arguments'.
 		require
 			non_void_argument: a_argument /= Void
-			valid_argument: not a_argument.empty
+			valid_argument: not a_argument.is_empty
 			not_constant: not constant
 			not_attribute: not is_attribute
 		do
@@ -231,7 +231,7 @@ feature -- Element Change
 			-- Add `a_variable' to `local_variables'.
 		require
 			non_void_variable: a_variable /= Void
-			valid_variable: not a_variable.empty
+			valid_variable: not a_variable.is_empty
 			not_constant: not constant
 			not_attribute: not is_attribute
 		do
@@ -244,7 +244,7 @@ feature -- Element Change
 			-- Set `result_type' with `a_result_type'.
 		require
 			non_void_result_type: a_result_type /= Void
-			valid_result_type: not a_result_type.empty
+			valid_result_type: not a_result_type.is_empty
 			not_constant: not constant
 		do
 			result_type := clone (a_result_type)
@@ -280,7 +280,7 @@ feature -- Element Change
 			-- Set `body' with `a_body'.
 		require
 			non_void_body: a_body /= Void
-			valid_syntax: (not a_body.empty) implies (not (a_body.item (a_body.count) = '%N') and not (a_body.item (1) = '%N'))
+			valid_syntax: (not a_body.is_empty) implies (not (a_body.item (a_body.count) = '%N') and not (a_body.item (1) = '%N'))
 			not_constant: not constant
 			not_deferred: not is_deferred
 		do
@@ -293,7 +293,7 @@ feature -- Element Change
 			-- Set `comment' with `a_comment'.
 		require
 			non_void_comment: a_comment /= Void
-			valid_comment: not a_comment.empty
+			valid_comment: not a_comment.is_empty
 			valid_syntax: not (a_comment.item (a_comment.count) = '%N') and not (a_comment.item (1) = '%N')
 		do
 			comment := clone (a_comment)

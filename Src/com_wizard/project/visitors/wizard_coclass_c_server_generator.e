@@ -137,7 +137,7 @@ feature {NONE} -- Implementation
 		do
 			if 
 				a_coclass_descriptor.default_dispinterface_name /= Void and then
-				not a_coclass_descriptor.default_dispinterface_name.empty
+				not a_coclass_descriptor.default_dispinterface_name.is_empty
 			then
 				Result := clone (a_coclass_descriptor.default_dispinterface_name)
 			elseif (dispinterface_names /= Void) then
@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 		do
 			if 
 				a_coclass_descriptor.source_interface_descriptors /= Void and then
-				not a_coclass_descriptor.source_interface_descriptors.empty
+				not a_coclass_descriptor.source_interface_descriptors.is_empty
 			then
 				from 
 					a_coclass_descriptor.source_interface_descriptors.start
@@ -175,7 +175,7 @@ feature {NONE} -- Implementation
 			create Result.make (0)
 			if 
 				a_coclass.source_interface_descriptors /= Void and then
-				not a_coclass.source_interface_descriptors.empty
+				not a_coclass.source_interface_descriptors.is_empty
 			then
 				from
 					a_coclass.source_interface_descriptors.start
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 			create Result.make (0)
 			if 
 				a_coclass.source_interface_descriptors /= Void and then
-				not a_coclass.source_interface_descriptors.empty
+				not a_coclass.source_interface_descriptors.is_empty
 			then
 				from
 					a_coclass.source_interface_descriptors.start
@@ -264,7 +264,7 @@ feature {NONE} -- Implementation
 			create tmp_body.make (10000)
 			tmp_body.append (Tab)
 
-			if not a_coclass_descriptor.interface_descriptors.empty then
+			if not a_coclass_descriptor.interface_descriptors.is_empty then
 				tmp_body.append (case_body_in_query_interface 
 					(a_coclass_descriptor.interface_descriptors.first.c_type_name,
 					a_coclass_descriptor.interface_descriptors.first.namespace,
@@ -423,7 +423,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_interface: an_interface /= Void
 			non_void_interface_id: interface_id /= Void
-			valid_interface_id: not interface_id.empty
+			valid_interface_id: not interface_id.is_empty
 		do
 			create Result.make (200)
 			Result.append (If_keyword)
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation
 			Result.append (Space)
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty
+			valid_body: not Result.is_empty
 		end
 
 	get_class_info_function (a_coclass: WIZARD_COCLASS_DESCRIPTOR): WIZARD_WRITER_C_FUNCTION is
@@ -492,7 +492,7 @@ feature {NONE} -- Implementation
 			source_name := default_source_dispinterface_name (a_coclass)
 			if
 				source_name /= Void and then
-				not source_name.empty
+				not source_name.is_empty
 			then
 				body.append (iid_name (source_name))
 			else

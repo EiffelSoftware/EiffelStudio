@@ -20,8 +20,8 @@ feature {NONE} -- Initialization
 		require
 			non_void_tag: a_tag /= Void
 			non_void_body: a_body /= Void
-			valid_tag: not a_tag.empty
-			valid_body: not a_body.empty
+			valid_tag: not a_tag.is_empty
+			valid_body: not a_body.is_empty
 		do
 			tag := a_tag
 			body := a_body
@@ -44,7 +44,7 @@ feature -- Access
 	can_generate: BOOLEAN is
 			-- Can code be generated?
 		do
-			Result := (tag /= Void and then not tag.empty) and (body /= Void and then not body.empty)
+			Result := (tag /= Void and then not tag.is_empty) and (body /= Void and then not body.is_empty)
 		end
 		
 	tag: STRING
@@ -59,7 +59,7 @@ feature -- Element Change
 			-- Set `tag' with `a_tag'.
 		require
 			non_void_tag: a_tag /= Void
-			valid_tag: not a_tag.empty
+			valid_tag: not a_tag.is_empty
 		do
 		ensure
 			tag_set: tag.is_equal (a_tag)
@@ -69,7 +69,7 @@ feature -- Element Change
 			-- Set `body' with `a_body'.
 		require
 			non_void_body: a_body /= Void
-			valid_body: not a_body.empty
+			valid_body: not a_body.is_empty
 		do
 		ensure
 			body_set: body = a_body

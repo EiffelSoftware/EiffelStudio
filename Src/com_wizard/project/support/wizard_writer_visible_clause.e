@@ -29,7 +29,7 @@ feature -- Access
 			create Result.make (100)
 			Result.append (Tab_tab_tab)
 			Result.append (name)
-			if not exported_features.empty then
+			if not exported_features.is_empty then
 				Result.append (New_line)
 				Result.append (Tab_tab_tab)
 				Result.append (tab)
@@ -62,7 +62,7 @@ feature -- Access
 	can_generate: BOOLEAN is
 			-- Can code be generated?
 		do
-			Result := name /= Void and then not name.empty
+			Result := name /= Void and then not name.is_empty
 		end
 
 	name: STRING
@@ -86,7 +86,7 @@ feature -- Element change
 			-- Add `a_feature to `exported_features'.
 		require
 			non_void_feature: a_feature /= Void
-			valid_feature: not a_feature.empty
+			valid_feature: not a_feature.is_empty
 		do
 			exported_features.extend (clone (a_feature))
 		ensure

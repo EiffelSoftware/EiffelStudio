@@ -35,7 +35,7 @@ feature {NONE} -- Basic operations
 			non_void_coclass_name: a_component.name /= Void
 			non_void_property: a_property /= Void
 			non_void_interface_name: interface_name /= Void
-			valid_interface_name: not interface_name.empty
+			valid_interface_name: not interface_name.is_empty
 		local
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
@@ -62,14 +62,14 @@ feature {NONE} -- Implementation
 			non_void_component: a_component /= Void
 			non_void_interface_name: interface_name /= Void
 			non_void_property: a_property/= Void
-			valid_interface_name: not interface_name.empty
+			valid_interface_name: not interface_name.is_empty
 		do
 			-- Access feature (get_  function)
 			create c_access_feature.make
 
 			c_access_feature.set_name (external_feature_name (a_property.eiffel_name (a_component)))
 
-			if visitor.c_header_file /= Void and then not visitor.c_header_file.empty then
+			if visitor.c_header_file /= Void and then not visitor.c_header_file.is_empty then
 				set_header_file (visitor.c_header_file)
 			end
 
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			non_void_component: a_component /= Void
 			non_void_interface_name: interface_name /= Void
 			non_void_property: a_property/= Void
-			valid_interface_name: not interface_name.empty
+			valid_interface_name: not interface_name.is_empty
 		local
 			a_comment, a_signature, set_feature_name: STRING
 		do
@@ -162,7 +162,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_visitor: visitor /= Void
 			non_void_interface_name: interface_name /= Void
-			valid_interface_name: not interface_name.empty
+			valid_interface_name: not interface_name.is_empty
 			non_void_access_feature: c_access_feature /= Void
 		local
 			tmp_body: STRING
@@ -229,7 +229,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_visitor: visitor /= Void
 			non_void_interface_name: interface_name /= Void
-			valid_interface_name: not interface_name.empty
+			valid_interface_name: not interface_name.is_empty
 			non_void_c_setting_feature: c_setting_feature /= Void
 		local
 			tmp_body: STRING
@@ -413,7 +413,7 @@ feature {NONE} -- Implementation
 			tmp_body.append (examine_parameter_error (Hresult_variable_name))
 			tmp_body.append (examine_hresult_with_pointer (Hresult_variable_name, pointer_var))
 
-			if not pointer_var.empty then
+			if not pointer_var.is_empty then
 				tmp_body.append (New_line_tab)
 				tmp_body.append (Co_task_mem_free)
 				tmp_body.append (Space_open_parenthesis)

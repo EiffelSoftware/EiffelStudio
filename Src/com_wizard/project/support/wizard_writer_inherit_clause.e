@@ -33,10 +33,10 @@ feature -- Access
 		do
 			Result := clone (Tab)
 			Result.append (name)
-			if not sources.empty or not exports.empty or not undefines.empty or
-				not redefines.empty or not selects.empty then
+			if not sources.is_empty or not exports.is_empty or not undefines.is_empty or
+				not redefines.is_empty or not selects.is_empty then
 				Result.append (New_line_tab_tab)
-				if not sources.empty then
+				if not sources.is_empty then
 					Result.append (Rename_keyword)
 						sources.start 
 						destinations.start
@@ -64,7 +64,7 @@ feature -- Access
 					end
 					Result.append (New_line_tab_tab)
 				end
-				if not exports.empty then
+				if not exports.is_empty then
 					Result.append (Export_keyword)
 					from
 						exports.start
@@ -94,7 +94,7 @@ feature -- Access
 					end
 					Result.append (New_line_tab_tab)
 				end
-				if not undefines.empty then
+				if not undefines.is_empty then
 					Result.append (Undefine_keyword)
 					Result.append (New_line_tab_tab_tab)
 					from
@@ -111,7 +111,7 @@ feature -- Access
 					end
 					Result.append (New_line_tab_tab)
 				end
-				if not redefines.empty then
+				if not redefines.is_empty then
 					Result.append (Redefine_keyword)
 					Result.append (New_line_tab_tab_tab)
 					from
@@ -128,7 +128,7 @@ feature -- Access
 					end
 					Result.append (New_line_tab_tab)
 				end
-				if not selects.empty then
+				if not selects.is_empty then
 					Result.append (Select_keyword)
 					Result.append (New_line_tab_tab_tab)
 					from
@@ -182,7 +182,7 @@ feature -- Element Change
 			-- Set `name' with `a_name'.
 		require	
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 		do
 			name := a_name
 		ensure
@@ -193,9 +193,9 @@ feature -- Element Change
 			-- Add renaming clause with source `source' and destination `destination'.
 		require
 			non_void_source: source /= Void
-			valid_source: not source.empty
+			valid_source: not source.is_empty
 			non_void_destination: destination /= Void
-			valid_destination: not destination.empty
+			valid_destination: not destination.is_empty
 		do
 			sources.extend (source)
 			destinations.extend (destination)
@@ -205,7 +205,7 @@ feature -- Element Change
 			-- Add redefine clause for feature `a_feature'.
 		require
 			non_void_feature: a_feature/= Void
-			valid_feature: not a_feature.empty
+			valid_feature: not a_feature.is_empty
 		do
 			redefines.extend (a_feature)
 		ensure
@@ -216,9 +216,9 @@ feature -- Element Change
 			-- Add export clause for features `features' exported to `class'.
 		require
 			non_void_features: features /= Void
-			valid_features: not features.empty
+			valid_features: not features.is_empty
 			non_void_class: a_class /= Void
-			valid_class: not a_class.empty
+			valid_class: not a_class.is_empty
 		local
 			export_directive: WIZARD_WRITER_EXPORT_DIRECTIVE
 		do
@@ -230,7 +230,7 @@ feature -- Element Change
 			-- Add undefine clause for feature `a_feature'.
 		require
 			non_void_features: a_feature/= Void
-			valid_features: not a_feature.empty
+			valid_features: not a_feature.is_empty
 		do
 			undefines.extend (a_feature)
 		ensure
@@ -241,7 +241,7 @@ feature -- Element Change
 			-- Add select clause with feature `a_feature'.
 		require
 			non_void_features: a_feature/= Void
-			valid_features: not a_feature.empty
+			valid_features: not a_feature.is_empty
 		do
 			selects.extend (a_feature)
 		ensure

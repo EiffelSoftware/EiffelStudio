@@ -46,7 +46,7 @@ feature -- Basic operations
 				generate_functions_and_properties (an_interface.inherited_interface)
 			end		
 
-			if not an_interface.properties.empty then
+			if not an_interface.properties.is_empty then
 				from
 					an_interface.properties.start
 				until

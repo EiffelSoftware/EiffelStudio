@@ -56,7 +56,7 @@ feature -- Basic Operations
 
 			if 
 				shared_wizard_environment.server and
-				not system_descriptor.coclasses.empty
+				not system_descriptor.coclasses.is_empty
 			then
 				cpp_class_writer.add_import ("server_registration.h")
 			end
@@ -181,7 +181,7 @@ feature -- Basic Operations
 			if 
 				shared_wizard_environment.server and
 				shared_wizard_environment.out_of_process_server and
-				not system_descriptor.coclasses.empty
+				not system_descriptor.coclasses.is_empty
 			then
 				Result.append (New_line_tab)
 				Result.append ("LockModule ();")
@@ -289,7 +289,7 @@ feature -- Basic Operations
 			if 
 				shared_wizard_environment.server and
 				shared_wizard_environment.out_of_process_server and
-				not system_descriptor.coclasses.empty
+				not system_descriptor.coclasses.is_empty
 			then
 				Result.append (New_line_tab)
 				Result.append ("LockModule ();")
@@ -297,7 +297,7 @@ feature -- Basic Operations
 
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty
+			valid_body: not Result.is_empty
 		end
 
 	add_constructor (a_component: WIZARD_COMPONENT_DESCRIPTOR) is
@@ -376,7 +376,7 @@ feature -- Basic Operations
 			if 
 				shared_wizard_environment.server and
 				shared_wizard_environment.out_of_process_server and
-				not system_descriptor.coclasses.empty
+				not system_descriptor.coclasses.is_empty
 			then
 				tmp_body.append (New_line_tab)
 				tmp_body.append ("UnlockModule ();")
@@ -684,7 +684,7 @@ feature -- Basic Operations
 					interface_desc.functions_forth
 				end
 
-				if not interface_desc.properties.empty then
+				if not interface_desc.properties.is_empty then
 					from
 						interface_desc.properties.start
 					until
@@ -695,7 +695,7 @@ feature -- Basic Operations
 					end
 				end
 
-				if not prop_get_functions.empty then
+				if not prop_get_functions.is_empty then
 					from
 						prop_get_functions.start
 					until
@@ -714,7 +714,7 @@ feature -- Basic Operations
 					end
 				end
 
-				if not prop_put_functions.empty then
+				if not prop_put_functions.is_empty then
 					from
 						prop_put_functions.start
 					until
@@ -733,7 +733,7 @@ feature -- Basic Operations
 			non_void_result: Result /= Void
 			valid_result: interface_desc.inherit_from_dispatch and 
 					not interface_desc.functions_empty
-					implies not Result.empty
+					implies not Result.is_empty
 		end
 
 	properties_case_body (prop_desc: WIZARD_PROPERTY_DESCRIPTOR): STRING is
@@ -923,7 +923,7 @@ feature -- Basic Operations
 			-- Code for case statement.
 		require
 			non_void_body: a_case_body /= Void
-			non_empty_body: not a_case_body.empty 
+			non_empty_body: not a_case_body.is_empty 
 			valid_body_start: a_case_body.substring_index ("%N%T%T%T%<", 1) = 1 or a_case_body.substring_index ("%N%T%T%Tif", 1) = 1
 		do
 			create Result.make (1000)
@@ -939,7 +939,7 @@ feature -- Basic Operations
 			Result.append (New_line)
 		ensure
 			non_void_code: Result /= Void
-			non_empty_code: not Result.empty
+			non_empty_code: not Result.is_empty
 		end
 
 	function_case (func_desc: WIZARD_FUNCTION_DESCRIPTOR): STRING is
@@ -1219,9 +1219,9 @@ feature -- Basic Operations
 			-- Case body in QueryInterface function implemenatation.
 		require
 			non_void_interface_name: interface_name /= Void
-			valid_interface_name: not interface_name.empty
+			valid_interface_name: not interface_name.is_empty
 			non_void_interface_id: interface_id /= Void
-			valid_interface_id: not interface_id.empty
+			valid_interface_id: not interface_id.is_empty
 		do
 			create Result.make (200)
 			Result.append (If_keyword)
@@ -1237,7 +1237,7 @@ feature -- Basic Operations
 			Result.append (Less)
 			if 
 				interface_namespace /= Void and then
-				not interface_namespace.empty
+				not interface_namespace.is_empty
 			then
 				Result.append (interface_namespace)
 				Result.append ("::")
@@ -1253,7 +1253,7 @@ feature -- Basic Operations
 			Result.append (Else_keyword)
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty
+			valid_body: not Result.is_empty
 		end
 	
 	default_dispinterface_name (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR): STRING is

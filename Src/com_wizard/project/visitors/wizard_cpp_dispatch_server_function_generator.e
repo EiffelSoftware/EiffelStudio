@@ -45,7 +45,7 @@ feature {NONE} -- Implementation
 		do
 			create Result.make (1000)
 			if 
-				func_desc.arguments.empty and 
+				func_desc.arguments.is_empty and 
 				not does_routine_have_result (func_desc) 
 			then
 				Result.append (Void_c_keyword)					
@@ -85,7 +85,7 @@ feature {NONE} -- Implementation
 
 				if 
 					not does_routine_have_result (func_desc) and
-					not func_desc.arguments.empty
+					not func_desc.arguments.is_empty
 				then
 					Result.remove (Result.count)
 				else
@@ -140,7 +140,7 @@ feature {NONE} -- Implementation
 					if is_paramflag_fout (func_desc.arguments.item.flags) then
 						variables.append (variable_set_up (func_desc.arguments.item.name, visitor))
 						variables.append (New_line_tab)
-						out_value.append (out_value_set_up (func_desc.arguments.item.name, visitor))
+						out_value.append (out_value_set_up (func_desc.arguments.item.name, visitor, func_desc.arguments.item.type))
 						out_value.append (New_line_tab)
 
 						add_to_cecil_call_arguments (visitor, func_desc.arguments.item.name)

@@ -37,7 +37,7 @@ feature -- Basic operations
 				data_member.set_name (a_variable_name)
 
 				create a_variable_type.make (100)
-				if an_interface.namespace /= Void and then not an_interface.namespace.empty then
+				if an_interface.namespace /= Void and then not an_interface.namespace.is_empty then
 					a_variable_type.append (an_interface.namespace)
 					a_variable_type.append ("::")
 				end

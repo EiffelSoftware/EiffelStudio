@@ -46,7 +46,7 @@ feature -- Basic operations
 			end
 
 			if coclass.source_interface_descriptors /= Void then
-				source := not coclass.source_interface_descriptors.empty
+				source := not coclass.source_interface_descriptors.is_empty
 				from
 					coclass.source_interface_descriptors.start
 				until

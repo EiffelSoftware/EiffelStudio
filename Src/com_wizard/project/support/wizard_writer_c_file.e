@@ -58,7 +58,7 @@ feature -- Access
 			Result.append (header_protector (header_file_name))
 			Result.append (New_line)
 
-			if not others_forward.empty then
+			if not others_forward.is_empty then
 				Result.append (cpp_protector_start)
 				Result.append (New_line)
 
@@ -213,8 +213,8 @@ feature -- Access
 	can_generate: BOOLEAN is
 			-- Can code be generated?
 		do
-			Result := header /= Void and then not header.empty
-					and header_file_name /= Void and then not header_file_name.empty
+			Result := header /= Void and then not header.is_empty
+					and header_file_name /= Void and then not header_file_name.is_empty
 		end
 
 feature -- Element Change

@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			Result.append (Co_uninitialize_function)
 		ensure
 			non_void_destructor: Result /= void
-			valid_descructor: not Result.empty
+			valid_descructor: not Result.is_empty
 		end
 
 	default_constructor (a_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR): WIZARD_WRITER_CPP_CONSTRUCTOR is
@@ -388,7 +388,7 @@ feature {NONE} -- Implementation
 
 		ensure
 			non_void_cocreate_instance: Result /= Void
-			valid_cocreate_instance: not Result.empty
+			valid_cocreate_instance: not Result.is_empty
 		end
 
 	multiple_query_interfaces: STRING is
@@ -419,7 +419,7 @@ feature {NONE} -- Implementation
 			Result.append (New_line)
 		ensure
 			non_void_multiple_query_interface: Result /= Void
-			valid_multiple_query_interface: not Result.empty
+			valid_multiple_query_interface: not Result.is_empty
 		end
 
 

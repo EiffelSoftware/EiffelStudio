@@ -58,7 +58,7 @@ feature -- Access
 			Result.append (class_name)
 			Result.append (New_line)
 			Result.append (New_line)
-			if not inherit_clauses.empty then
+			if not inherit_clauses.is_empty then
 				Result.append (Inherit_keyword)
 			end
 			from
@@ -71,7 +71,7 @@ feature -- Access
 				Result.append (New_line)
 				inherit_clauses.forth
 			end
-			if not inherit_clauses.empty then
+			if not inherit_clauses.is_empty then
 				Result.append (New_line)
 			end
 			if empty_creation_routines then
@@ -95,7 +95,7 @@ feature -- Access
 					Result.append (creation_routines.item)
 					creation_routines.forth
 				end
-				if not creation_routines.empty then
+				if not creation_routines.is_empty then
 					Result.append (New_line)
 					Result.append (New_line)
 				end
@@ -171,7 +171,7 @@ feature -- Access
 	can_generate: BOOLEAN is
 			-- Can code be generated?
 		do
-			Result := class_name /= Void and then not class_name.empty
+			Result := class_name /= Void and then not class_name.is_empty
 		end
 				
 	Default_description: STRING is "No description available."
@@ -185,7 +185,7 @@ feature -- Element Change
 	set_empty_creation_routines is
 			-- Set no creation routines with `create' keyword.
 		require
-			no_creation_routines: creation_routines.empty
+			no_creation_routines: creation_routines.is_empty
 		do
 			empty_creation_routines := True
 		ensure
@@ -196,7 +196,7 @@ feature -- Element Change
 			-- Set `class_name' with `a_class_name'.
 		require
 			non_void_class_name: a_class_name /= Void
-			valid_class_name: not a_class_name.empty
+			valid_class_name: not a_class_name.is_empty
 		do
 			class_name := a_class_name
 		ensure
@@ -207,7 +207,7 @@ feature -- Element Change
 			-- Set `description' with `a_description'.
 		require
 			non_void_description: a_description /= Void
-			valid_description: not a_description.empty
+			valid_description: not a_description.is_empty
 		do
 			description := a_description
 		ensure
@@ -228,7 +228,7 @@ feature -- Element Change
 			-- Add `a_creation_routine' to creation routines.
 		require
 			non_void_creation_routines: a_creation_routine /= Void
-			valid_creation_routine: not a_creation_routine.empty
+			valid_creation_routine: not a_creation_routine.is_empty
 		do
 			creation_routines.extend (a_creation_routine)
 		ensure
@@ -282,7 +282,7 @@ invariant
 	non_void_features: features /= Void
 	non_void_invariants: invariants /= Void
 	non_void_inherit_clauses: inherit_clauses /= Void
-	valid_empty_creation_routines: empty_creation_routines implies creation_routines.empty
+	valid_empty_creation_routines: empty_creation_routines implies creation_routines.is_empty
 
 end -- WIZARD_WRITER_EIFFEL_CLASS
 

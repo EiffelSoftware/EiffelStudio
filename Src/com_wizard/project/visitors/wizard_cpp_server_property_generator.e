@@ -330,7 +330,7 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 		ensure
 			non_void_function: Result /= Void
-			valid_function: not Result.empty
+			valid_function: not Result.is_empty
 		end
 
 	cecil_function_code (function_type, function_name, call_func_name: STRING): STRING is
@@ -339,8 +339,8 @@ feature {NONE} -- Implementation
 			non_void_type: function_type /= Void
 			non_void_name: function_name /= Void
 			non_void_call_name: call_func_name /= Void
-			not_empty: not function_type.empty and then not function_name.empty
-							and then not call_func_name.empty
+			not_empty: not function_type.is_empty and then not function_name.is_empty
+							and then not call_func_name.is_empty
 		do
 			-- EIF_type_FUNCTION eiffel_function = 0;
 			
@@ -369,7 +369,7 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 		ensure
 			non_void_code: Result /= Void
-			valid_code: not Result.empty
+			valid_code: not Result.is_empty
 		end
 
 	cecil_procedure (function_name: STRING; visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
@@ -442,7 +442,7 @@ feature {NONE} -- Implementation
 			end
 		ensure
 			non_void_procedure: Result /= Void
-			valid_procedure: not Result.empty
+			valid_procedure: not Result.is_empty
 		end
 
 end -- class WIZARD_C_SERVER_PROPERTY_GENERATOR

@@ -196,7 +196,7 @@ feature {NONE} -- Implementation
 			-- C to Eiffel function body for ARRAY (of automation data type elements).
 		require
 			non_void_function_name: rt_function_name /= Void
-			valid_function_name:  not rt_function_name.empty
+			valid_function_name:  not rt_function_name.is_empty
 			valid_dim_count: dim_count > 0
 			non_void_element_count: element_count /= Void
 			valid_element_count: element_count.count = dim_count
@@ -284,7 +284,7 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 		ensure
 			non_void_result: Result /= Void
-			non_empty_result: not Result.empty
+			non_empty_result: not Result.is_empty
 		end
 
 	ce_array_function_body_non_automation 
@@ -293,9 +293,9 @@ feature {NONE} -- Implementation
 					is_element_structure: BOOLEAN): STRING is
 			-- C to Eiffel function body for ARRAY (of non_automation data type elements).
 		require
-			valid_function_name: element_ce_function /= Void and then not element_ce_function.empty
-			valid_c_type: element_c_type /= Void and then not element_c_type.empty
-			valid_eiffel_type: element_eiffel_type /= Void and then not element_eiffel_type.empty
+			valid_function_name: element_ce_function /= Void and then not element_ce_function.is_empty
+			valid_c_type: element_c_type /= Void and then not element_c_type.is_empty
+			valid_eiffel_type: element_eiffel_type /= Void and then not element_eiffel_type.is_empty
 			valid_dim_count: dim_count > 0
 			valid_element_count: element_count /= Void and then element_count.count = dim_count
 		local
@@ -1098,14 +1098,14 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty
+			valid_body: not Result.is_empty
 		end
 
 	ec_array_function_body_automation (rt_function_name: STRING; dim_count: INTEGER; need_generate: BOOLEAN): STRING is
 			--
 		require
 			non_void_rt_function_name: rt_function_name /= Void
-			valid_rt_function_name: not rt_function_name.empty
+			valid_rt_function_name: not rt_function_name.is_empty
 			valid_dim_count: dim_count > 0
 		do
 			create Result.make (10000)
@@ -1134,7 +1134,7 @@ feature {NONE} -- Implementation
 			
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty
+			valid_body: not Result.is_empty
 		end
 
 	ec_array_function_body_non_automation (element_ec_function, element_c_type, element_eiffel_type: STRING;
@@ -1143,11 +1143,11 @@ feature {NONE} -- Implementation
 				-- C to Eiffel function body for ARRAY (of non_automation data type elements).
 		require
 			non_void_element_ec_function: element_ec_function /= Void
-			valid_element_ec_function: not element_ec_function.empty
+			valid_element_ec_function: not element_ec_function.is_empty
 			non_void_element_c_type: element_c_type /= Void
-			valid_element_c_type: not element_c_type.empty
+			valid_element_c_type: not element_c_type.is_empty
 			non_void_element_eiffel_type: element_eiffel_type /= Void
-			valid_element_eiffel_type: not element_eiffel_type.empty
+			valid_element_eiffel_type: not element_eiffel_type.is_empty
 			valid_dim_count: dim_count > 0
 			valid_element_count: element_count /= Void and then element_count.count = dim_count
 		do
@@ -1565,7 +1565,7 @@ feature {NONE} -- Implementation
 
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty
+			valid_body: not Result.is_empty
 		end
 end -- class WIZARD_ARRAY_DATA_TYPE_GENERATOR
 

@@ -112,7 +112,7 @@ feature -- Access
 			until
 				constructors.after
 			loop
-				if namespace /= Void and then not namespace.empty then
+				if namespace /= Void and then not namespace.is_empty then
 					Result.append (namespace)
 					Result.append (Colon)
 					Result.append (Colon)
@@ -129,8 +129,8 @@ feature -- Access
 				Result.append (New_line)
 				constructors.forth
 			end
-			if destructor_body /= Void and then not destructor_body.empty then
-				if namespace /= Void and then not namespace.empty then
+			if destructor_body /= Void and then not destructor_body.is_empty then
+				if namespace /= Void and then not namespace.is_empty then
 					Result.append (namespace)
 					Result.append (Colon)
 					Result.append (Colon)
@@ -301,7 +301,7 @@ feature -- Access
 				Result.append (New_line)
 			end
 
-			if namespace /= Void and then not namespace.empty then
+			if namespace /= Void and then not namespace.is_empty then
 				Result.append ("namespace ")
 				Result.append (namespace)
 				Result.append (New_line)
@@ -312,7 +312,7 @@ feature -- Access
 			Result.append (C_class_keyword)
 			Result.append (Space)
 			Result.append (name)
-			if not parents.empty then
+			if not parents.is_empty then
 				Result.append (Space)
 				Result.append (Colon)
 				Result.append (Space)
@@ -320,7 +320,7 @@ feature -- Access
 					parents.start
 					Result.append (cpp_status_keywords.item (parents.item.export_status))
 					Result.append (Space)
-					if parents.item.namespace /= Void and then not parents.item.namespace.empty then
+					if parents.item.namespace /= Void and then not parents.item.namespace.is_empty then
 						Result.append (parents.item.namespace)
 						Result.append ("::")
 					end
@@ -361,7 +361,7 @@ feature -- Access
 				constructors.forth
 			end
 
-			if constructors.empty then
+			if constructors.is_empty then
 				Result.append (Tab)
 				Result.append (name)
 				Result.append (Space)
@@ -384,7 +384,7 @@ feature -- Access
 			Result.append (Space)
 			Result.append (Open_parenthesis)
 			Result.append (Close_parenthesis)
-			if destructor_body = Void or else destructor_body.empty then
+			if destructor_body = Void or else destructor_body.is_empty then
 				Result.append (Space)
 				Result.append (Open_curly_brace)
 				Result.append (Close_curly_brace)
@@ -408,7 +408,7 @@ feature -- Access
 			Result.append (Semicolon)
 			Result.append (New_line)
 
-			if namespace /= Void and then not namespace.empty then
+			if namespace /= Void and then not namespace.is_empty then
 				Result.append (Close_curly_brace)
 				Result.append (New_line)
 			end
@@ -447,8 +447,8 @@ feature -- Access
 			-- Can code be generated?
 		do
 			Result := name /= Void and header /= Void 
-				and header_file_name /= Void and then not header_file_name.empty
-				and not abstract implies not constructors.empty
+				and header_file_name /= Void and then not header_file_name.is_empty
+				and not abstract implies not constructors.is_empty
 		end
 
 	name: STRING
@@ -491,7 +491,7 @@ feature -- Element Change
 			-- Set `name' with `a_name'.
 		require
 			non_void_name: a_name /= Void
-			valid_name: not a_name.empty
+			valid_name: not a_name.is_empty
 			valid_syntax: a_name.item (1) /= '%N' and a_name.item (a_name.count) /= '%N'
 		do
 			name := a_name
@@ -524,7 +524,7 @@ feature -- Element Change
 			-- Set `a_destructor_body' as destructor.
 		require
 			non_void_destructor: a_destructor_body /= Void
-			valid_destructor: not a_destructor_body.empty
+			valid_destructor: not a_destructor_body.is_empty
 		do
 			destructor_body := a_destructor_body
 		ensure
@@ -580,7 +580,7 @@ feature -- Element Change
 			-- Add `a_parent' to `parents'.
 		require
 			non_void_parent: a_name /= Void
-			valid_parent: not a_name.empty
+			valid_parent: not a_name.is_empty
 			valid_syntax: a_name.item (1) /= '%N' and a_name.item (a_name.count) /= '%N'
 		local
 			a_parent: WIZARD_PARENT_CPP_CLASS
@@ -672,7 +672,7 @@ feature {NONE} -- Implementation
 			create Result.make (10000)
 			Result.append (a_function.result_type)
 			Result.append (Space)
-			if namespace /= Void and then not namespace.empty then
+			if namespace /= Void and then not namespace.is_empty then
 				Result.append (namespace)
 				Result.append (Colon)
 				Result.append (Colon)
@@ -705,7 +705,7 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 		ensure
 			non_void_body: Result /= Void
-			valid_body: not Result.empty
+			valid_body: not Result.is_empty
 		end
 
 invariant

@@ -228,7 +228,7 @@ feature -- Access
 			Result := clone (c_names.item (a_var_type))
 		ensure
 			non_void_c_name: Result /= Void
-			valid_c_name: not Result.empty
+			valid_c_name: not Result.is_empty
 		end
 
 	eiffel_name (a_var_type: INTEGER): STRING is
@@ -239,7 +239,7 @@ feature -- Access
 			Result := clone (eiffel_names.item (a_var_type))
 		ensure
 			non_void_eiffel_name: Result /= Void
-			valid_eiffel_name: not Result.empty
+			valid_eiffel_name: not Result.is_empty
 		end
 
 	variant_field_name (a_visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
@@ -261,7 +261,7 @@ feature -- Access
 
 			Result := clone (variant_field_names.item (a_type))
 
-			if (Result = Void or else Result.empty) then
+			if (Result = Void or else Result.is_empty) then
 				if a_visitor.is_interface_pointer or a_visitor.is_coclass_pointer then
 					Result := clone (Variant_punkval)
 				elseif  a_visitor.is_interface_pointer_pointer or a_visitor.is_coclass_pointer_pointer then
@@ -284,7 +284,7 @@ feature -- Access
 			Result := clone (ce_array_function_names.item (a_var_type))
 		ensure
 			non_void_ce_array_function_name: Result /= Void
-			valid_c_name: not Result.empty
+			valid_c_name: not Result.is_empty
 		end
 
 	ec_array_function_name (a_var_type: INTEGER): STRING is
@@ -295,7 +295,7 @@ feature -- Access
 			Result := clone (ec_array_function_names.item (a_var_type))
 		ensure
 			non_void_ec_array_function_name: Result /= Void
-			valid_c_name: not Result.empty
+			valid_c_name: not Result.is_empty
 		end
 
 feature {NONE} -- Implementation

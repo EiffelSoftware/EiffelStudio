@@ -47,7 +47,7 @@ feature -- Basic operations
 
 			set_vtable_function_return_type
 
-			if visitor.c_header_file /= Void and then not visitor.c_header_file.empty then
+			if visitor.c_header_file /= Void and then not visitor.c_header_file.is_empty then
 				c_header_files.force (visitor.c_header_file)
 			end
 
@@ -81,7 +81,7 @@ feature -- Basic operations
 
 			ccom_feature_writer.set_result_type(Std_method_imp)
 
-			if not func_desc.arguments.empty or else not func_desc.return_type.name.is_equal (Void_c_keyword) then
+			if not func_desc.arguments.is_empty or else not func_desc.return_type.name.is_equal (Void_c_keyword) then
 				from
 					func_desc.arguments.start
 				until
@@ -96,7 +96,7 @@ feature -- Basic operations
 					signature.append (Space)
 					signature.append (func_desc.arguments.item.name)
 					signature.append (Comma)
-					if visitor.c_header_file /= Void and then not visitor.c_header_file.empty then
+					if visitor.c_header_file /= Void and then not visitor.c_header_file.is_empty then
 						c_header_files.force (visitor.c_header_file)
 					end
 
@@ -117,7 +117,7 @@ feature -- Basic operations
 					signature.append (Return_value_name)
 				end
 					
-				if visitor.c_header_file /= Void and then not visitor.c_header_file.empty then
+				if visitor.c_header_file /= Void and then not visitor.c_header_file.is_empty then
 					c_header_files.force (visitor.c_header_file)
 				end
 			end
@@ -137,7 +137,7 @@ feature -- Basic operations
 			interface_descriptor: WIZARD_INTERFACE_DESCRIPTOR
 		do
 			a_visitor := a_descriptor.visitor
-			if a_visitor.c_header_file /= Void and then not a_visitor.c_header_file.empty then
+			if a_visitor.c_header_file /= Void and then not a_visitor.c_header_file.is_empty then
 				if a_visitor.is_interface_pointer or a_visitor.is_interface_pointer_pointer or
 						a_visitor.is_coclass_pointer or a_visitor.is_coclass_pointer_pointer
 				then

@@ -40,6 +40,8 @@ feature {NONE} -- Implementation
 				open_file_dialog.activate (Current)
 				if open_file_dialog.selected then
 					create child.make (Current, open_file_dialog.file_name)
+						-- Add `Child' to `All_children'.
+					All_children.extend (child)
 				end
 			when Cmd_file_close then
 				if has_active_window then
@@ -73,7 +75,7 @@ feature {NONE} -- Implementation
 	main_menu: WEL_MENU is
 			-- Window's menu
 		once 
-				-- create the menu from the ressource file.
+				-- create the menu from the resource file.
 			create Result.make_by_id (Id_menu_application)
 		ensure
 			result_not_void: Result /= Void
@@ -86,6 +88,36 @@ feature {NONE} -- Implementation
 
 	Title: STRING is "WEL Bitmap Viewer"
 			-- Window's title
+	
+	All_children: LINKED_LIST [WEL_MDI_CHILD_WINDOW] is
+			-- A list of all the child windows to avoid the strong
+			-- possibility that they will be garbage collected.
+		once
+			create Result.make
+		end
+		
+feature {CHILD_WINDOW} -- Implementation
+		
+	remove_child_reference (a_child: WEL_MDI_CHILD_WINDOW) is
+			-- Remove `a_child' from `All_children'.
+		local
+			found: BOOLEAN
+		do
+			from
+				All_children.start
+			until
+				All_children.off or found
+			loop
+					-- We must check the childs `item' as just checking
+					-- the object is not enough.
+				if All_children.item.item = a_child.item then
+					found := True
+					All_children.remove
+				else
+					All_children.forth
+				end
+			end
+		end
 
 end -- class MAIN_WINDOW
 

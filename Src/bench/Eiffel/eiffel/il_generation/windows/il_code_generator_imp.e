@@ -23,6 +23,10 @@ feature {NONE} -- Initialization
 				-- Initialize metadata emitter.
 			create md_dispenser.make
 			md_emit := md_dispenser.emitter
+	
+				-- Create signature for `done' in once computation.		
+			create done_sig.make
+			done_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
 		end
 
 feature {NONE} -- Access
@@ -36,6 +40,12 @@ feature {NONE} -- Access
 
 	method_body: MD_METHOD_BODY
 			-- Body for currently generated routine.
+
+feature {NONE} -- Access
+
+	done_sig: MD_FIELD_SIGNATURE
+			-- Precomputed signature of `done_token' so that we do not have
+			-- to compute it too often.
 
 feature -- Target of generation
 
@@ -61,6 +71,7 @@ feature -- Generation Structure
 	start_assembly_generation (name, file_name, location: STRING) is
 			-- Create Assembly with `name'.
 		do
+			remap_external_token
 		end
 
 	add_assembly_reference (name: STRING) is
@@ -455,20 +466,42 @@ feature -- Variables access
 	generate_attribute (type_id, feature_id: INTEGER) is
 			-- Generate access to attribute of `feature_id' in `type_id'.
 		do
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldfld,
+				feature_token (type_id, feature_id))
 		end
 
 	generate_feature_access (type_id, feature_id: INTEGER; is_virtual: BOOLEAN) is
 			-- Generate access to feature of `feature_id' in `type_id'.
+		local
+			l_opcode: INTEGER_16
 		do
+			if is_virtual then
+				l_opcode := feature {MD_OPCODES}.Callvirt
+			else
+				l_opcode := feature {MD_OPCODES}.Call
+			end
+
+				-- FIXME: Manu 3/29/2002: we do not know here number of arguments
+				-- nor if it is a function or not.
+			method_body.put_call (l_opcode, feature_token (type_id, feature_id), 10, False)
 		end
 
 	generate_precursor_feature_access (type_id, feature_id: INTEGER) is
 			-- Generate access to feature of `feature_id' in `type_id'.
 		do
+				-- FIXME: Manu 3/29/2002: we do not know here number of arguments
+				-- nor if it is a function or not.
+			method_body.put_call (feature {MD_OPCODES}.Call, feature_token (type_id, feature_id),
+				10, False)
 		end
 
 	generate_type_feature (feature_id: INTEGER) is
+			-- Specifies for which feature of `feature_id' written in current class
+			-- IL code will be generated.
 		do
+			check
+				not_yet_implemented: False
+			end
 		end
 
 	put_type_token (type_id: INTEGER) is
@@ -481,6 +514,7 @@ feature -- Variables access
 	put_method_token (type_id, feature_id: INTEGER) is
 			-- Generate access to feature of `feature_id' in `type_id'.
 		do
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldtoken, feature_token (type_id, feature_id))
 		end
 
 	generate_argument (n: INTEGER) is
@@ -573,11 +607,15 @@ feature -- Addresses
 	generate_attribute_address (type_id, feature_id: INTEGER) is
 			-- Generate address of attribute of `feature_id' in class `type_id'.
 		do
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldflda,
+				feature_token (type_id, feature_id))
 		end
 
 	generate_routine_address (type_id, feature_id: INTEGER) is
 			-- Generate address of routine of `feature_id' in class `type_id'.
 		do
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldvirtftn,
+				feature_token (type_id, feature_id))
 		end
 
 	generate_load_from_address (type_id: INTEGER) is
@@ -605,9 +643,7 @@ feature -- Assignments
 	generate_attribute_assignment (type_id, feature_id: INTEGER) is
 			-- Generate assignment to attribute of `feature_id' in current class.
 		do
-			check
-				not_yet_implemented: False
-			end
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stfld, feature_token (type_id, feature_id))
 		end
 
 	generate_local_assignment (n: INTEGER) is
@@ -688,71 +724,145 @@ feature -- Return statements
 
 feature -- Once management
 
+	done_token, result_token: INTEGER
+			-- Token for static fields holding value if once has been computed,
+			-- and its value if computed.
+
 	generate_once_done_info (name: STRING) is
 			-- Generate declaration of static `done' variable corresponding
 			-- to once feature `name'.
 		do
+			done_token := md_emit.define_field (create {UNI_STRING}.make (name + "_done"),
+				current_class_token,
+				feature {MD_FIELD_ATTRIBUTES}.Private | feature {MD_FIELD_ATTRIBUTES}.Static, done_sig)
 		end
 
 	generate_once_result_info (name: STRING; type_id: INTEGER) is
 			-- Generate declaration of static `result' variable corresponding
 			-- to once function `name' that has a return type `type_id'.
+		local
+			l_sig: MD_FIELD_SIGNATURE
 		do
+			create l_sig.make
+			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+				class_mapping.item (type_id))
+				
+			result_token := md_emit.define_field (create {UNI_STRING}.make (name + "_result"),
+				current_class_token,
+				feature {MD_FIELD_ATTRIBUTES}.Private | feature {MD_FIELD_ATTRIBUTES}.Static, l_sig)
 		end
 
 	generate_once_computed is
 			-- Mark current once as being computed.
 		do
+			put_boolean_constant (True)
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, done_token)
 		end
 
 	generate_once_result_address is
 			-- Generate test on `done' of once feature `name'.
 		do
+			put_boolean_constant (True)
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsflda, result_token)
 		end
 
 	generate_once_test is
 			-- Generate test on `done' of once feature `name'.
 		do
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld, done_token)
 		end
 
 	generate_once_result is
 			-- Generate access to static `result' variable to load last
 			-- computed value of current processed once function
 		do
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld, result_token)
 		end
 
 	generate_once_store_result is
 			-- Generate setting of static `result' variable corresponding
 			-- to current processed once function.
 		do
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, result_token)
 		end
 
 feature -- Array manipulation
 
 	generate_array_access (kind: INTEGER) is
-			-- Generate call to `item' of ARRAY.
+			-- Generate call to `item' of NATIVE_ARRAY.
+		local
+			l_opcode: INTEGER_16
 		do
+			inspect kind
+			when Il_i1 then l_opcode := feature {MD_OPCODES}.Ldelem_i1
+			when Il_i2 then l_opcode := feature {MD_OPCODES}.Ldelem_i2
+			when Il_i4 then l_opcode := feature {MD_OPCODES}.Ldelem_i4
+			when Il_i8, Il_u8 then l_opcode := feature {MD_OPCODES}.Ldelem_i8
+			when Il_r4 then l_opcode := feature {MD_OPCODES}.Ldelem_r4
+			when Il_r8 then l_opcode := feature {MD_OPCODES}.Ldelem_r8
+			when Il_ref then l_opcode := feature {MD_OPCODES}.Ldelem_ref
+			when Il_i then l_opcode := feature {MD_OPCODES}.Ldelem_i
+			when Il_u1 then l_opcode := feature {MD_OPCODES}.Ldelem_u1
+			when Il_u2 then l_opcode := feature {MD_OPCODES}.Ldelem_u2
+			when Il_u4 then l_opcode := feature {MD_OPCODES}.Ldelem_u4
+			else
+				check
+					not_reached: False
+				end
+				l_opcode := feature {MD_OPCODES}.Nop
+			end
+			method_body.put_opcode (l_opcode)
 		end
 
 	generate_array_write (kind: INTEGER) is
-			-- Generate call to `put' of ARRAY.
+			-- Generate call to `put' of NATIVE_ARRAY.
+		local
+			l_opcode: INTEGER_16
 		do
+			inspect kind
+			when Il_i1, Il_u1 then l_opcode := feature {MD_OPCODES}.Stelem_i1
+			when Il_i2, Il_u2 then l_opcode := feature {MD_OPCODES}.Stelem_i2
+			when Il_i4, Il_u4 then l_opcode := feature {MD_OPCODES}.Stelem_i4
+			when Il_i8, Il_u8 then l_opcode := feature {MD_OPCODES}.Stelem_i8
+			when Il_r4 then l_opcode := feature {MD_OPCODES}.Stelem_r4
+			when Il_r8 then l_opcode := feature {MD_OPCODES}.Stelem_r8
+			when Il_ref then l_opcode := feature {MD_OPCODES}.Stelem_ref
+			when Il_i then l_opcode := feature {MD_OPCODES}.Stelem_i
+			else
+				check
+					not_reached: False
+				end
+				l_opcode := feature {MD_OPCODES}.Nop
+			end
+			method_body.put_opcode (l_opcode)
 		end
 
 	generate_array_creation (type_id: INTEGER) is
+			-- Create a new NATIVE_ARRAY [A] where `type_id' corresponds
+			-- to type id of `A'.
 		do
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Newarr, class_mapping.item (type_id))
 		end
 
 	generate_array_count is
+			-- Get length of current NATIVE_ARRAY on stack.
 		do
+			method_body.put_opcode (feature {MD_OPCODES}.Ldlen)
 		end
 
 	generate_array_upper is
+			-- Generate call to `count - 1'.
 		do
+			method_body.put_opcode (feature {MD_OPCODES}.Ldlen)
+			method_body.put_opcode (feature {MD_OPCODES}.Ldc_i4_1)
+			method_body.put_opcode (feature {MD_OPCODES}.Sub)
 		end
 
 	generate_array_lower is
+			-- Always `0' for native arrays as they are zero-based one
+			-- dimensional array.
 		do
+			method_body.put_opcode (feature {MD_OPCODES}.Ldc_i4_0)
 		end
 
 feature --- Rescue
@@ -789,34 +899,76 @@ feature -- Assertions
 
 	generate_in_assertion_test (end_of_assert: INTEGER) is
 		do
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld, ise_in_assertion_token)
+			method_body.put_opcode_label (feature {MD_OPCODES}.Brtrue, end_of_assert)
 		end
 
 	generate_set_assertion_status is
+			-- Set `in_assertion' flag to True.
 		do
+			put_boolean_constant (True)
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, ise_in_assertion_token)
 		end
 
 	generate_restore_assertion_status is
+			-- Set `in_assertion' flag to False.
 		do
+			put_boolean_constant (false)
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, ise_in_assertion_token)
 		end
 
 	generate_assertion_check (assert_type: INTEGER; tag: STRING) is
+		local
+			l_label: INTEGER
+			l_str_token: INTEGER
 		do
+			l_str_token := md_emit.define_string (create {UNI_STRING}.make (tag))
+			l_label := method_body.define_label
+			method_body.put_opcode_label (feature {MD_OPCODES}.Brtrue, l_label)
+			generate_restore_assertion_status
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldstr, l_str_token)
+			method_body.put_call (feature {MD_OPCODES}.Newobj, exception_ctor_token, 1, False)
+			method_body.put_opcode (feature {MD_OPCODES}.Throw)
+			method_body.mark_label (l_label)
 		end
 
 	generate_precondition_violation is
+			-- Generate a precondition violation.
 		do
+			generate_restore_assertion_status
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldsfld, ise_assertion_tag_token)
+			method_body.put_call (feature {MD_OPCODES}.Newobj, exception_ctor_token, 1, False)
+			method_body.put_opcode (feature {MD_OPCODES}.Throw)
 		end
 
-	generate_precondition_check (tag: STRING; labelID: INTEGER) is
+	generate_precondition_check (tag: STRING; label_id: INTEGER) is
+			-- If evaluation of precondition yield to False, we put on top of IL stack
+			-- a string that will be used to raise an exception later at end of 
+			-- preconditions evaluation.
+		local
+			l_str_token: INTEGER
 		do
+			l_str_token := md_emit.define_string (create {UNI_STRING}.make (tag))
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldstr, l_str_token)
+			method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Stsfld, ise_assertion_tag_token)
+			method_body.put_opcode_label (feature {MD_OPCODES}.Brfalse, label_id)
 		end
 
 	generate_invariant_checking (type_id: INTEGER) is
+			-- Generate invariant checking on class `type_id'.
 		do
+			check
+				not_yet_implemented: False
+			end
 		end
 
 	mark_invariant (feature_id: INTEGER) is
+			-- Mark current routine `feature_id' in current class being generated
+			-- as invariant of current class.
 		do
+			check
+				not_yet_implemented: False
+			end
 		end
 
 feature -- Constants generation
@@ -1064,21 +1216,62 @@ feature -- Unary operator generation
 feature -- Basic feature
 
 	generate_min (type_id: INTEGER) is
-			-- Generate `min' on basic types.
+			-- Generate `min' on basic types.\
+		local
+			l_min_token: INTEGER
+			l_type_token: INTEGER
+			l_sig: MD_METHOD_SIGNATURE
 		do
-			method_body.put_call (feature {MD_OPCODES}.Call, min_method_token, 2, True)
+			l_type_token := class_mapping.item (type_id)
+			create l_sig.make
+			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_sig.set_parameter_count (2)
+			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class, l_type_token)
+			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class, l_type_token)
+			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class, l_type_token)
+			l_min_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("Min"), math_type_token, l_sig)
+				
+			method_body.put_call (feature {MD_OPCODES}.Call, l_min_token, 2, True)
 		end
 
 	generate_max (type_id: INTEGER) is
 			-- Generate `max' on basic types.
+		local
+			l_max_token: INTEGER
+			l_type_token: INTEGER
+			l_sig: MD_METHOD_SIGNATURE
 		do
-			method_body.put_call (feature {MD_OPCODES}.Call, max_method_token, 2, True)
+			l_type_token := class_mapping.item (type_id)
+			create l_sig.make
+			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_sig.set_parameter_count (2)
+			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class, l_type_token)
+			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class, l_type_token)
+			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class, l_type_token)
+			l_max_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("Max"), math_type_token, l_sig)
+				
+			method_body.put_call (feature {MD_OPCODES}.Call, l_max_token, 2, True)
 		end
 
 	generate_abs (type_id: INTEGER) is
 			-- Generate `abs' on basic types.
+		local
+			l_abs_token: INTEGER
+			l_type_token: INTEGER
+			l_sig: MD_METHOD_SIGNATURE
 		do
-			method_body.put_call (feature {MD_OPCODES}.Call, abs_method_token, 1, True)
+			l_type_token := class_mapping.item (type_id)
+			create l_sig.make
+			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_sig.set_parameter_count (1)
+			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class, l_type_token)
+			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class, l_type_token)
+			l_abs_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("Abs"), math_type_token, l_sig)
+				
+			method_body.put_call (feature {MD_OPCODES}.Call, l_abs_token, 1, True)
 		end
 
 	generate_to_string is
@@ -1100,6 +1293,11 @@ feature -- Compilation error handling
 	last_error: STRING
 			-- Last exception which occurred during IL generation
 
+feature {NONE} -- Once per type definition
+
+	current_class_token: INTEGER
+			-- Token of current class being generated.
+
 feature {NONE} -- Once per feature definition
 
 	result_position: INTEGER
@@ -1107,63 +1305,187 @@ feature {NONE} -- Once per feature definition
 
 feature {NONE} -- Once per modules being generated.
 
-	power_method_token: INTEGER is
-			-- 
+	remap_external_token is
+			-- Recompute all tokens in context of newly created module.
 		do
-			check
-				not_yet_implemented: False
-			end
+			compute_mscorlib_token
+			compute_mscorlib_type_tokens
+			compute_power_method_token
+			compute_to_string_method_token
+			compute_ise_runtime_tokens
 		end
+	
+	mscorlib_token: INTEGER
+			-- Token for `mscorlib' assembly.
+			
+	object_type_token: INTEGER
+			-- Token for `System.Object' in `mscorlib'.
 
-	min_method_token: INTEGER is
-			-- 
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
+	math_type_token: INTEGER
+			-- Token for `System.Math' type in `mscorlib'.
 
-	max_method_token: INTEGER is
-			-- 
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
+	system_exception_token: INTEGER
+			-- Token for `System.Exception' type in `mscorlib'.
 
-	abs_method_token: INTEGER is
-			-- 
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
+	to_string_method_token: INTEGER
+			-- Token for `System.Object.ToString' feature in `mscorlib'.
 
-	system_exception_token: INTEGER is
-			-- 
-		do
-			check
-				not_yet_implemented: False
-			end
-		end
-		
-	ise_last_exception_token: INTEGER is
+	power_method_token: INTEGER
+			-- Token for `System.Math.Power' feature in `mscorlib'.
+
+	exception_ctor_token: INTEGER
+			-- Token for `System.Exception' constructor feature in `mscorlib'.
+
+	ise_runtime_token: INTEGER
+			-- Token for `ise_runtime' assembly
+
+	ise_last_exception_token: INTEGER
 			-- Token for `ISE.RUNTIME.last_exception' static field that holds
 			-- exception object we got from `catch'.
+			
+	ise_in_assertion_token: INTEGER
+			-- Token for `ISE.RUNTIME.in_assertion' static field that holds
+			-- status of assertion checking.
+
+	ise_assertion_tag_token: INTEGER
+			-- Token for `ISE.RUNTIME.assertion_tag' static field that holds
+			-- message for exception being thrown.
+
+	compute_mscorlib_token is
+			-- Compute `mscorlib_token'.
+		local
+			l_ass_info: MD_ASSEMBLY_INFO
+			l_pub_key: MD_PUBLIC_KEY_TOKEN
 		do
-			check
-				not_yet_implemented: False
-			end
+			create l_ass_info.make
+			l_ass_info.set_major_version (1)
+			l_ass_info.set_build_number (3300)
+			
+			create l_pub_key.make_from_array (
+				<<0xB7, 0x7A, 0x5C, 0x56, 0x19, 0x34, 0xE0, 0x89>>)
+				
+			mscorlib_token := md_emit.define_assembly_ref (
+				create {UNI_STRING}.make ("mscorlib"), l_ass_info, l_pub_key)
+		end
+
+	compute_mscorlib_type_tokens is
+			-- Compute `double_type_token', `math_type_token'.
+		require
+			valid_mscorlib_token: mscorlib_token /= 0
+			object_type_token_not_set: object_type_token = 0
+			math_type_token_not_set: math_type_token = 0
+			system_exception_token_not_set: system_exception_token = 0
+		local
+			l_sig: MD_METHOD_SIGNATURE
+		do
+			object_type_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make ("System.Object"), mscorlib_token)
+			math_type_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make ("System.Math"), mscorlib_token)
+			system_exception_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make ("System.Exception"), mscorlib_token)
+				
+				-- Define `.ctor' from System.Exception
+			create l_sig.make
+			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
+			l_sig.set_parameter_count (1)
+			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
+			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
+			exception_ctor_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make (".ctor"), system_exception_token, l_sig)
+		ensure
+			object_type_token_set: object_type_token /= 0
+			math_type_token_set: math_type_token /= 0
+			system_exception_token_set: system_exception_token /= 0
 		end
 		
-	to_string_method_token: INTEGER is
-			-- 
+	compute_power_method_token is
+			-- Compute `power_method_token'.
+		require
+			valid_math_type_token: math_type_token /= 0
+		local
+			l_sig: MD_METHOD_SIGNATURE
 		do
-			check
-				not_yet_implemented: False
-			end
+			create l_sig.make
+			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_sig.set_parameter_count (2)
+			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_r8, 0)
+			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_r8, 0)
+			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_r8, 0)
+			power_method_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("Pow"), math_type_token, l_sig)
+		ensure
+			power_method_token_set: power_method_token /= 0
 		end
-		
+
+	compute_to_string_method_token is
+			-- Compute `to_string_method_token'.
+		local
+			l_sig: MD_METHOD_SIGNATURE
+		do
+			create l_sig.make
+			l_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
+			l_sig.set_parameter_count (0)
+			l_sig.set_return_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_object, 0)
+			to_string_method_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("ToString"), object_type_token, l_sig)
+		ensure
+			to_string_method_token: to_string_method_token /= 0
+		end
+
+	compute_ise_runtime_tokens is
+			-- Compute `ise_runtime_token'.
+		local
+			l_ass_info: MD_ASSEMBLY_INFO
+			l_pub_key: MD_PUBLIC_KEY_TOKEN
+			l_runtime_type_token, l_excep_man_token: INTEGER
+			l_sig: MD_FIELD_SIGNATURE
+		do
+				-- Define `ise_runtime_token'.
+			create l_ass_info.make
+			l_ass_info.set_major_version (5)
+			l_ass_info.set_minor_version (2)
+			
+			create l_pub_key.make_from_array (
+				<<0xDE, 0xF2, 0x6F, 0x29, 0x6E, 0xFE, 0xF4, 0x69>>)
+				
+			ise_runtime_token := md_emit.define_assembly_ref (
+				create {UNI_STRING}.make ("ise_runtime"), l_ass_info, l_pub_key)
+				
+				-- Define `ise_last_exception_token'.
+			l_excep_man_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make ("ISE.Runtime.EXCEPTION_MANAGER"),
+				ise_runtime_token)
+
+			create l_sig.make
+			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_class,
+				system_exception_token)
+			
+			ise_last_exception_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("last_exception"), l_excep_man_token,
+				l_sig)
+				
+				-- Define `ise_in_assertion_token'.
+			l_runtime_type_token := md_emit.define_type_ref (
+				create {UNI_STRING}.make ("ISE.Runtime.RUN_TIME"),
+				ise_runtime_token)
+
+			create l_sig.make
+			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_boolean, 0)
+			
+			ise_in_assertion_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("in_assertion"), l_runtime_type_token, l_sig)
+				
+				-- Define `ise_assertion_tag_token'.
+			create l_sig.make
+			l_sig.set_type (feature {MD_SIGNATURE_CONSTANTS}.Element_type_string, 0)
+
+			ise_assertion_tag_token := md_emit.define_member_ref (
+				create {UNI_STRING}.make ("assertion_tag"), l_runtime_type_token, l_sig)
+		end
+	
+feature {NONE} -- Mapping between Eiffel compiler and generated tokens
+
 	class_mapping: ARRAY [INTEGER] is
 			-- Array of type token indexed by their `type_id'.
 		do
@@ -1172,4 +1494,13 @@ feature {NONE} -- Once per modules being generated.
 			end
 		end
 
+	feature_token (type_id, feature_id: INTEGER): INTEGER is
+			-- Given a `feature_id' in `type_id' return associated
+			-- token
+		do
+			check
+				net_yet_implemented: False
+			end
+		end
+		
 end -- class IL_CODE_GENERATOR_IMP

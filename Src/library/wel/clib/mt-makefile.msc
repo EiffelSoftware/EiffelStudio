@@ -8,6 +8,7 @@ CFLAGS = -nologo -W1 -c -MT -DEIF_THREADS -Ox -I..\spec\windows\include -I$(ISE_
 
 OBJ = 	disptchr.obj \
 		enumfont.obj \
+		enum_child_windows.obj \
 		estream.obj \
 		msgboxpa.obj \
 		diskspace.obj \

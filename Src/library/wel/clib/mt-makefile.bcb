@@ -9,12 +9,13 @@ CFLAGS = -w-8057 -w-8064 -w-8065 -c -O2 -tWM -DEIF_THREADS -I$(ISE_EIFFEL)\libra
 	$(CFLAGS) $<
 |
 
-OBJ = disptchr.obj enumfont.obj choose_folder.obj estream.obj msgboxpa.obj diskspace.obj drawstate.obj dynload.obj mousehook.obj wel_thr_init.obj
+OBJ = disptchr.obj enumfont.obj enum_child_windows.o choose_folder.obj estream.obj msgboxpa.obj diskspace.obj drawstate.obj dynload.obj mousehook.obj wel_thr_init.obj
 
 mtwel.lib: $(OBJ)
 	if exist $@ del $@
 	$(AR) $@ +disptchr.obj
 	$(AR) $@ +enumfont.obj
+	$(AR) $@ +enum_child_windows.obj
 	$(AR) $@ +estream.obj
 	$(AR) $@ +msgboxpa.obj
 	$(AR) $@ +diskspace.obj

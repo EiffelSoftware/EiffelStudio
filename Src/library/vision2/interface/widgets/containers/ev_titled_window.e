@@ -47,9 +47,9 @@ feature {NONE} -- Initialization
    			-- additional setup tasks.
 		do
 			set_icon_pixmap (default_pixmaps.Default_window_icon)
-			accelerators.add_actions.extend
+			accelerators.internal_add_actions.extend
 				(agent implementation.connect_accelerator (?))
-			accelerators.remove_actions.extend
+			accelerators.internal_remove_actions.extend
 				(agent implementation.disconnect_accelerator (?))
 			Precursor {EV_WINDOW}
 		end

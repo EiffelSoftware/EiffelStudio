@@ -133,19 +133,6 @@ feature {NONE}
 			]"
 		end
 		
-	dispose_error_debug_output (a_ptr: POINTER; an_obj: POINTER) is
-			-- Safe display while disposing. If `type' is `1' then
-			-- we are entering `dispose', else we are leaving it.
-			-- `a_ptr' is the item being freed in current object `an_obj'.
-		external
-			"C inline use <stdio.h>"
-		alias
-			"[
-				extern char *eif_typename(int16);
-				printf ("\nAn error occurred while disposing of %s with item value 0x%lX\n", eif_typename((int16)Dftype($an_obj)), $a_ptr);
-			]"
-		end
-		
 feature -- Ref management
 
 	add_ref is
@@ -153,6 +140,8 @@ feature -- Ref management
 		local
 			l_nb_ref: INTEGER
 		do
+			check item /= Default_pointer end
+
 			debug ("COM_OBJECT")
 				io.error.put_string ("Entering ["+ generating_type +"].add_ref ... on " + item.out + "%N")
 			end				
@@ -167,6 +156,7 @@ feature -- Ref management
 		local
 			l_nb_ref: INTEGER
 		do
+			check item /= Default_pointer end
 			debug ("COM_OBJECT")
 				io.error.put_string ("Entering [" + generating_type + "].release ... on " + item.out + "%N")
 			end						
@@ -232,14 +222,14 @@ feature {ICOR_EXPORTER} -- Implementation
 
 	frozen cwin_close_handle (a_hdl: INTEGER): INTEGER is
 				-- CloseHandle (HANDLE)
-			external
-				"[
-					C signature(HANDLE): EIF_INTEGER 
-					use "cli_headers.h"
-				]"
-			alias
-				"CloseHandle"
-			end
+		external
+			"[
+				C signature(HANDLE): EIF_INTEGER 
+				use "cli_headers.h"
+			]"
+		alias
+			"CloseHandle"
+		end
 
 feature {NONE} -- Implementation
 

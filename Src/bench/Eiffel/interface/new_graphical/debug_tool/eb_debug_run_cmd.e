@@ -32,7 +32,7 @@ inherit
 
 	NEW_EB_CONSTANTS
 
-	WARNER_CALLBACKS
+--	WARNER_CALLBACKS
 
 	EXEC_MODES
 
@@ -46,8 +46,8 @@ feature -- Initialization
 			-- Add some actions as well.
 		do
 			precursor (a_tool)
-			create run_request.make (Rqst_application)
-			create cont_request.make (Rqst_cont)
+--			create run_request.make (Rqst_application)
+--			create cont_request.make (Rqst_cont)
 		end
 
 feature -- Callbacks
@@ -93,7 +93,7 @@ feature -- Close window
 		obsolete
 			"Use destroy or hide instead"
 		do
-			argument_window.close
+--			argument_window.close
 		end
 
 feature -- Execution
@@ -101,7 +101,8 @@ feature -- Execution
 	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
 			-- What to do?
 		local
-			update_command: UPDATE_PROJECT
+--			update_command: UPDATE_PROJECT
+--			argument_window: EB_ARGUMENT_DIALOG
 		do
 			if Project_tool.initialized then
 				if argument = melt_and_run then
@@ -228,7 +229,7 @@ end
 			tool.save_current_cursor_position
 			tool.display_string ("Launching system...%N")
 --			create mp.set_watch_cursor
-			Application.run (argument_window.argument_list)
+			Application.run (Argument_list)
 			if Application.is_running then
 				debug_tool.display_string ("System is running%N")
 			else
@@ -258,10 +259,10 @@ feature {NONE} -- Attributes
 			Result := Interface_names.a_Debug_run
 		end
 
-	run_request: RUN_REQUEST
+--	run_request: RUN_REQUEST
 			-- Request for the run.
 
-	cont_request: EWB_REQUEST
+--	cont_request: EWB_REQUEST
 			-- Request for continuation.
 
 	launch_program: BOOLEAN

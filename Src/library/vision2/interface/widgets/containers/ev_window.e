@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			!EV_WINDOW_IMP!implementation.make (par)
 			implementation.set_interface (Current)
 			implementation.build
-			implementation.initialize_colors
+--			implementation.initialize_colors
 		end
 	
     make_top_level is
@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			!EV_WINDOW_IMP!implementation.make_top_level 
 			implementation.set_interface (Current)
 			implementation.build
-			implementation.initialize_colors
+--			implementation.initialize_colors
 		end
 	
 feature  -- Access
@@ -255,6 +255,26 @@ feature -- Resizing
 			implementation.set_maximum_height (max_height)
 		ensure
 			max_height = max_height
+		end
+
+feature -- Event - command association
+
+	add_resize_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add `command' to the list of commands to be executed when the
+			-- widget is resized.
+		require
+			exists: not destroyed
+		do
+			implementation.add_resize_command (command, arguments)
+		end
+
+	add_move_command (command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add `command' to the list of commands to be executed when the
+			-- widget is resized.
+		require
+			exists: not destroyed
+		do
+			implementation.add_move_command (command, arguments)
 		end
 
 feature -- Implementation

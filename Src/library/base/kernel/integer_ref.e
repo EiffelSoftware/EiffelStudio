@@ -46,6 +46,11 @@ feature -- Access
 			else
 				Result := - item
 			end
+			-- The following instruction in case we hit the minumum negative number,
+			-- which could yield a negative result when negated.
+			if Result <= 0 then
+				Result := 1
+			end
 		end;
 
 	sign: INTEGER is

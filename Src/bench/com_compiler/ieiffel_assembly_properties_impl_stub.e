@@ -30,14 +30,8 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	assembly_public_key: STRING is
+	assembly_public_key_token: STRING is
 			-- Assembly public key token
-		do
-			-- Put Implementation here.
-		end
-
-	assembly_path: STRING is
-			-- Assembly path
 		do
 			-- Put Implementation here.
 		end
@@ -54,8 +48,8 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
-	assembly_identifier: STRING is
-			-- Assembly identifier.
+	assembly_cluster_name: STRING is
+			-- Assembly cluster name.
 		do
 			-- Put Implementation here.
 		end
@@ -67,13 +61,6 @@ feature -- Access
 		end
 
 feature -- Basic Operations
-
-	set_assembly_path (return_value: STRING) is
-			-- Assembly path
-			-- `return_value' [in].  
-		do
-			-- Put Implementation here.
-		end
 
 	set_assembly_prefix (return_value: STRING) is
 			-- Prefix.

@@ -26,23 +26,14 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	add_signed_assembly (assembly_prefix: STRING; assembly_identifier: STRING; a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING) is
+	add_assembly (assembly_prefix: STRING; cluster_name: STRING; a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING) is
 			-- Add a signed assembly to the project.
 			-- `assembly_prefix' [in].  
-			-- `assembly_identifier' [in].  
+			-- `cluster_name' [in].  
 			-- `a_name' [in].  
 			-- `a_version' [in].  
 			-- `a_culture' [in].  
 			-- `a_publickey' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	add_unsigned_assembly (assembly_prefix: STRING; assembly_identifier: STRING; a_path: STRING) is
-			-- Add a unsigned (local) assembly to the project.
-			-- `assembly_prefix' [in].  
-			-- `assembly_identifier' [in].  
-			-- `a_path' [in].  
 		do
 			-- Put Implementation here.
 		end
@@ -54,23 +45,23 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	assembly_properties (assembly_identifier: STRING): IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE is
-			-- Cluster properties.
-			-- `assembly_identifier' [in].  
+	assembly_properties (cluster_name: STRING): IEIFFEL_ASSEMBLY_PROPERTIES_INTERFACE is
+			-- Assembly properties.
+			-- `cluster_name' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	is_valid_identifier (assembly_identifier: STRING): BOOLEAN is
-			-- Checks to see if a assembly identifier is valid
-			-- `assembly_identifier' [in].  
+	is_valid_cluster_name (cluster_name: STRING): BOOLEAN is
+			-- Checks to see if a assembly cluster name is valid
+			-- `cluster_name' [in].  
 		do
 			-- Put Implementation here.
 		end
 
-	contains_assembly (assembly_identifier: STRING): BOOLEAN is
-			-- Checks to see if a assembly identifier has already been added to the project
-			-- `assembly_identifier' [in].  
+	contains_assembly (cluster_name: STRING): BOOLEAN is
+			-- Checks to see if a assembly cluster name has already been added to the project
+			-- `cluster_name' [in].  
 		do
 			-- Put Implementation here.
 		end
@@ -92,8 +83,8 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	identifier_from_signed_assembly (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): STRING is
-			-- Retrieves the identifier for a signed assembly in the project
+	cluster_name_from_signed_assembly (a_name: STRING; a_version: STRING; a_culture: STRING; a_publickey: STRING): STRING is
+			-- Retrieves the cluster name for a signed assembly in the project
 			-- `a_name' [in].  
 			-- `a_version' [in].  
 			-- `a_culture' [in].  
@@ -102,8 +93,8 @@ feature -- Basic Operations
 			-- Put Implementation here.
 		end
 
-	identifier_from_unsigned_assembly (a_path: STRING): STRING is
-			-- Retrieves the identifier for a unsigned assembly in the project
+	cluster_name_from_unsigned_assembly (a_path: STRING): STRING is
+			-- Retrieves the cluster name for a unsigned assembly in the project
 			-- `a_path' [in].  
 		do
 			-- Put Implementation here.
@@ -119,14 +110,6 @@ feature -- Basic Operations
 	is_prefix_allocated (assembly_prefix: STRING): BOOLEAN is
 			-- Has the 'prefix' already been allocated to another assembly
 			-- `assembly_prefix' [in].  
-		do
-			-- Put Implementation here.
-		end
-
-	rename_assembly (assembly_new_identifier: STRING; assembly_old_identifier: STRING) is
-			-- Rename the assembly identifier
-			-- `assembly_new_identifier' [in].  
-			-- `assembly_old_identifier' [in].  
 		do
 			-- Put Implementation here.
 		end

@@ -31,22 +31,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	assembly_public_key_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `assembly_public_key'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	assembly_path_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `assembly_path'.
-			-- Redefine in descendants if needed.
-		do
-			Result := True
-		end
-
-	set_assembly_path_user_precondition (return_value: STRING): BOOLEAN is
-			-- User-defined preconditions for `set_assembly_path'.
+	assembly_public_key_token_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `assembly_public_key_token'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -66,8 +52,8 @@ feature -- Status Report
 			Result := True
 		end
 
-	assembly_identifier_user_precondition: BOOLEAN is
-			-- User-defined preconditions for `assembly_identifier'.
+	assembly_cluster_name_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `assembly_cluster_name'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -113,27 +99,10 @@ feature -- Basic Operations
 
 		end
 
-	assembly_public_key: STRING is
+	assembly_public_key_token: STRING is
 			-- Assembly public key token
 		require
-			assembly_public_key_user_precondition: assembly_public_key_user_precondition
-		deferred
-
-		end
-
-	assembly_path: STRING is
-			-- Assembly path
-		require
-			assembly_path_user_precondition: assembly_path_user_precondition
-		deferred
-
-		end
-
-	set_assembly_path (return_value: STRING) is
-			-- Assembly path
-			-- `return_value' [in].  
-		require
-			set_assembly_path_user_precondition: set_assembly_path_user_precondition (return_value)
+			assembly_public_key_token_user_precondition: assembly_public_key_token_user_precondition
 		deferred
 
 		end
@@ -154,10 +123,10 @@ feature -- Basic Operations
 
 		end
 
-	assembly_identifier: STRING is
-			-- Assembly identifier.
+	assembly_cluster_name: STRING is
+			-- Assembly cluster name.
 		require
-			assembly_identifier_user_precondition: assembly_identifier_user_precondition
+			assembly_cluster_name_user_precondition: assembly_cluster_name_user_precondition
 		deferred
 
 		end

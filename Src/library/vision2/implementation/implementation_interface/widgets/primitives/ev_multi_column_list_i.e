@@ -78,6 +78,15 @@ feature -- Status report
 
 feature -- Status setting
 
+	set_columns (i: INTEGER) is
+			-- Assign `i' to `columns'
+		require
+			empty: count = 0
+		deferred
+		ensure
+			columns_assigned: columns = i					
+		end
+
 	select_item (an_index: INTEGER) is
 			-- Select an item at the one-based `an_index' the list.
 		require
@@ -233,6 +242,9 @@ end -- class EV_MULTI_COLUMN_LIST_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/03/03 17:08:09  rogers
+--| Added set_columns.
+--|
 --| Revision 1.29  2000/03/02 22:01:14  king
 --| Implemented selection name changes
 --|

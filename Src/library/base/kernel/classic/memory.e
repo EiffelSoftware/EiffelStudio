@@ -209,7 +209,6 @@ feature -- Status report
 			i, nb, dtype: INTEGER
 			l_spec: SPECIAL [ANY]
 			l_item: ANY
-			l_count: INTEGER
 		do
 				-- First get all object instances in runtime.
 			l_spec := find_all_instances (special_any_dynamic_type)

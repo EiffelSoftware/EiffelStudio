@@ -3195,7 +3195,9 @@ end
 					if l_class.is_used_as_expanded and l_class.creation_feature /= Void then
 						create rout_entry
 						rout_entry.set_type_id (i)
-						rout_entry.set_written_type_id (i)
+						rout_entry.set_written_type_id (
+							l_class.implemented_type (l_class.creation_feature.written_in,
+								class_type.type).type_id)
 						rout_entry.set_body_index (l_class.creation_feature.body_index)
 						rout_table.extend (rout_entry)
 					end

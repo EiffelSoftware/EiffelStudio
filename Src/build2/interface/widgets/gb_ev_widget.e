@@ -72,6 +72,28 @@ feature -- Access
 			minimum_height.return_actions.resume
 		end
 
+feature {GB_CODE_GENERATOR} -- Output
+
+	generate_code (element: XML_ELEMENT; a_name: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+			-- `Result' is string representation of
+			-- settings held in `Current' which is
+			-- in a compilable format.
+		local
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			element_info: ELEMENT_INFORMATION
+		do
+			Result := ""
+			full_information := get_unique_full_info (element)
+			element_info := full_information @ (Minimum_width_string)
+			Result := a_name + ".set_minimum_width (" + element_info.data + ")"
+			
+			element_info := full_information @ (Minimum_height_string)
+			Result := Result + indent + a_name + ".set_minimum_height (" + element_info.data + ")"
+			
+			Result := strip_leading_indent (Result)
+		end
+
+
 feature {GB_XML_STORE} -- Output
 
 	
@@ -79,23 +101,22 @@ feature {GB_XML_STORE} -- Output
 			-- Generate an XML representation of `Current' in `element'.
 		do
 			--|FIXME
-	--		add_element_containing_integer (element, Minimum_width_string, objects.first.minimum_width)
-	--		add_element_containing_integer (element, Minimum_height_string, objects.first.minimum_height)
+			add_element_containing_integer (element, Minimum_width_string, objects.first.minimum_width)
+			add_element_containing_integer (element, Minimum_height_string, objects.first.minimum_height)
 		end
 		
 	modify_from_xml (element: XML_ELEMENT) is
 			-- Update all items in `objects' based on information held in `element'.
 		local
-			current_element: XML_ELEMENT
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 		do
---			full_information := get_unique_full_info (element)
---			element_info := full_information @ (Minimum_width_string)
---			for_all_objects (agent {EV_WINDOW}.set_minimum_width(element_info.data.to_integer))
---			
---			element_info := full_information @ (Minimum_height_string)
---			for_all_objects (agent {EV_WINDOW}.set_minimum_height(element_info.data.to_integer))
+			full_information := get_unique_full_info (element)
+			element_info := full_information @ (Minimum_width_string)
+			for_all_objects (agent {EV_WINDOW}.set_minimum_width(element_info.data.to_integer))
+			
+			element_info := full_information @ (Minimum_height_string)
+			for_all_objects (agent {EV_WINDOW}.set_minimum_height(element_info.data.to_integer))
 		end
 
 feature {NONE} -- Implementation

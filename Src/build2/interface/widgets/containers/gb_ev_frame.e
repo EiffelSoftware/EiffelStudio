@@ -89,8 +89,6 @@ feature {GB_XML_STORE} -- Output
 
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
-		local
-			new_type_element: XML_ELEMENT	
 		do
 			add_element_containing_integer (element, Style_string, objects.first.style)
 		end
@@ -100,7 +98,6 @@ feature {GB_XML_STORE} -- Output
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
-			style: STRING
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Style_string)
@@ -108,6 +105,23 @@ feature {GB_XML_STORE} -- Output
 				data_is_an_integer: element_info.data.is_integer
 			end
 			for_all_objects (agent {EV_FRAME}.set_style (element_info.data.to_integer))
+		end
+		
+feature {GB_CODE_GENERATOR} -- Output
+
+		generate_code (element: XML_ELEMENT; a_name: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+			-- `Result' is string representation of
+			-- settings held in `Current' which is
+			-- in a compilable format.
+		local
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			element_info: ELEMENT_INFORMATION
+		do
+			Result := ""
+			full_information := get_unique_full_info (element)
+			element_info := full_information @ (Style_string)
+			Result := a_name + ".set_style (" + element_info.data + ")"
+			Result := strip_leading_indent (Result)
 		end
 
 feature {NONE} -- Implementation

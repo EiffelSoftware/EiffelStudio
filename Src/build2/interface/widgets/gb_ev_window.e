@@ -42,9 +42,6 @@ feature -- Access
 				-- Set up `user_can_resize'.
 			create user_can_resize.make_with_text ("User can resize?")
 			Result.extend (user_can_resize)
-		--	if first.user_can_resize then
-		--		user_can_resize.enable_select	
-		--	end
 			user_can_resize.select_actions.extend (agent update_user_can_resize)
 			user_can_resize.select_actions.extend (agent update_editors)
 			
@@ -53,7 +50,6 @@ feature -- Access
 			Result.extend (maximum_width_label)
 			create maximum_width
 			Result.extend (maximum_width)
-			--maximum_width.set_text (first.maximum_width.out)
 			maximum_width.return_actions.extend (agent set_maximum_width)
 			maximum_width.return_actions.extend (agent update_editors)
 			
@@ -118,7 +114,6 @@ feature {GB_XML_STORE} -- Output
 	modify_from_xml (element: XML_ELEMENT) is
 			-- Update all items in `objects' based on information held in `element'.
 		local
-			current_element: XML_ELEMENT
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
 		do
@@ -139,7 +134,36 @@ feature {GB_XML_STORE} -- Output
 			
 			element_info := full_information @ (title_string)
 			for_all_objects (agent {EV_WINDOW}.set_title (element_info.data))
+		end
+		
+	generate_code (element: XML_ELEMENT; a_name: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+			-- `Result' is string representation of
+			-- settings held in `Current' which is
+			-- in a compilable format.
+		local
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			element_info: ELEMENT_INFORMATION
+		do
+			Result := ""
+			full_information := get_unique_full_info (element)
+			element_info := full_information @ (User_can_resize_string)
+			if element_info.data.is_equal (True_string) then
+				Result := a_name + ".enable_user_resize"
+			else
+				Result := a_name + ".disable_user_resize"
+			end
+		
+			element_info := full_information @ (Maximum_width_string)
+			Result := Result + indent + a_name + ".set_maximum_width (" + element_info.data + ")"
 			
+			element_info := full_information @ (Maximum_height_string)
+			Result := Result + indent + a_name + ".set_maximum_height (" + element_info.data + ")"
+			
+			element_info := full_information @ (Title_string)
+			Result := Result + indent + a_name + ".set_title (%"" + element_info.data + "%")"
+		
+		
+			Result := strip_leading_indent (Result)
 		end
 
 feature {NONE} -- Implementation

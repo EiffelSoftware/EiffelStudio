@@ -65,7 +65,6 @@ feature -- Access
 			-- Add events necessary for `vision2_object'.
 		local
 			widget: EV_WIDGET
-			item: EV_ITEM
 		do
 			--| For now, just deal with widgets. At some point items may be supported also.
 		user_event_widget := vision2_object
@@ -78,8 +77,6 @@ feature -- Access
 		objects.extend (vision2_object)
 		widget.pointer_button_release_actions.force_extend (agent start_timer)
 		widget.key_release_actions.force_extend (agent start_timer)
-		--	io.putstring ("Setting up events for deselctable%N")
-	--	vision2_object
 		end	
 		
 		start_timer is
@@ -114,8 +111,6 @@ feature {GB_XML_STORE} -- Output
 
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
-		local
-			new_type_element: XML_ELEMENT
 		do
 			add_element_containing_boolean (element, is_selected_string, objects.first.is_selected)
 		end
@@ -135,6 +130,26 @@ feature {GB_XML_STORE} -- Output
 			end
 		end
 
+feature {GB_CODE_GENERATOR} -- Output
+
+	generate_code (element: XML_ELEMENT; a_name: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+			-- `Result' is string representation of
+			-- settings held in `Current' which is
+			-- in a compilable format.
+		local
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			element_info: ELEMENT_INFORMATION
+		do
+			Result := ""
+			full_information := get_unique_full_info (element)
+			element_info := full_information @ (is_selected_string)
+			if element_info.data.is_equal (True_string) then
+				Result := a_name + ".enable_select"
+			else
+				Result := a_name + ".disable_select"
+			end
+			Result := strip_leading_indent (Result)
+		end
 
 feature {NONE} -- Implementation
 

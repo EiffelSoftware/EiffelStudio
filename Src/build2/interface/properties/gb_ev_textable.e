@@ -36,8 +36,6 @@ feature -- Access
 	attribute_editor: GB_OBJECT_EDITOR_ITEM is
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
-		local
-			first_object: EV_SENSITIVE
 		do
 			Result := Precursor {GB_EV_ANY}
 			create label.make_with_text (text_string)
@@ -97,7 +95,6 @@ feature {GB_XML_STORE} -- Output
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
 		local
-			new_type_element: XML_ELEMENT
 			alignment: EV_TEXT_ALIGNMENT
 			alignment_text: STRING
 		do
@@ -121,7 +118,6 @@ feature {GB_XML_STORE} -- Output
 		local
 			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info: ELEMENT_INFORMATION
-			style: STRING
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (text_string)
@@ -136,6 +132,33 @@ feature {GB_XML_STORE} -- Output
 			elseif element_info.data.is_equal (Ev_textable_right_string) then
 				for_all_objects (agent {EV_TEXTABLE}.align_text_right)
 			end
+		end
+		
+feature {GB_CODE_GENERATOR} -- Output
+
+	generate_code (element: XML_ELEMENT; a_name: STRING; children_names: ARRAYED_LIST [STRING]): STRING is
+			-- `Result' is string representation of
+			-- settings held in `Current' which is
+			-- in a compilable format.
+		local
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			element_info: ELEMENT_INFORMATION
+		do
+			Result := ""
+			full_information := get_unique_full_info (element)
+			element_info := full_information @ (text_string)
+			if element_info /= Void and then element_info.data.count /= 0 then
+				Result := a_name + ".set_text (%"" + element_info.data + "%")"
+			end
+			element_info := full_information @ (text_alignment_string)
+			if element_info.data.is_equal (Ev_textable_left_string) then
+				Result := Result + indent + a_name + ".align_text_left"
+			elseif element_info.data.is_equal (Ev_textable_center_string) then
+				Result := Result + indent + a_name + ".align_text_center"
+			elseif element_info.data.is_equal (Ev_textable_right_string) then
+				Result := Result + indent + a_name + ".align_text_right"
+			end
+			Result := strip_leading_indent (Result)
 		end
 
 feature {NONE} -- Implementation

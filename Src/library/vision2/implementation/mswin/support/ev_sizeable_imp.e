@@ -17,9 +17,8 @@ inherit
 
 feature {NONE} -- Initialization
 
-	initialize is
+	initialize_sizeable is
 		do
-			is_initialized := True
 			create child_cell
 			internal_changes := set_bit (internal_changes, 16, True)
 			internal_changes := set_bit (internal_changes, 32, True)
@@ -435,6 +434,9 @@ end -- EV_SIZEABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/14 20:01:08  brendel
+--| Renamed initialize to initialize_sizeable.
+--|
 --| Revision 1.21  2000/03/14 16:17:36  brendel
 --| Improved initialize.
 --|

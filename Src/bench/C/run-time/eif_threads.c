@@ -573,6 +573,9 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 	 * fields.
 	 */
 
+	/* no need to call EIF_GET_CONTEXT, it has been done in 
+	 * the calling functions .
+	 */
 	bzero((char *)eif_globals,sizeof(eif_global_context_t));
 	
 		/* except.c */
@@ -586,6 +589,8 @@ rt_private void eif_init_context(eif_global_context_t *eif_globals)
 
 		/* malloc.c */
 	gen_scavenge = GS_SET;
+		/* main.c */
+	in_assertion = 0;
 }
 
 

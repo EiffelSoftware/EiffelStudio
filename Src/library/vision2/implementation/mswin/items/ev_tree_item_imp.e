@@ -91,7 +91,6 @@ feature -- Access
 	text: STRING
 			-- Item text.
 
-
 	top_parent_imp: EV_TREE_IMP is
 			-- Implementation of `parent_tree'.
 		do
@@ -342,6 +341,31 @@ feature {EV_TREE_IMP} -- Implementation
 			internal_children := list
 		end
 
+	relative_position: TUPLE [INTEGER, INTEGER] is
+			-- `Result' is position relative to `parent_imp'.
+		local
+			tree_item_imp: EV_TREE_ITEM_IMP
+			loop_parent: EV_TREE_ITEM_IMP
+			counter: INTEGER
+			sx: INTEGER
+			sy: INTEGER
+		do
+			from
+				loop_parent := Current
+			until
+				loop_parent = Void
+			loop
+				loop_parent ?= loop_parent.parent_imp
+				counter := counter + 1
+			end
+			sx := top_parent_imp.indent * counter + 1
+			--|FIXME The relative y_position is always returned as 0.
+			sy := 0
+			create Result.make
+			Result.put (sx, 1)
+			Result.put (sy, 2)
+		end
+
 feature {NONE} -- Implementation
 
 	insert_item (item_imp: EV_TREE_ITEM_IMP; pos: INTEGER) is
@@ -402,6 +426,9 @@ end -- class EV_TREE_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/03/13 20:51:43  rogers
+--| Added relative position which returns position of `Current' in relation to the tree.
+--|
 --| Revision 1.34  2000/03/09 20:24:51  rogers
 --| Added text coment, removed add_item and removed commented lines from count.
 --|

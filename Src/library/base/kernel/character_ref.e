@@ -36,6 +36,10 @@ feature -- Access
 			Result := code
 		end
 
+	Min_value: INTEGER is 0
+	Max_value: INTEGER is 255
+			-- Bounds for integer representation of characters (ASCII)
+
 feature -- Status report
 
 	is_hashable: BOOLEAN is
@@ -78,8 +82,7 @@ feature -- Basic routines
 	infix "+" (incr: INTEGER): CHARACTER is
 			-- Add `incr' to the code of `item'
 		require
-			valid_upper_increment: item.code + incr <= 255
-			valid_lower_increment: item.code + incr >= 0
+			valid_increment: (item.code + incr).is_valid_character_code
 		do
 			Result := chconv (chcode (item) + incr)
 		ensure
@@ -89,8 +92,7 @@ feature -- Basic routines
 	infix "-" (decr: INTEGER): CHARACTER is
 			-- Subtract `decr' to the code of `item'
 		require
-			valid_upper_decrement: item.code - decr <= 255
-			valid_lower_decrement: item.code - decr >= 0
+			valid_decrement: (item.code - decr).is_valid_character_code
 		do
 			Result := chconv (chcode (item) - decr)
 		ensure
@@ -108,7 +110,7 @@ feature -- Basic routines
 	next: CHARACTER is
 			-- Next character
 		require
-			valid_character: item /= '%/255/'
+			valid_character: (item.code + 1).is_valid_character_code
 		do
 			Result := item + 1
 		ensure
@@ -118,7 +120,7 @@ feature -- Basic routines
 	previous: CHARACTER is
 			-- Previous character
 		require
-			valid_character: item /= '%U'
+			valid_character: (item.code - 1).is_valid_character_code
 		do
 			Result := item - 1
 		ensure

@@ -18,7 +18,7 @@
 #endif
 
 #include "eif_portable.h"
-#include "eif_except.h"
+#include "rt_except.h"
 #include "eif_sig.h"
 #include <signal.h>
 #include <errno.h>

@@ -28,7 +28,7 @@
 #include "eif_malloc.h"
 #include "eif_macros.h"
 #include "eif_err_msg.h"
-#include "eif_except.h"
+#include "rt_except.h"
 #include "eif_timer.h"
 #include "eif_misc.h"
 #include "eif_tools.h"		/* For hashcode() */

@@ -20,7 +20,7 @@
 #endif
 
 #include "eif_struct.h"
-#include "eif_except.h"
+#include "rt_except.h"
 #include "eif_local.h"
 #include "eif_hector.h"
 #include "eif_garcol.h"

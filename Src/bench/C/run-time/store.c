@@ -13,10 +13,9 @@
 #include "eif_project.h" /* for egc_ce_gtype */
 #include "rt_macros.h"
 #include "rt_malloc.h"
-#include "eif_except.h"
+#include "rt_except.h"
 #include "eif_store.h"
 #include "eif_traverse.h"
-#include "eif_except.h"
 #include "eif_cecil.h"
 #include <stdio.h>
 #include "eif_struct.h"

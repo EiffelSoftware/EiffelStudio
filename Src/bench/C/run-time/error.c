@@ -11,7 +11,7 @@
 */
 
 #include "eif_portable.h"
-#include "eif_except.h"
+#include "rt_except.h"
 #include "eif_error.h"
 
 #include <string.h>			/* Try to find strerror() there */

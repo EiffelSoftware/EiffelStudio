@@ -125,6 +125,8 @@ feature -- COM/C types
 
 	Com_char_type: STRING is "CHAR"
 
+	Uchar_type: STRING is "UCHAR"
+
 	Com_character_pointer: STRING is "CHAR *"
 
 	Olechar: STRING is "OLECHAR"
@@ -159,6 +161,10 @@ feature -- COM/C types
 
 	Short: STRING is "short"
 
+	Com_short_type: STRING is "SHORT"
+
+	Ushort_type: STRING is "USHORT"
+
 	Long: STRING is "long"
 
 	Unsigned_char: STRING is "unsigned char"
@@ -176,6 +182,8 @@ feature -- COM/C types
 	Double_c_keyword: STRING is "double"
 
 	Unsigned_int: STRING is "unsigned int"
+
+	Uint_type: STRING is "UINT"
 
 	Com_integer_type: STRING is "INT"
 

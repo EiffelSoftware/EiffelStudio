@@ -12,12 +12,37 @@ deferred class
 inherit
 
 	EV_WINDOW_I
+		redefine
+			build
+		end
 
-feature {NONE} -- Initialization
 
-	make (par: EV_WINDOW) is
-			-- Create the dialog box.
-		deferred
+feature {EV_DIALOG} -- Initialization
+
+	build is
+			-- Put the component inside the dialog
+		local
+			vbox: EV_VERTICAL_BOX
+			container_interface: EV_CONTAINER
+		do
+			container_interface ?= interface
+			check
+				container_not_void: container_interface /= Void
+			end
+			{EV_WINDOW_I} Precursor
+
+			!! vbox.make (container_interface)
+			vbox.set_homogeneous (False)
+			vbox.set_spacing (10)
+
+			!! display_area.make (vbox)
+			display_area.set_minimum_height (100)
+			display_area.set_minimum_width (100)
+
+			!! action_area.make (vbox)
+			action_area.set_expand (False)
+			action_area.set_minimum_height (20)
+			action_area.set_minimum_width (100)
 		end
 
 feature -- Access

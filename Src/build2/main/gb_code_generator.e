@@ -109,6 +109,7 @@ feature {NONE} -- Creation
 			-- Create `Current'.
 		do
 			reset_generation_constants
+			create read_only_files.make (5)
 		end
 		
 feature -- Basic operation
@@ -126,6 +127,7 @@ feature -- Basic operation
 			warning_dialog: EV_WARNING_DIALOG
 			error_message: STRING
 		do
+			
 				-- We must build an XML file representing the project, and
 				-- then for every window found in that file, generate a new window.
 			generate_xml_for_project
@@ -220,6 +222,7 @@ feature -- Basic operation
 				
 				root_element.forth
 			end
+			
 				-- Now display error dialog if one or more templates could not be found.
 			if missing_files /= Void then
 				error_message := "EiffelBuild was unable to locate the following files required for generation:%N%N"
@@ -228,10 +231,29 @@ feature -- Basic operation
 				until
 					missing_files.off
 				loop
-					error_message := error_message + missing_files.item + "%N"
+					error_message.append (missing_files.item)
+					error_message.append ("%N")
 					missing_files.forth
 				end
 				error_message := error_message + "%NCode generation has failed.%NPlease ensure that your installation of EiffelBuild has not been corrupted."
+				create warning_dialog.make_with_text (error_message)
+				warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
+				warning_dialog.show_modal_to_window (parent_window (progress_bar))
+			end
+			
+				-- Now display an error dialog if one or more files could not be written.
+			if not read_only_files.is_empty then
+				error_message := "EiffelBuild was unable to open the following files:%N%N"
+				from
+					read_only_files.start
+				until
+					read_only_files.off
+				loop
+					error_message.append (read_only_files.item)
+					error_message.append ("%N")
+					read_only_files.forth
+				end
+				error_message := error_message + "%NCode generation has been unable to complete succesfully.%NPlease check file permissions and try again."
 				create warning_dialog.make_with_text (error_message)
 				warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
 				warning_dialog.show_modal_to_window (parent_window (progress_bar))
@@ -382,10 +404,14 @@ feature {NONE} -- Implementation
 						-- Store `ace_text'.
 				create ace_output_file.make (ace_file_name)
 				if not ace_output_file.exists or project_settings.rebuild_ace_file then
-					ace_output_file.open_write
-					ace_output_file.start
-					ace_output_file.putstring (ace_text)
-					ace_output_file.close
+					if ace_output_file.is_access_writable then
+						ace_output_file.open_write
+						ace_output_file.start
+						ace_output_file.putstring (ace_text)
+						ace_output_file.close
+					else
+						read_only_files.extend (ace_file_name)
+					end
 				end
 			end
 		end
@@ -481,10 +507,15 @@ feature {NONE} -- Implementation
 						-- Now write the new constants file to disk.
 					constants_file_name := generated_path.twin
 					constants_file_name.extend (project_settings.constants_class_name.as_lower + Class_implementation_extension.as_lower + ".e")
-					create constants_file.make_open_write (constants_file_name)
-					constants_file.start
-					constants_file.putstring (constants_content)
-					constants_file.close
+					create constants_file.make (constants_file_name)
+					if constants_file.is_access_writable then
+						constants_file.make_open_write (constants_file_name)
+						constants_file.start
+						constants_file.putstring (constants_content)
+						constants_file.close
+					else
+						read_only_files.extend (constants_file_name)
+					end
 					
 							-- Now generate the interface class name for constants.
 							
@@ -598,11 +629,15 @@ feature {NONE} -- Implementation
 					
 					application_file_name := generated_path.twin
 					application_file_name.extend (application_class_name.as_lower + eiffel_class_extension)
-	
-					create application_output_file.make_open_write (application_file_name)
-					application_output_file.start
-					application_output_file.putstring (application_text)
-					application_output_file.close
+					create application_output_file.make (application_file_name)
+					if application_output_file.is_access_writable then
+						application_output_file.open_read_write
+						application_output_file.start
+						application_output_file.putstring (application_text)
+						application_output_file.close
+					else
+						read_only_files.extend (application_file_name)
+					end
 				end
 			end
 
@@ -756,10 +791,15 @@ feature {NONE} -- Implementation
 					document_info.reset_after_generation
 	
 						-- Store `class_text'.				
-					create window_output_file.make_open_write (file_name)
-					window_output_file.start
-					window_output_file.putstring (class_text)
-					window_output_file.close
+					create window_output_file.make (file_name)
+					if window_output_file.is_access_writable then
+						window_output_file.open_read_write
+						window_output_file.start
+						window_output_file.putstring (class_text)
+						window_output_file.close
+					else
+					read_only_files.extend (file_name)
+					end
 				end
 			end
 			
@@ -1559,6 +1599,9 @@ feature {NONE} -- Implementation
 		
 	missing_files: ARRAYED_LIST [STRING]
 		-- All files that could not be located during generation.
+		
+	read_only_files: ARRAYED_LIST [STRING]
+			-- All files that could not be accessed during generation.
 		
 	open_text_file_for_read (file_name: STRING): PLAIN_TEXT_FILE is
 			-- Open file plain text file named `file_name',

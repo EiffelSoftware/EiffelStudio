@@ -35,7 +35,7 @@ feature -- Output
 	trace_warnings (handler: ERROR_HANDLER) is
 			-- Display warnings messages from `handler'.
 		local
-			warning_list: SORTED_TWO_WAY_LIST [WARNING];
+			warning_list: LINKED_LIST [WARNING];
 			st: STRUCTURED_TEXT
 		do
 			if not retried then
@@ -72,7 +72,7 @@ feature -- Output
 	trace_errors (handler: ERROR_HANDLER) is
 			-- Display error messages from `handler'.
 		local
-			error_list: SORTED_TWO_WAY_LIST [ERROR];
+			error_list: LINKED_LIST [ERROR];
 			st: STRUCTURED_TEXT;
 			degree_nbr: INTEGER;
 			to_go: INTEGER

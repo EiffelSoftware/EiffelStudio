@@ -28,10 +28,10 @@ feature -- Properties
 	error_displayer: ERROR_DISPLAYER
 			-- Displays warning and error messages when they occur
 
-	error_list: SORTED_TWO_WAY_LIST [ERROR]
+	error_list: LINKED_LIST [ERROR]
 			-- Error list
 
-	warning_list: SORTED_TWO_WAY_LIST [WARNING]
+	warning_list: LINKED_LIST [WARNING]
 			-- Warning list
 
 	new_error: BOOLEAN
@@ -111,6 +111,7 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 				f_error.set_error_position (error_position)
 			end
 			error_list.extend (e)
+			error_list.finish
 		end
 
 	insert_warning (w: WARNING) is
@@ -119,6 +120,7 @@ feature {COMPILER_EXPORTER} -- Error handling primitives
 			good_argument: w /= Void
 		do
 			warning_list.extend (w)
+			warning_list.finish
 		end
 
 	mark is

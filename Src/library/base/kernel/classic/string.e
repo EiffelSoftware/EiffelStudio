@@ -660,7 +660,9 @@ feature -- Element change
 			if other /= Current then
 				old_area := area
 				standard_copy (other)
-				if old_area = Void or else old_area.count < count then
+					-- Note: <= is needed as all Eiffel string should have an
+					-- extra character to insert null character at the end.
+				if old_area = Void or else old_area.count <= count then
 					area := standard_clone (area)
 				else
 					($old_area).memory_copy ($area, count)

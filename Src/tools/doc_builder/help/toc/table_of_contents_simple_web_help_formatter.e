@@ -44,8 +44,7 @@ feature -- Processing
 				Result.append ("<tr><td>&nbsp;You are in:<br><br></td></tr>")
 				Result.append (parent_hierarchy_text (a_node))
 				Result.append ("<tr><td>" + spacer_html (number_of_parents (a_node)))
-				Result.append ("<a href=%"" + a_node.parent.id.out + ".html" + "%"><img src=%"../folder_open.gif%" align=%"center%"></a>&nbsp;" + a_node.title)
---				Result.append ("<a href=%"" + a_node.id.out + ".html" + "%">&nbsp;" + l_title "</a></td></tr>%N")				
+				Result.append ("<a href=%"" + a_node.parent.id.out + ".html" + "%"><img src=%"../folder_open.gif%" align=%"center%"></a>&nbsp;" + a_node.title)			
 				Result.append ("<tr><td><br></td></tr>")
 				Result.append ("<tr><td>&nbsp;Topics:<br><br></td></tr>")
 			end
@@ -129,12 +128,10 @@ feature {NONE} -- Implementation
 			
 				-- Add parent node
 			l_title := l_parent.title.twin
-			if l_parent.has_parent then
-				l_parent := l_parent.parent
-			end
 			if not l_title.is_equal ("table_of_contents") then
 				Result.append ("<a href=%"" + l_parent.id.out + ".html" + "%" align=%"center%"><img src=%"../folder_open.gif%" align=%"center%">&nbsp;</a>" + l_title)
---				Result.append ("<a href=%"" + l_url + "%" target=%"content_frame%">&nbsp;" + l_title + "</a></td></tr>%N")	
+			else
+				Result.append ("<a href=%"" + "0.html" + "%" align=%"center%"><img src=%"../folder_open.gif%" align=%"center%">&nbsp;</a>Documentation")
 			end			
 		end		
 
@@ -157,7 +154,7 @@ feature {NONE} -- Implementation
 	number_of_parents (a_node: TABLE_OF_CONTENTS_NODE): INTEGER is
 			-- Number of parents that `a_node' has
 		do
-			if a_node.has_parent then				
+			if a_node.has_parent then
 				Result := Result + 1
 				Result := Result + number_of_parents (a_node.parent)
 			end

@@ -170,7 +170,6 @@ feature -- Access
 			-- Position is relative to the toolbar.
 		local
 			pt: WEL_POINT
-			handle: INTEGER
 			info: WEL_LV_HITTESTINFO
 		do
 			create pt.make (x_pos, y_pos)
@@ -837,6 +836,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.54  2000/03/14 23:51:15  rogers
+--| Removed unused local.
+--|
 --| Revision 1.53  2000/03/14 19:02:00  rogers
 --| Removed all commented code from on_****_button_down, and implemented correctly. Removed all on_****_button_up.
 --|

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><application xsi="http://www.w3.org/1999/XMLSchema-instance">
-<item type="Constants"><Constant ><type >INTEGER</type>
+<item type="Constants"><Constant ><type >STRING</type>
+		<Name >close_text</Name>
+		<Value >Close</Value>
+		</Constant>
+	<Constant ><type >INTEGER</type>
 		<Name >small_padding</Name>
 		<Value >4</Value>
 		</Constant>
@@ -7,9 +11,12 @@
 		<Name >new_button_text</Name>
 		<Value >New...</Value>
 		</Constant>
-	<Constant ><type >DIRECTORY</type>
-		<Name >pixmap_location</Name>
-		<Value >D:\Eiffel54\build\bitmaps\png</Value>
+	<Constant ><type >PIXMAP</type>
+		<Name >icon_component_build_view_color_png</Name>
+		<Value >D:\Eiffel54\build\bitmaps\png\icon_component_build_view_color.png</Value>
+		<is_absolute >False</is_absolute>
+		<Directory >pixmap_location</Directory>
+		<Filename >icon_component_build_view_color.png</Filename>
 		</Constant>
 	<Constant ><type >INTEGER</type>
 		<Name >default_button_width</Name>
@@ -61,13 +68,6 @@
 		<Name >tip_of_day_dialog_title</Name>
 		<Value >Tip of the Day</Value>
 		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >icon_component_build_view_color_png</Name>
-		<Value >D:\Eiffel54\build\bitmaps\png\icon_component_build_view_color.png</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_location</Directory>
-		<Filename >icon_component_build_view_color.png</Filename>
-		</Constant>
 	<Constant ><type >INTEGER</type>
 		<Name >negative</Name>
 		<Value >-100</Value>
@@ -80,9 +80,9 @@
 		<Name >import_project_title</Name>
 		<Value >Import Completion Status</Value>
 		</Constant>
-	<Constant ><type >STRING</type>
-		<Name >close_text</Name>
-		<Value >Close</Value>
+	<Constant ><type >DIRECTORY</type>
+		<Name >pixmap_location</Name>
+		<Value >D:\Eiffel54\build\bitmaps\png</Value>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >ok_button_text</Name>
@@ -2657,7 +2657,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 		<EV_COLORIZABLE />
 		<EV_SENSITIVE />
 		<EV_WIDGET />
-		<EV_WINDOW ><Title ><![CDATA[Display window]]></Title>
+		<EV_WINDOW ><Title ><![CDATA[EV_TABLE child positioner]]></Title>
 			</EV_WINDOW>
 		<EV_PIXMAPABLE />
 		<EV_CONTAINER />
@@ -2836,7 +2836,7 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 				<EV_WIDGET />
 				<EV_BOX ><Padding ><Constant >small_padding</Constant>
 						</Padding>
-					<Is_item_expanded >10</Is_item_expanded>
+					<Is_item_expanded >101</Is_item_expanded>
 					</EV_BOX>
 				<EV_PIXMAPABLE />
 				<EV_CONTAINER />
@@ -2879,6 +2879,34 @@ Please enter the name of a DIRECTORYconstant which will be used.]]></Text>
 					<EV_WIDGET />
 					<EV_TEXT_ALIGNABLE />
 					<EV_PIXMAPABLE />
+					</item>
+				<item type="EV_TABLE"><Internal_properties ><id >238</id>
+						<Expanded >1</Expanded>
+						</Internal_properties>
+					<EV_COLORIZABLE />
+					<EV_SENSITIVE />
+					<EV_WIDGET />
+					<EV_PIXMAPABLE />
+					<EV_TABLE ><Column_positions >0001</Column_positions>
+						<Row_positions >0001</Row_positions>
+						<Column_spans >0001</Column_spans>
+						<Row_spans >0001</Row_spans>
+						</EV_TABLE>
+					<EV_CONTAINER />
+					<item type="EV_SCROLLABLE_AREA"><Internal_properties ><id >239</id>
+							<Expanded >0</Expanded>
+							</Internal_properties>
+						<EV_COLORIZABLE />
+						<EV_SENSITIVE />
+						<EV_WIDGET />
+						<EV_PIXMAPABLE />
+						<EV_VIEWPORT ><X_offset >0</X_offset>
+							<Y_offset >0</Y_offset>
+							<Item_width >-1</Item_width>
+							<Item_height >-1</Item_height>
+							</EV_VIEWPORT>
+						<EV_CONTAINER />
+						</item>
 					</item>
 				</item>
 			</item>

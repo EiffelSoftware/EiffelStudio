@@ -87,6 +87,7 @@ feature -- Query
 							create file_node.make_with_text (root_dir.lastentry)
 							file_node.pointer_double_press_actions.force_extend (agent Shared_document_manager.load_document_from_file (file.name))
 							file_node.set_pixmap (l_file_pixmap)
+							file_node.set_pebble (file.name)
 							Result.extend (file_node)	
 						end											
 					end

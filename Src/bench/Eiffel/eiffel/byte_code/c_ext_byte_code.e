@@ -1,6 +1,6 @@
 indexing
-	description: "Encapsulation of a C extension.";
-	date: "$Date$";
+	description: "Encapsulation of a C extension."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class C_EXT_BYTE_CODE

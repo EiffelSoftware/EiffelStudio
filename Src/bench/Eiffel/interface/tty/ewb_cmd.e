@@ -111,7 +111,7 @@ if not initialized.item then
 							temp.append (" does not have appropriate permissions.")
 	
 							error_occurred := True;
-							else
+						else
 							init_project_directory := project_dir;
 							if project_dir /= Project_directory then end;
 							Create_compilation_directory;
@@ -164,6 +164,7 @@ end;
 			init_work: INIT_WORKBENCH;
 			workbench_file: RAW_FILE;
 			precomp_r: PRECOMP_R;
+			extendible_r: EXTENDIBLE_R;
 			temp: STRING
 		do
 
@@ -194,7 +195,11 @@ if not initialized.item then
 
 				if System.uses_precompiled then
 					!!precomp_r;
-					precomp_r.set_precomp_dir;
+					precomp_r.set_precomp_dir
+				end;
+				if System.is_dynamic then
+					!!extendible_r;
+					extendible_r.set_extendible_dir
 				end;
 				System.server_controler.init;
 				Universe.update_cluster_paths;

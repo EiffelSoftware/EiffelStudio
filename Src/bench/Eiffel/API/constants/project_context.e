@@ -19,9 +19,7 @@ feature {NONE} -- Status report
 	is_project_readable: BOOLEAN is
 			-- May the project be used for browsing and debugging?
 		do
-			Result :=
-				(Update_file.exists and then Update_file.is_readable) and then
-				System.server_controler.is_readable
+			Result := System.server_controler.is_readable
 		end;
 
 	is_project_writable: BOOLEAN is
@@ -35,12 +33,18 @@ feature {NONE} -- Status report
 			!! comp_dir.make (Compilation_path);
 			!! project_file.make (Project_file_name);
 			Result := project_file.is_writable and then
-				Update_file.exists and then
-				(Update_file.is_readable and Update_file.is_writable) and then
 				(w_code_dir.exists and then w_code_dir.is_writable) and then
 				(f_code_dir.exists and then f_code_dir.is_writable) and then
-				(f_code_dir.exists and then comp_dir.is_writable) and then
-				System.server_controler.is_writable
+				(comp_dir.exists and then comp_dir.is_writable) and then
+				System.server_controler.is_writable;
+			if System.is_dynamic then
+				Result := Result and then 
+					(not Melted_dle_file.exists or else 
+					Melted_dle_file.is_writable)
+			else
+				Result := Result and then 
+					(not Update_file.exists or else Update_file.is_writable)
+			end
 		end;
 
 feature {NONE}
@@ -234,6 +238,74 @@ feature {NONE}
 			file_name.extend_from_array (<<Eiffelgen, W_code>>);
 			file_name.set_file_name (Driver);
 			Result := file_name
+		end;
+
+feature -- DLE
+
+	Melted_dle_file: RAW_FILE is
+			-- File containing all the melted byte code of the DC-set
+		local
+			file_name: FILE_NAME
+		once
+			!!file_name.make_from_string (Workbench_generation_path);
+			file_name.set_file_name (Melted_dle);
+			!!Result.make (file_name)
+		end;
+
+	extendible_directory: PROJECT_DIR is
+			-- Directory of the project which is intended to
+			-- be dynamically extended
+		once
+			Result := init_extendible_directory
+		end;
+
+	init_extendible_directory: PROJECT_DIR is do end;
+
+	Extendible_path: STRING is
+			-- Path of the system which is intended to
+			-- be dynamically extended
+		local
+			dir_name: DIRECTORY_NAME
+		once
+			!!dir_name.make_from_string (Extendible_directory.name);
+			dir_name.extend_from_array (<<Eiffelgen, Comp>>);
+			Result := dir_name
+		end;
+
+	Extendible_file_name: STRING is
+			-- Full name of the file where the dynamically extendible
+			-- project's workbench is stored
+		local
+			file_name: FILE_NAME
+		once
+			!!file_name.make_from_string (Extendible_directory.name);
+			file_name.extend (Eiffelgen);
+			file_name.set_file_name (Dot_workbench);
+			Result := file_name
+		end;
+
+	Extendible_W_code: STRING is
+			-- Workbench generation code directory of the static system
+		require
+			dynamic_system: System.is_dynamic
+		local
+			dir_name: DIRECTORY_NAME
+		once
+			!!dir_name.make_from_string (Extendible_directory.name);
+			dir_name.extend_from_array (<<Eiffelgen, W_code>>);
+			Result := dir_name
+		end;
+
+	Extendible_F_code: STRING is
+			-- Finalization generation code directory of the static system
+		require
+			dynamic_system: System.is_dynamic
+		local
+			dir_name: DIRECTORY_NAME
+		once
+			!!dir_name.make_from_string (Extendible_directory.name);
+			dir_name.extend_from_array (<<Eiffelgen, F_code>>);
+			Result := dir_name
 		end;
 
 end

@@ -43,12 +43,19 @@ feature
 		do
 			init;
 			if not error_occurred and then Lace.file_name /= Void then
-				System.set_freeze (True);
+					-- Do not call the once function `System' directly
+					-- since it's value may be replaced during the first
+					-- compilation (as soon as we figured out whether the
+					-- system describes a Dynamic Class Set or not).
+				Workbench.system.set_freeze (True);
 				compile;
 				if Workbench.successfull then
 					terminate_project;
 					print_tail;
-					prompt_finish_freezing (False)
+					prompt_finish_freezing (False);
+					if System.is_dynamic then
+						dle_link_system
+					end
 				end;
 			end;
 		end;

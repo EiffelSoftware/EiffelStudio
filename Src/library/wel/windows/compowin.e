@@ -783,10 +783,9 @@ feature {NONE} -- Implementation
 			on_window_pos_changing (wp)
 		end
 
-	on_wm_close: BOOLEAN is
+	on_wm_close is
 			-- Wm_close message.
-			-- If True further processing is halted
-			-- (False by default)
+			-- If `closeable' is False further processing is halted.
 		require
 			exists: exists
 		do
@@ -854,7 +853,7 @@ feature {WEL_DISPATCHER}
 			elseif msg = Wm_querynewpalette then
 				on_query_new_palette
 			elseif msg = Wm_close then
-				if on_wm_close then end
+				on_wm_close
 			end
 		end
 

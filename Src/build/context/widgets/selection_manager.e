@@ -215,7 +215,7 @@ feature {NONE}
 			--context.widget.top.raise;
 			ctrl_selected := false;
 			display_rectangle;
-			set_cursor;
+			set_cursor (True);
 			if not motion then
 				-- add context to the list of
 				-- grouped contexts if valid
@@ -563,13 +563,17 @@ feature {NONE} -- Cursor shape
 			-- If the cursor is on the squares, the mode
 			-- is resize, otherwise it is move
  
-	set_cursor is
+	set_cursor (movable: BOOLEAN) is
 			-- Set the cursor shape
 		local
 			x_pos, y_pos: INTEGER;
 			real_x, real_y: INTEGER
 		do
-			cursor_shape := Cursors.move_cursor;
+			if movable then
+				cursor_shape := Cursors.move_cursor;
+			else
+				cursor_shape := Cursors.cross_cursor
+			end
 			x_pos := eb_screen.x;
 			y_pos := eb_screen.y;
 
@@ -603,7 +607,7 @@ feature {PERM_WIND_C}
 			if (argument = First) then
 					-- Pointer motion
 				if not selected then
-					set_cursor
+					set_cursor (context.is_movable)
 				elseif ctrl_selected then
 					move_group
 				elseif context.is_movable then
@@ -701,7 +705,7 @@ feature {PERM_WIND_C}
 							context := bull.group_context
 						end;
 					end;
-					set_cursor;
+					set_cursor (context.is_movable)
 				end;
 			end;
 		end;

@@ -1506,6 +1506,7 @@ feature -- Features info
 					l_field_sig)
 
 				insert_attribute (l_meth_token, a_type_id, l_feat.feature_id)
+				insert_signature (l_signature, a_type_id, l_feat.feature_id)
 			else
 					-- Normal method
 				l_meth_token := md_emit.define_member_ref (uni_string, l_class_token,
@@ -1688,6 +1689,7 @@ feature -- Features info
 					l_field_attr, l_field_sig)
 
 				insert_attribute (l_meth_token, current_type_id, feat.feature_id)
+				insert_signature (l_signature, current_type_id, feat.feature_id)
 			else
 				l_meth_attr := feature {MD_METHOD_ATTRIBUTES}.Public |
 					feature {MD_METHOD_ATTRIBUTES}.Hide_by_signature
@@ -2343,6 +2345,11 @@ feature -- IL Generation
 				method_body.put_call (feature {MD_OPCODES}.Call,
 					current_module.memberwise_clone_token, 0, True)
 				generate_check_cast (Void, current_class_type.type)
+			else
+					-- Temporary code to satisfy assertions about computation
+					-- of stack depth of current body, until we know how to
+					-- implement it for expanded type.
+				put_void
 			end
 			generate_return (True)
 			method_writer.write_current_body

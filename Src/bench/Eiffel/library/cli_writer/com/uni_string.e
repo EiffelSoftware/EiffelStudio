@@ -68,7 +68,15 @@ feature -- Access
 		ensure
 			item_not_null: Result /= default_pointer
 		end
-		
+
+feature -- Status report
+
+	is_empty: BOOLEAN is
+			-- Is current empty?
+		do
+			Result := length = 0
+		end
+
 	capacity: INTEGER is
 			-- Number of character in Current.
 		do

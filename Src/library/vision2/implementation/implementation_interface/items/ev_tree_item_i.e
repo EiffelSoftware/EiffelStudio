@@ -17,6 +17,38 @@ feature -- Access
 	parent_imp: EV_TREE_ITEM_HOLDER_IMP
 			-- Parent implementation
 
+feature -- Status setting
+
+	set_selected (flag: BOOLEAN) is
+			-- Select the item if `flag', unselect it otherwise.
+		require
+			exists: not destroyed
+			has_parent: parent_imp /= Void
+		deferred
+		ensure
+			is_selected: flag implies is_selected
+		end
+
+	toggle is
+			-- Change the state of selection of the item.
+		require
+			exists: not destroyed
+			has_parent: parent_imp /= Void
+		do
+			set_selected (not is_selected)
+		end
+
+	set_expand (flag: BOOLEAN) is
+			-- Expand the item if `flag', collapse it otherwise.
+			-- Do nothing if the item is not a sub-tree.
+		require
+			exists: not destroyed
+			has_parent: parent_imp /= Void
+		deferred
+		ensure
+			is_expanded: flag implies is_expanded
+		end
+
 feature -- Status report
 
 	is_selected: BOOLEAN is
@@ -29,6 +61,13 @@ feature -- Status report
 
 	is_expanded: BOOLEAN is
 			-- is the item expanded ?
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	is_parent: BOOLEAN is
+			-- is the item the parent of other items?
 		require
 			exists: not destroyed
 		deferred

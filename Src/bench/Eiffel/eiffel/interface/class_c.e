@@ -3869,7 +3869,6 @@ feature -- Access
 	feature_with_body_index (bid: INTEGER): E_FEATURE is
 			-- Feature whose body id `bid'.
 		require
-			valid_body_index: bid /= 0
 			has_feature_table: has_feature_table
 		local
 			feat: FEATURE_I

@@ -7,12 +7,24 @@ indexing
 class
 	EB_EXPLAIN_TOOL_DATA
 
+inherit
+	SHARED_RESOURCES
+
 feature -- Access
 
-	Explain_Resources: EB_EXPLAIN_PARAMETERS is
-			-- Explain tool specific parameters
-		once
-			create Result.make
+	explain_tool_width: INTEGER is
+		do
+			Result := resources.get_integer ("explain_tool_width", 440)
+		end
+
+	explain_tool_height: INTEGER is
+		do
+			Result := resources.get_integer ("explain_tool_height", 500)
+		end
+
+	explain_tool_bar: BOOLEAN is
+		do
+			Result := resources.get_boolean ("explain_tool_bar", True)
 		end
 
 end -- class EB_EXPLAIN_TOOL_DATA

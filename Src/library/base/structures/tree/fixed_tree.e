@@ -16,13 +16,13 @@ class FIXED_TREE [G] inherit
 
 	CELL [G]
 		undefine
-			is_equal, copy, setup, consistent
+			is_equal, copy
 		end;
 
 	TREE [G]
 		undefine
 			child_off, child_after, child_before,
-			is_equal, copy, setup, consistent,
+			is_equal, copy,
 			child_item
 		redefine
 			parent, attach_to_parent

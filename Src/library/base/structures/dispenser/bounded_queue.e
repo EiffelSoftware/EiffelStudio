@@ -21,7 +21,7 @@ class BOUNDED_QUEUE [G] inherit
 
 	BOUNDED [G]
 		undefine
-			copy, consistent, is_equal, setup
+			copy, is_equal
 		end;
 
 creation

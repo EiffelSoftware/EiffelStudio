@@ -15,9 +15,6 @@ class BIT_REF inherit
 
 	ANY
 		redefine
-			c_standard_is_equal,
-			c_standard_copy,
-			c_standard_clone,
 			out,
 			generator,
 			conforms_to
@@ -151,14 +148,6 @@ feature {NONE} -- Implementation
 			"C | %"eif_bits.h%""
 		end;
 
-	c_standard_is_equal (target, source: POINTER): BOOLEAN is
-			-- C external performing standard equality
-		external
-			"C | %"eif_bits.h%""
-		alias
-			"b_equal"
-		end;
-
 	b_shift (a_bit: POINTER; s: INTEGER): BIT_REF is
 			-- Result of shifting `a_bit' by `s' positions
 		external
@@ -199,22 +188,6 @@ feature {NONE} -- Implementation
 			-- Negation of `a_bit'
 		external
 			"C | %"eif_bits.h%""
-		end;
-
-	c_standard_copy (source, target: POINTER) is
-			-- Copy of bit sequence
-		external
-			"C | %"eif_bits.h%""
-		alias
-			"b_copy"
-		end;
-
-	c_standard_clone (other: POINTER): BIT_REF is
-			-- New object of same dynamic type as `other'
-		external
-			"C | %"eif_bits.h%""
-		alias
-			"b_clone"
 		end;
 
 	b_put (a_bit: POINTER; val: BOOLEAN; index: INTEGER) is

@@ -1,5 +1,4 @@
 indexing
-
 	description:
 		"Special objects: homogeneous sequences of values, %
 		%used to represent arrays and strings";
@@ -8,13 +7,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SPECIAL [T] inherit
-
-	ANY
-		redefine
-			conforms_to,
-			c_standard_clone, c_standard_is_equal, c_standard_copy
-		end
+class
+	SPECIAL [T]
 
 feature -- Access
 
@@ -26,12 +20,6 @@ feature -- Access
 			index_small_enough: i < count
 		do
 			-- Built-in
-		end;
-
-	conforms_to (other: SPECIAL [T]): BOOLEAN is
-			-- Does special object conform to `other'?
-		do
-			Result := other.count = count
 		end;
 
 feature -- Measurement
@@ -76,34 +64,7 @@ feature {NONE} -- Implementation
 			"C | %"eif_copy.h%""
 		end
 
-	c_standard_is_equal (source, target: POINTER): BOOLEAN is
-			-- Is `source' equal to `target' ?
-			-- Returns True if `source' and `target' have the same count
-			-- and the same entries.
-		external
-			"C | %"eif_equal.h%""
-		alias
-			"spequal"
-		end;
-
-	c_standard_copy (source, target: POINTER) is
-			-- Copy entries of `target' into `source'.
-		external
-			"C | %"eif_copy.h%""
-		alias
-			"spcopy"
-		end;
-
-	c_standard_clone (other: POINTER): SPECIAL [T] is
-			-- New special object of size `count'
-		external
-			"C | %"eif_copy.h%""
-		alias
-			"spclone"
-		end
-
 end -- class SPECIAL
-
 
 --|----------------------------------------------------------------
 --| EiffelBase: Library of reusable components for Eiffel.

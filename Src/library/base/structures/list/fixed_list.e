@@ -22,8 +22,8 @@ class FIXED_LIST [G] inherit
 				fill,
 				prune, prune_all;
 		undefine
-			force, prune, infix "@", is_equal, setup, put_i_th, occurrences,
-			valid_index, prune_all, copy, has, consistent, i_th
+			force, prune, infix "@", is_equal, put_i_th, occurrences,
+			valid_index, prune_all, copy, has, i_th
 		redefine
 			first,
 			last,
@@ -55,13 +55,11 @@ class FIXED_LIST [G] inherit
 				put_i_th,
 				infix "@",
 				is_equal,
-				setup,
 				occurrences,
 				valid_index,
 				copy,
 				area,
-				has,
-				consistent;
+				has
 			{FIXED_LIST}
 				array_make
 		undefine
@@ -72,7 +70,7 @@ class FIXED_LIST [G] inherit
 
 	FIXED [G]
 		undefine
-			copy, consistent, is_equal, setup,
+			copy, is_equal,
 			full
 		end;
 

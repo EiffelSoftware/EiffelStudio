@@ -39,7 +39,7 @@ feature -- Access
 		do
 			!! Result.make (10);
 			Result.append ("BIT ");
-			Result.append (count.out)
+			Result.append_integer (count)
 		end;
 
 	conforms_to (other: BIT_REF): BOOLEAN is

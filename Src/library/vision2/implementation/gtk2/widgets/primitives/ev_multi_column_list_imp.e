@@ -1048,6 +1048,7 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP}
 			a_cs := a_text
 				-- Replace when we have UTF16 support
 			str_value := g_value_string_struct
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_unset (str_value)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_init_string (str_value)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_string (str_value, a_cs.item)
 

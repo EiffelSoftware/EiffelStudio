@@ -173,7 +173,7 @@ feature {NONE} -- Implementation
 				store: GB_XML_STORE
 				window_template_file, window_output_file: RAW_FILE
 				window_file_name: FILE_NAME
-				temp_index, local_tag_index, create_tag_index: INTEGER
+				local_tag_index, create_tag_index: INTEGER
 			do
 				set_progress (0.3)
 				create store
@@ -217,13 +217,8 @@ feature {NONE} -- Implementation
 					-- Generate the event code.
 				generate_events (current_document.root_element, 1)
 	
-				if local_string /= Void then
-					local_tag_index := class_text.substring_index (local_tag, 1)
-					class_text.replace_substring_all (local_tag, "")			
-					class_text.insert_string (local_string, local_tag_index)
-				else
-					class_text.replace_substring_all (local_tag, "")			
-				end
+					-- Add code for local declarations to `class_text'.
+				add_generated_string (class_text, local_string, local_tag)
 
 					-- Add code for creation of widgets to `class_text'.
 				add_generated_string (class_text, create_string, create_tag)
@@ -232,9 +227,9 @@ feature {NONE} -- Implementation
 				add_generated_string (class_text, build_string, build_tag)	
 				
 					-- Add code for widget attribute settings to `class_text'.
-				add_generated_string (class_text, set_string, set_tag)	
+				add_generated_string (class_text, set_string, set_tag)
 	
-					-- Add code connecting events to features to `class_text'.
+					-- Add code connecting event+s to features to `class_text'.
 				add_generated_string (class_text, event_connection_string, event_connection_tag)
 
 					-- Add declaration of features as deferred to `class_text'.
@@ -262,10 +257,8 @@ feature {NONE} -- Implementation
 	build_main_window is
 			--
 		local
-			store: GB_XML_STORE
 			window_template_file, window_output_file: RAW_FILE
 			window_file_name: FILE_NAME
-			temp_index, local_tag_index, create_tag_index: INTEGER
 		do
 				-- Retrieve the template for a class file to generate.
 			create window_template_file.make_open_read (window_template_file_name)
@@ -502,20 +495,15 @@ feature {NONE} -- Implementation
 			current_element: XML_ELEMENT
 			current_data_element: XML_CHARACTER_DATA
 			current_name: STRING
-			full_information, event_full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
-			element_info, event_element_info: ELEMENT_INFORMATION
-			current_type: STRING
-			gb_ev_any: GB_EV_ANY
+			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
+			element_info: ELEMENT_INFORMATION
 			current_iterative_name: STRING
-			data: STRING
-			char_data: STRING
 			another_element: XML_ELEMENT
 			action_sequence_info: GB_ACTION_SEQUENCE_INFO
 			action_sequence: GB_EV_ACTION_SEQUENCE
 			local_name: STRING
 			comment_object_name, parameters: STRING
 			feature_implementation: STRING
-			indent_value: STRING
 			project_settings: GB_PROJECT_SETTINGS
 		do
 			project_settings := system_status.current_project_settings
@@ -713,13 +701,12 @@ feature {NONE} -- Implementation
 		local
 			temp_string: STRING
 		do
+			temp_string := indent + "create " + name
 			if create_string = Void then
-				create_string := ""
-				temp_string := "create " + name
+				create_string := create_widgets_comment + temp_string
 			else
-				temp_string := indent + "create " + name	
+				create_string := create_string + temp_string--indent + "create " + name
 			end
-			create_string := create_string + temp_string
 		end
 		
 	add_build (constructor: STRING) is
@@ -727,13 +714,12 @@ feature {NONE} -- Implementation
 		local
 			temp_string: STRING
 		do
+			temp_string := indent + constructor
 			if build_string = Void then
-				build_string := ""
-				temp_string := constructor
+				build_string := build_widgets_comment + temp_string
 			else
-				temp_string := indent + constructor
+				build_string := build_string + temp_string--+ indent + constructor
 			end
-			build_string := build_string + temp_string
 		end
 		
 	add_event_connection (event: STRING) is
@@ -778,9 +764,9 @@ feature {NONE} -- Implementation
 				non_void_set := ""
 			end
 			
-			-- If we are working with an EV_TITLED_WINDOW, then
-			-- we may have the . at the start which is uneeded in
-			-- the code. Remove it.
+				-- If we are working with an EV_TITLED_WINDOW, then
+				-- we may have the . at the start which is uneeded in
+				-- the code. Remove it.
 			if not non_void_set.is_empty and then (non_void_set @ 1) = '.' then
 				non_void_set := non_void_set.substring (2, non_void_set.count)
 				non_void_set.replace_substring_all (indent + ".", indent)
@@ -788,7 +774,7 @@ feature {NONE} -- Implementation
 			
 			
 			if set_string = Void then
-				set_string := ""
+				set_string := set_widgets_comment
 				temp_string := non_void_set
 			else
 				if not non_void_set.is_empty then

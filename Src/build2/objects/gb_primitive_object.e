@@ -8,7 +8,7 @@ class
 	GB_PRIMITIVE_OBJECT
 
 inherit
-	GB_OBJECT
+	GB_PARENT_OBJECT
 		redefine
 			object, display_object
 		end

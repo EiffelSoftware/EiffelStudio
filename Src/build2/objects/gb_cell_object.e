@@ -8,13 +8,11 @@ class
 	GB_CELL_OBJECT
 	
 inherit
-	GB_OBJECT
+	GB_PARENT_OBJECT
 		redefine
 			object, display_object, is_full,
 			build_display_object, accepts_child
 		end
-		
-	GB_PARENT_OBJECT
 	
 create
 	make_with_type,

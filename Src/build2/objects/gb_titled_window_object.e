@@ -16,13 +16,6 @@ inherit
 			add_new_object_wrapper, add_new_component_wrapper, can_add_child, add_child_object, accepts_child,
 			generate_xml, modify_from_xml
 		end
-		
-	GB_PARENT_OBJECT
-		export
-			{NONE} all
-		redefine
-			add_child_object
-		end
 
 	GB_SHARED_TOOLS
 		export

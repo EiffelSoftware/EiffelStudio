@@ -8,7 +8,7 @@ class
 	GB_CONTAINER_OBJECT
 
 inherit
-	GB_OBJECT
+	GB_PARENT_OBJECT
 		export
 			{ANY} dynamic_type, dynamic_type_from_string,
 				type_conforms_to
@@ -18,8 +18,6 @@ inherit
 			accepts_child
 		end
 		
-	GB_PARENT_OBJECT
-
 create
 	make_with_type,
 	make_with_type_and_object

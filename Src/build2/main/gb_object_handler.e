@@ -342,8 +342,10 @@ feature -- Basic operation
 			window_object.build_drop_actions_for_layout_item
 			create display_win
 			titled_window ?= display_win
+			titled_window.set_size (Default_window_dimension, Default_window_dimension)
 			window_object.set_object (titled_window)
 			create builder_win
+			builder_win.set_size (Default_window_dimension, Default_window_dimension)
 			window_object.set_display_object (builder_win)
 		end
 

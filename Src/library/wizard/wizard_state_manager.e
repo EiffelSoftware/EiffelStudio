@@ -60,18 +60,22 @@ feature {WIZARD_WINDOW} -- Basic Operations
 		require
 			meaningfull: history.count>0
 		do
-			from
-				history.finish
-			until
-				history.before
-			loop
-				history.item.cancel
-				history.back
+			if not destroying_wizard then
+				destroying_wizard := True
+
+				from
+					history.finish
+				until
+					history.before
+				loop
+					history.item.cancel
+					history.back
+				end
+				history.wipe_out
+
+				first_window.destroy
+				destroying_wizard := False
 			end
-			history.wipe_out
-
-			first_window.destroy
-
 		ensure
 			ready_to_exit: history.count=0
 		end
@@ -96,8 +100,9 @@ feature {NONE} -- Internal Operations
 feature {NONE} -- Implementation
 
 	wizard_information: WIZARD_INFORMATION
-		-- State relative to Current State.
+			-- State relative to Current State.
 
-invariant
---	state_information_defined: wizard_information /= Void
+	destroying_wizard: BOOLEAN
+			-- Is the wizard being currently destroyed?
+
 end -- class WIZARD_STATE_MANAGER

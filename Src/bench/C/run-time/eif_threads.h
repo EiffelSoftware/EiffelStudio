@@ -89,7 +89,6 @@ extern void eif_thr_proxy_dispose(EIF_POINTER);
 
 /* Tuning for Windows */
 #ifdef EIF_WIN32
-#define EIF_NO_CONDVAR
 #define EIF_NO_POSIX_SEM
 #endif
 
@@ -320,13 +319,14 @@ extern EIF_POINTER eif_thr_last_thread(void);
 
 #include <windows.h>
 #include <process.h>
+#include "eif_cond_var.h"
 
 /* Types */
 #define EIF_THR_ENTRY_TYPE		void
 #define EIF_THR_ENTRY_ARG_TYPE	void *
 #define EIF_THR_TYPE			HANDLE
 #define EIF_THR_ATTR_TYPE		unsigned char /* FIXME - not used */
-#define EIF_MUTEX_TYPE			CRITICAL_SECTION
+#define EIF_MUTEX_TYPE			HANDLE
 #define EIF_TSD_TYPE			DWORD
 #define EIF_TSD_VAL_TYPE		LPVOID
 #define EIF_SEM_TYPE			HANDLE
@@ -348,6 +348,7 @@ extern EIF_POINTER eif_thr_last_thread(void);
 	tid=(EIF_THR_TYPE)_beginthread((entry),0,(EIF_THR_ENTRY_ARG_TYPE)(arg));\
 	if ((int)tid==-1) eif_thr_panic(msg)
 #define EIF_THR_EXIT(arg)					_endthread()
+
 #define EIF_THR_JOIN(which)
 #define EIF_THR_JOIN_ALL
 #define EIF_THR_YIELD
@@ -356,26 +357,21 @@ extern EIF_POINTER eif_thr_last_thread(void);
 #define EIF_THR_GET_PRIORITY(tid,prio)
 
 /* Mutex management */
-#define EIF_MUTEX_CREATE(m,msg)		\
-	m = (EIF_MUTEX_TYPE *) eif_malloc(sizeof(EIF_MUTEX_TYPE)); \
-	if (!(m)) eif_thr_panic("Not enough memory to create mutex\n"); \
-	EIF_MUTEX_INIT(m,msg)
-#define EIF_MUTEX_INIT(m,msg)			InitializeCriticalSection(m)
-#define EIF_MUTEX_LOCK(m,msg)			EnterCriticalSection(m)
+#define EIF_MUTEX_CREATE(m,msg) \
+        m = CreateMutex(NULL,FALSE,NULL); \
+        if (!m) eif_thr_panic(msg);
+#define EIF_MUTEX_LOCK(m,msg) \
+        if (WaitForSingleObject(m, INFINITE) == WAIT_FAILED) \
+        eif_thr_panic(msg)
+#define EIF_MUTEX_TRYLOCK(m,r,msg)  \
+        r = (WaitForSingleObject(m,0)); \
+        if (r==WAIT_FAILED) eif_thr_panic(msg); \
+        r = (r==WAIT_TIMEOUT)
+#define EIF_MUTEX_UNLOCK(m,msg) \
+        if (!ReleaseMutex(m)) eif_thr_panic(msg)
+#define EIF_MUTEX_DESTROY(m,msg) \
+        if (!CloseHandle(m)) eif_thr_panic(msg)
 
-#if(_WIN32_WINNT >= 0x0400)			/* The function EIF_MUTEX_TRYLOCK can be defined only
-									 * on Windows NT 4.0 */
-#define EIF_MUTEX_TRYLOCK(m,r,msg) \
-	r = TryEnterCriticalSection(m); \
-	if(r == 0) \
-		eif_thr_panic(msg)
-#else
-#define EIF_MUTEX_TRYLOCK(m,r,msg) /* Need to find a counter part on Windows 95 */
-#endif
-
-#define EIF_MUTEX_UNLOCK(m,msg)			LeaveCriticalSection(m)
-#define EIF_MUTEX_DESTROY0(m,msg)		DeleteCriticalSection(m)
-#define EIF_MUTEX_DESTROY(m,msg)		EIF_MUTEX_DESTROY0(m,msg); eif_free(m)
 
 /* Semaphore management */
 #define EIF_SEM_CREATE(sem,count,msg) \

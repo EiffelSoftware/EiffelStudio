@@ -40,6 +40,8 @@ cluster
 		error:				"$BENCH/Eiffel/error";
 		struct_text:        "$BENCH/Eiffel/structured_text";
 
+		common_eiffel_parser:	"$BENCH/Eiffel/common/parser/parser";
+
 	-- Lace compilation:
 
 		lace_AST:			"$BENCH/Eiffel/lace/AST";

@@ -184,6 +184,10 @@ feature -- C keywords -- 3
 
 	Else_if: STRING is "else if"
 
+	Switch: STRING is "switch"
+
+	Case: STRING is "case"
+
 	For: STRING is "for"
 
 	Int: STRING is "int"
@@ -620,6 +624,10 @@ feature -- Generator constants -- 8
 	Eiffel_function_variable_name: STRING is "eiffel_function"
 
 	Argument_name: STRING is "a_value"
+
+	Dispparam_parameter: STRING is "pDispParams"
+
+	Variant_parameter: STRING is "lcl_rgvarg"
 
 	Return_value_name: STRING is "ret_value"
 

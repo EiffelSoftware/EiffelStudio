@@ -388,7 +388,7 @@ feature {NONE} -- Implementation
 			end
 			Result.append (Space_open_parenthesis)
 
-			if is_unsigned_int (type) or is_unsigned_long (type) or is_int (type) then
+			if is_unsigned_long (type) then
 				Result.append (Open_parenthesis)
 				Result.append ("long *")
 				Result.append (Close_parenthesis)

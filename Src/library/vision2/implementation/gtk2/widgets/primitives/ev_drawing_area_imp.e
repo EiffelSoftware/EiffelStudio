@@ -29,7 +29,6 @@ inherit
 			default_key_processing_blocked,
 			dispose,
 			destroy,
-			on_key_event,
 			on_focus_changed
 		end
 
@@ -53,8 +52,7 @@ feature {NONE} -- Initialization
 			gc := {EV_GTK_EXTERNALS}.gdk_gc_new (App_implementation.default_gdk_window)
 			{EV_GTK_EXTERNALS}.GTK_WIDGET_SET_FLAGS (c_object, {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
 			init_default_values
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_double_buffered (c_object, False)
-			{EV_GTK_EXTERNALS}.gtk_widget_set_app_paintable (c_object, True)
+			{EV_GTK_EXTERNALS}.gtk_widget_set_double_buffered (c_object, False)
 		end
 
 feature {NONE} -- Implementation
@@ -64,14 +62,14 @@ feature {NONE} -- Implementation
 			Result := a_key.is_arrow or else a_key.code = App_implementation.Key_constants.key_tab
 		end
 
-	interface: EV_DRAWING_AREA
-
 	redraw is
+			-- Redraw the entire area.
 		do
 			redraw_rectangle (0, 0, width, height)
 		end
 
 	redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Redraw the rectangle area defined by `a_x', `a_y', `a_width', a_height'
 		local
 			a_rectangle: POINTER
 			a_drawable: POINTER
@@ -89,12 +87,14 @@ feature {NONE} -- Implementation
 		end
 		
 	clear_and_redraw is
+			-- Clear `Current' and redraw
 		do
 			clear
 			redraw
 		end
 
 	clear_and_redraw_rectangle (a_x, a_y, a_width, a_height: INTEGER) is
+			-- Clear the rectangle area defined by `a_x', `a_y', `a_width', `a_height' and then redraw it
 		do
 			clear_rectangle (a_x, a_y, a_width, a_height)
 			redraw_rectangle (a_x, a_y, a_width, a_height)
@@ -103,12 +103,22 @@ feature {NONE} -- Implementation
 	flush is
 			-- Redraw the screen immediately.
 		do
-			-- Do nothing
+			if drawable /= NULL and then is_displayed then
+				{EV_GTK_EXTERNALS}.gdk_window_process_updates (drawable, False)
+			end
 		end
+
+	update_if_needed is
+			-- Update `Current' if needed
+		do
+			-- Not applicable
+		end
+		
 
 feature {EV_DRAWABLE_IMP} -- Implementation
 
 	drawable: POINTER is
+			-- Pointer to the drawable object for `Current'
 		do
 			Result := {EV_GTK_EXTERNALS}.gtk_widget_struct_window (visual_widget)
 		end
@@ -144,19 +154,8 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		
 feature {NONE} -- Implementation
 
-	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
-			-- Key event has occured
-		do
-			Precursor {EV_PRIMITIVE_IMP} (a_key, a_key_string, a_key_press)
-			if 
-				a_key /= Void and then
-				(a_key.code = App_implementation.Key_constants.Key_up or else a_key.code = App_implementation.Key_constants.Key_down)
-			then
-				-- This is a hack for Studio to force trailing cursors to be undrawn upon key scrolling.
-				--feature {EV_GTK_EXTERNALS}.gtk_widget_queue_draw (visual_widget)
-				redraw_rectangle (1, 1, width, height)
-			end				
-		end
+	interface: EV_DRAWING_AREA
+		-- Interface object of Current
 
 	destroy is
 			-- Destroy implementation

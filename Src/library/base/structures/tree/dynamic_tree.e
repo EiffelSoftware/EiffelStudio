@@ -47,7 +47,6 @@ feature -- Element change
 			-- Add `v' to the left of cursor position.
 			-- Do not move child cursor.
 		require
-			extendible: extendible;
 			not_child_before: not child_before
 		deferred
 		end;
@@ -56,7 +55,6 @@ feature -- Element change
 			-- Add `v' to the right of cursor position.
 			-- Do not move child cursor.
 		require
-			extendible: extendible;
 			not_child_after: not child_after
 		deferred
 		end;
@@ -73,7 +71,6 @@ feature -- Element change
 			-- Add `n' to the left of cursor position.
 			-- Do not move cursor.
 		require
-			extendible: extendible;
 			not_child_before: not child_before;
 			non_void_argument: n /= Void
 		deferred
@@ -83,7 +80,6 @@ feature -- Element change
 			-- Add `n' to the right of cursor position.
 			-- Do not move cursor.
 		require
-			extendible: extendible;
 			not_child_after: not child_after;
 			non_void_argument: n /= Void
 		deferred

@@ -47,7 +47,8 @@ deferred class CHAIN [G] inherit
 			occurrences as sequential_occurrences
 		export
 			{NONE}
-				sequential_index_of, sequential_has
+				sequential_index_of, sequential_has, 
+				sequence_put
 		redefine
 			off
 		end;
@@ -145,7 +146,7 @@ feature -- Cursor movement
 				go_i_th (1)
 			end
 		ensure then
-			at_first: (not empty) implies isfirst
+			at_first: not empty implies isfirst
 		end;
 
 	finish is
@@ -156,7 +157,7 @@ feature -- Cursor movement
 				go_i_th (count)
 			end
 		ensure then
-			at_last: (not empty) implies islast
+			at_last: not empty implies islast
 		end;
 
 	move (i: INTEGER) is
@@ -223,7 +224,7 @@ feature -- Cursor movement
 		do
 			Result := not empty and (index = 1)
 		ensure
-			valid_position: Result implies (not empty)
+			valid_position: Result implies not empty
 		end;
 
 	islast: BOOLEAN is
@@ -231,7 +232,7 @@ feature -- Cursor movement
 		do
 			Result := not empty and (index = count)
 		ensure
-			valid_position: Result implies (not empty)
+			valid_position: Result implies not empty
 		end;
 
 	off: BOOLEAN is
@@ -246,7 +247,7 @@ feature -- Cursor movement
 		do
 			Result := (i >= 0) and (i <= count + 1)
 		ensure
-			valid_cursor_index_definition: Result = (i >= 0) and (i <= count + 1)
+			valid_cursor_index_definition: Result = ((i >= 0) and (i <= count + 1))
 		end;
 
 feature -- Element change

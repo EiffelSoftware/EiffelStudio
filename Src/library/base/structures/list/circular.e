@@ -97,7 +97,7 @@ feature -- Status report
 		do
 			Result := empty
 		ensure then
-			Result = empty
+			only_when_empty: Result = empty
 		end;
 
 	exhausted: BOOLEAN is

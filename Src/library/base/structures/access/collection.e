@@ -32,7 +32,7 @@ feature -- Element change
 	put, extend (v: G) is
 			-- Ensure that structure includes `v'.
 		require
-			extendible: extendible
+			extendible
 		deferred
 		ensure
 			item_inserted: has (v)
@@ -44,7 +44,7 @@ feature -- Element change
 			-- need not be the same.
 		require
 				  other_not_void: other /= Void;
-				  extendible: extendible
+				  extendible
 		local
 			lin_rep: LINEAR [G]
 		do
@@ -76,7 +76,7 @@ feature -- Removal
 			-- based on `object_comparison'.)
 			--|Default implementation, usually inefficient.
 		require
-			prunable: prunable
+			prunable
 		do
 			from
 			until not has (v) loop
@@ -89,7 +89,7 @@ feature -- Removal
 	wipe_out is
 			-- Remove all elements.
 		require
-			prunable: prunable
+			prunable
 		deferred
 		ensure
 			wiped_out: empty

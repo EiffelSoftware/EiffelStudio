@@ -47,13 +47,13 @@ feature -- Cursor movement
 			start;
 			continue_while 
 		ensure then
-			not exhausted implies not test 
+			finished: not exhausted implies not test 
 		end;
 
 	continue_while is
 			-- Apply `action' to every item of `target' up to
-			-- and including the first one not satisfying `test'.
-			-- (from the current position of `target')
+			-- and including the first one not satisfying `test'
+			-- (from the current position of `target').
 		require else
 			traversable_exists: target /= Void;
 			invariant_satisfied: invariant_value
@@ -69,7 +69,7 @@ feature -- Cursor movement
 				if not exhausted then action end
 			end
 		ensure then
-			not exhausted implies not test 
+			finished: not exhausted implies not test 
 		end;
 
 	while_do is
@@ -80,7 +80,7 @@ feature -- Cursor movement
 			start
 			while_continue
 		ensure then
-			not exhausted implies not test
+			finished: not exhausted implies not test
 		end
 
 	while_continue is
@@ -97,7 +97,7 @@ feature -- Cursor movement
 				forth
 			end
 		ensure
-			not exhausted implies not test
+			finished: not exhausted implies not test
 		end
 	
 	until_do is
@@ -135,18 +135,17 @@ feature -- Cursor movement
 	do_until is
 			-- Apply `action' to every item of `target' up to 
 			-- and including the first one satisfying `test'.
-			-- (from the `start' of `target')
 		do
 			start ;
 			continue_until;
 		ensure then
-			not exhausted implies test 
+			achieved: not exhausted implies test 
 		end;
 
 	 continue_until is
 			-- Apply `action' to every item of `target' up to
-			-- and including the first one satisfying `test'.
-			-- (from the current position of `target')
+			-- and including the first one satisfying `test'
+			-- (from the current position of `target').
 		require
 			traversable_exists: target /= Void;
 			invariant_satisfied: invariant_value 
@@ -164,13 +163,12 @@ feature -- Cursor movement
 				if not exhausted then action end
 			end
 		ensure then
-			not exhausted implies test 
+			achieved: not exhausted implies test 
 		end;
 
 	search (b: BOOLEAN) is
-			-- Search the first item of `target' 
-			-- satisfying: `test' equals to `b'.
-			-- (from the `start' of `target')
+			-- Search the first item of `target' for which `test' 
+			-- has the same value as `b' (both true or both false).
 		require
 			traversable_exists: target /= Void
 		do
@@ -180,8 +178,8 @@ feature -- Cursor movement
 
 	continue_search (b: BOOLEAN) is
 			-- Search the first item of `target'
-			-- satisfying: `test' equals to `b'.
-			-- (from the current position of `target')
+			-- satisfying: `test' equals to `b'
+			-- (from the current position of `target').
 		require
 			traversable_exists: target /= Void
 		do
@@ -194,13 +192,12 @@ feature -- Cursor movement
 				forth 
 			end
 		ensure then
-			not exhausted = (b = test )
+			found: not exhausted = (b = test )
 		end;
 
 	do_if is
 			-- Apply `action' to every item of `target' 
 			-- satisfying `test'.
-			-- (from the `start' of `target')
 		do
 			from
 				start 
@@ -242,7 +239,7 @@ feature -- Cursor movement
 		end;
 
 	continue_for (n, k: INTEGER) is
-			-- Every `k'th item, apply `action',
+			-- Apply `action' to every `k'-th item,
 			-- `n' times if possible.
 		require
 			traversable_exists: target /= Void

@@ -29,10 +29,10 @@ feature -- Conversion
 
 	integer_to_real (n: INTEGER): REAL is
 			-- Real conversion of `n'
-		external
-			"C"
-		alias
-			"conv_ir"
+		obsolete
+			"Use target := `n'"
+		do
+			Result := n
 		end;
 
 	real_to_integer (r: REAL): INTEGER is
@@ -53,10 +53,19 @@ feature -- Conversion
 
 	real_to_double (r: REAL): DOUBLE is
 			-- Double conversion of `r'
+		obsolete
+			"Use target := `r' instead."
 		do
 			Result := r
 		end;
 
+	double_to_integer (d: DOUBLE): INTEGER is
+			-- Integer conversion (truncation) of `d'
+		external
+			"C"
+		alias
+			"conv_di"
+		end
 
 feature -- Basic operations
 
@@ -163,7 +172,8 @@ feature -- Basic operations
 		end;
 	
 	up_int_div (n1, n2: INTEGER): INTEGER is
-			-- Least upper bound of the integer division of `n1' by `n2'
+			-- Least upper bound of the integer division
+			-- of `n1' by `n2'
 		external
 			"C"
 		alias

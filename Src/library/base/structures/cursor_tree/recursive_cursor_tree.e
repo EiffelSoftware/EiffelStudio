@@ -22,8 +22,6 @@ feature -- Access
 
 	item: G is
 			-- Item at cursor position
-		require else
-			not_off: not off
 		do
 			Result := active.item
 		end;

@@ -28,7 +28,7 @@ feature -- Status report
 		do
 			Result := item_test (target.item)
 		ensure
-			not target.off
+			not_off: not target.off
 		end;
 
 	item_test (v: G): BOOLEAN is
@@ -39,8 +39,9 @@ feature -- Status report
 
 	invariant_value: BOOLEAN is
 			-- Is the invariant satisfied?
-			-- (Redefinitions of this feature will usually involve `target';
-			-- if so make sure that the result is defined when `target = Void'.)
+			-- (Redefinitions of this feature will usually involve
+			-- `target'; if so, make sure that the result is defined
+			-- when `target = Void'.)
 		require
 			traversable_exists: target /= Void
 		do
@@ -88,7 +89,7 @@ feature -- Cursor movement
 	do_while is
 			-- Apply `action' to every item of `target' up to 
 			-- and including the first one not satisfying `test'.
-			-- (from the `start' of `target')
+			-- (Apply to full list if all items satisfy `test').
 		deferred
 		end;
 
@@ -129,8 +130,9 @@ feature -- Element change
 	action is
 			-- Action to be applied to item at current position in `target'.
 			-- (default: `item_action' on item at current position.)
-			-- Note: for iterators to work properly, redefined versions of
-			-- this feature should not change the traversable's structure.
+			-- For iterators to work properly, redefined versions of
+			-- this feature should not change the traversable's
+			-- structure.
 		require
 			traversable_exists: target /= Void;
 			not_off: not target.off;
@@ -144,7 +146,7 @@ feature -- Element change
 
 	item_action (v: G) is
 			-- Action to be applied to item `v'
-			-- (default: nothing.)
+			-- (Default: do nothing.)
 		do
 		end;
 

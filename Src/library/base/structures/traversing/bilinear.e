@@ -40,7 +40,7 @@ feature -- Access
 feature -- Cursor movement
 
 	before: BOOLEAN is
-			-- Is there no valid position to the left of current position?		deferred
+			-- Is there no valid position to the left of current one?	
 		deferred
 		end;
 
@@ -71,7 +71,7 @@ invariant
 
 	not_both: not (after and before);
 	empty_property: empty implies (after or before);
-    before_constraint: before implies off
+	before_constraint: before implies off
 
 end -- class BILINEAR
 

@@ -1,5 +1,11 @@
 indexing
 
+	WARNING:
+	"If you are precompiling a subset of EiffelBase, it is %
+	%preferable NOT to remove this class from the subset. %
+	%If you remove it you may see EiffelBench perform %
+	%apparently unnecessary recompilations after changes."
+
 	description:
 		"Class used to ensure proper precompilation of EiffelBase. %
 		%Not to be used otherwise.";

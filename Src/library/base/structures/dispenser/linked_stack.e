@@ -1,5 +1,5 @@
 indexing
-		--"Unbounded stacks implemented as linked lists";
+		"Unbounded stacks implemented as linked lists";
 
 	copyright: "See notice at end of class";
 	names: linked_stack, dispenser, linked_list;
@@ -81,7 +81,7 @@ feature -- Conversion
 			-- (order is reverse of original order of insertion)
 		do
 			from
-				!!Result.make (count);
+				!! Result.make (count);
 				start
 			until
 				after
@@ -107,7 +107,7 @@ feature -- Duplication
 		do
 			if not empty then
 				from
-					!!temp.make;
+					!! temp.make;
 					start
 				until
 					after or temp.count = n
@@ -116,7 +116,7 @@ feature -- Duplication
 					forth
 				end;
 				from
-					!!Result.make
+					!! Result.make
 				until
 					temp.empty
 				loop

@@ -32,7 +32,7 @@ feature -- Access
 feature -- Status report
 
 	consistent (other: like Current): BOOLEAN is
-			-- Is object in a consistent state so that `object'
+			-- Is object in a consistent state so that `other'
 			-- may be copied onto it? (Default answer: yes).
 		do
 			Result := true
@@ -80,8 +80,8 @@ feature -- Comparison
 		end;
 
 	deep_equal (some: GENERAL; other: like some): BOOLEAN is
-			-- Are `some' and `other' either both void or attached recursively
-			-- isomrphic object structures?
+			-- Are `some' and `other' either both void
+			-- or attached to isomorphic object structures?
 		do
 			Result := (some = Void and then other = Void) or else
 						(some /= Void and then other /= Void and then
@@ -125,7 +125,7 @@ feature -- Duplication
 		do
 			if other /= Void then
 				temp := c_check_assert (False);
-				Result := c_standard_clone ($other);
+				Result := other.c_standard_clone ($other);
 				Result.setup (other);
 				Result.copy (other);
 				temp := c_check_assert (temp);
@@ -140,15 +140,15 @@ feature -- Duplication
 			-- Always uses the default copying semantics.
 		do
 			if other /= Void then
-				Result := c_standard_clone ($other);
-				Result.standard_copy (Current)
+				Result := other.c_standard_clone ($other);
+				Result.standard_copy (other)
 			end
 		ensure
-			equal: standard_equal (Result, Current)
+			equal: standard_equal (Result, other)
 		end;
 
 	frozen deep_clone (other: GENERAL): like other is
-			-- Void of `other' is void: otherwise, new object structure
+			-- Void if `other' is void: otherwise, new object structure
 			-- recursively duplicated from the one attached to `other'
 		do
 			if other /= Void then
@@ -160,8 +160,8 @@ feature -- Duplication
 
 	frozen deep_copy (other: like Current) is
 			-- Effect equivalent to that of:
-			-- 		temp := deep_clone (other);
-			--		copy (temp)
+			-- 		`temp' := `deep_clone' (`other');
+			--		`copy' (`temp')
 		require
 			other_not_void: other /= Void
 		local
@@ -209,6 +209,7 @@ feature -- Output
 feature -- Miscellaneous
 
 	frozen do_nothing is
+			-- Execute a null action.
 		do
 		end;
 
@@ -221,6 +222,14 @@ feature -- Miscellaneous
 			"C"
 		alias
 			"esdie"
+		end;
+
+	c_standard_clone (other: GENERAL): like other is
+			-- New object of same dynamic type as `other'
+		external
+			"C"
+		alias
+			"eclone"
 		end;
 
 feature {NONE} -- Implementation
@@ -248,14 +257,6 @@ feature {NONE} -- Implementation
 			"C"
 		alias
 			"ecopy"
-		end;
-
-	c_standard_clone (other: GENERAL): like other is
-			-- New object of same dynamic type as `other'
-		external
-			"C"
-		alias
-			"eclone"
 		end;
 
 	frozen c_deep_clone (other: GENERAL): like other is

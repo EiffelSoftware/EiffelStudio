@@ -1,9 +1,9 @@
-
--- Trees where each node has a fixed number of children
--- (The number of children is arbitrary but cannot be
--- changed once the node has been created)
-
 indexing
+
+	description:
+		"Trees where each node has a fixed number of children %
+		%(The number of children is arbitrary but cannot be %
+		%changed once the node has been created";
 
 	names: fixed_tree, tree, fixed_list;
 	representation: recursive, array;
@@ -74,8 +74,9 @@ class FIXED_TREE [G] inherit
 			{NONE}
 				fl_put, fl_replace,
 				fl_writable, fl_extendible,
-				fl_remove, 
-				fl_fill, fl_seq_rep, fl_full;
+				fl_remove, fl_make, fl_has, fl_readable,
+				fl_seq_rep, fl_lin_rep,
+				fl_fill, fl_full;
 			{FIXED_TREE}
 				array_item
 		undefine
@@ -137,34 +138,20 @@ feature -- Access
 			end
 		end;
 
-feature -- Duplication
+feature -- Status report
 
-	duplicate (n: INTEGER): like Current is
-			-- Copy of sub-tree beginning at cursor position and
-			-- having min (`n', `arity' - `child_index' + 1)
-			-- children.
-		local
-			counter: INTEGER;
-			pos: CURSOR
+	child_contractable: BOOLEAN is
+			-- May items be removed from `Current'?
 		do
-			from
-				Result := new_node;
-				pos := child_cursor;
-				Result.child_start
-			until
-				child_after or else (counter = n)
-			loop
-				if child /= Void then
-					Result.replace_child (child.duplicate_all)
-				end;
-				Result.child_forth;
-				child_forth;
-				counter := counter + 1
-			end;
-			child_go_to (pos)
+			Result := not child_off
+		ensure
+			Result = not child_off
 		end;
 
-feature -- Modification & Insertion
+	full: BOOLEAN is true;
+			-- Is `Current' full?
+
+feature -- Element change
 
 	child_put, child_replace (v: like item) is
 			-- Replace current child item with `v'
@@ -239,18 +226,42 @@ feature -- Removal
 			child_removed: child = Void
 		end;
 
-feature -- Status report
+feature -- Duplication
 
-	child_contractable: BOOLEAN is
-			-- May items be removed from `Current'?
+	duplicate (n: INTEGER): like Current is
+			-- Copy of sub-tree beginning at cursor position and
+			-- having min (`n', `arity' - `child_index' + 1)
+			-- children.
+		local
+			counter: INTEGER;
+			pos: CURSOR
 		do
-			Result := not child_off
+			from
+				Result := new_node;
+				pos := child_cursor;
+				Result.child_start
+			until
+				child_after or else (counter = n)
+			loop
+				if child /= Void then
+					Result.replace_child (child.duplicate_all)
+				end;
+				Result.child_forth;
+				child_forth;
+				counter := counter + 1
+			end;
+			child_go_to (pos)
 		end;
 
-	full: BOOLEAN is true;
-			-- Is `Current' full?
+feature -- Obsolete
 
-feature  {FIXED_TREE} -- Initialization
+	add (v: G) is 
+		obsolete "Use ``put'' instead."
+			-- Add `v' to `Current'.
+		do
+		end;
+
+feature  {FIXED_TREE} -- Implementation
 
 	new_node: like Current is
 			-- Instance of class `like Current'.
@@ -259,13 +270,6 @@ feature  {FIXED_TREE} -- Initialization
 		do
 			!!Result.make (arity, item)
 		end;
-
-feature  {NONE} -- Access
-
-	position_in_parent: INTEGER;
-			-- Position of `Current' in parent
-
-feature  {FIXED_TREE} -- Duplication
 
 	duplicate_all: like Current is
 			-- Copy of sub-tree including all children
@@ -288,9 +292,6 @@ feature  {FIXED_TREE} -- Duplication
 			end;
 			child_go_to (pos)
 		end;
-
-
-feature  {FIXED_TREE} -- Modification & Insertion
 
 	fill_subtree (other: TREE [G]) is
 			-- Fill children with children of `other'
@@ -321,18 +322,12 @@ feature  {FIXED_TREE} -- Modification & Insertion
 			position_in_parent := n.child_index
 		end;
 
-feature  {NONE} -- Modification & Insertion
+feature  {NONE} -- Implementation
 
-	add (v: G) is
-			-- Add `v' to `Current'.
-		do
-		end;
+	position_in_parent: INTEGER;
+			-- Position of `Current' in parent
 
-
-
-feature  {NONE} -- Status report
-
-	extensible: BOOLEAN is false;
+	extendible: BOOLEAN is false;
 			-- May new items be added to `Current'?
 
 

@@ -16,7 +16,7 @@ deferred class STACK [G] inherit
 		export
 			{NONE} prune, prune_all
 		redefine
-			fill
+			extend, force, put, fill
 		end;
 
 feature -- Element change

@@ -2,7 +2,7 @@ indexing
 
 	description:
 		"Sequences of values, all of the same type or of a conforming one, %
-		%accessible through integer indices in a contiguous range";
+		%accessible through integer indices in a contiguous interval";
 
 	copyright: "See notice at end of class";
 	date: "$Date$";
@@ -45,7 +45,8 @@ creation
 feature -- Initialization
 
 	make (minindex, maxindex: INTEGER) is
-			-- Allocate array; set index interval to `minindex' .. `maxindex'
+			-- Allocate array; set index interval to
+			-- `minindex' .. `maxindex'
 			-- (empty if `minindex' > `maxindex').
 		do
 			upper := -1;
@@ -222,7 +223,7 @@ feature -- Status report
 feature -- Element change
  
 	put (v: G; i: INTEGER) is
-			-- Replace `i'-th entry, if in index range, by `v'.
+			-- Replace `i'-th entry, if in index interval, by `v'.
 		do
 			area.put (v, i - lower);
 		end;
@@ -328,6 +329,14 @@ feature -- Resizing
 				
 				
 feature -- Conversion
+
+	to_c: ANY is
+			-- Address of actual sequence of values,
+			-- for passing to external (non-Eiffel) routines.
+		do
+			Result := area
+		end;
+		
 		
 	linear_representation: LINEAR [G] is
 			-- Representation as a linear structure
@@ -438,13 +447,6 @@ feature {NONE} -- Implementation
 			upper := new_upper
 		end;
 	
-	to_c: ANY is
-			-- Address of actual sequence of values,
-			-- for passing to external (non-Eiffel) routines.
-		do
-			Result := area
-		end;
-		
 	empty_area: BOOLEAN is
 		do
 			Result := area.count = 0

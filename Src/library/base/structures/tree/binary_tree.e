@@ -52,6 +52,8 @@ feature -- Access
 			if has_right then
 				Result := Result + 1
 			end;
+		ensure then
+			valid_arity: Result <= 2
 		end;
 		
 	parent: BINARY_TREE [G];
@@ -109,7 +111,7 @@ feature -- Access
 	child_cursor: CURSOR is
 			-- Current cursor position
 		do
-			!ARRAYED_LIST_CURSOR!Result.make (child_index)
+			!ARRAYED_LIST_CURSOR! Result.make (child_index)
 		end;
 		
 	left_sibling: like parent is
@@ -146,18 +148,24 @@ feature -- Status report
 			-- Has current node a left child?
 		do
 			Result := left_child /= Void
+		ensure
+			Result = (left_child /= Void)
 		end;
 		
 	has_right: BOOLEAN is
 			-- Has current node a right child?
 		do
 			Result := right_child /= Void
+		ensure
+			Result = (right_child /= Void)
 		end;
 		
 	has_both: BOOLEAN is
 			-- Has current node two children ?
 		do
 			Result := left_child /= Void and right_child /= Void
+		ensure
+			Result = (has_left and has_right)
 		end;
 		
 

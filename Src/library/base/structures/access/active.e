@@ -21,7 +21,7 @@ feature -- Access
 	item: G is
 			-- Current item
 		require
-			readable: readable
+			readable
 		deferred
 		end;
 
@@ -53,8 +53,8 @@ feature -- Removal
 	remove is
 			-- Remove current item.
 		require
-			prunable: prunable;
-			writable: writable
+			prunable;
+			writable
 		deferred
 		end;
 

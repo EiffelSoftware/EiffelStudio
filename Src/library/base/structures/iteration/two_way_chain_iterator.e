@@ -16,13 +16,17 @@ indexing
 
 class TWO_WAY_CHAIN_ITERATOR [G] inherit
 
-	CHAIN_ITERATOR [G]
+	LINEAR_ITERATOR [G]
+		redefine
+			target
 		select
 			start,
 			forth,
 			do_all,
 			until_do,
 			do_until,
+			while_do,
+			do_while,
 			do_if,
 			do_for,
 			search,
@@ -30,17 +34,21 @@ class TWO_WAY_CHAIN_ITERATOR [G] inherit
 			exists,
 			until_continue,
 			continue_until,
+			while_continue,
+			continue_while,
 			continue_for,
 			continue_search
 		end;
 
-	CHAIN_ITERATOR [G]
+	LINEAR_ITERATOR [G]
 		rename   
 			start as finish,
 			forth as back,
 			do_all as do_all_back,
 			until_do as until_do_back,
 			do_until as do_until_back,
+			do_while as do_while_back,
+			while_do as while_do_back,
 			do_if as do_if_back,
 			do_for as do_for_back,
 			search as search_back,
@@ -48,11 +56,16 @@ class TWO_WAY_CHAIN_ITERATOR [G] inherit
 			exists as exists_back,
 			until_continue as until_continue_back,
 			continue_until as continue_until_back,
+			while_continue as while_continue_back,
+			continue_while as continue_while_back,
 			continue_for as continue_for_back,
 			continue_search as continue_search_back
 		redefine
 			back, finish, target
 		end
+feature -- Access
+
+	target: CHAIN [G]
 
 feature -- Cursor movement
 

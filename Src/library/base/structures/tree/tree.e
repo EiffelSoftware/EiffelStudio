@@ -11,10 +11,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class
-	TREE [G]
+deferred class	TREE [G] inherit
 
-inherit
 	CONTAINER [G]
 
 feature -- Access
@@ -106,7 +104,7 @@ feature -- Access
 		end;
 		
 	is_sibling (other: like parent): BOOLEAN is
-			-- are `Current' and `other' siblings
+			-- Are `Current' and `other' siblings?
 		do
 			Result := not is_root and other.parent = parent
 		ensure
@@ -155,7 +153,7 @@ feature -- Status report
 		end;
 
 	child_off: BOOLEAN is
-			-- Is there no current child
+			-- Is there no current child?
 		do
 			Result := child_before or child_after
 		end;
@@ -195,7 +193,7 @@ feature -- Status report
 		do
 			Result := not is_leaf and child_index = 1
 		ensure
-			not_is_leaf: Result implies (not is_leaf)
+			not_is_leaf: Result implies not is_leaf
 		end;
 
 	child_islast: BOOLEAN is
@@ -203,7 +201,7 @@ feature -- Status report
 		do
 			Result := not is_leaf and child_index = arity
 		ensure
-			not_is_leaf: Result implies (not is_leaf)
+			not_is_leaf: Result implies not is_leaf
 		end;
 
 	valid_cursor_index (i: INTEGER): BOOLEAN is

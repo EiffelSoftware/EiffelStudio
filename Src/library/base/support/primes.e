@@ -155,12 +155,6 @@ feature -- Access
 			end
 		end;
 
-feature -- Inapplicable
-
-	linear_representation: LINEAR [INTEGER] is
-		do
-		end;
-
 feature -- Obsolete
 		
 	next_prime (n: INTEGER): INTEGER is
@@ -179,6 +173,12 @@ feature -- Obsolete
 			obsolete "Use `is_prime' instead"
 		do
 			Result := is_prime (n)
+		end;
+
+feature {NONE} -- Inapplicable
+
+	linear_representation: LINEAR [INTEGER] is
+		do
 		end;
 
 end -- class PRIMES

@@ -47,7 +47,7 @@ feature -- Element change
 			-- Add `v' to the left of cursor position.
 			-- Do not move cursor.
 		require
-			extendible: extendible;
+			extendible;
 			not_before: not before
 		deferred
 		ensure
@@ -59,7 +59,7 @@ feature -- Element change
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		require
-			extendible: extendible;
+			extendible;
 			not_after: not after
 		deferred
 		ensure
@@ -71,7 +71,7 @@ feature -- Element change
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
 		require
-			extendible: extendible;
+			extendible;
 			not_off: not before;
 			other_exists: other /= Void
 		deferred
@@ -85,7 +85,7 @@ feature -- Element change
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'.
 		require
-			extendible: extendible;
+			extendible;
 			not_off: not after;
 			other_exists: other /= Void
 		deferred
@@ -113,7 +113,7 @@ feature -- Removal
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		require
-			left_exist: index > 1
+			left_exists: index > 1
 		deferred
 		ensure
 	 		new_count: count = old count - 1;
@@ -124,7 +124,7 @@ feature -- Removal
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		require
-			right_exist: index < count
+			right_exists: index < count
 		deferred
 		ensure
 	 		new_count: count = old count - 1;

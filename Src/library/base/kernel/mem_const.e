@@ -14,13 +14,16 @@ class
 feature -- Access
 
 	Total_memory: INTEGER is 0;
-			-- Code for all the memory managed by the garbage collector
+			-- Code for all the memory managed
+			-- by the garbage collector
 
 	Eiffel_memory: INTEGER is 1;
-			-- Code for the Eiffel memory managed by the garbage collector
+			-- Code for the Eiffel memory managed
+			-- by the garbage collector
 	
 	C_memory: INTEGER is 2;
-			-- Code for the C memory managed by the garbage collector
+			-- Code for the C memory managed
+			-- by the garbage collector
 
 	Full_collector: INTEGER is 0;
 			-- Statistics for full collections

@@ -66,8 +66,11 @@ feature -- Basic operations
 
 	intersect (other: like Current) is
 			-- Remove all items not in `other'.
+		require
+			set_exists: other /= Void
+			same_rule: object_comparison = other.object_comparison
 		deferred
-		ensure then
+		ensure
 			is_subset_other: is_subset (other);
 		end;
 
@@ -78,13 +81,16 @@ feature -- Basic operations
  			same_rule: object_comparison = other.object_comparison
 		deferred
 		ensure
-			is_superset (other);
+			is_superset: is_superset (other);
 		end;
 
 	subtract (other: like Current) is
 			-- Remove all items also in `other'.
+		require
+			set_exists: other /= Void
+			same_rule: object_comparison = other.object_comparison
 		deferred
-		ensure then
+		ensure 
 			is_disjoint: disjoint (other)
 		end;
 

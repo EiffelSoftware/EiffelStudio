@@ -39,8 +39,8 @@ feature -- Access
 		end;
 
 	field (i: INTEGER; object: ANY): ANY is
-			-- Object attached to the i-th field of `object'
-			-- (normal and expanded objects)
+			-- Object attached to the `i'-th field of `object'
+			-- (directly or through a reference)
 		require
 			object_not_void: object /= Void;
 			index_large_enough: i >= 1;
@@ -51,7 +51,7 @@ feature -- Access
 		end;
 
 	field_name (i: INTEGER; object: ANY): STRING is
-			-- Name of i_th field of `object'
+			-- Name of `i'-th field of `object'
 		require
 			object_not_void: object /= Void;
 			index_large_enough: i >= 1;
@@ -64,7 +64,7 @@ feature -- Access
 		end;
 
 	field_offset (i: INTEGER; object: ANY): INTEGER is
-			-- Offset of i_th field of 'object'
+			-- Offset of `i'-th field of `object'
 		require
 			object_not_void: object /= Void;
 			index_large_enough: i >= 1;
@@ -76,7 +76,7 @@ feature -- Access
 
 
 	field_type (i: INTEGER; object: ANY): INTEGER is	
-			-- Type of i-th field of `object'
+			-- Type of `i'-th field of `object'
 		require
 			object_not_void: object /= Void;
 			index_large_enough: i >= 1;
@@ -86,7 +86,8 @@ feature -- Access
 		end;
 
 	expanded_field_type (i: INTEGER; object: ANY): STRING is
-			-- Class name associated to the i-th expanded field of `object'
+			-- Class name associated with the `i'-th 
+			-- expanded field of `object'
 		require
 			object_not_void: object /= Void;
 			index_large_enough: i >= 1;
@@ -99,7 +100,7 @@ feature -- Access
 		end;
 
 	character_field (i: INTEGER; object: ANY): CHARACTER is
-			-- Character value of i-th field of `object'
+			-- Character value of `i'-th field of `object'
 		require
 			object_not_void: object /= Void;
 			index_large_enough: i >= 1;
@@ -110,7 +111,7 @@ feature -- Access
 		end;
 
 	boolean_field (i: INTEGER; object: ANY): BOOLEAN is
-			-- Boolean value of i-th field of `object'
+			-- Boolean value of `i'-th field of `object'
 		require
 			object_not_void: object /= Void;
 			index_large_enough: i >= 1;
@@ -121,7 +122,7 @@ feature -- Access
 		end;
 
 	integer_field (i: INTEGER; object: ANY): INTEGER is
-			-- Integer value of i-th field of `object'
+			-- Integer value of `i'-th field of `object'
 		require
 			object_not_void: object /= Void;
 			index_large_enough: i >= 1;
@@ -132,7 +133,7 @@ feature -- Access
 		end;
 
 	real_field (i: INTEGER; object: ANY): REAL is
-			-- Real value of i-th field of `object'
+			-- Real value of `i'-th field of `object'
 		require
 			object_not_void: object /= Void;
 			index_large_enough: i >= 1;
@@ -143,7 +144,7 @@ feature -- Access
 		end;
 
 	pointer_field (i: INTEGER; object: ANY): POINTER is
-			-- Character value of i-th field of `object'
+			-- Pointer value of `i'-th field of `object'
 		require
 			object_not_void: object /= Void;
 			index_large_enough: i >= 1;
@@ -154,7 +155,7 @@ feature -- Access
 		end;
 
 	double_field (i: INTEGER; object: ANY): DOUBLE is
-			-- Character value of i-th field of `object'
+			-- Double precision value of `i'-th field of `object'
 		require
 			object_not_void: object /= Void;
 			index_large_enough: i >= 1;
@@ -184,7 +185,7 @@ feature -- Measurement
 
 
 	bit_size (i: INTEGER; object: ANY): INTEGER is
-			-- Size (in bit) of the i-th bit field of `object'
+			-- Size (in bit) of the `i'-th bit field of `object'
 		require
 			object_not_void: object /= Void;
 			index_large_enough: i >= 1;
@@ -216,7 +217,7 @@ feature {NONE} -- Implementation
 		end;
 
 	c_field (i: INTEGER; object: ANY): ANY is
-			-- Object referenced by the i-th field of `object'
+			-- Object referenced by the `i'-th field of `object'
 		external
 			"C"
 		alias
@@ -224,7 +225,7 @@ feature {NONE} -- Implementation
 		end;
 
 	c_field_name (i: INTEGER; object: ANY): STRING is
-			-- Name of i_th field of `object'
+			-- Name of `i'-th field of `object'
 		external
 			"C"
 		alias
@@ -232,7 +233,7 @@ feature {NONE} -- Implementation
 		end;
 
 	c_field_type (i: INTEGER; object: ANY): INTEGER is
-			-- Type of i-th field of `object'
+			-- Type of `i'-th field of `object'
 		external
 			"C"
 		alias
@@ -240,7 +241,7 @@ feature {NONE} -- Implementation
 		end;
 
 	c_expanded_type (i: INTEGER; object: ANY): STRING is
-			-- Class name of the i-the expanded field of `object'
+			-- Class name of the `i'-th expanded field of `object'
 		external
 			"C"
 		alias
@@ -248,7 +249,7 @@ feature {NONE} -- Implementation
 		end;
 
 	c_character_field (i: INTEGER; object: ANY): CHARACTER is
-			-- Character value of i-th field of `object'
+			-- Character value of `i'-th field of `object'
 		external
 			"C"
 		alias
@@ -256,7 +257,7 @@ feature {NONE} -- Implementation
 		end;
 
 	c_boolean_field (i: INTEGER; object: ANY): BOOLEAN is
-			-- Boolean value of i-th field of `object'
+			-- Boolean value of `i'-th field of `object'
 		external
 			"C"
 		alias
@@ -264,7 +265,7 @@ feature {NONE} -- Implementation
 		end;
 
 	c_integer_field (i: INTEGER; object: ANY): INTEGER is
-			-- Character value of i-th field of `object'
+			-- Integer value of `i'-th field of `object'
 		external
 			"C"
 		alias
@@ -272,7 +273,7 @@ feature {NONE} -- Implementation
 		end;
 
 	c_real_field (i: INTEGER; object: ANY): REAL is
-			-- Character value of i-th field of `object'
+			-- Real value of `i'-th field of `object'
 		external
 			"C"
 		alias
@@ -280,7 +281,7 @@ feature {NONE} -- Implementation
 		end;
 
 	c_pointer_field (i: INTEGER; object: ANY): POINTER is
-			-- Pointer value of i-th field of `object'
+			-- Pointer value of `i'-th field of `object'
 		external
 			"C"
 		alias
@@ -288,7 +289,7 @@ feature {NONE} -- Implementation
 		end;
 
 	c_double_field (i: INTEGER; object: ANY): DOUBLE is
-			-- Character value of i-th field of `object'
+			-- Double precision value of `i'-th field of `object'
 		external
 			"C"
 		alias
@@ -304,7 +305,7 @@ feature {NONE} -- Implementation
 		end;
 
 	c_field_offset (i: INTEGER; object: ANY): INTEGER is
-			-- Offset of i-th field of `object'
+			-- Offset of `i'-th field of `object'
 		external
 			"C"
 		alias
@@ -321,7 +322,7 @@ feature {NONE} -- Implementation
 
 
 	c_bit_size (i: INTEGER; object: ANY): INTEGER is
-			-- Size (in bit) of the i-th bit field of `object'
+			-- Size (in bit) of the `i'-th bit field of `object'
 		external
 			"C"
 		alias

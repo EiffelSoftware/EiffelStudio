@@ -533,7 +533,6 @@ feature -- Duplication
 			loop
 				Result.extend (item);
 				forth;
-				--Result.forth
 			end;
 			Result.start;
 			go_i_th (pos);

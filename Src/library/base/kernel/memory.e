@@ -16,8 +16,6 @@ feature -- Measurement
 
 	memory_statistics (memory_type: INTEGER): MEM_INFO is
 			-- Memory usage information for `memory_type'
-			-- (`memory_type' is one of the memory types defined in class
-			-- MEM_CONST)
 		require
 			type_ok:
 				memory_type = Total_memory or
@@ -29,8 +27,10 @@ feature -- Measurement
 
 	gc_statistics (collector_type: INTEGER): GC_INFO is
 			-- Garbage collector information for `collector_type'.
-			-- (`collector_type' is one of the collector types defined in
-			-- class MEM_CONST)
+		require
+			type_ok:
+				collector_type = Full_collector or
+				collector_type = Incremental_collector
 		do
 			!! Result.make (collector_type);
 		end;
@@ -38,8 +38,8 @@ feature -- Measurement
 feature -- Status report
 
 	memory_threshold: INTEGER is
-			-- Minimum amount of bytes to be allocated before an
-			-- automatic garbage collection is raised.
+			-- Minimum amount of bytes to be allocated before
+			-- starting an automatic garbage collection.
 		external
 			"C"
 		alias
@@ -64,7 +64,7 @@ feature -- Status report
 
 	largest_coalesced_block: INTEGER is
 			-- Size of largest coalesced block since last call to
-			-- `largest_coalesced'; 0 if none
+			-- `largest_coalesced'; 0 if none.
 		external
 			"C"
 		alias
@@ -90,8 +90,8 @@ feature -- Status setting
 		end;
 
 	allocate_fast is
-			-- Enter speed mode: Optimize memory allocation speed at the
-			-- expense of memory usage
+			-- Enter speed mode: Optimize memory allocation speed
+			-- at the expense of memory usage.
 		external
 			"C"
 		alias
@@ -99,8 +99,8 @@ feature -- Status setting
 		end;
 	
 	allocate_compact is
-			-- Enter slow mode: Try to compact memory before requesting for
-			-- more from the operating system.
+			-- Enter slow mode: Try to compact memory before
+			-- requesting more from the operating system.
 		external
 			"C"
 		alias
@@ -108,8 +108,8 @@ feature -- Status setting
 		end;
 	
 	allocate_tiny is
-			-- Enter tiny mode: Enter slow mode after having freed as much
-			-- memory as possible.
+			-- Enter tiny mode: Enter slow mode after having freed
+			-- as much memory as possible.
 		external
 			"C"
 		alias
@@ -157,10 +157,10 @@ feature -- Removal
 			-- Action to be executed just before the garbage collector
 			-- reclaims an object.
 			-- Default version does nothing; redefine in descendants
-			-- to perform specific dispose actions. 
-			-- Those actions should only take care of cleaning external resources.
-			-- They should not perform remote calls on other objects since
-			-- these may also be dead and have already been reclaimed.
+			-- to perform specific dispose actions. Those actions should
+			-- only take care of freeing external resources; they should
+			-- not perform remote calls on other objects since these may
+			-- also be dead and reclaimed.
 		do
 		end;
 
@@ -180,8 +180,8 @@ feature -- Removal
 		end;
 
 	full_coalesce is
-			-- Coalesce the whole memory, merge adjacent free blocks
-			-- together so as to reduce fragmentation.
+			-- Coalesce the whole memory; merge adjacent free
+			-- blocks to reduce fragmentation.
 		external
 			"C"
 		alias
@@ -189,15 +189,15 @@ feature -- Removal
 		end;
 
 	collect is
-			-- Force a partial collection cycle if the garbage collector is
-			-- enabled; do nothing otherwise.
+			-- Force a partial collection cycle if the garbage
+			-- collector is enabled; do nothing otherwise.
 		external
 			"C"
 		end;
 	
 	full_collect is
-			-- Force a full collection cycle if the garbage collector is
-			-- enabled; do nothing otherwise.
+			-- Force a full collection cycle if the garbage 
+			-- collector is enabled; do nothing otherwise.
 		external
 			"C"
 		alias

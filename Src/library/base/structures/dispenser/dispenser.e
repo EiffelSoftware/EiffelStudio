@@ -1,4 +1,3 @@
-
 indexing
 
 	description:
@@ -40,6 +39,11 @@ feature -- Element change
 			-- (Synonym for `fill')
 		do
 			fill (s)
+		end;
+
+	extend, force, put (v: like item) is
+			-- Add item `v'.
+		deferred
 		end;
 
 invariant

@@ -37,7 +37,6 @@ feature -- Access
 
 feature -- Measurement
 
-
 	total: INTEGER;
 			-- Total number of bytes allocated for `type'
 			-- before last call to `update'
@@ -56,8 +55,8 @@ feature -- Measurement
 		end;
 
 	overhead: INTEGER;
-			-- Number of bytes used by memory management scheme for `type'
-			-- before last call to `update'
+			-- Number of bytes used by memory management
+			-- scheme for `type' before last call to `update'
 
 
 feature {NONE} -- Implementation

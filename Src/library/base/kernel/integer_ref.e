@@ -32,7 +32,11 @@ feature -- Access
 	hash_code: INTEGER is
 			-- Hash code value
 		do
-			Result := item;
+			if item > 0 then
+				Result := item
+			else
+				Result := -item + 1
+			end
 		end;
 
 feature -- Comparison

@@ -20,7 +20,7 @@ class LINKED_CIRCULAR [G] inherit
 			start, islast
 		select
 			remove, go_i_th, after, before, off,
-			prune_all, prune, first
+			prune_all, prune, first, forth
 		end;
 
 	LIST [G]
@@ -32,10 +32,11 @@ class LINKED_CIRCULAR [G] inherit
 			off as l_off, 
 			prune as l_prune,
 			prune_all as l_prune_all,
-			go_i_th as l_go_i_th
+			go_i_th as l_go_i_th,
+			forth as l_forth
 		export {NONE}
 			l_after, l_before, l_remove, l_first,
-			l_off, l_prune, l_prune_all, l_go_i_th
+			l_off, l_prune, l_prune_all, l_go_i_th, l_forth
 		undefine
 			last, exhausted, move, valid_cursor_index,
 			isfirst, readable, islast, start, writable
@@ -212,7 +213,13 @@ feature -- Cursor movement
 			end
 		end
 
-feature -- Element removal
+feature {NONE} -- Cursor movement
+
+	l_forth is
+		do
+		end
+
+feature -- Removal
 
 	remove_left is
 			-- Remove item to the left of cursor position.
@@ -270,7 +277,7 @@ feature {LINKED_CIRCULAR} -- Implementation
 		end;
 	
 	list : LINKED_LIST[G]
- 
+	
 	standard_after : BOOLEAN is
 			do
 				Result := list.after

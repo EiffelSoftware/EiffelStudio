@@ -24,7 +24,6 @@ ecom_eiffel_compiler::CEiffelProject::CEiffelProject( EIF_TYPE_ID tid )
 	eiffel_procedure = eif_procedure ("make_from_pointer", type_id);
 
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), (EIF_POINTER)this);
-	LockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -34,7 +33,6 @@ ecom_eiffel_compiler::CEiffelProject::CEiffelProject( EIF_OBJECT eif_obj )
 	eiffel_object = eif_adopt (eif_obj);
 	type_id = eif_type (eiffel_object);
 	
-	LockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -45,7 +43,6 @@ ecom_eiffel_compiler::CEiffelProject::~CEiffelProject()
 
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))eiffel_procedure) (eif_access (eiffel_object), NULL);
 	eif_wean (eiffel_object);
-	UnlockModule ();
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
@@ -271,8 +268,6 @@ STDMETHODIMP ecom_eiffel_compiler::CEiffelProject::compiler(  /* [out, retval] *
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
 		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_7 (eif_access (tmp_object));
-		if (*return_value != NULL)
-			(*return_value)->AddRef ();
 		eif_wean (tmp_object);
 	}
 	else
@@ -326,8 +321,6 @@ STDMETHODIMP ecom_eiffel_compiler::CEiffelProject::system_browser(  /* [out, ret
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
 		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_11 (eif_access (tmp_object));
-		if (*return_value != NULL)
-			(*return_value)->AddRef ();
 		eif_wean (tmp_object);
 	}
 	else
@@ -358,8 +351,6 @@ STDMETHODIMP ecom_eiffel_compiler::CEiffelProject::project_properties(  /* [out,
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
 		*return_value = grt_ec_Eif_compiler.ccom_ec_pointed_interface_14 (eif_access (tmp_object));
-		if (*return_value != NULL)
-			(*return_value)->AddRef ();
 		eif_wean (tmp_object);
 	}
 	else
@@ -376,6 +367,7 @@ STDMETHODIMP_(ULONG) ecom_eiffel_compiler::CEiffelProject::Release()
 	Decrement reference count
 -----------------------------------------------------------*/
 {
+	UnlockModule ();
 	LONG res = InterlockedDecrement (&ref_count);
 	if (res  ==  0)
 	{
@@ -391,6 +383,7 @@ STDMETHODIMP_(ULONG) ecom_eiffel_compiler::CEiffelProject::AddRef()
 	Increment reference count
 -----------------------------------------------------------*/
 {
+	LockModule ();
 	return InterlockedIncrement (&ref_count);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/

@@ -770,7 +770,7 @@ LPSTR ecom_runtime_ec::ccom_ec_lpstr (EIF_REFERENCE a_ref, char * old)
 };
 //----------------------------------------------------------------------------
 
-LPWSTR ecom_runtime_ec::ccom_ec_lpwstr (EIF_REFERENCE a_ref)
+LPWSTR ecom_runtime_ec::ccom_ec_lpwstr (EIF_REFERENCE a_ref, LPWSTR old)
 
 // Create LPWSTR from Eiffel STRING
 {
@@ -792,7 +792,15 @@ LPWSTR ecom_runtime_ec::ccom_ec_lpwstr (EIF_REFERENCE a_ref)
 		area_string = (char *)(FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))to_c) (eif_access (eif_object));
 		str_size = strlen (area_string) + 1;
 		size = mbstowcs (NULL, area_string, str_size);
-		result = (WCHAR *) CoTaskMemAlloc ((size + 1) * sizeof (WCHAR));
+		
+		if (old != NULL)
+		{
+			result = old;
+		}
+		else
+		{
+			result = (WCHAR *) CoTaskMemAlloc ((size + 1) * sizeof (WCHAR));
+		}
 		mbstowcs (result, area_string, str_size);
 		eif_wean (eif_object);
 	}
@@ -2015,7 +2023,7 @@ LPWSTR * ecom_runtime_ec::ccom_ec_array_lpwstr (EIF_REFERENCE a_ref, int dimensi
 	for (i = 0; i < capacity; i++)
 	{
 		a_string = ccom_ec_lpwstr ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_INTEGER))f_item)
-				(eif_access(e_lpwstr_array), ((EIF_INTEGER)(i+1))));
+				(eif_access(e_lpwstr_array), ((EIF_INTEGER)(i+1))), NULL);
 		ccom_c_array_element (lpwstr_array, i, LPWSTR) = a_string;
 	}
 

@@ -356,7 +356,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_lpstr (LPSTR a_string, EIF_OBJECT an_obje
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_lpwstr (LPWSTR a_string)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_lpwstr (LPWSTR a_string, EIF_OBJECT an_object)
 
 // Create Eiffel String from LPWSTR
 {
@@ -364,14 +364,48 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_lpwstr (LPWSTR a_string)
 	EIF_OBJECT local_obj = 0;
 	char * string = 0;
 	size_t size = 0, size_wide = 0;
+	static EIF_TYPE_ID type_id = -1;
+	EIF_PROCEDURE string_make = 0;
+	EIF_PROCEDURE from_c = 0;
 
-	size_wide = wcslen(a_string);
-	size = wcstombs (NULL, a_string, size_wide + 1);
-	string = (char *)malloc(size + 1);
+	if (-1 == type_id)
+		type_id = eif_type_id ("STRING");
+	
+	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+	{
+		if (a_string != NULL)
+		{
+			size_wide = wcslen(a_string);
+			size = wcstombs (NULL, a_string, size_wide + 1);
+			string = (char *)malloc(size + 1);
 
-	wcstombs (string, a_string, size_wide + 1);
-	local_obj = henter(RTMS(string));
-	free (string);
+			wcstombs (string, a_string, size_wide + 1);
+			local_obj = henter(RTMS(string));
+			free (string);
+		}
+		else
+		{
+			string_make = eif_procedure ("make", type_id);
+			local_obj = eif_create (type_id);
+			nstcall = 0;
+			(FUNCTION_CAST ( void, (EIF_REFERENCE, EIF_INTEGER))string_make) (eif_access (local_obj), 0);
+		}
+	}
+	else
+	{
+		if (a_string != NULL)
+		{
+			size_wide = wcslen(a_string);
+			size = wcstombs (NULL, a_string, size_wide + 1);
+			string = (char *)malloc(size + 1);
+			wcstombs (string, a_string, size_wide + 1);
+			
+			from_c = eif_procedure ("from_c", type_id);
+			(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))from_c) (eif_access (an_object), string);
+			
+			free (string);
+		}
+	}
 	return eif_wean (local_obj);
 };
 //----------------------------------------------------------------------------
@@ -771,9 +805,6 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_record (void * a_record_pointer, 
 	nstcall = 0;
 	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))make) (eif_access (result), (EIF_POINTER)a_record_pointer);
 	
-	EIF_PROCEDURE set_unshared = NULL;
-	set_unshared = eif_procedure ("set_unshared", type_id);
-	(FUNCTION_CAST (void, (EIF_REFERENCE))set_unshared) (eif_access (result));
 	
 	return eif_wean (result);
 };
@@ -1962,7 +1993,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_lpwstr
 	for (i = 0; i < element_number; i++)
 	{
 		an_array_element = (LPWSTR)((ccom_c_array_element (an_array, i, LPWSTR)));
-		tmp_object = eif_protect (ccom_ce_lpwstr ((LPWSTR)an_array_element));
+		tmp_object = eif_protect (ccom_ce_lpwstr ((LPWSTR)an_array_element, NULL));
 		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE,
 				EIF_INTEGER))put)(eif_access (intermediate_array), eif_access(tmp_object), i + 1);
 		eif_wean (tmp_object);

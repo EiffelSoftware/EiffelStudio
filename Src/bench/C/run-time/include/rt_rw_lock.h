@@ -20,10 +20,32 @@ extern "C" {
 #endif
 
 #ifdef EIF_THREADS
+	
+#ifdef HAS_RWL
 
-/* Read Write lock structure. 
- * Based on mutex and condition variables. 
- */
+#ifdef SOLARIS_THREADS
+	/* Read/Write Lock */
+#define EIF_RWL_TYPE	rwlock_t
+#define EIF_RWL_INIT(rwl,msg) \
+	if (rwlock_init(rwl, USYNC_THREAD, NULL)) eraise (msg, EN_EXT)
+#define EIF_RWL_CREATE(rwl, msg) \
+	rwl = (EIF_RWL_TYPE *) eif_malloc (sizeof(EIF_RWL_TYPE)); \
+	if (!rwl) {\
+		eraise ("Cannot allocate memory for read/write lock creation.", EN_MEM); \
+	} else { \
+		EIF_RWL_INIT(rwl,msg); \
+	}
+#define EIF_RWL_RDLOCK(rwl,msg) if (rw_rdlock(rwl)) eraise (msg, EN_EXT)
+#define EIF_RWL_WRLOCK(rwl,msg) if (rw_wrlock(rwl)) eraise (msg, EN_EXT)
+#define EIF_RWL_UNLOCK(rwl,msg) if (rw_unlock(rwl)) eraise (msg, EN_EXT)
+#define EIF_RWL_DESTROY(rwl, mesg) \
+	if (rwlock_destroy(rwl)) eraise (msg, EN_EXT); \
+	eif_free(rwl)
+
+#endif
+
+#else
+/* Platform does not provide Read/Write lock, we provide our own implementation */
 typedef struct
 {
 	EIF_MUTEX_TYPE *m; /* Internal monitor lock. */
@@ -31,17 +53,29 @@ typedef struct
 	EIF_COND_TYPE *readers_ok; /* Start waiting readers. */
 	unsigned int waiting_writers; /* Number of waiting writers. */
 	EIF_COND_TYPE *writers_ok; /* Start a waiting writer. */
-} eif_rwl_t;
+} EIF_RWL_TYPE;
 
-extern void eif_rwl_init (eif_rwl_t *rwlp); /* Initialize Read-Write lock. */
-RT_LNK void eif_rwl_rdlock (eif_rwl_t *rwlp); /* Lock in Read mode. */
-RT_LNK void eif_rwl_wrlock (eif_rwl_t *rwlp); /* Lock in Write mode. */
-RT_LNK void eif_rwl_unlock (eif_rwl_t *rwlp); /* Unlock Read-Write lock. */
-
+	/* Read/Write Lock */
+#define EIF_RWL_INIT(rwl,msg) eif_rwl_init(rwl)
 #define EIF_RWL_CREATE(rwl, msg) \
-	rwl = (eif_rwl_t *) eif_malloc (sizeof (eif_rwl_t)); \
-	if (!rwl) eraise (msg, EN_EXT); \
-	eif_rwl_init (rwl); 	
+	rwl = (EIF_RWL_TYPE *) eif_malloc (sizeof(EIF_RWL_TYPE)); \
+	if (!rwl) {\
+		eraise ("Cannot allocate memory for read/write lock creation.", EN_MEM); \
+	} else { \
+		EIF_RWL_INIT(rwl,msg); \
+	}
+#define EIF_RWL_RDLOCK(rwl,msg) eif_rwl_rdlock(rwl)
+#define EIF_RWL_WRLOCK(rwl,msg) eif_rwl_wrlock(rwl)
+#define EIF_RWL_UNLOCK(rwl,msg) eif_rwl_unlock(rwl)
+#define EIF_RWL_DESTROY(rwl, mesg) eif_rwl_destroy(rwl); eif_free (rwl)
+
+extern void eif_rwl_init (EIF_RWL_TYPE *rwlp); /* Initialize Read-Write lock. */
+extern void eif_rwl_rdlock (EIF_RWL_TYPE *rwlp); /* Lock in Read mode. */
+extern void eif_rwl_wrlock (EIF_RWL_TYPE *rwlp); /* Lock in Write mode. */
+extern void eif_rwl_unlock (EIF_RWL_TYPE *rwlp); /* Unlock Read-Write lock. */
+extern void eif_rwl_destroy (EIF_RWL_TYPE * rwlp);
+
+#endif /* HAS_RWL */
 
 #endif /* EIF_THREADS */
 

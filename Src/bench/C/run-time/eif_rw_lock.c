@@ -18,28 +18,40 @@
  An implementation of multiple readers, single writer lock */
 
 /*
-doc:<file name="eif_rw_lock.c" header="rt_rw_lock.h" version="$Id$" summary="Multiple readers, single writer lock">
+doc:<file name="eif_rw_lock.c" header="rt_rw_lock.h" version="$Id$" summary="Multiple readers, single writer lock for platforms that does not support it natively.">
 */
 
 #include "eif_portable.h"
 #include "rt_rw_lock.h"
 #include "rt_threads.h"
 #include "rt_lmalloc.h"
+#include "rt_assert.h"
 
-#ifdef EIF_THREADS /* Only in MT mode */
+#if defined EIF_THREADS && !defined HAS_RWL
+
+rt_shared void eif_rwl_init(EIF_RWL_TYPE *rwlp); /* Only called with EIF_RWL_CREATE. */
+rt_shared void eif_rwl_rdlock (EIF_RWL_TYPE *rwlp); /* Lock in read mode. */
+rt_shared void eif_rwl_wrlock (EIF_RWL_TYPE *rwlp); /* Lock in write mode. */
+rt_shared void eif_rwl_unlock (EIF_RWL_TYPE *rwlp); /* Unlock read write lock. */
+rt_shared void eif_rwl_destroy (EIF_RWL_TYPE * rwlp);
 
 
-rt_shared void eif_rwl_init(eif_rwl_t *rwlp); /* Only called with EIF_RWL_CREATE. */
-rt_public void eif_rwl_rdlock (eif_rwl_t *rwlp); /* Lock in read mode. */
-rt_public void eif_rwl_wrlock (eif_rwl_t *rwlp); /* Lock in write mode. */
-rt_public void eif_rwl_unlock (eif_rwl_t *rwlp); /* Unlock read write lock. */
+/*
+doc:	<routine name="eif_rwl_init" export="shared">
+doc:		<summary>Initialize a read-write lock.</summary>
+doc:		<param name="rwlp" type="EIF_RWL_TYPE *">Pointer to read/write lock structure to be initalized.</param>
+doc:		<exception>EN_EXT when it fails</exception>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe if called with a different value for `rwlp'.</synchronization>
+doc:	</routine>
+*/
 
-rt_public void eif_rwl_init(eif_rwl_t *rwlp)
+rt_shared void eif_rwl_init(EIF_RWL_TYPE *rwlp)
 {
-	/* Initialize Read-Write lock. */	
-
 	EIF_MUTEX_TYPE *m;
 	EIF_COND_TYPE *readers_ok, *writers_ok;
+
+	REQUIRE ("rwlp not null", rwlp);
 
 	EIF_MUTEX_CREATE (m, "Couldn't create rwlp->m\n");
 	EIF_COND_CREATE (readers_ok, "Couldn't create rwlp->readers_ok\n"); 
@@ -52,12 +64,19 @@ rt_public void eif_rwl_init(eif_rwl_t *rwlp)
 	rwlp->waiting_writers = 0; 
 } 
 
-rt_public void eif_rwl_rdlock (eif_rwl_t *rwlp)
-{
-	/* Acquire a Read lock. Multiple readers can go
-	 * if there are no writer. 
-	 */
+/*
+doc:	<routine name="eif_rwl_rdlock" export="shared">
+doc:		<summary>Acquire a read lock. Multiple readers can go if there are no writer.</summary
+doc:		<param name="rwlp" type="EIF_RWL_TYPE *">Pointer to read/write lock structure to be locked.</param>
+doc:		<exception>EN_EXT when it fails</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
 
+rt_shared void eif_rwl_rdlock (EIF_RWL_TYPE *rwlp)
+{
+	REQUIRE ("rwlp not null", rwlp);
 	EIF_MUTEX_LOCK (rwlp->m, "Couldn't lock rwlp->m\n");
 	while (rwlp->rwlock < 0 || rwlp->waiting_writers) {
 		EIF_COND_WAIT (rwlp->readers_ok, rwlp->m, 
@@ -67,15 +86,21 @@ rt_public void eif_rwl_rdlock (eif_rwl_t *rwlp)
 	EIF_MUTEX_UNLOCK (rwlp->m, "Couldn't unlock rwlp->m\n");
 }
 
-rt_public void eif_rwl_wrlock (eif_rwl_t *rwlp)
-{
-	/* Acquire a write lock. 
-	 * Only a single writer can proceed.
-	 */
+/*
+doc:	<routine name="eif_rwl_wrlock" export="shared">
+doc:		<summary>Acquire a write lock. Only a single write can proceed.</summary
+doc:		<param name="rwlp" type="EIF_RWL_TYPE *">Pointer to read/write lock structure to be locked.</param>
+doc:		<exception>EN_EXT when it fails</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
 
+rt_shared void eif_rwl_wrlock (EIF_RWL_TYPE *rwlp)
+{
+	REQUIRE ("rwlp not null", rwlp);
 	EIF_MUTEX_LOCK (rwlp->m,"Couldn't lock rwlp->m\n" );
-	while (rwlp->rwlock != 0) 
-	{
+	while (rwlp->rwlock != 0) {
 		rwlp->waiting_writers++;
 		EIF_COND_WAIT (rwlp->writers_ok, rwlp->m, 
 				"Couldn't wait for condition rwlp->writers_ok\n");
@@ -85,13 +110,21 @@ rt_public void eif_rwl_wrlock (eif_rwl_t *rwlp)
 	EIF_MUTEX_UNLOCK (rwlp->m, "Couldn't unlock rwlp->m\n");
 }
 
+/*
+doc:	<routine name="eif_rwl_unlock" export="shared">
+doc:		<summary>Unlock a read or write lock.</summary
+doc:		<param name="rwlp" type="EIF_RWL_TYPE *">Pointer to read/write lock structure to be unlocked.</param>
+doc:		<exception>EN_EXT when it fails</exception>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>None required</synchronization>
+doc:	</routine>
+*/
 
-rt_public void eif_rwl_unlock (eif_rwl_t *rwlp)
+rt_shared void eif_rwl_unlock (EIF_RWL_TYPE *rwlp)
 {
-	/* Unlock Read-Write lock. */
-	
 	int ww, wr;
 
+	REQUIRE ("rwlp not null", rwlp);
 	EIF_MUTEX_LOCK (rwlp->m, "Couldn't lock rwlp->m\n");
 	if (rwlp->rwlock < 0) /* rwlock < 0 iflocked for writing */
 		rwlp->rwlock = 0;
@@ -117,6 +150,31 @@ rt_public void eif_rwl_unlock (eif_rwl_t *rwlp)
 				"Couldn't broadcast condition rwlp->readers_ok\n");
 		}
 }
+
+/*
+doc:	<routine name="eif_rwl_destroy" export="shared">
+doc:		<summary>Destroy a read/write lock.</summary
+doc:		<param name="rwlp" type="EIF_RWL_TYPE *">Pointer to read/write lock structure to be destroyed.</param>
+doc:		<exception>EN_EXT when it fails</exception>
+doc:		<thread_safety>Not safe</thread_safety>
+doc:		<synchronization>Safe if called with a different value for `rwlp'.</synchronization>
+doc:	</routine>
+*/
+
+rt_shared void eif_rwl_destroy (EIF_RWL_TYPE *rwlp)
+{
+	REQUIRE ("rwlp not null", rwlp);
+	EIF_MUTEX_DESTROY(rwlp->m, "Cannot destroy mutex");
+	EIF_COND_DESTROY(rwlp->readers_ok, "Cannot destroy condition variable");
+	EIF_COND_DESTROY(rwlp->writers_ok, "Cannot destroy condition variable");
+
+	rwlp->m = NULL;
+	rwlp->readers_ok = NULL;
+	rwlp->writers_ok = NULL;
+	rwlp->rwlock = 0; 
+	rwlp->waiting_writers = 0; 
+}
+
 #endif /* EIF_THREADS */
 
 /*

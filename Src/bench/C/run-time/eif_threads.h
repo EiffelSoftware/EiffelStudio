@@ -66,6 +66,7 @@
 
 #ifdef SOLARIS_THREADS		/* Tuning for Solaris Threads */
 #define HAS_SEMA
+#define HAS_RWL
 #endif
 
 #ifdef VXWORKS				/* Tuning for VxWorks */
@@ -268,6 +269,17 @@ RT_LNK void eif_thr_cond_signal (EIF_POINTER cond);
 RT_LNK void eif_thr_cond_wait (EIF_POINTER cond, EIF_POINTER mutex);
 RT_LNK void eif_thr_cond_wait_with_timeout (EIF_POINTER cond, EIF_POINTER mutex, EIF_INTEGER a_timeout);
 RT_LNK void eif_thr_cond_destroy (EIF_POINTER cond);
+
+/*------------------------------------*/
+/*---  Read/Write lock operations  ---*/
+/*------------------------------------*/
+
+RT_LNK EIF_POINTER eif_thr_rwl_create (void);
+RT_LNK void eif_thr_rwl_rdlock (EIF_POINTER rwlp);
+RT_LNK void eif_thr_rwl_wrlock (EIF_POINTER rwlp);
+RT_LNK void eif_thr_rwl_unlock (EIF_POINTER rwlp);
+RT_LNK void eif_thr_rwl_destroy (EIF_POINTER rwlp);
+
 
 /* 
  * Structure used to give arguments to a new thread

@@ -22,7 +22,8 @@ inherit
 			flush_completion_features,
 			flush_completion_features_user_precondition,
 			initialize_feature,
-			initialize_feature_user_precondition
+			initialize_feature_user_precondition,
+			setup_rename_table
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -315,9 +316,9 @@ feature -- Access
 			retried := True
 			retry
 		end
-		
+
 	parse_source_for_expr (source_text: STRING; source_row, source_col: INTEGER; expr, feat: CELL [STRING]; is_class_expr: BOOLEAN_REF) is
-			-- parse `source_text' where caret is at `source_row', `source_col' and find the complete expression text
+			-- Parse `source_text' where caret is at `source_row', `source_col' and find the complete expression text.
 		require else
 			non_void_source_text: source_text /= Void
 			valid_source_text: not source_text.is_empty
@@ -339,10 +340,9 @@ feature -- Access
 				feat.put (def_parser.parsed_result_feature)
 			end
 		end
-		
-		
+
 	find_definition (class_text, target_file_name: STRING; target_row, target_col: INTEGER; source_file_name: CELL [STRING]; source_row: INTEGER_REF) is
-			-- find `target' file name and location
+			-- Find `target' file name and location
 		require else
 			non_void_class_text: class_text /= Void
 			valid_class_text: not class_text.is_empty
@@ -395,121 +395,137 @@ feature -- Access
 			retried := True
 			retry
 		end
-		
-		
+
 feature -- Basic Operations
 
-		add_local (name: STRING; type: STRING) is
-				-- Add local variable used for solving member completion list.
-			local
-				l_name: STRING
-			do
-				if name /= Void and type /= Void and then not name.is_empty and then not type.is_empty and then not locals.has (name) then
-					l_name := clone (name)
-					l_name.to_lower
-					locals.put (l_name, type)
-				end
+	setup_rename_table (var_sources: ECOM_VARIANT; var_targets: ECOM_VARIANT) is
+			-- Initialize the tables used to resolve renaming for completion of inherited features in inheritance clause.
+			-- `var_sources' [in].  
+			-- `var_targets' [in].
+		local
+			retried: BOOLEAN
+		do
+			if not retried then
+				rename_sources := var_sources.string_array
+				rename_targets := var_sources.string_array
 			end
+		rescue
+			retried := True
+			retry
+		end
 
-		add_argument (name: STRING; type: STRING) is
-				-- Add argument used for solving member completion list.
-			local
-				l_name: STRING
-			do
-				if name /= Void and type /= Void and then not name.is_empty and then not type.is_empty and then not arguments.has (name) then
-					l_name := clone (name)
-					l_name.to_lower
-					arguments.put (l_name, type)
-				end
-			end	
-			
-		flush_completion_features (a_file_name: STRING) is
-				-- clear all `completion_features' in `a_file_name'
-			require else
-				non_void_file_name: a_file_name /= Void
-				valid_file_name: not a_file_name.is_empty
-			local
-				l_file_name: STRING
-			do
-				l_file_name := clone (a_file_name)
-				l_file_name.to_lower
-				from
-					completion_features.start
-				until
-					completion_features.after
-				loop
-					if completion_features.item.file_name.is_equal (l_file_name) then
-						completion_features.remove
-					else
-						completion_features.forth
-					end
-				end
+	add_local (name: STRING; type: STRING) is
+			-- Add local variable used for solving member completion list.
+		local
+			l_name: STRING
+		do
+			if name /= Void and type /= Void and then not name.is_empty and then not type.is_empty and then not locals.has (name) then
+				l_name := clone (name)
+				l_name.to_lower
+				locals.put (l_name, type)
 			end
+		end
+
+	add_argument (name: STRING; type: STRING) is
+			-- Add argument used for solving member completion list.
+		local
+			l_name: STRING
+		do
+			if name /= Void and type /= Void and then not name.is_empty and then not type.is_empty and then not arguments.has (name) then
+				l_name := clone (name)
+				l_name.to_lower
+				arguments.put (l_name, type)
+			end
+		end	
 		
-		initialize_feature (a_name: STRING; a_arguments: ECOM_VARIANT; a_argument_types: ECOM_VARIANT; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING) is
-				-- Initialize a feature for completion without compltation
-			require else
-				non_void_name: a_name /= Void
-				valid_name: not a_name.is_empty
-				non_void_file_name: a_file_name /= Void
-				valid_file_name: not a_file_name.is_empty
-				valid_arguments: a_arguments /= Void implies a_arguments.string_array /= Void
-				valid_argument_types: a_argument_types /= Void implies a_argument_types.string_array /= Void
-				matching_argument_count: (a_arguments /= Void and a_argument_types /= Void) implies a_arguments.string_array.count = a_argument_types.string_array.count
-			local
-				l_feature: COMPLETION_FEATURE
-				l_ci: CLASS_I
-				l_fi: FEATURE_I
-				l_arguments: ARRAYED_LIST [PARAMETER_DESCRIPTOR]
-				l_ecom_arguments: ECOM_ARRAY [STRING]
-				l_ecom_types: ECOM_ARRAY [STRING]
-				l_index: INTEGER
-				l_upper_bound: INTEGER
-			do
-				if a_name /= Void and a_file_name /= Void and then not a_name.is_empty and then not a_file_name.is_empty then
-					l_ci := Eiffel_universe.class_with_file_name (create {FILE_NAME}.make_from_string (a_file_name))
-					if l_ci /= Void then
-						if l_ci.compiled_class /= Void and then l_ci.compiled_class.has_feature_table then
-							l_fi := l_ci.compiled_class.feature_table.item (a_name)
+	flush_completion_features (a_file_name: STRING) is
+			-- clear all `completion_features' in `a_file_name'
+		require else
+			non_void_file_name: a_file_name /= Void
+			valid_file_name: not a_file_name.is_empty
+		local
+			l_file_name: STRING
+		do
+			l_file_name := clone (a_file_name)
+			l_file_name.to_lower
+			completion_features.remove (l_file_name)
+		end
+		
+	initialize_feature (a_name: STRING; a_arguments: ECOM_VARIANT; a_argument_types: ECOM_VARIANT; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING) is
+			-- Initialize a feature for completion without compilation
+		require else -- Actually a "require" since parent precondition is "False"
+			non_void_name: a_name /= Void
+			valid_name: not a_name.is_empty
+			non_void_file_name: a_file_name /= Void
+			valid_file_name: not a_file_name.is_empty
+			valid_arguments: a_arguments /= Void implies a_arguments.string_array /= Void
+			valid_argument_types: a_argument_types /= Void implies a_argument_types.string_array /= Void
+			matching_argument_count: (a_arguments /= Void and a_argument_types /= Void) implies a_arguments.string_array.count = a_argument_types.string_array.count
+		local
+			l_feature: COMPLETION_FEATURE
+			l_ci: CLASS_I
+			l_fi: FEATURE_I
+			l_arguments: ARRAYED_LIST [PARAMETER_DESCRIPTOR]
+			l_ecom_arguments: ECOM_ARRAY [STRING]
+			l_ecom_types: ECOM_ARRAY [STRING]
+			l_index: INTEGER
+			l_upper_bound: INTEGER
+			retried: BOOLEAN
+			feature_list: ARRAYED_LIST [COMPLETION_FEATURE]
+		do
+			if not retried then
+				l_ci := Eiffel_universe.class_with_file_name (create {FILE_NAME}.make_from_string (a_file_name))
+				if l_ci /= Void then
+					if l_ci.compiled_class /= Void and then l_ci.compiled_class.has_feature_table then
+						l_fi := l_ci.compiled_class.feature_table.item (a_name)
+					end
+				end
+				if l_fi = Void then
+					if a_arguments /= Void and a_argument_types /= Void then
+						l_ecom_arguments := a_arguments.string_array
+						l_ecom_types :=	a_argument_types.string_array
+					end
+					if l_ecom_arguments /= Void and l_ecom_types/= Void and then l_ecom_arguments.count > 0 and then l_ecom_types.count > 0 then
+						create l_arguments.make (l_ecom_arguments.count)
+						from
+							l_index := l_ecom_arguments.lower_indices.item (1)
+							l_upper_bound := l_ecom_arguments.upper_indices.item (1)
+						until
+							l_index > l_upper_bound
+						loop
+							l_arguments.extend (create {PARAMETER_DESCRIPTOR}.make (l_ecom_arguments.item (<<l_index>>), l_ecom_types.item (<<l_index>>)))
+							l_index := l_index + 1
 						end
 					end
-					if l_fi = Void then
-						if a_arguments /= Void and a_argument_types /= Void then
-							l_ecom_arguments := a_arguments.string_array
-							l_ecom_types :=	a_argument_types.string_array
-						end
-						if l_ecom_arguments /= Void and l_ecom_types/= Void and then l_ecom_arguments.count > 0 and then l_ecom_types.count > 0 then
-							create l_arguments.make (l_ecom_arguments.count)
-							from
-								l_index := l_ecom_arguments.lower_indices.item (1)
-								l_upper_bound := l_ecom_arguments.upper_indices.item (1)
-							until
-								l_index > l_upper_bound
-							loop
-								l_arguments.extend (create {PARAMETER_DESCRIPTOR}.make (l_ecom_arguments.item (<<l_index>>), l_ecom_types.item (<<l_index>>)))
-								l_index := l_index + 1
-							end
-						end
-						if a_return_type = Void then
-							create l_feature.make (a_name, l_arguments, a_feature_type, a_file_name)
-						else
-							create l_feature.make_with_return_type (a_name, l_arguments, a_return_type, a_feature_type, a_file_name)
-						end
-						completion_features.extend (l_feature)							
+					if a_return_type = Void then
+						create l_feature.make (a_name, l_arguments, a_feature_type, a_file_name)
+					else
+						create l_feature.make_with_return_type (a_name, l_arguments, a_return_type, a_feature_type, a_file_name)
+					end
+					completion_features.search (a_file_name.as_lower)
+					if completion_features.found then
+						completion_features.found_item.extend (l_feature)
+					else
+						create feature_list.make (5)
+						feature_list.extend (l_feature)
+						completion_features.put (feature_list, a_file_name)
 					end
 				end
 			end
-			
-		flush_completion_features_user_precondition (a_file_name: STRING): BOOLEAN is
-			do
-				Result := False
-			end
-			
-		initialize_feature_user_precondition (a_name: STRING; a_arguments, a_argument_types: ECOM_VARIANT; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING): BOOLEAN is
-			do
-				Result := False
-			end
-			
+		rescue
+			retried := True
+			retry
+		end
+		
+	flush_completion_features_user_precondition (a_file_name: STRING): BOOLEAN is
+		do
+			Result := False
+		end
+		
+	initialize_feature_user_precondition (a_name: STRING; a_arguments, a_argument_types: ECOM_VARIANT; a_return_type: STRING; a_feature_type: INTEGER; a_file_name: STRING): BOOLEAN is
+		do
+			Result := False
+		end	
 
 feature {NONE} -- Implementation
 
@@ -528,6 +544,7 @@ feature {NONE} -- Implementation
 			features: SORTABLE_ARRAY [FEATURE_DESCRIPTOR]
 			cf: COMPLETION_FEATURE
 			target: STRING
+			feature_list: LIST [COMPLETION_FEATURE]
 		do
 			if not retried then
 				ci := Eiffel_universe.class_with_file_name (create {FILE_NAME}.make_from_string (file_name))
@@ -547,14 +564,14 @@ feature {NONE} -- Implementation
 						target.to_lower
 						ids := feature_variables (fi, feature_table)
 						if target.occurrences ('.') = 0 then
-							create variable_list.make (1, ids.count + completion_features.count)
-							from
-								ids.start
+							create variable_list.make (1, ids.count + completion_features.count * 10)	-- Magic number, we're hoping there is about 10 features per filename
+							from																		-- If more then array will be resized (see usage of `force' below)
+								ids.start																-- Calculating the exact count would be too expensive
 								i := 1
 							until
 								ids.after
 							loop
-								variable_list.put (create {VARIABLE_DESCRIPTOR}.make (ids.key_for_iteration, ids.key_for_iteration + ": " + ids.item_for_iteration.dump), i)
+								variable_list.force (create {VARIABLE_DESCRIPTOR}.make (ids.key_for_iteration, ids.key_for_iteration + ": " + ids.item_for_iteration.dump), i)
 								i := i + 1									
 								ids.forth
 							end
@@ -563,8 +580,16 @@ feature {NONE} -- Implementation
 							until
 								completion_features.after
 							loop
-								variable_list.put (completion_features.item, i)
-								i := i + 1
+								feature_list := completion_features.item_for_iteration
+								from
+									feature_list.start
+								until
+									feature_list.after
+								loop
+									variable_list.put (feature_list.item, i)
+									i := i + 1
+									feature_list.forth								
+								end
 								completion_features.forth
 							end
 							
@@ -635,8 +660,6 @@ feature {NONE} -- Implementation
 			cl_type ?= target_type.actual_type
 			if cl_type /= Void then
 				feature_table := cl_type.associated_class.feature_table
-			end
-			if feature_table /= Void then
 				if targets.is_empty then
 					Result := feature_table
 				else
@@ -691,7 +714,7 @@ feature {NONE} -- Implementation
 					Result := Result.subarray (1, i - 1)
 					Result.sort	
 				else
-					Result := Void
+					create Result.make (1,0)
 				end
 			else
 				create Result.make (1,0)
@@ -955,31 +978,36 @@ feature {NONE} -- Implementation
 		end
 		
 	completion_feature (a_feature_name: STRING; a_file_name: STRING): COMPLETION_FEATURE is
-			-- does `completion_features' contain `a_feature_name' for file `a_file_name'
+			-- Feature `a_feature_name' from file `a_file_name'
 		require
 			non_void_feature_name: a_feature_name /= Void
 			valid_feature_name: not a_feature_name.is_empty
 			non_void_file_name: a_file_name /= Void
 			valid_file_name: not a_file_name.is_empty
 		local
-			l_target: STRING
+			l_features: LIST [COMPLETION_FEATURE]
+			temp: STRING
+			comp_feature: COMPLETION_FEATURE
 		do
-			from
-				completion_features.start
-			until
-				completion_features.after or Result /= Void
-			loop
-				l_target := clone (a_feature_name)
-				l_target.to_lower
-				if l_target.is_equal (completion_features.item.name) then
-					l_target := clone (a_file_name)
-					l_target.to_lower
-					if l_target.is_equal (completion_features.item.file_name) then
-						Result := completion_features.item
+			create temp.make_from_string (a_file_name)
+			temp.to_lower
+			completion_features.search (temp)
+			if completion_features.found then
+				l_features := completion_features.found_item
+				from
+					l_features.start
+					create temp.make_from_string (a_feature_name)
+					temp.to_lower
+				until
+					l_features.after or Result /= Void
+				loop
+					comp_feature := l_features.item
+					if comp_feature.name.is_equal (temp) then
+						Result := comp_feature
 					end
+					l_features.forth
 				end
-				completion_features.forth
-			end	
+			end
 		end
 		
 	feature_i_from_completion_feature (a_completion_feature: COMPLETION_FEATURE): FEATURE_I is
@@ -1064,11 +1092,18 @@ feature {NONE} -- Implementation
 	locals, arguments: HASH_TABLE [STRING, STRING]
 			-- Local variables and arguments used to solve member completion list.
 			
-	completion_features: ARRAYED_LIST [COMPLETION_FEATURE]
-			-- Uncomplided features use to solve member completion.
+	completion_features: HASH_TABLE [ARRAYED_LIST [COMPLETION_FEATURE], STRING]
+			-- Uncompiled features use to solve member completion
+			-- Grouped by filename
 			
 	qualified_call: BOOLEAN
 			-- is current target a qualified call (with '.')
+
+	rename_sources: ARRAY [STRING]
+			-- Renamed features
+
+	rename_targets: ARRAY [STRING]
+			-- Renamed features new names
 
 invariant
 	valid_class_i: class_i /= Void implies class_i.compiled

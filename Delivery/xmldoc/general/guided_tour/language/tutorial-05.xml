@@ -20,9 +20,45 @@
 				<string>make</string>
 			</code>, also serving as creation procedure.  If you like short texts, here is a minimal version:
 		</paragraph>
-		<code_block>class HELLOcreate makefeature    make is         do print (" Hello World%N ") endend</code_block>
+		<code_block>
+<keyword>class</keyword> 
+	<class_name>HELLO</class_name>
+
+<keyword>create</keyword>
+	<feature_name>make</feature_name>
+
+<keyword>feature</keyword>
+
+	<feature_name>make</feature_name> <keyword>is</keyword>
+		<keyword>do</keyword> 
+			<feature_name>print</feature_name> <symbol>(</symbol><string>"Hello World%N"</string><symbol>)</symbol> 
+		<keyword>end</keyword>
+
+<keyword>end</keyword>
+</code_block>
 		<paragraph>In practice, however, the Eiffel style rules suggest a better documented version:</paragraph>
-		<code_block>indexing    description: "Root for trivial system printing a message"    author : " Elizabeth W. Brown "class HELLO create    makefeature    make is            -- Print a simple message.         do            io . put_string (" Hello World ")            io . put_new_line         endend - - class HELLO</code_block>
+		<code_block>
+<keyword>indexing</keyword>    
+	description: <string>"Root for trivial system printing a message" </string>
+	author: <string>"Elizabeth W. Brown"</string>
+
+<keyword>class</keyword> 
+	<class_name>HELLO</class_name> 
+
+<keyword>create</keyword>    
+	<feature_name>make</feature_name>
+
+<keyword>feature</keyword>
+
+	<feature_name>make</feature_name> <keyword>is</keyword>
+			<comment>-- Print a simple message.  </comment>       
+		<keyword>do</keyword>      
+			<feature_name>io</feature_name>.<feature_name>put_string</feature_name> (<string>"Hello World"</string>)
+			<feature_name>io</feature_name>.<feature_name>put_new_line</feature_name>
+	        <keyword>end</keyword>
+
+<keyword>end</keyword> <comment>-- class HELLO</comment>
+</code_block>
 		<paragraph>The two versions perform identically; the following comments will cover the more complete second one.  </paragraph>
 		<paragraph>Note the absence of semicolons and other syntactic clatter or clutter.  You may in fact use semicolons to separate instructions and declarations.  But the language's syntax is designed to make the semicolon optional (regardless of text layout) and it's best for readability to omit it, except in the special case of successive elements on a single line.  </paragraph>
 		<paragraph>The 

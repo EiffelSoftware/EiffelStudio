@@ -138,7 +138,7 @@
 			<size>2</size>Locating the example
 		</heading>
 		<paragraph>Please take a moment to locate the example files on your installation.  They all appear in the following directory, part of the Eiffel delivery:</paragraph>
-		<code_block><keyword>$ISE_EIFFEL/examples/studio/tour </keyword></code_block>
+		<code_block><keyword>$ISE_EIFFEL/examples/studio/tour</keyword></code_block>
 		<paragraph>(Windows users: remember that instead of the slash 
 			<code>
 				<keyword>/</keyword>

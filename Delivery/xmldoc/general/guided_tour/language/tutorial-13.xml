@@ -92,7 +92,7 @@
 				<comment>roman</comment>
 			</code> .  This lets a software element, such as an identifier, stand out clearly in what is otherwise a comment text expressed in English or another human language, as in the earlier example
 		</paragraph>
-		<code_block>-- Add sum to account.</code_block>
+		<code_block/>
 		<paragraph>which makes clear that 
 			<code>
 				<string>sum</string>

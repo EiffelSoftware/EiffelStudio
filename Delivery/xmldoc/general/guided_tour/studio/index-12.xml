@@ -63,7 +63,8 @@
 				</code>, before the first two instructions of the routine:
 			</paragraph>
 			<code_block>
-	io.put_string (" THIS IS SOME ADDED TEXT ") io.new_line
+	<feature_name>io</feature_name>.<feature_name>put_string</feature_name> <symbol>(</symbol>"This is some added text"<symbol>)</symbol> 
+	<feature_name>io</feature_name>.<feature_name>new_line</feature_name>
 </code_block>
 			<paragraph>They are very similar to the current first two lines of the routine, so you can just use copy-paste: selectthe first two lines with the mouse, copy them using CTRL-
 				<code>
@@ -638,9 +639,7 @@
 					</code> by the line number at which the Editing Tool is currently scrolled.  If you include one or both of these markers at the appropriate argument positions for the command, this will enable you -- assuming the editor supports the appropriate options -- to make sure it starts at exactly the right place.  For example the default editor command under Unix is
 				</paragraph>
 				<code_block>
-
 					<keyword>vi +$line $target</keyword>
-
 				</code_block>
 				<paragraph>meaning: start the Vi editor on the
 					<code>

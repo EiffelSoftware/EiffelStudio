@@ -27,16 +27,16 @@
 		<list ordered="false">
 			<item>after, a boolean-valued query which determines whether you have moved past the last position (a more precise specification is given below).</item>
 			<item>off, a boolean-valued query which is false if and only if there is no item at the current position; for LINEAR this is the same as:
-				<code_block>is_empty and not after</code_block>
+				<code_block><feature_name>is_empty</feature_name> <keyword>and</keyword> <keyword>not</keyword> <feature_name>after</feature_name></code_block>
 			</item>
 			<item>item, a query which returns the item at the current position - provided of course there is one, as expressed by the precondition:
-				<code_block>not off</code_block>
+				<code_block><keyword>not</keyword> <feature_name>off</feature_name></code_block>
 			</item>
 			<item>start, a command to move to the first position if any (if is_empty is true the command has no effect).</item>
 			<item>forth, a command to advance by one position; the precondition is not after.</item>
 			<item>finish, a command to move to the last position; the precondition is:
 				<line_break/>
-				<code_block>not is_empty. </code_block>
+				<code_block><keyword>not</keyword> <feature_name>is_empty</feature_name></code_block>
 			</item>
 		</list>
 		<image>
@@ -62,54 +62,57 @@
 			<size>2</size>Invariant properties for after, before and off
 		</heading>
 		<paragraph> The redefinition of off illustrates a general methodological advice about invariants: be careful about not over-constraining the invariant by including properties that may be made more general in descendants. It might have been tempting to include in LINEAR an invariant clause of the form</paragraph>
-		<code_block>off
-			<symbol>=</symbol> is_empty or after
+		<code_block>
+off <symbol>=</symbol> <feature_name>is_empty</feature_name> <keyword>or</keyword> <feature_name>after</feature_name>
 		</code_block>
 		<paragraph>This property, however, would be too constraining. More precisely, it is always true that the right-hand side implies the left-hand-side: if a linear structure is either empty or after, then it is off. But the converse is not true, since certain kinds of linear structure, for example bilinear ones, may be off but neither empty nor after.
 			<line_break/>  The actual invariant for class BILINEAR is obtained in three stages. In class TRAVERSABLE the feature off is deferred and a basic property of that feature is expressed by the invariant clause
 		</paragraph>
 		<code_block>
-			<indexing_tag>empty_constraint</indexing_tag>
-			<symbol>:</symbol>is_empty implies off
+empty_constraint<symbol>:</symbol><feature_name>is_empty</feature_name> <keyword>implies</keyword> <feature_name>off</feature_name>
 		</code_block>
 		<paragraph>In LINEAR, feature off is effected through an implementation which returns the value of the expression is_empty or after. The class adds an invariant clause which, however, says less than the implementation to leave some room for variation:</paragraph>
 		<code_block>
-		<indexing_tag>after_constraint</indexing_tag>
-		<symbol>:</symbol>after implies off
+after_constraint<symbol>:</symbol><feature_name>after</feature_name> <keyword>implies</keyword> <feature_name>off</feature_name>
 		</code_block>
 		<paragraph>Finally BILINEAR, an heir of LINEAR, redefines off to return the value of the expression</paragraph>
-		<code_block>before or after</code_block>
+		<code_block><feature_name>before</feature_name> <keyword>or</keyword> <feature_name>after</feature_name></code_block>
 		<paragraph> and adds the invariant clause</paragraph>
 		<code_block>
-			<indexing_tag>before_constraint</indexing_tag>
-			<symbol>:</symbol> before implies off
+before_constraint<symbol>:</symbol> <feature_name>before</feature_name> <keyword>implies</keyword> <feature_name>off</feature_name>
 		</code_block>
 		<paragraph>The new implementation of off </paragraph>
-		<code_block>after or before</code_block>
+		<code_block><feature_name>after</feature_name> <keyword>or</keyword> <feature_name>before</feature_name></code_block>
 		<paragraph> would not guarantee the invariant clause inherited from TRAVERSABLE were it not for another clause introduced in BILINEAR:</paragraph>
 		<code_block>
-			<indexing_tag>empty_property</indexing_tag>
-			<symbol>:</symbol>is_empty implies
-			<symbol>(</symbol>after or before
-			<symbol>)</symbol>
+empty_property<symbol>:</symbol><feature_name>is_empty</feature_name> <keyword>implies</keyword> <symbol>(</symbol><feature_name>after</feature_name> <keyword>or</keyword> <feature_name>before</feature_name> <symbol>)</symbol>
 		</code_block>
 		<paragraph>which indicates that an empty bilinear structure must always be after or before but not both, however, as stated by the last new clause, the reason for which is discussed in detail below:</paragraph>
 		<code_block>
-			<indexing_tag>not_both</indexing_tag>
-			<symbol>:</symbol>not
-			<symbol>(</symbol>after and before
-			<symbol>)</symbol>
+not_both<symbol>:</symbol>not<symbol>(</symbol><feature_name>after</feature_name> <keyword>and</keyword> <feature_name>before</feature_name><symbol>)</symbol>
 		</code_block>
 		<paragraph> The flat-short form of BILINEAR shows the complete reconstructed invariant:</paragraph>
 		<code_block>
-			Missing
+not_both<symbol>:</symbol> <keyword>not</keyword> <symbol>(</symbol>after <keyword>and</keyword> before<symbol>)</symbol>
+empty_property<symbol>:</symbol> is_empty <keyword>implies</keyword> <symbol>(</symbol>after <keyword>or</keyword> before<symbol>)</symbol> 
+		before_constraint<symbol>:</symbol> before <keyword>implies</keyword> off 
+		after_constraint<symbol>:</symbol> after <keyword>implies</keyword> off 
+		empty_constraint<symbol>:</symbol> is_empty <keyword>implies</keyword> off 
 		</code_block>
 		<heading>
 			<size>2</size> Iteration patterns
 		</heading>
 		<paragraph>For a more general form of this scheme, applicable to circular chains as well as other linear structures, replace off by exhausted. With the features shown above, a typical iteration mechanism on a non-empty linear structure lin is of the form:</paragraph>
 		<code_block>
-			Msiing
+	<keyword>from</keyword>
+	   <feature_name>lin</feature_name>.<feature_name>start</feature_name>
+	   some_optional_initializing_operation <symbol>(</symbol>lin<symbol>)</symbol>
+	<keyword>until</keyword>
+	   <feature_name>lin</feature_name>.<feature_name>off</feature_name>
+	<keyword>loop</keyword>
+	   <feature_name>lin</feature_name>.<feature_name>some_action</feature_name> <symbol>(</symbol><feature_name>lin</feature_name>.<feature_name>item</feature_name><symbol>)</symbol>
+	   <feature_name>lin</feature_name>.<feature_name>forth</feature_name>
+	<keyword>end</keyword> 
 		</code_block>
 		<paragraph>The value of
 			<code>
@@ -133,20 +136,27 @@
 		</list>
 		<paragraph>So for an empty list both before and after should be true. This scheme was used in early version of the Base libraries. It has some disadvantages, however; in particular it is not compatible with the simple, symmetric properties:</paragraph>
 		<code_block>after
-			Missing
+<feature_name>after</feature_name> <symbol>=</symbol> <symbol>(</symbol><feature_name>index</feature_name> <symbol>=</symbol> <feature_name>count</feature_name> <symbol>+</symbol> 1<symbol>)</symbol>
+<feature_name>before</feature_name> <symbol>=</symbol> <symbol>(</symbol><feature_name>index</feature_name> <symbol>=</symbol> 0<symbol>)</symbol> 
 		</code_block>
 		<paragraph> which express elementary definitions for after and before in terms of index, the current position, and count, the number of items (items being numbered from 1 to count). For an empty structure count is zero, so if we want after and before to be both true in this case we have to sacrifice one of the above properties, since the first would imply index to 1 and the second to 0. But again symmetry reigns supreme: we should either keep both properties or renounce both. The solution was to renounce both and replace them by slightly more complicated ones:</paragraph>
-		<code_block>after
-			Mssing
-		</code_block>
+		<code_block>
+<feature_name>after</feature_name> <symbol>=</symbol> <symbol>(</symbol>is_empty <keyword>or</keyword> <symbol>(</symbol><feature_name>index</feature_name> <symbol>=</symbol> <feature_name>count</feature_name> <symbol>+</symbol> 1<symbol>)</symbol><symbol>)</symbol>
+			<feature_name>before</feature_name> <symbol>=</symbol> <symbol>(</symbol><feature_name>is_empty</feature_name> <keyword>or</keyword> <symbol>(</symbol>index <symbol>=</symbol> 0<symbol>)</symbol><symbol>)</symbol> 
+	</code_block>
 		<paragraph> When a structure is created, some initializations will have to be made; the default initializations will usually lead to a value of 0 rather than 1 for index, although this dissymetry is not apparent in the assertions. Although acceptable, this solution leads to small but unpleasant complications, in particular frequent conditional instructions of the form</paragraph>
 		<code_block>
-			Missing
+<keyword>if</keyword> <feature_name>after</feature_name> <keyword>and</keyword> <keyword>not</keyword> <feature_name>is_empty</feature_name> <feature_name>then</feature_name>.<feature_name></feature_name>.<feature_name></feature_name>.<feature_name></feature_name>
 		</code_block>
 		<paragraph> The solution finally retained for the Base libraries uses a different technique, which has turned out to be preferable. The idea is to replace the conceptual picture by one in which there are always two fictitious sentinel items. The two sentinel items are only present conceptually. They are of course not taken into account for the computation of count and, although it is possible to conceive of an implementation which would actually reserve space for them (for example in an array representation), none of the implementations used in Base for the classes of this documentation and other descendants of LINEAR do. The only purpose of the sentinels is to provide two valid theoretical cursor positions, which exist regardless of the number of actual (non-sentinel) items in the structure.
 			<line_break/> The sentinel items always appear at positions 0 and count + 1; this property is true even if the structure is empty of items, in which case count is zero. As a result, the following properties are part of the invariant:
 		</paragraph>
-		<code_block>Missing
+		<code_block>
+0 <symbol>&lt;&lt;</symbol><symbol>=</symbol> <feature_name>index</feature_name>
+<feature_name>index</feature_name> <symbol>&lt;&lt;</symbol><symbol>=</symbol> <feature_name>count</feature_name> <symbol>+</symbol> 1
+<feature_name>before</feature_name> <symbol>=</symbol> <symbol>(</symbol><feature_name>index</feature_name> <symbol>=</symbol> 0<symbol>)</symbol>
+<feature_name>after</feature_name> <symbol>=</symbol> <symbol>(</symbol>index <symbol>=</symbol> <feature_name>count</feature_name> <symbol>+</symbol> 1<symbol>)</symbol>
+<keyword>not</keyword> <symbol>(</symbol><feature_name>after</feature_name> <keyword>and</keyword> <feature_name>before</feature_name><symbol>)</symbol> 
 		</code_block>
 		<paragraph> The last property given indicates that a structure can never be both after and before, since even in an empty structure the two sentinels are still present, with the cursor on one of them. For an empty structure, index will be zero by convention, so that before will be true and after false. But this property is not reflected in any of the invariant clauses.</paragraph>
 		<heading>
@@ -297,13 +307,11 @@
 			<line_break/>  The major originality of circular chains is that unless the structure is empty procedure forth is always applicable: it will cycle past the last item, coming back to the
 			<line_break/>  first. The symmetric property applies to back. The cyclic nature of forth and back for circular chains is expressed precisely by the assertions. The version of forth for class CHAIN, which comes from LINEAR, has precondition
 		</paragraph>
-		<code_block>notafter</code_block>
+		<code_block><keyword>not</keyword> after</code_block>
 		<paragraph>Similarly, the precondition for back is</paragraph>
 		<code_block>notbefore</code_block>
 		<paragraph>For lists, after becomes true when the cursor moves past the last item. For circular chains, however, after and before are never true except for an empty structure; this is expressed by the invariant clauses of class CIRCULAR:</paragraph>
-		<code_block>
-			Mssing
-		</code_block>
+		<code_block><keyword>not</keyword> before</code_block>
 		<paragraph>For a non-empty circular chain, then, you can circle forever around the items, using forth or back.</paragraph>
 		<heading>
 			<size>2</size>Choosing the first item
@@ -329,7 +337,10 @@
 			<size>2</size>Traversing a list or circular chain
 		</heading>
 		<paragraph>The properties of forth for circular chains imply that a traversal loop written as</paragraph>
-		<code_block>	Missing
+		<code_block>
+not_before_unless_empty<symbol>:</symbol> <feature_name>before</feature_name> <keyword>implies</keyword> <feature_name>is_empty</feature_name>
+not_after_unless_empty<symbol>:</symbol> <feature_name>after</feature_name> <keyword>implies</keyword> <feature_name>is_empty</feature_name>
+not_off_unless_empty<symbol>:</symbol> off <keyword>implies</keyword> <feature_name>is_empty</feature_name>
 		</code_block>
 		<paragraph>would not work if
 			<code>
@@ -337,7 +348,18 @@
 			</code> is a non-empty circular structure: off would never become true, so that the loop would forever cycle over the structure?s items. The same would apply to a loop using finish and back instead of start and forth. This behavior is the natural result of the semantics defined for off , forth and back for circular structures. But it prevents us from using these features to perform a single traversal which will visit every item once.
 			<line_break/> Using exhausted in lieu of off solves this problem. In class CIRCULAR, exhausted is an attribute which is set to false by start and finish, and is set to true by forth when advancing from the last item to the first and by back when backing up from the first item to the last. So you should write the loop as
 		</paragraph>
-		<code_block>	Missing
+		<code_block>
+<feature_name>forth</feature_name> <keyword>is</keyword>
+   <comment>-- Move cursor to next item, cyclically.</comment>
+<keyword>do</keyword>
+   <feature_name>standard_forth</feature_name>
+   <keyword>if</keyword> <feature_name>standard_after</feature_name> <keyword>then</keyword>
+      <feature_name>standard_start</feature_name>
+   <keyword>end</keyword>
+   <keyword>if</keyword> <feature_name>isfirst</feature_name> <keyword>then</keyword>
+      <feature_name>exhausted</feature_name> <symbol>:</symbol><symbol>=</symbol> True
+   <keyword>end</keyword>
+<keyword>end</keyword> 
 		</code_block>
 		<paragraph>This form is applicable to all linear structures, circular or not, since exhausted is introduced in class LINEAR as a function which returns the same value as off .Its redefinition into an attribute, modified by start, finish, forth and back, does not occur until class CIRCULAR.
 			<line_break/> Because exhausted is more general than off , the iteration scheme just given (and its equivalent going backwards) is preferable to the earlier one using off , especially if there is any chance that the iteration might one day be applied to a lin structure that is circular. Classes of the Iteration library, in particular LINEAR_ITERATOR, rely on this scheme for iterating over linear structures.
@@ -381,7 +403,14 @@
 		<paragraph>fig.3: Linked list and linked cells</paragraph>
 		<paragraph> The instance of type LINKED_LIST shown at the top contains general information about the list, such as the number of items (count) and a reference to the first element (first). Because lists are active structures with a notion of current position, there is also a reference active to the cell at the current position. An entity declared as</paragraph>
 		<code_block>
-			Missing
+<keyword>from</keyword>
+   <feature_name>lin</feature_name>.<feature_name>start</feature_name>
+<keyword>until</keyword>
+   <feature_name>lin</feature_name>.<feature_name>off</feature_name>
+<keyword>loop</keyword>
+   ...
+   <feature_name>lin</feature_name>.<feature_name>forth</feature_name>
+<keyword>end</keyword> 
 		</code_block>
 		<paragraph>will have as its run-time value (if not void) a reference to such an object, which is really a list header. The actual list content is given by the LINKABLE instances, each of which contains a value of type
 			<code>
@@ -441,7 +470,17 @@
 			<bold>Caution</bold>: Do not confuse the item feature of CELL and its descendants, such as LINKABLE, with the item feature of the classes describing linear structures, such as LINKED_LIST. For a linked list, item returns the item at cursor position.
 		</warning>
 		<paragraph>It may be implemented as</paragraph>
-		<code_block>		Missing
+		<code_block>
+<keyword>from</keyword>
+   <feature_name>lin</feature_name>.<feature_name>start</feature_name>
+   some_optional_initializing_operation <symbol>(</symbol>lin<symbol>)</symbol>
+<keyword>until</keyword>
+   <feature_name>lin</feature_name>.<feature_name>exhausted</feature_name>
+<keyword>loop</keyword>
+   ...
+   <feature_name>lin</feature_name>.<feature_name>some_action</feature_name> <symbol>(</symbol><feature_name>lin</feature_name>.<feature_name>item</feature_name><symbol>)</symbol>
+   <feature_name>lin</feature_name>.<feature_name>forth</feature_name>
+<keyword>end</keyword> 
 		</code_block>
 		<paragraph>using the item feature of LINKABLE, applied to active.</paragraph>
 		<heading>
@@ -494,7 +533,8 @@
 			<size>1</size>Sorted Linear Structures
 		</heading>
 		<paragraph>The class COMPARABLE_STRUCT, an heir of BILINEAR, is declared as</paragraph>
-		<code_block>Missing
+		<code_block>
+<feature_name>my_list</feature_name><symbol>:</symbol> <class_name>LINKED_LIST</class_name> <symbol>[</symbol><class_name>SOME_TYPE</class_name><symbol>]</symbol> 
 		</code_block>
 		<paragraph>As indicated by the constrained generic parameter it describes bilinear structures whose items may be compared by a total order relation.</paragraph>
 		<warning>
@@ -505,7 +545,11 @@
 			<line_break/> The deferred class PART_SORTED_LIST describes lists whose items are kept ordered in a way that is compatible with a partial order relation defined on them. The class is declared as
 		</paragraph>
 		<code_block>
-			Missing
+<feature_name>item</feature_name><symbol>:</symbol> <class_name>G</class_name> <keyword>is</keyword>
+   <comment>-- Current item</comment>
+<keyword>do</keyword>
+   Result <symbol>:</symbol><symbol>=</symbol> <feature_name>active</feature_name>.<feature_name>item</feature_name>
+<keyword>end</keyword>
 		</code_block>
 		<paragraph>An implementation based on two-way linked lists is available through the effective heir SORTED_TWO_WAY_LIST.
 			<line_break/> The deferred class SORTED_LIST, which inherits from PART_SORTED_LIST, assumes that the order relation on G is a total order. As a result, the class is able to introduce features min, max and median. Here too a a two-way linked list implementation is available, through the effective class SORTED_TWO_WAY_LIST

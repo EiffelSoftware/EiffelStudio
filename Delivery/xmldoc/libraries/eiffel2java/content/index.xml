@@ -32,7 +32,9 @@
 			<item>In $JDK_HOME\lib, rename javai.lib into javai.lib.microsoft</item>
 			<item>From the DOS command prompt and in the directory $JDK_HOME\lib,     launch the following command
 				<line_break/>
-				<code_block>%ISE_EIFFEL%\bcc55\bin\implib javai.lib..\bin\javai.dll</code_block>
+				<code_block>
+	%ISE_EIFFEL%\bcc55\bin\implib javai.lib..\bin\javai.dll
+				</code_block>
 			</item>
 		</list>
 		<heading>
@@ -192,14 +194,22 @@
 					</row>
 				</table>
 				<paragraph> The signature for a Java class has the following form: </paragraph>
-				<code_block>L fully-qualified-class ;</code_block>
+				<code_block>
+	L fully-qualified-class;
+				</code_block>
 				<paragraph> For example, class String:
-					<code_block>Ljava/lang/String;</code_block>
+					<code_block>
+	Ljava/lang/String;
+					</code_block>
 				</paragraph>
 				<paragraph> The signature for a method has the following form: </paragraph>
-				<code_block> ( arguments-types ) returned-types </code_block>
+				<code_block> 
+	(arguments-types) returned-types 
+				</code_block>
 				<paragraph> For example, the signature of a method that takes as arguments an integer and a string and return void is:
-					<code_block> (ILjava/lang/String;)V </code_block>
+					<code_block>
+	(ILjava/lang/String;)V
+					</code_block>
 				</paragraph>
 			</paragraph>
 		</paragraph>

@@ -52,31 +52,15 @@
 			</link>, declared as
 		</paragraph>
 		<code_block>
-
 			<keyword>deferred class</keyword>
-
 			<link>
 				<url>../../reference/structures/set/comparable_set_chart.html</url>
 				<label>COMPARABLE_SET</label>
-			</link>  [G -&gt;
-			<link>
-				<url>../../reference/kernel/comparable_chart.html</url>
-				<label>COMPARABLE</label>
-			</link>]
-
+			</link>  [G -&gt; <link><url>../../reference/kernel/comparable_chart.html</url><label>COMPARABLE</label></link>]
 
 			<keyword>inherit</keyword>
-
-			<link>
-				<url>../../reference/structures/set/subset.html</url>
-				<label>SUBSET</label>
-			</link> [G]
-
-
-			<link>
-				<url>/libraries/base/reference/structures/sort/comparable_struct_chart.html</url>
-				<label>COMPARABLE_STRUCT</label>
-			</link> [G]
+			<link><url>../../reference/structures/set/subset.html</url><label>SUBSET</label></link> [G]
+			<link><url>/libraries/base/reference/structures/sort/comparable_struct_chart.html</url><label>COMPARABLE_STRUCT</label></link> [G]
  ...
 		</code_block>
 		<paragraph> describes sets whose items may be compared by a total order relation. The class has the features

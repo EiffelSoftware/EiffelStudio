@@ -29,28 +29,29 @@
 			<bold>effective</bold>.
 		</paragraph>
 		<paragraph>For example, a system used by a Department of Motor Vehicles to register vehicles might include a class of the form</paragraph>
-		<code_block>deferred class VEHICLE
+		<code_block>
+<keyword>deferred</keyword> <keyword>class</keyword> <class_name>VEHICLE</class_name>
 
-feature
+<keyword>feature</keyword>
 
-	dues_paid (year: INTEGER): BOOLEAN is
-		do ... end
+	<feature_name>dues_paid</feature_name> <symbol>(</symbol>year<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol><symbol>:</symbol> <class_name>BOOLEAN</class_name> <keyword>is</keyword>
+		<keyword>do</keyword> ... <keyword>end</keyword>
 
-	valid_plate (year: INTEGER): BOOLEAN is
-		do ... end
+	<feature_name>valid_plate</feature_name> <symbol>(</symbol>year<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol><symbol>:</symbol> <class_name>BOOLEAN</class_name> <keyword>is</keyword>
+		<keyword>do</keyword> ... <keyword>end</keyword>
 
-	register (year: INTEGER) is
-			-- Register vehicle for year.
-		require
-			dues_paid (year)
-		deferred
-		ensure
-			valid_plate (year)
-		end
+	<feature_name>register</feature_name> <symbol>(</symbol>year<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Register vehicle for year.</comment>
+		<keyword>require</keyword>
+			<feature_name>dues_paid</feature_name> <symbol>(</symbol>year<symbol>)</symbol>
+		<keyword>deferred</keyword>
+		<keyword>ensure</keyword>
+			<feature_name>valid_plate</feature_name> <symbol>(</symbol>year<symbol>)</symbol>
+		<keyword>end</keyword>
 
-	... Other features, deferred or effective...
+	... Other features, deferred or effective ...
 
-end -- class VEHICLE
+<keyword>end</keyword> <comment>-- VEHICLE</comment>
 </code_block>
 		<paragraph>This example assumes that no single registration algorithm applies to all kinds of vehicle; passenger cars, motorcycles, trucks etc. are all registered differently. But the same precondition and postcondition apply in all cases. The solution is to treat register as a deferred routine, making VEHICLE a deferred class. Descendants of class VEHICLE, such as CAR or TRUCK,effect this routine, that is to say, give effective versions. An effecting is similar to a redefinition; only here there is no effective definition in the original class, just a specification in the form of a deferred routine. The term
 			<bold>redeclaration</bold> covers both redefinition and effecting.
@@ -59,24 +60,25 @@ end -- class VEHICLE
 			<url>invitation-5.png</url>
 		</image>
 		<paragraph>Whereas an effective class described an implementation of an abstract data types, a deferred class describes aset of possible implementations. You may not instantiate a deferred class: create v is invalid if v is declared of type VEHICLE. But you may assign to v a reference to an instance of an effective descendant of VEHICLE. For example, assuming CAR and TRUCK provide effective definitions for all deferred routines of VEHICLE, the following will be valid:</paragraph>
-		<code_block>v : VEHICLE
-c : CAR
-t : TRUCK
+		<code_block>
+v <symbol>:</symbol> <class_name>VEHICLE</class_name>
+c <symbol>:</symbol> <class_name>CAR</class_name>
+t <symbol>:</symbol> <class_name>TRUCK</class_name>
 
 ...
 
-create c
-create t
+<keyword>create</keyword> c
+<keyword>create</keyword> t
 
  ...
 
-if "Some test" then
+<keyword>if</keyword> <string>"Some test"</string> <keyword>then</keyword>
 	v := c
-else
+<keyword>else</keyword>
 	v := t
-end
+<keyword>end</keyword>
 
-v . register ( 2003 )
+v.<feature_name>register</feature_name> (2003)
 </code_block>
 		<paragraph>This example fully exploits polymorphism: depending on the outcome of "Some test", v will be treated as a car or a truck, and the appropriate registration algorithm will be applied. Also, "Some test" may depend on some event whose outcome is impossible to predict until run-time, for example the user clicking with the mouse to select one among several vehicle icons displayed on the screen.</paragraph>
 		<paragraph>Deferred classes are particularly useful at the design stage. The first version of a module may be a deferred class, which will later be refined into one or more effective classes. Eiffel's Design by Contract mechanisms are essential here: you may a precondition and a postcondition with a routine even though it is a deferred routine (as with register above), and an invariant with a class even though it is a deferred class. This enables you, as a designer, to attach precise semantics to a module at the design stage long before you will make any implementation choices.</paragraph>

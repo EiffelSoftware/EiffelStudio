@@ -35,7 +35,7 @@
 					</code>, express conditions that the routine (the supplier) guarantees on return, if the precondition was satisfied on entry.
 				</item>
 				<item>A class
-					<bold>invariant</bold>  must be satisfied by every instance of the class whenever the instance is externally accessible: after creation, and after any call to an exported routine of the class.  The invariant appears in a clause introduced by the keyword
+					<bold>invariant</bold> must be satisfied by every instance of the class whenever the instance is externally accessible: after creation, and after any call to an exported routine of the class.  The invariant appears in a clause introduced by the keyword
 					<code>
 						<keyword>invariant</keyword>
 					</code>, and represents a general consistency constraint imposed on all routines of the class.
@@ -46,53 +46,53 @@
 					<string>ACCOUNT</string>
 				</code> becomes:
 			</paragraph>
-			<code_block>class ACCOUNT
-	create
+			<code_block><keyword>class</keyword> <class_name>ACCOUNT</class_name>
+	<keyword>create</keyword>
 		make
 
-feature
-	... Attributes as before:
-       		balance , minimum_balance , owner , open ...
+<keyword>feature</keyword>
+	<feature_name/><symbol>.</symbol><feature_name/><symbol>.</symbol><feature_name/><symbol>.</symbol> Attributes <keyword>as</keyword> before<symbol>:</symbol>
+       		balance <symbol>,</symbol> minimum_balance <symbol>,</symbol> owner <symbol>,</symbol> open <feature_name/><symbol>.</symbol><feature_name/><symbol>.</symbol><feature_name/><symbol>.</symbol>
 
-	deposit (sum: INTEGER) is
-			-- Deposit sum into the account.
-		require
-			sum &gt;= 0
-		do
-			add (sum)
-		ensure
-			balance = old balance + sum
-		end
+	<feature_name>deposit</feature_name> <symbol>(</symbol><local_variable>sum</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Deposit sum into the account.</comment>
+		<keyword>require</keyword>
+			<local_variable>sum</local_variable> &gt;<symbol>=</symbol> 0
+		<keyword>do</keyword>
+			<feature_name>add</feature_name> <symbol>(</symbol><local_variable>sum</local_variable><symbol>)</symbol>
+		<keyword>ensure</keyword>
+			<feature_name>balance</feature_name> <symbol>=</symbol> <keyword>old</keyword> <feature_name>balance</feature_name> <symbol>+</symbol> <local_variable>sum</local_variable>
+		<keyword>end</keyword>
 
-	withdraw (sum: INTEGER) is
-			-- Withdraw sum from the account.
-		require
-			sum &gt;= 0
-			sum &lt;= balance - minimum_balance
-		do
-			add (-sum)
-		ensure
-			balance = old balance - sum
-		end
+	<feature_name>withdraw</feature_name> <symbol>(</symbol><local_variable>sum</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Withdraw sum from the account.</comment>
+		<keyword>require</keyword>
+			<local_variable>sum</local_variable> &gt;<symbol>=</symbol> 0
+			<local_variable>sum</local_variable> &lt;<symbol>=</symbol> <feature_name>balance</feature_name> <symbol>-</symbol> <feature_name>minimum_balance</feature_name>
+		<keyword>do</keyword>
+			<feature_name>add</feature_name> <symbol>(</symbol><symbol>-</symbol><local_variable>sum</local_variable><symbol>)</symbol>
+		<keyword>ensure</keyword>
+			<feature_name>balance</feature_name> <symbol>=</symbol> <keyword>old</keyword> <feature_name>balance</feature_name> <symbol>-</symbol> <local_variable>sum</local_variable>
+		<keyword>end</keyword>
 
-	may_withdraw ... -- As before
+	<feature_name>may_withdraw</feature_name> ... <comment>-- As before</comment>
 
-feature {NONE}
+<keyword>feature</keyword> <symbol>{</symbol>NONE<symbol>}</symbol>
 
-	add ... -- As before
+	<feature_name>add</feature_name> ... 
 
-	make (initial: INTEGER) is
-			-- Initialize account with balance initial.
-		require
-			initial &gt;= minimum_balance
-		do
-			balance := initial
-		end
+	<feature_name>make</feature_name> <symbol>(</symbol><local_variable>initial</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Initialize account with balance initial.</comment>
+		<keyword>require</keyword>
+			<local_variable>initial</local_variable> &gt;<symbol>=</symbol> <feature_name>minimum_balance</feature_name>
+		<keyword>do</keyword>
+			<feature_name>balance</feature_name> <symbol>:</symbol><symbol>=</symbol> <local_variable>initial</local_variable>
+		<keyword>end</keyword>
 
-invariant
-	balance &gt;= minimum_balance
+<keyword>invariant</keyword>
+	<feature_name>balance</feature_name> &gt;<symbol>=</symbol> <feature_name>minimum_balance</feature_name>
 
-end -- class ACCOUNT
+<keyword>end</keyword> <comment>-- ACCOUNT</comment>
 </code_block>
 			<paragraph>The notation
 				<code>
@@ -124,7 +124,7 @@ end -- class ACCOUNT
 				<keyword>create</keyword>
 			</code> clause at the beginning of the class text, a class offers a way to override the default initializations.  The effect of
 		</paragraph>
-		<code_block><keyword>create</keyword> acc1 <symbol>.</symbol> make ( 5_500 )</code_block>
+		<code_block><keyword>create</keyword> acc1<symbol>.</symbol><feature_name>make</feature_name> ( 5_500 )</code_block>
 		<paragraph>is to allocate the object (as with the default creation) and to call procedure
 			<code>
 				<string>make</string>
@@ -163,7 +163,7 @@ end -- class ACCOUNT
 				<comment>}</comment>
 			</code> ; so it would be invalid for a client to include a call such as
 		</paragraph>
-		<code_block>acc <symbol>.</symbol> make ( 8_000 )</code_block>
+		<code_block>acc<symbol>.</symbol><feature_name>make</feature_name> (8_000)</code_block>
 		<paragraph>To make such a call valid, it would suffice to move the declaration of
 			<code>
 				<string>make</string>
@@ -213,36 +213,34 @@ end -- class ACCOUNT
 				</code> clauses of routines, but keeping interface information and in particular assertions.  Here is the Contract Form of the above class:
 			</paragraph>
 			<code_block>
-class interface ACCOUNT
+<keyword>class</keyword> <keyword>interface</keyword> <class_name>ACCOUNT</class_name>
 
-create
+<keyword>create</keyword>
 	make
 
-feature
+<keyword>feature</keyword>
 
-	balance: INTEGER
-	...
+	<feature_name>balance</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name>
+	<symbol>.</symbol><feature_name/><symbol>.</symbol><feature_name/><symbol>.</symbol>
 
-	deposit (sum: INTEGER) is
-			-- Deposit sum into the account.
-		require
-			sum &gt;= 0
-		ensure
+	<feature_name>deposit</feature_name> <symbol>(</symbol><local_variable>sum</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Deposit sum into the account.</comment>
+		<keyword>require</keyword>
+			<local_variable>sum</local_variable> &gt;<symbol>=</symbol> 0
+		<keyword>ensure</keyword>
+			<feature_name>balance</feature_name> <symbol>=</symbol> <keyword>old</keyword> <feature_name>balance </feature_name><symbol>+</symbol> <local_variable>sum</local_variable>
 
-	balance = old balance + sum
+	<feature_name>withdraw</feature_name> <symbol>(</symbol><local_variable>sum</local_variable><symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Withdraw sum from the account.</comment>
+		<keyword>require</keyword>
+			<local_variable>sum</local_variable> &gt;<symbol>=</symbol> 0
+			<local_variable>sum</local_variable> &lt;<symbol>=</symbol> <feature_name>balance</feature_name> <symbol>-</symbol> <feature_name>minimum_balance</feature_name>
+		<keyword>ensure</keyword>
+			<feature_name>balance</feature_name> <symbol>=</symbol> <keyword>old</keyword> <feature_name>balance </feature_name><symbol>-</symbol> <local_variable>sum</local_variable>
 
-	withdraw (sum: INTEGER) is
-			-- Withdraw sum from the account.
-		require
-			sum &gt;= 0
-			sum &lt;= balance - minimum_balance
-		ensure
+	<feature_name>may_withdraw </feature_name>...
 
-	balance = old balance - sum
-
-	may_withdraw ...
-
-end -- class ACCOUNT
+<keyword>end</keyword> <comment>-- ACCOUNT</comment>
 </code_block>
 			<paragraph>This is not actual Eiffel, only documentation of Eiffel classes, hence the use of slightly different syntax to avoid any confusion (
 				<code>

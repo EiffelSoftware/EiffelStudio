@@ -87,21 +87,20 @@
 			</code> for the same purpose (EiffelStudio will accept both on Windows).
 		</paragraph>
 		<code_block>
-system
+<keyword>system</keyword>
 	example
 
-root
-	CALCULATOR (my_cluster1): "make"
+<keyword>root</keyword>
+	<class_name>CALCULATOR</class_name> (<cluster_name>my_cluster1</cluster_name>): <string>"make"</string>
 
-default
-	assertion ( ensure )
-	precompiled
-	(" $ ISE_EIFFEL\precomp\spec\$PLATFORM\base")
+<keyword>default</keyword>
+	<keyword>assertion</keyword> (ensure)
+	<keyword>precompiled</keyword> (<string>"$ISE_EIFFEL\precomp\spec\$PLATFORM\base"</string>)
 
-cluster
-	my_cluster1: "mydir\project1\subdir"
-	her_cluster2: "herdir\project2\subdir1\subdir2"
-end
+<keyword>cluster</keyword>
+	<cluster_name>my_cluster1</cluster_name>: <string>"mydir\project1\subdir"</string>
+	<cluster_name>her_cluster2</cluster_name>: <string>"herdir\project2\subdir1\subdir2"</string>
+<keyword>end</keyword>
 </code_block>
 		<paragraph>With EiffelStudio you don't have to write the Ace yourself; just specify the information interactively through the Preferences dialog and EiffelStudio will generate the Ace.  You can also reuse and adapt one of the many example Aces in the delivery.  </paragraph>
 		<paragraph>So you don't need to learn the syntax of Lace, although as the example shows it is straightforward.  The Ace first gives the system a name,

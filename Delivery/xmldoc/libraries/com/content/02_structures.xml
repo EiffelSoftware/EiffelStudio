@@ -16,15 +16,58 @@
 		</heading>
 		<paragraph>ECOM_EXCEPTION provides support for triggering and catching    exceptions. According to the COM specification, every feature of a    COM interface should return a status code of type HRESULT. HRESULT    is a 32 bit integer. The COM specification defines possible    exception codes and corresponding human-readable    descriptions.</paragraph>
 		<paragraph>The status code is mapped by the EiffelCOM runtime to Eiffel    exceptions. To raise    COM-specific exceptions, the class ECOM_EXCEPTION provides feature    trigger:</paragraph>
-		<code_block>Missing Code block</code_block>
+		<code_block>
+	<feature_name>trigger</feature_name> <symbol>(</symbol>code<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> 
+      		<comment>-- Raise exception with code `code'.</comment>
+      		<comment>-- See class ECOM_EXCEPTION_CODES for possible values.</comment>
+		</code_block>
 		<paragraph>The class also has several features that help to interpret exceptions    and error codes received from the COM runtime. </paragraph>
-		<code_block>Missing Code Block</code_block>
+		<code_block>
+	<feature_name>hresult</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name>  
+       			<comment>-- Original HRESULT.</comment>
+   		<keyword>require</keyword>
+       			applicable<symbol>:</symbol> is_developer_exception
+
+	<feature_name>hresult_code</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name>  
+       			<comment>-- Status code.</comment>
+   		<keyword>require</keyword>
+       			applicable<symbol>:</symbol> is_developer_exception
+
+	<feature_name>hresult_facility</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name>
+       			<comment>-- Facility code.</comment>
+   		<keyword>require</keyword>
+       			applicable<symbol>:</symbol> is_developer_exception
+
+	<feature_name>hresult_message</feature_name><symbol>:</symbol> <class_name>STRING</class_name>
+       			<comment>-- Error message.</comment>
+   		<keyword>require</keyword>
+       			applicable<symbol>:</symbol> is_developer_exception 
+		</code_block>
 		<paragraph>Every call to the COM layer should be wrapped    into the
 			<code>
 				<keyword>rescue</keyword>
 			</code>-clause as following:
 		</paragraph>
-		<code_block>Missing Code Block</code_block>
+		<code_block>
+	<feature_name>some_feature</feature_name> <keyword>is</keyword>
+   		<keyword>local</keyword>
+      			retried<symbol>:</symbol> <class_name>BOOLEAN</class_name>
+      			...
+   		<keyword>do</keyword>
+        		<keyword>if</keyword> <keyword>not</keyword> retried <keyword>then</keyword>
+            			<comment>-- Call to COM.</comment>
+        		<keyword>end</keyword>
+   		<keyword>rescue</keyword>
+        		<keyword>if</keyword> is_developer_exception <keyword>then</keyword>
+            			<comment>-- Compare `hresult' to some predefined value</comment>
+            			<comment>-- and handle various cases,</comment>
+            			<comment>-- or display a dialog box with an error message</comment>
+            			<comment>-- `hresult_message'.</comment>
+        	<keyword>end</keyword>
+		        retried <symbol>:</symbol><symbol>=</symbol> True
+		        <keyword>retry</keyword>
+		<keyword>end</keyword>
+		</code_block>
 		<heading>
 			<size>2</size>ECOM_STRUCTURE
 		</heading>
@@ -34,6 +77,9 @@
 		</heading>
 		<paragraph>ECOM_VARIANT is a wrapper of the VARIANT structure. VARIANT is    Visual Basic equivalent of ANY. In Visual Basic variable of any    type conforms to VARIANT. Since semantics and binary layout of Visual Basic    is different from those of Eiffel, there is no simple way to    map VARIANT to ANY. Instead, we created a simple wrapper of the VARIANT    structure. </paragraph>
 		<paragraph>It has the feature </paragraph>
-		<code_block>Missing code block</code_block>
+		<code_block>
+	<feature_name>variable_type</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name>
+        	<comment>-- Variable type. See class ECOM_VAR_TYPE for possible values. </comment>
+		</code_block>
 		<paragraph>which specifies the type of the wrapped variable. The class has    multiple feature for typed access and setting of variables. </paragraph>
 	</paragraph></document>

@@ -24,7 +24,7 @@
 			<italic>F</italic>, 
 			<italic>G</italic>, 
 			<italic>H</italic> and 
-			<italic>I</italic>, is called a leaf. The length of a pathfrom the root to a leaf (that is to say, the number of nodes on the path minus one) is the height of the tree; the average length of all such paths is the average height. On the figure the height is 2 and the average height is 11/6 since of the six paths five have length 2 and one has length 1.
+			<italic>I</italic>, is called a leaf. The length of a path from the root to a leaf (that is to say, the number of nodes on the path minus one) is the height of the tree; the average length of all such paths is the average height. On the figure the height is 2 and the average height is 11/6 since of the six paths five have length 2 and one has length 1.
 		</paragraph>
 		<paragraph>The children of a common node are called siblings. For example 
 			<italic>G</italic>, 
@@ -96,17 +96,12 @@
 			</link> is generally preferable since children of a node often needs to be traversed both ways; the notion of order is usually less significant here than for lists. Such a form of definition is a particularly effective way of conveying the profoundly recursive nature of trees. The corresponding classes are useful in many different areas such as graphics, text processing and compilation. To create a one-way or two-way linked tree, use
 		</paragraph>
 		<code_block>
-			<keyword>create</keyword>
-			<local_variable>my_tree</local_variable>
-			<symbol>.</symbol>make
-			<symbol>(</symbol>
-			<local_variable>root_value</local_variable>
-			<symbol>)</symbol>
+<keyword>create</keyword> <feature_name>my_tree</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>root_value<symbol>)</symbol>
 		</code_block>
 		<paragraph>This will attach my_tree to a new one-node tree, with root_value at the root node. Here my_tree must be declared of type 
 			<link>
 				<url>../../reference/structures/tree/two_way_tree_chart.html</url>
-				<label>TWO_WA Y_TREE</label>
+				<label>TWO_WAY_TREE</label>
 			</link> [MY_TYPE] for some type MY_TYPE, and root_value must be of type MY_TYPE.
 			<line_break/> A class with a similar interface but using arrays rather than lists to represent nodes is also available: 
 			<link>
@@ -115,14 +110,7 @@
 			</link>. This class is more efficient in both time and space for trees whose nodes have many children that are accessed randomly, if relatively few child insertions occur after node creation. Here the creation procedure indicates the initial number of children:
 		</paragraph>
 		<code_block>
-			<keyword>create</keyword>
-			<local_variable>my_tree</local_variable>
-			<symbol>.</symbol>make
-			<symbol>(</symbol>
-			<local_variable>max_estimated_children</local_variable>
-			<symbol>,</symbol>
-			<local_variable>root_value</local_variable>
-			<symbol>)</symbol>
+<keyword>create</keyword> <feature_name>my_tree</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>max_estimated_children, root_value<symbol>)</symbol> 
 		</code_block>
 		<paragraph>The integer argument max_estimated_children only serves for the initial allocation; the array will be resized if the number of children grows beyond the initial size. As with the previous kinds of tree, the newly created node initially has no children.</paragraph>
 		<heading>
@@ -139,14 +127,7 @@
 			</link> provides the basic mechanism; as you may have guessed, the implementation associates with each node an array of its children, arrays usually being the right structure when a collection of objects is known not to change size after creation. To create a fixed tree, use
 		</paragraph>
 		<code_block>
-			<keyword>create</keyword>
-			<local_variable>my_tree</local_variable>
-			<symbol>.</symbol>make
-			<symbol>(</symbol>
-			<local_variable>how_many_children</local_variable>
-			<symbol>,</symbol>
-			<local_variable>root_value</local_variable>
-			<symbol>)</symbol>
+<keyword>create</keyword> <feature_name>my_tree</feature_name>.<feature_name>make</feature_name> <symbol>(</symbol>how_many_children, root_value<symbol>)</symbol>
 		</code_block>
 		<paragraph>The root will have the associated value root value and will have how_many_ children children, all initially void. Unlike the argument max_estimated_children for the creation procedure of 
 			<link>

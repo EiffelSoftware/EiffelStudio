@@ -209,9 +209,7 @@
 				</code>, you will find the following comment line:
 			</paragraph>
 			<code_block>
-
 				<keyword>-- inv: INVALID</keyword>
-
 			</code_block>
 			<paragraph>If uncommented, this is a declaration of a feature of type
 				<code>

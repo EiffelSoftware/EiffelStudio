@@ -7,10 +7,7 @@
 				<label>Help reading this manual</label>
 			</link>
 		</paragraph>
-		<code_block>If you are using Eiffel on a personal computer under Windows, you can work directly on the installation directory
-and don't need to make copies of files as per the present section.   Skip directly to the next section, 3 .   Do read the present
-section and apply its instructions if you work under Unix, or may have to share the Eiffel installation with other users, do not
-have write permissions on the installation, or want to keep the installation unchanged.</code_block>
+		<note>If you are using Eiffel on a personal computer under Windows, you can work directly on the installation directoryand don't need to make copies of files as per the present section.   Skip directly to the next section, 3.   Do read the presentsection and apply its instructions if you work under Unix, or may have to share the Eiffel installation with other users, do nothave write permissions on the installation, or want to keep the installation unchanged.</note>
 		<paragraph>If you are going to work on a copy, choose or create a directory of your own; let's call it
 			<code>
 				<string>YOURDIR</string>

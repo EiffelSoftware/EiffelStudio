@@ -14,9 +14,9 @@
 			<bold>formal generic parameters</bold>  representing as unknown types, as in these examples from ISE's EiffelBase, an open-source library covering basic data structures and algorithms:
 		</paragraph>
 		<code_block>
-	ARRAY [G]
-	LIST [G]
-	LINKED_LIST [G]
+	<class_name>ARRAY</class_name> <symbol>[</symbol><generics>G</generics><symbol>]</symbol>
+	<class_name>LIST</class_name> <symbol>[</symbol><generics>G</generics><symbol>]</symbol>
+	<class_name>LINKED_LIST</class_name> <symbol>[</symbol><generics>G</generics><symbol>]</symbol>
 </code_block>
 		<paragraph>These classes describe data structures -- arrays, lists without commitment to a specific representation, lists in linked representation -- containing objects of a certain type.  The formal generic parameter
 			<code>
@@ -36,9 +36,9 @@
 			</code>, or a reference type.  Here are some possible generic derivations:
 		</paragraph>
 		<code_block>
-	il : LIST [ INTEGER ]
-	aa : ARRAY [ ACCOUNT ]
-	aal : LIST [ ARRAY [ ACCOUNT ]]
+	il<symbol>:</symbol> <class_name>LIST</class_name> <symbol>[</symbol> <class_name>INTEGER</class_name> <symbol>]</symbol>
+	aa<symbol>:</symbol> <class_name>ARRAY</class_name> <symbol>[</symbol> <class_name>ACCOUNT</class_name> <symbol>]</symbol>
+	aal<symbol>:</symbol> <class_name>LIST</class_name> <symbol>[</symbol> <class_name>ARRAY</class_name> <symbol>[</symbol> <class_name>ACCOUNT</class_name> <symbol>]</symbol><symbol>]</symbol>
 </code_block>
 		<paragraph>As the last example indicates, an actual generic parameter may itself be generically derived.  </paragraph>
 		<paragraph>It would not be possible, without genericity, to have static type checking in a realistic object-oriented language.  </paragraph>

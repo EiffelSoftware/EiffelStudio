@@ -9,27 +9,27 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>A class, it was said above, is an implementation of an abstract data type.  This means that it describes a set of run-time objects, characterized by the
+		<paragraph>A class, it was said above, is an implementation of an abstract data type.  This means that it describes a set of run-time objects, characterized by the 
 			<bold> features</bold>(operations) applicable to them, and by the formal properties of these features.
 		</paragraph>
-		<paragraph>Such objects are called the
+		<paragraph>Such objects are called the 
 			<bold>direct instances</bold> of the class.  Classes and objects should not be confused: "class" is a compile-time notion, whereas objects only exist at run time.  This is similar to the difference that exists in classical programming between a program and one execution of that program, or between a type and a run-time value of that type.
 		</paragraph>
 		<info>"Object-Oriented" is a misnomer; "Class-Oriented Analysis, Design and Programming" would be a more accurate description of the method.  </info>
-		<paragraph>To see what a class looks like, let us look at a simple example,
+		<paragraph>To see what a class looks like, let us look at a simple example, 
 			<code>
 				<string>ACCOUNT</string>
-			</code>, which describes bank accounts.  But before exploring the class itself it is useful to study how it maybe used by other classes, called it's
+			</code>, which describes bank accounts.  But before exploring the class itself it is useful to study how it maybe used by other classes, called it's 
 			<bold>clients</bold>.
 		</paragraph>
-		<paragraph>A class
+		<paragraph>A class 
 			<code>
 				<string>X</string>
-			</code> may become a client of
+			</code> may become a client of 
 			<code>
 				<string>ACCOUNT</string>
-			</code> by declaring one or more
-			<bold>entities</bold> of type
+			</code> by declaring one or more 
+			<bold>entities</bold> of type 
 			<code>
 				<string>ACCOUNT</string>
 			</code>.  Such a declaration is of the form:
@@ -54,7 +54,7 @@
 			</code> appearing in the client class
 			<code>
 				<string>X</string>
-			</code> may use a
+			</code> may use a 
 			<bold>creation instruction</bold> of the form
 		</paragraph>
 		<paragraph>
@@ -63,30 +63,31 @@
 		<paragraph>which creates a new direct instance of
 			<code>
 				<string> ACCOUNT</string>
-			</code>, attaches
+			</code>, attaches 
 			<code>
 				<string>acc</string>
 			</code> to that instance, and initializes all its fields to default values.  A variant of this notation, studied below, makes it possible to override the default initializations.
 		</paragraph>
-		<paragraph>Once the client has attached
+		<paragraph>Once the client has attached 
 			<code>
 				<string>acc</string>
-			</code> to an object, it may call on this object the features defined in class
+			</code> to an object, it may call on this object the features defined in class 
 			<code>
 				<string>ACCOUNT</string>
-			</code>.  Here is an extract with some feature calls using
+			</code>.  Here is an extract with some feature calls using 
 			<code>
 				<string>acc</string>
 			</code> as their target:
 		</paragraph>
-		<code_block>acc.open ("Jill")
-acc.deposit (5000)
-if acc.may_withdraw (3000) then
-	acc.withdraw (3000)
-	print (acc.balance)
-end
+		<code_block>
+<feature_name>acc</feature_name><symbol>.</symbol><feature_name>open</feature_name> <symbol>(</symbol><symbol>"</symbol>Jill<symbol>"</symbol><symbol>)</symbol>
+<feature_name>acc</feature_name><symbol>.</symbol><feature_name>deposit</feature_name> <symbol>(</symbol>5000<symbol>)</symbol>
+<keyword>if</keyword> <feature_name>acc</feature_name><symbol>.</symbol><feature_name>may_withdraw</feature_name> <symbol>(</symbol>3000<symbol>)</symbol> <keyword>then</keyword>
+	<feature_name>acc</feature_name><symbol>.</symbol><feature_name>withdraw</feature_name> <symbol>(</symbol>3000<symbol>)</symbol>
+	print <symbol>(</symbol><feature_name>acc</feature_name><symbol>.</symbol><feature_name>balance</feature_name><symbol>)</symbol>
+<keyword>end</keyword>
 </code_block>
-		<paragraph>These feature calls use dot notation, of the form
+		<paragraph>These feature calls use dot notation, of the form 
 			<code>
 				<string>target</string>
 			</code>
@@ -101,16 +102,16 @@ end
 		</paragraph>
 		<list ordered="false">
 			<item>
-				<bold>Routines</bold>, such as
+				<bold>Routines</bold>, such as 
 				<code>
 					<string>open</string>
-				</code>,
+				</code>, 
 				<code>
 					<string>deposit</string>
-				</code>,
+				</code>, 
 				<code>
 					<string>may_withdraw</string>
-				</code>,
+				</code>, 
 				<code>
 					<string>withdraw</string>
 				</code>, represent computations applicable to instances of the class.
@@ -119,9 +120,9 @@ end
 				<bold>Attributes</bold> represent data items associated with these instances.
 			</item>
 		</list>
-		<paragraph>Routines are further divided into
-			<bold>procedures</bold> (commands, which do not return a value) and
-			<bold>functions</bold> (queries, returning a value).  Here
+		<paragraph>Routines are further divided into 
+			<bold>procedures</bold> (commands, which do not return a value) and 
+			<bold>functions</bold> (queries, returning a value).  Here 
 			<code>
 				<string>may_withdraw</string>
 			</code> is a function returning a boolean; the other three-routines called are procedures.
@@ -129,10 +130,10 @@ end
 		<info>A note on syntax: you may separate instructions by semicolons, and indeed you should when, as on the next-to-last line of the example, two or more instructions appear on a line.  But the language's syntax has been designed so that the semicolon is almost always
 			<span> optional</span>, regardless of the layout.  Indeed the practice is to omit it between instructions or declarations on separate lines, as this results in lighter, clearer software texts.
 		</info>
-		<paragraph>In class
+		<paragraph>In class 
 			<code>
 				<string>ACCOUNT</string>
-			</code>, is feature
+			</code>, is feature 
 			<code>
 				<string>balance</string>
 			</code> an attribute, or is it a function with no argument? The above extract of the client class
@@ -198,47 +199,47 @@ end
 				<string>-3000</string>
 			</code> ) would be invalid.
 		</paragraph>
-		<code_block>class ACCOUNT
+		<code_block><keyword>class</keyword> <class_name>ACCOUNT</class_name>
 
-feature
+<keyword>feature</keyword>
 
-	balance: INTEGER
-	owner: PERSON
-	minimum_balance: INTEGER is 1000
+	balance<symbol>:</symbol> <class_name>INTEGER</class_name>
+	owner<symbol>:</symbol> <class_name>PERSON</class_name>
+	minimum_balance<symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword> 1000
 
-	open (who: PERSON) is
-			-- Assign the account to owner who.
-		do
-			owner := who
-		end
+	<feature_name>open</feature_name> <symbol>(</symbol>who<symbol>:</symbol> <class_name>PERSON</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Assign the account to owner who.</comment>
+		<keyword>do</keyword>
+			<feature_name>owner</feature_name> <symbol>:</symbol><symbol>=</symbol> who
+		<keyword>end</keyword>
 
-	deposit (sum: INTEGER) is
-			-- Deposit sum into the account.
-		do
-			add (sum)
-		end
+	<feature_name>deposit</feature_name> <symbol>(</symbol>sum<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Deposit sum into the account.</comment>
+		<keyword>do</keyword>
+			<feature_name>add</feature_name> <symbol>(</symbol>sum<symbol>)</symbol>
+		<keyword>end</keyword>
 
-	withdraw (sum: INTEGER) is
-			-- Withdraw sum from the account.
-		do
-			add (-sum)
-		end
+	<feature_name>withdraw</feature_name> <symbol>(</symbol>sum<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Withdraw sum from the account.</comment>
+		<keyword>do</keyword>
+			<feature_name>add</feature_name> <symbol>(</symbol><symbol>-</symbol>sum<symbol>)</symbol>
+		<keyword>end</keyword>
 
-	may_withdraw (sum: INTEGER): BOOLEAN is
-			-- Is there enough money to withdraw sum?
-		do
-			Result := (balance &gt;= sum + minimum_balance)
-		end
+	<feature_name>may_withdraw</feature_name> <symbol>(</symbol>sum<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol><symbol>:</symbol> <class_name>BOOLEAN</class_name> <keyword>is</keyword>
+			<comment>-- Is there enough money to withdraw sum?</comment>
+		<keyword>do</keyword>
+			Result <symbol>:</symbol><symbol>=</symbol> <symbol>(</symbol><feature_name>balance</feature_name> &gt;<symbol>=</symbol> sum <symbol>+</symbol> <feature_name>minimum_balance</feature_name><symbol>)</symbol>
+		<keyword>end</keyword>
 
-feature {NONE}
+<keyword>feature</keyword> <symbol>{</symbol>NONE<symbol>}</symbol>
 
-	add (sum: INTEGER) is
-			-- Add sum to the balance.
-		do
-			balance := balance + sum
-		end
+	<feature_name>add</feature_name> <symbol>(</symbol>sum<symbol>:</symbol> <class_name>INTEGER</class_name><symbol>)</symbol> <keyword>is</keyword>
+			<comment>-- Add sum to the balance</comment>
+		<keyword>do</keyword>
+			<feature_name>balance</feature_name> <symbol>:</symbol><symbol>=</symbol><feature_name> balance</feature_name> <symbol>+</symbol> sum
+		<keyword>end</keyword>
 
-end -- class ACCOUNT
+<keyword>end</keyword> <comment>-- ACCOUNT</comment>
 </code_block>
 		<paragraph>Let us examine the features in sequence.  The
 			<code>

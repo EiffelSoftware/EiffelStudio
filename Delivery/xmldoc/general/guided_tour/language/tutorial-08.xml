@@ -37,7 +37,7 @@
 				<content>Making a class generic</content>
 			</heading>
 			<paragraph>The notation</paragraph>
-			<code_block><keyword>class</keyword> C [ G ] ...The rest as for any other class declaration ...</code_block>
+			<code_block><keyword>class</keyword> <class_name>C</class_name> <symbol>[</symbol><generics>G</generics><symbol>]</symbol> ...The rest as for any other class declaration ...</code_block>
 			<paragraph>introduces a generic class.  A name such as 
 				<code>
 					<string>G</string>
@@ -55,7 +55,14 @@
 					<string>LIST</string>
 				</code> of EiffelBase, for example, includes features
 			</paragraph>
-			<code_block>first: G    -- Value of first list itemextend (val: G) is    -- Add a new item of value val at end of list    ...</code_block>
+			<code_block>
+first<symbol>:</symbol> <class_name>G</class_name>    
+	<comment>-- Value of first list item</comment>
+
+ext<keyword>end</keyword> <symbol>(</symbol>val<symbol>:</symbol> <class_name>G</class_name><symbol>)</symbol> <keyword>is</keyword>    
+	<comment>-- Add a new item of value val at end of list  </comment>  
+...
+</code_block>
 			<paragraph>The operations available on an entity such as 
 				<code>
 					<string>first</string>
@@ -121,7 +128,7 @@
 					<string>ACCOUNT</string>
 				</code> could include the declaration
 			</paragraph>
-			<code_block>all_deposits : LIST [ DEPOSIT ]</code_block>
+			<code_block><feature_name>all_deposits</feature_name><symbol>:</symbol> <class_name>LIST</class_name> <symbol>[</symbol><class_name>DEPOSIT</class_name><symbol>]</symbol></code_block>
 			<paragraph>using 
 				<code>
 					<string>LIST</string>
@@ -142,7 +149,7 @@
 					<string>DEPOSIT</string>
 				</code> .  With the target
 			</paragraph>
-			<code_block>all_accounts : LIST [ ACCOUNT ]</code_block>
+			<code_block><feature_name>all_accounts</feature_name><symbol>:</symbol> <class_name>LIST</class_name> <symbol>[</symbol><class_name>ACCOUNT</class_name><symbol>]</symbol></code_block>
 			<paragraph>these features would work on values of type 
 				<code>
 					<string>ACCOUNT</string>

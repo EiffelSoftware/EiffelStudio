@@ -364,7 +364,7 @@
 				</code> clause, enter
 			</paragraph>
 			<code_block>
-	my_heir /= Void
+	<feature_name>my_heir</feature_name> <symbol>/<symbol>=</symbol></symbol> Void
 </code_block>
 			<paragraph>to specify the invariant property that this attribute should never be void.  Finally, to see how EiffelStudio can generate the full accompaniment to an attribute, check the box
 				<code>
@@ -463,7 +463,7 @@
 				</code> .  In the top Editing Tool, use the editor to add an attribute declaration
 			</paragraph>
 			<code_block>
-	other: HEIR
+	<feature_name>other</feature_name><symbol>:</symbol> <class_name>HEIR</class_name>
 </code_block>
 			<paragraph>without further ado, as this is just a simple check.  </paragraph>
 			<note>If you are concerned about the correctness of the class, you may with to update its creation procedure

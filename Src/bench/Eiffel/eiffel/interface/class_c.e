@@ -94,6 +94,12 @@ feature
 	is_expanded: BOOLEAN;
 			-- Is the class expanded ?
 
+	has_expanded: BOOLEAN;
+			-- Does the class use expanded ?
+
+	is_used_as_expanded: BOOLEAN;
+			-- Is `Current' used as an expanded class ?
+
 	conformance_table: ARRAY [BOOLEAN];
 			-- Conformance table of the class;: once a class has changed
 			-- it must be reprocessed and the conformance table of the
@@ -2302,6 +2308,17 @@ feature -- Convenience features
 			-- Assign `b' to `is_expanded'.
 		do
 			is_expanded := b;
+		end;
+
+	set_has_expanded is
+			-- Set `has_expanded' to True
+		do
+			has_expanded := True;
+		end;
+
+	set_is_used_as_expanded is
+		do
+			is_used_as_expanded := True
 		end;
 
 	set_id (i: INTEGER) is

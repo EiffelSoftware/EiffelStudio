@@ -395,7 +395,7 @@ feature -- Debug
 			until
 				renaming.after
 			loop
-				io.error.putstring ("%T");
+				io.error.putstring ("%T%T");
 				io.error.putstring (renaming.key_for_iteration);
 				io.error.putstring (" as ");
 				io.error.putstring (renaming.item_for_iteration);
@@ -424,7 +424,7 @@ feature -- Debug
 			until
 				a_list.after
 			loop
-				io.error.putstring ("%T");
+				io.error.putstring ("%T%T");
 				io.error.putstring (a_list.item_for_iteration);
 				io.error.new_line;
 				a_list.forth

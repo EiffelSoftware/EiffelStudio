@@ -30,6 +30,7 @@ feature -- Initialization
 			bits_value: INTEGER;
 			error: BOOLEAN;
 			int_value: INT_VALUE_I;
+			depend_unit: DEPEND_UNIT;
 		do
 			if not feat_table.has (bits_symbol) then
 				!! veen;
@@ -65,6 +66,10 @@ feature -- Initialization
 			end;
 			!!Result.make (constant);
 			Result.set_base_type (bits_value);
+			if System.in_pass3 then
+				!!depend_unit.make (context.a_class.id, constant.feature_id);
+				context.supplier_ids.add (depend_unit);
+			end;
 		end; -- solved_type
 
 	actual_type: BITS_A is

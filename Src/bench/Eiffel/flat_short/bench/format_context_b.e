@@ -49,6 +49,10 @@ feature
 			class_c := c;
 			current_class_only := False;
 			is_short_bool.set_value (False);
+			in_bench_mode_bool.set_value (False);
+			order_same_as_text_bool.set_value (False);
+			in_assertion_bool.set_value (False);
+			troff_format := False;
 		ensure
 			class_c_set: class_c = c;
 			batch_mode:	not in_bench_mode;
@@ -636,6 +640,13 @@ end;
 		do
 			feature_i := format.local_types.target_feature;
 			f_name := format.local_types.final_name;
+			if print_fix_keyword then
+				if format.local_types.is_prefix then
+					put_keyword ("prefix ")
+				else
+					put_keyword ("infix "); 
+				end
+			end;
 			if feature_i /= Void and then in_bench_mode then
 				stone := feature_i.stone (old_types.target_class)
 				!CLICKABLE_TEXT!item.make (f_name, stone);

@@ -16,7 +16,8 @@ inherit
 			format, display_header, file_name
 		select
 			display_header
-		end
+		end;
+	SHARED_DEBUG
 
 creation
 
@@ -40,9 +41,17 @@ feature {NONE}
 		local
 			new_title: STRING;
 			filed_stone: FILED_STONE;
+			fs: FEATURE_STONE;
 		do
 			!!new_title.make (0);
 			new_title.append (stone.header);
+			fs ?= stone;
+			if
+				(fs /= Void) and then
+				Debug_info.is_breakpoint_set (fs.feature_i, 1) 
+			then
+				new_title.append ("   (stop)");		
+			end;
 			text_window.display_header (new_title);
 			filed_stone ?= stone;
 			if filed_stone /= Void then
@@ -94,7 +103,7 @@ feature
 						else
 							temp.append ("There is no associated file for pebble dropped");
 						end;
-						warner.custom_call (Void, temp, Void, Void, " Ok ")	
+						warner.gotcha_call (temp);
 					end			
 				end
 			end

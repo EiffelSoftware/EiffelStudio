@@ -105,10 +105,16 @@ feature
 
 	set_root_stone (r: like root_stone) is
 				-- Assign `r' to `root_stone'.
+		local
+			hh: HOLE
 		do
 			root_stone := r;
 			if root_stone /= Void then
-				tool.set_icon_name (root_stone.icon_name)
+				tool.set_icon_name (root_stone.icon_name);
+				hh := tool.hole;
+				if hh /= Void then
+					hh.set_full_symbol
+				end;
 			else
 				tool.set_icon_name (tool.tool_name);
 			end;
@@ -207,10 +213,10 @@ feature
 			text_position := 0;
 			focus_start := 0;
 			focus_end := 0;
+			tool.set_icon_name (tool.tool_name);
 			root_stone := Void;
 			file_name := Void;
 			set_changed (false);
-			tool.set_icon_name (tool.tool_name);
 		ensure
 			image.empty;
 			position = 0;

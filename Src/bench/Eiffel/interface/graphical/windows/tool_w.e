@@ -56,6 +56,9 @@ feature
 			set_default_size;
 			text_window.clear_window;
 			close_windows;
+			if hole /= Void then
+				hole.set_empty_symbol
+			end;
 		end;
 
 	set_default_format is
@@ -198,6 +201,8 @@ feature
 
 	
 feature 
+
+	hole: HOLE is do end;
 
 	save_command: ICONED_COMMAND is do end;
 	

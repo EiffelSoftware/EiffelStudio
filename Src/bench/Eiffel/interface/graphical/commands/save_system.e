@@ -46,8 +46,7 @@ feature {NONE}
 				!! temp.make (0);
 				temp.append (new_file.name);
 				temp.append ("%Nis not a plain file");
-				warner.custom_call
-					(Void, temp, Void, Void, " Ok ");
+				warner.gotcha_call (temp);
 			elseif
 				new_file.exists and then (not new_file.is_writable)
 			then
@@ -56,8 +55,7 @@ feature {NONE}
 				temp.append ("File: ");
 				temp.append (new_file.name);
 				temp.append (" is not writable.%NPlease check permissions");
-				warner.custom_call
-					(Void, temp, Void, Void, " Ok ");
+				warner.gotcha_call (temp);
 			elseif
 				(not new_file.exists) and then (not new_file.is_creatable)
 			then
@@ -66,8 +64,7 @@ feature {NONE}
 				temp.append ("File: ");
 				temp.append (new_file.name);
 				temp.append (" cannot be created.%NPlease check permissions");
-				warner.custom_call
-					(Void, temp, Void, Void, " Ok ");
+				warner.gotcha_call (temp);
 			end;
 
 			if aok then

@@ -55,6 +55,11 @@ feature
 					-- If the file is open then it is in the cache
 				f.close;
 				remove_id (f.id);
+debug ("SERVER")
+	io.error.putstring ("Forget file: E");
+	io.error.putint (f.id);
+	io.error.new_line;
+end;
 			end;
 		end;
 
@@ -74,6 +79,11 @@ feature
 			files.put (void_file, f.id);
 				-- Remove file from the disk
 			f.delete;
+debug ("SERVER")
+	io.error.putstring ("Remove file: E");
+	io.error.putint (f.id);
+	io.error.new_line;
+end;
 		end;
 
 	remove_useless_files is

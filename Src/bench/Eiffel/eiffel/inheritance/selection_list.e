@@ -15,12 +15,8 @@ creation
 	
 feature 
 
-	merged_rout_id_set: ROUT_ID_SET is
-			-- Merged routine id set from features before
-			-- unselection.
-		once
-			!! Result.make (5)
-		end;
+
+	selected_rout_id_set: ROUT_ID_SET;
 
 	selection (parents: PARENT_LIST; old_t, new_t: FEATURE_TABLE): FEATURE_I is
 			-- Feautre selected in the list.
@@ -35,7 +31,7 @@ feature
 			stop: BOOLEAN;
 			id, first_body_id: INTEGER;
 		do
-			merged_rout_id_set.wipe_out;
+			selected_rout_id_set := Void
 			if count > 1 then
 				detect_replication (parents, new_t);
 			end;
@@ -51,6 +47,7 @@ feature
 			else
 					-- Look for a valid selection
 				Result := parent_selection (parents);
+				selected_rout_id_set := Result.rout_id_set.twin;
 
 				if Result /= Void then
 						-- Keep track of the selection
@@ -64,7 +61,6 @@ feature
 						unselect (new_t, old_t, feat_table);
 					end;
 						--| Merge routine ids from unselected features
-					Result.rout_id_set.merge (merged_rout_id_set);
 					Result.set_is_selected (True);
 debug ("REPLICATION", "ACTUAL_REPLICATION")
 	io.error.putstring ("Selected feature is: ");
@@ -72,9 +68,9 @@ debug ("REPLICATION", "ACTUAL_REPLICATION")
 	io.error.putstring (Result.generator);
 	io.error.new_line;
 end;
-					merged_rout_id_set.wipe_out;
 				end;
 			end;
+			selected_rout_id_set := Void;
 		end;
 
 	Routine_id_counter: COUNTER is
@@ -197,14 +193,16 @@ end;
 			instantiator, to_compair, written_type, written_actual_type: TYPE_A;
 			written_class: CLASS_C;
 			feature_name: STRING;
-			old_pos: INTEGER
+			old_pos: INTEGER;
+			r_id_set: ROUT_ID_SET;
+			i, nb, rid: INTEGER
 		do		
 			id := new_t.feat_tbl_id;
 			info := first;
 			a_feature := info.a_feature;
 			first_body_id := a_feature.body_id;
 				-- New unselected feature
-			merged_rout_id_set.merge (a_feature.rout_id_set);
+			r_id_set := a_feature.rout_id_set;
 			a_feature := a_feature.unselected (id);
 				-- Process new routine id set
 			!!rout_id_set.make (1);
@@ -227,6 +225,25 @@ end;
 				new_rout_id := a_feature.new_rout_id;
 			end;
 			rout_id_set.put (new_rout_id);
+
+			from
+				nb := r_id_set.count;
+				i := 1;
+			until
+				i > nb
+			loop
+				rid := r_id_set.item (i);
+				if not selected_rout_id_set.has (rid) then
+					rout_id_set.force (rid);
+io.error.putstring ("%T");
+io.error.putstring (System.current_class.signature);
+io.error.putstring (", ");
+io.error.putstring (a_feature.feature_name);
+io.error.putstring (" is unselected and has a history%N");
+				end;
+				i := i + 1;
+			end
+				
 			if new_rout_id < 0 then
 					-- Attribute routine id
 				new_rout_id := - new_rout_id;

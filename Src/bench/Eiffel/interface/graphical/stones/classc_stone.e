@@ -42,6 +42,9 @@ feature -- dragging
 			Result.append ("  ");
 			Result.append ("Cluster: ");
 			Result.append (class_c.cluster.cluster_name);
+			if class_c.is_precompiled then
+				Result.append ("   (precompiled)")
+			end
 		end;
 
 	stone_type: INTEGER is do Result := Class_type end;

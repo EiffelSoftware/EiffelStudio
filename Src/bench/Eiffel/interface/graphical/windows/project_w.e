@@ -65,7 +65,7 @@ feature
 			set_x_y (0,0);
 			realize;
 			transporter_init;
-			if eiffel_symbol.is_valid then
+			if bm_Project_icon.is_valid then
 				set_icon_pixmap (bm_Project_icon);
 			end;
 			set_icon_name (tool_name);
@@ -145,7 +145,8 @@ feature -- xterminal
 				if hidden_system_window then
 					system_tool.display
 					hidden_system_window := False;
-				end
+				end;
+				raise
 			elseif arg = popdown then
 				window_manager.hide_all_editors;
 				if 	
@@ -191,6 +192,7 @@ feature -- rest
 			object_hole: OBJECT_HOLE;
 			explain_hole: EXPLAIN_HOLE;
 			shell_hole: SHELL_HOLE;
+			debug_stop_hole: DEBUG_STOPIN;
 			dummy_rc: ROW_COLUMN;
 		do
 			!!open_command.make (text_window);
@@ -204,6 +206,7 @@ feature -- rest
 				!!class_hole.make (classic_bar, Current);
 				!!routine_hole.make (classic_bar, Current);
 				!!object_hole.make (classic_bar, Current);
+				!!debug_stop_hole.make (classic_bar, Current);
 				--!!shell_hole.make (classic_bar, Current);
 					classic_bar.attach_top (quit_command, 0);
 					classic_bar.attach_top (change_font_command, 0);
@@ -213,12 +216,14 @@ feature -- rest
 					classic_bar.attach_top (class_hole, 0);
 					classic_bar.attach_top (routine_hole, 0);
 					classic_bar.attach_top (object_hole, 0);
+					classic_bar.attach_top (debug_stop_hole, 0);
 					classic_bar.attach_left (explain_hole, 0);
 					classic_bar.attach_left_widget (explain_hole, system_hole,0);
 					classic_bar.attach_left_widget (system_hole, class_hole,0);
 					classic_bar.attach_left_widget (class_hole, routine_hole, 0);
 					classic_bar.attach_left_widget (routine_hole, object_hole, 0);
-					classic_bar.attach_left_widget (object_hole, type_teller,
+					classic_bar.attach_left_widget (object_hole, debug_stop_hole, 0);
+					classic_bar.attach_left_widget (debug_stop_hole, type_teller,
 0);
 					classic_bar.attach_right_widget (change_font_command, type_teller, 0);
 					classic_bar.attach_right_widget (quit_command, change_font_command, 0);
@@ -241,7 +246,9 @@ feature -- rest
 	quit_command: QUIT_PROJECT;
 
 	update_command: UPDATE_PROJECT;
-	run_command: RUN;
+--	run_command: RUN;
+	debug_run_command: DEBUG_RUN;
+	debug_quit_command: DEBUG_QUIT;
 	special_command: SPECIAL_COMMAND;
 	freeze_command: FREEZE_PROJECT;
 	finalize_command: FINALIZE_PROJECT;
@@ -253,13 +260,17 @@ feature -- rest
 		do
 			!!icing.make (new_name, form_manager);
 				!!update_command.make (icing, text_window);
-				!!run_command.make (icing, text_window);
+--				!!run_command.make (icing, text_window);
+				!!debug_run_command.make (icing, text_window);
+				!!debug_quit_command.make (icing, text_window);
 				!!special_command.make (icing, text_window);
 				!!freeze_command.make (icing, text_window);
 				!!finalize_command.make (icing, text_window);
 			icing.attach_top (update_command, 0);
-			icing.attach_top_widget (update_command, run_command, 0);
-			icing.attach_top_widget (run_command, special_command, 0);
+--			icing.attach_top_widget (update_command, run_command, 0);
+			icing.attach_top_widget (update_command, debug_run_command, 0);
+			icing.attach_top_widget (debug_run_command, debug_quit_command, 0);
+			icing.attach_top_widget (debug_quit_command, special_command, 0);
 			icing.attach_bottom_widget (freeze_command, special_command, 0);
 			icing.attach_bottom_widget (finalize_command, freeze_command, 0);
 			icing.attach_bottom (finalize_command, 0);

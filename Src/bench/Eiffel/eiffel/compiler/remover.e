@@ -216,7 +216,7 @@ end;
 						depend_list.after
 					loop
 						depend_unit := depend_list.item;
-						if depend_unit.feature_id /= -1 then
+						if not depend_unit.is_special then
 							static_class := System.class_of_id (depend_unit.id);
 							feature_table := static_class.feature_table;
 							depend_feature := feature_table.feature_of_feature_id

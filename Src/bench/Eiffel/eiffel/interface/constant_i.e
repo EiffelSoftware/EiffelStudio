@@ -87,7 +87,7 @@ feature -- Incrementality
 			if other_constant /= Void then
 				Result :=   basic_equiv (other_constant)
 							and then
-							deep_equal (value, other_constant.value);
+							value.equiv (other_constant.value);
 			end;
 		end;
 	

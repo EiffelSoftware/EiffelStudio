@@ -17,10 +17,23 @@ feature
 	execute (argument: ANY) is
 			-- Execute current command but don't change the cursor into watch shape.
 		do
+			if 
+				(argument /= get_in) and
+				(argument /= get_out)
+			then
+				warner.popdown;
+			end;
+
 			if argument = get_in then
 				text_window.tool.tell_type (command_name)
 			elseif argument = get_out then
 				text_window.tool.clean_type
+			elseif license_problem then
+				license_problem := False;
+				if (argument = Void) then
+					license_window.set_exclusive_grab;
+					license_window.popup
+				end
 			elseif argument = warner then
 					--| If it comes here this means ok has
 					--| been pressed in the warner window

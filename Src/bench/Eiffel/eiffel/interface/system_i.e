@@ -1046,6 +1046,31 @@ end;
 			Error_handler.checksum;
 		end;
 
+	check_vtec is
+		local
+			i, nb: INTEGER;
+			a_class: CLASS_C
+		do
+			from
+				i := 1;
+				nb := id_array.count;
+			until
+				i > nb
+			loop
+				a_class := id_array.item (i);
+				if
+					a_class /= Void
+				and then
+					(	a_class.has_expanded or else
+						a_class.is_used_as_expanded)
+				then
+					set_current_class (a_class);
+					a_class.check_expanded
+				end;
+				i := i + 1;
+			end;
+		end;
+
 	check_expanded is
 			-- Check expanded client relation
 		local
@@ -1831,16 +1856,24 @@ feature -- Final mode generation
 			i, nb: INTEGER;
 			a_class: CLASS_C;
 			temp: STRING;
-			old_remover_off: BOOLEAN
+			old_remover_off: BOOLEAN;
+			old_exception_stack_managed: BOOLEAN;
 		do
 
 				-- Save the value of `remover_off'
+				-- and `exception_stack_managed'
 			old_remover_off := remover_off;
+			old_exception_stack_managed := exception_stack_managed
 		
 				-- Should dead code be removed?
 			if not remover_off then
-				remover_off := keep_assert and then Lace.has_assertions;
-			end
+				remover_off := 
+					keep_assert and then Lace.has_assertions;
+			end;
+			if not exception_stack_managed then
+				exception_stack_managed := 
+					keep_assert and then Lace.has_assertions;
+			end;
 
 				-- Set the generation mode in final mode
 			byte_context.set_final_mode;
@@ -1934,6 +1967,7 @@ end;
 
 			remover := Void;
 			remover_off := old_remover_off;
+			exception_stack_managed := old_exception_stack_managed
 		end;
 
 feature -- Dead code removal
@@ -1950,6 +1984,7 @@ feature -- Dead code removal
 			a_class: CLASS_C;
 			root_feat: FEATURE_I;
 			i, nb: INTEGER;
+			ct: CLASS_TYPE;
 		do
 			!!remover.make;
 
@@ -1975,6 +2010,19 @@ feature -- Dead code removal
 					end;
 				end;
 				i := i + 1
+			end;
+
+			from
+				i := 1;
+				nb := Type_id_counter.value
+			until
+				i > nb
+			loop
+				ct := class_types.item (i);
+				if ct /= Void then
+					ct.mark_creation_routine (remover);
+				end;
+				i := i + 1;
 			end;
 
 				-- Protection of the attribute `area' in class TO_SPECIAL

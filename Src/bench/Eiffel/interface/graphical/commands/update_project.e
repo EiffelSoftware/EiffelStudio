@@ -51,18 +51,16 @@ feature {NONE}
 							temp.append ("%NThen press Melt again%N");
 							error_window.put_string (temp);
 						else
+							error_window.put_string ("System recompiled%N");
 							if System.freezing_occurred then
 								error_window.put_string 
-									("The system had to be frozen (i.e. the modifications could not%N");
+									("System had to be frozen to include new externals.%N");
 								error_window.put_string 
-									("be melted in). This occurs when new externals are introduced.%N");
-								error_window.put_string 
-									("Launching C compilation in background...%N");
+									("Background C compilation launched.%N");
 								finish_freezing 
 							else
 								link_driver
 							end;		
-							error_window.put_string ("System recompiled%N");
 						end;
 					end;
 					restore_cursors;

@@ -55,7 +55,7 @@ feature {NONE}
 								"By default assertions enabled in the Ace%N%
 								%file are kept in final mode.%N%
 								%A final executable with assertion checking%N%
-								%enabled is sub-optimal in speed and size.%N",
+								%enabled is not optimal in speed and size.%N",
                             	"Keep assertions", "Discard assertions", "Cancel"); 
 						else
 							set_global_cursor (watch_cursor);
@@ -86,7 +86,7 @@ feature {NONE}
 										error_window.put_string 
 											("%Tin size and speed. In order to produce an optimal%N");
 										error_window.put_string 
-											("%Texecutable, finalize the system from scratch and do%N");
+											("%Texecutable, finalize from a new project and do%N");
 										error_window.put_string 
 											("%Tnot use precompilation.%N%N");
 									end;

@@ -29,6 +29,8 @@
 			<LI><B>EV_DYNAMIC_TREE_ITEM</B> - Added `remove_subtree_function'. Item now only shows as expandable if there is a subtree function.</LI>
 			<LI><B>EV_WINDOW</B> - Added `maximum_dimension' which is the greatest value allowed for `width' and `height'. This is also the default value for `width' and `height'.</LI>
 			<LI><B>EV_OPTION_BUTTON</B> - This class has been made obsolete. It will be removed at the next release.</LI>
+			<LI><B>EV_PICK_AND_DROPABLE_ACTION_SEQUENCES</B> - Added `pick_ended_actions' which are called when a pick ends.</LI>
+			<LI><B>EV_WIDGET</B> - `set_minimum_height', `set_minimum_width' and `set_minimum_size' now all allow 0 as an argument. Previously, 1 was the minimum valid dimension.</LI>
 		</UL>
 		<P><B>Bug fixes</B>
 		<UL>
@@ -51,7 +53,7 @@
 				</UL>
 			<LI><B>EV_TEXT</B> - `set_background_color' now correctly sets the color of the whole background. Previously only the area containing text was modified.</LI>
 			<LI><B>EV_CLIPBOARD</B> - Our implementation would sometimes query `text' when not allowed by Windows, thus causing postcondition failures.</LI>
-			<LI><B>EV_BUTTON</B> - The result of querying `text_alignment' after default_create was incorrect.</LI>
+			<LI><B>EV_BUTTON</B> - The result of `text_alignment' after default_create was incorrect.</LI>
 			</UL>
 		<LI><B>Gtk</B></LI>
 			<UL>

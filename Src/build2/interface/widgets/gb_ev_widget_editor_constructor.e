@@ -39,14 +39,14 @@ feature -- Access
 			-- Update status of `attribute_editor' to reflect information
 			-- from `first'.
 		do
-			minimum_width_entry.set_text (first.minimum_width.out)
+			minimum_width_entry.update_constant_display (first.minimum_width.out)
 			if first.minimum_width_set_by_user then
 				
 				reset_width_button.enable_sensitive
 			else
 				reset_width_button.disable_sensitive
 			end
-			minimum_height_entry.set_text (first.minimum_height.out)	
+			minimum_height_entry.update_constant_display (first.minimum_height.out)	
 			if first.minimum_height_set_by_user then
 				reset_height_button.enable_sensitive
 			else
@@ -156,6 +156,7 @@ feature {NONE} -- Implementation
 			first_not_void: first /= Void
 		do
 			for_first_object (agent {EV_WIDGET}.set_minimum_width (integer))
+			update_editors
 		end
 		
 	valid_minimum_dimension (value: INTEGER): BOOLEAN is
@@ -170,6 +171,7 @@ feature {NONE} -- Implementation
 			first_not_void: first /= Void
 		do
 			for_first_object (agent {EV_WIDGET}.set_minimum_height (integer))
+			update_editors
 		end
 
 	Minimum_width_string: STRING is "Minimum_width"

@@ -66,11 +66,11 @@ feature -- Access
 			-- from `objects.first'.
 		do
 			homogeneous_button.select_actions.block
-			rows_entry.set_text (first.rows.out)
-			columns_entry.set_text (first.columns.out)
-			border_width_entry.set_text (first.border_width.out)
-			column_spacing_entry.set_text (first.column_spacing.out)
-			row_spacing_entry.set_text (first.row_spacing.out)
+			rows_entry.update_constant_display (first.rows.out)
+			columns_entry.update_constant_display (first.columns.out)
+			border_width_entry.update_constant_display (first.border_width.out)
+			column_spacing_entry.update_constant_display (first.column_spacing.out)
+			row_spacing_entry.update_constant_display (first.row_spacing.out)
 			if first.is_homogeneous then
 				homogeneous_button.enable_select
 				homogeneous_button.set_text ("Disable homogeneous")
@@ -187,30 +187,35 @@ feature {GB_TABLE_POSITIONER} -- Implementation
 			-- Resize table to accomodate `row_value' rows.
 		do
 			for_all_objects (agent {EV_TABLE}.resize (first.columns, row_value))
+			update_editors
 		end
 		
 	set_columns (column_value: INTEGER) is
 			-- Resize table to accomodate `column_value' columns.
 		do
 			for_all_objects (agent {EV_TABLE}.resize (column_value, first.rows))
+			update_editors
 		end
 
 	set_border_width (border_width: INTEGER) is
 			-- Assign `border_width' to border width of table.
 		do
 			for_all_objects (agent {EV_TABLE}.set_border_width (border_width))
+			update_editors
 		end
 		
 	set_row_spacing (row_spacing: INTEGER) is
 			-- Assign `row_spacing' to row spacing of table.
 		do
 			for_all_objects (agent {EV_TABLE}.set_row_spacing (row_spacing))
+			update_editors
 		end
 		
 	set_column_spacing (column_spacing: INTEGER) is
 			-- Assign `column_spacing' to column spacing of table.
 		do
 			for_all_objects (agent {EV_TABLE}.set_column_spacing (column_spacing))
+			update_editors
 		end
 		
 		

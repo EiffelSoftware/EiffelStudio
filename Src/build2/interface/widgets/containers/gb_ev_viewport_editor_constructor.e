@@ -79,11 +79,11 @@ feature {NONE} -- Implementation
 				item_height_entry.enable_sensitive
 			end
 
-			x_offset_entry.set_text (first.x_offset.out)
-			y_offset_entry.set_text (first.y_offset.out)
+			x_offset_entry.update_constant_display (first.x_offset.out)
+			y_offset_entry.update_constant_display (first.y_offset.out)
 			if first.full then
-				item_width_entry.set_text (first.item.width.out)
-				item_height_entry.set_text (first.item.height.out)
+				item_width_entry.update_constant_display (first.item.width.out)
+				item_height_entry.update_constant_display (first.item.height.out)
 			else
 				item_width_entry.set_text ("0")
 				item_height_entry.set_text ("0")
@@ -94,12 +94,14 @@ feature {NONE} -- Implementation
 			-- Update property `x_offset' on all items in `objects'.
 		do
 			for_all_objects (agent {EV_VIEWPORT}.set_x_offset (integer))
+			update_editors
 		end
 		
 	set_y_offset (integer: INTEGER) is
 			-- Update property `y_offset' on all items in `objects'.
 		do
 			for_all_objects (agent {EV_VIEWPORT}.set_y_offset (integer))
+			update_editors
 		end
 		
 	valid_position (integer: INTEGER): BOOLEAN is
@@ -124,6 +126,7 @@ feature {NONE} -- Implementation
 				-- This enables us to do things such as enable the save
 				-- options.
 			enable_project_modified
+			update_editors
 		end
 		
 	set_item_height (integer: INTEGER) is
@@ -142,6 +145,7 @@ feature {NONE} -- Implementation
 				-- This enables us to do things such as enable the save
 				-- options.
 			enable_project_modified
+			update_editors
 		end
 		
 	valid_item_width (integer: INTEGER): BOOLEAN is

@@ -66,11 +66,11 @@ feature {NONE} -- Implementation
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
-			value_entry.set_text (first.value.out)
-			step_entry.set_text (first.step.out)
-			leap_entry.set_text (first.leap.out)
-			upper_entry.set_text (first.value_range.upper.out)
-			lower_entry.set_text (first.value_range.lower.out)
+			value_entry.update_constant_display (first.value.out)
+			step_entry.update_constant_display (first.step.out)
+			leap_entry.update_constant_display (first.leap.out)
+			upper_entry.update_constant_display (first.value_range.upper.out)
+			lower_entry.update_constant_display (first.value_range.lower.out)
 		end
 		
 	set_up_user_events (vision2_object, an_object: like ev_type) is
@@ -114,6 +114,7 @@ feature {NONE} -- Implementation
 			-- Update property `value' on all items in `objects'.
 		do
 			for_all_objects (agent {EV_GAUGE}.set_value (a_value))
+			update_editors
 		end
 		
 	valid_value (a_value: INTEGER): BOOLEAN is
@@ -126,6 +127,7 @@ feature {NONE} -- Implementation
 			-- Set step on all items in `objects' to `a_step'.
 		do
 			for_all_objects (agent {EV_GAUGE}.set_step (a_step))
+			update_editors
 		end
 		
 	positive_value (a_value: INTEGER): BOOLEAN is
@@ -138,6 +140,7 @@ feature {NONE} -- Implementation
 			-- Set leap on all items in `objects' to `a_leap'.
 		do
 			for_all_objects (agent {EV_GAUGE}.set_leap (a_leap))
+			update_editors
 		end
 		
 	set_upper (integer: INTEGER) is
@@ -159,6 +162,7 @@ feature {NONE} -- Implementation
 				-- This enables us to do things such as enable the save
 				-- options.
 			enable_project_modified
+			update_editors
 		end
 		
 	valid_upper (upper: INTEGER): BOOLEAN is
@@ -186,6 +190,7 @@ feature {NONE} -- Implementation
 				-- This enables us to do things such as enable the save
 				-- options.
 			enable_project_modified
+			update_editors
 		end
 		
 	valid_lower (lower: INTEGER): BOOLEAN is

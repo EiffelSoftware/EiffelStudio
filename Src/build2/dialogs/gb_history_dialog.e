@@ -22,9 +22,14 @@ inherit
 		undefine
 			default_create, copy
 		end
-		
-	GB_SHARED_COMMAND_HANDLER
-
+	
+	GB_COMMAND_HANDLER
+		export
+			{NONE} all
+		undefine
+			default_create, copy
+		end
+	
 create
 	default_create
 
@@ -51,7 +56,8 @@ feature -- Initialization
 			set_default_size_for_button (close_button)
 			horizontal_box.extend (close_button)
 			set_default_push_button (close_button)
-			close_button.select_actions.extend (agent close_window)
+			close_button.select_actions.extend (agent show_history_command.execute)
+			set_default_cancel_button (close_button)
 			set_minimum_size (250, 250)
 		end
 		
@@ -106,7 +112,7 @@ feature {GB_GLOBAL_HISTORY} -- Implementation
 			(history_list @ position).enable_select
 			history_list.select_actions.resume
 			last_selected_item := position
-			command_handler.update
+		--	command_handler.update
 		ensure
 			item_selected: (history_list @ position).is_selected
 		end	
@@ -145,15 +151,7 @@ feature {GB_GLOBAL_HISTORY} -- Implementation
 			history_list.wipe_out
 		end
 
-feature {NONE} -- Implementation
-
-	close_window is
-			-- Close `Current' and do any required processing.
-		do
-			hide
-			command_handler.update
-		end
-		
+feature {NONE} -- Implementation		
 
 	item_selected is
 			-- Peform processing when `an_item' has been selected.
@@ -167,7 +165,6 @@ feature {NONE} -- Implementation
 					history.step_from (last_selected_item + 1, index_of_current_item)
 				end	
 				last_selected_item := index_of_current_item
-				command_handler.update
 		end
 
 	history_list: EV_LIST

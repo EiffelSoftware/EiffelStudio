@@ -100,55 +100,55 @@ feature -- Status Setting
 
 			format_index := format_offsets.item (hashed_character_format)
 				
-					-- Must clone otherwise we will always be modifying `highlight_string'.
-			temp_string := highlight_string.twin
+			temp_string := ""
+			add_rtf_keyword (temp_string, rtf_highlight_string)
 			temp_string.append (back_color_offset.i_th (format_index).out)
-			temp_string.append (color_string)
+			add_rtf_keyword (temp_string, rtf_color_string)
 			temp_string.append (color_offset.i_th (format_index).out)
 			
 			format_underlined := a_format.is_underlined
 			if not is_current_format_underlined and format_underlined then
-				temp_string.append (start_underline_string)
+				add_rtf_keyword (temp_string, rtf_underline_string)
 				is_current_format_underlined := True
 			elseif is_current_format_underlined and not format_underlined then
-				temp_string.append (end_underline_string)
+				add_rtf_keyword (temp_string, rtf_underline_string + "0")
 				is_current_format_underlined := False
 			end
 			format_striked := a_format.is_striked_out
 			if not is_current_format_striked_through and format_striked then
-				temp_string.append (start_strikeout_string)
+				add_rtf_keyword (temp_string, rtf_strikeout_string)
 				is_current_format_striked_through := True
 			elseif is_current_format_striked_through and not format_striked then
-				temp_string.append (end_strikeout_string)
+				add_rtf_keyword (temp_string, rtf_strikeout_string + "0")
 				is_current_format_striked_through := False
 			end
 			format_bold := a_format.is_bold
 			if not is_current_format_bold and format_bold then
-				temp_string.append (start_bold_string)
+				add_rtf_keyword (temp_string, rtf_bold_string)
 				is_current_format_bold := True
 			elseif is_current_format_bold and not format_bold then
-				temp_string.append (end_bold_string)
+				add_rtf_keyword (temp_string, rtf_bold_string + "0")
 				is_current_format_bold := False
 			end
 			format_italic := a_format.shape = shape_italic
 			if not is_current_format_italic and format_italic then
-				temp_string.append (start_italic_string)
+				add_rtf_keyword (temp_string, rtf_italic_string)
 				is_current_format_italic := True
 			elseif is_current_format_italic and not format_italic then
-				temp_string.append (end_italic_string)
+				add_rtf_keyword (temp_string, rtf_italic_string + "0")
 				is_current_format_italic := False
 			end
 			vertical_offset := a_format.vertical_offset
 			if vertical_offset /= current_vertical_offset then
-				temp_string.append (start_vertical_offset)
+				add_rtf_keyword (temp_string, rtf_vertical_offset)
 				height_in_half_points := (pixels_to_half_points (vertical_offset))
 				temp_string.append (height_in_half_points.out)
 				current_vertical_offset := vertical_offset
 			end
-			
-			temp_string.append (font_string)
+
+			add_rtf_keyword (temp_string, rtf_font_string)
 			temp_string.append (font_offset.i_th (format_index).out)
-			temp_string.append (font_size_string)
+			add_rtf_keyword (temp_string, rtf_font_size_string)
 			temp_string.append (heights.i_th (format_index).out)
 			temp_string.append (space_string)
 			internal_text.append (temp_string)
@@ -159,7 +159,7 @@ feature -- Status Setting
 			loop
 				character := a_text.item (counter)
 				if character = '%N' then
-					internal_text.append (rtf_newline)
+					add_rtf_keyword (internal_text, rtf_newline + "%N")
 				elseif character = '\' then
 					internal_text.append (rtf_backslash)
 				elseif character = '{' then
@@ -225,6 +225,7 @@ feature -- Status Setting
 			current_character: CHARACTER
 		do
 			create format_stack.make (8)
+			create all_fonts.make (50)
 			create current_format
 			plain_text := ""
 			from
@@ -328,6 +329,7 @@ feature -- Status Setting
 			tag_completed: BOOLEAN
 			reading_tag_value: BOOLEAN
 			tag_start_position: INTEGER
+			processing_moved_iterator: BOOLEAN
 		do
 			tag_start_position := index
 			tag := ""
@@ -346,7 +348,8 @@ feature -- Status Setting
 					current_character = '}' or
 					current_character = '{') or
 					current_character = '%N' or
-					current_character = '%R' then
+					current_character = '%R' or 
+					current_character = ';' then
 					
 						-- Note that newline characters are not permitted in the middle of tags.
 						-- We must perform at least one iteration, ensuring that we enter the loop.
@@ -374,16 +377,40 @@ feature -- Status Setting
 					l_index := l_index + 1
 				end
 			end
-			--print ("Tag : " + tag.out + " Value : " + tag_value + "%N")
 				-- Now process the found keyword.
 			if tag.is_equal (rtf_fonttable) then
+				process_fonttable (rtf_text, index)
+				processing_moved_iterator := True
 			elseif tag.is_equal (rtf_colortbl) then
-			elseif tag.is_equal (rtf_bold) then
-			elseif tag.is_equal (rtf_highlight) then
-			elseif tag.is_equal (rtf_color) then
-			elseif tag.is_equal (rtf_font) then
-			elseif tag.is_equal (rtf_font_size) then
-			elseif tag.is_equal (rtf_new_line) then
+				process_colortable (rtf_text, index)
+				processing_moved_iterator := True
+			elseif tag.is_equal (rtf_bold_string) then
+			elseif tag.is_equal (rtf_highlight_string) then
+			elseif tag.is_equal (rtf_color_string) then
+			elseif tag.is_equal (rtf_red) then
+				last_colorred := tag_value.to_integer
+			elseif tag.is_equal (rtf_green) then
+				last_colorgreen := tag_value.to_integer
+			elseif tag.is_equal (rtf_blue) then		
+				last_colorblue := tag_value.to_integer
+			elseif tag.is_equal (rtf_font_string) then
+				last_fontindex := tag_value.to_integer
+			elseif tag.is_equal (rtf_charset) then
+				last_fontcharset := tag_value.to_integer
+			elseif tag.is_equal (rtf_family_nill) then
+				last_fontfamily := rtf_family_nill_int
+			elseif tag.is_equal (rtf_family_modern) then
+				last_fontfamily := rtf_family_modern_int
+			elseif tag.is_equal (rtf_family_roman) then
+				last_fontfamily := rtf_family_roman_int
+			elseif tag.is_equal (rtf_family_script) then
+				last_fontfamily := rtf_family_script_int
+			elseif tag.is_equal (rtf_family_swiss) then
+				last_fontfamily := rtf_family_swiss_int
+			elseif tag.is_equal (rtf_family_tech) then
+				last_fontfamily := rtf_family_tech_int
+			elseif tag.is_equal (rtf_font_size_string) then
+			elseif tag.is_equal (rtf_newline) then
 				plain_text.append_character ('%N')
 			elseif tag.is_equal (rtf_user_props) then
 				check
@@ -395,11 +422,19 @@ feature -- Status Setting
 					is_start_of_group: rtf_text.substring (tag_start_position - 1, tag_start_position).is_equal ("{\")
 				end
 				move_to_end_of_tag (rtf_text, tag_start_position - 1)
+			elseif tag.is_equal (rtf_stylesheet) then
+				check
+					is_start_of_group: rtf_text.substring (tag_start_position - 1, tag_start_position).is_equal ("{\")
+				end
+				move_to_end_of_tag (rtf_text, tag_start_position - 1)
 			else
 				--print ("Unhandled tag : " + tag.out + "%N")
 			end	
-			
-			move_main_iterator (tag.count + tag_value.count + 1)
+			if not processing_moved_iterator then
+					-- Some keyword processing moves `main_iterator' as part of its processing,
+					-- so do nothing in those cases, otherwise move the iterator by the size of the tag.
+				move_main_iterator (tag.count + tag_value.count + 1)
+			end
 		end
 		
 		
@@ -434,8 +469,157 @@ feature -- Status Setting
 					l_index := l_index + 1
 				end
 			end
+			move_main_iterator (l_index - 1)
+		end
+		
+	process_fonttable (rtf_text: STRING; index: INTEGER) is
+			--
+		local
+			depth: INTEGER
+			current_character: CHARACTER
+			l_index: INTEGER
+			a_font: EV_FONT
+		do
+			depth := 1
+			from
+				move_main_iterator (1)
+			until
+				depth = 0
+			loop
+				update_main_iterator
+				current_character := get_character (rtf_text, main_iterator)
+				if current_character = '{' then
+						-- Store state on stack
+					depth := depth + 1
+				elseif current_character = '}' then
+					depth := depth - 1
+					if depth = 1 then
+							-- We have found a fount, so add it to the fonts.
+						--print ("%N" + last_fontname + " " + last_fontindex.out + " " + last_fontcharset.out + " " + last_fontfamily.out + "%N")
+						create a_font
+							inspect last_fontfamily
+							when rtf_family_roman_int then
+								a_font.set_family (family_roman)
+							when rtf_family_swiss_int then
+								a_font.set_family (family_sans)
+							when rtf_family_modern_int then
+								a_font.set_family (family_modern)
+							when rtf_family_script_int then
+								a_font.set_family (family_typewriter)
+							when rtf_family_tech_int then
+								a_font.set_family (family_screen)
+							else
+								-- Perform nothing if family is Nill.
+							end
+								-- It is possible that no font name was specificed in the RTF.
+							if last_fontname /= Void then
+								a_font.preferred_families.extend (last_fontname)
+							end
+							all_fonts.put (a_font, last_fontindex)
+					end
+				elseif current_character = '\' then
+					process_keyword (rtf_text, main_iterator)
+				elseif current_character = ' '  then
+					move_main_iterator (1)
+					update_main_iterator
+					process_fontname (rtf_text, main_iterator)
+				elseif current_character /= '%R' and (rtf_text.item (main_iterator - 1) = '%N' or rtf_text.item (main_iterator - 1) = '}') then
+					process_fontname (rtf_text, main_iterator)
+				end
+				move_main_iterator (1)
+			end
+		end
+		
+	process_colortable (rtf_text: STRING; index: INTEGER) is
+			--
+		local
+			depth: INTEGER
+			current_character: CHARACTER
+			l_index: INTEGER
+			color_index: INTEGER
+			a_color: EV_COLOR
+		do
+			depth := 1
+			from
+				l_index := 1
+			until
+				depth = 0
+			loop
+				current_character := get_character (rtf_text, index + l_index)
+				if current_character = '{' then
+						-- Store state on stack
+					depth := depth + 1
+				elseif current_character = '}' then
+					depth := depth - 1
+					if depth = 1 then
+					end
+				elseif current_character = '\' then
+					process_keyword (rtf_text, index + l_index)
+				elseif current_character = ';' then
+					create a_color.make_with_8_bit_rgb (last_colorred, last_colorgreen, last_colorblue)
+					color_index := color_index + 1
+				end
+				l_index := l_index + 1
+			end
 			move_main_iterator (l_index)
 		end
+
+	last_fontname: STRING
+	last_fontindex: INTEGER
+	last_fontcharset: INTEGER
+	last_fontfamily: INTEGER
+	last_colorred: INTEGER
+	last_colorgreen: INTEGER
+	last_colorblue: INTEGER
+		-- Current values read in by parsing RTF.
+	
+	all_fonts: HASH_TABLE [EV_FONT, INTEGER]
+		
+	process_fontname (rtf_text:STRING; index: INTEGER) is
+		require
+			rtf_text_not_void: rtf_text /= Void
+			valid_index: rtf_text.valid_index (index)
+		local
+			l_index: INTEGER
+			text_completed: BOOLEAN
+			current_text: STRING
+			current_character: CHARACTER
+		do
+			current_text := ""
+			from
+			until
+				text_completed
+			loop
+				update_main_iterator
+				current_character := get_character (rtf_text, main_iterator)--l_index + index)
+				if current_character /= '%N' and current_character /= '%R' then
+						-- New line characters have no effect on the RTF contents, so
+						-- simply ignore these characters.
+					if current_character = ';' or current_character = '}' then
+						text_completed := True
+					end
+					if not text_completed then
+						current_text.append_character (current_character)
+					end
+				end
+				if (text_completed and current_character = ';') or not text_completed then
+						-- If there is no ended ';' character for the font name
+						-- the do not increase the main iterator, as when we jump
+						-- out of this loop, the closing brace must be found and processed.
+					move_main_iterator (1)
+				elseif text_completed and current_character = '}' then
+					temp_iterator := temp_iterator - 1
+					main_iterator := main_iterator - 1
+				else
+					check
+						unhandled_condition: False
+					end
+				end
+			end
+			
+			last_fontname := current_text
+		end
+		
 		
 	current_format: RTF_FORMAT_I
 		-- The current format retrieved from the RTF.
@@ -451,7 +635,7 @@ feature -- Status Setting
 		
 	temp_iterator: INTEGER
 		-- A temporary value used by `move_main_iterator' to ensure that multiple calls to
-		-- move forwards do not move backwards. For exampel
+		-- move forwards do not move backwards.
 	
 	plain_text: STRING
 		-- A string representation of the contents of from the last
@@ -523,30 +707,31 @@ feature {NONE} -- Implementation
 		local
 			format: STRING
 		do
-			format := new_paragraph.twin
+			format := ""
+			add_rtf_keyword (format, rtf_new_paragraph)
 			if a_format.is_left_aligned then
-				format.append (paragraph_left_aligned)
+				add_rtf_keyword (format, rtf_paragraph_left_aligned)
 			elseif a_format.is_center_aligned then
-				format.append (paragraph_center_aligned)
+				add_rtf_keyword (format, rtf_paragraph_center_aligned)
 			elseif a_format.is_right_aligned then
-				format.append (paragraph_right_aligned)
+				add_rtf_keyword (format, rtf_paragraph_right_aligned)
 			elseif a_format.is_justified then
-				format.append (paragraph_justified)
+				add_rtf_keyword (format, rtf_paragraph_justified)
 			end
 			if a_format.left_margin /= 0 then
-				format.append (paragraph_left_indent)
+				add_rtf_keyword (format, rtf_paragraph_left_indent)
 				format.append (pixels_to_half_points (a_format.left_margin * 10).out)
 			end
 			if a_format.right_margin /= 0 then
-				format.append (paragraph_right_indent)
+				add_rtf_keyword (format, rtf_paragraph_right_indent)
 				format.append (pixels_to_half_points (a_format.right_margin * 10).out)
 			end
 			if a_format.top_spacing /= 0 then
-				format.append (paragraph_space_before)
+				add_rtf_keyword (format, rtf_paragraph_space_before)
 				format.append (pixels_to_half_points (a_format.top_spacing * 10).out)
 			end
 			if a_format.bottom_spacing /= 0 then
-				format.append (paragraph_space_after)
+				add_rtf_keyword (format, rtf_paragraph_space_after)
 				format.append (pixels_to_half_points (a_format.bottom_spacing * 10).out)
 			end
 			format.append_character (' ')
@@ -592,7 +777,7 @@ feature {NONE} -- Implementation
 				font_text.append ("{\f")
 				font_text.append (font_count.out)
 				font_text.append (temp_string)
-				font_text.append ("}")
+				font_text.append (";}")
 			else
 				font_offset.force (hashed_fonts.item (temp_string))
 			end
@@ -607,16 +792,17 @@ feature {NONE} -- Implementation
 			red, green, blue: INTEGER
 		do
 			l_color := a_format.fcolor
-			hashed_color := rtf_red.twin
+			hashed_color := ""
+			add_rtf_keyword (hashed_color, rtf_red)
 			red := l_color & 0x000000ff
 			l_color := l_color |>> 8
 			green := l_color & 0x000000ff
 			l_color := l_color |>> 8
 			blue := l_color & 0x000000ff
 			hashed_color.append (red.out)
-			hashed_color.append (rtf_green.twin)
+			add_rtf_keyword (hashed_color, rtf_green)
 			hashed_color.append (green.out)
-			hashed_color.append (rtf_blue.twin)
+			add_rtf_keyword (hashed_color, rtf_blue)
 			hashed_color.append (blue.out)
 			hashed_color.append_character (';')
 
@@ -635,16 +821,17 @@ feature {NONE} -- Implementation
 			end
 			
 			l_color := a_format.bcolor
-			hashed_back_color := rtf_red.twin
+			hashed_back_color := ""
+			add_rtf_keyword (hashed_back_color, rtf_red)
 			red := l_color & 0x000000ff
 			l_color := l_color |>> 8
 			green := l_color & 0x000000ff
 			l_color := l_color |>> 8
 			blue := l_color & 0x000000ff
 			hashed_back_color.append (red.out)
-			hashed_back_color.append (rtf_green.twin)
+			add_rtf_keyword (hashed_back_color, rtf_green)
 			hashed_back_color.append (green.out)
-			hashed_back_color.append (rtf_blue.twin)
+			add_rtf_keyword (hashed_back_color, rtf_blue)
 			hashed_back_color.append (blue.out)
 			hashed_back_color.append_character (';')
 
@@ -661,6 +848,21 @@ feature {NONE} -- Implementation
 				back_color_offset.force (hashed_colors.item (hashed_back_color))
 			end
 		end
+		
+feature {NONE} -- Implementation
+
+	add_rtf_keyword (a_string, a_keyword: STRING) is
+			-- Add rtf representation of `rtf_control_character' and keyword `a_keyword' to `a_string'.
+		require
+			string_not_void: a_string /= Void
+			keyword_not_void: a_keyword /= Void
+		do
+			a_string.append_character (rtf_control_character)
+			a_string.append (a_keyword)
+		ensure
+			count_increased: old a_string.count + a_keyword.count + 1 = a_string.count
+		end
+		
 		
 feature {EV_ANY_I} -- Implementation
 

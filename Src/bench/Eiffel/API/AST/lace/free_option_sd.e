@@ -86,7 +86,8 @@ feature {NONE}
 	code_replication, check_vape, array_optimization, inlining, 
 	inlining_size, server_file_size, extendible, extending,
 	dynamic, hide, profile, override_cluster,
-	address_expression, profiler_type, document: INTEGER is UNIQUE;
+	address_expression, profiler_type, 
+	document, hide_implementation: INTEGER is UNIQUE;
 
 	valid_options: HASH_TABLE [INTEGER, STRING] is
 			-- Possible values for free operators
@@ -110,6 +111,7 @@ feature {NONE}
 			Result.force (override_cluster, "override_cluster");
 			Result.force (address_expression, "address_expression");
 			Result.force (document, "document");
+			Result.force (hide_implementation, "hide_implementation");
 		end;
 
 feature {COMPILER_EXPORTER}
@@ -125,6 +127,7 @@ feature {COMPILER_EXPORTER}
 			hide_sd: HIDE_SD;
 			document_sd: DOCUMENT_SD;
 			profile_sd: PROFILE_SD;
+			hide_imp_sd: HIDE_IMPLEMENTATION_SD;
 			opt: INTEGER
 		do
 			opt := valid_options.item (option_name);
@@ -134,6 +137,9 @@ feature {COMPILER_EXPORTER}
 			elseif opt = hide then
 				!! hide_sd;
 				hide_sd.adapt (value, classes, list)	
+			elseif opt = hide_implementation then
+				!! hide_imp_sd;
+				hide_imp_sd.adapt (value, classes, list)	
 			elseif opt = document then
 				!! document_sd;
 				document_sd.adapt (value, classes, list)	
@@ -314,6 +320,12 @@ feature {COMPILER_EXPORTER}
 				if path.is_valid then
 					System.set_document_path (path)
 				else
+					error_found := True
+				end;
+			when hide_implementation then
+					-- Processing for each class is done
+					-- in `adapt'
+				if not compilation_modes.is_precompiling then
 					error_found := True
 				end
 			else

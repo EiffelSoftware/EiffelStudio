@@ -81,7 +81,7 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 					vd02.set_use_name (use_file_path);
 					Error_handler.insert_error (vd02);
 					Error_handler.raise_error;
-				elseif not use_file.readable then
+				elseif not use_file.is_readable then
 					!!vd21;
 					vd21.set_file_name (use_file_path);
 					vd21.set_cluster (cluster);

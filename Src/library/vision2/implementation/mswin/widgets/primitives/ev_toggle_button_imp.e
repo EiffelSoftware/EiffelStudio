@@ -52,7 +52,14 @@ feature -- Status setting
 
 feature -- Event - command association
 
-	add_unselect_command (cmd: Ev_COMMAND; arg: EV_ARGUMENT) is
+	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add `cmd' to the list of commands executed
+			-- when `Current' is selected.
+		do
+			add_command (Cmd_select, cmd, arg)
+		end
+
+	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands executed
 			-- when `Current' is unselected'
 		do
@@ -67,6 +74,13 @@ feature -- Event - command association
 		end	
 
 feature -- Event -- removing command association
+
+	remove_select_commands is
+			-- Empty the list of commands executed
+			-- when `Current' is selected.
+		do
+			remove_command (Cmd_unselect)
+		end
 
 	remove_unselect_commands is
 			-- Empty the list of commands executed

@@ -147,4 +147,26 @@ feature -- Naming convention
 			result_not_void: Result /= Void
 		end
 
+	type_name (a_namespace, a_prefix, a_name: STRING; is_dotnet_naming: BOOLEAN): STRING is
+			-- Name of type `a_name' with prefix `a_prefix' in namespace `a_namespce' that follows
+			-- CIL naming rules according to `is_dotnet_naming'.
+		require
+			a_prefix_not_empty_if_not_void: a_prefix /= Void implies not a_prefix.is_empty
+			a_name_not_void: a_name /= Void
+			a_name_not_empty: not a_name.is_empty
+		do
+			create Result.make_empty
+			if a_namespace /= Void then
+				Result.append_string (namespace_casing (is_dotnet_naming, a_namespace))
+				if not Result.is_empty then
+					Result.append_character ('.')	
+				end
+			end
+			if a_prefix /= Void then
+				Result.append_string (a_prefix)
+				Result.append_character ('.')
+			end
+			Result.append_string (pascal_casing (is_dotnet_naming, a_name, upper_case))
+		end
+
 end -- class IL_CASING_CONVERSION

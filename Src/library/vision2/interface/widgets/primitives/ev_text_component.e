@@ -30,8 +30,8 @@ feature -- Access
 			Result := implementation.text
 		ensure
 			bridge_ok: equal (Result, implementation.text)
-			not_void_implies_cloned: Result /= Void implies
-				Result /= implementation.text
+			not_void: Result /= Void
+			cloned: Result /= implementation.text
 		end 
 
 	text_length: INTEGER is
@@ -164,7 +164,6 @@ feature -- Element change
 			not_destroyed: not is_destroyed
 			text_not_void: a_text /= Void
 			no_carriage_returns: not a_text.has ('%R')
-			a_text_not_empty: not a_text.is_empty
 		do
 			implementation.set_text (a_text)
 		ensure
@@ -178,7 +177,7 @@ feature -- Element change
 		do
 			implementation.remove_text
 		ensure
-			text_removed: text = Void
+			text_empty: text.is_empty
 		end
 
 	insert_text (a_text: STRING) is
@@ -374,7 +373,7 @@ feature {NONE} -- Contract support
 	is_in_default_state: BOOLEAN is
 			-- Is `Current' in its default state?
 		do
-			Result := Precursor {EV_PRIMITIVE} and text = Void and
+			Result := Precursor {EV_PRIMITIVE} and text.is_empty and
 				is_editable and caret_position = 1 and not has_selection
 		end
 
@@ -385,8 +384,7 @@ feature {EV_ANY_I} -- Implementation
 			-- toolkit.
 
 invariant
-	text_not_void_implies_text_not_empty:
-		is_usable and text /= Void implies text.count > 0
+	text_not_void: is_usable implies text /= Void
 			
 end -- class EV_TEXT_COMPONENT
 

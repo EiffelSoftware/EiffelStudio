@@ -25,12 +25,14 @@ feature {NONE} -- Initialization
 			create {LINKED_LIST [WIZARD_COCLASS_DESCRIPTOR]} coclasses.make
 			create {LINKED_LIST [STRING]} eiffel_names.make
 			eiffel_names.compare_objects
+			create {LINKED_LIST [WIZARD_WRITER_VISIBLE_CLAUSE]} visible_classes.make
 		ensure
-			valid_library_descriptors: library_descriptors /= Void
-			valid_enumerators: enumerators /= Void
-			valid_interfaces: interfaces /= Void
-			valid_coclasses: coclasses /= Void
-			valid_eiffel_names: eiffel_names /= Void
+			non_void_library_descriptors: library_descriptors /= Void
+			non_void_enumerators: enumerators /= Void
+			non_void_interfaces: interfaces /= Void
+			non_void_coclasses: coclasses /= Void
+			non_void_eiffel_names: eiffel_names /= Void
+			non_void_visible_classes: visible_classes /= Void
 		end
 
 feature -- Access
@@ -71,6 +73,9 @@ feature -- Access
 
 	coclasses: LIST [WIZARD_COCLASS_DESCRIPTOR]
 			-- List of coclasses in system.
+
+	visible_classes: LIST [WIZARD_WRITER_VISIBLE_CLAUSE]
+			-- List of visible classes in system.
 
 	is_iunknown: BOOLEAN
 			-- Is IUnknown referenced as data type in system?
@@ -160,6 +165,14 @@ feature -- Basic operations
 			non_void_descriptor: a_coclass /= Void
 		do
 			coclasses.force (a_coclass)
+		end
+
+	add_visible_class (a_class: WIZARD_WRITER_VISIBLE_CLAUSE) is
+			-- Add `a_class to `visible_classes
+		require
+			non_void_descriptor: a_class /= Void
+		do
+			visible_classes.force (a_class)
 		end
 
 	start is

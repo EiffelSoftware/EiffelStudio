@@ -49,6 +49,16 @@ static char cwd [MAX_PATH];	/* Store the working directory during the session, *
 
 extern EIF_INTEGER prof_enabled;
 
+/* Total execution time */
+
+#ifdef HAS_GETRUSAGE
+struct 	prof_rusage	init_date;
+#elif defined(HAS_TIMES)
+double 		init_date;
+#elif defined(EIF_WIN32)
+SYSTEMTIME 	init_date;
+#endif  /* HAS_GERUSAGE */
+
 /* INTERNAL TRACE VARIABLES */
 
 int last_dtype;			/* These three variables are needed because we */
@@ -145,13 +155,13 @@ struct prof_info {
 							x->s_micro = 0.;\
 						}
 #define subtract_gc_time(x,y)	{\
-									x->u_micro -= y;\
+									(x)->u_micro -= y;\
 								}
 #define subtract_time(x,y,z)	{\
-									x->u_seconds = y->u_seconds - z->u_seconds;\
-									x->u_micro = y->u_micro - z->u_micro;\
-									x->s_seconds = y->s_seconds - z->s_seconds;\
-									x->s_micro = y->s_micro - z->s_micro;\
+									(x)->u_seconds = (y)->u_seconds - (z)->u_seconds;\
+									(x)->u_micro = (y)->u_micro - (z)->u_micro;\
+									(x)->s_seconds = (y)->s_seconds - (z)->s_seconds;\
+									(x)->s_micro = (y)->s_micro - (z)->s_micro;\
 								}
 #define add_time(x,y,z)	{\
 							x->u_seconds = y->u_seconds + z->u_seconds;\
@@ -190,7 +200,7 @@ struct prof_info {
 							}
 
 #elif defined(EIF_WIN32)
-#define real_time(x)		(x->wHour*3600 + x->wMinute*60 + x->wSecond + x->wMilliseconds / 1000.)
+#define real_time(x)		((x)->wHour*3600 + (x)->wMinute*60 + (x)->wSecond + (x)->wMilliseconds / 1000.)
 #define record_time(x)	{\
 							prof_time(x);\
 						}
@@ -205,65 +215,65 @@ struct prof_info {
 							x->wYear = 0;\
 						}
 #define subtract_gc_time(x,y)	{\
-									if(x->wMilliseconds >= y)\
-										x->wMilliseconds -= (unsigned short) y;\
+									if((x)->wMilliseconds >= y)\
+										(x)->wMilliseconds -= (unsigned short) y;\
 									else\
 									{\
-										x->wMilliseconds = 1000 - ((unsigned short) y - x->wMilliseconds);\
-										x->wSecond -= 1;\
+										(x)->wMilliseconds = 1000 - ((unsigned short) y - (x)->wMilliseconds);\
+										(x)->wSecond -= 1;\
 									}\
 								}
 #define subtract_time(x,y,z)	{\
 	int ExtraSecond = 0;\
 	int ExtraMinute = 0;\
 	int ExtraHour = 0;\
-	if(real_time(y) == 0)\
+	if(real_time((y)) == 0)\
 	{\
-		x->wMilliseconds = -(z->wMilliseconds);\
-		x->wSecond = -(z->wSecond);\
-		x->wMinute = -(z->wMinute);\
-		x->wHour = -(z->wHour);\
+		(x)->wMilliseconds = -((z)->wMilliseconds);\
+		(x)->wSecond = -((z)->wSecond);\
+		(x)->wMinute = -((z)->wMinute);\
+		(x)->wHour = -((z)->wHour);\
 	}\
 	else\
 	{\
-		if(y->wMilliseconds >= z->wMilliseconds)\
+		if((y)->wMilliseconds >= (z)->wMilliseconds)\
 		{\
-			x->wMilliseconds = y->wMilliseconds - z->wMilliseconds;\
+			(x)->wMilliseconds = (y)->wMilliseconds - (z)->wMilliseconds;\
 		}\
 		else\
 		{\
-			x->wMilliseconds = 1000 - (z->wMilliseconds - y->wMilliseconds);\
+			(x)->wMilliseconds = 1000 - ((z)->wMilliseconds - (y)->wMilliseconds);\
 			ExtraSecond = -1;\
 		}\
-		if(y->wSecond >= z->wSecond)\
+		if((y)->wSecond >= (z)->wSecond)\
 		{\
-			x->wSecond = y->wSecond - z->wSecond;\
+			(x)->wSecond = (y)->wSecond - (z)->wSecond;\
 		}\
 		else\
 		{\
-			x->wSecond = 60 - (z->wSecond - y->wSecond);\
+			(x)->wSecond = 60 - ((z)->wSecond - (y)->wSecond);\
 			ExtraMinute = -1;\
 		}\
-		x->wSecond += ExtraSecond;\
-		if(y->wMinute >= z->wMinute)\
+		(x)->wSecond += ExtraSecond;\
+		if((y)->wMinute >= (z)->wMinute)\
 		{\
-			x->wMinute = y->wMinute - z->wMinute;\
+			(x)->wMinute = (y)->wMinute - (z)->wMinute;\
 		}\
 		else\
 		{\
-			x->wMinute = 60 - (z->wMinute - y->wMinute);\
+			(x)->wMinute = 60 - ((z)->wMinute - (y)->wMinute);\
 			ExtraHour = -1;\
 		}\
-		x->wMinute += ExtraMinute;\
-		if(y->wHour >= z->wHour)\
+		(x)->wMinute += ExtraMinute;\
+		if((y)->wHour >= (z)->wHour)\
 		{\
-			x->wHour = y->wHour - z->wHour;\
+			(x)->wHour = (y)->wHour - (z)->wHour;\
 		}\
 		else\
 		{\
-			x->wHour = 24 - (z->wHour - y->wHour);\
+			(x)->wHour = 24 - ((z)->wHour - (y)->wHour);\
 		}\
-		x->wHour += ExtraHour;\
+		(x)->wHour += ExtraHour;\
 	}\
 								}
 #define add_time(x,y,z)	{\
@@ -382,7 +392,7 @@ void check_options(EIF_CONTEXT struct eif_opt *opt, int dtype)
                     	/* Options for the Eiffel feature*/
           				/* Dtype of the Eiffel class */
 {
-	/* Check whether the class `dty[e' has E-TRACE or E-PROFILE
+	/* Check whether the class `dtype' has E-TRACE or E-PROFILE
 	 * options in `opt' and dispatch to the finctions `start_trace()'
 	 * and `start_profile()' if necessary.
 	 * This function is directly called by RTSA in WORKBENCH mode; it is
@@ -457,12 +467,14 @@ void check_options_stop(EIF_CONTEXT_NOARG)
 void initprf(void)
 {
 	/* Creates the table needed for E-PROFILE. This function only
-	 * allocates that table if `prof_enabled'.
+	 * allocates that table if `prof_enabled'. Record the time
+	 * to be able to compute the total execution time.
 	 */
 
 	if(prof_enabled) {
 			/* Get the current working directory, ie the one where we
 			/* are going to save the profile_ouput_file */
+
 		if (getcwd(cwd, MAX_PATH) == NULL)
 			print_err_msg(stderr, "Unable to get the current working directory.\n");
 
@@ -478,16 +490,28 @@ void initprf(void)
 			eraise("Hashtable creation failure", EN_FATAL);
 
 		prof_stack_init();		/* Initialize stack */
+
+		record_time (&init_date); 
 	}
 }
 
 void exitprf(void)
 {
 	/* Exit profiling. Call this function only at exit of Eiffel system.
+	 * Compute the total execution time and the percentage of each feature.
 	 * Store information to disk and deallocate structures.
 	 */
 
 	if(prof_enabled) {
+
+#ifdef HAS_GETRUSAGE
+		struct prof_rusage execution_time;
+#elif defined(HAS_TIMES)
+		double execution_time;
+#elif defined(EIF_WIN32)
+		SYSTEMTIME execution_time;
+#endif  /* HAS_GERUSAGE */
+
 		unsigned long *keys;		/* Keys from H table */
 		struct feat_table *f_values;	/* Values from class H table */
 		struct prof_info *features;	/* Features from H tables */
@@ -495,15 +519,35 @@ void exitprf(void)
 	    	j,					/* Inner-loop-counter */
 	    	index;				/* Index counter for output */
 		FILE *prof_output;		/* Storage file */
-
+			
+		double percentage; /* the computed percentage of each routine */
+		
 		chdir (cwd);	/* change the current directory to EIFGEN/W_code or
 						/* EIFGEN/F_code before to crete the profile_output_file */
 
+		record_time (&execution_time); 
+		
 		prof_output = fopen(profile_output_file, "w");
 		if (!prof_output) {
 				/* Too bad: no file */
 			eraise("Unable to open to output file for profile", EN_FATAL);
 		}
+
+#ifdef HAS_GETRUSAGE
+		subtract_time (&execution_time, &execution_time, &init_date);
+#elif defined(HAS_TIMES)
+		execution_time = execution_time - init_date;
+#elif defined(EIF_WIN32)
+		subtract_time (&execution_time, &execution_time, &init_date);
+#endif 
+
+/* NEED TO BE CHECKED BY GUILLAUME
+		if (gc_ran && !gc_running) {
+				/* Get time wasted by GC */
+/*			subtract_gc_time(&execution_time, last_gc_time);
+			gc_ran = 0;
+		}		
+ */
 
 		keys = class_table->h_keys;
 		f_values = (struct feat_table *) class_table->h_values;
@@ -514,7 +558,16 @@ void exitprf(void)
 				for (j = 0; j < f_values[i].htab->h_size; j++) {
 					if (f_values[i].htab->h_keys[j] != 0) {
 						features = (struct prof_info *) f_values[i].htab->h_values;
-						fprintf(prof_output, "[%d]\t%.2f\t%.2f\t%ld\t%s from %d\t[%d]\n", index,
+						
+#ifdef HAS_GETRUSAGE
+						percentage = (real_time(features[j].all_total_time)) / (real_time(&execution_time)) / 10000.0; 
+#elif defined(HAS_TIMES)
+						percentage = features[j].all_total_time / (double) execution_time * 100.;
+#elif defined(EIF_WIN32)
+						percentage = (real_time(features[j].all_total_time)) / (real_time(&execution_time)) * 100.0; 
+#endif						
+						
+						fprintf(prof_output, "[%d]\t%.2f\t%.2f\t%ld\t%.2f\t%s from %d\n", index,
 #ifdef HAS_GETRUSAGE
 		    					(real_time(features[j].all_total_time)) / 1000000.,
 								(real_time(features[j].descendent_time)) / 1000000.,
@@ -526,9 +579,9 @@ void exitprf(void)
 								real_time(features[j].descendent_time),
 #endif /* HAS_GETRUSAGE */
 		    					features[j].number_of_calls,
+								percentage,
 		    					features[j].featurename,
-								f_values[i].dtype,
-								index);
+								f_values[i].dtype);
 						index++;
 					}
 				}
@@ -823,6 +876,7 @@ void update_class_table(struct prof_info *item)
 			/* Find the H table of features of class dtype */
 		f_t = (struct feat_table *) ht_value(class_table, item->dtype);
 		if(!f_t) {
+		
 				/* Create a new Hash table */
 			f_t = (struct feat_table *) cmalloc(sizeof(struct feat_table));
 			if(!f_t)

@@ -2840,8 +2840,9 @@ rt_private EIF_REFERENCE malloc_from_zone(unsigned int nbytes)
 		 * -- Fabrice.
 		 */
 
-		if ((OVERHEAD+nbytes+sc_from.sc_top) > sc_from.sc_end)
-			 enomem(MTC_NOARG);
+		if ((OVERHEAD+nbytes+sc_from.sc_top) > sc_from.sc_end) {
+			return NULL;
+		}
 	}
 
 	SIGBLOCK;								/* Block signals */

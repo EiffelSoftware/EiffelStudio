@@ -384,6 +384,8 @@ feature -- Status setting
 
 	on_select is
 			-- Current became selected in notebook.
+		local
+			l_assembly_i: ASSEMBLY_I
 		do
 			if 
 				area = Void 
@@ -392,9 +394,18 @@ feature -- Status setting
 				update_excluded_class_figures
 				development_window.window.set_pointer_style (Default_pixmaps.Wait_cursor)
 				if class_stone /= Void then
-					create_class_view (class_stone.class_i)
+					if not class_stone.class_i.is_external_class then
+						create_class_view (class_stone.class_i)
+					else
+						clear_area
+					end
 				elseif cluster_stone /= Void then
-					create_cluster_view (cluster_stone.cluster_i)
+					l_assembly_i ?= cluster_stone.cluster_i
+					if l_assembly_i = Void then
+						create_cluster_view (cluster_stone.cluster_i)
+					else
+						clear_area
+					end
 				else
 					disable_toolbar
 				end

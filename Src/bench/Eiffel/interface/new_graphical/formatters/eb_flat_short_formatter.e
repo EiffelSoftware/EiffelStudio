@@ -11,6 +11,8 @@ inherit
 		redefine
 			class_cmd,
 			generate_text,
+			set_stone,
+			is_dotnet_formatter,
 			formatted_text
 		end
 
@@ -35,6 +37,12 @@ feature -- Properties
 			Result := Interface_names.m_Showfs
 		end
  
+ 	is_dotnet_formatter: BOOLEAN is
+ 			-- Is Current able to format .NET XML types?
+ 		do
+ 			Result := True
+ 		end
+ 
 feature {NONE} -- Properties
 
 	command_name: STRING is
@@ -46,7 +54,14 @@ feature {NONE} -- Properties
 	post_fix: STRING is "fs"
 			-- String symbol of the command, used as an extension when saving.
 
+	consumed_type: CONSUMED_TYPE
+			-- The .NET consumed undergoing formatting.
+
+	class_i: EXTERNAL_CLASS_I
+			-- Class currently associated with `Current'.
+
 	formatted_text: STRUCTURED_TEXT
+			-- Text representing `class_i'.
 
 feature {NONE} -- Implementation
 
@@ -67,7 +82,16 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				set_is_without_breakable
-				formatted_text := flatshort_context_text (associated_class)
+				if not is_dotnet_mode then
+					formatted_text := flatshort_context_text (associated_class)
+				else
+					if class_i /= Void then
+						formatted_text := flatshort_dotnet_text (consumed_type, class_i)
+					elseif associated_class /= Void then
+						formatted_text := flatshort_dotnet_text (consumed_type, associated_class.lace_class)
+					end
+				end
+				
 				if formatted_text = Void then
 					last_was_error := True
 				else
@@ -86,4 +110,53 @@ feature {NONE} -- Implementation
 			retry
 		end
 
+feature -- Status setting
+
+	set_stone (new_stone: CLASSI_STONE) is
+			-- Associate `Current' with class contained in `new_stone'.
+		local
+			a_stone: CLASSC_STONE
+			l_reader: EIFFEL_XML_DESERIALIZER
+		do
+			if new_stone /= Void and new_stone.class_i.is_external_class then
+				set_dotnet_mode (True)
+				create l_reader
+				a_stone ?= new_stone
+				if a_stone /= Void then
+					-- Is compiled
+					consumed_type ?= l_reader.new_object_from_file (a_stone.class_i.file_name)
+					set_class (a_stone.e_class)
+					class_i := Void
+				else
+					-- Is not compiled
+					consumed_type ?= l_reader.new_object_from_file (new_stone.file_name)
+					set_classi (new_stone.class_i)
+					associated_class := Void
+				end
+			else
+				set_dotnet_mode (False)
+				Precursor {EB_CLASS_TEXT_FORMATTER} (new_stone)
+			end
+		end
+
+	set_classi (a_class: CLASS_I) is
+			-- Associate current formatter with non-compiled `a_class'.
+		do		
+			class_i ?= a_class
+			if a_class = Void then
+				class_cmd := Void
+			else
+				create_class_cmd
+			end
+			must_format := True
+			format
+			if selected then
+				if widget_owner /= Void then
+					widget_owner.set_widget (widget)
+				end
+				display_header
+			end
+		end
+
 end -- class EB_FLAT_SHORT_FORMATTER
+

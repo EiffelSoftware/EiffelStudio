@@ -56,7 +56,7 @@ feature -- Properties
 		do
 			Result := Interface_names.m_Showtext_new
 		end
- 
+
 feature -- Formatting
 
 	format is
@@ -125,7 +125,9 @@ feature -- Status setting
 		do
 			a_stone ?= new_stone
 			if a_stone /= Void then
-				set_classi (a_stone.class_i)
+				if not new_stone.class_i.is_external_class then
+					set_classi (a_stone.class_i)
+				end
 			else
 				classi := Void
 				if selected then

@@ -14,7 +14,9 @@ inherit
 			feature_cmd,
 			generate_text,
 			formatted_text,
-			format
+			format,
+			set_stone,
+			is_dotnet_formatter
 		end
 
 	EB_SHARED_FORMAT_TABLES
@@ -35,6 +37,22 @@ feature -- Status setting
 			Precursor {EB_FEATURE_TEXT_FORMATTER} (an_editor)
 			an_editor.show_breakpoints
 			editor.drop_actions.extend (~on_breakable_drop)
+		end
+
+	set_stone (new_stone: FEATURE_STONE) is
+			-- Associate `Current' with class contained in `new_stone'.
+		local
+			l_reader: EIFFEL_XML_DESERIALIZER
+		do
+			if new_stone /= Void and new_stone.class_i.is_external_class then
+				set_dotnet_mode (True)
+				create l_reader
+				consumed_type ?= l_reader.new_object_from_file (new_stone.class_i.file_name)
+				set_feature (new_stone.e_feature)
+			else
+				set_dotnet_mode (False)
+				Precursor {EB_FEATURE_TEXT_FORMATTER} (new_stone)
+			end
 		end
 
 feature -- Formatting
@@ -131,7 +149,17 @@ feature {NONE} -- Properties
 			-- String symbol of the command, used as an extension when saving.
 
 	formatted_text: STRUCTURED_TEXT
+			-- Actual formatted text, if any.
+			
+	consumed_type: CONSUMED_TYPE
+			-- .NET consumed type contain this feature if external.
 
+	is_dotnet_formatter: BOOLEAN is
+ 			-- Is Current able to format .NET XML types?
+ 		do
+ 			Result := True
+ 		end
+	
 feature {NONE} -- Implementation
 
 	selected_line: INTEGER
@@ -152,8 +180,6 @@ feature {NONE} -- Implementation
 			associated_feature_non_void: associated_feature /= Void
 		do
 			create feature_cmd.do_nothing
---			class_cmd.set_feature_clause_order 
---				(feature_clause_order)
 		end
 
 	generate_text is
@@ -162,7 +188,12 @@ feature {NONE} -- Implementation
 		do
 			if not retried then
 				set_is_with_breakable
-				formatted_text := rout_flat_context_text (associated_feature)
+				if not is_dotnet_mode then			
+					formatted_text := rout_flat_context_text (associated_feature)
+				else
+					set_is_without_breakable
+					formatted_text := rout_flat_dotnet_text (associated_feature, consumed_type)
+				end
 				if formatted_text = Void then
 					last_was_error := True
 				else

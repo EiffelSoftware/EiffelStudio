@@ -343,11 +343,6 @@ feature {NONE} -- Initialization
 			managed_class_formatters.extend (create {EB_FLAT_FORMATTER}.make (Current))
 			managed_class_formatters.extend (create {EB_SHORT_FORMATTER}.make (Current))
 			managed_class_formatters.extend (create {EB_FLAT_SHORT_FORMATTER}.make (Current))
-			if debugger_manager.display_dotnet_cmd then   
-			  		-- Build .NET specific class formatter		  	
-			  	managed_class_formatters.extend (create {EB_DOTNET_SHORT_FORMATTER}.make (Current))
-			  	managed_class_formatters.extend (create {EB_DOTNET_FLAT_SHORT_FORMATTER}.make (Current))
-            end 
 			managed_class_formatters.extend (Void)
 			managed_class_formatters.extend (create {EB_ANCESTORS_FORMATTER}.make (Current))
 			managed_class_formatters.extend (create {EB_DESCENDANTS_FORMATTER}.make (Current))
@@ -364,10 +359,6 @@ feature {NONE} -- Initialization
 			create managed_feature_formatters.make (9)
 			managed_feature_formatters.extend (create {EB_BASIC_FEATURE_FORMATTER}.make (Current))
 			managed_feature_formatters.extend (create {EB_ROUTINE_FLAT_FORMATTER}.make (Current))
-			if debugger_manager.display_dotnet_cmd then   
-			  		-- Build .NET specific feature formatter 
-			  	managed_feature_formatters.extend (create {EB_DOTNET_FEATURE_FORMATTER}.make (Current))
-            end 
 			managed_feature_formatters.extend (Void)
 			managed_feature_formatters.extend (create {EB_CALLERS_FORMATTER}.make (Current))
 			managed_feature_formatters.extend (create {EB_IMPLEMENTERS_FORMATTER}.make (Current))
@@ -418,24 +409,6 @@ feature {NONE} -- Initialization
 			accel.actions.extend (form~execute)
 			form.set_accelerator (accel)
 			managed_main_formatters.extend (form)			
-			
-			if debugger_manager.display_dotnet_cmd then   
-				create {EB_DOTNET_SHORT_FORMATTER} form.make (Current)
-				create accel.make_with_key_combination (
-						create {EV_KEY}.make_with_code (Kcst.Key_d),
-						True, False, True)
-				accel.actions.extend (form~execute)
-				form.set_accelerator (accel)
-				managed_main_formatters.extend (form)
-				
-			  	create {EB_DOTNET_FLAT_SHORT_FORMATTER} form.make (Current)
-				create accel.make_with_key_combination (
-						create {EV_KEY}.make_with_code (Kcst.Key_d),
-						True, False, True)
-				accel.actions.extend (form~execute)
-				form.set_accelerator (accel)
-				managed_main_formatters.extend (form)				
-			end
 
 			from
 				managed_class_formatters.start
@@ -501,19 +474,16 @@ feature {NONE} -- Initialization
 				-- We now select the correct class formatter.
 			f_ind := default_class_formatter_index
 				--| This takes the formatter separators in consideration.
-			if f_ind > 5 then
+			if f_ind > 4 then
 				f_ind := f_ind + 1
 			end
-			if f_ind > 9 then
+			if f_ind > 8 then
 				f_ind := f_ind + 1
 			end
 			if f_ind < 1 or f_ind > managed_class_formatters.count then
-				f_ind := 7
+				f_ind := 6
 			end
-			if managed_class_formatters.i_th (f_ind) /= Void then
-				managed_class_formatters.i_th (f_ind).enable_select
-			end
-			
+			(managed_class_formatters @ f_ind).enable_select;			
 				-- We now select the correct feature formatter.
 			f_ind := default_feature_formatter_index
 			if f_ind > 2 then
@@ -2332,7 +2302,9 @@ feature {NONE} -- Implementation
 			l_reader: EIFFEL_XML_DESERIALIZER
 			external_cons: CONSUMED_TYPE
 			str: STRING
-			l_cnt: INTEGER
+			dotnet_class: BOOLEAN
+			l_short_formatter: EB_SHORT_FORMATTER
+			l_flat_formatter: EB_FLAT_SHORT_FORMATTER
 		do
 				-- the text does not change if the text was saved with syntax errors
 			cur_wid := window
@@ -2440,9 +2412,15 @@ feature {NONE} -- Implementation
 								external_cons ?= l_reader.new_object_from_file (externali.file_name)
 								if external_cons /= Void then
 									-- A .NET class.
-									managed_main_formatters.i_th (6).set_stone (new_class_stone)
-									managed_main_formatters.i_th (7).set_stone (new_class_stone)
-									managed_main_formatters.i_th (7).execute
+									dotnet_class := True
+									l_short_formatter ?= managed_main_formatters.i_th (4)
+									l_flat_formatter ?= managed_main_formatters.i_th (5)
+									if l_short_formatter /= Void then
+										l_short_formatter.set_dotnet_mode (True)
+									end
+									if l_flat_formatter /= Void then
+										l_flat_formatter.set_dotnet_mode (True)
+									end
 								end								
 							else
 								managed_main_formatters.first.set_stone (new_class_stone)
@@ -2456,9 +2434,14 @@ feature {NONE} -- Implementation
 					if conv_classc = Void then
 							--| The dropped class is not compiled.
 							--| Display only the textual formatter.
+						if dotnet_class then
+							managed_main_formatters.i_th (4).set_stone (new_class_stone)
+							managed_main_formatters.i_th (5).set_stone (new_class_stone)
+							managed_main_formatters.i_th (4).execute				
+						end
 						address_manager.disable_formatters
-					elseif not conv_classc.class_i.is_external_class then
-							--| We have a compiled class which is not external.
+					else
+							--| We have a compiled class.
 						if
 							class_text_exists and then
 							Eiffel_project.Workbench.last_reached_degree <= 2
@@ -2466,17 +2449,18 @@ feature {NONE} -- Implementation
 							new_feature_cmd.enable_sensitive
 						end
 
-						address_manager.enable_formatters
+						--address_manager.enable_formatters
+						update_formatters
 						if not class_text_exists then
 								--| Disable the textual formatter.
 							managed_main_formatters.first.disable_sensitive
 							from
-								l_cnt := 2
+								managed_main_formatters.start
 							until
-								l_cnt > 5
+								managed_main_formatters.after
 							loop
-								managed_main_formatters.i_th (l_cnt).set_stone (new_class_stone)
-								l_cnt := l_cnt + 1
+								managed_main_formatters.item.set_stone (new_class_stone)
+								managed_main_formatters.forth
 							end
 							managed_main_formatters.i_th (2).execute
 						else
@@ -2487,23 +2471,23 @@ feature {NONE} -- Implementation
 									not managed_main_formatters.first.selected
 								then
 									from
-										l_cnt := 1
+										managed_main_formatters.start
 									until
-										l_cnt > 5
+										managed_main_formatters.after
 									loop
-										managed_main_formatters.i_th (l_cnt).set_stone (new_class_stone)
-										l_cnt := l_cnt + 1
+										managed_main_formatters.item.set_stone (new_class_stone)
+										managed_main_formatters.forth
 									end
 								end
 							else
 								address_manager.disable_formatters
 								from
-									l_cnt := 1
+									managed_main_formatters.start
 								until
-									l_cnt > 5
+									managed_main_formatters.after
 								loop
-									managed_main_formatters.i_th (l_cnt).set_stone (new_class_stone)
-									l_cnt := l_cnt + 1
+									managed_main_formatters.item.set_stone (new_class_stone)
+									managed_main_formatters.forth
 								end
 							end
 						end
@@ -2654,55 +2638,65 @@ feature {NONE} -- Implementation
 			type_changed: BOOLEAN
 		do
 			cst ?= stone
+			cist ?= stone
+			-- Check to if formatting context has changed.
 			if cst /= Void then
-				type_changed := (cst.e_class.is_external and not is_stone_external) or
-					(not cst.e_class.is_external and is_stone_external)
-				if type_changed then
-					is_stone_external := not is_stone_external
-					address_manager.change_formatters (cst.e_class.is_external)
-				end
+				type_changed := (cst.e_class.is_true_external and not is_stone_external) or
+					(not cst.e_class.is_true_external and is_stone_external)
+			elseif cist /= Void then
+				type_changed := (cist.class_i.is_external_class and not is_stone_external) or
+					(not cist.class_i.is_external_class and is_stone_external)
+			end
+			
+			if type_changed then
+					-- Toggle stone flag.
+            	is_stone_external := not is_stone_external
+            end 
+
+			if cst /= Void then
+				address_manager.enable_formatters
 				if is_stone_external then
-					managed_main_formatters.i_th (1).disable_sensitive
-					managed_main_formatters.i_th (2).disable_sensitive
-					managed_main_formatters.i_th (3).disable_sensitive
-					managed_main_formatters.i_th (6).enable_sensitive
-					managed_main_formatters.i_th (7).enable_sensitive
-				else
-					if changed then
-						address_manager.disable_formatters
-					else
-						address_manager.enable_formatters
-						create file.make (cst.e_class.lace_class.file_name)
-						if not file.exists then
-							if managed_main_formatters.first.selected then
-								managed_main_formatters.i_th (2).execute
-							end
-							managed_main_formatters.first.disable_sensitive
-						end
-					end
-				end
-			else
-				cist ?= stone
-				if cist /= Void and cist.class_i.is_external_class then
-					type_changed := (cist.class_i.is_external_class and not is_stone_external) or
-						(not cist.class_i.is_external_class and is_stone_external)
+					-- Change formatters to .NET sensitivity (from normal).
+					enable_dotnet_formatters
 					if type_changed then
-						is_stone_external := not is_stone_external
-						address_manager.change_formatters (cist.class_i.is_external_class)
-					end
-					if is_stone_external then
-						managed_main_formatters.i_th (1).disable_sensitive
-						managed_main_formatters.i_th (2).disable_sensitive
-						managed_main_formatters.i_th (3).disable_sensitive
-						managed_main_formatters.i_th (6).enable_sensitive
-						managed_main_formatters.i_th (7).enable_sensitive
+						managed_main_formatters.i_th (4).enable_select
 					end
 				else
-					address_manager.disable_formatters
-					managed_main_formatters.first.execute
+					if changed then                                 
+                      	address_manager.disable_formatters 
+     		        else
+     		        	--managed_main_formatters.first.disable_sensitive
+     		   		end
 				end
+			elseif cist /= Void and is_stone_external then
+					-- Change formatters to .NET sensitivity (from normal).
+					enable_dotnet_formatters
+					if type_changed then
+						managed_main_formatters.i_th (4).enable_select
+					end
+			else			
+				address_manager.disable_formatters
+				managed_main_formatters.first.execute
 			end
 		end
+
+	enable_dotnet_formatters is
+			-- Enable only the .NET class text formatters.
+		do
+			from
+				managed_main_formatters.start
+			until
+				managed_main_formatters.after
+			loop
+				if managed_main_formatters.item.is_dotnet_formatter then
+					managed_main_formatters.item.enable_sensitive
+				else
+					managed_main_formatters.item.disable_sensitive
+				end
+				managed_main_formatters.forth
+			end
+		end
+		
 
 	on_text_reset is
 			-- The main editor has just been wiped out

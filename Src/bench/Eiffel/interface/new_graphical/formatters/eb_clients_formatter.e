@@ -9,7 +9,8 @@ class
 inherit
 	EB_CLASS_TEXT_FORMATTER
 		redefine
-			class_cmd
+			class_cmd,
+			is_dotnet_formatter
 		end
 
 creation
@@ -44,6 +45,12 @@ feature {NONE} -- Properties
 
 	post_fix: STRING is "cli"
 			-- String symbol of the command, used as an extension when saving.
+
+	is_dotnet_formatter: BOOLEAN is
+			-- Is Current able to format .NET XML types?
+		do
+			Result := True
+		end
 
 feature {NONE} -- Implementation
 

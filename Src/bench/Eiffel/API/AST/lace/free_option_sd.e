@@ -49,11 +49,9 @@ feature {COMPILER_EXPORTER}
 				inspect valid_options.item (option_name)
 				when extending, extendible then
 					!! dle_license.make;
-					if dle_license.dle_registered then
-						Result := true
-					end
+					Result := dle_license.licensed
 				else
-					Result := true
+					Result := True
 				end
 			end
 		end;

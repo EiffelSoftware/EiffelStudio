@@ -401,6 +401,7 @@ feature -- Access
 			Result.force ("meaning", "meaning")
 			Result.force ("raise", "raise")
 			Result.force ("set_item", "set_item")
+			Result.force ("a_stub", "a_stub")
 		end
 
 	c_keywords: HASH_TABLE [STRING, STRING] is
@@ -490,6 +491,7 @@ feature -- Access
 			Result.force ("Formatter", "Formatter")
 			Result.force ("value", "value")
 			Result.force ("result", "result")
+			Result.force ("IFont1", "IFont1")
 		end
 		
 	eiffel_runtime_macros: HASH_TABLE [STRING, STRING] is

@@ -341,6 +341,11 @@ feature -- Element change
 					end
 					c.forth
 				end
+ 				if is_row_layout then
+ 					largest_h := largest_h.max (height // preferred_count)
+ 				else
+ 					largest_w := largest_w.max (width // preferred_count)
+ 				end
 				set_children_sizes (c, largest_w, largest_h)
 				if is_row_layout then
 					set_children_in_rows (c, largest_h)

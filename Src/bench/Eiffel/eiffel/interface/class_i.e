@@ -301,6 +301,8 @@ feature {COMPILER_EXPORTER} -- Compiled class
 				!DOUBLE_REF_B! Result.make (Current)
 			elseif Current = local_system.pointer_ref_class then
 				!POINTER_REF_B! Result.make (Current)
+			elseif Current = local_system.tuple_class then
+				!TUPLE_CLASS_B! Result.make (Current)
 			else
 				!! Result.make (Current);
 			end;
@@ -414,8 +416,8 @@ end;
 
 feature -- Document processing
 
-    document_file_name: FILE_NAME is
-            -- File name specified for the document
+	document_file_name: FILE_NAME is
+			-- File name specified for the document
 			-- (.e is removed from end)
 		local
 			bname: STRING;
@@ -436,8 +438,8 @@ feature -- Document processing
 					bname.head (i - 2);
 				end;
 				Result.set_file_name (bname)
-            end
-        end
+			end
+		end
 
 feature {NONE} -- Document processing
 

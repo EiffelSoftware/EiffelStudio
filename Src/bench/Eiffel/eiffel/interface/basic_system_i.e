@@ -64,6 +64,10 @@ feature
 	memory_class_i: CLASS_I
 			-- Class MEMORY
 
+	tuple_class: CLASS_I
+			-- Class TUPLE
+
+
 	set_general_class (c: CLASS_I) is
 			-- Assign `c' to `general_class'.
 		do
@@ -183,6 +187,13 @@ feature
 		do
 			memory_class_i := c
 		end
+
+	set_tuple_class (c: CLASS_I) is
+			-- Assign `c' to `tuple_class'.
+		do
+			tuple_class := c
+		end
+
 
 	general_id: CLASS_ID is
 			-- Id of class GENERAL
@@ -354,6 +365,15 @@ feature
 		do
 			Result := pointer_ref_class.compiled_class.id
 		end; -- pointer_ref_id
+
+	tuple_id: CLASS_ID is
+			-- Id of class TUPLE
+		require
+			tuple_class_exists: tuple_class /= Void
+			compiled: tuple_class.compiled
+		do
+			Result := tuple_class.compiled_class.id
+		end
 
 	pointer_ref_dtype: INTEGER is
 			-- Id of class POINTER_REF

@@ -422,13 +422,13 @@ feature -- Plug and Makefile file
 	generate_plug is
 			-- Generate plug with run-time
 		local
-			string_cl, bit_cl, array_cl: CLASS_C
-			arr_type_id, str_type_id, type_id: INTEGER
+			string_cl, bit_cl, array_cl, tuple_cl: CLASS_C
+			arr_type_id, str_type_id, tup_type_id, type_id: INTEGER
 			id: TYPE_ID
 			to_c_feat, set_count_feat, creation_feature: FEATURE_I
 			creators: EXTEND_TABLE [EXPORT_I, STRING]
 			dispose_name, str_make_name, init_name, set_count_name, to_c_name: STRING
-			arr_make_name: STRING
+			arr_make_name, tup_make_name: STRING
 			special_cl: SPECIAL_B
 			cl_type: CLASS_TYPE
 			final_mode: BOOLEAN
@@ -497,6 +497,29 @@ feature -- Plug and Makefile file
 			Plug_file.putstring (arr_make_name)
 			Plug_file.putstring ("();%N")
 
+				--| make tuple declaration
+				--| Potentially same problems as above!
+			if (system.tuple_make_name = Void) or not System.uses_precompiled or final_mode then
+				tuple_cl := System.class_of_id (System.tuple_id)
+				cl_type := System.Instantiator.Tuple_type.associated_class_type; 
+				id := cl_type.id
+				tup_type_id := cl_type.type_id
+				creators := tuple_cl.creators
+				creators.start
+				creation_feature := tuple_cl.feature_table.item (creators.key_for_iteration)
+				tup_make_name := creation_feature.body_id.feature_name (id)
+-- FIXME
+	--			array_make_name := clone (arr_make_name)
+			else
+				cl_type := System.Instantiator.Tuple_type.associated_class_type; 
+				tup_type_id := cl_type.type_id
+				tup_make_name := system.tuple_make_name
+			end
+
+			Plug_file.putstring ("extern void ")
+			Plug_file.putstring (tup_make_name)
+			Plug_file.putstring ("();%N")
+
 			if final_mode and then System.array_optimization_on then
 				System.remover.array_optimizer.generate_plug_declarations (Plug_file)
 			else
@@ -554,6 +577,11 @@ feature -- Plug and Makefile file
 			Plug_file.putstring (arr_make_name)
 			Plug_file.putstring (";%N")
 
+				-- Pointer on creation feature of class TUPLE
+			Plug_file.putstring ("%Tegc_tupmake = ")
+			Plug_file.putstring (tup_make_name)
+			Plug_file.putstring (";%N")
+
 				--Pointer on `set_count' of class STRING
 			Plug_file.putstring ("%Tegc_strset = ")
 			Plug_file.putstring (set_count_name)
@@ -567,6 +595,11 @@ feature -- Plug and Makefile file
 				-- Dynamic type of class ARRAY[ANY]
 			Plug_file.putstring ("%Tegc_arr_dtype = ")
 			Plug_file.putint (arr_type_id - 1)
+			Plug_file.putstring (";%N")
+
+				-- Dynamic type of class TUPLE
+			Plug_file.putstring ("%Tegc_tup_dtype = ")
+			Plug_file.putint (tup_type_id - 1)
 			Plug_file.putstring (";%N")
 
 				-- Dispose routine id from class MEMORY (if compiled) 

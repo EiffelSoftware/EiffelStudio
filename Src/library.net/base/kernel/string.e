@@ -39,9 +39,14 @@ class STRING inherit
 		end
 		
 create
-	make, make_from_string, make_from_c, make_from_cil
+	make,
+	make_empty,
+	make_filled,
+	make_from_string,
+	make_from_c,
+	make_from_cil
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
 	make (n: INTEGER) is
 			-- Allocate space for at least `n' characters.
@@ -54,13 +59,32 @@ feature {NONE} -- Initialization
 			area_allocated: capacity >= n
 		end
 
+	make_empty is
+			-- Create empty string.
+		do
+			make (0)
+		ensure
+			empty: count = 0
+			area_allocated: capacity >= 0
+		end
+
+	make_filled (c: CHARACTER; n: INTEGER) is
+			-- Create string of length `n' filled with `c'.
+		require
+			valid_count: n >= 0
+		do
+			make (n)
+			fill_character (c)
+		ensure
+			count_set: count = n
+			filled: occurrences (c) = count
+		end
+
 	make_from_cil (s: SYSTEM_STRING) is
 			-- Initialize from a .NET string.
 		do
 			create internal_string_builder.make_2 (s)
 		end
-
-feature -- Initialization
 
 	remake (n: INTEGER) is
 			-- Allocate space for at least `n' characters.
@@ -549,7 +573,7 @@ feature -- Element change
 			s_area := s.internal_string_builder
 			diff := s_count - substring_size
 			new_size := diff + count
-			internal_string_builder.set_length (new_size)
+			set_count (new_size)
 			if diff > 0 then
 					--| We move the end of the string forward.
 				from
@@ -636,7 +660,7 @@ feature -- Element change
 	fill_character (c: CHARACTER) is
 			-- Fill with `capacity' characters all equal to `c'.
 		do
-			internal_string_builder.set_length (capacity)
+			set_count (capacity)
 			replace_character (c)
 		ensure
 			filled: full
@@ -647,11 +671,25 @@ feature -- Element change
 	head (n: INTEGER) is
 			-- Remove all characters except for the first `n';
 			-- do nothing if `n' >= `count'.
+		obsolete
+			"ELKS 2001: use `keep_head' instead'"
+		require
+			non_negative_argument: n >= 0
+		do
+			keep_head (n)
+		ensure
+			new_count: count = n.min (old count)
+			-- first_kept: For every `i' in 1..`n', `item' (`i') = old `item' (`i')
+		end
+
+	keep_head (n: INTEGER) is
+			-- Remove all characters except for the first `n';
+			-- do nothing if `n' >= `count'.
 		require
 			non_negative_argument: n >= 0
 		do
 			if n < count then
-				internal_string_builder.set_length (n)
+				set_count (n)
 			end
 		ensure
 			new_count: count = n.min (old count)
@@ -659,6 +697,19 @@ feature -- Element change
 		end
 
 	tail (n: INTEGER) is
+			-- Remove all characters except for the last `n';
+			-- do nothing if `n' >= `count'.
+		obsolete
+			"ELKS 2001: use `keep_tail' instead'"
+		require
+			non_negative_argument: n >= 0
+		do
+			keep_tail (n)
+		ensure
+			new_count: count = n.min (old count)
+		end
+
+	keep_tail (n: INTEGER) is
 			-- Remove all characters except for the last `n';
 			-- do nothing if `n' >= `count'.
 		require
@@ -674,7 +725,7 @@ feature -- Element change
 					internal_string_builder.set_chars (i, internal_string_builder.get_chars (i + n))
 					i := i + 1
 				end
-				internal_string_builder.set_length (n)
+				set_count (n)
 			end
 		ensure
 			new_count: count = n.min (old count)
@@ -704,7 +755,7 @@ feature -- Element change
 					i := i + 1
 				end
 			end
-			internal_string_builder.set_length (cnt - nbw)
+			set_count (cnt - nbw)
 		ensure
 			new_count: (count /= 0) implies
 				((item (1) /= ' ') and
@@ -727,7 +778,7 @@ feature -- Element change
 			loop
 				lnw := lnw - 1
 			end
-			internal_string_builder.set_length (lnw + 1)
+			set_count (lnw + 1)
 		ensure
 			new_count: (count /= 0) implies
 				((item (count) /= ' ') and
@@ -878,6 +929,20 @@ feature -- Element change
 		end
 
 	insert (s: STRING; i: INTEGER) is
+			-- Add `s' to left of position `i' in current string.
+		obsolete
+			"ELKS 2001: use `insert_string' instead"
+		require
+			string_exists: s /= Void
+			index_small_enough: i <= count + 1
+			index_large_enough: i > 0
+		do
+			insert_string (s, i)
+		ensure
+			new_count: count = old count + s.count
+		end
+
+	insert_string (s: STRING; i: INTEGER) is
 			-- Add `s' to the left of position `i' in current string.
 		require
 			string_exists: s /= Void
@@ -900,6 +965,39 @@ feature -- Removal
 			internal_string_builder := internal_string_builder.remove (i - 1, 1)
 		ensure
 			new_count: count = old count - 1
+		end
+
+	remove_head (n: INTEGER) is
+			-- Remove first `n' characters;
+			-- if `n' > `count', remove all.
+		require
+			n_non_negative: n >= 0
+		do
+			if n > count then
+				set_count (0)
+			else
+				keep_tail (count - n)
+			end
+		ensure
+			removed: is_equal (old substring (n.min (count) + 1, count))
+		end
+
+	remove_tail (n: INTEGER) is
+			-- Remove last `n' characters;
+			-- if `n' > `count', remove all.
+		require
+			n_non_negative: n >= 0
+		local
+			l_count: INTEGER
+		do
+			l_count := count
+			if n > l_count then
+				set_count (0)
+			else
+				keep_head (l_count - n)
+			end
+		ensure
+			removed: is_equal (old substring (1, count - n.min (count)))
 		end
 
 	prune (c: CHARACTER) is
@@ -978,7 +1076,7 @@ feature -- Removal
 	clear_all is
 			-- Reset all characters.
 		do
-			internal_string_builder.set_length (0)
+			set_count (0)
 		ensure
 			is_empty: count = 0
 			same_capacity: capacity = old capacity
@@ -1023,7 +1121,7 @@ feature -- Conversion
 			left_adjust
 			from
 				cnt := capacity
-				internal_string_builder.set_length (cnt)
+				set_count (cnt)
 			until
 				i = capacity
 			loop
@@ -1043,7 +1141,7 @@ feature -- Conversion
 			cnt := capacity
 			ocnt := count
 			nbw := (cnt - ocnt) // 2
-			internal_string_builder.set_length (cnt)
+			set_count (cnt)
 			from
 				
 			until
@@ -1073,7 +1171,7 @@ feature -- Conversion
 			cnt := capacity
 			ocnt := count
 			nbw := cnt - ocnt
-			internal_string_builder.set_length (cnt)
+			set_count (cnt)
 			from
 			until
 				i = nbw
@@ -1356,6 +1454,18 @@ feature -- Output
 			-- Printable representation
 		do
 			Result := clone (Current)
+		end
+
+feature {STRING_HANDLER} -- Implementation
+
+	frozen set_count (number: INTEGER) is
+			-- Set `count' to `number' of characters.
+		require
+			valid_count: 0 <= number and number <= capacity
+		do
+			internal_string_builder.set_length (capacity)
+		ensure
+			new_count: count = number
 		end
 
 feature {STRING} -- Implementation

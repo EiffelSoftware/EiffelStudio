@@ -51,6 +51,9 @@ feature -- Error Codes
 	Link_failed: INTEGER is 14
 			-- C link failed
 
+	Destination_folder_cleanup_error: INTEGER is 15
+			-- Destination folder cleanup error
+
 feature -- Access
 
 	error_title (a_error: INTEGER): STRING is
@@ -76,7 +79,7 @@ feature {NONE} -- Implementation
 	Error_table: ARRAY [STRING] is
 			-- Error table
 		once
-			create Result.make (1, 14)
+			create Result.make (1, 15)
 			Result.put ("Could not find EiffelStudio installation", No_ise_eiffel)
 			Result.put ("Generation stopped by user", User_stop)
 			Result.put ("An exception was raised", Exception_raised)
@@ -91,6 +94,7 @@ feature {NONE} -- Implementation
 			Result.put ("C compilation failed", C_compilation_failed)
 			Result.put ("IDL compilation failed", IDL_compilation_failed)
 			Result.put ("C link failed", Link_failed)
+			Result.put ("Could not cleanup destination folder, check for locked files", Destination_folder_cleanup_error)
 		end
 		
 end -- class WIZARD_ERRORS

@@ -52,31 +52,22 @@ feature -- Access
 	il_emitter: IL_EMITTER is
 			-- Instance of IL_EMITTER
 		local
-			l_dir: DIRECTORY
 			l_vd64: VD64
 			l_vd67: VD67
 		do
-			create l_dir.make (assembly_cache_folder)
-			if l_dir.exists then
-				Result := internal_il_emitter
-				if Result = Void or else not Result.exists then
-						-- IL_EMITTER component could not be loaded.
-					create l_vd64
-					error_handler.insert_error (l_vd64)
-					Result := Void
-				else
-					if not Result.is_initialized then
-							-- Path to cache is not valid
-						create l_vd67.make (assembly_cache_folder)
-						system.error_handler.insert_error (l_vd67)
-						Result := Void
-					end
-				end
+			Result := internal_il_emitter
+			if Result = Void or else not Result.exists then
+					-- IL_EMITTER component could not be loaded.
+				create l_vd64
+				error_handler.insert_error (l_vd64)
+				Result := Void
 			else
-					-- Path to cache is not valid
-				create l_vd67.make (assembly_cache_folder)
-				error_handler.insert_error (l_vd67)
-				Result := Void					
+				if not Result.is_initialized then
+						-- Path to cache is not valid
+					create l_vd67.make (assembly_cache_folder)
+					system.error_handler.insert_error (l_vd67)
+					Result := Void
+				end
 			end
 		ensure
 			valid_result: Result /= Void implies Result.exists and then Result.is_initialized
@@ -86,13 +77,8 @@ feature {NONE}
 
 	internal_il_emitter: IL_EMITTER is
 			-- Unique instance of IL_EMITTER
-		local
-			l_dir: DIRECTORY
 		once
-			create l_dir.make (assembly_cache_folder)
-			if l_dir.exists then
-				create Result.make (versioned_assembly_cache_folder, system.clr_runtime_version)
-			end
+			create Result.make (versioned_assembly_cache_folder, system.clr_runtime_version)
 		end
 
 end -- class SHARED_IL_EMITTER

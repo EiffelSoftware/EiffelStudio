@@ -249,9 +249,6 @@ feature {NONE} -- Implementation
 		do
 			constants_combo_box.wipe_out
 			lookup_string := internal_gb_ev_any.type + internal_type
-			if internal_gb_ev_any.object.constants.item (lookup_string) = Void then
-				add_select_item
-			end
 			integer_constants := Constants.integer_constants
 			from
 				integer_constants.start
@@ -260,7 +257,7 @@ feature {NONE} -- Implementation
 			loop
 				create list_item.make_with_text (integer_constants.item.name)
 				list_item.set_data (integer_constants.item)
-				constants_combo_box.extend (list_item)
+				add_to_list_alphabetically (constants_combo_box, list_item)
 				
 				list_item.deselect_actions.block
 				list_item.disable_select
@@ -276,6 +273,9 @@ feature {NONE} -- Implementation
 				list_item.select_actions.extend (agent list_item_selected (list_item))
 				list_item.deselect_actions.extend (agent list_item_deselected (list_item))
 				integer_constants.forth
+			end
+			if internal_gb_ev_any.object.constants.item (lookup_string) = Void then
+				add_select_item
 			end
 		end
 		

@@ -184,9 +184,6 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 		do
 			constants_combo_box.wipe_out
 			lookup_string := internal_gb_ev_any.type + internal_type
-			if internal_gb_ev_any.object.constants.item (lookup_string) = Void then
-				add_select_item
-			end
 			font_constants := Constants.font_constants
 			from
 				font_constants.start
@@ -195,7 +192,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 			loop
 				create list_item.make_with_text (font_constants.item.name)
 				list_item.set_data (font_constants.item)
-				constants_combo_box.extend (list_item)
+				add_to_list_alphabetically (constants_combo_box, list_item)
 				
 				list_item.deselect_actions.block
 				list_item.disable_select
@@ -211,6 +208,9 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY, GB_EV_EDITOR_CONSTRUCTOR} -- Imple
 				list_item.select_actions.extend (agent list_item_selected (list_item))
 				list_item.deselect_actions.extend (agent list_item_deselected (list_item))
 				font_constants.forth
+			end
+			if internal_gb_ev_any.object.constants.item (lookup_string) = Void then
+				add_select_item
 			end
 		end
 	

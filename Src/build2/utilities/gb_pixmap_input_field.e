@@ -280,9 +280,6 @@ feature {NONE} -- Implementation
 		do
 			constants_combo_box.wipe_out
 			lookup_string := internal_gb_ev_any.type + internal_type
-			if internal_gb_ev_any.object.constants.item (lookup_string) = Void then
-				add_select_item
-			end
 			pixmap_constants := constants.pixmap_constants
 			from
 				pixmap_constants.start
@@ -293,7 +290,7 @@ feature {NONE} -- Implementation
 				create list_item.make_with_text (pixmap_constant.name)
 				list_item.set_data (pixmap_constant)
 				list_item.set_pixmap (pixmap_constant.small_pixmap)
-				constants_combo_box.extend (list_item)
+				add_to_list_alphabetically (constants_combo_box, list_item)
 				
 				list_item.deselect_actions.block
 				list_item.disable_select
@@ -301,12 +298,17 @@ feature {NONE} -- Implementation
 				
 				if object.constants.has (lookup_string) and
 					pixmap_constant = object.constants.item (lookup_string).constant then
+					constants_button.select_actions.block
 					constants_button.enable_select
+					constants_button.select_actions.resume
 					list_item.enable_select
 				end
 				list_item.select_actions.extend (agent list_item_selected (list_item))
 				list_item.deselect_actions.extend (agent list_item_deselected (list_item))
 				pixmap_constants.forth
+			end
+			if internal_gb_ev_any.object.constants.item (lookup_string) = Void then
+				add_select_item
 			end
 		end
 		

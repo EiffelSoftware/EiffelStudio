@@ -74,7 +74,8 @@ feature -- Type check, byte code and dead code removal
 			current_item: TYPE_A;
 			last_type, last_constrained: TYPE_A;
 				-- Type onto the stack
-			last_id, context_count: INTEGER;
+			last_id: CLASS_ID;
+			context_count: INTEGER;
 				-- Id of the class correponding to `last_type'
 			last_class: CLASS_C;
 			depend_unit: DEPEND_UNIT;
@@ -89,6 +90,7 @@ feature -- Type check, byte code and dead code removal
 			feature_export: EXPORT_I;
 			like_argument_detected, vape_check: BOOLEAN;
 			vape: VAPE;
+			formal_type: FORMAL_A
 		do
 			last_type := context.item;
 			if last_type.is_multi_type then
@@ -224,7 +226,8 @@ feature -- Type check, byte code and dead code removal
 					-- if the class type of the constraint id not generic since in that
 					-- case `Result' would not be formal.
 				if last_type.is_formal and then Result.is_formal then
-					Result := last_constrained.generics.item (Result.base_type)
+					formal_type ?= Result;
+					Result := last_constrained.generics.item (formal_type.position)
 				end;
 				Result := Result.conformance_type;
 				context.pop (count);

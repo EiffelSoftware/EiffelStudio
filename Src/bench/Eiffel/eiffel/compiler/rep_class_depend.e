@@ -3,7 +3,7 @@ class REP_CLASS_DEPEND
 inherit
 
 	EXTEND_TABLE [REP_FEATURE_DEPEND, STRING];
-	IDABLE
+	COMPILER_IDABLE
 		undefine
 			copy, is_equal
 		end;
@@ -14,10 +14,10 @@ creation
 
 feature 
 
-	id: INTEGER;
+	id: CLASS_ID;
 			-- Id of the associated class
 
-	set_id (i: INTEGER) is
+	set_id (i: CLASS_ID) is
 			-- Assign `i' to `id'.
 		do
 			id := i;

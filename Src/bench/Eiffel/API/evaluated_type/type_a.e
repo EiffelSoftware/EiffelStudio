@@ -30,9 +30,6 @@ inherit
 
 feature -- Properties
 
-	base_type: INTEGER;
-			-- Base type of the actual type
-
 	generics: ARRAY [TYPE_A] is
 			-- Actual generic types
 		do
@@ -214,12 +211,6 @@ feature {COMPILER_EXPORTER} -- Access
 			-- Do nothing
 		end;
 
-	set_base_type (i: INTEGER) is
-			-- Assign `i' tp `base_type'.
-		do
-			base_type := i;
-		end;
-
 	check_const_gen_conformance (target_type: TYPE_A; a_class: CLASS_C) is
 		local
 			vtgg5: VTGG5;
@@ -299,12 +290,12 @@ feature {COMPILER_EXPORTER} -- Access
 			Result := Current
 		end;
 
-	instantiation_in (type: TYPE_A; written_id: INTEGER): TYPE_A is
+	instantiation_in (type: TYPE_A; written_id: CLASS_ID): TYPE_A is
 			-- Instantiation of Current in the context of `class_type'
 			-- assuming that Current is written in the class of id `written_id'.
 		require
 			good_argument: type /= Void;
-			positive_id: written_id > 0;
+			positive_id: written_id /= Void
 		do
 			Result := Current
 		end;

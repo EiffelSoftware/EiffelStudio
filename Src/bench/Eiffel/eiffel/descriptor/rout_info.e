@@ -10,6 +10,10 @@
 
 class ROUT_INFO 
 
+inherit
+
+	COMPILER_EXPORTER
+
 creation
 
 	make
@@ -18,13 +22,13 @@ feature -- Creation
 
 	make (org: CLASS_C; offs: INTEGER) is
 		do
-			origin := org;
+			origin := org.id;
 			offset := offs
 		end;
 
 feature -- Data
 
-	origin: CLASS_C;
+	origin: CLASS_ID;
 		-- Class in which the routine was initially
 		-- declared
 
@@ -34,7 +38,7 @@ feature -- Data
 		-- the routine in objects conforming to the 
 		-- origin class.
 
-	set_origin (o: CLASS_C) is
+	set_origin (o: like origin) is
 			-- Set `origin' to `o'.
 		do
 			origin := o

@@ -18,6 +18,10 @@ inherit
 		undefine
 			copy
 		end
+	COMPILER_EXPORTER
+		redefine
+			copy
+		end
 
 creation
 
@@ -25,7 +29,7 @@ creation
 
 feature
 
-	suppliers: TWO_WAY_SORTED_SET [INTEGER]
+	suppliers: TWO_WAY_SORTED_SET [CLASS_ID]
 			-- Set of all the syntactical suppliers of the feature
 
 	add_supplier (a_class: CLASS_C) is
@@ -39,8 +43,9 @@ feature
 	make is 
 		do
 			sorted_set_make
-			!!suppliers.make
 			compare_objects
+			!!suppliers.make
+			suppliers.compare_objects
 		end;
 
 	wipe_out is 
@@ -98,7 +103,7 @@ feature -- Debug
 				suppliers.after
 			loop
 				io.error.putstring ("Supplier id: ");
-				io.error.putint (suppliers.item);
+				io.error.putint (suppliers.item.id);
 				io.error.new_line;
 				suppliers.forth
 			end;

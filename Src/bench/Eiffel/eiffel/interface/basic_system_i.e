@@ -181,7 +181,7 @@ feature
 			pointer_ref_class := c;
 		end;
 
-	general_id: INTEGER is
+	general_id: CLASS_ID is
 			-- Id of class GENERAL
 		require
 			general_class_exists: general_class /= Void;
@@ -190,7 +190,7 @@ feature
 			Result := general_class.compiled_class.id;
 		end;
 
-	any_id: INTEGER is
+	any_id: CLASS_ID is
 			-- Id of class ANY
 		require
 			any_class_exists: any_class /= Void;
@@ -199,7 +199,7 @@ feature
 			Result := any_class.compiled_class.id;
 		end;
 
-	boolean_id: INTEGER is
+	boolean_id: CLASS_ID is
 			-- Id of class BOOLEAN
 		require
 			boolean_class_exists: boolean_class /= Void;
@@ -208,7 +208,7 @@ feature
 			Result := boolean_class.compiled_class.id;
 		end;
 
-	character_id: INTEGER is
+	character_id: CLASS_ID is
 			-- Id of class CHARACTER
 		require
 			character_class_exists: character_class /= Void;
@@ -217,7 +217,7 @@ feature
 			Result := character_class.compiled_class.id;
 		end;
 
-	integer_id: INTEGER is
+	integer_id: CLASS_ID is
 			-- Id of class INTEGER
 		require
 			integer_class_exists: integer_class /= Void;
@@ -226,7 +226,7 @@ feature
 			Result := integer_class.compiled_class.id;
 		end;
 
-	real_id: INTEGER is
+	real_id: CLASS_ID is
 			-- Id of class REAL
 		require
 			real_class_exists: real_class /= Void;
@@ -235,7 +235,7 @@ feature
 			Result := real_class.compiled_class.id;
 		end;
 
-	double_id: INTEGER is
+	double_id: CLASS_ID is
 			-- Id of class DOUBLE
 		require
 			double_class_exists: double_class /= Void;
@@ -244,7 +244,7 @@ feature
 			Result := double_class.compiled_class.id;
 		end;
 
-	pointer_id: INTEGER is
+	pointer_id: CLASS_ID is
 			-- Id of class POINTER
 		require
 			pointer_class_exists: pointer_class /= Void;
@@ -253,7 +253,7 @@ feature
 			Result := pointer_class.compiled_class.id;
 		end;
 
-	array_id: INTEGER is
+	array_id: CLASS_ID is
 			-- Id of class ARRAY
 		require
 			array_class_exists: array_class /= Void;
@@ -262,7 +262,7 @@ feature
 			Result := array_class.compiled_class.id;
 		end;
 
-	string_id: INTEGER is
+	string_id: CLASS_ID is
 			-- Id of class STRING
 		require
 			string_class_exists: string_class /= Void;
@@ -271,7 +271,7 @@ feature
 			Result := string_class.compiled_class.id;
 		end; -- string_id
 
-	special_id: INTEGER is
+	special_id: CLASS_ID is
 			-- Id of class SPECIAL
 		require
 			special_class_exists: special_class /= Void;
@@ -280,7 +280,7 @@ feature
 			Result := special_class.compiled_class.id;
 		end; -- special_id
 
-	to_special_id: INTEGER is
+	to_special_id: CLASS_ID is
 			-- Id of class TO_SPECIAL
 		require
 			to_special_class_exists: to_special_class /= Void;
@@ -289,7 +289,7 @@ feature
 			Result := to_special_class.compiled_class.id;
 		end; -- to_special_id
 
-	bit_id: INTEGER is
+	bit_id: CLASS_ID is
 			-- Id of class BIT_REF
 		require
 			bit_class_exists: bit_class /= Void;
@@ -298,7 +298,7 @@ feature
 			Result := bit_class.compiled_class.id;
 		end; -- bit_id
 
-	character_ref_id: INTEGER is
+	character_ref_id: CLASS_ID is
 			-- Id of class CHARACTER_REF
 		require
 			character_ref_class_exists: character_ref_class /= Void;
@@ -307,7 +307,7 @@ feature
 			Result := character_ref_class.compiled_class.id;
 		end; -- character_ref_id
 
-	boolean_ref_id: INTEGER is
+	boolean_ref_id: CLASS_ID is
 			-- Id of class BOOLEAN_REF
 		require
 			boolean_ref_class_exists: boolean_ref_class /= Void;
@@ -316,7 +316,7 @@ feature
 			Result := boolean_ref_class.compiled_class.id;
 		end; -- boolean_ref_id
 
-	integer_ref_id: INTEGER is
+	integer_ref_id: CLASS_ID is
 			-- Id of class INTEGER_REF
 		require
 			integer_ref_class_exists: integer_ref_class /= Void;
@@ -325,7 +325,7 @@ feature
 			Result := integer_ref_class.compiled_class.id;
 		end; -- integer_ref_id
 
-	real_ref_id: INTEGER is
+	real_ref_id: CLASS_ID is
 			-- Id of class REAL_REF
 		require
 			real_ref_class_exists: real_ref_class /= Void;
@@ -334,7 +334,7 @@ feature
 			Result := real_ref_class.compiled_class.id;
 		end; -- real_ref_id
 
-	double_ref_id: INTEGER is
+	double_ref_id: CLASS_ID is
 			-- Id of class DOUBLE_REF
 		require
 			double_ref_class_exists: double_ref_class /= Void;
@@ -343,7 +343,7 @@ feature
 			Result := double_ref_class.compiled_class.id;
 		end; -- double_ref_id
 
-	pointer_ref_id: INTEGER is
+	pointer_ref_id: CLASS_ID is
 			-- Id of class POINTER_REF
 		require
 			pointer_ref_class_exists: pointer_ref_class /= Void;
@@ -440,7 +440,7 @@ feature -- DLE
 			dynamic_class := c
 		end;
 
-	dynamic_id: INTEGER is
+	dynamic_id: CLASS_ID is
 			-- Id of class DYNAMIC
 		require
 			dynamic_class_exists: dynamic_class /= Void;

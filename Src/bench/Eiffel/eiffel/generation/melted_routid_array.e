@@ -5,7 +5,7 @@ class MELTED_ROUTID_ARRAY
 inherit
 
 	CHARACTER_ARRAY;
-	IDABLE
+	COMPILER_IDABLE
 		rename
 			id as class_id,
 			set_id as set_class_id
@@ -17,10 +17,10 @@ creation
 
 feature
 
-	class_id: INTEGER;
+	class_id: CLASS_ID;
 			-- Id of the associated class type
 
-	set_class_id (i: INTEGER) is
+	set_class_id (i: CLASS_ID) is
 			-- Assign `i' to `class_id'.
 		do
 			class_id := i;

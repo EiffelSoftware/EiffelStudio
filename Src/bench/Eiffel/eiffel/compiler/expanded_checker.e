@@ -17,12 +17,13 @@ feature
 	current_type: CLASS_TYPE;
 			-- Current class type to check
 
-	id_set: TWO_WAY_SORTED_SET [INTEGER];
+	id_set: TWO_WAY_SORTED_SET [CLASS_ID];
 			-- Set of class id
 
 	make is
 		do
 			!!id_set.make;
+			id_set.compare_objects
 		end;
 
 	set_current_type (t: like current_type) is
@@ -58,8 +59,8 @@ feature {NONE}
 			expanded_desc: EXPANDED_DESC;
 			client_type: CLASS_TYPE;
 			client: CLASS_C;
-			current_id: INTEGER;
-			id: INTEGER;
+			current_id: CLASS_ID;
+			id: CLASS_ID;
 			vlec: VLEC;
 			finished: BOOLEAN;
 			attr_desc: ATTR_DESC;
@@ -89,7 +90,7 @@ end;
 					client_type := System.class_type_of_id (expanded_desc.type_id);
 					client := client_type.associated_class;
 					id := client.id;
-					if id = current_type.associated_class.id then
+					if equal (id, current_type.associated_class.id) then
 							-- Found expanded circuit
 						!!vlec;
 						vlec.set_class (current_type.associated_class);
@@ -98,7 +99,7 @@ end;
 					else
 debug
 	io.error.putstring ("Inserting ");
-	io.error.putint (id);
+	io.error.putint (id.id);
 	io.error.putstring (" for class ");
 	io.error.putstring (client.class_name);
 	io.error.new_line;

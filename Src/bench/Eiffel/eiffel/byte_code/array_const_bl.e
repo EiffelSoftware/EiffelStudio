@@ -141,7 +141,7 @@ feature {NONE} -- C code generation
 			generated_file.putstring ("RTLN(");
 			if workbench_mode then
 				generated_file.putstring ("RTUD(");
-				generated_file.putint (real_ty.associated_class_type.id - 1);
+				generated_file.putint (real_ty.associated_class_type.id.id - 1);
 				generated_file.putchar (')');
 			else
 				generated_file.putint (real_ty.type_id - 1);
@@ -297,7 +297,7 @@ feature {NONE} -- C code generation
 				generated_file.putint (rout_info.offset);
 			else
 				generated_file.putstring (" RTWF(");
-				generated_file.putint (real_ty.associated_class_type.id - 1);
+				generated_file.putint (real_ty.associated_class_type.id.id - 1);
 				generated_file.putstring (gc_comma);
 				generated_file.putint (feat_i.feature_id);
 			end;

@@ -6,7 +6,7 @@ class FEATURE_TABLE
 
 inherit
 
-	IDABLE
+	COMPILER_IDABLE
 		rename
 			same_type as general_same_type,
 			id as feat_tbl_id,
@@ -75,7 +75,7 @@ creation
 	
 feature 
 
-	feat_tbl_id: INTEGER;
+	feat_tbl_id: CLASS_ID;
 			-- Id for feature table: it must be equal to the id of the
 			-- class to which the feature table belongs to.
 
@@ -85,12 +85,12 @@ feature
 	associated_class: CLASS_C is
 			-- Associated class
 		require
-			feat_tbl_id > 0
+			feat_tbl_id /= Void
 		do
 			Result := System.class_of_id (feat_tbl_id);
 		end;
 			
-	set_feat_tbl_id (i: INTEGER) is
+	set_feat_tbl_id (i: CLASS_ID) is
 			-- Assign `i' to `feat_tbl_id'.
 		do
 			feat_tbl_id := i
@@ -252,7 +252,7 @@ end;
 					propagate_feature := True;
 				end;
 
-				if 	old_feature_i.written_in = feat_tbl_id then
+				if 	equal (old_feature_i.written_in, feat_tbl_id) then
 					if old_feature_i.is_external then
 							-- Delete one occurence of an external feature
 						external_i ?= old_feature_i;
@@ -270,7 +270,7 @@ end;
 					end;
 					if 	new_feature_i = Void
 						or else
-						new_feature_i.written_in /= feat_tbl_id
+						not equal (new_feature_i.written_in, feat_tbl_id)
 					then
 							-- A feature written in the associated class
 							-- disapear
@@ -345,7 +345,7 @@ end;
 			until
 				after
 			loop
-				if item_for_iteration.written_in = feat_tbl_id and then 
+				if equal (item_for_iteration.written_in, feat_tbl_id) and then 
 					not item_for_iteration.is_deferred then
 					from
 						assert_list.start;
@@ -467,7 +467,7 @@ io.error.putstring ("Check feature: ");
 io.error.putstring (f.feature_name);
 io.error.new_line;
 end;
-			if f.written_in = feat_tbl_id then
+			if equal (f.written_in, feat_tbl_id) then
 					-- Take a feature written in the class associated
 					-- to the feature table
 				arguments := f.arguments;
@@ -577,7 +577,7 @@ end;
 				after
 			loop
 				feature_i := item_for_iteration;
-				if feature_i.written_in = feat_tbl_id then
+				if equal (feature_i.written_in, feat_tbl_id) then
 						-- Feature written in the associated class
 					feature_i.update_instantiator2 (a_class);
 				end;
@@ -690,7 +690,7 @@ end;
 		do
 			tab := routine_id_array;
 			file.putstring ("int32 ra");
-			file.putint (feat_tbl_id);
+			file.putint (feat_tbl_id.id);
 			file.putstring ("[] = {");
 			file.new_line;
 			from
@@ -779,7 +779,7 @@ feature -- Case stuff
 			loop
 				feat := item_for_iteration;
 				Result := feat.is_external and then
-					feat.written_in = feat_tbl_id
+					equal (feat.written_in, feat_tbl_id)
 				forth
 			end
 		end;

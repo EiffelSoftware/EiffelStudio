@@ -19,7 +19,7 @@ feature
 			-- Internal name
 		do
 			Result := Encoder.feature_name
-				(System.class_type_of_id (written_type_id).id, kind)
+				(System.class_type_of_id (written_type_id).id.id, kind)
 		end;
 
 		used: BOOLEAN is

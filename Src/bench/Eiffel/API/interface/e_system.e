@@ -24,14 +24,13 @@ feature -- Initialization
 	make is
 			-- Create an eiffel system.
 		do
-			!! classes.make (1, System_chunk);
+			!! classes.make (System_chunk);
 		end;
 
 feature -- Properties
 
-	classes: ARRAY [E_CLASS];
-			-- Array of compiled eiffel classes indexed by their class `id's
-			-- (Can have void entries)
+	classes: HASH_TABLE [E_CLASS, CLASS_ID];
+			-- Table of compiled eiffel classes indexed by their class `id's
 
 	root_class_name: STRING is
 			-- Root class name
@@ -70,7 +69,7 @@ feature -- Access
 			Result := Inst_context.cluster;
 		end;
 
-	Any_id: INTEGER is
+	Any_id: CLASS_ID is
 			-- Identification for class ANY
 		require
 			compiled: Any_class.compiled
@@ -171,10 +170,10 @@ feature -- Access
 			--end
 		end;
 
-	class_of_id (i: INTEGER): E_CLASS is
+	class_of_id (i: CLASS_ID): E_CLASS is
 			-- Eiffel Class of id `i'
 		require
-			positive_i: i >= 0;
+			valid_id: i /= Void
 		local
 			classc: CLASS_C
 		do

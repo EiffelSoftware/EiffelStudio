@@ -17,12 +17,12 @@ inherit
 		export
 			{ANY} all
 		end;
-	IDABLE;
+	COMPILER_IDABLE;
 	COMPILER_EXPORTER
 
 feature 
 
-	id: INTEGER;
+	id: CLASS_ID;
 			-- Class id
 
 	parents: PARENT_LIST;
@@ -42,7 +42,7 @@ feature
 	unique_values: HASH_TABLE [INTEGER, STRING];
 			-- Stores the values of the unique attributes
 
-	set_id (i: INTEGER) is
+	set_id (i: CLASS_ID) is
 			-- Assign `i' to `id'.
 		do
 			id := i;
@@ -81,12 +81,12 @@ feature
 	features: EIFFEL_LIST_B [FEATURE_CLAUSE_AS_B] is
 			-- Feature abstract syntax
 		require
-			ast_server_ok: Tmp_ast_server.has (id) or else Ast_server.has (id);
+			ast_server_ok: Tmp_ast_server.has (id.id) or else Ast_server.has (id.id);
 		do
-			if Tmp_ast_server.has (id) then
-				Result := Tmp_ast_server.item (id).features;
+			if Tmp_ast_server.has (id.id) then
+				Result := Tmp_ast_server.item (id.id).features;
 			else
-				Result := Ast_server.item (id).features;
+				Result := Ast_server.item (id.id).features;
 			end;
 		end;
 

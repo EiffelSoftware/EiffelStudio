@@ -145,9 +145,10 @@ feature
 		require
 			argument_not_void: pass_c /= Void;
 			class_not_void: pass_c.associated_class /= Void;
-			class_info_exists: Class_info_server.has (pass_c.associated_class.id);
+			class_info_exists: Class_info_server.has (pass_c.associated_class.id.id);
 		local
-			class_id, i, nb: INTEGER;
+			class_id: CLASS_ID;
+			i, nb: INTEGER;
 			resulting_table: like inherited_features;
 			a_cluster: CLUSTER_I;
 			pass2_control: PASS2_CONTROL;
@@ -173,7 +174,7 @@ feature
 
 				-- Look for the interpreted class information left
 				-- by the first pass if the class has syntactically changed.
-			class_info := Class_info_server.item (class_id);
+			class_info := Class_info_server.item (class_id.id);
 			parents := class_info.parents;
 
 				-- Compute attribute `feature_table'.
@@ -274,17 +275,17 @@ feature
 				if rep_parent_list.count > 0 then
 					process_replicated_features (resulting_table);
 				else
-					if Rep_server.has (a_class.id) then
+					if Rep_server.has (a_class.id.id) then
 							--! Remove it from the server if it
 							--! previously existed
-						Rep_server.remove (a_class.id)
+						Rep_server.remove (a_class.id.id)
 					end;
-					if Tmp_rep_info_server.has (a_class.id) then
+					if Tmp_rep_info_server.has (a_class.id.id) then
 						--| An error may have occured during Degree 3
 						--| and there may have been replicated info
 						--| originally and when recompiled 
 						--| these may have been removed.
-						Tmp_rep_info_server.remove (a_class.id)
+						Tmp_rep_info_server.remove (a_class.id.id)
 					end;
 				end;
 			end;
@@ -443,16 +444,16 @@ end;
 		require
 			a_class /= Void
 		local
-			id: INTEGER;
+			id: CLASS_ID;
 		do
 			id := a_class.id;
 				-- Look for a previous feature table in server `Feat_tbl_server'
 				-- nb: we don't have to look for it in the temporary server
 				-- for feature table here, that's why we are using feature
 				-- `server_item' of class FEAT_TBL_SERVER.
-			if Feat_tbl_server.server_has (id) then
+			if Feat_tbl_server.server_has (id.id) then
 					-- We have a previous compiled class
-				feature_table := Feat_tbl_server.server_item (id);
+				feature_table := Feat_tbl_server.server_item (id.id);
 				feature_table.update_table;
 			else
 					-- No previous compilation
@@ -461,10 +462,10 @@ end;
 				-- Prepare `inherited_features'.
 			inherited_features.set_feat_tbl_id (a_class.id);
 				-- Compute `previous_feature_table'.
-			if Tmp_feat_tbl_server.has (id) then
+			if Tmp_feat_tbl_server.has (id.id) then
 					-- There eas an error and a feature table has been already
 					-- computed for this class.
-				previous_feature_table := Tmp_feat_tbl_server.item (id);
+				previous_feature_table := Tmp_feat_tbl_server.item (id.id);
 				previous_feature_table.update_table;
 			end;
 		end;
@@ -498,7 +499,7 @@ end;
 			from
 				parent := parent_c.parent;
 					-- Look for the parent table on the disk
-				parent_table := Feat_tbl_server.item (parent.id);
+				parent_table := Feat_tbl_server.item (parent.id.id);
 				check
 					parent_table_exists: parent_table /= Void;
 						-- Because of topological sort, the parents are
@@ -699,7 +700,7 @@ end;
 			feature_i: FEATURE_I;
 			feature_name: STRING;
 				-- Feature name
-			id: INTEGER;
+			id: CLASS_ID;
 				-- Current class id
 		do
 			from
@@ -709,7 +710,7 @@ end;
 				feature_table.after
 			loop
 				feature_i := feature_table.item_for_iteration;
-				if feature_i.written_in = id then
+				if equal (feature_i.written_in, id) then
 					feature_name := feature_table.key_for_iteration;
 						-- recompute a former local declaration
 					analyze_local (feature_i.duplicate, feature_name);
@@ -820,7 +821,7 @@ end;
 				else
 						-- Take the previous feature id
 					feature_i.set_feature_id (old_feature.feature_id);
-					if old_feature.written_in /= a_class.id then
+					if equal (old_feature.written_in, a_class.id) then
 						feature_i.set_body_index (Body_index_counter.next);
 					else
 						feature_i.set_body_index (old_feature.body_index);
@@ -919,7 +920,7 @@ end;
 			feature_i := feature_table.item (feature_name);
 
 			if feature_i /= Void then
-				old_feature_in_class := feature_i.written_in = a_class.id;
+				old_feature_in_class := equal (feature_i.written_in, a_class.id);
 				old_body_id := feature_i.original_body_id;
 				if 	
 					old_feature_in_class and then 
@@ -1134,8 +1135,8 @@ end;
 			feature_name: STRING
 		do
 			from
-				if Rep_depend_server.has (a_class.id) then
-					rep_dep := Rep_depend_server.item (a_class.id);
+				if Rep_depend_server.has (a_class.id.id) then
+					rep_dep := Rep_depend_server.item (a_class.id.id);
 				end;
 				changed_features.start
 			until
@@ -1155,7 +1156,7 @@ end;
 				if feat_rep_dep.count > 0 then
 					Tmp_rep_depend_server.put (rep_dep)
 				else
-					Tmp_rep_depend_server.remove (a_class.id)
+					Tmp_rep_depend_server.remove (a_class.id.id)
 				end;
 			end;
 		end;
@@ -1365,7 +1366,7 @@ end;
 			good_context: not (a_class = Void or else class_info = Void);
 			changed: a_class.changed;
 		local
-			class_id: INTEGER;
+			class_id: CLASS_ID;
 			invariant_info: READ_INFO;
 				-- information left by the temporary server `Tmp_ast_server'
 				-- and stored in `class_info'
@@ -1379,14 +1380,14 @@ end;
 			invariant_info := class_info.invariant_info;
 				-- Look in the non-temporary invariant AST server for
 				-- for an old invariant clause
-			old_clause_exists := Inv_ast_server.server_has (class_id);
+			old_clause_exists := Inv_ast_server.server_has (class_id.id);
 			if invariant_info /= Void then
 					-- The changed class `a_class' has an invariant clause
 				if old_clause_exists then
 						-- Evaluation of an old invariant clause in order
 						-- to see if it has changed
-					old_invar_clause := Inv_ast_server.server_item (class_id);
-					invar_clause := Tmp_inv_ast_server.item (class_id);
+					old_invar_clause := Inv_ast_server.server_item (class_id.id);
+					invar_clause := Tmp_inv_ast_server.item (class_id.id);
 				
 						-- Incrementality test on invariant clause
 					invariant_changed := not deep_equal
@@ -1397,14 +1398,14 @@ end;
 			elseif old_clause_exists then
 				invariant_removed := True;
 					-- Remove invariant description from server
-				Tmp_inv_ast_server.remove_id (class_id);
-			elseif Tmp_inv_ast_server.has (class_id) then
+				Tmp_inv_ast_server.remove_id (class_id.id);
+			elseif Tmp_inv_ast_server.has (class_id.id) then
 					-- There was an invariant in the previous
 					-- unsuccessful compilation: remove
 					-- it from the server and reset `invariant_feature'
 					-- in CLASS_C
 				a_class.set_invariant_feature (Void);
-				Tmp_inv_ast_server.remove_id (class_id);
+				Tmp_inv_ast_server.remove_id (class_id.id);
 			end;
 		end;
 
@@ -1427,7 +1428,8 @@ feature -- Replications
 			rep_class_info: REP_CLASS_INFO;
 			tmp_rep_class_info: EXTEND_TABLE [S_REP_NAME_LIST, INTEGER];
 			stop, needs_replication: BOOLEAN;
-			written_in_cont, body_id: INTEGER;
+			written_in_cont: CLASS_ID;
+			body_id: INTEGER;
 			same_features: BOOLEAN;
 			cur: CURSOR;
 			s_rep_name: S_REP_NAME;
@@ -1436,7 +1438,7 @@ feature -- Replications
 				rep_parent_list.start;
 				!!calls_list.make;
 				!!rep_class_info.make (a_class.id);
-				!!tmp_rep_class_info.make (a_class.id);
+				!!tmp_rep_class_info.make (a_class.id.id);
 			until
 				rep_parent_list.after
 			loop
@@ -1449,7 +1451,7 @@ end;
 				needs_replication := False;
 				from
 					-- Need to update because f_table contains unselected.
-					written_in_cont := 0;
+					written_in_cont := Void;
 					rep_name_list.start
 				until
 					rep_name_list.after 
@@ -1457,20 +1459,20 @@ end;
 					rep_name := rep_name_list.item;
 					rep_feat :=	rep_name.rep_feature;  
 					if not rep_feat.is_deferred and then
-						(rep_feat.written_in /= a_class.id) 
+						not equal (rep_feat.written_in, a_class.id) 
 					then
-						if written_in_cont /= rep_feat.written_in then
+						if not equal (written_in_cont, rep_feat.written_in) then
 							written_in_cont := rep_feat.written_in;
 							rep_name_list.update_old_features (f_table,
 													written_in_cont);
 						end;
-						if tmp_rep_class_info.has (written_in_cont) then
-							s_rep_name_list := tmp_rep_class_info.item (written_in_cont);
+						if tmp_rep_class_info.has (written_in_cont.id) then
+							s_rep_name_list := tmp_rep_class_info.item (written_in_cont.id);
 						else
 							!!s_rep_name_list.make (
 								rep_name_list.parent_clause.parent_id);
 							tmp_rep_class_info.put (s_rep_name_list,
-													written_in_cont);
+													written_in_cont.id);
 							rep_name_list.update_new_features (f_table,
 													written_in_cont);
 						end;
@@ -1535,13 +1537,13 @@ end;
 			end;
 			if rep_class_info.count > 0 then
 				Tmp_rep_info_server.put (rep_class_info);
-			elseif Tmp_rep_info_server.has (a_class.id) then
+			elseif Tmp_rep_info_server.has (a_class.id.id) then
 debug ("REPLICATION")
 	io.error.putstring ("removing class ");
 	io.error.putstring (a_class.class_name);
 	io.error.putstring (" from tmp_rep_info server%N");
 end;
-				Tmp_rep_info_server.remove (a_class.id);
+				Tmp_rep_info_server.remove (a_class.id.id);
 			end
 		end;
 
@@ -1567,7 +1569,7 @@ end;
 			else
 					-- Take the previous feature id
 				feature_i.set_feature_id (old_feature.feature_id);
-				if old_feature.written_in /= a_class.id then
+				if not equal (old_feature.written_in, a_class.id) then
 					feature_i.set_body_index (Body_index_counter.next);
 				else
 					feature_i.set_body_index (old_feature.body_index);
@@ -1632,7 +1634,7 @@ end;
 				-- Look for a previous definition of the feature
 			feature_i := feature_table.item (feature_name);
 			if feature_i /= Void then
-				old_feature_in_class := feature_i.written_in = a_class.id;
+				old_feature_in_class := equal (feature_i.written_in, a_class.id);
 				if old_feature_in_class then
 						-- Found a feature of same name and written in the
 						-- same class.

@@ -51,10 +51,10 @@ feature -- Execution
 			feature_table: E_FEATURE_TABLE;
 			e_feature: E_FEATURE;
 			e_class: E_CLASS;
-			id: INTEGER;
+			id: CLASS_ID;
 				-- Temporary structures
 			list: SORTED_TWO_WAY_LIST [E_FEATURE];
-			table: EXTEND_TABLE [SORTED_TWO_WAY_LIST [E_FEATURE], INTEGER];
+			table: EXTEND_TABLE [SORTED_TWO_WAY_LIST [E_FEATURE], CLASS_ID];
 			classes: PART_SORTED_TWO_WAY_LIST [E_CLASS];
 			c: like current_class
 		do

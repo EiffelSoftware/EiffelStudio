@@ -31,7 +31,7 @@ feature -- Type check and byte code
 			bit_type: BITS_A;
 		do
 			!!bit_type;
-			bit_type.set_base_type (value.count);
+			bit_type.set_bit_count (value.count);
 				-- Update the type stack
 			context.put (bit_type);
 		end;

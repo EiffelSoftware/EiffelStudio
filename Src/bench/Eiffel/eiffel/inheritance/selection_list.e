@@ -29,8 +29,6 @@ feature
 			new_rout_id: INTEGER;
 			feat_table: SELECT_TABLE;
 			first_feature: FEATURE_I;
-			stop: BOOLEAN;
-			id, first_body_id: INTEGER;
 		do
 			selected_rout_id_set := Void
 			if count > 1 then
@@ -141,7 +139,8 @@ end;
 		local
 			instantiator, written_actual_type, written_type, to_compair: TYPE_A;
 			written_class: CLASS_C;
-			written_id, pos: INTEGER;
+			written_id: CLASS_ID;
+			pos: INTEGER;
 			info: INHERIT_INFO;
 		do
 			pos := index;
@@ -191,7 +190,8 @@ end;
 			info_parent: PARENT_C;
 			rout_id_set: ROUT_ID_SET;
 			cond, in_generic_class: BOOLEAN;
-			first_body_id, written_id, id: INTEGER;
+			first_body_id: INTEGER;
+			written_id, id: CLASS_ID;
 			instantiator, to_compair, written_type, written_actual_type: TYPE_A;
 			written_class: CLASS_C;
 			feature_name: STRING;
@@ -219,7 +219,7 @@ end;
 				-- Process a new routine id
 			if 	old_feature /= Void and then
 				old_feature.is_attribute = a_feature.is_attribute and then
-				(old_feature.is_unselected and old_feature.access_in = id)
+				(old_feature.is_unselected and equal (old_feature.access_in, id))
 			then
 					-- Take an old one
 				new_rout_id := old_feature.rout_id_set.first;
@@ -486,7 +486,7 @@ if item.a_feature.written_class > System.any_class.compiled_class and
 				io.error.new_line;
 				io.error.putstring ("Written in feature name: ");
 
-	if System.Feat_tbl_server.has (item.a_feature.written_in) then
+	if System.Feat_tbl_server.has (item.a_feature.written_in.id) then
 				io.error.putstring
 (item.a_feature.written_class.feature_table.feature_of_body_id
 (item.a_feature.body_id).feature_name);

@@ -25,7 +25,7 @@ feature -- Execution
 			feat: E_FEATURE;
 			classes: PART_SORTED_TWO_WAY_LIST [CLASS_I];
 			list: SORTED_LIST [STRING];
-			table: EXTEND_TABLE [SORTED_LIST [STRING], INTEGER]
+			table: EXTEND_TABLE [SORTED_LIST [STRING], CLASS_ID];
 		do
 			clients := current_class.clients;
 			!! table.make (5);

@@ -61,7 +61,7 @@ feature
 	routine_name: STRING is
 			-- Routine name to generate
 		do
-			Result := Encoder.feature_name (written_class_type.id, body_id);
+			Result := Encoder.feature_name (written_class_type.id.id, body_id);
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is

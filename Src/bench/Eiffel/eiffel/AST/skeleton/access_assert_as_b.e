@@ -44,7 +44,7 @@ feature -- Access
 			argument_position: INTEGER;
 			last_type: TYPE_A;
 				-- Type onto the stack
-			last_id: INTEGER;
+			last_id: CLASS_ID;
 				-- Id of the class correponding to `last_type'
 			local_b: LOCAL_B;
 			argument_b: ARGUMENT_B;

@@ -3,6 +3,10 @@
 
 deferred class COMPILER_SUBCOUNTER
 
+inherit
+
+	COMPILER_EXPORTER
+
 feature {NONE} -- Initialization
 
 	make is

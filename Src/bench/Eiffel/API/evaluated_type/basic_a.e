@@ -58,13 +58,13 @@ feature {COMPILER_EXPORTER}
 			Result ?= f.type
 		end;
 
-	instantiation_in (type: TYPE_A; written_id: INTEGER): like Current is
+	instantiation_in (type: TYPE_A; written_id: CLASS_ID): like Current is
 			-- Instantiated type in the context of `type'
 		do
 			Result := Current;
 		end;
 
-	instantiation_of (type: TYPE_B; class_id: INTEGER): TYPE_A is
+	instantiation_of (type: TYPE_B; class_id: CLASS_ID): TYPE_A is
 			-- Insatiation of `type' in s simple type
 		do
 			Result := type.actual_type;

@@ -6,10 +6,12 @@ inherit
 
 	SHARED_ID;
 	SHARED_WORKBENCH;
-	HASHABLE
-		rename
-			hash_code as internal_id
-		end
+	HASHABLE;
+	COMPARABLE
+		undefine
+			is_equal
+		end;
+	COMPILER_EXPORTER
 
 feature {NONE} -- Initialization
 
@@ -27,6 +29,12 @@ feature -- Access
 			Result := internal_id + counter.offset
 		end;
 
+	hash_code: INTEGER is
+			-- Hash code
+		do
+			Result := internal_id
+		end
+
 feature -- Status report
 
 	is_precompiled: BOOLEAN is
@@ -37,6 +45,12 @@ feature -- Status report
 	is_dynamic: BOOLEAN is
 			-- Is the entity identified by `Current' part of a DC-set?
 		do
+		end
+
+	infix "<" (other: COMPILER_ID): BOOLEAN is
+			-- Is current object less than `other'?
+		do
+			Result := id < other.id
 		end
 
 feature {NONE} -- Implementation

@@ -9,7 +9,7 @@ inherit
 			is_equal
 		end;
 
-	ANY
+	COMPILER_EXPORTER
 
 creation
 
@@ -17,7 +17,7 @@ creation
 
 feature 
 
-	id: INTEGER;
+	id: CLASS_ID;
 			-- Class id
 
 	feature_id: INTEGER;
@@ -25,7 +25,7 @@ feature
 			--| Note:	-1 is used for creation without creation routine
 			--|			-2 for expanded in local clause
 
-	make (i, j: INTEGER) is
+	make (i: CLASS_ID; j: INTEGER) is
 			-- Initialization
 		do
 			id := i;
@@ -43,7 +43,7 @@ feature
 			-- Is `other' greater than Current ?
 		do
 			Result := id < other.id or else
-				(id = other.id and then feature_id < other.feature_id);
+				(equal (id, other.id) and then feature_id < other.feature_id);
 		end; -- infix "<"
 
 feature -- Debug
@@ -51,7 +51,7 @@ feature -- Debug
 	trace is
 		do
 			io.error.putstring ("Class id: ");
-			io.error.putint (id);
+			io.error.putint (id.id);
 			io.error.putstring (" feature id: ");
 			io.error.putint (feature_id);
 			io.error.new_line;

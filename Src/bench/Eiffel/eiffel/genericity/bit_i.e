@@ -149,7 +149,7 @@ feature
 	type_a: BITS_A is
 		do
 			!!Result
-			Result.set_base_type (size)
+			Result.set_bit_count (size)
 		end
 
 end

@@ -8,6 +8,7 @@ inherit
 
 	HASH_TABLE [ROUT_INFO, ROUTINE_ID]
 		rename
+			make as ht_make,
 			put as table_put
 		end;
 	SHARED_WORKBENCH
@@ -17,11 +18,24 @@ inherit
 	SHARED_ARRAY_BYTE
 		undefine
 			copy, setup, consistent, is_equal
+		end;
+	COMPILER_EXPORTER
+		undefine
+			copy, setup, consistent, is_equal
 		end
 
 creation
 
 	make
+
+feature {NONE} -- Initialization
+
+	make (n: INTEGER) is
+			-- Create an empty table.
+		do
+			ht_make (n);
+			!! offset_counters.make (n)
+		end
 
 feature -- Insertion
 
@@ -39,12 +53,12 @@ feature -- Insertion
 					-- The routine id has been recorded 
 					-- earlier.
 				info := item (rout_id);
-				if info.origin /= org then
+				if not equal (info.origin, org.id) then
 						-- The origin of the routine has changed
 						-- a new offset must be computed, and the
 						-- origin value updated.
 					info.set_offset (new_offset (org));
-					info.set_origin (org)
+					info.set_origin (org.id)
 				end;
 			else
 					-- The routine is brand new.
@@ -60,9 +74,25 @@ feature -- Offset processing
 			-- start from 0.
 			--|Beware: this function has a side effect!
 			--|Note: see if "obsolete" offsets could be reused.
+		local
+			class_id: CLASS_ID;
+			counter: COUNTER
 		do
-			Result := c.offset_counter.next
+			class_id := c.id;
+			if not offset_counters.has (class_id) then
+				!! counter;
+					-- Routine offsets start from 0.
+				counter.set_value (-1);
+				offset_counters.put (counter, class_id)
+			else
+				counter := offset_counters.item (class_id)
+			end;
+			Result := counter.next
 		end;
+
+	offset_counters: HASH_TABLE [COUNTER, CLASS_ID];
+			-- Offset counters for feature introducted
+			-- in the corresponding class
 
 feature -- Query features
 
@@ -72,7 +102,7 @@ feature -- Query features
 			rout_id_not_void: rout_id /= Void;
 			has_rout_id: has (rout_id)
 		do
-			Result := item (rout_id).origin
+			Result := System.class_of_id (item (rout_id).origin)
 		ensure
 			origin_not_void: Result /= Void
 		end;
@@ -85,6 +115,16 @@ feature -- Query features
 			has_rout_id: has (rout_id)
 		do
 			Result := item (rout_id).offset
+		end;
+
+	descriptor_size (class_id: CLASS_ID): INTEGER is
+			-- Number of routines introduced
+			-- in class of id `class_id'
+		do
+			if offset_counters.has (class_id) then
+				-- Offsets start from 0.
+				Result := offset_counters.item (class_id).value + 1
+			end
 		end;
 
 	renumbered_table: ARRAY [ROUT_INFO] is

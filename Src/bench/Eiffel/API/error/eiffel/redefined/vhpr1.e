@@ -17,7 +17,7 @@ inherit
 	
 feature -- Properties
 
-	involved_classes: LINKED_LIST [INTEGER];
+	involved_classes: LINKED_LIST [CLASS_ID];
 			-- Id's of classes invloved in the inheritance graph
 
 	code: STRING is "VHPR";
@@ -49,7 +49,7 @@ feature -- Output
 
 feature {COMPILER_EXPORTER} -- Setting
 
-	set_involved_classes (l: LINKED_LIST [INTEGER]) is
+	set_involved_classes (l: LINKED_LIST [CLASS_ID]) is
 			-- Assign `l' to `involved_classes'.
 		do
 			involved_classes := l;

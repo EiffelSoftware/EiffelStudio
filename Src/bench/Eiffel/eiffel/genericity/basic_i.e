@@ -80,7 +80,7 @@ feature
 			file.putstring("RTLN(");
 			if workbench_mode then
 				file.putstring ("RTUD(");
-				file.putint (associated_reference.id - 1);
+				file.putint (associated_reference.id.id - 1);
 				file.putchar (')');
 			else
 				file.putint (associated_dtype);

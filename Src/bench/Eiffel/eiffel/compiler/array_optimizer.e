@@ -118,7 +118,7 @@ feature {NONE} -- Array optimization
 				a_class := array_descendants.item;
 				ftable := a_class.feature_table;
 				select_table := ftable.origin_table;
-				class_depend := Depend_server.item (a_class.id);
+				class_depend := Depend_server.item (a_class.id.id);
 
 				from
 					ftable.start
@@ -207,7 +207,7 @@ end
 			-- Recursively records `a_class' and its descendants in `descendants'
 		local
 			d: LINKED_LIST [E_CLASS];
-			an_id: INTEGER;
+			an_id: CLASS_ID;
 			ftable: FEATURE_TABLE;
 			select_table: SELECT_TABLE;
 			dep: DEPEND_UNIT;
@@ -358,6 +358,7 @@ feature -- Contexts
 			bc: BYTE_CODE
 			array_type_a: TYPE_A
 			f: FEATURE_I
+			formal_a: FORMAL_A
 		do
 			bc := context.byte_code;
 			if id = 0 then
@@ -379,8 +380,9 @@ feature -- Contexts
 				--(array_type_a, System.current_class.id)
 
 			if type_a.is_formal then
+				formal_a ?= type_a;
 				Result := Context.class_type.type.meta_generic.item
-						(type_a.base_type).c_type
+						(formal_a.position).c_type
 			else
 				Result := type_a.type_i.c_type
 			end;

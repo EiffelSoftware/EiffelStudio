@@ -110,6 +110,7 @@ feature {COMPILER_EXPORTER}
 				Result := other.is_all;
 			end;
 		end;
+
 	valid_for (client: CLASS_C): BOOLEAN is
 			-- Is the export valid for client `client' when the supplier is
 			-- `supplier' ?
@@ -177,7 +178,7 @@ feature {COMPILER_EXPORTER}
 			end;
 		end;
 	
-	clause (written_in: INTEGER): CLIENT_I is
+	clause (written_in: CLASS_ID): CLIENT_I is
 			-- Clause of attribute `written_in' 
 		local
 			pos: INTEGER;
@@ -188,7 +189,7 @@ feature {COMPILER_EXPORTER}
 			until
 				after or else Result /= Void
 			loop
-				if item.written_in = written_in then
+				if equal (item.written_in, written_in) then
 					Result := item;
 				end;
 				forth;

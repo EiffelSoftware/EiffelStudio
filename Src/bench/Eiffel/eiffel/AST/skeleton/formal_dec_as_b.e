@@ -67,7 +67,7 @@ feature -- Initialization
 			-- Default constraint actual type
 		once
 			!!Result;
-			Result.set_base_type (System.any_id);
+			Result.set_base_class_id (System.any_id);
 		end;
 
 	equiv (other: like Current): BOOLEAN is

@@ -32,7 +32,7 @@ feature
 			-- at the end of pass 2 (expandeds and 
 			-- replication)
 
-	changed_status: TWO_WAY_SORTED_SET [INTEGER];
+	changed_status: TWO_WAY_SORTED_SET [CLASS_ID];
 			-- Sorted set of all the classes for which the expanded
 			-- or deferred status has changed
 		
@@ -40,6 +40,7 @@ feature
 		do
 			!!changed_classes.make;
 			!!changed_status.make;
+			changed_status.compare_objects;
 			!!extra_check_list.make;
 		end;
 
@@ -58,7 +59,7 @@ feature
 		local
 			pass_c: PASS2_C;
 			current_class: CLASS_C;
-			id: INTEGER;
+			id: CLASS_ID;
 		do
 			from
 				changed_classes.start
@@ -118,10 +119,10 @@ end;
 					current_class := extra_check_list.first;
 					System.set_current_class (current_class);
 					id := current_class.id;
-					if Tmp_rep_info_server.has (id) then
+					if Tmp_rep_info_server.has (id.id) then
 						current_class.process_replicated_features;
-					elseif Tmp_rep_server.has (id) then
-						Tmp_rep_server.remove (id)
+					elseif Tmp_rep_server.has (id.id) then
+						Tmp_rep_server.remove (id.id)
 					end;
 					extra_check_list.remove;
 				end;

@@ -38,7 +38,7 @@ feature
 			-- Actual type for formal generic
 		do
 			!!Result;
-			Result.set_base_type (position);
+			Result.set_position (position);
 		end;
 
 feature -- Output

@@ -22,7 +22,7 @@ feature
 			basket: LINKED_LIST [STRING]
 		do
 			basket_nb := 1 + 
-					System.static_type_id_counter.value // Packet_number;
+					System.static_type_id_counter.total_count // Packet_number;
 			!!object_baskets.make (1, basket_nb);
 			from i := 1 until i > basket_nb loop
 				!!basket.make;
@@ -132,43 +132,41 @@ feature
 	add_eiffel_objects is
 			-- Add class C code objects.
 		local
-			i, nb: INTEGER;
 			a_class: CLASS_C;
 			types: TYPE_LIST;
 			cl_type: CLASS_TYPE;
 			object_name, file_name: STRING;
+			classes: CLASS_C_SERVER
 		do
 			from
-				i := 1;
-				nb := System.class_counter.value;
+				classes := System.classes;
+				classes.start
 			until
-				i > nb
+				classes.after
 			loop
-				a_class := System.class_of_id (i);
-				if a_class /= Void then
-					from
-						types := a_class.types;
-						types.start
-					until
-						types.after
-					loop
-						cl_type := types.item;
+				a_class := classes.item_for_iteration;
+				from
+					types := a_class.types;
+					types.start
+				until
+					types.after
+				loop
+					cl_type := types.item;
 
-						if
-							not empty_class_types.has (cl_type.id)
-						then
-								-- C code
-							object_name := cl_type.base_file_name;
-							!!file_name.make (16);
-							file_name.append (object_name);
-							file_name.append (".o");
-							object_baskets.item (cl_type.packet_number).extend (file_name);
-						end;
-
-						types.forth;
+					if
+						not empty_class_types.has (cl_type.id)
+					then
+							-- C code
+						object_name := cl_type.base_file_name;
+						!!file_name.make (16);
+						file_name.append (object_name);
+						file_name.append (".o");
+						object_baskets.item (cl_type.packet_number).extend (file_name);
 					end;
+
+					types.forth;
 				end;
-				i := i + 1;
+				classes.forth
 			end;
 		end;
 

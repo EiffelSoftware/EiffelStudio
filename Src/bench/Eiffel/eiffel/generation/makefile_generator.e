@@ -14,6 +14,7 @@ inherit
 		rename
 			context as byte_context
 		end;
+	COMPILER_EXPORTER
 
 feature -- Attributes
 
@@ -37,7 +38,7 @@ feature -- Attributes
 			-- Run-time object files to be put in the Cecil
 			-- archive
 
-	empty_class_types: TWO_WAY_SORTED_SET [INTEGER];
+	empty_class_types: SEARCH_TABLE [TYPE_ID];
 			-- Set of all the class types that have no used
 			-- features (final mode), i.e. the C file would
 			-- be empty.
@@ -56,7 +57,7 @@ feature -- Initialization
 		do
 			!!system_basket.make;
 			!!cecil_rt_basket.make;
-			!!empty_class_types.make
+			!!empty_class_types.make (50)
 		end;
 
 	init_objects_baskets is
@@ -65,8 +66,7 @@ feature -- Initialization
 			basket_nb, i: INTEGER;
 			basket: LINKED_LIST [STRING]
 		do
-			basket_nb := 1 + (System.static_type_id_counter.value - 
-							System.max_precompiled_type_id) // Packet_number;
+			basket_nb := 1 + System.static_type_id_counter.current_count // Packet_number;
 			!!object_baskets.make (1, basket_nb);
 			from i := 1 until i > basket_nb loop
 				!!basket.make;
@@ -79,8 +79,7 @@ feature -- Initialization
 				descriptor_baskets.put (basket, i);
 				i := i + 1
 			end;
-			basket_nb := 1 + (System.class_counter.value - 
-								System.max_precompiled_id) // Packet_number;
+			basket_nb := 1 + System.class_counter.current_count // Packet_number;
 			!!feat_table_baskets.make (1, basket_nb);
 			from i := 1 until i > basket_nb loop
 				!!basket.make;
@@ -1123,16 +1122,16 @@ feature -- Generation, Tail
 
 feature -- Removal of empty classes
 
-	record_empty_class_type (a_class_type: INTEGER) is
+	record_empty_class_type (a_class_type: TYPE_ID) is
 			-- add `a_class_type' to the set of class types that
 			-- are not generated
 		do
-			empty_class_types.extend (a_class_type);
+			empty_class_types.put (a_class_type);
 		end;
 
 feature -- DLE
 
-	record_dle_class_type (a_class_type: INTEGER) is
+	record_dle_class_type (a_class_type: TYPE_ID) is
 			-- Add `a_class_type' to the set of static class types that
 			-- needs to be regenerated (they are containing removed
 			-- features which are used by the dynamic system)

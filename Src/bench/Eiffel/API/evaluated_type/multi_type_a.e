@@ -104,7 +104,7 @@ feature {COMPILER_EXPORTER}
 			gen_type ?= other;
 			if	gen_type /= Void
 				and then
-				gen_type.base_type = System.array_id
+				equal (gen_type.base_class_id, System.array_id)
 			then
 				generic_param := gen_type.generics.item (1);
 				from

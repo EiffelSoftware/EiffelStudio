@@ -1,9 +1,10 @@
 class ADDRESS_TABLE
 
 inherit
-	HASH_TABLE [TWO_WAY_SORTED_SET [INTEGER], INTEGER]
+	HASH_TABLE [TWO_WAY_SORTED_SET [INTEGER], CLASS_ID]
 		rename
-			has as class_has_dollar_operator
+			has as class_has_dollar_operator,
+			cursor as ht_cursor
 		export
 			{NONE} all;
 			{ANY} class_has_dollar_operator
@@ -34,7 +35,7 @@ creation {SYSTEM_I}
 
 feature -- Access
 
-	has (class_id, feature_id: INTEGER): BOOLEAN is
+	has (class_id: CLASS_ID; feature_id: INTEGER): BOOLEAN is
 			-- Is the feature in the table?
 		do
 			if class_has_dollar_operator (class_id) then
@@ -42,7 +43,7 @@ feature -- Access
 			end
 debug ("DOLLAR")
 	io.putstring ("ADDRESS_TABLE.has ");
-	io.putint (class_id);
+	io.putint (class_id.id);
 	io.putchar (' ');
 	io.putint (feature_id)
 	io.putchar (' ');
@@ -53,7 +54,7 @@ end
 
 feature -- Insert
 
-	record (class_id, feature_id: INTEGER) is
+	record (class_id: CLASS_ID; feature_id: INTEGER) is
 			-- Record the feature in the 
 		require
 			not_in_the_table: not has (class_id, feature_id)
@@ -62,7 +63,7 @@ feature -- Insert
 		do
 debug ("DOLLAR")
 	io.putstring ("ADDRESS_TABLE.record ");
-	io.putint (class_id);
+	io.putint (class_id.id);
 	io.putchar (' ');
 	io.putint (feature_id)
 	io.new_line
@@ -85,7 +86,8 @@ feature -- Generation
 
 	generate (final_mode: BOOLEAN) is
 		local
-			class_id, feature_id: INTEGER
+			class_id: CLASS_ID;
+			feature_id: INTEGER;
 			features: TWO_WAY_SORTED_SET [INTEGER]
 		do
 			gen_file := Address_table_file (final_mode)
@@ -106,7 +108,7 @@ feature -- Generation
 				after
 			loop
 				class_id := key_for_iteration
-				a_class := System.class_of_id (class_id)
+				a_class := System.class_of_id (class_id);
 				if a_class /= Void then
 					features := item_for_iteration
 					from
@@ -203,7 +205,7 @@ feature {NONE} -- Generation
 			type_id_array: ARRAY [INTEGER]
 			cursor: CURSOR
 		do
-			!! type_id_array.make (0, System.static_type_id_counter.value)
+			!! type_id_array.make (0, System.static_type_id_counter.total_count)
 
 				-- First generate the tables per class type
 			from
@@ -223,12 +225,12 @@ feature {NONE} -- Generation
 					a_type := types.item
 					cursor := types.cursor
 
-					type_id_array.put (a_type.type_id ,a_type.id)
+					type_id_array.put (a_type.type_id, a_type.id.id)
 
 					gen_file.putstring ("char *(*");
 					gen_file.putstring (dle_prefix);
 					gen_file.putstring ("eif_address_t")
-					gen_file.putint (a_type.id)
+					gen_file.putint (a_type.id.id)
 					gen_file.putstring ("[])() = {%N")
 
 					from
@@ -240,7 +242,7 @@ feature {NONE} -- Generation
 						if sorted_set.has (i) then
 							gen_file.putstring ("(char *(*)())")
 							gen_file.putstring (dle_prefix);
-							gen_file.putstring (Encoder.address_table_name (a_type.id, i))
+							gen_file.putstring (a_type.id.address_table_name (i))
 							gen_file.putstring (",%N")
 						else
 							gen_file.putstring ("(fnptr) 0,%N")
@@ -262,20 +264,20 @@ feature {NONE} -- Generation
 
 			from
 				i := 1
-				nb := System.static_type_id_counter.value
+				nb := type_id_array.upper
 			until
 				i > nb
 			loop
 				type_id := type_id_array @ i
 				if type_id /= 0 then
-					a_type := System.class_type_of_id (type_id_array @ i)
+					a_type := System.class_type_of_id (type_id)
 					if a_type /= Void then
 						a_class := a_type.associated_class
 						if class_has_dollar_operator (a_class.id) then
 							gen_file.putstring ("(fnptr *) ")
 							gen_file.putstring (dle_prefix)
 							gen_file.putstring ("eif_address_t")
-							gen_file.putint (a_type.id)
+							gen_file.putint (a_type.id.id)
 							gen_file.putstring (" - ")
 							gen_file.putint (item (a_class.id).first)
 							gen_file.putstring (",%N")
@@ -383,12 +385,7 @@ feature {NONE} -- Generation
 
 				cursor := types.cursor
 
-				if final_mode then
-					function_name := clone (Encoder.address_table_name (a_type.type_id, feature_id))
-				else
-						-- Always the same name in Workbench mode
-					function_name := clone (Encoder.address_table_name (a_type.id, feature_id))
-				end
+				function_name := a_type.id.address_table_name (feature_id)
 
 				gen_file.putstring ("%T/* ")
 				a_type.type.dump (gen_file)
@@ -458,7 +455,7 @@ feature {NONE} -- Generation
 						gen_file.putint (rout_info.offset);
 					else
 						gen_file.putstring ("RTWP(")
-						gen_file.putint (a_type.id - 1)
+						gen_file.putint (a_type.id.id - 1)
 						gen_file.putstring (", ")
 						gen_file.putint (feature_id)
 					end;

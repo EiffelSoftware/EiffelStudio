@@ -6,6 +6,7 @@ inherit
 	SHARED_WORKBENCH;
 	SHARED_INST_CONTEXT;
 	SHARED_CASE_INFO;
+	COMPILER_EXPORTER
 
 creation
 
@@ -44,7 +45,7 @@ feature {CASE_CLUSTER_INFO}
 				-- Record index, and name
 			s_class_data := class_ast.header_storage_info (classc);
 				-- Record id
-			s_class_data.set_id (classc.id);
+			s_class_data.set_id (classc.id.id);
 				-- Record features, invariant
 			format_reg.store_case_information (s_class_data);
 				-- Record base file name

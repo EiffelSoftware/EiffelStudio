@@ -34,7 +34,7 @@ feature -- Properties
 	actual_type: TYPE_A;
 			-- Actual type of the anchored type in a given class
 
-	class_id: INTEGER;
+	class_id: CLASS_ID;
 			-- Class ID of the class where the anchor is referenced
 
 	feature_name: STRING;
@@ -147,7 +147,7 @@ feature -- Primitives
 			anchor_feature, orig_feat: FEATURE_I;
 			anchor_type: TYPE_B;
 		do
-			if System.current_class.id /= class_id then
+			if not equal (System.current_class.id, class_id) then
 debug
 	io.error.putstring ("LIKE_FEATURE solved_type origin_table%N");
 end;
@@ -199,7 +199,7 @@ end;
 			end;
 		end;
 
-	instantiation_in (type: TYPE_A; written_id: INTEGER): LIKE_FEATURE is
+	instantiation_in (type: TYPE_A; written_id: CLASS_ID): LIKE_FEATURE is
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
 		do
@@ -254,7 +254,7 @@ end;
 			like_feat ?= other;
 			Result := like_feat /= Void and then
 				like_feat.rout_id.is_equal (rout_id) and then
-				like_feat.class_id = class_id and then
+				equal (like_feat.class_id, class_id) and then
 				like_feat.feature_id = feature_id and then
 				like_feat.actual_type.is_deep_equal (actual_type) and then
 				feature_name.is_equal (like_feat.feature_name)

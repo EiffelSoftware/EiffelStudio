@@ -70,7 +70,7 @@ feature -- Generation
 			!! Result.make (0);
 			Result.append ("#include %"macros.h%"%N");
 			Result.append ("%Nstruct desc_info desc");
-			Result.append_integer (class_type.id);
+			Result.append_integer (class_type.id.id);
 			Result.append ("[] = {%N");
 
 			if (invariant_entry = Void) then
@@ -102,16 +102,16 @@ feature -- Generation
 		do
 			!! Result.make (0);
 			Result.append ("%NInit");
-			Result.append_integer (class_type.id);
+			Result.append_integer (class_type.id.id);
 			Result.append ("()%N{%N");
 
 				-- Special descriptor unit (invariant)
 			Result.append ("%T");
 			Result.append (Init_macro);
 			Result.append ("(desc");
-			Result.append_integer (class_type.id);
+			Result.append_integer (class_type.id.id);
 			Result.append (", 0, RTUD(");
-			Result.append_integer (class_type.id);
+			Result.append_integer (class_type.id.id);
 			Result.append ("-1));%N");	
 
 				-- Descriptor units for origin classes
@@ -124,13 +124,13 @@ feature -- Generation
 				Result.append ("%T");
 				Result.append (Init_macro);
 				Result.append ("(desc");
-				Result.append_integer (class_type.id);
+				Result.append_integer (class_type.id.id);
 				Result.append ("+");
 				Result.append_integer (i);
 				Result.append (",");
 				Result.append_integer (key_for_iteration);
 				Result.append (",RTUD(");
-				Result.append_integer (class_type.id);
+				Result.append_integer (class_type.id.id);
 				Result.append ("-1));%N");
 				i := i + item_for_iteration.count;
 				forth;
@@ -148,7 +148,7 @@ feature -- Melting
 			--    3) Sequence of descriptor units
 		do
 				-- Write the id of the class type
-			ba.append_short_integer (class_type.id);
+			ba.append_short_integer (class_type.id.id);
 				-- Write the number of descriptor units
 				-- +1, for the special routines (invariant...)
 			ba.append_short_integer (count + 1);

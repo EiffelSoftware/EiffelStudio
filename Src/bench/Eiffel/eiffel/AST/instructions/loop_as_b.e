@@ -91,7 +91,7 @@ debug ("OPTIMIZATION")
 	io.error.putstring ("Recording loop in class ");
 	io.error.putstring (context.a_class.class_name);
 	io.error.putstring (" (");
-	io.error.putint (context.a_class.id);
+	io.error.putint (context.a_class.id.id);
 	io.error.putstring ("), feature ");
 	io.error.putstring (context.a_feature.feature_name);
 	io.error.putstring (" (");

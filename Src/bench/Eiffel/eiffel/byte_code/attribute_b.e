@@ -133,7 +133,7 @@ feature -- Byte code generation
 				ba.append_integer (attribute_id);
 					-- Generate static type of the call
 				ba.append_short_integer
-					(instant_context_type.associated_class_type.id - 1);
+					(instant_context_type.associated_class_type.id.id - 1);
 			end;
 				-- Generate attribute meta-type
 			ba.append_uint32_integer (Context.real_type (type).sk_value);
@@ -173,7 +173,7 @@ feature -- Byte code generation
 				ba.append_integer (attribute_id);
 					-- Generate static type of the call
 				ba.append_short_integer
-					(instant_context_type.associated_class_type.id - 1);
+					(instant_context_type.associated_class_type.id.id - 1);
 			end;
 				-- Generate attribute meta-type
 			ba.append_uint32_integer (Context.real_type (type).sk_value);

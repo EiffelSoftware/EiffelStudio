@@ -21,7 +21,7 @@ feature -- Attributes
 
 feature  -- Initialization
 
-	init (class_id: INTEGER; f: FEATURE_I) is
+	init (class_id: CLASS_ID; f: FEATURE_I) is
 			-- Initialization
 		require
 			good_argument: f /= Void;
@@ -34,7 +34,7 @@ feature  -- Initialization
 
 feature -- Address table
 
-	record_feature (class_id, f_id: INTEGER) is
+	record_feature (class_id: CLASS_ID; f_id: INTEGER) is
 			-- Record the feature in the address table if it is not there.
 			-- A refreezing will occur.
 		local
@@ -78,7 +78,7 @@ feature
 			if context.workbench_mode then
 				generated_file.putstring ("RTWPP(");
 				generated_file.putint
-					(context.current_type.associated_class_type.id - 1);
+					(context.current_type.associated_class_type.id.id - 1);
 				generated_file.putstring (gc_comma);
 				generated_file.putint (feature_id);
 				generated_file.putchar (')');
@@ -93,7 +93,7 @@ feature
                     Eiffel_table.mark_used (rout_id);
 
 					table_name := clone (dle_prefix);
-					table_name.append (Encoder.address_table_name (context.current_type.type_id, feature_id))
+					table_name.append (context.current_type.associated_class_type.id.address_table_name (feature_id))
 
                     generated_file.putstring (table_name);
 
@@ -111,7 +111,7 @@ feature -- Byte code generation
 			ba.append (Bc_addr);
 			ba.append_integer (feature_id);
 			ba.append_short_integer
-					(context.current_type.associated_class_type.id - 1);
+					(context.current_type.associated_class_type.id.id - 1);
 		end;
 
 feature {NONE} -- DLE

@@ -75,10 +75,10 @@ feature -- Type check, byte code and dead code removal
 			any_type: CL_TYPE_A;
 		once
 			!!Result;
-			Result.set_base_type (System.array_id);
+			Result.set_base_class_id (System.array_id);
 			!!generics.make (1,1);
 			!!any_type;
-			any_type.set_base_type (System.any_id);
+			any_type.set_base_class_id (System.any_id);
 			generics.put (any_type, 1);
 			Result.set_generics (generics);
 		end;

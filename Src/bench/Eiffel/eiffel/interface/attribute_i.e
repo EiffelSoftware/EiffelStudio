@@ -44,7 +44,7 @@ feature
 			-- access function of this attribute in the C file associated
 			-- to the class where this attribute is available.
 
-	generate_in: INTEGER;
+	generate_in: CLASS_ID;
 			-- Class id where an equivalent feature has to be generate
 
 	set_has_function_origin (b: BOOLEAN) is
@@ -53,7 +53,7 @@ feature
 			has_function_origin := b;
 		end;
 
-	set_generate_in (i: INTEGER) is
+	set_generate_in (i: CLASS_ID) is
 			-- Assign `i' to `generate_in'.
 		do
 			generate_in := i
@@ -80,7 +80,7 @@ feature
 	new_rout_unit: ROUT_UNIT is
 			-- New routine unit
 		require else
-			has_to_be_generated: generate_in > 0
+			has_to_be_generated: generate_in /= Void
 		do
 			!!Result;
 			Result.set_body_index (body_index);
@@ -122,7 +122,7 @@ feature
 	to_generate_in (a_class: CLASS_C): BOOLEAN is
 			-- Has the current feature in class `a_class" ?
 		do
-			Result := a_class.id = generate_in
+			Result := equal (a_class.id, generate_in)
 		end;
 
 	check_expanded (class_c: CLASS_C) is
@@ -190,8 +190,7 @@ feature
 				result_type := result_type.instantiation_in (gen_type);
 			end;
 			result_type.c_type.generate (file);
-			internal_name := Encoder.feature_name
-											(class_type.id, body_id);
+			internal_name := Encoder.feature_name (class_type.id.id, body_id);
 			add_in_log (class_type, internal_name);
 			file.putstring (internal_name);
 			file.putstring ("(Current)");
@@ -233,7 +232,7 @@ feature
 				file.putstring (", Dtype(Current))");
 			else
 				file.putstring ("RTWA(");
-				file.putint (class_type.id - 1);
+				file.putint (class_type.id.id - 1);
 				file.putchar (',');
 				file.putint (feature_id);
 				file.putstring (", Dtype(Current))");
@@ -258,7 +257,7 @@ feature
 			Result := rep;
 		end;
 
-	unselected (in: INTEGER): FEATURE_I is
+	unselected (in: CLASS_ID): FEATURE_I is
 			-- Unselected attribute
 		local
 			s: D_ATTRIBUTE_I
@@ -278,10 +277,10 @@ feature
 			other.set_generate_in (generate_in);
 		end;
 
-	generation_class_id: INTEGER is
+	generation_class_id: CLASS_ID is
 			-- Id of the class where the feature has to be generated in
 		do
-			if generate_in > 0 then
+			if generate_in /= Void then
 				Result := generate_in
 			else
 				Result := written_in
@@ -349,7 +348,7 @@ feature
 				ba.append_integer (feature_id);
 					-- Static type
 				ba.append_short_integer
-					(current_type.associated_class_type.id - 1);
+					(current_type.associated_class_type.id.id - 1);
 			end;
 				-- Attribute meta-type
 			ba.append_uint32_integer (result_type.sk_value);

@@ -39,7 +39,7 @@ feature -- Type check, byte code and dead code removal
 			infix_arg_type, infix_type, left_balance: TYPE_A;
 			left_type, current_context: TYPE_A;
 			last_constrained, left_constrained: TYPE_A;
-			left_id: INTEGER;
+			left_id: CLASS_ID;
 			feature_b: FEATURE_B;
 			last_class: CLASS_C;
 			depend_unit: DEPEND_UNIT;

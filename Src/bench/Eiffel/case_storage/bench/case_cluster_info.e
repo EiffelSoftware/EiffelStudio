@@ -9,7 +9,8 @@ inherit
 	PROJECT_CONTEXT;
 	SHARED_RESCUE_STATUS;
 	S_CASE_INFO;
-	SHARED_CASE_INFO
+	SHARED_CASE_INFO;
+	COMPILER_EXPORTER
 
 creation
 
@@ -26,7 +27,7 @@ feature {FORMAT_CASE_STORAGE, CASE_CLUSTER_INFO}
 
 	clusters: LINKED_LIST [CASE_CLUSTER_INFO];
 
-	cluster_i: CLUSTER_i;
+	cluster_i: CLUSTER_I;
 			-- Cluster_i associated with path name `name'	
 
 	name: STRING;
@@ -359,7 +360,7 @@ feature {NONE} -- Class information
 							-- from the system.
 						view_id := old_class_data.view_id;
 						if classc.reverse_engineered and then 
-							old_class_data.id = classc.id 
+							old_class_data.id = classc.id.id
 						then
 								-- Need to make sure that the id's match.
 								-- This approach is not fool proof. I didn't

@@ -21,7 +21,7 @@ feature
 			parents: PARENT_LIST
 		do
 				-- Get class_info directly from disk
-			class_info := Class_info_server.disk_item (classc.id);
+			class_info := Class_info_server.disk_item (classc.id.id);
 			parents := class_info.parents;
 			record_parents (parents);
 			record_renamings (parents);
@@ -35,19 +35,20 @@ feature {NONE} -- Recording information for eiffelcase
 		require
 			valid_parents: parents /= Void
 		local
-			no_repeated_parents: LINKED_SET [INTEGER];
+			no_repeated_parents: LINKED_SET [CLASS_ID];
 			p_l: ARRAYED_LIST [S_INHERIT_DATA];
 			inherit_data: S_INHERIT_DATA;
-			parent_id: INTEGER
+			parent_id: CLASS_ID
 		do
 			!! no_repeated_parents.make;
+			no_repeated_parents.compare_objects;
 			from
 				parents.start
 			until
 				parents.after
 			loop
 				parent_id := parents.item.parent_id;
-				if parent_id /= System.any_id then
+				if not equal (parent_id, System.any_id) then
 					no_repeated_parents.extend (parent_id)
 				end;
 				parents.forth
@@ -59,8 +60,8 @@ feature {NONE} -- Recording information for eiffelcase
 				no_repeated_parents.after
 			loop
 				!! inherit_data;
-				inherit_data.set_class_links (classc.id,
-						no_repeated_parents.item);
+				inherit_data.set_class_links (classc.id.id,
+						no_repeated_parents.item.id);
 debug ("CASE")
 	io.error.putstring ("%T%T%TParent: ");
 	io.error.putstring (System.class_of_id (no_repeated_parents.item).class_name);

@@ -106,7 +106,7 @@ end;
 						make_end_precomp_byte_code (ba, flag, origin, offset)
 					else
 						real_feat_id := feat_tbl.item (feature_name).feature_id;
-						static_type := basic_type.associated_reference.id - 1;
+						static_type := basic_type.associated_reference.id.id - 1;
 						make_end_byte_code (ba, flag, real_feat_id, static_type)
 					end
 				end;
@@ -137,7 +137,7 @@ end;
 					offset := rout_info.offset;
 					make_end_precomp_byte_code (ba, flag, origin, offset)
 				else
-					static_type := cl_type.associated_class_type.id - 1;
+					static_type := cl_type.associated_class_type.id.id - 1;
 					real_feat_id := feature_id;
 					make_end_byte_code (ba, flag, real_feat_id, static_type);
 				end

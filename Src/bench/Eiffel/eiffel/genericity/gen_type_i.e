@@ -34,7 +34,7 @@ feature
 		do
 			gen_type_i ?= other;
 			if gen_type_i /= Void then
-				Result :=	base_id = gen_type_i.base_id
+				Result :=	equal (base_id, gen_type_i.base_id)
 							and then
 							is_expanded = gen_type_i.is_expanded
 							and then
@@ -149,7 +149,7 @@ feature
 			array: ARRAY [TYPE_A]
 		do
 			!!Result
-			Result.set_base_type (base_id);
+			Result.set_base_class_id (base_id);
 			Result.set_is_expanded (is_expanded);
 			from
 				i := meta_generic.count

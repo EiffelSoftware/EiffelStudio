@@ -90,10 +90,10 @@ feature
 			Result := System.class_of_id (parent_id);
 		end;
 
-	parent_id: INTEGER is
+	parent_id: CLASS_ID is
 			-- Parent class id
 		do
-			Result := parent_type.base_type;
+			Result := parent_type.base_class_id
 		end;
 
 	has_renamed (feature_name: STRING): BOOLEAN is

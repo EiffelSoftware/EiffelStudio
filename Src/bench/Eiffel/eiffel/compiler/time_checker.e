@@ -26,23 +26,23 @@ feature
 			-- i.e. if a class has been added or removed
 		local
 			new_classes: LINKED_LIST [CLASS_I];
-			old_classes: ARRAY [BOOLEAN];
+			old_classes: HASH_TABLE [BOOLEAN, CLASS_ID];
 			clusters: LINKED_LIST [CLUSTER_I];
 			class_name: STRING;
 			cluster: CLUSTER_I;
 			class_c: CLASS_C;
 			class_i: CLASS_I;
-			checked_classes: ARRAY [BOOLEAN];
+			checked_classes: HASH_TABLE [BOOLEAN, CLASS_ID];
 			clients: LINKED_LIST [CLASS_C];
 			check_clients: BOOLEAN;
-			i, nb: INTEGER
+			class_id: CLASS_ID
 		do
 			new_classes := System.new_classes;
 			if not new_classes.empty then
 debug ("ACTIVITY")
 io.error.putstring ("TIME_CHECK check_suppliers_of_unchanged_classes%N");
 end;
-				!!old_classes.make (1, System.id_array.count);
+				!!old_classes.make (500);
 				clusters := Universe.clusters;
 				from
 					new_classes.start
@@ -81,21 +81,21 @@ end;
 						-- Some classes may have the same visiblity
 						-- Check all the clients because there is maybe a conflict
 						-- 'classes_to_recompile' is updated and the check is done only once
-					!!checked_classes.make (1, System.id_array.count);
+					!!checked_classes.make (old_classes.count);
 					from
-						i := 1;
-						nb := old_classes.count
+						old_classes.start
 					until
-						i > nb
+						old_classes.after
 					loop
-						if old_classes.item (i) = True then
+						if old_classes.item_for_iteration = True then
 								-- Valid clients must be checked
+							class_id := old_classes.key_for_iteration;
 debug ("ACTIVITY")
 io.error.putstring ("%T%Tcheck clients of ");
-io.error.putstring (System.class_of_id (i).class_name);
+io.error.putstring (System.class_of_id (class_id).class_name);
 io.error.putstring ("%N");
 end;
-							clients := System.class_of_id (i).syntactical_clients;
+							clients := System.class_of_id (class_id).syntactical_clients;
 							from
 								clients.start
 							until
@@ -119,7 +119,7 @@ end;
 								clients.forth
 							end;
 						end;
-						i := i + 1;
+						old_classes.forth
 					end;
 				end;
 			end;

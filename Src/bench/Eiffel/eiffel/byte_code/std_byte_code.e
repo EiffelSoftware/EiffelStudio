@@ -157,7 +157,7 @@ feature
 
 				-- Function's name
 			internal_name := Encoder.feature_name
-				(System.class_type_of_id (context.current_type.type_id).id,
+				(System.class_type_of_id (context.current_type.type_id).id.id,
 				body_id);
 
 				-- Add entry in the log file
@@ -377,7 +377,7 @@ feature
 										written_type := written_class.meta_type
 																(class_type.type).associated_class_type;
 									end;
-									c_name := Encoder.feature_name (written_type.id, creation_feature.body_id);
+									c_name := Encoder.feature_name (written_type.id.id, creation_feature.body_id);
 									generated_file.putstring (");%N%T");
 									generated_file.putstring (clone (c_name));
 									generated_file.putchar ('(');
@@ -423,7 +423,7 @@ feature
 								written_type := written_class.meta_type
 														(class_type.type).associated_class_type;
 							end;
-							c_name := Encoder.feature_name (written_type.id, creation_feature.body_id);
+							c_name := Encoder.feature_name (written_type.id.id, creation_feature.body_id);
 							generated_file.putstring (");%N%T");
 							generated_file.putstring (clone (c_name));
 							generated_file.putchar ('(');

@@ -4,7 +4,11 @@ class DERIVATIONS
 
 inherit
 
-	HASH_TABLE [FILTER_LIST, INTEGER]
+	HASH_TABLE [FILTER_LIST, CLASS_ID];
+	COMPILER_EXPORTER
+		undefine
+			is_equal, copy
+		end
 
 creation
 
@@ -12,7 +16,7 @@ creation
 
 feature
 
-	has_derivation (an_id: INTEGER; a_type: GEN_TYPE_I): BOOLEAN is
+	has_derivation (an_id: CLASS_ID; a_type: GEN_TYPE_I): BOOLEAN is
 		local
 			derivations: FILTER_LIST;
 		do
@@ -26,13 +30,13 @@ feature
 			end;
 		end;
 
-	insert_derivation (an_id: INTEGER; a_type: GEN_TYPE_I) is
+	insert_derivation (an_id: CLASS_ID; a_type: GEN_TYPE_I) is
 		local
 			derivations: FILTER_LIST;
 		do
 debug
 	io.error.putstring ("Inserting a new derivation ");
-	io.error.putint (an_id);
+	io.error.putint (an_id.id);
 	io.error.new_line;
 	a_type.dump (io.error);
 	io.error.new_line;

@@ -4,14 +4,127 @@ class EXTEND_QUEUE [T]
 
 inherit
 
-	ARRAYED_QUEUE [T]
+	TO_SPECIAL [T]
 
 creation
 
 	make
 
-	
 feature 
+
+	make (n: INTEGER) is
+		do
+			upper := -1;
+				-- (`lower' initialized to 0 by default, so invariant holds)
+			allocate_space (0, n)
+		end;
+
+	allocate_space (minindex, maxindex: INTEGER) is
+			--  Allocate memory and initialize indexes.
+		require -- from ARRAY
+			valid_indices: maxindex >= minindex
+		do
+			lower := minindex;
+			upper := maxindex;
+			make_area (maxindex - minindex + 1)
+		end;
+
+	wipe_out is
+			-- Remove all items.
+		do
+			clear_all;
+			out_index := 0;
+			in_index := 0;
+		end
+
+	clear_all is
+			--  Reset all items to default values.
+		local
+			i: INTEGER;
+			dead_element: T
+		do
+			from
+				i := lower
+			variant
+				upper + 1 - i
+			until
+				i > upper
+			loop
+				put_i_th (dead_element,i);
+				i := i + 1
+			end
+		end
+
+	empty: BOOLEAN is
+			-- Is `Current' empty?
+		do
+			Result := count = 0
+		end
+
+	count: INTEGER is
+			--  Number of items in `Current'
+		local
+			size: INTEGER
+		do
+			size := array_seq_capacity;
+			Result := (in_index - out_index + size) \\ size
+		end;
+	
+	put_i_th (v: T; i: INTEGER) is
+			--  Replace `i'-th entry, if in index interval, by `v'.
+		do
+			area.put (v,i - lower)
+		end;
+	
+	put, add (v: like item) is
+			--  Add `v' to the end of `Current'.
+		do
+			put_i_th (v,in_index);
+			in_index := (in_index + 1) \\ array_seq_capacity
+		end;
+	
+	remove is
+			--  Remove oldest item.
+		do
+			out_index := (out_index + 1) \\ array_seq_capacity
+		end;
+	
+	array_seq_capacity: INTEGER is
+			--  Available indices
+		do
+			Result := upper - lower + 1
+		end;
+
+	item: T is
+			--  Oldest item of `Current'
+		do
+			Result := i_th (out_index)
+		end;
+	
+	i_th (i: INTEGER): T is
+			--  Entry at index `i', if in index interval.
+		do
+			Result := area.item (i - lower)
+		end;
+	
+	full: BOOLEAN is
+			-- Is `Current' full?
+		do
+			Result := capacity = count
+		end
+
+	in_index, out_index: INTEGER
+
+	lower: INTEGER;
+
+	upper: INTEGER;
+
+	capacity: INTEGER is
+			-- Number of items that may
+			-- be stored into `Current'
+		do
+			Result := array_seq_capacity - 1
+		end
 
 	change_last_item (t: T) is
 			-- Change the ouput of the queue

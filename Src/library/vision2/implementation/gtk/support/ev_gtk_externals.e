@@ -584,7 +584,7 @@ feature {NONE} -- GTK C functions for progress bar
 		external "C | %"gtk_eiffel.h%""
 		end
 
-feature {NONE} -- GTK C functions for file selection
+feature {NONE} -- GTK C functions for file and directory selection
 
 	gtk_file_selection_new (name: POINTER): POINTER is
 		external
@@ -626,11 +626,26 @@ feature {NONE} -- GTK C functions for file selection
 			"C | %"gtk_eiffel.h%""
 		end
 
-feature {NONE} -- GTK C functions for file selection
+	c_gtk_directory_selection_new (name: POINTER): POINTER is
+		external
+			"C (const gchar *): EIF_POINTER | %"gtk_eiffel.h%""
+		end
+
+feature {NONE} -- GTK C functions for color selection
 
 	c_gtk_color_selection_dialog_new (name: POINTER): POINTER is
 		external
 			"C (char*): EIF_POINTER | %"gtk_eiffel.h%""
+		end
+
+	gtk_color_selection_get_color (dialog: POINTER; color: POINTER) is
+		external
+			"C (GtkColorSelectionDialog *, gdouble *) | <gtk/gtk.h>"
+		end
+
+	gtk_color_selection_set_color (dialog: POINTER; color: POINTER) is
+		external
+			"C (GtkColorSelectionDialog *, gdouble *) | <gtk/gtk.h>"
 		end
 
 	c_gtk_color_selection_get_ok_button (dialog: POINTER): POINTER is

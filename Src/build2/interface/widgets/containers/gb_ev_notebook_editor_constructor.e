@@ -26,7 +26,6 @@ feature -- Access
 			-- of items held in `objects'.
 		local
 			label: EV_LABEL
-			name_field: EV_TEXT_FIELD
 		do
 			create Result
 			initialize_attribute_editor (Result)

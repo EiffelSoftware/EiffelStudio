@@ -84,13 +84,13 @@ feature -- Access
 		end
 
 	Open_string_field: SYSTEM_STRING is
-			-- <POINTER NAME="
+			-- <STRING NAME="
 		once
 			Result := ("<" + create {STRING}.make_from_Cil (String_node) + " " + create {STRING}.make_from_Cil (Field_name_xml_attribute) + "=%"").to_cil
 		end
 			
 	Close_string_field: SYSTEM_STRING is
-			-- "</POINTER>"
+			-- "</STRING>"
 		once
 			Result := ("</" + create {STRING}.make_from_Cil (String_node) + ">").to_cil
 		end

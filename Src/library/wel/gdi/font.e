@@ -35,13 +35,28 @@ feature {NONE} -- Initialization
 				clip_precision, quality, pitch_and_family, $a)
 		end
 
-	make_indirect (log_font: WEL_LOG_FONT) is
-			-- Make font with information from `log_font'.
+	make_indirect (a_log_font: WEL_LOG_FONT) is
+			-- Make a font using `a_log_font'.
 		require
-			log_font_not_void: log_font /= Void
-			log_font_exists: log_font.exists
+			a_log_font_not_void: a_log_font /= Void
+			a_log_font_exists: a_log_font.exists
 		do
-			item := cwin_create_font_indirect (log_font.item)
+			item := cwin_create_font_indirect (a_log_font.item)
+		ensure
+			exists: exists
+		end
+
+feature -- Access
+
+	log_font: WEL_LOG_FONT is
+			-- Log font structure associated to `Current'
+		require
+			exists
+		do
+			!! Result.make_by_font (Current)
+		ensure
+			result_not_void: Result /= Void
+			result_exists: Result.exists
 		end
 
 feature {NONE} -- Implementation

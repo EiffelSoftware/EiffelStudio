@@ -46,13 +46,6 @@ feature {NONE} -- Initialization
 			-- Create the `box'.
 			initialize
 
-			-- Create a label with a null text.
-			create_text_label ("")
-
-			-- left-align and middle-vertical align
-			gtk_misc_set_alignment (gtk_misc (label_widget), 0.0, 0.5)
-			gtk_misc_set_padding (label_widget, 21, 0)
-
 			-- Create the array where the items will be listed.
 			create ev_children.make (0)
 		end

@@ -39,6 +39,7 @@ feature {NONE} -- Implementation
 		once
 			Result := feature {EV_GTK_EXTERNALS}.GDK_EXPOSURE_MASK_ENUM |
 			feature {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_MASK_ENUM |
+			feature {EV_GTK_EXTERNALS}.GDK_POINTER_MOTION_HINT_MASK_ENUM |
 			feature {EV_GTK_EXTERNALS}.GDK_BUTTON_PRESS_MASK_ENUM |
 			feature {EV_GTK_EXTERNALS}.GDK_BUTTON_RELEASE_MASK_ENUM |
 			feature {EV_GTK_EXTERNALS}.GDK_KEY_PRESS_MASK_ENUM |
@@ -54,8 +55,7 @@ feature {NONE} -- Implementation
 		do
 			if needs_event_box then
 				feature {EV_GTK_EXTERNALS}.gtk_widget_set_events (c_object, gdk_events_mask)
-			end
-			if not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (visual_widget) then
+			elseif not feature {EV_GTK_EXTERNALS}.gtk_widget_no_window (visual_widget) then
 				feature {EV_GTK_EXTERNALS}.gtk_widget_add_events (visual_widget, gdk_events_mask)
 			end
 		end

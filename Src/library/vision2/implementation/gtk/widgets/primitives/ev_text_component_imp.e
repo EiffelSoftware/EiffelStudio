@@ -112,11 +112,13 @@ feature -- Basic operation
 			-- Insert `txt' at the current position.
 		local
 			pos: INTEGER
+			temp_string: ANY
 		do
 			pos := caret_position - 1
+			temp_string := txt.to_c
 			C.gtk_editable_insert_text (
 				entry_widget,
-				eiffel_to_c (txt),
+				$temp_string,
 				txt.count,
 				$pos
 			)

@@ -210,12 +210,15 @@ feature {NONE} -- Implementation
 		local
 			imp: EV_LIST_ITEM_IMP
 			temp_sig_id: INTEGER
+			temp_string, temp_string2: ANY
 		do
 			imp ?= v.implementation
-			C.gtk_combo_set_item_string (container_widget, imp.c_object, eiffel_to_c (imp.text))
+			temp_string := (imp.text).to_c
+			C.gtk_combo_set_item_string (container_widget, imp.c_object, $temp_string)
 			C.gtk_container_add (list_widget, imp.c_object)
 			imp.set_item_parent_imp (Current)
-			temp_sig_id := c_signal_connect (imp.c_object, eiffel_to_c ("button-press-event"), agent on_item_clicked)
+			temp_string2 := ("button-press-event").to_c
+			temp_sig_id := c_signal_connect (imp.c_object, $temp_string2, agent on_item_clicked)
 			real_signal_connect (imp.c_object, "key-press-event", agent on_key_pressed, key_event_translate_agent)
 			if count = 1 and is_sensitive then
 				imp.enable_select

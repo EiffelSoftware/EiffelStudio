@@ -217,12 +217,14 @@ feature {NONE} -- Implementation
 		local
 			v_imp: EV_ITEM_IMP
 			temp_sig_id: INTEGER
+			temp_string: ANY
 		do
 			Precursor {EV_LIST_ITEM_LIST_IMP} (v)
 			v_imp ?= v.implementation
+			temp_string := ("focus-out-event").to_c
 			temp_sig_id := c_signal_connect (
 				v_imp.c_object,
-				eiffel_to_c ("focus-out-event"),
+				$temp_string,
 				agent lose_focus
 				)
 		end

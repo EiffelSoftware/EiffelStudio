@@ -1943,10 +1943,8 @@ feature -- Genericity
 		local
 			i: INTEGER
 			a: like arguments
-			t: TYPE_AS
 		do
-			t := type
-			if t.has_like or else t.has_formal_generic then
+			if type.is_loose then
 				Result := True
 			else
 				from
@@ -1956,8 +1954,7 @@ feature -- Genericity
 				until
 					i <= 0
 				loop
-					t := a.i_th (i)
-					if t.has_like or else t.has_formal_generic then
+					if a.i_th (i).is_loose then
 						Result := True
 						i := 0
 					end

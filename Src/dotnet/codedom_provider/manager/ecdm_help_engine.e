@@ -18,10 +18,10 @@ feature -- Initialization
 			-- Set `url' with `a_url'.
 			-- Set `parent' with `a_parent'.
 		require
-			non_void_url: url /= Void
-			valid_url: not url.is_empty
+			non_void_url: a_url /= Void
+			valid_url: not a_url.is_empty
 			non_void_parent: a_parent /= Void
-			valid_parent: parent.item /= Void
+			valid_parent: a_parent.item /= Void
 		do
 			url := a_url
 			parent := a_parent

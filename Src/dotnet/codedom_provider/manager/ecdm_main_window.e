@@ -124,6 +124,8 @@ feature {NONE} -- Initialization
 			create help_parent_control.make_from_text ("")
 			create help_control
 			help_control.extend (help_parent_control)
+			fill_combo (precompile_combo, saved_precompiled_paths)
+			fill_combo (metadata_cache_combo, saved_metadata_cache_paths)
 			show_actions.extend (agent on_column_resize (1))
 		end
 
@@ -415,7 +417,47 @@ feature {NONE} -- Events
 				l_dialog.show_modal_to_window (Current)
 				l_path := l_dialog.file_name
 				if not l_path.is_empty then
+					precompile_combo.extend (create {EV_LIST_ITEM}.make_with_text (l_path))
 					precompile_combo.set_text (l_path)
+					save_precompiled_paths (precompile_combo.strings)
+				end
+			end
+		end
+
+	on_metadata_cache_select is
+			-- Called by `select_actions' of `metadata_cache_combo'.
+		local
+			l_metadata_cache: STRING
+		do
+			if active_configuration /= Void then
+				l_metadata_cache := metadata_cache_combo.text
+				if not l_metadata_cache.is_empty then
+					if active_configuration.metadata_cache = Void or else not l_metadata_cache.is_equal (active_configuration.metadata_cache) then
+						active_configuration.set_metadata_cache (l_metadata_cache)
+						set_dirty
+					end
+				elseif active_configuration.metadata_cache /= Void then
+					active_configuration.set_metadata_cache (Void)
+					set_dirty
+				end
+			end
+		end
+	
+	on_metadata_cache_browse is
+			-- Called by `select_actions' of `metadata_cache_browse_button'.
+			-- Browse for Eiffel Metadata cache.
+		local
+			l_dialog: EV_DIRECTORY_DIALOG
+			l_path: STRING
+		do
+			if active_configuration /= Void then
+				create l_dialog.make_with_title ("Browse for Eiffel Metadata Cache folder")
+				l_dialog.show_modal_to_window (Current)
+				l_path := l_dialog.directory
+				if not l_path.is_empty then
+					metadata_cache_combo.extend (create {EV_LIST_ITEM}.make_with_text (l_path))
+					metadata_cache_combo.set_text (l_path)
+					save_metadata_cache_paths (metadata_cache_combo.strings)
 				end
 			end
 		end
@@ -741,6 +783,24 @@ feature {NONE} -- Implementation
 		
 	active_configuration: ECDM_CONFIGURATION
 			-- Currently selected configuration if any.
+	
+	fill_combo (a_combo: EV_COMBO_BOX; a_list: LIST [STRING]) is
+			-- Fill `a_combo' with `a_list'.
+			-- Do nothing if `a_list' is void.
+		require
+			non_void_combo: a_combo /= Void
+		do
+			if a_list /= Void then
+				from
+					a_list.start
+				until
+					a_list.after
+				loop
+					a_combo.extend (create {EV_LIST_ITEM}.make_with_text (a_list.item))
+					a_list.forth
+				end
+			end
+		end
 	
 	log_level (a_level: INTEGER): STRING is
 			-- Text corresponding to log level `a_level'

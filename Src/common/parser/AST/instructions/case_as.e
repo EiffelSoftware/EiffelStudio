@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			-- Yacc initialization
 		do
 			interval ?= yacc_arg (0);
-			compound ?= yacc_arg (1);
+			compound ?= yacc_arg (1)
 		ensure then
 			interval_exists: interval /= Void;
 		end;

@@ -191,6 +191,8 @@ feature -- Status report
 				loc_selected_item := selected_item
 				if loc_selected_item /= Void then
 					Result := loc_selected_item.text
+				else
+					Result := ""
 				end
 			else
 				Result := wel_text

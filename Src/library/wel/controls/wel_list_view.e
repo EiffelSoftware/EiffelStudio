@@ -158,14 +158,14 @@ feature -- Status report
 		--	count_ok: result_count = selected_count
 		end
 
-	get_column_width (index: INTEGER): INTEGER is
+	get_column_width (column: INTEGER): INTEGER is
 			-- Width of the zero-based `index'-th item.
 		require
 			exists: exists
-			index_large_enough: index >= 0
-			index_small_enough: index < column_count
+			index_large_enough: column >= 0
+			index_small_enough: column < column_count
 		do
-			Result := cwin_send_message_result (item, Lvm_getcolumnwidth, index, 0)
+			Result := cwin_send_message_result (item, Lvm_getcolumnwidth, column, 0)
 		end
 
 	get_item_state (index, mask: INTEGER): INTEGER is
@@ -175,7 +175,7 @@ feature -- Status report
 		require
 			exists: exists
 			index_large_enough: index >= 0
-			index_small_enough: index < column_count
+			index_small_enough: index < count
 		do
 			Result := cwin_send_message_result (item, Lvm_getitemstate, index, mask)
 		end

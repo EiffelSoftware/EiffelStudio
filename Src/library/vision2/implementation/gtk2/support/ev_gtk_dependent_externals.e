@@ -30,8 +30,6 @@ feature -- Externals
 		end
 
 	signal_handler_unblock (a_object: POINTER; a_handler_id: INTEGER) is
-			-- void   gtk_signal_handler_unblock      (GtkObject           *object,
-			--                                         guint                handler_id);
 		external
 			"C [macro <gtk/gtk.h>]"
 		alias
@@ -39,8 +37,6 @@ feature -- Externals
 		end
 
 	signal_emit_stop_by_name (a_object: POINTER; a_name: POINTER) is
-			-- void   gtk_signal_emit_stop_by_name    (GtkObject           *object,
-			--                                         const gchar         *name);
 		external
 			"C [macro <gtk/gtk.h>]"
 		alias
@@ -67,21 +63,29 @@ feature -- Externals
 		end
 
 	gtk_style_get_font (a_c_struct: POINTER): POINTER is
-			-- (from C_GTK_STYLE_STRUCT)
 		external
 			"C (GtkStyle*): EIF_POINTER | <gtk/gtk.h>"
 		end
 
 	gtk_paned_set_gutter_size (a_paned: POINTER; a_size: INTEGER) is
-		do
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			" "
 		end
 
 	gtk_paned_set_handle_size (a_paned: POINTER; a_size: INTEGER) is
-		do
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			" "
 		end
 
 	gtk_menu_bar_set_shadow_type (a_menu_bar: POINTER; a_type: INTEGER) is
-		do	
+		external
+			"C [macro <gtk/gtk.h>]"
+		alias
+			" "
 		end
 
 	gtk_editable_get_editable (a_c_struct: POINTER): BOOLEAN is
@@ -113,6 +117,48 @@ feature -- Externals
 			"C (gpointer) | <gtk/gtk.h>"
 		alias
 			"g_object_unref"
+		end
+
+	gtk_text_view_new: POINTER is
+		external
+			"C (): GtkWidget* | <gtk/gtk.h>"
+		end
+
+	gtk_text_view_get_buffer (a_text_view: POINTER): POINTER is
+		external
+			"C (GtkTextView*): GtkTextBuffer* | <gtk/gtk.h>"
+		end
+
+	gtk_text_buffer_set_text (a_text_buffer: POINTER; a_string: POINTER; a_length: INTEGER) is
+		external
+			"C signature (GtkTextBuffer*, gchar *, gint) use <gtk/gtk.h>"
+		end
+		
+	gtk_text_buffer_get_start_iter (a_text_buffer: POINTER; a_text_iter: POINTER) is
+		external
+			"C (GtkTextBuffer*, GtkTextIter*) | <gtk/gtk.h>"
+		end
+		
+	gtk_text_buffer_get_end_iter (a_text_buffer: POINTER; a_text_iter: POINTER) is
+		external
+			"C (GtkTextBuffer*, GtkTextIter*) | <gtk/gtk.h>"
+		end
+		
+	gtk_text_buffer_get_bounds (a_text_buffer: POINTER; a_start_iter: POINTER; a_end_iter: POINTER) is
+		external
+			"C (GtkTextBuffer*, GtkTextIter*, GtkTextIter*) | <gtk/gtk.h>"
+		end
+
+	gtk_text_buffer_get_text (a_text_buffer: POINTER; a_start_iter: POINTER; a_end_iter: POINTER; inc_hid_chars: BOOLEAN): POINTER is
+		external
+			"C (GtkTextBuffer*, GtkTextIter*, GtkTextIter*, gboolean ): gchar* | <gtk/gtk.h>"
+		end
+
+	c_gtk_text_iter_struct_allocate: POINTER is
+		external
+			"C [macro <stdlib.h>]"
+		alias
+			"calloc (sizeof(GtkTextIter), 1)"
 		end
 
 end

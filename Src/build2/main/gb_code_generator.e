@@ -740,7 +740,7 @@ feature {NONE} -- Implementation
 					-- Add code which implements `show' if necessary, when using EV_WINDOW
 					-- as client. Also export `initialize' as necessary. If client, then it
 					-- must be exported to {ANY}.
-					if project_settings.client_of_window then
+					if document_info.generate_as_client then
 						if document_info.type.is_equal (ev_titled_window_string) or document_info.type.is_equal (ev_dialog_string) then
 							add_generated_string (class_text, "%Nfeature -- Basic operation%N" + show_window_feature, custom_feature_tag)
 						else
@@ -804,7 +804,7 @@ feature {NONE} -- Implementation
 					end
 
 						-- Add code for inheritance structure to `class_text'.
-					if project_settings.client_of_window then
+					if document_info.generate_as_client then
 						temp_string := "inherit" + Indent_less_two + "CONSTANTS%N%Nfeature -- Access%N" + indent_less_two
 						if document_info.type.is_equal (ev_titled_window_string) or document_info.type.is_equal (ev_dialog_string) then
 							temp_string.append (client_window_string)
@@ -844,7 +844,7 @@ feature {NONE} -- Implementation
 					end
 					
 						-- Add code for Precursor call in `intialize'.
-					if project_settings.client_of_window then
+					if document_info.generate_as_client then
 						add_generated_string (class_text, "initialize_constants", precursor_tag)
 					else
 						add_generated_string (class_text, "Precursor {" + document_info.type + "}" + Indent + "initialize_constants", precursor_tag)
@@ -922,14 +922,14 @@ feature {NONE} -- Implementation
 				set_class_name (a_class_name)
 				
 				temp_string := a_class_name + Class_implementation_extension
-				if project_settings.client_of_window then
+				if document_info.generate_as_client then
 						-- Add redefinition of `default_create' if we are client.
 					temp_string := temp_string + default_create_redefinition
 				end
 					-- Generate the inheritance from the window implementation.
 				set_inherited_class_name (temp_string)
 				
-				if project_settings.client_of_window then
+				if document_info.generate_as_client then
 						-- There are different sets of setting code for windows and dialogs, or widgets.
 					if document_info.type.is_equal (ev_titled_window_string) or document_info.type.is_equal (ev_dialog_string) then
 						temp_string := redefined_window_creation.twin
@@ -1057,6 +1057,12 @@ feature {NONE} -- Implementation
 								info.set_associated_root_object_id (element_info.data.to_integer)
 								in_reference := True
 							end
+							
+							element_info := full_information @ client_string
+							if element_info /= Void then
+								info.enable_generate_as_client
+							end
+							
 							element_info := full_information @ (id_string)
 							info.set_id (element_info.data.to_integer)
 							info.generated_info_by_id.put (info, info.id)
@@ -1135,7 +1141,7 @@ feature {NONE} -- Implementation
 					-- Fixme, why assign id here? Try generating, and then see new ids after...
 				new_object := object_handler.build_object_from_string (generated_info.type)--_and_assign_id (generated_info.type)
 				code_for_insert := generated_info.name.twin
-				if generated_info.associated_root_object_id > 0 and project_settings.client_of_window then
+				if generated_info.associated_root_object_id > 0 and generated_info.generate_as_client then
 					if generated_info.type.is_equal (ev_titled_window_string) or generated_info.type.is_equal (ev_dialog_string) then
 						code_for_insert.append ("." + client_window_string)
 					else
@@ -1145,13 +1151,13 @@ feature {NONE} -- Implementation
 				if generated_info.parent /= Void and then generated_info.parent.type /= Void and then generated_info.parent.is_root_object then
 					menu_bar_object ?= new_object
 					if menu_bar_object /= Void then
-						if project_settings.client_of_window then
+						if document_info.generate_as_client then
 							add_build (client_window_string + ".set_menu_bar (" + generated_info.name + ")")
 						else
 							add_build ("set_menu_bar (" + generated_info.name + ")")
 						end
 					else
-						if project_settings.client_of_window then
+						if document_info.generate_as_client then
 							if generated_info.parent.type.is_equal (ev_titled_window_string) or generated_info.parent.type.is_equal (ev_dialog_string) then
 								add_build (client_window_string +  "." + new_object.extend_xml_representation (code_for_insert))
 							else
@@ -1225,7 +1231,7 @@ feature {NONE} -- Implementation
 							if not temp_set.substring (1, dot_index - 1).is_equal (pixmap_name) then
 								temp_set := temp_set.substring (dot_index + 1, temp_set.count)
 							end
-							if project_settings.client_of_window and not temp_set.is_empty then
+							if document_info.generate_as_client and not temp_set.is_empty then
 								if generated_info.type.is_equal (ev_titled_window_string) or generated_info.type.is_equal (ev_dialog_string) then
 									temp_set := Client_window_string + "." + temp_set
 								else
@@ -1279,7 +1285,7 @@ feature {NONE} -- Implementation
 							-- is no need for a dot call, unless we are using the window as a client.
 						if generated_info.is_root_object then
 							local_name := ""
-							if project_settings.client_of_window then
+							if document_info.generate_as_client then
 								if generated_info.type.is_equal (ev_titled_window_string) or generated_info.type.is_equal (ev_dialog_string) then
 									local_name := Client_window_string + "."
 								else
@@ -1350,7 +1356,7 @@ feature {NONE} -- Implementation
 				-- Now we must connect the close event of the window:
 			add_event_connection ("%T-- Close the application when an interface close")
 			add_event_connection ("%T-- request is recieved on `Current'. i.e. the cross is clicked.")
---			if System_status.current_project_settings.client_of_window then
+--			if System_status.current_document_info.generate_as_client then
 --				add_event_connection (Client_window_string + ".close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)")
 --			else
 --				add_event_connection ("close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)")
@@ -1633,7 +1639,7 @@ feature {NONE} -- Implementation
 				-- we may have the . at the start which is uneeded in
 				-- the code. Remove it.
 			if not non_void_set.is_empty and then (non_void_set @ 1) = '.' then
-				if project_settings.client_of_window then
+				if document_info.generate_as_client then
 					non_void_set := "window" + non_void_set
 				else
 					non_void_set := non_void_set.substring (2, non_void_set.count)

@@ -55,6 +55,7 @@ feature {NONE} -- Implementation
 					else	
 						st.add_new_line;
 						displayed.extend (descendant_class);
+						displayed.forth
 						rec_display (i+1, descendant_class, st);
 					end;			
 					descendants.forth

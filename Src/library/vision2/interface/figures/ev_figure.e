@@ -347,19 +347,21 @@ feature -- Contract support
 		require
 			list_exists: list /= Void
 		local
-			n: INTEGER
+			cur: CURSOR
 		do
+			cur := list.cursor
 			from
 				Result := True
-				n := 1
+				list.start
 			until
-				not Result or else n > list.count
+				not Result or else list.after
 			loop
-				if not list.i_th (n).valid_group_point (pnt) then
+				if not list.item.valid_group_point (pnt) then
 					Result := False
 				end
-				n := n + 1
+				list.forth
 			end
+			list.go_to (cur)
 		end
 
 	all_points_exist (list: like points): BOOLEAN is
@@ -367,19 +369,21 @@ feature -- Contract support
 		require
 			list_exists: list /= Void
 		local
-			n: INTEGER
+			cur: CURSOR
 		do
+			cur := list.cursor
 			from
 				Result := True
-				n := 1
+				list.start
 			until
-				not Result or else n > point_count
+				not Result or else list.after
 			loop
-				if list.i_th (n) = Void then
+				if list.item = Void then
 					Result := False
 				end
-				n := n + 1
+				list.forth
 			end
+			list.go_to (cur)
 		end
 
 	all_points_in_group (grp: EV_FIGURE_GROUP): BOOLEAN is
@@ -388,18 +392,21 @@ feature -- Contract support
 			grp_exists: grp /= Void
 		local
 			n: INTEGER
+			cur: CURSOR
 		do
+			cur := points.cursor
 			from
 				Result := True
-				n := 1
+				points.start
 			until
-				not Result or else n > point_count
+				not Result or else points.after
 			loop
-				if not points.i_th (n).in_group (grp) then
+				if not points.item.in_group (grp) then
 					Result := False
 				end
-				n := n + 1
+				points.forth
 			end
+			points.go_to (cur)
 		end
 
 invariant
@@ -444,6 +451,10 @@ end -- class EV_FIGURE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.9  2000/02/21 21:48:15  brendel
+--| Improved implementation of Contract support features by saving cursor and
+--| using standard traversal routines.
+--|
 --| Revision 1.8  2000/02/19 20:24:42  brendel
 --| Updated copyright to 1986-2000.
 --|

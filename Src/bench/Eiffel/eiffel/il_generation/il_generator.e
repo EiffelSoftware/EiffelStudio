@@ -230,6 +230,7 @@ feature {NONE} -- Type description
 				il_generator.set_generic_conformance_type_id (static_type_id_counter.count + 8)
 				il_generator.generate_type_class_mappings
 				il_generator.set_any_type_id (System.any_class.compiled_class.types.first.static_type_id)
+				il_generator.set_object_type_id (System.system_object_class.compiled_class.types.first.implementation_id)
 			variant
 				nb - i + 1
 			until

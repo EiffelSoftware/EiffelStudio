@@ -15,6 +15,12 @@ inherit
 	COMPARABLE
 		undefine
 			is_equal
+		end;
+	CLICKABLE_AST
+		undefine
+			is_equal
+		redefine
+			is_feature
 		end
 
 feature -- Attributes
@@ -34,7 +40,19 @@ feature -- Attributes
 			-- second pass of the compiler in order to see if a feature
 			-- has change of body.
 
+	is_feature: BOOLEAN is
+			-- Does the Current AST represent a feature?
+		do
+			Result := True
+		end;
+
 feature -- Access
+
+	feature_name: STRING is
+			-- Feature name representing AST 
+		do
+			Result := feature_names.first.internal_name
+		end;
 
 	feature_with_name (n: STRING): FEATURE_AS is
 			-- Feature ast with internal name `n'

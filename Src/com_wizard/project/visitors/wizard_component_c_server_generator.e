@@ -848,7 +848,7 @@ feature -- Basic Operations
 				Result.append (New_line_tab_tab_tab)
 				Result.append (tab)
 
-				Result.append (get_argument_from_variant (prop_desc.data_type, "arg", "pDispParams->rgvarg [0]", 0, 0))
+				Result.append (get_argument_from_variant (prop_desc.data_type, "arg", "(&(pDispParams->rgvarg [0]))", 0, 0))
 				Result.append ("hr = ")
 				Result.append (Set_clause)
 				Result.append (prop_desc.name)

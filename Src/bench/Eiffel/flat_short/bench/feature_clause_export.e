@@ -11,7 +11,7 @@ class FEATURE_CLAUSE_EXPORT
 
 inherit
 
-	COMPARABLE
+	PART_COMPARABLE
 		undefine
 			is_equal
 		end;
@@ -29,32 +29,25 @@ feature -- Initialization
 		require
 			valid_feat_adapter: feat_adapter /= Void;
 		do
-			export_status := feat_adapter.target_feature.export_status;
+			if feat_adapter.target_feature = Void then
+				! EXPORT_ALL_I ! export_status;
+			else
+				export_status := feat_adapter.target_feature.export_status;
+			end;
 			!! features.make;
 			add (feat_adapter);
 		ensure
-			export_set: export_status = feat_adapter.target_feature.export_status;
-			has_feat_adapter: features.has (feat_adapter)
+			has_feat_adapter: features.has (feat_adapter);
 		end;
 
 feature -- Properties
 
-	features: SORTED_TWO_WAY_LIST [FEATURE_ADAPTER];
+	features: PART_SORTED_TWO_WAY_LIST [FEATURE_ADAPTER];
 			-- Features sorted on name within 
 			-- Current feature clause
 	
-	comment: EIFFEL_COMMENTS;
+	comments: EIFFEL_COMMENTS;
 			-- Comment for feature clause
-
-feature -- Setting
-
-	set_comment (c: like comment) is
-			-- Set comment to `c'.
-		do
-			comment := c;
-		ensure
-			comment = c
-		end;
 
 feature -- Access
 
@@ -62,6 +55,16 @@ feature -- Access
 			-- Are there any features?
 		do
 			Result := features.empty;
+		end;
+
+feature -- Setting
+
+	set_comments (c: like comments) is
+			-- Set comment to `c'.
+		do
+			comments := c;
+		ensure
+			comments = c
 		end;
 
 feature -- Comparison
@@ -115,12 +118,14 @@ feature -- Context output
 			ctxt.put_text_item (ti_Before_feature_clause);
 			ctxt.put_text_item (ti_Feature_keyword);
 			ctxt.put_space;
-			export_status.format (ctxt);
-			ctxt.put_space;
-			if comment = Void then
+			if not export_status.is_all then
+				export_status.format (ctxt);
+				ctxt.put_space;
+			end;
+			if comments = Void then
 				ctxt.new_line
 			else
-				ctxt.put_comment (comment);
+				ctxt.put_comments (comments);
 			end;
 			ctxt.indent;
 			ctxt.set_separator (Void);

@@ -17,10 +17,31 @@ inherit
 			{NONE} all
 		end;
 
-	MEL_RECT_OBJ
+	MEL_RECT_OBJ;
+
+	MEL_DRAWABLE
+		rename
+			identifier as window
+		end
 
 creation
 	make_from_existing
+
+feature -- Access
+
+	window: POINTER is
+			-- Associated window
+		do
+			Result := xt_window (screen_object)
+		ensure then
+			valid_result: realized implies Result /= default_pointer
+		end;
+
+	is_valid: BOOLEAN is
+			-- Is Current widget valid?
+		do
+			Result := not is_destroyed
+		end;
 
 feature -- Status Report
 
@@ -37,9 +58,10 @@ feature -- Status Report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixel (screen_object, XmNbackground)
+			Result := get_xt_pixel (Current, XmNbackground)
 		ensure
-			background_color_created: Result /= Void and then Result.is_valid
+			background_color_created: Result /= Void and then Result.is_valid;
+			result_has_same_display: Result.same_display (display)
 		end;
 
 	background_pixmap: MEL_PIXMAP is
@@ -47,19 +69,16 @@ feature -- Status Report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixmap (screen_object, XmNbackgroundPixmap)
+			Result := get_xt_pixmap (Current, XmNbackgroundPixmap)
 		ensure
-			background_pixmap_is_valid: Result /= Void and then Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid;
+			result_has_same_display: Result.same_display (display) 
 		end;
 
 	depth: INTEGER is
 			-- Number of bits allowed for each pixel
-		require
-			exists: not is_destroyed
 		do
 			Result := get_xt_int (screen_object, XmNdepth)
-		ensure
-			depth_large_enough: Result > 0
 		end;
 
 feature -- Status setting
@@ -68,7 +87,8 @@ feature -- Status setting
 			-- Set `background' and `background_color' to `a_color'.
 		require
 			exists: not is_destroyed;
-			a_color_is_valid: a_color /= Void and then a_color.is_valid
+			valid_color: a_color /= Void and then a_color.is_valid;
+			same_display: a_color.same_display (display)
 		do
 			set_xt_pixel (screen_object, XmNbackground, a_color)
 		ensure
@@ -79,8 +99,10 @@ feature -- Status setting
 	set_background_pixmap (a_pixmap: MEL_PIXMAP) is
 			-- Set `background_pixmap' to `a_pixmap'.
 		require
-			 exists: not is_destroyed;
-			a_pixmap_is_valid: a_pixmap /= Void and then a_pixmap.is_valid
+			exists: not is_destroyed;
+			valid_pixmap: a_pixmap /= Void and then a_pixmap.is_valid;
+			is_pixmap: a_pixmap.is_pixmap;
+			same_display: a_pixmap.same_display (display)
 		do
 			set_xt_pixmap (screen_object, XmNbackgroundPixmap, a_pixmap)
 		ensure
@@ -122,7 +144,7 @@ feature -- Transformation
 		require
 			exists: not is_destroyed
 		do
-			if window /= 0 then
+			if window /= default_pointer then
 				x_lower_window (screen.display.handle, window)
 			end
 		end;
@@ -132,7 +154,7 @@ feature -- Transformation
 		require
 			exists: not is_destroyed
 		do
-			if window /= 0 then
+			if window /= default_pointer then
 				x_raise_window (screen.display.handle, window)
 			end
 		end;
@@ -146,7 +168,7 @@ feature -- Miscellaneous
 			exists: not is_destroyed;
 			background_color_not_void: background_color /= Void
 		do
-			xm_change_color (screen_object, background_color.id)
+			xm_change_color (screen_object, background_color.identifier)
 		end;
 
 feature -- Element change
@@ -167,7 +189,7 @@ feature -- Element change
 		end;
 
 	set_override_translation (a_translation: STRING; a_callback: MEL_CALLBACK; an_argument: ANY) is
-            -- Set `a_callback' to be executed with `an_argument' when `a_translation' occurs.
+			-- Set `a_callback' to be executed with `an_argument' when `a_translation' occurs.
 			-- `a_translation' is specified with Xtoolkit convention.
 			-- An existing translation for `a_translation' will be overriden.
 		require
@@ -177,7 +199,44 @@ feature -- Element change
 			a_callback_exec: MEL_CALLBACK_EXEC
 		do
 			!! a_callback_exec.make (a_callback, an_argument);
-			Mel_dispatcher.add_translation (screen_object, a_translation, a_callback_exec)
+			Mel_dispatcher.set_translation (screen_object, a_translation, a_callback_exec)
+		end;
+
+	define_cursor (a_cursor: MEL_SCREEN_CURSOR) is
+			-- Define the cursor to be displayed to `a_cursor' if not
+			-- Void. Otherwize, if `a_cursor' is Void then have
+			-- the parent's cursor displayed in the Current window.
+		require
+			valid_cursor: a_cursor /= Void implies a_cursor.is_valid;
+			same_display: a_cursor.same_display (display)	
+		local
+			cursor_id, w: POINTER
+		do
+			w := window;
+			if w /= default_pointer then
+					-- If widget was not realized then it doesn't
+					-- have a window.
+				if a_cursor /= Void then
+					cursor_id := a_cursor.identifier
+				end
+				x_define_cursor (xt_display (screen_object), w, cursor_id)
+			end
+		end;
+
+	grab_pointer (a_cursor: MEL_SCREEN_CURSOR) is
+			-- Actively grab the pointer. Display `a_cursor' if it is
+			-- not void. Otherwize, keep the current cursor.
+			-- (Grab both the mouse and the keyboard events).
+		require
+			widget_realized: realized;
+			valid_cursor: a_cursor /= Void implies a_cursor.is_valid
+		local
+			cursor_id: POINTER
+		do
+			if a_cursor /= Void then
+				cursor_id := a_cursor.identifier
+			end;
+			xt_grab_pointer (screen_object, cursor_id)
 		end;
 
 feature -- Removal
@@ -198,8 +257,8 @@ feature -- Removal
 		end;
 
 	remove_override_translation (a_translation: STRING) is
-            -- Remove the callback for `a_translation'.
-            -- Do nothing if `a_translation' was not set.
+			-- Remove the callback for `a_translation'.
+			-- Do nothing if `a_translation' was not set.
 		require
 			exists: not is_destroyed;
 			non_void_a_translation: a_translation /= Void
@@ -207,11 +266,79 @@ feature -- Removal
 			Mel_dispatcher.remove_translation (screen_object, a_translation)
 		end;
 
+	undefine_cursor is
+			-- Sets the cursor to Current window to its parent's
+			-- cursor.
+		local
+			w: POINTER
+		do
+			w := window;
+			if w /= default_pointer then
+				x_undefine_cursor (xt_display (screen_object), w)
+			end
+		end;
+
+	ungrab_pointer is
+			-- Release the pointer from an active grab.
+		require
+			widget_realized: realized
+		do
+			xt_ungrab_pointer (screen_object, Current_time)
+		end;
+
 feature {NONE} -- Implementation
+
+	display_handle: POINTER is
+			-- Associated C handle for the display
+		do  
+			Result := display.handle
+		end
+
+feature {NONE} -- External features
 
 	x_propagate_event (scr_obj: POINTER; c_bool: BOOLEAN) is
 		external
 			"C"
+		end;
+
+	xt_grab_pointer (display_ptr: POINTER; cursor: POINTER) is
+		external
+			"C"
+		end;
+
+	x_define_cursor (display_ptr: POINTER; a_window: POINTER; cursor: POINTER) is
+		external
+			"C [macro <X11/Xlib.h>] (Display *, Window, Cursor)"
+		alias
+			"XDefineCursor"
+		end;
+
+	x_undefine_cursor (display_ptr: POINTER; a_window: POINTER) is
+		external
+			"C [macro <X11/Xlib.h>] (Display *, Window)"
+		alias
+			"XUndefineCursor"
+		end;
+
+	xt_ungrab_pointer (w: POINTER; time: INTEGER) is
+		external
+			"C [macro <X11/Intrinsic.h>] (Widget, Time)"
+		alias
+			"XtUngrabPointer"
+		end;
+
+	x_lower_window (display_ptr: POINTER; a_window: POINTER) is
+		external
+			"C [macro <X11/Xlib.h>] (Display *, Window)"
+		alias
+			"XLowerWindow"
+		end;
+
+	x_raise_window (display_ptr: POINTER; a_window: POINTER) is
+		external
+			"C [macro <X11/Xlib.h>] (Display *, Window)"
+		alias
+			"XRaiseWindow"
 		end;
 
 end -- class MEL_WIDGET

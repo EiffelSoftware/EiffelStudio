@@ -40,6 +40,7 @@ feature
 			object_menu: EV_MENU
 			menu_item: EV_MENU
 			description_frame: EV_FRAME
+			timer: EV_TIMEOUT
 		do
 			first_window.set_title ("Eiffel Vision Widgets")
 			create menu_bar
@@ -72,6 +73,17 @@ feature
 				object_menu.extend (menu_item)
 				non_widgets.forth
 			end
+			create timer.make_with_interval (120000)
+			timer.actions.extend (~exit_zero_wrapper)
+		end
+
+	exit_zero_wrapper is do exit_zero end
+
+	exit_zero is
+		external
+			"C [macro <stdio.h>]"
+		alias
+			"exit(0)"
 		end
 
 	widgets_frame: EV_FRAME is
@@ -150,12 +162,13 @@ feature
 			Result.extend (create {EV_HORIZONTAL_SEPARATOR}.make_for_test)
 			Result.extend (create {EV_LABEL}.make_for_test)
 			Result.extend (create {EV_LIST}.make_for_test)
---|FIXME		Result.extend (create {EV_OPTION_BUTTON}.make_for_test)
---|FIXME		Result.extend (create {EV_SPIN_BUTTON}.make_for_test)
+			Result.extend (create {EV_MULTI_COLUMN_LIST}.make_for_test)
+			Result.extend (create {EV_OPTION_BUTTON}.make_for_test)
+			Result.extend (create {EV_SPIN_BUTTON}.make_for_test)
 			Result.extend (create {EV_TEXT_FIELD}.make_for_test)
 			Result.extend (create {EV_TOGGLE_BUTTON}.make_for_test)
 			Result.extend (create {EV_TOOL_BAR}.make_for_test)
---|FIXME		Result.extend (create {EV_TREE}.make_for_test)
+--|FIXME			Result.extend (create {EV_TREE}.make_for_test)
 			Result.extend (create {EV_VERTICAL_PROGRESS_BAR}.make_for_test)
 			Result.extend (create {EV_VERTICAL_RANGE}.make_for_test)
 			Result.extend (create {EV_VERTICAL_SCROLL_BAR}.make_for_test)
@@ -336,6 +349,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/22 00:39:46  oconnor
+--| more tests
+--|
 --| Revision 1.12  2000/03/07 22:09:24  oconnor
 --| Commented out feature that do not yet work on windows
 --|

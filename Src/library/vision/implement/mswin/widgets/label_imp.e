@@ -213,7 +213,14 @@ feature {NONE} -- Implementation
 			end
 			color_windows ?= private_foreground_color.implementation
 			paint_dc.set_text_color (color_windows)
-			paint_dc.set_background_transparent
+			if private_background_color /= Void then
+				color_windows ?= private_background_color.implementation
+			end
+			if color_windows /= Void then
+				paint_dc.set_background_color (color_windows)
+			else
+				paint_dc.set_background_transparent
+			end
 			paint_dc.draw_text (text, client_rect, alignment_type +
 				Dt_vcenter + Dt_singleline)
 		end

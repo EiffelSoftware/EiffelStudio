@@ -53,7 +53,7 @@ feature -- Access
 			Result := parent_imp.internal_get_index (Current) + 1
 		end
 
-	parent_imp: EV_LIST_IMP
+	parent_imp: EV_LIST_ITEM_HOLDER_IMP
 	
 	set_parent (par: like parent) is
                       -- Make `par' the new parent of the widget.
@@ -198,6 +198,9 @@ end -- class EV_LIST_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/03/01 16:37:54  rogers
+--| Changed type of parent_imp from EV_LIST_IMP to EV_LIST_ITEM_HOLDER_IMP.
+--|
 --| Revision 1.28  2000/02/25 17:44:27  rogers
 --| Removed call to precursor in set_text, and replaced with text := txt as text is now an attribute of this class directly.
 --|

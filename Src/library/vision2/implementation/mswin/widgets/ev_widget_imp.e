@@ -402,6 +402,10 @@ feature -- Element change
 		do
 			background_color_imp := Void
 			foreground_color_imp := Void
+			if is_displayed then
+					-- If the widget is not hidden then invalidate.
+				invalidate
+			end
 		end	
 
 	set_parent (par: EV_CONTAINER) is

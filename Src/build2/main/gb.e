@@ -123,18 +123,4 @@ feature {NONE} -- Initialization
 			cancel_actions.extend (agent clear_status_after_transport)
 		end
 		
-	clear_status_during_transport (an_x, a_y: INTEGER; a_target: EV_ABSTRACT_PICK_AND_DROPABLE) is
-			-- Clear status bar if `a_target' is Void.
-		do
-			if a_target = Void then
-				clear_status_bar
-			end
-		end
-		
-	clear_status_after_transport (a: ANY) is
-			-- Clear `status_bar'.
-		do
-			clear_status_bar
-		end
-
 end

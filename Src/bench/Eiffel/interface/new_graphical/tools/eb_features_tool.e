@@ -171,7 +171,7 @@ feature -- Element change
 							end
 							tree.wipe_out
 							current_compiled_class := classc_stone.e_class
-							tree.build_tree_for_external
+							tree.build_tree_for_external (current_compiled_class)
 						end
 					else
 						current_compiled_class := Void

@@ -32,15 +32,18 @@ feature -- Access
 				XmCR_MULTIPLE_SELECT, XmCR_SINGLE_SELECT>>
 		end;
 
-	item: MEL_SHARED_STRING is
+	item: MEL_STRING is
 			-- Item selected
 		local
 			ptr: POINTER
 		do
 			ptr := c_item (handle);
 			if ptr /= default_pointer then
-				!! Result.make_from_existing (ptr)
+				!! Result.make_from_existing (ptr);
+				Result.set_shared
 			end
+        ensure
+            Result_is_shared: Result /= Void implies Result.shared
 		end;
 
 	item_length: INTEGER is

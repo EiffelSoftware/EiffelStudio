@@ -30,11 +30,15 @@ feature -- Access
 			Result := <<XmCR_APPLY, XmCR_CANCEL, XmCR_OK, XmCR_NO_MATCH>>;
 		end;
 
-	value: MEL_SHARED_STRING is
+	value: MEL_STRING is
 			-- String that was either chosen from the list
 			-- of typed in
 		do
-			!! Result.make_from_existing (c_value (handle))
+			!! Result.make_from_existing (c_value (handle));
+			Result.set_shared
+        ensure
+            Result_not_void: Result /= Void;
+            Result_is_shared: Result.shared
 		end;
 
 	length: INTEGER is

@@ -749,17 +749,19 @@ feature -- Element change
 				arguments := args
 			else
 				if format.dot_needed then
-					adapt := local_adapt.adapt_nested_feature (name, global_adapt)
-				else
-					adapt := unnested_local_adapt.adapt_feature (name, global_adapt)
 					type := last_class_printed
 					if type /= Void then
 							-- Need to update type local_adapt for
 							-- ! TYPE ! name.make
-						adapt.set_source_type (type)
-						adapt.set_target_type (type)
-						adapt.set_evaluated_type
+						local_adapt.set_source_type (type)
+						local_adapt.set_target_type (type)
+						local_adapt.set_evaluated_type
+						last_class_printed := Void
 					end
+					adapt := local_adapt.adapt_nested_feature (name, global_adapt)
+				else
+					last_class_printed := Void
+					adapt := unnested_local_adapt.adapt_feature (name, global_adapt)
 				end
 				local_adapt := adapt
 				arguments := args

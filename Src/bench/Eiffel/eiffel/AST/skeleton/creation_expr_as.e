@@ -54,7 +54,6 @@ feature {AST_EIFFEL} -- Output
 		do
 			ctxt.put_text_item (ti_Create_keyword)
 			ctxt.put_space
-			ctxt.set_type_creation (type)
 			ctxt.put_text_item (ti_L_curly)
 			ctxt.format_ast (type)
 
@@ -74,14 +73,22 @@ feature {AST_EIFFEL} -- Output
 				create dummy_name.initialize (ti_R_curly.image)
 				dummy_call.set_feature_name (dummy_name)
 				ctxt.format_ast (dummy_call)
+				ctxt.set_type_creation (type)
 				ctxt.need_dot
 				ctxt.format_ast (call)
 			else
-				ctxt.put_text_item (ti_R_curly)
+					--| Simply calling put_text_item doesn't work:
+					--| the context local_adapt must change.
+					--| Yeah yeah I know it's not really clean,
+					--| but if you want to redo completely the text generation, go on.
+				create dummy_call
+				create dummy_name.initialize (ti_R_curly.image)
+				dummy_call.set_feature_name (dummy_name)
+				ctxt.format_ast (dummy_call)
 			end
 
-				-- Reset creation type, otherwise it messed everything up.
-			ctxt.set_type_creation (Void)
+				--| If a dot call follows, it has to be relative to `type'.
+			ctxt.set_type_creation (type)
 		end
 
 feature -- Access

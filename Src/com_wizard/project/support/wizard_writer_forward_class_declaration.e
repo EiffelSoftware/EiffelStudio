@@ -58,29 +58,29 @@ feature -- Basic operations
 
 				Result.append ("#ifndef ")
 				Result.append (class_protector)
-				Result.append ("%R%N#define ")
+				Result.append ("%N#define ")
 				Result.append (class_protector)
-				Result.append ("%R%N")
+				Result.append ("%N")
 			end
 
 			if namespace /= Void and then not namespace.is_empty then
 				Result.append ("namespace ")
 				Result.append (namespace)
-				Result.append ("%R%N{%R%N")
+				Result.append ("%N{%N")
 			end
 
 			Result.append ("class ")
 			Result.append (name)
-			Result.append (";%R%N")
+			Result.append (";%N")
 
 			if namespace /= Void and then not namespace.is_empty then
-				Result.append ("}%R%N")
+				Result.append ("}%N")
 			end
 
 			if abstract then
-				Result.append ("#endif%R%N")
+				Result.append ("#endif%N")
 			end
-			Result.append ("%R%N")
+			Result.append ("%N")
 
 		ensure
 			non_void_generated_code: Result /= Void

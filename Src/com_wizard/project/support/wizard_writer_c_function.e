@@ -32,11 +32,11 @@ feature -- Access
 		do
 			create Result.make (10000)
 			Result.append (generated_signature)
-			Result.append ("%R%N%R%N")
+			Result.append ("%N%N")
 			Result.append (generated_comment)
-			Result.append ("{%R%N")
+			Result.append ("{%N")
 			Result.append (body)
-			Result.append ("%R%N};")
+			Result.append ("%N};")
 		end
 
 	generated_header_file: STRING is
@@ -49,7 +49,7 @@ feature -- Access
 			end
 			Result.prepend ("%T")
 			Result.prepend (generated_comment)
-			Result.append (";%R%N")
+			Result.append (";%N")
 		end
 
 feature -- Element Change
@@ -90,9 +90,9 @@ feature {NONE} -- Implementation
 			can_generate: can_generate
 		do
 			create Result.make (100)
-			Result.append ("%T/*-----------------------------------------------------------%R%N%T")
+			Result.append ("%T/*-----------------------------------------------------------%N%T")
 			Result.append (comment)
-			Result.append ("%R%N%T-----------------------------------------------------------*/%R%N")
+			Result.append ("%N%T-----------------------------------------------------------*/%N")
 		end
 
 	generated_signature: STRING is

@@ -54,6 +54,11 @@ feature -- Status setting
 		deferred
 		end;
 
+	set_text (a_string: STRING) is
+			-- Set the text to `a_string'.
+		deferred
+		end;
+
 feature {NONE} -- Properties
 
 	menu_entry_name: STRING is "menu_entry"

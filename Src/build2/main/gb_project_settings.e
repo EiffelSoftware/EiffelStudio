@@ -23,12 +23,30 @@ inherit
 
 create
 	default_create,
-	make_with_default_values
+	make_envision_with_default_values,
+	make_stand_alone_with_default_values
 
 feature {NONE} -- Initialization
 
-	make_with_default_values is
-			-- Create `Current' and initialize to default values.
+	make_envision_with_default_values is
+			-- Create `Current', mark as an Envision project,
+			-- and initialize to default values.
+		do
+			set_default_values
+			project_type := envision_project
+		end
+		
+	make_stand_alone_with_default_values is
+			-- Create `Current', mark as a stand alone Build project,
+			-- and intiailize_to_default_values.
+		do
+			set_default_values
+			project_type := stand_alone_project
+		end
+		
+		
+	set_default_values is
+			-- Initialize default values.
 		do
 			main_window_class_name := "MAIN_WINDOW"
 			application_class_name := "VISION2_APPLICATION"
@@ -38,8 +56,25 @@ feature {NONE} -- Initialization
 			enable_rebuild_ace_file
 		end
 		
+		
 
 feature -- Access
+
+	project_type: INTEGER
+		-- Type of project that `Current' represents.
+		
+	is_stand_alone_project: BOOLEAN is
+			-- Does `Current' represent a stand alone project?
+			-- i.e. regular Build, not Envision.
+		do
+			Result := project_type = Stand_alone_project
+		end
+		
+	is_envision_project: BOOLEAN is
+			-- Does `Current' represent an Envision project?
+		do
+			Result := project_type = Envision_project
+		end
 
 	project_location: STRING
 		-- Project location.
@@ -91,6 +126,7 @@ feature -- Basic operation
 			data: ARRAYED_LIST [TUPLE [STRING, STRING]]
 		do
 			create data.make (0)
+			data.extend ([project_type_string, project_type.out])
 			data.extend ([project_name_string, project_name.out])
 			data.extend ([project_location_string, project_location])
 			data.extend ([main_window_class_name_string, main_window_class_name])
@@ -124,17 +160,18 @@ feature -- Basic operation
 				check
 					data_not_void: data /= Void
 				end
-				if data.count = 10 then
-					set_string_attribute (data @ 1, agent set_project_name (?))
-					set_string_attribute (data @ 2, agent set_project_location (?))
-					set_string_attribute (data @ 3, agent set_main_window_class_name (?))
-					set_string_attribute (data @ 4, agent set_application_class_name (?))
-					set_boolean_attribute (data @ 5, agent enable_complete_project, agent disable_complete_project)
-					set_boolean_attribute (data @ 6, agent enable_grouped_locals, agent disable_grouped_locals)
-					set_boolean_attribute (data @ 7, agent enable_debugging_output, agent disable_debugging_output)
-					set_boolean_attribute (data @ 8, agent enable_attributes_local, agent disable_attributes_local)
-					set_boolean_attribute (data @ 9, agent enable_client_of_window, agent disable_client_of_window)
-					set_boolean_attribute (data @ 10, agent enable_rebuild_ace_file, agent disable_rebuild_ace_file)
+				if data.count = 11 then
+					set_integer_attribute (data @ 1, agent set_project_type (?))
+					set_string_attribute (data @ 2, agent set_project_name (?))
+					set_string_attribute (data @ 3, agent set_project_location (?))
+					set_string_attribute (data @ 4, agent set_main_window_class_name (?))
+					set_string_attribute (data @ 5, agent set_application_class_name (?))
+					set_boolean_attribute (data @ 6, agent enable_complete_project, agent disable_complete_project)
+					set_boolean_attribute (data @ 7, agent enable_grouped_locals, agent disable_grouped_locals)
+					set_boolean_attribute (data @ 8, agent enable_debugging_output, agent disable_debugging_output)
+					set_boolean_attribute (data @ 9, agent enable_attributes_local, agent disable_attributes_local)
+					set_boolean_attribute (data @ 10, agent enable_client_of_window, agent disable_client_of_window)
+					set_boolean_attribute (data @ 11, agent enable_rebuild_ace_file, agent disable_rebuild_ace_file)
 				else
 					create dialog.make_with_text (invalid_bpr_file)
 					dialog.button ((create {EV_DIALOG_CONSTANTS}).ev_abort).select_actions.extend (agent cancel_load)
@@ -151,6 +188,14 @@ feature -- Basic operation
 		
 
 feature -- Status Setting
+
+	set_project_type (a_type: INTEGER) is
+			-- Assign `a_type' to `project_type'.
+		do
+			project_type := a_type
+		ensure
+			set: project_type.is_equal (a_type)
+		end
 
 	set_project_location (location: STRING) is
 			-- Assign `location' to `project_location'.
@@ -203,7 +248,6 @@ feature -- Status Setting
 		do
 			client_of_window := False
 		end
-		
 		
 	enable_complete_project is
 			-- Assign `True' to `complete_project'.
@@ -265,8 +309,14 @@ feature -- Status Setting
 			rebuild_ace_file := False
 		end
 		
-		
+feature {NONE} -- Constants
 
+	stand_alone_project: INTEGER is 1
+		-- Project was created in stand alone version of Build.
+	
+	envision_project: INTEGER is 2
+		-- Project was created as an Envision project.
+		
 
 feature {NONE} --Implementation
 
@@ -290,6 +340,25 @@ feature {NONE} --Implementation
 	client_of_window_string: STRING is "Client_of_window"
 	
 	rebuild_ace_file_string: STRING is "Rebuild_ace_file"
+	
+	project_type_string: STRING is "Project_type"
+	
+		-- Type of Current project. We must store this information
+		-- in the save file, so we know what sort of processing to perform
+		-- when we double click on the .bpr file.
+		
+	set_integer_attribute (temp_tuple: TUPLE [STRING, STRING]; an_agent: PROCEDURE [ANY, TUPLE [INTEGER]]) is
+			-- Call `an_agent' with `temp_tuple' @ 2 string converted to an INTEGER.
+		local
+			temp_string: STRING
+		do
+			temp_string ?= temp_tuple @ 2
+			check
+				data_was_string: temp_string /= Void and temp_string.is_integer
+			end
+			an_agent.call ([temp_string.to_integer])
+		end
+		
 	
 	set_string_attribute (temp_tuple: TUPLE [STRING, STRING]; an_agent: PROCEDURE [ANY, TUPLE [STRING]]) is
 			-- Call `an_agent' with `temp_tuple' @ 2 string.

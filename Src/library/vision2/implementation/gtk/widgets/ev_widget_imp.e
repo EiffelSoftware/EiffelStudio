@@ -53,7 +53,7 @@ feature {NONE} -- Initialization
 			con_id := c_gtk_signal_connect (widget, $ev_str, $destroy_signal_callback, 
 						   $Current, Default_pointer, 
 						   Default_pointer, Default_pointer,
-						   Default_pointer, 0, False)
+						   Default_pointer, 0, False, Default_pointer)
 			check
 				successfull_connect: con_id > 0
 			end
@@ -404,7 +404,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_BUTTON_EVENT_DATA!ev_data.make
-			add_command_with_event_data (widget, "button_press_event", cmd, arg, ev_data, mouse_button, False)
+			add_command_with_event_data (widget, "button_press_event", cmd, arg, ev_data, mouse_button, False, default_pointer)
 		end
 	
 	add_button_release_command (mouse_button: INTEGER; cmd: EV_COMMAND; 
@@ -415,7 +415,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_BUTTON_EVENT_DATA!ev_data.make
-			add_command_with_event_data (widget, "button_release_event", cmd, arg, ev_data, mouse_button, False)
+			add_command_with_event_data (widget, "button_release_event", cmd, arg, ev_data, mouse_button, False, default_pointer)
 		end
 	
 	add_double_click_command (mouse_button: INTEGER; cmd: EV_COMMAND; 
@@ -426,7 +426,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_BUTTON_EVENT_DATA!ev_data.make
-			add_command_with_event_data (widget, "button_press_event", cmd, arg, ev_data, mouse_button, True)
+			add_command_with_event_data (widget, "button_press_event", cmd, arg, ev_data, mouse_button, True, default_pointer)
 		end		
 	
 	add_motion_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -434,7 +434,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_MOTION_EVENT_DATA!ev_data.make
-			add_command_with_event_data (widget, "motion_notify_event", cmd, arg, ev_data, 0, False)
+			add_command_with_event_data (widget, "motion_notify_event", cmd, arg, ev_data, 0, False, default_pointer)
 		end
 	
 	add_destroy_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -447,7 +447,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_EXPOSE_EVENT_DATA!ev_data.make
-			add_command_with_event_data (widget, "expose_event", cmd, arg, ev_data, 0, False)
+			add_command_with_event_data (widget, "expose_event", cmd, arg, ev_data, 0, False, default_pointer)
 		end
 	
 	add_key_press_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -455,7 +455,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_KEY_EVENT_DATA!ev_data.make
-			add_command_with_event_data (widget, "key_press_event", cmd, arg, ev_data, 0, False)
+			add_command_with_event_data (widget, "key_press_event", cmd, arg, ev_data, 0, False, default_pointer)
 		end
 			
 	add_key_release_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -463,7 +463,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_KEY_EVENT_DATA!ev_data.make
-			add_command_with_event_data (widget, "key_release_event", cmd, arg, ev_data, 0, False)
+			add_command_with_event_data (widget, "key_release_event", cmd, arg, ev_data, 0, False, default_pointer)
 		end	
 	
 	add_enter_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -471,7 +471,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA
 		do
 			!EV_EVENT_DATA!ev_data.make-- temporary, create a correct object here XX
-			add_command_with_event_data (widget, "enter_notify_event", cmd, arg, ev_data, 0, False)
+			add_command_with_event_data (widget, "enter_notify_event", cmd, arg, ev_data, 0, False, default_pointer)
 		end
 	
 	add_leave_notify_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -479,7 +479,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-			add_command_with_event_data (widget, "leave_notify_event", cmd, arg, ev_data, 0, False)
+			add_command_with_event_data (widget, "leave_notify_event", cmd, arg, ev_data, 0, False, default_pointer)
 		end
 
 	add_get_focus_command  (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -489,7 +489,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-			add_command_with_event_data (widget, "focus_in_event", cmd, arg, ev_data, 0, False)
+			add_command_with_event_data (widget, "focus_in_event", cmd, arg, ev_data, 0, False, default_pointer)
 		end
 
 	add_lose_focus_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -499,7 +499,7 @@ feature -- Event - command association
 			ev_data: EV_EVENT_DATA		
 		do
 			!EV_EVENT_DATA!ev_data.make  -- temporary, create a correct object here XX
-			add_command_with_event_data (widget, "focus_out_event", cmd, arg, ev_data, 0, False)
+			add_command_with_event_data (widget, "focus_out_event", cmd, arg, ev_data, 0, False, default_pointer)
 		end
 
 feature -- Event -- removing command association
@@ -655,7 +655,7 @@ feature -- Postconditions
 				(not shown and then (x = - 1 and y = - 1))
 		end
 
-feature {EV_ANY_I} -- Implementation
+feature -- Implementation
 	
 	widget: POINTER
                         -- pointer to the C structure representing this widget

@@ -89,13 +89,17 @@ feature -- Status setting
 
 	destroy (wid_list: LINKED_LIST [WIDGET]) is
 		do
+			if is_popped_up then
+				if insensitive_list /= Void then
+					set_windows_sensitive
+				end
+			end
 			wm_shell_destroy (wid_list)
 		end
 
 	popdown is
 			-- Popdown popup shell.
 		do
-
 			if is_popped_up then
 				if insensitive_list /= Void then
 					set_windows_sensitive

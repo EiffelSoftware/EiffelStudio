@@ -29,7 +29,7 @@ feature --{NONE} -- Initialization
 			-- Make an empty C string of `a_length' characters.
 			-- C memory area is not initialized.
 		require
-			positive_length: a_length >= 0
+			a_length_positive: a_length >= 0
 		do
 			create managed_data.make ((a_length + 1))
 			count := 0
@@ -39,15 +39,21 @@ feature --{NONE} -- Initialization
 			-- Make a copy of string pointed by `a_ptr'.
 		require
 			a_ptr_not_null: a_ptr /= default_pointer
-		local
-			lth: INTEGER
 		do
-			lth := c_strlen (a_ptr)
-			count := lth
-			create managed_data.make ((lth + 1))
-			managed_data.item.memory_copy (a_ptr, lth)
+			make_by_pointer_and_count (a_ptr, c_strlen (a_ptr))
 		end
-	
+		
+	make_by_pointer_and_count (a_ptr: POINTER; a_length: INTEGER) is
+			-- Make a copy of first `a_length' byte of string pointed by `a_ptr'.
+		require
+			a_ptr_not_null: a_ptr /= default_pointer
+			a_length_positive: a_length >= 0
+		do
+			count := a_length
+			create managed_data.make ((a_length + 1))
+			managed_data.item.memory_copy (a_ptr, a_length)
+		end
+
 feature -- Access
 
 	substring (start_pos, end_pos: INTEGER): STRING is

@@ -49,14 +49,14 @@ creation
 
 feature -- Initialization
 
-	make_from_tool (par: EV_CONTAINER; a_tool: EB_TOOL) is
+	make_from_tool (par: EV_CONTAINER; a_tool: EB_EDITOR) is
 			-- Initialize text window with name `a_name', parent `a_parent',
 			-- and tool window `a_tool'.
 		require
 			valid_tool: a_tool /= Void and then not a_tool.destroyed
 		do
 			make (par)
---			a_tool.init_modify_action (Current)
+			a_tool.init_change_command (Current)
 		end
 
 	make (a_parent: EV_CONTAINER) is
@@ -157,9 +157,9 @@ feature -- Changing
 			-- Set `text' to `a_text'.
 		do
 			set_editable (True)
-			changed := True
+			set_changed (True)
 			{EV_RICH_TEXT} Precursor (a_text)
-			changed := False
+			set_changed (False)
 		ensure then
 			not_changed: not changed	
 		end
@@ -235,19 +235,19 @@ feature -- Text manipulation
 			-- Erase internal structures of Current.
 		do
 			disable_clicking
-			struct_position := 0
-			text_position := 0
-			focus_start := 0
-			focus_end := 0
-			changed := True
+			struct_position := 1
+			text_position := 1
+			focus_start := 1
+			focus_end := 1
+			set_changed (True)
 			set_text("")
-			set_position (0)
+			set_position (1)
 			set_changed (false)
 		ensure then
-			struct_position = 0
+			struct_position = 1
 			clickable_count = 0
-			focus_start = 0
-			focus_end = 0
+			focus_start = 1
+			focus_end = 1
 			not changed
 		end
 
@@ -256,10 +256,10 @@ feature -- Text manipulation
 		do
 			set_text("")
 			disable_clicking
-			struct_position := 0
-			text_position := 0
-			focus_start := 0
-			focus_end := 0
+			struct_position := 1
+			text_position := 1
+			focus_start := 1
+			focus_end := 1
 			set_changed (false)
 		end
 
@@ -369,9 +369,6 @@ feature -- Update
 --			cur_pos: INTEGER
 		do
 --			if clickable_count /= 0 then
---				if last_warner /= Void then
---					last_warner.popdown
---				end
 --				cur_pos := character_position (but_data.absolute_x - real_x, but_data.absolute_y - real_y)
 --				update_focus (cur_pos)
 --				highlight_focus
@@ -390,7 +387,7 @@ feature -- Update
 		do
 --			cb := breakable_for (f, index)
 --			if cb /= Void then
---				changed := True
+--				set_changed (True)
 --				bs := cb.breakable
 --				if has_selection then
 --					was_selection_active := True
@@ -398,9 +395,9 @@ feature -- Update
 --					end_pos := selection_end
 --					deselect_all
 --				end
---				changed := True
+--				set_changed (True)
 --				replace (cb.start_position, cb.end_position, bs.sign)
---				changed := False
+--				set_changed (False)
 --				status := Application.status
 --				if
 --					status /= Void and status.is_stopped and

@@ -66,12 +66,10 @@ feature
 								c.append_clickable_name (output_window);
 								if c = written_cl then
 									output_window.put_string (" (version from)");
+								else
+									output_window.put_string (" ");
+									feat.append_clickable_signature (output_window, c);
 								end;
-								--| I commented the next two lines 
-								--| because Fred pleaded with me to
-								--| do so (dinov).
-								--output_window.put_string (".");
-								--feat.append_clickable_name (output_window, c);
 								output_window.new_line;
 								stop := True;
 							end

@@ -36,17 +36,17 @@ cluster
 			"CVS";
 		end
 		
-	all dot_net_base: "$ISE_EIFFEL\library.net\base"
+	all dot_net_base: "$EIFFEL_SRC\library.net\base"
 		exclude
 			"CVS";
 		end
 
-	system_xml_generated: "$ISE_EIFFEL\library.net\System.Xml"
+	system_xml_generated: "$EIFFEL_SRC\library.net\System.Xml"
 		exclude
 			"CVS";
 		end
 
-	system_generated: "$ISE_EIFFEL\library.net\System"
+	system_generated: "$EIFFEL_SRC\library.net\System"
 		exclude
 			"CVS";
 		end

@@ -16,7 +16,7 @@ cluster
 			"CVS";
 		end
 
-	all dot_net_base: "$ISE_EIFFEL\library.net\base"	
+	all dot_net_base: "$EIFFEL_SRC\library.net\base"	
 		exclude
 			"CVS";
 		end

@@ -13,6 +13,9 @@ deferred class
 	
 inherit
 	EV_MENU_ITEM_CONTAINER_I
+
+	EV_WIDGET_I
+
 end
 
 --|----------------------------------------------------------------

@@ -121,8 +121,16 @@ feature {RESOURCE_STRUCTURE} -- Resource Management
 		end		
 
 	save (resources: ARRAYED_LIST [RESOURCE]) is
-			-- 
+			-- Save all resources.			
 		do			
+			from
+				resources.start
+			until
+				resources.after
+			loop
+				save_resource (resources.item)
+				resources.forth
+			end
 		end		
 
 invariant

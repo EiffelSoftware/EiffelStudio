@@ -110,12 +110,14 @@ feature -- Basic operations
 	generate_class (f: FILE) is
 			-- Generate an Eiffel class template mapping
 			-- the loaded data description.
+		obsolete
+			"Wrong location for this capability: please use class DB_CLASS_GENERATOR instead."
 		require
 			is_ok: is_ok
 			rep_loaded: loaded
 			file_exists: f /= Void and then f.exists
 		do
-			implementation.generate_class(f)
+			implementation.generate_class (f)
 		end
 
 	change_name (new_name: STRING) is

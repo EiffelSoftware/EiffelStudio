@@ -37,7 +37,7 @@ feature {NONE} -- GTK C functions for menu items
 		external "C | <gtk/gtk.h>"
 		end
 
-	gtk_check_menu_item_set_state (check_menu_item: POINTER; state: BOOLEAN) is
+	gtk_check_menu_item_set_active (check_menu_item: POINTER; state: BOOLEAN) is
 		external "C | <gtk/gtk.h>"
 		end
 

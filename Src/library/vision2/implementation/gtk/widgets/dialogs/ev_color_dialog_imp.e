@@ -113,6 +113,14 @@ feature {NONE} -- Implementation
 		
 feature {NONE} -- Externals
 
+	double_array_i_th (double_array: POINTER; index: INTEGER): REAL is
+			-- EIF_DOUBLE double_array_i_th (double *double_array, int index) {
+			--	return double_array [index];
+			-- }
+		external
+			"C | %"ev_c_util.h%""
+		end
+
 	gtk_color_selection_dialog_struct_colorsel (a_c_struct: POINTER): POINTER is
 		external
 			"C [struct <gtk/gtk.h>] (GtkColorSelectionDialog): EIF_POINTER"

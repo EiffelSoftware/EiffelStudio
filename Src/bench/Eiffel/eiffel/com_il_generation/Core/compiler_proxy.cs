@@ -117,6 +117,10 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 		core.set_cls_compliant (v);
 	}
 
+	public void set_any_type_id (int v) {
+		core.set_any_type_id (v);
+	}
+
 	public void AddAssemblyReference (string Name) {
 		core.AddAssemblyReference (Name);
 	}
@@ -160,6 +164,11 @@ public class COMPILER_PROXY : COMPILER_PROXY_I {
 	public void generate_none_type_class_mapping (int type_id)
 	{
 		core.generate_none_type_class_mapping (type_id);
+	}
+
+	public void generate_eiffel_type_info_type_class_mapping (int type_id)
+	{
+		core.generate_eiffel_type_info_type_class_mapping (type_id);
 	}
 
 	public void generate_basic_type_class_mapping (int type_id)

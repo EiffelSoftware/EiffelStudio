@@ -39,6 +39,8 @@ feature -- Settings
 		// Set cls compliance of code generation. If `v' is True, generate
 		// cls compliant code, otherwise code is not cls compliant.
 
+	void set_any_type_id (int v);
+		// Set `Any_id' with `v'.
 /*
 feature -- Generation structure
 */
@@ -81,6 +83,9 @@ feature -- Generation structure
 
 	void generate_basic_type_class_mapping (int type_id);
 		// Generate mapping between `ISE.Runtime.BASIC_TYPE and `type_id'.
+
+	void generate_eiffel_type_info_type_class_mapping (int type_id);
+		// Generate mapping between `ISE.Runtime.EIFFEL_TYPE_INFO and `type_id'.
 
 	// Generate class name and its specifier.
 	void GenerateClassHeader (bool IsInterface,

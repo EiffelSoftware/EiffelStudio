@@ -52,6 +52,13 @@ feature -- Status Report
 			Result := True
 		end
 
+	set_any_type_id_user_precondition (v: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `set_any_type_id'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	start_assembly_generation_user_precondition (name: STRING; fname: STRING; location: STRING): BOOLEAN is
 			-- User-defined preconditions for `start_assembly_generation'.
 			-- Redefine in descendants if needed.
@@ -131,6 +138,13 @@ feature -- Status Report
 
 	generate_basic_type_class_mapping_user_precondition (type_id: INTEGER): BOOLEAN is
 			-- User-defined preconditions for `generate_basic_type_class_mapping'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	generate_eiffel_type_info_type_class_mapping_user_precondition (type_id: INTEGER): BOOLEAN is
+			-- User-defined preconditions for `generate_eiffel_type_info_type_class_mapping'.
 			-- Redefine in descendants if needed.
 		do
 			Result := True
@@ -1228,6 +1242,15 @@ feature -- Basic Operations
 
 		end
 
+	set_any_type_id (v: INTEGER) is
+			-- No description available.
+			-- `v' [in].  
+		require
+			set_any_type_id_user_precondition: set_any_type_id_user_precondition (v)
+		deferred
+
+		end
+
 	start_assembly_generation (name: STRING; fname: STRING; location: STRING) is
 			-- No description available.
 			-- `name' [in].  
@@ -1339,6 +1362,15 @@ feature -- Basic Operations
 			-- `type_id' [in].  
 		require
 			generate_basic_type_class_mapping_user_precondition: generate_basic_type_class_mapping_user_precondition (type_id)
+		deferred
+
+		end
+
+	generate_eiffel_type_info_type_class_mapping (type_id: INTEGER) is
+			-- No description available.
+			-- `type_id' [in].  
+		require
+			generate_eiffel_type_info_type_class_mapping_user_precondition: generate_eiffel_type_info_type_class_mapping_user_precondition (type_id)
 		deferred
 
 		end

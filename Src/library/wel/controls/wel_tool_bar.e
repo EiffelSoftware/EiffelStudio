@@ -76,7 +76,7 @@ feature -- Basic operations
 
 	auto_size is
 			-- Resize tooolbar after changes.
-			-- An application sends the Tb_autosize message after
+			-- An application sends the TB_AUTOSIZE message after
 			-- causing the size of a toolbar to change either by
 			-- setting the button or bitmap size or by adding strings
 			-- for the first time.
@@ -207,9 +207,9 @@ feature -- Status setting
 			exists: exists
 			positive_width: a_width >=0
 			positive_height: a_height >= 0
+			no_bitmap_present: not has_bitmap
 		do
-			cwin_send_message (item, Tb_setbitmapsize, 0,
-				cwin_make_long (a_width, a_height))
+			cwin_send_message (item, Tb_setbitmapsize, 0, cwin_make_long (a_width, a_height))
 		end
 
 	set_button_size (a_width, a_height: INTEGER) is
@@ -255,6 +255,9 @@ feature -- Status setting
 		end
 
 feature -- Status report
+
+	has_bitmap: BOOLEAN
+			-- Does the toolbar contains one bitmap or more?
 
 	tooltip_exists: BOOLEAN is
 			-- Is there a tooltip associated to the toolbar?
@@ -329,7 +332,7 @@ feature -- Status report
 			index_large_enough: index >= 0
 			index_small_enough: index < button_count
 		do
-			!! Result.make (0, 0, 0, 0)
+			create Result.make (0, 0, 0, 0)
 			cwin_send_message (item, Tb_getitemrect, index, 
 				Result.to_integer)
 		ensure
@@ -343,7 +346,7 @@ feature -- Status report
 			index_large_enough: index >= 0
 			index_small_enough: index < button_count
 		do
-			!! Result.make
+			create Result.make
 			cwin_send_message (item, Tb_getbutton, index,
 				Result.to_integer)
 		ensure
@@ -406,15 +409,17 @@ feature -- Element change
 			count_increased: button_count = old button_count + buttons.count
 		end	
 
-	add_bitmaps (bitmap: WEL_TOOL_BAR_BITMAP; bitmap_count: INTEGER) is
+	add_bitmaps (tb_bitmap: WEL_TOOL_BAR_BITMAP; bitmap_count: INTEGER) is
 			-- Add bitmaps.
 		require
 			exists: exists
-			bitmap_not_void: bitmap /= Void
+			bitmap_not_void: tb_bitmap /= Void
 			positive_bitmap_count: bitmap_count > 0
+		local
+			a_bitmap: WEL_BITMAP
 		do
-			last_bitmap_index := cwin_send_message_result (item,
-				Tb_addbitmap, bitmap_count, bitmap.to_integer)
+			last_bitmap_index := cwin_send_message_result (item, Tb_addbitmap, bitmap_count, tb_bitmap.to_integer)
+			has_bitmap := True
 		end
 
 	add_strings (strings: ARRAY [STRING]) is
@@ -440,7 +445,7 @@ feature -- Element change
 				i := i + 1
 			end
 			s.append_character ('%/0/')
-			!! wel_s.make (s)
+			create wel_s.make (s)
 			last_string_index := cwin_send_message_result (item, Tb_addstring, 0, wel_s.to_integer)
 		end	
 
@@ -554,13 +559,13 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 		do
 			code := notification_info.code
 			if code = Tbn_getbuttoninfo then
-				!! nm_info.make_by_nmhdr (notification_info)
+				create nm_info.make_by_nmhdr (notification_info)
 				on_tbn_getbuttoninfo (nm_info)
 			elseif code = Tbn_begindrag then
-				!! nm_info.make_by_nmhdr (notification_info)
+				create nm_info.make_by_nmhdr (notification_info)
 				on_tbn_begindrag (nm_info)
 			elseif code = Tbn_enddrag then
-				!! nm_info.make_by_nmhdr (notification_info)
+				create nm_info.make_by_nmhdr (notification_info)
 				on_tbn_enddrag (nm_info)
 			elseif code = Tbn_beginadjust then
 				on_tbn_beginadjust
@@ -569,17 +574,17 @@ feature {WEL_COMPOSITE_WINDOW} -- Implementation
 			elseif code = Tbn_reset then
 				on_tbn_reset
 			elseif code = Tbn_queryinsert then
-				!! nm_info.make_by_nmhdr (notification_info)
+				create nm_info.make_by_nmhdr (notification_info)
 				on_tbn_queryinsert (nm_info)
 			elseif code = Tbn_querydelete then
-				!! nm_info.make_by_nmhdr (notification_info)
+				create nm_info.make_by_nmhdr (notification_info)
 				on_tbn_querydelete (nm_info)
 			elseif code = Tbn_toolbarchange then
 				on_tbn_toolbarchange
 			elseif code = Tbn_custhelp then
 				on_tbn_custhelp
 			elseif code = Tbn_dropdown then
-				!! nm_info.make_by_nmhdr (notification_info)
+				create nm_info.make_by_nmhdr (notification_info)
 				on_tbn_dropdown (nm_info)
 			end
 		end
@@ -589,7 +594,7 @@ feature {NONE} -- Implementation
 	class_name: STRING is
 			-- Window class name to create
 		once
-			!! Result.make (0)
+			create Result.make (0)
 			Result.from_c (cwin_toolbar_class)
 		end
 

@@ -11,12 +11,18 @@ feature -- Initialization
 			!!dependent_directories.make
 
 			eiffel4 := env.get ("EIFFEL4")
+			platform := env.get ("PLATFORM")
+
 			eobj_count := 1
 			uses_precompiled := False
 
 			if eiffel4 = Void or else eiffel4.empty then
-				io.error.putstring ("ERROR: Key 'Eiffel4' was not found in registry!%N")
+				io.error.putstring ("ERROR: Key 'EIFFEL4' was not found in registry!%N")
 			end
+
+			if platform = Void or else platform.empty then
+				io.error.putstring ("ERROR: Key 'PLATFORM' was not found in registry!%N")
+		end
 		end
 
 feature -- Access
@@ -42,17 +48,23 @@ feature -- Access
 	finalized: BOOLEAN		
 			-- Is this a finalized compilation?
 			
-	concurrent: BOOLEAN
-			-- Does the application use concurrent Eiffel?
-	
 	precompile: BOOLEAN		
 			-- Is this a precompilation?
+
+	concurrent: BOOLEAN
+			-- Is this a concurrent Eiffel program?
+
+	multithreaded: BOOLEAN
+			-- Is this a multithreaded Eiffel program?
 
 	appl: STRING			
 			-- Application name
 
 	eiffel4: STRING			
-			-- Eiffel4 environment variable
+			-- EIFFEL4 environment variable
+			
+	platform: STRING			
+			-- PLATFORM environment variable
 			
 	eobj_count: INTEGER
 			-- The number of EOBJ# parts
@@ -927,24 +939,27 @@ feature {NONE}	-- substitutions
 			library_name.append_character (operating_environment.directory_separator)
 			library_name.append ("spec")
 			library_name.append_character (operating_environment.directory_separator)
-			library_name.append (options.get_string ("platform", Void))
+			library_name.append (platform)
 			library_name.append_character (operating_environment.directory_separator)
 			library_name.append ("lib")
 			library_name.append_character (operating_environment.directory_separator)
+			library_name.append (options.get_string ("prefix", ""))
+
+			if multithreaded then
+				library_name.append (options.get_string ("mt_prefix", "mt"))
+			end
+
+			if concurrent then
+				library_name.append (options.get_string ("concurrent_prefix", "c"))
+			end
 
 			if finalized then
-				if not concurrent then
-					library_name.append ("runtime.lib")
+				library_name.append (options.get_string ("eiflib", "finalized"))
 				else
-					library_name.append ("cruntime.lib")
+				library_name.append (options.get_string ("wkeiflib", "wkbench"))
 				end
-			else
-				if not concurrent then
-					library_name.append ("wkbench.lib")
-				else
-					library_name.append ("cwkbench.lib")
-				end
-			end
+
+			library_name.append (options.get_string ("suffix", ".lib"))
 
 			if concurrent then
 				library_name.append_character (' ')
@@ -956,7 +971,7 @@ feature {NONE}	-- substitutions
 				default_net_lib.append_character (operating_environment.directory_separator)
 				default_net_lib.append ("spec")
 				default_net_lib.append_character (operating_environment.directory_separator)
-				default_net_lib.append (options.get_string ("platform", Void))
+				default_net_lib.append (platform)
 				default_net_lib.append_character (operating_environment.directory_separator)
 				default_net_lib.append ("lib")
 				default_net_lib.append_character (operating_environment.directory_separator)
@@ -1200,7 +1215,8 @@ feature {NONE} -- Implementation
 		end
 
 	get_libs (line_to_search: STRING): STRING is
-			-- look for precompiled libraries, also checks if application uses concurrent Eiffel
+			-- look for precompiled libraries, also checks 
+			-- if application uses concurrent Eiffel or multithreading mechanism
 		local
 			line: STRING
 			next_precomp_lib: STRING
@@ -1247,16 +1263,19 @@ feature {NONE} -- Implementation
 					end
 				end
 				
-				-- set concurrent if application uses concurrent Eiffel
-				if finalized then
-					if line.substring_index ("libcruntime.a", 1) > 0 then
-						concurrent := true
-					end
-				else
-					if line.substring_index ("libcwkbench.a", 1) > 0 then
-						concurrent := true
-					end
+				-- set multithreaded if application uses multithreading
+				if line.substring_index ("$mt_prefix", 1) > 0 then
+					multithreaded := true
 				end
+				
+				-- set concurrent if application uses concurrent Eiffel
+				if line.substring_index ("$concurrent_prefix", 1) > 0 then
+						concurrent := true
+					end
+
+				if line.substring_index ("$eiflib", 1) > 0 then
+					finalized := true
+					end
 
 				if not line.empty then
 					precomp_lib_start := line.substring_index ("preobj.obj", 1)
@@ -1350,16 +1369,10 @@ feature {NONE} -- Implementation
 			-- the full filename for the CONFIG.EIF file
 			-- currently: $EIFFEL4|bench|spec|$PLATFORM|config|config.eif
 		local
-			platform: STRING
 			temp_result: STRING
 		once
 			debug ("implementation")
 				io.putstring("%Tconfig_eif_fn%N")
-			end
-
-			platform := env.get ("PLATFORM")
-			if platform = Void or else platform.empty then
-				io.error.putstring ("ERROR: Key 'PLATFORM' was not found in registry!%N")
 			end
 
 			temp_result := clone (eiffel4)

@@ -41,10 +41,10 @@ feature -- Operations
 				class_data ?= workarea.active_entity
 				relation_data ?= workarea.active_entity
 				if class_data /= Void then
-					create class_menu.make_from_workarea (workarea,workarea.scrollable_area)
+					create class_menu.make_from_workarea (workarea)
 					class_menu.show_at_position(x,y)
 				elseif relation_data /= Void then
-					create relation_menu.make (workarea.scrollable_area)
+					create relation_menu.make_from_workarea (workarea)
 					relation_menu.show_at_position(x,y)
 				end
 			end

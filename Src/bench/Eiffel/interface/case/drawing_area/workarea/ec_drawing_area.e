@@ -408,11 +408,11 @@ feature -- Setting
 		require
 			cluster /= void
 		do
-			set_cluster_without_update (cluster);
+			set_cluster_without_update (cluster)
 			refresh_all
 		ensure
 			data = cluster
-		end;
+		end
 
 	set_selected_entity (new_entity: like active_entity;
 				st: like stone) is

@@ -630,6 +630,8 @@ rt_public void eif_gen_conf_init (int max_dtype)
 			rtud_inv [egc_fdtypes [dt]] = dt;
 	}
 
+	rtud_inv [0] = 0;	/* For the GENERAL class */
+
 #endif
 
 	/* Initialize `cid_array' */

@@ -66,7 +66,7 @@ LRESULT CALLBACK cwel_window_procedure (HWND hwnd, UINT msg, WPARAM wparam, LPAR
 		}
 
 		switch (msg) {
-			case WM_DESTROY:
+                        case WM_NCDESTROY:
 			{
 					/* Object is destroyed during call to `dispose' we need
 					 * to call `eif_object_id_free' to reset entry in GC, otherwise

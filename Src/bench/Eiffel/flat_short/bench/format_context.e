@@ -22,6 +22,11 @@ inherit
 
 	COMPILER_EXPORTER
 
+	CHARACTER_ROUTINES
+		export
+			{NONE} all
+		end
+
 creation
 	make, make_for_case, make_for_appending
 
@@ -929,6 +934,19 @@ feature -- Output
 				emit_tabs
 			end
 			text.add (t)
+		end
+
+	put_quoted_string_item (s: STRING) is
+			-- Append `s' as STRING_TEXT to `text'. Emit tabs if needed.
+		require
+			s_not_void: s /= Void
+		local
+			new: STRING
+		do
+			new := eiffel_string (s)
+			new.precede ('"')
+			new.extend ('"')
+			put_string_item (new)
 		end
 
 	put_string_item (s: STRING) is

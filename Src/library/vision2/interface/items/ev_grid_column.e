@@ -22,6 +22,12 @@ create
 
 feature -- Access
 
+	is_displayed: BOOLEAN is
+		-- Is `Current' displayable in `parent'
+		do
+			Result := implementation.is_displayed
+		end
+
 	title: STRING is
 			-- Title of Current column. Empty if none.
 		require
@@ -49,25 +55,47 @@ feature -- Access
 		do
 			Result := implementation.parent
 		end
-		
+
 	selected_items: ARRAYED_LIST [EV_GRID_ITEM] is
 			-- All items selected in `Current'.
 		require
 			is_parented: parent /= Void
 		do
-			Result := implementation.selected_items 
+			Result := implementation.selected_items
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
 	width: INTEGER is
-			-- `Result' is width of `Current'.		
+			-- `Result' is width of `Current'.
 		require
 			is_parented: parent /= Void
 		do
 			Result := implementation.width
 		ensure
 			Result_non_negative: Result >= 0
+		end
+
+feature -- Status setting
+
+	hide is
+			-- Prevent column from being shown in `parent'
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.hide
+		ensure
+			not_is_displayed: not is_displayed
+		end
+
+	show is
+			-- Allow column to be displayable within `parent'
+		require
+			not_destroyed: not is_destroyed
+		do
+			implementation.show
+		ensure
+			is_displayed: is_displayed
 		end
 
 feature -- Status report

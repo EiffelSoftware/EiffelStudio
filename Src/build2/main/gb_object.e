@@ -179,7 +179,7 @@ feature -- Access
 			end
 		end
 
-feature {GB_COMMAND_DELETE_OBJECT, GB_OBJECT, GB_COMMAND_CHANGE_TYPE, GB_COMMAND_DELETE_WINDOW_OBJECT} -- Deletion
+feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_COMMAND_CHANGE_TYPE} -- Deletion
 			
 		delete is
 				-- Perform any necessary pre processing for

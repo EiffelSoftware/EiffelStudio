@@ -15,6 +15,7 @@ inherit
 		redefine
 			extend, put,
 			resize,
+			resize_exactly,
 			copy,
 			adapt
 		end

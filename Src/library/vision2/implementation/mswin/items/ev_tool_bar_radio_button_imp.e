@@ -15,7 +15,6 @@ inherit
 
 	EV_TOOL_BAR_SELECT_BUTTON_IMP
 		redefine
-			type,
 			interface,
 			initialize,
 			enable_select
@@ -39,14 +38,6 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Status report
-
-	type: INTEGER is
-			-- Type of the button.
-			-- See `add_button' of EV_TOOL_BAR_IMP for values
-			-- explanation.
-		do
-			Result := 3
-		end
 
 	enable_select is
 			-- Select `Current'.
@@ -107,6 +98,9 @@ end -- class EV_TOOL_BAR_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/26 22:20:20  rogers
+--| Removed type as now redundent.
+--|
 --| Revision 1.11  2000/04/25 22:40:08  rogers
 --| Removed FIXME NOT_REVIEWED.
 --|

@@ -22,8 +22,6 @@ inherit
 	EV_TOOL_BAR_BUTTON_IMP
 		rename
 			interface as ev_tool_bar_button_interface
-		redefine
-			type
 		select
 			parent_imp
 		end
@@ -32,14 +30,6 @@ creation
 	make
 
 feature -- Status report
-
-	type: INTEGER is
-			-- Type of the button.
-			-- See `add_button' of EV_TOOL_BAR_IMP for values
-			-- explanation.
-		do
-			Result := 5
-		end
 	
 	tb_parent_imp: EV_ITEM_LIST_IMP [EV_ITEM] is
 				-- The parent of the Current widget
@@ -76,6 +66,9 @@ end -- class EV_TOOL_BAR_SEPARATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/26 22:19:56  rogers
+--| Removed type as now redundent.
+--|
 --| Revision 1.11  2000/04/11 17:31:51  brendel
 --| Removed inh. of EV_SEPARATOR_ITEM_IMP again.
 --|

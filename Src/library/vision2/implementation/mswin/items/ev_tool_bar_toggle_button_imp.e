@@ -15,22 +15,11 @@ inherit
 
 	EV_TOOL_BAR_SELECT_BUTTON_IMP
 		redefine
-			type,
 			interface
 		end
 
 creation
 	make
-
-feature -- Status report
-
-	type: INTEGER is
-			-- Type of the button.
-			-- See `add_button' of EV_TOOL_BAR_IMP for values
-			-- explanation.
-		do
-			Result := 2
-		end
 
 feature -- Status setting
 
@@ -70,6 +59,9 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/04/26 22:19:37  rogers
+--| Removed type as now redundent.
+--|
 --| Revision 1.17  2000/04/26 16:35:12  rogers
 --| Removed unecessary redefinition of parent_imp.
 --|

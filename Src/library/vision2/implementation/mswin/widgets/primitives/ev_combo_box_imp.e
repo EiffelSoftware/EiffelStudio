@@ -12,9 +12,6 @@ class
 
 inherit
 	EV_COMBO_BOX_I
-		undefine
-			count
-		end
 
 	EV_LIST_ITEM_HOLDER_IMP
 

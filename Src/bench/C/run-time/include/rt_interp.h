@@ -192,6 +192,9 @@ extern "C" {
 #define BC_INT16			(unsigned char) 141
 #define BC_INT64			(unsigned char) 142
 
+/* Conversion */
+#define BC_CAST_CHAR		(unsigned char) 143
+
 #ifdef CONCURRENT_EIFFEL
 /* Instructions for Concurrent Eiffel */
 #define BC_SEP_SET			(unsigned char) 150

@@ -14,59 +14,28 @@ inherit
 		export
 			{EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} select_actions_internal
 		redefine
-			interface,
-			pointer_double_press_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_motion_actions_internal
-		select
 			interface
 		end
 
 	EV_ITEM_IMP
-		rename
-			interface as simple_item_interface
-		undefine
-			set_pixmap,
-			remove_pixmap,
-			parent,
-			set_foreground_color,
-			foreground_color_pointer,
-			visual_widget,
-			event_widget
 		redefine
-			initialize,
-			pointer_double_press_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_motion_actions_internal
+			interface,
+			initialize
 		end
 
-	EV_BUTTON_IMP
-		rename
-			interface as button_interface,
-			parent as button_parent,
-			parent_imp as widget_parent_imp,
-			select_actions_internal as button_select_actions_internal
-		undefine
-			button_press_switch,
-			pointer_motion_actions,	
-			pointer_button_press_actions,
-			pointer_double_press_actions,
-			create_pointer_button_press_actions,
-			create_pointer_double_press_actions,
-			select_actions,
-			on_focus_changed,
-			destroy,
-			enable_sensitive
+	EV_DOCKABLE_SOURCE_IMP
 		redefine
-			make,
-			initialize,
-			initialize_button_box,
-			pointer_double_press_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_motion_actions_internal,
-			create_select_actions
-		select
-			button_parent
+			interface
+		end
+
+	EV_SENSITIVE_IMP
+		redefine
+			interface
+		end
+
+	EV_TEXTABLE_IMP
+		redefine
+			interface
 		end
 
 	EV_TOOLTIPABLE_IMP
@@ -137,12 +106,6 @@ feature -- Element change
 		end
 
 feature {EV_ANY_I, EV_GTK_CALLBACK_MARSHAL} -- Implementation
-
-	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
-	
-	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
-	
-	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 	
 	create_select_actions: EV_NOTIFY_ACTION_SEQUENCE is
 			-- Create a select action sequence.

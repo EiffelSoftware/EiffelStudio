@@ -146,8 +146,8 @@ feature -- Access
 				create Result
 				pix_imp ?= Result.implementation
 				a_pixmap := feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0)
-				a_pixmap := feature {EV_GTK_EXTERNALS}.gtk_image_get_pixbuf (a_pixmap)
-				pix_imp.set_pixmap_from_pixbuf (a_pixmap)
+				--a_pixmap := feature {EV_GTK_EXTERNALS}.gtk_image_get_pixbuf (a_pixmap)
+				--pix_imp.set_pixmap_from_pixbuf (a_pixmap)
 			end
 			feature {EV_GTK_EXTERNALS}.g_list_free (a_list)
 		end
@@ -305,7 +305,7 @@ feature -- Element change
 				feature {EV_GTK_EXTERNALS}.gtk_container_remove (a_hbox, feature {EV_GTK_EXTERNALS}.g_list_nth_data (a_list, 0))
 			end
 			a_pix_imp ?= a_pixmap.implementation
-			a_pix := feature {EV_GTK_EXTERNALS}.gtk_image_new_from_pixbuf (a_pix_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height))
+			--a_pix := feature {EV_GTK_EXTERNALS}.gtk_image_new_from_pixbuf (a_pix_imp.pixbuf_from_drawable_with_size (pixmaps_width, pixmaps_height))
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (a_pix)
 			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (a_hbox, a_pix, False, False, 0)
 			feature {EV_GTK_EXTERNALS}.gtk_box_reorder_child (a_hbox, a_pix, 0)

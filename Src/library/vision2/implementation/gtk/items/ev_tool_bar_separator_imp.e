@@ -11,88 +11,40 @@ class
 inherit
 	EV_TOOL_BAR_SEPARATOR_I
 		redefine
-			interface,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
-		select
 			interface
 		end
 
 	EV_ITEM_IMP
-		rename
-			interface as sep_item_interface
-		undefine
-			parent
 		redefine
-			initialize,
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
-		select
-			widget_parent,
-			initialize,
-			create_pointer_double_press_actions,
-			create_pointer_button_press_actions
-		end
-
-	EV_VERTICAL_SEPARATOR_IMP
-		rename
-			initialize as vsep_initialize,
-			interface as vsep_interface,
-			parent as vsep_parent,
-			create_pointer_button_press_actions as widget_create_pointer_button_press_actions,
-			create_pointer_double_press_actions as widget_create_pointer_double_press_actions,
-			parent_imp as widget_parent_imp
-		undefine	
-			button_press_switch,
-			pointer_motion_actions,	
-			pointer_button_press_actions,
-			pointer_double_press_actions,
-			destroy
-		redefine
-			pointer_motion_actions_internal,
-			pointer_button_press_actions_internal,
-			pointer_double_press_actions_internal
+			interface,
+			initialize
 		end
 
 create
 	make
 
 feature {NONE} -- Initialization
+
+	is_dockable: BOOLEAN is False
+
+	make (an_interface: like interface) is
+			-- 
+		do
+			base_make (interface)
+		end
 	
 	initialize is
 			-- Initialize some stuff useless to separators.
 		do
-			pixmapable_imp_initialize
-			initialize_pixmap_box
 			Precursor {EV_ITEM_IMP}
 			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (c_object, 10, -1)
 			is_initialized := True
-		end
-
-	initialize_pixmap_box is
-			-- Give parent to pixmap item box.
-			--| This is just to satisfy pixmapable contracts.
-		local
-			box: POINTER
-		do
-			box := feature {EV_GTK_EXTERNALS}.gtk_hbox_new (False, 0)
-			feature {EV_GTK_EXTERNALS}.gtk_widget_hide (box)
-			feature {EV_GTK_EXTERNALS}.gtk_box_pack_start (box, pixmap_box, True, True, 0)
 		end
 
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_TOOL_BAR_SEPARATOR
 
-feature {EV_ANY_I} -- Implementation
-
-	pointer_motion_actions_internal: EV_POINTER_MOTION_ACTION_SEQUENCE
-
-	pointer_button_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
-
-	pointer_double_press_actions_internal: EV_POINTER_BUTTON_ACTION_SEQUENCE
 end -- class EV_TOOL_BAR_SEPARATOR_I
 
 --|----------------------------------------------------------------

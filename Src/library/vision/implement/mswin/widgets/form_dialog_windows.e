@@ -53,8 +53,10 @@ inherit
 			realized,
 			resize_for_shell,
 			width,
-			wel_move
-	redefine
+			wel_move,
+			real_x,
+			real_y
+		redefine
 			class_name,
 			realize,
 			on_size,

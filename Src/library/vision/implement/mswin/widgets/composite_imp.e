@@ -206,7 +206,7 @@ feature {WIDGET_IMP} -- Implementation
 
 feature -- Implementation
 
-	wel_children: LINKED_LIST [WEL_WINDOW] is
+	wel_children: LIST [WEL_WINDOW] is
 			-- List of implementation children
 		deferred
 		end

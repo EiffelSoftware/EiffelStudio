@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 				if text_window.changed then
 					warner (text_window).call (Current, l_File_changed)
 				else
-					window_manager.close (text_window.tool);
+					window_manager.close (text_window.tool)
 				end
 			end
 		end;

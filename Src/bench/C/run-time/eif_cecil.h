@@ -159,8 +159,8 @@ typedef EIF_BIT	(*EIF_BIT_FUNCTION)(EIF_REFERENCE, ...);	/* Returns an Eiffel Bi
 #define EIF_NO_BIT			2				/* Indexing a bit out of range */
 #define EIF_NO_ATTRIBUTE	(-1)			/* No attribute found */
 #define EIF_WRONG_TYPE	(-2)			/* Wrong type */
-#define EIF_CECIL_OK	(1)			/* Function returned successfully. */
-#define EIF_CECIL_ERROR	(0)			/* Function returned unsuccessfully. */
+#define EIF_CECIL_OK	(0)			/* Function returned successfully. */
+#define EIF_CECIL_ERROR	(1)			/* Function returned unsuccessfully. */
 
 /*
  * Structures used by Cecil (aka private informations)
@@ -290,6 +290,13 @@ RT_LNK void eif_rtinit(int argc, char **argv, char **envp);				/* Eiffel run-tim
 
 extern char *ct_value(struct ctable *ct, register char *key);				/* Hash table query */
 
+/*
+ * Initialization of non Eiffel Threads.
+ */
+#ifdef EIF_THREADS
+
+RT_LNK void eif_set_thr_context ();
+#endif
 #ifdef __cplusplus
 }
 #endif

@@ -356,7 +356,7 @@ feature {EV_DRAWABLE_IMP} -- Implementation
 			Result := C.gtk_pixmap_struct_pixmap (c_object)
 		end
 
-feature {EV_PIXMAP_I, EV_PIXMAPABLE_IMP, EV_COMPOSED_ITEM_IMP} -- Implementation
+feature {EV_PIXMAP_I, EV_PIXMAPABLE_IMP} -- Implementation
 
 	interface: EV_PIXMAP
 
@@ -411,6 +411,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/04/12 18:53:43  oconnor
+--| removed obsolete ref to EV_COMPOSED_ITEM_IMP
+--|
 --| Revision 1.28  2000/04/12 15:36:04  brendel
 --| Added 5 features. To be implemented.
 --|

@@ -16,16 +16,16 @@ lib='lib'
 #
 # Standard runtime
 #-----------------
-ccflags='-q $debug'
-mtccflags='-q $debug -tWM -DEIF_THREADS'
-output_libraries='standard mtstandard'
+ccflags='-q $debug -I$compiler_path\include -L$compiler_path\lib'
+mtccflags='-q $debug -tWM -DEIF_THREADS -I$compiler_path\include -L$compiler_path\lib'
+output_libraries='standard'
 #
 #
-link_line='&$compiler_path\bin\tlib /p256 $@ +-$**'
-link_wline='&$compiler_path\bin\tlib /p256 $@ +-$**'
-link_eline='&$compiler_path\bin\tlib /p256 $@ +-$**'
-link_mtline='&$compiler_path\bin\tlib /p256 $@ +-$**'
-link_mtwline='&$compiler_path\bin\tlib /p256 $@ +-$**'
+link_line='&$compiler_path\bin\tlib /p512 $@ +-$**'
+link_wline='&$compiler_path\bin\tlib /p512 $@ +-$**'
+link_eline='&$compiler_path\bin\tlib /p512 $@ +-$**'
+link_mtline='&$compiler_path\bin\tlib /p512 $@ +-$**'
+link_mtwline='&$compiler_path\bin\tlib /p512 $@ +-$**'
 #
 #
 optimize='-O2'
@@ -33,7 +33,7 @@ debug=''
 #optimize=''
 #debug='-v'
 #
-cc='bcc32'
-compiler_path='d:\apps\BCC55'
+cc='$compiler_path\bin\bcc32'
+compiler_path='f:\Eiffel50\BCC55'
 all_dependency=''
 #

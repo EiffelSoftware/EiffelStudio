@@ -34,15 +34,6 @@ feature {NONE} -- Initialization
 			dc.get
 		end
 
-feature -- FIXME These have been added to enable
-		-- compilation. 
-
-	wel_set_font (w: WEL_FONT) is
-		do
-		end
-
-	wel_font: WEL_FONT
-
 feature -- Access
 
 	dc: WEL_SCREEN_DC
@@ -151,6 +142,9 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/13 00:24:18  pichery
+--| - Removed useless features
+--|
 --| Revision 1.12  2000/04/11 22:44:11  brendel
 --| Fixed get_cursor_position.
 --|

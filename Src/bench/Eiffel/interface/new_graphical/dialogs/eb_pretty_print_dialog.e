@@ -141,7 +141,7 @@ feature -- Status setting
 
 feature {NONE} -- Implementation
 
-	editor: SELECTABLE_TEXT_PANEL
+	editor: EB_EDITOR
 			-- Editor where the object value is displayed.
 
 	text: STRUCTURED_TEXT

@@ -331,26 +331,29 @@ feature -- Event : command association
 	add_select_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
 			-- Add `cmd' to the list of commands to be executed
 			-- when a row has been selected.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
 		do
-			check
-					To_be_implemented: False
-			end
---			add_command (Cmd_selection, cmd, arg)
+			add_command (Cmd_select, cmd, arg)
 		end
 
 	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is	
 			-- Add `cmd' to the list of commands to be executed
 			-- when a row has been unselected.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
 		do
-			check
-					To_be_implemented: False
-			end
---			add_command (Cmd_selection, cmd, arg)
+			add_command (Cmd_unselect, cmd, arg)
 		end
 
 	add_column_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
 			-- when a column is clicked.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
 		do
 			add_command (Cmd_column_click, cmd, arg)
 		end
@@ -361,20 +364,14 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed
 			-- when a row has been selected.
 		do
-			check
-					To_be_implemented: False
-			end
---			remove_command (Cmd_selection)
+			remove_command (Cmd_select)
 		end
 
 	remove_unselect_commands is	
 			-- Empty the list of commands to be executed
 			-- when a row has been unselected.
 		do
-			check
-					To_be_implemented: False
-			end
---			remove_command (Cmd_selection)
+			remove_command (Cmd_unselect)
 		end
 
 	remove_column_click_commands is
@@ -528,7 +525,10 @@ feature {NONE} -- WEL Implementation
 						not flag_set(info.uoldstate, Lvis_selected) then
 					item_imp := ev_children @ (info.iitem + 1)
 					item_imp.execute_command (Cmd_item_activate, Void)
-					execute_command (Cmd_selection, Void)
+					--execute_command (Cmd_selection, Void)
+					check
+						to_be_implemented: FALSE
+					end
 				elseif flag_set(info.uoldstate, Lvis_selected) and
 						not flag_set(info.unewstate, Lvis_selected) then
 					item_imp := ev_children @ (info.iitem + 1)

@@ -34,6 +34,27 @@ feature -- Attributes
 			-- second pass of the compiler in order to see if a feature
 			-- has change of body.
 
+feature -- Access
+
+	feature_with_name (n: STRING): FEATURE_AS is
+			-- Feature ast with internal name `n'
+		local
+			cur: CURSOR;
+		do
+			cur := feature_names.cursor;
+			from
+				feature_names.start
+			until
+				feature_names.after or else Result /= Void
+			loop
+				if n.is_equal (feature_names.item.internal_name) then
+					Result := Current
+				end;
+				feature_names.forth
+			end
+			feature_names.go_to (cur)
+		end;
+
 feature -- Initialization
  
 	set is

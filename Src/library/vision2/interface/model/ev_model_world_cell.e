@@ -97,6 +97,7 @@ feature {NONE} -- Initialization
 			world_border := 20
 			is_autoscroll_enabled := True
 			is_resize_enabled := True
+			scroll_speed := 1.0
 		end
 		
 feature -- Status report
@@ -130,6 +131,13 @@ feature -- Access
 	world_border: INTEGER
 			-- Minimal distance between world borders and frame borders.
 			
+	scroll_speed: DOUBLE
+			-- Speed of auto scroll. Autoscroll happens every 50 milliseconds for
+			-- scroll_speed * (distance between `autoscroll_border' and cursor)
+			-- Pixels. Meaning the nearer the cursor is to the cell border the
+			-- faster the scroll plus the higher the scroll_speed value the faster
+			-- the scroll. Default is 1.0.
+			
 feature -- Status setting
 
 	disable_resize is
@@ -149,6 +157,16 @@ feature -- Status setting
 		end
 			
 feature -- Element change
+
+	set_scroll_speed (a_scroll_speed: like scroll_speed) is
+			-- Set `scroll_speed' to `a_scroll_speed'.
+		require
+			a_scroll_speed_positive: a_scroll_speed >= 0.0
+		do
+			scroll_speed := a_scroll_speed
+		ensure
+			set: scroll_speed = a_scroll_speed
+		end
 
 	set_world (a_world: like world) is
 			-- Set `world' to `a_world'.
@@ -322,7 +340,7 @@ feature {NONE} -- Implementation
 				if projector.is_figure_selected then	
 					is_scroll := True	
 				elseif not ev_application.ctrl_pressed then
-					drawing_area.set_pointer_style (default_pixmaps.busy_cursor)
+					drawing_area.set_pointer_style (default_pixmaps.wait_cursor)
 					drawing_area.enable_capture
 					is_hand := True
 					start_x := ax
@@ -405,23 +423,23 @@ feature {NONE} -- Implementation
 				cursor_x := pointer_position.x
 				world.hide
 				if cursor_x > drawing_area.width - autoscroll_border then
-					new_value := horizontal_scrollbar.value_range.upper.min (horizontal_scrollbar.value + cursor_x - (drawing_area.width - autoscroll_border))
+					new_value := horizontal_scrollbar.value_range.upper.min (horizontal_scrollbar.value + ((cursor_x - (drawing_area.width - autoscroll_border))*scroll_speed).truncated_to_integer)
 					horizontal_scrollbar.set_value (new_value)
 					scrolled := True
 				end
 				if cursor_x < autoscroll_border then
-					new_value := (horizontal_scrollbar.value - (autoscroll_border - cursor_x)).max (horizontal_scrollbar.value_range.lower)
+					new_value := (horizontal_scrollbar.value - ((autoscroll_border - cursor_x) * scroll_speed).truncated_to_integer).max (horizontal_scrollbar.value_range.lower)
 					horizontal_scrollbar.set_value (new_value)
 					scrolled := True
 				end
 				cursor_y := pointer_position.y
 				if cursor_y > drawing_area.height - autoscroll_border then
-					new_value := vertical_scrollbar.value_range.upper.min (vertical_scrollbar.value + cursor_y - (drawing_area.height - autoscroll_border))
+					new_value := vertical_scrollbar.value_range.upper.min (vertical_scrollbar.value + ((cursor_y - (drawing_area.height - autoscroll_border)) * scroll_speed).truncated_to_integer)
 					vertical_scrollbar.set_value (new_value)
 					scrolled := True
 				end
 				if cursor_y < autoscroll_border then
-					new_value := (vertical_scrollbar.value - (autoscroll_border - cursor_y)).max (vertical_scrollbar.value_range.lower)
+					new_value := (vertical_scrollbar.value - ((autoscroll_border - cursor_y) * scroll_speed).truncated_to_integer).max (vertical_scrollbar.value_range.lower)
 					vertical_scrollbar.set_value (new_value)
 					scrolled := True
 				end
@@ -468,6 +486,9 @@ feature {NONE} -- Implementation
 			end
 		end
 
+invariant
+	scroll_speed_positive: scroll_speed >= 0.0
+	
 end -- class EV_MODEL_WORLD_CELL
 
 --|----------------------------------------------------------------

@@ -69,7 +69,7 @@ feature {COMPILER_EXPORTER} -- Setting
 		require
 			valid_c: c /= Void
 		do
-			static_class := c.e_class;
+			static_class := c
 		end;
 
 	set_exported_feature (f: FEATURE_I) is

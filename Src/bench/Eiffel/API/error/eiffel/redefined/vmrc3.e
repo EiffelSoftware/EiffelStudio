@@ -82,7 +82,7 @@ feature {COMPILER_EXPORTER}
 				if info.parent = Void then
 					!! cell2.make (api_feature, Void);
 				else
-					!! cell2.make (api_feature, info.parent.parent.e_class);
+					!! cell2.make (api_feature, info.parent.parent);
 				end;
 				selection_list.extend (cell2)
 				l.forth

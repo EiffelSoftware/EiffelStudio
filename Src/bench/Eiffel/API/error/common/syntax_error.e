@@ -101,8 +101,8 @@ feature -- Output
 				if Lace.successfull then
 						-- Error happened in a class
 					st.add_string (" in class ");
-					st.add_class_syntax (Current, System.current_class.e_class, 
-							System.current_class.e_class.signature)
+					st.add_class_syntax (Current, System.current_class, 
+							System.current_class.signature)
 				else
 						-- Error happened while parsing a "use" file
 					st.add_string (" in Cluster_properties %"Use%" file")

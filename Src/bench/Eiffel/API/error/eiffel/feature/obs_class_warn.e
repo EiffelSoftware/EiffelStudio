@@ -84,14 +84,14 @@ feature {COMPILER_EXPORTER}
 		require
 			valid_c: c /= Void
 		do
-			associated_class := c.e_class
+			associated_class := c
 		end;
 
 	set_obsolete_class (c: CLASS_C) is
 		require
 			valid_c: c /= Void
 		do
-			obsolete_class := c.e_class
+			obsolete_class := c
 		end;
 
 end -- class OBS_CLASS_WARN

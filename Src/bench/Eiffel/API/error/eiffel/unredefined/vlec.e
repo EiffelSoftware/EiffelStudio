@@ -48,7 +48,7 @@ feature {COMPILER_EXPORTER}
 		require
 			valid_c: c /= Void
 		do
-			client := c.e_class;
+			client := c
 		end;
 
 end -- class VLEC

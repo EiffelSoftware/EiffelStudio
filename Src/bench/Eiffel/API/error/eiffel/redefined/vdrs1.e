@@ -71,7 +71,7 @@ feature {COMPILER_EXPORTER}
 		require
 			valid_p: p /= Void
 		do
-			parent := p.e_class;
+			parent := p
 		end;
 
 end -- class VDRS1

@@ -61,18 +61,18 @@ feature {NONE} -- Initialization
 			!! display_area.make (dbox)
 			display_area.set_spacing (3)
 --			display_area.set_height (100)
-			display_area.set_minimum_height (100)
+--			display_area.set_minimum_height (100)
 --			display_area.set_width (250)
-			display_area.set_minimum_width (250)
+--			display_area.set_minimum_width (250)
 
 			!! action_area.make (dbox)
 			action_area.set_border_width (3)
 			action_area.set_spacing (4)
 --			action_area.set_expand (False)
 --			dbox.set_child_expandable (action_area, False)
-			action_area.set_minimum_height (30)
+--			action_area.set_minimum_height (30)
 --			action_area.set_width (250)
-			action_area.set_minimum_width (250)
+--			action_area.set_minimum_width (250)
 
 --			forbid_resize
 

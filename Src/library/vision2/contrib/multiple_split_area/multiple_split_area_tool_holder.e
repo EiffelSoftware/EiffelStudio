@@ -77,14 +77,16 @@ feature {NONE} -- Initialization
 			close_button.set_pixmap (clone (parent_area.close_pixmap))
 			close_button.select_actions.extend (agent close)
 			close_button.set_tooltip (close_tooltip)
-			parent_area.set_holder_tool_height (main_box.height)
 			label_box.extend (tool_bar)
 			label_box.disable_item_expand (tool_bar)
 			vertical_box.disable_item_expand (frame)
+			parent_area.set_holder_tool_height (main_box.height)
 			vertical_box.extend (a_tool)
 			create lower_box
 			main_box.extend (lower_box)
 			main_box.disable_item_expand (lower_box)
+			
+			
 			
 				-- Set up docking for `Current'.
 			label.enable_dockable
@@ -170,12 +172,19 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 	disable_minimize_button is
 			-- Ensure `minimize_button' is non sensitive.
 		do
+			if not parent_area.disabled_minimize_button_shown then
+				tool_bar.prune (minimize_button)
+			end
 			minimize_button.disable_sensitive
 		end
 		
 	enable_minimize_button is
 			-- Ensure `minimize_button' is sensitive.
 		do
+			if not parent_area.disabled_minimize_button_shown and not tool_bar.has (minimize_button) then
+				tool_bar.go_i_th (1)
+				tool_bar.put_left (minimize_button)
+			end
 			minimize_button.enable_sensitive
 		end
 		
@@ -187,6 +196,15 @@ feature {MULTIPLE_SPLIT_AREA, MULTIPLE_SPLIT_AREA_TOOL_HOLDER}-- Access
 			end
 		end
 		
+	enable_close_button_as_grayed is
+			-- Ensure a close button is displayed as grayed for `Current'.
+		do
+			if close_button.parent = Void then
+				tool_bar.extend (close_button)
+			end
+			close_button.disable_sensitive
+		end
+
 	disable_close_button is
 			-- Ensure no close button is displayed for `Current'.
 		do
@@ -237,8 +255,10 @@ feature {MULTIPLE_SPLIT_AREA} -- Implemnetation
 		do
 			minimum_size_cell.set_minimum_height (0)
 			if parent_area /= Void and then parent_area.full then
-					-- This is a hack for linux to make sure the split area takes the new cell minimum_size in to account
-				parent_area.set_split_position (parent_area.split_position)
+				if parent_area /= Void then
+                              -- This is a hack for linux to make sure the split area takes the new cell minimum_size in to account
+                        parent_area.set_minimum_height (parent_area.minimum_height)
+                  end
 			end
 		ensure
 			minimum_size_removed: minimum_size_cell.minimum_height = 0
@@ -264,7 +284,7 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 			parented_in_dialog: parent_dockable_dialog (tool) = dialog
 		local
 			tool_height: INTEGER
-			locked_in_here: BOOLEAN
+			locked_in_here, is_expanded: BOOLEAN
 			original_parent_window: EV_WINDOW
 			widget: EV_WIDGET
 		do
@@ -291,13 +311,17 @@ feature {MULTIPLE_SPLIT_AREA} -- Implementation
 				customizeable_area.is_empty
 			loop
 				widget := customizeable_area.item
+				is_expanded := customizeable_area.is_item_expanded (widget)
 				customizeable_area.remove
 				parent_area.customizeable_area_of_widget (tool).extend (widget)
+				if not is_expanded then
+					parent_area.customizeable_area_of_widget (tool).disable_item_expand (widget)
+				end
 			end
 			if original_parent_window /= Void then
 				original_parent_window.unlock_update
 			end
-			parent_area.docked_in_actions.call (Void)
+			parent_area.docked_in_actions.call ([tool])
 		ensure
 			put_back_in_split_area: parent_area.linear_representation.has (tool)
 		end
@@ -331,6 +355,7 @@ feature {NONE} -- Implementation
 	docking_started is
 			-- Respond to dock starting on `Current'.
 		do
+			parent_area.store_positions
 			parent_area.initialize_docking_areas (Current)
 			if parent_dockable_dialog (main_box) = Void then
 				original_height := height
@@ -353,8 +378,8 @@ feature {NONE} -- Implementation
 			parent_rep: LINEAR [EV_WIDGET]
 			horizontal_box: EV_HORIZONTAL_BOX
 			widget: EV_WIDGET
+			temp_value: INTEGER
 		do
-			parent_area.store_positions
 			original_position := parent_area.linear_representation.index_of (tool, 1)
 			locked_in_here := (create {EV_ENVIRONMENT}).application.locked_window = Void
 			if locked_in_here then
@@ -366,6 +391,7 @@ feature {NONE} -- Implementation
 
 			dialog := parent_dockable_dialog (tool)
 			if dialog /= Void then
+				parent_area.store_positions
 				check
 					parent_area_not_void: parent_area /= Void
 				end
@@ -420,7 +446,7 @@ feature {NONE} -- Implementation
 				parent_area.rebuild
 				parent_area.restore_stored_positions
 				if not (original_height = 0 and original_width = 0) then
-					parent_area.docked_out_actions.call (Void)
+					parent_area.docked_out_actions.call ([tool])
 				end
 			end
 			if parent /= Void then
@@ -469,11 +495,26 @@ feature {NONE} -- Implementation
 						horizontal_box.extend (widget)
 					end
 				else
+						-- Now swap the stored positions of the two items that have just changed places.
+						-- This ensures that they do not resize. The positions were originally generated at
+						-- the start of the dock, so must take into account the re-ordering.
+					temp_value := parent_area.stored_splitter_widths.i_th (original_position)
+					parent_area.stored_splitter_widths.go_i_th (new_position)
+					parent_area.stored_splitter_widths.put_left (temp_value)
+					if new_position >= original_position then
+						parent_area.stored_splitter_widths.go_i_th (original_position)
+					else
+						parent_area.stored_splitter_widths.go_i_th (original_position + 1)
+					end
+					parent_area.stored_splitter_widths.remove
+					--parent_area.stored_splitter_widths.put_i_th (parent_area.stored_splitter_widths.i_th (new_position.min (parent_area.count)), original_position)
+					--parent_area.stored_splitter_widths.put_i_th (temp_value, new_position.min (parent_area.count))
+					
 					parent_area.update_for_holder_position_change (Current, new_position)
 					parent_area.rebuild
 					parent_area.restore_stored_positions
 				end			
-				parent_area.docked_in_actions.call (Void)
+				parent_area.docked_in_actions.call ([tool])
 			end
 			parent_area.remove_docking_areas
 			if original_parent_window /= Void then

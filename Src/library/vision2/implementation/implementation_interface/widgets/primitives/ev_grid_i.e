@@ -871,7 +871,7 @@ feature -- Status setting
 			internal_set_virtual_x_position (virtual_x)
 			if is_vertical_scrolling_per_item then
 				vertical_scroll_bar.change_actions.block
-				items := drawer.items_spanning_vertical_span (viewport.y_offset, viewable_height)
+				items := drawer.items_spanning_vertical_span (viewport_y_offset, viewable_height)
 				if items.count > 0 then
 					row_index := items.first
 					if row_indexes_to_visible_indexes = Void then
@@ -1425,10 +1425,18 @@ feature {EV_GRID_DRAWER_I, EV_GRID_COLUMN_I, EV_GRID_ROW_I, EV_GRID_ITEM_I, EV_G
 		
 	internal_client_height: INTEGER
 		-- Height of client area in which items are displayed.
-
+		
+	viewport_x_offset: INTEGER
+		-- `x_offset' of `viewport', used to prevent the need to always query the viewport.
+	
+	viewport_y_offset: INTEGER
+		-- `x_offset' of `viewport', used to prevent the need to always query the viewport.
+		
 	viewport: EV_VIEWPORT
 		-- Viewport containing `header' and `drawable', permitting the header to be offset
 		-- correctly in relation to the horizontal scroll bar.
+		-- Note that when querying the current position, use `viewport_x_offset' and `viewport_y_offset'
+		-- for speed.
 		
 	header: EV_HEADER
 		-- Header displayed at top of `Current'.
@@ -1652,12 +1660,14 @@ feature {EV_GRID_ROW_I, EV_GRID_COLUMN_I} -- Implementation
 				end
 			end
 			
-			if viewport.x_offset > 0 and (l_total_header_width - viewport.x_offset < internal_client_width) then
+			if viewport_x_offset > 0 and (l_total_header_width - viewport_x_offset < internal_client_width) then
 					-- If `header' and `drawable' currently have a position that starts before the client area of
 					-- `viewport' and the total header width is small enough so that at the current position, `header' and
 					-- `drawable' do not reach to the very left-hand edge of the `viewport', update the horizontal offset
 					-- so that they do reach the very left-hand edge of `viewport'
-				viewport.set_x_offset ((l_total_header_width - internal_client_width).max (0))
+				viewport_x_offset := (l_total_header_width - internal_client_width).max (0)
+				viewport.set_x_offset (viewport_x_offset)
+				
 				header_viewport.set_x_offset ((l_total_header_width - internal_client_width).max (0))
 			end
 		end
@@ -1679,6 +1689,8 @@ feature {NONE} -- Drawing implementation
 			row_height := 16
 			is_row_height_fixed := True
 			subrow_indent := 0
+			viewport_x_offset := 0
+			viewport_y_offset := 0
 			are_tree_node_connectors_shown := True
 			build_expand_node_pixmap
 			build_collapse_node_pixmap
@@ -1833,8 +1845,8 @@ feature {NONE} -- Drawing implementation
 			-- Draw a resizing line at horizontal position relative to `drawable'.
 			-- Clip line to drawable width.
 		do
-			if (position - viewport.x_offset > internal_client_width) or
-				(position - viewport.x_offset < 0) then
+			if (position - viewport_x_offset > internal_client_width) or
+				(position - viewport_x_offset < 0) then
 				remove_resizing_line
 			else
 				
@@ -1915,18 +1927,21 @@ feature {NONE} -- Drawing implementation
 				-- Store the virtual client y position internally.
 
 			buffer_space := (buffered_drawable_size - viewport.height)
-			current_buffer_position := viewport.y_offset
+			current_buffer_position := viewport_y_offset
 
 				-- Calculate if the buffer must be flipped. If so, redraw the complete client area,
 				-- otherwise, simply move the position in `viewport'.
 			if (internal_client_y > last_vertical_scroll_bar_value) and ((internal_client_y - last_vertical_scroll_bar_value) + (current_buffer_position)) >= buffer_space then
-				viewport.set_y_offset (0)
+				viewport_y_offset := 0
+				viewport.set_y_offset (viewport_y_offset)
 				redraw_client_area
 			elseif (internal_client_y < last_vertical_scroll_bar_value) and ((internal_client_y - last_vertical_scroll_bar_value) + (current_buffer_position)) <= 0 then
-				viewport.set_y_offset (buffer_space)
+				viewport_y_offset := buffer_space
+				viewport.set_y_offset (viewport_y_offset)
 				redraw_client_area
 			else
-				viewport.set_y_offset (current_buffer_position + internal_client_y - last_vertical_scroll_bar_value)
+				viewport_y_offset := current_buffer_position + internal_client_y - last_vertical_scroll_bar_value
+				viewport.set_y_offset (viewport_y_offset)
 			end
 			
 				-- Store the last scrolled to position.
@@ -1947,18 +1962,21 @@ feature {NONE} -- Drawing implementation
 				-- Store the virtual client x position internally.
 				
 			buffer_space := (buffered_drawable_size - internal_client_width)
-			current_buffer_position := viewport.x_offset
+			current_buffer_position := viewport_x_offset
 			
 				-- Calculate if the buffer must be flipped. If so, redraw the complete client area,
 				-- otherwise, simply move the position in `viewport'.
 			if (internal_client_x > last_horizontal_scroll_bar_value) and ((internal_client_x - last_horizontal_scroll_bar_value) + (current_buffer_position)) >= buffer_space then
-				viewport.set_x_offset (0)
+				viewport_x_offset := 0
+				viewport.set_x_offset (viewport_x_offset)
 				redraw_client_area
 			elseif (internal_client_x < last_horizontal_scroll_bar_value) and ((internal_client_x - last_horizontal_scroll_bar_value) + (current_buffer_position)) < 0 then
-				viewport.set_x_offset (buffer_space)
+				viewport_x_offset := buffer_space
+				viewport.set_x_offset (viewport_x_offset)
 				redraw_client_area
 			else
-				viewport.set_x_offset (current_buffer_position + internal_client_x - last_horizontal_scroll_bar_value)
+				viewport_x_offset := current_buffer_position + internal_client_x - last_horizontal_scroll_bar_value
+				viewport.set_x_offset (viewport_x_offset)
 			end
 			header_viewport.set_x_offset (internal_client_x)
 			
@@ -2091,7 +2109,7 @@ feature {NONE} -- Event handling
 				pointed_row_i := pointed_item.row_i
 				node_pixmap_width := expand_node_pixmap.width
 				current_subrow_indent := item_indent (pointed_item)
-				current_item_x_position := (column_offsets @ (pointed_item.column.index)) - (internal_client_x - viewport.x_offset)
+				current_item_x_position := (column_offsets @ (pointed_item.column.index)) - (internal_client_x - viewport_x_offset)
 				node_x_position_click_edge := current_subrow_indent - node_pixmap_width - 3 * tree_node_spacing + current_item_x_position
 				
 				if a_button = 1 and a_x >= node_x_position_click_edge then
@@ -2122,9 +2140,9 @@ feature {NONE} -- Event handling
 			if pointer_motion_actions_internal /= Void and then not pointer_motion_actions_internal.is_empty then
 				pointed_item := drawer.item_at_position (a_x, a_y)
 				if pointed_item /= Void then
-					pointer_motion_actions_internal.call ([a_x, a_x, pointed_item.interface])
+					pointer_motion_actions_internal.call ([a_x + internal_client_x - viewport_x_offset, a_y + internal_client_y - viewport_y_offset, pointed_item.interface])
 				else
-					pointer_motion_actions_internal.call ([a_x, a_x, Void])
+					pointer_motion_actions_internal.call ([a_x + internal_client_x - viewport_x_offset, a_y + internal_client_y- viewport_y_offset, Void])
 				end
 			end
 		end
@@ -2597,7 +2615,7 @@ invariant
 	hidden_node_count_positive_when_tree_enabled: is_tree_enabled implies hidden_node_count >= 0
 	hidden_node_count_no_greated_than_rows_less_one: is_tree_enabled and row_count > 0 implies hidden_node_count <= row_count - 1
 	tree_disabled_implies_visible_rows_equal_hidden_rows: not is_tree_enabled implies row_count = visible_row_count
-	
+	internal_viewport_positions_equal_to_viewports: viewport.x_offset = viewable_x_offset and viewport.y_offset = viewport_y_offset
 end
 
 --|----------------------------------------------------------------

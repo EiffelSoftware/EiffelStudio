@@ -429,6 +429,9 @@ feature -- Update
 							prev := menu_command_list;
 							menu_command_list := menu_command_list.parent;
 						end;
+						if menu_command_list = Void then
+							menu_command_list := main_menu
+						end;
 						display_commands;
 					else
 						io.putstring ("Unknown option ")

@@ -130,7 +130,7 @@ feature -- Access
 					eiffel_file.current_feature_clause = ast
 		do
 			if current_class.is_precompiled then
-				Result := class_comments.item (ast.position)
+				Result := class_comments.item (ast.end_position)
 			else
 				Result := eiffel_file.current_feature_clause_comments
 			end

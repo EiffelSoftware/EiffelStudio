@@ -815,11 +815,14 @@ rt_public char *b_implies(char *a, char *b)
 	 */
 
 	len_b %= BIT_UNIT;			/* Amount of needed bits in last unit */
-	if (len_b == 0)
-		*addr_a++ = ~(*addr_a) | *addr_b;
+	if (len_b == 0) {
+		*addr_a = ~(*addr_a) | *addr_b;
+		addr_a++;
+	}
 	else {
 		len_b = ((1 << len_b) - 1) << (BIT_UNIT - len_b);
-		*addr_a++ = ~(*addr_a) | (*addr_b & len_b);
+		*addr_a = ~(*addr_a) | (*addr_b & len_b);
+		addr_a++;
 	}
 
 	/* If there are some more bit units at the end of `a', they have to be

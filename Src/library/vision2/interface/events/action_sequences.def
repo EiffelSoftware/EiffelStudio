@@ -18,7 +18,7 @@ ev_proximity: for proximity in/out events
 
 ev_accelerator: for accelerator events
 
-ev_key: for keyboard events; keycode: INTEGER
+ev_key: for keyboard events; key: EV_KEY
 
 ev_key_string: for keyboard events; keystring: STRING
 

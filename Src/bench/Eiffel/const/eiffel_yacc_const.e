@@ -121,5 +121,7 @@ feature {NONE}
 	precursor_as: INTEGER is 164
 	creation_expr_as: INTEGER is 165
 	routine_creation_as: INTEGER is 166
+	tuple_as: INTEGER is 167
+	signature_as: INTEGER is 168
 
 end

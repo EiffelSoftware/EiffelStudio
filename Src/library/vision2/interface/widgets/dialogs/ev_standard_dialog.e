@@ -99,15 +99,6 @@ feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_STANDARD_DIALOG_I
 		-- Responsible for interaction with the native graphics toolkit.
-	
-feature -- Obsolete
-
-	show_modal is
-		obsolete
-			"Use show_modal_to_window instead."
-		do
-			implementation.show_modal_to_window (create {EV_WINDOW})
-		end
 
 invariant
 	title_not_void: is_usable implies title /= Void

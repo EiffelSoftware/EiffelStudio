@@ -63,6 +63,12 @@ feature -- Properties
 
 feature -- Access
 
+	feature_name: STRING is
+			-- Feature name of feature
+		do
+			Result := e_feature.name
+		end;
+
 	icon_name: STRING is
 		local
 			temp: STRING
@@ -94,26 +100,17 @@ feature -- Access
 			Result.append (e_class.name_in_upper)
 		end;
  
-	same_as (other: like Current): BOOLEAN is
+	same_as (other: STONE): BOOLEAN is
 			-- Is `other' the same stone?
 			-- Ie: does `other' represent the same feature?
 		local
-			fns: FEATURE_NAME_STONE
+			fns: FEATURE_STONE
 		do
-			if e_feature /= Void then
-				fns ?= other;
-				if fns /= Void then
-					Result := e_feature.name.is_equal (fns.feature_name)
-				else
-					if other /= void and then other.e_feature /= Void then
-						Result := e_feature.name.is_equal (other.e_feature.name)
-					end
-				end
-			end;
-			Result := Result and then
-				e_class = other.e_class and then
-				start_position = other.start_position and then
-				end_position = other.end_position
+			fns ?= other;
+			Result := fns /= Void and then
+						e_feature /= Void and then
+						feature_name.is_equal (fns.feature_name) and then
+						e_class = fns.e_class
 		end
 
 feature -- dragging
@@ -124,13 +121,12 @@ feature -- dragging
 			temp: STRING;
 			cn: STRING;
 		do
+			Result := "-- Version from class: ";
+			Result.append (e_feature.written_class.name_in_upper);
+			Result.append ("%N%N%T");
+
 			temp := normal_origin_text;
 			if temp /= Void then
-				Result := "-- Version from class: ";
-				cn := clone (e_feature.written_class.name)
-				cn.to_upper;
-				Result.append (cn);
-				Result.append ("%N%N%T");
 				if 
 					temp.count >= end_position and 
 					start_position < end_position 
@@ -138,8 +134,8 @@ feature -- dragging
 					temp := temp.substring (start_position + 1, end_position);
 					Result.append (temp)
 				end;
-				Result.append ("%N");
-			end
+			end;
+			Result.append ("%N");
 		end;
 
 	click_list: ARRAY [CLICK_STONE] is
@@ -159,8 +155,8 @@ feature -- dragging
 			!! classc_stone.make (e_feature.written_class);
 			!! cs.make (classc_stone, sp, ep);
 			Result.put (cs, 1);
-				sp := ep + 3;
-				ep := sp + end_position - start_position;
+			sp := ep + 3;
+			ep := sp + end_position - start_position;
 			!! cs.make (Current, sp, ep);
 			Result.put (cs, 2);
 		end;

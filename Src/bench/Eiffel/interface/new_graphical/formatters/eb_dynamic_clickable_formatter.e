@@ -35,7 +35,7 @@ feature -- Properties
 feature -- Formatting
 
 	format (stone: STONE) is
-			-- Show special format of `stone' in class text `text_window',
+			-- Show special format of `stone' in class text `text_area',
 			-- if it's clickable do nothing otherwise.
 		local
 --			cur: CURSOR
@@ -48,13 +48,13 @@ feature -- Formatting
 			d_stone ?= stone
 			if d_stone /= Void then
 				if not retried then
---					tool.close_search_window
+--					tool.close_search_dialog
 					display_temp_header (d_stone)
 --					!! mp.set_watch_cursor
-					cur := tool.text_window.position
+					cur := tool.text_area.position
 	
 --					if cur /= Void then
-						tool.text_window.go_to (cur)
+						tool.text_area.go_to (cur)
 --					end
 					tool.set_clickable (True)
 					tool.display_clickable_dynamic_lib_exports (True)

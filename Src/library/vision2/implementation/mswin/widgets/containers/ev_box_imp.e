@@ -194,7 +194,11 @@ feature -- Element change
 	remove_child (child_imp: EV_WIDGET_IMP) is
 			-- Remove the given child from the children of
 			-- the container.
+			local
+				child: EV_WIDGET
 		do
+			child ?= child_imp.interface
+			set_child_expandable (child, True)
 			ev_children.prune_all (child_imp)
 			if not ev_children.empty then
 				notify_change (Nc_minsize)

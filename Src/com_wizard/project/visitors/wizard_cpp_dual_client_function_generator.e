@@ -213,6 +213,7 @@ feature {NONE} -- Implementation
 						then
 							signature.append (arguments.item.name)
 						else
+							variables.append (New_line_tab)
 							variables.append (visitor.c_type)
 							variables.append (Space)
 
@@ -226,6 +227,8 @@ feature {NONE} -- Implementation
 							if not visitor.is_array_type then
 								variables.append (visitor.c_post_type)
 							end
+							variables.append (Space_equal_space)
+							variables.append (Zero)
 							variables.append (Semicolon)
 							variables.append (New_line_tab)
 

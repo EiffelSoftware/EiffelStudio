@@ -35,6 +35,8 @@ inherit
 
 creation {EIFFEL_CALL_STACK}
 	make
+create {STOPPED_HDLR}
+	dummy_make
 
 feature {NONE} -- Initialization
 
@@ -69,6 +71,27 @@ feature {NONE} -- Initialization
 			debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT: Finished creating%N"); end
 		end
 	
+	dummy_make (fn: STRING; lvl: INTEGER; mlt: BOOLEAN; br: INTEGER; addr: STRING; type, origin: INTEGER) is
+			-- Initialize `Current' with no calls to the run-time.
+		do
+			routine_name := fn
+			level_in_stack := lvl
+			is_melted := mlt
+			break_index := br
+			dynamic_class := Eiffel_system.class_of_dynamic_id (type + 1)
+			origin_class := Eiffel_system.class_of_dynamic_id (origin + 1)
+			object_address := addr
+			display_object_address := object_address
+				-- set the private body index to a fake value
+			private_body_index := -1
+
+			debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT: Creating item%N"); end
+			create unprocessed_values.make(10)
+			debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT: init_recv_c%N"); end
+			init_recv_c
+			debug ("DEBUGGER_TRACE"); io.error.putstring ("%T%TCALL_STACK_ELEMENT: init_rout_c%N"); end
+			init_rout_c
+		end
 
 feature -- Properties
 

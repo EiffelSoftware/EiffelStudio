@@ -24,7 +24,7 @@ inherit
 
 creation {RUN_INFO, APPLICATION_STATUS}
 
-	make
+	make, dummy_make
 
 feature -- Properties
 
@@ -128,6 +128,14 @@ feature {NONE} -- Initialization
 			end
 						
 			debug ("DEBUGGER_TRACE"); io.error.putstring ("%TEIFFEL_CALL_STACK: Finished Adopting callstack objects%N"); end
+		end
+
+	dummy_make is
+			-- Initialize only the first call stack element.
+		do
+			debug ("DEBUGGER_TRACE"); io.error.putstring ("%TEIFFEL_CALL_STACK: Creating dummy Eiffel Stack%N"); end
+			error_occurred := False
+			list_make
 		end
 
 feature {NONE} -- Externals

@@ -1,20 +1,22 @@
-class BIN_EQ_AS
+class BIN_EQ_AS_B
 
 inherit
 
-	BINARY_AS
+	BIN_EQ_AS
+		rename
+			left as old_eq_left,
+			right as old_eq_right
+		end;
+
+	BINARY_AS_B
+		undefine
+			operator_is_keyword, operator_is_special, 
+			operator_name
 		redefine
-			type_check, byte_node, operator_is_keyword,
-			operator_is_special, operator_name, replicate
+			type_check, byte_node, replicate
+		select
+			left, right
 		end
-
-feature
-
-	infix_function_name: STRING is
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
-		once
-		end; -- infix_function_name
 
 feature -- Type check, byte code and dead code removal
 
@@ -65,22 +67,9 @@ feature -- Type check, byte code and dead code removal
 			!BIN_EQ_B! Result;
 		end;
 
-	operator_name: STRING is
-		do
-			Result := constant_name;
-		end;
-	
-	operator_is_keyword: BOOLEAN is false;
-	
-	operator_is_special: BOOLEAN is true;
-	
-feature {}
-	
-	constant_name: STRING is "_infix_=";
-
 feature -- Replication
 
-	replicate (ctxt: REP_CONTEXT): BINARY_AS is
+	replicate (ctxt: REP_CONTEXT): BINARY_AS_B is
 			-- Adapt to replication.
 		do
 			Result := clone (Current);
@@ -88,4 +77,4 @@ feature -- Replication
 			Result.set_right (right.replicate (ctxt.new_ctxt));
 		end;
  
-end
+end -- class BIN_EQ_AS_B

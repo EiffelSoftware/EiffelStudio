@@ -1,10 +1,24 @@
--- Abstract description of a conditional instruction
+indexing
 
-class IF_AS
+	description:
+			"Abstract description of a conditional instruction, %
+			%Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class IF_AS_B
 
 inherit
-	
-	INSTRUCTION_AS
+
+	IF_AS
+		redefine
+			condition, compound,
+			elsif_list, else_part
+		end;	
+
+	INSTRUCTION_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node,
 			find_breakable, format,
@@ -13,30 +27,17 @@ inherit
 
 feature -- Attributes
 
-	condition: EXPR_AS;
+	condition: EXPR_AS_B;
 			-- Conditional expression
 
-	compound: EIFFEL_LIST [INSTRUCTION_AS];
+	compound: EIFFEL_LIST_B [INSTRUCTION_AS_B];
 			-- Compound
 
-	elsif_list: EIFFEL_LIST [ELSIF_AS];
+	elsif_list: EIFFEL_LIST_B [ELSIF_AS_B];
 			-- Elsif list
 
-	else_part: EIFFEL_LIST [INSTRUCTION_AS];
+	else_part: EIFFEL_LIST_B [INSTRUCTION_AS_B];
 			-- Else part
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			condition ?= yacc_arg (0);
-			compound ?= yacc_arg (1);
-			elsif_list ?= yacc_arg (2);
-			else_part ?= yacc_arg (3);
-		ensure then
-			condition_exists: condition /= Void;
-		end;
 
 feature -- Type check, byte code and dead code removal
 
@@ -113,7 +114,7 @@ feature -- Debugger
 
 feature -- Formatter
 		
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute	text
 		do
 			ctxt.begin;
@@ -193,28 +194,4 @@ feature	-- Replication
 			end;
 		end;
 
-
-feature {IF_AS}	-- Replication
-
-	set_condition (c: like condition) is
-		require
-			valid_arg: c /= Void
-		do
-			condition := c
-		end;
-
-	set_compound (c: like compound) is
-		do
-			compound := c
-		end;
-
-	set_elsif_list (e: like elsif_list) is
-		do
-			elsif_list := e
-		end;
-
-	set_else_part (e: like else_part) is
-		do
-			else_part := e
-		end;
-end
+end -- class IF_AS_B

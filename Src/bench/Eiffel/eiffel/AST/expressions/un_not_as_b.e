@@ -1,19 +1,22 @@
-class UN_NOT_AS
+class UN_NOT_AS_B
 
 inherit
+	
+	UN_NOT_AS
+		rename
+			expr as old_not_expr
+		end;
 
-	UNARY_AS
+	UNARY_AS_B
+		undefine
+			operator_is_keyword
 		redefine
-			byte_node, operator_is_keyword
+			byte_node
+		select
+			expr
 		end
 
 feature -- Type check
-
-	prefix_feature_name: STRING is
-			-- Internal name of the prefixed feature
-		once
-			Result := "_prefix_not";
-		end;
 
 	byte_node: UN_NOT_B is
 			-- Associated byte code
@@ -30,7 +33,4 @@ feature -- Type check
 			access_line.forth;
 		end;
 
-	operator_name: STRING is "not";
-	
-	operator_is_keyword: BOOLEAN is true;
-end
+end -- class UN_NOT_AS_B

@@ -1,10 +1,21 @@
--- Abstract description of a debug clause
+indexing
 
-class DEBUG_AS
+	description: "Abstract description of a debug clause. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class DEBUG_AS_B
 
 inherit
 
-	INSTRUCTION_AS
+	DEBUG_AS
+		redefine
+			compound, keys
+		end;
+
+	INSTRUCTION_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node,
 			find_breakable, format,
@@ -13,32 +24,11 @@ inherit
 
 feature -- Attributes
 
-	compound: EIFFEL_LIST [INSTRUCTION_AS];
+	compound: EIFFEL_LIST_B [INSTRUCTION_AS_B];
 			-- Compound to debug
 
-	keys: EIFFEL_LIST [STRING_AS];
+	keys: EIFFEL_LIST_B [STRING_AS_B];
 			-- Debug keys
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			keys ?= yacc_arg (0);
-			compound ?= yacc_arg (1);
-
-				-- Debug keys are not case sensitive
-			if keys /= Void then
-				from
-					keys.start
-				until
-					keys.after
-				loop
-					keys.item.value.to_lower;
-					keys.forth
-				end;
-			end;
-		end;
 
 feature -- Type check, byte code and dead code removal
 
@@ -89,7 +79,7 @@ feature -- Debugger
 
 feature -- Formatter
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -117,7 +107,6 @@ feature -- Formatter
 			ctxt.commit;
 		end;
 
-
 feature -- Replication
 
 	fill_calls_list (l: CALLS_LIST) is
@@ -138,11 +127,4 @@ feature -- Replication
 			end
 		end;
 			
-feature {DEBUG_AS}	-- Replication
-
-	set_compound (c: like compound) is
-		do
-			compound := c
-		end;
-
-end
+end -- class DEBUG_AS_B

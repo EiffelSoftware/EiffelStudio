@@ -1,26 +1,21 @@
-class BIN_MOD_AS
+class BIN_MOD_AS_B
 
 inherit
 
-	ARITHMETIC_AS
-		redefine
+	BIN_MOD_AS
+		rename
+			left as old_mod_left,
+			right as old_mod_right
+		end;
+
+	ARITHMETIC_AS_B
+		undefine
 			balanced
+		select
+			left, right
 		end
 
 feature
-
-	infix_function_name: STRING is
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
-		once
-			Result := "_infix_mod";
-		end;
-
-	balanced: BOOLEAN is
-			-- Is the bianry operation balanced ?
-		do
-			-- Do nothing
-		end;
 
 	byte_anchor: BIN_MOD_B is
 			-- Byte code type
@@ -28,4 +23,4 @@ feature
 			!!Result
 		end;
 
-end
+end -- class BIN_MOD_AS_B

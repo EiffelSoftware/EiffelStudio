@@ -1,39 +1,41 @@
--- Abstract description of a multi_branch instruction
+indexing
 
-class INSPECT_AS
+	description:
+			"Abstract description of a multi_branch instruction, %
+			%Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class INSPECT_AS_B
 
 inherit
 
-	INSTRUCTION_AS
+	INSPECT_AS
+		redefine
+			switch, case_list, else_part
+		end;
+
+	INSTRUCTION_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node,
 			find_breakable, format,
 			fill_calls_list, replicate
 		end;
+
 	SHARED_INSPECT
 
 feature -- Attributes
 
-	switch: EXPR_AS;
+	switch: EXPR_AS_B;
 			-- Expression to inspect
 
-	case_list: EIFFEL_LIST [CASE_AS];
+	case_list: EIFFEL_LIST_B [CASE_AS_B];
 			-- Alternatives
 
-	else_part: EIFFEL_LIST [INSTRUCTION_AS];
+	else_part: EIFFEL_LIST_B [INSTRUCTION_AS_B];
 			-- Else part
-
-feature -- Initialization
-
-	set is
-			-- Yacc alternatives
-		do
-			switch ?= yacc_arg (0);
-			case_list ?= yacc_arg (1);
-			else_part ?= yacc_arg (2);
-		ensure then
-			switch_exists: switch /= Void
-		end;
 
 feature -- Type check, byte code and dead code removal
 
@@ -124,7 +126,7 @@ feature -- Debugger
 
 feature -- Formatter
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -193,22 +195,4 @@ feature -- Replication
 			end;
 		end;
 
-feature {INSPECT_AS} -- Replication
-
-	set_switch (s: like switch) is
-		require
-			valid_arg: s /= Void
-		do
-			switch := s
-		end;
-
-	set_case_list (c: like case_list) is
-		do
-			case_list := c
-		end;
-
-	set_else_part (e: like else_part) is
-		do
-			else_part := e
-		end;
-end
+end -- class INSPECT_AS_B

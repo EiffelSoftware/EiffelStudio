@@ -1,26 +1,23 @@
-class BIN_POWER_AS
+class BIN_POWER_AS_B
 
 inherit
 
-	ARITHMETIC_AS
+	BIN_POWER_AS
+		rename
+			left as old_power_left,
+			right as old_power_right
+		end;
+
+	ARITHMETIC_AS_B
+		undefine
+			balanced
 		redefine
 			balanced
+		select
+			left, right
 		end
 
 feature
-
-	infix_function_name: STRING is
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
-		once
-			Result := "_infix_power";
-		end;
-
-	balanced: BOOLEAN is
-			-- Is the operation balanced ?
-		do
-			-- Do nothing
-		end;
 
 	byte_anchor: BIN_POWER_B is
 			-- Byte code type
@@ -28,4 +25,4 @@ feature
 			!!Result
 		end;
 
-end
+end -- class BIN_POWER_AS_B

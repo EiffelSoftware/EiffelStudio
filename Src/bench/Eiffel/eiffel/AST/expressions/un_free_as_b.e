@@ -1,43 +1,35 @@
--- Free unary expression description
+indexing
 
-class UN_FREE_AS
+	description: "Free unary expression description. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class UN_FREE_AS_B
 
 inherit
 
-	UNARY_AS
+	UN_FREE_AS
+		rename
+			expr as old_free_expr
 		redefine
-			set, byte_node
+			op_name
+		end;
+
+	UNARY_AS_B
+		undefine
+			set
+		redefine
+			byte_node
+		select
+			expr
 		end
 
 feature -- Attributes
 
-	op_name: ID_AS;
+	op_name: ID_AS_B;
 			-- Operator name
 
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			op_name ?= yacc_arg (0);
-			expr ?= yacc_arg (1);
-		ensure then
-			expr_exists: expr /= Void;
-			op_name_exists: op_name /= Void;
-		end;
-
 feature -- Type check
-
-	prefix_feature_name: STRING is
-			-- Internal name
-		do
-			!!Result.make (7 + op_name.count);
-			Result.append (Internal_prefix);
-			Result.append (op_name);
-		end;
-
-	Internal_prefix: STRING is "_prefix_";
-			-- Prefix string for internal name
 
 	byte_node: UN_FREE_B is
 			-- Associated byte code
@@ -54,19 +46,4 @@ feature -- Type check
 			access_line.forth;
 		end;
 
-	operator_name: STRING is
-		do
-			Result := op_name;
-		end;
-
-feature {UNARY_AS}	-- Replication
-
-	set_prefix_feature_name (p: like prefix_feature_name) is
-		do
-			!!op_name.make (p.count);
-			op_name.append (clone (p));
-			op_name.tail (op_name.count - 8)
-				-- 8 is "_prefix_".count
-		end;
-
-end
+end -- class UN_FREE_AS_B

@@ -1,38 +1,34 @@
-class CREATION_AS
+class CREATION_AS_B
 
 inherit
 
-	INSTRUCTION_AS
+	CREATION_AS
+		redefine
+			type, target, call
+		end;
+
+	INSTRUCTION_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
 		end;
+
 	SHARED_INSTANTIATOR
 
 feature -- Attributes
 
-	type: TYPE;
+	type: TYPE_B;
 			-- Creation type
 
-	target: ACCESS_AS;
+	target: ACCESS_AS_B;
 			-- Target to create
 
-	call: ACCESS_INV_AS;
+	call: ACCESS_INV_AS_B;
 			-- Routine call: it is an instance of ACCESS_INV_AS because
 			-- only procedure and functions are valid and no export validation
 			-- is made.
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			type ?= yacc_arg (0);
-			target ?= yacc_arg (1);
-			call ?= yacc_arg (2);
-		ensure then
-			target_exists: target /= Void;
-		end;
 
 feature -- Type check, byte code and dead code removal
 
@@ -318,8 +314,7 @@ feature -- Type check, byte code and dead code removal
 			end;
 		end;
 
-
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.put_breakable;
@@ -340,7 +335,6 @@ feature -- Type check, byte code and dead code removal
 			end;
 			ctxt.always_succeed;
 		end;
-
 
 feature -- Replication
 
@@ -367,17 +361,4 @@ feature -- Replication
 			end;
 		end;
 
-feature {CREATION_AS}	-- Replication
-
-	set_call (c: like call) is
-		do
-			call := c
-		end;
-
-	set_target (t: like target) is
-		require
-			valid_arg: t /= Void
-		do
-			target := t;
-		end;
-end
+end -- class CREATION_AS_B

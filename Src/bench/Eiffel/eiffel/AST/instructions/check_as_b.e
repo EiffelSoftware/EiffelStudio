@@ -1,10 +1,21 @@
--- Abstract description of a check clause
+indexing
 
-class CHECK_AS
+	description: "Abstract description of a check clause. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class CHECK_AS_B
 
 inherit
 
-	INSTRUCTION_AS
+	CHECK_AS
+		redefine
+			check_list
+		end;
+
+	INSTRUCTION_AS_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node, format,
 			fill_calls_list, replicate
@@ -12,16 +23,8 @@ inherit
 
 feature -- Attributes
 
-	check_list: EIFFEL_LIST [TAGGED_AS];
+	check_list: EIFFEL_LIST_B [TAGGED_AS_B];
 			-- List of tagged boolean expression
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			check_list ?= yacc_arg (0);
-		end;
 
 feature -- Type check, byte code and dead code removal
 
@@ -42,7 +45,7 @@ feature -- Type check, byte code and dead code removal
 			end;
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute Text
 		do
 			ctxt.begin;
@@ -79,11 +82,4 @@ feature -- Replication
 			end
 		end;
 
-feature {CHECK_AS}	-- Replication
-	
-	set_check_list (c: like check_list) is
-		do
-			check_list := c
-		end;
-
-end
+end -- class CHECK_AS_B

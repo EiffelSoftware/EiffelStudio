@@ -1,17 +1,19 @@
-class BIN_LE_AS
+class BIN_LE_AS_B
 
 inherit
 
-	COMPARISON_AS
+	BIN_LE_AS
+		rename
+			left as old_le_left,
+			right as old_le_right
+		end;
+
+	COMPARISON_AS_B
+		select
+			left, right
+		end
 
 feature
-
-	infix_function_name: STRING is
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
-		do
-			Result := "_infix_le";
-		end;
 
 	byte_anchor: BIN_LE_B is
 			-- Byte code type
@@ -19,4 +21,4 @@ feature
 			!!Result
 		end;
 
-end
+end -- class BIN_LE_AS_B

@@ -1,26 +1,26 @@
-class BIN_SLASH_AS
+class BIN_SLASH_AS_B
 
 inherit
 
-	ARITHMETIC_AS
+	BIN_SLASH_AS
+		rename
+			left as old_slash_left,
+			right as old_slash_right
+		end;
+
+	ARITHMETIC_AS_B
 		redefine
 			numeric_balance
 		select
-			numeric_balance
+			numeric_balance, left, right
 		end;
-	ARITHMETIC_AS
+
+	ARITHMETIC_AS_B
 		rename
 			numeric_balance as old_numeric_balance
 		end;
 
 feature
-
-	infix_function_name: STRING is
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
-		once
-			Result := "_infix_slash";
-		end;
 
 	numeric_balance (left_type, right_type: TYPE_A): BOOLEAN is
 		do
@@ -34,4 +34,4 @@ feature
 			!!Result
 		end;
 
-end
+end -- class BIN_SLASH_AS_B

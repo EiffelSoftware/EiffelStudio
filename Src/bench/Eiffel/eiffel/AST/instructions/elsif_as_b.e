@@ -1,10 +1,23 @@
--- Abstract description of a elsif clause of a condition instruction
+indexing
 
-class ELSIF_AS
+	description:
+			"Abstract description of a elsif clause of a condition %
+			%instruction. Version for Bench.";
+	date: "$Date$";
+	revision: "$Revision$"
+
+class ELSIF_AS_B
 
 inherit
 
-	AST_EIFFEL
+	ELSIF_AS
+		redefine
+			expr, compound
+		end;
+
+	AST_EIFFEL_B
+		undefine
+			simple_format
 		redefine
 			type_check, byte_node,
 			find_breakable, format,
@@ -13,22 +26,11 @@ inherit
 
 feature -- Attributes
 
-	expr: EXPR_AS;
+	expr: EXPR_AS_B;
 			-- Conditional expression
 
-	compound: EIFFEL_LIST [INSTRUCTION_AS];
+	compound: EIFFEL_LIST_B [INSTRUCTION_AS_B];
 			-- Compound
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			expr ?= yacc_arg (0);
-			compound ?= yacc_arg (1);
-		ensure then
-			expr_exists: expr /= Void
-		end;
 
 feature -- Type check, byte code and dead code removal
 
@@ -80,10 +82,9 @@ feature -- Debugging
 			record_break_node
 		end
 
-
 feature -- Formatter
 	
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -125,17 +126,4 @@ feature	-- Replication
 			end;
 		end;
 			
-feature {ELSIF_AS} -- Replication
-
-	set_expr (e: like expr) is
-		require
-			valid_arg: e /= Void
-		do
-			expr := e
-		end;
-
-	set_compound (c: like compound) is
-		do
-			compound := c
-		end;
-end
+end -- class ELSIF_AS_B

@@ -1,17 +1,19 @@
-class BIN_STAR_AS
+class BIN_STAR_AS_B
 
 inherit
 
-	ARITHMETIC_AS
+	BIN_STAR_AS
+		rename
+			left as old_star_left,
+			right as old_star_right
+		end;
+
+	ARITHMETIC_AS_B
+		select 
+			left, right
+		end
 
 feature
-
-	infix_function_name: STRING is
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
-		once
-			Result := "_infix_star";
-		end;
 
 	byte_anchor: BIN_STAR_B is
 			-- Byte code type
@@ -19,4 +21,4 @@ feature
 			!!Result
 		end;
 
-end
+end -- class BIN_STAR_AS_B

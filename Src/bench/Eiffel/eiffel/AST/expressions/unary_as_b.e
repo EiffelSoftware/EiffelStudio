@@ -1,36 +1,30 @@
+indexing
 
--- Abstract class for unary expression
+	description: "Abstract class for unary expression, Bench version";
+	date: "$Date$";
+	revision: "$Revision$"
 
-deferred class UNARY_AS
+deferred class UNARY_AS_B
 	
 inherit
 
-	EXPR_AS
+	UNARY_AS
 		redefine
-			type_check, byte_node, format, fill_calls_list, replicate
+			expr
+		end;
+
+	EXPR_AS_B
+		undefine
+			simple_format
+		redefine
+			type_check, byte_node, format, 
+			fill_calls_list, replicate
 		end
 
 feature -- Attributes
 
-	expr: EXPR_AS;
+	expr: EXPR_AS_B;
 			-- Expression
-
-feature -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			expr ?= yacc_arg (0);
-		ensure then
-			expr_exists: expr /= Void;
-		end;
-
-feature -- Type check
-
-	prefix_feature_name: STRING is
-			-- Internal name of the prefixed feature
-		deferred
-		end;
 
 feature -- Type check, byte code and dead code removal
 
@@ -82,15 +76,15 @@ feature -- Type check, byte code and dead code removal
 				Error_handler.raise_error;
 			end;
 
-                -- Export validity
-            if not prefix_feature.is_exported_for (last_class) then
-                !!vuex;
-                context.init_error (vuex);
-                vuex.set_static_class (last_class);
-                vuex.set_exported_feature (prefix_feature);
-                Error_handler.insert_error (vuex);
+				-- Export validity
+			if not prefix_feature.is_exported_for (last_class) then
+				!!vuex;
+				context.init_error (vuex);
+				vuex.set_static_class (last_class);
+				vuex.set_exported_feature (prefix_feature);
+				Error_handler.insert_error (vuex);
 				Error_handler.raise_error;
-            end;
+			end;
  
 				-- Suppliers update
 			!!depend_unit.make (last_class.id, prefix_feature.feature_id);
@@ -127,7 +121,7 @@ feature -- Type check, byte code and dead code removal
 		do
 		end;
 
-	format (ctxt: FORMAT_CONTEXT) is
+	format (ctxt: FORMAT_CONTEXT_B) is
 			-- Reconstitute text.
 		do
 			ctxt.begin;
@@ -147,23 +141,6 @@ feature -- Type check, byte code and dead code removal
 			end
 		end;
 
-
-
-	operator_name: STRING is
-		deferred
-		end;
-
-	
-	operator_is_special: BOOLEAN is
-		do
-			Result := true;
-		end;
-	
-	operator_is_keyword: BOOLEAN is 
-		do
-			Result := false;
-		end;
-
 feature -- Replication
 
 	fill_calls_list (l: CALLS_LIST) is
@@ -176,11 +153,11 @@ feature -- Replication
 			l.merge (new_list)
 		end;
 
-	replicate (ctxt: REP_CONTEXT): UNARY_AS is
+	replicate (ctxt: REP_CONTEXT): UNARY_AS_B is
 			-- Adapt to replication
 		local
 			new_expression: like expr;
-			u: UN_FREE_AS;
+			u: UN_FREE_AS_B;
 		do
 			new_expression := expr.replicate (ctxt);
 			ctxt.adapt_name (prefix_feature_name);
@@ -193,15 +170,5 @@ feature -- Replication
 			end;
 			Result.set_expr (new_expression);
 		end;
-			
 
-feature {UNARY_AS}	-- Replication
-
-	set_expr (e: like expr) is
-		require
-			valid_arg: e /= Void
-		do
-			expr := e
-		end;
-
-end
+end -- class UNARY_AS_B

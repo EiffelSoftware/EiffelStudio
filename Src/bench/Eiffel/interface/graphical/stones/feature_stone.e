@@ -19,6 +19,13 @@ inherit
 
 	SHARED_WORKBENCH;
 
+	HASHABLE_STONE
+		undefine
+			header
+		redefine
+			origin_text, is_valid, synchronized_stone
+		end
+
 --	SHARED_DEBUG
 -- Removed to cut dependancies for the batch only version
 
@@ -194,6 +201,14 @@ feature -- dragging
 					end
 				end
 			end
+		end;
+
+feature -- Hashable
+
+	hash_code: INTEGER is
+			-- Hash code value
+		do
+			Result := class_c.class_name.hash_code
 		end;
  
 end

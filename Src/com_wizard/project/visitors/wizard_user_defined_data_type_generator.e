@@ -146,6 +146,15 @@ feature -- Processing
 	process_coclass (coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR ) is
 			-- process coclass
 		do
+			if 
+				coclass_descriptor.default_interface_descriptor.inherit_from_dispatch or
+				coclass_descriptor.default_interface_descriptor.dual or 
+				coclass_descriptor.default_interface_descriptor.dispinterface
+			then
+				vt_type := Vt_dispatch
+			else
+				vt_type := Vt_unknown
+			end
 			c_type := clone (coclass_descriptor.default_interface_descriptor.c_type_name)
 			create c_post_type.make (100)
 			c_header_file := clone (coclass_descriptor.default_interface_descriptor.c_header_file_name)
@@ -230,6 +239,15 @@ feature -- Processing
 				ce_function_name.append ("ccom_ce_pointed_dispatch")
 				ec_function_name.append ("ccom_ec_dispatch")
 			else
+				if 
+					interface_descriptor.inherit_from_dispatch or
+					interface_descriptor.dual or 
+					interface_descriptor.dispinterface
+				then
+					vt_type := Vt_dispatch
+				else
+					vt_type := Vt_unknown
+				end
 				eiffel_type := clone (interface_descriptor.eiffel_class_name)
 
 				need_generate_ce := True

@@ -467,7 +467,7 @@
 	</TOPIC>
 	<TOPIC TOPIC_ID="Graphics" ICON="icon_preferences_folder">
 		<HEAD>Graphical Elements</HEAD>
-		<TEXT DESCRIPTION="All-purpose editor font" IMMEDIATE_EFFECT="no">editor_font<FONT>Courier New-r-regular-11-typewriter</FONT></TEXT>
+		<TEXT DESCRIPTION="All-purpose editor font" IMMEDIATE_EFFECT="no">editor_font<FONT>Courier New-r-regular-13-typewriter</FONT></TEXT>
 		<TEXT DESCRIPTION="Tabulation size" IMMEDIATE_EFFECT="no">tab_step<INTEGER>4</INTEGER></TEXT>
 		<TOPIC TOPIC_ID="Default_Colors" ICON="icon_preferences_folder">
 			<HEAD>Colors</HEAD>
@@ -530,6 +530,7 @@
 			<TEXT>last_saved_stack_path<STRING>C:\</STRING></TEXT>
 			<TEXT>max_slice<INTEGER>50</INTEGER></TEXT>
 			<TEXT>min_slice<INTEGER>0</INTEGER></TEXT>
+			<TEXT>display_dotnet_cmd<BOOLEAN>False</BOOLEAN></TEXT>
 			<TEXT>dyn_lib_window_height<INTEGER>300</INTEGER></TEXT>
 			<TEXT>dyn_lib_window_width<INTEGER>450</INTEGER></TEXT>
 			<TEXT>development_window__height<INTEGER>480</INTEGER></TEXT>

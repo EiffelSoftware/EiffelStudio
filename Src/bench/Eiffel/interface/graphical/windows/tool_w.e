@@ -127,6 +127,9 @@ feature -- Window Properties
 	file_menu: MENU_PULL;
 			-- File menu
 
+	toolbar_parent: ROW_COLUMN;
+			-- Toolbar parent
+
 	target: WIDGET is
 			-- Target of the hole is the text window.
 		do
@@ -138,19 +141,6 @@ feature -- Window Properties
 			-- By default: Void
 		do
 		end;
-
-	toolbar_parent: TOOLBAR_PARENT;
-			-- Row column for the toolbars
-			-- `classic_bar' and `format_bar'
-
-	toolbar_separator: SEPARATOR;
-			-- Separator for the toolbars
-
-	popup_cell: CELL [POPUP] is
-			-- Cell for the toolbar popup menu
-		once
-			!! Result.put (Void)
-		end
 
 feature -- Access
 
@@ -496,7 +486,6 @@ feature -- Update
 					history.after 
 				end;
 				set_default_format;
-				text_window.set_cursor_position (0);
 				text_window.clear_window;
 				text_window.display;
 				update_save_symbol;
@@ -579,6 +568,16 @@ feature {NONE} -- Implementation
 			-- Is Graphics disabled for the text window?
 		once 
 			Result := resources.get_boolean (r_Graphics_disabled, False) 
+		end;
+
+	create_toolbar_parent (a_parent: COMPOSITE) is
+			-- Create a toolbar_parent with parent `a_parent'.
+		do
+			!! toolbar_parent.make (new_name, a_parent);
+			toolbar_parent.set_column_layout;
+			toolbar_parent.set_free_size;	
+			toolbar_parent.set_margin_height (0);
+			toolbar_parent.set_spacing (0);
 		end;
 
 feature {PROJECT_W} -- Implementation

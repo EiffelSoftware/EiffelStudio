@@ -9,92 +9,57 @@ indexing
 class TOOLBAR
 
 inherit
-	COMMAND;
-	FORM
-		rename
-			make as form_make
-		end
+	FORM;
+	COMMAND_W
 
 creation
 	make
 
 feature -- Initialization
 
-	make (a_name: STRING; a_parent: COMPOSITE; a_tool: TOOL_W) is
-			-- Initialize Current with `a_name' and
-			-- `a_parent'. Add callback for button
-			-- press action on right mouse button.
-		require
-			a_tool_not_void: a_tool /= Void
+	init_toggle (toggle: TOGGLE_B) is
+			-- Init arm action.
 		do
-			form_make (a_name, a_parent);
-			add_button_press_action (3, Current, arg_popup);
-			tool := a_tool
-		end
+			associated_toggle := toggle;
+			toggle.add_activate_action (Current, Void);
+			toggle.set_toggle_on
+		end;
+
+feature -- Access
+
+	associated_toggle: TOGGLE_B;
+			-- associated toggle button with toolbar
 
 feature -- User Interface
 
 	add is
 		do
-			if tool.popup_cell.item /= Void then
-				tool.popup_cell.item.destroy;
-				tool.popup_cell.put (Void)
-			end;
 			manage_separator (True);
-			manage
+			manage;
+			parent.unmanage; -- Shake it (for HP)
+			parent.manage;
+			associated_toggle.set_toggle_on
 		end;
 
 	remove is
 		do
-			if tool.popup_cell.item /= Void then
-				tool.popup_cell.item.destroy;
-				tool.popup_cell.put (Void)
-			end;
 			manage_separator (False);
-			unmanage
+			unmanage;
+			parent.unmanage; -- Shake it (for HP)
+			parent.manage; 
+			associated_toggle.set_toggle_off
 		end;
-
-feature -- Properties; Execution arguments
-
-	arg_show: ANY is
-		once
-			!! Result
-		end;
-
-	arg_hide: ANY is
-		once
-			!! Result
-		end;
-
-	arg_popup: ANY is
-		once
-			!! Result
-		end
 
 feature {NONE} -- Execution
 
-	execute (argument: ANY) is
-		local
-			popup_cmd: TOOLBAR_CMD
+	work (argument: ANY) is
 		do
-			if argument = arg_show then
+			if associated_toggle.state then
 				add
-			elseif argument = arg_hide then
+			else
 				remove
-			elseif argument = arg_popup then
-				!! popup_cmd.make (tool);
-				popup_cmd.execute (Void);
-				popup_cmd := Void
-			end
+			end;
 		end
-
-feature {NONE} -- Properties
-
-	tool: TOOL_W;
-			-- Tool window parent of Current
-
-	new_name: STRING is ""
-			-- Dummy name for widget creations
 
 feature {NONE} -- Implementation
 
@@ -102,8 +67,8 @@ feature {NONE} -- Implementation
 			-- Find the right separator (ie. below Current if
 			-- Current is not the lowest toolbar, or else above Current).
 		local
+			s: SEPARATOR;
 			sibs: ARRAYED_LIST [WIDGET];
-			s: SEPARATOR
 		do
 			sibs := parent.children;
 			sibs.finish

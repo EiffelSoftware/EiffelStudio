@@ -56,7 +56,7 @@ creation
 	
 feature -- Initialization
 
-	make_default (cmd: PROCEDURE [ANY, TUPLE]) is
+	make_default (a_parent: EB_DEVELOPMENT_WINDOW; cmd: PROCEDURE [ANY, TUPLE]) is
 			-- Initialize Current with `par' as parent and
 			-- `cmd' as command window.
 			--| Use this in conjunction with `make_plain' to
@@ -65,14 +65,14 @@ feature -- Initialization
 			vb: EV_VERTICAL_BOX
 		do		
 			default_create
+			create vb
 			create saved_arguments.make (0)
 			saved_arguments.compare_objects
-			set_minimum_size (400, 210)
-			run := cmd	
-			create vb
+			run := cmd
+			parent_window := a_parent
 			vb.extend (execution_frame)
 			set_title ("Program Arguments")
-			extend (vb)		
+			extend (vb)	
 			retrieve_arguments
 		end
 
@@ -93,7 +93,7 @@ feature -- Initialization
 			create label.make_with_text ("Program command line arguments: ")
 			label.align_text_left
 			create item_box
-			item_box.set_padding (Default_item_padding)
+			item_box.set_padding (Layout_constants.Default_padding_size)
 			item_box.extend (label)
 			item_box.disable_item_expand (label)
 
@@ -107,7 +107,7 @@ feature -- Initialization
 			create label.make_with_text ("Program arguments: ")
 			label.align_text_left
 			create item_box
-			item_box.set_padding (Default_item_padding)
+			item_box.set_padding (Layout_constants.Default_padding_size)
 			item_box.extend (label)
 			item_box.disable_item_expand (label)
 
@@ -135,25 +135,25 @@ feature -- Initialization
 			if run /= Void then
 				create b.make_with_text ("Add")
 				hbox.extend (b)
-				b.set_minimum_size (74, 23)
+				b.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
 				hbox.disable_item_expand (b)
 				b.select_actions.extend (agent add_arguments)
 			end
 			
 			create b.make_with_text ("Apply")
 			hbox.extend (b)
-			b.set_minimum_size (74, 23)
+			b.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
 			hbox.disable_item_expand (b)
 			b.select_actions.extend (agent update_arguments)
 			create b.make_with_text ("Cancel")
-			b.select_actions.extend (agent destroy)
+			b.select_actions.extend (agent cancel_pressed)
 			hbox.extend (b)
-			b.set_minimum_size (74, 23)
+			b.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
 			hbox.disable_item_expand (b)
 			create b.make_with_text ("Run")
 			b.select_actions.extend (agent execute (apply_and_run_it))
 			hbox.extend (b)
-			b.set_minimum_size (74, 23)
+			b.set_minimum_size (Layout_constants.Default_button_width, Layout_constants.Default_button_height)
 			hbox.disable_item_expand (b)
 
 			vbox.extend (hbox)
@@ -178,6 +178,13 @@ feature -- Properties
 			-- Position of argument currently undergoing editing
 
 feature -- Actions
+
+	cancel_pressed is
+			-- The cancel button was pressed
+		do
+			parent_window.detach_argument_dialog
+			destroy
+		end
 
 	update_arguments is
 			-- Action performed when a new argument is entered.
@@ -253,9 +260,15 @@ feature {NONE} -- Properties
 
 feature {NONE} -- Implementation
 
+	parent_window: EB_DEVELOPMENT_WINDOW
+	
+	root_ast: ACE_SD
+			-- Ace file
+
 	execute (arg: ANY) is
 		do
 			hide
+			parent_window.detach_argument_dialog
 			if arg /= Void then
 				if arg = Apply_and_run_it then
 					store_arguments
@@ -265,9 +278,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
-
-	root_ast: ACE_SD
-			-- Ace file
 		
 	retrieve_arguments is
 			-- Check content of Ace file and if valid set retrieve arguments.
@@ -453,10 +463,5 @@ feature {NONE} -- Implementation
 
 	saved_arguments: ARRAYED_LIST [STRING]
 			-- List of arguments BEFORE any new ones have been added
-
-feature {NONE} -- Constants
-
-	Default_item_padding: INTEGER is 2
-			-- Padding for items (label + textfield/combo)
 
 end -- class EB_ARGUMENT_DIALOG

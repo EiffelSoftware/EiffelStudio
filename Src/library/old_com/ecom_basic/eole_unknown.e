@@ -118,7 +118,7 @@ feature -- Access
 			-- List of supported interfaces
 		once
 			!! Result.make
-			Result.extend (interface_identifier)
+			Result.extend (Iid_unknown)
 		end
 
 	is_initializable_from_eiffel: BOOLEAN is
@@ -188,6 +188,7 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 			-- Redefine in descendant if needed.
 		do
 			set_last_hresult (E_nointerface)
+			iid.to_upper
 			from
 				interface_identifier_list.start
 			until
@@ -199,7 +200,7 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 					set_last_hresult (S_ok)
 				end
 				interface_identifier_list.forth
-			end
+			end	
 		end
 
 	on_add_ref: INTEGER is

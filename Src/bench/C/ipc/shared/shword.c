@@ -61,8 +61,10 @@ rt_private void free_argv(void)
 	int i;
 
 	for (i = 0; i < argc; i++)
-		if (argv[i] != (char *) 0)
+		if (argv[i] != (char *) 0) {
 			free(argv[i]);
+			argv[i] = NULL;
+		}
 }
 
 rt_private int init_argv(void)
@@ -120,6 +122,10 @@ rt_private char *add_argv(char *word)
 	if (new_argv == (char **) 0)
 		return (char *) 0;			/* Out of memory */
 
+		/* Reset newly created elements of `new_argv' to NULL otherwise
+		 * `free_argv' will fail because entries of `new_argv' have non-initialized
+		 * values. */
+	memset ((char *) new_argv + argc * sizeof(char *), 0, ARGV_INCREASE * sizeof(char *));
 	argc += ARGV_INCREASE;
 	argv = new_argv;
 	argv[where++] = saved;

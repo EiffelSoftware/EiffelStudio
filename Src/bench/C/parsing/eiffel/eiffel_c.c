@@ -93,8 +93,7 @@ char *filename;
 	extern int yyparse();				/* Yacc parsing */
 	extern int yylineno;				/* Lex line number */
 	extern char *yacc_file_name;		/* Eiffel file name */
-	extern char *yysptr;
-	extern char yysbuf[];
+	extern void reset_eiffel_lex_parser();
 #ifdef YYDEBUG
 	extern int yydebug;
 #endif
@@ -108,12 +107,10 @@ char *filename;
 	yylineno = 1;
 	yacc_file_name = filename;
 	yyin = f;
-	string_mode = 0;
 	start_position = 0;
 	end_position = 0;
 
-	/* Reset lex buffer: no more lookahead tokens */
-	yysptr = yysbuf;
+	reset_eiffel_lex_parser();
 
 	/* Creation of the set of suppliers */
 	suppliers = create_node(SUPPLIERS_AS);

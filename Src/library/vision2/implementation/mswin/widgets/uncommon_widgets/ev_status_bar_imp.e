@@ -56,6 +56,8 @@ inherit
 			default_style
 		end
 
+	WEL_DT_CONSTANTS
+
 creation
 	make
 
@@ -228,6 +230,32 @@ feature -- Implementation
 			end
 		end
 
+	set_child_owner_draw (current_child: EV_STATUS_BAR_ITEM_IMP) is
+			-- Set `current_child' to ownerdrawn.
+			-- The child will be drawn by the status bar when on_wmdraw is recieved
+			-- by the status bar. See also EV_INTERNAL_SILLY_WIDGET_IMP.
+		local
+			counter: INTEGER
+			child_found: BOOLEAN
+		do
+			from
+				counter := 0
+				ev_children.start
+			until
+				counter = ev_children.count or child_found
+			loop
+				if equal (ev_children.item, current_child) then
+					set_part_owner_drawn (counter, 0 ,0)
+					child_found := True
+				end
+				counter := counter + 1
+				if not child_found then
+					ev_children.forth
+				end
+			end
+		end
+
+
 feature {NONE} -- Implementation
 
 	item_type: EV_STATUS_BAR_ITEM_IMP is
@@ -236,6 +264,37 @@ feature {NONE} -- Implementation
 			-- too complicated with the multi-platform design.
 			-- Need to be redefined.
 		do
+		end
+
+feature {EV_INTERNAL_SILLY_WINDOW_IMP} -- Implementation
+
+	vertical_offset : INTEGER is 4
+			-- 4 pixels down will center the text.
+			-- This is always true as status bars are fixed to 16 pixels high.
+
+	draw_item (id1: INTEGER; struct: WEL_DRAW_ITEM_STRUCT)is
+			-- Draw the status bar item.
+		local
+			dc: WEL_DC
+			rect: WEL_RECT
+			item_id: INTEGER
+			current_item: EV_STATUS_BAR_ITEM_IMP
+			pixmap : EV_PIXMAP_IMP
+			bitmap: WEL_BITMAP
+			rect2: WEL_RECT
+		do
+			dc := struct.dc
+			rect := struct.rect_item
+			item_id := struct.item_id + 1
+			current_item := ev_children @ item_id
+			pixmap ?= current_item.pixmap.implementation
+			bitmap := pixmap.internal_bitmap
+			dc.draw_bitmap (bitmap, rect.left, rect.top, bitmap.width, bitmap.height)
+				-- Draw `bitmap'
+			create rect2.make (bitmap.width + rect.left, vertical_offset, rect.width + rect.left, vertical_offset + rect.height)
+			dc.set_background_transparent
+			dc.draw_text (current_item.text, rect2, Dt_left)
+				-- Draw text associated with status bar item.
 		end
 
 feature {NONE} -- WEL Implementation

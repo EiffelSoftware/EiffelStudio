@@ -10,6 +10,8 @@ inherit
 	CONSUMED_ENTITY
 		rename
 			make as entity_make
+		redefine
+			dotnet_name
 		end
 
 create
@@ -29,6 +31,7 @@ feature {NONE} -- Initialization
 		local
 			args: ARRAY [CONSUMED_ARGUMENT]
 		do
+			dotnet_name := dn
 			create args.make (1, 1)
 			args.put (create {CONSUMED_ARGUMENT}.make ("Value", "value", handler_type, False), 1)
 			entity_make (en, pub, decl_type)
@@ -50,6 +53,7 @@ feature {NONE} -- Initialization
 			end
 			raiser := rais
 		ensure
+			dotnet_name_set: dotnet_name = dn
 			adder_set: has_adder implies adder /= Void
 			valid_adder: has_adder implies adder.is_property_or_event
 			remover_set: has_remover implies remover /= Void
@@ -59,6 +63,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	dotnet_name: STRING
+			-- .NET event name
 
 	adder: CONSUMED_PROCEDURE
 			-- Property getter function

@@ -10,6 +10,8 @@ inherit
 	CONSUMED_ENTITY
 		rename
 			make as entity_make
+		redefine
+			dotnet_name
 		end
 
 create
@@ -29,6 +31,7 @@ feature {NONE} -- Initialization
 		local
 			args: ARRAY [CONSUMED_ARGUMENT]
 		do
+			dotnet_name := dn
 			entity_make (en, pub, decl_type)
 			if has_getter then
 				create getter.make (
@@ -50,6 +53,7 @@ feature {NONE} -- Initialization
 									decl_type)
 			end
 		ensure
+			dotnet_name_set: dotnet_name = dn
 			getter_set: has_getter implies getter /= Void
 			valid_getter: has_getter implies getter.is_property_or_event
 			setter_set: has_setter implies setter /= Void
@@ -57,6 +61,9 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
+	dotnet_name: STRING
+			-- .NET property name
 
 	getter: CONSUMED_FUNCTION
 			-- Property getter function

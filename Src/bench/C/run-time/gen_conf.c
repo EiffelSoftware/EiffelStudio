@@ -313,6 +313,10 @@ rt_private void eif_put_gen_seq (int16, int16*, int16*, int16);
 #ifdef WORKBENCH
 #define RTUD_INV(x)  (((x) >= fcount)?(x):rtud_inv[(x)])
 
+#else
+#define RTUD_INV(x) (x)
+#endif
+
 /*
 doc:	<routine name="eif_id_for_typarr" return_type="int16" export="public">
 doc:		<summary>Perform call to RTUD_INV from generated code. Needed as RTUD_INV is not exported.</summary>
@@ -325,9 +329,7 @@ rt_public int16 eif_id_for_typarr (int16 id) {
 
 	return RTUD_INV(id);
 }
-#else
-#define RTUD_INV(x) (x)
-#endif
+
 
 /*------------------------------------------------------------------*/
 

@@ -1,4 +1,4 @@
-#This file was created by <oconnor> Fri Sep 10 16:40:28 1999
+#This file was created by <oconnor> Fri Sep 10 16:42:25 1999
 #LyX 1.0 (C) 1995-1999 Matthias Ettrich and the LyX Team
 \lyxformat 2.15
 \textclass article
@@ -63,7 +63,9 @@ Intorduction
 Review held: 08 Sep 1999, ISE meeting room.
 \newline 
 Present at review: Manus Stapf, Sam O'Connor, Andreas Leitner, Julian Rogers,
- Alex Buoy & Ian King 
+ Alex Buoy & Ian King
+\newline 
+Cvs tag of version reviewed: REVIEW_1_990907
 \layout Section
 
 Agenda

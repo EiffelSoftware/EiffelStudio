@@ -17,24 +17,42 @@ inherit
 
 feature 
 
-	foreground: COLOR is
+	foreground_color: COLOR is
 			-- Foreground color of primitive widget
 		deferred
+		ensure
+			valid_result: Result /= Void
 		end;
 
-	set_foreground (new_color: COLOR) is
+	foreground: COLOR is obsolete "Use ``foreground_color''"
+			-- Foreground color of primitive widget
+		do
+			Result := foreground_color
+		end;
+
+	set_foreground_color (new_color: COLOR) is
 			-- Set foreground color to `new_color'.
 		require
-			color_not_void: not (new_color = Void)
+			valid_color: new_color /= Void
 		deferred
 		ensure
-			foreground= new_color
+			foreground_set: foreground_color = new_color
 		end;
 
-    update_foreground is
-            -- Update the X color after a change inside the Eiffel color.
-        deferred
-        end;
+	set_foreground (new_color: COLOR) is obsolete "Use ``set_foreground_color''"
+			-- Set foreground color to `new_color'.
+		do
+			set_foreground_color (new_color)
+		end;
+
+	update_foreground is obsolete "Use ``update_foreground_color''"
+		do
+			update_foreground_color
+		end;
+
+	update_foreground_color is
+		deferred
+		end;
 
 end
 

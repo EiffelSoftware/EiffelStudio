@@ -102,14 +102,118 @@ void eif_thr_create (EIF_OBJ current_obj, EIF_PROC init_func)
 
 void eif_thr_entry(start_routine_ctxt_t *routine_ctxt)
 {
-	eif_register_thread();
-	(routine_ctxt->routine)(eif_access (routine_ctxt->current));
+	eif_thr_register();
+	{
+		EIF_GET_CONTEXT
+
+		struct ex_vect *exvect;
+		jmp_buf exenv;
+
+		EIF_MUTEX_LOCK(eif_rmark_mutex,
+			"problem while trying to lock mutex on context buffer");
+		initsig();
+		initstk();
+		exvect = exset((char *) 0, 0, (char *) 0);
+		exvect->ex_jbuf = (char *) exenv;
+		if (echval = setjmp(exenv))
+			failure();
+
+#ifdef WORKBENCH
+		/*printf("xinitint\n");*/
+		xinitint();
+#endif
+
+		root_obj = eclone(eif_access(routine_ctxt->current));
+	/*
+		root_obj = RTLN(eiftype(&(routine_ctxt->current)));
+		root_obj = edclone(eif_access(routine_ctxt->current));
+		root_obj = eclone(eif_access(routine_ctxt->current));
+		ecopy(routine_ctxt->current, root_obj);
+	*/
+		EIF_MUTEX_UNLOCK(eif_rmark_mutex,
+			"problem while unlocking mutex on context buffer");
+
+		(routine_ctxt->routine)(eif_access (routine_ctxt->current));
+		root_obj = (char *)0;
+		EIF_END_GET_CONTEXT
+	}
+	plsc();
+	free(routine_ctxt);
 }
 
 
-void eif_exit_thread(void)
-{
+void eif_thr_exit(void) {
 	EIF_THR_EXIT(0);
+}
+
+void eif_thr_efreeze(EIF_OBJ object) {
+    char *obj;
+
+    obj = efreeze(object);
+    if(!obj)
+        eif_thr_panic("cannot freeze\n");
+/*
+    else
+        printf("freeze ok .");
+*/
+}
+
+void eif_thr_eufreeze(char *object) {
+/*
+    eufreeze(object);
+*/
+}
+
+
+void eif_thr_yield(void) {
+    /*printf(".");*/
+    EIF_THR_YIELD;
+}
+
+void eif_thr_join_all(void) {
+    EIF_THR_JOIN_ALL;
+}
+
+
+	/******************************/
+	/* class MUTEX implementation */
+	/******************************/
+
+EIF_MUTEX_TYPE eif_thr_mutex_create(void) {
+	EIF_MUTEX_TYPE a_mutex_pointer;
+
+	EIF_MUTEX_CREATE(a_mutex_pointer, "cannot create mutex\n");
+	/*printf("\nmutex created\n");*/
+	return a_mutex_pointer;
+}
+
+void eif_thr_mutex_lock(EIF_MUTEX_TYPE a_mutex_pointer) {
+	EIF_MUTEX_LOCK(a_mutex_pointer, "cannot lock mutex\n");
+	/*printf("\nmutex locked\n");*/
+}
+
+void eif_thr_mutex_unlock(EIF_MUTEX_TYPE a_mutex_pointer) {
+	EIF_MUTEX_UNLOCK(a_mutex_pointer, "cannot unlock mutex\n");
+	/*printf("\nmutex unlocked\n");*/
+}
+
+EIF_BOOLEAN eif_thr_mutex_trylock(EIF_MUTEX_TYPE a_mutex_pointer) {
+	int status;
+	EIF_MUTEX_TRYLOCK(a_mutex_pointer, status, "cannot lock mutex\n");
+	return ((EIF_BOOLEAN)(!status));
+}
+
+
+	/******************************/
+	/* class PROXY implementation */
+	/******************************/
+
+EIF_REFERENCE eif_thr_proxy_set(EIF_OBJ an_object) {
+	return eif_adopt(an_object);
+}
+
+EIF_REFERENCE eif_thr_proxy_access(EIF_REFERENCE a_proxy) {
+	return eif_access(a_proxy);
 }
 
 

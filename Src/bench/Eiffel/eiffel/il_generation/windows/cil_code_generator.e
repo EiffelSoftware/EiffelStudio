@@ -3283,11 +3283,12 @@ feature -- Assignments
 			end
 		end
 
-	generate_expanded_attribute_assignment (type_i: TYPE_I; a_feature_id: INTEGER) is
+	generate_expanded_attribute_assignment (type_i, attr_type: TYPE_I; a_feature_id: INTEGER) is
 			-- Generate assignment to attribute of `a_feature_id' in current class
 			-- when direct access to attribute is not possible.
 		require
 			type_i_not_void: type_i /= Void
+			attr_type_not_void: attr_type /= Void
 			positive_feature_id: a_feature_id > 0
 		local
 			cl_type: CL_TYPE_I
@@ -3297,6 +3298,8 @@ feature -- Assignments
 				cl_type = Void or else
 				not (cl_type.base_class.is_frozen or cl_type.base_class.is_single)
 			then
+				method_body.put_opcode_mdtoken (feature {MD_OPCODES}.Ldobj,
+					class_type_token (attr_type.static_type_id))
 				method_body.put_call (feature {MD_OPCODES}.Callvirt,
 					setter_token (type_i.static_type_id, a_feature_id), 1, False)
 			end

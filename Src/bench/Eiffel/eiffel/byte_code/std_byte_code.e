@@ -212,6 +212,14 @@ feature
 			if rescue_clause /= Void then
 					-- Generate a `setjmp' C instruction in case of a
 					-- rescue clause
+				if trace_enabled then
+					generated_file.putstring ("RTTI;");
+					generated_file.new_line;
+				end
+				if profile_enabled then
+					generated_file.putstring ("RTPI;");
+					generated_file.new_line;
+				end
 				generated_file.putstring ("RTEJ;");
 				generated_file.new_line;
 			end;
@@ -818,6 +826,8 @@ feature
 					generated_file.new_line;
 				end;
 				rescue_clause.generate;
+				generate_rescue_cleanup;
+				generate_profile_stop;
 				generated_file.putstring ("/* NOTREACHED */");
 				generated_file.new_line;
 				generated_file.putstring ("RTEF;");
@@ -835,18 +845,22 @@ feature
 	generate_execution_declarations is
 			-- Generate the declarations needed for exception trace handling
 		do
-			if rescue_clause /= Void then
-				generated_file.putstring ("RTED;");
-				generated_file.new_line;
-			end;
 			if exception_stack_managed or rescue_clause /= Void then
 				generated_file.putstring ("RTEX;");
 				generated_file.new_line;
 			end
-			if rescue_clause /= Void and not context.workbench_mode then
-					-- We only need this for finalized mode...
-				generated_file.putstring ("RTLT;");
+			if rescue_clause /= Void then
+				generated_file.putstring ("RTED;");
 				generated_file.new_line;
+					-- We only need this for finalized mode...
+				if trace_enabled then
+					generated_file.putstring ("RTLT;");
+					generated_file.new_line;
+				end
+				if profile_enabled then
+					generated_file.putstring ("RTLP;");
+					generated_file.new_line;
+				end
 			end;
 		end;
 
@@ -961,15 +975,35 @@ feature
 				-- Generate the update of the trace stack before quitting
 				-- the routine
 			generate_pop_execution_trace;
-				-- Generate profile macro (stop)
-			generate_profile_stop;
 				-- Generate trace macro (stop)
 			generate_trace_stop;
+
+				-- Generate profile macro (stop)
+			generate_rescue_cleanup;
+			generate_profile_stop;
+
 			if rescue_clause /= Void then
 				generated_file.putstring ("RTOK;");
 				generated_file.new_line;
 			end;
 		end;
+
+	generate_rescue_cleanup is
+			-- Clean up the trace and profiling stacks
+		do
+			if rescue_clause /= Void then
+				if context.workbench_mode or else Context.associated_class.trace_level.is_yes then
+						-- Trace clean-up
+					generated_file.putstring ("RTTS;");
+					generated_file.new_line;
+				end
+				if context.workbench_mode or else Context.associated_class.profile_level.is_yes then
+						-- Profiling clean-up
+					generated_file.putstring ("RTPS;");
+					generated_file.new_line;
+				end
+			end
+		end
 
 feature -- Byte code generation
 

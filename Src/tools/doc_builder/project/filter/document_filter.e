@@ -14,8 +14,8 @@ feature
 	make is
 			-- Create
 		do
-			clear
 			create output_string.make_empty
+			clear
 		end		
 
 feature -- Access
@@ -31,7 +31,7 @@ feature -- Status Setting
 	clear is
 			-- Clear Current
 		do
-			output_string := ""
+			output_string.clear_all
 		end		
 
 end -- class DOCUMENT_FILTER

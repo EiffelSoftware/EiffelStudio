@@ -40,6 +40,12 @@ inherit
 			interface
 		end
 
+	EV_WEL_KEY_CONVERSION
+		rename
+			Key_down as Key_down_arrow,
+			Key_up as Key_up_arrow
+		end
+
 	WEL_WINDOWS_ROUTINES
 		export
 			{NONE} all
@@ -573,7 +579,11 @@ feature {NONE} -- Implementation, key events
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		do
-			interface.key_press_actions.call ([virtual_key])
+			if valid_wel_code (virtual_key) then
+				interface.key_press_actions.call ([
+					create {EV_KEY}.make_with_code (
+						key_code_from_wel (virtual_key))])
+			end
 		end
 
 	on_key_up (virtual_key, key_data: INTEGER) is
@@ -581,7 +591,11 @@ feature {NONE} -- Implementation, key events
 			-- We verify that there is indeed a command to avoid
 			-- the creation of an object for nothing.
 		do
-			interface.key_release_actions.call ([virtual_key])
+			if valid_wel_code (virtual_key) then
+				interface.key_release_actions.call ([
+					create {EV_KEY}.make_with_code (
+						key_code_from_wel (virtual_key))])
+			end
 		end
 
 	on_key_string (character_code, key_data: INTEGER) is
@@ -901,6 +915,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.59  2000/03/17 23:24:49  brendel
+--| Implemented recently changed key event to take EV_KEY.
+--|
 --| Revision 1.58  2000/03/17 23:02:51  rogers
 --| Removed set_pointer_style and cursor_imp. They are now in EV_PICK_AND_DROPABLE.
 --|

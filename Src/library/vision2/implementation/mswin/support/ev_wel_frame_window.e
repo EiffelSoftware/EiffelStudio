@@ -10,39 +10,53 @@ class
 
 inherit
 	WEL_FRAME_WINDOW
+		rename
+			on_wm_erase_background as old_erase_background
 		redefine
-			on_size,
-			on_wm_erase_background
+			on_size
 		end			
+
+
+	WEL_FRAME_WINDOW
+		redefine
+			on_wm_erase_background,
+			on_size
+		select
+			on_wm_erase_background
+		end		
+
 
 creation
 	make_top
 
+
 feature
 	
-	add_child (the_child: EV_CONTAINER_IMP) is
+	attach_container (the_container: EV_CONTAINER_IMP) is
 		do
-			child := the_child
+			container := the_container
 		end
 
 feature {NONE} -- Implementation
 
 	on_wm_erase_background (wparam: INTEGER) is
 		do
-			disable_default_processing
+			if container.the_child = Void then
+				old_erase_background (wparam)
+			else
+				disable_default_processing
+			end
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is
 		do
-			if a_width > child.minimum_width or a_height > child.minimum_height then
-				child.child_has_resized (a_width.max(child.minimum_width), a_height.max(child.minimum_height), child)
-			else
-				child.child_has_resized (child.minimum_width, child.minimum_height, child)
+			if container.the_child /= Void then
+				container.the_child.parent_ask_resize (a_width, a_height)
 			end
 		end
 
 feature {NONE} -- Access
 
-	child: EV_CONTAINER_IMP
+	container: EV_CONTAINER_IMP
 
 end -- class EV_WEL_FRAME_WINDOW

@@ -20,6 +20,7 @@ ld='ld'
 lngpad_2='8'
 
 mtccflags='-D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS'
+mtcppflags='-D_REENTRANT -DEIF_THREADS -DSOLARIS_THREADS'
 ccflags=''
 sharedccflags='-fPIC'
 cppflags=''

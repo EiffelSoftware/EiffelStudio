@@ -19,15 +19,14 @@ feature -- Access
 
 	frozen eif_id_object (an_id: INTEGER): WEL_WINDOW is
 			-- Object associated with `an_id' (void if no such object)
-		local
-			wr: WEAK_REFERENCE
 		do
-			if reference_list.valid_index (an_id) then
-				wr := reference_list.i_th (an_id).item
-				if wr /= Void then
-					Result ?= wr.get_target
-				end
-			end
+			Result ?= eif_id_system_object (an_id)
+		end
+
+	frozen eif_id_any_object (an_id: INTEGER): ANY is
+			-- Object associated with `an_id' (void if no such object)
+		do
+			Result ?= eif_id_system_object (an_id)
 		end
 
 feature -- Removal
@@ -48,6 +47,21 @@ feature {IDENTIFIED_CONTROLLER} -- Implementation
 			-- List of weak references used. Id's correspond to indices in this list.
 		once
 			create Result.make (50)
+		end
+
+feature {NONE} -- Implementation
+
+	frozen eif_id_system_object (an_id: INTEGER): SYSTEM_OBJECT is
+			-- Object associated with `an_id' (void if no such object)
+		local
+			wr: WEAK_REFERENCE
+		do
+			if reference_list.valid_index (an_id) then
+				wr := reference_list.i_th (an_id).item
+				if wr /= Void then
+					Result := wr.get_target
+				end
+			end
 		end
 
 end -- class WEL_IDENTIFIED

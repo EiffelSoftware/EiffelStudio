@@ -14,11 +14,9 @@ inherit
 	EV_MENU_I
 		
 	EV_MENU_ITEM_CONTAINER_IMP
-		rename
-			make as widget_make
-		end
 
 creation
+	make,
 	make_with_text
 
 feature {NONE} -- Initialization
@@ -76,13 +74,13 @@ feature {NONE} -- Implementation
 --			gtk_menu_append (gtk_menu (widget), item_p)
 --		end
 	
---	widget_make (par: EV_CONTAINER) is
---			-- Cannot be called
---		do
---			check
---				do_not_call: False
---			end
---		end
+	old_make (par: EV_CONTAINER) is
+			-- Cannot be called
+		do
+			check
+				do_not_call: False
+			end
+		end
 
 
 end -- class EV_MENU_IMP

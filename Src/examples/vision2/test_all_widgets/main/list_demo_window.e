@@ -41,13 +41,13 @@ feature -- Status setting
 			pixmap: EV_PIXMAP
 			arg: EV_ARGUMENT1[LIST_DEMO_WINDOW]
 		do
-			!!item1.make (main_widget)
-			!! pixmap.make_from_file (item1, the_parent.pixname("menu"))
+			!! item1.make (main_widget)
+			!! pixmap.make_from_file (the_parent.pixname("menu"))
 			item1.set_text("This is item1")
 			!!item2.make (main_widget)
-			!! pixmap.make_from_file (item2, the_parent.pixname("menu"))
+			!! pixmap.make_from_file (the_parent.pixname("menu"))
 			!!item3.make (main_widget)
-			!! pixmap.make_from_file (item3, the_parent.pixname("menu"))
+			!! pixmap.make_from_file (the_parent.pixname("menu"))
 			item3.set_text ("item3")
        	end
 	

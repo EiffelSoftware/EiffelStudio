@@ -1,0 +1,35 @@
+.TH CECIL 1  "November 10, 1999" "ISE" "CECIL Programmer's Manual"
+.SH NAME
+eif_procedure	\- return the address of an Eiffel procedure. 
+.SH SYNOPSYS
+.nf
+\fB#include "eif_cecil.h"\fB
+.sp
+.BI "EIF_PROCEDURE eif_procedure (char * " name ", int * " tid ");"
+.fi
+.SH DESCRIPTION
+The \fBeif_procedure()\fP function returns the address of the Eiffel 
+procedure of name \fIname\fP from the class, which type identifier is \fItid\fP.
+.PP
+If the visible exception is enabled, it raises an visible exception
+upon failure.
+.SH RETURN VALUE
+It returns NULL when it fails ( the procedure does not exist or is not visible). Otherwise, the address of the procedure
+is returned. 
+.SH NOTES
+The Eiffel procedure cannot be a C external. In this case, you must directly 
+call the C routine.
+.br 
+The return value is an address: to use it as a routine, you must call it with arguments or at least with \fP()\fP.
+.br 
+No argument type checking is done. You may cast the address of 
+an Eiffel routine obtained with \fBeif_procedure()\fP when calling it with real
+arguments.  
+.SH CONFORMANCE
+ISE Eiffel 4.4 and later.
+.SH COMPATIBILITY
+\fBeif_procedure()\fP is equivalent to \fBeif_proc()\fP, which is deprecated.
+.SH SEE ALSO
+.BR eif_type_id "(1), "eif_reference_function "(1)." 
+
+

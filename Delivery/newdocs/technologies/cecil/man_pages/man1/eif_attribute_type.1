@@ -1,0 +1,21 @@
+.TH CECIL 1  "November 10, 1999" "ISE" "CECIL Programmer's Manual"
+.SH NAME
+eif_attribute_type	\- return the type of an Eiffel attribute. 
+.SH SYNOPSYS
+.nf
+\fB#include "eif_cecil.h"\fB
+.sp
+.BI "int eif_attribute_type (char * " attr ", EIF_TYPE_ID " tid "); "
+.fi
+.SH DESCRIPTION
+The \fBeif_attribute_type()\fP function returns the type of the attribute  \fIattr\fP, from the Eiffel type, which type identifier is \fItid\fB.
+.SH RETURN VALUE
+Upon failure, it returns EIF_NO_TYPE.
+Otherwise, the return value can be one of the following:
+.BR EIF_INTEGER_TYPE ", " EIF_CHARACTER_TYPE ", " EIF_BOOLEAN_TYPE ", " EIF_DOUBLE_TYPE ", " EIF_REAL_TYPE ", " EIF_REFERENCE_TYPE ", "EIF_EXPANDED_TYPE ", " EIF_BIT_TYPE ". "
+.SH CONFORMANCE
+ISE Eiffel 4.5 and later.
+.SH SEE ALSO
+.BR eif_protect "(1) , " attribute_exists "(1) , " eif_procedure "(1) , " eif_reference_function "(1). " 
+
+

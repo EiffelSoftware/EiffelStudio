@@ -13,9 +13,18 @@ feature -- Access
 			-- Eiffel parser
 		do
 			if il_parsing then
-				Result := IL_eiffel_parser
+				Result := il_eiffel_parser
 			else
-				Result := Pure_eiffel_parser
+				Result := pure_eiffel_parser
+			end
+		end
+		
+	Eiffel_validating_parser: EIFFEL_PARSER is
+		do
+			if il_parsing then
+				Result := il_eiffel_validating_parser
+			else
+				Result := pure_eiffel_validating_parser
 			end
 		end
 
@@ -28,19 +37,22 @@ feature -- Access
 	entity_declaration_parser: EIFFEL_PARSER is
 			-- Entity declaration parser.
 		once
-			create Result.make_entity_declaration_parser
+			create Result.make
+			Result.set_entity_declaration_parser
 		end
 
 	Type_parser: EIFFEL_PARSER is
 			-- Type parser.
 		once
-			create Result.make_type_parser
+			create Result.make
+			Result.set_type_parser
 		end
 
 	Expression_parser: EIFFEL_PARSER is
 			-- Type parser.
 		once
-			create Result.make_expression_parser
+			create Result.make
+			Result.set_expression_parser
 		end
 		
 feature -- Setting
@@ -71,7 +83,7 @@ feature {NONE} -- Usage
 
 feature {NONE} -- Internal parsers
 
-	Pure_eiffel_parser: EIFFEL_PARSER is
+	pure_eiffel_parser: EIFFEL_PARSER is
 			-- Pure Eiffel parser
 		once
 			create Result.make
@@ -80,10 +92,30 @@ feature {NONE} -- Internal parsers
 			pure_parser: not Result.il_parser
 		end
 
-	IL_eiffel_parser: EIFFEL_PARSER is
+	il_eiffel_parser: EIFFEL_PARSER is
 			-- IL Eiffel parser.
 		once
-			create Result.make_il_parser
+			create Result.make
+			Result.set_il_parser
+		ensure
+			il_eiffel_parser_not_void: Result /= Void
+			il_parser: Result.il_parser
+		end
+
+	pure_eiffel_validating_parser: EIFFEL_PARSER is
+			-- Pure Eiffel validating parser
+		once
+			create Result.make_with_factory (create {AST_NULL_FACTORY})
+		ensure
+			eiffel_parser_not_void: Result /= Void
+			pure_parser: not Result.il_parser
+		end
+
+	il_eiffel_validating_parser: EIFFEL_PARSER is
+			-- IL Eiffel validating parser.
+		once
+			create Result.make_with_factory (create {AST_NULL_FACTORY})
+			Result.set_il_parser
 		ensure
 			il_eiffel_parser_not_void: Result /= Void
 			il_parser: Result.il_parser

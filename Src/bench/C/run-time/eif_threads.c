@@ -18,6 +18,7 @@
 
 */
 
+#include <assert.h>
 #include "eif_config.h"
 #include "eif_eiffel.h"
 #include "eif_threads.h"

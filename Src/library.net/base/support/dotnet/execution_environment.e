@@ -105,20 +105,9 @@ feature -- Status setting
 			-- If `s' is empty, use the default shell as command.
 		require
 			s_exists: s /= Void
-		local
-			np: SYSTEM_DLL_PROCESS
-			nm: SYSTEM_STRING
-			si: SYSTEM_DLL_PROCESS_START_INFO
 		do
-			if s.is_empty then
-				nm := ("cmd.exe").to_cil
-			else
-				nm := s.to_cil
-			end
-			create si.make_from_file_name (nm)
-			np := feature {SYSTEM_DLL_PROCESS}.start_process_start_info (si)
-			np.wait_for_exit
-			return_code := np.exit_code
+			internal_launch (s, True)
+			return_code := last_process.exit_code
 		end
 
 	launch (s: STRING) is
@@ -127,21 +116,57 @@ feature -- Status setting
 			-- If `s' is empty, use the default shell as command.
 		require
 			s_not_void: s /= Void
-		local
-			np: SYSTEM_DLL_PROCESS
-			nm: SYSTEM_STRING
-			si: SYSTEM_DLL_PROCESS_START_INFO
 		do
-			if s.is_empty then
-				nm := ("cmd.exe").to_cil
-			else
-				nm := s.to_cil
-			end
-			create si.make_from_file_name (nm)
-			np := feature {SYSTEM_DLL_PROCESS}.start_process_start_info (si)
+			internal_launch (s, False)
 		end
 
 feature {NONE} -- Implementation
+
+	last_process: SYSTEM_DLL_PROCESS
+			-- Handle to last launched process through `launch'. Used by `system'
+			-- to wait until process is finished.
+
+	internal_launch (s: STRING; should_wait: BOOLEAN) is
+			-- Pass to the operating system an asynchronous request to
+			-- execute `s'.
+			-- If `s' is empty, use the default shell as command.
+		require
+			s_not_void: s /= Void
+		local
+			nm: SYSTEM_STRING
+			l_comspec: STRING
+			si: SYSTEM_DLL_PROCESS_START_INFO
+			l_pos: INTEGER
+		do
+			if should_wait then
+				l_comspec := get ("COMSPEC")
+				if l_comspec = Void then
+					l_comspec := "cmd.exe"
+				end
+				if s.is_empty then
+					create si.make_from_file_name (l_comspec.to_cil)				
+				else
+					create si.make_from_file_name_and_arguments (l_comspec.to_cil, ("/c " + s).to_cil)
+				end
+			else
+					-- Let's split up the argument into `executable' and `arguments'.
+				l_comspec := clone (s)
+				l_comspec.left_adjust
+				l_pos := l_comspec.index_of (' ', 1)
+				if l_pos > 0 then
+					create si.make_from_file_name_and_arguments (
+						l_comspec.substring (1, l_pos).to_cil,
+						l_comspec.substring (l_pos + 1, l_comspec.count).to_cil)
+				else
+					create si.make_from_file_name (l_comspec.to_cil)
+				end
+			end
+			si.set_use_shell_execute (False)
+			last_process := feature {SYSTEM_DLL_PROCESS}.start_process_start_info (si)
+			if should_wait then
+				last_process.wait_for_exit
+			end
+		end
 
 	user_environment_variables: HASH_TABLE [STRING, STRING] is
 			-- User-defined environment variables.

@@ -715,6 +715,9 @@ feature -- Constants
 	is_absolute_string: STRING is "is_absolute"
 	
 	filename_string: STRING is "Filename"
+	
+	invalid_pixmap_name_prefix: STRING is "pixmap_"
+		-- Name prepended to pixmaps that are invalid.
 
 feature -- Preferences
 

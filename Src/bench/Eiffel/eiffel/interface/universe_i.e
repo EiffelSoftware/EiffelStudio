@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Create the hash table.
 		do
-			!! clusters.make (25)
+			create clusters.make (25)
 			assemblies_to_be_added := Void
 		ensure
 			clusters_not_void: clusters /= Void
@@ -65,7 +65,7 @@ feature -- Properties
 			loc_clusters: like clusters
 		do
 			loc_clusters := clusters
-			!! Result.make (loc_clusters.count)
+			create Result.make (loc_clusters.count)
 			if not loc_clusters.is_empty then
 				Result.force (loc_clusters.first)
 				from
@@ -115,7 +115,7 @@ feature -- Access
 				until
 					classes.after or else Result /= Void
 				loop
-					!! fn.make_from_string (classes.item_for_iteration.file_name)
+					create fn.make_from_string (classes.item_for_iteration.file_name)
 					if f_name.is_equal (fn) then
 						Result := classes.item_for_iteration
 					end
@@ -177,13 +177,13 @@ feature -- Access
 			end
 		end
 
-	class_named (class_name: STRING cluster: CLUSTER_I): CLASS_I is
-			-- Class named `class_name' in cluster `cluster'
+	class_named (class_name: STRING; a_cluster: CLUSTER_I): CLASS_I is
+			-- Class named `class_name' in cluster `a_cluster'
 		require
 			good_argument: class_name /= Void
-			good_cluster: cluster /= Void
+			good_cluster: a_cluster /= Void
 		local
-			a_cluster: CLUSTER_I
+			l_cluster: CLUSTER_I
 			real_name: STRING
 			rename_clause: RENAME_I
 			renamings: HASH_TABLE [STRING, STRING]
@@ -191,10 +191,10 @@ feature -- Access
 		do
 			if
 				has_override_cluster and then
-				not cluster.ignored (override_cluster)
+				not a_cluster.ignored (override_cluster)
 			then
 				real_name := class_name
-				rename_clause := cluster.rename_clause_for (override_cluster)
+				rename_clause := a_cluster.rename_clause_for (override_cluster)
 				if rename_clause /= Void then
 						-- Evaluation of the real name of the class
 					renamings := rename_clause.renamings
@@ -207,8 +207,8 @@ feature -- Access
 				Result := override_cluster.classes.item (real_name)
 			end
 			if Result = Void then
-					-- First look for a renamed class in `cluster'
-				Result := cluster.renamed_class (class_name)
+					-- First look for a renamed class in `a_cluster'
+				Result := a_cluster.renamed_class (class_name)
 
 				if Result = Void then
 					from
@@ -217,10 +217,10 @@ feature -- Access
 					until
 						clusters.after or else Result /= Void
 					loop
-						a_cluster := clusters.item
-						if not cluster.ignored (a_cluster) then
+						l_cluster := clusters.item
+						if not a_cluster.ignored (l_cluster) then
 							real_name := class_name
-							rename_clause := cluster.rename_clause_for (a_cluster)
+							rename_clause := a_cluster.rename_clause_for (l_cluster)
 							if rename_clause /= Void then
 									-- Evaluation of the real name of the class
 								renamings := rename_clause.renamings
@@ -230,7 +230,7 @@ feature -- Access
 									real_name := Has_been_renamed
 								end
 							end
-							Result := a_cluster.classes.item (real_name)
+							Result := l_cluster.classes.item (real_name)
 						end
 						clusters.forth
 					end
@@ -242,7 +242,7 @@ feature -- Access
 	cluster_changed: BOOLEAN is
 			-- Has the time stamps of the present clusters changed ?
 		local
-			a_cluster: CLUSTER_I
+			l_cluster: CLUSTER_I
 			new_date: INTEGER
 			ptr: ANY
 		do
@@ -251,10 +251,10 @@ feature -- Access
 			until
 				clusters.after or else Result
 			loop
-				a_cluster := clusters.item
-				ptr := a_cluster.path.to_c
+				l_cluster := clusters.item
+				ptr := l_cluster.path.to_c
 				new_date := eif_date ($ptr)
-				Result := a_cluster.date /= new_date
+				Result := l_cluster.date /= new_date
 				clusters.forth
 			end
 		end
@@ -454,157 +454,74 @@ feature {COMPILER_EXPORTER} -- Implementation
 		require
 			system_exists: system /= Void
 		local
-			l_ext_class: EXTERNAL_CLASS_I
-			l_class: CLASS_I
+			l_actions: HASH_TABLE [PROCEDURE [ANY, TUPLE [CLASS_I]], STRING]
 		do
+			create l_actions.make (50)
+
 			if system.il_generation then
-				l_ext_class ?= unique_class ("system_object")
-				if l_ext_class /= Void then
-					system.set_system_object_class (l_ext_class)
-				end
+				l_actions.put (agent system.set_system_object_class, "system_object")
 			end
-			l_class := unique_class ("any")
-			if l_class /= Void then
-				system.set_any_class (l_class)
-			end
-			l_class := unique_class ("boolean")
-			if l_class /= Void then
-				system.set_boolean_class (l_class)
-			end
-			l_class := unique_class ("character")
-			if l_class /= Void then
-				system.set_character_class (l_class, False)
-			end
-			l_class := unique_class ("integer_8")
-			if l_class /= Void then
-				system.set_integer_class (l_class, 8)
-			end
-			l_class := unique_class ("integer_16")
-			if l_class /= Void then
-				system.set_integer_class (l_class, 16)
-			end
-			l_class := unique_class ("integer")
-			if l_class /= Void then
-				system.set_integer_class (l_class, 32)
-			end
-			l_class := unique_class ("integer_64")
-			if l_class /= Void then
-				system.set_integer_class (l_class, 64)
-			end
-			l_class := unique_class ("real")
-			if l_class /= Void then
-				system.set_real_class (l_class)
-			end
-			l_class := unique_class ("double")
-			if l_class /= Void then
-				system.set_double_class (l_class)
-			end
-			l_class := unique_class ("string")
-			if l_class /= Void then
-				system.set_string_class (l_class)
-			end
-			l_class := unique_class ("pointer")
-			if l_class /= Void then
-				system.set_pointer_class (l_class)
-			end
-			l_class := unique_class ("array")
-			if l_class /= Void then
-				system.set_array_class (l_class)
-			end
-			l_class := unique_class ("special")
-			if l_class /= Void then
-				system.set_special_class (l_class)
-			end
-			l_class := unique_class ("tuple")
-			if l_class /= Void then
-				system.set_tuple_class (l_class)
-			end
-			l_class := unique_class ("memory")
-			if l_class /= Void then
-				system.set_memory_class (l_class)
-			end
-			l_class := unique_class ("routine")
-			if l_class /= Void then
-				system.set_routine_class (l_class)
-			end
-			l_class := unique_class ("procedure")
-			if l_class /= Void then
-				system.set_procedure_class (l_class)
-			end
-			l_class := unique_class ("function")
-			if l_class /= Void then
-				system.set_function_class (l_class)
-			end
-			l_class := unique_class ("to_special")
-			if l_class /= Void then
-				system.set_to_special_class (l_class)
-			end
+
+			l_actions.put (agent system.set_any_class, "any")
+			l_actions.put (agent system.set_boolean_class, "boolean")
+			l_actions.put (agent system.set_character_class (?, False), "character")
+			l_actions.put (agent system.set_integer_class (?, 8), "integer_8")
+			l_actions.put (agent system.set_integer_class (?, 16), "integer_16")
+			l_actions.put (agent system.set_integer_class (?, 32), "integer")
+			l_actions.put (agent system.set_integer_class (?, 64), "integer_64")
+			l_actions.put (agent system.set_real_class, "real")
+			l_actions.put (agent system.set_double_class, "double")
+			l_actions.put (agent system.set_pointer_class, "pointer")
+			l_actions.put (agent system.set_string_class, "string")
+			l_actions.put (agent system.set_array_class, "array")
+			l_actions.put (agent system.set_special_class, "special")
+			l_actions.put (agent system.set_tuple_class, "tuple")
+			l_actions.put (agent system.set_memory_class, "memory")
+			l_actions.put (agent system.set_routine_class, "routine")
+			l_actions.put (agent system.set_procedure_class, "procedure")
+			l_actions.put (agent system.set_function_class, "function")
+			l_actions.put (agent system.set_to_special_class, "to_special")
 
 				-- XX_REF classes
-			l_class := unique_class ("bit_ref")
-			if l_class /= Void then
-				system.set_bit_class (l_class)
-			end
-			l_class := unique_class ("character_ref")
-			if l_class /= Void then
-				system.set_character_ref_class (l_class, False)
-			end
-			l_class := unique_class("boolean_ref")
-			if l_class /= Void then
-				system.set_boolean_ref_class (l_class)
-			end
-			l_class := unique_class("integer_8_ref")
-			if l_class /= Void then
-				system.set_integer_ref_class (l_class, 8)
-			end
-			l_class := unique_class("integer_16_ref")
-			if l_class /= Void then
-				system.set_integer_ref_class (l_class, 16)
-			end
-			l_class := unique_class("integer_ref")
-			if l_class /= Void then
-				system.set_integer_ref_class (l_class, 32)
-			end
-			l_class := unique_class("integer_64_ref")
-			if l_class /= Void then
-				system.set_integer_ref_class (l_class, 64)
-			end
-			l_class := unique_class("real_ref")
-			if l_class /= Void then
-				system.set_real_ref_class (l_class)
-			end
-			l_class := unique_class("double_ref")
-			if l_class /= Void then
-				system.set_double_ref_class (l_class)
-			end
-			l_class := unique_class("pointer_ref")
-			if l_class /= Void then
-				system.set_pointer_ref_class (l_class)
-			end
+			l_actions.put (agent system.set_bit_class, "bit_ref")
+			l_actions.put (agent system.set_boolean_ref_class, "boolean_ref")
+			l_actions.put (agent system.set_character_ref_class (?, False), "character_ref")
+			l_actions.put (agent system.set_integer_ref_class (?, 8), "integer_8_ref")
+			l_actions.put (agent system.set_integer_ref_class (?, 16), "integer_16_ref")
+			l_actions.put (agent system.set_integer_ref_class (?, 32), "integer_ref")
+			l_actions.put (agent system.set_integer_ref_class (?, 64), "integer_64_ref")
+			l_actions.put (agent system.set_real_ref_class, "real_ref")
+			l_actions.put (agent system.set_double_ref_class, "double_ref")
+			l_actions.put (agent system.set_pointer_ref_class, "pointer_ref")
 
 			if not system.il_generation then
-				l_class := unique_class ("wide_character")
-				if l_class /= Void then
-					system.set_character_class (l_class, True)
-				end
-					-- XX_REF classes
-				l_class := unique_class ("wide_character_ref")
-				if l_class /= Void then
-					system.set_character_ref_class (l_class, True)
-				end
-
+				l_actions.put (agent system.set_character_class (?, True), "wide_character")
+				l_actions.put (agent system.set_character_ref_class (?, True), "wide_character_ref")
 			else
-				l_class := unique_class ("system_string")
-				if l_class /= Void then
-					system.set_system_string_class (l_class)
-				end
-				l_class := unique_class ("native_array")
-				if l_class /= Void then
-					system.set_native_array_class (l_class)
-				end
-
+				l_actions.put (agent system.set_system_string_class, "system_string")
+				l_actions.put (agent system.set_native_array_class, "native_array")
 					-- In MSIL generation, WIDE_CHARACTER does not exist since
 					-- all characters are wide.
+			end
+
+			check_class_unicity (l_actions)
+			
+			if system.il_generation then
+					-- One more check, let's find out that `system_object' and `system_string'
+					-- are set with EXTERNAL_CLASS_I instances
+
+					-- We test against Void as `system_object_class' is declared as
+					-- EXTERNAL_CLASS_I.
+				if system.system_object_class = Void then
+						-- Report error here
+						-- FIXME: Manu: 06/03/2003
+				end	
+
+					-- Check it is an EXTERNAL_CLASS_I instance.
+				if not system.system_string_class.is_external_class then
+						-- Report error here
+						-- FIXME: Manu: 06/03/2003
+				end	
 			end
 
 				-- Check sum error
@@ -614,57 +531,160 @@ feature {COMPILER_EXPORTER} -- Implementation
 	reset_clusters is
 			-- Reset all the clusters
 		local
-			a_cluster: CLUSTER_I
+			l_cluster: CLUSTER_I
 		do
 			from
 				clusters.start
 			until
 				clusters.after
 			loop
-				a_cluster := clusters.item
-				if not a_cluster.is_precompiled then
-					a_cluster.reset_cluster
+				l_cluster := clusters.item
+				if not l_cluster.is_precompiled then
+					l_cluster.reset_cluster
 				end
 				clusters.forth
 			end
 		end
 
-	unique_class (class_name: STRING): CLASS_I is
-			-- Universe checking
+	check_class_unicity (a_set: HASH_TABLE [PROCEDURE [ANY, TUPLE [CLASS_I]], STRING]) is
+			-- Universe checking, check all class names in `a_set' to ensure that only
+			-- one instance with specified name is found in universe. If it is unique,
+			-- then for each unique instance calls associated action.
 		require
-			good_argument: class_name /= Void
+			a_set_not_void: a_set /= Void
 		local
-			cluster: CLUSTER_I
+			l_cluster: CLUSTER_I
+			l_classes: HASH_TABLE [CLASS_I, STRING]
 			vd23: VD23
 			vd24: VD24
+			vscn: VSCN
 			old_cursor: CURSOR
+			l_processed_set: HASH_TABLE [CLASS_I, STRING]
+			l_conflicts_set: HASH_TABLE [ARRAYED_LIST [CLASS_I], STRING]
+			l_list: ARRAYED_LIST [CLASS_I]
+			l_first_class, l_second_class: CLASS_I
+			l_class_name: STRING
+			l_has_error: BOOLEAN
 		do
+				-- First pass, we check that all classes in `a_set' are located at least
+				-- in one cluster. If located in two or more clusters, we record them
+				-- in `l_conflicts'.
 			from
+				create l_processed_set.make (a_set.count)
+				create l_conflicts_set.make (a_set.count)
+				old_cursor := clusters.cursor
 				clusters.start
 			until
 				clusters.after
 			loop
-				cluster := clusters.item
-				old_cursor := clusters.cursor
-				compute_last_class (class_name, cluster)
-				if last_class = Void then
-					!!vd23
-					vd23.set_class_name (class_name)
-					Error_handler.insert_error (vd23)
-				elseif	Result /= Void
-						and then
-						last_class /= Result
-				then
-					!!vd24
-					vd24.set_cluster (cluster)
-					vd24.set_other_cluster (Result.cluster)
-					vd24.set_class_name (class_name)
-					Error_handler.insert_error (vd24)
+				l_cluster := clusters.item
+				from
+					l_classes := l_cluster.classes
+					l_classes.start
+				until
+					l_classes.after
+				loop
+					l_class_name := l_classes.key_for_iteration
+					if a_set.has (l_class_name) then
+						l_processed_set.search (l_class_name)
+						if l_processed_set.found then
+								-- We have a conflict here, let's record it for further analyzis.
+							l_list := l_conflicts_set.item (l_class_name)
+							if l_list = Void then
+									-- Create conflicts list for `l_class_name', we insert
+									-- as first element first element inserted for `l_class_name'
+									-- in `l_processed_set'.
+								create l_list.make (clusters.count)
+								l_conflicts_set.put (l_list, l_class_name)
+								l_list.extend (l_processed_set.found_item)
+							end
+							l_list.extend (l_classes.item_for_iteration)
+						else
+							l_processed_set.put (l_classes.item_for_iteration, l_class_name)
+						end
+					end
+					l_classes.forth
 				end
-				Result := last_class
-				clusters.go_to (old_cursor)
 				clusters.forth
 			end
+			
+			if l_processed_set.count /= a_set.count then
+					-- Some classes were missing, so for each missing class we report a VD23 error.
+				from
+					a_set.start
+				until
+					a_set.after
+				loop
+					if not l_processed_set.has (a_set.key_for_iteration) then
+							-- No class `a_set.key_for_iteration' found.
+						create vd23
+						vd23.set_class_name (a_set.key_for_iteration)
+						Error_handler.insert_error (vd23)
+					end
+					a_set.forth
+				end
+				l_has_error := True
+			end
+			
+			if not l_conflicts_set.is_empty then
+					-- We have found classes with the same name either in different cluster
+					-- (report a VD24 error) or in same cluster (report a VSCN error)
+				from
+					l_conflicts_set.start
+				until
+					l_conflicts_set.after
+				loop
+					l_class_name := l_conflicts_set.key_for_iteration
+					l_list := l_conflicts_set.item_for_iteration
+					check
+							-- We have at least 2 elements per list.
+						list_count_valid: l_list.count > 1
+					end
+					from
+						l_list.start
+						l_first_class := l_list.first
+						l_list.forth
+					until
+						l_list.after
+					loop
+						l_second_class := l_list.item
+						if l_first_class.cluster = l_second_class.cluster then
+								-- Report VSCN error
+							create vscn
+							vscn.set_cluster (l_first_class.cluster)
+							vscn.set_first (l_first_class)
+							vscn.set_second (l_second_class)
+							Error_handler.insert_error (vscn)
+						else
+								-- Report VD24 error
+							create vd24
+							vd24.set_cluster (l_first_class.cluster)
+							vd24.set_other_cluster (l_second_class.cluster)
+							vd24.set_class_name (l_class_name)
+							Error_handler.insert_error (vd24)
+						end
+						l_list.forth
+					end
+					l_conflicts_set.forth
+				end
+				l_has_error := True
+			end
+			
+			if not l_has_error then
+					-- No error occurred, we can safely call the actions associated to
+					-- `a_set'.
+				from
+					a_set.start
+				until
+					a_set.after
+				loop
+					a_set.item_for_iteration.call ([l_processed_set.item (a_set.key_for_iteration)])
+					a_set.forth
+				end
+			end
+
+				-- Restore clusters cursor.
+			clusters.go_to (old_cursor)
 		end
 
 	duplicate: like Current is
@@ -674,21 +694,21 @@ feature {COMPILER_EXPORTER} -- Implementation
 		do
 			old_cursor := clusters.cursor
 
-			!! Result.make
+			create Result.make
 			clusters.start
 			Result.set_clusters (clusters.duplicate (clusters.count))
 
 			clusters.go_to (old_cursor)
 		end
 
-	compute_last_class (class_name: STRING cluster: CLUSTER_I) is
+	compute_last_class (class_name: STRING; a_cluster: CLUSTER_I) is
 			-- Assign to `last_class' the class named `class_name'
-			-- in cluster `cluster'
+			-- in cluster `a_cluster'
 		require
 			good_argument: class_name /= Void
-			good_cluster: cluster /= Void
+			good_cluster: a_cluster /= Void
 		local
-			a_cluster: CLUSTER_I
+			l_cluster: CLUSTER_I
 			real_name: STRING
 			rename_clause: RENAME_I
 			renamings: HASH_TABLE [STRING, STRING]
@@ -703,10 +723,10 @@ feature {COMPILER_EXPORTER} -- Implementation
 			until
 				clusters.after
 			loop
-				a_cluster := clusters.item
-				if not cluster.ignored (a_cluster) then
+				l_cluster := clusters.item
+				if not a_cluster.ignored (l_cluster) then
 					real_name := class_name
-					rename_clause := cluster.rename_clause_for (a_cluster)
+					rename_clause := a_cluster.rename_clause_for (l_cluster)
 					if rename_clause /= Void then
 							-- Evaluation of the real name of the class
 						renamings := rename_clause.renamings
@@ -717,24 +737,24 @@ feature {COMPILER_EXPORTER} -- Implementation
 						end
 					end
 
-					if a_cluster.classes.has (real_name) then
-						new_class := a_cluster.classes.found_item
+					if l_cluster.classes.has (real_name) then
+						new_class := l_cluster.classes.found_item
 						if last_class = Void then
 							last_class := new_class
 						else
-							!! vscn
+							create vscn
 							vscn.set_first (last_class)
 							vscn.set_second (new_class)
-							vscn.set_cluster (a_cluster)
+							vscn.set_cluster (l_cluster)
 							if error_list = Void then
-								!! error_list.make
+								create error_list.make
 							end
 							error_list.extend (vscn)
 						end
-						if a_cluster.is_override_cluster then
+						if l_cluster.is_override_cluster then
 							override_class := new_class
 						end
-						if a_cluster.is_precompiled then
+						if l_cluster.is_precompiled then
 							precompiled_class := new_class
 						end
 					end
@@ -748,8 +768,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 
 			if
 					-- Conflict detected
-				error_list /= Void
-			and then
+				error_list /= Void and then
 					-- No override or conflict override/precompiled class
 				(override_class = Void or else precompiled_class /= Void)
 			then
@@ -859,14 +878,14 @@ feature {COMPILER_EXPORTER} -- Merging
 				if c_of_name /= Void then
 					if c_of_path /= c_of_name then
 							-- Two clusters with the same name.
-						!! vdcn
+						create vdcn
 						vdcn.set_cluster (c)
 						Error_handler.insert_error (vdcn)
 						Error_handler.raise_error
 					end
 				elseif c_of_path /= Void then
 						-- Two clusters with same path.
-					!!vd28
+					create vd28
 					vd28.set_cluster (c_of_path)
 					vd28.set_second_cluster_name (c.cluster_name)
 					Error_handler.insert_error (vd28)

@@ -156,6 +156,7 @@ feature {NONE} -- Implementation
 			outproc_reg_gen: WIZARD_OUTPROC_EIFFEL_REGISTRATION_GENERATOR
 			inproc_reg_gen: WIZARD_INPROC_EIFFEL_REGISTRATION_GENERATOR
 			c_reg_gen: WIZARD_C_REGISTRATION_CODE_GENERATOR
+			an_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR
 		do
 			-- Initialization
 			message_output.add_title (Current, Analysis_title)
@@ -244,13 +245,14 @@ feature {NONE} -- Implementation
 						system_descriptor.interfaces.after
 						or Shared_wizard_environment.abort
 					loop
+						an_interface := system_descriptor.interfaces.item
 						if shared_wizard_environment.client then
-							c_client_visitor.visit (system_descriptor.interfaces.item)
-							eiffel_client_visitor.visit (system_descriptor.interfaces.item)
+							c_client_visitor.visit (an_interface)
+							eiffel_client_visitor.visit (an_interface)
 						end
 						if shared_wizard_environment.server then
-							c_server_visitor.visit (system_descriptor.interfaces.item)
-							eiffel_server_visitor.visit (system_descriptor.interfaces.item)
+							c_server_visitor.visit (an_interface)
+							eiffel_server_visitor.visit (an_interface)
 						end
 
 						system_descriptor.interfaces.forth

@@ -131,8 +131,8 @@ feature -- Basic operations
 				a_type_library_descriptor.set_complete
 				a_type_library_descriptor.finalize_aliases
 				a_type_library_descriptor.finalize_names
-				a_type_library_descriptor.create_implemented_interfaces
 				a_type_library_descriptor.finalize_interface_feature_names
+				a_type_library_descriptor.create_implemented_interfaces
 				forth
 			end
 			from

@@ -63,4 +63,10 @@ make
 index
 set_parent
 set_index
+==========================================================================
+CLASS: 	ev_split_area_imp
+DATE: 	19990908
+WHO:	king
+set_first_area_shrinkable
+set_second_area_shrinkable
 

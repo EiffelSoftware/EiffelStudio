@@ -329,6 +329,49 @@ feature {NONE} -- Implementation
 
 feature {EV_LIST_ITEM_IMP} -- Implementation
 
+	is_item_imp_selected (li_imp: EV_LIST_ITEM_IMP): BOOLEAN is
+			-- Is `li_imp' selected?
+		local
+			child_id: INTEGER
+		do
+			child_id := ev_children.index_of (li_imp, 1) - 1
+			if multiple_selection_enabled then
+				if ms_selected then
+					Result := ms_selected_items.has (child_id)
+				end
+			else
+				if ss_selected then
+					Result := ss_selected_item = child_id
+				end
+			end
+		end
+
+	select_item_imp (li_imp: EV_LIST_ITEM_IMP) is
+			-- Set `li_imp' selected.
+		local
+			child_id: INTEGER
+		do
+			child_id := ev_children.index_of (li_imp, 1) - 1
+			if multiple_selection_enabled then
+				ms_select_item (child_id)
+			else
+				ss_select_item (child_id)
+			end
+		end
+
+	deselect_item_imp (li_imp: EV_LIST_ITEM_IMP) is
+			-- Set `li_imp' deselected.
+		local
+			child_id: INTEGER
+		do
+			child_id := ev_children.index_of (li_imp, 1) - 1
+			if multiple_selection_enabled then
+				ms_unselect_items (child_id, child_id)
+			else
+				ss_unselect
+			end
+		end
+
 --| FIXME Indentation, names, comments, contracts.
 
 		list_is_pnd_source : BOOLEAN
@@ -654,6 +697,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.54  2000/03/29 20:31:03  brendel
+--| Added is_item_imp_selected, select_item_imp and deselect_item_imp.
+--|
 --| Revision 1.53  2000/03/29 02:20:47  brendel
 --| Revised. Cleaned up.
 --| Now inherits from WEL_SINGLE_SELECTION_LIST_BOX and

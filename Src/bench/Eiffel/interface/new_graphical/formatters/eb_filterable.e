@@ -28,13 +28,15 @@ feature -- Filtering Implementation
 --				!! mp.set_watch_cursor
 				new_text := filtered_text (root_stone, filtername)
 				if new_text /= Void then
-					tool.text_window.clear_text
+					tool.text_area.clear_text
 --					tool.set_editable (True)
-					tool.text_window.set_text (new_text)
+					tool.text_area.set_text (new_text)
 					display_filter_header (root_stone, filtername)
-					tool.set_file_name (filtered_file_name 
-							(root_stone, filtername))
-					tool.text_window.set_editable (False)
+--					tool.set_file_name (filtered_file_name 
+--							(root_stone, filtername))
+--|FIXME
+--| Christophe, 18 oct 1999
+					tool.text_area.set_editable (False)
 					filter_name := clone (filtername)
 					filtered := true
 				end
@@ -189,7 +191,7 @@ feature {NONE} -- Implementation
 			-- Display the information about `stone' with the use
 			-- of `create_structured_text'.
 		do
-			tool.text_window.process_text (create_structured_text (stone))
+			tool.text_area.process_text (create_structured_text (stone))
 		end
 
 	display_filter_header (stone: STONE; filtername: STRING) is

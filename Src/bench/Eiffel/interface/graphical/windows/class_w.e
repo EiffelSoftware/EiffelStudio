@@ -350,11 +350,8 @@ feature -- Stone process
 				!! cl_stone.make (s.associated_class);
 				showtext_frmt_holder.execute (cl_stone);
 				text_window.deselect_all;
-				text_window.set_cursor_position
-						(s.start_position);
-				text_window.highlight_selected
-						(s.start_position,
-						s.end_position);
+				text_window.set_cursor_position (s.start_position);
+				text_window.highlight_selected (s.start_position, s.end_position);
 			end
 		end;
  
@@ -696,9 +693,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			next_target_button.add_button_press_action (3, history_list_cmd, next_target_button);
 			previous_target_button.add_button_press_action (3, history_list_cmd, previous_target_button);
 
-			!! new_class_button.make
-					(Project_tool.class_hole_holder.associated_command,
-					edit_bar);
+			!! new_class_button.make (Project_tool.class_hole_holder.associated_command,	edit_bar);
 			edit_bar.attach_left_widget (hole_button, shell_button, 0);
 			edit_bar.attach_left_widget (shell_button, new_class_button, 0);
 			edit_bar.attach_top (shell_button, 0);

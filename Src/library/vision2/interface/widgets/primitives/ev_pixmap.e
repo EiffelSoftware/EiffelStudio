@@ -8,6 +8,12 @@ indexing
 class
 	EV_PIXMAP
 
+inherit
+	EV_DRAWABLE
+		redefine
+			implementation
+		end
+
 creation
 	make,
 	make_from_file

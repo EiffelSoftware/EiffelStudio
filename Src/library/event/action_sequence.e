@@ -47,7 +47,7 @@ inherit
 		end
 
 creation
-	make
+	make,
 	make_with_connecting_agent
 
 feature {NONE} -- Initialization
@@ -86,7 +86,7 @@ feature {NONE} -- Initialization
 			event_data_names_not_void: some_event_data_names /= Void
 			correct_event_data_names_count:
 				 some_event_data_names.count = dummy_event_data.count
-			connecting_agent_not_void: a_connecting_agent_not_void
+			connecting_agent_not_void: a_connecting_agent /= Void
 		do
 			make (a_name, some_event_data_names)
 			source_connection_agent := a_connecting_agent
@@ -399,6 +399,9 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.11  1999/11/29 17:04:08  brendel
+--| Added comma in create-clause and fixed precondition.
+--|
 --| Revision 1.10  1999/11/17 03:34:03  oconnor
 --| added source_connection_agent
 --|

@@ -149,12 +149,6 @@ feature -- Initialization
 			clean_overloaded_names
 			l_feat_tbl.set_overloaded_names (overloaded_names)
 
-				-- Update creators to Void when no creators are available
-				-- on an expanded class.
-			if creators.count = 0 and then is_expanded then
-				creators := Void
-			end
-
 				-- Initialize `types'.
 			init_types
 

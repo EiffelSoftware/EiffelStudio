@@ -188,6 +188,7 @@ feature -- Project retrieval
 
 			if msg /= Void then
 				io.error.putstring (msg)
+				io.error.new_line
 				error_occurred := True
 			end
 		end

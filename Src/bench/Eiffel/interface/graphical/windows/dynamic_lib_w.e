@@ -8,12 +8,13 @@ class DYNAMIC_LIB_W
 inherit
 	BAR_AND_TEXT
 		rename
+			edit_bar as dynamic_lib_toolbar,
 			Dynamic_lib_resources as resources
 		redefine
-			make,
+			make, create_toolbar, build_toolbar_menu, 
 			build_format_bar, hole,
 			tool_name, open_cmd_holder, save_cmd_holder,
-			editable, build_bar, reset, build_widgets,
+			editable, reset, build_widgets,
 			close_windows, resize_action, stone, stone_type,
 			synchronize, process_class_syntax,
 			process_feature, process_class, process_classi,
@@ -412,21 +413,42 @@ feature -- Graphical Interface
 
 			build_text_windows (global_form)
 			build_menus
-			build_bar
 			build_format_bar
-			build_command_bar
 			fill_menus
 			build_toolbar_menu
 			set_last_format (default_format)
 
 			if resources.command_bar.actual_value = False then
-				edit_bar.remove
-			end
-			if resources.format_bar.actual_value = False then
-				format_bar.remove
+				dynamic_lib_toolbar.remove
 			end
 
 			attach_all
+		end
+
+	build_toolbar_menu is
+			-- Build the toolbar menu under the special sub menu.
+		local
+			sep: SEPARATOR
+			toolbar_t: TOGGLE_B
+		do
+			!! sep.make (Interface_names.t_Empty, special_menu)
+			!! toolbar_t.make (dynamic_lib_toolbar.identifier, special_menu)
+			dynamic_lib_toolbar.init_toggle (toolbar_t)
+		end
+
+	create_toolbar (a_parent: COMPOSITE) is
+			-- Create a toolbar_parent with parent `a_parent'.
+		local
+			sep: THREE_D_SEPARATOR
+		do
+			!! toolbar_parent.make (new_name, a_parent)
+			!! sep.make (Interface_names.t_Empty, toolbar_parent)
+			toolbar_parent.set_column_layout
+			toolbar_parent.set_free_size	
+			toolbar_parent.set_margin_height (0)
+			toolbar_parent.set_spacing (1)
+			!! dynamic_lib_toolbar.make (Interface_names.n_Command_bar_name, toolbar_parent)
+			dynamic_lib_toolbar.set_height (22)
 		end
 
 	raise_shell_popup is
@@ -490,7 +512,6 @@ feature {NONE} -- Implementation Graphical Interface
 	create_edit_buttons is
 		local
 			quit_cmd: QUIT_DYNAMIC_LIB
-			quit_button: EB_BUTTON
 			quit_menu_entry: EB_MENU_ENTRY
 			exit_menu_entry: EB_MENU_ENTRY
 			open_cmd: OPEN_DYNAMIC_LIB
@@ -499,39 +520,45 @@ feature {NONE} -- Implementation Graphical Interface
 			save_cmd: SAVE_FILE
 			save_button: EB_BUTTON
 			save_menu_entry: EB_MENU_ENTRY
-			sep: SEPARATOR
 			history_list_cmd: LIST_HISTORY
 		do
 			!! open_cmd.make (Current)
-			!! open_button.make (open_cmd, edit_bar)
+			!! open_button.make (open_cmd, dynamic_lib_toolbar)
 			!! open_menu_entry.make (open_cmd, file_menu)
 			!! open_cmd_holder.make (open_cmd, open_button, open_menu_entry)
 			!! save_cmd.make (Current)
-			!! save_button.make (save_cmd, edit_bar)
+			!! save_button.make (save_cmd, dynamic_lib_toolbar)
 			!! save_menu_entry.make (save_cmd, file_menu)
 			!! save_cmd_holder.make (save_cmd, save_button, save_menu_entry)
 			build_save_as_menu_entry
 			build_print_menu_entry
 			!! quit_cmd.make (Current)
-			!! quit_button.make (quit_cmd, edit_bar)
 			!! quit_menu_entry.make (quit_cmd, file_menu)
-			!! quit_cmd_holder.make (quit_cmd, quit_button, quit_menu_entry)
+			!! quit_cmd_holder.make (quit_cmd, Void, quit_menu_entry)
 			!! exit_menu_entry.make (Project_tool.quit_cmd_holder.associated_command, file_menu)
 			!! exit_cmd_holder.make_plain (Project_tool.quit_cmd_holder.associated_command)
 			exit_cmd_holder.set_menu_entry (exit_menu_entry)
-			build_edit_menu (edit_bar)
+			build_edit_menu (dynamic_lib_toolbar)
 		end
 
-	build_command_bar is
+	build_format_bar is
+			-- Build formatting buttons in `dynamic_lib_toolbar'.
 		local
 			version_menu_entry: EB_MENU_ENTRY
 			shell_cmd: SHELL_COMMAND
 			shell_button: EB_BUTTON_HOLE
 			shell_menu_entry: EB_MENU_ENTRY
+			tex_cmd: SHOW_TEXT_DYNAMIC_LIB
+			tex_button: FORMAT_BUTTON
+			tex_menu_entry: EB_TICKABLE_MENU_ENTRY
+			click_cmd: SHOW_CLICK_DYNAMIC_LIB
+			click_button: FORMAT_BUTTON
+			click_menu_entry: EB_TICKABLE_MENU_ENTRY
 			sep: SEPARATOR
+			sep1, sep2, sep3: THREE_D_SEPARATOR
 		do
 			!! shell_cmd.make (Current)
-			!! shell_button.make (shell_cmd, edit_bar)
+			!! shell_button.make (shell_cmd, dynamic_lib_toolbar)
 			shell_button.add_third_button_action
 			!! shell_menu_entry.make (shell_cmd, special_menu)
 			!! shell.make (shell_cmd, shell_button, shell_menu_entry)
@@ -540,60 +567,64 @@ feature {NONE} -- Implementation Graphical Interface
 
 			!! sep.make (new_name, special_menu)
 
-			edit_bar.attach_left_widget (hole_button, shell_button, 0)
-			edit_bar.attach_top (shell_button, 0)
-
-		end
-
-	build_format_bar is
-			-- Build formatting buttons in `format_bar'.
-		local
-			tex_cmd: SHOW_TEXT_DYNAMIC_LIB
-			tex_button: FORMAT_BUTTON
-			tex_menu_entry: EB_TICKABLE_MENU_ENTRY
-			click_cmd: SHOW_CLICK_DYNAMIC_LIB
-			click_button: FORMAT_BUTTON
-			click_menu_entry: EB_TICKABLE_MENU_ENTRY
-			sep: SEPARATOR
-		do
 				-- First we create all objects.
 			!! tex_cmd.make (Current)
-			!! tex_button.make (tex_cmd, format_bar)
+			!! tex_button.make (tex_cmd, dynamic_lib_toolbar)
 			!! tex_menu_entry.make (tex_cmd, format_menu)
 			!! showtext_frmt_holder.make (tex_cmd, tex_button, tex_menu_entry)
 
 			!! click_cmd.make (Current)
-			!! click_button.make (click_cmd, format_bar)
+			!! click_button.make (click_cmd, dynamic_lib_toolbar)
 			!! click_menu_entry.make (click_cmd, format_menu)
 			!! showclick_frmt_holder.make (click_cmd, click_button, click_menu_entry)
-			format_bar.attach_left(tex_button,0)
-			format_bar.attach_left_widget(tex_button,click_button,0)
 
-
-
-		end
-
-	build_bar is
-			-- Build top bar: editing commands
-		do
-			edit_bar.set_fraction_base (21)
 			!! hole.make (Current)
-			!! hole_button.make (hole, edit_bar)
+			!! hole_button.make (hole, dynamic_lib_toolbar)
 			!! hole_holder.make_plain (hole)
 			hole_holder.set_button (hole_button)
+
 			create_edit_buttons
 
-			edit_bar.attach_left (hole_button, 0)
-			edit_bar.attach_top (hole_button, 0)
+			!! sep1.make (interface_names.t_empty, dynamic_lib_toolbar)
+			sep1.set_height (20)
+			sep1.set_horizontal (False)
 
-			edit_bar.attach_right (quit_cmd_holder.associated_button, 0)
-			edit_bar.attach_top (quit_cmd_holder.associated_button, 0)
-			edit_bar.attach_top (search_cmd_holder.associated_button, 0)
-			edit_bar.attach_right_widget (quit_cmd_holder.associated_button, search_cmd_holder.associated_button, 5)
-			edit_bar.attach_top (save_cmd_holder.associated_button, 0)
-			edit_bar.attach_right_widget (search_cmd_holder.associated_button, save_cmd_holder.associated_button, 0)
-			edit_bar.attach_top (open_cmd_holder.associated_button, 0)
-			edit_bar.attach_right_widget (save_cmd_holder.associated_button, open_cmd_holder.associated_button, 0)
+			!! sep2.make (interface_names.t_empty, dynamic_lib_toolbar)
+			sep2.set_height (20)
+			sep2.set_horizontal (False)
+
+			!! sep3.make (interface_names.t_empty, dynamic_lib_toolbar)
+			sep3.set_height (20)
+			sep3.set_horizontal (False)
+
+			dynamic_lib_toolbar.attach_top (open_cmd_holder.associated_button, 0)
+			dynamic_lib_toolbar.attach_left (open_cmd_holder.associated_button, 5)
+			dynamic_lib_toolbar.attach_top (save_cmd_holder.associated_button, 0)
+			dynamic_lib_toolbar.attach_left_widget (open_cmd_holder.associated_button, save_cmd_holder.associated_button, 0)
+
+			dynamic_lib_toolbar.attach_top (sep1, 0)
+			dynamic_lib_toolbar.attach_left_widget (save_cmd_holder.associated_button, sep1, 5)
+
+			dynamic_lib_toolbar.attach_top (search_cmd_holder.associated_button, 0)
+			dynamic_lib_toolbar.attach_left_widget (sep1, search_cmd_holder.associated_button, 0)
+			
+			dynamic_lib_toolbar.attach_top (sep2, 0)
+			dynamic_lib_toolbar.attach_left_widget (search_cmd_holder.associated_button, sep2, 5)
+
+			dynamic_lib_toolbar.attach_top (shell_button, 0)
+			dynamic_lib_toolbar.attach_left_widget (sep2, shell_button, 0)
+
+			dynamic_lib_toolbar.attach_top (hole_button, 0)
+			dynamic_lib_toolbar.attach_left_widget (shell_button, hole_button, 5)
+
+			dynamic_lib_toolbar.attach_top (sep3, 0)
+			dynamic_lib_toolbar.attach_left_widget (hole_button, sep3, 5)
+			
+			dynamic_lib_toolbar.attach_top (tex_button,0)
+			dynamic_lib_toolbar.attach_left_widget (sep3, tex_button, 5)
+
+			dynamic_lib_toolbar.attach_top (click_button,0)
+			dynamic_lib_toolbar.attach_left_widget (tex_button,click_button,0)
 		end
 
 end -- class DYNAMIC_LIB_W

@@ -18,7 +18,7 @@
 
 extern char *c_generator();		/* Eiffel feature `generator' (GENERAL) */
 extern char *c_tagged_out();	/* Eiffel feature `tagged_out' (GENERAL) */
-shared char *build_out();		/* Build tagged out in C buffer */
+extern char *build_out();		/* Build tagged out in C buffer */
 
 /*
  * Building `out' string for simple types.

@@ -1,67 +1,72 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
   <Module Id="vision2_tour" Guid="85FA3E69-7DD6-4B30-9EBD-994B605EC147" Language="0" Version="5.6">
-	<Package Id="85FA3E69-7DD6-4B30-9EBD-994B605EC147" Keywords="MergeModule, MSI, Database" Description="Vision2Tour" Manufacturer="ISE Inc." InstallerVersion="200" Languages="1033" Compressed="yes" />
+    <Package Id="85FA3E69-7DD6-4B30-9EBD-994B605EC147" Keywords="MergeModule, MSI, Database" Description="Vision2Tour" Manufacturer="ISE Inc." InstallerVersion="200" Languages="1033" Compressed="yes" />
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Component Id="Registry" Guid="232839E5-2B6C-4AAA-866A-899685E51D46">
         <Registry Root="HKLM" Key="Software\ISE\Eiffel56\vision2_tour" Name="ISE_PLATFORM" Value="$(env.ISE_PLATFORM)" Id="registry1" Type="string" />
         <Registry Root="HKLM" Key="Software\ISE\Eiffel56\vision2_tour" Name="ISE_EIFFEL" Value="[Application]" KeyPath="yes" Id="registry" Type="string" />
       </Component>
-      <Directory Id="ProgramMenuFolder" Name="Redist">
+      <Directory Id="ProgramMenuFolder" Name=".">
         <Directory Id="EiffelStudio" Name="EIFFEL~2" LongName="EiffelStudio 5.6">
-          <Directory Id="Documentation1" Name="DOCUME~2" LongName="Documentation">
-            <Component Id="Documentation1" Guid="81D37F1B-9598-4251-8DDA-FD90F76FF79A" KeyPath="yes">
-              <Shortcut Id="VISION1.EXEvision2_tour.exe" Directory="Documentation1" Name="EIFFEL~1" LongName="EiffelVision2 Tour" Target="[#vision2_tour.exe]" Description="EiffelVision2 overview presentation" Hotkey="0" Show="normal" />
+          <Component Id="EiffelStudio" Guid="E28A2EAF-EDD5-4905-BF1E-E54D5C148035">
+            <CreateFolder />
+            <RemoveFolder Id="EiffelStudio" On="uninstall"/>
+          </Component>
+          <Directory Id="Documentation" Name="DOCUME~2" LongName="Documentation">
+            <Component Id="Documentation" Guid="81D37F1B-9598-4251-8DDA-FD90F76FF79A" KeyPath="yes">
+              <CreateFolder />
+              <RemoveFolder Id="Documentation" On="uninstall"/>
             </Component>
           </Directory>
         </Directory>
       </Directory>
-	  <Directory Id="Application" Name=".">
+      <Directory Id="Application" Name=".">
         <Directory Id="vision2_tour" Name="VISION~1" LongName="vision2_tour">
           <Component Id="vision2_tour" Guid="0E8DAE43-1031-414A-A9CE-7EC5C95BFDE4">
             <File Id="readme.html" Name="README~1.HTM" LongName="readme.html" KeyPath="yes" />
-		</Component>
+          </Component>
           <Directory Id="flatshort" Name="FLATSH~1" LongName="flatshort">
             <Component Id="flatshort" Guid="5754CA71-FC52-4FDB-8E3B-779BBC6B2E60">
-				<File Id="ev_horizontal_box_flatshort.rtf" Name="EV_HOR~1.RTF" LongName="ev_horizontal_box_flatshort.rtf" KeyPath="yes" />
-				<File Id="ev_notebook_flatshort.rtf" Name="EV_NOT~1.RTF" LongName="ev_notebook_flatshort.rtf" />
-				<File Id="ev_button_flatshort.rtf" Name="EV_BUT~1.RTF" LongName="ev_button_flatshort.rtf" />
-				<File Id="V5" Name="EV_VER~4.RTF" LongName="ev_vertical_scroll_bar_flatshort.rtf" />
-				<File Id="ev_tool_bar_flatshort.rtf" Name="EV_TOO~1.RTF" LongName="ev_tool_bar_flatshort.rtf" />
-				<File Id="ev_checkable_list_flatshort.rtf" Name="EV_CHE~1.RTF" LongName="ev_checkable_list_flatshort.rtf" />
-				<File Id="ev_scrollable_area_flatshort.rtf" Name="EV_SCR~1.RTF" LongName="ev_scrollable_area_flatshort.rtf" />
-				<File Id="V7" Name="EV8524~1.RTF" LongName="ev_horizontal_separator_flatshort.rtf" />
-				<File Id="ev_text_field_flatshort.rtf" Name="EV_TEX~1.RTF" LongName="ev_text_field_flatshort.rtf" />
-				<File Id="ev_password_field_flatshort.rtf" Name="EV_PAS~1.RTF" LongName="ev_password_field_flatshort.rtf" />
-				<File Id="ev_table_flatshort.rtf" Name="EV_TAB~1.RTF" LongName="ev_table_flatshort.rtf" />
-				<File Id="ev_spin_button_flatshort.rtf" Name="EV_SPI~1.RTF" LongName="ev_spin_button_flatshort.rtf" />
-				<File Id="V9" Name="EVA3AF~1.RTF" LongName="ev_horizontal_split_area_flatshort.rtf" />
-				<File Id="ev_vertical_separator_flatshort.rtf" Name="EVAC46~1.RTF" LongName="ev_vertical_separator_flatshort.rtf" />
-				<File Id="ev_label_flatshort.rtf" Name="EV_LAB~1.RTF" LongName="ev_label_flatshort.rtf" />
-				<File Id="ev_vertical_range_flatshort.rtf" Name="EV_VER~3.RTF" LongName="ev_vertical_range_flatshort.rtf" />
-				<File Id="ev_frame_flatshort.rtf" Name="EV_FRA~1.RTF" LongName="ev_frame_flatshort.rtf" />
-				<File Id="ev_tree_flatshort.rtf" Name="EV_TRE~1.RTF" LongName="ev_tree_flatshort.rtf" />
-				<File Id="ev_toggle_button_flatshort.rtf" Name="EV_TOG~1.RTF" LongName="ev_toggle_button_flatshort.rtf" />
-				<File Id="ev_pixmap_flatshort.rtf" Name="EV_PIX~1.RTF" LongName="ev_pixmap_flatshort.rtf" />
-				<File Id="V13" Name="EV_HOR~2.RTF" LongName="ev_horizontal_progress_bar_flatshort.rtf" />
-				<File Id="ev_viewport_flatshort.rtf" Name="EV_VIE~1.RTF" LongName="ev_viewport_flatshort.rtf" />
-				<File Id="ev_text_flatshort.rtf" Name="EV_TEX~2.RTF" LongName="ev_text_flatshort.rtf" />
-			  <File Id="ev_radio_button_flatshort.rtf" Name="EV_RAD~1.RTF" LongName="ev_radio_button_flatshort.rtf" />
-			  <File Id="ev_combo_box_flatshort.rtf" Name="EV_COM~1.RTF" LongName="ev_combo_box_flatshort.rtf" />
-			  <File Id="ev_list_flatshort.rtf" Name="EV_LIS~1.RTF" LongName="ev_list_flatshort.rtf" />
-			  <File Id="V17" Name="EVC2C1~1.RTF" LongName="ev_vertical_split_area_flatshort.rtf" />
-			  <File Id="V18" Name="EV_HOR~4.RTF" LongName="ev_horizontal_scroll_bar_flatshort.rtf" />
-			  <File Id="ev_horizontal_range_flatshort.rtf" Name="EV_HOR~3.RTF" LongName="ev_horizontal_range_flatshort.rtf" />
-			  <File Id="V23" Name="EV_VER~2.RTF" LongName="ev_vertical_progress_bar_flatshort.rtf" />
-			  <File Id="ev_drawing_area_flatshort.rtf" Name="EV_DRA~1.RTF" LongName="ev_drawing_area_flatshort.rtf" />
-			  <File Id="ev_check_button_flatshort.rtf" Name="EV_CHE~2.RTF" LongName="ev_check_button_flatshort.rtf" />
-			  <File Id="ev_cell_flatshort.rtf" Name="EV_CEL~1.RTF" LongName="ev_cell_flatshort.rtf" />
-			  <File Id="ev_vertical_box_flatshort.rtf" Name="EV_VER~1.RTF" LongName="ev_vertical_box_flatshort.rtf" />
-			  <File Id="ev_multi_column_list_flatshort.rtf" Name="EV_MUL~1.RTF" LongName="ev_multi_column_list_flatshort.rtf" />
-			  <File Id="ev_fixed_flatshort.rtf" Name="EV_FIX~1.RTF" LongName="ev_fixed_flatshort.rtf" />
-			  <File Id="ev_rich_text_flatshort.rtf" Name="EV_RIC~1.RTF" LongName="ev_rich_text_flatshort.rtf" />
+              <File Id="ev_horizontal_box_flatshort.rtf" Name="EV_HOR~1.RTF" LongName="ev_horizontal_box_flatshort.rtf" KeyPath="yes" />
+              <File Id="ev_notebook_flatshort.rtf" Name="EV_NOT~1.RTF" LongName="ev_notebook_flatshort.rtf" />
+              <File Id="ev_button_flatshort.rtf" Name="EV_BUT~1.RTF" LongName="ev_button_flatshort.rtf" />
+              <File Id="V5" Name="EV_VER~4.RTF" LongName="ev_vertical_scroll_bar_flatshort.rtf" />
+              <File Id="ev_tool_bar_flatshort.rtf" Name="EV_TOO~1.RTF" LongName="ev_tool_bar_flatshort.rtf" />
+              <File Id="ev_checkable_list_flatshort.rtf" Name="EV_CHE~1.RTF" LongName="ev_checkable_list_flatshort.rtf" />
+              <File Id="ev_scrollable_area_flatshort.rtf" Name="EV_SCR~1.RTF" LongName="ev_scrollable_area_flatshort.rtf" />
+              <File Id="V7" Name="EV8524~1.RTF" LongName="ev_horizontal_separator_flatshort.rtf" />
+              <File Id="ev_text_field_flatshort.rtf" Name="EV_TEX~1.RTF" LongName="ev_text_field_flatshort.rtf" />
+              <File Id="ev_password_field_flatshort.rtf" Name="EV_PAS~1.RTF" LongName="ev_password_field_flatshort.rtf" />
+              <File Id="ev_table_flatshort.rtf" Name="EV_TAB~1.RTF" LongName="ev_table_flatshort.rtf" />
+              <File Id="ev_spin_button_flatshort.rtf" Name="EV_SPI~1.RTF" LongName="ev_spin_button_flatshort.rtf" />
+              <File Id="V9" Name="EVA3AF~1.RTF" LongName="ev_horizontal_split_area_flatshort.rtf" />
+              <File Id="ev_vertical_separator_flatshort.rtf" Name="EVAC46~1.RTF" LongName="ev_vertical_separator_flatshort.rtf" />
+              <File Id="ev_label_flatshort.rtf" Name="EV_LAB~1.RTF" LongName="ev_label_flatshort.rtf" />
+              <File Id="ev_vertical_range_flatshort.rtf" Name="EV_VER~3.RTF" LongName="ev_vertical_range_flatshort.rtf" />
+              <File Id="ev_frame_flatshort.rtf" Name="EV_FRA~1.RTF" LongName="ev_frame_flatshort.rtf" />
+              <File Id="ev_tree_flatshort.rtf" Name="EV_TRE~1.RTF" LongName="ev_tree_flatshort.rtf" />
+              <File Id="ev_toggle_button_flatshort.rtf" Name="EV_TOG~1.RTF" LongName="ev_toggle_button_flatshort.rtf" />
+              <File Id="ev_pixmap_flatshort.rtf" Name="EV_PIX~1.RTF" LongName="ev_pixmap_flatshort.rtf" />
+              <File Id="V13" Name="EV_HOR~2.RTF" LongName="ev_horizontal_progress_bar_flatshort.rtf" />
+              <File Id="ev_viewport_flatshort.rtf" Name="EV_VIE~1.RTF" LongName="ev_viewport_flatshort.rtf" />
+              <File Id="ev_text_flatshort.rtf" Name="EV_TEX~2.RTF" LongName="ev_text_flatshort.rtf" />
+              <File Id="ev_radio_button_flatshort.rtf" Name="EV_RAD~1.RTF" LongName="ev_radio_button_flatshort.rtf" />
+              <File Id="ev_combo_box_flatshort.rtf" Name="EV_COM~1.RTF" LongName="ev_combo_box_flatshort.rtf" />
+              <File Id="ev_list_flatshort.rtf" Name="EV_LIS~1.RTF" LongName="ev_list_flatshort.rtf" />
+              <File Id="V17" Name="EVC2C1~1.RTF" LongName="ev_vertical_split_area_flatshort.rtf" />
+              <File Id="V18" Name="EV_HOR~4.RTF" LongName="ev_horizontal_scroll_bar_flatshort.rtf" />
+              <File Id="ev_horizontal_range_flatshort.rtf" Name="EV_HOR~3.RTF" LongName="ev_horizontal_range_flatshort.rtf" />
+              <File Id="V23" Name="EV_VER~2.RTF" LongName="ev_vertical_progress_bar_flatshort.rtf" />
+              <File Id="ev_drawing_area_flatshort.rtf" Name="EV_DRA~1.RTF" LongName="ev_drawing_area_flatshort.rtf" />
+              <File Id="ev_check_button_flatshort.rtf" Name="EV_CHE~2.RTF" LongName="ev_check_button_flatshort.rtf" />
+              <File Id="ev_cell_flatshort.rtf" Name="EV_CEL~1.RTF" LongName="ev_cell_flatshort.rtf" />
+              <File Id="ev_vertical_box_flatshort.rtf" Name="EV_VER~1.RTF" LongName="ev_vertical_box_flatshort.rtf" />
+              <File Id="ev_multi_column_list_flatshort.rtf" Name="EV_MUL~1.RTF" LongName="ev_multi_column_list_flatshort.rtf" />
+              <File Id="ev_fixed_flatshort.rtf" Name="EV_FIX~1.RTF" LongName="ev_fixed_flatshort.rtf" />
+              <File Id="ev_rich_text_flatshort.rtf" Name="EV_RIC~1.RTF" LongName="ev_rich_text_flatshort.rtf" />
             </Component>
-		</Directory>
+          </Directory>
           <Directory Id="templates" Name="TEMPLA~1" LongName="templates">
             <Component Id="templates" Guid="72593478-561B-45E6-A483-7CCD2D161E36">
               <File Id="application_template.e" Name="APPLIC~1.E" LongName="application_template.e" KeyPath="yes" />
@@ -455,7 +460,9 @@
                   <File Id="wel_hook.dll" Name="wel_hook.dll" KeyPath="yes" />
                 </Component>
                 <Component Id="VISION1.EXE" Guid="ED8D2B15-007F-4611-9E13-4C5201289287">
-                  <File Id="vision2_tour.exe" Name="VISION~1.EXE" LongName="vision2_tour.exe" KeyPath="yes" />
+                  <File Id="vision2_tour.exe" Name="VISION~1.EXE" LongName="vision2_tour.exe" KeyPath="yes">
+                    <Shortcut Id="vision2_tour.exe" Directory="Documentation" Name="EIFFEL~1" LongName="EiffelVision2 Tour" Description="EiffelVision2 overview presentation" Hotkey="0" Show="normal" />
+                  </File>
                 </Component>
               </Directory>
             </Directory>

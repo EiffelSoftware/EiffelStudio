@@ -17,7 +17,7 @@ inherit
 		end;
 	WARNER_CALLBACKS
 		rename
-			execute_warner_ok as loose_changes
+			execute_warner_ok as save_changes
 		end
 
 creation
@@ -32,10 +32,16 @@ feature -- Callbacks
 			-- Do Nothing
 		end;
 
-	loose_changes (argument: ANY) is
+	save_changes (argument: ANY) is
 			-- The changes will be lost.
+		local
+			class_w: CLASS_W
 		do
+			class_w ?= tool
 			text_window.disable_clicking;
+			if class_w /= Void then
+				class_w.save_cmd_holder.associated_command.execute (Void)
+			end
 			execute_licensed (Void)
 		end;
 

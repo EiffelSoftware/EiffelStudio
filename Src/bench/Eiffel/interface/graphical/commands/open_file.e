@@ -17,7 +17,7 @@ inherit
 		end;
 	WARNER_CALLBACKS
 		rename
-			execute_warner_ok as loose_changes
+			execute_warner_ok as save_changes
 		end
 
 creation
@@ -32,11 +32,15 @@ feature -- Callbacks
 			-- Do Nothing
 		end;
 
-	loose_changes (argument: ANY) is
+	save_changes (argument: ANY) is
 			-- The user has eventually been warned that he will lose his stuff
 		local
 			chooser: NAME_CHOOSER_W
 		do
+			if tool.save_cmd_holder /= Void then
+				tool.save_cmd_holder.associated_command.execute (Void)
+			end
+
 			chooser := name_chooser (popup_parent);
 			chooser.set_open_file;
 			chooser.call (Current) 

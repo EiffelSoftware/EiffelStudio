@@ -36,7 +36,7 @@ feature {NONE} -- Implementation
 			if tool.file_name /= Void then
 				file_name := tool.file_name;
 			else
-				!! default_name.make_from_string (Project_directory);
+				!! default_name.make_from_string (Project_directory_name);
 				default_name.set_file_name ("Ace");
 				default_name.add_extension ("ace");
 				file_name := default_name

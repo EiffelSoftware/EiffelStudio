@@ -87,48 +87,51 @@ if not initialized.item then
 				fn.set_file_name (Dot_workbench);
 				!!workbench_file.make (fn);
 
-					-- Is the project new?
-				project_is_new := project_dir.is_new or else
+				if not project_dir.exists then
+					!! temp.make (0);
+					temp.append ("Directory: ");
+					temp.append (project_dir.name);
+					temp.append (" does not exist");
+					error_occurred := True;
+				else
+
+						-- Is the project new?
+					project_is_new := project_dir.is_new or else
 								(not workbench_file.exists)
 
-				if project_is_new then
-					if not project_dir.exists then
-						!! temp.make (0);
-						temp.append ("Directory: ");
-						temp.append (project_dir.name);
-						temp.append (" does not exist");
-						error_occurred := True;
-					elseif
-						not (project_dir.is_readable and then
-							project_dir.is_writable and then
-							project_dir.is_executable)
-					then
-						!! temp.make (0);
-						temp.append ("Directory: ");
-						temp.append (project_dir.name);
-						temp.append (" does not have appropriate permissions.")
+					if project_is_new then
+						if
+							not project_dir.is_readable or else
+							not project_dir.is_writable or else
+							not project_dir.is_executable
+						then
+							!! temp.make (0);
+							temp.append ("Directory: ");
+							temp.append (project_dir.name);
+							temp.append (" does not have appropriate permissions.")
 	
-						error_occurred := True;
+							error_occurred := True;
+							else
+							init_project_directory := project_dir;
+							if project_dir /= Project_directory then end;
+							Create_compilation_directory;
+							Create_generation_directory;
+						end
 					else
-						init_project_directory := project_dir;
-						if project_dir /= Project_directory then end;
-						Create_compilation_directory;
-						Create_generation_directory;
-					end
-				else
-					if not workbench_file.is_readable then
-						!! temp.make (0);
-						temp.append (workbench_file.name);
-						temp.append (" is not readable");
-						error_occurred := True
-					elseif not workbench_file.is_plain then
-						!! temp.make (0);
-						temp.append (workbench_file.name);
-						temp.append (" is not a file");
-						error_occurred := True
-					else
-						init_project_directory := project_dir;
-						if project_dir /= Project_directory then end
+						if not workbench_file.is_readable then
+							!! temp.make (0);
+							temp.append (workbench_file.name);
+							temp.append (" is not readable");
+							error_occurred := True
+						elseif not workbench_file.is_plain then
+							!! temp.make (0);
+							temp.append (workbench_file.name);
+							temp.append (" is not a file");
+							error_occurred := True
+						else
+							init_project_directory := project_dir;
+							if project_dir /= Project_directory then end
+						end;
 					end;
 				end;
 				if error_occurred then

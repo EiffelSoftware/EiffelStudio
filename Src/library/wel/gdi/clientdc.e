@@ -31,6 +31,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	window: WEL_WINDOW
+			-- Window associated with the device context
 
 feature -- Basic operations
 

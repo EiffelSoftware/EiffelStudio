@@ -114,12 +114,12 @@ feature {EV_PND_TRANSPORTER_IMP} -- Access
 	get_pnd_data (data_type: EV_PND_TYPE; data: EV_PND_DATA; button_data: EV_BUTTON_EVENT_DATA): EV_PND_EVENT_DATA is
 		do
 			!! Result.make
-			Result.set_data_type (data_type)
-			Result.set_data (data)
-			Result.set_x (button_data.x)
-			Result.set_y (button_data.y)
-			Result.set_state (button_data.state)
-			Result.set_button (button_data.button)
+			Result.implementation.set_data_type (data_type)
+			Result.implementation.set_data (data)
+			Result.implementation.set_x (button_data.x)
+			Result.implementation.set_y (button_data.y)
+			Result.implementation.set_state (button_data.state)
+			Result.implementation.set_button (button_data.button)
 		end
 
 end -- class EV_PND_TARGET_IMP

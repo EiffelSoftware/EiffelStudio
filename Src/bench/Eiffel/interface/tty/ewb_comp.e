@@ -12,11 +12,6 @@ inherit
 
 feature
 
-	loop_execute is
-		do
-			execute
-		end;
-
 	execute is
 		do
 			init_project;

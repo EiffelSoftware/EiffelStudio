@@ -8,6 +8,8 @@ inherit
 			name as run_cmd_name,
 			help_message as run_help,
 			abbreviation as run_abb
+		redefine
+			loop_execute
 		end;
 	EXECUTION_ENVIRONMENT
 		rename

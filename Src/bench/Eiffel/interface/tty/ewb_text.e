@@ -8,6 +8,8 @@ inherit
 			name as text_cmd_name,
 			help_message as text_help,
 			abbreviation as text_abb
+		redefine
+			loop_execute
 		end
 
 creation
@@ -30,8 +32,7 @@ feature
 		do
 			get_class_name;
 			class_name := last_input;
-			class_name.to_lower;
-			execute;
+			check_arguments_and_execute;
 		end;
 
 	execute is
@@ -44,14 +45,19 @@ feature
 				retrieve_project;
 				if not error_occurred then
 					class_i := Universe.unique_class (class_name);
-					text := class_i.stone.origin_text
-					if text /= Void then
-						output_window.put_string (text);
-						output_window.new_line;
+					if class_i /= Void then
+						text := class_i.stone.origin_text
+						if text /= Void then
+							output_window.put_string (text);
+							output_window.new_line;
+						else
+							output_window.put_string ("Cannot open ");
+							output_window.put_string (class_i.file_name);
+							output_window.new_line;
+						end;
 					else
-						output_window.put_string ("Cannot open ");
-						output_window.put_string (class_i.file_name);
-						output_window.new_line;
+						output_window.put_string (class_name);
+						output_window.put_string (" is not in the universe%N");
 					end;
 				end;
 			end;

@@ -8,7 +8,7 @@ inherit
 
 creation
 
-	make, do_nothing
+	make, non_gui_make
 
 feature 
 
@@ -18,9 +18,13 @@ feature
 			!!request.make (Rqst_quit)
 		end;
 
-	exit_now is
+	non_gui_make is
 		do
 			!!request.make (Rqst_quit)
+		end;
+
+	exit_now is
+		do
 			work (void);
 		end;
 	

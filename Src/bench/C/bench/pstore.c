@@ -32,7 +32,7 @@ FILE *f;
 {
 	/* Position file `f' at the end. */
 
-    fseek(f,0,2);
+    lseek(fileno(f),0,SEEK_END);
 }
 
 long nb_object(obj)
@@ -61,12 +61,16 @@ char *s;
 #ifdef DEBUG
     extern long nomark();
 #endif
-	int32 result = ftell(f);	/* Position in the file */
+	long result;	/* Position in the file */
+	char gc_stopped;
 
 	/* Initialization */
-	st_file = f;				/* For use of `st_write' */
+	fides = fileno (f);				/* For use of `st_write' */
+	result = lseek (fides, 0, SEEK_CUR);
+
 	make_index = mid;
 	server = s;
+	gc_stopped = !gc_ison();
 	gc_stop();					/* Procedure `make_index' may call the GC
 								 * while creating objects. */
 
@@ -77,15 +81,16 @@ char *s;
 	obj_nb = 0;
 	traversal(o,0);
 
-	/* Write in file `st_file' the count of stored objects */
-	if (fwrite(&obj_nb, sizeof(long), 1, st_file) != 1)
-		eio();
+	allocate_gen_buffer();
+
+	/* Write in file `fides' the count of stored objects */
+	buffer_write(&obj_nb, sizeof(long));
 
 #ifndef DEBUG
-	(void) pst_store(o,0);		/* Recursive store process */
+	(void) pst_store(o,0L);		/* Recursive store process */
 #else
 	{
-		long nb_stored = pst_store(o,0);
+		long nb_stored = pst_store(o,0L);
 
 		if (obj_nb != nb_stored) {
 			printf("obj_nb = %ld nb_stored = %ld\n", obj_nb, nb_stored);
@@ -96,8 +101,9 @@ char *s;
 		panic("Partial store inconsistency");
 #endif
 
-	gc_run();					/* Restart GC */
-	fflush(f);
+	store_write();				/* Flush the buffer */
+
+	if (!gc_stopped) gc_run();					/* Restart GC */
 	return result;
 }
 
@@ -114,7 +120,7 @@ long object_count;
 	union overhead *zone = HEADER(object);
 	uint32 flags;
 	int is_expanded;
-	long saved_file_pos = ftell(st_file);
+	long saved_file_pos = lseek(fides, 0, SEEK_CUR)+current_position;
 	long saved_object_count = object_count;
 
 	flags = zone->ov_flags;
@@ -181,11 +187,11 @@ zone->ov_flags);
 
 long fpos1()
 {
-	return (long) ftell(st_file);
+	return (long) lseek(fides, 0, SEEK_CUR);
 }
 
 long fpos2(file_ptr)
 FILE *file_ptr;
 {
-	return (long) ftell(file_ptr);
+	return (long) lseek(fileno(file_ptr), 0, SEEK_CUR);
 }

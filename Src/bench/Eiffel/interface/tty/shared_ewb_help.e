@@ -30,6 +30,8 @@ feature {NONE}
 
 	externals_help: STRING is "show the externals features of a class";
 
+	f_compile_help: STRING is "compile C code produced by finalizing";
+
 	file_help: STRING is "save the output to a file";
 
 	finalize_help: STRING is "finalize the system (discard assertions by default)";
@@ -82,5 +84,6 @@ feature {NONE}
 
 	yank_help: STRING is "yank (save) output of last command to a file";
 
+	w_compile_help: STRING is "compile C code produced by freezing";
 
 end

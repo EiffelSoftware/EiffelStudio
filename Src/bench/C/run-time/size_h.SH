@@ -52,7 +52,7 @@ $spitshell >>size.h <<'!NO!SUBS!'
  * store a given amount of bits.
  */
 #define BIT_PACKSIZE    sizeof(uint32)	/* Size of a bit unit in bytes */
-#define BIT_UNIT		32				/* Size of a bit unit in bits */
+#define BIT_UNIT		(sizeof(uint32) * BYTSIZ)		/* Size of a bit unit in bits */
 #define BIT_NBPACK(s)	(((s) / BIT_UNIT) + (((s) % BIT_UNIT) ? 1 : 0))
 #define BITACS(n)		((1 + BIT_NBPACK((n)))*BIT_PACKSIZE)
 

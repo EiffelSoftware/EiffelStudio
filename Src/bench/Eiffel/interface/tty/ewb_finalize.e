@@ -8,6 +8,8 @@ inherit
 			name as finalize_cmd_name,
 			help_message as finalize_help,
 			abbreviation as finalize_abb
+		redefine
+			loop_execute
 		end
 
 creation
@@ -27,21 +29,23 @@ feature
 		local
 			answer: STRING
 		do
-			io.putstring ("--> Keep assertions (y/n): ");
-			wait_for_return;
-			answer := io.laststring;
-			answer.to_lower;
-			if answer.is_equal ("y") or else answer.is_equal ("yes") then
-				keep_assertions := True
-			else
-				keep_assertions := False;
-			end;
-			execute;
+			if confirmed ("Finalizing implies some C compilation%N%
+							%and linking. Do you want to do it now") then
+				io.putstring ("--> Keep assertions (y/n): ");
+				wait_for_return;
+				answer := io.laststring;
+				answer.to_lower;
+				if answer.is_equal ("y") or else answer.is_equal ("yes") then
+					keep_assertions := True
+				else
+					keep_assertions := False;
+				end;
+				execute
+			end
 		end;
 
 	execute is
 		do
-			if confirmed then
 				print_header;
 				init_project;
 				if not error_occurred then
@@ -73,7 +77,6 @@ feature
 						prompt_finish_freezing (True);
 					end;
 				end;
-			end;
 		end;
 
 end

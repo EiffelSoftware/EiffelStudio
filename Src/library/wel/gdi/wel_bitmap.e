@@ -17,7 +17,6 @@ inherit
 			dispose
 		redefine
 			make_by_id,
-			make_by_pointer,
 			make_by_name
 		end
 

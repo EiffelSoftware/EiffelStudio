@@ -319,7 +319,7 @@ feature -- Status setting
 	enable_sensitive is
 			-- Make object sensitive to user input.
 		do
-			Precursor
+			Precursor {EV_PRIMITIVE_IMP}
 			invalidate
 			update
 		end
@@ -327,7 +327,7 @@ feature -- Status setting
 	disable_sensitive is
 			-- Make object desensitive to user input.
 		do
-			Precursor
+			Precursor {EV_PRIMITIVE_IMP}
 			invalidate
 			update
 		end
@@ -513,7 +513,8 @@ feature {NONE} -- Implementation
 		local
 			system_info: WEL_SYSTEM_PARAMETERS_INFO
 		do
-			wel_set_column_width (-1, a_column - 1)
+			wel_set_column_width (lvscw_autosize, a_column - 1)
+			update_column_width (wel_get_column_width (a_column - 1), a_column)
 			create system_info
 				-- Only fire the resized actions when
 				-- `show window contents while dragging' is enabled,
@@ -1061,7 +1062,7 @@ feature {NONE} -- WEL Implementation
 			when Wm_vscroll then
 				on_wm_vscroll
 			else
-				Result := Precursor (hwnd, msg, wparam, lparam)
+				Result := Precursor {WEL_LIST_VIEW} (hwnd, msg, wparam, lparam)
 			end
 		end
 
@@ -1069,7 +1070,7 @@ feature {NONE} -- WEL Implementation
 		local
 			system_info: WEL_SYSTEM_PARAMETERS_INFO
 		do
-			Precursor (a_control_id, info)
+			Precursor {WEL_LIST_VIEW} (a_control_id, info)
 			create system_info
 				-- Because of a difference in behviour when
 				-- `show window contents when dragging' is turned

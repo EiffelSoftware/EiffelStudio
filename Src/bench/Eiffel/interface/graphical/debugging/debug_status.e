@@ -53,7 +53,8 @@ feature {NONE} -- Implementation
 				Debug_window.process_text (st);
 				Debug_window.display
 			else
-				st.add_string ("System not launched%N");
+				st.add_string ("System not launched");
+				st.add_new_line;
 				Debug_window.clear_window;
 				Debug_window.process_text (st);
 				Debug_window.display

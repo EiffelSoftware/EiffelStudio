@@ -8,8 +8,7 @@ inherit
 		redefine
 			register, set_register,
 			analyze, generate, unanalyze,
-			print_register, free_register,
-			initialize
+			print_register, free_register
 		end;
 	
 feature 

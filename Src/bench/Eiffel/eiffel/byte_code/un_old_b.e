@@ -22,15 +22,10 @@ feature
 		end;
 
 	enlarged: UN_OLD_BL is
-		require else
-			valid_old_exprs: Context.byte_code.old_expressions /= Void
-		local
-			old_expr: LINKED_LIST [UN_OLD_B]
 		do
 			!!Result;
 			Result.set_expr (expr.enlarged);
-			old_expr := Context.byte_code.old_expressions;
-			old_expr.add (Result);
+			Context.c_old_expressions.add (Result);	
 		end;
 
 	operator_constant: CHARACTER is
@@ -52,12 +47,6 @@ feature -- Byte code generation
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Do nothing.
 		do
-		end;
-
-	initialize is
-			-- Initialize C code for Current
-		do
-			-- Do nothing
 		end;
 
 end

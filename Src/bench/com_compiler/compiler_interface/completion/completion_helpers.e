@@ -66,13 +66,15 @@ feature -- Basic operations
 				end
 				l_file_name := path_from_assembly (l_external_class.assembly)
 				if (create {RAW_FILE}.make (l_file_name)).exists then
-					l_dictionary := Documentation_manager.dictionary (l_file_name)
-					if l_dictionary.is_initialized then
-						l_dictionary.set_type (l_external_class.external_name)
-						l_docs := l_dictionary.feature_documentation (a_feature_i.external_name, dotnet_arguments (a_feature_i))
-						if l_docs /= Void and then not l_docs.is_empty then
-							l_extracted_description.append_character ('%N')
-							l_extracted_description.append (l_docs)
+					if Documentation_manager /= Void then -- i.e. if Documentation manager is properly registered
+						l_dictionary := Documentation_manager.dictionary (l_file_name)
+						if l_dictionary.is_initialized then
+							l_dictionary.set_type (l_external_class.external_name)
+							l_docs := l_dictionary.feature_documentation (a_feature_i.external_name, dotnet_arguments (a_feature_i))
+							if l_docs /= Void and then not l_docs.is_empty then
+								l_extracted_description.append_character ('%N')
+								l_extracted_description.append (l_docs)
+							end
 						end
 					end
 				end

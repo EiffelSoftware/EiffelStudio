@@ -15,30 +15,13 @@ feature -- Basic Operations
 			-- Initialize from `ass'.
 		require
 			non_void_assembly: ass /= Void
-		local
-			aname: ASSEMBLY_NAME
-			culture: STRING
-			native_culture: SYSTEM_STRING
 		do
-			aname := ass.get_name
-			if aname.get_public_key_token /= Void then
-				Result := consumed_assembly_from_name (aname)
-			else
-				native_culture := aname.get_culture_info.to_string
-				if native_culture.get_length = 0 then
-					culture := "neutral"
-				else
-					create culture.make_from_cil (native_culture)
-				end
-				create Result.make (create {STRING}.make_from_cil (ass.get_name.get_name),
-									create {STRING}.make_from_cil (aname.get_version.to_string),
-									culture,
-									void)
-			end
+			Result := consumed_assembly_from_name (ass.get_name)
 		ensure
+			result_not_void: Result /= Void
 			name_set: Result.name /= Void
-			culture_set: Result.culture /= Void
 			version_set: Result.version /= Void
+			culture_set: Result.culture /= Void
 		end
 
 	consumed_assembly_from_name (aname: ASSEMBLY_NAME): CONSUMED_ASSEMBLY is
@@ -46,26 +29,28 @@ feature -- Basic Operations
 			--| Need to be signed assembly otherwise we can't get the location
 		require
 			non_void_name: aname /= Void
-			signed_assembly: aname.get_public_key_token /= Void
 		local
+			key: STRING
 			culture: STRING
-			native_culture: SYSTEM_STRING
 		do
-			native_culture := aname.get_culture_info.to_string
-			if native_culture.get_length = 0 then
+			if aname.get_public_key_token = Void then
+				key := "null"
+			else
+				key := encoded_key (aname.get_public_key_token)
+			end
+			if aname.get_culture_info.to_string.get_length = 0 then
 				culture := "neutral"
 			else
-				create culture.make_from_cil (native_culture)
+				create culture.make_from_cil (aname.get_culture_info.to_string)
 			end
 			create Result.make (create {STRING}.make_from_cil (aname.get_name),
 								create {STRING}.make_from_cil (aname.get_version.to_string),
-								culture,
-								encoded_key (aname.get_public_key_token))
+								culture, key)
 		ensure
+			result_not_void: Result /= Void
 			name_set: Result.name /= Void
-			culture_set: Result.culture /= Void
 			version_set: Result.version /= Void
-			key_set: Result.key /= Void
+			culture_set: Result.culture /= Void
 		end
 		
 end -- class CONSUMED_ASSEMBLY_FACTORY

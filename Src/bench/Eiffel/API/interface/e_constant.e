@@ -1,9 +1,7 @@
 indexing
-
-	description: 
-		"Representation of an eiffel constant.";
-	date: "$Date$";
-	revision: "$Revision $"
+	description: "Representation of an eiffel constant."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class E_CONSTANT
 
@@ -20,13 +18,13 @@ creation
 
 feature -- Properties
 
-	is_constant: BOOLEAN is True;
+	is_constant: BOOLEAN is True
 			-- Is current a function
 
-	value: STRING;
+	value: STRING
 			-- String representation of the constant
 
-	type: TYPE_A;
+	type: TYPE_A
 			-- Return type
 
 feature -- Setting
@@ -39,7 +37,7 @@ feature -- Setting
 			type := t
 		ensure
 			set: type = t
-		end;
+		end
 
 	set_value (v: like value) is
 			-- Set `value' to `v'.
@@ -49,6 +47,6 @@ feature -- Setting
 			value := v
 		ensure
 			set: value = v
-		end;
+		end
 
 end -- class E_CONSTANT

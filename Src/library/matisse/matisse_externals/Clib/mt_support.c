@@ -538,10 +538,7 @@ void c_set_value_u32(EIF_INTEGER oid, EIF_INTEGER aid, EIF_INTEGER value)
 }
 
 /* Set MT_DOUBLE */
-void c_set_value_double(oid,aid,type,value,rank)
-	EIF_INTEGER oid,aid,type;
-	EIF_DOUBLE value;
-	EIF_INTEGER rank;
+void c_set_value_double(EIF_INTEGER oid, EIF_INTEGER aid, EIF_INTEGER type, EIF_DOUBLE value, EIF_INTEGER rank)
 {
 	MtDouble ivalue = value;
 	
@@ -553,11 +550,7 @@ void c_set_value_double(oid,aid,type,value,rank)
 
 
 /* Set MT_FLOAT */
-void c_set_value_real(oid, aid, type, value, rank)
-	EIF_INTEGER oid, aid, type;
-	//float value;
-	EIF_REAL value;
-	EIF_INTEGER rank;
+void c_set_value_real(EIF_INTEGER oid, EIF_INTEGER aid, EIF_INTEGER type, EIF_REAL value, EIF_INTEGER rank)
 {
 	MtFloat ivalue = (MtFloat) value;
 
@@ -581,9 +574,7 @@ void c_set_value_char(oid,aid,type,value,rank)
 }
 
 /* Set MT_BOOLEAN */
-void c_set_value_boolean(oid, aid, value)
-	EIF_INTEGER oid,aid;
-	EIF_BOOLEAN value;
+void c_set_value_boolean(EIF_INTEGER oid, EIF_INTEGER aid, EIF_BOOLEAN value)
 {
 	MtBoolean ivalue;
 	EIF_MT_LOG1("c_set_value_boolean: value = %d", value);

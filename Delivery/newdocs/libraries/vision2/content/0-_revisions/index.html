@@ -31,6 +31,9 @@ modifications are relative to the previously released version.</p>
 		<li><b>EV_PASSWORD_FIELD</b> - Implemented pick and drop.</li>
 		<li><b>EV_TEXT</b> - Implemented pick and drop.</li>
 		<li><b>EV_DRAWABLE</b> - Fixed bug when you performed the following: drew a filled shape, called `set_tile' and then drew another filled shape. The tile would not be used on the second fill.</li>
+		<li><b>EV_COLOR_DIALOG</b> - Querying `color' after a used had cancelled the dialog would previously crash a system, if `set_color' had never been called.</li>
+		<li><b>EV_COLOR_IMP</b> - Fixed `set_rgb_with_24_bit' which would fail when called.</li>
+		<li><b>EV_BUTTON, EV_TOGGLE_BUTTON</b> - The buttons now correctly display a text, pixmap and background color simultaneously. Previously, the background color was never displayed, and either the pixmap or text would be displayed, not both.</li>
 	</ul>
 	<li><b>Gtk</b>
 </ul>

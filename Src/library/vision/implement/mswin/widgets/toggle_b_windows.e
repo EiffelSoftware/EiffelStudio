@@ -135,7 +135,14 @@ feature
 			end
 		end	
 
-feature -- Status report 
+feature -- Status report
+
+	has_accelerator: BOOLEAN
+			-- Is there an accelerator key associated with
+			-- this widget?
+
+	accelerator_text: STRING
+			-- Text of accelerator.
 
 	state: BOOLEAN is
 			-- True if the toggle has been armed. False otherwise.
@@ -168,6 +175,15 @@ feature -- Status report
 		end;
 
 feature -- Status setting
+
+	set_accelerator_action (a_translation: STRING) is
+			-- Set the accerlator action (modifiers and key to use as a shortcut
+			-- in selecting a button) to `a_translation'.
+			-- `a_translation' must be specified with the X toolkit conventions.
+		do
+			accelerator_text := a_translation
+			has_accelerator := True
+		end
 
 	set_x (a_x: INTEGER) is
 		do
@@ -254,6 +270,12 @@ feature -- Element change
 		end
 
 feature -- Removal
+
+	remove_accelerator_action is
+			-- Remove the accelerator action.
+		do
+			has_accelerator := False
+		end
 
 	remove_value_changed_action (a_command: COMMAND; arg: ANY) is
 			-- Remove a command from the list of action to execute

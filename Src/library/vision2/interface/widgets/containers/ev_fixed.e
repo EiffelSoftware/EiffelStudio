@@ -27,14 +27,6 @@ inherit
 			create_implementation
 		end
 
-	DOUBLE_MATH
-		export
-			{NONE} all
-		undefine
-			default_create, is_equal,
-			copy
-		end
-
 create
 	default_create
 

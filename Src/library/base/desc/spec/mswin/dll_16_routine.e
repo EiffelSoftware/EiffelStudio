@@ -77,7 +77,6 @@ feature -- Basic operations
 		local
 			formal_args: ANY
 			actual_args: ANY
-			p: POINTER
 		do
 			fill_argument_array (args)
 			actual_args := argument_array.area
@@ -96,15 +95,13 @@ feature -- Basic operations
 			when T_real then
 				imp_real_result := desc_call_dll16_real (function_handle, argument_count, $formal_args, $actual_args)
 			when T_pointer then
-				imp_pointer_result := desc_call_dll16_pointer (function_handle, argument_count, $formal_args, $actual_args)
+				imp_pointer_result := desc_make_np32 (desc_call_dll16_pointer (function_handle, argument_count, $formal_args, $actual_args))
 			when T_reference then
 				imp_reference_result := desc_call_dll16_reference (function_handle, argument_count, $formal_args, $actual_args)
 			when T_short_integer then
 				imp_integer_result := desc_call_dll16_short_integer (function_handle, argument_count, $formal_args, $actual_args)
 			when T_string then
-				p := desc_make_np32 (desc_call_dll16_string (function_handle, argument_count, $formal_args, $actual_args))
-				imp_string_result := desc_rtms (p)
-				desc_free_np32 (p)
+				imp_string_result := desc_rtms (desc_make_np32 (desc_call_dll16_string (function_handle, argument_count, $formal_args, $actual_args)))
 			when T_no_type then
 				desc_call_dll16_procedure (function_handle, argument_count, $formal_args, $actual_args)
 			end
@@ -341,9 +338,9 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Externals
 
-	desc_alloc_alias16 (ptr: POINTER): POINTER is
+	desc_alloc_alias16 (np32: POINTER): POINTER is
 			-- Obtains a 16-bit far pointer equivalent
-			-- of a 32-bit near pointer
+			-- of a 32-bit near pointer `np32'
 			--| Watcom specific
 		external
 			"C [macro <windows.h>]"
@@ -464,25 +461,23 @@ feature {NONE} -- Externals
 			"16"
 		end
 
-	desc_rtms (ptr: POINTER): STRING is
-		external
-			"C [macro <portable.h> ] (EIF_POINTER): EIF_REFERENCE"
-		alias
-			"RTMS"
-		end
-
-	desc_make_np32 (ptr: POINTER): POINTER is
+	desc_make_np32 (fp16: POINTER): POINTER is
+			-- Makes a 32-bit near pointer from
+			-- a 16-bit far pointer `fp16'
+			--| Watcom specific
 		external
 			"C [macro <desc.h>] (EIF_POINTER): EIF_POINTER"
 		alias
 			"DESC_MAKE_NP32"
 		end
 
-	desc_free_np32 (ptr: POINTER) is
+	desc_rtms (str: POINTER): STRING is
+			-- Creates an Eiffel string from a
+			-- C manifest string `str'
 		external
-			"C [macro <desc.h>] (EIF_POINTER)"
+			"C [macro <macros.h>] (EIF_POINTER): EIF_REFERENCE"
 		alias
-			"DESC_FREE_NP32"
+			"RTMS"
 		end
 
 end -- class DLL_16_ROUTINE

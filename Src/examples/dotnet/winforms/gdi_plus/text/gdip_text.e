@@ -37,13 +37,15 @@ feature {NONE} -- Initialization
 			set_style (feature {WINFORMS_CONTROL_STYLES}.resize_redraw, True)
 
 			-- Load the image to be used for the background from the exe's resource fork
-			create l_background_image.make_from_filename (("colorbars.jpg").to_cil)
+			--create l_background_image.make_from_filename (("D:\Eiffel52\examples\dotnet\winforms\gdi_plus\text\colorbars.jpg").to_cil)
+			create l_background_image.make_from_filename (image_path ("colorbars", "jpg"))
 
 			-- Now create the brush we are going to use to paint the background
 			create background_brush.make_from_bitmap (l_background_image)
 
 			-- Load the image to be used for the textured text from the exe's resource fork
-			create l_text_image.make_from_filename (("marble.jpg").to_cil)
+			--create l_text_image.make_from_filename (("D:\Eiffel52\examples\dotnet\winforms\gdi_plus\text\marble.jpg").to_cil)
+			create l_text_image.make_from_filename (image_path ("marble", "jpg"))
 			create text_texture_brush.make_from_bitmap (l_text_image)
 
 			-- Load the fonts we want to use
@@ -231,6 +233,54 @@ feature {NONE} -- Implementation
 				("The Japanese font MS Mincho needs be present to run the Japanese part of this sample%N%N").to_cil)
 			retried := True
 			retry
+		end
+	
+	image_path (image_name, image_extension: STRING): SYSTEM_STRING is
+			-- Retrieve the path to acced `an_image'.
+			-- Image path depends of your installation.
+		require
+			non_void_image_name: image_name /= Void
+			not_empty_image_name: not image_name.is_empty
+			non_void_image_extension: image_extension /= Void
+			not_empty_image_extension: not image_extension.is_empty
+		local
+			path_1, path_2: SYSTEM_STRING
+		do
+			path_1 := (Eiffel_path + "examples\dotnet\winforms\gdi_plus\text\" + image_name + "." + image_extension).to_cil
+			path_2 := (Eiffel_path + "..\samples\winforms\gdi_plus\" + image_name + "." + image_extension).to_cil
+			if feature {SYSTEM_FILE}.exists (path_1) then
+				Result := path_1
+			elseif feature {SYSTEM_FILE}.exists (path_2) then
+				Result := path_2
+			else
+					-- Image path not retrieved.
+				create Result.make_from_c_and_count (',', 0)
+			end
+		ensure
+			non_void_image_path: Result /= Void
+		end
+	
+	Ise_eiffel_key: STRING is "ISE_EIFFEL"
+			-- Environment variable $ISE_EIFFEL.
+
+	Eiffel_path: STRING is
+			-- Path to Eiffel installation.
+		local   
+			retried: BOOLEAN
+			l_str: SYSTEM_STRING
+			l_registry_key: REGISTRY_KEY   
+			l_obj: SYSTEM_OBJECT
+		once
+			Result := (create {EXECUTION_ENVIRONMENT}).get (Ise_eiffel_key)
+			if Result.item (Result.count) /= (create {OPERATING_ENVIRONMENT}).Directory_separator then
+				Result.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
+			end
+		ensure
+			exist: Result /= Void
+			ends_with_directory_separator: Result.item (Result.count) = (create {OPERATING_ENVIRONMENT}).Directory_separator 
+		rescue   
+			retried := True   
+			retry   
 		end
 		
 			

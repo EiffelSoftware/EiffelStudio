@@ -305,6 +305,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			quit_menu_entry: EB_MENU_ENTRY
 			exit_menu_entry: EB_MENU_ENTRY
 
+			history_list_cmd: LIST_HISTORY
 			previous_target_cmd: PREVIOUS_OBJECT
 			previous_target_button: EB_BUTTON
 			previous_target_menu_entry: EB_MENU_ENTRY
@@ -317,7 +318,6 @@ feature {NONE} -- Implementation; Graphical Interface
 			slice_button: EB_BUTTON
 			slice_menu_entry: EB_MENU_ENTRY
 			sep: SEPARATOR
-			history_list_cmd: LIST_HISTORY
 			once_cmd: SHOW_ONCE_RESULTS
 			once_button: FORMAT_BUTTON
 			once_menu_entry: EB_TICKABLE_MENU_ENTRY

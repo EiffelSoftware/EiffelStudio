@@ -541,7 +541,6 @@ feature {NONE} -- Implementation Graphical Interface
 			current_target_button: EB_BUTTON
 			current_target_menu_entry: EB_MENU_ENTRY
 			sep: THREE_D_SEPARATOR
-			history_list_cmd: LIST_HISTORY
 			new_class_button: EB_BUTTON_HOLE
 			rout_cli_cmd: SHOW_ROUTCLIENTS
 			rout_cli_button: FORMAT_BUTTON
@@ -576,6 +575,7 @@ feature {NONE} -- Implementation Graphical Interface
 			stop_hole_holder: HOLE_HOLDER
 			rc: ROW_COLUMN
 			search_button: EB_BUTTON
+			history_list_cmd: LIST_HISTORY
 		do
 				-- First we create the needed objects.
 			!! hole.make (Current)
@@ -738,7 +738,7 @@ feature {NONE} -- Implementation Graphical Interface
 			routine_toolbar.attach_left_widget (next_target_button, routine_text_field, 3)
 			routine_toolbar.attach_top (label, 0)
 			routine_toolbar.attach_bottom (label, 0)
-			routine_toolbar.attach_left_widget (routine_text_field, label, 0)
+			routine_toolbar.attach_left_widget (routine_text_field, label, 7)
 			routine_toolbar.attach_top (class_text_field, 0)
 			routine_toolbar.attach_left_widget (label, class_text_field, 0)
 

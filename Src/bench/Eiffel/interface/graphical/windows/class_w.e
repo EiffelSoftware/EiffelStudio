@@ -587,7 +587,6 @@ feature {NONE} -- Implementation Graphical Interface
 			save_button: EB_BUTTON
 			save_menu_entry: EB_MENU_ENTRY
 			sep: SEPARATOR
-			history_list_cmd: LIST_HISTORY
 		do
 			!! class_text_field.make (edit_bar, Current)
 			!! open_cmd.make (Current)

@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><application xsi="http://www.w3.org/1999/XMLSchema-instance">
-<item type="Constants"><Constant ><type >PIXMAP</type>
-		<Name >winhlp32_exe_3_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\winhlp32_exe_3.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >winhlp32_exe_3.ico</Filename>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >explorer_exe_50_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\explorer_exe_50.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >explorer_exe_50.ico</Filename>
-		</Constant>
-	<Constant ><type >STRING</type>
+<item type="Constants"><Constant ><type >STRING</type>
 		<Name >button_ok_text</Name>
 		<Value >OK</Value>
 		</Constant>
@@ -24,12 +10,9 @@
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_undo.ico</Filename>
 		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >toc_folder_open_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\toc_folder_open.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >toc_folder_open.ico</Filename>
+	<Constant ><type >INTEGER</type>
+		<Name >button_width</Name>
+		<Value >80</Value>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_open_file_ico</Name>
@@ -54,6 +37,13 @@
 		<Value >250</Value>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
+		<Name >icon_new_doc_ico</Name>
+		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_new_doc.ico</Value>
+		<is_absolute >False</is_absolute>
+		<Directory >pixmap_directory</Directory>
+		<Filename >icon_new_doc.ico</Filename>
+		</Constant>
+	<Constant ><type >PIXMAP</type>
 		<Name >icon_info_ico</Name>
 		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_info.ico</Value>
 		<is_absolute >False</is_absolute>
@@ -61,25 +51,11 @@
 		<Filename >icon_info.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
-		<Name >icon_paste_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_paste.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >icon_paste.ico</Filename>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
 		<Name >icon_search_ico_1</Name>
 		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_search.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_search.ico</Filename>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >bitmap_image_ico_1_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\Bitmap Image_ico_1.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >Bitmap Image_ico_1.ico</Filename>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >button_cancel_text</Name>
@@ -95,6 +71,10 @@
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_search.ico</Filename>
+		</Constant>
+	<Constant ><type >INTEGER</type>
+		<Name >empty_cell_width</Name>
+		<Value >15</Value>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_validate_ico</Name>
@@ -118,29 +98,25 @@
 		<Filename >icon_close_folder.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
-		<Name >rich_text_format_ico_1_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\Rich Text Format_ico_1.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >Rich Text Format_ico_1.ico</Filename>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
 		<Name >icon_envision_ico</Name>
 		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_envision.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_envision.ico</Filename>
 		</Constant>
-	<Constant ><type >INTEGER</type>
-		<Name >button_width</Name>
-		<Value >80</Value>
-		</Constant>
 	<Constant ><type >PIXMAP</type>
-		<Name >computer_system_43_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\Computer_System_43.ico</Value>
+		<Name >icon_toc_folder_open_ico</Name>
+		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_toc_folder_open.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
-		<Filename >Computer_System_43.ico</Filename>
+		<Filename >icon_toc_folder_open.ico</Filename>
+		</Constant>
+	<Constant ><type >PIXMAP</type>
+		<Name >icon_toc_file_node_ico</Name>
+		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_toc_file_node.ico</Value>
+		<is_absolute >False</is_absolute>
+		<Directory >pixmap_directory</Directory>
+		<Filename >icon_toc_file_node.ico</Filename>
 		</Constant>
 	<Constant ><type >INTEGER</type>
 		<Name >radio_button_width</Name>
@@ -149,13 +125,6 @@
 	<Constant ><type >STRING</type>
 		<Name >button_find_text</Name>
 		<Value >Find</Value>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >settings_ico_1_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\Settings_ico_1.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >Settings_ico_1.ico</Filename>
 		</Constant>
 	<Constant ><type >INTEGER</type>
 		<Name >dialog_height</Name>
@@ -169,27 +138,20 @@
 		<Name >button_save_text</Name>
 		<Value >Save...</Value>
 		</Constant>
+	<Constant ><type >PIXMAP</type>
+		<Name >icon_ie_icon_ico</Name>
+		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_ie_icon.ico</Value>
+		<is_absolute >False</is_absolute>
+		<Directory >pixmap_directory</Directory>
+		<Filename >icon_ie_icon.ico</Filename>
+		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >button_continue_text</Name>
 		<Value >Continue</Value>
 		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >gif_image_ico_1_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\GIF Image_ico_1.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >GIF Image_ico_1.ico</Filename>
-		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >button_open_text</Name>
 		<Value >Open</Value>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >computer_system_5_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\Computer_System_5.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >Computer_System_5.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_save_ico</Name>
@@ -198,59 +160,24 @@
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_save.ico</Filename>
 		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >winhlp32_exe_4_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\winhlp32_exe_4.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >winhlp32_exe_4.ico</Filename>
-		</Constant>
 	<Constant ><type >INTEGER</type>
 		<Name >dialog_width</Name>
 		<Value >400</Value>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
-		<Name >html_big_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\html_big.ico</Value>
+		<Name >icon_widget_edit_ico</Name>
+		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_widget_edit.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
-		<Filename >html_big.ico</Filename>
+		<Filename >icon_widget_edit.ico</Filename>
 		</Constant>
 	<Constant ><type >INTEGER</type>
 		<Name >inner_border_width</Name>
 		<Value >5</Value>
 		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >computer_system_40_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\Computer_System_40.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >Computer_System_40.ico</Filename>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >winhlp32_exe_1_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\winhlp32_exe_1.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >winhlp32_exe_1.ico</Filename>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >toc_folder_closed_ico_1</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\toc_folder_closed.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >toc_folder_closed.ico</Filename>
-		</Constant>
 	<Constant ><type >INTEGER</type>
 		<Name >border_width</Name>
 		<Value >2</Value>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >computer_disk_1_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\Computer_Disk_1.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >Computer_Disk_1.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_redo_ico</Name>
@@ -260,47 +187,26 @@
 		<Filename >icon_redo.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
-		<Name >winhlp32_exe_7_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\winhlp32_exe_7.ico</Value>
+		<Name >icon_file_close_ico</Name>
+		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_file_close.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
-		<Filename >winhlp32_exe_7.ico</Filename>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >file_close_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\file_close.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >file_close.ico</Filename>
+		<Filename >icon_file_close.ico</Filename>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >button_back_text</Name>
 		<Value >Back</Value>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >winhlp32_exe_2_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\winhlp32_exe_2.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >winhlp32_exe_2.ico</Filename>
 		</Constant>
 	<Constant ><type >INTEGER</type>
 		<Name >dialog_tall_height</Name>
 		<Value >580</Value>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
-		<Name >write_document_ico_1_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\Write Document_ico_1.ico</Value>
+		<Name >icon_settings_ico</Name>
+		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_settings.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
-		<Filename >Write Document_ico_1.ico</Filename>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >warning</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\1_ico_1.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >1_ico_1.ico</Filename>
+		<Filename >icon_settings.ico</Filename>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >button_apply_text</Name>
@@ -311,57 +217,11 @@
 		<Value >Create</Value>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
-		<Name >the_internet_ico_1_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\The Internet_ico_1.ico</Value>
+		<Name >icon_paste_ico</Name>
+		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_paste.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
-		<Filename >The Internet_ico_1.ico</Filename>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >winhlp32_exe_8_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\winhlp32_exe_8.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >winhlp32_exe_8.ico</Filename>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >winhlp32_exe_5_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\winhlp32_exe_5.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >winhlp32_exe_5.ico</Filename>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >hhc_exe_2_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\hhc_exe_2.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >hhc_exe_2.ico</Filename>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >icon_cut_color_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_cut_color.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >icon_cut_color.ico</Filename>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >computer_system_18_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\Computer_System_18.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >Computer_System_18.ico</Filename>
-		</Constant>
-	<Constant ><type >INTEGER</type>
-		<Name >empty_cell_width</Name>
-		<Value >15</Value>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >toc_file_node_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\toc_file_node.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >toc_file_node.ico</Filename>
+		<Filename >icon_paste.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_close_color_ico</Name>
@@ -378,13 +238,6 @@
 		<Filename >icon_ie.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
-		<Name >computer_system_19_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\Computer_System_19.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >Computer_System_19.ico</Filename>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
 		<Name >icon_format_text_color_ico</Name>
 		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_format_text_color.ico</Value>
 		<is_absolute >False</is_absolute>
@@ -398,13 +251,6 @@
 		<Directory >pixmap_directory</Directory>
 		<Filename >icon_forth_color.ico</Filename>
 		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >find_ico_1_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\Find_ico_1.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >Find_ico_1.ico</Filename>
-		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >button_add_text</Name>
 		<Value >Add</Value>
@@ -416,13 +262,6 @@
 	<Constant ><type >STRING</type>
 		<Name >button_browse_text</Name>
 		<Value >Browse...</Value>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >hhw_exe_7_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\hhw_exe_7.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >hhw_exe_7.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
 		<Name >icon_new_color_ico</Name>
@@ -454,25 +293,11 @@
 		<Value >Next</Value>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
-		<Name >default_document_ico_1_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\Default Document_ico_1.ico</Value>
+		<Name >icon_cut_color_ico</Name>
+		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_cut_color.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
-		<Filename >Default Document_ico_1.ico</Filename>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >winhlp32_exe_9_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\winhlp32_exe_9.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >winhlp32_exe_9.ico</Filename>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >help_ico_1_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\Help_ico_1.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >Help_ico_1.ico</Filename>
+		<Filename >icon_cut_color.ico</Filename>
 		</Constant>
 	<Constant ><type >STRING</type>
 		<Name >studio_filtered_text</Name>
@@ -490,43 +315,15 @@
 		<Filename >icon_new.ico</Filename>
 		</Constant>
 	<Constant ><type >PIXMAP</type>
-		<Name >icon_properties_color_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_properties_color.ico</Value>
+		<Name >icon_toc_folder_closed_ico</Name>
+		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_toc_folder_closed.ico</Value>
 		<is_absolute >False</is_absolute>
 		<Directory >pixmap_directory</Directory>
-		<Filename >icon_properties_color.ico</Filename>
+		<Filename >icon_toc_folder_closed.ico</Filename>
 		</Constant>
 	<Constant ><type >INTEGER</type>
 		<Name >padding_width</Name>
 		<Value >5</Value>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >computer_system_17_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\Computer_System_17.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >Computer_System_17.ico</Filename>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >computer_system_4_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\Computer_System_4.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >Computer_System_4.ico</Filename>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >internet_document_ico_1_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\Internet Document_ico_1.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >Internet Document_ico_1.ico</Filename>
-		</Constant>
-	<Constant ><type >PIXMAP</type>
-		<Name >computer_system_27_ico</Name>
-		<Value >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\Computer_System_27.ico</Value>
-		<is_absolute >False</is_absolute>
-		<Directory >pixmap_directory</Directory>
-		<Filename >Computer_System_27.ico</Filename>
 		</Constant>
 	</item>
 <item type="Directory"><Internal_properties ><name >application</name>
@@ -798,8 +595,8 @@
 					<EV_PIXMAPABLE />
 					<EV_FIXED ><Children_x_position >0100018000200020010000200100002001800100</Children_x_position>
 						<Children_y_position >0020002001000020010000600060014000600140</Children_y_position>
-						<Children_width >0032003200320032003200480045004500450045</Children_width>
-						<Children_height >0032003200320032003200200020002000200020</Children_height>
+						<Children_width >0001000100010001000100480045004500450045</Children_width>
+						<Children_height >0001000100010001000100200020002000200020</Children_height>
 						</EV_FIXED>
 					<EV_CONTAINER />
 					<item type="EV_PIXMAP"><Internal_properties ><id >20</id>
@@ -813,9 +610,7 @@
 						<EV_WIDGET ><Minimum_width >20</Minimum_width>
 							<Minimum_height >20</Minimum_height>
 							</EV_WIDGET>
-						<EV_PIXMAP ><Pixmap_path ><Constant >icon_new_color_ico</Constant>
-								</Pixmap_path>
-							</EV_PIXMAP>
+						<EV_PIXMAP />
 						</item>
 					<item type="EV_PIXMAP"><Internal_properties ><id >21</id>
 							<name >tutorial</name>
@@ -828,9 +623,7 @@
 						<EV_WIDGET ><Minimum_width >20</Minimum_width>
 							<Minimum_height >20</Minimum_height>
 							</EV_WIDGET>
-						<EV_PIXMAP ><Pixmap_path ><Constant >icon_new_color_ico</Constant>
-								</Pixmap_path>
-							</EV_PIXMAP>
+						<EV_PIXMAP />
 						</item>
 					<item type="EV_PIXMAP"><Internal_properties ><id >22</id>
 							<name >how_to</name>
@@ -843,9 +636,7 @@
 						<EV_WIDGET ><Minimum_width >20</Minimum_width>
 							<Minimum_height >20</Minimum_height>
 							</EV_WIDGET>
-						<EV_PIXMAP ><Pixmap_path ><Constant >icon_new_color_ico</Constant>
-								</Pixmap_path>
-							</EV_PIXMAP>
+						<EV_PIXMAP />
 						</item>
 					<item type="EV_PIXMAP"><Internal_properties ><id >23</id>
 							<name >empty_file</name>
@@ -858,9 +649,7 @@
 						<EV_WIDGET ><Minimum_width >20</Minimum_width>
 							<Minimum_height >20</Minimum_height>
 							</EV_WIDGET>
-						<EV_PIXMAP ><Pixmap_path ><Constant >icon_new_color_ico</Constant>
-								</Pixmap_path>
-							</EV_PIXMAP>
+						<EV_PIXMAP />
 						</item>
 					<item type="EV_PIXMAP"><Internal_properties ><id >24</id>
 							<name >project</name>
@@ -873,9 +662,7 @@
 						<EV_WIDGET ><Minimum_width >20</Minimum_width>
 							<Minimum_height >20</Minimum_height>
 							</EV_WIDGET>
-						<EV_PIXMAP ><Pixmap_path ><Constant >icon_new_color_ico</Constant>
-								</Pixmap_path>
-							</EV_PIXMAP>
+						<EV_PIXMAP />
 						</item>
 					<item type="EV_LABEL"><Internal_properties ><id >25</id>
 							<name >empty_label</name>
@@ -3560,7 +3347,7 @@ loaded project:]]></Text>
 					<EV_SENSITIVE />
 					<EV_TEXTABLE ><Text ><![CDATA[New..]]></Text>
 						</EV_TEXTABLE>
-					<EV_PIXMAPABLE ><Pixmap_path ><Constant >default_document_ico_1_ico</Constant>
+					<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_new_doc_ico</Constant>
 							</Pixmap_path>
 						</EV_PIXMAPABLE>
 					</item>
@@ -3941,7 +3728,7 @@ loaded project:]]></Text>
 						<EV_TEXTABLE />
 						<EV_TOOLTIPABLE ><Tooltip ><![CDATA[New]]></Tooltip>
 							</EV_TOOLTIPABLE>
-						<EV_PIXMAPABLE ><Pixmap_path ><Constant >default_document_ico_1_ico</Constant>
+						<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_new_doc_ico</Constant>
 								</Pixmap_path>
 							</EV_PIXMAPABLE>
 						</item>
@@ -4059,9 +3846,7 @@ loaded project:]]></Text>
 						<EV_TEXTABLE />
 						<EV_TOOLTIPABLE ><Tooltip ><![CDATA[Document Properties]]></Tooltip>
 							</EV_TOOLTIPABLE>
-						<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_properties_color_ico</Constant>
-								</Pixmap_path>
-							</EV_PIXMAPABLE>
+						<EV_PIXMAPABLE />
 						</item>
 					<item type="EV_TOOL_BAR_SEPARATOR"><Internal_properties ><id >276</id>
 							<Expanded >0</Expanded>
@@ -4220,7 +4005,8 @@ loaded project:]]></Text>
 											<EV_SENSITIVE />
 											<EV_TEXTABLE />
 											<EV_TOOLTIPABLE />
-											<EV_PIXMAPABLE ><Pixmap_path >D:\My Documents\Documentation Project\systems\DocBuilder\resources\icons\icon_close_color.ico</Pixmap_path>
+											<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_close_color_ico</Constant>
+													</Pixmap_path>
 												</EV_PIXMAPABLE>
 											</item>
 										</item>
@@ -4330,7 +4116,8 @@ loaded project:]]></Text>
 															</EV_TOOLTIPABLE>
 														<EV_WIDGET />
 														<EV_TEXT_ALIGNABLE />
-														<EV_PIXMAPABLE ><Pixmap_path >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\Default Document_ico_1.ico</Pixmap_path>
+														<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_new_doc_ico</Constant>
+																</Pixmap_path>
 															</EV_PIXMAPABLE>
 														</item>
 													<item type="EV_BUTTON"><Internal_properties ><id >300</id>
@@ -4402,7 +4189,8 @@ loaded project:]]></Text>
 															</EV_TOOLTIPABLE>
 														<EV_WIDGET />
 														<EV_TEXT_ALIGNABLE />
-														<EV_PIXMAPABLE ><Pixmap_path >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\toc_folder_open.ico</Pixmap_path>
+														<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_toc_folder_open_ico</Constant>
+																</Pixmap_path>
 															</EV_PIXMAPABLE>
 														</item>
 													<item type="EV_BUTTON"><Internal_properties ><id >305</id>
@@ -4432,7 +4220,7 @@ loaded project:]]></Text>
 															</EV_TOOLTIPABLE>
 														<EV_WIDGET />
 														<EV_TEXT_ALIGNABLE />
-														<EV_PIXMAPABLE ><Pixmap_path ><Constant >file_close_ico</Constant>
+														<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_file_close_ico</Constant>
 																</Pixmap_path>
 															</EV_PIXMAPABLE>
 														</item>
@@ -4458,7 +4246,8 @@ loaded project:]]></Text>
 															</EV_TOOLTIPABLE>
 														<EV_WIDGET />
 														<EV_TEXT_ALIGNABLE />
-														<EV_PIXMAPABLE ><Pixmap_path >D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\toc_folder_closed.ico</Pixmap_path>
+														<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_toc_folder_closed_ico</Constant>
+																</Pixmap_path>
 															</EV_PIXMAPABLE>
 														</item>
 													<item type="EV_CELL"><Internal_properties ><id >309</id>
@@ -4727,9 +4516,7 @@ loaded project:]]></Text>
 																	<EV_SENSITIVE />
 																	<EV_TEXTABLE />
 																	<EV_TOOLTIPABLE />
-																	<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_close_color_ico</Constant>
-																			</Pixmap_path>
-																		</EV_PIXMAPABLE>
+																	<EV_PIXMAPABLE />
 																	</item>
 																</item>
 															</item>
@@ -4872,8 +4659,7 @@ loaded project:]]></Text>
 														<EV_SENSITIVE />
 														<EV_TEXTABLE />
 														<EV_TOOLTIPABLE />
-														<EV_PIXMAPABLE ><Pixmap_path >D:\My Documents\Documentation Project\systems\DocBuilder\resources\icons\icon_close_color.ico</Pixmap_path>
-															</EV_PIXMAPABLE>
+														<EV_PIXMAPABLE />
 														</item>
 													</item>
 												</item>
@@ -4986,7 +4772,8 @@ loaded project:]]></Text>
 												</EV_SENSITIVE>
 											<EV_TEXTABLE />
 											<EV_TOOLTIPABLE />
-											<EV_PIXMAPABLE ><Pixmap_path >D:\My Documents\Documentation Project\systems\DocBuilder\resources\icons\icon_close_color.ico</Pixmap_path>
+											<EV_PIXMAPABLE ><Pixmap_path ><Constant >icon_close_color_ico</Constant>
+													</Pixmap_path>
 												</EV_PIXMAPABLE>
 											</item>
 										</item>
@@ -5503,9 +5290,7 @@ loaded project:]]></Text>
 							<EV_WIDGET />
 							<EV_TEXT_ALIGNABLE ><Text_alignment >Left</Text_alignment>
 								</EV_TEXT_ALIGNABLE>
-							<EV_PIXMAPABLE ><Pixmap_path ><Constant >computer_system_4_ico</Constant>
-									</Pixmap_path>
-								</EV_PIXMAPABLE>
+							<EV_PIXMAPABLE />
 							</item>
 						<item type="EV_BUTTON"><Internal_properties ><id >394</id>
 								<name >xml_button</name>

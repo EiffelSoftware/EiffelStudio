@@ -86,6 +86,27 @@ feature -- Output
 				st.add_string (public_key_token)
 			end
 		end
+
+	full_name: STRING is
+			-- Output name of Current
+		do
+			create Result.make (64)
+			Result.append (assembly_name)
+			if version /= Void then
+				Result.append (", ")
+				Result.append (version)
+			end
+			if culture /= Void then
+				Result.append (", ")
+				Result.append (culture)
+			end
+			if public_key_token /= Void then
+				Result.append (", ")
+				Result.append (public_key_token)
+			end
+		ensure
+			full_name_not_void: Result /= Void
+		end
 		
 invariant
 	assembly_name_not_void: assembly_name /= Void

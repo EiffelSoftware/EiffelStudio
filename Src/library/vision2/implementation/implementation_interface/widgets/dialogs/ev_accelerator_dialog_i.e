@@ -99,6 +99,7 @@ feature -- Status setting
 			-- until the user closed the window.
 		do
 			window.forbid_resize
+			list.set_focus
 			window.show
 		end
 
@@ -474,12 +475,14 @@ feature -- Execution features
 				end
 			end
 			window.hide
+			execute_ok_commands
 		end
 
 	cancel_execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Executed when the user select an item in the combo-box.
 		do
 			window.hide
+			execute_cancel_commands
 		end
 
 	list_item_execute (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
@@ -531,6 +534,18 @@ feature -- Execution features
 
 	changed: BOOLEAN
 			-- Did something changed in the user choice?
+
+feature {NONE} -- Implementation
+
+	execute_ok_commands is
+			-- Executes the commands added by the user.
+		deferred
+		end
+
+	execute_cancel_commands is
+			-- Executes the commands added by the user.
+		deferred
+		end
 
 end -- class EV_ACCELERATOR_DIALOG_I
 

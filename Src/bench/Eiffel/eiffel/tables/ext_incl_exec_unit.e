@@ -23,7 +23,7 @@ feature
 			-- Initialization
 		do
 			{EXT_EXECUTION_UNIT} Precursor (cl_type, f);
-			include_list := deep_clone (f.include_list)
+			include_list := f.include_list
 		end
 
 	generate_declaration (buffer: GENERATION_BUFFER) is

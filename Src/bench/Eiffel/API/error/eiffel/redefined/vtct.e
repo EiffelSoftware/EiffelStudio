@@ -19,6 +19,16 @@ feature -- Properties
 	code: STRING is "VTCT"
 			-- Error code
 
+feature -- Status report
+
+	less_than (other: VTCT): BOOLEAN is
+			-- Is `Current' less than `other'?
+		require
+			other_not_void: other /= Void
+		do
+			Result := class_c.name < other.class_c.name
+		end
+		
 feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is

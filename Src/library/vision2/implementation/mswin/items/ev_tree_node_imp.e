@@ -20,7 +20,8 @@ inherit
 		rename
 			parent as old_parent
 		undefine
-			set_pnd_original_parent
+			set_pnd_original_parent,
+			pixmap_equal_to
 		redefine
 			parent_imp,
 			destroy,

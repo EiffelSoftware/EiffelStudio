@@ -12,6 +12,7 @@
 */
 
 #include "eif_config.h"
+#include "eif_macros.h"			/* For EIF_FALSE|EIF_TRUE. */
 #ifdef I_STRING
 #include <string.h>
 #else
@@ -23,7 +24,7 @@
 
 #include <stdio.h>					/* For sscanf() */
 
-rt_private EIF_CHARACTER *make_string(EIF_CHARACTER *s, int length)
+rt_private EIF_CHARACTER *make_string(EIF_CHARACTER *s, EIF_INTEGER length)
 {
 	/* Build a C string from the Eiffel string starting at 's', whose length
 	 * is 'length'. This is for the sole purpose of string to numeric
@@ -60,7 +61,7 @@ rt_private EIF_CHARACTER *make_string(EIF_CHARACTER *s, int length)
  * Stripping space characters.
  */
 
-rt_public int str_left(register EIF_CHARACTER *str, int length)
+rt_public EIF_INTEGER str_left(register EIF_CHARACTER *str, EIF_INTEGER length)
 {
 	/* Remove all leading white spaces from `str'.
 	 * Return the number of remaining characters.
@@ -86,7 +87,7 @@ rt_public int str_left(register EIF_CHARACTER *str, int length)
  * Justifying strings
  */
 
-rt_public void str_ljustify(register EIF_CHARACTER *str, int length, int capacity)
+rt_public void str_ljustify(register EIF_CHARACTER *str, EIF_INTEGER length, EIF_INTEGER capacity)
 {
 	/* Remove all leading white spaces from `str'.
 	 * Pad the right side with spaces.
@@ -110,7 +111,7 @@ rt_public void str_ljustify(register EIF_CHARACTER *str, int length, int capacit
 		*s++ = ' ';
 }
 
-rt_public void str_rjustify(register EIF_CHARACTER *str, int length, int capacity)
+rt_public void str_rjustify(register EIF_CHARACTER *str, EIF_INTEGER length, EIF_INTEGER capacity)
 {
 	/* Remove all trailing white spaces from `str'.
 	 * Pad the left side with spaces.
@@ -129,7 +130,7 @@ rt_public void str_rjustify(register EIF_CHARACTER *str, int length, int capacit
 		*r-- = ' ';
 }
 
-rt_public void str_cjustify(register EIF_CHARACTER *str, int length, int capacity)
+rt_public void str_cjustify(register EIF_CHARACTER *str, EIF_INTEGER length, EIF_INTEGER capacity)
 {
 	/* Remove all leading and trailing white spaces from `str'.
 	 * Pad both sides with spaces.
@@ -156,7 +157,7 @@ rt_public void str_cjustify(register EIF_CHARACTER *str, int length, int capacit
 }
 
 
-rt_public int str_right(register EIF_CHARACTER *str, int length)
+rt_public EIF_INTEGER str_right(register EIF_CHARACTER *str, EIF_INTEGER length)
 {
 	/* Remove all trailing white spaces from `str'.
 	 * Return the new number of remaining characters.
@@ -176,7 +177,7 @@ rt_public int str_right(register EIF_CHARACTER *str, int length)
  * Search and replace.
  */
 
-rt_public int str_search(EIF_CHARACTER *str, EIF_CHARACTER c, int start, int len)
+rt_public EIF_INTEGER str_search(EIF_CHARACTER *str, EIF_CHARACTER c, EIF_INTEGER start, EIF_INTEGER len)
           		/* The string */
        			/* Character to look at */
           		/* Index in string where search starts */
@@ -200,7 +201,7 @@ rt_public int str_search(EIF_CHARACTER *str, EIF_CHARACTER c, int start, int len
 	return i < len ? ++i : 0;
 }
 
-rt_public int str_last_search (EIF_CHARACTER *str, EIF_CHARACTER c, int start_index_from_end)
+rt_public EIF_INTEGER str_last_search (EIF_CHARACTER *str, EIF_CHARACTER c, EIF_INTEGER start_index_from_end)
 			/* The string */
 			/* character to look at */
 			/* start index length of the string */
@@ -218,7 +219,7 @@ rt_public int str_last_search (EIF_CHARACTER *str, EIF_CHARACTER c, int start_in
 	return (i >= 0) ? ++i : 0;
 }
 
-rt_public void str_replace(EIF_CHARACTER *str, EIF_CHARACTER *new, int string_length, int new_len, int start, int end)
+rt_public void str_replace(EIF_CHARACTER *str, EIF_CHARACTER *new, EIF_INTEGER string_length, EIF_INTEGER new_len, EIF_INTEGER start, EIF_INTEGER end)
           			/* The original string */
           			/* The new string for substring replacement */
                   	/* Length of the original string */
@@ -265,7 +266,7 @@ rt_public void str_replace(EIF_CHARACTER *str, EIF_CHARACTER *new, int string_le
 	bcopy(new, str + (start - 1), new_len);
 }
 
-rt_public void str_insert(EIF_CHARACTER *str, EIF_CHARACTER *new, int string_length, int new_len, int idx)
+rt_public void str_insert(EIF_CHARACTER *str, EIF_CHARACTER *new, EIF_INTEGER string_length, EIF_INTEGER new_len, EIF_INTEGER idx)
           			/* The original string */
           			/* The new string to be inserted */
                   		/* Length of the original string */
@@ -301,7 +302,7 @@ rt_public void str_insert(EIF_CHARACTER *str, EIF_CHARACTER *new, int string_len
  * General routines.
  */
 
-rt_public void str_blank(EIF_CHARACTER *str, int n)
+rt_public void str_blank(EIF_CHARACTER *str, EIF_INTEGER n)
 {
 	/* Fill 'str' with 'n' blanks */
 
@@ -311,7 +312,7 @@ rt_public void str_blank(EIF_CHARACTER *str, int n)
 		*str++ = ' ';
 }
 
-rt_public void str_fill(EIF_CHARACTER *str, int n, EIF_CHARACTER c)
+rt_public void str_fill(EIF_CHARACTER *str, EIF_INTEGER n, EIF_CHARACTER c)
 {
 	/* Fill 'str' with 'n'  `c' */
 
@@ -321,7 +322,7 @@ rt_public void str_fill(EIF_CHARACTER *str, int n, EIF_CHARACTER c)
 		*str++ = c;
 }
 
-rt_public void str_tail(register EIF_CHARACTER *str, register int n, int l)
+rt_public void str_tail(register EIF_CHARACTER *str, register EIF_INTEGER n, EIF_INTEGER l)
                     	/* The string */
                 		/* Number of characters to keep at the tail */
       					/* Length of the string */
@@ -334,7 +335,7 @@ rt_public void str_tail(register EIF_CHARACTER *str, register int n, int l)
 		*str++ = *f++;
 }
 
-rt_public void str_take(EIF_CHARACTER *str, EIF_CHARACTER *new, long int start, long int end)
+rt_public void str_take(EIF_CHARACTER *str, EIF_CHARACTER *new, EIF_INTEGER start, EIF_INTEGER end)
           			/* The original string */
           			/* The to-be-filled substring */
            			/* First char index in string 'str' to be copied */
@@ -349,7 +350,7 @@ rt_public void str_take(EIF_CHARACTER *str, EIF_CHARACTER *new, long int start, 
  * String case conversions.
  */
 
-rt_public void str_lower(register EIF_CHARACTER *str, int l)
+rt_public void str_lower(register EIF_CHARACTER *str, EIF_INTEGER l)
 {
 	/* Convert 'str' to lower case */
 
@@ -362,7 +363,7 @@ rt_public void str_lower(register EIF_CHARACTER *str, int l)
 	}
 }
 
-rt_public void str_upper(register EIF_CHARACTER *str, int l)
+rt_public void str_upper(register EIF_CHARACTER *str, EIF_INTEGER l)
 {
 	/* Convert `str' to upper case */
 
@@ -375,7 +376,7 @@ rt_public void str_upper(register EIF_CHARACTER *str, int l)
 	}
 }
 
-rt_public int str_cmp(register EIF_CHARACTER *str1, register EIF_CHARACTER *str2, int l1, int l2)
+rt_public EIF_INTEGER str_cmp(register EIF_CHARACTER *str1, register EIF_CHARACTER *str2, EIF_INTEGER l1, EIF_INTEGER l2)
 {
 	/* Compare the two strings 'str1' and 'str2'.
 	 * Return the sign of 'str1 - str2'.
@@ -392,7 +393,7 @@ rt_public int str_cmp(register EIF_CHARACTER *str1, register EIF_CHARACTER *str2
 
 }
 
-rt_public void str_cpy(EIF_CHARACTER *to, EIF_CHARACTER *from, int len)
+rt_public void str_cpy(EIF_CHARACTER *to, EIF_CHARACTER *from, EIF_INTEGER len)
 {
 	/*  Copy 'len' characters from 'from' to 'to' */
 
@@ -403,7 +404,7 @@ rt_public void str_cpy(EIF_CHARACTER *to, EIF_CHARACTER *from, int len)
  * Prepending a character, appending a string.
  */
 
-rt_public void str_cprepend(EIF_CHARACTER *str, EIF_CHARACTER c, int l)
+rt_public void str_cprepend(EIF_CHARACTER *str, EIF_CHARACTER c, EIF_INTEGER l)
           		/* The string */
        			/* The character to prepend */
       			/* And Her Majesty, the Length */
@@ -419,7 +420,7 @@ rt_public void str_cprepend(EIF_CHARACTER *str, EIF_CHARACTER c, int l)
 	*str = c;
 }
 
-rt_public void str_append(EIF_CHARACTER *str, EIF_CHARACTER *new, int string_length, int new_len)
+rt_public void str_append(EIF_CHARACTER *str, EIF_CHARACTER *new, EIF_INTEGER string_length, EIF_INTEGER new_len)
           			/* The original string */
           			/* The new string to be appended */
                   		/* Length of the original string */
@@ -427,14 +428,14 @@ rt_public void str_append(EIF_CHARACTER *str, EIF_CHARACTER *new, int string_len
 {
 	/* Append 'new' at the end of 'str' */
 
-	bcopy (new, str + string_length, new_len);
+	bcopy (new, str + string_length, (size_t) new_len);
 }
 
 /*
  * Removing characters.
  */
 
-rt_public void str_rmchar(EIF_CHARACTER *str, int l, int i)
+rt_public void str_rmchar(EIF_CHARACTER *str, EIF_INTEGER l, EIF_INTEGER i)
           		/* The string */
       			/* String length */
       			/* Index of character to be removed */
@@ -454,7 +455,7 @@ rt_public void str_rmchar(EIF_CHARACTER *str, int l, int i)
 		*t++ = *f++;
 }
 
-rt_public int str_rmall(EIF_CHARACTER *str, EIF_CHARACTER c, int l)
+rt_public EIF_INTEGER str_rmall(EIF_CHARACTER *str, EIF_CHARACTER c, EIF_INTEGER l)
           		/* The string */
        			/* Character to be removed */
       			/* Length of string */
@@ -463,7 +464,7 @@ rt_public int str_rmall(EIF_CHARACTER *str, EIF_CHARACTER c, int l)
 	 * Return new number of character making up `str'.
 	 */
 
-	int new;		/* New string length */
+	EIF_INTEGER new;		/* New string length */
 	EIF_CHARACTER *top;		/* String viewed as a stack (first free location) */
 
 	top = str;
@@ -483,7 +484,7 @@ rt_public int str_rmall(EIF_CHARACTER *str, EIF_CHARACTER c, int l)
  * String reversing.
  */
 
-rt_public void str_mirror(register EIF_CHARACTER *str, register EIF_CHARACTER *new, register int len)
+rt_public void str_mirror(register EIF_CHARACTER *str, register EIF_CHARACTER *new, register EIF_INTEGER len)
                     	/* The string to reverse */
                     	/* Where the reversed string goes */
                   		/* Length of the string to be reversed */
@@ -498,7 +499,7 @@ rt_public void str_mirror(register EIF_CHARACTER *str, register EIF_CHARACTER *n
 		*new++ = *str--;
 }
 
-rt_public void str_reverse(register EIF_CHARACTER *str, int len)
+rt_public void str_reverse(register EIF_CHARACTER *str, EIF_INTEGER len)
                     	/* The string to reverese */
         				/* Length of the string to be reversed */
 {
@@ -520,18 +521,18 @@ rt_public void str_reverse(register EIF_CHARACTER *str, int len)
  * Conversions from ASCII to numeric values.
  */
 
-rt_public long str_atoi(EIF_CHARACTER *str, int length)
+rt_public EIF_INTEGER str_atoi(EIF_CHARACTER *str, EIF_INTEGER length)
 {
 	/* Value of integer in `str' */
 
-	EIF_CHARACTER *s = make_string(str, length);
-	long val;
+	EIF_CHARACTER *s = make_string(str, (int) length);
+	EIF_INTEGER val;
 
 	sscanf(s, "%ld", &val);
 	return val;
 }
 
-rt_public float str_ator(EIF_CHARACTER *str, int length)
+rt_public float str_ator(EIF_CHARACTER *str, EIF_INTEGER length)
 {
 	/* Value of real in `str' */
 
@@ -542,7 +543,7 @@ rt_public float str_ator(EIF_CHARACTER *str, int length)
 	return val;
 }
 
-rt_public double str_atod(EIF_CHARACTER *str, int length)
+rt_public double str_atod(EIF_CHARACTER *str, EIF_INTEGER length)
 {
 	/* Value of double in `str' */
 
@@ -557,21 +558,86 @@ rt_public double str_atod(EIF_CHARACTER *str, int length)
  * Test for numeric values.
  */
 
-rt_public EIF_BOOLEAN str_isi(EIF_CHARACTER *str, EIF_INTEGER length)
+rt_public EIF_BOOLEAN str_isi (EIF_CHARACTER *str, EIF_INTEGER length)
 {
-	/* Is it an integer? */
+    /* Is it an integer? 
+	 * We use a finite-state automaton which is faster than it is with
+	 * `sscanf ()'.
+	 * State 0: nothing read yet. 
+	 * State 1: '+' or '-' read.
+	 * State 2: in the number.
+	 * State 3: after the number.
+	 * State 4: Error.
+	 */	
 
-	EIF_CHARACTER *s = make_string(str, length);
-	long val;
-	EIF_CHARACTER c;
-	return (sscanf(s, "%ld %c", &val, &c) == 1)?(EIF_BOOLEAN) '\1': (EIF_BOOLEAN) '\0';
-}
+	int state = 0;					/* Current state. */
+    char c;							/* Current character read. */
+    EIF_BOOLEAN ret = EIF_FALSE;	/* Return value. */
+
+
+	/* [separator|\0][-|+][separator|\0][0-9|\0]*[separator|\0]
+     * is considered as an integer. 
+	 * We also have to take into account the Null character
+	 * that an Eiffel String can contain. 
+	 */
+
+    for (; length > 0 && state < 4; length--) {
+        c = *str++;
+        switch (state) {
+            case 0:
+                if (c == '\0' || c == '\t' || c == '\n' || c == '\r')
+                    break;
+                else if (c == '+' || c == '-')
+                    state = 1;
+                else if (isdigit(c)) {
+                    state = 2;
+                    ret = EIF_TRUE;
+                }
+                else {
+                    state = 4;
+                    ret = EIF_FALSE;
+                }
+                break;
+
+            case 1:
+                if (c == '\0' || c == '\t' || c == '\n' || c == '\r')
+                    break;
+                else if (isdigit(c)) {
+                    state = 2;
+                    ret = EIF_TRUE;
+                }
+                else
+                    ret = EIF_FALSE;
+                break;
+
+            case 2:
+                if (isdigit (c) || c == '\0')
+                    break;
+                else if (c == '\t' || c == '\n' || c == '\r')
+                    state = 3;
+                else {
+                    state = 4;
+                    ret = EIF_FALSE;
+                }
+                break;
+
+            case 3:
+                if (c == '\0' || c == '\t' || c == '\n' || c == '\r')
+                    break;
+                else
+                    state = 4;
+                    ret = EIF_FALSE;
+                break;
+        }
+    }
+    return ret;
+}	/* str_isi (). */
 
 rt_public EIF_BOOLEAN str_isr(EIF_CHARACTER *str, EIF_INTEGER length)
 {
 	/* Is it a real? */
 
-	EIF_CHARACTER *s = make_string(str, length);
+	EIF_CHARACTER *s = make_string (str, length);
 	float val;
 	EIF_CHARACTER c;
 
@@ -582,7 +648,7 @@ rt_public EIF_BOOLEAN str_isd(EIF_CHARACTER *str, EIF_INTEGER length)
 {
 	/* Is is a double? */
 
-	EIF_CHARACTER *s = make_string(str, length);
+	EIF_CHARACTER *s = make_string (str, length);
 	double val;
 	EIF_CHARACTER c;
 

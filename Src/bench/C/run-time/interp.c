@@ -2643,33 +2643,18 @@ rt_private void interpret(int flag, int where)
 			unsigned char *OLD_IC;
 			EIF_BOOLEAN is_atomic;
  
-			if (code == BC_PTUPLE) {
-				dtype = get_short();			/* Get the static type */
+			dtype = get_short();			/* Get the static type */
 
-					/*GENERIC CONFORMANCE */
-				dtype = get_compound_id(MTC icurrent->it_ref,dtype);
+				/*GENERIC CONFORMANCE */
+			dtype = get_compound_id(MTC icurrent->it_ref,dtype);
 
-				nbr_of_items = get_long();	  	/* Number of items in tuple */
-				is_atomic = EIF_TEST(get_long());
-				stagval = tagval;
-				OLD_IC = IC;					/* Save IC counter */
+			nbr_of_items = get_long();	  	/* Number of items in tuple */
+			is_atomic = EIF_TEST(get_long());
+			stagval = tagval;
+			OLD_IC = IC;					/* Save IC counter */
 	 
-				new_obj = RTLNTS(dtype, nbr_of_items, is_atomic);	/* Create new object */
-				RT_GC_PROTECT(new_obj);   /* Protect new_obj */
-			} else {
-				dtype = get_short();			/* Get the static type */
-
-					/*GENERIC CONFORMANCE */
-				dtype = get_compound_id(MTC icurrent->it_ref,dtype);
-
-				nbr_of_items = get_long();	  	/* Number of items in tuple */
-				is_atomic = EIF_TEST(get_long());
-				stagval = tagval;
-				OLD_IC = IC;					/* Save IC counter */
-	 
-				new_obj = RTLNTS(dtype, nbr_of_items, is_atomic);	/* Create new object */
-				RT_GC_PROTECT(new_obj);   /* Protect new_obj */
-			}
+			new_obj = RTLNTS(dtype, nbr_of_items, is_atomic);	/* Create new object */
+			RT_GC_PROTECT(new_obj);   /* Protect new_obj */
 
 			IC = OLD_IC;
 			if (tagval != stagval)

@@ -166,7 +166,8 @@ rt_public EIF_INTEGER eif_safe_putenv (char *v, char *k)
 	l1 = strlen(k);
 	l2 = strlen(v);
 
-	if ((new_string = (char*)eif_malloc (l1+l2+2)) == (char*)0)
+	new_string = (char*)eif_malloc (l1+l2+2);
+	if (new_string	== (char*)0)
 		return (EIF_INTEGER) -1;
 
 	strcpy (new_string, k);

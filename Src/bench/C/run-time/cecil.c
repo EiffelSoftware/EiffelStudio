@@ -28,6 +28,8 @@
 #include "eif_tools.h"
 #include "eif_eiffel.h"				/* Need string header */
 #include "eif_macros.h"
+#include "eif_lmalloc.h"
+#include <assert.h>
 
 #ifdef I_STDARG
 #include <stdarg.h>
@@ -670,3 +672,31 @@ rt_shared char *ct_value(struct ctable *ct, register char *key)
 	return (char *) 0;			/* Item was not found */
 }
 
+/*----------------------------------------*/
+/* Eiffel Threads initialization.         */
+/*----------------------------------------*/
+
+#ifdef EIF_THREADS
+rt_shared void eif_set_thr_context () {
+	/* Initialize thread context for non Eiffel Threads.
+     * There is not much to initialize, but this is necessary
+	 * so that `eif_thr_is_root ()' can distinguish the root thread
+	 * from the others.	
+	 */
+
+	EIF_GET_CONTEXT	
+	start_routine_ctxt_t *rout;
+	assert (eif_globals);	
+	rout = (start_routine_ctxt_t *) eif_malloc (sizeof (start_routine_ctxt_t));
+	if (rout == NULL) {
+		EIF_END_GET_CONTEXT
+		eif_panic ("Couldn't allocate thread context");
+	}
+	memset (rout, 0, sizeof (start_routine_ctxt_t));
+		/* Fill with NULL, since not allocated from run-time. 
+		 * This avoid some problem when reclaiminhgg. */
+	eif_thr_context = rout;
+
+	EIF_END_GET_CONTEXT
+}
+#endif	/* EIF_THREADS */

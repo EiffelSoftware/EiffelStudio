@@ -237,7 +237,7 @@ rt_shared void eif_lm_display () {
 		return;
 	}
 	for (cur = *lm; cur != NULL; cur = cur->next) {
-		fprintf (stderr, "0x%x\n", (size_t) cur->ptr);
+		fprintf (stderr, "lm:0x%x\n", (size_t) cur->ptr);
 	}
 	EIF_LM_UNLOCK;	
 }
@@ -275,7 +275,7 @@ rt_shared int eif_lm_free () {
 }
 #endif	/* LMALLOC_CHECK */
 
-rt_public Malloc_t eif_malloc (register unsigned int nbytes)
+rt_public Malloc_t eiffel_malloc (register unsigned int nbytes)
 {
 #ifdef LMALLOC_CHECK
 	Malloc_t ret;
@@ -296,7 +296,7 @@ rt_public Malloc_t eif_malloc (register unsigned int nbytes)
 #endif	/* LMALLOC_CHECK */
 }
 
-rt_public Malloc_t eif_calloc (unsigned int nelem, unsigned int elsize)
+rt_public Malloc_t eiffel_calloc (unsigned int nelem, unsigned int elsize)
 {
 #ifdef LMALLOC_CHECK
 	Malloc_t ret;
@@ -316,7 +316,7 @@ rt_public Malloc_t eif_calloc (unsigned int nelem, unsigned int elsize)
 #endif	/* LMALLOC_CHECK */
 }
 
-rt_public Malloc_t eif_realloc (register void *ptr, register unsigned int nbytes)
+rt_public Malloc_t eiffel_realloc (register void *ptr, register unsigned int nbytes)
 {
 #ifdef LMALLOC_CHECK
 	Malloc_t ret;
@@ -341,7 +341,7 @@ rt_public Malloc_t eif_realloc (register void *ptr, register unsigned int nbytes
 #endif	/* LMALLOC_CHECK */
 }
 
-void eif_free(register void *ptr)
+void eiffel_free(register void *ptr)
 {
 #ifdef LMALLOC_CHECK
 	free (ptr);

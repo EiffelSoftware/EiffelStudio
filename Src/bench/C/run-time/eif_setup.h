@@ -130,12 +130,14 @@ extern void egc_init_plug ();	/* defined in E1/eplug.c. */
 #ifdef WORKBENCH
 #define EIF_REGISTER_THREAD(fail_func) \
 	eif_thr_register(); \
+	eif_set_thr_context ();	\
 { \
 	EIF_RT_BASIC_SETUP(fail_func) \
 	xinitint();
 #else
 #define EIF_REGISTER_THREAD(fail_func) \
 	eif_thr_register(); \
+	eif_set_thr_context ();\
 { \
 	EIF_RT_BASIC_SETUP(fail_func)
 #endif

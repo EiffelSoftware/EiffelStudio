@@ -56,6 +56,12 @@ feature {NONE} -- Callback actions
 
 	notify_start_of_callback (cb_id: INTEGER) is
 		do
+			debug ("DEBUGGER_TRACE_CALLBACK")
+				print ("** BEGIN::Callback ** [" + Eifnet_debugger_info.value_of_cst_managed_cb (cb_id) + "]. %N")			
+				if Eifnet_debugger_info.is_inside_function_evaluation then
+					print ("                 Info : Callback inside an Evaluation%N")			
+				end
+			end			
 		end
 
 	notify_end_of_callback (cb_id: INTEGER; is_stopped: BOOLEAN) is
@@ -71,12 +77,11 @@ feature {NONE} -- Callback actions
 			end
 			
 			debug ("DEBUGGER_TRACE_CALLBACK")
-				print ("** Callback ** %T [" + Eifnet_debugger_info.last_managed_callback_name + "] %T done. %N")			
+				print ("** ->END::Callback ** [" + Eifnet_debugger_info.value_of_cst_managed_cb (cb_id) + "]. %N")
 				if is_stopped then
-					print ("%T => STOP %N")
-				end
-				if Eifnet_debugger_info.application.imp_dotnet.status.is_evaluating then
-					print ("[!] Callback inside an Evaluation%N")			
+					print ("                 Info : Debuggee is STOPPED %N")
+				else
+					print ("                 Info : Debuggee is RUNNING %N")
 				end
 			end
 		end

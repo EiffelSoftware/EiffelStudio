@@ -48,7 +48,8 @@ feature -- Creation
 			!! unselect_button.make ("", arrow_form)
 			!! separator1.make ("", top_form)
 			!! button_form.make ("", top_form)
-			!! generate_button.make ("Generate", button_form)
+			!! generate_tool_button.make ("Generate Tool", button_form)
+			!! generate_command_button.make ("Generate Command", button_form)
 			!! refresh_button.make ("Refresh", button_form)
 			set_values
 			attach_all
@@ -60,7 +61,7 @@ feature -- Creation
 		local
 			set_colors: SET_WINDOW_ATTRIBUTES_COM
 		do
-			set_size (300, 300)
+			set_size (resources.class_selector_width, resources.class_selector_height)
 			!! set_colors
 			set_colors.execute (Current)
 			set_title ("Class selector")
@@ -87,14 +88,18 @@ feature -- Creation
 			arrow_form.attach_right (unselect_button, 70)
 
 			button_form.set_fraction_base (100)
-			button_form.attach_top (generate_button, 0)
+			button_form.attach_top (generate_tool_button, 0)
 			button_form.attach_top (refresh_button, 0)
-			button_form.attach_bottom (generate_button, 0)
+			button_form.attach_top (generate_command_button, 0)
+			button_form.attach_bottom (generate_tool_button, 0)
 			button_form.attach_bottom (refresh_button, 0)
-			button_form.attach_left (generate_button, 20)
-			button_form.attach_right_position (generate_button, 45)
-			button_form.attach_left_position (refresh_button, 55)
-			button_form.attach_right (refresh_button, 20)
+			button_form.attach_bottom (generate_command_button, 0)
+			button_form.attach_left_position (generate_tool_button, 0)
+			button_form.attach_right_position (generate_tool_button, 33)
+			button_form.attach_left_position (generate_command_button, 33)
+			button_form.attach_right_position (generate_command_button, 66)
+			button_form.attach_left_position (refresh_button, 66)
+			button_form.attach_right_position (refresh_button, 100)
 
 			top_form.attach_top (available_label, 0)
 			top_form.attach_left (available_label, 0)
@@ -129,7 +134,8 @@ feature -- Creation
 			select_button.add_activate_action (Current, First)
 			unselect_button.add_activate_action (Current, Second)
 			refresh_button.add_activate_action (Current, Third)
-			generate_button.add_activate_action (Current, Fourth)
+			generate_tool_button.add_activate_action (Current, Fourth)
+			generate_command_button.add_activate_action (Current, Fifth)
 			!! del_com.make (Current)
 			set_delete_command (del_com)
 		end
@@ -163,8 +169,11 @@ feature {NONE} -- GUI attributes
 	unselect_button: ARROW_B
 			-- Button used to deselect classes
 
-	generate_button: PUSH_B
-			-- `Generate' button
+	generate_tool_button: PUSH_B
+			-- `Generate Tool' button
+
+	generate_command_button: PUSH_B
+			-- `Generate Command' button
 
 	refresh_button: PUSH_B
 			-- `Refresh' button
@@ -185,6 +194,10 @@ feature -- Command execution
 			elseif arg = Fourth then
 				if selected_list.selected_count > 0 then
 					object_tool_generator.display (selected_list.selected_item)
+				end
+			elseif arg = Fifth then
+				if selected_list.selected_count > 0 then
+					object_command_generator.display (selected_list.selected_item)
 				end
 			end
 		end

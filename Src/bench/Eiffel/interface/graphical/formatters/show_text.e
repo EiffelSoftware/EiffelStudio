@@ -10,6 +10,7 @@ class SHOW_TEXT
 
 inherit
 
+	SHARED_FORMAT_TABLES;
 	FORMATTER
 		rename
 			init as make,
@@ -79,7 +80,8 @@ feature -- Formatting
 			same_stone, error: BOOLEAN;
 			mp: MOUSE_PTR;
 			cur: CURSOR;
-			routine_w: ROUTINE_W
+			routine_w: ROUTINE_W;
+			st: STRUCTURED_TEXT
 		do
 			if not retried then
 				classc_stone ?= stone;
@@ -140,7 +142,17 @@ feature -- Formatting
 							tool.set_file_name (file_name (filed_stone));
 						end;
 						tool.set_stone (stone);
-						text_window.set_text (stone_text);
+						routine_w ?= tool;
+						if 	
+							routine_w /= Void and then
+							routine_w.stone.e_class.lace_class.hide_implementation
+						then
+							st := rout_flat_context_text (routine_w.stone);
+							text_window.process_text (st);
+							text_window.display
+						else
+							text_window.set_text (stone_text);
+						end;
 						tool.update_save_symbol;
 						tool.set_mode_for_editing;
 						tool.show_editable_text;
@@ -155,14 +167,13 @@ feature -- Formatting
 									warner (popup_parent).gotcha_call 
 										(Warning_messages.w_Class_modified (class_name))
 								end
-							else
+							elseif st = Void then
 								text_window.update_clickable_from_stone (stone)
 							end
 						end;
 						if cur /= Void then
 							text_window.go_to (cur)
 						end;
-						routine_w ?= tool;
 						if routine_w /= Void then
 							routine_w.highlight_routine
 						end

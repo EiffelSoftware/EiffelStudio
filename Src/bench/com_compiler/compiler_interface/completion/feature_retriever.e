@@ -30,7 +30,6 @@ feature -- Basic Operations
 			l_targets: LIST [STRING]
 			l_target_type: TYPE
 			l_lookup_name: STRING
-			l_feature_i: FEATURE_I
 		do
 			found := False
 			qualified_call := False
@@ -49,6 +48,7 @@ feature -- Basic Operations
 						l_targets.finish
 						l_targets.remove
 					end
+					qualified_call := l_targets.count > 1
 					l_targets.finish
 					l_lookup_name := l_targets.item
 					l_targets.remove
@@ -97,7 +97,8 @@ feature {NONE} -- Implementation
 					l_overloaded_features.forth
 				end
 				if l_feature_i /= Void then
-					create Result.make_with_return_type (a_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), l_feature_i.written_class.file_name, feature_location (l_feature_i))
+					extract_description (l_feature_i, l_class_i)
+					create Result.make_with_return_type (a_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), extracted_description, l_feature_i.written_class.file_name, feature_location (l_feature_i))
 					from
 					until
 						l_overloaded_features.after
@@ -114,7 +115,8 @@ feature {NONE} -- Implementation
 				if feature_table.found then
 					l_feature_i := feature_table.found_item
 					if is_listed (l_feature_i, class_i, l_class_i) then
-						create Result.make_with_return_type (l_feature_i.feature_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), l_feature_i.written_class.file_name, feature_location (l_feature_i))
+						extract_description (l_feature_i, l_class_i)
+						create Result.make_with_return_type (l_feature_i.feature_name, parameter_descriptors (l_feature_i), l_feature_i.type.dump, feature_type (l_feature_i), extracted_description, l_feature_i.written_class.file_name, feature_location (l_feature_i))
 					end
 				end
 			end

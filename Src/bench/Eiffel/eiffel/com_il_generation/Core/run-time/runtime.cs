@@ -245,6 +245,7 @@ feature -- Status report
 		// at position `pos'.
 	{
 		if (an_obj is EIFFEL_TYPE_INFO) {
+			INTERFACE_TYPE_ATTRIBUTE generic_type;
 			EIFFEL_TYPE_INFO l_obj = (EIFFEL_TYPE_INFO) an_obj;
 			#if ASSERTIONS
 				ASSERTIONS.REQUIRE ("Object not void", l_obj != null);
@@ -258,6 +259,9 @@ feature -- Status report
 			
 			der = l_obj.____type ();
 			cl_type = der.generics_type [pos - 1];
+			generic_type = (INTERFACE_TYPE_ATTRIBUTE)
+				Type.GetTypeFromHandle (cl_type.type).
+					GetCustomAttributes (typeof (INTERFACE_TYPE_ATTRIBUTE), false) [0];
 			return Type.GetTypeFromHandle (cl_type.type);
 		} else {
 			return null;
@@ -508,14 +512,10 @@ feature -- Duplication
 	public static object standard_clone (object obj)
 		//
 	{
-		EIFFEL_TYPE_INFO source;
-
 #if ASSERTIONS
 		ASSERTIONS.REQUIRE ("Valid type", obj is EIFFEL_TYPE_INFO);
 #endif
-
-		source = (EIFFEL_TYPE_INFO) obj;
-		return GENERIC_CONFORMANCE.create_like_object (source);
+		return GENERIC_CONFORMANCE.create_like_object ((EIFFEL_TYPE_INFO) obj);
 	}
 
 /*

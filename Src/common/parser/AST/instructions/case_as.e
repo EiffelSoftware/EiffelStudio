@@ -6,7 +6,8 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			type_check, byte_node
+			type_check, byte_node,
+			find_breakable
 		end
 
 feature -- Attributes
@@ -48,5 +49,14 @@ feature -- Type check, byte code production, dead code removal
 				Result.set_compound (compound.byte_node);
 			end;
 		end;
+
+feature -- Debugging
+
+	find_breakable is
+		do
+			if compound /= Void then
+				compound.find_breakable
+			end
+		end
 
 end

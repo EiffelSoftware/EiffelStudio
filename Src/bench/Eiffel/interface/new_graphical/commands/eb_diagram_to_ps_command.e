@@ -50,8 +50,7 @@ feature -- Basic operations
 	
 				if dial.file_name /= Void then
 					size := cd.bounds
-					create p.make_with_size (size.width, size.height)
-					p.draw_sub_pixmap (0, 0, tool.area_buffer, size)
+					p := tool.projector.diagram_image (size)
 					if p /= Void then
 						create png_file.make_from_string (dial.file_name)
 						create test_file.make_open_write (png_file)

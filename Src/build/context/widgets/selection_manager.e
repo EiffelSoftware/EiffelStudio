@@ -166,10 +166,12 @@ feature {NONE}
 
 	end_group_composite is
 		do
-			widget.ungrab;
-			grabbed := false;
-			draw_grouped_comp_items;
-			move_context
+			if grabbed then
+				widget.ungrab;
+				grabbed := false;
+				draw_grouped_comp_items;
+				move_context
+			end
 		end;
 
 	end_shift_action is

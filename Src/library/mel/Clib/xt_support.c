@@ -509,16 +509,12 @@ EIF_POINTER event_pointer;
 EIF_INTEGER c_event_keysym (event_pointer)
 EIF_INTEGER event_pointer;
 {
-	/* Ignore modifiers and simply return the string value */
-	/* E.g. ctrlg returns g.*/
+	/* Return the keysym value */
 	char result [100];
 	XComposeStatus status;
 	KeySym keysym;
-	int length;
-   
-	length = XLookupString ((XKeyEvent *) event_pointer, result, 99, &keysym, &status);
-	if (!length) return 0;
-	result [length] = '\0';
+
+	(void) XLookupString ((XKeyEvent *) event_pointer, result, 99, &keysym, &status);
 	return (EIF_INTEGER) keysym;
 }
 

@@ -81,80 +81,94 @@ feature
 			classc_stone: CLASSC_STONE;
 			class_text: CLASS_TEXT;
 			modified_class, position_saved: BOOLEAN;
-			last_cursor_position, last_top_position: INTEGER
+			last_cursor_position, last_top_position: INTEGER;
+			retried: BOOLEAN
 		do
-			classc_stone ?= stone;
-			if 
-				classc_stone /= Void and then classc_stone.is_valid and then
-				classc_stone.class_c.lace_class.date_has_changed 
-			then
-				modified_class := true
-			end;
-			if
-				do_format or filtered or modified_class or else
-				(text_window.last_format /= Current or
-				not equal (stone, text_window.root_stone))
-			then
-				set_global_cursor (watch_cursor);
-				if stone /= Void and then stone.is_valid then
-					stone_text := stone.origin_text;
-					if stone_text = Void then
-						stone_text := "";
-						filed_stone ?= stone;
-						if filed_stone /= Void then
-							warner.set_window (text_window);
-							if filed_stone.file_name /= Void then
-								warner.gotcha_call (w_Cannot_read_file (filed_stone.file_name))
-							else
-								warner.gotcha_call (w_No_associated_file)
-							end;
-						end			
-					end;
-					text_window.clean;
-					display_header (stone);
-					text_window.set_root_stone (stone);
-					text_window.put_string (stone_text);
-					if stone.clickable then
-						if modified_class then
-							class_name := classc_stone.class_c.class_name;
-							warner.set_window (text_window);
-							warner.gotcha_call (w_Class_modified (class_name))
-						else
-							click_list := stone.click_list;
-							if (click_list /= Void) then
-								text_window.share (click_list)
-							end
-						end
-					end;
-					class_text ?= text_window;
-					if 
-						class_text /= Void and then (
-						class_text.last_format = 
-									class_text.tool.showclick_command or
-						class_text.last_format = 
-									class_text.tool.showtext_command)
-					then
-						last_cursor_position := class_text.cursor_position;
-						last_top_position := class_text.top_character_position;
-						position_saved := true
-					end;
-					text_window.set_editable;
-					text_window.show_image;
-					text_window.set_mode_for_editing;
-					if position_saved then
-						if last_cursor_position > text_window.size then
-							last_cursor_position := text_window.size
-						end;
-						if last_top_position > text_window.size then
-							last_top_position := text_window.size
-						end;
-						text_window.set_cursor_position (last_cursor_position);
-						text_window.set_top_character_position (last_top_position)
-					end;
-					text_window.set_last_format (Current)
+			if not retried then
+				classc_stone ?= stone;
+				if 
+					classc_stone /= Void and then classc_stone.is_valid and then
+					classc_stone.class_c.lace_class.date_has_changed 
+				then
+					modified_class := true
 				end;
-				filtered := false;
+				if
+					do_format or filtered or modified_class or else
+					(text_window.last_format /= Current or
+					not equal (stone, text_window.root_stone))
+				then
+					set_global_cursor (watch_cursor);
+					if stone /= Void and then stone.is_valid then
+						stone_text := stone.origin_text;
+						if stone_text = Void then
+							stone_text := "";
+							filed_stone ?= stone;
+							if filed_stone /= Void then
+								if filed_stone.file_name /= Void then
+									warner (text_window).gotcha_call 	
+									(w_Cannot_read_file (filed_stone.file_name))
+								else
+									warner (text_window).gotcha_call 
+										(w_No_associated_file)
+								end;
+							end			
+						end;
+						text_window.clean;
+						display_header (stone);
+						text_window.set_root_stone (stone);
+						text_window.put_string (stone_text);
+						if stone.clickable then
+							if modified_class then
+								class_name := classc_stone.class_c.class_name;
+								warner (text_window).gotcha_call 
+									(w_Class_modified (class_name))
+							else
+								click_list := stone.click_list;
+								if (click_list /= Void) then
+									text_window.share (click_list)
+								end
+							end
+						end;
+						class_text ?= text_window;
+						if 
+							class_text /= Void and then (
+							class_text.last_format = 
+										class_text.tool.showclick_command or
+							(do_format and class_text.last_format = Current))
+						then
+							last_cursor_position := class_text.cursor_position;
+							last_top_position := 
+											class_text.top_character_position;
+							position_saved := true
+						end;
+						text_window.set_editable;
+						text_window.show_image;
+						text_window.set_mode_for_editing;
+						if position_saved then
+							if last_cursor_position > text_window.size then
+								last_cursor_position := text_window.size
+							end;
+							if last_top_position > text_window.size then
+								last_top_position := text_window.size
+							end;
+							text_window.set_cursor_position 
+													(last_cursor_position);
+							text_window.set_top_character_position 
+													(last_top_position)
+						end;
+						text_window.set_last_format (Current)
+					end;
+					filtered := false;
+					restore_cursors
+				end
+			else
+				warner (text_window).gotcha_call (w_Cannot_retrieve_info);
 				restore_cursors
+			end
+		rescue
+			if not Rescue_status.fail_on_rescue then
+				retried := true;
+				retry
 			end
 		end;
 

@@ -132,7 +132,10 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Call the expose actions for the drawing area.
 		do
 			if expose_actions_internal /= Void then
-				expose_actions_internal.call ([a_x, a_y, a_width, a_height])
+				--expose_actions_internal.call ([a_x, a_y, a_width, a_height])
+				--| FIXME Hack to make sure that editor gets redrawn correctly when expose is called
+				--| Remove when editor code has been refactored
+				expose_actions_internal.call ([0, 0, width, height])
 			end
 		end
 

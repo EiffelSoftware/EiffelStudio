@@ -230,6 +230,8 @@ rt_public void sc_stop(void);					/* Stop the scavenging process */
 rt_private EIF_REFERENCE eif_set(EIF_REFERENCE object, uint32 type);					/* Set Eiffel object prior use */
 rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge);				/* Set special Eiffel object */
 
+rt_private void set_memory_object (EIF_REFERENCE object);
+
 /* Also used by the garbage collector */
 rt_shared int split_block(register union overhead *selected, register uint32 nbytes);				/* Split a block (return length) */
 rt_shared void lxtract(union overhead *next);					/* Extract a block from free list */
@@ -281,12 +283,23 @@ rt_private char *rcsid =
 
 #ifdef EIF_THREADS
 extern EIF_REFERENCE safe_emalloc (uint32);
+extern EIF_REFERENCE safe_emalloc_size (uint32, uint32, uint32);
 extern EIF_REFERENCE safe_spmalloc (unsigned int, EIF_BOOLEAN);
+
 rt_public EIF_REFERENCE emalloc (uint32 ftype)
 {
 	EIF_REFERENCE result = NULL;
 	EIF_GC_MUTEX_LOCK;
 	result = safe_emalloc (ftype);
+	EIF_GC_MUTEX_UNLOCK;
+	return result;
+}
+
+rt_public EIF_REFERENCE emalloc_size (uint32 ftype, uint32 dtype, uint32 size)
+{
+	EIF_REFERENCE result = NULL;
+	EIF_GC_MUTEX_LOCK;
+	result = safe_emalloc_size (ftype, dtype, size);
 	EIF_GC_MUTEX_UNLOCK;
 	return result;
 }
@@ -301,10 +314,20 @@ rt_public EIF_REFERENCE spmalloc(unsigned int nbytes, EIF_BOOLEAN atomic)
 }
 
 #define emalloc safe_emalloc
+#define emalloc_size safe_emalloc_size
 #define spmalloc safe_spmalloc
 #endif
 
-rt_public EIF_REFERENCE emalloc(uint32 ftype)
+rt_public EIF_REFERENCE emalloc (uint32 ftype)
+{
+	/* Fetch object's size in bytes. Note that the size of all the Eiffel
+	 * objects is correctly padded, but do not account for the header's size.
+	 */
+	uint32 type = (uint32) Deif_bid(ftype);
+	return emalloc_size (ftype, type, EIF_Size(type));
+}
+
+rt_public EIF_REFERENCE emalloc_size(uint32 ftype, uint32 type, uint32 nbytes)
 							/* Full dynamic type */
 {
 	/* Memory allocation for an Eiffel object. It either succeeds or raises the
@@ -312,10 +335,7 @@ rt_public EIF_REFERENCE emalloc(uint32 ftype)
 	 * object holding at least 'nbytes'.
 	 */
 	EIF_REFERENCE object;				/* Pointer to the freshly created object */
-	unsigned int nbytes;		/* Object's size */
-	uint32 type = (uint32) Deif_bid(ftype);
 	
-
 #ifdef EMCHK
 	printf("--- Start of emalloc (DT %d) ---\n",type);
 	memck(0);
@@ -331,11 +351,6 @@ rt_public EIF_REFERENCE emalloc(uint32 ftype)
 
 	DISCARD_BREAKPOINTS
 
-	/* Fetch object's size in bytes. Note that the size of all the Eiffel
-	 * objects is correctly padded, but do not account for the header's size.
-	 */
-	nbytes = EIF_Size(type);
-
 #ifdef DEBUG
 	dprintf(8)("emalloc: type %d is %d bytes\n", type, nbytes);
 	flush;
@@ -343,15 +358,13 @@ rt_public EIF_REFERENCE emalloc(uint32 ftype)
 
 	/* Depending on the optimization chosen, we allocate the object in
 	 * the Generational Scavenge Zone (GSZ) or in the free-list.
+	 * All the objects smaller than `eif_gs_limit' are allocated 
+	 * in the the GSZ, otherwise they are allocated in the free-list.
 	 * If the flag EIF_MEMORY_OPTIMIZATION is defined then we put the 
 	 * memory objects in the GSZ (i.e those, which inherits from class
 	 * MEMORY, otherwise they are allocated in the free-list.
 	 * All the non-special objects smaller than `eif_gs_limit' are allocated 
 	 * in the the GSZ, otherwise they are allocated in the free-list.
-	 * If the string optimization is on (no defined flag but a different 
-     * C-code is generated), then the special string are also allocated in the
-	 * GSZ with the function strmalloc, strrealloc (see malloc.c), otherwise
-	 * they are allocated in the free-list. -- ET 
 	 */
 
 #ifdef EIF_MEMORY_OPTIMIZATION
@@ -375,18 +388,11 @@ rt_public EIF_REFERENCE emalloc(uint32 ftype)
 #endif
 
 #ifdef EIF_MEMORY_OPTIMIZATION
-			/* Extra operations for `memory' objects. */
-			if (0 != Disp_rout (type))		/* It is a memory object.	*/
-			{
-				if (-1 == epush (&memory_set, object))
-										/* Push it in the memory set.*/
-				{
-					urgent_plsc(&object);			/* Full safe collection */
-					if (-1 == epush(&memory_set, object))	/* Still failed */
-						enomem(MTC_NOARG);				/* Critical exception */
-				}
+				/* Special marking of MEMORY object */
+			if (0 != Disp_rout (type)) {		/* It is a memory object.	*/
+				set_memory_object (object);
 			}
-#endif
+#endif 
 			return object;
 
 		}
@@ -3121,6 +3127,18 @@ rt_private EIF_REFERENCE eif_spset(EIF_REFERENCE object, EIF_BOOLEAN in_scavenge
 	return object;
 }
 
+rt_private void set_memory_object (EIF_REFERENCE object)
+	/* Add `object' into `memory_set'. */
+{
+	if (-1 == epush (&memory_set, object))
+		/* Push it in the memory set.*/
+	{
+		urgent_plsc(&object);			/* Full safe collection */
+		if (-1 == epush(&memory_set, object))	/* Still failed */
+			enomem(MTC_NOARG);				/* Critical exception */
+	}
+}
+	
 rt_private int32 compute_hlist_index (int32 size) {
 	/* Quickly compute the index in the hlist array where we have a
 	 * chance to find the right block. The idea is to do a right

@@ -32,12 +32,17 @@ feature {NONE}
 			Result := main_panel.context_catalog_widget
 		end
 
+	presentation_window: BUILD_PRESENT_WINDOW is
+		once
+			!! Result.make ("", eb_screen)
+		end
+
 feature {NONE} -- Initial windowing
 
 	init_toolkit: TOOLKIT_IMP is
 			-- Init toolkit to desired implementation.
 		once
-			!!Result.make ("")
+			!! Result.make ("")
 		end
 
 	init_project is
@@ -49,6 +54,7 @@ feature {NONE} -- Initial windowing
 			if (command_catalog = Void) then end
 			if (history_window = Void) then end
 			if (app_editor = Void) then end
+			presentation_window.close
 		end
 
 	display_init_windows is

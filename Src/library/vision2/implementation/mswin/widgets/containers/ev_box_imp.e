@@ -26,7 +26,23 @@ inherit
 			set_width,
 			set_height,
 			child_add_successful,
-			on_first_display
+			on_first_display,
+			client_width,
+			client_height
+		end
+
+feature -- Access
+
+	client_width: INTEGER is
+			-- Width of the client area of container
+		do
+			Result := (client_rect.width - 2 * border_width).max (0)
+		end
+	
+	client_height: INTEGER is
+			-- Height of the client area of container
+		do
+			Result := (client_rect.height  - 2 * border_width).max (0)
 		end
 
 feature {NONE} -- Initialization
@@ -53,6 +69,9 @@ feature -- Access
 
 	spacing: INTEGER
 			-- Space between the objects in the box
+
+	border_width: INTEGER
+			-- Border width around container
 
 	total_spacing: INTEGER is
 			-- Total space occupied by spacing. One spacing
@@ -86,11 +105,10 @@ feature -- Status setting (box specific)
 		end
 
 	set_border_width (value: INTEGER) is
-			-- Border width around container
+			-- Make `value' the new border width.
 		do
-			check
-				not_yet_implemented: False
-			end
+			border_width := value
+			-- Update view
 		end
 
 feature -- Resizing

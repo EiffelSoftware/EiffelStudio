@@ -1,11 +1,10 @@
 system
-	rt-converter
+	rt_converter
 
 root
-	converter: "make"
+	CONVERTER (converter): "make"
 
 default
-
 	assertion (require);
 	--debug (all)
 
@@ -16,11 +15,10 @@ cluster
 	support:		"$EIFFEL4\library\base\support";
 	access:			"$EIFFEL4\library\base\structures\access";
 	cursors:		"$EIFFEL4\library\base\structures\cursors";
-	cursor_trees:		"$EIFFEL4\library\base\structures\cursor_tree";
+	cursor_tree:		"$EIFFEL4\library\base\structures\cursor_tree";
 	dispenser:		"$EIFFEL4\library\base\structures\dispenser";
 	iteration:		"$EIFFEL4\library\base\structures\iteration";
 	list:			"$EIFFEL4\library\base\structures\list";
-	obsolete:		"$EIFFEL4\library\base\structures\obsolete";
 	set:			"$EIFFEL4\library\base\structures\set";
 	sort:			"$EIFFEL4\library\base\structures\sort";
 	storage:		"$EIFFEL4\library\base\structures\storage";

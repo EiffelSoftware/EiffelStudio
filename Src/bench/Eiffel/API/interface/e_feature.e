@@ -535,7 +535,7 @@ feature {DEBUG_INFO} -- Implementation
 
 feature {NONE} -- Implementation
 
-    associated_class_id: CLASS_ID
+	associated_class_id: CLASS_ID
             -- Class id where the feature was evaluated in
 
 	is_dynamic: BOOLEAN is

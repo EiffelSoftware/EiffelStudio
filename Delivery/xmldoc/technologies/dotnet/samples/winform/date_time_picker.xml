@@ -25,15 +25,36 @@
 		<heading>
 			<size>2</size>Compiling
 		</heading>
+		<paragraph>To compile the example:
+			<list ordered="false">
+				<item>Launch EiffelStudio.</item>
+				<item>Select 
+					<bold>Use existing Ace (control file)</bold> and click 
+					<bold>OK</bold>
+				</item>
+				<item>Browse to 
+					<output output="envision">ENViSioN! root directory</output>
+					<output output="studio">Eiffel54</output>\examples\dotnet\winforms\control_reference\date_time_picker\.
+					<italic/>
+				</item>
+				<item>Choose
+					<italic/>.ace
+				</item>
+				<item>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.</item>
+				<item>Click 
+					<bold>OK</bold>.
+				</item>
+			</list>
+		</paragraph>
 		<heading>
 			<size>2</size>Running
 		</heading>
 		<paragraph>After launching the application, you will see a window displayed with a similar appearance to the one above. On the left side of the main window a date is displayed in a 
-			<span>COMBO_BOX</span>. Clicking on this 
-			<span>COMBO_BOX</span> and a 
-			<span>CALENDAR</span> control will appear showing the same date than in the 
-			<span>COMBO_BOX</span>. On the the right side of the main window are the commands to control the format of the displayed date and the style of the 
-			<span>CALENDAR</span> control.
+			<span><code><class_name>COMBO_BOX</class_name></code></span>. Clicking on this 
+			<span><code><class_name>COMBO_BOX</class_name></code></span> and a 
+			<span><code><class_name>CALENDAR</class_name></code></span> control will appear showing the same date than in the 
+			<span><code><class_name>COMBO_BOX</class_name></code></span>. On the the right side of the main window are the commands to control the format of the displayed date and the style of the 
+			<span><code><class_name>CALENDAR</class_name></code></span> control.
 		</paragraph>
 		<paragraph>Clicking on the "Change font" button and a 
 			<link>
@@ -45,9 +66,9 @@
 			<link>
 				<url>/images/dotnet_samples/date_time_picker_change_color_dlg.png</url>
 				<label>dialog box</label>
-			</link> will appear that will permit you to customize the color appearance of the calendar thought a 
+			</link> will appear that will permit you to customize the color appearance of the calendar though a 
 			<link>
-				<url>/images/dotnet_samples/change_color_dialog.png</url>
+				<url>/images/dotnet_samples/date_time_picker_change_color_dlg.png</url>
 				<label>color dialog box</label>
 			</link>.
 		</paragraph>
@@ -56,33 +77,33 @@
 			<size>2</size>Under the Hood
 		</heading>
 		<paragraph>This application uses several different controls, but tend to show how to parameter the 
-			<span>CALENDAR</span> control using the 
-			<span>FONT_DIALOG</span> and 
-			<span>COLOR_DIALOG</span>.
+			<span><code><class_name>CALENDAR</class_name></code></span> control using the 
+			<span><code><class_name>FONT_DIALOG</class_name></code></span> and 
+			<span><code><class_name>COLOR_DIALOG</class_name></code></span>.
 		</paragraph>
 		<paragraph>When one of the buttons "Change font" or "Change color" is pressed, an event is launched and open the corresponding dialog box. </paragraph>
 		<paragraph>When the entry in the 
-			<span>COMBO_BOX</span>format change, an event is launched and modify the format of the displayed date.
+			<span><code><class_name>COMBO_BOX</class_name></code></span> format change, an event is launched and modify the format of the displayed date.
 		</paragraph>
 		<paragraph>This sample contains the following class:</paragraph>
 		<list ordered="false">
 			<item>
-				<span>CALENDAR</span>
+				<span><code><class_name>CALENDAR</class_name></code></span>
 			</item>
 			<item>
-				<span>COMBO_BOX</span>
+				<span><code><class_name>COMBO_BOX</class_name></code></span>
 			</item>
 			<item>
-				<span>BUTTON</span>
+				<span><code><class_name>BUTTON</class_name></code></span>
 			</item>
 			<item>
-				<span>LABEL</span>
+				<span><code><class_name>LABEL</class_name></code></span>
 			</item>
 			<item>
-				<span>GROUP_BOX</span>
+				<span><code><class_name>GROUP_BOX</class_name></code></span>
 			</item>
 			<item>
-				<span>CHECK_BOX</span>
+				<span><code><class_name>CHECK_BOX</class_name></code></span>
 			</item>
 		</list>
 		<heading>

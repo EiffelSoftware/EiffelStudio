@@ -40,6 +40,16 @@ rt_public int    eif_par_table2_size = 0;
 #define par_info(t) (eif_par_table2[(t)])
 
 /*------------------------------------------------------------------*/
+/* Inverse RTUD table.
+/*                                                                  */
+/* Access   : Read only                                             */
+/* Indexing : base id; RTUD(yes)                                    */
+/* Result   : RTUD(no)                                              */
+/*------------------------------------------------------------------*/
+
+rt_public int16 *rtud_inv = (int16 *) 0;
+
+/*------------------------------------------------------------------*/
 /* Compound id map. Maps compiler generated ids to themselves and   */
 /* run-time generated ids to their base ids.                        */
 /* Table is dynamic.                                                */
@@ -172,16 +182,6 @@ rt_private EIF_CONF_TAB **eif_conf_tab = (EIF_CONF_TAB **)0;
 rt_private EIF_GEN_DER **eif_derivations = (EIF_GEN_DER **)0;
 
 /*------------------------------------------------------------------*/
-/* Inverse RTUD table.
-/*                                                                  */
-/* Access   : Read only                                             */
-/* Indexing : base id; RTUD(yes)                                    */
-/* Result   : RTUD(no)                                              */
-/*------------------------------------------------------------------*/
-
-rt_private int16 *rtud_inv = (int16 *) 0;
-
-/*------------------------------------------------------------------*/
 
 rt_private int16 cid_array [3];
 
@@ -273,24 +273,19 @@ rt_private void eif_put_gen_seq (int16, int16*, int16*, int16);
 
 rt_public void eif_gen_conf_init (int max_dtype)
 {
-	EIF_GET_CONTEXT
-
 	EIFMTX_CREATE;
 	EIFMTX_LOCK;
 
 	eifthd_gen_conf_init (max_dtype);
 
 	EIFMTX_UNLOCK;
-	EIF_END_GET_CONTEXT
 }
 /*------------------------------------------------------------------*/
 
 rt_public int16 eif_compound_id (int16 *cache, char *Current, int16 base_id, int16 *types)
 {
-	EIF_GET_CONTEXT
 	int16   result;
 
-	EIFMTX_CREATE;
 	EIFMTX_LOCK;
 
 	result = eifthd_compound_id (cache, Current, base_id, types);
@@ -298,16 +293,13 @@ rt_public int16 eif_compound_id (int16 *cache, char *Current, int16 base_id, int
 	EIFMTX_UNLOCK;
 
 	return result;
-	EIF_END_GET_CONTEXT
 }
 /*------------------------------------------------------------------*/
 
 rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, char *Current)
 {
-	EIF_GET_CONTEXT
 	int16   result;
 
-	EIFMTX_CREATE;
 	EIFMTX_LOCK;
 
 	result = eifthd_final_id (stype, ttable, gttable, Current);
@@ -315,16 +307,13 @@ rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, char 
 	EIFMTX_UNLOCK;
 
 	return result;
-	EIF_END_GET_CONTEXT
 }
 /*------------------------------------------------------------------*/
 
 rt_public int16 eif_gen_param (int16 stype, char *obj, int pos, char *is_exp, long *nr_bits)
 {
-	EIF_GET_CONTEXT
 	int16   result;
 
-	EIFMTX_CREATE;
 	EIFMTX_LOCK;
 
 	result = eifthd_gen_param (stype, obj, pos, is_exp, nr_bits);
@@ -332,16 +321,13 @@ rt_public int16 eif_gen_param (int16 stype, char *obj, int pos, char *is_exp, lo
 	EIFMTX_UNLOCK;
 
 	return result;
-	EIF_END_GET_CONTEXT
 }
 /*------------------------------------------------------------------*/
 
 rt_public int eif_gen_count (char *obj)
 {
-	EIF_GET_CONTEXT
 	int result;
 
-	EIFMTX_CREATE;
 	EIFMTX_LOCK;
 
 	result = eifthd_gen_count (obj);
@@ -349,16 +335,13 @@ rt_public int eif_gen_count (char *obj)
 	EIFMTX_UNLOCK;
 
 	return result;
-	EIF_END_GET_CONTEXT
 }
 /*------------------------------------------------------------------*/
 
 rt_public char eif_gen_typecode (char *obj, int pos)
 {
-	EIF_GET_CONTEXT
 	char    result;
 
-	EIFMTX_CREATE;
 	EIFMTX_LOCK;
 
 	result = eifthd_gen_typecode (obj, pos);
@@ -366,16 +349,13 @@ rt_public char eif_gen_typecode (char *obj, int pos)
 	EIFMTX_UNLOCK;
 
 	return result;
-	EIF_END_GET_CONTEXT
 }
 /*------------------------------------------------------------------*/
 
 rt_public char eif_gen_is_uniform (char *obj, char code)
 {
-	EIF_GET_CONTEXT
 	char    result;
 
-	EIFMTX_CREATE;
 	EIFMTX_LOCK;
 
 	result = eifthd_gen_is_uniform (obj, code);
@@ -383,16 +363,13 @@ rt_public char eif_gen_is_uniform (char *obj, char code)
 	EIFMTX_UNLOCK;
 	
 	return result;
-	EIF_END_GET_CONTEXT
 }
 /*------------------------------------------------------------------*/
 
 rt_public char *eif_gen_typecode_str (char *obj)
 {
-	EIF_GET_CONTEXT
 	char    *result;
 
-	EIFMTX_CREATE;
 	EIFMTX_LOCK;
 
 	result = eifthd_gen_typecode_str (obj);
@@ -400,16 +377,13 @@ rt_public char *eif_gen_typecode_str (char *obj)
 	EIFMTX_UNLOCK;
 	
 	return result;
-	EIF_END_GET_CONTEXT
 }
 /*------------------------------------------------------------------*/
 
 rt_public int16 eif_gen_param_id (int16 stype, char *obj, int pos)
 {
-	EIF_GET_CONTEXT
 	int16   result;
 
-	EIFMTX_CREATE;
 	EIFMTX_LOCK;
 
 	result = eifthd_gen_param_id (stype, obj, pos);
@@ -417,16 +391,13 @@ rt_public int16 eif_gen_param_id (int16 stype, char *obj, int pos)
 	EIFMTX_UNLOCK;
 
 	return result;
-	EIF_END_GET_CONTEXT
 }
 /*------------------------------------------------------------------*/
 
 rt_public char *eif_gen_create (char *obj, int pos)
 {
-	EIF_GET_CONTEXT
 	char    *result;
 
-	EIFMTX_CREATE;
 	EIFMTX_LOCK;
 
 	result = eifthd_gen_create (obj, pos);
@@ -434,16 +405,13 @@ rt_public char *eif_gen_create (char *obj, int pos)
 	EIFMTX_UNLOCK;
 
 	return result;
-	EIF_END_GET_CONTEXT
 }
 /*------------------------------------------------------------------*/
 
 rt_public int16 eif_register_bit_type (long size)
 {
-	EIF_GET_CONTEXT
 	int16   result;
 
-	EIFMTX_CREATE;
 	EIFMTX_LOCK;
 
 	result = eifthd_register_bit_type (size);
@@ -451,16 +419,13 @@ rt_public int16 eif_register_bit_type (long size)
 	EIFMTX_UNLOCK;
 
 	return result;
-	EIF_END_GET_CONTEXT
 }
 /*------------------------------------------------------------------*/
 
 rt_public int16 eif_typeof_array_of (int16 dtype)
 {
-	EIF_GET_CONTEXT
 	int16   result;
 
-	EIFMTX_CREATE;
 	EIFMTX_LOCK;
 
 	result = eifthd_typeof_array_of (dtype);
@@ -468,16 +433,13 @@ rt_public int16 eif_typeof_array_of (int16 dtype)
 	EIFMTX_UNLOCK;
 
 	return result;
-	EIF_END_GET_CONTEXT
 }
 /*------------------------------------------------------------------*/
 
 rt_public char *eif_gen_typename (char *obj)
 {
-	EIF_GET_CONTEXT
 	char    *result;
 
-	EIFMTX_CREATE;
 	EIFMTX_LOCK;
 
 	result = eifthd_gen_typename (obj);
@@ -485,16 +447,13 @@ rt_public char *eif_gen_typename (char *obj)
 	EIFMTX_UNLOCK;
 
 	return result;
-	EIF_END_GET_CONTEXT
 }
 /*------------------------------------------------------------------*/
 
 rt_public int16 *eif_gen_cid (int16 dftype)
 {
-	EIF_GET_CONTEXT
 	int16   *result;
 
-	EIFMTX_CREATE;
 	EIFMTX_LOCK;
 
 	result = eifthd_gen_cid (dftype);
@@ -502,16 +461,13 @@ rt_public int16 *eif_gen_cid (int16 dftype)
 	EIFMTX_UNLOCK;
 
 	return result;
-	EIF_END_GET_CONTEXT
 }
 /*------------------------------------------------------------------*/
 
 rt_public int16 eif_gen_id_from_cid (int16 *cidarr, int *dtype_map)
 {
-	EIF_GET_CONTEXT
 	int16   result;
 
-	EIFMTX_CREATE;
 	EIFMTX_LOCK;
 
 	result = eifthd_gen_id_from_cid (cidarr, dtype_map);
@@ -519,16 +475,13 @@ rt_public int16 eif_gen_id_from_cid (int16 *cidarr, int *dtype_map)
 	EIFMTX_UNLOCK;
 
 	return result;
-	EIF_END_GET_CONTEXT
 }
 /*------------------------------------------------------------------*/
 
 rt_public char *eif_gen_create_from_cid (int16 *cidarr)
 {
-	EIF_GET_CONTEXT
 	char    *result;
 
-	EIFMTX_CREATE;
 	EIFMTX_LOCK;
 
 	result = eifthd_gen_create_from_cid (cidarr);
@@ -536,16 +489,13 @@ rt_public char *eif_gen_create_from_cid (int16 *cidarr)
 	EIFMTX_UNLOCK;
 
 	return result;
-	EIF_END_GET_CONTEXT
 }
 /*------------------------------------------------------------------*/
 
 rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 {
-	EIF_GET_CONTEXT
 	int result;
 
-	EIFMTX_CREATE;
 	EIFMTX_LOCK;
 
 	result = eifthd_gen_conf (source_type, target_type);
@@ -553,24 +503,20 @@ rt_public int eif_gen_conf (int16 source_type, int16 target_type)
 	EIFMTX_UNLOCK;
 
 	return result;
-	EIF_END_GET_CONTEXT
 }
 /*------------------------------------------------------------------*/
 
-rt_public int16 eif_cid_map_acc (int idx)
+rt_public int eif_cid_map_acc (int idx)
 {
-	EIF_GET_CONTEXT
 	int result;
 
-	EIFMTX_CREATE;
 	EIFMTX_LOCK;
 
-	result = eif_cid_map [idx];
+	result = (int) eif_cid_map [idx];
 
 	EIFMTX_UNLOCK;
 
 	return result;
-	EIF_END_GET_CONTEXT
 }
 /*------------------------------------------------------------------*/
 /* Rename public features if EIF_THREADS is on.                     */
@@ -2975,7 +2921,7 @@ rt_private void eif_compute_ctab (int16 dftype)
 
 	if (gdp == (EIF_GEN_DER *) 0)
 	{
-		gdp = eif_new_gen_der ((long)0, (int16*) 0, RTUD_INV(dtype), (char)0, (char)0, 0);
+		gdp = eif_new_gen_der ((long)0, (int16*) 0, (int16) RTUD_INV(dtype), (char) 0, (char) 0, (int16) 0);
 
 		eif_derivations [dftype] = gdp;
 	}

@@ -49,7 +49,7 @@ feature -- Initialization
 
 					-- Read the resource files
 
-				if argument_count = 1 and then
+				if argument_count > 0 and then
 					(argument (1).is_equal ("-bench") or
 					else argument (1).is_equal ("-from_bench"))
 				then

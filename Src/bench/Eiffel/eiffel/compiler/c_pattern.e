@@ -58,6 +58,8 @@ feature
 			n, i: INTEGER;
 		do
 			n := argument_count;
+				-- Use of `deep_equal' is valid as no SPECIAL objects are
+				-- involved
 			Result := 	deep_equal (result_type, other.result_type)
 						and then
 						n = other.argument_count;
@@ -66,6 +68,8 @@ feature
 			until
 				i > n or else not Result
 			loop
+					-- Use of `deep_equal' is valid as no SPECIAL objects are
+					-- involved
 				Result := deep_equal (argument_types.item (i),
 											(other.argument_types.item (i)));
 				i := i + 1;

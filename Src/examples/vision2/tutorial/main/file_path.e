@@ -38,7 +38,7 @@ feature -- Basic operation
 			Result.append ("short_forms")
 			Result.append_character (Operating_environment.directory_separator)
 			Result.append (class_name)
-			Result.append (".txt")
+			Result.append (".rtf")
 		end
 
 	example_file: STRING is
@@ -61,7 +61,6 @@ feature {NONE} -- Implementation
 		once
 			create env
 			Result := env.get ("EIFFEL4")
-	--		Result := "d:\Eiffel45"
 			Result.append_character (Operating_environment.directory_separator)
 			Result.append ("library")
 			Result.append_character (Operating_environment.directory_separator)
@@ -76,7 +75,6 @@ feature {NONE} -- Implementation
 		once
 			create env
 			Result := env.get ("EIFFEL4")
-	--		Result := "d:\Eiffel45"
 			Result.append_character (Operating_environment.directory_separator)
 			Result.append ("examples")
 			Result.append_character (Operating_environment.directory_separator)

@@ -110,7 +110,7 @@ feature -- Access
 
 feature -- Basic operation
 
-	display_text (window: EV_TEXT; path: STRING) is
+	display_text (window: EV_RICH_TEXT; path: STRING) is
 			-- reads text information from file for use in text area
 		local
 			file: PLAIN_TEXT_FILE
@@ -127,6 +127,29 @@ feature -- Basic operation
 				file.start
 				file.readstream (file.count)
 				window.set_text(file.laststring)
+			end
+		end
+
+	display_rtf_text (window: EV_RICH_TEXT; path: STRING) is
+			-- reads text information from file for use in text area
+		local
+			str: STRING
+			file: RAW_FILE
+			warning: EV_WARNING_DIALOG
+			window_imp: EV_RICH_TEXT_IMP
+		do
+			create file.make (path)
+			if not file.exists then
+				str := "Could not open file : "
+				str.append (path)
+				create warning.make_default (demo_page, "File not found", str)
+			else
+				file.open_read
+--				file.start
+--				file.readstream (file.count)
+				window_imp ?= window.implementation
+				window_imp.load_rtf_file (file)
+--				window.set_text (file.laststring)
 			end
 		end
 
@@ -172,7 +195,7 @@ feature {DEMO_ITEM} -- Execution commands
 
 			-- And we set the diverse documentations.
 			display_text (example_page, example_file)
-			display_text (class_page, class_file)
+			display_rtf_text (class_page, class_file)
 			display_text (text_page, documentation_file)
 		end
  

@@ -19,6 +19,8 @@ feature {NONE} -- Initialization
 			create {LINKED_LIST [WIZARD_ENUM_DESCRIPTOR]} enumerators.make
 			create {LINKED_LIST [WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR]} 
 					interfaces.make
+			create {LINKED_LIST [STRING]} eiffel_names.make
+			eiffel_names.compare_objects
 		ensure
 			valid_library_descriptors: library_descriptors /= Void
 		end
@@ -62,6 +64,9 @@ feature -- Access
 	is_iunknown: BOOLEAN
 			-- Is IUnknown referenced as data type in system?
 
+	eiffel_names: LIST [STRING]
+			-- List of Eiffel names in system.
+
 feature -- Basic operations
 
 	generate (a_type_library_file_name: STRING) is
@@ -86,6 +91,7 @@ feature -- Basic operations
 				a_type_library_descriptor := library_descriptor_for_iteration
 				a_type_library_descriptor.set_complete
 				a_type_library_descriptor.finalize_aliases
+				a_type_library_descriptor.finalize_names
 				a_type_library_descriptor.create_implemented_interfaces
 				a_type_library_descriptor.finalize_interface_feature_names
 				forth

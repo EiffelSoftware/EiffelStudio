@@ -30,21 +30,6 @@ feature {NONE} -- Initialization
 			text := ""
 		end
 
-feature -- Access
-
-	parent_imp: EV_STATUS_BAR_IMP
-			-- Status bar parent of the item.
-
-	parent: EV_STATUS_BAR is
-			-- Parent of the current item.
-		do
-			if parent_imp /= Void then
-				Result ?= parent_imp.interface
-			else
-				Result := Void
-			end
-		end
-
 feature -- Status report
 
 	destroyed: BOOLEAN is

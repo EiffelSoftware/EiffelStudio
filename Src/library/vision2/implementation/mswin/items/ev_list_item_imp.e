@@ -10,6 +10,9 @@ class
 	
 inherit
 	EV_LIST_ITEM_I
+		redefine
+			parent_imp
+		end
 
 	EV_ITEM_IMP
 
@@ -35,17 +38,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	parent_imp: EV_LIST_ITEM_HOLDER_IMP
-			-- Tree that contains the item
-
-	parent: EV_LIST is
-			-- Parent of the current item.
-		do
-			if parent_imp /= Void then
-				Result ?= parent_imp.interface
-			else
-				Result := Void
-			end
-		end
+			-- Parent of the current item
 
 feature -- Status report
 

@@ -52,6 +52,12 @@ feature -- Lace compilation
 				System.set_c_file_names (file_names);
 			elseif language_name.is_object then
 				System.set_object_file_names (file_names);
+			else
+
+					-- Is it an error ?
+				io.error.putstring ("%NWARNING: undefined name in Externals clause");
+				io.error.putstring (language_name.language_name);
+				io.error.new_line;
 			end;
 		end;
 

@@ -241,10 +241,10 @@ feature -- Element change
 		do
 			gc_clip_area := an_area.twin
 			rectangle_struct := feature {EV_GTK_EXTERNALS}.c_gdk_rectangle_struct_allocate
-			feature {EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_x (rectangle_struct, an_area.x)
-			feature {EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_y (rectangle_struct, an_area.y)
-			feature {EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_width (rectangle_struct, an_area.width)
-			feature {EV_GTK_EXTERNALS}.set_gdk_rectangle_struct_height (rectangle_struct, an_area.height)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_x (rectangle_struct, an_area.x)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_y (rectangle_struct, an_area.y)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_width (rectangle_struct, an_area.width)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.set_gdk_rectangle_struct_height (rectangle_struct, an_area.height)
 			feature {EV_GTK_EXTERNALS}.gdk_gc_set_clip_rectangle (gc, rectangle_struct)
 			rectangle_struct.memory_free
 		end

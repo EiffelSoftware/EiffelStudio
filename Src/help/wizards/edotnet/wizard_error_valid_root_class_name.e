@@ -26,7 +26,7 @@ feature -- Access
 
 	h_filename: STRING is "index.html"
 			-- Path to HTML help filename
-			
+
 feature -- basic Operations
 
 	display_state_text is
@@ -47,6 +47,6 @@ feature {WIZARD_STATE_WINDOW}
 			create Result.make_from_string (Wizard_icon_name)
 			Result.add_extension (pixmap_extension)
 		end
-	
+
 end -- class WIZARD_ERROR_VALID_ROOT_CLASS_NAME
 

@@ -22,20 +22,18 @@ feature {NONE} -- Implementation
 			set_help_filename (h_filename)
 			Precursor {BENCH_WIZARD_ERROR_STATE_WINDOW} (an_info) 
 		end
-		
+
 	build is
 		do
 			Precursor {BENCH_WIZARD_ERROR_STATE_WINDOW}
 			First_window.disable_back_button
 		end
-		
-		
 
 feature -- Access
 
 	h_filename: STRING is "index.html"
 			-- Path to HTML help filename
-			
+
 feature -- basic Operations
 
 	display_state_text is
@@ -56,6 +54,6 @@ feature {WIZARD_STATE_WINDOW}
 			create Result.make_from_string (Wizard_icon_name)
 			Result.add_extension (pixmap_extension)
 		end
-	
+
 end -- class WIZARD_ERROR_COM_EXCEPTION
 

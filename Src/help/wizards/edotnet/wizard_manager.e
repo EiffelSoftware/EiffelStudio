@@ -25,11 +25,11 @@ feature -- Initialization
 			first_window.add_help_button
 			Precursor {BENCH_WIZARD_MANAGER}	
 		end
-		
+
 	Wizard_title: STRING is 
 			-- Window title for this wizard.
 		once
 			Result := Interface_names.t_Wizard_title
 		end
-	
+
 end -- class WIZARD_MANAGER

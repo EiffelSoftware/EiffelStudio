@@ -225,14 +225,47 @@ feature {NONE} -- Initialization
 			Precursor {EV_APPLICATION}
 			-- Any General initialization can be added here.
 			-- This will be executed before the program is launched.
-			pnd_motion_actions.extend (agent clear_status_during_transport)
-			cancel_actions.extend (agent clear_status_after_transport)
-			
-				-- Ensure that digit checking timer is destroyed after a transport.
-			cancel_actions.extend (agent end_digit_processing)
-			drop_actions.extend (agent end_digit_processing)
+			pnd_motion_actions.extend (agent pick_and_drop_motion)
+			pick_actions.extend (agent pick_and_drop_started)
+			cancel_actions.extend (agent pick_and_drop_cancelled)
+			drop_actions.extend (agent pick_and_drop_completed)
 		end
 		
+	pick_and_drop_motion (an_x, a_y: INTEGER; target: EV_ABSTRACT_PICK_AND_DROPABLE) is
+			-- Respond to a global pick and drop motion.
+		do
+			clear_status_during_transport (an_x, a_y, target)
+		end
+
+	pick_and_drop_started (pebble: ANY) is
+			-- Respond to a pick and drop starting.
+		require
+			pebble_not_void: pebble /= Void
+		do
+			system_status.set_pick_and_drop_pebble (pebble)
+			command_handler.update
+		end
+
+	pick_and_drop_cancelled (pebble: ANY) is
+			-- Respond to the cancelling of a pick and drop.
+		require
+			pebble_not_void: pebble /= Void
+		do
+			system_status.remove_pick_and_drop_pebble
+			clear_status_after_transport (pebble)
+			command_handler.update
+		end
+		
+	pick_and_drop_completed (pebble: ANY) is
+			-- Respond to the successful completion of a pick and drop.
+		require
+			pebble_not_void: pebble /= Void
+		do
+			end_digit_processing (pebble)
+			system_status.remove_pick_and_drop_pebble
+			command_handler.update
+		end
+
 feature {NONE} -- Implementation
 
 	display_tip_of_the_day is

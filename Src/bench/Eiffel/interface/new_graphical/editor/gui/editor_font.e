@@ -45,6 +45,7 @@ feature {NONE} -- Implementation
 		do
 			if not internal_is_proportional_computed then
 				internal_is_proportional := Precursor
+				internal_is_proportional_computed := True
 			end
 			Result := internal_is_proportional
 		end

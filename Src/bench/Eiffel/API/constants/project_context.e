@@ -226,7 +226,7 @@ feature {NONE}
 		end;
 
 	Precompilation_driver: STRING is
-			-- Full name of the `preobj' object file
+			-- Full name of the precompilation driver
 		local
 			file_name: FILE_NAME
 		once

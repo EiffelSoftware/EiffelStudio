@@ -42,7 +42,7 @@ public:
 
 	EIF_REFERENCE ccom_ce_date (DATE a_date);
 	EIF_REFERENCE ccom_ce_bstr (BSTR a_bstr);
-	EIF_REFERENCE ccom_ce_hresult (HRESULT a_hresult, EIF_OBJECT an_object);
+	EIF_REFERENCE ccom_ce_hresult (HRESULT a_hresult);
 	EIF_BOOLEAN ccom_ce_boolean (VARIANT_BOOL a_bool);
 	EIF_REFERENCE ccom_ce_lpstr (LPSTR a_string);
 	EIF_REFERENCE ccom_ce_lpwstr (LPWSTR a_wstring);
@@ -62,7 +62,6 @@ public:
 	EIF_REFERENCE ccom_ce_pointed_boolean (VARIANT_BOOL * a_bool, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_pointed_currency (CURRENCY * a_currency);
 	EIF_REFERENCE ccom_ce_pointed_decimal (DECIMAL * a_decimal);
-	EIF_REFERENCE ccom_ce_pointed_hresult (HRESULT * a_hresult, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_pointed_variant (VARIANT * a_variant);
 	EIF_REFERENCE ccom_ce_pointed_long_long (LARGE_INTEGER * a_large_int);
 	EIF_REFERENCE ccom_ce_pointed_ulong_long (ULARGE_INTEGER * a_ularge_int);

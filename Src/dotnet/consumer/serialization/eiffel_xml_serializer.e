@@ -195,11 +195,11 @@ feature {NONE} -- Implementation
 			integer_array ?= obj
 			if integer_array /= Void then
 				count := integer_array.count
-				f.write_integer (integer_array.lower)
+				f.write (integer_array.lower)
 				f.write_string (Quote_space)
 				f.write_string (Array_count_xml_attribute)
 				f.write_string (Equal_quote)
-				f.write_integer (count)
+				f.write (count)
 				f.write_string (Quote_space)
 				f.write_string (Compare_objects_xml_attribute)
 				f.write_string (Equal_quote)
@@ -222,11 +222,11 @@ feature {NONE} -- Implementation
 				real_array ?= obj
 				if real_array /= Void then
 					count := real_array.count
-					f.write_integer (real_array.lower)
+					f.write (real_array.lower)
 					f.write_string (Quote_space)
 					f.write_string (Array_count_xml_attribute)
 					f.write_string (Equal_quote)
-					f.write_integer (count)
+					f.write (count)
 					f.write_string (Quote_space)
 					f.write_string (Compare_objects_xml_attribute)
 					f.write_string (Equal_quote)
@@ -249,11 +249,11 @@ feature {NONE} -- Implementation
 					double_array ?= obj
 					if double_array /= Void then
 						count := double_array.count
-						f.write_integer (double_array.lower)
+						f.write (double_array.lower)
 						f.write_string (Quote_space)
 						f.write_string (Array_count_xml_attribute)
 						f.write_string (Equal_quote)
-						f.write_integer (count)
+						f.write (count)
 						f.write_string (Quote_space)
 						f.write_string (Compare_objects_xml_attribute)
 						f.write_string (Equal_quote)
@@ -276,11 +276,11 @@ feature {NONE} -- Implementation
 						character_array ?= obj
 						if character_array /= Void then
 							count := character_array.count
-							f.write_integer (character_array.lower)
+							f.write (character_array.lower)
 							f.write_string (Quote_space)
 							f.write_string (Array_count_xml_attribute)
 							f.write_string (Equal_quote)
-							f.write_integer (count)
+							f.write (count)
 							f.write_string (Quote_space)
 							f.write_string (Compare_objects_xml_attribute)
 							f.write_string (Equal_quote)
@@ -303,11 +303,11 @@ feature {NONE} -- Implementation
 							boolean_array ?= obj
 							if boolean_array /= Void then
 								count := boolean_array.count
-								f.write_integer (boolean_array.lower)
+								f.write (boolean_array.lower)
 								f.write_string (Quote_space)
 								f.write_string (Array_count_xml_attribute)
 								f.write_string (Equal_quote)
-								f.write_integer (count)
+								f.write (count)
 								f.write_string (Quote_space)
 								f.write_string (Compare_objects_xml_attribute)
 								f.write_string (Equal_quote)
@@ -330,11 +330,11 @@ feature {NONE} -- Implementation
 								pointer_array ?= obj
 								if pointer_array /= Void then
 									count := pointer_array.count
-									f.write_integer (pointer_array.lower)
+									f.write (pointer_array.lower)
 									f.write_string (Quote_space)
 									f.write_string (Array_count_xml_attribute)
 									f.write_string (Equal_quote)
-									f.write_integer (count)
+									f.write (count)
 									f.write_string (Quote_space)
 									f.write_string (Compare_objects_xml_attribute)
 									f.write_string (Equal_quote)
@@ -369,11 +369,11 @@ feature {NONE} -- Implementation
 										i := i + 1
 									end
 									count := ar.count
-									f.write_integer (ar.lower)
+									f.write (ar.lower)
 									f.write_string (Quote_space)
 									f.write_string (Array_count_xml_attribute)
 									f.write_string (Equal_quote)
-									f.write_integer (count)
+									f.write (count)
 									f.write_string (Quote_space)
 									f.write_string (Compare_objects_xml_attribute)
 									f.write_string (Equal_quote)
@@ -384,7 +384,7 @@ feature {NONE} -- Implementation
 									if type_attribute = Void then
 										f.write_string (None_node)
 									else
-										f.write_integer (id_from_type (type_attribute))
+										f.write (id_from_type (type_attribute))
 									end
 									f.write_string (End_element)
 									f.write_string (New_line)
@@ -429,7 +429,7 @@ feature {NONE} -- Implementation
 			f.write_string (Quote_space)
 			f.write_string (Type_xml_attribute)
 			f.write_string (Equal_quote)
-			f.write_integer (id_from_type (obj.generating_type))
+			f.write (id_from_type (obj.generating_type))
 			f.write_string (End_element)
 			f.write_string (New_line)
 			from

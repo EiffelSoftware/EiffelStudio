@@ -29,6 +29,8 @@ feature -- Access
 	attribute_editor: GB_OBJECT_EDITOR_ITEM is
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
+		local
+			horizontal_box: EV_HORIZONTAL_BOX
 		do
 			create Result
 			initialize_attribute_editor (Result)
@@ -47,11 +49,14 @@ feature -- Access
 			homogeneous_button.select_actions.extend (agent update_editors)
 			Result.extend (homogeneous_button)
 			create layout_button.make_with_text ("Position children...")
+			create horizontal_box
+			horizontal_box.extend (layout_button)
+			horizontal_box.disable_item_expand (layout_button)
 			if first.count = 0 then
 				layout_button.disable_sensitive
 			end
 			layout_button.select_actions.extend (agent show_layout_window)
-			Result.extend (layout_button)
+			Result.extend (horizontal_box)
 			
 			update_attribute_editor
 		end

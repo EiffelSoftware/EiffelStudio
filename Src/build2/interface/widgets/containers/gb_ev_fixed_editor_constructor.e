@@ -34,6 +34,7 @@ feature -- Access
 			-- of items held in `objects'.
 		local
 			button: EV_BUTTON
+			horizontal_box: EV_HORIZONTAL_BOX
 		do
 			create button.make_with_text ("Position children...")
 			if first.is_empty then
@@ -41,7 +42,10 @@ feature -- Access
 			end
 			create result
 			initialize_attribute_editor (Result)
-			Result.extend (button)
+			create horizontal_box
+			horizontal_box.extend (button)
+			horizontal_box.disable_item_expand (button)
+			Result.extend (horizontal_box)
 			button.select_actions.extend (agent show_layout_window)
 			
 			update_attribute_editor

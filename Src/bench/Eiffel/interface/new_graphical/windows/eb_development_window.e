@@ -1596,13 +1596,6 @@ feature -- Menu Building
 				tools_menu.extend (command_menu_item)
 			end
 
-			if debugger_manager.display_dotnet_cmd then
-					-- Import .Net Assembly
-				command_menu_item := dotnet_import_cmd.new_menu_item
-				add_recyclable (command_menu_item)
-				tools_menu.extend (command_menu_item)
-			end
-
 				-- Separator -------------------------------------------------
 			tools_menu.extend (create {EV_MENU_SEPARATOR})
 
@@ -3023,6 +3016,12 @@ feature {EB_TOOL} -- Implementation / Commands
 		do
 			Result := debugger_manager.dotnet_import_cmd
 		end
+		
+	eac_browser_cmd: EB_OPEN_EAC_BROWSER_CMD is
+			-- Command to display the eac browser
+		do
+			Result := Debugger_manager.eac_browser_cmd
+		end		
 
 	show_favorites_menu_item: EV_MENU_ITEM
 			-- Show/Hide favorites menu item.

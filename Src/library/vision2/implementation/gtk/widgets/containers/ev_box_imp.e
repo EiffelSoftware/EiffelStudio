@@ -38,7 +38,7 @@ feature -- Element change (box specific)
 	set_border_width (value: INTEGER) is
 			-- Border width around container
 		do
-			gtk_container_border_width (widget, value)
+			gtk_container_set_border_width (widget, value)
 		end	
 	
 	set_spacing (value: INTEGER) is

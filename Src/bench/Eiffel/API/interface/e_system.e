@@ -56,6 +56,20 @@ feature -- Properties
 			!! Result.make
 		end;
 
+	document_path: DIRECTORY_NAME is
+			-- Path specified for the documents directory for classes.
+			-- Void result implies no document generation
+		do
+			Result := System.document_path
+		end;
+
+	document_file_name: FILE_NAME is
+			-- File name specified for the cluster text generation
+			-- Void result implies no document generation
+		do	
+			Result := System.document_file_name
+		end
+
 feature -- Access
 
 	current_class: E_CLASS is

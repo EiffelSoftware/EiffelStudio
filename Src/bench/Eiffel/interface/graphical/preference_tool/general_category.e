@@ -56,6 +56,9 @@ feature {TTY_RESOURCES} -- Initialization
 					<<"black", "white", "red", "blue", "green", "yellow", "brown", "cyan">>);
 			if not Platform_constants.is_windows then
 				!! print_shell_command.make ("print_shell_command", rt, "lpr $target");
+				!! text_mode.make ("text_mode", rt, "UNIX")
+			else
+				!! text_mode.make ("text_mode", rt, "DOS")
 			end;
 		end
 
@@ -84,5 +87,6 @@ feature -- Resources
 	window_free_list_number: INTEGER_RESOURCE;
 	color_list: ARRAY_RESOURCE;
 	shell_command: STRING_RESOURCE
+	text_mode: STRING_RESOURCE
 
 end -- class GENERAL_CATEGORY

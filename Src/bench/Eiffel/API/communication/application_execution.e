@@ -36,22 +36,8 @@ feature {NONE} -- Initialization
 			-- Initialize current.
 		do
 			!! debug_info.make;
-		end;
-
-feature -- Initialization
-
-	initialize is
-			-- Initialize the application execution.
-			-- Set the `displayed_string_size' to 50.
-		require
-			not_initialized: not initialized;
-			project_initialized: project_initialized
-		do
-			initialized := True;
-			compilation_counter := Eiffel_project.compilation_counter;
 			displayed_string_size := 50
 		ensure
-			initialized: initialized;
 			displayed_string_size: displayed_string_size = 50
 		end;
 
@@ -59,9 +45,6 @@ feature -- Properties
 
 	status: APPLICATION_STATUS;
 			-- Status of the running application
-
-	initialized: BOOLEAN;
-			-- Is Current initialized?	
 
 	termination_command: E_CMD;
 			-- Command executed after application has been terminated
@@ -90,6 +73,7 @@ feature -- Properties
 	displayed_string_size: INTEGER;
 			-- Size of string to be retrieved from the application
 			-- when debugging (size of `string_value' in REFERENCE_VALUE)
+			-- (Default value is 50)
 
 	debugged_routines: LINKED_LIST [E_FEATURE] is
 			-- Routines that are currently debugged
@@ -151,26 +135,12 @@ feature -- Properties
 				i <= deb.first.breakable_points.count 
 		end;
 
-	name: FILE_NAME is
-			-- Application name
-		local
-			temp: STRING;
-		do
-			!! Result.make_from_string (Workbench_generation_path)
-			!! temp.make (0);
-			temp.append (Eiffel_system.name);
-			temp.append (Executable_suffix);
-			Result.set_file_name (temp);
-		ensure
-			non_void_result: Result /= Void
-		end;
-
 	exists: BOOLEAN is
 			-- Does the application file exists?
 		local
 			f: PLAIN_TEXT_FILE
 		do
-			!! f.make (name);
+			!! f.make (Eiffel_system.application_name (True));
 			Result := f.exists
 		end;
 
@@ -296,7 +266,7 @@ feature -- Execution
 		local
 			app: STRING
 		do
-			app := name;
+			app := Eiffel_system.application_name (True);
 			if args /= Void then
 				app.extend (' ');
 				app.append (args)

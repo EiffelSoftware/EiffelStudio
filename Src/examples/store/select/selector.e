@@ -170,6 +170,8 @@ feature {NONE}
 				-- Delete "author_name" from the map table
 				base_selection.unset_map_name ("author_name")
 
+				base_selection.terminate
+
 				io.new_line
 				io.putstring ("Author? ('exit' to terminate):")
 				io.readline

@@ -34,10 +34,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	x, left: INTEGER
+	x: INTEGER
 			-- Horizontal position.
 
-	y, top: INTEGER
+	y: INTEGER
 			-- Vertical position.
 
 	width: INTEGER
@@ -45,7 +45,19 @@ feature -- Access
 
 	height: INTEGER
 			-- Height of the clip area.
-
+			
+	left: INTEGER is
+			-- Horizontal position of left side
+		do
+			Result := x
+		end
+		
+	top: INTEGER is
+			-- Horiaontal position of right side
+		do
+			Result := y
+		end
+		
 	right: INTEGER is
 			--  Horizontal position of right side.
 		do

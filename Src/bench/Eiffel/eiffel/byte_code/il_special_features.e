@@ -102,9 +102,10 @@ feature -- Status
 
 feature -- IL code generation
 
-	generate_il (type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is
+	generate_il (feat: FEATURE_B; type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is
 			-- Generate IL code sequence that will be used with basic types.
 		require
+			feat_not_void: feat /= Void
 			valid_function_type: valid_function_type (function_type)
 			type_not_void: type /= Void
 		local
@@ -211,6 +212,9 @@ feature -- IL code generation
 
 			when from_enum_to_integer_type then
 					-- Nothing to do, as enums are basically integers.
+
+			when set_item_type then
+				generate_set_item (feat, type, parameters)
 				
 			else
 
@@ -263,6 +267,10 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (to_character_type, ascii_char_name_id)
  			Result.put (abs_type, abs_name_id)
 			Result.put (default_type, default_name_id)
+			Result.put (set_item_type, set_item_name_id)
+			Result.put (set_item_type, copy_name_id)
+			Result.put (set_item_type, deep_copy_name_id)
+			Result.put (set_item_type, standard_copy_name_id)
 
 -- FIXME: Manu 10/24/2001. Not yet implemented.
 -- 			Result.put (generator_type, generator_name_id)
@@ -270,13 +278,9 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 -- 			Result.put (memory_copy, memory_copy_name_id)
 -- 			Result.put (memory_move, memory_move_name_id)
 -- 			Result.put (memory_set, memory_set_name_id)
---			Result.put (set_item_type, set_item_name_id)
---			Result.put (set_item_type, copy_name_id)
---			Result.put (set_item_type, deep_copy_name_id)
---			Result.put (set_item_type, standard_copy_name_id)
 		end
 
-feature {NONE} -- Fast access to feature name
+feature -- Fast access to feature name
 
 	min_type_id: INTEGER is 1
 	equal_type: INTEGER is 1
@@ -355,6 +359,37 @@ feature {NONE} -- IL code generation
 					-- Convert type on stack to an integer and applies
 					-- proper computation to get a positive hash-code.
 				il_generator.generate_hash_code
+			end
+		end
+
+	generate_set_item (feat: FEATURE_B; type: CL_TYPE_I; parameters: BYTE_LIST [EXPR_B]) is
+			-- Generate IL code sequence that will be used with basic types.
+		require
+			feat_not_void: feat /= Void
+			valid_function_type: function_type = set_item_type
+			type_not_void: type /= Void
+			parameters_not_void: parameters /= Void
+			valid_parameters: parameters.count = 1
+		local
+			l_parent: NESTED_B
+			l_access: ACCESS_B
+		do
+			l_parent := feat.parent
+			if l_parent /= Void and then l_parent.target.is_assignable then
+				l_access := l_parent.target
+				if l_access.is_local or l_access.is_result then
+					il_generator.pop
+					parameters.generate_il
+					l_access.generate_il_assignment (type)
+				elseif l_access.is_attribute then
+						-- This is an expression of type `my_attribute.copy (a)'.
+						-- Top of the stack is properly initialized in ATTRIBYUTE_B.generate_il_call
+						-- so that object where `l_access' attribute belongs to is on
+						-- top of the evaluation stack.
+					parameters.generate_il
+					l_access.generate_il_assignment (type)
+				end
+				
 			end
 		end
 

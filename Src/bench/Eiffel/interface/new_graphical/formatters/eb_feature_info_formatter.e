@@ -52,7 +52,7 @@ feature -- Status setting
 		end
 
 	set_feature (a_feature: E_FEATURE) is
-			-- Associate current formatter with `a_class'.
+			-- Associate current formatter with `a_feature'.
 		do
 			associated_feature := a_feature
 			if a_feature = Void or else not a_feature.associated_class.has_feature_table then

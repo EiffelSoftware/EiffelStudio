@@ -39,7 +39,7 @@ feature -- Status setting
 			a_stone: CLASSC_STONE
 		do
 			a_stone ?= new_stone
-			if a_stone /= Void then
+			if a_stone /= Void then --and not a_stone.class_i.is_external_class then
 				set_class (a_stone.e_class)
 			else
 				associated_class := Void

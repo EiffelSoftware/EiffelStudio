@@ -177,6 +177,50 @@ feature -- Properties
 			end
 		end
 		
+	flatshort_dotnet_text (a_consumed: CONSUMED_TYPE; a_classi: CLASS_I): STRUCTURED_TEXT is
+			-- Format .NET consumed type, flat short.
+		require
+			a_consumed_void: a_consumed /= Void
+		local
+			dntxt: DOTNET_TEXT_FORMATTER
+		do
+			create dntxt
+			dntxt.set_is_flat_short
+			dntxt.format (a_consumed, a_classi)
+			if not dntxt.error then
+				Result := dntxt.text
+			end
+		end
+		
+	short_dotnet_text (a_consumed: CONSUMED_TYPE; a_classi: CLASS_I): STRUCTURED_TEXT is
+			-- Format .NET consumed type, short with inheritance.
+		require
+			a_consumed_void: a_consumed /= Void
+		local
+			dntxt: DOTNET_TEXT_FORMATTER
+		do
+			create dntxt
+			dntxt.set_is_short
+			dntxt.format (a_consumed, a_classi)
+			if not dntxt.error then
+				Result := dntxt.text
+			end
+		end
+		
+	rout_flat_dotnet_text (a_feature: E_FEATURE; c: CONSUMED_TYPE): STRUCTURED_TEXT is
+			-- Format .NET feature text, flat short.
+		require
+			a_feature_not_void: a_feature /= Void
+		local
+			dntxt: DOTNET_FEATURE_TEXT_FORMATTER
+		do
+			create dntxt
+			dntxt.format (a_feature, c)
+			if not dntxt.error then
+				Result := dntxt.text
+			end
+		end
+		
 feature -- Clearing tables
 
 	clear_format_tables is
@@ -270,7 +314,7 @@ feature {NONE} -- Attributes
 		once
 			create Result.make
 			Result.compare_objects
-		end
+		end		
 
 feature {NONE} -- Implementation
 

@@ -700,9 +700,11 @@ rt_public void dsetbreak(BODY_INDEX body_id, int offset, int what)
 		case DT_SET_STACK:
 			/* set the minimum stack depth.. if the stack depth is below than */
 			/* depth_stop, application  will stop (step by step, step out) */
-			/* d_data.db_callstack_depth_stop = offset; */
-					/* offset = current stack depth */
-			d_data.db_callstack_depth_stop = d_data.db_callstack_depth + offset; /* offset = current stack depth */
+			d_data.db_callstack_depth_stop = d_data.db_callstack_depth + offset; 
+				/* offset = (wanted stack depth stop) - (current stack depth) 
+					if 0 : step next
+					if -1 : step out
+				*/
 			break;
 		#ifdef MAY_PANIC
 		default:

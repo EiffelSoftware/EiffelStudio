@@ -598,9 +598,6 @@ feature {NONE} -- Exit implementation
 
 	save_and_quit is
 			-- Save all windows and destroy the last development window.
-		local
-			cv_dev: EB_DEVELOPMENT_WINDOW
-			w: EB_WINDOW
 		do
 			save_all
 			if has_modified_windows then

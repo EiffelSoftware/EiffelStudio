@@ -28,11 +28,20 @@ feature {NONE} -- Initialization
 
 feature -- Event : command association
 
-	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is	
+	add_selection_command (a_command: EV_COMMAND; arguments: EV_ARGUMENT) is	
 			-- Make `command' executed when an item is
 			-- selected.
 		do
 			add_command ("selection_changed", a_command, arguments)
+		end
+
+feature -- Event -- removing command association
+
+	remove_selection_commands is	
+			-- Empty the list of commands to be executed
+			-- when the selection has changed.
+		do
+			check False end
 		end
 
 feature {EV_TREE_ITEM} -- Implementation
@@ -49,6 +58,12 @@ feature {EV_TREE_ITEM} -- Implementation
 			gtk_tree_append (widget, item_imp.widget)
 			gtk_widget_show (item_imp.widget)
 		end
+
+
+feature {NONE} -- Implementation
+
+	ev_children: ARRAYED_LIST [EV_TREE_ITEM]
+			-- We need to store the children.
 
 end -- class EV_TREE_IMP
 

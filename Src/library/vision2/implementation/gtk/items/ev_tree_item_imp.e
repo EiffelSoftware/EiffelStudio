@@ -11,14 +11,20 @@ inherit
 	EV_TREE_ITEM_I
 	
 	EV_ITEM_IMP
+--		undefine
+--			set_label_widget,
+--			label_widget
+--		end
 
 	EV_TREE_ITEM_CONTAINER_IMP
 		rename
 			make as old_make,
 			interface as widget_interface,
-			set_interface as set_widget_interface
+			set_interface as set_widget_interface,
+			add_double_click_command as old_add_dblclk,
+			remove_double_click_commands as old_remove_dblclk
 		end
-		
+
 creation
 	make_with_text
 
@@ -36,6 +42,14 @@ feature {NONE} -- Initialization
 
 feature -- Status report
 
+	is_selected: BOOLEAN is
+			-- Is the item selected?
+		do
+			check
+				Not_yet_implemented: False
+			end
+		end
+
 	is_expanded: BOOLEAN is
 			-- is the item expanded ?
 		do
@@ -44,12 +58,21 @@ feature -- Status report
 
 feature -- Event : command association
 
-	add_subtree_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
-			-- Add 'command' to the list of commands to be
+	add_subtree_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add 'cmd' to the list of commands to be
 			-- executed when the menu item is activated
 		do
-			add_command ("expand", a_command, arguments)
-			add_command ("collapse", a_command, arguments)
+			add_command ("expand", cmd, arg)
+			add_command ("collapse", cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_subtree_commands is
+			-- Empty the list of commands to be executed when
+			-- the selection subtree is expanded or collapsed.
+		do
+			check False end
 		end
 
 feature {EV_TREE_ITEM} -- Implementation

@@ -53,7 +53,9 @@ feature -- Access
 			l_installed: like installed_runtimes
 		do
 			l_installed := installed_runtimes
-			if l_installed.has (v1_1) then
+			if l_installed.has (v2_0) then
+				Result := v2_0.twin
+			elseif l_installed.has (v1_1) then
 				Result := v1_1.twin
 			else
 				Result := v1_0.twin
@@ -218,6 +220,7 @@ feature {NONE} -- Implementation
 			create Result.make (2)
 			Result.put ("sdkInstallRoot", v1_0)
 			Result.put ("sdkInstallRootv1.1", v1_1)
+			Result.put ("sdkInstallRootv2.0", v2_0)
 		ensure
 			sdk_keys_not_void: Result /= Void
 		end
@@ -255,8 +258,8 @@ feature -- Constants
 	v1_1: STRING is "v1.1.4322"
 			-- Version number of v1.1 of Microsoft .NET
 			
-	v1_2: STRING is "v1.2.30617"
-			-- Temporary version number of the v1.2 of Microsoft .NET
+	v2_0: STRING is "v2.0.40301"
+			-- Temporary version number of the v2.0 of Microsoft .NET
 
 feature {NONE} -- Constants
 

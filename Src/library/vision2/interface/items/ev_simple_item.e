@@ -51,16 +51,25 @@ feature -- Status setting
 
 feature -- Event : command association
 
-	add_activate_command ( command: EV_COMMAND; 
-			       arguments: EV_ARGUMENTS) is
-			-- Add 'command' to the list of commands to be
-			-- executed when the menu item is activated
+	add_activate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make `cmd' the executed command when the item is 
+			-- activated.
 		require
-			valid_command: command /= Void
+			exists: not destroyed
+			valid_command: cmd /= Void
 		do
-			implementation.add_activate_command ( command, 
-							      arguments )
+			implementation.add_activate_command (cmd, arg)
 		end	
+
+	add_deactivate_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+			-- Make `cmd' the executed command when the item is
+			-- unactivated.
+		require
+			exists: not destroyed
+			valid_command: cmd /= Void
+		do
+			implementation.add_deactivate_command (cmd, arg)		
+		end
 
 feature {NONE} -- Inapplicable
 

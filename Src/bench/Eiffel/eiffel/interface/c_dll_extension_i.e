@@ -46,18 +46,18 @@ feature -- Comparison
 
 feature -- Code generation
 
-    generate_external_name (gen_file: INDENT_FILE; external_name: STRING;
+	generate_external_name (gen_file: INDENT_FILE; external_name: STRING;
 				e: POLY_TABLE [ENTRY]; type: CL_TYPE_I; ret_type: TYPE_C) is
-            -- Generate the C name associated with the extension
+			-- Generate the C name associated with the extension
 		local
 			rout_table: ROUT_TABLE
 			name: STRING
-        do
+		do
 			rout_table ?= e
 			name := rout_table.feature_name (type.type_id)
 			gen_file.putstring (name)
 			Extern_declarations.add_routine (ret_type, name)
-        end
+		end
 
 	has_standard_prototype: BOOLEAN is True
 

@@ -1,31 +1,37 @@
 class CLASS_TYPE 
 
 inherit
-
 	SHARED_COUNTER
+
 	SHARED_GENERATOR
-	SHARED_CODE_FILES
-		select
-			descriptor_suffix
-		end
+
 	SHARED_SERVER
+
 	SHARED_BODY_ID
+
 	SHARED_BYTE_CONTEXT
 		rename
 			context as byte_context
 		export
 			{ANY} byte_context
 		end
+
 	SHARED_ARRAY_BYTE
+
 	SHARED_EXEC_TABLE
+
 	SHARED_DECLARATIONS
+
 	SHARED_TABLE
+
 	SHARED_INCLUDE
+
 	SYSTEM_CONSTANTS
-		rename
-			Descriptor_suffix as Static_suffix
-		end
+
 	SHARED_EIFFEL_PROJECT
+
+	PROJECT_CONTEXT
+
 	COMPILER_EXPORTER
 
 creation
@@ -44,13 +50,6 @@ feature
 	type: CL_TYPE_I
 			-- Type of the class: it includes meta-instantiation of
 			-- possible generic parameters
-
-	dynamic_type_id: INTEGER is
-			-- Identification of the class type at run-time
-			-- (Useful when debugging)
-		do
-			Result := type_id
-		end
 
 	associated_eclass: E_CLASS is
 			-- Associated class
@@ -432,9 +431,9 @@ feature -- Generation
 			dir_name: DIRECTORY_NAME
 		do
 			if System.in_final_mode then
-				Result := Final_generation_path
+				Result := final_generation_path
 			else
-				Result := Workbench_generation_path
+				Result := workbench_generation_path
 			end
 			!!subdirectory.make (5)
 			subdirectory.append (sub_dir_prefix)
@@ -734,12 +733,7 @@ feature -- Byte code generation
 
 feature -- Skeleton generation
 
-	Skeleton_file: INDENT_FILE is
-		do
-			Result := System.Skeleton_file
-		end
-
-	generate_skeleton1 is
+	generate_skeleton1 (skeleton_file: INDENT_FILE) is
 			-- Generate skeleton names and types of Current class type
 		require
 			skeleton_exists: skeleton /= Void
@@ -749,48 +743,48 @@ feature -- Skeleton generation
 		do
 			if not skeleton.empty then
 					-- Generate attribute names sequence
-				Skeleton_file.putstring ("static char *names")
-				Skeleton_file.putint (type_id)
-				Skeleton_file.putstring (" [] =%N")
+				skeleton_file.putstring ("static char *names")
+				skeleton_file.putint (type_id)
+				skeleton_file.putstring (" [] =%N")
 				skeleton.generate_name_array
 
 					-- Generate attribute types sequence
-				Skeleton_file.putstring ("uint32 types")
-				Skeleton_file.putint (type_id)
-				Skeleton_file.putstring (" [] =%N")
+				skeleton_file.putstring ("uint32 types")
+				skeleton_file.putint (type_id)
+				skeleton_file.putstring (" [] =%N")
 				skeleton.generate_type_array
 
 				if byte_context.final_mode then	
 	
 						-- Generate attribute offset table pointer array
-					Skeleton_file.putstring ("static long *offsets")
-					Skeleton_file.putint (type_id)
-					Skeleton_file.putstring (" [] =%N")
+					skeleton_file.putstring ("static long *offsets")
+					skeleton_file.putint (type_id)
+					skeleton_file.putstring (" [] =%N")
 					skeleton.generate_offset_array
 				else
 						-- Generate attribute rout id array
-					Skeleton_file.putstring ("static int32 cn_attr")
-					Skeleton_file.putint (type_id)
-					Skeleton_file.putstring (" [] =%N")
+					skeleton_file.putstring ("static int32 cn_attr")
+					skeleton_file.putint (type_id)
+					skeleton_file.putstring (" [] =%N")
 					skeleton.generate_rout_id_array
 				end
 			end
 
 				-- Generate parent dynamic type array
 			parent_list := parent_types
-			Skeleton_file.putstring ("static int cn_parents")
-			Skeleton_file.putint (type_id)
-			Skeleton_file.putstring (" [] = {")
+			skeleton_file.putstring ("static int cn_parents")
+			skeleton_file.putint (type_id)
+			skeleton_file.putstring (" [] = {")
 			from
 				parent_list.start
 			until
 				parent_list.after
 			loop
-				Skeleton_file.putint (parent_list.item.type_id - 1)
-				Skeleton_file.putstring (", ")
+				skeleton_file.putint (parent_list.item.type_id - 1)
+				skeleton_file.putstring (", ")
 				parent_list.forth
 			end
-			Skeleton_file.putstring ("-1};%N%N")
+			skeleton_file.putstring ("-1};%N%N")
 
 			if	byte_context.final_mode
 				and
@@ -800,14 +794,14 @@ feature -- Skeleton generation
 			then
 					-- Generate extern declaration for invariant
 					-- routine of the current class type
-				Skeleton_file.putstring ("extern void ")
-				Skeleton_file.putstring (
+				skeleton_file.putstring ("extern void ")
+				skeleton_file.putstring (
 					Invariant_body_id.feature_name (id))
-				Skeleton_file.putstring ("();%N%N")
+				skeleton_file.putstring ("();%N%N")
 			end
 		end
 
-	generate_skeleton2 is
+	generate_skeleton2 (skeleton_file: INDENT_FILE) is
 			-- Generate skeleton of Current class type
 		require
 			skeleton_file_is_open: Skeleton_file.is_open_write
@@ -821,28 +815,28 @@ feature -- Skeleton generation
 		do
 			a_class := associated_class
 			skeleton_empty := skeleton.empty
-			Skeleton_file.putstring ("{%N(long) ")
-			Skeleton_file.putint (skeleton.count)
-			Skeleton_file.putstring (",%N%"")
+			skeleton_file.putstring ("{%N(long) ")
+			skeleton_file.putint (skeleton.count)
+			skeleton_file.putstring (",%N%"")
 			upper_class_name := a_class.name_in_upper
-			Skeleton_file.putstring (upper_class_name)
-			Skeleton_file.putstring ("%",%N")
+			skeleton_file.putstring (upper_class_name)
+			skeleton_file.putstring ("%",%N")
 			if not skeleton_empty then
-				Skeleton_file.putstring ("names")
-				Skeleton_file.putint (type_id)
-				Skeleton_file.putstring (",%N")
+				skeleton_file.putstring ("names")
+				skeleton_file.putint (type_id)
+				skeleton_file.putstring (",%N")
 			else
-				Skeleton_file.putstring ("(char **) 0,%N")
+				skeleton_file.putstring ("(char **) 0,%N")
 			end
-			Skeleton_file.putstring ("cn_parents")
-			Skeleton_file.putint (type_id)
-			Skeleton_file.putstring (",%N")
+			skeleton_file.putstring ("cn_parents")
+			skeleton_file.putint (type_id)
+			skeleton_file.putstring (",%N")
 			if not skeleton_empty then
-				Skeleton_file.putstring ("types")
-				Skeleton_file.putint (type_id)
-				Skeleton_file.putstring (",%N")
+				skeleton_file.putstring ("types")
+				skeleton_file.putint (type_id)
+				skeleton_file.putstring (",%N")
 			else
-				Skeleton_file.putstring ("(uint32 *) 0,%N")
+				skeleton_file.putstring ("(uint32 *) 0,%N")
 			end
 
 			if byte_context.final_mode then
@@ -850,52 +844,52 @@ feature -- Skeleton generation
 					and
 					a_class.assertion_level.check_invariant
 				then
-					Skeleton_file.putstring (
+					skeleton_file.putstring (
 						Invariant_body_id.feature_name (id))
 				else
-					Skeleton_file.putstring ("(void (*)()) 0")
+					skeleton_file.putstring ("(void (*)()) 0")
 				end
-				Skeleton_file.putstring (",%N")
+				skeleton_file.putstring (",%N")
 
 				if not skeleton_empty then
-					Skeleton_file.putstring ("offsets")
-					Skeleton_file.putint (type_id)
-					Skeleton_file.new_line
+					skeleton_file.putstring ("offsets")
+					skeleton_file.putint (type_id)
+					skeleton_file.new_line
 				else
-					Skeleton_file.putstring
+					skeleton_file.putstring
 						("(long **) 0%N")
 				end
 			else
 					-- Routine id array of attributes
 				if not skeleton_empty then
-					Skeleton_file.putstring ("cn_attr")
-					Skeleton_file.putint (type_id)
+					skeleton_file.putstring ("cn_attr")
+					skeleton_file.putint (type_id)
 				else
-					Skeleton_file.putstring ("(int32 *) 0")
+					skeleton_file.putstring ("(int32 *) 0")
 				end
-				Skeleton_file.putstring (",%N")
+				skeleton_file.putstring (",%N")
 						
 					-- Skeleton size
-				skeleton.generate_workbench_size (Skeleton_file)
-				Skeleton_file.putstring (",%N")
+				skeleton.generate_workbench_size (skeleton_file)
+				skeleton_file.putstring (",%N")
 
 					-- Skeleton number of references
-				Skeleton_file.putint
+				skeleton_file.putint
 						(skeleton.nb_reference + skeleton.nb_expanded)
-				Skeleton_file.putstring ("L,%N")
+				skeleton_file.putstring ("L,%N")
 
 					-- Deferred class type flag
 				if a_class.is_deferred then
-					Skeleton_file.putstring ("'\01',%N")
+					skeleton_file.putstring ("'\01',%N")
 				else
-					Skeleton_file.putstring ("'\0',%N")
+					skeleton_file.putstring ("'\0',%N")
 				end
 
 					-- Composite class type flag
 				if has_creation_routine then
-					Skeleton_file.putstring ("'\01',%N")
+					skeleton_file.putstring ("'\01',%N")
 				else
-					Skeleton_file.putstring ("'\0',%N")
+					skeleton_file.putstring ("'\0',%N")
 				end
 
 				if
@@ -903,37 +897,37 @@ feature -- Skeleton generation
 					not associated_class.is_precompiled
 				then
 						-- Creation feature id if any.
-					Skeleton_file.putstring ("(int32) ")
+					skeleton_file.putstring ("(int32) ")
 					creation_feature := a_class.creation_feature
 					if creation_feature /= Void then
-						Skeleton_file.putint (creation_feature.feature_id)
+						skeleton_file.putint (creation_feature.feature_id)
 					else
-						Skeleton_file.putint (0)
+						skeleton_file.putint (0)
 					end
 
 						-- Static type id 
-					Skeleton_file.putstring (",(int32) ")
-					Skeleton_file.putint (id.id - 1)
+					skeleton_file.putstring (",(int32) ")
+					skeleton_file.putint (id.id - 1)
 				else
-					Skeleton_file.putstring ("(int32) ")
+					skeleton_file.putstring ("(int32) ")
 					creation_feature := a_class.creation_feature
 					if creation_feature /= Void then
 						r_id := creation_feature.rout_id_set.first
 						rout_info := System.rout_info_table.item (r_id)
-						Skeleton_file.putint (rout_info.origin.id)
-						Skeleton_file.putstring (",(int32) ")
-						Skeleton_file.putint (rout_info.offset)
+						skeleton_file.putint (rout_info.origin.id)
+						skeleton_file.putstring (",(int32) ")
+						skeleton_file.putint (rout_info.offset)
 					else
-						Skeleton_file.putstring ("0,(int32) 0")
+						skeleton_file.putstring ("0,(int32) 0")
 					end
 				end
-				Skeleton_file.putstring (",%N")
+				skeleton_file.putstring (",%N")
 					
 					-- Dispose routine id
 				if System.memory_descendants.has (associated_class) then
-					Skeleton_file.putstring ("'\01',%N")
+					skeleton_file.putstring ("'\01',%N")
 				else
-					Skeleton_file.putstring ("'\0',%N")
+					skeleton_file.putstring ("'\0',%N")
 				end
 
 				if
@@ -941,18 +935,18 @@ feature -- Skeleton generation
 					not associated_class.is_precompiled
 				then
 						-- Generate reference on routine id array
-					Skeleton_file.putstring ("ra")
-					Skeleton_file.putint (associated_class.id.id)
+					skeleton_file.putstring ("ra")
+					skeleton_file.putint (associated_class.id.id)
 				else
-					Skeleton_file.putstring ("(int32 *) 0")
+					skeleton_file.putstring ("(int32 *) 0")
 				end
-				Skeleton_file.putstring (",%N")
+				skeleton_file.putstring (",%N")
 
 					-- Generate cecil structure if any
-				generate_cecil (Skeleton_file)
+				generate_cecil (skeleton_file)
 			end
 
-			Skeleton_file.putchar ('}')
+			skeleton_file.putchar ('}')
 		end
 
 feature -- Cecil generation
@@ -1025,15 +1019,13 @@ feature -- Cecil generation
 
 feature -- Conformance table generation
 
-	generate_conformance_table is
+	generate_conformance_table (conformance_file: INDENT_FILE) is
 			-- Generate conformance table
-		require
-			--Conformance_file.is_open_write
 		do
 			Conf_table.init (type_id)
 			Conf_table.mark (type_id)
 			associated_class.make_conformance_table (Conf_table)
-			Conf_table.generate
+			Conf_table.generate (conformance_file)
 		end
 
 	make_conformance_table_byte_code (ba: BYTE_ARRAY) is
@@ -1165,11 +1157,11 @@ feature -- DLE
 			Result := id.is_dynamic
 		end
 
-	generate_dle_skeleton is
+	generate_dle_skeleton (skeleton_file: INDENT_FILE) is
 			-- Generate skeleton of Current DC-set class type.
 		require
 			dynamic_system: System.is_dynamic
-			skeleton_file_is_open: Skeleton_file.is_open_write
+			skeleton_file_is_open: skeleton_file.is_open_write
 		local
 			upper_class_name: STRING
 			skeleton_empty: BOOLEAN
@@ -1181,215 +1173,215 @@ feature -- DLE
 			a_class := associated_class
 			skeleton_empty := skeleton.empty
 
-			Skeleton_file.putstring ("node = &System(")
-			Skeleton_file.putint (type_id - 1)
-			Skeleton_file.putstring (");")
-			Skeleton_file.new_line
+			skeleton_file.putstring ("node = &System(")
+			skeleton_file.putint (type_id - 1)
+			skeleton_file.putstring (");")
+			skeleton_file.new_line
 
-			Skeleton_file.putstring ("node->cn_nbattr = (long) ")
-			Skeleton_file.putint (skeleton.count)
-			Skeleton_file.putchar (';')
-			Skeleton_file.new_line
+			skeleton_file.putstring ("node->cn_nbattr = (long) ")
+			skeleton_file.putint (skeleton.count)
+			skeleton_file.putchar (';')
+			skeleton_file.new_line
 
-			Skeleton_file.putstring ("node->cn_generator = %"")
+			skeleton_file.putstring ("node->cn_generator = %"")
 			upper_class_name := a_class.name_in_upper
-			Skeleton_file.putstring (upper_class_name)
-			Skeleton_file.putstring ("%";")
-			Skeleton_file.new_line
+			skeleton_file.putstring (upper_class_name)
+			skeleton_file.putstring ("%";")
+			skeleton_file.new_line
 
-			Skeleton_file.putstring ("node->cn_names = ")
+			skeleton_file.putstring ("node->cn_names = ")
 			if not skeleton_empty then
-				Skeleton_file.putstring ("names")
-				Skeleton_file.putint (type_id)
+				skeleton_file.putstring ("names")
+				skeleton_file.putint (type_id)
 			else
-				Skeleton_file.putstring ("(char **) 0")
+				skeleton_file.putstring ("(char **) 0")
 			end
-			Skeleton_file.putchar (';')
-			Skeleton_file.new_line
+			skeleton_file.putchar (';')
+			skeleton_file.new_line
 
-			Skeleton_file.putstring ("node->cn_parents = ")
-			Skeleton_file.putstring ("cn_parents")
-			Skeleton_file.putint (type_id)
-			Skeleton_file.putchar (';')
-			Skeleton_file.new_line
+			skeleton_file.putstring ("node->cn_parents = ")
+			skeleton_file.putstring ("cn_parents")
+			skeleton_file.putint (type_id)
+			skeleton_file.putchar (';')
+			skeleton_file.new_line
 
-			Skeleton_file.putstring ("node->cn_types = ")
+			skeleton_file.putstring ("node->cn_types = ")
 			if not skeleton_empty then
-				Skeleton_file.putstring ("types")
-				Skeleton_file.putint (type_id)
+				skeleton_file.putstring ("types")
+				skeleton_file.putint (type_id)
 			else
-				Skeleton_file.putstring ("(uint32 *) 0")
+				skeleton_file.putstring ("(uint32 *) 0")
 			end
-			Skeleton_file.putchar (';')
-			Skeleton_file.new_line
+			skeleton_file.putchar (';')
+			skeleton_file.new_line
 
 			if byte_context.final_mode then
-				Skeleton_file.putstring ("node->cn_inv = ")
+				skeleton_file.putstring ("node->cn_inv = ")
 				if
 					a_class.has_invariant and 
 					a_class.assertion_level.check_invariant
 				then
-					Skeleton_file.putstring (
+					skeleton_file.putstring (
 						Invariant_body_id.feature_name (id))
 				else
-					Skeleton_file.putstring ("(void (*)()) 0")
+					skeleton_file.putstring ("(void (*)()) 0")
 				end
-				Skeleton_file.putchar (';')
-				Skeleton_file.new_line
+				skeleton_file.putchar (';')
+				skeleton_file.new_line
 
-				Skeleton_file.putstring ("node->cn_offsets = ")
+				skeleton_file.putstring ("node->cn_offsets = ")
 				if not skeleton_empty then
-					Skeleton_file.putstring ("offsets")
-					Skeleton_file.putint (type_id)
+					skeleton_file.putstring ("offsets")
+					skeleton_file.putint (type_id)
 				else
-					Skeleton_file.putstring ("(long **) 0")
+					skeleton_file.putstring ("(long **) 0")
 				end
-				Skeleton_file.putchar (';')
-				Skeleton_file.new_line
+				skeleton_file.putchar (';')
+				skeleton_file.new_line
 
 			else
 					-- Routine id array of attributes
-				Skeleton_file.putstring ("node->cn_attr = ")
+				skeleton_file.putstring ("node->cn_attr = ")
 				if not skeleton_empty then
-					Skeleton_file.putstring ("cn_attr")
-					Skeleton_file.putint (type_id)
+					skeleton_file.putstring ("cn_attr")
+					skeleton_file.putint (type_id)
 				else
-					Skeleton_file.putstring ("(int32 *) 0")
+					skeleton_file.putstring ("(int32 *) 0")
 				end
-				Skeleton_file.putchar (';')
-				Skeleton_file.new_line
+				skeleton_file.putchar (';')
+				skeleton_file.new_line
 						
 					-- Skeleton size
-				Skeleton_file.putstring ("node->size = (long) ")
-				skeleton.generate_workbench_size (Skeleton_file)
-				Skeleton_file.putchar (';')
-				Skeleton_file.new_line
+				skeleton_file.putstring ("node->size = (long) ")
+				skeleton.generate_workbench_size (skeleton_file)
+				skeleton_file.putchar (';')
+				skeleton_file.new_line
 
 					-- Skeleton number of references
-				Skeleton_file.putstring ("node->nb_ref = (long) ")
-				Skeleton_file.putint
+				skeleton_file.putstring ("node->nb_ref = (long) ")
+				skeleton_file.putint
 						(skeleton.nb_reference + skeleton.nb_expanded)
-				Skeleton_file.putchar (';')
-				Skeleton_file.new_line
+				skeleton_file.putchar (';')
+				skeleton_file.new_line
 
 					-- Deferred class type flag
-				Skeleton_file.putstring ("node->cn_deferred = ")
+				skeleton_file.putstring ("node->cn_deferred = ")
 				if a_class.is_deferred then
-					Skeleton_file.putstring ("'\01'")
+					skeleton_file.putstring ("'\01'")
 				else
-					Skeleton_file.putstring ("'\0'")
+					skeleton_file.putstring ("'\0'")
 				end
-				Skeleton_file.putchar (';')
-				Skeleton_file.new_line
+				skeleton_file.putchar (';')
+				skeleton_file.new_line
 
 					-- Composite class type flag
-				Skeleton_file.putstring ("node->cn_composite = ")
+				skeleton_file.putstring ("node->cn_composite = ")
 				if has_creation_routine then
-					Skeleton_file.putstring ("'\01'")
+					skeleton_file.putstring ("'\01'")
 				else
-					Skeleton_file.putstring ("'\0'")
+					skeleton_file.putstring ("'\0'")
 				end
-				Skeleton_file.putchar (';')
-				Skeleton_file.new_line
+				skeleton_file.putchar (';')
+				skeleton_file.new_line
 
 				if associated_class.is_precompiled then
 						-- Creation origin class.
-					Skeleton_file.putstring ("node->cn_creation_id = ")
-					Skeleton_file.putstring ("(int32) ")
+					skeleton_file.putstring ("node->cn_creation_id = ")
+					skeleton_file.putstring ("(int32) ")
 					creation_feature := a_class.creation_feature
 					if creation_feature /= Void then
 						r_id := creation_feature.rout_id_set.first
 						rout_info := System.rout_info_table.item (r_id)
-						Skeleton_file.putint (rout_info.origin.id)
-						Skeleton_file.putstring ("node->static_id = ")
-						Skeleton_file.putint (rout_info.offset)
+						skeleton_file.putint (rout_info.origin.id)
+						skeleton_file.putstring ("node->static_id = ")
+						skeleton_file.putint (rout_info.offset)
 					else
-						Skeleton_file.putint (0)
-						Skeleton_file.putstring ("node->static_id = (int32) 0")
+						skeleton_file.putint (0)
+						skeleton_file.putstring ("node->static_id = (int32) 0")
 					end
-					Skeleton_file.putchar (';')
-					Skeleton_file.new_line
+					skeleton_file.putchar (';')
+					skeleton_file.new_line
 				else
 						-- Creation feature id if any.
-					Skeleton_file.putstring ("node->cn_creation_id = ")
-					Skeleton_file.putstring ("(int32) ")
+					skeleton_file.putstring ("node->cn_creation_id = ")
+					skeleton_file.putstring ("(int32) ")
 					creation_feature := a_class.creation_feature
 					if creation_feature /= Void then
-						Skeleton_file.putint (creation_feature.feature_id)
+						skeleton_file.putint (creation_feature.feature_id)
 					else
-						Skeleton_file.putint (0)
+						skeleton_file.putint (0)
 					end
-					Skeleton_file.putchar (';')
-					Skeleton_file.new_line
+					skeleton_file.putchar (';')
+					skeleton_file.new_line
 	
 						-- Static type id 
-					Skeleton_file.putstring ("node->static_id = ")
-					Skeleton_file.putstring ("(int32) ")
-					Skeleton_file.putint (id.id - 1)
-					Skeleton_file.putchar (';')
-					Skeleton_file.new_line
+					skeleton_file.putstring ("node->static_id = ")
+					skeleton_file.putstring ("(int32) ")
+					skeleton_file.putint (id.id - 1)
+					skeleton_file.putchar (';')
+					skeleton_file.new_line
 				end
 				
 					-- Dispose routine id
-				Skeleton_file.putstring ("node->cn_disposed = ")
+				skeleton_file.putstring ("node->cn_disposed = ")
 				if System.memory_descendants.has (associated_class) then
-					Skeleton_file.putstring ("'\01'")
+					skeleton_file.putstring ("'\01'")
 				else
-					Skeleton_file.putstring ("'\0'")
+					skeleton_file.putstring ("'\0'")
 				end
-				Skeleton_file.putchar (';')
-				Skeleton_file.new_line
+				skeleton_file.putchar (';')
+				skeleton_file.new_line
 
 					-- Generate reference on routine id array
-				Skeleton_file.putstring ("node->cn_routids = ")
+				skeleton_file.putstring ("node->cn_routids = ")
 				if associated_class.is_precompiled then
-					Skeleton_file.putstring ("(int32 *) 0")
+					skeleton_file.putstring ("(int32 *) 0")
 				else
-					Skeleton_file.putstring ("ra")
-					Skeleton_file.putint (associated_class.id.id)
+					skeleton_file.putstring ("ra")
+					skeleton_file.putint (associated_class.id.id)
 				end
-				Skeleton_file.putchar (';')
-				Skeleton_file.new_line
+				skeleton_file.putchar (';')
+				skeleton_file.new_line
 
 					-- Generate cecil structure if any
-				Skeleton_file.putstring ("cecil_tab = &node->cn_cecil;")
-				Skeleton_file.new_line
+				skeleton_file.putstring ("cecil_tab = &node->cn_cecil;")
+				skeleton_file.new_line
 				if associated_class.has_visible then
 
-					Skeleton_file.putstring ("cecil_tab->h_size = ")
-					Skeleton_file.putstring ("(int32) ")
-					Skeleton_file.putint (associated_class.visible_table_size)
-					Skeleton_file.putchar (';')
-					Skeleton_file.new_line
+					skeleton_file.putstring ("cecil_tab->h_size = ")
+					skeleton_file.putstring ("(int32) ")
+					skeleton_file.putint (associated_class.visible_table_size)
+					skeleton_file.putchar (';')
+					skeleton_file.new_line
 
-					Skeleton_file.putstring 
+					skeleton_file.putstring 
 							("cecil_tab->h_sval = sizeof(int32);")
-					Skeleton_file.new_line
+					skeleton_file.new_line
 
-					Skeleton_file.putstring ("cecil_tab->h_keys = cl")
-					Skeleton_file.putint (associated_class.id.id)
-					Skeleton_file.putchar (';')
-					Skeleton_file.new_line
+					skeleton_file.putstring ("cecil_tab->h_keys = cl")
+					skeleton_file.putint (associated_class.id.id)
+					skeleton_file.putchar (';')
+					skeleton_file.new_line
 
-					Skeleton_file.putstring 
+					skeleton_file.putstring 
 							("cecil_tab->h_values = (char *) cr")
-					Skeleton_file.putint (associated_class.id.id)
-					Skeleton_file.putchar (';')
-					Skeleton_file.new_line
+					skeleton_file.putint (associated_class.id.id)
+					skeleton_file.putchar (';')
+					skeleton_file.new_line
 				else
-					Skeleton_file.putstring ("cecil_tab->h_size = (int32) 0;")
-					Skeleton_file.new_line
+					skeleton_file.putstring ("cecil_tab->h_size = (int32) 0;")
+					skeleton_file.new_line
 
-					Skeleton_file.putstring ("cecil_tab->h_sval = (int) 0;")
-					Skeleton_file.new_line
+					skeleton_file.putstring ("cecil_tab->h_sval = (int) 0;")
+					skeleton_file.new_line
 
-					Skeleton_file.putstring 
+					skeleton_file.putstring 
 							("cecil_tab->h_keys = (char **) 0;")
-					Skeleton_file.new_line
+					skeleton_file.new_line
 
-					Skeleton_file.putstring 
+					skeleton_file.putstring 
 							("cecil_tab->h_values = (char *) 0;")
-					Skeleton_file.new_line
+					skeleton_file.new_line
 				end
 			end
 		end
@@ -1547,7 +1539,7 @@ feature -- DLE
 			file_name: STRING
 		do
 			if System.is_dynamic and then is_static then
-				file_name := full_file_name (Static_suffix)
+				file_name := full_file_name (Descriptor_suffix) -- old name was Static_...
 			else
 				file_name := full_file_name (Class_suffix)
 			end
@@ -1559,7 +1551,7 @@ feature -- DLE
 			-- File name for external declarations in final mode
 		do
 			if System.is_dynamic and then is_static then
-				Result := full_file_name (Static_suffix)
+				Result := full_file_name (Descriptor_suffix) -- old name was Static_...
 			else
 				Result := full_file_name (Class_suffix)
 			end

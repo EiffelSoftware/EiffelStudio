@@ -100,7 +100,7 @@ extern int dynamic_dtype;	/* Dynamic type of DYNAMIC */
 /* Conformance query in class GENERAL */
 #define econfg(obj1, obj2) \
 	(((EIF_REFERENCE) obj1 == (EIF_REFERENCE) 0) || ((EIF_REFERENCE) obj2 == (EIF_REFERENCE) 0 )) ? EIF_FALSE: \
-		eif_gen_conf((int16) Dftype(obj1), (int16) Dftype(obj2))
+		eif_gen_conf((int16) Dftype(obj2), (int16) Dftype(obj1))
   
 /* Are dynamic types of `obj1' and `obj2' identical? */
 #define estypeg(obj1, obj2) \

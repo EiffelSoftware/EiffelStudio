@@ -297,7 +297,7 @@ feature -- Access
 	formal_name (pos: INTEGER): ID_AS is
 			-- Formal name of class_c generics at position `pos.
 		do
-			Result := class_c.generics.i_th (pos).formal_name.as_upper
+			Result := class_c.generics.i_th (pos).name.as_upper
 		end
 
 feature -- Setting

@@ -1,0 +1,149 @@
+
+
+<HTML>
+<HEAD>
+ 
+<TITLE>Windows Eiffel Library (WEL) Tutorial</TITLE>
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+
+
+<meta name="KEYWORDS" content="object-oriented, O-O, Java, Eiffel, C++, Smalltalk, software, reuse, reusability, software reuse, software reusability, logiciel, quality, contract, Design by Contract, programming by contract, contract-based engineering, BON, B.O.N., components, object-oriented analysis, object-oriented design, software components, componentware, COM, COM3, OLE, ActiveX, objet, objets, objekt, ogetto, ogetti, programmation par objets, programmation objets, programmazione per oggetti, technologie objet, technologie objets, object resource center, object technology resource center, object-oriented programming, objekt-orientierte programmierung, CORBA, OMG, CASE, Computer-Aided Software Engineering, SDK, development environment, software development kit, business modeling, Ariane 5, European Space Agency, ISE, Interactive Software Engineering, Bertrand Meyer, libraries, genie logiciel, software engineering, large-scale software engineering, object-oriented training, object-oriented consulting">
+
+
+    <META NAME="GENERATOR" Content="Microsoft FrontPage 4.0">
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
+<meta name="Microsoft Border" content="t, default">
+</HEAD>
+
+<BODY BGCOLOR="#F9EFE9" text="#000000"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Windows Eiffel Library (WEL) Tutorial</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right"><nobr>[&nbsp;<a href="../../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<H1>Step 2: Defining a main window class</H1>
+
+<P>
+In this step, you will learn how to define your window type for the main window, including application-specific behavior and appearance. 
+You will create a more specialized main window class which is descending from <I>WEL_FRAME_WINDOW</I>.
+
+<P>
+The quickest way to make a window useful is to explain it how to respond to Windows messages. For example, when the user clicks the 
+left mouse button in the main window of <I>My application</I>, the corresponding window object receives a <I>Wm_lbuttondown</I> 
+message from Windows. This tells the window object that the user clicked the mouse in it. It also passes the coordinates of the point 
+where the user clicked. To intercept and respond to Windows messages, WEL defines several procedures corresponding to the most common 
+Windows messages. For instance, <I>WEL_WINDOW</I> has a procedure named <I>on_left_button_down</I> corresponding to the 
+<I>Wm_lbuttondown</I> message. To respond to the message, you just need to redefine this procedure as follows:
+
+<pre><I>	on_left_button_down </I>(<I>keys</I>,<I> x_pos</I>,<I> y_pos</I>:<I> INTEGER</I>) <B>is</B>
+			-- Display a message box when the user presses the
+			-- the left mouse button.
+		<B>local</B>
+<I>			msgBox: WEL_MSG_BOX</I>
+		<B>do</B>
+<I>			!! msgBox.make
+			msgBox.information_message_box (Current, &quot;You have pressed the left mouse button.&quot;,
+				&quot;Message received&quot;)
+		<B>end</B>
+</pre>
+
+Since you have defined a customized main window class, you have to change the main_window function in
+APPLICATION in 
+order to return an instance of MAIN_WINDOW.  Class APPLICATION must be defined as follows:
+<PRE><B>class</B>
+	APPLICATION
+<B>inherit</B>
+	WEL_APPLICATION
+<B>creation</B>
+	make
+<B>feature</B>   
+	main_window: MAIN_WINDOW <B>is</B> 
+			-- Create the application's main window.
+		<B>once</B> 
+			!! Result<B>.</B>make
+		<B>end</B>
+	
+<B>end</B>  -- class APPLICATION
+</PRE>
+Figure 3 shows the message box displayed when the user clicks in the main window.<P>
+
+<P>
+<B>Figure 3</B><P>
+<IMG SRC="empty2.gif" ALT="empty2"   BORDER= width="398" height="266"><P>
+<P>
+The program created here closes when the user clicks on the system close box. But in serious applications, you may want to change this default behavior, for instance, to ask the user if he wants to save his work. WEL provides an easy way to do that, you just need to redefine the boolean function <I>closeable</I> to perform tests and actions needed. If you return True (which is the default value) the user will be able to close the window, otherwise the user will be unable to close it. A possible implementation could be the following:
+<PRE>	closeable: BOOLEAN <B>is</B> 
+			-- Does the user want to quit?
+		<B>local</B>
+			msgBox: WEL_MSG_BOX
+		<B>do</B>
+			!! msgBox.make
+			msgBox.question_message_box (Current, &quot;Do you want to quit?&quot;, &quot;Quit&quot;)
+			Result := msgBox.message_box_result = Mb_ok
+		<B>end</B>
+</pre>
+<P>
+</PRE>
+Here is the full source code of <I>MAIN_WINDOW</I>:
+<PRE><B>class</B> 
+	MAIN_WINDOW
+<B>inherit</B> 
+	WEL_FRAME_WINDOW
+		<B>redefine</B> 
+			on_left_button_down, closeable
+		<B>end</B> 
+<B>creation</B>  
+	make
+
+<B>feature</B>  {NONE} -- Initialization
+
+	make <B>is</B> 
+			-- Make the main window.
+		<B>do</B> 
+			make_top (&quot;My application&quot;)
+		<B>end</B>
+	
+<B>feature</B>  {NONE} -- Implementation
+
+	on_left_button_down (keys, x_pos, y_pos: INTEGER) <B>is</B> 
+			-- Display a message box when the user presses the
+			-- the left mouse button.
+		<B>local</B>
+			msgBox: WEL_MSG_BOX
+		<B>do</B> 
+			!! msgBox.make
+			msgBox.information_message_box (Current, &quot;You have pressed the left mouse button.&quot;,
+				&quot;Message received&quot;)
+		<B>end</B>
+	
+	closeable: BOOLEAN <B>is</B> 
+			-- Does the user want to quit?
+		<B>local</B>
+			msgBox: WEL_MSG_BOX
+		<B>do</B>
+			!! msgBox.make
+			msgBox.question_message_box (Current, &quot;Do you want to quit?&quot;, &quot;Quit&quot;)	
+			Result := msgBox.message_box_result = Mb_ok
+		<B>end</B>
+	
+<B>end</B>  -- class MAIN_WINDOW
+</PRE>
+
+<P>
+<A HREF="step1.html"><IMG SRC="fm2html-previous.gif" width="16" height="16">Previous</A>
+<A HREF="index.html"><IMG SRC="fm2html-toc.gif" width="16" height="16">Table of
+Contents</A>
+<A HREF="step3.html"><IMG SRC="fm2html-next.gif" width="16" height="16">Next</A>
+
+</i>
+
+<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
+</HTML>

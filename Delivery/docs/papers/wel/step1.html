@@ -1,0 +1,64 @@
+<HTML>
+<HEAD>
+ 
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+
+<meta name="KEYWORDS" content="object-oriented, O-O, Java, Eiffel, C++, Smalltalk, software, reuse, reusability, software reuse, software reusability, logiciel, quality, contract, Design by Contract, programming by contract, contract-based engineering, BON, B.O.N., components, object-oriented analysis, object-oriented design, software components, componentware, COM, COM3, OLE, ActiveX, objet, objets, objekt, ogetto, ogetti, programmation par objets, programmation objets, programmazione per oggetti, technologie objet, technologie objets, object resource center, object technology resource center, object-oriented programming, objekt-orientierte programmierung, CORBA, OMG, CASE, Computer-Aided Software Engineering, SDK, development environment, software development kit, business modeling, Ariane 5, European Space Agency, ISE, Interactive Software Engineering, Bertrand Meyer, libraries, genie logiciel, software engineering, large-scale software engineering, object-oriented training, object-oriented consulting">
+
+
+    <META NAME="GENERATOR" Content="Microsoft FrontPage 4.0">
+    <META HTTP-EQUIV="Content-Type" CONTENT="text/html;CHARSET=iso-8859-1">
+
+
+<TITLE>Windows Eiffel Library</TITLE>
+
+<meta name="Microsoft Border" content="t, default">
+</HEAD>
+
+<BODY BGCOLOR="#F9EFE9" text="#000000"><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Windows Eiffel Library</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right"><nobr>[&nbsp;<a href="../../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<H1>Step 1: Creating an application</H1>
+<P>
+All Windows programs have a window called main window that appears when the user starts the program. In WEL, this window is owned by the application which is responsible for creating and displaying the main window, processing Windows messages and terminating the application.
+<P>
+Every WEL application must define its own descendant of <I>WEL_APPLICATION</I> in order to define the deferred function <I>main_window</I> as follows:
+<PRE>
+<B>class</B>
+<I>	APPLICATION</I>
+<B>inherit</B>
+<I>	WEL_APPLICATION</I>
+<B>creation</B>
+<I>	make</I>
+<B>feature</B>
+<I>	main_window</I>:<I> WEL_FRAME_WINDOW </I> <B>is</B>
+<I>			</I>-- Create the application's main window.
+		<B>once</B>
+<I>			</I>!!<I> Result<B>.</B>make_top (</I>&quot;<I>My application</I>&quot;<I>)</I>
+		<B>end</B>
+<I>	</I>
+<B>end</B>--<I> </I>class <I>APPLICATION</I>
+</PRE>
+<P>
+This class is the minimal WEL application, if you run it you will get an empty frame window that can be moved, resized, maximized, minimized and closed. Figure 2 shows the appearance of the application.<P>
+<P>
+<B>Figure 2</B><P>
+<IMG SRC="empty.gif" ALT="empty"   BORDER= width="398" height="266">
+<P><BR>
+<A HREF="index.html"><IMG SRC="fm2html-previous.gif" width="16" height="16">Previous</A>
+<A HREF="index.html"><IMG SRC="fm2html-toc.gif" width="16" height="16">Table of Contents</A>
+<A HREF="step2.html"><IMG SRC="fm2html-next.gif" width="16" height="16">Next</A>
+</P>
+<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
+</HTML>

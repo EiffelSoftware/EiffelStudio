@@ -1,0 +1,48 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Melting Ice Technology</TITLE>
+		<META NAME="MS-HKWD" CONTENT="Freeze">
+		<META NAME="MS-HKWD" CONTENT="Melt">
+		<META NAME="MS-HKWD" CONTENT="Finalize">
+		<LINK REL=Stylesheet HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+		<H1>Melting Ice Technology</H1>
+        <p>EiffelStudio relies on Melting Ice Technology, the proprietary compilation mechanism of ISE Eiffel,
+        which offers three forms of compilation:</p>
+        <ul>
+          <li><i>melting</i>   for making a few changes. The fastest of the mechanisms, typically taking a
+            few seconds after small changes. Melting time is proportional to the size of the changed parts and
+            affected classes, while the time needed to freeze or finalize is partly proportional to the size of the whole system. As long as you do not include
+            new external C/C++ code, a C/C++ compiler is not required. However, execution speed is not optimal.
+            The generated executable is debuggable.</li>
+          <li><i>freezing</i> generates C code from the active system, and then compiles it into machine code; you must have a C/C++ compiler installed. You need to use
+            this option if you add new agents or external C/C++ calls. Unless you add external code, you can re-freeze every couple of days. The rest of the time,
+            you can melt your software to receive immediate feedback. The speed
+            is still slower than when finalizing, but the generated executable
+            is still debuggable.</li>
+          <li><i>finalizing</i> delivers a production version (intermediate or final) of your software.
+            It can be used to measure its performance in operational conditions.
+            Finalization performs extensive time and space optimizations that enable Eiffel to match the efficiency of C/C++; it also creates a stand-alone C package that
+            you can use for cross-platform development. Because of all the optimizations involved, finalizing takes the most
+            time, and the generated executable is not debuggable.</li>
+        </ul>
+        <p>Melting and freezing generate an executable in the EIFGEN|W_code
+        subdirectory of the project directory. The executable is composed of a
+        standard executable file named after the system, and of a &lt;<i>system
+        name</i>&gt;.melted file, which is called the Eiffel update file.
+        Although it is recommended to finalize the system when running it from
+        outside EiffelStudio (since the performance is better), it is possible
+        to launch a melted/frozen executable. However, the Eiffel update file is
+        necessary, the executable alone will not run.</p>
+        <p>Basically, the Eiffel update file incorporates the changes that have
+        been made to the system since it was last frozen. Therefore, it is very
+        small when the system has just been frozen, and progressively becomes
+        bigger each time the system is melted. On the contrary, the executable
+        is only modified when the system is frozen, never when it is melted.</p>
+        <p>The contents of the Eiffel update file are in a byte code
+        representation which is dynamically interpreted at run-time.</p>
+	</BODY>
+</HTML>

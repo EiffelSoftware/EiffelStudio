@@ -124,7 +124,7 @@ feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operatio
 		require
 			non_void_statement: a_statement /= Void
 		local
-			l_statement_type: TYPE
+			l_statement_type: SYSTEM_TYPE
 			l_agent: PROCEDURE [CODE_CONSUMER_FACTORY, TUPLE [SYSTEM_DLL_CODE_STATEMENT]]
 		do
 			l_statement_type := a_statement.get_type
@@ -140,7 +140,7 @@ feature {CODE_GENERATOR, CODE_FACTORY, CODE_ARGUMENTS_FACTORY} -- Basic Operatio
 		require
 			non_void_expression: an_expression /= Void
 		local
-			l_exp_type: TYPE
+			l_exp_type: SYSTEM_TYPE
 			l_agent: PROCEDURE [CODE_CONSUMER_FACTORY, TUPLE [SYSTEM_DLL_CODE_EXPRESSION]]
 		do
 			l_exp_type := an_expression.get_type

@@ -25,7 +25,11 @@ feature {NONE} -- Initialization
 			cn_not_void: cn /= Void
 		do
 			class_name := cn
+			cn.to_upper
 			visible_name := vn
+			if vn /= Void then
+				vn.to_upper
+			end
 			creation_restriction := cr
 			export_restriction := er
 			renamings := r

@@ -117,11 +117,13 @@ feature {COMPILER_EXPORTER}
 			until
 				target_list.after
 			loop
-				class_name := target_list.item.as_lower
+					-- Class names are stored in upper, thus the conversion to upper cases
+					-- for the lookup.
+				class_name := target_list.item.as_upper
 
 				if not classes.has (class_name) then
 					create vd16;
-					vd16.set_class_name (target_list.item);
+					vd16.set_class_name (class_name);
 					vd16.set_cluster (cluster);
 					vd16.set_node (Current);
 					Error_handler.insert_error (vd16);

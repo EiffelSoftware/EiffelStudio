@@ -53,7 +53,9 @@ feature {COMPILER_EXPORTER} -- Update
 					until
 						list.after
 					loop
-						classes.item (list.item.as_lower).set_namespace (l_namespace)
+							-- Class names are stored in upper, thus the conversion to upper cases
+							-- for the lookup.
+						classes.item (list.item.as_upper).set_namespace (l_namespace)
 						list.forth
 					end
 				end

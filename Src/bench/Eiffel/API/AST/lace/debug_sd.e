@@ -52,7 +52,6 @@ feature {COMPILER_EXPORTER}
 			debug_tag: DEBUG_TAG_I
 			tag_value: STRING
 			v: DEBUG_I
-			class_name: STRING
 		do
 			if enabled then
 				if value /= Void then
@@ -87,8 +86,9 @@ feature {COMPILER_EXPORTER}
 						until
 							list.after
 						loop
-							class_name := list.item.as_lower
-							classes.item (class_name).set_debug_level (v)
+								-- Class names are stored in upper, thus the conversion to
+								-- upper cases for the lookup.
+							classes.item (list.item.as_upper).set_debug_level (v)
 							list.forth
 						end
 					end

@@ -74,7 +74,7 @@ feature {COMPILER_EXPORTER} -- Update
 					until
 						list.after
 					loop
-						class_name := list.item.as_lower
+						class_name := list.item.as_upper
 						classes.item (class_name).set_profile_level (v)
 						list.forth
 					end

@@ -20,6 +20,8 @@ feature {NONE} -- Initialization
 
 	make_by_pointer (an_item: POINTER) is
 			-- Initialize Current with `an_item'.
+		require
+			an_item_not_null: an_item /= default_pointer
 		do
 			item := an_item
 		ensure

@@ -1,14 +1,11 @@
 indexing
-
-	description: 
-		"Error for specifying a DLL32 without an integer alias.";
+	description: "Error for specifying a DLL32 without an integer alias.";
 	date: "$Date$";
 	revision: "$Revision $"
 
 class EXT_DLL_ALIAS 
 
 inherit
-
 	FEATURE_ERROR
 
 feature -- Properties

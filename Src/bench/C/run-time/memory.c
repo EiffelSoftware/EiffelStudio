@@ -78,16 +78,18 @@ rt_public void mem_free(EIF_REFERENCE object)
 	if (0 == (flags & (EO_OLD | EO_NEW)))	/* Neither old nor new */
 		return;							/* Object in scavenge zone */
 
-	GC_THREAD_PROTECT(eif_synchronize_gc(rt_globals));
-
 	gfree(zone);		/* Free object, eventually calling dispose */
 
-	/* Update `eiffel_usage' variable. Set to 0 if negative */
+		/* Manu: 08/21/2003: One could think that we should update `eiffel_usage'
+		 * here as it used to be done in the past. But here is why I decided not
+		 * to keep this. First `eiffel_usage' is just an information to help
+		 * find out when triggering a GC cycle, second people playing with `mem_free'
+		 * are simply crazy, I still don't understand why we keep this C features.
+		 * Third who cares if the `eiffel_usage' is actually higher, it will force
+		 * more collection, but you pay the price of using `mem_free'. Finally
+		 * updating `eiffel_usage' without using its mutex is not safe.
+		 */
 
-	eiffel_usage -= (nbytes + OVERHEAD);
-	if (eiffel_usage < 0) eiffel_usage = 0;
-
-	GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 #else
 #ifdef BOEHM_GC
 	GC_free(zone);

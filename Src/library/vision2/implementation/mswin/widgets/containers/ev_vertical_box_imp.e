@@ -28,16 +28,19 @@ feature {NONE} -- Basic operation
 
 	set_local_width (new_width: INTEGER) is
 			-- Make `new_width' the `width' of the box and all the children.
+		local
+			temp_width: INTEGER
 		do
 			if new_width /= width then
-				resize (minimum_width.max (new_width), height)
+				temp_width := minimum_width.max (new_width)
+				resize (temp_width, height)
 				if not ev_children.empty then
 					from
 						ev_children.start
 					until
 						ev_children.after
 					loop
-						ev_children.item.parent_ask_resize(width, ev_children.item.child_cell.height)		
+						ev_children.item.parent_ask_resize(temp_width, ev_children.item.child_cell.height)		
 						ev_children.forth
 					end
 				end
@@ -296,7 +299,7 @@ feature {NONE} -- Implementation
 			cc := child_cell
 			cc.resize (minimum_width.max(a_width), minimum_height.max (a_height))
 			if resize_type = 3 then
-				if a_height /= height then
+				if cc.height /= height then
 					resize (cc.width, height)
 					set_local_height (cc.height)
 				else
@@ -304,7 +307,7 @@ feature {NONE} -- Implementation
 				end
 				move (cc.x, cc.y)
 			elseif resize_type = 2 then
-				if a_height /= height then
+				if cc.height /= height then
 					resize (minimum_width, cc.height)
 					set_local_height (cc.height)
 				else
@@ -316,9 +319,9 @@ feature {NONE} -- Implementation
 				set_local_height (minimum_height)
 				move (cc.x, (cc.height - height)//2 + cc.y)
 			else
-				move ((cc.width - width)//2 + cc.x, (cc.height - height)//2 + cc.y)
 				set_local_width (minimum_width)
 				set_local_height (minimum_height)
+				move ((cc.width - width)//2 + cc.x, (cc.height - height)//2 + cc.y)
 			end
 		end
 

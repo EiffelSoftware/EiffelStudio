@@ -58,8 +58,10 @@ feature
 		do
 			if System.Concurrent_eiffel then
 				System.set_has_separate;
+			elseif System.current_class.lace_class = System.general_class then
+				-- Allow declaration of `deep_import' in GENERAL
 			else
-				Error_handler.make_syntax_error
+				Error_handler.make_separate_syntax_error
 			end
 		end;
 

@@ -47,7 +47,7 @@ feature -- Pixmaps
 		once
 			create Result
 			create l_file.make_from_string (Shared_constants.Application_constants.Icon_resources_directory)
-			l_file.extend ("toc_folder_closed.ico")
+			l_file.extend ("icon_toc_folder_closed.ico")
 			Result.set_with_named_file (l_file)
 		end
 		
@@ -58,7 +58,7 @@ feature -- Pixmaps
 		once
 			create Result
 			create l_file.make_from_string (Shared_constants.Application_constants.Icon_resources_directory)
-			l_file.extend ("toc_folder_open.ico")
+			l_file.extend ("icon_toc_folder_open.ico")
 			Result.set_with_named_file (l_file)
 		end
 		

@@ -724,6 +724,7 @@ feature {NONE} -- Translation
 
 			if is_initialized then
 				from
+					area := s.area
 				until
 					(j - i) < 2 or i = 8
 				loop

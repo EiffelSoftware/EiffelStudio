@@ -55,7 +55,7 @@ feature -- Initialization
 			set_minimum_size (250, 250)
 		end
 		
-feature -- Basic operations
+feature -- Basic operation
 
 	add_command_representation (output: STRING) is
 			--
@@ -81,6 +81,20 @@ feature -- Basic operations
 			last_selected_item = history_list.count
 		end
 		
+feature {GB_SHOW_HISTORY_COMMAND} -- Basic operation
+		
+	select_current_history_position is
+			-- Ensure that the item representing the current position in
+			-- the history is selected.
+		do
+				-- Only select the position if an item should be selected.
+				-- If we are at the start of the history then no item
+				-- should be selected.
+			if history.current_position >= 0 then
+				select_item (history.current_position)	
+			end
+		end
+
 feature {GB_GLOBAL_HISTORY} -- Implementation
 
 	select_item (position: INTEGER) is
@@ -130,8 +144,7 @@ feature {GB_GLOBAL_HISTORY} -- Implementation
 		do
 			history_list.wipe_out
 		end
-		
-		
+
 feature {NONE} -- Implementation
 
 	close_window is

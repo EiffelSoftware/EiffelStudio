@@ -54,4 +54,15 @@ feature -- Status setting
 		do
 			gtk_toggle_button_toggled (widget)
                 end
+
+feature -- Event - command association
+	
+	add_toggle_command ( command: EV_COMMAND; 
+			    arguments: EV_ARGUMENTS) is
+			-- Add 'command' to the list of commands to be
+			-- executed when the button is toggled
+		do
+			add_command ( "toggled", command,  arguments )
+		end
+
 end

@@ -166,7 +166,11 @@ feature
 				else
 					buf.putchar ('(');
 				end;
-				type_c.generate_function_cast (buf, argument_types);
+				if extension /= Void and then extension.has_signature then
+					type_c.generate_external_function_cast (buf, extension)
+				else
+					type_c.generate_function_cast (buf, argument_types)
+				end
 				buf.putchar ('(');
 				buf.putstring (table_name);
 				buf.putchar ('-');

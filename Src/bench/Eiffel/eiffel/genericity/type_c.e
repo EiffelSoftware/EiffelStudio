@@ -97,6 +97,20 @@ feature
 			buffer.putstring (")) ")
 		end
 
+	generate_external_function_cast (buffer: GENERATION_BUFFER; extension: EXTERNAL_EXT_I) is
+			-- Generate C function cast in `buffer'.
+		require
+			good_arguments: buffer /= Void and extension /= Void
+		local
+			i, nb: INTEGER
+		do
+			buffer.putstring ("FUNCTION_CAST(")
+			buffer.putstring (c_string)
+			buffer.putstring (", (")
+			extension.generate_parameter_signature_list
+			buffer.putstring (")) ")
+		end
+
 	generate_size (buffer: GENERATION_BUFFER) is
 			-- Generate size of C type
 		require

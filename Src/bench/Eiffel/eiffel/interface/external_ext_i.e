@@ -41,7 +41,7 @@ feature
 
 	has_arg_list: BOOLEAN is
 		do
-			Result := argument_types /= void
+			Result := argument_types /= Void
 		end
 
 	has_return_type: BOOLEAN is
@@ -165,6 +165,31 @@ feature -- Code generation
 			-- Should cast be generated for arguments?
 		do
 			Result := has_arg_list
+		end
+
+	generate_parameter_signature_list is
+			-- Generate parameter signature for C polymorphic calls.
+		require
+			has_signature: has_signature
+		local
+			i, count: INTEGER;
+			arg_types: ARRAY [STRING]
+			buffer: GENERATION_BUFFER
+		do
+			buffer := Context.buffer
+			from
+				arg_types := argument_types
+				i := arg_types.lower
+				count := arg_types.upper
+			until
+				i > count	
+			loop
+				buffer.putstring (arg_types.item (i));
+				if i /= count then
+					buffer.putstring (", ");
+				end;
+				i := i + 1;
+			end;
 		end
 
 	generate_parameter_list (parameters: BYTE_LIST [EXPR_B]) is

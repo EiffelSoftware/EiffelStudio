@@ -42,8 +42,6 @@ feature -- Initialization
 			is_multi_line_mode := True
 			parent ?= oui_parent.implementation
 			!! private_text.make (0)
-			is_horizontal_scrollbar := True
-			is_vertical_scrollbar := True
 			managed := man
 			a_scrolled_text.set_font_imp (Current)
 		end
@@ -81,9 +79,13 @@ feature -- Initialization
 				if margin_width + margin_height > 0 then
 					set_margins (margin_width, margin_height)
 				end
-				show_horizontal_scrollbar
+				if is_horizontal_scrollbar then
+					show_horizontal_scrollbar
+				end
 				if is_multi_line_mode then
-					show_vertical_scrollbar
+					if is_vertical_scrollbar then
+						show_vertical_scrollbar
+					end
 				end
 				if not managed then
 					wel_hide
@@ -92,6 +94,9 @@ feature -- Initialization
 				end
 				if is_multi_line_mode then
 					set_top_character_position (private_top_character_position)
+				end
+				if private_is_read_only then
+					set_read_only
 				end
 			end
 		end

@@ -33,7 +33,7 @@ feature -- Setting
 				fg_color /= Void or else
 				font /= Void
 			then
-				children := composite.descendents;
+				children := composite.descendants;
 				children.extend (composite);
 				from
 					children.start

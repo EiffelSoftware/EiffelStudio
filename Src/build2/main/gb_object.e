@@ -514,7 +514,7 @@ feature {GB_ID_COMPRESSOR}
 		end
 		
 
-feature {GB_OBJECT_HANDLER} -- Implementation
+feature {GB_OBJECT_HANDLER, GB_TITLED_WINDOW_OBJECT} -- Implementation
 
 	build_display_object is
 			-- Build `display_object' from type of `Current'

@@ -400,6 +400,7 @@ feature -- Conformance dependenies
 			not_void : a_class /= Void
 			has: has_dep_class (a_class)
 		do
+			conf_dep_classes.start
 			conf_dep_classes.prune (a_class)
 		ensure
 			removed : not has_dep_class (a_class)
@@ -1015,7 +1016,7 @@ end
 			end
 		end
 
-	record_suppliers (feature_i: FEATURE_I dependances: CLASS_DEPENDANCE) is
+	record_suppliers (feature_i: FEATURE_I; dependances: CLASS_DEPENDANCE) is
 		local
 			feature_name: STRING
 			f_suppliers: FEATURE_DEPENDANCE
@@ -1432,7 +1433,7 @@ changed4 := False
 
 feature -- Class initialization
 
-	init (ast_b: CLASS_AS_B class_info: CLASS_INFO; old_suppliers: like syntactical_suppliers) is
+	init (ast_b: CLASS_AS_B; class_info: CLASS_INFO; old_suppliers: like syntactical_suppliers) is
 			-- Initialization of the class with AST produced by yacc
 		require
 			good_argument: ast_b /= Void
@@ -2952,7 +2953,7 @@ feature -- Conformance table generation
 
 feature -- Redeclaration valididty
 
-	valid_redeclaration (a_precursor: TYPE_A redeclared: TYPE_A): BOOLEAN is
+	valid_redeclaration (a_precursor: TYPE_A; redeclared: TYPE_A): BOOLEAN is
 			-- Is the redeclaration of `a_precursor' into `redeclared' valid
 			-- in the current class ?
 		require
@@ -3478,7 +3479,7 @@ feature -- Merging
 
 feature {NONE} -- External features
 
-	c_parse (f: POINTER s: POINTER): CLASS_AS_B is
+	c_parse (f: POINTER; s: POINTER): CLASS_AS_B is
 		external
 			"C"
 		end

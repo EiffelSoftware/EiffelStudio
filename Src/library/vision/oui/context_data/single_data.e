@@ -12,34 +12,12 @@ class SINGLE_DATA
 inherit 
 
 	CLICK_DATA
-		rename
-			make as click_data_make
-		redefine
-			position, item
-		end
 
 creation
 
 	make
 
-feature 
-
-	position: INTEGER;
-			-- Position of the selected or unselected item
-
-	item: STRING;
-			-- selected or unselected item
-
-	make (a_widget: WIDGET; a_position: INTEGER; an_item: STRING) is
-			-- Create a context_data for `single' or `browse' action.
-		do
-			widget := a_widget;
-			position := a_position;
-			item := an_item
-		end
-
-end
-
+end -- class SINGLE_DATA
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

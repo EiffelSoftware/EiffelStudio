@@ -7,13 +7,12 @@ class
 	HTML_DOC_GENERATOR
 	
 inherit
-	IEIFFEL_HTML_DOCUMENTATION_GENERATOR_IMPL_STUB
+	CEIFFEL_HTML_DOCUMENTATION_GENERATOR_COCLASS_IMP
 		redefine
-			add_excluded_cluster,
-			remove_excluded_cluster,
+			add_included_cluster,
+			remove_included_cluster,
 			start_generation,
-			advise_status_callback,
-			unadvise_status_callback
+			make
 		end
 		
 	SHARED_EIFFEL_PROJECT
@@ -39,16 +38,14 @@ feature {NONE} -- Implementation
 	make  is
 			-- create and instance
 		do
-			create output.make	
-			Eiffel_project.set_degree_output (output)
-			create excluded_clusters.make
+			eiffel_project.set_degree_output (output)
+			create included_clusters.make
 		end
-
 
 feature -- Access
 	
-	excluded_clusters: LINKED_LIST[STRING]
-			-- sorted list of excluded clusters
+	included_clusters: LINKED_LIST[STRING]
+			-- list of included clusters
 
 feature -- Status report
 
@@ -78,38 +75,38 @@ feature -- Status report
 
 feature -- Status setting
 
-	set_excluded_clusters (a_list: ARRAYED_LIST[STRING]) is
-			-- set the list of excluded clusters with a different list
+	set_included_clusters (a_list: ARRAYED_LIST[STRING]) is
+			-- set the list of included clusters with a different list
 		do
-			create excluded_clusters.make
+			create included_clusters.make
 			from
 				a_list.start
 			until
 				a_list.after
 			loop
-				excluded_clusters.extend (a_list.item)
+				included_clusters.extend (a_list.item)
 				a_list.forth
 			end
 		end
 
 feature -- Basic operations
 
-	add_excluded_cluster (a_cluster_name: STRING) is
-			-- add a 'a_cluster_name' to the list of excluded clusters
+	add_included_cluster (a_cluster_name: STRING) is
+			-- add a 'a_cluster_name' to the list of included clusters
 			-- 'a_cluster_name' must be the full cluster name
 		require else
 			cluster_name_exists: a_cluster_name /= Void
 			valid_cluster_name: not a_cluster_name.is_empty
 		do
-			excluded_clusters.compare_objects
-			if not excluded_clusters.has (a_cluster_name) then
-				excluded_clusters.extend (a_cluster_name)
+			included_clusters.compare_objects
+			if not included_clusters.has (a_cluster_name) then
+				included_clusters.extend (a_cluster_name)
 			end
 		ensure then
 		end
 		
-	remove_excluded_cluster (a_cluster_name: STRING) is
-			-- remove 'a_cluster_name' from the list of excluded clusters
+	remove_included_cluster (a_cluster_name: STRING) is
+			-- remove 'a_cluster_name' from the list of included clusters
 			-- 'a_cluster_name' must be the full cluster name
 		require else
 			cluster_name_exists: a_cluster_name /= Void
@@ -117,12 +114,12 @@ feature -- Basic operations
 		local
 			index: INTEGER
 		do
-			excluded_clusters.compare_objects
-			if excluded_clusters.has (a_cluster_name) then
-				index := excluded_clusters.index_of (a_cluster_name, 1)
+			included_clusters.compare_objects
+			if included_clusters.has (a_cluster_name) then
+				index := included_clusters.index_of (a_cluster_name, 1)
 				if index > 0 then
-					excluded_clusters.go_i_th (index)
-					excluded_clusters.remove
+					included_clusters.go_i_th (index)
+					included_clusters.remove
 				end
 			end
 		ensure then	
@@ -146,15 +143,15 @@ feature -- Basic operations
 				
 				-- set the included clusters
 				from
-					excluded_clusters.start
+					included_clusters.start
 				until
-					excluded_clusters.after
+					included_clusters.after
 				loop
-					l_cluster := doc_generator.Universe.cluster_of_name (excluded_clusters.item)
+					l_cluster := doc_generator.Universe.cluster_of_name (included_clusters.item)
 					if l_cluster /= Void then
 						du.include_cluster (l_cluster, true)
 					end
-					excluded_clusters.forth
+					included_clusters.forth
 				end
 				doc_generator.set_universe (du)
 				
@@ -177,30 +174,19 @@ feature -- Basic operations
 			doc_generator.generate (output)	
 		end
 
-feature -- Advise/Unadvise callback functions
-
-	advise_status_callback (interface: IEIFFEL_HTML_DOCUMENTATION_EVENTS_INTERFACE) is
-			-- add an interface to the list of call backs
-		do
-			output.add_callback (interface)			
-		end
-		
-	unadvise_status_callback (interface: IEIFFEL_HTML_DOCUMENTATION_EVENTS_INTERFACE) is
-			-- remove an interface from the list of call backs
-		do
-			output.remove_callback (interface)
-		end
-
 feature {NONE} -- Implementation
 
-	output: COM_HTML_DOC_DEGREE_OUTPUT
+	output: COM_HTML_DOC_DEGREE_OUTPUT is	
 			-- generation output
+		once
+			create Result.make (Current)
+		end
 			
 	doc_generator: DOCUMENTATION
 			-- html documentation generator
 			
 invariant
-	non_void_excluded_clusters: excluded_clusters /= Void
+	non_void_included_clusters: included_clusters /= Void
 	non_void_output: output /= Void
 
 end -- class HTML_DOC_GENERATOR

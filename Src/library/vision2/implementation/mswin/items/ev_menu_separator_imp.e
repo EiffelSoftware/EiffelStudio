@@ -1,7 +1,6 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
 	description:
-		"EiffelVision menu separator, mswindows implemenatation."
+		"Eiffel Vision menu separator. Mswindows implementation."
 	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,14 +11,12 @@ class
 inherit
 	EV_MENU_SEPARATOR_I
 		redefine
-			--parent_imp,
 			interface
 		end
 
 	EV_MENU_ITEM_IMP
 		redefine
 			make,
-			--parent_imp,
 			interface
 		end
 
@@ -34,33 +31,14 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 		end
 
---	initialize is
---		do
---		end
+feature {EV_MENU_ITEM_LIST_IMP} -- Access
 
-feature -- Access
+	radio_group: LINKED_LIST [EV_RADIO_MENU_ITEM_IMP]
 
-	--parent_imp: EV_MENU_ITEM_LIST_IMP
-
---	set_parent (par: like parent) is
-			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
---		do
-	
---			if parent_imp /= Void then
---				parent_imp.remove_separator (Current)
---				parent_imp := Void
---			end
---			if par /= Void then
---				parent_imp ?= par.implementation
---				parent_imp.add_separator (Current)
---			end
---		end
-
-	index: INTEGER is
-			-- Index of the current item.
+	create_radio_group is
+			-- Create `radio_group'.
 		do
-		--	Result := parent_imp.internal_get_index (Current)
+			create radio_group.make
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -90,6 +68,10 @@ end -- class EV_MENU_SEPARATOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/23 02:15:49  brendel
+--| Revised. Added feature `radio_group' and `create_radio_group', to save
+--| the need for a list of radiogroups.
+--|
 --| Revision 1.3  2000/02/19 05:44:59  oconnor
 --| released
 --|

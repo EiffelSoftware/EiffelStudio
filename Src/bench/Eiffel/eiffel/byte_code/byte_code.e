@@ -592,8 +592,6 @@ feature -- IL code generation
 					-- Create retry label.
 				il_label_factory.create_retry_label
 				il_generator.mark_label (il_label_factory.retry_label)
-				il_generator.generate_start_exception_block
-				end_of_routine := Il_label_factory.new_label
 			end
 
 				-- Make IL code for preconditions
@@ -603,7 +601,19 @@ feature -- IL code generation
 			then
 				generate_il_precondition
 			end
-			
+
+				-- Generate prologue for once routine
+			if is_once then
+				il_generator.generate_once_prologue
+			end
+
+			if rescue_clause /= Void then
+					-- Start "try" block that will catch exceptions
+					-- and invoke rescue clause
+				il_generator.generate_start_exception_block
+				end_of_routine := Il_label_factory.new_label
+			end
+
 			if
 				(context.workbench_mode or class_c.assertion_level.check_postcond) and then
 				(old_expressions /= Void or inh_assert.has_postcondition)

@@ -117,9 +117,9 @@ feature {PIXMAP_X} -- Implementation
 				set_pressed (False);
 				is_pressed := True
 			end;
-            if private_foreground_color /= Void then
-                update_foreground_color
-            end
+			if private_foreground_color /= Void then
+				update_foreground_color
+			end
 		end;
  
 end -- PICT_COL_B_M

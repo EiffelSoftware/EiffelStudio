@@ -102,10 +102,7 @@ feature -- Initialization
 		require
 			c_string_exists: c_string /= default_pointer
 		do
-			check
-				False
-				-- Not supported.
-			end
+			make_from_cil (feature {MARSHAL}.ptr_to_string_ansi (c_string))
 		end
 
 	from_c (c_string: POINTER) is
@@ -114,10 +111,7 @@ feature -- Initialization
 		require
 			c_string_exists: c_string /= default_pointer
 		do
-			check
-				False
-				-- Not supported.
-			end
+			make_from_cil (feature {MARSHAL}.ptr_to_string_ansi (c_string))
 		ensure
 			no_zero_byte: not has ('%/0/')
 			-- characters: for all i in 1..count, item (i) equals
@@ -527,6 +521,7 @@ feature -- Element change
 				i > end0
 			loop
 				internal_string_builder.set_chars (index0 + i, other_area.get_chars (i))
+				i := i + 1
 			end
 		ensure
 			-- copied: forall `i' in 0 .. (`end_pos'-`start_pos'),
@@ -631,6 +626,7 @@ feature -- Element change
 				i = cnt
 			loop
 				internal_string_builder.set_chars (i, c)
+				i := i + 1
 			end
 		ensure
 			same_size: (count = old count) and (capacity = old capacity)

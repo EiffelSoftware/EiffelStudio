@@ -10,10 +10,6 @@ class
 
 inherit
 	WEL_REGISTRY_ACCESS_MODE
-		export
-			{NONE} all
-			{ANY} default_pointer
-		end
 		
 	WEL_HKEY
 	

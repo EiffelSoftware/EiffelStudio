@@ -50,7 +50,7 @@ feature -- Status report
 		external
 			"C"
 		alias
-			"eetag"
+			"eeotag"
 		end;
 
 	is_signal: BOOLEAN is
@@ -102,7 +102,7 @@ feature -- Status report
 		external
 			"C"
 		alias
-			"eecode"
+			"eeocode"
 		end;
 
 	original_recipient_name: STRING is

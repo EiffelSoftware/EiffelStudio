@@ -537,7 +537,7 @@ feature {NONE} -- Cluster display and saving
 				fill_list (l_exclude, exclude_list.list, ~new_exclude_sd (?), True)
 			end
 
-			if not visible_list.is_sensitive and then not visible_list.is_empty then
+			if visible_list.is_sensitive and then not visible_list.is_empty then
 				l_visible := prop.visible_option
 				if l_visible = Void then
 					l_visible := new_lace_list_clas_visi_sd (visible_list.count)

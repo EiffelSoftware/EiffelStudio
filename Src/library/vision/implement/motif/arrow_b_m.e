@@ -6,7 +6,8 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class ARROW_B_M 
+class 
+	ARROW_B_M 
 
 inherit
 
@@ -45,11 +46,13 @@ feature {NONE} -- Initialization
 
 	make (an_arrow_b: ARROW_B; man: BOOLEAN; oui_parent: COMPOSITE) is
 			-- Create a motif arrow button.
+		local
+			mc: MEL_COMPOSITE
 		do
+			mc ?= oui_parent.implementation;
 			widget_index := widget_manager.last_inserted_position;
-			mel_arrow_make (an_arrow_b.identifier,
-					mel_parent (an_arrow_b, widget_index),
-					man);
+			an_arrow_b.set_font_imp (Current);
+			mel_arrow_make (an_arrow_b.identifier, mc, man)
 		end;
 
 feature -- Element change

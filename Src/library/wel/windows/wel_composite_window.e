@@ -38,14 +38,14 @@ inherit
 feature -- Access
 
 	children: LINKED_LIST [WEL_WINDOW] is
-			-- Construct a linear representation of the children.
+			-- Construct a linear representation of children.
 		require
 			exists: exists
 		local
 			hwnd: POINTER
 			win: WEL_WINDOW
 		do
-			!! Result.make
+			create Result.make
 			from
 				hwnd := cwin_get_window (item, Gw_child)
 			until
@@ -68,7 +68,7 @@ feature -- Access
 			exists: exists
 			has_menu: has_menu
 		do
-			!! Result.make_by_pointer (cwin_get_menu (item))
+			create Result.make_by_pointer (cwin_get_menu (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -79,8 +79,7 @@ feature -- Access
 			exists: exists
 			has_system_menu: has_system_menu
 		do
-			!! Result.make_by_pointer (cwin_get_system_menu (item,
-				False))
+			create Result.make_by_pointer (cwin_get_system_menu (item, False))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -387,7 +386,7 @@ feature -- Basic operations
 					invalidate
 				end
 			else
-				!! point.make (a_x, a_y)
+				create point.make (a_x, a_y)
 				point.client_to_screen (parent)
 				cwin_move_window (item, point.x, point.y, a_width, a_height, repaint)
 			end
@@ -557,7 +556,7 @@ feature {NONE}-- Messages
 				-- Typical implementation:
 				-- paint_dc.set_text_color (control.foreground_color)
 				-- paint_dc.set_background_color (control.background_color)
-				-- !! brush.make_solid (control.background_color)
+				-- create brush.make_solid (control.background_color)
 				-- set_message_return_value (brush.to_integer)
 				-- disable_default_processing
 		end
@@ -641,7 +640,7 @@ feature {NONE} -- Implementation
 			info: WEL_NMHDR
 			control: WEL_CONTROL
 		do
-			!! info.make_by_pointer (cwel_integer_to_pointer (lparam))
+			create info.make_by_pointer (cwel_integer_to_pointer (lparam))
 			on_notify (wparam, info)
 			control ?= info.window_from
 			if control /= Void and then control.exists then
@@ -715,7 +714,7 @@ feature {NONE} -- Implementation
 		do
 			p := cwin_get_wm_menuselect_hmenu (wparam, lparam)
 			if p /= default_pointer then
-				!! a_menu.make_by_pointer (p)
+				create a_menu.make_by_pointer (p)
 				on_menu_select (cwin_get_wm_menuselect_cmd (wparam, lparam),
 					cwin_get_wm_menuselect_flags (wparam, lparam),
 					a_menu)
@@ -739,7 +738,7 @@ feature {NONE} -- Implementation
 		local
 			paint_dc: WEL_PAINT_DC
 		do
-			!! paint_dc.make_by_pointer (Current, cwel_integer_to_pointer(wparam))
+			create paint_dc.make_by_pointer (Current, cwel_integer_to_pointer(wparam))
 			paint_dc.get
 			if scroller /= Void then
 				paint_dc.set_viewport_origin (-scroller.horizontal_position,
@@ -810,7 +809,7 @@ feature {NONE} -- Implementation
 		local
 			di: WEL_DRAW_ITEM_STRUCT
 		do
-			!! di.make_by_pointer (cwel_integer_to_pointer (lparam))
+			create di.make_by_pointer (cwel_integer_to_pointer (lparam))
 			on_draw_item (wparam, di)
 		end
 
@@ -821,7 +820,7 @@ feature {NONE} -- Implementation
 		local
 			mmi: WEL_MIN_MAX_INFO
 		do
-			!! mmi.make_by_pointer (cwel_integer_to_pointer (lparam))
+			create mmi.make_by_pointer (cwel_integer_to_pointer (lparam))
 			on_get_min_max_info (mmi)
 		end
 
@@ -832,7 +831,7 @@ feature {NONE} -- Implementation
 		local
 			wp: WEL_WINDOW_POS
 		do
-			!! wp.make_by_pointer (cwel_integer_to_pointer (lparam))
+			create wp.make_by_pointer (cwel_integer_to_pointer (lparam))
 			on_window_pos_changed (wp)
 		end
 
@@ -843,7 +842,7 @@ feature {NONE} -- Implementation
 		local
 			wp: WEL_WINDOW_POS
 		do
-			!! wp.make_by_pointer (cwel_integer_to_pointer (lparam))
+			create wp.make_by_pointer (cwel_integer_to_pointer (lparam))
 			on_window_pos_changing (wp)
 		end
 
@@ -860,7 +859,7 @@ feature {NONE} -- Implementation
 			if hwnd_control /= default_pointer then
 				control ?= window_of_item (hwnd_control)
 				if control /= Void and then control.exists then
-					!! paint_dc.make_by_pointer (Current, cwel_integer_to_pointer (wparam))
+					create paint_dc.make_by_pointer (Current, cwel_integer_to_pointer (wparam))
 					on_color_control (control, paint_dc)
 				end
 			end
@@ -891,7 +890,7 @@ feature {NONE} -- Implementation
 			-- Once object used by `on_wm_destroy' to test if `Current'
 			-- is the application's main window.
 		once
-			!! Result
+			create Result
 		ensure
 			result_not_void: Result /= Void
 		end

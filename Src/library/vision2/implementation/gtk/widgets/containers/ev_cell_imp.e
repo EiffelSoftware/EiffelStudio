@@ -42,10 +42,11 @@ feature -- Access
 		local
 			p: POINTER
 			imp: EV_ANY_IMP
+			a_child_list: POINTER
 		do
-			p := C.gtk_container_children (container_widget)
-			if p /= NULL then
-				p := C.g_list_nth_data (p, 0)
+			a_child_list := C.gtk_container_children (container_widget)
+			if a_child_list /= NULL then
+				p := C.g_list_nth_data (a_child_list, 0)
 				if p /= NULL then
 					imp := eif_object_from_c (p)
 					check
@@ -54,7 +55,7 @@ feature -- Access
 					end
 					Result ?= imp.interface
 				end
-				C.g_list_free (p)
+				C.g_list_free (a_child_list)
 			end
 		end
 

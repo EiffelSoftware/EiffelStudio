@@ -275,8 +275,8 @@ __declspec(dllexport) int desc_get_size (int type)
 	switch (type)
 	{
 		case T_array: return sizeof (LPVOID);
-		case T_boolean: return sizeof (EIF_CHARACTER);
-		case T_character: return sizeof (EIF_CHARACTER);
+		case T_boolean: return sizeof (EIF_CHARACTER)*4;
+		case T_character: return sizeof (EIF_CHARACTER)*4;
 		case T_double: return sizeof (EIF_DOUBLE);
 		case T_integer: return sizeof (EIF_INTEGER);
 		case T_no_type: return 0;

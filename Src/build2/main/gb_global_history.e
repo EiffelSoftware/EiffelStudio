@@ -102,11 +102,11 @@ feature -- Basic operation
 		do
 			(command_list @ current_position).undo
 			set_current_position (current_position - 1)
-			if current_position = 0 then
+			if current_position = -1 then
 				history_dialog.remove_selection
 				set_current_position (-1)
 			else
-				history_dialog.select_item (current_position)
+				history_dialog.select_item (current_position + 1)
 			end
 			
 				-- Update modified status of project.
@@ -125,7 +125,7 @@ feature -- Basic operation
 			(command_list @ (current_position + 1)).execute
 			set_current_position (current_position + 1)
 				-- Update undo/redo buttons.
-			history_dialog.select_item (current_position)
+			history_dialog.select_item (current_position + 1)
 			
 				-- Update modified status of project.
 			System_status.enable_project_modified
@@ -150,7 +150,7 @@ feature -- Basic operation
 					command_list.remove
 				end
 					-- Update the display in the history_dialog also.
-				history_dialog.remove_items_from_position (current_position + 1)
+				history_dialog.remove_items_from_position (current_position + 2)
 			end
 		end
 		

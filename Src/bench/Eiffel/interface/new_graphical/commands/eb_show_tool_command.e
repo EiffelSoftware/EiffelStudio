@@ -16,6 +16,7 @@ inherit
 		redefine
 			new_toolbar_item,
 			new_menu_item,
+			initialize_menu_item,
 			tooltext,
 			is_tooltext_important
 		end
@@ -114,31 +115,19 @@ feature -- Basic operations
 		do
 			create Result.make (Current)
 			initialize_toolbar_item (Result, display_text, use_gray_icons)
+			Result.select_actions.extend (agent execute)
 			if is_selected then
 				Result.enable_select
 			end
-			Result.select_actions.extend (agent execute)
 		end
 
 	new_menu_item: EB_COMMAND_CHECK_MENU_ITEM is
 			-- Create a new menu entry for this command.
-		local
-			mname: STRING
 		do
-				-- Add it to the managed menu items
-			if managed_menu_items = Void then
-				create managed_menu_items.make (1)
-			end
 				-- Create the menu item
 			create Result.make (Current)
-			mname := menu_name.twin
-			if accelerator /= Void then
-				mname.append (Tabulation)
-				mname.append (accelerator.out)
-			end
-			Result.set_text (mname)
+			initialize_menu_item (Result)
 			Result.select_actions.extend (agent execute)
-			Result.enable_sensitive
 			if is_selected then
 				Result.enable_select
 			else
@@ -199,6 +188,14 @@ feature {NONE} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
+	initialize_menu_item (a_menu_item: EB_COMMAND_MENU_ITEM) is
+			-- Create a new menu entry for this command.
+		do
+			Precursor {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} (a_menu_item)
+				-- We do not want pixmaps for check items.
+			a_menu_item.remove_pixmap
+		end
 
 	safety_flag: BOOLEAN
 			-- Are we changing the `is_selected' attribute? (To prevent stack overflows)

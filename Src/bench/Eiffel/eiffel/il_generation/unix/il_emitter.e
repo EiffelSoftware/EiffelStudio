@@ -11,7 +11,7 @@ create
 	
 feature {NONE} -- Initialization
 
-	make is
+	make (runtime_version: STRING) is
 			-- Create new instance of IL_EMITTER
 		do
 			check

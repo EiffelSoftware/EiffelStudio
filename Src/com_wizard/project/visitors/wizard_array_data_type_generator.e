@@ -70,8 +70,7 @@ feature -- Basic operations
 
 			create c_header_file.make (100)
 			element_descriptor := an_array_descriptor.array_element_descriptor
-			create element_visitor
-			element_visitor.visit (element_descriptor)
+			element_visitor := element_descriptor.visitor
 
 			if is_void (an_element_type) then
 				message_output.add_warning (Current, message_output.void_array)

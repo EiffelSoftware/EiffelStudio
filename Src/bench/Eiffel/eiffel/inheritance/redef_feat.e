@@ -11,8 +11,7 @@ feature
 
 	class_id: INTEGER;
 
-	process (adaptations: LINKED_LIST [FEATURE_ADAPTATION];
-			assert_list: LINKED_LIST [INTEGER]) is
+	process (adaptations: LINKED_LIST [FEATURE_ADAPTATION]) is
 			-- Process 'adaptions' to update the assert_id_set for
 			-- redefined features. 
 		local
@@ -48,7 +47,7 @@ feature
 					list.forth;
 				end;
 				if redef_assert_feats.count > 0 then
-					update_assert_set (redef_assert_feats, feat, assert_list);
+					update_assert_set (redef_assert_feats, feat);
 				end;
 				adaptations.forth;
 			end;
@@ -56,8 +55,8 @@ feature
 
 feature {NONE}
 
-	update_assert_set (features: LINKED_LIST [FEATURE_I]; new_feat: FEATURE_I;
-						assert_list: LINKED_LIST [INTEGER]) is
+	update_assert_set (features: LINKED_LIST [FEATURE_I]; new_feat: FEATURE_I)
+is
 			-- Update assert_id_set of `new_feat' from `features'.
 		require
 			valid_features: features /= Void;
@@ -86,13 +85,6 @@ feature {NONE}
 					end;
 					features.forth
 				end;
-				--if not System.freeze then
-					--old_assert_id_set := new_feat.assert_id_set;
-					--if not new_assert_id_set.same_as (old_assert_id_set) 
-					--then
-						--assert_list.add (new_feat.rout_id_set.first)
-					--end;
-				--end;
 				new_feat.set_assert_id_set (new_assert_id_set);
 debug ("ASSERTION")
 	trace (new_feat);

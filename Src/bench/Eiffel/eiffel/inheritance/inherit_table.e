@@ -194,8 +194,6 @@ feature
 				-- Check-sum error after analysis fo the inherited
 				-- features
 			Error_handler.checksum;
-				-- Create propagation list for assertions
-			!!assert_prop_list.make;
 				-- Analyze local features
 			if a_class.changed then
 					-- Remove all changed features if any
@@ -308,13 +306,8 @@ feature
 			pass3_control.set_invariant_removed (invariant_removed);
 
 				-- Update the assert_id_set of redefined features.
-				-- Also update assert_prop_list if redefinition
-				-- occurs.
 			update_inherited_assertions;
 
-			if assert_prop_list.empty then
-				assert_prop_list := Void
-			end;
 				-- Propagation
 			pass_c.propagate (feature_table, resulting_table,
 								pass2_control, assert_prop_list);
@@ -837,6 +830,7 @@ debug ("ACTIVITY")
 	end;
 end;
 					else
+						!!assert_prop_list.make;
 						assert_prop_list.add (feature_i.rout_id_set.first)
 					end;
 
@@ -926,10 +920,7 @@ end;
 			new_externals.wipe_out;
 			invariant_changed := False;
 			invariant_removed := False;
-			if assert_prop_list /= Void then
-				-- An error has occurred
-				assert_prop_list.wipe_out;
-			end;
+			assert_prop_list := Void; 
 			clear_all;
 		end;
 
@@ -963,7 +954,7 @@ end;
 			redefined_features: REDEF_FEAT;
 		do
 			!!redefined_features;
-			redefined_features.process (adaptations, assert_prop_list);
+			redefined_features.process (adaptations);
 		end;
 
 	update_body_server is

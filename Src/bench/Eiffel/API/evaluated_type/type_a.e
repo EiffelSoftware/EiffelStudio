@@ -320,15 +320,14 @@ feature
 			-- Check for obsolete class from Current. If
 			-- obsolete then display warning message.
 		local
-			ass_class: CLASS_C
+			ass_class: CLASS_C;
+			warn: OBS_CLASS_WARN;
 		do
 			ass_class := actual_type.associated_class;
 		   	if 	(ass_class /= Void) and then ass_class.is_obsolete then
-			   	io.error.putstring ("%TWarning: Class ");
-				io.error.putstring (ass_class.class_name);
-				io.error.putstring (" is obsolete: ");
-				io.error.putstring (ass_class.obsolete_message);
-				io.error.new_line;
+				!!warn;
+				warn.set_class (ass_class);
+				Error_handler.insert_warning (warn);
 			end;
 		end;
 

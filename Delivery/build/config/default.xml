@@ -27,6 +27,7 @@
 			<TEXT DESCRIPTION="Display warning when deleting via the keyboard">show_deleting_keyboard_warning<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display warning when deleting a directory containing one or more windows">show_deleting_directories_warning<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT DESCRIPTION="Display warning when deleting final directory containing root window">show_deleting_final_directory_warning<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT DESCRIPTION="Display warning when adding a directory that already exists on the disk">show_adding_existing_directory_warning<BOOLEAN>True</BOOLEAN></TEXT>
 		</TOPIC>
 	</TOPIC>
 	<TOPIC TOPIC_ID="Dynamic_data" ICON="icon_preferences_folder" VISIBILITY="hidden">

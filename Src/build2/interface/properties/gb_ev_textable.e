@@ -7,6 +7,10 @@ indexing
 
 class
 	GB_EV_TEXTABLE
+	
+	-- The following properties from EV_TEXTABLE are manipulated by `Current'.
+	-- Text - Performed on the real object and the display_object child.
+	-- Text_alignment - Performed on the real object and the display_object child
 
 inherit
 	GB_EV_ANY
@@ -98,16 +102,24 @@ feature {GB_XML_STORE} -- Output
 		local
 			alignment: EV_TEXT_ALIGNMENT
 			alignment_text: STRING
+			textable: EV_TEXTABLE
+			default_alignment: EV_TEXT_ALIGNMENT
 		do
+			textable ?= new_instance_of (dynamic_type_from_string (class_name (first)))
+			textable.default_create
+			default_alignment := textable.alignment
+			
 			alignment := objects.first.alignment
-			if alignment.is_left_aligned then
-				alignment_text := Ev_textable_left_string
-			elseif alignment.is_center_aligned then
-				alignment_text := Ev_textable_center_string
-			elseif alignment.is_right_aligned then
-				alignment_text := Ev_textable_right_string
+			if not alignment.is_equal (default_alignment) then
+				if alignment.is_left_aligned then
+					alignment_text := Ev_textable_left_string
+				elseif alignment.is_center_aligned then
+					alignment_text := Ev_textable_center_string
+				elseif alignment.is_right_aligned then
+					alignment_text := Ev_textable_right_string
+				end
+				add_element_containing_string (element, text_alignment_string, alignment_text)
 			end
-			add_element_containing_string (element, text_alignment_string, alignment_text)
 			
 			if not objects.first.text.is_empty then
 				add_element_containing_string (element, text_string, objects.first.text)	
@@ -126,12 +138,14 @@ feature {GB_XML_STORE} -- Output
 				for_all_objects (agent {EV_TEXTABLE}.set_text (element_info.data))
 			end
 			element_info := full_information @ (text_alignment_string)
-			if element_info.data.is_equal (Ev_textable_left_string) then
-				for_all_objects (agent {EV_TEXTABLE}.align_text_left)
-			elseif element_info.data.is_equal (Ev_textable_center_string) then
-				for_all_objects (agent {EV_TEXTABLE}.align_text_center)
-			elseif element_info.data.is_equal (Ev_textable_right_string) then
-				for_all_objects (agent {EV_TEXTABLE}.align_text_right)
+			if element_info /= Void then
+				if element_info.data.is_equal (Ev_textable_left_string) then
+					for_all_objects (agent {EV_TEXTABLE}.align_text_left)
+				elseif element_info.data.is_equal (Ev_textable_center_string) then
+					for_all_objects (agent {EV_TEXTABLE}.align_text_center)
+				elseif element_info.data.is_equal (Ev_textable_right_string) then
+					for_all_objects (agent {EV_TEXTABLE}.align_text_right)
+				end
 			end
 		end
 		
@@ -152,12 +166,14 @@ feature {GB_CODE_GENERATOR} -- Output
 				Result := a_name + ".set_text (%"" + element_info.data + "%")"
 			end
 			element_info := full_information @ (text_alignment_string)
-			if element_info.data.is_equal (Ev_textable_left_string) then
-				Result := Result + indent + a_name + ".align_text_left"
-			elseif element_info.data.is_equal (Ev_textable_center_string) then
-				Result := Result + indent + a_name + ".align_text_center"
-			elseif element_info.data.is_equal (Ev_textable_right_string) then
-				Result := Result + indent + a_name + ".align_text_right"
+			if element_info /= Void then
+				if element_info.data.is_equal (Ev_textable_left_string) then
+					Result := Result + indent + a_name + ".align_text_left"
+				elseif element_info.data.is_equal (Ev_textable_center_string) then
+					Result := Result + indent + a_name + ".align_text_center"
+				elseif element_info.data.is_equal (Ev_textable_right_string) then
+					Result := Result + indent + a_name + ".align_text_right"
+				end
 			end
 			Result := strip_leading_indent (Result)
 		end

@@ -59,7 +59,7 @@ feature -- Access
 			align_labels_left (Result)
 		end
 		
-		update_attribute_editor is
+	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
@@ -86,8 +86,14 @@ feature {GB_XML_STORE} -- Output
 
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
+		local
+			frame: EV_FRAME
 		do
-			add_element_containing_integer (element, Style_string, objects.first.style)
+			frame ?= new_instance_of (dynamic_type_from_string (class_name (first)))
+			frame.default_create
+			if frame.style /= objects.first.style then
+				add_element_containing_integer (element, Style_string, objects.first.style)
+			end
 		end
 		
 	modify_from_xml (element: XML_ELEMENT) is
@@ -98,10 +104,12 @@ feature {GB_XML_STORE} -- Output
 		do
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Style_string)
-			check
-				data_is_an_integer: element_info.data.is_integer
+			if element_info /= Void then
+				check
+					data_is_an_integer: element_info.data.is_integer
+				end
+				for_all_objects (agent {EV_FRAME}.set_style (element_info.data.to_integer))
 			end
-			for_all_objects (agent {EV_FRAME}.set_style (element_info.data.to_integer))
 		end
 		
 feature {GB_CODE_GENERATOR} -- Output
@@ -117,8 +125,10 @@ feature {GB_CODE_GENERATOR} -- Output
 			Result := ""
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Style_string)
-			Result := a_name + ".set_style (" + element_info.data + ")"
-			Result := strip_leading_indent (Result)
+			if element_info /= Void then
+				Result := a_name + ".set_style (" + element_info.data + ")"
+				Result := strip_leading_indent (Result)
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -155,9 +155,22 @@ feature {GB_XML_STORE} -- Output
 		local
 			temp_string: STRING
 		do
-			add_element_containing_boolean (element, Is_homogeneous_string, objects.first.is_homogeneous)
-			add_element_containing_integer (element, Padding_string, objects.first.padding_width)
-			add_element_containing_integer (element, Border_string, objects.first.border_width)
+				-- Boxes are not homogeneous by default.
+			if objects.first.is_homogeneous = True then
+				add_element_containing_boolean (element, Is_homogeneous_string, objects.first.is_homogeneous)
+			end
+				-- Padding is 0 by default.
+			if objects.first.padding_width > 0 then
+				add_element_containing_integer (element, Padding_string, objects.first.padding_width)	
+			end
+				-- Border is 0 by default.
+			if objects.first.border_width > 0 then
+				add_element_containing_integer (element, Border_string, objects.first.border_width)
+			end
+			
+				-- If there are one or more children in the box, then we always
+				-- store the string of details. This could be changed to be made smarter
+				-- at some point, so we only store if one ore more are not expanded.
 				-- Initialize `temp_string' as empty.
 			temp_string := ""
 			from
@@ -187,20 +200,26 @@ feature {GB_XML_STORE} -- Output
 			full_information := get_unique_full_info (element)
 			
 			element_info := full_information @ (Is_homogeneous_string)
-			if element_info.data.is_equal (True_string) then
-				for_all_objects (agent {EV_BOX}.enable_homogeneous)
-			else
-				for_all_objects (agent {EV_BOX}.disable_homogeneous)
+			if element_info /= Void then
+				if element_info.data.is_equal (True_string) then
+					for_all_objects (agent {EV_BOX}.enable_homogeneous)
+				else
+					for_all_objects (agent {EV_BOX}.disable_homogeneous)
+				end
+			end
+
+			element_info := full_information @ (Padding_string)
+			if element_info /= Void then
+				for_all_objects (agent {EV_BOX}.set_padding_width (element_info.data.to_integer))
 			end
 			
-			element_info := full_information @ (Padding_string)
-			for_all_objects (agent {EV_BOX}.set_padding_width (element_info.data.to_integer))
-			
 			element_info := full_information @ (Border_string)
-			for_all_objects (agent {EV_BOX}.set_border_width (element_info.data.to_integer))
+			if element_info /= Void then
+				for_all_objects (agent {EV_BOX}.set_border_width (element_info.data.to_integer))
+			end
 		
 		
-				
+				-- We set up some deferred building now.
 			deferred_builder.defer_building (Current, element)
 		end
 		
@@ -217,18 +236,26 @@ feature {GB_CODE_GENERATOR} -- Output
 			Result := ""
 			full_information := get_unique_full_info (element)
 			element_info := full_information @ (Is_homogeneous_string)
-			if element_info.data.is_equal (True_string) then
-				Result := a_name + ".enable_homgeneous"
-			else
-				Result := a_name + ".disable_homogeneous"
+			if element_info /= Void then
+				if element_info.data.is_equal (True_string) then
+					Result := a_name + ".enable_homgeneous"
+				else
+					Result := a_name + ".disable_homogeneous"
+				end
 			end
+			
+			
 			element_info := full_information @ (Padding_string)
-			Result := Result + indent + a_name + ".set_padding_width (" + element_info.data + ")"
+			if element_info /= Void then
+				Result := Result + indent + a_name + ".set_padding_width (" + element_info.data + ")"
+			end
 			
 			element_info := full_information @ (Border_string)
-			Result := Result + indent + a_name + ".set_border_width (" + element_info.data + ")"
+			if element_info /= Void then
+				Result := Result + indent + a_name + ".set_border_width (" + element_info.data + ")"
+			end
 			
-		
+				-- This is always saved, so there is no check.
 			element_info := full_information @ (Is_item_expanded_string)
 			check
 				consistent: children_names.count = element_info.data.count
@@ -238,9 +265,9 @@ feature {GB_CODE_GENERATOR} -- Output
 			until
 				children_names.off
 			loop
-				if element_info.data @ children_names.index = '1' then
-					Result := Result + indent + a_name + ".enable_item_expand (" + children_names.item + ")"
-				else
+					-- We only generate code for all the children that are disabled as they
+					-- are expanded by default.
+				if element_info.data @ children_names.index /= '1' then
 					Result := Result + indent + a_name + ".disable_item_expand (" + children_names.item + ")"
 				end
 				children_names.forth

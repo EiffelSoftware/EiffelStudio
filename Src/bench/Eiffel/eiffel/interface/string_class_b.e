@@ -26,23 +26,25 @@ feature
 			creat_feat: FEATURE_I;
 			to_special_p, parent_t: CL_TYPE_A
 		do
-			-- First check if class inherits directly from parent
-			-- TO_SPECIAL [CHARACTER]
-			from
-				parents.start
-				to_special_p := To_special_parent
-			until
-				parents.after or else stop
-			loop
-				parent_t := parents.item
-				stop := parent_t.same_type (to_special_p) and then
-					to_special_p.is_equivalent (parent_t)
-				parents.forth;
-			end;
-			if not stop then
-				!!special_error.make (Case_4, Current);
-				Error_handler.insert_error (special_error);
-			end;
+			if not System.il_generation then
+				-- First check if class inherits directly from parent
+				-- TO_SPECIAL [CHARACTER]
+				from
+					parents.start
+					to_special_p := To_special_parent
+				until
+					parents.after or else stop
+				loop
+					parent_t := parents.item
+					stop := parent_t.same_type (to_special_p) and then
+						to_special_p.is_equivalent (parent_t)
+					parents.forth;
+				end;
+				if not stop then
+					!!special_error.make (Case_4, Current);
+					Error_handler.insert_error (special_error);
+				end;
+			end
 			
 			-- Second check if class has only one reference attribute
 			-- only (which is necessary `area' then).

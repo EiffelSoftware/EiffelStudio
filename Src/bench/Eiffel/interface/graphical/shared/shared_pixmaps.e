@@ -44,9 +44,34 @@ feature {NONE}
 			Result := pixmap_file_content ("current.bm")
 		end;
 
+	bm_Dark_breakpoint: PIXMAP is
+		do
+			Result := pixmap_file_content ("dbreakpoint.bm");
+		end;
+
 	bm_Dark_clickable: PIXMAP is
 		do
 			Result := pixmap_file_content ("dclickable.bm");
+		end;
+
+	bm_Dark_exec_last: PIXMAP is
+		do
+			Result := pixmap_file_content ("dexeclast.bm");
+		end;
+
+	bm_Dark_exec_nostop: PIXMAP is
+		do
+			Result := pixmap_file_content ("dexecnostop.bm");
+		end;
+
+	bm_Dark_exec_step: PIXMAP is
+		do
+			Result := pixmap_file_content ("dexecstep.bm");
+		end;
+
+	bm_Dark_exec_stop: PIXMAP is
+		do
+			Result := pixmap_file_content ("dexecstop.bm");
 		end;
 
 	bm_Dark_save: PIXMAP is
@@ -154,9 +179,34 @@ feature {NONE}
 			Result := pixmap_file_content ("debug_run.bm");
 		end;
 
+	bm_Debug_status: PIXMAP is
+		do
+			Result := pixmap_file_content ("debug_status.bm");
+		end;
+
 	bm_Debug_step: PIXMAP is
 		do
 			Result := pixmap_file_content ("debug_step.bm");
+		end;
+
+	bm_Exec_last: PIXMAP is
+		do
+			Result := pixmap_file_content ("execlast.bm");
+		end;
+
+	bm_Exec_nostop: PIXMAP is
+		do
+			Result := pixmap_file_content ("execnostop.bm");
+		end;
+
+	bm_Exec_step: PIXMAP is
+		do
+			Result := pixmap_file_content ("execstep.bm");
+		end;
+
+	bm_Exec_stop: PIXMAP is
+		do
+			Result := pixmap_file_content ("execstop.bm");
 		end;
 
 	bm_Explain: PIXMAP is
@@ -233,12 +283,12 @@ feature {NONE}
 		do
 			Result := pixmap_file_content ("tower.bm");
 		end;
- 
+
 	bm_Project_icon: PIXMAP is
 		do
 			Result := pixmap_file_content ("project_icon.bm");
 		end;
- 
+
 	bm_Quit: PIXMAP is
 		do
 			Result := pixmap_file_content ("quit.bm");

@@ -12,7 +12,7 @@ inherit
 
 feature
 
-	arrow_b (an_arrow_button: ARROW_B): ARROW_B_I is
+	arrow_b (an_arrow_button: ARROW_B; managed: BOOLEAN): ARROW_B_I is
 			-- Toolkit implementation of `an_arrow_button'
 		deferred
 		end; -- arrow_b
@@ -42,7 +42,7 @@ feature
 		deferred
 		end; -- font
 
-	font_box (a_font_box: FONT_BOX): FONT_BOX_I is
+	font_box (a_font_box: FONT_BOX; managed: BOOLEAN): FONT_BOX_I is
 			-- Toolkit implementation of `a_font_box'
 		deferred
 		end; -- font_box
@@ -74,7 +74,7 @@ feature
 		deferred
 		end; -- override_s
 
-	pict_color_b (a_picture_color_button: PICT_COLOR_B): PICT_COL_B_I is
+	pict_color_b (a_picture_color_button: PICT_COLOR_B; managed: BOOLEAN): PICT_COL_B_I is
 			-- Toolkit implementation of `a_picture_color_button'
 		deferred
 		end; -- pict_color_b
@@ -135,12 +135,12 @@ feature
 		deferred
 		end;
 
-	bar (a_bar: BAR): BAR_I is
+	bar (a_bar: BAR; managed: BOOLEAN): BAR_I is
 			-- Toolkit implementation of `a_bar'
 		deferred
 		end; -- bar
 
-	bulletin (a_bulletin: BULLETIN): BULLETIN_I is
+	bulletin (a_bulletin: BULLETIN; managed: BOOLEAN): BULLETIN_I is
 			-- Toolkit implementation of `a_bulletin'
 		deferred
 		end; -- bulletin
@@ -150,17 +150,17 @@ feature
 		deferred
 		end; -- bulletin_d
 
-	check_box (a_check_box: CHECK_BOX): CHECK_BOX_I is
+	check_box (a_check_box: CHECK_BOX; managed: BOOLEAN): CHECK_BOX_I is
 			-- Toolkit implementation of `a_check_box'
 		deferred
 		end;
 
-	draw_b (a_draw_b: DRAW_B): DRAW_B_I is
+	draw_b (a_draw_b: DRAW_B; managed: BOOLEAN): DRAW_B_I is
 			-- Toolkit implementation of `a_draw_b'
 		deferred
 		end;
 
-	drawing_area (a_drawing_area: DRAWING_AREA): D_AREA_I is
+	drawing_area (a_drawing_area: DRAWING_AREA; managed: BOOLEAN): D_AREA_I is
 			-- Toolkit implementation of `a_drawing_area'
 		deferred
 		end;
@@ -175,7 +175,7 @@ feature
 		deferred
 		end; -- file_sel_d
 
-	file_selec (a_file_selection: FILE_SELEC): FILE_SELEC_I is
+	file_selec (a_file_selection: FILE_SELEC; managed: BOOLEAN): FILE_SELEC_I is
 			-- Toolkit implementation of `a_file_selection'
 		deferred
 		end; -- file_selec
@@ -185,7 +185,7 @@ feature
 		deferred
 		end;
 
-	form (a_form: FORM): FORM_I is
+	form (a_form: FORM; managed: BOOLEAN): FORM_I is
 			-- Toolkit implementation of `a_form'
 		deferred
 		end; -- form
@@ -195,7 +195,7 @@ feature
 		deferred
 		end; -- form_d
 
-	frame (a_frame: FRAME): FRAME_I is
+	frame (a_frame: FRAME; managed: BOOLEAN): FRAME_I is
 			-- Toolkit implementation of `a_frame'
 		deferred
 		end; -- frame
@@ -205,22 +205,22 @@ feature
 		deferred
 		end; -- info_d
 
-	label (a_label: LABEL): LABEL_I is
+	label (a_label: LABEL; managed: BOOLEAN): LABEL_I is
 			-- Toolkit implementation of `a_label'
 		deferred
 		end;
 
-	label_g (a_label_gadget: LABEL): LABEL_G_I is
+	label_g (a_label_gadget: LABEL; managed: BOOLEAN): LABEL_G_I is
 			-- Toolkit implementation of `a_label_gadget'
 		deferred
 		end;
 
-	menu_b (a_menu_b: MENU_B): MENU_B_I is
+	menu_b (a_menu_b: MENU_B; managed: BOOLEAN): MENU_B_I is
 			-- Toolkit implementation of `a_menu_b'
 		deferred
 		end; -- menu_b
 
-	message (a_message: MESSAGE): MESSAGE_I is
+	message (a_message: MESSAGE; managed: BOOLEAN): MESSAGE_I is
 			-- Toolkit implementation of `a_message'
 		deferred
 		end; -- message
@@ -230,7 +230,7 @@ feature
 		deferred
 		end; -- message_d
 
-	option_b (an_option_button: OPTION_B): OPTION_B_I is
+	option_b (an_option_button: OPTION_B; managed: BOOLEAN): OPTION_B_I is
 			-- Toolkit implementation of `an_option_button'
 		deferred
 		end;
@@ -240,7 +240,7 @@ feature
 		deferred
 		end;
 
-	prompt (a_prompt: PROMPT): PROMPT_I is
+	prompt (a_prompt: PROMPT; managed: BOOLEAN): PROMPT_I is
 			-- Toolkit implementation of `a_prompt'
 		deferred
 		end;
@@ -250,22 +250,22 @@ feature
 		deferred
 		end; -- prompt_d
 
-	menu_pull (a_new_pull: MENU_PULL): MENU_PULL_I is
+	menu_pull (a_new_pull: MENU_PULL; managed: BOOLEAN): MENU_PULL_I is
 			-- Toolkit implementation of `a_new_pull'
 		deferred
 		end; -- menu_pull
 
-	opt_pull (an_opt_pull: OPT_PULL): OPT_PULL_I is
+	opt_pull (an_opt_pull: OPT_PULL; managed: BOOLEAN): OPT_PULL_I is
 			-- Toolkit implementation of `an_opt_pull'
 		deferred
 		end; -- opt_pull
 
-	push_b (a_push_b: PUSH_B): PUSH_B_I is
+	push_b (a_push_b: PUSH_B; managed: BOOLEAN): PUSH_B_I is
 			-- Toolkit implementation of `a_push_b'
 		deferred
 		end; -- push_b
 
-	push_bg (a_push_b_gadget: PUSH_BG): PUSH_BG_I is
+	push_bg (a_push_b_gadget: PUSH_BG; managed: BOOLEAN): PUSH_BG_I is
 			-- Toolkit implementation of `a_push_b_gadget'
 		deferred
 		end;
@@ -275,67 +275,77 @@ feature
 		deferred
 		end;
 
-	radio_box (a_radio_box: RADIO_BOX): RADIO_BOX_I is
+	radio_box (a_radio_box: RADIO_BOX; managed: BOOLEAN): RADIO_BOX_I is
 			-- Toolkit implementation of `a_radio_box'
 		deferred
 		end;
 
-	row_column (a_row_column: ROW_COLUMN): ROW_COLUMN_I is
+	row_column (a_row_column: ROW_COLUMN; managed: BOOLEAN): ROW_COLUMN_I is
 			-- Toolkit implementation of `a_row_column'
 		deferred
 		end;
 
-	scale (a_scale: SCALE): SCALE_I is
+	scale (a_scale: SCALE; managed: BOOLEAN): SCALE_I is
 			-- Toolkit implementation of `a_scale'
 		deferred
 		end;
 
-	scroll_list (a_list: SCROLL_LIST): SCROLL_L_I is
+	scroll_list (a_list: SCROLL_LIST; managed: BOOLEAN): SCROLL_L_I is
 			-- Toolkit implementation of `a_list'
 		deferred
 		end;
 
-	scrollbar (a_scrollbar: SCROLLBAR): SCROLLBAR_I is
+	scrollbar (a_scrollbar: SCROLLBAR; managed: BOOLEAN): SCROLLBAR_I is
 			-- Toolkit implementation of `a_scrollbar'
 		deferred
 		end;
 
-	scrolled_t (a_scrolled_text: SCROLLED_T): SCROLLED_T_I is
+	scrolled_t (a_scrolled_text: SCROLLED_T; managed: BOOLEAN): SCROLLED_T_I is
 			-- Toolkit implementation of `a_scrolled_text'
 		deferred
 		end;
 
-	scrolled_w (a_scrolled_window: SCROLLED_W): SCROLLED_W_I is
+	scrolled_t_word_wrapped (a_scrolled_text: SCROLLED_T; managed: BOOLEAN): SCROLLED_T_I is
+			-- Toolkit implementation of `a_scrolled_text'
+		deferred
+		end;
+
+	scrolled_w (a_scrolled_window: SCROLLED_W; managed: BOOLEAN): SCROLLED_W_I is
 			-- Toolkit implementation of `a_scrolled_window'
 		deferred
 		end;
 
-	separator (a_separator: SEPARATOR): SEPARATOR_I is
+	separator (a_separator: SEPARATOR; managed: BOOLEAN): SEPARATOR_I is
 			-- Toolkit implementation of `a_separator'
 		deferred
 		end;
 
-	separator_g (a_separator_gadget: SEPARATOR_G): SEPARATO_G_I is
+	separator_g (a_separator_gadget: SEPARATOR_G; managed: BOOLEAN): SEPARATO_G_I is
 			-- Toolkit implementation of `a_separator_gadget'
 		deferred
 		end;
 
-	text (a_text: TEXT): TEXT_I is
+	text (a_text: TEXT; managed: BOOLEAN): TEXT_I is
 			-- Toolkit implementation of `a_text'
 		deferred
 		end;
 
-	text_field (a_text_field: TEXT_FIELD): TEXT_FIELD_I is
+	text_word_wrapped (a_text: TEXT; managed: BOOLEAN): TEXT_I is
+			-- Toolkit implementation of `a_text'
+		deferred
+		end;
+
+	text_field (a_text_field: TEXT_FIELD; managed: BOOLEAN): TEXT_FIELD_I is
 			-- Toolkit implementation of `a_text_field'
 		deferred
 		end;
 
-	toggle_b (a_toggle_b: TOGGLE_B): TOGGLE_B_I is
+	toggle_b (a_toggle_b: TOGGLE_B; managed: BOOLEAN): TOGGLE_B_I is
 			-- Toolkit implementation of `a_toggle_b'
 		deferred
 		end;
 
-	toggle_bg (a_toggle_b_gadget: TOGGLE_BG): TOGGLE_BG_I is
+	toggle_bg (a_toggle_b_gadget: TOGGLE_BG; managed: BOOLEAN): TOGGLE_BG_I is
 			-- Toolkit implementation of `a_toggle_b_gadget'
 		deferred
 		end;

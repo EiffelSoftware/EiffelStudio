@@ -43,6 +43,13 @@ inherit
 			is_in_default_state,
 			create_implementation
 		end
+		
+	EV_COMBO_BOX_ACTION_SEQUENCES
+		undefine
+			is_equal
+		redefine
+			implementation
+		end
 
 create	
 	default_create,

@@ -120,6 +120,9 @@ feature
 	m_desc_server: M_DESC_SERVER;
 			-- Server for class type descriptors
 
+	class_comments_server: CLASS_COMMENTS_SERVER;
+			-- Server for class comments 
+
 	id_array: ARRAY [CLASS_C];
 			-- Array of classes indexed by their class `id's
 
@@ -296,8 +299,16 @@ feature
 	current_class: CLASS_C;
 			-- Current processed class
 
-	precompilation: BOOLEAN;
+	is_precompiling: BOOLEAN;
 			-- Are we currently doing a precompilation?
+
+	precompilation: BOOLEAN is
+			-- Are we currently doing a precompilation?
+		obsolete
+			"Use ``is_precompiling''"
+		do
+			Result := is_precompiling
+		end;
 
 	makefile_generator: MAKEFILE_GENERATOR;
 			-- Makefile generator.
@@ -339,6 +350,7 @@ feature
 			!!sorter.make;
 				-- Creation of servers
 			!!feat_tbl_server.make;
+			!!class_comments_server.make;
 			!!body_server.make;
 			!!byte_server.make;
 			!!ast_server.make;
@@ -581,7 +593,13 @@ end;
 				Rep_depend_server.remove (id);
 				M_rout_id_server.remove (id);
 				M_desc_server.remove (id);
-
+				if is_precompiling then
+						-- Do not need to remove id from
+						-- Class_comments_server since
+						-- we are not able to remove a
+						-- precompiled class
+					Tmp_class_comments_server.remove (id);
+				end;
 				Tmp_inv_byte_server.remove (id);
 				Tmp_ast_server.remove (id);
 				Tmp_feat_tbl_server.remove (id);
@@ -1555,6 +1573,7 @@ end;
 			M_rout_id_server.take_control (Tmp_m_rout_id_server);
 			M_desc_server.take_control (Tmp_m_desc_server);
 			Rep_server.take_control (Tmp_rep_server);
+			Class_comments_server.take_control (Tmp_class_comments_server);
 				-- Just clear the rep info server
 			Tmp_rep_info_server.clear;
 
@@ -3574,9 +3593,17 @@ feature -- Conveniences
 feature -- Precompilation
 
 	set_precompilation (b: BOOLEAN) is
-			-- Set `precompilation' to `b'
+			-- Set `is_precompiling' to `b'
+		obsolete
+			"Use ``set_is_precompiling''"
 		do
-			precompilation := b
+			set_is_precompiling (b)
+		end;
+
+	set_is_precompiling (b: BOOLEAN) is
+			-- Set `is_precompiling' to `b'
+		do
+			is_precompiling := b
 		end;
 
 	init_precompilation is

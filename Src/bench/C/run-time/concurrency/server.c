@@ -6,7 +6,7 @@ to indicate indirect(also called Eiffel or protected) address.
 *****************************************************************/
 
 #include "net.h"
-#include "curextern.h"
+#include "curserver.h"
 #define tSTOP_GC
 #ifdef SIGPIPE
 #define SIGNAL
@@ -138,6 +138,7 @@ EIF_OBJ s1;
 /* is the separate object on the local processor? */
 	
 	if (!s1) {
+		add_nl;
 		sprintf(crash_info, "    Try to apply feature/attribute to Void separate object.");
 		c_raise_concur_exception(exception_void_separate_object);
 	}
@@ -193,6 +194,7 @@ EIF_OBJ  create_child() {
 	c_make_without_connection = eif_proc("make_without_connection", sep_obj_id);
 #ifdef SEP_OBJ
 	if (sep_obj_id < 0 || !c_make_without_connection) {
+		add_nl;
 		sprintf(crash_info, "    %d How can type_id(SEP_OBJ) = %d and make_without_connection = %x!", _concur_pid, sep_obj_id, c_make_without_connection);
 		c_raise_concur_exception(exception_sep_obj_not_visible);
 	}
@@ -258,6 +260,7 @@ printf("******** The object(%s, %d, %d) has been imported before.!\n", c_get_nam
 		sep_obj_id = eif_type_id("SEP_OBJ");
 #ifdef SEP_OBJ
 	if (sep_obj_id <= 0) {
+		add_nl;
 		sprintf(crash_info, "    %d How can type_id(SEP_OBJ) = %d !", _concur_pid, sep_obj_id);
 		c_raise_concur_exception(exception_sep_obj_not_visible);
 	}
@@ -600,6 +603,7 @@ EIF_INTEGER s;
 	printf(GET_CMD_MSG1, _concur_pid, s, command_text(_concur_command));	
 #endif
 	if (!valid_command(_concur_command)) {
+		add_nl;
 		sprintf(crash_info, CURAPPERR3, error_info(), command_text(_concur_command));
 		c_raise_concur_exception(exception_unexpected_request);
 	}

@@ -72,6 +72,7 @@ feature -- Initialization
 			array_make (1, n)
 		ensure
 			correct_position: before
+			is_empty: is_empty
 		end
 
 	make_filled (n: INTEGER) is
@@ -97,6 +98,9 @@ feature -- Initialization
 			set_count (a.count)
 			upper := count
 			index := 0
+		ensure then
+			correct_position: before
+			filled: count = a.count
 		end 
 
 feature -- Access

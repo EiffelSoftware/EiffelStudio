@@ -207,8 +207,17 @@ static int process_bit()
 {
 	/* Process bit value; get rid of the suffix */
 
-	strncpy(token_str,yytext,yyleng - 1);
-	token_str[yyleng-1] = '\0';
+	int length;
+
+	length = yyleng;
+
+printf ("In process bit, length %d\n", length);
+
+	if (length >= IDLENGTH)
+		return EIF_ERROR7;
+
+	strncpy(token_str,yytext,length - 1);
+	token_str[length-1] = '\0';
 
 	return process(TE_A_BIT);
 }

@@ -397,7 +397,7 @@ char *name;
 		return (char *) 0;			/* Will certainly raise a bus error */
 
 #ifndef WORKBENCH
-	return object + (*System(Dtype(object)).cn_offsets[i]);
+	return (char *) (object + ((System(Dtype(object)).cn_offsets[i])[Dtype(object)]));
 #else
 	dtype = Dtype(object);
 	rout_id = System(dtype).cn_attr[i]; 

@@ -120,7 +120,13 @@ char *filename;
 	/* Call of feature `Create' of class SUPPLIERS_AS */
 	(*init_array[SUPPLIERS_AS])(suppliers);
 
-	/* Re-evaluation of `id_phar' : Gc is off so this reference won't move */
+	/* Re-evaluation of `id_phar' : Gc is off so this reference won't move
+	 * This is a magouille, we know that references are placed at the top
+	 * of the object structure, and that STRING (ID_AS) class only has one
+	 * reference, namely to the `area'. Hence the following instruction
+	 * will save the address of the `area'.
+	 */ 
+	 
 	id_pchar = *(char **) id_string;
 
 	/* Initialization of formal generical parameter */

@@ -51,7 +51,7 @@ private struct mstack map_stack;	/* Map table */
  * object, there must be one and the stack must be empty at the end of the
  * cloning operation).
  */
-private char *botched = "maping table botched";
+private char *botched = "mapping table botched";
 
 shared long obj_nb;				/* Counter of marked objects */
 

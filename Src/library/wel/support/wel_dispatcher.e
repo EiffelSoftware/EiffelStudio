@@ -25,6 +25,10 @@ inherit
 			{NONE} all
 		end
 
+
+	WEL_EN_CONSTANTS	
+		-- debug
+
 creation
 	make
 
@@ -60,18 +64,27 @@ feature {NONE} -- Implementation
 				check
 					window_exists: window.exists
 				end
-				window.reset_window_processing
+				window.increment_level
+
 				Result := window.process_message (hwnd, msg, wparam, lparam)
 					--| Store `message_return_value' and `has_return_value' for later
 					--| use, since `call_default_window_procedure' can reset their value.
-				returned_value := window.message_return_value
-				has_return_value := window.has_return_value
-				if window.default_processing_enabled then
+				if
+					window.has_return_value
+				then
+					returned_value := window.message_return_value
+					has_return_value := window.has_return_value
+				end
+
+				if window.default_processing then
 					Result := window.call_default_window_procedure (msg, wparam, lparam)
 				end
+
 				if has_return_value then
 					Result := returned_value
 				end
+
+				window.decrement_level
 			else
 				Result := cwin_def_window_proc (hwnd, msg, wparam, lparam)
 			end
@@ -95,6 +108,7 @@ feature {NONE} -- Implementation
 			end
 			if msg = Wm_initdialog then
 				window := windows.item (cwel_temp_dialog_value)
+				window.increment_level
 				if window /= Void then
 					-- Special case for the message
 					-- Wm_initdialog. We set the hwnd value
@@ -113,13 +127,14 @@ feature {NONE} -- Implementation
 				Result := 1
 			else
 				window := windows.item (hwnd)
+				window.increment_level
 				if window /= Void then
-					window.reset_window_processing
+--					window.reset_window_processing
 					last_result := window.process_message (hwnd, msg, wparam, lparam)
 					if window.has_return_value then
 						Result := window.message_return_value
 					else
-						if not window.default_processing_enabled then
+						if not window.default_processing then
 							Result := 1
 						else
 							Result := 0
@@ -127,6 +142,7 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+			window.decrement_level
 		end
 
 feature {NONE} -- Implementation

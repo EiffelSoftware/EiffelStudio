@@ -59,6 +59,9 @@ RT_LNK double math_power (double v1, double v2);
 
 extern int str_str(EIF_CONTEXT EIF_OBJECT text, EIF_OBJECT pattern, int tlen, int plen, int start, int fuzzy);
 
+extern int substr_search (EIF_CONTEXT EIF_OBJECT text, EIF_OBJECT pattern, int start, int size_of_text);
+
+
 #ifdef CONCURRENT_EIFFEL
 #include "eif_curextern.h"
 #endif

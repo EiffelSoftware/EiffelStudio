@@ -198,9 +198,6 @@ feature -- Status report
 				captured_window = Current
 		end
 
---	has_heavy_capture: BOOLEAN
-			-- Does this window have an heavy mouse capture?
-
 	has_vertical_scroll_bar: BOOLEAN is
 			-- Does this window have a vertical scroll bar?
 		require
@@ -230,7 +227,7 @@ feature -- Status report
 				-- way to get the relative x position of
 				-- a child!
 				rect := window_rect
-				!! point.make (rect.x, rect.y)
+				create point.make (rect.x, rect.y)
 				point.screen_to_client (parent)
 				Result := point.x
 			else
@@ -253,7 +250,7 @@ feature -- Status report
 				-- way to get the relative y position of
 				-- a child!
 				rect := window_rect
-				!! point.make (rect.x, rect.y)
+				create point.make (rect.x, rect.y)
 				point.screen_to_client (parent)
 				Result := point.y
 			else
@@ -338,7 +335,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make_client (Current)
+			create Result.make_client (Current)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -348,7 +345,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make_window (Current)
+			create Result.make_window (Current)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -365,14 +362,14 @@ feature -- Status report
 			length := text_length
 			if length > 0 then
 				length := length + 1
-				!! Result.make (length)
+				create Result.make (length)
 				Result.fill_blank
-				!! a_wel_string.make (Result)
+				create a_wel_string.make (Result)
 				nb := cwin_get_window_text (item, a_wel_string.item, length)
 				Result := a_wel_string.string
 				Result.head (nb)
 			else
-				!! Result.make (0)
+				create Result.make (0)
 			end
 		ensure
 			result_not_void: Result /= Void
@@ -393,7 +390,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make (Current)
+			create Result.make (Current)
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -577,7 +574,6 @@ feature -- Status setting
 		require
 			exists: exists
 			has_not_capture: not has_capture
---			has_not_heavy_capture: not has_heavy_capture
 		do
 			cwin_set_capture (item)
 		ensure
@@ -595,7 +591,6 @@ feature -- Status setting
 		require
 			exists: exists
 			has_not_capture: not has_capture
---			has_not_heavy_capture: not has_heavy_capture
 		local
 			has_heavy_capture: BOOLEAN
 		do
@@ -603,8 +598,6 @@ feature -- Status setting
 			check
 				capture_initialized: has_heavy_capture
 			end
---		ensure
---			has_heavy_capture: has_heavy_capture
 		end
 
 	release_capture is
@@ -624,7 +617,6 @@ feature -- Status setting
 			-- to `set_heavy_capture'.
 		require
 			exists: exists
---			has_heavy_capture: has_heavy_capture
 		local
 			has_heavy_capture: BOOLEAN
 		do
@@ -632,8 +624,6 @@ feature -- Status setting
 			check
 				capture_stopped: not has_heavy_capture
 			end
---		ensure
---			not_has_heavy_capture: not has_heavy_capture
 		end
 
 	set_style (a_style: INTEGER) is
@@ -684,7 +674,7 @@ feature -- Element change
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_text)
+			create a_wel_string.make (a_text)
 			cwin_set_window_text (item, a_wel_string.item)
 		ensure
 			 text_set: text.is_equal (a_text)
@@ -803,9 +793,9 @@ feature -- Basic operations
 			-- Has a command been already put?
 			-- If no, let's create `commands'.
 			if commands = Void then
-				!! commands.make
+				create commands.make
 			end
-			!! command_exec.make (a_command, argument)
+			create command_exec.make (a_command, argument)
 			commands.force (command_exec, message)
 		ensure
 			command_added: command (message) = a_command and
@@ -982,8 +972,8 @@ feature -- Basic operations
 		local
 			a_wel_string1, a_wel_string2: WEL_STRING
 		do
-			!! a_wel_string1.make (a_text)
-			!! a_wel_string2.make (a_title)
+			create a_wel_string1.make (a_text)
+			create a_wel_string2.make (a_title)
 			Result := cwin_message_box_result (item, a_wel_string1.item, a_wel_string2.item,
 				a_style)
 		end
@@ -999,8 +989,8 @@ feature -- Basic operations
 		local
 			a_wel_string1, a_wel_string2: WEL_STRING
 		do
-			!! a_wel_string1.make (a_text)
-			!! a_wel_string2.make (a_title)
+			create a_wel_string1.make (a_text)
+			create a_wel_string2.make (a_title)
 			cwin_message_box (item, a_wel_string1.item, a_wel_string2.item,
 				Mb_ok + Mb_iconinformation)
 		end
@@ -1016,8 +1006,8 @@ feature -- Basic operations
 		local
 			a_wel_string1, a_wel_string2: WEL_STRING
 		do
-			!! a_wel_string1.make (a_text)
-			!! a_wel_string2.make (a_title)
+			create a_wel_string1.make (a_text)
+			create a_wel_string2.make (a_title)
 			cwin_message_box (item, a_wel_string1.item, a_wel_string2.item,
 				Mb_ok + Mb_iconexclamation)
 		end
@@ -1032,7 +1022,7 @@ feature -- Basic operations
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (a_text)
+			create a_wel_string.make (a_text)
 			cwin_message_box (item, a_wel_string.item, default_pointer,
 				Mb_ok + Mb_iconhand)
 		end
@@ -1050,8 +1040,8 @@ feature -- Basic operations
 		local
 			a_wel_string1, a_wel_string2: WEL_STRING
 		do
-			!! a_wel_string1.make (a_text)
-			!! a_wel_string2.make (a_title)
+			create a_wel_string1.make (a_text)
+			create a_wel_string2.make (a_title)
 			Result := cwin_message_box_result (item, a_wel_string1.item, a_wel_string2.item,
 				Mb_yesno + Mb_iconquestion) = Idyes
 		end
@@ -1155,7 +1145,7 @@ feature -- Basic operations
 		local
 			 a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (help_file)
+			create a_wel_string.make (help_file)
 			cwin_win_help (item, a_wel_string.item, a_command, data)
 		end
 
@@ -1370,9 +1360,9 @@ feature {WEL_WINDOW} -- Implementation
 			a_wel_string1, a_wel_string2: WEL_STRING
 		do
 			parent := a_parent
-			!! a_wel_string1.make (class_name)
+			create a_wel_string1.make (class_name)
 			if a_name /= Void then
-				!! a_wel_string2.make (a_name)
+				create a_wel_string2.make (a_name)
 				item := cwin_create_window_ex (default_ex_style,
 				a_wel_string1.item, a_wel_string2.item, a_style, a_x, a_y, a_w, a_h,
 				parent_item, an_id,
@@ -1432,7 +1422,7 @@ feature {WEL_WINDOW} -- Implementation
 
 	main_args: WEL_MAIN_ARGUMENTS is
 		once
-			!! Result
+			create Result
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -1441,7 +1431,7 @@ feature {WEL_WINDOW} -- Implementation
 			-- Is the commands execution enabled?
 			-- False by default.
 		once
-			!! Result
+			create Result
 			Result.set_item (False)
 		end
 
@@ -1478,7 +1468,7 @@ feature {WEL_WINDOW} -- Implementation
 		local
 			info: WEL_NMHDR
 		do
-			!! info.make_by_pointer (cwel_integer_to_pointer (lparam))
+			create info.make_by_pointer (cwel_integer_to_pointer (lparam))
 			on_notify (wparam, info)
 		end
 
@@ -1505,66 +1495,67 @@ feature {WEL_DISPATCHER, WEL_WINDOW}
 					commands.item (msg).execute (Current,
 						msg, wparam, lparam)
 			end
-			if msg = Wm_mousemove then
+			inspect msg
+			when Wm_mousemove then
 				on_mouse_move (wparam,
 					c_mouse_message_x (lparam),
 					c_mouse_message_y (lparam))
-			elseif msg = Wm_setcursor then
+			when Wm_setcursor then
 				on_set_cursor (cwin_lo_word (lparam))
-			elseif msg = Wm_size then
+			when Wm_size then
 				on_size (wparam,
 					cwin_lo_word (lparam),
 					cwin_hi_word (lparam))
-			elseif msg = Wm_move then
+			when Wm_move then
 				on_move (cwin_lo_word (lparam),
 					cwin_hi_word (lparam))
-			elseif msg = Wm_lbuttondown then
+			when Wm_lbuttondown then
 				on_left_button_down (wparam,
 					c_mouse_message_x (lparam),
 					c_mouse_message_y (lparam))
-			elseif msg = Wm_lbuttonup then
+			when Wm_lbuttonup then
 				on_left_button_up (wparam,
 					c_mouse_message_x (lparam),
 					c_mouse_message_y (lparam))
-			elseif msg = Wm_lbuttondblclk then
+			when Wm_lbuttondblclk then
 				on_left_button_double_click (wparam,
 					c_mouse_message_x (lparam),
 					c_mouse_message_y (lparam))
-			elseif msg = Wm_rbuttondown then
+			when Wm_rbuttondown then
 				on_right_button_down (wparam,
 					c_mouse_message_x (lparam),
 					c_mouse_message_y (lparam))
-			elseif msg = Wm_rbuttonup then
+			when Wm_rbuttonup then
 				on_right_button_up (wparam,
 					c_mouse_message_x (lparam),
 					c_mouse_message_y (lparam))
-			elseif msg = Wm_rbuttondblclk then
+			when Wm_rbuttondblclk then
 				on_right_button_double_click (wparam,
 					c_mouse_message_x (lparam),
 					c_mouse_message_y (lparam))
-			elseif msg = Wm_timer then
+			when Wm_timer then
 				on_timer (wparam)
-			elseif msg = Wm_setfocus then
+			when Wm_setfocus then
 				on_set_focus
-			elseif msg = Wm_killfocus then
+			when Wm_killfocus then
 				on_kill_focus
-			elseif msg = Wm_char then
+			when Wm_char then
 				on_char (wparam, lparam)
-			elseif msg = Wm_keydown then
+			when Wm_keydown then
 				on_key_down (wparam, lparam)
-			elseif msg = Wm_keyup then
+			when Wm_keyup then
 				on_key_up (wparam, lparam)
-			elseif msg = Wm_syschar then
+			when Wm_syschar then
 				on_sys_char (wparam, lparam)
-			elseif msg = Wm_syskeydown then
+			when Wm_syskeydown then
 				on_sys_key_down (wparam, lparam)
-			elseif msg = Wm_syskeyup then
+			when Wm_syskeyup then
 				on_sys_key_up (wparam, lparam)
-			elseif msg = Wm_showwindow then
+			when Wm_showwindow then
 				on_wm_show_window (wparam, lparam)
-			elseif msg = Wm_notify then
+			when Wm_notify then
 				on_wm_notify (wparam, lparam)
-			elseif msg = Wm_destroy then
+			when Wm_destroy then
 				on_wm_destroy
 			else
 				default_process_message (msg, wparam, lparam)

@@ -889,45 +889,47 @@ feature {WEL_DISPATCHER}
 			-- parent class.
 			Result := window_process_message (hwnd, msg, wparam, lparam)
 
-			if msg = Wm_paint then
+			inspect msg
+			when Wm_paint then
 				on_wm_paint (wparam)
-			elseif msg = Wm_ctlcolorstatic then
+			when Wm_ctlcolorstatic then
 				on_wm_ctlcolor (wparam, lparam)
-			elseif msg = Wm_ctlcoloredit then
+			when Wm_ctlcoloredit then
 				on_wm_ctlcolor (wparam, lparam)
-			elseif msg = Wm_ctlcolorlistbox then
+			when Wm_ctlcolorlistbox then
 				on_wm_ctlcolor (wparam, lparam)
-			elseif msg = Wm_ctlcolorscrollbar then
+			when Wm_ctlcolorscrollbar then
 				on_wm_ctlcolor (wparam, lparam)
-			elseif msg = Wm_command then
+			when Wm_command then
 				on_wm_command (wparam, lparam)
-			elseif msg = Wm_syscommand then
+			when Wm_syscommand then
 				on_sys_command (wparam, cwin_lo_word (lparam),
 					cwin_hi_word (lparam))
-			elseif msg = Wm_menuselect then
+			when Wm_menuselect then
 				on_wm_menu_select (wparam, lparam)
-			elseif msg = Wm_vscroll then
+			when Wm_vscroll then
 				on_wm_vscroll (wparam, lparam)
-			elseif msg = Wm_hscroll then
+			when Wm_hscroll then
 				on_wm_hscroll (wparam, lparam)
-			elseif msg = Wm_drawitem then
+			when Wm_drawitem then
 				on_wm_draw_item (wparam, lparam)
-			elseif msg = Wm_getminmaxinfo then
+			when Wm_getminmaxinfo then
 				on_wm_get_min_max_info (lparam)
-			elseif msg = Wm_windowposchanged then
+			when Wm_windowposchanged then
 				on_wm_window_pos_changed (lparam)
-			elseif msg = Wm_windowposchanging then
+			when Wm_windowposchanging then
 				on_wm_window_pos_changing (lparam)
-			elseif msg = Wm_paletteischanging then
+			when Wm_paletteischanging then
 				on_palette_is_changing (windows.item (
 					cwel_integer_to_pointer (wparam)))
-			elseif msg = Wm_palettechanged then
+			when Wm_palettechanged then
 				on_palette_changed (windows.item (
 					cwel_integer_to_pointer (wparam)))
-			elseif msg = Wm_querynewpalette then
+			when Wm_querynewpalette then
 				on_query_new_palette
-			elseif msg = Wm_close then
+			when Wm_close then
 				on_wm_close
+			else
 			end
 		end
 

@@ -16,8 +16,6 @@ inherit
 			generics, descendants, clients
 		end
 
-	IDABLE
-
 	SHARED_COUNTER
 
 	SHARED_AST_CONTEXT
@@ -27,27 +25,17 @@ inherit
 
 	SHARED_TYPES
 
-	SHARED_INSTANTIATOR
-
 	SHARED_TYPEID_TABLE
-
-	SHARED_ERROR_HANDLER
-
-	SHARED_INST_CONTEXT
 
 	SHARED_CODE_FILES
 
 	SHARED_BODY_ID
-
-	SHARED_PASS
 
 	PART_COMPARABLE
 
 	MEMORY
 
 	SK_CONST
-
-	SHARED_RESCUE_STATUS
 
 	SHARED_ASSERTION_LEVEL
 
@@ -282,7 +270,7 @@ feature -- Access
 			end
 		end
 	
-	end_of_pass1 (ast_b: CLASS_AS_B; new_compilation: BOOLEAN) is
+	end_of_pass1 (ast_b: CLASS_AS_B) is
 				-- End of the first pass after syntax analysis
 		local
 			supplier_list: LINKED_LIST [ID_AS_B]
@@ -340,11 +328,7 @@ if System.class_of_id (id) /= Void then
 				-- (instance of CLASS_C) is retrieved through the feature
 				-- `id' of CLASS_C and file ".TMP_AST".
 			ast_b.set_id (id)
-
-			if new_compilation then
-					--| Store the AST only if it has not already be stored.
-				Tmp_ast_server.put (ast_b)
-			end
+			Tmp_ast_server.put (ast_b)
 
 			if has_unique then
 				!! unique_counter
@@ -568,10 +552,13 @@ feature -- Third pass: byte code production and type check
 					!!dependances.make (changed_features.count)
 					dependances.set_id (id)
 				end
-				if Rep_depend_server.has (id) then
-					rep_dep := Rep_depend_server.item (id)
-				else
+
+				if Rep_depend_server.server_has (id) then
+					rep_dep := Rep_depend_server.server_item (id)
+				elseif Tmp_rep_depend_server.has (id) then
+					rep_dep := Tmp_rep_depend_server.item (id)
 				end
+
 				if changed then
 					new_suppliers := suppliers.same_suppliers
 				end
@@ -600,9 +587,11 @@ end
 
 				if feature_i.to_melt_in (Current) then
 
-					if def_resc /= Void and then
-						not def_resc.empty_body and then
-							not equal (def_resc.feature_name, feature_name) then
+					if
+						def_resc /= Void
+						and then not def_resc.empty_body
+						and then not equal (def_resc.feature_name, feature_name)
+					then
 						feature_i.create_default_rescue (def_resc.feature_name)
 					end
 
@@ -616,8 +605,7 @@ end
 					end
 						-- For a feature written in the class
 					feature_changed := 	changed_features.has (feature_name)
-										and
-										not feature_i.is_attribute
+										and not feature_i.is_attribute
 debug ("SEP_DEBUG", "ACTIVITY")
 	io.error.putstring ("%T%Tfeature_changed: ")
 	io.error.putbool (feature_changed)
@@ -628,14 +616,8 @@ end
 						-- Feature is considered syntactically changed if
 						-- some of the entities used by it have changed
 						-- of nature (attribute/function versus incrementality).
-					if not (	feature_changed
-								or else
-								f_suppliers = Void
-							)
-					then
-						feature_changed :=
-							(not propagators.melted_empty_intersection
-																(f_suppliers))
+					if not (feature_changed or else f_suppliers = Void) then
+						feature_changed := (not propagators.melted_empty_intersection (f_suppliers))
 debug ("SEP_DEBUG", "ACTIVITY")
 	io.error.putstring ("%T%Tfeature_changed (After melted_empty_intersection): ")
 	io.error.putbool (feature_changed)
@@ -646,6 +628,7 @@ end
 								feature_changed := True
 							end
 						end
+
 						if feature_changed then
 								-- Automatic melting of the feature
 							if System.has_separate then
@@ -674,14 +657,11 @@ end
 						if
 							-- No type check for constants and attributes.
 							-- [It is done in second pass.]
-							(feature_changed
+							feature_changed
 							or else
-							not (	f_suppliers = Void
-									or else
-									(propagators.empty_intersection (f_suppliers)
-									and then
-									propagators.changed_status_empty_intersection (f_suppliers.suppliers))
-								))
+							not (f_suppliers = Void
+								or else (propagators.empty_intersection (f_suppliers)
+								and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
 						then
 								-- Type check
 debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
@@ -715,9 +695,7 @@ end
 							type_checked := True
 							type_check_error := Error_handler.new_error
 
-							if
-								not type_check_error
-							then
+							if not type_check_error then
 								if f_suppliers /= Void then
 										-- Dependances update: remove old
 										-- dependances for `feature_name'.
@@ -734,12 +712,14 @@ end
 
 									f_suppliers := clone (ast_context.supplier_ids)
 
-									if def_resc /= Void and then
-									   not feature_i.is_deferred and then
-									   not feature_i.is_external and then
-									   not feature_i.is_attribute and then
-									   not feature_i.is_constant then
-										-- Make it dependant on `default_rescue'
+									if
+										def_resc /= Void and then
+										not feature_i.is_deferred and then
+										not feature_i.is_external and then
+										not feature_i.is_attribute and then
+										not feature_i.is_constant
+									then
+											-- Make it dependant on `default_rescue'
 										!!def_resc_depend.make (id, def_resc.feature_id)
 										f_suppliers.extend (def_resc_depend)
 									end
@@ -779,8 +759,7 @@ end
 					ast_context.clear2
 
 					if	(feature_changed or else byte_code_generated)
-						and then
-						not (type_check_error or else feature_i.is_deferred)
+						and then not (type_check_error or else feature_i.is_deferred)
 					then
 debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
 	io.error.putstring ("%TMelted_set.put for ")
@@ -804,9 +783,11 @@ end
 						ast_context.clear2
 					end
 
-				elseif ((not feature_i.in_pass3) or else
+				elseif
+					((not feature_i.in_pass3)
 							-- The feature is deferred and written in the current class
-						(feature_i.is_deferred and then id.is_equal (feature_i.written_in))) then
+					or else (feature_i.is_deferred and then id.is_equal (feature_i.written_in)))
+				then
 					if feature_i.is_deferred then
 							-- Just type check it. See if VRRR or
 							-- VMRX error has occurred.
@@ -853,15 +834,11 @@ end
 					System.body_index_table.force
 								(new_body_id, invariant_feature.body_index)
 				end
-				if	(	invariant_changed
-						or else
-						not	(	f_suppliers = Void
-								or else
-								(propagators.empty_intersection (f_suppliers)
-								and then
-								propagators.changed_status_empty_intersection (f_suppliers.suppliers))
-							)
-					)
+				if
+					invariant_changed
+					or else not	(f_suppliers = Void
+								or else (propagators.empty_intersection (f_suppliers)
+								and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
 				then
 					invar_clause := Inv_ast_server.item (id)
 					Error_handler.mark
@@ -981,14 +958,14 @@ end
 			if not_empty then
 					-- If features have been changed, then byte code
 					-- must be reproduced
-				System.freeze_set1.put (id)
-				System.melted_set.put (id)
+				System.freeze_set1.put (Current)
+				System.melted_set.put (Current)
 			end
 			if not_empty or else propagators.invariant_removed then
 					-- If code has been melted or else if invariant
 					-- has been removed, hash table must be updated
-				System.freeze_set2.put (id)
-				System.melted_set.put (id)
+				System.freeze_set2.put (Current)
+				System.melted_set.put (Current)
 			end
 
 		ensure
@@ -1174,40 +1151,17 @@ end
 feature -- Generation
 
 	update_valid_body_ids is
-		local
-			ct: CLASS_TYPE
 		do
 			Inst_context.set_cluster (cluster)
-			from
-				types.start
-			until
-				types.after
-			loop
-				ct := types.item
-				if not ct.is_precompiled then
-					ct.update_valid_body_ids
-				end
-				types.forth
-			end
+			types.update_valid_body_ids
 		end
 
 	pass4 is
 			-- Generation of C files for each type associated to the current
 			-- class
-		local
-			old_cursor: CURSOR
 		do
 			Inst_context.set_cluster (cluster)
-			from
-				types.start
-			until
-				types.after
-			loop
-				old_cursor := types.cursor
-				types.item.pass4
-				types.go_to (old_cursor)
-				types.forth
-			end
+			types.pass4
 		end
 
 feature -- Melting
@@ -1236,16 +1190,7 @@ feature -- Melting
 			good_context: has_features_to_melt
 		do
 			Inst_context.set_cluster (cluster)
-			from
-				types.start
-			until
-				types.after
-			loop
-				if not types.item.is_precompiled then
-					types.item.melt
-				end
-				types.forth
-			end
+			types.melt
 
 				-- Forget melted list
 			melted_set := Void
@@ -1257,17 +1202,8 @@ feature -- Melting
 			good_context: has_features_to_melt
 		do
 			Inst_context.set_cluster (cluster)
-			from
-				types.start
-			until
-				types.after
-			loop
-				if not types.item.is_precompiled then
-					types.item.update_dispatch_table
-				end
-				types.forth
-			end
-	
+			types.update_dispatch_table
+
 				-- Forget melted list
 			melted_set := Void
 		end
@@ -1326,30 +1262,21 @@ feature -- Melting
 				tbl.melt
 			end
 				-- Mark the class to be frozen later again.
-			System.freeze_set1.put (id)
-			System.freeze_set2.put (id)
+			System.freeze_set1.put (Current)
+			System.freeze_set2.put (Current)
 				-- Mark the class melted
-			System.melted_set.put (id)
+			System.melted_set.put (Current)
 			pass4_controler.insert_new_class (Current)
 		end
 
 	melt_feature_table is
 			-- Melt feature table.
 		require
-			good_context: System.melted_set.has (id)
+			good_context: System.melted_set.has (Current)
 		do
 			if not types.empty then
 				Inst_context.set_cluster (cluster)
-				from
-					types.start
-				until
-					types.after
-				loop
-					if types.item.is_modifiable then
-						types.item.melt_feature_table
-					end
-					types.forth
-				end
+				types.melt_feature_table
 			end
 		end
 
@@ -1469,9 +1396,9 @@ end
 				then
 					old_skeleton := class_type.skeleton
 					new_skeleton := skeleton.instantiation_in (class_type)
-					if 	old_skeleton = Void
-						or else
-						not new_skeleton.equiv (old_skeleton)
+					if
+						old_skeleton = Void
+						or else not new_skeleton.equiv (old_skeleton)
 					then
 						class_type.set_is_changed (True)
 						class_type.set_skeleton (new_skeleton)
@@ -1483,8 +1410,8 @@ old_skeleton.trace
 io.error.new_line
 end
 
-						System.freeze_set2.put (id)
-						System.melted_set.put (id)
+						System.freeze_set2.put (Current)
+						System.melted_set.put (Current)
 					else
 debug ("SKELETON")
 io.error.putstring ("Skeleton has not changed:%N")
@@ -3075,6 +3002,8 @@ feature -- Replication
 			feat_depend: REP_FEATURE_DEPEND
 			f_table: FEATURE_TABLE
 			feat: FEATURE_I
+			class_id: CLASS_ID
+			found: BOOLEAN
 		do
 			from
 				feat_dep.start
@@ -3082,7 +3011,8 @@ feature -- Replication
 				feat_dep.after
 			loop
 				unit := feat_dep.item
-				class_c := System.class_of_id (unit.id)
+				class_id := unit.id
+				class_c := System.class_of_id (class_id)
 					-- Get feature table
 				if class_c /= Void then
 					-- Class exists in system
@@ -3096,15 +3026,23 @@ feature -- Replication
 						-- Then Propagate
 						class_c.set_changed2 (True)
 						pass2_controler.insert_new_class (class_c)
-						if Rep_depend_server.has (unit.id) then
-							rep_depend := Rep_depend_server.item (unit.id)
+						if Rep_depend_server.server_has (class_id) then
+							rep_depend := Rep_depend_server.server_item (class_id)
+							found := True
+						elseif Tmp_rep_depend_server.has (class_id) then
+							rep_depend := Tmp_rep_depend_server.item (class_id)
+							found := True
+						else
+							found := False
+						end
+						if found then
 							feat_depend := rep_depend.item (unit.feature_name)
 							if feat_depend /= Void then
 								propagate_replication (feat_depend)
 								if feat_depend.count > 0 then
 									Tmp_rep_depend_server.put (rep_depend)
 								else
-									Tmp_rep_depend_server.remove (unit.id)
+									Tmp_rep_depend_server.remove (class_id)
 								end
 							end
 						end
@@ -3272,30 +3210,12 @@ end
 			--! than the frozen level
 			a_feature.change_body_id
 			if melted_set = Void then
-				!!melted_set.make
+				!! melted_set.make
 				melted_set.compare_objects
 			end
-			!!melted_info.make (a_feature)
+			!! melted_info.make (a_feature)
 			melted_set.put (melted_info)
-			System.freeze_set1.put (id)
-		end
-
-feature -- Precompilation
-
-	nb_modifiable_types: INTEGER is
-			-- Number of modifiable types (i.e. precompiled or static)
-			-- derived from the current class
-		do
-			from
-				types.start
-			until
-				types.after
-			loop
-				if types.item.is_modifiable then
-					Result := Result + 1
-				end
-				types.forth
-			end
+			System.freeze_set1.put (Current)
 		end
 
 feature -- DLE

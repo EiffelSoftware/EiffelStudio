@@ -178,6 +178,7 @@ iff not defined NO_COMPILE then
 	call update_libraries.btm
 	copy %EIFFEL_SRC\library\wel\spec\msc\dll\wel_hook.dll %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin\
 	copy %EIFFEL_SRC\library\wel\spec\msc\dll\wel_hook.dll %INSTALL_DIR\build\spec\%ISE_PLATFORM\bin\
+	copy %EIFFEL_SRC\library\wel\spec\msc\dll\wel_hook.dll %INSTALL_DIR\vision2_tour\spec\%ISE_PLATFORM\bin\
 	cdd %INIT_DIR
 	give_time_to update libraries
 
@@ -256,9 +257,6 @@ iff not defined NO_INSTALL then
 	call make_installations.btm
 	cdd %INIT_DIR
 endiff
-
-remtrace Copying cec to Envision delivery location
-copy %INSTALL_DIR\releases\enterprise\cec.exe \\10.0.10.158\Incoming
 
 REM Finish
 remtrace final time:

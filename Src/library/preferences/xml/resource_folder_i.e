@@ -8,35 +8,40 @@ deferred class
 inherit
 	EXCEPTIONS
 
+	XM_CALLBACKS_FILTER_FACTORY
+		export {NONE} all end
+
 feature -- Initialization
 
-	make_default (doc: XML_ELEMENT; struct: like structure) is
+	make_default (doc: XM_ELEMENT; struct: like structure) is
 			-- Initialization of Current, belonging to `struct',
 			-- according to `doc'.
 		local
 			s: STRING
-			att: XML_ATTRIBUTE
-			att_table: XML_ATTRIBUTE_TABLE
+			att: XM_ATTRIBUTE
+			att_table: DS_LIST [XM_ATTRIBUTE]
 		do
 			att_table := doc.attributes
-			if att_table.has ("TOPIC_ID") then
-				att := att_table.item ("TOPIC_ID")
-				if att /= Void then
-					name := att.value
-				end
-			end
-			if att_table.has ("ICON") then
-				att := att_table.item ("ICON")
-				if att /= Void then
-					icon := att.value
-				end
-			end
 			is_visible := True
-			if att_table.has ("VISIBILITY") then
-				att := att_table.item ("VISIBILITY")
-				if att /= Void and then att.value /= Void and then att.value.is_equal ("hidden") then
-					is_visible := False
+			from
+				att_table.start
+			until
+				att_table.after
+			loop
+				att := att_table.item_for_iteration
+				check
+					non_void_attribute: att /= Void
 				end
+				if att.name.is_equal ("TOPIC_ID") then
+					name := att.value
+				elseif att.name.is_equal ("ICON") then
+					icon := att.value
+				elseif att.name.is_equal ("VISIBILITY") then
+					if att.value.is_equal ("hidden") then
+						is_visible := False
+					end
+				end
+				att_table.forth
 			end
 			structure := struct
 			load_default_attributes (doc)
@@ -67,28 +72,30 @@ feature -- Initialization
 			-- Create Current (as a root folder of `struct')
 			-- taking data from `file_name'.
 		local
-			file: RAW_FILE
-			s: STRING
-			parser: XML_TREE_PARSER
+			parser: XM_EIFFEL_PARSER
+			l_file: KL_TEXT_INPUT_FILE
 			error_message: STRING
+			l_tree_pipe: XM_TREE_CALLBACKS_PIPE
+			l_concat_filter: XM_CONTENT_CONCATENATOR
 		do
 			name := "root"
 			description := "root folder"
 			structure := struct
 
 			create parser.make
-			create file.make (file_name)
-			if file.exists then
-				file.open_read
-				file.read_stream (file.count)
-				s := file.last_string
-				parser.parse_string (s)
-				parser.set_end_of_file
-				file.close
-				if not parser.root_element.name.is_equal ("EIFFEL_DOCUMENT") then
+			create l_file.make (file_name.string)
+			l_file.open_read
+			if l_file.is_open_read then
+				create l_tree_pipe.make
+				create l_concat_filter.make_null
+				parser.set_callbacks (standard_callbacks_pipe (<<l_concat_filter, l_tree_pipe.start>>))
+				parser.parse_from_stream (l_file)
+				l_file.close
+
+				if not l_tree_pipe.document.root_element.name.is_equal ("EIFFEL_DOCUMENT") then
 					error_message := "EIFFEL_DOCUMENT TAG missing%N"
 				else
-					xml_data := parser.root_element
+					xml_data := l_tree_pipe.document.root_element
 					load_default_attributes (xml_data)
 				end
 			else
@@ -99,14 +106,14 @@ feature -- Initialization
 			end
 		end
 
-	load_default_attributes (xml_elem: XML_ELEMENT) is
+	load_default_attributes (xml_elem: XM_ELEMENT) is
 			-- effective load of data from `xml_elem'.
 		local
 			resource: RESOURCE
 			child: RESOURCE_FOLDER_IMP
-			cursor,des_cursor: DS_BILINKED_LIST_CURSOR[XML_NODE]
-			node: XML_ELEMENT
-			txt: XML_TEXT
+			cursor,des_cursor: DS_LINKED_LIST_CURSOR[XM_NODE]
+			node: XM_ELEMENT
+			txt: XM_CHARACTER_DATA
 		do
 			create description.make (20)
 			create {ARRAYED_LIST [RESOURCE_FOLDER_I]} child_list.make (10)
@@ -129,7 +136,7 @@ feature -- Initialization
 						loop
 							txt ?= des_cursor.item
 							if txt /= Void then
-								description.append (txt.string)
+								description.append (txt.content)
 							else
 								description := Void
 							end
@@ -248,37 +255,40 @@ feature -- Implementation
 
 feature {NONE} -- Implementation
 
-	xml_data: XML_ELEMENT
+	xml_data: XM_ELEMENT
 
-	load_xml_resource (el: XML_ELEMENT): RESOURCE is
+	load_xml_resource (el: XM_ELEMENT): RESOURCE is
 			-- Create a resource associated to an XML representation.
 		require
 			not_void: el /= Void
 		local
-			cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
-			node: XML_ELEMENT
-			txt: XML_TEXT
-			att: XML_ATTRIBUTE
-			att_table: XML_ATTRIBUTE_TABLE
+			cursor: DS_LINKED_LIST_CURSOR [XM_NODE]
+			node: XM_ELEMENT
+			txt: XM_CHARACTER_DATA
+			att: XM_ATTRIBUTE
+			att_table: DS_LIST [XM_ATTRIBUTE]
 			val: STRING
 		do
 			create resource_name.make (20)
 			att_table := el.attributes
 			resource_description := Void
-			if att_table.has ("DESCRIPTION") then
-				att := att_table.item ("DESCRIPTION")
-				if att /= Void then
-					resource_description := att.value
+			from
+				att_table.start
+			until
+				att_table.after
+			loop
+				att := att_table.item_for_iteration
+				check
+					non_void_attribute: att /= Void
 				end
-			end
-			effect_is_delayed := False
-			if att_table.has ("IMMEDIATE_EFFECT") then
-				att := att_table.item ("IMMEDIATE_EFFECT")
-				if att /= Void then
+				if att.name.is_equal ("DESCRIPTION") then
+					resource_description := att.value
+				elseif att.name.is_equal ("IMMEDIATE_EFFECT") then
 					val := clone (att.value)
 					val.to_lower
 					effect_is_delayed := val.is_equal ("no")
 				end
+				att_table.forth
 			end
 			cursor := el.new_cursor
 			from
@@ -288,7 +298,7 @@ feature {NONE} -- Implementation
 			loop
 				txt ?= cursor.item
 				if txt /= Void then
-					resource_name.append (txt.string)
+					resource_name.append (txt.content)
 				else
 					node ?= cursor.item
 					if node /= Void then
@@ -301,14 +311,14 @@ feature {NONE} -- Implementation
 			resource_name := Void
 		end
 
-	process_unit_specific (node: XML_ELEMENT): RESOURCE is
+	process_unit_specific (node: XM_ELEMENT): RESOURCE is
 			-- Gets the appropriate resource from `node'
 			-- if the type is unknown, it is assumed to be a string.
 		require
 			not_void: node /= Void
 		local
 			s: STRING
-			txt: XML_TEXT
+			txt: XM_CHARACTER_DATA
 			n: STRING
 			types: LINEAR [RESOURCE_TYPE]
 		do
@@ -318,7 +328,7 @@ feature {NONE} -- Implementation
 					txt ?= node.first
 				end
 				if txt /= Void then
-					s := txt.string
+					s := txt.content
 					s.prune_all ('%R')
 					s.prune_all ('%N')
 					s.prune_all ('%T')
@@ -329,7 +339,7 @@ feature {NONE} -- Implementation
 				until
 					types.after or Result /= Void
 				loop
-					if types.item.xml_name.is_equal (n) then
+					if n.is_equal (types.item.xml_name) then
 						if resource_name = Void or else resource_name.is_empty then
 							raise ("Empty resource name")
 						end

@@ -30,12 +30,11 @@ feature -- Access
 				-- Note: 
 			l_name := current_instance.name
 			l_pos := l_name.last_index_of (feature {PATH}.Directory_separator_char, l_name.count)
-			l_name.remove_head (l_pos)
-			l_name.prepend ("lib")
+			l_name.insert_string ("lib", l_pos + 1)
 			l_name.remove_tail (4)
 			l_name.append (".dll")
 			create l_str.make (l_name)
-			create Result.make (cwel_get_module_handle (l_str.item))
+			create Result.make (cwel_load_library (l_str.item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -69,6 +68,13 @@ feature {NONE} -- Externals
 			"C [macro <windows.h>] (LPCTSTR): HMODULE"
 		alias
 			"GetModuleHandle"
+		end
+
+	cwel_load_library (name: POINTER): POINTER is
+		external
+			"C [macro <windows.h>] (LPCTSTR): HMODULE"
+		alias
+			"LoadLibrary"
 		end
 
 end -- class WEL_MAIN_ARGUMENTS

@@ -1,8 +1,6 @@
 indexing
-
-	description:	
-		"Retarget the class tool with the class the execution is stopped in.";
-	date: "$Date$";
+	description:	"Retarget the class tool with the class the execution is stopped in."
+	date: "$Date$"
 	revision: "$Revision$"
 
 class CURRENT_CLASS

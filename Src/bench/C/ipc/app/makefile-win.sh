@@ -45,7 +45,7 @@ network.$lib: $(OBJECTS) $(LIBDIR)\$(LIBNAME)
 	$link_line
 
 mtnetwork.$lib: $(MT_OBJECTS) $(LIBDIR)\$(LIBMTNAME)
-	$link_mtline
+	$link_line
 
 MTapp_listen.$obj: app_listen.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $? 

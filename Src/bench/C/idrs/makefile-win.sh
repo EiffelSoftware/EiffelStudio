@@ -82,7 +82,7 @@ idr.$lib: $(OBJECTS)
 	$link_line
 
 mtidr.$lib: $(MT_OBJECTS)
-	$link_mtline
+	$link_line
 
 MTidr_double.$obj: idr_double.c
 	$(CC) $(JMTCFLAGS) $(OUTPUT_CMD)$@ -c $?

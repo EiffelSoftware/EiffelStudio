@@ -1,5 +1,6 @@
 TOP = ..
 OUTDIR = .\LIB
+FREEOUTDIR = .\FREELIB
 INDIR = .\OBJDIR
 RTSRC = .
 CC = $cc
@@ -20,7 +21,7 @@ CFLAGS = -I. -I./include -I$(TOP) -I$(TOP)/idrs -I$(TOP)/console -I$(TOP)/ipc/ap
 NETWORK = $(TOP)\ipc\app\network.$lib
 MT_NETWORK = $(TOP)\ipc\app\mtnetwork.$lib
 
-OBJECTS = \
+FINAL_OBJECTS = \
 	$(INDIR)\lmalloc.$obj \
 	$(INDIR)\malloc.$obj \
 	$(INDIR)\garcol.$obj \
@@ -54,7 +55,6 @@ OBJECTS = \
 	$(INDIR)\argv.$obj \
 	$(INDIR)\boolstr.$obj \
 	$(INDIR)\search.$obj \
-	$(INDIR)\main.$obj \
 	$(INDIR)\option.$obj \
 	$(INDIR)\console.$obj \
 	$(INDIR)\run_idr.$obj \
@@ -70,7 +70,13 @@ OBJECTS = \
 	$(INDIR)\rout_obj.$obj \
 	$(TOP)\ipc\shared\networku.$obj \
 	$(TOP)\ipc\shared\shword.$obj \
-	$(TOP)\console\winconsole.$lib \
+	$(TOP)\console\winconsole.$lib
+
+OBJECTS = $(FINAL_OBJECTS) \
+	$(INDIR)\main.$obj
+
+FREE_OBJECTS = $(FINAL_OBJECTS) \
+	$(INDIR)\fmain.$obj
 
 WOBJECTS = \
 	$(NETWORK) \
@@ -183,7 +189,7 @@ EOBJECTS = \
 	$(TOP)\ipc\shared\networku.$obj \
 	$(TOP)\console\wwinconsole.$lib
 
-MT_OBJECTS = \
+MT_FINAL_OBJECTS = \
 	$(INDIR)\MTlmalloc.$obj \
 	$(INDIR)\MTmalloc.$obj \
 	$(INDIR)\MTgarcol.$obj \
@@ -217,7 +223,6 @@ MT_OBJECTS = \
 	$(INDIR)\MTargv.$obj \
 	$(INDIR)\MTboolstr.$obj \
 	$(INDIR)\MTsearch.$obj \
-	$(INDIR)\MTmain.$obj \
 	$(INDIR)\MToption.$obj \
 	$(INDIR)\MTconsole.$obj \
 	$(INDIR)\MTrun_idr.$obj \
@@ -233,7 +238,13 @@ MT_OBJECTS = \
 	$(INDIR)\MTrout_obj.$obj \
 	$(TOP)\ipc\shared\MTnetworku.$obj \
 	$(TOP)\ipc\shared\MTshword.$obj \
-	$(TOP)\console\mtwinconsole.$lib \
+	$(TOP)\console\mtwinconsole.$lib
+
+MT_OBJECTS = $(MT_FINAL_OBJECTS) \
+	$(INDIR)\MTmain.$obj
+
+MT_FREE_OBJECTS = $(MT_FINAL_OBJECTS) \
+	$(INDIR)\MTfmain.$obj
 
 MT_WOBJECTS = \
 	$(MT_NETWORK) \
@@ -294,8 +305,8 @@ MT_WOBJECTS = \
 all:: eif_size.h
 all:: $output_libraries
 
-standard:: $(OUTDIR)\finalized.$lib $(OUTDIR)\wkbench.$lib $(OUTDIR)\ebench.$lib 
-mtstandard:: $(OUTDIR)\mtfinalized.$lib $(OUTDIR)\mtwkbench.$lib
+standard:: $(OUTDIR)\finalized.$lib $(OUTDIR)\wkbench.$lib $(OUTDIR)\ebench.$lib freestandard
+mtstandard:: $(OUTDIR)\mtfinalized.$lib $(OUTDIR)\mtwkbench.$lib mtfreestandard
 
 $(OUTDIR)\finalized.$lib: $(OBJECTS)
 	$(RM) $(OUTDIR)\finalized.$lib
@@ -303,22 +314,33 @@ $(OUTDIR)\finalized.$lib: $(OBJECTS)
 
 $(OUTDIR)\wkbench.$lib: $(WOBJECTS)
 	$(RM) $(OUTDIR)\wkbench.$lib
-	$link_wline
+	$link_line
 
 $(OUTDIR)\mtfinalized.$lib: $(MT_OBJECTS)
 	$(RM) $(OUTDIR)\mtfinalized.$lib
-	$link_mtline
+	$link_line
 
 $(OUTDIR)\mtwkbench.$lib: $(MT_WOBJECTS)
 	$(RM) $(OUTDIR)\mtwkbench.$lib
-	$link_mtwline
+	$link_line
 
-dll:: $(OUTDIR)\wkbench.dll $(OUTDIR)\finalized.dll
-mtdll:: $(OUTDIR)\mtwkbench.dll $(OUTDIR)\mtfinalized.dll
+freestandard:: $(FREEOUTDIR)\finalized.$lib
+mtfreestandard:: $(FREEOUTDIR)\mtfinalized.$lib
+
+$(FREEOUTDIR)\finalized.$lib: $(FREE_OBJECTS)
+	$(RM) $(FREEOUTDIR)\finalized.$lib
+	$link_line
+
+$(FREEOUTDIR)\mtfinalized.$lib: $(MT_FREE_OBJECTS)
+	$(RM) $(FREEOUTDIR)\mtfinalized.$lib
+	$link_line
 
 LINK32_FLAGS= kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
 		advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib wsock32.lib \
 	$(DLLFLAGS)
+
+dll:: $(OUTDIR)\wkbench.dll $(OUTDIR)\finalized.dll freedll
+mtdll:: $(OUTDIR)\mtwkbench.dll $(OUTDIR)\mtfinalized.dll mtfreedll
 
 $(OUTDIR)\mtwkbench.dll : $(OUTDIR) $(MT_WOBJECTS)
 	$(RM) $(OUTDIR)\mtwkbench.dll
@@ -339,6 +361,19 @@ $(OUTDIR)\finalized.dll : $(OUTDIR) $(OBJECTS)
 	$(RM) $(OUTDIR)\finalized.dll
 	$(LINK32) $(LINK32_FLAGS) -OUT:$(OUTDIR)\finalized.dll \
 		-IMPLIB:$(OUTDIR)\dll_finalized.lib $(OBJECTS)
+
+freedll:: $(FREEOUTDIR)\finalized.dll
+mtfreedll:: $(FREEOUTDIR)\mtfinalized.dll
+
+$(FREEOUTDIR)\finalized.dll : $(FREEOUTDIR) $(FREE_OBJECTS)
+	$(RM) $(FREEOUTDIR)\finalized.dll
+	$(LINK32) $(LINK32_FLAGS) -OUT:$(FREEOUTDIR)\finalized.dll \
+		-IMPLIB:$(FREEOUTDIR)\dll_finalized.lib $(FREE_OBJECTS)
+
+$(FREEOUTDIR)\mtfinalized.dll : $(FREEOUTDIR) $(MT_FREE_OBJECTS)
+	$(RM) $(FREEOUTDIR)\mtfinalized.dll
+	$(LINK32) $(LINK32_FLAGS) -OUT:$(FREEOUTDIR)\mtfinalized.dll \
+		-IMPLIB:$(FREEOUTDIR)\dll_mtfinalized.lib $(MT_FREE_OBJECTS)
 
 ..\console\winconsole.$lib: ..\console\econsole.c ..\console\argcargv.c
 	cd ..\console
@@ -382,7 +417,7 @@ $(OUTDIR)\finalized.dll : $(OUTDIR) $(OBJECTS)
 
 $(OUTDIR)\ebench.$lib: $(EOBJECTS)
 	$(RM) $(OUTDIR)\ebench.$lib
-	$link_eline
+	$link_line
 
 all:: x2c.exe
 
@@ -703,9 +738,19 @@ $(INDIR)\bmain.$obj: $(RTSRC)\main.c
 $(INDIR)\bexcept.$obj: $(RTSRC)\except.c
 	$(CC) $(JCFLAGS) -DWORKBENCH -DNOHOOK $(RTSRC)\except.c
 
+$(INDIR)\fmain.$obj: $(RTSRC)\main.c
+	$(CC) $(JCFLAGS) -DNON_COMMERCIAL $(RTSRC)\main.c
+
+
 ###################
 # MT_OBJECTS
 ###################
+
+$(INDIR)\MTfmain.$obj: $(RTSRC)\main.c
+	$(CC) $(JMTCFLAGS) -DNON_COMMERCIAL $(RTSRC)\main.c
+
+$(INDIR)\MTmain.$obj: $(RTSRC)\main.c
+	$(CC) $(JMTCFLAGS) $(RTSRC)\main.c
 
 $(INDIR)\MTargv.$obj: $(RTSRC)\argv.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)\argv.c
@@ -781,9 +826,6 @@ $(INDIR)\MTlmalloc.$obj: $(RTSRC)\lmalloc.c
 
 $(INDIR)\MTlocal.$obj: $(RTSRC)\local.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)\local.c
-
-$(INDIR)\MTmain.$obj: $(RTSRC)\main.c
-	$(CC) $(JMTCFLAGS) $(RTSRC)\main.c
 
 $(INDIR)\MTmalloc.$obj: $(RTSRC)\malloc.c
 	$(CC) $(JMTCFLAGS) $(RTSRC)\malloc.c

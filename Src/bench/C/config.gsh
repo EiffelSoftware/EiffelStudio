@@ -21,11 +21,7 @@ mtccflags='-mno-cygwin -DCYGWIN -DEIF_THREADS'
 output_libraries='standard mtstandard'
 #
 #
-link_line='$compiler_path\bin\ld -r -o $@ $(OBJECTS)'
-link_wline='$compiler_path\bin\ld -r -o $@ $(WOBJECTS)'
-link_eline='$compiler_path\bin\ld -r -o $@ $(EOBJECTS)'
-link_mtline='$compiler_path\bin\ld -r -o $@ $(MT_OBJECTS)'
-link_mtwline='$compiler_path\bin\ld -r -o $@ $(MT_WOBJECTS)'
+link_line='$compiler_path\bin\ld -r -o $@ $**'
 #
 optimize='-O2'
 debug=''

@@ -519,8 +519,13 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 				debug ("debugger_trace_callback_data")
 					io.error.put_string ((create {ICOR_DEBUG_APP_DOMAIN}.make_by_pointer (p)).get_name + "%N")
 				end
-				r := {ICOR_DEBUG_APP_DOMAIN}.cpp_attach (p)
-				check r = 0 end
+				r := {ICOR_DEBUG_APP_DOMAIN}.cpp_is_attached (p, $i)
+				if not i.to_boolean then
+						--| This should be done on the callback event
+						--| but in case this is not done, let's do it
+					r := {ICOR_DEBUG_APP_DOMAIN}.cpp_attach (p)
+					check (r = 0) end
+				end
 				dbgsync_cb_without_stopping := True
 			when Cst_managed_cb_create_process then
 					--| p_process
@@ -685,7 +690,8 @@ feature {EIFNET_DEBUGGER} -- Callback notification about synchro
 					--|	p_app_domain, p_module, p_symbol_stream
 				p := dbg_cb_info_pointer_item (1) -- p_app_domain
 				set_last_controller_by_pointer (icor_debug_controller_interface (p))
-				
+			when Cst_unmanaged_debug_event then
+
 			else
 				check False end
 			end

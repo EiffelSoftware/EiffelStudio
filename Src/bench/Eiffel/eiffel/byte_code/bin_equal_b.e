@@ -50,6 +50,12 @@ feature
 			-- Generate equality if one side at least is an expanded
 		do
 			generated_file.putstring ("RTEQ(");
+			generate_equal_end;
+		end;
+
+	generate_equal_end is
+			-- Generate last portion of equality.
+		do
 			if left_register = Void then
 				left.print_register;
 			else
@@ -62,6 +68,13 @@ feature
 				right_register.print_register;
 			end;
 			generated_file.putstring (")");
+		end;
+
+	generate_bit_equal is
+			-- Generate equality if one side at least is a bit.
+		do
+			generated_file.putstring ("RTEB(");
+			generate_equal_end
 		end;
 
 	right_register: REGISTRABLE is
@@ -171,6 +184,7 @@ feature
 		do
 			left_type := context.real_type (left.type);
 			right_type := context.real_type (right.type);
+			
 			if
 				(left_type.is_none and right_type.is_basic) or
 				(left_type.is_basic and right_type.is_none)
@@ -181,6 +195,8 @@ feature
 				left_register /= Void or right_register /= Void
 			then
 				generate_equal;
+			elseif left_type.is_bit or right_type.is_bit then
+				generate_bit_equal
 			else
 				if left_register = Void then
 					left.print_register;
@@ -205,9 +221,13 @@ feature -- Byte code generation
 		deferred
 		end;
 
-	expanded_operator_constant: CHARACTER is
-			-- Byte code constant associated to current expanded
-			-- equality
+	make_bit_eq_test (ba: BYTE_ARRAY) is
+			-- Make byte code for current bit equality
+		deferred
+		end;
+
+	make_expanded_eq_test (ba: BYTE_ARRAY) is
+			-- Make byte code for current expaned equality
 		deferred
 		end;
 
@@ -252,7 +272,10 @@ feature -- Byte code generation
 				flag
 			then
 					-- Standard equality
-				ba.append (expanded_operator_constant);
+				make_expanded_eq_test (ba);
+			elseif (lt.is_bit and then rt.is_bit) then
+					-- Bit equality
+				make_bit_eq_test (ba)	
 			elseif	(lt.is_basic and then rt.is_none)
 					or else
 					(lt.is_none and then rt.is_basic)

@@ -52,7 +52,6 @@ feature
 			editor.apply_current_form;
 		end;
 
-	
 feature {NONE}
 
 	context_work is

@@ -12,6 +12,11 @@ inherit
 	SHARED_EXPORT_STATUS
 	COMPILER_EXPORTER
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
 creation
 	make
 	
@@ -144,10 +149,13 @@ feature
 			feature_name, new_name: STRING
 			parent: PARENT_C
 			replication: FEATURE_I
+			feature_name_id, new_name_id: INTEGER
+			l_names_heap: like Names_heap
 				-- Replicated feature in case of repeated inheritance
 		do
 			from
 				feat.start;
+				l_names_heap := Names_heap
 			until
 				feat.after
 			loop
@@ -157,22 +165,25 @@ feature
 				if not next.renaming_processed and then
 					parent.is_renaming (feature_name) 
 				then
+					feature_name_id := next.a_feature.feature_name_id;
 						-- Detection of a renaming clause: check repeated
 						-- inheritance possible replication
 					new_name := parent.renaming.item (feature_name);
+					l_names_heap.put (new_name)
+					new_name_id := l_names_heap.found_item
 					replication := clone (next.a_feature);
 						-- Mark it as processed
 					next.set_renaming_processed;
 						-- Move the inherit feature information under 
 						-- 'new_name'.
-					replication.set_renamed_name (new_name);
+					replication.set_renamed_name_id (new_name_id);
 					next.set_a_feature (replication);
-					Inherit_table.add_inherited_feature (next, new_name);
+					Inherit_table.add_inherited_feature (next, new_name_id);
 						-- Remove the information
 					feat.remove;
 						-- Remove empty structure
 					if is_empty then
-						Inherit_table.remove (feature_name);
+						Inherit_table.remove (feature_name_id);
 					end;
 				else
 					feat.forth;

@@ -703,6 +703,7 @@ feature {NONE} -- Implementation
 			tmp_body.append (C_equal)
 			tmp_body.append (Space)
 			tmp_body.append (Zero)
+			tmp_body.append (Close_parenthesis)
 			tmp_body.append (New_line_tab_tab)
 
 			tmp_body.append (Delete)

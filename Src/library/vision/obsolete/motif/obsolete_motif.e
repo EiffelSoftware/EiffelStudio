@@ -65,6 +65,13 @@ feature -- Access
 			!! Result.make (a_separator_gadget, managed, oui_parent)
 		end;
 
+	message (a_message: MESSAGE; managed: BOOLEAN;
+		oui_parent: COMPOSITE): MESSAGE_M is
+			-- Motif implementation of `a_message'
+		do
+			!! Result.make (a_message, managed, oui_parent)
+		end;
+ 
 end -- class OBSOLETE_MOTIF
 
 --|----------------------------------------------------------------

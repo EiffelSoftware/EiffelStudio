@@ -199,7 +199,7 @@ feature -- Basic Operations
 			valid_feature_name: not Result.empty
 		end
 
-	header_name (a_name: STRING): STRING is
+	header_name (a_namespace, a_name: STRING): STRING is
 			-- Name for header file.
 		require
 			non_void_name: a_name /= Void
@@ -208,8 +208,14 @@ feature -- Basic Operations
 			tmp_string: STRING
 		do
 			create Result.make (20)
-			Result.append ("ecom_")
+			if a_namespace /= Void and then not a_namespace.empty then
+				Result.append (a_namespace)
+			end
+			Result.append ("_")
 			Result.append (a_name)
+			if shared_wizard_environment.server then
+				Result.append ("_s")
+			end
 			Result.append (".h")
 
 			tmp_string := clone (Result)

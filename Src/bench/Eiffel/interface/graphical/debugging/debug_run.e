@@ -145,17 +145,15 @@ end;
 					else
 						mp.restore;
 						debug_window.clear_window;
-					Project_tool.save_current_cursor_position;
+						Project_tool.save_current_cursor_position;
 						debug_window.put_string ("Launching system...");
 						debug_window.new_line;
-						debug_window.display;
 						mp.set_watch_cursor;
 						Application.run (argument_window.argument_list);
 						if Application.is_running then
 							debug_window.clear_window;
 							debug_window.put_string ("System is running");
 							debug_window.new_line;
-							debug_window.display
 						else
 								-- Something went wrong
 							debug_window.clear_window;

@@ -228,6 +228,16 @@ feature -- Externals
 		external
 			"C signature (GtkTextBuffer*, gboolean, gboolean) use <gtk/gtk.h>"
 		end
+		
+	gtk_text_buffer_delete (a_text_buffer: POINTER; a_start_iter: POINTER; a_end_iter: POINTER) is
+		external
+			"C signature (GtkTextBuffer*, GtkTextIter*, GtkTextIter*) use <gtk/gtk.h>"
+		end
+	
+	gtk_text_buffer_place_cursor (a_text_buffer: POINTER; a_text_iter: POINTER) is
+		external
+			"C signature (GtkTextBuffer*, GtkTextIter*) use <gtk/gtk.h>"
+		end		
 	
 	gtk_text_iter_forward_to_line_end (a_text_iter: POINTER) is
 		external
@@ -247,7 +257,13 @@ feature -- Externals
 	gtk_text_iter_get_offset (a_text_iter: POINTER): INTEGER is
 		external
 			"C signature (GtkTextIter*): gint use <gtk/gtk.h>"
-		end		
+		end
+		
+	gtk_clipboard_get (a_atom: INTEGER): POINTER is
+		external
+			"C signature (GdkAtom): GtkClipboard* use <gtk/gtk.h>"
+		end
+		
 
 end
 

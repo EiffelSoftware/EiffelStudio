@@ -67,14 +67,14 @@ feature -- Status setting
 			-- When a pick occurs, the pick position in widget coordinates,
 			-- <<x, y>> in pixels, is passed.
 			-- To handle this data use `a_function' of type
-			-- FUNTION [ANY, TUPLE [INTEGER, INTERGER], ANY] and return the
+			-- FUNCTION [ANY, TUPLE [INTEGER, INTEGER], ANY] and return the
 			-- pebble as a function of x and y.
 			-- Overrides `set_pebble'.
 		require
 			a_function_not_void: a_function /= Void
 			a_function_takes_two_integer_open_operands:
 				a_function.valid_operands ([1,1])
-				-- Note that `a_funtion' with no operands or one integer
+				-- Note that `a_function' with no operands or one integer
 				-- operand meets this criteria.
 		do
 			implementation.set_pebble_function (a_function)
@@ -222,6 +222,9 @@ end -- class EV_PICK_AND_DROPABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/18 16:52:49  king
+--| Corrected typos in set_pebble_function comment
+--|
 --| Revision 1.7  2000/03/27 19:44:12  oconnor
 --| added support for pebble_funtion
 --|

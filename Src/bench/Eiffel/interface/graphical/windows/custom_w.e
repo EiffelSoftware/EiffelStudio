@@ -9,10 +9,12 @@ class CUSTOM_W
 
 inherit
 
+	COMMAND;
 	TOOL_W
+		rename
+			last_format as old_last_format
 		redefine
-			text_window,
-			execute, tool_name, hole
+			text_window, tool_name, hole
 		end;
 	CUSTOM_CONST;
 	CUSTOM_INTERF;
@@ -37,6 +39,7 @@ feature -- Initialization
 			shell_make (tool_name, a_screen);
 			build_widgets;
 			!! format_catalog.make (10);
+			!! history.make;
 			apply_push.add_activate_action (Current, apply_push);
 			cancel_push.add_activate_action (Current, cancel_push);
 			ok_push.add_activate_action (Current, ok_push);
@@ -44,8 +47,8 @@ feature -- Initialization
 			remove_push.add_activate_action (Current, remove_push);
 			catalog_list.add_selection_action (Current, catalog_list);
 			catalog_list.deselect_item;
+			register;
 			realize;
-			transporter_init;
 			if hole.symbol.is_valid then
 				set_icon_pixmap (hole.symbol);
 			end;
@@ -511,43 +514,8 @@ feature -- Execution Implementation
 	execute (argument: ANY) is
 		local
 			format_name: STRING;
-			pointed_widget: WIDGET;
-			pointed_text: TEXT_WINDOW;
-			pointed_hole: HOLE;
-			transported_hole: HOLE;
-			transported_node: like last_transported
 		do
-			if argument = Current then
-				-- Motion action (when grabbed)
-				draw_segment (x0, y0, x1, y1);
-				x1 := screen.x; y1 := screen.y;
-				draw_segment (x0, y0, x1, y1)
-			elseif argument = text_window then
-				-- Button is released, let's drop the stone!
-				draw_segment (x0, y0, x1, y1);
-				if origin_text /= Void then
-					origin_text.deselect_all
-				end;
-				pointed_widget := screen.widget_pointed;
-				pointed_hole ?= pointed_widget;
-				pointed_text ?= pointed_widget;
-				transported_node ?= last_transported;
-				transported_hole ?= last_transported;
-				if pointed_text /= Void then
-					if transported_hole /= Void and then pointed_text.clickable then
-						pointed_text.change_focus;
-						transported_hole.receive (pointed_text.focus);
-						pointed_text.deselect_all
-					elseif transported_node /= Void then
-						pointed_text.receive (transported_node)
-					end
-				elseif pointed_hole /= Void then
-					if transported_node /= Void then
-						pointed_hole.receive (transported_node)
-					end
-				end;
-				ungrab;
-			elseif argument = ok_push then
+			if argument = ok_push then
 				update_user_format;
 				if last_caller.last_format /= user_format then
 					last_caller.set_last_format (user_format);

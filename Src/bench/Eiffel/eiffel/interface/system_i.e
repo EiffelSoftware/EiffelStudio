@@ -2371,10 +2371,9 @@ feature -- Dead code removal
 			l_class := array_class.compiled_class
 			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.Make_name_id), l_class)
 			
-				-- Protection of feature `make' and `set_count' of class STRING
+				-- Protection of feature `make' of class STRING.
 			l_class := string_class.compiled_class
 			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.Make_name_id), l_class)
-			remover.record (l_class.feature_table.item_id (feature {PREDEFINED_NAMES}.Set_count_name_id), l_class)
 
 				-- Protection of feature `make' of class TUPLE
 			l_class := tuple_class.compiled_class

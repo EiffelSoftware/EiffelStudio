@@ -42,7 +42,7 @@ feature {WIZARD_STATE_WINDOW}
 	pixmap_icon_location: FILE_NAME is
 			--
 		do
-			create Result.make_from_string ("eiffel_wizard_icon.bmp")
+			create Result.make_from_string ("eiffel_wizard_icon.png")
 		end
 
 

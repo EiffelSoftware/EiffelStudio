@@ -121,11 +121,7 @@ feature {NONE} -- Implementation
 			--| Does not return internal toolkit string because it is possible
 			--| to set the string without parent.
 		do
-			if real_text /= Void then
-				Result := clone (real_text)
-			else
-				Result := ""
-			end
+			Result := clone (real_text)
 		end
 
 	real_text: STRING
@@ -142,9 +138,7 @@ feature {NONE} -- Implementation
 	text_length: INTEGER is
 			-- Length of text'.
 		do
-			if real_text /= Void then
-				Result := real_text.count
-			end
+			Result := real_text.count
 		end
 
 	parent_imp: EV_MENU_ITEM_LIST_IMP

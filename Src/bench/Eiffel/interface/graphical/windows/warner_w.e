@@ -90,9 +90,9 @@ feature -- Window Settings
 			last_caller := cmd
 		end;
 
-	set_window (wind: TEXT_WINDOW) is
+	set_window (wind: like window) is
 		do
-			window ?= wind.tool
+			window := wind
 		end;
 
 feature -- Access

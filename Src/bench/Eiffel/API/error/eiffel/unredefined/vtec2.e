@@ -1,8 +1,8 @@
 indexing
 
 	description: 
-		"Error for expanded that has more that more creation routines %
-		%or creation routine has arguments";
+		"Error for expanded that does not have `default_create' from ANY as %
+		%creation procedure";
 	date: "$Date$";
 	revision: "$Revision $"
 

@@ -139,8 +139,6 @@ feature -- Change
 			pi ?= parent
 			wel_make (pi, "")
 
---			{MANAGER_IMP} Precursor
-
 			set_height (pi.height)
 			set_width (pi.width)
 
@@ -151,7 +149,7 @@ feature -- Change
 			end
 
 			if split_visible then
-				split_position := split_size // 100 * proportion
+				split_position := (split_size * proportion) // 100
 			end
 		end
 
@@ -170,7 +168,7 @@ feature -- Change
 			end
 
 			if split_visible then
-				split_position := split_size // 100 * proportion
+				split_position := (split_size * proportion) // 100
 			end
 			resize_children
 		end
@@ -230,7 +228,6 @@ feature -- Sizing policy
 			-- Respond to resizing from children.
 		do
 			if first_child /= Void and then 
-				first_child.exists and then
 				first_child.managed 
 			then
 				resize_first_child
@@ -238,7 +235,6 @@ feature -- Sizing policy
 			
 			if
 				second_child /= Void and then
-				second_child.exists and then
 				second_child.managed and then
 				split_visible
 			then
@@ -310,7 +306,7 @@ feature -- Element change
 		do
 			if a_window = second_child then
 				if first_child.managed then
-					split_position := split_size // 100 * proportion
+					split_position := (split_size * proportion) // 100
 					split_visible := True
 				else
 					split_position := 0
@@ -318,7 +314,7 @@ feature -- Element change
 				end
 			else
 				if second_child.managed then
-					split_position := split_size // 100 * proportion
+					split_position := (split_size * proportion) // 100
 					split_visible := True
 				else
 					split_position := split_size

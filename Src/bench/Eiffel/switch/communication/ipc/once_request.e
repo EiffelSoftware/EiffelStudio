@@ -35,7 +35,7 @@ feature
 				Result := False
 			else
 				real_body_id := once_routine.real_body_id
-				send_rqst_3 (Rqst_once, Out_called, 0, real_body_id - 1)
+				send_rqst_3_integer (Rqst_once, Out_called, 0, real_body_id - 1)
 				Result := c_tread.to_boolean
 			end
 	
@@ -64,7 +64,7 @@ end
 			real_body_id: INTEGER
 		do
 			real_body_id := once_function.real_body_id
-			send_rqst_3 (Rqst_once, Out_result, once_function.argument_count, real_body_id - 1)
+			send_rqst_3_integer (Rqst_once, Out_result, once_function.argument_count, real_body_id - 1)
 			c_recv_value (Current)
 			Result := item
 			if Result /= Void then

@@ -89,7 +89,7 @@ feature -- Execution
 			keep_objects (kept_objects)
 			cont_request.send_breakpoints
 			status.set_is_stopped (False)
-			cont_request.send_rqst_3 (Rqst_resume, Resume_cont, Application.interrupt_number, Application.critical_stack_depth)
+			cont_request.send_rqst_3_integer (Rqst_resume, Resume_cont, Application.interrupt_number, Application.critical_stack_depth)
 		end
 
 	interrupt is

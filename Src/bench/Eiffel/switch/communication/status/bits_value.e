@@ -164,7 +164,7 @@ feature {NONE} -- Implementation
 		do
 			if not is_attribute then
 				-- The `value' is the Physical address of the bit object 
-				send_rqst_3 (Rqst_inspect, In_bit_addr, 0, hex_to_integer (value));
+				send_rqst_3 (Rqst_inspect, In_bit_addr, 0, hex_to_pointer (value));
 				value := c_tread
 				-- This is actual `value' .
 			end

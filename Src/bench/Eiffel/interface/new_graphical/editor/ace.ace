@@ -24,6 +24,7 @@ cluster
 	lexer			(root_cluster)	:	"$\lexer"
 	editor			(root_cluster)	:	"$\editor"
 	tokens			(root_cluster)	:	"$\tokens"
+	undo_redo		(root_cluster)	:	"$\undo_redo"
 
 		-- EiffelBase
 	all base: 		"$EIFFEL4\library\base"

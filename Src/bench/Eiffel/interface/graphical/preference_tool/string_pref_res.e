@@ -77,6 +77,7 @@ feature {PREFERENCE_CATEGORY} -- Access
 			-- Save Current.
 		local
 			ar: like associated_resource
+			quotation_added: BOOLEAN
 		do
 			ar := associated_resource
 			if text = Void or else equal (ar.value, (text.text)) then
@@ -87,9 +88,10 @@ feature {PREFERENCE_CATEGORY} -- Access
 				else
 					if ar.value @ 1 /= '%"' then
 						file.putchar ('%"')
+						quotation_added := true
 					end
-					file.putstring (ar.value)
-					if ar.value @ ar.value.count /= '%"' then
+					file_putstring (file, ar.value)
+					if quotation_added then
 						file.putchar ('%"')
 					end
 				end
@@ -98,11 +100,40 @@ feature {PREFERENCE_CATEGORY} -- Access
 			else
 				if text.text @ 1 /= '%"' then
 					file.putchar ('%"')
+					quotation_added := true
 				end
-				file.putstring (text.text)
-				if text.text @ text.text.count /= '%"' then
+				file_putstring (file, text.text)
+				if quotation_added then
 					file.putchar ('%"')
 				end
+			end
+		end;
+
+	file_putstring (file: PLAIN_TEXT_FILE; s: STRING) is
+		local
+			index: INTEGER
+			temp: STRING
+			finished: BOOLEAN
+		do
+			if s.has ('%"') then
+				from
+					temp := clone (s)
+					index := temp.index_of ('%"', 1)
+				until
+					index = 0 or finished
+				loop
+					temp.insert ("%%", index)
+					index := index + 2
+					if index < temp.count then
+						index := temp.index_of ('%"', index)
+					else
+						finished := true
+					end
+				end
+
+				file.putstring (temp)
+			else
+				file.putstring (s)
 			end
 		end;
 

@@ -1,6 +1,5 @@
 indexing	
-	description: 
-		"Eiffel Vision radio menu item. Implementation interface."
+	description: "Eiffel Vision radio menu item. Implementation interface."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,63 +9,159 @@ class
 
 inherit
 	EV_RADIO_MENU_ITEM_I
+		undefine
+			parent
 		redefine
 			interface
 		end
 
 	EV_CHECK_MENU_ITEM_IMP
 		redefine
-			on_activate,
+			disable_select,
+			enable_select,
+			toggle,
 			interface
 		end
 
 create
 	make
 
-feature -- Access
+feature -- Status report
 
-	radio_group: LINKED_LIST [like Current]
+	peers: LINKED_LIST [like interface] is
+			-- List of all radio items in the group `Current' is in.
+		local
+			cur: CURSOR
+		do
+			create Result.make
+			if radio_group /= Void then
+				cur := radio_group.cursor
+				from
+					radio_group.start
+				until
+					radio_group.off
+				loop
+					Result.extend (radio_group.item.interface)
+					radio_group.forth
+				end
+				radio_group.go_to (cur)
+			end
+		end
 
 feature -- Status setting
+	
+	enable_select is
+		local
+			cur: CURSOR
+		do
+			is_in_transitional_state := True
+			if radio_group /= Void then
+				cur := radio_group.cursor
+				from
+					radio_group.start
+				until
+					radio_group.off
+				loop
+					parent_imp.uncheck_item (radio_group.item.id)
+					radio_group.forth
+				end
+				radio_group.go_to (cur)
+			end
+			Precursor
+			is_in_transitional_state := True
+		end
+
+	disable_select is
+		do
+			check
+				inapplicable_for_radio_items: False
+			end
+		end
+
+	toggle is
+			-- Change the checked state of the menu-item.
+		do
+			enable_select
+		end
+
+feature -- Contract support
+
+	is_in_transitional_state: BOOLEAN
+			-- When `True', `radio_group_selected_count' might be zero.
+
+	radio_group_selected_count: INTEGER is
+			-- Number of selected radio items in `radio_group'.
+		local
+			cur: CURSOR
+		do
+			if radio_group /= Void then
+				cur := radio_group.cursor
+				from
+					radio_group.start
+				until
+					radio_group.off
+				loop
+					if radio_group.item.is_selected then
+						Result := Result + 1
+					end
+					radio_group.forth
+				end
+				radio_group.go_to (cur)
+			end
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	radio_group: LINKED_LIST [like Current]
 
 	set_radio_group (a_list: like radio_group) is
 			-- Remove `Current' from `radio_group'.
 			-- Set `radio_group' to `a_list'.
 			-- Extend `Current' in `a_list'.
+		require
+			a_list_not_void: a_list /= Void
+			a_list_not_has_current: not a_list.has (Current)
 		do
 			if radio_group /= Void then
-				radio_group.search (Current)
-				radio_group.remove
+				remove_from_radio_group
 			end
 			radio_group := a_list
+			if radio_group.empty then
+				enable_select
+			end
 			radio_group.extend (Current)
+		ensure
+			assigned: radio_group = a_list
+			in_it: radio_group.has (Current)
 		end
 
-feature {NONE} -- Implementation
-
-	on_activate is
+	remove_from_radio_group is
+			-- Remove `Current' from `radio_group'.
+			-- Set `radio_group' to `Void'.
+		require
+			radio_group_not_void: radio_group /= Void
 		do
-			if not is_selected then
-				enable_select
-				if radio_group /= Void then
-					from
-						radio_group.start
-					until
-						radio_group.off
-					loop
-						if radio_group.item /= Current then
-							if radio_group.item.is_selected then
-								radio_group.item.disable_select
-							end
-						end
-						radio_group.forth
-					end
-				end
+			radio_group.start
+			radio_group.prune (Current)
+			check
+				removed: not radio_group.has (Current)
 			end
-			interface.press_actions.call ([])
+			if is_selected and then not radio_group.empty then
+				radio_group.first.enable_select
+			end
+			radio_group := Void
+		ensure
+			void: radio_group = Void
 		end
 
 	interface: EV_RADIO_MENU_ITEM
+
+invariant
+	radio_group_not_void_implies_has_current:
+		radio_group /= Void implies radio_group.has (Current)
+	radio_group_not_void_implies_one_selected:
+		(radio_group /= Void and not is_in_transitional_state) implies
+			radio_group_selected_count = 1
 
 end -- class EV_RADIO_MENU_ITEM_IMP
 
@@ -91,6 +186,10 @@ end -- class EV_RADIO_MENU_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/02/24 01:45:59  brendel
+--| Improved contracts.
+--| Fully implemented.
+--|
 --| Revision 1.13  2000/02/23 02:16:35  brendel
 --| Revised. Implemented.
 --|

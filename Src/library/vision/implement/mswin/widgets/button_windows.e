@@ -93,10 +93,10 @@ feature -- Status setting
 			end
 			if exists then
 				set_size (fw.string_width (Current, text) + extra_width,
-					(7 * fw.string_height (Current, text)) // 4)
+					(7 * fw.string_height (Current, text)) // 4 - 2)
 			else
 				set_form_width (fw.string_width (Current, text) + extra_width)
-				set_form_height ((7 * fw.string_height (Current, text)) // 4)
+				set_form_height ((7 * fw.string_height (Current, text)) // 4 - 2)
 			end
 		end
 

@@ -44,6 +44,8 @@ inherit
 			default_create, is_equal, copy
 		end
 
+	GB_CONSTANTS
+
 create
 	make_with_text
 
@@ -144,7 +146,12 @@ feature -- Access
 					end
 				end
 
-						
+				--| We must override if the type represented by `object' is a window.
+				--| Currently, windows are fixed and may not be replaced.
+				
+			if object.type.is_equal (Ev_window_string) or object.type.is_equal (Ev_titled_window_string) then
+				can_drop := False
+			end
 
 			if can_drop then
 				drop_actions.extend (agent replace_layout_item (?))	

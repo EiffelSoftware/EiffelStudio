@@ -11,7 +11,7 @@ creation
 	
 feature 
 
-	special_w: SPECIAL_W;
+--	special_w: SPECIAL_W;
 
 	make (c: COMPOSITE; t_w: TEXT_WINDOW) is
 		do

@@ -1,4 +1,3 @@
-
 -- Root class of the Eiffelbench system.
 
 class EWB
@@ -7,7 +6,8 @@ inherit
 
 	WINDOWS;
 	EIFFEL_ENV;
-	ISED_X_SLAVE
+	ISED_X_SLAVE;
+	ARGUMENTS
 
 creation
 
@@ -19,12 +19,22 @@ feature
 	make is
 			-- Create and map the first window: the system window.
 		do
-			init_connection;
-			init_windowing;
-			iterate
+			if argument_count = 1 and then
+				argument (1).is_equal ("-bench")
+			then
+				set_batch_mode (False);
+				init_connection;
+				init_windowing;
+				iterate
+			else
+				set_batch_mode (True);
+				!! batch_compiler.make
+			end;
 		end;
 	
 feature {NONE}
+
+	batch_compiler: ES;
 
 	init_windowing is
 			-- Initialize the windowing environment.

@@ -55,7 +55,12 @@ feature -- Generation
 				il_generator.start_module_generation (file_name, System.line_generation)
 				generate_types
 				if System.generate_eac_metadata then
-					generate_metadata
+					if System.java_generation then
+						create {JVM_META_DATA_GENERATOR} il_meta_data_generator.make
+					else
+						create {MSIL_META_DATA_GENERATOR} il_meta_data_generator.make
+					end
+					il_meta_data_generator.generate_metadata (sorted_classes (System.classes))
 				end
 				generate_il_code
 				generate_entry_point
@@ -315,38 +320,6 @@ feature -- Code generation
 				root_feat := a_class.feature_table.item (System.creation_name)
 				il_generator.define_entry_point (a_class.types.first.static_type_id, root_feat.feature_id)
 			end
-		end
-
-feature -- Metadata generation (.NET only)
-
-	generate_metadata is
-			-- Store Eiffel names to allow roundtrip
-			-- when consuming metadata again.
-		local
-			i, nb: INTEGER
-			class_c: CLASS_C
-			classes: ARRAY [CLASS_C]
-			metadata_generator: EAC_META_DATA_GENERATOR
-		do
-			classes := sorted_classes (System.classes)
-			from
-				i := classes.lower
-				nb := classes.upper
-				create metadata_generator.make
-			variant
-				nb - i + 1
-			until
-				i > nb
-			loop
-				class_c := classes.item (i)
-				if class_c /= Void and then class_c.is_external and then
-				class_c.ast.top_indexes /= Void and then
-				class_c.ast.top_indexes.assembly_name /= Void then
-					metadata_generator.add (class_c)
-				end
-				i := i + 1
-			end
-			metadata_generator.generate
 		end
 		
 feature {NONE} -- Sort

@@ -49,6 +49,7 @@ feature -- Access
 	server_item, item (an_id: INTEGER): T is
 			-- Object of id `an_id'
 		require
+			cache_not_void: cache /= Void
 			an_id_in_table: has (an_id)
 		deferred
 		end

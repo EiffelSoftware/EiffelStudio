@@ -33,7 +33,7 @@ class ARRAYED_LIST [G] inherit
 				capacity
 		undefine
 			linear_representation, prunable, put, is_equal,
-			prune, occurrences, extendible 
+			prune, occurrences, has, extendible 
 		redefine
 			extend, prune_all, full, wipe_out,
 			is_inserted, make_from_array
@@ -44,7 +44,7 @@ class ARRAYED_LIST [G] inherit
 	DYNAMIC_LIST [G]
 		undefine
 			valid_index, infix "@", i_th, put_i_th,
-			force, is_inserted, copy, has
+			force, is_inserted, copy
 		redefine
 			first, last, swap, wipe_out,
 			go_i_th, move, prunable, start, finish,

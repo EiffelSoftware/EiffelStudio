@@ -12,10 +12,12 @@
 #ifndef _eif_lmalloc_h_
 #define _eif_lmalloc_h_
 
+#include "eif_config.h"
+#include "eif_portable.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
-#include "eif_config.h"
 
 #ifdef LMALLOC_DEBUG
 #include "stdio.h"

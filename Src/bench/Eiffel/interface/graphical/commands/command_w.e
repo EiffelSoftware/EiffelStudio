@@ -13,8 +13,7 @@ inherit
 	EB_CONSTANTS;
 	INTERFACE_W;
 	GRAPHICS;
-	COMMAND;
-	WARNING_MESSAGES
+	COMMAND
 
 feature -- Execution
 

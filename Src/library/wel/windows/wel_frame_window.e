@@ -221,9 +221,10 @@ feature {NONE} -- Implementation
 				wnd_class.set_window_procedure (class_window_procedure)
 				wnd_class.set_icon (class_icon)
 				wnd_class.set_cursor (class_cursor)
-				if class_background /= Void then
-						--| Can be Void since the user maybe wants to catch
-						--| the `WM_ERASEBKGND' message.
+				if background_brush = Void then
+						--| If class_background attribute is not
+						--| Void, we do not use the class_background
+						--| once function.
 					wnd_class.set_background (class_background)
 				end
 				wnd_class.set_menu_name (class_menu_name)

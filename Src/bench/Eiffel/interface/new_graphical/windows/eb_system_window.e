@@ -57,35 +57,10 @@ feature {NONE} -- Initialization
 			tool.build_file_menu (file_menu)
 			create format_menu.make_with_text (menu_bar, Interface_names.m_Formats)
 			tool.build_format_menu (format_menu)
+			create special_menu.make_with_text (menu_bar, Interface_names.m_Special)
+			tool.build_special_menu (special_menu)
 			create windows_menu.make_with_text (menu_bar, Interface_names.m_Windows)
 			build_windows_menu (windows_menu)
-		end
-
-	build_file_menu (a_menu: EV_MENU_ITEM_HOLDER) is
-		local
-			i: EV_MENU_ITEM
-			open_cmd: EB_OPEN_SYSTEM_CMD
-			save_cmd: EB_SAVE_SYSTEM_CMD
-			save_as_cmd: EB_SAVE_SYSTEM_AS_CMD
-		do
-			create open_cmd.make (tool)
-			create i.make_with_text (a_menu, m_Open)
-			i.add_select_command (open_cmd, Void)
-
-			create save_cmd.make (tool)
-			create i.make_with_text (a_menu, m_Save)
-			i.add_select_command (save_cmd, Void)
-
-			create save_as_cmd.make (tool)
-			create i.make_with_text (a_menu, m_Save_as)
-			i.add_select_command (save_as_cmd, Void)
-
-			create i.make_with_text (a_menu, m_Exit)
-			i.add_select_command (tool.close_cmd, Void)
-
-			create i.make_with_text (a_menu, m_Exit_project)
-			i.add_select_command (tool.exit_app_cmd, Void)
-
 		end
 
 feature -- Access
@@ -96,6 +71,8 @@ feature -- Access
 	file_menu: EV_MENU
 
 	format_menu: EV_MENU
+
+	special_menu: EV_MENU
 
 	windows_menu: EV_MENU
  

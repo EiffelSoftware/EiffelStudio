@@ -1,0 +1,31 @@
+-- Ace file for the StringManipulator EiffelCOM component client.
+-- Change the path to the generated precompiled library if needed.
+
+system
+	string_manipulator_client
+
+root
+	APPLICATION (root_cluster): "make"
+
+default
+	assertion (all)
+	precompiled ("generated/")
+
+cluster
+	root_cluster: ".";
+
+	-- EiffelBase
+	all base:						"$EIFFEL4\library\base"
+		exclude
+			"table_eiffel3";
+			"desc"
+		end;
+
+	-- WEL
+	all wel:						"$EIFFEL4\library\wel"
+
+external
+	include_path:	"$LIBRARY\wel\spec\windows\include";
+	object: 		"$(LIBRARY)\wel\spec\$(COMPILER)\lib\wel.lib";
+
+end

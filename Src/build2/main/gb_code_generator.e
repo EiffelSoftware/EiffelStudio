@@ -215,7 +215,8 @@ feature {NONE} -- Implementation
 					-- to find paticular information regarding the structure.
 				create document_info.make_root
 				create all_ids.make (50)
-				prepass_xml (current_document.root_element, document_info, 1)
+				prepass_xml (current_document.root_element, document_info, 1)				
+				
 				
 				set_progress (0.6)
 					-- Retrieve the template for a class file to generate.
@@ -232,6 +233,7 @@ feature {NONE} -- Implementation
 				window_template_file.read_stream (window_template_file.count)
 				class_text := window_template_file.last_string
 				window_template_file.close
+
 			
 					-- We must now perform the generation into `class_text'.
 					-- First replace the name of the class
@@ -270,40 +272,38 @@ feature {NONE} -- Implementation
 					-- Generate the event code.
 				generate_events (current_document.root_element, 1)
 				
+				
+					-- Now we must check the status of the prepass, and remove the
+					-- "internal_pixmap" and `"internal_font" which is in the template,
+					-- if they are not necessary
+				if document_info.fonts_set.is_empty then
+					remove_line_containing ("internal_font", class_text)
+					remove_line_containing ("internal_font", class_text)
+				end
+				if document_info.pixmaps_set.is_empty then
+					remove_line_containing ("internal_pixmap", class_text)
+					remove_line_containing ("internal_pixmap", class_text)
+				end
+				
+					-- Now remove the local declaration if necessary.
+				if document_info.fonts_set.is_empty and document_info.pixmaps_set.is_empty and
+				not project_settings.attributes_local then
+					remove_line_containing (local_tag, class_text)
+				end
+				if not project_settings.attributes_local and (not document_info.fonts_set.is_empty
+					or not document_info.pixmaps_set.is_empty) then
+					add_generated_string (class_text, "local", local_tag)
+				end
+				
+				
 					-- Add code for widget attribute settings to `class_text'.
 				add_generated_string (class_text, set_string, set_tag)
 
-					-- If a pixmap is specified in the project, then
-					-- we must create  a local which is used for loading and
-					-- assigning this pixmap. This is always hidden, i.e.
-					-- declared in the locals of `initialize'. The different
-					-- cases are handled below when we generate the local or attribute
-					-- declarations.
 				if project_settings.attributes_local then
-					if class_text.substring_index (pixmap_name, 1) /= 0 then
-						add_local_on_single_line ("EV_PIXMAP", pixmap_name)
-					end
 					add_generated_string (class_text, local_string, local_tag)
 					class_text.replace_substring_all (attribute_tag + "%R%N", "")
 				else
 					add_generated_string (class_text, local_string, attribute_tag)
-					if class_text.substring_index (pixmap_name, 1) /= 0 then
-						class_text.replace_substring_all (local_tag + "%R%N%T%T", "local" + indent + pixmap_name +
-							": EV_PIXMAP" + indent_less_one)	
-					else
-						class_text.replace_substring_all (local_tag + "%R%N%T%T", "")
-					end
-				end
-
-					-- If a pixmap was included then we must create the temporary pixmap
-					-- used to load and assign it.
-				if class_text.substring_index (pixmap_name, 1) /= 0 then
-						-- If we only added a pixmap to an empty window,
-						-- create string will be Void.
-					if create_string = Void then
-						create_string := ""
-					end
-					create_string.append_string (indent + "create " + pixmap_name)
 				end
 				
 					-- Add code for inheritance structure to `class_text'.
@@ -331,6 +331,10 @@ feature {NONE} -- Implementation
 
 					-- Add declaration of features as deferred to `class_text'.
 				add_generated_string (class_text, event_declaration_string, event_declaration_tag)
+				
+				
+					-- Tidy up `document_info' ready for next generation.
+				document_info.reset_after_generation
 
 					-- Store `class_text'.				
 				window_file_name := clone (generated_path)
@@ -826,6 +830,24 @@ feature {NONE} -- Implementation
 			end
 			
 		end
+		
+	remove_line_containing (string: STRING; body: STRING) is
+			-- Remove the line of text from `body' containing `string'.
+			-- The "%N" following `string' is the one removed. The start of
+			-- the line is determined by the previous "%N".
+		local
+			index: INTEGER
+			next_index: INTEGER
+			tab_index: INTEGER
+			temp_string: STRING
+		do
+			index := body.substring_index (string, 1)
+			next_index := body.substring_index ("%N", index)
+			temp_string := body.substring (1, index)
+			tab_index := temp_string.last_index_of ('%N', temp_string.count)
+			body.remove_substring (tab_index + 1, next_index)--index, next_index)
+		end
+		
 		
 		
 	create_local (name: STRING) is

@@ -261,8 +261,14 @@ feature -- Generation
 				if generate_c_code then
 	
 					file := generation_file
-
 					file.open_write_c
+
+					if final_mode then
+						!! extern_decl_file.make_open_append (extern_declaration_filename)
+					else
+						extern_decl_file := file
+					end
+
 						-- Write header
 					file.putstring ("/*%N * Code for class ")
 					type.dump (file)
@@ -275,19 +281,11 @@ feature -- Generation
 						file.putstring (".h%"%N%N")
 	
 						-- Generation of extern declarations
-						Extern_declarations.generate_header (extern_declaration_filename)
-
+						Extern_declarations.generate_header (extern_decl_file)
 					elseif Compilation_modes.is_precompiling then
 						Class_counter.generate_extern_offsets (file)
 						Static_type_id_counter.generate_extern_offsets (file)
 						Real_body_id_counter.generate_extern_offsets (file)
-					end
-
-					if final_mode then
-						!! extern_decl_file.make (extern_declaration_filename)
-						extern_decl_file.open_append
-					else
-						extern_decl_file := file
 					end
 
 					byte_context.set_generated_file (file)
@@ -340,10 +338,9 @@ feature -- Generation
 					end
 	
 					if final_mode then
-						extern_decl_file.close
-	
-						Extern_declarations.generate (extern_declaration_filename)
+						Extern_declarations.generate (extern_decl_file)
 						Extern_declarations.wipe_out
+						extern_decl_file.close
 					end
 
 					file.close_c

@@ -1,0 +1,112 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+String_manipulator_client_dialog_box DIALOG DISCARDABLE  0, 0, 343, 119
+STYLE DS_MODALFRAME | DS_SETFOREGROUND | WS_MINIMIZEBOX | WS_POPUP | 
+    WS_CAPTION
+CAPTION "String Manipulator Client"
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "Quit",IDCANCEL,15,95,50,14
+    LTEXT           "Set String with:",-1,20,10,75,10
+    LTEXT           "Current String: ",-1,20,30,75,10
+    LTEXT           "Replace Substring",-1,20,50,75,10
+    LTEXT           "Prune All",-1,20,70,75,10
+    EDITTEXT        Set_string_edit,95,5,180,15,ES_AUTOHSCROLL
+    EDITTEXT        Prune_all_edit,95,65,20,15,ES_AUTOHSCROLL
+    EDITTEXT        Replace_substring_index_1_edit,95,45,20,15,
+                    ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        Replace_substring_index_2_edit,125,45,20,15,
+                    ES_AUTOHSCROLL | ES_NUMBER
+    EDITTEXT        Replace_substring_edit,155,45,120,15,ES_AUTOHSCROLL
+    LTEXT           "",Current_string_display,95,25,180,15,SS_SUNKEN
+    PUSHBUTTON      "Set",Set_string_button,280,5,50,14
+    PUSHBUTTON      "Replace",Replace_substring_button,280,45,50,14
+    PUSHBUTTON      "Prune",Prune_button,280,65,50,14
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    String_manipulator_client_dialog_box, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 336
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 112
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

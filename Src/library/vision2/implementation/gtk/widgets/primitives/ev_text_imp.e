@@ -42,10 +42,10 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			set_c_object (C.gtk_scrolled_window_new (NULL, NULL))
 			C.gtk_scrolled_window_set_policy (c_object, C.GTK_POLICY_AUTOMATIC_ENUM, C.GTK_POLICY_AUTOMATIC_ENUM)
-			entry_widget := C.gtk_text_new (NULL, NULL)
+			entry_widget := gtk_text_new (NULL, NULL)
 			C.gtk_widget_show (entry_widget)
 			C.gtk_container_add (c_object, entry_widget)
-			C.gtk_text_set_editable (entry_widget, True)
+			gtk_text_set_editable (entry_widget, True)
 		end
 
 feature -- Access
@@ -117,9 +117,9 @@ feature -- Status report
 			temp_string: STRING
 		do
 			if is_displayed then
-				Result := (C.gtk_text_struct_cursor_pos_y (entry_widget) + C.gtk_text_struct_first_onscreen_ver_pixel (entry_widget)) // line_height
+				Result := (gtk_text_struct_cursor_pos_y (entry_widget) + gtk_text_struct_first_onscreen_ver_pixel (entry_widget)) // line_height
 			else
-				p := C.gtk_editable_get_chars (entry_widget, 0, C.gtk_text_get_point (entry_widget))
+				p := C.gtk_editable_get_chars (entry_widget, 0, gtk_text_get_point (entry_widget))
 				create temp_string.make_from_c (p)
 				C.g_free (p)
 				Result := temp_string.occurrences ('%N') + 1
@@ -129,7 +129,7 @@ feature -- Status report
 	caret_position: INTEGER is
 			-- Current position of the caret.
 		do
-			Result := C.gtk_text_get_point (entry_widget) + 1
+			Result := gtk_text_get_point (entry_widget) + 1
 		end
 
 	first_position_from_line_number (i: INTEGER): INTEGER is
@@ -199,7 +199,7 @@ feature -- Status setting
 	internal_set_caret_position (pos: INTEGER) is
 			-- Set the position of the caret to `pos'.
 		do
-			C.gtk_text_set_point (entry_widget, pos - 1)
+			gtk_text_set_point (entry_widget, pos - 1)
 			Precursor {EV_TEXT_COMPONENT_IMP} (pos)
 		end
 	
@@ -208,7 +208,7 @@ feature -- Status setting
 			a_gs: GEL_STRING
 		do
 			create a_gs.make (txt)
-			C.gtk_text_insert (entry_widget, NULL, NULL, NULL, a_gs.item, -1)
+			gtk_text_insert (entry_widget, NULL, NULL, NULL, a_gs.item, -1)
 		end
 	
 	set_text (txt: STRING) is
@@ -223,7 +223,7 @@ feature -- Status setting
 			temp_caret_pos: INTEGER
 		do
 			temp_caret_pos := caret_position
-			C.gtk_text_set_point (entry_widget, text_length)
+			gtk_text_set_point (entry_widget, text_length)
 			insert_text (txt)
 			set_caret_position (temp_caret_pos)
 		end
@@ -234,7 +234,7 @@ feature -- Status setting
 			temp_caret_pos: INTEGER
 		do
 			temp_caret_pos := caret_position
-			C.gtk_text_set_point (entry_widget, 0)
+			gtk_text_set_point (entry_widget, 0)
 			insert_text (txt)
 			set_caret_position (temp_caret_pos)
 		end
@@ -254,13 +254,13 @@ feature -- Status setting
 			-- Note: Only one window can be frozen at a time.
 			-- This is because of a limitation on Windows.
 		do
-			C.gtk_text_freeze (entry_widget)
+			gtk_text_freeze (entry_widget)
 		end
 
 	thaw is
 			-- Thaw a frozen widget.
 		do
-			C.gtk_text_thaw (entry_widget)
+			gtk_text_thaw (entry_widget)
 		end
 
 feature -- Basic operation
@@ -321,6 +321,72 @@ feature {NONE} -- Implementation
 			-- Pointer to widget shown on screen.
 		do
 			Result := entry_widget
+		end
+		
+feature {NONE} -- Externals
+
+	gtk_text_new (a_hadj: POINTER; a_vadj: POINTER): POINTER is
+			-- GtkWidget* gtk_text_new             (GtkAdjustment *hadj,
+			--                                   GtkAdjustment *vadj);
+		external
+			"C (GtkAdjustment*, GtkAdjustment*): GtkWidget* | <gtk/gtk.h>"
+		end
+
+	gtk_text_set_editable (a_text: POINTER; a_editable: BOOLEAN) is
+			-- void       gtk_text_set_editable    (GtkText       *text,
+			-- 				     gboolean       editable);
+		external
+			"C (GtkText*, gboolean) | <gtk/gtk.h>"
+		end
+		
+	gtk_text_struct_cursor_pos_y (a_c_struct: POINTER): INTEGER is
+		external
+			"C [struct <gtk/gtk.h>] (GtkText): EIF_INTEGER"
+		alias
+			"cursor_pos_y"
+		end
+		
+	gtk_text_struct_first_onscreen_ver_pixel (a_c_struct: POINTER): INTEGER is
+		external
+			"C [struct <gtk/gtk.h>] (GtkText): EIF_INTEGER"
+		alias
+			"first_onscreen_ver_pixel"
+		end
+		
+	gtk_text_get_point (a_text: POINTER): INTEGER is
+			-- guint      gtk_text_get_point       (GtkText       *text);
+		external
+			"C (GtkText*): guint | <gtk/gtk.h>"
+		end
+		
+	gtk_text_insert (a_text: POINTER; a_font: POINTER; a_fore: POINTER; a_back: POINTER; a_chars: POINTER; a_length: INTEGER) is
+			-- void       gtk_text_insert          (GtkText       *text,
+			-- 				     GdkFont       *font,
+			-- 				     GdkColor      *fore,
+			-- 				     GdkColor      *back,
+			-- 				     const char    *chars,
+			-- 				     gint           length);
+		external
+			"C (GtkText*, GdkFont*, GdkColor*, GdkColor*, char*, gint) | <gtk/gtk.h>"
+		end
+		
+	gtk_text_set_point (a_text: POINTER; a_index: INTEGER) is
+			-- void       gtk_text_set_point       (GtkText       *text,
+			-- 				     guint          index);
+		external
+			"C (GtkText*, guint) | <gtk/gtk.h>"
+		end
+		
+	gtk_text_freeze (a_text: POINTER) is
+			-- void       gtk_text_freeze          (GtkText       *text);
+		external
+			"C (GtkText*) | <gtk/gtk.h>"
+		end
+		
+	gtk_text_thaw (a_text: POINTER) is
+			-- void       gtk_text_thaw            (GtkText       *text);
+		external
+			"C (GtkText*) | <gtk/gtk.h>"
 		end
 
 feature {EV_ANY_I} -- Implementation

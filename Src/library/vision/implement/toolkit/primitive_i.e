@@ -22,12 +22,6 @@ feature
 			valid_result: Result /= Void
 		end;
 
-	foreground: COLOR is obsolete "Use ``foreground_color''"
-			-- Foreground color of primitive widget
-		do
-			Result := foreground_color
-		end;
-
 	set_foreground_color (new_color: COLOR) is
 			-- Set foreground color to `new_color'.
 		require
@@ -35,12 +29,6 @@ feature
 		deferred
 		ensure
 			foreground_set: foreground_color = new_color
-		end;
-
-	set_foreground (new_color: COLOR) is obsolete "Use ``set_foreground_color''"
-			-- Set foreground color to `new_color'.
-		do
-			set_foreground_color (new_color)
 		end;
 
 	update_foreground is obsolete "Use ``update_foreground_color''"

@@ -199,6 +199,8 @@ feature
 			if context.workbench_mode then
 				generate_save_assertion_level;
 			end;
+				-- Reserve separate parameters
+			reserve_separate_parameters;
 				-- Precondition check generation
 			generate_precondition;
 			if 
@@ -229,6 +231,8 @@ feature
 			generate_compound;
 				-- Now the postcondition
 			generate_postcondition;
+                -- Free separate parameters
+			free_separate_parameters;
 			if not result_type.is_void then
 					-- Function returns something. So generate the return
 					-- expression, if necessary. Otherwise, have some mercy
@@ -687,6 +691,8 @@ feature
 					generated_file.indent;
 				end;
 				generate_invariant_before;
+				generated_file.putstring ("check_sep_pre:");
+				generated_file.new_line;
 				if precondition /= Void then
 					context.set_is_prec_first_block (True);
 					Context.inc_label;
@@ -704,7 +710,17 @@ feature
 					inh_assert.generate_precondition
 				end;
 
-				generated_file.putstring ("RTCF;");
+				if has_separate_call_in_condition(precondition) then
+					-- free separate parameters
+					free_separate_parameters;
+					-- Reserve separate parameters
+					reserve_separate_parameters;
+					generated_file.putstring ("RTCK;");
+					generated_file.new_line;
+					generated_file.putstring ("CURCSPF;");
+				else
+					generated_file.putstring ("RTCF;");
+				end;
 				generated_file.new_line;
 				if workbench_mode then
 					generated_file.exdent;
@@ -719,6 +735,21 @@ feature
 				generate_invariant_before
 			end;
 		end;
+
+	has_separate_call_in_condition(l: BYTE_LIST [BYTE_NODE]): BOOLEAN is
+		do
+			Result := False;
+			if l /= Void then
+				from
+					l.start
+				until
+					l.after or Result
+				loop
+					Result := l.item.has_separate_call;
+					l.forth;
+				end;
+			end;
+		end
 
 	generate_postcondition is
 			-- Generate postcondition check if needed
@@ -1256,6 +1287,75 @@ feature -- Inlining
 			else
 				Result := Current
 			end;
+		end
+
+feature -- Concurrent Eiffel
+
+	reserve_separate_parameters is
+		-- generate codes for reserving separate parameters of a feature
+		local
+			i, count: INTEGER;
+			var_name: STRING;
+			reg: REGISTRABLE
+		do
+			-- Reserve separate parameters
+			!!var_name.make(10);
+			if arguments /= Void then
+				from 
+					!!var_name.make(10);
+					i := arguments.lower;
+					count := arguments.count;
+				until
+					i > count
+				loop
+					if real_type(arguments.item(i)).is_separate then
+						var_name.wipe_out;
+						var_name.append("arg");
+						var_name.append(i.out);							
+						reg := context.associated_register_table.item(var_name);
+						if reg /= Void then
+							generated_file.putstring ("reserve_sep_obj(");
+							reg.print_register_by_name;
+							generated_file.putstring (");")
+						end
+						generated_file.new_line;
+					end
+					i := i + 1;
+				end;
+			end;
+		end
+
+	free_separate_parameters is 
+		-- generate codes for freeing separate parameters of a feature
+		local
+			i, count: INTEGER;
+			var_name: STRING;
+			reg: REGISTRABLE
+		do
+            -- Free separate parameters
+			!!var_name.make(10);
+            if arguments /= Void then
+                from 
+                    i := arguments.lower;
+                    count := arguments.count;
+                until
+                    i > count
+                loop
+                    if real_type(arguments.item(i)).is_separate then
+                        var_name.wipe_out;
+                        var_name.append("arg");
+                        var_name.append(i.out);                            
+                        reg := context.associated_register_table.item(var_name);
+                        if reg /= Void then
+	                        generated_file.putstring ("free_sep_obj(");
+                            reg.print_register_by_name;
+                        	generated_file.putstring (");")
+                        end
+                        generated_file.new_line;
+                    end
+                    i := i + 1;
+                end;
+            end;
 		end
 
 end

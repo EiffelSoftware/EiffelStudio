@@ -249,6 +249,54 @@ feature -- Conversion
 			Result := item /= 0
 		end
 
+	frozen as_natural_8: NATURAL_8 is
+			-- Convert `item' into an NATURAL_8 value.
+		do
+			Result := item.as_natural_8
+		end
+
+	frozen as_natural_16: NATURAL_16 is
+			-- Convert `item' into an NATURAL_16 value.
+		do
+			Result := item.as_natural_16
+		end
+
+	frozen as_natural_32: NATURAL_32 is
+			-- Convert `item' into an NATURAL_32 value.
+		do
+			Result := item.as_natural_32
+		end
+	
+	frozen as_natural_64: NATURAL_64 is
+			-- Convert `item' into an NATURAL_64 value.
+		do
+			Result := item.as_natural_64
+		end
+
+	frozen as_integer_8: INTEGER_8 is
+			-- Convert `item' into an INTEGER_8 value.
+		do
+			Result := item.as_integer_8
+		end
+		
+	frozen as_integer_16: INTEGER_16 is
+			-- Convert `item' into an INTEGER_16 value.
+		do
+			Result := item.as_integer_16
+		end
+
+	frozen as_integer_32: INTEGER is
+			-- Convert `item' into an INTEGER_32 value.
+		do
+			Result := item.as_integer_32
+		end
+
+	frozen as_integer_64: INTEGER_64 is
+			-- Convert `item' into an INTEGER_64 value.
+		do
+			Result := item.as_integer_64
+		end
+
 	frozen to_natural_8: NATURAL_8 is
 			-- Convert `item' into an NATURAL_8 value.
 		require

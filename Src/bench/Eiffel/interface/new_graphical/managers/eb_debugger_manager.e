@@ -377,6 +377,8 @@ feature -- Status setting
 				end
 				rl ?= resources.item ("left_debug_layout_new")
 				rr ?= resources.item ("right_debug_layout_new")
+				debug_splitter_position := integer_resource_value ("splitter_position_during_debug", 250)
+				debugging_window.panel.set_split_position (debug_splitter_position. max (debugging_window.panel.minimum_split_position))
 				if rl /= Void and rr /= Void then
 					debug ("DEBUGGER_INTERFACE")
 						io.put_string("Found resource%N")
@@ -388,16 +390,16 @@ feature -- Status setting
 						--| Only minimize the editor.
 					debugging_window.editor_tool.explorer_bar_item.minimize
 				end
-				debug_splitter_position := integer_resource_value ("splitter_position_during_debug", 250)
 			else
+				debugging_window.panel.set_split_position (debug_splitter_position.
+					max (debugging_window.panel.minimum_split_position))
 				debugging_window.left_panel.load_from_resource (debug_left_layout)
 				debugging_window.right_panel.load_from_resource (debug_right_layout)
 			end
 			split ?= object_tool.widget
 				--| 200 is the default size of the local tree.
 			split.set_split_position (object_split_position.max (split.minimum_split_position).min (split.maximum_split_position))
-			debugging_window.panel.set_split_position (debug_splitter_position.
-				max (debugging_window.panel.minimum_split_position))
+			
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("editor height during debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end
@@ -475,12 +477,13 @@ feature -- Status setting
 				-- as a result of rebuilding the panels.
 			debugging_window.remove_all_tool_windows
 				-- Change the state of the debugging window.
-			debugging_window.left_panel.load_from_resource (normal_left_layout)
-			debugging_window.right_panel.load_from_resource (normal_right_layout)
 			if debugging_window.panel.full then
 				debugging_window.panel.set_split_position (normal_splitter_position.
 					max (debugging_window.panel.minimum_split_position))
 			end
+			debugging_window.left_panel.load_from_resource (normal_left_layout)
+			debugging_window.right_panel.load_from_resource (normal_right_layout)
+
 			debug ("DEBUGGER_INTERFACE")
 				io.put_string ("editor height after debug: " + debugging_window.editor_tool.explorer_bar_item.widget.height.out + "%N")
 			end

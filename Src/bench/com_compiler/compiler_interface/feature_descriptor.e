@@ -60,7 +60,6 @@ feature {NONE} -- Initialization
 			a_class_not_void: a_class /= Void
 			a_feature_not_void: a_feature /= Void
 		do
-			create_item
 			compiler_feature := a_feature
 			compiler_class := a_class
 		end
@@ -94,8 +93,27 @@ feature -- Access
 	description: STRING is
 			-- Feature description.
 			--| FIXME For the moment, only returns the external name.
+		local
+			ef: EIFFEL_FILE
+			comments: EIFFEL_COMMENTS
+			ast: FEATURE_AS
 		do
-			Result := compiler_feature.external_name
+			ast := compiler_feature.e_feature.ast
+			create ef.make (compiler_feature.e_feature.written_class.file_name, ast.end_position)
+			ef.set_current_feature (ast)
+			comments := ef.current_feature_comments
+			create Result.make (20)
+			from
+				comments.start
+			until
+				comments.after
+			loop
+				Result.append (comments.item)
+				comments.forth
+			end
+			Result.prune_all ('%R')
+			Result.prune_all ('%N')
+			Result.prune_all ('%T')
 		ensure then
 			result_exists: Result /= void			
 		end

@@ -10,7 +10,7 @@ class LACE_LIST [T->AST_LACE]
 inherit
 	AST_LACE
 		undefine 
-			pass_address, copy, setup, consistent, is_equal
+			pass_address, copy, is_equal
 		redefine
 			adapt
 		end

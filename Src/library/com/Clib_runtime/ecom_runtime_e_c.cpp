@@ -20,17 +20,13 @@ VARIANT_BOOL *ecom_runtime_ec::ccom_ec_pointed_boolean (EIF_REFERENCE a_bool, VA
 // Create VARIANT_BOOL from ECOM_BOOLEAN
 {
 	EIF_OBJECT eif_object;
-	EIF_TYPE_ID type_id;
-	EIF_BOOLEAN_FUNCTION item;
 	VARIANT_BOOL * result;
 	EIF_BOOLEAN temp_bool;
 
 	eif_object = eif_protect (a_bool);
-	type_id = eif_type_id ("BOOLEAN_REF");
-	item = eif_boolean_function ("item", type_id);
 
 	result = (VARIANT_BOOL *) CoTaskMemAlloc (sizeof (VARIANT_BOOL));
-	temp_bool = (EIF_BOOLEAN) item (eif_access (eif_object));
+	temp_bool = (EIF_BOOLEAN) eif_field (eif_access (eif_object), "item", EIF_BOOLEAN);
 
 	eif_wean (eif_object);
 	if (old != NULL)
@@ -113,23 +109,14 @@ HRESULT ecom_runtime_ec::ccom_ec_hresult (EIF_REFERENCE a_ref)
 {
 	EIF_OBJECT hr;
 
-	EIF_TYPE_ID tid;
-	EIF_INTEGER_FUNCTION f_sev, f_fac, f_code;
-	unsigned long sev, fac, code;
-
 	hr = eif_protect (a_ref);
-	tid = eif_type_id ("ECOM_HRESULT");
-	f_sev = eif_integer_function ("severity_bit", tid);
-	f_fac = eif_integer_function ("facility_code", tid);
-	f_code = eif_integer_function ("error_code", tid);
 
-	sev = (unsigned long) (f_sev)(eif_access(hr));
-	fac = (unsigned long) (f_fac)(eif_access(hr));
-	code = (unsigned long) (f_code)(eif_access(hr));
+	HRESULT result = 0;
+	result = (HRESULT) eif_field (eif_access(hr), "item", EIF_INTEGER);
 
 	eif_wean (hr);
 
-	return MAKE_HRESULT (sev, fac, code);
+	return result;
 };
 //---------------------------------------------------------------------------
 
@@ -139,15 +126,11 @@ LARGE_INTEGER ecom_runtime_ec::ccom_ec_long_long (EIF_REFERENCE a_ref)
 {
 	EIF_OBJECT an_int;
 
-	EIF_TYPE_ID tid;
-	EIF_POINTER_FUNCTION f_item;
 	LARGE_INTEGER * c_large_integer;
 
 	an_int = eif_protect (a_ref);
-	tid = eif_type_id ("ECOM_LARGE_INTEGER");
-	f_item = eif_pointer_function ("item", tid);
 
-	c_large_integer = (LARGE_INTEGER *)(f_item)(eif_access(an_int));
+	c_large_integer = (LARGE_INTEGER *)eif_field (eif_access(an_int), "item", EIF_POINTER);
 	eif_wean (an_int);
 
 	return (*c_large_integer);
@@ -160,15 +143,11 @@ LARGE_INTEGER * ecom_runtime_ec::ccom_ec_pointed_long_long (EIF_REFERENCE a_ref,
 {
 	EIF_OBJECT an_int;
 
-	EIF_TYPE_ID tid;
-	EIF_POINTER_FUNCTION f_item;
 	LARGE_INTEGER * c_large_integer;
 
 	an_int = eif_protect (a_ref);
-	tid = eif_type_id ("ECOM_LARGE_INTEGER");
-	f_item = eif_pointer_function ("item", tid);
 
-	c_large_integer = (LARGE_INTEGER *)(f_item)(eif_access(an_int));
+	c_large_integer = (LARGE_INTEGER *)eif_field(eif_access(an_int), "item", EIF_POINTER);
 	eif_wean (an_int);
 
 	if (old != NULL)
@@ -187,15 +166,11 @@ ULARGE_INTEGER ecom_runtime_ec::ccom_ec_ulong_long (EIF_REFERENCE a_ref)
 {
 	EIF_OBJECT an_int;
 
-	EIF_TYPE_ID tid;
-	EIF_POINTER_FUNCTION f_item;
 	ULARGE_INTEGER * c_ularge_integer;
 
 	an_int = eif_protect (a_ref);
-	tid = eif_type_id ("ECOM_ULARGE_INTEGER");
-	f_item = eif_pointer_function ("item", tid);
 
-	c_ularge_integer = (ULARGE_INTEGER *)(f_item)(eif_access(an_int));
+	c_ularge_integer = (ULARGE_INTEGER *)eif_field(eif_access(an_int), "item", EIF_POINTER);
 	eif_wean (an_int);
 
 	return (*c_ularge_integer);
@@ -208,15 +183,11 @@ ULARGE_INTEGER * ecom_runtime_ec::ccom_ec_pointed_ulong_long (EIF_REFERENCE a_re
 {
 	EIF_OBJECT an_int;
 
-	EIF_TYPE_ID tid;
-	EIF_POINTER_FUNCTION f_item;
 	ULARGE_INTEGER * c_ularge_integer;
 
 	an_int = eif_protect (a_ref);
-	tid = eif_type_id ("ECOM_ULARGE_INTEGER");
-	f_item = eif_pointer_function ("item", tid);
 
-	c_ularge_integer = (ULARGE_INTEGER *)(f_item)(eif_access(an_int));
+	c_ularge_integer = (ULARGE_INTEGER *)eif_field(eif_access(an_int), "item", EIF_POINTER);
 	eif_wean (an_int);
 
 	if (old != NULL)
@@ -235,15 +206,11 @@ IUnknown * ecom_runtime_ec::ccom_ec_unknown (EIF_REFERENCE a_ref)
 {
 	EIF_OBJECT an_interface;
 
-	EIF_TYPE_ID tid;
-	EIF_POINTER_FUNCTION f_item;
 	IUnknown * c_iunknown;
 
 	an_interface = eif_protect (a_ref);
-	tid = eif_type_id ("ECOM_GENERIC_INTERFACE");
-	f_item = eif_pointer_function ("item", tid);
 
-	c_iunknown = (IUnknown *)(f_item)(eif_access(an_interface));
+	c_iunknown = (IUnknown *)eif_field(eif_access(an_interface), "item", EIF_POINTER);
 	eif_wean (an_interface);
 
 	return c_iunknown;
@@ -256,15 +223,11 @@ IDispatch * ecom_runtime_ec::ccom_ec_dispatch (EIF_REFERENCE a_ref)
 {
 	EIF_OBJECT an_interface;
 
-	EIF_TYPE_ID tid;
-	EIF_POINTER_FUNCTION f_item;
 	IDispatch * c_dispatch;
 
 	an_interface = eif_protect (a_ref);
-	tid = eif_type_id ("ECOM_GENERIC_DISPINTERFACE");
-	f_item = eif_pointer_function ("item", tid);
 
-	c_dispatch = (IDispatch *)(f_item)(eif_access(an_interface));
+	c_dispatch = (IDispatch *)eif_field(eif_access(an_interface), "item", EIF_POINTER);
 	eif_wean (an_interface);
 
 	return c_dispatch;
@@ -276,15 +239,11 @@ DECIMAL ecom_runtime_ec::ccom_ec_decimal (EIF_REFERENCE a_ref)
 // Create DECIMAL from EIF_REFERENCE
 {
 	EIF_OBJECT a_decimal;
-	EIF_TYPE_ID tid;
-	EIF_POINTER_FUNCTION f_item;
 	DECIMAL * c_decimal;
 
 	a_decimal = eif_protect (a_ref);
-	tid = eif_type_id ("ECOM_DECIMAL");
-	f_item = eif_pointer_function ("item", tid);
 
-	c_decimal = (DECIMAL *)(f_item)(eif_access(a_decimal));
+	c_decimal = (DECIMAL *)eif_field(eif_access(a_decimal), "item", EIF_POINTER);
 	eif_wean (a_decimal);
 
 	return (*c_decimal);
@@ -296,15 +255,11 @@ DECIMAL * ecom_runtime_ec::ccom_ec_pointed_decimal (EIF_REFERENCE a_ref, DECIMAL
 // Create DECIMAL from EIF_REFERENCE
 {
 	EIF_OBJECT a_decimal;
-	EIF_TYPE_ID tid;
-	EIF_POINTER_FUNCTION f_item;
 	DECIMAL * c_decimal;
 
 	a_decimal = eif_protect (a_ref);
-	tid = eif_type_id ("ECOM_DECIMAL");
-	f_item = eif_pointer_function ("item", tid);
 
-	c_decimal = (DECIMAL *)(f_item)(eif_access(a_decimal));
+	c_decimal = (DECIMAL *)eif_field(eif_access(a_decimal), "item", EIF_POINTER);
 	eif_wean (a_decimal);
 
 	if (old != NULL)
@@ -322,15 +277,11 @@ CURRENCY ecom_runtime_ec::ccom_ec_currency (EIF_REFERENCE a_ref)
 // Create CURRENCY from EIF_REFERENCE
 {
 	EIF_OBJECT a_currency;
-	EIF_TYPE_ID tid;
-	EIF_POINTER_FUNCTION f_item;
 	CURRENCY * c_currency;
 
 	a_currency = eif_protect (a_ref);
-	tid = eif_type_id ("ECOM_CURRENCY");
-	f_item = eif_pointer_function ("item", tid);
 
-	c_currency = (CURRENCY *)(f_item)(eif_access (a_currency));
+	c_currency = (CURRENCY *)eif_field(eif_access(a_currency), "item", EIF_POINTER);
 	eif_wean (a_currency);
 
 	return (*c_currency);
@@ -342,16 +293,12 @@ char * ecom_runtime_ec::ccom_ec_pointed_character (EIF_REFERENCE a_ref, char * o
 // Create char * from EIF_REFERENCE (CHARACTER_REF)
 {
 	EIF_OBJECT eif_object;
-	EIF_TYPE_ID type_id;
-	EIF_CHARACTER_FUNCTION item;
 	char * result;
 
 	eif_object = eif_protect (a_ref);
-	type_id = eif_type_id ("CHARACTER_REF");
-	item = eif_character_function ("item", type_id);
 
 	result = (char *) CoTaskMemAlloc (sizeof (char));
-	* result = (char) item (eif_access (eif_object));
+	* result = (char) eif_field(eif_access(eif_object), "item", EIF_CHARACTER);
 
 	eif_wean (eif_object);
 	if (old != NULL)
@@ -369,16 +316,12 @@ DATE * ecom_runtime_ec::ccom_ec_pointed_date (EIF_REFERENCE a_ref, DATE * old)
 // Create char * from EIF_REFERENCE (CELL [DATE_TIME])
 {
 	EIF_OBJECT eif_object;
-	EIF_TYPE_ID type_id;
-	EIF_REFERENCE_FUNCTION item;
 	DATE * result;
 
 	eif_object = eif_protect (a_ref);
-	type_id = eif_type_id ("CELL [DATE_TIME]");
-	item = eif_reference_function ("item", type_id);
 
 	result = (DATE *) CoTaskMemAlloc (sizeof (DATE));
-	* result = (DATE) ccom_ec_date (item (eif_access (eif_object)));
+	* result = (DATE) ccom_ec_date (eif_field (eif_access (eif_object), "item", EIF_REFERENCE));
 
 	eif_wean (eif_object);
 	if (old != NULL)
@@ -395,16 +338,12 @@ short * ecom_runtime_ec::ccom_ec_pointed_short (EIF_REFERENCE a_ref, short * old
 // Create short * from EIF_REFERENCE (INTEGER_REF)
 {
 	EIF_OBJECT eif_object;
-	EIF_TYPE_ID type_id;
-	EIF_INTEGER_FUNCTION item;
 	short * result;
 
 	eif_object = eif_protect (a_ref);
-	type_id = eif_type_id ("INTEGER_REF");
-	item = eif_integer_function ("item", type_id);
 
 	result = (short *) CoTaskMemAlloc (sizeof (short));
-	* result = (short) item (eif_access (eif_object));
+	* result = (short) eif_field (eif_access (eif_object), "item", EIF_INTEGER);
 
 	eif_wean (eif_object);
 	if (old != NULL)
@@ -422,16 +361,12 @@ long * ecom_runtime_ec::ccom_ec_pointed_long (EIF_REFERENCE a_ref, long * old)
 // Create long * from EIF_REFERENCE (INTEGER_REF)
 {
 	EIF_OBJECT eif_object;
-	EIF_TYPE_ID type_id;
-	EIF_INTEGER_FUNCTION item;
 	long * result;
 
 	eif_object = eif_protect (a_ref);
-	type_id = eif_type_id ("INTEGER_REF");
-	item = eif_integer_function ("item", type_id);
 
 	result = (long *) CoTaskMemAlloc (sizeof (long));
-	* result = (long) item (eif_access (eif_object));
+	* result = (long) eif_field (eif_access(eif_object), "item", EIF_INTEGER);
 
 	eif_wean (eif_object);
 	eif_wean (eif_object);
@@ -451,15 +386,12 @@ float * ecom_runtime_ec::ccom_ec_pointed_real (EIF_REFERENCE a_ref, float * old)
 {
 	EIF_OBJECT eif_object;
 	EIF_TYPE_ID type_id;
-	EIF_REAL_FUNCTION item;
 	float * result;
 
 	eif_object = eif_protect (a_ref);
-	type_id = eif_type_id ("REAL_REF");
-	item = eif_real_function ("item", type_id);
 
 	result = (float *) CoTaskMemAlloc (sizeof (float));
-	* result = (float) item (eif_access (eif_object));
+	* result = (float) eif_field (eif_access(eif_object), "item", EIF_REAL);
 
 	eif_wean (eif_object);
 	eif_wean (eif_object);
@@ -478,16 +410,12 @@ double * ecom_runtime_ec::ccom_ec_pointed_double (EIF_REFERENCE a_ref, double * 
 // Create double * from EIF_REFERENCE (DOUBLE_REF)
 {
 	EIF_OBJECT eif_object;
-	EIF_TYPE_ID type_id;
-	EIF_DOUBLE_FUNCTION item;
 	double * result;
 
 	eif_object = eif_protect (a_ref);
-	type_id = eif_type_id ("DOUBLE_REF");
-	item = eif_double_function ("item", type_id);
 
 	result = (double *) CoTaskMemAlloc (sizeof (double));
-	* result = (double) item (eif_access (eif_object));
+	* result = (double) eif_field(eif_access(eif_object), "item", EIF_DOUBLE);
 
 	eif_wean (eif_object);
 	eif_wean (eif_object);
@@ -506,15 +434,11 @@ CURRENCY * ecom_runtime_ec::ccom_ec_pointed_currency (EIF_REFERENCE a_ref, CURRE
 // Create (CURRENCY *) from EIF_REFERENCE
 {
 	EIF_OBJECT a_currency;
-	EIF_TYPE_ID tid;
-	EIF_POINTER_FUNCTION f_item;
 	CURRENCY * c_currency;
 
 	a_currency = eif_protect (a_ref);
-	tid = eif_type_id ("ECOM_CURRENCY");
-	f_item = eif_pointer_function ("item", tid);
 
-	c_currency = (CURRENCY *)(f_item)(eif_access (a_currency));
+	c_currency = (CURRENCY *)eif_field(eif_access(a_currency), "item", EIF_POINTER);
 	eif_wean (a_currency);
 
 	if (old != NULL)
@@ -606,15 +530,11 @@ VARIANT ecom_runtime_ec::ccom_ec_variant (EIF_REFERENCE a_ref)
 // Create VARIANT from EIF_REFERENCE
 {
 	EIF_OBJECT a_variant;
-	EIF_TYPE_ID tid;
-	EIF_POINTER_FUNCTION f_item;
 	VARIANT * c_variant;
 
 	a_variant = eif_protect (a_ref);
-	tid = eif_type_id ("ECOM_VARIANT");
-	f_item = eif_pointer_function ("item", tid);
 
-	c_variant = (VARIANT *)(f_item)(eif_access(a_variant));
+	c_variant = (VARIANT *)eif_field(eif_access(a_variant), "item", EIF_POINTER);
 	eif_wean (a_variant);
 
 	return (*c_variant);
@@ -626,15 +546,11 @@ VARIANT * ecom_runtime_ec::ccom_ec_pointed_variant (EIF_REFERENCE a_ref, VARIANT
 // Create VARIANT from EIF_REFERENCE
 {
 	EIF_OBJECT a_variant;
-	EIF_TYPE_ID tid;
-	EIF_POINTER_FUNCTION f_item;
 	VARIANT * c_variant;
 
 	a_variant = eif_protect (a_ref);
-	tid = eif_type_id ("ECOM_VARIANT");
-	f_item = eif_pointer_function ("item", tid);
 
-	c_variant = (VARIANT *)(f_item)(eif_access(a_variant));
+	c_variant = (VARIANT *)eif_field(eif_access(a_variant), "item", EIF_POINTER);
 	eif_wean (a_variant);
 	if (old != NULL)
 	{

@@ -23,6 +23,8 @@
 
 #define ccom_c_array_element(_c_array_, _index_, _type_) (*((_type_ *)_c_array_ + _index_))
 
+typedef void (*EIF_SET_REAL_ITEM)(EIF_REFERENCE, EIF_REAL); 
+
 class ecom_runtime_ce
 {
 public:

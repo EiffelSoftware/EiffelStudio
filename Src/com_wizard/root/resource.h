@@ -55,6 +55,7 @@
 #define Paths_Static                    1043
 #define Paths_Static2                   1044
 #define Marshalling_Static              1044
+#define Introduction4_Static            1044
 #define Marshalling2_Static             1045
 #define Progress_Bar                    1045
 #define Progress_Static                 1046

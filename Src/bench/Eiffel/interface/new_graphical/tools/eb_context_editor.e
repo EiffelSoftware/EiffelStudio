@@ -330,8 +330,9 @@ feature {NONE} -- Initialization
 		do
 			create view_menu
 			view_menu.extend (reset_view_cmd.new_menu_item)
-			create menu_item.make_with_text_and_action ("Name view", agent name_view)
-			view_menu.extend (menu_item)
+--TODO: Maybe a pop up dialog.
+--			create menu_item.make_with_text_and_action ("Name view", agent name_view)
+--			view_menu.extend (menu_item)
 			view_menu.extend (delete_view_cmd.new_menu_item)
 			if world.current_view.is_equal (world.default_view_name) then
 				delete_view_cmd.disable_sensitive

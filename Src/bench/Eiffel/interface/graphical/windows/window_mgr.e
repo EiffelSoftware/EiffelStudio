@@ -58,10 +58,10 @@ feature -- Properties
 			Project_tool.add_class_entry (Result)
 		end;
 
-	dialog_object_window: OBJECT_W is
+	object_window: OBJECT_W is
 			-- Make an object window
 		do
-			Result := object_win_mgr.form_d_editor;
+			Result := object_win_mgr.top_shell_editor;
 			Project_tool.add_object_entry (Result)
 		end;
 

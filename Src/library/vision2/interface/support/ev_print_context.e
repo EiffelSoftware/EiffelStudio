@@ -31,9 +31,11 @@ feature -- Access
 
 	selection_type: INTEGER
 		-- Type code of chosen selection.
+		-- corresponds to `all_pages', `page_range'
+		-- or `selection'.
 
 	output_to_file: BOOLEAN
-		-- Will output be to file.
+		-- Will output be to file?
 
 	printer_name: STRING
 		-- Name of printer.
@@ -42,7 +44,7 @@ feature -- Access
 		-- Name of output file.
 
 	portrait: BOOLEAN
-		-- Will print output be portrait.
+		-- Will print output be portrait?
 
 feature {EV_PRINT_DIALOG_I} -- Status setting
 
@@ -157,7 +159,11 @@ feature {EV_PRINT_DIALOG_I, EV_PRINT_PROJECTOR_I} -- Implementation
 			-- Set `printer_context' to `a_context'.
 		do
 			printer_context := a_context
-		end	
+		end
+		
+invariant
+	selection_type_valid: selection_type = all_pages or selection_type = page_range
+		or selection_type = selection
 
 end -- class EV_PRINT_CONTEXT
 

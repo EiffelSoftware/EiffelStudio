@@ -65,6 +65,26 @@ feature
 			end;
 		end;
 
+	-- FIXME
+	-- FIXME
+	-- FIXME
+	-- FIXME
+	-- FIXME
+
+	-- If the feature table does NOT have any of the rout_ids, we don't need to record the class
+	-- or any of its ancestors
+	-- => We don't need to go all the way up to GENERAL each time !!!!!!!!!!!
+
+	-- Xavier
+
+	
+	-- FIXME
+	-- FIXME
+	-- FIXME
+
+	-- Use of the select table ??
+
+	
 	rec_add_parents (ss: PART_SORTED_SET [CLASS_C]; class_c: CLASS_C) is
 		local
 			parents: FIXED_LIST [CL_TYPE_A];

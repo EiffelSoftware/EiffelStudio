@@ -12,7 +12,7 @@ inherit
 		undefine
 			copy, is_equal
 		redefine
-			is_multi_type, deep_actual_type, is_equivalent,
+			is_multi_type, deep_actual_type, is_equivalent, same_as,
 			dump, ext_append_to, conform_to, type_i,
 			create_info, instantiation_of, generics
 		end
@@ -70,15 +70,49 @@ feature -- Comparison
 		do
 			Result := Precursor {CL_TYPE_A} (other)
 			nb := other.count
-			if count = nb then
+			if Result and count = nb then
 				from
 					i := 1
-					Result := True
 				until
 					not Result or else i > nb
 				loop
 					Result := equivalent (item (i), other.item (i))
 					i := i + 1
+				end
+			end
+		end
+
+	same_as (other: TYPE_A): BOOLEAN is
+			-- Is the current type the same as `other' ?
+		local
+			l_multi_type: like Current
+			other_gen_type: GEN_TYPE_A
+			i, nb: INTEGER
+			other_generics: like generics
+		do
+			l_multi_type ?= other
+			if l_multi_type /= Void then
+				Result := Precursor {CL_TYPE_A} (l_multi_type)
+				nb := count
+				if Result and nb = l_multi_type.count then
+					from
+						i := 1
+					until
+						not Result or else i > nb
+					loop
+						Result := item (i).same_as (l_multi_type.item (i))
+						i := i + 1
+					end
+				end
+			else
+				other_gen_type ?= other
+				if
+					other_gen_type /= Void
+					and then other_gen_type.class_id = class_id
+					and then is_expanded = other_gen_type.is_expanded
+					and then other_gen_type.generics.count = 1
+				then
+					Result := last_type.same_as (other_gen_type.generics.item (1))
 				end
 			end
 		end

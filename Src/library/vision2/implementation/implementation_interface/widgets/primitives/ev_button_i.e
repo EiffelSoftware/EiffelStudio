@@ -24,6 +24,11 @@ inherit
 		redefine
 			interface
 		end
+		
+	EV_FONTABLE_I
+		redefine
+			interface
+		end
 
 	EV_BUTTON_ACTION_SEQUENCES_I
 

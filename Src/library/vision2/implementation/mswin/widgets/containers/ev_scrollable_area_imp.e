@@ -9,6 +9,8 @@ class
 
 inherit
 	EV_SCROLLABLE_AREA_I
+		undefine
+			set_offset
 		redefine
 			interface
 		end
@@ -223,6 +225,9 @@ end -- class EV_SCROLLABLE_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/04/24 16:02:55  brendel
+--| Undefine set_offset.
+--|
 --| Revision 1.26  2000/04/22 01:23:47  brendel
 --| Improved wel_move_and_resize.
 --|

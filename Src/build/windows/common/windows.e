@@ -4,7 +4,7 @@ feature {NONE}
 
 	eb_screen: SCREEN is
 		once
-			!!Result.make ("")
+			!! Result.make ("")
 		end
 
 	transporter: TRANSPORTER is
@@ -14,12 +14,12 @@ feature {NONE}
 	
 	main_panel: MAIN_PANEL is
 		once
-			!!Result.make (eb_screen)
+			!! Result.make (eb_screen)
 		end
 
 	context_catalog: CONTEXT_CATALOG  is
 		once
-			!!Result.make
+			!! Result.make
 		end
 
 feature {NONE} -- Initial windowing
@@ -60,27 +60,27 @@ feature {NONE} -- Windows
 
 	command_catalog: CMD_CATALOG is
 		once
-			!!Result.make (eb_screen)
+			!! Result.make (eb_screen)
 		end	
 
 	app_editor: APP_EDITOR is
 		once
-			!!Result.make 
+			!! Result.make 
 		end
 
 	history_window: HISTORY_WND is
 		once
-			!!Result.make (eb_screen)
+			!! Result.make (eb_screen)
 		end
 
 	tree: CONTEXT_TREE is
 		once
-			!!Result.make (eb_screen)
+			!! Result.make (eb_screen)
 		end
 
 	error_box: ERROR_BOX is
 		once
-			!!Result.make (main_panel.base)
+			!! Result
 		end
 
 	error_window: ERROR_BOX is
@@ -92,14 +92,14 @@ feature {NONE} -- Windows
 
 	question_box: QUESTION_BOX is
 		once
-			!!Result.make (main_panel.base)
+			!! Result
 		end
 
 feature {NONE} -- Window Manager
 
 	window_mgr: WINDOW_MGR is
 		once
-			!!Result.make (eb_screen)
+			!! Result.make (eb_screen)
 		end
 
 end

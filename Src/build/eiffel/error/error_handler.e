@@ -247,7 +247,6 @@ end;
 				if not error_list.empty then
 					display_separation_line
 				end;
-				error_window.display_error_message;
 			else
 				retried := False;
 				display_error_error
@@ -299,7 +298,6 @@ end;
 			error_window.clear;
 			error_window.put_string ("Exception occurred while displaying error message.%N%
 										%Please contact ISE to report this bug.%N");
-			error_window.display_error_message
 		end;
 
 	display_separation_line is

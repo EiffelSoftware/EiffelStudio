@@ -900,7 +900,7 @@ feature {EV_ANY_I} -- Implementation
 			item_list_imp: EV_ITEM_LIST_IMP [EV_ITEM]
 			an_item_imp: EV_ITEM_IMP
 			sensitive: EV_SENSITIVE
-			pebble_result: ANY
+--			pebble_result: ANY
 		do	
 			create wel_point.make (0, 0)
 			wel_point.set_cursor_position

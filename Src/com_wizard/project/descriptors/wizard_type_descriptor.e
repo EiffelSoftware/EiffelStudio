@@ -57,6 +57,15 @@ feature -- Access
 		deferred
 		end
 
+	data_type_visitor: WIZARD_DATA_TYPE_VISITOR
+			-- Data type visitor.
+
+	pointed_data_type_visitor: WIZARD_DATA_TYPE_VISITOR
+			-- Pointed data type visitor.
+
+	pointed_pointed_data_type_visitor: WIZARD_DATA_TYPE_VISITOR
+			-- Pointed pointed data type visitor.
+
 feature -- Basic Operations
 
 	set_name (a_name: STRING) is
@@ -136,6 +145,24 @@ feature -- Basic Operations
 		ensure
 			non_void_guid: guid /= Void
 			valid_guid: guid = a_guid
+		end
+
+	set_data_type_visitor (a_data_visitor: WIZARD_DATA_TYPE_VISITOR) is
+			-- Set `data_type_visitor' with `a_data_visitor'
+		do
+			data_type_visitor := a_data_visitor
+		end
+
+	set_pointed_data_type_visitor (a_data_visitor: WIZARD_DATA_TYPE_VISITOR) is
+			-- Set `data_type_visitor' with `a_data_visitor'
+		do
+			pointed_data_type_visitor := a_data_visitor
+		end
+
+	set_pointed_pointed_data_type_visitor (a_data_visitor: WIZARD_DATA_TYPE_VISITOR) is
+			-- Set `data_type_visitor' with `a_data_visitor'
+		do
+			pointed_pointed_data_type_visitor := a_data_visitor
 		end
 
 feature -- Visitor

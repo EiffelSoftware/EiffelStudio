@@ -24,14 +24,6 @@ feature -- Initialization
 
 feature -- Properties
 
-	name: STRING is
-		deferred
-		end;
-
-	symbol: PIXMAP is
-		deferred
-		end;
-
 	holder: HOLE_HOLDER;
 			-- Holder of Current
 

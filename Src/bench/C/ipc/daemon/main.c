@@ -36,11 +36,6 @@
 #include <stdlib.h>
 
 #ifdef EIF_WIN32
-#ifdef dexit
-#undef dexit	/* We do not want to use exit directly when we are not using the
-				   USE_ADD_LOG C option flag, because we need to free some Windows
-				   specific memory */
-#endif
 
 #include <windows.h>
 #define EWB		"\\bin\\es4.exe -bench"	/* Ewb process within Eiffel dir */

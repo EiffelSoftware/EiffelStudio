@@ -36,7 +36,8 @@ inherit
 			set_background_color,
 			set_foreground_color,
 			set_default_options,
-			pixmap_drawable_ok
+			pixmap_drawable_ok,
+			pixmap_size_ok
 		end
 
 creation

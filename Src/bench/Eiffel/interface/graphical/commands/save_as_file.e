@@ -45,32 +45,32 @@ feature {NONE}
 					then
 						aok := False;
 						warner (text_window).gotcha_call 
-							(w_Not_a_plain_file (new_file.name))
+							(w_Not_a_plain_file (fn))
 					elseif 
 						argument = name_chooser and then 
 						(new_file.exists and then new_file.is_writable)
 					then
 						aok := False;
 						warner (text_window).custom_call (Current, 
-							w_File_exists (new_file.name), 
+							w_File_exists (fn), 
 							"Overwrite", Void, "Cancel");
 					elseif
 						new_file.exists and then (not new_file.is_writable)
 					then
 						aok := False;
 						warner (text_window).gotcha_call 
-							(w_Not_writable (new_file.name))
+							(w_Not_writable (fn))
 					elseif
 						not new_file.is_creatable
 					then
 						aok := False;
 						warner (text_window).gotcha_call 
-							(w_Not_creatable (new_file.name))
+							(w_Not_creatable (fn))
 					end
 				else
 					aok := False;
 					warner (text_window).gotcha_call 
-						(w_Not_a_plain_file (new_file.name))
+						(w_Not_a_plain_file (fn))
 				end;
 				if aok then
 					new_file.open_write;

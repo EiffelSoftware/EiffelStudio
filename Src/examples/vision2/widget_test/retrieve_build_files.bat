@@ -52,7 +52,7 @@ XCOPY /Y Delivery\vision2_tour\bitmaps\png\image2.png .\bitmaps\png\
 REM Copy modified vision2 interface files needed.
 XCOPY /Y Src\Build2\modified_libraries\vision2\ev_pixmap.e .\interface
 XCOPY /Y Src\Build2\modified_libraries\vision2\ev_pixmapable.e .\interface
-XCPOY /Y Src\Build2\modified_libraries\vision2\ev_notebook.e .\interface
+XCOPY /Y Src\Build2\modified_libraries\vision2\ev_notebook.e .\interface
 
 
 REM Copy all the editor constructor classes into interface.

@@ -23,7 +23,6 @@ cluster
 			"table_eiffel3"
 		end
 
-	all gel (devel):			"$/gel_remote"
 	new_event (devel):			"$/event"
 
 	all vision2 (devel):			"/home/brendel/hack-fig/vision2"

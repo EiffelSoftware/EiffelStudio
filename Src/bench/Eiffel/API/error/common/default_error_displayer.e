@@ -87,10 +87,9 @@ feature -- Output
 				until
 					error_list.after
 				loop
-					display_separation_line (st);
-					st.add_new_line;
+					display_before_error_trace (st)
 					error_list.item.trace (st);
-					st.add_new_line;
+					display_after_error_trace (st)
 					error_list.forth;
 				end;
 				display_separation_line (st);	
@@ -110,6 +109,17 @@ feature -- Output
 feature {NONE} -- Implementation
 
 	retried: BOOLEAN;
+
+	display_after_error_trace (st: STRUCTURED_TEXT) is
+		do
+			st.add_new_line
+		end
+
+	display_before_error_trace (st: STRUCTURED_TEXT) is
+		do
+			display_separation_line (st);
+			st.add_new_line;
+		end
 
 	display_error_error (st: STRUCTURED_TEXT) is
 		do

@@ -473,8 +473,10 @@ feature {NONE} -- Translation
 					-- Force size of integer constant depending on number
 					-- of hexadecimal character in hex string.
 				if j <= 3 then
+					lower := lower.to_integer_8
 					compatibility_size := 8
 				elseif j <= 5 then
+					lower := lower.to_integer_16
 					compatibility_size := 16
 				else
 					check j <= 9 end

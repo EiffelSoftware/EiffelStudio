@@ -19,7 +19,7 @@ create
 	make_empty_line,
 	make_from_lexer
 
-feature --- Initialisations
+feature {NONE} -- Initialisation
 
 	make_empty_line is
 			-- Create an empty line.
@@ -31,8 +31,12 @@ feature --- Initialisations
 			end_token := t_eol
 		end
 
+feature -- Initialisation
+
 	make_from_lexer (lexer: EIFFEL_SCANNER) is
 			-- Create a line using token from `lexer'
+		require
+			lexer_exists: lexer /= Void
 		local
 			t_eol: EDITOR_TOKEN_EOL
 			t: EDITOR_TOKEN
@@ -50,6 +54,56 @@ feature --- Initialisations
 				first_token := t_eol
 			end
 			end_token := t_eol
+		end
+
+feature -- Transformation
+
+	replace_from_lexer (lexer: EIFFEL_SCANNER; t_before, t_after: EDITOR_TOKEN) is
+			-- Replace tokens between `t_before' and `t_after'
+			-- by tokens from `lexer'.
+		require
+			lexer_exists: lexer /= Void
+			t_before_exists: t_before /= Void
+			t_after_exists: t_after /= Void
+		local
+			first_t, last_t: EDITOR_TOKEN
+		do
+			last_t := lexer.end_token
+			if last_t /= Void then
+					-- The lexer has parsed something.
+				first_t := lexer.first_token
+				last_t.set_next_token (t_after)
+				t_after.set_previous_token (last_t)
+				first_t.set_previous_token (t_before)
+				t_before.set_next_token (first_t)
+			else
+				t_before.set_next_token (t_after)
+				t_after.set_previous_token (t_before)
+			end
+		end
+
+--| FIXME
+--| Christophe, 27 jan 2000
+--| Should we avoid the case "t_before = Void" or
+--| redirect it to `replace_beginning_from_lexer'? 
+
+	replace_beginning_from_lexer (lexer: EIFFEL_SCANNER; t_after: EDITOR_TOKEN) is
+			-- Replace tokens before `t_after' by tokens from `lexer'.
+		require
+			lexer_exists: lexer /= Void
+			t_after_exists: t_after /= Void
+		local
+			t: EDITOR_TOKEN
+		do
+			t := lexer.end_token
+			if t /= Void then
+					-- The lexer has parsed something.
+				t.set_next_token (t_after)
+				first_token := lexer.first_token
+			else
+				first_token := t_after
+			end
+			t_after.set_previous_token (t)
 		end
 
 feature -- Access
@@ -91,15 +145,52 @@ feature -- Status Report
 
 feature -- Element change
 
-	set_width(a_width: INTEGER) is
+	set_width (a_width: INTEGER) is
 		do
 			width := a_width
 		end
 
+feature -- Transformation
+
+	merge_with_next_line (lexer: EIFFEL_SCANNER) is
+		local
+			t_before : EDITOR_TOKEN
+			s: STRING
+		do
+			t_before := end_token.previous
+			if t_before /= Void then
+				s := clone (t_before.image)
+				t_before := t_before.previous
+				s.append (next.image)
+			else
+				s := next.image
+			end
+			lexer.execute (s)
+			if t_before = Void then
+				replace_beginning_from_lexer (lexer, end_token)
+			else
+				replace_from_lexer (lexer, t_before, end_token)
+			end
+			next.delete
+		end
+
 feature -- Status Report
 
-	image: STRING
-		-- string representation of the line.
+	image: STRING is
+			-- string representation of the line.
+		local
+			t: EDITOR_TOKEN
+		do
+			create Result.make (0)
+			from
+				t := first_token
+			until
+				t = end_token
+			loop
+				Result.append (t.image)
+				t := t.next
+			end
+		end
 
 	width: INTEGER
 		-- x position of last pixel of the string

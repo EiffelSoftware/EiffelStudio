@@ -29,14 +29,6 @@ feature -- Status setting
 			text_cloned: text.is_equal (a_text) and then text /= a_text
 		end
 
-	remove_text is
-			-- Make `text' Void.
-		do
-			set_text (Void)
-		ensure
-			text_removed: text = Void
-		end
-
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_CLIPBOARD

@@ -257,10 +257,17 @@ void c_get_host_name() {
 char *c_get_name_from_addr(addr)
 EIF_INTEGER addr;
 {
+#ifdef EIF_WIN32
+	static char null_str[] = "\0";
+#endif
 	struct hostent *host;
 	EIF_INTEGER real_addr = ntohl(addr);
 	host=gethostbyaddr((char *)&real_addr, sizeof(EIF_INTEGER), AF_INET);
 	if (!host) {
+#ifdef EIF_WIN32
+		return null_str;
+		/* Because the BUG existed in Windows NT's socket. */
+#endif
 		sprintf(_concur_crash_info, CURIMPERR19, addr, error_info());
 		c_raise_concur_exception(exception_implementation_error);
 	}
@@ -658,7 +665,7 @@ EIF_INTEGER addr;
 				sprintf(crash_info, CURIMPERR13, c_get_name_from_addr(addr), port, error_info());
 			}
 			else
-				if (port == constant_scoop_dog_port)
+				if (port == _concur_scoop_dog_port)
 					sprintf(_concur_crash_info, CURERR10, c_get_name_from_addr(addr), port, constant_retry_times_for_client);
 				else
 					sprintf(_concur_crash_info, CURIMPERR14, c_get_name_from_addr(addr), port, constant_retry_times_for_client, error_info());
@@ -717,7 +724,7 @@ EIF_INTEGER s;
     if (fd == SOCKET_ERROR)
         if (WSAGetLastError() != EWOULDBLOCK && !_concur_exception_has_happened) {
 			add_nl;
-			sprintf(crash_info, "    Error happened when accepts from network(%s).", error_info());
+			sprintf(crash_info, CURIMPERR24, error_info());
 			c_raise_concur_exception(exception_implementation_error);
 		}
 		else
@@ -726,7 +733,7 @@ EIF_INTEGER s;
     if (fd == -1)
         if (sock_errno() != SOCEWOULDBLOCK && !_concur_exception_has_happened) {
 			add_nl;
-			sprintf(crash_info, "    Error happened when accepts from network(%s).", error_info());
+			sprintf(crash_info, CURIMPERR24, error_info());
 			c_raise_concur_exception(exception_implementation_error);
 		} else
 			return -1;
@@ -734,7 +741,7 @@ EIF_INTEGER s;
     if (fd < 0)
         if (errno != EWOULDBLOCK && !_concur_exception_has_happened) {
 			add_nl;
-			sprintf(crash_info, "    Error happened when accepts from network(%s).", error_info());
+			sprintf(crash_info, CURIMPERR24, error_info());
 			c_raise_concur_exception(exception_implementation_error);
 		} else
 			return -1;
@@ -748,25 +755,36 @@ EIF_INTEGER sock;
 EIF_INTEGER len;
 {
 	EIF_INTEGER res;
+	EIF_INTEGER got=0;
 
-	if (_concur_buffer_len <= len) {
+	if (_concur_buffer_len <= len+33) {
 		if (_concur_buffer)
 			free(_concur_buffer);
-		if (len < 1024) 
+		if (len+33 < 1024) 
 			_concur_buffer_len = 1024;
 		else
-			_concur_buffer_len = len + 1;
+			_concur_buffer_len = len + 33;
 		_concur_buffer = (EIF_POINTER)malloc(_concur_buffer_len);
 		valid_memory(_concur_buffer);
 	}
-	res = c_concur_my_read_stream(sock, len, _concur_buffer);
-/*	if (res != len && _concur_command != constant_report_error) { */
-	if (res != len && !_concur_exception_has_happened) {
-		add_nl;
-		sprintf(crash_info, CURERR6);
-		c_raise_concur_exception(exception_network_connection_crash);
+	while (got < len) {
+		res = c_concur_my_read_stream(sock, len-got, _concur_buffer+got);
+		if (res>0)
+			got += res;
+		else
+			break;
 	}
-	_concur_buffer[res] = '\0';
+	if (got != len) {
+        if (!_concur_exception_has_happened && _concur_command != constant_report_error) {
+            add_nl;
+            sprintf(crash_info, CURERR6);
+            c_raise_concur_exception(exception_network_connection_crash);
+        } else {
+            sprintf(_concur_buffer+got, "\n[want %4d but got %4d bytes!]", len, got);
+            got += 32;
+        }
+    }
+	_concur_buffer[got] = '\0';
 	return (EIF_POINTER)_concur_buffer;
 }
 
@@ -916,12 +934,77 @@ EIF_INTEGER tout;
 	int ret;
 	int to_second = tout / 1000000;
 	int to_micsec = tout % 1000000;
-
-	c_concur_select(ret, 1, NULL, NULL, NULL, to_second, to_micsec);
+	fd_set tmp_mask;
+	
+	if (tout) {
+#ifdef EIF_WIN32
+		FD_ZERO(&tmp_mask);
+		FD_SET(_concur_sock, &tmp_mask);
+		c_concur_select(ret, 1, &tmp_mask, NULL, NULL, to_second, to_micsec);
+#else
+		c_concur_select(ret, 1, NULL, NULL, NULL, to_second, to_micsec);
+#endif
+	}
 }
 
-void cur_print_info() {
-	printf("%d(%s) I'm printed from concurrent run-time\n", _concur_pid, _concur_class_name_of_root_obj);
+
+/**********************************************************************************
+ * The following functions are utilities provided by class CONCURRENCY to user    *
+ * so that he/she can set system's options and turn up the system's performance.  *
+***********************************************************************************/
+
+void cur_set_with_rejection() {
+	set_with_rejection;
 }
 
+void cur_unset_with_rejection() {
+	unset_with_rejection;
+}
 
+void cur_set_daemon_port(EIF_INTEGER port) {
+	_concur_scoop_dog_port = port;
+}
+
+void  cur_clear_configure_table() {
+}
+
+void cur_append_to_configure_table(char *host, char *dir, char * exec, EIF_INTEGER capability) {
+}
+
+void cur_change_capacity_of_configure_table_item(char *host, char *dir, char * exec, EIF_INTEGER capability) {
+}
+
+void cur_set_sleeping_time_of_reserve_sep_para(EIF_INTEGER to) {
+	if (to < 0) 
+		_concur_waiting_time_of_rspf = constant_waiting_time_in_reservation;
+	else
+		_concur_waiting_time_of_rspf = to;
+}
+
+void cur_set_sleeping_time_of_precondition (EIF_INTEGER to) {
+	if (to < 0) 
+		_concur_waiting_time_of_cspf = constant_waiting_time_in_precondition;
+	else
+		_concur_waiting_time_of_cspf = to;
+}
+
+/*
+void cur_set_gc_on_cpu() {
+	set_gc_on_cpu;
+}
+
+void cur_unset_gc_on_cpu() {
+	unset_gc_on_cpu;
+}
+
+void cur_set_gc_period(EIF_INTEGER gcp) {
+	if (gcp<0) {
+		if (gc_on_cpu)
+			_concur_gc_period = 10*constant_cpu_period;
+		else
+			_concur_gc_period = constant_absolute_period;
+	}	
+	else 
+		_concur_gc_period = gcp;
+}
+*/

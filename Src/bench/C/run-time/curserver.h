@@ -41,9 +41,11 @@ char _concur_command_feature[constant_max_feature_name_len+1];
 PARAMETER *_concur_paras=NULL;
 int _concur_paras_size=0;
 
+#ifdef COMBINE_CREATION_WITH_INIT
 PARAMETER *_concur_alt_paras=NULL;
 int _concur_alt_paras_size=0;
 EIF_INTEGER _concur_alt_para_num=0;
+#endif
 
 /*---------------------------------------------------------------------------*/
 /* The following variables are used to keep the information of the PROCESSOR */
@@ -99,6 +101,9 @@ EIF_INTEGER _concur_obj_type;
 
 char _concur_user_name[constant_max_user_name_len+1];
 char _concur_command_text[constant_max_command_text+1];
+char _concur_options;
+EIF_INTEGER _concur_waiting_time_of_rspf;
+EIF_INTEGER _concur_waiting_time_of_cspf;
 
 
 /*---------------------------------------------------------*/
@@ -110,6 +115,7 @@ EIF_BOOLEAN _concur_terminatable;
 EIF_BOOLEAN _concur_exception_has_happened;
 EIF_OBJ _concur_temp_sep_obj;
 DAEMON  *_concur_scoop_dog;
+EIF_INTEGER _concur_scoop_dog_port = constant_scoop_dog_port;
 
 
 
@@ -132,8 +138,9 @@ EIF_INTEGER _concur_host_level_size;
 EIF_INTEGER _concur_resource_index;
 EIF_INTEGER _concur_resource_count;
 
-char *_concur_dispatched_directory;
-char *_concur_dispatched_executable;
+char *_concur_dispatched_host = NULL;
+char *_concur_dispatched_directory = NULL;
+char *_concur_dispatched_executable = NULL;
 char _concur_executable[constant_max_directory_len+1];
 
 /*---------------------------------------------------------*/
@@ -343,6 +350,9 @@ extern EIF_BOOLEAN c_wait_long_enough();
 extern void c_raise_concur_exception();
 extern void c_process_ser_list_from_sep_obj();
 extern void cur_usleep();
+extern void cur_set_with_rejection();
+extern void cur_unset_with_rejection();
+extern void cur_set_daemon_port();
 
 
 

@@ -14,6 +14,14 @@ to indicate indirect(also called Eiffel or protected) address.
 
 #define ONLY_CABIN
 
+#ifdef EIF_WIN32
+#include <io.h>
+#include <sys/stat.h>
+#include <Fcntl.h>
+#include <sys/types.h>
+void disp_info(char *, char *, long);
+#endif
+
 void make_server(config_file)
 char *config_file;
 {
@@ -90,6 +98,10 @@ char *config_file;
 	
 	_concur_pid = c_get_pid();
 
+	init_options;
+	_concur_waiting_time_of_rspf = constant_waiting_time_in_reservation;
+	_concur_waiting_time_of_cspf = constant_waiting_time_in_precondition;
+
 #ifdef SIGNAL
 #ifdef SIGPIPE
 	signal(SIGPIPE, def_res);
@@ -139,7 +151,7 @@ EIF_OBJ s1;
 	
 	if (!s1) {
 		add_nl;
-		sprintf(crash_info, "    Try to apply feature/attribute to Void separate object.");
+		sprintf(crash_info, CURAPPERR38);
 		c_raise_concur_exception(exception_void_separate_object);
 	}
 	return hostaddr_of_sep_obj(s1) == _concur_hostaddr && pid_of_sep_obj(s1) == _concur_pid;
@@ -1061,7 +1073,13 @@ EIF_INTEGER s;
 					/* to send the STRING parameter's data value */
 					if (strlen(_concur_paras[tmp].str_val)) {
 					/* For EMPTY string, just its length(0) is sent */
-						fill_buf(s, send_buf, send_data_len, _concur_paras[tmp].str_val, (int)strlen(_concur_paras[tmp].str_val));
+						if ((send_data_len + (int)strlen(_concur_paras[tmp].str_val)) > constant_command_buffer_len) {
+							c_concur_put_stream(s, send_buf, send_data_len);
+							send_data_len = 0;
+							c_concur_put_stream(s, _concur_paras[tmp].str_val, (int)strlen(_concur_paras[tmp].str_val));
+						} else {
+							fill_buf(s, send_buf, send_data_len, _concur_paras[tmp].str_val, (int)strlen(_concur_paras[tmp].str_val));
+						}
 					}
 #ifdef DISP_MSG
 		printf(" len: %d, VAL: %s\n", strlen(_concur_paras[tmp].str_val), _concur_paras[tmp].str_val);
@@ -1715,7 +1733,7 @@ EIF_OBJ direct_sep;
 				_concur_parent->sock  = -5;
 				if (!_concur_exception_has_happened) {
 					add_nl;
-					sprintf(crash_info, "    The parent processor asked the local processor to terminate.");
+					sprintf(crash_info, CURERR17);
 					default_rescue();
 				}
 				break;
@@ -1726,7 +1744,7 @@ EIF_OBJ direct_sep;
 					for (bak_child=NULL, cur_child=_concur_child_list; cur_child && (cur_child->hostaddr!=CURGI(0) || cur_child->pid!=CURGI(1)); bak_child=cur_child , cur_child=cur_child->next);
 					if (!cur_child) {
 						add_nl;
-						sprintf(crash_info, "    Got REPORT_ERROR message from <%s, %d> but there is no entry in child list.", c_get_name_from_addr(CURGI(_concur_para_num-2)), CURGI(_concur_para_num-1));
+						sprintf(crash_info, CURERR18, c_get_name_from_addr(CURGI(_concur_para_num-2)), CURGI(_concur_para_num-1));
 						c_raise_concur_exception(exception_implementation_error);
 					}
 					if (!bak_child)
@@ -1750,7 +1768,7 @@ EIF_OBJ direct_sep;
 					for (bak_child=NULL, cur_child=_concur_child_list; cur_child && (cur_child->hostaddr!=CURGI(0) || cur_child->pid!=CURGI(1)); bak_child=cur_child , cur_child=cur_child->next);
 					if (!cur_child) {
 						add_nl;
-						sprintf(crash_info, "    Got EXIT_OK message from <%s, %d> but there is no entry in child list.", c_get_name_from_addr(CURGI(0)), CURGI(1));
+						sprintf(crash_info, CURERR19, c_get_name_from_addr(CURGI(0)), CURGI(1));
 						c_raise_concur_exception(exception_implementation_error);
 					}
 					if (!bak_child)
@@ -2271,7 +2289,9 @@ void default_rescue() {
 	RTEX;
 	RTED;
     RTSN;
+#ifdef WORKBENCH
     RTDA;
+#endif
     RTXD;
 	RTXI(0);
 	RTEA("RT-Concur1", 0, root_obj);
@@ -2319,14 +2339,14 @@ failure();
 		 */
 			_concur_para_num -= 2;
 		if (_concur_parent == NULL) 
-			strcpy(err_msg, "Called From(root): \n    ");
+			strcpy(err_msg, "From(root): \n    ");
 		else 
-			strcpy(err_msg, "Called From: \n    ");
+			strcpy(err_msg, "From: \n    ");
 	}
 	if (strlen(_concur_class_name_of_root_obj)) {
-		strcat(err_msg, "separate object from class `");
+		strcat(err_msg, "separate object(whose class is `");
 		strcat(err_msg, _concur_class_name_of_root_obj);
-		strcat(err_msg, "' ");
+		strcat(err_msg, "') ");
 	}
 	strcat(err_msg, "on host <");
 	if (!_concur_pid) {
@@ -2338,14 +2358,14 @@ failure();
 	if (strlen(_concur_crash_info)) {
 		strcat(err_msg, "Error Message:\n");
 		strcat(err_msg, _concur_crash_info);
-		strcat(err_msg, "\n");
+		sprintf(err_msg+strlen(err_msg), "\n    %s\n", error_info());
 	}
 	else {
 		if (_concur_command != constant_report_error)
 			if (_concur_ser_list_count)
-				sprintf(err_msg+strlen(err_msg), "Error Message:\n    Error happened on the local processor or One of its SERVERs may be killed by user.\n");
+				sprintf(err_msg+strlen(err_msg), "Error Message:\n    Error happened on the local processor or One of its SERVERs may be killed by user.\n    %s\n", error_info());
 			else
-				sprintf(err_msg+strlen(err_msg), "Error Message:\n    Error happened on the local processor.\n");
+				sprintf(err_msg+strlen(err_msg), "Error Message:\n    Error happened on the local processor or it's interrupted by user.\n    %s\n", error_info());
 		else
 			sprintf(err_msg+strlen(err_msg), "Error Message:\n    %s\n", error_info());
 	}
@@ -2402,8 +2422,11 @@ failure();
 rescue:
 #ifdef SIGNAL
 #else
+#ifdef WORKBENCH
 	RTEU;
 	RTXS(0);
+#else
+#endif
 #endif
 	if (_concur_parent->sock == constant_alive_socket) 
 		_concur_parent->sock = -3;
@@ -2414,8 +2437,10 @@ rescue:
 #ifdef SIGNAL
 	CONCUR_RESC_RETRY;
 #else
+#ifdef WORKBENCH
 	RTTS;
 	RTPS;
+#endif
 	RTER;
 	RTEF;
 #endif
@@ -2449,7 +2474,9 @@ void release_system_lists_in_rescue() {
 	RTEX;
 	RTED;
     RTSN;
+#ifdef WORKBENCH
     RTDA;
+#endif
     RTXD;
 	RTXI(0);
 	RTEA("RT-Concur3", 0, root_obj);
@@ -2520,8 +2547,10 @@ rescue:
 #else
 	RTEU;
 	RTXS(0);
+#ifdef WORKBENCH
 	RTTS;
 	RTPS;
+#endif
 	RTER;
 	RTEF;
 #endif
@@ -2542,7 +2571,9 @@ void release_child_list() {
 	RTEX;
 	RTED;
     RTSN;
+#ifdef WORKBENCH
 	RTDA;
+#endif
     RTXD;
 	RTXI(0);
 	RTEA("RT-Concur14", 0, root_obj);
@@ -2583,8 +2614,10 @@ rescue:
 #else
 	RTEU;
 	RTXS(0);
+#ifdef WORKBENCH
 	RTTS;
 	RTPS;
+#endif
 	RTER;
 	RTEF;
 #endif
@@ -2862,7 +2895,7 @@ cli1=cli1->next) {
 			 * processor.
 			*/
 				add_nl;
-				sprintf(crash_info, "    Network exception happened on the local processor.");
+				sprintf(crash_info, CURERR20);
 				c_concur_close_socket(_concur_sock);
 				_concur_sock = -1;
 				c_raise_concur_exception(exception_network_connection_crash);	
@@ -2873,7 +2906,7 @@ cli1=cli1->next) {
 			 * processor.
 			*/
 				add_nl;
-				sprintf(crash_info, "    Network exception happened on the parent of the local processor.");
+				sprintf(crash_info, CURERR21);
 				c_concur_close_socket(_concur_parent->sock);
 				_concur_parent->sock = -2;
 				c_raise_concur_exception(exception_network_connection_crash);	
@@ -2882,7 +2915,7 @@ cli1=cli1->next) {
 			 * processor.
 			*/
 			add_nl;
-			sprintf(crash_info, "    Network exception happened on the child(ren) of the local processor.");
+			sprintf(crash_info, CURERR22);
 			c_raise_concur_exception(exception_network_connection_crash);	
 		}
 	}
@@ -2931,7 +2964,7 @@ void process_connection() {
 			_concur_parent->sock  = -5;
 			if (!_concur_exception_has_happened) {
 				add_nl;
-				sprintf(crash_info, "    The parent processor asked the local processor to terminate.");
+				sprintf(crash_info, CURERR17);
 				default_rescue();
 			}
 			break;
@@ -2945,7 +2978,7 @@ void process_connection() {
 						break;
 					else {
 						add_nl;
-						sprintf(crash_info, "    Got REPORT_ERROR message from <%s, %d> but there is no entry in child list.", c_get_name_from_addr(CURGI(_concur_para_num-2)), CURGI(_concur_para_num-1));
+						sprintf(crash_info, CURERR18, c_get_name_from_addr(CURGI(_concur_para_num-2)), CURGI(_concur_para_num-1));
 						c_raise_concur_exception(exception_implementation_error);
 					}
 				}
@@ -2975,7 +3008,7 @@ void process_connection() {
 						break;
 					else {
 						add_nl;
-						sprintf(crash_info, "    Got EXIT_OK message from <%s, %d> but there is no entry in child list.", c_get_name_from_addr(CURGI(0)), CURGI(1));
+						sprintf(crash_info, CURERR19, c_get_name_from_addr(CURGI(0)), CURGI(1));
 						c_raise_concur_exception(exception_implementation_error);
 					}
 				}
@@ -3119,3 +3152,25 @@ print_active_sockets() {
 		printf(" %d", tmpc->sock);
 	printf("\n");
 }
+
+#ifdef EIF_WIN32
+void disp_info(char *f, char *info, long val) {
+        int fd;
+        int len;
+        char msg[2048];
+ 
+        if (!strcmp(_concur_class_name_of_root_obj, "FORK")||
+                !strcmp(_concur_class_name_of_root_obj, "PHILOSOPHER")) {
+                fd = open(f, O_CREAT|O_RDWR|O_APPEND, S_IREAD|S_IWRITE);
+                if (fd < 0)
+                        return;
+                if (strlen(info))
+                        sprintf(msg, "%s(%d) %s %ld(0x%x)\n", _concur_class_name_of_root_obj, _concur_pid, info, val, val);
+                else
+                        sprintf(msg, "\n");
+                len = write(fd, msg, strlen(msg));
+        }
+        return;
+}
+#endif
+

@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 			implementation.test_and_set_parent (par)
 			implementation.parent_imp.add_child (implementation)
 			implementation.build
+			implementation.initialize_colors
 			managed := par.manager
  		ensure
  			exists: not destroyed
@@ -41,7 +42,11 @@ feature -- Access
 		require
 			exists: not destroyed
 		do
-			Result := implementation.parent
+			if implementation.parent_imp /= Void then
+				Result := implementation.parent_imp.interface
+			else
+				Result := Void
+			end
 		end
 	
 feature -- Status report
@@ -84,6 +89,8 @@ feature -- Status report
 			-- the parent resize ? In this case,
 			-- automatic_position has no effect.
 			-- True by default
+		require
+			exists: not destroyed
 		do
 			Result := implementation.automatic_resize
 		end
@@ -93,8 +100,31 @@ feature -- Status report
 			-- the parent resize ?
 			-- (If it does, its size doesn't changed).
 			-- False by default
+		require
+			exists: not destroyed
 		do
 			Result := implementation.automatic_position
+		end
+
+	background_color: EV_COLOR is
+			-- Color used for the background of the widget
+		require
+			exists: not destroyed
+		do
+			Result := implementation.background_color.interface
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	foreground_color: EV_COLOR is
+			-- Color used for the foreground of the widget
+			-- usually the text.
+		require
+			exists: not destroyed
+		do
+			Result := implementation.foreground_color.interface
+		ensure
+			result_not_void: Result /= Void
 		end
 
 feature -- Status setting
@@ -148,24 +178,46 @@ feature -- Status setting
 			flag = insensitive	
 		end
 
-	set_automatic_resize (state: BOOLEAN) is
-			-- Make `state' the new `automatic_resize'.
+	set_automatic_resize (flag: BOOLEAN) is
+			-- Make `flag' the new `automatic_resize' state.
 		require
 			exists: not destroyed
 		do
-			implementation.set_automatic_resize (state)
+			implementation.set_automatic_resize (flag)
 		ensure
-			automatic_resize_set: automatic_resize = state
+			automatic_resize_set: automatic_resize = flag
 		end
 
-	set_automatic_position (state: BOOLEAN) is
-			-- Make `state' the new `automatic_position'.
+	set_automatic_position (flag: BOOLEAN) is
+			-- Make `flag' the new `automatic_position' state.
 		require
 			exists: not destroyed
 		do
-			implementation.set_automatic_position (state)
+			implementation.set_automatic_position (flag)
 		ensure
-			automatic_position_set: automatic_position = state
+			automatic_position_set: automatic_position = flag
+		end
+
+	set_background_color (color: EV_COLOR) is
+			-- Make `color' the new `background_color'
+		require
+			exists: not destroyed
+			color_not_void: color /= Void
+		do
+			implementation.set_background_color (color)
+		ensure
+			background_color_set: background_color = color
+		end
+
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'
+		require
+			exists: not destroyed
+			color_not_void: color /= Void
+		do
+			implementation.set_foreground_color (color)
+		ensure
+			foreground_color_set: foreground_color = color
 		end
 
 	-- What is this for?
@@ -292,26 +344,26 @@ feature -- Resizing
 			dimensions_set: implementation.dimensions_set (new_width, new_height)
 		end 
 
-	set_width (new_width :INTEGER) is
-			-- Make `new_width' the new `width'.
+	set_width (value :INTEGER) is
+			-- Make `value' the new `width'.
 		require
 			exists: not destroyed
-			Positive_width: new_width >= 0
+			Positive_width: value >= 0
 		do
-			implementation.set_width (new_width)
+			implementation.set_width (value)
 		ensure
-			dimensions_set: implementation.dimensions_set (new_width, height)
+			dimensions_set: implementation.dimensions_set (value, height)
 		end
 
-	set_height (new_height: INTEGER) is
-			-- Make `new_height' the new `height'.
+	set_height (value: INTEGER) is
+			-- Make `value' the new `height'.
 		require
 			exists: not destroyed
-			Positive_height: new_height >= 0
+			Positive_height: value >= 0
 		do
-			implementation.set_height (new_height)
+			implementation.set_height (value)
 		ensure					
-			dimensions_set: implementation.dimensions_set (width, new_height)
+			dimensions_set: implementation.dimensions_set (width, value)
 		end
 	
 	set_minimum_size (min_width, min_height: INTEGER) is
@@ -328,39 +380,38 @@ feature -- Resizing
 			 min_height = min_height
 		end
 		
-        set_minimum_width (min_width: INTEGER) is
-			-- Make `min_width' the new `minimum_width'.
-                require
-                        exists: not destroyed
-                        large_enough: min_width >= 0
-                do
-                        implementation.set_minimum_width (min_width)
-                ensure
-                        min_width = min_width
-                end
+	set_minimum_width (value: INTEGER) is
+			-- Make `value' the new `minimum_width'.
+		require
+			exists: not destroyed
+			large_enough: value >= 0
+		do
+			implementation.set_minimum_width (value)
+		ensure
+			minimum_width_set: minimum_width = value
+		end
         
-	set_minimum_height (min_height: INTEGER) is
-			-- Make `min_height' the new `minimum__height'.
-                require
-                        exists: not destroyed
-                        large_enough: min_height >= 0
-                do
-                        implementation.set_minimum_height (min_height)
-                ensure
-                        min_height = min_height
-                end
+	set_minimum_height (value: INTEGER) is
+			-- Make `value' the new `minimum__height'.
+		require
+			exists: not destroyed
+			large_enough: value >= 0
+		do
+			implementation.set_minimum_height (value)
+		ensure
+			minimum_height_set: minimum_height = value
+		end
 
-	set_x (new_x: INTEGER) is
-			-- Put at horizontal position `new_x' relative
+	set_x (value: INTEGER) is
+			-- Put at horizontal position `value' relative
 			-- to parent.
 		require
 			exists: not destroyed
 			Unmanaged: not managed
-								   
 		do
-			implementation.set_x (new_x)
+			implementation.set_x (value)
 		ensure
-			x_set: x = new_x
+			x_set: x = value
 		end
 
 	set_x_y (new_x: INTEGER; new_y: INTEGER) is
@@ -372,20 +423,20 @@ feature -- Resizing
 		do
 			implementation.set_x_y (new_x, new_y)
 		ensure
-	--XX		x_set: x = new_x	
-	--XX		y_set: y = new_y	
+			x_set: x = new_x	
+			y_set: y = new_y	
 		end
 
-	set_y (new_y: INTEGER) is
-			-- Put at vertical position `new_y' relative
+	set_y (value: INTEGER) is
+			-- Put at vertical position `value' relative
 			-- to parent.
 		require
 			exists: not destroyed
 			Unmanaged: not managed
 		do
-			implementation.set_y (new_y)
+			implementation.set_y (value)
 		ensure
-			y_set: y = new_y		
+			y_set: y = value		
 		end
 
 feature -- Comparison

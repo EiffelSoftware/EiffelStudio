@@ -8,63 +8,6 @@ deferred class
 inherit
 	LINKED_LIST [G]
 
---	NEW_EB_CONSTANTS
-
-	EB_RESOURCE_USER
-		redefine
-			dispatch_modified_resource
-		end
-
-feature -- Resource Update
-
-	dispatch_modified_resource (mod_res: EB_MODIFIED_RESOURCE) is
-			-- Dispatch modified resource based on
-			-- the actual type of `old_res'.
-		local
-			old_b, new_b: EB_BOOLEAN_RESOURCE
-			old_i, new_i: EB_INTEGER_RESOURCE
-		do
-			old_b ?= mod_res.old_resource
-			if old_b /= Void then
-				new_b ?= mod_res.new_resource
-				update_boolean_resource (old_b, new_b)
-			else
-				old_i ?= mod_res.old_resource
-				if old_i /= Void then
-					new_i ?= mod_res.new_resource
-					update_integer_resource (old_i, new_i)
-				end
-			end
-		end
-
-	update_boolean_resource (old_res, new_res: EB_BOOLEAN_RESOURCE) is
-			-- Update all active class tools according to
-			-- `new_res'.
-		do
-			from
-				start
-			until
-				after
-			loop
---				item.update_boolean_resource (old_res, new_res)
-				forth
-			end
-		end
-
-	update_integer_resource (old_res, new_res: EB_INTEGER_RESOURCE) is
-			-- Update all active class tools according to
-			-- `new_res'.
-		do
-			from
-				start
-			until
-				after
-			loop
---				item.update_integer_resource (old_res, new_res)
-				forth
-			end
-		end
-
 feature -- Fonts
 
 	set_font_to_default is

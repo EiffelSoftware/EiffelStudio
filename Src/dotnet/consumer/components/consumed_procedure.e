@@ -134,7 +134,4 @@ feature {NONE} -- Access
 	q: like dotnet_eiffel_name
 			-- Internal data for `dotnet_eiffel_name'.
 
-invariant
-	non_void_arguments: arguments /= Void
-
 end -- class CONSUMED_PROCEDURE

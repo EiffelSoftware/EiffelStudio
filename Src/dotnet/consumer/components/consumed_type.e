@@ -369,8 +369,6 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 	entities: ARRAYED_LIST [CONSUMED_ENTITY] is
 			-- All fields, procedures, functions, properties and events immediately
 			-- implemented by type.
-		require
-			fields_not_void: fields /= Void
 		do
 			Result := consumed_type_entities (True)
 			Result.compare_objects
@@ -380,8 +378,6 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 
 	inherited_entities: ARRAYED_LIST [CONSUMED_ENTITY] is
 			-- All fields, procedures, functions, properties and events inherited by type.
-		require
-			fields_not_void: fields /= Void
 		do
 			Result := consumed_type_entities (False)
 		end
@@ -389,8 +385,6 @@ feature -- Functions used for easy browsing of data from ConsumerWrapper.
 	flat_entities: ARRAYED_LIST [CONSUMED_ENTITY] is
 			-- All fields, procedures, functions, properties and events
 			-- implemented/inherited by type.
-		require
-			fields_not_void: fields /= Void
 		do
 			Result := consumed_type_entities (True)
 			Result.append (consumed_type_entities (False))
@@ -501,6 +495,5 @@ invariant
 	valid_eiffel_name: not eiffel_name.is_empty
 	non_void_dotnet_name: dotnet_name /= Void
 	valid_dotnet_name: not dotnet_name.is_empty
-	valid_interfaces: interfaces /= Void
 
 end -- class CONSUMED_TYPE

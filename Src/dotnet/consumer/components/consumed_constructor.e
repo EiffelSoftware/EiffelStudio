@@ -93,7 +93,4 @@ feature {NONE} -- Access
 	p: like is_public
 			-- Internal data for `is_public'.
 
-invariant
-	non_void_arguments: arguments /= Void
-
 end -- class CONSUMED_CONSTRUCTOR then

@@ -186,20 +186,6 @@ feature -- Access
 			Result := lace_class.assembly
 		end
 
-	type_from_consumed_type_in_assembly (
-			an_assembly: ASSEMBLY_I;
-			c: CONSUMED_REFERENCED_TYPE): CL_TYPE_A
-		is
-			-- Given an external type `c' in assembly `an_assembly'
-			-- get its associated CL_TYPE_A.
-			-- Void, if `c' is not part of system.
-		require
-			an_assembly_not_void: an_assembly /= Void
-			c_not_void: c /= Void
-		do
-			Result := internal_type_from_consumed_type_in_assembly (an_assembly, False, c)
-		end
-
 	type_from_consumed_type (c: CONSUMED_REFERENCED_TYPE): CL_TYPE_A is
 			-- Given an external type `c' get its associated CL_TYPE_A.
 			-- Void, if `c' is not part of system.
@@ -326,26 +312,29 @@ feature {NONE} -- Initialization
 			parent_type: CL_TYPE_A
 			parent_class: CLASS_C
 			i, nb: INTEGER
-			pars: like parents
 		do
 			nb := 1
 			if external_class.interfaces /= Void then
 				nb := nb + external_class.interfaces.count
 			end
 
-			create pars.make (nb)
+			create parents_classes.make (nb)
+			create parents.make (nb)
 
 			if external_class.parent /= Void then
 				parent_type := internal_type_from_consumed_type (True, external_class.parent)
-				pars.extend (parent_type)
 				parent_class := parent_type.associated_class
+				parents.extend (parent_type)
+				parents_classes.extend (parent_class)
 				parent_class.add_descendant (Current)
 				add_syntactical_supplier (parent_type)
 			elseif external_class.is_interface then
 					-- Force inheritance to `System.Object' for interfaces.
 				is_interface := True
 				parent_class := System.system_object_class.compiled_class
-				pars.extend (parent_class.actual_type)
+				parent_type := parent_class.actual_type
+				parents.extend (parent_type)
+				parents_classes.extend (parent_class)
 				parent_class.add_descendant (Current)
 				syntactical_suppliers.start
 				syntactical_suppliers.search (parent_class)
@@ -363,18 +352,23 @@ feature {NONE} -- Initialization
 				loop
 					parent_type := internal_type_from_consumed_type (True,
 						external_class.interfaces.item (i))
-					pars.extend (parent_type)
 					parent_class := parent_type.associated_class
+					parents.extend (parent_type)
+					parents_classes.extend (parent_class)
 					parent_class.add_descendant (Current)
 					add_syntactical_supplier (parent_type)
 					i := i + 1
 				end
 			end
-			parents := pars
 		ensure
 			parents_not_void: parents /= Void
 			parents_filled:
-				Current /= System.system_object_class.compiled_class implies parents.count > 0
+				Current /= System.system_object_class.compiled_class
+					implies parents.count > 0
+			parents_classes_not_void: parents_classes /= Void
+			parents_classes_filled:
+				Current /= System.system_object_class.compiled_class
+					implies parents_classes.count > 0
 		end
 
 	process_syntax_features (a_features: ARRAY [CONSUMED_ENTITY]) is

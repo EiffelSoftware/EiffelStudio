@@ -22,7 +22,7 @@ typedef EIF_INTEGER (* EIF_WNDPROC)
 	 );
 /* Eiffel routine signature for `window_procedure' */
 
-typedef EIF_BOOLEAN (* EIF_DLGPROC)
+typedef EIF_INTEGER (* EIF_DLGPROC)
 	(EIF_OBJ,     /* WEL_DISPATCHER Eiffel object */
 	 EIF_POINTER, /* hwnd */
 	 EIF_INTEGER, /* message */

@@ -1,6 +1,6 @@
 indexing
 	description: "Control that looks and acts like a button. But %
-		% the button looks raised when it isn’t pushed or checked,%
+		% the button looks raised when it isn't pushed or checked,%
 		% and sunken when it is pushed or checked."
 	note: "To create this kind of button  a ressource editor,   %
 		% create a checkbox and then choose the pushlike option %

@@ -112,14 +112,17 @@ feature -- Update
 		local
 			previous_position: INTEGER
 		do
-			set_changed (True)
-			implementation.hide_selection
-			previous_position := implementation.cursor_position
-			implementation.set_selection (0, implementation.count)
-			implementation.set_character_format_word (text_format)
-			implementation.set_selection (previous_position, previous_position)
-			implementation.show_selection
-			{SCROLLED_TEXT_WINDOW} Precursor
+			if not done then
+				done := True
+				implementation.hide_selection
+				previous_position := implementation.cursor_position
+				implementation.set_selection (0, implementation.count)
+				implementation.set_character_format_word (text_format)
+				implementation.set_selection (previous_position, previous_position)
+				implementation.show_selection
+				{SCROLLED_TEXT_WINDOW} Precursor
+				done := False
+			end
 		end
 
 	put_after_class (e_class: CLASS_C str: STRING) is
@@ -313,5 +316,11 @@ feature {NONE} -- Implementation
 			implementation.replace_selection (s)
 			text_position := text_position + s.count
 		end
+
+feature {NONE} -- Implementation
+
+	done: BOOLEAN
+			-- Are we done with `disable_clicking'?
+			--| Only one call to `disable_clicking' is allowed at a time.
 
 end -- class GRAPHICAL_TEXT_WINDOW

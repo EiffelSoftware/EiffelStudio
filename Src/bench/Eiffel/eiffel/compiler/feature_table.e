@@ -8,7 +8,8 @@ inherit
 
 	IDABLE
 		rename
-			id as feat_tbl_id
+			id as feat_tbl_id,
+			set_id as set_feat_tbl_id
 		undefine
 			twin
 		end;
@@ -293,13 +294,20 @@ end;
 				f := item_for_iteration;
 				if not f.is_valid then
 						-- The result type or one of the arguments type is not valid
-io.error.putstring ("REMOVE BODY_ID ....%N");
 debug
 	io.error.putstring ("Update table: ");
 	io.error.putstring (key_for_iteration);
 	io.error.putstring (" removed%N");
 end;
-					Tmp_body_server.desactive (f.body_id);
+					if not f.is_code_replicated then
+						Tmp_body_server.desactive (f.body_id);
+					else
+						Tmp_rep_feat_server.desactive (f.body_id);
+					end;
+						
+					-- There is no need for a corresponding "reactivate" here
+					-- since it will be done in by pass2 in `feature_unit' if need be
+
 					remove (key_for_iteration);
 				end;
 				forth

@@ -717,17 +717,26 @@ feature -- Byte code computation
 			old_body_id := body_id;
 			new_body_id := System.body_id_counter.next;
 				-- Update the server using `old_body_id'
+debug ("SERVER")
+	io.putstring ("Change body id of feature: ");
+	io.putstring (feature_name);
+	io.putstring (" of class ");
+	io.putstring (written_class.class_name);
+	io.putstring (" old: ");
+	io.putint (old_body_id);
+	io.putstring (" new: ");
+	io.putint (new_body_id);
+	io.new_line;
+end;
 			if not is_code_replicated then
-				Body_server.change_key (new_body_id, old_body_id);
-				Tmp_body_server.change_key (new_body_id, old_body_id);
+				Body_server.change_id (new_body_id, old_body_id);
 			else
-				Rep_feat_server.change_key (new_body_id, old_body_id);
-				Tmp_rep_feat_server.change_key (new_body_id, old_body_id);
+				Rep_feat_server.change_id (new_body_id, old_body_id);
 			end;
-			Byte_server.change_key (new_body_id, old_body_id);
-			Tmp_byte_server.change_key (new_body_id, old_body_id);
+			Byte_server.change_id (new_body_id, old_body_id);
 				-- Update the body index table
 			Body_index_table.force (new_body_id, body_index);
+			System.onbidt.put (new_body_id, old_body_id);
 		end;
 	
 feature -- Polymorphism

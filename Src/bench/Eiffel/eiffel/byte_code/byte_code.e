@@ -6,7 +6,8 @@ inherit
 
 	IDABLE
 		rename
-			id as byte_id
+			id as byte_id,
+			set_id as set_byte_id
 		export
 			{NONE} all
 		end;

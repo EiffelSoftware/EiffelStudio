@@ -7,7 +7,8 @@ inherit
 	CHARACTER_ARRAY;
 	IDABLE
 		rename
-			id as rout_id
+			id as rout_id,
+			set_id as set_rout_id
 		end
 
 creation

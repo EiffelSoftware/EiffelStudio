@@ -2840,11 +2840,13 @@ end;
 						then
 							new_body_id := System.body_id_counter.next;
 							insert_changed_feature (new_feat.feature_name);
-							if Tmp_rep_feat_server.has (old_body_id) then
-								Tmp_rep_feat_server.desactive (old_body_id)
-							else
-								Tmp_body_server.desactive (old_body_id);
-							end;
+
+								-- We do not have enough information to know
+								-- in which server we should deactivate, so 
+								-- we do it in both -- FRED
+							Tmp_body_server.desactive (old_body_id);
+							Tmp_rep_feat_server.desactive (old_body_id);
+
 debug ("REPLICATION")
 	io.error.putstring ("following feature AST was NOT equiv to previous%N")
 end;

@@ -19,7 +19,7 @@ DEFAULT_CVS_TAG=HEAD
 GTK_DIR=gtk2
 
 # Used only when making PorterPackage to checkout the sources
-NEW_EIFFEL_SRC=`pwd`/tmp52dev
+NEW_EIFFEL_SRC=`pwd`/tmpdev
 # The following directory is going to be used to compile the compiler
 FINALIZATION_DIR=`pwd`/finalized
 

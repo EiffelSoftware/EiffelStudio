@@ -309,9 +309,9 @@ feature {EV_ANY} -- Contract support
 			-- Is `Current' in its default state.
 		do
 			Result := {EV_ANY} Precursor and then
-				family = Ev_font_family_sans and then
-				weight = Ev_font_weight_regular and then
-				shape = Ev_font_shape_regular and then
+				-- family = Ev_font_family_sans and then
+				-- weight = Ev_font_weight_regular and then
+				-- shape = Ev_font_shape_regular and then
 				preferred_face = Void
 				--| Nothing about size since they are different
 				--| on each platform. (Win: 8; GTK: 11)
@@ -393,6 +393,11 @@ end -- class EV_FONT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/02/22 21:22:32  pichery
+--| The default creation of EV_FONT under Windows now creates the
+--| WEL_DEFAULT_GUI_FONT and set family, weight and shape according to
+--| the retrieved font.
+--|
 --| Revision 1.16  2000/02/22 18:39:48  oconnor
 --| updated copyright date and formatting
 --|

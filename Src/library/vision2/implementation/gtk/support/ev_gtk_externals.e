@@ -61,7 +61,6 @@ feature {NONE} -- GTK C functions for label
 		external "C | <gtk/gtk.h>"
 		end
 
-
 feature {NONE} -- GTK C functions for toolbars
 
 	gtk_toolbar_new (o, s: INTEGER): POINTER is
@@ -144,6 +143,48 @@ feature {NONE} -- GTK C functions for text_component
 		external "C | <gtk/gtk.h>"
 		end
 
+feature {NONE} -- GTK C functions for gtk_combo
+
+	gtk_combo_new: POINTER is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_combo_set_value_in_list (combo: POINTER; val: BOOLEAN; ok_if_empty: BOOLEAN) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_combo_set_use_arrows (combo: POINTER; val: BOOLEAN) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_combo_set_use_arrows_always (combo: POINTER; val: BOOLEAN) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_combo_set_case_sensitive (combo: POINTER; val: BOOLEAN) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_combo_set_item_string (combo: POINTER; item: POINTER; item_value: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_combo_set_popdown_strings (combo: POINTER; strings: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_combo_disable_activate (combo: POINTER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	c_gtk_combo_entry (combo: POINTER): POINTER  is
+		external "C [macro <gtk_eiffel.h>]"
+		end
+
+	c_gtk_combo_list (combo: POINTER): POINTER  is
+		external "C [macro <gtk_eiffel.h>]"
+		end
+
 feature {NONE} -- GTK C functions for gtktext
 
 	gtk_text_new (hadj, vajd: POINTER): POINTER is
@@ -222,8 +263,41 @@ feature {NONE} -- GTK C functions for list
 		external "C | <gtk/gtk.h>"
 		end
 
+	gtk_list_clear_items (list: POINTER; starti: INTEGER; endi: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
+	gtk_list_select_item (list: POINTER; item: INTEGER) is
+		external "C | <gtk/gtk.h>"
+		end
+
 	gtk_list_set_selection_mode (list: POINTER; mode: INTEGER) is
 		external "C | <gtk/gtk.h>"
+		end
+
+	c_gtk_add_list_item (list: POINTER; item: POINTER) is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_list_rows (list: POINTER): INTEGER is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_list_selection_mode (list: POINTER): INTEGER is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_list_selected (list: POINTER): BOOLEAN is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_list_selected_item (list: POINTER): INTEGER is
+		external
+			"C | %"gtk_eiffel.h%""
 		end
 
 feature {NONE} -- GTK C functions for multi-column list
@@ -256,7 +330,7 @@ feature {NONE} -- GTK C functions for multi-column list
 		external "C | <gtk/gtk.h>"
 		end
 
-	gtk_clist_set_column_justification (list: POINTER; column: INTEGER; justification: POINTER) is
+	gtk_clist_set_column_justification (list: POINTER; column: INTEGER; justification: INTEGER) is
 		external "C | <gtk/gtk.h>"
 		end
 
@@ -268,36 +342,40 @@ feature {NONE} -- GTK C functions for multi-column list
 		external "C | <gtk/gtk.h>"
 		end
 
-	gtk_clist_set_text (list: POINTER; row, column: INTEGER; text: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_clist_set_foreground (list: POINTER; row: INTEGER; color: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_clist_set_background (list: POINTER; row: INTEGER; color: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end
-	
-	gtk_clist_insert (list: POINTER; row: INTEGER; text: POINTER) is
-		external "C | <gtk/gtk.h>"
-		end
-
 	gtk_clist_remove (list: POINTER; row: INTEGER) is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_clist_select_row (list: POINTER; row, column: INTEGER) is
-		external "C | <gtk/gtk.h>"
-		end
-
-	gtk_clist_unselect_row (list: POINTER; row, column: INTEGER) is
 		external "C | <gtk/gtk.h>"
 		end
 
 	gtk_clist_clear (list: POINTER) is
 		external "C | <gtk/gtk.h>"
+		end
+
+	c_gtk_clist_rows (list:POINTER): INTEGER is
+		external "C [macro <gtk_eiffel.h>]"
+		end
+	
+	c_gtk_clist_columns (list: POINTER): INTEGER is
+		external "C [macro <gtk_eiffel.h>]"
+		end
+	
+	c_gtk_clist_selection_mode (list: POINTER): INTEGER is
+		external "C [macro <gtk_eiffel.h>]"
+		end
+
+	c_gtk_clist_append_row (list: POINTER): INTEGER is
+		external "C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_clist_selected (list: POINTER): BOOLEAN is
+		external "C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_clist_ith_selected_item (list: POINTER; i: INTEGER): INTEGER is
+		external "C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_clist_selection_length (list: POINTER): INTEGER is
+		external "C | %"gtk_eiffel.h%""
 		end
 
 feature {NONE} -- GTK C functions for tree
@@ -346,13 +424,6 @@ feature {NONE} -- code in the glue library
 			"C | %"gtk_eiffel.h%""
 		end	
 	
-	-- list
-
-	c_gtk_add_list_item (list: POINTER; item: POINTER) is
-		external
-			"C | %"gtk_eiffel.h%""
-		end	
-
 feature {NONE} -- Implementation
 	
 	routine_address (routine: POINTER): POINTER is

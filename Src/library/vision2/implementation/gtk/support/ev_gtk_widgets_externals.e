@@ -73,19 +73,19 @@ feature {NONE} -- code in the glue library
 		end
 	
 	c_gtk_widget_height (w: POINTER): INTEGER is
-		external "C | %"gtk_eiffel.h%""
+		external "C [macro <gtk_eiffel.h>]"
 		end
 	
 	c_gtk_widget_width (w: POINTER): INTEGER is
-		external "C | %"gtk_eiffel.h%""
+		external "C [macro <gtk_eiffel.h>]"
 		end
 
 	c_gtk_widget_x (w:POINTER): INTEGER is
-		external "C | %"gtk_eiffel.h%""
+		external "C [macro <gtk_eiffel.h>]"
 		end
 	
 	c_gtk_widget_y (w: POINTER): INTEGER is
-		external "C | %"gtk_eiffel.h%""
+		external "C [macro <gtk_eiffel.h>]"
 		end
 
 	c_gtk_widget_sensitive (w: POINTER): BOOLEAN is
@@ -97,14 +97,24 @@ feature {NONE} -- code in the glue library
 		end
 	
 	c_gtk_widget_minimum_width (w: POINTER): INTEGER is
-		external "C | %"gtk_eiffel.h%""
+		external "C [macro <gtk_eiffel.h>]"
 		end
 
 	c_gtk_widget_minimum_height (w: POINTER): INTEGER is
-		external "C | %"gtk_eiffel.h%""
+		external "C [macro <gtk_eiffel.h>]"
 		end
 
 	c_gtk_widget_show_children (widget: POINTER) is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_widget_position_set (widget: POINTER; x, y: INTEGER): BOOLEAN is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_widget_minimum_size_set (widget: POINTER; width, height: INTEGER): BOOLEAN is
 		external
 			"C | %"gtk_eiffel.h%""
 		end

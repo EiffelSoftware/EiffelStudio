@@ -137,11 +137,11 @@ feature {NONE} -- Implementation
 				obj_set1.put (o)
 				create o.make (5)
 				obj_set1.put (o)
+				if obj_comparison then create o.make (5)end
+				obj_set2.put (o)
 				create o.make (2)
 				obj_set2.put (o)
 				create o.make (4)
-				obj_set2.put (o)
-				create o.make (5)
 				obj_set2.put (o)
 			end
 		ensure
@@ -187,11 +187,11 @@ feature {NONE} -- Implementation
 				obj_set1.put (o)
 				create o.make (5)
 				obj_set1.put (o)
+				if obj_comparison then create o.make (5)end
+				obj_set2.put (o)
 				create o.make (2)
 				obj_set2.put (o)
 				create o.make (4)
-				obj_set2.put (o)
-				create o.make (5)
 				obj_set2.put (o)
 			end
 		ensure
@@ -203,6 +203,8 @@ feature {NONE} -- Implementation
 			-- `object_comparison' of the sets to `obj_comparison'.
 		require
 			sets_exist: string_set1 /= Void and string_set2 /= Void
+		local
+			s: STRING
 		do
 			if obj_comparison then
 				Io.put_string ("object comparison set%N")
@@ -225,10 +227,16 @@ feature {NONE} -- Implementation
 				Io.put_string ("Filling string set with non-disjoint data%N")
 				string_set1.put ("foo")
 				string_set1.put ("bar")
-				string_set1.put ("boo")
+				if obj_comparison then
+					string_set1.put ("boo")
+					string_set2.put ("boo")
+				else
+					s := "boo"
+					string_set1.put (s)
+					string_set2.put (s)
+				end
 				string_set2.put ("bla")
 				string_set2.put ("baz")
-				string_set2.put ("boo")
 			end
 		ensure
 			sets_filled: not string_set1.is_empty and not string_set2.is_empty

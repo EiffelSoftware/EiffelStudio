@@ -1,7 +1,7 @@
 Create object set as type LINKED_SET
 reference comparison set
 Filling object set with non-disjoint data
-object set disjoint: True
+object set disjoint: False
 Create object set as type LINKED_SET
 reference comparison set
 Filling object set with disjoint data
@@ -17,7 +17,7 @@ object set disjoint: True
 Create comparable object set as type BINARY_SEARCH_TREE_SET
 reference comparison set
 Filling comparable object set with non-disjoint data
-object set disjoint: True
+object set disjoint: False
 Create comparable object set as type BINARY_SEARCH_TREE_SET
 reference comparison set
 Filling comparable object set with disjoint data
@@ -29,11 +29,11 @@ object set disjoint: False
 Create comparable object set as type BINARY_SEARCH_TREE_SET
 object comparison set
 Filling comparable object set with disjoint data
-object set disjoint: False
+object set disjoint: True
 Create string set as type LINKED_SET
 reference comparison set
 Filling string set with non-disjoint data
-string set disjoint: True
+string set disjoint: False
 Create string set as type LINKED_SET
 reference comparison set
 Filling string set with disjoint data
@@ -49,7 +49,7 @@ string set disjoint: True
 Create string set as type BINARY_SEARCH_TREE_SET
 reference comparison set
 Filling string set with non-disjoint data
-string set disjoint: True
+string set disjoint: False
 Create string set as type BINARY_SEARCH_TREE_SET
 reference comparison set
 Filling string set with disjoint data

@@ -230,9 +230,11 @@ feature -- Status setting
 
 	hide is
 		do
-			C.gtk_window_set_position (c_object, C.Gtk_win_pos_none_enum)
-			C.gtk_widget_set_uposition (c_object, x_position, y_position)
-			Precursor
+			if is_show_requested then
+				C.gtk_window_set_position (c_object, C.Gtk_win_pos_none_enum)
+				C.gtk_widget_set_uposition (c_object, x_position, y_position)
+				Precursor		
+			end
 		end
 
 feature -- Element change

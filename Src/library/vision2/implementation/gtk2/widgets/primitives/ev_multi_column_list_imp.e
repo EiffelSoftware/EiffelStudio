@@ -106,8 +106,8 @@ feature {NONE} -- Initialization
 			resize_model_if_needed (25)
 				-- Create our model with 25 columns to avoid recomputation each time the column count increases
 			create_list (2)
-			
-			set_row_height (App_implementation.default_font_size + 9)
+
+			set_row_height ((App_implementation.default_font_point_height * 2 + 2).max (20))
 				-- We explicitly set the row height to be proportional to the default gtk application font
 			
 			previous_selection := selected_items

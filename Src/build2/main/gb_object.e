@@ -453,7 +453,7 @@ feature {GB_INTEGER_INPUT_FIELD, GB_STRING_INPUT_FIELD, GB_EV_ANY, GB_EV_EDITOR_
 		do
 			constants.extend (context, context.property + context.attribute)
 		ensure
-			constants.has (context.property + context.constant.name)
+			constants.has (context.property + context.attribute)
 		end
 
 feature -- Basic operations

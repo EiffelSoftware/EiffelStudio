@@ -457,7 +457,7 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 				if an_object.window_selector_item /= Void then
 					if an_object.window_selector_item.parent /= Void then
 							-- Do nothing if attempting to move from `Current' to `Current'.
-						if an_object.window_selector_item.parent /= Current then
+						if an_object.window_selector_item.parent /= parent_item then
 							directory_item ?= parent_item
 							create command_move_window.make (an_object, directory_item)
 							command_move_window.execute

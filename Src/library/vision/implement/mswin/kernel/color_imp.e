@@ -182,7 +182,6 @@ feature -- Settings
 					print ("%N")
 				end
 			end
-			!! allocated_brush.make_solid (Current)
 		end
 
 	set_white_default is
@@ -197,16 +196,10 @@ feature -- Settings
 	brush: WEL_BRUSH is
 			-- Windows Brush corresponding to this color.
 		do
-			if allocated_brush = Void then
-				!! allocated_brush.make_solid (Current)
-			end
-			Result := allocated_brush
+			create Result.make_solid (Current)
 		end
 
 feature {NONE} -- Implementation
-
-	allocated_brush: WEL_BRUSH
-			-- Brush corresponding to the color
 
 	has (color_name: STRING): BOOLEAN is
 			-- Test if the color_name exists in the hash_table

@@ -61,14 +61,15 @@ feature
 				generated_file.putstring ("RTWP(");
 				generated_file.putint
 					(context.current_type.associated_class_type.id - 1);
-				generated_file.putstring (", ");
+				generated_file.putstring (gc_comma);
 				generated_file.putint (feature_id);
-				generated_file.putstring (", ");
+				generated_file.putstring (gc_comma);
 				if context.dt_current > 1 then
-					generated_file.putstring ("dtype)");
+					generated_file.putstring (gc_dtype);
 				else
-					generated_file.putstring ("Dtype(Current))");
+					generated_file.putstring (gc_dtype_current);
 				end;
+				generated_file.putchar (')');
 			else
 				entry := Eiffel_table.item_id (rout_id);
 				if entry = Void then
@@ -83,11 +84,13 @@ feature
                     generated_file.putchar ('-');
                     generated_file.putint (entry.min_used - 1);
                     generated_file.putchar (')');
+                    generated_file.putchar ('[');
 					if context.dt_current > 1 then
-						generated_file.putstring ("[dtype]")
+						generated_file.putstring (gc_dtype)
 					else
-						generated_file.putstring ("[Dtype(Current)]");
+						generated_file.putstring (gc_dtype_current);
 					end;
+                    generated_file.putchar (']');
 						-- Mark table used
                     Eiffel_table.mark_used (rout_id);
                         -- Remember extern declarations

@@ -59,7 +59,7 @@ feature
 			register.print_register;
 			generated_file.putstring (" = RTHP(");
 			expr.print_register;
-			generated_file.putstring (");");
+			generated_file.putstring (gc_rparan_comma);
 			generated_file.new_line;
 		end;
 	

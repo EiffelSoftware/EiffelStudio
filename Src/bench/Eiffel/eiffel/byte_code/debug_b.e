@@ -84,7 +84,7 @@ feature
 						-- Generation of the debug compound in workbench
 						-- mode
 					static_type := context.current_type.type_id - 1;
-					generated_file.putstring ("if (");
+					generated_file.putstring (gc_if_l_paran);
 					generated_file.new_line;
 					generated_file.indent;
 					if keys = Void then

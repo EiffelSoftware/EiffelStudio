@@ -85,7 +85,7 @@ feature
 			generated_file.indent;
 			expr.generate;
 			generated_file.exdent;
-			generated_file.putstring ("if (");
+			generated_file.putstring (gc_if_l_paran);
 			expr.print_register;
 			generated_file.putstring (") {");
 			generated_file.new_line;

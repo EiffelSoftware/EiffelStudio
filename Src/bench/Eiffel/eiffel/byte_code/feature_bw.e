@@ -81,14 +81,14 @@ feature
 				generated_file.putstring ("RTWF(");
 			end;
 			generated_file.putint (typ.associated_class_type.id - 1);
-			generated_file.putstring (", ");
+			generated_file.putstring (gc_comma);
 			generated_file.putint (real_feature_id);
-			generated_file.putstring (", ");
+			generated_file.putstring (gc_comma);
 			if not is_nested then
 				if context.dt_current > 1 then
-					generated_file.putstring ("dtype");
+					generated_file.putstring (gc_dtype);
 				else
-					generated_file.putstring ("Dtype(");
+					generated_file.putstring (gc_upper_dtype_lparan);
 					context.Current_register.print_register_by_name;
 					generated_file.putchar (')');
 				end;
@@ -98,7 +98,7 @@ feature
 				generated_file.putstring ("%", ");
 				reg.print_register;
 			else
-				generated_file.putstring ("Dtype(");
+				generated_file.putstring (gc_upper_dtype_lparan);
 				reg.print_register;
 				generated_file.putchar (')');
 			end;

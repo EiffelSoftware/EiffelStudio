@@ -74,7 +74,7 @@ feature
 			r_name: STRING
 		do
 			if array_desc /= Void then
-				generated_file.putstring ("{");
+				generated_file.putchar ('{');
 				generated_file.new_line;
 				from
 					array_desc.start
@@ -85,7 +85,7 @@ feature
 					id := array_desc.item;
 					r_name := reg_name (id);
 					generated_file.putstring (r_name);
-					generated_file.putstring (");");
+					generated_file.putstring (gc_rparan_comma);
 							-- The Dtype has not been declared before
 					if
 						already_generated_offsets = Void
@@ -94,7 +94,7 @@ feature
 					then
 						generated_file.putstring (" RTADTYPE(");
 						generated_file.putstring (r_name);
-						generated_file.putstring (");");
+						generated_file.putstring (gc_rparan_comma);
 					end;
 					generated_file.new_line;
 					array_desc.forth
@@ -103,7 +103,7 @@ feature
 			end
 			if generated_offsets /= Void then
 				if array_desc = Void then
-					generated_file.putstring ("{");
+					generated_file.putchar ('{');
 					generated_file.new_line;
 				end;
 				from
@@ -116,7 +116,7 @@ feature
 					generated_file.putstring (r_name);
 					generated_file.putstring ("); RTADOFFSETS(");
 					generated_file.putstring (r_name);
-					generated_file.putstring (");");
+					generated_file.putstring (gc_rparan_comma);
 					generated_file.new_line;
 					generated_offsets.forth
 				end
@@ -148,11 +148,11 @@ feature
 					end
 					System.remover.array_optimizer.array_item_type (id).
 						generate (generated_file);
-					generated_file.putstring (",");
+					generated_file.putchar (',');
 					generated_file.putstring (reg_name (id));
-					generated_file.putstring (",");
+					generated_file.putchar (',');
 					generated_file.putstring (register_acces (id));
-					generated_file.putstring (");");
+					generated_file.putstring (gc_rparan_comma);
 					generated_file.new_line;
 
 					array_desc.forth
@@ -169,9 +169,9 @@ feature
                     r_name := reg_name (id);
                     generated_file.putstring ("RTAIOFFSETS(");
                     generated_file.putstring (r_name);
-					generated_file.putstring (",");
+					generated_file.putchar (',');
 					generated_file.putstring (register_acces (id));
-                    generated_file.putstring (");");
+                    generated_file.putstring (gc_rparan_comma);
 					generated_file.new_line;
                     generated_offsets.forth
                 end
@@ -192,17 +192,17 @@ feature
 					generated_file.putstring ("RTAF(");
 					id := array_desc.item
 					generated_file.putstring (reg_name (id));
-					generated_file.putstring (",");
+					generated_file.putchar (',');
 					generated_file.putstring (register_acces (id));
-					generated_file.putstring (");");
+					generated_file.putstring (gc_rparan_comma);
 					generated_file.new_line;
 					array_desc.forth
 				end
 				generated_file.new_line;
-				generated_file.putstring ("}");
+				generated_file.putchar ('}');
 				generated_file.new_line;
 			elseif generated_offsets /= Void then
-				generated_file.putstring ("}");
+				generated_file.putchar ('}');
 				generated_file.new_line;
 			end
 		end;

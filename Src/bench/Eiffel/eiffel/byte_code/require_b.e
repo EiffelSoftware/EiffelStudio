@@ -30,21 +30,21 @@ feature
 					generated_file.putchar ('"');
 					generated_file.putstring (tag);
 					generated_file.putchar ('"');
-					generated_file.putstring(", ");
+					generated_file.putstring (gc_comma);
 				else
 					generated_file.putstring ("RTCS(");
 				end;
 				generate_assertion_code (context.assertion_type);
-				generated_file.putstring(");");
+				generated_file.putstring (gc_rparan_comma);
 				generated_file.new_line;
 			end;
 				-- Now evaluate the expression
 			expr.generate;
 			generated_file.putstring ("RTTE(");
 			expr.print_register;
-			generated_file.putstring (", ");
+			generated_file.putstring (gc_comma);
 			context.print_current_label;
-			generated_file.putstring (");");
+			generated_file.putstring (gc_rparan_comma);
 			generated_file.new_line;
 			if Context.is_prec_first_block then
 				generated_file.putstring ("RTCK;");

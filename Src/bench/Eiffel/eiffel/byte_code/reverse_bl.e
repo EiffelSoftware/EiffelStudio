@@ -118,7 +118,7 @@ feature
 				   source_print_register;
 					generated_file.putstring (" = RTRM(");
 					source_print_register;
-					generated_file.putstring (", ");
+					generated_file.putstring (gc_comma);
 					context.Current_register.print_register_by_name;
 					generated_file.putchar (')');
 					generated_file.putchar (';');
@@ -140,7 +140,7 @@ feature
 								(cl_type_i.associated_class_type.id - 1);
 					generated_file.putchar (')');
 				end;
-				generated_file.putstring (", ");
+				generated_file.putstring (gc_comma);
 				source_print_register;
 				generated_file.putchar (')');
 			else

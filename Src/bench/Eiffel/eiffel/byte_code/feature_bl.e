@@ -136,9 +136,9 @@ end;
 			expr: EXPR_B;
 		do
 			reg.print_register;
-			generated_file.putstring (" ");
+			generated_file.putchar (' ');
 			generated_file.putstring (special_routines.c_operation);
-			generated_file.putstring (" ");
+			generated_file.putchar (' ');
 			expr ?= parameters.first; -- Cannot fail
 			expr.print_register;
 		end;
@@ -230,19 +230,21 @@ end;
 				generated_file.putchar ('-');
 				generated_file.putint (entry.min_used - 1);
 				generated_file.putchar (')');
+				generated_file.putchar ('[');
 				if reg.is_current then
 					if context.dt_current > 1 then
-						generated_file.putstring ("[dtype])");
+						generated_file.putstring (gc_dtype);
 					else
-						generated_file.putstring ("[Dtype(");
+						generated_file.putstring (gc_upper_dtype_lparan);
 						context.Current_register.print_register_by_name;
-						generated_file.putstring (")])");
+						generated_file.putchar (')');
 					end;
 				else
-					generated_file.putstring ("[Dtype(");
+					generated_file.putstring (gc_upper_dtype_lparan);
 					reg.print_register;
-					generated_file.putstring (")])");
+					generated_file.putchar (')');
 				end;
+				generated_file.putstring ("])");
 					-- Mark routine id used
 				Eiffel_table.mark_used (rout_id);
 					-- Remember extern declaration
@@ -277,7 +279,7 @@ end;
 					parameters.after
 				loop
 					expr ?= parameters.item;	-- Cannot fail
-					generated_file.putstring (", ");
+					generated_file.putstring (gc_comma);
 					expr.print_register;
 					parameters.forth;
 				end;

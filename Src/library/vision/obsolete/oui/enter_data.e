@@ -44,7 +44,7 @@ feature
 			-- Create a context_data for `EnterNotify' event.
 		do
 			widget := a_widget
-		end -- Create
+		end 
 
 end -- class ENTER_DATA
 

@@ -26,7 +26,7 @@ feature
 		deferred
 	        ensure
 		        button.same (selected_button)
-	        end; -- set_selected_button
+		end;
 
 feature
 	caption: STRING is

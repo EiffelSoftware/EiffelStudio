@@ -21,7 +21,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_apply_action
+		end;
 
 	add_cancel_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
@@ -29,7 +29,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_cancel_action
+		end;
 
 	add_ok_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
@@ -37,29 +37,29 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_ok_action
+		end;
 
 	font: FONT is
 			-- Font currently selected by the user
 		deferred
 		ensure
 			not (Result = Void)
-		end; -- font
+		end;
 
 	hide_apply_button is
 			-- Make apply button invisible.
 		deferred
-		end; -- hide_apply_button
+		end;
 
 	hide_cancel_button is
 			-- Make cancel button invisible.
 		deferred
-		end; -- hide_cancel_button
+		end;
 
 	hide_ok_button is
 			-- Make ok button invisible.
 		deferred
-		end; -- hide_ok_button
+		end;
 
 	remove_apply_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -67,7 +67,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_apply_action
+		end;
 
 	remove_cancel_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -75,7 +75,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_cancel_action
+		end;
 
 	remove_ok_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -83,29 +83,29 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_ok_action
+		end;
 
 	set_font (a_font: FONT) is
 			-- Edit `a_font'.
 		require
 			a_font_exists: not (a_font = Void)
 		deferred
-		end; -- set_font
+		end;
 
 	show_apply_button is
 			-- Make apply button visible.
 		deferred
-		end; -- show_apply_button
+		end;
 
 	show_cancel_button is
 			-- Make cancel button visible.
 		deferred
-		end; -- show_cancel_button
+		end;
 
 	show_ok_button is
 			-- Make ok button visible.
 		deferred
-		end -- show_ok_button
+		end
 
 end -- class FONT_BOX_I
 

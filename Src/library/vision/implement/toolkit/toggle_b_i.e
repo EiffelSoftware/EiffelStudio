@@ -19,21 +19,21 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_value_changed_action
+		end;
 
 	arm is
 			-- Assign True to `state'.
 		deferred
 		ensure
 			state_is_true: state
-		end; -- arm
+		end;
 
 	disarm is
 			-- Assign False to `state'
 		deferred
 		ensure
 			state_is_false: not state
-		end; -- disarm
+		end;
 
 	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -41,12 +41,12 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_value_changed_action
+		end;
 
 	state: BOOLEAN is
 			-- State of current toggle button.
 		deferred
-		end -- state
+		end
 
 	set_toggle_on is
 			-- Set Current toggle on and set

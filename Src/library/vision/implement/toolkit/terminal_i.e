@@ -15,7 +15,7 @@ feature {TERMINAL_OUI}
 	build is
 			-- Build the terminal.
 		deferred
-		end; -- build
+		end;
 	
 feature 
 
@@ -25,7 +25,7 @@ feature
 			font_name_not_void: a_font /= Void;
 			a_font_specified: a_font.is_specified
 		deferred
-		end; -- set_label_font
+		end;
 
 	set_button_font (a_font: FONT) is
 			-- Set font of every buttons to `a_font'.
@@ -33,7 +33,7 @@ feature
 			font_name_not_void: a_font /= Void;
 			a_font_specified: a_font.is_specified
 		deferred
-		end; -- set_button_font
+		end;
 
 	set_text_font (a_font: FONT) is
 			-- Set font of every text to `a_font'.
@@ -41,22 +41,22 @@ feature
 			font_name_not_void: a_font /= Void;
 			a_font_specified: a_font.is_specified
 		deferred
-		end; -- set_text_font
+		end;
 
 	label_font: FONT is
 			-- Font specified for labels
 		deferred
-		end; -- label_font
+		end;
 
 	button_font: FONT is
 			-- Font specified for buttons
 		deferred
-		end; -- button_font
+		end;
 
 	text_font: FONT is
 			-- Font specified for text
 		deferred
-		end -- text_font
+		end
 
 end -- class TERMINAL_I
 

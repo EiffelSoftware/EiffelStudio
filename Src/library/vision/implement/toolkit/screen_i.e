@@ -17,31 +17,31 @@ feature
 		deferred
 		ensure
 			not (Result = Void)
-		end; -- buttons
+		end;
 
 	height: INTEGER is
 			-- Height of screen (in pixel)
 		deferred
 		ensure
 			height_large_enough: Result >= 0
-		end; -- height
+		end;
 
 	screen_object: POINTER is
 			-- Screen object associated
 		deferred
-		end; -- screen_object
+		end;
 
 	widget_pointed: WIDGET is
 			-- Widget currently pointed by the pointer
 		deferred
-		end; -- widget_pointed
+		end;
 
 	width: INTEGER is
 			-- Width of screen (in pixel)
 		deferred
 		ensure
 			width_large_enough: Result >= 0
-		end; -- width
+		end;
 
 	x: INTEGER is
 			-- Current absolute horizontal coordinate of the mouse
@@ -49,7 +49,7 @@ feature
 		ensure
 			position_positive: Result >= 0;
 			position_small_enough: Result < width
-		end; -- x
+		end;
 
 	y: INTEGER is
 			-- Current absolute vertical coordinate of the mouse
@@ -57,7 +57,7 @@ feature
 		ensure
 			position_positive: Result >= 0;
 			position_small_enough: Result < height
-		end; -- y
+		end;
 
 	is_valid: BOOLEAN is
 			-- Is Current screen created?

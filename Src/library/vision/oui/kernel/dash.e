@@ -53,8 +53,8 @@ feature
 
 invariant
 
-	offset >= 0;
-	(not empty) implies (offset <= max_offset)
+	non_negative_offset: offset >= 0;
+	not_empty_offset_in_bound: (not empty) implies (offset <= max_offset)
 
 end
 

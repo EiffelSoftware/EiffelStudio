@@ -16,17 +16,17 @@ feature
 	is_horizontal: BOOLEAN is
 			-- Is separator oriented horizontal?
 		deferred
-		end; -- is_horizontal
+		end;
 
 	set_double_dashed_line is
 			-- Set separator display to be double dashed line.
 		deferred
-		end; -- set_double_dashed_line
+		end;
 
 	set_double_line is
 			-- Set separator display to be double line.
 		deferred
-		end; -- set_double_line
+		end;
 
 	set_horizontal (flag: BOOLEAN) is
 			-- Set orientation of the scale to horizontal if `flag',
@@ -34,22 +34,22 @@ feature
 		deferred
 		ensure
 			value_correctly_set: is_horizontal = flag
-		end; -- set_horizontal
+		end;
 
 	set_no_line is
 			-- Make current separator invisible.
 		deferred
-		end; -- set_no_line
+		end;
 
 	set_single_dashed_line is
 			-- Set separator display to be single dashed line.
 		deferred
-		end; -- set_single_dashed_line
+		end;
 
 	set_single_line is
 			-- Set separator display to be single line.
 		deferred
-		end -- set_single_line
+		end
 
 end -- class SEPARATOR_I
 

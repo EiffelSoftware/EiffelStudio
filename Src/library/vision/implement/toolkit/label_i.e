@@ -25,7 +25,7 @@ feature
 			-- Forbid current label to recompute its size according to
 			-- some changes on its value.
 		deferred
-		end; -- forbid_recom
+		end;
 
 	set_right_alignment is
 		-- Set text alignment of current label to right.
@@ -35,12 +35,12 @@ feature
 	set_center_alignment is
 			-- Set text alignment of current label to center.
 		deferred
-		end; -- set_center_alignment
+		end;
 
 	set_left_alignment is
 			-- Set text alignment of current label to left.
 		deferred
-		end; -- set_left_alignment
+		end;
 
 	set_text (a_text: STRING) is
 			-- Set text of current label to `a_text'.
@@ -49,12 +49,12 @@ feature
 		deferred
 		ensure
 			text.is_equal (a_text)
-		end; -- set_text
+		end;
 
 	text: STRING is
 			-- Text of current label
 		deferred
-		end -- text
+		end
 
 end --class LABEL_I
 

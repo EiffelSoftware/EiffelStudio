@@ -21,7 +21,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_cancel_action
+		end;
 
 	add_filter_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
@@ -29,7 +29,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_filter_action
+		end;
 
 	add_help_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
@@ -37,7 +37,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_help_action
+		end;
 
 	add_ok_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
@@ -45,74 +45,74 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_ok_action
+		end;
 
 	dir_count: INTEGER is
 			-- Number of items in directory list
 		deferred
-		end; -- dir_count
+		end;
 
 	dir_list: LINKED_LIST [STRING] is
 			-- Items of current directory list
 		deferred
-		end; -- dir_list
+		end;
 
 	directory: STRING is
 			-- Base directory used in determining files and directories
 			-- to be displayed
 		deferred
-		end; -- directory
+		end;
 
 	file_count: INTEGER is
 			-- Number of items in file list
 		deferred
-		end; -- file_count
+		end;
 
 	file_list: LINKED_LIST [STRING] is
 			-- Items of current file list
 		deferred
-		end; -- file_list
+		end;
 
 	filter: STRING is
 			-- Current filter value
 		deferred
-		end; -- filter
+		end;
 
 	hide_cancel_button is
 			-- Make cancel button invisible.
 		deferred
-		end; -- hide_cancel_button
+		end;
 
 	hide_filter_button is
 			-- Make filter button invisible.
 		deferred
-		end; -- hide_filter_button
+		end;
 
 	hide_help_button is
 			-- Make help button invisible.
 		deferred
-		end; -- hide_help_button
+		end;
 
 	hide_ok_button is
 			-- Make ok button invisible.
 		deferred
-		end; -- hide_ok_button
+		end;
 
 	is_dir_valid: BOOLEAN is
 			-- Is current search directory valid?
 		deferred
-		end; -- is_dir_valid
+		end;
 
 	is_list_updated: BOOLEAN is
 			-- Is file od directory list updated during last search?
 		deferred
-		end; -- is_list_updated
+		end;
 
 	pattern: STRING is
 			-- Search pattern used in combination with `directory'
 			-- files and directories to be displayed
 		deferred
-		end; -- pattern
+		end;
 
 	remove_cancel_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -120,7 +120,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_cancel_action
+		end;
 
 	remove_filter_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -128,7 +128,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_filter_action
+		end;
 
 	remove_help_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -136,7 +136,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_help_action
+		end;
 
 	remove_ok_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -144,18 +144,18 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_ok_action
+		end;
 
 	selected_file: STRING is
 			-- Current selected file
 		deferred
-		end; -- selected_file
+		end;
 
 	set_dir_list_label (a_label: STRING) is
 			-- Set `a_label' as dir list label,
 			-- by default this label is `Directories'.
 		deferred
-		end; -- set_dir_list_label
+		end;
 
 	set_directory (a_directory_name: STRING) is
 			-- Set base directory used in determining files and directories
@@ -163,53 +163,53 @@ feature
 		require
 			not_a_directory_name_void: not (a_directory_name = Void)
 		deferred
-		end; -- set_directory
+		end;
 
 	set_file_list_label (a_label: STRING) is
 			-- Set `a_label' as file list label,
 			-- by default this label is `Files'.
 		deferred
-		end; -- set_file_list_label
+		end;
 
 	set_filter (a_filter: STRING) is
 			-- Set current filter to `a_filter'.
 		require
 			not_a_filter_void: not (a_filter = Void)
 		deferred
-		end; -- set_filter
+		end;
 
 	set_filter_label (a_label: STRING) is
 			-- Set `a_label' as filter label,
 			-- by default this label is `Filter'.
 		deferred
-		end; -- set_filter_label
+		end;
 
 	set_pattern (a_pattern: STRING) is
 			-- Set pattern to `a_pattern'.
 		require
 			not_a_pattern_void: not (a_pattern = Void)
 		deferred
-		end; -- set_pattern
+		end;
 
 	show_cancel_button is
 			-- Make cancel button visible.
 		deferred
-		end; -- show_cancel_button
+		end;
 
 	show_filter_button is
 			-- Make filter button visible.
 		deferred
-		end; -- show_filter_button
+		end;
 
 	show_help_button is
 			-- Make help button visible.
 		deferred
-		end; -- show_help_button
+		end;
 
 	show_ok_button is
 			-- Make ok button visible.
 		deferred
-		end; -- show_ok_button
+		end;
 
 	hide_file_selection_list is
 		deferred

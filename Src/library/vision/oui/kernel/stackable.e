@@ -1,8 +1,8 @@
 indexing
 
 	status: "See notice at end of class";
-    date: "$Date$";
-    revision: "$Revision$"
+	date: "$Date$";
+	revision: "$Revision$"
 
 deferred class STACKABLE
 
@@ -38,7 +38,6 @@ feature
 			exists: not destroyed;
 		deferred
 		end;
-
 
 feature {NONE}
 

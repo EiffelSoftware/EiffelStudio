@@ -21,7 +21,7 @@ feature
 		deferred
 		ensure
 			valid_result: Result.is_valid
-		end; -- pixmap
+		end;
 
 	set_pixmap (a_pixmap: PIXMAP) is
 			-- Draw `a_pixmap' into the picture_button.
@@ -31,7 +31,7 @@ feature
 		deferred
 		ensure
 			pixmap = a_pixmap
-		end -- set_pixmap
+		end
 
 end -- class PICT_COLOR_B
 

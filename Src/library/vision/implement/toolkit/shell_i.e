@@ -23,13 +23,13 @@ feature
 			-- Allow geometry resize to all geometry requests
 			-- from its children.
 		deferred
-		end; -- allow_resize
+		end;
 
 	forbid_resize is
 			-- Forbid geometry resize to all geometry requests
 			-- from its children.
 		deferred
-		end; -- forbid_resize
+		end;
 
 end -- class SHELL_I
 

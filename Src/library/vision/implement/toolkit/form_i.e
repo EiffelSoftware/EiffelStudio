@@ -21,7 +21,7 @@ feature
 			not_shell_child: is_valid (a_child);
 			offset_non_negative: right_offset >= 0
 		deferred
-		end; -- attach_right
+		end;
 
 	attach_left (a_child: WIDGET_I; left_offset: INTEGER) is
 			-- Attach left side of `a_child' to the left side of current form
@@ -31,7 +31,7 @@ feature
 			not_shell_child: is_valid (a_child);
 			offset_non_negative: left_offset >= 0
 		deferred
-		end; -- attach_left
+		end;
 
 	attach_bottom (a_child: WIDGET_I; bottom_offset: INTEGER) is
 			-- Attach bottom side of `a_child' to the bottom side of current form
@@ -41,7 +41,7 @@ feature
 			not_shell_child: is_valid (a_child);
 			offset_non_negative: bottom_offset >= 0
 		deferred
-		end; -- attach_bottom
+		end;
 
 	attach_top (a_child: WIDGET_I; top_offset: INTEGER) is
 			-- Attach top side of `a_child' to the top side of current form
@@ -51,7 +51,7 @@ feature
 			not_shell_child: is_valid (a_child);
 			offset_non_negative: top_offset >= 0
 		deferred
-		end; -- attach_top
+		end;
 
 	attach_right_widget (a_widget: WIDGET_I; a_child: WIDGET_I; right_offset: INTEGER) is
 			-- Attach right side of `a_child' to the left side of
@@ -62,7 +62,7 @@ feature
 			not_widget_void: not (a_widget = Void);
 			offset_non_negative: right_offset >= 0
 		deferred
-		end; -- attach_right_widget
+		end;
 
 	attach_left_widget (a_widget: WIDGET_I; a_child: WIDGET_I; left_offset: INTEGER) is
 			-- Attach left side of `a_child' to the right side of
@@ -73,7 +73,7 @@ feature
 			not_widget_void: not (a_widget = Void);
 			offset_non_negative: left_offset >= 0
 		deferred
-		end; -- attach_left_widget
+		end;
 
 	attach_bottom_widget (a_widget: WIDGET_I; a_child: WIDGET_I; bottom_offset: INTEGER) is
 			-- Attach bottom side of `a_child' to the top side of
@@ -84,7 +84,7 @@ feature
 			not_widget_void: not (a_widget = Void);
 			offset_non_negative: bottom_offset >= 0
 		deferred
-		end; -- attach_bottom_widget
+		end;
 
 	attach_top_widget (a_widget: WIDGET_I; a_child: WIDGET_I; top_offset: INTEGER) is
 			 -- Attach top side of `a_child' to the bottom side of
@@ -95,7 +95,7 @@ feature
 			not_widget_void: not (a_widget = Void);
 			offset_non_negative: top_offset >= 0
 		deferred
-		end; -- attach_top_widget
+		end;
 
 	attach_left_position (a_child: WIDGET_I; a_position: INTEGER) is
 			-- Attach left side of `a_child' to a position that is
@@ -108,7 +108,7 @@ feature
 			a_position_large_enough: a_position >= 0;
 			a_position_small_enough: a_position <= fraction_base
 		deferred
-		end; -- attach_left_position
+		end;
 
 	attach_right_position (a_child: WIDGET_I; a_position: INTEGER) is
 			-- Attach right side of `a_child' to a position that is
@@ -121,7 +121,7 @@ feature
 			a_position_large_enough: a_position >= 0;
 			a_position_small_enough: a_position <= fraction_base
 		deferred
-		end; -- attach_right_position
+		end;
 
 	attach_bottom_position (a_child: WIDGET_I; a_position: INTEGER) is
 			-- Attach bottom side of `a_child' to a position that is
@@ -134,7 +134,7 @@ feature
 			a_position_large_enough: a_position >= 0;
 			a_position_small_enough: a_position <= fraction_base
 		deferred
-		end; -- attach_bottom_position
+		end;
 
 	attach_top_position (a_child: WIDGET_I; a_position: INTEGER) is
 			-- Attach top side of `a_child' to a position that is
@@ -147,35 +147,35 @@ feature
 			a_position_large_enough: a_position >= 0;
 			a_position_small_enough: a_position <= fraction_base
 		deferred
-		end; -- attach_top_position
+		end;
 
 	detach_right (a_child: WIDGET_I) is
 			-- Detach right side of `a_child'.
 		require
 			not_child_void: not (a_child = Void)
 		deferred
-		end; -- detach_right;
+		end;
 
 	detach_left (a_child: WIDGET_I) is
 			-- Detach left side of `a_child'.
 		require
 			not_child_void: not (a_child = Void)
 		deferred
-		end; -- detach_left;
+		end;
 
 	detach_bottom (a_child: WIDGET_I) is
 			-- Detach bottom side of `a_child'.
 		require
 			not_child_void: not (a_child = Void)
 		deferred
-		end; -- detach_bottom;
+		end;
 
 	detach_top (a_child: WIDGET_I) is
 			-- Detach top side of `a_child'.
 		require
 			not_child_void: not (a_child = Void)
 		deferred
-		end; -- detach_top;
+		end;
 
 	set_fraction_base (a_value: INTEGER) is
 			-- Set fraction_base to `a_value'.
@@ -184,7 +184,7 @@ feature
 		require
 			a_value_strictly_greater_than_zero: a_value > 0
 		deferred
-		end; -- set_fraction_base
+		end;
 
 	fraction_base: INTEGER is
 			-- Value used to compute child position with
@@ -192,7 +192,7 @@ feature
 		deferred
 		ensure
 			fraction_base_strictly_greater_than_zero: Result > 0
-		end; -- fraction_base
+		end;
 
 	
 feature 
@@ -201,7 +201,7 @@ feature
 			-- Is `other' a valid child?
 		do
 			Result := true
-		end -- is_valid
+		end
 
 end -- class FORM_I
 

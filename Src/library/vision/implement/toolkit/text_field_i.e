@@ -34,19 +34,19 @@ feature
 		require
 			not_a_text_void: not (a_text = Void)
 		deferred
-		end; -- append
+		end;
 
 	clear is
 			-- Clear current text field.
 		deferred
-		end; -- clear
+		end;
 
 	count: INTEGER is
 			-- Number of character in current text field
 		deferred
 		ensure
 			Result >= 0
-		end; -- count
+		end;
 
 	insert (a_text: STRING; a_position: INTEGER) is
 			-- Insert `a_text' in current text field at `a_position'.
@@ -59,13 +59,13 @@ feature
 		ensure
 --			count = (old count) + a_text.count;
 			a_text.count > 0 implies a_text.is_equal (text.substring (a_position						+ 1, a_position + a_text.count))
-		end; -- insert
+		end;
 
 	maximum_size: INTEGER is
 			-- Maximum number of characters in current
 			-- text field
 		deferred
-		end; -- maximum_size
+		end;
 
 	replace (from_position, to_position: INTEGER; a_text: STRING) is
 			-- Replace text from `from_position' to `to_position' by `a_text'.
@@ -78,28 +78,28 @@ feature
 		ensure
 --			count = (old count) + a_text.count + to_position - from_position;
 			a_text.count > 0 implies a_text.is_equal (text.substring (from_position+1, from_position+a_text.count))
-		end; -- replace
+		end;
 
 	set_maximum_size (a_max: INTEGER) is
 			-- Set maximum_size to `a_max'.
 		require
 			not_negative_maximum: not (a_max < 0)
 		deferred
-		end; -- set_maximum_size
+		end;
 
 	set_text (a_text: STRING) is
 			-- Set `text' to `a_text'.
 		require
 			not_a_text_void: not (a_text = Void)
 		deferred
-		end; -- set_text
+		end;
 
 	text: STRING is
 			-- Value of current text field
 		deferred
 		ensure
 			Result.count = count
-		end -- text
+		end
 
 end -- class TEXT_FIELD_I
 

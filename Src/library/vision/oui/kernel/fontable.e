@@ -15,7 +15,7 @@ feature
 			exists: not destroyed
 		do
 			Result := implementation.font
-		end; -- font
+		end;
 
 feature {G_ANY, WIDGET_I, TOOLKIT}
 
@@ -32,7 +32,7 @@ feature
 			a_font_specified: a_font.is_specified
 		do
 			implementation.set_font (a_font)
-		end; -- set_font
+		end;
 
 	set_font_name (a_font_name: STRING) is
 			-- Set font label to `a_font_name'.
@@ -59,7 +59,7 @@ feature {G_ANY, WIDGET_I, TOOLKIT}
 			an_implementation_exists: not (an_implementation = Void)
 		do
 			implementation := an_implementation
-		end -- set_font_imp
+		end
 
 end
 

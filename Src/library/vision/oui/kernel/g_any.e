@@ -12,17 +12,17 @@ feature {NONE}
 	init_toolkit: like toolkit is
 			-- Init toolkit to desired implementation.
 		do
-		end; -- init_toolkit
+		end;
 
 	toolkit: TOOLKIT is
 			-- Toolkit of implementation in the environment desired
 		once
 			Result := init_toolkit
 		ensure
-			not (Result = Void)
-		end -- toolkit
+			toolkit_exists: Result /= Void
+		end 
 
-end
+end -- G_ANY
 
 
 --|----------------------------------------------------------------

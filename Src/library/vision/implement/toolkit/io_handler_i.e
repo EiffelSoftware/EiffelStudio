@@ -22,7 +22,7 @@ feature
 	is_call_back_set: BOOLEAN is
 			-- Is a call back already set ?
 		deferred
-		end; -- is_call_back_set
+		end;
 
 	set_error_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
 			-- Set `a_command' with `argument' to execute when an operation
@@ -35,7 +35,7 @@ feature
 		deferred
 		ensure
 			is_call_back_set
-		end; -- set_error_call_back
+		end;
 
 	set_no_call_back is
 			-- Remove any call-back already set.
@@ -44,7 +44,7 @@ feature
 		deferred
 		ensure
 			not is_call_back_set
-		end; -- set_no_call_back
+		end;
 
 	set_read_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
 			-- Set `a_command' with `argument' to execute when `a_file' has
@@ -55,7 +55,7 @@ feature
 		deferred
 		ensure
 			is_call_back_set
-		end; -- set_read_call_back
+		end;
 
 	set_write_call_back (a_file: IO_MEDIUM; a_command: COMMAND; an_argument: ANY) is
 			-- Set `a_command' with `argument' to execute when `a_file' is

@@ -26,7 +26,7 @@ feature
 		deferred
 		ensure
 			type = User_defined_pixmap
-		end; -- set_pixmap
+		end;
 
 	set_type (new_type: INTEGER) is
 			-- Set type of current cursor to `new_type'.
@@ -36,12 +36,12 @@ feature
 		deferred
 		ensure
 			type = new_type
-		end; -- set_type
+		end;
 
 	type: INTEGER is
 			-- Predefined type of current cursor
 		deferred
-		end -- type
+		end
 
 invariant
 

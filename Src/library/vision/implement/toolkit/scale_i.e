@@ -21,7 +21,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_move_action
+		end;
 
 	add_value_changed_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when value
@@ -29,7 +29,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_value_changed_action
+		end;
 
 	granularity: INTEGER is
 			-- Value of the amount to move the slider and modifie value
@@ -38,43 +38,43 @@ feature
 		ensure
 			granularity_large_enough: Result >=1;
 			granularity_small_enough: Result <= (maximum - minimum)
-		end; -- granularity
+		end;
 
 	is_horizontal: BOOLEAN is
 			-- Is scale oriented horizontal?
 		deferred
-		end; -- is_horizontal
+		end;
 
 	is_maximum_right_bottom: BOOLEAN is
 			-- Is maximum value on the right side when orientation
 			-- is horizontal or on the bottom side when orientation
 			-- is vertical?
 		deferred
-		end; -- is_maximum_right_bottom
+		end;
 
 	is_output_only: BOOLEAN is
 			-- Is scale mode output only?
 		deferred
-		end; -- is_output_only
+		end;
 
 	is_value_shown: BOOLEAN is
 			-- Is value shown on the screen?
 		deferred
-		end; -- is_value_shown
+		end;
 
 	maximum: INTEGER is
 			-- Maximum value of the slider
 		deferred
 		ensure
 			maximum_greater_than_minimum: Result >= minimum
-		end; -- maximum
+		end;
 
 	minimum: INTEGER is
 			-- Minimum value of the slider
 		deferred
 		ensure
 			minimum_smaller_than_maximum: Result <= maximum
-		end; -- minimum
+		end;
 
 	remove_move_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -82,7 +82,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_value_changed_action
+		end;
 
 	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -90,7 +90,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_value_changed_action
+		end;
 
 	set_granularity (new_granularity: INTEGER) is
 			-- Set amount to move the slider and modifie value when
@@ -101,7 +101,7 @@ feature
 		deferred
 		ensure
 			granularity = new_granularity
-		end; -- set_granularity
+		end;
 
 	set_horizontal (flag: BOOLEAN) is
 			-- Set orientation of the scale to horizontal if `flag',
@@ -109,7 +109,7 @@ feature
 		deferred
 		ensure
 			value_correctly_set: is_horizontal = flag
-		end; -- set_horizontal
+		end;
 
 	set_maximum (new_maximum: INTEGER) is
 			-- Set maximum value of the slider to `new_maximum'.
@@ -118,7 +118,7 @@ feature
 		deferred
 		ensure
 			maximum = new_maximum
-		end; -- set_maximum
+		end;
 
 	set_maximum_right_bottom (flag: BOOLEAN) is
 			-- Set maximum value on the right side when orientation
@@ -127,7 +127,7 @@ feature
 		deferred
 		ensure
 			maximum_value_on_right_bottom: is_maximum_right_bottom = flag
-		end; -- set_maximum_right_bottom
+		end;
 
 	set_minimum (new_minimum: INTEGER) is
 			-- Set minimum value of the slider to `new_minimum'.
@@ -136,7 +136,7 @@ feature
 		deferred
 		ensure
 			minimum = new_minimum
-		end; -- set_minimum
+		end;
 
 	set_output_only (flag: BOOLEAN) is
 			-- Set scale mode to output only if `flag' and to input/output
@@ -144,7 +144,7 @@ feature
 		deferred
 		ensure
 			output_only: is_output_only = flag
-		end; -- set_output_only
+		end;
 
 	set_text (a_text: STRING) is
 			-- Set scale text to `a_text'.
@@ -153,7 +153,7 @@ feature
 		deferred
 		ensure
 			text.is_equal (a_text)
-		end; -- set_text
+		end;
 
 	set_value (new_value: INTEGER) is
 			-- Set value to `new_value'.
@@ -163,19 +163,19 @@ feature
 		deferred
 		ensure
 			value = new_value
-		end; -- set_value
+		end;
 
 	set_value_shown (b: BOOLEAN) is
 			-- Show scale value on the screen if `b', hide it otherwise.
 		deferred
 		ensure
 			value_is_shown: is_value_shown = b
-		end; -- show_value
+		end;
 
 	text: STRING is
 			-- Scale text
 		deferred
-		end; -- text
+		end;
 
 	value: INTEGER is
 			-- Value of the current slider position along the scale
@@ -183,7 +183,7 @@ feature
 		ensure
 			value_large_enough: Result >= minimum;
 			value_small_enough: Result <= maximum
-		end -- value
+		end
 
 end -- class SCALE_I
 

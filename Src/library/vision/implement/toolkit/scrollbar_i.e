@@ -19,7 +19,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_move_action
+		end;
 
 	add_value_changed_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when value
@@ -27,7 +27,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_value_changed_action
+		end;
 
 	granularity: INTEGER is
 			-- Value of the amount to move the slider and modifie the
@@ -36,7 +36,7 @@ feature
 		ensure
 			granularity_large_enough: Result >= 1;
 			granularity_small_enough: Result <= (maximum - minimum)
-		end; -- granularity
+		end;
 
 	initial_delay: INTEGER is
 			-- Amount of time to wait (milliseconds) before starting
@@ -44,33 +44,33 @@ feature
 		deferred
 		ensure
 			positive_value: Result > 0
-		end; -- initial_delay
+		end;
 
 	is_horizontal: BOOLEAN is
 			-- Is scrollbar oriented horizontal?
 		deferred
-		end; -- is_horizontal
+		end;
 
 	is_maximum_right_bottom: BOOLEAN is
 			-- Is maximum value on the right side when orientation
 			-- is horizontal or on the bottom side when orientation
 			-- is vertical?
 		deferred
-		end; -- is_maximum_right_bottom
+		end;
 
 	maximum: INTEGER is
 			-- Maximum value of slider position
 		deferred
 		ensure
 			maximum_greater_than_mini: Result > minimum
-		end; -- maximum
+		end;
 
 	minimum: INTEGER is
 			-- Minimum value of slider position
 		deferred
 		ensure
 			minimum_smaller_than_maxi: Result < maximum
-		end; -- minimum
+		end;
 
 	position: INTEGER is
 			-- Slider position
@@ -78,7 +78,7 @@ feature
 		ensure
 			position_large_enough: Result >= minimum;
 			position_small_enough: Result <= maximum
-		end; -- position
+		end;
 
 	remove_move_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -86,7 +86,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_value_changed_action
+		end;
 
 	remove_value_changed_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -94,7 +94,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_value_changed_action
+		end;
 
 	repeat_delay: INTEGER is
 			-- Amount of time to wait (milliseconds) between subsequent
@@ -102,7 +102,7 @@ feature
 		deferred
 		ensure
 			positive_delay: Result > 0
-		end; -- repeat_delay
+		end;
 
 	set_granularity (new_granularity: INTEGER) is
 			-- Set amount to move the slider and modifie the slide
@@ -113,7 +113,7 @@ feature
 		deferred
 		ensure
 			granularity = new_granularity
-		end; -- set_granularity
+		end;
 
 	set_horizontal (flag: BOOLEAN) is
             -- Set orientation of the scale to horizontal if `flag',
@@ -121,7 +121,7 @@ feature
         deferred
         ensure
             value_correctly_set: is_horizontal = flag
-        end; -- set_horizontal
+		end;
 
 	set_initial_delay (new_delay: INTEGER) is
 			-- Set the amount of time to wait (milliseconds) before
@@ -131,7 +131,7 @@ feature
 		deferred
 		ensure
 			initial_delay = new_delay
-		end; -- set_initial_delay
+		end;
 
 	set_maximum (new_maximum: INTEGER) is
 			-- Set maximum value of slider position to `new_maximum'.
@@ -140,7 +140,7 @@ feature
 		deferred
 		ensure
 			maximum = new_maximum
-		end; -- set_maximum
+		end;
 
 	set_maximum_right_bottom (flag: BOOLEAN) is
             -- Set maximum value on the right side when orientation
@@ -178,7 +178,7 @@ feature
 		deferred
 		ensure
 			repeat_delay = new_delay
-		end; -- set_repeat_delay
+		end;
 
 	set_slider_size (new_size: INTEGER) is
 			-- Set size of slider to 'new_size'.
@@ -188,7 +188,7 @@ feature
 		deferred
 		ensure
 			slider_size = new_size
-		end; -- set_slider_size
+		end;
 
 	slider_size: INTEGER is
 			-- Size of slider.
@@ -196,7 +196,7 @@ feature
 		ensure
 			slider_size_small_enough: Result <= (maximum - minimum);
 			slider_size_large_enough: Result >= 0
-		end -- slider_size
+		end
 
 end --class SCROLLBAR
 

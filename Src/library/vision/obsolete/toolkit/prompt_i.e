@@ -18,7 +18,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_apply_action
+		end;
 
 	add_cancel_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
@@ -26,7 +26,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_cancel_action
+		end;
 
 	add_help_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
@@ -34,7 +34,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_help_action
+		end;
 
 	add_ok_action (a_command: COMMAND; argument: ANY) is
 			-- Add `a_command' to the list of action to execute when
@@ -42,27 +42,27 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- add_ok_action
+		end;
 
 	hide_apply_button is
 			-- Make apply button invisible.
 		deferred
-		end; -- hide_apply_button
+		end;
 
 	hide_cancel_button is
 			-- Make cancel button invisible.
 		deferred
-		end; -- hide_cancel_button
+		end;
 
 	hide_help_button is
 			-- Make help button invisible.
 		deferred
-		end; -- hide_help_button
+		end;
 
 	hide_ok_button is
 			-- Make ok button invisible.
 		deferred
-		end; -- hide_ok_button
+		end;
 
 	remove_apply_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -70,7 +70,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_apply_action
+		end;
 
 	remove_cancel_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -78,7 +78,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_cancel_action
+		end;
 
 	remove_help_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -86,7 +86,7 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_help_action
+		end;
 
 	remove_ok_action (a_command: COMMAND; argument: ANY) is
 			-- Remove `a_command' from the list of action to execute when
@@ -94,12 +94,12 @@ feature
 		require
 			not_a_command_void: not (a_command = Void)
 		deferred
-		end; -- remove_ok_action
+		end;
 
 	selection_text: STRING is
 			-- Current text in selection box
 		deferred
-		end; -- selection_text
+		end;
 
 	set_apply_label (a_label: STRING) is
 			-- Set `a_label' as label for apply button,
@@ -107,7 +107,7 @@ feature
 		require
 			not_label_void: not (a_label = Void)
 		deferred
-		end; -- set_apply_label
+		end;
 
 	set_cancel_label (a_label: STRING) is
 			-- Set `a_label' as label for cancel button,
@@ -115,7 +115,7 @@ feature
 		require
 			not_label_void: not (a_label = Void)
 		deferred
-		end; -- set_cancel_label
+		end;
 
 	set_help_label (a_label: STRING) is
 			-- Set `a_label' as label for help button,
@@ -123,7 +123,7 @@ feature
 		require
 			not_label_void: not (a_label = Void)
 		deferred
-		end; -- set_help_label
+		end;
 
 	set_ok_label (a_label: STRING) is
 			-- Set `a_label' as label for ok button,
@@ -131,40 +131,40 @@ feature
 		require
 			not_label_void: not (a_label = Void)
 		deferred
-		end; -- set_ok_label
+		end;
 
 	set_selection_label (a_label: STRING) is
 			-- Set `a_label' as selection label,
 			-- by default this label is `selection'.
 		deferred
-		end; -- set_selection_label
+		end;
 
 	set_selection_text (a_text: STRING) is
 			-- Set selection text to `a_text'.
 		require
 			a_text_not_void: not (a_text = Void)
 		deferred
-		end; -- set_selection_text
+		end;
 
 	show_apply_button is
 			-- Make apply button visible.
 		deferred
-		end; -- show_apply_button
+		end;
 
 	show_cancel_button is
 			-- Make cancel button visible.
 		deferred
-		end; -- show_cancel_button
+		end;
 
 	show_help_button is
 			-- Make help button visible.
 		deferred
-		end; -- show_help_button
+		end;
 
 	show_ok_button is
 			-- Make ok button visible.
 		deferred
-		end -- show_ok_button
+		end
 
 end
 

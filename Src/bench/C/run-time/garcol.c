@@ -589,11 +589,6 @@ rt_public int scollect(int (*gc_func) (void), int i);				/* Collect with statist
 rt_public void gc_stop(void);				/* Stop the garbage collector */
 rt_public void gc_run(void);				/* Restart the garbage collector */
 
-#ifdef ISE_GC
-/* Mark and sweep */
-rt_public void mksp(void);					/* The mark and sweep entry point */
-rt_private int mark_and_sweep(void);		/* Mark and sweep algorithm */
-#endif /* ISE_GC */
 rt_public void reclaim(void);				/* Reclaim all the objects */
 #ifdef ISE_GC
 rt_private void internal_marking(MARKER marking, int moving);
@@ -1020,47 +1015,6 @@ rt_public void gc_run(void)
 }
 
 #ifdef ISE_GC
-/*
- * Mark and sweep garbage collector.
- */
-
-rt_public void mksp(void)
-{
-	/* The mark and sweep entry. The scollect routine is called in order to
-	 * maintain statistics on every call.
-	 */
-
-	if (g_data.status & GC_STOP)
-		return;						/* Garbage collection stopped */
-
-	(void) scollect(mark_and_sweep, GST_PART);
-}
-
-rt_private int mark_and_sweep(void)
-{
-	/* Uses the mark and sweep algorithm to collect garbage in chunk
-	 * space. This is a full-stop algorithm (i.e. non incremental).
-	 * The roots for the mark phase are taken from 'root_obj', which is
-	 * the address of the root object and 'loc_set', which holds
-	 * all the local reference variables. I suppose no object is already
-	 * marked at the beginning of the processing.
-	 */
-	RT_GET_CONTEXT
-
-	SIGBLOCK;			/* Block all signals during garbage collection */
-
-	/* The idea of having a global status for the garbage collector arose
-	 * this afternoon after lunch. Just to say it's not "clean", but it does
-	 * avoid code duplication--RAM.
-	 */
-	g_data.status = (char) ((gen_scavenge & GS_ON) ? GC_GEN : 0);
-
-	run_collector();		/* Call a wrapper to do the job */
-	clean_up();				/* Restore signals, release core, etc... */
-
-	return 0;
-}
-
 rt_private void clean_up(void)
 {
 	/* After a collection cycle, we may restore attempt to release some core,
@@ -4887,7 +4841,7 @@ rt_private void scavenge_trace(void)
 
 rt_private void run_gc(void)
 {
-	scollect(mark_and_sweep, GST_PART);
+	scollect(partial_scavenging, GST_PART);
 	printf(">>> GC status:\n");
 	printf(">>>> # of full collects    : %ld\n", g_data.nb_full);
 	printf(">>>> # of partial collects : %ld\n", g_data.nb_partial);

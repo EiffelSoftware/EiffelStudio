@@ -68,7 +68,6 @@ extern int is_in_special_rem_set (EIF_REFERENCE obj);	/* Is obj in special_rem_s
 RT_LNK void plsc(void);					/* Partial scavenging */
 #ifdef ISE_GC
 extern void urgent_plsc(EIF_REFERENCE *object);			/* Partial scavenge with given local root */
-extern void mksp(void);					/* Mark and sweep algorithm */
 #endif
 RT_LNK void reclaim(void);				/* Reclaim all the objects */
 RT_LNK int collect(void);				/* Generation-based collector */

@@ -2,44 +2,1122 @@
 
 <HTML>
 	<HEAD>
-		<TITLE>EiffelBase Data Structures</TITLE>
+		<TITLE>EiffelBase Data Structures, Iteration</TITLE>
 		<LINK REL=StyleSheet HREF="../../../../default.css">
 	</HEAD>
 
 	<BODY>
-		<H1>Data Structures Overview</H1>
+		<H1>Iteration</H1>
 			<P>
-				The data structures cluster of EiffelBase includes classes that cover a wide
-				range a data structures classes for you to reuse in your systems. The cluster
-				is divided into a number of subclusters. Each subcluster contains one or more
-				<B>deferred</B> classes, which provide the general high-level abstractions;
-				other classes in the cluster inherit from the deferred ones.</P>
+				The classes of the Iteration cluster encapsulate control structures representing common
+				traversal operations.
+			<H2>Iterators and Agents</H2>
 			<P>
-				The highest-level class is <A HREF="../reference/structures/access/container.html">
-				CONTAINER</A>, with the following heirs:
-				<UL>
-					<LI><A HREF="../reference/structures/access/collection.html">COLLECTION</A>
-					, which describes containers through their access properties (defining how
-					to access a container's items, for	example through an index or according to
-					a last-in, first-out policy).</LI>
-					<LI><A HREF="../reference/structures/traversing/traversable.html">TRAVERSABLE</A>
-					, which considers their traversal properties, such as sequential or hierarchical.</LI>
-					<LI><A HREF="../reference/structures/storage/box.html">BOX</A>,
-					which describes their storage properties, such as being bounded or unbounded.</LI>
-				</UL>
+				The recent introduction of the agents mechanism in ISE Eiffel offers an attractive alternative
+				to the <SPAN CLASS="ecluster">Iterator</SPAN> cluster of EiffelBase. See
+				<A HREF="../../../../general/agents/iterating.html">Iterating with Agents</A> for more
+				information.
+			<H2>The Notion of iterator</H2>
+			<P>
+				Let us first explore the role of iterators in the architecture of a system.
+			<H3>Iterating over data structures</H3>
+			<P>
+				Client software that uses data structures of a certain type, for example lists or trees,
+				often needs to traverse a data structure of that type in a predetermined order so as to
+				apply a certain action to all the items of the structure, or to all items that satisfy a certain
+				criterion. Such a systematic traversal is called an iteration.<BR>
+				Cases of iteration can be found in almost any system. Here are a few typical
+				examples:
+			<UL>
+				<LI>A text processing system may maintain a list of paragraphs. In response to a user
+				command, such as a request to resize the column width, the system will iterate
+				over the entire list so as to update all paragraphs.
+				<LI>A business system may maintain a list of customers. If the company decides that
+				a special promotion will target all customers satisfying a certain criterion (for
+				example all customers that have bought at least one product over the past six
+				months), the system will iterate over the list, generating a mailing for every list
+				item that satisfies the criterion.
+				<LI>An interactive development environment for a programming language may
+				maintain a syntax tree. In response to a program change, the system will traverse
+				the tree to determine what nodes are affected by the change and update them.
+			</UL>
+			<P>
+				These examples illustrate the general properties of iteration. An iteration involves a
+				data structure of a known general type and a particular ordering of the structure’s items.
+				For some structures, more than one ordering will be available; for example a tree
+				iteration may use preorder, postorder or breadth-first (as defined below). The iteration
+				involves an operation, say <SPAN CLASS="efeature">item_action</SPAN>, to be applied
+				to the selected items. It may also involve a boolean-valued query, say
+				<SPAN CLASS="efeature">item_test</SPAN>, applicable to candidate items. Finally, it
+				involves a certain policy, usually based on <SPAN CLASS="efeature">item_test</SPAN>,
+				as to which items should be subjected to item_action. Typical example policies are:
+			<UL>
+				<LI>Apply <SPAN CLASS="efeature">item_action</SPAN> to all the items in the structure.
+				(In this case item_test is not relevant).
+				<LI>Apply <SPAN CLASS="efeature">item_action</SPAN> to all items that satisfy
+				<SPAN CLASS="efeature">item_test</SPAN>.
+				<LI>Apply <SPAN CLASS="efeature">item_action</SPAN> to all items up to the first one
+				that satisfies <SPAN CLASS="efeature">item_test</SPAN>.
+			</UL>
+			<P>
+				The Iteration library provides many more, covering in particular all the standard
+				control structures.
+			<H3>Iterations and control structures</H3>
+			<P>
+				You can perform iterations without any special iteration classes. For example if
+				customers is declared as
+			<P CLASS="code">
+				<SPAN CLASS="elocal">customers</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<A HREF="../../reference/structures/list/list.html">LIST</A>
+				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">CUSTOMER</SPAN><SPAN CLASS="esymbol">]</SPAN>
 			</P>
 			<P>
-				The documentation further discuss:
-				<UL>
-					<LI>The <A HREF="taxonomy.html">taxonomy</A> of the
-					abstract container structures.</LI>
-					<LI>The <A HREF="list.html">list-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="dispenser.html">dispenser-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="tree.html">tree-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="set.html">set-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="table.html">table-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="iteration.html">iteration mechanisms</A>.</LI>
-				</UL>
+				then a class <SPAN CLASS="eclass">SPECIAL_PROMOTION</SPAN> of a text processing
+				system may include in one of its routines a loop of the form
+			<P CLASS="code">
+				<SPAN CLASS="ekeyword">from</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">customers</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">start</SPAN><BR>
+				<SPAN CLASS="ekeyword">until</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">customers</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">exhausted</SPAN><BR>
+				<SPAN CLASS="ekeyword">loop</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN>
+				<SPAN CLASS="elocal">recent_ purchases</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">has</SPAN>
+				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">customers</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">item</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ekeyword">then</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">target_list</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">put</SPAN>
+				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">customers</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">item</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">customers</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">forth</SPAN><BR>
+				<SPAN CLASS="ekeyword">end</SPAN><BR>
+			</P>
 			<P>
+				Such schemes are quite common. But it is precisely because they occur frequently
+				that it is useful to rely on library classes to handle them. One of the principal tasks of
+				object-oriented software development is to identify recurring patterns and build reusable
+				classes that encapsulate them, so that future developers will be able to rely on ready-made
+				solutions.<BR>
+				The classes of the Iteration library address this need. Using them offers two
+				benefits:
+			<UL>
+				<LI>You avoid writing loops, in which the definition of sub-components such as exit
+				conditions, variants and invariants is often delicate or error-prone.
+				<LI>You can more easily adapt the resulting features in descendant classes.
+				The rest of this chapter shows how to obtain these benefits.
+			</UL>
+			<H2>Simple Examples</H2>
+			<P>
+				To get a first grasp of how one can work with the Iteration library, let us look at a typical
+				iteration class and a typical iteration client.
+			<H3>An example iterator routine</H3>
+			<P>
+				Here, given with its full implementation, is a typical Iteration library routine: the
+				procedure <A CLASS="efeature"	 HREF="../../reference/structures/iteration/linear_iterator.html#f_until_do">until_do</A> from
+				<A HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>, the class
+				defining iteration mechanisms	on linear (sequential) structures.
+			<P CLASS="code">
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_until_do">until_do</A>
+				<SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Apply action to every <A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_item">item</A> of target,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- up to but excluding first one satisfying <A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_test">test</A>.</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- (Apply to full list if no item satisfies <A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_test">test</A>.)</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="etag">traversable_exists</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A> <SPAN CLASS="esymbol">/=</SPAN>
+				<A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">Void</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_start">start</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">invariant</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">invariant_value</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_exhausted">exhausted</A>
+				<SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="ekeyword">else</SPAN>
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_test">test</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_action">action</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_forth">forth</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="etag">achieved</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_exhausted">exhausted</A>
+				<SPAN CLASS="ekeyword">or</SPAN> <SPAN CLASS="ekeyword">else</SPAN> <A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_test">test</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="etag">invariant_satisfied</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<SPAN CLASS="elocal">invariant_value</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+			</P>
+			<P>
+				The precise form of the procedure in the class relies on a call to another procedure,
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_until_continue">until_continue</A>,
+				and on inherited assertions. Here everything has been unfolded for illustration
+				purposes.<BR>
+				This procedure will traverse the linear structure identified by
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_target">target</A>
+				and apply the procedure called
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_action">action</A>
+				on every item up to but excluding the first one satisfying test.<BR>
+				The class similarly offers
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_do_all">do_all</A>,
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_do_while">do_while</A>,
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_do_for">do_for</A>,
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_do_if">do_if</A>
+				and other procedures representing the common control structures.
+				It also includes functions such as
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_exists">exists</A> and
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_forall">forall</A>,
+				corresponding to the usual quantifiers.<BR>
+				These iteration schemes depend on the procedure
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_action">action</A>,
+				defining the action to be	applied to successive elements, and on the function
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_test">test</A>,
+				defining the boolean query to be applied to these elements. These features are declared in class
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html#f_action">ITERATOR</A>
+				(the highest-level deferred class of the Iteration library); here is
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_test">test</A>:
+			<P CLASS="code">
+				<SPAN CLASS="efeature">test</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<A HREF ="../../reference/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Test to be applied to
+				<A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_item">item</A>
+				 at current position in</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">--
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A>
+				(default: value of
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_test">item_test</A>
+				on <A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_item">item</A>)</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="etag">traversable_exists</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A> <SPAN CLASS="esymbol">/=</SPAN>
+				<A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">Void</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="etag">not_off</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<A CLASS="efeature" HREF="../../reference/kernel/boolean.html#f__prefix_not">not</A>
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_off">off</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">Result</SPAN>
+				<SPAN CLASS="esymbol">:=</SPAN> <A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_test">item_test</A>
+				<SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="etag">not_off</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<A CLASS="efeature" HREF="../../reference/kernel/boolean.html#f__prefix_not">not</A>
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_off">off</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+			</P>
+			<P>
+				This indicates that the value of the boolean function test will be obtained by
+				applying <A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_test">item_test</A> to the
+				<A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_item">item</A> at the current position in the
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A> structure. In
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html#f_action">ITERATOR</A>, function
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_test">item_test</A> always return
+				<SPAN CLASS="ekeyword">False</SPAN>; descendant classes will redefine it
+				so as to describe the desired test.
+				Similarly, action is declared in class <A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html#f_action">ITERATOR</A> as a
+				call to <A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_action">item_action</A>.
+				Descendants will redefine
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_action">item_action</A>,
+				which as initially declared in
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html#f_action">ITERATOR</A>
+				is a procedure with a null body.<BR>
+				Going through <A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_action">item_action</A>
+				and <A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_test">item_test</A>
+				provides an extra degree of flexibility. Normally the action and test performed at each step apply to
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_targer">target</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_item">item</A>item,
+				so that it suffices to redefine the
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_features">item_features</A>.
+				This is the case will all examples studied in this chapter. In a more general
+				setting, however, you might need to redefine action and test themselves.
+			<H3>An example use of iteration</H3>
+			<P>
+				Here now is an example illustrating the use of these mechanisms. The result will enable
+				us to resize all the paragraphs of a text up to the first one that has been modified - as we
+				might need to do, in a text processing system, to process an interactive user request.
+				Assume a class <SPAN CLASS="eclass">TEXT</SPAN> that describes lists of paragraphs
+				with certain additional	features. The example will also assume a class
+				<SPAN CLASS="eclass">PARAGRAPH</SPAN> with a procedure <SPAN CLASS="efeature">resize</SPAN>,
+				and a boolean-valued attribute <SPAN CLASS="efeature">modified</SPAN> which indicates
+				whether a paragraph has been modified. Class <SPAN CLASS="eclass">TEXT</SPAN> inherits
+				from <A CLASS="eclass" HREF="../../reference/structures/list/linked_list.html">LINKED_LIST</A> and
+				so is a descendant of <A CLASS="eclass" HREF="../../reference/structures/traversing/linear.html">LINEAR</A>:
+			<P CLASS="code">
+				<SPAN CLASS="ekeyword">class</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">TEXT</SPAN><BR><BR>
+				<SPAN CLASS="ekeyword">inherit</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/kernel/list/linked_list">LINKED_LIST</A>
+				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">PARAGRAPH</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;...<BR><BR>
+				<SPAN CLASS="ekeyword">feature</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;...<BR><BR>
+				<SPAN CLASS="ekeyword">end</SPAN>
+			</P>
+			<P>
+				In a class <SPAN CLASS="eclass">TEXT_PROCESSOR</SPAN>, you can use an iteration
+				procedure to write a very simple procedure <SPAN CLASS="efeature">resize_ paragraphs</SPAN>
+				that will resize all paragraphs up to but excluding the first one that has been modified:
+			<P CLASS="code">
+				<SPAN CLASS="ekeyword">class</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">TEXT_PROCESSOR</SPAN><BR><BR>
+				<SPAN CLASS="ekeyword">inherit</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">PARAGRAPH</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">redefine</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_item_action">item_action</A>,
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_item_test">item_test</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
+				<SPAN CLASS="ekeyword">feature</SPAN><BR><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">resize_ paragraphs</SPAN>
+				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<SPAN CLASS="eclass">TEXT</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Resize all the paragraphs of t up to but excluding</SPAN>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- the first one that has been modified.</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">set</SPAN>
+				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_until_do">until_do</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
+				<SPAN CLASS="ekeyword">feature</SPAN>
+				<SPAN CLASS="esymbol">{</SPAN><SPAN CLASS="eclass">NONE</SPAN><SPAN CLASS="esymbol">}</SPAN><BR><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">item_test</SPAN>
+				<SPAN CLASS="ekeyword">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol":></SPAN>
+				<SPAN CLASS="eclass">PARAGRAPH</SPAN><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<A CLASS="eclass" HREF="../../reference/kernel/boolean.html">BOOLEAN</A>
+				<SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Has
+				<SPAN CLASS="elocal">p</SPAN> been modified?</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">Result</SPAN>
+				<SPAN CLASS="esymbol">:=</SPAN>
+				<SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">modified</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">item_action</SPAN>
+				<SPAN CLASS="ekeyword">(</SPAN><SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<SPAN CLASS="eclass">PARAGRAPH</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Resize
+				<SPAN CLASS="elocal">p</SPAN>.</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">p</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">resize</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;...<BR>
+				<SPAN CLASS="ekeyword">end</SPAN><BR>
+			</P>
+			<P>
+				Thanks to the iteration mechanism, the procedure <SPAN CLASS="efeature">resize_ paragraphs</SPAN>
+				simply needs	two procedure calls:<BR>
+			<UL>
+				<LI>To set its argument <SPAN CLASS="elocal">t</SPAN> as the iteration target, it uses procedure
+				<SPAN CLASS="efeature">set</SPAN>. (This procedure is from class
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>
+				which passes it on to all iterator classes.)
+				<LI>Then it simply calls
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_until_do">until_do</A>
+				as defined above.
+			</UL>
+			<P>
+				Procedure
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_action">item_action</A>
+				is redefined to describe the operation to be performed on	each successive element. Function
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_test">item_test</A>
+				is redefined to describe the exit test.<BR>
+				As presented so far, the mechanism seems to limit every descendant of an iteration class to just
+				one form of iteration. As shown later in this chapter, it is in fact easy to generalize the
+				technique to allow a class to use an arbitrary number of iteration schemes.<BR>
+				What is interesting here is that the redefinitions of
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_test">item_test</A>
+				and
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_action">item_action</A>
+				take care of all the details. There is no need to write any loop or other control structure. We
+				are at the very heart of the object-oriented method, enjoying the ability to encapsulate
+				useful and common software schemes so that client developers will only need to fill in
+				what is specific to their application.
+			<H2>Using the Iteration Library</H2>
+			<P>
+				Let us now explore the classes of the Iteration library and the different ways of using
+				them.
+			<H3>Overview of the classes</H3>
+			<P>
+				There are only four Iteration classes, whose simple inheritance structure appeared at the
+				beginning of this chapter.
+			<UL>
+				<LI><A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>,
+				a deferred class which describes the most general notion.
+				<LI><A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>,
+				for iterating over linear structures and chains.
+				<LI><A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A>,
+				a repeated heir of
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>,
+				for iterating in either direction over a bilinear structure.
+				<LI><A CLASS="eclass" HREF="../../reference/structures/iteration/cursor_tree_iterator.html">CURSOR_TREE_ITERATOR</A>,
+				for iterating over trees.
+			</UL>
+			<P>
+				As you will remember from the <A HREF="taxnomy.html">presentation</A> of the abstract overall taxonomy,
+				the traversal hierarchy describes how data structures can be traversed; its most general class
+				is <A CLASS="eclass" HREF="../../reference/structures/traversing/traversable.html">TRAVERSABLE</A>.<BR>
+				Each one of the iterator classes is paired with a traversal class (or	two in one case):<BR>
+				<CENTER><TABLE>
+					<TR>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A></TD>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/traversing/traversable.html">TRAVERSABLE</A></TD>
+					</TR>
+					<TR>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A></TD>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/traversing/linear.html">LINEAR</A></TD>
+					</TR>
+					<TR>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A></TD>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/list/two_way_list.html">TWO_WAY_LIST</A></TD>
+					</TR>
+					<TR>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A></TD>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/list/two_way_list.html">TWO_WAY_LIST</A>, <A CLASS="eclass" HREF="../../reference/structures/list/two_way_list.html">TWO_WAY_CIRCULAR</A></TD>
+					</TR>
+					<TR>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/iteration/cursor_tree_iterator.html">CURSOR_TREE_ITERATOR</A></TD>
+						<TD><A CLASS="eclass" HREF="../../reference/structures/cursor_tree/cursor_tree.html">CURSOR_TREE</A></TD>
+					</TR>
+				</TABLE></CENTER><BR>
+				Each iterator class relies on the corresponding traversal class to provide the features
+				for traversing the corresponding data structures, such as start, forth and exhausted for
+				linear structures.<BR>
+				Of course the data structure class used in connection with a given iterator class does not need to
+				be the iterator’s exact correspondent as given by the above table; it may be any one of its
+				descendants. For example you may use
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				to iterate over data structures	described not just by
+				<A CLASS="eclass" HREF="../../reference/structures/traversing/linear.html">LINEAR</A>
+				but also by such descendants as
+				<A CLASS="eclass" HREF="../../reference/structures/list/list.html">LIST</A>, <A CLASS="eclass" HREF="../../reference/structures/list/linked_list.html">LINKED_LIST</A>,
+				<A CLASS="eclass" HREF="../../reference/structures/list/arrayed_list.html">ARRAYED_LIST</A>,
+				or even
+				<A CLASS="eclass" HREF="../../reference/structures/list/two_way_list.html">TWO_WAY_LIST</A>
+				if you do not need the backward iteration features (for which you will have to use
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A>
+				).
+			<H3>General iteration facilities</H3>
+			<P>
+				Class
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>
+				defines the features that apply to all forms of iterator.<BR>
+				An iterator will always apply to a certain target structure. The target is introduced in
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A> by the feature
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A>:
+				<A CLASS="eclass" HREF="../../reference/structures/traversing/traversable.html">TRAVERSABLE</A> [G]<BR>
+				Both the iterator classes and the traversal classes are generic, with a formal generic
+				parameter G. The actual generic parameters will be matched through the choice of
+				iteration target: for a generic derivation of the form
+				<SPAN CLASS="eclass">SOME_ITERATOR</SPAN> [<SPAN CLASS="eclass">ACTUAL_TYPE</SPAN>]
+				the target can only be of type
+				<SPAN CLASS="eclass">SOME_TRAVERSABLE</SPAN> [<SPAN CLASS="eclass">ACTUAL_TYPE</SPAN>]
+				for the same	<SPAN CLASS="eclass">ACTUAL_TYPE</SPAN>, where
+				<SPAN CLASS="eclass">SOME_TRAVERSABLE</SPAN> is the traversal class matching
+				<SPAN CLASS="eclass">SOME_ITERATOR</SPAN> according to the preceding table
+				(<A CLASS="eclass" HREF="../../reference/structures/traversing/linear.html">LINEAR</A>
+				for
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				and so on), or one of its proper descendants.<BR>
+				Each of the proper descendants of
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>
+				redefines the type of target to the matching proper descendant of
+				<A CLASS="eclass" HREF="../../reference/structures/traversing/traversable.html">TRAVERSABLE</A>,
+				to cover more specific variants of the iteration target, For example in
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A> the feature is redefined to be of
+				type <A CLASS="eclass" HREF="../../reference/structures/traversing/linear.html">LINEAR</A>.
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>
+				also introduces the procedure for selecting a target:
+			<P CLASS="code">
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_set">set</A>
+				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">s</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<SPAN CLASS="ekeyword">like</SPAN>
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A><SPAN CLASS="esymbol">)</SPAN>
+				<SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Make
+				<SPAN CLASS="elocal">s</SPAN> the new target of iterations.</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">s</SPAN>
+				<SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">Void</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A>
+				</SPAN><SPAN CLASS="esymbol">:=</SPAN> <SPAN CLASS="elocal">s</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A>
+				</SPAN><SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">s</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A>
+				</SPAN><SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">Void</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+			</P>
+			<P>
+				Next
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>
+				introduces the routines describing the elementary action and test
+				that will be applied to items of the iteration targets:
+			<P CLASS="code">
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_action">action</A>
+				<SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Action to be applied to item at current position in</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- target.</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- (default:
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_action">item_action</A>
+				on
+				<A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_item">item</A>
+				at current position.)</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Note: for iterators to work properly, redefined</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- versions of this feature should not change the</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- traversable structure.</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="etag">traversable_exists</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A>
+				<SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">Void</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="etag">not_off</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<A CLASS="efeature" HREF="../../reference/kernel/boolean.html#f__prefix_not">not</A>
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_off">off</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="etag">invariant_satisfied</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<SPAN CLASS="elocal">invariant_value</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_action">item_action</A>
+				<SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_item">item</A>)<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="etag">not_off</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<A CLASS="efeature" HREF="../../reference/kernel/boolean.html#f__prefix_not">not</A>
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_off">off</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="etag">invariant_satisfied</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<SPAN CLASS="elocal">invariant_value</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+			</P>
+			<P CLASS="code">
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_test">test</A><SPAN CLASS="esymbol">:</SPAN>
+				<A CLASS="eclass" HREF="../../reference/kernel/boolean.html">BOOLEAN</A>
+				<SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Test to be applied to
+				<A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_item">item</A>
+				at current position in<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- <A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A> (default: value of
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_test">item_test</A>
+				on
+				<A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_item">item</A>)</SPAN></SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="etag">traversable_exists</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A>
+				<SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">Void</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="etag">not_off</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<A CLASS="efeature" HREF="../../reference/kernel/boolean.html#f__prefix_not">not</A>
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_off">off</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN>
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_test">item_test</A>
+				<SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_item">item</A><SPAN CLASS="esymbol">)</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">ensure</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/kernel/boolean.html#f__prefix_not">not</A>
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_off">off</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+			</P>
+			<P>
+				These routines rely on two others,
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_action">item_action</A> and
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_test">item_test</A>,
+				which both take an	argument of type G, the formal generic parameter. The reason, already noted above, is
+				that in a vast majority of cases the iterated action and test solely depend, at each step of
+				the traversal, on the item (of type G) at the current position. To define an iteration
+				process, then, it suffices to redefine item_action and item_test in a descendant of the
+				appropriate iteration class. Only in complex cases will it be necessary to redefine action
+				and test themselves.<BR>
+				If you encounter such a case, note the caveat about action changing the target’s structure.
+				Understandably enough, an iterator that attempts to change the data structure while traversing it
+				may engage in strange behavior. No such risk exists if you only redefine item_action, which
+				may change the contents of items but not the structure itself.<BR>
+				Another feature introduced in
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>
+				is the query
+				invariant_value,
+				describing invariant properties that must be ensured at the beginning of any iteration and preserved
+				by every iteration step. As declared in
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>
+				this query always returns true, but proper descendants can redefine it to describe more interesting
+				invariant properties.<BR>
+				Finally,
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>
+				introduces in deferred form the general iteration routines applicable to all iteration variants.
+				They include two queries corresponding to the quantifiers of first-order predicate calculus:
+			<UL>
+				<LI><A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_for_all">for_all</A>
+				will return true if all items of the target structure satisfy test.
+				<LI><A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_exists">exists</A>
+				will return true if at least one item satisfies test.
+			</UL>
+			<P>
+				The other routines are commands which will traverse the target structure and apply
+				action to items selected through test:
+			<UL>
+				<LI><A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_do_all">do_all</A>
+				applies action to all items.
+				<LI><A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_do_if">do_if</A>,
+				to those items which satisfy test.
+				<LI><A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_until_do">until_do</A>,
+				to all items up to but excluding the first one that satisfies test.
+				<LI><A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_do_until">do_until</A>,
+				to all items up to and including the first one that satisfies test.
+				<LI><A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_while_do">while_do</A>
+				and
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_do_while">do_while</A>,
+				to all items up to the first one that does not satisfy
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_test">test</A>.
+				(This can also be achieved with
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_until_do">until_do</A>
+				or
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_do_until">do_until</A>
+				by choosing the opposite test.)
+			</UL>
+			<P>
+				All these features, and most of the other iteration features introduced in proper
+				descendants of
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>
+				and described next, have no argument. Information about the target of iteration comes
+				from feature
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A>,
+				set by procedure
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_set">set</A>;
+				information about what needs to be done for each item of the target structure comes from
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_action">item_action</A>
+				and
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_test">item_test</A>.
+			<H3>Linear and chain iteration</H3>
+			<P>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>,
+				an effective class, refines the iteration mechanisms for cases in	which the target is a linear
+				structure, such as a list in any implementation or a circular chain.<BR>
+				The class effects all the deferred features inherited from
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>,
+				taking advantage of the linear traversal mechanisms present in the corresponding traversal class,
+				<A CLASS="eclass" HREF="../../reference/structures/traversing/linear.html">LINEAR</A>.
+				Here for example is the effecting of
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_do_if">do_if</A>:
+			<P CLASS="code">
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_do_if">do_if</A>
+				<SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Apply action to every item of target satisfying</SPAN>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- <A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_test">test</A>.</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_start">start</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">invariant</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">invariant_value</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/traversing/linear	.html#f_exhausted">exhausted</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">if</SPAN>
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_test">test</A>
+				<SPAN CLASS="ekeyword">then</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_action">action</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_forth">forth</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+			</P>
+			<P>
+				This routine text relies on features
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_start">start</A>,
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_forth">forth</A> and
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_exhausted">exhausted</A>
+				which, together with
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_off">off</A>,
+				have for convenience been carried over to
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				from their counterparts in
+				<A CLASS="eclass" HREF="../../reference/structures/traversing/linear.html">LINEAR</A>,
+				with feature declarations such as
+			<P CLASS="code">
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_off">off</A><SPAN CLASS="esymbol">:</SPAN>
+				<A CLASS="eclass" HREF="../../reference/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Is position of target off?</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">require</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="etag">traversable_exists</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A>
+				<SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../reference/kernel/any.html#f_void">Void</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">Result</SPAN> <SPAN CLASS="esymbol">:=</SPAN>
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_target">target</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_off">off</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+			</P>
+			<P>
+				and similarly for the others.<BR>
+				In addition to effecting the general iteration features from
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/iterator.html">ITERATOR</A>,
+				class
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				introduces iteration features that apply to the specific case of linear structures:
+			<UL>
+				<LI>
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_search">search</A>
+				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">b</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<A CLASS="eclass" HREF="../../reference/kernel/boolean.html">BOOLEAN</A>)
+				moves the iteration to the first position satisfying test if <SPAN CLASS="elocal">b</SPAN>
+				is true, or not satisfying test if <SPAN CLASS="elocal">b</SPAN> is false. This use of a boolean argument to
+				switch between two opposite semantics is not part of the recommended style, and
+				you will find few if any other examples in the Base libraries. Here, however, it
+				was deemed preferable to the alternative, which would have involved four
+				separate procedures (if together with
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_search">search</A>
+				we consider
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_continue_search">continue_search</A>
+				discussed next).
+				<LI>With a linear structure we can implement an iteration corresponding to the “for”
+				loop of traditional programming languages, defined by three integers: the starting
+				position, the number of items to be traversed, and the step between consecutive
+				items. This is provided by procedure
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_do_for">do_for</A>
+				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">starting</SPAN><SPAN CLASS="esymbol">,</SPAN>
+				<SPAN CLASS="elocal">number</SPAN><SPAN CLASS="esymbol">,</SPAN>
+				<SPAN CLASS="elocal">step</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<A CLASS="eclass" HREF="../../reference/kernel/integer.html">INTEGER</A>).
+				<LI>Since with a linear target the iterator can advance the cursor step by step, the
+				basic iteration operations are complemented by variants which pick up from the
+				position reached by the last call:
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_continue_until">continue_until</A>,
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_until_continue">until_continue</A>,
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_continue_while">continue_while</A>,
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_while_continue">while_continue</A>,
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_continue_search">continue_search</A>,
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_continue_for">continue_for</A>.
+			</UL>
+			<H3>Two-way iteration</H3>
+			<P>
+				Class
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A>
+				has all the features of
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>,
+				to which it adds features for iterating backward as well as forward.<BR>
+				The class introduces commands
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/two_way_chain_iterator.html#f_finish">finish</A> and
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/two_way_chain_iterator.html#f_back">back</A>,
+				applying the corresponding	operations to the two-way target. It also has a backward variant for every iteration
+				feature. The name of each such variant is the name of the forward feature followed by
+				<I>_back</I>:
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/two_way_chain_iterator.html#f_do_all_back">do_all_back</A>,
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/two_way_chain_iterator.html#f_until_do_back">until_do_back</A>
+				and so on.<BR>
+				An alternative design would have kept just one set of features and added two features: a
+				command reverse to reverse the direction of future iteration operations, and a query backward
+				to find out the direction currently in force.<BR>
+				Contrary to what one might at first imagine, class
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A>
+				is extremely short and simple; its <SPAN CLASS="ekeyword">Feature</SPAN> clause only contains the declarations of two
+				features,
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/two_way_chain_iterator.html#f_finish">finish</A> and
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/two_way_chain_iterator.html#f_back">back</A>.<BR>
+				The trick is to use repeated inheritance.
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A>
+				inherits twice from
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>;
+				the first inheritance branch yields the forward iteration features,
+				the second yields those for backward iteration. There is
+				no need for any explicit declaration or redeclaration of iteration features. Here is the
+				entire class text that yields this result:
+			<P CLASS="code">
+				<SPAN CLASS="ekeyword">class</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A>
+				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">G</SPAN><SPAN CLASS="esymbol">]</SPAN><BR><BR>
+				<SPAN CLASS="ekeyword">inherit</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">G</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">redefine</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_target">target</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">select</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_start">start</A>,<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_forth">forth</A><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_do_all">do_all</A><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_until_do">until_do</A><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_do_until">do_until</A><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_do_if">do_if</A><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_do_for">do_for</A><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_search">search</A><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_forall">forall</A><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_exists">exists</A><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_until_continue">until_continue</A><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_continue_until">continue_until</A><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_continue_for">continue_for</A><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_continue_search">continue_search</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">G</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">rename</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_start">start</A>
+				<SPAN CLASS="ekeyword">as</SPAN>
+				<SPAN CLASS="efeature">finish</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_forth">forth</A>
+				<SPAN CLASS="ekeyword">as</SPAN>
+				<SPAN CLASS="efeature">back</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_do_all">do_all</A>
+				<SPAN CLASS="ekeyword">as</SPAN>
+				<SPAN CLASS="efeature">do_all_back</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_until_do">until_do</A>
+				<SPAN CLASS="ekeyword">as</SPAN>
+				<SPAN CLASS="efeature">until_do_back</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_do_until">do_until</A>
+				<SPAN CLASS="ekeyword">as</SPAN>
+				<SPAN CLASS="efeature">do_until_back</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_do_if">do_if</A>
+				<SPAN CLASS="ekeyword">as</SPAN>
+				<SPAN CLASS="efeature">do_if_back</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_do_for">do_for</A>
+				<SPAN CLASS="ekeyword">as</SPAN>
+				<SPAN CLASS="efeature">do_ for_back</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_search">search</A>
+				<SPAN CLASS="ekeyword">as</SPAN>
+				<SPAN CLASS="efeature">search_back</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_forall">forall</A>
+				<SPAN CLASS="ekeyword">as</SPAN>
+				<SPAN CLASS="efeature">forall_back</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_exists">exists</A>
+				<SPAN CLASS="ekeyword">as</SPAN>
+				<SPAN CLASS="efeature">exists_back</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_until_continue">until_continue</A>
+				<SPAN CLASS="ekeyword">as</SPAN>
+				<SPAN CLASS="efeature">until_continue_back</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_continue_until">continue_until</A>
+				<SPAN CLASS="ekeyword">as</SPAN>
+				<SPAN CLASS="efeature">continue_until_back</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_continue_for">continue_for</A>
+				<SPAN CLASS="ekeyword">as</SPAN>
+				<SPAN CLASS="efeature">continue_for_back</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_continue_search">continue_search</A>
+				<SPAN CLASS="ekeyword">as</SPAN>
+				<SPAN CLASS="efeature">continue_search_back</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">redefine</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_target">target</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
+				<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Status report</SPAN><BR><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/two_way_chain_iterator.html#f_target">target</A><SPAN CLASS="esymbol">:</SPAN>
+				<A CLASS="eclass" HREF="../../reference/structures/traversing/bilinear.html">BILINEAR</A>
+				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">G</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- The structure to which iteration features will</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- apply</SPAN><BR><BR>
+				<SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">-- Cursor movement</SPAN><BR><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/two_way_chain_iterator.html#f_finish">finish</A>
+				<SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Move cursor of target to last position.</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/two_way_chain_iterator.html#f_target">target</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/traversing/bilinear.html#f_finish">finish</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/two_way_chain_iterator.html#f_back">back</A>
+				<SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Move cursor of target backward one position.</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/two_way_chain_iterator.html#f_target">target</A><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/traversing/bilinear.html#f_back">back</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+				<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
+			</P>
+			<P>
+				This class provides a good example of the economy of expression that the full
+				inheritance mechanism affords through the combination of renaming, redefinition,
+				repeated inheritance rules and selection, without sacrificing clarity and maintainability.
+			<H3>Tree iteration</H3>
+			<P>
+				Tree iterations, provided by class
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/cursor_tree_iterator.html">CURSOR_TREE_ITERATOR</A>,
+				work on trees of the cursor tree form; only with this form of tree are traversal operations possible.
+				Three forms of iteration are provided: preorder, postorder and breadth-first. They
+				correspond to the three traversal policies described in the discussion of trees.
+				Here too it would seem that a rather lengthy class is needed, but repeated
+				inheritance works wonders.<BR>
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/cursor_tree_iterator.html">CURSOR_TREE_ITERATOR</A>
+				simply inherits three times from
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>,
+				renaming the features appropriately in each case:
+			<UL>
+				<LI><SPAN CLASS="efeature">pre_do_all</SPAN>,
+				<SPAN CLASS="efeature">pre_until</SPAN>
+				and so on.
+				<LI><SPAN CLASS="efeature">post_do_all</SPAN>,
+				<SPAN CLASS="efeature">post_until</SPAN>
+				and so on.
+				<LI><SPAN CLASS="efeature">breadth_do_all</SPAN>,
+				<SPAN CLASS="efeature">breadth_until</SPAN>
+				and so on.
+			</UL>
+			<P>
+				All it needs to do then is to redefine the type of target to be
+				<A CLASS="eclass" HREF="../../reference/structures/cursor_tree/cursor_tree.html">CURSOR_TREE</A>
+				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">G</SPAN><SPAN CLASS="esymbol">]</SPAN>,
+				and to redefine six features: the three renamed
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_start">start</A>
+				(<SPAN CLASS="efeature">pre_start</SPAN>
+				etc.) and the three
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_forth">forth</A>
+				(<SPAN CLASS="efeature">pre_ forth</SPAN>
+				and so on). These seven redefinitions give us a full-fledged battery of tree
+				iteration mechanisms.
+			<H2>Building and Using Iterators</H2>
+			<P>
+				To conclude this discussion, let us now put together the various mechanisms studied so
+				far, to see how authors of client software can use the Iteration library to perform
+				possibly complex iterations on various data structures without ever writing a single loop
+				or test. The basic ideas were sketched above but now we have all the elements for the
+				full view.<BR>
+				An application class may use one of the iteration classes in either of two ways: as a
+				descendant (single or repeated) or as a client. The descendant technique is extremely
+				simple but less versatile.
+			<H3>The single descendant technique</H3>
+			<P>
+				Assume an application class
+				<SPAN CLASS="eclass">PROCESSOR</SPAN>
+				that is a proper descendant of one of the effective iteration classes studied in this chapter.
+				Then a routine of
+				<SPAN CLASS="eclass">PROCESSOR</SPAN>, say
+				<SPAN CLASS="efeature">iterate</SPAN>, may iterate a certain action over a data structure, subject to a certain test.
+				First, class <SPAN CLASS="eclass">PROCESSOR</SPAN> must specify the action by redefining
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_action">item_action</A> and
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_test">item_test</A>
+				(or, in the most general case,
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_action">action</A> and
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_test">test</A>).
+				Then routine iterate must specify the target data structure through a call of the form
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_set">set</A>
+				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">t</SPAN><SPAN CLASS="esymbol">)</SPAN>
+				where <SPAN CLASS="elocal">t</SPAN> represents the selected target data structure. The type of
+				<SPAN CLASS="elocal">t</SPAN> must correspond to	the iteration class selected as ancestor of
+				<SPAN CLASS="eclass">PROCESSOR</SPAN>:
+				for
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				it must be a descendant of
+				<A CLASS="eclass" HREF="../../reference/structures/traversing/linear.html">LINEAR</A>
+				(such as
+				<A CLASS="eclass" HREF="../../reference/structures/list/linked_list.html">LINKED_LIST</A>,
+				<A CLASS="eclass" HREF="../../reference/structures/list/arrayed_list.html">ARRAYED_LIST</A>,
+				<A CLASS="eclass" HREF="../../reference/structures/list/linked_circular.html">LINKED_CIRCULAR</A>
+				or any other list or circular chain classes); for
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A>
+				it must be a descendant of
+				<A CLASS="eclass" HREF="../../reference/structures/traversing/bilinear.html">BILINEAR</A>
+				such as
+				<A CLASS="eclass" HREF="../../reference/structures/list/two_way_list.html">TWO_WAY_LIST</A>
+				or
+				<A CLASS="eclass" HREF="../../reference/structures/list/two_way_list.html">TWO_WAY_CIRCULAR</A>;
+				for
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/cursor_tree_iterator.html">CURSOR_TREE_ITERATOR</A>
+				it must be a descendant of
+				<A CLASS="eclass" HREF="../../reference/structures/cursor_tree/cursor_tree.html">CURSOR_TREE</A>.
+				In all cases the actual generic parameters of the iterator class and of	the data structure class must be compatible.
+				Then the iteration proper is obtained simply by calling the appropriate procedure, without any qualification
+				or arguments, for example:
+				do_ if<BR>
+				It is hard to imagine a simpler scheme: no loops, no initialization, no arguments.
+				Feature
+				<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_action">item_action</A>
+				may need to rely on some variable values. Because it does not take any
+				argument, such values will have to be treated as attributes, with the corresponding <SPAN CLASS="efeature">set_...</SPAN>
+				procedures to set and change their values. This also applies to the two schemes set next.<BR>
+				The single descendant technique has one drawback: it provides the iterating class,
+				<SPAN CLASS="eclass">PROCESSOR</SPAN>,
+				with only one set of iteration particulars. This limitation does not affect
+				the number of targets: you may use as many targets as you wish, as long as they are of
+				compatible types, by calling a routine such as iterate several times, or calling several
+				such routines, each call being preceded by a call to set to define a new target. The
+				limitation also does not affect the iterating scheme: one iteration could use
+				do_if,
+				the next
+				do_all
+				and so on. But it does require the action and test to be the same in all cases.<BR>
+				The next two techniques will remove this limitation.
+			<H3>Using repeated inheritance</H3>
+			<P>
+				One way to obtain several iteration schemes is a simple extension to the single
+				descendant technique. You can use repeated inheritance to provide two or more variants.
+				We have in fact already encountered the technique when studying how to derive
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/two_way_chain_iterator.html">TWO_WAY_CHAIN_ITERATOR</A>
+				and
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/cursor_tree_iterator.html">CURSOR_TREE_ITERATOR</A>
+				from
+				<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>.
+				The general pattern, applied here to just two iteration schemes but easily generalized to
+				more, is straightforward:
+			<P CLASS="code">
+				<SPAN CLASS="ekeyword">class</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">DUAL_PROCESSOR</SPAN><BR><BR>
+				<SPAN CLASS="ekeyword">inherit</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">SOME_TYPE</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">rename</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_action">item_action</A>
+				<SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="efeature">action1</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_test">item_test</A>
+				<SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="efeature">test1</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_do_if">do_if</A>
+				<SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="efeature">do_if1</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">redefine</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">action1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">test1</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">select</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">action1</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">test1</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A>
+				<SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="eclass">SOME_TYPE</SPAN><SPAN CLASS="esymbol">]</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">rename</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_action">item_action</A>
+				<SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="efeature">action2</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_item_test">item_test</A>
+				<SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="efeature">test2</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_do_if">do_if</A>
+				<SPAN CLASS="ekeyword">as</SPAN> <SPAN CLASS="efeature">do_if2</SPAN><SPAN CLASS="esymbol">,</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">redefine</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">action2</SPAN><SPAN CLASS="esymbol">,</SPAN> <SPAN CLASS="efeature">test2</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
+				<SPAN CLASS="ekeyword">feature</SPAN><BR><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">action1</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Action for the first scheme</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">test1</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<A CLASS="eclass" HREF="../../reference/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Test for the first scheme</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">action2</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Action for the second scheme</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">test2</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<A CLASS="eclass" HREF="../../reference/kernel/boolean.html">BOOLEAN</A> <SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Test for the second scheme</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;...<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">iterate1</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Execute iteration of first kind.</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_set">set</A>
+				<SPAN CLASS="esymbol">(</SPAN>...<SPAN CLASS="esymbol">)</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">do_if1</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">iterate2</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Execute iteration of second kind.</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_set">set</A>
+				<SPAN CLASS="esymbol">(</SPAN>...<SPAN CLASS="esymbol">)</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">do_if2</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;...
+			</P>
+			<P>
+				The repeated inheritance machinery takes care of the rest.
+			<H3>Using explicit iterator objects</H3>
+			<P>
+				To obtain maximum flexibility, classes that need iteration facilities should be clients
+				rather than descendants of the iteration classes. The resulting scheme is completely
+				dynamic: to perform iterations you use iterator objects as discussed earlier.<BR>
+				The following example illustrates the technique. Consider a deferred class
+				<SPAN CLASS="eclass">FIGURE</SPAN> describing the notion of graphical figure,
+				with many effective descendants (<SPAN CLASS="eclass">POLYGON</SPAN>,
+				<SPAN CLASS="eclass">CIRCLE</SPAN> and so on). It is useful to define
+				<SPAN CLASS="eclass">COMPLEX_FIGURE</SPAN>, describing figures that
+				are recursively composed of sub-figures. This is a remarkable example of multiple
+				inheritance:
+			<P CLASS="code">
+				<SPAN CLASS="ekeyword">class</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">COMPLEX_FIGURE</SPAN><BR><BR>
+				<SPAN CLASS="ekeyword">inherit</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">FIGURE</SPAN>,<BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">LINKED_LIST [FIGURE]</SPAN><BR><BR>
+				<SPAN CLASS="ekeyword">feature</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;...
+				<SPAN CLASS="ekeyword">end</SPAN>
+			</P>
+			<P>
+				In the feature clause we want to provide the appropriate effectings for the deferred
+				features of class <SPAN CLASS="eclass">FIGURE</SPAN>:
+				<SPAN CLASS="efeature">display</SPAN>, <SPAN CLASS="efeature">hide</SPAN>,
+				<SPAN CLASS="efeature">translate</SPAN> and all other basic figure operations.<BR>
+				We can use loops for that purpose, for example
+			<P CLASS="code">
+				<SPAN CLASS="efeature">display</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Recursively display all components of the complex</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- figure</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">from</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_start">start</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">until</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_exhausted">exhausted</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">loop</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/traversing/linear.html#f_item">item</A><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">display</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_forth">forth</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+			</P>
+			<P>
+				Although acceptable and even elegant, this scheme will cause significant
+				duplication: all the <SPAN CLASS="eclass">FIGURE</SPAN> features - not
+				just <SPAN CLASS="efeature">display</SPAN> but also <SPAN CLASS="efeature">hide</SPAN>,
+				<SPAN CLASS="efeature">rotate</SPAN>, <SPAN CLASS="efeature">move</SPAN> and
+				others - will have the same structure, with a loop. We can use iterators to avoid this
+				duplication. The repeated inheritance technique would work, but given the large number
+				of <SPAN CLASS="eclass">FIGURE</SPAN> features the amount of repeated inheritance that would be needed seems
+				unwieldy. It is also not very desirable to have to change the inheritance structure of the
+				system just to add a new feature to <SPAN CLASS="eclass">FIGURE</SPAN>. The more dynamic approach using iterator
+				objects seems preferable.<BR>
+				To implement this approach, define a class for iterating on complex figures:
+			</P>
+			<P CLASS="code">
+				<SPAN CLASS="ekeyword">class</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">COMPLEX_FIGURE_ITERATOR</SPAN><BR><BR>
+				<SPAN CLASS="ekeyword">inherit</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="eclass" HREF="../../reference/structures/iteration/linear_iterator.html">LINEAR_ITERATOR</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">redefine</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_target">target</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
+				<SPAN CLASS="ekeyword">create</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_set">set</A><BR><BR>
+				<SPAN CLASS="ekeyword">feature</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">target</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<SPAN CLASS="eclass">COMPLEX_FIGURE</SPAN><BR><BR>
+				<SPAN CLASS="ekeyword">end</SPAN>
+			</P>
+			<P>
+				Then for each operation to be iterated define a small class. For example:
+			<P CLASS="code">
+				<SPAN CLASS="ekeyword">class</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">FIGURE_DISPLAYER</SPAN><BR><BR>
+				<SPAN CLASS="ekeyword">inherit</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">COMPLEX_FIGURE_ITERATOR</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">redefine</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/linear_iterator.html#f_item_action">item_action</A><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR><BR>
+				<SPAN CLASS="ekeyword">create</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<A CLASS="efeature" HREF="../../reference/structures/iteration/iterator.html#f_set">set</A><BR><BR>
+				<SPAN CLASS="ekeyword">feature</SPAN><BR><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="efeature">item_action</SPAN>
+				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">f</SPAN><SPAN CLASS="esymbol">:</SPAN>
+				<SPAN CLASS="eclass">FIGURE</SPAN><SPAN CLASS="esymbol">)</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Action to be applied to each figure: display</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- it.</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">f</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">display</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+			</P>
+			<P>
+				Similarly, you may define <SPAN CLASS="eclass">FIGURE_HIDER</SPAN>, <SPAN CLASS="eclass">FIGURE_MOVER</SPAN> and others. Then
+				the features of <SPAN CLASS="eclass">COMPLEX_FIGURE</SPAN> are written almost trivially, without any explicit
+				loops; for example:
+			<P CLASS="code">
+				<SPAN CLASS="efeature">display</SPAN> <SPAN CLASS="ekeyword">is</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- Recursively display all components of the complex</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ecomment">-- figure</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">local</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">disp</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="eclass">FIGURE_DISPLAYER</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">do</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">create</SPAN>
+				<SPAN CLASS="elocal">disp</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">set</SPAN>
+				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ekeyword">Current</SPAN><SPAN CLASS="esymbol">)</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="elocal">disp</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">do_all</SPAN><BR>
+				&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="ekeyword">end</SPAN><BR>
+			</P>
+			<P>
+				and similarly for all the others.<BR>
+				Note the use of <SPAN CLASS="efeature">set</SPAN> as creation procedure, which is more convenient than requiring
+				the clients first to create an iterator object and then to call <SPAN CLASS="efeature">set</SPAN>. This is also safer, since
+				with <SPAN CLASS="efeature">set</SPAN> as a creation procedure the client cannot forget to initialize the target. (If a class
+				<SPAN CLASS="eclass">C</SPAN> has a creation clause, the creation instruction
+				<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="elocal">x</SPAN>
+				with no creation call is invalid for <SPAN CLASS="elocal">x</SPAN>	of type
+				<SPAN CLASS="eclass">C</SPAN>.)<BR>
 	</BODY>
 </HTML>

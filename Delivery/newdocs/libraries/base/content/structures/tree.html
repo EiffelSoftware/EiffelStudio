@@ -2,44 +2,333 @@
 
 <HTML>
 	<HEAD>
-		<TITLE>EiffelBase Data Structures</TITLE>
+		<TITLE>EiffelBase Data Structures, Trees</TITLE>
 		<LINK REL=StyleSheet HREF="../../../../default.css">
 	</HEAD>
 
 	<BODY>
-		<H1>Data Structures Overview</H1>
+		<H1>Trees</H1>
 			<P>
-				The data structures cluster of EiffelBase includes classes that cover a wide
-				range a data structures classes for you to reuse in your systems. The cluster
-				is divided into a number of subclusters. Each subcluster contains one or more
-				<B>deferred</B> classes, which provide the general high-level abstractions;
-				other classes in the cluster inherit from the deferred ones.</P>
-			<P>
-				The highest-level class is <A HREF="../reference/structures/access/container.html">
-				CONTAINER</A>, with the following heirs:
-				<UL>
-					<LI><A HREF="../reference/structures/access/collection.html">COLLECTION</A>
-					, which describes containers through their access properties (defining how
-					to access a container's items, for	example through an index or according to
-					a last-in, first-out policy).</LI>
-					<LI><A HREF="../reference/structures/traversing/traversable.html">TRAVERSABLE</A>
-					, which considers their traversal properties, such as sequential or hierarchical.</LI>
-					<LI><A HREF="../reference/structures/storage/box.html">BOX</A>,
-					which describes their storage properties, such as being bounded or unbounded.</LI>
-				</UL>
+				Trees and their immediate generalization, forests, are useful for any system that
+				manipulates hierarchically organized information. The range of applications is broad,
+				from abstract syntax trees in compilers through document structures in text processing
+				systems to company organization charts in business software.<BR>
+				Trees, in particular binary trees and their variants, also provide convenient
+				implementations of container data structures.
+		<H2>Basic Terminology</H2>
+		<P>
+			A tree consists of a set of nodes. Each node may have zero or more children, other
+			nodes of which it is the parent. Each node has at most one parent, although it may have
+			an arbitrary number of children.<BR><BR>
+			<CENTER><IMG SRC="tree.gif" ALT="tree" /></CENTER><BR><BR>
+			A node with no parent, such as the node marked <I>A</I> on the figure, is called a root; a
+			node with no children, such as <I>E</I>, <I>F</I>, <I>G</I>, <I>H</I> and <I>I</I>,
+			is called a leaf. The length of a path	from the root to a leaf (that is to say, the number of
+			nodes on the path minus one) is the height of the tree; the average length of all such paths
+			is the average height. On the figure the height is 2 and the average height is 11/6 since of
+			the six paths five have length 2 and one has length 1.<BR>
+			The children of a common node are called siblings. For example <I>G</I>, <I>H</I> and
+			<I>I</I> are siblings on the figure. The siblings of a node are usually considered to be
+			ordered; the order corresponds to the direction from left to right on conventional figures
+			such as this one.<BR>
+			The descendants of a node are the node itself and, recursively, the descendants of
+			its children. The ancestors of a node are the node itself and, recursively, the ancestors
+			of its parent. For example the descendants of <I>A</I> are all the tree’s nodes; and the
+			ancestors of <I>I</I> are <I>A</I>, <I>D</I> and <I>I</I>.<BR>
+			To obtain a tree rather than a more general kind of graph, there is an extra
+			requirement: in we start from an arbitrary node, go to the parent, to the parent’s parent
+			and so on (for as long as there is a parent), we will never find the starting node again. In
+			more precise terms the condition is that the “parent” relation must not have any cycles.
+			(That relation is in fact a partial function, since every node has zero or one parent.)
+			If we consider infinite as well as finite trees the above condition must be restated to express that
+			if we start from an arbitrary node and repeatedly go to the parent we will eventually hit a root.
+			This discussion, however, will only consider finite trees (those with a finite number of nodes),
+			for which the two statements are equivalent.<BR>
+			The definition given so far properly defines forests rather than trees. <I>A</I> tree is a
+			forest with at most one root (that is to say, with exactly one root unless it is empty), such
+			as the example on the last figure. The discussion and the library classes will handle trees
+			rather than forest, but this is not a very important difference since by using an obvious
+			device you can treat any forest as a tree: simply add an extra node, and make it the
+			parent of all the forest’s roots.<BR>
+			Another important observation is that there is a one-to-one correspondence between
+			trees and nodes. To any node N of a tree T we can associate a tree: take T, remove all
+			nodes that are not descendants of N, and use N as the new root. Conversely, to any tree
+			we can associate a node - its root. This correspondence enables us to treat the two
+			concepts of tree and node as essentially the same.
+		<H2>Recursive Trees</H2>
+		<P>
+			The closeness of the notions of tree and node yields an elegant definition of trees in
+			terms of lists. If we look at trees or, equivalently, at tree nodes, we can consider each
+			node as being both:
+		<UL>
+			<LI>A list: the list of its children.
+			<LI>A list cell (similar to a <A HREF="../../reference/structures/list/linkable.html">LINKABLE
+			</A> or <A HREF="../../reference/structures/list/bi_linkable.html">BI_LINKABLE</A> for
+			one-way and two-way linked lists), paired with the node’s siblings.
+		</UL>
+		This yields a simple definition of trees by multiple inheritance from
+		<A HREF="../../reference/structures/list/list.html">LIST</A> and
+		<A HREF="../../reference/structures/list/cell.html">CELL</A>.
+		<H3>Dynamic recursive trees</H3>
+		<P>
+			An example of dynamic tree structure is provided by class
+			<A HREF="../../reference/structures/tree/two_way_tree.html">TWO_WA Y_TREE</A>, an heir
+			of both <A HREF="../../reference/structures/list/two_way_list.html">TWO_WAY_LIST</A>
+			and <A HREF="../../reference/structures/list/bi_linkable.html">BI_LINKABLE</A>.
+			There is also <A HREF="../../reference/structures/tree/linked_tree.html">LINKED_TREE</A>,
+			which inherits from LINKED_LIST and LINKABLE, but
+			<A HREF="../../reference/structures/tree/two_way_tree.html">TWO_WA Y_TREE</A>
+			is generally preferable since children of a node often needs to be traversed both
+			ways; the notion of order is usually less significant here than for lists.
+			Such a form of definition is a particularly effective way of conveying the
+			profoundly recursive nature of trees. The corresponding classes are useful in many
+			different areas such as graphics, text processing and compilation.
+			To create a one-way or two-way linked tree, use
+			<P CLASS="code">
+				<SPAN CLASS="ekeyword">create</SPAN>
+				<SPAN CLASS="elocal">my_tree</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/tree/two_way_tree.html#f_make">make</A>
+				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">root_value</SPAN><SPAN CLASS="esymbol">)</SPAN>
 			</P>
-			<P>
-				The documentation further discuss:
-				<UL>
-					<LI>The <A HREF="taxonomy.html">taxonomy</A> of the
-					abstract container structures.</LI>
-					<LI>The <A HREF="list.html">list-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="dispenser.html">dispenser-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="tree.html">tree-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="set.html">set-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="table.html">table-based structures hierarchy</A>.</LI>
-					<LI>The <A HREF="iteration.html">iteration mechanisms</A>.</LI>
-				</UL>
-			<P>
+			This will attach my_tree to a new one-node tree, with root_value at the root node.
+			Here my_tree must be declared of type
+			<A HREF="../../reference/structures/tree/two_way_tree.html">TWO_WA Y_TREE</A>
+			[MY_TYPE] for some type MY_TYPE, and root_value must be of type MY_TYPE.<BR>
+			A class with a similar interface but using arrays rather than lists to represent nodes
+			is also available: <A HREF="../../reference/structures/tree/arrayed_tree.html">ARRAYED_TREE
+			</A>. This class is more efficient in both time and space for trees whose nodes have
+			many children that are accessed randomly, if relatively few child insertions occur after
+			node creation. Here the creation procedure indicates the initial number of children:
+			<P CLASS="code">
+				<SPAN CLASS="ekeyword">create</SPAN>
+				<SPAN CLASS="elocal">my_tree</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/tree/arrayed_tree.html#f_make">make</A>
+				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">max_estimated_children</SPAN><SPAN CLASS="esymbol">,</SPAN>
+				<SPAN CLASS="elocal">root_value</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			</P>
+			The integer argument max_estimated_children only serves for the initial allocation;
+			the array will be resized if the number of children grows beyond the initial size. As
+			with the previous kinds of tree, the newly created node initially has no children.
+		<H3>Fixed trees</H3>
+		<P>
+			<A HREF="../../reference/structures/tree/two_way_tree.html">
+				TWO_WA Y_TREE</A> is useful for fully dynamic trees, in which a node may get new
+			children at any time. For some applications, the number of children of a tree, although
+			still arbitrary, is set for each node when the node is created, and will not change after
+			that. Of course, some children may be absent; the corresponding entries will be void
+			references. Class <A HREF="../../reference/structures/tree/fixed_tree.html">FIXED_TREE</A>
+			provides the basic mechanism; as you may have guessed, the implementation associates
+			with each node an array of its children, arrays usually being the right structure when a
+			collection of objects is known not to change size after creation.
+			To create a fixed tree, use
+			<P CLASS="code">
+				<SPAN CLASS="ekeyword">create</SPAN>
+				<SPAN CLASS="elocal">my_tree</SPAN><SPAN CLASS="esymbol">.</SPAN><A CLASS="efeature" HREF="../../reference/structures/tree/fixed_tree.html#f_make">make</A>
+				<SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">how_many_children</SPAN><SPAN CLASS="esymbol">,</SPAN>
+				<SPAN CLASS="elocal">root_value</SPAN><SPAN CLASS="esymbol">)</SPAN>
+			</P>
+			The root will have the associated value root value and will have how_many_
+			children children, all initially void. Unlike the argument max_estimated_children for
+			the creation procedure of
+			<A HREF="../../reference/structures/tree/arrayed_tree.html">ARRAYED_TREE</A>
+			, the value of how_many_children is the final arity of the newly created node; since
+			it set separately for each node on creation, the various nodes of a tree can have
+			different arities, as illustrated on the above figure.
+		<H3>Properties of recursive trees</H3>
+		<P>
+			Whether fixed or dynamic, recursive trees fully enjoy their dual origin. This means in
+			particular that each node is viewed as a list of its children, and can apply to this list the
+			features inherited from <A HREF="../../reference/structures/list/list.html">LIST</A>,
+			appropriately renamed; for example:<BR>
+			<A HREF="../../reference/structures/tree/dynamic_tree.html#f_child_put_left">child_put_left</A><BR>
+			<A HREF="../../reference/structures/tree/dynamic_tree.html#f_child_forth">child_forth</A><BR>
+			<A HREF="../../reference/structures/tree/dynamic_tree.html#f_child_put">child_put</A><BR>
+			and so on. Feature <A HREF="../../reference/structures/tree/dynamic_tree.html#f_count">count</A>,
+			inherited from <A HREF="../../reference/structures/list/list.html">LIST</A>, indicates
+			the number of children; it is renamed arity to conform to accepted
+			tree terminology. (The word is a substantived form of the “ary” adjective ending, as in
+			“ternary”, “quaternary” and so on, which yielded the expression “n-ary”.)
+		<H2>BINARY TREES</H2>
+		<P>
+			Binary trees are a special case of fixed trees in which nodes always have two children,
+			although either or both of these children may be void.
+		<H3>Basic binary trees</H3>
+		<P>
+			Class <A HREF="../../reference/structures/tree/binary_tree.html">BINARY_TREE</A>
+			describes binary trees.<BR><BR>
+			<CENTER><IMG SRC="binary_tree.gif" ALT="binary_tree"/></CENTER><BR><BR>
+			The children are represented by features
+			<A HREF="../../reference/structures/tree/binary_tree.html#f_left_child">left_child</A>and
+			<A HREF="../../reference/structures/tree/binary_tree.html#f_right_child">right_child</A>.
+			Queries <A HREF="../../reference/structures/tree/binary_tree.html#f_has_left">has_left</A>
+			and <A HREF="../../reference/structures/tree/binary_tree.html#f_has_right">has_right</A>
+			indicate whether any of these is non-void; arity is redefined to yield the number of non-void
+			children (0, 1 or 2).
+			<H3>Binary representations of trees</H3>
+			For any ordinary tree, there exists a standard representation as a binary tree, which is
+			useful in some applications. The correspondence is one-to-one, so that the original tree
+			may be reconstructed without ambiguity. It actually applies to forests rather than trees
+			and works as follows, <I>fr</I> being the first root in a forest: the binary tree’s root
+			corresponds to <I>fr</I>; its left subtree is obtained recursively from the forest made by the
+			subtrees of <I>fr</I>; and its right subtree is obtained recursively from the original forest
+			deprived of the tree rooted at <I>fr</I>. If you start from a tree rather than a forest the binary
+			tree’s root will have no right child.<BR>
+			Function <A HREF="../../reference/structures/tree/tree.html#f_binary_representation">binary_representation</A>,
+			in <A HREF="../../reference/structures/tree/tree.html">TREE</A>, creates a binary tree
+			representation (the function’s result) obtained from the current tree.<BR>
+			Procedure <A HREF="../../reference/structures/tree/dynamic_tree.html#f_fill_from_binary">fill_ from_binary</A>,
+			in	<A HREF="../../reference/structures/tree/dynamic_tree.html">DYNAMIC_TREE</A>,
+			reconstructs a tree from a binary tree representation passed as	argument.
+		<H3>Binary search trees</H3>
+		<P>
+			Class <A HREF="../../reference/structures/tree/binary_search_tree.html">BINARY_SEARCH_TREE</A>
+			describes binary search trees, an implementation of	bags which is appropriate for comparable items.<BR>
+			Binary search trees rely for insertion on a policy whereby any item less than the
+			root is inserted (recursively) into the left subtree, and any item greater than the root into
+			the right subtree. So if the insertion order is reasonably random the items will distribute
+			evenly among the various branches, This means that the average height of the tree will
+			be not much more than the optimal: [log2 n] where n is the number of nodes and [x],
+			for any x, is the integer part of x.<BR>
+			Since search operations will follow the same principle (search left if smaller than
+			the root, and so on), the time to find an item or ascertain that it is not there is
+			proportional to the average height. In normal cases this means about [log2 n] basic
+			operations, rather than n with a linear structure such as a list, and hence much better
+			performance for large n.
+		<H2>CURSOR TREES</H2>
+		<P>
+			Recursive trees, as described so far, are not active data structures: even though each
+			node has its own cursor to traverse the list of its children, there is no global cursor on
+			the tree as a whole. It is not hard to see that the notion of recursive tree is in fact
+			incompatible with the presence of a global cursor.
+			In situations where you need such a cursor, enabling you to move freely from a
+			node to its children, siblings and parents, you may use class
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html">CURSOR_TREE</A> and its
+			descendants.
+		<H3>The conceptual model</H3>
+		<P>
+			With cursor trees the model is different from what we have seen earlier in this chapter:
+			there is a clear distinction between the nodes and the tree itself. The manipulated object
+			is a tree, and the notion of node is merely implicit.
+			In the various operations presented below and illustrated on the following figure,
+			“up” means towards the root and “down” towards the leaves. This, of course, is the
+			reverse of the properties of trees of the other kind - those which grow towards the sun
+			and serve to print books about software.
+		<H3>Operations on cursor trees</H3>
+		<P>
+			The cursor supported by instances of
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html">CURSOR_TREE</A> has
+			a position referring to a node of the tree, which is then considered to be the active node,
+			or is off the tree. The different off positions are:
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_above">above</A>
+			(above the root),
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_below">below</A>
+			(below a leaf),
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_before">before</A>
+			(before a leftmost sibling),
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_after">after</A>
+			(after a rightmost sibling.) As with linear structures, fictitious sentinel elements are
+			assumed to be present to the left, right, top and bottom.<BR>
+			Various procedures are available to move the cursor in all directions:
+		<UL>
+			<LI><A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_down">down (i)</A>
+			moves the cursor down to the <SPAN CLASS="elocal">i</SPAN>-th child of the active
+			node. If <SPAN CLASS="elocal">i</SPAN> is equal to
+			0 the cursor ends up before; if <SPAN CLASS="elocal">i</SPAN> is equal to the arity
+			of the current parent plus 1, the cursor ends up
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_after">after</A>.
+			Calling
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_down">down (i)</A>
+			when the cursor is on a leaf node results in setting
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_below">below</A> and
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_before">before</A>
+			to true if <SPAN CLASS="elocal">i</SPAN> is equal to 0, or
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_below">below</A> and
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_after">after</A> to
+			true if <SPAN CLASS="elocal">i</SPAN> is equal to arity+1.
+			<LI><A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_forth">forth</A>
+			and <A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_back">back</A>
+			move the cursor forward and backward between siblings and can cause the cursor to end up
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_after">after</A> or
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_before">before</A>.
+			<LI><A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_up">up</A>
+			moves the cursor up one level. The call may be made even when the cursor is
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_after">after</A> or
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_before">before</A>.
+			If the cursor is on the root of the tree or below in an empty tree, the cursor ends up
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_above">above</A>.
+		</UL>
+		<P>
+			You can move the cursor in any one direction (
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_up">up</A>,
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_down">down</A>,
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_forth">forth</A>,
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_back">back</A>),
+			repeatedly, until it is
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_off">off</A>
+			(<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_above">above</A>,
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_below">below,</A>
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_after">after</A>,
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_before">before</A>
+			respectively), but once it is
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_off">off</A>,
+			further movement in the same direction is prohibited. For example the precondition of
+			<A HREF="../../reference/structures/tree/cursor_tree.html#f_put_left">put_left</A>
+			requires
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_before">before</A>
+			to be false, and the precondition of
+			<A HREF="../../reference/structures/tree/cursor_tree.html#f_put_right">put_right</A>
+			requires <A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_after">after</A>
+			to be false.<BR>
+			It is possible to move down from an
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_above">above</A>
+			position; in an empty tree this brings the cursor
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_below">below</A>.
+			Similarly, it is possible to move up from
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_below">below</A>,
+			left from
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_after">after</A>,
+			right from
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_before">before</A>.
+			<BR>
+			The sentinel element above the tree’s root is considered to be the root of a forest
+			containing just one tree. This view justifies the convention for the result of arity when
+			the cursor is above: 0 if the tree
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_is_empty">is_empty</A>,
+			1 if it has a root (viewed as the child of the fictitious sentinel element).
+		<H3>Manipulating the cursor explicitly</H3>
+		<P>
+			The cursor attached to a cursor tree is not just a conceptual notion but an actual object,
+			of type <A HREF="../../reference/structures/cursors/cursor.html">CURSOR</A>.
+			You may use the query cursor to obtain a reference to the current cursor. Procedure
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_go_to">go_to</A>
+			takes a cursor as argument and brings the tree’s cursor to the node identified by
+			the value of that argument.
+		<H3>Traversals</H3>
+		<P>
+			A useful notion associated with trees and particularly applicable to cursor trees is that of
+			traversal.<BR>
+			A traversal is a certain policy for ordering all the nodes in a tree - usually to apply
+			an operation to all these nodes in the resulting order.
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html">CURSOR_TREE</A> and its
+			descendants support three forms of traversal: preorder, postorder and breadth-first.
+			They correspond to the most commonly used traversal policies on trees, illustrated on
+			the figure (where the children of each node are assumed to be ordered from left to
+			right):
+			<CENTER><IMG SRC="tree.gif" ALT="tree" /></CENTER><BR><BR>
+		<UL>
+			<LI>Preorder is the traversal that visits the root first, then (recursively) traverses each
+			subtree in order. On the figure we will visit node <I>A</I> first then, recursively, the
+			subtrees rooted at <I>B</I> (which implies visiting <I>E</I> and <I>F</I>), <I>C</I>
+			and <I>D</I>. The resulting order is: <I>A B E F C D G H I</I>.
+			<LI>Postorder first traverses (recursively) the subtrees, then visits the root. On the
+			example this gives:<I> E F B C G H I D A</I>.
+			<LI>Breadth-first visits the nodes level by level, starting with the root: first the root,
+			then all its children, then all their children and so on. Here the resulting order is:
+			<I>A B C D E F G H I</I>.
+		</UL>
+		<P>
+			For each of the traversals, procedures are available to move the cursor accordingly,
+			for example
+			<A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_breadth_start">breadth_start</A>
+			and <A HREF="../../reference/structures/cursor_tree/cursor_tree.html#f_breadth_forth">breadth_ forth</A>
+			for breadth-first, and similar names for the others.
 	</BODY>
 </HTML>

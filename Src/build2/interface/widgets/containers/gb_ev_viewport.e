@@ -95,22 +95,22 @@ feature {GB_CODE_GENERATOR} -- Output
 						
 			element_info := full_information @ item_width_string
 			if element_info /= Void and then element_info.data.to_integer >= 0 then
-				Result := Result + indent + info.name + ".set_item_width (" + element_info.data + ")"
+				Result := Result + indent + info.name + ".set_item_width (" + retrieve_integer_setting (item_width_string) + ")"
 			end
 			
 			element_info := full_information @ item_height_string
 			if element_info /= Void and then element_info.data.to_integer >= 0 then
-				Result := Result + indent + info.name + ".set_item_height (" + element_info.data + ")"
+				Result := Result + indent + info.name + ".set_item_height (" + retrieve_integer_setting (item_height_string) + ")"
 			end
 			
 			element_info := full_information @ X_offset_string
 			if element_info /= Void and then element_info.data.to_integer /= 0 then
-				Result := info.name + ".set_x_offset (" + element_info.data + ")"
+				Result := info.name + ".set_x_offset (" + retrieve_integer_setting (X_offset_string) + ")"
 			end
 			
 			element_info := full_information @ Y_offset_string
 			if element_info /= Void and then element_info.data.to_integer /= 0 then
-				Result := Result + indent + info.name + ".set_y_offset (" + element_info.data + ")"
+				Result := Result + indent + info.name + ".set_y_offset (" + retrieve_integer_setting (Y_offset_string) + ")"
 			end
 		end
 

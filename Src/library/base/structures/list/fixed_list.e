@@ -40,7 +40,6 @@ class FIXED_LIST [G] inherit
 			make as array_make,
 			put as put_i_th,
 			item as i_th,
-			duplicate as array_duplicate,
 			force as force_i_th,
 			bag_put as put
 		export

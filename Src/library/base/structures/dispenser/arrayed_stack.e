@@ -91,18 +91,6 @@ feature -- Conversion
 			end
 		end;
 
-feature -- Obsolete
-
-	max_size: INTEGER is obsolete "Use ``capacity''"
-		do
-			Result := capacity
-		end;
-
-	change_item (v: G) is obsolete "Use ``replace (v)''"
-		do
-			replace (v)
-		end;
-
 end -- class ARRAYED_STACK
 
 

@@ -189,57 +189,6 @@ feature -- Duplication
 			go_to (pos)
 		end;
 
-feature -- Obsolete
-
-	remove_n_left (n: INTEGER) is
-			obsolete "Use ``remove_left'' repeatedly"
-		local
-			counter: INTEGER
-		do
-			from
-				counter := 1
-			until
-				isfirst or else (counter > n)
-			loop
-				remove_left;
-				counter := counter + 1
-			end
-		end;
-
-	remove_n_right (n: INTEGER) is
-			obsolete "Use ``remove_right'' repeatedly"
-		local
-			counter: INTEGER
-		do
-			from
-				counter := 1
-			until
-				islast or else (counter > n)
-			loop
-				remove_right;
-				counter := counter + 1
-			end
-		end;
-
-	add_front (v: like item) is
-			obsolete "Use ``put_front'' instead"
-		do
-			put_front (v)
-		end;
-
-	add_left (v: like item) is
-			obsolete "Use ``put_left'' instead"
-		do
-			put_left (v)
-		end;
-
-	add_right (v: like item) is
-			obsolete "Use ``put_right'' instead"
-		do
-			put_right (v)
-		end;
-
-
 feature {DYNAMIC_CHAIN} -- Implementation
 
 	new_chain: like Current is

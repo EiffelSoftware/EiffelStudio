@@ -29,8 +29,7 @@ class HEAP_PRIORITY_QUEUE [G -> COMPARABLE] inherit
 			put as put_i_th,
 			bag_put as put,
 			force as array_force,
-			count as array_count,
-			duplicate as array_duplicate
+			count as array_count
 		export
 			{NONE}
 				all

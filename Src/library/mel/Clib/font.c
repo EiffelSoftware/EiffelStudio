@@ -12,4 +12,5 @@ EIF_POINTER a_font_list;
 	if (XmFontListInitFontContext (&fontCont, (XmFontList) a_font_list))
 		return (EIF_POINTER) fontCont;
 
+	return NULL;
 }

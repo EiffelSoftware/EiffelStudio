@@ -55,13 +55,13 @@ inherit
 			on_accelerator_command,
 			on_color_control,
 			on_wm_vscroll,
-			on_wm_hscroll
+			on_wm_hscroll,
+			on_key_down
 		redefine
 			default_ex_style,
 			default_style,
 			adjust_items,
-			on_tcn_selchange,
-			on_key_down
+			on_tcn_selchange
 		end
 
 	WEL_TCIF_CONSTANTS

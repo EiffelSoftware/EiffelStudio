@@ -108,6 +108,7 @@ feature {NONE} -- Implementation
 			gb_ev_gauge: GB_EV_GAUGE
 			gb_ev_notebook: GB_EV_NOTEBOOK
 			gb_ev_text_component: GB_EV_TEXT_COMPONENT
+			gb_ev_pixmapable: GB_EV_PIXMAPABLE
 		do
 		end
 

@@ -118,7 +118,7 @@ char *error_info() {
 			sprintf(_concur_error_msg, "ErrorNo:%d.", errno);
 	}
 #ifdef EIF_WIN32
-	sprintf(_concur_error_msg+strlen(_concur_error_msg), " WSAError = %d."), WSAGetLastError());
+	sprintf(_concur_error_msg+strlen(_concur_error_msg), " WSAError = %d.", WSAGetLastError());
 #endif
 	return _concur_error_msg;
 }

@@ -108,7 +108,7 @@ feature -- Basic Operations
 				i := i + 1
 			end
 			if (Result.item (1) = '_') then
-				Result.prepend ("x_")
+				Result.prepend ("x")
 			end
 			if Result.item (1).is_digit then
 				Result.prepend ("x_")
@@ -136,10 +136,13 @@ feature -- Basic Operations
 				if standard_structures.has (a_name) then
 					Result := clone (standard_structures.item (a_name))
 				end
-			elseif (a_type = Tkind_interface) then
+			elseif 
+				(a_type = Tkind_interface) or
+				(a_type = Tkind_dispatch)
+			then
 				Result.append ("_INTERFACE")
-			elseif (a_type = Tkind_dispatch) then
-				Result.append ("_AUTO_INTERFACE")
+--			elseif (a_type = Tkind_dispatch) then
+--				Result.append ("_AUTO_INTERFACE")
 			elseif (a_type = Tkind_coclass) then
 				if is_client then
 					Result.append ("_PROXY")

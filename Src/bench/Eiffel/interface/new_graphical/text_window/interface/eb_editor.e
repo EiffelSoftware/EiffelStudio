@@ -943,7 +943,7 @@ feature {NONE} -- Mouse copy cut
 			if y_p >= 0 and then y_p < editor_area.height then
 					-- wipe the cursor out if it is at a position that is still on screen.
 				x_p := prev_x_cur - offset
-				create zone.make (x_p - left_margin_width, y_p, cursor_width, line_height) --x_p + cursor_width - left_margin_width, y_p + line_height)
+				create zone.make (x_p - left_margin_width + offset, y_p, cursor_width, line_height) --x_p + cursor_width - left_margin_width, y_p + line_height)
 				editor_area.draw_sub_pixmap (x_p, y_p, buffered_screen, zone)
 				editor_area.flush
 			end

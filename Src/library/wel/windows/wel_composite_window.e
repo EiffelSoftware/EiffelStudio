@@ -992,14 +992,6 @@ feature {NONE} -- Externals
 			"GetSystemMenu"
 		end
 
-	cwin_get_window (hwnd: POINTER; relation_flag: INTEGER): POINTER is
-			-- SDK GetWindow
-		external
-			"C [macro <wel.h>] (HWND, UINT): EIF_POINTER"
-		alias
-			"GetWindow"
-		end
-
 	cwin_post_quit_message (exit_code: INTEGER) is
 			-- SDK PostQuitMessage
 		external

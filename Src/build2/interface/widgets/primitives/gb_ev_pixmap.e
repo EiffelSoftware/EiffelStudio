@@ -72,10 +72,17 @@ feature -- Access
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		local
-			error_label: EV_LABEL
 			pixmap: EV_PIXMAP
 		do
-			add_pixmap_to_pixmap_container (clone (first))
+			if first.pixmap_exists then
+				add_pixmap_to_pixmap_container (clone (first))
+				for_all_objects (agent {EV_PIXMAP}.enable_pixmap_exists)
+			else
+				create error_label.make_with_text ("Error - named pixmap missing.")
+				error_label.set_tooltip (first.pixmap_path)
+				pixmap_container.extend (error_label)
+				for_all_objects (agent {EV_PIXMAP}.disable_pixmap_exists)
+			end
 		end
 		
 feature {GB_XML_STORE} -- Output
@@ -102,14 +109,16 @@ feature {GB_XML_STORE} -- Output
 			if element_info /= Void then
 				create new_pixmap
 				create file_name.make_from_string (element_info.data)
-				create file.make (file_name)
+				create file.make (file_name)	
 				if file.exists then
 					new_pixmap.set_with_named_file (element_info.data)
 					for_all_objects (agent {EV_PIXMAP}.set_with_named_file (file_name))
+					for_all_objects (agent {EV_PIXMAP}.enable_pixmap_exists)
 				else
-					new_pixmap.draw_text (10, 10, "Error - Pixmap does not exist")
-					new_pixmap.set_minimum_height (20)
+					for_all_objects (agent {EV_PIXMAP}.disable_pixmap_exists)
 				end
+					-- We must know the path if successful or not.
+				for_all_objects (agent {EV_PIXMAP}.set_pixmap_path (file_name))
 			end
 		end
 
@@ -155,6 +164,8 @@ feature {NONE} -- Implementation
 					new_pixmap.set_with_named_file (dialog.file_name)
 						-- Must set the pixmap before the stretch takes place.
 					for_all_objects (agent {EV_PIXMAP}.set_with_named_file (dialog.file_name))
+					for_all_objects (agent {EV_PIXMAP}.set_pixmap_path (dialog.file_name))
+					for_all_objects (agent {EV_PIXMAP}.enable_pixmap_exists)
 					add_pixmap_to_pixmap_container (clone (new_pixmap))
 					opened_file := True
 				elseif not dialog.file_name.is_empty then
@@ -227,6 +238,8 @@ feature {NONE} -- Implementation
 		-- Holds a representation of the loaded pixmap.
 		
 	filler_label: EV_LABEL
+	
+	error_label: EV_LABEL
 		
 	modify_button: EV_BUTTON
 		-- Is either "Select" or "Remove"

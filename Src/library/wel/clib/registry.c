@@ -6,8 +6,14 @@
  */
 
 #ifndef __WEL_REGISTRY__
-#	include <registry.h>
+#	include "registry.h"
 #endif
+		
+
+//////////////////////////////////////////////////////////////
+//
+//  Creation or opening of a key.
+//
 
 EIF_INTEGER cwin_reg_create_key(
 		EIF_OBJ main_obj,
@@ -29,15 +35,15 @@ EIF_INTEGER cwin_reg_create_key(
 	lpdwDisposition = (LPDWORD)malloc(sizeof (DWORD));
 
     result = RegCreateKeyEx(
-            (HKEY) parent_key ,		 	// handle of an open key
-            (LPCTSTR)keyName,			// address of subkey name
-            0,							// reserved
-            REG_NONE,					// address of class string
-			REG_OPTION_NON_VOLATILE,	// special options flag
-			(REGSAM)access_mode,		// desired security access
-			NULL,						// address of key security structure
-            &phkResult,					// address of buffer for opened handle
-			lpdwDisposition );			// address of disposition value buffer
+            (HKEY) parent_key ,						 	// handle of an open key
+            (LPCTSTR)keyName,							// address of subkey name
+            0,											// reserved
+            REG_NONE,									// address of class string
+			REG_OPTION_NON_VOLATILE,					// special options flag
+			(REGSAM)access_mode,						// desired security access
+			NULL,										// address of key security structure
+            &phkResult,                                 // address of buffer for opened handle
+			lpdwDisposition );							// address of disposition value buffer
 
 
 	if (*lpdwDisposition==REG_CREATED_NEW_KEY)
@@ -52,7 +58,10 @@ EIF_INTEGER cwin_reg_create_key(
     return (EIF_INTEGER)phkResult;
 }
 
-//---------------------------------------------------------------------------
+//////////////////////////////////////////////////////////////
+//
+//  Opening of a key.
+//
 
 EIF_INTEGER cwin_reg_open_key(
         EIF_INTEGER parent_key,
@@ -70,14 +79,15 @@ EIF_INTEGER cwin_reg_open_key(
             (DWORD)0,
             (REGSAM)access_mode,
             (PHKEY)&key);
-    if( result != ERROR_SUCCESS )
-    {
-        return 0;
-    }
-    return (EIF_INTEGER)key;
+    if( result == ERROR_SUCCESS )
+	    return (EIF_INTEGER)key;
+	return 0;
 }
 
-//---------------------------------------------------------------------------
+//////////////////////////////////////////////////////////////
+//
+//  Deletion of a key.
+//
 
 EIF_BOOLEAN cwin_reg_delete_key(
 		EIF_INTEGER parent_key,
@@ -92,7 +102,11 @@ EIF_BOOLEAN cwin_reg_delete_key(
 		return EIF_TRUE;
 	return EIF_FALSE;
 }
-//---------------------------------------------------------------------------
+
+//////////////////////////////////////////////////////////////
+//
+//  Value setting of a key.
+//
 
 void cwin_reg_set_key_value(
         EIF_INTEGER key,
@@ -111,59 +125,130 @@ void cwin_reg_set_key_value(
             ((REG_VALUE *)keyvalue)->length );
 }
 
+//////////////////////////////////////////////////////////////
+//
+//  Enumeration of subkeys.
+//
 
+EIF_POINTER cwin_reg_enum_key(
+		EIF_INTEGER key,
+		EIF_INTEGER index )
+{
+	REG_KEY* RK;
+	DWORD size;
+	LONG result;
 
-//---------------------------------------------------------------------------
+	
+	size = 128;
+	RK = (REG_KEY*)malloc (sizeof (REG_KEY));
+	RK->name = (EIF_POINTER)malloc (size * sizeof (char));
+	RK->class = (EIF_POINTER)malloc (size * sizeof (char));
+	RK->LastWriteTime = (PFILETIME)malloc (sizeof (FILETIME));
+	
+	result = RegEnumKeyEx(
+	(HKEY)key,
+	(DWORD)index,
+	(LPTSTR)RK->name,
+	(LPDWORD)&size,
+	NULL,
+	(LPTSTR)RK->class,
+	(LPDWORD)&size,
+	RK->LastWriteTime );
+
+	if (result == ERROR_SUCCESS) 
+		return (EIF_POINTER)RK;
+	return NULL;
+}
+
+//////////////////////////////////////////////////////////////
+//
+//  Closing of a key.
+//
 
 void cwin_reg_close_key( EIF_INTEGER key )
 {
-    LONG result;
-
-    result = RegCloseKey( (HKEY)key );
+    RegCloseKey( (HKEY)key );
 }
 
-//---------------------------------------------------------------------------
+//////////////////////////////////////////////////////////////
+//
+//  Value accessing of a key.
+//
 
-void cwin_reg_query_value(
+EIF_POINTER cwin_reg_query_value(
         EIF_INTEGER key, EIF_POINTER value_name )
 {
     LONG result;
     LONG charCount;
 	DWORD type;
-    static char buffer[256];
+    char* buffer;
+	REG_VALUE* RV;
+//	LPVOID lpMsgBuf;
 
+	buffer = (char *)malloc (256);	
     buffer[0] = 0;
-    charCount = sizeof( buffer ) - 1;
+    charCount = 255;
+	
     result = RegQueryValueEx( (HKEY)key ,
         (LPTSTR)value_name,
 		NULL,
 		&type,
         (LPTSTR)buffer,
         &charCount );
-	g_type = type;
-	g_buffer = buffer;
-	g_length = charCount;
+		
+	if (result == ERROR_SUCCESS) {
+		RV = (REG_VALUE*)malloc (sizeof (REG_VALUE));
+		RV->type = type;
+		RV->data = buffer;
+		RV->length = charCount;
+		return (EIF_POINTER) RV;	
+	}
+
 }
 
-//---------------------------------------------------------------------------
+//////////////////////////////////////////////////////////////
+//
+//  Default value accessing of a key.
+//
 
-EIF_INTEGER cwin_reg_value_type()
+EIF_POINTER cwin_reg_def_query_value(
+        EIF_INTEGER key, EIF_POINTER value_name )
 {
-	return (EIF_INTEGER)g_type;
-}
+    LONG result;
+    LONG charCount;
+	DWORD type;
+    char *buffer;
+	REG_VALUE* RV;
+//	LPVOID lpMsgBuf;
 
-//---------------------------------------------------------------------------
+	buffer = (char *)malloc (256);
+    buffer[0] = 0;
+    charCount = 255;
+	
+    result = RegQueryValue( (HKEY)key ,
+        (LPTSTR)value_name,
+        (LPTSTR)buffer,
+        &charCount );
+		
+	if (result == ERROR_SUCCESS){
+		RV = (REG_VALUE*)malloc (sizeof (REG_VALUE));
+		RV->type = 0;
+		RV->data = buffer;
+		RV->length = charCount;
+		return (EIF_POINTER) RV;	
+	}
+	
+/*	FormatMessage (FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,    NULL,
+			result, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language
+			(LPTSTR) &lpMsgBuf,    0,    NULL );// Display the string.
 
-EIF_POINTER cwin_reg_value_data()
-{
-	return (EIF_POINTER)g_buffer;
-}
+	MessageBox( NULL, lpMsgBuf, "GetLastError", MB_OK|MB_ICONINFORMATION );
 
-//---------------------------------------------------------------------------
+	// Free the buffer.
 
-EIF_INTEGER cwin_reg_value_length()
-{
-	return (EIF_INTEGER)g_length;
+	LocalFree( lpMsgBuf );*/
+
+	return NULL;
 }
 
 /*

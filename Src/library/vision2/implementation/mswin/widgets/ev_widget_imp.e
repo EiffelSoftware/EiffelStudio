@@ -462,6 +462,7 @@ feature {NONE} -- Implementation, mouse button events
 		do
 			create pt.make (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
+			check_drag_and_drop_release (x_pos, y_pos)
 			interface.pointer_button_release_actions.call ([x_pos, y_pos, 1, 0.0, 0.0, 0.0, pt.x, pt.y])
 		end
 
@@ -918,6 +919,10 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.68  2000/04/27 16:33:08  rogers
+--| On_left_button_up now calls check_drag_and_drop_release which
+--| will end current drag and drop if underway.
+--|
 --| Revision 1.67  2000/04/14 20:54:20  brendel
 --| Removed on_parented and on_orphaned.
 --|

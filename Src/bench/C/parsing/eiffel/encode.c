@@ -16,8 +16,8 @@
 #define ENCODE_LENGTH 7
 
 #define FEAT_NAME_FLAG		0
-#define ROUT_TABLE_FLAG		((1<<30)+ (1<<29))
-#define TYPE_TABLE_FLAG		((1<<31) + (1<<29))
+#define ROUT_TABLE_FLAG		(((uint32)1<<30) + ((uint32)1<<29))
+#define TYPE_TABLE_FLAG		(((uint32)1<<31) + ((uint32)1<<29))
 
 /*
  * Function declarations.

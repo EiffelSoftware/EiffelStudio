@@ -27,136 +27,138 @@ inherit
 		export
 			{NONE} all
 		end
-	
+		
+	SAFE_ASSEMBLY_LOADER
+		export
+			{NONE} all
+		end
+		
 create
 	make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make is
 			-- Creation procedure.
 		do
-			parser_make (<<Dest_path_switch, Dest_path_short, Help_switch,
-							Help_spelled_switch, No_logo_switch, List_assemblies_switch,
-							List_assemblies_short, Init_switch, No_output_switch,
-							No_output_short, Eac_switch, Eac_short, Remove_switch,
-							Remove_short, Nice_switch, Force_switch, Force_short, No_references_switch, 
-							Consume_from_fullname_switch, Consume_from_fullname_short, Eiffel_var_switch,
-							Clr_version_switch>>)
+			parser_make (<<help_switch, help_spelled_switch, no_logo_switch, list_assemblies_switch, 
+						list_assemblies_short, verbose_switch, verbose_short, add_switch, add_short,
+						remove_switch, remove_short, nice_switch, nice_short, fullname_switch,
+						fullname_short, out_switch, out_short, version_switch, version_short>>)
 			parse
-			
+		
 			if not successful then
 				process_error (error_message)
 			else
-				create consumed_assemblies.make
-				consumed_assemblies.compare_objects
+				exec_from_cli := True
 				if clr_version = Void then
 						-- If it is Void, either an error was thrown, or we ask for
 						-- usage information.
 					clr_version := "v1.1.4322"
 				end
+				complete_initialization
 				start
 			end
 		end
+		
+	complete_initialization is
+			-- Completes initialization of instance given it current state
+		require
+			non_void_clr_version: clr_version /= Void
+			valid_clr_version: not clr_version.is_empty and then clr_version.item (1).as_lower = 'v'
+		do
+			create cache_writer.make (clr_version)
+			create cache_reader.make (clr_version)
+			if verbose_output then
+				cache_writer.set_status_printer (agent display_status)	
+			end		
+			cache_writer.set_error_printer (agent process_error)
+		ensure
+			non_void_cache_writer: cache_writer /= Void
+		end
+		
 
 feature -- Access
 
-	Dest_path_switch: STRING is "dest"
-			-- Switch used to specify destination path
-	
-	Dest_path_short: STRING is "d"
-			-- Shortcut equivalent of `Dest_path_switch'
-	
-	Help_switch: STRING is "?"
+	help_switch: STRING is "?"
 			-- Switch used to display usage
 	
-	Help_spelled_switch: STRING is "help"
+	help_spelled_switch: STRING is "help"
 			-- Switch used to display usage
 
-	No_logo_switch: STRING is "nologo"
+	no_logo_switch: STRING is "nologo"
 			-- Switch used to prevent copyright notice display
 
-	List_assemblies_switch: STRING is "list"
+	list_assemblies_switch: STRING is "list"
 			-- Switch used to list assemblies in EAC
 
-	List_assemblies_short: STRING is "l"
-			-- Switch used to list assemblies in EAC
+	list_assemblies_short: STRING is "l"
+			-- Shortcut equivalent of `list_assemblies_switch'
 
-	Init_switch: STRING is "init"
-			-- Switch used to initialize EAC
+	verbose_switch: STRING is "verbose"
+			-- Switch used to display all information.
 
-	No_output_switch: STRING is "nooutput"
-			-- Switch used to prevent information display
+	verbose_short: STRING is "v"
+			-- Shortcut equivalent of `verbose_switch'
 
-	No_output_short: STRING is "n"
-			-- Shortcut equivalent of `No_output_switch'
-
-	Eac_switch: STRING is "add"
+	add_switch: STRING is "add"
 			-- Switch used to put assembly in EAC
 	
-	Eac_short: STRING is "a"
-			-- Shortcut equivaleent of `Eac_switch'
+	add_short: STRING is "a"
+			-- Shortcut equivalent of `add_switch'
 
-	Remove_switch: STRING is "remove"
-			-- Switch used to put assembly in EAC
+	remove_switch: STRING is "remove"
+			-- Switch used to remove and assembly from EAC
 	
-	Remove_short: STRING is "r"
-			-- Shortcut equivaleent of `Eac_switch'
+	remove_short: STRING is "r"
+			-- Shortcut equivalent of `remove_switch'
 
-	Nice_switch: STRING is "nice"
+	nice_switch: STRING is "nice"
+			-- Switch used to create indented xml
 			
-	Force_switch: STRING is "force"
-			-- Force GAC dependancies from local assembliesto be consumed into the local destination
+	nice_short: STRING is "n"
+			-- Shortcut equivalent of `nice_switch'
 			
-	Force_short: STRING is "f"
-			-- Shortcut force GAC dependancies from local assembliesto be consumed into the local destination
+	fullname_switch: STRING is "fullname"
+			-- Switch to indicate that assembly path is actually a display name
 			
-	No_references_switch: STRING is "noref"
-			-- Stop the emitter from generating a local assembly's references
+	fullname_short: STRING is "full"
+			-- Shortcut equivaleent of `fullname_switch'
 			
-	Consume_from_fullname_switch: STRING is "fullname"
-			-- consume an assembly from the GAC
+	out_switch: STRING is "out"
+			-- Switch to specify alternative path to generate XML to.
 			
-	Consume_from_fullname_short: STRING is "fn"
-			-- consume an assembly from the GAC
-			
-	Eiffel_var_switch: STRING is "eiffel_var"
-			-- Swtich to specify alternative ISE_EIFFEL variable
+	out_short: STRING is "o"
+			-- Shortcut equivalent of `out_short'
 
-	clr_version_switch: STRING is "clr_version"
-			-- Switch to specify CLR runtime version we target
+	version_switch: STRING is "version"
+			-- Switch to specify target CLR version.
+			
+	version_short: STRING is "ver"
+			-- Shortcut equivalent of `version_switch'
 
 feature -- Status report
 
 	no_copyright_display: BOOLEAN
 			-- Should copyright notice not be displayed?
 
-	usage_display: BOOLEAN
+	display_usage_help: BOOLEAN
 			-- Should usage be displayed?
 
 	list_assemblies: BOOLEAN
 			-- Should EAC assemblies list be displayed?
 
-	init: BOOLEAN
-			-- Should EAC be intialized?
+	verbose_output: BOOLEAN
+			-- Should consumption status output be displayed?
 
-	no_output: BOOLEAN
-			-- Should emitter not display output?
-
-	put_in_eac: BOOLEAN
+	add_to_eac: BOOLEAN
 			-- Should assembly be put in EAC?
 	
-	remove: BOOLEAN
+	remove_from_eac: BOOLEAN
 			-- Should assembly be removed from EAC?
 			
-	force_local_generation: BOOLEAN
-			-- Should a local assembly's GAC dependancies be forced into the EAC?
-			
-	no_dependancies: BOOLEAN
-			-- Should no dependancies be generated?
-			
-	consume_from_fullname: BOOLEAN
-			-- should the specified assembly be consumed from the GAC?
+	path_is_full_name: BOOLEAN
+			-- Is assembly path actually a display name?
 			
 feature {NONE} -- Implementation
 
@@ -165,79 +167,38 @@ feature {NONE} -- Implementation
 		require
 			non_void_clr_version: clr_version /= Void
 		local
-			assemblies: ARRAY [CONSUMED_ASSEMBLY]
-			i: INTEGER
-			ass: ASSEMBLY
-			cr: CACHE_READER
+			l_assembly: ASSEMBLY
 			l_resolver: ASSEMBLY_RESOLVER
 		do
 			if not no_copyright_display then
 				display_copyright		
 			end
-			create cr.make (clr_version)
-			if not cr.is_initialized then
-				(create {EIFFEL_XML_SERIALIZER}).serialize (create {CACHE_INFO}.make (clr_version), cr.Absolute_info_path)
-			end
-			if init then
-				from
-					i := 1
-				until
-					i > initial_assemblies.count
-				loop
-					ass := feature {ASSEMBLY}.load_from (initial_assemblies.item(i).to_cil)
-					consume_in_eac (ass)
-					i := i + 1
-				end
-			elseif list_assemblies then
-				assemblies := (create {CACHE_READER}.make (clr_version)).consumed_assemblies
-				if assemblies = Void then
-					process_error ("EAC not initialized")
-				else
-					from
-						i := 1
-					until
-						i > assemblies.count
-					loop
-						io.put_string (i.out)
-						io.put_string (": ")
-						io.put_string (assemblies.item (i).out)
-						io.put_new_line
-						i := i + 1
-					end
-				end
-			elseif usage_display then
+			if list_assemblies then
+				display_assemblies_list
+			elseif display_usage_help then
 				display_usage
 			elseif not successful then
 				display_error
 			else
-				check
-					full_path: not is_path_relative (target_path)
-				end
-				create cr.make (clr_version)
-				if consume_from_fullname then
-					ass := feature {ASSEMBLY}.load_string (target_path.to_cil)
+				if path_is_full_name then
+					l_assembly := load_assembly_from_full_name (target_path)
 				else
-					ass := feature {ASSEMBLY}.load_from (target_path.to_cil)					
+					l_assembly := load_assembly_from_path (target_path)
 				end
-				
-				create l_resolver.make (feature {APP_DOMAIN}.current_domain)
-				l_resolver.add_resolver_path_from_assembly (ass)
-				
-				if not cr.is_initialized then
-					set_error (Eac_not_initialized, Void)
-				elseif ass = Void then
+
+				if l_assembly = Void then
 					set_error (Invalid_assembly, target_path)
-				elseif put_in_eac and ass.get_name.get_public_key_token = Void then
-					set_error (Non_signed_assembly, target_path)
-				end
-				if successful then
-					if put_in_eac then
-						consume_in_eac (ass)						
-					elseif remove then
-						remove_from_eac (ass)
-					else
-						consume_into_path (ass)
+					display_error
+				elseif successful then
+					create l_resolver.make (feature {APP_DOMAIN}.current_domain)
+					l_resolver.add_resolver_path_from_assembly (l_assembly)
+					
+					if add_to_eac then
+						add_assembly_to_eac (l_assembly.location)						
+					elseif remove_from_eac then
+						remove_assembly_from_eac (l_assembly.location)
 					end
+					
 					l_resolver.remove_from_app_domain
 				else
 					process_error (error_message)
@@ -248,41 +209,26 @@ feature {NONE} -- Implementation
 	process_switch (switch, switch_value: STRING) is
 			-- Process switch `switch' associated with value `switch_value'.
 		do
-			if switch.is_equal (Dest_path_switch) or switch.is_equal (Dest_path_short) then
-				if (create {DIRECTORY}.make (switch_value)).exists then
-					destination_path := switch_value.twin
-					destination_path.prune_all_trailing ('\')
-				else
-					set_error (Invalid_destination_path, switch_value)
-				end
-			elseif switch.is_equal (Help_switch) or switch.is_equal (Help_spelled_switch) then
-				usage_display := True
-			elseif switch.is_equal (No_logo_switch) then
+			if switch.is_equal (help_switch) or switch.is_equal (help_spelled_switch) then
+				display_usage_help := True
+			elseif switch.is_equal (no_logo_switch) then
 				no_copyright_display := True
-			elseif switch.is_equal (List_assemblies_switch) or switch.is_equal (List_assemblies_short) then
+			elseif switch.is_equal (list_assemblies_short) or switch.is_equal (list_assemblies_switch) then
 				list_assemblies := True
-			elseif switch.is_equal (Init_switch) then
-				init := True
-			elseif switch.is_equal (No_output_switch) or switch.is_equal (No_output_short) then
-				no_output := True
-			elseif switch.is_equal (Eac_switch) or switch.is_equal (Eac_short) then
-				put_in_eac := True
-			elseif switch.is_equal (Remove_switch) or switch.is_equal (Remove_short) then
-				remove := True
-			elseif switch.is_equal (Nice_switch) then
+			elseif switch.is_equal (verbose_short) or switch.is_equal (verbose_switch) then
+				verbose_output := True
+			elseif switch.is_equal (add_short) or switch.is_equal (add_switch) then
+				add_to_eac := True
+			elseif switch.is_equal (remove_short) or switch.is_equal (remove_switch) then
+				remove_from_eac := True
+			elseif switch.is_equal (nice_short) or switch.is_equal (nice_switch) then
 				has_indented_output.set_item (True)
-			elseif switch.is_equal (Force_switch) or switch.is_equal (Force_short) then
-				force_local_generation := True
-			elseif switch.is_equal (Consume_from_fullname_switch) or switch.is_equal (Consume_from_fullname_short) then
-				consume_from_fullname := True
-			elseif switch.is_equal (Eiffel_var_switch) then
+			elseif switch.is_equal (fullname_short) or switch.is_equal (fullname_switch) then
+				path_is_full_name := True
+			elseif switch.is_equal (out_short) or switch.is_equal (out_switch) then
 				set_internal_eiffel_path (switch_value)
-			elseif switch.is_equal (Clr_version_switch) then
+			elseif switch.is_equal (version_switch) or switch.is_equal (version_short) then
 				clr_version := switch_value
-			elseif target_path = Void or target_path.is_empty then
-				set_error (Invalid_target_path, "None Set!")
-			elseif switch.is_equal (No_references_switch) then
-				no_dependancies := True
 			end
 		end
 
@@ -294,91 +240,67 @@ feature {NONE} -- Implementation
 
 	post_process is
 			-- Post argument parsing processing.
-		local
-			assembly: ASSEMBLY
-			retried: BOOLEAN
-			l_exe_env: EXECUTION_ENVIRONMENT
 		do
-			if not retried then
-				if not (list_assemblies or init or usage_display) and target_path = Void then
-					set_error (No_target, Void)
-				elseif not usage_display and clr_version = Void then
-					set_error (Version_should_be_specified, Void)
-				elseif put_in_eac and destination_path /= Void then
-					set_error (No_destination_if_put_in_eac, Void)
-				elseif put_in_eac and force_local_generation then
-					set_error (Cannot_force_local_and_eac, Void)
-				elseif put_in_eac and no_dependancies then
-					set_error (Dependancies_must_be_generated, Void)
-				elseif force_local_generation and no_dependancies then
-					set_error (Cannot_force_and_exclude_references, Void)
-				elseif not (list_assemblies or init or usage_display) and destination_path = Void then
-					destination_path := (create {EXECUTION_ENVIRONMENT}).current_working_directory
+			if not (list_assemblies or display_usage_help) and target_path = Void then
+				set_error (No_target, Void)
+			elseif not display_usage_help and clr_version = Void then
+				set_error (Version_should_be_specified, Void)
+			elseif not (list_assemblies or display_usage_help) then
+				if not add_to_eac or remove_from_eac or list_assemblies then
+					set_error (no_operation, Void)
+				elseif clr_version = Void or clr_version.is_empty or clr_version.item (1).as_lower /= 'v' then
+					set_error (invalid_version_specified, clr_version)	
 				end
-				
-				if not (list_assemblies or init or usage_display) then
-					if consume_from_fullname then
-						assembly := feature {ASSEMBLY}.load_string (target_path)
-					else
-						if is_path_relative (target_path) then
-							create l_exe_env
-							target_path.prepend (l_exe_env.current_working_directory + "\")
-						end
-						assembly := feature {ASSEMBLY}.load_from (target_path)
-					end
-				end
-			else
-				set_error (Invalid_target_path, target_path)
 			end
-		rescue
-			retried := True
-			retry
+			
+			if list_assemblies or display_usage_help then
+				verbose_output := True
+			end
 		end
 
 	display_copyright is
 			-- Display copyright notice
+		require
+			exec_from_command_line: exec_from_cli
 		do
-			io.put_string ("%NISE Eiffel Metadata Consumer Version ")
+			io.put_string ("%NEiffel Metadata Consumer Version ")
 			io.put_string (Version)
-			io.put_string ("%NCopyright (C) Interactive Software Engineering Inc. All rights reserved.")
+			io.put_string ("%NCopyright (C) EiffelSoftware. All rights reserved.")
 			io.put_string ("%N%N")
 		end
 		
 	display_usage is
 			-- Display tool usage
+		require
+			exec_from_command_line: exec_from_cli
 		do
-			io.put_string ("Usage: ")
-			io.put_string (System_name)
-			io.put_string (" <assembly> [/g] [/a | /r] [/n] [/nologo] [/nice] [/eiffel_var:<path>] /clr_version:<version_string>%N")
-			io.put_string ("       " + System_name)
-			io.put_string (" <assembly> [/g] [/d:destination] [/n] [/nologo] [/nice] [/f | /noref] [/eiffel_var:<path>] /clr_version:<version_string>%N")
-			io.put_string ("       " + System_name)
-			io.put_string (" /l [/nologo] [/eiffel_var:<path>] /clr_version:<version_string>%N")
-			io.put_string ("       " + System_name)
-			io.put_string (" /init [/n] [/nologo] [/nice] [/eiffel_var:<path>] /clr_version:<version_string>%N%N")
-			io.put_string (" - Options -%N%N")
-			io.put_string ("/fullname%N   Consume an assembly using its fullname. Short form is '/fn'.%N%N")
-			io.put_string ("/dest:<path>%N   Generate XML in directory '<path>'. Short form is '/d'.%N%N")
-			io.put_string ("/add%N   Put assembly in Eiffel Assembly Cache. Short form is '/a'.%N%N")
-			io.put_string ("/remove%N   Remove assembly from Eiffel Assembly Cache. Short form is '/r'.%N%N")
-			io.put_string ("/nooutput%N   Prevent progress information display. Short form is '/n'.%N%N")
-			io.put_string ("/nologo%N   Prevent display of copyright notice.%N%N")
-			io.put_string ("/init%N   Initialize Eiffel Assembly Cache (can only be run once).%N%N")
-			io.put_string ("/list%N   List assemblies in EAC. Short form is '/l'.%N%N")
-			io.put_string ("/nice%N   XML output is indented.%N%N")
-			io.put_string ("/force%N   Consume a local assembly's GAC dependancies into same location. Short form is '/f'.%N%N")
-			io.put_string ("/noref%N   Do not generated assembly dependancies..%N%N")
-			io.put_string ("/eiffel_var:<path>%N   Use alternative ISE_EIFFEL path '<path>'%N%N")
-			io.put_string ("/clr_version:<version_string>%N   Consume assembly for runtime version '<version_string>'%N%N")
-			io.put_string (" - Arguments -%N%N")
-			io.put_string ("<assembly>%N   Name of assembly containing types to generate XML for. <assembly> can%N")
-			io.put_string ("   be either a path to a local assembly or an assembly's fully quantified name ONLY when '/fn' is used%N")
-			io.put_string ("   e.g. - %"System.Xml, Version=1.0.3300.0, Culture=neutral, PublicKeyToken=b77a5c561934e089%".%N%N")
-			io.put_string ("<path>%N   Valid path to existing folder%N%N")
+			io.put_string ("Usage:%N%N")
+			io.put_string ("  " + System_name + " /a <assembly> [/full] /ver:<version> [/o:<path>] [/n] [/v] [/nologo]%N")
+			io.put_string ("  " + System_name + " /r <assembly> [/full] /ver:<version> [/o:<path>] [/v] [/nologo]%N")
+			io.put_string ("  " + System_name + " /l <assembly> [/full] /ver:<version> [/o:<path>] [/nologo]%N%N")
+			
+			io.put_string ("Options:%N%N")
+			
+			io.put_string ("  /a[dd] - Put assembly in Eiffel Assembly Cache.%N")
+			io.put_string ("  /r[emove] - Remove assembly from Eiffel Assembly Cache.%N")
+			io.put_string ("  /ver[sion]:<version> - Runtime version of the assembly being consumed.%N")
+			io.put_string ("  /o[ut]:<path> - Alternative path for Eiffel installation.%N")
+			io.put_string ("  /full[name] - Indicates that <assembly> is a full or part display name.%N")
+			io.put_string ("  /l[ist] - List assemblies in EAC.%N")
+			io.put_string ("  /n[ice] - Writes indented XML for each assemblies consumed metadata.%N")
+			io.put_string ("  /v[erbose] - Display all information when consuming an assembly.%N")
+			io.put_string ("  /nologo - Prevent display of copyright notice.%N")
+			io.put_string ("  /? - Display's this usage guide.%N%N")
+			
+			io.put_string ("Arguments:%N%N")
+			io.put_string ("  <assembly> - Name or path for assembly to generate XML metadata for.%N")
+			io.put_string ("  <path> - A path to an existing folder on disk or UNC path.%N%N")
 		end
 	
 	display_status (s: STRING) is
 			-- Display progress status.
+		require
+			exec_from_command_line: exec_from_cli
 		do
 			io.put_string (s)
 			io.put_new_line
@@ -386,186 +308,121 @@ feature {NONE} -- Implementation
 
 	process_error (s: STRING) is
 			-- Display error.
+		require
+			exec_from_command_line: exec_from_cli
 		do
 			io.put_string ("%N" + "** Error: " + s + "%N%N")
 			io.put_string ("Type 'emitter /?' for usage information.%N%N")
 		end
 
-	consume_in_eac (ass: ASSEMBLY) is
-			-- Consume `ass' and put result in EAC
+	add_assembly_to_eac (a_path: STRING) is
+			-- Consume assembly `a_path' and put results in EAC
 		require
-			non_void_assembly: ass /= Void
-			signed_assembly: ass.get_name.get_public_key_token /= Void
+			non_void_path: a_path /= Void
+			valid_path: not a_path.is_empty
 			non_void_clr_version: clr_version /= Void
-		local
-			writer: CACHE_WRITER
+			non_void_cache_writer: cache_writer /= Void
 		do
-			if ass/= Void then			
-				create writer.make (clr_version)
-				if not no_output then
-					display_status ("Consuming " + create {STRING}.make_from_cil (ass.get_name.full_name))
-					writer.set_status_printer (agent display_status)
-				end
-				writer.set_error_printer (agent process_error)
-				writer.add_assembly (ass.get_name)
-				
-				consumed_assemblies.extend (ass.full_name)
-			end
+			if exec_from_cli then
+				display_status ("Consuming '" + a_path + "' and all of it's dependencies.")
+			end	
+			cache_writer.add_assembly (a_path)
+			cache_writer.clean_cache
+		rescue
+			cache_writer.clean_cache
+		end
+
+	remove_assembly_from_eac (a_path: STRING) is
+			-- Remove assembly `a_path' from EAC
+		require
+			non_void_path: a_path /= Void
+			valid_path: not a_path.is_empty
+			non_void_clr_version: clr_version /= Void
+			non_void_cache_writer: cache_writer /= Void
+		do
+			if exec_from_cli then
+				display_status ("Removing '" + a_path + "' and all dependents.")	
+			end		
+			cache_writer.remove_recursive_assembly (a_path)
+			cache_writer.clean_cache
+		rescue
+			cache_writer.clean_cache
 		end
 		
-	consume_into_path (ass: ASSEMBLY) is
-			-- Consume 'ass' and place in the destination path specified in the command line
-		require
-			non_void_assembly: ass /= Void
-			non_void_destination: destination_path /= Void
-			non_void_consumed_assemblies: consumed_assemblies /= Void
+	display_assemblies_list is
+			-- Displays list of assemblies in EAC
 		local
-			output_destination_path: STRING
-			references: NATIVE_ARRAY [ASSEMBLY_NAME]
-			n: INTEGER
-			name: ASSEMBLY_NAME
-			assembly: ASSEMBLY
-			consume_folder: DIRECTORY			
-			reconsume: BOOLEAN
-			local_info: LOCAL_CACHE_INFO
-			des: EIFFEL_XML_DESERIALIZER
-			local_info_path: STRING		
-		do	
-			reconsume := True
-			local_info_path := destination_path.twin
-			if local_info_path.item (local_info_path.count) /= '\' then
-				local_info_path.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
-			end
-			local_info_path.append (info_path)
+			l_assemblies: ARRAY [CONSUMED_ASSEMBLY]
+			l_desc: STRING
+			l_target_name: STRING
+			l_assembly_desc: STRING
+			l_file_info: FILE_INFO
+			l_show: BOOLEAN
+			l_show_count: INTEGER
+			i: INTEGER
+		do
+			if target_path /= Void and then not target_path.is_empty then
+				l_target_name := target_path.as_lower
+			end			
 			
-			output_destination_path := destination_path.twin
-			if output_destination_path.item (output_destination_path.count) /= '\' then
-				output_destination_path.append_character ((create {OPERATING_ENVIRONMENT}).Directory_separator)
-			end
-			output_destination_path.append (relative_assembly_path (ass.get_name))
-			create consume_folder.make (output_destination_path.substring (1, output_destination_path.count - 1))
-		
-			if not no_output then
-				display_status ("Consuming " + create {STRING}.make_from_cil (ass.get_name.full_name))
-			end
-			
-				-- only consume `assembly' if assembly has not already been consumed,
-				-- corresponding assembly has been modified or if consumer tool has been 
-				-- modified.
-			if not consume_folder.exists or else assembly_consumer.does_consumed_assembly_require_reconsume (ass, output_destination_path) or else assembly_consumer.is_newer_tool (output_destination_path) then
-				create des
-				des.deserialize (local_info_path)
-				if des.successful then
-					local_info ?= des.deserialized_object
-				end
-				
-				if consume_folder.exists then
-					consume_folder.recursive_delete					
-				end
-				
-				assembly_consumer.set_destination_path (output_destination_path)				
-				assembly_consumer.consume (ass)
-				if local_info = Void then
-					create local_info.make (destination_path)					
-				end
-				local_info.add_assembly (Assembly_consumer.Consumed_assembly_factory.consumed_assembly (ass))
-
-				(create {EIFFEL_XML_SERIALIZER}).serialize (local_info, local_info_path)
-				(create {EIFFEL_BINARY_SERIALIZER}).serialize (local_info, local_info_path)
-			else
-				if not no_output then
-					display_status ("Up-to-date check: '" + create {STRING}.make_from_cil (ass.get_name.full_name) + "' has not been modified since last consumption.%N")
-				end
-			end
-			
-			consumed_assemblies.extend (ass.full_name)
-			
-			if not no_dependancies then
-				references := ass.get_referenced_assemblies			
-				if references /= Void then
-					from 
-						n := references.lower
-					until
-						n > references.upper
-					loop
-						name := references.item (n)
-						
-						-- do not consume mscorlib, as it isnt loaded from the GAC but from the %SystemRoot%\Microsoft.Net\Framework\<version>\ directory.
-						if not name.name.equals (("mscorlib").to_cil) then
-							assembly := feature {ASSEMBLY}.load_assembly_name (name)
-							if assembly /= Void then
-								if not consumed_assemblies.has (assembly.full_name) then
-									if assembly.global_assembly_cache and not force_local_generation then
-										consume_in_eac (assembly)
-									else
-										consume_into_path (assembly)
-									end
-								end
+			l_assemblies := cache_reader.consumed_assemblies
+			if l_assemblies /= Void and then not l_assemblies.is_empty then
+				display_status ("The Eiffel Assembly Cache contains the following entries")
+				from
+					i := 1
+				until
+					i > l_assemblies.count
+				loop
+					l_assembly_desc := l_assemblies.item (i).out
+					
+					if l_target_name /= Void then
+						if path_is_full_name then
+							l_show := l_target_name.is_equal (l_assembly_desc.substring (1, l_target_name.count.min (l_assembly_desc.count)).as_lower)
+						else
+							if l_target_name.index_of ((create {OPERATING_ENVIRONMENT}).directory_separator, 1) > 0 then
+								l_show := l_assemblies.item (i).has_same_path (l_target_name)
 							else
-								set_error (Invalid_assembly, name.full_name)
+								create l_file_info.make (l_assemblies.item (i).location)
+								l_show := l_target_name.is_equal (l_file_info.name.to_lower)
 							end
 						end
-						n := n + 1
-					end	
+					else
+						l_show := True
+					end
+					if l_show then
+						create l_desc.make (l_assemblies.count.out.count + 6 + l_assembly_desc.count)
+						l_desc.append ("   ")
+						l_desc.append_integer (i)
+						l_desc.append (create {STRING}.make_filled (' ', l_assemblies.count.out.count - i.out.count + 1))
+						l_desc.append (": ")
+						l_desc.append (l_assembly_desc)
+						display_status (l_desc)
+						l_show_count := l_show_count + 1
+					end
+					i := i + 1
 				end
+				display_status ("%NNumber of items = " + l_show_count.out)
+			else
+				display_status ("The Eiffel Assembly Cache is empty.")
 			end
-		end
-
-	remove_from_eac (ass: ASSEMBLY) is
-			-- Remove `ass' from EAC
-		require
-			non_void_assembly: ass /= Void
-			signed_assembly: ass.get_name.get_public_key_token /= Void
-			non_void_clr_version: clr_version /= Void
-		local
-			writer: CACHE_WRITER
-		do
-			if ass/= Void then
-				create writer.make (clr_version)
-				if not no_output then
-					display_status ("Removing " + create {STRING}.make_from_cil (ass.get_name.full_name))
-					writer.set_status_printer (agent display_status)
-				end
-				writer.set_error_printer (agent process_error)
-				writer.remove_assembly (ass.get_name)
-			end
-		end
-	
-	assembly_consumer: ASSEMBLY_CONSUMER is
-			-- Assembly consumer
-		once
-			create Result
-			if not no_output then
-				Result.set_status_printer (agent display_status)
-			end
-			Result.set_error_printer (agent process_error)
-			Result.set_destination_path (destination_path)
-		end
+		end		
 	
 	target_path: STRING
 			-- Path to target assembly
-
-	destination_path: STRING
-			-- Path where to generate XML
 			
-	System_name: STRING is "emitter"
+	System_name: STRING is 
 			-- Name of executable
-
-	Version: STRING is "2.0"
-
-	initial_assemblies: ARRAY [STRING] is
-			-- Assemblies that will be imported when EAC is initialized
---		local
---			il_env: IL_ENVIRONMENT
+		local
+			l_file_info: FILE_INFO
 		once
---			create il_env
---			Result := <<il_env.dotnet_framework_path + "mscorlib.dll">>
-			if (create {RAW_FILE}.make ("C:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\mscorlib.dll")).exists then
-				Result := <<"C:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\mscorlib.dll">>
-			else
-				Result := <<"C:\WINNT\Microsoft.NET\Framework\v1.0.3705\mscorlib.dll">>				
-			end
+			create l_file_info.make ((create {ARGUMENTS}).argument (0))
+			Result := l_file_info.name
+		ensure then
+			non_void_result: Result /= Void
+			valid_result: not Result.is_empty
 		end
+
+	Version: STRING is "3.0"
 		
 	is_path_relative (a_path: STRING): BOOLEAN is
 			-- is `a_path' a relative path?
@@ -588,9 +445,18 @@ feature {NONE} -- Implementation
 				Result := a_path.index_of (':', 1) = 0
 			end
 		end
-		
-		
-	dummy: CACHE_REFLECTION
-	consumed_assemblies: LINKED_LIST [STRING]
+	
+	cache_writer: CACHE_WRITER
+			-- cache writer to manipulate contents of specified EAC.
+
+	cache_reader: CACHE_READER
+			-- Cache reader to read contents of specified EAC
+			
+	exec_from_cli: BOOLEAN
+			-- Is consumer being executed from a command line interface?
+	
+invariant
+	non_void_cache_writer: cache_writer /= Void
+	non_void_cache_reader: cache_reader /= Void
 	
 end -- class EMITTER

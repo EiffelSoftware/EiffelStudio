@@ -445,12 +445,22 @@ feature -- Status setting
 			text_file.close
 			create buffer.set_rich_text (Current)
 			buffer.set_with_rtf (l_text)
+			last_load_successful := buffer.last_load_successful
 			complete_loading
 			set_caret_position (1)
 		ensure
-			caret_reset: caret_position = 1
-			unselected: not has_selection
+			caret_reset_if_successful: last_load_successful implies caret_position = 1
+			unselected_if_successful: last_load_successful implies not has_selection
+			text_not_changed_if_failed: not last_load_successful implies old text.is_equal (text)
+			caret_not_moved_if_failed: not last_load_successful implies caret_position = old caret_position
+			selection_not_changed_if_failed: not last_load_successful implies (old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end)
 		end
+		
+	last_load_successful: BOOLEAN
+			-- Did last call to `set_with_named_file' complete succesfully?
+			-- If an invalid RTF file is passed, `Result' is `False'.
+			-- `Result' is undefined if `set_with_named_file' not called.
 		
 	next_change_of_character (current_pos: INTEGER; a_text_length: INTEGER): INTEGER is
 			-- `Result' is caret position at next change of character from `current_pos',

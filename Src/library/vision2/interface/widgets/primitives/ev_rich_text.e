@@ -250,6 +250,16 @@ feature -- Access
 			selection_not_changed: old has_selection = has_selection and has_selection implies
 				old selection_start = selection_start and old selection_end = selection_end
 		end
+		
+	last_load_successful: BOOLEAN is
+			-- Did last call to `set_with_named_file' complete succesfully?
+			-- If an invalid RTF file is passed, `Result' is `False'.
+			-- `Result' is undefined if `set_with_named_file' not called.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.last_load_successful
+		end
 
 feature -- Status setting
 
@@ -438,8 +448,12 @@ feature -- Status setting
 		do
 			implementation.set_with_named_file (a_filename)
 		ensure
-			caret_reset: caret_position = 1
-			unselected: not has_selection
+			caret_reset_if_successful: last_load_successful implies caret_position = 1
+			unselected_if_successful: last_load_successful implies not has_selection
+			text_not_changed_if_failed: not last_load_successful implies old text.is_equal (text)
+			caret_not_moved_if_failed: not last_load_successful implies caret_position = old caret_position
+			selection_not_changed_if_failed: not last_load_successful implies (old has_selection = has_selection and has_selection implies
+				old selection_start = selection_start and old selection_end = selection_end)
 		end
 
 feature {NONE} -- Contract support

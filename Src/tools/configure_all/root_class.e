@@ -37,10 +37,9 @@ feature {NONE} -- Initialization
 			precompilation_params.append (args @ 1)
 			precompilation_params.append_character (' ')
 			precompilation_params.append (args @ 2)
-			install_dir := args @ 3
-			project_directory := args @ 4
-			dotnet_cmd_line := args @ 5
-			c_compiler := args @ 6
+			c_compiler := args @ 3
+			install_dir := args @ 4
+			project_directory := args @ 5
 		ensure
 			initialized: initialized
 		end
@@ -55,8 +54,10 @@ feature -- Actions
 			txt: STRING
 			retried: BOOLEAN
 		do
-			if not retried and then c_compiler.is_equal ("UseBorland") then
-				io.put_string ("Configuring the Borland compiler%N")
+			if not retried and then c_compiler.is_equal ("bcb") then
+				debug
+					io.put_string ("Configuring the Borland compiler%N")
+				end
 				create fn1.make_from_string (install_dir)
 				fn1.extend ("BCC55")
 				fn1.extend ("Bin")
@@ -93,11 +94,17 @@ feature -- Actions
 			valid_project_dir: initialized
 		local
 			retried: BOOLEAN
+			l_dir: DIRECTORY
 		do
 				--| FIXME XR: allow recursive creation.
 			if not retried then
-				io.putstring ("Creating the project directory%N")
-				(create {DIRECTORY}.make (project_directory)).create_dir
+				debug
+					io.putstring ("Creating the project directory%N")
+				end
+				create l_dir.make (project_directory)
+				if not l_dir.exists then
+					l_dir.create_dir
+				end
 			end
 		rescue
 			retried := True
@@ -114,7 +121,9 @@ feature -- Actions
 			lib := clone (precompilation_params)
 			lib.keep_tail (4)
 			if not lib.is_equal ("none") then
-				io.putstring ("Precompiling the libraries%N")
+				debug
+					io.putstring ("Precompiling the libraries%N")
+				end
 				exec_env.launch (shell_name + " /c call " + short_path + "\precompile_install.bat " + precompilation_params)
 			end
 		end
@@ -130,7 +139,6 @@ feature -- Actions
 			key: WEL_REGISTRY_KEY_VALUE
 			new_key_val: STRING
 			changed: BOOLEAN
-			buf: STRING
 		do
 			new_key_val := clone (short_path)
 			if new_key_val.item (new_key_val.count) = '\' then
@@ -140,21 +148,31 @@ feature -- Actions
 				
 			create key.make (feature {WEL_REGISTRY_KEY_VALUE_TYPE}.Reg_sz, new_key_val)
 			create reg
-			p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel51\ec", feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
+			p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel52\ec",
+				feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
 			reg.set_key_value (p, "ISE_EIFFEL", key)
 			reg.close_key (p)
 
 --			if changed or not new_key_val.is_equal (install_dir) then
 
-				p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel51\finish_freezing", feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
+				p := reg.open_key_with_access (
+					"hkey_local_machine\Software\ISE\Eiffel52\finish_freezing",
+					feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
 				reg.set_key_value (p, "ISE_EIFFEL", key)
 				reg.close_key (p)
 
-				p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel51\wizard", feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
+				p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel52\wizard",
+					feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
 				reg.set_key_value (p, "ISE_EIFFEL", key)
 				reg.close_key (p)
 
-				p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel51\build", feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
+				p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel52\build",
+					feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
+				reg.set_key_value (p, "ISE_EIFFEL", key)
+				reg.close_key (p)
+
+				p := reg.open_key_with_access ("hkey_local_machine\Software\ISE\Eiffel52\emitter",
+					feature {WEL_REGISTRY_ACCESS_MODE}.key_all_access)
 				reg.set_key_value (p, "ISE_EIFFEL", key)
 				reg.close_key (p)
 --			end
@@ -167,7 +185,6 @@ feature -- Status report
 		do
 			Result := install_dir /= Void and
 						project_directory /= Void and
-						dotnet_cmd_line /= Void and
 						precompilation_params /= Void and
 						c_compiler /= Void
 		end
@@ -221,7 +238,7 @@ feature {NONE} -- Implementation
 			-- Parameters linked to the precompilations.
 
 	c_compiler: STRING
-			-- C compiler used by Eiffel (UseMicrosoft or UseBorland).
+			-- C compiler used by Eiffel (msc or bcb).
 
 	separator: CHARACTER is '"'
 			-- Character used to separate command line arguments.

@@ -60,12 +60,6 @@ EIF_REFERENCE generize (EIF_OBJECT g_item)
 	return eif_access (g_item);
 }
 
-void c_gtk_init_toolkit () 
-{
-    gtk_init (&eif_argc, &eif_argv);
-	gtk_rc_parse("gtkrc");
-}
-
 void enable_motion_notify (GtkWidget *widg)
 {
 	gint event_flags;

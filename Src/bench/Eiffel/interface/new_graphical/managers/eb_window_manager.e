@@ -567,6 +567,24 @@ feature -- Actions on all windows
 			end
 		end
 
+	for_all_development_windows (p: PROCEDURE [EB_DEVELOPMENT_WINDOW, TUPLE]) is
+			-- Call `p' on all development windows.
+		local
+			cv_dev: EB_DEVELOPMENT_WINDOW
+		do
+			from
+				managed_windows.start
+			until
+				managed_windows.after
+			loop
+				cv_dev ?= managed_windows.item
+				if cv_dev /= Void then
+					p.call ([cv_dev])
+				end
+				managed_windows.forth
+			end
+		end
+
 feature {EB_WINDOW} -- Events
 
 	set_focused_window (w: EB_WINDOW) is

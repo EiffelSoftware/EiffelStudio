@@ -104,7 +104,7 @@ feature -- Access
 			color_ref: WEL_COLOR_REF
 		do
 			color_ref := text_color
-			create Result.make_with_8_bit_rgb (color_ref.red, color_ref.blue, color_ref.green)
+			create Result.make_with_8_bit_rgb (color_ref.red, color_ref.green, color_ref.blue)
 		end
 		
 	background_color: EV_COLOR is
@@ -113,7 +113,7 @@ feature -- Access
 			color_ref: WEL_COLOR_REF
 		do
 			color_ref := wel_background_color
-			create Result.make_with_8_bit_rgb (color_ref.red, color_ref.blue, color_ref.green)
+			create Result.make_with_8_bit_rgb (color_ref.red, color_ref.green, color_ref.blue)
 		end
 		
 	font: EV_FONT is

@@ -39,7 +39,6 @@ feature -- Basic operations
 			-- Read preferences from file
 		local
 			l_error_report: ERROR_REPORT
-			l_error: ERROR
 		do
 			document := deserialize_document (create {FILE_NAME}.make_from_string (project.file.name))
 			if document /= Void then
@@ -113,13 +112,13 @@ feature -- Basic operations
 	
 feature -- Access
 			
-	process_includes: BOOLEAN is True
+	process_includes: BOOLEAN
 			-- Should include directives be processed during transformation?			
 			
-	process_header: BOOLEAN is True
+	process_header: BOOLEAN
 			-- Should header be included in transformations?
 		
-	process_footer: BOOLEAN is True
+	process_footer: BOOLEAN
 			-- Should footer be included in transformations?
 			
 	use_header_file: BOOLEAN is False
@@ -140,11 +139,17 @@ feature -- Access
 	footer_name: STRING
 			-- Footer file name
 			
-	process_html_stylesheet: BOOLEAN is True
+	process_html_stylesheet: BOOLEAN
 			-- Should HTML stylesheet reference be added during transformation?
 			
-	include_navigation_links: BOOLEAN is True
+	include_navigation_links: BOOLEAN
 			-- Should easy navigation links be generated during transformation?
+			
+	generate_dhtml_toc: BOOLEAN
+			-- Should DHTML TOC be generated for web based outputting?
+	
+	generate_dhtml_filter: BOOLEAN
+			-- Should DHTML filter combo be genrates for web based outputting?
 	
 feature {PREFERENCES_DIALOG} -- Status Setting	
 	
@@ -164,6 +169,76 @@ feature {PREFERENCES_DIALOG} -- Status Setting
 			name_not_empty: not a_name.is_empty
 		do
 			footer_name := a_name
+		end	
+	
+	set_process_includes (a_flag: BOOLEAN) is
+			-- Set if includes should be processed when converting documents
+		require
+			flag_not_void: a_flag /= Void
+		do
+			process_includes := a_flag
+		ensure
+			flag_set: process_includes = a_flag
+		end	
+	
+	set_include_header (a_flag: BOOLEAN) is
+			-- Set if header should be including during conversion
+		require
+			flag_not_void: a_flag /= Void
+		do
+			process_header := a_flag
+		ensure
+			flag_set: process_header = a_flag
+		end	
+		
+	set_include_footer (a_flag: BOOLEAN) is
+			-- Set if footer should be included during conversion
+		require
+			flag_not_void: a_flag /= Void
+		do
+			process_footer := a_flag
+		ensure
+			flag_set: process_footer = a_flag
+		end	
+	
+	set_include_html_stylesheet (a_flag: BOOLEAN) is
+			-- Set if HTML stylesheet should be included during conversion
+		require
+			flag_not_void: a_flag /= Void
+		do
+			process_html_stylesheet := a_flag
+		ensure
+			flag_set: process_html_stylesheet = a_flag
+		end	
+		
+	set_include_nav_links (a_flag: BOOLEAN) is
+			-- Set if naviaation links should be added to output
+		require
+			flag_not_void: a_flag /= Void
+		do
+			include_navigation_links := a_flag
+		ensure
+			flag_set: include_navigation_links = a_flag
+		end	
+		
+	set_generate_dhtml_toc (a_flag: BOOLEAN) is
+			-- Set if DHTML TOC should be built for web based outputting
+		require
+			flag_not_void: a_flag /= Void
+		do
+			generate_dhtml_toc := a_flag
+		ensure
+			flag_set: generate_dhtml_toc = a_flag
+		end	
+		
+	set_generate_dhtml_filter (a_flag: BOOLEAN) is
+			-- Set if DHTML filter should be built for web based outputting
+		require
+			flag_not_void: a_flag /= Void
+		do
+			generate_dhtml_filter := a_flag
+		ensure
+			flag_set: generate_dhtml_filter = a_flag
 		end	
 	
 feature {NONE} -- Implementation

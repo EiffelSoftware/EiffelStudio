@@ -59,7 +59,6 @@ feature {NONE} -- Initialization
 			gdkpix, gdkmask: POINTER
 		do
 			base_make (an_interface)
-			
 				-- Create a new pixmap
 			gdkpix := feature {EV_GTK_EXTERNALS}.gdk_pixmap_new (App_implementation.default_gdk_window, 1, 1, Default_color_depth)
 				-- Box the pixmap into a container to receive events
@@ -160,11 +159,14 @@ feature -- Element change
 
 	stretch (a_x, a_y: INTEGER) is
 			-- Stretch the image to fit in size `a_x' by `a_y'.
+		local
+			a_gdkpix, a_gdkmask, a_gdkpixbuf: POINTER
 		do
-				--| FIXME: To be implemented
-			check
-				to_be_implemented: False
-			end
+			a_gdkpixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, drawable, default_pointer, 0, 0, 0, 0, -1, -1)
+			a_gdkpixbuf := gdk_pixbuf_scale_simple (a_gdkpixbuf, a_x, a_y)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_render_pixmap_and_mask (a_gdkpixbuf, $a_gdkpix, $a_gdkmask, 0)
+			set_pixmap (a_gdkpix, a_gdkmask)
+			feature {EV_GTK_EXTERNALS}.object_unref (a_gdkpixbuf)
 		end
 
 	set_size (a_x, a_y: INTEGER) is
@@ -314,7 +316,7 @@ feature -- Access
 feature -- Duplication
 
 	copy_pixmap (other: EV_PIXMAP) is
-			-- Update `Current' to have same appearence as `other'.
+			-- Update `Current' to have same appearance as `other'.
 			-- (So as to satisfy `is_equal'.)
 		local
 			other_imp: EV_PIXMAP_IMP
@@ -389,22 +391,29 @@ feature {NONE} -- Implementation
 	save_to_named_file (a_format: EV_GRAPHICAL_FORMAT; a_filename: FILE_NAME) is
 			-- 
 		local
-			png_format: EV_GRAPHICAL_FORMAT--EV_PNG_FORMAT
-		do
-			png_format ?= a_format
-			if png_format /= Void then
-				-- Perform custom PNG saving with GdkPixbuf
+			a_gdkpixbuf: POINTER
+			a_gerror: POINTER
+			a_handle, a_filetype: EV_GTK_C_UTF8_STRING
+		do			
+			if app_implementation.writeable_pixbuf_formats.has (a_format.file_extension.as_upper) then
+				-- Perform custom saving with GdkPixbuf
+				a_gdkpixbuf := feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_get_from_drawable (default_pointer, drawable, default_pointer, 0, 0, 0, 0, -1, -1)
+				create a_handle.make (a_filename)
+				create a_filetype.make (a_format.file_extension)
+				if a_format.scale_width > 0 and then a_format.scale_height > 0 then
+					a_gdkpixbuf := gdk_pixbuf_scale_simple (a_gdkpixbuf, a_format.scale_width, a_format.scale_height)
+				end
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_pixbuf_save (a_gdkpixbuf, a_handle.item, a_filetype.item, $a_gerror)
+				if a_gerror /= default_pointer then
+					-- We could not save the image so raise an exception
+					(create {EXCEPTIONS}).raise ("Could not save image file.")
+				end
+				feature {EV_GTK_EXTERNALS}.object_unref (a_gdkpixbuf)
+			else
+				-- If Gtk cannot save the file then the default is called
+				Precursor {EV_PIXMAP_I} (a_format, a_filename)
 			end
-			Precursor {EV_PIXMAP_I} (a_format, a_filename)
 		end
-
-	gdk_pixbuf_png_save (a_pixbuf, a_file_handle: POINTER; a_error: TYPED_POINTER [POINTER]) is
-		external
-			"C inline use <gtk/gtk.h>"
-		alias
-			"gdk_pixbuf_save ((GdkPixbuf*) $a_pixbuf, (char*) $a_file_handle, %"png%", (GError**) $a_error, %"quality%", %"100%", NULL)"
-		end
-		
 
 	parent_widget: POINTER
 			-- Parent widget for Current.
@@ -446,7 +455,7 @@ feature {NONE} -- Implementation
 			Precursor {EV_PRIMITIVE_IMP}
 		end
 
-feature {NONE} -- Constants
+feature {NONE} -- Externals
 
 	default_pixmap_xpm: POINTER is
 		external
@@ -454,6 +463,15 @@ feature {NONE} -- Constants
 		alias
 			"default_pixmap_xpm"
 		end
+
+	gdk_pixbuf_scale_simple (a_gdkpixbuf: POINTER; a_width, a_height: INTEGER): POINTER is
+		external
+			"C inline use <gtk/gtk.h>"
+		alias
+			"gdk_pixbuf_scale_simple ((GdkPixbuf*) $a_gdkpixbuf, (int) $a_width, (int) $a_width, GDK_INTERP_BILINEAR)"
+		end
+
+feature {NONE} -- Constants
 
 	Default_color_depth: INTEGER is -1
 			-- Default color depth, use the one from gdk_root_parent.

@@ -624,6 +624,8 @@ disregard null fetch ”error”. */
 				return 1;
 			else 
 				return 0;
+		} else {
+			return 0;
 		}
 //	}
 
@@ -738,11 +740,12 @@ int ora_connect (text *name, text *passwd)
 int ora_disconnect (void)
 {
   int count;
+  int max = descriptor;
   
   ora_clear_error ();
 	/* Clean all the allocated descriptor, here we allocated
 	   `descriptor - 1' descriptors. */
-  for (count = 0; count < descriptor; count++)
+  for (count = 0; count < max; count++)
     {
       ora_terminate_order (count);
     }
@@ -766,13 +769,14 @@ int ora_disconnect (void)
 int ora_rollback (void)
 {
   int count;
+  int max = descriptor;
 
   ora_clear_error ();
   if (orol(&lda))
 	ora_error_handler(&lda);
   /* Command ROLLBACK closes all open cursors; discards all statements */
   /* that were prepared in the current transaction.                    */
-  for (count = 0; count < MAX_DESCRIPTOR; count++)
+  for (count = 0; count < max; count++)
     {
       ora_terminate_order (count);
     }
@@ -792,12 +796,15 @@ int ora_rollback (void)
 int ora_commit (void)
 {
   int count;
+  int max = descriptor;
+
   ora_clear_error ();
   if (ocom(&lda))
 	ora_error_handler(&lda);
   /* Command  COMMIT  closes all open cursors; discards all statements */
   /* that were prepared in the current transaction.                    */
-  for (count = 0; count < MAX_DESCRIPTOR; count++)
+
+  for (count = 0; count < max; count++)
     {
       ora_terminate_order (count);
     }
@@ -853,6 +860,8 @@ char date[19];
 char d[2];
 char y[4];
 
+static char *default_date = "01/01/0000 00:00:00";
+
 int ora_get_date_data (int no_des, int i)
 {
 	int size;
@@ -860,7 +869,10 @@ int ora_get_date_data (int no_des, int i)
 	if (desc[i-1].dbtype == DATE_TYPE)
 	{
 		size = desc[i-1].buflen;
-		memcpy (&date, def[i-1].buf, sizeof(date));
+		if (def[i-1].buf == '\0')
+			memcpy (&date, default_date, sizeof(date));
+		else
+			memcpy (&date, def[i-1].buf, sizeof(date));
 		return 1;
 
 	}

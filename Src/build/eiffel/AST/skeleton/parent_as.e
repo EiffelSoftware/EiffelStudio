@@ -248,13 +248,13 @@ feature {NONE} -- Merging
 					until
 						list.after or else found
 					loop
-						found := deep_equal (item, other_list.item);
+						found := deep_equal (item, list.item);
 						list.forth
 					end;
 					if found then
 						temp_list.put_left (item);
 					end;
-					list.forth
+					other_list.forth
 				end;
 				if not temp_list.empty then
 					!! Result.make (list.count + temp_list.count)

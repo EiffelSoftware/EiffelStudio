@@ -30,13 +30,13 @@ inherit
 		end;
 	REMOVABLE;
 	NAMABLE
-		rename
-			label as full_label
+		redefine
+			title_label
 		end;
 	DEFERRED_CREATOR;
 	EDITABLE
 		rename
-			label as full_label
+			label as title_label
 		end;
 	DRAG_SOURCE;
 	TYPE_DATA
@@ -110,13 +110,22 @@ feature -- Editable
 				not parent_context.is_group_composite
 		end;
 
-feature {NONE, CONTEXT}
+feature {NONE, CONTEXT, SHOW_WINDOW_HOLE}
 
 	update_tree_element is
 		do
-			tree_element.set_text (full_label);
+			tree_element.set_text (title_label);
 			tree.display (data);
+			update_visual_name_in_editor;
 			context_catalog.update_name_in_editors (Current);
+			App_editor.update_context_name_in_editors (Current)
+		end;
+
+	update_visual_name_in_editor is
+			-- Update the format page of Current
+			-- editor when visual name is changed
+			-- (By default, does nothing).
+		do
 		end;
 
 feature
@@ -252,7 +261,7 @@ feature
 			end;
 		end;
 
-	full_label: STRING is
+	title_label: STRING is
 		do
 			if (visual_name = Void) then
 				Result := clone (entity_name);
@@ -321,6 +330,18 @@ feature
 	is_window: BOOLEAN is
 			-- Is Current a window (perm or temp window)?
 		do
+		end;
+
+	is_resizable: BOOLEAN is
+			-- Is Current able to be resized?
+		do
+			Result := True
+		end;
+
+	is_movable: BOOLEAN is
+			-- Is Current able to be positioned?
+		do
+			Result := True
 		end;
 
 feature {NONE}
@@ -458,7 +479,6 @@ feature {NONE}
 			-- General callbacks forall types of contexts
 		do
 				-- Move and resize actions
-			--a_widget.set_action ("~Shift ~Ctrl<Btn1Down>", Eb_selection_mgr, third);
 			a_widget.set_action ("!<Btn1Down>", Eb_selection_mgr, third);
 			a_widget.set_action ("<Btn1Up>", Eb_selection_mgr, second_arg);
 				-- Shift actions
@@ -472,6 +492,50 @@ feature {NONE}
 			a_widget.set_action ("<Key>osfDown", Eb_selection_mgr, Nineth);
 				-- Cursor shape
 			a_widget.add_pointer_motion_action (Eb_selection_mgr, first_arg);
+		end;
+
+	reset_widget_callbacks is
+		do
+			add_widget_callbacks;
+			initialize_transport
+		end;
+
+	remove_widget_callbacks is
+			-- Remove callbacks.
+			-- (Need to only remove callbacks part of a list
+			-- since set_action will overwrite previous callbacks).
+		do
+			widget.remove_pointer_motion_action (Eb_selection_mgr, 
+					first_arg)
+			widget.remove_enter_action (Eb_selection_mgr, Current);
+		end;
+
+feature -- Removing / Reseting callbacks
+
+	remove_callbacks is
+		do
+			remove_widget_callbacks;
+			from
+				child_start
+			until
+				child_offright
+			loop
+				child.remove_callbacks;
+				child_forth
+			end;
+		end;
+
+	reset_callbacks is
+		do
+			reset_widget_callbacks;
+			from
+				child_start
+			until
+				child_offright
+			loop
+				child.reset_callbacks;
+				child_forth
+			end;
 		end;
 
 feature 
@@ -671,7 +735,7 @@ feature
 	hide is
 		do
 			if widget.realized and then widget.shown then
-				widget.hide
+				widget.hide;
 			end
 		end;
 
@@ -858,24 +922,13 @@ feature -- Font
 		local
 			fontable: FONTABLE;
 			old_w, old_h: INTEGER;
-			was_managed: BOOLEAN;
 		do
 			font_name_modified := False;
 			if is_fontable then
 				fontable ?= widget;
 				if s = Void or else s.empty then
 					if default_font /= Void then
-						was_managed := widget.managed;
-						if was_managed then
-							widget.unmanage;
-							old_w := widget.width;
-							old_h := widget.height;
-						end;
 						fontable.set_font (default_font);		
-						if was_managed then
-							widget.set_size (old_w, old_h);
-							widget.manage;
-						end
 					end
 					font_name_modified := False;
 					font_name := s
@@ -885,18 +938,7 @@ feature -- Font
 					end;
 					font_name := s;
 					font_name_modified := True;
-					was_managed := widget.managed;
-					if was_managed then
-						widget.unmanage;
-						old_w := widget.width;
-						old_h := widget.height;
-					end;
 					fontable.set_font_name (s);
-					if was_managed then
-						widget.set_size (old_w, old_h);
-						widget.manage;
-					end;
-					widget.manage;
 				end
 			end;			
 		end;
@@ -1104,7 +1146,13 @@ feature
 			widget_is_hidden: not widget.managed
 		end;
 
-	children_list_plus_current, cut_list: LINKED_LIST [CONTEXT] is
+	children_list_plus_current: LINKED_LIST [CONTEXT] is
+			-- Current Context and all its children 
+		do
+			Result := cut_list;
+		end;
+
+	cut_list: LINKED_LIST [CONTEXT] is
 			-- Current Context and all its children 
 			-- that will be destroyed
 		local
@@ -1749,7 +1797,7 @@ feature
 			end;
 			retrieve_oui_create (parent_widget);
 			retrieved_node.set_context_attributes (Current);
-			!!tree_element.make (Current);
+			!! tree_element.make (Current);
 			from
 				child_start
 			until
@@ -1759,7 +1807,7 @@ feature
 				child_forth
 			end;
 			if is_window then
-				widget.realize;
+				realize;
 				temp_w ?= Current
 				if temp_w /= Void then
 					show

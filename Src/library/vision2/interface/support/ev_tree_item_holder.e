@@ -7,7 +7,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	EV_TREE_ITEM_HOLDER
+	EV_TREE_ITEM_LIST
 
 inherit
 	EV_ITEM_LIST [EV_TREE_ITEM]
@@ -27,10 +27,10 @@ feature -- Status report
 
 feature {EV_ANY_I} -- Implementation
 
-	implementation: EV_TREE_ITEM_HOLDER_I
+	implementation: EV_TREE_ITEM_LIST_I
 			-- Platform dependent access.
 
-end -- class EV_TREE_ITEM_HOLDER
+end -- class EV_TREE_ITEM_LIST
 
 --!-----------------------------------------------------------------------------
 --! EiffelVision2: library of reusable components for ISE Eiffel.
@@ -53,6 +53,9 @@ end -- class EV_TREE_ITEM_HOLDER
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/03/16 23:15:46  king
+--| Renamed from holder to list
+--|
 --| Revision 1.12  2000/03/07 01:32:43  king
 --| Reformatted text
 --|

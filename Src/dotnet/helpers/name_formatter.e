@@ -53,20 +53,28 @@ feature -- Basic Operations
 				Result := clone (name)
 				if Result.item (name.count) = ']' then
 					Result.keep_head (Result.count - 2)
-					Result := "NATIVE_ARRAY [" + full_formatted_type_name (Result) + "]"
+					Result.append (native_array_string)
+					Result.append (full_formatted_type_name (Result))
+					Result.append_character (']')
 				else
 					i := name.index_of ('+', 1)
 					if i > 0 then
 						container := name.substring (1, i - 1)
 						nested := name.substring (i + 1, name.count)
-						Result := full_formatted_type_name (nested) + "_IN_" + full_formatted_type_name (container)
+							-- Estimated allocation size.
+						create Result.make (name.count + 5)
+						Result.append (full_formatted_type_name (nested))
+						Result.append (in_string)
+						Result.append (full_formatted_type_name (container))
 					else
 						if Result.item (Result.count) = '&' then
 							Result.keep_head (Result.count - 1)
 						end
-						Result.replace_substring_all (".", "_")
-						Result.replace_substring_all ("___", "_")
-						Result.replace_substring_all ("__", "_")
+						Result.replace_substring_all (single_dot_string, single_underscore_string)
+						Result.replace_substring_all (triple_underscore_string,
+							single_underscore_string)
+						Result.replace_substring_all (double_underscore_string,
+							single_underscore_string)
 						if Result.item (1) = '_' then
 							Result.prepend_character ('X')
 						end
@@ -91,17 +99,7 @@ feature -- Basic Operations
 			if operators.found then
 				Result := operators.found_item
 			else
-				Result := clone (name)
-				if Result.item (Result.count) = '&' then
-					Result.keep_head (Result.count - 1)
-				end
-				Result.replace_substring_all (".", "_")
-				Result.replace_substring_all ("___", "_")
-				Result.replace_substring_all ("__", "_")
-				if Result.item (1) = '_' then
-					Result.prepend_character ('x')
-				end
-				Result := eiffel_format (Result)
+				Result := formatted_variable_name (name)
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -112,59 +110,80 @@ feature -- Basic Operations
 		require
 			non_void_name: name /= Void
 		local
-			l_name: STRING
 			i: INTEGER
-			container, nested : STRING
+			l_name: STRING
+			l_var: like variable_mapping_table
 		do
 				-- resolve conflict names	
 			l_name := clone (name)
 			l_name.to_lower
-			variable_mapping_table.search (l_name)
-			if variable_mapping_table.found then
-				Result := variable_mapping_table.found_item
+			l_var := variable_mapping_table
+			l_var.search (l_name)
+			if l_var.found then
+				Result := l_var.found_item
+			else
+				Result := clone (name)
+				if Result.item (Result.count) = '&' then
+					Result.keep_head (Result.count - 1)
+				end
+				Result.replace_substring_all (Single_dot_string, Single_underscore_string)
+				Result.replace_substring_all (Triple_underscore_string, Single_underscore_string)
+				Result.replace_substring_all (Double_underscore_string, Single_underscore_string)
+				if Result.item (1) = '_' then
+					Result.prepend_character ('a')
+				end
+				Result := eiffel_format (Result)
+			end
+		ensure
+			non_void_result: Result /= Void
+		end
+
+	formatted_variable_type_name (name: STRING): STRING is
+			-- Format variable name that represent a type into Eiffel
+			-- naming convention.
+		require
+			non_void_name: name /= Void
+		local
+			i, index: INTEGER
+			container, nested: STRING
+			l_arg: like argument_mapping_table
+		do
+			index := name.last_index_of ('.', name.count)
+			if index > 0 then
+				Result := name.substring (index + 1, name.count)
+			else
+				Result := name
+			end
+			l_arg := argument_mapping_table
+			l_arg.search (Result)
+			if l_arg.found then
+				Result := l_arg.found_item
 			else
 				i := name.index_of ('+', 1)
 				if i > 0 then
 					container := name.substring (1, i - 1)
 					nested := name.substring (i + 1, name.count)
-					Result := full_formatted_type_name (nested) + "_IN_" + full_formatted_type_name (container)
+					create Result.make (name.count + 5)
+					Result.append (formatted_variable_type_name (nested))
+					Result.append (in_string)
+					Result.append (formatted_variable_type_name (container))
 				else
-					Result := clone (name)
-					if Result.item (name.count) = ']' then
-						Result.keep_head (Result.count - 2)
-						Result := "array_" + full_formatted_type_name (Result)
+					if name.item (name.count) = '&' then
+						Result := name.substring (1, Result.count - 1)
 					end
-					if Result.item (Result.count) = '&' then
-						Result.keep_head (Result.count - 1)
+					if Result.item (Result.count) = ']' then
+						container := Result.substring (1, Result.count - 2)
+						create Result.make (container.count + 6)
+						Result.append (formatted_variable_type_name (container))
+						Result.append (array_string)
 					end
-					Result.replace_substring_all (".", "_")
-					Result.replace_substring_all ("___", "_")
-					Result.replace_substring_all ("__", "_")
-					if Result.item (1) = '_' then
-						Result.prepend_character ('a')
-					end
+					Result.replace_substring_all (".", single_underscore_string)
+					Result.replace_substring_all (triple_underscore_string,
+						single_underscore_string)
+					Result.replace_substring_all (double_underscore_string,
+						single_underscore_string)
 					Result := eiffel_format (Result)
 				end
-			end
-		ensure
-			non_void_result: Result /= Void
-		end
-		
-	formatted_argument_type_name (name: STRING): STRING is
-			-- Format `name' to Eiffel conventions
-		require
-			non_void_name: name /= Void
-		local
-			head: STRING
-		do
-			head := clone (name)
-			head.keep_head (4)
-			head.to_lower
-			if head.is_equal ("ref ") then
-				name.remove_head (4)
-				Result := formatted_variable_name (name)
-			else
-				Result := formatted_variable_name (name)
 			end
 		ensure
 			non_void_result: Result /= Void
@@ -180,26 +199,31 @@ feature {NONE} -- Implementation
 		local
 			previous_underscore: BOOLEAN
 			previous_digit: BOOLEAN
-			i: INTEGER
+			i, nb: INTEGER
 			c: CHARACTER
 		do
 			previous_underscore := True
 			previous_digit := False
-			Result := ""
+				-- Allocate just a little bit more to avoid useless resizing
+			create Result.make (s.count + 5)
 			from
 				i := 1
+				nb := s.count
 			until
-				i > s.count
+				i > nb
 			loop
 				c := s.item (i)
-				if (c.is_upper and not previous_underscore) or else (previous_digit and not c.is_digit) then
-					Result := Result + "_" 
+				if
+					(c.is_upper and not previous_underscore) or else
+					(previous_digit and c /= '_' and not c.is_digit)
+				then
+					Result.append_character ('_')
 				elseif c.is_digit and not previous_digit and not previous_underscore then
-					Result := Result + "_"
+					Result.append_character ('_')
 				end
 				previous_underscore := c.is_upper or c = '_'
 				previous_digit := c.is_digit
-				Result.append_character (c.to_lower (c))
+				Result.append_character (c.lower)
 				i := i + 1
 			end
 		end
@@ -207,7 +231,7 @@ feature {NONE} -- Implementation
 	type_mapping_table: HASH_TABLE [STRING, STRING] is
 			-- Special types
 		once
-			create Result.make (25)
+			create Result.make (100)
 			Result.put ("INTEGER", "Int32")
 			Result.put ("INTEGER", "UInt32")
 			Result.put ("INTEGER_64", "Int64")
@@ -233,13 +257,16 @@ feature {NONE} -- Implementation
 			Result.put ("SYSTEM_STACK", "Stack")
 			Result.put ("SYSTEM_DIRECTORY", "Directory")
 			Result.put ("SYSTEM_FILE", "File")
+			Result.put ("SYSTEM_DATE_TIME", "DateTime")
+			Result.put ("SYSTEM_SORTED_LIST", "SortedList")
+			Result.put ("SYSTEM_RANDOM", "Random")
 		end
 
 	variable_mapping_table: HASH_TABLE [STRING, STRING] is
 			-- Protected Eiffel identifiers
 		once
 			-- Features in ANY Eiffel class
-			create Result.make (100)
+			create Result.make (200)
 			Result.put ("copy_", "copy")
 			Result.put ("clone_", "clone")
 			Result.put ("is_equal_", "is_equal")
@@ -310,10 +337,30 @@ feature {NONE} -- Implementation
 			Result.put ("bit_", "bit")
 		end 
 
+	argument_mapping_table: HASH_TABLE [STRING, STRING] is
+			-- Mapping for type when used in feature name to distinguish between
+			-- different overloading.
+		once
+			create Result.make (50)
+			Result.put ("boolean", "Boolean")
+			Result.put ("character", "Char")
+			Result.put ("integer_8", "Byte")
+			Result.put ("integer_8", "SByte")
+			Result.put ("integer_16", "Int16")
+			Result.put ("integer_16", "UInt16")
+			Result.put ("integer_32", "Int32")
+			Result.put ("integer_32", "UInt32")
+			Result.put ("pointer", "IntPtr")
+			Result.put ("integer_64", "Int64")
+			Result.put ("integer_64", "UInt64")
+			Result.put ("double", "Double")
+			Result.put ("real", "Single")
+		end
+
 	operators: HASH_TABLE [STRING, STRING] is
 			-- Operator symbols table
 		once
-			create Result.make (50)
+			create Result.make (200)
 			
 			-- Unary operators
 			Result.put ("#--", "op_Decrement");
@@ -364,6 +411,17 @@ feature {NONE} -- Implementation
 			Result.put ("#,", "op_Comma");
 			Result.put ("#/=", "op_DivisionAssignment");
 		end
-		
+	
+feature {NONE} -- Constants
+
+	single_dot_string: STRING is "."
+	single_underscore_string: STRING is "_"
+	double_underscore_string: STRING is "__"
+	triple_underscore_string: STRING is "___"
+	array_string: STRING is "_array"
+	native_array_string: STRING is "NATIVE_ARRAY ["
+	in_string: STRING is "_IN_"
+			-- To save time in creating those strings in current class.
+
 end -- class NAME_FORMATTER
 

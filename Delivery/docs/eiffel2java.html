@@ -1,0 +1,263 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>ISE EiffelBench</title>
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="styles/tech.css">
+</head>
+
+<body>
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
+      <TR>
+              <TD><IMG SRC="styles/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
+                      BORDER="0"><IMG SRC="styles/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
+                      BORDER="0"></TD>
+      </TR>
+</TABLE>
+
+<table cols="1" width="700" cellpadding="0" cellspacing="0" border="0">
+<tr><td>
+
+The Java Interface<br>
+==================<br>
+<br>
+* Brieve description of the interface:<br>
+  ------------------------------------<br>
+<br>
+	The Java interface allows you to call Java routines or attributes from your Eiffel<br>
+	code. It uses the Java Native Interface (JNI) provided by the Java Development Kit<br>
+	(JDK) 1.1.4. You can get more information about the JNI at:<br>
+	http://java.sun.com/products/jdk/1.1/docs/guide/jni/index.html<br>
+<br>
+<br>
+* Requirements:<br>
+  -------------<br>
+<br>
+	* JDK 1.1.4 correctly set<br>
+	  (download it at http://java.sun.com/products/jdk/1.1/index.html)<br>
+	* the Java classes you want to use must be in the environment variable CLASSPATH<br>
+<br>
+<br>
+* Limitations:<br>
+  ------------<br>
+<br>
+	* In this version, you can only use one JNI environment.&nbsp;<br>
+	* Only one thread can interact with the Java Virtual Machine (JVM).<br>
+	* It is not possible to call Eiffel features from Java program.<br>
+	* The Eiffel side cannot deal with 'long' integer (64 bits)<br>
+	* The Eifffel feature `destroy_vm' of `JAVA_VM' calls a C function of the Java Native&nbsp;<br>
+	  Interface that is not fully implemented in jdk 1.1.4. This function, called&nbsp;<br>
+	  DestroyJavaVM, always returns -1 in jdk 1.1.4. For further information, go on the&nbsp;<br>
+	  JNI pages at the address above.&nbsp;<br>
+<br>
+<br>
+* The classes of the interface:<br>
+  -----------------------------<br>
+<br>
+	JNI_ENVIRONMENT&nbsp;<br>
+		-- Holds information about JNI environment. Potentially many JNI&nbsp;<br>
+		-- environments can exists at once, but more than one was never tested<br>
+<br>
+		This class provide the facilities to interact with the JVM:<br>
+			* creation of instances of Java Classes<br>
+			* exceptions mechanism<br>
+			* destruction of the JVM<br>
+<br>
+	SHARED_JNI_ENVIRONMENT&nbsp;<br>
+		-- Shared JNI environment. Since one JNI is needed per thread we limit&nbsp;<br>
+		-- Eiffel to having one thread that deals with Java<br>
+<br>
+		The class that calls Java routines or attributes must inherit from this<br>
+		class.&nbsp;<br>
+<br>
+	JAVA_VM&nbsp;<br>
+		-- This class is used to initially load the JVM into the running program<br>
+<br>
+		The Eiffel representation of the JVM.<br>
+<br>
+<br>
+	JAVA_CLASS&nbsp;<br>
+		-- Access to Java classes. Static methods and attributes are accessed&nbsp;<br>
+		-- via this class<br>
+<br>
+		The Eiffel representation of a Java Class.<br>
+<br>
+	JAVA_OBJECT&nbsp;<br>
+		-- This class gives Eiffel access to Java objects. You can use it&nbsp;<br>
+		-- directly or inherit from to and create a more convienient Eiffel&nbsp;<br>
+		-- class that makes the Java object look like an Eiffel object<br>
+<br>
+		The Eiffel representation of a Java Object.&nbsp;<br>
+		!! To access the static fields or routines of a Java Class, you have<br>
+		to use the features of a JAVA_CLASS instance!!<br>
+<br>
+	JAVA_EXTERNALS&nbsp;<br>
+		-- JNI external declarations<br>
+<br>
+		Don't use this class directly<br>
+<br>
+	JAVA_***_ARRAY<br>
+		-- Access to Java array of "***"<br>
+<br>
+		"***" can be all the usual types of Java (byte, short, int, float,<br>
+		double, char, boolean) or object if it is an array of Java Object<br>
+		(a String is considered as an object)<br>
+<br>
+	JAVA_ARGS&nbsp;<br>
+		-- class representing the arguments that can be passed to a Java method<br>
+<br>
+		See below about the signature of the methods<br>
+<br>
+	JAVA_OBJECT_TABLE&nbsp;<br>
+		-- This class provides a mapping between Java and Eiffel objects<br>
+<br>
+* Mapping the Eiffel classes and the Java types:<br>
+  ----------------------------------------------<br>
+<br>
+	The following table describes the mapping of Java primitive types and classes&nbsp;<br>
+	to Eiffel classes.&nbsp;<br>
+<br>
+		Java type/class	| Eiffel class<br>
+		----------------+-----------------<br>
+		boolean			| BOOLEAN<br>
+		char			| CHARACTER<br>
+		byte			| CHARACTER<br>
+		short			| INTEGER<br>
+		int 			| INTEGER<br>
+		long			|&nbsp;<br>
+		float			| REAL<br>
+		double			| DOUBLE<br>
+		void			| Void<br>
+						|<br>
+		String			| STRING<br>
+<br>
+	The interface does the mapping automatically. For example, if you call a Java&nbsp;<br>
+	method that returns a 'float', by using float_method you will get a 'REAL'.<br>
+<br>
+* The signature of Java methods and attributes:<br>
+  ---------------------------------------------<br>
+<br>
+	When you want to call a Java method or access a field, you need to specify its signature.&nbsp;<br>
+	The Eiffel to Java interface follows the JNI specifications.&nbsp;<br>
+	The table below summarizes the encoding for the Java type signatures:&nbsp;<br>
+<br>
+		Signature	| Java Type<br>
+		----------------+-----------------<br>
+		Z			| boolean<br>
+		B			| byte<br>
+		C			| char<br>
+		S			| short<br>
+		I			| int<br>
+		J			| long<br>
+		F			| float<br>
+		D			| double<br>
+		V			| void<br>
+		[type		| type []<br>
+<br>
+	The signature for a Java class has the following form:<br>
+		L fully-qualified-class ;<br>
+<br>
+		For example, class String: 	Ljava/lang/String;<br>
+<br>
+	The signature for a method has the following form:<br>
+		( arguments-types ) returned-types<br>
+<br>
+		For example, the signature of a method that takes&nbsp;<br>
+		as arguments an integer and a string and return void is:<br>
+			(ILjava/lang/String;)V<br>
+<br>
+<br>
+* An example:<br>
+  -----------<br>
+<br>
+			## the Java Class ##<br>
+<br>
+class test {<br>
+<br>
+	test () {}<br>
+<br>
+	public int my_integer;<br>
+<br>
+	public static in my_static_integer;<br>
+<br>
+	public void my_method (int arg_int, String arg_string) {<br>
+		...<br>
+	}<br>
+<br>
+	...<br>
+}<br>
+<br>
+			## the Eiffel Side ##<br>
+<br>
+class&nbsp;<br>
+	EIFFEL_TO_JAVA<br>
+<br>
+inherit<br>
+	SHARED_JNI_ENVIRONMENT<br>
+<br>
+creation<br>
+	make<br>
+<br>
+feature -- Creation<br>
+<br>
+	make is<br>
+		local<br>
+			class_test: JAVA_CLASS<br>
+			instance_of_class_test: JAVA_OBJECT<br>
+			fid: POINTER<br>
+			value: INTEGER<br>
+			j_args: JAVA_ARGS<br>
+		do<br>
+			--| Creation of the Java object<br>
+<br>
+			class_test := jni.find_class ("test")<br>
+			!! instance_of_class_test.create_instance (class_test, "()V", Void)<br>
+<br>
+			--| Access to a public attribute<br>
+<br>
+			fid := instance_of_class_test.field_id ("my_integer", "I")<br>
+				-- 'fid' contains the id of the field 'my_integer'<br>
+<br>
+			value := instance_of_class_test.integer_attribute (fid)<br>
+				-- 'value' contains the value of the field referenced<br>
+				-- by 'fid'<br>
+			...<br>
+<br>
+			--| Access to a static attribute using directly the JAVA_CLASS<br>
+<br>
+			fid := class_test.field_id ("my_static_integer", "I")<br>
+			value := class_test.integer_attribute (fid)<br>
+			...<br>
+<br>
+			--| Access to a static attribute using the attribute 'jclass'<br>
+<br>
+			fid := instance_of_class_test.jclass.field_id ("my_static_integer", "I")<br>
+			value := instance_of_class_test.jclass.integer_attribute (fid)<br>
+			...<br>
+<br>
+			--| Access to the method 'my_method'<br>
+			fid := instance_of_class_test.method_id ("my_method", "(ILjava/lang/String;)V")<br>
+				-- Get the id of 'my_method'<br>
+<br>
+			!! j_args.make(2)<br>
+			j_args.push_int (2)<br>
+			j_args.push_string("String test")<br>
+				-- Create the set of arguments for 'my_method'<br>
+<br>
+			instance_of_class_test.void_method (fid, j_args)<br>
+				-- Call to the void method referenced by 'fid'<br>
+			...<br>
+<br>
+		end -- make<br>
+<br>
+end -- class EIFFEL_TO_JAVA<br>
+<br>
+
+</td></tr></table>
+</body>
+
+</html>

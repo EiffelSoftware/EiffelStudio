@@ -147,6 +147,42 @@ feature -- Duplication
 		
 feature -- Access: Platform specific
 
+	read_natural_8 (pos: INTEGER): NATURAL_8 is
+			-- Read NATURAL_8 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_8_bytes) <= count
+		do
+			($Result).memory_copy (item + pos, natural_8_bytes)
+		end
+
+	read_natural_16 (pos: INTEGER): NATURAL_16 is
+			-- Read NATURAL_16 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_16_bytes) <= count
+		do
+			($Result).memory_copy (item + pos, natural_16_bytes)
+		end
+
+	read_natural_32 (pos: INTEGER): NATURAL_32 is
+			-- Read INTEGER at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_32_bytes) <= count
+		do
+			($Result).memory_copy (item + pos, natural_32_bytes)
+		end		
+
+	read_natural_64 (pos: INTEGER): NATURAL_64 is
+			-- Read NATURAL_64 at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_64_bytes) <= count
+		do
+			($Result).memory_copy (item + pos, natural_64_bytes)
+		end
+
 	read_integer_8 (pos: INTEGER): INTEGER_8 is
 			-- Read INTEGER_8 at position `pos'.
 		require
@@ -251,6 +287,50 @@ feature -- Access: Platform specific
 		end
 
 feature -- Element change: Platform specific
+
+	put_natural_8 (i: NATURAL_8; pos: INTEGER) is
+			-- Insert `i' at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_8_bytes) <= count
+		do
+			(item + pos).memory_copy ($i, natural_8_bytes)
+		ensure
+			inserted: i = read_natural_8 (pos)
+		end
+
+	put_natural_16 (i: NATURAL_16; pos: INTEGER) is
+			-- Insert `i' at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_16_bytes) <= count
+		do
+			(item + pos).memory_copy ($i, natural_16_bytes)
+		ensure
+			inserted: i = read_natural_16 (pos)
+		end
+
+	put_natural_32 (i: NATURAL_32; pos: INTEGER) is
+			-- Insert `i' at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_32_bytes) <= count
+		do
+			(item + pos).memory_copy ($i, natural_32_bytes)
+		ensure
+			inserted: i = read_natural_32 (pos)
+		end
+
+	put_natural_64 (i: NATURAL_64; pos: INTEGER) is
+			-- Insert `i' at position `pos'.
+		require
+			pos_nonnegative: pos >= 0
+			valid_position: (pos + natural_64_bytes) <= count
+		do
+			(item + pos).memory_copy ($i, natural_64_bytes)
+		ensure
+			inserted: i = read_natural_64 (pos)
+		end
 
 	put_integer_8 (i: INTEGER_8; pos: INTEGER) is
 			-- Insert `i' at position `pos'.

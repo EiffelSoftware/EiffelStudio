@@ -9,7 +9,9 @@ indexing
 class PROFILE_HELP_CMD
 
 inherit
-	TOOL_COMMAND
+	EB_CONSTANTS;
+	ISE_COMMAND;
+	WINDOWS
 
 feature -- Access
 

@@ -99,7 +99,7 @@ feature -- Status report
 
 	rows: INTEGER is
 			-- Number of characters that should fit vertically
-	   require
+		require
 			exists: not is_destroyed
 		do
 			Result := get_xt_short (screen_object, XmNrows)
@@ -265,7 +265,8 @@ feature -- Extras
 				lower_pattern.to_lower
 				text := lower_text.to_c
 				pattern := lower_pattern.to_c 
-				dummy_object := xm_create_text (parent.screen_object, $text, default_pointer, 0)
+				dummy_object := xm_create_text (parent.screen_object, $pattern, default_pointer, 0)
+				xm_text_set_string (dummy_object, $text)
  			end
 
 			if match_case then

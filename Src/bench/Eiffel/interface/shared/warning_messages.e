@@ -458,6 +458,16 @@ feature -- Cluster tree warnings
 			Result.append (class_name)
 			Result.append ("' already exists.%NPlease select a different class name.")
 		end
+		
+	w_Class_already_exists_info (class_name: STRING): STRING is
+		require
+			class_name_not_void: class_name /= Void
+		do
+			create Result.make (100)
+			Result.append ("Class with name: '")
+			Result.append (class_name)
+			Result.append ("' already exists.%NDo you want to proceed?")
+		end
 
 	w_Enter_path: STRING is "Please enter a folder%Nto receive the new cluster."
 

@@ -1876,7 +1876,7 @@ void odbc_error_handler(HSTMT h_err_stmt, int code) {
 		error_number = DB_SQL_INVALID_HANDLE;
 		sprintf(msg, "ODBC ERROR: <%d>, Inter code: <%d>", error_number, code);
 		strcat(error_message, msg);
-		strcat(error_message, "\n An Application programming error occured: maybe passed ");
+		strcat(error_message, "\n An Application programming error occurred: maybe passed ");
 		strcat(error_message, "\n invalid environment, connection or statement handle to ");
 		strcat(error_message, "\n Driver Manager of ODBC. \n");
 

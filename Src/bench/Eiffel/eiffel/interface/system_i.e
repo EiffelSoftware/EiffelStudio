@@ -529,7 +529,7 @@ feature -- Properties
 			c.set_id (new_id);
 debug ("ACTIVITY")
 io.error.putstring ("%TInserting class ");
-io.error.putstring (c.class_name);
+io.error.putstring (c.name);
 new_id.trace;
 io.error.new_line;
 end;
@@ -587,7 +587,7 @@ end;
 
 debug ("ACTIVITY", "REMOVE_CLASS");
 	io.error.putstring ("%TRemoving class ");
-	io.error.putstring (a_class.class_name);
+	io.error.putstring (a_class.name);
 	io.error.new_line;
 end;
 					-- Update control flags of the topological sort
@@ -740,7 +740,7 @@ io.error.putstring ("Class of id ");
 id.trace;
 io.error.putstring (": ");
 if Result /= Void then
-	io.error.putstring (Result.class_name);
+	io.error.putstring (Result.name);
 end
 io.error.new_line;
 end;
@@ -1129,13 +1129,13 @@ end;
 						if not marked_classes.has (a_class.id) then
 							if a_class.has_visible then
 								!!vd31;
-								vd31.set_class_name (a_class.class_name);
+								vd31.set_class_name (a_class.name);
 								vd31.set_cluster (a_class.cluster);
 								Error_handler.insert_error (vd31);
 							else
 debug ("REMOVE_CLASS")
 	io.error.putstring ("Remove useless classes: ");
-	io.error.putstring (a_class.class_name);
+	io.error.putstring (a_class.name);
 	io.error.new_line;
 end;
 								remove_class (a_class)
@@ -1229,7 +1229,7 @@ end;
 					a_class := changed_classes.item.associated_class;
 debug ("ACTIVITY", "SKELETON")
 io.error.putstring ("%T");
-io.error.putstring (a_class.class_name);
+io.error.putstring (a_class.name);
 io.error.new_line
 end;
 						-- Process skeleton(s) for `a_class'.
@@ -1252,7 +1252,7 @@ end;
 					a_class := changed_classes.item.associated_class;
 debug ("ACTIVITY", "SKELETON")
 io.error.putstring ("%T");
-io.error.putstring (a_class.class_name);
+io.error.putstring (a_class.name);
 io.error.new_line
 end;
 					if a_class.has_types then
@@ -1320,7 +1320,7 @@ end;
 				a_class := pass4_controler.changed_classes.item.associated_class;
 debug ("CHECK_EXPANDED")
 	io.error.putstring ("Check expanded on ");
-	io.error.putstring (a_class.class_name);
+	io.error.putstring (a_class.name);
 	io.error.new_line;
 end;
 				from
@@ -1333,7 +1333,7 @@ end;
 					if class_type.is_changed then
 debug ("CHECK_EXPANDED")
 	io.error.putstring ("Check expanded on type of ");
-	io.error.putstring (a_class.class_name);
+	io.error.putstring (a_class.name);
 	io.error.new_line;
 end;
 						if check_exp then
@@ -1391,7 +1391,7 @@ debug ("COUNT")
 	io.error.putstring ("] ");
 	i := i - 1;
 end;
-					deg_output.put_degree_1 (a_class.e_class, i);
+					deg_output.put_degree_1 (a_class, i);
 					a_class.melt_feature_table;
 					a_class.melt_descriptor_tables;
 					id_list.forth;
@@ -1497,7 +1497,7 @@ end;
 				a_class := class_of_id (id_list.item);
 debug ("ACTIVITY")
 	io.error.putstring ("%T%T");
-	io.error.putstring (a_class.class_name);
+	io.error.putstring (a_class.name);
 	io.error.new_line;
 end;
 				nb_tables := nb_tables + a_class.nb_modifiable_types;
@@ -1514,7 +1514,7 @@ end;
 				a_class := class_of_id (id_list.item);
 debug ("ACTIVITY")
 	io.error.putstring ("%T%T");
-	io.error.putstring (a_class.class_name);
+	io.error.putstring (a_class.name);
 	io.error.new_line;
 end;
 				types := a_class.types;
@@ -1557,7 +1557,7 @@ end;
 debug ("ACTIVITY")
 io.error.putstring ("melting routine id array of ");
 class_id.trace;
-io.error.putstring (a_class.class_name);
+io.error.putstring (a_class.name);
 io.error.new_line
 end;
 				write_int (file_pointer, class_id.id);
@@ -1689,7 +1689,7 @@ end;
 					a_class := cl_type.associated_class;
 debug ("OPTIONS")
 	io.error.putstring ("%TClass ");
-	io.error.putstring (a_class.class_name);
+	io.error.putstring (a_class.name);
 	io.error.new_line;
 end;
 					a_class.assertion_level.make_byte_code (Byte_array);
@@ -1836,7 +1836,7 @@ end;
 					id_list.after
 				loop
 					a_class := class_of_id (id_list.item);
-					deg_output.put_degree_minus_1 (a_class.e_class, i);
+					deg_output.put_degree_minus_1 (a_class, i);
 debug ("COUNT")
 	io.error.putstring ("[");
 	io.error.putint (i);
@@ -1876,7 +1876,7 @@ debug ("COUNT")
 	io.error.putstring ("] ");
 end;
 					if a_class /= Void then
-						deg_output.put_degree_minus_1 (a_class.e_class, i);
+						deg_output.put_degree_minus_1 (a_class, i);
 						a_class.generate_descriptor_tables;
 					end;
 					i := i - 1;
@@ -1898,7 +1898,7 @@ end;
 				id_list.after
 			loop
 				a_class := class_of_id (id_list.item);
-				deg_output.put_degree_minus_2 (a_class.e_class, i);
+				deg_output.put_degree_minus_2 (a_class, i);
 debug ("COUNT")
 	io.error.putstring ("[");
 	io.error.putint (i);
@@ -1928,7 +1928,7 @@ debug ("COUNT")
 	io.error.putstring ("] ");
 end;
 					if a_class.is_modifiable then
-						deg_output.put_degree_minus_3 (a_class.e_class, i);
+						deg_output.put_degree_minus_3 (a_class, i);
 	
 						a_class.generate_feature_table;
 					end;
@@ -2180,7 +2180,7 @@ feature -- Final mode generation
 				from j := 1 until j > nb loop
 					a_class := class_array.item (j)
 					if a_class /= Void then
-						deg_output.put_degree_minus_4 (a_class.e_class, i);
+						deg_output.put_degree_minus_4 (a_class, i);
 						a_class.process_polymorphism;
 						History_control.check_overload;
 						i := i - 1
@@ -2216,7 +2216,7 @@ feature -- Final mode generation
 				from i := 1 until i > nb loop
 					a_class := class_array.item (i)
 					if a_class /= Void then
-						deg_output.put_degree_minus_5 (a_class.e_class, j);
+						deg_output.put_degree_minus_5 (a_class, j);
 						current_class := a_class;
 						a_class.pass4;
 						j := j - 1
@@ -3023,8 +3023,8 @@ feature -- Dispose routine
 	formulate_mem_descendants (c: CLASS_C; desc: LINKED_LIST [CLASS_C]) is
 			-- Formulate descendants of class MEMORY. 
 		local
-			descendants: LINKED_LIST [E_CLASS];
-			d: E_CLASS
+			descendants: LINKED_LIST [CLASS_C];
+			d: CLASS_C
 		do
 			from
 				descendants := c.descendants;
@@ -3033,8 +3033,8 @@ feature -- Dispose routine
 				descendants.after
 			loop
 				d := descendants.item;
-				desc.extend (d.compiled_info);
-				formulate_mem_descendants (d.compiled_info, desc);
+				desc.extend (d);
+				formulate_mem_descendants (d, desc);
 				descendants.forth;
 			end;
 		end;

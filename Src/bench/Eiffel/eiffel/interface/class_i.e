@@ -55,7 +55,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	class_name: STRING;
+	name: STRING;
 			-- Class name
 
 	cluster: CLUSTER_I;
@@ -77,20 +77,15 @@ feature -- Properties
 	date: INTEGER;
 			-- Date of the file
 
-	compiled_class: CLASS_C is
+	compiled_class: CLASS_C;
 			-- Compiled class
-		local
-			ec: E_CLASS
+
+	compiled_eclass: E_CLASS  is
+			-- Compiled class
 		do
-			ec := compiled_eclass;
-			if ec /= Void then
-				Result := ec.compiled_info
-			end
+			Result := compiled_class
 		end;
-
-	compiled_eclass: E_CLASS 
-			-- Compiled class
-
+		
 	assertion_level: ASSERTION_I;
 			-- Assertion checking level
 
@@ -154,19 +149,19 @@ feature -- Access
 
 feature -- Setting
 
-	set_class_name (s: like class_name) is
-			-- Assign `s' to `class_name'.
+	set_name (s: like name) is
+			-- Assign `s' to `name'.
 		do
-			class_name := s;
+			name := s;
 		ensure
-			set: class_name = s
+			set: name = s
 		end;
 
-	set_file_details (s: like class_name; b: STRING) is 
-			-- Assign `s' to class_name, `b' to base_name, and
+	set_file_details (s: like name; b: STRING) is 
+			-- Assign `s' to name, `b' to base_name, and
 			-- set date of insertion.
 		do
-			set_class_name (s);
+			set_name (s);
 			set_base_name (b);
 			set_date;
 		end;
@@ -176,7 +171,7 @@ feature -- Comparison
 	infix "<" (other: like Current): BOOLEAN is
 			-- Class name alphabetic order
 		do
-			Result := class_name < other.class_name
+			Result := name < other.name
 		end;
 
 feature -- Output
@@ -188,7 +183,7 @@ feature -- Output
 		local
 			c_name: STRING;
 		do
-			c_name := clone (class_name)
+			c_name := clone (name)
 			c_name.to_upper;
 			st.add_classi (Current, c_name) 
 		end;
@@ -216,8 +211,8 @@ feature {COMPILER_EXPORTER} -- Setting
 		do
 debug
 	io.error.putstring ("reset_options: ");
-	if class_name /= Void then
-		io.error.putstring (class_name);
+	if name /= Void then
+		io.error.putstring (name);
 	end;
 	io.error.new_line;
 end;
@@ -246,17 +241,17 @@ end;
 		require
 			non_void_c: c /= Void
 		do
-			compiled_eclass := c.e_class
+			compiled_class := c
 		ensure
-			compiled_eclass = c.e_class
+			compiled_class = c
 		end;
 
 	reset_compiled_class is
 			-- Reset `compiled_class' to Void.
 		do
-			compiled_eclass := Void
+			compiled_class := Void
 		ensure
-			void_compiled_eclass: compiled_eclass = Void
+			void_compiled_class: compiled_eclass = Void
 		end;
 
 	set_date is
@@ -279,49 +274,47 @@ feature {COMPILER_EXPORTER} -- Compiled class
 	class_to_recompile: CLASS_C is
 			-- Instance of a class to remcompile
 		require
-			class_name_exists: class_name /= Void;
+			name_exists: name /= Void;
 		local
-			local_system: SYSTEM_I;
-			e_class: E_CLASS
+			local_system: SYSTEM_I
 		do
-			!! e_class.make (Current);
 			local_system := system;
 			if Current = local_system.boolean_class then
-				!BOOLEAN_B! Result.make (e_class)
+				!BOOLEAN_B! Result.make (Current)
 			elseif Current = local_system.character_class then
-				!CHARACTER_B! Result.make (e_class)
+				!CHARACTER_B! Result.make (Current)
 			elseif Current = local_system.integer_class then
-				!INTEGER_B! Result.make (e_class)
+				!INTEGER_B! Result.make (Current)
 			elseif Current = local_system.real_class then
-				!REAL_B! Result.make (e_class)
+				!REAL_B! Result.make (Current)
 			elseif Current = local_system.double_class then
-				!DOUBLE_B! Result.make (e_class)
+				!DOUBLE_B! Result.make (Current)
 			elseif Current = local_system.pointer_class then
-				!POINTER_B! Result.make (e_class)
+				!POINTER_B! Result.make (Current)
 			elseif Current = local_system.any_class then
-				!ANY_B! Result.make (e_class)
+				!ANY_B! Result.make (Current)
 			elseif Current = local_system.special_class then
-				!SPECIAL_B! Result.make (e_class)
+				!SPECIAL_B! Result.make (Current)
 			elseif Current = local_system.to_special_class then
-				!TO_SPECIAL_B! Result.make (e_class)
+				!TO_SPECIAL_B! Result.make (Current)
 			elseif Current = local_system.array_class then
-				!ARRAY_CLASS_B! Result.make (e_class)
+				!ARRAY_CLASS_B! Result.make (Current)
 			elseif Current = local_system.string_class then
-				!STRING_CLASS_B! Result.make (e_class)
+				!STRING_CLASS_B! Result.make (Current)
 			elseif Current = local_system.character_ref_class then
-				!CHARACTER_REF_B! Result.make (e_class)
+				!CHARACTER_REF_B! Result.make (Current)
 			elseif Current = local_system.boolean_ref_class then
-				!BOOLEAN_REF_B! Result.make (e_class)
+				!BOOLEAN_REF_B! Result.make (Current)
 			elseif Current = local_system.integer_ref_class then
-				!INTEGER_REF_B! Result.make (e_class)
+				!INTEGER_REF_B! Result.make (Current)
 			elseif Current = local_system.real_ref_class then
-				!REAL_REF_B! Result.make (e_class)
+				!REAL_REF_B! Result.make (Current)
 			elseif Current = local_system.double_ref_class then
-				!DOUBLE_REF_B! Result.make (e_class)
+				!DOUBLE_REF_B! Result.make (Current)
 			elseif Current = local_system.pointer_ref_class then
-				!POINTER_REF_B! Result.make (e_class)
+				!POINTER_REF_B! Result.make (Current)
 			else
-				!! Result.make (e_class);
+				!! Result.make (Current);
 			end;
 		ensure
 			Result_exists: Result /= Void;
@@ -335,7 +328,7 @@ feature {COMPILER_EXPORTER} -- Setting
 			assertion_level := l;
 debug
 	io.error.putstring ("set_assertion_level (");
-	io.error.putstring (class_name);
+	io.error.putstring (name);
 	io.error.putstring ("): ");
 	l.trace;
 end;
@@ -359,7 +352,7 @@ end;
 			hidden := b
 debug ("HIDE_OPTION")
 	io.error.putstring ("class name: ");
-	io.error.putstring (class_name);
+	io.error.putstring (name);
 	io.error.putstring (" is_hidden: ");
 	io.error.putbool (hidden);
 	io.error.new_line;
@@ -430,7 +423,7 @@ end;
 			-- Name of the class for the external environment
 		do
 			if visible_name = Void then
-				Result := class_name;
+				Result := name;
 			else
 				Result := visible_name;
 			end;

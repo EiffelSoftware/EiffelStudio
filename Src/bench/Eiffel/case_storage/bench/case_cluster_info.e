@@ -347,7 +347,7 @@ feature {NONE} -- Class information
 				classes.after
 			loop
 				classc := classes.item;
-				c_name := clone (classc.class_name);
+				c_name := clone (classc.name);
 				c_name.to_upper;
 				re_class := True;
 				view_id := 0;
@@ -379,7 +379,7 @@ end
 					end;
 				end;
 				if re_class then
-					deg_output.put_case_class_message (classc.e_class);
+					deg_output.put_case_class_message (classc);
 						-- Need to reverse engineer class for eiffelcase.
 					!! class_info.make (classc);
 					class_info.formulate_class_data (format_reg);

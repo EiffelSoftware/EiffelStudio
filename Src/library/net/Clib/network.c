@@ -159,7 +159,7 @@ void eif_net_check_recv (int r) {
 
 
 #ifdef EIF_OS2
-void do_init(void)
+rt_shared void do_init(void)
 {
 	static int done = FALSE;
 
@@ -176,7 +176,7 @@ void eif_winsock_cleanup(EIF_BOOLEAN f)
 	eif_net_check(WSACleanup());
 }
 
-void do_init(void)
+rt_shared void do_init(void)
 {
 	WORD wVersionRequested;
 	WSADATA wsaData;

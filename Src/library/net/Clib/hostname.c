@@ -13,6 +13,7 @@
 
 #ifdef EIF_WIN32
 #include <winsock.h>
+extern void do_init (void);
 #endif
 
 #ifndef MAXHOSTNAMELEN      /* added for dgux and other platforms maybe */
@@ -24,6 +25,10 @@ static char hostname[MAXHOSTNAMELEN + 1];
 EIF_POINTER c_get_hostname()
 	/*x get host name in dotted format */
 {
+#if defined EIF_WIN32 || defined EIF_OS2
+	do_init ();
+#endif
+
 	if (gethostname (hostname, sizeof(hostname)) == -1)
 		hostname[0] = '\0';
 

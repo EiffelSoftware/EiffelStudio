@@ -71,6 +71,9 @@ feature {NONE} -- Initialization
 			C.gtk_container_add (c_object, scroll_window)
 			create ev_children.make (0)
 			set_row_height (15)
+
+				-- create a list with one column
+			create_list (1)
 		end
 
 	create_list (a_columns: INTEGER) is
@@ -83,10 +86,8 @@ feature {NONE} -- Initialization
 			temp_title: STRING
 			temp_width: INTEGER
 		do
-			if list_widget /= Default_pointer then
-				old_list_widget := list_widget
-			end
-
+			old_list_widget := list_widget
+			
 			list_widget := C.gtk_clist_new (a_columns)
 		
 			real_signal_connect (list_widget, "select_row", ~select_callback)
@@ -106,12 +107,14 @@ feature {NONE} -- Initialization
 			until
 				i > a_columns
 			loop
-				if column_titles.valid_index (i) and then column_titles.i_th (i) /= Void then
+				if column_titles /= Void and then 
+					column_titles.valid_index (i) and then
+						column_titles.i_th (i) /= Void then
 					temp_title := column_titles.i_th (i)
 				else
 					temp_title := ""
 				end
-				if column_widths.valid_index (i) then
+				if column_widths /= Void and then column_widths.valid_index (i) then
 					temp_width := column_widths.i_th (i)
 				else
 					temp_width := Default_column_width
@@ -471,7 +474,6 @@ feature {EV_APPLICATION_IMP} -- Implementation
 			if clist_parent = gdkwin_parent then
 				if row_from_y_coord (a_y) /= 0 then
 					Result := False
-					print ("Mouse over row " + row_from_y_coord (a_y).out + "%N")
 				end
 			end
 		end
@@ -486,6 +488,9 @@ feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 				Result := 0
 			end
 		end
+
+	scroll_window: POINTER
+		-- Pointer to the scrollable window tree is in.
 
 feature {NONE} -- Implementation
 
@@ -527,9 +532,6 @@ feature {NONE} -- Implementation
 			create_list (a_columns)
 		end
 
-	scroll_window: POINTER
-		-- Pointer to the scrollable window tree is in.
-
 	add_to_container (v: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Add `v' to the list.
 		local
@@ -543,12 +545,6 @@ feature {NONE} -- Implementation
 
 			-- update the list of rows of the column list:
 			ev_children.force (item_imp)
-
-			if list_widget = Default_pointer then
-				if v.count = 0 then
-					create_list (1)
-				end
-			end
 
 			if v.count > column_count then
 				create_list (v.count)
@@ -658,6 +654,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.56  2000/03/30 19:30:26  king
+--| Changed to one column on creation, added column_* /= Void checks in create_list
+--|
 --| Revision 1.55  2000/03/29 22:14:51  king
 --| Added initial row pnd support
 --|

@@ -9,9 +9,8 @@ deferred class ARITHMETIC_AS_B
 inherit
 
 	ARITHMETIC_AS
-		rename
-			left as old_left,
-			right as old_right
+		redefine
+			left, right
 		end; 
 
 	BINARY_AS_B
@@ -20,9 +19,11 @@ inherit
 			balanced, operator_is_special
 		redefine
 			balanced, balanced_result, operator_is_special,
-			operator_is_keyword
-		select
-			left, right
+			operator_is_keyword, left, right
 		end
+
+feature
+
+	left, right: EXPR_AS_B
 
 end -- class ARITHMETIC_AS_B

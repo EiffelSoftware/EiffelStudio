@@ -377,6 +377,7 @@ feature -- Element change
 					]")
 			header.go_i_th (a_index)
 			header.put_left (column_implementation.header_item)
+			recompute_horizontal_scroll_bar
 		ensure
 			column_count_set: (a_index < old column_count implies (column_count = old column_count + 1)) or column_count = a_index
 			visible_column_count_set: visible_column_count = old visible_column_count + 1
@@ -567,7 +568,7 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 	drawable: EV_DRAWING_AREA
 		-- Drawing area for `Current' on which all drawing operations are performed.
 
-feature {NONE} -- Implementation
+feature {NONE} -- Drawing implementation
 
 	initialize_grid is
 			-- Initialize `Current'. To be called during `initialize' of
@@ -585,6 +586,7 @@ feature {NONE} -- Implementation
 			create drawable
 			create vertical_scroll_bar
 			create horizontal_scroll_bar
+			horizontal_scroll_bar.change_actions.extend (agent horizontal_scroll_bar_changed)
 			create horizontal_box
 			create vertical_box
 			horizontal_box.extend (vertical_box)
@@ -596,16 +598,20 @@ feature {NONE} -- Implementation
 			l_vertical_box.extend (scroll_bar_spacer)
 			l_vertical_box.disable_item_expand (scroll_bar_spacer)
 			
-				-- This ensures that the two scroll bars meet exactly at the corners
-				-- with `scroll_bar_spacer' displayed in the corner.
-			scroll_bar_spacer.set_minimum_height (horizontal_scroll_bar.minimum_height)
-			
 			create viewport
 			vertical_box.extend (viewport)
 			vertical_box.extend (horizontal_scroll_bar)
 			vertical_box.disable_item_expand (horizontal_scroll_bar)
+			horizontal_scroll_bar.hide
 			create vertical_box
+			
+			
 			create header
+				-- Now connect events to `header' which are used to update the "physical size" of
+				-- Current in response to their re-sizing.
+			header.item_resize_actions.extend (agent header_item_resizing)
+			header.item_resize_end_actions.extend (agent header_item_resized)
+			
 			header.set_minimum_height (default_header_height)
 			vertical_box.extend (header)
 			vertical_box.disable_item_expand (header)
@@ -615,13 +621,139 @@ feature {NONE} -- Implementation
 			extend (horizontal_box)
 			viewport.resize_actions.extend (agent viewport_resized)
 			drawable.resize_actions.force_extend (agent drawer.partial_redraw)
+			update_scroll_bar_spacer
+		end
+		
+	header_item_resizing (header_item: EV_HEADER_ITEM) is
+			-- Respond to `header_item' being resized.
+		require
+			header_item_not_void: header_item /= Void
+		local
+			l_total_header_width: INTEGER
+			l_client_width: INTEGER
+		do
+				-- Retrieve the 
+			l_total_header_width := total_header_width
+			
+			l_client_width := viewport.width
+				-- Note that `width' was not used as we want it to represent only the width of
+				-- the "client area" which is `viewport'.
+			
+				
+			if l_total_header_width > l_client_width then
+					-- The headers are wider than the visible client area.
+				if not horizontal_scroll_bar.is_show_requested then
+						-- Show `horizontal_scroll_bar' if not already shown.
+					horizontal_scroll_bar.show
+					update_scroll_bar_spacer
+				end
+					-- Update the range and leap of `horizontal_scroll_bar' to reflect the relationship between
+					-- `l_total_header_width' and `l_client_width'.
+				horizontal_scroll_bar.value_range.adapt (create {INTEGER_INTERVAL}.make (1, l_total_header_width - l_client_width))
+				horizontal_scroll_bar.set_leap (width)
+			else
+					-- The headers are not as wide as the visible client area.
+				if horizontal_scroll_bar.is_show_requested then
+						-- Hide `horizontal_scroll_bar' as it is not required.
+					horizontal_scroll_bar.hide
+					update_scroll_bar_spacer
+				end
+			end
+			if viewport.x_offset > 0 and (l_total_header_width - viewport.x_offset < viewport.width) then
+					-- If `header' and `drawable' currently have a position that starts before the client area of
+					-- `viewport' and the total header width is small enough so that at the current position, `header' and
+					-- `drawable' do not reach to the very left-hand edge of the `viewport', update the horizontal offset
+					-- so that they do reach the very left-hand edge of `viewport'
+				horizontal_scroll_bar.change_actions.block
+				viewport.set_x_offset ((l_total_header_width - viewport.width).max (0))
+				horizontal_scroll_bar.change_actions.resume
+			end
+		end
+		
+	total_header_width: INTEGER is
+			-- `Result' is total width of all header items contained within `header'.
+		do
+			Result := header.item_x_offset (header.last) + header.last.width
+		ensure
+			result_non_negative: Result >= 0
+		end
+		
+	header_item_resized (header_item: EV_HEADER_ITEM) is
+			-- Resizing has completed on `header_item'.
+		require
+			header_item_not_void: header_item /= Void
+		local
+			l_total_header_width: INTEGER
+		do
+			l_total_header_width := total_header_width
+				-- Ensure that the total width of `header' and `drawable' are equal
+				-- to the width of all headers combined or the client area of `viewport'.
+			if l_total_header_width.max (viewport.width) > viewport.item.width then
+				viewport.set_item_width (l_total_header_width.max (viewport.width))
+			end
+		end
+		
+	recompute_horizontal_scroll_bar is
+			-- Recompute horizontal scroll bar positioning.
+		do
+			header_item_resizing (header.last)
+			header_item_resized (header.last)
+		end
+
+	horizontal_scroll_bar_changed (a_value: INTEGER) is
+			-- Respond to a change in value from `horizontal_scroll_bar'.
+		require
+			a_value_non_negative: a_value >= 0
+		do
+			viewport.set_x_offset (a_value)
+		ensure
+			viewport_offset_set: viewport.x_offset = a_value
+		end
+
+	update_scroll_bar_spacer is
+			-- Update `scroll_bar_spacer' so that it has the appropriate minimum dimensions
+			-- given the visible state of `horizontal_scroll_bar' and `vertical_scroll_bar
+			-- which results in the two scroll bars being positioned correctly in relation
+			-- to each other.
+		do
+			if horizontal_scroll_bar.is_show_requested and vertical_scroll_bar.is_show_requested then
+				scroll_bar_spacer.set_minimum_size (vertical_scroll_bar.width, horizontal_scroll_bar.height)
+			else
+				scroll_bar_spacer.set_minimum_size (0, 0)
+			end
 		end
 		
 	viewport_resized (an_x, a_y, a_width, a_height: INTEGER) is
-			--
+			-- Respond to resizing of `Viewport' to width and height `a_width', `a_height'.
+		require
+			a_width_non_negative: a_width >= 0
+			a_height_non_negative: a_height >= 0
+		local
+			l_total_header_width: INTEGER
 		do
-			viewport.set_item_size ((viewport.width).max (viewport.item.minimum_width), (viewport.height).max (viewport.item.minimum_height))
-		end
+			if viewport.item.width < viewport.width or viewport.item.height < viewport.height then
+					-- If the item contained in `viewport' is smaller than the viewport, enlarge it
+					-- to fill `viewport'.
+				viewport.set_item_size (viewport.width, viewport.height)
+			end	
+			if not header.is_empty then
+					-- If there is at least a single header item
+				l_total_header_width := total_header_width
+					-- If the width of the item contained in the viewport is greater
+				if viewport.item.width > l_total_header_width.max (viewport.width) or
+					l_total_header_width.max (viewport.width) > viewport.item.width then
+						
+					viewport.set_item_width (l_total_header_width.max (viewport.width))
+				end
+			end
+			if not header.is_empty then
+					-- Update horizontal scroll bar settings.
+				header_item_resizing (header.last)
+			end
+			if (viewport.item.width - viewport.x_offset) < viewport.width then
+				viewport.set_x_offset ((viewport.width - viewport.item.width).abs)
+			end
+		end		
 		
 	vertical_scroll_bar: EV_VERTICAL_SCROLL_BAR
 		-- Vertical scroll bar of `Current'.

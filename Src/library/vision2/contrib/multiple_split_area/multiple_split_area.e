@@ -866,7 +866,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 			
 			original_parent ?= a_tool.parent
 			remove_tool_from_parent (a_tool)
-			index_of_tool := all_holders.index_of (a_tool, 1)
+			index_of_tool := index_of_holder (a_tool)
 			a_tool.disable_minimized
 			
 			if all_split_areas.valid_index (split_area_index (index_of_tool)) then
@@ -880,7 +880,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				-- The first two cases handle when we have two widgets inside a single split area.
 			if all_holders.last = a_tool and then not top_widget_resizing then
 				parent_split_area.set_second (a_tool)
-			elseif all_holders.i_th (2) = a_tool and then top_widget_resizing then
+			elseif index_of_holder (a_tool) = 2 and then top_widget_resizing then
 				parent_split_area.set_second (a_tool)
 			elseif parent_split_area.first = Void then
 				parent_split_area.set_first (a_tool)
@@ -1072,7 +1072,7 @@ feature {MULTIPLE_SPLIT_AREA_TOOL_HOLDER} -- Implementation
 				all_holders.forth
 			end
 		ensure
-			index_valid: Result >= 1 and Result <= count
+			index_valid: Result >= 1 and Result <= linear_representation.count + external_representation.count
 		end
 		
 		

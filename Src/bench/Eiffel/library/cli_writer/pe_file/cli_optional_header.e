@@ -18,6 +18,8 @@ inherit
 		export
 			{NONE} all
 			{ANY} file_alignment
+		undefine
+			copy, is_equal
 		end
 
 create

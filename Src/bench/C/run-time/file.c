@@ -12,6 +12,11 @@
 */
 
 #include "config.h"
+#ifdef I_STRING
+#include <string.h>
+#else
+#include <strings.h>
+#endif
 
 /* #include <stdio.h>	*/	/* %%zs here, moved <stdio.h> into file.h */
 #include <errno.h>
@@ -96,9 +101,9 @@ rt_public char *file_open_mode(int how, char mode);		/* Open file */
 rt_private char *file_fopen(char *name, char *type);		/* Open file */
 rt_private char *file_fdopen(int fd, char *type);	/* Open file descriptor (UNIX specific) */
 rt_private char *file_freopen(char *name, char *type, FILE *stream);	/* Reopen file */
-rt_private char *file_binary_fopen();		/* Open file */ /* %%zs undefined */
-rt_private char *file_binary_fdopen();	/* Open file descriptor (UNIX specific) */ /* %%zs undefined */
-rt_private char *file_binary_freopen();	/* Reopen file */ /* %%zs undefined */
+/*rt_private char *file_binary_fopen();*/		/* Open file */ /* %%zs undefined */
+/*rt_private char *file_binary_fdopen();*/	/* Open file descriptor (UNIX specific) */ /* %%zs undefined */
+/*rt_private char *file_binary_freopen();*/	/* Reopen file */ /* %%zs undefined */
 rt_private void swallow_nl(FILE *f);		/* Swallow next character if new line */
 
 #ifndef HAS_UTIME
@@ -929,6 +934,8 @@ rt_public EIF_INTEGER file_info (struct stat *buf, int op)
 	default:
 		panic(MTC "illegal stat request");
     }
+	/* NOTREACHED */
+	return 0; /* to avoid a warning */
 }
 
 rt_public EIF_BOOLEAN file_eaccess(struct stat *buf, int op)
@@ -939,9 +946,10 @@ rt_public EIF_BOOLEAN file_eaccess(struct stat *buf, int op)
 	 */
 
 	int mode = buf->st_mode & ST_MODE;	/* Current mode */
+#if defined HAS_GETEUID || defined HAS_GETUID
 	int uid = buf->st_uid;				/* File owner */
 	int gid = buf->st_gid;				/* File group */
-
+#endif
 #ifdef HAS_GETEUID
 	int euid, egid;						/* Effective user and group */
 #endif
@@ -1040,6 +1048,8 @@ rt_public EIF_BOOLEAN file_eaccess(struct stat *buf, int op)
 	default:
 		panic(MTC "illegal access request");
 	}
+	/* NOTREACHED */
+	return 0;
 }
 
 rt_public EIF_BOOLEAN file_access(char *name, EIF_INTEGER op)

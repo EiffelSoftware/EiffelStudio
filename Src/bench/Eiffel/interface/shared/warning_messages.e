@@ -1020,7 +1020,17 @@ feature -- Warning messages
 				"Unable to execute the wizard.%N%
 				%Check that `"+wizard_file+"' exists and is executable.%N"	
 		end
-		
+	
+	w_short_internal_error (a_code: STRING): STRING is
+			-- Short internal error using `a_code'.
+		require
+			a_code_not_void: a_code /= Void
+		do
+			Result := "Internal error ("
+			Result.append (a_code)
+			Result.append ("): Submit bug at http://support.eiffel.com")
+		end
+
 	w_Internal_error: STRING is
 		"An internal error occurred.%N%N%
 		%1 - Check that you have enough space to compile.%N%

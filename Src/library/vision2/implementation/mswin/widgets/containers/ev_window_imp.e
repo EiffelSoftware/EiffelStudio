@@ -1,6 +1,6 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision untitled window, mswindows implementation."
+	description: "Eiffel Vision window. Mswindows implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -101,7 +101,8 @@ inherit
 			wel_move_and_resize,
 			on_menu_command,
 			on_wm_close,
-			show
+			show,
+			on_accelerator_command
 		end
 
 	WEL_MA_CONSTANTS
@@ -137,7 +138,7 @@ feature {NONE} -- Initialization
 			app_imp.add_root_window (interface)
 			destroy_agent := interface~destroy
 			interface.close_actions.extend (destroy_agent)
-		--| FIXME	create accel_list.make (10)
+			create accel_list.make (10)
 			is_initialized := True
 		end
 
@@ -369,25 +370,32 @@ feature -- Element change
 			-- Set `is_modal' to `True'.
 		do
 			is_modal := True
-		--	if is_show_requested and then not has_capture then
-		--		set_capture_type (Capture_normal)
-		--		enable_capture
-		--	end
+
+			--| FIXME VB: This is not working AT ALL.
+			--| We might need to recreate the window as modal.
+			--| I tried creating a WEL_MODAL_DIALOG, but did not succeed
+			--| in putting in it.
+
+			--|if is_show_requested and then not has_capture then
+			--|	set_capture_type (Capture_normal)
+			--|	enable_capture
+			--|end
 		end
 
 	disable_modal is
 			-- Set `is_modal' to `False'.
 		do
 			is_modal := False
-		--	if has_capture then
-		--		disable_capture
-		--		set_capture_type (Capture_heavy)
-		--	end
+			--|if has_capture then
+			--|	disable_capture
+			--|	set_capture_type (Capture_heavy)
+			--|end
 		end
 
 	set_blocking_window (a_window: EV_WINDOW) is
 			-- Set as transient for `a_window'.
 		do
+			--| FIXME Needs reviewing like en/dis-able_modal.
 			blocking_window := a_window
 		end
 
@@ -398,7 +406,6 @@ feature -- Resizing
 --| % resize it to the minimum_size. The bit used are the following:%
 --| % bit 7 -> The user has set the width of the window while it was hidden%
 --| % bit 8 -> The user has set the height of the window shile it was hidden."
-
 
 	set_size (w, h: INTEGER) is
 			-- Resize the widget when it is not managed.
@@ -476,6 +483,85 @@ feature -- Assertion features
 		do
 			Result := (width = new_width or else width = minimum_width.max (window_minimum_width) or else width = maximum_width) and then
 				  (height = new_height or else height = minimum_height.max (window_minimum_height)or else height = maximum_height)
+		end
+
+feature {EV_TITLED_WINDOW, EV_APPLICATION_IMP} -- Accelerators
+
+	on_accelerator_command (an_accel_id: INTEGER) is
+			-- Accelerator width `an_accel_id' has just been pressed.
+		do
+			check
+				accel_list_has_an_accel_id: accel_list.has (an_accel_id)
+			end
+			accel_list.item (an_accel_id).actions.call ([])
+		end
+
+	accel_list: HASH_TABLE [EV_ACCELERATOR, INTEGER]
+			-- List of accelerators connected to this window indexed by
+			-- their `id'.
+
+	accelerators: WEL_ACCELERATORS
+			-- List of accelerators connected to this window.
+
+	wel_acc_size: INTEGER is
+			-- Used to initialize WEL_ARRAY.
+		local
+			wel_acc: WEL_ACCELERATOR
+		once
+			wel_acc ?= (create {EV_ACCELERATOR}).implementation
+			Result := wel_acc.structure_size
+		end
+
+	create_accelerators is
+			-- Recreate the accelerators.
+		local
+			wel_array: WEL_ARRAY [WEL_ACCELERATOR]
+			acc: WEL_ACCELERATOR
+			n: INTEGER
+		do
+			if accel_list.empty then
+				accelerators := Void
+			else
+	 			from
+	 				accel_list.start
+		 			create wel_array.make (accel_list.count, wel_acc_size)
+					n := 0
+				until
+					accel_list.after
+				loop
+					acc ?= accel_list.item_for_iteration.implementation
+					wel_array.put (acc, n)
+					accel_list.forth
+					n := n + 1
+	 			end
+	 			create accelerators.make_with_array (wel_array)
+			end
+		end
+
+	connect_accelerator (an_accel: EV_ACCELERATOR) is
+			-- Connect key combination `an_accel' to this window.
+		local
+			acc_imp: EV_ACCELERATOR_IMP
+		do
+			acc_imp ?= an_accel.implementation
+			check
+				acc_imp_not_void: acc_imp /= Void
+			end
+			accel_list.put (an_accel, acc_imp.id)
+			create_accelerators
+		end
+
+	disconnect_accelerator (an_accel: EV_ACCELERATOR) is
+			-- Disconnect key combination `an_accel' from this window.
+		local
+			acc_imp: EV_ACCELERATOR_IMP
+		do
+			acc_imp ?= an_accel.implementation
+			check
+				acc_imp_not_void: acc_imp /= Void
+			end
+			accel_list.remove (acc_imp.id)
+			create_accelerators
 		end
 
 feature {NONE} -- Implementation
@@ -912,6 +998,10 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2000/04/20 16:30:20  brendel
+--| Moved accelerator code into here.
+--| enable_modal and disable_modal still not implemented. See code.
+--|
 --| Revision 1.37  2000/04/19 00:43:05  brendel
 --| Revised.
 --|

@@ -15,49 +15,7 @@ inherit
 
 	EV_GAUGE_IMP
 		redefine
-			interface,
-			maximum,
-			set_maximum,
-			set_range,
-			reset_with_range
-		end
-
-feature -- Access
-
-	maximum: INTEGER is
-			-- Highest value of the scroll bar.
-		do
-			Result := Precursor - leap
-		end
-
-	set_maximum (a_maximum: INTEGER) is
-			-- Set `maximum' to `a_maximum'.
-			--| We cannot call precursor because it has wrong postconditions.
-		do
-			if maximum /= a_maximum then
-				C.set_gtk_adjustment_struct_upper (adjustment, a_maximum + leap)
-				C.gtk_adjustment_changed (adjustment)
-			end
-		end
-
-	set_range (a_range: INTEGER_INTERVAL) is
-			-- Set `range' to `a_range'.
-		do
-			if minimum /= a_range.lower or else maximum /= a_range.upper then
-				C.set_gtk_adjustment_struct_lower (adjustment, a_range.lower)
-				C.set_gtk_adjustment_struct_upper (adjustment, a_range.upper + leap)
-				C.gtk_adjustment_changed (adjustment)
-			end
-		end
-
-	reset_with_range (a_range: INTEGER_INTERVAL) is
-			-- Set `range' to `a_range'.
-			-- Set `value' to `a_range.lower'.
-		do
-			C.set_gtk_adjustment_struct_lower (adjustment, a_range.lower)
-			C.set_gtk_adjustment_struct_upper (adjustment, a_range.upper + leap)
-			C.gtk_adjustment_set_value (adjustment, a_range.lower)
-			C.gtk_adjustment_value_changed (adjustment)
+			interface
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -87,6 +45,10 @@ end -- class EV_RANGE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/02/16 04:03:36  brendel
+--| Removed redefinition of features that changed maximum.
+--| Since page_size is now 0, there is need for that anymore.
+--|
 --| Revision 1.7  2000/02/14 22:53:27  brendel
 --| Corrected small errors occured while copying & pasting.
 --|

@@ -231,8 +231,8 @@ feature -- Element change
 			if a.radians  /= 0.0 then
 				xr := x - px
 				yr := y - py
-				cosinus := cos (a)
-				sinus := sin (a)
+				cosinus := a.cosine
+				sinus := a.sine
 				x := px + ((xr * cosinus) + (yr * sinus)).truncated_to_integer
 				y := py + ((yr * cosinus) - (xr * sinus)).truncated_to_integer
 				set_modified

@@ -30,8 +30,8 @@ feature {EV_FONTABLE_IMP} -- Initialization
 	make is
 			-- Create a font
 		do
-			!WEL_SYSTEM_FONT! wel_font.make
-			!! wel_log_font.make_by_font (wel_font)
+			create {WEL_SYSTEM_FONT} wel_font.make
+			create wel_log_font.make_by_font (wel_font)
 		end
 
 	make_by_name (str: STRING) is
@@ -63,7 +63,7 @@ feature {EV_FONTABLE_IMP} -- Initialization
 			a_wel_font_exists: a_wel_font /= Void
 		do
 			wel_font := a_wel_font
-			!! wel_log_font.make_by_font (wel_font)
+			create wel_log_font.make_by_font (wel_font)
 		end
 
 feature -- Access
@@ -74,7 +74,7 @@ feature -- Access
 			size_in_point: INTEGER
 			screen_dc: WEL_SCREEN_DC
 		do
-			!! Result.make (60)
+			create Result.make (60)
 				-- face name
 			Result.append (wel_log_font.face_name)
 			Result.extend (',')
@@ -216,7 +216,7 @@ feature -- Measurement
 			number_of_lines: INTEGER
 		do
 			if not str.empty then
-				!! screen_dc
+				create screen_dc
 				screen_dc.get
 				screen_dc.select_font (wel_font)
 				number_of_lines := str.occurrences ('%N') + 1
@@ -297,7 +297,7 @@ feature -- Element change
 			parsed: ARRAY [STRING]
 		do
 			from
-				!! parsed.make (1, 13)
+				create parsed.make (1, 13)
 				number :=1
 			until
 				number > 13
@@ -362,14 +362,14 @@ feature -- Element change
 					-- specified size `a_height' and from the screen resolution:
 					-- (height in point * Number of pixels per logical inch
 					-- along the display height) / 72 pixels per inch
-				create screen_dc
-				screen_dc.get
-				real_size :=   mul_div (value,
-								get_device_caps (screen_dc.item, logical_pixels_y), 72)
-				screen_dc.release
+			--	create screen_dc
+			--	screen_dc.get
+			--	real_size :=   mul_div (value,
+			--					get_device_caps (screen_dc.item, logical_pixels_y), 72)
+			--	screen_dc.release
 
 					-- Set the computed font height.
-				wel_log_font.set_height (real_size)
+				wel_log_font.set_height (value)
 			else
 					-- Set the default height to the current font.
 				wel_log_font.set_height (0)
@@ -397,10 +397,10 @@ feature {NONE} -- Implementation
 		local
 			sdc: WEL_SCREEN_DC
 		do
-			!! sdc
+			create sdc
 			sdc.get
 			sdc.select_font (wel_font)
-			!! Result.make (sdc)
+			create Result.make (sdc)
 			sdc.unselect_font
 			sdc.release
 		ensure
@@ -487,7 +487,7 @@ feature {NONE} -- Bizarre
 	allocate is
 			-- Allocate the WEL_FONT
 		do
-			!! wel_font.make_indirect (wel_log_font)
+			create wel_font.make_indirect (wel_log_font)
 			allocated := True
 		end
 

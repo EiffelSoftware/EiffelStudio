@@ -4,6 +4,10 @@ iff isdir %EIFFEL_SRC then
 endiff
 safe_md %EIFFEL_SRC
 safe_md %EIFFEL_SRC\library
+
+cdd %EIFFEL_SRC
+exprt -r %DEFAULT_CVS_TAG -d C_library "Src/C_library"
+
 cdd %EIFFEL_SRC\library
 remtrace base
 exprt -r %DEFAULT_CVS_TAG -d base "Src/library/base"

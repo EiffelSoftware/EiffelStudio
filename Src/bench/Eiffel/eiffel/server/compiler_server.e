@@ -28,18 +28,6 @@ inherit
 		redefine
 			copy, is_equal
 		end;
-	EXTEND_TABLE [SERVER_INFO, INTEGER]
-		rename
-			make as tbl_make,
-			position as tbl_position,
-			item as tbl_item,
-			put as tbl_put,
-			remove as tbl_remove,
-			change_key as tbl_change_key,
-			has as tbl_has
-		redefine
-			is_equal, copy
-		end
 
 feature
 

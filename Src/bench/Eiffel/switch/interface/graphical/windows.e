@@ -15,21 +15,40 @@ feature {NONE}
 			!!Result.make
 		end;
 
-    transporter: TRANSPORTER is
+	transporter: TRANSPORTER is
 		once
 			!! Result.make (project_tool)
 		end;
 
 	system_tool: SYSTEM_W is
 			-- Unique assembly tool
+		local
+			ts: EB_TOP_SHELL
 		once
-			!!Result.make (project_tool.screen)
+			!! ts.make ("", project_tool.screen);
+			!! Result.make_shell (ts);
+			ts.set_title (Result.tool_name)
 		end;
 
-	name_chooser: NAME_CHOOSER_W is
+	name_chooser (window: WIDGET): NAME_CHOOSER_W is
 			-- File selection window
-		once
-			!!Result.make (project_tool)
+		require
+			window_not_void: window /= Void
+		do
+			!! Result.make (window.top);
+			if last_name_chooser /= Void then
+				last_name_chooser.popdown;
+				last_name_chooser.destroy
+			end;
+			last_name_chooser_cell.put (Result)
+		ensure
+			last_name_chooser_set: equal (last_name_chooser, Result)
+		end;
+
+	last_name_chooser: NAME_CHOOSER_W is
+			-- Last name chooser created
+		do
+			Result := last_name_chooser_cell.item
 		end;
 
 	warner (window: WIDGET): WARNER_W is
@@ -41,7 +60,7 @@ feature {NONE}
 			old_warner: WARNER_W
 		do
 			new_parent := window.top;
-			!!Result.make (new_parent);
+			!! Result.make (new_parent);
 			Result.set_window (new_parent);
 			old_warner := last_warner;
 			if old_warner /= Void then
@@ -65,8 +84,14 @@ feature {NONE}
 			new_parent: COMPOSITE;
 			old_confirmer: CONFIRMER_W
 		do
-			new_parent ?= window.tool;
-			!!Result.make (new_parent);
+			new_parent ?= window.tool.eb_shell;
+			if new_parent = Void then
+					--| Apparently `window' is created as part
+					--| of `project_tool', and thus `project_tool'
+					--| should be the parent.
+				new_parent ?= project_tool
+			end;
+			!! Result.make (new_parent);
 			Result.set_window (window);
 			old_confirmer := last_confirmer;
 			if old_confirmer /= Void then
@@ -100,14 +125,25 @@ feature {NONE}
 
 	explain_window: EXPLAIN_W is
 			-- Explanation window
+		local
+			ts: EB_TOP_SHELL
 		once
-			!!Result.make (project_tool.screen)
+			ts.make ("", project_tool.screen);
+			!! Result.make (ts);
+			ts.set_title (Result.tool_name);
+			ts.raise
 		end;
 
 	window_manager: WINDOW_MGR is
 			-- Window manager for ebench windows
 		once
-			!!Result.make (project_tool.screen, 2);
+			!! Result.make (project_tool.screen, 2);
+		end;
+
+	argument_window: ARGUMENT_W is
+			-- General argument window.
+		once
+			!! Result.make_plain
 		end;
 
 feature -- Compilation Mode
@@ -134,6 +170,12 @@ feature {NONE} -- Implementation
 
 	last_confirmer_cell: CELL [CONFIRMER_W] is
 			-- Cell containing the last confirmer window created
+		once
+			!! Result.put (Void)
+		end;
+
+	last_name_chooser_cell: CELL [NAME_CHOOSER_W] is
+			-- Cell containing the last name chooser window created
 		once
 			!! Result.put (Void)
 		end;

@@ -30,7 +30,7 @@ feature -- Output
 			input_pipe.put_string (s)
 		end
 
-	new_line is 
+	new_line, put_new_line is 
 		do 
 			input_pipe.put_string ("%N")
 		end

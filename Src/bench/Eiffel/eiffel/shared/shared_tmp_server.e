@@ -102,11 +102,6 @@ feature {NONE}
 			!!Result.make;
 		end;
 
-	Tmp_rep_depend_server: TMP_REP_DEPEND_SERVER is
-		once
-			!!Result.make;
-		end;
-
 	Tmp_class_comments_server: TMP_CLASS_COMMENTS_SERVER is
 		once
 			!!Result.make;

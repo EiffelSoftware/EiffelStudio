@@ -74,12 +74,6 @@ feature {NONE}
 			Result := System.m_desc_server
 		end
  
-	Rep_depend_server: REP_DEPEND_SERVER is
-			-- Dependency server for replicated features 
-		once
-			Result := System.Rep_depend_server
-		end
-
 	Class_comments_server: CLASS_COMMENTS_SERVER is
 		once
 			Result := System.Class_comments_server

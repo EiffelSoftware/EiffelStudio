@@ -50,7 +50,7 @@ feature
 	il_type_name (a_prefix: STRING): STRING is
 			-- Name of current class type.
 		once
-			Result := "ANY"
+			Result := (create {CL_TYPE_I}.make (system.any_id)).il_type_name (Void)
 		end
 
 	same_as (other: TYPE_I): BOOLEAN is

@@ -423,10 +423,11 @@ feature {NONE} -- Opcode insertion helpers
 				i > 8
 			loop
 				internal_put ((l_val & 0x00000000000000FF).to_integer_8, l_pos)
+				l_pos := l_pos + 1
 				l_val := l_val |>> 8
 				i := i + 1
 			end
-			current_position := l_pos + 8
+			current_position := l_pos
 		end
 	
 	add_real (val: REAL) is

@@ -117,7 +117,7 @@ feature -- Removal
 			last_error: INTEGER
 		do
 			if item /= p then
-				debug ("GDI_COUNT")
+				debug ("WEL_GDI_COUNT")
 					decrease_gdi_objects_count
 				end
 				delete_result := destroy_resource

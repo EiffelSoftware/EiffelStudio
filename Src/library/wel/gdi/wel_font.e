@@ -84,7 +84,7 @@ feature -- Re-initialisation
 			a_default_pointer: POINTER
 		do
 				-- we delete the current C item
-			debug ("GDI_COUNT")
+			debug ("WEL_GDI_COUNT")
 				decrease_gdi_objects_count
 			end
 			object_destroyed := cwin_delete_object (item)
@@ -99,7 +99,7 @@ feature -- Re-initialisation
 
 				-- Then we retrieve an new C item.
 			item := cwin_create_font_indirect (a_log_font.item)
-			debug ("GDI_COUNT")
+			debug ("WEL_GDI_COUNT")
 				increase_gdi_objects_count
 			end
 		end

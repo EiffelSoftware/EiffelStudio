@@ -31,7 +31,6 @@ feature {NONE} -- Initialization
 		do
 			make_form (a_shell.associated_form);
 			eb_shell := a_shell;
-			set_default_size;
 			a_shell.set_action ("<Configure>", Current, remapped);
 			a_shell.set_action ("<Visible>", Current, remapped);
 			if hole.icon_symbol.is_valid then
@@ -68,10 +67,6 @@ feature -- Standard Interface
 		local
 			sep: SEPARATOR
 		do
-			if is_a_shell then
-				set_default_size
-			end;
-
 			create_toolbar_parent (global_form);
 			
 			build_text_windows;

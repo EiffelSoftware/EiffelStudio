@@ -177,9 +177,13 @@ feature -- Access
 			l_filename: FILE_NAME
 		do
 			if relative_from_root then
-						-- Prepend `root_directory' to `url' to get absolute file name
-				create l_filename.make_from_string (root_directory)
-				l_filename.extend (url.substring (2, url.count))
+						-- Prepend `root_directory' to `url' to get absolute file name				
+				if (create {PLATFORM}).is_windows then		
+					create l_filename.make_from_string (root_directory)								
+					l_filename.extend (url.substring (2, url.count))	
+				else
+					create l_filename.make_from_string (url)
+				end
    				Result := l_filename.string			  				
 			elseif relative_from_document then
 						-- Determine number of directory parents specified in relative url
@@ -377,8 +381,8 @@ feature {DOCUMENT_LINK} -- Query
 		local			
 			l_first_char: CHARACTER
 		do
-			l_first_char := url.item (1)
-			Result := l_first_char = '\' or l_first_char = '/'
+			l_first_char := url.item (1)				
+			Result := l_first_char = '\' or l_first_char = '/'				
 		end		
 		
 feature {NONE} -- Implmentation

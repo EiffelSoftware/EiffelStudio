@@ -52,7 +52,7 @@ feature -- Query
 		do
 			Result := attributes
 			if
-				Result /= Void
+				Result /= Void and then (not is_special and not is_tuple)
 			then
 				sort_debug_values (Result)
 			end

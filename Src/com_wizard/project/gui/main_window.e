@@ -82,13 +82,6 @@ inherit
 			{NONE} all
 		end
 
-	MEMORY
-		export
-			{NONE} all
-		undefine
-			dispose
-		end
-
 create
 	make
 

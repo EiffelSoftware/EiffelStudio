@@ -434,6 +434,7 @@ feature {NONE} -- Added features for ENUM types.
 				False,	-- is_prefix
 				True,	-- is_public
 				enum_type)
+			Result.set_is_artificially_added (True)				
 		end
 
 	from_integer_feature (enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
@@ -454,6 +455,7 @@ feature {NONE} -- Added features for ENUM types.
 				False,	-- is_prefix
 				True,	-- is_public
 				enum_type)
+			Result.set_is_artificially_added (True)
 		end
 
 	to_integer_feature (enum_type: CONSUMED_REFERENCED_TYPE): CONSUMED_FUNCTION is
@@ -472,6 +474,7 @@ feature {NONE} -- Added features for ENUM types.
 				False,	-- is_prefix
 				True,	-- is_public
 				enum_type)
+			Result.set_is_artificially_added (True)				
 		end
 				
 	integer_type: CONSUMED_REFERENCED_TYPE is

@@ -121,7 +121,7 @@ feature -- Creation
 			editing_button_form.attach_top (add_ancestor_hole, 3)
 			editing_button_form.attach_top (new_command_button, 3)
 			editing_button_form.attach_top (undoable_toggle_b, 3)
-			editing_button_form.attach_top (new_label_label, 3)
+			editing_button_form.attach_top (new_label_label, 6)
 			editing_button_form.attach_top (new_label_text, 3)
 			editing_button_form.attach_left (add_argument_hole, 0)
 			editing_button_form.attach_left_widget (add_argument_hole, add_ancestor_hole, 0)
@@ -440,14 +440,23 @@ feature {NONE}
 
 	save_previous_command is
 			-- Save values of currently
+			-- edited command and reset the editor.
+		do
+			save_command
+			if current_command /= Void then
+				current_command.reset
+			end
+		end
+
+feature {COMMAND_TOOL}
+
+	save_command is
+			-- Save values of currently
 			-- edited command.
 		do
 			if edited_command /= Void then
 				edited_command.save
 				edited_command.save_to_disk
-			end
-			if current_command /= Void then
-				current_command.reset
 			end
 		end
 
@@ -672,6 +681,14 @@ feature
 				Result.extend (an_arg)
 				arg_box.forth
 			end
+		end
+
+feature 
+
+	hide_yourself is
+			-- Hide current command editor
+		do
+			command_tool.hide_command_editor
 		end
 
 end -- class COMMAND_EDITOR

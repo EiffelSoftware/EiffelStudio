@@ -713,7 +713,8 @@ feature -- Conveniences
 						extension ?= att.extension
 					end
 				end
-				Result := extension /= Void and then not extension.need_current (extension.type)
+				Result := (extension /= Void and then not extension.need_current (extension.type)) or
+					(is_constant and then not is_once)
 			else
 				Result := is_external or (is_constant and then not is_once)
 			end			

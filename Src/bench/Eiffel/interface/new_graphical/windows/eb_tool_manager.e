@@ -69,20 +69,23 @@ feature -- Tool management
 feature -- Resize
 
 	set_tool_size (t: EB_TOOL; new_width, new_height: INTEGER) is
+			-- sets the size of the tool, if possible.
+			-- this procedure does not require that `t' is not
+			-- destroyed, because only the manager is affected.
 		require
-			t_valid: t /= void and not t.destroyed
+			t_non_void: t /= void
 		deferred
 		end
 
 	set_tool_width (t: EB_TOOL; new_width: INTEGER) is
 		require
-			t_valid: t /= void and not t.destroyed
+			t_non_void: t /= void
 		deferred
 		end
 
 	set_tool_height (t: EB_TOOL; new_height: INTEGER) is
 		require
-			t_valid: t /= void and not t.destroyed
+			t_non_void: t /= void
 		deferred
 		end
 
@@ -90,13 +93,13 @@ feature -- Tool status report
 
 	tool_title (t: EB_TOOL) : STRING is
 		require
-			t_valid: t /= void and not t.destroyed
+			t_non_void: t /= void
 		deferred
 		end
 
 	tool_icon_name (t: EB_TOOL) : STRING is
 		require
-			t_valid: t /= void and not t.destroyed
+			t_non_void: t /= void
 		deferred
 		end
 
@@ -104,13 +107,13 @@ feature -- Tool status setting
 
 	set_tool_title (t: EB_TOOL; s: STRING) is
 		require
-			t_valid: t /= void and not t.destroyed
+			t_non_void: t /= void
 		deferred
 		end
 
 	set_tool_icon_name (t: EB_TOOL; s: STRING) is
 		require
-			t_valid: t /= void and not t.destroyed
+			t_non_void: t /= void
 		deferred
 		end
 

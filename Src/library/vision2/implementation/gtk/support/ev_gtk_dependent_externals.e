@@ -95,6 +95,13 @@ feature -- Externals
 			Result := gtk_editable_struct_editable (a_c_struct) /= 0
 		end
 
+	gtk_widget_set_default_visual (a_visual: POINTER) is
+			-- void	     gtk_widget_set_default_visual   (GdkVisual	  *visual);
+			-- (from C_GTK_WIDGET)
+		external
+			"C (GdkVisual*) | <gtk/gtk.h>"
+		end
+
 	object_destroy (a_c_object: POINTER) is
 			-- Only for use in dispose.
 			-- (Dispose cannot call C.gtk_object_destroy)

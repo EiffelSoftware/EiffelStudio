@@ -20,7 +20,7 @@ inherit
 
 	EV_UNTITLED_DIALOG_IMP_COMMON
 		undefine
-			setup_dialog
+			setup_dialog, show
 		redefine
 			interface,
 			other_imp

@@ -15,9 +15,6 @@ inherit
 		end
 		
 	GB_ACCESSIBLE_OBJECT_EDITOR
-		undefine
-			default_create
-		end
 		
 	INTERNAL
 		undefine

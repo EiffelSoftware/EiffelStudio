@@ -39,6 +39,12 @@ feature -- Access
 
 feature -- Status report
 
+	ensure_item_visible (tree_item: EV_TREE_ITEM) is
+			-- Ensure `an_item' is visible in `Current'.
+			-- Tree nodes may be expanded to achieve this.
+		deferred
+		end
+
 	selected: BOOLEAN is
 			-- Is at least one tree item selected?
 		require
@@ -100,6 +106,9 @@ end -- class EV_TREE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.26  2001/06/25 17:02:22  rogers
+--| Added `ensure_item_visible.
+--|
 --| Revision 1.25  2001/06/07 23:08:10  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

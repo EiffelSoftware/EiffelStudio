@@ -97,10 +97,14 @@ feature
 				visual_name := Void;
 				text_modified := False;
 				size_modified := True;
+				widget.unmanage;
 				widget_set_text (label);
+				widget.manage;
 				update_tree_element
 			else
-				set_text (s)
+				widget.unmanage;
+				set_text (s);
+				widget.manage;
 			end;
 		end;
 

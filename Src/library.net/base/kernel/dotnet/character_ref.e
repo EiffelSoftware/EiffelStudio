@@ -166,20 +166,20 @@ feature -- Status report
 	is_lower: BOOLEAN is
 			-- Is `item' lowercase?
 		do
-			Result := feature {CHARACTER}.is_lower_char (item)
+			Result := feature {CHARACTER}.static_is_lower (item)
 		end
 
 	is_upper: BOOLEAN is
 			-- Is `item' uppercase?
 		do
-			Result := feature {CHARACTER}.is_upper_char (item)
+			Result := feature {CHARACTER}.static_is_upper (item)
 		end
 
 	is_digit: BOOLEAN is
 			-- Is `item' a digit?
 			-- A digit is one of 0123456789
 		do
-			Result := feature {CHARACTER}.is_digit_char (item)
+			Result := feature {CHARACTER}.static_is_digit (item)
 		end
 
 	is_alpha: BOOLEAN is

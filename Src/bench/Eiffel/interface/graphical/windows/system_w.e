@@ -23,7 +23,8 @@ inherit
 			update_boolean_resource,
 			update_integer_resource,
 			update_array_resource,
-			set_default_size
+			set_default_size,
+			resources, close
 		end;
 	EB_CONSTANTS;
 
@@ -34,7 +35,7 @@ feature -- Initialization
 
 	make is
 		do
-			System_tool_resources.add_user (Current)
+			System_resources.add_user (Current)
 		end;
 
 feature -- Dispatch Resource
@@ -50,9 +51,9 @@ feature -- Dispatch Resource
 			-- Update `old_res' with the value of `new_res',
 			-- if the value of `new_res' is applicable.
 		local
-			sr: like System_tool_resources
+			sr: like System_resources
 		do
-			sr := System_tool_resources
+			sr := System_resources
 			if old_res = sr.command_bar then
 				if new_res.actual_value then
 					edit_bar.add
@@ -95,6 +96,12 @@ feature -- Properties
 	read_only_text_window: TEXT_WINDOW
 			-- Text window that only reads text
 
+	resources: like System_resources is 
+			-- System category page in preference tool
+		do
+			Result := system_resources
+		end
+		
 feature -- Access
 
 	compatible (a_stone: STONE): BOOLEAN is
@@ -108,7 +115,7 @@ feature -- Access
 	has_editable_text: BOOLEAN is
 			-- Does Current tool have an editable text window?
 		do
-			Result := True
+			Result := last_format = showtext_frmt_holder
 		end;
 
 	changed: BOOLEAN is
@@ -153,11 +160,19 @@ feature -- Status setting
 	set_default_size is
 			-- Set the size of Current to its default.
 		do
-			eb_shell.set_size (System_tool_resources.tool_width.actual_value,
-				System_tool_resources.tool_height.actual_value)
+			eb_shell.set_size (System_resources.tool_width.actual_value,
+				System_resources.tool_height.actual_value)
 		end;
 
 feature -- Update
+
+	close is
+			-- Close the system tool.
+		do
+			if realized and then shown then
+				hide
+			end
+		end
 
 	process_system (s: SYSTEM_STONE) is
 			-- Process system stone.
@@ -256,8 +271,6 @@ feature -- Graphical Interface
 				make_shell (ts);
 				ts.set_title (tool_name);
 				mp.restore
-			end;
-			if not realized then
 				set_default_format;
 				set_default_position;
 				eb_shell.display;
@@ -274,6 +287,7 @@ feature -- Graphical Interface
 
 	hide is
 		do
+			stone := Void;
 			if realized then
 				eb_shell.hide;
 				set_in_use (false)
@@ -335,20 +349,20 @@ feature {NONE} -- Implementation; Graphical Interface
 
 			build_text_windows;
 			build_menus;
-			!! edit_bar.make (Interface_names.t_Empty, toolbar_parent);
+			!! edit_bar.make (Interface_names.n_Command_bar_name, toolbar_parent);
 			!! sep.make (Interface_names.t_Empty, toolbar_parent);
 			build_bar;
-			!! format_bar.make (Interface_names.t_Empty, toolbar_parent);
+			!! format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent);
 			build_format_bar;
 			build_command_menu;
 			fill_menus;
 			set_last_format (default_format);
 			build_toolbar_menu;
 
-			if System_tool_resources.command_bar.actual_value = False then
+			if System_resources.command_bar.actual_value = False then
 				edit_bar.remove
 			end;
-			if System_tool_resources.format_bar.actual_value = False then
+			if System_resources.format_bar.actual_value = False then
 				format_bar.remove
 			end;
 
@@ -373,6 +387,9 @@ feature {NONE} -- Implementation; Graphical Interface
 			showclass_cmd: SHOW_CLASS_LIST;
 			showclass_button: FORMAT_BUTTON;
 			showclass_menu_entry: EB_TICKABLE_MENU_ENTRY;
+			-- 3.5 showheir_cmd: SHOW_CLUSTER_HIERARCHY;
+			-- showheir_button: FORMAT_BUTTON;
+			-- showheir_menu_entry: EB_TICKABLE_MENU_ENTRY;
 			showindex_cmd: SHOW_INDEXING;
 			showindex_button: FORMAT_BUTTON
 			showindex_menu_entry: EB_TICKABLE_MENU_ENTRY;
@@ -391,6 +408,10 @@ feature {NONE} -- Implementation; Graphical Interface
 			!! showclass_button.make (showclass_cmd, format_bar);
 			!! showclass_menu_entry.make (showclass_cmd, format_menu);
 			!! showclasses_frmt_holder.make (showclass_cmd, showclass_button, showclass_menu_entry);
+			-- 3.5 !! showheir_cmd.make (Current);
+			-- !! showheir_button.make (showheir_cmd, format_bar);
+			-- !! showheir_menu_entry.make (showheir_cmd, format_menu);
+			-- !! showheir_frmt_holder.make (showheir_cmd, showheir_button, showheir_menu_entry);
 			!! stat_cmd.make (Current);
 			!! stat_button.make (stat_cmd, format_bar);
 			!! stat_menu_entry.make (stat_cmd, format_menu);
@@ -407,6 +428,8 @@ feature {NONE} -- Implementation; Graphical Interface
 				-- Now we attach everything (this is done here for reason of speed).
 			format_bar.attach_top (showtext_button, 0);
 			format_bar.attach_left (showtext_button, 0);
+			-- format_bar.attach_top (showheir_button, 0);
+			-- format_bar.attach_left_widget (showtext_button, showheir_button, 0);
 			format_bar.attach_top (list_button, 0);
 			format_bar.attach_left_widget (showtext_button, list_button, 0);
 			format_bar.attach_top (showclass_button, 0);
@@ -469,6 +492,10 @@ feature {NONE} -- Attributes; Commands
 	showlist_frmt_holder: FORMAT_HOLDER;
 
 	showclasses_frmt_holder: FORMAT_HOLDER;
+
+	-- 3.5 showheir_frmt_holder: FORMAT_HOLDER;
+
+	showhier_frmt_holder: FORMAT_HOLDER;
 
 	showmodified_frmt_holder: FORMAT_HOLDER;
 

@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 	edit_hole: S_EDIT_HOLE
 
-	create_menu (par: EV_CONTAINER) is
+	create_menu (par: EV_BOX) is
 		local
 			vbox: EV_VERTICAL_BOX
 			tbar: EV_TOOL_BAR
@@ -56,7 +56,7 @@ feature {NONE} -- Initialization
 			create cut_hole.make (tbar)
 
 			vbox.set_spacing (2)
-			vbox.set_expand (False)
+			par.set_child_expandable (vbox, False)
 		end
 
 	clear_menu is

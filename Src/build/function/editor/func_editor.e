@@ -23,8 +23,9 @@ feature {NONE} -- Initialization
 
 			create vbox.make (hbox)
 			create input_box.make (vbox)
-			input_box.set_expand (False)
+			vbox.set_child_expandable (input_box, False)
 			create tbar.make (input_box)
+			input_box.set_child_expandable (tbar, False)
 			create input_hole.make_with_editor (tbar, Current)
 			create input_stone.make (input_box)
 			input_stone.hide_title_row
@@ -32,8 +33,9 @@ feature {NONE} -- Initialization
 
 			create vbox.make (hbox)
 			create output_box.make (vbox)
-			output_box.set_expand (False)
+			vbox.set_child_expandable (output_box, False)
 			create tbar.make (output_box)
+			output_box.set_child_expandable (tbar, False)
 			create output_hole.make_with_editor (tbar, Current)
 			create output_stone.make (output_box)
 			output_stone.hide_title_row
@@ -99,7 +101,7 @@ feature -- Edited function
 			output_list.set (f.output_list)
 			edited_function.set_lists (f.input_list, f.output_list)
 			edited_function.set_editor (Current)
-			if input_list.rows /= 0 then
+			if input_list.count /= 0 then
 				edited_function.go_i_th (1)
 			end
 			edit_hole.set_full_symbol

@@ -8,7 +8,6 @@ class
 	PRINT_DISPLAY
 
 inherit
---	CACHE_PATH
 	CACHE
 	COLOR_CONSTANT
 	FINDER
@@ -25,6 +24,7 @@ feature {NONE} -- Initialization
 			non_void_an_output: an_output /= Void
 		do
 			output := an_output
+			--output.set_size (800, 800)
 		ensure
 			output_set: output = an_output
 		end
@@ -73,18 +73,18 @@ feature {NONE} -- Implementation
 		require
 			non_void_factory_display: factory_display /= Void
 		local
-			i: INTEGER
 			l_line: DISPLAYED_LINE
 			l_entity: ENTITY_LINE
 			cursor_y_position, cursor_x_position: INTEGER
+			l_ico: EV_PIXMAP
 		do
 			output.clear
 			cursor_x_position := 0
 			cursor_y_position := 0
 			from
-				i := 0
+				factory_display.lines.start
 			until
-				i > factory_display.lines.count
+				factory_display.lines.after
 			loop
 				l_line := factory_display.lines.item
 --				if l_line.selected then
@@ -92,10 +92,11 @@ feature {NONE} -- Implementation
 --					output.fill_rectangle (cursor_x_position + horizontal_scroll_bar.value * Nb_pixel_decal_h_scroll, cursor_y_position, output.width, Nb_pixel_line)
 --				end
 
---				if not l_line.path_icon.is_empty then
---					output.draw_text_top_left (cursor_x_position, cursor_y_position, l_line.path_icon)
---					cursor_x_position := cursor_x_position + (create {EV_FONT}).string_width (l_line.path_icon)
---				end
+				if not l_line.path_icon.is_empty then
+					create l_ico
+					l_ico.set_with_named_file (l_line.path_icon)
+					output.draw_pixmap (cursor_x_position, cursor_y_position, l_ico)
+				end
 
 				from
 					l_line.entities.start
@@ -116,7 +117,6 @@ feature {NONE} -- Implementation
 				cursor_x_position := 0
 					
 				factory_display.lines.forth
-				i := i + 1
 			end
 
 			output.flush

@@ -10,6 +10,7 @@ deferred class
 inherit
 	EV_SIMPLE_ITEM_I
 		redefine
+			parent,
 			parent_imp
 		end
 
@@ -20,6 +21,13 @@ inherit
 	EV_PND_TARGET_I
 
 feature -- Access
+
+	parent: EV_TREE_ITEM_HOLDER is
+			-- The parent of the Current widget
+			-- Can be void.
+		do
+			Result ?= {EV_SIMPLE_ITEM_I} Precursor
+		end
 
 	parent_imp: EV_TREE_ITEM_HOLDER_IMP
 			-- Parent implementation

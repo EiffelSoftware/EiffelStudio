@@ -23,6 +23,9 @@
 #include <sys/in.h>
 #endif
 #endif
+#ifdef EIF_WINDOWS
+#include "winsock.h"
+#endif
 #include "eiffel.h"
 #include "bits.h"
 #include "../idrs/idrf.h"
@@ -40,7 +43,11 @@ shared char *idr_temp_buf;	/* This is shared so it can be freed
 private int amount_read = 0;	/* Amount read into buffer (see check_capacity) */
 
 extern int fides;
+extern char fstoretype;
+
 extern int r_fides;
+extern char r_fstoretype;
+
 extern void eio();
 
 
@@ -140,8 +147,19 @@ IDR *bu;
         short read_size, amount_left;
         register int part_read = 0, total_read = 0;
 
+#ifdef EIF_WINDOWS
+	if (r_fstoretype == 'F')
+		{
+		if ((read (r_fides, &read_size, sizeof (short))) < sizeof (short))
+			eio();
+		}
+	else
+		if ((recv (r_fides, &read_size, sizeof (short), 0)) < sizeof (short))
+			eio();
+#else
         if ((read (r_fides, &read_size, sizeof (short))) < sizeof (short))
                 eio();
+#endif
 
 	read_size = ntohs (read_size);
 #ifdef DEBUG
@@ -150,13 +168,24 @@ IDR *bu;
 #endif
 
 	amount_left = read_size;
-        while (total_read < read_size) {
-                if ((part_read = read (r_fides, ptr, amount_left)) < 0)
-                        eio();
-                total_read += part_read;
-                ptr += part_read;
+	while (total_read < read_size) {
+#ifdef EIF_WINDOWS
+		if (r_fstoretype == 'F')
+			{
+			if ((part_read = read (r_fides, ptr, amount_left)) < 0)
+				eio();
+			}
+		else
+			if ((part_read = recv (r_fides, ptr, amount_left, 0)) < 0)
+				eio();
+#else
+		if ((part_read = read (r_fides, ptr, amount_left)) < 0)
+			eio();
+#endif
+		total_read += part_read;
+		ptr += part_read;
 		amount_left -= part_read;
-        }
+		}
 	return total_read;
 }
 
@@ -173,14 +202,38 @@ IDR *bu;
 #endif
 
 	host_send = htons (send_size);
-        if ((write (fides, &host_send, sizeof (short))) < sizeof (short))
-                eio();
-        while (send_size > 0) {
-                if ((number_writen = write (fides, ptr, (int) send_size)) <= 0)
-                        eio();
-                send_size -= number_writen;
-                ptr += number_writen;
-	}
+
+#ifdef EIF_WINDOWS
+	if (fstoretype == 'F')
+		{
+		if ((write (fides, &host_send, sizeof (short))) < sizeof (short))
+			eio();
+		}
+	else
+		if ((send (fides, &host_send, sizeof (short), 0)) < sizeof (short))
+			eio();
+#else
+	if ((write (fides, &host_send, sizeof (short))) < sizeof (short))
+		eio();
+#endif
+
+	while (send_size > 0) {
+#ifdef EIF_WINDOWS
+		if (fstoretype == 'F')
+			{
+			if ((number_writen = write (fides, ptr, (int) send_size)) <= 0)
+				eio();
+			}
+		else
+			if ((number_writen = send (fides, ptr, (int) send_size, 0)) <= 0)
+				eio();
+#else
+		if ((number_writen = write (fides, ptr, (int) send_size)) <= 0)
+			eio();
+#endif
+		send_size -= number_writen;
+		ptr += number_writen;
+		}
 }
 
 public void check_capacity (bu, size)

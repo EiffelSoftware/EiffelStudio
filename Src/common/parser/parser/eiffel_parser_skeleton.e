@@ -198,7 +198,7 @@ feature {NONE} -- Implementation
 	is_frozen: BOOLEAN
 			-- Boolean mark for frozen feature names
 
-	fclause_pos: INTEGER
+	fclause_pos: TOKEN_LOCATION
 			-- To memorize the beginning of a feature clause
 
 	fbody_pos: INTEGER

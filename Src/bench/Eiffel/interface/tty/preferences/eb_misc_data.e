@@ -173,13 +173,7 @@ feature {EB_SHARED_PREFERENCES} -- Value
 	editor_left_side: BOOLEAN is 
 		do
 			Result := editor_left_side_preference.value
-		end
-		
-	progress_bar_color: EV_COLOR is
-			-- 
-		do
-			Result := progress_bar_color_preference.value	
-		end		
+		end	
 
 feature {EB_SHARED_PREFERENCES} -- Preference
 
@@ -220,7 +214,6 @@ feature {EB_SHARED_PREFERENCES} -- Preference
 	dyn_lib_window_width_preference: INTEGER_PREFERENCE	
 	dyn_lib_window_height_preference: INTEGER_PREFERENCE	
 	editor_left_side_preference: BOOLEAN_PREFERENCE
-	progress_bar_color_preference: COLOR_PREFERENCE
 
 feature {NONE} -- Preference Strings
 
@@ -248,7 +241,6 @@ feature {NONE} -- Preference Strings
 	dyn_lib_window_width_string: STRING is "misc.dyn_lib_window_width"
 	dyn_lib_window_height_string: STRING is "misc.dyn_lib_window_height"
 	ctrl_right_click_receiver_string: STRING is "ctrl_right_click_receiver"
-	progress_bar_color_preference_string: STRING is "misc.progress_bar_color"
 
 feature {NONE} -- Implementation
 
@@ -295,7 +287,6 @@ feature {NONE} -- Implementation
 			dyn_lib_window_height_preference := l_manager.new_integer_resource_value (l_manager, dyn_lib_window_height_string, 200)
 			dyn_lib_window_width_preference := l_manager.new_integer_resource_value (l_manager, dyn_lib_window_width_string, 400)	
 			ctrl_right_click_receiver_preference := l_manager.new_array_resource_value (l_manager, ctrl_right_click_receiver_string, <<"new_window">>)	
-			progress_bar_color_preference := l_manager.new_color_resource_value (l_manager, progress_bar_color_preference_string, create {EV_COLOR}.make_with_8_bit_rgb (0,0,128))
 		end
 	
 	preferences: PREFERENCES

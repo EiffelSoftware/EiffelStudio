@@ -30,8 +30,7 @@ inherit
 		redefine
 			parent_imp,
 			interface,
-			on_parented,
-			pnd_press
+			on_parented
 		end
 
 	WEL_LIST_VIEW_ITEM
@@ -89,32 +88,6 @@ feature -- Status setting
 		end
 
 feature {EV_ANY_I} -- Access
-
-	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
-		local
-			multi_column_list_imp: EV_MULTI_COLUMN_LIST_IMP
-		do
-			multi_column_list_imp := parent_imp
-			if press_action = Ev_pnd_start_transport then
-				start_transport (a_x, a_y, a_button, 
-					0, 0, 0.5, a_screen_x, a_screen_y)
-				multi_column_list_imp.set_parent_source_true
-				multi_column_list_imp.set_item_source (Current)
-				multi_column_list_imp.set_item_source_true
-			elseif press_action = Ev_pnd_end_transport then
-				end_transport (a_x, a_y, a_button)
-				multi_column_list_imp.set_parent_source_false
-				multi_column_list_imp.set_item_source (Void)
-				multi_column_list_imp.set_item_source_false
-			else
-				multi_column_list_imp.set_parent_source_false
-				multi_column_list_imp.set_item_source (Void)
-				multi_column_list_imp.set_item_source_false
-				check
-					disabled: press_action = Ev_pnd_disabled
-				end
-			end
-		end
 
 	index: INTEGER is
 			-- Index of the current item.
@@ -215,6 +188,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/04/21 17:47:35  rogers
+--| Removed pnd_press as it is now inherited from EV_ITEM_IMP.
+--|
 --| Revision 1.38  2000/04/21 16:31:57  rogers
 --| Performance improvement in relative_position.
 --|

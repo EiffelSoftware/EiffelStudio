@@ -35,26 +35,15 @@ create
 
 feature {NONE} -- Initialization
 
-	make (c: HASH_TABLE [DATE_TIME_CODE, INTEGER]; 
-			m, d: ARRAY [STRING];
-			b: INTEGER) is
+	make (c: HASH_TABLE [DATE_TIME_CODE, INTEGER]) is
 			-- Create parser with date/time code `c', months array `m',
 			-- days array `d', and base century `b'.
 		require
 			code_exists: c /= Void
-			months_exist: m /= Void
-			days_exist: d /= Void
-			base_century_valid: b > 0 and (b \\ 100 = 0)
 		do
 			code := c
-			months := m
-			days := d
-			base_century := b
 		ensure
 			code_set: code = c
-			months_set: months = m
-			days_set: days = d
-			base_century_set: base_century = b
 		end
 		
 feature -- Access
@@ -123,12 +112,14 @@ feature -- Status report
 	parsed: BOOLEAN
 			-- Has `source_string' been parsed?
 
-	is_source_set: BOOLEAN is
-			-- Has `source_string' been set?
+	is_set_up: BOOLEAN is
+			-- Has parser been set up completely?
 		do
-			Result := source_string /= Void and then not source_string.empty
+			Result := (days /= Void) and (months /= Void) and 
+				(base_century /= Void) and (source_string /= Void and then
+				not source_string.empty)
 		end
-
+		
 	is_date: BOOLEAN is
 			-- Does `source_string' contain a DATE?
 		require
@@ -174,12 +165,42 @@ feature -- Status setting
 			not_parsed: not parsed
 		end
 
+	set_day_array (d: ARRAY [STRING]) is
+			-- Set day array to `d'.
+		require
+			not_void: d /= Void
+		do
+			days := d
+		ensure
+			days_set: days = d
+		end
+
+	set_month_array (m: ARRAY [STRING]) is
+			-- Set month array to `m'.
+		require
+			not_void: m /= Void
+		do
+			months := m
+		ensure
+			months_set: months = m
+		end
+
+	set_base_century (c: INTEGER) is
+			-- Set base century to `c'.
+		require
+			base_century_valid: c /= 0 and (c \\ 100 = 0)
+		do
+			base_century := c
+		ensure
+			base_century_set: base_century = c
+		end
+
 feature -- Basic operations
 
 	parse is
 			-- Parse `source_string'.
 		require
-			source_set: is_source_set
+			setup_complete: is_set_up
 		local
 			substrg: STRING
 			pos1, pos2, i, j: INTEGER
@@ -220,7 +241,23 @@ feature -- Basic operations
 						when 4 then
 							year_val := substrg.to_integer
 						when 5 then 
-							year_val := substrg.to_integer + base_century
+							if base_century < 0 then
+								-- A negative value in `base_century' indicates
+								-- that this value has been calculated
+								-- automaticaly. Since we want to add it, we
+								-- have to substract it, because it is
+								-- negative.
+								year_val := substrg.to_integer - base_century
+								
+								-- We need a smart century correction
+								-- eventually.
+								if (year_val - c_year_now).abs > 50 then
+									year_val := year_val - 100
+								end
+							else
+								-- `base_century' has been set manually.
+								year_val := substrg.to_integer - base_century
+							end
 						when 6, 7 then
 							month_val := substrg.to_integer
 						when 8 then
@@ -275,6 +312,14 @@ feature -- Basic operations
 			string_parsed: parsed
 		end
 
+feature {NONE} -- Externals
+
+	c_year_now: INTEGER is
+			-- Today's year
+		external
+			"C"
+		end
+		
 feature {NONE} -- Implementation
 
 	year_val: INTEGER

@@ -16,10 +16,12 @@ inherit
 	EV_SELECT_BUTTON_IMP
 		undefine
 			default_style,
-			on_key_down
+			on_key_down,
+			on_bn_clicked
 		redefine
 			interface,
-			initialize
+			initialize,
+			enable_select
 		end
 
 	EV_RADIO_PEER_IMP
@@ -79,6 +81,30 @@ feature {NONE} -- Initalization
 			set_checked
 		end			
 
+feature -- Status setting
+	
+	enable_select is
+			-- Set `Current' as selected.
+			--| On WEL, this happens automatically in a WEL_CONTROL, but we
+			--| want it to work over multiple controls (see: EV_CONTAINER).
+		local
+			cur: CURSOR
+		do
+			if radio_group /= Void then
+				cur := radio_group.cursor
+				from
+					radio_group.start
+				until
+					radio_group.off
+				loop
+					radio_group.item.set_unchecked
+					radio_group.forth
+				end
+				radio_group.go_to (cur)
+			end
+			Precursor
+		end
+
 feature {NONE} -- Implementation
 
 	on_key_down (virtual_key, key_data: INTEGER) is
@@ -87,6 +113,15 @@ feature {NONE} -- Implementation
 			{WEL_RADIO_BUTTON} Precursor (virtual_key, key_data)
 			process_tab_and_arrows_keys (virtual_key)
 		end
+
+	on_bn_clicked is
+			-- Called when button is pressed.
+		do
+			enable_select
+			{EV_SELECT_BUTTON_IMP} Precursor
+		end
+
+feature {EV_ANY_I} -- Implementation
 
 	interface: EV_RADIO_BUTTON
 
@@ -113,6 +148,10 @@ end -- class EV_RADIO_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/02/29 00:40:44  brendel
+--| Added redefinition of `enable_select', see comments on feature.
+--| Added redefinition of `on_bn_clicked', to call `enable_select' first.
+--|
 --| Revision 1.22  2000/02/25 20:26:07  brendel
 --| Now redefined initialize instead of make.
 --|

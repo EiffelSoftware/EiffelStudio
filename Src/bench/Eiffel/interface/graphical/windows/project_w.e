@@ -29,7 +29,7 @@ inherit
 	BASE
 		rename
 			make as base_make
-		export {GENERATE_ALL_REVERSE}
+		export {GENERATE_ALL_REVERSE, GENERATE_SELEC_REVERSE}
 			implementation
 		end
 
@@ -60,6 +60,7 @@ feature -- Initialization
 			-- Create a project application.
 		local
 			app_stopped_cmd: APPLICATION_STOPPED_CMD
+			titre: STRING
 		do
 			General_resources.add_user (Current)
 			Project_resources.add_user (Current)
@@ -67,6 +68,7 @@ feature -- Initialization
 			base_make (Icon_id.out, a_screen)
 			!! history.make
 			register
+			titre := Interface_names.t_Project
 			set_title (Interface_names.t_Project)
 			set_icon_name (tool_name)
 			if Pixmaps.bm_Project_icon.is_valid then
@@ -75,7 +77,6 @@ feature -- Initialization
 			set_action ("<Unmap>,<Prop>", Current, popdown)
 			set_action ("<Configure>", Current, remapped)
 			set_action ("<Visible>", Current, remapped)
-
 			!! app_stopped_cmd
 			Application.set_before_stopped_command (app_stopped_cmd)
 			Application.set_after_stopped_command (app_stopped_cmd)
@@ -189,12 +190,25 @@ feature -- Resource Update
 				elseif old_res = pr.tool_y then
 					set_y (new.actual_value)
 				elseif old_res = pr.tool_width then
-					set_width (new.actual_value)
+					if new.actual_value /= 0 then
+						set_width (new.actual_value)
+					else
+						set_width (1)
+					end
 				elseif old_res = pr.tool_height then
-					if shown_portions = 1 then
-						set_height (new.actual_value)
-						if not toolkit_is_motif then
-							hori_split_window.set_height (new.actual_value)
+					if new.actual_value /= 0 then
+						if shown_portions = 1 then
+							set_height (new.actual_value)
+							if not toolkit_is_motif then
+								hori_split_window.set_height (new.actual_value)
+							end
+						end
+					else
+							if shown_portions = 1 then
+							set_height (1)
+							if not toolkit_is_motif then
+								hori_split_window.set_height (1)
+							end
 						end
 					end
 				elseif old_res = pr.interrupt_every_n_instructions then

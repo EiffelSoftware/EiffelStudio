@@ -693,11 +693,11 @@ feature {NONE} -- Implementation
 		do
 			if search_tool.is_visible then
 				search_tool.set_focus
-			else
-				if not text_displayed.selection_is_empty then
-					search_tool.set_current_searched (text_displayed.selected_string)
-				end
+			else				
 				search_tool.show_and_set_focus
+			end
+			if not text_displayed.selection_is_empty then
+				search_tool.set_current_searched (text_displayed.selected_string)
 			end
 			check_cursor_position
 		end

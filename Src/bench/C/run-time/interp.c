@@ -700,7 +700,7 @@ rt_private void interpret(int flag, int where)
 				break;
 			case SK_BIT:
 				RT_GC_PROTECT(ref);
-				last->it_bit = RTLB(get_short());
+				last->it_bit = RTLB(get_long());
 				RT_GC_WEAN(ref);
 				b_copy(ref, last->it_bit);
 				break;

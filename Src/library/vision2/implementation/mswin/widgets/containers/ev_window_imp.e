@@ -714,10 +714,16 @@ feature {EV_ANY_I} -- Implementation
 				end
 
 					-- Calls user actions if any
-				if resize_actions_internal /= Void then
-					resize_actions_internal.call (
-						[screen_x, screen_y, a_width, a_height])
-				end
+				execute_resize_actions (a_width, a_height)
+			end
+		end
+		
+	execute_resize_actions (a_width, a_height: INTEGER) is
+			-- execute `resize_actions_internal' if not Void.
+		do
+			if resize_actions_internal /= Void then
+				resize_actions_internal.call (
+					[screen_x, screen_y, a_width, a_height])
 			end
 		end
 

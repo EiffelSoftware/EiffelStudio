@@ -534,8 +534,11 @@ feature {DUMP_VALUE} -- string_representation Implementation
 			end
 		end
 
-	generic_type_evaluated_string: STRING is
+	generating_type_evaluated_string: STRING is
 			-- Full generic type using evaluation of generating_type on the related object
+			-- WARNING: This has to be an Eiffel type (descendant of ANY to implement generating_type)
+		require
+			is_valid_eiffel_type: dynamic_class /= Void and then not dynamic_class.is_true_external
 		local
 			expr: EB_EXPRESSION
 			evaluator: DBG_EXPRESSION_EVALUATOR
@@ -619,8 +622,12 @@ feature -- Access
 			if is_void then
 				Result.append ("NONE = Void")
 			elseif dynamic_class /= Void then
-				if dynamic_class.is_generic then
-					l_generating_type_string := generic_type_evaluated_string
+				if is_dotnet_value and then is_external_type then
+					l_generating_type_string := value_class_name				
+				elseif dynamic_class.is_true_external then
+					l_generating_type_string := dynamic_class.external_class_name
+				elseif dynamic_class.is_generic then
+					l_generating_type_string := generating_type_evaluated_string
 				end
 				if l_generating_type_string	/= Void then
 					Result.append (l_generating_type_string)
@@ -634,9 +641,6 @@ feature -- Access
 					Result.append_character ('=')
 				end
 				Result.append (full_output)
-				if is_dotnet_value and then is_external_type then
-					Result.append (" -> " + value_class_name)
-				end
 			else		
 				Result.append ("ANY ")			
 				Result.append (full_output)
@@ -655,8 +659,10 @@ feature -- Access
 				if is_void then
 					Result := "NONE"
 				elseif dynamic_class /= Void then
-					if dynamic_class.is_generic then
-						l_generating_type_string := generic_type_evaluated_string
+					if dynamic_class.is_true_external then
+						l_generating_type_string := dynamic_class.external_class_name
+					elseif dynamic_class.is_generic then
+						l_generating_type_string := generating_type_evaluated_string
 					end
 					if l_generating_type_string	/= Void then
 						Result := l_generating_type_string

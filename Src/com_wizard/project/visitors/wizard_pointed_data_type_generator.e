@@ -257,6 +257,10 @@ feature -- Basic operations
 				ec_function_signature.append (Eif_reference)
 				ec_function_signature.append (Space)
 				ec_function_signature.append ("eif_ref")
+				ec_function_signature.append (Comma_space)
+				ec_function_signature.append (c_type)
+				ec_function_signature.append (Space)
+				ec_function_signature.append (Old_keyword)
 
 				ec_function_return_type := clone (c_type)
 
@@ -691,10 +695,35 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
 
-			-- result = (element_c_type *) CoTaskMemAlloc (sizeof (element_c_type));
+			-- if (old != NULL)
+
+			Result.append (If_keyword)
+			Result.append (Space_open_parenthesis)
+			Result.append (Old_keyword)
+			Result.append (Space)
+			Result.append (C_not_equal)
+			Result.append (Space)
+			Result.append (Null)
+			Result.append (Close_parenthesis)
+			Result.append (New_line_tab_tab)
+
+			-- 	result = old;
+
+			Result.append (C_result)
+			Result.append (Space_equal_space)
+			Result.append (Old_keyword)
+			Result.append (Semicolon)
+			Result.append (New_line_tab)
+
+			-- else
+
+			Result.append (Else_keyword)
+			Result.append (New_line_tab_tab)
+
+			-- 	result = (element_c_type *) CoTaskMemAlloc (sizeof (element_c_type));
 			--       value of ^                              value of ^
 
-			Result.append ("result")
+			Result.append (C_result)
 			Result.append (Space)
 			Result.append (Equal_sign)
 			Result.append (Space)

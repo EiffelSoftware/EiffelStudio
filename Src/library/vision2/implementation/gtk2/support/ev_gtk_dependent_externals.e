@@ -299,6 +299,11 @@ feature -- Externals
 			"C signature (GtkTextView*, GtkTextIter*, gdouble, gboolean, gdouble, gdouble) use <gtk/gtk.h> "
 		end
 		
+	gtk_text_iter_copy (a_text_iter: POINTER): POINTER is
+		external
+			"C signature (GtkTextIter*): GtkTextIter* use <gtk/gtk.h>"
+		end
+
 
 end
 

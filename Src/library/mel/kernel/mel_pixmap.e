@@ -11,78 +11,131 @@ class
 
 inherit
 
-	ANY
-		redefine
-			is_equal
-		end;
-
 	MEL_PIXMAP_CONSTANTS
-		redefine
+		undefine
 			is_equal
 		end;
 
-	MEMORY
-		redefine
-			dispose, is_equal
+	MEL_DRAWABLE
+		undefine
+			is_equal
+		end;
+
+	MEL_RESOURCE
+		rename
+			make_from_existing as resource_make_from_existing,
+			handle as identifier 
 		end
 
 creation
 
+	make,
 	make_from_existing
 
 feature {NONE} -- Initialization
 
-	make_from_existing (a_pixmap: INTEGER; a_screen: MEL_SCREEN) is
-			-- Create a MEL_PIXMAP object from an pixmap ID.
+	make (a_drawable: MEL_DRAWABLE; a_width, a_height, a_depth: INTEGER) is
+			-- Create a pixmap with `a_width', `a_height' and `a_depth'.
+			-- Use `a_drawable' to determine which screen the pixmap is 
+			-- stored on. The resulting pixmap can only be used on this
+			-- screen.
 		require
-			a_screen_not_void: a_screen /= Void
+			valid_drawable: a_drawable /= Void and then a_drawable.is_valid;
+			valid_dimensions: a_width > 0 and then a_height > 0 
+				and then a_depth >= 0
+		local
+			c_depth, int1, int2, int3, int4, int5, int6: INTEGER
 		do
-			id := a_pixmap;
-			screen_pointer := a_screen.handle;
-			is_valid := True;
+			display_handle := a_drawable.display_handle;
+			identifier := x_create_pixmap (display_handle, 
+				a_drawable.identifier, a_width, a_height, a_depth)
+			if (x_get_geometry (display_handle,
+				identifier, $int1, $int2, $int3, $int4, $int5,
+				$int6, $c_depth))
+			then
+				depth := c_depth
+			end
 		ensure
-			pixmap_is_valid: is_valid
+			set: display_handle = a_drawable.display_handle
 		end;
+
+    make_from_existing (a_display: MEL_DISPLAY; a_handle: POINTER; a_depth: INTEGER) is
+            -- Create a MEL resource from an `a_handle'
+            -- for display `a_display'.
+        require
+            valid_display: a_display /= Void and then a_display.is_valid;
+            handle_not_null: a_handle /= default_pointer;
+			valid_depth: a_depth > 0
+        do
+            identifier := a_handle;
+            display_handle := a_display.handle;
+			depth := a_depth
+        ensure
+            set: identifier = a_handle and then depth = a_depth;
+            has_valid_display: has_valid_display;
+        end;
 
 feature -- Access
 
-	id: INTEGER;
-		-- In fact it is an unsigned long.
-
-	screen_pointer: POINTER;
-		-- Screen on which the Pixmap is allocated.
-
-	is_valid: BOOLEAN
-
-feature -- Comparison
-
-	is_equal (other: like Current): BOOLEAN is
-			-- Compares two pixmaps.
-		require else
-			current_is_valid: is_valid;
-			other_is_valid: other /= Void and then other.is_valid
+	is_bitmap: BOOLEAN is
+			-- Is this pixmap a single plane bitmap?
 		do
-			Result := id = other.id and screen_pointer = other.screen_pointer
+			Result := depth = 1
 		end;
+
+	is_pixmap: BOOLEAN is
+			-- Is this pixmap a multi plane pixmap?
+		do
+			Result := not is_bitmap
+		end;
+
+	depth: INTEGER
+			-- Depth of drawable
 
 feature -- Removal
 
-	dispose is
-			-- destroy the pixmap.
+	free is
+			-- Free the pixmap.
+		require
+			not_destroyed: not is_destroyed
 		do
-			if is_valid then
-				xm_destroy_pixmap (screen_pointer, id)
-			end
+			x_free_pixmap (display_handle, identifier);
+			identifier := default_pointer
+		ensure
+			destroyed: is_destroyed
 		end;
 
-feature {NONE} -- Implementation
+feature {NONE} -- External features
 
-	xm_destroy_pixmap (a_screen: POINTER; a_pixmap: INTEGER) is
+	x_create_pixmap (a_display: POINTER; a_pixmap: POINTER; 
+				a_width, a_height, a_depth: INTEGER): POINTER is
 		external
-			"C [macro <Xm/Xm.h>] (Screen *, Pixmap)"
+			"C [macro <X11/Xlib.h>] (Display *, Drawable, %
+				%unsigned int, unsigned int, unsigned int): EIF_POINTER"
 		alias
-			"XmDestroyPixmap"
+			"XCreatePixmap"
 		end;
+
+	x_free_pixmap (a_display: POINTER; a_pixmap: POINTER) is
+		external
+			"C [macro <X11/Xlib.h>] (Display *, Pixmap)"
+		alias
+			"XFreePixmap"
+		end;
+
+	x_get_geometry (dspl_pointer, a_drawable, a_root: POINTER; a_x, a_y,
+					a_width, a_hght, a_b_width, a_depth: POINTER): BOOLEAN is
+		external
+			"C [macro <X11/Xlib.h>] (Display *, Drawable, Window *, %
+				%int *, int *, unsigned int *, unsigned int *,%
+				%unsigned int *, unsigned int *): EIF_BOOLEAN"
+		alias
+			"XGetGeometry"
+		end;
+
+invariant
+
+	valid_display: has_valid_display
 
 end -- class MEL_PIXMAP
 

@@ -32,7 +32,7 @@ rt_private int socket_fides;
 extern void idr_flush (void);
 
 /* Returns nonzero if the socket is ready for, zero otherwise */
-/* read = 0, check the socket to be rrready for writing */
+/* read = 0, check the socket to be ready for writing */
 /* read = 1, check the socket to be ready for reading */ 
 int net_socket_ready (int read)
 {

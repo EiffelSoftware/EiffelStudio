@@ -1546,6 +1546,8 @@ Agent_call:
 
 Delayed_actuals: -- Empty
 			-- { $$ := Void }
+	|	TE_LPARAN TE_RPARAN
+			-- { $$ := Void }
 	|	TE_LPARAN Delayed_actual_list TE_RPARAN
 			{ $$ := $2 }
 	;

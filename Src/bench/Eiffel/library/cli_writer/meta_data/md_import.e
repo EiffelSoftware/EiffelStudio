@@ -11,6 +11,7 @@ inherit
 	COM_OBJECT
 		export 
 			{NONE} all;
+			{ANY} add_ref;
 		redefine
 			make_by_pointer
 		end

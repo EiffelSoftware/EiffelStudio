@@ -570,7 +570,7 @@ feature -- Function Evaluation
 		do
 			l_mod_name := il_debug_info_recorder.module_file_name_for_class (ct)
 			l_icd_module := icor_debug_module (l_mod_name)
-			l_md_import := l_icd_module.get_md_import_interface
+			l_md_import := l_icd_module.interface_md_import
 			
 			l_class_token := l_md_import.find_type_def_by_name (ct.full_il_implementation_type_name, 0)
 			Result := l_md_import.find_member (l_class_token, a_f_name)
@@ -759,8 +759,10 @@ feature -- Function Evaluation
 			
 			l_icd_class := l_icd_object.get_class
 			l_icd_module := l_icd_class.get_module		
-			l_md_import := l_icd_module.get_md_import_interface
+			l_md_import := l_icd_module.interface_md_import
 			l_feature_token := l_md_import.find_method (l_icd_class.get_token, "generating_type")
+-- FIXME JFIAT: check if this could be done 
+--			l_feature_token := feature_token (l_class_type, "generating_type")
 			
 			l_func := l_icd_module.get_function_from_token (l_feature_token)
 

@@ -129,9 +129,12 @@ feature
 					file.putstring
 					("%T*(double *)(Current + arg2 * sizeof(double)) = arg1;");
 				when C_ref then
+					--! Could be bit or ref
 					file.putstring ("%TRTAS(arg1, Current);%N");
 					file.putstring
-					("%T*(char **)(Current + arg2 * sizeof(char *)) = arg1;");
+					("%T*(char **)(Current + arg2 * "); 
+					type_c.generate_size (file);
+					file.putstring (") = arg1;");
 				when C_pointer then
 					file.putstring
 					("%T*(fnptr *)(Current + arg2 * sizeof(fnptr)) = arg1;");
@@ -225,8 +228,11 @@ feature
 					file.putstring
 					("%Treturn *(double *)(Current + arg1 * sizeof(double));");
 				when C_ref then
+					--! Could be bit or ref
 					file.putstring
-					("%Treturn *(char **)(Current + arg1 * sizeof(char *));");
+					("%Treturn *(char **)(Current + arg1 * ");
+					type_c.generate_size (file);
+					file.putstring (");");
 				when C_pointer then
 					file.putstring
 					("%Treturn *(fnptr *)(Current + arg1 * sizeof(fnptr));");

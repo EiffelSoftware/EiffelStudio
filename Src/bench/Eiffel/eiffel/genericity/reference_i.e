@@ -9,7 +9,7 @@ inherit
 		end;
 	TYPE_C
 		undefine
-			is_void
+			is_void, is_bit
 		redefine
 			is_pointer
 		end;

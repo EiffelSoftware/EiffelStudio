@@ -8,7 +8,10 @@ inherit
 		redefine
 			is_basic, is_reference, c_type, base_class
 		end;
-	TYPE_C;
+	TYPE_C
+		undefine
+			is_bit
+		end;
 	SHARED_C_LEVEL;
 
 feature

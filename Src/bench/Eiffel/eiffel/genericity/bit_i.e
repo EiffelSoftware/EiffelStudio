@@ -5,7 +5,9 @@ inherit
 	BASIC_I
 		redefine
 			dump, is_bit, same_as,
-			description, sk_value, generate_cecil_value, hash_code
+			description, sk_value, generate_cecil_value, hash_code,
+			is_pointer, generate_initial_value,
+			metamorphose
 		end;
 
 feature
@@ -13,7 +15,7 @@ feature
 	level: INTEGER is
 			-- Internal code for generation
 		do
-			-- FIXME
+			Result := C_ref
 		end; -- level
 
 	size: INTEGER;
@@ -27,6 +29,9 @@ feature
 
 	is_bit: BOOLEAN is true;
 			-- Is the type a long type ?
+
+	is_pointer: BOOLEAN is true;
+			-- Is the type a pointer type ?
 
 	dump (file: UNIX_FILE) is
 			-- Debug purpose
@@ -56,7 +61,7 @@ feature
 	generate_cecil_value (file: UNIX_FILE) is
 			-- Generate Cecil type value.
 		do
-			file.putstring ("SK_BIT + (unit32) ");
+			file.putstring ("SK_BIT + (uint32) ");
 			file.putint (size);
 		end;
 
@@ -89,7 +94,7 @@ feature
 		do
 			file.putstring ("BITOFF(");
 			file.putint (size);
-			file.new_line;
+			file.putstring (")");
 		end;
 
 	hash_code: INTEGER is
@@ -111,6 +116,18 @@ feature
 			Result := 671088640 + size;
 		end;
 
+	metamorphose
+	(reg, value: REGISTRABLE; file: UNIX_FILE; workbench_mode: BOOLEAN) is
+			-- Generate the metamorphism from simple type to reference and
+		   	-- put result in register `reg'. The value of the basic type is
+		   	-- held in `value'. For bits it is a direct assignment of
+			-- `value' to `reg'. 
+		do
+			reg.print_register;
+			file.putstring (" = ");
+			value.print_register;
+		end;
+
 	generate_union (file: UNIX_FILE) is
 			-- Generate discriminant of C structure "item" associated
 			-- to the current C type in `file'.
@@ -123,6 +140,14 @@ feature
 		do
 			file.putstring ("SK_BIT + ");
 			file.putint (size);
+		end;
+
+	generate_initial_value (file: UNIX_FILE) is
+			-- Generate initial value for registers in `file'.
+		do
+			file.putstring ("RTLB(");
+			file.putint (size);
+			file.putchar (')');
 		end;
 
 end

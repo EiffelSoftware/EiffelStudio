@@ -8,11 +8,7 @@ class
 	GD_POINT
 
 inherit
-
-	MEMORY
-		redefine
-			dispose
-		end
+	DISPOSABLE
 
 create
 	make

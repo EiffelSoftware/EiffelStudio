@@ -14,11 +14,7 @@ class
    REGEX
 
 inherit
-
-   MEMORY
-      redefine
-	 dispose
-      end
+	DISPOSABLE
 
 create {REGEX_COMPILER}
 

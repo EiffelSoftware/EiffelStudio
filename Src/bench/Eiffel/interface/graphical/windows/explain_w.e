@@ -64,7 +64,7 @@ feature -- Graphical Interface
 			-- Build formatting buttons in `format_bar'.
 		local
 			showtext_cmd: SHOW_TEXT;
-			showtext_button: EB_BUTTON
+			showtext_button: FORMAT_BUTTON
 		do
 			!! showtext_cmd.make (text_window);
 			!! showtext_button.make (showtext_cmd, format_bar);
@@ -83,8 +83,7 @@ feature -- Graphical Interface
 			else
 				!TABBED_TEXT_WINDOW! text_window.make (new_name, Current)
 			end;
-			set_mode_for_editing;
-			set_tab_length_to_default
+			set_mode_for_editing
 		end
 
 feature -- Window Properties

@@ -3,20 +3,10 @@
 class ONCE_BYTE_CODE
 
 inherit
-
-	STD_BYTE_CODE
-		rename
-			inlined_byte_code as std_inlined_byte_code
-		redefine
-			is_once, generate_once, generate_result_declaration,
-			pre_inlined_code
-		end
 	STD_BYTE_CODE
 		redefine
 			is_once, generate_once, generate_result_declaration,
 			pre_inlined_code, inlined_byte_code
-		select
-			inlined_byte_code
 		end
 
 feature
@@ -111,7 +101,7 @@ feature -- Inlining
 		local
 			inlined_once_byte_code: INLINED_ONCE_BYTE_CODE
 		do
-			Result := std_inlined_byte_code;
+			Result := Precursor
 			if Result.has_inlined_code then
 				!!inlined_once_byte_code
 				inlined_once_byte_code.fill_from (Result)

@@ -82,6 +82,7 @@
 #define CHUNK_T     0           /* Scanning a chunk */
 #define ZONE_T      1           /* Scanning a generation scavenging zone */
 
+#ifndef EIF_THREADS
 /* The main data-structures for malloc are filled-in statically at
  * compiled time, so that no special initialization routine is
  * necessary.
@@ -101,13 +102,14 @@ rt_shared struct emallinfo m_data = { /* %%ss mt */
  * enables us to pilot the garbage collector correctly or to call coalescing
  * over the memory only if it is has a chance to succeed.
  */
-rt_shared struct emallinfo c_data = {		/* Informations on C memory */ /* %%ss mt */
+rt_shared struct emallinfo c_data = { /* Informations on C memory */ /* %%ss mt */
 	0,		/* ml_chunk */
 	0,		/* ml_total */
 	0,		/* ml_used */
 	0,		/* ml_over */
-};	
-rt_shared struct emallinfo e_data = {		/* Informations on Eiffel memory */ /* %%ss mt */
+};
+	
+rt_shared struct emallinfo e_data = { /* Informations on Eiffel memory */ /* %%ss mt */
 	0,		/* ml_chunk */
 	0,		/* ml_total */
 	0,		/* ml_used */
@@ -147,7 +149,7 @@ rt_private union overhead *e_buffer[NBLOCKS];	/* Buffer cache for Eiffel list */
  * These zones may be put back into the free list in case we are low in RAM.
  */
 rt_shared struct sc_zone sc_from;		/* Scavenging 'from' zone */ /* %%ss mt */
-rt_shared struct sc_zone sc_to;			/* Scavenging 'to' zone */ /* %%ss mt */
+rt_shared struct sc_zone sc_to;		/* Scavenging 'to' zone */ /* %%ss mt */
 
 /* General malloc/GC flag */
 rt_shared uint32 gen_scavenge = GS_SET;	/* Generation scavenging to be set */ /* %%ss mt */
@@ -156,7 +158,9 @@ rt_shared uint32 gen_scavenge = GS_SET;	/* Generation scavenging to be set */ /*
  * tenuring), we record its size in eiffel_usage variable. Then, once the amount
  * of allocated data goes beyond th_alloc, a cycle of acollect() is run.
  */
-rt_public long eiffel_usage = 0;			/* Monitor Eiffel memory usage */
+rt_public long eiffel_usage = 0;		/* Monitor Eiffel memory usage */ /* %%ss mt */
+
+#endif /* EIF_THREADS */
 
 /* Error message commonly used */
 rt_private char *inconsistency = "free-list inconsistency";
@@ -1253,7 +1257,7 @@ rt_private int free_last_chunk(void)
 		(char *) arena == ps_from.sc_arena ||
 		(char *) arena == ps_to.sc_arena
 	)
-		i = -1;
+		i = (uint32) -1;
 	else {
 		r = (uint32) arena->ov_size & B_SIZE;
 		i = 0;
@@ -1660,7 +1664,7 @@ rt_private void xfreeblock(union overhead *zone, uint32 r)
 	 * Note that zone points at the beginning of the memory block
 	 * (beginning of the header) and not at an object data area.
 	 */
-
+	EIF_GET_CONTEXT
 	register2 uint32 i;					/* Index in hlist */
 	register5 uint32 size;				/* Size of the coalesced block */
 
@@ -1691,6 +1695,7 @@ rt_private void xfreeblock(union overhead *zone, uint32 r)
 	connect_free_list(zone, i);		/* Insert block in free list */
 
 	SIGRESUME;					/* Critical section ends */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *crealloc(char *ptr, unsigned int nbytes)
@@ -2280,6 +2285,7 @@ rt_shared int chunk_coalesc(struct chunk *c)
 	 * returns the size of the largest coalesced block or 0 if no coalescing
 	 * occurred.
 	 */
+	EIF_GET_CONTEXT
 	register3 union overhead *zone;	/* Malloc info zone */
 	register4 uint32 flags;			/* Malloc flags */
 	register2 uint32 i;				/* Index in free list */
@@ -2337,7 +2343,7 @@ rt_shared int chunk_coalesc(struct chunk *c)
 			/* Compute new list number for coalesced block */
 			old_i = i;					/* Save old index */
 			r = flags & B_SIZE;			/* Size of coalesced block */
-			if (max_size < r)
+			if (max_size < (int) r)
 				max_size = r;			/* Update maximum size yielded */
 			i = 0;
 			while (r >>= 1)
@@ -2363,6 +2369,7 @@ rt_shared int chunk_coalesc(struct chunk *c)
 #endif
 
 	return max_size;		/* Maximum size of coalesced block or 0 */
+	EIF_END_GET_CONTEXT
 }
 
 rt_shared int full_coalesc(int chunk_type)
@@ -2719,7 +2726,7 @@ rt_shared char *eif_set(char *object, unsigned int nbytes, uint32 type)
 	 * record the object inside the moved set, if necessary. The function
 	 * returns the address of the object (it may move if a GC cycle is raised).
 	 */
-	
+	EIF_GET_CONTEXT
 	register3 union overhead *zone;		/* Malloc info zone */
 	register4 char *(*init)();			/* The optional initialization */
 
@@ -2754,6 +2761,7 @@ rt_shared char *eif_set(char *object, unsigned int nbytes, uint32 type)
 #endif
 
 	return object;
+	EIF_END_GET_CONTEXT
 }
 
 rt_shared char *eif_spset(char *object, unsigned int nbytes)
@@ -2765,7 +2773,7 @@ rt_shared char *eif_spset(char *object, unsigned int nbytes)
 	 * The function returns the location of the object (it may move if a GC
 	 * cycle has been raised to remember the object).
 	 */
-
+	EIF_GET_CONTEXT
 	register3 union overhead *zone;		/* Malloc info zone */
 
 	SIGBLOCK;					/* Critical section */
@@ -2789,6 +2797,7 @@ rt_shared char *eif_spset(char *object, unsigned int nbytes)
 #endif
 
 	return object;
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -3325,9 +3334,10 @@ rt_public eif_mem_info(EIF_BOOLEAN flag)
 #endif /* MEMCHK */
 
 
-
-rt_private uint32 *type_use = 0;       /* Object usage table by dynamic type */ /* %%ss mt */
-rt_private uint32 c_mem;				/* C memory used (bytes) */ /* %%ss mt */
+#ifndef EIF_THREADS
+rt_private uint32 *type_use = 0;   /* Object usage table by dynamic type */ /* %%ss mt */
+rt_private uint32 c_mem = 0;		/* C memory used (bytes) */ /* %%ss mt */
+#endif /* EIF_THREADS */
 
 rt_private void inspect();
 rt_private void check_obj(char *object);
@@ -3841,3 +3851,4 @@ rt_public void epop(void)
 rt_public struct cnode esystem[20];
 
 #endif
+

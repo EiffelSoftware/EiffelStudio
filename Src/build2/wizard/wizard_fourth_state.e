@@ -40,6 +40,7 @@ feature -- Basic Operation
 			end
 			set_updatable_entries(<<>>)
 			first_window.enable_user_resize
+			first_window.enable_maximize
 		end
 
 	proceed_with_current_info is
@@ -50,7 +51,7 @@ feature -- Basic Operation
 				-- as possible, and its size will be constrained to
 				-- the widgets inside.
 			first_window.set_minimum_size (100, 100)
-			first_window.set_size (100, 100)
+			first_window.set_size (dialog_unit_to_pixels(503), dialog_unit_to_pixels(385))
 			Precursor
 			proceed_with_new_state(create {WIZARD_FINAL_STATE}.make(wizard_information))
 			main_window.hide_all_floating_tools

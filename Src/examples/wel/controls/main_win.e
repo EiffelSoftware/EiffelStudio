@@ -70,7 +70,7 @@ feature -- Access
 	background_brush: WEL_BRUSH is
 			-- Dialog boxes background color is the same than
 			-- button color.
-		once
+		do
 			create Result.make_by_sys_color (Color_btnface + 1)
 		end
 

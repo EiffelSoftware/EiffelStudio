@@ -1,9 +1,11 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
 	description:
-		"EiffelVision password field. A text field%
-		% That displays always the same character."
+		"Input field for a single line of `text', displayed%N%
+		%as a sequence of `*'."
+	appearance:
+		"+-------------+%N%
+		%| ********    |%N%
+		%+-------------+"
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,56 +16,26 @@ class
 inherit
 	EV_TEXT_FIELD
 		redefine
-			make,
-			make_with_text,
+			create_implementation,
 			implementation
 		end
 
 create
-	make,
+	default_create,
 	make_with_text
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
-			-- Create a text field with, `par' as
-			-- parent
+	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
 		do
-			!EV_PASSWORD_FIELD_IMP!implementation.make
-			widget_make (par)
-		end
-
-	make_with_text (par: EV_CONTAINER; txt: STRING) is
-			-- Create a text area with `par' as
-			-- parent and `txt' as text.
-		do
-			!EV_PASSWORD_FIELD_IMP!implementation.make_with_text (txt)
-			widget_make (par)
-		end
-
-feature -- Access
-
-	character: CHARACTER is
-			-- Displayed character instead of the text.
-		require
-		do
-			Result := implementation.character
-		end
-
-feature -- Element change
-
-	set_character (char: CHARACTER) is
-			-- Make `char' the new character displayed in the
-			-- password field.
-		require
-		do
-			implementation.set_character (char)
+			create {EV_PASSWORD_FIELD_IMP} implementation.make (Current)
 		end
 
 feature {NONE} -- Implementation
 
 	implementation: EV_PASSWORD_FIELD_I
-		-- Implementation
+			-- Responsible for interaction with the native graphics toolkit.
 
 end -- class EV_PASSWORD_FIELD
 
@@ -88,6 +60,9 @@ end -- class EV_PASSWORD_FIELD
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/07 01:11:28  brendel
+--| Revised.
+--|
 --| Revision 1.7  2000/02/29 18:09:10  oconnor
 --| reformatted indexing cluase
 --|

@@ -1,7 +1,6 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing 
-	description: "EiffelVision password field, implementation interface"
+	description:
+		"Eiffel Vision password field. Implementation interface."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,23 +10,6 @@ deferred class
 
 inherit
 	EV_TEXT_FIELD_I
-
-feature -- Access
-
-	character: CHARACTER is
-			-- Displayed character instead of the text.
-		require
-		deferred
-		end
-
-feature -- Element change
-
-	set_character (char: CHARACTER) is
-			-- Make `char' the new character displayed in the
-			-- password field.
-		require
-		deferred
-		end
 
 end -- class EV_PASSWORD_FIELD_I
 
@@ -52,6 +34,9 @@ end -- class EV_PASSWORD_FIELD_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/04/07 01:11:59  brendel
+--| Revised.
+--|
 --| Revision 1.4  2000/02/22 18:39:44  oconnor
 --| updated copyright date and formatting
 --|

@@ -1,7 +1,6 @@
---| FIXME Not for release
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "iffelVision password field, gtk implementation."
+	description:
+		"Eiffel Vision password field. GTK+ implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,48 +10,31 @@ class
 
 inherit
 	EV_PASSWORD_FIELD_I
+		redefine
+			interface
+		end
 
 	EV_TEXT_FIELD_IMP
 		redefine
-			make,
-			make_with_text
+			initialize,
+			interface
 		end
 
 create
-	make,
-	make_with_text
+	make
 
 feature {NONE} -- Initialization
 
-	make is
-			-- Create an empty password field
+	initialize is
+			-- Create password field with `*'.
 		do
-			{EV_TEXT_FIELD_IMP} Precursor
-			gtk_entry_set_visibility (widget, False)
+			Precursor
+			C.gtk_entry_set_visibility (c_object, False)		
 		end
 
-	make_with_text (txt: STRING) is
-			-- Create a password field with `txt' as
-			-- label.
-		do
-			{EV_TEXT_FIELD_IMP} Precursor (txt)
-			gtk_entry_set_visibility (widget, False)		
-		end
+feature {NONE} -- Implementation
 
-feature -- Access
-
-	character: CHARACTER is
-			-- Displayed character instead of the text.
-		do
-		end
-
-feature -- Element change
-
-	set_character (char: CHARACTER) is
-			-- Make `char' the new character displayed in the
-			-- password field.
-		do
-		end
+	interface: EV_PASSWORD_FIELD
 
 end -- class EV_PASSWORD_FIELD_IMP
 
@@ -77,6 +59,9 @@ end -- class EV_PASSWORD_FIELD_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/04/07 01:12:43  brendel
+--| Revised.
+--|
 --| Revision 1.6  2000/02/22 18:39:39  oconnor
 --| updated copyright date and formatting
 --|

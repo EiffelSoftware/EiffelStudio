@@ -495,6 +495,14 @@ feature {NONE} -- Implementation
 			system_status.enable_project_modified
 			command_handler.update
 		end
+		
+	key_pressed_on_constants_list (a_key: EV_KEY) is
+			-- Called by `key_press_actions' of `constants_list'.
+		do
+			if a_key.code = (create {EV_KEY_CONSTANTS}).key_delete then
+				remove_selected_constant
+			end
+		end
 	
 	remove_selected_constant is
 			-- Called by `select_actions' of `remove_button'.

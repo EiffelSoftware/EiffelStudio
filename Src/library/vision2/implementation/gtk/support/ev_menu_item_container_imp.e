@@ -18,6 +18,13 @@ inherit
 		-- reasons.
 
 	EV_WIDGET_IMP 
+		rename
+			make as old_make,
+			interface as widget_interface,
+			set_interface as set_widget_interface,
+			add_double_click_command as old_add_dblclk,
+			remove_double_click_commands as old_remove_dblclk
+		end
 
 	EV_GTK_ITEMS_EXTERNALS
 	

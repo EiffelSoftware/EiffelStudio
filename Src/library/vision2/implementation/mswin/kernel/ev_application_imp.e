@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			init_instance
 			init_application
 			tooltip_delay := no_tooltip_delay_assigned
-			stop_processing_requested_msg := cwin_register_window_message ($ev_stop_processing_requested)
+			stop_processing_requested_msg := cwin_register_window_message (ev_stop_processing_requested.item)
 		end
 
 	launch  is
@@ -577,11 +577,11 @@ feature {NONE} -- Implementation
 	stop_processing_requested_msg: INTEGER
 		-- Custom message sent by `stop_processing'.
 		
-	ev_stop_processing_requested: STRING is
+	ev_stop_processing_requested: WEL_STRING is
 			-- `Result' is string used to register custom stop processing
 			-- message with Windows.
 		once
-			Result := "ev_stop_processing_requested"
+			create Result.make ("ev_stop_processing_requested")
 		end
 
 feature {NONE} -- Blocking Dispatcher

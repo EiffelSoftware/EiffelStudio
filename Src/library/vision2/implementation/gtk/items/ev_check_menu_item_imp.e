@@ -16,7 +16,8 @@ inherit
 	EV_MENU_ITEM_IMP
 		redefine
 			make,
-			interface
+			interface,
+			menu_item_type
 		end
 
 create
@@ -59,6 +60,14 @@ feature -- Status setting
 			-- Invert the value of `is_selected'.
 		do
 			C.gtk_check_menu_item_set_active (c_object, not is_selected)
+		end
+		
+		
+feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
+
+	menu_item_type: INTEGER is
+		do
+			Result := Check_type
 		end
 
 feature {NONE} -- Implementation

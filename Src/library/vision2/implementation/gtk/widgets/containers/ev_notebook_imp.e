@@ -250,7 +250,7 @@ feature {EV_ANY_I} -- Implementation
 				C.gtk_notebook_page_struct_child (temp_ptr)
 			) + 1
 			if selection_actions_internal /= Void then
-				selection_actions_internal.call ([])
+				selection_actions_internal.call (empty_tuple)
 			end
 			end
 		end

@@ -268,14 +268,14 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 			-- Called when `Current' is expanded.
 		do
 			is_expanded := True
-			expand_actions_internal.call ([])
+			expand_actions_internal.call (empty_tuple)
 		end
 
 	collapse_callback is
 			-- Called when `Current' is collapsed.
 		do
 			is_expanded := False
-			collapse_actions_internal.call ([])
+			collapse_actions_internal.call (empty_tuple)
 		end
 
 	tree_node_ptr: POINTER

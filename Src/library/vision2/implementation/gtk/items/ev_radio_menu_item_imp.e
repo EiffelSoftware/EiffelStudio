@@ -17,7 +17,8 @@ inherit
 		redefine
 			on_activate,
 			interface,
-			make
+			make,
+			menu_item_type
 		end
 
 	EV_RADIO_PEER_IMP
@@ -53,6 +54,13 @@ feature -- Status setting
 			-- Select this menu item.
 		do
 			C.gtk_check_menu_item_set_active (c_object, True)
+		end
+		
+feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
+
+	menu_item_type: INTEGER is
+		do
+			Result := Radio_type
 		end
 
 feature {EV_ANY_I} -- Implementation

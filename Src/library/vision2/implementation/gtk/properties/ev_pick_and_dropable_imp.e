@@ -29,6 +29,27 @@ inherit
 
 feature -- Implementation
 
+--| FIXME IEK Remove this when cursor setting is fixed on Windows.
+	temp_execute (
+			a_x, a_y: INTEGER;
+			a_x_tilt, a_y_tilt, a_pressure: DOUBLE;
+			a_screen_x, a_screen_y: INTEGER)
+		is
+			-- Executed when `pebble' is being moved.
+			-- Draw a rubber band from pick position to pointer position.
+		local
+			target: EV_ABSTRACT_PICK_AND_DROPABLE
+		do
+			draw_rubber_band
+			pointer_x := a_screen_x
+			pointer_y := a_screen_y
+			
+			target := pointed_target
+			if target /= last_pointed_target then
+				update_pointer_style (target)
+			end
+		end
+
 	enable_transport is
 			-- Activate pick/drag and drop mechanism.
  		do
@@ -208,7 +229,7 @@ feature -- Implementation
 
 					signal_connect (
 						"motion-notify-event",
-						agent execute,
+						agent temp_execute,
 						default_translate
 					)
 					motion_notify_connection_id := last_signal_connection_id

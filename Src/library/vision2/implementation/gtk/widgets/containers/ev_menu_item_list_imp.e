@@ -33,7 +33,7 @@ feature {NONE} -- implementation
 
 	insert_i_th (v: like item; pos: INTEGER) is
 		local
-			an_item_imp: EV_ITEM_IMP
+			an_item_imp: EV_MENU_ITEM_IMP
 			an_index: INTEGER
 			sep_imp: EV_MENU_SEPARATOR_IMP
 			radio_imp: EV_RADIO_MENU_ITEM_IMP
@@ -50,11 +50,11 @@ feature {NONE} -- implementation
 					sep_imp_radio_group_void: sep_imp.radio_group = NULL
 				end
 				from
-					interface.go_i_th (pos + 1)
+					go_i_th (pos + 1)
 				until
-					interface.after or else is_menu_separator_imp (interface.item.implementation)
+					(index = count + 1) or else is_menu_separator_imp (i_th (index).implementation)
 				loop
-					radio_imp ?= interface.item.implementation
+					radio_imp ?= i_th (index)
 					if radio_imp /= Void then
 						radio_imp.set_radio_group (sep_imp.radio_group)
 						if sep_imp.radio_group /= NULL then
@@ -62,7 +62,7 @@ feature {NONE} -- implementation
 						end
 						sep_imp.set_radio_group (radio_imp.radio_group)
 					end
-					interface.forth
+					forth
 				end
 			else
 				radio_imp ?= an_item_imp
@@ -99,26 +99,7 @@ feature {NONE} -- implementation
 			interface.go_i_th (an_index)
 		end
 
-	set_gslist_group (a_gslist, a_group: POINTER) is
-			-- Set the radio group of all elements in `a_gslist' to `a_group'.
-		local
-			item_pointer, rgroup: POINTER
-		do
-			from
-				rgroup := a_gslist
-			until
-				rgroup = NULL
-			loop
-				item_pointer := C.gslist_struct_data (rgroup)
-				C.set_gtk_radio_menu_item_struct_group (
-					item_pointer, a_group
-				)
-				rgroup := C.gslist_struct_next (rgroup)
-			end
-		end
-
-
-	insert_menu_item (an_item_imp: EV_ITEM_IMP; pos: INTEGER) is
+	insert_menu_item (an_item_imp: EV_MENU_ITEM_IMP; pos: INTEGER) is
 			-- Generic menu item insertion.
 		do
 			an_item_imp.set_item_parent_imp (Current)
@@ -136,21 +117,21 @@ feature {NONE} -- implementation
 			cur_item: INTEGER
 			sep_imp: EV_MENU_SEPARATOR_IMP
 		do
-			cur := interface.cursor
+			cur := cursor
 			from
-				interface.start
+				start
 				cur_item := 1
 			until
-				interface.off or else an_index = cur_item
+				(index = count + 1) or else an_index = cur_item
 			loop
 				sep_imp ?= interface.item.implementation
 				if sep_imp /= Void then
 					Result := sep_imp
 				end
-				interface.forth
+				forth
 				cur_item := cur_item + 1
 			end
-			interface.go_to (cur)
+			go_to (cur)
 		end
 				
 	is_menu_separator_imp (an_item_imp: EV_ITEM_I): BOOLEAN is

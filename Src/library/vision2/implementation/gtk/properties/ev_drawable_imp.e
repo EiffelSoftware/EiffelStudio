@@ -193,7 +193,7 @@ feature -- Element change
 				color_has_been_allocated: tempbool
 			end
 			C.gdk_gc_set_foreground (gc, color_struct)
-			C.c_gdk_color_struct_free (color_struct)
+			c_free (color_struct)
 		end
 
 	set_line_width (a_width: INTEGER) is

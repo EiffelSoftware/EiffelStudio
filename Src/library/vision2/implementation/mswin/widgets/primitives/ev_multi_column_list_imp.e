@@ -24,7 +24,8 @@ inherit
 			on_key_down,
 			interface,
 			pnd_press,
-			set_default_minimum_size
+			set_default_minimum_size,
+			initialize
 		end
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
@@ -110,7 +111,12 @@ feature {NONE} -- Initialization
 			--|FIXME This is only required as column title does not correctly
 			--|Work at the moment.
 			create column_titles.make (1,1)
-			update_children_agent := ~update_children
+		end
+
+	initialize is
+		do
+			{EV_PRIMITIVE_IMP} Precursor
+			{EV_MULTI_COLUMN_LIST_I} Precursor
 		end
 
 	make_with_size (col_nb: INTEGER) is         
@@ -135,28 +141,7 @@ feature {NONE} -- Initialization
 			end
 		end
 
-feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- implementation
-
-	update_children is
-			-- Update all children with `update_needed' True.
-			--| We are on an idle action now. At least one item has marked
-			--| itself `update_needed'.
-		local
-			cur: INTEGER
-		do
-			cur := ev_children.index
-			from
-				ev_children.start
-			until
-				ev_children.after
-			loop
-				ev_children.forth
-			end
-			ev_children.go_i_th (index)
-		end
-
-	update_children_agent: PROCEDURE [EV_MULTI_COLUMN_LIST_IMP, TUPLE []]
-			-- Agent object for `update_children'.
+feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
 		list_is_pnd_source : BOOLEAN
 
@@ -549,9 +534,8 @@ feature -- Element change
 	row_height: INTEGER is
 			-- Height in pixels of each row.
 		do
-			check
-				to_be_implemented: False
-			end
+			Result := 16
+			--| FIXME To be implemented
 		end
 
 	clear_items is
@@ -968,6 +952,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.60  2000/03/24 17:32:35  brendel
+--| Moved update code into _I.
+--|
 --| Revision 1.59  2000/03/24 01:38:01  brendel
 --| Added set_default_minimum_size to some value other than zero. Needs fixing.
 --| Added `row_height'.

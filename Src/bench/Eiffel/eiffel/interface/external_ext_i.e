@@ -1,9 +1,9 @@
 indexing
 
 	description:
-        "Encapsulation of an external extension.";
-    date: "$Date$";
-    revision: "$Revision$"
+		"Encapsulation of an external extension.";
+	date: "$Date$";
+	revision: "$Revision$"
  
 class EXTERNAL_EXT_I
 
@@ -13,6 +13,10 @@ inherit
 			is_equal
 		end
 	SHARED_DECLARATIONS
+		redefine
+			is_equal
+		end
+	SHARED_BYTE_CONTEXT
 		redefine
 			is_equal
 		end
@@ -154,8 +158,51 @@ feature -- Code generation
 		end
 
 	generate_parameter_cast: BOOLEAN is
+			-- Should cast be generated for arguments?
 		do
 			Result := has_arg_list
+		end
+
+	generate_parameter_list (parameters: BYTE_LIST [EXPR_B]) is
+			-- Generate parameters for C extension
+		local
+			expr: EXPR_B;
+			i: INTEGER;
+			generate_cast: BOOLEAN
+			arg_types: ARRAY [STRING]
+			generated_file: INDENT_FILE
+		do
+			if parameters /= Void then
+				generated_file := Context.generated_file
+
+				generate_cast := Context.final_mode and then
+					generate_parameter_cast
+ 
+				if generate_cast then
+					arg_types := argument_types
+					i := arg_types.lower
+				end
+ 
+				from
+					parameters.start;
+				until
+					parameters.after
+				loop
+					expr := parameters.item;
+						-- add cast before parameter
+					if generate_cast then
+						generated_file.putchar ('(');
+						generated_file.putstring (arg_types.item (i));
+						generated_file.putstring (") ");
+					end;
+					expr.print_register;
+					if not parameters.islast then
+						generated_file.putstring (", ");
+					end;
+					parameters.forth;
+					i := i + 1;
+				end;
+			end;
 		end
 
 end -- class EXTERNAL_EXT_I

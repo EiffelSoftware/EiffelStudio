@@ -1198,6 +1198,7 @@ end;
 			old_type, new_type: TYPE_A;
 			i, arg_count: INTEGER;
 			new_ext, old_ext: EXTERNAL_I;
+			new_extension, old_extension: EXTERNAL_EXT_I;
 			old_arguments: like arguments;
 			current_class: CLASS_C;
 			vdrd51: VDRD51;
@@ -1225,10 +1226,7 @@ end;
 
 				-- Check if an external (resp. non-external) feature is not
 				-- redefined into a non external (resp. external) one
-			if 	(old_feature.is_external and then not is_external)
-				or else
-				(not old_feature.is_external and then is_external)
-			then
+			if old_feature.is_external /= is_external then
 				!!ve01;
 				ve01.set_class (current_class);
 				ve01.set_feature (Current);
@@ -1245,6 +1243,22 @@ end;
 					-- into a `standard' external that doesn't need to be encapsulated
 					-- the previous implementation led this `standard' external to
 					-- be encapsulated. Bad. -- Fabrice.
+
+					-- C++ redeclaration
+				old_extension := old_ext.extension
+				new_extension := new_ext.extension
+
+				if
+					(old_extension /= Void and old_extension.is_cpp) /=
+					(new_extension /= Void and new_extension.is_cpp)
+				then
+					-- Error C++ => C or C => C++
+			--	elseif
+			--		(new_extension /= Void and new_extension.is_cpp) and then
+			--		new_extension.type /= old_extension.type
+			--	then
+					-- Error: two different C++ types
+				end
 			end;
 
 				-- Check if an effective feature is not redefined in a

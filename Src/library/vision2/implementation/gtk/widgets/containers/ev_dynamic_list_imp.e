@@ -34,7 +34,9 @@ feature -- Access
 	i_th (i: INTEGER): G is
 			-- Item at `i'-th position.
 		do
-			Result := child_array.i_th (i)
+			if child_array /= Void then
+				Result := child_array.i_th (i)
+			end	
 		end
 
 feature -- Measurement
@@ -42,7 +44,9 @@ feature -- Measurement
 	count: INTEGER is
 			-- Number of items.
 		do
-			Result := child_array.count
+			if child_array /= Void then
+				Result := child_array.count
+			end	
 		end
 
 feature {NONE} -- Implementation

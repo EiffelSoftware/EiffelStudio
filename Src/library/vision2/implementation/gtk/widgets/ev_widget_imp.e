@@ -626,7 +626,6 @@ feature {NONE} -- Implementation
 		do
 			--| FIXME VB 05/11/2000
 			--| Temporary implementation.
-			
 			if not in_resize_event then
 				in_resize_event := True
 				if last_width /= a_width or else last_height /= a_height then
@@ -707,6 +706,17 @@ feature {NONE} -- Implementation
 					// C.GTK_HAS_FOCUS_ENUM) \\ 2) 
 				) = 1
 			end
+		end
+		
+	update_child_requisition (a_child: POINTER) is
+			-- Force the event loop to update the requistion of `a_child'.
+		local
+			temp_int: INTEGER
+		do
+				if is_displayed then
+					C.gtk_widget_queue_resize (a_child)
+					temp_int := C.gtk_main_iteration_do (False)
+				end
 		end
 
 	propagate_foreground_color_internal (a_color: EV_COLOR; a_c_object: POINTER) is
@@ -838,6 +848,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.73  2001/06/21 22:32:59  king
+--| Added update_child_requisition feature
+--|
 --| Revision 1.72  2001/06/19 16:58:05  king
 --| Commented out unneeded event masks
 --|

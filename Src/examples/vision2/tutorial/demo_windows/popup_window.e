@@ -24,21 +24,23 @@ feature {NONE} -- Initialization
 			-- Create the demo in `par'.
 		local
 			cmd: EV_ROUTINE_COMMAND
+			sep: EV_MENU_SEPARATOR
 		do
 			{EV_FIXED} Precursor (par)
 	
-			!! cmd.make (~popup_cmd)
+			create cmd.make (~popup_cmd)
 			add_button_press_command (3, cmd, Void)
 
-			!! button.make_with_text (Current, "I move")
+			create button.make_with_text (Current, "I move")
 			button.set_x_y (10, 10)
 
-			!! popup.make (Current)
-			!! item.make_with_text (popup, "GO")
-			!! cmd.make (~plus_command)
+			create popup.make (Current)
+			create item.make_with_text (popup, "GO")
+			create cmd.make (~plus_command)
 			item.add_select_command (cmd, Void)
-			!! item.make_with_text (popup, "BACK")
-			!! cmd.make (~less_command)
+			create sep.make (popup)
+			create item.make_with_text (popup, "BACK")
+			create cmd.make (~less_command)
 			item.add_select_command (cmd, Void)
 		end
 	

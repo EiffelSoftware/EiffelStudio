@@ -54,6 +54,7 @@ feature -- Conveniences
 			extension := language_name.extension
 
 			if extension /= Void then
+				Error_handler.set_error_position (language_name.start_position)
 				extension.type_check (Current)
 			end
 		end;

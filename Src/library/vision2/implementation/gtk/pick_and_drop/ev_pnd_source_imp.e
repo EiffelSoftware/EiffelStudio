@@ -381,9 +381,6 @@ feature -- Implementation
 			x, y: INTEGER
 		do
 			gdkwin := C.gdk_window_at_pointer ($x, $y)
-
-			print ("X = " + x.out + "  Y = " + y.out + "%N")
-			
 			create env
 			app_imp ?= env.application.implementation
 			check
@@ -469,6 +466,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/03/29 22:14:14  king
+--| Removed debugging line
+--|
 --| Revision 1.18  2000/03/27 19:43:36  oconnor
 --| added support for pebble_funtion
 --|

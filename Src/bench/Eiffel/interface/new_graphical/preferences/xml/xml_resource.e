@@ -12,17 +12,25 @@ creation
 
 feature -- Initialization
 	
-	make (root_resource: XML_NODE; r: RESOURCE_STRUCTURE) is
+	make (root_resource: XML_ELEMENT) is
 			-- initialization
 		require
-			not_void: root_resource /= Void and r /= Void
+			not_void: root_resource /= Void
 		local
 			cursor: DS_BILINKED_LIST_CURSOR [XML_NODE]
 			node: XML_ELEMENT
 			txt: XML_TEXT
+			att: XML_ATTRIBUTE
+			att_table: XML_ATTRIBUTE_TABLE
 		do
 			create name.make (20)
-			structure ?= r
+			att_table := root_resource.attributes
+			if att_table.has ("DESCRIPTION") then
+				att := att_table.item ("DESCRIPTION")
+				if att /= Void then
+					description := att.value
+				end
+			end
 			cursor := root_resource.new_cursor
 			from
 				cursor.start
@@ -97,7 +105,11 @@ feature -- Implementation
 			else
 				create {STRING_RESOURCE} value.make (name, s)
 			end
-			structure.table.add_resource (value)
+			if description /= Void then
+				value.set_description (description)
+			else
+				value.set_description (name)
+			end
 		end
 
 feature {NONE} -- Constants
@@ -107,11 +119,11 @@ feature {NONE} -- Constants
 
 feature -- Implementation
 
-	structure: RESOURCE_STRUCTURE
-		-- Structure of the resources.
-
 	name: STRING
 		-- Name of the variable.
+
+	description: STRING
+		-- Description of the variable.
 
 	value: RESOURCE
 		-- Value of the variable.
@@ -120,7 +132,7 @@ feature -- Implementation
 		-- Name for the outside world of Current.
 
 invariant
-	XML_RESOURCE_not_void: structure /= Void and name /= Void and value /= Void
+	XML_RESOURCE_not_void: name /= Void and value /= Void
 	XML_RESOURCE_consistency: not name.empty
 
 end -- class XML_RESOURCE

@@ -223,6 +223,10 @@ else
 		move ec.exe %INSTALL_DIR\releases\enterprise
 
 		remtrace Free edition
+		cdd %FINALIZATION_DIR
+		sed -e "s/free/enterprise/g" finalizedbench.ace >> newace.ace
+		move newace.ace finalizedbench.ace
+
 		cdd %EIFFEL_SRC\Eiffel\API\constants
 		sed -e "s/Version_type_name:\ STRING\ is\ \"Enterprise\ Edition\"/Version_type_name:\ STRING\ is\ \"Free\ Edition\"/g" system_constants.e >> new_system_constants.e
 		move new_system_constants.e system_constants.e

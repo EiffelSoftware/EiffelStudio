@@ -45,8 +45,9 @@ if [ ! "$NO_NEW_EC" ]; then
 		md $FINALIZATION_DIR
 	fi
 	cd $FINALIZATION_DIR
+	copy $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace ace.ace
 	clean_project
-	finalize $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace
+	finalize ace.ace
 	tgz_ccode ec
 	if [ ! -e ec.tar.gz ]; then
 		echo Could not finalize a new EiffelStudio
@@ -57,6 +58,10 @@ if [ ! "$NO_NEW_EC" ]; then
 
 	if [ "$MULTIPLE_EDITIONS" ]; then
 		remtrace Free version edition
+		cd $FINALIZATION_DIR
+		copy $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace ace.ace
+		sed -e "s/free/enterprise/g" ace.ace >> newace.ace
+		move newace.ace ace.ace
 		cd $EIFFEL_SRC/Eiffel/API/constants
 		sed -e "s/Version_type_name:\ STRING\ is\ \"Enterprise\ Edition\"/Version_type_name:\ STRING\ is\ \"Free\ Edition\"/g" system_constants.e >> new_system_constants.e
 		move new_system_constants.e system_constants.e
@@ -79,7 +84,7 @@ if [ ! "$NO_NEW_EC" ]; then
 		move new_bench_license.e bench_licence.e
 		cd $FINALIZATION_DIR
 		clean_project
-		finalize $NEW_EIFFEL_SRC/Eiffel/Ace/newbench.linux.ace
+		finalize ace.ace
 		tgz_ccode ec
 		if [ ! -e ec.tar.gz ]; then
 			echo Could not finalize a new EiffelStudio

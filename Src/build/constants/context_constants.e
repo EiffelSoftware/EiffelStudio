@@ -58,4 +58,8 @@ feature -- Constants for separators
 	single_dashed_line: INTEGER is unique;
 	double_dashed_line: INTEGER is unique;
 
+feature -- Default color name
+
+	default_value: STRING is "default"
+
 end

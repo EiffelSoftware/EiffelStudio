@@ -9,6 +9,8 @@ class
 
 inherit	
 	ECOM_STRUCTURE
+		rename
+			make as structure_make
 		undefine
 			is_equal
 		end
@@ -19,7 +21,23 @@ inherit
 
 creation
 	make,
-	make_by_pointer
+	make_by_pointer,
+	make_from_double
+
+feature -- Initialiazation
+
+	make is
+		do
+			structure_make
+			ccom_decimal_value_zero (item)
+		end
+
+	make_from_double (dbl_value: DOUBLE) is
+			-- Create with value 'dbl_value'
+		do
+			structure_make
+			ccom_decimal_from_double (dbl_value, item)
+		end
 
 feature  -- Access
 
@@ -128,6 +146,12 @@ feature -- Conversion
 			non_void_result: Result /= Void
 		end
 
+	truncated_to_double: DOUBLE is
+			-- Double value
+		do
+			Result := ccom_decimal_to_double (item)
+		end
+
 feature -- Basic operations
 	
 	prefix "-": ECOM_DECIMAL is
@@ -198,6 +222,18 @@ feature -- Basic operations
 
 feature {NONE} -- Externals
 
+	ccom_decimal_to_double (a_ptr: POINTER): DOUBLE is
+		external
+			"C (DECIMAL *):EIF_DOUBLE|%"E_Decimal.h%""
+		end
+
+	ccom_decimal_from_double (dbl_value: DOUBLE; a_ptr: POINTER) is
+		external
+			"C [macro <oleauto.h>](EIF_DOUBLE, DECIMAL *)"
+		alias
+			"VarDecFromR8"
+		end
+
 	ccom_decimal_scale (a_ptr: POINTER): INTEGER is
 		external
 			"C [macro %"E_Decimal.h%"] (DECIMAL *): EIF_INTEGER"
@@ -262,7 +298,7 @@ feature {NONE} -- Externals
 	
 	ccom_decimal_subtract (ptr_1, ptr_2, ptr_3: POINTER) is
 		external
-			"c [macro %"E_Decimal.h%"] (DECIMAL *, DECIMAL *, DECIMAL *)"
+			"C [macro %"E_Decimal.h%"] (DECIMAL *, DECIMAL *, DECIMAL *)"
 		end
 
 end -- class ECOM_DECIMAL

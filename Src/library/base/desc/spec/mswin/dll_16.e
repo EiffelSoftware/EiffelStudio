@@ -27,7 +27,7 @@ creation
 feature {NONE} -- Initialization
 
 	make (lib_name: STRING) is
-			-- Load DLL `lib_name'			
+			-- Load DLL `lib_name'
 		local
 			c_lib_name: ANY
 		do
@@ -92,7 +92,7 @@ feature {NONE} -- Externals
 
 	desc_load_library (p: POINTER): POINTER is
 			-- Load library
-                external
+		external
 			"C [dll16 %"desc.dll%"] (PTR): EIF_POINTER"
 		alias
 			"15"

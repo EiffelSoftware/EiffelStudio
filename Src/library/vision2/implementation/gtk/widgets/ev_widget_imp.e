@@ -23,10 +23,12 @@ inherit
         EV_GTK_CONSTANTS
 	EV_GDK_EXTERNALS
 
-	MEMORY
-		redefine
-			dispose
+	EV_GTK_ANY_IMP
+		rename
+			handle as widget
 		end
+
+	EV_GTK_OBJECT_MANAGER_IMP
 
 feature {NONE} -- Initialization	
 
@@ -34,10 +36,6 @@ feature {NONE} -- Initialization
 			-- This is a general initialization for 
 			-- widgets and has to be called by all the 
 			-- widgets with parents.
-		local
-			s: string
-			ev_str: ANY
-			con_id: INTEGER
 		do
 			-- Set the interface
 			interface := an_interface
@@ -46,6 +44,22 @@ feature {NONE} -- Initialization
 			set_default_options
 			set_default_colors
 
+			-- intialize the object handling.
+			initialize_object_handling
+		end
+
+	initialize_object_handling is
+			-- Register the widget in the hash table.
+			-- And Connect `destroy' event to `destroy_signal_callback'
+			-- function so that the Eiffel object is destroyed when the
+			-- Gtk object is destroyed.
+		local
+			s: string
+			ev_str: ANY
+--			con_id: INTEGER
+		do
+			register_object (Current)
+
 			-- Set a default destroy event.
  			-- connect gtk widget destroy signal to EV_WIDGET_IMP.destroy_signal_callback
 			create s.make (0)
@@ -53,12 +67,12 @@ feature {NONE} -- Initialization
 			ev_str := s.to_c
 							
 			-- Connect the signal
-			con_id := c_gtk_signal_connect (widget, $ev_str, $destroy_signal_callback, 
+			destroy_con_id := c_gtk_signal_connect (widget, $ev_str, $destroy_signal_callback, 
 						   $Current, Default_pointer, 
 						   Default_pointer, Default_pointer,
 						   Default_pointer, 0, False, Default_pointer)
 			check
-				successfull_connect: con_id > 0
+				successfull_connect: destroy_con_id > 0
 			end
 		end
 
@@ -111,11 +125,11 @@ feature -- Access
 
 feature -- Status report
 
-	destroyed: BOOLEAN is
-			-- Is screen window destroyed?
-                do
-                        Result := widget = Default_pointer
- 		end
+--	destroyed: BOOLEAN is
+--			-- Is screen window destroyed?
+-- 		do
+--			Result := widget = Default_pointer
+--		end
 
 	insensitive: BOOLEAN is
 			-- Is current widget insensitive?
@@ -167,9 +181,17 @@ feature -- Status setting
 
 	destroy is
 			-- Destroy screen widget implementation.
-                do
+		local
+			s: ANY
+b: BOOLEAN
+		do
 			if not destroyed then
-	                        gtk_widget_destroy (widget)
+				if destroy_con_id > 0 then
+					gtk_signal_disconnect (widget, destroy_con_id)
+				end
+				if gtk_is_widget (widget) then
+					gtk_widget_destroy (widget)
+				end
 			end
 			widget := Default_pointer
 		end
@@ -177,7 +199,13 @@ feature -- Status setting
 	destroy_signal_callback is
 			-- Called when the gtk widget is destroyed
 			-- Remove reference to destroyed widget
+local
+	obj: HASH_TABLE [EV_GTK_ANY_IMP, POINTER]
+
+
 		do
+obj := objects
+			unregister_object (Current)
 			widget := Default_pointer
 			interface.remove_implementation
 		end
@@ -185,7 +213,12 @@ feature -- Status setting
 	hide is
 			-- Make widget invisible on the screen.
                 do
-                        gtk_widget_hide (widget)
+			if vbox_widget /= default_pointer then
+				-- The widget is in `vbox_widget'.
+	                        gtk_widget_hide (vbox_widget)
+			else
+	                        gtk_widget_hide (widget)
+			end
 		end
 	
 	show is
@@ -815,8 +848,9 @@ feature -- Postconditions
 
 feature -- Implementation
 	
-	widget: POINTER
+--	widget: POINTER
                         -- pointer to the C structure representing this widget
+			--| no more needed because it is now inherited from EV_GTK_ANY_IMP.		
 	vbox_widget: POINTER
                         -- pointer to the C structure representing the
 			-- vbox in which the widget will be in.
@@ -841,24 +875,8 @@ feature -- Implementation
 			hbox_widget := box_wid
 		end
 
-feature -- Removal
-
-	dispose is
-			-- Action to be executed just before garbage collection
-			-- reclaims an object.
-			-- Default version does nothing; redefine in descendants
-			-- to perform specific dispose actions. Those actions
-			-- should only take care of freeing external resources;
-			-- they should not perform remote calls on other objects
-			-- since these may also be dead and reclaimed.
-		do
-			-- Destroy the gtkwidget.
---			if (gtk_is_widget (widget)) then
---				gtk_widget_destroy (widget)
---			end
--- Check for each widget if there are other gtk object than `widget'.
---! FIXME: use Andreas's Hashtable mechanism.
-		end	
+	destroy_con_id: INTEGER
+			--
 
 end -- class EV_WIDGET_IMP
 

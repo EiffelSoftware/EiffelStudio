@@ -120,7 +120,13 @@ feature -- Status report
 feature -- Settings
 
 	set_real_type (t: TYPE_A) is
-			-- Used only by BIT_VALUE_I
+			-- Sometime type of constants needs to be changed.
+			-- For example by default an integer constant is of type
+			-- INTEGER, but type of constant might be INTEGER_8 and
+			-- therefore current instance should be updated accordingly.
+			-- Same thing with real constant which can be either DOUBLE or
+			-- REAL.
+			-- Same thing with BIT_VALUE_I
 		require
 			t_not_void: t /= Void
 		do

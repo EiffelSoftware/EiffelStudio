@@ -20,11 +20,11 @@ feature -- Access
 	default_dispinterface (an_interface: WIZARD_IMPLEMENTED_INTERFACE_DESCRIPTOR): WIZARD_INTERFACE_DESCRIPTOR is
 			-- Default dispinterface.
 		do
-			if an_interface.interface_descriptor.dual then
-				Result := an_interface.interface_descriptor.dispinterface_descriptor
-			else
+	--		if an_interface.interface_descriptor.dual then
+	--			Result := an_interface.interface_descriptor.dispinterface_descriptor
+	--		else
 				Result := an_interface.interface_descriptor
-			end
+	--		end
 		end
 
 feature -- Basic operations
@@ -49,8 +49,6 @@ feature -- Basic operations
 			interface_generator.generate_functions_and_properties (an_interface.interface_descriptor)
 
 			if 
-				an_interface.interface_descriptor.dispinterface or 
-				an_interface.interface_descriptor.dual or
 				an_interface.interface_descriptor.inherit_from_dispatch
 			then
 				dispatch_interface := True

@@ -521,7 +521,12 @@ feature -- Basic Operations
 			body_code.append (Open_curly_brace)
 			body_code.append (New_line_tab_tab)
 
-			body_code.append (invoke_function_case_item (default_dispinterface (a_component)))
+			if 
+				default_dispinterface (a_component).dispinterface or
+				default_dispinterface (a_component).dual
+			then
+				body_code.append (invoke_function_case_item (default_dispinterface (a_component)))
+			end
 			body_code.append (New_line_tab_tab)
 			body_code.append ("default:")
 			body_code.append (New_line_tab_tab_tab)
@@ -552,6 +557,7 @@ feature -- Basic Operations
 			-- Case statement for functions in interface
 		require
 			non_void_descriptor: interface_desc /= Void
+			dispatch_or_dual: interface_desc.dispinterface or interface_desc.dual
 		local
 			prop_get_functions: HASH_TABLE[STRING, INTEGER]
 			prop_put_functions: HASH_TABLE[STRING, INTEGER]
@@ -561,12 +567,12 @@ feature -- Basic Operations
 			create prop_put_functions.make (2)
 			create Result.make (10000)			
 
-			from
-				interface_desc.functions.start
-			until
-				interface_desc.functions.after
-			loop
-				if (interface_desc.functions.item.func_kind = Func_dispatch) then
+			if interface_desc.inherit_from_dispatch then
+				from
+					interface_desc.functions.start
+				until
+					interface_desc.functions.after
+				loop
 					if is_propertyget (interface_desc.functions.item.invoke_kind) then
 						prop_get_functions.force (propertyget_case (interface_desc.functions.item), interface_desc.functions.item.member_id)
 					elseif is_propertyput (interface_desc.functions.item.invoke_kind) then
@@ -576,55 +582,60 @@ feature -- Basic Operations
 					else
 						Result.append (function_case (interface_desc.functions.item))
 					end
+
+					interface_desc.functions.forth
 				end
 
-				interface_desc.functions.forth
-			end
-
-			if not interface_desc.properties.empty then
-				from
-					interface_desc.properties.start
-				until
-					interface_desc.properties.after
-				loop
-					Result.append (case_code (properties_case_body (interface_desc.properties.item), interface_desc.properties.item.member_id))
-					interface_desc.properties.forth
-				end
-			end
-
-			if not prop_get_functions.empty then
-				from
-					prop_get_functions.start
-				until
-					prop_get_functions.off
-				loop
-					create a_body.make (1000)
-					a_body.append (prop_get_functions.item_for_iteration)
-
-					if prop_put_functions.has (prop_get_functions.key_for_iteration) then
-						a_body.append (prop_put_functions.item (prop_get_functions.key_for_iteration))
-						prop_put_functions.remove (prop_get_functions.key_for_iteration)
+				if not interface_desc.properties.empty then
+					from
+						interface_desc.properties.start
+					until
+						interface_desc.properties.after
+					loop
+						Result.append (case_code (properties_case_body (interface_desc.properties.item), interface_desc.properties.item.member_id))
+						interface_desc.properties.forth
 					end
+				end
 
-					Result.append (case_code (a_body, prop_get_functions.key_for_iteration))
-					prop_get_functions.forth
+				if not prop_get_functions.empty then
+					from
+						prop_get_functions.start
+					until
+						prop_get_functions.off
+					loop
+						create a_body.make (1000)
+						a_body.append (prop_get_functions.item_for_iteration)
+
+						if prop_put_functions.has (prop_get_functions.key_for_iteration) then
+							a_body.append (prop_put_functions.item (prop_get_functions.key_for_iteration))
+							prop_put_functions.remove (prop_get_functions.key_for_iteration)
+						end
+
+						Result.append (case_code (a_body, prop_get_functions.key_for_iteration))
+						prop_get_functions.forth
+					end
+				end
+
+				if not prop_put_functions.empty then
+					from
+						prop_put_functions.start
+					until
+						prop_put_functions.off
+					loop
+						Result.append (case_code (prop_put_functions.item_for_iteration, prop_put_functions.key_for_iteration))
+						prop_put_functions.forth
+					end
+				end
+
+				if not interface_desc.inherited_interface.name.is_equal (IDispatch_type) then
+					Result.append (invoke_function_case_item (interface_desc.inherited_interface))
 				end
 			end
-
-			if not prop_put_functions.empty then
-				from
-					prop_put_functions.start
-				until
-					prop_put_functions.off
-				loop
-					Result.append (case_code (prop_put_functions.item_for_iteration, prop_put_functions.key_for_iteration))
-					prop_put_functions.forth
-				end
-			end
-
-			if not interface_desc.inherited_interface.name.is_equal (IDispatch_type) then
-				Result.append (invoke_function_case_item (interface_desc.inherited_interface))
-			end
+		ensure
+			non_void_result: Result /= Void
+			valid_result: interface_desc.inherit_from_dispatch and 
+					not interface_desc.functions.empty
+					implies not Result.empty
 		end
 
 	properties_case_body (prop_desc: WIZARD_PROPERTY_DESCRIPTOR): STRING is
@@ -769,8 +780,11 @@ feature -- Basic Operations
 			dispatch: BOOLEAN
 			a_body_generator: WIZARD_DISPATCH_INVOKE_CASE_BODY_GENERATOR
 		do
-			create a_body_generator.make
-			Result := a_body_generator.function_case_body (func_desc)
+			create a_body_generator.make (func_desc)
+			Result := a_body_generator.function_case_body 
+		ensure
+			non_void_body: Result /= Void
+			valid_body: Result /= Void
 		end
 
 	case_code (a_case_body: STRING; a_case_member_id: INTEGER): STRING is

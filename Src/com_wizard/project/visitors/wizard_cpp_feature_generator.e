@@ -179,24 +179,7 @@ feature {NONE} -- Implementation
 				end
 			end
 			Result.append (New_line_tab_tab_tab)
-			Result.append (Com_eraise)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (Formatter)
-			Result.append (Dot)
-			Result.append (Format_message)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (variable_name)
-			Result.append (Close_parenthesis)
-			Result.append (Comma_space)
-			Result.append (Hresult_code)
-			Result.append (Space)
-			Result.append (Open_parenthesis)
-			Result.append (variable_name)
-			Result.append (Close_parenthesis)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
+			Result.append (raise_com_error (variable_name))
 			Result.append (New_line_tab_tab)
 			Result.append (Close_curly_brace)
 			Result.append (Semicolon)
@@ -318,8 +301,27 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 			Result.append (New_line_tab_tab)
 
-			--	com_eraise (f.c_format_message (`variable_name'), HRESULT_CODE (`variable_name'));
+			Result.append (raise_com_error (variable_name))
 
+			-- }
+
+			Result.append (Close_curly_brace)
+			Result.append (Semicolon)
+		ensure
+			non_void_examine_hresult: Result /= Void
+			valid_examine_hresult: not Result.empty
+		end
+
+	raise_com_error (variable_name: STRING): STRING is
+			-- Code for raising COM exception.
+		require
+			non_void_name: variable_name /= Void
+			valid_name: not variable_name.empty
+		do
+			--	com_eraise (f.c_format_message (`variable_name'), HRESULT_CODE (EN_PROG));
+
+			create Result.make (100)
+			
 			Result.append (Com_eraise)
 			Result.append (Space)
 			Result.append (Open_parenthesis)
@@ -335,16 +337,11 @@ feature {NONE} -- Implementation
 			Result.append (Close_parenthesis)
 			Result.append (Semicolon)
 			Result.append (New_line_tab)
-
-			-- }
-
-			Result.append (Close_curly_brace)
-			Result.append (Semicolon)
 		ensure
-			non_void_examine_hresult: Result /= Void
-			valid_examine_hresult: not Result.empty
+			non_void_raise: Result /= Void
+			valid_raise: not Result.empty
 		end
-
+		
 	initialize_excepinfo: STRING is
 			-- Code to initialize excepinfo
 		do

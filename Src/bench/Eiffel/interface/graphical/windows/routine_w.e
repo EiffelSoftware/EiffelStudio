@@ -74,6 +74,8 @@ feature -- Update Resources
 			-- if the value of `new_res' is applicable.
 			-- Also update the interface.
 		local
+			rout_cli_cmd: SHOW_ROUTCLIENTS;
+			stop_cmd: SHOW_BREAKPOINTS;
 			fr: like Feature_tool_resources
 		do
 			fr := Feature_tool_resources
@@ -89,6 +91,14 @@ feature -- Update Resources
 				else
 					format_bar.remove
 				end
+			elseif old_res = fr.show_all_callers then
+				rout_cli_cmd ?= 
+					showroutclients_frmt_holder.associated_command;
+				rout_cli_cmd.set_show_all_callers (new_res.actual_value)
+			elseif old_res = fr.do_flat_in_breakpoints then
+				stop_cmd ?= 
+					showstop_frmt_holder.associated_command;
+				stop_cmd.set_format_mode (new_res.actual_value)
 			end;
 			old_res.update_with (new_res)
 		end;
@@ -203,14 +213,14 @@ feature -- Update
 			end
 		end
 
-    resynchronize_debugger (feat: E_FEATURE) is
-            -- Resynchronize debugged routine window with feature `feat'.
+	resynchronize_debugger (feat: E_FEATURE) is
+			-- Resynchronize debugged routine window with feature `feat'.
 			-- If `feat' resynchronize routine window.
 		local
 			cur: CURSOR;
 			old_do_format: BOOLEAN;
 			f: FORMATTER
-        do
+		do
 			if (in_debug_format and then stone /= Void and then
 				stone.e_feature /= Void) and then
 			 	(feat = Void or else 
@@ -218,10 +228,10 @@ feature -- Update
 			then
 				cur := text_window.cursor;
 				f := showstop_frmt_holder.associated_command;
-                old_do_format := f.do_format;
-                f.set_do_format (true);
+				old_do_format := f.do_format;
+				f.set_do_format (true);
 				f.execute (stone);
-                f.set_do_format (old_do_format)
+				f.set_do_format (old_do_format)
 				text_window.go_to (cur)
 			end
 		end;
@@ -305,7 +315,7 @@ feature -- Stone updating
 
 	process_breakable (a_stone: BREAKABLE_STONE) is
 		do
-			stop_hole_button.process_breakable (a_stone)
+			stop_hole_button.associated_command.process_breakable (a_stone)
 		end;
 
 	process_class (a_stone: CLASSC_STONE) is
@@ -379,6 +389,8 @@ feature -- Graphical Interface
 	
 	build_widgets is
 			-- Build the widgets for this window.
+		local
+			sep: SEPARATOR
 		do
 			if is_a_shell then
 				set_default_size
@@ -392,6 +404,7 @@ feature -- Graphical Interface
 
 			!! edit_bar.make (l_Command_bar_name, toolbar_parent);
 			build_bar;
+			!! sep.make ("", toolbar_parent);
 			!! format_bar.make (l_Format_bar_name, toolbar_parent);
 			build_format_bar;
 			build_command_bar;
@@ -540,8 +553,8 @@ feature {NONE} -- Implementation; Graphical Interface
 			if show_menus then
 				!! shell_menu_entry.make (shell_cmd, special_menu);
 				!! shell.make (shell_cmd, shell_button, shell_menu_entry);
-            	!! super_melt_cmd.make (Current);
-            	!! super_melt_menu_entry.make (super_melt_cmd, special_menu);
+				!! super_melt_cmd.make (Current);
+				!! super_melt_menu_entry.make (super_melt_cmd, special_menu);
 			else
 				!! shell.make_plain (shell_cmd);
 				shell.set_button (shell_button);

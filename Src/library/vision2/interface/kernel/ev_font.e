@@ -282,20 +282,29 @@ feature -- Status report
 			bridge_ok: Result = implementation.is_proportional
 		end
 
-	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER] is
-			-- [width, height] in pixels of `a_string' in the current font,
+	string_size (a_string: STRING): TUPLE [INTEGER, INTEGER, INTEGER, INTEGER] is
+			-- [width, height, left_offset, right_offset] in pixels of `a_string' in the current font,
 			-- taking into account line breaks ('%N').
+			-- `width' and `height' correspond to the rectange used to bound `a_string', and
+			-- should be used when placing strings next to each as part of a text.
+			-- On some fonts, characters may extend outside of the bounds given by `width' and `height',
+			-- for example certain italic letters may overhang other letters. Use `left_offset' and
+			-- `right_offset' to determine if there is any overhang for `a_string'. a negative `left_offset'
+			-- indicates overhang to the left, while a positive `right_offset' indicates an overhang to the right.
+			-- To determine the complete bounding rectangle for `a_string' add negative `left_offset'
+			-- and positive `right_offset' to `width'.
 		require
 			not_destroyed: not is_destroyed
 			a_string_not_void: a_string /= Void
 		do
 			Result := implementation.string_size (a_string)
 		ensure
+			result_not_void: Result /= Void
 			bridge_ok: Result.item (1).is_equal
 				(implementation.string_size (a_string).item (1)) and
 				Result.item (2).is_equal
 				(implementation.string_size (a_string).item (2))
-		end
+		end		
 
 feature -- Basic operations
 

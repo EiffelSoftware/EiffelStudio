@@ -91,11 +91,11 @@ feature -- Basic Operation
 	undo is
 			-- Execute `Current'.
 		local
-			integer_constant: GB_INTEGER_CONSTANT
-			string_constant: GB_STRING_CONSTANT
-			pixmap_constant: GB_PIXMAP_CONSTANT
-			directory_constant: GB_DIRECTORY_CONSTANT
-			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
+--			integer_constant: GB_INTEGER_CONSTANT
+--			string_constant: GB_STRING_CONSTANT
+--			pixmap_constant: GB_PIXMAP_CONSTANT
+--			directory_constant: GB_DIRECTORY_CONSTANT
+--			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
 --			if internal_constant.type.is_equal (Integer_constant_type) then
 --				integer_constant ?= internal_constant

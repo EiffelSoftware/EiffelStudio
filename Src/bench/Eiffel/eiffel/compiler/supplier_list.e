@@ -5,7 +5,7 @@ class SUPPLIER_LIST
 inherit
 
 	LINKED_LIST [SUPPLIER_INFO];
-	SHARED_WORKBENCH
+	SHARED_EIFFEL_PROJECT
 
 creation
 
@@ -64,12 +64,12 @@ feature
 				id := s.item;
 debug ("ACTIVITY");
 	io.error.putstring ("SUPPLIER_LIST add_occurence: ");
-	io.error.putstring (System.class_of_id (id).class_name);
+	io.error.putstring (Eiffel_system.class_of_id (id).name);
 	io.error.new_line;
 end;
 				suppl_info := info (id);
 				if suppl_info = Void then
-					!!suppl_info.make (System.class_of_id (id));
+					!! suppl_info.make (Eiffel_system.class_of_id (id));
 					put_front (suppl_info);
 				else
 					suppl_info.add_occurence;
@@ -113,6 +113,9 @@ end;
 			loop
 				id := l.item.id;
 				if not Result.has (id) then
+		-- **** FIXME **** 
+		-- doesn't extend check to if id already exists since
+		-- result is set !!!???!! dinov
 debug ("ACTIVITY")
 	io.error.putint (id);
 	io.error.new_line;
@@ -144,9 +147,9 @@ end;
 		require
 			positive_argument: id > 0;
 		local
-			pos: INTEGER;
+			cur: CURSOR;
 		do
-			pos := index;
+			cur := cursor;
 			from
 				start
 			until
@@ -157,7 +160,7 @@ end;
 				end;
 				forth;
 			end;
-			go_i_th (pos);
+			go_to (cur);
 		end;
 
 feature
@@ -201,7 +204,7 @@ feature
 			until
 				after
 			loop
-				io.error.putstring (item.supplier.class_name);
+				io.error.putstring (item.supplier.name);
 				io.error.putstring (" [");
 				io.error.putint (item.occurence);
 				io.error.putstring ("]  ");

@@ -23,6 +23,7 @@
 #include "search.h"
 #include "eiffel.h"		/* For bcopy/memcpy */
 #include <stdio.h>		/* For stream flushing */
+#include "dle.h"		/* For dle_reclaim */
 
 #ifdef WORKBENCH
 #include "interp.h"
@@ -645,6 +646,8 @@ public void reclaim()
 	eif_free_dlls();
 #endif
 #endif
+
+	dle_reclaim();			/* Reclaim resources introduced by DLE */
 
 #ifdef DEBUG
 	dprintf(1)("reclaim: ready to die!\n");

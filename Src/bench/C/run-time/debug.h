@@ -125,39 +125,39 @@ extern struct dbstack db_stack;	/* Calling context stack */
 extern struct pgcontext d_cxt;	/* Program context */
 
 /* Context set up */
-extern void dstart();			/* Beginning of melted feature execution */
-extern void dexset();			/* Associate context with Eiffel call stack */
-extern void drun();				/* Starting execution of debugged feature */
-extern void dostk();			/* Set operational stack context */
+extern void dstart(void);			/* Beginning of melted feature execution */
+extern void dexset(struct ex_vect *exvect);			/* Associate context with Eiffel call stack */
+extern void drun(int body_id);				/* Starting execution of debugged feature */
+extern void dostk(void);			/* Set operational stack context */
 
 /* Step by step execution control */
-extern void dstep();			/* A single "step" has been reached */
-extern void dnext();			/* A single "next" (end of call) reached */
-extern void dline();			/* End of line (semicolon) reached */
-extern void dsync();			/* (Re)synchronize d_data cached information */
-extern void dsetbreak();		/* Set/remove breakpoint in feature */
-extern void dstatus();			/* Update execution status (RESUME request) */
+extern void dstep();			/* A single "step" has been reached */ /* %%zs undefined */
+extern void dnext(void);			/* A single "next" (end of call) reached */
+extern void dline();			/* End of line (semicolon) reached */ /* %%zs undefined */
+extern void dsync(void);			/* (Re)synchronize d_data cached information */
+extern void dsetbreak(int body_id, uint32 offset, int what);		/* Set/remove breakpoint in feature */
+extern void dstatus(int dx);			/* Update execution status (RESUME request) */
 
 /* Debugging stack handling */
-extern void initdb();			/* Create debugger stack and once list */
-extern struct dcall *dpush();	/* Push value on stack */
-extern struct dcall *dpop();	/* Pop value off stack */
-extern struct dcall *dtop();	/* Current top value */
-extern void dmove();			/* Move active routine cursor */
+extern void initdb(void);			/* Create debugger stack and once list */
+extern struct dcall *dpush(register struct dcall *val);	/* Push value on stack */
+extern struct dcall *dpop(void);	/* Pop value off stack */
+extern struct dcall *dtop(void);	/* Current top value */
+extern void dmove(int offset);			/* Move active routine cursor */
 
 /* Breakpoint handling */
-extern rt_shared void dbreak();	/* Program execution stopped */
+extern rt_shared void dbreak(int why);	/* Program execution stopped */
 
 /* Once list handling */
-extern uint32 *onceadd();		/* Add once body_id to list */	
-extern uint32 *onceitem();		/* Item with body_id in list */
+extern uint32 *onceadd(uint32 id);		/* Add once body_id to list */	
+extern uint32 *onceitem(register uint32 id);		/* Item with body_id in list */
 
 /* Once result evaluation */
-extern struct item *docall();	/* Evaluate result of already called once func*/
+extern struct item *docall(register uint32 body_id, register int arg_num);	/* Evaluate result of already called once func*/
 
 /* Downloading byte code from compiler */
-extern int dmake_room();		/* Pre-extend melting table */
-extern void drecord_bc();		/* Record new byte code in run-time tables */
+extern int dmake_room(int new);		/* Pre-extend melting table */
+extern void drecord_bc(int body_idx, int body_id, char *addr);		/* Record new byte code in run-time tables */
 
 /* Macro used to get a calling context on top of the stack */
 #define dget()	dpush((struct dcall *) 0)

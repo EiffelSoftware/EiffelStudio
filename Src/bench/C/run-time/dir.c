@@ -86,8 +86,7 @@ typedef struct tagEIF_OS2_DIRENT {
  * Opening and closing a directory.
  */
 
-rt_public EIF_POINTER dir_open(name)
-char *name;
+rt_public EIF_POINTER dir_open(char *name)
 {
 	/* Open directory `name' for reading (can't do much else on UNIX) */
 #ifdef EIF_WIN32
@@ -126,8 +125,7 @@ char *name;
 }
 
 #ifdef EIF_WIN32
-rt_public void dir_close(dirp)
-EIF_WIN_DIRENT *dirp;
+rt_public void dir_close(EIF_WIN_DIRENT *dirp)
 {
 	if (dirp->handle != NULL)
 		FindClose (dirp->handle);
@@ -135,8 +133,7 @@ EIF_WIN_DIRENT *dirp;
 }
 
 #elif defined EIF_OS2
-rt_public void dir_close(dirp)
-EIF_OS2_DIRENT *dirp;
+rt_public void dir_close(EIF_OS2_DIRENT *dirp)
 {
 	APIRET rc = NO_ERROR;
 	if (dirp->first != 1)
@@ -144,8 +141,7 @@ EIF_OS2_DIRENT *dirp;
 }
 
 #else
-rt_public void dir_close(dirp)
-DIR *dirp;
+rt_public void dir_close(DIR *dirp)
 {
 	(void) closedir(dirp);
 }
@@ -156,8 +152,7 @@ DIR *dirp;
  */
 
 #ifdef EIF_WIN32
-rt_public void dir_rewind(dirp)
-EIF_WIN_DIRENT *dirp;
+rt_public void dir_rewind(EIF_WIN_DIRENT *dirp)
 {
 	if (dirp->handle != NULL)
 		FindClose(dirp->handle);
@@ -165,8 +160,7 @@ EIF_WIN_DIRENT *dirp;
 }
 
 #elif defined EIF_OS2
-rt_public void dir_rewind(dirp)
-EIF_OS2_DIRENT *dirp;
+rt_public void dir_rewind(EIF_OS2_DIRENT *dirp)
 {
 	APIRET rc = NO_ERROR;
 	if (dirp->first != 1)
@@ -175,8 +169,7 @@ EIF_OS2_DIRENT *dirp;
 }
 
 #else
-rt_public void dir_rewind(dirp)
-DIR *dirp;
+rt_public void dir_rewind(DIR *dirp)
 {
 #ifdef HAS_REWINDDIR
 	rewinddir(dirp);
@@ -189,9 +182,7 @@ DIR *dirp;
  */
 
 #ifdef EIF_WIN32
-rt_public char *dir_search(dirp, name)
-EIF_WIN_DIRENT *dirp;
-char *name;
+rt_public char *dir_search(EIF_WIN_DIRENT *dirp, char *name)
 {
 	HANDLE h;
 	WIN32_FIND_DATA wfd;
@@ -217,9 +208,7 @@ char *name;
 }
 
 #elif defined EIF_OS2
-rt_public char *dir_search(dirp, name)
-EIF_OS2_DIRENT *dirp;
-char *name;
+rt_public char *dir_search(EIF_OS2_DIRENT *dirp, char *name)
 {
 	HDIR h;
 	char *filename;
@@ -252,9 +241,9 @@ char *name;
 }
 
 #else
-rt_public char *dir_search(dirp, name)
-DIR *dirp;		/* Directory where search is made */
-char *name;		/* Entry we are looking for */
+rt_public char *dir_search(DIR *dirp, char *name)
+          		/* Directory where search is made */
+           		/* Entry we are looking for */
 {
 	/* Look for a given entry throughout the directory and return a pointer
 	 * to a descriptor if found, a null pointer otherwise.
@@ -285,8 +274,7 @@ char *name;		/* Entry we are looking for */
 #endif
 
 #ifdef EIF_WIN32
-rt_public char *dir_next(dirp)
-EIF_WIN_DIRENT *dirp;
+rt_public char *dir_next(EIF_WIN_DIRENT *dirp)
 {
 	HANDLE h;
 	WIN32_FIND_DATA wfd;
@@ -325,8 +313,7 @@ EIF_WIN_DIRENT *dirp;
 }
 
 #elif defined EIF_OS2
-rt_public char *dir_next(dirp)
-EIF_OS2_DIRENT *dirp;
+rt_public char *dir_next(EIF_OS2_DIRENT *dirp)
 {
 	HDIR h;
 	char *name;
@@ -378,8 +365,7 @@ EIF_OS2_DIRENT *dirp;
 }
 
 #else
-rt_public char *dir_next(dirp)
-DIR *dirp;
+rt_public char *dir_next(DIR *dirp)
 {
 	/* Return the Eiffel string corresponding to the next entry name, or a
 	 * null pointer if we reached the end of the directory.
@@ -398,7 +384,7 @@ DIR *dirp;
 }
 #endif
 
-rt_public EIF_OBJ dir_current()
+rt_public EIF_OBJ dir_current(void)
 {
 	/* Return the Eiffel string corresponding to the current working
 	 * directory.  Note this always returns a new string.
@@ -413,7 +399,7 @@ rt_public EIF_OBJ dir_current()
 	return ((EIF_OBJ)cwd_string);
 }
 
-rt_public EIF_CHARACTER eif_dir_separator ()
+rt_public EIF_CHARACTER eif_dir_separator (void)
 {
 #if defined EIF_WINDOWS || defined EIF_OS2
 	return '\\';
@@ -426,8 +412,7 @@ rt_public EIF_CHARACTER eif_dir_separator ()
 #endif
 }
 
-rt_public EIF_INTEGER eif_chdir (path)
-EIF_OBJ path;
+rt_public EIF_INTEGER eif_chdir (EIF_OBJ path)
 {
 	/* Set current dir to `path'
 	 * Returns the error status
@@ -435,8 +420,7 @@ EIF_OBJ path;
 	return chdir (eif_access(path));
 }
 
-rt_public EIF_BOOLEAN eif_dir_exists(name)
-char *name;
+rt_public EIF_BOOLEAN eif_dir_exists(char *name)
 {
 #ifdef __VMS
 	/* Need to check if directory is passed as simple name
@@ -541,8 +525,7 @@ char *name;
 #endif	/* else not vms */
 }
 
-rt_public EIF_BOOLEAN eif_dir_is_readable(name)
-char *name;
+rt_public EIF_BOOLEAN eif_dir_is_readable(char *name)
 {
 	/* Is directory readable */
 
@@ -606,8 +589,7 @@ char *name;
 #endif	/* not vms */
 }
 
-rt_public EIF_BOOLEAN eif_dir_is_writable(name)
-char *name;
+rt_public EIF_BOOLEAN eif_dir_is_writable(char *name)
 {
 	/* Is directory writable */
 
@@ -667,8 +649,7 @@ char *name;
 #endif	/* not vms */
 }
 
-rt_public EIF_BOOLEAN eif_dir_is_executable(name)
-char *name;
+rt_public EIF_BOOLEAN eif_dir_is_executable(char *name)
 {
 	/* Is directory executable */
 
@@ -726,8 +707,7 @@ char *name;
 #endif	/* not vms */
 }
 
-rt_public void eif_dir_delete(name)
-char *name;
+rt_public void eif_dir_delete(char *name)
 {
 		/* Delete directory `name' */
 
@@ -819,9 +799,7 @@ char *	dir_dot_dir ( char *	duplicate )
 /*
 **  Open a directory, return a handle for later use.
 */
-DIR *
-opendir(name)
-    char	*name;
+DIR *opendir(char	*name)
 {
     DIR		*dd;
 
@@ -856,10 +834,7 @@ opendir(name)
 /*
 **  Set the flag to indicate we want versions or not.
 */
-void
-vmsreaddirversions(dd, flag)
-    DIR		*dd;
-    int		flag;
+void vmsreaddirversions(DIR *dd, int flag)
 {
     dd->vms_wantversions = flag;
 }
@@ -868,9 +843,7 @@ vmsreaddirversions(dd, flag)
 /*
 **  Free up an opened directory.
 */
-void
-closedir(dd)
-    DIR		*dd;
+void closedir(DIR *dd)
 {
     free(dd->pattern);
     free((char *)dd);
@@ -934,9 +907,7 @@ collectversions(dd)
 /*
 **  Read the next entry from the directory.
 */
-struct dirent *
-readdir(dd)
-    DIR				*dd;
+struct dirent *readdir(DIR *dd)
 {
     struct dsc$descriptor_s	res;
     char			*p;
@@ -981,9 +952,7 @@ readdir(dd)
 /*
 **  Return something that can be used in a seekdir later.
 */
-long
-telldir(dd)
-    DIR		*dd;
+long telldir(DIR *dd)
 {
     return dd->context;
 }
@@ -992,10 +961,7 @@ telldir(dd)
 /*
 **  Return to a spot where we used to be.
 */
-void
-seekdir(dd, pos)
-    DIR		*dd;
-    long	pos;
+void seekdir(DIR *dd, long pos)
 {
     dd->context = pos;
 }

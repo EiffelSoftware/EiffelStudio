@@ -28,9 +28,9 @@
 #endif
 
 
-long chroff(), lngoff(), fltoff(), ptroff(), dbloff(), remainder(), padding();
-long objsiz(), nextarg();
-void getarg();
+long chroff(void), lngoff(void), fltoff(void), ptroff(void), dbloff(void), remainder(long int x), padding(long int x, long int y);
+long objsiz(void), nextarg(void);
+void getarg(int n, char *name);
 
 long a[6];		/* Parameters array */
 
@@ -56,15 +56,15 @@ struct parse {
 	{ "OBJSIZ", 6, objsiz },
 };
 
-struct parse *locate();
+struct parse *locate(char *name);
 
-void	print_usage();
+void	print_usage(void);
 
 FILE *input_file, *output_file;
 
-int main(argc, argv)	/* DEC C will complain if declared as type void */
-int argc;
-char **argv;
+int main(int argc, char **argv)	/* DEC C will complain if declared as type void */
+         
+            
 {
 	/* Pre-process input (stdin) and outputs new form with resolved offset
 	 * macros (introduced by '@') on stdout. C strings and C chars are skipped
@@ -201,15 +201,14 @@ char **argv;
 	exit(0);
 }
 
-void print_usage() {
+void print_usage(void) {
 	printf("Usage:    x2c    xfile   [cfile]\n");
 	printf("    where        xfile is an input X file (.x suffix is optional)\n");
 	printf("    and          cfile is optional output C file.\n");
 	printf("    Default suffix for xfile is .x, default suffix for cfile is .c\n");
 }	/* print usage */
 
-struct parse *locate(name)
-char *name;
+struct parse *locate(char *name)
 {
 	/* Locate macro in parsing array and return the structure corresponding
 	 * to that macro. If the macro is not recognized, return a null pointer.
@@ -225,9 +224,9 @@ char *name;
 	return (struct parse *) 0;
 }
 
-void getarg(n, name)
-int n;				/* Expected number of arguments */
-char *name;			/* Macro name (used only for error message) */
+void getarg(int n, char *name)
+      				/* Expected number of arguments */
+           			/* Macro name (used only for error message) */
 {
 	/* Extract all the arguments of the macro into tha a[] array, whose items
 	 * are #define'd to arguments for offset-calculation routines. Not pretty
@@ -256,7 +255,7 @@ char *name;			/* Macro name (used only for error message) */
 		ungetc(c, input_file);
 }
 
-long nextarg()
+long nextarg(void)
 {
 	/* Extract the next argument from the macro. Arguments are separated by
 	 * a ',' and the argument list ends with a ')'. The numerical value of
@@ -294,37 +293,37 @@ long nextarg()
  * Offset-calculation routines (take their arguments from a[] arary).
  */
 
-long chroff()
+long chroff(void)
 {
 	long to_add = nb_ref * REFSIZ;
 	return to_add + padding(to_add, (long) CHRSIZ);
 }
 
-long lngoff()
+long lngoff(void)
 {
 	long to_add = chroff() + nb_char *CHRSIZ;
 	return to_add + padding(to_add,(long)  LNGSIZ);
 }
 
-long fltoff()
+long fltoff(void)
 {
 	long to_add = lngoff() + nb_int * LNGSIZ;
 	return to_add + padding(to_add, (long) FLTSIZ);
 }
 
-long ptroff()
+long ptroff(void)
 {
 	long to_add = fltoff() + nb_flt * FLTSIZ;
 	return to_add + padding(to_add, (long) PTRSIZ);
 }
 
-long dbloff()
+long dbloff(void)
 {
 	long to_add = ptroff() + nb_ptr * PTRSIZ;
 	return to_add + padding(to_add, (long) DBLSIZ);
 }
 
-long objsiz()
+long objsiz(void)
 {
 	long to_add = dbloff() + nb_dbl * DBLSIZ;
 	return to_add + remainder(to_add);
@@ -334,14 +333,12 @@ long objsiz()
  * Private functions definitions
  */
 
-long remainder(x)
-long x;
+long remainder(long int x)
 {
 	return ((x % ALIGN) ? (ALIGN -(x % ALIGN)) : 0);
 }
 
-long padding(x,y)
-long x,y;
+long padding(long int x, long int y)
 {
 	return remainder(x) % y;
 }

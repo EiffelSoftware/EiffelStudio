@@ -38,7 +38,7 @@ extern "C" {
 
 #include "macros.h"
 
-extern double math_power ();
+extern double math_power (double v1, double v2);
 
 #ifdef CONCURRENT_EIFFEL
 #include "curextern.h"

@@ -10,30 +10,35 @@
 			Include file for printing an Eiffel object
 */
 
+#ifndef _out_h_
+#define _out_h_
+
 #ifdef __cplusplus
 extern "C" {
 #endif
- 
+
 #include "portable.h"
+#include "cecil.h"		/* %%zs added for EIF_OBJ definition line 26... */
+#include "interp.h"		/* %%zs added for 'struct item' definition line 48 */
 
 /*
  * Function declarations 
  */
 
-extern char *c_generator();		/* Eiffel feature `generator' (GENERAL) */
-extern char *c_tagged_out();	/* Eiffel feature `tagged_out' (GENERAL) */
-extern char *build_out();		/* Build tagged out in C buffer */
+extern char *c_generator(register char *Current);		/* Eiffel feature `generator' (GENERAL) */
+extern char *c_tagged_out(EIF_OBJ object);	/* Eiffel feature `tagged_out' (GENERAL) */
+extern char *build_out(EIF_OBJ object);		/* Build tagged out in C buffer */
 
 /*
  * Building `out' string for simple types.
  */
 
-extern char *c_outb();
-extern char *c_outi();
-extern char *c_outr();
-extern char *c_outd();
-extern char *c_outc();
-extern char *c_outp();
+extern EIF_REFERENCE c_outb(EIF_BOOLEAN b);		/* %%zs modified EIF_REFERENCE was char * */
+extern EIF_REFERENCE c_outi(EIF_INTEGER i);		/* %%zs modified EIF_REFERENCE was char * */
+extern EIF_REFERENCE c_outr(EIF_REAL f);		/* %%zs modified EIF_REFERENCE was char * */
+extern EIF_REFERENCE c_outd(EIF_DOUBLE d);		/* %%zs modified EIF_REFERENCE was char * */
+extern EIF_REFERENCE c_outc(EIF_CHARACTER c);		/* %%zs modified EIF_REFERENCE was char * */
+extern EIF_REFERENCE c_outp(EIF_POINTER p);		/* %%zs modified EIF_REFERENCE was char * */
 
 #ifdef WORKBENCH
 
@@ -43,7 +48,7 @@ extern char *c_outp();
  * build_out, as it expects a true object, not a simple type...
  */
 
-extern char *simple_out();		/* Tagged out form for simple types */
+extern char *simple_out(struct item *val);		/* Tagged out form for simple types */	/* %%zs need to include 'item' definition */
 
 #endif /* WORKBENCH */
 
@@ -51,3 +56,4 @@ extern char *simple_out();		/* Tagged out form for simple types */
 }
 #endif
 
+#endif

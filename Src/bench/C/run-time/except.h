@@ -203,49 +203,49 @@ extern struct xstack eif_trace;	/* Unsolved exception trace */
 extern struct eif_except exdata;	/* Exception handling global flags */
 
 /* Exported routines (used by the generated C code or run-time) */
-extern void expop();			/* Pops an execution vector off */
-extern void eraise();			/* Raise an Eiffel exception */
-extern void xraise();			/* Raise an exception with no tag */
-extern void eviol();			/* Eiffel violation of last assertion */
-extern void enomem();			/* Raises an "Out of memory" exception */
-extern struct ex_vect *exret();	/* Retries execution of routine */
-extern void exhdlr();			/* Call signal handler */
-extern void exinv();			/* Invariant record */
-extern void exasrt();			/* Assertion record */
-extern void exfail();			/* Signals: reached end of a rescue clause */
-extern void panic();			/* Run-time raised panic */
-extern void fatal_error();			/* Run-time raised fatal errors */
-extern void exok();				/* Resumption has been successful */
-extern void esfail();			/* Eiffel system failure */
-extern void ereturn();			/* Return to lastly recorded rescue entry */
-extern struct ex_vect *exget();	/* Get a new vector on stack */
-extern void excatch();			/* Set exception catcher from C to interpret */
-extern void exresc();			/* Signals entry in rescue clause */
+extern void expop(register1 struct xstack *stk);	/* Pops an execution vector off */
+extern void eraise(char *tag, long num);			/* Raise an Eiffel exception */
+extern void xraise(int code);			/* Raise an exception with no tag */
+extern void eviol(void);			/* Eiffel violation of last assertion */
+extern void enomem(void);			/* Raises an "Out of memory" exception */
+extern struct ex_vect *exret(register1 struct ex_vect *rout_vect);	/* Retries execution of routine */
+extern void exhdlr(Signal_t (*handler)(int), int sig);			/* Call signal handler */
+extern void exinv(register2 char *tag, register3 char *object);			/* Invariant record */
+extern void exasrt(char *tag, int type);			/* Assertion record */
+extern void exfail(void);			/* Signals: reached end of a rescue clause */
+extern void panic(char *msg);			/* Run-time raised panic */
+extern void fatal_error(char *msg);			/* Run-time raised fatal errors */
+extern void exok(void);				/* Resumption has been successful */
+extern void esfail(void);			/* Eiffel system failure */
+extern void ereturn(void);			/* Return to lastly recorded rescue entry */
+extern struct ex_vect *exget(register2 struct xstack *stk);	/* Get a new vector on stack */
+extern void excatch(char *jmp);			/* Set exception catcher from C to interpret */
+extern void exresc(register2 struct ex_vect *rout_vect);			/* Signals entry in rescue clause */
 #ifndef WORKBENCH
-extern struct ex_vect *exft();	/* Set execution stack in final mode */
+extern struct ex_vect *exft(void);	/* Set execution stack in final mode */
 #endif
-extern struct ex_vect *exset();	/* Set execution stack on routine entrance */
-extern struct ex_vect *exnext();	/* Read next eif_trace item from bottom */
+extern struct ex_vect *exset(char *name, int origin, char *object);	/* Set execution stack on routine entrance */
+extern struct ex_vect *exnext(void);	/* Read next eif_trace item from bottom */
 
 /* Routines for run-time usage only */
-extern struct ex_vect *extop();	/* Top of Eiffel stack */
-extern void esdie();
+extern struct ex_vect *extop(register1 struct xstack *stk);	/* Top of Eiffel stack */
+extern void esdie(int code);
 
 /* Eiffel interface with class EXCEPTIONS */
-extern long eeocode();			/* Original exception code */
-extern char *eeotag();			/* Original exception tag */
-extern char *eeoclass();		/* Original class where exception occurred */
-extern char *eeorout();			/* Original routine where exception occurred */
-extern long eelcode();			/* Last exception code */
-extern char *eeltag();			/* Last exception tag */
-extern char *eelclass();		/* Last class where exception occurred */
-extern char *eelrout();			/* Last routine where exception occurred */
-extern void eetrace();			/* Print/No Print of exception history table */
-extern void eecatch();			/* Catch exception */
-extern void eeignore();			/* Ignore exception */
-extern char *eename();			/* Exception description */
+extern long eeocode(void);			/* Original exception code */
+extern char *eeotag(void);			/* Original exception tag */
+extern char *eeoclass(void);		/* Original class where exception occurred */
+extern char *eeorout(void);			/* Original routine where exception occurred */
+extern long eelcode(void);			/* Last exception code */
+extern char *eeltag(void);			/* Last exception tag */
+extern char *eelclass(void);		/* Last class where exception occurred */
+extern char *eelrout(void);			/* Last routine where exception occurred */
+extern void eetrace(char b);			/* Print/No Print of exception history table */
+extern void eecatch(long ex);			/* Catch exception */
+extern void eeignore(long ex);			/* Ignore exception */
+extern char *eename(long ex);			/* Exception description */
 
-extern EIF_REFERENCE stack_trace_string ();		/* Exception stack as an Eiffel string */
+extern EIF_REFERENCE stack_trace_string(void);		/* Exception stack as an Eiffel string */
 
 #ifdef __cplusplus
 }

@@ -58,8 +58,8 @@ rt_private struct stack free_stack = {			/* Entries free in hector */
 };
 
 /* Private function declarations */
-rt_private EIF_OBJ hector_addr();		/* Maps an adress to an hector position */
-rt_private char *hpop();				/* Pop a free entry off the free stack */
+rt_private EIF_OBJ hector_addr(char *root);		/* Maps an adress to an hector position */
+rt_private char *hpop(void);				/* Pop a free entry off the free stack */
 
 #ifndef lint
 rt_private char *rcsid =
@@ -73,8 +73,7 @@ rt_private char *rcsid =
  * meaning anyway).
  */
 
-rt_public char *efreeze(object)
-EIF_OBJ object;
+rt_public char *efreeze(EIF_OBJ object)
 {
 	/* This is the most costly routine of Hector. Given an object, we want to
 	 * release it from GC control and prevent it from moving in memory. This is
@@ -142,8 +141,7 @@ EIF_OBJ object;
 	return root;						/* Freezing succeeded, new location */
 }
 
-rt_public EIF_OBJ eadopt(object)
-EIF_OBJ object;
+rt_public EIF_OBJ eadopt(EIF_OBJ object)
 {
 	/* The C wants to keep an Eiffel reference. Very well, simply add an entry
 	 * in the remembered hector objects stack 'hec_saved' and return the new
@@ -154,8 +152,7 @@ EIF_OBJ object;
 
 }
 
-rt_public EIF_OBJ ewean(object)
-EIF_OBJ object;
+rt_public EIF_OBJ ewean(EIF_OBJ object)
 {
 	/* The C wants to get rid of a reference which was previously kept. It may
 	 * be only be an adopted one. Anyway, we remove the object from hector
@@ -175,8 +172,7 @@ EIF_OBJ object;
 	return ret;				/* return unprotected address */
 }
 
-rt_public void eufreeze(object)
-char *object;
+rt_public void eufreeze(char *object)
 {
 	/* The C wants to get rid of a frozen reference which was previously
 	 * obtained through efreeze(). However, the argument is the address of the
@@ -203,8 +199,7 @@ char *object;
  * Run-time entries
  */
 
-rt_public EIF_OBJ hrecord(object)
-char *object;
+rt_public EIF_OBJ hrecord(char *object)
 {
 	/* This routine is called by the generated C code before passing references
 	 * to C. It records the object in the hector table and returns the address
@@ -229,8 +224,7 @@ char *object;
  * Low-level routines left visible to enable high wizardry--RAM.
  */
 
-rt_public EIF_OBJ henter(object)
-char *object;
+rt_public EIF_OBJ henter(char *object)
 {
 	/* Enter 'object' into the hector indirection table and return its
 	 * indirection pointer. I think this run-time call might be useful if
@@ -253,8 +247,7 @@ char *object;
 	return (EIF_OBJ) address;			/* Location in Hector table */
 }
 
-rt_public void hfree(address)
-EIF_OBJ address;
+rt_public void hfree(EIF_OBJ address)
 {
 	/* This routine frees an hector indirection pointer obtained through henter.
 	 * The indirection pointer is reset to a null pointer and its location
@@ -269,8 +262,8 @@ EIF_OBJ address;
 	}
 }
 
-rt_public char *spfreeze(object)
-char *object;		/* Physical address */
+rt_public char *spfreeze(char *object)
+             		/* Physical address */
 {
 	/* Given an special object, we want to release it from GC control and 
 	 * prevent it from moving in memory. This is dangerous as we will have
@@ -289,8 +282,8 @@ char *object;		/* Physical address */
 	return object;					/* Object's location did not change */
 }
 
-rt_public void spufreeze(object)
-char *object;		/* Physical address */
+rt_public void spufreeze(char *object)
+             		/* Physical address */
 {
 	/* We want to put back under GC control a frozen object previously
 	 * obtain through spfreeze(). The B_C bit on the object is cleared.
@@ -303,7 +296,7 @@ char *object;		/* Physical address */
  * Stack handling
  */
 
-rt_private char *hpop()
+rt_private char *hpop(void)
 {
 	/* Pop an address of the free_stack. If the stack is empty, return a
 	 * null pointer. Otherwise the address points directly to a free entry
@@ -337,8 +330,7 @@ rt_private char *hpop()
 	return *top;
 }
 
-rt_private EIF_OBJ hector_addr(root)
-char *root;
+rt_private EIF_OBJ hector_addr(char *root)
 {
 	/* Given an object's address, look in the stack and find the hector address
 	 * associated with the physical address and return it. This is a linear

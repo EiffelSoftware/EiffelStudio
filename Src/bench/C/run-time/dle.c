@@ -60,8 +60,7 @@ static FILE *fil;						/* melted.eif file */
 /*#define DEBUG 3		/**/
 
 
-rt_public EIF_INTEGER dle_retrieve(obj, dle_path)
-EIF_REFERENCE obj, dle_path;
+rt_public EIF_INTEGER dle_retrieve(EIF_REFERENCE obj, EIF_REFERENCE dle_path)
 {
 	/* Load the Dynamic Class Set. */
 
@@ -507,9 +506,7 @@ if (body_id >= 0)
 #endif
 }
 
-rt_public EIF_REFERENCE dle_instance(dtype, arg)
-int dtype;
-EIF_REFERENCE arg;
+rt_public EIF_REFERENCE dle_instance(int dtype, EIF_REFERENCE arg)
 {
 	/* Make an DLE object of dynamic type `dtype', initialized by 
 	 * procedure `make' of its base class, using `arg' as argument.
@@ -553,8 +550,7 @@ EIF_REFERENCE arg;
 #endif
 }
 
-rt_public EIF_INTEGER dle_search(obj, class_name)
-EIF_REFERENCE obj, class_name;
+rt_public EIF_INTEGER dle_search(EIF_REFERENCE obj, EIF_REFERENCE class_name)
 {
 	/* Search in the system for `class_name' with a dtype 
 	 * within the DC-set range. Set its dtype in `obj' if found,
@@ -573,13 +569,12 @@ EIF_REFERENCE obj, class_name;
 	return (EIF_INTEGER) DLE_NO_CLASS;
 }
 
-rt_public void c_pass_dle_routines(set_dtype_addr)
-EIF_PROC set_dtype_addr;
+rt_public void c_pass_dle_routines(EIF_PROC set_dtype_addr)
 {
 	eif_set_dtype = set_dtype_addr;
 }
 
-rt_public void dle_reclaim()
+rt_public void dle_reclaim(void)
 {
 #ifdef WORKBENCH
 

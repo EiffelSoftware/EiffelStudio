@@ -53,10 +53,10 @@ extern char *   dir_dot_dir (char * dir);
 #endif
 
 
-extern EIF_POINTER dir_open();
-extern void dir_rewind();
-extern char *dir_search();
-extern char *dir_next();
+extern EIF_POINTER dir_open(char *name);
+extern void dir_rewind(DIR *dirp);
+extern char *dir_search(DIR *dirp, char *name);
+extern char *dir_next(DIR *dirp);
 
 #ifdef __cplusplus
 }

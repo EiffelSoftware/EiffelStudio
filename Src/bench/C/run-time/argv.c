@@ -28,14 +28,12 @@ rt_public char **eif_argv;			/* Copy of initial argv (argument vector) */
 
 rt_private char *error = "can't set argument vector";
 
-rt_public int arg_number()
+rt_public int arg_number(void)
 {
 	return eif_argc;
 }
 
-rt_public void arg_init(eargc, eargv)
-int eargc;
-char **eargv;
+rt_public void arg_init(int eargc, char **eargv)
 {
 	/* Save command-line arguments array and number */
 
@@ -59,8 +57,7 @@ char **eargv;
 	eif_argv[eargc] = (char *)0;
 }
 
-rt_public char *arg_option(num)
-int num;
+rt_public char *arg_option(int num)
 {
 	/* Build up Eiffel string associated with the corresponding argument which
 	 * was specified in the command line. Note that this always returns a new

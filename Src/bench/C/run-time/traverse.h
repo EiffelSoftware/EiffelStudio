@@ -26,15 +26,15 @@ extern "C" {
 #define INDEPEND_ACCOUNT		0x05		/* Accounting of objects in obj_nb */
 
 extern long obj_nb;					/* Count of marked objects */
-extern void traversal();			/* Traversal of objects */
+extern void traversal(char *object, int accounting);			/* Traversal of objects */
 
 /* Maping table handling */
-extern void map_start();			/* Reset LIFO stack into a FIFO one */
-extern EIF_OBJ map_next();			/* Get next object as in a FIFO stack */
-extern void map_reset();			/* Reset maping table */
+extern void map_start(void);			/* Reset LIFO stack into a FIFO one */
+extern EIF_OBJ map_next(void);			/* Get next object as in a FIFO stack */
+extern void map_reset(int emergency);			/* Reset maping table */
 
 #ifdef DEBUG						/* For copy.c */
-extern long nomark();
+extern long nomark(char *obj);
 #endif
 
 #ifdef __cplusplus

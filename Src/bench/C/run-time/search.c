@@ -22,8 +22,7 @@
 #include <strings.h>
 #endif
 
-rt_public struct s_table *s_create(size)
-uint32 size;
+rt_public struct s_table *s_create(uint32 size)
 {
 	/* Returns new search table of size `size'. */
 
@@ -44,9 +43,7 @@ uint32 size;
 	return result;
 }
 
-rt_public int s_put(tbl, object)
-struct s_table *tbl;
-char *object;
+rt_public int s_put(struct s_table *tbl, char *object)
 {
 	/* Insert `object' in `h_table'. Return `S_CONFLICT' if already in it,
 	 * otherwise return `S_OK'.
@@ -68,9 +65,7 @@ char *object;
 	}
 }
 
-rt_public int32 s_search(tbl, object)
-struct s_table *tbl;
-char *object;
+rt_public int32 s_search(struct s_table *tbl, char *object)
 {
 	/* Internal search of `object' in `tbl'. Return S_FOUND if found, otherwise
 	 * position where to insert it.
@@ -93,8 +88,7 @@ char *object;
 	}
 }
 
-rt_public void s_resize(tbl)
-register4 struct s_table *tbl;
+rt_public void s_resize(register struct s_table *tbl)
 {
 	/* Resize `tbl' to a bigger size */
 

@@ -20,11 +20,10 @@
  * Declarations
  */
 
-rt_shared char **hash_search();	/* Search in the hash table */
-rt_shared void hash_free();		/* Free the tables */
-rt_shared void hash_malloc();		/* Hash table creation */
-rt_private void free_entries();	/* Free all the hector entries */
-
+rt_shared char **hash_search(struct hash *hp, register char *object);	/* Search in the hash table */
+rt_shared void hash_free(struct hash *hp);		/* Free the tables */
+rt_shared void hash_malloc(struct hash *hp, register long int size);	/* Hash table creation */
+rt_private void free_entries();	/* Free all the hector entries */ /* %%ss undefine */
 #ifndef lint
 rt_private char *rcsid =
 	"$Id$";
@@ -35,9 +34,7 @@ rt_private char *rcsid =
  */
 
 
-rt_shared void hash_malloc(hp, size)
-struct hash *hp;
-register1 long size;
+rt_shared void hash_malloc(struct hash *hp, register long int size)
 {
 	 /* Initialization of the hash table */
 
@@ -46,8 +43,7 @@ register1 long size;
 	hp->h_entry = (char **) xcalloc(hp->h_size, sizeof(char *));
 }
 
-rt_shared void hash_free(hp)
-struct hash *hp;
+rt_shared void hash_free(struct hash *hp)
 {
 	/* Free memory allocated to the tables. */
 
@@ -55,9 +51,7 @@ struct hash *hp;
 	xfree(hp->h_entry);			/* Free entries array */
 }
 
-rt_shared char **hash_search(hp, object)
-struct hash *hp;
-register2 char *object;
+rt_shared char **hash_search(struct hash *hp, register char *object)
 {
 	/* Search in hash table for updating references.
 	 * Return a pointer to an entry of `hash_entry' and not the entry itself.

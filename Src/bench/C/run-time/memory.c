@@ -27,8 +27,7 @@
 #endif
 
 
-rt_public void mem_free(object)
-char *object;
+rt_public void mem_free(char *object)
 {
 	/* Unconditionally free object, if not in generational scavenge zone, in
 	 * which case the object will be either collected if it is really dead
@@ -56,7 +55,7 @@ char *object;
  * Compiled for speed or for memory?
  */
 
-rt_public void mem_speed()
+rt_public void mem_speed(void)
 {
 	/* Dynamically set the allocation flag 'cc_for_speed' to true, to indicate
 	 * to that the user cares more about raw speed than memory consumption.
@@ -70,7 +69,7 @@ rt_public void mem_speed()
 		gen_scavenge = GS_SET;	/* Allow malloc to try again */
 }
 
-rt_public void mem_slow()
+rt_public void mem_slow(void)
 {
 	/* Dynamically set the allocation flag 'cc_for_speed; to false, which
 	 * indicates that the user cares more about low memory consumption than
@@ -86,7 +85,7 @@ rt_public void mem_slow()
 		gen_scavenge = GS_OFF;	/* Turn it off */
 }
 
-rt_public void mem_tiny()
+rt_public void mem_tiny(void)
 {
 	/* Basically the same as mem_slow(), but scavenging zone are freed if they
 	 * have been allocated.
@@ -109,12 +108,12 @@ rt_public void mem_tiny()
 
 rt_private int m_largest = 0;		/* Size of the largest coalesced block */
 
-rt_public int mem_largest()
+rt_public int mem_largest(void)
 {
 	return m_largest;			/* Return size of the largest block */
 }
 
-rt_public void mem_coalesc()
+rt_public void mem_coalesc(void)
 {
 	/* Run a full coalescing on all the chunks managed by the run-time, both
 	 * C and Eiffel ones. This certainly can be a big help in reducing the
@@ -137,24 +136,22 @@ rt_public void mem_coalesc()
  * collections in the acollect() routine.
  */
 
-rt_public long mem_tget()
+rt_public long mem_tget(void)
 {
 	return th_alloc;			/* Current allocation threshold */
 }
 
-rt_public void mem_tset(value)
-long value;
+rt_public void mem_tset(long int value)
 {
 	th_alloc = value;			/* Set new allocation threshold */
 }
 
-rt_public long mem_pget()
+rt_public long mem_pget(void)
 {
 	return plsc_per;			/* Current full collection period */
 }
 
-rt_public void mem_pset(value)
-long value;
+rt_public void mem_pset(long int value)
 {
 	plsc_per = value;			/* Set new full collection period */
 }
@@ -165,8 +162,7 @@ long value;
 
 rt_private struct emallinfo mem_stats;
 
-rt_public void mem_stat(type)
-long type;
+rt_public void mem_stat(long int type)
 {
 	/* Initialize the mem statistics buffer, which will be used by the mem_info
 	 * routine to fetch the fields value, one at a time. By copying the whole
@@ -180,8 +176,7 @@ long type;
 	bcopy(sm, &mem_stats, sizeof(struct emallinfo));
 }
 
-rt_public long mem_info(field)
-long field;
+rt_public long mem_info(long int field)
 {
 	/* Extracts values from the emallinfo structure */
 
@@ -208,14 +203,12 @@ long field;
 rt_private struct gacstat gc_stats;
 rt_private long gc_count;
 
-rt_public void gc_mon(flag)
-char flag;
+rt_public void gc_mon(char flag)
 {
 	gc_monitor = (int) flag;	/* Turn GC statistics on/off */
 }
 
-rt_public void gc_stat(type)
-long type;
+rt_public void gc_stat(long int type)
 {
 	/* Initialize the GC statistics buffer, which will be used by the gc_info
 	 * routine to fetch the fields value, one at a time. By copying the whole
@@ -234,8 +227,7 @@ long type;
 		gc_count = g_data.nb_partial;
 }
 
-rt_public long gc_info(field)
-long field;
+rt_public long gc_info(long int field)
 {
 	/* Extracts values from the gacstat structure */
 
@@ -263,8 +255,7 @@ long field;
 	/* NOTREACHED */
 }
 
-rt_public double gc_infod(field)
-long field;
+rt_public double gc_infod(long int field)
 {
 	/* Extracts values from the gacstat structure */
 
@@ -296,7 +287,7 @@ long field;
  * Is garbage collection enabled?
  */
 
-rt_public char gc_ison()
+rt_public char gc_ison(void)
 {
 	return g_data.status & GC_STOP ? '\0' : '\01';
 }

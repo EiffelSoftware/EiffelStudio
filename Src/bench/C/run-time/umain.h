@@ -13,7 +13,7 @@
 extern "C" {
 #endif
 
-extern void umain();			/* User's initialization routine */
+extern void umain(int argc, char **argv, char **envp);			/* User's initialization routine */
 
 #ifdef __cplusplus
 }

@@ -13,7 +13,7 @@
 extern "C" {
 #endif
 
-extern Malloc_t malloc();
+extern Malloc_t malloc(register unsigned int nbytes);
 
 #ifdef __cplusplus
 }

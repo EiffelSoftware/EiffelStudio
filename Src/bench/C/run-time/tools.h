@@ -20,9 +20,9 @@ extern "C" {
 #include "config.h"
 #include "portable.h"
 
-extern uint32 nprime();				/* Find first prime above a given number */
-extern int prime();					/* Test whether a number is prime or not */
-extern long hashcode();				/* Computes hashcode for a string */
+extern uint32 nprime(register uint32 n);				/* Find first prime above a given number */
+extern int prime(register uint32 n);					/* Test whether a number is prime or not */
+extern long hashcode(register char *s, register long int count);				/* Computes hashcode for a string */
 
 #ifdef __cplusplus
 }

@@ -34,18 +34,17 @@
 rt_private struct hash hclone;			/* Cloning hash table */
 
 /* Function declarations */
-rt_private void rdeepclone();			/* Recursive cloning */
-rt_private void expanded_update();		/* Expanded reference update */
-rt_private void efcopy();				/* Copy field by field */
-rt_private char *duplicate();			/* Duplication with aging tests */
+rt_private void rdeepclone(char *source, char *enclosing, int offset);			/* Recursive cloning */
+rt_private void expanded_update(char *source, char *target, int shallow_or_deep);		/* Expanded reference update */
+rt_private void efcopy(register char *source, register char *target, uint32 s_flags, uint32 t_flags, char *enclosing);				/* Copy field by field */
+rt_private char *duplicate(char *source, char *enclosing, int offset);			/* Duplication with aging tests */
 
 #ifndef lint
 rt_private char *rcsid =
 	"$Id$";
 #endif
 
-rt_public char *eclone(source)
-register1 char *source;
+rt_public char *eclone(register char *source)
 {
 	/* Clone an of Eiffel object `source'. Assumes that source is not a
 	 * special object.
@@ -54,8 +53,7 @@ register1 char *source;
 	return emalloc(HEADER(source)->ov_flags & EO_TYPE);
 }
 
-rt_public char *spclone(source)
-register5 char *source;
+rt_public char *spclone(register char *source)
 {
 	/* Clone an of Eiffel object `source'. Assumes that source
 	 * is a special object.
@@ -86,8 +84,7 @@ register5 char *source;
 	return result;
 }
 
-rt_public char *edclone(source)
-char *source;
+rt_public char *edclone(char *source)
 {
 	/* Recursive Eiffel clone. This function recursively clones the source
 	 * object and returns a pointer to the top of the new tree.
@@ -180,8 +177,7 @@ char *source;
 	return anchor.boot;			/* The cloned object tree */
 }
 
-rt_public char *rtclone(source)
-char *source;
+rt_public char *rtclone(char *source)
 {
 	/* Clone source, copy the source in the clone and return the clone */
 
@@ -205,10 +201,10 @@ char *source;
 	return result;					/* Pointer to the cloned object */
 }
 
-rt_private char *duplicate(source, enclosing, offset)
-char *source;		/* Object to be duplicated */
-char *enclosing;	/* Object where attachment is made */
-int offset;			/* Offset within enclosing where attachment is made */
+rt_private char *duplicate(char *source, char *enclosing, int offset)
+             		/* Object to be duplicated */
+                	/* Object where attachment is made */
+           			/* Offset within enclosing where attachment is made */
 {
 	/* Duplicate the source object (shallow duplication) and attach the freshly
 	 * allocated copy at the address pointed to by receiver, which is protected
@@ -258,10 +254,10 @@ int offset;			/* Offset within enclosing where attachment is made */
 	return clone;
 }
 
-rt_private void rdeepclone (source, enclosing, offset)
-char *source;			/* Source object to be cloned */
-char *enclosing;		/* Object receiving clone */
-int offset;				/* Offset within enclosing where attachment is made */
+rt_private void rdeepclone (char *source, char *enclosing, int offset)
+             			/* Source object to be cloned */
+                		/* Object receiving clone */
+           				/* Offset within enclosing where attachment is made */
 {
 	/* Recursive deep clone of `source' is attached to `receiver'. Then
 	 * enclosing parameter gives us a pointer to where the address of the
@@ -332,9 +328,7 @@ int offset;				/* Offset within enclosing where attachment is made */
 		expanded_update(source, clone, DEEP); /* Update intra expanded refs */
 }
 
-rt_public void xcopy(source, target)
-char *source;
-char *target;
+rt_public void xcopy(char *source, char *target)
 {
 	/* Copy 'source' into expanded object 'target' if 'source' is not void,
 	 * or raise a "Void assigned to expanded" exception.
@@ -346,9 +340,7 @@ char *target;
 	ecopy(source, target);
 }
 
-rt_public void ecopy(source, target)
-register2 char *source;
-register1 char *target;
+rt_public void ecopy(register char *source, register char *target)
 {
 	/* Copy Eiffel object `source' into Eiffel object `target'.
 	 * Problem: updating intra-references on expanded object
@@ -417,9 +409,7 @@ register1 char *target;
 
 }
 
-rt_public void spcopy(source, target)
-register2 char *source;
-register1 char *target;
+rt_public void spcopy(register char *source, register char *target)
 {
 	/* Copy a special Eiffel object into another one. It assumes that
 	 * `source' and `target' are not NULL. Precondition of redefined
@@ -450,12 +440,12 @@ register1 char *target;
 		eremb(target);
 }
 
-rt_private void efcopy(source, target, s_flags, t_flags, enclosing)
-register2 char *source;
-register1 char *target;
-uint32 s_flags;
-uint32 t_flags;
-char *enclosing;		/* Enclosing target object (may differ from target) */
+rt_private void efcopy(register char *source, register char *target, uint32 s_flags, uint32 t_flags, char *enclosing)
+                       
+                       
+               
+               
+                		/* Enclosing target object (may differ from target) */
 {
 	/* Copy field by field of `source' into `target' */
 
@@ -574,9 +564,7 @@ char *enclosing;		/* Enclosing target object (may differ from target) */
 	}	
 }
 
-rt_private void expanded_update(source, target, shallow_or_deep)
-char *source, *target;
-int shallow_or_deep;
+rt_private void expanded_update(char *source, char *target, int shallow_or_deep)
 {
 	/*
 	 * Update recursively:
@@ -687,8 +675,7 @@ int shallow_or_deep;
 	}
 }
 
-EIF_BOOLEAN c_check_assert (b)
-EIF_BOOLEAN b;
+EIF_BOOLEAN c_check_assert (EIF_BOOLEAN b)
 {
 
 	/*
@@ -706,9 +693,7 @@ EIF_BOOLEAN b;
 	return ((EIF_BOOLEAN) temp);
 }
 
-void spsubcopy (source, target, start, end, index)
-EIF_POINTER source, target;
-EIF_INTEGER start, end, index;
+void spsubcopy (EIF_POINTER source, EIF_POINTER target, EIF_INTEGER start, EIF_INTEGER end, EIF_INTEGER strchr)
 {
 	/* Copy elements of `source' within bounds `start'..`end'
 	 * to `target' starting at index `index'.
@@ -740,8 +725,7 @@ EIF_INTEGER start, end, index;
 		eremb(target);
 }
 
-void spclearall (spobj)
-EIF_POINTER spobj;
+void spclearall (EIF_POINTER spobj)
 {
 	/* Reset all elements of `spobj' to default value. Call
 	 * creation procedure of expanded objects if `spobj' is
@@ -749,7 +733,7 @@ EIF_POINTER spobj;
 	 */
 
 	union overhead *zone;			/* Malloc information zone */
-	char  *(*init)();				/* Initialization routine to be called */
+	char  *(*init)(char *);				/* Initialization routine to be called */
 	long i, count, elem_size;
 	int dtype;
 	char *ref;
@@ -767,7 +751,7 @@ EIF_POINTER spobj;
 			/* Initialize new expanded elements, if any */
 		init = Create(dtype);
 #ifdef MAY_PANIC
-		if ((char *(*)()) 0 == init)		/* There MUST be a routine */
+		if ((char *(*)(char *)) 0 == init)		/* There MUST be a routine */
 			panic("init routine lost");
 #endif
 		for (i = 0; i < count; i++, ref += elem_size) {

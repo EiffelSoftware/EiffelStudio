@@ -36,9 +36,7 @@
  * `wdisp (dyn_type)'
  */
 
-rt_public char *(*wfeat(static_type, feature_id, dyn_type))()
-int static_type, dyn_type;
-int32 feature_id;
+rt_public char *(*wfeat(int static_type, int32 feature_id, int dyn_type))(/* ??? */)
 {
 	/* Function pointer associated to Eiffel feature of feature id
 	 * `feature_id' accessed in Eiffel static type `static_type' to
@@ -77,9 +75,7 @@ int32 feature_id;
 #endif
 }
 
-rt_public char *(*wpfeat(origin, offset, dyn_type))()
-int dyn_type;
-int32 origin, offset;
+rt_public char *(*wpfeat(int32 origin, int32 offset, int dyn_type))(/* ??? */)
 {
 	/* Function pointer associated to Eiffel feature of origin class
 	 * `origin', identified by `offset' in that class, and to
@@ -114,11 +110,7 @@ int32 origin, offset;
 #endif
 }
 
-rt_public char *(*wfeat_inv(static_type, feature_id, name, object))()
-int static_type;
-int32 feature_id;
-char *object;
-char *name;
+rt_public char *(*wfeat_inv(int static_type, int32 feature_id, char *name, char *object))(/* ??? */)
 {
 	/* Function pointer associated to Eiffel feature of feature id
 	 * `feature_id' accessed in Eiffel static type `static_type' to
@@ -168,10 +160,7 @@ char *name;
 #endif
 }
 
-rt_public char *(*wpfeat_inv(origin, offset, name, object))()
-int32 origin, offset;
-char *object;
-char *name;
+rt_public char *(*wpfeat_inv(int32 origin, int32 offset, char *name, char *object))(/* ??? */)
 {
 	/* Function pointer associated to Eiffel feature of origin class
 	 * `origin', identified by `offset' in that class, and to
@@ -218,10 +207,7 @@ char *name;
 }
 
 
-rt_public void wexp(static_type, feature_id, dyn_type, object)
-int static_type, dyn_type;
-int32 feature_id;
-char *object;
+rt_public void wexp(int static_type, int32 feature_id, int dyn_type, char *object)
 {
 	/* Call the creation of the expanded.
 	 * with static type `stype', dynamic type `dtype' and
@@ -276,10 +262,7 @@ char *object;
 									 */
 }
 
-rt_public void wpexp(origin, offset, dyn_type, object)
-int32 origin, offset;
-int dyn_type;
-char *object;
+rt_public void wpexp(int32 origin, int32 offset, int dyn_type, char *object)
 {
 	/* Call the creation of the expanded (when precompiled).
 	 * with origin class `origin', dynamic type `dtype' and
@@ -331,9 +314,7 @@ char *object;
 									 */
 }
 
-rt_public long wattr(static_type, feature_id, dyn_type)
-int static_type, dyn_type;
-int32 feature_id;
+rt_public long wattr(int static_type, int32 feature_id, int dyn_type)
 {
 	/* Offset of attribute of feature id `feature_id' in the class of
 	 * static type `static_type' in an object of dynamic type `dyn_type'.
@@ -348,9 +329,7 @@ int32 feature_id;
 	return (offset);
 }
 
-rt_public long wpattr(origin, offset, dyn_type)
-int32 origin, offset;
-int dyn_type;
+rt_public long wpattr(int32 origin, int32 offset, int dyn_type)
 {
 	/* Offset of precompiled attribute of origin class `origin', identified by
 	 * `offset' in that class, in an object of dynamic type `dyn_type'.
@@ -360,11 +339,11 @@ int dyn_type;
 	return (desc_tab[origin][dyn_type][offset].info);
 }
 
-rt_public long wattr_inv (static_type, feature_id, name, object)
-int static_type;
-int32 feature_id;
-char *object;	/* Target object */
-char *name;		/* Feature name to apply */
+rt_public long wattr_inv (int static_type, int32 feature_id, char *name, char *object)
+                
+                 
+             	/* Target object */
+           		/* Feature name to apply */
 {
 	/* Offset of attribute of feature id `feature_id' in the class of
 	 * static type `static_type' in an object `object'.
@@ -399,10 +378,10 @@ char *name;		/* Feature name to apply */
 	return (offset);
 }
 
-rt_public long wpattr_inv (origin, offset, name, object)
-int32 origin, offset;
-char *object;	/* Target object */
-char *name;		/* Feature name to apply */
+rt_public long wpattr_inv (int32 origin, int32 offset, char *name, char *object)
+                     
+             	/* Target object */
+           		/* Feature name to apply */
 {
 	/* Offset of precompiled attribute of origin class `origin', identified by
 	 * `offset' in that class, in an object `object'.
@@ -433,9 +412,7 @@ char *name;		/* Feature name to apply */
 	return (desc_tab[origin][dyn_type][offset].info);
 }
 
-rt_public int wtype(static_type, feature_id, dyn_type)
-int dyn_type, static_type;
-int32 feature_id;
+rt_public int wtype(int static_type, int32 feature_id, int dyn_type)
 {
 	/* Type of feature of routine id `rout_id' in the class of
 	 * dynamic type `dyn_type'.
@@ -451,9 +428,7 @@ int32 feature_id;
 	return (type & SK_DTYPE);
 }
 
-rt_public int wptype(origin, offset, dyn_type)
-int32 origin, offset;
-int dyn_type;
+rt_public int wptype(int32 origin, int32 offset, int dyn_type)
 {
 	/* Type of feature of routine identified by `offset' in its origin class
 	 * `origin' and to be applied on an object of dynamic type `dyn_type'.
@@ -466,8 +441,7 @@ int dyn_type;
 	return (type & SK_DTYPE);
 }
 
-rt_public char *(*wdisp(dyn_type))()
-int dyn_type;
+rt_public char *(*wdisp(int dyn_type))(/* ??? */)
 {
 	/* Function pointer associated to Eiffel feature of routine id
 	 * `routine_id' accessed in Eiffel dynamic type `dyn_type'.
@@ -551,7 +525,7 @@ int mdesc_tab_size;			/* Size of the `mdesc_tab' */
  * global descriptor table
  */
 
-rt_public void init_desc() 
+rt_public void init_desc(void)
 {
 	/* Initialize the temporary structures used for the
 	 * construction of the global descriptor table.
@@ -579,10 +553,7 @@ rt_public void init_desc()
 	tabinit();
 }
 
-rt_public void put_desc(desc_ptr, org, dtype)
-struct desc_info desc_ptr[];
-int org;
-int dtype;
+rt_public void put_desc(struct desc_info *desc_ptr, int org, int dtype)
 {
 	/* If the `desc_fill' flag is set to false, simply record
 	 * the value of the dynamic type (to compute the size
@@ -602,10 +573,7 @@ int dtype;
 	}
 }
 
-rt_public void put_mdesc(desc_ptr, org, dtype)
-struct desc_info desc_ptr[];
-int org;
-int dtype;
+rt_public void put_mdesc(struct desc_info *desc_ptr, int org, int dtype)
 {
 	/* Record melted descriptor:
 	 * Record the value of the dynamic type (to compute the size
@@ -641,7 +609,7 @@ int dtype;
 	mdesc_tab[mdesc_count++] = md;
 }
 
-rt_public void create_desc()
+rt_public void create_desc(void)
 {
 	struct bounds *b;
 	int i, upper;

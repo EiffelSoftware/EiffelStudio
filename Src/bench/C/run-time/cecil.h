@@ -133,39 +133,35 @@ extern struct ctable fce_rname[];		/* Routine names -> function pointer */
 extern struct ctable ce_type;			/* Class name -> type ID */
 extern struct ctable ce_gtype;			/* Generic class name -> gt_info */
 
-extern EIF_TYPE_ID eifcid();			/* Get a class ID */
-extern EIF_TYPE_ID eifexp();			/* Force expansion */
+extern EIF_TYPE_ID eifcid(char *class);			/* Get a class ID */
+extern EIF_TYPE_ID eifexp(EIF_TYPE_ID id);			/* Force expansion */
 
-#ifdef I_STDARG
 extern EIF_TYPE_ID eifgid(char *class_name, ...);	/* Get a generic class ID */
-#else
-extern EIF_TYPE_ID eifgid();					/* Get a generic class ID */
-#endif
 
-extern EIF_OBJ eifcreate();				/* Object creation */
+extern EIF_OBJ eifcreate(EIF_TYPE_ID cid);				/* Object creation */
 
-extern EIF_PROC eifproc();				/* Pointer to Eiffel procedure */
-extern EIF_FN_INT eiflong();			/* Eiffel function returning INTEGER */
-extern EIF_FN_CHAR eifchar();			/* Eiffel function returning CHAR */
-extern EIF_FN_FLOAT eifreal();			/* Eiffel function returning REAL */
-extern EIF_FN_DOUBLE eifdouble();		/* Eiffel function returning DOUBLE */
-extern EIF_FN_BIT eifbit();				/* Eiffel function returning BIT */
-extern EIF_FN_BOOL eifbool();			/* Eiffel function returning BOOLEAN */
-extern EIF_FN_POINTER eifptr();			/* Eiffel function returning POINTER */
-extern EIF_FN_REF eifref();				/* Eiffel function returning ANY */
+extern EIF_PROC eifproc(char *routine, EIF_TYPE_ID cid);				/* Pointer to Eiffel procedure */
+extern EIF_FN_INT eiflong(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning INTEGER */
+extern EIF_FN_CHAR eifchar(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning CHAR */
+extern EIF_FN_FLOAT eifreal(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning REAL */
+extern EIF_FN_DOUBLE eifdouble(char *routine, EIF_TYPE_ID cid);		/* Eiffel function returning DOUBLE */
+extern EIF_FN_BIT eifbit(char *routine, EIF_TYPE_ID cid);				/* Eiffel function returning BIT */
+extern EIF_FN_BOOL eifbool(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning BOOLEAN */
+extern EIF_FN_POINTER eifptr(char *routine, EIF_TYPE_ID cid);			/* Eiffel function returning POINTER */
+extern EIF_FN_REF eifref(char *routine, EIF_TYPE_ID cid);				/* Eiffel function returning ANY */
 
-extern int eiftype();					/* Give dynamic type of EIF_OBJ */
-extern char *eifname();					/* Give class name from class ID */
-extern char *eifaddr();					/* Compute address of attribute */
-extern EIF_BIT eifgbit();				/* Get a bit field structure */
-extern void eifsbit();					/* Set a bit field structure */
-extern char eifibit();					/* Access ith bit in bit field */
-extern int eifsibit();					/* Set ith bit to 1 */
-extern int eifribit();					/* Reset ith bit to 0 */
-extern EIF_BIT eifbcln();				/* Eiffel bit cloning */
+extern int eiftype(EIF_OBJ *object);					/* Give dynamic type of EIF_OBJ */
+extern char *eifname(EIF_TYPE_ID cid);					/* Give class name from class ID */
+extern char *eifaddr(char *object, char *name);					/* Compute address of attribute */
+extern EIF_BIT eifgbit(char *object, char *name);				/* Get a bit field structure */
+extern void eifsbit(char *object, char *name, EIF_BIT bit);					/* Set a bit field structure */
+extern char eifibit(EIF_BIT bit, int i);					/* Access ith bit in bit field */
+extern int eifsibit(EIF_BIT bit, int i);					/* Set ith bit to 1 */
+extern int eifribit(EIF_BIT bit, int i);					/* Reset ith bit to 0 */
+extern EIF_BIT eifbcln(EIF_BIT bit);				/* Eiffel bit cloning */
 
-extern void  failure();					/* The Eiffel exectution failed */
-extern void eif_rtinit();				/* Eiffel run-time initialization */
+extern void  failure(void);					/* The Eiffel exectution failed */
+extern void eif_rtinit(int argc, char **argv, char **envp);				/* Eiffel run-time initialization */
 
 #ifndef WORKBENCH
 #define Cecil(x)	ce_rname[x]			/* Final mode acces to hash table */
@@ -173,7 +169,7 @@ extern void eif_rtinit();				/* Eiffel run-time initialization */
 #define Cecil(x)	System(x).cn_cecil	/* Workbench mode access */
 #endif
 
-extern char *ct_value();				/* Hash table query */
+extern char *ct_value(struct ctable *ct, register char *key);				/* Hash table query */
 
 #ifdef __cplusplus
 }

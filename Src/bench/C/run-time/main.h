@@ -13,8 +13,8 @@
 extern "C" {
 #endif
 
-extern void dinterrupt();
-extern void dserver();
+extern void dinterrupt(void);
+extern void dserver(void);
 extern int in_assertion;
 extern char *ename;				/* Name of the Eiffel program running */
 extern int cc_for_speed;		/* Optimized for speed or for memory */

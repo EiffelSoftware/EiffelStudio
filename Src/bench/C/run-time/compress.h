@@ -40,10 +40,10 @@ void eif_cmps_read_u32_from_char_buf (unsigned char* in_buf, uint32* pout_value)
 void eif_cmps_write_u32_to_char_buf (uint32 in_value, unsigned char* out_buf);
 */
 
-void eif_compress ();
-void eif_decompress ();
-void eif_cmps_read_u32_from_char_buf ();
-void eif_cmps_write_u32_to_char_buf ();
+void eif_compress (unsigned char *in_buf, long unsigned int in_size, unsigned char *out_buf, long unsigned int *pout_size);
+void eif_decompress (unsigned char *in_buf, long unsigned int in_size, unsigned char *out_buf, long unsigned int *pout_size);
+void eif_cmps_read_u32_from_char_buf (unsigned char *in_buf, uint32 *pout_value);
+void eif_cmps_write_u32_to_char_buf (uint32 in_value, unsigned char *out_buf);
 
 #ifdef __cplusplus
 }

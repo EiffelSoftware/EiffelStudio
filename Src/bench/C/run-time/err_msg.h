@@ -15,7 +15,7 @@ extern "C" {
 #ifdef EIF_WINDOWS
 extern int print_err_msg(FILE *err, char *StrFmt, ...);
 extern char *exception_trace_string;
-extern void show_trace();
+extern void show_trace();		/* %%zs undefined */
 #else
 #define print_err_msg fprintf
 #endif

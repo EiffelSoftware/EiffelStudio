@@ -18,9 +18,7 @@ rt_private char *rcsid =
 	"$Id$";
 #endif
 
-rt_public long hashcode(s, count)
-register3 char *s;
-register4 long count;
+rt_public long hashcode(register char *s, register long int count)
 {
 	/* Compute the hash code associated with given string s. The magic number
 	 * below is the greatest prime lower than 2^23.
@@ -35,8 +33,7 @@ register4 long count;
 	return (long) (hashval & 0x7fffffff);	/* Clear bit 31 (no unsigned in Eiffel) */
 }
 
-rt_public uint32 nprime(n)
-register1 uint32 n;
+rt_public uint32 nprime(register uint32 n)
 {
 	/* Return the closest prime number greater than `n' */
 
@@ -46,8 +43,7 @@ register1 uint32 n;
 	return n;
 }
 
-rt_public int prime(n)
-register2 uint32 n;
+rt_public int prime(register uint32 n)
 {
 	/* Return 1 if `n' is a prime number */
 

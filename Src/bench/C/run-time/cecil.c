@@ -38,8 +38,8 @@
 #define GEN_MAX	4				/* Maximum number of generic parameters */
 
 /* Function declarations */
-rt_private int cid_to_dtype();		/* Converts a class ID into a dynamic type */
-rt_private int locate();			/* Locate attribute by name in skeleton */
+rt_private int cid_to_dtype(EIF_TYPE_ID cid);		/* Converts a class ID into a dynamic type */
+rt_private int locate(char *object, char *name);			/* Locate attribute by name in skeleton */
 
 #ifndef lint
 rt_private char *rcsid =
@@ -50,8 +50,7 @@ rt_private char *rcsid =
  * Type ID handling
  */
 
-rt_public EIF_TYPE_ID eifcid(class)
-char *class;
+rt_public EIF_TYPE_ID eifcid(char *class)
 {
 	/* Return class ID of a class name. If the class id is not available or
 	 * the associated type is generic, then EIF_NO_TYPE is returned.
@@ -71,8 +70,7 @@ char *class;
 	return *value;				/* The associated type ID */
 }
 
-rt_public EIF_TYPE_ID eifexp(id)
-EIF_TYPE_ID id;
+rt_public EIF_TYPE_ID eifexp(EIF_TYPE_ID id)
 {
 	/* Take a type ID and return the type ID for an expanded type, hence
 	 * forcing the expansion. If the type was already that of an expanded,
@@ -215,8 +213,7 @@ rt_public EIF_TYPE_ID eifgid(va_alist)
  * Object creation
  */
 
-rt_public EIF_OBJ eifcreate(cid)
-EIF_TYPE_ID cid;
+rt_public EIF_OBJ eifcreate(EIF_TYPE_ID cid)
 {
 	/* Create an instance of class 'cid', but does not call any creation
 	 * routine. Return the address in the indirection table (access to the
@@ -240,65 +237,47 @@ EIF_TYPE_ID cid;
  * Function pointers handling
  */
 
-rt_public EIF_PROC eifproc(routine, cid)
-char *routine;
-EIF_TYPE_ID cid;
+rt_public EIF_PROC eifproc(char *routine, EIF_TYPE_ID cid)
 {
 	return (EIF_PROC) eifref(routine, cid);		/* Eiffel procedure */
 }
 
-rt_public EIF_FN_INT eiflong(routine, cid)
-char *routine;
-EIF_TYPE_ID cid;
+rt_public EIF_FN_INT eiflong(char *routine, EIF_TYPE_ID cid)
 {
 	return (EIF_FN_INT) eifref(routine, cid);	/* Function returning INTEGER */
 }
 
-rt_public EIF_FN_CHAR eifchar(routine, cid)
-char *routine;
-EIF_TYPE_ID cid;
+rt_public EIF_FN_CHAR eifchar(char *routine, EIF_TYPE_ID cid)
 {
 	return (EIF_FN_CHAR) eifref(routine, cid);	/* Function returning CHAR */
 }
 
-rt_public EIF_FN_FLOAT eifreal(routine, cid)
-char *routine;
-EIF_TYPE_ID cid;
+rt_public EIF_FN_FLOAT eifreal(char *routine, EIF_TYPE_ID cid)
 {
 	return (EIF_FN_FLOAT) eifref(routine, cid);	/* Function returning REAL */
 }
 
-rt_public EIF_FN_DOUBLE eifdouble(routine, cid)
-char *routine;
-EIF_TYPE_ID cid;
+rt_public EIF_FN_DOUBLE eifdouble(char *routine, EIF_TYPE_ID cid)
 {
 	return (EIF_FN_DOUBLE) eifref(routine, cid);	/* Returning DOUBLE */
 }
 
-rt_public EIF_FN_BIT eifbit(routine, cid)
-char *routine;
-EIF_TYPE_ID cid;
+rt_public EIF_FN_BIT eifbit(char *routine, EIF_TYPE_ID cid)
 {
 	return (EIF_FN_BIT) eifref(routine, cid);	/* Function returning BIT */
 }
 
-rt_public EIF_FN_BOOL eifbool(routine, cid)
-char *routine;
-EIF_TYPE_ID cid;
+rt_public EIF_FN_BOOL eifbool(char *routine, EIF_TYPE_ID cid)
 {
 	return (EIF_FN_BOOL) eifref(routine, cid);	/* Function returning BOOLEAN */
 }
 
-rt_public EIF_FN_POINTER eifptr(routine, cid)
-char *routine;
-EIF_TYPE_ID cid;
+rt_public EIF_FN_POINTER eifptr(char *routine, EIF_TYPE_ID cid)
 {
 	return (EIF_FN_POINTER) eifref(routine, cid);	/* Returning POINTER */
 }
 
-rt_public EIF_FN_REF eifref(routine, cid)
-char *routine;
-EIF_TYPE_ID cid;
+rt_public EIF_FN_REF eifref(char *routine, EIF_TYPE_ID cid)
 {
 	/* Look for the routine named 'routine' in the type 'cid' (there is no
 	 * polymorphism here). Return a pointer to the routine if found, or the
@@ -358,16 +337,14 @@ EIF_TYPE_ID cid;
  * Class ID versus dynamic type
  */
 
-rt_public int eiftype(object)
-EIF_OBJ *object;
+rt_public int eiftype(EIF_OBJ *object)
 {
 	/* Return the dynamic type of the specified object */
 
 	return Dtype(eif_access(object));
 }
 
-rt_public char *eifname(cid)
-EIF_TYPE_ID cid;
+rt_public char *eifname(EIF_TYPE_ID cid)
 {
 	/* Return the name of the class whose ID is cid. It is a pointer to
 	 * static data. For generic types, only the base name of the class
@@ -382,8 +359,7 @@ EIF_TYPE_ID cid;
 	return System(dtype).cn_generator;	/* Pointer to static data */
 }
 
-rt_private int cid_to_dtype(cid)
-EIF_TYPE_ID cid;
+rt_private int cid_to_dtype(EIF_TYPE_ID cid)
 {
 	/* Converts a class ID to a dynamic type. Returns -1 if the class ID is not
 	 * that of a reference type. Expanded types are ignored, of course, for the
@@ -400,9 +376,7 @@ EIF_TYPE_ID cid;
  * Field access (attributes)
  */
 
-rt_public char *eifaddr(object, name)
-char *object;
-char *name;
+rt_public char *eifaddr(char *object, char *name)
 {
 	/* Returns the physical address of the attribute named 'name' in the given
 	 * object (note that the address of the object is expected -- we do not
@@ -430,9 +404,7 @@ char *name;
 #endif
 }
 
-rt_private int locate(object, name)
-char *object;
-char *name;
+rt_private int locate(char *object, char *name)
 {
 	/* Locate the attribute 'name' in the specified object and return the index
 	 * in the cn_offsets array, or -1 if there is no such attribute.
@@ -471,9 +443,7 @@ char *name;
  * Bit field handling
  */
 
-rt_public EIF_BIT eifgbit(object, name)
-char *object;
-char *name;
+rt_public EIF_BIT eifgbit(char *object, char *name)
 {
 	/* Return a pointer the bit field 'name' in the object, or an error if
 	 * no such bit field is found.
@@ -507,10 +477,7 @@ char *name;
 #endif
 }
 
-rt_public void eifsbit(object, name, bit)
-char *object;
-char *name;
-EIF_BIT bit;
+rt_public void eifsbit(char *object, char *name, EIF_BIT bit)
 {
 	/* Sets the bit field 'name' of 'object' to bit. Do nothing if the fields
 	 * is not a bit one or if 'bit' is a void pointer.
@@ -540,9 +507,7 @@ EIF_BIT bit;
 	bcopy((char *) bit, (char *) obj_field, size);
 }
 
-rt_public char eifibit(bit, i)
-EIF_BIT bit;
-int i;
+rt_public char eifibit(EIF_BIT bit, int i)
 {
 	/* Return the value of the ith bit in 'bit', starting numbering at 1.
 	 * If 'i' is not in the range, return EIF_NO_BIT.
@@ -559,9 +524,7 @@ int i;
 	return RTBI(bit, i);			/* Access to bit i */
 }
 
-rt_public int eifsibit(bit, i)
-EIF_BIT bit;
-int i;
+rt_public int eifsibit(EIF_BIT bit, int i)
 {
 	/* Set the bit 'i' to 1 in the bit field 'bit'. If out of range or a null
 	 * bit field is provided, do nothing and return -1.
@@ -579,9 +542,7 @@ int i;
 	return 0;		/* Ok */
 }
 
-rt_public int eifribit(bit, i)
-EIF_BIT bit;
-int i;
+rt_public int eifribit(EIF_BIT bit, int i)
 {
 	/* Reset the bit 'i' to 0 in the bit field 'bit'. If out of range or a null
 	 * bit field is provided, do nothing and return -1.
@@ -599,8 +560,7 @@ int i;
 	return 0;		/* Ok */
 }
 
-rt_public EIF_BIT eifbcln(bit)
-EIF_BIT bit;
+rt_public EIF_BIT eifbcln(EIF_BIT bit)
 {
 	/* Clones the bit field structure given as argument */
 
@@ -632,9 +592,7 @@ EIF_BIT bit;
  * Hash table handling
  */
 
-rt_shared char *ct_value(ct, key)
-struct ctable *ct;
-register1 char *key;
+rt_shared char *ct_value(struct ctable *ct, register char *key)
 {
 	/* Look for item associated with given key and returns a pointer to its
 	 * location in the value array. Return a null pointer if item is not found.

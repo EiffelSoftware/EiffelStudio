@@ -17,6 +17,7 @@
 extern "C" {
 #endif
 
+#include <stdio.h>		/* %%zs added: for FILE definition line 91 */
 #include "portable.h"
 #include "struct.h"
 
@@ -66,15 +67,15 @@ struct stochunk {
 };
 
 /* Interpreter interface to outside world */
-extern void call_disp();			/* Function to call dispose routines */ 
-extern void xinterp();				/* Compound from a given address */
-extern void xiinv();				/* Invariant interpreter */
-extern void xinitint();				/* Initialize the interpreter */
-extern struct item *opush();		/* Push value on operational stack */
-extern struct item *opop();			/* Remove value from operational stack */
-extern struct item *otop();			/* Top of the stack */
-extern struct item *ivalue();		/* Value request from current routine */
-extern void sync_registers();		/* Resynchronize registers on routine */
+extern void call_disp(uint32 dtype, char *object);			/* Function to call dispose routines */ 
+extern void xinterp(char *icval);				/* Compound from a given address */
+extern void xiinv(char *icval, int where);				/* Invariant interpreter */
+extern void xinitint(void);				/* Initialize the interpreter */
+extern struct item *opush(register struct item *val);		/* Push value on operational stack */
+extern struct item *opop(void);			/* Remove value from operational stack */
+extern struct item *otop(void);			/* Top of the stack */
+extern struct item *ivalue(int code, int num);		/* Value request from current routine */
+extern void sync_registers(struct stochunk *stack_cur, struct item *stack_top);		/* Resynchronize registers on routine */
 
 /* Requesting values via ivalue() */
 #define IV_LOCAL	0				/* Nth local wanted */
@@ -87,7 +88,7 @@ extern void sync_registers();		/* Resynchronize registers on routine */
 
 extern char *IC;					/* Byte code to interpret */
 extern struct opstack op_stack;		/* Operational stack */
-extern void idump();
+extern void idump(FILE *fd, char *start);
 
 /*
  * Byte-code tokens

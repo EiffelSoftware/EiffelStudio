@@ -36,23 +36,23 @@ extern "C" {
 #define BC_YES			'y'
 
 
-extern void update();					/* Update of internal structures */
-extern void cnode_updt();				/* Update a cnode structure */
-extern void routid_updt();				/* Update routine id arrays */
-extern void conform_updt();				/* Update conformance table */
-extern void option_updt();				/* Update of the option table */
-extern void routinfo_updt();			/* Update routine information table */
-extern void desc_updt();				/* Update the descriptors */
+extern void update(char ignore_updt);					/* Update of internal structures */
+extern void cnode_updt(void);				/* Update a cnode structure */
+extern void routid_updt(void);				/* Update routine id arrays */
+extern void conform_updt(void);				/* Update conformance table */
+extern void option_updt(void);				/* Update of the option table */
+extern void routinfo_updt(void);			/* Update routine information table */
+extern void desc_updt(void);				/* Update the descriptors */
 extern long melt_count;					/* Size of melting table */
 
 
 /* Read information from file `fil'.
  */
-extern short wshort();
-extern long wlong();
-extern int32 wint32();
-extern uint32 wuint32();
-extern void wread();
+extern short wshort(void);
+extern long wlong(void);
+extern int32 wint32(void);
+extern uint32 wuint32(void);
+extern void wread(char *buffer, int nbytes);
 
 #ifdef __cplusplus
 }

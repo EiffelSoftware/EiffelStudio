@@ -36,15 +36,15 @@ extern struct stack hec_stack;		/* Indirection table "hector" */
 extern struct stack hec_saved;		/* Saved indirection pointers */
 
 /* Declaration of hector routines */
-extern char *efreeze();				/* Freeze object's address (no more move) */
-extern EIF_OBJ eadopt();			/* The C wants to keep the reference */
-extern EIF_OBJ ewean();				/* Weans a previously adopted reference */
-extern void eufreeze();				/* Forget a frozen memory address */
-extern EIF_OBJ hrecord();			/* Record entry in hector table */
-extern EIF_OBJ henter();			/* Low-level entry in hector table */
-extern void hfree();				/* Low-level release from hector table */
-extern char *spfreeze();			/* Freeze special object's address */
-extern void spufreeze();			/* Put frozen spec obj back to GC control */
+extern char *efreeze(EIF_OBJ object);				/* Freeze object's address (no more move) */
+extern EIF_OBJ eadopt(EIF_OBJ object);			/* The C wants to keep the reference */
+extern EIF_OBJ ewean(EIF_OBJ object);				/* Weans a previously adopted reference */
+extern void eufreeze(char *object);				/* Forget a frozen memory address */
+extern EIF_OBJ hrecord(char *object);			/* Record entry in hector table */
+extern EIF_OBJ henter(char *object);			/* Low-level entry in hector table */
+extern void hfree(EIF_OBJ address);				/* Low-level release from hector table */
+extern char *spfreeze(char *object);			/* Freeze special object's address */
+extern void spufreeze(char *object);			/* Put frozen spec obj back to GC control */
 
 #define spfrozen(object)	(HEADER(object)->ov_size & B_C) /* Is special object frozen */
 

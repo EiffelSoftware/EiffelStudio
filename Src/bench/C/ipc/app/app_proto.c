@@ -334,10 +334,10 @@ Opaque *what;		/* Generic structure describing request */
 		val = ivalue(IV_ARG, what->op_second);
 		break;
 	case IN_CURRENT:				/* Value of Current */
-		val = ivalue(IV_CURRENT);
+		val = ivalue(IV_CURRENT,0);		/* %%zs misuse, added ",0" */
 		break;
 	case IN_RESULT:					/* Value of Result */
-		val = ivalue(IV_RESULT);
+		val = ivalue(IV_RESULT,0);		/* %%zs misuse, added ",0" */
 		break;
 	default:
 		panic("BUG inspect");

@@ -64,7 +64,7 @@ struct eif_opt {
 extern struct eif_opt foption[];	/* Frozen option table */
 extern struct eif_opt *eoption;		/* Melted option table */
 
-extern int is_debug();		/* Debug level query */
+extern int is_debug(int st_type, char *key);		/* Debug level query */
 
 /*
  * Options for E-PROFILE && E-TRACE
@@ -82,19 +82,19 @@ extern int trace_call_level;			/* Call level to report at E-TRACE output */
 
 extern struct stack *prof_stack;		/* Stack that maintains profile information */
 
-extern void check_options();			/* Dispatches to start_profile and start_trace */
-extern void check_options_stop();		/* Dispatches to stop_profile and stop_trace */
+extern void check_options(struct eif_opt *opt, int dtype);			/* Dispatches to start_profile and start_trace */
+extern void check_options_stop(void);		/* Dispatches to stop_profile and stop_trace */
 
-extern void start_trace();			/* Prints entering feature ... */
-extern void stop_trace();			/* Prints leaving feature ... */
+extern void start_trace(char *name, int origin, int dtype);			/* Prints entering feature ... */
+extern void stop_trace(char *name, int origin, int dtype);			/* Prints leaving feature ... */
 
-extern void initprf();				/* Generates table for profiling */
-extern void exitprf();				/* Saves table as textfile */
+extern void initprf(void);				/* Generates table for profiling */
+extern void exitprf(void);				/* Saves table as textfile */
 
-extern void start_profile();			/* Starts profiling of a certain feature */
-extern void stop_profile();			/* Stops profiling of a certain feature */
+extern void start_profile(char *name, int origin, int dtype);			/* Starts profiling of a certain feature */
+extern void stop_profile(void);			/* Stops profiling of a certain feature */
 
-extern void prof_stack_rewind();		/* Stops all timer counts in
+extern void prof_stack_rewind(char **old_top);		/* Stops all timer counts in
 						 * the stack items,
 						 * updates the table, and
 						 * pops the items from the stack

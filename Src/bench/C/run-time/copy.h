@@ -23,15 +23,15 @@ extern "C" {
  * Functions declarations
  */
 
-extern char *eclone();			/* Clone of an Eiffel object */
-extern char *spclone();			/* Clone for a special object */
-extern char *edclone();			/* Deep clone of an Eiffel object */
-extern char *rtclone();			/* The Eiffel clone operation (run-time) */
-extern void ecopy();			/* Standard copy of a normal Eiffel object */
-extern void xcopy();			/* Expanded copy with possible exception */
-extern void spcopy();			/* Standard copy of a special object */
-extern void spsubcopy();		/* Copy special objects' slices */
-extern void spclearall();		/* Reset special object's items to default */
+extern char *eclone(register char *source);			/* Clone of an Eiffel object */
+extern char *spclone(register char *source);			/* Clone for a special object */
+extern char *edclone(char *source);			/* Deep clone of an Eiffel object */
+extern char *rtclone(char *source);			/* The Eiffel clone operation (run-time) */
+extern void ecopy(register char *source, register char *target);			/* Standard copy of a normal Eiffel object */
+extern void xcopy(char *source, char *target);			/* Expanded copy with possible exception */
+extern void spcopy(register char *source, register char *target);			/* Standard copy of a special object */
+extern void spsubcopy(EIF_POINTER source, EIF_POINTER target, EIF_INTEGER start, EIF_INTEGER end, EIF_INTEGER strchr);		/* Copy special objects' slices */
+extern void spclearall(EIF_POINTER spobj);		/* Reset special object's items to default */
 
 #ifdef HAS_SAFE_BCOPY
 #define safe_bcopy(s,d,l) bcopy((s),(d),(l))

@@ -26,8 +26,7 @@ rt_private char *rcsid =
 #endif
 
 #ifdef HAS_GETTIMEOFDAY
-rt_public void gettime(stamp)
-Timeval *stamp;
+rt_public void gettime(struct timeval *stamp)
 {
 	struct timezone tzp;
 
@@ -35,15 +34,13 @@ Timeval *stamp;
 }
 #else
 #ifdef HAS_FTIME
-rt_public void gettime(stamp)
-Timeval *stamp;
+rt_public void gettime(Timeval *stamp)
 {
 	ftime(stamp);
 }
 #else
 #ifdef HAS_TIME
-rt_public void gettime(stamp)
-Timeval *stamp;
+rt_public void gettime(Timeval *stamp)
 {
 	(void) time(stamp);
 }
@@ -53,8 +50,7 @@ Timeval *stamp;
 
 
 #ifdef HAS_GETTIMEOFDAY
-rt_public unsigned long elapsed(first, second)
-Timeval *first, *second;
+rt_public unsigned long elapsed(struct timeval *first, struct timeval *second)
 {
 	/* Computes the elapsed time in centiseconds between
 	 * first and second times.
@@ -69,8 +65,7 @@ Timeval *first, *second;
 }
 #else
 #ifdef HAS_FTIME
-rt_public unsigned long elapsed(first, second)
-Timeval *first, *second;
+rt_public unsigned long elapsed(Timeval *first, Timeval *second)
 {
 	/* Computes the elapsed time in centiseconds between
 	 * first and second times.
@@ -85,8 +80,7 @@ Timeval *first, *second;
 }
 #else
 #ifdef HAS_TIME
-rt_public unsigned long elapsed(first, second)
-Timeval *first, *second;
+rt_public unsigned long elapsed(Timeval *first, Timeval *second)
 {
 	/* Computes the elapsed time in centiseconds between
 	 * first and second times.
@@ -100,8 +94,7 @@ Timeval *first, *second;
 
 
 #ifdef HAS_GETRUSAGE
-rt_public void getcputime(usertime, systime)
-double *usertime, *systime;
+rt_public void getcputime(double *usertime, double *systime)
 {
 	struct rusage usage;
 
@@ -114,8 +107,7 @@ double *usertime, *systime;
 }
 #else
 #ifdef HAS_TIMES
-rt_public void getcputime(usertime, systime)
-double *usertime, *systime;
+rt_public void getcputime(double *usertime, double *systime)
 {
 	struct tms time;
 
@@ -124,8 +116,7 @@ double *usertime, *systime;
 	*systime = (double)time.tms_stime / (double)HZ;
 }
 #else
-rt_public void getcputime(usertime, systime)
-double *usertime, *systime;
+rt_public void getcputime(double *usertime, double *systime)
 {
 	*usertime = 0;
 	*systime = 0;

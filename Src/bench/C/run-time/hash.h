@@ -23,9 +23,9 @@ struct hash {				/* Hashing table pointer -> EIF_OBJ */
 	char **h_entry;			/* Entries array */
 };
 
-extern char **hash_search();		/* Search in hash table */
-extern void hash_free();			/* Free allocated table */
-extern void hash_malloc();			/* Table allocation */
+extern char **hash_search(struct hash *hp, register char *object);		/* Search in hash table */
+extern void hash_free(struct hash *hp);			/* Free allocated table */
+extern void hash_malloc(struct hash *hp, register long int size);			/* Table allocation */
 
 #ifdef __cplusplus
 }

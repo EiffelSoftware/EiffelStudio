@@ -96,17 +96,14 @@ rt_public long *nbref;						/* Gives # of references (updated by DLE) */
 #define exvec() exset(null, 0, null)	/* How to get an execution vector */
 #endif
 
-rt_public void failure();					/* The Eiffel exectution failed */
-rt_private Signal_t emergency();			/* Emergency exit */
+rt_public void failure(void);					/* The Eiffel exectution failed */
+rt_private Signal_t emergency(int sig);			/* Emergency exit */
 
 #ifndef EIF_WIN_31
 rt_public unsigned TIMEOUT;     /* Time out for interprocess communications */
 #endif
 
-rt_public void eif_rtinit(argc, argv, envp)
-int argc;
-char **argv;
-char **envp;
+rt_public void eif_rtinit(int argc, char **argv, char **envp)
 {
 	struct ex_vect *exvect;				/* Execution vector for main */
 	jmp_buf exenv;						/* Jump buffer for rescue */
@@ -250,7 +247,7 @@ char **envp;
 #endif
 }
 
-rt_public void failure()
+rt_public void failure(void)
 {
 	/* A fatal Eiffel exception has occurred. The stack of exceptions is dumped
 	 * and the memory is cleaned up, if possible.
@@ -269,8 +266,7 @@ rt_public void failure()
 	/* NOTREACHED */
 }
 
-rt_private Signal_t emergency(sig)
-int sig;
+rt_private Signal_t emergency(int sig)
 {
 	/* A signal has been trapped while we were failing peacefully. The memory
 	 * must really be in a desastrous state, so print out a give-up message
@@ -295,11 +291,11 @@ int sig;
  * archive. However, we need to define dummy dserver() and dinterrupt() entries.
  */
 
-rt_public void dserver() {}
-rt_public void dinterrupt() {}
+rt_public void dserver(void) {}
+rt_public void dinterrupt(void) {}
 #endif
 
-rt_public void dexit(code)
+rt_public void dexit(int code)
 {
 	/* This routine is called by functions from libipc.a to raise immediate
 	 * termination with a chance to trap the action and perform some clean-up.

@@ -19,27 +19,27 @@ extern "C" {
 #endif
 
 extern fnptr **eif_address_table;		/* Table of $ operator encapsulation functions */
-extern uint32 *onceadd();				/* Add once-routine body_id in a list */
-extern char *(*wfeat())();				/* Feature call */
-extern char *(*wpfeat())();				/* Precompiled feature call */
-extern char *(*wfeat_inv())();			/* Nested feature call */
-extern char *(*wpfeat_inv())();			/* Nested precompiled feature call */
-extern void wexp();						/* Creation call for expanded types */
-extern void wpexp();			/* Creation call for precomp expanded types */
-extern char *(*wdisp())();          	/* Feature call for dispose routine */ 
-extern long	wattr();					/* Attribute access */
-extern long	wpattr();					/* Precompiled attribute access */
-extern long wattr_inv();				/* Nested attribute access */
-extern long wpattr_inv();				/* Nested precompiled attribute access*/
-extern int wtype();						/* Creation type */
-extern int wptype();					/* Creation type of a precomp feature */
+extern uint32 *onceadd(uint32 id);				/* Add once-routine body_id in a list */
+extern char *(*wfeat(int static_type, int32 feature_id, int dyn_type))(/* ??? */);				/* Feature call */
+extern char *(*wpfeat(int32 origin, int32 offset, int dyn_type))(/* ??? */);				/* Precompiled feature call */
+extern char *(*wfeat_inv(int static_type, int32 feature_id, char *name, char *object))(/* ??? */);			/* Nested feature call */
+extern char *(*wpfeat_inv(int32 origin, int32 offset, char *name, char *object))(/* ??? */);			/* Nested precompiled feature call */
+extern void wexp(int static_type, int32 feature_id, int dyn_type, char *object);						/* Creation call for expanded types */
+extern void wpexp(int32 origin, int32 offset, int dyn_type, char *object);			/* Creation call for precomp expanded types */
+extern char *(*wdisp(int dyn_type))(/* ??? */);          	/* Feature call for dispose routine */ 
+extern long	wattr(int static_type, int32 feature_id, int dyn_type);					/* Attribute access */
+extern long	wpattr(int32 origin, int32 offset, int dyn_type);					/* Precompiled attribute access */
+extern long wattr_inv(int static_type, int32 feature_id, char *name, char *object);				/* Nested attribute access */
+extern long wpattr_inv(int32 origin, int32 offset, char *name, char *object);				/* Nested precompiled attribute access*/
+extern int wtype(int static_type, int32 feature_id, int dyn_type);						/* Creation type */
+extern int wptype(int32 origin, int32 offset, int dyn_type);					/* Creation type of a precomp feature */
 
-extern void update();					/* Dynamic byte code loading */
+extern void update(char ignore_updt);					/* Dynamic byte code loading */
 
-extern void init_desc();				/* Call structure initialization */
-extern void put_desc();					/* Call structure insertion */
-extern void put_mdesc();				/* Melted call structure insertion */
-extern void create_desc();				/* Call structure creation */
+extern void init_desc(void);				/* Call structure initialization */
+extern void put_desc(struct desc_info *desc_ptr, int org, int dtype);					/* Call structure insertion */
+extern void put_mdesc(struct desc_info *desc_ptr, int org, int dtype);				/* Melted call structure insertion */
+extern void create_desc(void);				/* Call structure creation */
 extern char desc_fill;					/* Is it an actual insertion or do we 
 										 * wish to compute the size ? */
 

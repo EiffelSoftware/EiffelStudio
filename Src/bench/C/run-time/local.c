@@ -42,8 +42,8 @@
 
 #define dprintf(n)		if (DEBUG & (n)) printf
 
-rt_public void epop();					/* Pops values off a stack */
-rt_private int extend();				/* Stack extension w/ urgent chunks */
+rt_public void epop(register struct stack *stk, register int nb_items);					/* Pops values off a stack */
+rt_private int extend(register struct stack *stk);				/* Stack extension w/ urgent chunks */
 
 /* Compiled with -DTEST, we turn on DEBUG if not already done */
 #ifdef TEST
@@ -57,9 +57,9 @@ rt_private char *rcsid =
 	"$Id$";
 #endif
 
-rt_public void epop(stk, nb_items)
-register1 struct stack *stk;		/* The stack */
-register2 int nb_items;				/* Number of items to be popped */
+rt_public void epop(register struct stack *stk, register int nb_items)
+                            		/* The stack */
+                       				/* Number of items to be popped */
 {
 	/* Removes 'nb_items' from the stack 'stk'. The routine is more general
 	 * than needed, but it keeps the spirit of epush().
@@ -234,8 +234,7 @@ rt_public void evpush(va_alist)
 	SIGRESUME;				/* Leaving critical section */
 }
 
-rt_public char **eget(num)
-register1 int num;
+rt_public char **eget(register int num)
 {
 	/* Get 'num' entries in the 'loc_set' stack to hold Eiffel local reference
 	 * variables in the current feature. Usually, the generated C code takes
@@ -334,8 +333,7 @@ register1 int num;
 	return top;		/* This is the base area which may be used for locals */
 }
 
-rt_public void eback(top)
-register1 char **top;
+rt_public void eback(register char **top)
 {
 	/* Restore the stack structure pointer to the previous chunk, setting the
 	 * top of the stack to 'top'. Make sure there is no inconsistency in the
@@ -369,8 +367,8 @@ register1 char **top;
 	st_truncate(&loc_set);				/* Free unneeded chunks */
 }
 
-rt_private int extend(stk)
-register1 struct stack *stk;			/* The stack to be extended */
+rt_private int extend(register struct stack *stk)
+                            			/* The stack to be extended */
 {
 	/* The stack 'stk' is extended and the 'stk' structure updated.
 	 * 0 is returned in case of success. Otherwise, -1 is returned.
@@ -411,7 +409,7 @@ register1 struct stack *stk;			/* The stack to be extended */
  * Main local stack initialization.
  */
 
-rt_shared void initstk()
+rt_shared void initstk(void)
 {
 	/* Initialize both the local stack and the hector stack. Those two stacks
 	 * may have their context saved and restored in an Eiffel routine, so they
@@ -456,10 +454,10 @@ rt_shared void initstk()
 #include "urgent.c"
 
 rt_private int cc_for_speed = 1;	/* Optimized for speed */
-rt_private void collect_stats();	/* Gives statistics on collector's stack */
-rt_private void stack_stats();		/* Gives statistics on local stack */
+rt_private void collect_stats(void);	/* Gives statistics on collector's stack */
+rt_private void stack_stats(void);		/* Gives statistics on local stack */
 
-rt_public main()
+rt_public main(void)
 {
 	/* Tests for the local variable stack */
 
@@ -522,14 +520,14 @@ rt_public main()
 	exit(0);
 }
 
-rt_private void collect_stats()
+rt_private void collect_stats(void)
 {
 	/* Print statistics about other collector stack */
 
 	printf(">>>> Remembered items: %d\n", nb_items(&rem_set));
 }
 
-rt_private void stack_stats()
+rt_private void stack_stats(void)
 {
 	/* Print statistics about the local vars stack */
 
@@ -537,41 +535,35 @@ rt_private void stack_stats()
 }
 
 /* Functions not provided here */
-rt_public void panic(s)
-char *s;
+rt_public void panic(char *s)
 {
 	printf("PANIC: %s\n", s);
 	exit(1);
 }
 
-rt_public void eraise(val, tag)
-int val;
-char *tag;
+rt_public void eraise(int val, char *tag)		/* %%zs incoherent with other definitions (see bits.c:964, except.c:132, garcol.c:3901, malloc.c:3495 */
 {
 	xraise(val);
 }
 
-rt_public void enomem()
+rt_public void enomem(void)
 {
 	xraise(0);
 }
 
-rt_public void xraise(val)
-int val;
+rt_public void xraise(int val)
 {
 	printf("xraise: exception code %d\n", val);
 }
 
-rt_public void exhdlr(handler, sig)
-Signal_t (*handler)();
-int sig;
+rt_public void exhdlr(Signal_t (*handler)(int), int sig)
 {
 	(handler)(sig);		/* Call handler */
 }
 
 rt_shared int esigblk = 0;				/* By default, signals are not blocked */
 rt_shared struct s_stack sig_stk;
-rt_shared void esdpch()
+rt_shared void esdpch(void)
 {
 }
 

@@ -16,9 +16,9 @@
 extern "C" {
 #endif
 
-extern void esys();				/* Raise 'Operating system error' exception */
-extern void eio();				/* Raise 'I/O error' exception */
-extern char *error_tag();		/* English description out of errno code */
+extern void esys(void);				/* Raise 'Operating system error' exception */
+extern void eio(void);				/* Raise 'I/O error' exception */
+extern char *error_tag(int code);		/* English description out of errno code */
 
 #ifdef HAS_SYS_ERRLIST
 	extern int sys_nerr;            /* Size of sys_errlist[] */

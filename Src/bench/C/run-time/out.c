@@ -34,14 +34,14 @@ rt_private char *tagged_out;		/* String where the tagged out is written */
 rt_private int tagged_max;			/* Actual maximum size of `tagged_out' */
 rt_private int tagged_len;			/* Actual length of `tagged_out' */
 
-rt_private void write_string();	/* Write a string in `tagged_out' */
-rt_private void write_char();		/* Write a character */
-rt_private void write_out();		/* Write in `tagged_out' */
-rt_private void write_tab();		/* Print tabulations */
-rt_private void rec_write();		/* Write object print in `tagged_out' */
-rt_private void rec_swrite();		/* Write special object */
-rt_private void buffer_allocate();	/* Allocate initial buffer */
-rt_shared char *build_out();		/* Build `tagged_out' string */
+rt_private void write_string(char *str);	/* Write a string in `tagged_out' */
+rt_private void write_char(EIF_CHARACTER c, char *buf);		/* Write a character */
+rt_private void write_out(void);		/* Write in `tagged_out' */
+rt_private void write_tab(register int tab);		/* Print tabulations */
+rt_private void rec_write(register char *object, int tab);		/* Write object print in `tagged_out' */
+rt_private void rec_swrite(register char *object, int tab);		/* Write special object */
+rt_private void buffer_allocate(void);	/* Allocate initial buffer */
+rt_shared char *build_out(EIF_OBJ object);		/* Build `tagged_out' string */
 
 #ifndef lint
 rt_private char *rcsid =
@@ -52,8 +52,7 @@ rt_private char *rcsid =
  * Routine for printing representation
  */
 
-rt_public char *c_generator(Current)
-register1 char *Current;
+rt_public char *c_generator(register char *Current)
 {
 	/* Class name from which the Eiffel object is an instance.
 	 * Return a reference on an Eiffel instance of STRING.
@@ -70,8 +69,7 @@ register1 char *Current;
 	return makestr(generator, strlen(generator));
 }
 
-rt_public char *c_tagged_out(object)
-EIF_OBJ object;
+rt_public char *c_tagged_out(EIF_OBJ object)
 {
 	/* Write a tagged out printing in an string.
 	 * Return a pointer on an Eiffel string object.
@@ -86,8 +84,7 @@ EIF_OBJ object;
 	return result;		/* An Eiffel string */
 }
 
-rt_public char *build_out(object)
-EIF_OBJ object;
+rt_public char *build_out(EIF_OBJ object)
 {
 	/* Build up tagged out representation in a private global buffer */
 
@@ -118,7 +115,7 @@ EIF_OBJ object;
 	return tagged_out;		/* This arena must be freed manually */
 }
 
-rt_private void buffer_allocate()
+rt_private void buffer_allocate(void)
 {
 	/* Allocates initial tagged out buffer */
 
@@ -129,9 +126,7 @@ rt_private void buffer_allocate()
 	tagged_len = 0;
 }
 
-rt_private void rec_write(object, tab)
-register1 char *object;
-int tab;
+rt_private void rec_write(register char *object, int tab)
 {
 	/* Print recursively `object' in `tagged_out' */
 
@@ -278,9 +273,7 @@ int tab;
 	}
 }
 
-rt_private void rec_swrite(object, tab)
-register1 char *object;
-int tab;
+rt_private void rec_swrite(register char *object, int tab)
 {
 	/* Print special object */
 
@@ -374,8 +367,7 @@ int tab;
 		}
 }
 
-rt_private void write_tab(tab)
-register2 int tab;
+rt_private void write_tab(register int tab)
 {
 	register1 int i = 0;
 
@@ -385,9 +377,9 @@ register2 int tab;
 	}
 }
 
-rt_private void write_char (c, buf)
-EIF_CHARACTER c;			/* The character */
-char *buf;		/* Where it should be written */
+rt_private void write_char (EIF_CHARACTER c, char *buf)
+                			/* The character */
+          		/* Where it should be written */
 {
 	/* Write a character in `buffer' */
 		
@@ -403,15 +395,14 @@ char *buf;		/* Where it should be written */
 		sprintf(buf, "CHARACTER = '%c'\n", c);
 }
 
-rt_private void write_out()
+rt_private void write_out(void)
 {
 	/* Print private string `buffer' in `tagged_out'. */
 
 	write_string(buffer);
 }
 
-rt_private void write_string(str)
-char *str;
+rt_private void write_string(char *str)
 {
 	/* Print `str' in `tagged_out'. */
 
@@ -435,8 +426,7 @@ char *str;
  * Building `out' representation for various data types.
  */
 
-rt_public char *c_outb(b)
-EIF_BOOLEAN b;
+rt_public char *c_outb(EIF_BOOLEAN b)
 {
 	if (b)
 		return makestr("true", 4);
@@ -444,37 +434,32 @@ EIF_BOOLEAN b;
 		return makestr("false", 5);
 }
 
-rt_public char *c_outi(i)
-EIF_INTEGER i;
+rt_public char *c_outi(EIF_INTEGER i)
 {
 	sprintf(buffer, "%ld", i);
 	return makestr(buffer, strlen(buffer));
 }
 
-rt_public char *c_outr(f)
-EIF_REAL f;
+rt_public char *c_outr(EIF_REAL f)
 {
 	sprintf(buffer, "%g", f);
 	return makestr(buffer, strlen(buffer));
 }
 
-rt_public char *c_outd(d)
-EIF_DOUBLE d;
+rt_public char *c_outd(EIF_DOUBLE d)
 {
 	sprintf(buffer, "%.17g", d);
 	return makestr(buffer, strlen(buffer));
 }
 
-rt_public char *c_outc(c)
-EIF_CHARACTER c;
+rt_public char *c_outc(EIF_CHARACTER c)
 {
 	buffer[0] = c;
 	buffer[1] = '\0';
 	return makestr(buffer, 1);
 }
 
-rt_public char *c_outp(p)
-EIF_POINTER p;
+rt_public char *c_outp(EIF_POINTER p)
 {
 	sprintf(buffer, "0x%lX", p);
 	return makestr(buffer, strlen(buffer));
@@ -490,8 +475,8 @@ EIF_POINTER p;
  * build_out, as it expects a true object, not a simple type...
  */
 
-rt_shared char *simple_out(val) 
-struct item *val;			/* Interpreter value cell */
+rt_shared char *simple_out(struct item *val) 
+                 			/* Interpreter value cell */
 {
 	/* Hand build a tagged out representation for simple types. The
 	 * representation should be kept in sync with those defined above.

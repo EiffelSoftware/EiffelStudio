@@ -18,6 +18,7 @@
 extern "C" {
 #endif
 
+#include <stdio.h>		/* %%zs moved from file.c */
 #include "limits.h"							/* For PATH_MAX */
 #include "macros.h"
 
@@ -98,61 +99,67 @@ extern "C" {
  * Functions declaration.
  */
 
-extern EIF_POINTER	file_open();
-extern EIF_POINTER	file_dopen();
-extern EIF_POINTER	file_reopen();
-extern void file_close();
-extern void file_flush();
-extern EIF_BOOLEAN file_feof();
-extern void file_pi();
-extern void file_pr();
-extern void file_ps();
-extern void file_pc();
-extern void file_pd();
-extern void file_tnwl();
-extern void file_append();
-extern void file_tnil();
-extern EIF_INTEGER file_gi();
-extern EIF_REAL file_gr();
-extern EIF_DOUBLE file_gd();
-extern EIF_CHARACTER	file_gc();
-extern EIF_INTEGER file_gs();
-extern EIF_INTEGER file_gss();
-extern EIF_INTEGER file_gw();
-extern EIF_CHARACTER file_lh();
-extern void file_chown();
-extern void file_chgrp();
-extern void file_stat ();
-extern EIF_INTEGER file_info ();
-extern EIF_BOOLEAN file_eaccess();
-extern EIF_BOOLEAN file_access();
-extern EIF_BOOLEAN file_exists();
-extern void file_rename();
-extern void file_link();
-extern void file_unlink();
-extern void file_touch();
-extern void file_utime();
-extern void file_perm();
-extern void file_chmod();
-extern EIF_INTEGER file_tell();
-extern void file_go();
-extern void file_recede();
-extern void file_move();
-extern EIF_INTEGER stat_size();
-extern EIF_BOOLEAN file_creatable();
-extern EIF_INTEGER file_fd();
-extern char *file_owner();
-extern char *file_group();
+extern EIF_POINTER	file_open(char *name, int how);
+extern EIF_POINTER	file_dopen(int fd, int how);
+extern EIF_POINTER	file_reopen(char *name, int how, FILE *old);
+extern void file_close(FILE *fp);
+extern void file_flush(FILE *fp);
+extern EIF_BOOLEAN file_feof(FILE *fp);
+extern void file_pi(FILE *f, EIF_INTEGER number);
+extern void file_pr(FILE *f, EIF_REAL number);
+extern void file_ps(FILE *f, char *str, EIF_INTEGER len);
+extern void file_pc(FILE *f, char c);
+extern void file_pd(FILE *f, EIF_DOUBLE val);
+extern void file_tnwl(FILE *f);
+extern void file_append(FILE *f, FILE *other, EIF_INTEGER l);
+extern void file_tnil(FILE *f);
+extern EIF_INTEGER file_gi(FILE *f);
+extern EIF_REAL file_gr(FILE *f);
+extern EIF_DOUBLE file_gd(FILE *f);
+extern EIF_CHARACTER	file_gc(FILE *f);
+extern EIF_INTEGER file_gs(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start);
+extern EIF_INTEGER file_gss(FILE *f, char *s, EIF_INTEGER bound);
+extern EIF_INTEGER file_gw(FILE *f, char *s, EIF_INTEGER bound, EIF_INTEGER start);
+extern EIF_CHARACTER file_lh(FILE *f);
+extern void file_chown(char *name, int uid);
+extern void file_chgrp(char *name, int gid);
+extern void file_stat (char *path, struct stat *buf);
+extern EIF_INTEGER file_info (struct stat *buf, int op);
+extern EIF_BOOLEAN file_eaccess(struct stat *buf, int op);
+extern EIF_BOOLEAN file_access(char *name, EIF_INTEGER op);
+extern EIF_BOOLEAN file_exists(char *name);
+extern void file_rename(char *from, char *to);
+extern void file_link(char *from, char *to);
+extern void file_unlink(char *name);
+extern void file_touch(char *name);
+extern void file_utime(char *name, time_t stamp, int how);
+extern void file_perm(char *name, char *who, char *what, int flag);
+extern void file_chmod(char *path, int mode);
+extern EIF_INTEGER file_tell(FILE *f);
+extern void file_go(FILE *f, EIF_INTEGER pos);
+extern void file_recede(FILE *f, EIF_INTEGER pos);
+extern void file_move(FILE *f, EIF_INTEGER pos);
+extern EIF_INTEGER stat_size(void);
+extern EIF_BOOLEAN file_creatable(char *path);
+extern EIF_INTEGER file_fd(FILE *f);
+extern char *file_owner(int uid);
+extern char *file_group(int gid);
 
 #ifdef EIF_WIN_31
 	/* The following routines are already defined with the correct prototype */
 #else
 	/* FIXME: include the correct header files!!! */
-extern int rename();
-extern int rmdir();
+
+#ifndef HAS_RENAME	/* %%zs added */
+extern int rename(const char *from, const char *to);
 #endif
 
-extern EIF_BOOLEAN eif_group_in_list();
+#ifndef HAS_RMDIR	/* %%zs added */
+extern int rmdir(const char *path);
+#endif
+#endif
+
+extern EIF_BOOLEAN eif_group_in_list(int gid);
 
 #ifdef __cplusplus
 }

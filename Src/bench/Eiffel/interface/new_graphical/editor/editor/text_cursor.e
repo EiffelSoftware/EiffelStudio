@@ -10,18 +10,24 @@ class
 inherit
 	CURSOR
 
+	WEL_SB_CONSTANTS
+		export
+			{NONE} all
+		end
+
 create
 	make_from_absolute_pos
 
 feature -- Initialization
 
-	make_from_absolute_pos (x, y : INTEGER; a_text: STRUCTURED_TEXT) is
+	make_from_absolute_pos (x, y : INTEGER; a_window: CHILD_WINDOW) is
 		require
-			a_text_valid: a_text /= Void
+			a_window_valid: a_window /= Void
 			x_valid: x >= 0
 			y_valid: y >= 1
 		do
-			whole_text := a_text
+			associated_window := a_window
+			whole_text := a_window.text_displayed
 			set_y_in_lines (y)
 			set_x_in_pixels (x)
 		end
@@ -351,10 +357,19 @@ feature {NONE} -- Implementation
 			-- Change `y_in_lines' accordingly.
 			-- Do not update `pos' and `token',
 			-- as it is done at a higher level.
+		local
+			last_line_displayed: INTEGER
 		do
 			if line.next /= Void then
 				line := line.next
 				y_in_lines := y_in_lines + 1
+
+					-- Scroll the window if necessary
+				last_line_displayed := associated_window.first_line_displayed
+									 + associated_window.number_of_lines_displayed - 1
+				if y_in_lines >= last_line_displayed then
+					associated_window.on_vertical_scroll (Sb_linedown,0)
+				end
 			end
 		end
 
@@ -367,6 +382,11 @@ feature {NONE} -- Implementation
 			if line.previous /= Void then
 				line := line.previous
 				y_in_lines := y_in_lines - 1
+
+					-- Scroll the window if necessary
+				if y_in_lines <= associated_window.first_line_displayed - 1 then
+					associated_window.on_vertical_scroll (Sb_lineup,0)
+				end
 			end
 		end
 
@@ -417,8 +437,12 @@ feature {NONE} -- Implementation
 			end
 		end
 
+feature {NONE} -- Private attributes
+
 	whole_text: STRUCTURED_TEXT
 		-- Whole text displayed.
+
+	associated_window: CHILD_WINDOW
 
 invariant
 	x_in_pixels_positive_or_null	: x_in_pixels >= 0

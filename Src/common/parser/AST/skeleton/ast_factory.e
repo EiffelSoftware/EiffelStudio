@@ -519,7 +519,8 @@ feature -- Access
 		inv: INVARIANT_AS;
 		s: SUPPLIERS_AS;
 		o: STRING_AS;
-		cl: CLICK_LIST): CLASS_AS is
+		cl: CLICK_LIST;
+		he: BOOLEAN): CLASS_AS is
 			-- New CLASS AST node
 		require
 			n_not_void: n /= Void
@@ -528,7 +529,7 @@ feature -- Access
 		do
 			create Result
 			Result.initialize (n, ext_name, is_d, is_e, is_s, is_fc, is_ex, top_ind, bottom_ind,
-				g, p, c, co, f, inv, s, o, cl)
+				g, p, c, co, f, inv, s, o, cl, he)
 		ensure
 			class_as_not_void: Result /= Void
 			class_name_set: Result.class_name = n
@@ -551,6 +552,7 @@ feature -- Access
 			suppliers_set: Result.suppliers = s
 			obsolete_message_set: Result.obsolete_message = o
 			click_list_set: Result.click_list = cl
+			has_externals_set: Result.has_externals = he
 		end
 
 	new_class_type_as (n: ID_AS; g: EIFFEL_LIST [EIFFEL_TYPE]): CLASS_TYPE_AS is

@@ -4,7 +4,7 @@ indexing
 		"Representation of a command line project class. Used to initialize,%
 		%retrieve and create eiffel projects.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class COMMAND_LINE_PROJECT 
 
@@ -110,34 +110,36 @@ feature -- Project Initialization
 				end
 			end
 
-				-- We create a project without an existing Eiffel Project file.
-			create project_dir.make (Project_directory_name, Void);
+			if not error_occurred then
+					-- We create a project without an existing Eiffel Project file.
+				create project_dir.make (Project_directory_name, Void);
 
-				-- Check the existence of an already existing Eiffel project.
-			create d_name.make_from_string (project_dir.name)
-			d_name.extend (Eiffelgen)
-			create d.make (d_name)
-			if d.exists then
-					-- A Project exist
-				if stop_on_error then
-					error_occurred := stop_on_error
-					io.error.putstring ("In `")
-					io.error.putstring (project_dir.name)
-					io.error.putstring ("' an Eiffel project already exists%N")
-					io.error.putstring ("Compilation aborted due to `-batch' or `-stop' option.%N")
-				else
-					io.error.putstring ("In `")
-					io.error.putstring (project_dir.name)
-					io.error.putstring ("' an Eiffel project already exists.%N")
-					io.error.putstring ("Do you wish to overwrite it (Y-yes or N-no)? %N")
-					io.read_line
-					answer := io.last_string
-					answer.to_lower
-					error_occurred := not (answer.is_equal ("y") or answer.is_equal ("yes"))
-					io.error.new_line
+					-- Check the existence of an already existing Eiffel project.
+				create d_name.make_from_string (project_dir.name)
+				d_name.extend (Eiffelgen)
+				create d.make (d_name)
+				if d.exists then
+						-- A Project exist
+					if stop_on_error then
+						error_occurred := stop_on_error
+						io.error.putstring ("In `")
+						io.error.putstring (project_dir.name)
+						io.error.putstring ("' an Eiffel project already exists%N")
+						io.error.putstring ("Compilation aborted due to `-batch' or `-stop' option.%N")
+					else
+						io.error.putstring ("In `")
+						io.error.putstring (project_dir.name)
+						io.error.putstring ("' an Eiffel project already exists.%N")
+						io.error.putstring ("Do you wish to overwrite it (Y-yes or N-no)? %N")
+						io.read_line
+						answer := io.last_string
+						answer.to_lower
+						error_occurred := not (answer.is_equal ("y") or answer.is_equal ("yes"))
+						io.error.new_line
+					end
 				end
+				project_is_new := True
 			end
-			project_is_new := True
 		end
 
 	open_project_file (file_name: STRING) is

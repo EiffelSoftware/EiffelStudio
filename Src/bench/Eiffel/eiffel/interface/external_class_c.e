@@ -382,7 +382,7 @@ feature {NONE} -- Initialization
 					l_proc.set_arguments (l_feat_arg)
 				end
 			
-				a_feat_tbl.put_id (l_feat, l_feat.feature_name_id)
+				a_feat_tbl.put (l_feat, l_feat.feature_name_id)
 				l_orig_tbl.put (l_feat, l_feat.rout_id_set.first)
 				i := i + 1
 			end

@@ -20,7 +20,6 @@ feature -- Basic Operations
 		local
 			map_list: LINKED_LIST [TUPLE [STRING, STRING]]
 			tuple: TUPLE [STRING, STRING]
-			main_dialog_id: STRING
 			project_name_lowercase: STRING
 			project_location: FILE_NAME
 			ace_location: FILE_NAME

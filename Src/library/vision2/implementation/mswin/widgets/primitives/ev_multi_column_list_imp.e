@@ -22,7 +22,8 @@ inherit
 			on_right_button_down,
 			on_mouse_move,
 			on_key_down,
-			interface
+			interface,
+			pnd_press
 		end
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
@@ -105,6 +106,9 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			create ev_children.make (0)
 			wel_make (default_parent, 0, 0, 0, 0, 0)
+			--|FIXME This is only required as column title does not correctly
+			--|Work at the moment.
+			create column_titles.make (1,1)
 		end
 
 	make_with_size (col_nb: INTEGER) is         
@@ -126,6 +130,66 @@ feature {NONE} -- Initialization
 				a_column.set_text ("")
 				append_column (a_column)
 				i := i + 1
+			end
+		end
+
+feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- implementation
+
+		list_is_pnd_source : BOOLEAN
+
+		pnd_child_source: EV_MULTI_COLUMN_LIST_ROW_IMP
+				-- If the pnd started in an item, then this is the item.
+
+		set_pnd_child_source (c: EV_MULTI_COLUMN_LIST_ROW_IMP) is
+			do
+				pnd_child_source := c
+			end
+
+		set_source_true is
+			do
+				list_is_pnd_source := True
+			end
+		
+
+		set_source_false is
+			do
+				list_is_pnd_source := False
+			end
+
+		transport_started_in_item: BOOLEAN
+
+		set_t_item_true is
+			do
+				transport_started_in_item := True
+			end
+
+		set_t_item_false is
+			do
+				transport_started_in_item := False
+			end
+
+feature {EV_ANY_I}
+
+	pnd_press (a_x, a_y, a_button, a_screen_x, a_screen_y: INTEGER) is
+		do
+			inspect
+				press_action
+			when
+				Ev_pnd_start_transport
+			then
+					start_transport (a_x, a_y, a_button, 0, 0, 0.5, a_screen_x, a_screen_y)
+					set_source_true
+					--transport_started_in_list := True
+			when
+				Ev_pnd_end_transport
+			then
+				end_transport (a_x, a_y, a_button)
+				set_source_false
+				--transport_started_in_list := False
+			else
+				check
+					disabled: press_action = Ev_pnd_disabled
+				end
 			end
 		end
 
@@ -222,14 +286,15 @@ feature -- Status report
 		local
 			c: WEL_LIST_VIEW_COLUMN
 		do
-			check
-				to_be_implemented: False
+			result := column_titles @ column
+			if result = Void then
+				Result := ""
 			end
 			--|FIXME This appears to be a bug in WEL.
 			--|It appears that the correct parameters are passed.
-			create c.make
-			cwin_send_message (wel_item, Lvm_getcolumn, column , c.to_integer)
-			Result := c.text
+			--create c.make
+			--cwin_send_message (wel_item, Lvm_getcolumn, column , c.to_integer)
+			--Result := c.text
 		end
 
 feature -- Status setting
@@ -421,6 +486,7 @@ feature -- Element change
 			-- Make `txt' the title of the column number
 			-- `number'.
 		do
+			column_titles.force (txt, column)
 			{WEL_LIST_VIEW} Precursor (txt, column - 1)
 		end
 
@@ -620,6 +686,11 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
+	column_titles: ARRAY [STRING]
+		--|FIXME This has been added as the column_title appears not to
+		--|be working correctly in WEL. This needs to be tested and fixed.
+		--|Julian Rogers 03/21/00
+
 	internal_propagate_pointer_press (event_id, x_pos, y_pos, button: INTEGER) is
 			-- Propagate `event_id' to the good item. 
 		local 
@@ -628,8 +699,13 @@ feature {NONE} -- WEL Implementation
 			offsets: TUPLE [INTEGER, INTEGER]
 		do
 			mcl_row := find_item_at_position (x_pos, y_pos) 
+			pt := client_to_screen (x_pos, y_pos)
+			if mcl_row /= Void and mcl_row.is_transport_enabled and not list_is_pnd_source then
+					mcl_row.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+				elseif pnd_child_source /= Void then 
+					pnd_child_source.pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+				end
 			if mcl_row /= Void then 
-				pt := client_to_screen (x_pos, y_pos)
 				offsets := mcl_row.relative_position
 				mcl_row.interface.pointer_button_press_actions.call ([x_pos - offsets.integer_arrayed @ 1 + 1,
 				y_pos - offsets.integer_arrayed @ 2, button, 0.0, 0.0, 0.0, pt.x, pt.y])
@@ -703,8 +779,21 @@ feature {NONE} -- WEL Implementation
 	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
 			-- Wm_rbuttondown message
 			-- See class WEL_MK_CONSTANTS for `keys' value
+		local
+			pt: WEL_POINT
+			it: EV_MULTI_COLUMN_LIST_ROW_IMP
+			a: BOOLEAN
 		do
+			a:= transport_started_in_item
+			create pt.make (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
 			internal_propagate_pointer_press (keys, x_pos, y_pos, 3)
+			it := find_item_at_position (x_pos, y_pos)
+
+			if transport_started_in_item = a then
+				pnd_press (x_pos, y_pos, 3, pt.x, pt.y)
+			end
+
 			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end
 
@@ -730,11 +819,14 @@ feature {NONE} -- WEL Implementation
 			offsets: TUPLE [INTEGER, INTEGER]
 		do
 			mcl_row := find_item_at_position (x_pos, y_pos)
+			pt := client_to_screen (x_pos, y_pos)
 			if mcl_row /= Void then
-				pt := client_to_screen (x_pos, y_pos)
 				offsets := mcl_row.relative_position
 				mcl_row.interface.pointer_motion_actions.call ([x_pos - offsets.integer_arrayed @ 1 + 1,
 				y_pos - offsets.integer_arrayed @ 2, 0.0, 0.0, 0.0, pt.x, pt.y])
+			end
+			if pnd_child_source /= Void then
+				pnd_child_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
 			end
 			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 		end
@@ -836,6 +928,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.55  2000/03/21 23:10:03  rogers
+--| Added features for chechking PND status with relation, and modified features to support this. Fixed column_title with a tmeporary implementation.
+--|
 --| Revision 1.54  2000/03/14 23:51:15  rogers
 --| Removed unused local.
 --|

@@ -8,7 +8,8 @@ inherit
 		redefine
 			c_code_directory, launch_c_compilation,
 			finalization_actions, confirm_and_compile,
-			command_name, symbol
+			command_name, symbol,
+			compilation_allowed
 		end
  
 creation
@@ -16,6 +17,11 @@ creation
 	make
  
 feature {NONE}
+
+	compilation_allowed: BOOLEAN is
+		do
+			Result := not melt_only
+		end
 
 	c_code_directory: STRING is
 		do

@@ -54,7 +54,7 @@
 #define DUMP_VARIABLES	37		/* Send the locals and the arguments of a feature on the call stack */
 #define APPLICATION_CWD	38		/* Send current directory to launch application */
 #define OVERFLOW_DETECT	39		/* Specify the stack overflow management: set a depth at which the application raises an exception */
-#define MAX_REQUEST_TYPE 39		/* To update with new value of max request type.
+#define MAX_REQUEST_TYPE 39		/* To update with new value of max request type. */
 
 /* Acknowledgments codes */
 #define AK_OK			0       /* Everything is ok */

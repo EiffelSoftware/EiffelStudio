@@ -9,7 +9,7 @@ class
 inherit
 	ERROR
 		redefine
-			Error_string,
+			error_string,
 			print_error_message
 		end
 
@@ -53,7 +53,7 @@ feature -- Properties
 	code: STRING is
 			-- Error code
 		once
-			Result := "IL_Error"
+			Result := "VIGE"
 		end
 	
 	Error_string: STRING is
@@ -98,4 +98,4 @@ feature {NONE} -- Implementation
 	internal_error_string: STRING
 			-- Internal copy of error description
 
-end -- class UNUSED_LOCAL_WARNING
+end -- class VIGE

@@ -87,11 +87,11 @@ rt_private struct fop_list **eif_fop_table = (struct fop_list **) 0; /* Table co
  ****************************************/
 
 /* Mutex for accessing the `eif_pop_table' */
-rt_private EIF_MUTEX_TYPE *eif_pop_table_mutex;
+rt_private EIF_MUTEX_TYPE *eif_pop_table_mutex = (EIF_MUTEX_TYPE *) 0;
 
 /* We have to declare a mutex for accessing the `eif_fop_table' 
  * otherwise several threads can access and modify it  */
-rt_private EIF_MUTEX_TYPE *eif_fop_table_mutex;
+rt_private EIF_MUTEX_TYPE *eif_fop_table_mutex = (EIF_MUTEX_TYPE *) 0;
 
 rt_private struct fop_list *init_fop_list (EIF_FN_REF feature_address); 
 	/* Creates and returns a pointer on a new 'fop_list' */

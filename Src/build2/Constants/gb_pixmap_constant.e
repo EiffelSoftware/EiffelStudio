@@ -24,6 +24,9 @@ inherit
 		end
 	
 	GB_SHARED_CONSTANTS
+		export
+			{NONE} all
+		end
 	
 create
 	make_with_name_and_value

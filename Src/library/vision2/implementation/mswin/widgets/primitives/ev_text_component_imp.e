@@ -151,13 +151,8 @@ feature {EV_ANY_I}-- element change
 			previous_caret_position: INTEGER
 		do
 			previous_caret_position := caret_position
-				-- We have to handle the case where `text' is void.
-			if text = Void then
-				temp_text := txt
-			else
-				temp_text := text
-				temp_text.append (txt)
-			end
+			temp_text := text
+			temp_text.append (txt)
 			set_text (temp_text)
 			set_caret_position (previous_caret_position)
 		end
@@ -169,13 +164,8 @@ feature {EV_ANY_I}-- element change
 			previous_caret_position: INTEGER
 		do
 			previous_caret_position := caret_position
-				-- We have to handle the case where `text' is void.
-			if text = Void then
-				temp_text := txt
-			else
-				temp_text := text
-				temp_text.prepend (txt)
-			end
+			temp_text := text
+			temp_text.prepend (txt)
 			set_text (temp_text)
 			set_caret_position (previous_caret_position)
 		end

@@ -2,6 +2,12 @@ indexing
 	description: 
 		"EiffelVision option button is a button that%
 		% displays a popup_menu when we click on it."
+	note: "On Linux platform, because of GTK, it is better%
+		% to follow the following step to be able to display%
+		% the selected item at the beginning:%
+		% 1- create the menu with a parent Void,%
+		% 2- create the item with the menu as a parent%
+		% 3- set the option button as the menu's parent"
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -16,6 +22,11 @@ inherit
 		end
 
 	EV_BUTTON
+		export {NONE}
+			set_center_alignment,
+			set_left_alignment,
+			set_right_alignment,
+			set_text
 		redefine
 			implementation,
 			make

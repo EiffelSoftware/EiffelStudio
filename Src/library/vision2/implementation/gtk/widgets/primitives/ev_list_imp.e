@@ -181,7 +181,7 @@ feature -- Status setting
 
 feature {EV_APPLICATION_IMP} -- Implementation
 
-	pebble_over_widget (a_gdkwin: POINTER): BOOLEAN is
+	pebble_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
 		do
 			Result := a_gdkwin = C.gtk_widget_struct_window (list_widget)
 		end
@@ -242,6 +242,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/03/23 19:19:01  king
+--| Updated for signature change of pebble_over_widget
+--|
 --| Revision 1.34  2000/03/22 22:02:09  king
 --| Redefined pebble_over_widget to return correct gdkwindow
 --|

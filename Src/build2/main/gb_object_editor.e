@@ -10,6 +10,9 @@ class
 inherit
 
 	EV_VERTICAL_BOX
+		export
+			{NONE} all
+			{ANY} destroy
 		undefine
 			is_in_default_state
 		redefine
@@ -40,6 +43,8 @@ inherit
 	GB_SHARED_COMMAND_HANDLER
 		
 	GB_SHARED_SYSTEM_STATUS
+		export
+			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
@@ -50,6 +55,8 @@ inherit
 		end
 		
 	GB_SHARED_HISTORY
+		export
+			{NONE} all
 		undefine
 			default_create, copy, is_equal
 		end
@@ -127,6 +134,7 @@ feature -- Initialization
 			is_initialized := True
 		end
 		
+feature {NONE}
 	do_not_allow_object_type (transported_object: GB_OBJECT): BOOLEAN is
 		do
 				-- If the object is not void, it means that
@@ -225,11 +233,16 @@ feature -- Status setting
 		end
 		
 	update_current_object is
-			-- Update fields for `object'.
-			-- For now, we just rebuild the whole
+			-- Update fields for `object'. This ensures that
+			-- representation of `object' displayed in `Current'
+			-- is up to date. For now, we just rebuild the whole
 			-- tool. This can be optimized later.
+		require
+			object_not_void: object /= Void
 		do
 			set_object (object)
+		ensure
+			object_not_changed: old object = object
 		end
 		
 	replace_object_editor_item (a_type: STRING) is
@@ -253,17 +266,6 @@ feature -- Status setting
 					editor_item.creating_class.update_attribute_editor
 				end
 				item_parent.forth
-			end
-		end
-
-	update_event_selection_button_text is
-			-- Change text displayed on `event_selection_button',
-			-- dependent on number of items in events from `object'.
-		do
-			if object.events.is_empty then
-				event_selection_button.set_text (Event_selection_text)
-			else
-				event_selection_button.set_text (Event_modification_text)
 			end
 		end
 
@@ -310,6 +312,16 @@ feature {GB_SHARED_OBJECT_EDITORS} -- Implementation
 
 feature {NONE} -- Implementation
 
+		update_event_selection_button_text is
+			-- Change text displayed on `event_selection_button',
+			-- dependent on number of items in events from `object'.
+		do
+			if object.events.is_empty then
+				event_selection_button.set_text (Event_selection_text)
+			else
+				event_selection_button.set_text (Event_modification_text)
+			end
+		end
 
 	set_title_from_name is
 			-- Update title of top level window to reflect the

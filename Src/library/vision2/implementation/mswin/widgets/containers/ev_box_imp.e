@@ -193,20 +193,11 @@ feature {EV_WIDGET_I} -- Implementation
 		local
 			i: INTEGER
 		do
-			if not ev_children.empty then
-				from
-					i := 1
-				until
-					i = ev_children.count + 1
-				loop
-					(ev_children @ i).on_first_display
-					i := i + 1
-				end
-			end
+			{EV_INVISIBLE_CONTAINER_IMP} Precursor
 			already_displayed := True
 			resize (minimum_width, minimum_height)
 			initialize_length_at_minimum
---			child_cell.set_width (minimum_width)
+--			child_cell.set_widgth (minimum_width)
 --			child_cell.set_height (minimum_height)
 		end
 

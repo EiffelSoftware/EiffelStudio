@@ -221,6 +221,8 @@ cluster
 
 	all eac_components:		"$EIFFEL_SRC\dotnet\consumer\components"
 
+	eac_documentation:	"$EIFFEL_SRC\dotnet\eac_browser\src\deserialization\assembly_informations"
+
 external
 
 	include_path:

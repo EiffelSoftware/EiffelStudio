@@ -245,6 +245,10 @@ feature -- Basic operations
 				if handle.status.found then
 					cursor.fill_in
 				end
+				if object /= Void and then (cursor.map_table_to_create or else update_map_table) then
+					cursor.update_map_table (object)
+					update_map_table := False
+				end
 				if stop_condition /= Void then
 					stop_condition.start
 				end

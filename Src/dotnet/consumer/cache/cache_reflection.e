@@ -84,6 +84,7 @@ feature -- Access
 								if cargs.count = args.count then
 									from
 										j := 1
+										found := True
 									until
 										j > cargs.count or not found									
 									loop

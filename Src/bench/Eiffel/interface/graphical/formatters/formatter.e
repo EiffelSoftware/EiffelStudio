@@ -55,7 +55,7 @@ feature -- Callbacks
 			do_format := true;
 			execute_licenced (formatted);
 			do_format := old_do_format;
-			text_window.history.extend (text_window.root_stone);
+			tool.history.extend (tool.stone);
 			mp.restore
 		end;
 
@@ -70,15 +70,15 @@ feature -- Execution
 				last_warner.popdown
 			end
 
-			if argument = text_window then
-				formatted ?= text_window.root_stone
+			if argument = tool then
+				formatted ?= tool.stone
 			else
 				formatted ?= argument
 			end;
 			if not text_window.changed then
 				execute_licenced (formatted);
 			else
-				warner (text_window).call (Current, l_File_changed)
+				warner (popup_parent).call (Current, l_File_changed)
 			end
 		end;
 
@@ -97,40 +97,40 @@ feature -- Formatting
 			-- if it's clickable; do nothing otherwise.
 		local
 			retried: BOOLEAN;
-			tool: BAR_AND_TEXT;
+			bar_and_text_tool: BAR_AND_TEXT;
 			mp: MOUSE_PTR
 		do
 			if not retried then 
 				if 
 					do_format or else filtered or else
-					(text_window.last_format.associated_command /= Current or
-					not equal (stone, text_window.root_stone))
+					(tool.last_format.associated_command /= Current or
+					not stone.same_as (tool.stone))
 				then
 					if stone /= Void and then stone.is_valid then
 						if stone.clickable then
 							display_temp_header (stone);
 							!! mp.set_watch_cursor;
-							text_window.clean;
-							text_window.set_root_stone (stone);
-							text_window.set_file_name (file_name (stone));
+							text_window.clear_window;
+							tool.set_read_only_text;
+							tool.set_stone (stone);
+							tool.set_file_name (file_name (stone));
 							display_info (stone);
-							text_window.set_editable;
+							tool.show_read_only_text;
 							text_window.display;
-							text_window.set_read_only;
-							text_window.set_last_format (holder);
+							tool.set_last_format (holder);
 							filtered := false;
 							display_header (stone);
 							mp.restore
 						else
-							tool ?= text_window.tool;
-							if tool /= Void then
-								tool.showtext_frmt_holder.execute (stone)
+							bar_and_text_tool ?= tool;
+							if bar_and_text_tool /= Void then
+								bar_and_text_tool.showtext_frmt_holder.execute (stone)
 							end
 						end
 					end
 				end
 			else
-				warner (text_window).gotcha_call (w_Cannot_retrieve_info);
+				warner (popup_parent).gotcha_call (w_Cannot_retrieve_info);
 				mp.restore;
 			end
 		rescue
@@ -156,10 +156,10 @@ feature -- Filters; Implementation
 			-- Filter the `Current' format with `filtername'.
 		require
 			filtername_not_void: filtername /= Void;
-			current_format: text_window.last_format.associated_command = Current
+			current_format: tool.last_format.associated_command = Current
 		do
-			if text_window.root_stone /= Void then
-				warner (text_window).gotcha_call (w_Not_a_filterable_format)
+			if tool.stone /= Void then
+				warner (popup_parent).gotcha_call (w_Not_a_filterable_format)
 			end
 		end;
 
@@ -238,7 +238,7 @@ feature {NONE} -- Properties
 	indent: INTEGER
 			-- Number of blank characters in a tab
 
-feature {ROUTINE_WIN_MGR} -- Implementation
+feature {ROUTINE_W} -- Implementation
 
 	display_header (stone: STONE) is
 			-- Show header for 'stone'.
@@ -248,7 +248,7 @@ feature {ROUTINE_WIN_MGR} -- Implementation
 			!!new_title.make (50);
 			new_title.append (title_part);
 			new_title.append (stone.signature);
-			text_window.display_header (new_title)
+			tool.set_title (new_title)
 		end;
 
 	display_temp_header (stone: STONE) is
@@ -260,7 +260,7 @@ feature {ROUTINE_WIN_MGR} -- Implementation
 			new_title.append (title_part);
 			new_title.append (stone.signature);
 			new_title.append (" ...");
-			text_window.display_header (new_title)
+			tool.set_title (new_title)
 		end;
 
 	display_info (s: STONE) is

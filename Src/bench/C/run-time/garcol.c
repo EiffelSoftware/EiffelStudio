@@ -6029,17 +6029,24 @@ rt_private int	all_subreferences_processed (EIF_REFERENCE root)
 	char			*subref;	/* Subreference in root. */
 
 	EIF_GET_CONTEXT						/* For MT-mode: special_rem_set. */
+
+
 	if (root == (EIF_REFERENCE) 0)
 		return 1;
 
+
 	zone = HEADER (root);
-	assert (zone->ov_flags & EO_REF);	/* Does not apply to other objects. */
 	
 	if (zone->ov_size & B_FWD)
 	{
 		EIF_END_GET_CONTEXT 
 		return 0;	/* Not updated. */
 	}
+
+	assert (!(HEADER (root)->ov_size & B_FWD));
+	assert (HEADER (root)->ov_flags & EO_SPEC);
+	assert (HEADER (root)->ov_flags & EO_REF);
+
 	if ((zone->ov_flags & (EO_OLD | EO_REM)) == EO_OLD)
 	{
 		assert (!(refers_new_object (root)));
@@ -6064,13 +6071,20 @@ rt_private int	all_subreferences_processed (EIF_REFERENCE root)
 			continue;	/* Ok, next one. */
 		if (szone->ov_flags & EO_OLD)
 			continue;	/* Do not explore. */
-		if ((subref > sc_to.sc_arena && subref <= sc_to.sc_end) ||
-		(subref > ps_to.sc_arena && subref <= ps_to.sc_end))
+		if ((g_data.status & GC_FAST) &&
+			((subref > sc_to.sc_arena) && subref <= sc_to.sc_end)) 
+				/* In TO zone. */
 			continue;	/* Ok, next. */
-		if (!(g_data.status & GC_FAST) && (g_data.status & GC_PART))	
+		
+		if ((g_data.status & GC_PART)) {
 				/* Is this a partial scavenging. */
+			if 	((subref > ps_to.sc_arena) && (subref <= ps_to.sc_end))
+					/* In TO zone. */
+				continue;	/* Ok, next. */
 			if ((subref > ps_from.sc_arena && subref <= ps_from.sc_end))
+					/* Still in FROM zone. */
 				return 0;		/* Object not updated. */
+		}
 		EIF_END_GET_CONTEXT
 		return 0;
 	}	

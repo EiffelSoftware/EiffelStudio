@@ -36,7 +36,6 @@ feature -- Basic operations
 			create cpp_class_writer.make
 			create interface_names.make
 
-
 			cpp_class_writer.set_name (a_descriptor.c_type_name)
 			cpp_class_writer.set_header (a_descriptor.description)
 			cpp_class_writer.set_header_file_name (a_descriptor.c_header_file_name)
@@ -77,7 +76,9 @@ feature -- Basic operations
 			end
 
 			cpp_class_writer.set_destructor (destructor (a_descriptor))
-			cpp_class_writer.add_constructor (default_constructor (a_descriptor))
+			if is_typeflag_fcancreate (a_descriptor.flags) then
+				cpp_class_writer.add_constructor (default_constructor (a_descriptor))
+			end
 			cpp_class_writer.add_constructor (pointer_constructor (a_descriptor))
 
 
@@ -274,6 +275,28 @@ feature {NONE} -- Implementation
 				constructor_body.append (Space_equal_space)
 				constructor_body.append (Zero)
 				constructor_body.append (Semicolon)
+
+				constructor_body.append (New_line_tab)
+				constructor_body.append (Hresult_variable_name)
+				constructor_body.append (Space_equal_space)
+				constructor_body.append (A_pointer)
+				constructor_body.append (Struct_selection_operator)
+				constructor_body.append (Query_interface)
+				constructor_body.append (Open_parenthesis)
+				constructor_body.append (iid_name (a_coclass_descriptor.interface_descriptors.item.name))
+				constructor_body.append (Comma_space)
+				constructor_body.append (Open_parenthesis)
+				constructor_body.append (C_void_pointer)
+				constructor_body.append (Asterisk)
+				constructor_body.append (Close_parenthesis)
+				constructor_body.append (Ampersand)
+				constructor_body.append (Interface_variable_prepend)
+				constructor_body.append (a_coclass_descriptor.interface_descriptors.item.name)
+				constructor_body.append (Close_parenthesis)
+				constructor_body.append (Semicolon)
+				constructor_body.append (New_line)
+				constructor_body.append (examine_hresult (Hresult_variable_name))
+				constructor_body.append (New_line)
 
 				a_coclass_descriptor.interface_descriptors.forth
 			end

@@ -587,9 +587,9 @@ feature -- Implementation
 				create error_dialog.make_with_text (names.item + name_error_message)
 					error_dialog.show_modal_to_window (system_window.window)
 				if gac_assembly_list.has_focus then
-					gac_assembly_list.set_field
+					gac_assembly_list.set_with_previous_text
 				elseif local_assembly_list.has_focus then
-					local_assembly_list.set_field
+					local_assembly_list.set_with_previous_text
 				end
 			end
 		end

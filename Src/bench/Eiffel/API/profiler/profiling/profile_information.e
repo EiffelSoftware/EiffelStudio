@@ -7,9 +7,6 @@ indexing
 
 class PROFILE_INFORMATION
 
-inherit
-	STORABLE
-
 creation
 	make
 

@@ -13,7 +13,6 @@ inherit
 		rename
 			make as file_make
 		end;
-	STORABLE;
 	EXCEPTIONS;
 	UNIX_SIGNALS
 		rename
@@ -167,7 +166,7 @@ feature {NONE} -- Implementation
 				check_version_number (0);
 				if not error then
 					open_read;
-					Result := retrieved (Current);
+					Result := retrieved;
 					close;
 					if Result = Void then
 						error_value := corrupt_value

@@ -6,10 +6,6 @@ inherit
 		rename
 			make as ht_make
 		end;
-	STORABLE
-		undefine
-			copy, is_equal
-		end;
 	SHARED_WORKBENCH
 		undefine
 			copy, is_equal

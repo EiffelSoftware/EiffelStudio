@@ -1415,6 +1415,36 @@ feature -- Conversion
 			Result := str_atoi ($area, count)
 		end
 
+	to_integer_64: INTEGER_64 is
+			-- Integer value of type INTEGER_64;
+			-- for example, when applied to "123", will yield 123
+		require
+			is_integer: is_integer
+		local
+			l_area: like area
+			l_character: CHARACTER
+			i, nb: INTEGER
+			l_is_negatif: BOOLEAN
+		do
+			from
+				l_area := area
+				nb := count - 1
+			until
+				i > nb
+			loop
+				l_character := l_area.item (i)
+				if l_character.is_digit then
+					Result := (Result * 10) + l_character.code - 48
+				elseif l_character = '-' then
+					l_is_negatif := True
+				end
+				i := i + 1
+			end
+			if l_is_negatif then
+				Result := - Result
+			end
+		end
+		
 	to_real: REAL is
 			-- Real value;
 			-- for example, when applied to "123.0", will yield 123.0

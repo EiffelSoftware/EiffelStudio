@@ -3,23 +3,17 @@ class VISIBLE_SELEC_I
 inherit
 
 	VISIBLE_I
-		rename
-			trace as basic_trace
 		redefine
-			nb_visible, generate_cecil_table, has_visible, mark_visible,
+			trace, nb_visible, generate_cecil_table, has_visible, mark_visible,
 			is_visible, make_byte_code, dle_generate_cecil_table
-		end;
-	VISIBLE_I
-		redefine
-			trace,
-			nb_visible, generate_cecil_table, has_visible, mark_visible,
-			is_visible, make_byte_code, dle_generate_cecil_table
-		select
-			trace
-		end;
-	SHARED_AST_CONTEXT;
-	SHARED_SERVER;
-	SHARED_CECIL;
+		end
+
+	SHARED_AST_CONTEXT
+
+	SHARED_SERVER
+
+	SHARED_CECIL
+
 	COMPILER_EXPORTER
 	
 feature 
@@ -156,7 +150,7 @@ feature
 	trace is
 			-- Debug purpose
 		do
-			basic_trace;
+			{VISIBLE_I} precursor
 			io.error.putstring (" for ");
 			from
 				visible_features.start;

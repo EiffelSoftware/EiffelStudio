@@ -75,6 +75,7 @@ feature -- Initialization
 			formal_parameters.wipe_out
 			id_level := Normal_level
 			real_class_end_position := 0
+			has_externals := False
 		end
 
 feature -- Status report
@@ -87,6 +88,9 @@ feature -- Status report
 
 	has_syntax_warning: BOOLEAN
 			-- Do we create SYNTAX_WARNING instances for obsolte syntactical constructs?
+
+	has_externals: BOOLEAN
+			-- Did last parse find external declarations?
 
 feature -- Parsing
 
@@ -285,7 +289,7 @@ feature {NONE} -- Actions
 				end
 			end
 			Result := new_class_as (n.first, ext_name, is_d, is_e, is_s, is_fc, is_ex, first_ind,
-				last_ind, g, p, c, co, f, inv, s, o, cl)
+				last_ind, g, p, c, co, f, inv, s, o, cl, has_externals)
 			n.second.set_node (Result)
 		ensure
 			class_description_not_void: Result /= Void

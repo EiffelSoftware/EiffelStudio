@@ -455,6 +455,7 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			if environment.application.ctrl_pressed then
 				new_object_editor (Current)
 			else
+				type_selector.update_drop_actions_for_all_children (Current)
 				Result := Current
 			end
 		end

@@ -10,22 +10,23 @@ inherit
 		rename
 			make as cl_make
 		undefine
-			hash_code, generics, same_class_type, has_like, parent_type,
-			deep_actual_type, ext_append_to, internal_conform_to,
+			hash_code, generics, has_like, parent_type,
+			deep_actual_type, ext_append_to, conform_to,
 			has_formal_generic, valid_generic, conformance_type,
 			instantiated_in, good_generics, error_generics, check_constraints,
 			expanded_deferred, valid_expanded_creation, update_dependance,
 			solved_type, has_expanded, format, dump, duplicate,
-			is_equivalent, instantiation_of, same_as, instantiation_in
+			is_equivalent, instantiation_of, same_as, instantiation_in,
+			is_full_named_type
 		redefine
-			is_typed_pointer, type_i, associated_class
+			is_typed_pointer, type_i, associated_class, reference_actual_type
 		end
 		
 	GEN_TYPE_A
 		undefine
 			meta_type, is_basic, feature_type, is_valid
 		redefine
-			is_typed_pointer, type_i, associated_class
+			is_typed_pointer, type_i, associated_class, reference_actual_type
 		end
 
 create
@@ -40,7 +41,7 @@ feature {NONE} -- Initialization
 		do
 			create generics.make (1, 1)
 			generics.put (a_type, 1)
-			class_id := associated_class.class_id
+			cl_make (associated_class.class_id)
 		ensure
 			pointed_type_set: pointed_type = a_type
 		end
@@ -60,6 +61,13 @@ feature -- Property
 			-- Type pointed by current if any.
 		do
 			Result := generics.item (1)
+		end
+
+	reference_actual_type: GEN_TYPE_A is
+			-- `actual_type' if not `is_expanded'.
+			-- Otherwise associated reference of `actual type'
+		do
+			create Result.make (class_id, generics)
 		end
 
 feature {COMPILER_EXPORTER}

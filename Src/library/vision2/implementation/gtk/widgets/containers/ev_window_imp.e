@@ -38,7 +38,7 @@ feature {NONE} -- Initialization
 		do
 			widget := gtk_window_new (GTK_WINDOW_TOPLEVEL)
 -- alex
-			gtk_widget_set_all_events(widget)
+			c_gtk_widget_set_all_events (widget)
 				-- set the events to be handled by the window
 
 			initialize

@@ -11,7 +11,8 @@ class
 inherit
 	EV_HORIZONTAL_BOX
 		redefine
-			make_for_test
+			make_for_test,
+			initialize
 		end
 
 	EV_FRAME_CONSTANTS
@@ -24,6 +25,13 @@ create
 	make_for_test
 
 feature {NONE} -- Initialization
+
+	initialize is
+			-- Set `padding' 1.
+		do
+			Precursor
+			set_padding (1)
+		end
 
 	make_for_test is
 			-- Create and test.
@@ -64,6 +72,9 @@ end -- class EV_STATUS_BAR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.19  2000/04/28 23:43:59  brendel
+--| Padding = 1.
+--|
 --| Revision 1.18  2000/04/28 21:47:05  brendel
 --| Made platform independent.
 --|

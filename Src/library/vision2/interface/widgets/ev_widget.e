@@ -260,7 +260,7 @@ feature -- Element change
 			-- dynamically by the application anymore.
 		require
 			not_destroyed: not is_destroyed
-			a_minimum_width_positive: a_minimum_width > 0
+			a_minimum_width_positive: a_minimum_width >= 0
 		do
 			implementation.set_minimum_width (a_minimum_width)
 		ensure
@@ -275,7 +275,7 @@ feature -- Element change
 			-- dynamically by the application anymore.
 		require
 			not_destroyed: not is_destroyed
-			a_minimum_height_positive: a_minimum_height > 0
+			a_minimum_height_positive: a_minimum_height >= 0
 		do
 			implementation.set_minimum_height (a_minimum_height)
 		ensure
@@ -291,8 +291,8 @@ feature -- Element change
 			-- dynamically by the application anymore.
 		require
 			not_destroyed: not is_destroyed
-			a_minimum_width_positive: a_minimum_width > 0
-			a_minimum_height_positive: a_minimum_height > 0
+			a_minimum_width_positive: a_minimum_width >= 0
+			a_minimum_height_positive: a_minimum_height >= 0
 		do
 			implementation.set_minimum_size (a_minimum_width, a_minimum_height)
 		ensure

@@ -49,12 +49,12 @@ feature -- Properties
 	
 	operator_is_special: BOOLEAN is
 		do
-			Result := true
+			Result := True
 		end
 	
 	operator_is_keyword: BOOLEAN is 
 		do
-			Result := false
+			Result := False
 		end
 
 feature -- Comparison
@@ -205,10 +205,13 @@ feature {AST_EIFFEL} -- Output
 feature {UNARY_AS} -- Replication
 
 	set_expr (e: like expr) is
+			-- Set `expr' with `e'.
 		require
 			valid_arg: e /= Void
 		do
 			expr := e
+		ensure
+			expr_set: expr = e
 		end
 
 feature {NONE} -- Implementation
@@ -217,7 +220,6 @@ feature {NONE} -- Implementation
 			-- Create typed byte code depending on Current.
 		deferred
 		end
-
 
 end -- class UNARY_AS
 

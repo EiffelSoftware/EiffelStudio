@@ -129,6 +129,7 @@ feature
 			end;
 			if how /= None_assignment then
 				generated_file.putstring ("RTRV(");
+-- FIXME!!!! use something similar to CREATE_INFO in CREATION_BL
 					-- It so happens that reverse assignments are only allowed
 					-- on reference types.
 				cl_type_i ?= real_type (target.type);   -- Cannot fail

@@ -15,26 +15,34 @@
 		<IMG SRC="../../../../images/EiffelBench/feature-wizard-typeselection.png">
 		</CENTER>
 
-		<H2>Generic parameters</H2>
+		<P>When you select a class that is in the system and has formal generic parameters, the type selection component lets you specify an actual generic parameter in another type selection.</P>
 
-		<P>When you select a class that is in the system and has formal generic parameters, the type selection component lets you specify an actual generic parameter in another type selection.<BR>
-		<IMG SRC="../../../../images/EiffelBench/feature-wizard-generictype.png"></P>
+		<CENTER>
+		<IMG SRC="../../../../images/EiffelBench/feature-wizard-generictype.png">
+		</CENTER>
 
 		<P CLASS="note"><B>Note</B>: the window might grow in size because of the added component.</P>
 
-		<P>Since the actual generic type selection is also a type selection, you can select another class with generic parameters and nest them as deep as you need.<BR>
-		<IMG SRC="../../../../images/EiffelBench/feature-wizard-generictyperec.png"></P>
+		<P>Since the actual generic type selection is also a type selection, you can select another class with generic parameters and nest them as deep as you need.</P>
 
-		You can also select the type <SPAN CLASS="eclass">TUPLE</SPAN>, which is a special class that can have zero or more generic parameters. When you select it, it has no parameters, but you can add one by clicking on the <B>Add parameter</B> button. Click it as often as the number of generic parameters that you need.
-		<BR>
+		<CENTER>
+		<IMG SRC="../../../../images/EiffelBench/feature-wizard-generictyperec.png">
+		</CENTER>
+
+		<P>You can also select the type <SPAN CLASS="eclass">TUPLE</SPAN>, which is a special class that can have zero or more generic parameters. When you select it, it has no parameters, but you can add one by clicking on the <B>Add parameter</B> button. Click it as often as the number of generic parameters that you need.</P>
+
+		<CENTER>
 		<IMG SRC="../../../../images/EiffelBench/feature-wizard-tupletype2.png"><BR>
+		</CENTER>
 
 		<P CLASS="warning"><B>Warning</B>: if you need a very complex type, it is better not to use the wizard, because the window might grow bigger than your screen. After you completed the feature, edit it manually in the class text.</P>
 
-		<H2>Generated code</H2>
-		The code generated for the selected type is quite straightforward, an example:<BR>
+		<P>The code generated for the selected type is quite straightforward, an example:</P>
+
+		<CENTER>
 		<IMG SRC="../../../../images/EiffelBench/feature-wizard-complextype.png"><BR>
-		will generate the code:<BR>
+		</CENTER>
+
 		<CODE>
 		<SPAN CLASS="efeature">new_feature</SPAN><SPAN CLASS="esymbol">:</SPAN>
 		<SPAN CLASS="eclass">FUNCTION</SPAN>

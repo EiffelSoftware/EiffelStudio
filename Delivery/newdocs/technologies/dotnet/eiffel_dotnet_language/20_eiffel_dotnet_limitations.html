@@ -6,46 +6,41 @@
 
 <body>
 
-<h1>Differences between Eiffel and Eiffel for .NET and .NET</h1>
+<h1>Differences between Eiffel, Eiffel for .NET and .NET</h1>
 
 <h2>Differences between Eiffel and Eiffel for .NET</h2>
 
 <h3>Limitation of Eiffel for .NET in version 5.1</h3>
 
-<p>With version 5.1, we support most of the Eiffel mechanisms and for the one we 
-are still missing we are planning on having it completed with 5.2. Here is the 
-list of missing features:</p>
+<p>Most of the Eiffel mechanisms are supported in 5.1. All missing features listed below are planned for
+addition in 5.2:</p>
 
 <ul>
   <li>No expanded class support</li>
-  <li>Eiffel classes cannot inherit from .NET classes, they can be clients only</li>
-  <li>Compiler performances are rather poor now (both in terms of memory usage 
-  and speed)</li>
-  <li>Partial implementation of generic conformance (same as what was supported 
+  <li>No generic parameter creation</li>
+  <li>No correct creation of object whose type is anchored to another one.</li>
+  <li>Partial implementation of generic conformance (same as what was supported
   up to and including ISE Eiffel 4.2).</li>
-  <li>Compile any existing Eiffel libraries that does not use any C externals.</li>
-  <li>Partial support for compiling existing Eiffel libraries using C externals 
-  that does not use the ISE C runtime (e.g. WEL)</li>
-  <li>Does not process correctly creation of object whose type is anchored to 
-  another one.</li>
-  <li>Does not process creation of generic parameter</li>
+  <li>Eiffel classes cannot inherit from .NET classes, they can only be clients</li>
+  <li>Compiler performances are poor (both in terms of memory usage and speed)</li>
 </ul>
 
-<p>Apart from the above limitations, Eiffel for .NET
-supports:</p>
+<p>Eiffel for .NET supports:</p>
 
 <ul>
+  <li>Multiple Inheritance</li>
   <li>Design By Contract</li>
   <li>Exception handling</li>
   <li>Genericity</li>
   <li>Covariance</li>
+  <li>Compilation of any existing Eiffel libraries as long as it does not include C externals that
+  call into the ISE C runtime</li>
 </ul>
 
 <h3>Added to Eiffel and Eiffel for .NET</h3>
 
-<p>To improve the expressiveness of Eiffel for .NET for .NET we added a flexible
-language change that enables the author of Eiffel for .NET libraries to generate 
-.NET custom attributes using the following indexing syntax:</p>
+<p>The following syntax can be used to declare .NET custom attributes on Eiffel
+entities (features and classes):</p>
 
 <pre><span class=efeature>empty</span>: <span class=eclass>BOOLEAN</span> is
 	<span class=ekeyword>indexing</span>
@@ -58,30 +53,29 @@ language change that enables the author of Eiffel for .NET libraries to generate
 	<span class=ekeyword>end</span>
 </pre>
 
-<p>&nbsp;In the previous example, we are declaring obsolete the routine <span class=efeature>empty
-</span>and although we added the Eiffel obsolete clause, we add a .NET custom
-attribute of type <span class=eclass>SYSTEM_OBSOLETEATTRIBUTE.</span></p>
+<p>The previous example shows the declaration of the obsolete feature <span class=efeature>empty
+</span>. The custom attribute defined by <span class=eclass>SYSTEM_OBSOLETEATTRIBUTE.</span> is used to ensure
+that any consumer of the resulting assembly will see the feature as being obsolete.</p>
 
 <h2>Differences between Eiffel for .NET and .NET</h2>
 
 <h3>Covariance</h3>
-<p>The CLR (Common Language Runtime) does not support covariance due to the type safety issue that 
+<p>The CLR (Common Language Runtime) does not support covariance due to the type safety issue that
 full covariance implies (known as polymorphic CATCALLS
-in Eiffel). Although very rare,&nbsp; CATCALLS are not suitable to .NET where safety is
+in Eiffel). Although very rare, CATCALLS are not suitable to .NET where safety is
 one of the primary goals.</p>
 <p>Eiffel for .NET implements a safe variant of covariance that will always perform a
 check on the types to avoid a CATCALL. So when a CATCALL is going to be
-performed a `Invalid Cast&nbsp; Exception' will be raised by the CLR instead of an
+performed a `Invalid Cast Exception' will be raised by the CLR instead of an
 unexpected behavior as it is currently done in Eiffel.</p>
 <p>Another advantage of Eiffel for .NET's implementation of covariance is that it can be
-easily understood by CLS compliant consumer tools. These tools will actually benefit from the 
+easily understood by CLS compliant consumer tools. These tools will actually benefit from the
 Eiffel for .NET covariance.</p>
 
 <h3>Genericity</h3>
 
-<p>The CLR does not support generics at all, so that the following Eiffel for 
-.NET 
-classes:</p>
+<p>The CLR does not support generics at all, so that the following Eiffel for
+.NET classes:</p>
 <ul>
   <li>
     <span class="eclass">LIST [ANY]</span></li>
@@ -93,13 +87,13 @@ classes:</p>
   <li><span class="eclass">LIST_ANY</span></li>
   <li><span class="eclass">LIST_Int32</span></li>
 </ul>
-<p>Meaning that if one wants to reuse an Eiffel generic class from another 
-language than Eiffel for .NET, one has to use either <span class="eclass">LIST_ANY </span>or <span class="eclass">
+<p>Meaning that if one wants to reuse an Eiffel generic class from another
+language than Eiffel for .NET, one has to use either <span class="eclass">LIST_ANY</span> or <span class="eclass">
 LIST_Int32</span>.</p>
 
 <h3>Enum types</h3>
-<p>Eiffel for .NET supports in a hidden way .NET enum types. From the point of view 
-of Eiffel, they are just considered as expanded classes. The only difference is 
+<p>Eiffel for .NET supports .NET enum types implicitly. From the point of view
+of Eiffel, they are just considered as expanded classes. The only difference is
 in the code generation. Eiffel for .NET cannot declare new enum types yet.</p>
 
 <h3>ByRef</h3>

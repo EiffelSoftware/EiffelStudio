@@ -40,7 +40,8 @@ inherit
 			set_to_drag_and_drop,
 			button_press_switch,
 			create_pointer_motion_actions,
-			visual_widget
+			visual_widget,
+			on_button_release
 		end
 
 	EV_ITEM_LIST_IMP [EV_MULTI_COLUMN_LIST_ROW]
@@ -96,6 +97,8 @@ feature {NONE} -- Initialization
 
 	initialize is
 			-- Initialize `Current'
+		local
+			l_release_actions: EV_POINTER_BUTTON_ACTION_SEQUENCE
 		do
 			Precursor {EV_ITEM_LIST_IMP}
 			Precursor {EV_PRIMITIVE_IMP}
@@ -111,17 +114,24 @@ feature {NONE} -- Initialization
 			initialize_pixmaps
 			connect_button_press_switch
 			disable_multiple_selection
+			
+				-- Needed so that we can query if the mouse button is down for column resize actions
+			l_release_actions := pointer_button_release_actions
 			connect_selection_actions
 		end
+
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 	connect_selection_actions is
 			-- Connect the selection signal
 		local
 			a_selection: POINTER
 		do
-			a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
-			real_signal_connect (a_selection, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
-			selection_signal_id := last_signal_connection_id
+			if selection_signal_id = 0 then
+				a_selection := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_selection (tree_view)
+				real_signal_connect (a_selection, "changed", agent (app_implementation.gtk_marshal).on_pnd_deferred_item_parent_selection_change (internal_id), Void)
+				selection_signal_id := last_signal_connection_id				
+			end
 		end
 
 	disconnect_selection_actions is
@@ -149,39 +159,41 @@ feature {NONE} -- Implementation
 			an_item: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
 			disconnect_selection_actions
-			new_selection := selected_items
-			create newly_selected_items.make (0)
-			from
-				new_selection.start
-			until
-				new_selection.off
-			loop
-				if not previous_selection.has (new_selection.item) then
-					an_item ?= new_selection.item.implementation
-					newly_selected_items.extend (an_item)
+			if not mouse_button_pressed then
+				new_selection := selected_items
+				create newly_selected_items.make (0)
+				from
+					new_selection.start
+				until
+					new_selection.off
+				loop
+					if not previous_selection.has (new_selection.item) then
+						an_item ?= new_selection.item.implementation
+						newly_selected_items.extend (an_item)
+					end
+					previous_selection.prune_all (new_selection.item)
+					new_selection.forth
 				end
-				previous_selection.prune_all (new_selection.item)
-				new_selection.forth
+				from
+					previous_selection.start
+				until
+					previous_selection.off
+				loop
+					an_item ?= previous_selection.item.implementation
+					call_deselect_actions (an_item)
+					previous_selection.forth
+				end
+				
+				from
+					newly_selected_items.start
+				until
+					newly_selected_items.off
+				loop
+					call_selection_actions (newly_selected_items.item)
+					newly_selected_items.forth
+				end
+				previous_selection := new_selection
 			end
-			from
-				previous_selection.start
-			until
-				previous_selection.off
-			loop
-				an_item ?= previous_selection.item.implementation
-				call_deselect_actions (an_item)
-				previous_selection.forth
-			end
-			
-			from
-				newly_selected_items.start
-			until
-				newly_selected_items.off
-			loop
-				call_selection_actions (newly_selected_items.item)
-				newly_selected_items.forth
-			end
-			previous_selection := new_selection
 			connect_selection_actions
 		end
 
@@ -194,6 +206,8 @@ feature {NONE} -- Implementation
 			create Result
 		end
 
+feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Event handling
+
 	button_press_switch (
 			a_type: INTEGER;
 			a_x, a_y, a_button: INTEGER;
@@ -203,10 +217,10 @@ feature {NONE} -- Implementation
 		local
 			t : TUPLE [INTEGER, INTEGER, INTEGER, DOUBLE, DOUBLE, DOUBLE,
 				INTEGER, INTEGER]
-
 			a_row_number: INTEGER
 			clicked_row: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
+			mouse_button_pressed := True
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
 			a_row_number := row_index_from_y_coord (a_y)
@@ -233,6 +247,20 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	on_button_release (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Used for pointer button release events
+			-- (export status {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I})
+		do
+			Precursor {EV_PRIMITIVE_IMP} (a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+			mouse_button_pressed := False
+			call_selection_action_sequences
+		end
+
+	mouse_button_pressed: BOOLEAN
+		-- Is the mouse button pressed
+
+feature {NONE} -- Implementation
+
 	call_selection_actions (clicked_row: EV_MULTI_COLUMN_LIST_ROW_IMP) is
 			-- Call the selections actions for `clicked_row'
 		do
@@ -256,7 +284,6 @@ feature {NONE} -- Implementation
 					deselect_actions_internal.call ([deselected_row.interface])
 				end
 		end
-		
 
 	resize_model_if_needed (a_columns: INTEGER) is
 			-- 
@@ -1139,7 +1166,7 @@ feature {NONE} -- Implementation
 			end
 	
 			child_array.go_i_th (i)
-			child_array.put_left (v)		
+			child_array.put_left (v)
 		end
 
 	remove_i_th (a_position: INTEGER) is
@@ -1148,7 +1175,6 @@ feature {NONE} -- Implementation
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-			clear_selection
 			item_imp := (ev_children @ (a_position))
 			item_imp.set_parent_imp (Void)
 			feature {EV_GTK_EXTERNALS}.gtk_list_store_remove (list_store, item_imp.list_iter.item)

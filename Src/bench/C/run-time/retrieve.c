@@ -63,7 +63,7 @@
 #endif
 #endif
 #ifdef RECOVERABLE_DEBUG
-#define EIF_OBJECT_TYPE(obj)    eif_typename (Dftype (obj))
+#define EIF_OBJECT_TYPE(obj)    eif_typename ((int16) Dftype (obj))
 #ifdef PRINT_OBJECT
 extern void print_object (EIF_REFERENCE object);
 #endif
@@ -1743,7 +1743,7 @@ rt_public EIF_REFERENCE rrt_nmake (long int objectCount)
 
 		old_type = (int16) (flags & EO_TYPE);
 		if (! type_defined (old_type))
-			eif_panic ("unknown type");
+			eraise ("Independent retrieve: unknown type.", EN_RETR);
 		conv = type_description (old_type);
 		if (conv->new_type < 0)
 			newadd = NULL;				/* Stored type not in retrieving system */
@@ -2566,74 +2566,103 @@ rt_shared char *name_of_basic_attribute_type (int16 type)
 	return result;
 }
 
-rt_shared char *name_of_attribute_type (int16 type)
+rt_shared char *name_of_attribute_type (int16 **type)
 {
 	static char buffer [512 + 9];
 	char *result;
-	if (type >= 0)
-		result = System (RTUD (type)).cn_generator;
-	else if (type <= EXPANDED_LEVEL) {
-		sprintf (buffer, "expanded %s",
-				System (RTUD (EXPANDED_LEVEL - type)).cn_generator);
-		result = buffer;
+	int is_expanded = 0;
+	int16 dftype = **type;
+
+	if (dftype <= EXPANDED_LEVEL) {
+		dftype = EXPANDED_LEVEL - dftype;
+		is_expanded = 1;
 	}
-	else if (type <= FORMAL_TYPE) {
-		sprintf (buffer, "%c", 'F' + FORMAL_TYPE - type);
+
+	if (dftype == TUPLE_TYPE) {
+		*type += 3;
+		dftype = **type;
+		if (dftype <= EXPANDED_LEVEL) {
+			dftype = EXPANDED_LEVEL - dftype;
+			is_expanded = 1;
+		}
+	}
+
+	if (dftype >= 0) {
+		dftype = RTUD(dftype);
+		if (!is_expanded) {
+			result = System (dftype).cn_generator;
+		} else {
+			sprintf (buffer, "expanded %s", System (dftype).cn_generator);
+			result = buffer;
+		}
+	} else if (dftype <= FORMAL_TYPE) {
+		sprintf (buffer, "%c", 'F' + FORMAL_TYPE - dftype);
 		result = buffer;
 	}
 	else
-		result = name_of_basic_attribute_type (type);
+		result = name_of_basic_attribute_type (dftype);
 	return result;
 }
 
-rt_private char *name_of_old_attribute_type (int16 type)
+rt_private char *name_of_old_attribute_type (int16 **type)
 {
 	rt_shared char *name_of_basic_attribute_type (int16 type);
+	int16 dftype = **type;
 	static char buffer [512 + 9];
 	char *result;
-	if (type >= 0) {
-		if (type_conversions->type_index[type] == TYPE_UNDEFINED) {
-			sprintf (buffer, "NOT_YET_KNOWN (%d)", type);
+	if (dftype >= 0) {
+		if (type_conversions->type_index[dftype] == TYPE_UNDEFINED) {
+			sprintf (buffer, "NOT_YET_KNOWN (%d)", dftype);
 			result = buffer;
 		}
 		else
-			result = type_description (type)->name;
-	}
-	else if (type <= EXPANDED_LEVEL) {
-		if (type_conversions->type_index[EXPANDED_LEVEL - type] == TYPE_UNDEFINED) {
-			sprintf (buffer, "NOT_YET_KNOWN (%d)", EXPANDED_LEVEL - type);
+			result = type_description (dftype)->name;
+	} else if (dftype <= EXPANDED_LEVEL) {
+		if (type_conversions->type_index[EXPANDED_LEVEL - dftype] == TYPE_UNDEFINED) {
+			sprintf (buffer, "NOT_YET_KNOWN (%d)", EXPANDED_LEVEL - dftype);
 			result = buffer;
 		}
 		else {
 			sprintf (buffer, "expanded %s",
-					type_description (EXPANDED_LEVEL - type)->name);
+					type_description (EXPANDED_LEVEL - dftype)->name);
 			result = buffer;
 		}
-	}
-	else if (type <= FORMAL_TYPE) {
-		sprintf (buffer, "%c", 'F' + FORMAL_TYPE - type);
+	} else if (dftype == TUPLE_TYPE) {
+		(*type) += 3;
+		result = "TUPLE";
+	} else if (dftype <= FORMAL_TYPE) {
+		sprintf (buffer, "%c", 'F' + FORMAL_TYPE - dftype);
 		result = buffer;
 	}
 	else
-		result = name_of_basic_attribute_type (type);
+		result = name_of_basic_attribute_type (dftype);
 	return result;
 }
 
 rt_private void print_old_attribute_type (int16 *atypes)
 {
-	int i;
-	for (i=0; atypes[i] != TERMINATOR; i++)
+	int i = 0;
+	int16 *typearr = atypes;
+	for (; (*typearr != TERMINATOR); ) {
 		printf ("%s%s", i==0 ? "" : i==1 ? " [" : ", ",
-				name_of_old_attribute_type (atypes[i]));
+				name_of_old_attribute_type (&typearr));
+		typearr += 1;
+		i++;
+	}
 	printf ("%s", i > 1 ? "]" : "");
 }
 
 rt_private void print_attribute_type (int16 *gtypes)
 {
-	int i;
-	for (i=0; gtypes[i] != TERMINATOR; i++)
+	int i = 0;
+	int16 *typearr = gtypes;
+	
+	for (; (*typearr != TERMINATOR); ) {
 		printf ("%s%s", i==0 ? "" : i==1 ? " [" : ", ",
-				name_of_attribute_type (gtypes[i]));
+				name_of_attribute_type (&typearr));
+		typearr += 1;
+		i++;
+	}
 	printf ("%s", i > 1 ? "]" : "");
 }
 
@@ -2723,22 +2752,70 @@ rt_shared void print_object_summary (
 
 #endif
 
-rt_private int attribute_type_matched (int16 gtype, int16 atype)
+rt_private int attribute_type_matched (int16 **gtype, int16 **atype)
 {
-	int result = 0;
-	if (gtype >= 0  &&  atype >= 0) {
-		int16 g = RTUD (gtype);
-		if (type_defined (atype))
-			result = (g == type_description (atype)->new_type);
+	int result = 1;
+	int16 dftype = **gtype;
+	int16 aftype = **atype;
+
+	if (dftype <= EXPANDED_LEVEL) {
+		if (aftype <= EXPANDED_LEVEL) {
+			dftype = EXPANDED_LEVEL - dftype;
+			aftype = EXPANDED_LEVEL - aftype;
+		} else {
+			result = 0;
+		}
 	}
-	else if (gtype <= EXPANDED_LEVEL  &&  atype <= EXPANDED_LEVEL) {
-		int16 g = RTUD (EXPANDED_LEVEL - gtype);
-		int16 a = EXPANDED_LEVEL - atype;
-		if (type_defined (a))
-			result = (g == type_description (a)->new_type);
+
+	if (result && (dftype == TUPLE_TYPE)) {
+		if (aftype == TUPLE_TYPE) {
+			(*gtype) += 3;
+			(*atype) += 3;
+			dftype = **gtype;
+			aftype = **atype;
+
+			if (dftype <= EXPANDED_LEVEL) {
+				if (aftype <= EXPANDED_LEVEL) {
+					dftype = EXPANDED_LEVEL - dftype;
+					aftype = EXPANDED_LEVEL - aftype;
+				} else {
+					result = 0;
+				}
+			}
+		} else {
+			result = 0;
+		}
 	}
-	else if (gtype < 0  &&  atype < 0)
-		result = (gtype == atype);
+
+	if
+		((result) && ((dftype == LIKE_FEATURE_TYPE)||(dftype == LIKE_PFEATURE_TYPE) ||
+		(dftype == LIKE_ARG_TYPE) || (dftype == LIKE_CURRENT_TYPE)))
+	{
+		if
+			((aftype == LIKE_FEATURE_TYPE)||(aftype == LIKE_PFEATURE_TYPE) ||
+			(aftype == LIKE_ARG_TYPE) || (aftype == LIKE_CURRENT_TYPE))
+		{
+			(*gtype) += 2;
+			(*atype) += 2;
+			result = attribute_type_matched (gtype, atype);
+		} else {
+			result = 0;
+		}
+	} else if (result) {
+		if (dftype >= 0  &&  aftype >= 0) {
+			int16 g = RTUD (dftype);
+			if (type_defined (aftype)) {
+				result = (g == type_description (aftype)->new_type);
+			} else {
+				result = 0;
+			}
+		} else if (dftype < 0  &&  aftype < 0) {
+				result = (dftype == aftype);
+		} else {
+			result = 0;
+		}
+	}
+
 	return result;
 }
 
@@ -2760,13 +2837,13 @@ rt_private int attribute_types_matched (int16 *gtypes, int16 *atypes)
 		result = (dftype == type_description (atype)->new_dftype);
 	}
 	else {
-		int i;
 		/* If `gtypes' is shorter than `atypes', we accept this, as it
 		 * means that generic parameters were removed.
 		 */
 		result = 1;
-		for (i=0; (result == 1) && (gtypes[i] != TERMINATOR); i++)
-			result = attribute_type_matched (gtypes[i], atypes[i]);
+		for (; (result == 1) && (*gtypes != TERMINATOR); gtypes++, atypes++) {
+			result = attribute_type_matched (&gtypes, &atypes);
+		}
 	}
 	return result;
 }
@@ -2898,7 +2975,7 @@ rt_private void iread_header_new (EIF_CONTEXT_NOARG)
 				printf ("Type %d {%s} not in system ***\n", dtype, vis_name);
 			else
 				printf ("Type %d {%s} -> %d {%s}\n",
-						dtype, vis_name, new_dtype, eif_typename (new_dtype));
+						dtype, vis_name, new_dtype, eif_typename ((int16) new_dtype));
 #endif
 		}
 		else {

@@ -978,6 +978,22 @@ feature -- Generation (Linking rules)
 			make_file.put_integer (1)
 			make_file.put_string (" ; $(MAKE) emain.o ; $(RM) emain.c%N%N")
 
+			if System.in_final_mode then
+					-- Generate dependence rule for E1/estructure.h in final mode
+				make_file.putchar (System_object_prefix)
+				make_file.putint (1)
+				make_file.putstring ("/estructure.h: ")
+				make_file.putchar (System_object_prefix)
+				make_file.putint (1)
+				make_file.putstring ("/estructure.x")
+				make_file.new_line
+				make_file.indent
+				make_file.putstring ("$(X2C) E1/estructure.x E1/estructure.h")
+				make_file.new_line
+				make_file.exdent
+				make_file.new_line
+			end
+
 			from
 				i := 1
 				nb := system_baskets.count
@@ -1032,7 +1048,7 @@ feature -- Generation (Linking rules)
 					make_file.put_character (C_prefix)
 					make_file.put_string ("obj")
 					make_file.put_integer (i)
-					make_file.put_string (".o: Makefile%N%Tcd ")
+					make_file.put_string (".o: Makefile E1/estructure.h%N%Tcd ")
 					make_file.put_character (C_prefix)
 					make_file.put_integer (i)
 					make_file.put_string (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) $(END_TEST)")

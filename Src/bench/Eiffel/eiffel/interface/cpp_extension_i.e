@@ -95,6 +95,8 @@ feature -- Code generation
 		local
 			buffer: GENERATION_BUFFER
 		do
+			context.set_has_cpp_externals_calls (True);
+
 			check
 					-- VAPE on precondition so ...
 				final_mode: Context.final_mode

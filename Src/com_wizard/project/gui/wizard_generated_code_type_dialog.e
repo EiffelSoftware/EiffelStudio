@@ -29,8 +29,8 @@ feature {NONE} -- Initialization
 			a_parent_exists: a_parent.exists
 		do
 			make_by_id (a_parent, Wizard_generated_code_type_dialog_constant)
-			create client_check.make_by_id (Current, Client_check_constant)
-			create server_check.make_by_id (Current, Server_check_constant)
+			create client_radio.make_by_id (Current, Client_radio_constant)
+			create server_radio.make_by_id (Current, Server_radio_constant)
 			create eiffel_code_compilation_check.make_by_id (Current, Eiffel_code_compilation_check_constant)
 			create c_code_compilation_check.make_by_id (Current, C_code_compilation_check_constant)
 			create in_process_check.make_by_id (Current, In_process_check_constant)
@@ -49,10 +49,10 @@ feature -- Behavior
 			Precursor {WIZARD_DIALOG}
 			uncheck_all
 			if shared_wizard_environment.client then
-				client_check.set_checked
+				client_radio.set_checked
 			end
 			if shared_wizard_environment.server then
-				server_check.set_checked
+				server_radio.set_checked
 			end
 			if shared_wizard_environment.in_process_server then
 				in_process_check.set_checked
@@ -71,8 +71,8 @@ feature -- Behavior
 	on_ok is
 			-- Process Next button activation.
 		do
-			shared_wizard_environment.set_client (client_check.checked)
-			shared_wizard_environment.set_server (server_check.checked)
+			shared_wizard_environment.set_client (client_radio.checked)
+			shared_wizard_environment.set_server (server_radio.checked)
 			shared_wizard_environment.set_in_process_server (in_process_check.checked)
 			shared_wizard_environment.set_out_of_process_server (out_of_process_check.checked)
 			Shared_wizard_environment.set_compile_eiffel (not eiffel_code_compilation_check.checked)			
@@ -100,10 +100,10 @@ feature -- Behavior
 
 feature -- Access
 
-	client_check: WEL_CHECK_BOX
+	client_radio: WEL_CHECK_BOX
 			-- Client code generation check box
 
-	server_check: WEL_CHECK_BOX
+	server_radio: WEL_CHECK_BOX
 			-- Server code generation check box
 
 	eiffel_code_compilation_check: WEL_CHECK_BOX
@@ -123,8 +123,8 @@ feature {NONE} -- Implementation
 	uncheck_all is
 			-- Uncheck all buttons.
 		do
-			client_check.set_unchecked
-			server_check.set_unchecked
+			client_radio.set_unchecked
+			server_radio.set_unchecked
 			in_process_check.set_unchecked
 			out_of_process_check.set_unchecked
 		end

@@ -37,7 +37,7 @@ feature -- Output
 		do
 			st.add_string ("Path `")
 			st.add_string (path)
-			st.add_string ("' could not be found on disk.")
+			st.add_string ("' does not exists or you do not have the correct permissions.")
 			st.add_new_line
 		end
 

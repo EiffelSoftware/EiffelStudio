@@ -289,7 +289,7 @@ feature -- Event : command association
 		do
 			p := widget
 			widget := list_widget
-			add_command ("selection_changed", a_command, arguments)
+			add_command (widget, "selection_changed", a_command, arguments)
 			widget := p
 		end
 
@@ -301,7 +301,7 @@ feature -- Event : command association
 		do
 			p := widget
 			widget := entry_widget
-			add_command ("activate", cmd,  arg)
+			add_command (widget, "activate", cmd,  arg)
 			widget := p
 		end
 
@@ -313,7 +313,7 @@ feature -- Event : command association
 		do
 			p := widget
 			widget := entry_widget
-			add_command ("changed", cmd,  arg)
+			add_command (widget, "changed", cmd,  arg)
 			widget := p
 		end
 
@@ -327,7 +327,7 @@ feature -- Event -- removing command association
 		do
 			p := widget
 			widget := list_widget
-			remove_commands (selection_changed_id)
+			remove_commands (widget, selection_changed_id)
 			widget := p
 		end
 
@@ -340,7 +340,7 @@ feature -- Event -- removing command association
 		do
 			p := widget
 			widget := entry_widget
-			remove_commands (activate_id)
+			remove_commands (widget, activate_id)
 			widget := p
 		end
 
@@ -352,7 +352,7 @@ feature -- Event -- removing command association
 		do
 			p := widget
 			widget := entry_widget
-			remove_commands (changed_id)
+			remove_commands (widget, changed_id)
 			widget := p
 		end
 

@@ -108,7 +108,7 @@ feature -- Event - command association
 			-- Add 'cmd' to the list of commands to be executed
 			-- when a page is switched in the notebook.
 		do
-			add_command ("switch_page", cmd, arg)
+			add_command (widget, "switch_page", cmd, arg)
 		end
 
 feature -- Event -- removing command association
@@ -117,7 +117,7 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed
 			-- when a page is switched in the notebook.
 		do
-			remove_commands (switch_page_id)
+			remove_commands (widget, switch_page_id)
 		end	
 
 feature -- Assertion test

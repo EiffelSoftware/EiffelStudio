@@ -116,6 +116,9 @@ feature -- Access
 		ensure
 			bridge_ok: Result = implementation.menu_bar
 		end
+		
+	maximum_dimension: INTEGER is 32000
+			-- Maximum width/height that a window can be set to.
 
 feature -- Status report
 
@@ -176,6 +179,8 @@ feature -- Status setting
 			a_maximum_width_non_negative: a_maximum_width >= 0
 			a_maximum_width_not_less_than_minimum_width:
 				a_maximum_width >= minimum_width
+			a_maximum_width_not_greater_than_maximum_dimension:
+				a_maximum_width <= maximum_dimension
 		do
 			implementation.set_maximum_width (a_maximum_width)
 		ensure
@@ -189,6 +194,8 @@ feature -- Status setting
 			a_maximum_height_non_negative: a_maximum_height >= 0
 			a_maximum_height_not_less_than_minimum_height:
 				a_maximum_height >= minimum_height
+			a_maximum_height_not_greater_than_maximum_dimension:
+				a_maximum_height <= maximum_dimension
 		do
 			implementation.set_maximum_height (a_maximum_height)
 		ensure
@@ -204,6 +211,10 @@ feature -- Status setting
 				a_maximum_width >= minimum_width
 			a_maximum_height_not_less_than_minimum_height:
 				a_maximum_height >= minimum_height
+			a_maximum_width_not_greater_than_maximum_dimension:
+				a_maximum_width <= maximum_dimension
+			a_maximum_height_not_greater_than_maximum_dimension:
+				a_maximum_height <= maximum_dimension
 		do
 			implementation.set_maximum_size (a_maximum_width, a_maximum_height)
 		ensure

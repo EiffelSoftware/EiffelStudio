@@ -22,9 +22,7 @@ inherit
 
 	EV_DYNAMIC_LIST_IMP [G]
 		redefine
-			interface,
-			remove_i_th,
-			insert_i_th
+			interface
 		end
 
 feature {NONE} -- Implementation
@@ -108,6 +106,15 @@ feature {NONE} -- Obsolete
 			gtk_reorder_child (list_widget, v_imp.c_object, a_position - 1)
 		end
 
+feature -- Event handling
+
+	new_item_actions: ACTION_SEQUENCE [TUPLE [G]]
+			-- Actions to be performed after an item is added.
+
+			
+	remove_item_actions: ACTION_SEQUENCE [TUPLE [G]]
+			-- Actions to be performed before an item is removed.
+
 feature {EV_ANY_I} -- Implementation
 
 	interface: EV_ITEM_LIST [G]
@@ -137,6 +144,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/05/02 17:28:48  king
+--| Added *_item_actions
+--|
 --| Revision 1.23  2000/04/06 20:09:31  brendel
 --| Fixed bug in insert_i_th.
 --|

@@ -3,27 +3,49 @@ indexing
 	description: 
 		"Extended AST representation of a feature clause structure. %
 		%Keeps the comments as an attribute, instead of %
-		%retrieving them each time";
+		%retrieving them each time. Also keeps position information.";
 	date: "$Date$";
 	revision: "$Revision $"
 
 class EXT_FEATURE_CLAUSE_AS
 
 inherit
+	EXT_AST_EIFFEL
 	FEATURE_CLAUSE_AS
 		redefine
 			features, simple_format, features_simple_format,
 			has_equiv_declaration
 		end
 
+creation --%%%AAA
+
+	make_from_other_and_features
+
+feature -- Initialization
+
+	make_from_other_and_features (other: like Current; flist: like features) is --%%%AAA
+			--%%%AA beware ! maybe not deep enough... check
+		do
+			clients := other.clients
+			position := other.position
+			comments := other.comments
+			end_position := other.end_position
+			start_position := other.start_position
+			features := flist
+		end
+
 feature -- Properties
 
 	comments: EIFFEL_COMMENTS
-		-- Comments associated to Current feature clause
-		--| Kept in an attribute, unlike in FEATURE_CLAUSE_AS
+			-- Comments associated to Current feature clause
+			--| Kept in an attribute, unlike in FEATURE_CLAUSE_AS
 
 	features: EIFFEL_LIST [EXT_FEATURE_AS];
 			-- Features
+
+	start_position, end_position: INTEGER
+			-- Beginning and end of the feature clause, in character
+			--| Valid only after `simple_format' has been called.
 
 feature {COMPILER_EXPORTER} -- Settings
 
@@ -55,12 +77,13 @@ feature {AST_EIFFEL} -- Output
 		local
 			c: like comments
 		do
+			start_position := ctxt.text.position
 			ctxt.put_text_item (ti_Feature_keyword)
 			ctxt.put_space
 			if clients /= Void then
-				ctxt.set_separator (ti_Comma);
-				ctxt.set_space_between_tokens;
-				clients.simple_format (ctxt);
+				ctxt.set_separator (ti_Comma)
+				ctxt.set_space_between_tokens
+				clients.simple_format (ctxt)
 			end;
 			c := comments
 			if c = Void then
@@ -74,17 +97,18 @@ feature {AST_EIFFEL} -- Output
 					ctxt.exdent
 					ctxt.exdent
 				else
-					ctxt.put_space;
+					ctxt.put_space
 					ctxt.put_comments (c)
 				end
 			end
-			ctxt.new_line;
-			ctxt.indent;
-			ctxt.set_new_line_between_tokens;
-			ctxt.set_separator (Void);
-			features_simple_format (ctxt);
-			ctxt.exdent;
-		end;
+			ctxt.new_line
+			ctxt.indent
+			ctxt.set_new_line_between_tokens
+			ctxt.set_separator (Void)
+			features_simple_format (ctxt)
+			ctxt.exdent
+			end_position := ctxt.text.position
+		end
 
 feature {COMPILER_EXPORTER} -- Setting
 

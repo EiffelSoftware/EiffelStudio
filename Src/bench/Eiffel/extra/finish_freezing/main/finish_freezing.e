@@ -54,8 +54,10 @@ feature -- Initialization
 				create translator.make (mapped_path)
 
 				translator.translate
-				translator.run_make
-
+				if index_of_word_option ("vs") = 0 then
+					-- We do not want to run nmake if launched from VS.Net
+					translator.run_make
+				end
 				c_error := c_compilation_error
 			end
 			
@@ -71,7 +73,7 @@ feature -- Initialization
 			end
 			
 			if index_of_word_option ("vs") /= 0 then
-				if retried or c_error then
+				if retried then
 					-- Make the application return a non-zero value to OS to flag an error to calling process.
 					feature {EXCEPTIONS}.die (1)
 				end

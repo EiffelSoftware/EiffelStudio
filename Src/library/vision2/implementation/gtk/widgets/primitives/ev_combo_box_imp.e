@@ -30,7 +30,8 @@ inherit
 			visual_widget,
 			set_text,
 			set_focus,
-			has_focus
+			has_focus,
+			destroy
 		end
 
 	EV_LIST_ITEM_LIST_IMP
@@ -51,7 +52,8 @@ inherit
 			foreground_color_pointer,
 			visual_widget,
 			set_focus,
-			has_focus
+			has_focus,
+			destroy
 		end
 
 create
@@ -81,12 +83,17 @@ feature {NONE} -- Initialization
 		--	gtk_widget_set_flags (c_object, C.GTK_CAN_FOCUS_ENUM)
 			real_signal_connect (entry_widget, "key_press_event", ~on_key_event, ~key_event_translate)
 			real_signal_connect (entry_widget, "key_release_event", ~on_key_event, ~key_event_translate)
+			
+			create timer.make_with_interval (0)
+			timer.actions.extend (~launch_select_actions)
 		end
 
 	container_widget: POINTER
 
 	initialize is
 			-- Connect action sequences to signals.
+		local
+			temp_sig_id: INTEGER
 		do
 			initialize_pixmaps
 			{EV_LIST_ITEM_LIST_IMP} Precursor
@@ -94,6 +101,14 @@ feature {NONE} -- Initialization
 			--| We don't call EV_TEXT_FIELD_IMP Precursor as this only
 			--| adds two extra ones to what ev_list_imp Precursor calls
 			--| already.
+			C.gtk_list_set_selection_mode (
+				list_widget,
+				C.GTK_SELECTION_SINGLE_ENUM
+			)
+			selection_mode_is_single := True
+			temp_sig_id := c_signal_connect (visual_widget, eiffel_to_c ("focus-in-event"), agent attain_focus)
+			temp_sig_id := c_signal_connect (visual_widget, eiffel_to_c ("focus-out-event"), agent lose_focus)
+
 		end
 
 	avoid_callback: BOOLEAN
@@ -103,7 +118,12 @@ feature {NONE} -- Initialization
 			-- Redefined to counter repeated select signal of combo box. 
 		do
 			if not avoid_callback then
-				Precursor (n, an_item)
+			--	Precursor (n, an_item)
+			 	triggering_item ?= eif_object_from_c (
+					gtk_value_pointer (an_item)
+				)
+				timer.reset_count
+				timer.set_interval (1)
 				avoid_callback := True
 			else
 				avoid_callback := False
@@ -120,6 +140,13 @@ feature -- Access
 	select_item (an_index: INTEGER) is
 			-- Give the item of the list at the one-base index.
 		do
+			if selection_mode_is_single then
+				C.gtk_list_set_selection_mode (
+					list_widget,
+					C.GTK_SELECTION_BROWSE_ENUM
+				)
+				selection_mode_is_single := False
+			end
 			C.gtk_list_select_item (list_widget, an_index - 1)
 		end
 
@@ -181,7 +208,8 @@ feature {NONE} -- Implementation
 			-- Add `v' to container.
 		local
 			imp: EV_LIST_ITEM_IMP
-		do	
+			temp_sig_id: INTEGER
+		do
 			imp ?= v.implementation
 			C.gtk_combo_set_item_string (container_widget,
 				imp.c_object,
@@ -189,6 +217,11 @@ feature {NONE} -- Implementation
 			)
 			C.gtk_container_add (list_widget, imp.c_object)
 			imp.set_parent_imp (Current)
+			temp_sig_id := c_signal_connect (
+				imp.c_object,
+				eiffel_to_c ("button-press-event"),
+				~on_item_clicked
+				)
 		end
 
 	remove_i_th (a_position: INTEGER) is
@@ -196,6 +229,13 @@ feature {NONE} -- Implementation
 		local
 			imp: EV_LIST_ITEM_IMP
 		do
+			if not selection_mode_is_single then
+				C.gtk_list_set_selection_mode (
+					list_widget,
+					C.GTK_SELECTION_SINGLE_ENUM
+				)
+				selection_mode_is_single := True
+			end
 			imp ?= i_th (a_position).implementation
 			Precursor (a_position)
 			imp.set_parent_imp (Void)
@@ -219,6 +259,47 @@ feature {NONE} -- Implementation
 			Result := C.gtk_style_struct_fg (
 				C.gtk_widget_struct_style (list_widget)
 			)
+		end
+		
+	timer: EV_TIMEOUT
+	
+	triggering_item: EV_LIST_ITEM_IMP
+	
+	launch_select_actions is
+			-- 
+		do
+			timer.set_interval (0)
+			if triggering_item /= Void then
+				call_select_actions (triggering_item)
+				triggering_item := Void
+			end
+		end
+	
+	destroy is
+			-- 
+		do
+			timer.destroy
+			timer := Void
+			triggering_item := Void
+			Precursor
+		end
+		
+	switch_to_single_mode_if_necessary is
+			-- Change selection mode if the last selected item is deselected.
+		do
+			if not selection_mode_is_single then
+				C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_single_enum)
+				selection_mode_is_single := True
+			end
+		end
+		
+	switch_to_browse_mode_if_necessary is
+			-- Change selection mode to browse mode if necessary.
+		do
+			if selection_mode_is_single then
+				C.gtk_list_set_selection_mode (list_widget, C.Gtk_selection_browse_enum)
+				selection_mode_is_single := False
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -248,6 +329,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.38  2001/06/13 16:35:57  etienne
+--| Improved item selection in combo boxes and lists.
+--|
 --| Revision 1.37  2001/06/07 23:08:07  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

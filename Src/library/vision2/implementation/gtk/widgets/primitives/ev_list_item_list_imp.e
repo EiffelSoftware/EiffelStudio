@@ -106,6 +106,7 @@ feature {NONE} -- Initialization
 					~on_list_clicked
 			)
 			gtk_widget_set_flags (visual_widget, C.GTK_CAN_FOCUS_ENUM)
+			selection_mode_is_single := True
 		end
 		
 	select_callback (n_args: INTEGER; args: POINTER) is
@@ -117,6 +118,7 @@ feature {NONE} -- Initialization
 			--item_alloc_y: INTEGER
 			--v_adjustment: POINTER
 		do
+			switch_to_browse_mode_if_necessary		
 		 	l_item ?= eif_object_from_c (
 				gtk_value_pointer (args)
 			)
@@ -193,18 +195,21 @@ feature -- Status setting
 			-- Select the item of the list at the one-based
 			-- `index'.
 		do
+			switch_to_browse_mode_if_necessary
 			C.gtk_list_select_item (list_widget, an_index - 1)
 		end
 
 	deselect_item (an_index: INTEGER) is
 			-- Unselect the item at the one-based `index'.
 		do
+			switch_to_single_mode_if_necessary
 			C.gtk_list_unselect_item (list_widget, an_index - 1)
 		end
 
 	clear_selection is
 			-- Clear the selection of the list.
 		do
+			switch_to_single_mode_if_necessary
 			C.gtk_list_unselect_all (list_widget)
 		end
 
@@ -250,6 +255,16 @@ feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation
 	
 feature {NONE} -- Implementation
 
+	switch_to_single_mode_if_necessary is
+			-- 
+		deferred
+		end
+	
+	switch_to_browse_mode_if_necessary is
+			-- 
+		deferred
+		end
+
 	call_select_actions (selected_item_imp: EV_LIST_ITEM_IMP) is
 			-- Call `select_actions'.
 		do
@@ -283,6 +298,7 @@ feature {NONE} -- Implementation
 			f_i: EV_LIST_ITEM
 			item_imp: EV_LIST_ITEM_IMP
 		do
+			clear_selection
 			f_i := focused_item
 			if f_i /= Void and then f_i.is_equal (i_th (an_index)) then
 				list_has_been_clicked := True
@@ -363,6 +379,7 @@ feature {NONE} -- Implementation
 				-- then `on_list_clicked'. `list_has_been_clicked' will prevent the 
 				-- `focus_out_actions' from being called.
 			list_has_been_clicked := True
+			switch_to_browse_mode_if_necessary
 		end
 	
 	on_list_clicked is
@@ -370,6 +387,9 @@ feature {NONE} -- Implementation
 		do
 			if not has_focus then
 				set_focus	
+			end
+			if not list_has_been_clicked then
+				clear_selection
 			end
 			list_has_been_clicked := False
 		end
@@ -472,6 +492,8 @@ feature {NONE} -- Implementation
 		
 	arrow_used: BOOLEAN
 		-- Has the user just used up or down arrows to change the focused item?
+		
+	selection_mode_is_single:BOOLEAN
 	
 end -- class EV_LIST_ITEM_LIST_IMP
 
@@ -496,6 +518,9 @@ end -- class EV_LIST_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2001/06/13 16:35:58  etienne
+--| Improved item selection in combo boxes and lists.
+--|
 --| Revision 1.4  2001/06/08 22:07:54  etienne
 --| Made the focus work.
 --|

@@ -83,10 +83,10 @@ feature -- Initialization
 			fs_list_empty: fs_list.empty
 		end;
 
-feature {NONE} -- Implementation
-
 	fs_list: ARRAYED_LIST [FOCUSABLE]
 			-- List of FOCUSABLEs
+
+feature {NONE} -- Implementation
 
 	common_controls_dll: WEL_COMMON_CONTROLS_DLL
 			-- Common controls dll

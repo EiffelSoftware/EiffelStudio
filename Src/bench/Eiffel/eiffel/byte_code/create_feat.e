@@ -93,7 +93,7 @@ feature
 				end;
 			else
 				if
-					Compilation_modes.is_precompiling or
+					Compilation_modes.is_precompiling or else
 					context.current_type.base_class.is_precompiled
 				then
 					gen_file.putstring ("RTWPT(");
@@ -103,8 +103,7 @@ feature
 					gen_file.putint (rout_info.offset)
 				else
 					gen_file.putstring ("RTWT(");
-					gen_file.putint
-						(context.current_type.associated_class_type.id.id - 1);
+					gen_file.putint (context.current_type.associated_class_type.id.id - 1);
 					gen_file.putstring (gc_comma);
 					gen_file.putint (feature_id);
 				end;

@@ -19,12 +19,51 @@ inherit
 			format
 		end
 
-feature -- Attributes
+feature -- Properties
 
 	is_expanded: BOOLEAN;
 			-- Is the type expanded ?
 
-feature
+	is_valid: BOOLEAN is
+		do
+			Result := associated_eclass /= Void
+		end;
+
+feature -- Access
+
+	associated_eclass: E_CLASS is
+			-- Associated class to the type
+		do
+			Result := Eiffel_system.class_of_id (base_type);
+		end;
+
+feature -- Output
+
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			if is_expanded then
+				a_clickable.put_string ("expanded ");
+			end;
+			associated_class.append_clickable_name (a_clickable);
+		end;
+
+	dump: STRING is
+			-- Dumped trace
+		local
+			class_name: STRING;
+		do
+			class_name := clone (associated_class.class_name)
+			class_name.to_upper;
+			if is_expanded then
+				!!Result.make (class_name.count + 9);
+				Result.append ("expanded ");
+			else
+				!!Result.make (class_name.count);
+			end;
+			Result.append (class_name);
+		end;
+
+feature 
 
 	set_is_expanded (b: BOOLEAN) is
 			-- Assign `b' to `is_expanded'.
@@ -38,11 +77,6 @@ feature
 			positive_base_type: base_type > 0;
 		do
 			Result := System.id_array.item (base_type);
-		end;
-
-	is_valid: BOOLEAN is
-		do
-			Result := associated_class /= Void
 		end;
 
 	type_i: CL_TYPE_I is
@@ -244,30 +278,6 @@ feature
 				end;
 				i := i + 1;
 			end;
-		end;
-
-	dump: STRING is
-			-- Dumped trace
-		local
-			class_name: STRING;
-		do
-			class_name := clone (associated_class.class_name)
-			class_name.to_upper;
-			if is_expanded then
-				!!Result.make (class_name.count + 9);
-				Result.append ("expanded ");
-			else
-				!!Result.make (class_name.count);
-			end;
-			Result.append (class_name);
-		end;
-
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
-		do
-			if is_expanded then
-				a_clickable.put_string ("expanded ");
-			end;
-			associated_class.append_clickable_name (a_clickable);
 		end;
 
 	duplicate: like Current is

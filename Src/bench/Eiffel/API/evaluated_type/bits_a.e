@@ -10,19 +10,49 @@ inherit
 		redefine
 			is_bits, associated_class, dump,
 			heaviest, same_as, append_clickable_signature,
-			check_conformance, format
+			check_conformance, format, associated_eclass
 		end;
 
 	BASIC_A
 		redefine
 			is_bits, internal_conform_to, associated_class, dump,
 			heaviest, same_as, append_clickable_signature,
-			check_conformance, format
+			check_conformance, format, associated_eclass
 		select
 			internal_conform_to
 		end;
 
-feature
+feature -- Access
+
+	is_bits: BOOLEAN is
+			-- Is the current actual type a bits type ?
+		do
+			Result := True;
+		end;
+
+	associated_eclass: E_CLASS is
+			-- Associated eiffel class
+		once
+			Result := associated_class.e_class
+		end;
+
+feature -- Output
+
+	dump: STRING is
+			-- Dumped trace
+		do
+			!!Result.make (9);
+			Result.append ("BIT ");
+			Result.append_integer (base_type);
+		end;
+
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string ("BIT ");
+			a_clickable.put_int (base_type);
+		end;
+
+feature 
 
 	check_conformance (target_name: STRING; target_type: TYPE_A) is
 			-- Check if Current conforms to `other'.
@@ -59,12 +89,6 @@ feature
 			end;
 		end;
 
-	is_bits: BOOLEAN is
-			-- Is the current actual type a bits type ?
-		do
-			Result := True;
-		end;
-
 	heaviest (type: TYPE_A): TYPE_A is
 			-- Heaviest numeric type for balancing rule
 		require else
@@ -87,20 +111,6 @@ feature
 			bit_class_compiled: System.bit_class.compiled;
 		once
 			Result := System.bit_class.compiled_class;
-		end;
-
-	dump: STRING is
-			-- Dumped trace
-		do
-			!!Result.make (9);
-			Result.append ("BIT ");
-			Result.append_integer (base_type);
-		end;
-
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
-		do
-			a_clickable.put_string ("BIT ");
-			a_clickable.put_int (base_type);
 		end;
 
 	type_i: BIT_I is

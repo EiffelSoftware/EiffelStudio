@@ -63,10 +63,55 @@ inherit
 			is_valid, append_clickable_signature
 		end;
 
-feature -- Attributes
+feature -- Property
 
 	generics: ARRAY [TYPE_A];
 			-- Actual generical parameter
+
+feature -- Output
+
+	dump: STRING is
+			-- Dumped trace
+		local
+			i, count: INTEGER;
+		do
+			Result := old_dump;
+			Result.append (" [");
+			from
+				i := 1;
+				count := generics.count;
+			until
+				i > count
+			loop
+				Result.append (generics.item (i).dump);
+				if i /= count then
+					Result.append (", ");
+				end;
+				i := i + 1;
+			end;
+			Result.append ("]");
+		end;
+
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		local
+			i, count: INTEGER;
+		do
+			old_append_clickable_signature (a_clickable);
+			a_clickable.put_string (" [");
+			from
+				i := 1;
+				count := generics.count;
+			until
+				i > count
+			loop
+				generics.item (i).append_clickable_signature (a_clickable);
+				if i /= count then
+					a_clickable.put_string (", ");
+				end;
+				i := i + 1;
+			end;
+			a_clickable.put_string ("]");
+		end;
 
 feature -- Primitives
 
@@ -284,49 +329,6 @@ feature -- Primitives
 			else
 				Result := type;
 			end;
-		end;
-
-	dump: STRING is
-			-- Dumped trace
-		local
-			i, count: INTEGER;
-		do
-			Result := old_dump;
-			Result.append (" [");
-			from
-				i := 1;
-				count := generics.count;
-			until
-				i > count
-			loop
-				Result.append (generics.item (i).dump);
-				if i /= count then
-					Result.append (", ");
-				end;
-				i := i + 1;
-			end;
-			Result.append ("]");
-		end;
-
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
-		local
-			i, count: INTEGER;
-		do
-			old_append_clickable_signature (a_clickable);
-			a_clickable.put_string (" [");
-			from
-				i := 1;
-				count := generics.count;
-			until
-				i > count
-			loop
-				generics.item (i).append_clickable_signature (a_clickable);
-				if i /= count then
-					a_clickable.put_string (", ");
-				end;
-				i := i + 1;
-			end;
-			a_clickable.put_string ("]");
 		end;
 
 	has_like: BOOLEAN is

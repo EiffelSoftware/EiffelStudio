@@ -10,7 +10,8 @@ inherit
 			set_base_type as set_rout_id
 		redefine
 			actual_type, solved_type, has_like, instantiation_in, is_like,
-			is_basic, instantiated_in, same_as, meta_type, is_deep_equal
+			is_basic, instantiated_in, same_as, meta_type, is_deep_equal,
+			valid_base_type
 		end;
 	SHARED_LIKE_CONTROLER;
 
@@ -18,19 +19,66 @@ creation
 
 	make
 
-feature -- Attributes
-
-	actual_type: TYPE_A;
-			-- Actual type of the anchored type in a given class
+feature -- Properties
 
 	class_id: INTEGER;
 			-- Class ID of the class where the anchor is referenced
 
-	feature_id: INTEGER;
-			-- Feature ID of the anchor
-
 	feature_name: STRING;
 			-- Feature name of the anchor
+
+	is_like: BOOLEAN is
+			-- Is the type an chored one ?
+		do
+			Result := True;
+		end;
+
+feature -- Access
+
+	is_basic: BOOLEAN is
+			-- Is the current actual type a basic one ?
+		do
+			Result := evaluated_type.is_basic;
+		end;
+
+    valid_base_type: BOOLEAN is
+            -- Is the base type valid
+        do
+            Result := evaluated_type.valid_base_type
+        end;
+
+	associated_eclass: E_CLASS is
+			-- Associated class
+		do
+			Result := evaluated_type.associated_eclass;
+		end;
+
+feature -- Output
+
+	dump: STRING is
+			-- Dumped trace
+		local
+			s: STRING;
+		do
+			s := actual_type.dump;
+			!!Result.make (18 + s.count);
+			Result.append ("[like feature]: ");
+			Result.append (s);
+		end;
+
+	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+		do
+			a_clickable.put_string ("[like feature]: ");
+			actual_type.append_clickable_signature (a_clickable);
+		end;
+
+feature
+
+	actual_type: TYPE_A;
+			-- Actual type of the anchored type in a given class
+
+	feature_id: INTEGER;
+			-- Feature ID of the anchor
 
 	make (f: FEATURE_I) is
 			-- Creation
@@ -48,12 +96,6 @@ feature -- Primitives
 			-- Assign `a' to `actual_type'.
 		do
 			actual_type := a;
-		end;
-
-	is_like: BOOLEAN is
-			-- Is the type an chored one ?
-		do
-			Result := True;
 		end;
 
 	raise_veen (f: FEATURE_I) is
@@ -164,23 +206,6 @@ end;
 			Result := actual_type.associated_class;
 		end;
 
-	dump: STRING is
-			-- Dumped trace
-		local
-			s: STRING;
-		do
-			s := actual_type.dump;
-			!!Result.make (18 + s.count);
-			Result.append ("[like feature]: ");
-			Result.append (s);
-		end;
-
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
-		do
-			a_clickable.put_string ("[like feature]: ");
-			actual_type.append_clickable_signature (a_clickable);
-		end;
-
 	has_like: BOOLEAN is
 			-- Does the type have anchored type in its definition ?
 		do
@@ -197,12 +222,6 @@ end;
 			-- C type for `actual_type'
 		do
 			Result := actual_type.meta_type
-		end;
-
-	is_basic: BOOLEAN is
-			-- Is the current actual type a basic one ?
-		do
-			Result := actual_type.is_basic;
 		end;
 
 	same_as (other: TYPE_A): BOOLEAN is

@@ -8,15 +8,32 @@ inherit
 		rename
 			internal_conform_to as old_conform_to
 		redefine
-			is_real, associated_class, same_as, is_numeric, heaviest
+			is_real, associated_class, same_as, is_numeric, heaviest,
+			associated_eclass
 		end;
 	BASIC_A
 		redefine
 			is_real, associated_class, same_as, is_numeric, heaviest,
-			internal_conform_to
+			internal_conform_to, associated_eclass
 		select
 			internal_conform_to
 		end
+
+feature -- Property
+
+	is_real: BOOLEAN is
+			-- Is the current type a real type ?
+		do
+			Result := True;
+		end;
+
+	associated_eclass: E_CLASS is
+			-- Associated eiffel class
+		once
+			Result := associated_class.e_class;
+				--- **** TO BE FIXED System should not
+				-- have COMPILED class but E_CLASS
+		end;
 
 feature
 
@@ -34,12 +51,6 @@ feature
 
 	is_numeric: BOOLEAN is
 			-- Is the current type a numeric type ?
-		do
-			Result := True;
-		end;
-
-	is_real: BOOLEAN is
-			-- Is the current type a real type ?
 		do
 			Result := True;
 		end;

@@ -8,17 +8,34 @@ inherit
 		rename
 			internal_conform_to as old_conform_to
 		redefine
-			is_character, type_i, associated_class, same_as
+			is_character, type_i, associated_class, same_as, 
+			associated_eclass
 		end;
 	BASIC_A
 		redefine
 			is_character, type_i, associated_class, same_as,
-			internal_conform_to
+			internal_conform_to, associated_eclass
 		select
 			internal_conform_to
 		end
 
-feature
+feature -- Access
+
+	is_character: BOOLEAN is
+			-- Is the current type a character type ?
+		do
+			Result := True;
+		end;
+
+	associated_eclass: E_CLASS is
+			-- Associated eiffel class
+		once
+			Result := associated_class.e_class;
+				--- **** TO BE FIXED System should not
+				-- have COMPILED class but E_CLASS
+		end;
+
+feature 
 
 	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
 			-- Does `other' conform to Current ?
@@ -28,12 +45,6 @@ feature
 			else
 				Result := old_conform_to (other, False);
 			end;
-		end;
-
-	is_character: BOOLEAN is
-			-- Is the current type a character type ?
-		do
-			Result := True;
 		end;
 
 	type_i: CHAR_I is

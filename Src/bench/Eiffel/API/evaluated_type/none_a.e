@@ -8,16 +8,23 @@ inherit
 		redefine
 			is_none, dump, type_i, associated_class, same_as,
 			internal_conform_to, append_clickable_signature,
-			storage_info, storage_info_with_name
+			storage_info, storage_info_with_name, associated_eclass
 		end
 
-feature
+feature -- Properties
 
 	is_none: BOOLEAN is
 			-- Is the current type a none type ?
 		do
 			Result := True;
 		end;
+
+	associated_eclass: E_CLASS is
+			-- No associated class
+		do
+		end;
+
+feature -- Output
 
 	dump: STRING is "NONE";
 			-- Dumped trace
@@ -26,6 +33,8 @@ feature
 		do
 			a_clickable.put_string ("NONE");
 		end;
+
+feature
 
 	type_i: NONE_I is
 			-- Void C type

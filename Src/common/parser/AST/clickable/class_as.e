@@ -8,7 +8,11 @@ class CLASS_AS
 
 inherit
 
-	AST_EIFFEL
+	AST_EIFFEL;
+	CLICKABLE_AST
+		redefine
+			is_class
+		end
 
 feature -- Properties
 
@@ -51,6 +55,12 @@ feature -- Properties
 
 	suppliers: SUPPLIERS_AS;
 			-- Supplier types
+
+	is_class: BOOLEAN is
+			-- Does the Current AST represent a class?
+		do
+			Result := True
+		end;
 
 feature -- Access
 

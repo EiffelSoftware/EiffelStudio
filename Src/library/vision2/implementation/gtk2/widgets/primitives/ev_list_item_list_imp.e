@@ -10,15 +10,19 @@ deferred class
 inherit
 	EV_LIST_ITEM_LIST_I
 		redefine
+			call_pebble_function,
 			interface,
 			wipe_out
 		end
 
 	EV_PRIMITIVE_IMP
 		redefine
+			call_pebble_function,
 			initialize,
 			interface,
-			make
+			make,
+			pre_pick_steps,
+			enable_transport
 		end
 
 	EV_ITEM_LIST_IMP [EV_LIST_ITEM]
@@ -75,6 +79,148 @@ feature -- Status report
 			-- Retrieve the Current row from `a_y' coordinate
 			-- (export status {EV_ANY_I})
 		do
+		end
+
+	update_pnd_status is
+			-- Update PND status of list and its children.
+		local
+			a_enable_flag: BOOLEAN
+			i: INTEGER
+			a_cursor: CURSOR
+			a_list_item_imp: EV_LIST_ITEM_IMP
+		do
+			from
+				a_cursor := child_array.cursor
+				child_array.start
+				i := 1
+			until
+				i > child_array.count or else a_enable_flag
+			loop
+				child_array.go_i_th (i)
+				if child_array.item /= Void then
+					a_list_item_imp ?= child_array.item.implementation
+					a_enable_flag := a_list_item_imp.is_transport_enabled
+				end
+				i := i + 1
+			end
+			child_array.go_to (a_cursor)
+			update_pnd_connection (a_enable_flag)
+		end
+
+	update_pnd_connection (a_enable: BOOLEAN) is
+			-- Update the PND connection of `Current' if needed.
+		do
+			if not is_transport_enabled then
+				if a_enable or pebble /= Void then
+					connect_pnd_callback
+				end
+			elseif not a_enable and pebble = Void then
+				disable_transport_signals
+				is_transport_enabled := False
+			end		
+		end
+
+	connect_pnd_callback is
+		do
+			check
+				button_release_not_connected: button_release_connection_id = 0
+			end
+			if button_press_connection_id > 0 then
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, button_press_connection_id)
+			end
+			real_signal_connect (visual_widget,
+				"button-press-event", 
+				agent (App_implementation.gtk_marshal).pnd_deferred_parent_start_transport_filter_intermediary (c_object, ?, ?, ?, ?, ?, ?, ?, ?, ?),
+				App_implementation.default_translate)
+			button_press_connection_id := last_signal_connection_id
+			is_transport_enabled := True
+		end
+
+	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+				-- Steps to perform before transport initiated.
+			do
+				temp_accept_cursor := accept_cursor
+				temp_deny_cursor := deny_cursor
+				app_implementation.on_pick (pebble)
+				if pnd_row_imp /= Void then
+					if pnd_row_imp.pick_actions_internal /= Void then
+						pnd_row_imp.pick_actions_internal.call ([a_x, a_y])
+					end
+					accept_cursor := pnd_row_imp.accept_cursor
+					deny_cursor := pnd_row_imp.deny_cursor
+				else
+					if pick_actions_internal /= Void then
+						pick_actions_internal.call ([a_x, a_y])
+					end
+				end
+				pointer_x := a_screen_x
+				pointer_y := a_screen_y
+				if pnd_row_imp = Void then
+					if (pick_x = 0 and then pick_y = 0) then
+						x_origin := a_screen_x
+						y_origin := a_screen_y
+					else
+						if pick_x > width then
+							pick_x := width
+						end
+						if pick_y > height then
+							pick_y := height
+						end
+						x_origin := pick_x + (a_screen_x - a_x)
+						y_origin := pick_y + (a_screen_y - a_y)
+					end
+				else
+					if (pnd_row_imp.pick_x = 0 and then pnd_row_imp.pick_y = 0) then
+						x_origin := a_screen_x
+						y_origin := a_screen_y
+					else
+						if pick_x > width then
+							pick_x := width
+						end
+						if pick_y > row_height then
+							pick_y := row_height
+						end
+						x_origin := pnd_row_imp.pick_x + (a_screen_x - a_x)
+						y_origin := pnd_row_imp.pick_y + (a_screen_y - a_y) + ((child_array.index_of (pnd_row_imp.interface, 1) - 1) * row_height)
+					end
+				end
+			end
+	
+	row_height: INTEGER is
+			-- Default height of rows
+		do
+			Result := 10
+		end
+
+	pnd_row_imp: EV_LIST_ITEM_IMP
+			-- Implementation object of the current row if in PND transport.
+	
+	temp_pebble: ANY
+	
+	temp_pebble_function: FUNCTION [ANY, TUPLE [], ANY]
+			-- Returns data to be transported by PND mechanism.
+	
+	temp_accept_cursor, temp_deny_cursor: EV_CURSOR
+	
+	call_pebble_function (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+			-- Set `pebble' using `pebble_function' if present.
+		do
+			temp_pebble := pebble
+			temp_pebble_function := pebble_function
+			if pnd_row_imp /= Void then
+				pebble := pnd_row_imp.pebble
+				pebble_function := pnd_row_imp.pebble_function
+			end
+	
+			if pebble_function /= Void then
+				pebble_function.call ([a_x, a_y]);
+				pebble := pebble_function.last_result
+			end		
+		end
+
+	enable_transport is
+		do
+			connect_pnd_callback
 		end
 
 feature -- Status setting
@@ -154,10 +300,8 @@ feature -- Insertion
 			end
 			
 			if item_imp.is_transport_enabled then
-			--	update_pnd_connection (True)
+				update_pnd_connection (True)
 			end
-	
-	
 		end
 		
 feature {EV_LIST_ITEM_LIST_IMP, EV_LIST_ITEM_IMP} -- Implementation

@@ -354,6 +354,8 @@ feature -- Action
 					-- Call Eiffel parser
 				parser := Eiffel_parser
 				parser.set_has_syntax_warning (System.has_syntax_warning)
+				parser.set_has_old_verbatim_strings (system.has_old_verbatim_strings)
+				parser.set_has_old_verbatim_strings_warning (system.has_old_verbatim_strings_warning)
 				parser.parse (file)
 				Result := parser.root_node
 

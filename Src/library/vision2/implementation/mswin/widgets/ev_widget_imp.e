@@ -10,6 +10,10 @@ indexing
 		% feature we used are defined as deferred. They will be%
 		% implemented directly by the heirs thanks to inheritance%
 		% from a heir of wel_window."
+	note: "The `child_cell' attribute is created in test_and_set_parent%
+		% it has absolutely no link to this feature but it is the%
+		% feature automaticaly called when we create a widget, it%
+		% is then the perfect feature to receive this creation."
 	status: "See notice at end of class"
 	id: "$Id$"
 	date: "$Date$"
@@ -98,8 +102,6 @@ feature -- Resizing
 		do
 			set_width (new_width)
 			set_height (new_height)
---			wel_window.resize (minimum_width.max(new_width), minimum_height.max (new_height))
---			notify_size_to_parent
 		end
 	
 	set_width (value:INTEGER) is
@@ -107,7 +109,10 @@ feature -- Resizing
 			-- of the change.
 		do
 			resize (value.max (minimum_width), height)
-			parent_imp.child_width_changed (width, Current)
+			if width > child_cell.width then
+				child_cell.set_width (width)
+				parent_imp.child_width_changed (width, Current)
+			end
 		end
 		
 	set_height (value: INTEGER) is
@@ -115,7 +120,10 @@ feature -- Resizing
 			-- parent of the change.
 		do
 			resize (width, value.max (minimum_height))
-			parent_imp.child_height_changed (value, Current)
+			if height > child_cell.height then
+				child_cell.set_height (height)
+				parent_imp.child_height_changed (height, Current)
+			end
 		end
 	
     set_minimum_height (value: INTEGER) is
@@ -124,9 +132,9 @@ feature -- Resizing
 			-- bigger than the Current `height', the widget is resized.
 		do
 			minimum_height := value
-			parent_imp.child_minheight_changed (value)
+			parent_imp.child_minheight_changed (value, Current)
 			if value > height then
-				parent_ask_resize (width, value)
+				set_height (value)
 			end
 		end
 
@@ -136,9 +144,9 @@ feature -- Resizing
 			-- bigger than the Current `width', the widget is resized.
 		do
 			minimum_width := value
-			parent_imp.child_minwidth_changed (value)
+			parent_imp.child_minwidth_changed (value, Current)
 			if value > width then
-				parent_ask_resize (value, height)
+				set_width (value)
 			end
 		end
 
@@ -271,15 +279,16 @@ feature -- Implementation
 			-- parent but with a different type.
 		do 
 			Result ?= wel_parent
-		ensure then
-			parent_set: wel_parent /= Void implies Result /= Void
 		end
 
 	test_and_set_parent (par: EV_CONTAINER) is
 			-- Set the parent of the Current widget.
 			-- Nothing to do on windows. The wel_parent
 			-- is enough.
+			-- Yet, we initialise the child_cell which will be
+			-- used by the parent.
 		do
+			!! child_cell
 		end
 
 	set_minimum_size (min_width, min_height: INTEGER) is
@@ -294,14 +303,31 @@ feature -- Implementation
 			-- Move and resize the widget. Only the parent can call this feature
 			-- because it doesn't notify the parent of the change.
 		do
-			move_and_resize (a_x, a_y, minimum_width.max(a_width), minimum_height.max (a_height), True)
+			child_cell.move (a_x, a_y)
+			parent_ask_resize (a_width, a_height)
 		end
 
-	parent_ask_resize (new_width, new_height: INTEGER) is
+	parent_ask_resize (a_width, a_height: INTEGER) is
 			-- When the parent asks the resize, it's not 
 			-- necessary to send him back the information
 		do
-			resize (minimum_width.max(new_width), minimum_height.max (new_height))
+			child_cell.resize (minimum_width.max(a_width), minimum_height.max (a_height))
+			if resize_type = 3 then
+				move_and_resize (child_cell.x, child_cell.y, child_cell.width, child_cell.height, True)
+			elseif resize_type = 2 then
+				move_and_resize ((child_cell.width - width)//2 + child_cell.x, child_cell.y, width, child_cell.height, True)
+			elseif resize_type = 1 then
+				move_and_resize (child_cell.x, (child_cell.height - height)//2 + child_cell.y, child_cell.width, height, True)
+			else
+				move ((child_cell.width - width)//2 + child_cell.x, (child_cell.height - height)//2 + child_cell.y)
+			end
+		end
+
+	on_first_display is
+			-- Called by the top_level window when it is displayed
+			-- for the first time
+		do
+			parent_ask_resize (minimum_width, minimum_height)
 		end
 
 feature {NONE} -- Implementation for events handling
@@ -463,6 +489,14 @@ feature {NONE} -- Implementation, key events
 feature -- Implementation : deferred features of WEL_WINDOW that are used
 		-- here but not defined
 
+  	on_show is
+   			-- Wm_showwindow message.
+   			-- The window is being shown.
+			-- Routine called by the parent only when the 
+			-- window is shown for the first time.
+   		deferred
+		end
+
 	exists: BOOLEAN is
 			-- Does the window exist?
 		deferred
@@ -503,6 +537,10 @@ feature -- Implementation : deferred features of WEL_WINDOW that are used
 	wel_parent: WEL_WINDOW is
 		deferred
 		end
+
+	child_cell: EV_CHILD_CELL_IMP
+			-- The space that the parent allow to the current
+			-- child.
 
 end -- class EV_WIDGET_IMP
 

@@ -245,7 +245,7 @@ rt_public void eif_thr_register(void)
 		EIF_GET_CONTEXT
 	
 		/* Allocate room for once manifest strings array. */
-		EIF_oms = alloc_oms ();
+		ALLOC_OMS (EIF_oms);
 
 		/*
 		 * Allocate room for once values for all threads but the initial 
@@ -389,8 +389,7 @@ rt_private void eif_free_context (rt_global_context_t *rt_globals)
 #endif
 
 		/* Free array of once manifest strings */
-	free_oms (rt_globals->eif_globals->EIF_oms_cx);
-	rt_globals->eif_globals->EIF_oms_cx = NULL;
+	FREE_OMS (rt_globals->eif_globals->EIF_oms_cx);
 
 		/* Context data if any */
 	if (eif_thr_context) {

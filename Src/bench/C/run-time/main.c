@@ -245,6 +245,7 @@ doc:	</attribute>
 rt_shared long *nbref;						/* Gives # of references */
 #endif
 
+#if defined(WORKBENCH) || defined (EIF_THREADS)
 /*
 doc:	<attribute name="eif_nb_org_routines" return_type="uint32" export="public">
 doc:		<summary>Number of original routine bodies. Additional routine bodies generated for derivations with expanded parameters are not counted.</summary>
@@ -255,6 +256,7 @@ doc:		<synchronization>None since initialized in compiler generated `einit.c' an
 doc:	</attribute>
 */
 rt_public uint32 eif_nb_org_routines;
+#endif
 
 #define exvec() exset(NULL, 0, NULL)	/* How to get an execution vector */
 
@@ -376,7 +378,7 @@ rt_public void once_init (void)
 	egc_system_mod_init ();
 
 	/* Allocate room for once manifest strings array. */
-	EIF_oms = alloc_oms ();
+	ALLOC_OMS (EIF_oms);
 
 	/* Allocate room for once values */
 

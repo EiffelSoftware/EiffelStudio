@@ -132,6 +132,7 @@ feature {NONE} -- Initialization
 			if not idle_actions_being_called then
 				idle_actions_being_called := True
 				internal_idle_actions.call (empty_tuple)
+				a_idle_timeout_imp.destroy
 				idle_actions_being_called := False
 			end
 			

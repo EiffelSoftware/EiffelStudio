@@ -32,7 +32,7 @@ feature -- Element change
 			-- Set the value of `pos_in_token' to `a_position'.
 			-- Update `x_in_pixels' accordingly.
 		do
-			{TEXT_CURSOR} Precursor (a_token, a_position)
+			Precursor {TEXT_CURSOR} (a_token, a_position)
 			on_cursor_move
 		end
 
@@ -42,10 +42,8 @@ feature {EDITABLE_TEXT} -- Implementation
 			-- Update the current token and the the position in it.
 			-- It is required that the cursor is not in the left margin.
 		do
+			Precursor {TEXT_CURSOR}
 			on_cursor_move
-
-				-- Update the current token.
-			{TEXT_CURSOR} Precursor
 		end
 
 feature {NONE} -- Implementation

@@ -1,0 +1,48 @@
+@echo off
+set OLD_PATH=%PATH
+set OLD_EIFFEL_SRC=%EIFFEL_SRC
+set INIT_DIR=%@EXECSTR[cd]
+call set_aliases.btm
+remtrace Set up the environment
+on break goto broken
+TIMER ON /1 >> NUL
+TIMER ON /2 >> NUL
+
+
+alias compile_aces `^
+for %a in *.ace do (^
+clean_project &^
+melt %a &^
+wff &^
+iff not exist EIFGEN\W_code\*.exe then &^
+echo %d\%t\%a won't melt. &^
+endiff &^
+clean_project &^
+finalize %a &^
+fff &^
+iff not exist EIFGEN\F_code\*.exe then &^
+echo %d\%t\%a won't finalize. &^
+endiff &^
+clean_project )`
+
+alias test_subdirs `^
+ls /b *. > subdirs.txt &^
+for %t in @subdirs.txt do ( &^
+iff isdir %t then &^
+cd %t &^
+compile_aces &^
+cd .. &^
+endiff )`
+
+alias test_lib `^
+ls /b *. > subdirs.txt &^
+for %d in @subdirs.txt do ( &^
+iff isdir %t then &^
+cd %t &^
+compile_aces &^
+cd .. &^
+endiff )`
+
+
+CANCEL
+

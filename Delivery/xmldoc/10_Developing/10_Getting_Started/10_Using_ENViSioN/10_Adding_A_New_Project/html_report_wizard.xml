@@ -75,7 +75,7 @@
 					<paragraph>
 						<image>
 							<alt_text>Import EiffelStudio Wizard</alt_text>
-							<url.xml_report_project_select.png</url>
+							<url>xml_report_project_select.png</url>
 						</image>
 					</paragraph>
 					<heading>
@@ -112,7 +112,7 @@
 					<paragraph>
 						<image>
 							<alt_text>Import EiffelStudio Wizard</alt_text>
-							<url.xml_report_cluster_select.png</url>
+							<url>xml_report_cluster_select.png</url>
 						</image>
 					</paragraph>
 					<heading>

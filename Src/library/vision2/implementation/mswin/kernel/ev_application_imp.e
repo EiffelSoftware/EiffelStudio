@@ -56,17 +56,18 @@ feature {NONE} -- Initialization
 
 feature -- Basic operation
 
-        process_events is
-                        -- Process any pending events.
-                        --| Pass control to the GUI toolkit so that it can
-                        --| handle any events that may be in its queue.
+	process_events is
+			-- Process any pending events.
+			--| Pass control to the GUI toolkit so that it can
+			--| handle any events that may be in its queue.
 		local
 			msg: WEL_MSG
 			done: BOOLEAN
 		do
-			create msg.make
 			from
-			until done
+				create msg.make
+			until
+				done
 			loop
 				msg.peek_all
 				if msg.last_boolean_result then
@@ -210,19 +211,13 @@ feature {NONE} -- Message loop, we redefine it because the user
 			-- Windows message loop
 		local
 			msg: WEL_MSG
-			--accel: WEL_ACCELERATORS
-			main_w: WEL_WINDOW
+			main_win: EV_TITLED_WINDOW_IMP
 			done: BOOLEAN
 			dlg: POINTER
 		do
-			-- `accel' and `main_w' are declared
-			-- locally to get a faster access.
-			--accel := accelerator_table
-			main_w := main_window
-
-			-- Process the messages
 			from
 				create msg.make
+				main_win ?= main_window
 			until
 				done
 			loop
@@ -231,7 +226,7 @@ feature {NONE} -- Message loop, we redefine it because the user
 					if msg.quit then
 						done := True
 					else
-						dlg := cwin_get_last_active_popup (main_w.item)
+						dlg := cwin_get_last_active_popup (main_win.wel_item)
 						if is_dialog (dlg) then
 							msg.process_dialog_message (dlg)
 							if not msg.last_boolean_result then
@@ -239,16 +234,16 @@ feature {NONE} -- Message loop, we redefine it because the user
 								msg.dispatch
 							end
 						else
-							--if has_accelerator then
-							--	msg.translate_accelerator (main_w, accel)
-							--	if not msg.last_boolean_result then
-							--		msg.translate
-							--		msg.dispatch
-							--	end
-							--else
+						--	if main_win.accel /= Void then
+						--		msg.translate_accelerator (main_win, main_win.accel)
+						--		if not msg.last_boolean_result then
+						--			msg.translate
+						--			msg.dispatch
+						--		end
+						--	else
 								msg.translate
 								msg.dispatch
-							--end
+						--	end
 						end
 					end
 				else
@@ -344,6 +339,10 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.22  2000/03/16 23:26:10  brendel
+--| Formatting.
+--| Tried something with accelerators.
+--|
 --| Revision 1.21  2000/03/14 03:02:53  brendel
 --| Merged changed from WINDOWS_RESIZING_BRANCH.
 --|

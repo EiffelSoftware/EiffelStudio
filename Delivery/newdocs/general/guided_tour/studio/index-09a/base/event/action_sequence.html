@@ -1,6 +1,6 @@
 <HTML>
 <HEAD>
-<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.32">
+<META NAME="generator" CONTENT="ISE EiffelStudio version 5.0.34">
 <META NAME="instructions" CONTENT="TTUse features inherited from LIST to add/remove actions.R TTAn action is a procedure of ANY class that takes EVENT_DATA.R TTWhen `call' is called the actions in the list will be executedR TTin order stating at `first'.R TTAn action may call `abort' which will cause `call' to stop executingR TTactions in the sequence. (Until the next call to `call').R TTDescendants may redefine `initialize' to arrange for `call' toR TTbe called by an event source.R TTUse `block', `pause', `flush' and `resume' to change the behaviorR TTof `call'.R TTeg.R TT birthday_data: TUPLE [INTEGER, STRING] -- (age, name)R TT birthday_actions: ACTIONS_SEQUENCE [like birthday_data]R TT create birthday_actions.make (birthday, <<age,name>>)R TT send_card (age: INTEGER, name, from: STRING) is ...R TT buy_gift (age: INTEGER, name, gift, from: STRING) is ...R TT birthday_actions.extend (~send_card (?, ?, Sam)R TT birthday_actions.extend (~buy_gift (?, ?, Wine, Sam)R TT birthday_actions.call ([35, Julia])R TT causes call to: send_card (35, Julia, Sam)R TT                 buy_gift (35, Julia, Wine, Sam)">
 <META NAME="revision" CONTENT="$Revision$">
 <META NAME="keywords" CONTENT="Eiffel class, event, action">

@@ -4,12 +4,12 @@ indexing
 	revision	: "$Revision$"
 
 class
-	STRING_RESOURCE
+	STRING_PREFERENCE
 
 inherit
-	TYPED_RESOURCE [STRING]
+	TYPED_PREFERENCE [STRING]
 
-create {RESOURCE_FACTORY}
+create {PREFERENCE_FACTORY}
 	make, make_from_string_value
 
 feature -- Access
@@ -51,4 +51,4 @@ feature {NONE} -- Implementation
 			set_value (a_value)
 		end	
 
-end -- class STRING_RESOURCE
+end -- class STRING_PREFERENCE

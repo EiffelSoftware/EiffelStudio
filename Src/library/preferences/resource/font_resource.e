@@ -4,10 +4,10 @@ indexing
 	revision	: "$Revision$"
 
 class
-	FONT_RESOURCE
+	FONT_PREFERENCE
 
 inherit
-	TYPED_RESOURCE [EV_FONT]
+	TYPED_PREFERENCE [EV_FONT]
 		redefine
 			set_value
 		end
@@ -17,7 +17,7 @@ inherit
 			is_equal
 		end
 		
-create {RESOURCE_FACTORY}
+create {PREFERENCE_FACTORY}
 	make, make_from_string_value
 
 feature -- Access
@@ -26,7 +26,7 @@ feature -- Access
 			-- String representation of `value'.		
 		do
 			Result := generated_value
-		end	
+		end
 
 feature -- Status Setting
 
@@ -35,12 +35,12 @@ feature -- Status Setting
 		require else
 			valid_font: a_value /= Void and then not a_value.is_destroyed
 		do
-			Precursor {TYPED_RESOURCE} (a_value)
+			Precursor {TYPED_PREFERENCE} (a_value)
 			face := value.name
 			shape := value.shape
 			weight := value.weight
-			height := value.height
-			family := value.family
+			height := value.height_in_points
+			family := value.family			
 		end
 
 	string_type: STRING is
@@ -107,6 +107,8 @@ feature {NONE} -- Implementation
 					end
 				end
 				create value.make_with_values (family, weight, shape, height)
+				value.set_height_in_points (height)
+				set_value (value)
 			end			
 		end
 
@@ -214,7 +216,7 @@ feature {NONE} -- Implementation
 		end
 
 	set_height (s: STRING) is
-			-- Set `height' according to `s'
+			-- Set `height' according to `s'.
 		require
 			not_void: s /= Void
 		do
@@ -223,4 +225,4 @@ feature {NONE} -- Implementation
 			end
 		end
 
-end -- class FONT_RESOURCE
+end -- class FONT_PREFERENCE

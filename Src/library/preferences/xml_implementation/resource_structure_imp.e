@@ -4,10 +4,10 @@ indexing
 	revision: "$Revision$"
 
 class
-	RESOURCE_STRUCTURE_IMP
+	PREFERENCE_STRUCTURE_IMP
 
 inherit
-	RESOURCE_STRUCTURE_I
+	PREFERENCE_STRUCTURE_I
 
 	XM_CALLBACKS_FILTER_FACTORY
 		export 		
@@ -20,7 +20,7 @@ create
 	make_empty,
 	make_with_location
 
-feature {RESOURCE_STRUCTURE} -- Initialization
+feature {PREFERENCE_STRUCTURE} -- Initialization
 	
 	make_empty is
 			-- Create resource structure in XML file.  File will be created based on name of application.
@@ -58,7 +58,7 @@ feature {RESOURCE_STRUCTURE} -- Initialization
 			location_set: location = a_location
 		end
 
-feature {RESOURCE_STRUCTURE} -- Resource Management
+feature {PREFERENCE_STRUCTURE} -- Resource Management
 
 	has_resource (a_name: STRING): BOOLEAN is
 			-- Does the underlying store contain a resource with `a_name'?
@@ -72,16 +72,16 @@ feature {RESOURCE_STRUCTURE} -- Resource Management
 			Result := session_values.item (a_name)	
 		end	
 
-	save_resource (a_resource: RESOURCE) is
+	save_resource (a_resource: PREFERENCE) is
 			-- Save `a_resource' to the file on disk.
 		do
 			-- TODO: neilc
 		end		
 
-	save (resources: ARRAYED_LIST [RESOURCE]) is
+	save (resources: ARRAYED_LIST [PREFERENCE]) is
 			-- Save contents of structure.
 		local
-			l_resource: RESOURCE
+			l_resource: PREFERENCE
 			l_file: KL_TEXT_OUTPUT_FILE
 		do
 			create l_file.make (location)
@@ -174,4 +174,4 @@ invariant
 	has_session_values: session_values /= Void
 	has_structure: xml_structure /= Void
 
-end -- class RESOURCE_STRUCTURE_IMP
+end -- class PREFERENCE_STRUCTURE_IMP

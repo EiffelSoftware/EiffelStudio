@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	RESOURCE
+	PREFERENCE
 
 feature -- Status setting
 
@@ -37,6 +37,7 @@ feature -- Status setting
 			a_value_valid: valid_value_string (a_value)
 		do
 			default_value := a_value
+			change_actions.call ([Current])
 		ensure		
 			default_value_set: default_value = a_value
 		end		
@@ -65,14 +66,6 @@ feature -- Access
 
 	name: STRING
 			-- Name of the resource as it appears in the resource file.
-			
-	full_name: STRING is
-			-- Full name, including `manager' prefix.
-		do
-			Result := manager.namespace + "." + name
-		ensure
-			full_name_not_void: full_name /= Void
-		end		
 
 	description: STRING
 			-- Description of what the resource is all about.
@@ -102,6 +95,9 @@ feature -- Access
 		ensure
 			generating_resource_type_not_void: generating_resource_type /= Void
 		end	
+
+	manager: PREFERENCE_MANAGER
+			-- Manager to which Current belongs.
 
 feature -- Query
 		
@@ -136,14 +132,9 @@ feature -- Actions
 	change_actions: ACTION_SEQUENCE [TUPLE]
 			-- Actions to be performed when `value' changes, after call to `set_value'.
 
-feature {NONE} -- Implementation
-
-	manager: PREFERENCE_RESOURCE_MANAGER
-			-- Manager to which Current belongs.
-
 invariant
 	has_manager: manager /= Void
 	name_not_void: name /= Void
 	has_change_actions: change_actions /= Void
 
-end -- class RESOURCE
+end -- class PREFERENCE

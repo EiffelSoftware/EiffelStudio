@@ -37,7 +37,8 @@ inherit
 		undefine
 			item_by_data
 		redefine
-			interface
+			interface,
+			initialize
 		end
 
 	WEL_TREE_VIEW
@@ -114,6 +115,7 @@ feature {NONE} -- Initialization
 			-- Do post creation initialization.
 		do
 			{EV_PRIMITIVE_IMP} Precursor
+			{EV_ARRAYED_LIST_ITEM_HOLDER_IMP} Precursor
 			!! all_ev_children.make (1)
 			create ev_children.make (1)
 			create image_list.make (16, 16, Ilc_color24, True)
@@ -581,6 +583,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.54  2000/03/24 19:14:11  rogers
+--| Redefined initialize from EV_ARRAYED_LIST_ITEM_HOLDER_IMP.
+--|
 --| Revision 1.53  2000/03/24 17:14:22  rogers
 --| Added creation of current_image_list_images.
 --|

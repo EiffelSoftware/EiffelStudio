@@ -329,6 +329,18 @@ cluster
 
 	all cli_writer:		"$EIFFEL_SRC\Eiffel\library\cli_writer"
 
+	all xml_deserializer: "$EIFFEL_SRC\Eiffel\library\xml_deserializer"
+
+	all eac_components: "$EIFFEL_SRC\dotnet\consumer\components"
+
+	xml:		"$EIFFEL_SRC\library\exml"
+
+	xml_main (xml):		"$\main"
+
+	xml_tree_parser (xml_main):		"$\tree_parser"
+
+	xml_spec (xml):		"$\compiler_specific\ise"
+
 external
 
 	include_path:
@@ -342,7 +354,9 @@ external
 		"$(EIFFEL_SRC)\C\platform",
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib",
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib",
-		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib"
+		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\Clib",
+		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib",
+		"$(EIFFEL_SRC)\C_library\expat\xmlparse"
 
 	object:
 		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
@@ -360,6 +374,8 @@ external
 		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib\$(ISE_C_COMPILER)\ecom.lib",
 		"$(EIFFEL_SRC)\com_compiler\Clib\$(ISE_C_COMPILER)\ecom.lib",
 		"$(EIFFEL_SRC)\Eiffel\library\cli_writer\spec\msc\lib\cli_writer.lib",
-		"corguids.lib"
+		"corguids.lib",
+		"$(EIFFEL_SRC)\library\exml\compiler_specific\ise\clib\$(ISE_C_COMPILER)\exml.lib",
+		"$(EIFFEL_SRC)\C_library\expat\lib\xmlparse.lib"
 
 end

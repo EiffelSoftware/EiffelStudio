@@ -3,7 +3,6 @@ indexing
 				  %and use imagelist to store bitmaps - when available   "
 	note		: "The common controls dll (WEL_COMMON_CONTROLS_DLL)     %
 				  %needs to be loaded to use this control.               "
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 	date		: "$Date$"
 	revision	: "$Revision$"
 

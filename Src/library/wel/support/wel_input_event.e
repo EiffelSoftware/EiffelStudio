@@ -1,7 +1,7 @@
 indexing
 	description	: "Objects to synthesize keystrokes, mouse motions %
 				  %and button clicks."
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	status		: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"
 

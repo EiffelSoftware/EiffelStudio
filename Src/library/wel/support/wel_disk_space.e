@@ -1,7 +1,6 @@
 indexing
 	description	: "Object used to retrieve total and free disk space on any%
 	 			  %local hard drive. Remote drive are not yet supported"
-	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 	status		: "See notice at end of class."
 	date		: "$Date$"
 	revision	: "$Revision$"

@@ -74,7 +74,7 @@ feature -- Input
 		do
 			append_string (" -- class ")
 			create class_stone.make (e_class)
-			set_format (Graphical_resources.class_text)
+			set_format (class_font, class_color)
 			append_stone (class_stone, e_class.name_in_upper)
 			new_line
 		end
@@ -85,14 +85,14 @@ feature -- Input
 			stone: FEATURE_STONE	
 		do
 			create stone.make (e_feature)
-			set_format (Graphical_resources.keyword_text)
+			set_format (keyword_font, keyword_color)
 			append_stone (stone, str)
 		end
 
 	put_string (s: STRING) is
 			-- Add `s' to the text, don't record it in internal structure.
 		do
-			set_format (Graphical_resources.string_text)
+			set_format (string_text_font, string_text_color)
 			append_text (s)
 			text_position := text_position + s.count
 		end
@@ -118,7 +118,7 @@ feature -- Input
 			stone: CLASSI_STONE	
 		do
 			create stone.make (e_class)
-			set_format (Graphical_resources.keyword_text)			
+			set_format (keyword_font, keyword_color)			
 			append_stone (stone, str)
 		end
 
@@ -126,7 +126,7 @@ feature -- Input
 			-- Put `e_cluster' with string representation
 			-- `str' at current position.
 		do
-			set_format (Graphical_resources.cluster_text)			
+			set_format (cluster_font, cluster_color)			
 			put_string (str)
 		end
 
@@ -137,7 +137,7 @@ feature -- Input
 			stone: CLASSC_STONE	
 		do
 			create stone.make (e_class)
-			set_format (Graphical_resources.class_text)			
+			set_format (class_font, class_color)			
 			append_stone (stone, str)
 		end
 
@@ -148,7 +148,7 @@ feature -- Input
 			stone: ERROR_STONE	
 		do
 			create stone.make (error)
-			set_format (Graphical_resources.error_text)			
+			set_format (error_font, error_color)			
 			append_stone (stone, str)
 		end
 
@@ -159,7 +159,7 @@ feature -- Input
 			stone: FEATURE_STONE	
 		do
 			create stone.make (feat)
-			set_format (Graphical_resources.feature_text)			
+			set_format (feature_font, feature_color)			
 			append_stone (stone, str)
 		end
 
@@ -170,7 +170,7 @@ feature -- Input
 			stone: FEATURE_ERROR_STONE	
 		do
 			create stone.make (feat, a_pos)
-			set_format (Graphical_resources.feature_text)			
+			set_format (feature_font, feature_color)			
 			append_stone (stone, str)
 		end
 
@@ -180,7 +180,7 @@ feature -- Input
 			stone: FEATURE_NAME_STONE	
 		do
 			create stone.make (f_name, e_class)
-			set_format (Graphical_resources.feature_text)			
+			set_format (feature_font, feature_color)			
 			append_stone (stone, f_name)
 		end
 
@@ -189,7 +189,7 @@ feature -- Input
 			stone: EXPORTED_FEATURE_NAME_STONE	
 		do
 			create stone.make (f_name, class_c, alias_name)
-			set_format (Graphical_resources.feature_text)			
+			set_format (feature_font, feature_color)			
 			append_stone (stone, f_name)
 		end
 
@@ -199,7 +199,7 @@ feature -- Input
 			stone: OBJECT_STONE	
 		do
 			create stone.make (address, a_name, e_class)
-			set_format (Graphical_resources.object_text)			
+			set_format (object_font, object_color)			
 			append_stone (stone, address)
 		end
 
@@ -209,7 +209,7 @@ feature -- Input
 			stone: CL_SYNTAX_STONE	
 		do
 			create stone.make (syn, e_class)
-			set_format (Graphical_resources.class_text)			
+			set_format (class_font, class_color)			
 			append_stone (stone, str)
 		end
 
@@ -219,7 +219,7 @@ feature -- Input
 			stone: ACE_SYNTAX_STONE	
 		do
 			create stone.make (syn)
-			set_format (Graphical_resources.class_text)			
+			set_format (class_font, class_color)			
 			append_stone (stone, str)
 		end
 
@@ -399,8 +399,8 @@ feature {NONE} -- Implementation
 		deferred
 		end
 
-	set_format (fr: EB_FORMAT_RESOURCE) is
-			-- changes current format according to `fr'
+	set_format (f: EV_FONT; c: EV_COLOR) is
+			-- changes current format according to `f' and `c'
 		deferred
 		end
 

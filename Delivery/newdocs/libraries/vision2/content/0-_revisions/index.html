@@ -84,6 +84,7 @@
 			<LI><B>EV_LIST, EV_MULTI_COLUMN_LIST, EV_TREE</B> - Fixed `set_foreground_color' and `set_background_color'. Previously, calling these features did nothing.</LI>
 			<LI><B>EV_BOX</B> - If a widget was not`is_item_expanded', then adding a new widget to the box before that widget would sometimes cause a different widget to become `is_item_expanded'.</LI>
 			<LI><B>EV_TOOL_BAR_RADIO_BUTTON</B> - The currently selected button in `peers' was unselected when the button was pressed, and not when it was really selected. This bug made it possible to make `selected_peer' Void, which caused an invariant to fail.</LI>
+			<LI><B>EV_LIST_ITEM</B> - Calling `enable_select' when parented in an EV_LIST now also sets the item as focused in the parent. This corrects bugs in keyboard navigation when selecting an item programatically.</LI>
 			</UL>
 		<LI><B>Gtk</B></LI>
 			<UL>

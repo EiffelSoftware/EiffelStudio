@@ -14,6 +14,8 @@
 #include "eif_econsole.h"									/* console */
 #endif
 
+#include "eif_console.h"
+
 rt_public EIF_POINTER file_def(int file)
 {
 	/* Convert the integer `i' into the corresponding

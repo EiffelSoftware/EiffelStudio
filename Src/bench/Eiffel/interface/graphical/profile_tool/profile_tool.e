@@ -575,7 +575,7 @@ feature {NONE} -- Implementation
 			new_name_chooser := name_chooser (Current)
 			new_name_chooser.set_title (Interface_names.t_Browse);
 			new_name_chooser.hide_help_button;
-			new_name_chooser.hide_filter_button;
+			new_name_chooser.show_filter_button;
 			new_name_chooser.set_open_file;
 			new_name_chooser.add_ok_action (Current, Void);
 			new_name_chooser.call (Current)

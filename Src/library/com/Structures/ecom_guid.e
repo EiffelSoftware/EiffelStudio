@@ -22,7 +22,7 @@ inherit
 
 creation
 	make,
-	make_by_pointer,
+	make_from_pointer,
 	make_from_string,
 	make_from_guid
 
@@ -32,6 +32,14 @@ feature -- Basic operation
 			-- Generate a new GUID
 		do
 			ccom_generate_guid (item)
+		end
+
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
 		end
 
 feature {NONE} -- Initialization

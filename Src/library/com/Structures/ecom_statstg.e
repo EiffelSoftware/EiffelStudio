@@ -66,7 +66,7 @@ feature -- Access
 	size: ECOM_ULARGE_INTEGER is
 			-- Size in bytes of stream or byte array. 
 		do
-			!! Result.make_by_pointer (ccom_size(initializer))
+			!! Result.make_from_pointer (ccom_size(initializer))
 		ensure
 			Result /= Void and Result.item /= Default_pointer
 		end

@@ -10,6 +10,8 @@ deferred class
 
 inherit
 	WEL_STRUCTURE
+		export
+			{NONE} set_item
 		redefine
 			make, 
 			destroy_item
@@ -28,6 +30,23 @@ feature {NONE} -- Initialization
 			shared := False
 		end
 
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		require
+			valid_pointer: a_pointer /= default_pointer
+		deferred
+		end
+
+feature -- Basic operation
+
+	set_value (source: like Current) is
+			-- Set Current to 'source'.
+		require
+			non_void: source /= Void
+			valid_source: source.item /= default_pointer
+		do
+			memory_copy (source.item, structure_size)
+		end
 
 feature {NONE} -- Removal
 

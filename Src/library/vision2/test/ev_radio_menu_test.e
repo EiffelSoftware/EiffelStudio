@@ -23,8 +23,8 @@ feature -- Access
 
 	prepare is
 		do
-			first_window.show
-			destroy
+		--	first_window.show
+		--	destroy
 		end
 
 end -- class ROOT_CLASS

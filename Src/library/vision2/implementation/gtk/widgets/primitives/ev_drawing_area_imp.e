@@ -127,7 +127,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 	lose_focus is
 		do
 			top_level_window_imp.set_focus_widget (Void)
-			GTK_WIDGET_UNSET_FLAGS (c_object, feature {EV_GTK_EXTERNALS}.GTK_HAS_FOCUS_ENUM)
+			feature {EV_GTK_EXTERNALS}.GTK_WIDGET_UNSET_FLAGS (c_object, feature {EV_GTK_EXTERNALS}.GTK_HAS_FOCUS_ENUM)
 			-- This is a hack to make sure focus flag is unset.
 		end
 		
@@ -135,15 +135,15 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 			-- Grab keyboard focus.
 		do
 			if not has_focus then
-				GTK_WIDGET_SET_FLAGS (c_object, feature {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+				feature {EV_GTK_EXTERNALS}.GTK_WIDGET_SET_FLAGS (c_object, feature {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
 				if focus_in_actions_internal /= Void then
 					focus_in_actions_internal.block
 					-- This needs to be called manually for cases that gtk doesn't handle.
 				end
 				feature {EV_GTK_EXTERNALS}.gtk_widget_grab_focus (c_object)
-				GTK_WIDGET_SET_FLAGS (c_object, feature {EV_GTK_EXTERNALS}.GTK_HAS_FOCUS_ENUM)
+				feature {EV_GTK_EXTERNALS}.GTK_WIDGET_SET_FLAGS (c_object, feature {EV_GTK_EXTERNALS}.GTK_HAS_FOCUS_ENUM)
 				top_level_window_imp.set_focus_widget (Current)
-				GTK_WIDGET_UNSET_FLAGS (c_object, feature {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
+				feature {EV_GTK_EXTERNALS}.GTK_WIDGET_UNSET_FLAGS (c_object, feature {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM)
 				if focus_in_actions_internal /= Void then
 					focus_in_actions_internal.resume
 					focus_in_actions_internal.call (App_implementation.Empty_tuple)

@@ -48,10 +48,13 @@ feature {NONE} -- Initialization
 			a_height_bigger_than_zero: a_height > 0
 		do
 			default_create
-			set_family (a_family)
-			set_weight (a_weight)
-			set_shape (a_shape)
-			set_height (a_height)
+			implementation.set_values (
+				a_family,
+				a_weight,
+				a_shape,
+				a_height,
+				Void
+			)
 		end
 
 feature -- Access
@@ -144,20 +147,6 @@ feature -- Element change
 			implementation.set_height (a_height)
 		ensure
 			height_assigned: height = a_height
-		end
-
-	set_values (a_family, a_weight, a_shape, a_height: INTEGER) is
-			-- set all the four parameters
-		require
-			a_family_valid: valid_family (a_family)
-			a_weight_valid: valid_weight (a_weight)
-			a_shape_valid: valid_shape (a_shape)
-			a_height_bigger_than_zero: a_height > 0
-		do
-			set_family (a_family)
-			set_weight (a_weight)
-			set_shape (a_shape)
-			set_height (a_height)
 		end
 
 	set_preferred_face (a_preferred_face: STRING) is
@@ -286,13 +275,13 @@ feature -- Basic operations
 	copy (other: like Current) is
 			-- Update `Current' with all attributes of `other'.
 		do
-			set_family (other.family)
-			set_weight (other.weight)
-			set_shape (other.shape)
-			set_height (other.height)
-			if other.preferred_face /= Void then
-				set_preferred_face (other.preferred_face)
-			end
+			implementation.set_values (
+				other.family,
+				other.weight,
+				other.shape,
+				other.height,
+				other.preferred_face
+			)
 		end
 
 feature {EV_ANY} -- Contract support
@@ -402,6 +391,9 @@ end -- class EV_FONT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/03/28 21:48:44  brendel
+--| Now uses new set_values in _I.
+--|
 --| Revision 1.20  2000/03/16 01:15:33  oconnor
 --| comments
 --|

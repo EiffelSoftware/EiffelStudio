@@ -49,11 +49,21 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	name: STRING is
-			-- Name of the font
+			-- Face name.
 		require
 			exists: not destroyed
 		do
 			Result := implementation.name
+		ensure
+			Result.is_equal (implementation.name)
+		end
+
+	system_name: STRING is
+			-- System font name. 
+		require
+			exists: not destroyed
+		do
+			Result := implementation.system_name
 		end
 
 	ascent: INTEGER is

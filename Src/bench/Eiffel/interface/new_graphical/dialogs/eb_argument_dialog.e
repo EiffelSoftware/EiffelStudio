@@ -153,7 +153,6 @@ feature {NONE} -- Implementation
 
 	execute (arg: ANY) is
 		do
-			hide
 			if arg /= Void then
 				if arg = Apply_and_run_it then
 					arguments_control.store_arguments (Void)

@@ -66,6 +66,9 @@ feature -- General Information
 	Log: INTEGER is 2004
 			-- Generic log information
 
+	File_deletion: INTEGER is 2005
+			-- File is being deleted
+
 feature -- Consumer Errors
 
 	Missing_current_type: INTEGER is 3001
@@ -92,8 +95,8 @@ feature -- Consumer Errors
 	Missing_variable_type: INTEGER is 3008
 			-- Variable type is missing
 
-	Missing_feature_type: INTEGER is 3009
-			-- Feature type is missing
+	Missing_type_name: INTEGER is 3009
+			-- Name of type is missing
 
 	Missing_assignment_target: INTEGER is 3010
 			-- Statement is missing assignment target
@@ -133,9 +136,6 @@ feature -- Consumer Errors
 
 	Missing_argument: INTEGER is 3022
 			-- Argument is missing
-
-	Missing_type_name: INTEGER is 3023
-			-- Name of type is missing
 
 feature -- Consumer Warnings
 
@@ -270,6 +270,9 @@ feature -- Compiler Warnings
 
 	Missing_directory: INTEGER is 10005
 			-- Directory is missing
+
+	Missing_assembly: INTEGER is 10006
+			-- Assembly is missing
 
 feature -- Compiler Information
 

@@ -141,7 +141,7 @@ feature {NONE} -- Implementation
 						Incorrect_result)
 			Result.extend (["Failed Assignment Attempt", "general", "An assignment attempt that should have succeeded failed: trying to assign an instance of {1} to an instance of {2} in {3}", Warning],
 						Failed_assignment_attempt)
-			Result.extend (["File Lock", "general", "Operation {2} failed because of a file lock on {1}", Warning],
+			Result.extend (["File Lock", "general", "Operation {1} failed because of a file lock on {2}", Warning],
 						File_lock)
 			Result.extend (["Missing Input", "general", "Operation {1} cannot execute because input is missing", Warning],
 						Missing_input)
@@ -155,6 +155,8 @@ feature {NONE} -- Implementation
 						Missing_config)
 			Result.extend (["Log", "general", "{1}", Information],
 						Log)
+			Result.extend (["File Deletion", "general", "File `{1}' was deleted", Information],
+						File_deletion)
 
 			-- Consumer Errors
 			Result.extend (["Missing Current Type", "consumer", "Construct is missing current type information: {1}", Error],
@@ -173,8 +175,6 @@ feature {NONE} -- Implementation
 						Missing_implementing_type)
 			Result.extend (["Missing Variable Type", "consumer", "Could not find type of variable `{1}'", Error],
 						Missing_variable_type)
-			Result.extend (["Missing Feature Type", "consumer", "Could not find type of feature `{2}' from type `{1}'", Error],
-						Missing_feature_type)
 			Result.extend (["Missing Comment Text", "consumer", "Comment in {1} is missing text", Error],
 						Missing_comment_text)
 			Result.extend (["Missing Assignment Target", "consumer", "Assignment target is missing from assignment statement in `{1}'", Error],
@@ -290,12 +290,14 @@ feature {NONE} -- Implementation
 						File_exists)
 			Result.extend (["Missing Temporary Files", "compiler", "Missing temporary files in compiler parameters or Missing temporary directory in temporary files", Warning],
 						Missing_temporary_files)
-			Result.extend (["Missing File", "general", "File {1} is missing", Warning],
+			Result.extend (["Missing File", "compiler", "File {1} is missing", Warning],
 						Missing_file)
-			Result.extend (["Missing Directory", "general", "Directory {1} is missing", Warning],
+			Result.extend (["Missing Directory", "compiler", "Directory {1} is missing", Warning],
 						Missing_directory)
-			Result.extend (["Copy Failed", "general", "Could not copy file {1} to {2}", Warning],
+			Result.extend (["Copy Failed", "compiler", "Could not copy file {1} to {2}", Warning],
 						Could_not_copy)
+			Result.extend (["Missing Assembly", "compiler", "Could not find assembly `{1}'", Warning],
+						Missing_assembly)
 
 			-- Overwriting existing Eiffel source file
 

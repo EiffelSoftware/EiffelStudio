@@ -43,7 +43,8 @@ inherit
 		redefine
 			new_cell,
 			merge_left,
-			merge_right
+			merge_right,
+			cleanup_after_remove
 		end
 
 creation
@@ -68,25 +69,11 @@ feature {NONE} -- Initialization
 			name_internal := a_name
 			event_data_names_internal := some_event_data_names
 			state := Normal_state
+			create not_empty_actions.make
+			create empty_actions.make
 		ensure
 			name_assigned: name_internal.is_equal (a_name)
 			event_data_names_assigned: event_data_names_internal.is_equal (some_event_data_names)
-		end
-
-	initialize is
-			-- Called when the first action is added.
-			-- Calles `source_connection_agent' to attach sequence
-			-- to event source.
-		require
-			not_already_called: not is_initialized
-		do
-			is_initialized := True
-			if source_connection_agent /= Void then
-				source_connection_agent.call ([])
-				source_connection_agent := Void
-			end
-		ensure
-			is_initialized
 		end
 
 feature -- Basic operations
@@ -235,9 +222,6 @@ feature -- Status report
 	Paused_state: INTEGER is 2
 	Blocked_state: INTEGER is 3
 
-	is_initialized: BOOLEAN
-			-- Initialize has been called
-
 	call_is_underway: BOOLEAN is
 			-- Is `call' currently being executed?
 		do
@@ -252,24 +236,28 @@ feature  -- Element Change
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'
 		do
-			Precursor (other)
-			if not is_initialized then
-				initialize
+			if count = 0 then
+				Precursor (other)
+				if count > 0 then
+					call_action_list (not_empty_actions)
+				end
+			else
+				Precursor (other)
 			end
-		ensure then
-			is_initialized
 		end
 
 	merge_right (other: like Current) is
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'
 		do
-			Precursor (other)
-			if not is_initialized then
-				initialize
+			if count = 0 then
+				Precursor (other)
+				if count > 0 then
+					call_action_list (not_empty_actions)
+				end
+			else
+				Precursor (other)
 			end
-		ensure then
-			is_initialized
 		end
 
 	set_source_connection_agent
@@ -278,40 +266,65 @@ feature  -- Element Change
 			-- actual event source. The agent will be called when the first action is
 			-- added to the sequence. If there are already actions in the
 			-- sequence the agent is called immediately.
-		require
-			source_connection_agent_not_set:
-				not set_source_connection_agent_called
-			source_connection_agent_not_void: a_source_connection_agent /= Void
+		obsolete
+			"use not_empty_actions"
 		do
-			if is_initialized then
+			not_empty_actions.extend (a_source_connection_agent)
+			if not empty then
 				a_source_connection_agent.call ([])
-			else
-				source_connection_agent := a_source_connection_agent
 			end 
-			set_source_connection_agent_called := True
-		ensure
-			source_connection_agent_assigned: not is_initialized implies
-				source_connection_agent = a_source_connection_agent
-			set_source_connection_agent_called_set:
-				set_source_connection_agent_called
 		end
 
-	set_source_connection_agent_called: BOOLEAN
+feature -- Event handling
+
+	not_empty_actions: LINKED_LIST [PROCEDURE [ANY, TUPLE []]]
+			-- Actions to be performed on transition from `empty' to not `empty'.
+
+	empty_actions: LINKED_LIST [PROCEDURE [ANY, TUPLE []]]
+			-- Actions to be performed on transition from not `empty' to `empty'.
 
 feature  {LINKED_LIST} -- Implementation
 
 	new_cell (v: like item): like first_element is
-			-- 
+			-- Create new cell with `v'.
 		do
-			Result := Precursor (v)
-			if not is_initialized then
-				initialize
+			if count = 0 then
+				Result := Precursor (v)
+				call_action_list (not_empty_actions)
+			else
+				Result := Precursor (v)
 			end
-		ensure then
-			is_initialized
+		end
+
+	cleanup_after_remove (v: like first_element) is
+			-- Clean-up a just removed cell.
+		do
+			Precursor (v)
+			if count = 0 then
+				call_action_list (empty_actions)
+			end
 		end
 
 feature {NONE} -- Implementation
+
+	call_action_list (actions: LINKED_LIST [PROCEDURE [ANY, TUPLE []]]) is
+			-- Call each action in `actions'.
+		require
+			actions_not_void: actions /= Void
+		local
+			snapshot: like actions
+		do
+			create snapshot.make
+			snapshot.fill (actions)
+			from
+				snapshot.start
+			until
+				snapshot.after
+			loop
+				snapshot.item.call ([])
+				snapshot.forth
+			end
+		end
 
 	source_connection_agent: PROCEDURE [ANY, TUPLE []]
 
@@ -371,16 +384,9 @@ invariant
 	valid_state:
 		state = Normal_state or state = Paused_state or state = Blocked_state
 	call_buffer_consistent: state = Normal_state implies call_buffer.empty
+	not_empty_actions_not_void: not_empty_actions /= void
+	empty_actions_not_void: empty_actions /= void
 	source_connection_agent_disgarded_after_call:
-		is_initialized implies source_connection_agent = Void
-	first_addition_caught: not empty implies is_initialized
-		--| We redefine new_cell, merge_left and merge_right from LINKED_LIST
-		--| to call initialize if it has not been called before. This should
-		--| catch any possible way of adding the action item to the list.
-		--| If it turns out that there is a LINKED_LIST feature that can add
-		--| an action without calling any of these then this invariant fails.
-		--| In this case the guilty feature should be redefined to call
-		--| initialize.
 
 end
 
@@ -405,6 +411,10 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.17  2000/03/24 02:18:31  oconnor
+--| Make set_source_connection_agent obsolete
+--| added not_empty_actions and empty_actions instead.
+--|
 --| Revision 1.16  2000/03/23 19:19:29  oconnor
 --| Fixed source connection glitch.
 --|

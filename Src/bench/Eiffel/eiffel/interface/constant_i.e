@@ -22,8 +22,14 @@ inherit
 		select
 			transfer_to, check_types, access, equiv
 		end;
-	SHARED_TYPE_I;
-	BYTE_CONST;
+	SHARED_TYPE_I
+		rename
+			same_type as general_same_type
+		end;
+	BYTE_CONST
+		rename
+			same_type as general_same_type
+		end
 	
 feature 
 

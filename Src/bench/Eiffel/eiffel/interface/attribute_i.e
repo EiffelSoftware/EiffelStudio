@@ -23,8 +23,14 @@ inherit
 		select
 			transfer_to, process_pattern, check_expanded
 		end;
-	SHARED_DECLARATIONS;
+	SHARED_DECLARATIONS
+		rename
+			same_type as general_same_type
+		end;
 	BYTE_CONST
+		rename
+			same_type as general_same_type
+		end
 
 feature 
 

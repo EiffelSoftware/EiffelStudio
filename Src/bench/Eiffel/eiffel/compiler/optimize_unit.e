@@ -4,6 +4,10 @@ class OPTIMIZE_UNIT
 
 inherit
 	COMPARABLE
+		undefine
+			is_equal
+		end;
+	ANY
 
 creation
 	make

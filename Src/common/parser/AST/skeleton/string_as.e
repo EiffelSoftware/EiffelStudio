@@ -4,7 +4,10 @@ class STRING_AS
 
 inherit
 
-	COMPARABLE;
+	COMPARABLE
+		undefine
+			is_equal
+		end;
 	ATOMIC_AS
 		redefine
 			type_check, byte_node, value_i, format

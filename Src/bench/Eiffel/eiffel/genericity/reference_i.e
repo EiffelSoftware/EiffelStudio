@@ -3,6 +3,8 @@ class REFERENCE_I
 inherit
 
 	TYPE_I
+		rename
+			same_type as general_same_type
 		redefine
 			is_reference,
 			same_as
@@ -13,7 +15,10 @@ inherit
 		redefine
 			is_pointer
 		end;
-	SHARED_C_LEVEL;
+	SHARED_C_LEVEL
+		rename
+			same_type as general_same_type
+		end
 
 feature
 

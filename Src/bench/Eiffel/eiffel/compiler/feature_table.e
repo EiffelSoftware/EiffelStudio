@@ -8,40 +8,57 @@ inherit
 
 	IDABLE
 		rename
+			same_type as general_same_type,
 			id as feat_tbl_id,
 			set_id as set_feat_tbl_id
 		undefine
 			copy, is_equal
 		end;
 	EXTEND_TABLE [FEATURE_I, STRING]
+		rename
+			same_type as general_same_type
 		export {CLASS_C}
 			pos_for_iter
 		end
 	SHARED_WORKBENCH
+		rename
+			same_type as general_same_type
 		undefine
 			copy, is_equal
 		end;
 	SHARED_TABLE
+		rename
+			same_type as general_same_type
 		undefine
 			copy, is_equal
 		end;
 	SHARED_ERROR_HANDLER
+		rename
+			same_type as general_same_type
 		undefine
 			copy, is_equal
 		end;
 	SHARED_BODY_ID
+		rename
+			same_type as general_same_type
 		undefine
 			copy, is_equal
 		end
 	SH_DEBUG
+		rename
+			same_type as general_same_type
 		undefine
 			copy, is_equal
 		end
 	SHARED_ARRAY_BYTE
+		rename
+			same_type as general_same_type
 		undefine
 			copy, is_equal
 		end
 	SHARED_SERVER
+		rename
+			same_type as general_same_type
 		undefine
 			copy, is_equal
 		end

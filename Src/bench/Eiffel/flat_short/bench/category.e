@@ -2,7 +2,10 @@ class CATEGORY
 
 inherit
 	
-	COMPARABLE;
+	COMPARABLE
+		undefine
+			is_equal
+		end;
 	SPECIAL_AST
 
 creation

@@ -10,6 +10,9 @@ inherit
 	SHARED_RESCUE_STATUS;
 	SYSTEM_CONSTANTS;
 	COMPARABLE
+		undefine
+			is_equal
+		end
 
 creation
 

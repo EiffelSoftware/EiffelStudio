@@ -4,7 +4,10 @@ deferred class POLY_UNIT
 
 inherit
 
-	COMPARABLE;
+	COMPARABLE
+		undefine
+			is_equal
+		end;
 	SHARED_WORKBENCH;
 
 feature

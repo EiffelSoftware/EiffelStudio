@@ -6,6 +6,9 @@ class FEATURE_CLAUSE_EXPORT
 inherit
 
 	COMPARABLE
+		undefine
+			is_equal
+		end;
 	SPECIAL_AST
 
 creation

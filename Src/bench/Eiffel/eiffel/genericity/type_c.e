@@ -3,6 +3,9 @@ deferred class TYPE_C
 inherit
 
 	HASHABLE
+		rename
+			same_type as general_same_type
+		end
 
 feature
 

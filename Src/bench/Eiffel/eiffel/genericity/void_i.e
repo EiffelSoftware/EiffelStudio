@@ -3,6 +3,8 @@ class VOID_I
 inherit
 
 	TYPE_I
+		rename
+			same_type as general_same_type
 		redefine
 			is_void, same_as
 		end;
@@ -10,7 +12,10 @@ inherit
 		undefine
 			is_void, is_bit
 		end;
-	SHARED_C_LEVEL;
+	SHARED_C_LEVEL
+		rename
+			same_type as general_same_type
+		end
 
 feature
 

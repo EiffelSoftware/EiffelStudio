@@ -3,8 +3,15 @@ deferred class INTERVAL_B
 inherit
 
 	BYTE_NODE;
-	COMPARABLE;
-	BASIC_ROUTINES;
+	COMPARABLE
+		undefine
+			is_equal
+		end;
+	BASIC_ROUTINES
+		rename
+			min as basic_min,
+			max as basic_max
+		end;
 	
 feature 
 

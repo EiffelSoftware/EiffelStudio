@@ -6,6 +6,10 @@ class AST_POSITION
 inherit
 
 	COMPARABLE
+		undefine
+			is_equal
+		end;
+	ANY
 
 creation
 

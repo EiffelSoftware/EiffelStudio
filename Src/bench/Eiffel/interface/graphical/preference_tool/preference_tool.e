@@ -93,7 +93,7 @@ feature {NONE} -- Initialization
 			-- Create and initialize `button_form'.
 		do
 			!! button_form.make (t_Empty, global_form);
-			button_form.set_fraction_base (3);
+			button_form.set_fraction_base (19);
 
 			!! ok_button.make (b_Ok, button_form);
 			ok_button.add_activate_action (ok_cmd, Void);
@@ -110,24 +110,35 @@ feature {NONE} -- Initialization
 			button_form.attach_bottom (exit_button, 0);
 
 			button_form.attach_left (ok_button, 0);
-			button_form.attach_right_position (ok_button, 1);
-			button_form.attach_left_position (apply_button, 1);
-			button_form.attach_right_position (apply_button, 2);
-			button_form.attach_left_position (exit_button, 2);
+			button_form.attach_right_position (ok_button, 5);
+			button_form.attach_left_position (apply_button, 7);
+			button_form.attach_right_position (apply_button, 12);
+			button_form.attach_left_position (exit_button, 14);
 			button_form.attach_right (exit_button, 0)
 		end;
 
 	attach_forms is
 			-- Attache the forms to `global_form' and to each other.
+		local
+			sep: THREE_D_SEPARATOR
 		do
 			global_form.attach_top (menu_form, 0);
 			global_form.attach_left (menu_form, 0);
 			global_form.attach_right (menu_form, 0);
 
-			global_form.attach_top_widget (menu_form, category_button_rc, 0);
+			!! sep.make ("", global_form);
+			global_form.attach_top_widget (menu_form, sep, 0);
+			global_form.attach_top_widget (sep, category_button_rc, 1);
 			global_form.attach_left (category_button_rc, 0);
+			global_form.attach_left (sep, 0);
+			global_form.attach_right (sep, 0);
 
-			global_form.attach_top_widget (category_button_rc, category_form, 5);
+			!! sep.make ("", global_form);
+			global_form.attach_top_widget (category_button_rc, sep, 1);
+			global_form.attach_top_widget (sep, category_form, 1);
+			global_form.attach_left (sep, 0);
+			global_form.attach_right (sep, 0);
+
 			global_form.attach_left (category_form, 0);
 			global_form.attach_right (category_form, 0);
 			global_form.attach_bottom_widget (button_form, category_form, 5);

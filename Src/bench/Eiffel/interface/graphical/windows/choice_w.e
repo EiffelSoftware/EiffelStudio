@@ -39,7 +39,7 @@ feature -- Initialization
 			fd_make ("Choice Window", a_parent);
 			set_title ("Choice Window");
 			!! list.make (new_name, Current);
-			!! exit_b.make ("Exit", Current);
+			!! exit_b.make (Interface_names.b_Cancel, Current);
 			set_fraction_base (3);
 			attach_top (list, 0);
 			attach_left (list, 0);

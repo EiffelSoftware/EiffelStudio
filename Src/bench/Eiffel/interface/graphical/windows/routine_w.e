@@ -500,12 +500,9 @@ feature -- Graphical Interface
 				build_menus
 			end;
 
-			create_toolbar_parent (global_form);
+			create_toolbar (global_form);
 
-			!! edit_bar.make (Interface_names.n_Command_bar_name, toolbar_parent);
 			build_bar;
-			!! sep.make (Interface_names.t_Empty, toolbar_parent);
-			!! format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent);
 			build_format_bar;
 			build_command_bar;
 			if not is_in_project_tool then

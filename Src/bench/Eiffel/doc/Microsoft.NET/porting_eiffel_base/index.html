@@ -29,7 +29,25 @@ clone, copy, equal, is_equal, default....</p>
 <h2>Basic types</h2>
 
 <p>After updating ANY, all basic types have to be updated so that they inherit 
-from the _REF counterpart.</p>
+from the _REF counterpart. This means that _REF corresponds to the boxed version 
+of the basic types. If the language change to introduce `reference' was done, we 
+would not have to do so, but unfortunately the specification is not done.</p>
+
+<h3>Characters</h3>
+
+<p>A quite big issue in porting EiffelBase to .NET is the recent introduction in 
+normal Eiffel of the new basic type WIDE_CHARACTER. The issue is that .NET only 
+supports wide character, it does not have an abstract data type for ASCII 
+character. Since the addition is quite recent, we decided not to include 
+WIDE_CHARACTER and its WIDE_CHARACTER_REF counterpart in the kernel cluster of 
+EiffelBase.NET.</p>
+
+<h3>BITs</h3>
+
+<p>Even though the class BIT_REF has been included in EiffelBase.NET, it does 
+not have any special code handling from the compiler.</p>
+
+<h2>SPECIAL</h2>
 
 </body>
 

@@ -1,31 +1,21 @@
 indexing
-
-	description:
-		"A data packet for sending and receiving on a socket.";
-
+	description: "A data packet for sending and receiving on a socket.";
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
 class
-
 	PACKET
 
 inherit
-	TO_SPECIAL [CHARACTER] 
-		rename
-			area as data,
-			make_area as make_data,
-			valid_index as valid_position,
-			item as element,
-			put as put_element
+	ANY
 		redefine
 			copy, is_equal
 		end
-
-creation
-
-	make
+		
+create
+	make,
+	make_from_memory_stream
 
 feature -- Initialization
 
@@ -34,15 +24,55 @@ feature -- Initialization
 		require
 			valid_size: size >= 0
 		do
-			make_data (size)
+			create data.make (size)
 		end
 
+	make_from_memory_stream (a_data: like data) is
+			-- Create packet from `a_data' memory stream.
+		require
+			a_data_not_void: a_data /= Void
+		do
+			data := a_data
+		ensure
+			data_set: data = a_data
+		end
+		
 feature -- Measurement
 
 	count: INTEGER is
 			-- Number of elements in packet
 		do
 			Result := data.count
+		end
+
+feature -- Access
+
+	element, infix "@" (i: INTEGER): CHARACTER is
+			-- Entry at index `i'.
+		require
+			valid_position: valid_position (i)			
+		do
+			Result := data.item (i).ascii_char
+		end
+		
+feature -- Status report
+
+	valid_position (i: INTEGER): BOOLEAN is
+			-- Is `i' within the bounds of Current?
+		do
+			Result := (0 <= i) and then (i < count)
+		end
+		
+feature -- Element change
+
+	put_element (v: CHARACTER; i: INTEGER) is
+			-- Replace `i'-th entry by `v'.
+		require
+			valid_position: valid_position (i)
+		do
+			data.put (v.code.to_integer_8, i)
+		ensure
+			inserted: element (i) = v
 		end
 
 feature -- Comparison
@@ -59,15 +89,18 @@ feature -- Duplication
 			-- Reinitialize by copying characters of `other'.
 			-- (This is also used by `clone')
 		do
-			Precursor {TO_SPECIAL} (other)
 			make (other.count)
 			data.copy (other.data)
 		ensure then
 			size_valid: count = other.count
 		end
 
-invariant
+feature -- Storage
 
+	data: MEMORY_STREAM
+			-- Place holder
+			
+invariant
 	data_not_equal_void: data /= Void
 
 end -- class PACKET

@@ -348,34 +348,21 @@ feature -- Output
 			socket_exists: exists;
 			opened_for_write: is_open_write
 		local
-			send_packet: PACKET;
 			amount_sent: INTEGER;
-			ext_data: ANY;
+			ext_data: POINTER;
 			return_val: INTEGER;
 			count: INTEGER
 		do
-			ext_data := a_packet.data;
 			from 
+				ext_data := a_packet.data.area;
+				count := a_packet.count
 			until
-				a_packet.count = amount_sent
+				count = amount_sent
 			loop
-				return_val := c_write (descriptor, $ext_data, a_packet.count - amount_sent);
+				return_val := c_write (descriptor, ext_data, count - amount_sent);
 				if return_val > 0 then
+					ext_data := ext_data + return_val
 					amount_sent := amount_sent + return_val;
-					if amount_sent < a_packet.count then
-						if send_packet = Void then
-							create send_packet.make (a_packet.count - amount_sent);
-							ext_data := send_packet.data
-						end;
-						from
-							count := 0
-						until
-							count = (a_packet.count - amount_sent)
-						loop
-							send_packet.put_element (a_packet.element (amount_sent + count), count);
-							count := count + 1
-						end
-					end
 				end
 			end
 		end;
@@ -387,34 +374,21 @@ feature -- Output
 			opened_for_write: is_open_write;
 			valid_packet: a_packet /= Void
 		local
-			send_packet: PACKET;
 			amount_sent: INTEGER;
-			ext_data: ANY;
+			ext_data: POINTER
 			return_val: INTEGER;
 			count: INTEGER
 		do
-			ext_data := a_packet.data;
 			from 
+				ext_data := a_packet.data.area;
+				count := a_packet.count
 			until
-				a_packet.count = amount_sent 
+				count = amount_sent 
 			loop
-				return_val := c_send (descriptor, $ext_data, a_packet.count - amount_sent, flags);
+				return_val := c_send (descriptor, ext_data, count - amount_sent, flags);
 				if return_val > 0 then
 					amount_sent := amount_sent + return_val;
-					if amount_sent < a_packet.count then
-						if send_packet = Void then
-							create send_packet.make (a_packet.count - amount_sent)
-							ext_data := send_packet.data
-						end;
-						from
-							count := 0
-						until
-							count = (a_packet.count - amount_sent)
-						loop
-							send_packet.put_element (a_packet.element (amount_sent + count), count)
-							count := count + 1
-						end
-					end
+					ext_data := ext_data + return_val
 				end
 			end
 		end;
@@ -568,36 +542,34 @@ feature -- Input
 			socket_exists: exists;
 			opened_for_read: is_open_read
 		local
-			recv_packet: PACKET;
+			l_data, recv_packet: MEMORY_STREAM;
 			amount_read: INTEGER;
 			return_val: INTEGER;
-			ext_data: ANY;
-			count: INTEGER
+			ext_data: POINTER;
 		do
-			create Result.make (size);
-			create recv_packet.make (size);
-			ext_data := recv_packet.data;
+			ext_data := ext_data.memory_alloc (size)
 			from
 				amount_read := 0
 			until
 				amount_read = size 
 			loop
-				return_val := c_read_stream (descriptor, size - amount_read, $ext_data);
+				return_val := c_read_stream (descriptor, size - amount_read, ext_data);
 				if return_val > 0 then
-					from
-						count := 0
-					until
-						count = return_val
-					loop
-						Result.put_element (recv_packet.element (count), count + amount_read);
-						count := count + 1
-					end;
+					create recv_packet.make_from_pointer (ext_data, return_val)
+					if l_data = Void then
+						l_data := clone (recv_packet)
+					else
+						l_data.append (recv_packet)
+					end
 					amount_read := amount_read + return_val
 				else
 					if amount_read = 0 then
-						Result := Void
+						l_data := Void
 					end
 				end
+			end
+			if l_data /= Void then
+				create Result.make_from_memory_stream (l_data)
 			end
 		end;
 
@@ -607,15 +579,12 @@ feature -- Input
 			socket_exists: exists;
 			opened_for_read: is_open_read
 		local
-			recv_packet: PACKET;
+			l_data, recv_packet: MEMORY_STREAM
 			amount_read: INTEGER;
 			return_val: INTEGER;
-			ext_data: ANY;
-			count: INTEGER
+			ext_data: POINTER;
 		do
-			create Result.make (size);
-			create recv_packet.make (size);
-			ext_data := recv_packet.data;
+			ext_data := ext_data.memory_alloc (size)
 			from
 				amount_read := 0
 			until
@@ -623,20 +592,21 @@ feature -- Input
 			loop
 				return_val := c_receive (descriptor, $ext_data, size - amount_read, flags);
 				if return_val > 0 then
-					from
-						count := 0
-					until
-						count = return_val
-					loop
-						Result.put_element (recv_packet.element (count), count + amount_read);
-						count := count + 1
-					end;
+					create recv_packet.make_from_pointer (ext_data, return_val)
+					if l_data = Void then
+						l_data := clone (recv_packet)
+					else
+						l_data.append (recv_packet)
+					end
 					amount_read := amount_read + return_val
 				else
 					if amount_read = 0 then
-						Result := Void
+						l_data := Void
 					end
 				end
+			end
+			if l_data /= Void then
+				create Result.make_from_memory_stream (l_data)
 			end
 		end;
 

@@ -41,7 +41,7 @@ create
 feature -- Element change
 
 	set_item_x_position (a_widget: like item; an_x: INTEGER) is
-			-- Set `a_widget.x_position' to `an_x'.
+			-- Assign `an_x' to `a_widget.x_position'.
 		require
 			not_destroyed: not is_destroyed
 			has_a_widget: has (a_widget)
@@ -49,11 +49,11 @@ feature -- Element change
 		do
 			implementation.set_item_x_position (a_widget, an_x)
 		ensure
-			a_widget_x_position_assigned: a_widget.x_position = an_x
+			an_item_x_position_assigned: a_widget.x_position = an_x
 		end
 
 	set_item_y_position (a_widget: like item; a_y: INTEGER) is
-			-- Set `a_widget.y_position' to `a_y'.
+			-- Assign `a_y' to `a_widget.y_position'.
 		require
 			not_destroyed: not is_destroyed
 			has_a_widget: has (a_widget)
@@ -61,12 +61,12 @@ feature -- Element change
 		do
 			implementation.set_item_y_position (a_widget, a_y)
 		ensure
-			a_widget_y_position_assigned: a_widget.y_position = a_y
+			an_item_y_position_assigned: a_widget.y_position = a_y
 		end
 
 	set_item_position (a_widget: like item; an_x, a_y: INTEGER) is
-			-- Set `a_widget.x_position' to `an_x'.
-			-- Set `a_widget.y_position' to `a_y'.
+			-- Assign `an_x' to `a_widget.x_position'.
+			-- Assign `a_y' to `a_widget.y_position'.
 		require
 			not_destroyed: not is_destroyed
 			has_a_widget: has (a_widget)
@@ -75,12 +75,12 @@ feature -- Element change
 		do
 			implementation.set_item_position (a_widget, an_x, a_y)
 		ensure
-			a_widget_x_position_assigned: a_widget.x_position = an_x
-			a_widget_y_position_assigned: a_widget.y_position = a_y
+			an_item_x_position_assigned: a_widget.x_position = an_x
+			an_item_y_position_assigned: a_widget.y_position = a_y
 		end
 
 	set_item_width (a_widget: like item; a_width: INTEGER) is
-			-- Set `a_widget.width' to `a_width'.
+			-- Assign `a_width' to `a_widget.width'.
 		require
 			not_destroyed: not is_destroyed
 			has_a_widget: has (a_widget)
@@ -88,10 +88,12 @@ feature -- Element change
 				a_width >= a_widget.minimum_width
 		do
 			implementation.set_item_width (a_widget, a_width)
+		ensure
+			an_item_width_assigned: a_widget.width = a_width
 		end
 
 	set_item_height (a_widget: like item; a_height: INTEGER) is
-			-- Set `a_widget.height' to `a_height'.
+			-- Assign `a_height' to `a_widget.height'.
 		require
 			not_destroyed: not is_destroyed
 			has_a_widget: has (a_widget)
@@ -99,11 +101,13 @@ feature -- Element change
 				a_height >= a_widget.minimum_height
 		do
 			implementation.set_item_height (a_widget, a_height)
+		ensure
+			an_item_height_assigned: a_widget.height = a_height
 		end
 
 	set_item_size (a_widget: like item; a_width, a_height: INTEGER) is
-			-- Set `a_widget.width' to `a_width'.
-			-- Set `a_widget.height' to `a_height'.
+			-- Assign `_width' to `a_widget.width'.
+			-- Assign `a_height' to `a_widget.height'.
 		require
 			not_destroyed: not is_destroyed
 			has_a_widget: has (a_widget)
@@ -113,6 +117,9 @@ feature -- Element change
 				a_height >= a_widget.minimum_height
 		do
 			implementation.set_item_size (a_widget, a_width, a_height)
+		ensure
+			an_item_width_assigned: a_widget.width = a_width
+			an_item_height_assigned: a_widget.height = a_height
 		end
 
 feature {EV_ANY_I} -- Implementation

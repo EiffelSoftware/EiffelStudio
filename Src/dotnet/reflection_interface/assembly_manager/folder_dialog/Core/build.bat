@@ -1,3 +1,7 @@
 midl folder_browser.idl
-tlbimp folder_browser.tlb
-csc /t:library /out:ISE.AssemblyManager.FolderDialog.dll FolderDialog.cs /r:FolderBrowser.dll
+sn -k Key1
+tlbimp /keyfile:Key1 folder_browser.tlb
+
+csc /t:module FolderDialog.cs /r:FolderBrowser.dll
+sn -k Key2
+al folderdialog.netmodule /keyfile:Key2 /out:FolderDialog.dll

@@ -10,8 +10,6 @@ class
 create
 	default_create
 
-feature -- Initialization
-
 feature -- Access
 
 	name: STRING
@@ -19,6 +17,9 @@ feature -- Access
 
 	data: STRING
 		-- Data associated with `Name'.
+		
+	is_constant: BOOLEAN
+		-- Does `Current' represent a constant?
 
 	element: XM_ELEMENT
 		-- Element associated with `Name'.
@@ -29,18 +30,32 @@ feature -- Status setting
 			-- Assign `a_name' to `name'.
 		do
 			name := a_name
+		ensure
+			name_set: name = a_name
 		end
 
 	set_data (a_data: STRING) is
 			-- Assign `a_data' to `data'.
 		do
 			data := a_data
+		ensure
+			data_set: data = a_data
 		end
 
 	set_element (an_element: XM_ELEMENT) is
 			-- Assign `an_element' to `element'.
 		do
 			element := an_element
+		ensure
+			element_set: element = an_element
+		end
+		
+	set_as_constant is
+			-- Ensure `Current' represents a constant.
+		do
+			is_constant := True
+		ensure
+			constant_set: is_constant
 		end
 
 end -- class ELEMENT_INFORMATION

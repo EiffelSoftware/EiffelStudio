@@ -9,7 +9,7 @@ class
 	EV_ACCELERATOR_LIST
 
 inherit
-	ACTIVE_LIST [EV_ACCELERATOR]
+	EV_ACTIVE_LIST [EV_ACCELERATOR]
 		undefine
 			default_create
 		end
@@ -20,8 +20,8 @@ feature -- Initialization
 			-- Standard creation procedure.
 		do
 			Precursor
-			add_actions.extend (agent enable_item_parented (?))
-			remove_actions.extend (agent disable_item_parented (?))
+			internal_add_actions.extend (agent enable_item_parented (?))
+			internal_remove_actions.extend (agent disable_item_parented (?))
 		end
 
 feature {NONE} -- Status Setting

@@ -24,7 +24,7 @@ feature -- Access
 feature -- Status report
 
 	selected: BOOLEAN is
-			-- Is at least one item selected ?
+			-- Is one item selected ?
 		require
 			exists: not destroyed
 		deferred

@@ -169,24 +169,42 @@ feature -- Status setting
 
 	align_text_left is
 			-- Set button `text' to be left aligned.
+		local
+			new_style: INTEGER
 		do
-			set_style (default_style + Bs_left)
+			new_style := clear_flag (style, Bs_center)
+			new_style := clear_flag (new_style, Bs_right)
+			new_style := set_flag (new_style, Bs_left)
+			set_style (new_style)
+
 			text_alignment := Text_alignment_left
 			invalidate
 		end
 
 	align_text_right is
 			-- Set button `text' to be right aligned.
+		local
+			new_style: INTEGER
 		do
-			set_style(default_style + Bs_right)
+			new_style := clear_flag (style, Bs_center)
+			new_style := clear_flag (new_style, Bs_left)
+			new_style := set_flag (new_style, Bs_right)
+			set_style (new_style)
+
 			text_alignment := Text_alignment_right
 			invalidate
 		end
 
 	align_text_center is
 			-- Set button `text' to be centered.
+		local
+			new_style: INTEGER
 		do
-			set_style(default_style + Bs_center)
+			new_style := clear_flag (style, Bs_right)
+			new_style := clear_flag (new_style, Bs_left)
+			new_style := set_flag (new_style, Bs_center)
+			set_style (new_style)
+
 			text_alignment := Text_alignment_center
 			invalidate
 		end
@@ -195,46 +213,26 @@ feature -- Status setting
 			-- Set the style of the button corresponding
 			-- to the default push button.
 		local
-			align_style: INTEGER
+			new_style: INTEGER
 		do
-			inspect text_alignment
-			when Text_alignment_left then
-				align_style := Bs_left
-			when Text_alignment_right then
-				align_style := Bs_right
-			when Text_alignment_center then
-				align_style := Bs_center
-			end
+			new_style := set_flag (style, Bs_defpushbutton)
+			set_style (new_style)
 
-			set_style (align_style + Default_style + Bs_defpushbutton)
 			is_default_push_button := True
-
-			if parent_imp /= Void then
-				invalidate
-			end
+			invalidate
 		end
 
 	disable_default_push_button is
 			-- Remove the style of the button corresponding
 			-- to the default push button.
 		local
-			align_style: INTEGER
+			new_style: INTEGER
 		do
-			inspect text_alignment
-			when Text_alignment_left then
-				align_style := Bs_left
-			when Text_alignment_right then
-				align_style := Bs_right
-			when Text_alignment_center then
-				align_style := Bs_center
-			end
+			new_style := clear_flag (style, Bs_defpushbutton)
+			set_style (new_style)
 
-			set_style (align_style + Default_style)
 			is_default_push_button := False
-
-			if parent_imp /= Void then
-				invalidate
-			end
+			invalidate
 		end
 
 feature -- Element change
@@ -374,6 +372,11 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.49  2000/05/03 00:35:39  pichery
+--| Changed the implementation of some
+--| `set_style' features. The new implementation
+--| is safer.
+--|
 --| Revision 1.48  2000/05/01 17:04:44  manus
 --| Use of `wel_parent' directly without the hack of renaming into `wel_window_parent'.
 --|

@@ -13,7 +13,8 @@ inherit
 		redefine			
 			on_start_tag,
 			on_end_tag,
-			on_content
+			on_content,
+			clear
 		end
 
 	CODE_XML_READER_CONSTANTS
@@ -23,7 +24,7 @@ inherit
 	XML_ROUTINES
 
 create
-	make
+	make, make_filter
 
 feature -- Creation
 
@@ -33,8 +34,15 @@ feature -- Creation
 			file_not_void: a_file /= Void
 			file_exists: a_file.exists
 		do
-			make_filter
+			clear
 			file := a_file			
+		end
+
+	clear is
+		do
+			Precursor {DOCUMENT_FILTER}
+			conc_content := Void
+			file := Void
 		end
 
 feature -- Tag
@@ -49,7 +57,6 @@ feature -- Tag
 			if not root_done then
 					-- Determine type of code we are reading
 				root_done := True
-				create output_string.make_empty
 			else
 				process_tag (a_local_part, True)
 			end			

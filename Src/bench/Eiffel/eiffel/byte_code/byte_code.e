@@ -23,14 +23,30 @@ inherit
 
 	ASSERT_TYPE
 
+	SHARED_NAMES_HEAP
+		export
+			{NONE} all
+		end
+
 feature 
 
 	real_body_id: INTEGER
 			-- Real body id of the feature to which current byte code belongs
 
-	feature_name: STRING
-			-- Name of the feature to which the current byte code tree
-			-- belongs to
+	feature_name_id: INTEGER
+			-- Name ID of the feature to which the current byte code tree
+			-- belongs to.
+			
+	feature_name: STRING is
+			-- Final name of the feature
+		require
+			feature_name_id_set: feature_name_id > 0
+		do
+			Result := Names_heap.item (feature_name_id)
+		ensure
+			Result_not_void: Result /= Void
+			Result_not_empty: not Result.is_empty
+		end
 
 	rout_id: INTEGER
 			-- Routine id of the feature
@@ -99,10 +115,14 @@ feature
 			-- Do nothing
 		end
 
-	set_feature_name (s: STRING) is
-			-- Assign `s' to `feature_name'.
+	set_feature_name_id (id: INTEGER) is
+			-- Assign `id' to `feature_name_id'.
+		require
+			valid_id: id > 0
 		do
-			feature_name := s
+			feature_name_id := id
+		ensure
+			feature_name_id_set: feature_name_id = id
 		end
 
 	set_real_body_id (i: INTEGER) is
@@ -508,7 +528,7 @@ feature -- IL code generation
 			class_c := context.class_type.associated_class
 			local_list := context.local_list
 			local_list.wipe_out
-			feat := Context.associated_class.feature_table.item (feature_name)
+			feat := Context.associated_class.feature_table.item_id (feature_name_id)
 			inh_assert := Context.inherited_assertion
 			inh_assert.init
 			Context.set_origin_has_precondition (True)
@@ -758,7 +778,7 @@ feature -- Byte code generation
 		do
 			local_list := context.local_list
 			local_list.wipe_out
-			feat := Context.associated_class.feature_table.item (feature_name)
+			feat := Context.associated_class.feature_table.item_id (feature_name_id)
 			inh_assert := Context.inherited_assertion
 			inh_assert.init
 			Context.set_origin_has_precondition (True)

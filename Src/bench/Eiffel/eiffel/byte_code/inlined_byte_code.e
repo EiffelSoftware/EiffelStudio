@@ -13,7 +13,7 @@ feature
 		do
 			arguments := std.arguments
 			body_index := std.body_index
-			feature_name := std.feature_name
+			feature_name_id := std.feature_name_id
 			locals := std.locals
 			old_expressions := std.old_expressions
 			pattern_id := std.pattern_id

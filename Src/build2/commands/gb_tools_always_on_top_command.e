@@ -25,8 +25,6 @@ inherit
 		export
 			{NONE} all
 		end
-		
-	GB_SHARED_HISTORY
 
 create
 	make
@@ -59,8 +57,7 @@ feature -- Execution
 	execute is
 			-- Execute command.
 		local
-			root_object: GB_OBJECT
-			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+			counter: INTEGER
 		do
 			reverse_is_selected
 			if is_selected then
@@ -68,10 +65,14 @@ feature -- Execution
 			else
 				system_status.disable_tools_always_on_top
 			end
-			update_tool (display_window)
-			update_tool (builder_window)
-			update_tool (history.dialog)
-			update_tool (component_viewer)
+			from
+				counter := 1
+			until
+				counter > All_floating_tools.count
+			loop
+				update_tool (All_floating_tools @ counter)
+				counter := counter + 1
+			end
 		end		
 				
 	update_tool (tool_window: EV_DIALOG) is

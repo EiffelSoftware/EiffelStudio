@@ -28,17 +28,15 @@ feature -- Basic Operation
 			f: RAW_FILE
 		do
 			if not retried then
+				deserialized_object := Void
 				last_error := No_error
 				last_error_context := Void
 				binary_path := path.twin
 				binary_path.remove_tail (4)
 				binary_path.append (".bin")
-				if feature {SYSTEM_FILE}.exists (binary_path.to_cil) then
+				if feature {SYSTEM_FILE}.exists (binary_path) then
 					create f.make_open_read (binary_path)
-					if 
-						f.exists and then 
-						f.Support_storable
-					then
+					if f.exists and then f.support_storable then
 						deserialized_object := f.retrieved
 					end
 					f.close

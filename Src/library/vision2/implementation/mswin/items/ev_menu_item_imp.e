@@ -18,16 +18,10 @@ inherit
 		end
 
 	EV_ITEM_IMP
-		export {EV_MENU_ITEM_CONTAINER_IMP}
-			id,
-			set_id
-		redefine
-			parent
-		end
-
-	EV_PIXMAPABLE_IMP
 		undefine
 			pixmap_size_ok
+		redefine
+			parent
 		end
 
 creation
@@ -58,26 +52,6 @@ feature -- Access
 
 	text: STRING
 			-- Text of the current item
-
-feature {EV_MENU_ITEM_CONTAINER_IMP} -- Access
-	
-	parent: EV_MENU_ITEM_CONTAINER_IMP
-			-- The vision parent of the current item.
-
-	parent_menu: WEL_MENU is
-			-- Wel menu that contains the current item.
-		local
-			item: EV_MENU_ITEM_IMP
-		do
-			Result ?= parent
-			if Result = Void then
-				item ?= parent
-				Result := item.submenu
-			end
-		end
-
-	submenu: WEL_MENU
-			-- Wel menu used when the item is a sub-menu.
 
 feature -- Status report
 
@@ -141,6 +115,26 @@ feature {EV_MENU_ITEM_CONTAINER_IMP} -- Implementation
 			{EV_MENU_ITEM_CONTAINER_IMP} Precursor (an_item)
 		end
 
+feature {EV_MENU_ITEM_CONTAINER_IMP} -- Access
+	
+	parent: EV_MENU_ITEM_CONTAINER_IMP
+			-- The vision parent of the current item.
+
+	parent_menu: WEL_MENU is
+			-- Wel menu that contains the current item.
+		local
+			item: EV_MENU_ITEM_IMP
+		do
+			Result ?= parent
+			if Result = Void then
+				item ?= parent
+				Result := item.submenu
+			end
+		end
+
+	submenu: WEL_MENU
+			-- Wel menu used when the item is a sub-menu.
+
 feature {EV_CONTAINER_IMP} -- Implementation
 
 	on_activate is
@@ -149,9 +143,6 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			execute_command (Cmd_item_activate, Void)
 			parent_container.on_selection_changed (Current)
 		end
-
-	wel_window: WEL_WINDOW
-			-- XX need to be removed and recreate.
 
 end -- class EV_MENU_ITEM_IMP
 

@@ -1,3 +1,3 @@
-Type error: creation instruction applies to target of generic type.
-What to do: make sure that type of creation target is not a formal
-  generic parameter of the enclosing class. 
+Error: Creation instruction applies to target of generic type
+       which does not have a creation constraint.
+What to do: make sure that the constraint has a creation part.

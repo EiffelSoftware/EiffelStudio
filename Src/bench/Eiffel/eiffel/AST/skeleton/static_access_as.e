@@ -166,9 +166,6 @@ feature -- Type check, byte code and dead code removal
 
 	new_call_access (a_feature: FEATURE_I; a_type_i: TYPE_I): ACCESS_B is
 			-- Create new node for associated AST node.
-		require
-			a_feature_not_void: a_feature /= Void
-			a_type_i_not_void: a_type_i /= Void
 		local
 			ext: EXTERNAL_B
 			cl_type_i: CL_TYPE_I
@@ -179,8 +176,6 @@ feature -- Type check, byte code and dead code removal
 			if ext /= Void then
 				ext.enable_static_call
 			end
-		ensure
-			result_not_void: Result /= Void
 		end
 		
 feature -- Conveniences

@@ -56,9 +56,9 @@ feature -- Access
 			-- Full file name of the class
 		do
 			create Result.make_from_string (assembly.path)
-			result.extend (classes_directory)
+			Result.extend (classes_directory)
 			Result.set_file_name (base_name)
-		ensure
+		ensure then
 			file_name_not_void: Result /= Void
 		end
 

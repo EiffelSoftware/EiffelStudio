@@ -18,7 +18,7 @@ inherit
 			make as wel_make,
 			main_window as wel_main_window
 		redefine
-			idle_action
+			idle_action, run
 		end
 
 	MAIN_WINDOW_MANAGER_WINDOWS
@@ -98,7 +98,9 @@ feature
 	iterate is
 			-- Loop the application.
 		do
-			run
+			if application_main_window.exists then
+				run
+			end
 		end;
 
 	name: STRING is "MS_WINDOWS"

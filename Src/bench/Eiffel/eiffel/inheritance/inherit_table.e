@@ -162,7 +162,7 @@ feature
 			pass3_control: PASS3_CONTROL;
 			depend_unit: DEPEND_UNIT;
 			old_creators, new_creators: HASH_TABLE [EXPORT_I, STRING];
-			old_convert_to, old_convert_from: DS_HASH_TABLE [INTEGER, CL_TYPE_A]
+			old_convert_to, old_convert_from: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A]
 			creation_name: STRING;
 			equiv_tables: BOOLEAN;
 		do
@@ -186,14 +186,18 @@ feature
 
 				-- Look for the interpreted class information left
 				-- by the first pass if the class has syntactically changed.
-			class_info := Class_info_server.item (class_id);
-			parents := class_info.parents;
+			class_info := Class_info_server.item (class_id)
+
+				-- Extract `computed_parents' from current class an reset
+				-- it as it is not needed that we store this information
+				-- since it is only used in `pass2'.
+			parents := a_class.computed_parents
 
 				-- Compute attribute `feature_table'.
 			compute_feature_table;
 
 				-- Check generic parents of the class
-			a_class.check_parents;
+			a_class.check_parents
 
 				-- Merge parents table: the topological sort and the
 				-- sort of list `changed_classes' of the system ensures
@@ -399,8 +403,6 @@ end;
 								pass2_control, assert_prop_list);
 			assert_prop_list := Void;
 
-				-- Process creation feature of `a_class'.
-			a_class.process_creation_feature (resulting_table);
 				-- Process paterns of origin features
 			process_pattern (resulting_table);
 
@@ -1050,8 +1052,6 @@ end;
 						-- changed features of class `a_class'.
 					changed_features.extend (feature_name_id);
 				else
-						-- Keep the type
-					Result.set_type (feature_i.type);
 						-- Update `read_info' in BODY_SERVER
 					body_table.force (read_info, body_index);
 					Tmp_body_server.reactivate (body_index)
@@ -1166,7 +1166,7 @@ end;
 		end;
 
 	update_convert_clause (
-			a_old_convert, a_new_convert: DS_HASH_TABLE [INTEGER, CL_TYPE_A];
+			a_old_convert, a_new_convert: DS_HASH_TABLE [INTEGER, NAMED_TYPE_A];
 			a_resulting_table: FEATURE_TABLE)
 		is
 			-- Take into account incremental changes in `convert' clauses.

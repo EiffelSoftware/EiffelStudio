@@ -354,7 +354,7 @@ feature {NONE} -- Implementation
 			index := a_string.index_of ('%N', 1)
 				-- Doing the convertion this way will stop us from walking down a string
 				-- twice when there is no %N nor %R%N in the string.
-			if index > 0 and then (index = 1 or else a_string @ index - 1 /= '%R') then
+			if index > 0 and then (index = 1 or else a_string.item (index - 1) /= '%R') then
 				a_string.replace_substring_all ("%N", "%R%N")
 			end
 		end

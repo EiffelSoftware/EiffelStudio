@@ -73,6 +73,7 @@ feature -- Initialization
 			Application.set_after_stopped_command (app_stopped_cmd);
 			set_default_position;
 			realize;
+			focus_label.initialize_focusables;
 			init_text_window;
 			set_composite_attributes (Current);
 		end;

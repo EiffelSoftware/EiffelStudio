@@ -1,6 +1,6 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Objects that alows to remove anchors from classes."
+	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -10,24 +10,41 @@ inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
 			new_toolbar_item,
-			description
+			description,
+			initialize
 		end
+		
+	EB_CONTEXT_DIAGRAM_TOGGLE_COMMAND
 
 create
 	make
+	
+feature {NONE} -- Initialization
+		
+	initialize is
+			-- Initialize default values.
+		do
+			create accelerator.make_with_key_combination (
+				create {EV_KEY}.make_with_code (key_constants.key_l),
+				True, False, False)
+			accelerator.actions.extend (agent execute)
+		end
 
 feature -- Basic operations
 
 	execute is
 			-- Perform operation.
 		do
-			if tool.world.is_labels_shown and then not current_button.is_selected then
-				tool.world.hide_labels
-			elseif not tool.world.is_labels_shown and then current_button.is_selected then
-				tool.world.show_labels
+			if is_sensitive then
+				if tool.world.is_labels_shown then
+					tool.world.hide_labels
+					disable_select
+				else
+					tool.world.show_labels
+					enable_select
+				end
+				tool.projector.full_project
 			end
-			current_button.set_tooltip (tooltip)
-			tool.projector.full_project
 		end
 
 	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is

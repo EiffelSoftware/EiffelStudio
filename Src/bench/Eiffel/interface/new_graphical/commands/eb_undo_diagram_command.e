@@ -8,16 +8,32 @@ class
 
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
+		redefine
+			initialize
+		end
 
 create
 	make
+	
+feature {NONE} -- Initialization
+		
+	initialize is
+			-- Initialize default values.
+		do
+			create accelerator.make_with_key_combination (
+				create {EV_KEY}.make_with_code (key_constants.key_z),
+				True, False, False)
+			accelerator.actions.extend (agent execute)
+		end
 
 feature -- Basic operations
 
 	execute is
 			-- Perform operation.
 		do
-			history.undo
+			if is_sensitive then
+				history.undo
+			end
 		end
 
 feature {EB_DEVELOPMENT_WINDOW} -- Accelerator action

@@ -10,11 +10,23 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			menu_name
+			menu_name,
+			initialize
 		end
 
 create
 	make
+	
+feature {NONE} -- Initialization
+		
+	initialize is
+			-- Initialize default values.
+		do
+			create accelerator.make_with_key_combination (
+				create {EV_KEY}.make_with_code (key_constants.key_r),
+				True, False, True)
+			accelerator.actions.extend (agent execute)
+		end
 
 feature -- Basic operations
 
@@ -23,9 +35,11 @@ feature -- Basic operations
 		local
 			dial: EV_CONFIRMATION_DIALOG
 		do
-			dial := confirmation
-			dial.disable_user_resize
-			dial.show_modal_to_window (tool.development_window.window)
+			if is_sensitive then
+				dial := confirmation
+				dial.disable_user_resize
+				dial.show_modal_to_window (tool.development_window.window)
+			end
 		end
 
 feature {NONE} -- Implementation

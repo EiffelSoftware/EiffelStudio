@@ -9,7 +9,8 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			menu_name
+			menu_name,
+			initialize
 		end
 		
 	EB_FILE_DIALOG_CONSTANTS
@@ -19,6 +20,17 @@ inherit
 
 create
 	make
+	
+feature {NONE} -- Initialization
+		
+	initialize is
+			-- Initialize default values.
+		do
+			create accelerator.make_with_key_combination (
+				create {EV_KEY}.make_with_code (key_constants.key_s),
+				True, False, True)
+			accelerator.actions.extend (agent execute)
+		end
 
 feature -- Basic operations
 
@@ -35,46 +47,48 @@ feature -- Basic operations
 			env: EXECUTION_ENVIRONMENT
 			current_directory: STRING
 		do
-			if error = 0 then
-				create dial
-				set_dialog_filters_and_add_all (dial, <<Png_files_filter>>)
-				
-				if tool.class_graph /= Void then
-					dial.set_file_name (tool.class_graph.center_class.name + ".png")
-				else
-					dial.set_file_name (tool.cluster_graph.center_cluster.name + ".png")
-				end
-				create env
-				current_directory := env.current_working_directory
-				dial.show_modal_to_window (tool.development_window.window)
-					-- EA: added this to prevent working directory changes by file dialog.
-					-- Will maybe be fixed in Vision 2
-				env.change_working_directory (current_directory)
-				if not dial.file_name.is_empty then
-					error := 1
-					p := tool.projector.world_as_pixmap (5)
-					if p /= Void then 
-						create png_file.make_from_string (dial.file_name)
-						create test_file.make_open_write (png_file)
-						if test_file.is_writable then
-							test_file.close
-							create png_format
-							tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Wait_cursor)
-							p.save_to_named_file (png_format, png_file)
-							tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
-							error := 0
-						else
-							test_file.close
+			if is_sensitive then
+				if error = 0 then
+					create dial
+					set_dialog_filters_and_add_all (dial, <<Png_files_filter>>)
+					
+					if tool.class_graph /= Void then
+						dial.set_file_name (tool.class_graph.center_class.name + ".png")
+					else
+						dial.set_file_name (tool.cluster_graph.center_cluster.name + ".png")
+					end
+					create env
+					current_directory := env.current_working_directory
+					dial.show_modal_to_window (tool.development_window.window)
+						-- EA: added this to prevent working directory changes by file dialog.
+						-- Will maybe be fixed in Vision 2
+					env.change_working_directory (current_directory)
+					if not dial.file_name.is_empty then
+						error := 1
+						p := tool.projector.world_as_pixmap (5)
+						if p /= Void then 
+							create png_file.make_from_string (dial.file_name)
+							create test_file.make_open_write (png_file)
+							if test_file.is_writable then
+								test_file.close
+								create png_format
+								tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Wait_cursor)
+								p.save_to_named_file (png_format, png_file)
+								tool.development_window.window.set_pointer_style (tool.Default_pixmaps.Standard_cursor)
+								error := 0
+							else
+								test_file.close
+							end
 						end
 					end
+				else
+					if error = 1 then
+						create wd.make_with_text (Warning_messages.w_cannot_save_png_file (dial.file_name))
+					elseif error = 2 then
+						create wd.make_with_text (Warning_messages.W_cannot_generate_png)
+					end
+					wd.show_modal_to_window (tool.development_window.window)
 				end
-			else
-				if error = 1 then
-					create wd.make_with_text (Warning_messages.w_cannot_save_png_file (dial.file_name))
-				elseif error = 2 then
-					create wd.make_with_text (Warning_messages.W_cannot_generate_png)
-				end
-				wd.show_modal_to_window (tool.development_window.window)
 			end
 		rescue
 			if tool.projector.is_world_too_large then

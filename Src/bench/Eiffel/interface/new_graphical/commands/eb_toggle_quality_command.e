@@ -1,6 +1,6 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Objects that is a command to toggle between high and low quality diagrams."
+	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -11,11 +11,25 @@ inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
 			new_toolbar_item,
-			description
+			description,
+			initialize
 		end
+		
+	EB_CONTEXT_DIAGRAM_TOGGLE_COMMAND
 
 create
 	make
+
+feature {NONE} -- Initialization
+		
+	initialize is
+			-- Initialize default values.
+		do
+			create accelerator.make_with_key_combination (
+				create {EV_KEY}.make_with_code (key_constants.key_q),
+				True, False, False)
+			accelerator.actions.extend (agent execute)
+		end
 
 feature -- Basic operations
 
@@ -25,23 +39,26 @@ feature -- Basic operations
 			l_world: EIFFEL_WORLD
 			l_projector: EIFFEL_PROJECTOR
 		do
-			l_world := tool.world
-			l_projector := tool.projector
-			if l_world.is_high_quality then
-				l_world.disable_high_quality
-				tool.history.register_named_undoable (
-					interface_names.t_diagram_disable_high_quality,
-					[<<agent l_world.disable_high_quality, agent l_projector.full_project, agent toggle_button>>],
-					[<<agent l_world.enable_high_quality, agent l_projector.full_project, agent toggle_button>>])
-			else
-				l_world.enable_high_quality
-				tool.history.register_named_undoable (
-					interface_names.t_diagram_enable_high_quality,
-					[<<agent l_world.enable_high_quality, agent l_projector.full_project, agent toggle_button, agent do_nothing>>],
-					[<<agent l_world.disable_high_quality, agent l_projector.full_project, agent toggle_button>>])
+			if is_sensitive then
+				l_world := tool.world
+				l_projector := tool.projector
+				if l_world.is_high_quality then
+					l_world.disable_high_quality
+					disable_select
+					tool.history.register_named_undoable (
+						interface_names.t_diagram_disable_high_quality,
+						[<<agent l_world.disable_high_quality, agent l_projector.full_project, agent disable_select>>],
+						[<<agent l_world.enable_high_quality, agent l_projector.full_project, agent enable_select>>])
+				else
+					l_world.enable_high_quality
+					enable_select
+					tool.history.register_named_undoable (
+						interface_names.t_diagram_enable_high_quality,
+						[<<agent l_world.enable_high_quality, agent l_projector.full_project, agent enable_select>>],
+						[<<agent l_world.disable_high_quality, agent l_projector.full_project, agent disable_select>>])
+				end
+				l_projector.full_project
 			end
-			current_button.set_tooltip (tooltip)
-			l_projector.full_project
 		end
 
 	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOGGLE_TOOL_BAR_BUTTON is
@@ -89,15 +106,6 @@ feature {NONE} -- Implementation
 	name: STRING is "High_quality"
 			-- Name of the command. Used to store the command in the
 			-- preferences.
-			
-	toggle_button is
-			-- Toggle button without execution.
-		do
-			current_button.select_actions.block
-			current_button.toggle
-			current_button.set_tooltip (tooltip)
-			current_button.select_actions.resume
-		end
 
 feature {EB_CONTEXT_EDITOR} -- Implementation
 

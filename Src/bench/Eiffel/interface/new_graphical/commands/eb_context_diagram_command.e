@@ -46,6 +46,19 @@ feature -- Access
 		do
 			Result := tooltip
 		end
+	
+	shortcut_string: STRING is
+			-- String discribing shortcut combination for `Current'.
+		do
+			if accelerator = Void then
+				Result := ""
+			else
+				Result := " (" + accelerator.out + ")"
+			end
+		ensure
+			Result_exists: Result /= Void
+		end
+		
 
 end -- class EB_CONTEXT_DIAGRAM_COMMAND
 

@@ -9,11 +9,23 @@ class
 inherit
 	EB_CONTEXT_DIAGRAM_COMMAND
 		redefine
-			new_toolbar_item
+			new_toolbar_item,
+			initialize
 		end
 
 create
 	make
+	
+feature {NONE} -- Initialization
+		
+	initialize is
+			-- Initialize default values.
+		do
+			create accelerator.make_with_key_combination (
+				create {EV_KEY}.make_with_code (key_constants.key_f),
+				True, False, False)
+			accelerator.actions.extend (agent execute)
+		end
 
 feature -- Basic operations
 
@@ -22,11 +34,13 @@ feature -- Basic operations
 		local
 			cluster_fig: EIFFEL_CLUSTER_FIGURE
 		do
-			check
-				only_aviable_in_cluster_graph: tool.cluster_graph /= Void
+			if is_sensitive then
+				check
+					only_aviable_in_cluster_graph: tool.cluster_graph /= Void
+				end
+				cluster_fig ?= tool.cluster_view.figure_from_model (tool.cluster_graph.center_cluster)
+				include_all_classes (cluster_fig)
 			end
-			cluster_fig ?= tool.cluster_view.figure_from_model (tool.cluster_graph.center_cluster)
-			include_all_classes (cluster_fig)
 		end
 
 	execute_with_cluster_stone (a_stone: CLUSTER_STONE) is

@@ -40,7 +40,7 @@ feature {NONE} -- GTK C functions for tooltips
 
 	gtk_tooltips_set_tip (tooltips, widget, txt, tip_private: POINTER) is
 		external
-			"C (GtkTooltips *, GtkWidget *, const gchar *txt, const gchar *tip_private) | <gtk/gtk.h>"
+			"C (GtkTooltips *, GtkWidget *, const gchar *, const gchar *) | <gtk/gtk.h>"
 		end
 
 	gtk_tooltips_enable (tooltips: POINTER) is
@@ -395,6 +395,10 @@ feature {NONE} -- GTK C functions for menu
 
 	gtk_menu_prepend (menu: POINTER; menu_item: POINTER) is
 		external "C | <gtk/gtk.h>"
+		end		
+
+	c_gtk_menu_remove_all_items (menu: POINTER) is
+		external "C (GtkMenu *) | %"gtk_eiffel.h%""
 		end		
 
 feature {NONE} -- GTK C functions for menu item

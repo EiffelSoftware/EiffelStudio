@@ -48,7 +48,10 @@ feature -- Basic Operation
 			locals_grouped.select_actions.extend (agent update_locals_grouped)
 			
 			create attributes_local.make_with_text ("Generate attributes as locals")
-			if project_settings.attributes_local then
+			check
+				False
+			end
+			if project_settings.attributes_local.is_equal (True_string) then
 				attributes_local.enable_select
 			end
 			attributes_local.select_actions.extend (agent update_attributes_local)
@@ -111,10 +114,11 @@ feature {NONE} -- Implementation
 	update_attributes_local is
 			-- Update project_settings based on state of `attributes_local'.
 		do
+				--| FIXME really handle all three states that now exist. Julian
 			if attributes_local.is_selected then
-				project_settings.enable_attributes_local
+				project_settings.set_attributes_locality (True_string)
 			else
-				project_settings.disable_attributes_local
+				project_settings.set_attributes_locality (Optimal_string)
 			end
 		end
 		

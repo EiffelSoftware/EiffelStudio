@@ -256,18 +256,16 @@ feature -- Element change
 			wel_icon: WEL_ICON
 			a_wel_bitmap: WEL_BITMAP
 		do
-			if pix /= private_pixmap then
-				Precursor {EV_PIXMAPABLE_IMP} (pix)
-				wel_icon := pixmap_imp.icon
-				if wel_icon /= Void then
-					set_icon (pixmap_imp.icon)
-				else
-					a_wel_bitmap := pixmap_imp.get_bitmap
-					set_bitmap (a_wel_bitmap)
-					a_wel_bitmap.decrement_reference
-				end
-				set_default_minimum_size
+			Precursor {EV_PIXMAPABLE_IMP} (pix)
+			wel_icon := pixmap_imp.icon
+			if wel_icon /= Void then
+				set_icon (pixmap_imp.icon)
+			else
+				a_wel_bitmap := pixmap_imp.get_bitmap
+				set_bitmap (a_wel_bitmap)
+				a_wel_bitmap.decrement_reference
 			end
+			set_default_minimum_size
 		end
 
 	remove_pixmap is

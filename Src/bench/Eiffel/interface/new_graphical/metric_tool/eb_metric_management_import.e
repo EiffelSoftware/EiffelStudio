@@ -295,73 +295,82 @@ feature -- Importation
 			list_item_data: CELL2 [EB_METRIC, XML_ELEMENT]
 			cell: CELL2 [EB_METRIC, XML_ELEMENT]
 			x_pos, y_pos: INTEGER
+			retried: BOOLEAN
+			error_dialog: EV_WARNING_DIALOG
 		do
-			x_pos := interface.tool.development_window.window.x_position + 200
-			y_pos := interface.tool.development_window.window.y_position + 40
-			if file_name /= Void and then not file_name.is_empty then
-				create file.make (file_name)
-				if file.exists and then not file.is_directory then
-					if importable_metric_list = Void then
-						create importable_metric_list
-						importable_metric_list.select_actions.extend (~enable_add)
+			if not retried then
+				x_pos := interface.tool.development_window.window.x_position + 200
+				y_pos := interface.tool.development_window.window.y_position + 40
+				if file_name /= Void and then not file_name.is_empty then
+					create file.make (file_name)
+					if file.exists and then not file.is_directory then
+						if importable_metric_list = Void then
+							create importable_metric_list
+							importable_metric_list.select_actions.extend (~enable_add)
+						end
+						importable_metric_list.wipe_out
+						file.open_read
+						create imported_metrics.make
+						create imported_xml_elements.make
+						interface.tool.file_handler.retrieve_metric (file, imported_metrics, imported_xml_elements)
+						from
+							imported_metrics.start
+							imported_xml_elements.start
+						until
+							imported_metrics.after and
+							imported_xml_elements.after
+						loop
+							create list_item.make_with_text (imported_metrics.item.name)
+							create list_item_data.make (imported_metrics.item, imported_xml_elements.item)
+							list_item.set_data (list_item_data)
+							list_item.pointer_double_press_actions.extend (~double_click_add)
+							list_item.set_pebble (list_item)
+							list_item.drop_actions.extend (agent interface.drop_action_in_list (?, list_item))
+							importable_metric_list.extend (list_item)
+							imported_metrics.forth
+							imported_xml_elements.forth
+						end
+						file.close
+						if current_metric_list = Void then
+							create current_metric_list
+							current_metric_list.select_actions.extend (~enable_remove)
+						end
+						current_metric_list.wipe_out
+						create non_removable_metrics.make
+						from
+							interface.ev_list.start
+						until
+							interface.ev_list.after
+						loop
+							create list_item.make_with_text (interface.ev_list.item.text)
+							list_item.set_data (interface.ev_list.item.data)
+							list_item.pointer_double_press_actions.extend (~double_click_remove)
+							list_item.set_pebble (list_item)
+							list_item.drop_actions.extend (agent interface.drop_action_in_list (?, list_item))
+							current_metric_list.extend (list_item)
+							cell ?= interface.ev_list.item.data
+							non_removable_metrics.extend (cell.item1)
+							interface.ev_list.forth
+						end
+						importable_metric_list.drop_actions.extend (agent interface.move_to_list (?, importable_metric_list))
+						current_metric_list.drop_actions.extend (agent interface.move_to_list (?, current_metric_list))
+						if import_metrics_dialog = Void then
+							build_import_metrics_dialog
+						end
+						import_metrics_dialog.set_position (x_pos, y_pos)
+						formula_field_import.remove_text
+						unit_field_import.remove_text
+						add_button.disable_sensitive
+						remove_button.disable_sensitive
+						import_metrics_dialog.show_modal_to_window (parent_dialog)
 					end
-					importable_metric_list.wipe_out
-					file.open_read_write
-					create imported_metrics.make
-					create imported_xml_elements.make
-					interface.tool.file_handler.retrieve_metric (file, imported_metrics, imported_xml_elements)
-					from
-						imported_metrics.start
-						imported_xml_elements.start
-					until
-						imported_metrics.after and
-						imported_xml_elements.after
-					loop
-						create list_item.make_with_text (imported_metrics.item.name)
-						create list_item_data.make (imported_metrics.item, imported_xml_elements.item)
-						list_item.set_data (list_item_data)
-						list_item.pointer_double_press_actions.extend (~double_click_add)
-						list_item.set_pebble (list_item)
-						list_item.drop_actions.extend (agent interface.drop_action_in_list (?, list_item))
-						importable_metric_list.extend (list_item)
-						imported_metrics.forth
-						imported_xml_elements.forth
-					end
-					file.close
-					if current_metric_list = Void then
-						create current_metric_list
-						current_metric_list.select_actions.extend (~enable_remove)
-					end
-					current_metric_list.wipe_out
-					create non_removable_metrics.make
-					from
-						interface.ev_list.start
-					until
-						interface.ev_list.after
-					loop
-						create list_item.make_with_text (interface.ev_list.item.text)
-						list_item.set_data (interface.ev_list.item.data)
-						list_item.pointer_double_press_actions.extend (~double_click_remove)
-						list_item.set_pebble (list_item)
-						list_item.drop_actions.extend (agent interface.drop_action_in_list (?, list_item))
-						current_metric_list.extend (list_item)
-						cell ?= interface.ev_list.item.data
-						non_removable_metrics.extend (cell.item1)
-						interface.ev_list.forth
-					end
-					importable_metric_list.drop_actions.extend (agent interface.move_to_list (?, importable_metric_list))
-					current_metric_list.drop_actions.extend (agent interface.move_to_list (?, current_metric_list))
-					if import_metrics_dialog = Void then
-						build_import_metrics_dialog
-					end
-					import_metrics_dialog.set_position (x_pos, y_pos)
-					formula_field_import.remove_text
-					unit_field_import.remove_text
-					add_button.disable_sensitive
-					remove_button.disable_sensitive
-					import_metrics_dialog.show_modal_to_window (parent_dialog)
 				end
 			end
+		rescue
+			retried := True
+			create error_dialog.make_with_text ("Unable to read file:%N" + interface.tool.file_manager.metric_file_name)
+			error_dialog.show_modal_to_window (interface.management_dialog)
+			retry
 		end
 		
 	update_wished_list is

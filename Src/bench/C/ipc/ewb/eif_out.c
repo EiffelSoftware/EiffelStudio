@@ -171,19 +171,6 @@ EIF_REFERENCE c_tread ()
 	return e_str;
 }
 
-public void send_simple_request(code)
-long code;		/* Request type */
-{
-	/* Send the simple request specified by code */
-
-	Request rqst;
-	STREAM *sp = stream_by_fd[EWBOUT];
-
-	Request_Clean (rqst);
-	rqst.rq_type = code;
-	send_packet(writefd(sp), &rqst);
-}
-
 public int async_shell(cmd)
 char *cmd;
 {

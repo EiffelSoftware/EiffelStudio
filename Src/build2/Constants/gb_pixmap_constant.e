@@ -132,6 +132,7 @@ feature -- Access
 			Result.set_pixmap (small_pixmap)
 			Result.extend (name)			
 			Result.extend (type)
+			Result.extend (" ")
 			Result.set_data (Current)
 		end
 

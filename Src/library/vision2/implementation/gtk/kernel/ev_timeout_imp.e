@@ -62,7 +62,7 @@ feature -- Access
 			interval := an_interval
 		end
 
-feature {EV_ANY_IMP, EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
+feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES, EV_APPLICATION_IMP} -- Implementation
 
 	set_interval_kamikaze (an_interval: INTEGER) is
 			-- Assign `an_interval' in milliseconds to `interval'.

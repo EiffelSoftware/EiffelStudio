@@ -98,7 +98,9 @@ feature -- Basic Operations
 						until
 							i = l_count
 						loop
-							add_referenced_assembly (l_assemblies.item (i))
+							if not has_file (l_assemblies.item (i)) then
+								add_file (l_assemblies.item (i))
+							end
 							i := i + 1
 						end
 					else
@@ -157,7 +159,7 @@ feature {NONE} -- Implementation
 			until
 				Startup_assemblies.after
 			loop
-				add_referenced_assembly (Startup_assemblies.item)
+				add_file (Startup_assemblies.item)
 				Startup_assemblies.forth
 			end
 		end

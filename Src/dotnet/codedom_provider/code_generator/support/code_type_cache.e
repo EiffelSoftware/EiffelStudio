@@ -20,6 +20,8 @@ inherit
 		end
 
 	CODE_REFERENCED_ASSEMBLIES
+		rename
+			reset as reset_assemblies
 		export
 			{NONE} all
 		end

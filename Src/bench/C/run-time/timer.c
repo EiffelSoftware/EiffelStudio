@@ -10,6 +10,10 @@
 	Time-related routines
 */
 
+/*
+doc:<file name="timer.c" header="eif_timer.h" version="$Id$" summary="Time related routines">
+*/
+
 #include "eif_portable.h"
 #include "eif_confmagic.h"
 #include "eif_timer.h"
@@ -128,3 +132,6 @@ rt_public void getcputime(double *usertime, double *systime)
 
 #endif
 
+/*
+doc:</file>
+*/

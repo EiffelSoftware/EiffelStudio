@@ -1,8 +1,5 @@
 /*
-	eif_type_id.c : Computation of dynamic type corresponding to
-					a written type in a C string.
-
-	$Id$
+doc:<file name="eif_type_id.c" version="$Id$" summary="Computation of dynamic type corresponding to a written type in a C string">
 */
 
 #include "eif_portable.h"
@@ -292,3 +289,7 @@ rt_private int16 gen_type_id (int32 cecil_id)
 		default:	return (int16) ((uint32) cecil_id & SK_DTYPE);
 	}
 }
+
+/*
+doc:</file>
+*/

@@ -18,6 +18,10 @@
 	properly, but the root object is not created yet.
 */
 
+/*
+doc:<file name="umain.c" header="eif_umain.h" version="$Id$" summary="User's main entry point">
+*/
+
 #include "eif_umain.h"
 
 void umain(int argc, char **argv, char **envp)
@@ -25,3 +29,6 @@ void umain(int argc, char **argv, char **envp)
 	/* Empty by default, but may be overwritten by user */
 }
 
+/*
+doc:</file>
+*/

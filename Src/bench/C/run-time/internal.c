@@ -10,6 +10,10 @@
 	Routines to implement class INTERNAL
 */
 
+/*
+doc:<file name="internal.c" header="eif_internal.h" version="$Id$" summary="Externals for INTERNAL class">
+*/
+
 #include "eif_portable.h"
 #include "eif_internal.h"
 #include "eif_cecil.h"
@@ -284,3 +288,7 @@ rt_public void * ei_oref(long i, EIF_REFERENCE object)
 #endif
 	return o_ref;
 }
+
+/*
+doc:</file>
+*/

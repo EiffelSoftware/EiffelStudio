@@ -1,7 +1,8 @@
-/* 
-    eifrtvms.c - vms specific runtime tools.
-    $Id$
+/*
+doc:<file name="eifrtvms.c" version="$Id$" summary="VMS specific runtime tools">
+*/
 
+/* 
     This file contains VMS specific code. 
     It is used by the ebench daemon as well as eiffel applications.
     Some of this code used to live in lmalloc.c
@@ -255,3 +256,7 @@ main () {
 #endif	/* TEST */
 
 #endif /* EIF_VMS */
+
+/*
+doc:</file>
+*/

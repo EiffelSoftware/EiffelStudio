@@ -10,6 +10,10 @@
 	Pre-computes offsets in generated C code to avoid cpp indigestion.
 */
 
+/*
+doc:<file name="x2c.h" header="x2c.h" version="$Id$" summary="Convert .x file into compilable .c files">
+*/
+
 #include "eif_eiffel.h"
 #include "x2c.h"
 #ifdef EIF_WINDOWS
@@ -417,3 +421,6 @@ rt_private long padding (long int x, long int y) {
 	return remainder(x) % y;
 }
 
+/*
+doc:</file>
+*/

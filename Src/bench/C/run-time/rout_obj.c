@@ -1,5 +1,5 @@
 /*
-	Routine objects
+doc:<file name="rout_obj.c" header="eif_rout_obj.h" version="$Id$" summary="Routine objects">
 */
 
 #include "eif_portable.h"
@@ -374,3 +374,6 @@ rt_public void rout_obj_call_function_dynamic (EIF_INTEGER_32 body_id, EIF_ARG_U
 
 /*------------------------------------------------------------------*/
 
+/*
+doc:</file>
+*/

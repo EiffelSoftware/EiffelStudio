@@ -7,8 +7,10 @@
  #    #     #    #   #    ###    #    #
  #####      #    #    #   ###     ####
 
-	Externals for directory handling.
-	$Id$
+*/
+
+/*
+doc:<file name="dir.c" header="eif_dir.h" version="$Id$" summary="Externals for directory handling">
 */
 
 #include "eif_portable.h"
@@ -1008,3 +1010,7 @@ main()
 #endif	/* TEST */
 #endif	/* EIF_VMS_V6_ONLY */
 #endif /* EIF_VMS */
+
+/*
+doc:</file>
+*/

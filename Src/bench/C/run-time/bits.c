@@ -13,6 +13,10 @@
 	executable.
 */
 
+/*
+doc:<file name="bits.c" header="eif_bits.h" version="$Id$" summary="Primitives for manipulatin Eiffel bits">
+*/
+
 #include "eif_portable.h"
 #include "eif_garcol.h"
 #include "eif_malloc.h"
@@ -1064,3 +1068,7 @@ rt_public void main(void)
 }
 
 #endif
+
+/*
+doc:</file>
+*/

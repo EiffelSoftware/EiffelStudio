@@ -1,5 +1,5 @@
 /*
-	Externals for class  CONSOLE
+doc:<file name="console.c" header="eif_console.h" version="$Id$" summary="Externals for CONSOLE class">
 */
 
 #include "eif_portable.h"
@@ -184,3 +184,7 @@ rt_public void console_file_close (FILE *f)
 #endif
 	file_close (f);
 }
+
+/*
+doc:</file>
+*/

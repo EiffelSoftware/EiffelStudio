@@ -202,7 +202,7 @@ fff ()
 {
 if [ -d EIFGEN/F_code ]; then
 cd EIFGEN/F_code
-$INSTALL_DIR/studio/spec/$ISE_PLATFORM/bin/finish_freezing -silent >> $COMPILE_LOG
+$ISE_EIFFEL/studio/spec/$ISE_PLATFORM/bin/finish_freezing -silent >> $COMPILE_LOG
 cd ../..
 fi
 }

@@ -109,22 +109,15 @@ remtrace Borland files
 fullrf BCC55.tar.gz
 fullrf *.bat
 fullrf *.exe
+if [ ! -e $NEW_EIFFEL_SRC ]; then
+	md $NEW_EIFFEL_SRC
+fi
 TMP_EIFFEL_SRC=$EIFFEL_SRC
 EIFFEL_SRC=$NEW_EIFFEL_SRC
 
 remtrace Check out the documentation
 cd $INSTALL_DIR
 exprt -r $DEFAULT_CVS_TAG -d docs Delivery/newdocs
-remtrace Recompile abs2rel
-cd $EIFFEL_SRC
-exprt -r $DEFAULT_CVS_TAG -d abs2rel Src/tools/abs2rel
-cd abs2rel
-finalize abs2rel.ace
-fff
-cleanup_eiffel abs2rel
-
-remtrace Converting absolute path names in the documentation.
-abs2rel -root:$INSTALL_DIR/docs
 
 cd $INIT_DIR
 give_time_to organize the delivery and to start filling it
@@ -157,8 +150,6 @@ else
 	give_time_to copy executables from the old delivery
 fi
 
-cd $INSTALL_DIR
-exprt -r $DEFAULT_CVS_TAG -d docs Delivery/newdocs
 remtrace Recompile abs2rel
 cd $EIFFEL_SRC
 exprt -r $DEFAULT_CVS_TAG -d abs2rel Src/tools/abs2rel
@@ -166,6 +157,7 @@ cd abs2rel
 finalize abs2rel.ace
 fff
 cleanup_eiffel abs2rel
+
 remtrace Converting absolute path names in the documentation.
 abs2rel -root:$INSTALL_DIR/docs
 

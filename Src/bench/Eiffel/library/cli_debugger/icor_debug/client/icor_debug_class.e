@@ -37,7 +37,7 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_get_module (item, $p)
 			if p /= default_pointer then
-				create Result.make_by_pointer (p)
+				Result := Icor_objects_manager.icd_module (p)
 			end
 		ensure
 			success: last_call_success = 0

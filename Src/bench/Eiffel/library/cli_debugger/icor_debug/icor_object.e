@@ -24,6 +24,11 @@ inherit
 		redefine
 			out
 		end
+		
+	SHARED_ICOR_OBJECTS_MANAGER
+		redefine
+			out
+		end
 
 feature {ICOR_EXPORTER} -- Initialisation
 
@@ -35,12 +40,24 @@ feature {ICOR_EXPORTER} -- Initialisation
 				init_icor
 			end
 		end
-		
+
 	init_icor is
 			-- Initialize special field
 			-- to be redefined
 		do
 		end
+
+feature {ICOR_OBJECTS_MANAGER} -- Special feature for ICOR_OBJECTS_MANAGER
+	
+	update_item (p: POINTER) is
+		require
+			p_valid: p /= Default_pointer
+			item_previously_removed: p = Default_pointer
+		do
+			item := p
+		ensure
+			item_set: item = p
+		end		
 
 feature -- dispose
 

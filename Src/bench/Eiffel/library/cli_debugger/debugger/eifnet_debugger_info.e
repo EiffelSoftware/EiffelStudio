@@ -211,9 +211,6 @@ feature -- Current CallStack
 
 							l_frames.clean_on_dispose
 							l_il_code.clean_on_dispose
-							l_class.clean_on_dispose
-							l_module.clean_on_dispose
-							l_func.clean_on_dispose
 							l_code.clean_on_dispose
 							l_chain.clean_on_dispose
 							l_il_frame.clean_on_dispose
@@ -619,7 +616,7 @@ feature -- JIT info
 	reset_jit_info is
 			-- Reset JustInTime information.
 		local
-			l_mod: ICOR_DEBUG_MODULE
+			l_module: ICOR_DEBUG_MODULE
 		do
 				--| Threads
 			if not loaded_managed_threads.is_empty then
@@ -641,13 +638,12 @@ feature -- JIT info
 				until
 					loaded_modules.after
 				loop
-					l_mod := loaded_modules.item_for_iteration
+					l_module := loaded_modules.item_for_iteration
 					debug ("com_object")
-						io.error.put_string ("Release ICorDebugModule : " + l_mod.module_name 
-								+ " " + l_mod.item.out
+						io.error.put_string ("Release ICorDebugModule : " + l_module.module_name 
+								+ " " + l_module.item.out
 								+ "%N")
 					end
-					l_mod.clean_on_dispose
 					loaded_modules.forth
 				end
 				Loaded_modules.wipe_out

@@ -240,8 +240,6 @@ feature {NONE} -- Special childrens
 							l_tokens_cursor.forth
 						end
 					end
-					l_icd_module.clean_on_dispose
-					l_icd_class.clean_on_dispose
 				end
 				l_object_value.clean_on_dispose
 			end

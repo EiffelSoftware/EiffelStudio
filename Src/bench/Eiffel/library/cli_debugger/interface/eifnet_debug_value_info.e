@@ -74,13 +74,11 @@ feature -- Dispose
 				--| ICorDebugClass value
 			if once_value_icd_class /= Void then
 				once_value_icd_class.release
-				once_value_icd_class.clean_on_dispose
 				once_value_icd_class := Void
 			end
 				--| ICorDebugModule value
 			if once_value_icd_module /= Void then
 				once_value_icd_module.release
-				once_value_icd_module.clean_on_dispose
 				once_value_icd_module := Void
 			end
 

@@ -59,7 +59,6 @@ feature {NONE} -- Properties
 		do
 			Result := eifnet_debugger.current_stack_icor_debug_frame
 		end
-		
 
 feature -- Bridge
 
@@ -252,7 +251,6 @@ feature -- Access
 							Result := l_adv.dump_value
 						end
 					end
-					l_icd_function.clean_on_dispose
 				end
 			end
 			
@@ -466,7 +464,6 @@ feature {NONE} -- Debug purpose only
 					print (generating_type + " : Fct evaluation : " + mdi.get_method_props (icd_f.get_token) + "%N")
 					l_class := icd_f.get_class
 					print (generating_type + " :      on class : " + mdi.get_typedef_props (l_class.get_token) + "%N")
-					l_class.clean_on_dispose
 				end			
 			end
 		end

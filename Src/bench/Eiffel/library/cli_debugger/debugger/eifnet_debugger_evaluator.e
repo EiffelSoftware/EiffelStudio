@@ -675,54 +675,42 @@ feature {EIFNET_DEBUGGER} -- Private Implementation : ICor... once per session
 		do
 				--| Clean kept ICorDebugClass
 			if once_reference_integer_32_icd_class /= Void then
-				once_reference_integer_32_icd_class.clean_on_dispose
 				once_reference_integer_32_icd_class          := Void
 			end
 			if once_reference_real_icd_class /= Void then
-				once_reference_real_icd_class.clean_on_dispose
 				once_reference_real_icd_class                := Void
 			end
 			if once_reference_double_icd_class /= Void then
-				once_reference_double_icd_class.clean_on_dispose
 				once_reference_double_icd_class              := Void
 			end
 			if once_reference_boolean_icd_class /= Void then
-				once_reference_boolean_icd_class.clean_on_dispose
 				once_reference_boolean_icd_class             := Void
 			end
 			if once_reference_character_icd_class /= Void then
-				once_reference_character_icd_class.clean_on_dispose
 				once_reference_character_icd_class           := Void
 			end
 			if once_eiffel_string_icd_class /= Void then
-				once_eiffel_string_icd_class.clean_on_dispose
 				once_eiffel_string_icd_class                 := Void
 			end
 
 				--| Clean kept ICorDebugFunction
 			if once_reference_integer_32_set_item_method /= Void then
-				once_reference_integer_32_set_item_method.clean_on_dispose
 				once_reference_integer_32_set_item_method    := Void
 			end
 			if once_reference_real_set_item_method /= Void then
-				once_reference_real_set_item_method.clean_on_dispose
 				once_reference_real_set_item_method          := Void
 			end
 			if once_reference_double_set_item_method /= Void then
-				once_reference_double_set_item_method.clean_on_dispose
 				once_reference_double_set_item_method        := Void
 			end
 			if once_reference_boolean_set_item_method /= Void then
-				once_reference_boolean_set_item_method.clean_on_dispose
 				once_reference_boolean_set_item_method       := Void
 			end
 			if once_reference_character_set_item_method /= Void then
-				once_reference_character_set_item_method.clean_on_dispose
 				once_reference_character_set_item_method     := Void
 			end
 
 			if once_eiffel_string_make_from_cil_constructor /= Void then
-				once_eiffel_string_make_from_cil_constructor.clean_on_dispose
 				once_eiffel_string_make_from_cil_constructor := Void
 			end
 		end

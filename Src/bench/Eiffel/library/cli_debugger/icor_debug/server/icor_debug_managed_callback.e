@@ -687,7 +687,7 @@ feature -- Basic Operations
 				begin_of_managed_callback (Cst_managed_cb_load_module)
 				set_last_controller_by_pointer (icd_controller_interface (p_app_domain))
 				if p_module /= Default_pointer then
-					create l_module.make_by_pointer (p_module)
+					l_module := Icor_objects_manager.icd_module (p_module)
 					debug ("debugger_trace_callback_data")
 						io.error.put_string ("Loading module : " + l_module.get_name + "%N")
 					end

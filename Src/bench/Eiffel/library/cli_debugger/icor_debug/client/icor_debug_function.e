@@ -33,20 +33,19 @@ feature -- Addons
 			-- For debug purpose only
 		local
 			l_cl: ICOR_DEBUG_CLASS
-			l_mod: ICOR_DEBUG_MODULE
+			l_module: ICOR_DEBUG_MODULE
 		do
 			Result := "Function [Ox" + item.out + "] " 
 					+ " Token="+ get_token.out + "~0x" + get_token.to_hex_string
 			l_cl := get_class	
 			if l_cl /= Void then
 				Result.append (" ClassToken=" + l_cl.get_token.out + "~0x" + l_cl.get_token.to_hex_string)
-				l_cl.clean_on_dispose
+--				l_cl.clean_on_dispose
 			else
 				Result.append (" Class= not IL ")
 			end
-			l_mod := get_module
-			Result.append (" Module[" + l_mod.get_token.out + "]=" + l_mod.get_name + " .")
-			l_mod.clean_on_dispose
+			l_module := get_module
+			Result.append (" Module[" + l_module.get_token.out + "]=" + l_module.get_name + " .")
 		end
 		
 feature {ICOR_EXPORTER} -- Access
@@ -61,7 +60,7 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_get_module (item, $p)
 			if p /= default_pointer then
-				create Result.make_by_pointer (p)
+				Result := Icor_objects_manager.icd_module (p)
 			end
 		ensure
 			success: last_call_success = 0
@@ -73,7 +72,7 @@ feature {ICOR_EXPORTER} -- Access
 		do
 			last_call_success := cpp_get_class (item, $p)
 			if p /= default_pointer then
-				create Result.make_by_pointer (p)
+				Result := Icor_objects_manager.icd_class (p)
 			end
 		ensure
 			success: last_call_success = 0

@@ -243,7 +243,6 @@ feature {NONE} -- Children implementation
 							l_feature_table.forth
 						end
 					end
-					l_icd_class.clean_on_dispose
 				end
 			end
 			release_object_value
@@ -369,7 +368,6 @@ feature -- Once request
 					Result := debug_value_from_icdv (l_icd_dv_result)
 					Result.set_name (a_feat.name)
 				end
-				l_icd_class.clean_on_dispose
 			end
 
 			debug ("DEBUGGER_TRACE")

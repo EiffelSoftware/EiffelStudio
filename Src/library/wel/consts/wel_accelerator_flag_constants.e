@@ -14,7 +14,7 @@ feature -- Access
 			-- The ALT key must be held down when the accelerator
 			-- key is pressed.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"FALT"
 		end
@@ -23,7 +23,7 @@ feature -- Access
 			-- The CTRL key must be held down when the accelerator
 			-- key is pressed.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"FCONTROL"
 		end
@@ -35,7 +35,7 @@ feature -- Access
 			-- highlighted, if possible, when the accelerator is
 			-- used.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"FNOINVERT"
 		end
@@ -44,7 +44,7 @@ feature -- Access
 			-- The SHIFT key must be held down when the accelerator
 			-- key is pressed.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"FSHIFT"
 		end
@@ -54,7 +54,7 @@ feature -- Access
 			-- flag is not specified, key is assumed to specify an
 			-- ASCII character code.
 		external
-			"C [macro <wel.h>]"
+			"C [macro %"wel.h%"]"
 		alias
 			"FVIRTKEY"
 		end

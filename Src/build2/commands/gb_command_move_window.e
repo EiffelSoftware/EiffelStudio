@@ -51,10 +51,10 @@ feature {NONE} -- Initialization
 			original_id := object.id
 			dir ?= object.window_selector_item.parent
 			if dir /= Void then
-				original_directory := dir.text
+				original_directory := dir.path
 			end
 			if a_new_directory /= Void then
-				new_directory := a_new_directory.text
+				new_directory := a_new_directory.path
 			end
 		end
 
@@ -144,11 +144,11 @@ feature -- Basic Operation
 				current_text := "unnamed " + object.short_type
 			end
 			if original_directory = Void then
-				Result := current_text + " moved into directory %"" + new_directory + "%""
+				Result := current_text + " moved into directory %"" + new_directory.last + "%""
 			elseif new_directory = Void then
-				Result := current_text + " moved from directory %"" + original_directory + "%" to the root"
+				Result := current_text + " moved from directory %"" + original_directory.last + "%" to the root"
 			else
-				Result := current_text + " moved from %"" + original_directory + "%" to directory %"" + new_directory + "%""
+				Result := current_text + " moved from %"" + original_directory.last + "%" to directory %"" + new_directory.last + "%""
 			end
 		end
 	
@@ -157,12 +157,12 @@ feature {NONE} -- Implementation
 	original_id: INTEGER
 		-- id of object that was deleted.
 		
-	original_directory: STRING
+	original_directory: ARRAYED_LIST [STRING]
 		-- String representing the original directory holding the window
-		-- `Void' if root of project.
+		-- empty if root of project.
 	
-	new_directory: STRING
+	new_directory: ARRAYED_LIST [STRING]
 		-- String representing the directory into which the window was moved.
-		-- `Void' if root of project.
+		-- `empty' if root of project.
 
 end -- class GB_COMMAND_MOVE_WINDOW

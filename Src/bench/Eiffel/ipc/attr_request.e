@@ -53,12 +53,32 @@ feature -- Update
 								hex_to_integer (object_address));
 			dynamic_class_name := c_tread;
 			type_id := c_tread.to_integer + 1;
+debug ("DEBUG_RECV")
+	io.error.putstring ("Grepping object at address ");
+	io.error.putstring (object_address);
+	io.error.putstring (".%NDynamic class name is: ");
+	io.error.putstring (dynamic_class_name);
+	io.error.putstring (".%N And the type id is: ");
+	io.error.putint (type_id);
+	io.error.putstring (".%N")
+end;
 			if dynamic_class_name.is_equal ("SPECIAL") then
+debug ("DEBUG_RECV")
+	io.error.putstring ("Oh oooh. This is a special object...%N")
+end;
 				is_special := true;
 				!! attributes.make;
-				capacity := c_tread.to_integer;
-				max_capacity := capacity;
-				recv_attributes (attributes, Void)
+debug("DEBUG_RECV")
+	io.error.putstring ("Getting the attributes from the special object...%N");
+	io.error.putstring ("Capacity is ");
+	io.error.putint (capacity);
+	io.error.putstring (".%N");
+	io.error.putstring ("Calling `recv_attributes'.%N")
+end
+				recv_attributes (attributes, Void);
+debug ("DEBUG_RECV")
+	io.error.putstring ("And being back again in `send'.%N");
+end
 			else
 				is_special := false;
 				!SORTED_TWO_WAY_LIST [DEBUG_VALUE]! attributes.make;
@@ -95,9 +115,14 @@ feature {NONE} -- Implementation
 			spec_attr: SPECIAL_VALUE;
 			type_id: INTEGER;
 			class_type: CLASS_TYPE
-toto: STRING
+			toto: STRING
 		do
 			attr_nb := c_tread.to_integer;
+debug("DEBUG_RECV")
+	io.error.putstring ("Getting ");
+	io.error.putint (attr_nb);
+	io.error.putstring (" attributes...%N")
+end
 			from
 				i := 1
 			until
@@ -105,6 +130,13 @@ toto: STRING
 			loop
 				attr_name := c_tread;
 				type_name := c_tread;
+debug("DEBUG_RECV")
+	io.error.putstring ("Grepping attribute `");
+	io.error.putstring (attr_name);
+	io.error.putstring ("' of type ");
+	io.error.putstring (type_name);
+	io.error.putstring (".%N")
+end
 				if type_name.is_equal ("BOOLEAN") then
 					!BOOLEAN_VALUE! attr.make_attribute (attr_name, 
 							e_class, c_tread.to_boolean)
@@ -135,8 +167,19 @@ toto: STRING
 						recv_attributes (exp_attr.attributes, Void)
 					end;
 				elseif type_name.is_equal ("SPECIAL") then
+debug("DEBUG_RECV")
+	io.error.putstring ("Creating special object.%N")
+end
 					!! spec_attr.make_attribute (attr_name, e_class, 
 								c_tread, c_tread.to_integer);
+debug("DEBUG_RECV")
+	io.error.putstring ("Attribute name: ");
+	io.error.putstring (attr_name);
+	io.error.new_line;
+	io.error.putstring ("The eiffel class: ");
+	io.error.putstring (e_class.name_in_upper);
+	io.error.new_line
+end;
 					if sp_upper = -1 then
 						spec_attr.set_sp_bounds (sp_lower, spec_attr.capacity);
 					else
@@ -144,7 +187,13 @@ toto: STRING
 					end;
 					max_capacity := max_capacity.max (spec_attr.capacity);
 					attr := spec_attr;
-					recv_attributes (spec_attr.items, Void)
+debug("DEBUG_RECV")
+	io.error.putstring ("Receiving attributes in the special object.%N")
+end;
+					recv_attributes (spec_attr.items, Void);
+debug("DEBUG_RECV")
+	io.error.putstring ("Done receiving attributes in the special object.%N")
+end
 				else
 					if not type_name.is_equal ("Void") then	
 						type_id := c_tread.to_integer + 1;
@@ -152,6 +201,9 @@ toto: STRING
 					!REFERENCE_VALUE! attr.make_attribute (attr_name, e_class, 
 													type_id, c_tread)
 				end
+debug("DEBUG_RECV")
+	io.error.putstring ("Putting `attr' in `attr_list'.%N")
+end;
 				attr_list.extend (attr);
 				i := i + 1
 			end

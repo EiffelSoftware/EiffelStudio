@@ -72,6 +72,26 @@ feature -- Miscellaneous
 		deferred
 		end
 
+	display_selected(d_y: INTEGER; dc: WEL_DC) is
+			-- Display the current token on device context `dc'
+			-- at the coordinates (`position',`d_y') with its
+			-- selected state.
+		do
+				-- by default, we call the normal `display' feature.
+				-- Redefine the feature to apply a different style.
+			display(d_y, dc)
+		end
+
+	display_half_selected(d_y: INTEGER; start_selection, end_selection: INTEGER; dc: WEL_DC) is
+			-- Display the current token on device context `dc'
+			-- at the coordinates (`position',`d_y') with its
+			-- selected state from beggining to `pivot'
+		do
+				-- by default, we call the normal `display' feature.
+				-- Redefine the feature to apply a different style.
+			display(d_y, dc)
+		end
+
 	get_substring_width(n: INTEGER): INTEGER is
 			-- Conpute the width in pixels of the first
 			-- `n' characters of the current string.
@@ -89,6 +109,28 @@ feature -- Miscellaneous
 		ensure
 			Result_positive: Result > 0
 			Result_small_enough: Result <= length
+		end
+
+feature {EDITOR_TOKEN} -- Properties used to display the token
+
+	selected_text_color: WEL_COLOR_REF is
+		do
+			create Result.make_rgb(255,255,255)
+		end
+
+	selected_background_color: WEL_COLOR_REF is
+		do
+			create Result.make_rgb(0,0,128)
+		end
+
+	text_color: WEL_COLOR_REF is
+		do
+			create Result.make_rgb(0,0,0)
+		end
+
+	background_color: WEL_COLOR_REF is
+		do
+			create Result.make_rgb(255,255,255)
 		end
 
 invariant

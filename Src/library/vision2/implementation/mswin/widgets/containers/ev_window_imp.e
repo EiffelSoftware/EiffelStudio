@@ -91,8 +91,7 @@ inherit
 			on_color_control,
 			on_wm_vscroll,
 			on_wm_hscroll,
-			on_destroy,
-			on_size
+			on_destroy
 		redefine
 			default_ex_style,
 			default_style,
@@ -241,9 +240,6 @@ feature -- Access
 	menu_bar: EV_MENU_BAR
 			-- Horizontal bar at top of client area that contains menu's.
 
-	status_bar: EV_WIDGET
-			-- Status bar of the window.
-
 	notebook_parent: ARRAYED_LIST[EV_NOTEBOOK_IMP] is
 			-- By default all windows are not notebooks.
 			-- Redefined in EV_NOTEBOOK.
@@ -266,13 +262,13 @@ feature -- Status setting
 			-- Destroy the widget, but set the parent sensitive
 			-- in case it was set insensitive by the child.
 		local
-			app_i: EV_APPLICATION_IMP
+			app_i: EV_APPLICATION_I
 		do
 			if not on_wm_close_executed then
 				interface.close_actions.prune_all (destroy_agent)
 				interface.close_actions.call ([])
 			end
-			app_i ?= (create {EV_ENVIRONMENT}).application.implementation
+			app_i := (create {EV_ENVIRONMENT}).application.implementation
 			app_i.remove_root_window (interface)
 			if parent_imp /= Void then
 				parent_imp.disable_sensitive
@@ -280,7 +276,8 @@ feature -- Status setting
 
 				-- Remove parent/children relationship
 			interface.wipe_out
-				--| Instead of calling {WEL_COMPOSITE_WINDOW} Precursor,
+
+				--| Instead of calling Precursor {WEL_COMPOSITE_WINDOW},
 				--| We do about the same except we do not quit the application
 				--| if `Current' is application main window, since Vision2
 				--| Does not have such a concept.
@@ -380,8 +377,8 @@ feature -- Element change
 			-- change.
 		do
 			maximum_width := value
-			if value < width then
-				wel_resize (value, height)
+			if value < wel_width then
+				wel_resize (value, wel_height)
 			end
 		end
 
@@ -391,8 +388,8 @@ feature -- Element change
 			-- change.
 		do
 			maximum_height := value
-			if value < height then
-				wel_resize (width, value)
+			if value < wel_height then
+				wel_resize (wel_width, value)
 			end
 		end
 
@@ -681,8 +678,8 @@ feature {NONE} -- Implementation
 			-- change.
 		do
 			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (value)
-			if value > width then
-				wel_resize (value, height)
+			if value > wel_width then
+				wel_resize (value, wel_height)
 			end
 		end
 
@@ -692,8 +689,8 @@ feature {NONE} -- Implementation
 			-- change.
 		do
 			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (value)
-			if value > height then
-				wel_resize (width, value)
+			if value > wel_height then
+				wel_resize (wel_width, value)
 			end
 		end
 
@@ -703,8 +700,11 @@ feature {NONE} -- Implementation
 			-- the size change.
 		do
 			{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (mw, mh)
-			if mw > width or else mh > height then
-				wel_resize (mw.max (width), mh.max (height))
+			if mw > wel_width or else mh > wel_height then
+				wel_resize (
+					mw.max (wel_width), 
+					mh.max (wel_height)
+				)
 			end
 		end
 
@@ -713,17 +713,13 @@ feature {NONE} -- Implementation
 		local
 			mw: INTEGER
 		do
-			-- We calculate the values first
 			mw := 2 * window_frame_width
-
 			if item_imp /= Void then
 				mw := mw + item_imp.minimum_width
 			end
-
-			mw := mw.max (status_bar.minimum_width)
-
-			-- Finaly, we set the value
-			internal_set_minimum_width (mw)
+			mw := mw.max (interface.upper_bar.minimum_width).max (interface.lower_bar.minimum_width)
+			internal_set_minimum_width (
+				mw.max (interface.upper_bar.minimum_width).max (interface.lower_bar.minimum_width))
 		end
 
 	compute_minimum_height is
@@ -731,20 +727,19 @@ feature {NONE} -- Implementation
 		local
 			mh: INTEGER
 		do
-			-- We calculate the values first
 			mh := 2 * window_frame_height
-
-			if item_imp /= Void then
-				mh := mh + item_imp.minimum_height
-			end
 			if has_menu then
 				mh := mh + menu_bar_height
 			end
-			if status_bar /= Void then
-				mh := mh + status_bar.minimum_height
+			if not interface.upper_bar.empty then
+				mh := mh + interface.upper_bar.minimum_height + 1
 			end
-
-			-- Finaly, we set the value
+			if item_imp /= Void then
+				mh := mh + item_imp.minimum_height
+			end
+			if not interface.lower_bar.empty then
+				mh := mh + interface.lower_bar.minimum_height + 1
+			end
 			internal_set_minimum_height (mh)
 		end
 
@@ -753,24 +748,28 @@ feature {NONE} -- Implementation
 		local
 			mw, mh: INTEGER
 		do
-			-- We calculate the values first
 			mw := 2 * window_frame_width
-			mh := 2 * window_frame_height
-
 			if item_imp /= Void then
 				mw := mw + item_imp.minimum_width
-				mh := mh + item_imp.minimum_height
 			end
+			mw := mw.max (interface.upper_bar.minimum_width).max (interface.lower_bar.minimum_width)
+
+			mh := 2 * window_frame_height
 			if has_menu then
 				mh := mh + menu_bar_height
 			end
-			if status_bar /= Void then
-				mh := mh + status_bar.minimum_height
+			if not interface.upper_bar.empty then
+				mh := mh + interface.upper_bar.minimum_height + 1
 			end
-			mw := mw.max (status_bar.minimum_width)
-
-			-- Finaly, we set the value
-			internal_set_minimum_size (mw, mh)
+			if item_imp /= Void then
+				mh := mh + item_imp.minimum_height
+			end
+			if not interface.lower_bar.empty then
+				mh := mh + interface.lower_bar.minimum_height + 1
+			end
+			internal_set_minimum_size (
+				mw.max (interface.upper_bar.minimum_width).max (interface.lower_bar.minimum_width),
+				mh)
 		end
 
 	notify_change (type: INTEGER; child: EV_SIZEABLE_IMP) is
@@ -788,6 +787,7 @@ feature {NONE} -- Implementation
 		end
 
 	resize_on_idle_agent: PROCEDURE [ANY, TUPLE []]
+			-- `compute_minimum_size'.
 
 feature {NONE} -- Inapplicable
 
@@ -854,7 +854,7 @@ feature {NONE} -- Implementation
 		do
 			-- The width to give to the window
 			if bit_set (internal_changes, 64) then
-				w := width
+				w := wel_width
 				internal_changes := set_bit (internal_changes, 64, False)
 			else
 				w := 0
@@ -862,24 +862,26 @@ feature {NONE} -- Implementation
 
 			-- The height to give to the window
 			if bit_set (internal_changes, 128) then
-				h := height
+				h := wel_height
 				internal_changes := set_bit (internal_changes, 128, False)
 			else
 				h := 0
 			end
 
-			-- We check if there is a menu
+			-- We check if there is a menu, and if so we draw it.
 			if has_menu then
 				draw_menu
 			end
 
-			-- We resize everything and draw the menu.
-			wel_resize (w.max (minimum_width).min (maximum_width), h.max (minimum_height).min (maximum_height))
+			-- We resize everything.
+			wel_resize (
+				w.max (minimum_width).min (maximum_width), 
+				h.max (minimum_height).min (maximum_height)
+				)
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is
 			-- Called when the window is resized.
-			-- Resize the child if it exists.
 		local
 			bar_imp: EV_VERTICAL_BOX_IMP
 		do
@@ -892,7 +894,8 @@ feature {NONE} -- Implementation
 					bar_imp.set_move_and_size (0, 0, client_width, client_y)
 				end
 				if item /= Void then
-					item_imp.parent_ask_resize (client_width, client_height)
+					item_imp.set_move_and_size (client_x, client_y,
+						client_width, client_height)
 				end
 				if not interface.lower_bar.empty then
 					bar_imp ?= interface.lower_bar.implementation
@@ -903,7 +906,8 @@ feature {NONE} -- Implementation
 						client_y + client_height + 1,
 						client_width, bar_imp.minimum_height)
 				end
-				{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (size_type, a_width, a_height)
+				{EV_SINGLE_CHILD_CONTAINER_IMP} Precursor (size_type,
+					a_width, a_height)
 			end
 		end
 
@@ -915,7 +919,7 @@ feature {NONE} -- Implementation
    			-- `y_pos' specifies the y-coordinate of the upper-left
    			-- corner of the client area of the window.
    		do
-			interface.move_actions.call ([x_pos, y_pos, width, height])
+			interface.move_actions.call ([x_pos, y_pos, wel_width, wel_height])
  		end
 
 	on_get_min_max_info (min_max_info: WEL_MIN_MAX_INFO) is
@@ -935,11 +939,11 @@ feature {NONE} -- Implementation
 				create min_track.make (internal_minimum_width, height)
 				create max_track.make (maximum_width, height)
 			elseif h then
-				create min_track.make (width, internal_minimum_height)
-				create max_track.make (width, maximum_height)
+				create min_track.make (wel_width, internal_minimum_height)
+				create max_track.make (wel_width, maximum_height)
 			else
-				create min_track.make (width, height)
-				create max_track.make (width, height)
+				create min_track.make (wel_width, wel_height)
+				create max_track.make (wel_width, wel_height)
 			end
 			min_max_info.set_min_track_size (min_track)
 			min_max_info.set_max_track_size (max_track)
@@ -1160,22 +1164,14 @@ end -- class EV_WINDOW_IMP
 --! For latest info see award-winning pages: http://www.eiffel.com
 --!-----------------------------------------------------------------------------
 
+
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.51  2000/06/08 20:51:23  rogers
---| Replaced references of sb_imp with bar_imp which is an EV_VERTICAL_BOX_IMP.
---|
---| Revision 1.50  2000/06/08 20:48:06  rogers
---| Removed dimensions set, and item from WEL is now renamed as wel_item.
---|
---| Revision 1.49  2000/06/07 17:27:59  oconnor
---| merged from DEVEL tag MERGED_TO_TRUNK_20000607
---|
---| Revision 1.48  2000/05/13 01:10:09  pichery
---| Improved enable/disable modal & blocking windows.
+--| Revision 1.52  2000/06/09 00:54:25  manus
+--| Updated trunc with DEVEL branch version 1.17.4.17
 --|
 --| Revision 1.17.4.17  2000/06/05 20:52:58  manus
 --| Cosmetic on precursor
@@ -1232,9 +1228,15 @@ end -- class EV_WINDOW_IMP
 --| Changed to now use upper_bar and lower_bar.
 --|
 --| Revision 1.17.4.5  2000/05/03 22:35:02  brendel
---|
---| Revision 1.47  2000/05/03 20:13:25  brendel
 --| Fixed resize_actions.
+--|
+--| Revision 1.17.4.4  2000/05/03 22:16:27  pichery
+--| - Cosmetics / Optimization with local variables
+--| - Replaced calls to `width' to calls to `wel_width'
+--|   and same for `height'.
+--|
+--| Revision 1.17.4.3  2000/05/03 19:09:41  oconnor
+--| mergred from HEAD
 --|
 --| Revision 1.46  2000/05/03 00:33:36  pichery
 --| - Changed constants retrieval
@@ -1392,6 +1394,7 @@ end -- class EV_WINDOW_IMP
 --|
 --| Revision 1.17.2.3  1999/11/02 17:20:09  oconnor
 --| Added CVS log, redoing creation sequence
+--|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

@@ -1,0 +1,102 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<LINK REL=Stylesheet HREF="../../../../../../default.css" TYPE="text/css">
+<title>Compiler</title>
+</head>
+
+<body>
+
+        
+        <h1>Compiler differences from 4.5</h1>
+        
+        
+        <p>&nbsp;</p>
+        
+        
+        <H2>What's new</H2>
+        
+        &nbsp;
+        
+        <UL>
+        
+        <LI>Implementation of new external syntax.
+        
+        <LI>Implementation of verbatim strings.
+        
+        <LI>Implementation of agents.
+        
+        <LI>Implementation of agent creations on `Result' and `Current' object.
+        
+        <LI>Improved incrementality of C compilation: fewer directories will have their
+  C files changed after a freeze.
+        
+        <LI>New MSIL generation.
+        
+        <LI>Introduction of 4 new basic classes:
+  INTEGER_8,
+  INTEGER_16,
+  INTEGER_64, WIDE_CHARACTER.
+         <LI>Changed the storable mechanism so that we do not store POINTER objects
+        with their value, instead we store a NULL value. As a consequence it is safe to store on disk objects that have references to C
+          objects. Upon
+        retrieval those references will be equal to `default_pointer'. This is now
+        the default behavior, if someone wants to have the previous behavior, simply call
+        `set_keep_pointer_value' from STORABLE.</p>
+        </UL>
+        
+        <H2>Improvements</H2>
+        
+        
+        <p>&nbsp;</p>
+        
+        <UL>
+        
+        <LI>New run-time speed improvement (between 30 to 100% faster than the 4.5
+          release).
+        
+        <LI>Compiler that is largely faster (between 200 and 300% faster than 4.5).
+        
+        <LI>Compiler now detects unused local variables (at freeze/finalize time only)
+        
+        </UL>
+        
+        
+        <p>&nbsp;</p>
+        
+        
+        <H2>Bug fixes</H2>
+        
+        
+        <p>&nbsp;</p>
+        
+        <UL>
+        <LI>Compiler now fixes incrementality issues with frozen/melted code.
+        
+        <LI>Degree 4/Degree 3 crash on *_SERVER when doing an incremental recompilation has
+        been fixed.
+        
+        <LI>Fixed crash when using creation expression that includes a feature call.
+        
+        <LI>Fixed creation of an ARRAY of BIT type.
+        
+        <LI>CHARACTER has been extended to support the extended ASCII which means that
+        the following expressions are now True instead of being False as it was in our previous version:
+        <UL>
+        <LI>'%/127/' &lt; '%/128/'
+        
+        <LI>'%/127/' &lt; '%/128/'
+        </UL>
+        
+        <LI>When using `independent_store', in case of retrieval error due to a name
+  change in one of the class attributes we will display the original attribute name that was used to make the storable file. This will help when
+          managing many storable files.
+        </UL>
+        
+        
+</body>
+
+</html>

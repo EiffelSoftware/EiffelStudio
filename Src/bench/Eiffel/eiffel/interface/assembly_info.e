@@ -65,6 +65,28 @@ feature -- Settings
 			public_key_token_set: public_key_token = a_public_key_token
 		end
 
+feature -- Output
+
+	format (st: STRUCTURED_TEXT) is
+			-- Output name of Current in `st'.
+		require
+			st_not_void: st /= Void
+		do
+			st.add_string (assembly_name)
+			if version /= Void then
+				st.add_string (", ")
+				st.add_string (version)
+			end
+			if culture /= Void then
+				st.add_string (", ")
+				st.add_string (culture)
+			end
+			if public_key_token /= Void then
+				st.add_string (", ")
+				st.add_string (public_key_token)
+			end
+		end
+		
 invariant
 	assembly_name_not_void: assembly_name /= Void
 

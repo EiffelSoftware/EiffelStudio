@@ -17,9 +17,6 @@ feature -- Redefined
 
 	consumed_type (t: TYPE): CONSUMED_TYPE is
 			-- Consumed type corresponding to `t'.
-		require
-			non_void_type: t /= Void
-			valid_type: is_type_in_cache (t)
 		local
 			i: INTEGER
 		do
@@ -33,8 +30,6 @@ feature -- Redefined
 					types_cache.put (Result, i)
 				end
 			end
-		ensure
-			non_void_consumed_type: Result /= Void
 		end
 
 	assembly_types (aname: ASSEMBLY_NAME): CONSUMED_ASSEMBLY_TYPES is

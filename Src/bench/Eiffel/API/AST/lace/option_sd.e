@@ -8,7 +8,6 @@ indexing
 deferred class OPTION_SD
 
 inherit
-
 	AST_LACE
 		rename
 			adapt as ast_adapt
@@ -57,12 +56,6 @@ feature -- Properties
 		do
 			-- Do nothing
 		end;
-
-	is_multithreaded: BOOLEAN is
-			-- Is the option a multithreaded option?
-		do
-			-- Do nothing
-		end
 
 	is_free_option: BOOLEAN is
 		do

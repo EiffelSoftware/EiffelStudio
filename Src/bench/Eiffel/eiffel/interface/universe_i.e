@@ -131,14 +131,13 @@ feature -- Access
 			-- Classes with name `class_name' found in the Universe
 		require
 			class_name_not_void: class_name /= Void
+			class_name_is_in_upper_case: class_name.as_upper.is_equal (class_name)
 		local
 			cur: CURSOR
-			cname: STRING
 			classes: HASH_TABLE [CLASS_I, STRING]
 		do
 			create {ARRAYED_LIST [CLASS_I]} Result.make (2)
-			cname := class_name.as_lower
-			buffered_classes.search (cname)
+			buffered_classes.search (class_name)
 			if not buffered_classes.found then
 				cur := clusters.cursor
 				from
@@ -147,7 +146,7 @@ feature -- Access
 					clusters.after
 				loop
 					classes := clusters.item.classes
-					if classes.has (cname) then
+					if classes.has (class_name) then
 						Result.extend (classes.found_item)
 						Result.forth
 					end
@@ -155,7 +154,7 @@ feature -- Access
 				end
 				clusters.go_to (cur)
 				if Result.count = 1 then
-					buffered_classes.put (Result.first, cname)
+					buffered_classes.put (Result.first, class_name)
 				end
 			else
 				Result.extend (buffered_classes.found_item)
@@ -169,13 +168,12 @@ feature -- Access
 			-- which have been overriden.
 		require
 			class_name_not_void: class_name /= Void
+			class_name_is_in_upper_case: class_name.as_upper.is_equal (class_name)
 		local
 			cur: CURSOR
-			cname: STRING
 			classes: HASH_TABLE [CLASS_I, STRING]
 		do
 			create {ARRAYED_LIST [CLASS_I]} Result.make (2)
-			cname := class_name.as_lower
 			cur := clusters.cursor
 			from
 				clusters.start
@@ -183,7 +181,7 @@ feature -- Access
 				clusters.after
 			loop
 				classes := clusters.item.overriden_classes
-				if classes.has (cname) then
+				if classes.has (class_name) then
 					Result.extend (classes.found_item)
 					Result.forth
 				end
@@ -196,6 +194,9 @@ feature -- Access
 
 	compiled_classes_with_name (class_name: STRING): LIST [CLASS_I] is
 			-- Compiled classes with name `class_name' found in the Universe
+		require
+			class_name_not_void: class_name /= Void
+			class_name_is_in_upper_case: class_name.as_upper.is_equal (class_name)
 		do
 			Result := classes_with_name (class_name)
 			from
@@ -216,6 +217,7 @@ feature -- Access
 		require
 			good_argument: class_name /= Void
 			good_cluster: a_cluster /= Void
+			class_name_is_in_upper_case: class_name.as_upper.is_equal (class_name)
 		local
 			l_cluster: CLUSTER_I
 			real_name: STRING
@@ -253,6 +255,45 @@ feature -- Access
 					clusters.forth
 				end
 				clusters.go_to (old_cursor)
+			end
+		end
+
+	class_from_assembly (an_assembly, a_dotnet_name: STRING): CLASS_I is
+			-- Associated CLASS_I instance for `a_dotnet_name' external class name
+			-- from given assembly `an_assembly'. If more than one assembly with
+			-- `an_assembly' as name, look only in first found item.
+			--| An example of usage would be:
+			--|	 l_class := universe.class_from_assembly ("mscorlib", "System.IComparable")
+			--| to get the associated `System.IComparable' from `mscorlib'.
+		require
+			an_assembly_not_void: an_assembly /= Void
+			an_assembly_not_empty: not an_assembly.is_empty
+			a_dotnet_name_not_void: a_dotnet_name /= Void
+			a_dotnet_name_not_empty: not a_dotnet_name.is_empty
+		local
+			l_assembly: ASSEMBLY_I
+			l_found: BOOLEAN
+		do
+				-- Iterate through to find proper assembly.
+			from
+				clusters.start
+			until
+				clusters.after or l_found
+			loop
+				l_assembly ?= clusters.item
+				l_found := l_assembly /= Void and then equal (an_assembly, l_assembly.assembly_name)
+				clusters.forth
+			end
+			
+			check
+				l_found_implies_found: l_found implies l_assembly /= Void
+			end
+
+			if l_found then
+				l_assembly.dotnet_classes.search (a_dotnet_name)
+				if l_assembly.dotnet_classes.found then
+					Result := l_assembly.dotnet_classes.found_item
+				end
 			end
 		end
 
@@ -522,49 +563,40 @@ feature {COMPILER_EXPORTER} -- Implementation
 			create l_actions.make (50)
 
 			if system.il_generation then
-				l_actions.put (agent system.set_system_object_class, "system_object")
+				l_actions.put (agent system.set_system_object_class, "SYSTEM_OBJECT")
+				l_actions.put (agent system.set_system_value_type_class, "VALUE_TYPE")
 			end
 
-			l_actions.put (agent system.set_any_class, "any")
-			l_actions.put (agent system.set_boolean_class, "boolean")
-			l_actions.put (agent system.set_character_class (?, False), "character")
-			l_actions.put (agent system.set_integer_class (?, 8), "integer_8")
-			l_actions.put (agent system.set_integer_class (?, 16), "integer_16")
-			l_actions.put (agent system.set_integer_class (?, 32), "integer")
-			l_actions.put (agent system.set_integer_class (?, 64), "integer_64")
-			l_actions.put (agent system.set_real_class, "real")
-			l_actions.put (agent system.set_double_class, "double")
-			l_actions.put (agent system.set_pointer_class, "pointer")
-			l_actions.put (agent system.set_typed_pointer_class, "typed_pointer")
-			l_actions.put (agent system.set_string_class, "string")
-			l_actions.put (agent system.set_array_class, "array")
-			l_actions.put (agent system.set_special_class, "special")
-			l_actions.put (agent system.set_tuple_class, "tuple")
-			l_actions.put (agent system.set_disposable_class, "disposable")
-			l_actions.put (agent system.set_routine_class, "routine")
-			l_actions.put (agent system.set_procedure_class, "procedure")
-			l_actions.put (agent system.set_function_class, "function")
-			l_actions.put (agent system.set_to_special_class, "to_special")
+			l_actions.put (agent system.set_any_class, "ANY")
+			l_actions.put (agent system.set_boolean_class, "BOOLEAN")
+			l_actions.put (agent system.set_character_class (?, False), "CHARACTER")
+			l_actions.put (agent system.set_integer_class (?, 8), "INTEGER_8")
+			l_actions.put (agent system.set_integer_class (?, 16), "INTEGER_16")
+			l_actions.put (agent system.set_integer_class (?, 32), "INTEGER")
+			l_actions.put (agent system.set_integer_class (?, 64), "INTEGER_64")
+			l_actions.put (agent system.set_real_class, "REAL")
+			l_actions.put (agent system.set_double_class, "DOUBLE")
+			l_actions.put (agent system.set_pointer_class, "POINTER")
+			l_actions.put (agent system.set_typed_pointer_class, "TYPED_POINTER")
+			l_actions.put (agent system.set_string_class, "STRING")
+			l_actions.put (agent system.set_array_class, "ARRAY")
+			l_actions.put (agent system.set_special_class, "SPECIAL")
+			l_actions.put (agent system.set_tuple_class, "TUPLE")
+			l_actions.put (agent system.set_disposable_class, "DISPOSABLE")
+			l_actions.put (agent system.set_routine_class, "ROUTINE")
+			l_actions.put (agent system.set_procedure_class, "PROCEDURE")
+			l_actions.put (agent system.set_function_class, "FUNCTION")
+			l_actions.put (agent system.set_to_special_class, "TO_SPECIAL")
 
 				-- XX_REF classes
-			l_actions.put (agent system.set_bit_class, "bit_ref")
-			l_actions.put (agent system.set_boolean_ref_class, "boolean_ref")
-			l_actions.put (agent system.set_character_ref_class (?, False), "character_ref")
-			l_actions.put (agent system.set_integer_ref_class (?, 8), "integer_8_ref")
-			l_actions.put (agent system.set_integer_ref_class (?, 16), "integer_16_ref")
-			l_actions.put (agent system.set_integer_ref_class (?, 32), "integer_ref")
-			l_actions.put (agent system.set_integer_ref_class (?, 64), "integer_64_ref")
-			l_actions.put (agent system.set_real_ref_class, "real_ref")
-			l_actions.put (agent system.set_double_ref_class, "double_ref")
-			l_actions.put (agent system.set_pointer_ref_class, "pointer_ref")
+			l_actions.put (agent system.set_bit_class, "BIT_REF")
 
 			if not system.il_generation then
-				l_actions.put (agent system.set_character_class (?, True), "wide_character")
-				l_actions.put (agent system.set_character_ref_class (?, True), "wide_character_ref")
+				l_actions.put (agent system.set_character_class (?, True), "WIDE_CHARACTER")
 			else
-				l_actions.put (agent system.set_system_string_class, "system_string")
-				l_actions.put (agent system.set_native_array_class, "native_array")
-				l_actions.put (agent system.set_arguments_class, "arguments")
+				l_actions.put (agent system.set_system_string_class, "SYSTEM_STRING")
+				l_actions.put (agent system.set_native_array_class, "NATIVE_ARRAY")
+				l_actions.put (agent system.set_arguments_class, "ARGUMENTS")
 					-- In MSIL generation, WIDE_CHARACTER does not exist since
 					-- all characters are wide.
 			end
@@ -775,6 +807,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 		require
 			good_argument: class_name /= Void
 			good_cluster: a_cluster /= Void
+			class_name_is_in_upper_case: class_name.as_upper.is_equal (class_name)
 		local
 			l_cluster: CLUSTER_I
 			real_name: STRING
@@ -846,6 +879,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			-- universe ?
 		require
 			good_argument: class_name /= Void
+			class_name_is_in_upper_case: class_name.as_upper.is_equal (class_name)
 		local
 			found, one_found: BOOLEAN
 		do

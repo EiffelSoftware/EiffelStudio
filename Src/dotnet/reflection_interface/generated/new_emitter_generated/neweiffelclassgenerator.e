@@ -20,12 +20,12 @@ feature {NONE} -- Initialization
 
 feature -- Basic Operations
 
-	import_assembly_without_dependancies (assembly: SYSTEM_REFLECTION_ASSEMBLY; path_name: STRING; formatting: BOOLEAN) is
-		external
-			"IL signature (System.Reflection.Assembly, System.String, System.Boolean): System.Void use EiffelClassGenerator"
-		alias
-			"ImportAssemblyWithoutDependancies"
-		end
+--	import_assembly_without_dependancies (assembly: SYSTEM_REFLECTION_ASSEMBLY; path_name: STRING; formatting: BOOLEAN) is
+--		external
+--			"IL signature (System.Reflection.Assembly, System.String, System.Boolean): System.Void use EiffelClassGenerator"
+--		alias
+--			"ImportAssemblyWithoutDependancies"
+--		end
 
 	import_assembly_with_dependancies (assembly: SYSTEM_REFLECTION_ASSEMBLY; path_name: STRING; formatting: BOOLEAN) is
 		external
@@ -34,6 +34,13 @@ feature -- Basic Operations
 			"ImportAssemblyWithDependancies"
 		end
 
+	generate_eiffel_classes_from_xml (assembly: SYSTEM_REFLECTION_ASSEMBLY; path_name: STRING) is
+		external
+			"IL signature (System.Reflection.Assembly, System.String): System.Void use EiffelClassGenerator"
+		alias
+			"GenerateEiffelClassesFromXml"
+		end
+		
 	is_assembly_imported (assembly: SYSTEM_REFLECTION_ASSEMBLY): BOOLEAN is
 		external
 			"IL signature (System.Reflection.Assembly): System.Boolean use EiffelClassGenerator"

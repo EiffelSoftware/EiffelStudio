@@ -26,9 +26,6 @@ inherit
 	
 feature -- Attributes for externals
 
-	dll_arg: STRING;
-			-- Extra arg for dll (Windows)
-
 	special_id: INTEGER;
 			-- special id of external if it is
 
@@ -74,12 +71,6 @@ feature -- Routines for externals
 			-- Does the external declaration include a list of include files ?
 		do
 			Result := (include_list /= Void) and then (include_list.count > 0);
-		end;
-
-	set_dll_arg (s: STRING) is
-			-- set `dll_arg' to s
-		do
-			dll_arg := s;
 		end;
 
 	set_special_id (i: INTEGER) is
@@ -137,7 +128,6 @@ feature -- Incrementality
 						Result := other_ext.arg_list = Void
 					end
 					Result := Result and then
-						equal (dll_arg, other_ext.dll_arg) and then
 						equal (return_type, other_ext.return_type) and then
 						equal (special_file_name, other_ext.special_file_name) and then
 						special_id = other_ext.special_id
@@ -223,7 +213,6 @@ feature
 			external_b.set_include_list (include_list);
 			external_b.set_arg_list (arg_list);
 			external_b.set_return_type (return_type);
-			external_b.set_dll_arg (dll_arg);
 			
 			Result := external_b;
 		end;
@@ -239,7 +228,6 @@ feature
 			other.set_return_type (return_type);
 			other.set_special_file_name (special_file_name);
 			other.set_include_list (include_list);
-			other.set_dll_arg (dll_arg);
 		end;
 
 	new_rout_unit: EXTERNAL_UNIT is

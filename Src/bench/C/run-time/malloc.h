@@ -47,7 +47,7 @@ extern "C" {
 #define EIFFEL_T	1				/* Chunk mainly holds Eiffel blocks */
 #define ALL_T		2				/* Any chunk, used by full_coalesc() */
 #ifdef VXWORKS
-#define CHUNK		4096			/* Number of bytes in standard chunk (in VxWorks case) */
+#define CHUNK		8192			/* Number of bytes in standard chunk (in VxWorks case) */
 #else
 #define CHUNK		65536			/* Number of bytes in standard chunk */
 #endif

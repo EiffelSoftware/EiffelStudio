@@ -116,11 +116,17 @@ feature -- Generation
 		
 feature {IL_CODE_GENERATOR} -- Feature generation
 
-	generate_feature (feat: FEATURE_I; in_current_class: BOOLEAN; type_id: INTEGER; is_static: BOOLEAN) is
+	generate_feature (feat: FEATURE_I; is_static: BOOLEAN) is
 			-- Generate `feat' description.
 		require
 			feat_not_void: feat /= Void
-			positive_type_id: type_id > 0
+		deferred
+		end
+
+	generate_inherited_feature (feat: FEATURE_I; feat_id: INTEGER) is
+			-- Generate `feat' description.
+		require
+			feat_not_void: feat /= Void
 		deferred
 		end
 

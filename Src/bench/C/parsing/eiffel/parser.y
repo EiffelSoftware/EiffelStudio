@@ -92,6 +92,8 @@ int fbody_pos;		/* To memorize the beginning of a feature body */
 %token 		TE_CREATION
 %token		TE_LARRAY
 %token		TE_RARRAY
+%token		TE_LTUPLE
+%token		TE_RTUPLE
 %token 		TE_RPARAN
 %token		TE_LCURLY
 %token		TE_RCURLY
@@ -175,7 +177,7 @@ Else_part When_part Multi_branch Loop Invariant Variant Debug Debug_keys
 Retry Rescue Assignment Reverse_assignment Creators Creation_clause
 Creation Creation_type Creation_target Creation_call Creation_expression
 Routine_creation Expression Actual_parameter
-Manifest_array Choice Features Rename_pair
+Manifest_array Manifest_tuple Choice Features Rename_pair
 Entity_declaration_group Call Check Assertion A_feature Call_on_result
 Call_on_current Call_on_feature Feature_call Remote_call Parameters
 Expression_constant Client_list
@@ -1166,6 +1168,8 @@ Expression:					Expression_constant
 								{yyerrok;$$ = create_node1(VALUE_AS,$1);yacc_error_code=290;}
 	|						Manifest_array
 								{yyerrok;$$ = create_node1(VALUE_AS,$1);yacc_error_code=291;}
+	|						Manifest_tuple
+								{yyerrok;$$ = create_node1(VALUE_AS,$1);yacc_error_code=291;}
 	|						Feature_call
 								{$$ = create_node1(EXPR_CALL_AS, $1);yacc_error_code=292;}
 	|						Routine_creation
@@ -1444,6 +1448,10 @@ Non_empty_string:		TE_STRING
 
 Manifest_array:			TE_LARRAY {list_init();yacc_error_code=382;} Manifest_expression_list TE_RARRAY
 							{$$ = create_node1(ARRAY_AS,list_new(CONSTRUCT_LIST_AS));yacc_error_code=383;}
+	;
+
+Manifest_tuple:			TE_LTUPLE {list_init();yacc_error_code=382;} Manifest_expression_list TE_RTUPLE
+							{$$ = create_node1(TUPLE_AS,list_new(CONSTRUCT_LIST_AS));yacc_error_code=383;}
 	;
 
 Set_position: 			{SET_POS (current_location) ; $$ = current_location;}

@@ -464,13 +464,16 @@ rt_private void commute(int from, int to, int size)
 #endif
 
 #ifdef EIF_WIN32
-	if (-1 == net_recv(from, buf, size, TRUE))
+	if (-1 == net_recv(from, buf, size, TRUE)) {
 #else
-	if (-1 == net_recv(from, buf, size))
+	if (-1 == net_recv(from, buf, size))  {
 #endif
+		free (buf);
 		return;
+	}
 
 	if (-1 == net_send(to, buf, size)) {	/* Cannot send any more */
+		free (buf);
 		return;
 	}
 }

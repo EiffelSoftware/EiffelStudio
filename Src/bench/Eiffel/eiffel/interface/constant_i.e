@@ -143,18 +143,19 @@ feature -- C code generation
 					-- Function's body
 					-- If constant is a string, it is the semantic of a once
 				if is_once then
-					file.putstring ("%TEIF_ONCE_TYPE *key = EIF_once_keys + EIF_oidx_off + ");
+					file.putstring ("%TEIF_REFERENCE *PResult;%N%
+						%%Tif (MTOG((EIF_REFERENCE *),*(EIF_once_values + EIF_oidx_off + ");
 					file.putint (byte_context.once_index);
+					file.putstring ("),PResult)) return *PResult;")
 					file.putstring (";%N%
-						%%TEIF_REFERENCE Result;%N%
-						%%TEIF_REFERENCE *PResult;%N%
-						%%Tif (MTOG((EIF_REFERENCE *),*key,PResult)) return *PResult;%N%
-						%%TResult = ");
+						%%TPResult = (EIF_REFERENCE *) RTOC(0);%N%
+						%%TMTOS(*(EIF_once_values + EIF_oidx_off + ");
+					file.putint (byte_context.once_index);
+					file.putstring ("),PResult);%N%
+						%%T*PResult = ");
 					value.generate (file);
-					file.putstring (";%N%
-						%%TPResult = (EIF_REFERENCE *) RTOC((char **)0);%N%
-						%%T*PResult = Result;%N%
-						%%TMTOS(*key,PResult);%N");
+					file.putchar (';');
+
 					if byte_context.workbench_mode then
 							-- Real body id to be stored in the id list of 
 							-- already called once routines.
@@ -162,7 +163,7 @@ feature -- C code generation
 						file.putstring (real_body_id.generated_id);
 						file.putstring (");%N");
 					end;
-					file.putstring ("%Treturn Result");
+					file.putstring ("%Treturn *PResult");
 				else
 					file.putstring ("return ");
 					value.generate (file);

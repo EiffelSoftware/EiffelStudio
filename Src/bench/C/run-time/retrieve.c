@@ -279,6 +279,7 @@ long objectCount;
 	uint32 spec_size = 0;
 	char g_status = g_data.status;
 	jmp_buf exenv;
+	RTXD;
 
 #if DEBUG & 2
 /*	long saved_objectCount = objectCount;
@@ -289,6 +290,7 @@ long objectCount;
 #endif
 	excatch((char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
+		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
 		ereturn();				/* Propagate exception */
 	}
@@ -429,9 +431,11 @@ long objectCount;
 	uint32 spec_size = 0;
 	char g_status = g_data.status;
 	jmp_buf exenv;
+	RTXD;
 
 	excatch((char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
+		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
 		ereturn();				/* Propagate exception */
 	}
@@ -608,6 +612,7 @@ long objectCount;
 	uint32 spec_size = 0;
 	char g_status = g_data.status;
 	jmp_buf exenv;
+	RTXD;
 
 #if DEBUG & 1
 /*	long saved_objectCount = objectCount;
@@ -618,6 +623,7 @@ long objectCount;
 #endif
 	excatch((char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
+		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
 		ereturn();				/* Propagate exception */
 	}
@@ -1053,11 +1059,13 @@ char rt_type;
 	char vis_name[512], end;
 	char * temp_buf;
 	jmp_buf exenv;
+	RTXD;
 
 	errno = 0;
 
 	excatch((char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
+		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
 		ereturn();				/* Propagate exception */
 	}
@@ -1188,11 +1196,13 @@ private void iread_header()
 	char att_name[IDLENGTH + 1];
 	int *attrib_order = (int *)0;
 	jmp_buf exenv;
+	RTXD;
 
 	errno = 0;
 
 	excatch((char *) exenv);	/* Record pseudo execution vector */
 	if (setjmp(exenv)) {
+		RTXSC;					/* Restore stack contexts */
 		rt_clean();				/* Clean data structure */
 		ereturn();				/* Propagate exception */
 	}

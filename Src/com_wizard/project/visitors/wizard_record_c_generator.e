@@ -8,7 +8,7 @@ deferred class
 	WIZARD_RECORD_C_GENERATOR
 
 inherit
-	WIZARD_C_WRITER_GENERATOR
+	WIZARD_TYPE_GENERATOR
 
 	WIZARD_RECORD_GENERATOR
 	
@@ -19,6 +19,12 @@ inherit
 
 feature -- Access
 
+	c_writer: WIZARD_WRITER_C_FILE
+			-- Writer of C file.
+
+	c_writer_impl: WIZARD_WRITER_C_FILE
+			-- Writer of C file.
+
 	generate (a_descriptor: WIZARD_RECORD_DESCRIPTOR) is
 			-- Generate c client for record.
 		local
@@ -28,6 +34,12 @@ feature -- Access
 			a_windows_structure: WIZARD_WINDOWS_STRUCTURE
 		do
 			create c_writer.make
+			create c_writer_impl.make
+
+			c_writer.set_header_file_name (a_descriptor.c_header_file_name)
+			c_writer_impl.set_header_file_name (impl_header_file_name (a_descriptor.c_header_file_name))
+			
+			c_writer_impl.add_import (a_descriptor.c_header_file_name)
 
 			if not a_descriptor.is_union then 
 				a_descriptor.fields.sort
@@ -144,39 +156,25 @@ feature -- Access
 
 			c_writer.add_other (struct_def)
 
-			create a_mapper_include.make (100)
-			a_mapper_include.append (c_writer.cpp_protector_end)
-			a_mapper_include.append (New_line)
-			a_mapper_include.append (New_line)
-			a_mapper_include.append (Include_clause)
-			a_mapper_include.append (Space)
-			a_mapper_include.append ("%"")
-			a_mapper_include.append (Ecom_generated_rt_globals_header_file_name)
-			a_mapper_include.append ("%"")
-			a_mapper_include.append (New_line)
-			a_mapper_include.append (New_line)
-			a_mapper_include.append (c_writer.cpp_protector_start)
-			c_writer.add_other (a_mapper_include)
-
-			c_writer.add_other ("#ifdef __cplusplus")
+			c_writer_impl.add_import (Ecom_generated_rt_globals_header_file_name)
+			c_writer_impl.add_other ("#ifdef __cplusplus")
 			from
 				a_descriptor.fields.start
 			until
 				a_descriptor.fields.after
 			loop
 
-				c_writer.add_other (access_macro (a_descriptor, a_descriptor.fields.item))
-				c_writer.add_other (set_macro (a_descriptor, a_descriptor.fields.item))
+				c_writer_impl.add_other (access_macro (a_descriptor, a_descriptor.fields.item))
+				c_writer_impl.add_other (set_macro (a_descriptor, a_descriptor.fields.item))
 				a_descriptor.fields.forth
 			end
-			c_writer.add_other ("#endif")
-
-			c_writer.set_header_file_name (a_descriptor.c_header_file_name)
+			c_writer_impl.add_other ("#endif")
 
 			create header.make (1000)
 			header.append (Wizard_note)
 			header.append (a_descriptor.creation_message)
 			c_writer.set_header (header)
+			c_writer_impl.set_header (header)
 		end
 
 

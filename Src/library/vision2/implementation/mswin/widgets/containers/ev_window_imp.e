@@ -216,9 +216,6 @@ feature -- Access
 	menu_bar: EV_MENU_BAR
 			-- Horizontal bar at top of client area that contains menu's.
 
-	is_modal: BOOLEAN
-			-- Must the window be closed before application continues?
-
 feature -- Status setting
 
 	lock_update is
@@ -375,50 +372,6 @@ feature -- Element change
 				menu_bar := Void
 				unset_menu
 				compute_minimum_height
-			end
-		end
-
-	enable_modal is
-			-- Assign `True' to `is_modal' to `True' and set `Current' to be
-			-- "Top most".
-		local
-			loc_ex_style: INTEGER
-		do
-			if not is_modal then
-					-- Change the `ex_style' of the window to turn
-					-- it into top most.
-				loc_ex_style := ex_style
-				if not flag_set (loc_ex_style, Ws_ex_topmost) then
-					loc_ex_style := set_flag (loc_ex_style, Ws_ex_topmost)
-					set_ex_style (loc_ex_style)
-				end
-				set_ex_style (default_ex_style + Ws_ex_topmost)
-	
-				is_modal := True
-			end
-		end
-
-	disable_modal is
-			-- Set `is_modal' to `False', Set `Current' not 
-			-- to be "Top most" if it is not part of its 
-			-- default style.
-		local
-			loc_ex_style: INTEGER
-		do
-			if is_modal then
-				if exists then
-					-- Remove the TopMost flag only it is not part
-					-- of `default_ex_style'.
-					loc_ex_style := ex_style
-					if (not flag_set (Default_ex_style, Ws_ex_topmost)) and
-					   flag_set (loc_ex_style, Ws_ex_topmost)
-					then
-						loc_ex_style := clear_flag (loc_ex_style, Ws_ex_topmost)
-						set_ex_style (loc_ex_style)
-					end
-				end
-
-				is_modal := False
 			end
 		end
 

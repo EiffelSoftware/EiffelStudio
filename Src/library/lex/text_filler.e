@@ -257,13 +257,13 @@ feature {NONE} -- Implementation
 			"C"
 		end; 
 
-	fill_f_s (str: ANY; buf, line_nb_ar, col_nb_ar, mk: ANY;
+	fill_f_s (str: POINTER; buf, line_nb_ar, col_nb_ar, mk: POINTER;
 				b, buf_sz, buf_end: INTEGER): INTEGER is
 		external
 			"C"
 		end; 
 
-	fill_buf (fp: POINTER; buf, line_nb_ar, col_nb_ar, mk: ANY;
+	fill_buf (fp: POINTER; buf, line_nb_ar, col_nb_ar, mk: POINTER;
 				b, buf_sz, buf_end: INTEGER): INTEGER is
 		external
 			"C"

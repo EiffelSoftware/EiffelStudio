@@ -117,6 +117,16 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
+	icon_paste_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (pixmap_directory)
+			a_file_name.set_file_name ("icon_paste.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
 	icon_search_ico_1: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
@@ -459,13 +469,13 @@ feature -- Access
 			set_with_named_file (Result, a_file_name)
 		end
 
-	icon_paste_ico: EV_PIXMAP is
+	icon_search_ico: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
 		Once
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_paste.ico")
+			a_file_name.set_file_name ("icon_search.ico")
 			set_with_named_file (Result, a_file_name)
 		end
 
@@ -654,16 +664,6 @@ feature -- Access
 			create Result
 			create a_file_name.make_from_string (pixmap_directory)
 			a_file_name.set_file_name ("icon_new.ico")
-			set_with_named_file (Result, a_file_name)
-		end
-
-	icon_search_ico: EV_PIXMAP is
-		local
-			a_file_name: FILE_NAME
-		Once
-			create Result
-			create a_file_name.make_from_string (pixmap_directory)
-			a_file_name.set_file_name ("icon_search.ico")
 			set_with_named_file (Result, a_file_name)
 		end
 

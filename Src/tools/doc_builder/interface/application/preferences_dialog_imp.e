@@ -221,7 +221,6 @@ feature {NONE}-- Initialization
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_6, "Includes")
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_7, "Conversion")
 			l_ev_notebook_1.set_item_text (l_ev_vertical_box_12, "Filters")
-			l_ev_vertical_box_3.hide
 			l_ev_vertical_box_3.set_padding_width (padding_width)
 			l_ev_vertical_box_3.set_border_width (border_width)
 			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_1)
@@ -234,7 +233,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_2.set_border_width (border_width)
 			name_text.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (212, 208, 200))
 			name_text.disable_sensitive
-			l_ev_vertical_box_4.hide
 			l_ev_vertical_box_4.set_padding_width (padding_width)
 			l_ev_vertical_box_4.set_border_width (border_width)
 			l_ev_vertical_box_4.disable_item_expand (l_ev_horizontal_box_3)
@@ -248,7 +246,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_4.disable_item_expand (browse_schema_bt)
 			browse_schema_bt.set_text (button_browse_text)
 			browse_schema_bt.set_minimum_width (button_width)
-			l_ev_vertical_box_5.hide
 			l_ev_vertical_box_5.set_padding_width (padding_width)
 			l_ev_vertical_box_5.set_border_width (border_width)
 			l_ev_vertical_box_5.disable_item_expand (l_ev_horizontal_box_5)
@@ -262,7 +259,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_6.disable_item_expand (browse_css_bt)
 			browse_css_bt.set_text (button_browse_text)
 			browse_css_bt.set_minimum_width (button_width)
-			l_ev_vertical_box_6.hide
 			l_ev_vertical_box_6.set_padding_width (padding_width)
 			l_ev_vertical_box_6.set_border_width (border_width)
 			l_ev_vertical_box_6.disable_item_expand (l_ev_horizontal_box_7)
@@ -297,7 +293,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_12.set_border_width (inner_border_width)
 			footer_override_check.enable_select
 			footer_override_check.set_text ("Override individual document footer declarations")
-			l_ev_vertical_box_7.hide
 			l_ev_vertical_box_7.set_border_width (2)
 			l_ev_vertical_box_7.disable_item_expand (l_ev_horizontal_box_13)
 			l_ev_vertical_box_7.disable_item_expand (l_ev_horizontal_box_14)
@@ -345,7 +340,6 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_18.set_border_width (5)
 			generate_feature_nodes_check.enable_select
 			generate_feature_nodes_check.set_text ("Generate feature nodes in TOC")
-			l_ev_vertical_box_12.hide
 			l_ev_vertical_box_12.set_padding_width (padding_width)
 			l_ev_vertical_box_12.set_border_width (border_width)
 			l_ev_horizontal_box_19.set_padding_width (padding_width)

@@ -113,6 +113,7 @@ feature {NONE} -- Implementation
 			l_checked: ARRAYED_LIST [EV_CHECKABLE_TREE_ITEM]
 			l_path: STRING
 		do
+			shared_constants.application_constants.set_is_include_list (True)
 			l_checked := document_selector_widget.checked_items
 			shared_project.include_documents_list.wipe_out
 			if l_checked /= Void then
@@ -126,6 +127,7 @@ feature {NONE} -- Implementation
 					l_checked.forth
 				end
 			end
+			shared_constants.application_constants.set_is_include_list (False)
 		end		
 
 	document_selector_widget: EV_CHECKABLE_TREE is	

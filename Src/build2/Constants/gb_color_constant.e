@@ -27,6 +27,7 @@ feature {NONE} -- Initialization
 		do
 			name := a_name.twin
 			value := a_value
+			build_small_pixmap
 			create referers.make (4)
 		ensure
 			name_set: name.is_equal (a_name) and name /= a_name
@@ -52,15 +53,9 @@ feature -- Access
 		
 	as_multi_column_list_row: EV_MULTI_COLUMN_LIST_ROW is
 			-- Representation of `Current' as a multi column list row.
-		local
-			pixmap: EV_PIXMAP
 		do
 			create Result
-			create pixmap
-			pixmap.set_size (16, 16)
-			pixmap.set_foreground_color (value)
-			pixmap.fill_rectangle (0, 0, pixmap.width, pixmap.height)
-			Result.set_pixmap (pixmap)
+			Result.set_pixmap (small_pixmap)
 			Result.extend (name)
 			Result.extend (type)
 			Result.extend (value.red_8_bit.out + ", " + value.green_8_bit.out + ", " + value.blue_8_bit.out)
@@ -87,6 +82,8 @@ feature {GB_CONSTANTS_DIALOG} -- Implementation
 			constant_context: GB_CONSTANT_CONTEXT
 			execution_agent: PROCEDURE [ANY, TUPLE [EV_COLOR]]
 		do
+			value := new_value
+			build_small_pixmap
 			from
 				referers.start
 			until
@@ -97,13 +94,26 @@ feature {GB_CONSTANTS_DIALOG} -- Implementation
 				check
 					execution_agent_not_void: execution_agent /= Void
 				end
-				execution_agent.call ([new_value])
+				execution_agent.call ([value])
 				referers.forth
 			end
-			value := new_value
 		ensure
 			value_set: value = new_value
 		end
+
+feature {NONE} -- Implementation
+
+	build_small_pixmap is
+			-- Build `small_pixmap' representing `value'.
+		do
+			create small_pixmap
+			small_pixmap.set_size (16, 16)
+			small_pixmap.set_background_color (value)
+			small_pixmap.clear
+		ensure
+			small_pixmap_not_void: small_pixmap /= Void
+		end
+		
 
 invariant
 	value_not_void: value /= Void

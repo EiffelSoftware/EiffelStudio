@@ -40,7 +40,7 @@ feature
 			loop
 				unit := table.item;
 				old_position := table.position
-				mark (unit.feature_id, unit.body_index, unit.class_id, unit.written_in, dispose_rout_id);
+				mark (unit.body_index, unit.class_id, unit.written_in, dispose_rout_id);
 				table.go_to (old_position)	
 				table.forth
 			end
@@ -48,14 +48,14 @@ feature
 			
 feature {NONE}
 
-	mark (f: INTEGER;body_index: INTEGER; static_class_id: INTEGER; original_class_id: INTEGER; rout_id_val: INTEGER) is
+	mark (body_index: INTEGER; static_class_id: INTEGER; original_class_id: INTEGER; rout_id_val: INTEGER) is
 			-- Mark feature and its redefinitions
 		local
 			table: ROUT_TABLE;
 			old_position: INTEGER;
 			unit: ROUT_ENTRY;
 		do
-			mark_and_record (f, body_index, static_class_id, original_class_id);
+			mark_and_record (body_index, static_class_id, original_class_id);
 
 			if Tmp_poly_server.has (rout_id_val) then
 debug ("DEAD_CODE")
@@ -85,7 +85,7 @@ DEBUG ("DEAD_CODE")
 	io.putint (rout_id_val)
 	io.putstring ("%N")
 end
-								mark (unit.feature_id, unit.body_index, unit.class_id, unit.written_in, rout_id_val);
+								mark (unit.body_index, unit.class_id, unit.written_in, rout_id_val);
 						end;
 						table.go_to (old_position);
 					end;
@@ -101,7 +101,7 @@ end
 			end;
 		end;
 
-	mark_and_record (feature_id: INTEGER; body_index: INTEGER; actual_class_id: INTEGER; written_class_id: INTEGER) is
+	mark_and_record (body_index: INTEGER; actual_class_id: INTEGER; written_class_id: INTEGER) is
 			-- Mark feature `feat' alive.
 		local
 			depend_list: FEATURE_DEPENDANCE
@@ -124,8 +124,6 @@ DEBUG("DEAD_CODE")
 	io.putstring (a_class.feature_table.feature_of_body_index (body_index).feature_name)
 	io.putstring (" (bid: ")
 	io.putint (body_index)
-	io.putstring ("; fid: ")
-	io.putint (feature_id)
 	io.putstring (") of ")
 	io.putstring (a_class.lace_class.name)
 	io.putstring (" (")

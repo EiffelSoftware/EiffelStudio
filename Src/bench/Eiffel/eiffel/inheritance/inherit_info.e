@@ -33,6 +33,25 @@ feature
 						<
 						other.a_feature.body_id;
 		end;
+
+	inherited_assertion: BOOLEAN is
+			-- (For merging)
+		local
+			i: INTEGER;
+			assert_set: ASSERT_ID_SET
+		do
+			assert_set := a_feature.assert_id_set;
+			if assert_set /= Void then
+				from
+					i := 1;
+				until
+					i > assert_set.count or else Result
+				loop
+					Result := (assert_set.item (i).has_assertion);
+					i := i + 1;
+				end
+			end;
+		end;
 			
 end
 			

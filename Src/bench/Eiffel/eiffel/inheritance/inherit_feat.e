@@ -41,6 +41,28 @@ feature
 			!!rout_id_set.make (5);
 		end;
 
+	has_assertion: BOOLEAN is
+			-- Do deferred_features or features have assertions?
+			-- (for Merging)
+		do
+			Result := check_assertion (deferred_features) or else
+						check_assertion (features)
+		end;
+
+	check_assertion (list: LINKED_LIST [INHERIT_INFO]): BOOLEAN is
+			-- Check to see if list has assertion
+			-- (for merging)
+		do
+			from
+				list.start
+			until
+				list.after or Result
+			loop
+				Result := list.item.inherited_assertion;
+				list.forth
+			end;			
+		end;
+
 	wipe_out is
 			-- Clear the structure
 		do

@@ -110,5 +110,11 @@ feature {NONE}
 	Bc_add_strip:		CHARACTER is '%/102/';
 	Bc_end_strip:		CHARACTER is '%/103/';
 	Bc_lbit_assign:		CHARACTER is '%/104/';
+	Bc_raise_prec:		CHARACTER is '%/105/';
+	Bc_goto_body:		CHARACTER is '%/106/';
+	Bc_not_rec:			CHARACTER is '%/107/';
+	Bc_end_pre:			CHARACTER is '%/108/';
+	Bc_end_first_pre:	CHARACTER is '%/109/';
+
 
 end

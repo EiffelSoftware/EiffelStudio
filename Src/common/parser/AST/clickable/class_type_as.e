@@ -20,7 +20,7 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (n: like class_name; g: like generics; a_is_ref, a_is_exp, a_is_sep: BOOLEAN) is
+	initialize (n: like class_name; g: like generics; a_is_exp, a_is_sep: BOOLEAN) is
 			-- Create a new CLASS_TYPE AST node.
 		require
 			n_not_void: n /= Void
@@ -28,13 +28,11 @@ feature {AST_FACTORY} -- Initialization
 			class_name := n
 			class_name.to_upper
 			generics := g
-			is_reference := a_is_ref
 			is_expanded := a_is_exp
 			is_separate := a_is_sep
 		ensure
 			class_name_set: class_name = n
 			generics_set: generics = g
-			is_reference_set: is_reference = a_is_ref
 			is_expanded_set: is_expanded = a_is_exp
 			is_separate_st: is_separate = a_is_sep
 		end
@@ -58,9 +56,6 @@ feature -- Attributes
 	is_class: BOOLEAN is True
 			-- Does the Current AST represent a class?
 
-	is_reference: BOOLEAN
-			-- Is current type used with `reference' keyword?
-	
 	is_expanded: BOOLEAN
 			-- Is current type used with `expanded' keyword?
 			
@@ -112,7 +107,6 @@ feature -- Comparison
 		do
 			Result := equivalent (class_name, other.class_name) and then
 				equivalent (generics, other.generics) and then
-				is_reference = other.is_reference and then
 				is_expanded = other.is_expanded
 		end
 

@@ -555,18 +555,17 @@ feature -- Access
 			has_externals_set: Result.has_externals = he
 		end
 
-	new_class_type_as (n: ID_AS; g: EIFFEL_LIST [TYPE_AS]; is_ref, is_exp, is_sep: BOOLEAN): CLASS_TYPE_AS is
+	new_class_type_as (n: ID_AS; g: EIFFEL_LIST [TYPE_AS]; is_exp, is_sep: BOOLEAN): CLASS_TYPE_AS is
 			-- New CLASS_TYPE AST node
 		require
 			n_not_void: n /= Void
 		do
 			create Result
-			Result.initialize (n, g, is_ref, is_exp, is_sep)
+			Result.initialize (n, g, is_exp, is_sep)
 		ensure
 			class_type_as_not_void: Result /= Void
 			class_name_set: Result.class_name = n
 			generics_set: Result.generics = g
-			is_reference_set: Result.is_reference = is_ref
 			is_expanded_set: Result.is_expanded = is_exp
 			is_separate_set: Result.is_separate = is_sep
 		end

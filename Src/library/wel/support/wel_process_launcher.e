@@ -15,8 +15,6 @@ class
 	WEL_PROCESS_LAUNCHER
 
 inherit
-	ANY
-
 	WEL_PROCESS_CREATION_CONSTANTS
 		export
 			{NONE} all
@@ -83,7 +81,11 @@ feature -- Basic Operations
 			l_tuple: TUPLE [STRING]
 		do
 			create l_tuple
-			spawn (a_command_line, a_working_directory)
+			if hidden then
+				spawn_with_flags (a_command_line, a_working_directory, create_no_window)
+			else
+				spawn (a_command_line, a_working_directory)
+			end
 			output_pipe.close_input
 			l_block_size := Block_size
 			from

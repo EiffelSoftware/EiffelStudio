@@ -85,6 +85,8 @@ feature {NONE} -- Processing
 					
 					if footer_inserted then
 						l_content.put_last (l_parent.last)
+						l_parent.remove (l_parent.count - 1)
+					else
 						l_parent.remove_last
 					end								
 							

@@ -21,8 +21,8 @@ feature {NONE} -- Initialization
 	make (a_parent: WEL_COMPOSITE_WINDOW) is
 		do
 			make_by_id (a_parent, Modeless_dlg_id)
-			!! edit.make_by_id (Current, Edit_id)
-			!! edit_text.make (0)
+			create edit.make_by_id (Current, Edit_id)
+			create edit_text.make (0)
 		end
 
 feature -- Access

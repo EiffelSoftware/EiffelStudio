@@ -98,7 +98,7 @@ feature {NONE} -- Implementation
 			brush: WEL_BRUSH
 			row, column: INTEGER
 		once
-			!! Result.make (std_colors.count,
+			create Result.make (std_colors.count,
 				std_hatch_styles.count)
 			from
 				row := 1
@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 				until
 					column > Result.width
 				loop
-					!! brush.make_hatch (
+					create brush.make_hatch (
 						std_hatch_styles.item (column),
 						std_colors.item (row))
 					Result.put (brush, row, column)

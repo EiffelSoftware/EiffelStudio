@@ -1,45 +1,27 @@
 system
-	app
+	tutorial_step1
 
 root 
-	APPLICATION (root_cluster): "make"
+	TUTORIAL_STEP1 (root_cluster): "make"
 
 default
-	assertion (all);
-	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\wel");
+	assertion (all)
 
 cluster 
-	root_cluster:		"$EIFFEL4\examples\wel\tutorial\step1";
+	root_cluster:	"$EIFFEL4\examples\wel\tutorial\step1"
 
-	-- WEL
-	wel_constants:		"$EIFFEL4\library\wel\consts";
-	wel_controls:		"$EIFFEL4\library\wel\controls";
-	wel_gdi:		"$EIFFEL4\library\wel\gdi";
-	wel_gdi_stocks: 	"$EIFFEL4\library\wel\gdistock";
-	wel_messages:		"$EIFFEL4\library\wel\messages";
-	wel_standard_dialogs:	"$EIFFEL4\library\wel\stddlgs";
-	wel_structures: 	"$EIFFEL4\library\wel\structs";
-	wel_support:		"$EIFFEL4\library\wel\support";
-	wel_windows:		"$EIFFEL4\library\wel\windows";
+		-- WEL
+	all wel: 		"$EIFFEL4\library\wel"
 
-	-- EiffelBase
-	kernel: 		"$EIFFEL4\library\base\kernel";
-	support:		"$EIFFEL4\library\base\support";
-	access: 		"$EIFFEL4\library\base\structures\access";
-	cursors:		"$EIFFEL4\library\base\structures\cursors";
-	cursor_tree:		"$EIFFEL4\library\base\structures\cursor_tree";
-	dispenser:		"$EIFFEL4\library\base\structures\dispenser";
-	iteration:		"$EIFFEL4\library\base\structures\iteration";
-	list:			"$EIFFEL4\library\base\structures\list";
-	set:			"$EIFFEL4\library\base\structures\set";
-	sort:			"$EIFFEL4\library\base\structures\sort";
-	storage:		"$EIFFEL4\library\base\structures\storage";
-	table:			"$EIFFEL4\library\base\structures\table";
-	traversing:		"$EIFFEL4\library\base\structures\traversing";
-	tree:			"$EIFFEL4\library\base\structures\tree";
+		-- EiffelBase
+	all base: 		"$EIFFEL4\library\base"
+		exclude
+			"table_eiffel3"
+			"desc"
+		end
 
 external
-	include_path:		"$(EIFFEL4)\library\wel\spec\windows\include";
+	include_path:	"$(EIFFEL4)\library\wel\spec\windows\include"
 	object: 		"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib"
 
-end -- system app
+end -- tutorial_step1

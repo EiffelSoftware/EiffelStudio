@@ -36,10 +36,12 @@ feature {NONE} -- Initialization
 			make_top (Title)
 			resize (185, 245)
 			-- Create the output
-			!! list.make (Current, 0, 0, client_rect.width, 20, 1)
-			!! label.make (Current, "What happens?", 0, 20, client_rect.width, 20, 0)
+			create list.make (Current, 0, 0, client_rect.width, 20, 1)
+			list.set_font(gui_font)
+			create label.make (Current, "What happens?", 0, 20, client_rect.width, 20, 0)
+			label.set_font(gui_font)
 			-- Create the tree view.
-			!! tree_view.make (Current, 10, 50, 150, 150, -1)
+			create tree_view.make (Current, 10, 50, 150, 150, -1)
 			tree_view.set_item_output (label)
 			tree_view.set_mess_output (list)
 		end
@@ -57,16 +59,22 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			!! Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Id_ico_application)
 		end
 
 	Title: STRING is "WEL Tree View"
 			-- Window's title
 
+	gui_font: WEL_DEFAULT_GUI_FONT is
+			-- Default font used to draw dialogs.
+		once
+			create Result.make
+		end
+
 	class_background: WEL_BRUSH is
 			-- background color
 		once
-			!! Result.make_by_sys_color (Color_background)
+			create Result.make_by_sys_color (Color_background)
 		end
 
 	default_style: INTEGER is
@@ -88,7 +96,7 @@ feature {NONE} -- Implementation
 			pt: WEL_POINT
    		do
 			if shown then
-				!! pt.make (width, height)
+				create pt.make (width, height)
 				min_max_info.set_min_track_size (pt)
 				min_max_info.set_max_track_size (pt)
 			end

@@ -1,0 +1,14 @@
+system
+	treeview_demo
+
+root 
+	PRECOMP_TREEVIEW_DEMO (root_cluster): "make"
+
+default
+	assertion (all)
+	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\wel")
+
+cluster 
+	root_cluster:	"$EIFFEL4\examples\wel\tree_view"
+
+end -- treeview_demo

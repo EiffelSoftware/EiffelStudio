@@ -5,7 +5,6 @@ inherit
 	WEL_FRAME_WINDOW
 		redefine
 			class_background,
-			class_icon,
 			on_control_command,
 			on_left_button_down
 		end
@@ -19,7 +18,7 @@ feature {NONE} -- Initialization
 			-- Make the main window and a button
 		do
 			make_top ("WEL xy")
-			!! clear_button.make (Current, "Clear",
+			create clear_button.make (Current, "Clear",
 				1, 1, 70, 40, 1)
 		end
 
@@ -39,13 +38,13 @@ feature {NONE} -- Behaviors
 			dc: WEL_CLIENT_DC
 			position: STRING
 		do
-			!! position.make (20)
+			create position.make (20)
 			position.extend ('(')
 			position.append_integer (x_pos)
 			position.append (", ")
 			position.append_integer (y_pos)
 			position.extend (')')
-			!! dc.make (Current)
+			create dc.make (Current)
 			dc.get
 			dc.text_out (x_pos, y_pos, position)
 			dc.release
@@ -59,13 +58,7 @@ feature {NONE} -- Implementation
 	class_background: WEL_WHITE_BRUSH is
 			-- White background
 		once
-			!! Result.make
-		end
-
-	class_icon: WEL_ICON is
-			-- Window's icon
-		once
-			!! Result.make_by_id (1)
+			create Result.make
 		end
 
 end -- class MAIN_WINDOW

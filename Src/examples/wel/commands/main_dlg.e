@@ -26,11 +26,11 @@ feature {NONE} -- Initialization
 			c3: SHOW_COMMAND_INFORMATION
 		do
 			make_by_id (Main_dialog)
-			!! list_box.make_by_id (Current, Idc_listbox)
-			!! check_box.make_by_id (Current, Idc_checkbox)
-			!! c1
-			!! c2
-			!! c3
+			create list_box.make_by_id (Current, Idc_listbox)
+			create check_box.make_by_id (Current, Idc_checkbox)
+			create c1
+			create c2
+			create c3
 			put_command (c1, Wm_move, list_box)
 			put_command (c2, Wm_lbuttondown, list_box)
 			put_command (c3, Wm_command, list_box)

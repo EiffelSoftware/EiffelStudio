@@ -40,7 +40,7 @@ feature {NONE} -- Implementation
 			when Cmd_exit then
 				destroy
 			when Cmd_print then
-				!! print_dialog.make
+				create print_dialog.make
 				print_dialog.disable_selection
 				print_dialog.disable_selection
 				print_dialog.activate (Current)
@@ -53,7 +53,7 @@ feature {NONE} -- Implementation
 						i <= 0
 					loop
 						printer_dc.start_page
-						!! rect.make (0, 0, printer_dc.width, printer_dc.height)
+						create rect.make (0, 0, printer_dc.width, printer_dc.height)
 						draw (printer_dc, rect)
 						printer_dc.end_page
 						i := i - 1
@@ -83,13 +83,13 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			!! Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Id_ico_application)
 		end
 
 	main_menu: WEL_MENU is
 			-- Window's menu
 		once
-			!! Result.make_by_id (Id_main_menu)
+			create Result.make_by_id (Id_main_menu)
 		ensure
 			result_not_void: Result /= Void
 		end

@@ -22,21 +22,21 @@ feature {NONE} -- Initialization
 	make (a_parent: WEL_COMPOSITE_WINDOW) is
 		do
 			make_by_id (a_parent, Id_dialog_pizza)
-			!! size.make_by_id (Current,
+			create size.make_by_id (Current,
 				Id_size)
-			!! listbox_items.make_by_id (Current,
+			create listbox_items.make_by_id (Current,
 				Id_listbox_items)
-			!! radio_thin.make_by_id (Current,
+			create radio_thin.make_by_id (Current,
 				Id_rad_thin)
-			!! radio_thick.make_by_id (Current,
+			create radio_thick.make_by_id (Current,
 				Id_rad_thick)
-			!! radio_stuff.make_by_id (Current,
+			create radio_stuff.make_by_id (Current,
 				Id_rad_stuff)
-			!! radio_for_here.make_by_id (Current,
+			create radio_for_here.make_by_id (Current,
 				Id_rad_for_here)
-			!! radio_to_go.make_by_id (Current,
+			create radio_to_go.make_by_id (Current,
 				Id_rad_to_go)
-			!! static_price.make_by_id (Current,
+			create static_price.make_by_id (Current,
 				Id_static_price)
 		end
 
@@ -145,14 +145,14 @@ feature
 			else
 				text_info.append ("no toppings.%N")
 			end
-			!!msg_box.make
+			create msg_box.make
 			msg_box.information_message_box (Current, text_info, "Pizza Order")
 			terminate (Idok)
 		end
 
 	text_info: STRING is
 		once
-			!! Result.make (200)
+			create Result.make (200)
 		ensure
 			result_not_void: Result /= Void
 		end

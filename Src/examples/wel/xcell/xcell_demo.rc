@@ -1,0 +1,227 @@
+#include <windows.h>
+
+#define SELECT_CARDS_DLG_ID             1
+#define SELECT_GAME_NUMBER_DLG_ID       2
+#define ABOUT_DIALOG_ID                 3
+#define HOW_TO_PLAY_DIALOG              4
+
+#define GAME_MENU_ID                    1
+
+#define IDC_EDIT                        101
+
+#define CMD_START                       101
+#define CMD_STOP                        102
+#define CMD_EXIT                        103
+#define CMD_NEW                         104
+#define CMD_ABOUT                       105
+#define CMD_SELECT_NUMBER_OF_CARDS      106
+#define CMD_SELECT_GAME_NUMBER          107
+#define CMD_HOW_TO_PLAY                 108
+
+#define START_BITMAP_ID                 1
+#define END_BITMAP_ID   		2
+#define BACKGROUND_BITMAP_ID            75
+#define XCELL_BITMAP_ID             	77
+
+#define XCELL_ICON                      1
+
+#define BITMAP_63                       63
+#define BITMAP_62                       62
+#define BITMAP_61                       61
+#define BITMAP_60                       60
+#define BITMAP_55                       55
+#define BITMAP_54                       54
+#define BITMAP_53                       53
+#define BITMAP_52                       52
+#define BITMAP_51                       51
+#define BITMAP_50                       50
+#define BITMAP_49                       49
+#define BITMAP_48                       48
+#define BITMAP_47                       47
+#define BITMAP_46                       46
+#define BITMAP_45                       45
+#define BITMAP_44                       44
+#define BITMAP_43                       43
+#define BITMAP_42                       42
+#define BITMAP_41                       41
+#define BITMAP_40                       40
+#define BITMAP_39                       39
+#define BITMAP_38                       38
+#define BITMAP_37                       37
+#define BITMAP_36                       36
+#define BITMAP_35                       35
+#define BITMAP_34                       34
+#define BITMAP_33                       33
+#define BITMAP_32                       32
+#define BITMAP_31                       31
+#define BITMAP_30                       30
+#define BITMAP_29                       29
+#define BITMAP_28                       28
+#define BITMAP_27                       27
+#define BITMAP_26                       26
+#define BITMAP_25                       25
+#define BITMAP_24                       24
+#define BITMAP_23                       23
+#define BITMAP_22                       22
+#define BITMAP_21                       21
+#define BITMAP_20                       20
+#define BITMAP_19                       19
+#define BITMAP_18                       18
+#define BITMAP_17                       17
+#define BITMAP_16                       16
+#define BITMAP_15                       15
+#define BITMAP_14                       14
+#define BITMAP_13                       13
+#define BITMAP_12                       12
+#define BITMAP_11                       11
+#define BITMAP_10                       10
+#define BITMAP_9                         9
+#define BITMAP_8                         8
+#define BITMAP_7                         7
+#define BITMAP_6                         6
+#define BITMAP_5                         5
+#define BITMAP_4                         4
+
+GAME_MENU_ID MENU 
+{
+ POPUP "&Game"
+ {
+  MENUITEM "&New\tF2", CMD_NEW
+  MENUITEM "&Stop\tF3", CMD_STOP, GRAYED
+  MENUITEM SEPARATOR
+  MENUITEM "E&xit", CMD_EXIT
+ }
+
+ POPUP "&Options"
+ {
+  MENUITEM "&Number of cards...", CMD_SELECT_NUMBER_OF_CARDS
+  MENUITEM "&Game number...", CMD_SELECT_GAME_NUMBER
+ }
+
+ POPUP "&Help"
+ {
+  MENUITEM "&About...", CMD_ABOUT
+  MENUITEM "How to play...", CMD_HOW_TO_PLAY
+ }
+
+}
+
+SELECT_CARDS_DLG_ID DIALOG 217, 168, 114, 52
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Xcell"
+FONT 8, "MS Sans Serif"
+{
+ LTEXT "Select number of cards", -1, 5, 8, 78, 12
+ EDITTEXT IDC_EDIT, 88, 7, 19, 12
+ DEFPUSHBUTTON "OK", IDOK, 7, 32, 42, 14
+ PUSHBUTTON "Cancel", IDCANCEL, 64, 32, 42, 14
+}
+
+SELECT_GAME_NUMBER_DLG_ID DIALOG 217, 168, 114, 52
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "Xcell"
+FONT 8, "MS Sans Serif"
+{
+ LTEXT "Select a game number", -1, 5, 8, 78, 12
+ EDITTEXT IDC_EDIT, 82, 7, 25, 12
+ DEFPUSHBUTTON "OK", IDOK, 7, 32, 42, 14
+ PUSHBUTTON "Cancel", IDCANCEL, 64, 32, 42, 14
+}
+
+ABOUT_DIALOG_ID DIALOG 106, 25, 203, 197
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "About Xcell"
+FONT 8, "MS Sans Serif"
+{
+ DEFPUSHBUTTON "OK", IDOK, 76, 176, 50, 14
+ ICON XCELL_ICON, -1, 5, 7, 18, 20
+ LTEXT "Xcell is a cardgame based on the cardgame 'Freecell' which is shipped with Windows 95 and Windows NT.\n\nAn extra feature of this game is the ability to select the number of cards you want to play with.", -1, 30, 8, 165, 54
+ LTEXT "The game is written in Eiffel with ISE's Windows Eiffel Library (WEL). By using the facilities of this library it was possible to implement a steady cardgame in a few days. The library also made it very easy to have a good, efficient redrawing mechanism.", -1, 30, 63, 165, 52
+ LTEXT "If you want to know more about the WEL, please send a piece of e-mail to <wel@eiffel.com>.\n\nCopyright by ISE Inc. 1995.\n\nWritten by Robin van Ommeren.", -1, 30, 116, 165, 53
+}
+
+HOW_TO_PLAY_DIALOG DIALOG 102, 33, 203, 253
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+CAPTION "How to play Xcell"
+FONT 8, "MS Sans Serif"
+{
+ DEFPUSHBUTTON "OK", IDOK, 75, 227, 50, 14
+ ICON XCELL_ICON, -2, 5, 7, 18, 20
+ LTEXT "The rules for the game are the same as the rules for the 'Freecell' game of Microsoft.", -1, 24, 33, 165, 18, NOT WS_GROUP
+ LTEXT "The controls however are slightly different, the game makes use of the left and the right mousebutton.", -1, 24, 60, 166, 25, NOT WS_GROUP
+ LTEXT "Left mouse button:\n\nWhen pressing the left mouse button on a card, you will select the card and you will be enabled to move the card to a destination of your choice.", -1, 24, 94, 166, 42, NOT WS_GROUP
+ LTEXT "Right mouse button:\n\nWhen pressing the right mouse button, you will select a card. This card will then be moved respectively to a homecell, an empty column or an empty Xcell if possible.", -1, 24, 145, 166, 51, NOT WS_GROUP
+ CTEXT "WELcome to Xcell", -1, 24, 16, 154, 10, SS_CENTER | NOT WS_GROUP
+ LTEXT "Enjoy the game!", -1, 24, 205, 165, 13
+}
+
+GAME_ACCELERATOR_ID ACCELERATORS
+{
+ VK_F2, CMD_NEW, VIRTKEY
+ VK_F3, CMD_STOP, VIRTKEY
+}
+
+BITMAP_4 BITMAP "clubs1.bmp"
+BITMAP_5 BITMAP "diamon1.bmp"
+BITMAP_6 BITMAP "spades1.bmp"
+BITMAP_7 BITMAP "harts1.bmp"
+BITMAP_8 BITMAP "clubs2.bmp"
+BITMAP_9 BITMAP "diamon2.bmp"
+BITMAP_10 BITMAP "spades2.bmp"
+BITMAP_11 BITMAP "harts2.bmp"
+BITMAP_12 BITMAP "clubs3.bmp"
+BITMAP_13 BITMAP "diamon3.bmp"
+BITMAP_14 BITMAP "spades3.bmp"
+BITMAP_15 BITMAP "harts3.bmp"
+BITMAP_16 BITMAP "clubs4.bmp"
+BITMAP_17 BITMAP "diamon4.bmp"
+BITMAP_18 BITMAP "spades4.bmp"
+BITMAP_19 BITMAP "harts4.bmp"
+BITMAP_20 BITMAP "clubs5.bmp"
+BITMAP_21 BITMAP "diamon5.bmp"
+BITMAP_22 BITMAP "spades5.bmp"
+BITMAP_23 BITMAP "harts5.bmp"
+BITMAP_24 BITMAP "clubs6.bmp"
+BITMAP_25 BITMAP "diamon6.bmp"
+BITMAP_26 BITMAP "spades6.bmp"
+BITMAP_27 BITMAP "harts6.bmp"
+BITMAP_28 BITMAP "clubs7.bmp"
+BITMAP_29 BITMAP "diamon7.bmp"
+BITMAP_30 BITMAP "spades7.bmp"
+BITMAP_31 BITMAP "harts7.bmp"
+BITMAP_32 BITMAP "clubs8.bmp"
+BITMAP_33 BITMAP "diamon8.bmp"
+BITMAP_34 BITMAP "spades8.bmp"
+BITMAP_35 BITMAP "harts8.bmp"
+BITMAP_36 BITMAP "clubs9.bmp"
+BITMAP_37 BITMAP "diamon9.bmp"
+BITMAP_38 BITMAP "spades9.bmp"
+BITMAP_39 BITMAP "harts9.bmp"
+BITMAP_40 BITMAP "clubs10.bmp"
+BITMAP_41 BITMAP "diamon10.bmp"
+BITMAP_42 BITMAP "spades10.bmp"
+BITMAP_43 BITMAP "harts10.bmp"
+BITMAP_44 BITMAP "clubs11.bmp"
+BITMAP_45 BITMAP "diamon11.bmp"
+BITMAP_46 BITMAP "spades11.bmp"
+BITMAP_47 BITMAP "harts11.bmp"
+BITMAP_48 BITMAP "clubs12.bmp"
+BITMAP_49 BITMAP "diamon12.bmp"
+BITMAP_50 BITMAP "spades12.bmp"
+BITMAP_51 BITMAP "harts12.bmp"
+BITMAP_52 BITMAP "clubs13.bmp"
+BITMAP_53 BITMAP "diamon13.bmp"
+BITMAP_54 BITMAP "spades13.bmp"
+BITMAP_55 BITMAP "harts13.bmp"
+
+BITMAP_60 BITMAP "h_clubs.bmp"
+BITMAP_61 BITMAP "h_diamo.bmp"
+BITMAP_62 BITMAP "h_spades.bmp"
+BITMAP_63 BITMAP "h_harts.bmp"
+
+XCELL_BITMAP_ID BITMAP "xcell.bmp"
+BACKGROUND_BITMAP_ID BITMAP "backgr.bmp"
+START_BITMAP_ID BITMAP "start.bmp"
+END_BITMAP_ID BITMAP "end.bmp"
+
+XCELL_ICON ICON "xcell_demo.ico"

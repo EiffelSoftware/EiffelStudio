@@ -39,7 +39,7 @@ feature {NONE} -- Implementation
 			when Cmd_file_open then
 				open_file_dialog.activate (Current)
 				if open_file_dialog.selected then
-					!! child.make (Current, open_file_dialog.file_name)
+					create child.make (Current, open_file_dialog.file_name)
 				end
 			when Cmd_file_close then
 				if has_active_window then
@@ -61,8 +61,8 @@ feature {NONE} -- Implementation
 		local
 			ofn: WEL_OFN_CONSTANTS
 		once
-			!! ofn
-			!! Result.make
+			create ofn
+			create Result.make
 			Result.set_filter (<<"Bitmap file (*.bmp)", "All file (*.*)">>,
 					<<"*.bmp", "*.*">>)
 			Result.add_flag (ofn.Ofn_filemustexist)
@@ -71,15 +71,17 @@ feature {NONE} -- Implementation
 		end
 
 	main_menu: WEL_MENU is
-		once
-			!! Result.make_by_id (Id_menu_application)
+			-- Window's menu
+		once 
+				-- create the menu from the ressource file.
+			create Result.make_by_id (Id_menu_application)
 		ensure
 			result_not_void: Result /= Void
 		end
 
 	class_icon: WEL_ICON is
 		once
-			!! Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Id_ico_application)
 		end
 
 	Title: STRING is "WEL Bitmap Viewer"

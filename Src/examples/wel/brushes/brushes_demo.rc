@@ -1,0 +1,6 @@
+#define ID_BMP_ISE_LOGO		1
+#define ID_ICO_APPLICATION	1
+
+ID_ICO_APPLICATION ICON "brushes_demo.ico"
+ID_BMP_ISE_LOGO BITMAP "eiffel.bmp"
+

@@ -1,0 +1,14 @@
+system
+	listview_demo
+
+root 
+	PRECOMP_LISTVIEW_DEMO (root_cluster): "make"
+
+default
+	assertion (all)
+	precompiled ("$EIFFEL4\precomp\spec\$PLATFORM\wel")
+
+cluster 
+	root_cluster:	"$EIFFEL4\examples\wel\list_view"
+
+end -- listview_demo

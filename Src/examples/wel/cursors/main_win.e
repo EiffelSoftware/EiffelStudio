@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Make the main window
 		do
-			!! cursor.make_by_predefined_id (Idc_arrow)
+			create cursor.make_by_predefined_id (Idc_arrow)
 			make_top (Title)
 			set_menu (main_menu)
 			resize (300, 200)
@@ -50,27 +50,27 @@ feature {NONE} -- Behaviors
 			inspect
 				id_menu
 			when Cmd_cursor_arrow then
-				!!cursor.make_by_predefined_id (Idc_arrow)
+				create cursor.make_by_predefined_id (Idc_arrow)
 			when Cmd_cursor_cross then
-				!! cursor.make_by_predefined_id (Idc_cross)
+				create cursor.make_by_predefined_id (Idc_cross)
 			when Cmd_cursor_ibeam then
-				!! cursor.make_by_predefined_id (Idc_ibeam)
+				create cursor.make_by_predefined_id (Idc_ibeam)
 			when Cmd_cursor_size then
-				!! cursor.make_by_predefined_id (Idc_sizeall)
+				create cursor.make_by_predefined_id (Idc_sizeall)
 			when Cmd_cursor_sieznesw then
-				!! cursor.make_by_predefined_id (Idc_sizenesw)
+				create cursor.make_by_predefined_id (Idc_sizenesw)
 			when Cmd_cursor_sizens then
-				!! cursor.make_by_predefined_id (Idc_sizens)
+				create cursor.make_by_predefined_id (Idc_sizens)
 			when Cmd_cursor_sizeswne then
-				!! cursor.make_by_predefined_id (Idc_sizenwse)
+				create cursor.make_by_predefined_id (Idc_sizenwse)
 			when Cmd_cursor_sizewe then
-				!! cursor.make_by_predefined_id (Idc_sizewe)
+				create cursor.make_by_predefined_id (Idc_sizewe)
 			when Cmd_cursor_uparrow then
-				!! cursor.make_by_predefined_id (Idc_uparrow)
+				create cursor.make_by_predefined_id (Idc_uparrow)
 			when Cmd_cursor_wait then
-				!! cursor.make_by_predefined_id (Idc_wait)
+				create cursor.make_by_predefined_id (Idc_wait)
 			when Cmd_cursor_custom then
-				!! cursor.make_by_id (Id_cur_custom)
+				create cursor.make_by_id (Id_cur_custom)
 			end
 		end
 
@@ -88,12 +88,12 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			!! Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Id_ico_application)
 		end
 
 	main_menu: WEL_MENU is
 		once
-			!! Result.make_by_id (Id_menu_application)
+			create Result.make_by_id (Id_menu_application)
 		ensure
 			result_not_void: Result /= Void
 		end

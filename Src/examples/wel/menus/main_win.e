@@ -7,7 +7,8 @@ inherit
 			class_icon,
 			on_menu_command,
 			on_right_button_down,
-			closeable
+			closeable,
+			background_brush
 		end
 
 creation
@@ -22,12 +23,28 @@ feature {NONE} -- Initialization
 			make_top (Title)
 			resize (400, 250)
 			set_menu (main_menu)
-			!! label.make (Current, 
+			create label.make (Current, 
 				"Right-click in this window to get a track popup menu.",
 				1, 10, 350, 20, 1)
+			label.set_font(gui_font)
+		end
+
+feature -- Access
+
+	background_brush: WEL_BRUSH is
+			-- Dialog boxes background color is the same than
+			-- button color.
+		once
+			create Result.make_by_sys_color (Color_btnface + 1)
 		end
 
 feature {NONE} -- Implementation
+
+	gui_font: WEL_DEFAULT_GUI_FONT is
+			-- Default font to draw dialogs.
+		once
+			create Result.make
+		end
 
 	closeable: BOOLEAN is
 			-- When the user can close the window?
@@ -35,7 +52,7 @@ feature {NONE} -- Implementation
 			msg_box: WEL_MSG_BOX
 		do
 			if file_menu.item_checked (Confirmation_id) then
-				!! msg_box.make
+				create msg_box.make
 				msg_box.question_message_box (Current, 
 							"Do you want to exit?", "Exit")
 				Result := msg_box.message_box_result = Idyes
@@ -62,13 +79,13 @@ feature {NONE} -- Implementation
 					file_menu.check_item (Confirmation_id)
 				end
 			when Open_id then
-				!! msg_box.make
+				create msg_box.make
 				msg_box.information_message_box (Current, "Option `Open' selected.", "Open")
 			when Save_id then
-				!! msg_box.make
+				create msg_box.make
 				msg_box.information_message_box (Current, "Option `Save' selected.", "Save")
 			when Delete_id then
-				!! msg_box.make
+				create msg_box.make
 				msg_box.information_message_box (Current, "Option `Delete' selected.", "Delete")
 			else
 			end
@@ -79,7 +96,7 @@ feature {NONE} -- Implementation
 		local
 			point: WEL_POINT
 		do
-			!! point.make (x_pos, y_pos)
+			create point.make (x_pos, y_pos)
 			point.client_to_screen (Current)
 			track.show_track (point.x, point.y, Current)
 		end
@@ -87,7 +104,7 @@ feature {NONE} -- Implementation
 	main_menu: WEL_MENU is
 			-- The main menu
 		once
-			!! Result.make
+			create Result.make
 			Result.append_popup (file_menu, "&File")
 		ensure
 			result_not_void: Result /= Void
@@ -96,7 +113,7 @@ feature {NONE} -- Implementation
 	file_menu: WEL_MENU is
 			-- The file menu
 		once
-			!! Result.make
+			create Result.make
 			Result.append_string ("&Open", Open_id)
 			Result.append_string ("&Save", Save_id)
 			Result.append_string ("&Delete", Delete_id)
@@ -111,7 +128,7 @@ feature {NONE} -- Implementation
 	track: WEL_MENU is
 			-- The track menu
 		once
-			!! Result.make_track			
+			create Result.make_track			
 			Result.append_popup (file_menu, "File")
 		ensure
 			result_not_void: Result /= Void
@@ -120,7 +137,7 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			!! Result.make_by_id (1)
+			create Result.make_by_id (1)
 		end
 
 	Open_id, Save_id, Delete_id,

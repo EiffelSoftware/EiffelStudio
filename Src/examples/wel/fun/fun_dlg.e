@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			-- Make a funny dialog
 		do
 			make_by_id (a_parent, Id_dialog)
-			!! ok_button.make_by_id (Current, Idok)
+			create ok_button.make_by_id (Current, Idok)
 			direction_x := Inc_x
 			direction_y := Inc_y
 		end
@@ -114,7 +114,7 @@ feature
 		local
 			msg_box: WEL_MSG_BOX
 		do
-			!!msg_box.make
+			create msg_box.make
 			msg_box.information_message_box (Current, 
 				"Thank you for your participation...", "ISE Example")
 			terminate (Idok)

@@ -26,8 +26,8 @@ feature -- Initialization
 			a_parent_exists: a_parent.exists
 		do
 			control_make (a_parent, "")
-			!! on_bitmap.make_by_id (On_bmp_id)
-			!! off_bitmap.make_by_id (Off_bmp_id)
+			create on_bitmap.make_by_id (On_bmp_id)
+			create off_bitmap.make_by_id (Off_bmp_id)
 			move_and_resize (a_x, a_y, on_bitmap.width,
 				on_bitmap.height, False)
 		end

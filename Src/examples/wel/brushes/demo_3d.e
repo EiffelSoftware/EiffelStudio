@@ -55,7 +55,7 @@ feature -- Basic operations
 
 	go is
 		do
-			!! win_dc.make (Current)
+			create win_dc.make (Current)
 			win_dc.get
 			if dec > virtual_dcs_count then
 				dec := 1
@@ -99,7 +99,7 @@ feature {NONE} -- Implementation
 			virtual_dc: WEL_MEMORY_DC
 			message: STRING
 		do
-			!! win_dc.make (Current)
+			create win_dc.make (Current)
 			win_dc.get
 			max_x := client_rect.width
 			max_y := client_rect.height
@@ -156,23 +156,23 @@ feature {NONE} -- Implementation
 			virtual_dc: WEL_MEMORY_DC
 			virtual_bitmap: WEL_BITMAP
 		do
-			!! log_pal.make (768, max_color)
+			create log_pal.make (768, max_color)
 			from
 				ind := 0
 			until
 				ind = max_color
 			loop
-				!! pal_entry.make (12+ 3 * ind // 17,
+				create pal_entry.make (12+ 3 * ind // 17,
 						  20 + 3 * ind // 13,
 						  48 + 3 * ind // 5,
 						  Pc_reserved)
 				log_pal.set_pal_entry (ind, pal_entry)
 				ind := ind + 1
 			end
-			!! palette.make (log_pal)
-			!! colors.make (1, max_color)
-			!! brushes.make (1, max_color)
-			!! pens.make (1, max_color)
+			create palette.make (log_pal)
+			create colors.make (1, max_color)
+			create brushes.make (1, max_color)
+			create pens.make (1, max_color)
 			from
 				ind := 1
 			until
@@ -180,21 +180,21 @@ feature {NONE} -- Implementation
 			loop
 				color := palette.palette_index (ind - 1)
 				colors.force (color,ind)
-				!! brush.make_solid (color)
+				create brush.make_solid (color)
 				brushes.force (brush, ind)
-				!! pen.make (Ps_solid, 1, color)
+				create pen.make (Ps_solid, 1, color)
 				pens.force (pen, ind)
 				ind := ind + 1
 			end
-			!! virtual_dcs.make (1, virtual_dcs_count)
-			!! virtual_bitmaps.make (1, virtual_dcs_count)
+			create virtual_dcs.make (1, virtual_dcs_count)
+			create virtual_bitmaps.make (1, virtual_dcs_count)
 			from
 				dec := 1
 			until
 				dec > virtual_dcs_count
 			loop
-				!! virtual_dc.make_by_dc (win_dc)
-				!! virtual_bitmap.make_compatible (win_dc,
+				create virtual_dc.make_by_dc (win_dc)
+				create virtual_bitmap.make_compatible (win_dc,
 					width, height)
 				virtual_dc.select_bitmap (virtual_bitmap)
 				virtual_dc.select_brush (white_brush)
@@ -219,16 +219,16 @@ feature {NONE} -- Implementation
 			poly_coord: ARRAY [INTEGER]
 			projected_point: PROJECTION
 		do
-			!! coord.make (1, 1)
-			!! poly_coord.make (1, 6)
+			create coord.make (1, 1)
+			create poly_coord.make (1, 6)
 			from
-				ind :=1
+				ind := 1
 			variant
-				nx - ind
+				1 + nx - ind
 			until
-				ind > nx
+				ind > nx 
 			loop
-				!! projected_point
+				create projected_point
 				coord.force (projected_point, ind)
 				ind := ind + 1
 			end
@@ -353,6 +353,7 @@ feature {NONE} -- Implementation
 		local
 			loc_p1, loc_p2, loc_p3, loc_q1, loc_q2, loc_q3: REAL
 			norm1, norm2, norm3: DOUBLE
+			divisor: DOUBLE
 		do
 			loc_p1 := x2 - x1
 			loc_p2 := y2 - y1
@@ -363,8 +364,13 @@ feature {NONE} -- Implementation
 			norm1 := loc_p2 * loc_q3 - loc_q2 * loc_p3
 			norm2 := loc_p3 * loc_q1 - loc_q3 * loc_p1
 			norm3 := loc_p1 * loc_q2 - loc_q1 * loc_p2
-			Result := (- 200 * norm2) / (200 * Sqrt (norm1 * norm1 +
-				norm2 * norm2 + norm3 * norm3))
+			divisor := norm1 * norm1 + norm2 * norm2 + norm3 * norm3
+			divisor := sqrt(divisor)
+			if divisor /= 0.0 then
+				Result := (- 200 * norm2) / (200 * divisor)
+			else
+				Result := (- 200 * norm2) / 1.0e-20
+			end
 		end
 
 	evaluate (a_x, a_y: REAL): REAL is
@@ -386,7 +392,7 @@ feature {NONE} -- Implementation
 
 	White_brush : WEL_WHITE_BRUSH is
 		once
-			!! Result.make
+			create Result.make
 		end
 
 

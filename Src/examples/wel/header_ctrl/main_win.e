@@ -39,11 +39,14 @@ feature {NONE} -- Initialization
 			-- Create the list view.
 			create header_control.make (Current, client_rect.x, client_rect.y, 
 												 client_rect.width, client_rect.height, -1)
+			header_control.set_font(gui_font)
 
 			-- Create the output
-			!! label.make (Current, "What happens?", 0, 30, client_rect.width, 20, 0)
-			!! list.make (Current, 0, 50,
+			create label.make (Current, "What happens?", 0, 30, client_rect.width, 20, 0)
+			label.set_font(gui_font)
+			create list.make (Current, 0, 50,
 							  client_rect.width, client_rect.height - 55, 1)
+			list.set_font(gui_font)
 
 			header_control.set_item_output (label)
 			header_control.set_mess_output (list)
@@ -62,7 +65,7 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			!! Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Id_ico_application)
 		end
 
 	Title: STRING is "WEL Header Control"
@@ -71,7 +74,13 @@ feature {NONE} -- Implementation
 	class_background: WEL_BRUSH is
 			-- background color
 		once
-			!! Result.make_by_sys_color (Color_background)
+			create Result.make_by_sys_color (Color_background)
+		end
+
+	gui_font: WEL_DEFAULT_GUI_FONT is
+			-- Default font used to draw dialogs.
+		once
+			create Result.make
 		end
 
 	default_style: INTEGER is

@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 			-- Make the main window.
 		do
 			make_top ("My application")
-			!! dc.make (Current)
+			create dc.make (Current)
 		end
 
 feature -- Access
@@ -72,7 +72,7 @@ feature {NONE} -- Implementation
 		local
 			msg_box: WEL_MSG_BOX
 		do
-			!!msg_box.make
+			create msg_box.make
 			msg_box.question_message_box (Current, "Do you want to quit?",
 				"Quit")
 			Result := msg_box.message_box_result = Idyes

@@ -1,0 +1,18 @@
+#define ID_ICO_APPLICATION		1
+
+#define ID_MAIN_MENU			1
+
+#define CMD_PRINT			100
+#define CMD_EXIT			1000
+
+ID_ICO_APPLICATION ICON "printer_demo.ico"
+
+ID_MAIN_MENU MENU
+{
+	POPUP "&File"
+	{
+		MENUITEM "&Print", CMD_PRINT
+		MENUITEM SEPARATOR
+		MENUITEM "E&xit", CMD_EXIT
+	}
+}

@@ -32,13 +32,13 @@ feature -- Initialization
 			dib: WEL_DIB
 		do
 			mdi_child_window_make (a_parent, a_name)
-			!! file.make_open_read (a_name)
-			!! dib.make_by_file (file)
-			!! dc.make (Current)
+			create file.make_open_read (a_name)
+			create dib.make_by_file (file)
+			create dc.make (Current)
 			dc.get
-			!! bitmap.make_by_dib (dc, dib, Dib_rgb_colors)
+			create bitmap.make_by_dib (dc, dib, Dib_rgb_colors)
 			dc.release
-			!! scroller.make (Current, bitmap.width, bitmap.height, 1, 20)
+			create scroller.make (Current, bitmap.width, bitmap.height, 1, 20)
 		end
 
 feature -- Access
@@ -60,7 +60,7 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			!! Result.make_by_id (Id_ico_child_window)
+			create Result.make_by_id (Id_ico_child_window)
 		end
 
 end -- class CHILD_WINDOW

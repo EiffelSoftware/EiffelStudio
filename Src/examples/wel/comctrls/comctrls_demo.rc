@@ -1,0 +1,35 @@
+#define ID_ICO_APPLICATION		1
+
+#define ID_MAIN_MENU			1
+
+#define BMP_TOOLBAR			1
+
+#define CMD_BOLD			1004
+#define CMD_ITALIC			1005
+#define CMD_PROGRESS_BAR		1006
+#define CMD_EXIT			1007
+
+#define STR_TOOLTIP			200
+
+ID_ICO_APPLICATION ICON "comctrls_demo.ico"
+BMP_TOOLBAR BITMAP "toolbar.bmp"
+
+ID_MAIN_MENU MENU
+{
+	POPUP "&File"
+	{
+		MENUITEM "&Progress bar demonstration", CMD_PROGRESS_BAR
+		MENUITEM SEPARATOR
+		MENUITEM "E&xit", CMD_EXIT
+	}
+}
+
+STRINGTABLE 
+{
+	CMD_BOLD, "Bold"
+	CMD_ITALIC, "Italic"
+	CMD_PROGRESS_BAR, "Demonstrates the progress bar control"
+	CMD_EXIT, "Quits the application"
+
+	STR_TOOLTIP, "This is a tooltip for the track bar"
+}

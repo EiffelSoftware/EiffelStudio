@@ -37,14 +37,14 @@ feature {NONE} -- Initialization
 			make_top (Title)
 			resize (355, 240)
 			-- Create the output
-			!! list.make (Current, 0, 0, client_rect.width, 60, 1)
-			!! label.make (Current, "What happens?", 0, 60, client_rect.width, 20, 0)
+			create list.make (Current, 0, 0, client_rect.width, 60, 1)
+			create label.make (Current, "What happens?", 0, 60, client_rect.width, 20, 0)
 			-- Create the list view.
-			!! list_view.make (Current, 10, 90, client_rect.width - 20, client_rect.height - 130, -1)
+			create list_view.make (Current, 10, 90, client_rect.width - 20, client_rect.height - 130, -1)
 			list_view.set_item_output (label)
 			list_view.set_mess_output (list)
 			-- Create a button
-			!! button.make (Current, "Style", 10, height - 55, 50, 20, 3)
+			create button.make (Current, "Style", 10, height - 55, 50, 20, 3)
 		end
 
 feature -- Access
@@ -62,7 +62,7 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			!! Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Id_ico_application)
 		end
 
 	Title: STRING is "WEL List View"
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 	class_background: WEL_BRUSH is
 			-- background color
 		once
-			!! Result.make_by_sys_color (Color_background)
+			create Result.make_by_sys_color (Color_background)
 		end
 
 	default_style: INTEGER is

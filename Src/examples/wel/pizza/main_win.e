@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 			make_top (Title)
 			set_menu (main_menu)
 			resize (300, 200)
-			!! dialog.make (Current)
+			create dialog.make (Current)
 		end
 
 feature -- Access
@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 		local
 			msg_box: WEL_MSG_BOX
 		do
-			!!msg_box.make
+			create msg_box.make
 			msg_box.question_message_box(Current, "Do you want to exit?", "Exit")
 			Result := msg_box.message_box_result = Idyes
 		end
@@ -57,12 +57,12 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			!! Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Id_ico_application)
 		end
 
 	main_menu: WEL_MENU is
 		once
-			!! Result.make_by_id (Id_main_menu)
+			create Result.make_by_id (Id_main_menu)
 		ensure
 			result_not_void: Result /= Void
 		end

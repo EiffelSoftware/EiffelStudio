@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 			number_greater_than_Card_offset: number > Card_offset
 			number_less_or_equal_maximun: number <= Maximum_number_of_cards + Card_offset
 		do
-			!! card_image.make_by_id (number)
+			create card_image.make_by_id (number)
 			card_number := number
 		ensure
 			card_number_set: card_number = number

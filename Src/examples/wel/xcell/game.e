@@ -18,17 +18,17 @@ feature {NONE} -- Initialization
 			a_column: column [INTEGER]
 			i: INTEGER
 		do
-			!! columns.make (1, Number_of_columns)
-			!! the_card_numbers.make
-			!! xcells.make (1, Number_of_cells)
-			!! home_cells.make (1, Number_of_cells)
+			create columns.make (1, Number_of_columns)
+			create the_card_numbers.make
+			create xcells.make (1, Number_of_cells)
+			create home_cells.make (1, Number_of_cells)
 			number_of_cards := no_cards
 			from
 				i := 1
 			until
 				i > Number_of_columns
 			loop
-				!! a_column.make
+				create a_column.make
 				columns.force (a_column, i)
 				i := i + 1
 			end
@@ -277,8 +277,8 @@ feature -- Element change
 			i, j: INTEGER
 			temp_cards: LINKED_LIST [INTEGER]
 		do
-			!! temp_cards.make
-			!! randomizer.set_seed (game_number)
+			create temp_cards.make
+			create randomizer.set_seed (game_number)
 			from
 				the_card_numbers.start
 			until
@@ -492,13 +492,13 @@ feature {NONE} -- Implementation
 			i: INTEGER
 			a_card: CARD
 		do
-			!! the_cards.make (4, number_of_cards + 3)
+			create the_cards.make (4, number_of_cards + 3)
 			from
 				i := 4
 			until
 				i > number_of_cards + 3
 			loop
-				!! a_card.make (i)
+				create a_card.make (i)
 				the_cards.force (a_card, i)
 				i := i + 1
 			end

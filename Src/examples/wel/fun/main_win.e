@@ -23,11 +23,11 @@ feature {NONE} -- Initialization
 		do
 			make_top (Title)
 			resize (415, 330)
-			!! maze_button.make (Current, "Maze",
+			create maze_button.make (Current, "Maze",
 				35, 240, 100, 50, -1)
-			!! artist_button.make (Current, "Artist",
+			create artist_button.make (Current, "Artist",
 				154, 240, 100, 50, -1)
-			!! fun_button.make (Current, "Fun",
+			create fun_button.make (Current, "Fun",
 				270, 240, 100, 50, -1)
 		end
 
@@ -46,11 +46,11 @@ feature {NONE} -- Implementation
 	on_control_command (control: WEL_CONTROL) is
 		do
 			if control = maze_button then
-				!! maze.make
+				create maze.make
 			elseif control = artist_button then
-				!! artist.make (Current)
+				create artist.make (Current)
 			elseif control = fun_button then
-				!! fun_dialog.make (Current)
+				create fun_dialog.make (Current)
 				fun_dialog.activate
 			end
 		end
@@ -65,13 +65,13 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			!! Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Id_ico_application)
 		end
 
 	ise_logo: WEL_BITMAP is
 			-- ISE logo bitmap
 		once
-			!! Result.make_by_id (Id_bmp_ise_logo)
+			create Result.make_by_id (Id_bmp_ise_logo)
 		ensure
 			result_not_void: Result /= Void
 		end

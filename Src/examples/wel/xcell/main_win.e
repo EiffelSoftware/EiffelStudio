@@ -67,12 +67,12 @@ feature {NONE} -- Initialization
 			virtual_bitmap: WEL_BITMAP
 		do
 			make_top ("Xcell")
-			!! client_dc.make (Current)
+			create client_dc.make (Current)
 			client_dc.get
-			!! virtual_dc.make_by_dc (client_dc)
-			!! background_dc.make_by_dc (client_dc)
-			!! virtual_bitmap.make_compatible (client_dc, scr_width, scr_height)
-			!! background_bitmap.make_compatible (client_dc, scr_width, scr_height)
+			create virtual_dc.make_by_dc (client_dc)
+			create background_dc.make_by_dc (client_dc)
+			create virtual_bitmap.make_compatible (client_dc, scr_width, scr_height)
+			create background_bitmap.make_compatible (client_dc, scr_width, scr_height)
 			virtual_dc.select_bitmap (virtual_bitmap)
 			background_dc.select_bitmap (background_bitmap)	
 			set_menu (main_menu)
@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 				if number_of_cards = 0 then
 					number_of_cards := Maximum_number_of_cards
 				end
-				!! game_manager.make (number_of_cards)
+				create game_manager.make (number_of_cards)
 				if game_number = 0 then
 					game_number := tick_count \\ Maximum_game_number
 					select_game_number_dialog.set_game_number (game_number)
@@ -167,7 +167,7 @@ feature {NONE} -- Implementation
 		local
 			cursor: WEL_CURSOR
 		do
-			!! cursor.make_by_predefined_id (Idc_wait)
+			create cursor.make_by_predefined_id (Idc_wait)
 			cursor.set
 		end
 
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 		local
 			cursor: WEL_CURSOR
 		do
-			!! cursor.make_by_predefined_id (Idc_arrow)
+			create cursor.make_by_predefined_id (Idc_arrow)
 			cursor.set
 		end
 
@@ -424,7 +424,7 @@ feature {NONE} -- Implementation
 			y_position: INTEGER
 			i: INTEGER
 		do
-			!! a_bitmap.make_by_id (Background_bitmap_id)
+			create a_bitmap.make_by_id (Background_bitmap_id)
 			from
 				x_position := 0
 			until
@@ -450,13 +450,13 @@ feature {NONE} -- Implementation
 			until
 				i > 63
 			loop
-				!! a_bitmap.make_by_id (i)
+				create a_bitmap.make_by_id (i)
 				virtual_dc.draw_bitmap (a_bitmap, x_position, y_position,
 					a_bitmap.width, a_bitmap.height)
 				i := i + 1
 				x_position := x_position + space_between_columns
 			end
-			!! a_bitmap.make_by_id (Xcell_bitmap_id)
+			create a_bitmap.make_by_id (Xcell_bitmap_id)
 			from
 				x_position := Most_left_x_position
 				i := 1
@@ -543,7 +543,7 @@ feature -- Implementation
 	main_menu: WEL_MENU is
 			-- The menu of the game
 		once
-			!! Result.make_by_id (Game_menu_id)
+			create Result.make_by_id (Game_menu_id)
 		ensure
 			menu_not_void: Result /= Void
 		end
@@ -551,13 +551,13 @@ feature -- Implementation
 	class_background: WEL_NULL_BRUSH is
 			-- Transparent window background
 		once
-			!! Result.make
+			create Result.make
 		end
 
 	end_bitmap: WEL_BITMAP is
 			-- Creates the `end_bitmap'
 		once
-			!! Result.make_by_id (End_bitmap_id)
+			create Result.make_by_id (End_bitmap_id)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -565,7 +565,7 @@ feature -- Implementation
 	start_bitmap: WEL_BITMAP is
 			-- Creates the `start_bitmap'
 		once
-			!! Result.make_by_id (Start_bitmap_id)
+			create Result.make_by_id (Start_bitmap_id)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -573,13 +573,13 @@ feature -- Implementation
 	class_icon: WEL_ICON is
 			-- Creates the `class_icon'
 		once
-			!! Result.make_by_id (Xcell_icon)
+			create Result.make_by_id (Xcell_icon)
 		end
 
 	select_number_of_cards_dialog: SELECT_NUMBER_OF_CARDS_DIALOG is
 			-- Creates the `select_number_of_cards_dialog'
 		once
-			!! Result.make (Current)
+			create Result.make (Current)
 		ensure
 			dialog_not_void: Result /= Void
 		end
@@ -587,7 +587,7 @@ feature -- Implementation
 	select_game_number_dialog: SELECT_GAME_NUMBER_DIALOG is
 			-- Creates the `select_game_number_dialog'
 		once
-			!! Result.make (Current)
+			create Result.make (Current)
 		ensure
 			dialog_not_void: Result /= Void
 		end
@@ -595,7 +595,7 @@ feature -- Implementation
 	about_box: WEL_MODAL_DIALOG is
 			-- Creates the `about_box'
 		once
-			!! Result.make_by_id (Current, About_dialog_id)
+			create Result.make_by_id (Current, About_dialog_id)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -603,7 +603,7 @@ feature -- Implementation
 	how_to_play_box: WEL_MODAL_DIALOG is
 			-- Creates the `how_to_play_box'
 		once
-			!! Result.make_by_id (Current, How_to_play_dialog)
+			create Result.make_by_id (Current, How_to_play_dialog)
 		ensure
 			Result_not_void: Result /= Void
 		end

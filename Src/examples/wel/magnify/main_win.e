@@ -44,7 +44,7 @@ feature {NONE} -- Initialization
 			-- Make the window.
 		do
 			zoom := 4
-			!! zoom_point.make (100, 100)
+			create zoom_point.make (100, 100)
 			make_top (Title)
 			resize (44 * zoom, 36 * zoom)
 			is_tracking := False
@@ -80,15 +80,15 @@ feature -- Access
 			i: INTEGER
 		once
 			from
-				!! log_palette.make (Windows_95, 256)
+				create log_palette.make (Windows_95, 256)
 			until	
 				i = 256
 			loop
-				!! entry.make (i, 0, 0, Pc_explicit)
+				create entry.make (i, 0, 0, Pc_explicit)
 				log_palette.set_pal_entry (i, entry)
 				i := i + 1
 			end
-			!! Result.make (log_palette)
+			create Result.make (log_palette)
 		end
 
 feature -- Messages
@@ -218,11 +218,11 @@ feature {NONE} -- Implementation
 			x1, y1: INTEGER
 			dc: WEL_CLIENT_DC
 		do
-			!! dc.make (Current)
+			create dc.make (Current)
 			dc.get
 			dc.select_palette (palette)
 			dc.realize_palette
-			!! screen_dc
+			create screen_dc
 			screen_dc.get
 			x1 := bound (zoom_point.x, cx_zoomed // 2,
 				screen_width - 1 - cx_zoomed // 2)
@@ -248,12 +248,12 @@ feature {NONE} -- Implementation
 				screen_width - 1 - cx_zoomed // 2)
 			y1 := bound (zoom_point.y, cy_zoomed // 2,
 				screen_height - 1 - cy_zoomed // 2)
-			!! a_rect.make (x1 - cx_zoomed // 2,
+			create a_rect.make (x1 - cx_zoomed // 2,
 				y1 - cx_zoomed // 2,
 				x1 - cx_zoomed // 2 + cx_zoomed,
 				y1 - cy_zoomed // 2 + cy_zoomed)
 			a_rect.inflate (1, 1)
-			!! sdc
+			create sdc
 			sdc.get
 			sdc.pat_blt (a_rect.left,
 				a_rect.top, a_rect.width, 1, Dstinvert)
@@ -302,7 +302,7 @@ feature {NONE} -- Implementation
 	about_box: WEL_MODAL_DIALOG is
 			-- About dialog box
 		once
-			!! Result.make_by_id (Current, About_dlg_id)
+			create Result.make_by_id (Current, About_dlg_id)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -310,7 +310,7 @@ feature {NONE} -- Implementation
 	quick_reference: WEL_MODAL_DIALOG is
 			-- Quick reference dialog box
 		once
-			!! Result.make_by_id (Current, Quickref_dlg_id)
+			create Result.make_by_id (Current, Quickref_dlg_id)
 		ensure
 			Result_not_void: Result /= Void
 		end
@@ -318,7 +318,7 @@ feature {NONE} -- Implementation
 	main_menu: WEL_MENU is
 			-- Window's menu
 		once
-			!! Result.make_by_id (Id_main_menu)
+			create Result.make_by_id (Id_main_menu)
 		ensure
 			menu_not_void: Result /= Void
 		end
@@ -326,7 +326,7 @@ feature {NONE} -- Implementation
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			!! Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Id_ico_application)
 		end
 
 	Title: STRING is "WEL Magnify"

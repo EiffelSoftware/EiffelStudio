@@ -41,7 +41,7 @@ feature {NONE} -- implementation
 			max_y := height
 			x_pos := max_x // 2
 			y_pos := max_y // 2
-			!! dc.make (Current)
+			create dc.make (Current)
 			dc.get
 			dc.move_to (x_pos, y_pos)
 			from
@@ -113,7 +113,7 @@ feature {NONE} -- Implementation
 	random: RANDOM is
 			-- Initialize a randon number
 		once
-			!! Result.make
+			create Result.make
 			random.start
 		ensure
 			result_not_void : Result /= Void

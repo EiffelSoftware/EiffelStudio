@@ -34,7 +34,7 @@ feature {NONE} -- Initialization
 			make_child (a_parent, "Artist")
 			resize (300, 300)
 			show
-			!! dc.make (Current)
+			create dc.make (Current)
 		end
 
 feature {NONE} -- Implementation
@@ -144,19 +144,19 @@ feature {NONE} -- Implementation
 	class_background: WEL_BLACK_BRUSH is
 			-- Black background
 		once
-			!! Result.make
+			create Result.make
 		end
 
 	class_icon: WEL_ICON is
 			-- Window's icon
 		once
-			!! Result.make_by_id (Id_ico_artist)
+			create Result.make_by_id (Id_ico_artist)
 		end
 
 	class_cursor: WEL_CURSOR is
 			-- No cursor
 		once
-			!! Result.make_by_id (Id_cur_invisible)
+			create Result.make_by_id (Id_cur_invisible)
 		end
 
 	class_name: STRING is "GDI Artist"

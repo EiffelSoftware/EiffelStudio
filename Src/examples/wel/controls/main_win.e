@@ -9,6 +9,7 @@ inherit
 			on_vertical_scroll_control,
 			on_horizontal_scroll_control,
 			closeable,
+			background_brush,
 			class_icon
 		end
 
@@ -67,7 +68,20 @@ feature -- Access
 
 	vertical_scroll_bar: BOOLEAN
 
+	background_brush: WEL_BRUSH is
+			-- Dialog boxes background color is the same than
+			-- button color.
+		once
+			create Result.make_by_sys_color (Color_btnface + 1)
+		end
+
 feature {NONE} -- Implementation
+
+	gui_font: WEL_DEFAULT_GUI_FONT is
+			-- Default font to draw dialogs.
+		once
+			create Result.make
+		end
 
 	on_vertical_scroll_control (scroll_code, position: INTEGER;
 			bar: WEL_SCROLL_BAR) is
@@ -188,21 +202,21 @@ feature {NONE} -- Implementation
 		local
 			msg_box: WEL_MSG_BOX
 		do
-			!!msg_box.make
+			create msg_box.make
 			msg_box.question_message_box (Current, "Do you want to exit?", "Exit")
 			Result := msg_box.message_box_result = Idyes
 		end
 
 	text_info: STRING is
 		once
-			!! Result.make (20)
+			create Result.make (20)
 		ensure
 			result_not_void: Result /= Void
 		end
 
 	main_menu: WEL_MENU is
 		once
-			!! Result.make_by_id (Id_menu_application)
+			create Result.make_by_id (Id_menu_application)
 			menu_start
 		end
 
@@ -258,7 +272,7 @@ feature {NONE} -- Implementation
 
 	class_icon: WEL_ICON is
 		once
-			!! Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Id_ico_application)
 		end
 
 	menu_start is
@@ -300,7 +314,8 @@ feature {NONE} -- Implementation
 	menu_list_box_create is
 		do
 			list_box_item_num := 0
-			!! list_box.make (Current, 10, 100, 100, 200, -1)
+			create list_box.make (Current, 10, 100, 100, 200, -1)
+			list_box.set_font(gui_font)
 			list_box_menu.disable_item (Cmd_list_box_create)
 			list_box_menu.disable_item (Cmd_list_box_current_item)
 			list_box_menu.enable_item (Cmd_list_box_add_item)
@@ -339,7 +354,7 @@ feature {NONE} -- Implementation
 			else
 				text_info.append (" item is present.")
 			end
-			!!msg_box.make
+			create msg_box.make
 			msg_box.information_message_box (Current, text_info, "Count item")
 		end
 
@@ -351,10 +366,10 @@ feature {NONE} -- Implementation
 				text_info.wipe_out
 				text_info.append (list_box.selected_string)
 				text_info.append (" is selected.")
-				!!msg_box.make
+				create msg_box.make
 				msg_box.information_message_box (Current, text_info, "Current item")
 			else
-				!!msg_box.make
+				create msg_box.make
 				msg_box.information_message_box (Current, text_info, "Count item")
 			end
 		end
@@ -362,7 +377,8 @@ feature {NONE} -- Implementation
 	menu_mul_create is
 		do
 			list_box_mul_item_num := 0
-			!! list_box_mul.make (Current, 116, 100, 100, 200, -1)
+			create list_box_mul.make (Current, 116, 100, 100, 200, -1)
+			list_box_mul.set_font(gui_font)
 			list_box_mul_menu.disable_item (Cmd_mul_create)
 			list_box_mul_menu.disable_item (Cmd_mul_current_item)
 			list_box_mul_menu.enable_item (Cmd_mul_add_item)
@@ -401,7 +417,7 @@ feature {NONE} -- Implementation
 			else
 				text_info.append (" item is present.")
 			end
-			!!msg_box.make
+			create msg_box.make
 			msg_box.information_message_box (Current, text_info, "Count item")
 		end
 
@@ -430,10 +446,10 @@ feature {NONE} -- Implementation
 				else
 					text_info.append (" is selected.")
 				end
-				!!msg_box.make
+				create msg_box.make
 				msg_box.information_message_box (Current, text_info, "Current item")
 			else
-				!!msg_box.make
+				create msg_box.make
 				msg_box.error_message_box (Current, "No item selected.", "Error")
 			end
 		end
@@ -441,7 +457,8 @@ feature {NONE} -- Implementation
 	menu_combo_box_create is
 		do
 			combo_box_item_num := 0
-			!! combo_box.make (Current, 115, 20, 102, 90, -1)
+			create combo_box.make (Current, 115, 20, 102, 90, -1)
+			combo_box.set_font(gui_font)
 			combo_box_menu.disable_item (Cmd_combo_box_create)
 			combo_box_menu.disable_item (Cmd_combo_box_current_item)
 			combo_box_menu.enable_item (Cmd_combo_box_add_item)
@@ -485,7 +502,7 @@ feature {NONE} -- Implementation
 			else
 				text_info.append (" item is present.")
 			end
-			!!msg_box.make
+			create msg_box.make
 			msg_box.information_message_box (Current, text_info, "Count item")
 		end
 
@@ -497,10 +514,10 @@ feature {NONE} -- Implementation
 				text_info.wipe_out
 				text_info.append (combo_box.selected_string)
 				text_info.append (" is selected.")
-				!!msg_box.make
+				create msg_box.make
 				msg_box.information_message_box (Current, text_info, "Current item")
 			else
-				!!msg_box.make
+				create msg_box.make
 				msg_box.error_message_box (Current, "No item selected.", "Error")
 			end
 		end
@@ -517,7 +534,8 @@ feature {NONE} -- Implementation
 
 	menu_button_create is
 		do
-			!! button.make (Current, "Button", 10, 20, 100, 50, -1)
+			create button.make (Current, "Button", 10, 20, 100, 50, -1)
+			button.set_font(gui_font)
 			button_menu.disable_item (Cmd_button_create)
 			button_menu.enable_item (Cmd_button_delete)
 			button_menu.uncheck_item (Cmd_button_enable)
@@ -554,8 +572,9 @@ feature {NONE} -- Implementation
 
 	menu_edit_create is
 		do
-			!! edit.make (Current, "Edit", 250,
+			create edit.make (Current, "Edit", 250,
 				100, 100, 22, -1)
+			edit.set_font(gui_font)
 			edit_menu.disable_item (Cmd_edit_create)
 			edit_menu.enable_item (Cmd_edit_delete)
 			edit_menu.enable_item (Cmd_edit_set_text)
@@ -592,7 +611,7 @@ feature {NONE} -- Implementation
 			text_info.wipe_out
 			text_info.append ("The length is ")
 			text_info.append_integer (edit.text_length)
-			!!msg_box.make
+			create msg_box.make
 			msg_box.information_message_box (Current, text_info, "Text length")
 		end
 
@@ -600,14 +619,15 @@ feature {NONE} -- Implementation
 		local
 			msg_box: WEL_MSG_BOX
 		do
-			!!msg_box.make
+			create msg_box.make
 			msg_box.information_message_box (Current, edit.text, "Current text")
 		end
 
 	menu_multi_edit_create is
 		do
-			!! multi_edit.make (Current, "Multiple line edit", 250,
+			create multi_edit.make (Current, "Multiple line edit", 250,
 				20, 300, 70, -1)
+			multi_edit.set_font(gui_font)
 			multi_edit_menu.disable_item (Cmd_multi_edit_create)
 			multi_edit_menu.enable_item (Cmd_multi_edit_delete)
 			multi_edit_menu.enable_item (Cmd_multi_edit_set_text)
@@ -644,7 +664,7 @@ feature {NONE} -- Implementation
 			text_info.wipe_out
 			text_info.append ("The length is ")
 			text_info.append_integer (multi_edit.text_length)
-			!!msg_box.make
+			create msg_box.make
 			msg_box.information_message_box (Current, text_info, "Text length")
 		end
 
@@ -652,19 +672,20 @@ feature {NONE} -- Implementation
 		local
 			msg_box: WEL_MSG_BOX
 		do
-			!!msg_box.make
+			create msg_box.make
 			msg_box.information_message_box (Current, multi_edit.text, "Current text")
 		end
 
 	menu_scroll_bar_create is
 		do
-			!! static.make (Current, "static", 250, 270,
+			create static.make (Current, "static", 250, 270,
 				30, 20, -1)
+			static.set_font(gui_font)
 			if vertical_scroll_bar then
-				!! scroll_bar.make_vertical (Current, 250, 170,
+				create scroll_bar.make_vertical (Current, 250, 170,
 					20, 100, -1)
 			else
-				!! scroll_bar.make_horizontal (Current, 250,
+				create scroll_bar.make_horizontal (Current, 250,
 					250, 100, 20, -1)
 			end
 			scroll_bar_menu.enable_item (Cmd_scroll_bar_delete)
@@ -700,9 +721,12 @@ feature {NONE} -- Implementation
 
 	menu_radio_create is
 		do
-			!! group1.make (Current, "Group box", 380, 90, 85, 70, -1)
-			!! radio1.make (Current, "Radio1", 390, 110, 65, 20, -1)
-			!! radio2.make (Current, "Radio2", 390, 130, 65, 20, -1)
+			create group1.make (Current, "Group box", 380, 90, 85, 70, -1)
+			group1.set_font(gui_font)
+			create radio1.make (Current, "Radio1", 390, 110, 65, 20, -1)
+			radio1.set_font(gui_font)
+			create radio2.make (Current, "Radio2", 390, 130, 65, 20, -1)
+			radio2.set_font(gui_font)
 			radio_menu.enable_item (Cmd_radio_delete)
 			radio_menu.enable_item (Cmd_radio_state)
 			radio_menu.disable_item (Cmd_radio_create)
@@ -737,15 +761,18 @@ feature {NONE} -- Implementation
 			else
 				text_info.append ("unchecked.")
 			end
-			!!msg_box.make
+			create msg_box.make
 			msg_box.information_message_box (Current, text_info, "State")
 		end
 
 	menu_check_create is
 		do
-			!! group2.make (Current, "Group box", 380, 180, 85, 70, -1)
-			!! bcheck1.make (Current, "Check1", 390, 200, 65, 20, -1)
-			!! bcheck2.make (Current, "Check2", 390, 220, 65, 20, -1)
+			create group2.make (Current, "Group box", 380, 180, 85, 70, -1)
+			group2.set_font(gui_font)
+			create bcheck1.make (Current, "Check1", 390, 200, 65, 20, -1)
+			bcheck1.set_font(gui_font)
+			create bcheck2.make (Current, "Check2", 390, 220, 65, 20, -1)
+			bcheck2.set_font(gui_font)
 			check_menu.enable_item (Cmd_check_delete)
 			check_menu.enable_item (Cmd_check_state)
 			check_menu.disable_item (Cmd_check_create)
@@ -780,7 +807,7 @@ feature {NONE} -- Implementation
 			else
 				text_info.append ("unchecked.")
 			end
-			!!msg_box.make
+			create msg_box.make
 			msg_box.information_message_box (Current, text_info, "State")
 		end
 

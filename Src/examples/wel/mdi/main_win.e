@@ -37,7 +37,7 @@ feature {NONE} -- Implementation
 				child_no := child_no + 1
 				s := "Child window "
 				s.append_integer (child_no)
-				!! child.make (Current, s)
+				create child.make (Current, s)
 			when Cmd_file_close then
 				if has_active_window then
 					active_window.destroy
@@ -62,14 +62,14 @@ feature {NONE} -- Implementation
 
 	main_menu: WEL_MENU is
 		once
-			!! Result.make_by_id (Id_menu_application)
+			create Result.make_by_id (Id_menu_application)
 		ensure
 			result_not_void: Result /= Void
 		end
 
 	class_icon: WEL_ICON is
 		once
-			!! Result.make_by_id (Id_ico_application)
+			create Result.make_by_id (Id_ico_application)
 		end
 
 	Title: STRING is "WEL Multiple Document Interface"

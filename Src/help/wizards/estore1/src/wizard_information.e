@@ -21,16 +21,19 @@ feature {NONE} -- Initialization
 			location := ""
 			project_location := ""
 			Create table_list.make
+			is_oracle := FALSE
+			example := TRUE
 		end
 
 feature {STATE_WINDOW} -- Settings
 
-	set_database_info(s1,s2,s3: STRING) is
+	set_database_info(s1,s2,s3: STRING;oracle_selected: BOOLEAN) is
 			-- Set the database information.
 		do
 			username := s1
 			password := s2
 			handle := s3
+			is_oracle := oracle_selected
 		end
 
 	set_generation_type(b1,b2: BOOLEAN) is
@@ -61,6 +64,8 @@ feature {STATE_WINDOW} -- Settings
 
 feature -- Access
 
+	is_oracle: BOOLEAN
+
 	location: STRING
 		-- Generation location.
 
@@ -82,7 +87,7 @@ feature -- Access
 	new_project: BOOLEAN
 		-- Does the user want to generate a new projet ?
 
-	example: BOOLEAN is TRUE
+	example: BOOLEAN
 		-- Does the user want to generate an example ?
 
 	table_list: LINKED_LIST[CLASS_NAME]

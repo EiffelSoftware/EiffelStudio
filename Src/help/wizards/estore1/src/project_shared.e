@@ -1,19 +1,20 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Project Shared variables"
+	author: "pascalf"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	PROJECT_SHARED
 
+inherit
+	ARGUMENTS
+
 feature -- Access
 
 	odbc: STRING is "odbc"
 
 	oracle: STRING is "oracle"
-
-	wizard_resource_path: STRING is "c:\development\eiffelweb_wizard\estore1\bmp"
 
 	db_manager: DATABASE_MANAGER[DATABASE] is
 			-- Database manager. Allows to perform

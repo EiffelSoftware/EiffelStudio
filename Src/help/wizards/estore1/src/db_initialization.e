@@ -28,11 +28,26 @@ feature -- basic Operations
 	build is 
 			-- Build entries.
 		local
-			h1,h2,h3,h4,h5,h6: EV_HORIZONTAL_BOX
+			h1: EV_HORIZONTAL_BOX
 		do 
+			Create h1
+			Create oracle_b.make_with_text("Oracle")
+			Create odbc_b.make_with_text("ODBC")
+			odbc_b.press_actions.extend(~set_handle_insensitive(FALSE))
+			if not state_information.is_oracle then
+				odbc_b.enable_select 
+			else
+				oracle_b.enable_select
+			end
+			oracle_b.press_actions.extend(~set_handle_insensitive(TRUE))
 			Create db_name.make("Data Source Name",state_information.handle,10,20,Current)
 			Create username.make("username",state_information.username,10,20,Current)
 			Create password.make("Password",state_information.password,10,20,Current)
+			
+			main_box.extend(Create {EV_HORIZONTAL_BOX})
+			main_box.extend(h1)
+			h1.extend(odbc_b)
+			h1.extend(oracle_b)
 			main_box.extend(Create {EV_HORIZONTAL_BOX})
 			main_box.extend(username)
 			main_box.extend(Create {EV_HORIZONTAL_BOX})
@@ -43,6 +58,12 @@ feature -- basic Operations
 			main_box.disable_child_expand(username)
 			main_box.disable_child_expand(password)
 			main_box.disable_child_expand(db_name)	
+
+			set_updatable_entries(<<oracle_b.press_actions,
+									odbc_b.press_actions,
+									db_name.change_actions,
+									username.change_actions,
+									password.change_actions>>)
 		end
 
 	proceed_with_current_info is 
@@ -56,15 +77,18 @@ feature -- basic Operations
 		do
 			precursor
 			if not b then
-				Create db_generation.make(state_information)
-				set_database(odbc)
+				if odbc_b.is_selected then
+					set_database(odbc)
+				else
+					set_database(oracle)
+				end
 				if db_manager.connected then
 					db_manager.disconnect
 				end
 				db_manager.log_and_connect (username.text,password.text,db_name.text)
 			end
 			if not b and then db_manager.connected then
-				proceed_with_new_state(db_generation)
+				proceed_with_new_state(Create {DB_GENERATION}.make(state_information))
 			else
 				Create message.make_with_text("Connection Failed")
 				entries_checked := FALSE
@@ -80,12 +104,30 @@ feature -- basic Operations
 			-- Check user entries
 		do
 			state_information.set_database_info(username.text,
-				password.text,db_name.text)
+				password.text,db_name.text,oracle_b.is_selected)
 			precursor			
+		end
+
+	set_handle_insensitive(b: BOOLEAN) is
+			-- Set Handle description insensitive.
+		require
+			handle_field_exists: db_name /= Void
+		do
+			db_name.set_text("")
+			if not b then
+				db_name.enable_sensitive
+			else
+				db_name.disable_sensitive
+			end
 		end
 
 feature -- Implementation
 
 	username,password,db_name: SMART_TEXT_FIELD
+		-- User text entries dealing with username, password and
+		-- Database Handle name.
+
+	oracle_b,odbc_b: EV_RADIO_BUTTON
+		-- Database Type selection thanks to radio buttons.
 
 end -- class DB_INITIALIZATION

@@ -9,7 +9,7 @@ class
 
 inherit
 	STATE_WINDOW
-		redefine
+		redefine 
 			update_state_information,
 			proceed_with_current_info
 		end
@@ -33,18 +33,24 @@ feature -- basic Operations
 	build is 
 			-- Build Page entries.
 		do 
-			Create generate_all_tables.make_with_text("Generate All tables/Views")
+			Create generate_all_tables.make_with_text("Generate All tables/views")
+			Create generate_specific_tables.make_with_text("Generate Specific tables/views")
 			if state_information.generate_every_table then
 				generate_all_tables.enable_select
+			else
+				generate_specific_tables.enable_select
 			end
-			generate_all_tables.press_actions.extend(~change_entries)
+			main_box.extend(Create {EV_HORIZONTAL_BOX})
 			main_box.extend(generate_all_tables)
+			main_box.extend(Create {EV_HORIZONTAL_BOX})
+			main_box.extend(generate_specific_tables)
+
+			set_updatable_entries(<<generate_all_tables.press_actions,
+									generate_specific_tables.press_actions>>)
 		end
 
 	proceed_with_current_info is 
 			-- Process user entries
-		local
-			db_generation_type: DB_GENERATION_TYPE
 		do
 			precursor
 			if generate_all_tables.is_selected then
@@ -57,7 +63,6 @@ feature -- basic Operations
 	update_state_information is
 			-- Check user entries
 		local
-			li: LINKED_LIST[CLASS_NAME]
 			cl_name: CLASS_NAME
 		do
 			Create cl_name.make
@@ -75,7 +80,10 @@ feature -- basic Operations
 
 feature -- Implementation
 
-	generate_all_tables: EV_CHECK_BUTTON
+	generate_all_tables,generate_specific_tables: EV_RADIO_BUTTON
+		-- Button which are provided in order to allow
+		-- the user to choose which type of generation he	
+		-- wish to do.
 
 	table_list: LINKED_LIST[CLASS_NAME]
 		-- List of all the system tables.

@@ -84,6 +84,23 @@ feature -- Basic Operations
 
 feature -- Settings
 
+	set_updatable_entries(tab: ARRAY[ACTION_SEQUENCE[TUPLE[]]]) is
+			-- Set the actions which imply a change
+			-- in the user entries, so that we know that going forward
+			-- will be done by re-computed the data.
+		local
+			i: INTEGER
+		do
+			from
+				i:= 1
+			until
+				i>tab.count
+			loop
+				tab.item(i).extend(~change_entries)
+				i := i+1
+			end
+		end
+
 	change_entries is
 			-- The user clicked on the page, which 
 			-- implies state_information re-computation.

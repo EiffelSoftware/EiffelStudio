@@ -11,7 +11,8 @@ inherit
 	STATE_WINDOW
 		redefine
 			update_state_information,
-			proceed_with_current_info
+			proceed_with_current_info,
+			change_entries
 		end
 
 creation
@@ -29,21 +30,37 @@ feature -- basic Operations
 			-- Build user entries.
 		do 
 			Create generate_facade_b.make_with_text("Generate Facade")
+			Create new_project_b.make_with_text("Generate as a new Project")
+			Create example_b.make_with_text("Generate example")
+			Create current_project_b.make_with_text("Integrate within existing Project")
 			if state_information.generate_facade then
 				generate_facade_b.enable_select
 			else
 				generate_facade_b.disable_select
 			end
-			generate_facade_b.press_actions.extend(~change_entries)
-			Create new_project_b.make_with_text("Generate as a new Project")
 			if state_information.new_project then
 				new_project_b.enable_select
 			else
-				new_project_b.disable_select
+				current_project_b.enable_select
 			end
-			new_project_b.press_actions.extend(~change_entries)
-			main_box.extend(generate_facade_b)
+			if state_information.example then
+				example_b.enable_select
+			else
+				example_b.disable_select
+			end		
+
+			main_box.extend(Create {EV_HORIZONTAL_BOX})
 			main_box.extend(new_project_b)
+			main_box.extend(current_project_b)
+			main_box.extend(Create {EV_HORIZONTAL_BOX})
+			main_box.extend(example_b)
+			main_box.extend(generate_facade_b)
+			main_box.extend(Create {EV_HORIZONTAL_BOX})
+
+			set_updatable_entries(<<generate_facade_b.press_actions,
+									new_project_b.press_actions,
+									current_project_b.press_actions,
+									example_b.press_actions>>)
 		end
 
 	proceed_with_current_info is 
@@ -61,8 +78,24 @@ feature -- basic Operations
 			precursor
 		end
 
+	change_entries is
+			-- The user pressed a button.
+		do
+			precursor
+			if current_project_b /= Void then
+				if current_project_b.is_selected then
+					example_b.disable_select
+					example_b.disable_sensitive
+				else
+					example_b.enable_sensitive
+				end
+			end
+		end
+
 feature -- Implementation
 
-	generate_facade_b,new_project_b: EV_CHECK_BUTTON
+	example_b,generate_facade_b: EV_CHECK_BUTTON
+
+	new_project_b,current_project_b: EV_RADIO_BUTTON
 
 end -- class DB_GENERATION_TYPE

@@ -83,6 +83,7 @@ feature -- Element change
 		require
 			exists: exists
 			a_menu_not_void: a_menu /= Void
+			a_menu_exists: a_menu.exists
 			a_title_not_void: a_title /= Void
 		local
 			a: ANY
@@ -147,6 +148,7 @@ feature -- Element change
 		require
 			exists: exists
 			a_menu_not_void: a_menu /= Void
+			a_menu_exists: a_menu.exists
 			a_title_not_void: a_title /= Void
 			a_position_large_enough: a_position >= 0
 			a_position_small_enough: a_position <= count
@@ -155,7 +157,7 @@ feature -- Element change
 		do
 			a := a_title.to_c
 			cwin_insert_menu (item, a_position,
-				Mf_popup + Mf_bycommand, a_menu.to_integer, $a)
+				Mf_popup + Mf_byposition, a_menu.to_integer, $a)
 		ensure
 			new_count: count = old count + 1
 			popup_menu_set: popup_menu (a_position).item = a_menu.item

@@ -7,6 +7,9 @@ inherit
 	
 feature {NONE}
 
+	do_not_record: BOOLEAN;
+			-- Record Current command in history list?
+
 	position: INTEGER;
 			-- Position of the removed element
 
@@ -38,15 +41,24 @@ feature {NONE}
 			position := input_list.index;
 			input_data := input_list.item;
 			output_data := output_list.item;
-			history.record (Current);
+			if not do_not_record then
+				history.record (Current);
+			end;
 		end; -- function_work
 
 	worked_on: STRING is
 		do
 			!!Result.make (0);
 			Result.append (input_data.label);
-			Result.append (" and ");
+			Result.append (" -> ");
 			Result.append (output_data.label);
 		end; -- worked_on
+
+feature {STATE}
+
+	set_not_record is
+		do
+			do_not_record := True
+		end;
 
 end

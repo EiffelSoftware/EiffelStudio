@@ -112,6 +112,8 @@ feature {NONE} -- Status report
 				Result := focus_out_event_id
 			elseif ev_str.is_equal ("expose_event") then
 				Result := expose_event_id
+			elseif ev_str.is_equal ("destroy") then
+				Result := destroy_id
 
 			-- For windows:
 			elseif ev_str.is_equal ("delete_event") then

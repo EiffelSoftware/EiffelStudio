@@ -31,11 +31,6 @@ inherit
 
 	ERROR_POPUPER
 
--- 	QUEST_POPUPER
--- 		redefine
--- 			question_help_action
--- 		end
-
 creation 
 
 	make,
@@ -95,6 +90,7 @@ feature -- Creation
 			observers.set_row_layout
 			observers.set_spacing (5)
 			new_command_button.set_command_editor (Current)
+			list_form.set_height (75)
 		end
 
 	attach_all is
@@ -659,6 +655,7 @@ feature -- POPUPER
 
 	popuper_parent: COMPOSITE is
 		do
+			Result := Current
 		end 
 
 feature

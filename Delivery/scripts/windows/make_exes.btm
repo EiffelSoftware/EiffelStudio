@@ -287,26 +287,21 @@ iff not exist h2e.exe then
 endiff
 move h2e.exe %INSTALL_DIR\studio\spec\%ISE_PLATFORM\bin
 
-remtrace Recompile License installation program
+remtrace Recompile Custom actions for installation program
 cdd %EIFFEL_SRC
 mkdir tools
 cd tools
-exprt -r %DEFAULT_CVS_TAG -d cd_key_validator "Src/tools/cd_key_validator"
-cd %EIFFEL_SRC\tools\cd_key_validator\eiffel_studio_52
-copy ..\setup.ico .
-copy ..\setup.rc .
+exprt -r %DEFAULT_CVS_TAG -d setup "Src/tools/setup"
+cd %EIFFEL_SRC\tools\setup\studio
 clean_project
 finalize ace.ace
 fff
-cleanup_eiffel setup.exe
-iff not exist setup.exe then
-	remtrace Couldnt generate setup.exe
+cleanup_eiffel setup.dll
+iff not exist setup.dll then
+	remtrace Couldnt generate setup.dll
 	CANCEL
 endiff
-iff not defined WIN64 then
-	call upx.exe setup.exe
-endiff
-move setup.exe %INSTALL_DIR
+move setup.dll %INIT_DIR\install\Binary
 
 remtrace Recompile configure_all
 cdd %EIFFEL_SRC

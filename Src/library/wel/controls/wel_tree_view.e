@@ -11,6 +11,9 @@ class
 
 inherit
 	WEL_CONTROL
+		redefine
+			process_notification
+		end
 
 	WEL_TVS_CONSTANTS
 		export
@@ -18,6 +21,11 @@ inherit
 		end
 
 	WEL_TVM_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_TVN_CONSTANTS
 		export
 			{NONE} all
 		end
@@ -139,7 +147,116 @@ feature -- Element change
 			last_item := cwin_send_message_result (item,
 				Tvm_insertitem, 0, an_item.to_integer)
 		ensure
-			new_count: count = old count + 1
+			new_count: count = old count + 1 
+		end
+
+feature -- Notifications
+
+	on_tvn_begindrag is
+			-- A drag-and-drop operation involving the left mouse
+			-- button is being initiated.
+		require
+			exists: exists
+		do
+		end
+
+	on_tvn_beginlabeledit is
+			-- A label editing for an item has started.
+		require
+			exists: exists
+		do
+		end
+
+	on_tvn_beginrdrag is
+			-- A drag-and-drop operation involving the right mouse
+			-- button is being initiated.
+		require
+			exists: exists
+		do
+		end
+
+	on_tvn_deleteitem is
+			-- An item has been deleted.
+		require
+			exists: exists
+		do
+		end
+
+	on_tvn_endlabeledit is
+			-- A label editing for an item has ended.
+		require
+			exists: exists
+		do
+		end
+
+	on_tvn_itemexpanded is
+			-- a parent item's list of child items has expanded
+			-- or collapsed.
+		require
+			exists: exists
+		do
+		end
+
+	on_tvn_itemexpanding is
+			-- a parent item's list of child items is about to
+			-- expand or collapse.
+		require
+			exists: exists
+		do
+		end
+
+	on_tvn_keydown is
+			-- The user pressed a key and the tree-view control 
+			-- has the input focus.
+		require
+			exists: exists
+		do
+		end
+
+	on_tvn_selchanged is
+			-- Selection has changed from one item to another.
+		require
+			exists: exists
+		do
+		end
+
+	on_tvn_selchanging is
+			-- Selection is about to change from one item to
+			-- another.
+		require
+			exists: exists
+		do
+		end
+
+feature {WEL_COMPOSITE_WINDOW} -- Implementation
+
+	process_notification (notification_code: INTEGER) is
+			-- Process a `notification_code' sent by Windows
+			-- through the Wm_notify message
+		do
+			if notification_code = Tvn_begindrag then
+				on_tvn_begindrag
+			elseif notification_code = Tvn_beginlabeledit then
+				on_tvn_beginlabeledit
+			elseif notification_code = Tvn_beginrdrag then
+				on_tvn_beginrdrag
+			elseif notification_code = Tvn_deleteitem then
+				on_tvn_deleteitem
+			elseif notification_code = Tvn_endlabeledit then
+				on_tvn_endlabeledit
+			elseif notification_code = Tvn_itemexpanded then
+				on_tvn_itemexpanded
+			elseif notification_code = Tvn_itemexpanding then
+				on_tvn_itemexpanding
+			elseif notification_code = Tvn_keydown then
+				on_tvn_keydown
+			elseif notification_code = Tvn_selchanged then
+				on_tvn_selchanged
+			elseif notification_code = Tvn_selchanging then
+				on_tvn_selchanging
+			else
+				default_process_notification (notification_code)
+			end
 		end
 
 feature {NONE} -- Implementation

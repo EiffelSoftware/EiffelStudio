@@ -26,6 +26,7 @@ feature {NONE} -- Initialization
 			valid_text: a_text /= Void
 		do
 			default_create
+			set_count (a_text.count)
 			set_text (a_text)
 		ensure
 			--text_set: a_text = text
@@ -197,6 +198,9 @@ end -- class EV_COMPOSED_ITEM
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/03/03 00:36:21  rogers
+--| Make_with_text now sets the count of the item before setting the texts.
+--|
 --| Revision 1.11  2000/02/22 18:39:47  oconnor
 --| updated copyright date and formatting
 --|

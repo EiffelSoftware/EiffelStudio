@@ -1587,8 +1587,8 @@ feature {NONE} -- Implementation
 
 					if shared_wizard_environment.use_universal_marshaller then
 						Result.append (universal_marshaling_registration_code)
-					else
-						Result.append (standard_marshaling_registration_code)
+				--	else
+				--		Result.append (standard_marshaling_registration_code)
 					end
 				end
 				system_descriptor.coclasses.forth

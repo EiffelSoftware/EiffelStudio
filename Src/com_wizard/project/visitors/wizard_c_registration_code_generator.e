@@ -702,11 +702,105 @@ feature {NONE} -- Implementation
 			Result.set_body (tmp_string)
 		end
 
-	dll_get_class_object_macro: STRING is
+	module_file_name_set_up: STRING is
+			-- Code to set up module file name
+		do
+			-- getcwd (file_name, MAX_PATH);
+			Result := clone (Get_current_directory_function)
+			Result.append (Space_open_parenthesis)
+			Result.append (Module_file_name)
+			Result.append (Comma_space)
+			Result.append (Max_path)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+
+			-- strcpy (file_name + strlen (file_name), "\\");
+			Result.append (New_line_tab)
+			Result.append (String_copy_function)
+			Result.append (Space_open_parenthesis)
+			Result.append (Module_file_name)
+			Result.append (Plus)
+			Result.append (String_length_function)
+			Result.append (Space_open_parenthesis)
+			Result.append (Module_file_name)
+			Result.append (Close_parenthesis)
+			Result.append (Comma_space)
+			Result.append ("%"\\%"")
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+
+			-- strcpy (file_name + strlen (file_name), egc_system_name);
+			Result.append (New_line_tab)
+			Result.append (String_copy_function)
+			Result.append (Space_open_parenthesis)
+			Result.append (Module_file_name)
+			Result.append (Plus)
+			Result.append (String_length_function)
+			Result.append (Space_open_parenthesis)
+			Result.append (Module_file_name)
+			Result.append (Close_parenthesis)
+			Result.append (Comma_space)
+			Result.append ("egc_system_name")
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+
+			-- strcpy (file_name + strlen (file_name), ".dll");
+			Result.append (New_line_tab)
+			Result.append (String_copy_function)
+			Result.append (Space_open_parenthesis)
+			Result.append (Module_file_name)
+			Result.append (Plus)
+			Result.append (String_length_function)
+			Result.append (Space_open_parenthesis)
+			Result.append (Module_file_name)
+			Result.append (Close_parenthesis)
+			Result.append (Comma_space)
+			Result.append ("%".dll%"")
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+
+			-- #ifdef UNICODE
+			Result.append (New_line)
+			Result.append (New_line)
+			Result.append (Hash_if_def)
+			Result.append (Space)
+			Result.append (Unicode)
+			Result.append (New_line_tab)
+
+			-- lString_copy_function ('wide_string_module_file_name', 'module_file_name')
+			Result.append (Unicode_string_copy_function)
+			Result.append (Space_open_parenthesis)
+			Result.append (Wide_string_module_file_name)
+			Result.append (Comma_space)
+			Result.append (Module_file_name)
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+
+			-- #else
+			Result.append (New_line)
+			Result.append (Hash_else)
+
+			-- mbstowcs ('wide_string_module_file_name', 'module_file_name', MAX_PATH)
+			Result.append (New_line_tab)
+			Result.append (Non_unicode_string_copy_function)
+			Result.append (Space_open_parenthesis)
+			Result.append (Wide_string_module_file_name)
+			Result.append (Comma_space)
+			Result.append (Module_file_name)
+			Result.append (Comma_Space)
+			Result.append ("MAX_PATH")
+			Result.append (Close_parenthesis)
+			Result.append (Semicolon)
+
+			-- #endif
+			Result.append (New_line)
+			Result.append (Hash_end_if)			
+		end
+		
+		dll_get_class_object_macro: STRING is
 			-- Macro for `ccom_dll_get_class_object' function.
 		do
 			create Result.make (0)
-
 			Result.append (Hash_define)
 			Result.append (Space)
 			Result.append (Ccom_dll_get_class_object)
@@ -743,57 +837,7 @@ feature {NONE} -- Implementation
 			valid_mocro: not Result.empty
 		end
 
-	module_file_name_set_up: STRING is
-			-- Code to set up module file name
-		do
-			-- GetModuleFileName (Null, file_name, MAX_PATH)
-			Result := clone (Get_module_file_name)
-			Result.append (Space_open_parenthesis)
-			Result.append (Null)
-			Result.append (Comma_space)
-			Result.append (Module_file_name)
-			Result.append (Comma_space)
-			Result.append (Max_path)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
 
-			-- #ifdef UNICODE
-			Result.append (New_line)
-			Result.append (Hash_if_def)
-			Result.append (Space)
-			Result.append (Unicode)
-			Result.append (New_line_tab)
-
-			-- lstrcpy ('wide_string_module_file_name', 'module_file_name')
-			Result.append (Unicode_string_copy_function)
-			Result.append (Space_open_parenthesis)
-			Result.append (Wide_string_module_file_name)
-			Result.append (Comma_space)
-			Result.append (Module_file_name)
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-
-			-- #else
-			Result.append (New_line)
-			Result.append (Hash_else)
-
-			-- mbstowcs ('wide_string_module_file_name', 'module_file_name', MAX_PATH)
-			Result.append (New_line_tab)
-			Result.append (Non_unicode_string_copy_function)
-			Result.append (Space_open_parenthesis)
-			Result.append (Wide_string_module_file_name)
-			Result.append (Comma_space)
-			Result.append (Module_file_name)
-			Result.append (Comma_Space)
-			Result.append ("MAX_PATH")
-			Result.append (Close_parenthesis)
-			Result.append (Semicolon)
-
-			-- #endif
-			Result.append (New_line)
-			Result.append (Hash_end_if)
-			
-		end
 
 	dll_register_server_feature: WIZARD_WRITER_C_FUNCTION is
 			-- DllRegisterServer
@@ -1210,7 +1254,7 @@ feature {NONE} -- Implementation
 			tmp_string.append (New_line_tab)
 			tmp_string.append (Close_curly_brace)
 			tmp_string.append (New_line_tab)
-			tmp_string.append ("return hr;")
+			tmp_string.append ("return 0;")
 
 			Result.set_body (tmp_string)
 		end

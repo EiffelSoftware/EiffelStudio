@@ -16,7 +16,8 @@ inherit
 			item,
 			call_pebble_function,
 			update_child,
-			wipe_out
+			wipe_out,
+			append
 		end
 
 	EV_PRIMITIVE_IMP
@@ -52,7 +53,8 @@ inherit
 			interface,
 			visual_widget,
 			disconnect_all_signals,
-			wipe_out
+			wipe_out,
+			append
 		end
 
 	EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES_IMP
@@ -61,6 +63,14 @@ create
 	make
 
 feature {NONE} -- Initialization
+
+	append (s: SEQUENCE [EV_MULTI_COLUMN_LIST_ROW]) is
+			-- Copy `s' to end of `Current'.  Do not move cursor.
+		do
+			C.gtk_clist_freeze (list_widget)
+			Precursor (s)
+			C.gtk_clist_thaw (list_widget)			
+		end
 
 	make (an_interface: like interface) is         
 			-- Create a list widget with `par' as
@@ -235,6 +245,7 @@ feature {NONE} -- Initialization
 
 			from
 				ev_children.start
+				C.gtk_clist_freeze (list_widget)
 			until
 				ev_children.after
 			loop
@@ -245,6 +256,7 @@ feature {NONE} -- Initialization
 				update_child (ev_children.item, ev_children.index)
 				ev_children.forth
 			end
+			C.gtk_clist_thaw (list_widget)
 			
 			if old_list_widget /= NULL then
 				C.gtk_container_remove (visual_widget, old_list_widget)

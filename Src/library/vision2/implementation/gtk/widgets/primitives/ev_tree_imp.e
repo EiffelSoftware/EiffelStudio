@@ -13,7 +13,8 @@ inherit
 			interface,
 			initialize,
 			wipe_out,
-			call_pebble_function
+			call_pebble_function,
+			append
 		end
 
 	EV_PRIMITIVE_IMP
@@ -45,7 +46,8 @@ inherit
 			list_widget,
 			visual_widget,
 			count,
-			wipe_out
+			wipe_out,
+			append
 		end
 
 	EV_TREE_ACTION_SEQUENCES_IMP
@@ -623,6 +625,14 @@ feature {NONE} -- Implementation
 			-- `i'_th child of Current.
 		do
 			Result := (ev_children @ i).interface
+		end
+		
+	append (s: SEQUENCE [EV_TREE_ITEM]) is
+			-- 
+		do
+			C.gtk_clist_freeze (list_widget)
+			Precursor (s)
+			C.gtk_clist_thaw (list_widget)
 		end
 
 	add_to_container (v: like item) is

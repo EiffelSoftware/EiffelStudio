@@ -143,6 +143,13 @@ inherit
 			add_alphabetically, default_create
 		end
 		
+	GB_SHARED_STATUS_BAR
+		export
+			{NONE} all
+		redefine
+			default_create
+		end
+		
 feature {NONE} -- Implementation
 
 	default_create is
@@ -1145,6 +1152,13 @@ feature {NONE} -- Implementation
 			object_stone_not_void: object_stone /= Void
 		do
 			Result := True
+			if Result then
+					-- Only clear the status bar if a drop is permitted.
+					-- Without this line, holding an object above a window selector item that did
+					-- not accept the object and then moving over the window selector, did not
+					-- clear the status bar and the old message was displayed even though a drop was now permitted.
+				clear_status_bar
+			end
 		end
 		
 	check_for_object_delete (a_key: EV_KEY) is

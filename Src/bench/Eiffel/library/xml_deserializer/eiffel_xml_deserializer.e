@@ -217,34 +217,19 @@ feature {NONE} -- Object retrieval from node.
 
 feature {NONE} -- Node constants
 
-	type_attr: STRING is "TYPE"
-	name_attr: STRING is "NAME"
-	count_attr: STRING is "COUNT"
-	lower_attr: STRING is "LOWER"
+	type_attr: STRING is "T"
+	name_attr: STRING is "N"
+	count_attr: STRING is "C"
+	lower_attr: STRING is "L"
 	
-	reference_node: STRING is
-			-- REFERENCE node.
-		once
-			create Result.make_from_string ("REFERENCE")
-		end
+	reference_node: STRING is "R"
+	array_node: STRING is "A"
+	string_node: STRING is "S"
+	integer_node: STRING is "I"
+	character_node: STRING is "C"
+	boolean_node: STRING is "B"
 
-	array_node: STRING is
-			-- REFERENCE node.
-		once
-			create Result.make_from_string ("ARRAY")
-		end
-
-	string_node: STRING is
-			-- REFERENCE node.
-		once
-			create Result.make_from_string ("STRING")
-		end
-
-	none_node: STRING is
-			-- REFERENCE node.
-		once
-			create Result.make_from_string ("NONE")
-		end
+	none_node: STRING is "NONE"
 		
 feature {NONE} -- Internal speedup
 
@@ -307,10 +292,10 @@ feature {NONE} -- Internal speedup
 			-- INTERNAL.
 		once
 			create Result.make (15)
-			Result.put (Boolean_type, "BOOLEAN")
-			Result.put (Character_type, "CHARACTER")
-			Result.put (Integer_32_type, "INTEGER")
-			Result.put (String_type, "STRING")
+			Result.put (Boolean_type, Boolean_node)
+			Result.put (Character_type, Character_node)
+			Result.put (Integer_32_type, Integer_node)
+			Result.put (String_type, String_node)
 		end
 
 	internal_field_table: HASH_TABLE [HASH_TABLE [INTEGER, STRING], INTEGER] is

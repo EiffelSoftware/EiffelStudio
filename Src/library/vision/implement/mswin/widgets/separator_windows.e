@@ -133,6 +133,13 @@ feature -- Status report
 		
 feature -- Status setting
 
+	set_3d_separator is
+			-- Set the separator to be Windows 3D
+		do
+			set_form_height (6)
+			w3d_separator := True
+		end
+
 	set_foreground_color (c: COLOR) is
 			-- Set the foreground color of current widget.
 		do
@@ -401,24 +408,41 @@ feature -- Removal
 
 feature {NONE} -- Implementation
 
+	w3d_separator: BOOLEAN
+			-- Is separator 3D Windows standard?
+
 	on_paint (a_paint_dc: WEL_PAINT_DC; a_rect: WEL_RECT) is
 			-- Repaint separator.
+		local
+			a_pen: WEL_PEN
+			color: WEL_COLOR_REF
 		do
-			a_paint_dc.select_pen (pen)
-			a_paint_dc.set_background_color (c_background)
-			if is_horizontal then
-				if double then
-					a_paint_dc.line (0, height // 2 - 1, width, height // 2 - 1)
-					a_paint_dc.line (0, height // 2 + 1, width, height // 2 + 1)
-				else
-					a_paint_dc.line (0, height // 2, width, height // 2)
-				end
+			if w3d_separator then
+				!! color.make_system (Color_btnshadow)
+				!! a_pen.make (Ps_solid, 1, color)
+				a_paint_dc.select_pen (a_pen)
+				a_paint_dc.line (0, height // 2 - 1, width, height // 2 - 1)
+				!! color.make_rgb (255, 255, 255)
+				!! a_pen.make (Ps_solid, 1, color)
+				a_paint_dc.select_pen (a_pen)
+				a_paint_dc.line (0, height // 2, width, height // 2)
 			else
-				if double then
-					a_paint_dc.line (width // 2 - 1, 0, width // 2 - 1, height)
-					a_paint_dc.line (width // 2 + 1, 0, width // 2 + 1, height)
+				a_paint_dc.select_pen (pen)
+				a_paint_dc.set_background_color (c_background)
+				if is_horizontal then
+					if double then
+						a_paint_dc.line (0, height // 2 - 1, width, height // 2 - 1)
+						a_paint_dc.line (0, height // 2 + 1, width, height // 2 + 1)
+					else
+						a_paint_dc.line (0, height // 2, width, height // 2)
+					end
 				else
-					a_paint_dc.line (width // 2, 0, width // 2, height)
+					if double then
+						a_paint_dc.line (width // 2 - 1, 0, width // 2 - 1, height)
+						a_paint_dc.line (width // 2 + 1, 0, width // 2 + 1, height)
+					else
+						a_paint_dc.line (width // 2, 0, width // 2, height)
+					end
 				end
 			end
 		end

@@ -78,7 +78,7 @@ feature -- Code generation
 			-- Generate byte code for a real constant value
 		do
 			ba.append (Bc_double)
-			ba.append_real (double_value)
+			ba.append_double (double_value)
 		end
 
 feature -- Output

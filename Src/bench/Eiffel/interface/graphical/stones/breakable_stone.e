@@ -29,24 +29,25 @@ feature
 
 feature -- dragging
 
-	sign (stopped: BOOLEAN): STRING is 
+	sign: STRING is 
 			-- Textual representation of the breakable mark.
 			-- Two different representations whether the breakpoint
 			-- is set or not.
-			-- If `stopped' is true and the execution is stopped
-			-- on the current breakpoint, then `sign' is a stopped mark.
 		do
-			if stopped and Run_info.is_at (routine, index) then
+			if 
+				Run_info.is_running and Run_info.is_stopped and 
+				Run_info.is_at (routine, index) 
+			then
 					-- Execution stopped at that point.
 				Result := "->|"
 			elseif Debug_info.is_breakpoint_set (routine, index) then
-				Result := "|#|"
+				Result := "|||"
 			else
-				Result := "|.|"
+				Result := ":::"
 			end
 		end; -- sign
 
-	origin_text: STRING is "|.|";
+	origin_text: STRING is ":::";
 
 	stone_type: INTEGER is do Result := Breakable_type end;
  

@@ -103,9 +103,109 @@ feature {NONE}
 			Result := pixmap_file_content ("continue.bm");
 		end;
 
+	bm_Current: PIXMAP is
+		do
+			Result := pixmap_file_content ("current.bm")
+		end;
+
+	bm_Dark_clickable: PIXMAP is
+		do
+			Result := pixmap_file_content ("dclickable.bm");
+		end;
+
 	bm_Dark_save: PIXMAP is
 		do
 			Result := pixmap_file_content ("dark_save.bm");
+		end;
+
+	bm_Dark_showancestors: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowancestors.bm");
+		end;
+
+	bm_Dark_showattributes: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowattributes.bm");
+		end;
+
+	bm_Dark_showaversions: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowaversions.bm");
+		end;
+
+	bm_Dark_showcallers: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowcallers.bm");
+		end;
+
+	bm_Dark_showclients: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowclients.bm");
+		end;
+
+	bm_Dark_showclusters: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowclusters.bm");
+		end;
+
+	bm_Dark_showdeferreds: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowdeferreds.bm");
+		end;
+
+	bm_Dark_showdescendants: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowdescendants.bm");
+		end;
+
+	bm_Dark_showdversions: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowdversions.bm");
+		end;
+
+	bm_Dark_showexternals: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowexternals.bm");
+		end;
+
+	bm_Dark_showflat: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowflat.bm");
+		end;
+
+	bm_Dark_showfs: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowfs.bm");
+		end;
+
+	bm_Dark_showhistory: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowhistory.bm");
+		end;
+
+	bm_Dark_showonces: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowonces.bm");
+		end;
+
+	bm_Dark_showroutines: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowroutines.bm");
+		end;
+
+	bm_Dark_showshort: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowshort.bm");
+		end;
+
+	bm_Dark_showsuppliers: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowsuppliers.bm");
+		end;
+
+	bm_Dark_showtext: PIXMAP is
+		do
+			Result := pixmap_file_content ("dshowtext.bm");
 		end;
 
 	bm_Debug_quit: PIXMAP is
@@ -163,6 +263,11 @@ feature {NONE}
 			Result := pixmap_file_content ("next.bm");
 		end;
 
+	bm_Next_target: PIXMAP is
+		do
+			Result := pixmap_file_content ("hist_forth.bm")
+		end;
+
 	bm_Object: PIXMAP is
 		do
 			Result := pixmap_file_content ("object.bm");
@@ -181,6 +286,11 @@ feature {NONE}
 	bm_Open: PIXMAP is
 		do
 			Result := pixmap_file_content ("open.bm");
+		end;
+
+	bm_Previous_target: PIXMAP is
+		do
+			Result := pixmap_file_content ("hist_back.bm")
 		end;
 
 	bm_Project: PIXMAP is

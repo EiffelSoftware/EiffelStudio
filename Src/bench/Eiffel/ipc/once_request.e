@@ -66,7 +66,10 @@ end
 			send_rqst_3 (Rqst_once, Out_result, 
 						once_function.argument_count, real_body_id - 1);
 			c_recv_value (Current);
-			Result := item
+			Result := item;
+				-- Convert the physical addresses received from 
+				-- the application to hector addresses.
+			Result.set_hector_addr
 		ensure
 			result_exists: Result /= Void
 		end;

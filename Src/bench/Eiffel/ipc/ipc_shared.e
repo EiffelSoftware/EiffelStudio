@@ -88,6 +88,10 @@ feature {NONE} -- For workbench requests.
 		-- #define IN_BIT_ADDR      6
 		-- /* Bit object at given addr */
 
+	In_string_addr: INTEGER is 7;
+		-- #define IN_STRING_ADDR      7
+		-- /* String object at given addr */
+
 	Out_called: INTEGER is 0;
 		-- #define OUT_CALLED		0
 		-- /* Check whether once routine has been called */

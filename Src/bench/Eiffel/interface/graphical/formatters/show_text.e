@@ -9,11 +9,11 @@ inherit
 		rename
 			display_header as format_display_header
 		redefine
-			format, file_name
+			format, file_name, dark_symbol
 		end;
 	FORMATTER
 		redefine
-			format, display_header, file_name
+			format, display_header, file_name, dark_symbol
 		select
 			display_header
 		end;
@@ -33,6 +33,11 @@ feature
 	symbol: PIXMAP is 
 		once 
 			Result := bm_Showtext 
+		end;
+	
+	dark_symbol: PIXMAP is 
+		once 
+			Result := bm_Dark_showtext
 		end;
 	
 feature {NONE}
@@ -91,7 +96,7 @@ feature
 					text_window.set_editable;
 					text_window.show_image;
 					text_window.set_mode_for_editing;
-					text_window.set_last_format (Current);
+					text_window.set_last_format (Current)
 				else
 					filed_stone ?= stone;
 					if filed_stone /= Void then

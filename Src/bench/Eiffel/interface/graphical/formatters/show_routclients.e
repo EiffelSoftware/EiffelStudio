@@ -4,7 +4,10 @@ class SHOW_ROUTCLIENTS
 
 inherit
 
-	FORMATTER;
+	FORMATTER
+		redefine
+			dark_symbol
+		end;
 	SHARED_SERVER
 
 creation
@@ -21,6 +24,11 @@ feature
 	symbol: PIXMAP is 
 		once 
 			Result := bm_Showcallers 
+		end;
+ 
+	dark_symbol: PIXMAP is 
+		once 
+			Result := bm_Dark_showcallers 
 		end;
  
 feature {NONE}

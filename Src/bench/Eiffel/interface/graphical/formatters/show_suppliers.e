@@ -5,6 +5,9 @@ class SHOW_SUPPLIERS
 inherit
 
 	FORMATTER
+		redefine
+			dark_symbol
+		end
 
 creation
 
@@ -21,6 +24,11 @@ feature
 	symbol: PIXMAP is 
 		once 
 			Result := bm_Showsuppliers 
+		end;
+ 
+	dark_symbol: PIXMAP is 
+		once 
+			Result := bm_Dark_showsuppliers 
 		end;
  
 feature {NONE}

@@ -54,6 +54,16 @@ feature
 				dt_lower.to_lower;
 				c_stone ?= Universe.class_stone (dt_lower);
 				recv_attributes (attributes, c_stone.class_c)
+			end;
+				-- Convert the physical addresses received from
+				-- the application to hector addresses.
+			from
+				attributes.start
+			until
+				attributes.after
+			loop
+				attributes.item.set_hector_addr;
+				attributes.forth
 			end
 		end;
 
@@ -77,9 +87,6 @@ feature
 			loop
 				attr_name := clone (c_tread);
 				type_name := clone (c_tread);
---				if type_name.is_equal ("Void") then
---					!REFERENCE_ATTR!attr.make (attr_name, class_c, Void, "Void")
---				else
 				if type_name.is_equal ("BOOLEAN") then
 					!BOOLEAN_ATTR!attr.make (attr_name, class_c, clone(c_tread))
 				elseif type_name.is_equal ("INTEGER") then

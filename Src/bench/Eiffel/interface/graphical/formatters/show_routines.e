@@ -5,6 +5,9 @@ class SHOW_ROUTINES
 inherit
 
 	FORMATTER
+		redefine
+			dark_symbol
+		end
 
 creation
 
@@ -20,6 +23,11 @@ feature
 	symbol: PIXMAP is 
 		once 
 			Result := bm_Showroutines 
+		end;
+	
+	dark_symbol: PIXMAP is 
+		once 
+			Result := bm_Dark_showroutines 
 		end;
 	
 feature {NONE}

@@ -5,6 +5,9 @@ class SHOW_SHORT
 inherit
 
 	FORMATTER
+		redefine
+			dark_symbol
+		end
 
 creation
 
@@ -20,6 +23,11 @@ feature
 	symbol: PIXMAP is 
 		once 
 			Result := bm_Showshort 
+		end;
+ 
+	dark_symbol: PIXMAP is 
+		once 
+			Result := bm_Dark_showshort 
 		end;
  
 feature {NONE}

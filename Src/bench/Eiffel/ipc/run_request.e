@@ -34,6 +34,7 @@ feature
 					debug_window.clear_window;
 					debug_window.put_string ("Application is running%N");
 					run_info.set_is_running (True);
+					run_info.set_is_stopped (False);
 					debug_window.display					
 				else
 					debug_info.tenure;

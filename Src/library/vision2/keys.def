@@ -31,7 +31,7 @@ numerical keypad "6", numpad_6, NumPad 6, GDK_KP_6, Vk_numpad6
 numerical keypad "7", numpad_7, NumPad 7, GDK_KP_7, Vk_numpad7
 numerical keypad "8", numpad_8, NumPad 8, GDK_KP_8, Vk_numpad8
 numerical keypad "9", numpad_9, NumPad 9, GDK_KP_9, Vk_numpad9
-numerical keypad "+", numpad_add, NumPad 0, GDK_KP_Add, Vk_add
+numerical keypad "+", numpad_add, NumPad +, GDK_KP_Add, Vk_add
 numerical keypad "/", numpad_divide, NumPad /, GDK_KP_Divide, Vk_divide
 numerical keypad "*", numpad_multiply, NumPad *, GDK_KP_Multiply, Vk_multiply
 num lock, num_lock, NumLock, GDK_Num_Lock, Vk_numlock
@@ -110,6 +110,9 @@ delete, delete, Delete, GDK_Delete, Vk_delete
 #-------------------------------------------------------------------------------
 #
 # $Log$
+# Revision 1.10  2000/03/21 00:52:13  brendel
+# NumPad 0 -> NumPad +.
+#
 # Revision 1.9  2000/03/17 20:15:03  brendel
 # Fixed GDK externals.
 #

@@ -1,0 +1,176 @@
+indexing
+	description: "Eiffel Vision checkable list. Gtk implementation."
+	status: "See notice at end of class"
+	date: "$Date$"
+	revision: "$Revision$"
+
+
+class
+	EV_CHECKABLE_LIST_IMP
+	
+inherit
+	EV_CHECKABLE_LIST_I
+		undefine
+			wipe_out,
+			selected_items
+		redefine
+			interface
+		end
+	
+	EV_LIST_IMP
+		redefine
+			interface,
+			initialize,
+			initialize_model
+		end
+		
+	EV_CHECKABLE_LIST_ACTION_SEQUENCES_IMP
+	
+create
+	make
+
+feature -- Initialization
+
+	initialize is
+			-- Setup `Current'
+		local
+			a_column, a_cell_renderer: POINTER
+			a_gtk_c_str: EV_GTK_C_STRING
+		do
+			Precursor {EV_LIST_IMP}
+			a_column := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_get_column (tree_view, 0)
+			
+			a_cell_renderer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_cell_renderer_toggle_new
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_pack_start (a_column, a_cell_renderer, False)				
+			create a_gtk_c_str.make ("active")
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_column_add_attribute (a_column, a_cell_renderer, a_gtk_c_str.item, boolean_tree_model_column)
+			
+			real_signal_connect (a_cell_renderer, "toggled", agent (app_implementation.gtk_marshal).boolean_cell_renderer_toggle_intermediary (internal_id, ?, ?), agent (App_implementation.gtk_marshal).gtk_args_to_tuple)
+		end
+
+	boolean_tree_model_column: INTEGER is 2
+
+	on_tree_path_toggle (a_tree_path_str: POINTER) is
+			-- 
+		local
+			a_tree_path, a_int_ptr: POINTER
+			a_tree_iter: EV_GTK_TREE_ITER_STRUCT
+			a_success: BOOLEAN
+			mp: MANAGED_POINTER
+			a_list_item: EV_LIST_ITEM
+			a_selected: BOOLEAN
+			a_gvalue: POINTER
+		do
+			create a_tree_iter.make
+			a_tree_path := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_new_from_string (a_tree_path_str)
+			a_success := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_iter (list_store, a_tree_iter.item, a_tree_path)
+			if a_success then
+				a_int_ptr := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_get_indices (a_tree_path)
+				create mp.share_from_pointer (a_int_ptr, App_implementation.integer_bytes)
+				a_list_item := child_array @ (mp.read_integer_32 (0) + 1)
+				a_gvalue := feature {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (list_store, a_tree_iter.item, boolean_tree_model_column,  a_gvalue)
+				a_selected := feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_get_boolean (a_gvalue)
+					-- Toggle the currently selected value
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_boolean (a_gvalue, not a_selected)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, a_tree_iter.item, boolean_tree_model_column,  a_gvalue)
+				
+				if a_selected then
+						-- We are toggling so `a_selected' is status before toggle
+					if uncheck_actions_internal /= Void then
+						uncheck_actions_internal	.call ([a_list_item])
+					end
+				else
+					if check_actions_internal /= Void then
+						check_actions_internal.call ([a_list_item])
+					end
+				end
+				
+				a_gvalue.memory_free
+			end
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_path_free (a_tree_path)
+		end
+		
+
+	initialize_model is
+			-- Create our data model for `Current'
+		local
+			a_type_array: ARRAY [INTEGER]
+			a_type_array_c: ANY
+		do
+			create a_type_array.make (0, 2)
+			a_type_array.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_type_pixbuf, 0)
+			a_type_array.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.g_type_string, 1)
+			a_type_array.put (feature {EV_GTK_DEPENDENT_EXTERNALS}.g_type_boolean, 2)
+			a_type_array_c := a_type_array.to_c
+			list_store := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_newv (3, $a_type_array_c)			
+		end
+
+feature -- Access
+
+	is_item_checked (list_item: EV_LIST_ITEM): BOOLEAN is
+			--
+		local
+			item_imp: EV_LIST_ITEM_IMP
+			a_gvalue: POINTER
+		do
+			item_imp ?= list_item.implementation
+			a_gvalue := feature {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (list_store, item_imp.list_iter.item, boolean_tree_model_column,  a_gvalue)
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_get_boolean (a_gvalue)
+			a_gvalue.memory_free
+		end
+
+feature -- Status setting
+
+	check_item (list_item: EV_LIST_ITEM) is
+			-- Ensure check associated with `list_item' is
+			-- checked.
+		local
+			item_imp: EV_LIST_ITEM_IMP
+			a_gvalue: POINTER
+		do
+			item_imp ?= list_item.implementation
+			a_gvalue := feature {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (list_store, item_imp.list_iter.item, boolean_tree_model_column,  a_gvalue)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_boolean (a_gvalue, True)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, item_imp.list_iter.item, boolean_tree_model_column, a_gvalue)
+			a_gvalue.memory_free
+		end
+
+	uncheck_item (list_item: EV_LIST_ITEM) is
+			-- Ensure check associated with `list_item' is
+			-- checked.
+		local
+			item_imp: EV_LIST_ITEM_IMP
+			a_gvalue: POINTER
+		do
+			item_imp ?= list_item.implementation
+			a_gvalue := feature {EV_GTK_DEPENDENT_EXTERNALS}.c_g_value_struct_allocate
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_model_get_value (list_store, item_imp.list_iter.item, boolean_tree_model_column,  a_gvalue)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.g_value_set_boolean (a_gvalue, False)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_list_store_set_value (list_store, item_imp.list_iter.item, boolean_tree_model_column, a_gvalue)
+			a_gvalue.memory_free
+		end
+
+feature {EV_ANY_I} -- Implementation
+
+	interface: EV_CHECKABLE_LIST
+	
+end -- class EV_CHECKABLE_LIST_IMP
+
+--|----------------------------------------------------------------
+--| EiffelVision2: library of reusable components for ISE Eiffel.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--| May be used only with ISE Eiffel, under terms of user license. 
+--| Contact ISE for any other use.
+--|
+--| Interactive Software Engineering Inc.
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
+--| Telephone 805-685-1006, Fax 805-685-6869
+--| Electronic mail <info@eiffel.com>
+--| Customer support: http://support.eiffel.com>
+--| For latest info see award-winning pages: http://www.eiffel.com
+--|----------------------------------------------------------------

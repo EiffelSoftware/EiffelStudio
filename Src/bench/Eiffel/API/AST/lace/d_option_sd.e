@@ -14,6 +14,20 @@ inherit
 			adapt
 		end;
 
+feature {LACE_AST_FACTORY} -- Initialization
+
+	initialize (o: like option; v: like value) is
+			-- Create a new D_OPTION AST node.
+		require
+			o_not_void: o /= Void
+		do
+			option := o
+			value := v
+		ensure
+			option_set: option = o
+			value_set: value = v
+		end
+
 feature {NONE} -- Initialization 
 
 	set is

@@ -14,6 +14,28 @@ inherit
 			adapt
 		end
 
+feature {LACE_AST_FACTORY} -- Initialization
+
+	initialize (cn: like class_name; vn: like visible_name;
+		cr: like creation_restriction; er: like export_restriction;
+		r: like renamings) is
+			-- Create a new CLAS_VISI AST node.
+		require
+			cn_not_void: cn /= Void
+		do
+			class_name := cn
+			visible_name := vn
+			creation_restriction := cr
+			export_restriction := er
+			renamings := r
+		ensure
+			class_name_set: class_name = cn
+			visible_name_set: visible_name = vn
+			creation_restriction_set: creation_restriction = cr
+			export_restriction_set: export_restriction = er
+			renamings_set: renamings = r
+		end
+
 feature {NONE} -- Initialization 
 
 	set is

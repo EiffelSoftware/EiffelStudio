@@ -18,6 +18,31 @@ inherit
 	SHARED_ENV;
 	SYSTEM_CONSTANTS
 
+feature {LACE_AST_FACTORY} -- Initialization
+
+	initialize (us: like use_name; iop: like include_option;
+		eo: like exclude_option; ao: like adapt_option;
+		dop: like default_option; o: like options;
+		vo: like visible_option) is
+			-- Create a new CLUST_PROP AST node.
+		do
+			use_name := us
+			include_option := iop
+			exclude_option := eo
+			adapt_option := ao
+			default_option := dop
+			options := o
+			visible_option := vo
+		ensure
+			use_name_set: use_name = us
+			include_option_set: include_option = iop
+			exclude_option_set: exclude_option = eo
+			adapt_option_set: adapt_option = ao
+			default_option_set: default_option = dop
+			options_set: options = o
+			visible_option_set: visible_option = vo
+		end
+
 feature {NONE} -- Initialization
 
 	set is

@@ -11,6 +11,18 @@ inherit
 
 	AST_LACE
 
+feature {LACE_AST_FACTORY} -- Initialization
+
+	initialize (ln: like language_name) is
+			-- Create a new LANGUAGE_NAME AST node.
+		require
+			ln_not_void: ln /= Void
+		do
+			language_name := ln
+		ensure
+			language_name_set: language_name = ln
+		end
+
 feature -- Properties
 
 	language_name: ID_SD;

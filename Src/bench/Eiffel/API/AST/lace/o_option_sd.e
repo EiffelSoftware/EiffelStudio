@@ -10,9 +10,27 @@ class O_OPTION_SD
 inherit
 
 	D_OPTION_SD
+		rename
+			initialize as d_initialize
 		redefine
 			set, adapt
 		end;
+
+feature {LACE_AST_FACTORY} -- Initialization
+
+	initialize (o: like option; v: like value; t: like target_list) is
+			-- Create a new O_OPTION AST node.
+		require
+			o_not_void: o /= Void
+		do
+			option := o
+			value := v
+			target_list := t
+		ensure
+			option_set: option = o
+			value_set: value = v
+			target_list_set: target_list = t
+		end
 
 feature {NONE} -- Initialization 
 

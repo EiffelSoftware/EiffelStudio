@@ -3,13 +3,25 @@ indexing
 	description: 
 		"Heirs are standrad value or a name.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class OPT_VAL_SD
 
 inherit
 
 	AST_LACE
+
+feature {LACE_AST_FACTORY} -- Initialization
+
+	initialize (v: like value) is
+			-- Create a new OPT_VAL AST node.
+		require
+			v_not_void: v /= Void
+		do
+			value := v
+		ensure
+			value_set: value = v
+		end
 
 feature {NONE} -- Initialization 
 

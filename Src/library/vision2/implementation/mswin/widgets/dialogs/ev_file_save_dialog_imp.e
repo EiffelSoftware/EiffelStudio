@@ -16,7 +16,8 @@ inherit
 		rename
 			make as wel_make,
 			file_name as wel_file_name,
-			set_filter as wel_set_filter
+			set_filter as wel_set_filter,
+			set_parent as wel_set_parent
 		end
 
 creation

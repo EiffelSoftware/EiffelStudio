@@ -7,9 +7,6 @@ class INLINE_EXTENSION_AS
 
 inherit
 	EXTERNAL_EXTENSION_AS
-		redefine
-			byte_node
-		end
 
 create
 	initialize
@@ -39,16 +36,6 @@ feature -- Get inline extension
 		do
 			create Result.make (is_cpp)
 			init_extension_i (Result)
-		end
-
-feature -- Byte code
-
-	byte_node: INLINE_EXT_BYTE_CODE is
-			-- Byte code for external extension
-		do
-			create Result
-			init_byte_node (Result)
-			Result.set_is_cpp_code (is_cpp)
 		end
 
 end -- class INLINE_EXTENSION_AS

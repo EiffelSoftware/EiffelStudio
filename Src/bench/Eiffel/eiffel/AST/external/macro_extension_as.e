@@ -8,8 +8,7 @@ class MACRO_EXTENSION_AS
 inherit
 	EXTERNAL_EXTENSION_AS
 		redefine
-			parse_special_part, is_macro,
-			byte_node
+			parse_special_part
 		end
 
 create
@@ -49,8 +48,6 @@ feature  -- Initialization
 
 feature -- Properties
 
-	is_macro: BOOLEAN is True
-
 	is_cpp: BOOLEAN
 			-- Is Current macro a C++ one?
 
@@ -61,16 +58,6 @@ feature -- Get the macro extension
 		do
 			create Result.make (is_cpp)
 			init_extension_i (Result)
-		end
-
-feature -- Byte code
-
-	byte_node: MACRO_EXT_BYTE_CODE is
-			-- Byte code for external extension
-		do
-			create Result
-			init_byte_node (Result)
-			Result.set_is_cpp_code (is_cpp)
 		end
 
 feature {NONE} -- Implementation

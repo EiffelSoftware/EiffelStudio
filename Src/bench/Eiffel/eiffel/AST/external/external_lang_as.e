@@ -67,12 +67,6 @@ feature -- Comparison
 
 feature -- Properties
 
-	need_encapsulation: BOOLEAN is
-			-- Is an encapsulation needed?
-		do
-			Result := extension.need_encapsulation
-		end
-
 	extension_i: EXTERNAL_EXT_I is
 			-- EXTERNAL_EXT_I corresponding to current extension
 		do
@@ -263,13 +257,13 @@ feature {NONE} -- Implementation
 								is_cpp_extension := False
 							elseif special_type.is_equal (dll32_string) then
 								create dll_ext
-								dll_ext.set_dll_type (dll32_type)
-								dll_ext.set_dll_index (dll_index) 
+								dll_ext.set_type (dll32_type)
+								dll_ext.set_index (dll_index) 
 								extension := dll_ext
 							elseif special_type.is_equal (dllwin32_string) then
 								create dll_ext
-								dll_ext.set_dll_type (dllwin32_type)
-								dll_ext.set_dll_index (dll_index) 
+								dll_ext.set_type (dllwin32_type)
+								dll_ext.set_index (dll_index) 
 								extension := dll_ext
 							elseif is_cpp_extension then
 								create {CPP_EXTENSION_AS} extension

@@ -192,7 +192,6 @@ feature -- New feature description
 				-- A litteral numeric value is interpreted as 
 				-- a DOUBLE. In the case of a constant REAL
 				-- declaration that wont do!
-			ext_lang: EXTERNAL_LANG_AS
 			extension: EXTERNAL_EXT_I
 			il_ext: IL_EXTENSION_I
 			is_deferred_external, is_attribute_external: BOOLEAN
@@ -241,8 +240,7 @@ feature -- New feature description
 					
 						-- External procedure
 					external_body ?= routine.routine_body
-					ext_lang := external_body.language_name
-					extension := ext_lang.extension_i
+					extension := external_body.language_name.extension_i
 					if external_body.alias_name_id > 0 then
 						extension.set_alias_name_id (external_body.alias_name_id)
 					end
@@ -261,7 +259,7 @@ feature -- New feature description
 	--						(content.has_assertion or else content.has_rescue)
 
 							-- if there's a macro or a signature then encapsulate
-						extern_proc.set_encapsulated (ext_lang.need_encapsulation)
+						extern_proc.set_encapsulated (extension.need_encapsulation)
 						proc := extern_proc
 					else
 						create def_proc
@@ -300,8 +298,7 @@ feature -- New feature description
 				
 						-- External procedure
 					external_body ?= routine.routine_body
-					ext_lang := external_body.language_name
-					extension := ext_lang.extension_i
+					extension := external_body.language_name.extension_i
 					if external_body.alias_name_id > 0 then
 						extension.set_alias_name_id (external_body.alias_name_id)
 					end
@@ -324,7 +321,7 @@ feature -- New feature description
 	--						(content.has_assertion or else content.has_rescue)
 
 							-- if there's a macro or a signature then encapsulate
-						extern_func.set_encapsulated (ext_lang.need_encapsulation)
+						extern_func.set_encapsulated (extension.need_encapsulation)
 						extern_func.set_type (type)
 						func := extern_func
 					elseif is_attribute_external then

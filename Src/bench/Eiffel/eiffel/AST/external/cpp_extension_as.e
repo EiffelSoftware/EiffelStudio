@@ -8,8 +8,7 @@ class CPP_EXTENSION_AS
 inherit
 	EXTERNAL_EXTENSION_AS
 		redefine
-			byte_node, type_check, type_check_signature,
-			parse_special_part
+			type_check, type_check_signature, parse_special_part
 		end
 
 	SHARED_CPP_CONSTANTS
@@ -231,17 +230,6 @@ feature -- Type check
 					Error_handler.raise_error
 				end
 			end
-		end
-
-feature -- Byte code
-
-	byte_node: CPP_EXT_BYTE_CODE is
-			-- Byte code for external extension
-		do
-			create Result
-			init_byte_node (Result)
-			Result.set_type (type)
-			Result.set_class_name (class_name)
 		end
 
 feature {NONE} -- Implementation

@@ -8,8 +8,7 @@ class DLL_EXTENSION_AS
 inherit
 	EXTERNAL_EXTENSION_AS
 		redefine
-			parse_special_part, is_dll,
-			type_check
+			parse_special_part, type_check
 		end
 
 create
@@ -18,8 +17,8 @@ create
 
 feature {EXTERNAL_FACTORY} -- Initialization
 
-	initialize (a_dll_type: like dll_type; a_dll_name: ID_AS;
-			a_dll_index: like dll_index; sig: SIGNATURE_AS; use_list: USE_LIST_AS)
+	initialize (a_dll_type: like type; a_dll_name: ID_AS;
+			a_dll_index: like index; sig: SIGNATURE_AS; use_list: USE_LIST_AS)
 		is
 			-- Create a new C_EXTENSION_AS node
 		require
@@ -27,9 +26,9 @@ feature {EXTERNAL_FACTORY} -- Initialization
 				a_dll_type = feature {EXTERNAL_CONSTANTS}.dllwin32_type
 			a_dll_name_not_void: a_dll_name /= Void
 		do
-			dll_type := a_dll_type
-			dll_index := a_dll_index
-			dll_name := a_dll_name.string
+			type := a_dll_type
+			index := a_dll_index
+			name := a_dll_name.string
 			if sig /= Void then
 				argument_types := sig.arguments_id_array
 				if sig.return_type /= Void then
@@ -40,23 +39,19 @@ feature {EXTERNAL_FACTORY} -- Initialization
 				header_files := use_list.array_representation
 			end
 		ensure
-			dll_type_set: dll_type = a_dll_type
-			dll_index_set: dll_index = a_dll_index
+			type_set: type = a_dll_type
+			index_set: index = a_dll_index
 		end
-
-feature -- Properties
-
-	is_dll: BOOLEAN is True
 
 feature -- Access
 
-	dll_name: STRING
+	name: STRING
 			-- File name associated with extension
 
-	dll_type: INTEGER
+	type: INTEGER
 		-- Dll type
 
-	dll_index: INTEGER
+	index: INTEGER
 		-- Dll index
 
 feature -- Initialization
@@ -64,11 +59,8 @@ feature -- Initialization
 	extension_i: DLL_EXTENSION_I is
 			-- DLL_EXTENSION_I corresponding to current extension
 		do
-			create Result
+			create Result.make (type, index, name)
 			init_extension_i (Result)
-			Result.set_dll_type (dll_type)
-			Result.set_dll_index (dll_index)
-			Result.set_dll_name (dll_name)
 		end
 
 feature -- Type check
@@ -94,18 +86,6 @@ feature -- Type check
 				Error_handler.insert_error (ext_dll_sign)
 				Error_handler.raise_error
 			end
-		end
-
-feature -- Byte code
-
-	byte_node: DLL_EXT_BYTE_CODE is
-			-- Byte code for external extension
-		do
-			create Result
-			init_byte_node (Result)
-			Result.set_dll_type (dll_type)
-			Result.set_dll_index (dll_index)
-			Result.set_dll_name (dll_name)
 		end
 
 feature {NONE} -- Implementation
@@ -138,7 +118,7 @@ end
 					-- Invalid file
 				raise_error ("Invalid file name")
 			else
-				dll_name := special_part.substring (1, end_file)
+				name := special_part.substring (1, end_file)
 				count := special_part.count
 				if end_file /= count then
 					remaining := special_part.substring (end_file + 1, count)
@@ -152,16 +132,20 @@ end
  
 feature -- {EXTERNAL_LANG_AS} Implementation
 
-	set_dll_type (t: INTEGER) is
-			-- Assign `t' to `dll_type'.
+	set_type (t: INTEGER) is
+			-- Assign `t' to `type'.
 		do
-			dll_type := t
+			type := t
+		ensure
+			type_set: type = t
 		end
 
-	set_dll_index (i: INTEGER) is
-			-- Assign `i' to `dll_index'.
+	set_index (i: INTEGER) is
+			-- Assign `i' to `index'.
 		do
-			dll_index := i
+			index := i
+		ensure
+			index_set: index = i
 		end
 
 end -- class DLL_EXTENSION_AS

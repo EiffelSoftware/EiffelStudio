@@ -20,6 +20,14 @@ feature -- Access
 	item: POINTER;
 			-- Pointer value
 
+feature -- Element change
+
+	set_item (p: POINTER) is
+			-- Make `p' the `item' value.
+		do
+			item := p
+		end
+
 feature -- Output
 
 	out: STRING is

@@ -17,11 +17,10 @@ inherit
 			dump,
 			type_i,
 			good_generics,
-			internal_conform_to,
+			conform_to,
 			generic_conform_to,
 			instantiation_in,
 			instantiation_of,
-			same_class_type,
 			format
 		end
 
@@ -93,8 +92,8 @@ feature {COMPILER_EXPORTER}
 
 feature {COMPILER_EXPORTER} -- Conformance
 
-	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
-			-- Does `other' conform to Current ?
+	conform_to (other: TYPE_A): BOOLEAN is
+			-- Does Current conform to `other'?
 		do
 			-- An open type can be replaced by anything
 			Result := True
@@ -123,15 +122,6 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 			-- in the context of Current
 		do
 			Result := Current
-		end
-
-	same_class_type (other: CL_TYPE_A): BOOLEAN is
-			-- Is the current type the same as `other' ?
-		local
-			other_type : OPEN_TYPE_A
-		do
-			other_type ?= other
-			Result := (other_type /= Void)
 		end
 
 	format (ctxt: FORMAT_CONTEXT) is

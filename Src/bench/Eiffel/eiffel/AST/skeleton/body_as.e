@@ -260,7 +260,8 @@ feature -- New feature description
 
 					if System.il_generation then
 						il_ext ?= extension
-						is_deferred_external := il_ext /= Void and then il_ext.type = (create {SHARED_IL_CONSTANTS}).Deferred_type
+						is_deferred_external := il_ext /= Void and then
+							il_ext.type = (create {SHARED_IL_CONSTANTS}).Deferred_type
 					end
 					if not is_deferred_external then
 						create extern_proc
@@ -319,7 +320,8 @@ feature -- New feature description
 
 					if System.il_generation then
 						il_ext ?= extension
-						is_deferred_external := il_ext /= Void and then il_ext.type = (create {SHARED_IL_CONSTANTS}).Deferred_type
+						is_deferred_external := il_ext /= Void and then
+							il_ext.type = (create {SHARED_IL_CONSTANTS}).Deferred_type
 						is_attribute_external := il_ext /= Void and then
 							(il_ext.type = (create {SHARED_IL_CONSTANTS}).Field_type or
 							il_ext.type = (create {SHARED_IL_CONSTANTS}).Static_field_type)

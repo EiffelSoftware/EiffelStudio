@@ -62,7 +62,7 @@ feature -- Basic operation
 						-- in a type change.
 					temp_widget ?= moved_object.object
 					if temp_widget.parent /= Void then
-						moved_object.unparent
+						remove_child (moved_object)
 						add_child_object (moved_object, 2)
 					end
 				end
@@ -72,6 +72,7 @@ feature -- Basic operation
 					layout_item.go_i_th (1)
 					layout_item.put_left (an_object.layout_item)
 				end
+				add_child (an_object, 1)
 			else
 				object.set_second (widget)
 				display_object.child.set_second (widget2)
@@ -83,7 +84,8 @@ feature -- Basic operation
 					layout_item.go_i_th (2)
 					layout_item.put_left (an_object.layout_item)
 				end
-			end	
+				add_child (an_object, 2)
+			end
 		end
 
 end -- class GB_SPLIT_AREA_OBJECT

@@ -9,7 +9,10 @@ deferred class
 	EV_LIST_ITEM_HOLDER_IMP
 
 inherit
-	EV_ITEM_HOLDER_IMP
+	EV_ARRAYED_LIST_ITEM_HOLDER_IMP
+		redefine
+			move_item
+		end
 
 feature -- Access
 
@@ -31,12 +34,6 @@ feature -- Access
 		end
 
 feature -- Element change
-
-	add_item (item_imp: EV_LIST_ITEM_IMP) is
-			-- Add `item_imp' to the list.
-		do
-			insert_item (item_imp, count + 1)
-		end
 
 	insert_item (item_imp: EV_LIST_ITEM_IMP; index: INTEGER) is
 			-- Insert `item_imp' at the `index' position.
@@ -150,26 +147,17 @@ feature -- Basic operations
 	internal_get_index (item_imp: EV_LIST_ITEM_IMP): INTEGER is
 			-- Return the index of `item_imp' in the list.
 		do
-			Result := ev_children.index_of (item_imp, 1)
+			Result := ev_children.index_of (item_imp, 1) - 1
 		end
 
 feature {NONE} -- Implementation
 
-	on_draw (struct: WEL_DRAW_ITEM_STRUCT) is
-			-- All the items containers contain items which are
-			-- pixmap container, then, we need this feature to
-			-- call the `on_draw' feature of the items.
-			-- In some cases, windows return -1, then we have to
-			-- check before to call the paint message of the
-			-- children.
-		local
-			id: INTEGER
+	item_type: EV_LIST_ITEM_IMP is
+			-- An empty feature to give a type.
+			-- We don't use the genericity because it is
+			-- too complicated with the multi-platform design.
+			-- Need to be redefined.
 		do
---			id := count
---			id := struct.item_id
---			if (id /= -1) then
---				(ev_children @ (struct.item_id + 1)).on_draw (struct)
---			end
 		end
 
 feature {EV_LIST_ITEM_IMP} -- Deferred features
@@ -208,10 +196,6 @@ feature {EV_LIST_ITEM_IMP} -- Deferred features
 		end
 
 	foreground_color_imp: EV_COLOR_IMP is
-		deferred
-		end
-
-	count: INTEGER is
 		deferred
 		end
 

@@ -43,7 +43,7 @@ inherit
 			changeable_comparison_criterion
 		end
 
-feature {NONE} -- Initalization
+feature {NONE} -- Initialization
 
 	initialize is
 		do
@@ -375,6 +375,9 @@ end -- class EV_SPLIT_AREA
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.20  2000/03/03 20:27:41  brendel
+--| Cosmetics.
+--|
 --| Revision 1.19  2000/03/03 16:50:23  brendel
 --| Added feature initialize. Now only to find out why it is not called.
 --| Fixed bug in readable.

@@ -12,10 +12,4 @@ inherit
 
 feature
 
-	text_string: STRING is
-			-- Text representation of Current
-		do
-			Result := "gogo"
-		end;
-
 end -- class EXPR_AS

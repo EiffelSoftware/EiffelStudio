@@ -69,6 +69,19 @@ feature {GB_EV_ANY} -- Basic operation
 			all_element_extended: all_element.has (element) and (all_element.count = old all_element.count + 1)
 		end
 		
+feature {GB_XML_OBJECT_BUILDER} -- Basic operation
+
+	--| FIXME this should be removed after the first release. This is required
+	--| as when picking a component, we simply build the object from XML, as if we were
+	--| loading it from a file. This sets defered building on it which should not be
+	--| the case. This feature is only here as a temporary fix. Julian 11/13/2001.
+
+	clear_deferred is
+			-- Remove all deferred building currently stored.
+		do
+			all_gb_ev.wipe_out
+			all_element.wipe_out
+		end
 	
 feature {NONE} -- Implementation
 
@@ -82,6 +95,6 @@ feature {NONE} -- Implementation
 		
 invariant
 	
-	test: all_gb_ev /= Void implies all_gb_ev.count = all_element.count
+	list_count_equal: all_gb_ev /= Void implies all_gb_ev.count = all_element.count
 
 end -- class GB_DEFERRED_BUILDER

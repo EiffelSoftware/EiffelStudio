@@ -209,7 +209,7 @@ cluster
 
 	all preferences:	"$EIFFEL_SRC\library\preferences"
 		exclude
-			"xml_implementation"; "graphical"; "interface";
+			"xml_implementation"; "graphical"; 
 		end		
 
 external

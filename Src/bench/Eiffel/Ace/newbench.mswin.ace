@@ -5,8 +5,8 @@ root
 	EB_KERNEL: make
 
 default
+	assertion (check)
 	assertion (require)
-	assertion(check)
 	assertion (ensure)
 	arguments ("-from_bench")
 	disabled_debug (yes)

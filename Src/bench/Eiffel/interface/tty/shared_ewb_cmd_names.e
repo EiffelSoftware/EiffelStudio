@@ -33,6 +33,8 @@ feature {NONE}
 
 	edit_class_cmd_name: STRING is "edit"
 
+	exported_cmd_name: STRING is "exported";
+
 	externals_cmd_name: STRING is "externals"
 
 	f_compile_cmd_name: STRING is "F-compile"

@@ -82,7 +82,7 @@ feature -- Initialization
 		local
 			ewb_cmd: EWB_CMD;
 		once
-			!!Result.make (1, 14)
+			!!Result.make (1, 15)
 			
 			!EWB_ANCESTORS! ewb_cmd.null;
 			Result.add_entry (ewb_cmd)
@@ -115,6 +115,9 @@ feature -- Initialization
 			Result.add_entry (ewb_cmd)
 
 			!EWB_ROUTINES! ewb_cmd.null;
+			Result.add_entry (ewb_cmd)
+
+			!EWB_EXPORTED! ewb_cmd.null;
 			Result.add_entry (ewb_cmd)
 
 			!EWB_SHORT! ewb_cmd.null;

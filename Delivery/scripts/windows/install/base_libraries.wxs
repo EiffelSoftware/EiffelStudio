@@ -775,6 +775,7 @@
 									<File Id="platform.e" Name="platform.e" />
 									<File Id="routine.e" Name="routine.e" />
 									<File Id="disposable.e" Name="DISPOS~1.E" LongName="disposable.e" />
+									<File Id="type_e" Name="type.e" />
 								</Component>
 							</Directory>
 						</Directory>

@@ -1,0 +1,42 @@
+#include <windows.h>
+#include "app_ids.h"
+
+IDR_ICON ICON DISCARDABLE "fancy.ico"
+
+IDR_MENU MENU DISCARDABLE
+BEGIN
+    POPUP "&Windows"
+    BEGIN
+        MENUITEM "&Rectangle",                  CMD_WIN_RECT
+        MENUITEM "&Oval",                       CMD_WIN_OVAL
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       CMD_WIN_EXIT
+    END
+    POPUP "&Help"
+    BEGIN
+	MENUITEM "&About...",                   CMD_HELP_ABOUT
+    END
+END
+
+IDR_ABOUT DIALOG DISCARDABLE  0, 0, 149, 82
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About Fancy"
+FONT 8, "MS Sans Serif"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,49,61,50,14
+    CTEXT	    "Fancy",-1,6,7,136,11,SS_SUNKEN
+    CTEXT	    "A simple multi-threaded example in Eiffel.",-1,
+                    6,22,136,8
+    CTEXT	    "Interactive Software Engineering, Inc.",-1,6,34,
+                    136,8
+    CTEXT	    "\xA9 Copyright 1997",-1,6,46,136,8
+END
+
+
+STRINGTABLE DISCARDABLE
+BEGIN
+    CMD_WIN_RECT	"Display a window wich draws some rectangles"
+    CMD_WIN_OVAL	"Display a window wich draws some ovales"
+    CMD_WIN_EXIT	"Quit the application"
+    CMD_HELP_ABOUT	"About this demo"
+END

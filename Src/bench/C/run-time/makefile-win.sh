@@ -264,7 +264,7 @@ ebench.lib: $(EOBJECTS)
 all:: x2c.exe
 
 x2c.exe: x2c.c
-	$(CC) x2c.c
+	$(CC) -I$(TOP) x2c.c
 
 all:: 
 	@echo WARNING: If you want to generate or to update DLLs : USE "make dll".

@@ -86,6 +86,9 @@ feature -- Access
 	parent: WEL_COMPOSITE_WINDOW
 			-- Parent window
 
+	commands: WEL_COMMAND_MANAGER
+			-- Command manager associated to the current window.
+
 feature -- Status report
 
 	exists: BOOLEAN
@@ -375,7 +378,29 @@ feature -- Status report
 			Result := cwin_get_window_long (item, Gwl_style)
 		end
 
+	commands_enabled: BOOLEAN is
+			-- Is the commands execution enabled?
+		do
+			Result := commands_enabled_ref.item
+		end
+
 feature -- Status setting
+
+	enable_commands is
+			-- Enable commands execution.
+		do
+			commands_enabled_ref.set_item (True)
+		ensure
+			commands_enabled: commands_enabled
+		end
+
+	disable_commands is
+			-- Disable commands execution.
+		do
+			commands_enabled_ref.set_item (False)
+		ensure
+			commands_disabled: not commands_enabled
+		end
 
 	enable_default_processing is
 			-- Enable default window processing.
@@ -583,6 +608,37 @@ feature -- Element change
 		end
 
 feature -- Basic operations
+
+	put_command (command: WEL_COMMAND; message: INTEGER; argument: ANY) is
+			-- Put `command' associated to `message'.
+		require
+			command_not_void: command /= Void
+			positive_message: message >= 0
+		local
+			command_exec: WEL_COMMAND_EXEC
+		do
+			-- Has a command been already put?
+			-- If no, let's create `commands'.
+			if commands = Void then
+				!! commands.make
+			end
+			!! command_exec.make (command, argument)
+			commands.put (command_exec, message)
+		ensure
+			commands_exists: commands.exists (message)
+		end
+
+	remove_command (message: INTEGER) is
+			-- Remove the command associated to `message'.
+		require
+			positive_message: message >= 0
+		do
+			if commands /= Void then
+				commands.remove (message)
+			end
+		ensure
+			commands_not_exists: not commands.exists (message)
+		end
 
 	show_with_option (cmd_show: INTEGER) is
 			-- Set the window's visibility with `cmd_show'.
@@ -1157,6 +1213,14 @@ feature {NONE} -- Implementation
 			Result.set_item (True)
 		end
 
+	commands_enabled_ref: BOOLEAN_REF is
+			-- Is the commands execution enabled?
+			-- False by default.
+		once
+			!! Result
+			Result.set_item (False)
+		end
+
 	on_wm_show_window (wparam, lparam: INTEGER) is
 		require
 			exists: exists
@@ -1199,6 +1263,12 @@ feature {WEL_DISPATCHER}
 		do
 			--| Unfortunately, we can not use inspect since
 			--| Wm_* are not real constants.
+			if commands /= Void and then
+				commands_enabled and then
+				commands.has (msg) then
+					commands.item (msg).execute (Current,
+						msg, wparam, lparam)
+			end
 			if msg = Wm_mousemove then
 				on_mouse_move (wparam,
 					c_mouse_message_x (lparam),

@@ -132,7 +132,7 @@ feature -- Other constants
 			external_name: "CaptionText"
 		end
 
-	Non_editable_assembly: STRING is "This assembly cannot be edited from the Eiffel Assembly Cache."
+	Non_editable_assembly: STRING is "This assembly cannot be edited."
 		indexing
 			description: "Error message in case the user wants to edit an assembly that cannot be edited"
 			external_name: "NonEditbleAssembly"

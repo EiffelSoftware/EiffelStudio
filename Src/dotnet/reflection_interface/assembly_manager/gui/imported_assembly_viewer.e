@@ -762,7 +762,7 @@ feature -- Event handling
 			retried: BOOLEAN
 		do
 			if not retried then
-				create support
+				create support.make
 				selected_row := data_grid.get_Current_Row_Index			
 				a_descriptor := current_assembly (selected_row)
 				if a_descriptor /= Void then

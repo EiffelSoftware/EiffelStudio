@@ -6,7 +6,7 @@ root
 
 default
 	assertion (all)
-	line_generation (yes)
+	line_generation (no)
 	msil_generation ("exe")
 
 cluster	
@@ -82,12 +82,12 @@ cluster
 		
 external
 	assembly: 	
-			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.dll",
-			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.Drawing.dll",
-			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.XML.dll",
-			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\SYSTEM.WINDOWS.FORMS.DLL",
-			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\Accessibility.dll",
-			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.Data.dll",
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\System.dll",
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\System.Drawing.dll",
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\System.XML.dll",
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\SYSTEM.WINDOWS.FORMS.DLL",
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\Accessibility.dll",
+			"C:\WINNT\Microsoft.NET\Framework\v1.0.2914\System.Data.dll",
 			"..\..\bin\ISE.Reflection.ReflectionInterface.dll",
 			"..\..\bin\ISE.Reflection.EiffelComponents.dll",
 	 		"..\..\bin\ISE.Reflection.Formatter.dll",

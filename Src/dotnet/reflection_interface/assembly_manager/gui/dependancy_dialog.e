@@ -378,6 +378,8 @@ feature {NONE} -- Implementation
 						build_empty_row (rows.get_count)
 						i := i + 1
 					end
+				else
+					build_empty_row (rows.get_count)
 				end
 			end
 		rescue

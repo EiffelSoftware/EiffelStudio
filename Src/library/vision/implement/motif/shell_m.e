@@ -14,7 +14,7 @@ inherit
 	COMPOSITE_M
 		undefine
 			real_x, real_y, mel_destroy, make_from_existing, 
-			unmanage, manage, clean_up_callbacks, mel_set_insensitive
+			unmanage, manage, mel_set_insensitive
 		redefine
 			define_cursor_if_shell, undefine_cursor_if_shell
 		end;

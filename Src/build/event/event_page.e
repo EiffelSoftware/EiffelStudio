@@ -7,6 +7,7 @@ inherit
 		redefine
 			create_new_icon, associated_catalog, new_icon
 		end;
+	SHARED_EVENTS
 
 feature {NONE}
 

@@ -20,11 +20,6 @@ feature {CATALOG}
 	
 feature {NONE}
 
-	selection: SELECTION_EV is
-		once
-			!!Result.make
-		end;
-
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.list_pixmap
@@ -45,7 +40,7 @@ feature {NONE}
 	make (cat: like associated_catalog) is
 		do
 			make_page (cat);
-			extend (selection);
+			extend (selection_ev);
 		end
 
 end 

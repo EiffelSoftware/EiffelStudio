@@ -21,14 +21,14 @@ feature {NONE}
 			Result := label.hash_code
 		end;
 
-	Event_const: EVENT_CONSTANTS is
-		once
-			!! Result
-		end;
-
 	make is
 		do
 			event_table.put (Current, - identifier)
+		end;
+
+	Event_const: EVENT_CONSTANTS is
+		once
+			!! Result
 		end;
 
 	help_file_name: STRING is

@@ -277,37 +277,6 @@ feature {NONE} -- Implementation
 				name_field.change_actions.resume
 			end
 		end
-		
-		
---	check_valid_class_name: BOOLEAN is
---   -- Check that name `class_name' is a valid class name.
---  local
---   cn: STRING
---   cchar: CHARACTER
---   i: INTEGER
---  do
---  	Result := True
---  	   cn := name_field.text
---
---  	if not cn.is_empty then
---
---   if cn = Void or else not (cn @ 1).is_alpha then
---   					-- else cn.is_empty or else not (cn @ 1).is_alpha then
---    Result := False
---   else
---    from
---     i := 2
---    until
---     i > cn.count or not Result
---    loop
---     cchar := (cn @ i)
---     Result := cchar.is_alpha or cchar.is_digit or cchar = '_'
---     i := i + 1
---    end
---   end
---  	end
---  end
-
 
 	item_parent: EV_VERTICAL_BOX
 		-- An EV_VERTICAL_BOX to hold all GB_OBJECT_EDITOR_ITEM

@@ -57,7 +57,7 @@ feature -- Comparison
 		do
 			Result := item < other.item
 		ensure then
-			definition: result = (code < other.code)
+			definition: Result = (code < other.code)
 		end
 
 	is_equal (other: like Current): BOOLEAN is
@@ -85,7 +85,7 @@ feature -- Basic routines
 		require
 			valid_increment: (item.code + incr).is_valid_character_code
 		do
-			Result := chconv (chcode (item) + incr)
+			Result := (chcode (item) + incr).to_character
 		ensure
 			valid_result: Result |-| item = incr
 		end
@@ -95,7 +95,7 @@ feature -- Basic routines
 		require
 			valid_decrement: (item.code - decr).is_valid_character_code
 		do
-			Result := chconv (chcode (item) - decr)
+			Result := (chcode (item) - decr).to_character
 		ensure
 			valid_result: item |-| Result = decr
 		end
@@ -141,23 +141,24 @@ feature -- Output
 	out: STRING is
 			-- Printable representation of character
 		do
-			Result := c_outc (item)
+			create Result.make (2)
+			Result.append_character (item)
 		end
 
 feature -- Conversion
 
-	upper: CHARACTER is
+	as_upper, upper: CHARACTER is
 			-- Uppercase value of `item'
 			-- Returns `item' if not `is_lower'
 		do
-			Result := chupper (item)
+			Result := feature {CHARACTER}.to_upper (item)
 		end
 
-	lower: CHARACTER is
+	as_lower, lower: CHARACTER is
 			-- Lowercase value of `item'
 			-- Returns `item' if not `is_upper'
 		do
-			Result := chlower (item)
+			Result := feature {CHARACTER}.to_lower (item)
 		end
 
 feature -- Status report
@@ -165,27 +166,27 @@ feature -- Status report
 	is_lower: BOOLEAN is
 			-- Is `item' lowercase?
 		do
-			Result := chis_lower (item)
+			Result := feature {CHARACTER}.is_lower_char (item)
 		end
 
 	is_upper: BOOLEAN is
 			-- Is `item' uppercase?
 		do
-			Result := chis_upper (item)
+			Result := feature {CHARACTER}.is_upper_char (item)
 		end
 
 	is_digit: BOOLEAN is
 			-- Is `item' a digit?
 			-- A digit is one of 0123456789
 		do
-			Result := chis_digit (item)
+			Result := feature {CHARACTER}.is_digit_char (item)
 		end
 
 	is_alpha: BOOLEAN is
 			-- Is `item' alphabetic?
 			-- Alphabetic is `is_upper' or `is_lower'
 		do
-			Result := chis_alpha (item)
+			Result := feature {CHARACTER}.is_letter (item)
 		end
 
 feature {NONE} -- Implementation
@@ -194,51 +195,6 @@ feature {NONE} -- Implementation
 			-- Associated integer value
 		do
 			Result := feature {CONVERT}.to_int32_char (c)
-		end
-
-	chconv (i: INTEGER): CHARACTER is
-			-- Character associated with integer value `i'
-		require
-			valid_integer: i.is_valid_character_code
-		do
-			Result := i.to_character
-		end
-
-	c_outc (c: CHARACTER): STRING is
-			-- Printable representation of character
-		do
-			create Result.make (2)
-			Result.append_character (c)
-		end
-
-	chupper (c: CHARACTER): CHARACTER is
-		do
-			Result := feature {CHARACTER}.to_upper (c)
-		end
-
-	chlower (c: CHARACTER): CHARACTER is
-		do
-			Result := feature {CHARACTER}.to_lower (c)
-		end
-
-	chis_lower (c: CHARACTER): BOOLEAN is
-		do
-			Result := feature {CHARACTER}.is_lower_char (c)
-		end
-
-	chis_upper (c: CHARACTER): BOOLEAN is
-		do
-			Result := feature {CHARACTER}.is_upper_char (c)
-		end
-
-	chis_digit (c: CHARACTER): BOOLEAN is
-		do
-			Result := feature {CHARACTER}.is_digit_char (c)
-		end
-
-	chis_alpha (c: CHARACTER): BOOLEAN is
-		do
-			Result := feature {CHARACTER}.is_letter (c)
 		end
 
 indexing

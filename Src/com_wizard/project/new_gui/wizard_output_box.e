@@ -355,12 +355,12 @@ feature {NONE} -- Implementation
 		require	
 			non_void_text: a_text /= Void
 		do	
-			if a_text.count < 1024 then
+			if a_text.count < 1023 then
 				internal_text.append (a_text)
 			else	
-				internal_text.append (a_text.substring (1, 1023))
+				internal_text.append (a_text.substring (1, 1022))
 				internal_text.append ("%R%N")
-				append_text (a_text.substring (1024, a_text.count))
+				append_text (a_text.substring (1023, a_text.count))
 			end
 		end
 

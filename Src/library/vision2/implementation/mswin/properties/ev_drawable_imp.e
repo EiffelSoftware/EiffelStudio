@@ -393,9 +393,12 @@ feature -- Drawing operations
 			pix_imp: EV_PIXMAP_IMP
 		do
 			pix_imp ?= a_pixmap.implementation
-			pix_imp.reset_dc(True)
-			dc.bit_blt (x, y, pix_imp.width, 
-				pix_imp.height, pix_imp.dc, 0, 0, Srccopy)
+--| FIXME ARNAUD
+			check
+				not_implemented: False
+			end
+--			dc.bit_blt (x, y, pix_imp.width, 
+--				pix_imp.height, pix_imp.dc, 0, 0, Srccopy)
 		end
 
 	draw_rectangle (x, y, a_width, a_height: INTEGER) is
@@ -789,6 +792,10 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/04/12 01:28:44  pichery
+--| - commented some stuff to run with the new
+--|   pixmap implementation
+--|
 --| Revision 1.23  2000/03/20 23:33:04  pichery
 --| Added a small modification to `draw_pixmap' for speed optimisation.
 --|

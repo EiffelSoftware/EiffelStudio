@@ -59,7 +59,7 @@ void wel_set_font_family_enumerator_object(EIF_POINTER _addr_)
 		font_family_enumerator = eif_adopt ((EIF_OBJ) _addr_);
 }
 
-EIF_OBJ wel_release_font_family_enumerator_object ()
+EIF_REFERENCE wel_release_font_family_enumerator_object ()
 {
 		WGTCX
 		return eif_wean (font_family_enumerator);

@@ -24,7 +24,15 @@ feature  {NONE} -- Initialization
 		require
 			non_void_other: other /= Void
 			valid_other: other.item /= default_pointer
+		local
+			a_stub: ECOM_STUB
 		do
+			if (other.item = default_pointer) then
+				a_stub ?= other
+				if a_stub /= Void then
+					a_stub.create_item
+				end
+			end
 			make_from_pointer (other.item)
 		ensure
 			valid_initializer: initializer /= default_pointer

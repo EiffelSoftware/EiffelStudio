@@ -87,7 +87,7 @@ clearness. In this example there are six padding bits.
 
 */
 
-#define DEBUG_CMPS
+/*#define DEBUG_CMPS*/
 
 #include <stdio.h>
 #include <memory.h>

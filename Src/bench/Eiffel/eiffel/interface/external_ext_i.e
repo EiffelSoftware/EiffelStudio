@@ -92,6 +92,14 @@ feature -- Properties
 	alias_name_id: INTEGER
 			-- Real name index in NAMES_HEAP of external feature
 
+feature -- Convenience
+
+	alias_name: STRING is
+			-- Associated name to `alias_name_id'.
+		do
+			Result := Names_heap.item (alias_name_id)
+		end
+
 feature -- Settings
 
 	set_argument_types (a: like argument_types) is

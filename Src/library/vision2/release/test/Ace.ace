@@ -19,13 +19,9 @@ gel(dev):					"$/gel"
 
 all vision2(dev):				"$/vision2"
 	exclude
-		"test";
 		"mswin";
 		"EIFGEN";
-		"release";
 	end
-
-test(dev):				"$/vision2/release/test"
 
 all base(dev):					"$/base"
 	exclude

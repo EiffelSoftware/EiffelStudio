@@ -1,84 +1,32 @@
 system
-	ec
+	"ec"
 
 root
 	ES: make
 
 default
-	assertion(require)
-	assertion(ensure)
-	assertion(check)
-	address_expression(no)
-	array_optimization(no)
-	console_application(yes)
-	dead_code_removal(yes)
-	dynamic_runtime(no)
-	exception_trace(yes)
-	inlining(no)
-	multithreaded(no)
-	check_vape(yes)
-	disabled_debug(yes)
-	disabled_debug("jvmgen")
-	disabled_debug("assertion")
-	disabled_debug("liman")
-	disabled_debug("dead_code")
-	disabled_debug("type_check")
-	disabled_debug("jvm_dbc")
-	disabled_debug("c_debugger")
-	disabled_debug("profile_convert")
-	disabled_debug("remove_class")
-	disabled_debug("debbugger_hook")
-	disabled_debug("cache_compiler")
-	disabled_debug("check_expanded")
-	disabled_debug("cecil")
-	disabled_debug("dle topo")
-	disabled_debug("jvm_gen2")
-	disabled_debug("replication")
-	disabled_debug("document")
-	disabled_debug("jvm_gen [ ]")
-	disabled_debug("class_of_id")
-	disabled_debug("actual_replication")
-	disabled_debug("comments")
-	disabled_debug("flat_short")
-	disabled_debug("resource_validate")
-	disabled_debug("jvm_agen")
-	disabled_debug("hide_option")
-	disabled_debug("parse")
-	disabled_debug("skeleton")
-	disabled_debug("activity")
-	disabled_debug("local_feat_adaptation")
-	disabled_debug("trace_table")
-	disabled_debug("options")
-	disabled_debug("cache")
-	disabled_debug("dollar")
-	disabled_debug("cache_server")
-	disabled_debug("genericity")
-	disabled_debug("documentation")
-	disabled_debug("dead_code_removal")
-	disabled_debug("filters")
-	disabled_debug("cache_stat")
-	disabled_debug("debugger_hook")
-	disabled_debug("jvm_once")
-	disabled_debug("gelex")
-	disabled_debug("cache_research")
-	disabled_debug("show_prof_query")
-	disabled_debug("geyacc")
-	disabled_debug("flush_file")
-	disabled_debug("transfer")
-	disabled_debug("verbose")
-	disabled_debug("jvm_stack")
-	disabled_debug("has_calls")
-	disabled_debug("jvm_gen")
-	disabled_debug("sep_debug")
-	disabled_debug("byte_code")
-	disabled_debug("count")
-	disabled_debug("server")
-	disabled_debug("assertions")
-	disabled_debug("optimization")
-	debug(no)
-	line_generation(no)
-	profile(no)
-	trace(no)
+	assertion (check)
+	assertion (require)
+	assertion (ensure)
+	arguments (" ")
+	disabled_debug (yes)
+	debug (no)
+	line_generation (no)
+	profile (no)
+	trace (no)
+	il_verifiable (yes)
+	cls_compliant (yes)
+	cls_compliant_name (yes)
+	msil_generation_type ("exe")
+	check_vape (yes)
+	console_application (yes)
+	address_expression (no)
+	array_optimization (no)
+	dead_code_removal (yes)
+	dynamic_runtime (no)
+	exception_trace (yes)
+	inlining (no)
+	multithreaded (no)
 
 
 cluster
@@ -141,7 +89,7 @@ cluster
 
 	all documentation:		"$EIFFEL_SRC\Eiffel\case\documentation"
 		exclude
-			"CVS"
+			"CVS"; 
 		end
 
 	all lace:		"$EIFFEL_SRC\Eiffel\lace"
@@ -151,7 +99,7 @@ cluster
 
 	all compiler:		"$EIFFEL_SRC\Eiffel\eiffel"
 		exclude
-			"CVS"; "unix"; "Clib"; "Core"; "junk"; "kernel";
+			"CVS"; "unix"; "Clib"; "Core"; "junk"; "kernel"; 
 		end
 
 	all compiler_api:		"$EIFFEL_SRC\Eiffel\API"
@@ -159,7 +107,7 @@ cluster
 			"CVS"; 
 		end
 
-	all helpers:            "$EIFFEL_SRC/library/helpers"
+	all helpers:		"$EIFFEL_SRC/library/helpers"
 		exclude
 			"CVS"; 
 		end
@@ -191,7 +139,7 @@ external
 	include_path:
 		"$(EIFFEL_SRC)\C\bench",
 		"$(EIFFEL_SRC)\C\platform",
-		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\Clib",
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib",
 		"$(EIFFEL_SRC)\library\com\spec\windows\include",
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
 		"$(EIFFEL_SRC)\library\gobo\library\kernel\include",

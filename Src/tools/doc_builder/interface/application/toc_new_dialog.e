@@ -34,13 +34,18 @@ feature {NONE} -- Implementation
 
 	okay is
 			-- Okay pressed
+		local
+			l_dir: DIRECTORY
 		do
-			if project_radio.is_selected then
-				Shared_toc_manager.build_toc (create {DIRECTORY}.make (Shared_project.root_directory))
-			else
-				Shared_toc_manager.new_toc
-			end
-			hide
+			if not toc_name_text.text.is_empty then
+				if project_radio.is_selected then
+					create l_dir.make (Shared_project.root_directory)
+					Shared_toc_manager.build_toc (toc_name_text.text, l_dir)
+				else
+					Shared_toc_manager.new_toc (toc_name_text.text)
+				end
+				hide
+			end			
 		end
 		
 

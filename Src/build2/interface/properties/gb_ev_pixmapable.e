@@ -97,7 +97,7 @@ feature {GB_XML_STORE} -- Output
 		local
 			deselectable: EV_DESELECTABLE
 		do
-			if first.pixmap /= Void then
+			if first.pixmap_path /= Void then
 				add_element_containing_string (element, pixmap_path_string, objects.first.pixmap_path)
 			end
 		end
@@ -119,7 +119,7 @@ feature {GB_XML_STORE} -- Output
 				create file.make (file_name)
 				if file.exists then
 					new_pixmap.set_with_named_file (element_info.data)
-					for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))	
+					for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))
 				else
 					new_pixmap.draw_text (10, 10, "Error - Pixmap does not exist")
 					new_pixmap.set_minimum_height (20)

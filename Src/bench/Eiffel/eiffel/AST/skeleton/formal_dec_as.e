@@ -136,7 +136,7 @@ feature -- Status
 				end
 				from
 					creation_feature_list.start
-					!! Result.make
+					create Result.make
 				until
 					creation_feature_list.after
 				loop
@@ -256,7 +256,7 @@ feature -- creation feature check
 				if not matched then
 						-- The feature listed in the creation constraint have not been
 						-- declared in the constraint class.
-					!! vtcg6
+					create vtcg6
 					vtcg6.set_class (current_class)
 					vtcg6.set_constraint_class (associated_class)
 					vtcg6.set_feature_name (feature_name)
@@ -272,7 +272,7 @@ feature -- Output
 		local
 			feature_name: FEAT_NAME_ID_AS
 		do
-			!! Result.make (50)
+			create Result.make (50)
 			Result.append (formal_name)
 			Result.to_upper
 			if has_constraint then

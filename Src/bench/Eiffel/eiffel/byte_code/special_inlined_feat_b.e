@@ -128,7 +128,7 @@ feature -- Generation
 				buf.putchar ('}')
 				buf.new_line
 			else
-				{INLINED_FEAT_B} Precursor (gen_reg)
+				Precursor {INLINED_FEAT_B} (gen_reg)
 			end
 		end
 

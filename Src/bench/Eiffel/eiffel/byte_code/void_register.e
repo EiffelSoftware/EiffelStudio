@@ -23,7 +23,7 @@ feature
 	c_type: VOID_I is
 			-- Void C type
 		once
-			!!Result;
+			create Result;
 		end;
 
 	register_name: STRING is

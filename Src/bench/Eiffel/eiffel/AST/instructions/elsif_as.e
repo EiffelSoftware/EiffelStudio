@@ -79,7 +79,7 @@ feature -- Type check, byte code and dead code removal
 				-- Check conformance to boolean
 			current_context := context.item
 			if 	not current_context.is_boolean then
-				!!vwbe2
+				create vwbe2
 				context.init_error (vwbe2)
 				vwbe2.set_type (current_context)
 				Error_handler.insert_error (vwbe2)

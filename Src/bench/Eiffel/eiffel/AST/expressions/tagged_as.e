@@ -75,7 +75,7 @@ feature -- Type check, byte code and dead code removal
 				-- Check if the type of the expression is boolean
 			current_context := context.item
 			if not current_context.is_boolean then
-				!!vwbe3
+				create vwbe3
 				context.init_error (vwbe3)
 				vwbe3.set_type (current_context)
 				Error_handler.insert_error (vwbe3)

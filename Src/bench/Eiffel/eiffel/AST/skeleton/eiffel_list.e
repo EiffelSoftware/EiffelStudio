@@ -23,7 +23,7 @@ inherit
 			make, make_filled
 		end
 
-creation
+create
 	make, make_filled
 
 feature {NONE} -- Initialization
@@ -31,14 +31,14 @@ feature {NONE} -- Initialization
 	make (n: INTEGER) is
 			-- Creation of the list with the comparison set on object
 		do
-			{CONSTRUCT_LIST} Precursor (n)
+			Precursor {CONSTRUCT_LIST} (n)
 			compare_objects
 		end
 
 	make_filled (n: INTEGER) is
 			-- Creation of the list with the comparison set on object
 		do
-			{CONSTRUCT_LIST} Precursor (n)
+			Precursor {CONSTRUCT_LIST} (n)
 			compare_objects
 		end
 
@@ -141,7 +141,7 @@ feature -- Type check, byte code and dead code removal
 		do
 			from
 				nb := count
-				!! Result.make_filled (nb)
+				create Result.make_filled (nb)
 				r_area := Result.area
 				l_area := area
 			until
@@ -161,7 +161,7 @@ feature -- Type check, byte code and dead code removal
 		do
 			from
 				nb := count
-				!! Result.make_filled (nb)
+				create Result.make_filled (nb)
 				r_area := Result.area
 				l_area := area
 				max := nb - 1

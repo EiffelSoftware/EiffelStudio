@@ -10,7 +10,7 @@ inherit
 		end
 	SHARED_INSTANTIATOR
 
-creation
+create
 
 	make
 	
@@ -38,7 +38,7 @@ feature
 	enlarged: STRIP_BL is
 			-- Enlarge node
 		do
-			!!Result;
+			create Result;
 			Result.set_feature_ids (feature_ids)
 		end;
 
@@ -50,7 +50,7 @@ feature
 		do
 			skeleton := Context.class_type.skeleton;
 			from
-				!!Result.make;
+				create Result.make;
 				feature_ids.start
 			until
 				feature_ids.after

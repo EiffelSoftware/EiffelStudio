@@ -24,7 +24,7 @@ feature
 
 	Current_register: INLINED_CURRENT_B is
 		once
-			!!Result
+			create Result
 		end
 
 end

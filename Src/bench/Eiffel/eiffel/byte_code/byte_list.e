@@ -19,7 +19,7 @@ inherit
 			{ANY} area
 		end
 
-creation
+create
 	make, make_filled
 
 feature -- Code analyzis
@@ -268,7 +268,7 @@ feature -- Convenience
 				if nbr_void > 0 then
 					--| Remove the void elements
 					from
-						!! Result.make_filled (count - nbr_void)
+						create Result.make_filled (count - nbr_void)
 						r_area := Result.area
 						i := 0
 					until

@@ -25,7 +25,7 @@ feature {AST_FACTORY} -- Initialization
 			if target /= Void then
 				if target.target /= Void then
 						-- Target is an entity
-					!!access_id_as
+					create access_id_as
 					access_id_as.set_feature_name (target.target)
 					target_ast := access_id_as
 				else

@@ -67,7 +67,7 @@ feature {NONE} -- Type check, byte code production, dead_code_removal
 			access := context.access_line.access
 			if  access.read_only then
 					-- Read-only entity
-				!!ve03
+				create ve03
 				context.init_error (ve03)
 				ve03.set_target (target)
 				Error_handler.insert_error (ve03)

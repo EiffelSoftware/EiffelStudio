@@ -398,7 +398,7 @@ feature -- Generic conformance
 			l_buffer.putstring (", ")
 
 			if use_init then
-				!!idx_cnt
+				create idx_cnt
 				idx_cnt.set_value (1)
 				gtype.generate_cid_array (l_buffer, context.final_mode, True, idx_cnt)
 			else

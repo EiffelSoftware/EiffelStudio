@@ -38,7 +38,7 @@ feature
 			-- new enlarged tree node.
 		do
 				-- This is the root of the call tree
-			!CURRENT_BL!Result;
+			create {CURRENT_BL} Result;
 		end;
 
 	register_name: STRING is
@@ -77,7 +77,7 @@ feature -- Inlining
 
 	pre_inlined_code: like Current is
 		do
-			!INLINED_CURRENT_B!Result
+			create {INLINED_CURRENT_B} Result
 		end
 
 end

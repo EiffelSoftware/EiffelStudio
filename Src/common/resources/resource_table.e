@@ -11,7 +11,7 @@ class
 inherit
 	HASH_TABLE [STRING, STRING]
 
-creation
+create
 
 	make
 
@@ -132,7 +132,7 @@ feature -- Access
 			search (name)
 			if found then
 				a_text := found_item
-				!! a_list.make;
+				create a_list.make;
 				from
 					c := a_text.count;
 					last_pos := 1;
@@ -162,7 +162,7 @@ feature -- Access
 					end;
 				end;
 				from
-					!! Result.make (1, a_list.count);
+					create Result.make (1, a_list.count);
 					a_list.start
 					pos := 1
 				until

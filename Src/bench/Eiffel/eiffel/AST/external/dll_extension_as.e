@@ -89,7 +89,7 @@ feature -- Type check
 				error := True
 			end
 			if error then
-				!! ext_dll_sign
+				create ext_dll_sign
 				context.init_error (ext_dll_sign)
 				Error_handler.insert_error (ext_dll_sign)
 				Error_handler.raise_error
@@ -101,7 +101,7 @@ feature -- Byte code
 	byte_node: DLL_EXT_BYTE_CODE is
 			-- Byte code for external extension
 		do
-			!! Result
+			create Result
 			init_byte_node (Result)
 			Result.set_dll_type (dll_type)
 			Result.set_dll_index (dll_index)

@@ -52,7 +52,7 @@ feature -- Type check and byte code
 	value_i: STRING_VALUE_I is
 			-- Interface value
 		do
-			!! Result
+			create Result
 			Result.set_string_value (value)
 		end
 

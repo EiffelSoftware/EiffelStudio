@@ -33,7 +33,7 @@ feature
 			if has_call then
 				register.free_register
 			else
-				{B_OR_ELSE_B} Precursor;
+				Precursor {B_OR_ELSE_B};
 			end;
 		end;
 
@@ -43,7 +43,7 @@ feature
 			if has_call then
 				register.print_register;
 			else
-				{B_OR_ELSE_B} Precursor;
+				Precursor {B_OR_ELSE_B};
 			end;
 		end;
 
@@ -61,7 +61,7 @@ feature
 					context.set_propagated;
 				end;
 			else
-				{B_OR_ELSE_B} Precursor (r);
+				Precursor {B_OR_ELSE_B} (r);
 			end;
 		end;
 
@@ -79,7 +79,7 @@ feature
 				right.analyze;
 				right.free_register;
 			else
-				{B_OR_ELSE_B} Precursor;
+				Precursor {B_OR_ELSE_B};
 			end;
 		end;
 
@@ -124,7 +124,7 @@ feature
 				buf.putchar ('}');
 				buf.new_line;
 			else
-				{B_OR_ELSE_B} Precursor;
+				Precursor {B_OR_ELSE_B};
 			end;
 		end;
 

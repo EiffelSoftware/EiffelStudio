@@ -9,7 +9,7 @@ inherit
 			type
 		end
 
-creation
+create
 
 	make
 

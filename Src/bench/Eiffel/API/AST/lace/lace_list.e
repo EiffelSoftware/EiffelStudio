@@ -20,7 +20,7 @@ inherit
 			duplicate as construct_list_duplicate
 		end
 
-creation
+create
 	make, make_filled
 
 feature {COMPILER_EXPORTER}

@@ -53,7 +53,7 @@ feature -- Export status computing
 				if not export_adapt.has (feature_name) then
 					export_adapt.put (export_status, feature_name)
 				else
-					!! vlel3
+					create vlel3
 					vlel3.set_class (System.current_class)
 					vlel3.set_parent (parent.parent)
 					vlel3.set_feature_name (feature_name)

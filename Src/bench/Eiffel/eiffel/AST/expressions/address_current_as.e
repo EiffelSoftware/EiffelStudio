@@ -43,8 +43,8 @@ feature -- Type check, byte code and dead code removal
 		local
 			current_access: CURRENT_B
 		do
-			!! current_access
-			!! Result.make (current_access)
+			create current_access
+			create Result.make (current_access)
 		end
 
 feature {AST_EIFFEL} -- Output

@@ -23,7 +23,7 @@ feature -- Access
 
 	fill_from (l: OPT_LOOP_B) is    
 		do
-			{LOOP_BL} Precursor (l)
+			Precursor {LOOP_BL} (l)
 			array_desc := l.array_desc
 			generated_offsets := l.generated_offsets
 			already_generated_offsets := l.already_generated_offsets

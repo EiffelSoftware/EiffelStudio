@@ -8,7 +8,7 @@ inherit
 		redefine
 			type
 		end
-creation
+create
 
 	make
 	

@@ -143,7 +143,7 @@ feature {COMPILER_EXPORTER}
 			cluster := context.current_cluster;
 			a_class := cluster.classes.item (class_name);
 			if a_class = Void then
-				!!vd25;
+				create vd25;
 				vd25.set_class_name (class_name);
 				vd25.set_cluster (cluster);
 				Error_handler.insert_error (vd25);
@@ -152,7 +152,7 @@ feature {COMPILER_EXPORTER}
 					-- effective class name used for the external
 					-- environment
 				if Universe.is_ambiguous_name (external_name) then
-					!!vd26;
+					create vd26;
 					vd26.set_cluster (cluster);
 					vd26.set_class_name (external_name);
 					Error_handler.insert_error (vd26);
@@ -173,12 +173,12 @@ feature {COMPILER_EXPORTER}
 			cuple: TWO_NAME_SD;
 		do
 			if export_restriction = Void then
-				!!visi1;
+				create visi1;
 				Result := visi1;
 			else
-				!!visi2;
+				create visi2;
 				from
-					!!table.make (export_restriction.count);
+					create table.make (export_restriction.count);
 					export_restriction.start;
 				until
 					export_restriction.after
@@ -192,7 +192,7 @@ feature {COMPILER_EXPORTER}
 			if renamings /= Void then
 				from
 					renamings.start;
-					!!rename_table.make (renamings.count);
+					create rename_table.make (renamings.count);
 				until
 					renamings.after
 				loop

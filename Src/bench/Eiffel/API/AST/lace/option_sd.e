@@ -139,7 +139,7 @@ feature {COMPILER_EXPORTER} -- Update
 		local
 			vd15: VD15
 		do
-			!!vd15;
+			create vd15;
 			vd15.set_option_name (option_name);
 			if option_value /= Void then
 				vd15.set_option_value (option_value.value);

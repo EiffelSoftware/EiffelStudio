@@ -286,7 +286,7 @@ feature {COMPILER_EXPORTER, CLASS_AS} -- Element change
 			saved := features.index
 			old_features := features
 			feat_count := old_features.count
-			!! features.make_filled (feat_count + 1)
+			create features.make_filled (feat_count + 1)
 			from
 				i := 1
 			until
@@ -317,7 +317,7 @@ feature {COMPILER_EXPORTER, CLASS_AS} -- Element change
 			saved := features.index
 			old_features := features
 			feat_count := old_features.count
-			!! features.make_filled (feat_count - 1)
+			create features.make_filled (feat_count - 1)
 			from
 				i := 1
 				feat := old_features.first

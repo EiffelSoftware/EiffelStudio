@@ -32,7 +32,7 @@ feature {AST_FACTORY} -- Initialization
 			if call = Void then
 					-- Create id. True name set later.
 				create dcr_id.make (0)
-				!ACCESS_ID_AS! default_call
+				create {ACCESS_ID_AS} default_call
 				default_call.set_feature_name (dcr_id)
 			end
 		ensure

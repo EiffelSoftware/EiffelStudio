@@ -13,7 +13,7 @@ inherit
 			is_delayed, is_export_valid, is_equivalent
 		end
 
-creation
+create
 	make
 
 feature -- Initialization

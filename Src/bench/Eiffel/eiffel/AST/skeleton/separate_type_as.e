@@ -42,7 +42,7 @@ feature
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): CL_TYPE_A is
 		do
-			Result := {CLASS_TYPE_AS} Precursor (feat_table, f)
+			Result := Precursor {CLASS_TYPE_AS} (feat_table, f)
 			Result.set_is_separate (True)
 			record_separate_dependance (Result.associated_class);		
 		end
@@ -50,7 +50,7 @@ feature
 	actual_type: CL_TYPE_A is
 			-- Separate actual class type
 		do
-			Result := {CLASS_TYPE_AS} Precursor
+			Result := Precursor {CLASS_TYPE_AS}
 			Result.set_is_separate (True)
 		end
 
@@ -59,9 +59,9 @@ feature -- Output
 	dump: STRING is
 			-- Dumped trace
 		do
-			!! Result.make (class_name.count + 9)
+			create Result.make (class_name.count + 9)
 			Result.append ("separate ")
-			Result.append ({CLASS_TYPE_AS} Precursor)
+			Result.append (Precursor {CLASS_TYPE_AS})
 		end
 
 feature {AST_EIFFEL} -- Output
@@ -71,7 +71,7 @@ feature {AST_EIFFEL} -- Output
 		do
 			ctxt.put_text_item (ti_Separate_keyword)
 			ctxt.put_space
-			{CLASS_TYPE_AS} Precursor (ctxt)
+			Precursor {CLASS_TYPE_AS} (ctxt)
 		end
 
 end -- class SEPARATE_TYPE_AS

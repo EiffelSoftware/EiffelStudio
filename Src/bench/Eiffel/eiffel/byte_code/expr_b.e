@@ -125,7 +125,7 @@ feature -- C generation
 			if register = Void then
 				ctype := c_type
 				if not ctype.is_void then
-					!!tmp_register.make (ctype)
+					create tmp_register.make (ctype)
 					set_register (tmp_register)
 				end
 			end

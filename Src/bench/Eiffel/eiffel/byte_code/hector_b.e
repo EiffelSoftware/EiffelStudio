@@ -13,7 +13,7 @@ inherit
 			generate, generate_il, size
 		end
 
-creation
+create
 
 	make
 
@@ -24,7 +24,7 @@ feature
 	type: TYPE_I is
 			-- Expression's type
 		once
-			!POINTER_I!Result
+			create {POINTER_I} Result
 		end;
 
 	make (a: ACCESS_B) is

@@ -91,7 +91,7 @@ feature
 	No_register: VOID_REGISTER is
 			-- Special entity for no register
 		once
-			!!Result;
+			create Result;
 		end;
 
 feature -- Concurrent Eiffel

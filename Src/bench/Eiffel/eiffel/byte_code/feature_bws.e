@@ -9,7 +9,7 @@ inherit
 			generate_access_on_type
 		end
 
-creation
+create
 
 	make
 

@@ -38,7 +38,7 @@ feature -- Type check, byte code and dead code removal
 			if not context.level1 then
 					-- Old expression found somewhere else that in a
 					-- postcondition
-				!! vaol1
+				create vaol1
 				context.init_error (vaol1)
 				Error_handler.insert_error (vaol1)
 				Error_handler.raise_error
@@ -63,7 +63,7 @@ feature -- Type check, byte code and dead code removal
 				context.check_for_vaol
 			then
 					-- Not an expression
-				!! vaol2
+				create vaol2
 				context.init_error (vaol2)
 				Error_handler.insert_error (vaol2)
 			end

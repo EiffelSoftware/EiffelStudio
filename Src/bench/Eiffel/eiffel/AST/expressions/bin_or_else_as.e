@@ -17,7 +17,7 @@ feature -- Properties
 	byte_anchor: B_OR_ELSE_B is
 			-- Byte code type
 		do
-			!! Result
+			create Result
 		end
 
 	infix_function_name: STRING is

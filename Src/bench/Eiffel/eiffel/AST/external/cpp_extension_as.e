@@ -87,7 +87,7 @@ feature -- Type check
 					error := not arg_type.is_pointer
 				end
 				if error then
-					!! cpp_error
+					create cpp_error
 					cpp_error.set_error_message ("First argument must be of type POINTER")
 					context.init_error (cpp_error)
 					Error_handler.insert_error (cpp_error)
@@ -102,7 +102,7 @@ feature -- Type check
 			when data_member, static_data_member then
 					-- Must be a function
 				if not a_feat.is_function then
-					!! cpp_error
+					create cpp_error
 					cpp_error.set_error_message ("This external must be a function")
 					context.init_error (cpp_error)
 					Error_handler.insert_error (cpp_error)
@@ -110,11 +110,11 @@ feature -- Type check
 				end
 				if type = data_member then
 					error := a_feat.argument_count /= 1
-					!! cpp_error
+					create cpp_error
 					cpp_error.set_error_message ("First argument must be of type POINTER")
 				else
 					error := a_feat.argument_count /= 0
-					!! cpp_error
+					create cpp_error
 					cpp_error.set_error_message ("No argument allowed")
 				end
 				if error then
@@ -126,14 +126,14 @@ feature -- Type check
 					-- Must return a pointer
 				arg_type ?= a_feat.type
 				if not arg_type.is_pointer then
-					!! cpp_error
+					create cpp_error
 					cpp_error.set_error_message ("The return type must be POINTER")
 					context.init_error (cpp_error)
 					Error_handler.insert_error (cpp_error)
 					Error_handler.raise_error
 				end
 				if a_feat.alias_name_id > 0 then
-					!! cpp_error
+					create cpp_error
 					cpp_error.set_error_message ("The alias clause is not allowed")
 					context.init_error (cpp_error)
 					Error_handler.insert_error (cpp_error)
@@ -142,21 +142,21 @@ feature -- Type check
 			when delete then
 					-- Must be a procedure
 				if a_feat.is_function then
-					!! cpp_error
+					create cpp_error
 					cpp_error.set_error_message ("This external must be a procedure")
 					context.init_error (cpp_error)
 					Error_handler.insert_error (cpp_error)
 					Error_handler.raise_error
 				end
 				if a_feat.argument_count /= 1 then
-					!! cpp_error
+					create cpp_error
 					cpp_error.set_error_message ("The only argument must be of type POINTER")
 					context.init_error (cpp_error)
 					Error_handler.insert_error (cpp_error)
 					Error_handler.raise_error
 				end
 				if a_feat.alias_name_id > 0 then
-					!! cpp_error
+					create cpp_error
 					cpp_error.set_error_message ("The alias clause is not allowed")
 					context.init_error (cpp_error)
 					Error_handler.insert_error (cpp_error)
@@ -224,7 +224,7 @@ feature -- Type check
 				end
 
 				if error then
-					!! cpp_error
+					create cpp_error
 					cpp_error.set_error_message (error_msg)
 					context.init_error (cpp_error)
 					Error_handler.insert_error (cpp_error)
@@ -238,7 +238,7 @@ feature -- Byte code
 	byte_node: CPP_EXT_BYTE_CODE is
 			-- Byte code for external extension
 		do
-			!! Result
+			create Result
 			init_byte_node (Result)
 			Result.set_type (type)
 			Result.set_class_name (class_name)

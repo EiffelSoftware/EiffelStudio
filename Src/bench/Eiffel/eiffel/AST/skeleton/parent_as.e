@@ -108,11 +108,11 @@ feature -- Compiled parent computation
 			export_adapt: EXPORT_ADAPTATION
 			s: STRING
 		do
-			!!Result
+			create Result
 			Result.set_parent_type (type.actual_type)
 			if exports /= Void then
 				from
-					!!export_adapt.make (5)
+					create export_adapt.make (5)
 					Result.set_exports (export_adapt)
 					exports.start
 				until
@@ -124,7 +124,7 @@ feature -- Compiled parent computation
 			end
 			if renaming /= Void then
 				from
-					!!renaming_c.make (renaming.count)
+					create renaming_c.make (renaming.count)
 					Result.set_renaming (renaming_c)
 					renaming.start
 				until
@@ -135,7 +135,7 @@ feature -- Compiled parent computation
 					new_name := rename_pair.new_name
 					s := old_name.internal_name
 					if renaming_c.has (s) then
-						!!vhrc2
+						create vhrc2
 						vhrc2.set_class (System.current_class)
 						vhrc2.set_parent (Result.parent)
 						vhrc2.set_feature_name (old_name.internal_name)
@@ -169,7 +169,7 @@ feature -- Compiled parent computation
 			s: STRING
 		do
 			from
-				!!Result.make (clause.count)
+				create Result.make (clause.count)
 				clause.start
 			until
 				clause.after
@@ -180,12 +180,12 @@ feature -- Compiled parent computation
 					inspect
 						flag
 					when Redef then
-						!!vdrs3
+						create vdrs3
 					when Undef then
-						!!vdus4
+						create vdus4
 						vdrs3 := vdus4
 					when Selec then
-						!!vmss3
+						create vmss3
 						vdrs3 := vmss3
 					else
 					end

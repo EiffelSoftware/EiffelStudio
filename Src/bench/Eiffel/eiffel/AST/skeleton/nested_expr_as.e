@@ -64,7 +64,7 @@ feature -- Type check, byte code and dead code removal
 					-- The target of a separate call must be an argument
 					-- FIXME: the expression can be an argument access only
 
-				!! not_supported
+				create not_supported
 				context.init_error (not_supported)
 				not_supported.set_message ("Invalid separate call")
 				Error_handler.insert_error (not_supported)
@@ -81,9 +81,9 @@ feature -- Type check, byte code and dead code removal
 			access_expr: ACCESS_EXPR_B
 			c: CALL_B
 		do
-			!! access_expr
+			create access_expr
 			access_expr.set_expr (target.byte_node)
-			!! Result
+			create Result
 			Result.set_target (access_expr)
 			c := message.byte_node
 			Result.set_message (c)

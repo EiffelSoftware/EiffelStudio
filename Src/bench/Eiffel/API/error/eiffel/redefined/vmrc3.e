@@ -72,7 +72,7 @@ feature {COMPILER_EXPORTER}
 			api_feature: E_FEATURE
 		do
 			from
-				!! selection_list.make;
+				create selection_list.make;
 				l.start
 			until
 				l.after
@@ -80,9 +80,9 @@ feature {COMPILER_EXPORTER}
 				info := l.item;
 				api_feature := info.a_feature.api_feature (info.a_feature.written_in);
 				if info.parent = Void then
-					!! cell2.make (api_feature, Void);
+					create cell2.make (api_feature, Void);
 				else
-					!! cell2.make (api_feature, info.parent.parent);
+					create cell2.make (api_feature, info.parent.parent);
 				end;
 				selection_list.extend (cell2)
 				l.forth

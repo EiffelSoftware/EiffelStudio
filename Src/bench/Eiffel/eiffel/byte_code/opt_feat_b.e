@@ -14,7 +14,7 @@ feature
 
 	enlarged: OPT_FEAT_BL is
 		do
-			!!Result
+			create Result
 			Result.fill_from (Current)
 		end
 

@@ -14,7 +14,7 @@ inherit
 			generation_value
 		end
 	
-creation
+create
 	make
 
 feature {NONE} -- Initialization

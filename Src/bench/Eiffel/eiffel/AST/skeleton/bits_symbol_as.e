@@ -51,7 +51,7 @@ feature
 			depend_unit: DEPEND_UNIT
 		do
 			if not feat_table.has (bits_symbol) then
-				!! veen
+				create veen
 				veen.set_class (feat_table.associated_class)
 				veen.set_feature (f)
 				veen.set_identifier (bits_symbol)
@@ -69,7 +69,7 @@ feature
 				end
 			end
 			if error then
-				!!vtbt
+				create vtbt
 				vtbt.set_class (feat_table.associated_class)
 				vtbt.set_feature (f)
 				if bits_value < 0 then
@@ -84,7 +84,7 @@ feature
 			end
 			create Result.make (constant, bits_value)
 			if System.in_pass3 then
-				!!depend_unit.make (context.current_class.class_id, constant)
+				create depend_unit.make (context.current_class.class_id, constant)
 				context.supplier_ids.extend (depend_unit)
 			end
 		end; -- solved_type
@@ -126,7 +126,7 @@ feature -- Output
 	dump: STRING is
 			-- Debug purpose
 		do
-			!! Result.make (5 + bits_symbol.count)
+			create Result.make (5 + bits_symbol.count)
 			Result.append ("BIT ")
 			Result.append (bits_symbol)
    		end

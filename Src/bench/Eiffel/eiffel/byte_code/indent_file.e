@@ -20,7 +20,7 @@ inherit
 			putdouble, putreal, putstring, putint, new_line, putchar
 		end
 
-creation
+create
 	make, make_open_append, make_open_write, make_c_code_file
 
 feature {NONE} -- Initialization
@@ -184,7 +184,7 @@ feature
 					file_putstring ("0")
 				end
 				
-				!!s.make (3);
+				create s.make (3);
 				from
 					val := i;
 				variant

@@ -23,7 +23,7 @@ feature -- Parsing
 		local
 			resource_name: STRING
 		do
-			!! resource_file.make (filename);
+			create resource_file.make (filename);
 			if not resource_file.exists then 
 				-- Do nothing (no message) if the resource file does not exist
 			elseif resource_file.is_readable then

@@ -99,32 +99,32 @@ feature {COMPILER_EXPORTER} -- Renaming
 			vd50: VD50
 		do
 			if renamings /= Void and then not renamings.is_empty then
-				!! renamed_clusters.make (renamings.count);
+				create renamed_clusters.make (renamings.count);
 				from renamings.start until renamings.after loop
-					!! old_name.make (10);
+					create old_name.make (10);
 					old_name.append (renamings.item.old_name);
 					old_name.to_lower;
-					!! new_name.make (10);
+					create new_name.make (10);
 					new_name.append (renamings.item.new_name);
 					new_name.to_lower;
 					cluster := univ.cluster_of_name (old_name);
 					if cluster = Void then
 							-- `old_name': unknown cluster
-						!! vd48;
+						create vd48;
 						vd48.set_path (value.value);
 						vd48.set_cluster_name (renamings.item.old_name);
 						Error_handler.insert_error (vd48);
 						Error_handler.raise_error
 					elseif renamed_clusters.has (new_name) then
 							-- `new_name' listed twice in the rename list
-						!! vd49;
+						create vd49;
 						vd49.set_path (value.value);
 						vd49.set_new_name (renamings.item.new_name);
 						Error_handler.insert_error (vd49);
 						Error_handler.raise_error
 					elseif renamed_clusters.has_item (cluster) then
 							-- `old_name' listed twice in the rename list
-						!! vd50;
+						create vd50;
 						vd50.set_path (value.value);
 						vd50.set_old_name (renamings.item.old_name);
 						Error_handler.insert_error (vd50);
@@ -150,7 +150,7 @@ feature {COMPILER_EXPORTER} -- Renaming
 					then
 							-- Two clusters with the same name:
 							-- `cluster' and `other_cluster'.
-						!! vdcn;
+						create vdcn;
 						vdcn.set_cluster (cluster);
 						Error_handler.insert_error (vdcn);
 						Error_handler.raise_error

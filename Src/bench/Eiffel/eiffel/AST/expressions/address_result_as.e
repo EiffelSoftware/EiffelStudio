@@ -43,8 +43,8 @@ feature -- Type check, byte code and dead code removal
 		local
 			result_access: RESULT_B
 		do
-			!!result_access
-			!!Result.make (result_access)
+			create result_access
+			create Result.make (result_access)
 		end
 
 feature {AST_EIFFEL} -- Output

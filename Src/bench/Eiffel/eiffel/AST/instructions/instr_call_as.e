@@ -56,7 +56,7 @@ feature -- Type check, byte code and dead code removal
 				-- Check it is a procedure call
 			if not context.item.conform_to (Void_type) then
 					-- Error
-				!!vkcn1
+				create vkcn1
 				context.init_error (vkcn1)
 				Error_handler.insert_error (vkcn1)
 			end
@@ -67,7 +67,7 @@ feature -- Type check, byte code and dead code removal
 	byte_node: INSTR_CALL_B is
 			-- Associated byte code
 		do
-			!!Result
+			create Result
 			Result.set_call (call.byte_node)
 			Result.set_line_number (line_number)
 		end

@@ -48,7 +48,7 @@ feature
 		local
 			old_expr: LINKED_LIST [UN_OLD_B]
 		do
-			!!Result;
+			create Result;
 			Result.set_expr (expr.enlarged);
 			old_expr := Context.byte_code.old_expressions;
 			old_expr.extend (Result);

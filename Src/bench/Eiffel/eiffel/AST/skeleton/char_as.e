@@ -60,14 +60,14 @@ feature -- Conveniences
 	byte_node: CHAR_CONST_B is
 			-- Associated byte code
 		do
-			!! Result
+			create Result
 			Result.set_value (value)
 		end
 
 	make_character: CHAR_VAL_B is
 			-- Character value
 		do
-		   !! Result.make (value)
+		   create Result.make (value)
 		end
 
 feature -- Output

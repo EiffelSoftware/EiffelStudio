@@ -31,14 +31,14 @@ feature
 			-- Generate non-equality.
 		do
 			buffer.putchar ('!');
-			{BIN_EQUAL_B} Precursor;
+			Precursor {BIN_EQUAL_B};
 		end;
 
 	generate_bit_equal is
 			-- Generate non-equality for bits.
 		do
 			buffer.putchar ('!');
-			{BIN_EQUAL_B} Precursor;
+			Precursor {BIN_EQUAL_B};
 		end;
 
 	enlarged: EXPR_B is

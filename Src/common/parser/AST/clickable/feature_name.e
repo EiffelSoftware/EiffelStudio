@@ -56,7 +56,7 @@ feature -- Stoning
 	temp_name: ID_AS is
 			-- Buffer for internal name evaluation.
 		once
-			!! Result.make (45)
+			create Result.make (45)
 		end
  
 	associated_feature_name: STRING is
@@ -146,7 +146,7 @@ feature {NONE} -- Implementation
 	code_table: HASH_TABLE [STRING, STRING] is
 			-- Corrsepondance table for infix/prefix notation
 		once
-			!!Result.make (20)
+			create Result.make (20)
 			Result.put ("plus", "+")
 			Result.put ("minus", "-")
 			Result.put ("star", "*")

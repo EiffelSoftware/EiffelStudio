@@ -299,7 +299,7 @@ feature -- Type check, byte code and dead code removal
 					or else
 					routine_body.is_external	
 				then
-					!!vxrc
+					create vxrc
 					context.init_error (vxrc)
 					vxrc.set_deferred (routine_body.is_deferred)
 					Error_handler.insert_error (vxrc)
@@ -361,7 +361,7 @@ feature -- Type check, byte code and dead code removal
 						if f_table.has_id (local_name_id) then
 								-- The local name is a feature name of the
 								-- current analyzed class.
-							!!vrle1
+							create vrle1
 							context.init_error (vrle1)
 							vrle1.set_local_name (local_name_id)
 							Error_handler.insert_error (vrle1)
@@ -468,12 +468,12 @@ feature -- Type check, byte code and dead code removal
 							-- Check an expanded local type
 						if 	solved_type.has_expanded then
 							if	solved_type.expanded_deferred then
-								!!vtec1
+								create vtec1
 								context.init_error (vtec1)
 								vtec1.set_entity_name (local_name)
 								Error_handler.insert_error (vtec1)
 							elseif not solved_type.valid_expanded_creation (context_class) then
-								!!vtec2
+								create vtec2
 								context.init_error (vtec2)
 								vtec2.set_entity_name (local_name)
 								Error_handler.insert_error (vtec2)
@@ -635,7 +635,7 @@ feature -- Format Context
 							id_list.after
 						loop
 							local_name_id := id_list.item
-							!!local_info
+							create local_info
 							local_info.set_type (solved_type)
 							Result.put (local_info, Names_heap.item (local_name_id))
 							id_list.forth

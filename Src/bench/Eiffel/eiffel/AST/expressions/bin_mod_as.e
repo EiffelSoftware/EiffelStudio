@@ -15,7 +15,7 @@ feature -- Properties
 	byte_anchor: BIN_MOD_B is
 			-- Byte code type
 		do
-			!! Result
+			create Result
 		end
 
 	infix_function_name: STRING is

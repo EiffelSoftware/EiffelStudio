@@ -9,7 +9,7 @@ class RESOURCE_FILES
 inherit
 	EIFFEL_ENV
 
-creation
+create
 
 	make
 

@@ -22,7 +22,7 @@ inherit
 			is_integer as string_is_integer
 		end
 
-creation
+create
 	make, initialize
 
 feature {AST_FACTORY} -- Initialization
@@ -58,7 +58,7 @@ feature -- Conveniences
 			depend_unit: DEPEND_UNIT 
 		do
 			constant_i ?= context.current_class.feature_table.item (Current)
-			!!depend_unit.make (context.current_class.class_id, constant_i)
+			create depend_unit.make (context.current_class.class_id, constant_i)
 			context.supplier_ids.extend (depend_unit)
 		end
 
@@ -90,7 +90,7 @@ feature -- Conveniences
 		do
 			constant_i ?= context.current_class.feature_table.item (Current)
 			integer_value ?= constant_i.value
-			!! Result.make (context.current_class, integer_value.value, constant_i)
+			create Result.make (context.current_class, integer_value.value, constant_i)
 		end
 
 	make_character: CHAR_CONST_VAL_B is
@@ -101,7 +101,7 @@ feature -- Conveniences
 		do
 			constant_i ?= context.current_class.feature_table.item (Current)
 			char_value ?= constant_i.value
-			!! Result.make (context.current_class, char_value.character_value, constant_i)
+			create Result.make (context.current_class, char_value.character_value, constant_i)
 		end
 
 feature {COMPILER_EXPORTER, FEAT_NAME_ID_AS} -- Conveniences

@@ -9,7 +9,7 @@ class RESOURCE_FILES_PARSER
 inherit
 	EIFFEL_ENV
 
-creation
+create
 	make
 
 feature -- Initialization

@@ -89,7 +89,7 @@ feature {COMPILER_EXPORTER}
 			then
 				check_target_list;
 			else
-				!!vd39;
+				create vd39;
 				vd39.set_cluster (context.current_cluster);
 				vd39.set_option_name (option.option_name);
 				Error_handler.insert_error (vd39)
@@ -121,7 +121,7 @@ feature {COMPILER_EXPORTER}
 				class_name.to_lower;
 
 				if not classes.has (class_name) then
-					!!vd16;
+					create vd16;
 					vd16.set_class_name (target_list.item);
 					vd16.set_cluster (cluster);
 					vd16.set_node (Current);

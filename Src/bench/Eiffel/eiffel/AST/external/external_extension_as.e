@@ -114,7 +114,7 @@ feature -- Type check
 				end
 
 				if error then
-					!! ext_same_sign
+					create ext_same_sign
 					context.init_error (ext_same_sign)
 					Error_handler.insert_error (ext_same_sign)
 					Error_handler.raise_error
@@ -177,7 +177,7 @@ feature {NONE} -- Implementation
 			if c_signature /= Void then
 				if c_signature @ 1 = '(' then
 					end_arg_list := c_signature.index_of (')', 1)
-					!! argument_types.make (1, 0)
+					create argument_types.make (1, 0)
 					from
 						pos := 2
 					until
@@ -249,7 +249,7 @@ end
 				unprocessed := clone (include_files)
 					-- Compute maximum number of include files
 				nb := unprocessed.occurrences (',') + 1
-				!! header_files.make (1, nb)
+				create header_files.make (1, nb)
 
 				from
 					start_pos := 1
@@ -319,7 +319,7 @@ end
 			ext_error: EXTERNAL_SYNTAX_ERROR
 			line_start: INTEGER
 		do
-			!! ext_error.init
+			create ext_error.init
 			line_start := ext_error.start_position
 			ext_error.set_start_position (line_start)
 				-- We add 5 otherwise there won't be any visible selection

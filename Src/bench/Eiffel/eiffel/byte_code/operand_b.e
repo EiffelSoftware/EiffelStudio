@@ -13,7 +13,7 @@ feature
 	type: REFERENCE_I is
 			-- Type of operand.
 		once
-			!!Result
+			create Result
 		end
 
 	same (other: ACCESS_B): BOOLEAN is
@@ -29,7 +29,7 @@ feature
 			-- Enlarges the tree to get more attributes and returns the
 			-- new enlarged tree node.
 		do
-			!OPERAND_BL!Result
+			create {OPERAND_BL} Result
 		end
 
 end

@@ -14,7 +14,7 @@ inherit
 
 	SHARED_C_LEVEL;
 
-creation
+create
 
 	make
 
@@ -65,7 +65,7 @@ feature
 	register_name: STRING is
 			-- ASCII representation of register
 		do
-			!! Result.make (10)
+			create Result.make (10)
 			inspect
 				c_type.level
 			when C_int8 then

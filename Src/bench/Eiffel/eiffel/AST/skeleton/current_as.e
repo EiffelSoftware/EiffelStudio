@@ -43,7 +43,7 @@ feature -- Type check and byte code
 		do
 				-- Creation of a byte code access to Current and insertion
 			   -- of it in the access line.
-			!!current_access
+			create current_access
 			context.access_line.insert (current_access)
 		end
 

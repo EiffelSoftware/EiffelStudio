@@ -59,7 +59,7 @@ feature -- Code generation
 	external_reg_name (id: INTEGER): STRING is
 			-- Register name which will be effectively generated at the C level.
 		do
-			!!Result.make (0);
+			create Result.make (0);
 			if id = 0 then
 				Result.append ("tmp_result");
 			elseif id < 0 then
@@ -78,7 +78,7 @@ feature -- Code generation
 			-- result we need to return `Result' and not `tmp_result' because the
 			-- hash_code is based on `Result'.
 		do
-			!!Result.make (0);
+			create Result.make (0);
 			if id = 0 then
 				Result.append ("Result");
 			elseif id < 0 then

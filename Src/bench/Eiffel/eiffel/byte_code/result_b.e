@@ -45,13 +45,13 @@ feature
 	creation_access (t: TYPE_I): RESULT_CR_B is
 			-- Creation access
 		do
-			!! Result.make (t);
+			create Result.make (t);
 		end;
 
 	enlarged: RESULT_B is
 			-- Enlarges the result node
 		do
-			!RESULT_BL!Result.make (type);
+			create {RESULT_BL} Result.make (type);
 		end;
 
 	register_name: STRING is
@@ -109,7 +109,7 @@ feature -- Inlining
 
 	pre_inlined_code: INLINED_RESULT_B is
 		do
-			!!Result
+			create Result
 			Result.set_parent (parent)
 		end
 

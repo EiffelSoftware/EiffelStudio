@@ -55,7 +55,7 @@ feature -- Type check, byte code and dead code removal
 			end
 					
 			if error_found then
-				!! vrle3
+				create vrle3
 				context.init_error (vrle3)
 				Error_handler.insert_error (vrle3)
 					-- Cannot go on here
@@ -63,7 +63,7 @@ feature -- Type check, byte code and dead code removal
 			else
 				if context.level4 then
 						-- Result entity in precondition
-					!! veen2a
+					create veen2a
 					context.init_error (veen2a)
 					Error_handler.insert_error (veen2a)
 				end
@@ -72,7 +72,7 @@ feature -- Type check, byte code and dead code removal
 				context.replace (feat_type)
 
 					-- Update the access line
-				!! access_result
+				create access_result
 				context.access_line.insert (access_result)
 			end
 		end

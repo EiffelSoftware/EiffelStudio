@@ -66,7 +66,7 @@ feature -- Parsing
 				from
 					inspect last_character
 					when 'a'..'z', 'A'..'Z' then
-						!! last_token.make (10);
+						create last_token.make (10);
 						last_token.extend (last_character);
 						read_character
 					else
@@ -93,7 +93,7 @@ feature -- Parsing
 		do
 			parse_separators;
 			if not end_of_file and then last_character = ':' then
-				!! last_token.make (0);
+				create last_token.make (0);
 				read_character
 			else
 				last_token := Void
@@ -115,7 +115,7 @@ feature -- Parsing
 				parse_string
 			else
 				from
-					!! last_token.make (10)
+					create last_token.make (10)
 				until
 					stop
 				loop
@@ -145,7 +145,7 @@ feature -- Parsing
 		do
 			from
 				read_character;
-				!! last_token.make (10)
+				create last_token.make (10)
 			until
 				last_token = Void or end_of_line or else
 				last_character = '%"'
@@ -239,7 +239,7 @@ feature -- Parsing
 			if not end_of_line then
 				inspect last_character
 				when '0'..'9' then
-					!! code.make (3);
+					create code.make (3);
 					code.extend (last_character)
 					read_character;
 					if not end_of_line then
@@ -295,7 +295,7 @@ feature -- Parsing
 				line := resource_file.last_string;
 				line.left_adjust
 			else
-				!! line.make (0)
+				create line.make (0)
 			end;
 			line_count := line.count;
 			position := 0;

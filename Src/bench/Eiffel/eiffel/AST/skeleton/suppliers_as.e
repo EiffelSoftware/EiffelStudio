@@ -11,7 +11,7 @@ class SUPPLIERS_AS
 inherit
 	AST_EIFFEL
 
-creation
+create
 	make, initialize
 
 feature {AST_FACTORY} -- Initialization
@@ -19,7 +19,7 @@ feature {AST_FACTORY} -- Initialization
 	initialize is
 			-- Create a new SUPPLIERS AST node.
 		do
-			!! supplier_ids.make
+			create supplier_ids.make
 			supplier_ids.compare_objects
 		end
 
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 
 	make is
 		do
-			!!supplier_ids.make
+			create supplier_ids.make
 			supplier_ids.compare_objects
 		end
 

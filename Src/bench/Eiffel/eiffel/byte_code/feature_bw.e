@@ -10,7 +10,7 @@ inherit
 			need_invariant, set_need_invariant
 		end
 
-creation
+create
 
 	make
 	

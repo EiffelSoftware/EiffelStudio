@@ -60,7 +60,7 @@ feature
 	free_register is
             -- Free registers
 		do
-			{FEATURE_BL} Precursor;
+			Precursor {FEATURE_BL};
 			if result_reg /= Void then
 				result_reg.free_register
 			end
@@ -68,7 +68,7 @@ feature
 
 	unanalyze is
 		do
-			{FEATURE_BL} Precursor;
+			Precursor {FEATURE_BL};
 			compound := deep_clone (saved_compound)
 		end
 
@@ -83,7 +83,7 @@ feature
 			local_inliner: INLINER
 		do
 				-- First, standard analysis of the call
-			{FEATURE_BL} Precursor (reg);
+			Precursor {FEATURE_BL} (reg);
 
 			reg_type := reg.c_type;
 
@@ -132,7 +132,7 @@ feature
 			is_current_temporary := local_is_current_temporary;
 
 			if not local_is_current_temporary then
-				!REGISTER! current_reg.make (reg_type)
+				create {REGISTER} current_reg.make (reg_type)
 			end;
 
 			Context.set_inlined_current_register (current_reg);
@@ -187,7 +187,7 @@ feature -- Generation
 			b_area: SPECIAL [BOOLEAN]
 			i, count: INTEGER
 		do
-			{FEATURE_BL} Precursor (gen_reg)
+			Precursor {FEATURE_BL} (gen_reg)
 
 			local_inliner := inliner
 			local_inliner.set_inlined_feature (Current);
@@ -368,7 +368,7 @@ feature {NONE} -- Registers
 				from
 					i := 1
 					count := a.count;
-					!!Result.make (1, count)
+					create Result.make (1, count)
 				until
 					i > count
 				loop
@@ -395,8 +395,8 @@ feature {NONE} -- Registers
 					check
 						same_count: count = parameters.count
 					end;
-					!!Result.make (1, count);
-					!! temporary_parameters.make (1, count);
+					create Result.make (1, count);
+					create temporary_parameters.make (1, count);
 					parameters.start
 				until
 					i > count
@@ -479,7 +479,7 @@ feature {NONE} -- Registers
 
 	get_inline_register (type_i: TYPE_I): REGISTER is
 		do
-			!!Result.make (type_i.c_type);
+			create Result.make (type_i.c_type);
 		end
 
 	free_inlined_registers (a: ARRAY [REGISTER]) is

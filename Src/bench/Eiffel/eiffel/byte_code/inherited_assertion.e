@@ -13,7 +13,7 @@ inherit
 
 	BYTE_CONST
 	
-creation
+create
 	make
 
 feature -- Creation

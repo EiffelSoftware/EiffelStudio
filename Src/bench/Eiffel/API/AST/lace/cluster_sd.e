@@ -277,7 +277,7 @@ feature {COMPILER_EXPORTER} -- Lace recompilation
 			if parent_name /= Void then
 				parent_cluster := Universe.cluster_of_name (parent_name);
 				if parent_cluster = Void then	
-					!! vd51;
+					create vd51;
 					vd51.set_parent_name (parent_name);
 					vd51.set_cluster_name (cluster_name);
 					Error_handler.insert_error (vd51);
@@ -338,7 +338,7 @@ feature {COMPILER_EXPORTER} -- Lace recompilation
 						(cluster_of_path /= Void) and then
 						cluster_of_path /= cluster_of_name
 					then
-						!!vd28;
+						create vd28;
 						vd28.set_cluster (cluster_of_name);
 						vd28.set_second_cluster_name (cluster_of_path.cluster_name);
 						Error_handler.insert_error (vd28);
@@ -348,13 +348,13 @@ feature {COMPILER_EXPORTER} -- Lace recompilation
 						cluster := cluster_of_name;
 					end;
 				else
-					!!vdcn;
+					create vdcn;
 					vdcn.set_cluster (cluster_of_name);
 					Error_handler.insert_error (vdcn);
 					Error_handler.raise_error;
 				end;
 			elseif cluster_of_path /= Void then
-				!!vd28;
+				create vd28;
 				vd28.set_cluster (cluster_of_path);
 				vd28.set_second_cluster_name (cluster_name);
 				Error_handler.insert_error (vd28);

@@ -38,7 +38,7 @@ feature
 	enlarged: ASSIGN_BL is
 			-- Enlarge current node.
 		do
-			!!Result;
+			create Result;
 			Result.set_target (target.enlarged);
 			Result.set_source (source.enlarged);
 			Result.set_line_number (line_number)

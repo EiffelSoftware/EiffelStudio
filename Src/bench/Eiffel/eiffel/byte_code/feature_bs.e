@@ -21,11 +21,11 @@ feature
 			feature_bws: FEATURE_BWS
 		do
 			if context.final_mode then
-				!!feature_bls;
+				create feature_bls;
 				feature_bls.fill_from (Current);
 				Result := feature_bls
 			else
-				!!feature_bws.make;
+				create feature_bws.make;
 				feature_bws.fill_from (Current);
 				Result := feature_bws
 			end;

@@ -43,7 +43,7 @@ feature
 				expr.type.is_basic and then
 				(expr.register = Void or else not expr.register.is_temporary)
 			then
-				!! register.make (expr.type.c_type)
+				create register.make (expr.type.c_type)
 			end
 			if expr.is_result and then expr.type.is_basic then
 				context.mark_result_used;

@@ -96,7 +96,7 @@ feature -- Type check, byte code and dead code removal
 
 			if prefix_feature = Void then
 					-- Error: not prefixed function found
-				!!vwoe
+				create vwoe
 				context.init_error (vwoe)
 				vwoe.set_other_class (last_class)
 				vwoe.set_op_name (prefix_feature_name)
@@ -107,7 +107,7 @@ feature -- Type check, byte code and dead code removal
 
 				-- Export validity
 			if not prefix_feature.is_exported_for (last_class) then
-				!!vuex
+				create vuex
 				context.init_error (vuex)
 				vuex.set_static_class (last_class)
 				vuex.set_exported_feature (prefix_feature)
@@ -129,7 +129,7 @@ feature -- Type check, byte code and dead code removal
 			end
 
 				-- Suppliers update
-			!!depend_unit.make (last_class.class_id, prefix_feature)
+			create depend_unit.make (last_class.class_id, prefix_feature)
 			context.supplier_ids.extend (depend_unit)
 
 				-- Assumes here that a prefix feature has no argument

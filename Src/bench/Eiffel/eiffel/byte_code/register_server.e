@@ -13,7 +13,7 @@ inherit
 			{NONE} all
 		end
 
-creation
+create
 
 	make
 
@@ -34,13 +34,13 @@ feature
 			i: INTEGER;
 			reg: REGISTER_MANAGER;
 		do
-			!!registers.make (1, C_nb_types);
+			create registers.make (1, C_nb_types);
 			from
 				i := 1;
 			until
 				i > C_nb_types
 			loop
-				!!reg.make (true);
+				create reg.make (true);
 				registers.put (reg, i);
 				i := i + 1;
 			end;
@@ -62,8 +62,8 @@ feature
 			reg: like registers;
 			i: INTEGER;
 		do
-			!!Result.make (false);
-			!!reg.make (1, C_nb_types);
+			create Result.make (false);
+			create reg.make (1, C_nb_types);
 			Result.set_registers (reg);
 			from
 				i := 1;

@@ -57,7 +57,7 @@ feature -- Type evaluation
 			vtbt: VTBT
 		do
 			if (bits_value.value <= 0) then
-				!!vtbt
+				create vtbt
 				vtbt.set_class (feat_table.associated_class)
 				vtbt.set_feature (f)
 				vtbt.set_value (bits_value.value)
@@ -79,7 +79,7 @@ feature -- Output
 	dump: STRING is
 			-- Debug purpose
 		do
-			!! Result.make (10)
+			create Result.make (10)
 			Result.append ("BIT ")
 			Result.append_integer (bits_value.value)
 		end

@@ -67,19 +67,19 @@ feature -- Type check, byte code and dead code removal
 				id_list.search (an_id)
 				if not id_list.after then
 						-- Id appears more than once in attribute list
-					!! vwst2
+					create vwst2
 					context.init_error (vwst2)
 					vwst2.set_attribute_name (Names_heap.item (an_id))
 					Error_handler.insert_error (vwst2)
 				else
 					attribute_i ?= feature_table.item_id (an_id)
 					if attribute_i = Void then
-						!! vwst1
+						create vwst1
 						context.init_error (vwst1)
 						vwst1.set_attribute_name (Names_heap.item (an_id))
 						Error_handler.insert_error (vwst1)
 					else
-						!! depend_unit.make (context.current_class.class_id,
+						create depend_unit.make (context.current_class.class_id,
 											attribute_i)
 						context.supplier_ids.extend (depend_unit)
 					end
@@ -114,7 +114,7 @@ feature -- Type check, byte code and dead code removal
 		do
 			from
 				id_list.start
-				!! Result.make
+				create Result.make
 				feature_table := context.current_class.feature_table
 			until
 				id_list.after

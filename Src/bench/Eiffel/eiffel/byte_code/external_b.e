@@ -657,9 +657,9 @@ feature -- Inlining
 			if parent /= Void then
 				Result := Current
 			else
-				!!nested_b;
+				create nested_b;
 
-				!!inlined_current_b;
+				create inlined_current_b;
 				nested_b.set_target (inlined_current_b);
 				inlined_current_b.set_parent (nested_b);
 

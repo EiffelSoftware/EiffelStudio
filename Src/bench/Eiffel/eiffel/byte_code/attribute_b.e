@@ -92,9 +92,9 @@ feature
 			attr_bl: ATTRIBUTE_BL
 		do
 			if context.final_mode then
-				!!attr_bl
+				create attr_bl
 			else
-				!ATTRIBUTE_BW!attr_bl
+				create {ATTRIBUTE_BW} attr_bl
 			end
 			attr_bl.fill_from (Current)
 			Result := attr_bl
@@ -371,7 +371,7 @@ feature -- Inlining
 			if parent /= Void then
 				Result := Current
 			else
-				!!inlined_attr_b
+				create inlined_attr_b
 				inlined_attr_b.fill_from (Current)
 				Result := inlined_attr_b
 			end

@@ -155,7 +155,7 @@ feature -- Context type
 			-- Context type of the access (properly instantiated)
 		do
 			if precursor_type = Void then
-				Result := {CALL_ACCESS_B} Precursor
+				Result := Precursor {CALL_ACCESS_B}
 			else
 				Result := Context.real_type (precursor_type)
 			end
@@ -525,7 +525,7 @@ feature -- Array optimization
 			cl_type ?= context_type -- Cannot fail
 			base_class := cl_type.base_class
 			f := base_class.feature_table.item_id (feature_name_id)
-			!!dep.make (base_class.class_id, f)
+			create dep.make (base_class.class_id, f)
 			Result := optimizer.special_features.has (dep)
 		end
 
@@ -547,7 +547,7 @@ debug ("OPTIMIZATION")
 	io.error.putstring (" is NOT safe%N")
 end
 			optimizer.test_safety (f, base_class)
-			!! dep.make (base_class.class_id, f)
+			create dep.make (base_class.class_id, f)
 			Result := (not optimizer.is_safe (dep))
 				or else (parameters /= Void and then parameters.is_unsafe)
 debug ("OPTIMIZATION")

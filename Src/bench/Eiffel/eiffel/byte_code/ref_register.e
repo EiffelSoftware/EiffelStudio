@@ -9,7 +9,7 @@ inherit
 			register_name
 		end;
 
-creation
+create
 	make
 
 	
@@ -33,7 +33,7 @@ feature
 	register_name: STRING is
 			-- ASCII representation of register
 		do
-			!! Result.make (10)
+			create Result.make (10)
 			Result.append ("xp")
 			Result.append(regnum.out)
 		end;

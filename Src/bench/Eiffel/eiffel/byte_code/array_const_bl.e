@@ -46,7 +46,7 @@ feature
 			real_ty ?= context.real_type (type);
 			target_gen_type := real_ty.meta_generic.item (1);
 			get_register;
-			!!array_area_reg.make (Reference_c_type.c_type);
+			create array_area_reg.make (Reference_c_type.c_type);
 			from
 				expressions.start
 			until
@@ -63,7 +63,7 @@ feature
 				expressions.forth
 			end;
 			if require_meta then
-				!!metamorphose_reg.make (target_gen_type.c_type);
+				create metamorphose_reg.make (target_gen_type.c_type);
 			end;
 		end;
 

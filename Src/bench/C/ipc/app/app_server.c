@@ -26,6 +26,10 @@
 #include "rqst_const.h"
 #include "server.h"
 
+#ifndef EIF_WIN32
+#include <unistd.h>
+#endif
+
 #ifdef WORKBENCH
 rt_public unsigned char interrupt_flag = 0;	/* 1=interrupt asked by user, 2=new breakpoint added while runnning */
 #endif

@@ -90,12 +90,14 @@ feature -- Status Setting
 			-- pressing ALT-F4)
 		do
 			is_closeable := True
+			set_style (default_style + Ws_sysmenu)
 		end
 
 	disable_closeable is
 			-- Set the window not to be closeable by the user
 		do
 			is_closeable := False
+			set_style (default_style)
 		end
 
 feature {NONE} -- WEL Implementation
@@ -114,20 +116,13 @@ feature {NONE} -- WEL Implementation
 	default_style: INTEGER is
 			-- By default we don't show the "Window Menu"
 		do
-			Result := set_flag (Result, Ws_overlapped)
-			Result := set_flag (Result, Ws_dlgframe)
-			Result := set_flag (Result, Ws_border)
-			Result := set_flag (Result, Ws_thickframe)
-			Result := set_flag (Result, Ws_clipchildren)
-			Result := set_flag (Result, Ws_clipsiblings)
-			Result := set_flag (Result, Ws_minimizebox)
-			Result := set_flag (Result, Ws_sysmenu)
+			Result := Precursor - ws_sysmenu
 		end
 
 	default_ex_style: INTEGER is
 		do
-			Result := set_flag (Result, Ws_ex_controlparent)
-			Result := set_flag (Result, Ws_ex_toolwindow)
+			Result :=  Ws_ex_controlparent
+				+ Ws_ex_toolwindow
 		end
 
 	interface: EV_DIALOG
@@ -155,6 +150,9 @@ end -- class EV_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2000/06/09 01:23:52  manus
+--| Merged version 1.6.8.2 from DEVEL branch to HEAD.
+--|
 --| Revision 1.17  2000/06/07 17:27:59  oconnor
 --| merged from DEVEL tag MERGED_TO_TRUNK_20000607
 --|

@@ -36,7 +36,7 @@ feature
 		do
 			!!widget.make_unmanaged (entity_name, a_parent);
 			widget.set_horizontal (False);
-			set_size (10, 105);
+			set_size (15, 105);
 		end;
 
 	widget: SCALE;

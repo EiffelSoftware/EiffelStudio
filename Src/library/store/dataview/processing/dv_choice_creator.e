@@ -57,7 +57,7 @@ feature -- Basic operations
 			control_not_void: ctrl /= Void
 		do
 			control := ctrl
-			control.set_action (~ask_for_creation)
+			control.set_action (agent ask_for_creation)
 		ensure
 			control_set: control_set
 		end
@@ -160,7 +160,7 @@ feature {NONE} -- Implementation
  				end
  			else
 				db_table_component.confirmation_handler.call ([creation_confirmation 
-						(db_table_component.table_description.Table_name), ~create_tablerow])
+						(db_table_component.table_description.Table_name), agent create_tablerow])
  			end
  		end
  

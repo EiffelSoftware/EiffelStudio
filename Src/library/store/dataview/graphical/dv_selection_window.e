@@ -35,7 +35,7 @@ feature -- Initialization
 			-- Create the window and the status bar.
 		do
 			default_create
-			close_request_actions.extend (~hide)
+			close_request_actions.extend (agent hide)
 		end
 
 	set_display_list (display_l: DV_TABLEROW_MULTILIST) is
@@ -93,10 +93,10 @@ feature {NONE} -- Implementation
 			hbox.disable_default_expand
 			hbox.extend_cell
 			create selecting_control.make_with_text ("OK")
-			selecting_control.add_action (~hide)
+			selecting_control.add_action (agent hide)
 			hbox.extend (selecting_control)
 			create cancel_button.make_with_text ("Cancel")
-			cancel_button.add_action (~hide)
+			cancel_button.add_action (agent hide)
 			hbox.extend (cancel_button)
 			hbox.extend_cell
 			container.extend (hbox)

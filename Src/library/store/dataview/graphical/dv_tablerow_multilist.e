@@ -47,14 +47,14 @@ feature -- Status report
 			-- Does list of actions executed when an item is selected
 			-- contain `action'?
 		do
-			Result := select_actions.has (select_actions~wrapper (?, action))
+			Result := select_actions.has (agent select_actions.wrapper (?, action))
 		end
 
 	has_deselect_action (action: PROCEDURE [ANY, TUPLE]): BOOLEAN is
 			-- Does list of actions executed when an item is deselected
 			-- contain `action'?
 		do
-			Result := deselect_actions.has (deselect_actions~wrapper (?, action))
+			Result := deselect_actions.has (agent deselect_actions.wrapper (?, action))
 		end
 
 feature -- Access

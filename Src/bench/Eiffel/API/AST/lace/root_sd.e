@@ -17,7 +17,11 @@ inherit
 		end;
 	SHARED_SERVER;
 	SHARED_ERROR_HANDLER;
-	STONABLE
+	CLICKABLE_AST
+		redefine
+			associated_eiffel_class,
+			valid_reference_class, is_class
+		end
 
 feature -- Attributes
 
@@ -149,10 +153,20 @@ feature {NONE}
 		end;
 
 feature -- stoning
- 
-	stone (reference_class: E_CLASS): CLASSC_STONE is
+
+	is_class: BOOLEAN is
 		do
-			!! Result.make (System.root_class.compiled_eclass)
+			Result := True
+		end;
+
+	valid_reference_class (reference_class: E_CLASS): BOOLEAN is
+		do
+			Result := True
+		end;
+
+	associated_eiffel_class (reference_class: E_CLASS): E_CLASS is
+		do
+			Result := System.root_class.compiled_eclass
 		end
 
 end

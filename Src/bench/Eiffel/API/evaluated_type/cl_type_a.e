@@ -62,14 +62,20 @@ feature -- Properties
 			Result := is_basic or (not l_base_class.is_basic and l_base_class.is_external)
 		end
 
-	is_system_object: BOOLEAN is
-			-- Does current type represent SYSTEM_OBJECT?
+	is_system_object_or_any: BOOLEAN is
+			-- Does current type represent SYSTEM_OBJECT or ANY?
 		require
 			il_generation: System.il_generation
+		local
+			l_class_id: like class_id
+			l_system: like system
 		do
-			Result := class_id = System.system_object_class.compiled_class.class_id
+			l_class_id := class_id
+			l_system := system
+			Result := l_class_id = l_system.system_object_class.compiled_class.class_id or
+				l_class_id = l_system.any_class.compiled_class.class_id
 		end
-
+		
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is

@@ -74,6 +74,7 @@ feature -- Creation
 			included_list.set_multiple_selection
 			excluded_list.set_multiple_selection
 			scrolled_w.set_working_area (properties_rc)
+			properties_rc.set_same_size
 			!! set_colors
 			set_colors.execute (Current)
 		end

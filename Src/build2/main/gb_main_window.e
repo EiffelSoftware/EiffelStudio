@@ -65,7 +65,6 @@ feature -- Basic operation
 	build_interface is
 			-- Create user interface in `Current'.
 		do
-			--Precursor {EV_TITLED_WINDOW}
 			set_title (Product_name)
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 				-- Initialize the menu bar for `Current'.
@@ -78,6 +77,11 @@ feature -- Basic operation
 				-- Build the tools and other widgets within `Current'.
 			build_widget_structure
 			set_minimum_size (640, 480)
+				-- The split areas do not re-position correctly when
+				-- `Current' is not shown, so when shown, we initialize
+				-- them. This is only done once, as if the user moves through the
+				-- wizard, we need to keep their desired layout.
+			show_actions.extend_kamikaze (agent initialize_split_areas)
 			
 				-- When an attempt to close `Current' is made, call `close_requested'.
 			close_request_actions.extend (agent close_requested)
@@ -94,16 +98,22 @@ feature -- Basic operation
 			wipe_out
 				-- Add the tools.
 			extend (tool_holder)
-				-- We build the menus here, as the only time they
-				-- change at the moment is in conjunction with the
-				-- tools being displayed. This may have to change later.
-			horizontal_split_area.set_split_position (Default_width_of_type_selector)
-			vertical_split_area.set_split_position (Default_height_of_type_selector)
+			
+				-- Position split areas.
+			initialize_split_areas
+			
 			build_menu
 			unlock_update
 		ensure
 			has_item: item /= Void
 			item_is_tool_holder: item = tool_holder
+		end	
+		
+	initialize_split_areas is
+			-- Set splitters to default positions.
+		do
+			horizontal_split_area.set_split_position (Default_width_of_type_selector)
+			vertical_split_area.set_split_position (Default_height_of_type_selector)
 		end
 		
 		

@@ -198,6 +198,17 @@ feature -- Query
 				end
 			end	
 		end
+		
+	resource_compiler: STRING is
+			-- Path to `resgen' tool from .NET Framework SDK.
+		local
+			l_path: STRING
+		do
+			l_path := dotnet_framework_sdk_bin_path
+			if l_path /= Void then
+				Result := l_path + "resgen.exe"
+			end
+		end
 	
 feature {NONE} -- Implementation
 

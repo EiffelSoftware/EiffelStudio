@@ -560,7 +560,7 @@
 	</TOPIC>
 	<TOPIC TOPIC_ID="Dynamic_data" ICON="icon_preferences_folder" VISIBILITY="hidden">
 			<HEAD>Dynamic data</HEAD>
-			<TEXT>display_dotnet_cmd<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT>display_dotnet_cmd<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>development_window__show_address_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>development_window__show_project_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
 			<TEXT>development_window__show_general_toolbar<BOOLEAN>True</BOOLEAN></TEXT>

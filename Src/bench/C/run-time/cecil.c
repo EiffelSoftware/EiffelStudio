@@ -58,7 +58,7 @@ rt_shared unsigned char eif_ignore_invisible = (unsigned char) 0;
 #endif
 
 /* 
- * Exception handling
+ * `visible' exception handling
  */
 
 rt_public void eifvisex (void) {
@@ -352,6 +352,18 @@ rt_public EIF_FN_POINTER eifptr(char *routine, EIF_TYPE_ID cid)
 	return (EIF_FN_POINTER) eifref(routine, cid);	/* Returning POINTER */
 }
 
+rt_public EIF_POINTER eifrout (EIF_OBJ rout_name, EIF_OBJ class_name) {
+    /* Get the pointer to the Eiffel routine described by its 
+     * name `rout_name' and its class `class_name'
+     */
+
+   
+    return (EIF_POINTER) eifref (eif_access (rout_name),
+                                     eifcid (eif_access (class_name))
+                                    );
+
+    }
+
 rt_public EIF_FN_REF eifref(char *routine, EIF_TYPE_ID cid)
 {
 	/* Look for the routine named 'routine' in the type 'cid' (there is no
@@ -489,6 +501,7 @@ rt_public char *eifaddr(char *object, char *name)
 	return object + offset;
 #endif
 }
+
 
 rt_public int eiflocate (EIF_OBJ object, char *name) {
     /* Return the index of attribute `name' in EIF_OBJ `object' */

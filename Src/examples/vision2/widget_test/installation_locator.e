@@ -13,6 +13,7 @@ feature -- Access
 
 	location: STRING is
 			-- Location of installation.
+			-- `Void' if environment variables not correctly set.
 		local
 			file_location: STRING
 			directory_name: DIRECTORY_NAME
@@ -35,7 +36,7 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	execution_environment: EXECUTION_ENVIRONMENT is
-			-- Once access to executino environemnt.
+			-- Once access to execution environment.
 		once
 			create Result
 		end

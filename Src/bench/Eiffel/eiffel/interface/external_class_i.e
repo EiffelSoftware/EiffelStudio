@@ -72,7 +72,6 @@ feature -- Status Report
 			l_name: STRING
 			l_is_array: BOOLEAN
 			l_array_type: CONSUMED_ARRAY_TYPE
-			l_generics: ARRAY [CLASS_I]
 		do
 			l_assembly := assembly.referenced_assemblies.item (c.assembly_id)
 			l_array_type ?= c

@@ -85,13 +85,13 @@ feature -- Access
 feature -- Query
 	
 	use_cordbg (a_string: STRING): BOOLEAN is
-			-- 
+			-- Should Current use cordbg.exe?
 		do
 			Result := a_string.is_equal ("cordbg")
 		end
 		
 	use_dbgclr (a_string: STRING): BOOLEAN is
-			-- 
+			-- Should Current use DbgCLR.exe?
 		do
 			Result := a_string.is_equal ("DbgCLR")
 		end

@@ -1,71 +1,91 @@
 system
-	 wizard
+	wizard
 
 root
-	WIZARD_MANAGER (dotnet_wizard): "make_and_launch"
+	WIZARD_MANAGER: make_and_launch
 
 default
+	assertion(require)
+	assertion(ensure)
+	assertion(check)
+	address_expression(no)
+	array_optimization(no)
+	console_application(no)
+	dead_code_removal(yes)
+	dynamic_runtime(no)
+	exception_trace(yes)
+	inlining(no)
+	multithreaded(no)
+	check_vape(yes)
+	arguments("D:\Eiffel50\bench\wizards\new_projects\dotnet -callback c:\test.txt")
+	arguments("E:\Eiffel50\bench\wizards\new_projects\dotnet -callback c:\test.txt")
+	disabled_debug(yes)
+	disabled_debug("win_dispatcher")
+	disabled_debug("wel")
+	disabled_debug("vision2_windows_gdi")
+	disabled_debug("vision2_windows")
+	disabled_debug("wel_gdi_count")
+	disabled_debug("gdi_count")
+	disabled_debug("wel_gdi_references")
+	disabled_debug("dlg_dispatcher")
+	debug(no)
+	line_generation(no)
+	profile(no)
+	trace(no)
+
+
 --	assertion (no)
-	assertion (ensure)
-	assertion (check)
-	multithreaded (no)
-	console_application (no)
-	dynamic_runtime (no)
-	dead_code_removal (yes)
-	profile (no)
-	line_generation (no)
-	debug  (no)
-	array_optimization (no)
-	inlining (no)
-	inlining_size ("4")
-	exception_trace (yes)
-	arguments ("E:\Eiffel50\bench\wizards\new_projects\dotnet -callback c:\test.txt")
+-- Root cluster
+-- Wel Wizard
+-- Bench Common
+-- EiffelBase
+-- WEL
+-- EiffelVision2
+-- Wizard library
+-- Lex and Parse
 
 cluster
-		-- Root cluster
-	root_cluster: "$EIFFEL_SRC\help\wizards"
-	
-		-- Wel Wizard
-	dotnet_wizard (root_cluster): "$\edotnet"
-	
-		-- Bench Common
-	bench_common (root_cluster): "$\bench_common"
-	
-		-- EiffelBase
-	all base: "$EIFFEL_SRC\library\base"
+	root_cluster:		"$EIFFEL_SRC\help\wizards"
+
+	dotnet_wizard (root_cluster):		"$\edotnet"
+
+	bench_common (root_cluster):		"$\bench_common"
+
+	all base:		"$EIFFEL_SRC\library\base"
 		exclude
-			"desc";"table_eiffel3";"CVS"
+			"desc"; "table_eiffel3"; "CVS"; 
 		end
 
-		-- WEL
-	all wel: "$EIFFEL_SRC\library\wel"
+	all wel:		"$EIFFEL_SRC\library\wel"
 		exclude
-			"CVS"
+			"CVS"; 
 		default
-			assertion (ensure)
+			assertion(ensure)
 		end
 
-		-- EiffelVision2
-	all vision2: "$EIFFEL_SRC\library\vision2"
+	all vision2:		"$EIFFEL_SRC\library\vision2"
 		exclude
-			"gtk";"EIFGEN";"tmp";"temp";"release";"obsolete";"CVS"
+			"gtk"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "CVS"; 
 		end
 
-		-- Wizard library
-	all wizard_library: "$EIFFEL_SRC\library\wizard"
+	all wizard_library:		"$EIFFEL_SRC\library\wizard"
 
-		-- Lex and Parse
-	all lex: "$EIFFEL_SRC\library\lex"
-	all parse: "$EIFFEL_SRC\library\parse"
+	all lex:		"$EIFFEL_SRC\library\lex"
+
+	all parse:		"$EIFFEL_SRC\library\parse"
 
 external
+
 	include_path:
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
-		"$(EIFFEL_SRC)\library\vision2\spec\include"
+		"$(EIFFEL_SRC)\library\vision2\spec\include",
+		"$(EIFFEL_SRC)\help\wizards\edotnet\Clib"
 
 	object:
-		"$(EIFFEL_SRC)\library\wel\spec\$(COMPILER)\lib\wel.lib",
-		"$(EIFFEL_SRC)\library\vision2\spec\$(COMPILER)\lib\vision2.lib",
+		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"$(EIFFEL_SRC)\library\vision2\spec\$(ISE_C_COMPILER)\lib\vision2.lib",
 		"$(EIFFEL_SRC)\C_library\zlib\zlib.lib",
-		"$(EIFFEL_SRC)\C_library\libpng\libpng.lib"
+		"$(EIFFEL_SRC)\C_library\libpng\libpng.lib",
+		"$(EIFFEL_SRC)\help\wizards\edotnet\Clib\assembly_helper.obj"
+
 end

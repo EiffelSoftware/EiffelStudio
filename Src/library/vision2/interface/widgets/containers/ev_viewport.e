@@ -60,9 +60,9 @@ feature -- Access
 	y_offset: INTEGER is
 			-- Vertical position of viewport relative to `item'.
 		do
-			Result := implementation.x_offset
+			Result := implementation.y_offset
 		ensure
-			bridge_ok: Result = implementation.x_offset
+			bridge_ok: Result = implementation.y_offset
 		end
 
 feature -- Element change
@@ -158,6 +158,9 @@ end -- class EV_VIEWPORT
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/21 22:37:20  brendel
+--| Corrected imp of y_offset.
+--|
 --| Revision 1.9  2000/04/21 22:04:17  brendel
 --| Corrected preconditions.
 --|

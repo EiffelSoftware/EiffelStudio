@@ -76,7 +76,7 @@ feature -- Status setting
 	set_minimum_width_in_characters (nb: INTEGER) is
 			-- Make `nb' characters visible on one line.
 		do
-			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_entry_set_width_chars (entry_widget, nb)
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_entry_set_width_chars (entry_widget, nb + 1)
 		end
 	
 	set_text (a_text: STRING) is

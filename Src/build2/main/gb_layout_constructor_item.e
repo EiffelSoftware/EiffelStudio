@@ -106,6 +106,28 @@ feature {GB_COMMAND_CHANGE_TYPE} -- Implementation
 			create pixmaps
 			set_pixmap (pixmaps.pixmap_by_name (object.type.as_lower))
 		end
+		
+feature {GB_COMMAND_DELETE_WINDOW_OBJECT, GB_OBJECT} -- Implementation
+
+	unparent is
+			-- Remove `Current' from its `parent' if any.
+		local
+			parent_item: EV_TREE_NODE_LIST
+		do
+				-- Remove `layout_item' from its parent.
+			parent_item ?= parent
+			if parent_item /= Void then
+				check
+						-- No longer perform this check, as window object layout items
+						-- will have no parent unless they are currently being edited.
+					--parent_item_not_void: parent_item /= Void
+					--item_contained_in_parent: parent_item.has (layout_item)
+				end
+				parent_item.prune (Current)			
+			end
+		ensure
+			not_parented: parent = Void
+		end
 
 feature {NONE} -- Implementation
 

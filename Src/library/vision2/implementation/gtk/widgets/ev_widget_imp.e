@@ -213,6 +213,9 @@ feature -- Access
 	tooltip: STRING
 			-- Text displayed when user moves mouse over widget.
 
+	popup_menu: EV_MENU
+			-- Menu popped up when button 3 is pressed on widget.
+
 feature -- Status report
 
 	is_sensitive: BOOLEAN is
@@ -521,6 +524,26 @@ feature -- Element change
 				Default_pointer, Default_pointer)
 		end
 
+	set_popup_menu (a_menu: EV_MENU) is
+			-- Pop up `a_menu' when button 3 is pressed on widget.
+		do
+			check
+				to_be_implemented: False
+			end
+		--	popup_menu := a_menu
+		--	C.gtk_signal_connect_object (
+		--		c_object, ~show_popup_menu, popup_menu)
+		end
+
+	remove_popup_menu is
+			-- Do not pop up the menu.
+		do
+			check
+				to_be_implemented: False
+			end
+		--	popup_menu := Void
+		end
+
 feature -- Measurement
 	
 	x_position: INTEGER is
@@ -795,6 +818,10 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.58  2000/02/22 16:19:10  brendel
+--| Added features to show popup menu.
+--| Not yet implemented.
+--|
 --| Revision 1.57  2000/02/16 03:38:41  oconnor
 --| connected resize action sequence
 --|

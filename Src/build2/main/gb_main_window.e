@@ -145,6 +145,14 @@ feature -- Basic operation
 			if is_show_requested then
 				type_selector.ensure_top_item_visible
 			end
+				-- Now place tools within `multiple_split_area'.
+			multiple_split_area.extend (type_selector, type_selector.name)
+			multiple_split_area.customizeable_area_of_widget (type_selector).extend (type_selector.tool_bar)
+			multiple_split_area.extend (component_selector, component_selector.name)
+			multiple_split_area.customizeable_area_of_widget (component_selector).extend (component_selector.tool_bar)			
+			multiple_split_area.extend (window_selector, window_selector.name)
+			multiple_split_area.customizeable_area_of_widget (window_selector).extend (window_selector.tool_bar)
+			
 			initialize_split_areas
 			command_handler.update
 		end
@@ -294,7 +302,7 @@ feature {NONE} -- Implementation
 			-- Set splitters to default positions.
 		do
 			if horizontal_split_area.full then
-				horizontal_split_area.set_split_position (Default_width_of_type_selector)
+				horizontal_split_area.set_split_position (Default_width_of_type_selector.max (horizontal_split_area.minimum_split_position))
 			end
 		end
 

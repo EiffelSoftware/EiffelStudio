@@ -20,7 +20,8 @@ inherit
 			Freeze_command_name,
 			freeze_command_arguments,
 			remove_file_locks,
-			has_signable_generation
+			has_signable_generation,
+			expand_path
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -70,7 +71,64 @@ feature -- Access
 
 	expand_path (a_path: STRING): STRING is
 			-- Epxand all env vars in the given path
+		local
+			var: STRING
+			formatted_var: STRING
+			dollar_pos: INTEGER
+			slash_pos: INTEGER
+			parth_pos: INTEGER
+			env_var: STRING
+			env: EXECUTION_ENVIRONMENT
 		do
+			create env
+			Result := a_path.clone(a_path)
+			Result.replace_substring_all ("/", "\")
+			
+			dollar_pos := Result.index_of ('$', 1)
+			if dollar_pos > 0 then
+				from 
+				until
+					dollar_pos = 0
+				loop
+					-- look for '\'
+					slash_pos := Result.index_of ('\', dollar_pos + 1)
+					
+					-- now look for ) and return the first
+					-- allows for $(ENV)Ext\...
+					parth_pos := Result.index_of (')', dollar_pos + 1)
+					
+					if parth_pos > 0 then
+						-- if ) has been found
+						if slash_pos > 0 then
+							-- if the ) comes before \
+							if parth_pos < slash_pos then
+								slash_pos := parth_pos + 1
+							end
+						else
+							slash_pos := parth_pos + 1
+						end
+					else
+						-- if there is no () then use the \
+						if slash_pos = 0 then
+							slash_pos := Result.count + 1
+						end						
+					end
+		
+					var := Result.substring (dollar_pos, slash_pos - 1)
+					
+					-- remove the () and $
+					formatted_var := var.clone(var);
+					formatted_var.prune_all('(')
+					formatted_var.prune_all(')')
+					formatted_var.prune_all_leading('$')
+					
+					env_var := env.get (formatted_var)
+					if env_var /= Void and then env_var.count > 0 then
+						Result.replace_substring_all (var, env_var)
+					end
+					dollar_pos := Result.index_of ('$', 1)
+				end
+			end
 		end
 		
 	shrink_path (a_path: STRING): STRING is

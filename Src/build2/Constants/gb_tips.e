@@ -28,6 +28,8 @@ feature -- Access
 	
 	changing_type: STRING is "You may change the type of an object by picking it,%Nand dropping it on the type you wish to change it to in%Nthe Type Selector. Any objects contained will be re-parented into the new%Nobject. This may only occur if the new type matches, and supports%Ninsertion of all children."
 	
+	renaming_window: STRING is "Renaming a window or dialog that has already been generated,%Nmodifies the file and class names of the generated files on%Ndisk immediately."
+	
 	all_tips: ARRAYED_LIST [STRING] is
 			-- All tips avaialable from `Current'.
 		once
@@ -42,6 +44,7 @@ feature -- Access
 			Result.extend (name_is_generated_code_tip)
 			Result.extend (builder_window_ctrl_shift)
 			Result.extend (changing_type)
+			Result.extend (renaming_window)
 		end
 	
 	tip_count: INTEGER is

@@ -20,7 +20,7 @@
         systems and will run concurrently. The communication uses streams rather
         than datagrams; the datagram form of communication will be examined in
         section <a href="70_datagram_sockets.html">using datagram sockets</a>.</p>
-        <h3><a Machine?>7.1 A client and a server on the same machine</a></h3>
+        <h3><a Machine?>A client and a server on the same machine</a></h3>
         <center>
         <table border="1" width="75%">
           <tbody>
@@ -109,7 +109,7 @@
         <p>applying to <i>soc2</i>, not <i>soc1</i>; this makes <i>soc1 </i>available
         to accept connections with other clients, a fundamental feature of
         client-server mechanisms.</p>
-        <p>The operation <i>soc2</i>l<i>close</i> which terminates the above
+        <p>The operation <i>soc2</i>.<i>close</i> which terminates the above
         sequence closes the new socket. In principle this is not necessary,
         since garbage collection should eventually reclaim the socket object,
         and the <i>dispose</i> procedure of the corresponding socket class
@@ -328,7 +328,7 @@
               <p><span CLASS="ekeyword">end</span></p>
         </ul>
         </code>
-        <h3>7.2 Communication between two different machines</h3>
+        <h3>Communication between two different machines</h3>
         <center>
         <table border="1" width="75%">
           <tbody>

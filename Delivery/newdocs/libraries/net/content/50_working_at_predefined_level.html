@@ -66,7 +66,7 @@
         <p>Note that to make use of the storage and retrieval facilities the
         objects to be exchanged must be instances of a class which, as here, is
         a descendant of <a CLASS="eclass" href="../../base/reference/kernel/storable_chart.html">STORABLE</a>.</p>
-        <h3>6.3 Application classes and system structure</h3>
+        <h3>Application classes and system structure</h3>
         <p>The client and server mechanisms will be described by instances of
         two classes that make up the example, called OUR_CLIENT and OUR_SERVER.</p>
         <p>We want to have the two communicating systems be two different
@@ -97,13 +97,13 @@
               <p><span CLASS="ekeyword">inherit</span></p>
             </dd>
             <dd>
-              <p>	<a CLASS="eclass" href="../reference/local/client_server/unix_client_chart.html">&nbsp;&nbsp;&nbsp; UNIX_CLIENT<br>
-</a>		&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">redefine</span>&nbsp;
+              <p>	&nbsp;&nbsp;&nbsp; <a CLASS="eclass" href="../reference/local/client_server/unix_client_chart.html">UNIX_CLIENT<br>
+</a>		&nbsp;&nbsp;&nbsp;&nbsp; <span CLASS="ekeyword">&nbsp;&nbsp;&nbsp;</span> <span CLASS="ekeyword">redefine</span>&nbsp;
 			<br>
             &nbsp;&nbsp;&nbsp;
-			&nbsp;&nbsp;&nbsp;&nbsp;
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span CLASS="efeature">received<br>
-            &nbsp;&nbsp;&nbsp;</span>
+            &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;</span>
             <span CLASS="ekeyword">end</span></p>
             <dd>
               <p><span CLASS="ekeyword">creation</span><br>
@@ -245,7 +245,7 @@
         <p>make (&quot;serverhost&quot;, 2000)</p>
         <p>As noted earlier, you may identify the machine by an Internet address
         such as <i>&quot;127.0.0.1&quot;</i> rather than by a host name.</p>
-        <h3>6.5 The server</h3>
+        <h3>The server</h3>
         <p>Now, the server class:
         <code>
         <ul>
@@ -315,7 +315,7 @@
             </dd>
             <dd>
               <p>	&nbsp;&nbsp;&nbsp; <span CLASS="efeature">respond</span> <span CLASS="ekeyword">is</span><br>
-              &nbsp;&nbsp;&nbsp;<span CLASS="ecomment">&nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;<span CLASS="ecomment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span></span><span CLASS="ecomment">&nbsp;</span><span CLASS="efeature"><span CLASS="ecomment">
               -- Extend received list.</span><span CLASS="ekeyword"><br>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             do<br></span>
@@ -323,7 +323,7 @@
             <span CLASS="efeature">received</span><span CLASS="esymbol">.</span><span CLASS="efeature">extend</span> <span CLASS="esymbol">(</span><span CLASS="estring">&quot;%N I'm back.%N&quot;</span><span CLASS="esymbol">)</span><br>
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <span CLASS="efeature">resend</span> <span CLASS="esymbol">(</span><span CLASS="efeature">received</span><span CLASS="esymbol">)</span><br>
-            &nbsp;&nbsp;&nbsp;</span></span></span><span>&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;</span><span>&nbsp;&nbsp;&nbsp;&nbsp;
             <span CLASS="ekeyword">end</span></p>
             </dd>
             <dd>

@@ -120,6 +120,7 @@ feature -- Basic operation
 				-- have a root window.
 			if Object_handler.root_window_object = Void then
 				window_selector.mark_first_window_as_root
+				System_status.disable_project_modified
 			end
 			
 			Window_selector.select_main_window

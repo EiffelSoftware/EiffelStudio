@@ -301,7 +301,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 	insert_pixmap is
 		local
 			a_gs: GEL_STRING
-			is_leaf, is_expded: INTEGER
+			is_leaf: INTEGER
 		do
 			create a_gs.make (text)
 			if parent_tree_imp /= Void then
@@ -318,7 +318,7 @@ feature {EV_TREE_IMP, EV_TREE_NODE_IMP} -- Implementation
 					gdk_pixmap,
 					gdk_mask,
 					is_leaf,
-					is_expded
+					is_expanded.to_integer
 				)
 			end
 		end

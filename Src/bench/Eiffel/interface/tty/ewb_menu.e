@@ -64,8 +64,7 @@ feature -- Access
 			s : STRING
 		do
 			from
-				s := clone (cmd_name)
-				s.to_lower
+				s := cmd_name.as_lower
 				i := lower
 			until
 				i > upper or else Result /= Void
@@ -158,7 +157,7 @@ feature {NONE} -- Implementation
 			s: STRING;
 		do
 				-- First letter in upper case
-			s := clone (opt)
+			s := opt.twin
 			s.put (s.item (1).upper, 1);
 
 			io.putstring ("%T(");

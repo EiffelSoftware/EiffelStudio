@@ -1,13 +1,15 @@
 indexing
 
 	description:
-		"A client for a Unix socket.";
+		"A client with Unix socket.";
 
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class UNIX_CLIENT
+class
+
+	UNIX_CLIENT
 
 inherit
 
@@ -24,24 +26,27 @@ feature -- Access
 feature -- Initialization
 
 	make (a : STRING) is
+			-- Create an unix socket client.
 		require
 			a_valid_name: a /= Void and then not a.empty
 		do
-			!!in_out.make_client (a)
+			!!in_out.make_client (a);
 			in_out.connect
 		end
 
 feature -- Status setting
 
 	cleanup is
+			-- Clean close
 		do
-			in_out.close
+			in_out.close;
 			if in_out.address /= void then
 				in_out.unlink
 			end
 		end
 
 end -- class UNIX_CLIENT
+
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel 3.

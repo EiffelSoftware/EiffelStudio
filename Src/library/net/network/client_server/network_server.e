@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class NETWORK_SERVER
+deferred class
+
+	NETWORK_SERVER
 
 inherit
 	SERVER
@@ -17,39 +19,44 @@ inherit
 
 feature -- Access
 
-	in: NETWORK_STREAM_SOCKET
+	in: NETWORK_STREAM_SOCKET;
 			-- Receive socket.
 
 	make (a_port : INTEGER) is
+			-- Make a network server.
 		require 
 			valid_port: a_port >= 0
 		do
-			!!in.make_server_by_port (a_port)
+			!!in.make_server_by_port (a_port);
 			if queued = 0 then
 				in.listen (5)
 			else
 				in.listen (queued)
 			end
-		end
+		end;
 
 	cleanup is
+			-- Clean close of server
 		do
 			in.close
-		end
+		end;
 
 	receive is
+			-- Receive activity of server
 		do
-			in.accept
-			outflow ?= in.accepted
+			in.accept;
+			outflow ?= in.accepted;
 			received ?= retrieved (outflow)
-		end
+		end;
 
 	resend (msg: STORABLE) is
+			-- Send back message `msg'.
 		do
 			msg.independent_store (outflow)
-		end
+		end;
 	
 	close is
+			-- Close server socket.
 		do
 			if outflow /= Void and then not outflow.is_closed then
 				outflow.close
@@ -57,6 +64,7 @@ feature -- Access
 		end
 
 end -- class NETWORK_SERVER
+
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel 3.

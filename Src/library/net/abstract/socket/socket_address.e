@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class SOCKET_ADDRESS
+class
+
+	SOCKET_ADDRESS
 
 inherit
 
@@ -37,7 +39,7 @@ creation
 feature -- Initalization
 
 	make is
-			--create the memory for address size
+			-- Make space available for address size.
 		do
 			make_socket_address (address_size)
 		end
@@ -45,7 +47,7 @@ feature -- Initalization
 feature -- Measurement
 
 	count: INTEGER is
-			-- size of address
+			-- Size of address
 		do
 			Result := socket_address.count
 		end
@@ -53,6 +55,7 @@ feature -- Measurement
 feature -- Comparison
 
 	is_equal (other: like Current): BOOLEAN is
+			-- Is current address equal to `other' ?
 		do
 			Result := socket_address.is_equal (other.socket_address)
 		end
@@ -60,7 +63,7 @@ feature -- Comparison
 feature -- Status report
 
 	family: INTEGER is
-			-- get the socket family from socket address
+			-- Get the socket family of socket address.
 		do
 			Result := get_sock_family ($socket_address)
 		end
@@ -68,7 +71,7 @@ feature -- Status report
 feature -- Status setting
 
 	set_family (f: INTEGER) is
-			-- set socket address family to f
+			-- Set socket address family to `f'.
 		do
 			set_sock_family ($socket_address, f)
 		end
@@ -76,15 +79,15 @@ feature -- Status setting
 feature -- Duplication
 
 	copy (other: like Current) is
-			-- Reinitialize by copying the characters of `other'.
+			-- Reinitialize by copying characters of `other'.
 			-- (This is also used by `clone'.)
 		do
-			old_copy (other)
+			old_copy (other);
 			if other.count > address_size then
 				make_socket_address (other.count)
 			else
 				make
-			end
+			end;
 			socket_address.copy (other.socket_address)
 		ensure then
 			new_result_count: count = other.count or else count = address_size
@@ -93,36 +96,37 @@ feature -- Duplication
 feature {NONE} -- External
 
 	address_size: INTEGER is
-			-- returns the size of the socket address
+			-- Size of socket address
 		external
 			"C"
-		end
+		end;
 
 	set_sock_family (address: POINTER; a_family: INTEGER) is
-			-- sets the family in the socket address
+			-- Set family of socket address.
 		external
 			"C"
-		end
+		end;
 
 	get_sock_family (address: POINTER): INTEGER is
-			-- gets the socket family from the socket address
+			-- Get socket family from socket address.
 		external
 			"C"
-		end
+		end;
 
 	set_sock_data (address: POINTER; dat: POINTER) is
-			-- sets the data area of the socket address 
+			-- Set data area of socket address.
 		external
 			"C"
-		end
+		end;
 
 	get_sock_data (address: POINTER): POINTER is
-			-- gets the data portion of the socket address
+			-- Get data portion of socket address.
 		external
 			"C"
 		end
 
 end -- Class SOCKET_ADDRESS
+
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel 3.

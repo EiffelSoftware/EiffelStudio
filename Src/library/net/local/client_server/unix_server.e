@@ -7,7 +7,9 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class UNIX_SERVER
+deferred class
+
+	UNIX_SERVER
 
 inherit
 
@@ -18,35 +20,40 @@ inherit
 
 feature -- Access
 
-	in: UNIX_STREAM_SOCKET
-		-- Receive socket.
+	in: UNIX_STREAM_SOCKET;
+			-- Receive socket
 
-	make (a : STRING) is
+	make (a_path : STRING) is
+			-- Create an unix socket server bound to address
+			-- `a_path'.
 		do
-			!!in.make_server (a)
+			!!in.make_server (a_path);
 			if queued = 0 then
 				in.listen (5)
 			else
 				in.listen (queued)
 			end
-		end
+		end;
 
 	cleanup is
+			-- Clean close
 		do
-			in.close
+			in.close;
 			if in.address /= Void then
 				in.unlink
 			end
-		end
+		end;
 
 	receive is
+			-- Receive activity of server
 		do
-			in.accept
-			outflow ?= in.accepted
+			in.accept;
+			outflow ?= in.accepted;
 			received ?= retrieved (outflow)
-		end
+		end;
 	
 	close is
+			-- Close socket.
 		do
 			if outflow /= Void and then not outflow.is_closed then
 				outflow.close
@@ -54,6 +61,7 @@ feature -- Access
 		end
 
 end -- class UNIX_SERVER
+
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel 3.

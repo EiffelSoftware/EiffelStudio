@@ -1,17 +1,31 @@
 indexing
 
 	description:
-		"A unix stream socket.";
+		"An unix stream socket.";
 
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class UNIX_STREAM_SOCKET
+class
+
+	UNIX_STREAM_SOCKET
 
 inherit
 
+	STREAM_SOCKET
+		rename
+			address as old_socket_address,
+			cleanup as old_socket_cleanup,
+			name as old_socket_name
+		end
+
 	UNIX_SOCKET
+		select
+			address,
+			cleanup,
+			name
+		end
 
 creation {UNIX_STREAM_SOCKET}
 
@@ -24,38 +38,38 @@ creation
 feature -- Initialization
 
 	make is
-			-- Make a unix socket stream
+			-- Make an unix socket stream.
 		do
-			family := af_unix
+			family := af_unix;
 			type := sock_stream;			
 			make_socket
-		end
+		end;
 
 	make_client (a_peer: STRING) is
-			-- create a unix stream socket and
-			-- create the peer address with a path
-			-- of 'a_name'
+			-- Create an unix stream client socket with peer
+			-- address set to `a_peer'.
 		require
 			valid_path: a_peer /= Void
 		do
-			make
-			!!peer_address.make
+			make;
+			!!peer_address.make;
 			peer_address.set_path (clone (a_peer))
-		end
+		end;
 
 	make_server (a_name: STRING) is
-			-- create a unix stream socket bind
-			-- it to path 'a_name'  
+			-- Create an unix stream server socket bound to local
+			-- address `a_name'.
 		require
 			valid_path: a_name /= Void and then not a_name.empty
 		do
-			make
-			!!address.make
-			address.set_path (clone (a_name))
+			make;
+			!!address.make;
+			address.set_path (clone (a_name));
 			bind
 		end
 
 end -- class UNIX_STREAM_SOCKET
+
 
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel 3.

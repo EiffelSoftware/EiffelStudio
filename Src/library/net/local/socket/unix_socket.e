@@ -1,67 +1,79 @@
 indexing
 
 	description:
-		"A unix socket.";
+		"An unix socket.";
 
 	status: "See notice at end of class";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class UNIX_SOCKET
+deferred class
+
+	UNIX_SOCKET
 
 inherit
 
 	SOCKET
+		undefine
+			send, put_character, putchar, put_string, putstring,
+			put_integer, putint, put_boolean, putbool,
+			put_real, putreal, put_double, putdouble
 		redefine
 			address, cleanup, name
 		end
 
-creation {UNIX_SOCKET}
-
-	create_from_descriptor
-
 feature -- Status Report
 
-	address: UNIX_SOCKET_ADDRESS
+	address: UNIX_SOCKET_ADDRESS;
 			-- Local address of socket
 
 	cleanup is
-			-- Close the socket and unlink it from file system.
+			-- Close socket and unlink it from file system.
 		do
-			close
+			close;
 			if address /= Void then
 				unlink
 			end
-		end
+		end;
 
 	name: STRING is
-			-- name of the socket
+			-- Socket name
 		require else
 			valid_address: address /= Void
 		do
-			!! Result.make (10)
+			!! Result.make (10);
 			Result.append (address.path)
 		end
 
 feature -- Status setting
 
 	unlink is
-			-- Remove associate name from file system
+			-- Remove associate name from file system.
 		require else
 			name_address: address /= void
 		local
 			ext: ANY
 		do
-			ext := name.to_c
+			ext := name.to_c;
 			c_unlink ($ext)
+		end
+
+feature {NONE} -- Externals
+
+	c_unlink (nam: POINTER) is
+			-- External c routine to remove socket file from file
+			-- system
+		external
+			"C"
 		end
 
 end -- class UNIX_SOCKET
 
+
 --|----------------------------------------------------------------
 --| EiffelNet: library of reusable components for ISE Eiffel 3.
 --| Copyright (C) 1994, Interactive Software
---|   Engineering Inc.
+--|	 Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|
 --| 270 Storke Road, Suite 7, Goleta, CA 93117 USA

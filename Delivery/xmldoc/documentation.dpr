@@ -1,8 +1,8 @@
-<project xmlns="" xmlns:ns1="">
+<project>
 	<project_name>docs</project_name>
-	<root_directory>g:/Deliv_55/xmldoc</root_directory>
-	<schema>g:/tmpdev/tools/doc_builder/resources/xml/schema/document.xsd</schema>
-	<html_css>g:/Deliv_55/xmldoc/default.css</html_css>
+	<root_directory>$DOCUMENT_DIR</root_directory>
+	<schema>$EIFFEL_SRC/tools/doc_builder/resources/xml/schema/document.xsd</schema>
+	<html_css>$DOCUMENT_DIR/default.css</html_css>
 	<header_override>True</header_override>
 	<use_header_from_file>False</use_header_from_file>
 	<footer_override>True</footer_override>
@@ -13,37 +13,62 @@
 	<process_html_stylesheet>True</process_html_stylesheet>
 	<include_navigation_links>True</include_navigation_links>
 	<generate_dhtml_filter>True</generate_dhtml_filter>
-	<generate_feature_nodes>True</generate_feature_nodes>
+	<generate_feature_nodes>False</generate_feature_nodes>
 	<filter>
 		<filter_description>EiffelStudio for Mac OS X</filter_description>
+		<filter_highlight_color_red>0.87451</filter_highlight_color_red>
+		<filter_highlight_color_green>1</filter_highlight_color_green>
+		<filter_highlight_color_blue>0.87451</filter_highlight_color_blue>
+		<filter_highlight_on>True</filter_highlight_on>
+		<filter_primary_flag>studio_mac</filter_primary_flag>
 		<tag>all</tag>
 		<tag>studio_mac</tag>
 		<tag>studio</tag>
 	</filter>
 	<filter>
-		<filter_description>EiffelStudio</filter_description>
+		<filter_description>EiffelStudio for Windows</filter_description>
+		<filter_highlight_color_red>0.937255</filter_highlight_color_red>
+		<filter_highlight_color_green>0.937255</filter_highlight_color_green>
+		<filter_highlight_color_blue>0.937255</filter_highlight_color_blue>
+		<filter_highlight_on>False</filter_highlight_on>
+		<filter_primary_flag>studio_win</filter_primary_flag>
 		<tag>all</tag>
-		<tag>studio</tag>
 		<tag>studio_win</tag>
-		<tag>studio_lin</tag>
-		<tag>studio_mac</tag>
+		<tag>studio</tag>
 	</filter>
 	<filter>
 		<filter_description>ENViSioN!</filter_description>
+		<filter_highlight_color_red>1</filter_highlight_color_red>
+		<filter_highlight_color_green>0.811765</filter_highlight_color_green>
+		<filter_highlight_color_blue>0.623529</filter_highlight_color_blue>
+		<filter_highlight_on>False</filter_highlight_on>
+		<filter_primary_flag>envision</filter_primary_flag>
 		<tag>all</tag>
 		<tag>envision</tag>
 	</filter>
 	<filter>
-		<filter_description>EiffelStudio for Windows</filter_description>
-		<tag>all</tag>
-		<tag>studio_win</tag>
-		<tag>studio</tag>
-	</filter>
-	<filter>
 		<filter_description>EiffelStudio for Unix/Linux</filter_description>
+		<filter_highlight_color_red>1</filter_highlight_color_red>
+		<filter_highlight_color_green>1</filter_highlight_color_green>
+		<filter_highlight_color_blue>0.807843</filter_highlight_color_blue>
+		<filter_highlight_on>False</filter_highlight_on>
+		<filter_primary_flag>studio_lin</filter_primary_flag>
 		<tag>all</tag>
 		<tag>studio_lin</tag>
 		<tag>studio</tag>
+	</filter>
+	<filter>
+		<filter_description>EiffelStudio</filter_description>
+		<filter_highlight_color_red>0.701961</filter_highlight_color_red>
+		<filter_highlight_color_green>0.85098</filter_highlight_color_green>
+		<filter_highlight_color_blue>1</filter_highlight_color_blue>
+		<filter_highlight_on>True</filter_highlight_on>
+		<filter_primary_flag>studio</filter_primary_flag>
+		<tag>all</tag>
+		<tag>studio</tag>
+		<tag>studio_win</tag>
+		<tag>studio_lin</tag>
+		<tag>studio_mac</tag>
 	</filter>
 	<shortcut>
 		<shortcut_key>1</shortcut_key>
@@ -100,5 +125,4 @@
 	<shortcut>
 		<shortcut_key>88</shortcut_key>
 		<shortcut_value>&lt;url&gt;[tag]&lt;/url&gt;</shortcut_value>
-	</shortcut>
-</project>
+	</shortcut></project>

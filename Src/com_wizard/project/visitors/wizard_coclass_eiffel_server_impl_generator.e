@@ -29,30 +29,28 @@ feature -- Basic operation
 		do
 			coclass_descriptor := a_coclass
 
+			create a_visible.make
+			a_visible.set_name (implemented_coclass_name (a_coclass.eiffel_class_name))
+			system_descriptor.add_visible_class_server (a_visible)
+			create eiffel_writer.make
+
+			eiffel_writer.set_class_name (implemented_coclass_name (a_coclass.eiffel_class_name))
+
+			create a_description.make (1000)
+			a_description.append (a_coclass.eiffel_class_name)
+			a_description.append (" Implementation.")
+			eiffel_writer.set_description (a_description)
+			set_default_ancestors (eiffel_writer)
+
+			add_creation
+			add_default_features (a_coclass)
+
 			if not shared_wizard_environment.new_eiffel_project then
-				create a_visible.make
-				a_visible.set_name (implemented_coclass_name (a_coclass.eiffel_class_name))
-				system_descriptor.add_visible_class_server (a_visible)
-
-				create eiffel_writer.make
-
-				eiffel_writer.set_class_name (implemented_coclass_name (a_coclass.eiffel_class_name))
-
 				process_interfaces (a_coclass)
-
-				create a_description.make (1000)
-				a_description.append (a_coclass.eiffel_class_name)
-				a_description.append (" Implementation.")
-				eiffel_writer.set_description (a_description)
-
-				set_default_ancestors (eiffel_writer)
-				add_creation
-				add_default_features (a_coclass)
-
-				-- Generate code
-				Shared_file_name_factory.create_file_name (Current, eiffel_writer)
-				eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
 			end
+
+			Shared_file_name_factory.create_file_name (Current, eiffel_writer)
+			eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
 
 			eiffel_writer := Void
 		end
@@ -78,7 +76,11 @@ feature -- Basic operation
 			-- Add default features to coclass server. 
 			-- e.g. make, constructor etc.
 		do
-			eiffel_writer.add_feature (make_feature, Initialization)
+			if shared_wizard_environment.new_eiffel_project then
+				eiffel_writer.add_feature (make_feature_precursor, Initialization)
+			else
+				eiffel_writer.add_feature (make_feature, Initialization)
+			end
 			eiffel_writer.add_feature (make_from_pointer_feature, Initialization)
 			eiffel_writer.add_feature (create_item_feature, Basic_operations)
 			eiffel_writer.add_feature (ccom_create_item_feature (a_component), Externals)
@@ -99,6 +101,7 @@ feature {NONE} -- Implementation
 
 			if shared_wizard_environment.new_eiffel_project then
 				tmp_writer.set_name (shared_wizard_environment.eiffel_class_name)
+				tmp_writer.add_redefine (make_word)
 			else
 				tmp_writer.set_name (coclass_descriptor.eiffel_class_name)
 			end
@@ -108,6 +111,12 @@ feature {NONE} -- Implementation
 			create tmp_writer.make
 			tmp_writer.set_name ("ECOM_EXCEPTION")
 			an_eiffel_writer.add_inherit_clause (tmp_writer)
+
+			if shared_wizard_environment.new_eiffel_project then
+				create tmp_writer.make
+				tmp_writer.set_name ("ECOM_STUB")
+				an_eiffel_writer.add_inherit_clause (tmp_writer)
+			end
 		end
 
 	ccom_create_item_feature (a_component: WIZARD_COMPONENT_DESCRIPTOR): WIZARD_WRITER_FEATURE is
@@ -121,8 +130,7 @@ feature {NONE} -- Implementation
 			Result.set_comment ("Initialize %Qitem%'")
 
 			create an_argument.make (100)
-			an_argument.append ("eif_object: ")
-			an_argument.append (a_component.eiffel_class_name)
+			an_argument.append ("eif_object: like Current")
 			Result.add_argument (an_argument)
 
 			Result.set_result_type ("POINTER")
@@ -140,6 +148,30 @@ feature {NONE} -- Implementation
 			feature_body.append (double_quote)
 
 			Result.set_external
+			Result.set_body (feature_body)
+		ensure
+			non_void_feature: Result /= Void
+			non_void_feature_name: Result.name /= Void
+			non_void_feature_body: Result.body /= Void
+		end
+
+	make_feature_precursor: WIZARD_WRITER_FEATURE is
+			-- `make' feature.
+		local
+			feature_body: STRING
+		do
+			create Result.make
+			Result.set_name (Make_word)
+			Result.set_comment ("Creation.")
+
+			create feature_body.make (100)
+			feature_body.append (Tab_tab_tab)
+			feature_body.append ("Precursor ")
+			feature_body.append (Open_curly_brace)
+			feature_body.append (shared_wizard_environment.eiffel_class_name)
+			feature_body.append (Close_curly_brace)
+
+			Result.set_effective
 			Result.set_body (feature_body)
 		ensure
 			non_void_feature: Result /= Void

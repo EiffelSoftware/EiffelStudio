@@ -210,6 +210,12 @@ char *constrained;
 	/* Save the name of the generic parameter. */
 	if (nb_generics <  MAXG)
 		Generic_name[nb_generics++] = str_save(gen_name);
+	else
+			/* Create a special syntax error if MAXG generic
+			 * parameters have already been found. The following
+			 * comment is invalid!.
+			 */
+		(*syntax9)(Error_handler);
 
 	/* Even if already MAXG generic parameters have been found, we
 	 * create a new FORMAL_GENERIC node. The error will be reported

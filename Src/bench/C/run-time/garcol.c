@@ -2220,6 +2220,8 @@ struct sc_zone *to;
 	if (zone->ov_flags & EO_EXP) {
 		/* Compute original object's address (before scavenge) */
 		zone = (union overhead *) ((char *) zone - (zone->ov_size & B_SIZE));
+		if (!(zone->ov_size & B_FWD))
+			return root;
 		new = zone->ov_fwd;			/* Data space of the scavenged object */
 		exp = new + (root - (char *) (zone + 1));	/* New data space */
 		return exp;					/* This is the new location of expaded */
@@ -3217,16 +3219,17 @@ register1 union overhead *zone;		/* Pointer on malloc info zone */
 
 	if (!(zone->ov_size & B_BUSY))
 		return;					
-							
 */
-
-	dtype = Dtype((zone + 1)); 
-
-	if (Disp_rout(dtype)) {
-		gc_status = g_data.status;		/* Save GC status */
-		g_data.status |= GC_STOP;		/* Stop GC */
-		DISP(dtype,(char *) (zone + 1));/* Call 'dispose' */
-		g_data.status = gc_status;		/* Restore previous GC status */
+							
+	if (!(zone->ov_size & B_FWD)) {	/* If object has not been forwarded
+									   then call the dispose routine */
+		dtype = Dtype((zone + 1)); 
+		if (Disp_rout(dtype)) { 
+			gc_status = g_data.status;		/* Save GC status */
+			g_data.status |= GC_STOP;		/* Stop GC */
+			DISP(dtype,(char *) (zone + 1));/* Call 'dispose' */
+			g_data.status = gc_status;		/* Restore previous GC status */
+		}
 	}
 
 #ifdef DEBUG

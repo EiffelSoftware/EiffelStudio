@@ -1339,9 +1339,11 @@ end:
 					new_obj = RTLN(point_ref_dtype);
 					*(fnptr *) new_obj = last->it_ptr;
 					break;
-				default:
+				case SK_REF:			/* Had to do this for bit operations */
+					new_obj = last->it_ref;
+					break;
+				default: 
 					panic("illegal metamorphose type");
-					/* NOTREACHED */
 				}
 				last = iget();
 				last->type = SK_REF;
@@ -4065,7 +4067,7 @@ char *start;
 			IC += strlen(string) + 1;	/* Get the feature name */
 			fprintf(fd, "0x%X %s \"%s\"\n", string, "feature", string);
 			code = get_short();			/* Dyn. type where feature is written */
-			fprintf(fd, "0x%X %s %d\n", IC - sizeof(short), "WRITTEN", code);
+			fprintf(fd, "0x%X %s %d (%s)\n", IC - sizeof(short), "WRITTEN", code, System(code).cn_generator);
 		}
 
 		has_rescue = (int) *IC++;

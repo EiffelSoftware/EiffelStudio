@@ -753,7 +753,9 @@ long num;			/* May be called from Eiffel, and INTEGER is long */
 
 	SIGRESUME;			/* End of critical section, dispatch queued signals */
 
+#ifndef NOHOOK
 	exception(PG_RAISE);	/* Debugger hook -- explicitly raised exception */
+#endif
 	ereturn();				/* Go back to last recorded rescue entry */
 
 	/* NOTREACHED */
@@ -801,7 +803,9 @@ public void eviol()
 	exorig();			/* Recompute original exception code */
 	echlvl--;			/* Restore nesting level */
 
+#ifndef NOHOOK
 	exception(PG_VIOL);		/* Debugger hook -- implicitely raised exception */
+#endif
 	ereturn();				/* Go back to last recorded rescue entry */
 
 	/* NOTREACHED */

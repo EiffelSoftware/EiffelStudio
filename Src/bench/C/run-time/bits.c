@@ -221,6 +221,8 @@ char *b;
 	register2 int len2;
 	register3 uint32 *arena1;
 	register4 uint32 *arena2;
+	register5 union overhead *zone;
+	register6 union overhead *zone2;
 	int nb_pack1, nb_pack2, gap, idx;
 	uint32 mask, val;
 	if ((char *) 0 == a)
@@ -240,6 +242,7 @@ char *b;
 		bcopy(a, b, BIT_NBPACK(len1) * BIT_PACKSIZE + sizeof(uint32));
 		return;
 	}
+
 
 	/* Different bit sizes: copy `a' at the start of longer field of `b' */
 	arena1 = ARENA(a);

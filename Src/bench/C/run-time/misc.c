@@ -50,6 +50,12 @@ double d;
 	return (float) d;	/* (double) -> (float) */
 }
 
+public long conv_di(d)
+double d;
+{
+	return (long) d;    /* (double) -> (long) */
+}
+
 public long bointdiv(n1, n2)
 long n1, n2;
 {

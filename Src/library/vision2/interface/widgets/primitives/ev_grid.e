@@ -100,7 +100,16 @@ feature -- Access
 		ensure
 			result_not_void: Result /= Void
 		end
-		
+
+	clear_selection is
+			-- Clear the selected rows or items if any
+		do
+			implementation.clear_selection
+		ensure
+			selected_items_empty: selected_items.is_empty
+			selected_rows_empty: selected_rows.is_empty
+		end
+
 	is_header_displayed: BOOLEAN is
 			-- Is the header displayed in `Current'.
 		require
@@ -653,7 +662,7 @@ feature -- Element change
 		do
 			implementation.move_row (i, j)
 		ensure
-			moved: row (j) = old row (i) and then row (j) /= row (i)
+			moved: row (j) = old row (i) and then (i /= j implies row (j) /= row (i))
 		end
 
 	move_column (i, j: INTEGER) is
@@ -661,12 +670,13 @@ feature -- Element change
 		require
 			not_destroyed: not is_destroyed
 			i_positive: i > 0
+			j_positive: j > 0
 			i_less_than_column_count: i <= column_count
 			j_less_than_column_count: j <= column_count
 		do
 			implementation.move_column (i, j)
 		ensure
-			moved: column (j) = old column (i) and then column (j) /= column (i)
+			moved: column (j) = old column (i) and then (i /= j implies column (j) /= column (i))
 		end	
 
 	set_item (a_column, a_row: INTEGER; a_item: EV_GRID_ITEM) is
@@ -769,6 +779,10 @@ invariant
 	row_count_non_negative: row_count >= 0
 	column_count_non_negative: column_count >= 0
 	dynamic_modes_mutually_exclusive: not (is_content_completely_dynamic and is_content_partially_dynamic)
+	selected_rows_not_void: selected_rows /= Void
+	selected_items_not_void: selected_items /= Void
+	single_row_selection_enabled_implies_selected_count_no_more_than_one: single_row_selection_enabled implies selected_rows.count <= 1
+	single_item_selection_enabled_implies_selected_count_no_more_than_one: single_item_selection_enabled implies selected_rows.count <= 1
 end
 
 --|----------------------------------------------------------------

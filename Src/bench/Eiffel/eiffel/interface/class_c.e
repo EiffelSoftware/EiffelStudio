@@ -3362,7 +3362,7 @@ feature -- Cecil
 			if is_expanded then
 				Result := Sk_exp
 			end
-			Result := Result + types.first.type_id - 1
+			Result := Result | (types.first.type_id - 1)
 		end
 
 feature -- Conformance table generation

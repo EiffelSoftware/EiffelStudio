@@ -20,7 +20,7 @@
 
 #include "idr.h"
 
-rt_public bool_t idr_string(IDR *idrs, char **sp, unsigned int maxlen)
+rt_public bool_t idr_string(IDR *idrs, char **sp, int maxlen)
           				/* The serializing stream */
           				/* Pointer to area where string address is stored */
                     	/* Maximum length, 0 = no limit */
@@ -46,11 +46,11 @@ rt_public bool_t idr_string(IDR *idrs, char **sp, unsigned int maxlen)
 			return FALSE;
 		}
 		len = (unsigned int) strlen(string);
-		if (maxlen > 0 && len > maxlen){
+		if (maxlen > 0 && (int) len > maxlen){
 			return FALSE;
 		}
-		if (maxlen < 0 && len > -maxlen){
-			len = -maxlen;				/* Truncate string if too long */
+		if (maxlen < 0 && (int) len > -maxlen){
+			len = (unsigned int) -maxlen;				/* Truncate string if too long */
 		}
 		if (!idr_u_int(idrs, &len)){		/* Emit string length */
 			return FALSE;
@@ -61,7 +61,7 @@ rt_public bool_t idr_string(IDR *idrs, char **sp, unsigned int maxlen)
 		if (!idr_u_int(idrs, &len)){		/* Get string length */
 			return FALSE;
 		}
-		if (maxlen != 0 && len > maxlen){
+		if (maxlen != 0 && (int) len > maxlen){
 			return FALSE;
 		}
 		string = *sp;

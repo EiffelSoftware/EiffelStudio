@@ -1,7 +1,6 @@
 indexing
 	description: "Ancestor of all PND widgets which contain items."
 	status: "See notice at end of class."
-	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -365,6 +364,9 @@ end -- class EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2001/07/10 17:22:20  rogers
+--| Removed author from the indexing clause.
+--|
 --| Revision 1.12  2001/06/14 00:12:23  rogers
 --| Redefined escape_pnd, as there were certain state variables for pick and
 --| dropable item holders that were not being reset correctly when escape was

@@ -469,8 +469,8 @@ feature -- Basic operations
 			days_in_new_month: INTEGER
 		do
 			new_month := mod ((month + m - 1), Months_in_year) + 1
-			days_in_new_month := days_in_i_th_month (new_month, year)
 			set_year (year + div ((month + m - 1), Months_in_year))
+			days_in_new_month := days_in_i_th_month (new_month, year)
 			if day > days_in_new_month then
 				set_day (days_in_new_month)
 			end

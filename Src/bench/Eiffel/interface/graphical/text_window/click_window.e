@@ -367,7 +367,7 @@ feature {NONE} -- Implementation
 			-- Add non processed text `s' to the text image.
 			-- Note: `put_string' is called as a result from the processing
 			-- of TEXT_ITEMS whereas `put_normal_string' is not. The reason
-			-- this was done so that the descendent class GRAPHICAL_TEXT_WINDOWS
+			-- this was done so that the descendant class GRAPHICAL_TEXT_WINDOWS
 			-- for windows can redefine `put_string' to set a specific 
 			-- character format where `put_normal_string' does not.
 		do

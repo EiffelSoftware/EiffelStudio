@@ -17,12 +17,17 @@ feature -- Access
 
 	criterium (f: E_FEATURE): BOOLEAN is 
 			-- Criterium for feature `f'
+		require
+			f_not_void: f /= Void
 		deferred 
 		end;
 
 	display_feature (f: E_FEATURE; st: STRUCTURED_TEXT) is
 			-- Display feature `f' defined in class `c'
 			-- to `st'.
+		require
+			f_not_void: f /= Void
+			st_not_void: st /= Void
 		do
 			f.append_signature (st);
 		end;

@@ -62,6 +62,7 @@ inherit
 			on_lbn_dblclk,
 			on_lbn_selchange,
 			default_style,
+			default_ex_style,
 			default_process_message
 		end
 
@@ -303,11 +304,18 @@ feature {NONE} -- Implementation
 feature {NONE} -- Implementation : WEL features
 
 	default_style: INTEGER is
+			-- Default style of the list.
 		do
 			Result := Ws_child + Ws_visible + Ws_group 
 						+ Ws_tabstop + Ws_border + Ws_vscroll
 						+ Lbs_notify --+ Lbs_ownerdrawfixed 
 						+ Lbs_hasstrings + Lbs_nointegralheight
+		end
+
+	default_ex_style: INTEGER is
+			-- Default extended style of the list.
+		do
+			Result := Ws_ex_clientedge
 		end
 
 	default_process_message (msg, wparam, lparam: INTEGER) is

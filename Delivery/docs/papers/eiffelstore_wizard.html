@@ -1,0 +1,114 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>EiffelStore Wizard</title>
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
+</head>
+
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">EiffelStore Wizard</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="center">[<a href="http://eiffel.com">ISE Home</a>] <nobr>[&nbsp;<a href="../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../Eiffel/index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+<hr>
+
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<table cols="1" cellpadding="5" cellspacing="0" border="0">
+  <tr>
+    <td>
+    <H1>The EiffelStore Wizard (Beta Version)</H1><br>
+<br>
+This Wizard will help you to create an Eiffel Project using EiffelStore.<br>
+<br>
+It will generate some compilable files in the directory of your choice,&nbsp;<br>
+launch the compilation and ebench.<br>
+<br>
+You can then modify the generated example to create your own project.<br>
+<br>
+<br>
+<H2>Installation:</H2><br>
+<br>
+Unzip the file EiffelStore_Wizard.zip.<br>
+Be sure to use folder names when unzipping.<br>
+This will create a subdirectory 'Store_wizard_odbc'.<br>
+In this directory there should be 3 other directories (bmp,exe,ressources).<br>
+<br>
+Then, execute launch.bat<br>
+<br>
+<i>However, you can directly run the exe file in the directory exe, with as parameter the&nbsp;<br>
+path where you have unzipped the wizard.<br>
+<br>
+Example: store_wizard_odbc c:\store_wizard_odbc</i><br>
+<br>
+<br>
+<H2>Details:</H2><br>
+<br>
+The generated files are:<br>
+<br>
+	* one Class for each Table you have chosen to use with your<br>
+	  Project<br>
+<br>
+	* The class DATABASE_MANAGER which help you to do any queries on the database<br>
+<br>
+	* The classes: DB_ACTION, DB_ACTION_DYN, REPOSITORIES and DB_SHARED which are<br>
+		used by the DATABASE_MANAGER classes.<br>
+<br>
+	* The classes ESTORE_EXAMPLE and ESTORE_ROOT<br>
+<br>
+	* The generated project is: sample.epr<br>
+<br>
+<H2>Known Limitations:</H2><br>
+<br>
+	* An Ace file in generated , and so the link to ODBC32.lib is:<br>
+		"$EIFFEL4\library\store\spec\$(COMPILER)\lib\odbc32.lib".<br>
+		So you should copy this file in this previous directory to avoid any problems.<br>
+		Or you can change the link in the generated ace file.<br>
+<br>
+	* You must choose at least one Table before doing the generation.<br>
+<br>
+	* For now there are not any differences in the generation when you choose to<br>
+		generate a new project, or an existing project.<br>
+<br>
+	* The wizard has been developed using Vision2.<br>
+		However, there are still a few limitations with vision2 on EV_TEXT.<br>
+		That's why the fonts are not so nice for now.<br>
+		Also if you are using the large fonts, you won't read all the comments<br>
+		of the wizard.<br>
+<br>
+	* After the generation, the compilation and ebench are launched.<br>
+		However, if there was an other project in the directory, the compilation<br>
+		can't be launched.<br>
+So the Directory is deleted before the generation.<br>
+		If you don't have the permission to delete some files, the compilation won't<br>
+		be launched.<br>
+<br>
+	* If you are using MS SQL Server you should choose the check box : <i>specific
+Tables/Views</i>.<br>
+		Indeed, you shouldn't try to generate the System tables as you won't be<br>
+		able to make any request on some of these tables.<br>
+<br>
+	* If you have a $ in the name of your Table, for now EiffelStore doesn't support it.<br>
+		So the compilation won't work as an Eiffel Class can't have a $ in its name.
+<p>* The chosen table must have at least one Column.<br>
+</p>
+    </td>
+  </tr>
+</table>
+&nbsp;
+
+<!--msnavigation--></td></tr><!--msnavigation--></table></body>
+
+</html>

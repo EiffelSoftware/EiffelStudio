@@ -54,6 +54,7 @@
 				<li><b>EV_TEXT</B><ul class="square">
 				<li>Corrected `last_position_from_line_number' which was returning an incorrect position when there were multiple lines of text contained, and you queried the final line.</li>
 				<li> Modified `insert_text' so that the control is no longer scrolled to the top as a result. The original position is now maintained wherever possible.</li>
+				<li> Corrected handling of selection for caret positions greater than 64,000 characters. The following features were broken when using caret positions greater than 64,000: `caret_position', `has_selection', `selection_start' and `selection_end'.
 				</ul>
 			</UL>
 				<b>Gtk</b>

@@ -30,6 +30,7 @@ inherit
 		end
 
 feature -- Access
+
 	new_object (element: XML_ELEMENT; is_component: BOOLEAN): GB_OBJECT is
 			-- `Result' is an object generated from `xml_element'.
 			-- This object has no parent, is not included in the
@@ -48,6 +49,7 @@ feature -- Access
 			
 			a_new_object := object_handler.build_object_from_string (xml_element.attribute_by_name (type_string).value.to_utf8)
 			object_handler.build_object (a_new_object)
+			object_handler.add_object_to_objects (a_new_object)
 			from
 				xml_element.start
 			until
@@ -61,8 +63,9 @@ feature -- Access
 						build_new_object (current_element, a_new_object, is_component)
 						
 					else
-						if current_name.is_equal (Internal_properties_string) or
-							current_name.is_equal (Events_string) then
+						if current_name.is_equal (Internal_properties_string) then
+							a_new_object.modify_from_xml (current_element)
+						elseif current_name.is_equal (Events_string) then
 							-- I do not think we have to do anything when we find the internal properties
 							-- currently just a name, and as this is used for components, no name should be 
 							-- applied.
@@ -94,11 +97,6 @@ feature -- Access
 				end
 				xml_element.forth
 			end
-				-- If we were just building a component, then
-				-- there should be no deferred building routines.
-			if is_component then
-				deferred_builder.clear_deferred
-			end
 			Result := a_new_object
 		end
 		
@@ -115,7 +113,11 @@ feature -- Access
 			current_name: STRING
 			display_object: GB_DISPLAY_OBJECT
 		do
-			a_new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value.to_utf8)
+			if is_component then
+				a_new_object := object_handler.build_object_from_string (element.attribute_by_name (type_string).value.to_utf8)
+			else
+				a_new_object := object_handler.build_object_from_string_and_assign_id (element.attribute_by_name (type_string).value.to_utf8)
+			end
 			
 			object_handler.add_object (object, a_new_object, object.layout_item.count + 1)
 			from
@@ -131,8 +133,10 @@ feature -- Access
 						build_new_object (current_element, a_new_object, is_component)
 					else
 						-- We must check for internal properties, else set the properties of the component
-						if current_name.is_equal (Internal_properties_string) or current_name.is_equal (Events_string) then
-							-- No internal properties are used. i.e. no name is assigned.
+						if current_name.is_equal (Internal_properties_string) then
+							a_new_object.modify_from_xml (current_element)
+						elseif current_name.is_equal (Events_string) then
+							-- No events handled.
 						else
 						
 							-- Create the class.

@@ -125,11 +125,9 @@ feature -- Processing
 								-- Process skeleton(s) for `a_class'.
 							a_class.process_skeleton
 
-							if not il_generation then
-									-- Check validity of special classes ARRAY,
-									-- STRING, TO_SPECIAL, SPECIAL.
-								a_class.check_validity
-							end
+								-- Check validity of special classes ARRAY,
+								-- STRING, TO_SPECIAL, SPECIAL.
+							a_class.check_validity
 						end
 						nb := nb - 1
 					end
@@ -148,11 +146,9 @@ feature -- Processing
 							-- Process skeleton(s) for `a_class'.
 						a_class.process_skeleton
 
-						if not il_generation then
-								-- Check validity of special classes ARRAY,
-								-- STRING, TO_SPECIAL, SPECIAL.
-							a_class.check_validity
-						end
+							-- Check validity of special classes ARRAY,
+							-- STRING, TO_SPECIAL, SPECIAL.
+						a_class.check_validity
 						nb := nb - 1
 					end
 					i := i + 1

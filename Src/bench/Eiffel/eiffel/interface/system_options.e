@@ -54,6 +54,9 @@ feature -- Access
 	uses_ise_gc_runtime: BOOLEAN
 			-- Does generated application uses ISE's GC.
 
+	full_type_checking: BOOLEAN
+			-- Does compiler checks inherited feature as well as local feature.
+
 feature -- Access: IL code generation
 
 	use_cluster_as_namespace, use_all_cluster_as_namespace: BOOLEAN
@@ -94,9 +97,6 @@ feature -- Access: IL code generation
 			-- Let the compiler generates CLS compliant metadata along with or
 			-- without using .NET naming convention.
 			--| Used for IL generation.
-
-	generate_eac_metadata: BOOLEAN
-			-- Will Eiffel Assembly Cache metadata be generated?
 
 	system_namespace: STRING
 			-- Top namespace of all generated Eiffel classes.
@@ -252,12 +252,11 @@ feature -- Update
 				(create {SHARED_WORKBENCH}).Workbench.is_already_compiled or else dotnet_naming_convention = v
 		end
 
-	set_generate_eac_metadata (b: BOOLEAN) is
-			-- Set `generate_eac_metadata' with `b'.
+	set_full_type_checking (b: BOOLEAN) is
 		do
-			generate_eac_metadata := b
+			full_type_checking := b
 		ensure
-			generate_eac_metadata_set: generate_eac_metadata = b
+			full_type_checking_set: full_type_checking = b
 		end
 
 	set_do_not_check_vape (b: BOOLEAN) is

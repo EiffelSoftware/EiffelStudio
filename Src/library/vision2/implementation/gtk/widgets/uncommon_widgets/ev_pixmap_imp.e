@@ -131,9 +131,6 @@ feature -- Element change
 			-- May raise `Ev_unknow_image_format' or `Ev_courpt_image_data'
 			-- exceptions.
 			--|FIXME do this!
-		require
-			file_name_not_void: file_name /= Void
-			file_name_not_empty: not file_name.empty
 		local
 			file: RAW_FILE
 		do
@@ -291,6 +288,9 @@ end -- EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/03/21 00:10:05  pichery
+--| fixed small bug
+--|
 --| Revision 1.22  2000/03/21 00:08:30  pichery
 --| forgotten to implemented feature `read_from_named_file'.
 --|

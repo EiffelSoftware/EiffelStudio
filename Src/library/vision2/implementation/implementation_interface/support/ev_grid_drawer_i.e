@@ -45,13 +45,12 @@ feature -- Basic operations
 --			a_width_positive: a_width >= 0
 --			a_height_positive: a_height >= 0
 		local
-			x, y: INTEGER
+			y: INTEGER
 --			height: INTEGER
 			
 			virtual_x_position, virtual_y_position: INTEGER
 			vertical_buffer_offset: INTEGER
 			horizontal_buffer_offset: INTEGER
-			virtual_buffer_x_position: INTEGER
 			column_widths: ARRAYED_LIST [INTEGER]
 			
 			current_row: SPECIAL [EV_GRID_ITEM_I]

@@ -29,8 +29,9 @@
 				<label>main toolbar</label>
 			</link>.
 		</paragraph>
+		<paragraph>You may also delete via the keyboard by pressing the delete key while the tool containing the objects representation has the focus. Whichever <link><url>../../reference/02_notation.xml</url><label>object</label></link> has the selection is deleted.</paragraph>
 		<note>
-			<bold>Note</bold>: Only user defined objects may be deleted. The EV_TITLED_WINDOW may not be deleted.
+			<bold>Note</bold>: To restore a deleted object, you may use the <link><url>../../reference/70_history/index.xml</url><label>History</label></link>
 		</note>
 		<seealso>
 			<bold>See Also</bold>

@@ -22,23 +22,18 @@ creation
 
 feature {NONE} -- Initialization
 
-	initialize_button (a_parent: MENU) is
+	initialize_button (a_cmd: like associated_command; a_parent: MENU) is
 			-- Initialize the button part.
 		do
-			button_make (menu_entry_name, a_parent);
-			set_text (entry_text);
-			add_activate_action (associated_command, associated_command.text_window)
+			button_make (a_cmd.name, a_parent);
+			add_activate_action (a_cmd, a_cmd.text_window)
 		end;
 
 feature -- Properties
 
-	associated_command: ICONED_COMMAND;
-			-- The associated_command
-
-	entry_text: STRING is
-			-- Text as displayed on the button
+	associated_command: TOOL_COMMAND is
+			-- Command type that menu entry expects
 		do
-			Result := associated_command.name
-		end
+		end;
 
 end -- class EB_MENU_ENTRY

@@ -231,6 +231,9 @@ feature {COMPILER_EXPORTER} -- Case storage
 
 	storage_info: S_EXPORT_SET_I is
 			-- Case storage of export set 
+		local
+			l: FIXED_LIST [STRING];
+			cl: STRING
 		do
 			!! Result.make (count);
 			from
@@ -238,7 +241,20 @@ feature {COMPILER_EXPORTER} -- Case storage
 			until
 				after
 			loop
-				Result.append (item.clients);
+					--| clients dynamic types is actually ID_AS_B not STRING.
+					--| We need to convert this to a string so that EiffelCase
+					--| can read it in.
+				from
+					l := item.clients;
+					l.start
+				until
+					l.after
+				loop
+					!! cl.make (0);
+					cl.append (l.item);
+					Result.extend (cl);
+					l.forth
+				end
 				forth
 			end
 		end

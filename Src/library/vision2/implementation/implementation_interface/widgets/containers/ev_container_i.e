@@ -13,6 +13,15 @@ inherit
 		redefine
 			interface
 		end
+		
+	EV_PIXMAPABLE_I
+		rename
+			set_pixmap as set_background_pixmap,
+			remove_pixmap as remove_background_pixmap,
+			pixmap as background_pixmap
+		redefine
+			interface
+		end
 	
 	EV_CONTAINER_ACTION_SEQUENCES_I
 
@@ -61,7 +70,7 @@ feature -- Status setting
 		end
 
 feature -- Basic operations
-			
+
 	propagate_foreground_color is
 			-- Propagate the current foreground color of the
 			-- container to the children.

@@ -16,6 +16,11 @@ inherit
 			is_superimposable
 		end
 
+	MATH_CONST
+		export
+			{ANY} Pi
+		end
+
 create
 	make
 
@@ -25,17 +30,17 @@ feature {NONE} -- Initialization
 			-- Create a slice.
 		do
 			Precursor
-			angle1 := 0
-			angle2 := 360
+			create angle1.make (0)
+			create angle2.make (Pi * 2)
 		end
 
 feature -- Access
 
-	angle1: REAL
+	angle1: EV_ANGLE
 			-- Angle which specifies start position of
 			-- current arc relative to the orientation
 
-	angle2: REAL
+	angle2: EV_ANGLE
 			-- Angle which specifies end position of
 			-- current arc relative to the start of
 			-- current arc
@@ -44,9 +49,6 @@ feature -- Element change
 
 	set_angle1 (an_angle: like angle1) is
 			-- Set angle1 to `an_angle'._
-		require
-			angle1_smaller_than_360: an_angle < 360
-			angle1_positive: an_angle >= 0
 		do
 			angle1 := an_angle
 			set_modified
@@ -57,8 +59,7 @@ feature -- Element change
 	set_angle2 (an_angle: like angle2) is
 			-- Set angle2 to `an_angle'.
 		require
-			angle2_smaller_than_360: an_angle <= 360
-			angle2_positive: an_angle >= 0
+			valid_angle: an_angle.radians <= Pi * 2
 		do
 			angle2 := an_angle
 			set_modified
@@ -150,10 +151,6 @@ feature {NONE} -- Access
 			-- Code to define join endpoints to center of arc
 
 invariant
-	angle1_small_enough: angle1 < 360
-	angle1_large_enough: angle1 >= 0
-	angle2_small_enough: angle2 <= 360
-	angle2_large_enough: angle2 >= 0
 	angles_not_equal: angle2 /= angle1
 
 end -- class EV_SLICE

@@ -17,22 +17,16 @@ inherit
 
 feature -- Basic operation
 
-	cos (a: REAL): REAL is
+	cos (a: EV_ANGLE): REAL is
 			-- Trigonometric cosine of `a' degrees
-		require
-			a_smaller_than_360: a < 360
-			a_positive: a >= 0
 		do
-			Result := cosine (((Pi*a)/180.0).truncated_to_real)
+			Result := cosine (a.radians)
 		end
 
-	sin (a: REAL): REAL is
+	sin (a: EV_ANGLE): REAL is
 			-- Trigonometric sine of `a' degrees
-		require
-			a_smaller_than_360: a < 360
-			a_positive: a >= 0
 		do
-			Result := sine (((Pi*a)/180.0).truncated_to_real)
+			Result := sine (a.radians)
 		end
 
 	mod360 (angle: REAL): REAL is

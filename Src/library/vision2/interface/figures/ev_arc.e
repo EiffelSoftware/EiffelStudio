@@ -24,6 +24,10 @@ inherit
 			export
 				{NONE} all
 			end
+	MATH_CONST
+		export
+			{ANY} Pi
+		end
 
 create
 	make
@@ -36,17 +40,17 @@ feature -- Initialization
 			init_fig (Void)
 			{EV_PATH} Precursor
 			create center.make
-			angle1 := 0
-			angle2 := 360
+			create angle1.make_in_degrees (0)
+			create angle2.make_in_degrees (0)
 		end
 
 feature -- Access
 
-	angle1: REAL
+	angle1: EV_ANGLE
 			-- Angle which specifies start position of
 			-- current arc relative to the orientation
 
-	angle2: REAL
+	angle2: EV_ANGLE
 			-- Angle which specifies end position of
 			-- current arc relative to the start of
 			-- current arc
@@ -54,7 +58,7 @@ feature -- Access
 	center: EV_POINT
 			-- Center of the arc
 
-	orientation: REAL
+	orientation: EV_ANGLE
 			-- Angle which specifies the position of the first ray
 			-- (length `radius1') relative to the three-o'clock position
 			-- from the center
@@ -80,9 +84,6 @@ feature -- Element change
 
 	set_angle1 (an_angle: like angle1) is
 			-- Set angle1 to `an_angle'.
-		require
-			angle1_smaller_than_360: an_angle < 360
-			angle1_positive: an_angle >= 0
 		do
 			angle1 := an_angle
 			set_modified
@@ -93,11 +94,10 @@ feature -- Element change
 	set_angle2 (an_angle: like angle2) is
 			-- Set angle2 to `an_angle'.
 		require
-			angle2_smaller_than_360: an_angle <= 360
-			angle2_positive: an_angle >= 0
+			an_angle.radians <= Pi * 2
 		do
 			angle2 := an_angle
-				set_modified
+			set_modified
 		ensure
 			angle2 = an_angle
 		end
@@ -116,8 +116,6 @@ feature -- Element change
 	set_orientation (an_orientation: like orientation) is
 			-- Set `orientation' to `an_orientation'.
 		require
-			orientation_smaller_than_360: an_orientation < 360
-			orientation_positive: an_orientation >= 0
 		do
 			orientation := an_orientation
 			set_modified
@@ -155,15 +153,12 @@ feature -- Element change
 			radius2 = a_radius
 		end
 
-	xyrotate (a: REAL px, py: INTEGER) is
+	xyrotate (a: EV_ANGLE; px, py: INTEGER) is
 			-- Rotate figure by `a' relative to (`px', `py').
-			-- Angle `a' is measured in degrees.
-		require else
-			a_smaller_than_360: a < 360
-			a_positive: a >= 0
+			-- Angle `a' is measured in radians.
 		do
 			center.xyrotate (a, px, py)
-			orientation := mod360 (orientation+a)
+			orientation := orientation + a 
 			set_modified
 		end
 
@@ -189,7 +184,7 @@ feature -- Output
 
 	draw is
 			-- draw the arc.
-		local
+ 		local
 			lpath: EV_PATH
 		do
 			if drawing.is_drawable then
@@ -234,13 +229,7 @@ invariant
 	origin_type_constraint: origin_user_type <= 2
 	meaningful_radius1: radius1 >= 0
 	meaningful_radius2: radius2 >= 0
-	orientation_small_enough: orientation < 360
-	orientation_large_enough: orientation >= 0
-	angle1_small_enough: angle1 < 360
-	angle1_large_enough: angle1 >= 0
-	angle2_small_enough: angle2 <= 360
-	angles2_large_enough: angle2 >= 0
-
+	
 end -- class EV_ARC
 
 --!----------------------------------------------------------------

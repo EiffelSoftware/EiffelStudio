@@ -34,7 +34,7 @@ feature -- Access
 	contains (p: EV_POINT): BOOLEAN is 
 			-- Is 'p' in the current square? 
 		require else
-			orientation_is_zero: orientation = 0.0
+			orientation_is_zero: ((orientation.degrees + 0.5).truncated_to_integer) \\ 360  = 0
 		local 
 			x0, y0, x1, y1: INTEGER
 			converted: INTEGER

@@ -164,13 +164,11 @@ feature -- Element change
 			unset_modified			
 		end
 
-	rotate (a: REAL; p: like origin) is
+	rotate (a: EV_ANGLE; p: like origin) is
 			-- Rotate figure by `a' relative to `p'.
-			-- Angle `a' is measured in degrees.
+			-- Angle `a' is measured in radians.
 		require
 			point_exists: p /= Void
-			angle_large_enough: a >= 0
-			angle_small_enough: a <= 360
 		do
 			xyrotate (a, p.x, p.y)
 		end
@@ -184,13 +182,11 @@ feature -- Element change
 			xyscale (f, p.x, p.y)
 		end
 
-	self_rotate (a: REAL) is
+	self_rotate (a: EV_ANGLE) is
 			-- Rotate figure by `a' relative to `origin'.
-			-- Angle is measured in degrees.
+			-- Angle is measured in radians.
 		require
 			origin_exists: origin /= Void
-			angle_large_enough: a >= 0
-			angle_small_enough: a < 360
 		do
 			xyrotate (a, origin.x, origin.y)
 		end
@@ -212,12 +208,9 @@ feature -- Element change
 			xytranslate (v.x, v.y)
 		end
 
-	xyrotate (a: REAL; px, py: INTEGER) is
+	xyrotate (a: EV_ANGLE; px, py: INTEGER) is
 			-- Rotate figure by `a' relative to (`px', `py').
-			-- Angle `a' is measured in degrees.
-		require
-			a_smaller_than_360: a < 360
-			a_positive: a >= 0.0
+			-- Angle `a' is measured in radians.
 		deferred
 		end
 

@@ -13,8 +13,6 @@ inherit
 			recompute
 		end
 
---	EV_JOINABLE
-
 	EV_ANGLE_ROUTINES
 		export
 			{NONE} all
@@ -35,7 +33,7 @@ feature {NONE} -- Initialization
 			interior.set_no_op_mode
 			width := 1
 			height := 1
-			orientation := 0
+			create orientation.make (0)
 		end 
 
 	make_from_closure (cl: EV_CLOSURE) is
@@ -109,9 +107,6 @@ feature -- Element change
 
 	set_orientation (new_orientation: like orientation) is
 			-- Set `orientation' to `new_orientation'.
-		require
-			orientation_positive: new_orientation >= 0
-			orientation_smaller_than_360: new_orientation < 360
 		do
 			orientation := new_orientation
 			set_modified
@@ -157,20 +152,11 @@ feature -- Element change
 			width = new_width
 		end
 
-	xyrotate (a: REAL; px, py: INTEGER) is
+	xyrotate (a: EV_ANGLE; px, py: INTEGER) is
 			-- Rotate figure by `a' relative to (`px', `py').
-			-- Angle `a' is measured in degrees.
-		require else
-			a_smaller_than_360: a < 360
-			a_positive: a >= 0.0
+			-- Angle `a' is measured in radians.
 		do
-			orientation := orientation+a
-			if orientation >= 360 then
-				orientation := orientation-360
-			end
-			if orientation < 0 then
-				orientation := orientation+360
-			end
+			orientation := orientation + a
 			upper_left.xyrotate (a, px, py)
 			set_modified
 		end
@@ -252,13 +238,11 @@ feature {CONFIGURE_NOTIFY} -- Updating
 
 feature {NONE} -- Access
 
-	orientation: REAL
-			-- Orientation in degree of the rectangle
+	orientation: EV_ANGLE
+			-- Orientation in radians of the rectangle
 
 invariant
 	origin_user_type_constraint: origin_user_type <= 3
-	orientation_small_enough: orientation < 360
-	orientation_large_enough: orientation >= 0
 	non_negative_width: width >= 0
 	non_negative_height: height >= 0
 	upper_left_exists: upper_left /= Void

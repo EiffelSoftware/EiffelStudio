@@ -114,12 +114,9 @@ feature -- Element change
 			p2_set: p2 = p
 		end
 
-	xyrotate (a: REAL; px, py: INTEGER) is
+	xyrotate (a: EV_ANGLE; px, py: INTEGER) is
 			-- Rotate figure by `a' relative to (`px', `py').
 			-- Angle `a' is measured in degrees.
-		require else
-			a_smaller_than_360: a < 360
-			a_positive: a >= 0.0
 		do
 			p1.xyrotate (a, px, py)
 			p2.xyrotate (a, px, py)

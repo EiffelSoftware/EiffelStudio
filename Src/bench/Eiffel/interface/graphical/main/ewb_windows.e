@@ -27,17 +27,13 @@ feature {NONE}
 
 	create_handler is
 		do
-print ("toto%N")
 			win_ioh_make_client ($call_back, Current)
-print ("toto2%N")
 		end;
 
 	call_back is
 			-- Call the command.
 		do
-print ("toto3%N")
 			execute (Current)	
-print ("toto4%N")
 		end
 
 feature {NONE} -- Externals

@@ -11,29 +11,19 @@ inherit
 
 	BAR_AND_TEXT
 		redefine
-			text_window, build_format_bar, 
-			tool_name, build_text_window, hole, stone_type, 
+			build_format_bar, build_text_windows,
+			tool_name, hole, stone_type, 
 			process_any, build_menus, hole_button
 		end;
 	BAR_AND_TEXT
 		redefine
-			text_window, build_format_bar, hole_button,
-			tool_name, build_text_window, 
-			hole, stone_type, process_any, build_menus
+			build_format_bar, hole_button,build_text_windows,
+			tool_name,  hole, stone_type, process_any, build_menus
 		end;
 
 creation
 
-	make
-
-feature -- Creation
-
-	make (a_shell: EB_SHELL) is
-			-- Create a explain window tool
-		do
-			make_shell (a_shell);
-			text_window.set_read_only
-		end;
+	make_shell
 
 feature -- Properties
 
@@ -49,12 +39,8 @@ feature -- Status setting
 			-- Set `s' to `stone'.
 		do
 			if s.is_valid then
-				text_window.set_editable;
-				text_window.set_changed (true);
 				text_window.set_text (s.help_text);
-				text_window.display_header (s.header);
-				text_window.set_read_only;
-				text_window.set_changed (false);
+				set_title (s.header);
 				update_save_symbol
 			end
 		end;
@@ -74,17 +60,6 @@ feature -- Graphical Interface
 			fill_menus
 		end;
 
-	build_text_window is
-			-- Create `text_window' different ways whether
-			-- the tabulation mecanism is disable or not
-		do
-			if tabs_disabled then
-				!! text_window.make (new_name, Current, Current)
-			else
-				!EXPLAIN_TAB_TEXT! text_window.make (new_name, Current, Current)
-			end
-		end;
-
 	build_format_bar is
 			-- Build formatting buttons in `format_bar'.
 		local
@@ -99,6 +74,18 @@ feature -- Graphical Interface
 			format_bar.attach_left (showtext_button, 0);
 		end;
 
+	build_text_windows is
+			-- Create `editable_text_window' different ways whether
+			-- the tabulation mecanism is disable or not
+		do
+			if tabs_disabled then
+				!SCROLLED_TEXT_WINDOW! text_window.make (new_name, Current)
+			else
+				!TABBED_TEXT_WINDOW! text_window.make (new_name, Current)
+			end;
+			set_mode_for_editing
+		end
+
 feature -- Window Properties
 
 	tool_name: STRING is
@@ -107,9 +94,6 @@ feature -- Window Properties
 			Result := l_Explain
 		end;
 
-	text_window: EXPLAIN_TEXT;
-			-- A text window that displays the help file of an element
-	
 feature {NONE} -- Attributes; Forms And Holes
 
 	hole: EXPLAIN_CMD;

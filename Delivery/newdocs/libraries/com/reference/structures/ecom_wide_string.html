@@ -17,26 +17,26 @@
 	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
 
 <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
-	<A CLASS="eclass" HREF="../../../com/reference/Structures/ecom_wide_string.html">ECOM_WIDE_STRING</A>
+	<A CLASS="eclass" HREF="../../../com/reference/structures/ecom_wide_string.html">ECOM_WIDE_STRING</A>
 
 <SPAN CLASS="ekeyword">create</SPAN> 
 
-	<A NAME="f_make_from_string"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_make_from_string">make_from_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">string</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_make_from_string"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_make_from_string">make_from_string</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">string</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Create wide string from </SPAN><SPAN CLASS="equoted">string</SPAN><SPAN CLASS="ecomment"></SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">nonvoid_string</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">string</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 		<SPAN CLASS="ekeyword">ensure</SPAN>
-			<SPAN CLASS="etag">non_default_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_exists">exists</A>
-			<SPAN CLASS="etag">not_shared</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_shared">shared</A>
+			<SPAN CLASS="etag">non_default_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_exists">exists</A>
+			<SPAN CLASS="etag">not_shared</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_shared">shared</A>
 </A>
-	<A NAME="f_make_from_pointer"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_make_from_pointer">make_from_pointer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_wide_string</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_make_from_pointer"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_make_from_pointer">make_from_pointer</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">a_wide_string</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Creation procedure</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_item">item</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_wide_string</SPAN><SPAN CLASS="ecomment"></SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_item">item</A><SPAN CLASS="ecomment"> to </SPAN><SPAN CLASS="equoted">a_wide_string</SPAN><SPAN CLASS="ecomment"></SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">valid_pointer</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">a_wide_string</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A>
 		<SPAN CLASS="ekeyword">ensure</SPAN>
-			<SPAN CLASS="etag">valid_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_wide_string</SPAN>
-			<SPAN CLASS="etag">shared</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_shared">shared</A>
+			<SPAN CLASS="etag">valid_item</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_item">item</A> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="elocal">a_wide_string</SPAN>
+			<SPAN CLASS="etag">shared</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_shared">shared</A>
 </A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
 
@@ -117,7 +117,7 @@
 	<A NAME="f_is_in_final_collect"><A CLASS="efeature" HREF="../../../base/reference/kernel/memory.html#f_is_in_final_collect">is_in_final_collect</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is GC currently performing final collection</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> after execution of current program?</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Safe to use in </SPAN><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_dispose">dispose</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Safe to use in </SPAN><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_dispose">dispose</A><SPAN CLASS="ecomment">.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">(from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/memory.html">MEMORY</A><SPAN CLASS="ecomment">)</SPAN>
 </A>
 	<A NAME="f_largest_coalesced_block"><A CLASS="efeature" HREF="../../../base/reference/kernel/memory.html#f_largest_coalesced_block">largest_coalesced_block</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
@@ -249,40 +249,40 @@
 </A>	
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Accsess</SPAN>
 
-	<A NAME="f_exists"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does the </SPAN><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_item">item</A><SPAN CLASS="ecomment"> exist?</SPAN>
+	<A NAME="f_exists"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_exists">exists</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Does the </SPAN><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_item">item</A><SPAN CLASS="ecomment"> exist?</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN>
-			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A><SPAN CLASS="esymbol">)</SPAN>
+			<SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">=</SPAN> <SPAN CLASS="esymbol">(</SPAN><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_item">item</A> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_default_pointer">default_pointer</A><SPAN CLASS="esymbol">)</SPAN>
 </A>
-	<A NAME="f_item"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A></A>
+	<A NAME="f_item"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_item">item</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/pointer.html">POINTER</A></A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Pointer to wide string</SPAN>
 
-	<A NAME="f_shared"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A></A>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_item">item</A><SPAN CLASS="ecomment"> shared by another object?</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If False (by default), </SPAN><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_item">item</A><SPAN CLASS="ecomment"> will</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> be destroyed by </SPAN><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_destroy_item">destroy_item</A><SPAN CLASS="ecomment">.</SPAN>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If True, </SPAN><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_item">item</A><SPAN CLASS="ecomment"> will not be destroyed.</SPAN>
+	<A NAME="f_shared"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_shared">shared</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A></A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_item">item</A><SPAN CLASS="ecomment"> shared by another object?</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If False (by default), </SPAN><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_item">item</A><SPAN CLASS="ecomment"> will</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> be destroyed by </SPAN><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_destroy_item">destroy_item</A><SPAN CLASS="ecomment">.</SPAN>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If True, </SPAN><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_item">item</A><SPAN CLASS="ecomment"> will not be destroyed.</SPAN>
 	
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic Operations</SPAN>
 
-	<A NAME="f_set_shared"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_set_shared">set_shared</A>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_shared">shared</A><SPAN CLASS="ecomment"> to True.</SPAN>
+	<A NAME="f_set_shared"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_set_shared">set_shared</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_shared">shared</A><SPAN CLASS="ecomment"> to True.</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN>
-			<SPAN CLASS="etag">shared</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_shared">shared</A>
+			<SPAN CLASS="etag">shared</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_shared">shared</A>
 </A>
-	<A NAME="f_set_unshared"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_set_unshared">set_unshared</A>
-			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_shared">shared</A><SPAN CLASS="ecomment"> to False.</SPAN>
+	<A NAME="f_set_unshared"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_set_unshared">set_unshared</A>
+			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Set </SPAN><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_shared">shared</A><SPAN CLASS="ecomment"> to False.</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN>
-			<SPAN CLASS="etag">not_shared</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_shared">shared</A>
+			<SPAN CLASS="etag">not_shared</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="ekeyword" HREF="../../../base/reference/kernel/boolean_ref.html#f__prefix_not">not</A> <A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_shared">shared</A>
 </A>
-	<A NAME="f_to_string"><A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_to_string">to_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A>
+	<A NAME="f_to_string"><A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_to_string">to_string</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/string.html">STRING</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Convert wide string to string</SPAN>
 		<SPAN CLASS="ekeyword">ensure</SPAN>
 			<SPAN CLASS="etag">nonvoid_result</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ereserved">Result</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 </A>	
 <SPAN CLASS="ekeyword">invariant</SPAN>
 
-	<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Structures/ecom_wide_string.html#f_exists">exists</A>
+	<SPAN CLASS="etag">exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/structures/ecom_wide_string.html#f_exists">exists</A>
 		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
 	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
 	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>

@@ -18,19 +18,19 @@
 		<h3>Requirements</h3>
 		<ul>
 		  <li>JDK 1.1.8 should be correctly set up (download it at <a href="http://java.sun.com/products/jdk/1.1/index.html">http://java.sun.com/products/jdk/1.1/index.html</a>)</li>
-		  <li>The environment variable CLASSPATH should defined (check with 
-  the JDK documentation on how to do so) and that it contains the Java classes 
+		  <li>The environment variable CLASSPATH should defined (check with
+  the JDK documentation on how to do so) and that it contains the Java classes
           you want to access.</li>
-  <li>The environment variable JDK_HOME should be set to the installation 
-  directory of the JDK (e.g. <a href="file:///D:/apps/jdk1.1.8">D:\apps\jdk1.1.8</a>).</li>
+  <li>The environment variable JDK_HOME should be set to the installation
+  directory of the JDK (e.g. D:\apps\jdk1.1.8).</li>
 		</ul>
 		<h3>Borland users</h3>
-        <p>On Windows, the JDK includes a set of C libraries which have been 
-        compiled for the Microsoft C compiler. Before being able to use the JDK 
+        <p>On Windows, the JDK includes a set of C libraries which have been
+        compiled for the Microsoft C compiler. Before being able to use the JDK
         from Eiffel you need to perform the following operation:</p>
         <ol>
           <li>In $JDK_HOME\lib, rename javai.lib into javai.lib.microsoft</li>
-          <li>From the DOS command prompt and in the directory $JDK_HOME\lib, 
+          <li>From the DOS command prompt and in the directory $JDK_HOME\lib,
           launch the following command<br>
           <pre>%ISE_EIFFEL%\bcc55\bin\implib javai.lib..\bin\javai.dll         </pre>
           </li>
@@ -40,9 +40,9 @@
 		  <li>In this version, you can only use one JNI environment.</li>
 		  <li>Only one thread can interact with the Java Virtual Machine (JVM).</li>
 		  <li>It is not possible to call Eiffel features from Java program.</li>
-		  <li>The Eifffel feature `destroy_vm' of `JAVA_VM' calls a C function of the Java Native&nbsp;Interface that is not fully implemented in jdk 
+		  <li>The Eifffel feature `destroy_vm' of `JAVA_VM' calls a C function of the Java Native&nbsp;Interface that is not fully implemented in jdk
           1.1.8.
-		    This function, called&nbsp;DestroyJavaVM, always returns -1 in jdk 
+		    This function, called&nbsp;DestroyJavaVM, always returns -1 in jdk
           1.1.8. For further information, go on the&nbsp;JNI pages at the address
 		    above.&nbsp;</li>
 	    </ul>

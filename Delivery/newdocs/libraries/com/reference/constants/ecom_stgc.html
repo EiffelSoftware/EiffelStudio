@@ -17,21 +17,21 @@
 	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
 
 <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
-	<A CLASS="eclass" HREF="../../../com/reference/Constants/ecom_stgc.html">ECOM_STGC</A>
+	<A CLASS="eclass" HREF="../../../com/reference/constants/ecom_stgc.html">ECOM_STGC</A>
 
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
 
-	<A NAME="f_is_valid_stgc"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgc.html#f_is_valid_stgc">is_valid_stgc</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">stgc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+	<A NAME="f_is_valid_stgc"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgc.html#f_is_valid_stgc">is_valid_stgc</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">stgc</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">stgc</SPAN><SPAN CLASS="ecomment"> a valid storage commit mode flag?</SPAN>
 </A>
-	<A NAME="f_stgc_dangerouslycommitmerelytodiskcache"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgc.html#f_stgc_dangerouslycommitmerelytodiskcache">stgc_dangerouslycommitmerelytodiskcache</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stgc_dangerouslycommitmerelytodiskcache"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgc.html#f_stgc_dangerouslycommitmerelytodiskcache">stgc_dangerouslycommitmerelytodiskcache</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> EOLE_STGC_DANGEROUSLYCOMMITMERELYTODISKCACHE commits the changes,</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> but does not save them to the disk cache.</SPAN>
 </A>
-	<A NAME="f_stgc_default"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgc.html#f_stgc_default">stgc_default</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stgc_default"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgc.html#f_stgc_default">stgc_default</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> OLE 2 default commit mode</SPAN>
 </A>
-	<A NAME="f_stgc_onlyifcurrent"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgc.html#f_stgc_onlyifcurrent">stgc_onlyifcurrent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stgc_onlyifcurrent"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgc.html#f_stgc_onlyifcurrent">stgc_onlyifcurrent</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> EOLE_STGC_ONLYIFCURRENT prevents multiple users of an IStorage</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> from overwriting the other's changes. EOLE_STGC_ONLYIFCURRENT</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> commits changes only if no one else has made changes since the</SPAN>
@@ -40,7 +40,7 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If the caller chooses to overwrite the changes, IStorage.Commit</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> can be called with commit mode set to EOLE_STGC_DEFAULT.</SPAN>
 </A>
-	<A NAME="f_stgc_overwrite"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_stgc.html#f_stgc_overwrite">stgc_overwrite</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_stgc_overwrite"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_stgc.html#f_stgc_overwrite">stgc_overwrite</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> EOLE_STGC_OVERWRITE allows new data to overwrite the old data,</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> reducing space requirements. EOLE_STGC_OVERWRITE is not recommended</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> for usual operation, but it could be useful in the following</SPAN>

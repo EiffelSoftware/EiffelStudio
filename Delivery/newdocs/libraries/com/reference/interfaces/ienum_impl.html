@@ -16,18 +16,18 @@
 	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
 
 <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
-	<A CLASS="eclass" HREF="../../../com/reference/Interfaces/ienum_impl.html">IENUM_IMPL</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
+	<A CLASS="eclass" HREF="../../../com/reference/interfaces/ienum_impl.html">IENUM_IMPL</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN>
 
 <SPAN CLASS="ekeyword">create</SPAN> 
 
-	<A NAME="f_make"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ienum_impl.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">enumeration</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Interfaces/ienum_impl.html#f_implementation">implementation</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_make"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ienum_impl.html#f_make">make</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">enumeration</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="ekeyword">like</SPAN> <A CLASS="efeature" HREF="../../../com/reference/interfaces/ienum_impl.html#f_implementation">implementation</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Initialization.</SPAN>
 		<SPAN CLASS="ekeyword">require</SPAN>
 			<SPAN CLASS="etag">non_void_enumeration</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="elocal">enumeration</SPAN> <SPAN CLASS="esymbol">/=</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_void">void</A>
 </A>
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Basic Operations</SPAN>
 
-	<A NAME="f_clone1"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ienum_impl.html#f_clone1">clone1</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">ppenum</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/structures/list/cell.html">CELL</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_clone1"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ienum_impl.html#f_clone1">clone1</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">ppenum</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/structures/list/cell.html">CELL</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="ekeyword">like</SPAN> <SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Creates another enumerator that contains the</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> same enumeration state as the current one.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Using this function, a client can record a</SPAN>
@@ -37,7 +37,7 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> as the original one.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">ppenum</SPAN><SPAN CLASS="ecomment"> [out].</SPAN>
 </A>
-	<A NAME="f_next"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ienum_impl.html#f_next">next</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">celt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">rgelt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">pcelt_fetched</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_ref.html">INTEGER_REF</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_next"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ienum_impl.html#f_next">next</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">celt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">rgelt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/array.html">ARRAY</A> <SPAN CLASS="esymbol">[</SPAN><SPAN CLASS="egeneric">G</SPAN><SPAN CLASS="esymbol">]</SPAN><SPAN CLASS="esymbol">;</SPAN> <SPAN CLASS="elocal">pcelt_fetched</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer_ref.html">INTEGER_REF</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Retrieves the next </SPAN><SPAN CLASS="equoted">celt</SPAN><SPAN CLASS="ecomment"> items in</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> the enumeration sequence.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If there are fewer than the requested number</SPAN>
@@ -56,17 +56,17 @@
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> elements actually supplied in </SPAN><SPAN CLASS="equoted">rgelt</SPAN><SPAN CLASS="ecomment">. Caller can</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> pass in Void if celt is one.</SPAN>
 </A>
-	<A NAME="f_reset"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ienum_impl.html#f_reset">reset</A>
+	<A NAME="f_reset"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ienum_impl.html#f_reset">reset</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Resets the enumeration sequence to the beginning.</SPAN>
 </A>
-	<A NAME="f_skip"><A CLASS="efeature" HREF="../../../com/reference/Interfaces/ienum_impl.html#f_skip">skip</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">celt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
+	<A NAME="f_skip"><A CLASS="efeature" HREF="../../../com/reference/interfaces/ienum_impl.html#f_skip">skip</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">celt</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Skips over the next specified number of</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> elements in the enumeration sequence.</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> </SPAN><SPAN CLASS="equoted">celt</SPAN><SPAN CLASS="ecomment"> [in] Number of elements to be skipped.</SPAN>
 </A>	
 <SPAN CLASS="ekeyword">invariant</SPAN>
 
-	<SPAN CLASS="etag">implementation_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/Interfaces/ienum_impl.html#f_implementation_exists">implementation_exists</A>
+	<SPAN CLASS="etag">implementation_exists</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../com/reference/interfaces/ienum_impl.html#f_implementation_exists">implementation_exists</A>
 		<SPAN CLASS="ecomment">--</SPAN> <SPAN CLASS="ecomment">from </SPAN><A CLASS="eclass" HREF="../../../base/reference/kernel/any.html">ANY</A>
 	<SPAN CLASS="etag">reflexive_equality</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_standard_is_equal">standard_is_equal</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>
 	<SPAN CLASS="etag">reflexive_conformance</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="efeature" HREF="../../../base/reference/kernel/any.html#f_conforms_to">conforms_to</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="ereserved">Current</SPAN><SPAN CLASS="esymbol">)</SPAN>

@@ -17,24 +17,24 @@
 	<SPAN CLASS="eitag">revision</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">"$Revision$"</SPAN>
 
 <SPAN CLASS="ekeyword">class</SPAN> <SPAN CLASS="ekeyword">interface</SPAN>
-	<A CLASS="eclass" HREF="../../../com/reference/Constants/ecom_lock_types.html">ECOM_LOCK_TYPES</A>
+	<A CLASS="eclass" HREF="../../../com/reference/constants/ecom_lock_types.html">ECOM_LOCK_TYPES</A>
 
 <SPAN CLASS="ekeyword">feature</SPAN> <SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Access</SPAN>
 
-	<A NAME="f_is_valid_lock"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_lock_types.html#f_is_valid_lock">is_valid_lock</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lock</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
+	<A NAME="f_is_valid_lock"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_lock_types.html#f_is_valid_lock">is_valid_lock</A> <SPAN CLASS="esymbol">(</SPAN><SPAN CLASS="elocal">lock</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A><SPAN CLASS="esymbol">)</SPAN><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/boolean.html">BOOLEAN</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Is </SPAN><SPAN CLASS="equoted">lock</SPAN><SPAN CLASS="ecomment"> a valid locktype?</SPAN>
 </A>
-	<A NAME="f_lock_exclusive"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_lock_types.html#f_lock_exclusive">lock_exclusive</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_lock_exclusive"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_lock_types.html#f_lock_exclusive">lock_exclusive</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> Attempts to read or write this stream by other stream openings</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> return error EOLE_STG_E_ACCESSDENIED.</SPAN>
 </A>
-	<A NAME="f_lock_onlyonce"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_lock_types.html#f_lock_onlyonce">lock_onlyonce</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_lock_onlyonce"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_lock_types.html#f_lock_onlyonce">lock_onlyonce</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If lock is granted, no other EOLE_LOCK_ONLYONCE lock can be</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> obtained on bytes in given region. Usually this lock type</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> is an alias for some other lock type and other semantics might occur</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> as a side effect.</SPAN>
 </A>
-	<A NAME="f_lock_write"><A CLASS="efeature" HREF="../../../com/reference/Constants/ecom_lock_types.html#f_lock_write">lock_write</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
+	<A NAME="f_lock_write"><A CLASS="efeature" HREF="../../../com/reference/constants/ecom_lock_types.html#f_lock_write">lock_write</A><SPAN CLASS="esymbol">:</SPAN> <A CLASS="eclass" HREF="../../../base/reference/kernel/integer.html">INTEGER</A>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> If lock is granted, specified region of stream</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> can be read by calling IStream.Read from any opening of</SPAN>
 			<SPAN CLASS="ecomment">--</SPAN><SPAN CLASS="ecomment"> this stream. Attempts to write to this region from any opening</SPAN>

@@ -21,9 +21,7 @@ wrapper around the Win32 APIs that provides a clean object model to build a GUI.
 Web Forms also provide a way to build GUIs on the Web; they include such types
 as <b>DataGrid</b> or <b>HTMLImage</b>.</p>
 <p>These three libraries are distributed with Eiffel.NET so you can reuse these
-classes directly in your system. Take a look at the documentation regarding the <a href="../../../tools/assembly_manager/index.html">assembly
-manager</a> for more details on how to generate automatically corresponding
-Eiffel.NET libraries for other .NET components.</p>
+classes directly in your system.</p>
 <h2>External Classes</h2>
 <p>They are many ways of reusing existing .NET classes. One would have been to
 find in the .NET world all the information about a class that has not been yet
@@ -136,8 +134,8 @@ externals listed in the following table:</p>
     </tr>
   </tbody>
 </table>
-<p>The .NET Framework type name that appears at the end of the string following 
-the <span class="ekeyword">external</span> keyword should be the same as the one 
+<p>The .NET Framework type name that appears at the end of the string following
+the <span class="ekeyword">external</span> keyword should be the same as the one
 that appears after the <SPAN CLASS="ekeyword">alias</SPAN> keyword,
 following the declaration of the class (see the code fragment under
 &quot;External Classes&quot;).</p>
@@ -156,7 +154,7 @@ includes a feature that needs user input, it can include the following code:</p>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ekeyword">create</span>
 <span class="elocal">io</span><span class="esymbol">.</span><span class="efeature">make</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="elocal">input</span> <span class="esymbol">:=</span>
-<span class="elocal">io</span>.<span class="efeature">read_line</span> <span class="ecomment">-- calls 
+<span class="elocal">io</span>.<span class="efeature">read_line</span> <span class="ecomment">-- calls
             System.Console.ReadLine()</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ecomment">-- do stuff</span><br>
 &nbsp;&nbsp;&nbsp;<span class="ekeyword">end</span></code><br>
@@ -174,10 +172,10 @@ the external call:</p>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="elocal">input</span><span class="esymbol">:</span>
 <span class="eclass">STRING</span><br>
 &nbsp;&nbsp;&nbsp;<span class="ekeyword">do<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span> <span class="ecomment">-- Removed 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span> <span class="ecomment">-- Removed
 creation of </span><span class="elocal">io</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="elocal">input</span> <span class="esymbol">:=</span>
-<span class="elocal">io</span>.<span class="efeature">read_line</span> <span class="ecomment">-- calls 
+<span class="elocal">io</span>.<span class="efeature">read_line</span> <span class="ecomment">-- calls
             System.Console.ReadLine()</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ecomment">-- do stuff</span><br>
 &nbsp;&nbsp;&nbsp;<span class="ekeyword">end</span></code><p>
@@ -190,7 +188,7 @@ This library makes extensive use of genericity and contracts to provide a clean
 and powerful set of data structures you can reuse in your system. This library
 uses the external classes that wrap the .NET Framework Base Class Library, also
 provided with Eiffel.NET.</p>
-<p>The other sets of classes provided with the compiler wrap the standard Framework 
+<p>The other sets of classes provided with the compiler wrap the standard Framework
 assemblies so that you can easily reuse the corresponding types in you
 applications.</p>
 

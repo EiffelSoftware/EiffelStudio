@@ -59,6 +59,7 @@ rt_public char *spclone(char *source)
 	 * is a special object.
 	 */
 	
+	EIF_GET_CONTEXT
 	register4 char *result;				/* Clone pointer */
 	register1 union overhead *zone;		/* Pointer on source header */
 	register2 uint32 flags;				/* Source object flags */
@@ -86,6 +87,7 @@ rt_public char *spclone(char *source)
 	epop(&loc_stack, 1);				/* Remove GC protection */
 
 	return result;
+	EIF_END_GET_CONTEXT
 }
 
 rt_public char *edclone(EIF_CONTEXT char *source)
@@ -180,7 +182,6 @@ rt_public char *edclone(EIF_CONTEXT char *source)
 	}
 
 	return anchor.boot;			/* The cloned object tree */
-
 	EIF_END_GET_CONTEXT
 }
 
@@ -188,6 +189,7 @@ rt_public char *rtclone(char *source)
 {
 	/* Clone source, copy the source in the clone and return the clone */
 
+	EIF_GET_CONTEXT
 	char *result;					/* Address of the cloned object */
 
 	if (source == (char *) 0)
@@ -206,6 +208,7 @@ rt_public char *rtclone(char *source)
 	epop(&loc_stack, 1);			/* Remove the source object */
 
 	return result;					/* Pointer to the cloned object */
+	EIF_END_GET_CONTEXT
 }
 
 rt_private char *duplicate(char *source, char *enclosing, int offset)

@@ -88,7 +88,8 @@ feature
 			old_current_type: CL_TYPE_I;
 			reg_type: TYPE_C;
 			local_is_current_temporary: BOOLEAN;
-			a: ATTRIBUTE_BL
+			a: ATTRIBUTE_BL;
+			access: ACCESS_EXPR_B
 		do
 				-- First, standard analysis of the call
 			feat_bl_analyze_on (reg);
@@ -108,7 +109,7 @@ feature
 			if local_is_current_temporary then
 				current_reg := reg
 			else
-				-- We have to check if Current is an attribute. A much nicer way
+				-- We have to check if `Current' is an attribute. A much nicer way
 				-- would be to define a feature in REGISTRABLE which would indicate
 				-- whether the register can be used during inlining, and to 
 				-- redefine it in the appropriate descendants.
@@ -118,6 +119,20 @@ feature
 					current_reg := a.register;
 					if current_reg /= Void then
 						local_is_current_temporary := current_reg.is_temporary
+					end
+				else
+					-- There is the case where `reg' is of type ACCESS_EXPR_B (if the 
+					-- feature is an infixed routine). The attribute is stored in 
+					-- field `expr'.
+					access ?= reg;
+					if access /= Void then
+						a ?= access.expr;
+						if a /= Void then
+							current_reg := a.register;
+							if current_reg /= Void then
+								local_is_current_temporary := current_reg.is_temporary
+							end
+						end
 					end
 				end
 			end;
@@ -347,7 +362,8 @@ feature {NONE} -- Registers
 			local_reg: REGISTRABLE;
 			p: PARAMETER_B;
 			expr: EXPR_B;
-			nest, msg: NESTED_B
+			nest, msg: NESTED_B;
+			void_reg: VOID_REGISTER
 		do
 			if a /= Void then
 				from
@@ -407,10 +423,17 @@ feature {NONE} -- Registers
 					end;
 
 					if (local_reg /= Void) then
-						is_param_temporary_reg :=  local_reg.is_temporary or local_reg.is_predefined
+						is_param_temporary_reg := local_reg.is_temporary;
+						if is_param_temporary_reg then
+							void_reg ?= local_reg;
+							is_param_temporary_reg := void_reg = Void
+						else
+							is_param_temporary_reg := local_reg.is_predefined
+						end
 					end;
 
-					temporary_parameters.put (is_param_temporary_reg, i);					
+					temporary_parameters.put (is_param_temporary_reg, i);
+
 					if is_param_temporary_reg then
 						Result.put (local_reg, i)
 					else

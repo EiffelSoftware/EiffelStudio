@@ -101,7 +101,7 @@ feature {NONE} -- Implementation
 			else
 					-- Now generate ace files on both platforms as standard.
 				generate_ace_file (clone (windows_ace_file_name), windows_ace_name)
-				generate_ace_file (clone (unix_ace_file_name), linux_ace_name)
+				generate_ace_file (clone (unix_ace_file_name), unix_ace_name)
 			end	
 		end
 		

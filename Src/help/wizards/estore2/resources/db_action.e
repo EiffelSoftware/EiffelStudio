@@ -25,7 +25,7 @@ feature -- Creation
 		do
 			selection := s
 			item := an_item
-			create list.make
+			create list.make (50)
 		ensure
 			set: selection = s and item = an_item
 		end
@@ -48,7 +48,7 @@ feature -- Access
 	item: G
 		-- Current found item.
 
-	list: LINKED_LIST [G]
+	list: ARRAYED_LIST [G]
 		-- Result List.
 
 end -- class DB_ACTION

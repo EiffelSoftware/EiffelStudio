@@ -109,8 +109,8 @@ feature -- Status setting
 			check
 				font_not_void: fw /= Void
 			end
-			set_minimum_width (fw.string_width (Current, text) + 10)
-			set_minimum_height (7 * fw.string_height (Current, text) // 4 - 2)
+			set_minimum_width (fw.string_width (text) + 10)
+			set_minimum_height (7 * fw.height // 4 - 2)
 		end
 
 feature {NONE} -- WEL Implementation

@@ -6,18 +6,14 @@ indexing
 	revision: "$Revision$"
 	
 class
-	
 	EV_VERTICAL_SPLIT_AREA_IMP
 	
 inherit
-	
 	EV_VERTICAL_SPLIT_AREA_I
 		
 	EV_SPLIT_AREA_IMP
 		redefine
-			child_minwidth_changed,
-			child_minheight_changed,
-			child_height_changed
+			child_minheight_changed
 		end
 	
 creation
@@ -28,7 +24,7 @@ feature {NONE} -- Access
 	level: INTEGER is
 			-- Position of the splitter in the window
 		do
-			if child1 /= Void then
+			if child1 /= Void and then child1.child_cell /= Void then
 				Result := child1.child_cell.height
 			else
 				Result := 0
@@ -59,24 +55,24 @@ feature {NONE} -- Access
 
 feature -- Implementation
 
-	child_height_changed (new_height: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Resize the window and redraw the split according to
-			-- the resize of a child.
-		local
-			local_height: INTEGER
-		do
-			if the_child = child1 then
-				refresh
-			else
-				local_height := size + child1.child_cell.height
-				if child2 /= Void then
-					child2.set_y (local_height)
-					local_height := local_height + child2.child_cell.height
-					set_height (local_height)
-				end
-				parent_imp. child_height_changed (height, Current)
-			end
-		end
+--	child_height_changed (new_height: INTEGER; the_child: EV_WIDGET_IMP) is
+--			-- Resize the window and redraw the split according to
+--			-- the resize of a child.
+--		local
+--			local_height: INTEGER
+--		do
+--			if the_child = child1 then
+--				refresh
+--			else
+--				local_height := size + child1.child_cell.height
+--				if child2 /= Void then
+--					child2.set_y (local_height)
+--					local_height := local_height + child2.child_cell.height
+--					set_height (local_height)
+--				end
+--				parent_imp. child_height_changed (height, Current)
+--			end
+--		end
 
 	set_local_width (new_width: INTEGER) is
 			-- Make `new_width' the new `width' of the 
@@ -112,12 +108,6 @@ feature -- Implementation
 				local_height := local_height + child2.minimum_height
 			end
 			set_minimum_height (local_height + size)
-		end
-
-	child_minwidth_changed (child_new_minimum: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- Change the current minimum_height because onr of the children did.
-		do
-			set_minimum_width (child_new_minimum.max(minimum_width))
 		end
 
 feature {NONE} -- Implementation

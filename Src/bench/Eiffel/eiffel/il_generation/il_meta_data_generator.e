@@ -55,6 +55,12 @@ feature -- Generation
 		deferred
 		end
 
+	generate_metadata (classes: ARRAY [CLASS_C]) is
+			-- Store Eiffel names to allow roundtrip
+			-- when consuming metadata again.
+		deferred
+		end
+
 	generate_il_features_description (class_c: CLASS_C; class_type: CLASS_TYPE) is
 			-- Generate features description of `class_type'.
 		require

@@ -13,8 +13,6 @@ inherit
 			text_color, background_color
 		end
 
-	EB_GRAPHICAL_DATA
-
 create
 	make
 
@@ -22,12 +20,12 @@ feature {NONE} -- Implementation
 	
 	text_color: EV_COLOR is
 		do
-			Result := object_color
+			Result := editor_preferences.object_text_color
 		end
 
 	background_color: EV_COLOR is
 		do
-			Result := editor_preferences.string_background_color
+			Result := editor_preferences.object_background_color
 		end
 
 end -- class EDITOR_TOKEN_OBJECT

@@ -54,7 +54,8 @@ rt_public int identify()
 	DWORD wait;
 	SECURITY_ATTRIBUTES sa;
 	char c;
-	int count, tl;
+	DWORD count;
+	int tl;
 	char *t, *uu_str, *uu_t;
 	HANDLE uu_handles [2];
 
@@ -80,12 +81,11 @@ rt_public int identify()
 /*      NT 3.51 is really fast - at this point we know we were launched by ebench.
 	lets wait for it to catch up with us */
 
-	for (count = 0; (event_r == NULL) && (count < 10); count++)
-		{
+	for (count = 0; (event_r == NULL) && (count < 10); count++) {
 		event_r = OpenSemaphore (SEMAPHORE_ALL_ACCESS, FALSE, event_str);
 		if (event_r == NULL)
 			Sleep(500);
-		}
+	}
 	if (event_r == NULL) {
 #ifdef USE_ADD_LOG
 		add_log(12, "not started from wrapper - no read event %d", GetLastError());

@@ -589,7 +589,15 @@ feature -- Basic Operations
 			body_code.append ("VARIANTARG * ")
 			body_code.append (Tmp_variable_name)
 			body_code.append (Space_equal_space)
-			body_code.append (Zero)
+			body_code.append ("NULL")
+			body_code.append (Semicolon)
+			body_code.append (New_line)
+			body_code.append (New_line_tab)
+
+			body_code.append ("VARIANTARG * ")
+			body_code.append ("tmp2_value")
+			body_code.append (Space_equal_space)
+			body_code.append ("NULL")
 			body_code.append (Semicolon)
 			body_code.append (New_line)
 			body_code.append (New_line_tab)
@@ -794,7 +802,7 @@ feature -- Basic Operations
 			Result.append (New_line_tab_tab_tab)
 			Result.append (tab)
 
-			Result.append (check_failer (True, excepinfo_setting, "DISP_E_EXCEPTION"))
+			Result.append (check_failer (0, excepinfo_setting, "DISP_E_EXCEPTION"))
 			Result.append (New_line_tab_tab_tab)
 			Result.append (tab)
 
@@ -848,16 +856,7 @@ feature -- Basic Operations
 				Result.append (New_line_tab_tab_tab)
 				Result.append (tab)
 
-				Result.append ("if (pDispParams->rgvarg [0].vt != ")
-				Result.append_integer (visitor.vt_type)
-				Result.append (Close_parenthesis)
-				Result.append (New_line_tab_tab_tab)
-				Result.append (tab_tab)
-				Result.append ("return DISP_E_BADVARTYPE;")
-				Result.append (New_line_tab_tab_tab)
-				Result.append (tab)
-
-				Result.append (get_argument_from_variant (prop_desc.data_type, "arg", "pDispParams->rgvarg [0]", 0, True))
+				Result.append (get_argument_from_variant (prop_desc.data_type, "arg", "pDispParams->rgvarg [0]", 0, 0))
 				Result.append ("hr = ")
 				Result.append (Set_clause)
 				Result.append (prop_desc.name)
@@ -867,7 +866,7 @@ feature -- Basic Operations
 				Result.append (Semicolon)
 				Result.append (New_line_tab_tab_tab)
 				Result.append (tab)
-				Result.append (check_failer (True, excepinfo_setting, "DISP_E_EXCEPTION"))
+				Result.append (check_failer (0, excepinfo_setting, "DISP_E_EXCEPTION"))
 				Result.append (New_line_tab_tab_tab)
 				Result.append (Close_curly_brace)
 			end

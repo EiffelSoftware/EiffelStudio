@@ -149,7 +149,7 @@ feature {COMPILER_EXPORTER}
 									$make_too_many_generics);
 		end;
 
-feature {NONE} -- Passed to C
+feature {EXPR_ADDRESS_AS} -- Passed to C
 
 	make_syntax_error is
 			-- Build a syntax error message
@@ -161,6 +161,8 @@ feature {NONE} -- Passed to C
 			insert_error (syntax_error);
 			raise_error;
 		end;
+
+feature {NONE} -- Passed to C
 
 	make_string_too_long is
 			-- Build an error message for a too long manifest string.

@@ -769,13 +769,8 @@ feature {NONE}
 
 feature {NONE} -- External
 
-	Infinite_time: INTEGER is
-			-- 
-		external
-			"C++ macro use %"cli_headers.h%" "
-		alias
-			"INFINITE"
-		end		
+	Infinite_time: INTEGER is 0xFFFFFFFF
+			-- Value for C externals to have an infinite wait
 
 end -- class EIFNET_DEBUGGER
 

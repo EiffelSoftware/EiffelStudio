@@ -1,0 +1,187 @@
+
+
+<HTML>
+<HEAD>
+<TITLE>EiffelWeb: Object-Oriented Web library</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>New Page 1</title>
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
+</HEAD>
+
+
+<h1><br>
+2. WRITING A FORM-PROCESSING SYSTEM</h1>
+
+<P>Processing Web forms with EiffelWeb is straightforward, as EiffelWeb
+takes care of parsing the form and makes the visitor's input available
+to you in the form of Eiffel objects, instances of EiffelWeb classes and
+their descendants.</P>
+
+<h2><A NAME="2.1">Writing a basic script</A></h2>
+
+<P>Here are the basic steps to process the data entered by someone (called
+the <I>&quot;visitor&quot;</I> in the rest of this document) who has filled
+a form on your Web site:</P>
+
+<UL>
+<LI>Write an Eiffel class <I>YOUR_FORM</I> describing your form. <I>YOUR_FORM</I>
+should be a descendant from the EiffelWeb class <I>CGI_INTERFACE</I>, itself
+an heir to <I>CGI_ENVIRONMENT</I> which provides access to environment
+variables.<BR>
+</LI>
+
+<LI>Write in <I>YOUR_FORM </I>an effective version of the deferred feature
+<I>execute</I> inherited from <I>CGI_INTERFACE</I>. This is the body of
+your form processing, where you can manipulate the data entered by the
+visitor and, if desired, produce HTML output for display to the visitor.<BR>
+</LI>
+
+<LI>Either define the <I>make </I>creation procedure inherited from <I>CGI_INTERFACE</I>
+as a creation procedure of <I>YOUR_FORM</I>, or write your own creation
+procedure if you need more specific creation actions. The default <I>make
+</I>starts off everything as needed and calls <I>execute</I>; for most
+uses this is what you need.</LI>
+</UL>
+
+<h2><A NAME="2.2">A complete example</A></h2>
+
+<P>Let us build a small example. Our system will simply display the results
+of any HTML form as an indented list of name-value pairs. The name of the
+field will appear in bold face. You only need one class, the one called
+<I>YOUR_FORM</I> above - here <I>CGI_DEMO</I>; it can keep the inherited
+<I>make </I>as a creation procedure. Here is the class:<br>
+</P>
+
+<DL COMPACT>
+<DL COMPACT>
+  <table border="1" width="97%" height="602">
+    <tr>
+      <td width="100%" height="596" bgcolor="#FFFFCC">
+<DL COMPACT>
+<DT><B>class</B><BR>
+	<DD><I>
+      <pre>CGI_DEMO</I></pre>
+</DD>
+</DL>
+<DL COMPACT>
+<DT><B>inherit</B><BR>
+	<DD><I>CGI_INTERFACE</I></DD>
+</DL>
+<DL COMPACT>
+<DT><B>creation</B><BR>
+	<DD><I>make</I></DD>
+</DL>
+<DL COMPACT><DT><B>feature</B>
+	<DD>
+<I><br>
+execute</I> <B>is</B>
+<DL COMPACT>
+<DD>
+<DL COMPACT><DT>
+	<DD>
+    <font color="#FF0000">
+	-- Analyse form's fields and output them as name-value pairs.</font>
+<DT><B>do</B><BR>
+	<DD>
+	... See next ...
+<DT><B>end</B>
+</DL>
+</DL>
+<DT><B>end</B>  <font color="#FF0000"> -- class CGI_DEMO</font>
+</DL>
+<P>with <I>execute </I>effected as follows:</P>
+
+<DL COMPACT>
+<DT><I>execute</I> <B>is</B><BR>
+<DL COMPACT><DT><DD>
+    <font color="#FF0000">
+	-- Analyse form's fields and output them as name-value pairs.</font>
+<DT><B>&nbsp;&nbsp; local</B><BR>
+<DD><I>i: INTEGER;<BR>
+vl: LINKED_LIST [STRING]</I><BR>
+</DD>
+<DT><B>&nbsp;&nbsp; do</B>
+<DT><BR>
+<DD><I>generate_html_header;<BR>
+put_basic (&quot;You have submitted the following name/value pairs:
+%N&quot;);</I><BR>
+put_glossary_start
+</DD>
+<DL COMPACT>
+<DT>&nbsp;
+<DT><B>&nbsp;&nbsp;&nbsp; from</B>
+<DD><I>i := fields.lower</I><BR>
+</DD>
+<DT><B>&nbsp;&nbsp;&nbsp; until</B>
+<DD><I>i &gt; fields.upper</I><BR>
+</DD>
+<DT><B>&nbsp;&nbsp;&nbsp; loop</B>
+<DD><I>
+put_glossary_term (fields.item (i));<BR>
+put_glossary_definition;<BR>
+put_line_break;<BR>
+vl := value_list (fields.item (i));</I><BR>
+</DD>
+<DL COMPACT>
+<DT><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; from</B>
+<DD><I>&nbsp;&nbsp;&nbsp;&nbsp; vl.start&nbsp;</I>
+</DD>
+<DT><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</B>
+<DT><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; until</b>
+<DD><I>&nbsp;&nbsp;&nbsp;&nbsp; vl.after</I><BR>
+</DD>
+<DT><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; loop</B>
+<DD><I>
+&nbsp;&nbsp;&nbsp;&nbsp; put_basic (vl.item);<BR>
+&nbsp;&nbsp;&nbsp;&nbsp; vl.forth;</I><BR>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+<B>if not</B> <I>vl.after</I> <B>then</B> <I>put_line_break</I> <B>end</B>
+</DD>
+<DT><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; end</B><I>;</I>
+</DL>
+<I><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; i := i + 1;</I><BR>
+<B>&nbsp;&nbsp; end</B>
+</DL>
+<I><br>
+put_glossary_end</I>
+<DT><B><br>
+  end</B>
+</DL>
+</DL>
+
+        <p align="left">&nbsp;</td>
+    </tr>
+  </table>
+<DT><BR>
+</DL>
+</DL>
+
+<P>Procedure <I>execute </I>loops over the elements of the array <I>fields</I>,
+which holds the names of the fields. For each field it loops over the list
+of values for that field, which may have zero, one or more elements. Procedure
+<I>generate_html_header</I>, which like the other features used by this
+version of <I>execute </I>comes from CGI_INTERFACE, prints on the standard
+output the header of an HTML reply, which is necessary to avoid getting
+an error from the Web server.</P>
+
+<P>You will have noted that this text does not contain any HTML code. This
+is because using EiffelWeb does not require knowing HTML; you can produce
+output using abstract output procedures such as <I>put_line_break</I>,
+<I>put_basic</I> and <I>generate_html_header</I> which will take care of
+generating the appropriate HTML output. If you do know HTML and want to
+generate specific output, you can do so using the class <I>HTML_GENERATOR</I>
+(see <A HREF="generator.html">section 6</A>). </P>
+
+<P>
+<FONT SIZE="-1">
+<A HREF="page.html">Table of contents</A>
+|
+<A HREF="how.html">Next chapter</A>
+</FONT>
+
+
+</HTML>

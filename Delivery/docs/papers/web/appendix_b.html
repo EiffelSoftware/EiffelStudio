@@ -1,0 +1,230 @@
+
+
+<HTML>
+<HEAD>
+<TITLE>EiffelWeb: Object-Oriented Web library</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>New Page 1</title>
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
+</HEAD>
+
+<H1><br>
+Appendix B: class CGI_ENVIRONMENT</H1>
+
+<table border="1" width="93%">
+  <tr>
+    <td width="100%" bgcolor="#FFFFCC">
+
+<DL COMPACT><DT><B>indexing</B><BR>
+	<BR>
+	<DD><I><font color="#FF0000">description: "Access to environment variables set by the HTTP server when the
+		 CGI application is executed. This class may be used as ancestor by classes
+		 needing its facilities."</font>
+	<DD><font color="#FF0000">status: ""</font>
+	<DD><font color="#FF0000">date: "$Date$"</font>
+	<DD><font color="#FF0000">revision: "$Revision$"</font></I>
+</DL>
+<DL COMPACT><DT><B>class interface</B>
+	<DD><I>CGI_ENVIRONMENT</I>
+</DL>
+<DL COMPACT><DT><B>feature</B>  <font color="#FF0000"> -- Environment variable setting</font>
+	<BR>
+	<BR>
+	<DD>
+	<DL COMPACT><DT><I>set_environment_variable (variable, val: STRING)</I>
+		<DD>
+		<DL COMPACT><DT>
+			<DD><font color="#FF0000">-- Set environment variable <I>variable</I> to <I>val</I>.</font>
+		<DT><B>require</B>
+			<DD><I>valid_variable: variable /= Void and then variable.count &gt; 0;<BR>
+			valid_value: val /= Void</I>
+		</DL>
+	</DL>
+</DL>
+
+<DL COMPACT><DT><B>feature</B>  -<font color="#FF0000">- Not request-specific environment variables</font>
+	<BR>
+	<BR>
+	<DD>
+	<DL COMPACT><DT><I>Gateway_interface: STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Revision of the CGI specification to which this server complies.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>Server_name: STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Server's hostname, DNS alias, or IP address.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>Server_software: STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Name and version of information server answering the request.</font>
+		</DL>
+	</DL>
+</DL>
+
+<DL COMPACT><DT><B>feature</B>  <font color="#FF0000"> -- Headerline based environment variables
+	<BR>
+    </font>
+	<BR>
+	<DD>
+	<DL COMPACT><DT><I>Http_accept: STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- MIME types which the client will accept.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>Http_user_agent: STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Browser the client is using to send the request.</font>
+		</DL>
+	</DL>
+</DL>
+
+<DL COMPACT><DT><B>feature</B>  <font color="#FF0000"> -- Request-specific environment variables</font>
+	<BR>
+	<BR>
+	<DD>
+	<DL COMPACT><DT><I>Auth_type: STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Protocol-specific authentication method used to validate user.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>Content_length: STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Length of the said content as given by the client.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>Content_type: STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Content type of data.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>Path_info: STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Extra path information, as given by the client.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>Path_translated: STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Translated version of PATH_INFO provided by server.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>Query_string: STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Information which follows ? in URL referencing CGI program.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>Remote_addr: STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- IP address of the remote host making the request.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>Remote_host: STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Hostname making the request.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>Remote_ident: STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- User name retrieved from server if RFC 931 supported.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>Remote_user: STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Username, if applicable.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>Request_method: STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Method with which the request was made.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>Script_name: STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Virtual path to the script being executed.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>Server_port: STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Port number to which request was sent.</font>
+		</DL>
+	</DL>
+	<BR>
+	<DL COMPACT><DT><I>Server_protocol: STRING</I>
+		<DD>
+		<DL COMPACT><DT><DD>
+            <font color="#FF0000">
+			-- Name and revision of information protocol of this request.</font>
+		</DL>
+	</DL>
+	<BR>
+<DT><B>end</B> -- class CGI_ENVIRONMENT
+</DL>
+
+      <p>&nbsp;</td>
+  </tr>
+</table>
+
+<P>
+<FONT SIZE="-1">
+<A HREF="page.html">Table of contents</A>
+|
+<A HREF="appendix_c.html">Next chapter</A>
+</FONT>
+
+
+</HTML>

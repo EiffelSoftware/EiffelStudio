@@ -1,0 +1,84 @@
+
+
+<HTML>
+<HEAD>
+<TITLE>EiffelWeb: Object-Oriented Web library</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>New Page 1</title>
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
+</HEAD>
+
+
+<H1><br>
+3. HOW DO FORMS GET PROCESSED?</H1>
+
+<P>To help understand EiffelWeb it is useful to have a general picture
+of the tasks involved in processing a form received through the World-Wide
+Web.</P>
+
+<P>When a visitor clicks on the submit button of an HTML form, the visitor's
+Web browser sends the contents of text fields, selected buttons and items
+to the server. In turn, the server transmits these data to the CGI script
+associated with the form. The transfer can be done via two distinct methods:</P>
+
+<UL>
+<LI><B>GET</B>: data is made available through the environment variable,
+<I>QUERY_STRING</I><BR>
+</LI>
+
+<LI><B>POST</B>: data is available on the standard input of the CGI script</LI>
+</UL>
+
+<P>With either method, all the fields are concatenated into a unique string
+which has the following structure:</P>
+
+<UL>
+<P><I>field1=value1<B>&amp;</B>field2=value2<B>&amp;</B>...</I></P>
+</UL>
+
+<P>Space characters are converted to `+' and any special character is replaced
+by its hexadecimal code.</P>
+
+<P>Execution of the CGI script also sets a number of environment variables,
+defining: the method, <B>GET POST</B>, with which the script was called
+(<I>REQUEST_METHOD</I>); the length of the data (<I>CONTENT_LENGTH</I>);
+the name of the server (<I>SERVER_NAME</I>); and others.</P>
+
+<P>A CGI script written in an ordinary scripting language will typically
+perform the following tasks in response to a visitor submitting a form:</P>
+
+<UL>
+<LI>Determine the method with which it was called, so as to know where
+to get the input. With EiffelWeb you will not need this step, as EiffelWeb
+takes care of finding the input for you.<BR>
+</LI>
+
+<LI>Parsing the input, to decode the fields and obtain their values. With
+EiffelWeb you do not need to worry about this aspect, as EiffelWeb decodes
+everything and puts the result into Eiffel objects.<BR>
+</LI>
+
+<LI>Process the input as needed by the application. EiffelWeb provides
+a specific place (the procedure <I>execute </I>of class <I>CGI_INTERFACE</I>)
+for such processing, various features and an array <I>fields </I>containing
+all the input fields, and of course the whole power of ISE Eiffel and its
+libraries to perform all the processing that you need.<BR>
+</LI>
+
+<LI>Most of the time, produce output to be sent to the visitor in HTML
+form. Here too EiffelWeb provides all the necessary output facilities,
+taking care of generating the proper HTML syntax for you. </LI>
+</UL>
+
+<P>
+<FONT SIZE="-1">
+<A HREF="page.html">Table of contents</A>
+|
+<A HREF="variables.html">Next chapter</A>
+</FONT>
+
+
+</HTML>

@@ -1,0 +1,83 @@
+
+
+<HTML>
+<HEAD>
+<TITLE>EiffelWeb: Object-Oriented Web library</TITLE>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>New Page 1</title>
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
+</HEAD>
+
+<h1><br>
+4. ACCESSING VISITOR INFORMATION AND ENVIRONMENT VARIABLES</h1>
+
+<P>EiffelWeb provides a set of classes to access information provided by
+the visitor, as well as the values of various environment variables.</P>
+
+<h2><A NAME="4.1">Visitor information</A></h2>
+
+<P>When a visitor enters information into a form, the Web server gets it
+in a raw, hardly usable form. This is where EiffelWeb steps in: it parses
+the information, and makes it available in a form that is convenient for
+direct processing by your classes according to your needs.</P>
+
+<P>A given field may have zero, one or move values, depending both on the
+field's type and on what the visitor entered in it. In usual CGI processing,
+there is no easy way to find out beforehand. EiffelWeb, however, enables
+you to obtain the information through a number of queries from class CGI_INTERFACE,
+which you can all apply to a field:</P>
+
+<UL>
+<LI>The query <I>value_count</I> yields the number of values available
+for a field; this is particularly useful when you need to process multiple
+values differently from single values</LI>
+
+<LI>In the single-value case, the query <I>value</I> yields that value.
+(For multiple values it yields the first one.)</LI>
+
+<LI>In the multiple-value case, the query <I>value_list </I>returns a <I>LINKED_LIST</I>containing
+the values.</LI>
+</UL>
+
+<P>In the case of checkboxes and similar kinds of fields, your system will
+not see any field, not even an empty one, if the user did not check the
+box. To find out whether a field is available, use the query <I>field_defined</I>.</P>
+
+<P>If, as is often the case, you know the name of a field, you can just
+pass that name as a string argument to any of the preceding queries. You
+can also, as in the example of <A HREF="writing.html">section 2</A>, loop over all the fields of the
+form, using the array</P>
+
+<UL>
+<P><I>fields: ARRAY[STRING]</I></P>
+</UL>
+
+<P>and passing the value of <I>fields.item (i)</I>, for various i, to the
+above queries.</P>
+
+<P>All the features listed in this section belong to class <I>CGI_INTERFACE</I>,
+whose complete specification appears in <A HREF="appendix_a.html">Appendix A</A>.</P>
+
+<h2><A NAME="4.2">Accessing environment variables</A></h2>
+
+<P>A Web server can set a number of environment variables, which will not
+change during the processing of a form and so can be represented as once
+functions, all returning strings.</P>
+
+<P>These strings are available from features of class <I>CGI_ENVIRONMENT</I>,
+whose complete specification appears in <A HREF="appendix_b.html">Appendix B</A>. <I>CGI_ENVIRONMENT</I>
+also includes a procedure <I>set_environment_variable</I> to set environment
+variables to specific values, useful only for debugging. </P>
+
+<P>
+<FONT SIZE="-1">
+<A HREF="page.html">Table of contents</A>
+|
+<A HREF="debug.html">Next chapter</A>
+</FONT>
+
+
+</HTML>

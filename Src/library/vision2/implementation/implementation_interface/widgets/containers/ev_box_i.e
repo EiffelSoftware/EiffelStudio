@@ -93,8 +93,75 @@ feature {EV_ANY, EV_ANY_I} -- Status settings
 
 feature {EV_DOCKABLE_SOURCE_I} -- Implementation
 
-	insertion_position: INTEGER is
+	pointer_offset: INTEGER is
+			-- Offset of mouse pointer coordinate matching orientation, into `Current'.
 		deferred
+		end
+		
+	docking_dimension_of_current_item: INTEGER is
+			-- Dimension of `interface.item' matching orientation of `Current'.
+		deferred
+		end
+		
+	docking_dimension_of_current: INTEGER is
+			-- Dimension of `Current' matching orientation of `Current'
+		deferred
+		end
+
+	insertion_position: INTEGER is
+			-- `Result' is insertion position in `Current' based on
+			-- Current screen pointer.
+		local
+			curs: CURSOR
+			offset: INTEGER
+			current_position: INTEGER
+			last_position: INTEGER
+			temp1, temp2: INTEGER
+		do
+			Result := -1
+			curs := cursor
+			offset := pointer_offset
+				-- As the current mouse position may have changed since the
+				-- motion event was received, we only perform the
+				-- following if this is not the case
+			if offset >= 0 and offset <= docking_dimension_of_current then
+				if offset >= docking_dimension_of_current - border_width or interface.is_empty or (interface.count = 1 and interface.i_th (1) = Insert_label) then
+						-- Three cases are handled specially here
+						-- If the pointed position is within the far border after all item, of `Current'.
+						-- If `Current' is empty.
+						-- If `Current' is only containing `Insert_label', meaning when the transport
+						-- began, it was empty.
+					Result := interface.count + 1
+				elseif offset < border_width then
+					Result := 1
+				else
+					from
+						interface.start
+						last_position := border_width
+					until
+						Result /= -1
+					loop
+						current_position := current_position + docking_dimension_of_current_item
+						if interface.index = 1 then
+							current_position := current_position + border_width
+						else
+							current_position := current_position + interface.padding_width
+						end
+						if offset >= last_position and then offset <= current_position then
+						temp1 := (current_position - last_position) // 2
+						temp2 := last_position + temp1 + (interface.padding_width // 2)
+						if offset > temp2 then
+							Result := interface.index + 1
+						else
+							Result := interface.index
+						end
+					end				
+					last_position := current_position
+					interface.forth
+				end 
+				go_to (curs)
+				end
+			end
 		end
 		
 feature {EV_ANY, EV_ANY_I} -- Implementation

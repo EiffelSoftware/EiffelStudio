@@ -24,18 +24,6 @@ creation
 
 feature
 
-	login_name: STRING is
-			-- Database login
-		once
-			Result := "scott"
-		end;
-		
-	password: STRING is
-			-- Database password
-		once
-			Result := "tigger"
-		end;
-
 	select_string: STRING is
 		once
 			Result := 

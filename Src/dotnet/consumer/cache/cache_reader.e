@@ -70,6 +70,16 @@ feature -- Access
 			Result ?= des.deserialized_object
 		end
 		
+	consumed_type_from_consumed_referenced_type (crt: CONSUMED_REFERENCED_TYPE): CONSUMED_TYPE is
+			-- Type information from consumed referenced type `crt'.
+		require
+			non_void_referenced_type: crt /= Void
+		do
+			Result := consumed_type_from_dotnet_type_name (info.assemblies @ crt.assembly_id, crt.name)
+		ensure
+			non_void_info: Result /= Void
+		end
+	
 	assembly_mapping (aname: ASSEMBLY_NAME): CONSUMED_ASSEMBLY_MAPPING is
 			-- Assembly information from EAC
 		require

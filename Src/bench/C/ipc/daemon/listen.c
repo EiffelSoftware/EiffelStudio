@@ -42,7 +42,7 @@ rt_public void dwide_listen(void)
 	/* Make sure we listen on the connected socket and call the handling
 	 * routine whenever data is available there.
 	 */
-	if (-1 == add_input(readfd(d_data.d_cs), drqsthandle)) {
+	if (-1 == add_input(readfd(daemon_data.d_cs), drqsthandle)) {
 #ifdef USE_ADD_LOG
 		add_log(4, "add_input: %s (%s)", s_strerror(), s_strname());
 #endif
@@ -80,12 +80,12 @@ rt_public void dwide_listen(void)
 		 * detected (in which case the input is removed).
 		 */
 
-		if (!has_input(readfd(d_data.d_cs)))	/* Stream connection broken */
+		if (!has_input(readfd(daemon_data.d_cs)))	/* Stream connection broken */
 			return;								/* Abort processing */
 
-		if (d_data.d_app > 0 && !has_input(readfd(d_data.d_as))) {
-			d_data.d_app = 0;
-			close_stream(d_data.d_as);
+		if (daemon_data.d_app > 0 && !has_input(readfd(daemon_data.d_as))) {
+			daemon_data.d_app = 0;
+			close_stream(daemon_data.d_as);
 			dead_app();				/* Send a DEAD notification to ewb */
 		}
 
@@ -96,16 +96,16 @@ rt_public void dwide_listen(void)
 		 */
 
 		if (nfd == 0) {				/* Select timed out */
-			if (0 != active_check(d_data.d_cs, d_data.d_ewb)) {
-				d_data.d_ewb = 0;
+			if (0 != active_check(daemon_data.d_cs, daemon_data.d_ewb)) {
+				daemon_data.d_ewb = 0;
 #ifdef USE_ADD_LOG
 				add_log(12, "ewb is dead");
 #endif
 				return;				/* This ends the listening */
 			}
-			if (0 != active_check(d_data.d_as, d_data.d_app)) {
-				d_data.d_app = 0;
-				close_stream(d_data.d_as);
+			if (0 != active_check(daemon_data.d_as, daemon_data.d_app)) {
+				daemon_data.d_app = 0;
+				close_stream(daemon_data.d_as);
 				dead_app();			/* Send a DEAD notification to ewb */
 			}
 		}

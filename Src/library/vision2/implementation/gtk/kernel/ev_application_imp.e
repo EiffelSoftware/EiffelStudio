@@ -291,7 +291,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 						trg.drop_actions.accepts_pebble (a_pebble)
 					then
 						imp ?= trg.implementation
-						if imp /= Void then
+						if imp /= Void and then imp.is_displayed then
 							imp.enable_pnd_prelight_state
 						end
 					end
@@ -323,7 +323,7 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 						trg.drop_actions.accepts_pebble (a_pebble)
 					then
 						imp ?= trg.implementation
-						if imp /= Void then
+						if imp /= Void and then imp.is_displayed then
 							imp.disable_pnd_prelight_state
 						end
 					end

@@ -149,6 +149,13 @@ feature -- Basic operations
 				mname.append (accelerator.out)
 			end
 			Result.set_text (mname)
+			if pixmap /= Void then
+				if pixmap.count >= 2 then
+					Result.set_pixmap (pixmap @ 2)
+				else
+					Result.set_pixmap (pixmap @ 1)
+				end
+			end
 			Result.select_actions.extend (~execute)
 			Result.enable_sensitive
 			if is_selected then

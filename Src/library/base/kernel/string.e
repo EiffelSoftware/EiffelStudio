@@ -218,8 +218,11 @@ feature -- Access
 			other_notempty: not other.empty
 			start_large_enough: start >= 1
 			start_small_enough: start <= count
+		local
+			a: ANY
 		do
-			Result := str_str (area, other.area, count, other.count, start, 0);
+			a := other.area
+			Result := str_str ($area, $a, count, other.count, start, 0);
 		ensure
 			correct_place: Result > 0 implies
 				substring (Result, Result+other.count - 1).is_equal (other)
@@ -237,8 +240,11 @@ feature -- Access
 			start_large_enough: start >= 1
 			start_small_enough: start <= count
 			acceptable_fuzzy: fuzz <= other.count
+		local
+			a: ANY
 		do
-			Result := str_str (area, other.area, count, other.count, start, fuzz)
+			a := other.area
+			Result := str_str ($area, $a, count, other.count, start, fuzz)
 		end
 
 feature -- Measurement
@@ -1107,7 +1113,7 @@ feature {STRING} -- Implementation
 			"C | %"eif_str.h%""
 		end;
 
-	str_str (c_str, o_str: like area; clen, olen, i, fuzzy: INTEGER): INTEGER is
+	str_str (c_str, o_str: POINTER; clen, olen, i, fuzzy: INTEGER): INTEGER is
 			-- Forward search of `o_str' within `c_str' starting at `i'.
 			-- Return the index within `c_str' where the pattern was
 			-- located, 0 if not found.

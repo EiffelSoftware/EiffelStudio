@@ -283,6 +283,77 @@ extern void undiscard_breakpoints(void);	/* un-discard all breakpoints. */
 		(x).st_top = (z);			\
 	}
 
+/* Macros to handle exceptions in routine body:
+ * SET_RESCUE - set rescue handler (if any)
+ * ENTER_BODY - enter body of a routine
+ * LEAVE_BODY - leave body of a routine
+ */
+
+#define SET_RESCUE                                                    \
+	if (rescue) {                                                 \
+			/* Register address to rescue on exception.*/ \
+		exvect->ex_jbuf = &exenv;                             \
+		if (setjmp(exenv)) {                                  \
+				/* There is an exception. */          \
+				/* Jump to rescue clause. */          \
+			IC = rescue;                                  \
+		}                                                     \
+	}
+
+#define ENTER_BODY(i)                                                                \
+	if (is_once) {                                                               \
+			/* Check if once routine was executed earlier. */            \
+		if (MTOD(i)) {                                                       \
+				/* Yes, it was executed.      */                     \
+				/* Ckeck if it failed or not. */                     \
+			if (MTOF(i)) {                                               \
+					/* Raise its exception. */                   \
+				xraise (MTOF(i));                                    \
+			}                                                            \
+				/* Pop registers */                                  \
+			pop_registers();	                                     \
+			if (rescue) {                                                \
+					/* End routine with rescue clause. */        \
+				RTEOK;                                               \
+			} else {                                                     \
+					/* Remove execution vector from stack. */    \
+				RTEE;                                                \
+			}                                                            \
+			return;                                                      \
+		} else {                                                             \
+				/* This is a first-time call. */                     \
+				/* Declare variables for exception handling. */      \
+			jmp_buf exenvo;                                              \
+				/* Mark once routine as executed. */                 \
+			MTOM(OResult);                                               \
+				/* Record execution vector to catch exception. */    \
+			excatch (&exenvo);                                           \
+			if (!setjmp(exenvo)) {                                       \
+					/* Provide stack record for rescue/retry. */ \
+				struct ex_vect * EIF_VOLATILE exvect = exft();       \
+				SET_RESCUE;                                          \
+			} else {                                                     \
+					/* Exception occurred. */                    \
+					/* Record it for future use. */              \
+				MTOE(i, echval);                                     \
+					/* Raise the exception. */                   \
+				xraise (MTOF(i));                                    \
+			}                                                            \
+		}                                                                    \
+	} else {                                                                     \
+		SET_RESCUE;                                                          \
+	}
+
+#define LEAVE_BODY                                                  \
+	if (is_once) {                                              \
+			/* Evaluation is completed successfully. */ \
+			/* Remove stack record for rescue/retry. */ \
+		expop(&eif_stack);                                  \
+			/* Remove execution vector to restore    */ \
+			/* previous exception catch point.       */ \
+		expop (&eif_stack);                                 \
+	}
+
 rt_public void metamorphose_top()
 {
 	RT_GET_CONTEXT
@@ -477,7 +548,8 @@ rt_private void interpret(int flag, int where)
 	int volatile assert_type;				/* Assertion type */
 	char volatile pre_success;				/* Flag for precondition success */ 
 	long volatile rtype;					/* Result type */
-	void * volatile PResult = NULL;			/* Result address for once */
+	EIF_REFERENCE * volatile PResult = NULL;	/* Result address for once */
+	MTOT OResult = (MTOT) 0;				/* Item for once data */
 	int32 volatile rout_id;					/* Routine id */
 	BODY_INDEX volatile body_id = 0;		/* Body id of routine */
 	int volatile current_trace_level;		/* Saved call level for trace, only needed when routine is retried */
@@ -532,51 +604,11 @@ rt_private void interpret(int flag, int where)
 		argnum = get_int16(&IC);			/* Get the argument number */
 	
 		if (is_once) {				/* If it is a once */
-				/* Put pointer to 'result' in 'PResult' */
 
-				/* MTOG = MT Once Get */
-			if (MTOG((EIF_REFERENCE *),EIF_once_values[once_key], PResult))
-			{
-				/* Already executed. 'PResult' points to result */
-
-				npop(argnum + 1);       /* Pop Current and the arguments */
-
-				/* Retrieve value and then return */
-
-				if ((rtype & SK_HEAD) != SK_VOID) 
-				{
-					last = iget();          /* Leave result on stack */
-					last->type = rtype;
-
-					switch (rtype & SK_HEAD) 
-					{
-						case SK_BOOL:
-						case SK_CHAR: last->it_char = *((EIF_CHARACTER *) PResult); break;
-						case SK_WCHAR: last->it_wchar = *((EIF_WIDE_CHAR *) PResult); break;
-						case SK_UINT8: last->it_uint8 = *((EIF_NATURAL_8 *) PResult); break;
-						case SK_UINT16: last->it_uint16 = *((EIF_NATURAL_16 *) PResult); break;
-						case SK_UINT32: last->it_uint32 = *((EIF_NATURAL_32 *) PResult); break;
-						case SK_UINT64: last->it_uint64 = *((EIF_NATURAL_64 *) PResult); break;
-						case SK_INT8: last->it_int8 = *((EIF_INTEGER_8 *) PResult); break;
-						case SK_INT16: last->it_int16 = *((EIF_INTEGER_16 *) PResult); break;
-						case SK_INT32: last->it_int32 = *((EIF_INTEGER_32 *) PResult); break;
-						case SK_INT64: last->it_int64 = *((EIF_INTEGER_64 *) PResult); break;
-						case SK_REAL32: last->it_real32 = *((EIF_REAL_32 *) PResult); break;
-						case SK_REAL64: last->it_real64 = *((EIF_REAL_64 *) PResult); break;
-						case SK_POINTER: last->it_ptr = *((EIF_POINTER *) PResult); break;
-						case SK_BIT:
-						case SK_EXP:
-						case SK_REF:
-								last->it_ref = *((EIF_REFERENCE *) PResult);
-								break;
-						default:
-								eif_panic(MTC "invalid result type");
-					}
-				}
-
-				return;
-			}
-			else
+				/* MTOI = MT Once Item */
+			OResult = MTOI(once_key);
+				/* MTOD = MT Once Done */
+			if (!MTOD(OResult))
 			{
 				/* Allocate space for 'result' then thread-specific (if MT
 				   mode) store it via the key table and initialize `Result'
@@ -587,79 +619,60 @@ rt_private void interpret(int flag, int where)
 					switch (rtype & SK_HEAD) 
 					{
 						case SK_BOOL:
+								MTOP(EIF_BOOLEAN, OResult, EIF_FALSE);
+								break;
 						case SK_CHAR:   
-								PResult = (void *) cmalloc (sizeof (EIF_CHARACTER));
-								*((EIF_CHARACTER *) PResult) = (EIF_CHARACTER) 0;
+								MTOP(EIF_CHARACTER, OResult, (EIF_CHARACTER) 0);
 								break;
 						case SK_WCHAR:   
-								PResult = (void *) cmalloc (sizeof (EIF_WIDE_CHAR));
-								*((EIF_WIDE_CHAR *) PResult) = (EIF_WIDE_CHAR) 0;
+								MTOP(EIF_WIDE_CHAR, OResult, (EIF_WIDE_CHAR) 0);
 								break;
 						case SK_UINT8:    
-								PResult = (void *) cmalloc (sizeof (EIF_NATURAL_8));
-								*((EIF_NATURAL_8 *) PResult) = (EIF_NATURAL_8) 0;
+								MTOP(EIF_NATURAL_8, OResult, (EIF_NATURAL_8) 0);
 								break;
 						case SK_UINT16:    
-								PResult = (void *) cmalloc (sizeof (EIF_NATURAL_16));
-								*((EIF_NATURAL_16 *) PResult) = (EIF_NATURAL_16) 0;
+								MTOP(EIF_NATURAL_16, OResult, (EIF_NATURAL_16) 0);
 								break;
 						case SK_UINT32:    
-								PResult = (void *) cmalloc (sizeof (EIF_NATURAL_32));
-								*((EIF_NATURAL_32 *) PResult) = (EIF_NATURAL_32) 0;
+								MTOP(EIF_NATURAL_32, OResult, (EIF_NATURAL_32) 0);
 								break;
 						case SK_UINT64:    
-								PResult = (void *) cmalloc (sizeof (EIF_NATURAL_64));
-								*((EIF_NATURAL_64 *) PResult) = (EIF_NATURAL_64) 0;
+								MTOP(EIF_NATURAL_64, OResult, (EIF_NATURAL_64) 0);
 								break;
 						case SK_INT8:    
-								PResult = (void *) cmalloc (sizeof (EIF_INTEGER_8));
-								*((EIF_INTEGER_8 *) PResult) = (EIF_INTEGER_8) 0;
+								MTOP(EIF_INTEGER_8, OResult, (EIF_INTEGER_8) 0);
 								break;
 						case SK_INT16:    
-								PResult = (void *) cmalloc (sizeof (EIF_INTEGER_16));
-								*((EIF_INTEGER_16 *) PResult) = (EIF_INTEGER_16) 0;
+								MTOP(EIF_INTEGER_16, OResult, (EIF_INTEGER_16) 0);
 								break;
 						case SK_INT32:    
-								PResult = (void *) cmalloc (sizeof (EIF_INTEGER_32));
-								*((EIF_INTEGER_32 *) PResult) = (EIF_INTEGER_32) 0;
+								MTOP(EIF_INTEGER_32, OResult, (EIF_INTEGER_32) 0);
 								break;
 						case SK_INT64:    
-								PResult = (void *) cmalloc (sizeof (EIF_INTEGER_64));
-								*((EIF_INTEGER_64 *) PResult) = (EIF_INTEGER_64) 0;
+								MTOP(EIF_INTEGER_64, OResult, (EIF_INTEGER_64) 0);
 								break;
 						case SK_REAL32:  
-								PResult = (void *) cmalloc (sizeof (EIF_REAL_32));
-								*((EIF_REAL_32 *) PResult) = (EIF_REAL_32) 0;
+								MTOP(EIF_REAL_32, OResult, (EIF_REAL_32) 0);
 								break;
 						case SK_REAL64: 
-								PResult = (void *) cmalloc (sizeof (EIF_REAL_64));
-								*((EIF_REAL_64 *) PResult) = (EIF_REAL_64) 0;
+								MTOP(EIF_REAL_64, OResult, (EIF_REAL_64) 0);
 								break;
 						case SK_POINTER:
-								PResult = (void *) cmalloc (sizeof (EIF_POINTER));
-								*((EIF_POINTER *) PResult) = (EIF_POINTER) 0;
+								MTOP(EIF_POINTER, OResult, (EIF_POINTER) 0);
 								break;
 						case SK_BIT:
 						case SK_EXP:
 						case SK_REF:    
 								PResult = RTOC(0);
+								MTOP(EIF_REFERENCE, OResult, PResult);
 								break;
 					default:        
 								eif_panic(MTC "invalid result type");
 					}
 				}
-				else
-				{
-					/* It's a procedure we need only to store something != 0 */
-					PResult = (void *) 1;
-				}
-
-				/* MTOS = MT Once Set */
-				MTOS(EIF_once_values[once_key], PResult);
+				onceadd(body_id);	/* Add this routine to the list of already */
+							/* called once routines */
 			}
-
-			onceadd(body_id);	/* Add this routine to the list of already */
-								/* called once routines */
 		}
 
 		locnum = get_int16(&IC);		/* Get the local number */
@@ -781,25 +794,57 @@ rt_private void interpret(int flag, int where)
 				}							
 			}
 			last = iresult;
+			if (is_once && MTOD(OResult) && (rtype & SK_HEAD) != SK_VOID) {
+				/* Already executed. 'OResult' points to once item */
+				/* Retrieve last value */
+
+				switch (rtype & SK_HEAD) 
+				{
+					case SK_BOOL:
+					case SK_CHAR: last->it_char = MTOR(EIF_CHARACTER, OResult); break;
+					case SK_WCHAR: last->it_wchar = MTOR(EIF_WIDE_CHAR, OResult); break;
+					case SK_UINT8: last->it_uint8 = MTOR(EIF_NATURAL_8, OResult); break;
+					case SK_UINT16: last->it_uint16 = MTOR(EIF_NATURAL_16, OResult); break;
+					case SK_UINT32: last->it_uint32 = MTOR(EIF_NATURAL_32, OResult); break;
+					case SK_UINT64: last->it_uint64 = MTOR(EIF_NATURAL_64, OResult); break;
+					case SK_INT8: last->it_int8 = MTOR(EIF_INTEGER_8, OResult); break;
+					case SK_INT16: last->it_int16 = MTOR(EIF_INTEGER_16, OResult); break;
+					case SK_INT32: last->it_int32 = MTOR(EIF_INTEGER_32, OResult); break;
+					case SK_INT64: last->it_int64 = MTOR(EIF_INTEGER_64, OResult); break;
+					case SK_REAL32: last->it_real32 = MTOR(EIF_REAL_32, OResult); break;
+					case SK_REAL64: last->it_real64 = MTOR(EIF_REAL_64, OResult); break;
+					case SK_POINTER: last->it_ptr = MTOR(EIF_POINTER, OResult); break;
+					case SK_BIT:
+					case SK_EXP:
+					case SK_REF:
+							PResult = MTOR(EIF_REFERENCE, OResult);
+							last->it_ref = *PResult;
+							break;
+					default:
+							eif_panic(MTC "invalid result type");
+				}
+			}
 			type = last->type;
 			switch (type & SK_HEAD) {
 			case SK_EXP:
 				stagval = tagval;
 				last->type = SK_POINTER;		/* For GC */
+					/* TODO: what happens to value assigned for once function before? */
 				last->it_ref = RTLX(type & SK_DTYPE);	
 				last->type = SK_EXP;
 				if (tagval != stagval)
 					sync_registers(MTC scur, stop);
 				if (is_once) {
-					*((EIF_REFERENCE *) PResult) = last->it_ref;
+					*PResult = last->it_ref;
 				}
 				break;
 			case SK_BIT:
 				last->type = SK_POINTER;    /* GC: wait for malloc */
+					/* TODO: what happens to value assigned for once function before? */
 				last->it_bit = RTLB(type & SK_BMASK);
 				last->type = type;
 				if (is_once) {
-					*((EIF_REFERENCE *) PResult) = last->it_bit;
+					*PResult = last->it_bit;
 				}
 				break;
 			default:
@@ -817,10 +862,6 @@ rt_private void interpret(int flag, int where)
 #endif
 				current_trace_level = trace_call_level;	/* Save trace call level */
 				if (prof_stack) saved_prof_top = prof_stack->st_top;
-				exvect->ex_jbuf = &exenv;	/* Longjmp address */
-				if (setjmp(exenv)) {
-					IC = rescue;				/* Jump to rescue clause */
-				}
 			}
 		}
 			break;
@@ -829,7 +870,9 @@ rt_private void interpret(int flag, int where)
 		default:
 			eif_panic(MTC RT_BOTCHED_MSG);
 		}
-/* end:*/ /* %%ss removed */
+		if (*IC != BC_PRECOND) {
+			ENTER_BODY(OResult); /* Start execution of a routine body. */
+		}
 		break;
 
 	/*
@@ -874,7 +917,7 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_RETRY\n");
 #endif
 		trace_call_level = current_trace_level;
-		prof_stack_rewind(saved_prof_top);
+		if (prof_stack) prof_stack_rewind(saved_prof_top);
 		in_assertion = saved_assertion;		/* restore saved assertion checking because
 											 * we might have reached this code from
 											 * an assertion checking code. */
@@ -891,8 +934,11 @@ rt_private void interpret(int flag, int where)
 		dprintf(2)("BC_PRECOND\n");
 #endif
 		offset = get_int32(&IC);
-		if (!(~in_assertion & WASC(icur_dtype) & CK_REQUIRE))	/* No precondition check? */
-			IC += offset;						/* Skip preconditions */
+		if (!(~in_assertion & WASC(icur_dtype) & CK_REQUIRE)) {
+				/* No precondition check? */
+			IC += offset; /* Skip preconditions */
+			ENTER_BODY(OResult); /* Start execution of a routine body. */
+		}
 
 		pre_success = '\01';
 		break;
@@ -1317,24 +1363,24 @@ rt_private void interpret(int flag, int where)
 			last = iresult;
 			switch (rtype & SK_HEAD) 
 			{
-				case SK_BOOL:
-				case SK_CHAR:   *((EIF_CHARACTER *) PResult) = last->it_char; break;
-				case SK_WCHAR: *((EIF_WIDE_CHAR *) PResult) = last->it_wchar; break;
-				case SK_UINT8: *((EIF_NATURAL_8 *) PResult) = last->it_uint8; break;
-				case SK_UINT16: *((EIF_NATURAL_16 *) PResult) = last->it_uint16; break;
-				case SK_UINT32: *((EIF_NATURAL_32 *) PResult) = last->it_uint32; break;
-				case SK_UINT64: *((EIF_NATURAL_64 *) PResult) = last->it_uint64; break;
-				case SK_INT8: *((EIF_INTEGER_8 *) PResult) = last->it_int8; break;
-				case SK_INT16: *((EIF_INTEGER_16 *) PResult) = last->it_int16; break;
-				case SK_INT32: *((EIF_INTEGER_32 *) PResult) = last->it_int32; break;
-				case SK_INT64: *((EIF_INTEGER_64 *) PResult) = last->it_int64; break;
-				case SK_REAL32: *((EIF_REAL_32*) PResult) = last->it_real32; break;
-				case SK_REAL64: *((EIF_REAL_64*) PResult) = last->it_real64; break;
-				case SK_POINTER: *((EIF_POINTER *) PResult) = last->it_ptr; break;
+				case SK_BOOL: MTOP(EIF_BOOLEAN, OResult, last->it_char); break;
+				case SK_CHAR: MTOP(EIF_CHARACTER, OResult, last->it_char); break;
+				case SK_WCHAR: MTOP(EIF_WIDE_CHAR, OResult, last->it_wchar); break;
+				case SK_UINT8: MTOP(EIF_NATURAL_8, OResult, last->it_uint8); break;
+				case SK_UINT16: MTOP(EIF_NATURAL_16, OResult, last->it_uint16); break;
+				case SK_UINT32: MTOP(EIF_NATURAL_32, OResult, last->it_uint32); break;
+				case SK_UINT64: MTOP(EIF_NATURAL_64, OResult, last->it_uint64); break;
+				case SK_INT8: MTOP(EIF_INTEGER_8, OResult, last->it_int8); break;
+				case SK_INT16: MTOP(EIF_INTEGER_16, OResult, last->it_int16); break;
+				case SK_INT32: MTOP(EIF_INTEGER_32, OResult, last->it_int32); break;
+				case SK_INT64: MTOP(EIF_INTEGER_64, OResult, last->it_int64); break;
+				case SK_REAL32: MTOP(EIF_REAL_32, OResult, last->it_real32); break;
+				case SK_REAL64: MTOP(EIF_REAL_64, OResult, last->it_real64); break;
+				case SK_POINTER: MTOP(EIF_POINTER, OResult, last->it_ptr); break;
 				case SK_BIT:
 				case SK_EXP:
 				case SK_REF:
-						*((EIF_REFERENCE *) PResult) = last->it_ref; break;
+						*PResult = last->it_ref; break;
 			}
 		}
 		break;
@@ -1358,7 +1404,7 @@ rt_private void interpret(int flag, int where)
 				case SK_BIT:
 				case SK_EXP:
 				case SK_REF:	/* See below */ 
-					*((EIF_REFERENCE *) PResult) = last->it_ref;
+					*PResult = last->it_ref;
 					break;
 				}
 			}
@@ -1521,7 +1567,7 @@ rt_private void interpret(int flag, int where)
 		 */
 		if (is_once) {
 			last = iresult;
-			*((EIF_REFERENCE *) PResult) = last->it_ref;
+			*PResult = last->it_ref;
 		}
 		break;
 
@@ -1725,7 +1771,7 @@ rt_private void interpret(int flag, int where)
 		offset = get_int32(&IC);		/* get the offset to the precondition
 									 * block's corresponding "BC_GOTO_BODY"
 									*/
-		code = (int) opop()->it_char;	
+		code = (int) opop()->it_char;
 									/* Get the assertion boolean result */
 		if (!code) {
 			pre_success = '\0'; 
@@ -1745,6 +1791,7 @@ rt_private void interpret(int flag, int where)
 		if (!pre_success) {
 			RTCF;
 		}
+		ENTER_BODY(OResult); /* Start execution of a routine body. */
 		break;
 
 	/*
@@ -3192,6 +3239,7 @@ rt_private void interpret(int flag, int where)
 		if (is_nested)		/* Nested feature call (dot notation) */
 			icheck_inv(MTC icurrent->it_ref, scur, stop, 1);	/* Invariant */
 		pop_registers();	/* Pop registers */
+		LEAVE_BODY;		/* Exit rutine body. */
 		if (rescue) {
 			RTEOK;	/* ends routine with rescue clause by cleaning the trace stack */
 		} else {

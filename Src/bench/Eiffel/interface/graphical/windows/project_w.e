@@ -1115,6 +1115,7 @@ feature -- Graphical Interface
 			about_cmd: ABOUT_COMMAND
 			about_tool:ABOUT_W
 			local_menu: MENU_PULL
+			do_nothing_cmd: DO_NOTHING_CMD
 		do
 			build_file_menu
 
@@ -1285,6 +1286,8 @@ feature -- Graphical Interface
 
 			project_toolbar.attach_top (search_cmd_holder.associated_button, 0)
 			project_toolbar.attach_right_widget (sep2, search_cmd_holder.associated_button, 5)
+			!! do_nothing_cmd
+			project_toolbar.set_action ("c<Btn1Down>", do_nothing_cmd, Void)
 		end
 
 	build_format_bar is
@@ -1317,6 +1320,7 @@ feature -- Graphical Interface
 			up_exception_stack_button: EB_BUTTON
 			down_exception_stack_button: EB_BUTTON
 			display_exception_menu_entry: EB_MENU_ENTRY
+			do_nothing_cmd: DO_NOTHING_CMD
 		do
 			!! debug_run_cmd.make (Current)
 			!! debug_run_button.make (debug_run_cmd, format_bar)
@@ -1411,6 +1415,8 @@ feature -- Graphical Interface
 			format_bar.attach_right_widget (debug_status_button, down_exception_stack_button, 0)
 			format_bar.attach_top (up_exception_stack_button, 0)
 			format_bar.attach_right_widget (down_exception_stack_button, up_exception_stack_button, 0)
+			!! do_nothing_cmd
+			format_bar.set_action ("c<Btn1Down>", do_nothing_cmd, Void)
 		end
 
 	build_compile_menu is

@@ -338,6 +338,7 @@ feature {NONE} -- Implementation; Graphical Interface
 			attr_cmd: SHOW_ATTR_VALUES
 			attr_button: FORMAT_BUTTON
 			attr_menu_entry: EB_TICKABLE_MENU_ENTRY
+			do_nothing_cmd: DO_NOTHING_CMD
 		do
 				-- Creation of all the commands, holes, buttons, and menu entries
 			!! hole.make (Current)
@@ -436,6 +437,8 @@ feature {NONE} -- Implementation; Graphical Interface
 			object_toolbar.attach_left_widget (sep3, previous_target_button, 5)
 			object_toolbar.attach_top (next_target_button, 0)
 			object_toolbar.attach_left_widget (previous_target_button, next_target_button, 0)
+			!! do_nothing_cmd
+			object_toolbar.set_action ("c<BtnDown>", do_nothing_cmd, Void)
 
 			if not is_in_project_tool and then has_close_button then
 				object_toolbar.attach_top (quit_button, 0)

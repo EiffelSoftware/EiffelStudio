@@ -653,6 +653,7 @@ feature {NONE} -- Implementation Graphical Interface
 			history_list_cmd: LIST_HISTORY
 			super_melt_menu_entry: EB_MENU_ENTRY
 			new_class_button: EB_BUTTON_HOLE
+			do_nothing_cmd: DO_NOTHING_CMD
 		do
 			!! hole.make (Current)
 			!! hole_button.make (hole, edit_bar)
@@ -693,12 +694,15 @@ feature {NONE} -- Implementation Graphical Interface
 
 			!! sep1.make (Interface_names.t_empty, edit_bar)
 			sep1.set_horizontal (False)
+			sep1.set_height (20)
 
 			!! sep2.make (Interface_names.t_empty, edit_bar)
 			sep2.set_horizontal (False)
+			sep2.set_height (20)
 
 			!! sep3.make (Interface_names.t_empty, edit_bar)
 			sep3.set_horizontal (False)
+			sep3.set_height (20)
 
 				-- Attachements
 			edit_bar.attach_top (open_cmd_holder.associated_button, 0)
@@ -731,10 +735,12 @@ feature {NONE} -- Implementation Graphical Interface
 			edit_bar.attach_top (previous_target_button, 0)
 			edit_bar.attach_left_widget (sep3, previous_target_button, 5)
 			edit_bar.attach_top (next_target_button, 0)
-			edit_bar.attach_left_widget (previous_target_button, next_target_button, 2)
+			edit_bar.attach_left_widget (previous_target_button, next_target_button, 0)
 
 			edit_bar.attach_top (class_text_field, 0)
 			edit_bar.attach_left_widget (next_target_button, class_text_field, 3)
+			!! do_nothing_cmd
+			edit_bar.set_action ("c<BtnDown>", do_nothing_cmd, Void)
 
 			if quit_cmd_holder.associated_button /= Void then
 				edit_bar.attach_right_widget (quit_cmd_holder.associated_button, class_text_field, 0)
@@ -795,6 +801,7 @@ feature {NONE} -- Implementation Graphical Interface
 			click_menu_entry: EB_TICKABLE_MENU_ENTRY
 			sep: SEPARATOR
 			sep1, sep2: THREE_D_SEPARATOR
+			do_nothing_cmd: DO_NOTHING_CMD
 		do
 				-- First we create all objects.
 			!! tex_cmd.make (Current)
@@ -908,6 +915,8 @@ feature {NONE} -- Implementation Graphical Interface
 			format_bar.attach_left_widget (onc_button, ext_button, 0)
 			format_bar.attach_top (exp_button, 0)
 			format_bar.attach_left_widget (ext_button, exp_button, 0)
+			!! do_nothing_cmd
+			format_bar.set_action ("c<BtnDown>", do_nothing_cmd, Void)
  
 -- 			format_bar.attach_top (att_button, 0)
 -- 			format_bar.attach_right_widget (rou_button, att_button, 0)

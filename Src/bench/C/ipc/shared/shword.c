@@ -10,7 +10,8 @@
 	Shell word parsing of a command string.
 */
 
-#include "shword.h"
+#include "config.h"
+#include "portable.h"
 
 #define ARGV_NUMBER		5		/* Initial number of arguments expected */
 #define ARGV_INCREASE	10		/* Amount by which argument array increases */
@@ -34,6 +35,9 @@ rt_private int is_separator();		/* Test whether char is an IFS */
 rt_private void free_argv();		/* Free inside of argv[] array */
 rt_private int init_argv();		/* Initialize argv[] for new command */
 rt_private char *add_argv();		/* Append one word to the argv[] array */
+rt_public void shfree();			/* Free structure used by argv[] */
+rt_public char **shword();			/* Parse command string and split into words */
+
 extern char *str_save();			/* Save string somewhere in memory */
 
 rt_private int is_separator(c)

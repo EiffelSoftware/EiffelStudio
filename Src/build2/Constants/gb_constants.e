@@ -28,11 +28,11 @@ feature -- Menu texts.
 	Gb_file_menu_text: STRING is "&File"
 		-- Text of file menu.
 		
+	Gb_file_exit_menu_text: STRING is "&Exit"
+		
 	Gb_help_about_menu_text: STRING is "&About"
 	
 	Gb_help_menu_text: STRING is "&Help"
-		
---	Gb_settings_menu_text: STRING is "&Settings"
 	
 	Gb_project_menu_text: STRING is "Project"
 	
@@ -53,7 +53,7 @@ feature -- String representations of class names.
 feature -- Miscellaneous
 
 	Internal_properties_string: STRING is "Internal_properties"
-		-- Xml tag used to store proeprties stored by GB_OBJECT
+		-- Xml tag used to store properties stored by GB_OBJECT
 		-- but not in the interface of Vision2.
 	
 feature -- Directories
@@ -70,7 +70,6 @@ feature -- Default values
 
 	Minimum_width_of_object_editor: INTEGER is 120
 		-- The minimum width allowed for a GB_OBJECT_EDITOR
-		
 
 feature -- Generation constants
 
@@ -136,12 +135,17 @@ feature -- XML saving
 
 	filename: FILE_NAME is
 			-- File to be generated.
+		local
+			accessible_status: GB_ACCESSIBLE_SYSTEM_STATUS
 		do
+			create accessible_status
+			create Result.make_from_string (accessible_status.system_status.current_project_settings.project_location)
+			Result.extend ("interface.xml")			
 			--| FIXME
-			create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
-			Result.extend ("build")
-			Result.extend ("temp")
-			Result.extend ("xml_output.xml")
+		--	create Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
+		--	Result.extend ("build")
+		--	Result.extend ("temp")
+		--	Result.extend ("xml_output.xml")
 		end		
 		
 	component_filename: FILE_NAME is
@@ -169,8 +173,26 @@ feature -- XML constants
 		-- String constant representing "item".
 		
 	Name_string: STRING is "name"
+		-- String constant representing "name".
 	
-feature -- Warnings
+	Schema_instance: STRING is "http://www.w3.org/1999/XMLSchema-instance"
+		-- Schema information for inclusion in XML files.
+	
+feature -- Dialogs
+
+	b_OK: STRING is "OK"
+	
+	b_Cancel: STRING is "Cancel"
+	
+	b_Apply: STRING is "Apply"
+
+	Save_prompt: STRING is "Do you wish to save the current project?"
+	
+feature -- Warning Dialogs
+
+	Class_invalid_name_warning:STRING is " is not a valid Class name.%NClass names should only include%N%
+		%alphanumeric characters or underscores,%Nand start with an alphabetic character.%N%
+		%please select a different Class name."
 
 	Component_invalid_name_warning: STRING is " is not a valid Component name.%NComponent names should only include%N%
 		%alphanumeric characters or underscores,%Nand start with an alphabetic character.%N%

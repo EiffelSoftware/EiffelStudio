@@ -2,22 +2,27 @@
  *	 Jmakefile for Eiffel 3.0 run-time
  */
 
-CFLAGS = -I$(TOP) -I. -I../ipc/app
-DPFLAGS = -I$(TOP) -I. -I../ipc/app
+#include "../U/runtime.H"
 
-NETWORK_OBJ = ../ipc/app/network.o
+>JMTCFLAGS
+
+CFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app -I./include -I$(TOP)/idrs
+DPFLAGS = -I$(TOP) -I. -I$(TOP)/ipc/app
+
+NETWORK_OBJ = $(TOP)/ipc/app/network.o
+MTNETWORK_OBJ = $(TOP)/ipc/app/MTnetwork.o
 
 /*
  * Main source files for run-time archive
  */
-LSRC = math.c malloc.c garcol.c local.c store.c retrieve.c \
+LSRC = malloc.c garcol.c local.c store.c retrieve.c \
 	hash.c traverse.c hashin.c tools.c internal.c plug.c \
 	copy.c equal.c lmalloc.c out.c timer.c urgent.c sig.c \
 	hector.c cecil.c bits.c file.c dir.c string.c misc.c \
 	pattern.c error.c umain.c memory.c argv.c boolstr.c search.c \
-	run_idr.c path_name.c dle.c object_id.c eif_threads.c
-
-++SOURCES compress.c console.c option.c
+	run_idr.c path_name.c object_id.c eif_threads.c eif_project.c \
+	eif_rw_lock.c gen_conf.c eif_type_id.c rout_obj.c \
+	option.c compress.c console.c
 
 /*
  * The following files need a special treatment.
@@ -30,71 +35,115 @@ OTHER = main.c except.c
 WADD = debug.c interp.c update.c wbench.c
 
 /*
- * File belonging to workbench archive but built externally (no source).
- */
-NETWORK = network.o
-
-/*
  * Files for workbench have a 'w' pre-pended if they already exist for
  * the normal run-time archive.
  */
-WSRC = \
-	compress.c \
-	console.c \
-	woption.c \
+WOBJ = \
+	$(NETWORK_OBJ) \
+|expand f!$(WADD)!
+	!f:\.c=.o \
+-expand
 |expand f!$(LSRC) $(OTHER)!
-	w!f \
+	w!f:\.c=.o \
+-expand \\
+
+/*
+ * Object files for finalized run-time archive
+ */
+LOBJ = \
+|expand f!$(LSRC) $(OTHER)!
+	!f:\.c=.o \
 -expand \\
 
 /*
  * Ebench archive does not provide debugging (used to compile the workbench
  * and avoid eating its own tail..., when using ebench in workbench mode).
  */
-ESRC = \
-	compress.c \
-	console.c \
+EOBJ = \
+|expand f!$(WADD)!
+	!f:\.c=.o \
+-expand
 |expand f!$(LSRC)!
-	w!f \
+	w!f:\.c=.o \
 -expand
 |expand f!$(OTHER)!
-	b!f \
+	b!f:\.c=.o \
 -expand \\
 
 /*
- * Object files for run-time archive
+ * Files for multithreaded workbench have a 'MTw' pre-pended if they already exist for
+ * the normal run-time archive.
  */
-LOBJ = \
-	compress.o \
-	console.o \
-	option.o \
+MT_WOBJ = \
+	$(MTNETWORK_OBJ) \
+|expand f!$(WADD)!
+	MT!f:\.c=.o \
+-expand
 |expand f!$(LSRC) $(OTHER)!
-	!f:\.c=.o \
+	MTw!f:\.c=.o \
 -expand \\
 
 /*
- * Object files for workbench archive
+ * Object files for finalized run-time archive
  */
-WOBJ = \
-	$(NETWORK) \
-|expand f!$(WSRC) $(WADD)!
-	!f:\.c=.o \
+MT_LOBJ = \
+|expand f!$(LSRC) $(OTHER)!
+	MT!f:\.c=.o \
 -expand \\
 
-/*
- * Object files for ebench archive
+/* How to build a 'w' and `MT' and `MTw' file from a normal file. 
  */
-EOBJ = \
-	woption.o \
-|expand f!$(ESRC) $(WADD)!
-	!f:\.c=.o \
--expand \\
 
-#include "U/workbench.H"
+|expand f!$(LSRC) $(OTHER)!
+w!f:\.c=.o: !f
+        $(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
 
+-expand
+
+|expand f!$(LSRC) $(OTHER)!
+MT!f:\.c=.o: !f
+        $(CC) -c $(JMTCFLAGS) $? -o $@
+
+-expand
+
+|expand f!$(LSRC) $(OTHER)!
+MTw!f:\.c=.o: !f
+        $(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+-expand
+
+|expand f!$(OTHER)!
+b!f:\.c=.o: !f
+        $(CC) -c $(JCFLAGS) -DWORKBENCH -DNOHOOK $? -o $@
+
+-expand
+
+|expand f!$(WADD)!
+!f:\.c=.o: !f
+	$(CC) -c $(JCFLAGS) -DWORKBENCH $? -o $@
+
+-expand
+
+|expand f!$(WADD)!
+MT!f:\.c=.o: !f
+	$(CC) -c $(JMTCFLAGS) -DWORKBENCH $? -o $@
+
+-expand
+
+NormalObjectRule()
 ShellScriptLongTarget(eif_size_h,eif_size.h)
-NormalLibraryTarget(runtime,$(LSRC),$(LOBJ))
-SpecialLibraryTarget(wkbench,$(WOBJ),/**/)
-SpecialLibraryTarget(ebench,$(EOBJ),/**/)
+AddSource($(LSRC) $(OTHER) $(WADD))
+
+CustomLibraryTarget(mtfinalized,$(MT_LOBJ))
+CustomLibraryTarget(mtwkbench,$(MT_WOBJ))
+CustomLibraryTarget(finalized,$(LOBJ))
+CustomLibraryTarget(wkbench,$(WOBJ))
+CustomLibraryTarget(ebench,$(EOBJ))
+
+CustomSharedLibraryTarget(mtfinalized,$(MT_LOBJ))
+CustomSharedLibraryTarget(mtwkbench,$(MT_WOBJ))
+CustomSharedLibraryTarget(finalized,$(LOBJ))
+CustomSharedLibraryTarget(wkbench,$(WOBJ))
 
 SimpleProgramTarget(x2c)
 
@@ -118,84 +167,28 @@ eif_portable.h: $(TOP)/eif_portable.h
  * Workbench files added to SOURCES
  */
 
-AddSourceFileC(debug)
-AddSourceFileC(interp)
-AddSourceFileC(option)
-AddSourceFileC(update)
-AddSourceFileC(wbench)
-AddSourceFileC(main)
-
 DependTarget()
 LintTarget()
 
-/* How to build a 'w' file from a normal file. The library for the workbench
- * is built from w*.c files, which are linked from normal files. Dependencies
- * for w*.c files will be strong enough to force recompilation of a w*.o if the
- * original .o was to be rebuilt.
- */
+shared: sharedfinal sharedwork
+mtshared: mtsharedfinal mtsharedwork
+sharedfinal: libfinalized.so
+mtsharedfinal: libmtfinalized.so
+sharedwork: libwkbench.so
+mtsharedwork: libmtwkbench.so
 
->LN
->RM
-|expand f!$(LSRC) $(OTHER) option.c!
-w!f: !f
-	$(RM) w!f
-	$(LN) !f w!f
-remove::
-	$(RM) w!f
-
--expand
-
-|expand f!option.c $(LSRC) $(OTHER)!
-w!f:\.c=.o: w!f
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
-	$(RM) $*.c
-
--expand
-
-|expand f!$(WADD)!
-!f:\.c=.o: !f
-	$(CC) -c $(JCFLAGS) -DWORKBENCH $*.c
-
--expand
-
-local_clean:: remove
-
-final: libruntime.a
+static: final work
+final: libfinalized.a
+mtfinal: libmtfinalized.a
 work: libwkbench.a
+mtwork: libmtwkbench.a
+mt: mtwork mtfinal
 
 /*
  * The network object is pre-linked with all the needed libraries.
  */
 
-RemoteTargetDependency(network.o,../ipc/app,network.o)
-
->LIBS
-
-network.o:
-	$(RM) network.o
-	$(LN) $(NETWORK_OBJ) $@
-
-/*
- * Other files to be compiled with -DNOHOOK.
- */
-
->LN
->RM
-|expand f!$(OTHER)!
-b!f: !f
-	$(RM) b!f
-	$(LN) !f b!f
-remove::
-	$(RM) b!f
-
--expand
-
-|expand f!$(OTHER)!
-b!f:\.c=.o: b!f
-	$(CC) -c $(JCFLAGS) -DWORKBENCH -DNOHOOK $*.c
-	$(RM) $*.c
-
--expand
+RemoteDependency($(TOP)/ipc/app,network.o)
 
 /*
  * Run-time tests

@@ -13,17 +13,71 @@ inherit
 			is_commutative, make_standard_byte_code,
 			generate_standard_il
 		end
-	
-feature 
 
-	built_in_enlarged: B_AND_THN_BL is
-			-- Enlarge node
+feature -- Status report
+
+	is_and: BOOLEAN is
+			-- Is Current just `and', i.e. order does not matter?
 		do
-			!!Result;
-			Result.init (access.enlarged);
-			Result.set_left (left.enlarged);
-			Result.set_right (right.enlarged);
-		end;
+		end
+
+feature -- Enlarging
+
+	built_in_enlarged: EXPR_B is
+			-- Enlarge node. Try to get rid of useless code if possible.
+		local
+			l_b_and_thn_bl: B_AND_THN_BL
+			l_bool_val: VALUE_I
+			l_is_normal: BOOLEAN
+		do
+			left := left.enlarged
+			right := right.enlarged
+			if context.final_mode then
+				l_bool_val := left.evaluate
+				if l_bool_val.is_boolean then
+					if l_bool_val.boolean_value then
+						Result := right
+					else
+							-- Expression will always be False. We simply
+							-- return computation that yields to False value.
+							-- case of: False and expression
+						create {CONSTANT_B} Result.make (l_bool_val)
+					end
+				else
+					l_bool_val := right.evaluate
+					if l_bool_val.is_boolean then
+						if l_bool_val.boolean_value or not is_and then
+								-- Right expression is always true, we only need to return
+								-- left expression
+							Result := left
+						else
+							check
+								valid_simplification: not l_bool_val.boolean_value and is_and
+							end
+								-- Expression will always be False. We simply
+								-- return computation that yields to False value.
+								-- case of: expression and False
+								-- Note: you cannot do such an optimization with a `and then'
+								-- statement as the order matter.
+							create {CONSTANT_B} Result.make (l_bool_val)
+						end
+					else
+						l_is_normal := True
+					end
+				end
+			else
+				l_is_normal := True
+			end
+			
+			if l_is_normal then
+					-- Normal code transformation.
+				create l_b_and_thn_bl
+				l_b_and_thn_bl.init (access.enlarged)
+				l_b_and_thn_bl.set_left (left)
+				l_b_and_thn_bl.set_right (right)
+				Result := l_b_and_thn_bl
+			end
+		end			
 
 	generate_operator is
 			-- Generate the operator

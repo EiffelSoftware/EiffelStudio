@@ -9,17 +9,49 @@ inherit
 			built_in_enlarged, print_register, make_standard_byte_code,
 			generate_il
 		end
-	
+
 feature 
 
-	built_in_enlarged: B_IMPLIES_BL is
-			-- Enlarge node
+	built_in_enlarged: EXPR_B is
+			-- Enlarge node. Try to get rid of useless code if possible.
+		local
+			l_b_implies_bl: B_IMPLIES_BL
+			l_bool_val: VALUE_I
+			l_is_normal: BOOLEAN
 		do
-			!!Result;
-			Result.init (access.enlarged);
-			Result.set_left (left.enlarged);
-			Result.set_right (right.enlarged);
-		end;
+			left := left.enlarged
+			if context.final_mode then
+				l_bool_val := left.evaluate
+				if l_bool_val.is_boolean then
+					if not l_bool_val.boolean_value then
+							-- Expression is always True as left-hand side is False.
+						create {CONSTANT_B} Result.make (create {BOOL_VALUE_I}.make (True))
+					else
+						right := right.enlarged
+						l_bool_val := right.evaluate
+						if l_bool_val.is_boolean then
+								-- Expression is always True.
+							create {CONSTANT_B} Result.make (l_bool_val)
+						else
+							Result := right
+						end
+					end
+				else
+					l_is_normal := True
+				end
+			else
+				l_is_normal := True
+			end
+			
+			if l_is_normal then
+					-- Normal code transformation.
+				create l_b_implies_bl
+				l_b_implies_bl.init (access.enlarged)
+				l_b_implies_bl.set_left (left)
+				l_b_implies_bl.set_right (right.enlarged)
+				Result := l_b_implies_bl
+			end
+		end			
 
 	print_register is
 			-- Print the expression

@@ -13,16 +13,73 @@ inherit
 			is_commutative, generate_standard_il
 		end;
 	
-feature 
+feature -- Status report
 
-	built_in_enlarged: B_OR_ELSE_BL is
-			-- Enlarge node
+	is_or: BOOLEAN is
+			-- Is Current just `or', i.e. order does not matter?
 		do
-			!!Result;
-			Result.init (access.enlarged);
-			Result.set_left (left.enlarged);
-			Result.set_right (right.enlarged);
-		end;
+		end
+
+feature -- Enlarging
+
+	built_in_enlarged: EXPR_B is
+			-- Enlarge node. Try to get rid of useless code if possible.
+		local
+			l_b_or_else_bl: B_OR_ELSE_BL
+			l_bool_val: VALUE_I
+			l_is_normal: BOOLEAN
+		do
+			left := left.enlarged
+			right := right.enlarged
+			if context.final_mode then
+				l_bool_val := left.evaluate
+				if l_bool_val.is_boolean then
+					if l_bool_val.boolean_value then
+							-- Expression will always be True. We simply
+							-- return computation that yields to True value.
+							-- case of: True_expression or XXX
+						Result := left
+					else
+						Result := right
+					end
+				else
+					l_bool_val := right.evaluate
+					if l_bool_val.is_boolean then
+						if not l_bool_val.boolean_value or not is_or then
+							Result := left
+						else
+							create {CONSTANT_B} Result.make (l_bool_val)
+						end
+						if is_or then
+								-- Note: below optimization is only allowed with `or', not with `or else'
+								-- as the order matter in a `or else' statement.
+							l_bool_val := right.evaluate
+							if l_bool_val.is_boolean then
+									-- Expression will always be True. We simply
+									-- return computation that yields to True value.
+									-- case of: XXX or True_expression
+								Result := right
+							else
+								Result := left
+							end
+						end
+					else
+						l_is_normal := True
+					end
+				end
+			else
+				l_is_normal := True
+			end
+			
+			if l_is_normal then
+					-- Normal code transformation.
+				create l_b_or_else_bl
+				l_b_or_else_bl.init (access.enlarged)
+				l_b_or_else_bl.set_left (left)
+				l_b_or_else_bl.set_right (right)
+				Result := l_b_or_else_bl
+			end
+		end
 
 	generate_operator is
 			-- Generate the operator

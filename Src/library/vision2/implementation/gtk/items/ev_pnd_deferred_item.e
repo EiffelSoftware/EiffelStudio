@@ -23,6 +23,5 @@ feature
 	interface: EV_PICK_AND_DROPABLE is
 		deferred
 		end
-		
 
 end

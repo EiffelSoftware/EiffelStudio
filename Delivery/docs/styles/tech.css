@@ -1,0 +1,51 @@
+
+BODY {
+  background: linen;
+  font-family: arial, helvetica;
+  font-size: small
+  margin: 5%;
+  }
+
+PRE {
+  font-size: medium;
+  font-family: arial, helvetica;
+  }
+
+H5 {
+  font-size: x-large;
+  font-family: arial, helvetica;
+  color: white;
+  background: teal;
+  }
+
+H1 {
+  font-family: arial, helvetica;
+  font-size: large;
+  font-weight: bold;
+  color: "AA0000";
+  background-repeat: repeat-x, repeat-y;
+  }
+
+H2 {
+  font-family: arial, helvetica;
+  font-size: medium;
+  font-weight: bold;
+  color: navy;
+  }
+
+H3 {
+  font-family: arial, helvetica;
+  }
+
+.series {
+  font-family: Arial, Helvetica;
+  color: white;
+  background: navy;
+
+  }
+
+.subsection {
+  font-family: Arial, Helvetica;
+  color: white;
+  background: red;
+  }

@@ -111,7 +111,7 @@
         </p>
         <p>The
         definition states that every derived metric is derived from a certain
-        raw metric. This provides only for two levels of elementary metrics, raw
+        raw metric. This provides only two levels of elementary metrics, raw
         and derived; you may not, from an existing derived metric, derive new
         ones, since you may only associate selection criteria with raw metrics.
 
@@ -119,7 +119,7 @@
         <p>As
         a general guideline, we will try to keep the selection criteria for a
         given raw metric independent. For example, to distinguish the classes
-        that inherit from a given class we will use the following selection
+        that inherit a given class we will use the following selection
         criteria:
 
         </p>
@@ -151,8 +151,7 @@
         </p>
         <p>Instead
         we limit ourselves to the three criteria listed above. If you need a
-        finer decomposition, it is easy, with the techniques discussed below, t
-        o define Proper_descendants and Descendants as composite
+        finer decomposition, it is easy, with the techniques discussed below, to define Proper_descendants and Descendants as composite
         metrics expressed in terms of the elementary metrics Heirs, Indirect_heirs
         and Self.
 
@@ -170,10 +169,6 @@
         make sure never to count an element twice even in an “or” query, as
         when a user asks for the number of features that are attributes or
         effective.
-        <p>The following diagram will help
-        remember the various kinds of metric, as used in the rest of the
-        discussion:</p>
-        <p>DIAGRAM....</p>
         <p>A metric is either elementary or
         composite. An elementary metric is either a raw metric, such as
         “number of features”, or a derived metric obtained from slicing a

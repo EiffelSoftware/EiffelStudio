@@ -15,21 +15,21 @@
 
 <p>&nbsp;</p>
 
-<p>Here is what the debug tab look like when you haven't compiled your system
+<p>Here is what the debug tab looks like when you have not yet compiled the system
 you just created.</p>
 
 <p align="center"><img border="0" src="../../../../images/eiffelstudio/project_settings/debug_tab.png" width="605" height="506"></p>
 
 <p>&nbsp;</p>
-<h2>Execution parameter</h2>
+<h2>Execution parameters</h2>
 <p>You can specify the location from where your program will run. By default the
-location is `your_project_path/EIFGEN/W_code'. This is useful when your
-application relies on the use of resource files located at a precise location.</p>
+location is `your_project_path/EIFGEN/W_code'. Use this option when your
+application relies on the use of resource files located at a different location.</p>
 <p>You can also specify one or more command line arguments. To add one, simply
 type your command line arguments in the combo box and press enter. To remove
 one, select it from the combo box and then click on the red cross. To select
-one, simply choose it from the combo box, and when you will click on Apply or Ok
-they will be automatically taken into account, no need to recompile.</p>
+one, simply choose it from the combo box, and when you click on Apply or Ok
+they will be automatically taken into account, even before you recompile.</p>
 <p>&nbsp;</p>
 <h2>Miscellaneous options</h2>
 <ul>
@@ -37,27 +37,30 @@ they will be automatically taken into account, no need to recompile.</p>
     generation or C generation some extra information that will enable a .NET
     debugger or a C debugger to step through the Eiffel code rather than MSIL
     code or C code.</li>
-  <li>call tracing when selected will in C generation mode only display on the
+  <li>call tracing when selected will, in C generation mode only, display on the
     console all the features that are called during the system execution.</li>
-  <li>profiling when selected will in C generation mode turn on the Eiffel
-    profiler during execution. The results can be seen at the end of the
+  <li>profiling when selected will, in C generation mode, turn on the Eiffel
+    profiler during the application execution. The results can be seen at the end of the
     execution in <a href="../70_wizards_and_dialogs/10_profiler_wizard/00_introduction.html">the
     profiler window</a>.</li>
 </ul>
-<p>&nbsp;</p>
+<p class="Note"><b>Note</b>: The profiler is only available in the Enterprise edition of
+EiffelStudio.</p>
 <h2>Debug options</h2>
 <p>By default all debug clauses are turned off.</p>
 
-<p>The first step to enable them is to select the `Enable debug' check box. Then
-select the one you want to enable/disable and do a right click on it and a
-contextual menu will appear in which you can chose to enable/disable the debug
-clause.</p>
+<p>The first step to enable them is to select the `Enable debug' check box. Then right-click on
+the debug clauses you want to enable/diable and a
+contextual menu will appear to let you do so.</p>
+
+<p class="tip"><b>Tip</b>: You can select several debug clauses at a time by using the Ctrl
+and Shift keys.  </p>
 
 <p>Before you compile for the first time your project with an Ace file that has
 been automatically created, you
-won't see any debug clauses. They will automatically be added by the compiler at
+won't see any debug clauses. They will be automatically added by the compiler at
 the end of your first compilation. When this is done, you can
-enable/disable each of them.</p>
+enable/disable each one of them.</p>
 
 </body>
 

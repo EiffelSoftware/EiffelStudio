@@ -45,10 +45,11 @@
 				Then, <i>$cursor$</i> tells EiffelStudio to move the cursor to this position after the completion.<BR>
 				<i>then</i> is inserted after the cursor position.<BR>
 				<i>%N</i> indicates that you want to insert a new line after <i>then</i>.<BR>
-				<i>$indent$%T</i> means that this line is filled with as many blank spaces as before <i>if</i> plus
+				<i>$indent$%T</i> means that this line is filled with as many blank spaces as
+                there are before <i>if</i> plus
 				a tabulation.<BR>
 				Another line is inserted with <i>%N</i>.<BR>
-				Then <i>$indent$%Tend</i> means that <i>end</i> will be inserted in this new line with the same
+				Then <i>$indent$end</i> means that <i>end</i> will be inserted in this new line with the same
 				indentation as <i>if</i>.
 				</P>
 	
@@ -67,7 +68,8 @@
 				<P>&quot;%B%B%B%Bend%N$indent$%B$cursor$&quot;
 				</P>
 				<P>
-				The four <i>%B</i> will remove <i>end</i> plus one character before <i>end</i>.<BR>
+				The four <i>%B</i> will remove <i>end</i> plus one character before <i>end</i>
+                (the tabulation character).<BR>
 				<i>end</i> will be inserted at this new position.<BR>
 				<i>%N</i> indicates that you want to insert a new line.<BR>
 				<i>$indent$%B$cursor$</i> means that the cursor will be moved to the end of the line

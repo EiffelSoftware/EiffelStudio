@@ -9,31 +9,30 @@
 <body>
 
 <h1>Preference window overview</h1>
-The preferences dialog window is divided in three parts (plus a button
+The preferences dialog window is divided into two parts (plus a button
 bar at the bottom).
 <p align="center"><IMG SRC="/images/eiffelstudio/dialogs_and_wizards/preferences_dialog.png"></P>
-<p>The left part is used to display a tree that displays preferences categories.
-A description of the content of this tree, i.e. the different categories
-of preferences and preferences themselves, is available <a href="./20_preferences_reference/index.html">here</a>.
-<p>The upper right part shows the preferences attached to the currently
-selectly tree node. They appears in a table that has two colums. The first
+<p>The left part is used to display a tree that shows preference categories.
+A description of the contents of this tree, i.e. the different categories
+of preferences and preferences themselves, is available <a href="./20_preferences_reference/index.html">here</a>.<p>The right part shows the preferences attached to the currently
+selected tree node. They appear in a table that has two columns. The first
 one contains the description of the preference, the second one contains
-its value. To modify this value, select the preference by clicking on it.
-The lower right part will then be update to allow the change.
-<p>What will be displayed in this part depends on the type of the preference.
-There are four of them :
+its value. To modify this value, select the preference by clicking on it. A
+floating widget appears on top of the preference value to let you change it.
+<p>The floating widget depends on the type of the preference that is modified.
+There are four kinds of preferences:
 <ul>
 <li>
-Boolean preferences : their possible values are "True" or "False". A combo-box
-will allow you to choose one or the other.</li>
+Boolean preferences : their possible values are "True" and "False". A combo box
+will allow you to choose between both.</li>
 
 <li>
 Color preferences : Their value is represented by three integers, which
 are the RGB code of the color. You do not have to use RGB codes though.
 When you select such a preference, the current color and two buttons are
-displayed in the lower right part. If you press the first button, a color
-selection window will appear. For some background color, you have the possibility
-to click on the "Auto" button. EiffelStudio will then set the current color
+displayed. If you press the first button, a color
+selection window will appear. For some background colors, you have the possibility
+to click the "Auto" button. EiffelStudio will then set the current color
 to the default background color.</li>
 
 <li>
@@ -41,15 +40,13 @@ Font preferences : A font selection window will appear as you press the
 button with label "change".</li>
 
 <li>
-Other preferences : They will be modified by using a text field in the
-lower right part.</li>
+Other preferences : They will be modified by using a text field.</li>
 </ul>
-If there is no message stating you need to restart EiffelStudio (next to the
-preference description in the lower right part), changes will be taken
+If there is no message stating you need to restart EiffelStudio, changes will be taken
 into account immediately.
 
-<p CLASS="warning"><b>Caution</b>: Sub-categories and their content are
-not displayed in the upper right area. To see the preferences that belong
+<p CLASS="warning"><b>Caution</b>: Sub-categories and their contents are
+not displayed in the right area. To see the preferences that belong
 to a sub-category, you have to select it in the left part of the window.
 
 <p CLASS="warning"><b>Caution</b>: You can restore preferences default

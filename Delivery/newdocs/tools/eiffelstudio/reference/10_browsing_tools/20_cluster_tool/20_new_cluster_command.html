@@ -20,10 +20,20 @@ new cluster is by default located in the cluster selected in the <A HREF="10_clu
 then popped up in which it is possible to select the name of the new cluster and
 the cluster in which the new cluster should be inserted. Only clusters that are
 not libraries are displayed in the list.
-<P align="center"><IMG SRC="/images/eiffelstudio/dialogs_and_wizards/new_cluster_dialog.png"></P>
-<p>Note that the directory corresponding to the new cluster will have the same name as
-the cluster.
-
+<P align="center"><IMG SRC="/images/eiffelstudio/dialogs_and_wizards/new_cluster_dialog.png" width="276" height="430"></P>
+<p>Enabling the <b>recursive </b>option makes the compiler search not only the
+cluster directory but also all its sub-directories for classes.<br>
+The <b>library </b>option optimizes compilations, since the classes inside a
+library cluster are compiled only once. However, if you modify the classes
+inside a library cluster, the modifications will not be taken into account in
+your project. Besides, you cannot add or remove classes in a library cluster, so
+use this option with care: if you intend to create new classes inside this
+cluster later in your design, do not select the library option. You should use
+this option only if the new cluster is given an existing directory, which
+already contains classes that you will not modify.
+<p class="tip"><b>Tip</b>: You don't have to enter a path for the new cluster if you choose to create 
+a sub-cluster: the new cluster directory will be a sub-directory of the directory of the parent cluster,
+and its name will be the name of the newly created cluster.</p>
 </body>
 
 </html>

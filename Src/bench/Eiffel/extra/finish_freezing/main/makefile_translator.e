@@ -46,8 +46,9 @@ feature -- Initialization
 				lib_extension := clone (options.get_string ("intermediate_file_ext", "lib"))
 				lib_extension.prepend_character ('.')
 	
+				check_for_il
 				quick_compilation := options.get_boolean ("quick_compilation", True)
-				if quick_compilation then
+				if quick_compilation and not is_il_code then
 					io.put_string ("Preparing C compilation...%N")
 					launch_quick_compilation
 				end
@@ -138,6 +139,9 @@ feature -- Access
 			-- File extension name for C generated object files for
 			-- each C*, D* and F* directory.
 
+	is_il_code: BOOLEAN
+			-- Is Makefile.SH generated for IL C code generation.
+
 feature -- Execution
 
 	read_options is
@@ -170,6 +174,15 @@ feature -- Execution
 		end
 
 feature {NONE} -- Translation
+
+	check_for_il is
+			-- Read content of first Ace file
+		do
+			open_files
+			makefile_sh.readstream (makefile_sh.count)
+			is_il_code := makefile_sh.last_string.substring_index ("$(IL_SYSTEM)", 1) > 0
+			close_files
+		end
 
 	translate_makefile  (master: BOOLEAN) is
 			-- translate the Makefile.SH in the current directory
@@ -383,7 +396,9 @@ feature {NONE} -- Translation
 			translate_translate
 			translate_externals
 			translate_application
-			translate_dependencies
+			if not is_il_code then
+				translate_dependencies
+			end
 		end
 
 	translate_translate is
@@ -525,7 +540,10 @@ feature {NONE} -- Translation
 				end
 			end
 
-			if lastline.count>3 and then lastline.substring (1,4).is_equal (options.get_string ("all", Void).substring (1,4)) then
+			if
+				lastline.count>3 and then
+				lastline.substring (1,4).is_equal (options.get_string ("all", Void).substring (1,4))
+			then
 				shared_library_pos := lastline.substring_index ("$(SYSTEM", 6)
 				if shared_library_pos = 0 then
 					appl := lastline.substring (6, lastline.count)
@@ -533,6 +551,8 @@ feature {NONE} -- Translation
 					appl := lastline.substring (6, shared_library_pos - 1)
 				end
 				appl.right_adjust
+
+				is_il_code := appl.is_equal ("$(IL_SYSTEM)")
 
 				if appl.count>4 then
 					extension := clone (appl)
@@ -552,19 +572,21 @@ feature {NONE} -- Translation
 				end
 			end
 
-			read_next
-			read_next
+			if not is_il_code then 
+				read_next
+				read_next
 
-			makefile.putstring (options.get_string ("all", Void))
-			makefile.putstring (appl_exe)
+				makefile.putstring (options.get_string ("all", Void))
+				makefile.putstring (appl_exe)
 
-			if shared_library_pos /= 0 then
-				makefile.putstring (" $(SYSTEM_IN_DYNAMIC_LIB)")				
+				if shared_library_pos /= 0 then
+					makefile.putstring (" $(SYSTEM_IN_DYNAMIC_LIB)")				
+				end
+
+				makefile.new_line
+				makefile.putstring (options.get_string ("completed", Void))
+				makefile.putstring ("%N%N")
 			end
-
-			makefile.new_line
-			makefile.putstring (options.get_string ("completed", Void))
-			makefile.putstring ("%N%N")
 		end
 
 	translate_dependencies is
@@ -922,7 +944,11 @@ feature {NONE} -- Translation
 			end
 
 			-- application name, cecil
-			if appl /= Void and then lastline.count>=appl.count and then lastline.substring (1, appl.count).is_equal (appl) then
+			if
+				not is_il_code and then appl /= Void and then
+				lastline.count>=appl.count and then
+				lastline.substring (1, appl.count).is_equal (appl)
+			then
 				translate_appl
 			elseif lastline.count>14 and then lastline.substring (1,14).is_equal ("STATIC_CECIL =") then
 				translate_cecil_and_dll

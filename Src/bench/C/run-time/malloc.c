@@ -1189,6 +1189,7 @@ rt_shared EIF_REFERENCE gmalloc(unsigned int nbytes)
 #ifdef EIF_THREADS
 rt_shared EIF_REFERENCE eif_rt_xmalloc(unsigned int nbytes, int type, int gc_flag)
 {
+#ifdef ISE_GC
 	RT_GET_CONTEXT
 	if (gc_thread_status == EIF_THREAD_GC_RUNNING) {
 			/* Allocation is done from the thread that is collecting,
@@ -1202,6 +1203,9 @@ rt_shared EIF_REFERENCE eif_rt_xmalloc(unsigned int nbytes, int type, int gc_fla
 		GC_THREAD_PROTECT(eif_unsynchronize_gc(rt_globals));
 		return result;
 	}
+#else
+	return (EIF_REFERENCE) malloc (nbytes);
+#endif
 }
 
 rt_private EIF_REFERENCE eif_rt_internal_xmalloc(unsigned int nbytes, int type, int gc_flag)

@@ -270,8 +270,10 @@ create
 
 ----------/** Eiffel strings **/------------------------------------------------
 
-[%\"]([^\n\"]*(%\")*)*[%\"]		|
-[%\"]([^\n\"]*(%\")*)*			{
+[\"]([^\n\"]*(%\")*)*[\"]		|										
+[\"]([^\n\"]*(%\")*)*[%\n]	|
+[ \t\r](%)[^\n]*[%\n]		|
+[ \t\r](%)[^\n]*[\"]			{
 					-- Eiffel String
 					if not in_comments then
 						create {EDITOR_TOKEN_STRING} curr_token.make(text, tab_size_cell)

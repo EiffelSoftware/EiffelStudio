@@ -117,12 +117,12 @@ cluster
 			"CVS"; 
 		end
 
-	all env:		"$EIFFEL_SRC\Eiffel\lace\env"
+	all env:		"$EIFFEL_SRC/Eiffel/lace/env"
 		exclude
 			"CVS"; 
 		end
 		
-	all compiler_shared:		"$EIFFEL_SRC\Eiffel\eiffel\shared"
+	all compiler_shared:		"$EIFFEL_SRC/Eiffel/eiffel/shared"
 		exclude
 			"CVS"; 
 		end

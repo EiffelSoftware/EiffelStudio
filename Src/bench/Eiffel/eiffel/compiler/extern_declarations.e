@@ -35,7 +35,7 @@ feature
 
 	add_routine_table (rout_table: STRING) is
 			-- Add one routine table to the current extern declarations.
-		require	
+		require
 			rout_table_exists: rout_table /= Void;
 		do
 			routine_tables.put (rout_table);
@@ -93,7 +93,7 @@ feature
 		do
 			queue := shared_include_queue
 			if queue /= Void then
-				from 
+				from
 				until
 					queue.empty
 				loop
@@ -179,5 +179,5 @@ feature
 
 			f.close;
 		end;
-	
-end	
+
+end

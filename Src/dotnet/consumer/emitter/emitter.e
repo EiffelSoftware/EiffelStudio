@@ -162,6 +162,8 @@ feature {NONE} -- Implementation
 
 	start is
 			-- Execute emitter according to options
+		require
+			non_void_clr_version: clr_version /= Void
 		local
 			ct: CONSUMED_TYPE
 			assemblies: ARRAY [CONSUMED_ASSEMBLY]
@@ -388,6 +390,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_assembly: ass /= Void
 			signed_assembly: ass.get_name.get_public_key_token /= Void
+			non_void_clr_version: clr_version /= Void
 		local
 			writer: CACHE_WRITER
 		do
@@ -509,6 +512,7 @@ feature {NONE} -- Implementation
 		require
 			non_void_assembly: ass /= Void
 			signed_assembly: ass.get_name.get_public_key_token /= Void
+			non_void_clr_version: clr_version /= Void
 		local
 			writer: CACHE_WRITER
 		do

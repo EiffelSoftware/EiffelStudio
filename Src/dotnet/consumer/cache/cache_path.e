@@ -96,6 +96,7 @@ feature {CACHE_READER} -- Access
 		require
 			non_void_assembly: name /= Void
 			valid_assembly: name.get_public_key_token /= Void
+			non_void_clr_version: clr_version /= Void
 		local
 			relative_path: STRING
 		do
@@ -116,6 +117,7 @@ feature {CACHE_READER} -- Access
 		require
 			non_void_assembly: ca /= Void
 			valid_assembly: ca.key /= Void
+			non_void_clr_version: clr_version /= Void
 		local
 			relative_path: STRING
 		do
@@ -156,6 +158,7 @@ feature {CACHE_READER} -- Access
 			-- Always return a value even if `t' in not in EAC
 		require
 			non_void_type: t /= Void
+			non_void_clr_version: clr_version /= Void
 		local
 			relative_path: STRING
 		do
@@ -176,6 +179,8 @@ feature {CACHE_READER} -- Access
 
 	Absolute_info_path: STRING is
 			-- Absolute path to EAC assemblies file info
+		require
+			non_void_clr_version: clr_version /= Void
 		once
 			create Result.make (Eiffel_path.count + Eac_path.count + Info_path.count)
 			Result.append (Eiffel_path)

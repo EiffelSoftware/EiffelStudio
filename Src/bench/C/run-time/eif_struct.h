@@ -22,14 +22,14 @@ extern "C" {
 
 /* Cnode structure: definition of a class by its name and attributes.
  *
- *  - cn_generator is the class name.
  *  - cn_nbattr is the number of attributes in the class.
+ *  - cn_generator is the class name.
  *  - cn_names is a pointer to an array of attributes' name.
+ *  - cn_parents is a sequence of dymanic types, used for invariant checking.
  *  - cn_types is a pointer on an array of attributes' type (non workbench).
  *  - cn_gtypes is a pointer to generic type arrays.
- *  - cn_init is a pointer to a routine which initializes the object.
+ *  - cn_flags is a set of flags describing current type.
  *  - cn_offsets is a pointer on an array of attributes' offset (non workbench).
- *  - cn_parents is a sequence of dymanic types, used for invariant checking.
  *  - cn_attr is a pointer to an array of attribute keys.
  */
 struct cnode {
@@ -39,12 +39,11 @@ struct cnode {
 	int *cn_parents;			/* Dynamic types of parents (-1 marks end) */
 	uint32 *cn_types;			/* Attribute types */
 	int16 **cn_gtypes;			/* Attribute generic types (expanded attributes only) */
+	uint16 cn_flags;			/* Flags of Current type */
 #ifdef WORKBENCH
 	int32 *cn_attr;				/* Array of attribute routine ids */
-	long size;					/* Object size */
-	long nb_ref;				/* Number of references in the object */
-	char cn_deferred;			/* Is the class type deferred ? */
-	char cn_composite;			/* is the class type a composite one ? */
+	long cn_size;				/* Object size */
+	long cn_nbref;				/* Number of references in the object */
 
 		/* The following two entities (`cn_creation_id' and `static_id')
 		 * are used to identify the creation procedure for expanded types.
@@ -57,9 +56,8 @@ struct cnode {
 		 * origin class.
 		 */
 	int32 cn_creation_id;
-	int32 static_id;
+	int32 cn_static_id;
 
-	char cn_disposed;			/* Does class type have a dispose routine? */ 
 	int32 *cn_routids;   		/* Pointer on routine id array */
 	struct ctable cn_cecil;		/* Cecil hash table */
 #else
@@ -148,11 +146,6 @@ struct rout_info {						/* Routine information */
 
 /* Invalid body id used to mark empty invariants (= max uint32) */
 #define INVALID_ID 0xFFFFFFFF
-
-/* Array of class node (indexed by dynamic type). It is statically allocated
- * in production mode and dynamically in workbench mode.
- */
-extern struct cnode *esystem;	/* Describes a full Eiffel system */
 
 typedef char *(*fnptr)(EIF_REFERENCE, ...); /* The function pointer type */
 

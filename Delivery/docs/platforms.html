@@ -7,31 +7,34 @@
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <title>ISE EiffelBench</title>
 <link rev="made" href="mailto:webmaster@eiffel.com">
-<link rel="stylesheet" href="styles/tech.css">
+<link rel="stylesheet" href="styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
 </head>
 
-<body>
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
-      <TR>
-              <TD><IMG SRC="images/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
-                      BORDER="0"><IMG SRC="images/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
-                      BORDER="0"></TD>
-      </TR>
-</TABLE>
-
-<table cols="1" cellpadding="0" cellspacing="0" border="0">
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right">
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="0" cellspacing="0" border="0">
 <tr><td>
 
 <h1>
 <a name="Linux">
 Linux</a>
 
-</h1>
+    </h1>
 
 <h2>
 <a name="linuxglibc">Linux-glibc</a>
 
-</h2>
+    </h2>
 
 <blockquote>
 
@@ -49,9 +52,7 @@ glibc-2.0.7 and elf format.
 
 </p>
 
-  <h3>`eifid' doesn't return a valid value
-
-</h3>
+  <h3>`eifid' doesn't return a valid value</h3>
 
   <blockquote>
     <p>Make sure your machine is configured as a "network" machine and not as a standalone machine even if no network card is installed.
@@ -76,9 +77,7 @@ glibc-2.0.7 and elf format.
     </blockquote>
   </blockquote>
   <h3><br>
- BUG with the backspace key
-
-</h3>
+ BUG with the backspace key</h3>
 
   <blockquote>
     <p>Under certain linux configuration, the BackSpace key has a strange behaviour within ebench: it deletes the character before the cursor,
@@ -92,9 +91,7 @@ glibc-2.0.7 and elf format.
 
   </blockquote>
   <h3><br>
- XKeysymDB problem
-
-</h3>
+ XKeysymDB problem</h3>
 
   <blockquote>
     <p>You may experience trouble while trying to use the BackSpace key. If so, you have to check that the file
@@ -115,9 +112,7 @@ glibc-2.0.7 and elf format.
 </blockquote>
 
 <h2>
-linux-glibc2.1
-
-</h2>
+linux-glibc2.1</h2>
 
 <blockquote>
 
@@ -191,13 +186,12 @@ with sgi-5.x.
 
 <h1><a name="Solaris24">Solaris 2.4</a></h1>
 <p>This note does not apply to any version other than Solaris 2.4.</p>
-<ul>
-  <li> C compiler:<br>
+    <ul>
+      <li> C compiler:<br>
     You can not use the C compiler shipped with non development system since it is only used to rebuild the kernel.<br>
 If you have installed the SPROcc package, the default location for the C compiler is
-    /opt/SUNWspro/bin/cc.
-</li>
-  <li> Displaying on another Sun machine: When running the Solaris 2.4 version of EiffelBench on a computer, do not display on another Sun computer running Open Windows.
+    /opt/SUNWspro/bin/cc.</li>
+      <li> Displaying on another Sun machine: When running the Solaris 2.4 version of EiffelBench on a computer, do not display on another Sun computer running Open Windows.
 This may crash the X server on that other computer. This bug occurs somewhat randomly (usually only in the second consecutive execution of EiffelBench) and does not arise
 for any platform other than Solaris 2.4.  We have not yet been able to determine what causes it.<br>
 <br>
@@ -208,7 +202,7 @@ The following do NOT cause any problem:
 	- Running on a Solaris computer and displaying on a non-Sun computer.
 <br>
 	- Executing other tools of the environment, in particular EiffelBuild.</li>
-</ul>
+    </ul>
 <h1>&nbsp;</h1>
 
 <h1><a name="Solaris25+">Solaris 2.5 and greater</a></h1>
@@ -335,21 +329,19 @@ statically with the Motif 1.2 version given with the corresponding Platform. Due
 to limitations or Motif 1.2 certains graphical functionality of some ISE
 products are limited:</p>
 
-<ul>
-  <li>EiffelBench: the split area of the project tool are horizontal and not a
+    <ul>
+      <li>EiffelBench: the split area of the project tool are horizontal and not a
     mixture of horizontal and vertical split area as done on Linux and Windows</li>
-  <li>EiffelCase: the scrollbar of the system architecture does not work.</li>
-</ul>
+      <li>EiffelCase: the scrollbar of the system architecture does not work.</li>
+    </ul>
 
 <p>List of Platforms using Motif 1.2:
-<ul>
-  <li><a href="#Solaris24">Solaris</a></li>
-  <li><a href="#sgi">SGI</a></li>
-  <li><a href="#alpha">Digital Unix</a></li>
-  <li><a href="#unixware">UnixWare</a></li>
-</ul>
-
-</td></tr></table>
-</body>
+    <ul>
+      <li><a href="#Solaris24">Solaris</a></li>
+      <li><a href="#sgi">SGI</a></li>
+      <li><a href="#alpha">Digital Unix</a></li>
+      <li><a href="#unixware">UnixWare</a></li>
+    </ul>
+  </td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
 
 </html>

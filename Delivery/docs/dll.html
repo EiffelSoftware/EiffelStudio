@@ -7,44 +7,48 @@
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <title>ISE Shared library generation mechanism</title>
 <link rev="made" href="mailto:webmaster@eiffel.com">
-<link rel="stylesheet" href="styles/tech.css">
+<link rel="stylesheet" href="styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
 </head>
 
-<body>
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
-      <TR>
-              <TD><IMG SRC="images/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
-                      BORDER="0"><IMG SRC="images/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
-                      BORDER="0"></TD>
-      </TR>
-</TABLE>
-
-<table cols="1" cellpadding="0" cellspacing="0" border="0">
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right">
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="0" cellspacing="0" border="0">
 <tr><td>
 
 <H1>Dynamic Library Tool</H1>
-<UL>
-  <LI><A 
+    <ul>
+      <li><A 
   href="dll.html#Overview">Overview</A> 
 
-  <LI><A 
+      <li><A 
   href="dll.html#def">The 
   definition file</A> 
-  <LI><A 
+      <li><A 
   href="dll.html#Why">Why this 
   tool ?</A> 
-  <LI><A 
+      <li><A 
   href="dll.html#Selecting">Selecting 
   and creating a definition file - Lace option</A> 
-  <LI><A 
+      <li><A 
   href="dll.html#Dynamic">Dynamic 
   Library tool bar</A> 
-  <LI><A 
+      <li><A 
   href="dll.html#How">How to 
   use it ?</A> 
-  <LI><A 
+      <li><A 
   href="dll.html#c_level">At 
-  the C level</A> </LI></UL>
+  the C level</A> </li>
+    </ul>
 <H2>Overview</H2><A 
 href="dll.html#TOP"><IMG 
 align=right alt=TOP border=1 src="images/top.gif" width="27" height="27"></A> 
@@ -68,8 +72,8 @@ feature: you need the name of the <B>feature</B>, the name of the concerned
 to specify an <B>index</B>, and an <B>alias</B>. The index is mainly to create a 
 DLL for windows, and the alias to export the feature under a different name.</P>
 <H3>Syntax</H3>
-<UL>
-  <TABLE bgColor=#ffffff border=3 cellPadding=5 cellSpacing=0>
+    <ul>
+      <TABLE bgColor=#ffffff border=3 cellPadding=5 cellSpacing=0>
     <TBODY>
     <TR>
       <TD><B>Export_feature</B></TD>
@@ -90,43 +94,57 @@ DLL for windows, and the alias to export the feature under a different name.</P>
 <I>alias_name</I></TD></TR>
     <TR>
       <TD><b>Call_type_part</b></TD>
-      <TD bgColor=#ffffe8>"<b>call_type</b>" <i>call_type_name</i></TD></TR></TBODY></TABLE></UL>
+      <TD bgColor=#ffffe8>"<b>call_type</b>" <i>call_type_name</i></TD></TR></TBODY></TABLE>
+    </ul>
 <H3>Example</H3>
-<UL>
-  <TABLE bgColor=#ffffff border=3 cellPadding=5 cellSpacing=0>
+    <ul>
+      <TABLE bgColor=#ffffff border=3 cellPadding=5 cellSpacing=0>
     <TBODY>
     <TR>
       <TD><FONT size=+1><FONT color=purple>ROOT_CLASS <FONT 
         color=green>(make): foo <FONT color=black><B>@</B><FONT color=blue> 4 
         <FONT color=black>Alias <FONT color=blue>my_foo 
         </FONT></FONT></FONT></FONT></FONT></FONT><font color="blue"> </font>call_type<font color="blue">
-        __stdcall</font></FONT></TD></TR></TBODY></TABLE></UL>
+        __stdcall</font></FONT></TD></TR></TBODY></TABLE>
+    </ul>
 <H3>Constraint</H3>
-<UL>
-  <UL>
-    <LI><U>on the feature:</U> 
-    <UL>it could be any feature except : an attribute, and a deferred feature 
-    </UL>
-    <LI><U>on the creation procedure:</U> 
-    <UL>It must have zero argument, and no return type. </UL>
-    <LI><U>on the alias name:</U> 
-    <UL>It must be a valid name for a C function. </UL>
-    <LI><U>on the index:</U> 
-    <UL>It must be strictly positive. </UL>
-    <LI><U>on the call type:</U> 
-    <UL>It must be a valid call type for the targeted platform (useful for
-      Windows only). </UL></LI></UL>
+    <ul>
+      <ul>
+        <li><U>on the feature:</U> 
+          <ul>
+            it could be any feature except : an attribute, and a deferred feature
+          </ul>
+        <li><U>on the creation procedure:</U> 
+          <ul>
+            It must have zero argument, and no return type.
+          </ul>
+        <li><U>on the alias name:</U> 
+          <ul>
+            It must be a valid name for a C function.
+          </ul>
+        <li><U>on the index:</U> 
+          <ul>
+            It must be strictly positive.
+          </ul>
+        <li><U>on the call type:</U> 
+          <ul>
+            It must be a valid call type for the targeted platform (useful for
+      Windows only).
+          </ul>
+        </li>
+      </ul>
   <P>
-  <LI>For each feature you will need to specify a <B>class</B>, a <B>creation 
-  procedure</B>,and a <B>feature</B>. 
-  <UL>
-    <LI>If the feature is a creation procedure then do not specify any creation, 
-    it will use the feature as creation. For example <B>ROOT_CLASS: make</B>. 
-    <LI>If the class has no creation procedure, do not specify any creation. 
-    </LI></UL>
+  &nbsp;
+      <li>For each feature you will need to specify a <B>class</B>, a <B>creation 
+  procedure</B>,and a <B>feature</B>.
+        <ul>
+          <li>If the feature is a creation procedure then do not specify any creation, 
+    it will use the feature as creation. For example <B>ROOT_CLASS: make</B>.
+          <li>If the class has no creation procedure, do not specify any creation.</li>
+        </ul>
 <H3>The definition file</H3>
-<UL>
-  <TABLE bgColor=#ffffff border=3 cellPadding=5 cellSpacing=0 width=500>
+        <ul>
+          <TABLE bgColor=#ffffff border=3 cellPadding=5 cellSpacing=0 width=500>
     <TBODY>
     <TR>
       <TD width=300><PRE>-- EXPORTED FEATURE(s) OF THE SHARED LIBRARY
@@ -150,7 +168,9 @@ ROOT_CLASS (make) : test_bar </PRE></TD>
 -
 -here the feature is also a creation
 -
-- </PRE></TD></TR></TBODY></TABLE></UL><!-- ------------------------------------------------------------ --><A 
+- </PRE></TD></TR></TBODY></TABLE>
+        </ul>
+        <!-- ------------------------------------------------------------ --><A 
 href="dll.html#Why" 
 name=Why></A>
 <H2>Why this tool ?</H2><A 
@@ -163,7 +183,7 @@ definition files.</P>
 and basically will say when it is not possible. </P><!-- ------------------------------------------------------------ --><A 
 href="dll.html#Selecting" 
 name=Selecting></A>
-<H2>Selecting and creating a definition file - Lace option </H2><A 
+<H2>Selecting and creating a definition file - Lace option</H2><A 
 href="dll.html#TOP"><IMG 
 align=right alt=TOP border=1 src="images/top.gif" width="27" height="27"></A> 
 <P>When you first open your dynamic library tool, the user will have to choose 
@@ -191,17 +211,20 @@ href="dll.html#TOP"><IMG
 align=right alt=TOP border=1 src="images/top.gif" width="27" height="27"></A> <IMG align=bottom 
 alt=IMAGE border=1 src="images/dyntool.gif" width="454" height="362"> 
 <P>The Dynamic Library toolbar is composed of <BR><BR>
-<UL>
-  <UL>
-    <LI><IMG align=bottom alt=OPEN/SAVE border=1 src="images/opensave.gif" width="48" height="28"> 
+        <ul>
+          <ul>
+            <li><IMG align=bottom alt=OPEN/SAVE border=1 src="images/opensave.gif" width="48" height="28"> 
     open/save part<BR>- to save or open a new eiffel definition file 
     (*.def).<BR><BR>
-    <LI><IMG align=bottom alt=FORMAT border=1 src="images/format.gif" width="52" height="28"> format 
+            <li><IMG align=bottom alt=FORMAT border=1 src="images/format.gif" width="52" height="28"> format 
     part:<BR>- to select clickable format, or text format.<BR><BR>
-    <LI><IMG align=bottom alt=ICON border=1 src="images/dynicon.gif" width="27" height="27"> the 
-    dynamic lib icon:<BR>- to reload the definition file<BR><FONT 
-    color=red>ATTENTION : this will cancel your changes, and reload the 
-    file</FONT><BR><BR></LI></UL></UL><!-- ------------------------------------------------------------ --><A 
+            <li><IMG align=bottom alt=ICON border=1 src="images/dynicon.gif" width="27" height="27"> the 
+    dynamic lib icon:<BR>- to reload the definition file<BR><font color="red">Warning!!
+              : this will cancel your changes, and reload the 
+    file</font><BR><BR></li>
+          </ul>
+        </ul>
+        <!-- ------------------------------------------------------------ --><A 
 href="dll.html#How" 
 name=How></A>
 <H2>How to use it ?</H2><A 
@@ -227,22 +250,26 @@ your definition file, during your current session, this way EiffelBench will
 know which one to use, if you do not specify any definition file, nothing will 
 be generated. </FONT></P>
 <P>The set of files is composed of: </P>
-<UL>
-  <UL>
-    <LI><B>EIFGEN/W_code/<FONT color=blue><I>system</I>.def</FONT></B> (or 
-    F_code) 
-    <LI><B>EIFGEN/W_code/<FONT color=blue>edynlib.c</FONT></B> (or F_code) 
-    <LI><B>$(EIFFEL4)/bench/spec/$(PLATFORM)/templates/<FONT 
+        <ul>
+          <ul>
+            <li><B>EIFGEN/W_code/<FONT color=blue><I>system</I>.def</FONT></B> (or 
+    F_code)
+            <li><B>EIFGEN/W_code/<FONT color=blue>edynlib.c</FONT></B> (or F_code)
+            <li><B>$(EIFFEL4)/bench/spec/$(PLATFORM)/templates/<FONT 
     color=blue>egc_dynlib.template</FONT></B><BR>this file will be copied during 
     the compilation into the EIFGEN/W_code/E1 directory as <B><FONT 
-    color=blue>egc_dynlib.c</B></FONT> 
-    <LI><B>$(EIFFEL4)/bench/spec/$(PLATFORM)/include/<FONT 
+    color=blue>egc_dynlib.c</font></B>
+            <FONT 
+    color=blue>
+            <li><B>$(EIFFEL4)/bench/spec/$(PLATFORM)/include/<FONT 
     color=blue>egc_dynlib.h</FONT></B> 
-    <LI>and the Makefile </LI></UL></UL>
+            <li>and the Makefile</li>
+            </ul>
+          </ul>
 <P>The <I><FONT color=blue>system.def</FONT></I> is use only on windows, this 
 files is the definition file used to generate a DLL at the linking.</P>
-<UL>
-  <TABLE bgColor=#ffffff border=3 cellPadding=5 cellSpacing=0>
+          <ul>
+            <TABLE bgColor=#ffffff border=3 cellPadding=5 cellSpacing=0>
     <TBODY>
     <TR>
       <TD><PRE>LIBRARY demo.dll
@@ -280,12 +307,13 @@ EXPORTS
 -	make
 -	foo
 -	test_bar
-</PRE></TD></TR></TBODY></TABLE></UL>
+</PRE></TD></TR></TBODY></TABLE>
+          </ul>
 <P>The <I><FONT color=blue>edynlib.c</FONT></I> file is the "interface" between 
 the Eiffel system, and the C code, basically it contains the declaration, and 
 implementation of the function used to call directly the eiffel feature with its 
 real name.</P>
 <P>The <I><FONT color=blue>egc_dynlib.c and egc_dynlib.h</FONT></I> files are 
 used for the operation by the RunTime. </P>
-</td></tr></table>
-</BODY>
+      </ul>
+    </font></td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>

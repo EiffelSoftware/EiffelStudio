@@ -7,26 +7,29 @@
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <title>ISE EiffelBench</title>
 <link rev="made" href="mailto:webmaster@eiffel.com">
-<link rel="stylesheet" href="styles/tech.css">
+<link rel="stylesheet" href="styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
 </head>
 
-<body>
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
-      <TR>
-              <TD><IMG SRC="images/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
-                      BORDER="0"><IMG SRC="images/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
-                      BORDER="0"></TD>
-      </TR>
-</TABLE>
-
-<table cols="1" cellpadding="0" cellspacing="0" border="0">
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right">
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="0" cellspacing="0" border="0">
 <tr><td>
 <h1 align="center">EiffelThread</h1>
 <h1 align="center">
 
  Multi-threading for O-O development</h1>
 <p>
-<pre> 1  INTRODUCTION
+&nbsp;<pre> 1  INTRODUCTION
 
  2  SPECIFICATION
 
@@ -67,6 +70,8 @@
 	5.4  Limitations
 </pre>
 <p>
+
+&nbsp;
 
 <h1>1  INTRODUCTION</h1>
 <p>
@@ -254,8 +259,7 @@ and libmtmel.a. When using MEL, you have to be aware that Motif1.2 is not thread
 <p>
 
 	- The class of the thread object you want to create should inherit&nbsp;from the THREAD class.<br>
-	- Your thread is represented by a class which inherit from THREAD (deferred class).
-<pre>	class
+	- Your thread is represented by a class which inherit from THREAD (deferred class).<pre>	class
 		MY_THREAD
 	inherit
 		THREAD
@@ -271,15 +275,13 @@ and libmtmel.a. When using MEL, you have to be aware that Motif1.2 is not thread
 	end --class MY_THREAD
 </pre>
 
-  	- Creating a thread, it is like creating an Eiffel object:
-<pre>	my_thread: MY_THREAD
+  	- Creating a thread, it is like creating an Eiffel object:<pre>	my_thread: MY_THREAD
 		-- MY_THREAD inherit from THREAD and define
 		-- the deferred procedure `execute'
 	!! my_thread (or my_thread.make if there is a creation feature).</pre>
 
 	- Note: - you have created a thread object but not yet launched it.<br>
-  		- to run the thread, use the feature `launch' from THREAD.
-<pre>	my_thread.launch</pre>
+  		- to run the thread, use the feature `launch' from THREAD.<pre>	my_thread.launch</pre>
 
 	- On the Eiffel side, the procedure `execute' will be launched. This procedure is deferred in class THREAD, you have to define
 it in MY_THREAD.&nbsp;
@@ -305,15 +307,12 @@ the father to die before its children threads, otherwise the execution of the ch
     collected instead. A proxy must not be shared and is specific to a thread. The PROXY class was expanded before 4.2, it is not any longer.&nbsp;
 <p>
 
-	- To declare a proxy of object SHARED_TYPE:
-<pre>	my_proxy: PROXY [SHARED_TYPE]</pre>
+	- To declare a proxy of object SHARED_TYPE:<pre>	my_proxy: PROXY [SHARED_TYPE]</pre>
 
-	- To create it: ( be sure your object `my_item' is already created. )
-<pre>	!! my_proxy.put (my_item)</pre>
+	- To create it: ( be sure your object `my_item' is already created. )<pre>	!! my_proxy.put (my_item)</pre>
 
 	- During the execution of your thread (take it literally: it means when&nbsp;the procedure execute is running), you will access the shared object
-    throughout the proxy:
-<pre>	`my_proxy.item' corresponds to the encapsulated shared object.</pre>
+    throughout the proxy:<pre>	`my_proxy.item' corresponds to the encapsulated shared object.</pre>
 
   	NOTE:
 <p>
@@ -346,22 +345,16 @@ the father to die before its children threads, otherwise the execution of the ch
 	- my_mutex.pointer is the pointer to the C-corresponding mutex of my_mutex.
 <p>
 
-	- declaration of the mutex :
-<pre>	my_mutex: MUTEX</pre>
+	- declaration of the mutex :<pre>	my_mutex: MUTEX</pre>
 
-	- Creation of mutex :
-<pre>	create my_mutex.make</pre>
-    	- Locking mutex :&nbsp;
-<pre>	my_mutex.lock</pre>
+	- Creation of mutex :<pre>	create my_mutex.make</pre>
+    	- Locking mutex :&nbsp;<pre>	my_mutex.lock</pre>
 
-    	- unlocking mutex :
-<pre>	my_mutex.unlock</pre>
+    	- unlocking mutex :<pre>	my_mutex.unlock</pre>
 
-    	- Has client been successful in locking the mutex without waiting?
-<pre>	my_mutex.try_lock</pre>
+    	- Has client been successful in locking the mutex without waiting?<pre>	my_mutex.try_lock</pre>
 
-    	- Is my mutex initialized?
-<pre>	my_mutex.is_set</pre>
+    	- Is my mutex initialized?<pre>	my_mutex.is_set</pre>
 
 	NOTE: on Windows:
 <p>
@@ -378,22 +371,18 @@ the father to die before its children threads, otherwise the execution of the ch
 	Like MUTEX, the features of this class call the C-thread corresponding function.
 <p>
 
-	- Declaration of the semaphore :
-<pre>	my_sem: SEMAPHORE</pre>
+	- Declaration of the semaphore :<pre>	my_sem: SEMAPHORE</pre>
 
 	- Creation of semaphore: initialize semaphore with nb_tokens, it require
-	 nb_tokens >= 0
-<pre>	!!my_sem.make (nb_tokens)&nbsp;</pre>
+	 nb_tokens >= 0<pre>	!!my_sem.make (nb_tokens)&nbsp;</pre>
 <p>
-	- Wait for an available token:
-<pre>	my_sem.wait</pre>
+	- Wait for an available token:<pre>	my_sem.wait</pre>
 
-	- Give back a token:
-<pre>	my_sem.post</pre>
+	- Give back a token:<pre>	my_sem.post</pre>
 
-	- try_wait : similar to try_lock from MUTEX
-<pre>	my_sem.try_wait</pre>
+	- try_wait : similar to try_lock from MUTEX<pre>	my_sem.try_wait</pre>
 <p>
+&nbsp;
 <h2>
 
    4.5  The class CONDITION_VARIABLE</h2>
@@ -401,28 +390,23 @@ the father to die before its children threads, otherwise the execution of the ch
 
   	This class allows to use condition variables in Eiffel.<br>
 <br>
-	-- Declaration of the condition variable
-<pre>	my_cond: CONDITION_VARIABLE</pre>
-	-- Creation:
-<pre>	!! my_cond.make</pre>
+	-- Declaration of the condition variable<pre>	my_cond: CONDITION_VARIABLE</pre>
+	-- Creation:<pre>	!! my_cond.make</pre>
 	-- Wait for a signal (send by `signal'). You need to use a mutex, because when we call the `wait' feature
-    the number of waiters on this condition variable is incremented.&nbsp;
-<pre>	my_mutex: MUTEX
+    the number of waiters on this condition variable is incremented.&nbsp;<pre>	my_mutex: MUTEX
 	!! my_mutex.make</pre>
 
-<p>my_mutex must be locked by the calling thread so as `wait' can be called.
-<pre>	my_mutex.lock
+<p>my_mutex must be locked by the calling thread so as `wait' can be called.<pre>	my_mutex.lock
 	...
 	my_cond.wait (my_mutex)
 	...
 	my_mutex.unlock</pre>
 
-    	-- Unblock one thread blocked on the current condition variable.
-<pre>	my_cond.signal</pre>
-    	-- Unblock all the threads blocked on the current condition variable.
-<pre>	my_cond.broadcast</pre>
+    	-- Unblock one thread blocked on the current condition variable.<pre>	my_cond.signal</pre>
+    	-- Unblock all the threads blocked on the current condition variable.<pre>	my_cond.broadcast</pre>
 
 <p>
+&nbsp;
 <h2>
 
    4.6  Disposing C-thread object: class OBJECT_OWNER</h2>
@@ -470,7 +454,7 @@ the father to die before its children threads, otherwise the execution of the ch
 
 	-> A parent thread can wait for the termination of a child process through the feature `join' of class THREAD_CONTROL
         (inherited by THREAD):<br>
-<pre>	thr: MY_THREAD
+    <pre>	thr: MY_THREAD
 	...
 	thr.launch
 	...
@@ -486,6 +470,9 @@ the father to die before its children threads, otherwise the execution of the ch
 <br>
 	-> For platforms that support a thread_join function, an Eiffel interface to it is `native_join' (in case anybody wants to use it).
 <p>
+
+
+&nbsp;
 
 
 <h1>
@@ -526,9 +513,7 @@ the father to die before its children threads, otherwise the execution of the ch
    5.3  Using Once per process/thread features in EIFFEL</h2>
 <p>
 
-	- Keeping the default management of the once features in EIFFEL,&nbsp;a once per process could be implemented by calling the external&nbsp;C function 'eif_global_function' as described below:
-
-<pre>	class
+	- Keeping the default management of the once features in EIFFEL,&nbsp;a once per process could be implemented by calling the external&nbsp;C function 'eif_global_function' as described below:<pre>	class
 		TEST_ONCE_PER_PROCESS
 	inherit
 		ONCE_CONTROL -- contains global_once_function
@@ -582,8 +567,7 @@ the father to die before its children threads, otherwise the execution of the ch
    'file_per_thread'.
 <p>
 
-	- In the same way, there is a once_per_process procedure mechanism:
-<pre> 	procedure_per_process is&nbsp;
+	- In the same way, there is a once_per_process procedure mechanism:<pre> 	procedure_per_process is&nbsp;
  		once
  			global_once_procedure (Current, $procedure_per_thread)
  		end
@@ -594,8 +578,7 @@ the father to die before its children threads, otherwise the execution of the ch
  		end
 </pre>
 
- 	in class ONCE_CONTROL:
-<pre> 	...
+ 	in class ONCE_CONTROL:<pre> 	...
 	global_once_procedure (Currt: ANY; once_proc: POINTER) is
  		external
  			&quot;C [macro %&quot;eif_once.h%&quot;]&quot;
@@ -605,6 +588,7 @@ the father to die before its children threads, otherwise the execution of the ch
  	...
 </pre>
 <p>
+&nbsp;
 <h2>5.4  Limitations:</h2>
 <p>
 
@@ -617,8 +601,7 @@ the father to die before its children threads, otherwise the execution of the ch
     This can happen in some tricky situation.
 <p>
 
-	Ex: Do not write:
-<pre>	my_opp1: A_TYPE is
+	Ex: Do not write:<pre>	my_opp1: A_TYPE is
 		once
 			Result ?= global_function (Current, $my_opt)&nbsp;&nbsp;
 			-- lock access to&nbsp;
@@ -684,7 +667,6 @@ time it is called in a thread.</p>
 
 </blockquote>
 
-</td></tr></table>
-</body>
+  </td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
 
 </html>

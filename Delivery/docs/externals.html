@@ -7,19 +7,22 @@
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <title>ISE EiffelBench</title>
 <link rev="made" href="mailto:webmaster@eiffel.com">
-<link rel="stylesheet" href="styles/tech.css">
+<link rel="stylesheet" href="styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
 </head>
 
-<body>
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
-      <TR>
-              <TD><IMG SRC="images/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
-                      BORDER="0"><IMG SRC="images/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
-                      BORDER="0"></TD>
-      </TR>
-</TABLE>
-
-<table cols="1" cellpadding="0" cellspacing="0" border="0">
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC"></font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right">
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="0" cellspacing="0" border="0">
 <tr><td>
 
 <h1 align="center">Interface to other programming languages</h1>
@@ -31,7 +34,7 @@ specific constructs available only for C.</p>
 <p>For Windows users: please read the <a href="#windows">last section of this
 document</a>.</p>
 <p>
-<table border="0" cellspacing="0" cellpadding="0">
+&nbsp;<table border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td height=60 valign="top"><img border="0" src="images/danger.gif" width="45" height="39"></td>
     <td valign="bottom">
@@ -61,8 +64,7 @@ declaration:</p>
 <center>
 <table border="0" bgcolor="#FFFFE6">
   <tr>
-    <td width="100%">
-    <pre>
+    <td width="100%"><pre>
 		/* Routine with no parameter */
 	extern void no_param(void);
 
@@ -74,8 +76,7 @@ declaration:</p>
 	
 		/* Routine returning a value with one parameter */
 	extern size_t one_param_return(FILE *f);
-    </pre>
-    </td>
+    </pre></td>
   </tr>
 </table>
 </center>
@@ -83,8 +84,7 @@ declaration:</p>
 <center>
 <table border="0" bgcolor="#FFFFE6">
   <tr>
-    <td width="100%">
-    <pre>
+    <td width="100%"><pre>
 		c_no_param is
 				-- Encapsulation of a C routine with no parameter.
 			external
@@ -110,8 +110,7 @@ declaration:</p>
 			external
 				&quot;C (FILE *): EIF_INTEGER| %&quot;my_header.h%&quot;&quot;
 			end
-    </pre>
-    </td>
+    </pre></td>
   </tr>
 </table>
 </center>
@@ -121,8 +120,7 @@ declaration:</p>
 <center>
 <table border="0" bgcolor="#FFFFE6">
   <tr>
-    <td width="100%">
-    <pre>
+    <td width="100%"><pre>
 		/* Predefined constants */
 	#define ID_MENU				128
 	#define ID_MENU_CHARACTER	'c'
@@ -130,8 +128,7 @@ declaration:</p>
 		/* Access the `i'-th element of `a' where `a'
 		 * is an array of EIF_INTEGER */
 	#define i_th(a,i)				((a) + (i)*sizeof(EIF_INTEGER))
-    </pre>
-    </td>
+    </pre></td>
   </tr>
 </table>
 </center>
@@ -139,8 +136,7 @@ declaration:</p>
 <center>
 <table border="0" bgcolor="#FFFFE6">
   <tr>
-    <td width="100%">
-    <pre>
+    <td width="100%"><pre>
 	menu_id: INTEGER is
 			-- `ID_MENU' C encapsulation.
 		external
@@ -163,8 +159,7 @@ declaration:</p>
 			&quot;C [macro %&quot;my_header.h%&quot;] (EIF_INTEGER *, EIF_INTEGER): EIF_INTEGER&quot;
 		alias
 			&quot;i_th&quot;
-		end	</pre>
-    </td>
+		end	</pre></td>
   </tr>
 </table>
 </center>
@@ -181,15 +176,13 @@ field:</p>
 <center>
 <table border="0" bgcolor="#FFFFE6">
   <tr>
-    <td width="100%">
-    <pre>
+    <td width="100%"><pre>
 		/* Definition of `Point' */
 	typdef struct point {
 		int x;
 		int y;
 	} Point;
-    </pre>
-    </td>
+    </pre></td>
   </tr>
 </table>
 </center>
@@ -197,8 +190,7 @@ field:</p>
 <center>
 <table border="0" bgcolor="#FFFFE6">
   <tr>
-    <td width="100%">
-    <pre>
+    <td width="100%"><pre>
 	x (p: POINTER): INTEGER is
 			-- Access field x of struct pointed by `p'.
 		external
@@ -230,8 +222,7 @@ field:</p>
 		alias
 			&quot;y&quot;
 		end	
-	</pre>
-    </td>
+	</pre></td>
   </tr>
 </table>
 </center>
@@ -240,10 +231,10 @@ field:</p>
 <h3>DLLS</h3>
 <p>With ISE EiffelBench you now have two different ways to call C routines
 exported in a DLL. Why two, because Windows offers two way to call a C routines:</p>
-<ul>
-  <li>_cdecl: referred as the standard way</li>
-  <li>__stdcall referred as the Pascal way</li>
-</ul>
+    <ul>
+      <li>_cdecl: referred as the standard way</li>
+      <li>__stdcall referred as the Pascal way</li>
+    </ul>
 <p>Therefore if you want to call an external routines defined in a DLL to be
 called using the `_cdecl' method, you have to use the `<font color="#0000FF"><b>dll32</b>'</font>
 sub-language option. For `__stdcall' you need to use the `<b><font color="#0000FF">dllwin32</font></b>'
@@ -251,8 +242,7 @@ sub-language option. Here is an example:</p>
 <center>
 <table border="0" bgcolor="#FFFFE6">
   <tr>
-    <td width="100%">
-    <pre>
+    <td width="100%"><pre>
 	my_cdecl_routine (a: INTEGER): POINTER is
 			-- Encapsulation of a dll function with the `_cdecl' call mechanism.
 		external
@@ -265,13 +255,12 @@ sub-language option. Here is an example:</p>
 			&quot;C [dllwin32 %&quot;my_dll.dll%&quot;] (int): EIF_POINTER&quot;
 		end
 
-    </pre>
-    </td>
+    </pre></td>
   </tr>
 </table>
 </center>
 <p>
-<table border="0" cellspacing="0" cellpadding="0">
+&nbsp;<table border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td><img border="0" src="images/danger.gif" width="45" height="39"></td>
     <td>Using wrongly <b><font color="#0000FF">dll32</font></b>
@@ -294,16 +283,14 @@ to encapsulate the Windows `SendMessage' function:
   <tr>
     <td width="100%">
     
-Windows defined SendMessage as:
-<pre>
+Windows defined SendMessage as:<pre>
 <B>	LRESULT SendMessage(
 		HWND</B><I> hWnd</I><B>,      </B>// handle to destination window
 <B>		UINT</B><I> Msg</I><B>,       </B>// message
 <B>		WPARAM</B><I> wParam</I><B>,  </B>// first message parameter
 <B>		LPARAM</B><I> lParam</I>   // second message parameter
 <B>	);</B></PRE>
-In WEL, the encapsulation is written as:
-    <pre>
+In WEL, the encapsulation is written as:<pre>
 	cwin_send_message (hwnd: POINTER; msg, wparam,
 				lparam: INTEGER) is
 			-- SDK SendMessage (without the result)
@@ -312,14 +299,10 @@ In WEL, the encapsulation is written as:
 		alias
 			&quot;SendMessage&quot;
 		end
-    </pre>
-    </td>
+    </pre></td>
   </tr>
 </table>
 </center>
-<p>&nbsp;
-
-</td></tr></table>
-</body>
+<p>&nbsp;</td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></body>
 
 </html>

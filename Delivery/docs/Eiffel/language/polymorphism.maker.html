@@ -5,36 +5,27 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <meta name="GENERATOR" content="Microsoft FrontPage 4.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
-<TITLE>An Invitation to Eiffel: Polymorphism</TITLE>
+<TITLE>Polymorphism</TITLE>
 <link rev="made" href="mailto:webmaster@eiffel.com">
-<link rel="stylesheet" href="../../styles/tech.css">
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
 </head>
 
-<body>
-<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="425">
-      <TR>
-              <TD><IMG SRC="../../images/ise-left.gif" width="200" height="65" ALIGN="BOTTOM" ALT="Interactive Software Engineering: tools and components for enterprise applications"
-                      BORDER="0"><IMG SRC="../../images/tech-right.gif" width="225" height="65" ALIGN="BOTTOM" ALT="ISE TECHNOLOGY"
-                      BORDER="0"></TD>
-      </TR>
-</TABLE>
-
-<table cols="1" cellpadding="0" cellspacing="0" border="0">
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Polymorphism</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="right"><nobr>[&nbsp;<a href="../../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top"><table cols="1" cellpadding="0" cellspacing="0" border="0">
 <tr><td>
 
-<P>&nbsp;</P>
-
-<H1><A HREF="geninh.maker.html"><IMG SRC="fm2html-next.gif" ALT="Next page" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
-<A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" ALT="Table ofContents" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
-<A HREF="inheritance.maker.html"><IMG SRC="fm2html-previous.gif" ALT="Previous section" HEIGHT=16 WIDTH=16 ALIGN=RIGHT></A>
-<A NAME="REF98317"></A>AN INVITATION TO EIFFEL </H1>
-
-<P>
-<HR><!-- This file was created with the fm2html filter.
-The filter is copyright Norwegian Telecom Research and
-was programmed by Jon Stephenson von Tetzchner. -->
-
-<H2><A NAME="HDR0"></A>9 POLYMORPHISM AND DYNAMIC BINDING </H2>
+<H2><A NAME="HDR0"></A>9 POLYMORPHISM AND DYNAMIC BINDING</H2>
 
 <P>Inheritance is not just a module combination and enrichment mechanism.
 It also enables the definition of flexible entities that may become attached
@@ -68,7 +59,7 @@ features include an array of points representing the vertices and a function
 distances between adjacent vertices. An heir of <I>POLYGON</I> may begin
 as: </P>
 
-<UL>
+    <ul>
 <DL>
 <DT><B><FONT COLOR="#0000FF">class </FONT></B><I>RECTANGLE </I><B><FONT COLOR="#0000FF">inherit
 </FONT></B><BR>
@@ -113,7 +104,7 @@ Specific features of rectangles, such as:<I> </I></FONT><BR>
 
 <DD><I>... </I>Other<I> RECTANGLE</I> features ... </DD>
 </DL>
-</UL>
+    </ul>
 
 <P>Here it is appropriate to redefine <I>perimeter</I> for rectangles as
 there is a simpler and more efficient algorithm. Note the explicit <B><I>redefine</I></B>
@@ -124,7 +115,7 @@ subclause (which would come after the <B><I>rename</I></B> if present).
 of <I>perimeter</I>. The version to use in any call is determined by the
 run-time form of the target. Consider the following class fragment: </P>
 
-<UL>
+    <ul>
 <DL>
 <DD><I>p: POLYGON; r: RECTANGLE <BR>
 <BR>
@@ -148,7 +139,7 @@ run-time form of the target. Consider the following class fragment: </P>
 
 <DD><I>print (p.perimeter) </I></DD>
 </DL>
-</UL>
+    </ul>
 
 <P>The polymorphic assignment <I>p </I>:= <I>r</I> is valid because of
 the above rule. If condition c is false, <I>p</I> will be attached to an
@@ -226,13 +217,7 @@ the precondition may be weaker; and that it must achieve at least as much
 as promised by the prime contractor, but may achieve more, so that the
 postcondition may be stronger. </P>
 
-<center><P><A HREF="inheritance.maker.html"><IMG SRC="fm2html-previous.gif" HEIGHT=16 WIDTH=16></A><A HREF="inheritance.maker.html">Previous
-Chapter</A> <A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" HEIGHT=16 WIDTH=16></A><A HREF="BOOK.maker.html">Table
-of Contents</A> <A HREF="geninh.maker.html"><IMG SRC="fm2html-next.gif" HEIGHT=16 WIDTH=16></A><A HREF="geninh.maker.html">Next
-Chapter</A> </P></center>
+<center><P><A HREF="inheritance.maker.html"><IMG SRC="fm2html-previous.gif" HEIGHT=16 WIDTH=16></A> <A HREF="BOOK.maker.html"><IMG SRC="fm2html-toc.gif" HEIGHT=16 WIDTH=16></A> <A HREF="geninh.maker.html"><IMG SRC="fm2html-next.gif" HEIGHT=16 WIDTH=16></A> </P></center>
 
-</td></tr></table>
-
-
-</BODY>
+  </td></tr></table>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table></BODY>
 </HTML>

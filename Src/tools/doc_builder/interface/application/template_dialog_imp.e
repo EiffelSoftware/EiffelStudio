@@ -68,8 +68,8 @@ feature {NONE}-- Initialization
 			set_minimum_height (dialog_height)
 			set_title ("Templates")
 			l_ev_vertical_box_1.set_minimum_width (350)
-			l_ev_vertical_box_1.set_padding_width (padding_width)
-			l_ev_vertical_box_1.set_border_width (border_width)
+			l_ev_vertical_box_1.set_padding_width (5)
+			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
 			l_ev_frame_1.set_background_color (create {EV_COLOR}.make_with_8_bit_rgb (255, 255, 255))
@@ -123,14 +123,14 @@ feature {NONE}-- Initialization
 			project_label.set_minimum_width (45)
 			project_label.set_minimum_height (20)
 			l_ev_horizontal_box_1.set_minimum_height (20)
-			l_ev_horizontal_box_1.set_padding_width (padding_width)
-			l_ev_horizontal_box_1.set_border_width (border_width)
+			l_ev_horizontal_box_1.set_padding_width (5)
+			l_ev_horizontal_box_1.set_border_width (2)
 			l_ev_horizontal_box_1.disable_item_expand (template_description)
 			template_description.set_text ("Label text here")
 			template_description.set_minimum_height (20)
 			template_description.align_text_left
-			l_ev_horizontal_box_2.set_padding_width (padding_width)
-			l_ev_horizontal_box_2.set_border_width (border_width)
+			l_ev_horizontal_box_2.set_padding_width (5)
+			l_ev_horizontal_box_2.set_border_width (2)
 			l_ev_horizontal_box_2.disable_item_expand (ok_button)
 			l_ev_horizontal_box_2.disable_item_expand (cancel_button)
 			ok_button.set_text (button_ok_text)
@@ -166,10 +166,11 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+		
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
+		
 	
 end -- class TEMPLATE_DIALOG_IMP

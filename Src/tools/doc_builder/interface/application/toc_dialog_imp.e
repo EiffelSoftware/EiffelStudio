@@ -121,13 +121,13 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_8)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_9)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_horizontal_box_10)
-			l_ev_vertical_box_3.set_padding_width (padding_width)
+			l_ev_vertical_box_3.set_padding_width (5)
 			l_ev_vertical_box_3.set_border_width (inner_border_width)
 			l_ev_vertical_box_3.disable_item_expand (l_ev_label_1)
 			l_ev_label_1.set_text ("To sort the currently loaded Table of Contents simply choose from the%Noptions listed below and click 'Sort'.  A new TOC will be generated%Nbased upon the options specified.")
 			l_ev_label_1.align_text_left
-			l_ev_horizontal_box_2.set_padding_width (padding_width)
-			l_ev_horizontal_box_2.set_border_width (border_width)
+			l_ev_horizontal_box_2.set_padding_width (5)
+			l_ev_horizontal_box_2.set_border_width (2)
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_2)
 			l_ev_label_2.set_text ("General")
 			l_ev_label_2.align_text_left
@@ -165,7 +165,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_10.set_border_width (inner_border_width)
 			order_alphabetical_check.enable_select
 			order_alphabetical_check.set_text ("Order alphabetically")
-			l_ev_horizontal_box_11.set_padding_width (padding_width)
+			l_ev_horizontal_box_11.set_padding_width (5)
 			l_ev_horizontal_box_11.set_border_width (inner_border_width)
 			l_ev_horizontal_box_11.disable_item_expand (l_ev_label_6)
 			l_ev_label_6.set_text ("Sort for ")
@@ -214,10 +214,11 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+		
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
+		
 	
 end -- class TOC_DIALOG_IMP

@@ -69,32 +69,31 @@ feature {NONE} -- Query
 			-- Are options valid?
 		do
 			Result := True
-			error_report.clear
 			
 				-- Test for output directory
 			if location_text.text.is_empty then
-				error_report.append_error (create {ERROR}.make ("No output location specified."))	
+				shared_error_reporter.set_error (create {ERROR}.make ("No output location specified."))	
 			end
 			
 				-- Test for help specific details
 			if is_help then
 				if help_name_text.text.is_empty then
-					error_report.append_error (create {ERROR}.make ("Name for help project is required."))
+					shared_error_reporter.set_error (create {ERROR}.make ("Name for help project is required."))
 				end
 				if Shared_toc_manager.is_empty then
-					error_report.append_error (create {ERROR}.make ("No table of content defined."))
+					shared_error_reporter.set_error (create {ERROR}.make ("No table of content defined."))
 				end		
 				if toc_list.selected_items.is_empty then
-					error_report.append_error (create {ERROR}.make ("You must choose at least one table of contents %
+					shared_error_reporter.set_error (create {ERROR}.make ("You must choose at least one table of contents %
 						%from which to generate the help structure."))						
 				end
 				if web_radio.is_selected and then filter_list.selected_items.is_empty then
-					error_report.append_error (create {ERROR}.make ("You must choose at least one document filter type %
+					shared_error_reporter.set_error (create {ERROR}.make ("You must choose at least one document filter type %
 						%to generate web based help."))
 				end
 			end
 			
-			Result := error_report.is_empty
+			Result := shared_error_reporter.error /= Void
 		end	
 
 feature {NONE} -- GUI
@@ -349,7 +348,7 @@ feature {NONE} -- Implementation
 				generate		
 				hide
 			else
-				error_report.show
+				shared_error_reporter.show
 			end			
 		end	
 
@@ -397,12 +396,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		end		
-
-	error_report: ERROR_REPORT is
-			-- Error report
-		once
-			create Result.make ("Errors")
-		end
 
 	conversion_combo_changed is
 			-- Conversion type combo was changed

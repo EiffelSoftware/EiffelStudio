@@ -71,14 +71,14 @@ feature {NONE}-- Initialization
 			set_maximum_width (4000)
 			set_maximum_height (5000)
 			set_title ("Exception Report")
-			l_ev_vertical_box_1.set_padding_width (padding_width)
-			l_ev_vertical_box_1.set_border_width (border_width)
+			l_ev_vertical_box_1.set_padding_width (5)
+			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_3)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_4)
-			l_ev_horizontal_box_1.set_padding_width (padding_width)
-			l_ev_horizontal_box_1.set_border_width (border_width)
+			l_ev_horizontal_box_1.set_padding_width (5)
+			l_ev_horizontal_box_1.set_border_width (2)
 			l_ev_label_1.set_text ("An exception has occured.  Please send the trace to neilc@eiffel.com")
 			l_ev_label_1.align_text_left
 			l_ev_horizontal_box_2.set_padding_width (5)
@@ -87,20 +87,20 @@ feature {NONE}-- Initialization
 			l_ev_label_2.set_text ("Exception Summary: ")
 			l_ev_label_2.align_text_left
 			summary_label.align_text_left
-			l_ev_horizontal_box_3.set_padding_width (padding_width)
-			l_ev_horizontal_box_3.set_border_width (border_width)
+			l_ev_horizontal_box_3.set_padding_width (5)
+			l_ev_horizontal_box_3.set_border_width (2)
 			l_ev_horizontal_box_3.disable_item_expand (l_ev_label_3)
 			l_ev_label_3.set_text ("Exception Type: ")
 			l_ev_label_3.align_text_left
 			excpt_type_label.align_text_left
-			l_ev_vertical_box_2.set_padding_width (padding_width)
-			l_ev_vertical_box_2.set_border_width (border_width)
+			l_ev_vertical_box_2.set_padding_width (5)
+			l_ev_vertical_box_2.set_border_width (2)
 			l_ev_vertical_box_2.disable_item_expand (l_ev_label_4)
 			l_ev_label_4.set_text ("Exception Trace:")
 			l_ev_label_4.align_text_left
 			excpt_trace_text.disable_edit
-			l_ev_horizontal_box_4.set_padding_width (padding_width)
-			l_ev_horizontal_box_4.set_border_width (border_width)
+			l_ev_horizontal_box_4.set_padding_width (5)
+			l_ev_horizontal_box_4.set_border_width (2)
 			l_ev_horizontal_box_4.disable_item_expand (okay_button)
 			okay_button.set_text ("OK")
 			okay_button.set_minimum_width (button_width)
@@ -131,10 +131,11 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+		
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
+		
 	
 end -- class EXCEPTION_DIALOG_IMP

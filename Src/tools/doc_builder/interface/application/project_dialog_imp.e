@@ -65,8 +65,8 @@ feature {NONE}-- Initialization
 			set_minimum_width (dialog_width)
 			set_minimum_height (dialog_short_height)
 			set_title ("New Project")
-			l_ev_vertical_box_1.set_padding_width (padding_width)
-			l_ev_vertical_box_1.set_border_width (border_width)
+			l_ev_vertical_box_1.set_padding_width (5)
+			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_label_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
@@ -75,14 +75,14 @@ feature {NONE}-- Initialization
 			l_ev_label_1.set_text ("Please enter details for your new project:")
 			l_ev_label_1.set_minimum_height (25)
 			l_ev_label_1.align_text_left
-			l_ev_horizontal_box_1.set_padding_width (padding_width)
-			l_ev_horizontal_box_1.set_border_width (border_width)
+			l_ev_horizontal_box_1.set_padding_width (5)
+			l_ev_horizontal_box_1.set_border_width (2)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_2)
 			l_ev_label_2.set_text ("Project Name:")
 			l_ev_label_2.set_minimum_width (120)
 			l_ev_label_2.align_text_left
-			l_ev_horizontal_box_2.set_padding_width (padding_width)
-			l_ev_horizontal_box_2.set_border_width (border_width)
+			l_ev_horizontal_box_2.set_padding_width (5)
+			l_ev_horizontal_box_2.set_border_width (2)
 			l_ev_horizontal_box_2.disable_item_expand (l_ev_label_3)
 			l_ev_horizontal_box_2.disable_item_expand (browse_button)
 			l_ev_label_3.set_text ("Project root directory:")
@@ -91,8 +91,8 @@ feature {NONE}-- Initialization
 			browse_button.set_text (button_browse_text)
 			browse_button.set_minimum_width (button_width)
 			l_ev_cell_1.set_minimum_height (5)
-			l_ev_horizontal_box_3.set_padding_width (padding_width)
-			l_ev_horizontal_box_3.set_border_width (border_width)
+			l_ev_horizontal_box_3.set_padding_width (5)
+			l_ev_horizontal_box_3.set_border_width (2)
 			l_ev_horizontal_box_3.disable_item_expand (create_button)
 			l_ev_horizontal_box_3.disable_item_expand (cancel_btn)
 			create_button.set_text (button_create_text)
@@ -126,10 +126,11 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+		
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
+		
 	
 end -- class PROJECT_DIALOG_IMP

@@ -19,23 +19,19 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			ok.select_actions.extend (agent hide)
-			close.select_actions.extend (agent close_error_list)
 		end		
 
 feature -- Status Setting
 
-	set_error_list (a_error_list: LIST [ERROR]; a_context: STRING) is
+	set_error (a_error: ERROR; a_context: STRING) is
 			-- Set errors with `error_list'.
 		require
-			error_list_not_void: a_error_list /= Void
-			error_list_not_empty: not a_error_list.is_empty
-		do			
-			error_list := a_error_list
+			error_not_void: a_error /= Void
+		do						
 			create errors
-			error_list.do_all (agent show_error_description (?))
-			errors_notebook.extend (errors)
-			errors_notebook.set_item_text (errors, a_context)
-			errors_notebook.select_item (errors)
+			show_error_description (a_error)
+			error_container.wipe_out
+			error_container.extend (errors)
 		end			
 		
 feature {NONE} -- Implementation
@@ -50,18 +46,7 @@ feature {NONE} -- Implementation
 				l_item.pointer_double_press_actions.force_extend (a_error.action)
 			end
 			errors.extend (l_item)			
-		end		
-		
-	close_error_list is
-			-- Close error list with focus
-		do
-			if not errors_notebook.is_empty then
-				errors_notebook.prune_all (errors_notebook.selected_item)
-			end	
-		end		
-	
-	error_list: LIST [ERROR]
-			-- Errors
+		end			
 			
 	errors: EV_LIST
 			-- Error widget

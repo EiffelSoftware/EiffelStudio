@@ -32,50 +32,34 @@ feature {NONE}-- Initialization
 			
 				-- Create all widgets.
 			create l_ev_vertical_box_1
-			create l_ev_horizontal_box_1
-			create l_ev_label_1
-			create l_ev_tool_bar_1
-			create close
-			create errors_notebook
+			create error_container
 			create l_ev_cell_1
-			create l_ev_horizontal_box_2
+			create l_ev_horizontal_box_1
 			create error_count
 			create l_ev_cell_2
 			create ok
 			
 				-- Build_widget_structure.
 			extend (l_ev_vertical_box_1)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
-			l_ev_horizontal_box_1.extend (l_ev_label_1)
-			l_ev_horizontal_box_1.extend (l_ev_tool_bar_1)
-			l_ev_tool_bar_1.extend (close)
-			l_ev_vertical_box_1.extend (errors_notebook)
+			l_ev_vertical_box_1.extend (error_container)
 			l_ev_vertical_box_1.extend (l_ev_cell_1)
-			l_ev_vertical_box_1.extend (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_2.extend (error_count)
-			l_ev_horizontal_box_2.extend (l_ev_cell_2)
-			l_ev_horizontal_box_2.extend (ok)
+			l_ev_vertical_box_1.extend (l_ev_horizontal_box_1)
+			l_ev_horizontal_box_1.extend (error_count)
+			l_ev_horizontal_box_1.extend (l_ev_cell_2)
+			l_ev_horizontal_box_1.extend (ok)
 			
 			set_minimum_width (dialog_width)
 			set_minimum_height (dialog_height)
 			set_title ("Error Report Dialog")
-			l_ev_vertical_box_1.set_padding_width (padding_width)
-			l_ev_vertical_box_1.set_border_width (border_width)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
+			l_ev_vertical_box_1.set_padding_width (5)
+			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_cell_1)
-			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_2)
-			l_ev_horizontal_box_1.set_padding_width (padding_width)
-			l_ev_horizontal_box_1.set_border_width (border_width)
-			l_ev_horizontal_box_1.disable_item_expand (l_ev_tool_bar_1)
-			l_ev_label_1.set_text ("Double-click an error for context sensitive information")
-			l_ev_label_1.align_text_left
-			close.set_tooltip ("Close")
-			close.set_pixmap (icon_file_close_ico)
+			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
 			l_ev_cell_1.set_minimum_height (4)
-			l_ev_horizontal_box_2.set_padding_width (padding_width)
-			l_ev_horizontal_box_2.set_border_width (border_width)
-			l_ev_horizontal_box_2.disable_item_expand (error_count)
-			l_ev_horizontal_box_2.disable_item_expand (ok)
+			l_ev_horizontal_box_1.set_padding_width (5)
+			l_ev_horizontal_box_1.set_border_width (2)
+			l_ev_horizontal_box_1.disable_item_expand (error_count)
+			l_ev_horizontal_box_1.disable_item_expand (ok)
 			error_count.align_text_left
 			ok.set_text (button_ok_text)
 			ok.set_minimum_width (button_width)
@@ -90,13 +74,10 @@ feature {NONE}-- Initialization
 
 feature -- Access
 
-	l_ev_vertical_box_1: EV_VERTICAL_BOX
-	l_ev_horizontal_box_1, l_ev_horizontal_box_2: EV_HORIZONTAL_BOX
-	l_ev_label_1, error_count: EV_LABEL
-	l_ev_tool_bar_1: EV_TOOL_BAR
-	close: EV_TOOL_BAR_BUTTON
-	errors_notebook: EV_NOTEBOOK
+	l_ev_vertical_box_1, error_container: EV_VERTICAL_BOX
 	l_ev_cell_1, l_ev_cell_2: EV_CELL
+	l_ev_horizontal_box_1: EV_HORIZONTAL_BOX
+	error_count: EV_LABEL
 	ok: EV_BUTTON
 
 feature {NONE} -- Implementation
@@ -108,10 +89,11 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+		
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
+		
 	
 end -- class ERROR_DIALOG_IMP

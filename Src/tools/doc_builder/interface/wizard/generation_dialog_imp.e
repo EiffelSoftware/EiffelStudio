@@ -125,23 +125,23 @@ feature {NONE}-- Initialization
 			set_minimum_width (dialog_wide_width)
 			set_minimum_height (dialog_tall_height)
 			set_title ("Generation Wizard")
-			l_ev_vertical_box_1.set_padding_width (padding_width)
-			l_ev_vertical_box_1.set_border_width (border_width)
+			l_ev_vertical_box_1.set_padding_width (5)
+			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_vertical_box_1.disable_item_expand (filter_frame)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_4)
 			filter_frame.set_text ("File Options")
-			l_ev_vertical_box_2.set_padding_width (padding_width)
-			l_ev_vertical_box_2.set_border_width (border_width)
-			l_ev_horizontal_box_1.set_padding_width (padding_width)
-			l_ev_horizontal_box_1.set_border_width (border_width)
-			l_ev_vertical_box_3.set_padding_width (padding_width)
+			l_ev_vertical_box_2.set_padding_width (5)
+			l_ev_vertical_box_2.set_border_width (2)
+			l_ev_horizontal_box_1.set_padding_width (5)
+			l_ev_horizontal_box_1.set_border_width (2)
+			l_ev_vertical_box_3.set_padding_width (5)
 			l_ev_vertical_box_3.set_border_width (inner_border_width)
 			l_ev_vertical_box_3.disable_item_expand (convert_box)
 			l_ev_vertical_box_3.disable_item_expand (transform_box)
 			l_ev_vertical_box_3.disable_item_expand (l_ev_horizontal_box_2)
 			convert_box.set_minimum_width (15)
-			convert_box.set_padding_width (padding_width)
-			convert_box.set_border_width (border_width)
+			convert_box.set_padding_width (5)
+			convert_box.set_border_width (2)
 			convert_box.disable_item_expand (l_ev_label_1)
 			convert_box.disable_item_expand (transform_file_combo)
 			l_ev_label_1.set_text ("Convert documents into")
@@ -166,12 +166,12 @@ feature {NONE}-- Initialization
 			browse_button.set_minimum_width (80)
 			help_frame.disable_sensitive
 			help_frame.set_text ("Help Project Options")
-			l_ev_vertical_box_4.set_padding_width (padding_width)
-			l_ev_vertical_box_4.set_border_width (border_width)
+			l_ev_vertical_box_4.set_padding_width (5)
+			l_ev_vertical_box_4.set_border_width (2)
 			l_ev_vertical_box_4.disable_item_expand (l_ev_horizontal_box_3)
 			l_ev_vertical_box_4.disable_item_expand (l_ev_vertical_box_5)
-			l_ev_horizontal_box_3.set_padding_width (padding_width)
-			l_ev_horizontal_box_3.set_border_width (border_width)
+			l_ev_horizontal_box_3.set_padding_width (5)
+			l_ev_horizontal_box_3.set_border_width (2)
 			l_ev_horizontal_box_3.disable_item_expand (l_ev_label_4)
 			l_ev_label_4.set_text ("Project Name")
 			l_ev_label_4.align_text_left
@@ -185,17 +185,17 @@ feature {NONE}-- Initialization
 			html_radio.set_text ("Microsoft HTML Help 1.x")
 			vs_radio.set_text ("Visual Studio Integrated Help (MS Help 2.0)")
 			web_radio.set_text ("Web Help (can generate multiple interchangable tocs)")
-			web_toc_type_box.set_padding_width (padding_width)
+			web_toc_type_box.set_padding_width (5)
 			web_toc_type_box.set_border_width (inner_border_width)
 			web_toc_type_box.disable_item_expand (tree_web_help_radio)
 			web_toc_type_box.disable_item_expand (tree_web_simple_radio)
 			tree_web_help_radio.set_text ("DHTML Tree TOC")
 			tree_web_simple_radio.set_text ("DHTML Single level TOC")
-			help_toc_box.set_padding_width (padding_width)
-			help_toc_box.set_border_width (border_width)
+			help_toc_box.set_padding_width (5)
+			help_toc_box.set_border_width (2)
 			l_ev_frame_1.set_text ("Table of Contents")
-			l_ev_vertical_box_6.set_padding_width (padding_width)
-			l_ev_vertical_box_6.set_border_width (border_width)
+			l_ev_vertical_box_6.set_padding_width (5)
+			l_ev_vertical_box_6.set_border_width (2)
 			l_ev_vertical_box_6.disable_item_expand (web_filter_option_combo)
 			web_filter_option_combo.disable_sensitive
 			web_filter_option_combo.disable_edit
@@ -207,8 +207,8 @@ feature {NONE}-- Initialization
 			l_ev_vertical_box_7.disable_item_expand (web_toc_option_combo)
 			web_toc_option_combo.disable_sensitive
 			web_toc_option_combo.disable_edit
-			l_ev_horizontal_box_4.set_padding_width (padding_width)
-			l_ev_horizontal_box_4.set_border_width (border_width)
+			l_ev_horizontal_box_4.set_padding_width (5)
+			l_ev_horizontal_box_4.set_border_width (2)
 			l_ev_horizontal_box_4.disable_item_expand (finish_button)
 			l_ev_horizontal_box_4.disable_item_expand (cancel_button)
 			finish_button.set_text (button_finish_text)
@@ -248,10 +248,11 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+		
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
+		
 	
 end -- class GENERATION_DIALOG_IMP

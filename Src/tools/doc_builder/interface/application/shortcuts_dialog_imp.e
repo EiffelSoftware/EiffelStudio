@@ -57,12 +57,12 @@ feature {NONE}-- Initialization
 			set_minimum_width (dialog_width)
 			set_minimum_height (dialog_short_height)
 			set_title ("Shortcut Configuration")
-			l_ev_vertical_box_1.set_padding_width (padding_width)
-			l_ev_vertical_box_1.set_border_width (border_width)
+			l_ev_vertical_box_1.set_padding_width (5)
+			l_ev_vertical_box_1.set_border_width (2)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_separator_1)
 			l_ev_vertical_box_1.disable_item_expand (l_ev_horizontal_box_1)
-			l_ev_horizontal_box_1.set_padding_width (padding_width)
-			l_ev_horizontal_box_1.set_border_width (border_width)
+			l_ev_horizontal_box_1.set_padding_width (5)
+			l_ev_horizontal_box_1.set_border_width (2)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_1)
 			l_ev_horizontal_box_1.disable_item_expand (keys_combo)
 			l_ev_horizontal_box_1.disable_item_expand (l_ev_label_2)
@@ -102,10 +102,11 @@ feature {NONE} -- Implementation
 			-- for `Current'.
 			Result := True
 		end
-	
+		
 	user_initialization is
 			-- Feature for custom initialization, called at end of `initialize'.
 		deferred
 		end
+		
 	
 end -- class SHORTCUTS_DIALOG_IMP

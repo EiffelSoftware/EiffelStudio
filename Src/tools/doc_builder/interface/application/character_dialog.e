@@ -78,8 +78,8 @@ feature {NONE} -- Implementation
 			l_editor: DOCUMENT_EDITOR
 		do
 			l_editor := (create {SHARED_OBJECTS}).shared_document_editor
-			if l_editor.current_widget /= Void then
-				l_editor.current_widget.internal_edit_widget.insert_text (a_code)
+			if l_editor.current_document /= Void then
+				l_editor.text_displayed.insert_string (a_code)
 			end
 		end		
 

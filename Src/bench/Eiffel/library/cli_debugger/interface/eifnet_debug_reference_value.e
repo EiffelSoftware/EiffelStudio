@@ -293,8 +293,10 @@ feature -- Once request
 			l_origin_class_c := a_feat.written_class
 			if dynamic_class.is_equal (l_origin_class_c) then
 				--| The Once is inherited
-				l_icd_class := object_value.get_class
-				l_adapted_class_type := dynamic_class_type
+				if object_value /= Void then
+					l_icd_class := object_value.get_class
+					l_adapted_class_type := dynamic_class_type
+				end
 			else
 				if l_origin_class_c.types.count = 1 then
 					l_adapted_class_type := l_origin_class_c.types.first

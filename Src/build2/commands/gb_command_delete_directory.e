@@ -51,8 +51,8 @@ feature -- Basic Operation
 		local
 			temp_file_name: FILE_NAME
 			directory: DIRECTORY
+			directory_item: GB_WINDOW_SELECTOR_DIRECTORY_ITEM
 		do
-			history.cut_off_at_current_position
 				-- Now actually remove the directory from the disk.
 			create temp_file_name.make_from_string (generated_path.string)
 			temp_file_name.extend (directory_name)	
@@ -62,6 +62,10 @@ feature -- Basic Operation
 					-- If a project has not been generated, then there may be no directory yet.
 				delete_directory (directory)
 			end
+				-- Now remove the representation from the directory selector.
+			directory_item := window_selector.directory_object_from_name (directory_name)
+			Window_selector.prune_all (directory_item)
+			
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end

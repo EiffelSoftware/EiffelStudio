@@ -269,9 +269,6 @@ feature {NONE} -- Implementation
 				end
 			end
 		rescue
---			catch (THREAD_INTERRUPTED_EXCEPTION last_exception) {}
---			catch (EXCEPTION last_exception) {-- msg_box}
-
 			rescued := True
 			retry
 		end

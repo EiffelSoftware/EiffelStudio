@@ -8,6 +8,7 @@ indexing
 		%d_: Degree outputter; %
 		%f_: Focus label text; %
 		%h_: Help text; %
+		%i_: Icon ids for windows (ignored for motif); %
 		%m_: Mnemonic (menu entry); %
 		%l_: Label texts; %
 		%n_: widget Names; %
@@ -81,17 +82,24 @@ feature -- Help text
 
 	h_No_help_available: STRING is		"No help available for this element";
 
+feature -- Icon ids for Windows
+
+	i_Project_id: INTEGER is 1;
+	i_Object_id: INTEGER is 2;
+	i_Feature_id: INTEGER is 3;
+	i_Explain_id: INTEGER is 4;
+	i_Class_id: INTEGER is 5;
+	i_System_id: INTEGER is 6;
+
 feature -- Accelerator, focus label and menu name
 
-	m_Apply: STRING is			"&Apply"
-	f_Case_storage: STRING is		"Reverse engineer (case)";
-	m_Case_storage: STRING is		"&Reverse engineer (case)";
-	a_Clear_breakpoints: STRING is		"Ctrl<Key>l";
+	m_Apply: STRING is					"&Apply"
+	f_Case_storage: STRING is			"Reverse engineer (case)";
+	m_Case_storage: STRING is			"&Reverse engineer (case)";
 	f_Clear_breakpoints: STRING is		"Clear stop points";
-	m_Clear_breakpoints: STRING is		"C&lear stop points%TCtrl+L";
-	a_Close_all_tools: STRING is		"Ctrl<Key>a";
+	m_Clear_breakpoints: STRING is		"C&lear stop points";
 	f_Close_all_tools: STRING is		"Close all tools";
-	m_Close_all_tools: STRING is		"Close &all tools%TCtrl+A";
+	m_Close_all_tools: STRING is		"Close &all tools";
 	f_Copy: STRING is					"Copy";
 	m_Windows_copy: STRING is			"&Copy%TCtrl+C";
 	m_Unix_copy: STRING is				"&Copy%TCtrl+Insert";
@@ -111,32 +119,26 @@ feature -- Accelerator, focus label and menu name
 	m_Debug_status: STRING is			"E&xecution status";
 	f_Disable_stop_points: STRING is	"Disable all stop points";
 	m_Disable_stop_points: STRING is	"&Disable all stop points";
-	a_Down_stack: STRING is				"Ctrl<Key>d";
 	f_Down_stack: STRING is				"Go down one level";
-	m_Down_stack: STRING is				"Go &down one level%TCtrl+D";
+	m_Down_stack: STRING is				"Go &down one level";
 	f_Enable_stop_points: STRING is		"Enable all stop points";
 	m_Enable_stop_points: STRING is		"&Enable all stop points";
-	a_Exec_last: STRING is				"Ctrl<Key>o";
 	f_Exec_last: STRING is				"Out of routine";
-	m_Exec_last: STRING is				"&Out of routine%TCtrl+O";
-	a_Exec_nostop: STRING is			"Ctrl<Key>i";
+	m_Exec_last: STRING is				"&Out of routine";
 	f_Exec_nostop: STRING is			"Ignore stop points";
-	m_Exec_nostop: STRING is			"&Ignore stop points%TCtrl+I";
-	a_Exec_step: STRING is				"Ctrl<Key>t";
+	m_Exec_nostop: STRING is			"&Ignore stop points";
 	f_Exec_step: STRING is				"Step by step";
-	m_Exec_step: STRING is				"S&tep by step%TCtrl+T";
-	a_Exec_stop: STRING is				"Ctrl<Key>x";
+	m_Exec_step: STRING is				"S&tep by step";
 	f_Exec_stop: STRING is				"To next stop point";
-	m_Exec_stop: STRING is				"To ne&xt stop point%TCtrl+X";
+	m_Exec_stop: STRING is				"To ne&xt stop point";
 	f_Exit: STRING is					"Exit tool";
 	m_Exit: STRING is					"E&xit tool";
 	f_Exit_project: STRING is			"End session";
 	m_Exit_project: STRING is			"E&nd session";
 	f_Filter: STRING is					"Filter";
 	m_Filter: STRING is					"&Filter";
-	a_Finalize: STRING is				"Ctrl Alt<Key>z";
 	f_Finalize: STRING is				"Finalize...";
-	m_Finalize: STRING is				"Finali&ze...%TCtrl+Alt+Z";
+	m_Finalize: STRING is				"Finali&ze...";
 	f_Final_mode: STRING is				"Final mode";
 	m_Final_mode: STRING is				"&Final mode";
 	a_Find: STRING is					"Ctrl<Key>f";
@@ -152,14 +154,13 @@ feature -- Accelerator, focus label and menu name
 	m_short_doc: STRING is				"&Short";
 	f_Show_cluster_heir_list: STRING is	"Show cluster hierarchy";
 	m_Show_cluster_heir_list: STRING is	"Cluster &hierarchy";
-	a_Freeze: STRING is					"Ctrl Alt<Key>f";
+	a_Freeze: STRING is					"Ctrl<Key>n";
 	f_Freeze: STRING is					"Freeze...";
-	m_Freeze: STRING is					"&Freeze...%TCtrl+Alt+F";
+	m_Freeze: STRING is					"&Freeze...%TCtrl+N";
 	f_Generate: STRING is				"Generate";
 	m_Generate: STRING is				"&Generate";
 	f_Help: STRING is					"Help";
-	m_Help: STRING is					"&Help%T<F1>";
-	a_Help: STRING is					"<Key><F1>";
+	m_Help: STRING is					"&Help";
 	f_Hide_feature: STRING is			"Hide feature";
 	m_Hide_feature: STRING is			"Hide &feature";
 	f_Hide_object: STRING is			"Hide object";
@@ -186,9 +187,9 @@ feature -- Accelerator, focus label and menu name
 	f_Paste: STRING is					"Paste";
 	m_Windows_paste: STRING is			"&Paste%TCtrl+V";
 	m_Unix_Paste: STRING is				"&Paste%TShift+Insert";
-	a_Precompile: STRING is				"Ctrl Alt<Key>P";
+	a_Precompile: STRING is				"Ctrl<Key>P";
 	f_Precompile: STRING is				"&Precompile...";
-	m_Precompile: STRING is				"Precompile...%TCtrl+Alt+P";
+	m_Precompile: STRING is				"Precompile...%TCtrl+P";
 	f_Print: STRING is					"Print...";
 	m_Print: STRING is					"&Print";
 	f_Preferences: STRING is			"Preferences";
@@ -197,12 +198,11 @@ feature -- Accelerator, focus label and menu name
 	m_Profile_tool: STRING is			"Pro&file tool";
 	f_Previous_target: STRING is		"Previous";
 	m_Previous_target: STRING is		"&Previous";
-	a_Quick_update: STRING is			"Ctrl Alt<Key>q";
+	a_Quick_update: STRING is			"CtrlKey>q";
 	f_Quick_update: STRING is			"Quick melt";
-	m_Quick_update: STRING is			"&Quick Melt%TCtrl+Alt+Q";
-	a_Raise_all_tools: STRING is		"Ctrl<Key>b";
+	m_Quick_update: STRING is			"&Quick Melt%TCtrl+Q";
 	f_Raise_all_tools: STRING is		"Raise all tools";
-	m_Raise_all_tools: STRING is		"&Raise all tools%TCtrl+B";
+	m_Raise_all_tools: STRING is		"&Raise all tools";
 	f_Raise_project: STRING is			"Raise project tool";
 	m_Raise_project: STRING is			"&Raise project tool%TAlt+R";
 	a_Raise_project: STRING is			"Alt<Key>P";
@@ -283,12 +283,11 @@ feature -- Accelerator, focus label and menu name
 	m_Stoppable: STRING is				"&Stoppable";
 	f_System: STRING is					"System";
 	m_System: STRING is					"&System tool";
-	a_Update: STRING is					"Ctrl Alt<Key>m";
+	a_Update: STRING is					"Ctrl<Key>m";
 	f_Update: STRING is					"Melt";
-	m_Update: STRING is					"&Melt%TCtrl+Alt+M";
-	a_Up_stack: STRING is				"Ctrl<Key>u";
+	m_Update: STRING is					"&Melt%TCtrl+M";
 	f_Up_stack: STRING is				"Go up one level";
-	m_Up_stack: STRING is				"Go &up one level%TCtrl+U";
+	m_Up_stack: STRING is				"Go &up one level";
 	m_Validate: STRING is				"&Validate";
 	m_Version: STRING is				"&Version";
 

@@ -135,9 +135,6 @@ feature {NONE} -- Implementation
 					visitor.visit (func_desc.arguments.item.type)
 
 					if is_paramflag_fout (func_desc.arguments.item.flags) then
-						if not visitor.is_pointed then
-			 				message_output.add_warning (Current, message_output.Not_pointer_type)
-						end							
 						variables.append (out_variable_set_up (func_desc.arguments.item.name, visitor))
 						variables.append (New_line_tab)
 						out_value.append (out_value_set_up (func_desc.arguments.item.name, visitor))

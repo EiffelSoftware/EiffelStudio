@@ -1,8 +1,9 @@
 indexing
 
-	description:	"Retrieves the profiler configuration file.";
-	date:		   "Date: ";
-	revision:	   "Revision: "
+	description:
+		"Retrieves the profiler configuration file.";
+	date: "Date: ";
+	revision: "Revision: "
 
 class CONFIGURATION_LOADER
 

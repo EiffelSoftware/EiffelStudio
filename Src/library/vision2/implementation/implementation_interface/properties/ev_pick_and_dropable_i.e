@@ -259,7 +259,6 @@ feature {EV_ANY_I} -- Implementation
 			-- Draw a rubber band from pick position to pointer position.
 		local
 			target: EV_ABSTRACT_PICK_AND_DROPABLE
-			last_widget_target: EV_WIDGET_I
 		do
 			draw_rubber_band
 			pointer_x := a_screen_x
@@ -425,6 +424,9 @@ end -- class EV_PICK_AND_DROPABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2001/06/20 23:32:09  manus
+--| Removed non-used local variable.
+--|
 --| Revision 1.4  2001/06/16 01:09:07  king
 --| Optimized execute to not set pointer everytime
 --|

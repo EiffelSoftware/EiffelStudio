@@ -11,7 +11,6 @@
 #include "gtk_eiffel.h"
 #include "gdk_eiffel.h"
 
-
 static void c_gtk_widget_show_children_recurse (GtkWidget *widget,
 					      gpointer   client_data);
 
@@ -96,6 +95,16 @@ void c_event_callback (GtkObject *w, GdkEvent *ev,  gpointer data)
 	(pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));
     }
 
+    /* Another test to make a difference between a move event and a size
+       event for a window. For a move-event : pcbd->mouse_button = 1, for
+       a size_event : pcbd->mouse_button = 2.
+    */
+    
+    if (c_gdk_event_type (ev) == GDK_CONFIGURE)
+      {
+	if ((pcbd->mouse_button == 1 && ((c_gdk_event_configure_width(ev) == c_gtk_widget_width (GTK_WIDGET(w))) && (c_gdk_event_configure_height(ev) == c_gtk_widget_height (GTK_WIDGET(w))))) || (pcbd->mouse_button == 2 && ((c_gdk_event_configure_width(ev) != c_gtk_widget_width (GTK_WIDGET(w))) || (c_gdk_event_configure_height(ev) != c_gtk_widget_height (GTK_WIDGET(w)))))) 
+	  (pcbd->rtn)(eif_access(pcbd->obj), eif_access(pcbd->argument));
+      }
 }
 
 
@@ -118,7 +127,6 @@ void c_gtk_signal_destroy_data (gpointer data)
 				/* free the memory for callback data */
     c_free_call_back_block (data);
 }
-
 
 /*********************************
  *
@@ -195,7 +203,7 @@ gint c_gtk_signal_connect (GtkObject *widget,
 				(gpointer)pcbd));
 }
 
-/*********************************
+ /*********************************
  *
  * Function `c_gtk_signal_disconnect'
  *
@@ -296,11 +304,11 @@ EIF_BOOLEAN c_gtk_widget_sensitive (GtkWidget *w)
  *
  * Function `c_gtk_widget_x'
  *          `c_gtk_widget_y'
+ *          `c_gtk_window_x'
+ *          `c_gtk_window_y'
  *
- * Note : Return the x and y coordinates of a widget
- * Note2 : The gtk function sent an `signed short' (gint16), but it 
- *         seems compatible with the EIF_INTEGER.
- *
+ * Note : Return the x and y coordinates of a widget and a window
+ * 
  * Author : Leila
  *
  *********************************/
@@ -314,9 +322,26 @@ EIF_INTEGER c_gtk_widget_x (GtkWidget *w)
 
 EIF_INTEGER c_gtk_widget_y (GtkWidget *w) 
 {
-  if (!GTK_WIDGET_VISIBLE (w))
+  if (GTK_IS_WIDGET(w) && !GTK_WIDGET_VISIBLE (w))
     gtk_widget_size_allocate (w, &w->allocation);
   return (GTK_WIDGET(w)->allocation.y);
+
+}
+
+EIF_INTEGER c_gtk_window_x (GtkWidget *w) 
+{
+  gint x;
+
+  gdk_window_get_position (w->window, &x, NULL);
+  return (x);
+}
+
+EIF_INTEGER c_gtk_window_y (GtkWidget *w) 
+{
+  gint y;
+
+  gdk_window_get_position (w->window, NULL, &y);
+  return (y);
 }
 
 /*********************************
@@ -332,23 +357,25 @@ EIF_INTEGER c_gtk_widget_y (GtkWidget *w)
 
 EIF_INTEGER c_gtk_widget_width (GtkWidget *w) 
 {
-  //  GtkRequisition r;
-   //  gtk_widget_size_request (w, &r);
-   //  return r.width;
-   //    return (GTK_WIDGET(w)->requisition.width);
-  if (!GTK_WIDGET_VISIBLE (w))
-    gtk_widget_queue_resize (w);
+  /*  GtkRequisition r;
+     gtk_widget_size_request (w, &r);
+     return r.width;
+     return (GTK_WIDGET(w)->requisition.width); */
+/*  if (!GTK_WIDGET_VISIBLE (w))
+    gtk_widget_queue_resize (w);*/
+
   return (GTK_WIDGET(w)->allocation.width);
 }
 
 EIF_INTEGER c_gtk_widget_height (GtkWidget *w) 
 {
-  //   GtkRequisition r;
-   //gtk_widget_size_request (w, &r);
-  // return r.height;
-  //return (GTK_WIDGET(w)->requisition.height);
-  if (!GTK_WIDGET_VISIBLE (w))
-    gtk_widget_queue_resize (w);
+  /*   GtkRequisition r;
+   gtk_widget_size_request (w, &r);
+   return r.height;
+   return (GTK_WIDGET(w)->requisition.height); */
+  /*  if (!GTK_WIDGET_VISIBLE (w))
+      gtk_widget_queue_resize (w);*/
+
    return (GTK_WIDGET(w)->allocation.height);
 }
 
@@ -365,16 +392,18 @@ EIF_INTEGER c_gtk_widget_height (GtkWidget *w)
 
 EIF_INTEGER c_gtk_widget_minimum_width (GtkWidget *w) 
 {
-    GtkRequisition r;
-    gtk_widget_size_request (w, &r);
-    return r.width;
+  /*    GtkRequisition r;
+	gtk_widget_size_request (w, &r);*/
+
+    return (GTK_WIDGET(w)->requisition.width);
 }
 
 EIF_INTEGER c_gtk_widget_minimum_height (GtkWidget *w) 
 {
-    GtkRequisition r;
-    gtk_widget_size_request (w, &r);
-    return r.height;
+  /*   GtkRequisition r;
+       gtk_widget_size_request (w, &r);*/
+
+    return (GTK_WIDGET(w)->requisition.height);
 }
 
 /*********************************
@@ -383,17 +412,26 @@ EIF_INTEGER c_gtk_widget_minimum_height (GtkWidget *w)
  *
  * Note : Allocates the widget size
  *
- * Author : Samik
+ * Author : Leila
  *
  *********************************/
 
 void c_gtk_widget_set_size (GtkWidget *w, int width, int height) 
 {
-    GtkAllocation a;
-    a.width = width;
-    a.height = height;
+  /*      GtkAllocation a */
+  GtkRequisition a;
 
-    gtk_widget_size_allocate (w, &a);
+  /*  a = (GTK_WIDGET(w) -> requisition);
+    gtk_widget_set_usize (w, width, height);
+    gtk_widget_size_request (w, &a); */
+
+  a.width = width;
+  a.height = height;
+  gtk_widget_size_request (w, &a);
+  gtk_widget_queue_resize (w);
+
+  /*        gtk_widget_size_allocate (w, &a); 
+	    gtk_widget_set_usize (w, width, height); */
 }
 
 /*********************************
@@ -565,11 +603,26 @@ int c_gtk_get_text_max_length (GtkWidget* text)
 void c_gtk_widget_show_children (GtkWidget *widget)
 {
     g_return_if_fail (widget != NULL);
-    
+ 
     if (GTK_IS_CONTAINER (widget))
-	gtk_container_foreach (GTK_CONTAINER (widget),
-			       c_gtk_widget_show_children_recurse,
-			       NULL);
+	  gtk_container_foreach (GTK_CONTAINER (widget),
+    			         c_gtk_widget_show_children_recurse,
+				 NULL);
+}
+
+/*********************************
+ *
+ * Function : `c_gtk_widget_show_children_recurse'
+ *
+ * Note : static functions
+ *
+ *********************************/
+
+static void c_gtk_widget_show_children_recurse (GtkWidget *widget,
+                                  gpointer   client_data)
+{
+    gtk_widget_show (widget);
+    c_gtk_widget_show_children (widget);
 }
 
 /*********************************
@@ -689,22 +742,34 @@ void c_gtk_add_list_item (GtkWidget *list, GtkWidget *item)
 	glist=NULL;
 	glist=g_list_append(glist, item);
 	gtk_list_append_items (GTK_LIST(list), glist);
-	gtk_widget_show(item);
+	/*	gtk_widget_show(item);*/
 }
 
 /*********************************
  *
- * Function : `c_gtk_widget_show_children_recurse'
+ * Function : `c_gtk_list_item_select'
+ *            `c_gtk_list_item_unselect'
  *
- * Note : static functions
+ * Note : Two routines to select or unselect an item, because the gtk
+ *        functions seems to have a bug.
+ *
+ * Author : Leila
  *
  *********************************/
 
-static void c_gtk_widget_show_children_recurse (GtkWidget *widget,
-                                  gpointer   client_data)
-{
-    gtk_widget_show (widget);
-    c_gtk_widget_show_children (widget);
+void c_gtk_list_item_select (GtkWidget *item)
+{  
+  if (GTK_WIDGET (item)->parent && GTK_IS_LIST (GTK_WIDGET (item)->parent))
+    gtk_list_select_child (GTK_LIST (GTK_WIDGET (item)->parent),
+                           GTK_WIDGET (item));
+}
+
+void c_gtk_list_item_unselect (GtkWidget *item)
+{  
+  /* if (GTK_WIDGET (item)->parent && GTK_IS_LIST (GTK_WIDGET (item)->parent)) */
+  if (GTK_IS_LIST (GTK_WIDGET (item)->parent))
+    gtk_list_unselect_child (GTK_LIST (GTK_WIDGET (item)->parent),
+                           GTK_WIDGET (item));
 }
 
 /*********************************
@@ -727,5 +792,66 @@ EIF_INTEGER c_gtk_table_rows (GtkWidget *widget)
 EIF_INTEGER c_gtk_table_columns (GtkWidget *widget)
 {
   return (GTK_TABLE(widget)->ncols);
+}
+
+/*********************************
+ *
+ * Function : `c_gtk_tree_item_expanded'
+ *
+ * Note : Tell if an item is expanded or not
+ *
+ * Author : Leila
+ *
+ *********************************/
+
+EIF_BOOLEAN c_gtk_tree_item_expanded (GtkWidget *widget)
+{
+  return (GTK_TREE_ITEM(widget)->expanded) ? 1: 0;
+}
+
+/*********************************
+ *
+ * Function : `c_gtk_text_insert'
+ *
+ * Note : insert a text at the current position of a text area.
+ *        We can't use directly the function because the widget
+ *        must be realized.
+ *
+ * Author : Leila
+ *
+ *********************************/
+
+void c_gtk_text_insert (GtkWidget *widget, const char *txt)
+{
+   /* Widget must be realized before we can set the text */
+  if (widget->window == NULL)
+    gtk_widget_realize (widget);
+
+  gtk_text_insert (GTK_TEXT(widget), NULL, NULL, NULL, txt, -1);
+}
+
+/*********************************
+ *
+ * Function : `c_gtk_box_set_child_options'
+ *
+ * Note : Change the options of a child in a box.
+ *
+ * Author : Leila
+ *
+ *********************************/
+
+void c_gtk_box_set_child_options (GtkWidget *box, GtkWidget *child,
+				  gint expand, gint fill)
+{
+  gint old_fill;
+  gint old_expand;
+  gint old_padding;
+  GtkPackType old_pack_type;
+
+  gtk_box_query_child_packing (GTK_BOX(box), child, & old_expand, & old_fill,
+			       & old_padding, & old_pack_type);
+  gtk_box_set_child_packing (GTK_BOX(box), child, expand, fill, 
+			     old_padding, old_pack_type);
+
 }
 

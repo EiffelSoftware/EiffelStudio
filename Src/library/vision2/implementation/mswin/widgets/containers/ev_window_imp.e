@@ -1,5 +1,10 @@
 indexing
-	description: "Objects that ..."
+	description: "EiffelVision untitled window, mswindows implementation."
+	note: " In the implementation of the window, we use internal_changes to know%
+		% if the user changed the size of the window. In this case, we won't%
+		% resize it to the minimum_size. The bit used are the following:%
+		% bit 7 -> The user has set the width of the window while it was hidden (64),%
+		% bit 8 -> The user has set the height of the window shile it was hidden (128)."
 	id: "$Id$"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -14,14 +19,14 @@ inherit
 		export
 			{NONE} set_parent
 		undefine
-			set_width,
-			set_height,
 			set_default_colors,
 			show,
 			hide
 		redefine
 			destroy,
 			set_parent,
+			set_width,
+			set_height,
 			set_size,
 			client_height,
 			parent_ask_resize,
@@ -41,7 +46,9 @@ inherit
 			parent as wel_parent,
 			set_parent as wel_set_parent,
 			shown as displayed,
-			destroy as wel_destroy
+			destroy as wel_destroy,
+			set_width as wel_set_width,
+			set_height as wel_set_height
 		undefine
 			remove_command,
 			on_left_button_down,
@@ -264,12 +271,12 @@ feature -- Element change
 			end
 		end
 
-	set_size (new_width:INTEGER; new_height: INTEGER) is
-			-- Resize the widget and don't notify the parent.
-		do
-			resize (maximum_width.min (minimum_width.max(new_width)),
-				maximum_height.min (minimum_height.max (new_height)))
-		end
+--	set_size (new_width:INTEGER; new_height: INTEGER) is
+--			-- Resize the widget and don't notify the parent.
+--		do
+--			resize (maximum_width.min (minimum_width.max(new_width)),
+--				maximum_height.min (minimum_height.max (new_height)))
+--		end
 
 	set_maximum_width (value: INTEGER) is
 			-- Make `value' the new maximum width.
@@ -318,6 +325,45 @@ feature -- Element change
 			-- Remove the current status bar of the window.
 		do
 			status_bar := Void
+		end
+
+feature -- Resizing
+
+	set_size (w, h: INTEGER) is
+			-- Resize the widget when it is not managed.
+			-- We don't redefine it because of the post-conditions.
+		do
+			if shown then
+				resize (w.max (minimum_width).min (maximum_width), h.max (minimum_height).min (maximum_height))
+			else
+				internal_changes := set_bit (internal_changes, 64, True)
+				internal_changes := set_bit (internal_changes, 128, True)
+				resize (w, h)
+			end
+		end
+
+	set_width (value:INTEGER) is
+			-- Make `value' the new width of the widget when
+			-- it is not managed.
+		do
+			if shown then
+				wel_set_width (value.max (minimum_width).min (maximum_width))
+			else
+				internal_changes := set_bit (internal_changes, 64, True)
+				wel_set_width (value)
+			end
+		end
+
+	set_height (value: INTEGER) is
+			-- Make `value' the new height of the widget when
+			-- it is not managed.
+		do
+			if shown then
+				wel_set_height (value.max (minimum_height).min (maximum_height))
+			else
+				internal_changes := set_bit (internal_changes, 128, True)
+				wel_set_height (value)
+			end
 		end
 
 feature -- Event - command association
@@ -398,7 +444,7 @@ feature {NONE} -- Implementation
 		do
 			-- We calculate the values first
 			mw := 2 * window_frame_width
-			mh := title_bar_height + window_border_height + 2 * window_frame_height
+			mh := 2 * window_frame_height
 
 			if child /= Void then
 				mw := mw + child.minimum_width
@@ -519,16 +565,45 @@ feature {NONE} -- Implementation
 			-- it resizes the window at the size of the child.
 			-- And it send the message to the child because wel
 			-- don't
+		local
+			w, h: INTEGER
 		do
-			if child /= Void then
-				move_and_resize (x, y, (child.minimum_width + 2*system_metrics.window_frame_width).max (minimum_width),
-						(child.minimum_height + 2 * system_metrics.window_frame_height).max (minimum_height), True)
+			-- The width to give to the window
+			if bit_set (internal_changes, 64) then
+				w := width
+				internal_changes := set_bit (internal_changes, 64, False)
 			else
-				move_and_resize (x, y, minimum_width, minimum_height, True)
+				if child /= Void then
+					w := child.minimum_width + 2 * window_frame_width
+				end
 			end
+
+			-- The height to give to the window
+			if bit_set (internal_changes, 128) then
+				h := height
+				internal_changes := set_bit (internal_changes, 128, False)
+			else
+				-- First the child
+				if child /= Void then
+					h := child.minimum_height + 2 * window_frame_height
+				end
+				-- Then, the menu
+				if has_menu then
+					h := h + menu_bar_height
+				end
+				-- And the status bar
+				if status_bar /= Void then
+					h := h + status_bar.height
+				end
+			end
+
+			-- We check if there is a menu
 			if has_menu then
 				draw_menu
 			end
+
+			-- We resize everything and draw the menu.
+			resize (w.max (minimum_width).min (maximum_width), h.max (minimum_height).min (maximum_height))
 		end
 
 	on_size (size_type, a_width, a_height: INTEGER) is

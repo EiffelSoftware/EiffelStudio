@@ -46,6 +46,7 @@ feature -- Command Execution
 					tool.all_operators.extend (operator)
 					tool.all_operators.append (subquery_operators)
 					tool.update_query_form
+					tool.subquery_text.clear
 				end
 
 			end

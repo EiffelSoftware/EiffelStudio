@@ -23,7 +23,7 @@ feature -- Access
 	item: EV_WIDGET is
 			-- Current item.
 		do
-			if ev_children.item /= Void then
+			if ev_children.readable then
 				Result := ev_children.item.interface
 				check
 					Result_not_void: Result /= Void
@@ -296,6 +296,9 @@ end -- class EV_WIDGET_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.16  2000/03/21 18:38:57  rogers
+--| Item now check ev_children.readable instead of ev_children.item /= Void.
+--|
 --| Revision 1.15  2000/03/21 02:31:04  brendel
 --| Replaced unnecessary assignment attempt with assignment.
 --|

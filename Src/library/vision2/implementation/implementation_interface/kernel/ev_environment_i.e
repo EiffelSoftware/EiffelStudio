@@ -31,7 +31,7 @@ feature {EV_APPLICATION_I, EV_ENVIRONMENT} -- Status report
 	supported_image_formats: LINEAR [STRING] is
 			-- `Result' contains all supported image formats
 			-- on current platform, in the form of their three letter extension.
-			-- e.g. PNG, BMP, XPM, ICO
+			-- e.g. PNG, BMP, ICO
 		require
 			not_destroyed: not is_destroyed
 		deferred

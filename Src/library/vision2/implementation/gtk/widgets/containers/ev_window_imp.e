@@ -54,10 +54,6 @@ feature -- Initialization
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_window_new (feature {EV_GTK_EXTERNALS}.Gtk_window_toplevel_enum))
 			set_title ("")
 				-- set title also realizes the window.
-			feature {EV_GTK_EXTERNALS}.gdk_window_set_decorations (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), 0)
-			feature {EV_GTK_EXTERNALS}.gdk_window_set_functions (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), 0)
-			
-			feature {EV_GTK_EXTERNALS}.gtk_window_set_policy (c_object, 0, 1, 0) -- allow_shrink = False, allow_grow = True, auto_shrink = False
 		end
 
 feature  -- Access
@@ -604,6 +600,11 @@ feature {NONE} -- Implementation
 			
 			signal_connect_true ("delete_event", agent (App_implementation.gtk_marshal).on_window_close_request (c_object))
 			initialize_client_area
+			
+			if not has_wm_decorations then
+					-- If our window doesn't have WM decorations then unset them.
+				feature {EV_GTK_EXTERNALS}.gdk_window_set_decorations (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), 0)
+			end	
 			enable_user_resize
 			default_height := -1
 			default_width := -1
@@ -617,7 +618,7 @@ feature {NONE} -- Implementation
 		end
 	
 	initialize_client_area is
-			-- FIXME: Need comments
+			-- Initialize the client area of 'Current'.
 		local
 			bar_imp: EV_VERTICAL_BOX_IMP
 		do

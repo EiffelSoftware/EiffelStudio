@@ -42,8 +42,6 @@ extern "C" {
  ****************************************/
 
 
-extern EIF_TSD_TYPE eif_global_key;
-
 #define MTC_NOARG			/* eif_globals */
 #define MTC					/* MTC_NOARG, */
 #define EIF_CONTEXT_NOARG	void /* eif_global_context_t	*MTC_NOARG */
@@ -183,6 +181,12 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 	char r_fstoretype;				/* File storage type used for retrieve */
 #endif
 
+#if defined THREAD_DEVEL
+#warning "PaulCDV: development feature of the runtime: DO NOT DELIVER"
+	int n_children;					/* Number or child threads */
+	int *n_brothers;				/* Number of "brother" threads, including 
+									   self - protected by mutex */
+#endif
 
 } eif_global_context_t;
 
@@ -309,6 +313,10 @@ typedef struct tag_eif_globals		/* Structure containing all global variables to 
 /*extern int r_fides;				/* moved here from retrieve.c */
 /*extern char r_fstoretype;		/* File storage type use for retrieve */
 
+#define n_children		(eif_globals->n_children)
+#define n_brothers		(eif_globals->n_brothers)
+
+extern EIF_TSD_TYPE eif_global_key;
 
 #else
 

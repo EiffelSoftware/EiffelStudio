@@ -276,16 +276,14 @@ feature -- Server Access
 
 	click_list: CLICK_LIST is
 			-- Associated click list
-		require
-			has_ast: has_ast
-		local
-			ast_clicks: CLICK_LIST
 		do
 			if Tmp_ast_server.has (id) then
 				Result := Tmp_ast_server.item (id).click_list
-			else
+			elseif Ast_server.has (id) then
 				Result := Ast_server.item (id).click_list
 			end;
+		ensure
+			valid_result: Result /= Void implies has_ast
 		end;
 
 	cluster: CLUSTER_I is
@@ -349,14 +347,18 @@ feature -- Element change
 			--| Save the AST in the temporary server and add it to the
 			--| pass one controller (need to still do the end of pass1 process).
 		require
+			not_precompiled: not is_precompiled;
 			file_is_readable: file_is_readable
 		local
 			class_ast: CLASS_AS_B;
 			error: BOOLEAN;
 			syntax_error: SYNTAX_ERROR;
-			compiled_info: CLASS_C
+			compiled_info: CLASS_C;
+			prev_class: CLASS_C
 		do
 			if not error then
+				prev_class := System.current_class;
+				System.set_current_class (compiled_info);
 				last_syntax_cell.put (Void);
 				class_ast := build_ast;
 				class_ast.set_id (id);
@@ -378,6 +380,7 @@ feature -- Element change
 				last_syntax_cell.put (syntax_error);
 				error := False
 			end
+			System.set_current_class (prev_class);
 		rescue
 			if Rescue_status.is_error_exception then
 				Rescue_status.set_is_error_exception (False);

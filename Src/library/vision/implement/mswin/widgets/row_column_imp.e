@@ -439,27 +439,29 @@ feature {NONE} -- Implementation
 							((preferred_count - 1) * spacing)
 
 						rest_count := managed_count \\ preferred_count
-						loop_count := managed_count // preferred_count
-						max_height := 0
-							--| Official version
 						from
 							c.finish
 							max_height := 0
-							temp_height := 0
 							loop_count := managed_count // preferred_count
+							if rest_count /= 0 then
+								loop_count := loop_count + 1
+							end
 						until
 							c.before
 						loop
-							temp_height := temp_height.max (c.item.height + spacing)
+							if c.item.managed then
+								total := total + c.item.height + spacing
+							end
 							i := i + 1
-							if i = preferred_count then
-								max_height := temp_height + max_height
-								temp_height := 0
+							if i = loop_count then
+								total := total - spacing
+								max_height := max_height.max (total)
+								total := 0
 								i := 0
 							end
 							c.back
 						end
-						max_height := max_height + temp_height - spacing
+						max_height := max_height.max (total)
 						max_height := max_height + 2 * margin_height
  					end
 				end

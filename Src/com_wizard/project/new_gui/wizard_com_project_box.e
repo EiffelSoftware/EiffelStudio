@@ -27,6 +27,24 @@ inherit
 			is_equal
 		end
 
+	WIZARD_SHARED_PROFILE_MANAGER
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy,
+			is_equal
+		end
+
+	WIZARD_SETTINGS_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create,
+			copy,
+			is_equal
+		end
+
 feature {NONE} -- Initialization
 
 	user_initialization is
@@ -63,9 +81,30 @@ feature -- Basic Operations
 		
 	show is
 			-- Update environment and show.
+		local
+			l_value: STRING
 		do
 			Precursor {WIZARD_COM_PROJECT_BOX_IMP}
 			update_environment
+			Profile_manager.search_active_profile (Marshaller_key)
+			if Profile_manager.found then
+				l_value := Profile_manager.found_item.value
+				if l_value.is_equal (True_code) then
+					marshaller_check_button.enable_select
+				end
+			end
+		end
+	
+	hide_marshaller is
+			-- Hide marshaller box
+		do
+			marshaller_box.hide
+		end
+		
+	show_marshaller is
+			-- Show marshaller box
+		do
+			marshaller_box.show
 		end
 		
 feature {NONE} -- Events Handling
@@ -75,6 +114,7 @@ feature {NONE} -- Events Handling
 			-- Set `environment.marshaller_generated' accordingly.
 		do
 			environment.set_marshaller_generated (marshaller_check_button.is_selected)
+			Profile_manager.save_active_profile
 		end
 
 feature {NONE} -- Implementation
@@ -104,4 +144,15 @@ feature {NONE} -- Private Access
 			-- Invalid component file error
 
 end -- class WIZARD_COM_PROJECT_BOX
+
+--+----------------------------------------------------------------
+--| EiffelCOM Wizard
+--| Copyright (C) 1999-2005 Eiffel Software. All rights reserved.
+--| Eiffel Software Confidential
+--| Duplication and distribution prohibited.
+--|
+--| Eiffel Software
+--| 356 Storke Road, Goleta, CA 93117 USA
+--| http://www.eiffel.com
+--+----------------------------------------------------------------
 

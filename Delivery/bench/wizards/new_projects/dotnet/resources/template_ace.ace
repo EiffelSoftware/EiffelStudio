@@ -1,55 +1,29 @@
 -------------------------------------------------
 -- This ace file has been generated for you by --
--- The New Vision2 Application Wizard.         --
+-- The New .NET Application Wizard.            --
 -------------------------------------------------
 system
 	<FL_PROJECT_NAME>
 
-root 
-	APPLICATION (root_cluster): "make_and_launch"
+root
+	APPLICATION (root_cluster): "make"
 
 default
-	assertion (require)
-	assertion (ensure)
-	assertion (check)
-	multithreaded (no)
-	console_application (no)
-	dynamic_runtime (no)
-	dead_code_removal (yes)
-	profile (no)
+	assertion (no)
+	il_generation ("exe")
 	line_generation (no)
-	debug  (no)
-	array_optimization (no)
-	inlining (no)
-	inlining_size ("4")
 
-cluster 
+cluster
 		-- The application
 	root_cluster: "<FL_LOCATION>"
 
-		-- EiffelBase
-	all base: "$ISE_EIFFEL\library\base"
+		-- EiffelBase.NET
+	all base: "$EIFFEL_SRC\library\base.net"
 		exclude
-			"table_eiffel3"; "desc"
+			"kernel"; "CVS"
 		end
 
-		-- WEL
-	all wel: "$ISE_EIFFEL\library\wel"
+		-- .NET System
+	<FL_SELECTED_CLUSTERS>
 
-		-- EiffelVision2
-	all vision2: "$ISE_EIFFEL\library\vision2"
-		exclude
-			"gtk"; "EIFGEN"; "tmp"; "temp"; "release"; "obsolete"; "CVS"
-		end
-
-external
-	include_path:
-		"$(ISE_EIFFEL)\library\wel\spec\windows\include",
-		"$(ISE_EIFFEL)\library\vision2\spec\include"
-
-	object:
-		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_COMPILER)\lib\wel.lib",
-		"$(ISE_EIFFEL)\library\vision2\spec\$(ISE_COMPILER)\lib\vision2.lib",
-		"$(ISE_EIFFEL)\C_library\zlib\zlib.lib",
-		"$(ISE_EIFFEL)\C_library\libpng\libpng.lib"
 end

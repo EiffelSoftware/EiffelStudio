@@ -883,7 +883,6 @@ feature {NONE} -- Added features of System.Object to Interfaces
 		local
 			l_members: NATIVE_ARRAY [MEMBER_INFO]
 			l_method, l_obj_method: METHOD_INFO
-			l_cell: CLI_CELL [METHOD_INFO]
 			l_processed: HASHTABLE
 			i, j, k, nb: INTEGER
 			l_matched: BOOLEAN
@@ -909,11 +908,9 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			loop
 				l_method ?= l_members.item (i)
 				if l_method /= Void then
-					create l_meth_name.make_from_cil (l_method.name)
-					l_cell := l_object_methods.item (l_meth_name)
-					if l_cell /= Void then
+					l_obj_method := l_object_methods.item (l_method.name)
+					if l_obj_method /= Void then
 							-- Let's check return type and arguments type.
-						l_obj_method := l_cell.item
 						l_obj_params := l_obj_method.get_parameters
 						l_params := l_method.get_parameters
 						if
@@ -949,7 +946,7 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			until
 				l_object_methods.after
 			loop
-				l_members.put (i, l_object_methods.item_for_iteration.item)
+				l_members.put (i, l_object_methods.item_for_iteration)
 				i := i + 1
 				l_object_methods.forth
 			end
@@ -1026,14 +1023,14 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			end
 		end
 
-	object_methods: HASH_TABLE [CLI_CELL [METHOD_INFO], STRING] is
+	object_methods: HASH_TABLE [METHOD_INFO, STRING] is
 			-- List of members of System.Object.
 		local
 			l_type: TYPE
 			l_methods: NATIVE_ARRAY [METHOD_INFO]
 			i, nb: INTEGER
 		once
-			l_type := feature {TYPE}.get_type_string (("System.Object").to_cil)
+			l_type := feature {TYPE}.get_type_string ("System.Object")
 			l_methods := l_type.get_methods_binding_flags (feature {BINDING_FLAGS}.instance |
 				feature {BINDING_FLAGS}.public)
 			create Result.make (l_methods.count)
@@ -1043,8 +1040,7 @@ feature {NONE} -- Added features of System.Object to Interfaces
 			until
 				i > nb
 			loop
-				Result.put (create {CLI_CELL [METHOD_INFO]}.put (l_methods.item (i)),
-					create {STRING}.make_from_cil (l_methods.item (i).name))
+				Result.put (l_methods.item (i), l_methods.item (i).name)
 				i := i + 1
 			end
 		ensure
@@ -1186,22 +1182,16 @@ feature {NONE} -- Added features for ENUM types.
 		do
 			if val.get_type.equals_type (Double_type) then
 				d ?= val
-				check
-					is_double: d /= Void
-				end
 				Result := bytes_to_string (feature {BIT_CONVERTER}.get_bytes_double (d))
 			elseif val.get_type.equals_type (Real_type) then
 				r ?= val
-				check
-					is_real: r /= Void
-				end
 				Result := bytes_to_string (feature {BIT_CONVERTER}.get_bytes_real (r))
 			else
 				create Result.make_from_cil (val.to_string)
 			end
 		end
 
-	bytes_to_string (a: NATIVE_ARRAY [INTEGER_8]): STRING is
+	bytes_to_string (a: NATIVE_ARRAY [NATURAL_8]): STRING is
 			-- Convert `a' into an hexadecimal string.
 		require
 			non_void_array: a /= Void

@@ -1,6 +1,9 @@
 indexing
 	description: "EiffelVision fixed container. Allows several children that%
 				  % must be place in one's hand. Mswindows implementation"
+	note: "We use `create with coordinates' to allow the notebook%
+		% as containers. They are wel_windows and not%
+		% wel_composite_windows."
 	author: "Leila"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,14 +28,14 @@ feature {NONE} -- Initialization
 	make (par: EV_CONTAINER) is
 			-- Create the fixed container in  ev_window.
 		local
-			par_imp: EV_CONTAINER_IMP
+			par_imp: WEL_WINDOW
 		do
 			par_imp ?= par.implementation
 			check
 				parent_not_void: par_imp /= Void
 			end
 			initialize
-			wel_make (par_imp, "Fixed")
+			make_with_coordinates (par_imp, "Fixed", 0, 0, 0, 0)
 		end
 
 feature {NONE} -- Implementation

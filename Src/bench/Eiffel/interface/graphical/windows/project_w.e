@@ -143,24 +143,43 @@ feature -- xterminal
 			if arg = popup then
 				window_manager.show_all_editors
 				if hidden_system_window then
-					system_tool.display
+					system_tool.show
 					hidden_system_window := False;
 				end;
 				if initialized then
 					raise
-					if warner.is_popped_up then
-						warner.raise
-					end
+					if hidden_warner then
+						hidden_warner := false;
+						warner.popup
+					end;
+					if hidden_name_chooser then
+						hidden_name_chooser := false;
+						name_chooser.popup
+					end;	
+					if hidden_confirmer then
+						hidden_confirmer := false;
+						confirmer.popup
+					end	
 				end
 			elseif arg = popdown then
 				window_manager.hide_all_editors;
-				if 	
-					system_tool.realized and then system_tool.shown 
-				then
+				if 	system_tool.realized and then system_tool.shown then
 					system_tool.hide;
 					system_tool.close_windows;
 					hidden_system_window := True;
-				end
+				end;
+				if warner.is_popped_up then
+					hidden_warner := true;
+					warner.popdown
+				end;
+				if name_chooser.is_popped_up then
+					hidden_name_chooser := true;
+					name_chooser.popdown
+				end;	
+				if confirmer.is_popped_up then
+					hidden_confirmer := true;
+					confirmer.popdown
+				end;	
 			elseif arg = task_end then
 				task_end.remove_action (Current, task_end);
 				quit_command.execute (Void);
@@ -170,6 +189,9 @@ feature -- xterminal
 		end;
 
 	hidden_system_window: BOOLEAN;
+	hidden_warner: BOOLEAN;
+	hidden_confirmer: BOOLEAN;
+	hidden_name_chooser: BOOLEAN;
 
 feature {NONE}
 
@@ -202,7 +224,7 @@ feature -- rest
 			build_top;
 			build_icing;
 			build_format_bar;
-			exec_stop.format (Void);
+			exec_stop.execute (Void);
 			attach_all
 		end; -- build
 

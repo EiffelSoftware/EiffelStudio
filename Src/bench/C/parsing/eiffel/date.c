@@ -15,13 +15,31 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-long eif_date(path)
+EIF_INTEGER eif_date(path)
 char *path;
 {
 	/* Return last modification time of file of path `path' */
 
 	static struct stat info;
 
-	return (-1 == stat(path,&info)) ? 0L : (long) info.st_mtime;
+	return (-1 == stat(path,&info)) ? (EIF_INTEGER) 0L : (EIF_INTEGER) info.st_mtime;
+}
+
+EIF_BOOLEAN eif_directory_has_changed(path, date)
+char *path;
+EIF_INTEGER date;
+{
+	/* Check to see if the directory `path' has changed after `date' */
+
+#ifdef __WATCOMC__
+	return (EIF_BOOLEAN) 1;
+#else
+	static struct stat info;
+
+	if (-1 == stat(path,&info))
+		return (EIF_BOOLEAN) 1;
+	else
+		return (date == (EIF_INTEGER) info.st_mtime) ? (EIF_BOOLEAN) 0 : (EIF_BOOLEAN) 1;
+#endif
 }
 

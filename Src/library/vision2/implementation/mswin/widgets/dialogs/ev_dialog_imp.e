@@ -240,7 +240,7 @@ feature {EV_BUTTON_IMP} -- Implementation
 	
 feature {NONE} -- Implementation
 
-	move_children (other_imp: EV_DIALOG_IMP_COMMON)is
+	move_children (other_imp: EV_DIALOG_IMP_COMMON) is
 			-- Move the children to the dialog or the window, depending
 			-- on which is currently selected in `wel_item'.
 		local

@@ -1,3 +1,10 @@
+/*
+indexing
+	description: "Test class for testing the IL code generator component."
+	date: "$Date$"
+	revision: "$Revision$"
+*/
+
 using System;
 using System.Reflection;
 class CoreTest

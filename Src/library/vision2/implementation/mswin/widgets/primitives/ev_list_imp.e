@@ -298,8 +298,8 @@ feature {NONE} -- Implementation : WEL features
 							-- start when last and actual may be void, so => equal), or
 							-- the selected item is different from the previously selected
 							-- item then call the deselect events on the previously selected item.
-						interface.select_actions.call ([actual.interface])
 						actual.interface.select_actions.call ([])
+						interface.select_actions.call ([actual.interface])
 					end
 					if selected then
 						-- Check that the user has not done something that may have
@@ -522,6 +522,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2000/03/07 00:11:56  rogers
+--| The select actions are now always called on the child first before the list
+--|
 --| Revision 1.43  2000/03/06 20:47:36  rogers
 --| The list select and deselect action sequences now only return the selected item, so any calls to these action sequences have been modified.
 --|

@@ -10,7 +10,7 @@ inherit
 
 creation
 
-	make
+	make, make_for_case
 
 feature -- Flat and flat/short modes
 
@@ -52,6 +52,30 @@ feature
 			order_same_as_text_bool.set_value (False);
 			in_assertion_bool.set_value (False);
 			troff_format := False;
+		ensure
+			class_c_set: class_c = c;
+			batch_mode:	not in_bench_mode;
+			analyze_ancestors: not current_class_only;
+			do_flat: not is_short;
+			not_troff_format: not troff_format
+		end;
+
+	make_for_case (c: CLASS_C) is
+		local
+			first_format: LOCAL_FORMAT;
+		do
+			class_c := c;
+			current_class_only := False;
+			is_short_bool.set_value (False);
+			in_bench_mode_bool.set_value (False);
+			order_same_as_text_bool.set_value (False);
+			in_assertion_bool.set_value (False);
+			troff_format := False;
+			!! previous.make;
+			!! text.make;
+			!! first_format.make_for_case (class_c.actual_type);
+			previous.extend (first_format);
+			last_was_printed := True;
 		ensure
 			class_c_set: class_c = c;
 			batch_mode:	not in_bench_mode;
@@ -903,6 +927,13 @@ feature -- comments
 		do
 			Result := clone (class_c.generics.i_th (pos).formal_name)
 			Result.to_upper;
+		end;
+
+feature {ASSERT_LIST_AS} -- For case
+
+	clear_text is
+		do
+			text.wipe_out
 		end;
 
 end	

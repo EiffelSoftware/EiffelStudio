@@ -56,4 +56,26 @@ feature
 			end;
 		end;
 
+	storage_info (classc: CLASS_C; s: S_CLASS_DATA) is
+		local
+			is_not_first: BOOLEAN;
+			target_class: CLASS_C;
+		do
+			if not empty then
+				check
+					count_equal_1: count = 1
+				end;
+				from
+					start
+				until
+					after
+				loop
+					if item.assertion_list /= Void then
+						s.set_invariants (item.storage_info (classc))
+					end;
+					forth
+				end
+			end;
+		end;
+
 end

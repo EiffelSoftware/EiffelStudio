@@ -1,7 +1,7 @@
 class LOCAL_FORMAT
 
 creation
-	make
+	make, make_for_case
 
 feature
 
@@ -11,6 +11,13 @@ feature
 				 c.associated_class);
 			global_types.set_source_type (c);
 			global_types.set_target_type (global_types.source_type);
+			local_types := global_types;
+		end;
+
+	make_for_case (c: TYPE_A) is
+		do
+			!FEAT_ADAPTATION!global_types.make (c.associated_class,
+					c.associated_class);
 			local_types := global_types;
 		end;
 

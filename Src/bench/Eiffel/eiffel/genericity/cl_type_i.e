@@ -487,11 +487,11 @@ feature -- Generic conformance
 				use_info and then (cr_info /= Void)
 				and then not is_expanded
 			then
-				-- It's an anchored type 
+					-- It's an anchored type 
 				cr_info.generate_cid (buffer, final_mode)
 			else
 				buffer.put_integer (generated_id (final_mode))
-				buffer.put_string (", ")
+				buffer.put_character (',')
 			end
 		end
 
@@ -521,7 +521,7 @@ feature -- Generic conformance
 				cr_info.generate_cid_array (buffer, final_mode, idx_cnt)
 			else
 				buffer.put_integer (generated_id (final_mode))
-				buffer.put_string (", ")
+				buffer.put_character (',')
 
 					-- Increment counter
 				dummy := idx_cnt.next

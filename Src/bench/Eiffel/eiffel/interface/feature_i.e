@@ -1589,7 +1589,11 @@ feature -- C code generation
 			if used then
 				generate_header (file);
 
-				byte_code := Byte_server.disk_item (body_id);
+				if Tmp_opt_byte_server.has (body_id) then
+					byte_code := Tmp_opt_byte_server.disk_item (body_id);
+				else
+					byte_code := Byte_server.disk_item (body_id);
+				end
 
 					-- Generation of C code for an Eiffel feature written in
 					-- the associated class of the current type.

@@ -330,23 +330,24 @@ feature {NONE} -- Implementation
 			create l_file.make (Def_file_name)
 			if not l_file.exists then
 				l_file.make_create_read_write (Def_file_name)
-				l_file.put_string ("DESCRIPTION %"EiffelCOM Generated Component%"%R%N")
-				l_file.put_string ("EXPORTS%R%N")
-				l_file.put_string ("%TDllGetClassObject%T%T@1 PRIVATE%R%N")
-				l_file.put_string ("%TDllCanUnloadNow%T%T%T@2 PRIVATE%R%N")
-				l_file.put_string ("%TDllRegisterServer%T%T@3 PRIVATE%R%N")
-				l_file.put_string ("%TDllUnregisterServer%T@4 PRIVATE%R%N")
+				l_file.put_string ("DESCRIPTION %"EiffelCOM Generated Component%"%N")
+				l_file.put_string ("EXPORTS%N")
+				l_file.put_string ("%TDllGetClassObject%T%T@1 PRIVATE%N")
+				l_file.put_string ("%TDllCanUnloadNow%T%T%T@2 PRIVATE%N")
+				l_file.put_string ("%TDllRegisterServer%T%T@3 PRIVATE%N")
+				l_file.put_string ("%TDllUnregisterServer%T@4 PRIVATE%N")
 				l_file.close
 			end
 		end
 
 	Idl_compiler_command_line: STRING is
 			-- MIDL command line
+		local
+			l_dest: STRING
 		do
 			Result := Common_idl_compiler_options.twin
-			Result.append ("  /out %"")
-			Result.append (environment.destination_folder.twin)
-			Result.append_character (Directory_separator)
+			Result.append (" %"")
+			Result.append (environment.idl_file_name)
 			Result.append ("%" /h %"")
 			Result.append (Generated_header_file_name)
 			Result.append ("%" /dlldata %"")
@@ -357,8 +358,11 @@ feature {NONE} -- Implementation
 			Result.append (Generated_ps_file_name)
 			Result.append ("%" /tlb %"")
 			Result.append (environment.project_name.twin)
-			Result.append (".tlb%" /nologo %"")
-			Result.append (environment.idl_file_name)
+			Result.append (".tlb%" /nologo ")
+			Result.append (" /out %"")
+			l_dest := environment.destination_folder.twin
+			l_dest.keep_head (l_dest.count - 1)
+			Result.append (l_dest)
 			Result.append ("%"")
 		end
 
@@ -462,7 +466,7 @@ feature {NONE} -- Implementation
 	Shared_library_option: STRING is
 			-- Dll definition file for Ace file
 		do
-			Result := "default%R%N%Tshared_library_definition (%""
+			Result := "default%N%Tshared_library_definition (%""
 			Result.append (User_def_file_name)
 			Result.append ("%")")
 		end

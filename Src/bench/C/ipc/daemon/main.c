@@ -25,7 +25,7 @@
 #include "stream.h"
 
 #define EIFFEL3		"/usr/lib/Eiffel3"	/* Default installation directory */
-#define EWB			"/bin/ewb"			/* Ewb process within Eiffel dir */
+#define EWB			"/bin/es3 -bench"			/* Ewb process within Eiffel dir */
 
 /* Function declaration */
 public void dexit();			/* Daemon's exit */

@@ -18,13 +18,6 @@
 #include "except.h"
 #include "macros.h"
 
-/*#define DEBUG 0	/**/
-
-#ifdef DEBUG
-#define dprintf(n) if (DEBUG & (n)) printf
-#define Class(x) System(Dtype(x)).cn_generator
-#endif
-
 extern uint32 gen_scavenge;		/* Malloc flag, controls scavenging */
 extern int cc_for_speed;		/* Optimized for speed of for memory */
 extern long th_alloc;			/* Allocation threshold, in bytes */
@@ -34,16 +27,7 @@ extern int gc_monitor;			/* GC monitoring flag */
 extern int full_coalesc();		/* Perform free blocks coalescing */
 extern void gfree();			/* Garbage collector's free routine */
 
-extern struct stack rem_set;	/* Remembered objects (old referencing young) */
-extern struct stack moved_set;	/* Moved objects */
-extern struct stack loc_set;	/* Local variable stack */
-extern struct stack loc_stack;	/* Local indirection stack */
 extern long eiffel_usage;		/* For memory statistics */
-#ifdef WORKBENCH
-extern struct opstack op_stack; /* Interpreter operational stack */
-#endif
-
-private void drop_reference();	/* Drop reference in annex structures */
 
 public void mem_free(object)
 char *object;
@@ -53,10 +37,6 @@ char *object;
 	 * or be tenured later on. If the object is in the main memory, it is
 	 * irreversibly freed, which will have unpredictable consequences if some
 	 * other object still references it--RAM.
-	 * The object to be freed might be referenced in a certain number of
-	 * run-time structures, namely the various stacks such as `rem_set',
-	 * `moved_set'... Those structures must also be updated when an object
-	 * is freed--FRED
 	 */
 
 	union overhead *zone = HEADER(object);
@@ -66,89 +46,12 @@ char *object;
 	if (0 == flags & (EO_OLD | EO_NEW))	/* Neither old nor new */
 		return;							/* Object in scavenge zone */
 
-#ifdef DEBUG
-	dprintf(2)("mem_free: freeing object 0x%x of DT, %d, (%s)\n",
-			object, Dtype(object), Class(object));
-#endif
-
-	if (flags & EO_REM) {
-#ifdef DEBUG
-	dprintf(2)("mem_free: removing reference from the remembered set...\n");
-#endif
-		drop_reference (object, &rem_set);
-	}
-
-	if (flags & (EO_MOVED)) {
-#ifdef DEBUG
-	dprintf(1)("mem_free: removing reference from the moved set...\n");
-#endif
-		drop_reference (object, &moved_set);
-	}
-
-#ifdef DEBUG
-	dprintf(2)("mem_free: removing reference from the local set...\n");
-#endif
-	drop_reference (object, &loc_set);
-#ifdef DEBUG
-	dprintf(2)("mem_free: removing reference from the local stack...\n");
-#endif
-	drop_reference (object, &loc_stack);
-
-#ifdef WORKBENCH
-#ifdef DEBUG
-	dprintf(2)("mem_free: removing reference from the operational stack...\n");
-#endif
-	drop_reference (object, &op_stack);
-#endif
-
-	/* Free the object and call `dispose' if defined */
-
-	gfree(zone);
+	gfree(zone);		/* Free object, eventually calling dispose */
 
 	/* Update `eiffel_usage' variable. Set to 0 if negative */
 
 	eiffel_usage -= (nbytes + OVERHEAD);
 	if (eiffel_usage < 0) eiffel_usage = 0;
-
-#ifdef DEBUG
-	dprintf(2)("mem_free: eiffel_usage is %d\n", eiffel_usage);
-#endif
-}
-
-private void drop_reference (object, stk)
-char *object;
-struct stack *stk;
-{
-
-	struct stchunk *s;
-	char **obj;
-	int roots;
-	int done = 0;
-
-	/* Search `object' in `stk', and set to NULL
-	 * if found
-	 */
-
-	if (stk->st_top == (char **) 0)
-		return;
-
-	for (s = stk->st_hd; s && !done; s = s->sk_next) {
-		obj = s->sk_arena;
-		if (s != stk->st_cur)
-			roots = s->sk_end - obj;
-		else { 
-			roots = stk->st_top - obj;
-			done = 1;
-		}
-		for (; roots > 0; roots--, obj++) {
-			if (object == *obj) {
-				*obj = (char *) 0;
-#ifdef DEBUG
-	dprintf(1)("\tdrop_reference: found one\n");
-#endif
-			}
-		}
-	}
 }
 
 /*

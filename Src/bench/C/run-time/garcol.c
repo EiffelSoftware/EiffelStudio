@@ -84,8 +84,6 @@ shared struct gacstat g_stat[GST_NBR] = {	/* Run-time statistics */
  * The only public one is the stack for local variables. The others
  * are used internally. All these points to objects which may be moved by
  * the garbage collector or the memory management routines.
- * The stacks are now all public. That was necessary to implement the
- * explicit `mem_free' routine in "memory.c"--FRED
  */
 
 shared struct stack loc_stack = {			/* Local indirection stack */
@@ -102,7 +100,7 @@ public struct stack loc_set = {				/* Local variable stack */
 	(char **) 0,			/* st_top */
 	(char **) 0,			/* st_end */
 };
-public struct stack rem_set = {			/* Remembered set */
+private struct stack rem_set = {			/* Remembered set */
 	(struct stchunk *) 0,	/* st_hd */
 	(struct stchunk *) 0,	/* st_tl */
 	(struct stchunk *) 0,	/* st_cur */
@@ -862,14 +860,32 @@ char *(*marker)();		/* The routine used to mark objects */
 	char *enclosing;	/* Address of the enclosing object */
 	char *new;			/* New address of the enclosing object */
 	long offset;		/* Offset of the expanded object within enclosing one */
+	long size;			/* Object's size along with malloc flags */
 	union overhead *zone;
 
 	if (root == (char *) 0)
 		return (char *) 0;
 
 	zone = HEADER(root);			/* Malloc info zone */
+	size = zone->ov_size;			/* And its malloc flags */
 
-	if (zone->ov_size & B_FWD)
+	/* Make sure this object we are trying to mark is still in use, by checking
+	 * the B_BUSY bit in the malloc flags. If the object is in the scavenging
+	 * zone, it won't have the B_BUSY bit set at all, but then it does not
+	 * really matters here: what we are trying to avoid is traversing objects
+	 * freed via a call to a MEMORY class feature (mem_free), which will not
+	 * do anything on objects located in the scavenging zone anyway--RAM.
+	 */
+
+	if (							/* Will slow things down, might ifdef it */
+		!(size & B_BUSY) &&			/* Object not busy, or in scavenge zone */
+		(char *) zone < sc_from.sc_arena &&	/* Before scavenging zone and */
+		(char *) zone >= sc_from.sc_end		/* after its end, i.e. not in that zone */
+		)
+		return (char *) 0;			/* Object has been freed, ignore it */
+
+
+	if (size & B_FWD)
 		return zone->ov_fwd;		/* Already forwarded, i.e. traversed  */
 
 	if (!(zone->ov_flags & EO_EXP))
@@ -2818,9 +2834,9 @@ private void update_moved_set()
 	register3 union overhead *zone;	/* Referenced object's header */
 	register4 struct stchunk *s;	/* To walk through each stack's chunk */
 	register5 uint32 flags;			/* Used only if GC_FAST */
-	register6 char *addr;			/* Object's address */
 	struct stack new_stack;			/* The new stack built from the old one */
 	int done = 0;					/* Top of stack not reached yet */
+	register6 long size;			/* Object's size along with malloc flags */
 
 #ifdef USE_STRUCT_COPY
 	new_stack = moved_set;
@@ -2858,11 +2874,11 @@ private void update_moved_set()
 				done = 1;						/* Reached end of stack */
 			}
 			for (; i > 0; i--, obj++) {			/* Stack viewed as an array */
-				addr = *obj;					/* Get stack item value */
-				if ((char *) 0 == addr)			/* Freed object? */
+				zone = HEADER(*obj);			/* Malloc info zone */
+				size = zone->ov_size;			/* And its flags */
+				if (!(size & B_BUSY))			/* Freed object? */
 					continue;					/* Skip free objects */
-				zone = HEADER(addr);			/* Referenced object */
-				if (zone->ov_size & B_FWD) {		/* Object forwarded? */
+				if (size & B_FWD) {				/* Object forwarded? */
 					zone = HEADER(zone->ov_fwd);	/* Look at fwd object */
 					if (zone->ov_flags & EO_NEW)	/* It's a new one */
 						epush(&new_stack, zone+1);	/* Update reference */
@@ -2880,10 +2896,10 @@ private void update_moved_set()
 				done = 1;						/* Reached end of stack */
 			}
 			for (; i > 0; i--, obj++) {			/* Stack viewed as an array */
-				addr = *obj;					/* Get stack item value */
-				if (addr == (char *) 0)			/* Freed object? */
-					continue;					/* Remove it from stack */
-				zone = HEADER(addr);			/* Referenced object */
+				zone = HEADER(*obj);			/* Malloc info zone */
+				size = zone->ov_size;			/* And its flags */
+				if (!(size & B_BUSY))			/* Freed object? */
+					continue;					/* Skip free objects */
 				flags = zone->ov_flags;			/* Get Eiffel flags */
 				if (flags & EO_MARK) {			/* Object is alive? */
 					if (flags & EO_NEW) {				/* Not tenrured */
@@ -2905,10 +2921,10 @@ private void update_moved_set()
 				done = 1;						/* Reached end of stack */
 			}
 			for (; i > 0; i--, obj++) {			/* Stack viewed as an array */
-				addr = *obj;					/* Get stack item value */
-				if (addr == (char *) 0)			/* Freed object? */
+				zone = HEADER(*obj);			/* Malloc info zone */
+				size = zone->ov_size;			/* And its flags */
+				if (!(size & B_BUSY))			/* Freed object? */
 					continue;					/* Skip free objects */
-				zone = HEADER(addr);			/* Referenced object */
 				if (EO_MOVED == (zone->ov_flags & EO_MOVED))
 					epush(&new_stack, zone+1);	/* Remains "as is" */
 			}
@@ -2954,6 +2970,7 @@ private void update_rem_set()
 	register4 struct stchunk *s;	/* To walk through each stack's chunk */
 	int done = 0;					/* Top of stack not reached yet */
 	int generational;				/* Are we in a generational cycle? */
+	register6 long size;
 
 #ifdef USE_STRUCT_COPY
 	new_stack = rem_set;
@@ -2987,9 +3004,10 @@ private void update_rem_set()
 
 		for (; n > 0; n--, object++) {
 			current = *object;				/* Save that for later perusal */
-			if (current == (char *) 0)		/* Freed object */
-				continue;					/* Remove it from stack */
 			zone = HEADER(current);			/* Object's header */
+			size = zone->ov_size;
+			if (!(size & B_BUSY))		/* Freed object? */
+				continue;					/* Skip free objects */
 
 #ifdef DEBUG
 			dprintf(4)("update_rem_set: at 0x%x (type %d, %d bytes) %s%s\n",

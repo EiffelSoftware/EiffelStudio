@@ -178,6 +178,7 @@ compiler,,,,
 ,3,Make the finalization independent from the workbench mode: this would remove bugs (cf DH) and facilitate some optimizations,Xavier,CMP0032
 ,4,"Save project file even if we don't have a successful compilation, so that we can resume compilation later on",,CMP0033
 ,3,Reorder features to put together the ones that are called at the same time in order to optimize page faults at run-time. This can be applied to feature tables and maybe to the actual order of the pieces of code in the executable,Arnaud,CMP0034
+,3,Classes that do not define the code of a polymorphic feature should not appear in polymorphic tables,Xavier,CMP0033
 
 
 

@@ -255,8 +255,9 @@ feature -- Project Initialization
 						version_number, 
 						Eiffel_project.incompatible_version_number)
 					redo_project := True
---					warner (Project_tool).custom_call (Current, 
---							msg, Interface_names.b_ok, Interface_names.b_cancel, Void)
+					create wd.make_with_text (Project_tool.parent, Interface_names.t_Warning, msg)
+					wd.show_ok_cancel_buttons
+					wd.show
 				else
 					if Eiffel_project.is_corrupted then
 						msg := Warning_messages.w_Project_corrupted (project_dir.name)

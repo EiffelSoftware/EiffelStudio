@@ -184,12 +184,7 @@ feature -- IL Code generation
 		do
 			generate_il_line_info (True)
 			expr.generate_il
-			
-			if tag = Void then
-				il_generator.generate_precondition_check ("", failure_block)
-			else
-				il_generator.generate_precondition_check (tag, failure_block)
-			end
+			il_generator.generate_precondition_check (tag, failure_block)
 		end
 
 feature -- Byte Code generation

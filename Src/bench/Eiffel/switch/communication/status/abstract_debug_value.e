@@ -30,6 +30,16 @@ inherit
 		undefine
 			is_equal
 		end
+		
+	SK_CONST
+		undefine
+			is_equal
+		end
+		
+	REFACTORING_HELPER
+		undefine
+			is_equal
+		end	
 
 feature -- Properties
 

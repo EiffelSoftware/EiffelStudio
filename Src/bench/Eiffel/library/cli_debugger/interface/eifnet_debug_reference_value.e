@@ -266,7 +266,7 @@ feature {NONE} -- Children implementation
 					if Result /= Void then
 						Result.set_name (f.feature_name)
 					else
-						create {DEBUG_VALUE[INTEGER]} Result.make (0)
+						create {DEBUG_VALUE[INTEGER]} Result.make (Sk_int32, 0)
 						Result.set_name ("ERROR on " + f.feature_name)
 							--| FIXME JFIAT : 2003/10/24 maybe add DUMMY_VALUE to say 
 							--| we had problem to get its value ...

@@ -25,12 +25,12 @@ create {DEBUG_VALUE_EXPORTER}
 	
 feature {NONE} -- Redefinition of make
 
-	make (a_referenced_value: like icd_referenced_value; v: like value) is
+	make (a_referenced_value: like icd_referenced_value; a_sk_type: INTEGER; v: like value) is
 		require
 			a_referenced_value_not_void: a_referenced_value /= Void
 		do
 			icd_referenced_value := a_referenced_value
-			dv_make (v)
+			dv_make (a_sk_type, v)
 		end
 		
 feature -- Access : Redefinition of dump_value

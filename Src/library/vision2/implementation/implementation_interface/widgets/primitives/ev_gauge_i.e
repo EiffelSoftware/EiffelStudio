@@ -16,7 +16,7 @@ inherit
 feature {NONE} -- Initialization
 
 	make_with_range (min: INTEGER; max: INTEGER) is
-			-- Create a spin-button with `min' as minimum, `max' as maximum
+			-- Create a gauge with `min' as minimum, `max' as maximum
 			-- and `par' as parent.
 		deferred
 		end

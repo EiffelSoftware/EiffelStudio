@@ -1,0 +1,67 @@
+<HTML>
+	<HEAD>
+		<TITLE>EiffelWeb Sample</TITLE>
+		<LINK REL="stylesheet" HREF="/default.css" TYPE="text/css">
+	</HEAD>
+	<BODY>
+		<H1>A Basic EiffelWeb Sample</H1>
+		<P>
+			This sample shows how to retrieve and display information from a
+            basic form on a web page.<P>
+		<P CLASS="note">
+			<B>Note:</B> This sample requires a web server supporting CGI in
+            order to be run. Both the Internet Information Services web server
+            from Microsoft and the GNU Apache server may be used.<H2>Compiling</H2>
+		<P>
+			To compile the example:
+		</P>
+		<UL>
+			<LI>Launch EiffelBench.
+			<LI>Select <B>Use existing Ace (control file)</B> and click <B>OK</B>.
+			<LI>Browse to <I>Eiffel50\examples\web\basic\</I>.
+			<LI>Choose <I>Ace.mswin.ace</I> on Windows platforms or <I>Ace.unix.ace</I> on Unix platforms.
+			<LI>Choose the directory where the project will be compiled, by default the same directory containing the Ace file.
+			<LI>Click <B>OK</B>.</UL>
+		<P>
+		<H2>Installing</H2>
+		<p>The workbench version of the example (i.e. the version
+        compiled either by melting or freezing) relies on the file <i>
+        web_demo.melted</i> to execute properly. However the process is
+        launched by the web server which means that this file will not be in the
+        <i>path</i> of the application. It is possible to set a registry entry
+        that will tell the Eiffel runtime where to find this file. The sample includes the file <i>web.reg</i>
+        that you can edit by replacing the line:</p>
+		<code>&quot;MELT_PATH&quot;=&quot;c:\\eiffel50\\examples\\web\\basic\\eifgen\\w_code&quot;</code><p>
+        with the path to the <i>W_Code</i> folder where you have compiled the
+        example (the <i>W_Code</i> folder is located underneath the <i>Eifgen</i>
+        folder). Once you have edited the file, simply double click on it to
+        register the changes in the registry (click <i>Yes </i>when prompted).</p>
+		<p>
+        You should then copy the file <i>web_demo.exe</i> in the <i>cgi_bin</i>
+        directory of your web server and the file <i>sample.html</i> in a
+        directory on the web server.</p>
+		<h2>
+        Running</h2>
+		<p>
+        To run the example, access the page <i>sample.html</i> that you copied
+        on the web server with a web browser (typically <i>
+        http://localhost/sample.html</i>). Fill in the text field with a
+        username and click <i>Submit</i>. You should see a page displaying the
+        name you jsut entered. Although not earth-shattering, this sample shows
+        the basis for building more complex forms processing in Eiffel.</p>
+		<H2>Under the Hood</H2>
+		<P>
+		This basic sample has just one class
+		<A CLASS="eclass" HREF="root_cluster/sample_chart.html">SAMPLE</A> which inherits from
+		<A CLASS="eclass" HREF="/libraries/web/reference/cgi_handling/cgi_interface_chart.html">CGI_INTERFACE</A>.
+		<A CLASS="eclass" HREF="root_cluster/sample_chart.html">SAMPLE</A> implements
+		<A CLASS="efeature" HREF="root_cluster/sample.html#f_execute">execute</A> which retrieves the
+		name entered in the form and creates a new HTML page with it.
+		</P>
+		<p></p>
+		<P>
+			&nbsp;<P>
+			See the <A HREF="root_cluster/index.html">reference</A> for the class interfaces.
+		<P>
+	</BODY>
+</HTML>

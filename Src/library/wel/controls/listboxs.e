@@ -22,14 +22,10 @@ creation
 feature -- Status setting
 
 	select_item (index: INTEGER) is
-			-- Select item at the zero-based `index'
-		require
-			exists: exists
-			index_small_enough: index < count
-			index_large_enough: index >= 0
+			-- Select item at the zero-based `index'.
 		do
 			cwin_send_message (item, Lb_setcursel, index, 0)
-		ensure
+		ensure then
 			selected: selected
 			selected_item: selected_item = index
 			selected_string: strings.item (index).is_equal (selected_string)
@@ -49,8 +45,6 @@ feature -- Status report
 
 	selected: BOOLEAN is
 			-- Is an item selected?
-		require
-			exists: exists
 		do
 			Result := cwin_send_message_result (item,
 				Lb_getcursel, 0, 0) /= Lb_err
@@ -63,7 +57,7 @@ feature -- Status report
 			selected: selected
 		do
 			Result := cwin_send_message_result (item,
-					Lb_getcursel, 0, 0)
+				Lb_getcursel, 0, 0)
 		ensure
 			result_large_enough: Result >= 0
 			result_small_enough: Result < count
@@ -89,6 +83,10 @@ feature {NONE} -- Implementation
 				Ws_tabstop + Ws_border + Ws_vscroll +
 				Lbs_notify
 		end
+
+invariant
+	consistent_selection: exists and then selected implies
+		is_selected (selected_item)
 
 end -- class WEL_SINGLE_SELECTION_LIST_BOX
 

@@ -101,8 +101,9 @@ feature {NONE} -- Recording information for eiffelcase
 			result_type: S_CLASS_TYPE_INFO;
 			feat_arg: FIXED_LIST [S_ARGUMENT_DATA];
 			real_class_ids: LINKED_LIST [INTEGER]
-            cli_sup_data: S_CLI_SUP_DATA;
-            label: STRING;
+			cli_sup_data: S_CLI_SUP_DATA;
+			label: STRING;
+			label_done: BOOLEAN
 			gen_type: S_GEN_TYPE_INFO;
 			type_a: TYPE_A
 		do
@@ -157,21 +158,15 @@ end;
 									!! label.make (0);
 									label.append (feature_data.name);
 									cli_sup_data.set_label (label);
-								else
-									label.append (", ");	
-									label.append (feature_data.name);
-debug ("CASE_FEATURE")
-	io.error.putstring ("%T%T%TResult: ");
--- Not available (class_id in an INTEGER)
---	io.error.putstring (System.class_of_id (result_type.class_id).name);
-	io.error.new_line;
-end
-								end;
-								if result_type.has_generics then
+								elseif not label_done then
+									label.append (", ...");
+									label_done := true
+								end
+	
+								if not label_done and then result_type.has_generics then
 									gen_type ?= result_type;
 									label.append (": ");	
-									label.append (gen_type.string_value_minus_id 
-											(sup_class_id))
+									label.append (gen_type.string_value_minus_id (sup_class_id))
 								end
 							end;
 							cli_sup_data.set_implementation (is_hidden);

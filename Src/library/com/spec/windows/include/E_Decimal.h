@@ -32,4 +32,6 @@ void ccom_decimal_value_zero (DECIMAL * a_value);
 
 void ccom_decimal_value_one (DECIMAL * a_value);
 
+EIF_DOUBLE ccom_decimal_to_double (DECIMAL * a_value);
+
 #endif // !__ECOM_E_DECIMAL_H_INC__

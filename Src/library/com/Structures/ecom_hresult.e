@@ -16,7 +16,7 @@ feature -- Initialization
 	make is
 			-- Set 'severity_bit' to 1.
 		do
-			severity_bit := 1
+			item := 0
 		end
 
 	make_from_integer (an_integer: INTEGER) is
@@ -42,17 +42,18 @@ feature -- Access
 			Result := cwin_hresult_error_code (item)
 		end
 
+	severity_bit: INTEGER is
+			-- Severity bit
+		do
+			Result := cwin_hresult_severity_bit (item)
+		end
+
 feature -- Element change
 
 	set_item (an_item: like item) is
 			-- Set value of item to 'an_item'
 		do
 			item := an_item;
-			if an_item >= 0 then
-				severity_bit := 0
-			else
-				severity_bit := 1
-			end
 		ensure
 			item_set: item = an_item
 		end
@@ -60,19 +61,13 @@ feature -- Element change
 	set_succeeded is
 			-- Set severity bit to indicate succeeded 
 		do
-			severity_bit := 0;
-			item := (cwin_hresult_make_hresult (severity_bit, facility_code, error_code))
-		ensure
-			severity_bit_set: severity_bit = 0
+			item := (cwin_hresult_make_hresult (0, facility_code, error_code))
 		end
 
 	set_failed is
 			-- Set severity bit to indicate failure
 		do
-			severity_bit := 1;
-			item := cwin_hresult_make_hresult (severity_bit, facility_code, error_code)
-		ensure
-			severity_bit_set: severity_bit = 1
+			item := cwin_hresult_make_hresult (1, facility_code, error_code)
 		end
 
 	set_facility_code (a_code: like facility_code) is
@@ -104,8 +99,6 @@ feature -- Status report
 			Result := (severity_bit = 0)
 		end
 
-	severity_bit: INTEGER
-
 feature {NONE} -- Implementation
 
 	cwin_hresult_make_hresult (tmp_sev, a_facility_code, an_error_code: INTEGER): INTEGER is
@@ -113,6 +106,13 @@ feature {NONE} -- Implementation
 			"C [macro <winerror.h>](EIF_INTEGER, EIF_INTEGER, EIF_INTEGER):EIF_INTEGER"
 		alias
 			"MAKE_HRESULT"
+		end
+
+	cwin_hresult_severity_bit (an_item: INTEGER): INTEGER is
+		external
+			"C [macro <winerror.h>](EIF_INTEGER):EIF_INTEGER"
+		alias
+			"HRESULT_SEVERITY"
 		end
 
 	cwin_hresult_error_code (an_item: INTEGER): INTEGER is

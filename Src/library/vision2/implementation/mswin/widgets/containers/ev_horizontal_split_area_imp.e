@@ -16,7 +16,8 @@ inherit
 			child_minwidth_changed,
 			child_minheight_changed,
 			set_default_minimum_size,
-			on_first_display
+			on_first_display,
+			on_set_cursor
 		end
 
 creation
@@ -158,7 +159,9 @@ feature {NONE} -- Implementation
   	on_first_display is
    		do
 			{EV_SPLIT_AREA_IMP} Precursor
-			resize_children (child1.minimum_width)
+			if child1 /= Void then
+				resize_children (child1.minimum_width)
+			end
  		end
 
 feature {NONE} -- WEL Implementation
@@ -173,13 +176,16 @@ feature {NONE} -- WEL Implementation
 			point.screen_to_client (Current)
 			
 			if on_split (point.x) then
-				!! cursor.make_by_predefined_id (Idc_sizewe)
+				!! internal_cursor.make_by_predefined_id (Idc_sizewe)
 			else
-				cursor := Void
+				internal_cursor := Void
 			end
 
-			if cursor /= Void and then code = Htclient then
-				cursor.set
+			if internal_cursor /= Void and then code = Htclient then
+				internal_cursor.set
+				disable_default_processing
+			elseif cursor_imp /= Void then
+				cursor_imp.set
 				disable_default_processing
 			end
 		end

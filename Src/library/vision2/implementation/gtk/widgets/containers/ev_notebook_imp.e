@@ -87,7 +87,7 @@ feature -- Element change
 			a: ANY
 			p: POINTER
 		do
-			a ?= label.to_c
+			a := label.to_c
 			p := gtk_label_new ($a)
 			gtk_notebook_append_page (widget, 
 						  c.widget, 
@@ -106,7 +106,7 @@ feature -- Event - command association
 	
 	add_switch_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add 'cmd' to the list of commands to be executed
-			-- the a page is switch in the notebook.
+			-- when a page is switched in the notebook.
 		do
 			add_command ("switch_page", cmd, arg)
 		end
@@ -115,9 +115,9 @@ feature -- Event -- removing command association
 
 	remove_switch_commands is
 			-- Empty the list of commands to be executed
-			-- when a page is switch in the notebook.
+			-- when a page is switched in the notebook.
 		do
-			check False end
+			remove_commands (switch_page_id)
 		end	
 
 feature -- Assertion test

@@ -608,7 +608,7 @@ rt_public void eif_gen_conf_init (int max_dtype)
 	/* Now initialize egc_xxx_dtypes and 
 	   egc_dtype entries in table `codes' */
 
-	for (dt = 0, pt = eif_par_table2; dt < eif_par_table2_size; ++dt, ++pt)
+	for (dt = 0, pt = eif_par_table2; dt <= eif_par_table2_size; ++dt, ++pt)
 	{
 		if (*pt == (struct eif_par_types *)0)
 			continue;
@@ -2223,7 +2223,7 @@ finish_simple:
 	if (strcmp (cname, "ARRAY") == 0)
 		result->is_array = '1';
 
-	for (dt = 0, pt = eif_par_table2; dt < eif_par_table2_size; ++dt, ++pt)
+	for (dt = 0, pt = eif_par_table2; dt <= eif_par_table2_size; ++dt, ++pt)
 	{
 		if (*pt == (struct eif_par_types *)0)
 			continue;

@@ -86,6 +86,7 @@
 						</list>
 					</item>
 					<item><bold>EV_SPIN_BUTTON</bold> - Corrected positioning in parent container. In many situations, the spin button mis-behaved and would be moved to the 0x0 pixel position in the parent.</item>
+					<item><bold>EV_LIST_ITEM</bold> - Setting a pixmap to an item that was already displayed in a list and had a text would cause the end of the text to be cut off. This is now fixed.</item>
 				</list>
 			</item>
 			<item>

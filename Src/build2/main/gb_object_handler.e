@@ -89,30 +89,25 @@ feature -- Access
 			parent_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
 			object_contained_in_object_result := False
-			parent_layout_item ?= parent_object.layout_item
-			check
-				parent_layout_item_not_void: parent_layout_item /= Void
-			end
-			parent_layout_item.recursive_do_all (agent is_child (child_object, ?))
+			recursive_do_all (parent_object, agent is_child (child_object, ?))
 			Result := object_contained_in_object_result
 		end
 		
-	is_child (child_object: GB_OBJECT; an_item: EV_TREE_ITEM) is
-			-- Is `child_object' a direct child of `an_item'?
-		local
-			current_item: GB_LAYOUT_CONSTRUCTOR_ITEM
+	is_child (child_object: GB_OBJECT; parent_object: GB_OBJECT) is
+			-- Is `child_object' a direct child of `parent_object'?
+		require
+			child_object_not_void: child_object /= Void
+			parent_object_not_void: parent_object /= Void
 		do
-			current_item ?= an_item
-			check
-				current_item_not_void: current_item /= Void
-			end
-			if current_item.object = child_object then
-				object_contained_in_object_result := True
+			if not object_contained_in_object_result then
+				object_contained_in_object_result := child_object.parent_object = parent_object
 			end
 		end
 		
 	objects_all_named (some_objects: ARRAYED_LIST [GB_OBJECT]): BOOLEAN is
 			-- Are all GB_OBJECT in `objects' named?
+		require
+			some_objects_not_void: some_objects /= Void
 		do
 			Result := True
 			from
@@ -246,33 +241,16 @@ feature -- Basic operation
 			an_object_not_void: an_object /= Void
 			an_object_object_not_void: an_object.object /= Void
 			an_object_display_item_not_void: an_object.display_object /= Void
-			an_object_layout_item_not_void: an_object.layout_item /= Void
 			
 		local
-			layout_parent_item, old_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			parent_object: GB_OBJECT
 			original_position: INTEGER
 			local_all_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 			table_object: GB_TABLE_OBJECT
 			assertion_result: BOOLEAN
-			layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 		do
-				-- Retreive the parent of `an_object'
-				-- we must do this before calling `remove_object_from_parent'.
-			layout_parent_item ?= an_object.layout_item.parent
-			
-				-- Store the layout item as we need to use this in the new object.
-				-- If we keep references to this layout item, when the type changes,
-				-- we can still access the object.
-			old_layout_item := an_object.layout_item
-
-				--| Need to get original position.
-			original_position := layout_parent_item.index_of (an_object.layout_item, 1)			
-			
-			parent_object ?= an_object.parent_object
-			check
-				parent_object_not_void: parent_object /= Void
-			end	
+			parent_object := an_object.parent_object
+			original_position := parent_object.children.index_of (an_object, 1)
 			assertion_result := (create {ISE_RUNTIME}).check_assert (False)
 			
 			parent_object.remove_child (an_object)
@@ -284,7 +262,7 @@ feature -- Basic operation
 			 -- the new contents.
 			 table_object ?= new_object
 			if table_object /= Void then
-				table_object.resize_to_accomodate (an_object.layout_item.count)
+				table_object.resize_to_accomodate (an_object.children.count)
 			end
 				
 			
@@ -811,32 +789,30 @@ feature -- Basic operation
 			-- `an_object', call `action' with the current object as
 			-- the argument.
 			-- Semantics not guaranteed if `action' changes the structure
+		require
+			an_object_not_void: an_object /= Void
+			action_not_void: action /= Void
 		local
 			t: TUPLE [GB_OBJECT]
 			layout_item, current_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
 			cursor: CURSOR
+			children: ARRAYED_LIST [GB_OBJECT]
 		do
 			create t
 			t.put (an_object, 1)
 			action.call (t)
-			layout_item := an_object.layout_item
-			cursor := layout_item.cursor
+			children := an_object.children
+			cursor := children.cursor
 			from
-				layout_item.start
+				children.start
 			until
-				layout_item.off
+				children.off
 			loop
-				current_layout_item ?= layout_item.item
-				check
-					current_layout_item_not_void: current_layout_item /= Void
-				end
-				recursive_do_all (current_layout_item.object, action)
-				layout_item.forth
+				recursive_do_all (children.item, action)
+				children.forth
 			end
-			if layout_item.valid_cursor (cursor) then
-					-- We only restore the cursor position if it is valid, 
-					-- as `action' may have modified the structure.
-				layout_item.go_to (cursor)	
+			if children.valid_cursor (cursor) then
+				children.go_to (cursor)
 			end
 		end
 		
@@ -936,7 +912,6 @@ feature -- Basic operation
 				an_object := some_objects.item
 				if an_object.name.is_empty then
 					an_object.set_name (unique_name_from_array (names, an_object.short_type))
-					an_object.layout_item.set_text (name_and_type_from_object (an_object))
 					titled_window_object ?= an_object
 					if titled_window_object /= Void then
 						titled_window_object.window_selector_item.set_text (name_and_type_from_object (an_object))	
@@ -1011,25 +986,19 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 			store: GB_XML_STORE
 			element: XM_ELEMENT
 			load: GB_XML_LOAD
-			new_object: GB_OBJECT
-			parent_object: GB_OBJECT
+			new_object, parent_object: GB_OBJECT
 			table_parent_object: GB_TABLE_OBJECT
-			original_position: INTEGER
-			x, y, width, height: INTEGER
+			original_position, x, y, width, height: INTEGER
 			fixed: EV_FIXED
-			widget: EV_WIDGET
+			widget, old_builder_contents: EV_WIDGET
 			table: EV_TABLE
 			container_object: GB_CONTAINER_OBJECT
 			titled_window_object: GB_TITLED_WINDOW_OBJECT
 			old_contents: EV_WIDGET
-			old_window: EV_TITLED_WINDOW
-			new_window: EV_TITLED_WINDOW
-			old_builder_window, new_builder_window: EV_TITLED_WINDOW
-			old_builder_contents: EV_WIDGET
+			old_window, new_window,  old_builder_window, new_builder_window: EV_TITLED_WINDOW
 			locked_in_here: BOOLEAN
 			old_window_selector_item: GB_WINDOW_SELECTOR_ITEM
-			old_window_menu_bar: EV_MENU_BAR
-			old_builder_menu_bar: EV_MENU_BAR
+			old_builder_menu_bar, old_window_menu_bar: EV_MENU_BAR
 		do
 			if ((create {EV_ENVIRONMENT}).application.locked_window = Void) then
 				locked_in_here := True
@@ -1064,7 +1033,7 @@ feature {GB_EV_WIDGET_EDITOR_CONSTRUCTOR} -- Implementation
 					width := widget.width
 					height := widget.height
 				end
-				original_position := parent_object.layout_item.index_of (an_object.layout_item, 1)
+				original_position := parent_object.children.index_of (an_object, 1)
 				parent_object.remove_child (an_object)	
 				
 				create store

@@ -61,9 +61,9 @@ feature -- Assertions
 			(!in_assertion ()) &&
 			((is_final) || (is_assertion_checked (o.GetType (), ASSERTION_LEVEL_ENUM.invariant)))
 		) {
-			if (o is EIFFEL_TYPE_INFO) {
+			target = o as EIFFEL_TYPE_INFO;
+			if (target != null) {
 				set_in_assertion (true);
-				target = (EIFFEL_TYPE_INFO) o;
 
 				invariant_checked_table = new Hashtable (10);
 
@@ -193,11 +193,12 @@ feature -- Status report
 		if (o == null) return "NONE";
 
 		String Result;
+		EIFFEL_TYPE_INFO l_object = o as EIFFEL_TYPE_INFO;
 
-		if (o is EIFFEL_TYPE_INFO) {
+		if (l_object != null) {
 				// This is a generated Eiffel type, we extract
 				// stored type.
-			Result = ((EIFFEL_TYPE_INFO) o).____class_name ();
+			Result = l_object.____class_name ();
 		} else {
 			Result = o.GetType().Name;
 		}
@@ -210,12 +211,11 @@ feature -- Status report
 		if (o == null) return "NONE";
 
 		EIFFEL_DERIVATION der;
-		EIFFEL_TYPE_INFO info;
+		EIFFEL_TYPE_INFO info = o as EIFFEL_TYPE_INFO;
 		String Result;
 
-		if (o is EIFFEL_TYPE_INFO) {
+		if (info != null) {
 				// This is a generated Eiffel type.
-			info = (EIFFEL_TYPE_INFO) o;
 			der = info.____type ();
 			if (der == null) {
 					// Not a generic class, we extract stored name.
@@ -234,8 +234,9 @@ feature -- Status report
 		// Number of generic Parameter if any.
 	{
 		int Result = 0;
-		if (o is EIFFEL_TYPE_INFO) {
-			Result = ((EIFFEL_TYPE_INFO) o).____type ().nb_generics;
+		EIFFEL_TYPE_INFO l_object = o as EIFFEL_TYPE_INFO;
+		if (l_object != null) {
+			Result = l_object.____type ().nb_generics;
 		}
 		return Result;
 	}
@@ -244,20 +245,19 @@ feature -- Status report
 		// Given an Eiffel object `an_obj', find the associated type of generic parameter
 		// at position `pos'.
 	{
-		if (an_obj is EIFFEL_TYPE_INFO) {
-			INTERFACE_TYPE_ATTRIBUTE generic_type;
-			EIFFEL_TYPE_INFO l_obj = (EIFFEL_TYPE_INFO) an_obj;
+		EIFFEL_TYPE_INFO l_object = an_obj as EIFFEL_TYPE_INFO;
+		INTERFACE_TYPE_ATTRIBUTE generic_type;
+		EIFFEL_DERIVATION der;
+		CLASS_TYPE cl_type;
+
+		if (l_object != null) {
 			#if ASSERTIONS
-				ASSERTIONS.REQUIRE ("Object not void", l_obj != null);
-				ASSERTIONS.REQUIRE ("There should be some generic info", l_obj.____type() != null);
+				ASSERTIONS.REQUIRE ("Has  generic info", l_object.____type() != null);
 				ASSERTIONS.REQUIRE ("Valid position `pos'",
-					(pos > 0) && (pos <= l_obj.____type().nb_generics));
+					(pos > 0) && (pos <= l_object.____type().nb_generics));
 			#endif
 
-			EIFFEL_DERIVATION der;
-			CLASS_TYPE cl_type;
-			
-			der = l_obj.____type ();
+			der = l_object.____type ();
 			cl_type = der.generics_type [pos - 1];
 			generic_type = (INTERFACE_TYPE_ATTRIBUTE)
 				Type.GetTypeFromHandle (cl_type.type).
@@ -272,11 +272,10 @@ feature -- Status report
 		// Is `o' an instance of an Eiffel STRING.
 	{
 		EIFFEL_DERIVATION der;
-		EIFFEL_TYPE_INFO info;
+		EIFFEL_TYPE_INFO info = o as EIFFEL_TYPE_INFO;
 		Boolean Result = false;
 
-		if (o is EIFFEL_TYPE_INFO) {
-			info = (EIFFEL_TYPE_INFO) o;
+		if (info != null) {
 			der = info.____type ();
 			if (der == null) {
 					// Not a generic class, possibly a good candidate for STRING.
@@ -290,11 +289,10 @@ feature -- Status report
 		// Is `o' an instance of an Eiffel ARRAY.
 	{
 		EIFFEL_DERIVATION der;
-		EIFFEL_TYPE_INFO info;
+		EIFFEL_TYPE_INFO info = o as EIFFEL_TYPE_INFO;
 		Boolean Result = false;
 
-		if (o is EIFFEL_TYPE_INFO) {
-			info = (EIFFEL_TYPE_INFO) o;
+		if (info != null) {
 			der = info.____type ();
 			if (der != null) {
 					// A generic class, possibly a good candidate for ARRAY.

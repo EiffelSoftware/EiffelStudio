@@ -31,7 +31,7 @@ feature {NONE} -- Initialization
 		local
 			a: ANY
 		do
-			a ?= txt.to_c
+			a := txt.to_c
 			widget := gtk_frame_new ($a)
 			gtk_object_ref (widget)
 		end

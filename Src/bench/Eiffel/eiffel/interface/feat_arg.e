@@ -33,7 +33,6 @@ inherit
 
 	
 creation
-
 	make
 
 	
@@ -279,7 +278,7 @@ feature {FEATURE_I} -- Case storage
 			type_a: TYPE_A;
 			arg_data: S_ARGUMENT_DATA
 		do
-			!! Result.make (count);
+			!! Result.make_filled (count);
 			Result.start
 			from
 				argument_names.start

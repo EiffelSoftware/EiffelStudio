@@ -41,8 +41,6 @@ feature {TTY_RESOURCES} -- Initialization
 			!! tmp_path.make ("temporary_directory", rt, env_tmp_directory);
 			!! shell_command.make ("shell_command", 
 					rt, "xterm -geometry 80x40 -e vi +$line $target");
-			!! project_shell_command.make 	
-				("project_tool_shell_command", rt, "netscape");
 			!! filter_name.make ("filter_name", rt, "PostScript");
 			!! filter_command.make ("filter_command", rt, "");
 			!! active_drag_and_drop.make ("active_drag_and_drop", rt, True);
@@ -69,7 +67,6 @@ feature -- Resources
 	filter_path: STRING_RESOURCE;
 	profile_path: STRING_RESOURCE;
 	tmp_path: STRING_RESOURCE;
-	project_shell_command: STRING_RESOURCE;
 	shell_command: STRING_RESOURCE;
 	filter_name: STRING_RESOURCE;
 	filter_command: STRING_RESOURCE;

@@ -33,7 +33,6 @@ feature {NONE} -- Initialization
 			!! profile_path.make (associated_category.profile_path);
 			!! tmp_path.make (associated_category.tmp_path);
 			!! shell_command.make (associated_category.shell_command);
-			!! project_shell_command.make (associated_category.project_shell_command);
 			!! filter_name.make (associated_category.filter_name);
 			!! filter_command.make (associated_category.filter_command);
 			!! active_drag_and_drop.make (associated_category.active_drag_and_drop);
@@ -48,7 +47,6 @@ feature {NONE} -- Initialization
 			resources.extend (profile_path);
 			resources.extend (tmp_path);
 			resources.extend (shell_command);
-			resources.extend (project_shell_command);
 			resources.extend (filter_name);
 			resources.extend (filter_command);
 			resources.extend (active_drag_and_drop);
@@ -96,7 +94,6 @@ feature {NONE} -- Resources
 
 	tab_step: INTEGER_PREF_RES;
 	editor, filter_path, profile_path, tmp_path: STRING_PREF_RES;
-	project_shell_command: STRING_PREF_RES;
 	shell_command: STRING_PREF_RES;
 	filter_name: STRING_PREF_RES;
 	filter_command: STRING_PREF_RES;

@@ -350,7 +350,7 @@ feature -- Element change
 					top_split_position := bottom_split_position
 				end;
 				resize_bottom_child
-			end
+			end;
 		end;
 
 	remove_managed_child (a_window: SPLIT_WINDOW_CHILD) is
@@ -366,9 +366,9 @@ feature -- Element change
 	remove_middle_child is
 			-- Remove `middle_child' from the display.
 		do
-			top_split_position := bottom_split_position;
+			bottom_split_position := top_split_position
 			top_split_visible := False;
-			resize_top_child
+			resize_bottom_child
 		end;
 
 	remove_bottom_child is
@@ -426,8 +426,9 @@ feature {NONE} -- Implementation
 			exists: exists
 		do
 			bottom_child.set_x_y (0, bottom_split_position + split_width);
-			bottom_child.set_size (width, (height - bottom_split_position - split_width).max
-					(bottom_child.implementation.minimal_height))
+			bottom_child.set_size (width, 
+				(height - bottom_split_position - split_width).max
+				(bottom_child.implementation.minimal_height))
 		end
 
 	draw_top_split (a_dc: WEL_DC) is
@@ -616,7 +617,9 @@ feature {NONE} -- Implementation
 	on_size (code, a_width, a_height: INTEGER) is
 			-- Respond to a resize message.
 		do
-			if not flag_set (code, Size_minimized) then
+			if 
+				not flag_set (code, Size_minimized) 	
+			then
 				if bottom_split_visible then
 					if bottom_split_position > a_height then
 						bottom_split_position := a_height - split_width

@@ -63,7 +63,7 @@ feature {NONE} -- Implementation
 	body: STRING is
 			-- Feature body
 		local
-			cecil_call, arguments, variables, return_value, free_object, protect_object: STRING
+			tmp_string, cecil_call, arguments, variables, return_value, free_object, protect_object: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
 			pointed_data_type_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 		do
@@ -120,7 +120,11 @@ feature {NONE} -- Implementation
 						if is_paramflag_fout (func_desc.arguments.item.flags) then
 							pointed_data_type_descriptor ?= func_desc.arguments.item
 							if pointed_data_type_descriptor = Void then
-				 				add_warning (Current, Not_pointer_type)
+								tmp_string := clone (visitor.c_type)
+								tmp_string.append (visitor.c_post_type)
+								tmp_string.append (Struct_selection_operator)
+								tmp_string.append (Not_pointer_type)
+				 				add_warning (Current, tmp_string)
 							end	
 							variables.append (out_variable_set_up (func_desc.arguments.item.name, visitor))
 							variables.append (New_line_tab)

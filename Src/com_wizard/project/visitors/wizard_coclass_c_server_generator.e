@@ -19,7 +19,7 @@ feature -- Basic operations
 			a_class_object: WIZARD_CLASS_OBJECT_GENERATOR
 			tmp_coclass_descriptor: WIZARD_COCLASS_DESCRIPTOR
 			a_registration_code_gen: WIZARD_REGISTRATION_CODE_GENERATOR
-			tmp_file_name: STRING
+			tmp_string: STRING
 		do
 			coclass_descriptor := a_descriptor
 
@@ -32,6 +32,18 @@ feature -- Basic operations
 			cpp_class_writer.set_name (a_descriptor.c_type_name)
 			cpp_class_writer.set_header (a_descriptor.description)
 			cpp_class_writer.set_header_file_name (a_descriptor.c_header_file_name)
+
+			-- Import header file
+			cpp_class_writer.add_import (Ecom_server_rt_globals_h)
+
+			-- Add clsid of the coclass
+			-- const CLSID CLSID_'coclass_name'
+			cpp_class_writer.add_other (clsid_declaration (a_descriptor.c_type_name))
+			cpp_class_writer.add_other_source (clsid_definition (a_descriptor.c_type_name, a_descriptor.guid))
+
+			-- Add jmp_buf variable and integer value
+			cpp_class_writer.add_other_source ("int return_hr_value;")
+			cpp_class_writer.add_other_source ("jmp_buf exenv;")
 
 			-- member (LONG Ref_count)
 			create member_writer.make
@@ -656,10 +668,7 @@ feature {NONE} -- Implementation
 			Result.append (Struct_selection_operator)
 			Result.append (Get_type_info_of_guid)
 			Result.append (Space_open_parenthesis)
-			Result.append (Ampersand)
-			Result.append (Clsid_type)
-			Result.append (Underscore)
-			Result.append (coclass_descriptor.c_type_name)
+			Result.append (clsid_name(coclass_descriptor.c_type_name))
 			Result.append (Comma_space)
 			Result.append (Ampersand)
 			Result.append (Type_info_variable_name)

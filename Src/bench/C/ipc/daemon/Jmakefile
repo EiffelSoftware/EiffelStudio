@@ -16,21 +16,21 @@ OBJ = \
 -expand \\
 
 ;# Where shared archive is located (path and name)
-LIBDIR = ../shared
-LIBNAME = libipc.a
-LIBARCH = $(LIBDIR)/$(LIBNAME)
-LIBRUN = ../../run-time
-LIBIDR = ../../idrs
+LIBIPC = $(TOP)/ipc/shared
+LIBIPCNAME = libipc.a
+LIBIPCARCH = $(LIBIPC)/$(LIBIPCNAME)
+LIBIDR = $(TOP)/idrs
 LIBIDRNAME = libidr.a
 LIBIDRARCH = $(LIBIDR)/$(LIBIDRNAME)
 
 /* The following are understood by jmake to alter built-in commands */
-DPFLAGS = -I$(TOP) -I$(LIBDIR) -I$(LIBRUN) -I$(LIBIDR)
+DPFLAGS = -I$(TOP) -I$(LIBIDR) -I$(LIBIPC) -I$(TOP)/run-time -I$(TOP)/run-time/include
 CFLAGS = $(DPFLAGS)
-LDFLAGS = $(LIBARCH) $(LIBIDRARCH)
+LDFLAGS = $(LIBIPCARCH) $(LIBIDRARCH)
 
-RemoteTargetDependency(estudio,$(LIBDIR),$(LIBNAME))
+RemoteTargetDependency(estudio,$(LIBIPC),$(LIBIPCNAME))
 RemoteTargetDependency(estudio,$(LIBIDR),$(LIBIDRNAME))
 
-DependTarget()
 NormalProgramTarget(estudio,$(SRC),$(OBJ))
+DependTarget()
+LintTarget()

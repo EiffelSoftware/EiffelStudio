@@ -8,8 +8,8 @@ indexing
 class ACCELERATOR_W
 
 inherit
+	COMMAND_W
 
-	COMMAND_W;
 	SHARED_ACCELERATOR
 
 feature {NONE} -- Execution

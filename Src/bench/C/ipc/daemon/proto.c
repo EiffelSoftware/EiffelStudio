@@ -473,7 +473,7 @@ rt_private void run_command(int s)
 	 }
      sprintf (envstring, "MELT_PATH=%s", meltpath);
      putenv (envstring);
-#if defined BSD || defined EIF_VMS
+#if defined (BSD) || defined (EIF_VMS)
 	signal (SIGCHLD, SIG_DFL);
 #elif defined (SIGCLD)
 	signal (SIGCLD, SIG_DFL);
@@ -506,7 +506,7 @@ rt_private void run_command(int s)
 	status = system(cmd);				/* Run command via /bin/sh */
 #endif
 
-#if defined BSD || defined EIF_VMS
+#if defined (BSD) || defined (EIF_VMS)
     signal (SIGCHLD, SIG_IGN);
 #elif defined (SIGCLD)
     signal (SIGCLD, SIG_IGN);
@@ -584,7 +584,9 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	chdir(current_dir);
 	free(current_dir);
 
-#elif !defined EIF_VMS	/* VMS needs a higher level abstraction for async system() */
+#else
+
+#ifndef EIF_VMS	/* VMS needs a higher level abstraction for async system() */
 	switch (fork()) {
 	case -1:				/* Cannot fork */
 #ifdef USE_ADD_LOG
@@ -637,7 +639,7 @@ rt_private void run_asynchronous(int s, Request *rqst)
          }
      sprintf (envstring, "MELT_PATH=%s", meltpath);
      putenv (envstring);
-#if defined BSD || defined __VMS
+#if defined (BSD) || defined (__VMS)
         signal (SIGCHLD, SIG_DFL);
 #else
         signal (SIGCLD, SIG_DFL);
@@ -674,7 +676,12 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	add_log(12, "child exiting");
 #endif
 	exit(0);							/* Child is exiting properly */
+<<<<<<< proto.c
 #endif /* EIF_VMS */
+#endif /* EIF_WIN32 */
+=======
+#endif /* EIF_VMS */
+>>>>>>> 2.7
 	/* NOTREACHED */
 }
 
@@ -793,7 +800,7 @@ rt_public void dead_app(void)
 	 * of `waitpid' to be suspended if the child process is still
 	 * running (just in case!)).
 	 */
-#if !defined EIF_WIN32 && !defined EIF_VMS
+#if !defined (EIF_WIN32) && !defined (EIF_VMS)
 	child_pid = waitpid((Pid_t) daemon_data.d_app, &status, WNOHANG);
 #endif
 

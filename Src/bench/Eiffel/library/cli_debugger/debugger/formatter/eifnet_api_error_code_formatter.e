@@ -5,7 +5,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	EIFNET_ERROR_CODE_FORMATTER
+	EIFNET_API_ERROR_CODE_FORMATTER
 
 feature -- Access
 
@@ -50,4 +50,4 @@ feature -- Access
 			Result.to_upper
 		end
 
-end -- class EIFNET_ERROR_CODE_FORMATTER
+end -- class EIFNET_API_ERROR_CODE_FORMATTER

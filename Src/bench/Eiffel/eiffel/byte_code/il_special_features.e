@@ -142,10 +142,12 @@ feature -- IL code generation
 					parameters_not_void: parameters /= Void
 					valid_count: parameters.count = 1
 				end
-				il_generator.put_integer_32_constant (1)
+				il_generator.put_numeric_integer_constant (type, 1)
 				parameters.i_th (1).generate_il
 				generate_il_operation_code (bit_shift_left_type)
 				generate_il_operation_code (bit_and_type)
+				il_generator.put_default_value (type)
+				il_generator.generate_binary_operator (il_ne)
 
 			when is_equal_type then
 				check
@@ -164,19 +166,7 @@ feature -- IL code generation
 					-- No need to keep pushed value as we are going
 					-- to put something else.
 				il_generator.pop
-				inspect type_of (type)
-				when integer_type then
-					if is_signed_integer then
-						il_generator.put_integer_constant (type, 1)
-					else
-						il_generator.put_natural_constant (type, 1)
-					end
-				when real_64_type then
-					il_generator.put_double_constant (1.0)
-				when real_32_type then
-					il_generator.put_double_constant (1.0)
-					il_generator.convert_to_real
-				end
+				il_generator.put_numeric_integer_constant (type, 1)
 
 			when as_natural_8_type, to_natural_8_type then
 				il_generator.convert_to_natural_8
@@ -233,10 +223,10 @@ feature -- IL code generation
 				il_generator.generate_binary_operator (il_plus)
 				
 			when to_real_32_type then
-				il_generator.convert_to_real
+				il_generator.convert_to_real_32
 
 			when to_real_64_type then
-				il_generator.convert_to_double
+				il_generator.convert_to_real_64
 			
 			when out_type then
 				il_generator.generate_out (type)

@@ -66,6 +66,8 @@ feature {NONE} -- Initialization
 			set_menu_name ("Generate code")
 			disable_sensitive
 			add_agent (agent execute)
+			drop_agent := agent generate_single_window
+			veto_drop_agent := agent veto_drop
 
 				-- Now add an accelerator for `Current'.
 			create key.make_with_code ((create {EV_KEY_CONSTANTS}).key_g)
@@ -124,5 +126,30 @@ feature {NONE} -- Implementation
 
 	dialog: GB_CODE_GENERATION_DIALOG
 		-- Displays generation output.
+
+	generate_single_window (object: GB_OBJECT) is
+			-- Generate code for `object' only.
+		require
+			object_not_void: object /= Void
+			object_is_top_level: object.is_top_level_object
+			object_named: object.name /= Void and then not object.name.is_empty
+		do
+			create dialog.make_for_single_generation (object.name)
+			dialog.show_modal_to_window (main_window)
+		end
+		
+	veto_drop (pebble: ANY): BOOLEAN is
+			-- Veto dropping for `generate_single_window' as the object
+			-- must be a named top level object.
+		require
+			pebble_not_void: pebble /= Void
+		local
+			object: GB_OBJECT
+		do
+			object ?= pebble
+			if object /= Void then
+				Result := object.is_top_level_object and not object.name.is_empty
+			end
+		end
 
 end -- class GB_GENERATION_COMMAND

@@ -9,7 +9,7 @@ class
 inherit
 	WEL_STRUCTURE
 		rename
-			structure_size as size
+			structure_size as count
 		end
 		
 create
@@ -57,11 +57,10 @@ feature -- Settings
 			rva_set: rva = a_rva
 			data_size_set: data_size = a_size
 		end
-		
-				
+
 feature -- Measurement
 
-	size: INTEGER is
+	count: INTEGER is
 			-- Size of current structure.
 		do
 			Result := structure_size
@@ -74,9 +73,8 @@ feature -- Measurement
 		alias
 			"sizeof(IMAGE_DATA_DIRECTORY)"
 		end
-		
-feature {NONE} -- Implementation
 
+feature {NONE} -- Implementation
 
 	c_virtual_address (an_item: POINTER): INTEGER is
 			-- Access to `VirtualAddress'.

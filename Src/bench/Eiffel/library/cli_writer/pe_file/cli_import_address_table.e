@@ -9,7 +9,7 @@ class
 inherit
 	WEL_STRUCTURE
 		rename
-			structure_size as size
+			structure_size as count
 		end
 		
 create
@@ -25,7 +25,7 @@ feature -- Settings
 		
 feature -- Measurement
 
-	size: INTEGER is
+	count: INTEGER is
 			-- Size of Current structure.
 		do
 			Result := structure_size

@@ -19,7 +19,6 @@ inherit
 		redefine
 			interface,
 			initialize,
-			is_displayed,
 			button_press_switch,
 			destroy,
 			minimum_width,
@@ -212,6 +211,9 @@ feature {EV_ANY_I, EV_INTERMEDIARY_ROUTINES} -- Implementation
 				INTEGER, INTEGER]
 			mouse_wheel_delta: INTEGER
 		do
+			if not has_focus then
+				set_focus
+			end
 			t := [a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure,
 				a_screen_x, a_screen_y]
 				-- Mouse Wheel implementation.
@@ -313,21 +315,6 @@ feature {EV_WIDGET_IMP, EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Position retr
 					Result := {EV_GTK_EXTERNALS}.gtk_widget_aux_info_struct_y (a_aux_info)
 				end
 			end
-		end
-	
-feature -- Status report
-
-	is_show_requested: BOOLEAN is
-			-- Will `Current' be displayed when its parent is?
-			-- See also `is_displayed'.
-		do
-			Result := has_struct_flag (c_object, {EV_GTK_EXTERNALS}.GTK_VISIBLE_ENUM)
-		end
-
-	is_displayed: BOOLEAN is
-			-- Is `Current' visible on the screen?
-		do
-			Result := has_struct_flag (c_object, {EV_GTK_EXTERNALS}.GTK_MAPPED_ENUM)
 		end
 
 feature -- Status setting
@@ -530,7 +517,7 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 feature {NONE} -- Implementation
 
 	internal_set_minimum_size (a_minimum_width, a_minimum_height: INTEGER) is
-			-- Abstracted implementation for minumum size setting.
+			-- Abstracted implementation for minimum size setting.
 		do
 			if a_minimum_width /= -1 then
 				internal_minimum_width := a_minimum_width

@@ -39,7 +39,7 @@ extern "C" {
 
 
 /* Eiffel routine signature for `converter' */
-int CALLBACK cwel_enum_font_fam_procedure (ENUMLOGFONT *, NEWTEXTMETRIC *, int, LPARAM);
+int CALLBACK cwel_enum_font_fam_procedure (ENUMLOGFONT *, NEWTEXTMETRIC *, DWORD, LPARAM);
 
 #ifdef EIF_THREADS
 

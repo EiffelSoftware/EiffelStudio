@@ -15,7 +15,7 @@
 	/* Address of the Eiffel object WEL_FONT_FAMILY_ENUMERATOR created */
 #endif
 
-int CALLBACK cwel_enum_font_fam_procedure (ENUMLOGFONT * lpelf, NEWTEXTMETRIC * lpntm, int font_type, LPARAM lparam)
+int CALLBACK cwel_enum_font_fam_procedure (ENUMLOGFONT * lpelf, NEWTEXTMETRIC * lpntm, DWORD font_type, LPARAM lparam)
 {
 	/*
 	 * This function is called by Windows for each font found in the system.

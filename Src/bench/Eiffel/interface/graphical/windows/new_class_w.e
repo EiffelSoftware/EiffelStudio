@@ -189,8 +189,7 @@ feature -- Access
 					clus_list.forth
 				end;
 				if cluster_list.empty then
-					warner (tool.popup_parent).gotcha_call 
-						(Warning_messages.w_Cannot_create_class (class_name))
+					create_b.set_insensitive
 				else
 					if cl = Void then
 						cluster_list.select_i_th (1);

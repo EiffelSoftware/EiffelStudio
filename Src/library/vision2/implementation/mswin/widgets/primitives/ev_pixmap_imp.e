@@ -1642,7 +1642,7 @@ feature {NONE} -- Externals
 		update_fields_routine: POINTER
 		) is
 		external
-			"C | %"load_pixmap.h%""
+			"C signature (void *, char *, void *) use %"load_pixmap.h%""
 		end
 
 invariant

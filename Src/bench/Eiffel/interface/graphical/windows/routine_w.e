@@ -102,12 +102,17 @@ feature
 
 	change_class_command: CHANGE_CL_ROUT;
 	change_routine_command: CHANGE_ROUTINE;
+	change_class_form: FORM;
+	change_routine_form: FORM;
 
 	hole: ROUTINE_HOLE;
 			-- Hole caraterizing current
 	class_hole: ROUT_CLASS_HOLE;
 			-- Hole for version of routine for a particular class.
 	tool_name: STRING is do Result := l_Routine end;
+
+	stop_hole: DEBUG_STOPIN;
+			-- To set breakpoints
 
 feature {NONE}
 
@@ -128,15 +133,13 @@ feature {NONE}
 
 	set_default_size is
 		do
-			set_size (600, 450)
+			set_size (650, 450)
 		end;
 
 	set_default_position is
-		local
-			i: INTEGER;
+			-- Display the window at the cursor position.
 		do
-			i := 10 * window_manager.routine_windows_count;
-			set_x_y (500 + i, i)
+			set_x_y (screen.x, screen.y)
 		end;
 
 	close_windows is
@@ -172,9 +175,13 @@ feature {NONE}
 				format_bar.attach_top (showtext_command, 0);
 				format_bar.attach_left (showtext_command, 0);
 
+			!!showflat_command.make (format_bar, text_window);
+				format_bar.attach_top (showflat_command, 0);
+				format_bar.attach_left_widget (showtext_command, showflat_command, 0);
+
 			!!showroutclients_command.make (format_bar, text_window);
 				format_bar.attach_top (showroutclients_command, 0);
-				format_bar.attach_left_widget (showtext_command, showroutclients_command, 0);
+				format_bar.attach_left_widget (showflat_command, showroutclients_command, 10);
 
 			!!showhistory_command.make (format_bar, text_window);
 				format_bar.attach_top (showhistory_command, 0);
@@ -188,37 +195,40 @@ feature {NONE}
 				format_bar.attach_top (showfuture_command, 0);
 				format_bar.attach_left_widget (showpast_command, showfuture_command, 0);
 
-			!!showflat_command.make (format_bar, text_window);
-				format_bar.attach_top (showflat_command, 0);
-				format_bar.attach_left_widget (showfuture_command, showflat_command, 0);
-
 			!!showstop_command.make (format_bar, text_window);
 				format_bar.attach_top (showstop_command, 0);
-				format_bar.attach_left_widget (showflat_command, showstop_command, 10);
+				format_bar.attach_left_widget (showfuture_command, showstop_command, 10);
 		end;
 
 	build_bar is
 			-- Build top bar: editing commands.
 		local
 			quit_cmd: QUIT_FILE;
-			form: FORM;
 			label: LABEL;
 		do
-			edit_bar.set_fraction_base (2);
-			!!form.make ("", edit_bar);
-				!!label.make ("", form);
-				label.set_text ("from: ");
-				!!change_class_command.make (form, text_window);
-				form.attach_top (change_class_command, 0);
-				form.attach_top (label, 0);
-				form.attach_bottom (label, 0);
-				form.attach_left (label, 0);
-				form.attach_left_widget (label, change_class_command, 0);
-				form.attach_right (change_class_command, 0);
+			edit_bar.set_fraction_base (5);
+			!!label.make ("", edit_bar);
+			label.set_text ("from: ");
+			!!change_class_form.make (new_name, edit_bar);
+			!!change_class_command.make (change_class_form, text_window);
+			change_class_form.attach_left (change_class_command, 0);
+			change_class_form.attach_right (change_class_command, 0);
+			change_class_form.attach_bottom (change_class_command, 0);
+			change_class_form.attach_top (change_class_command, 0);
+			edit_bar.attach_top (change_class_form, 0);
+			edit_bar.attach_top (label, 0);
+			edit_bar.attach_bottom (label, 0);
+			edit_bar.attach_left_widget (label, change_class_form, 0);
 			!!hole.make (edit_bar, Current);
 			!!class_hole.make (edit_bar, Current);
+			!!stop_hole.make (edit_bar, Current);
 			!!type_teller.make (new_name, edit_bar);
-			!!change_routine_command.make (edit_bar, text_window);
+			!!change_routine_form.make (new_name, edit_bar);
+			!!change_routine_command.make (change_routine_form, text_window);
+			change_routine_form.attach_left (change_routine_command, 0);
+			change_routine_form.attach_right (change_routine_command, 0);
+			change_routine_form.attach_bottom (change_routine_command, 0);
+			change_routine_form.attach_top (change_routine_command, 0);
 			type_teller.set_center_alignment;
 			!!search_command.make (edit_bar, text_window);
 			!!change_font_command.make (edit_bar, text_window);
@@ -227,22 +237,23 @@ feature {NONE}
 				edit_bar.attach_top (hole, 0);
 				edit_bar.attach_left_widget (hole, class_hole, 0);
 				edit_bar.attach_top (class_hole, 0);
+				edit_bar.attach_left_widget (class_hole, stop_hole, 0);
+				edit_bar.attach_top (stop_hole, 0);
 
 				clean_type;
 
-				edit_bar.attach_top (form, 0);
-				edit_bar.attach_bottom (form, 0);
-				edit_bar.attach_top (change_routine_command, 0);
-				edit_bar.attach_bottom (change_routine_command, 0);
+				edit_bar.attach_top (change_routine_form, 0);
+				edit_bar.attach_bottom (change_routine_form, 0);
 				edit_bar.attach_top (type_teller, 0);
-				edit_bar.attach_left_widget (class_hole, type_teller, 0);
-				edit_bar.attach_left (change_routine_command, 175);
+				edit_bar.attach_left_widget (stop_hole, type_teller, 0);
+				edit_bar.attach_left (change_routine_form, 215);
 				edit_bar.attach_bottom (type_teller, 0);
 				edit_bar.attach_top (search_command, 0);
-				edit_bar.attach_left_position (form, 1);
-				edit_bar.attach_right_position (change_routine_command, 1);
-				edit_bar.attach_right_widget (change_routine_command, type_teller, 0);
-				edit_bar.attach_right_widget (search_command, form, 0);
+				edit_bar.attach_right_widget (label, change_routine_form, 0);
+				edit_bar.attach_left_position (change_class_form, 3);
+				edit_bar.attach_right_position (label, 3);
+				edit_bar.attach_right_widget (change_routine_form, type_teller, 0);
+				edit_bar.attach_right_widget (search_command, change_class_form, 0);
 				edit_bar.attach_right_widget (change_font_command, search_command, 0);
 				edit_bar.attach_top (change_font_command, 0);
 				edit_bar.attach_right_widget (quit_cmd, change_font_command, 10);

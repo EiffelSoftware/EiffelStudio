@@ -35,7 +35,6 @@ feature -- Basic operations
 
 			create interface_generator.make (coclass, an_interface, coclass_generator.cpp_class_writer)
 			interface_generator.generate_functions_and_properties (an_interface)
-			coclass_generator := Void
 		end
 
 end -- class WIZARD_COCLASS_INTERFACE_C_SERVER_PROCESSOR

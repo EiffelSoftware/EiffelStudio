@@ -24,10 +24,8 @@ feature -- Access
 		deferred
 		end
 
-	pixmap: EV_PIXMAP is
+	pixmap: EV_PIXMAP
 			-- Implementation of the pixmap contained 
-		do
-		end
 
 	
 feature {EV_CONTAINER} -- Element change
@@ -41,14 +39,39 @@ feature {EV_CONTAINER} -- Element change
 			check
 				pixmap_imp_not_void: pixmap_imp /= Void
 			end
-			add_child (pixmap_imp)
-		 	gtk_widget_show (pixmap_imp.widget)
-			gtk_box_pack_start (GTK_BOX(box), pixmap_imp.widget, False, False, 2)
+			gtk_widget_show (pixmap_imp.widget)
+			gtk_box_pack_start (GTK_BOX(box), pixmap_imp.widget, False, False, 0)
+
+			-- (2) We need to unreference the pixmap as, it has one extra reference
+			-- because of the reference added in `unset_pixmap'.
+			gtk_object_unref (pixmap_imp.widget)
+
+			-- updating status
+			pixmap := pix
+			pixmap_imp.set_parent (Current)
+
+			-- Destroy the temporary window which
+			-- was needed at the creation of the pixmap
+			if (pixmap_imp.creation_window /= Default_pointer) then
+				gtk_widget_destroy (pixmap_imp.creation_window)
+				pixmap_imp.set_window_pointer (Default_pointer)
+			end
 		end
 
 	unset_pixmap is
 			-- Remove the pixmap from the container
+		local
+			pixmap_imp: EV_PIXMAP_IMP
 		do
+			pixmap_imp ?= pixmap.implementation
+
+			-- (1) Add a reference to the pixmap otherwise
+			-- it will be destroyed when removed from the box.
+			gtk_object_ref (pixmap_imp.widget)
+
+			-- Remove the pixmap from the box.
+			gtk_container_remove (GTK_CONTAINER (box), pixmap_imp.widget)
+			pixmap := Void
 		end
 
 feature {NONE} -- Implementation

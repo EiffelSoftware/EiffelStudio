@@ -57,36 +57,25 @@ feature {NONE} -- Initialization
 			end
 			
 			create C
-			put ("", "GTK_RC_FILES")
-			temp_string := ""
-			empty_str_array := temp_string.to_c
-			C.gtk_rc_set_default_files ($empty_str_array)
-			c_ev_gtk_callback_marshal_init (Current, $marshal)
+
+			temp_string := get ("ISE_EIFFEL")
+			
+			put (temp_string + "/eifinit/bench/spec/gtk/studiorc", "GTK_RC_FILES")
+		--	temp_string := ""
+		--	empty_str_array := temp_string.to_c
+			--C.gtk_rc_set_default_files ($empty_str_array)
+			
+			
+			C.gtk_rc_parse (eiffel_to_c ("studiorc"));
 			gtk_init
-			C.gtk_rc_parse (eiffel_to_c ("gtkrc"));
-			C.gdk_rgb_init
+			C.gdk_rgb_init			
+			c_ev_gtk_callback_marshal_init (Current, $marshal)
 			C.gtk_widget_set_default_colormap (C.gdk_rgb_get_cmap)
 			C.gtk_widget_set_default_visual (C.gdk_rgb_get_visual)
+
 			tooltips := C.gtk_tooltips_new
 			set_tooltip_delay (500)
 			create window_oids.make
-
-			create temp_font
-			-- Set font size according to system configuration.
-			temp_string := get ("ISE_GTK_FONT_SIZE")
-			if temp_string /= Void then
-				temp_int := temp_string.to_integer
-			end
-			if temp_int >= 8 and then temp_int <= 16 then
-				temp_font.set_height (temp_int)
-			else
-				temp_font.set_height (10)
-			end
-			temp_font_imp ?= temp_font.implementation
-	
-			a_style := C.gtk_widget_get_default_style
-			C.set_gtk_style_struct_font (a_style, temp_font_imp.c_object)
-			-- Manipulating directly the default gtk style.
 		end
 
 	launch is
@@ -486,6 +475,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.34  2001/06/16 01:11:06  king
+--| Integrated resource file handling
+--|
 --| Revision 1.33  2001/06/07 23:38:33  king
 --| Updated font size init
 --|

@@ -148,7 +148,7 @@ feature
 							-- Relaunch the application.
 						Cont_request.send_breakpoints
 						Application.status.set_is_stopped (False)
-						cont_request.send_rqst_2 (Rqst_resume, Resume_cont, Application.interrupt_number)
+						cont_request.send_rqst_3 (Rqst_resume, Resume_cont, Application.interrupt_number, application.critical_stack_depth)
 					end
 				else
 						-- If the reason is Pg_new_breakpoint, the application sends the

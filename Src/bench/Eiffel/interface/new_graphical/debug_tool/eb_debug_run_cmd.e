@@ -375,6 +375,7 @@ end
 				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				output_text.add_string (Warning_messages.w_Invalid_working_directory (working_dir))
 			else
+				Application.set_critical_stack_depth (Debugger_manager.critical_stack_depth)
 				Application.run (current_cmd_line_argument, working_dir)
 				if Application.is_running then
 					output_text.add_string ("System is running")

@@ -18,6 +18,16 @@ inherit
 	
 	EB_SHARED_GRAPHICAL_COMMANDS
 	
+	IPC_SHARED
+		export
+			{NONE} all
+		end
+
+	DEBUG_EXT
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -163,6 +173,12 @@ feature -- Access
 
 			Result.extend (stop_cmd.new_menu_item)
 			Result.extend (quit_cmd.new_menu_item)
+
+				-- Separator.
+			create sep
+			Result.extend (sep)
+
+			Result.extend (set_critical_stack_depth_cmd.new_menu_item)
 
 			debug ("DEBUGGER_INTERFACE")
 					-- Separator.
@@ -531,6 +547,10 @@ feature -- Debugging events
 			debug_cmd.disable_sensitive
 			step_cmd.disable_sensitive
 			into_cmd.disable_sensitive
+			set_critical_stack_depth_cmd.disable_sensitive
+			if dialog /= Void and then not dialog.is_destroyed then
+				close_dialog
+			end
 			
 			from
 				observers.start
@@ -552,6 +572,7 @@ feature -- Debugging events
 		local
 			st: CALL_STACK_STONE
 			stt: STRUCTURED_TEXT
+			cd: EV_CONFIRMATION_DIALOG
 		do
 			Window_manager.display_message (Interface_names.E_paused)
 			Application.set_current_execution_stack (1)
@@ -561,6 +582,7 @@ feature -- Debugging events
 			step_cmd.enable_sensitive
 			out_cmd.enable_sensitive
 			into_cmd.enable_sensitive
+			set_critical_stack_depth_cmd.enable_sensitive
 			debug ("debugger_interface")
 				io.putstring ("Application Stopped (dixit EB_DEBUGGER_MANAGER)%N")
 			end
@@ -589,6 +611,10 @@ feature -- Debugging events
 				observers.item.on_application_stopped
 				observers.forth
 			end
+			if Application.status.reason = Pg_overflow then
+				create cd.make_with_text_and_actions (Warning_messages.w_Overflow_detected, <<~do_nothing, ~relaunch_application>>)
+				cd.show_modal_to_window (debugging_window.window)
+			end
 			
 			debug ("debugger_interface")
 				io.putstring ("Application Stopped End (dixit EB_DEBUGGER_MANAGER)%N")
@@ -607,6 +633,7 @@ feature -- Debugging events
 			step_cmd.disable_sensitive
 			out_cmd.disable_sensitive
 			into_cmd.disable_sensitive
+			set_critical_stack_depth_cmd.disable_sensitive
 				-- Fill in the stack tool.
 			call_stack_tool.update
 				-- Fill in the object tool.
@@ -617,6 +644,9 @@ feature -- Debugging events
 			stt.add_new_line
 			output_manager.process_text (stt)
 			window_manager.quick_refresh_all
+			if dialog /= Void and then not dialog.is_destroyed then
+				close_dialog
+			end
 			
 			from
 				observers.start
@@ -641,6 +671,7 @@ feature -- Debugging events
 			debug_cmd.enable_sensitive
 			step_cmd.enable_sensitive
 			into_cmd.enable_sensitive
+			set_critical_stack_depth_cmd.enable_sensitive
 				-- Modify the debugging window display.
 			window_manager.quick_refresh_all
 			debugging_window := Void
@@ -708,6 +739,9 @@ feature {NONE} -- Implementation
 	bkpt_info_cmd: EB_STANDARD_CMD
 			-- Command that can display info concerning the breakpoints in the system.
 
+	set_critical_stack_depth_cmd: EB_STANDARD_CMD
+			-- Command that changes the depth at which we warn the user against a stack overflow.
+
 	stop_cmd: EB_EXEC_STOP_CMD
 			-- Command that can interrupt the execution.
 
@@ -764,6 +798,11 @@ feature {NONE} -- Implementation
 			system_info_cmd.set_name ("System_info")
 			system_info_cmd.add_agent (output_manager~display_system_info)
 			toolbarable_commands.extend (system_info_cmd)
+
+			create set_critical_stack_depth_cmd.make
+			set_critical_stack_depth_cmd.set_menu_name (Interface_names.m_Set_critical_stack_depth)
+			set_critical_stack_depth_cmd.add_agent (~change_critical_stack_depth)
+			set_critical_stack_depth_cmd.enable_sensitive
 
 			create display_error_help_cmd.make
 			toolbarable_commands.extend (display_error_help_cmd)
@@ -899,6 +938,132 @@ feature {NONE} -- Implementation
 			if raised then
 				unraise
 				kept_objects := Void
+			end
+		end
+
+	relaunch_application is
+			-- Quickly relaunch the application.
+		require
+			stopped: Application.status /= Void and then Application.status.is_stopped
+		local
+			rqst: EWB_REQUEST
+		do
+			create rqst.make (rqst_cont)
+			rqst.send_breakpoints
+			Application.status.set_is_stopped (False)
+			rqst.send_rqst_3 (Rqst_resume, Resume_cont, Application.interrupt_number, application.critical_stack_depth)
+			on_application_resumed
+		end
+
+	change_critical_stack_depth is
+			-- Display a dialog that lets the user change the critical stack depth.
+		require
+			not_running: Application.status = Void or else Application.status.is_stopped
+		local
+			rb2: EV_RADIO_BUTTON
+			l: EV_LABEL
+			okb, cancelb: EV_BUTTON
+			hb: EV_HORIZONTAL_BOX
+			vb: EV_VERTICAL_BOX
+		do
+				-- Create widgets.
+			create dialog
+			create show_all_radio.make_with_text (Interface_names.l_Do_not_detect_stack_overflows)
+			create rb2.make_with_text (Interface_names.l_Display_call_stack_warning)
+			create l.make_with_text (Interface_names.l_Elements)
+			create element_nb.make_with_value_range (1 |..| 30000)
+			create okb.make_with_text (Interface_names.b_Ok)
+			create cancelb.make_with_text (Interface_names.b_Cancel)
+			
+				-- Organize widgets.
+			create vb
+			vb.set_border_width (Layout_constants.Default_border_size)
+			vb.set_padding (Layout_constants.Small_padding_size)
+			vb.extend (show_all_radio)
+			vb.extend (rb2)
+			create hb
+			hb.set_padding (Layout_constants.Small_padding_size)
+			hb.extend (element_nb)
+			hb.disable_item_expand (element_nb)
+			hb.extend (l)
+			hb.disable_item_expand (l)
+			hb.extend (create {EV_CELL})
+			vb.extend (hb)
+			
+			create hb
+			hb.set_padding (Layout_constants.Small_padding_size)
+			hb.extend (create {EV_CELL})
+			hb.extend (okb)
+			hb.disable_item_expand (okb)
+			hb.extend (cancelb)
+			hb.disable_item_expand (cancelb)
+			vb.extend (hb)
+			
+			dialog.extend (vb)
+
+				-- Set widget properties.
+			dialog.set_title (Interface_names.t_Set_critical_stack_depth)
+			dialog.disable_user_resize
+			rb2.enable_select
+			Layout_constants.set_default_size_for_button (okb)
+			Layout_constants.set_default_size_for_button (cancelb)
+			if critical_stack_depth > 30000 then
+				element_nb.set_value (30000)
+			elseif critical_stack_depth = -1 then
+				element_nb.set_value (1000)
+				show_all_radio.enable_select
+				element_nb.disable_sensitive
+			else
+				element_nb.set_value (critical_stack_depth)
+			end
+			
+				-- Set up actions.
+			cancelb.select_actions.extend (~close_dialog)
+			okb.select_actions.extend (~accept_dialog)
+			show_all_radio.select_actions.extend (element_nb~disable_sensitive)
+			rb2.select_actions.extend (element_nb~enable_sensitive)
+			dialog.set_default_push_button (okb)
+			dialog.set_default_cancel_button (cancelb)
+			if element_nb.is_sensitive then
+				dialog.show_actions.extend (element_nb~set_focus)
+			end
+			
+			dialog.show_modal_to_window (Window_manager.last_focused_development_window.window)
+		end
+
+	element_nb: EV_SPIN_BUTTON
+			-- Spin button that indicates the critical call stack depth.
+
+	dialog: EV_DIALOG
+			-- Dialog that lets the user choose the critical call stack depth.
+
+	show_all_radio: EV_RADIO_BUTTON
+			-- Radio button that indicates that stack overflows shouldn't be detected.
+
+	close_dialog is
+			-- Close `dialog' without doing anything.
+		do
+			dialog.destroy
+			dialog := Void
+			element_nb := Void
+			show_all_radio := Void
+		end
+
+	accept_dialog is
+			-- Close `dialog' and change the critical stack depth.
+		local
+			nb: INTEGER
+		do
+			if show_all_radio.is_selected then
+				nb := -1
+			else
+				nb := element_nb.value
+			end
+			close_dialog
+			set_critical_stack_depth (nb)
+			Application.set_critical_stack_depth (nb)
+			if Application.status /= Void and then Application.status.is_stopped then
+				send_rqst_3 (Rqst_overflow_detection, 0, 0, nb)
 			end
 		end
 

@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			create debug_info.make
 			displayed_string_size := 50
 			current_execution_stack_number := 1
+			critical_stack_depth := -1
 			create {APPLICATION_STOPPED_CMD} before_stopped_command
 			create {APPLICATION_STOPPED_CMD} after_stopped_command
 		ensure
@@ -124,6 +125,9 @@ feature -- Properties
 	interrupt_number: INTEGER
 			-- Number that specifies the `n' breakable points in	
 			-- which the application will check if an interrupt was pressed
+
+	critical_stack_depth: INTEGER
+			-- Call stack depth at which we warn the user against a possible stack overflow.
 
 	is_running: BOOLEAN is
 			-- Is the application running?
@@ -581,7 +585,7 @@ feature -- Execution
 			keep_objects (kept_objects)
 			cont_request.send_breakpoints
 			status.set_is_stopped (False)
-			cont_request.send_rqst_2 (Rqst_resume, Resume_cont, interrupt_number)
+			cont_request.send_rqst_3 (Rqst_resume, Resume_cont, interrupt_number, critical_stack_depth)
 		end
 
 	interrupt is
@@ -646,6 +650,15 @@ feature -- Setting
 			interrupt_number := a_nbr
 		ensure
 			set: interrupt_number = a_nbr
+		end
+
+	set_critical_stack_depth (d: INTEGER) is
+			-- Call stack depth at which we warn the user against a possible stack overflow.
+			-- -1 never warns the user.
+		require
+			valid_depth: d = -1 or d > 0
+		do
+			critical_stack_depth := d
 		end
 
 	set_launched_command (cmd: like application_launched_command) is

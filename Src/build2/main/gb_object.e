@@ -1053,7 +1053,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_TYPE_SELECTOR_ITEM, GB_COMMAND_ADD_OBJ
 			Result := False
 		end
 		
-feature {GB_INTEGER_INPUT_FIELD, GB_STRING_INPUT_FIELD, GB_PIXMAP_INPUT_FIELD, GB_EV_ANY} -- Basic operations
+feature {GB_INPUT_FIELD, GB_EV_ANY} -- Basic operations
 
 	add_constant_context (context: GB_CONSTANT_CONTEXT) is
 			-- Add `context' to `constants'.

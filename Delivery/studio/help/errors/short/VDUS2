@@ -1,4 +1,4 @@
 Error: Undefine subclause lists name of frozen feature or attribute or 
-	C external.
+    C external.
 What to do: unless you can change the status of the feature in the parent,
-  remove its name from Undefine subclause since it cannot be undefined.  
+    remove its name from Undefine subclause since it cannot be undefined.  

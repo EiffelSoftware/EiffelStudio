@@ -1,4 +1,3 @@
 Lace error: Local assembly could not be loaded.
 What to do: Make sure assembly file does exist at specified location
-	and is indeed a .NET assembly.
-
+    and is indeed a .NET assembly.

@@ -28,7 +28,7 @@ feature -- Access
 		do
 			if not addr_table.has (addr) then
 				send_rqst_3 (Rqst_adopt, In_address, 0, hex_to_integer (addr));
-				addr_table.put (clone (c_tread), addr)
+				addr_table.put (c_tread, addr)
 			end;
 			Result := addr_table.item (addr)
 
@@ -48,7 +48,7 @@ end
 			h_addr_not_void: h_addr /= Void
 		do
 			send_rqst_3 (Rqst_access, In_address, 0, hex_to_integer (h_addr));
-			Result := clone (c_tread)
+			Result := c_tread
 	
 debug ("HECTOR")
 	io.error.putstring ("Hector: ");

@@ -23,7 +23,7 @@ feature
 			-- all the information has been received from the application.)
 		do
 			send_rqst_3 (Rqst_inspect, In_bit_addr, 0, hex_to_integer (value));
-			value := clone (c_tread)
+			value := c_tread
 		end;
 	
 	append_value (cw: CLICK_WINDOW) is 

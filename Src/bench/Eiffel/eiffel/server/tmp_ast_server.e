@@ -116,13 +116,13 @@ feature {NONE} -- Implementation of dynamic type checking
 	invariant_as_type: INTEGER is
 			-- Dynamic type of objects of type INVARIANT_AS.
 		once
-			Result := dynamic_type (create {INVARIANT_AS})
+			Result := dynamic_type_from_string ("INVARIANT_AS")
 		end
 
 	feature_as_type: INTEGER is
 			-- Dynamic type of objects of type INVARIANT_AS.
 		once
-			Result := dynamic_type (create {FEATURE_AS})
+			Result := dynamic_type_from_string ("FEATURE_AS")
 		end
 
 invariant

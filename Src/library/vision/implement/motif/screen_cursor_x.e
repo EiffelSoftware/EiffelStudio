@@ -35,10 +35,19 @@ feature {NONE}
 
 	dispose is
 			-- Called when garbaged.
+		local
+			null_pointer: POINTER;
 		do
-			--if not has_objects then
-				--free_resources
-			--end
+			if type = User_defined_pixmap then
+				if arx_pixmap /= null_pointer then
+					c_free_pixmap (arx_pixmap);
+					arx_pixmap := null_pointer;
+				end;
+				if arx_mask /= null_pointer then
+					c_free_pixmap (arx_mask);
+					arx_mask := null_pointer;
+				end;
+			end
 		end; 
 	
 feature 
@@ -66,9 +75,8 @@ feature
 				else
 					Result := x_create_font_cursor (a_screen.screen_object, type*2)
 				end;
-				!!a_resource.make (a_screen, Result, true);
-				finish;
-				put_right (a_resource)
+				!CURSOR_RES_X! a_resource.make (a_screen, Result, true);
+				put_front (a_resource)
 			else
 				Result := a_resource.identifier
 			end
@@ -78,8 +86,6 @@ feature {NONE}
 
 	free_resources is
 			-- Free all cursor resources.
-		local
-			null_pointer: POINTER;
 		do
 			from
 				start
@@ -93,16 +99,7 @@ feature {NONE}
 				forth
 			end;
 			wipe_out;
-			if type = User_defined_pixmap then
-				if arx_pixmap /= null_pointer then
-					c_free_pixmap (arx_pixmap);
-					arx_pixmap := null_pointer;
-				end;
-				if arx_mask /= null_pointer then
-					c_free_pixmap (arx_mask);
-					arx_mask := null_pointer;
-				end;
-			end
+			dispose
 		end; 
 
 	is_used_by (a_widget: WIDGET): BOOLEAN is
@@ -110,7 +107,8 @@ feature {NONE}
 		require else
 			a_widget_exists: not (a_widget = Void)
 		do
-			Result := (not (a_widget.cursor = Void)) and then (a_widget.cursor.implementation = Current)
+			Result := (a_widget.cursor /= Void) and then 
+					(a_widget.cursor.implementation = Current)
 		ensure then
 			(number_of_uses = 0) implies (not Result)
 		end; 

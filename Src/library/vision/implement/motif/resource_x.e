@@ -7,11 +7,15 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-class RESOURCE_X 
+deferred class RESOURCE_X 
 
-creation
-	make
-	
+inherit
+
+	MEMORY
+		undefine
+			dispose
+		end
+
 feature 
 
 	make (a_screen: SCREEN_I; an_identifier: POINTER; is_allocated_r: BOOLEAN) is
@@ -36,12 +40,13 @@ feature
 	identifier: POINTER
 			-- X identifier of the resource
 
+
 	set_allocated (b: BOOLEAN) is
 		do
 			is_allocated := b;
 		end;
 
-end  -- class RESOURCE_X
+end 
 
 
 --|----------------------------------------------------------------

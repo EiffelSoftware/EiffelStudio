@@ -171,7 +171,10 @@ feature {NONE}
 			until
 				off
 			loop
-				x_free_font (item.screen.screen_object, item.identifier);
+				if item.is_allocated then
+					x_free_font (item.screen.screen_object, item.identifier);
+					item.set_allocated (False);
+				end;
 				forth
 			end;
 			wipe_out
@@ -240,7 +243,6 @@ feature {NONE}
 
 	is_standard_private: BOOLEAN;
 			-- Is the font standard and informations available ?
-
 	
 feature 
 
@@ -380,7 +382,6 @@ feature
 			-- Number of resource with the window `screen_object'
 		require
 			is_specified
-		
 		local
 			a_resource: RESOURCE_X;
 			ext_name: ANY
@@ -389,7 +390,8 @@ feature
 			if (a_resource = Void) then
 				ext_name := n_ame.to_c;
 				Result := x_load_query_font (a_screen.screen_object, $ext_name);
-				!! a_resource.make (a_screen, Result, true)
+				!FONT_RES_X! a_resource.make (a_screen, Result, true);
+				put_front (a_resource);
 			else
 				Result := a_resource.identifier
 			end

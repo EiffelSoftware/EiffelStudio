@@ -94,21 +94,22 @@ feature {NONE}
 
 	dispose is
 			-- Called when the pixmap is garbaged
+		local
+			void_pointer: POINTER
 		do
-			--if not has_objects then
-				--free_resources
-			--end;
+			if arx_pixmap /= void_pointer then
+				c_free_pixmap (arx_pixmap)
+				arx_pixmap := void_pointer;
+			end
 		end; 
 
 	free_resources is
 			-- Free all pixmap resources.
-		local
-			void_pointer: POINTER
 		do
 			from
 				start
 			until
-				off
+				after
 			loop
 				if item.is_allocated then
 					c_free_xpixmap (item.identifier);
@@ -120,7 +121,7 @@ feature {NONE}
 			from
 				bitmaps.start
 			until
-				bitmaps.off
+				bitmaps.after
 			loop
 				if bitmaps.item.is_allocated then
 					x_free_pixmap (bitmaps.item.screen.screen_object, bitmaps.item.identifier);
@@ -129,10 +130,7 @@ feature {NONE}
 				bitmaps.forth
 			end;
 			bitmaps.wipe_out;
-			if arx_pixmap /= void_pointer then
-				c_free_pixmap (arx_pixmap)
-				arx_pixmap := void_pointer;
-			end
+			dispose
 		end;
 	
 feature 
@@ -229,9 +227,8 @@ feature
 			a_resource := bitmaps.find_same_screen (a_screen);
 			if (a_resource = Void) then
 				Result := c_resource_bitmap (arx_pixmap, a_screen.screen_object);
-				bitmaps.finish;
-				!! a_resource.make (a_screen, Result, true);
-				bitmaps.put_right (a_resource)
+				!BITMAP_RES_X! a_resource.make (a_screen, Result, true);
+				bitmaps.put_front (a_resource)
 			else
 				Result := a_resource.identifier
 			end
@@ -250,9 +247,8 @@ feature
 			a_resource := find_same_screen (a_screen);
 			if (a_resource = Void) then
 				Result := c_resource_pixmap (arx_pixmap, a_screen.screen_object);
-				!! a_resource.make (a_screen, Result, true);
-				finish;
-				put_right (a_resource);
+				!PIXMAP_RES_X! a_resource.make (a_screen, Result, true);
+				put_front (a_resource);
 				Result := c_real_pixmap (Result)
 			else
 				Result := c_real_pixmap (a_resource.identifier)

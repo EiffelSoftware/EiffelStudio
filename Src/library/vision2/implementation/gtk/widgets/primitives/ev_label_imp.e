@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 			C.gtk_container_add (c_object, text_label)
 			set_font (font)
 			align_text_center
+			update_request_size
 		end
 
 feature {NONE} -- Implementation

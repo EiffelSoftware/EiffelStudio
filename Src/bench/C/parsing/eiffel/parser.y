@@ -757,6 +757,7 @@ Type:
 	| TE_EXPANDED Pushing_id Existing_generics
 		{
 		$$ = create_exp_class_type(click_list_elem($<value>2),$3);
+		click_list_set ($$, $<value>2);
 		}
 	| TE_BIT TE_INTEGER
 		{

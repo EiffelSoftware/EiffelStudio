@@ -28,7 +28,7 @@ cluster
 
 	-- General compilation:
 
-        flat_short:         "$BENCH/Eiffel/flat_short";
+        flat_short:         "$EBENCH/Eiffel/flat_short";
 		yacc:				"$EBENCH/Eiffel/yacc";
 		const:				"$EBENCH/Eiffel/const";
 		error:				"$EBENCH/Eiffel/error";

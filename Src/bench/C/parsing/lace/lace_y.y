@@ -104,7 +104,9 @@ Root                    : LAC_ROOT Name {$<value>$ = click_list_push ();}
 							}
                         ;
 
-Cluster_mark            : LAC_LEFT_PARAM Name LAC_RIGHT_PARAM
+Cluster_mark            : /* empty */
+                            {$$ = NULL;}
+						| LAC_LEFT_PARAM Name LAC_RIGHT_PARAM
 							{$$ = $2;}
                         ;
 

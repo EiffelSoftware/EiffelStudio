@@ -207,15 +207,15 @@ private void root_class_updt ()
 {
 	/* Update the root class info */
 
-	extern int root_class_static_type;
-	extern int root_class_dtype;
-	extern int32 root_class_feature_id;
-	extern int root_class_has_argument;
+	extern int rcst;
+	extern int rcdt;
+	extern int32 rcfid;
+	extern int rcarg;
 
-	root_class_static_type = wlong();
-	root_class_dtype = wlong();
-	root_class_feature_id = wlong();
-	root_class_has_argument = wlong();
+	rcst = wlong();
+	rcdt = wlong();
+	rcfid = wlong();
+	rcarg = wlong();
 }
 
 private void cnode_updt()

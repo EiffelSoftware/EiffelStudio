@@ -9,7 +9,6 @@ inherit
 	TYPE
 		redefine
 			has_like, simple_format, is_equivalent,
-			fill_calls_list, replicate,
 			check_constraint_type, solved_type_for_format,
 			append_to
 		end
@@ -90,48 +89,43 @@ feature -- Conveniences
 			type_a: TYPE_A
 			abort: BOOLEAN
 		do
-			if generics /= Void then
-				from
-					i := 1
-					count := generics.count
-					create actual_generic.make (1, count)
-					if is_tuple then
-						create {TUPLE_TYPE_A} Result.make (actual_generic)
-					else
-						create {GEN_TYPE_A} Result.make (actual_generic)
+			a_classi := Universe.class_named (class_name, Inst_context.cluster)
+			if a_classi /= Void and then a_classi.compiled_class /= Void then
+				a_class := a_classi.compiled_class
+				if generics /= Void then
+					from
+						i := 1
+						count := generics.count
+						create actual_generic.make (1, count)
+						if is_tuple then
+							create {TUPLE_TYPE_A} Result.make (a_class.class_id, actual_generic)
+						else
+							create {GEN_TYPE_A} Result.make (a_class.class_id, actual_generic)
+						end
+					until
+						i > count or else abort
+					loop
+						type_a := generics.i_th (i).solved_type_for_format (feat_table, f)
+						if type_a = Void then
+							abort := True
+						else
+							actual_generic.put (type_a, i)
+						end
+						i := i + 1
 					end
-				until
-					i > count or else abort
-				loop
-					type_a := generics.i_th (i).solved_type_for_format (feat_table, f)
-					if type_a = Void then
-						abort := True
-					else
-						actual_generic.put (type_a, i)
-					end
-					i := i + 1
-				end
-			else
-				if is_tuple then
-					create actual_generic.make (1, 0)
-					create {TUPLE_TYPE_A} Result.make (actual_generic)
-				end
-			end
-
-			if abort then
-				Result := Void
-			else
-				if Result = Void then
-					!! Result
-				end
-				a_classi := Universe.class_named (class_name, Inst_context.cluster)
-				if a_classi /= Void and then a_classi.compiled_class /= Void then
-					a_class := a_classi.compiled_class
-					Result.set_base_class_id (a_class.class_id)
-						-- Base type class is expanded
-					Result.set_is_true_expanded (a_class.is_expanded)
 				else
+					if is_tuple then
+						create actual_generic.make (1, 0)
+						create {TUPLE_TYPE_A} Result.make (a_class.class_id, actual_generic)
+					else
+						create Result.make (a_class.class_id)
+					end
+				end
+
+				if abort then
 					Result := Void
+				else
+					Result.set_is_true_expanded (a_class.is_expanded)
 				end
 			end
 		end
@@ -143,15 +137,17 @@ feature -- Conveniences
 			actual_generic: ARRAY [TYPE_A]
 			i, count: INTEGER
 		do
+			a_class := Universe.class_named (class_name, Inst_context.cluster).compiled_class
+
 			if generics /= Void then
 				from
 					i := 1
 					count := generics.count
 					create actual_generic.make (1, count)
 					if is_tuple then
-						create {TUPLE_TYPE_A} Result.make (actual_generic)
+						create {TUPLE_TYPE_A} Result.make (a_class.class_id, actual_generic)
 					else
-						create {GEN_TYPE_A} Result.make (actual_generic)
+						create {GEN_TYPE_A} Result.make (a_class.class_id, actual_generic)
 					end
 				until
 					i > count
@@ -163,16 +159,14 @@ feature -- Conveniences
 			else
 				if is_tuple then
 					create actual_generic.make (1, 0)
-					create {TUPLE_TYPE_A} Result.make (actual_generic)
+					create {TUPLE_TYPE_A} Result.make (a_class.class_id, actual_generic)
 				end
 			end
 
 			if Result = Void then
-				!! Result
+				create Result.make (a_class.class_id)
 			end
 
-			a_class := Universe.class_named (class_name, Inst_context.cluster).compiled_class
-			Result.set_base_class_id (a_class.class_id)
 				-- Base type class is expanded
 			Result.set_is_true_expanded (a_class.is_expanded)
 			if a_class.is_expanded then
@@ -234,16 +228,17 @@ feature -- Conveniences
 			a_class_i := Universe.class_named (class_name, a_cluster)
 				-- Bug fix: `append_signature' can be called on invalid
 				-- types by the error mechanism
-			if a_class_i /= Void then
+			if a_class_i /= Void and then a_class_i.compiled_class /= Void then
+				a_class := a_class_i.compiled_class
 				if generics /= Void then
 					from
 						i := 1
 						count := generics.count
 						create actual_generic.make (1, count)
 						if is_tuple then
-							create {TUPLE_TYPE_A} Result.make  (actual_generic)
+							create {TUPLE_TYPE_A} Result.make  (a_class.class_id, actual_generic)
 						else
-							create {GEN_TYPE_A} Result.make (actual_generic)
+							create {GEN_TYPE_A} Result.make (a_class.class_id, actual_generic)
 						end
 					until
 						i > count
@@ -254,16 +249,14 @@ feature -- Conveniences
 				else
 					if is_tuple then
 						create actual_generic.make (1, 0)
-						create {TUPLE_TYPE_A} Result.make (actual_generic)
+						create {TUPLE_TYPE_A} Result.make (a_class.class_id, actual_generic)
 					end
 				end
 
 				if Result = Void then
-					!! Result
+					create Result.make (a_class.class_id)
 				end
 
-				a_class := a_class_i.compiled_class
-				Result.set_base_class_id (a_class.class_id)
 						-- Base type class is expanded
 				Result.set_is_true_expanded (a_class.is_expanded)
 				if a_class.is_expanded then
@@ -432,25 +425,6 @@ feature -- Output
 			end
 			Result := Universe.class_named (class_name,
 						Inst_context.cluster)
-		end
-
-feature -- Replication
-
-	fill_calls_list (l: CALLS_LIST) is
-			-- find calls to Current
-		do
-			if generics /= Void then
-				generics.fill_calls_list (l)
-			end
-		end
-
-	replicate (ctxt: REP_CONTEXT): like Current is
-			-- Adapt to replication
-		do
-			Result := clone (Current)
-			if generics /= Void then
-				Result.set_generics (generics.replicate (ctxt))
-			end
 		end
 
 feature {AST_EIFFEL} -- Output

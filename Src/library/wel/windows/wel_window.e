@@ -1290,8 +1290,10 @@ feature -- Removal
 			-- Destroy the window.
 		require
 			exists: exists
+		local
+			l_result: INTEGER
 		do
-			cwin_destroy_window (item)
+			l_result := cwin_destroy_window (item)
 		ensure
 			not_exists: not exists
 		end
@@ -1892,6 +1894,7 @@ feature {NONE} -- Removal
 			-- meaning that `destroy' has not been called. We need to call it.
 		local
 			p, hwnd, null: POINTER
+			l_result: INTEGER
 		do
 			hwnd := item
 			if is_window (hwnd) then
@@ -1908,12 +1911,26 @@ feature {NONE} -- Removal
 					-- Destroying the window.
 					-- C code will automatically do an equivalent of `destroy_item'
 					-- feature.
-				cwin_destroy_window (hwnd)
+				l_result := cwin_destroy_window (hwnd)
+				if l_result = 0 then
+						-- In a multithreaded application it may fail when the thread
+						-- who created `hwnd' is not the current thread. This means
+						-- that the current windows was not destroyed, thus the C code
+						-- of `disptchr.c' did not free the allocated `internal_data'.
+						-- We need to free `internal_data' by calling `destroy_item'.
+						-- To ensure that the window will be destroyed, we send a 
+						-- WM_CLOSE message which by default calls `DestroyWindow'
+						-- but this time it will be done in the proper thread. Indeed our
+						-- handler will not be called because we will have no more trace
+						-- of the Current object when the WM_CODE message will be received.
+					destroy_item
+					cwin_post_message (hwnd, wm_close, 0, 0)
+				else
+					item := default_pointer
+				end
 
 					-- Restore `dispatcher' object so that dispatching can proceed.
 				cwel_set_dispatcher_pointer (p)
-
-				item := default_pointer				
 			end
 		end
 
@@ -1955,10 +1972,10 @@ feature {NONE} -- Externals
 			"SetParent"
 		end 
 
-	cwin_destroy_window (hwnd: POINTER) is
+	cwin_destroy_window (hwnd: POINTER): INTEGER is
 			-- SDK DestroyWindow
 		external
-			"C [macro %"wel.h%"] (HWND)"
+			"C [macro %"wel.h%"] (HWND): BOOL"
 		alias
 			"DestroyWindow"
 		end

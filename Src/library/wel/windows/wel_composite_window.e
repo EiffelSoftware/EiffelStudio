@@ -330,8 +330,10 @@ feature -- Basic operations
 	destroy is
 			-- Destroy the window and quit the application
 			-- if `Current' is the application's main window.
+		local
+			l_result: INTEGER
 		do
-			cwin_destroy_window (item)
+			l_result := cwin_destroy_window (item)
 			if application_main_window.is_application_main_window (Current) then
 				cwin_post_quit_message (0)
 			end

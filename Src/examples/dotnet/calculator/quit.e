@@ -1,11 +1,15 @@
 --|---------------------------------------------------------------
 --|   Copyright (C) Interactive Software Engineering, Inc.      --
 --|        Interactive Software Engineering Building            --
---|            270 Storke Road, California 93117                --
+--|            360 Storke Road, Goleta, CA 93117                --
 --|                   (805) 685-1006                            --
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+indexing
+	description: "Quit"
+	external_name: "ISE.Examples.Calculator.Quit"
+	
 class 
 	QUIT
 
@@ -18,15 +22,19 @@ inherit
 create
 	make
 
-feature
+feature -- Basic Operations
 	
 	operation is
-			-- Useless.
+		indexing
+			description: "Useless"
+			external_name: "Operation"
 		do
 		end
 
 	process is
-			-- Useless.
+		indexing
+			description: "Useless"
+			external_name: "Process"
 		do
 		end
 

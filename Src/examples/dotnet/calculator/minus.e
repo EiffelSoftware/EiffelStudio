@@ -1,11 +1,15 @@
 --|---------------------------------------------------------------
 --|   Copyright (C) Interactive Software Engineering, Inc.      --
 --|        Interactive Software Engineering Building            --
---|            270 Storke Road, California 93117                --
+--|            360 Storke Road, Goleta, CA 93117                --
 --|                   (805) 685-1006                            --
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
 
+indexing
+	description: "Minus operation"
+	external_name: "ISE.Examples.Calculator.Minus"
+	
 class 
 	MINUS 
 
@@ -18,11 +22,13 @@ create
 feature 
 	
 	operation is 
-			-- Subtract top element of stack with register.
+		indexing
+			description: "Subtract top element of stack with register."
+			external_name: "Operation"
 		do 
 			register := operand_stack.item - register
 		ensure then
 			register = operand_stack.item - old register 
-		end;
+		end
 	
 end -- class MINUS 

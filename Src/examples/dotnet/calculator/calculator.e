@@ -1,33 +1,49 @@
 --|---------------------------------------------------------------
 --|   Copyright (C) Interactive Software Engineering, Inc.      --
 --|        Interactive Software Engineering Building            --
---|            270 Storke Road, California 93117                --
+--|            360 Storke Road, Goleta, CA 93117                --
 --|                   (805) 685-1006                            --
 --| All rights reserved. Duplication or distribution prohibited --
 --|---------------------------------------------------------------
--- Root class
+
+indexing
+	description: "Root class"
+	external_name: "ISE.Examples.Calculator.Calculator"
+	attribute: create {SYSTEM_OBSOLETEATTRIBUTE}.make_obsoleteattribute end
 
 class 
 	CALCULATOR 
 
 inherit
-	SET_UP 
+	SET_UP
 
 create
 	make
 
-feature -- creation
+feature {NONE} -- Initialization
 
 	make is
+		indexing
+			description: "Creation routine"
+			external_name: "Make"
 		local
 			a: HASH_TABLE [INTERFACE, STRING]
 			t: CONSOLE
+			b: BOOLEAN
+			tsd: POINTER
 		do 
+			tsd := $make
+			b := f and g and f and g
+			b := f or g or f or g
+
+			b := f and g or f and g
+			b := f or g and f or g
+
 			create t
 			io := t
-			io.putstring ("%N*********************************%N")
-			io.putstring ("Calculator in reverse Polish form%N")
-			io.putstring ("*********************************%N")
+			io.put_string ("%N*********************************%N")
+			io.put_string ("Calculator in reverse Polish form%N")
+			io.put_string ("*********************************%N")
 			create a.make (10)
 			associated_operator := a
 			initialize
@@ -36,37 +52,84 @@ feature -- creation
 
 feature {NONE}  -- Attributes 
 
+	f: BOOLEAN is 
+		indexing
+			description: "Operand"
+			external_name: "F"
+		do 
+		end
+		
+	g: BOOLEAN is 
+		indexing
+			description: "Operand"
+			external_name: "G"
+		do 
+		end
+
 	current_state: STATE
-		-- The current state.
+		indexing
+			description: "The current state"
+			external_name: "CurrentState"
+		end
 
 	quit_state: QUIT
+		indexing
+			description: "Quit state"
+			external_name: "QuitState"
+		end
 		
 	help_state: HELP
- 
+ 		indexing
+ 			description: "Help state"
+ 			external_name: "HelpState"
+ 		end
+ 		
  	qst: QUESTION
- 
+ 		indexing
+ 			description: " Question state"
+ 			external_name: "QST"
+ 		end
+ 		
 -- 	remove: EMPTY
--- 		-- Reset operation.
+--		indexing
+--			description: "Reset operation"
+--			external_name: "Remove"
+--		end
 -- 	
 -- 	pls: PLUS
--- 		-- Addition operation.
+-- 		indexing
+--			description: "Addition operation"
+--			external_name: "PLS"
+--		end
 -- 
 -- 	mns: MINUS
--- 		-- Subtraction operation.
+-- 		indexing
+--			description: "Subtraction operation"
+--			external_name: "MNS"
+--		end
 -- 
 -- 	mlt: MULTIPLY
--- 		-- Multiplication operation.
+-- 		indexing
+--			description: "Multiplication operation"
+--		end
 -- 
 -- 	dvd: DIVIDE
--- 		-- Division operation.
--- 
+-- 		indexing
+--			description: "Division operation"
+--			external_name: "DVD"
+--		end
+ 
 feature {NONE} -- Implementation
 
 	session is
-			-- The main loop.
+		indexing
+			description: "The main loop"
+			external_name: "Session"
+			attribute: create {SYSTEM_OBSOLETEATTRIBUTE}.make_obsoleteattribute_2 ("TOTO", False) end
 		do
 			from
 				start
+--				print ("ti")
 			until
 				over
 			loop
@@ -76,7 +139,9 @@ feature {NONE} -- Implementation
 		end
 	
 	start is
-			-- Start session
+		indexing
+			description: "Start session."
+			external_name: "Start"
 		do
 			help_state.do_one_state
 			current_state := qst
@@ -85,19 +150,31 @@ feature {NONE} -- Implementation
 		end
 
 	over: BOOLEAN is
-			-- Is session over?
+		indexing
+			description: "Is session over?"
+			external_name: "Over"
+		require
+			non_void_current_state: current_state /= Void
 		do
 			Result := current_state /= Void and then current_state.equals (quit_state)
 		end
 
 	action is
-			-- Do something.
+		indexing
+			description: "Do something."
+			external_name: "Action"
+		require
+			non_void_current_state: current_state /= Void
 		do
 			current_state.do_one_state
 		end
 
 	next is
-			-- Get next state.
+		indexing
+			description: "Get next state."
+			external_name: "Next"
+		require
+			non_void_current_state: current_state /= Void
 		local
 			current_interface: INTERFACE
 		do
@@ -111,7 +188,9 @@ feature {NONE} -- Implementation
 		end
 
 	initialize is 
-			-- Build operator states. 
+		indexing
+			description: "Build operator states."
+			external_name: "Initialize"
 		local
 			q: QUESTION
 			quit: QUIT
@@ -138,5 +217,9 @@ feature {NONE} -- Implementation
 		end
 
 	operator_stack: LINKED_STACK [REAL]
+		indexing
+			description: "Operator stack"
+			external_name: "Operator"
+		end
 
 end -- class CALCULATOR 

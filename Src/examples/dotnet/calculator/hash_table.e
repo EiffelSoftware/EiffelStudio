@@ -1,19 +1,19 @@
 indexing
-	description:
-		"Hash tables, used to store items identified by hashable keys"
+	description: "Hash tables, used to store items identified by hashable keys"
+	external_name: "ISE.Examples.Calculator.HashTable"
 
-	status: "See notice at end of class"
-	date: "$Date$"
-	revision: "$Revision$"
 class
 	HASH_TABLE [G, H]
 
 creation
         make
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make (n: INTEGER) is
+		indexing
+			description: "Creation routine"
+			external_name: "Make"
 		local
 			table_size: INTEGER
 			io: SYSTEM_CONSOLE
@@ -24,7 +24,7 @@ feature -- Initialization
 			table_size := n * 2
 			if table_size < Minimum_size then
 				table_size := Minimum_size
-			end;
+			end
 
 			create lg.make (table_size - 1);
 			content := lg
@@ -42,8 +42,11 @@ feature -- Initialization
 feature -- Access
 
 	item (key: H): G is
-			-- Item associated with `key', if present
-			-- otherwise default value of type `G'
+		indexing
+			description: "Item associated with `key', if present, otherwise default value of type `G'"
+			external_name: "Item"
+		require
+			non_void_key: key /= Void
 		local
 			old_control: INTEGER
 		do
@@ -55,25 +58,10 @@ feature -- Access
 			control := old_control
 		end
 
-	has (key: H): BOOLEAN is
-			-- Is there an item in the table with key `key'?
-		local
-			old_control: INTEGER
-			default_value: G
-		do
-			old_control := control
-			internal_search (key)
-			Result := (control = Found_constant)
-			if Result then
-				found_item := content.item (position)
-			else
-				found_item := default_value
-			end
-			control := old_control
-		end
-
 	current_keys: ARRAY [H] is
-			-- Array of actually used keys, from 1 to `count'
+		indexing
+			description: "Array of actually used keys, from 1 to `count'"
+			external_name: "CurrentKeys"
 		local
 			i, j, table_size: INTEGER
 			scanned_key: H
@@ -98,25 +86,37 @@ feature -- Access
  		end
 
 	dead_key: H is
-			-- Special key used to mark deleted items
+		indexing
+			description: "Special key used to mark deleted items"
+			external_name: "DeadKey"
 		do
 		end
 
 	found_item: G
-			-- Item found during a search with `has' to reduce the number of
-			-- search for clients
+		indexing
+			description: "Item found during a search with `has' to reduce the number of search for clients"
+			external_name: "FoundItem"
+		end
 
 	position: INTEGER
-			-- Hash table cursor, updated after each operation:
-			-- put, remove, has, replace, force, change_key...
+		indexing
+			description: "[Hash table cursor, updated after each operation:%
+						%put, remove, has, replace, force, change_key...]"
+			external_name: "Position"
+		end
 
 feature -- Element change
 
 	put (new: G; key:H) is
-			-- Insert `new' with `key' if there is no other item
-			-- associated with the same key.
-			-- Make `inserted' true if and only if an insertion has
-			-- been made (i.e. `key' was not present).
+		indexing
+			description: "[Insert `new' with `key' if there is no other item%
+						%associated with the same key.%
+						%Make `inserted' true if and only if an insertion has%
+						%been made (i.e. `key' was not present).]"
+			external_name: "Put"
+		require
+			non_void_new_item: new /= Void
+			non_void_key: key /= Void
 		do
 			internal_search (key)
 			if control = Found_constant then
@@ -137,97 +137,177 @@ feature -- Element change
 
 feature -- Status report
 
-	full: BOOLEAN is false
-			-- Is structured filled to capacity? (Answer: no.)
+	has (key: H): BOOLEAN is
+		indexing
+			description: "Is there an item in the table with key `key'? If found, make item available in `found_item'."
+			external_name: "Has"
+		require
+			non_void_key: key /= Void
+		local
+			old_control: INTEGER
+			default_value: G
+		do
+			old_control := control
+			internal_search (key)
+			Result := (control = Found_constant)
+			if Result then
+				found_item := content.item (position)
+			else
+				found_item := default_value
+			end
+			control := old_control
+		end
+		
+	full: BOOLEAN is False
+		indexing
+			description: "Is structured filled to capacity? (Answer: no.)"
+			external_name: "Full"
+		end
 
-	extendible: BOOLEAN is true
-			-- May new items be added? (Answer: yes.)
+	extendible: BOOLEAN is True
+		indexing
+			description: "May new items be added? (Answer: yes.)"
+			external_name: "Extendible"
+		end
 
 	prunable: BOOLEAN is
-			-- May items be removed? (Answer: yes.)
+		indexing
+			description: "May items be removed? (Answer: yes.)"
+			external_name: "Prunable"
 		do
-			Result := true
+			Result := True
+		ensure
+			is_prunable: Result
 		end
 
 	valid_key (k: H): BOOLEAN is
-			-- Is `k' a valid key?
-			-- Answer: yes if and only if `k' is not the default
-			-- value of type `H'.
+		indexing
+			description: "Is `k' a valid key? Answer: yes if and only if `k' is not the default value of type `H'."
+			external_name: "ValidKey"
+		require
+			non_void_key: k /= Void
 		local
 			dkey: H
 		do
 			Result := k /= dkey
 		ensure
-			Result = (k /= void)
+			valid_if_key_is_default_value: Result = (k /= void)
 		end
 
 	conflict: BOOLEAN is
-			-- Did last operation cause a conflict?
+		indexing
+			description: "Did last operation cause a conflict?"
+			external_name: "Conflict"
 		do
 			Result := (control = Conflict_constant)
 		end
 
 	inserted: BOOLEAN is
-			-- Did last operation insert an item?
+		indexing
+			description: "Did last operation insert an item?"
+			external_name: "Inserted"
 		do
 			Result := (control = Inserted_constant)
 		end
 
 	replaced: BOOLEAN is
-			-- Did last operation replace an item?
+		indexing
+			description: "Did last operation replace an item?"
+			external_name: "Replaced"
 		do
 			Result := (control = Changed_constant)
 		end
 
 	removed: BOOLEAN is
-			-- Did last operation remove an item?
+		indexing
+			description: "Did last operation remove an item?"
+			external_name: "Removed"
 		do
 			Result := (control = Removed_constant)
 		end
 
 	found: BOOLEAN is
-			-- Did last operation find the item sought?
+		indexing
+			description: "Did last operation find the item sought?"
+			external_name: "Found"
 		do
 			Result := (control = Found_constant)
 		end
+		
 feature -- Measurement
 
 	count: INTEGER
-			-- Number of items in table
+		indexing
+			description: "Number of items in table"
+			external_name: "Count"
+		end
 
 feature {HASH_TABLE} -- Implementation
 
 	content: ARRAY [G]
-			-- Array of contents
+		indexing
+			description: "Array of contents"
+			external_name: "Content"
+		end
 
 	keys: ARRAY [H]
-			-- Array of keys
+		indexing
+			description: "Array of keys"
+			external_name: "Keys"
+		end
 
 	deleted_marks: ARRAY [BOOLEAN]
-			-- Array of deleted marks
+		indexing
+			description: "Array of deleted marks"
+			external_name: "DeletedMarks"
+		end
 
 	Size_threshold: INTEGER is 80
-			-- Filling percentage over which some resizing is done
+		indexing
+			description: "Filling percentage over which some resizing is done"
+			external_name: "SizeThreshold"
+		end
 
 	set_content (c: like content) is
-			-- Assign `c' to `content'.
+		indexing
+			description: "Assign `c' to `content'."
+			external_name: "SetContent"
+		require
+			non_void_content: c /= Void
 		do
 			content := c
+		ensure
+			content_set: content = c
 		end
 
-	set_keys (c: like keys) is
-			-- Assign `c' to `keys'.
+	set_keys (k: like keys) is
+		indexing
+			description: "Assign `k' to `keys'."
+			external_name: "SetKeys"
+		require
+			non_void_keys: k /= Void
 		do
-			keys := c
+			keys := k
+		ensure
+			keys_set: keys = k
 		end
 
-	set_deleted_marks (c: like deleted_marks) is
-			-- Assign `c' to `deleted_marks'.
+	set_deleted_marks (dm: like deleted_marks) is
+		indexing
+			description: "Assign `dm' to `deleted_marks'."
+			external_name: "SetDeletedMarks"
+		require
+			non_void_marks: dm /= Void
 		do
-			deleted_marks := c
+			deleted_marks := dm
+		ensure
+			deleted_marks_set: deleted_marks = dm
 		end
 
 	set_replaced is
+		indexing
+			description: "Set `control' with `changed_constant'."
+			external_name: "SetReplaced"
 		do
 			control := changed_constant
 		end
@@ -235,14 +315,19 @@ feature {HASH_TABLE} -- Implementation
 feature {NONE} -- Implementation
 
 	iteration_position: INTEGER
-			-- Cursor for iteration primitives
+		indexing
+			description: "Cursor for iteration primitives"
+			external_name: "IterationPosition"
+		end
 
 	internal_search (search_key: H) is
-			-- Search for item of `search_key'.
-			-- If successful, set `position' to index
-			-- of item with this key (the same index as the key's index).
-			-- If not, set position to possible position for insertion.
-			-- Set `control' to `Found_constant' or `Not_found_constant'.
+		indexing
+			description: "[Search for item of `search_key'.%
+						%If successful, set `position' to index%
+						%of item with this key (the same index as the key's index).%
+						%If not, set position to possible position for insertion.%
+						%Set `control' to `Found_constant' or `Not_found_constant'.]"
+			external_name: "InternalSearch"
 		require
 			good_key: valid_key (search_key)
 		local
@@ -258,8 +343,8 @@ feature {NONE} -- Implementation
 				local_deleted_marks := deleted_marks
 				first_deleted_position := -1
 				table_size := local_keys.count
-				hash_code := search_key.gethashcode
-				-- Increment computed for no cycle: `table_size' is prime
+				hash_code := search_key.get_hash_code
+					-- Increment computed for no cycle: `table_size' is prime
 				increment := 1 + hash_code \\ (table_size - 1)
 				pos := (hash_code \\ table_size) - increment
 			until
@@ -293,25 +378,45 @@ feature {NONE} -- Implementation
 		end
 
 	Inserted_constant: INTEGER is unique
-			-- Insertion successful
+		indexing
+			description: "Insertion successful"
+			external_name: "InsertedConstant"
+		end
 
 	Found_constant: INTEGER is unique
-			-- Key found
+		indexing
+			description: "Key found"
+			external_name: "FoundConstant"
+		end
 
 	Changed_constant: INTEGER is unique
-			-- Change successful
+		indexing
+			description: "Change successful"
+			external_name: "ChangedConstant"
+		end
 
 	Removed_constant: INTEGER is unique
-			-- Remove successful
+		indexing
+			description: "Remove successful"
+			external_name: "RemovedConstant"
+		end
 
 	Conflict_constant: INTEGER is unique
-			-- Could not insert an already existing key
+		indexing
+			description: "Could not insert an already existing key"
+			external_name: "ConflictConstant"
+		end
 
 	Not_found_constant: INTEGER is unique
-			-- Key not found
+		indexing
+			description: "Key not found"
+			external_name: "NotFoundConstant"
+		end
 
 	add_space is
-			-- Increase capacity.
+		indexing
+			description: "Increase capacity."
+			external_name: "AddSpace"
 		local
 			i, table_size: INTEGER
 			current_key: H
@@ -339,21 +444,37 @@ feature {NONE} -- Implementation
 		end
 
 	soon_full: BOOLEAN is
-			-- Is table close to being filled to current capacity?
-			-- (If so, resizing is needed to avoid performance degradation.)
+		indexing
+			description: "[Is table close to being filled to current capacity?%
+						%(If so, resizing is needed to avoid performance degradation.)]"
+			external_name: "SoonFull"
 		do
 			Result := (keys.count * Size_threshold <= 100 * count)
 		end
 
 	control: INTEGER
-			-- Control code set by operations that may produce
-			-- several possible conditions.
+		indexing
+			description: "Control code set by operations that may produce several possible conditions."
+			external_name: "Control"
+		end
 
 	Minimum_size : INTEGER is 5
-
-	High_ratio : INTEGER is 3
-
-	Low_ratio : INTEGER is 2
-
-end
+		indexing
+			description: "Minimum size"
+			external_name: "MinimumSize"
+		end
+		
+	High_ratio: INTEGER is 3
+		indexing
+			description: "High ratio"
+			external_name: "HighRatio"
+		end
+		
+	Low_ratio: INTEGER is 2
+		indexing
+			description: "Low ratio"
+			external_name: "LowRatio"
+		end
+		
+end -- class HASH_TABLE
 

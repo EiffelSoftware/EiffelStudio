@@ -53,8 +53,12 @@ feature -- Basic Operations
 			assembly_mapping.put (last_index, ca.out)
 			assembly_mapping.compare_objects
 			build_referenced_assemblies (ass)
-			prepare_consumed_types (ass)
-			serialize_consumed_types			
+			if successful then
+				prepare_consumed_types (ass)
+				serialize_consumed_types
+			else
+				process_error (error_message)
+			end
 		end
 
 	is_assembly_modified (ass: ASSEMBLY; apath: STRING): BOOLEAN is
@@ -136,26 +140,75 @@ feature {NONE} -- Implementation
 			assembly_mapping_object_comparison: assembly_mapping.object_comparison
 		local
 			referenced_assemblies: NATIVE_ARRAY [ASSEMBLY_NAME]
+			l_assembly_name: ASSEMBLY_NAME
+			l_assembly: ASSEMBLY
 			i, count, index: INTEGER
 			ca: CONSUMED_ASSEMBLY
+			l_tmp: STRING
 		do
 			referenced_assemblies := ass.get_referenced_assemblies
 			count := referenced_assemblies.count
 			from
 				i := 1
 			until
-				i > count
+				i > count or not successful
 			loop
-				ca := Consumed_assembly_factory.consumed_assembly_from_name (referenced_assemblies.item (i - 1))
+				l_assembly_name := referenced_assemblies.item (i - 1)
+				ca := Consumed_assembly_factory.consumed_assembly_from_name (l_assembly_name)
 				if not assembly_mapping.has (ca.out) then
 					last_index := last_index + 1
 					assembly_ids.extend (ca)
 					assembly_mapping.put (last_index, ca.out)
 						-- add also referenced assemblies of assembly referenced.
-					build_referenced_assemblies (feature {ASSEMBLY}.load_assembly_name (referenced_assemblies.item (i - 1)))
+					create l_tmp.make_from_cil (l_assembly_name.code_base)
+					l_assembly := load_referenced_assembly (l_assembly_name)
+					if l_assembly /= Void then
+						build_referenced_assemblies (l_assembly)
+					else
+						check
+							not_successful: not successful
+						end
+					end
 				end
 				i := i + 1
 			end
+		end
+
+	load_referenced_assembly (an_assembly_name: ASSEMBLY_NAME): ASSEMBLY is
+			-- Load assembly associated to `an_assembly_name'.
+			-- | Search in assemblies given as parameter,
+			-- | if not found try to load it from GAC.
+		require
+			non_void_an_assembly_name: an_assembly_name /= Void
+		local
+			l_retried: BOOLEAN
+			l_cursor: CURSOR
+			l_ass_full_name, l_current_ass_full_name: STRING
+		do
+			if not l_retried then
+				l_cursor := assembly_locations.cursor
+				create l_ass_full_name.make_from_cil (an_assembly_name.full_name)
+				from
+					assembly_locations.start
+				until
+					assembly_locations.after or Result /= Void
+				loop
+					create l_current_ass_full_name.make_from_cil (feature {ASSEMBLY_NAME}.get_assembly_name (Assembly_locations.item.to_cil).full_name)
+					if l_ass_full_name.is_equal (l_current_ass_full_name) then
+						Result := feature {ASSEMBLY}.load_from (Assembly_locations.item.to_cil)
+					end
+					assembly_locations.forth
+				end
+				assembly_locations.go_to (l_cursor)
+				if Result = Void then
+					Result := feature {ASSEMBLY}.load_assembly_name (an_assembly_name)
+				end
+			else
+				set_error (Ref_assembly_not_found_error, create {STRING}.make_from_cil (an_assembly_name.full_name))
+			end
+		rescue
+			l_retried := True
+			retry
 		end
 
 	prepare_consumed_types (ass: ASSEMBLY) is
@@ -371,6 +424,12 @@ feature {NONE} -- Implementation
 			not_empty_a_type_name: not a_type_name.is_empty
 		do
 			Result := base_types.has (a_type_name)
+		end
+
+	process_error (s: STRING) is
+			-- Display error.
+		do
+			io.put_string ("%N" + "** Error: " + s + "%N%N")
 		end
 
 feature {NONE} -- Constants

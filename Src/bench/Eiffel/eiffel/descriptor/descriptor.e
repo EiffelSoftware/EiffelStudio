@@ -7,13 +7,17 @@ class DESCRIPTOR
 
 inherit
 
-	EXTEND_TABLE [DESC_UNIT, INTEGER]
+	EXTEND_TABLE [DESC_UNIT, CLASS_ID]
 		rename
 			put as table_put,
 			item as table_item,
 			make as table_make
 		end;
 	SHARED_WORKBENCH
+		undefine
+			copy, is_equal
+		end;
+	COMPILER_EXPORTER
 		undefine
 			copy, is_equal
 		end
@@ -58,7 +62,16 @@ feature -- Generation
 			f.open_write;
 
 			f.putstring ("#include %"macros.h%"%N%N");
-			f.putstring (C_string);
+			System.class_counter.generate_extern_offsets (f);
+			System.static_type_id_counter.generate_extern_offsets (f);
+			if Compilation_modes.is_precompiling then
+				System.dispatch_table.counter.generate_extern_offsets (f);
+				f.new_line;
+				f.putstring (precomp_C_string)
+			else
+				f.new_line;
+				f.putstring (C_string)
+			end;
 			f.putstring (init_string);
 
 			f.close
@@ -69,9 +82,7 @@ feature -- Generation
 			-- structure of Current descriptor
 		do
 			!! Result.make (0);
-			Result.append ("struct desc_info desc");
-			Result.append_integer (class_type.id.id);
-			Result.append ("[] = {%N");
+			Result.append ("static struct desc_info desc[] = {%N");
 
 			if (invariant_entry = Void) then
 				Result.append ("%T{(int16) -1, (int16) -1},%N")
@@ -91,7 +102,41 @@ feature -- Generation
 			end;
 			Result.put ('%N', Result.count - 1);
 			Result.put ('}', Result.count);
-			Result.append (";%N");
+			Result.append (";%N")
+		end;
+
+	precomp_C_string: STRING is
+			-- C code of corresponding to run-time
+			-- structure of Current precompiled descriptor
+		local
+			i: INTEGER
+		do
+			!! Result.make (0);
+			Result.append ("static struct desc_info desc");
+			Result.append ("[")
+			Result.append_integer (table_size)
+			Result.append ("];%N%Nstatic void build_desc () {%N")
+
+			if (invariant_entry = Void) then
+				Result.append ("%Tdesc[0].info = (int16) -1;%N")
+				Result.append ("%Tdesc[0].type = (int16) -1;%N")
+			else
+				Result.append ("%Tdesc[0].info = (int16) (");
+				Result.append (invariant_entry.real_body_index.generated_id);
+				Result.append (");%N%Tdesc[0].type = (int16) -1;%N");
+			end;
+
+			from
+				start
+				i := 1
+			until
+				after
+			loop
+				Result.append (item_for_iteration.precomp_C_string (i));
+				i := i + item_for_iteration.count
+				forth
+			end;
+			Result.append ("}%N");
 		end;
 
 	init_string: STRING is
@@ -99,21 +144,23 @@ feature -- Generation
 			-- descriptor
 		local
 			i: INTEGER
-			class_type_id: INTEGER
+			class_type_id: TYPE_ID
 		do
-			class_type_id := class_type.id.id;
+			class_type_id := class_type.id;
 			!! Result.make (0);
-			Result.append ("%NInit");
-			Result.append_integer (class_type_id);
+			Result.append (class_type_id.init_name);
 			Result.append ("()%N{%N");
+			if Compilation_modes.is_precompiling then
+				Result.append ("%Textern char desc_fill;%N");
+				Result.append ("%Tif (desc_fill != 0)%N%T%Tbuild_desc();%N")
+			end;
 
 				-- Special descriptor unit (invariant)
 			Result.append ("%T");
 			Result.append (Init_macro);
 			Result.append ("(desc");
-			Result.append_integer (class_type_id);
 			Result.append (", 0, RTUD(");
-			Result.append_integer (class_type_id - 1);
+			Result.append (class_type_id.generated_id);
 			Result.append ("));%N");	
 
 				-- Descriptor units for origin classes
@@ -126,18 +173,17 @@ feature -- Generation
 				Result.append ("%T");
 				Result.append (Init_macro);
 				Result.append ("(desc");
-				Result.append_integer (class_type_id);
 				Result.append ("+");
 				Result.append_integer (i);
 				Result.append (",");
-				Result.append_integer (key_for_iteration);
+				Result.append (key_for_iteration.generated_id);
 				Result.append (",RTUD(");
-				Result.append_integer (class_type_id - 1);
+				Result.append (class_type_id.generated_id);
 				Result.append ("));%N");
 				i := i + item_for_iteration.count;
-				forth;
+				forth
 			end;
-			Result.append ("}%N");
+			Result.append ("}%N")
 		end;
 
 	table_size: INTEGER is

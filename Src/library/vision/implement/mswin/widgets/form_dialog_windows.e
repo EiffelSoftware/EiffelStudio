@@ -18,7 +18,9 @@ inherit
 			make_with_coordinates,
 			show,
 			set_default_position,
-			set_enclosing_size
+			set_enclosing_size,
+			maximal_width,
+			maximal_height
 		redefine
 			class_name,
 			dialog_realize, 

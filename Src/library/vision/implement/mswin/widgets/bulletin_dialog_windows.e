@@ -19,7 +19,9 @@ inherit
 			on_destroy,
 			make_with_coordinates,
 			set_default_position,
-			show
+			show,
+			maximal_width,
+			maximal_height
 		redefine
 			class_name,
 			dialog_realize, 

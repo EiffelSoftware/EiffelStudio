@@ -74,9 +74,9 @@ feature {NONE} -- Initialization
 		do
 			create font
 			create foreground_color.make_with_rgb (0, 0, 0)
-			set_foreground_color (foreground_color)
 			create background_color.make_with_rgb (1, 1, 1)
-			set_background_color (background_color)
+
+				-- Initialise the device for painting.
 			dc.set_background_opaque
 			dc.set_background_transparent
 			dc.set_text_alignment (Ta_baseline)
@@ -85,6 +85,7 @@ feature {NONE} -- Initialization
 			set_line_width (1)
 			reset_pen
 			reset_brush
+
 			is_initialized := True
 		end
 
@@ -97,6 +98,8 @@ feature --{EV_ANY_I} -- Implementation
 			not_void: dc /= Void
 			exists: dc.exists
 		end
+
+	get_dc: BOOLEAN
 
 feature -- Access
 
@@ -158,27 +161,33 @@ feature -- Element change
 	set_background_color (a_color: EV_COLOR) is
 			-- Assign `a_color' to `background_color'.
 		do
-			background_color.copy (a_color)
-			if background_brush /= Void then
-				background_brush.delete
+			if not a_color.is_equal(background_color) then
+				background_color.copy (a_color)
+
+					-- update current background brush (lazzy evaluation)
+				internal_initialized_background_brush := False
 			end
-			create background_brush.make_solid (wel_bg_color)
 		end
 
 	set_foreground_color (a_color: EV_COLOR) is
 			-- Assign `a_color' to `foreground_color'
 		do
-			foreground_color.copy (a_color)
-			dc.set_text_color (wel_fg_color)
-			reset_pen
-			reset_brush
+			if not a_color.is_equal(foreground_color) then
+				foreground_color.copy (a_color)
+			
+					-- update current pen & brush (lazzy evaluation)
+				internal_initialized_brush := False
+				internal_initialized_pen := False
+				dc.set_text_color (wel_fg_color)
+			end
 		end
 
 	set_line_width (a_width: INTEGER) is
 			-- Assign `a_width' to `line_width'.
 		do
 			line_width := a_width
-			reset_pen
+
+			internal_initialized_pen := False
 		end
 
 	set_drawing_mode (a_mode: INTEGER) is
@@ -240,6 +249,7 @@ feature -- Element change
 			-- Do not apply a tile when filling.
 		do
 			tile := Void
+			internal_initialized_brush := False
 			reset_brush
 		end
 
@@ -247,6 +257,7 @@ feature -- Element change
 			-- Draw lines dashed.
 		do
 			dashed_line_style := True
+			internal_initialized_pen := False
 			reset_pen
 		end
 
@@ -254,6 +265,7 @@ feature -- Element change
 			-- Draw lines solid.
 		do
 			dashed_line_style := False
+			internal_initialized_pen := False
 			reset_pen
 		end
 
@@ -263,26 +275,28 @@ feature -- Element change
 			font_imp: EV_FONT_IMP
 		do
 			font.copy (a_font)
-			font_imp ?= font.implementation
+			font_imp ?= a_font.implementation
+			if dc.font_selected then
+				dc.unselect_font
+			end
 			dc.select_font (font_imp.wel_font)
 		end
 
-feature -- Clearing operations
+feature -- Clearing and drawing operations
 
 	clear is
 			-- Erase `Current' with `background_color'.
 		do
-			clear_rect (0, 0, width + 1, height + 1)
+			clear_rectangle (0, 0, width + 1, height + 1)
 		end
 
-	clear_rect (x1, y1, x2, y2: INTEGER) is
+	clear_rectangle (x1, y1, x2, y2: INTEGER) is
 			-- Erase rectangle (`x1, `y1) - (`x2', `y2') with `background_color'.
+		local
+			a_rect: WEL_RECT
 		do
-			remove_pen
-			set_background_brush
-			dc.rectangle (x1, y1, x2, y2)
-			reset_brush
-			reset_pen
+			create a_rect.make (x1, y1, x2, y2)
+			dc.fill_rect (a_rect, background_brush)
 		end
 
 feature -- Drawing operations
@@ -290,6 +304,9 @@ feature -- Drawing operations
 	draw_point (x, y: INTEGER) is
 			-- Draw point at (`x', `y').
 		do
+			if not internal_initialized_pen then
+				reset_pen
+			end
 			dc.set_pixel (x, y, wel_fg_color)
 		end
 
@@ -302,6 +319,9 @@ feature -- Drawing operations
 	draw_segment (x1, y1, x2, y2: INTEGER) is
 			-- Draw line segment from (`x1', 'y1') to (`x2', 'y2').
 		do
+			if not internal_initialized_pen then
+				reset_pen
+			end
 			dc.move_to (x1, y1)
 			dc.line_to (x2, y2)
 		end
@@ -347,6 +367,10 @@ feature -- Drawing operations
 			y_start_arc := y - (a_vertical_radius * sine (a_start_angle)).rounded
 			x_end_arc := x + (a_horizontal_radius * cosine ((a_start_angle + an_aperture))).rounded
 			y_end_arc := y - (a_vertical_radius * sine ((a_start_angle + an_aperture))).rounded
+
+			if not internal_initialized_pen then
+				reset_pen
+			end
 			dc.arc (left, top, right, bottom, x_start_arc,
 				y_start_arc, x_end_arc, y_end_arc)
 		end
@@ -366,6 +390,9 @@ feature -- Drawing operations
 			-- with size `a_width' and `a_height'.
 		do
 			remove_brush
+			if not internal_initialized_pen then
+				reset_pen
+			end
 			dc.rectangle (x, y, x + a_width, y + a_height)
 			reset_brush
 		end
@@ -375,6 +402,9 @@ feature -- Drawing operations
 			-- size `a_vertical_radius' and `a_horizontal_radius'.
 		do
 			remove_brush
+			if not internal_initialized_pen then
+				reset_pen
+			end
 			dc.ellipse (x - a_horizontal_radius, y - a_vertical_radius,
 				x + a_vertical_radius, y + a_vertical_radius)
 			reset_brush
@@ -412,6 +442,10 @@ feature -- Drawing operations
 				flat_index := flat_index + 1
 				flat_points.put ((points.item (i)).y, flat_index)
 			end
+
+			if not internal_initialized_pen then
+				reset_pen
+			end
 			dc.polyline (flat_points)
 		end
 
@@ -424,6 +458,7 @@ feature -- Drawing operations
 		local
 			left, top, right, bottom: INTEGER
 			x_start_arc, y_start_arc, x_end_arc, y_end_arc: INTEGER
+			null_brush: WEL_NULL_BRUSH
 		do
 			left := x - a_horizontal_radius
 			right := x + a_horizontal_radius
@@ -434,6 +469,9 @@ feature -- Drawing operations
 			x_end_arc := x + (a_horizontal_radius * cosine ((a_start_angle + an_aperture))).rounded
 			y_end_arc := y - (a_vertical_radius * sine ((a_start_angle + an_aperture))).rounded
 			remove_brush
+			if not internal_initialized_pen then
+				reset_pen
+			end
 			dc.pie (left, top, right, bottom, x_start_arc,
 				y_start_arc, x_end_arc, y_end_arc)
 			reset_brush
@@ -443,9 +481,12 @@ feature -- Filling operations
 
 	fill_rectangle (x, y, a_width, a_height: INTEGER) is
 			-- Draw rectangle with upper-left corner on (`x', `y')
-			-- with size `a_width' and `a_height'. Fill with `background_color'.
+			-- with size `a_width' and `a_height'. Fill with `foreground_color'.
 		do
 			remove_pen
+			if not internal_initialized_brush then
+				reset_brush
+			end
 			dc.rectangle (x, y, x + a_width, y + a_height)
 			reset_pen
 		end 
@@ -456,6 +497,9 @@ feature -- Filling operations
 			-- Fill with `background_color'.
 		do
 			remove_pen
+			if not internal_initialized_brush then
+				reset_brush
+			end
 			dc.ellipse (x - a_horizontal_radius, y - a_vertical_radius,
 				x + a_vertical_radius, y + a_vertical_radius)
 			reset_pen
@@ -463,7 +507,7 @@ feature -- Filling operations
 
 	fill_polygon (points: ARRAY [EV_COORDINATES]) is
 			-- Draw line segments between subsequent points in `points'.
-			-- Fill all enclosed area's with `background_color'.
+			-- Fill all enclosed area's with `foreground_color'.
 		local
 			flat_points: ARRAY [INTEGER]
 			i, flat_i: INTEGER
@@ -482,6 +526,9 @@ feature -- Filling operations
 				i := i + 1
 			end
 			remove_pen
+			if not internal_initialized_brush then
+				reset_brush
+			end
 			dc.polygon (flat_points)
 			reset_pen
 		end
@@ -505,6 +552,9 @@ feature -- Filling operations
 			x_end_arc := x + (a_horizontal_radius * cosine ((a_start_angle + an_aperture))).rounded
 			y_end_arc := y - (a_vertical_radius * sine ((a_start_angle + an_aperture))).rounded
 			remove_pen
+			if not internal_initialized_brush then
+				reset_brush
+			end
 			dc.pie (left, top, right, bottom, x_start_arc,
 				y_start_arc, x_end_arc, y_end_arc)
 			reset_pen
@@ -516,7 +566,6 @@ feature {NONE} -- Implementation
 			-- The WEL equivalent for the Ev_drawing_mode_* selected.
 
 	wel_bg_color: WEL_COLOR_REF is
-			-- Get implementation object of `background_color'.
 		do
 			Result ?= background_color.implementation
 		ensure
@@ -524,96 +573,161 @@ feature {NONE} -- Implementation
 		end
 
 	wel_fg_color: WEL_COLOR_REF is
-			-- Get implementation object of `foreground_color'.
 		do
 			Result ?= foreground_color.implementation
 		ensure
 			not_void: Result /= Void
 		end
 
-	background_brush: WEL_BRUSH
+	background_brush: WEL_BRUSH is
 			-- Current window background color used to refresh the window when
-			-- requested by the Wm_erasebkgnd windows message.
+			-- requested by the WM_ERASEBKGND windows message.
+		do
+			if internal_initialized_background_brush then
+				Result := internal_background_brush
+			else
+				if background_color /= Void then
+					create Result.make_solid (wel_bg_color)
+				end
+				internal_background_brush := Result
+				internal_initialized_background_brush := True
+			end
+		end
 
 	set_background_brush is
 			-- Set background-brush. For clear-operations.
 		do
-			dc.unselect_brush
 			dc.select_brush (background_brush)
 		end
-
-	pen: WEL_PEN
-
-	brush: WEL_BRUSH
 
 	reset_brush is
 			-- Restore brush to tile or color.
 		local
+			brush: WEL_BRUSH
 			pix_imp: EV_PIXMAP_IMP
 		do
-			if brush /= Void then
-				dc.unselect_brush
-				brush.delete
-			end
-			if tile /= Void then
-				pix_imp ?= tile.implementation
-				create brush.make_by_pattern (pix_imp.bitmap)
+			if internal_initialized_brush then
+				brush := internal_brush
 			else
-				create brush.make_solid (wel_fg_color)
-			end				
+				if tile /= Void then
+					pix_imp ?= tile.implementation
+					create brush.make_by_pattern (pix_imp.bitmap)
+				else
+					create brush.make_solid (wel_fg_color)
+				end
+				
+				internal_initialized_brush := True
+				internal_brush := brush
+			end
+
+				-- Unselect previously selected brush.
+			if dc.brush_selected then
+				dc.unselect_brush
+			end
+				-- Select new brush.
 			dc.select_brush (brush)
 		end
 
 	reset_pen is
 			-- Restore pen to correct line width and color
 		local
+			pen: WEL_PEN
 			dmode: INTEGER
 		do
 			if line_width = 0 then
 				remove_pen
 			else
-				if dashed_line_style then
-					dmode := Ps_dot
+				if internal_initialized_pen then
+					pen := internal_pen
 				else
-					dmode := Ps_solid
+					if dashed_line_style then
+						dmode := Ps_dot
+					else
+						dmode := Ps_solid
+					end
+					create pen.make (dmode, line_width, wel_fg_color)
+					if pen.item = default_pointer then
+						create pen.make (dmode, line_width, wel_fg_color)
+					end
+
+					internal_pen := pen
+					internal_initialized_pen := True
 				end
-				if pen /= Void then
+
+				if dc.pen_selected then
 					dc.unselect_pen
-					pen.delete
 				end
-				create pen.make (dmode, line_width, wel_fg_color)
 				dc.select_pen (pen)
 			end
 		end
 
-	null_pen: WEL_PEN is
-			-- Pen that appears as if no pen is used.
+	remove_pen is
+			-- Draw without outline.
+		local
+			pen: WEL_PEN
+			log_pen: WEL_LOG_PEN
+		do
+			if dc.pen_selected then
+				dc.unselect_pen
+			end
+			dc.select_pen (empty_pen)
+		end
+
+	remove_brush is
+			-- Draw without filling.
+		local
+			brush: WEL_BRUSH
+			log_brush: WEL_LOG_BRUSH
+		do
+			if dc.brush_selected then
+				dc.unselect_brush
+			end
+			dc.select_brush (empty_brush)
+		end
+
+
+--| Internal buffered pens & brush
+
+	internal_background_brush: WEL_BRUSH
+			-- Buffered background brush. Created in order to
+			-- avoid multiple WEL_BRUSHes creation.
+
+	internal_brush: WEL_BRUSH
+			-- Buffered current brush. Created in order to
+			-- avoid multiple WEL_BRUSHes creation.
+
+	internal_pen: WEL_PEN
+			-- Buffered current pen. Created in order to
+			-- avoid multiple WEL_BRUSHes creation.
+
+	internal_initialized_pen: BOOLEAN
+			-- Is `internal_pen' valid? (can be invalidated if
+			-- the user change the foreground color, the width, ...)
+
+	internal_initialized_background_brush: BOOLEAN
+			-- Is `internal_background_brush' valid?
+
+	internal_initialized_brush: BOOLEAN
+			-- Is `internal_brush' valid?
+
+	empty_brush: WEL_BRUSH is
+			-- Null brush (used when one want to draw
+			-- a figure without filling it)
+		local
+			log_brush: WEL_LOG_BRUSH
+		once
+			create log_brush.make (Bs_null, wel_fg_color, Hs_horizontal)
+			create Result.make_indirect (log_brush)
+		end
+
+	empty_pen: WEL_PEN is
+			-- Null brush (used when one want to draw
+			-- a figure without outlining it)
 		local
 			log_pen: WEL_LOG_PEN
 		once
 			create log_pen.make (Ps_null, 1, wel_fg_color)
 			create Result.make_indirect (log_pen)
-		end			
-
-	remove_pen is
-			-- Draw without outline.
-		do
-			dc.select_pen (null_pen)
-		end
-
-	null_brush: WEL_BRUSH is
-			-- Brush that appears as if no brush is used.
-		local
-			log_brush: WEL_LOG_BRUSH
-		do
-			create log_brush.make (Bs_null, wel_fg_color, Hs_horizontal)
-			create Result.make_indirect (log_brush)
-		end			
-
-	remove_brush is
-			-- Draw without filling.
-		do
-			dc.select_brush (null_brush)
 		end
 
 feature {EV_ANY_I} -- Implementation
@@ -643,19 +757,8 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.16  2000/02/15 17:41:13  brendel
---| Changed to avoid any memory leak. Changes:
---|  - For `reset_pen' and `reset_brush', once-functions are used to create
---|    resp. `null_pen' and `null_brush'.
---|  - In `reset_pen' and `reset_brush', a reference to the old pen/brush
---|    object is stored so that it can be deleted when it has to be recreated.
---|  - Feature `background_brush' is now an attribute that is reinstantiated
---|    every time the background color is changed.
---|  - The leak caused by font turned out to be a bug in WEL and should be
---|    fixed now.
---|
---| Revision 1.15  2000/02/14 11:40:40  oconnor
---| merged changes from prerelease_20000214
+--| Revision 1.17  2000/02/16 18:06:57  pichery
+--| Cosmetics: renammed feature `clear_rect' into `clear_rectangle'.
 --|
 --| Revision 1.14.6.24  2000/01/27 19:30:12  oconnor
 --| added --| FIXME Not for release

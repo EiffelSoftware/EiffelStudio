@@ -158,14 +158,14 @@ feature -- Element change
 			assigned: font.is_equal (a_font)
 		end
 
-feature -- Clearing operations
+feature -- Clearing and drawing operations
 
 	clear is
 			-- Erase `Current' with `background_color'.
 		deferred
 		end
 
-	clear_rect (x1, y1, x2, y2: INTEGER) is
+	clear_rectangle (x1, y1, x2, y2: INTEGER) is
 			-- Erase rectangle (`x1, `y1) - (`x2', `y2') with `background_color'.
 		deferred
 		end
@@ -319,8 +319,8 @@ end -- class EV_DRAWABLE_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.14  2000/02/14 11:40:35  oconnor
---| merged changes from prerelease_20000214
+--| Revision 1.15  2000/02/16 18:06:57  pichery
+--| Cosmetics: renammed feature `clear_rect' into `clear_rectangle'.
 --|
 --| Revision 1.13.4.23  2000/02/04 04:00:10  oconnor
 --| released

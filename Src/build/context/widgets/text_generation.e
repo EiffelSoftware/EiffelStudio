@@ -3,12 +3,6 @@ class TEXT_GENERATION
 
 feature {NONE}
 
-	to_string (i: INTEGER): STRING is
-		do
-			!!Result.make (0);
-			Result.append_integer (i)
-		end;
-
 	function_name (a_string: STRING; context: STRING; func_name: STRING) is
 		do
 			a_string.append ("%T%T%T");
@@ -42,7 +36,7 @@ feature {NONE}
 		do
 			function_name (a_string, context, func_name);
 			a_string.append (" (");
-			a_string.append (to_string (number));
+			a_string.append (number.out);
 			a_string.append (");%N");
 		end;
 
@@ -76,9 +70,9 @@ feature {NONE}
 		do
 			function_name (a_string, context, func_name);
 			a_string.append (" (");
-			a_string.append (to_string (n1));
+			a_string.append (n1.out);
 			a_string.append (", ");
-			a_string.append (to_string (n2));
+			a_string.append (n2.out);
 			a_string.append (");%N");
 		end;
 

@@ -298,7 +298,7 @@ feature -- Status report
 					Result := l_app_exec_dotnet.string_value_from_string_class_object_value (value_object_dotnet)
 				end					
 			else
-				Result := l_app_exec_dotnet.debug_output_value_from_object_value (value_dotnet, value_object_dotnet, value_frame_dotnet, dynamic_class_type)
+				Result := l_app_exec_dotnet.debug_output_value_from_object_value (value_frame_dotnet, value_dotnet, value_object_dotnet, dynamic_class_type)
 			end
 		end
 

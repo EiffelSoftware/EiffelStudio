@@ -70,6 +70,8 @@ feature -- Basic operation
 		do
 			--|FIXME
 			check fixme: false end
+			--| See SendInput
+			--| http://msdn.microsoft.com/library/psdk/winui/keybinpt_7id0.htm
 		end
 
 feature -- Measurement
@@ -123,6 +125,9 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/06 23:26:59  oconnor
+--| added implementation comments and new fake event features
+--|
 --| Revision 1.7  2000/04/06 20:12:30  oconnor
 --| added pointer position features
 --|

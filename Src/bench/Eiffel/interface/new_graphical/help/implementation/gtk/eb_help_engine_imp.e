@@ -6,8 +6,8 @@ class
 
 inherit
 	EB_HELP_ENGINE_I
-	
-	SHARED_RESOURCES
+
+	EB_SHARED_PREFERENCES
 
 	EB_CONSTANTS
 	
@@ -38,7 +38,7 @@ feature -- Basic Operations
 			root: STRING
 			exists: BOOLEAN
 		do
-			cmd := clone (string_resource_value ("internet_browser", ""))
+			cmd := preferences.misc_data.internet_browser_preference.string_value
 			if cmd.is_empty then
 				last_show_successful := False
 				last_error_message := warning_messages.w_No_internet_browser_selected

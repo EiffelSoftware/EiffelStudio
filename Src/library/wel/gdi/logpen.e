@@ -1,0 +1,191 @@
+indexing
+	description: "Defines the style, width and color of a pen."
+	status: "See notice at end of class."
+	date: "$Date$"
+	revision: "$Revision$"
+
+class
+	WEL_LOG_PEN
+
+inherit
+	WEL_STRUCTURE
+		rename
+			make as structure_make
+		end
+
+creation
+	make,
+	make_by_pen
+
+feature {NONE} -- Initialization
+
+	make (a_style, a_width: INTEGER; a_color: WEL_COLOR_REF) is
+		require
+			positive_width: a_width >= 0
+			color_not_void: a_color /= Void
+			color_exists: a_color.exists
+		do
+			structure_make
+			set_style (a_style)
+			set_width (a_width)
+			set_color (a_color)
+		ensure
+			set_style: style = a_style
+			set_width: width = a_width
+			set_color: color.item = a_color.item
+		end
+
+	make_by_pen (pen: WEL_PEN) is
+		require
+			pen_not_void: pen /= Void
+			pen_exists: pen.exists
+		do
+			structure_make
+			cwin_get_object (pen.item, structure_size, item)
+		end
+
+feature -- Access
+
+	style: INTEGER is
+			-- Pen style
+		require
+			exists: exists
+		do
+			Result := cwel_logpen_get_style (item)
+		end
+
+	width: INTEGER is
+			-- Pen width
+		require
+			exists: exists
+		do
+			Result := cwel_logpen_get_width (item)
+		ensure
+			positive_result: Result >= 0
+		end
+
+	color: WEL_COLOR_REF is
+			-- Pen color
+		require
+			exists: exists
+		do
+			!! Result.make_by_pointer (cwel_logpen_get_color (item))
+		ensure
+			result_not_void: Result /= Void
+			result_exists: Result.exists
+		end
+
+feature -- Element changes
+
+	set_style (a_style: INTEGER) is
+			-- Set `style' with `a_style'
+		require
+			exists: exists
+		do
+			cwel_logpen_set_style (item, a_style)
+		ensure
+			set_style: style = a_style
+		end
+
+	set_width (a_width: INTEGER) is
+			-- Set `width' with `a_width'
+		require
+			exists: exists
+			positive_width: a_width >= 0
+		do
+			cwel_logpen_set_width (item, a_width)
+			cwel_logpen_set_y (item, 0)
+		ensure
+			set_width: width = a_width
+		end
+
+	set_color (a_color: WEL_COLOR_REF) is
+			-- Set `color' with `a_color'
+		require
+			exists: exists
+			a_color_not_void: a_color /= Void
+			a_color_exists: a_color.exists
+		do
+			cwel_logpen_set_color (item, a_color.item)
+		ensure
+			set_color: color.item = a_color.item
+		end
+
+feature {WEL_STRUCTURE} -- Measurement
+
+	structure_size: INTEGER is
+			-- Size to allocate (in bytes)
+		once
+			Result := c_size_of_logpen
+		end
+
+feature {NONE} -- Externals
+
+	c_size_of_logpen: INTEGER is
+		external
+			"C [macro <logpen.h>]"
+		alias
+			"sizeof (LOGPEN)"
+		end
+
+	cwel_logpen_get_style (ptr: POINTER): INTEGER is
+		external
+			"C [macro <logpen.h>]"
+		end
+
+	cwel_logpen_get_width (ptr: POINTER): INTEGER is
+		external
+			"C [macro <logpen.h>]"
+		end
+
+	cwel_logpen_get_color (ptr: POINTER): POINTER is
+		external
+			"C [macro <logpen.h>]"
+		end
+
+	cwel_logpen_set_style (ptr: POINTER; value: INTEGER) is
+		external
+			"C [macro <logpen.h>]"
+		end
+
+	cwel_logpen_set_width (ptr: POINTER; value: INTEGER) is
+		external
+			"C [macro <logpen.h>]"
+		end
+
+	cwel_logpen_set_color (ptr: POINTER; value: POINTER) is
+		external
+			"C [macro <logpen.h>]"
+		end
+
+	cwel_logpen_set_y (ptr: POINTER; value: INTEGER) is
+		external
+			"C [macro <logpen.h>]"
+		end
+
+	cwin_get_object (hgdi_object: POINTER; buffer_size: INTEGER;
+			object: POINTER) is
+		external
+			"C [macro <wel.h>] (HGDIOBJ, int, LPVOID)"
+		alias
+			"GetObject"
+		end
+
+invariant
+	color_not_void: exists implies color /= Void
+	color_exists: exists implies color.exists
+	positive_width: exists implies width >= 0
+
+end -- class WEL_LOG_PEN
+
+--|-------------------------------------------------------------------------
+--| Windows Eiffel Library: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1995, Interactive Software Engineering, Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Information e-mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|-------------------------------------------------------------------------

@@ -295,7 +295,7 @@ feature {NONE} -- Implementation
 			loop
 				cf ?= class_figures.item
 				if cf.class_i.compiled and documentation.doc_universe.is_class_generated (cf.class_i) then
-					item_file := clone (base_path)
+					item_file := base_path.twin
 					path := documentation.relative_path (cf.class_i.cluster)
 					if path /= Void then
 						item_file.append_character ('/')
@@ -360,7 +360,7 @@ feature {NONE} -- Implementation
 				loop
 					clf ?= local_cluster_figures.item
 					if documentation.doc_universe.is_cluster_generated (clf.cluster_i) then
-						item_file := clone (base_path)
+						item_file := base_path.twin
 						path := documentation.relative_path (clf.cluster_i)
 						if path /= Void then
 							item_file.append_character ('/')

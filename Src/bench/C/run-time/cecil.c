@@ -362,7 +362,7 @@ rt_public void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, 
 	 * Should be preceded by *(EIF_TYPE*). 
 	 */
 
-	void *addr;
+	void *addr = (void *) 0;
 	int tid;
 
 	addr = eifaddr (object, name, ret);
@@ -374,10 +374,11 @@ rt_public void *eif_field_safe (EIF_REFERENCE object, char *name, int type_int, 
 	if (tid == EIF_NO_TYPE)	/* No type id? */
 		eif_panic ("Object has no type id.");/* Should not happen. */
 
-	if (eif_attribute_type (name, tid) != type_int)  {	/* Do types match. */
+	if (eif_attribute_type (name, tid) != type_int)  	/* Do types match. */
 		*ret = EIF_WRONG_TYPE;	/* Wrong type. */
-		return addr;	
-	}
+
+	return addr;	/* Return "addr" anyway. */
+
 
 } 	/* eif_field_safe */
 	

@@ -1,0 +1,184 @@
+<EIFFEL_DOCUMENT>
+<TOPIC TOPIC_ID="Bench_preferences">
+	<HEAD>EiffelBench Resources, version 4.8</HEAD>
+	<TOPIC TOPIC_ID="General">
+		<HEAD>General Preferences</HEAD>
+		<TOPIC TOPIC_ID="Applications_and_directories">
+			<HEAD>Applications and Directories</HEAD>
+			<TEXT>acrobat_reader<STRING>acrobat</STRING></TEXT>
+			<TEXT>text_mode<STRING>UNIX</STRING></TEXT>
+			<TEXT>editor<STRING>vi</STRING></TEXT>
+			<TEXT>temporary_directory<STRING>/tmp</STRING></TEXT>
+			<TEXT>shell_command<STRING>vi +$line $target</STRING></TEXT>
+			<TEXT>filter_name<STRING>PostScript</STRING></TEXT>
+			<TEXT>filter_command<STRING>none</STRING></TEXT>
+			<TEXT>print_shell_command<STRING>lpr $target</STRING></TEXT>
+			<TEXT>web_browser<STRING>netscape</STRING></TEXT>
+			<TEXT>confirm_on_exit<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>show_starting_dialog<BOOLEAN>True</BOOLEAN></TEXT>
+		</TOPIC>
+		<TOPIC TOPIC_ID="tools">
+			<HEAD>Tool Preferences</HEAD>
+			<TEXT>close_button_in_tools<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT>default_window_position<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT>history_size<INTEGER>10</INTEGER></TEXT>
+		</TOPIC>
+	</TOPIC>
+	<TOPIC TOPIC_ID="Tools_Preferences">
+		<HEAD>Tools Preferences</HEAD>
+		<TOPIC TOPIC_ID="Project_tool_preferences">
+			<HEAD>Project tool preferences</HEAD>
+			<TEXT>project_tool_x<INTEGER>0</INTEGER></TEXT>
+			<TEXT>project_tool_y<INTEGER>0</INTEGER></TEXT>
+			<TEXT>project_tool_width<INTEGER>900</INTEGER></TEXT>
+			<TEXT>project_tool_height<INTEGER>600</INTEGER></TEXT>
+			<TEXT>project_tool_bar<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>raise_on_error<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>graphical_output_disabled<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT>starting_layout<LIST_STRING>horizontal;select;vertical;horizontal;debug;object;feature</LIST_STRING></TEXT>
+			<TEXT>bench_recent_files<LIST_STRING>/home/bonnard/sample_application/sample.epr</LIST_STRING></TEXT>
+		</TOPIC>
+		<TOPIC TOPIC_ID="Debugger_preferences">
+			<HEAD>Debugger preferences</HEAD>
+			<TEXT>debug_tool_width<INTEGER>214</INTEGER></TEXT>
+			<TEXT>debug_tool_height<INTEGER>214</INTEGER></TEXT>
+			<TEXT>debug_tool_bar<BOOLEAN>True</BOOLEAN></TEXT>
+		</TOPIC>
+		<TOPIC TOPIC_ID="Explain_tool_preferences">
+			<HEAD>Explain tool preferences</HEAD>
+			<TEXT>explain_tool_width<INTEGER>440</INTEGER></TEXT>
+			<TEXT>explain_tool_height<INTEGER>500</INTEGER></TEXT>
+			<TEXT>explain_tool_bar<BOOLEAN>True</BOOLEAN></TEXT>
+		</TOPIC>
+		<TOPIC TOPIC_ID="System_tool_preferences">
+			<HEAD>System tool preferences</HEAD>
+			<TEXT>system_tool_width<INTEGER>440</INTEGER></TEXT>
+			<TEXT>system_tool_height<INTEGER>500</INTEGER></TEXT>
+			<TEXT>system_tool_bar<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>parse_ace_after_saving<BOOLEAN>True</BOOLEAN></TEXT>
+		</TOPIC>
+		<TOPIC TOPIC_ID="Development_window_preferences">
+			<HEAD>Development window preferences</HEAD>
+			<TEXT>class_tool_command_bar<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>class_tool_format_bar<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>parse_ace_after_saving<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>development_window__show_address_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>development_window__show_project_toolbar<BOOLEAN>False</BOOLEAN></TEXT>
+			<TEXT>development_window__show_general_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>development_window__show_text_in_general_toolbar<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>feature_clause_order<LIST_STRING>Initialization;Access;Measurement;Comparison;Status report;Status setting;Cursor movement;Element change;Removal;Resizing;Transformation;Conversion;Duplication;Miscellaneous;Basic operations;Obsolete;Inapplicable;Implementation;*</LIST_STRING></TEXT>
+		</TOPIC>
+		<TOPIC TOPIC_ID="Feature_tool_preferences">
+			<HEAD>Feature tool preferences</HEAD>
+			<TEXT>feature_tool_width<INTEGER>600</INTEGER></TEXT>
+			<TEXT>feature_tool_height<INTEGER>450</INTEGER></TEXT>
+			<TEXT>feature_tool_command_bar<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>feature_tool_format_bar<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>show_all_callers<BOOLEAN>True</BOOLEAN></TEXT>
+			<TEXT>do_flat_in_breakpoints<BOOLEAN>True</BOOLEAN></TEXT>
+		</TOPIC>
+		<TOPIC TOPIC_ID="Object_tool_preferences">
+			<HEAD>Object tool preferences</HEAD>
+			<TEXT>object_tool_width<INTEGER>440</INTEGER></TEXT>
+			<TEXT>object_tool_height<INTEGER>500</INTEGER></TEXT>
+			<TEXT>object_tool_bar<BOOLEAN>True</BOOLEAN></TEXT>
+		</TOPIC>
+		<TOPIC TOPIC_ID="Profile_tool_preferences">
+			<HEAD>Profile tool preferences</HEAD>
+			<TEXT>profile_tool_width<INTEGER>250</INTEGER></TEXT>
+			<TEXT>profile_tool_height<INTEGER>490</INTEGER></TEXT>
+			<TEXT>profile_query_window_width<INTEGER>500</INTEGER></TEXT>
+			<TEXT>profile_query_window_height<INTEGER>500</INTEGER></TEXT>
+		</TOPIC>
+		<TOPIC TOPIC_ID="Dynamic_Lib_tool_preferences">
+			<HEAD>Dynamic Library tool preferences</HEAD>
+			<TEXT>dynamic_lib_tool_width<INTEGER>440</INTEGER></TEXT>
+			<TEXT>dynamic_lib_tool_height<INTEGER>500</INTEGER></TEXT>
+		</TOPIC>
+	</TOPIC>
+	<TOPIC TOPIC_ID="Graphics">
+		<HEAD>Graphical Elements</HEAD>
+		<TOPIC TOPIC_ID="Editor_Preferences">
+			<HEAD>Editor specific preferences</HEAD>
+			<TEXT DESCRIPTION="Color used to display normal text">normal_text_color<COLOR>0;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color used to display normal text">normal_background_color<COLOR>255;255;255</COLOR></TEXT>
+			<TEXT DESCRIPTION="Color used to display selected text">selection_text_color<COLOR>255;255;128</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color used to display selected text">selection_background_color<COLOR>0;0;128</COLOR></TEXT>
+			<TEXT DESCRIPTION="Color used to display manifest strings">string_text_color<COLOR>0;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color used to display manifest strings">string_background_color<COLOR>255;255;255</COLOR></TEXT>
+			<TEXT DESCRIPTION="Color used to display keywords">keyword_text_color<COLOR>0;0;128</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color used to display keywords">keyword_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Color used to display spaces">spaces_text_color<COLOR>0;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color used to display spaces">spaces_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Color used to display comments">comments_text_color<COLOR>128;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color used to display comments">comments_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Color used to display numbers">number_text_color<COLOR>0;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color used to display numbers">number_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Color used to display operator">operator_text_color<COLOR>0;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color used to display operator">operator_background_color<COLOR>auto</COLOR></TEXT>
+
+			<TEXT DESCRIPTION="Color used to display indexing tag">indexing_tag_text_color<COLOR>64;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color used to display indexing tag">indexing_tag_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Color used to display assertion tag">assertion_tag_text_color<COLOR>64;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color used to display assertion tag">assertion_tag_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Color used to display reserved">reserved_text_color<COLOR>64;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color used to display reserved">reserved_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Color used to display local">local_text_color<COLOR>64;0;0</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color used to display local">local_background_color<COLOR>auto</COLOR></TEXT>
+			<TEXT DESCRIPTION="Color used to display generic">generic_text_color<COLOR>0;255;255</COLOR></TEXT>
+			<TEXT DESCRIPTION="Background color used to display generic">generic_background_color<COLOR>auto</COLOR></TEXT>
+
+			<TEXT DESCRIPTION="Background color used to display breakable marks and breakpoints">breakpoint_background_color<COLOR>212;208;200</COLOR></TEXT>
+			<TEXT DESCRIPTION="All-purpose editor font">editor_font<FONT>Courier New-r-regular-15-screen</FONT></TEXT>
+		</TOPIC>
+		<TOPIC TOPIC_ID="Default_Colors">
+			<HEAD>Colors</HEAD>
+			<TEXT>foreground_color<COLOR>0;0;0</COLOR></TEXT>
+			<TEXT>text_background_color<COLOR>255;255;255</COLOR></TEXT>
+			<TEXT>text_foreground_color<COLOR>0;0;0</COLOR></TEXT>
+			<TEXT>breakable_color<COLOR>255;0;0</COLOR></TEXT>
+			<TEXT>class_color<COLOR>0;0;255</COLOR></TEXT>
+			<TEXT>cluster_color<COLOR>128;0;0</COLOR></TEXT>
+			<TEXT>comment_color<COLOR>255;0;0</COLOR></TEXT>
+			<TEXT>default_text_color<COLOR>0;0;0</COLOR></TEXT>
+			<TEXT>error_color<COLOR>255;0;0</COLOR></TEXT>
+			<TEXT>feature_color<COLOR>0;128;0</COLOR></TEXT>
+			<TEXT>keyword_color<COLOR>0;0;128</COLOR></TEXT>
+			<TEXT>object_color<COLOR>0;0;255</COLOR></TEXT>
+			<TEXT>stop_color<COLOR>255;0;0</COLOR></TEXT>
+			<TEXT>string_text_color<COLOR>0;0;0</COLOR></TEXT>
+			<TEXT>symbol_color<COLOR>0;0;0</COLOR></TEXT>
+			<TEXT>html_color<COLOR>0;0;255</COLOR></TEXT>
+			<TEXT>explanation_label<COLOR>255;255;0</COLOR></TEXT>
+			<TEXT>highlight_background_line_color<COLOR>255;0;0</COLOR></TEXT>
+			<TEXT>highlight_foreground_line_color<COLOR>255;255;255</COLOR></TEXT>
+			<TEXT>progress_bar_color<COLOR>0;0;255</COLOR></TEXT>
+		</TOPIC>
+		<TOPIC TOPIC_ID="Default_fonts">
+			<HEAD>Fonts</HEAD>
+			<TEXT>window_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
+			<TEXT>text_font<FONT>arial,helvetica-r-regular-10-screen</FONT></TEXT>
+			<TEXT>breakable_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
+			<TEXT>class_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
+			<TEXT>cluster_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
+			<TEXT>comment_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
+			<TEXT>default_text_font<FONT>arial,helvetica-r-regular-20-screen</FONT></TEXT>
+			<TEXT>error_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
+			<TEXT>feature_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
+			<TEXT>keyword_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
+			<TEXT>object_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
+			<TEXT>string_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
+			<TEXT>symbol_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
+			<TEXT>html_font<FONT>arial,helvetica-r-regular-15-screen</FONT></TEXT>
+		</TOPIC>
+	</TOPIC>
+	<TOPIC TOPIC_ID="Dynamic_data">
+			<HEAD>Dynamic data</HEAD>
+			<TEXT>development_window__width<INTEGER>490</INTEGER></TEXT>
+			<TEXT>development_window__height<INTEGER>490</INTEGER></TEXT>
+			<TEXT>development_window__left_panel_width<INTEGER>100</INTEGER></TEXT>
+			<TEXT>development_window__left_panel_layout<LIST_STRING>visible;visible;visible;closed;closed;closed</LIST_STRING></TEXT>
+			<TEXT>development_window__general_toolbar_layout<LIST_STRING>New_window__visible;Save_file__visible;Open_shell__hidden;Separator;Undo__visible;Redo__visible;Separator;Editor_cut__visible;Editor_copy__visible;Editor_paste__visible;Separator;Favorites__visible;Clusters__visible;Features__visible;Search__visible;Windows__hidden;Separator;Melt_project__visible;Run__visible;New_feature__hidden</LIST_STRING></TEXT>
+	</TOPIC>
+</TOPIC>
+</EIFFEL_DOCUMENT>

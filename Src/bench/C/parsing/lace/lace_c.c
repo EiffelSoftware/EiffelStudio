@@ -125,9 +125,8 @@ char *filename;
 	return rn_ast;
 }
 
-char *lace_id (s, start, end)
+char *lace_id (s)
 char s[];
-int start, end;
 {
 	/* Create an instance of ID_SD with string `s' and test
 	 * the hash table where all the different ids are stored in

@@ -1074,4 +1074,4 @@ feature {NONE} -- Attributes
 	
 	width_string: STRING is "Children_width"
 			
-end -- class GB_EV_BOX
+end -- class GB_EV_FIXED

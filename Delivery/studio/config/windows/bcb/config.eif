@@ -22,10 +22,10 @@ wkoptimize: ""
 optimize: "-O2"
 
 -- compiler flags
-ccflags: "-c -g0 -w- -DNONAMELESSUNION -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib -L$(ISE_EIFFEL)\BCC55\lib\PSDK"
-mtccflags: "-c -g0 -w- -DNONAMELESSUNION -tWM -DEIF_THREADS -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib -L$(ISE_EIFFEL)\BCC55\lib\PSDK"
-cppflags: "-c -g0 -w- -DNONAMELESSUNION -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib -L$(ISE_EIFFEL)\BCC55\lib\PSDK"
-mtcppflags: "-c -g0 -w- -DNONAMELESSUNION -tWM -DEIF_THREADS -I$(ISE_EIFFEL)\BCC55\include -L$(ISE_EIFFEL)\BCC55\lib -L$(ISE_EIFFEL)\BCC55\lib\PSDK"
+ccflags: "-c -g0 -w- -DNONAMELESSUNION"
+mtccflags: "-c -g0 -w- -DNONAMELESSUNION -tWM -DEIF_THREADS"
+cppflags: "-c -g0 -w- -P -DNONAMELESSUNION"
+mtcppflags: "-c -g0 -w- -P -DNONAMELESSUNION -tWM -DEIF_THREADS"
 shared_flags: "-DEIF_USE_DLL"
 
 large: ""
@@ -33,8 +33,8 @@ large: ""
 -- linker flags
 ar: ""
 ld: ""
-ldflags: "-c -Tpe -L$(ISE_EIFFEL)\BCC55\lib -L$(ISE_EIFFEL)\BCC55\lib\PSDK"
-mtldflags: "-c -Tpe -L$(ISE_EIFFEL)\BCC55\lib -L$(ISE_EIFFEL)\BCC55\lib\PSDK"
+ldflags: "-c -Tpe"
+mtldflags: "-c -Tpe"
 console_flags: "-ap"
 windows_flags: "-aa"
 ldsharedflags: "-dll"
@@ -117,7 +117,7 @@ precompile: "driver.exe: driver.res e1\emain.obj $(OBJECTS) precomp.lib $precomp
 %%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p512 $@ +$** %N%
 %%N"
 
-cecil_make: "cecil.lib: $(OBJECTS) $(EXTERNALS) $precompilelibs%N%
+cecil_make: "$(STATIC_CECIL): $(EIFLIB) $(OBJECTS) $(EXTERNALS) $precompilelibs%N%
 %%T$(RM) $@%N%
 %%T&$(ISE_EIFFEL)\BCC55\bin\tlib /p512 $@ +$**"
 

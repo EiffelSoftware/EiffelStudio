@@ -477,7 +477,7 @@ feature {COMPILER_EXPORTER} -- Implementation
 			l_actions.put (agent system.set_array_class, "array")
 			l_actions.put (agent system.set_special_class, "special")
 			l_actions.put (agent system.set_tuple_class, "tuple")
-			l_actions.put (agent system.set_memory_class, "memory")
+			l_actions.put (agent system.set_disposable_class, "disposable")
 			l_actions.put (agent system.set_routine_class, "routine")
 			l_actions.put (agent system.set_procedure_class, "procedure")
 			l_actions.put (agent system.set_function_class, "function")

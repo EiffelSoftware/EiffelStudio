@@ -143,6 +143,14 @@ inherit
 		end
 
 	EV_TEXT_FIELD_ACTION_SEQUENCES_IMP
+		export
+			{NONE} all
+		end
+		
+	EV_COMBO_BOX_ACTION_SEQUENCES_IMP
+		export
+			{NONE} all
+		end
 
 create
 	make
@@ -693,6 +701,7 @@ feature {NONE} -- Implementation
 	insert_item (item_imp: EV_LIST_ITEM_IMP; an_index: INTEGER) is
 			-- Insert `item_imp' at the one-based index `an_index'.
 		do
+			--FIXME must set the index as in LIST.
 			insert_string_at (item_imp.wel_text, an_index - 1)
 		end
 
@@ -881,6 +890,9 @@ feature {NONE} -- WEL Implementation
 		local
 			pt: WEL_POINT
 		do
+			if drop_down_actions_internal /= Void then
+				drop_down_actions_internal.call (Void)
+			end
 			if not ev_children.is_empty then
 				pt := client_to_screen (0,0)
 				combo.resize (combo.width, screen_height - pt.y)

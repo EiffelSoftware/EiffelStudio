@@ -94,8 +94,9 @@ feature {EV_GRID_DRAWER_I} -- Implementation
 			end
 			
 			drawable.set_copy_mode
-			drawable.draw_ellipsed_text_top_left (an_x, a_y, text, a_width)
-			
+			if internal_text /= Void then
+				drawable.draw_ellipsed_text_top_left (an_x, a_y, internal_text, a_width)
+			end
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -48,10 +48,8 @@ feature -- Basic operation
 			end
 			table.extend (widget)
 
-			if not layout_item.has (an_object.layout_item) then
-				layout_item.go_i_th (position)
-				layout_item.put_left (an_object.layout_item)			
-			end
+			layout_item.go_i_th (position)
+			layout_item.put_left (an_object.layout_item)			
 			add_child (an_object, position)
 		end
 		

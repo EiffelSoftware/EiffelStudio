@@ -68,10 +68,8 @@ feature -- Basic operation
 				end
 				object.set_first (widget)
 				display_object.child.set_first (widget2)
-				if not layout_item.has (an_object.layout_item) then
-					layout_item.go_i_th (1)
-					layout_item.put_left (an_object.layout_item)
-				end
+				layout_item.go_i_th (1)
+				layout_item.put_left (an_object.layout_item)
 				add_child (an_object, 1)
 			else
 				object.set_second (widget)
@@ -80,7 +78,7 @@ feature -- Basic operation
 					-- second position.
 				if position = 2 and (layout_item.is_empty) then
 					layout_item.extend (an_object.layout_item)
-				elseif not layout_item.has (an_object.layout_item) then
+				else
 					layout_item.go_i_th (2)
 					layout_item.put_left (an_object.layout_item)
 				end

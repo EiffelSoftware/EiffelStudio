@@ -333,6 +333,7 @@ feature {NONE} -- Implementation
 			l_cl_type_a: CL_TYPE_A
 		do
 			if ctype.associated_class.is_basic then
+					-- FIXME JFIAT: maybe we should return the associated _REF type ...
 				Result := ctype
 			else
 					--| Get the real class_type

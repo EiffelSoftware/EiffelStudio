@@ -506,7 +506,9 @@ feature {NONE} -- Implementation
 			body_code.append (Tmp_variable_name)
 			body_code.append (Close_parenthesis)
 			body_code.append (Semicolon)
+			body_code.append (New_line)
 			body_code.append (New_line_tab)
+			body_code.append (Return_s_ok)
 
 			func_writer.set_body (body_code)
 

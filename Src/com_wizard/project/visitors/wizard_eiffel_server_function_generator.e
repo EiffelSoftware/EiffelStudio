@@ -40,9 +40,7 @@ feature -- Basic operations
 
 			
 			-- Set arguments and precondition
-			if func_desc.argument_count > 0 then
-				set_feature_result_type_and_arguments
-			end
+			set_feature_result_type_and_arguments
 
 			-- Set return type for C server function
 			visitor.visit (func_desc.return_type)

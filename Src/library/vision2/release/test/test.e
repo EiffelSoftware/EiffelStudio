@@ -56,6 +56,7 @@ feature
 			create {EV_VERTICAL_BOX} box
 			first_window.extend (box)
 			create notebook
+			box.extend (notebook)
 
 			create scroll
 			scroll.set_minimum_size (700, 500)
@@ -505,6 +506,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.37  2000/04/26 23:51:38  brendel
+--| Insert notebook!
+--|
 --| Revision 1.36  2000/04/26 23:20:06  brendel
 --| Fixed agent call.
 --|

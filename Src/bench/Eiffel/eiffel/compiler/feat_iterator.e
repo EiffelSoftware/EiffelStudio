@@ -197,14 +197,14 @@ end;
 			temp: ROUT_ID_SET
 		do
 debug ("MARKING")
-				-- Verbose
-			io.error.putstring ("%TMarking ");
-			io.error.putstring (feat.feature_name);
-			io.error.putstring (" from ");
-			class_name := clone (feat.written_class.name)
-			class_name.to_upper;
-			io.error.putstring (class_name);
-			io.error.new_line;
+-- Verbose
+	io.error.putstring ("%TMarking ");
+	io.error.putstring (feat.feature_name);
+	io.error.putstring (" from ");
+	class_name := clone (feat.written_class.name)
+	class_name.to_upper;
+	io.error.putstring (class_name);
+	io.error.new_line;
 end;
 			temp := used_table.item (feat.body_id.id);
 			if (temp = Void) then
@@ -222,9 +222,8 @@ feature
 		local
 			temp: ROUT_ID_SET
 		do
-			temp := used_table.item (feat.body_id.id);
-			Result := (temp /= Void) and then
-				temp.has (feat.rout_id_set.first)
+			temp := used_table.item (feat.body_id.id)
+			Result := (temp /= Void) and then temp.has (feat.rout_id_set.first)
 		end;
 
 	bid_rid_is_marked (bid: BODY_ID; rid: ROUTINE_ID): BOOLEAN is
@@ -233,9 +232,8 @@ feature
 		local
 			temp: ROUT_ID_SET
 		do
-			temp := used_table.item (bid.id);
-			Result := (temp /= Void) and then
-				temp.has (rid)
+			temp := used_table.item (bid.id)
+			Result := (temp /= Void) and then temp.has (rid)
 		end;
 
 	is_alive (feat: FEATURE_I): BOOLEAN is

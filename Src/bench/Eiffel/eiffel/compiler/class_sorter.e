@@ -37,19 +37,20 @@ feature
 			a_class: CLASS_C;
 			classes: CLASS_C_SERVER
 		do
-			check
-				consistency: count = System.nb_of_classes
-			end;
 			classes := System.classes;
-			count := 0;
+			check
+				consistency: count = classes.count
+			end
+
+			count := 0
 			from 
 				classes.start 
 			until 
 				classes.after 
 			loop
-				class_array := classes.item_for_iteration;
-				nb := Class_counter.item (classes.key_for_iteration).count
 				from 
+					class_array := classes.item_for_iteration;
+					nb := Class_counter.item (classes.key_for_iteration).count
 					i := 1 
 				until 
 					i > nb 
@@ -71,14 +72,17 @@ feature
 			-- Topological sort of classes
 		do
 				-- Initialize data structures
-			init (System.nb_of_classes);
+			init (System.classes.count)
+
 				-- Initialize arrays `successors' and `precursor_count'.
-			fill;
+			fill
+
 				-- Perform sort
-			perform_sort;
+			perform_sort
+
 				-- Check validity: there must be no cycle in the 
 				-- inheritance graph
-			check_validity;
+			check_validity
 		end;
 
 	check_validity is

@@ -116,7 +116,7 @@ feature
 			f.open_write;
 
 			f.putstring ("#include %"eif_portable.h%"%N%
-						%#include %"eif_macros.h%"%N%N");
+					%#include %"eif_macros.h%"%N%N");
 
 			f.close
 		end
@@ -156,6 +156,7 @@ feature
 				f.putstring ("[];%N");
 				routine_tables.forth;
 			end;
+
 			from
 				attribute_tables.start
 			until
@@ -166,6 +167,7 @@ feature
 				f.putstring ("[];%N");
 				attribute_tables.forth;
 			end;
+
 			from
 				type_tables.start
 			until

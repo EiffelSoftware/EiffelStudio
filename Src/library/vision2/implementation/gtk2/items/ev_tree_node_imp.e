@@ -444,7 +444,13 @@ feature {EV_TREE_IMP} -- Implementation
 				end	
 			end
 			if count = 1 and then par_t_imp /= Void then
+				if expand_actions_internal /= Void then
+					expand_actions_internal.block
+				end
 				set_expand (expanded_on_last_item_removal)
+				if expand_actions_internal /= Void then
+					expand_actions_internal.resume
+				end
 			end
 		end
 

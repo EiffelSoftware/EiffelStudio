@@ -9,6 +9,7 @@ class SUPER_MELT
 
 inherit
 
+	EB_CONSTANTS;
 	TOOL_COMMAND
 		rename
 			init as make

@@ -109,17 +109,6 @@ feature {NONE} -- Implementation
 
 	retried: BOOLEAN;
 
-	display_after_error_trace (st: STRUCTURED_TEXT) is
-		do
-			st.add_new_line
-		end
-
-	display_before_error_trace (st: STRUCTURED_TEXT) is
-		do
-			display_separation_line (st);
-			st.add_new_line;
-		end
-
 	display_error_error (st: STRUCTURED_TEXT) is
 		do
 			st.add_string ("Exception occurred while displaying error message.");
@@ -130,13 +119,12 @@ feature {NONE} -- Implementation
 
 	display_separation_line (st: STRUCTURED_TEXT) is
 		do
-			st.add_string
-("-------------------------------------------------------------------------------");
+			st.add_string ("--------------------------------------------%
+							%-----------------------------------");
 			st.add_new_line
-		end;
+		end
 
 	display_additional_info (st: STRUCTURED_TEXT) is
-			-- Add additional information to `st'.
 		do
 		end
 

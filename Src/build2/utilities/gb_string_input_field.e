@@ -53,7 +53,7 @@ create
 	
 feature {NONE} -- Initialization
 	
-	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [STRING]]; a_validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]) is
+	make (any: ANY; a_parent: EV_CONTAINER; a_type, label_text, tooltip: STRING; an_execution_agent: PROCEDURE [ANY, TUPLE [STRING]]; a_validate_agent: FUNCTION [ANY, TUPLE [STRING], BOOLEAN]; multiple_line_text_entry: BOOLEAN) is
 			-- Create `Current' with `gb_ev_any' as the client of `Current', we need this to call `update_atribute_editors'.
 			-- Build widget structure into `a_parent'. Use `label_text' as the text of the label next to the text field for entry.
 			-- `an_execution_agent' is to execute the setting of the attribute.
@@ -79,6 +79,8 @@ feature {NONE} -- Initialization
 			check
 				internal_gb_ev_any /= Void
 			end
+			
+			has_multiple_line_entry := multiple_line_text_entry
 
 			object ?= editor_constructor.object
 			setup_text_field (a_parent, tooltip, an_execution_agent, a_validate_agent)
@@ -113,6 +115,9 @@ feature -- Access
 		ensure
 			Result_not_void: Result /= Void
 		end
+		
+	has_multiple_line_entry: BOOLEAN	
+		-- Does `Current' permit the entering of multiple lines of text?
 
 feature {NONE} -- Implementation
 
@@ -234,8 +239,8 @@ feature {NONE} -- Implementation
 			a_parent.extend (Current)
 			create horizontal_box
 			extend (horizontal_box)
-			
-			if is_instance_of (internal_gb_ev_any.first, dynamic_type_from_string ("EV_TEXT")) or is_instance_of (internal_gb_ev_any.first, dynamic_type_from_string ("EV_LABEL")) then
+	
+			if has_multiple_line_entry = multiple_line_entry then
 					-- Create a text component that supports multiple lines of text if necessary.
 				create {EV_TEXT} text_entry
 			else
@@ -244,6 +249,9 @@ feature {NONE} -- Implementation
 			entry_widget ?= text_entry
 			check
 				text_entry_was_widget: entry_widget /= Void
+			end
+			if has_multiple_line_entry then
+				text_entry.set_minimum_height (50)
 			end
 			entry_widget.set_tooltip (tooltip)
 			horizontal_box.extend (entry_widget)

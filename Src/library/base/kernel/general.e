@@ -283,7 +283,7 @@ feature {GENERAL} -- Implementation
 	c_standard_clone (other: POINTER): GENERAL is
 			-- New object of same dynamic type as `other'
 		external
-			"C | <copy.h>"
+			"C | %"eif_copy.h%""
 		alias
 			"eclone"
 		end;
@@ -294,7 +294,7 @@ feature {NONE} -- Implementation
 			-- Does dynamic type of object attached to `obj1' conform to
 			-- dynamic type of object attached to `obj2'?
 		external
-			"C | <plug.h>"
+			"C | %"eif_plug.h%""
 		alias
 			"econfg"
 		end;
@@ -303,7 +303,7 @@ feature {NONE} -- Implementation
 			-- Are dynamic type of object attached to `obj1' and
 			-- dynamic type of object attached to `obj2' the same?
 		external
-			"C | <plug.h>"
+			"C | %"eif_plug.h%""
 		alias
 			"estypeg"
 		end;
@@ -311,7 +311,7 @@ feature {NONE} -- Implementation
 	c_standard_is_equal (target, source: POINTER): BOOLEAN is
 			-- C external performing standard equality
 		external
-			"C | <equal.h>"
+			"C | %"eif_equal.h%""
 		alias
 			"eequal"
 		end;
@@ -319,7 +319,7 @@ feature {NONE} -- Implementation
 	c_standard_copy (source, target: POINTER) is
 			-- C external performing standard copy
 		external
-			"C | <copy.h>"
+			"C | %"eif_copy.h%""
 		alias
 			"ecopy"
 		end;
@@ -328,7 +328,7 @@ feature {NONE} -- Implementation
 			-- New object structure recursively duplicated from the one
 			-- attached to `other'
 		external
-			"C | <copy.h>"
+			"C | %"eif_copy.h%""
 		alias
 			"edclone"
 		end;
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 			-- Are `some' and `other' attached to recursively isomorphic
 			-- object structures?
 		external
-			"C | <equal.h>"
+			"C | %"eif_equal.h%""
 		alias
 			"ediso"
 		end;
@@ -345,18 +345,18 @@ feature {NONE} -- Implementation
 	frozen c_tagged_out (some: GENERAL): STRING is
 			-- Printable representation of current object
 		external
-			"C | <out.h>"
+			"C | %"eif_out.h%""
 		end;
 
 	frozen c_generator (some: POINTER): STRING is
 			-- Name of the generating class of current object
 		external
-			"C | <out.h>"
+			"C | %"eif_out.h%""
 		end;
 
 	frozen c_check_assert (b: BOOLEAN): BOOLEAN is
 		external
-			"C | <copy.h>"
+			"C | %"eif_copy.h%""
 		end;
 
 invariant

@@ -233,12 +233,12 @@ feature {NONE} -- Implementation
 
 	arg_number: INTEGER is
 		external
-			"C | <argv.h>"
+			"C | %"eif_argv.h%""
 		end;
 
 	arg_option (i: INTEGER): STRING is
 		external
-			"C | <argv.h>"
+			"C | %"eif_argv.h%""
 		end;
 
 	internal_option_sign: CHARACTER

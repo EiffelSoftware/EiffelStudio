@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 			-- Retrieve the DC-set information from the project
 			-- directory `dc_dir'. Return the retrieve status code.
 		external
-			"C | <dle.h>"
+			"C | %"eif_dle.h%""
 		end;
 
 	dle_search (obj, class_name: ANY): INTEGER is
@@ -162,20 +162,20 @@ feature {NONE} -- Implementation
 			-- If found, set `dynamic_type' to the proper value and
 			-- return the search status code.
 		external
-			"C | <dle.h>"
+			"C | %"eif_dle.h%""
 		end;
 
 	dle_instance (dtype: INTEGER; arg: ANY): DYNAMIC is
 			-- An object of dynamic type `dtype', initialized by procedure
 			-- `make' of its base class, using `arg' as argument
 		external
-			"C | <dle.h>"
+			"C | %"eif_dle.h%""
 		end;
 
 	c_pass_dle_routines (set_dtype: POINTER) is
 			-- Pass the address of `set_dtype' to C.
 		external
-			"C | <dle.h>"
+			"C | %"eif_dle.h%""
 		end;
 
 end -- class DYNAMIC_CLASS

@@ -31,10 +31,11 @@ feature {NONE} -- Externals
 
 	eif_is_directory_valid (p: POINTER): BOOLEAN is
 		external
-			"C | <path_name.h>"
+			"C | %"eif_path_name.h%""
 		end
 
 end -- class DIRECTORY_NAME
+
 
 --|----------------------------------------------------------------
 --| EiffelBase: library of reusable components for ISE Eiffel.

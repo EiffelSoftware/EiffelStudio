@@ -315,14 +315,14 @@ feature {NONE} -- Implementation
 	c_outd (d: DOUBLE): STRING is
 			-- Printable representation of double value
 		external
-			"C | <out.h>"
+			"C | %"eif_out.h%""
 		end;
 
 	c_truncated_to_integer (d: DOUBLE): INTEGER is
 			-- Integer part of `d' (same sign, largest absolute
 			-- value no greater than `d''s)
 		external
-			"C | <misc.h>"
+			"C | %"eif_misc.h%""
 		alias
 			"conv_di"
 		end;
@@ -331,7 +331,7 @@ feature {NONE} -- Implementation
 			-- Real part of `d' (same sign, largest absolute
 			-- value no greater than `d''s)
 		external
-			"C | <misc.h>"
+			"C | %"eif_misc.h%""
 		alias
 			"conv_dr"
 		end;

@@ -18,8 +18,6 @@ inherit
 	ISERIALIZABLE
 		rename
 			get_object_data as system_runtime_serialization_iserializable_get_object_data
-		undefine
-			memberwise_clone
 		end
 
 	POINTER_REF

@@ -145,7 +145,7 @@ feature -- Element change
 			fi: FILE_INFO
 		do	
 			create f.make (f_name)
-			create fi.make_file_info (f_name.to_cil)
+			create fi.make (f_name.to_cil)
 			protection := 0
 			type := 0
 			is_directory := f.is_directory

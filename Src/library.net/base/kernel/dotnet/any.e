@@ -295,7 +295,7 @@ feature -- Clone operations
 			-- as it will not be portable.
 		do
 				-- Built-in
-			Result := memberwise_clone
+			Result ?= memberwise_clone
 		end
 
 feature {NONE} -- Disposal
@@ -340,7 +340,7 @@ feature {NONE} -- Implement .NET feature
 			end
 		end
 		
-	frozen memberwise_clone: like Current is
+	frozen memberwise_clone: SYSTEM_OBJECT is
 			-- New object equal to `other' using `copy'
 		 	-- To change copying/cloning semantics, redefine `copy'.
 		 do

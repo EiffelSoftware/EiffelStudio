@@ -17,14 +17,8 @@ inherit
 		end
 
 	ICOMPARABLE
-		undefine
-			memberwise_clone
-		end
 
 	IFORMATTABLE
-		undefine
-			memberwise_clone
-		end
 
 	DOUBLE_REF
 

@@ -77,7 +77,7 @@ feature -- Access
 		require
 			valid_character: is_valid_character_code
 		do
-			Result := feature {CONVERT}.to_char_int64 (item)
+			Result := feature {CONVERT}.to_char_integer_64 (item)
 		end
 
 feature -- Comparison
@@ -387,7 +387,7 @@ feature -- Output
 	out: STRING is
 			-- Printable representation of integer value
 		do
-			create Result.make_from_cil (feature {CONVERT}.to_string_int64 (item))
+			create Result.make_from_cil (feature {CONVERT}.to_string_integer_64 (item))
 		end
 
 

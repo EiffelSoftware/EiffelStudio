@@ -45,25 +45,25 @@ feature -- Output
 	put_integer, putint (i: INTEGER) is
 			-- Write binary value of `i' at current position.
 		do
-			writer.write_int32 (i)
+			writer.write_integer_32 (i)
 		end
 
 	put_boolean, putbool (b: BOOLEAN) is
 			-- Write binary value of `b' at current position.
 		do
-			writer.write_boolean (b)
+			writer.write (b)
 		end
 
 	put_real, putreal (r: REAL) is
 			-- Write binary value of `r' at current position.
 		do
-			writer.write_single (r)
+			writer.write_real (r)
 		end
 
 	put_double, putdouble (d: DOUBLE) is
 			-- Write binary value `d' at current position.
 		do
-			writer.write (d)
+			writer.write_double (d)
 		end
 
 	put_data (p: POINTER; size: INTEGER) is
@@ -78,7 +78,7 @@ feature -- Output
 			until
 				i > (size - 1)
 			loop
-				writer.write_byte (feature {MARSHAL}.read_byte (p + i))
+				writer.write_integer_8 (feature {MARSHAL}.read_byte (p + i))
 				i := i + 1
 			end
 		end
@@ -91,7 +91,7 @@ feature -- Input
 		local
 			buf: SPECIAL [CHARACTER]
 		do
-			last_integer := reader.read_int32
+			last_integer := reader.read_int_32
 		end
 
 

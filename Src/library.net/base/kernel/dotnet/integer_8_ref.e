@@ -76,7 +76,7 @@ feature -- Access
 		local
 			cv: CONVERT
 		do
-			Result := cv.to_char_byte (item)
+			Result := cv.to_char_integer_8 (item)
 		end
 
 feature -- Comparison
@@ -386,7 +386,7 @@ feature -- Output
 		local
 			cv: CONVERT
 		do
-			create Result.make_from_cil (cv.to_string_byte (item))
+			create Result.make_from_cil (cv.to_string_integer_8 (item))
 		end
 
 feature {NONE} -- Implementation

@@ -64,9 +64,12 @@ feature -- Basic Operations
 						update_info (info)
 					end
 				else
-					create l_string_tuple.make
-					l_string_tuple.put ("Up-to-date check: '" +	create {STRING}.make_from_cil (aname.full_name) + "' has not been modified since last consumption.%N", 1)
-					status_printer.call (l_string_tuple)
+					if status_printer /= Void then
+						create l_string_tuple.make
+						l_string_tuple.put ("Up-to-date check: '" +	create {STRING}.make_from_cil (aname.full_name) +
+							"' has not been modified since last consumption.%N", 1)
+						status_printer.call (l_string_tuple)
+					end
 				end
 				
 				if consumer.successful then

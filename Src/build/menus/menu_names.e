@@ -37,6 +37,7 @@ feature -- Menus on main panel
 	Instance_editor: STRING is "Comman&d tool"
 	Interface: STRING is "&Interface"
 	Interface_only: STRING is "Interface &only"
+	Class_selector: STRING is "Class selector"
 
 		-- Submenus of `Help'
 

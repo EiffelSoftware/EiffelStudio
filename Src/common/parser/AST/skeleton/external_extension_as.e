@@ -1,14 +1,13 @@
 indexing
 
-	description:
-		"Encapsulation of an external extension.";
-	date: "$Date$";
+	description: "Encapsulation of an external extension."
+	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class EXTERNAL_EXTENSION_AS
 
 inherit
-	COMPILER_EXPORTER;
+	COMPILER_EXPORTER
 	SHARED_ERROR_HANDLER
 
 feature -- Properties
@@ -63,6 +62,11 @@ feature -- Conveniences
 		do
 		end
 
+	is_dll: BOOLEAN is
+			-- Is this a dll extension?
+		do
+		end
+
 	has_signature: BOOLEAN is
 			-- Does the extension define a signature?
 		do
@@ -104,7 +108,7 @@ feature {NONE} -- Implementation
 					until
 						pos >= end_arg_list
 					loop
-						comma_pos := signature.index_of (',', pos);
+						comma_pos := signature.index_of (',', pos)
 						if comma_pos = 0 then
 								-- Last type
 							end_pos := end_arg_list - 1
@@ -231,16 +235,16 @@ end
 	raise_error (msg: STRING) is
 			-- Raise syntax error (`msg' is the explanation).
 		local
-			ext_error: EXTERNAL_SYNTAX_ERROR;
-			line_start: INTEGER;
+			ext_error: EXTERNAL_SYNTAX_ERROR
+			line_start: INTEGER
 		do
-			!! ext_error.init;
-			line_start := ext_error.start_position;
-			ext_error.set_start_position (line_start);
-			ext_error.set_end_position (line_start);
-			ext_error.set_external_error_message (msg);
-			Error_handler.insert_error (ext_error);
-			Error_handler.raise_error;
+			!! ext_error.init
+			line_start := ext_error.start_position
+			ext_error.set_start_position (line_start)
+			ext_error.set_end_position (line_start)
+			ext_error.set_external_error_message (msg)
+			Error_handler.insert_error (ext_error)
+			Error_handler.raise_error
 		end
 
 end -- class EXTERNAL_EXTENSION_AS

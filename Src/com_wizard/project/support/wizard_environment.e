@@ -35,14 +35,6 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	raw_file_name: STRING is
-			-- Intermediate file for IDL generator.
-		once
-			Result := clone (destination_folder)
-			Result.append ("idl\e2idl.output")
-	
-		end
-
 	eiffel_class_name: STRING
 			-- Eiffel class name to generate IDL.
 
@@ -54,9 +46,6 @@ feature -- Access
 
 	ace_file_name: STRING
 			-- Eiffel Ace file.
-
-	cluster_names: STRING
-			-- Eiffel clusters.
 
 	in_process_server: BOOLEAN
 			-- Should in process server code be generated?

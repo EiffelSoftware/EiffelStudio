@@ -57,7 +57,7 @@ feature -- Basic operations
 
 			launch (command, destination_folder)
 
-			create raw_file.make (shared_wizard_environment.raw_file_name)
+			create raw_file.make (raw_file_name)
 
 			create input_data.make
 			input_data.input_from_file (raw_file)
@@ -121,7 +121,7 @@ feature {NONE} -- Basic operations
 			end
 			a_output.replace_substring_all ("%R%N", "%N")
 
-			create output_file.make_open_write (shared_wizard_environment.raw_file_name)
+			create output_file.make_open_write (raw_file_name)
 
 			output_file.put_string (a_output)
 
@@ -144,6 +144,14 @@ feature {NONE} -- Basic operations
 			last_process_result := a_last_process_result
 		rescue
 			Shared_wizard_environment.set_abort (Idl_generation_error)
+		end
+
+	raw_file_name: STRING is
+			-- Intermediate file for IDL generator.
+		once
+			Result := clone (shared_wizard_environment.destination_folder)
+			Result.append ("idl\e2idl.output")
+	
 		end
 
 end -- class WIZARD_IDL_GENERATOR

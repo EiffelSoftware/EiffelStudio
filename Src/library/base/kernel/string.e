@@ -968,7 +968,7 @@ feature -- Conversion
 			Result := temp;
 		end;
 
-	to_c: ANY is
+	frozen to_c: ANY is
 			-- A reference to a C form of current string.
 			-- Useful only for interfacing with C software.
 		do

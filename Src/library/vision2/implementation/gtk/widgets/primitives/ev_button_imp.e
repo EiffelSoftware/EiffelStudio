@@ -104,16 +104,16 @@ feature -- Status Setting
 			par_ptr: POINTER
 		do
 			enable_can_default
-			from
-				par_ptr := C.gtk_widget_struct_parent (visual_widget)
-			until
-				GTK_IS_WINDOW (par_ptr) or else par_ptr = NULL
-			loop
-				par_ptr := C.gtk_widget_struct_parent (par_ptr)
-			end
-			if par_ptr /= NULL then
-				C.set_gtk_window_struct_default_widget (par_ptr, visual_widget)
-			end	
+--			from
+--				par_ptr := C.gtk_widget_struct_parent (visual_widget)
+--			until
+--				GTK_IS_WINDOW (par_ptr) or else par_ptr = NULL
+--			loop
+--				par_ptr := C.gtk_widget_struct_parent (par_ptr)
+--			end
+--			if par_ptr /= NULL then
+--				C.set_gtk_window_struct_default_widget (par_ptr, visual_widget)
+--			end	
 		end
 
 	disable_default_push_button is
@@ -124,17 +124,17 @@ feature -- Status Setting
 		do		
 			--| FIXME IEK Undraw default widget style.
 			is_default_push_button := False
-			from
-				par_ptr := C.gtk_widget_struct_parent (visual_widget)
-			until
-				GTK_IS_WINDOW (par_ptr) or else par_ptr = NULL
-			loop
-				par_ptr := C.gtk_widget_struct_parent (par_ptr)
-			end
-
-			if par_ptr /= NULL then
-				C.set_gtk_window_struct_default_widget (par_ptr, NULL)
-			end			
+--			from
+--				par_ptr := C.gtk_widget_struct_parent (visual_widget)
+--			until
+--				GTK_IS_WINDOW (par_ptr) or else par_ptr = NULL
+--			loop
+--				par_ptr := C.gtk_widget_struct_parent (par_ptr)
+--			end
+--
+--			if par_ptr /= NULL then
+--				C.set_gtk_window_struct_default_widget (par_ptr, NULL)
+--			end			
 		end
 
 	enable_can_default is

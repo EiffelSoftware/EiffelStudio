@@ -342,7 +342,7 @@ feature {NONE} -- Implementation
 			-- Only called if `Current' is referenced from `c_object'.
 			-- Render `Current' unusable.
 		do
-			debug ("EV_GTK_DISPOSE")
+			debug ("EV_GTK_C_OBJECT_DISPOSE")
 				safe_print (generator + ".c_object_dispose")
 			end
 			c_object := NULL

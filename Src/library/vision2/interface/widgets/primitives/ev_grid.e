@@ -758,7 +758,7 @@ feature {NONE} -- Implementation
 invariant
 	row_count_non_negative: row_count >= 0
 	column_count_non_negative: column_count >= 0
-
+	dynamic_modes_mutually_exclusive: not (is_content_completely_dynamic and is_content_partially_dynamic)
 end
 
 --|----------------------------------------------------------------

@@ -1,6 +1,6 @@
 indexing
 	description: "Abstract representation of addition of Eiffel routines in a dynamic library"
-	date: "$Date$";
+	date: "$Date$"
 	revision: "$Revision$"
 
 class E_DYNAMIC_LIB
@@ -13,19 +13,90 @@ inherit
 feature -- Properties
 
 	file_name: STRING 
+			-- Name of shared definition file.
+
+feature -- Access
+
+	text: STRING is
+			-- Text of the Def file.
+			-- Void if unreadable file
+		require
+			non_void_file_name: file_name /= Void
+		local
+			a_file: RAW_FILE
+		do
+			if valid_file_name (file_name) then
+				create a_file.make_open_read (file_name)
+				a_file.readstream (a_file.count)
+				a_file.close
+				Result := clone (a_file.laststring)
+			end
+		ensure
+			text_not_void_if_file_valid: valid_file_name (file_name) implies Result /= Void
+		end
+
+feature -- Status report
+
+	valid_file_name (f_name: STRING): BOOLEAN is
+			-- Is `f_name' a valid file name (i.e
+			-- does it exist and is it readable)?
+		require
+			valid_f_name: f_name /= Void
+		local
+			f: PLAIN_TEXT_FILE
+		do
+			create f.make (f_name)
+			Result := f.exists and then f.is_readable and then f.is_plain
+		end
+
+	is_content_valid: BOOLEAN
+			-- Is current date read from `file_name' valid?
+
+	is_empty: BOOLEAN is
+			-- Does current have some exported features?
+		do
+			Result := dynamic_lib_exports.is_empty
+		end
+
+feature -- Update
+
+	update is
+			-- Update data with new values from configuration file.
+			-- Set `file_name' with new shared definition file name if specified.
+			-- Set `is_content_valid' to True if `file_name' exists and contains
+			-- valid data.
+		local
+			l_file: PLAIN_TEXT_FILE
+		do
+			is_content_valid := False
+			file_name := Void
+			if System.dynamic_def_file /= Void then
+				if valid_file_name (System.dynamic_def_file) then
+					set_file_name (System.dynamic_def_file)
+					create l_file.make_open_read (file_name)
+					parse_exports_from_file (l_file)
+					l_file.close
+				end
+			end
+		end
+
+feature -- Setting
+
+	set_file_name (f_name: STRING) is
+			-- Set lace_file_name to `f_name'.
+		require
+			valid_f_name_if_not_void: f_name /= Void implies valid_file_name (f_name)
+		do
+			file_name := clone(f_name)
+		ensure
+			file_name_set: equal (f_name, file_name)
+		end
 
 feature -- Data
 
 	dynamic_lib_exports: HASH_TABLE [LINKED_LIST[DYNAMIC_LIB_EXPORT_FEATURE],INTEGER] is
 		once
-			!! Result.make(0)
-		end
-
-	modified: BOOLEAN
-
-	set_modified(val:BOOLEAN) is
-		do
-			modified:=val
+			create Result.make(0)
 		end
 
 feature -- DYNAMIC_LIB Exports processing.
@@ -45,15 +116,16 @@ feature -- DYNAMIC_LIB Exports processing.
 		do
 			if d_creation = Void then
 					--| FIXME XR: Huh, seems ugly.
-					--| In the old interface, this pops up a dialog to choose the creation procedure,
-					--| in the batch compiler, this does nothing,
+					--| In the old interface, this pops up a dialog to choose the creation
+					--| procedure, in the batch compiler, this does nothing,
 					--| I wonder if this clause is needed...
 					--| At least, it shouldn't be in the API\interface I believe.
-					--| (thinking aloud) When will we get rid of the old interface so that code can be cleaned up?!
+					--| (thinking aloud) When will we get rid of the old interface so that code
+					--| can be cleaned up?!
 					--| END FIXME
 					
 					-- Addition of an export feature from the environment.
-				!! list_dl.make(d_class, d_routine,d_index, d_alias, d_call_type)
+				create list_dl.make(d_class, d_routine,d_index, d_alias, d_call_type)
 				list_dl.choose_creation
 			else
 					-- Addition of an export feature already defined in a ".def" file.
@@ -65,11 +137,10 @@ feature -- DYNAMIC_LIB Exports processing.
 				elseif d_routine.is_deferred then
 					-- Error: a deferred feature cannot be exported.
 				else
-					set_modified (True)
 					if dynamic_lib_exports.has (d_class.class_id) then
 						dl_exp_list := dynamic_lib_exports.found_item
 					else
-						!! dl_exp_list.make
+						create dl_exp_list.make
 						dynamic_lib_exports.put (dl_exp_list, d_class.class_id)
 					end
 
@@ -88,7 +159,7 @@ feature -- DYNAMIC_LIB Exports processing.
 					end
 
 					if not has_feature then
-						!! dl_exp.make (d_class, dl_creation, d_routine)
+						create dl_exp.make (d_class, dl_creation, d_routine)
 
 						if dl_creation /= Void then
 							dl_exp.set_creation_routine (dl_creation)
@@ -136,7 +207,7 @@ feature -- DYNAMIC_LIB Exports processing.
 			
 				if class_list.is_empty then
 						-- Error cannot process the line
-					class_list := Void;
+					class_list := Void
 				elseif class_list.count = 1 then
 					class_i := class_list.first --FIXME: if there are many cluster with the 
 					class_list := Void
@@ -173,7 +244,11 @@ feature -- DYNAMIC_LIB Exports processing.
 
 		end
 
-	parse_exports_from_file (f: PLAIN_TEXT_FILE): BOOLEAN is
+	parse_exports_from_file (f: PLAIN_TEXT_FILE) is
+			-- Parse content of `f'.
+		require
+			f_not_void: f /= Void
+			f_open: f.is_open_read
 		local
 			lastline: STRING
 			lastchar: CHARACTER
@@ -187,7 +262,7 @@ feature -- DYNAMIC_LIB Exports processing.
 			t_call_type: STRING
 		do
 			dynamic_lib_exports.clear_all
-			Result := True
+			is_content_valid := True
 			from
 				f.start
 			until
@@ -313,7 +388,7 @@ feature -- DYNAMIC_LIB Exports processing.
 							end
 
 							if done = 0 or else done = 2 then
-								Result := False
+								is_content_valid := False
 							elseif done = 1  then
 									-- We only found a routine name.
 								if call_type_mark /= 0 then
@@ -331,11 +406,11 @@ feature -- DYNAMIC_LIB Exports processing.
 								end
 							end
 						else
-							Result := False
+							is_content_valid := False
 						end -- if on "done > 2"
 
 					else
-						Result := False
+						is_content_valid := False
 					end -- if on "done > 1"					
 				end -- if not "--"
 
@@ -383,7 +458,6 @@ feature -- DYNAMIC_LIB Exports processing.
 				t_call_type := Void
 
 			end -- loop on file
-			set_modified(False)
 		end
 
 	save_to_file (f: PLAIN_TEXT_FILE) is
@@ -460,51 +534,8 @@ feature -- DYNAMIC_LIB Exports processing.
 				dynamic_lib_exports.forth
 			end
 			f.put_string (out_text)
-			set_modified (False)
 		end
 
-feature -- Access
-
-	text: STRING is
-			-- Text of the Def file.
-			-- Void if unreadable file
-		require
-			non_void_file_name: file_name /= Void
-		local
-			a_file: RAW_FILE
-		do
-			!! a_file.make (file_name)
-			if a_file.exists and then a_file.is_readable then
-				a_file.open_read
-				a_file.readstream (a_file.count)
-				a_file.close
-				Result := clone (a_file.laststring)
-			end
-		end
-
-	valid_file_name (f_name: STRING): BOOLEAN is
-			-- Is `f_name' a valid file name (i.e
-			-- does it exist and is it readable)?
-		require
-			valid_f_name: f_name /= Void
-		local
-			f: PLAIN_TEXT_FILE
-		do
-			!! f.make (f_name);
-			Result := f.exists and then f.is_readable
-		end
-
-feature -- Setting
-
-	set_file_name (f_name: STRING) is
-			-- Set lace_file_name to `f_name'.
-		require
-			valid_f_name_if_not_void: f_name /= Void implies valid_file_name (f_name)
-		do
-			file_name := clone(f_name)
-		ensure
-			file_name_set: equal (f_name, file_name)
-		end
 
 feature {NONE} -- Implementation
 

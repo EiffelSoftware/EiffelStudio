@@ -27,17 +27,19 @@ feature -- Menus on main panel
 		-- Submenus of `View'
 
 	Application_editor: STRING is "&Application editor"
-	Context_catalog: STRING is "&Context catalog"
-	Context_editor: STRING is "Context e&ditor"
+	Context: STRING is "Con&text"
+	Context_catalog: STRING is "Context &catalog"
+	Context_editor: STRING is "Context &editor"
 	Context_tree: STRING is "Context &tree"
-	Command_catalog: STRING is "Co&mmand catalog"
+	Command: STRING is "Co&mmand"
+	Command_catalog: STRING is "Command &catalog"
 	Command_editor: STRING is "Command &text editor"
 	Editors: STRING is "&Editors"
 	History_window: STRING is "&History window"
-	Instance_editor: STRING is "Comman&d tool"
+	Instance_editor: STRING is "Command &tool"
 	Interface: STRING is "&Interface"
 	Interface_only: STRING is "Interface &only"
-	Class_selector: STRING is "Class selector"
+	Class_selector: STRING is "Class &selector"
 
 		-- Submenus of `Help'
 
@@ -46,6 +48,7 @@ feature -- Menus on command tool
 		-- Submenus of `Actions'
 
 	Add_formal_argument: STRING is "&Add a formal argument"
+	Create_command: STRING is "&Create new command"
 	Remove_formal_argument: STRING is "&Remove a formal argument"
 
 end -- class MENU_NAMES

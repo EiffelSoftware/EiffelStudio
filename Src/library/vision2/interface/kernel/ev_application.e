@@ -1,10 +1,9 @@
 indexing
 	description: 
-		"Eiffel Vision application.%N%
-		%Base class for every Eiffel Vision application.%N%
-		%Applications should inherit this class and implement prepare and%N%
-		%first_window. `make_and_launch' will construct the application%N%
-		%object, call `prepare', open the `first_window' and start%N%
+		"Base class for every Eiffel Vision application.%N%
+		%Applications should inherit this class and implement prepare and%
+		%first_window. Creating an application with `make_and_launch' will%
+		%construct the application object, call `prepare' then start%
 		%proccessing events."
 	status: "See notice at end of class"
 	keywords: "application, accelerator, event loop"
@@ -30,27 +29,17 @@ feature {NONE} -- Initialization
 			launch
 		end
 
-	create_action_sequences is
-			-- Create the post launch action sequence.
-		do
-			create post_launch_actions
-			create pick_actions
-			create drop_actions
-			create idle_actions
-		end
-
 	prepare is
 			-- Do pre-launch preperation.
 			-- Called by `launch' just before starting the application.
-			-- Should be implemented to prepare the application for launch.
 		deferred
 		end
 
 feature -- Access
 	
 	first_window: EV_WINDOW is
-			-- Must be defined as a once funtion to create
-			-- the application's first_window.
+			-- Must be defined as a once funtion to create the application's
+			-- first_window.
 		deferred
 		ensure
 			top_level_window: Result.parent = Void
@@ -60,7 +49,7 @@ feature -- Basic operation
 
 	launch is
 			-- Start the application.
-			-- (Begin event processing.)
+			-- Call `prepare' the Begin event processing.
 		require
 			post_launch_actions_not_void: post_launch_actions /= Void
 			not_already_launched: not is_launched
@@ -98,7 +87,8 @@ feature -- Status report
 			-- Has `launch' been called?
 
 	tooltip_delay: INTEGER is
-			-- Time in milliseconds before tooltips pop up.
+			-- Time in milliseconds which the pointer must be stationary over
+			-- a widget before a tooltips apears.
 		do
 			Result := implementation.tooltip_delay
 		ensure
@@ -108,7 +98,7 @@ feature -- Status report
 feature -- Status setting
 
 	set_tooltip_delay (a_delay: INTEGER) is
-			-- Set `tooltip_delay' to `a_delay'.
+			-- Assign `a_delay' to `tooltip_delay'.
 		require
 			a_delay_non_negative: a_delay >= 0
 		do
@@ -131,49 +121,23 @@ feature -- Event handling
 	idle_actions: EV_NOTIFY_ACTION_SEQUENCE
 			-- Actions be performed take when the application is otherwise idle.
 
-feature -- Root window management
-
-	add_root_window (a_window: EV_WINDOW) is
-			-- Add `a_window' to the `root_windows'.
-		require
-			a_window_not_void: a_window /= Void
-		do
-			implementation.add_root_window (a_window)
-		ensure
-			a_window_is_root_window: is_root_window (a_window)
-		end
-
-	is_root_window (a_window: EV_WINDOW): BOOLEAN is
-			-- Is `a_window' a root window?
-		require
-			a_window_not_void: a_window /= Void
-		do
-			Result := implementation.root_windows.has (a_window)
-		ensure
-			implementation_root_window_has_a_window:
-				Result = implementation.root_windows.has (a_window)
-		end
-
-	remove_root_window (a_window: EV_WINDOW) is
-			-- Remove `a_window' from the root windows list.
-		require
-			a_window_not_void: a_window /= Void
-			a_window_is_root_window: is_root_window (a_window)
-		do
-			implementation.remove_root_window (a_window)
-		ensure
-			not_a_window_is_root_window: not is_root_window (a_window)
-		end
-
 feature {EV_WINDOW, EV_PICK_AND_DROPABLE, EV_PICK_AND_DROPABLE_I}
 		-- Implementation
 	
 	implementation: EV_APPLICATION_I
-			-- Responsible for interaction with the underlying native graphics
-			-- toolkit. (See bridge pattern notes in ev_any.e)
+			-- Responsible for interaction with the native graphics toolkit.
+
+	create_action_sequences is
+			-- See `{EV_ANY}.create_action_sequences'.
+		do
+			create post_launch_actions
+			create pick_actions
+			create drop_actions
+			create idle_actions
+		end
 
 	create_implementation is
-			-- Create implementation of button
+			-- See `{EV_ANY}.create_implementation'.
 		do
 			(create {EV_ENVIRONMENT}).set_application (Current)
 			create {EV_APPLICATION_IMP} implementation.make (Current)
@@ -217,6 +181,9 @@ end -- class EV_APPLICATION
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/16 01:11:25  oconnor
+--| Removed root window features.
+--|
 --| Revision 1.13  2000/03/15 23:05:46  brendel
 --| Removed `accelerator_actions'.
 --|
@@ -288,7 +255,6 @@ end -- class EV_APPLICATION
 --|
 --| Revision 1.10.2.4  1999/11/02 17:20:11  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

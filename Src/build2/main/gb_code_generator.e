@@ -293,7 +293,7 @@ feature {NONE} -- Implementation
 				-- This allows use to use project names that clash with ace file settings,
 				-- for example, library is an invalid project name without double quotes
 				
-			add_generated_string (ace_text, "%"" + project_settings.project_name + "%"", project_name_tag)				
+			add_generated_string (ace_text, "%"" + project_settings.project_name.as_lower + "%"", project_name_tag)				
 			
 				-- Now add the application class name.
 			add_generated_string (ace_text, project_settings.application_class_name.as_upper, application_tag)

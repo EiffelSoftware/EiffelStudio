@@ -12,8 +12,7 @@ deferred class
 inherit
 	EV_ANY
 		redefine
-			implementation,
-			create_action_sequences
+			implementation
 		end
 
 	DYNAMIC_LIST [G]
@@ -52,18 +51,6 @@ inherit
 			set_extend
 		end
 
-feature {NONE} -- Initialization
-
-	create_action_sequences is
-			-- Create `add_item_actions' and `remove_item_actions'.
-		do
-			Precursor
-			create add_item_actions.make (
-				"add item", <<"item", "position">>)
-			create remove_item_actions.make (
-				"remove item", <<"item", "position">>)
-		end
-
 feature -- Access
 
 	item: G is
@@ -99,14 +86,6 @@ feature -- Access
 		ensure then
 			bridge_ok: Result.is_equal (implementation.i_th (i))
 		end
-
-feature -- Access
-
-	add_item_actions: ACTION_SEQUENCE [TUPLE [G, INTEGER]]
-			-- Actions performed when an item is added.
-
-	remove_item_actions: ACTION_SEQUENCE [TUPLE [G, INTEGER]]
-			-- Actions performed when an item is removed.
 
 feature -- Measurement
 
@@ -185,7 +164,6 @@ feature -- Element change
 			v_not_parent_of_current: not is_parent_recursive (v)
 		do
 			implementation.extend (v)
-			add_item_actions.call ([v, count])
 		ensure
 			parent_is_current: is_parent_of (v)
 			v_is_last: v = last
@@ -202,9 +180,7 @@ feature -- Element change
 			v_not_current: not same (v)
 			v_not_parent_of_current: not is_parent_recursive (v)
 		do
-			remove_item_actions.call ([item, index])
 			implementation.replace (v)
-			add_item_actions.call ([v, index])
 		ensure
 			parent_is_current: is_parent_of (v)
 			item_replaced: v = item
@@ -224,7 +200,6 @@ feature -- Element change
 			v_not_parent_of_current: not is_parent_recursive (v)
 		do
 			implementation.put_front (v)
-			add_item_actions.call ([v, 1])
 		ensure
 			parent_is_current: is_parent_of (v)
 			v_is_first: v = first
@@ -244,7 +219,6 @@ feature -- Element change
 			v_not_parent_of_current: not is_parent_recursive (v)
 		do
 			implementation.put_right (v)
-			add_item_actions.call ([v, index + 1])
 		ensure
 			parent_is_current: is_parent_of (v)
 			v_at_index_plus_one: v = i_th (index + 1)
@@ -261,9 +235,7 @@ feature -- Element change
 			v_not_current: not same (v)
 			v_not_parent_of_current: not is_parent_recursive (v)
 		do
-			remove_item_actions.call ([i_th (i), i])
 			implementation.put_i_th (v, i)
-			add_item_actions.call ([v, i])
 		ensure
 			parent_is_current: is_parent_of (v)
 			item_replaced: v = i_th (i)
@@ -308,7 +280,6 @@ feature -- Removal
 			-- Remove current item. Move cursor to right neighbor.
 			-- (or `after' if no right neighbor).
 		do
-			remove_item_actions.call ([item, index])
 			implementation.remove
 		ensure then
 			v_removed: not has (old item)
@@ -321,7 +292,6 @@ feature -- Removal
 			-- Remove item to the left of cursor position.
 			-- Do not move cursor.
 		do
-			remove_item_actions.call ([i_th (index - 1), index - 1])
 			implementation.remove_left
 		ensure then
 			left_neighbor_removed: not has (old i_th (index - 1))
@@ -333,7 +303,6 @@ feature -- Removal
 			-- Remove item to the right of cursor position.
 			-- Do not move cursor.
 		do
-			remove_item_actions.call ([i_th (index + 1), index + 1])
 			implementation.remove_right
 		ensure then
 			right_neighbor_removed: not has (old i_th (index + 1))
@@ -415,10 +384,6 @@ feature {EV_ANY_I} -- Implementation
 			-- Responsible for interaction with the underlying native graphics
 			-- toolkit.
 
-invariant
-	add_item_actions_not_void: add_item_actions /= Void
-	remove_item_actions_not_void: remove_item_actions /= Void
-
 end -- class EV_DYNAMIC_LIST
 
 --!-----------------------------------------------------------------------------
@@ -442,6 +407,9 @@ end -- class EV_DYNAMIC_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.5  2000/04/06 00:01:50  brendel
+--| Removed action sequences.
+--|
 --| Revision 1.4  2000/04/05 21:16:13  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

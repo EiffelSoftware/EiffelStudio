@@ -44,9 +44,22 @@ feature -- Access
 			object_comparison_set: Result.object_comparison
 		end
 		
+	fonts: LINEAR [EV_FONT] is
+			-- All fonts available on current platform.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.fonts
+		ensure
+			Result_not_void: Result /= Void
+		end
+		
+		
 	mouse_wheel_scroll_lines: INTEGER is
 			-- Default number of lines to scroll in response to
 			-- a mouse wheel scroll event.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.mouse_wheel_scroll_lines
 		end
@@ -54,6 +67,8 @@ feature -- Access
 	has_printer: BOOLEAN is
 			-- Is a default printer available?
 			-- `Result' is `True' if at least one printer is installed.
+		require
+			not_destroyed: not is_destroyed
 		do
 			Result := implementation.has_printer
 		end

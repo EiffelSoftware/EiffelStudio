@@ -46,6 +46,72 @@ ecom_eiffel_compiler::CEiffelCompletionInfo::~CEiffelCompletionInfo()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::add_local(  /* [in] */ BSTR name, /* [in] */ BSTR type )
+
+/*-----------------------------------------------------------
+	Add a local variable used for solving member completion list
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_name = NULL;
+	if (name != NULL)
+	{
+		tmp_name = eif_protect (rt_ce.ccom_ce_bstr (name));
+	}
+	EIF_OBJECT tmp_type = NULL;
+	if (type != NULL)
+	{
+		tmp_type = eif_protect (rt_ce.ccom_ce_bstr (type));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("add_local", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_name != NULL) ? eif_access (tmp_name) : NULL), ((tmp_type != NULL) ? eif_access (tmp_type) : NULL));
+	if (tmp_name != NULL)
+		eif_wean (tmp_name);
+	if (tmp_type != NULL)
+		eif_wean (tmp_type);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::add_argument(  /* [in] */ BSTR name, /* [in] */ BSTR type )
+
+/*-----------------------------------------------------------
+	Add an argument used for solving member completion list
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_name = NULL;
+	if (name != NULL)
+	{
+		tmp_name = eif_protect (rt_ce.ccom_ce_bstr (name));
+	}
+	EIF_OBJECT tmp_type = NULL;
+	if (type != NULL)
+	{
+		tmp_type = eif_protect (rt_ce.ccom_ce_bstr (type));
+	}
+	
+	EIF_PROCEDURE eiffel_procedure = 0;
+	eiffel_procedure = eif_procedure ("add_argument", type_id);
+
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_name != NULL) ? eif_access (tmp_name) : NULL), ((tmp_type != NULL) ? eif_access (tmp_type) : NULL));
+	if (tmp_name != NULL)
+		eif_wean (tmp_name);
+	if (tmp_type != NULL)
+		eif_wean (tmp_type);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::target_features(  /* [in] */ BSTR target, /* [in] */ BSTR feature_name, /* [in] */ BSTR file_name, /* [out, retval] */ ecom_eiffel_compiler::IEnumCompletionEntry * * return_value )
 
 /*-----------------------------------------------------------
@@ -80,7 +146,58 @@ STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::target_features(  /* [
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_219 (eif_access (tmp_object));
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_230 (eif_access (tmp_object));
+		eif_wean (tmp_object);
+	}
+	else
+		*return_value = NULL;
+	if (tmp_target != NULL)
+		eif_wean (tmp_target);
+	if (tmp_feature_name != NULL)
+		eif_wean (tmp_feature_name);
+	if (tmp_file_name != NULL)
+		eif_wean (tmp_file_name);
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::CEiffelCompletionInfo::target_feature(  /* [in] */ BSTR target, /* [in] */ BSTR feature_name, /* [in] */ BSTR file_name, /* [out, retval] */ ecom_eiffel_compiler::IEiffelFeatureDescriptor * * return_value )
+
+/*-----------------------------------------------------------
+	Feature information
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	EIF_OBJECT tmp_target = NULL;
+	if (target != NULL)
+	{
+		tmp_target = eif_protect (rt_ce.ccom_ce_bstr (target));
+	}
+	EIF_OBJECT tmp_feature_name = NULL;
+	if (feature_name != NULL)
+	{
+		tmp_feature_name = eif_protect (rt_ce.ccom_ce_bstr (feature_name));
+	}
+	EIF_OBJECT tmp_file_name = NULL;
+	if (file_name != NULL)
+	{
+		tmp_file_name = eif_protect (rt_ce.ccom_ce_bstr (file_name));
+	}
+	
+	EIF_REFERENCE_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_reference_function ("target_feature", type_id);
+	EIF_REFERENCE tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_target != NULL) ? eif_access (tmp_target) : NULL), ((tmp_feature_name != NULL) ? eif_access (tmp_feature_name) : NULL), ((tmp_file_name != NULL) ? eif_access (tmp_file_name) : NULL));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "target_feature", EIF_REFERENCE);
+	if (tmp_value != NULL)
+	{
+		EIF_OBJECT tmp_object = eif_protect (tmp_value);
+		*return_value = grt_ec_ISE.ccom_ec_pointed_interface_45 (eif_access (tmp_object));
 		eif_wean (tmp_object);
 	}
 	else

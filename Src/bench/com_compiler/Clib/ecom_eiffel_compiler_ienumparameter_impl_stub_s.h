@@ -1,16 +1,16 @@
 /*-----------------------------------------------------------
-Implemented `IEiffelCompletionInfo' Interface.
+Implemented `IEnumParameter' Interface.
 -----------------------------------------------------------*/
 
-#ifndef __ECOM_EIFFEL_COMPILER_IEIFFELCOMPLETIONINFO_IMPL_STUB_S_H__
-#define __ECOM_EIFFEL_COMPILER_IEIFFELCOMPLETIONINFO_IMPL_STUB_S_H__
+#ifndef __ECOM_EIFFEL_COMPILER_IENUMPARAMETER_IMPL_STUB_S_H__
+#define __ECOM_EIFFEL_COMPILER_IENUMPARAMETER_IMPL_STUB_S_H__
 #ifdef __cplusplus
 extern "C" {
 
 
 namespace ecom_eiffel_compiler
 {
-class IEiffelCompletionInfo_impl_stub;
+class IEnumParameter_impl_stub;
 }
 
 }
@@ -24,7 +24,7 @@ class IEiffelCompletionInfo_impl_stub;
 
 #include "server_registration.h"
 
-#include "ecom_eiffel_compiler_IEiffelCompletionInfo_s.h"
+#include "ecom_eiffel_compiler_IEnumParameter_s.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,34 +34,46 @@ extern "C" {
 extern "C" {
 namespace ecom_eiffel_compiler
 {
-class IEiffelCompletionInfo_impl_stub : public ecom_eiffel_compiler::IEiffelCompletionInfo
+class IEnumParameter_impl_stub : public ecom_eiffel_compiler::IEnumParameter
 {
 public:
-	IEiffelCompletionInfo_impl_stub (EIF_OBJECT eif_obj);
-	virtual ~IEiffelCompletionInfo_impl_stub ();
+	IEnumParameter_impl_stub (EIF_OBJECT eif_obj);
+	virtual ~IEnumParameter_impl_stub ();
 
 	/*-----------------------------------------------------------
-	Add a local variable used for solving member completion list
+	No description available.
 	-----------------------------------------------------------*/
-	STDMETHODIMP add_local(  /* [in] */ BSTR name, /* [in] */ BSTR type );
-
-
-	/*-----------------------------------------------------------
-	Add an argument used for solving member completion list
-	-----------------------------------------------------------*/
-	STDMETHODIMP add_argument(  /* [in] */ BSTR name, /* [in] */ BSTR type );
+	STDMETHODIMP Next(  /* [out] */ ecom_eiffel_compiler::IEiffelParameterDescriptor * * rgelt, /* [out] */ ULONG * pcelt_fetched );
 
 
 	/*-----------------------------------------------------------
-	Features accessible from target.
+	No description available.
 	-----------------------------------------------------------*/
-	STDMETHODIMP target_features(  /* [in] */ BSTR target, /* [in] */ BSTR feature_name, /* [in] */ BSTR file_name, /* [out, retval] */ ecom_eiffel_compiler::IEnumCompletionEntry * * return_value );
+	STDMETHODIMP Skip(  /* [in] */ ULONG celt );
 
 
 	/*-----------------------------------------------------------
-	Feature information
+	No description available.
 	-----------------------------------------------------------*/
-	STDMETHODIMP target_feature(  /* [in] */ BSTR target, /* [in] */ BSTR feature_name, /* [in] */ BSTR file_name, /* [out, retval] */ ecom_eiffel_compiler::IEiffelFeatureDescriptor * * return_value );
+	STDMETHODIMP Reset( void );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	STDMETHODIMP Clone(  /* [out] */ ecom_eiffel_compiler::IEnumParameter * * ppenum );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	STDMETHODIMP ith_item(  /* [in] */ ULONG an_index, /* [out] */ ecom_eiffel_compiler::IEiffelParameterDescriptor * * rgelt );
+
+
+	/*-----------------------------------------------------------
+	No description available.
+	-----------------------------------------------------------*/
+	STDMETHODIMP count(  /* [out, retval] */ ULONG * return_value );
 
 
 	/*-----------------------------------------------------------

@@ -31,6 +31,8 @@ interface IEnumIncludePaths;
 interface IEnumObjectFiles;
 interface IEnumAssembly;
 interface IEnumCompletionEntry;
+interface IEnumParameter;
+interface IEiffelParameterDescriptor;
 interface IEiffelHTMLDocGenerator;
 interface IEiffelHTMLDocEvents;
 
@@ -166,8 +168,17 @@ interface IEiffelCompletionEntry: IUnknown
 ]
 interface IEiffelCompletionInfo: IUnknown
 {
+  [helpstring ("Add a local variable used for solving member completion list")]
+  HRESULT add_local ([in] BSTR name, [in] BSTR type);
+  
+  [helpstring ("Add an argument used for solving member completion list")]
+  HRESULT add_argument ([in] BSTR name, [in] BSTR type);
+
   [helpstring ("Features accessible from target.")]
   HRESULT target_features ([in] BSTR target, [in] BSTR feature_name, [in] BSTR file_name, [out, retval] IEnumCompletionEntry ** return_value);
+  
+  [helpstring ("Feature information")]
+  HRESULT target_feature ([in] BSTR target, [in] BSTR feature_name, [in] BSTR file_name, [out, retval] IEiffelFeatureDescriptor** return_value);
 };
 //---------------------------------------------------------------------
 
@@ -241,7 +252,6 @@ interface IEiffelCompilerEvents: IUnknown
 ]
 interface IEiffelHTMLDocGenerator: IUnknown
 {
-
   [propget, helpstring ("Is the project loaded?")]
   HRESULT is_loaded ([out, retval] VARIANT_BOOL* return_value);
 
@@ -265,12 +275,11 @@ interface IEiffelHTMLDocGenerator: IUnknown
 
   [helpstring ("Generate the HTML documents into path.")]
   HRESULT generate ([in] BSTR path);
-
 };
 //---------------------------------------------------------------------
 
 [
-  oleautomation,
+ oleautomation,
   uuid (62890DD1-7909-4a7d-890D-51DBEFE2BB12),
   helpstring ("Callback interface for HTML Documentation Generator.")
 ]
@@ -370,6 +379,32 @@ interface IEnumFeature : IUnknown
 
     HRESULT count ([out, retval] ULONG *return_value);
 };
+//---------------------------------------------------------------------
+
+[
+    oleautomation,
+    uuid (743740A5-71C1-4141-A875-B337CE6DCAD6),
+    helpstring ("Feature paramaters enumeration.")
+]
+interface IEnumParameter: IUnknown
+{
+    HRESULT Next(
+        [out] IEiffelParameterDescriptor ** rgelt,
+        [out] ULONG *pceltFetched);
+
+    HRESULT Skip(
+        [in] ULONG celt);
+
+    HRESULT Reset();
+
+    HRESULT Clone(
+        [out] IEnumParameter ** ppenum);
+
+    HRESULT ith_item ([in] ULONG an_index, [out] IEiffelParameterDescriptor ** rgelt);
+
+    HRESULT count ([out, retval] ULONG *return_value);
+};
+
 //---------------------------------------------------------------------
 
 [
@@ -706,6 +741,12 @@ interface IEiffelFeatureDescriptor: IEiffelCompletionEntry
   [helpstring ("Feature description.")]
   HRESULT description ([out, retval] BSTR * return_value);
 
+  [helpstring ("Feature parameters.")]
+  HRESULT parameters ([out, retval] IEnumParameter** params);
+  
+  [helpstring ("Feature return type.")]
+  HRESULT return_type ([out, retval] BSTR* return_value);
+  
   [helpstring ("Feature location, full path to file and line number")]
   HRESULT feature_location (  [in, out] BSTR * file_path,
                 [in, out] ULONG * line_number);
@@ -791,6 +832,22 @@ interface IEiffelFeatureDescriptor: IEiffelCompletionEntry
   [helpstring ("Does feature have postcondition?")]
   HRESULT has_postcondition([out, retval] VARIANT_BOOL * return_value);
 };
+//---------------------------------------------------------------------
+
+[
+  oleautomation,
+  uuid (1863FC71-0E34-4ee6-9924-56D4B49069B0),
+  helpstring ("Feature parameter info.")
+]
+interface IEiffelParameterDescriptor: IUnknown
+{
+  [helpstring ("Parameter name")]
+  HRESULT name ([out, retval] BSTR* return_value);
+  
+  [helpstring ("Parameter display")]
+  HRESULT display ([out, retval] BSTR* return_value);  
+};
+
 //---------------------------------------------------------------------
 
 [
@@ -986,7 +1043,7 @@ interface IEiffelSystemClusters: IDispatch
   HRESULT get_cluster_fullname ([in] BSTR cluster_name, [out, retval] BSTR * return_value);
 };
 
-//---------------------------------------------------------------------
+//---------------------------------------------------------------------`
 
 [
   dual, object,
@@ -1249,6 +1306,8 @@ library eiffel_compiler
   interface IEnumObjectFiles;
   interface IEnumAssembly;
   interface IEnumCompletionEntry;
+  interface IEnumParameter;
+  interface IEiffelParameterDescriptor;
   interface IEiffelHTMLDocGenerator;
   interface IEiffelHTMLDocEvents;
 

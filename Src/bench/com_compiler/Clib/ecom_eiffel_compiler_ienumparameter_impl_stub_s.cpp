@@ -1,17 +1,17 @@
 /*-----------------------------------------------------------
-Implemented `IEnumClusterProp' Interface.
+Implemented `IEnumParameter' Interface.
 -----------------------------------------------------------*/
 
-#include "ecom_eiffel_compiler_IEnumClusterProp_impl_stub_s.h"
+#include "ecom_eiffel_compiler_IEnumParameter_impl_stub_s.h"
 static int return_hr_value;
 
-static const IID IID_IEnumClusterProp_ = {0x57c162f4,0x18a3,0x4abd,{0xbd,0xb1,0x3e,0x8b,0x75,0x9c,0x3e,0x4d}};
+static const IID IID_IEnumParameter_ = {0x743740a5,0x71c1,0x4141,{0xa8,0x75,0xb3,0x37,0xce,0x6d,0xca,0xd6}};
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-ecom_eiffel_compiler::IEnumClusterProp_impl_stub::IEnumClusterProp_impl_stub( EIF_OBJECT eif_obj )
+ecom_eiffel_compiler::IEnumParameter_impl_stub::IEnumParameter_impl_stub( EIF_OBJECT eif_obj )
 {
 	ref_count = 0;
 	eiffel_object = eif_adopt (eif_obj);
@@ -20,7 +20,7 @@ ecom_eiffel_compiler::IEnumClusterProp_impl_stub::IEnumClusterProp_impl_stub( EI
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-ecom_eiffel_compiler::IEnumClusterProp_impl_stub::~IEnumClusterProp_impl_stub()
+ecom_eiffel_compiler::IEnumParameter_impl_stub::~IEnumParameter_impl_stub()
 {
 	EIF_PROCEDURE eiffel_procedure;
 	eiffel_procedure = eif_procedure ("set_item", type_id);
@@ -30,7 +30,7 @@ ecom_eiffel_compiler::IEnumClusterProp_impl_stub::~IEnumClusterProp_impl_stub()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Next(  /* [out] */ ecom_eiffel_compiler::IEiffelClusterProperties * * rgelt, /* [out] */ ULONG * pcelt_fetched )
+STDMETHODIMP ecom_eiffel_compiler::IEnumParameter_impl_stub::Next(  /* [out] */ ecom_eiffel_compiler::IEiffelParameterDescriptor * * rgelt, /* [out] */ ULONG * pcelt_fetched )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -41,7 +41,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Next(  /* [out] *
 	EIF_OBJECT tmp_rgelt = NULL;
 	if (rgelt != NULL)
 	{
-		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_161 (rgelt, NULL));
+		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_108 (rgelt, NULL));
 		if (*rgelt != NULL)
 			(*rgelt)->AddRef ();
 	}
@@ -58,7 +58,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Next(  /* [out] *
 	
 	if (*rgelt != NULL)
 		(*rgelt)->Release ();
-	grt_ec_ISE.ccom_ec_pointed_cell_161 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
+	grt_ec_ISE.ccom_ec_pointed_cell_108 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
 	rt_ec.ccom_ec_pointed_unsigned_long (((tmp_pcelt_fetched != NULL) ? eif_wean (tmp_pcelt_fetched) : NULL), pcelt_fetched);
 	
 	END_ECATCH;
@@ -66,7 +66,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Next(  /* [out] *
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Skip(  /* [in] */ ULONG celt )
+STDMETHODIMP ecom_eiffel_compiler::IEnumParameter_impl_stub::Skip(  /* [in] */ ULONG celt )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -86,7 +86,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Skip(  /* [in] */
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Reset( void )
+STDMETHODIMP ecom_eiffel_compiler::IEnumParameter_impl_stub::Reset( void )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -103,7 +103,7 @@ EIF_PROCEDURE eiffel_procedure;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Clone(  /* [out] */ ecom_eiffel_compiler::IEnumClusterProp * * ppenum )
+STDMETHODIMP ecom_eiffel_compiler::IEnumParameter_impl_stub::Clone(  /* [out] */ ecom_eiffel_compiler::IEnumParameter * * ppenum )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -114,7 +114,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Clone(  /* [out] 
 	EIF_OBJECT tmp_ppenum = NULL;
 	if (ppenum != NULL)
 	{
-		tmp_ppenum = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_158 (ppenum, NULL));
+		tmp_ppenum = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_78 (ppenum, NULL));
 		if (*ppenum != NULL)
 			(*ppenum)->AddRef ();
 	}
@@ -126,14 +126,14 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Clone(  /* [out] 
 	
 	if (*ppenum != NULL)
 		(*ppenum)->Release ();
-	grt_ec_ISE.ccom_ec_pointed_cell_158 (((tmp_ppenum != NULL) ? eif_wean (tmp_ppenum) : NULL), ppenum);
+	grt_ec_ISE.ccom_ec_pointed_cell_78 (((tmp_ppenum != NULL) ? eif_wean (tmp_ppenum) : NULL), ppenum);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::ith_item(  /* [in] */ ULONG an_index, /* [out] */ ecom_eiffel_compiler::IEiffelClusterProperties * * rgelt )
+STDMETHODIMP ecom_eiffel_compiler::IEnumParameter_impl_stub::ith_item(  /* [in] */ ULONG an_index, /* [out] */ ecom_eiffel_compiler::IEiffelParameterDescriptor * * rgelt )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -145,7 +145,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::ith_item(  /* [in
 	EIF_OBJECT tmp_rgelt = NULL;
 	if (rgelt != NULL)
 	{
-		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_161 (rgelt, NULL));
+		tmp_rgelt = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_108 (rgelt, NULL));
 		if (*rgelt != NULL)
 			(*rgelt)->AddRef ();
 	}
@@ -157,14 +157,14 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::ith_item(  /* [in
 	
 	if (*rgelt != NULL)
 		(*rgelt)->Release ();
-	grt_ec_ISE.ccom_ec_pointed_cell_161 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
+	grt_ec_ISE.ccom_ec_pointed_cell_108 (((tmp_rgelt != NULL) ? eif_wean (tmp_rgelt) : NULL), rgelt);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::count(  /* [out, retval] */ ULONG * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEnumParameter_impl_stub::count(  /* [out, retval] */ ULONG * return_value )
 
 /*-----------------------------------------------------------
 	No description available.
@@ -187,7 +187,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::count(  /* [out, 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Release()
+STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEnumParameter_impl_stub::Release()
 
 /*-----------------------------------------------------------
 	Decrement reference count
@@ -203,7 +203,7 @@ STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEnumClusterProp_impl_stub::Release()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEnumClusterProp_impl_stub::AddRef()
+STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEnumParameter_impl_stub::AddRef()
 
 /*-----------------------------------------------------------
 	Increment reference count
@@ -214,16 +214,16 @@ STDMETHODIMP_(ULONG) ecom_eiffel_compiler::IEnumClusterProp_impl_stub::AddRef()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEnumClusterProp_impl_stub::QueryInterface( REFIID riid, void ** ppv )
+STDMETHODIMP ecom_eiffel_compiler::IEnumParameter_impl_stub::QueryInterface( REFIID riid, void ** ppv )
 
 /*-----------------------------------------------------------
 	Query Interface
 -----------------------------------------------------------*/
 {
 	if (riid == IID_IUnknown)
-		*ppv = static_cast<ecom_eiffel_compiler::IEnumClusterProp*>(this);
-	else if (riid == IID_IEnumClusterProp_)
-		*ppv = static_cast<ecom_eiffel_compiler::IEnumClusterProp*>(this);
+		*ppv = static_cast<ecom_eiffel_compiler::IEnumParameter*>(this);
+	else if (riid == IID_IEnumParameter_)
+		*ppv = static_cast<ecom_eiffel_compiler::IEnumParameter*>(this);
 	else
 		return (*ppv = 0), E_NOINTERFACE;
 

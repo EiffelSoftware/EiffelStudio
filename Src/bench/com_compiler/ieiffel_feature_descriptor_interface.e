@@ -38,6 +38,20 @@ feature -- Status Report
 			Result := True
 		end
 
+	parameters_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `parameters'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
+	return_type_user_precondition: BOOLEAN is
+			-- User-defined preconditions for `return_type'.
+			-- Redefine in descendants if needed.
+		do
+			Result := True
+		end
+
 	feature_location_user_precondition (file_path: CELL [STRING]; line_number: INTEGER_REF): BOOLEAN is
 			-- User-defined preconditions for `feature_location'.
 			-- Redefine in descendants if needed.
@@ -264,6 +278,22 @@ feature -- Basic Operations
 			-- Feature description.
 		require
 			description_user_precondition: description_user_precondition
+		deferred
+
+		end
+
+	parameters: IENUM_PARAMETER_INTERFACE is
+			-- Feature parameters.
+		require
+			parameters_user_precondition: parameters_user_precondition
+		deferred
+
+		end
+
+	return_type: STRING is
+			-- Feature return type.
+		require
+			return_type_user_precondition: return_type_user_precondition
 		deferred
 
 		end

@@ -237,6 +237,66 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::descripti
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::parameters(  /* [out, retval] */ ecom_eiffel_compiler::IEnumParameter * * params )
+
+/*-----------------------------------------------------------
+	Feature parameters.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_REFERENCE_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_reference_function ("parameters", type_id);
+	EIF_REFERENCE tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "parameters", EIF_REFERENCE);
+	if (tmp_value != NULL)
+	{
+		EIF_OBJECT tmp_object = eif_protect (tmp_value);
+		*params = grt_ec_ISE.ccom_ec_pointed_interface_77 (eif_access (tmp_object));
+		eif_wean (tmp_object);
+	}
+	else
+		*params = NULL;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
+STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::return_type(  /* [out, retval] */ BSTR * return_value )
+
+/*-----------------------------------------------------------
+	Feature return type.
+-----------------------------------------------------------*/
+{
+	ECATCH;
+
+	
+	EIF_REFERENCE_FUNCTION eiffel_function = 0;
+	eiffel_function = eif_reference_function ("return_type", type_id);
+	EIF_REFERENCE tmp_value = 0;
+	if (eiffel_function != NULL)
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
+	else
+		tmp_value = eif_field (eif_access (eiffel_object), "return_type", EIF_REFERENCE);
+	if (tmp_value != NULL)
+	{
+		EIF_OBJECT tmp_object = eif_protect (tmp_value);
+		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
+		eif_wean (tmp_object);
+	}
+	else
+		*return_value = NULL;
+	
+	END_ECATCH;
+	return S_OK;
+};
+/*----------------------------------------------------------------------------------------------------------------------*/
+
 STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::feature_location(  /* [in, out] */ BSTR * file_path, /* [in, out] */ ULONG * line_number )
 
 /*-----------------------------------------------------------
@@ -248,7 +308,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::feature_l
 	EIF_OBJECT tmp_file_path = NULL;
 	if (file_path != NULL)
 	{
-		tmp_file_path = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_76 (file_path, NULL));
+		tmp_file_path = eif_protect (grt_ce_ISE.ccom_ce_pointed_cell_80 (file_path, NULL));
 	}
 	EIF_OBJECT tmp_line_number = NULL;
 	if (line_number != NULL)
@@ -263,7 +323,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelFeatureDescriptor_impl_stub::feature_l
 	
 	if (*file_path != NULL)
 		rt_ce.free_memory_bstr (*file_path);
-	grt_ec_ISE.ccom_ec_pointed_cell_76 (((tmp_file_path != NULL) ? eif_wean (tmp_file_path) : NULL), file_path);
+	grt_ec_ISE.ccom_ec_pointed_cell_80 (((tmp_file_path != NULL) ? eif_wean (tmp_file_path) : NULL), file_path);
 	rt_ec.ccom_ec_pointed_unsigned_long (((tmp_line_number != NULL) ? eif_wean (tmp_line_number) : NULL), line_number);
 	
 	END_ECATCH;

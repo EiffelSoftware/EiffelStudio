@@ -4703,6 +4703,11 @@ rt_private short get_compound_id(EIF_CONTEXT char *Current, short dtype)
 
 	} while (last != -1);
 
+	/* If not generic then return dtype */
+	
+	if (cnt == 1)
+			return dtype;
+
 	return (short) RTCID(Current, (int16) dtype, gen_types);
 
 	EIF_END_GET_CONTEXT

@@ -239,7 +239,9 @@ feature -- Status setting
 			obj: DEBUGGED_OBJECT
 		do
 			attr_item.wipe_out
-			attributes_loaded := False
+			attr_item.expand_actions.wipe_out
+			attr_item.collapse_actions.wipe_out
+			attributes_loaded := True
 			create obj.make (address, spec_lower, spec_higher)
 			list := obj.attributes
 			if not list.is_empty then

@@ -11,6 +11,9 @@
 
 */
 
+/* Define assertions level */
+/*#define EIF_ASSERTIONS */
+
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "eif_memory.h"
@@ -169,16 +172,19 @@ rt_public EIF_REFERENCE retrieve_all(EIF_INTEGER f_desc, long position)
 rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 {
 	EIF_INTEGER i, j, object_id, dtype;
-	EIF_INTEGER nb_bytes, nb_ref, object_size;
+	EIF_INTEGER nb_bytes, nb_ref;
 	EIF_REFERENCE *obj_array, o_ref, o_ptr, *o_field;
 	EIF_INTEGER min_object_id;
 	uint32 crflags, fflags, flags;
 	union overhead *zone;
 	char *tmp_buffer = buffer + sizeof(EIF_INTEGER);
-	EIF_BOOLEAN done = EIF_FALSE;
 
 		/* Allocate array where all retrieved objects will be stored */
 	obj_array = (EIF_REFERENCE *) xmalloc (nb_obj * sizeof(EIF_REFERENCE), C_T, GC_OFF);
+
+		/* Get the lower bound of the `obj_array' array, by reading the ID of
+		 * the first object that we are reading.*/
+	(void) buffer_read (tmp_buffer, &min_object_id, sizeof(EIF_INTEGER));
 
 		/* First pass of retrieving. We create `nb_obj' objects in one
 		 * pass without resolving the references between objects.
@@ -188,14 +194,6 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 			/* Read ID of `i-th' object. */
 		tmp_buffer = buffer_read (tmp_buffer, &object_id, sizeof(EIF_INTEGER));
 
-			/* If it is the first object that we are reading, we store its
-			 * ID, since it is used to compute the lower bound of the `obj_array'
-			 * array. */
-		if (!done) {
-			min_object_id = object_id;
-			done = EIF_TRUE;
-		}
-
 			/* Read flags of `i-th' object. */
 		tmp_buffer = buffer_read (tmp_buffer, &flags, sizeof(uint32));
 
@@ -204,8 +202,7 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 	
 		if (flags & EO_SPEC) {	/* Special reference */
 				/* Read SPECIAL size. */
-			tmp_buffer = buffer_read (tmp_buffer, &object_size, sizeof(EIF_INTEGER));
-			nb_bytes = object_size & B_SIZE;
+			tmp_buffer = buffer_read (tmp_buffer, &nb_bytes, sizeof(EIF_INTEGER));
 
 				/* Create SPECIAL */
 			o_ref = spmalloc (nb_bytes);
@@ -225,6 +222,8 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 		}
 			/* Store `o_ref' at `object_id' pos in `obj_array' */
 		obj_array [object_id - min_object_id] = o_ref;
+			/* Make sure that the retrieved `object_id' is valid. */
+		assert((object_id - min_object_id) < nb_obj);
 	}
 
 		/* Now, all objects have been retrieved, we do need to update
@@ -245,6 +244,9 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 
 				for (j = 0; j < nb_ref; j++) {
 					o_field = (EIF_REFERENCE *) (o_ref + j * sizeof(EIF_REFERENCE));
+						/* Make sure that the reference points on a valid
+						 * object, i.e. which has a valid `object_id'. */
+					assert((((EIF_INTEGER) *o_field) - min_object_id) < nb_obj);
 					if (*o_field != NULL) {
 						*o_field = obj_array [((EIF_INTEGER) (*o_field)) - min_object_id];
 						RTAS_OPT (*o_field, j, o_ref);
@@ -256,6 +258,9 @@ rt_private EIF_REFERENCE retrieve_objects (EIF_INTEGER nb_obj)
 			nb_ref = References(dtype);
 			for (j = 0; j < nb_ref; j ++) {
 				o_field = (EIF_REFERENCE *) (o_ref + j * sizeof(EIF_REFERENCE));
+					/* Make sure that the reference points on a valid
+					 * object, i.e. which has a valid `object_id'. */
+				assert((((EIF_INTEGER) *o_field) - min_object_id) < nb_obj);
 				if (*o_field != NULL) {
 					*o_field = obj_array [((EIF_INTEGER) (*o_field)) - min_object_id];
 					RTAS(*o_field, o_ref);
@@ -346,7 +351,7 @@ rt_private int store_object (EIF_REFERENCE object, int object_count)
 		object_size = (zone->ov_size & B_SIZE);
 
 			/* We have to save the size of the SPECIAL object */
-		saved_buffer = buffer_write(saved_buffer, &(zone->ov_size), sizeof(EIF_INTEGER));
+		saved_buffer = buffer_write(saved_buffer, &object_size, sizeof(EIF_INTEGER));
 		written_byte += sizeof(EIF_INTEGER);
 		current_buffer_pos += (written_byte + object_size);
 
@@ -354,7 +359,7 @@ rt_private int store_object (EIF_REFERENCE object, int object_count)
 			EIF_INTEGER real_count, count;
 			EIF_REFERENCE ref;
 
-			o_ptr = (EIF_REFERENCE) (object + (zone->ov_size & B_SIZE) - LNGPAD_2);
+			o_ptr = (EIF_REFERENCE) (object + object_size - LNGPAD_2);
 			count = *(EIF_INTEGER *) o_ptr;
 
 				/* Compute the difference between `count' and the read count

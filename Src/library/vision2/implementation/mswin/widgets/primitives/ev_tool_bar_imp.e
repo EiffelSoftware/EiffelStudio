@@ -1,6 +1,6 @@
 indexing
 	description: "EiffelVision toolbar, mswindows implementation."
-	status: "See notice at end of class."
+	status: "See notica at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -14,14 +14,24 @@ inherit
 		undefine
 			set_default_options
 		redefine
-			on_first_display
+			parent_imp,
+			on_first_display,
+			move_and_resize,
+			on_left_button_up,
+			on_left_button_down,
+			on_right_button_down,
+			on_right_button_up,
+			on_middle_button_up,
+			on_middle_button_down
 		end
 
 	EV_ITEM_HOLDER_IMP
 
-	WEL_CONTROL_WINDOW
+	WEL_TOOL_BAR
 		rename
 			make as wel_make,
+			button_count as count,
+			insert_button as wel_insert_button,
 			parent as wel_parent,
 			set_parent as wel_set_parent,
 			destroy as wel_destroy,
@@ -30,7 +40,6 @@ inherit
 			set_width,
 			set_height,
 			remove_command,
-			background_brush,
 			on_left_button_down,
 			on_mouse_move,
 			on_left_button_up,
@@ -42,43 +51,67 @@ inherit
 			on_key_down,
 			on_kill_focus,
 			on_set_focus,
-			on_set_cursor,
-			on_accelerator_command
+			on_set_cursor
 		redefine
-			on_size,
+			wel_set_parent,
+			move,
+			resize,
 			move_and_resize,
-			on_wm_erase_background,
-			on_control_id_command
+			hide,
+			show,
+			shown,
+			default_style,
+			default_process_message
+		end
+
+	WEL_COLOR_CONSTANTS
+		export
+			{NONE} all
 		end
 
 creation
 	make,
 	make_with_size
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	make is
-			-- Create the tool-bar with `par' as parent.
- 		do
-			wel_make (default_parent.item, "EV_TOOL_BAR_IMP")
-			create toolbar.make (Current, 0)
+			-- Create the tool-bar.
+		local
+			ctrl: EV_INTERNAL_TOOL_BAR_IMP
+		do
+			create ctrl.make (default_parent.item, "EV_INTERNAL_TOOL_BAR_IMP")
+			wel_make (ctrl, 0)
 			create ev_children.make (1)
 		end
 
 	make_with_size (w, h: INTEGER) is
-			-- Create the tool-bar with `par' as parent.
+			-- Create the tool-bar with a size (w, h).
 		do
 			make
-			toolbar.set_bitmap_size (w, h)
+			set_bitmap_size (w, h)
 		end
 
 feature -- Access
 
-	toolbar: EV_INTERNAL_TOOL_BAR_IMP
-			-- The tool bar of the container.
+	bar: EV_INTERNAL_TOOL_BAR_IMP is
+			-- WEL container of the tool-bar
+		do
+			Result ?= wel_parent
+		end
 
 	ev_children: HASH_TABLE [EV_TOOL_BAR_BUTTON_IMP, INTEGER]
 			-- The buttons of the tool-bar.
+
+	parent_imp: EV_CONTAINER_IMP is
+			-- Parent container of this tool-bar.
+		do
+			if bar.parent = default_parent.item then
+				Result := Void
+			else
+				Result ?= bar.parent
+			end
+		end
 
 	separator_count: INTEGER is
 			-- Number of separators in the toolbar.
@@ -103,10 +136,44 @@ feature -- Access
 
 feature -- Status report
 
-	count: INTEGER is
-			-- Current number of buttons in the tool-bar.
+	button_width: INTEGER is
+			-- Current width of the buttons
 		do
-			Result := toolbar.button_count
+			Result := cwin_lo_word (cwin_send_message_result (item,
+						Tb_getbuttonsize, 0, 0))
+		end
+
+	separator_width: INTEGER is
+			-- Current width of a separator
+		do
+			Result := 8
+		end
+
+	button_height: INTEGER is
+			-- Current width of the buttons
+		do
+			Result := cwin_hi_word (cwin_send_message_result (item,
+						Tb_getbuttonsize, 0, 0))
+		end
+
+	shown: BOOLEAN is
+			-- Is the window shown?
+		do
+			Result := bar.shown
+		end
+
+feature -- Status setting
+
+	show is
+			-- Show the window
+		do
+			bar.show
+		end
+
+	hide is
+			-- Hide the window
+		do
+			bar.hide
 		end
 
 feature -- Element change
@@ -127,11 +194,9 @@ feature -- Element change
 		local
 			bmp: WEL_TOOL_BAR_BITMAP
 			but: WEL_TOOL_BAR_BUTTON
-			tool: EV_INTERNAL_TOOL_BAR_IMP
 			num: INTEGER
 		do
 			-- We create the button
-			tool := toolbar
 			inspect button.type
 			when 1 then -- Usual button
 				create but.make_button (-1, button.id)
@@ -149,18 +214,18 @@ feature -- Element change
 			-- First, we take care of the pixmap,
 			if button.pixmap_imp /= Void then
 				create bmp.make_from_bitmap (button.pixmap_imp.bitmap)
-				tool.add_bitmaps (bmp, 1)
-				but.set_bitmap_index (tool.last_bitmap_index)
+				add_bitmaps (bmp, 1)
+				but.set_bitmap_index (last_bitmap_index)
 			end
 
 			-- Then, the text of the button.
 			if button.text /= Void and then text /= "" then
-				tool.add_strings (<<button.text>>)
-				but.set_string_index (tool.last_string_index)
+				add_strings (<<button.text>>)
+				but.set_string_index (last_string_index)
 			end
 
 			-- Finally, we insert the button
-			tool.insert_button (index - 1, but)
+			wel_insert_button (index - 1, but)
 			ev_children.put (button, button.id)
 
 			-- We reset the minimum size it case it changed.
@@ -179,7 +244,7 @@ feature -- Element change
 	remove_button (button: EV_TOOL_BAR_BUTTON_IMP) is
 			-- Remove button from the toolbar.
 		do
-			toolbar.delete_button (internal_index (button.id))
+			delete_button (internal_index (button.id))
 			ev_children.remove (button.id)
 			if already_displayed then
 				internal_update_minsize
@@ -188,24 +253,21 @@ feature -- Element change
 
 feature -- Basic operation
 
-	internal_index (id: INTEGER): INTEGER is
-			-- Retrieve the current index of `but'.
+	internal_index (command_id: INTEGER): INTEGER is
+			-- Retrieve the current index of the button with
+			-- `command_id' as id.
 		do
-			Result := toolbar.internal_index (id)
+			Result := cwin_send_message_result (item, Tb_commandtoindex, command_id, 0)
 		end
 
 	internal_update_minsize is
 			-- Update the minimum-size of the tool-bar.
 		local
 			num: INTEGER
-			tool: EV_INTERNAL_TOOL_BAR_IMP
 		do
-			tool := toolbar
-
-			set_minimum_height (tool.button_height + 6)
+			set_minimum_height (button_height + 6)
 			num := separator_count
-			num := (tool.button_count - num) * tool.button_width
-					+ num * tool.separator_width
+			num := (count - num) * button_width + num * separator_width
 			set_minimum_width (num)
 		end
 
@@ -222,6 +284,43 @@ feature -- Basic operation
 			index := internal_index (but.id) + 1
 			remove_button (but)
 			insert_button (but, index)
+		end
+
+	find_item_at_position (x_pos, y_pos: INTEGER): EV_TOOL_BAR_BUTTON_IMP is
+			-- Find the item at the given position.
+			-- Position is relative to the toolbar.
+		local
+			index: INTEGER
+			point: WEL_POINT
+			button: WEL_TOOL_BAR_BUTTON
+		do
+			create point.make (x_pos, y_pos)
+--			index := cwin_send_message_result (item, Tb_hittest, 0, point.to_integer)
+			index := cwin_send_message_result (item, 1093, 0, point.to_integer)
+			create button.make
+			if index >= 0 then
+				cwin_send_message (item, Tb_getbutton, index, button.to_integer)
+				Result := ev_children @ button.command_id
+			end
+		end
+
+	internal_propagate_event (event_id, x_pos, y_pos: INTEGER) is
+			-- Propagate the `event_id' to the good child.
+		local
+			index: INTEGER
+			point: WEL_POINT
+			button: WEL_TOOL_BAR_BUTTON
+		do
+			create point.make (x_pos, y_pos)
+--			index := cwin_send_message_result (item, Tb_hittest, 0, point.to_integer)
+			index := cwin_send_message_result (item, 1093, 0, point.to_integer)
+			create button.make
+			if index >= 0 then
+				cwin_send_message (item, Tb_getbutton, index, button.to_integer)
+				if ev_children.has (button.command_id) then
+					(ev_children @ button.command_id).execute_command (event_id, Void)
+				end
+			end
 		end
 
 feature {NONE} -- Inapplicable
@@ -258,45 +357,127 @@ feature {NONE} -- Implementation
 			internal_update_minsize
 		end
 
-	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
-			-- We must not resize the height of the combo-box.
+	move (a_x, a_y: INTEGER) is
+			-- We must move the bar before repositioning the tool-bar.
 		do
-			cwin_move_window (item, a_x, a_y, a_width, toolbar.height, repaint)
+			bar.move (a_x, a_y)
+			reposition
+		end
+
+	resize (a_width, a_height: INTEGER) is
+			-- We must not resize the hight of the tool-bar.
+		do
+			bar.resize (a_width, height)
+			reposition
+		end
+
+	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is
+			-- We must not resize the height of the tool-bar.
+		do
+			bar.move_and_resize (a_x, a_y, a_width, height, repaint)
+			reposition
 		end
 
 feature {NONE} -- WEL Implementation
 
-   	background_brush: WEL_BRUSH is
-   			-- Current window background color used to refresh the window when
-   			-- requested by the WM_ERASEBKGND windows message.
-   			-- By default there is no background  
+	wel_set_parent (a_parent: WEL_WINDOW) is
+			-- Change the parent of the current window.
 		do
- 			if exists and background_color_imp /= void then
- 				!! Result.make_solid (background_color_imp)
- 			end
- 		end
-
-	on_size (size_type, a_width, a_height: INTEGER) is
-			-- Wm_size message
-		do
-			toolbar.reposition
+			bar.set_parent (a_parent)
 		end
 
-	on_wm_erase_background (wparam: INTEGER) is
-			-- Wm_erasebkgnd message.
-			-- Ne need to erase the background because this
-			-- containers has always the same size than the
-			-- tool-bar.
+	default_style: INTEGER is
+			-- A new style to avoid a line on the top.
 		do
+			Result := {WEL_TOOL_BAR} Precursor + Tbstyle_flat
+					--	+ Tbstyle_list
+		end
+
+	default_process_message (msg, wparam, lparam: INTEGER) is
+			-- Process `msg' which has not been processed by
+			-- `process_message'.
+		do
+			if msg = Wm_ncpaint then
+				on_wm_ncpaint (wparam)
+			end
+		end
+
+	on_wm_ncpaint (wparam: INTEGER) is
+			-- Wm_paint message.
+			-- A WEL_DC and WEL_PAINT_STRUCT are created and
+			-- passed to the `on_paint' routine.
+			-- To be more efficient when the windows does not
+			-- need to paint something, this routine can be
+			-- redefined to do nothing (eg. The object creation are
+			-- useless).
+		require
+			exists: exists
+		local
+			dc: WEL_WINDOW_DC
+			color: WEL_COLOR_REF
+			pen: WEL_PEN
+			int: INTEGER
+		do
+			create color.make_system (Color_menu)
+			create pen.make_solid (2, color)
+			create dc.make (Current)
+			dc.get
+				dc.select_pen (pen)
+				int := width
+				int := height
+				dc.line (-1, 1, width, 1)
+			dc.release
 			disable_default_processing
 		end
 
-	on_control_id_command (control_id: INTEGER) is
-			-- A command has been received from `control_id'.
+	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_lbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
 		do
-			(ev_children @ control_id).on_activate
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			internal_propagate_event (Cmd_button_one_press, x_pos, y_pos)
 		end
 
+	on_middle_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_mbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			internal_propagate_event (Cmd_button_two_press, x_pos, y_pos)
+		end
+
+	on_right_button_down (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_rbuttondown message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			internal_propagate_event (Cmd_button_three_press, x_pos, y_pos)
+		end
+
+	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_lbuttonup message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			internal_propagate_event (Cmd_button_one_release, x_pos, y_pos)
+		end
+
+	on_middle_button_up (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_mbuttonup message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			internal_propagate_event (Cmd_button_two_release, x_pos, y_pos)
+		end
+
+	on_right_button_up (keys, x_pos, y_pos: INTEGER) is
+			-- Wm_rbuttonup message
+			-- See class WEL_MK_CONSTANTS for `keys' value
+		do
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			internal_propagate_event (Cmd_button_three_release, x_pos, y_pos)
+		end
+	
 end -- class EV_TOOL_BAR_IMP
 
 --|----------------------------------------------------------------

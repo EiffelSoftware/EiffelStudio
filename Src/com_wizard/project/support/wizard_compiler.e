@@ -21,11 +21,6 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_ROUTINES
-		export
-			{NONE} all
-		end
-
 	WIZARD_RESCUABLE
 		export
 			{NONE} all
@@ -83,7 +78,16 @@ feature -- Access
 	resource_file_generated: BOOLEAN
 			-- Was generated project resource file generated?
 
+	makefile_generated: BOOLEAN
+			-- Were Makefiles generated?
+
 feature -- Basic Operations
+
+	set_makefile_generated (a_boolean: BOOLEAN) is
+			-- Set `makefile_generated'.
+		do
+			makefile_generated := a_boolean
+		end
 
 	set_ace_file_generated (a_boolean: BOOLEAN) is
 			-- Set `ace_file_generated'.
@@ -103,7 +107,6 @@ feature -- Basic Operations
 			-- resulting type library file name.
 		local
 			a_string: STRING
-			intt: INTEGER
 		do
 			a_string := clone (Idl_compiler)
 			a_string.append (Space)
@@ -114,7 +117,7 @@ feature -- Basic Operations
 			a_string.append (".tlb")
 			shared_wizard_environment.set_type_library_file_name (a_string)
 			execution_environment.change_working_directory (Shared_wizard_environment.destination_folder)
-			generate_make_file (Idl_compiler_command_line, Temporary_input_file_name)
+			generate_command_line_file (Idl_compiler_command_line, Temporary_input_file_name)
 			a_string := clone (Idl_compiler)
 			a_string.append (clone (Space))
 			a_string.append (last_make_command)
@@ -150,7 +153,7 @@ feature -- Basic Operations
 			a_string.append (Space)
 			a_string.append (Linker_command_line)
 			message_output.add_message (Current, a_string)
-			generate_make_file (Linker_command_line, Temporary_input_file_name)
+			generate_command_line_file (Linker_command_line, Temporary_input_file_name)
 			a_string := clone (Linker)
 			a_string.append (Space)
 			a_string.append (last_make_command)

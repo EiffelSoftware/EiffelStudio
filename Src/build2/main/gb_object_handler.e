@@ -1132,9 +1132,78 @@ feature {GB_TITLED_WINDOW_OBJECT, GB_XML_OBJECT_BUILDER} -- Implementation
 			-- Add `an_object' to `objects'.
 		require
 			not_already_included: not objects.has (an_object)
-		do
+		do		
 			objects.extend (an_object)
 		end
+		
+feature {GB_COMMAND_DELETE_OBJECT, GB_COMMAND_DELETE_WINDOW_OBJECT} -- Implementation
+
+	update_object_editors_for_delete (deleted_object, parent_object: GB_OBJECT) is
+			-- For every item in `editors', update to reflect removal of `deleted_object' from `parent_object'.
+		local
+			editor: GB_OBJECT_EDITOR
+			window_parent: EV_WINDOW
+			editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
+		do
+			editors := all_editors
+			from
+				editors.start
+			until
+				editors.off
+			loop
+				editor := editors.item
+					-- Update the editor if `Current' or a child of `Current'
+					-- is contained.
+				if object_contained_in_object (deleted_object, editor.object) or
+					deleted_object = editor.object then
+						-- If we are the doced object editor, then just empty it.
+						-- If not, we destroy the editor and the containing window.
+					if editor = docked_object_editor then
+						editor.make_empty
+					else
+						window_parent := parent_window (editor)
+						check
+							floating_editor_is_in_window: window_parent /= Void
+						end
+						editor.destroy
+						window_parent.destroy
+						floating_object_editors.prune (editor)
+					end
+				end
+
+					-- We only update any editors that reference containers.
+					-- Note that we could check to see which attributes of which objects
+					-- really were affected, thus minimizing, rebuilding. Not done
+					-- and probably not necessary.
+				
+				if not editor.is_destroyed and then editor.object /= Void and then
+					type_conforms_to (dynamic_type_from_string (editor.object.type), dynamic_type_from_string (Ev_container_string)) then
+					editor.update_current_object
+				end	
+				editors.forth
+			end
+		end
+		
+	update_for_delete (object_id: INTEGER) is
+				-- Perform any necessary processing on object referenced
+				-- by id `object_id' and all children contained,
+				-- for a deletion event. I.e. unmerge radio connection.
+			local
+				all_objects: ARRAYED_LIST [GB_OBJECT]
+				counter: INTEGER
+			do
+				create all_objects.make (10)
+				deep_object_from_id (object_id).all_children_recursive (all_objects)
+				all_objects.extend (deep_object_from_id (object_id))
+				from
+					counter := 1
+				until
+					counter > all_objects.count
+				loop
+					(all_objects @ counter).delete
+					counter := counter + 1
+				end
+			end
 		
 feature {NONE} -- Implementation
 

@@ -76,22 +76,60 @@ feature -- Update
 			if file_name /= Void then
 				open_project_file (file_name)
 			else
-				create_project (Project_directory_name)
+				create_project
 			end
 		end
 
 feature -- Project Initialization
 
-	create_project (dir: STRING) is
+	create_project is
 			-- Create an Eiffel Project.
+			--| By default in current directory, otherwise in directory
+			--| pointed by `project_path_name'.
 		local
-			p: PROJECT_EIFFEL_FILE
+			d: DIRECTORY
+			d_name: DIRECTORY_NAME
+			answer: STRING
 		do
-			!! project_dir.make (dir, p);
+				-- Initialize the attribute to its default value.
+			project_is_new := False
+
+				-- Check the value of `-project_path' if specified in the
+				-- command line.
 			if project_path_name /= Void then
-				Project_directory_name.wipe_out
-				Project_directory_name.set_directory (project_path_name)
+					-- Check the validity of the path given in argument
+				!! d.make (project_path_name)
+				if d.exists then
+					Project_directory_name.wipe_out
+					Project_directory_name.set_directory (project_path_name)
+				else
+					error_occurred := True
+					io.error.putstring ("Cannot create project in:%N")
+					io.error.putstring (project_path_name)
+					io.error.new_line
+				end
 			end
+
+				-- We create a project without an existing Eiffel Project file.
+			!! project_dir.make (Project_directory_name, Void);
+
+				-- Check the existence of an already existing Eiffel project.
+			!! d_name.make_from_string (project_dir.name)
+			d_name.extend (Eiffelgen)
+			!! d.make (d_name)
+			if d.exists then
+					-- A Project exist
+				io.error.putstring ("In `")
+				io.error.putstring (project_dir.name)
+				io.error.putstring ("' an Eiffel project already exists.%N")
+				io.error.putstring ("Do you wish to overwrite it (Y-yes or N-no)? %N")
+				io.read_line
+				answer := io.last_string
+				answer.to_lower
+				error_occurred := not (answer.is_equal ("y") or answer.is_equal ("yes"))
+				io.error.new_line
+			end
+
 			project_is_new := True
 		end
 

@@ -84,6 +84,20 @@ feature -- Access
 	color_resolution: INTEGER is 108
 			-- Color resolution of the device in bits
 
+	physical_offset_x: INTEGER is 112
+		-- Distance from left edge of the printable area, in
+		-- device units.
+
+	physical_offset_y: INTEGER is 113
+		-- Distance from top edge of the printable area, in
+		-- device units.
+
+	scaling_factor_x: INTEGER is 114
+			-- Scaling factor for the x-axis of the printer.
+	
+	scaling_factor_y: INTEGER is 115
+			-- Scaling factor for the y-axis of the printer.
+
 	raster_caps: INTEGER is 38
 			-- See class WEL_RASTER_CAPABILITIES_CONSTANTS
 

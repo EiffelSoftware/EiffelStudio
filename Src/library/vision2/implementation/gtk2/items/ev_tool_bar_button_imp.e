@@ -28,8 +28,7 @@ inherit
 			pointer_button_press_actions_internal,
 			pointer_motion_actions_internal,
 			event_widget,
-			set_pixmap,
-			enable_sensitive
+			set_pixmap
 		end
 
 	EV_TOOLTIPABLE_IMP
@@ -146,13 +145,6 @@ feature -- Element change
 		do
 			gray_pixmap := Void
 			--| FIXME IEK Needs proper implementation
-		end
-
-	enable_sensitive is
-			-- Enable sensitivity of button
-		do
-			Precursor {EV_ITEM_IMP}
-			feature {EV_GTK_EXTERNALS}.gtk_button_set_relief (visual_widget, feature {EV_GTK_EXTERNALS}.gtk_relief_normal_enum)
 		end
 
 feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation

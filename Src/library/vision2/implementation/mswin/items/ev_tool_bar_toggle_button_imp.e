@@ -23,8 +23,7 @@ inherit
 		redefine
 			type,
 			on_activate,
-			parent_imp,
-			on_parented
+			parent_imp
 		end
 
 creation
@@ -45,49 +44,14 @@ feature -- Status report
 			Result := 2
 		end
 
-	checked: BOOLEAN
-		-- Is `Current' checked?
-
 feature -- Status setting
 
-	disable_select is
-		do
-			checked := False
-			if parent_imp /= Void then
-				parent_imp.uncheck_button (id)
-			end
-		end
-
 	enable_select is
-			-- Select the current button.
+			-- Select `Current'.
 		do
-			checked := True
+			is_selected := True
 			if parent_imp /= Void then
 				parent_imp.check_button (id)
-			end
-		end
-
-feature {EV_TOOL_BAR_IMP} -- Implementation
-
-	on_parented is
-		require else
-			has_parent: parent_imp /= Void
-		do
-			if checked = True then
-				parent_imp.check_button (id)
-			else
-				parent_imp.uncheck_button (id)
-			end
-		end
-
-	on_activate is
-			-- Is called by the menu when the item is activated.
-		do
-			if is_selected then
-				--|FIXME Need to use the new events.
-				--execute_command (Cmd_item_activate, Void)
-			else
-				--execute_command (Cmd_item_deactivate, Void)
 			end
 		end
 
@@ -114,6 +78,12 @@ end -- class EV_TOOL_BAR_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.13  2000/04/05 18:15:36  rogers
+--| Removed checked, now uses is_checked directly. Removed
+--| on_Activate as it is redundent. Disable select and on_parented
+--| are removed as they are now inherited from
+--| EV_TOOL_BAR_SELECT_BUTTON_IMP.
+--|
 --| Revision 1.12  2000/04/05 17:26:43  rogers
 --| renamed set_checked -> enable_select.
 --|

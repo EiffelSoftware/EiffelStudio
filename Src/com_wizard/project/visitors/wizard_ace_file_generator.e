@@ -11,6 +11,8 @@ inherit
 	WIZARD_WRITER_DICTIONARY
 		export
 			{NONE} all
+			{ANY} client
+			{ANY} server
 		end
 
 	WIZARD_SHARED_GENERATION_ENVIRONMENT

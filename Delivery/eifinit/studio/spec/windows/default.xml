@@ -288,10 +288,10 @@
 					<HEAD>Other keywords</HEAD>
 					<TOPIC TOPIC_ID="precursor">
 						<HEAD>precusor</HEAD>
-						<TEXT DESCRIPTION="Autocomplete infix">autocomplete_precursor<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Use default autocomplete">use_default_infix<BOOLEAN>True</BOOLEAN></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_infix_space<STRING> {$cursor$}</STRING></TEXT>
-						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_infix_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
+						<TEXT DESCRIPTION="Autocomplete precursor">autocomplete_precursor<BOOLEAN>True</BOOLEAN></TEXT>
+						<TEXT DESCRIPTION="Use default autocomplete">use_default_precursor<BOOLEAN>True</BOOLEAN></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Return)">custom_precursor_space<STRING> {$cursor$}</STRING></TEXT>
+						<TEXT DESCRIPTION="Customized autocomplete (Space)">custom_precusor_return<STRING>%N$indent$%T$cursor$</STRING></TEXT>
 					</TOPIC>
 					<TOPIC TOPIC_ID="create">
 						<HEAD>create</HEAD>

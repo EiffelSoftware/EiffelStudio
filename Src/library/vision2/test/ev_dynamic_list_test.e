@@ -29,6 +29,7 @@ feature -- Initialization
 			hbox_test, vbox_test, nb_test : EV_LIST_TEST [EV_WIDGET]
 			list_test, tb_test, sb_test, mcl_test: EV_LIST_TEST [EV_ITEM]
 			tree_test, ti_test, menu_test, mb_test: EV_LIST_TEST [EV_ITEM]
+			cb_test: EV_LIST_TEST [EV_ITEM]
 		do
 			create hbox_test.make ("EV_HORIZONTAL_BOX", ~hbox_list_generator, ~item_generator)
 			create vbox_test.make ("EV_VERTICAL_BOX", ~vbox_list_generator, ~item_generator)
@@ -42,6 +43,7 @@ feature -- Initialization
 			create ti_test.make ("EV_TREE_ITEM", ~tree_item_generator, ~tree_item_generator)
 			create menu_test.make ("EV_MENU", ~menu_generator, ~menu_item_generator)
 			create mb_test.make ("EV_MENU_BAR", ~menu_bar_generator, ~menu_generator)
+		--	create cb_test.make ("EV_COMBO_BOX", ~cb_generator, ~list_item_generator)
 
 			hbox_test.execute
 
@@ -59,13 +61,15 @@ feature -- Initialization
 			mcl_test.execute
 			print (mcl_test.description + "%N")
 			tree_test.execute
-			print (mcl_test.description + "%N")
+			print (tree_test.description + "%N")
 			ti_test.execute
-			print (mcl_test.description + "%N")
+			print (ti_test.description + "%N")
 			menu_test.execute
-			print (mcl_test.description + "%N")
+			print (menu_test.description + "%N")
 			mb_test.execute
-			print (mcl_test.description + "%N")
+			print (mb_test.description + "%N")
+		--	cb_test.execute
+		--	print (cb_test.description + "%N")
 			if
 				hbox_test.test_successful and
 				vbox_test.test_successful and
@@ -77,7 +81,8 @@ feature -- Initialization
 				tree_test.test_successful and
 				ti_test.test_successful and
 				menu_test.test_successful and
-				mb_test.test_successful
+				mb_test.test_successful --and
+		--		cb_test.test_successful
 			then
 				destroy
 			else
@@ -173,6 +178,11 @@ feature -- Initialization
 		end
 
 	menu_item_generator: EV_MENU_ITEM is
+		do
+			create Result
+		end
+
+	cb_generator: EV_COMBO_BOX is
 		do
 			create Result
 		end

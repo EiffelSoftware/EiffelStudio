@@ -17,33 +17,19 @@ feature -- Access
 			feature_name_exists: feature_name.count > 0
 		do
 			if compilation_type then
-				Result := c_eiffel_table.has (feature_name)
+				Result := c_type_table.has (feature_name)
 				if Result then
-					c_operation := c_eiffel_table.found_item
-					function_type := function_type_table.item (feature_name)
-				else
-					c_operation := Void
+					function_type := c_type_table.found_item
 				end
 			else
-				Result := byte_eiffel_table.has (feature_name)
+				Result := byte_type_table.has (feature_name)
 				if Result then
-					bc_code := byte_eiffel_table.found_item
-					function_type := function_type_table.item (feature_name)
-				else
-					bc_code := '%U'
+					function_type := byte_type_table.found_item
 				end
 			end
 		end
 
 feature -- Access code
-
-	bc_code: CHARACTER
-			-- Byte code constant associated to current special
-			-- feature from find.
-
-	c_operation: STRING
-			-- C code constant associated to current special
-			-- feature from find.
 
 	function_type: INTEGER
 			-- Is current call based on an operator instead of a function
@@ -54,8 +40,31 @@ feature -- Byte code special generation
 	make_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_I) is
 		do
 			inspect function_type
-			when equal_type, max_type, min_type ,generator_type then
-				ba.append (bc_code)
+			when equal_type then
+				ba.append (Bc_eq)
+			when max_type then
+				ba.append (Bc_max)
+			when min_type then
+				ba.append (Bc_min)
+			when generator_type then
+				ba.append (Bc_generator)
+			when default_type then
+				inspect type_of (basic_type)
+				when boolean_type then
+					ba.append (Bc_bool)
+					ba.append ('%U')
+				when character_type then
+					ba.append (Bc_char)
+					ba.append ('%U')
+				when integer_type then
+					ba.append (Bc_int)
+					ba.append_integer (0)
+				when pointer_type then
+					ba.append (Bc_null_pointer)
+				when real_type, double_type then
+					ba.append (Bc_double)
+					ba.append_real (0.0)
+				end
 			end
 		end
 
@@ -70,7 +79,7 @@ feature -- C special code generation
 			when equal_type then
 				target.print_register
 				buffer.putchar (' ')
-				buffer.putstring (c_operation)
+				buffer.putstring ("==")
 				buffer.putchar (' ')
 				parameter.print_register
 			when to_integer_type then
@@ -197,37 +206,33 @@ feature -- C special code generation
 				when double_type then
 					buffer.putstring (" RTMS_EX(%"DOUBLE%", 6)")
 				end
+			when default_type then
+				inspect type_of (basic_type)
+				when boolean_type then
+					buffer.putstring ("(EIF_BOOLEAN) 0")
+				when character_type then
+					buffer.putstring ("(EIF_CHARACTER) 0")
+				when integer_type then
+					buffer.putstring ("(EIF_INTEGER) 0")
+				when pointer_type then
+					buffer.putstring ("(EIF_POINTER) 0")
+				when real_type then
+					buffer.putstring ("(EIF_REAL) 0")
+				when double_type then
+					buffer.putstring ("(EIF_DOUBLE) 0")
+				end
 			end
 		end
 
 feature {NONE} -- C and Byte code corresponding Eiffel function calls
 
-	c_eiffel_table: HASH_TABLE [STRING, STRING] is
+	c_type_table: HASH_TABLE [INTEGER, STRING] is
 		once
-			create Result.make (10)
-			Result.put ("==", "is_equal")
-			Result.put ("==", "standard_is_equal")
-			Result.put ("==", "deep_equal")
-			Result.put ("==", "standard_deep_equal")
---			Result.put ("=", "set_item")
-			Result.put (Void, "out")
-			Result.put (Void, "hash_code")
-			Result.put (Void, "max")
-			Result.put (Void, "min")
-			Result.put (Void, "abs")
-			Result.put (Void, "generator")
-			Result.put (Void, "generating_type")
-			Result.put (Void, "_infix_plus")
-		end
-
-	function_type_table: HASH_TABLE [INTEGER, STRING] is
-		once
-			create Result.make (10)
+			create Result.make (15)
 			Result.put (equal_type, "is_equal")
 			Result.put (equal_type, "standard_is_equal")
 			Result.put (equal_type, "deep_equal")
 			Result.put (equal_type, "standard_deep_equal")
---			Result.put (set_item_type, "set_item")
 			Result.put (out_type, "out")
 			Result.put (hash_code_type, "hash_code")
 			Result.put (max_type, "max")
@@ -237,20 +242,23 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (generator_type, "generating_type")
 			Result.put (to_integer_type, "truncated_to_integer")
 			Result.put (offset_type, "_infix_plus")
+			Result.put (default_type, "default")
+--			Result.put (set_item_type, "set_item")
 		end
 
-	byte_eiffel_table: HASH_TABLE [CHARACTER, STRING] is
+	byte_type_table: HASH_TABLE [INTEGER, STRING] is
 		once
 			create Result.make (10)
-			Result.put (Bc_eq, "is_equal")
-			Result.put (Bc_eq, "standard_is_equal")
-			Result.put (Bc_eq, "deep_equal")
-			Result.put (Bc_eq, "standard_deep_equal")
-			Result.put (Bc_max, "max")
-			Result.put (Bc_min, "min")
-			Result.put (Bc_generator, "generator")
-			Result.put (Bc_generator, "generating_type")
---			Result.put (Bc_set_item, "set_item")
+			Result.put (equal_type, "is_equal")
+			Result.put (equal_type, "standard_is_equal")
+			Result.put (equal_type, "deep_equal")
+			Result.put (equal_type, "standard_deep_equal")
+			Result.put (max_type, "max")
+			Result.put (min_type, "min")
+			Result.put (generator_type, "generator")
+			Result.put (generator_type, "generating_type")
+			Result.put (default_type, "default")
+--			Result.put (set_item_type, "set_item")
 		end
 
 
@@ -266,6 +274,7 @@ feature {NONE} -- Fast access to feature name
 	generator_type: INTEGER is 8
 	to_integer_type: INTEGER is 9
 	offset_type: INTEGER is 10
+	default_type: INTEGER is 11
 
 feature {NONE} -- Type information
 

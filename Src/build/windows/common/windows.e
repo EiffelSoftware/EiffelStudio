@@ -87,6 +87,11 @@ feature {NONE} -- Windows
 			!! Result
 		end
 
+	namer_window: NAMER_WINDOW is
+		once
+			!! Result.make (Eb_screen)
+		end;
+
 	error_window: ERROR_BOX is
 			-- For the Error Handler (which
 			-- is also used for bench)

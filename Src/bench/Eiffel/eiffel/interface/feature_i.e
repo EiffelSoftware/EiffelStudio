@@ -38,6 +38,7 @@ inherit
 		end;
 	SHARED_ARRAY_BYTE;
 	SHARED_EXEC_TABLE;
+	SHARED_OPTIMIZATION_TABLES;
 	HASHABLE;
 	PART_COMPARABLE;
 	
@@ -247,6 +248,21 @@ feature -- Incrementality
 						has_precondition = other.has_precondition
 						and then
 						has_postcondition = other.has_postcondition;
+debug ("ACTIVITY")
+	if not result then
+			io.error.putbool (written_in = other.written_in); io.error.new_line;
+			io.error.putbool (is_selected = other.is_selected); io.error.new_line;
+			io.error.putbool (rout_id_set.same_as (other.rout_id_set)); io.error.new_line;
+			io.error.putbool (is_origin = other.is_origin); io.error.new_line;
+			io.error.putbool (is_frozen = other.is_frozen); io.error.new_line;
+			io.error.putbool (is_deferred = other.is_deferred); io.error.new_line;
+			io.error.putbool (is_external = other.is_external); io.error.new_line;
+			io.error.putbool (export_status.same_as (other.export_status)); io.error.new_line;
+			io.error.putbool (same_signature (other)); io.error.new_line;
+			io.error.putbool (has_precondition = other.has_precondition); io.error.new_line;
+			io.error.putbool (has_postcondition = other.has_postcondition); io.error.new_line;
+	end;
+end;
 			if Result then
 				if assert_id_set /= Void then
 					Result := assert_id_set.same_as (other.assert_id_set);
@@ -648,20 +664,25 @@ feature -- Check
 --		do
 --		end;
 
+	body: FEATURE_AS is
+			-- Body of the feature
+		do
+			if is_code_replicated then
+				Result := Rep_feat_server.item (body_id);
+			else
+				Result := Body_server.item (body_id);
+			end;
+		end;
+
 	type_check is
 			-- Third pass on current feature
 		require
 			in_pass3
-		local
-			body: FEATURE_AS;
-				-- Body of the feature
-			bd: INTEGER
 		do
 -- See the note near the declaration of `check_assertions'
 --			check_assertions;
 			record_suppliers (context.supplier_ids);
 				-- Take the body in the body server
-			bd := body_id;
 debug ("SERVER", "TYPE_CHECK");
 	io.error.putstring ("feature name: ");
 	io.error.putstring (feature_name);
@@ -670,11 +691,6 @@ debug ("SERVER", "TYPE_CHECK");
 	io.error.putint (body_id);
 	io.error.new_line;
 end;
-			if is_code_replicated then
-				body := Rep_feat_server.item (bd);
-			else
-				body := Body_server.item (bd);
-			end;
 				-- make the type check
 			body.type_check;
 		end;
@@ -698,21 +714,11 @@ feature -- Byte code computation
 		require
 			in_pass3: in_pass3;
 		local
-			body: FEATURE_AS;
-				-- Body of the feature
-			i: INTEGER;
 			byte_code: BYTE_CODE
 		do
-			i := body_id;
-				-- Take the body in the body server
-			if not is_code_replicated then
-				body := Body_server.item (i);
-			else
-				body := Rep_feat_server.item (i);
-			end;
 				-- Process byte code
 			byte_code := body.byte_node;
-			byte_code.set_byte_id (i);
+			byte_code.set_byte_id (body_id);
 				-- Put it in the temporary byte code server
 			if not byte_context.old_expressions.empty then
 				byte_code.set_old_expressions (byte_context.old_expressions);
@@ -1766,21 +1772,14 @@ feature -- PS
 
 	stone (c: CLASS_C): FEATURE_STONE is
 		local
-			body: FEATURE_AS;
-			bd: INTEGER
+			bd: INTEGER;
+			body_as: FEATURE_AS
 		do
 			if body_index /= 0 then
-				bd := body_id;
-				if Tmp_body_server.has (bd) then
-					body := Tmp_body_server.item (bd)
-				elseif Body_server.has (bd) then	
-					body := Body_server.item (bd)
-				elseif Rep_feat_server.has (bd) then
-					body := Rep_feat_server.item (bd)
-				end;
+				body_as := body;
 			end;
-			if body /= Void then
-				!!Result.make (Current, c, body.start_position, body.end_position);
+			if body_as /= Void then
+				!!Result.make (Current, c, body_as.start_position, body_as.end_position);
 			else
 				-- FIXME
 				!!Result.make (Void, c, 0, 0);

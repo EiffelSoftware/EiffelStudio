@@ -101,7 +101,11 @@ feature -- Basic Operations
 			other.set_tree (tree)
 			link_right (other)
 			create ti.make (other)
+			other.set_key (ti)
 			key.add_right (ti)
+		ensure
+			other_has_key: other.key /= Void
+			other_has_tree: other.tree /= void
 		end
 
 	add_left (other: like Current) is
@@ -112,7 +116,11 @@ feature -- Basic Operations
 			other.set_tree (tree)
 			link_left (other)
 			create ti.make (other)
+			other.set_key (ti)
 			key.add_left (ti)
+		ensure
+			other_has_key: other.key /= Void
+			other_has_tree: other.tree /= void
 		end
 
 	link_right (other: like Current) is

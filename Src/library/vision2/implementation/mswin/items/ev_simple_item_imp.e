@@ -17,17 +17,20 @@ inherit
 
 	EV_ITEM_I
 
+	EV_EVENT_HANDLER_IMP
+		export
+			{EV_LIST_IMP} execute_command
+		end
+
+	EV_ITEM_EVENTS_CONSTANTS_IMP
+
 feature {NONE} -- Access for implementation
 
 	id: INTEGER
 		-- Id of the item in the menu_item_container
 
-	command: EV_COMMAND
-		-- Command that must be called when the menu is selected
-		-- by the user.
-
-	arguments: EV_ARGUMENTS
-		-- Argument that goes with the command
+	parent_imp: EV_ITEM_CONTAINER_IMP
+		-- The current container of the item
 
 feature -- Status report
 
@@ -42,6 +45,11 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	set_text (str: STRING) is
+			-- Set `text' to `str'
+		deferred
+		end
 
 	set_center_alignment is
 			-- Set text alignment of current label to center.
@@ -67,7 +75,16 @@ feature -- Status setting
                         end
 		end
 
-feature {NONE} -- Status setting for implementation
+feature -- Event : command association
+
+	add_activate_command (a_command: EV_COMMAND; arguments: EV_ARGUMENTS) is
+			-- Add 'command' to the list of commands to be
+			-- executed when the menu item is activated
+		do
+			add_command (Cmd_item_activate, a_command, arguments)			
+		end	
+
+feature {NONE} -- Implementation
 
 	set_id (new_id: INTEGER) is
 			-- Set `id' to `new_id'
@@ -75,23 +92,20 @@ feature {NONE} -- Status setting for implementation
 			id := new_id
 		end
 
-feature -- Element change
-
-	set_text (str: STRING) is
-			-- Set `text' to `str'
-		deferred
+	set_parent (new_parent: EV_ITEM_CONTAINER_IMP) is
+			-- Make `par' the new container of th item.
+		do
+			parent_imp := new_parent
 		end
 
-feature -- Event : command association
+feature {NONE} -- Implementation for events handling
 
-	add_activate_command (a_command: EV_COMMAND; 
-			       an_arguments: EV_ARGUMENTS) is
-			-- Add 'command' to the list of commands to be
-			-- executed when the menu item is activated
+	initialize_list is
+			-- Create the `command_list' and the `arguments_list'.
 		do
-			command := a_command
-			arguments := an_arguments
-	end	
+				!! command_list.make (1, 2)
+				!! argument_list.make (1, 2)
+		end
 
 end -- class EV_ITEM_IMP
 

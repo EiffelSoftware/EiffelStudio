@@ -11,6 +11,14 @@ inherit
 	WIZARD_COMPONENT_C_GENERATOR
 
 	ECOM_FUNC_KIND
+		export
+			{NONE} all
+		end
+
+	ECOM_VAR_FLAGS
+		export 
+			{NONE} all
+		end
 
 feature -- Access
 
@@ -36,7 +44,10 @@ feature -- Basic operations
 
 					property_generator.generate (a_component_descriptor.name, a_desc.properties.item)
 					cpp_class_writer.add_function (property_generator.c_access_feature, Public)
-					cpp_class_writer.add_function (property_generator.c_setting_feature, Public)
+
+					if not is_varflag_freadonly (a_desc.properties.item.var_flags) then
+						cpp_class_writer.add_function (property_generator.c_setting_feature, Public)
+					end
 
 					a_desc.properties.forth
 				end

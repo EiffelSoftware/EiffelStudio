@@ -222,8 +222,6 @@ feature {NONE} -- Implementation
 				if is_int (visitor.vt_type) or is_integer2 (visitor.vt_type) or is_integer4 (visitor.vt_type) or is_unsigned_int (visitor.vt_type)
 						or is_unsigned_long (visitor.vt_type) or is_unsigned_short (visitor.vt_type) then
 					Result := cecil_function_code (Eif_integer_function, Eif_integer_function_name, function_name)
-				elseif is_boolean (visitor.vt_type) then
-					Result := cecil_function_code (Eif_boolean_function, Eif_boolean_function_name, function_name)
 				elseif is_character (visitor.vt_type) or is_unsigned_char (visitor.vt_type) then
 					Result := cecil_function_code (Eif_character_function, Eif_character_function_name, function_name)	
 				elseif is_real4 (visitor.vt_type) then
@@ -242,38 +240,54 @@ feature {NONE} -- Implementation
 				Result.append (Space)
 				Result.append (Tmp_variable_name)
 				Result.append (Space_equal_space)
-				Result.append (Open_parenthesis)
 
+				Result.append ("(FUNCTION_CAST (")
 				if visitor.is_basic_type then
 					Result.append (visitor.cecil_type)
 				else
-					Result.append (visitor.c_type)
+					Result.append (Eif_reference)
 				end
-
+				Result.append (Comma_space)
+				Result.append (open_parenthesis)
+				Result.append (Eif_reference)
+				Result.append (Close_parenthesis)
 				Result.append (Close_parenthesis)
 
-				if is_boolean (visitor.vt_type) then
-					Result.append (Ce_mapper)
-					Result.append (Dot)
-					Result.append (visitor.ec_function_name)
-					Result.append (Space_open_parenthesis)
-					Result.append (Eiffel_function_variable_name)
-					Result.append (Space_open_parenthesis)
-					Result.append (Eif_access)
-					Result.append (Space_open_parenthesis)
-					Result.append (Eiffel_object)
-					Result.append (Close_parenthesis)
-					Result.append (Close_parenthesis)
-					Result.append (Close_parenthesis)
-				else
-					Result.append (Eiffel_function_variable_name)
-					Result.append (Space_open_parenthesis)
-					Result.append (Eif_access)
-					Result.append (Space_open_parenthesis)
-					Result.append (Eiffel_object)
-					Result.append (Close_parenthesis)
-					Result.append (Close_parenthesis)
-				end
+				Result.append (Eiffel_function_variable_name)
+				Result.append (Close_parenthesis)
+				Result.append (Space_open_parenthesis)
+				Result.append (Eif_access)
+				Result.append (Space_open_parenthesis)
+				Result.append (Eiffel_object)
+				Result.append (Close_parenthesis)
+				Result.append (Close_parenthesis)
+			elseif is_boolean (visitor.vt_type) and not visitor.is_pointed then
+				Result := cecil_function_code (Eif_boolean_function, Eif_boolean_function_name, function_name)
+				Result.append (New_line_tab)
+				Result.append (Eif_boolean)
+				Result.append (Space)
+				Result.append (Tmp_variable_name)
+				Result.append (Space_equal_space)
+				Result.append (Open_parenthesis)
+				Result.append (Eif_boolean)
+				Result.append (Close_parenthesis)
+				Result.append (Ce_mapper)
+				Result.append (Dot)
+				Result.append (visitor.ec_function_name)
+				Result.append (Space_open_parenthesis)
+
+				Result.append ("(FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE))")
+
+				Result.append (Eiffel_function_variable_name)
+				Result.append (Close_parenthesis)
+				Result.append (Space_open_parenthesis)
+				Result.append (Eif_access)
+				Result.append (Space_open_parenthesis)
+				Result.append (Eiffel_object)
+				Result.append (Close_parenthesis)
+				Result.append (Close_parenthesis)
+				Result.append (Close_parenthesis)
+
 			else
 				Result := cecil_function_code (Eif_reference_function, Eif_reference_function_name, function_name) 
 				Result.append (New_line_tab)
@@ -281,7 +295,12 @@ feature {NONE} -- Implementation
 				Result.append (Space)
 				Result.append (Tmp_variable_name)
 				Result.append (Space_equal_space)
+
+				Result.append ("(FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))")
+
 				Result.append (Eiffel_function_variable_name)
+				Result.append (Close_parenthesis)
+
 				Result.append (Space_open_parenthesis)
 				Result.append (Eif_access)
 				Result.append (Space_open_parenthesis)
@@ -311,6 +330,7 @@ feature {NONE} -- Implementation
 			-- eiffel_function = eif_type_function ("call_func_name", tid)
 			Result.append (Eiffel_function_variable_name)
 			Result.append (Space_equal_space)
+
 			Result.append (function_name)
 			Result.append (Space_open_parenthesis)
 			Result.append (Double_quote)
@@ -351,7 +371,19 @@ feature {NONE} -- Implementation
 			Result.append (New_line_tab)
 
 			-- eif_procedure (eif_access (eiffel_object),
+			Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE, ")
+			if visitor.is_basic_type then
+				Result.append (visitor.cecil_type)
+			elseif is_boolean (visitor.vt_type) and not visitor.is_pointed then
+				Result.append (Eif_boolean)
+			else
+				Result.append (Eif_reference)
+			end
+
+			Result.append (Close_parenthesis)
+			Result.append (Close_parenthesis)
 			Result.append (Eiffel_procedure_variable_name)
+			Result.append (Close_parenthesis)
 			Result.append (Space_open_parenthesis)
 			Result.append (Eif_access)
 			Result.append (Space_open_parenthesis)

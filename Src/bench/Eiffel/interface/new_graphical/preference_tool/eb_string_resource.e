@@ -32,12 +32,12 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			actual_value := rt.get_string (a_name, def_value)
-			default_value := def_value
+			default_string_value := def_value
 		end
 
 feature -- Access
 
-	default_value, actual_value: STRING
+	actual_value: STRING
 			-- Value as a `STRING' as represented by Current
 
 	value: STRING is
@@ -50,7 +50,7 @@ feature -- Status report
 	is_default: BOOLEAN is
 			-- Is the resource equal to its default value?
 		do
-			Result := equal (default_value, actual_value)
+			Result := equal (default_string_value, value)
 		end
 
 	is_valid (a_value: STRING): BOOLEAN is

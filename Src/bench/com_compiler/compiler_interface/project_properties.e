@@ -51,6 +51,7 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize structure.
 		do
+			create_item
 			create ace.make
 		end
 	
@@ -181,6 +182,7 @@ feature -- Access
 			enum: ECOM_X__EIF_COMPILATON_TYPES_ENUM
 		do
 			if is_valid then
+				create enum
 				if ace.il_generation_type = ace.Il_generation_exe then
 					Result := enum.is_application
 				elseif ace.il_generation_type = ace.Il_generation_dll then
@@ -195,6 +197,7 @@ feature -- Access
 
 	assemblies: ECOM_ARRAY [STRING] is
 			-- Imported assemblies.
+			-- Void if none.
 		local
 			res: ARRAY [STRING]
 			ace_res: LINKED_LIST [STRING]
@@ -215,7 +218,9 @@ feature -- Access
 						ace_res.forth
 					end
 				end
-				create Result.make_from_array (res, 1, <<1>>, <<res.count>>)
+				if res /= Void then
+					create Result.make_from_array (res, 1, <<1>>, <<res.count>>)
+				end
 			end
 		end
 
@@ -269,7 +274,7 @@ feature -- Element change
 			-- Should preconditions be evaluated?
 		do
 			if is_valid then
-				ace.set_assertions (True, evaluate_ensure, evaluate_check, evaluate_loop, evaluate_invariant)
+				ace.set_assertions (return_value, evaluate_ensure, evaluate_check, evaluate_loop, evaluate_invariant)
 			end
 		end
 
@@ -277,7 +282,7 @@ feature -- Element change
 			-- Should postconditions be evaluated?
 		do
 			if is_valid then
-				ace.set_assertions (evaluate_require, True, evaluate_check, evaluate_loop, evaluate_invariant)
+				ace.set_assertions (evaluate_require, return_value, evaluate_check, evaluate_loop, evaluate_invariant)
 			end
 		end
 
@@ -285,7 +290,7 @@ feature -- Element change
 			-- Should check assertions be evaluated?
 		do
 			if is_valid then
-				ace.set_assertions (evaluate_require, evaluate_ensure, True, evaluate_loop, evaluate_invariant)
+				ace.set_assertions (evaluate_require, evaluate_ensure, return_value, evaluate_loop, evaluate_invariant)
 			end
 		end
 
@@ -293,7 +298,7 @@ feature -- Element change
 			-- Should loop assertions be evaluated?
 		do
 			if ace.is_valid then
-				ace.set_assertions (evaluate_require, evaluate_ensure, evaluate_check, True, evaluate_invariant)
+				ace.set_assertions (evaluate_require, evaluate_ensure, evaluate_check, return_value, evaluate_invariant)
 			end
 		end
 
@@ -301,7 +306,7 @@ feature -- Element change
 			-- Should class invariants be evaluated?
 		do
 			if is_valid then
-				ace.set_assertions (evaluate_require, evaluate_ensure, evaluate_check, evaluate_loop, True)
+				ace.set_assertions (evaluate_require, evaluate_ensure, evaluate_check, evaluate_loop, return_value)
 			end
 		end
 
@@ -331,6 +336,7 @@ feature -- Element change
 			enum: ECOM_X__EIF_COMPILATON_TYPES_ENUM
 		do
 			if is_valid then
+				create enum
 				if return_value = enum.is_application then
 					ace.set_il_generation (ace.Il_generation_exe)
 				elseif return_value = enum.is_library then

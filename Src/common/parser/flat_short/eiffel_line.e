@@ -91,7 +91,7 @@ feature -- Access
 feature {NONE} -- Implementation
 
 	comment_line: CELL2 [STRING, INTEGER] is
-		do
+		once
 			!! Result.make (Void, 0)
 		end;
 				

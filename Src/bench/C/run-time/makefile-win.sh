@@ -24,7 +24,7 @@ OBJECTS = lmalloc.obj math.obj malloc.obj garcol.obj local.obj except.obj store.
 	boolstr.obj search.obj main.obj dle.obj option.obj \
 	console.obj run_idr.obj  $(TOP)\ipc\shared\networku.obj \
 	path_name.obj object_id.obj $(TOP)\console\econsole.lib \
-	compress.obj eif_threads.obj $extra_object_files
+	compress.obj eif_threads.obj eif_cond_var.obj $extra_object_files
 
 WOBJECTS = $(NETWORK) wlmalloc.obj wmath.obj wmalloc.obj wgarcol.obj wlocal.obj wexcept.obj \
 	wstore.obj wretrieve.obj whash.obj wtravers.obj whashin.obj wtools.obj \
@@ -35,7 +35,7 @@ WOBJECTS = $(NETWORK) wlmalloc.obj wmath.obj wmalloc.obj wgarcol.obj wlocal.obj 
 	debug.obj interp.obj woption.obj update.obj wbench.obj  \
 	wconsole.obj wrun_idr.obj wdle.obj $(TOP)\idrs\idr.lib wpath_name.obj \
 	wobject_id.obj $(TOP)\console\econsole.lib \
-	compress.obj weif_threads.obj $extra_object_files
+	compress.obj weif_threads.obj weif_cond_var.obj $extra_object_files
 
 EOBJECTS = wlmalloc.obj wmath.obj wmalloc.obj wgarcol.obj wlocal.obj bexcept.obj wstore.obj \
 	wretrieve.obj whash.obj wtravers.obj whashin.obj wtools.obj winterna.obj \
@@ -46,7 +46,7 @@ EOBJECTS = wlmalloc.obj wmath.obj wmalloc.obj wgarcol.obj wlocal.obj bexcept.obj
 	woption.obj update.obj wbench.obj wconsole.obj wrun_idr.obj \
 	$(TOP)\ipc\shared\networku.obj wdle.obj \
 	wpath_name.obj wobject_id.obj $(TOP)\console\econsole.lib \
-	compress.obj weif_threads.obj
+	compress.obj weif_threads.obj weif_cond_var.obj
 
 all:: eif_size.h
 
@@ -114,6 +114,10 @@ wgarcol.c : garcol.c
 weif_threads.c : eif_threads.c
 	$(RM) weif_threads.c
 	$(LN) eif_threads.c weif_threads.c
+
+weif_cond_var.c : eif_cond_var.c
+	$(RM) weif_cond_var.c
+	$(LN) eif_cond_var.c weif_cond_var.c
 
 wlocal.c : local.c
 	$(RM) wlocal.c
@@ -277,6 +281,9 @@ wgarcol.obj : wgarcol.c
 	$(CC)  $(JCFLAGS) -DWORKBENCH $*.c
 
 weif_threads.obj : weif_threads.c
+	$(CC)  $(JCFLAGS) -DWORKBENCH $*.c
+
+weif_cond_var.obj : weif_cond_var.c
 	$(CC)  $(JCFLAGS) -DWORKBENCH $*.c
 
 wlocal.obj : wlocal.c
@@ -953,4 +960,6 @@ object_id.obj : eif_garcol.h
 object_id.obj : eif_except.h
 object_id.obj : eif_hector.h
 eif_threads.obj : eif_threads.h
+eif_cond_var.obj : eif_cond_var.h
 weif_threads.obj : eif_threads.h
+weif_cond_var.obj : eif_cond_var.h

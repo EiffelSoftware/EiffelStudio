@@ -19,14 +19,6 @@
 extern "C" {
 #endif
 
-/* Flags for traversal */
-#define TR_PLAIN		0x00		/* No accounting during object traversal */
-#define TR_ACCOUNT		0x01		/* Accounting of objects in obj_nb */
-#define TR_MAP			0x02		/* Build a maping table in obj_table */
-#define TR_ACCOUNT_ATTR	0x04		/* Accounting of types of attributes */
-#define INDEPEND_ACCOUNT 0x11
-#define RECOVER_ACCOUNT	0x15
-
 extern EIF_INTEGER_32 obj_nb;					/* Count of marked objects */
 extern void traversal(char *object, int p_accounting); /* Traversal of objects */
 

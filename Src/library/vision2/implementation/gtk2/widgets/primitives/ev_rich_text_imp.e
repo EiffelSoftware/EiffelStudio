@@ -544,7 +544,11 @@ feature -- Status setting
 			-- apply `format' to current caret position, applicable
 			-- to next typed characters.
 		do
+			current_format := format
 		end
+
+	current_format: EV_CHARACTER_FORMAT
+		-- Format to be applied to next typed characters
 		
 	format_region (start_position, end_position: INTEGER; format: EV_CHARACTER_FORMAT) is
 			-- Apply `format' to all characters between the caret positions `start_position' and `end_position'.
@@ -664,15 +668,30 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 
 	on_key_event (a_key: EV_KEY; a_key_string: STRING; a_key_press: BOOLEAN) is
 			-- Used for key event actions sequences.
+		local
+			insert_buffer: POINTER
+			a_iter: EV_GTK_TEXT_ITER_STRUCT
 		do
 			Precursor {EV_TEXT_IMP} (a_key, a_key_string, a_key_press)
+			if current_format /= Void and a_key_press and then a_key /= Void then
+				if (a_key.code = feature {EV_KEY_CONSTANTS}.key_delete or a_key.is_arrow or a_key.code = feature {EV_KEY_CONSTANTS}.key_back_space) then
+					current_format := Void
+				else
+					App_implementation.do_once_on_idle (agent format_region (caret_position, caret_position + 1, current_format))
+				end
+			end
 		end
+
+	format_insertion_mark: POINTER
 
 	on_text_mark_changed (a_text_iter, a_text_mark: POINTER) is
 			-- Called when a text mark within `text_buffer' has been set.
 		local
 			a_caret_position: INTEGER
 			a_selection_start, a_selection_end: INTEGER
+			a_iter, a_end_iter: EV_GTK_TEXT_ITER_STRUCT
+			a_cs: EV_GTK_C_STRING
+			insert_buffer: POINTER
 		do
 			if not (a_text_mark = feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_buffer_get_insert (text_buffer)) then
 				a_selection_start := selection_start_internal
@@ -684,11 +703,15 @@ feature {EV_GTK_DEPENDENT_INTERMEDIARY_ROUTINES} -- Implementation
 				previous_selection_end := a_selection_end
 			else
 				a_caret_position := caret_position
-				if a_caret_position /= previous_caret_position and then caret_move_actions_internal /= Void then
-					caret_move_actions_internal.call ([a_caret_position])
+				if a_caret_position /= previous_caret_position then
+					if caret_move_actions_internal /= Void then
+						caret_move_actions_internal.call ([a_caret_position])
+					end
+						-- Wipeout current format
+					current_format := Void
 				end
-				previous_caret_position := a_caret_position
 			end
+			previous_caret_position := a_caret_position
 		end
 
 feature {NONE} -- Implementation

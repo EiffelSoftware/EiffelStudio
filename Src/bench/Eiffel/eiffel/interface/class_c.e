@@ -11,7 +11,6 @@ inherit
 		end;
 	IDABLE;
 	SHARED_WORKBENCH;
-	SHARED_CONTEXT;
 	SHARED_SERVER;
 	SHARED_AST_CONTEXT
 		rename
@@ -1430,17 +1429,19 @@ feature -- Supplier checking
 			-- of a system
 		local
 			a_class: CLASS_C;
+			recompile: BOOLEAN;
 		do
 			from
 				syntactical_suppliers.start
 			until
-				syntactical_suppliers.offright
+				syntactical_suppliers.offright or else recompile
 			loop
 				a_class := syntactical_suppliers.item.supplier;
 				Universe.compute_last_class (a_class.class_name, cluster);
 				if Universe.last_class /= a_class.lace_class then
 						-- one of the suppliers has changed (different CLASS_I)
 						-- recompile the client (Current class)
+					recompile := True;
 					Workbench.change_class (lace_class);
 				end;
 				syntactical_suppliers.forth

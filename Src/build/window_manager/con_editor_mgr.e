@@ -1,15 +1,18 @@
+indexing
+	description: "Context editors manager."
+	id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class CON_EDITOR_MGR 
+class CON_EDITOR_MGR
 
 inherit
-
 	EDITOR_MGR
 		redefine
 			editor_type, clear_editor
 		end
 
 creation
-
 	make
 
 feature {NONE}
@@ -21,4 +24,5 @@ feature {NONE}
 			ed.clear
 		end
 
-end 
+end -- class CON_EDITOR_MGR
+

@@ -1,73 +1,68 @@
+indexing
+	description: "Namer window: namer tool."
+	date: "$Date$"
+	id: "$Id$"
+	revision: "$Revision$"
+
 class NAMER_WIN_EDIT_HOLE 
 
 inherit
 
 	EB_BUTTON
-		rename
-			symbol as button_symbol
-		end;
-	HOLE
 		redefine
-			process_any
-		select
-			init_toolkit
-		end;
-	DRAG_SOURCE
+			make
+		end
+
+	WINDOWS
 
 creation
 
 	make
 
-feature {NONE} 
+feature {NONE} -- Initialization
 
-	create_focus_label is
+	make (par: EV_TOOL_BAR) is
+		local
+			cmd: EV_ROUTINE_COMMAND
 		do
-			set_focus_string (Focus_labels.namer_label)
-		end;
-	
-	button_symbol: PIXMAP is
+			{EB_BUTTON} Precursor (par)
+			create cmd.make (~process_name)
+			add_default_pnd_command (cmd, Void)
+		end
+
+--	create_focus_label is
+--		do
+--			set_focus_string (Focus_labels.namer_label)
+--		end
+
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.namer_pixmap
-		end;
+		end
 
-	make (a_parent: COMPOSITE) is
-			-- Make Current
-		do
-			make_visible (a_parent);
-			initialize_transport;
-			register;	
-		end;
+feature {NAMER_WIN_EDIT_HOLE} -- Target
 
-	target: WIDGET is
-		do
-			Result := Current
-		end;
-
-	stone_type: INTEGER is
-		do
-			Result := Stone_types.any_type
-		end;
-
-	process_any (dropped: STONE) is
+	process_name(arg: EV_ARGUMENT; ev_data: EV_PND_EVENT_DATA) is
 		local
 			namable: NAMABLE
 		do
-			namable ?= dropped.data;
+			namable ?= ev_data.data
 			if namable /= Void then
 				namer_window.set_namable (namable)
 			end
-		end;
+		end
 
-feature {NONE} -- Stone
+--feature {NONE} -- Stone
 
-	stone: STONE is
-		do
-			Result ?= namer_window.namable
-		end;
+--	stone: STONE is
+--		do
+--			Result ?= namer_window.namable
+--		end
 
-	source: WIDGET is
-		do
-			Result := Current
-		end;
+--	source: WIDGET is
+--		do
+--			Result := Current
+--		end
 
-end 
+end -- class NAMER_WIN_EDIT_HOLE
+

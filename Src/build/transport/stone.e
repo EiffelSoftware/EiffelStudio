@@ -36,7 +36,7 @@ feature {HOLE}
 
 feature 
 
-	data: DATA is
+	data: HELPABLE is
 			-- Canonical representative of 
 			-- current stone.
 			-- For copy and multiple references 

@@ -19,7 +19,7 @@ feature
 			Result := True
 		end
 
-	data: DATA;
+	data: HELPABLE;
 			-- Data to be transported.
 
 	set_data (d: like data) is

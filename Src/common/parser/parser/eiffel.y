@@ -14,13 +14,11 @@ inherit
 
 	SHARED_NAMES_HEAP
 
-creation
-
-	make, make_il_parser
-
+create
+	make, make_il_parser, make_type_parser
 %}
 
-%start		Class_declaration
+%start		Eiffel_parser
 
 %nonassoc	TE_DOTDOT
 %left		TE_IMPLIES
@@ -165,13 +163,30 @@ creation
 
 %type <TOKEN_LOCATION>		Position
 
-%expect 196
+%expect 198
 
 %%
 
 
 -- Root rule
 
+
+
+Eiffel_parser:
+		Class_declaration
+			{
+				if type_parser then
+					raise_error
+				end
+			}
+	|	Type
+			{
+				if not type_parser then
+					raise_error
+				end
+				type_node := $1
+			}
+	;
 
 Class_declaration:
 		Indexing							-- $1

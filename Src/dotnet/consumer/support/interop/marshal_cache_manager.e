@@ -138,7 +138,7 @@ feature -- Basic Exportations
 			implementation.compact_and_clean_cache
 		end
 
-feature {NONE} -- Implementation
+feature {COM_CACHE_MANAGER2} -- Implementation
 			
 	implementation: CACHE_MANAGER
 			-- Access to `CACHE_MANAGER'.

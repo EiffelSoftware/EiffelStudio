@@ -6,7 +6,7 @@ inherit
 		redefine
 			dump, is_bit, same_as,
 			description, sk_value, generate_cecil_value, hash_code,
-			is_pointer, generate_initial_value,
+			is_pointer, 
 			metamorphose
 		end;
 
@@ -140,14 +140,6 @@ feature
 		do
 			file.putstring ("SK_BIT + ");
 			file.putint (size);
-		end;
-
-	generate_initial_value (file: UNIX_FILE) is
-			-- Generate initial value for registers in `file'.
-		do
-			file.putstring ("RTLB(");
-			file.putint (size);
-			file.putchar (')');
 		end;
 
 end

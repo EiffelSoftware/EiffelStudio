@@ -45,6 +45,7 @@ feature
 
 	is_feature_special: BOOLEAN is
 			-- Search for feature_name in special_routines.
+			-- This is used for simple types only.
 			-- If found return True (and keep reference position).
 			-- Otherwize, return false;
 		do

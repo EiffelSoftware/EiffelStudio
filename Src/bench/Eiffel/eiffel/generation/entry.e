@@ -49,8 +49,8 @@ feature
 				class_type = Void
 				or else
 				class_type.is_basic
-				or else
-				class_type.is_expanded
+				--or else
+				--class_type.is_expanded
 			) then
 				Result := class_type.type_id;
 			end;

@@ -1,4 +1,4 @@
--- Error when the result type of a feature is not a good expanded type
+-- Error when the result type of a an expanded feature is deferred
 
 class VTEC1 
 
@@ -16,6 +16,14 @@ feature
 			-- Assign `i' to `body_id'.
 		do
 			body_id := i;
+		end;
+
+	entity_name: STRING;
+			-- Entity name for source of error
+
+	set_entity_name (s: STRING) is
+		do
+			entity_name := s
 		end;
 
 end

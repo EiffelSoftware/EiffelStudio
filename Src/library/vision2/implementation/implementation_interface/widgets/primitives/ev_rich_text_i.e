@@ -346,7 +346,6 @@ feature -- Status setting
 			paragraphs_exhausted: BOOLEAN
 		do
 			create buffer.set_rich_text (Current)
-			initialize_for_saving
 			l_text := text
 			l_text_length := l_text.count
 			
@@ -354,6 +353,8 @@ feature -- Status setting
 			buffer.generate_paragraph_information (l_text)
 			paragraph_indexes := buffer.paragraph_start_indexes
 			paragraph_formats := buffer.paragraph_formats
+			
+			initialize_for_saving
 
 			current_lower_line_index := 1
 			last_paragraph_change := 1
@@ -368,13 +369,12 @@ feature -- Status setting
 				counter := 1
 				last_counter := 1
 			until
-				counter > l_text_length
+				counter >= l_text_length
 			loop
+				current_format := internal_character_format (counter + 1)
 					-- Retrieve next character change index.
-				counter := next_change_of_character (counter)
-				
-					-- Retrieve last character format found while executing `next_change_of_character'.
-				current_format := last_format
+				counter := next_change_of_character (counter, l_text_length)
+
 				current_paragraph_index := paragraph_indexes.i_th (current_lower_line_index)
 				if counter > current_paragraph_index and not paragraphs_exhausted then
 					if current_paragraph_index /= last_counter then
@@ -413,6 +413,9 @@ feature -- Status setting
 					buffer.append_text_for_rtf (l_text.substring (last_counter, (counter - 1).min (l_text.count)), current_format)
 					last_counter := counter
 				end
+				if file_access_actions_internal /= Void then
+					file_access_actions_internal.call ([counter])
+				end
 			end
 			buffer.generate_complete_rtf_from_buffering
 			complete_saving
@@ -421,8 +424,11 @@ feature -- Status setting
 			text_file.close
 		end
 		
-	next_change_of_character (current_pos: INTEGER): INTEGER is
-			-- `Result' is caret position at next change of character.
+	next_change_of_character (current_pos: INTEGER; a_text_length: INTEGER): INTEGER is
+			-- `Result' is caret position at next change of character from `current_pos',
+			-- checking maximum position `a_text_length'. By passing `a_text_length' as
+			-- an argument, it prevents querying from the rich text constantly as it can be
+			-- precomputed instead.
 		local
 			counter: INTEGER
 			last_false_pos, current_step: INTEGER
@@ -435,16 +441,19 @@ feature -- Status setting
 				value_finder := default_step
 				last_false_pos := 0				
 			until
-				(last_contiguous_position - last_false_pos).abs = 1
+				(last_contiguous_position - last_false_pos).abs = 1 or counter = a_text_length
 			loop
 				if internal_character_format_contiguous (counter, counter + current_step) then
 						-- This is performed here so that on Windows we do not have to
 						-- change the selection while querying the format. The previous call has
 						-- set the selection already.
-					last_format := internal_character_format (counter)
 					last_contiguous_position := current_step
 					if value_finder = default_step then
-						current_step := current_step + default_step
+						counter := (counter + default_step - 1).min (a_text_length)
+						if counter > a_text_length - 50 then
+							do_nothing
+						end
+						current_step := default_step
 					else
 						value_finder := value_finder // 2
 						current_step := current_step + value_finder
@@ -455,7 +464,9 @@ feature -- Status setting
 					current_step := current_step - value_finder
 				end
 			end
-			Result := current_pos + last_contiguous_position
+			Result := (counter + last_contiguous_position).min (a_text_length)
+		ensure
+			Result_valid: Result <= a_text_length
 		end
 		
 	last_format: EV_CHARACTER_FORMAT

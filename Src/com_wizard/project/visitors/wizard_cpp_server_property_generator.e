@@ -402,9 +402,9 @@ feature {NONE} -- Implementation
 
 			-- eif_procedure (eif_access (eiffel_object),
 			Result.append ("(FUNCTION_CAST (void, (EIF_REFERENCE, ")
-			if visitor.is_basic_type then
+			if visitor.is_basic_type or visitor.is_enumeration then
 				Result.append (visitor.cecil_type)
-			elseif is_boolean (visitor.vt_type) and not visitor.is_pointed then
+			elseif visitor.vt_type = Vt_bool then
 				Result.append (Eif_boolean)
 			else
 				Result.append (Eif_reference)
@@ -420,7 +420,7 @@ feature {NONE} -- Implementation
 			Result.append (Eiffel_object)
 			Result.append (Close_parenthesis)
 			Result.append (Comma_space)
-			if visitor.is_basic_type or (visitor.vt_type = Vt_bool) then
+			if visitor.is_basic_type or (visitor.vt_type = Vt_bool) or visitor.is_enumeration then
 				Result.append (Tmp_variable_name)
 			else
 				Result.append (Eif_access)
@@ -432,7 +432,7 @@ feature {NONE} -- Implementation
 			Result.append (Semicolon)
 
 			-- eif_wean ('tmp_object')
-			if not (visitor.is_basic_type or (visitor.vt_type = Vt_bool)) then
+			if not (visitor.is_basic_type or (visitor.vt_type = Vt_bool) or visitor.is_enumeration) then
 				Result.append (New_line_tab)
 				Result.append (Eif_wean)
 				Result.append (Space_open_parenthesis)

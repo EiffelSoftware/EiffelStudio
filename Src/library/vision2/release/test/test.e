@@ -41,6 +41,7 @@ feature
 			menu_bar: EV_MENU_BAR
 			object_menu: EV_MENU
 			button: EV_BUTTON
+			event_test_frame: EV_FRAME
 		do
 			create scroll
 			create notebook
@@ -60,15 +61,18 @@ feature
 			scroll.extend  (notebook)
 
 			create label.make_with_text ("Drop here!")
+			create button.make_with_text ("Destroy widget")
+			create event_test_frame.make_with_text ("Event test, triggering an event will remove it from list")
 			box.extend (label)
 			box.set_minimum_width (800)
 			box.set_minimum_height (600)
 			box.disable_child_expand (label)
-			label.drop_actions.extend (~update_widget_label (label, ?))
-			create button.make_with_text ("Destroy widget")
+			label.drop_actions.extend (~update_widget_label (label, event_test_frame, ?))
 			button.press_actions.extend (~destroy_current_widget)
 			box.extend (button)
 			box.disable_child_expand (button)
+			--box.extend (event_test_frame)
+			--box.disable_child_expand (event_test_frame)
 			
 			notebook.fill (widgets)
 			
@@ -120,13 +124,14 @@ feature
 					notebook.forth
 				end
 			end
---|			menu_bar.extend (decendants (first_window))
+			menu_bar.extend (decendants (first_window))
 
 			from
 				non_widgets.start
 			until
 				non_widgets.after
 			loop
+				print ("H")
 				object_menu.extend (
 					create {EV_MENU_ITEM}.make_with_text (
 						non_widgets.item.generating_type
@@ -299,7 +304,7 @@ feature
 			t: EV_TEXTABLE
 			s: STRING
 		do
-			create Result
+			create Result.make_with_text ("Widget packing heirachy")
 			l := a_container.linear_representation
 			from l.start until l.after loop
 				c ?= l.item
@@ -319,15 +324,18 @@ feature
 						Result.extend (create {EV_MENU_ITEM}.make_with_text (s))
 					end
 				end
+				l.forth
 			end
 		end
 
-	update_widget_label (a_label: EV_LABEL; a_widget: EV_WIDGET) is
+	update_widget_label (a_label: EV_LABEL; a_cell: EV_CELL; a_widget: EV_WIDGET) is
 			-- Update `a_lable' with information about `a_widget'.
 		local
 			t: EV_TEXTABLE
 			s: STRING
 		do
+--			a_cell.wipe_out
+--			a_cell.extend (a_widget.action_sequence_test_widget)
 			current_widget := a_widget
 			s := "type   = " + a_widget.generating_type + "%N"
 			s.append ("width  = " + a_widget.width.out + "%N")
@@ -372,6 +380,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.4  2000/02/15 19:27:56  oconnor
+--| more tests
+--|
 --| Revision 1.3  2000/02/14 12:11:41  oconnor
 --| moved test2 to test
 --|

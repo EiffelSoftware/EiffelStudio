@@ -81,8 +81,7 @@
 			<size>3</size>Compiler issues
 		</heading>
 		<list ordered="false">
-			<item>Fixed issue where declaring a <class_name>NATIVE_ARRAY</class_name> of a .NET expanded type would be rejected by the compiler.</item>
-			<item>Fixed issue where assigning a .NET expanded type to an entity of type <class_name>ANY</class_name> would be rejected by the compiler.</item>
+			<item>Fixed crash of the compiler at the very end of a finalization of a system which has an assignment of a manifest type into a variable of type <class_name>ARRAY</class_name> [<keyword>like</keyword> <feature_name>anchor</feature_name>] where<feature_name>anchor</feature_name> is a feature being redefined with a different type in a descendant class.</item>
 		</list>
 		<heading>
 			<size>3</size>Runtime/code generation issues
@@ -100,6 +99,9 @@
 		<list ordered="false">
 			<item>Corrected processing of literal floating point fields from external assemblies (such as <cluster_name>System</cluster_name><code><symbol>.</symbol></code><class_name>Math</class_name><code><symbol>.</symbol></code><feature_name>PI</feature_name>) to obtain proper values.</item>
 			<item>Fixed a bug where the value -1 was actuall 255 on .NET.</item>
+			<item>Fixed issue where declaring a <class_name>NATIVE_ARRAY</class_name> of a .NET expanded type would be rejected by the compiler.</item>
+			<item>Fixed issue where assigning a .NET expanded type to an entity of type <class_name>ANY</class_name> would be rejected by the compiler.</item>
+			<item>Fixed a crash in the compiler when generating the code for a class which inherits from a .NET class and from an Eiffel class which has some anchored types.</item>
 		</list>
 		<heading>
 			<size>3</size>Store/Retrieve issues

@@ -5535,9 +5535,7 @@ feature {NONE} -- Mapping between Eiffel compiler and generated tokens
 						end
 
 						if l_key_string /= Void then
-							if l_key_string /= Void then
-								create l_key_token.make_from_string (l_key_string)
-							end
+							create l_key_token.make_from_string (l_key_string)
 						end
 
 							-- NOTE: cannot use `uni_string' buffer as current feature can

@@ -24,6 +24,12 @@ inherit
 
 	EV_C_UTIL
 
+	GTK_ENUMS
+
+	EV_GTK_KEY_CONVERSION
+
+	INTERNAL
+
 feature {EV_ANY_I, EV_PND_TRANSPORTER_IMP} -- Access
 
 	c_object: POINTER
@@ -77,14 +83,19 @@ feature {EV_ANY, EV_ANY_IMP} -- Command
 
 feature {EV_ANY_I} -- Event handling
 
-	signal_connect (a_signal_name: STRING; an_agent: PROCEDURE [ANY, TUPLE]) is
+	signal_connect (
+		a_signal_name: STRING;
+		an_agent: PROCEDURE [ANY, TUPLE];
+		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE]
+		) is
 			-- Connect `an_agent' to `a_signal_name'.
+			-- Use `translate' to convert GTK+ event data to TUPLE.
 		require
 			a_signal_name_not_void: a_signal_name /= Void
 			a_signal_name_not_empty: not a_signal_name.empty
 			an_agent_not_void: an_agent /= Void
 		do
-			real_signal_connect (c_object, a_signal_name, an_agent)
+			real_signal_connect (c_object, a_signal_name, an_agent, translate)
 		ensure
 			signal_connection_id_positive: last_signal_connection_id > 0
 		end
@@ -92,19 +103,66 @@ feature {EV_ANY_I} -- Event handling
 	real_signal_connect (
 		a_c_object: like c_object;
 		a_signal_name: STRING;
-		an_agent: PROCEDURE [ANY, TUPLE]
-	) is
+		an_agent: PROCEDURE [ANY, TUPLE];
+		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE]
+		) is
 			-- Connect `an_agent' to `a_signal_name' of `a_c_object'.
+			-- Use `translate' to convert GTK+ event data to TUPLE.
 		require
 			a_c_object_not_void: a_c_object /= Void
 			a_signal_name_not_void: a_signal_name /= Void
 			a_signal_name_not_empty: not a_signal_name.empty
 			an_agent_not_void: an_agent /= Void
 		do
-			last_signal_connection_id := 
-			c_signal_connect (a_c_object, eiffel_to_c(a_signal_name), an_agent)
+			if translate /= Void then
+				last_signal_connection_id := c_signal_connect (
+					a_c_object,
+					eiffel_to_c(a_signal_name),
+					~translate_and_call (an_agent, translate, ?, ?)
+				)
+			else
+				last_signal_connection_id := c_signal_connect (
+					a_c_object,
+					eiffel_to_c(a_signal_name),
+					an_agent
+				)
+			end
 		ensure
 			signal_connection_id_positive: last_signal_connection_id > 0
+		end
+
+	translate_and_call (
+		an_agent: PROCEDURE [ANY, TUPLE];
+		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE];
+		n_args: INTEGER;
+		args: POINTER
+	) is
+			-- Call `an_agent' using `translate' to convert `args' and `n_args'
+			-- from raw GTK+ event data to a TUPLE.
+		require
+			an_agent_not_void: an_agent /= Void
+			translate_not_void: translate /= Void
+		local
+			t: TUPLE []
+			f_of_tuple_type_id: INTEGER
+			--FIXME make this an attribut or somthign to make it faster
+		do
+			f_of_tuple_type_id := 
+				dynamic_type (create {PROCEDURE [ANY, TUPLE [TUPLE]]})
+			t := translate.item ([n_args, args])
+			--FIXME
+			if t /= Void then
+				if
+					type_conforms_to (
+						dynamic_type (an_agent),
+						f_of_tuple_type_id
+					)
+				then
+					an_agent.call ([t])
+				else	
+					an_agent.call (t)
+				end
+			end
 		end
 
 	last_signal_connection_id: INTEGER
@@ -118,9 +176,13 @@ feature {EV_ANY_I} -- Event handling
 			C.gtk_signal_disconnect (c_object, a_connection_id)
 		end
 
-	connect_signal_to_actions (a_signal_name: STRING;
-		an_action_sequence: ACTION_SEQUENCE [TUPLE]) is
+	connect_signal_to_actions (
+		a_signal_name: STRING;
+		an_action_sequence: ACTION_SEQUENCE [TUPLE];
+		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE]
+		) is
 			-- Connect `a_signal_name' to `an_action_sequence'.
+			-- Use `translate' to convert GTK+ event data to TUPLE.
 		require
 			a_signal_name_not_void: a_signal_name /= Void
 			a_signal_name_not_empty: not a_signal_name.empty
@@ -129,13 +191,19 @@ feature {EV_ANY_I} -- Event handling
 			real_connect_signal_to_actions (
 				c_object,
 				a_signal_name,
-				an_action_sequence
+				an_action_sequence,
+				translate
 			)
 		end
 
-	real_connect_signal_to_actions (a_c_object: POINTER; a_signal_name: STRING;
-		an_action_sequence: ACTION_SEQUENCE [TUPLE]) is
+	real_connect_signal_to_actions (
+		a_c_object: POINTER;
+		a_signal_name: STRING;
+		an_action_sequence: ACTION_SEQUENCE [TUPLE];
+		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE]
+		) is
 			-- Connect `a_signal_name' for `a_c_object' to `an_action_sequence'.
+			-- Use `translate' to convert GTK+ event data to TUPLE.
 			-- Connection delayed until `an_actions_sequence' is not empty.
 		require
 			a_c_object_not_void: a_c_object /= Void
@@ -147,28 +215,36 @@ feature {EV_ANY_I} -- Event handling
 				~connect_signal_to_actions_now (
 					a_c_object,
 					a_signal_name,
-					an_action_sequence
+					an_action_sequence,
+					translate
 				)
 			)
 			if not an_action_sequence.empty then
 				connect_signal_to_actions_now (
 					a_c_object,
 					a_signal_name,
-					an_action_sequence
+					an_action_sequence,
+					translate
 				)
 			end
 		end
 
-	connect_signal_to_actions_now (a_c_object: POINTER; a_signal_name: STRING;
-		an_action_sequence: ACTION_SEQUENCE [TUPLE]) is
+	connect_signal_to_actions_now (
+		a_c_object: POINTER;
+		a_signal_name: STRING;
+		an_action_sequence: ACTION_SEQUENCE [TUPLE];
+		translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE]
+		) is
 			-- Connect `a_signal_name' for `a_c_object' to `an_action_sequence'.
+			-- Use `translate' to convert GTK+ event data to TUPLE.
 		local
 			disconnect_agent: PROCEDURE [ANY, TUPLE []]
 		do
 			real_signal_connect (
 				a_c_object,
 				a_signal_name,
-				an_action_sequence~call (?)
+				an_action_sequence~call (?),
+				translate
 			)
 			disconnect_agent := ~signal_disconnect (last_signal_connection_id)
 			an_action_sequence.empty_actions.extend (disconnect_agent)
@@ -201,6 +277,211 @@ feature {EV_ANY_I} -- Event handling
 		do
 			an_action_sequence.prune_all (target)
 			an_action_sequence.prune_all (kamikaze_cell.item)
+		end
+
+
+	gtk_value_pointer (arg: POINTER): POINTER is
+			-- Pointer to the value of a GtkArg.
+			--| FIXME find a better home for this feature. - sam
+		external
+			"C | %"ev_gtk_callback_marshal.h%""
+		end
+
+	gtk_value_int (arg: POINTER): INTEGER is
+			-- Integer value from a GtkArg.
+			--| FIXME find a better home for this feature. - sam
+		external
+			"C | %"ev_gtk_callback_marshal.h%""
+		end
+
+	default_translate: FUNCTION [ANY, TUPLE [INTEGER, POINTER], TUPLE] is
+		
+		once
+			Result := ~gdk_event_to_tuple
+		end
+
+	gdk_event_to_tuple (n_args: INTEGER; args: POINTER): TUPLE is
+			-- A TUPLE containing `args' data from a GdkEvent.
+			-- `n_args' is ignored.
+		require
+			--FIXME n_args_is_one: n_args = 1
+		local
+			gdk_event: POINTER
+			p: POINTER
+			keyval: INTEGER
+			key: EV_KEY
+		do
+			if n_args /= 1 then
+				print ("********** /= 1 nargs *********%N");
+			else
+			gdk_event := gtk_value_pointer (args)
+			print (C.gdk_event_any_struct_type (gdk_event).out + "%N");
+			if C.gdk_event_any_struct_type (gdk_event) < 100000 then
+			inspect
+				C.gdk_event_any_struct_type (gdk_event)
+			when
+				Gdk_nothing_enum,
+				Gdk_delete_enum,
+				Gdk_destroy_enum,
+				Gdk_focus_change_enum,
+				Gdk_map_enum,
+				Gdk_unmap_enum
+			then
+					-- gdk_event type GdkEventAny
+				Result := []
+
+			when
+				Gdk_expose_enum
+			then
+					-- gdk_event type GdkEventExpose
+				p := C.gdk_event_expose_struct_area (gdk_event)
+				Result := [
+					C.gdk_rectangle_struct_x (p),
+					C.gdk_rectangle_struct_y (p),
+					C.gdk_rectangle_struct_width (p),
+					C.gdk_rectangle_struct_height (p)
+				]
+
+			when
+				Gdk_motion_notify_enum
+			then
+					-- gdk_event type GdkEventMotion
+				Result := [
+					C.gdk_event_motion_struct_x (gdk_event).truncated_to_integer,
+					C.gdk_event_motion_struct_y (gdk_event).truncated_to_integer,
+					C.gdk_event_motion_struct_xtilt (gdk_event),
+					C.gdk_event_motion_struct_ytilt (gdk_event),
+					C.gdk_event_motion_struct_pressure (gdk_event),
+					C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+					C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+				]
+
+			when
+				Gdk_button_press_enum,
+				Gdk_2button_press_enum
+			then
+					-- gdk_event type GdkEventButton
+				Result := [
+					C.gdk_event_button_struct_type (gdk_event),
+					C.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
+					C.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
+					C.gdk_event_button_struct_button (gdk_event),
+					C.gdk_event_button_struct_xtilt (gdk_event),
+					C.gdk_event_button_struct_ytilt (gdk_event),
+					C.gdk_event_button_struct_pressure (gdk_event),
+					C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+					C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+				]
+
+			when
+				Gdk_button_release_enum
+			then
+					-- gdk_event type GdkEventButton
+				Result := [
+					C.gdk_event_button_struct_x (gdk_event).truncated_to_integer,
+					C.gdk_event_button_struct_y (gdk_event).truncated_to_integer,
+					C.gdk_event_button_struct_button (gdk_event),
+					C.gdk_event_button_struct_xtilt (gdk_event),
+					C.gdk_event_button_struct_ytilt (gdk_event),
+					C.gdk_event_button_struct_pressure (gdk_event),
+					C.gdk_event_motion_struct_x_root (gdk_event).truncated_to_integer,
+					C.gdk_event_motion_struct_y_root (gdk_event).truncated_to_integer
+				]
+
+			when
+				Gdk_3button_press_enum
+			then
+					-- gdk_event type GdkEventButton
+					-- Ignored
+
+			when
+				Gdk_key_press_enum,
+				Gdk_key_release_enum
+			then
+					-- gdk_event type GdkEventKey
+				keyval := C.gdk_event_key_struct_keyval (gdk_event)
+				if valid_gtk_code (keyval) then
+					create key.make_with_code (key_code_from_gtk (keyval))
+					Result := [ key	]
+				end
+			when
+				Gdk_enter_notify_enum,
+				Gdk_leave_notify_enum
+			then
+					-- gdk_event type GdkEventCrossing
+				Result := []
+
+			when
+				Gdk_configure_enum
+			then
+					-- gdk_event type GdkEventConfigure
+				check
+					gdk_configure_event_not_handled: False
+				end
+
+			when
+				Gdk_property_notify_enum
+			then
+					-- gdk_event type GdkEventProperty
+				check
+					gdk_property_event_not_handled: False
+				end
+
+			when
+				Gdk_selection_clear_enum,
+				Gdk_selection_request_enum,
+				Gdk_selection_notify_enum
+			then
+					-- gdk_event type GdkEventSelection
+				check
+					gdk_selection_event_not_handled: False
+				end
+
+			when
+				Gdk_proximity_in_enum,
+				Gdk_proximity_out_enum
+			then
+					-- gdk_event type GdkEventProximity
+				Result := []
+					
+			when
+				Gdk_drag_enter_enum,
+				Gdk_drag_leave_enum,
+				Gdk_drag_motion_enum,
+				Gdk_drag_status_enum,
+				Gdk_drop_start_enum,
+				Gdk_drop_finished_enum
+			then
+				check
+					gdk_drag_and_drop_event_not_handled: False
+				end
+
+			when
+				Gdk_client_event_enum
+			then
+					-- gdk_event type GdkEventSelection
+				check	
+					gdk_client_event_not_handled: False
+				end
+			when	
+				Gdk_visibility_notify_enum
+			then
+					-- gdk_event type GdkEventAny
+				check
+					gdk_visibility_event_not_handled: False
+				end
+
+			when
+				Gdk_no_expose_enum
+			then
+					-- gdk_event type GdkEventNoExpose
+				check
+					gdk_no_expose_event_not_handled: False
+				end
+
+			end
+			end
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -408,6 +689,9 @@ end -- class EV_ANY_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.8  2000/04/04 21:01:36  oconnor
+--| assumed funtionality previously in callback marshal
+--|
 --| Revision 1.7  2000/03/24 02:21:36  oconnor
 --| rewrote idle handling using new kamikaze agents
 --|

@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			(create {EV_C_UTIL}).enable_ev_gtk_log
 			create C
-			create ev_gtk_callback_marshal
+			c_ev_gtk_callback_marshal_init (Current, $marshal)
 			C.c_gtk_init_toolkit
 			C.gdk_rgb_init
 			tooltips := C.gtk_tooltips_new
@@ -45,7 +45,7 @@ feature {NONE} -- Initialization
 			add_root_window (interface.first_window)
 			c_ev_gtk_callback_marshal_delayed_agent_call (
 				0,
-				(interface.post_launch_actions)~call
+				(interface.post_launch_actions)~call ([])
 			)
 			internal_idle_actions.not_empty_actions.extend (
 				~connect_internal_idle_actions
@@ -131,7 +131,10 @@ feature -- Status setting
 
 feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 
-	pnd_target_from_gdk_window (a_gdk_window: POINTER; a_x, a_y: INTEGER): EV_PICK_AND_DROPABLE is
+	pnd_target_from_gdk_window (
+		a_gdk_window: POINTER;
+		a_x, a_y: INTEGER
+		): EV_PICK_AND_DROPABLE is
 		require
 			a_gdk_window_not_void: a_gdk_window /= Default_pointer
 		local
@@ -159,7 +162,9 @@ feature {EV_PICK_AND_DROPABLE_IMP} -- Pick and drop
 						check
 							imp_not_void: row_imp /= Void
 						end
-						if row_imp.pointer_over_widget (a_gdk_window, a_x, a_y) then
+						if
+							row_imp.pointer_over_widget (a_gdk_window, a_x, a_y)
+						then
 							Result := trg
 						end
 					elseif imp.pointer_over_widget (a_gdk_window, a_x, a_y) then
@@ -251,7 +256,11 @@ feature {EV_WINDOW_I} -- Root window management
 		do
 			root_windows.extend (a_window)
 			w_imp ?= a_window.implementation
-			w_imp.signal_connect ("destroy", ~remove_root_window (a_window))
+			w_imp.signal_connect (
+				"destroy",
+				~remove_root_window (a_window),
+				Void
+			)
 		end
 
 	remove_root_window (a_window: EV_WINDOW) is
@@ -274,8 +283,17 @@ feature {EV_WIDGET_IMP} -- Implementation
 
 feature -- Implementation
 
-	ev_gtk_callback_marshal: EV_GTK_CALLBACK_MARSHAL
-			-- Marshal responsible for directing signals from GTK.
+	marshal (agent: PROCEDURE [ANY, TUPLE]; n_args: INTEGER; args: POINTER) is
+			-- Call `agent' with GTK+ event data from `args'.
+			-- There are `n_args' GtkArg*s in `args'.
+			-- Called by C funtion `c_ev_gtk_callback_marshal'.
+		require
+			agent_not_void: agent /= Void
+			n_args_not_negative: n_args >= 0
+			args_not_null: n_args > 0 implies args /= Default_pointer
+		do
+			agent.call ([n_args, args])
+		end
 
 	is_in_gtk_main: BOOLEAN
 			-- Is execution currently in gtk_main?
@@ -294,12 +312,12 @@ feature -- Implementation
 			if internal_idle_actions_connection_id = 0 then
 				internal_idle_actions_connection_id :=
 					c_ev_gtk_callback_marshal_idle_connect (
-						internal_idle_actions~call (?) 
+						internal_idle_actions~call ([]) 
 					)
 			end
 		ensure
 			internal_idle_actions_connection_id_positive:
-					internal_idle_actions_connection_id > 0
+				internal_idle_actions_connection_id > 0
 		end
 
 	disconnect_internal_idle_actions is
@@ -311,6 +329,14 @@ feature -- Implementation
 		end
 
 feature -- External implementation
+
+	c_ev_gtk_callback_marshal_init (
+		object: EV_APPLICATION_IMP; a_marshal: POINTER
+		) is
+			-- See ev_gtk_callback_marshal.c
+		external
+			"C | %"ev_gtk_callback_marshal.h%""
+		end
 
 	c_ev_gtk_callback_marshal_delayed_agent_call
 				(a_delay: INTEGER; an_agent: PROCEDURE [ANY, TUPLE]) is
@@ -332,7 +358,6 @@ feature -- External implementation
 		end
 
 invariant
-	ev_gtk_callback_marshal_not_void: ev_gtk_callback_marshal /= Void
 	c_externals_object_not_void: C /= Void
 	tooltips_not_void: tooltips /= Default_pointer
 	idle_actions_agent_not_void: idle_actions_agent /= void
@@ -360,6 +385,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/04/04 21:01:57  oconnor
+--| assumed funtionality previously in callback marshal
+--|
 --| Revision 1.23  2000/03/31 19:27:12  oconnor
 --| added C.gdk_rgb_init
 --|
@@ -464,7 +492,6 @@ end -- class EV_APPLICATION_IMP
 --|
 --| Revision 1.13.2.3  1999/11/02 17:20:02  oconnor
 --| Added CVS log, redoing creation sequence
---|
 --|
 --|-----------------------------------------------------------------------------
 --| End of CVS log

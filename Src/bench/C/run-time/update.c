@@ -10,8 +10,11 @@
 
 	Interpretor datas update primitives
 */
+
 /* TEMPORARY */
+/*
 #include <stdio.h>
+*/
 
 #include "config.h"
 #ifdef EIF_WINDOWS
@@ -35,6 +38,7 @@
 #include "err_msg.h"
 #include "dle.h"
 #include "project.h"				/* For rcdt, rcorigin, rcoffset, ... */
+#include "oncekeys.h"
 
 #ifdef DEBUG
 #include "interp.h"					/* For idump() */
@@ -48,6 +52,9 @@ rt_private void cecil_updt(void);			/* Cecil update */
 rt_private char **names_updt(short int count);		/* String array */
 rt_private void root_class_updt(void);		/* Update the root class info */
 rt_public long melt_count;				/* Size of melting table */
+
+/* Writing constants (same as in interp.c!)*/
+rt_private void write_long(char *where, long int value);				/* Write long constant */
 
 /* For debugging */
 #define dprintf(n)	  if (DEBUG & (n)) printf
@@ -69,7 +76,11 @@ rt_public void update(char ignore_updt)
 	char *meltpath = (char *) 0;			/* directory of .UPDT */
 	char *filename;							/* .UPDT complet path */
 	long pattern_id;
+	long bonce_idx;
 /* %%ss bloc moved below*/
+
+	/* Initialize count of bytecode once routines */
+	EIF_bonce_count = 0;
 
 	if (ignore_updt != (char) 0) {
 		init_desc();
@@ -262,19 +273,32 @@ if ((fil = fopen(filename, "r")) == (FILE *) 0) {
 	if (mpatidtab == (int *) 0)
 		enomem(MTC_NOARG);
 
+	bonce_idx = 0;
+
 	while ((body_id = wlong()) != -1) {
 		bsize = wlong();
 		pattern_id = wlong();
-if (body_id >= 0)
-		mpatidtab[body_id] = (int) pattern_id;
+		if (body_id >= 0)
+			mpatidtab[body_id] = (int) pattern_id;
 		bcode = cmalloc(bsize * sizeof(char));
 		if (bcode == (char *) 0)
 			enomem(MTC_NOARG);
 		/* Read the byte code */
 		wread(bcode, (int)(bsize * sizeof(char)));
-if (body_id >= 0)
-		melt[body_id] = bcode;
+		if (body_id >= 0)
+		{
+			melt[body_id] = bcode;
 
+			if (*bcode)
+			{
+				/* It's a once routine */
+				/* Assign a key to it  */
+
+				write_long (bcode + 1, bonce_idx);
+
+				++bonce_idx;    /* Increment key */
+			}
+		}
 #ifdef DEBUG
 	dprintf(2)("------------------\n");
 	if (DEBUG & (2)) idump(stdout, bcode); 
@@ -285,6 +309,10 @@ if (body_id >= 0)
 	dprintf(1)("sizeof(melt[%ld]) = %ld\n", body_id, bsize);
 #endif
 	}
+
+	/* Record number of bytecode once routines */
+
+	EIF_bonce_count = bonce_idx;
 
 	/* Recompute adresses of `melt' and `patidtab' */
 
@@ -535,8 +563,8 @@ rt_public void routid_updt(void)
 #ifdef DEBUG
 {
 	long i;
-    for (i=0; i<array_size; i++) 
-        dprintf(4)("ra%d[%ld] = %ld\n", class_id, i, cn_eroutid[i]);
+	for (i=0; i<array_size; i++) 
+		dprintf(4)("ra%d[%ld] = %ld\n", class_id, i, cn_eroutid[i]);
 }
 #endif
 		wread(&has_cecil, 1);		/* Cecil ? */
@@ -875,3 +903,21 @@ rt_public uint32 wuint32(void)
 	wread((char *)(&result), sizeof(uint32));
 	return result;
 }
+
+rt_private void write_long(char *where, long int value)
+{
+	/* Write 'value' in possibly mis-aligned address 'where' */
+
+	union {
+		char xtract[sizeof(long)];
+		long value;
+	} xlong;
+	register1 char *p = (char *) &xlong;
+	register2 int i;
+
+	xlong.value = value;
+
+	for (i = 0; i < sizeof(long); i++)
+		where [i] = *p++;
+}
+

@@ -30,6 +30,7 @@ To be revised:
     ev_dynamic_tree_item.e
 
 To do:
+- Splitter cursor in EV_SPLIT_AREA.
 - Redo windows dialog implementation.
 - Right click interface to pick and drop.
 - Add set_pointer_position to EV_SCREEN.

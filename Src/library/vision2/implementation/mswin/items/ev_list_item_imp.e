@@ -204,14 +204,14 @@ feature {NONE} -- Implementation for drawing
 			dc.set_background_color (selection_color)
 			dc.set_text_color (white)
 			if pixmap_imp /= Void and text /= "" then
-				dc.bit_blt (rect.left, rect.top, rect.width, rect.height, pixmap_imp, 0, 0, Srccopy)
+				dc.bit_blt (rect.left, rect.top, rect.width, rect.height, pixmap_imp.dc, 0, 0, Srccopy)
 				rect.set_left (pixmap_imp.width)
 				dc.fill_rect (rect, selection_brush)
 				rect.set_left (rect.left + 5)
 				dc.draw_text (text, rect, Dt_left)
 				rect.set_left (0)
 			elseif pixmap_imp /= Void then
-				dc.bit_blt (rect.left, rect.top, rect.width, rect.height, pixmap_imp, 0, 0, Srccopy)
+				dc.bit_blt (rect.left, rect.top, rect.width, rect.height, pixmap_imp.dc, 0, 0, Srccopy)
 				rect.set_left (pixmap_imp.width)
 				dc.fill_rect (rect, selection_brush)
 				rect.set_left (0)
@@ -227,13 +227,13 @@ feature {NONE} -- Implementation for drawing
 			dc.set_background_color (parent_imp.background_color_imp)
 			dc.fill_rect (rect, parent_imp.background_brush)
 			if pixmap_imp /= Void and text /= "" then
-				dc.bit_blt (rect.left, rect.top, rect.width, rect.height, pixmap_imp, 0, 0, Srccopy)
+				dc.bit_blt (rect.left, rect.top, rect.width, rect.height, pixmap_imp.dc, 0, 0, Srccopy)
 			rect.set_left (pixmap_imp.width + 5)
 				dc.set_text_color (parent_imp.foreground_color_imp)
 				dc.draw_text (text, rect, Dt_left)
 				rect.set_left (0)
 			elseif pixmap_imp /= Void then
-				dc.bit_blt (rect.left, rect.top, rect.width, rect.height, pixmap_imp, 0, 0, Srccopy)
+				dc.bit_blt (rect.left, rect.top, rect.width, rect.height, pixmap_imp.dc, 0, 0, Srccopy)
 			elseif text /= "" then
 				dc.set_text_color (parent_imp.foreground_color_imp)
 				dc.draw_text (text, rect, Dt_left)

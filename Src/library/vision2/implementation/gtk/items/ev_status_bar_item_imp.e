@@ -57,7 +57,7 @@ feature -- Initialization
 			C.gtk_widget_show (box)
 			C.gtk_box_pack_end (box, text_label, True, True, padding)
 			C.gtk_widget_hide (text_label)
-			C.gtk_box_pack_start (box, pixmap_box, False, False, 0)
+			C.gtk_box_pack_start (box, pixmap_box, False, False, 1)
 			C.gtk_widget_hide (pixmap_box)
 		ensure
 			status_bar_item_box /= default_pointer
@@ -137,6 +137,9 @@ end -- class EV_STATUS_BAR_ITEM_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.21  2000/02/15 19:22:19  king
+--| Changed padding to 1 for pixmap box
+--|
 --| Revision 1.20  2000/02/14 11:40:27  oconnor
 --| merged changes from prerelease_20000214
 --|

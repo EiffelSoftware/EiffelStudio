@@ -180,7 +180,7 @@ feature {NONE} -- Implementation
 			a_argc, a_argv: POINTER): POINTER is
 		external
 			"C (XtAppContext, String, String, String, XrmOptionDescRec *, %
-				% Cardinal, Cardinal *, String *): EIF_POINTER |<X11/Intrinsic.h>"
+				% Cardinal, int *, String *): EIF_POINTER |<X11/Intrinsic.h>"
 		alias
 			"XtOpenDisplay"
 		end;

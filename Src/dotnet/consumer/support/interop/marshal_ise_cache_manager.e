@@ -30,6 +30,12 @@ feature -- Access
 		do
 			Result := implementation.last_error_message
 		end
+		
+	assembly_resolver: ASSEMBLY_RESOLVER is
+			-- assembly resolver used to resolve references that cannot be resolved by default implementation
+		do
+			Result := implementation.assembly_resolver
+		end
 
 feature -- Basic Exportations
 

@@ -1,0 +1,118 @@
+class
+	MAIN_WINDOW
+
+inherit
+	WEL_FRAME_WINDOW
+		redefine
+			class_icon,
+			on_menu_command,
+			on_set_cursor
+		end
+
+	APPLICATION_IDS
+		export
+			{NONE} all
+		end
+
+	WEL_IDC_CONSTANTS
+		export
+			{NONE} all
+		end
+
+	WEL_HT_CONSTANTS
+		export
+			{NONE} all
+		end
+
+creation
+	make
+
+feature {NONE} -- Initialization
+
+	make is
+			-- Make the main window
+		do
+			!! cursor.make_by_predefined_id (Idc_arrow)
+			make_top (Title)
+			set_menu (main_menu)
+			resize (300, 200)
+		end
+
+feature -- Access
+
+	cursor: WEL_CURSOR
+			-- Current cursor
+
+feature {NONE} -- Behaviors
+
+	on_menu_command (id_menu: INTEGER) is
+		do
+			inspect
+				id_menu
+			when Cmd_cursor_arrow then
+				!!cursor.make_by_predefined_id (Idc_arrow)
+			when Cmd_cursor_cross then
+				!! cursor.make_by_predefined_id (Idc_cross)
+			when Cmd_cursor_ibeam then
+				!! cursor.make_by_predefined_id (Idc_ibeam)
+			when Cmd_cursor_icon then
+				!! cursor.make_by_predefined_id (Idc_icon)
+			when Cmd_cursor_size then
+				!! cursor.make_by_predefined_id (Idc_size)
+			when Cmd_cursor_sieznesw then
+				!! cursor.make_by_predefined_id (Idc_sizenesw)
+			when Cmd_cursor_sizens then
+				!! cursor.make_by_predefined_id (Idc_sizens)
+			when Cmd_cursor_sizeswne then
+				!! cursor.make_by_predefined_id (Idc_sizenwse)
+			when Cmd_cursor_sizewe then
+				!! cursor.make_by_predefined_id (Idc_sizewe)
+			when Cmd_cursor_uparrow then
+				!! cursor.make_by_predefined_id (Idc_uparrow)
+			when Cmd_cursor_wait then
+				!! cursor.make_by_predefined_id (Idc_wait)
+			when Cmd_cursor_custom then
+				!! cursor.make_by_id (Id_cur_custom)
+			end
+		end
+
+	on_set_cursor (hit_test: INTEGER): BOOLEAN is
+			-- Set the cursor only in the client area.
+		do
+			if hit_test = Htclient then
+				cursor.set
+				Result := True
+			end
+		end
+
+feature {NONE} -- Implementation
+
+	class_icon: WEL_ICON is
+			-- Window's icon
+		once
+			!! Result.make_by_id (Id_ico_application)
+		end
+
+	main_menu: WEL_MENU is
+		once
+			!! Result.make_by_id (Id_menu_application)
+		ensure
+			result_not_void: Result /= Void
+		end
+
+	Title: STRING is "WEL Cursors"
+			-- Window's title
+
+end -- class MAIN_WINDOW
+
+--|-------------------------------------------------------------------------
+--| Windows Eiffel Library: library of reusable components for ISE Eiffel 3.
+--| Copyright (C) 1995, Interactive Software Engineering, Inc.
+--| All rights reserved. Duplication and distribution prohibited.
+--|
+--| 270 Storke Road, Suite 7, Goleta, CA 93117 USA
+--| Telephone 805-685-1006
+--| Fax 805-685-6869
+--| Information e-mail <info@eiffel.com>
+--| Customer support e-mail <support@eiffel.com>
+--|-------------------------------------------------------------------------

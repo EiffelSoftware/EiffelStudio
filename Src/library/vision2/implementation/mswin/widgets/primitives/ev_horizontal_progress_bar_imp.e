@@ -11,9 +11,25 @@ inherit
 	EV_HORIZONTAL_PROGRESS_BAR_I
 
 	EV_PROGRESS_BAR_IMP
+		undefine
+			set_default_options
+		redefine
+			set_default_minimum_size
+		end
 
 creation
-	make
+	make,
+	make_with_range
+
+feature -- Status settings
+
+	set_default_minimum_size is
+			-- Initialize the size of the widget.
+			-- Redefine by some widgets.
+		do
+			internal_set_minimum_width (0)
+			internal_set_minimum_height (20)
+		end
 
 feature {NONE} -- WEL Implementation
 

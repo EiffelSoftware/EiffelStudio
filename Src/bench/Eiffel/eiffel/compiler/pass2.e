@@ -196,7 +196,7 @@ end;
 
 feature -- Dino stuff
 
-	set_assertion_prop_list (a_class: CLASS_C; l: LINKED_LIST [INTEGER]) is
+	set_assertion_prop_list (a_class: CLASS_C; l: LINKED_LIST [ROUTINE_ID]) is
 		local
 			pass_c: PASS2_C
 		do

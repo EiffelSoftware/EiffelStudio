@@ -117,16 +117,16 @@ feature -- Byte code generation
 		local
 			instant_context_type: CL_TYPE_I;
 			base_class: CLASS_C;
-			r_id: INTEGER;
+			r_id: ROUTINE_ID;
 			rout_info: ROUT_INFO
 		do
 			instant_context_type ?= context_type;
 			base_class := instant_context_type.base_class;
 			if base_class.is_precompiled then
-				r_id := -base_class.feature_table.item
+				r_id := base_class.feature_table.item
 					(attribute_name).rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				ba.append_integer (rout_info.origin);
+				ba.append_integer (rout_info.origin.id);
 				ba.append_integer (rout_info.offset)
 			else
 					-- Generate attribute id
@@ -157,16 +157,16 @@ feature -- Byte code generation
 		local
 			instant_context_type: CL_TYPE_I;
 			base_class: CLASS_C;
-			r_id: INTEGER;
+			r_id: ROUTINE_ID;
 			rout_info: ROUT_INFO
 		do
 			instant_context_type ?= context_type;
 			base_class := instant_context_type.base_class;
 			if base_class.is_precompiled then
-				r_id := -base_class.feature_table.item
+				r_id := base_class.feature_table.item
 					(attribute_name).rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				ba.append_integer (rout_info.origin);
+				ba.append_integer (rout_info.origin.id);
 				ba.append_integer (rout_info.offset)
 			else
 					-- Generate attribute id

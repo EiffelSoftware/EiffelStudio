@@ -58,7 +58,8 @@ feature -- Implementation of inherited deferred features
 			anchor_feature: FEATURE_I;
 			like_feature: LIKE_FEATURE;
 			anchor_type, argument_type: TYPE_B;
-			argument_position, rout_id: INTEGER;
+			argument_position: INTEGER;
+			rout_id: ROUTINE_ID;
 			like_argument: LIKE_ARGUMENT;
 			depend_unit: DEPEND_UNIT;
 			s: STRING;
@@ -70,10 +71,6 @@ feature -- Implementation of inherited deferred features
 					-- anchor feature has not an anchor type itself.
 				anchor_type := anchor_feature.type;
 				rout_id := anchor_feature.rout_id_set.first;
-				if rout_id < 0 then
-						-- Anchor on attribute
-					rout_id := - rout_id;
-				end;
 
 					-- Set the like controler on
 				Like_control.on;

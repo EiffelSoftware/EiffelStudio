@@ -9,7 +9,7 @@ class DLE_STATIC_CALLS inherit
 			set_id as set_type_id
 		end;
 
-	LINKED_SET [INTEGER]
+	LINKED_SET [ROUTINE_ID]
 		rename
 			make as linked_set_make
 		end
@@ -23,6 +23,7 @@ feature {NONE} -- Initialization
 	make (new_id: INTEGER) is
 		do
 			linked_set_make;
+			compare_objects;
 			type_id := new_id
 		end;
 

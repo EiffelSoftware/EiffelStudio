@@ -238,7 +238,7 @@ feature
 			arguments: FEAT_ARG;
 			redef_bodies: ARRAY [INTEGER];
 			redef_byte: BYTE_CODE;
-			rout_id: INTEGER;
+			rout_id: ROUTINE_ID;
 		do
 				-- Name
 			byte_code.set_feature_name (feature_name);
@@ -248,9 +248,6 @@ feature
 			byte_code.set_result_type (a_feature.type.actual_type.type_i);
 				-- Routine id
 			rout_id := a_feature.rout_id_set.first;
-			if rout_id < 0 then
-				rout_id := - rout_id;
-			end;
 			byte_code.set_rout_id (rout_id);
 				-- Pattern id
 			byte_code.set_pattern_id (a_feature.pattern_id);

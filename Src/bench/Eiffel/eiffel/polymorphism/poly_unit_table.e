@@ -8,19 +8,23 @@ inherit
 		redefine
 			add
 		end;
-	IDABLE
-		rename
-			id as rout_id,
-			set_id as set_rout_id
-		end;
+	IDABLE;
 	SHARED_WORKBENCH;
 
 feature
 
-	rout_id: INTEGER;
+	id: INTEGER is
+			-- Id for server storage
+		do
+			Result := rout_id.id
+		end;
+
+	set_id (i: INTEGER) is do end;
+
+	rout_id: ROUTINE_ID;
 			-- Routine id of the polymorphic unit table
 
-	set_rout_id (i: INTEGER) is
+	set_rout_id (i: ROUTINE_ID) is
 			-- Assign` i' to `rout_id'.
 		do
 			rout_id := i

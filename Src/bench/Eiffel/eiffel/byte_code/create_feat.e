@@ -30,7 +30,7 @@ feature
 			feature_name := n;
 		end;
 
-	rout_id: INTEGER is
+	rout_id: ROUTINE_ID is
 			-- Routine ID of the feature to be created
 		local
 			a_class: CLASS_C;
@@ -38,11 +38,8 @@ feature
 			a_class := context.current_type.base_class;
 			Result := a_class.feature_table.item
 				(feature_name).rout_id_set.first;
-			if Result < 0 then
-				Result := -Result;
-			end;
 		ensure
-			positive_routine_id: Result > 0;
+			routine_id_not_void: Result /= Void
 		end;
 
 	analyze is
@@ -51,7 +48,7 @@ feature
 			entry: POLY_TABLE [ENTRY];
 		do
 			if context.final_mode then
-				entry := Eiffel_table.item_id (rout_id);
+				entry := Eiffel_table.poly_table (rout_id);
 				if not entry.has_one_type then
 					context.mark_current_used;
 					context.add_dt_current;
@@ -73,14 +70,14 @@ feature
 		do
 			gen_file := context.generated_file;
 			if context.final_mode then
-				entry := Eiffel_table.item_id (rout_id);
+				entry := Eiffel_table.poly_table (rout_id);
 				if entry.has_one_type then
 						-- There is a table, but with only one type id
 					dyn_type := entry.first.feature_type_id - 1;
 					gen_file.putint (dyn_type);
 				else
 						-- Attribute is polymorphic
-					create_table_name := Encoder.type_table_name (rout_id);
+					create_table_name := rout_id.type_table_name;
 					gen_file.putchar ('(');
                     gen_file.putstring (create_table_name);
                     gen_file.putchar ('-');
@@ -101,7 +98,7 @@ feature
 				then
 					gen_file.putstring ("RTWPT(");
 					rout_info := System.rout_info_table.item (rout_id);
-					gen_file.putint (rout_info.origin);
+					gen_file.putint (rout_info.origin.id);
 					gen_file.putstring (gc_comma);
 					gen_file.putint (rout_info.offset)
 				else
@@ -127,7 +124,7 @@ feature -- Byte code generation
 			if context.current_type.base_class.is_precompiled then
 				ba.append (Bc_pclike);
 				rout_info := System.rout_info_table.item (rout_id);
-				ba.append_integer (rout_info.origin);
+				ba.append_integer (rout_info.origin.id);
 				ba.append_integer (rout_info.offset);
 			else
 				ba.append (Bc_clike);

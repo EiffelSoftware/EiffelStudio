@@ -59,7 +59,7 @@ feature -- Generation
 			c_name: STRING;
 			p_name: STRING
 		do
-			c_name := clone (Encoder.table_name (rout_id));
+			c_name := rout_id.table_name;
 			if not Old_eiffel_table.was_used (rout_id) or else has_changed then
 				min_val := min_type_id;
 				max_val := max_type_id;
@@ -103,32 +103,21 @@ feature -- Generation
 			end
 		end;
 
-	generate_type_table (file: INDENT_FILE; final_mode: BOOLEAN) is
-			-- Generate the associated type table.
+	generate_type_table (file: INDENT_FILE) is
+			-- Generate the associated type table in final mode.
 		local
 			i, nb: INTEGER;
 			entry: ENTRY;
-			c_name: STRING;
-			do_it: BOOLEAN
+			c_name: STRING
 		do
-			if final_mode then
-				c_name := clone (Encoder.type_table_name (rout_id));
-				if
-					not (Old_eiffel_table.was_used (rout_id) and
-						had_type_table) or else has_changed
-				then
-					file.putstring ("int16 ");
-					file.putstring (dynamic_prefix);
-					file.putstring (c_name);
-					do_it := true
-				end
-			else
+			c_name := rout_id.type_table_name;
+			if
+				not (Old_eiffel_table.was_used (rout_id) and
+					had_type_table) or else has_changed
+			then
 				file.putstring ("int16 ");
-				file.putchar ('t');
-				file.putint (rout_id);
-				do_it := true
-			end;
-			if do_it then
+				file.putstring (dynamic_prefix);
+				file.putstring (c_name);
 				from
 					file.putstring ("[] = {%N");
 					i := min_type_id;
@@ -151,20 +140,18 @@ feature -- Generation
 				end;
 				file.putstring ("};%N")
 			end;
-			if final_mode then
-				if Old_eiffel_table.was_used (rout_id) and had_type_table then
-					if has_changed then
-						Attr_declarations.add_dle_table (c_name);
-						Attr_declarations.add_type_table (c_name)
-					end
-				else
-					file.putstring ("int16 *");
-					file.putstring (c_name);
-					file.putstring (" = ");
-					file.putstring (dynamic_prefix);
-					file.putstring (c_name);
-					file.putstring (";%N")
+			if Old_eiffel_table.was_used (rout_id) and had_type_table then
+				if has_changed then
+					Attr_declarations.add_dle_table (c_name);
+					Attr_declarations.add_type_table (c_name)
 				end
+			else
+				file.putstring ("int16 *");
+				file.putstring (c_name);
+				file.putstring (" = ");
+				file.putstring (dynamic_prefix);
+				file.putstring (c_name);
+				file.putstring (";%N")
 			end;
 			file.new_line
 		end;

@@ -257,11 +257,11 @@ feature {NONE} -- C code generation
 			entry: POLY_TABLE [ENTRY];
 			rout_table: ROUT_TABLE;
 			internal_name, table_name: STRING;
-			rout_id: INTEGER;
+			rout_id: ROUTINE_ID;
 		do
 			rout_id := real_ty.base_class.feature_table.item 
 							("make").rout_id_set.first;
-			entry := Eiffel_table.item_id (rout_id);
+			entry := Eiffel_table.poly_table (rout_id);
 			rout_table ?= entry;
 			internal_name := clone (rout_table.feature_name (real_ty.type_id));
 			generated_file.putstring (internal_name);
@@ -277,7 +277,7 @@ feature {NONE} -- C code generation
 		local
 			f_table: FEATURE_TABLE;
 			feat_i: FEATURE_I;
-			r_id: INTEGER;
+			r_id: ROUTINE_ID;
 			rout_info: ROUT_INFO;
 			base_class: CLASS_C
 		do
@@ -292,7 +292,7 @@ feature {NONE} -- C code generation
 				generated_file.putstring ("RTWPF(");
 				r_id := feat_i.rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				generated_file.putint (rout_info.origin);
+				generated_file.putint (rout_info.origin.id);
 				generated_file.putstring (gc_comma);
 				generated_file.putint (rout_info.offset);
 			else

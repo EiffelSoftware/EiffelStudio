@@ -166,16 +166,13 @@ feature {NONE} -- Implementation
 			valid_format_reg: format_reg /= Void
 		local
 			t_feat, s_feat: FEATURE_I;
-			rout_id: INTEGER;
+			rout_id: ROUTINE_ID;
 			select_table: SELECT_TABLE;
 		do	
 			select_table := format_reg.target_feature_table.origin_table;
 			s_feat := format_reg.current_feature_table.item
 						(old_name.internal_name);
 			rout_id := s_feat.rout_id_set.first;
-			if rout_id < 0 then
-				rout_id := - rout_id
-			end;
 			t_feat := select_table.item (rout_id);
 			if s_feat /= Void and then t_feat /= Void then
 				format_reg.assert_server.register (Current);

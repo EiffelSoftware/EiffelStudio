@@ -2,7 +2,7 @@ class ROUT_ID_SET
 
 inherit
 
-	ARRAY [INTEGER]
+	ARRAY [ROUTINE_ID]
 		rename
 			make as array_create,
 			put as array_put,
@@ -37,10 +37,14 @@ feature -- Properties
 
 feature -- Access
 
-	first: INTEGER is
+	first: ROUTINE_ID is
 			-- First routine id
+		require
+			not_empty: not empty
 		do
 			Result := item (1);
+		ensure
+			first_not_void: Result /= Void
 		end;
 
 	empty: BOOLEAN is
@@ -49,8 +53,10 @@ feature -- Access
 			Result := count = 0;
 		end;
 
-	has (rout_id: INTEGER): BOOLEAN is
+	has (rout_id: ROUTINE_ID): BOOLEAN is
 			-- Is the routine id `rout_id' present in the set ?
+		require
+			rout_id_not_void: rout_id /= Void
 		local
 			i: INTEGER
 		do
@@ -59,7 +65,7 @@ feature -- Access
 			until
 				i > count or else Result
 			loop
-				Result := item (i) = rout_id;
+				Result := rout_id.is_equal (item (i));
 				i := i + 1;
 			end;
 		end;
@@ -89,7 +95,7 @@ feature -- Output
 	trace is
 			-- Debug purpose
 		local
-			i: INTEGER;
+			i: INTEGER
 		do
 			io.error.putchar ('[');
 			from
@@ -97,7 +103,7 @@ feature -- Output
 			until
 				i > count
 			loop
-				io.error.putint (item (i));
+				io.error.putint (item (i).id);
 				io.error.putchar (' ');
 				i := i + 1;
 			end;
@@ -112,25 +118,25 @@ feature {COMPILER_EXPORTER}
 			Result := count = array_count;
 		end;
 
-	put (rout_id: INTEGER) is
+	put (rout_id: ROUTINE_ID) is
 			-- Insert routine id `rout_id' in the set if not already
 			-- present.
 		require
+			rout_id_not_void: rout_id /= Void;
 			not_full: not full;
 		local
-			temp: INTEGER
+			temp: ROUTINE_ID
 		do
 			if not has (rout_id) then
 					-- Routine id `rout_id' is not present in the set
 				count := count + 1;
 				array_put (rout_id, count);
-				-- Processing for attribute table: id for attribute offset
-				-- table are negative and id for routine tables are positive.
+				-- Processing for attribute table:
 				-- Since the byte code inspect the first value of this	
 				-- routine id set, if there are thw ids one for a routine
 				-- table and another one for an attribute table, the one
 				-- for the attribute table must be in first position;
-				if rout_id < 0 and then item (1) > 0 then
+				if rout_id.is_attribute and not first.is_attribute then
 					temp := item (1);
 					array_put (rout_id, 1);
 					array_put (temp, count);
@@ -138,11 +144,13 @@ feature {COMPILER_EXPORTER}
 			end;
 		end;
 
-	force (rout_id: INTEGER) is
+	force (rout_id: ROUTINE_ID) is
 			-- Insert routine id `rout_id' in the set if not already
 			-- present. Resize the array if needed.
+		require
+			rout_id_not_void: rout_id /= Void
 		local
-			pos, temp: INTEGER
+			temp: ROUTINE_ID
 		do
 			if not has (rout_id) then
 					-- Routine id `rout_id' is not present in the set.
@@ -153,7 +161,7 @@ feature {COMPILER_EXPORTER}
 				count := count + 1;
 				array_put (rout_id, count);
 					-- See comment in `put'
-				if rout_id < 0 and then item (1) > 0 then
+				if rout_id.is_attribute and not first.is_attribute then
 					temp := item (1);	
 					array_put (rout_id, 1);
 					array_put (temp, count);
@@ -163,17 +171,10 @@ feature {COMPILER_EXPORTER}
 
 	has_attribute_origin: BOOLEAN is
 			-- Is in the routine id set an attribute offset table id ?
-		local
-			i: INTEGER;
+		require
+			not_empty: not empty
 		do
-			from
-				i := 1;
-			until
-				i > count or else Result
-			loop
-				Result := item (i) < 0;
-				i := i + 1;
-			end;
+			Result := first.is_attribute
 		end;
 			
 	update (l: LINKED_LIST [INHERIT_INFO]) is

@@ -22,7 +22,7 @@ feature -- Execution
 		local
 			classes: PART_SORTED_TWO_WAY_LIST [E_CLASS];
 			rout_id_set: ROUT_ID_SET;
-			rout_id: INTEGER;
+			rout_id: ROUTINE_ID;
 			i: INTEGER;
 			stop: BOOLEAN;
 			written_in: INTEGER;
@@ -47,7 +47,7 @@ feature -- Execution
 			until
 				i > rout_id_set.count
 			loop
-				rout_id := rout_id_set.item (i).abs;
+				rout_id := rout_id_set.item (i);
 				output_window.put_string ("%NClass history branch #");
 				output_window.put_int (i);
 				output_window.put_string ("%N-----------------------%N");

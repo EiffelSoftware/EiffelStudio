@@ -7,7 +7,7 @@ class SELECT_TABLE
 
 inherit
 
-	EXTEND_TABLE [FEATURE_I, INTEGER];
+	EXTEND_TABLE [FEATURE_I, ROUTINE_ID];
 	SHARED_HISTORY_CONTROL
 		undefine
 			copy, is_equal
@@ -25,7 +25,7 @@ feature -- Final mode
 		local
 			new_unit: POLY_UNIT;
 			feature_i: FEATURE_I;
-			rout_id: INTEGER;
+			rout_id: ROUTINE_ID;
 		do
 			from
 				start
@@ -51,7 +51,7 @@ feature -- Incrementality
 		require
 			good_argument: other /= Void
 		local
-			id: INTEGER;
+			id: ROUTINE_ID;
 			f1, f2: FEATURE_I;
 		do
 			if other.count = count then

@@ -1,4 +1,4 @@
--- Cache of horizontal tables for fianl mode generation
+-- Cache of horizontal tables for final mode generation
 
 class EIFFEL_HISTORY
 
@@ -26,29 +26,33 @@ creation
 
 	make
 
-feature
-
-	used: ARRAY [BOOLEAN];
-			-- Used routine table ids
+feature {NONE} -- Initialization
 
 	make is
 			-- Initialization
 		do
 			cache_make;
-			!!used.make (1,1);
+			!!used.make (1);
 		end;
 
-	Cache_size: INTEGER is 200;
-			-- Cache size
+feature 
 
-	item_id (rout_id: INTEGER): POLY_TABLE [ENTRY] is
+	poly_table (rout_id: ROUTINE_ID): POLY_TABLE [ENTRY] is
 			-- Routine table of id `rout_id'
+		require
+			rout_id_not_void: rout_id /= Void
 		do
-			Result := cache_item_id (rout_id);
-			if Result = Void and then Tmp_poly_server.has (rout_id) then
-					-- Not in cache and the routine id is not associated to a routine
-					-- table of deferred features only.
-				Result := Tmp_poly_server.item (rout_id).poly_table;
+			Result := item_id (rout_id.id)
+		end;
+		
+	item_id (r_id: INTEGER): POLY_TABLE [ENTRY] is
+			-- Routine table of id `r_id'
+		do
+			Result := cache_item_id (r_id);
+			if Result = Void and then Tmp_poly_server.has (r_id) then
+					-- Not in cache and the routine id is not associated
+					-- to a routine table of deferred features only.
+				Result := Tmp_poly_server.item (r_id).poly_table;
 				if full then
 					remove;
 				end;
@@ -56,29 +60,27 @@ feature
 			end;
 		end;
 
-	init is
-			-- Initialization of `used'.
-		do
-			used.resize (1, System.routine_id_counter.value)
-		end;
-
-	is_used (rout_id: INTEGER): BOOLEAN is
+	is_used (rout_id: ROUTINE_ID): BOOLEAN is
 			-- Is the table of routine id `rout_id' used ?
+		require
+			rout_id_not_void: rout_id /= Void
 		do
-			Result := used.item (rout_id)
+			Result := used.has (rout_id)
 		end;
 
-	mark_used (rout_id: INTEGER) is
+	mark_used (rout_id: ROUTINE_ID) is
 			-- Mark routine table of routine id `rout_id' used.
+		require
+			rout_id_not_void: rout_id /= Void
 		do
-			used.put (True, rout_id)
+			used.force (rout_id)
 		end;
 
 	wipe_out is
 			-- Wipe out the structure
 		do
 			cache_wipe_out;
-			!!used.make (1,1);
+			!!used.make (1);
 		end;
 
 feature -- DLE
@@ -89,8 +91,19 @@ feature -- DLE
 			dynamic_system: System.is_dynamic;
 			other_exists: other /= Void
 		do
-			used := clone (other.used);
-			used.resize (1, System.routine_id_counter.value)
+			used := clone (other.used)
 		end;
+
+feature {EIFFEL_HISTORY} -- Implementation
+
+	used: SEARCH_TABLE [ROUTINE_ID];
+			-- Used routine table ids
+
+	Cache_size: INTEGER is 200;
+			-- Cache size
+
+invariant
+
+	used_not_void: used /= Void
 
 end

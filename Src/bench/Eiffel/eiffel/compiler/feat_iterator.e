@@ -21,10 +21,11 @@ feature
 
 feature {NONE}
 
-	mark (f: FEATURE_I; static_class: CLASS_C; rout_id_val: INTEGER) is
+	mark (f: FEATURE_I; static_class: CLASS_C; rout_id_val: ROUTINE_ID) is
 			-- Mark feature and its redefinitions
 		require
 			not_is_attribute: not f.is_attribute;
+			rout_id_not_void: rout_id_val /= Void
 		local
 			other_body_id: INTEGER;
 			descendant_class: CLASS_C;
@@ -45,7 +46,7 @@ feature {NONE}
 			mark_and_record (f, static_class, rout_id_val);
 
 			check
-				(not Tmp_poly_server.has (rout_id_val)) implies f.is_deferred;
+				(not Tmp_poly_server.has (rout_id_val.id)) implies f.is_deferred;
 					-- Case for an non existing routine table: a deferred
 					-- feature without any implementation in descendant classes
 					-- leads to NO routine table.
@@ -77,11 +78,11 @@ feature {NONE}
 --				end;
 --			end;
 
-			if Tmp_poly_server.has (rout_id_val) then
+			if Tmp_poly_server.has (rout_id_val.id) then
 					-- If routine id available: this is not a deferred feature
 					-- without any implementation
 				written_class := f.written_class;
-				table ?= Tmp_poly_server.item (rout_id_val);
+				table ?= Tmp_poly_server.item (rout_id_val.id);
 				check
 					table_exists: table /= Void;
 				end;
@@ -119,12 +120,13 @@ feature {NONE}
 			end;
 		end;
 
-	mark_and_record (feat: FEATURE_I; actual_class: CLASS_C; rout_id_val: INTEGER) is
+	mark_and_record (feat: FEATURE_I; actual_class: CLASS_C; rout_id_val: ROUTINE_ID) is
 			-- Mark feature `feat' alive.
 		require
 			feat_exists: feat /= Void;
 			actual_class_exists: actual_class /= Void;
 			consistency: actual_class.conform_to (feat.written_class);
+			rout_id_not_void: rout_id_val /= Void
 		local
 			depend_list: FEATURE_DEPENDANCE;
 			original_feature: FEATURE_I;
@@ -169,10 +171,11 @@ end;
 		deferred
 		end
 
-	mark_alive (feat: FEATURE_I; rout_id_val: INTEGER) is
+	mark_alive (feat: FEATURE_I; rout_id_val: ROUTINE_ID) is
 			-- Record feature `feat'
 		require
-			good_argument: feat /= Void
+			good_argument: feat /= Void;
+			rout_id_not_void: rout_id_val /= Void
 		local
 			class_name: STRING;
 			temp: ROUT_ID_SET
@@ -208,7 +211,9 @@ feature
 				temp.has (feat.rout_id_set.first)
 		end;
 
-	bid_rid_is_marked (bid, rid: INTEGER): BOOLEAN is
+	bid_rid_is_marked (bid: INTEGER; rid: ROUTINE_ID): BOOLEAN is
+		require
+			rid_not_void: rid /= Void
 		local
 			temp: ROUT_ID_SET
 		do

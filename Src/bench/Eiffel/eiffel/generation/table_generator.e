@@ -73,16 +73,9 @@ feature
 			table.generate (current_file);
 		end;
 
-	generate_workbench (table: POLY_TABLE [ENTRY]) is
-			-- Generation of the workbench table `table'.
-		do
-			update;
-			size := size + table.workbench_table_size;
-			table.generate_workbench (current_file);
-		end;
-
-	generate_type_table (table: POLY_TABLE [ENTRY]; final_mode: BOOLEAN) is
-			-- Generation of associated type table of `table'.
+	generate_type_table (table: POLY_TABLE [ENTRY]) is
+			-- Generation of associated type table of `table'
+			-- in final mode.
 		require
 			current_file_exists: current_file /= Void;
 			is_open: current_file.is_open_write;
@@ -91,7 +84,7 @@ feature
 		do
 			update;
 			size := size + table.final_table_size;
-			table.generate_type_table (current_file, final_mode);
+			table.generate_type_table (current_file);
 		end;
 
 	update is

@@ -10,9 +10,6 @@ class LIKE_FEATURE
 inherit
 
 	TYPE_A
-		rename
-			base_type as rout_id,
-			set_base_type as set_rout_id
 		redefine
 			actual_type, solved_type, has_like, instantiation_in, is_like,
 			is_basic, instantiated_in, same_as, meta_type, is_deep_equal,
@@ -25,6 +22,14 @@ creation
 	make
 
 feature -- Properties
+
+	rout_id: ROUTINE_ID;
+
+	set_rout_id (rid: like rout_id) is
+			-- Set `set_rout_id' to `rid'.
+		do
+			rout_id := rid
+		end;
 
 	actual_type: TYPE_A;
 			-- Actual type of the anchored type in a given class
@@ -57,7 +62,7 @@ feature -- Access
 			other_like_feat ?= other;
 			Result := 	other_like_feat /= Void
 						and then
-						other_like_feat.rout_id = rout_id
+						other_like_feat.rout_id.is_equal (rout_id)
 						and then
 						other_like_feat.feature_id = feature_id
 		end;
@@ -138,7 +143,7 @@ feature -- Primitives
 			-- Calculated type in function of the feature `f' which has
 			-- the type Current and the feautre table `feat_table
 		local
-			origin_table: HASH_TABLE [FEATURE_I, INTEGER];
+			origin_table: HASH_TABLE [FEATURE_I, ROUTINE_ID];
 			anchor_feature, orig_feat: FEATURE_I;
 			anchor_type: TYPE_B;
 		do
@@ -153,9 +158,6 @@ end;
 					raise_veen (f);
 				end;
 				rout_id := orig_feat.rout_id_set.first;
-				if rout_id < 0 then
-					rout_id := - rout_id
-				end;
 				anchor_feature := origin_table.item (rout_id);
 debug
 	if anchor_feature = Void then
@@ -174,9 +176,6 @@ end;
 					raise_veen (f);
 				end;
 				rout_id := anchor_feature.rout_id_set.first;
-				if rout_id < 0 then
-					rout_id := - rout_id
-				end;
 debug
 	if anchor_feature = Void then
 		io.error.putstring ("Void feature%N");
@@ -254,7 +253,7 @@ end;
 		do
 			like_feat ?= other;
 			Result := like_feat /= Void and then
-				like_feat.rout_id = rout_id and then
+				like_feat.rout_id.is_equal (rout_id) and then
 				like_feat.class_id = class_id and then
 				like_feat.feature_id = feature_id and then
 				like_feat.actual_type.is_deep_equal (actual_type) and then

@@ -165,6 +165,17 @@ feature
 	unique_counter: COUNTER;
 			-- Counter for unique features
 
+	offset_counter: COUNTER;
+			-- Offset counter for feature introduced in current class
+
+	descriptor_size: INTEGER is
+			-- Number of routines introduced
+			-- in current class
+		do
+				-- Offsets start from 0.
+			Result := offset_counter.value + 1
+		end;
+
 	changed_features: SEARCH_TABLE [STRING];
 			-- Names of the changed features
 
@@ -229,6 +240,10 @@ feature
 			!!propagators.make;
 				-- Unique counter creation
 			!!unique_counter;
+				-- Offset counter.
+				-- Routine offsets start from 0.
+			!!offset_counter;
+			offset_counter.set_value (-1);
 			e_class.set_compiled_info (Current);
 			e_class.set_is_debuggable (not (is_special or else is_basic))
 		end;
@@ -3600,7 +3615,7 @@ feature -- DLE
 			end
 		end;
 
-	dle_is_polymorphic (rout_id: INTEGER): BOOLEAN is
+	dle_is_polymorphic (rout_id: ROUTINE_ID): BOOLEAN is
 			-- Has the feature identified by `rout_id' been declared to be
 			-- polymorphic (i.e. dynamically bound calls) in the Ace file?
 		require

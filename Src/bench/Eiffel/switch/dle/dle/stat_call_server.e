@@ -15,9 +15,11 @@ creation
 	
 feature -- Element change
 
-	mark_static (rout_id, type_id: INTEGER) is
+	mark_static (rout_id: ROUTINE_ID; type_id: INTEGER) is
 			-- Mark the feature call identified by `rout_id' and applied
 			-- on an object of type `type_id' as statically bound.
+		require
+			rout_id_not_void: rout_id /= Void
 		local
 			static_calls: DLE_STATIC_CALLS
 		do
@@ -32,11 +34,14 @@ feature -- Element change
 
 feature -- Status report
 
-	is_polymorphic (rout_id, type_id: INTEGER): BOOLEAN is
+	is_polymorphic (rout_id: ROUTINE_ID; type_id: INTEGER): BOOLEAN is
 			-- Is the feature call identified by `rout_id' and applied
 			-- on an object of type `type_id' dynamically bound?
+		require
+			rout_id_not_void: rout_id /= Void
 		do
-			Result := not has (type_id) or else not item (type_id).has (rout_id)		end;
+			Result := not has (type_id) or else not item (type_id).has (rout_id)
+		end;
 
 feature -- Server
 

@@ -5,7 +5,6 @@ class
 
 	DLE_EIFFEL_HISTORY
 
-
 inherit
 
 	EIFFEL_HISTORY
@@ -24,11 +23,11 @@ creation
 
 feature
 
-	was_used (rout_id: INTEGER): BOOLEAN is
+	was_used (rout_id: ROUTINE_ID): BOOLEAN is
 			-- Was the table of routine id `rout_id' used in the
 			-- static system?
 		do
-			Result := used.valid_index (rout_id) and then used.item (rout_id)
+			Result := used.has (rout_id)
 		end;
 
 	make (static: EIFFEL_HISTORY) is

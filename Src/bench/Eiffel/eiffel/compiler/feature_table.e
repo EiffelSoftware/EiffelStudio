@@ -334,7 +334,7 @@ end;
 			end
 		end;
 
-	propagate_assertions (assert_list: LINKED_LIST [INTEGER]) is
+	propagate_assertions (assert_list: LINKED_LIST [ROUTINE_ID]) is
 			-- Propagate features to Pass 4 using the routine ids
 			-- in `assert_list'.
 		local
@@ -539,7 +539,7 @@ end;
 			go (pos);
 		end;
 
-	feature_of_rout_id (rout_id: INTEGER): FEATURE_I is
+	feature_of_rout_id (rout_id: ROUTINE_ID): FEATURE_I is
 			-- Feature found in routine table rout_id
 		local
 			feat: FEATURE_I;
@@ -616,7 +616,7 @@ end;
 						end;
 						desc.set_feature_id (feature_i.feature_id);
 						desc.set_attribute_name (feature_i.feature_name);
-						desc.set_rout_id (-(feature_i.rout_id_set.first));
+						desc.set_rout_id (feature_i.rout_id_set.first);
 						Result.extend (desc);
 					end;
 				end;
@@ -644,7 +644,8 @@ end;
 		local	
 			tab: ARRAY [FEATURE_I];
 			feat: FEATURE_I;
-			i, nb, rout_id: INTEGER;
+			i, nb: INTEGER;
+			rout_id: ROUTINE_ID;
 			a_class: CLASS_C;
 		do
 			a_class := associated_class;
@@ -664,10 +665,7 @@ end;
 						ba.append_int32_integer (0);
 					else
 						rout_id := feat.rout_id_set.first;
-						if rout_id < 0 then
-							rout_id := - rout_id;
-						end;
-						ba.append_int32_integer (rout_id);
+						ba.append_int32_integer (rout_id.id);
 					end;
 					i := i + 1
 				end
@@ -687,7 +685,8 @@ end;
 		local
 			tab: ARRAY [FEATURE_I];
 			feat: FEATURE_I;
-			i, nb, rout_id: INTEGER;
+			i, nb: INTEGER;
+			rout_id: ROUTINE_ID
 		do
 			tab := routine_id_array;
 			file.putstring ("int32 ra");
@@ -706,10 +705,7 @@ end;
 					file.putint (0);
 				else
 					rout_id := feat.rout_id_set.first;
-					if rout_id < 0 then
-						rout_id := - rout_id;
-					end;
-					file.putint (rout_id);
+					file.putint (rout_id.id);
 debug
 file.putstring (" /* `");
 file.putstring (feat.feature_name);

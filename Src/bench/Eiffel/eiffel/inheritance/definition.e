@@ -97,7 +97,7 @@ feature
 		local
 			attribute, old_attribute: ATTRIBUTE_I;
 			rout_id_set: ROUT_ID_SET;
-			new_rout_id: INTEGER;
+			new_rout_id: ROUTINE_ID;
 			attribute_list: LINKED_LIST [INHERIT_INFO];
 			stop: BOOLEAN;
 			attr_precursor: ATTRIBUTE_I;

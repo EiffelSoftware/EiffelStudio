@@ -22,7 +22,7 @@ class ORIGIN_TABLE
 
 inherit
 
-	EXTEND_TABLE [SELECTION_LIST, INTEGER];
+	EXTEND_TABLE [SELECTION_LIST, ROUTINE_ID];
 	SHARED_WORKBENCH
 		export
 			{NONE} all
@@ -55,7 +55,8 @@ feature
 								info.a_feature.rout_id_set = Void);
 		local
 			rout_id_set: ROUT_ID_SET;
-			i, nb, rout_id: INTEGER;
+			i, nb: INTEGER;
+			rout_id: ROUTINE_ID;
 			l: SELECTION_LIST;
 		do
 			from
@@ -66,9 +67,6 @@ feature
 				i > nb
 			loop
 				rout_id := rout_id_set.item (i);
-				if rout_id < 0 then
-					rout_id := - rout_id;
-				end;
 				l := item (rout_id);
 				if l = Void then
 					!!l.make;
@@ -89,7 +87,8 @@ feature
 									info.a_feature.rout_id_set = Void);
 		local
 			rout_id_set: ROUT_ID_SET;
-			i, nb, rout_id: INTEGER;
+			i, nb: INTEGER;
+			rout_id: ROUTINE_ID;
 			l: SELECTION_LIST;
 		do
 			from
@@ -100,9 +99,6 @@ feature
 				i > nb
 			loop
 				rout_id := rout_id_set.item (i);
-				if rout_id < 0 then
-					rout_id := - rout_id;
-				end;
 				l := item (rout_id);
 				l.start;
 				l.compare_references

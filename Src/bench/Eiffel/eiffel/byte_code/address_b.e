@@ -16,7 +16,7 @@ feature -- Attributes
 	feature_id: INTEGER;
 			-- Feature id of the addressed feature
 
-	rout_id: INTEGER;
+	rout_id: ROUTINE_ID;
 			-- Routine id of the feature
 
 feature  -- Initialization
@@ -83,7 +83,7 @@ feature
 				generated_file.putint (feature_id);
 				generated_file.putchar (')');
 			else
-				entry := Eiffel_table.item_id (rout_id);
+				entry := Eiffel_table.poly_table (rout_id);
 				if entry = Void then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation

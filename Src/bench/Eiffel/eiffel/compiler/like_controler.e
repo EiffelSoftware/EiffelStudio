@@ -4,13 +4,13 @@ class LIKE_CONTROLER
 
 inherit
 
-	LINKED_SET [INTEGER]
+	LINKED_SET [ROUTINE_ID]
 		rename
 			make as basic_make,
 			off as linked_set_off,
 			wipe_out as old_wipe_out
 		end;
-	LINKED_SET [INTEGER]
+	LINKED_SET [ROUTINE_ID]
 		rename
 			off as linked_set_off
 		redefine
@@ -37,6 +37,7 @@ feature
 			-- Initialization
 		do
 			basic_make;
+			compare_objects;
 			!!arguments.make;
 		end;
 

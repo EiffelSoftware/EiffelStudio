@@ -19,7 +19,7 @@ feature
 	attribute_name: STRING;
 			-- Attribute name
 
-	rout_id: INTEGER;
+	rout_id: ROUTINE_ID;
 			-- Attribute routine id
 
 	set_feature_id (i: INTEGER) is
@@ -34,7 +34,7 @@ feature
 			attribute_name := s;
 		end;
 
-	set_rout_id (i: INTEGER) is
+	set_rout_id (i: ROUTINE_ID) is
 			-- Assign `i' to `rout_id'.
 		do
 			rout_id := i
@@ -139,7 +139,7 @@ feature
 						and
 						other.feature_id = feature_id
 						and
-						other.rout_id = rout_id
+						other.rout_id.is_equal (rout_id)
 		end;
 
 	trace is

@@ -98,7 +98,7 @@ feature
 			c_name: STRING;
 			p_name: STRING;
 		do
-			c_name := Encoder.table_name (rout_id);
+			c_name := rout_id.table_name;
 
 			min_val := min_type_id;
 			max_val := max_type_id;

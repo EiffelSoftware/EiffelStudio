@@ -222,7 +222,7 @@ feature
 			good_argument: file /= Void;
 		local
 			area_feature: FEATURE_I;
-			rout_id: INTEGER;
+			rout_id: ROUTINE_ID;
 			table: POLY_TABLE [ENTRY];
 			table_name: STRING;
 			rout_info: ROUT_INFO
@@ -231,13 +231,13 @@ feature
 
 			area_feature := associated_class.feature_table.item ("area");
 
-			rout_id := - area_feature.rout_id_set.first;
+			rout_id := area_feature.rout_id_set.first;
 			if byte_context.final_mode then
-				table := Eiffel_table.item_id (rout_id);
+				table := Eiffel_table.poly_table (rout_id);
 			
 				if table.is_polymorphic (type_id) then
 						-- Access to area is polymorphic
-					table_name := Encoder.table_name (rout_id);
+					table_name := rout_id.table_name;
 					file.putchar ('(');
 					file.putstring (table_name);
 					file.putchar ('-');
@@ -258,7 +258,7 @@ feature
 			then
 				rout_info := System.rout_info_table.item (rout_id);
 				file.putstring ("RTWPA(");
-				file.putint (rout_info.origin);
+				file.putint (rout_info.origin.id);
 				file.putstring (", ");
 				file.putint (rout_info.offset);
 				file.putstring (", Dtype(l[0])))");

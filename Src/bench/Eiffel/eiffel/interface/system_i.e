@@ -21,6 +21,7 @@ inherit
 		end;
 	SHARED_TIME;
 	SHARED_CECIL;
+	SHARED_ROUT_ID;
 	SHARED_BODY_ID;
 	SHARED_ENCODER;
 	SHARED_USED_TABLE;
@@ -40,6 +41,29 @@ inherit
 		end;
 	SHARED_DLE;
 	COMPILER_EXPORTER
+
+feature -- Counters
+
+	routine_id_counter: ROUTINE_COUNTER;
+			-- Counter for routine ids
+
+	init_counters is
+			-- Initialize various counters.
+		do
+			routine_id_counter.init_counter
+		end;
+
+	compilation_id: INTEGER is 
+			-- Precompilation identifier
+		once
+			if Compilation_modes.is_precompiling then
+				Result := 1
+			elseif Compilation_modes.is_extending then
+				Result := 3
+			else
+				Result := -1
+			end
+		end;
 
 feature -- Properties
 
@@ -63,9 +87,6 @@ feature -- Properties
 
 	body_index_counter: COUNTER;
 			-- Body index counter
-
-	routine_id_counter: ROUT_ID_COUNTER;
-			-- Counter for routine ids
 
 	type_id_counter: COUNTER;
 			-- Counter of valid instances of CLASS_TYPE
@@ -369,9 +390,9 @@ feature -- Properties
 			!!m_rout_id_server.make;
 			!!m_desc_server.make;
 				-- Counter creation
+			!! routine_id_counter.make;
 			!!class_counter;
 			!!body_id_counter.make;
-			!!routine_id_counter.make;
 			!!type_id_counter;
 			!!static_type_id_counter;
 			!!body_index_counter;
@@ -396,7 +417,7 @@ feature -- Properties
 			!!dispatch_table.init;
 			!!execution_table.init;
 			!!melted_set.make;
-			!!rout_info_table.make;
+			!!rout_info_table.make (500);
 			!!onbidt.make (50);
 			!!optimization_tables.make;
 			!!dle_frozen_nobid_table.make (50)
@@ -810,9 +831,6 @@ feature -- Recompilation
 				-- Syntax analysis: This maybe add new classes to
 				-- the system
 			process_pass (pass1_controler);
-
-				-- Initialize the routine info table
-			Rout_info_table.init;
 
 				-- Check generic validity on old classes
 				-- generic parameters cannot be new classes
@@ -1257,7 +1275,7 @@ end;
 			has_argument: INTEGER;
 			rout_info: ROUT_INFO;
 			rcorigin, rcoffset: INTEGER;
-			rout_id: INTEGER
+			rout_id: ROUTINE_ID
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("Updating melted.eif%N");
@@ -1278,7 +1296,7 @@ end;
 				end;
 				rout_id := root_feat.rout_id_set.first;
 				rout_info := System.rout_info_table.item (rout_id);
-				rcorigin := rout_info.origin;
+				rcorigin := rout_info.origin.id;
 				rcoffset := rout_info.offset
 			else
 				rcorigin := -1
@@ -1953,8 +1971,6 @@ feature -- Final mode generation
 				-- Set the generation mode in final mode
 			byte_context.set_final_mode;
 
-			Eiffel_table.init;
-
 			from
 				i := 1;
 				nb := class_counter.value;
@@ -2311,7 +2327,8 @@ end;
 		require
 			in_final_mode: byte_context.final_mode
 		local
-			rout_id: INTEGER;
+			server_id: INTEGER;
+			rout_id: ROUTINE_ID;
 			table: POLY_TABLE [ENTRY];
 		do
 			Attr_generator.init;
@@ -2322,10 +2339,11 @@ end;
 			until
 				Tmp_poly_server.after
 			loop
-				rout_id := Tmp_poly_server.key_for_iteration;
+				server_id := Tmp_poly_server.key_for_iteration;
+				table := Tmp_poly_server.item (server_id).poly_table;
+				rout_id := table.rout_id;
 
 				if Eiffel_table.is_used (rout_id) then
-					table := Tmp_poly_server.item (rout_id).poly_table;
 					table.write;
 				end;
 				Tmp_poly_server.forth;
@@ -2771,7 +2789,7 @@ end;
 		do
 			from
 				rout_table := new_special_table;
-				rout_table.set_rout_id (Initialization_id);
+				rout_table.set_rout_id (Initialization_rout_id);
 				i := 1;
 				nb := Type_id_counter.value;
 			until
@@ -2809,7 +2827,7 @@ end;
 
 feature -- Dispose routine
 
-	memory_dispose_id: INTEGER is
+	memory_dispose_id: ROUTINE_ID is
 			-- Memory dispose routine id from class MEMORY. 
 			-- Return 0 if the MEMORY class has not been compiled.
 			--! (Assumed memory must have a dispose routine
@@ -2895,7 +2913,7 @@ feature -- Dispose routine
 		do
 			from
 				rout_table := new_special_table;
-				rout_table.set_rout_id (Dispose_id);
+				rout_table.set_rout_id (Dispose_rout_id);
 				i := 1;
 				nb := Type_id_counter.value;
 			until
@@ -3023,10 +3041,8 @@ feature -- Plug and Makefile file
 				Plug_file.putchar (';');
 				Plug_file.new_line
 
-				init_name :=
-						clone (Encoder.table_name (Initialization_id))
-				dispose_name := 
-						clone (Encoder.table_name (Dispose_id))
+				init_name := Initialization_rout_id.table_name
+				dispose_name := Dispose_rout_id.table_name
 
 				Plug_file.putstring ("extern char *(*");
 				Plug_file.putstring (Table_prefix);
@@ -3073,7 +3089,7 @@ feature -- Plug and Makefile file
 				-- Dispose routine id from class MEMORY (if compiled) 
 			Plug_file.putstring ("int32 disp_rout_id = ");
 			if memory_class /= Void then
-				Plug_file.putint (memory_dispose_id);
+				Plug_file.putint (memory_dispose_id.id);
 			else
 				Plug_file.putstring ("-1");
 			end;
@@ -3196,7 +3212,7 @@ feature -- Main file generation
 			i, nb: INTEGER;
 			Initialization_file: INDENT_FILE
 
-			rout_id: INTEGER;
+			rout_id: ROUTINE_ID;
 			rout_table: ROUT_TABLE;
 
 			rout_info: ROUT_INFO;
@@ -3218,7 +3234,7 @@ feature -- Main file generation
 				end;
 				rout_id := root_feat.rout_id_set.first;
 				rout_info := System.rout_info_table.item (rout_id);
-				rcorigin := rout_info.origin;
+				rcorigin := rout_info.origin.id;
 				rcoffset := rout_info.offset;
 			else
 				rcorigin := -1
@@ -3255,7 +3271,7 @@ feature -- Main file generation
 
 			if 	creation_name /= Void then
 				if final_mode then
-					rout_table ?= Eiffel_table.item_id (rout_id);
+					rout_table ?= Eiffel_table.poly_table (rout_id);
 					c_name := rout_table.feature_name (cl_type.id);
 					Initialization_file.putstring ("%Textern void ");
 					Initialization_file.putstring (c_name);
@@ -3921,7 +3937,8 @@ feature -- DLE
 		local
 			log_file: REMOVED_FEAT_LOG_FILE;
 			f_name: FILE_NAME;
-			rout_id, type_id: INTEGER;
+			type_id: INTEGER;
+			rout_id: ROUTINE_ID;
 			rout_ids: DLE_STATIC_CALLS;
 			feature_table: FEATURE_TABLE;
 			feat: FEATURE_I;

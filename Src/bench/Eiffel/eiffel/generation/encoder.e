@@ -8,27 +8,6 @@ inherit
 	
 feature 
 
-	table_name (rout_id: INTEGER): STRING is
-			-- Name of a table of datas for the final Eiffel executable.
-			-- It is either a name of a routine table or an attribute
-			-- offset table name.
-		require
-			positive_argument: rout_id > 0
-		do
-			Result := Buffer;
-			eif011 ($Result, rout_id);
-		end;
-
-	type_table_name (rout_id: INTEGER): STRING is
-			-- Name of a type table associated to an attribute offset or 
-			-- routine table. Useful for creation generation.
-		require
-			positive_argument: rout_id > 0
-		do
-			Result := Buffer;
-			eif101 ($Result, rout_id);
-		end;
-
 	feature_name (id: INTEGER; body_id: INTEGER): STRING is
 			-- Name of an Eiffel feature belonging to type of id `id'
 			-- and of body id `body_id'.

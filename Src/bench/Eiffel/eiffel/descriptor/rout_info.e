@@ -16,7 +16,7 @@ creation
 
 feature -- Creation
 
-	make (org: INTEGER; offs: INTEGER) is
+	make (org: CLASS_C; offs: INTEGER) is
 		do
 			origin := org;
 			offset := offs
@@ -24,10 +24,9 @@ feature -- Creation
 
 feature -- Data
 
-	origin: INTEGER;
+	origin: CLASS_C;
 		-- Class in which the routine was initially
-		-- declared. The value corresponds to the
-		-- `id' of the corresponding CLASS_C object.
+		-- declared
 
 	offset: INTEGER;
 		-- Offset of the routine in the origin class.
@@ -35,10 +34,10 @@ feature -- Data
 		-- the routine in objects conforming to the 
 		-- origin class.
 
-	set_origin (i: INTEGER) is
-			-- Set `origin' to `i'
+	set_origin (o: CLASS_C) is
+			-- Set `origin' to `o'.
 		do
-			origin := i
+			origin := o
 		end;
 
 	set_offset (i: INTEGER) is
@@ -52,7 +51,7 @@ feature -- Trace
 	trace is
 		do
 			io.putstring (" Origin: ");
-			io.putint (origin);
+			io.putint (origin.id);
 			io.putstring (" Offset: ");
 			io.putint (offset);
 		end;

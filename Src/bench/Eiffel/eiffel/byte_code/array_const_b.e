@@ -77,7 +77,7 @@ feature
 			target_type: TYPE_I;
 			basic_i: BASIC_I;
 			base_class: CLASS_C;
-			r_id: INTEGER;
+			r_id: ROUTINE_ID;
 			rout_info: ROUT_INFO
 		do
 			real_ty ?= context.real_type (type);
@@ -121,7 +121,7 @@ feature
 				ba.append (Bc_parray);
 				r_id := feat_i.rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				ba.append_integer (rout_info.origin);
+				ba.append_integer (rout_info.origin.id);
 				ba.append_integer (rout_info.offset);	
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
 			else

@@ -64,7 +64,6 @@ feature -- Initialization
 			class_counter := static.class_counter;
 			body_id_counter := static.body_id_counter;
 			body_index_counter := static.body_index_counter;
-			routine_id_counter := static.routine_id_counter;
 			type_id_counter := static.type_id_counter;
 			static_type_id_counter := static.static_type_id_counter;
 			feature_counter := static.feature_counter;
@@ -153,6 +152,8 @@ feature -- Initialization
 			dle_static_calls := static.dle_static_calls;
 			dle_system_name := static.system_name;
 			address_table := static.address_table;
+			routine_id_counter := static.routine_id_counter;
+
 			!! sorter.make;
 
 				-- Save information concerning the static base system.
@@ -293,10 +294,7 @@ feature -- Recompilation
 				-- Syntax analysis: This maybe add new classes to
 				-- the system
 			process_pass (pass1_controler);
-
-				-- Initialize the routine info table
-			Rout_info_table.init;
-
+			
 				-- Check generic validity on old classes
 				-- generic parameters cannot be new classes
 debug ("ACTIVITY")
@@ -1406,7 +1404,8 @@ end;
 			-- need not to be dynamically bound now.
 		local
 			table: POLY_TABLE [ENTRY];
-			rout_id, type_id: INTEGER;
+			type_id: INTEGER;
+			rout_id: ROUTINE_ID;
 			rout_ids: DLE_STATIC_CALLS;
 			feature_table: FEATURE_TABLE;
 			class_c: CLASS_C;
@@ -1428,7 +1427,7 @@ end;
 					class_c := class_types.item (type_id).associated_class;
 					feature_table := class_c.feature_table;
 					rout_id := rout_ids.item;
-					table := Eiffel_table.item_id (rout_id);
+					table := Eiffel_table.poly_table (rout_id);
 					if table.is_polymorphic (type_id) then
 							-- The call is not statically bound anymore.
 						feat := feature_table.feature_of_rout_id (rout_id);
@@ -2261,9 +2260,9 @@ end;
 			Plug_file.putstring ("#include %"struct.h%"%N%N");
 			if final_mode then
 					-- Extern declarations
-				init_name := clone (Encoder.table_name (Initialization_id));
-				dispose_name := clone (Encoder.table_name (Dispose_id));
-				dle_make_name := clone (Encoder.table_name (Dle_make_id));
+				init_name := Initialization_rout_id.table_name;
+				dispose_name := Dispose_rout_id.table_name;
+				dle_make_name := Dle_make_rout_id.table_name;
 				Plug_file.putstring ("extern char *(**");
 				Plug_file.putstring (init_name);
 				Plug_file.putstring (")();%N");
@@ -2333,7 +2332,8 @@ end;
 	generate_routine_table is
 			-- Generate routine and attribute table.
 		local
-			rout_id: INTEGER;
+			server_id: INTEGER;
+			rout_id: ROUTINE_ID;
 			table: POLY_TABLE [ENTRY]
 		do
 			Attr_generator.init;
@@ -2343,9 +2343,10 @@ end;
 			until
 				Tmp_poly_server.after
 			loop
-				rout_id := Tmp_poly_server.key_for_iteration;
+				server_id := Tmp_poly_server.key_for_iteration;
+				table := Tmp_poly_server.item (server_id).poly_table;
+				rout_id := table.rout_id;
 				if Eiffel_table.is_used (rout_id) then
-					table := Tmp_poly_server.item (rout_id).poly_table;
 					table.write
 				end;
 				Tmp_poly_server.forth
@@ -2576,7 +2577,7 @@ end;
 			from
 				!! void_type;
 				!! rout_table.make;
-				rout_table.set_rout_id (Dle_make_id)
+				rout_table.set_rout_id (Dle_make_rout_id)
 				i := dle_max_dr_class_id + 1;
 				nb := id_array.upper
 			until

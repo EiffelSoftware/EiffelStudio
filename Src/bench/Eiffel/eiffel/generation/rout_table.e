@@ -84,7 +84,7 @@ feature
 			i, nb, min_id, max_id: INTEGER;
 			routine_name, c_name: STRING;
 		do
-			c_name := Encoder.table_name (rout_id);
+			c_name := rout_id.table_name;
 			min_id := min_used;
 			max_id := max_used;
 			from

@@ -21,19 +21,16 @@ feature
 		deferred
 		end;
 
-	rout_id: INTEGER is
+	rout_id: ROUTINE_ID is
 			-- Routine ID for the access (used in final mode generation)
 		local
 			class_type: CL_TYPE_I;
 		do
 			class_type ?= context_type;
 			Result := class_type.base_class.feature_table.item
-				(feature_name).rout_id_set.first;
-			if Result < 0 then
-				Result := -Result;
-			end;
+				(feature_name).rout_id_set.first
 		ensure
-			positive_routine_id: Result > 0;
+			routine_id_not_void: Result /= Void
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is
@@ -70,7 +67,8 @@ feature
 			feat_tbl: FEATURE_TABLE;
 			inst_cont_type: TYPE_I;
 			metamorphosed: BOOLEAN;
-			r_id, origin, offset: INTEGER;
+			origin, offset: INTEGER;
+			r_id: ROUTINE_ID;
 			rout_info: ROUT_INFO
 		do
 			inst_cont_type := context_type;
@@ -102,11 +100,8 @@ end;
 					ba.append (Bc_metamorphose);
 					if associated_class.is_precompiled then
 						r_id := feat_tbl.item (feature_name).rout_id_set.first;
-						if r_id < 0 then
-							r_id := - r_id
-						end;
 						rout_info := System.rout_info_table.item (r_id);
-						origin := rout_info.origin;
+						origin := rout_info.origin.id;
 						offset := rout_info.offset;
 						make_end_precomp_byte_code (ba, flag, origin, offset)
 					else
@@ -137,11 +132,8 @@ end;
 				if associated_class.is_precompiled then
 					r_id := associated_class.feature_table.item
 						(feature_name).rout_id_set.first;
-					if r_id < 0 then
-						r_id := - r_id
-					end;
 					rout_info := System.rout_info_table.item (r_id);
-					origin := rout_info.origin;
+					origin := rout_info.origin.id;
 					offset := rout_info.offset;
 					make_end_precomp_byte_code (ba, flag, origin, offset)
 				else

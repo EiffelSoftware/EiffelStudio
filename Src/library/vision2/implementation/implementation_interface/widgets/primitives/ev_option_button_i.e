@@ -10,6 +10,9 @@ deferred class
 
 inherit
 	EV_MENU_HOLDER_I
+		redefine
+			add_menu_ok
+		end
 
 	EV_BUTTON_I
 		rename
@@ -36,6 +39,9 @@ feature {EV_OPTION_BUTTON} -- Status report
 			-- which menu item is selected.
 		deferred
 		end
+
+	menu: EV_MENU_IMP
+			-- The menu contained in the option button.
 
 feature {NONE} -- Inapplicable
 
@@ -72,6 +78,15 @@ feature {EV_OPTION_BUTTON, EV_MENU_IMP} -- Implementation
 	menu_items_array: ARRAYED_LIST [EV_MENU_ITEM_IMP]
 			-- List of the children (menu_items) of the
 			-- child (menu). We need it for `selected item'.
+
+feature -- Implementation
+
+	add_menu_ok: BOOLEAN is
+			-- Can we add a menu to the Current widget?
+		do
+			-- We can only add one menu to the option button.
+			Result := (menu = Void)
+		end
 
 end -- class EV_OPTION_BUTTON_I
 

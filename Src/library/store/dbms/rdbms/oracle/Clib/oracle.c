@@ -16,6 +16,7 @@
    Product: "EiffelStore";
    Database: "ora"
 */
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -78,7 +79,7 @@ sb2 descrip_indp[MAX_SELECT_LIST_SIZE];
 static text sql_statement[2048];
 static sword sql_function;
 static sword numwidth = 8;
-static descriptor;
+static int descriptor;
 static int error_number;
 static int max_size;
 text error_message[512];
@@ -110,9 +111,9 @@ short ora_tranNumber=0; /* number of transaction opened at present */
 
 int c_ora_make (int m_size)
 {
-  int count;
+  /*int count;
   
-  /*if (error_message == NULL) {
+  if (error_message == NULL) {
 	 error_message = (char *) ora_safe_alloc(malloc (sizeof (char) * (m_size + ERROR_MESSAGE_SIZE)));
   }*/
 
@@ -169,7 +170,7 @@ int ora_new_descriptor (void)
     }
   else {
 	//ora_error_handler(NULL, 201);
-	strcpy(error_message, " No available descriptor\n");
+	strcpy((char *) error_message, "No available descriptor\n");
   }
   return result;
 }
@@ -186,12 +187,12 @@ int ora_new_descriptor (void)
 /*****************************************************************/
 int ora_first_descriptor_available (void)
 {
-	int no_descriptor;    
+/*	int no_descriptor;    
  
-//	for (no_descriptor = 0; no_descriptor < MAX_DESCRIPTOR && &cda[no_descriptor] != NULL; no_descriptor++)
-//	{
-		/* empty */
-//	}
+	for (no_descriptor = 0; no_descriptor < MAX_DESCRIPTOR && &cda[no_descriptor] != NULL; no_descriptor++)
+	{
+	}
+*/
    	
 	if (descriptor < MAX_DESCRIPTOR)
     {
@@ -253,10 +254,8 @@ int ora_max_descriptor (void)
 /* and finally return error number.                              */
 /*                                                               */
 /*****************************************************************/
-int ora_exec_immediate (text order[1024])
+int ora_exec_immediate (int no_desc, text order[1024])
 {
-	int no_desc;
-	no_desc = ora_new_descriptor();
 	ora_tranNumber = 1;
 	ora_clear_error ();
 	if (oparse(&cda[no_desc], (text *) order, (sb4) -1, (sword) PARSE_NO_DEFER, (ub4) PARSE_V7_LNG)) {
@@ -351,8 +350,8 @@ sword describe_define(Cda_Def *tmp)
 			{
 				defptr = (ub1 *) &def[col].flt_buf;
 				deflen = (sword) sizeof(float);
-				deftyp = FLT_TYPE;
-				desc[col].dbtype = FLT_TYPE;
+				deftyp = FLOAT_TYPE;
+				desc[col].dbtype = FLOAT_TYPE;
 			}
 			else
 			{
@@ -363,14 +362,14 @@ sword describe_define(Cda_Def *tmp)
 			}
 			break;
 			default:
-			if (desc[col].dbtype == D_TYPE)
+			if (desc[col].dbtype == DATE_TYPE)
 				desc[col].dbsize = 19;
 			if (desc[col].dbtype == ROWID_TYPE)
 				desc[col].dbsize = 18;
 			defptr = def[col].buf;
 			deflen = desc[col].dbsize > MAX_ITEM_BUFFER_SIZE ? 
 			MAX_ITEM_BUFFER_SIZE : desc[col].dbsize + 1;
-			deftyp = STRG_TYPE;
+			deftyp = STRING_TYPE;
 			break;
 		}
 		if (odefin(
@@ -404,7 +403,7 @@ void print_header(sword ncols)
 	for (col = 0; col < ncols; col++)
 	{
 		n = desc[col].dbsize - desc[col].buflen;
-		if (desc[col].dbtype == FLOAT_TYPE ||
+		if (desc[col].dbtype == ORA_EIF_FLOAT_TYPE ||
 			desc[col].dbtype == INT_TYPE)
 		{
 			printf("%*c", n, ' ');
@@ -454,7 +453,7 @@ null, print n spaces, else print value. */
 			{
 				switch (desc[col].dbtype)
 				{
-					case FLOAT_TYPE:
+					case ORA_EIF_FLOAT_TYPE:
 						printf("%*.*f", numwidth, 2, def[col].flt_buf);
 						break;
 					case INT_TYPE:
@@ -477,7 +476,7 @@ null, print n spaces, else print value. */
 int ora_put_data (int no_des, int index, char *result)
 {
 	int size;
-	size = strlen (def[index-1].buf);
+	size = strlen ((char *) def[index-1].buf);
 //	switch (desc[index].dbtype)
 //	{
 //		case FLOAT_TYPE:
@@ -505,7 +504,7 @@ int ora_put_select_name (int no_des, int i, char *result)
 	char *tmp_st;
 	int size;
 
-	tmp_st = desc[i-1].buf;
+	tmp_st = (char *) desc[i-1].buf;
 	size = strlen (tmp_st);
 	memcpy (result, tmp_st, size);
 	return size;
@@ -530,10 +529,6 @@ int ora_put_select_name (int no_des, int i, char *result)
 
 int ora_start_order (int no_desc)
 {
-sword col, errno, n; 
-text *cp;
-
-
 /* Process user’s SQL statements. */
 //for (;;)
 //{
@@ -662,7 +657,7 @@ disregard null fetch ”error”. */
 /*****************************************************************/
 
 
-int ora_set_parameter(int no_desc, text *stmt_buf, char *ph, char *value) {
+int ora_set_parameter(int no_desc, text *stmt_buf, text *ph, char *value) {
 
 	//text bind_values[MAX_BINDS][MAX_ITEM_BUFFER_SIZE];
 
@@ -693,7 +688,7 @@ auto on the do_binds stack. */
 					return 1;
 				}
 			}				
-			if (obndrv(&cda[no_desc], ph, -1, value, -1,
+			if (obndrv(&cda[no_desc], ph, -1, (ub1 *) value, -1,
 			VARCHAR2_TYPE, -1, (sb2 *) 0, (text *) 0, -1, -1))
 			{
 				ora_error_handler(&cda[no_desc]);
@@ -727,7 +722,7 @@ return 0;
 int ora_connect (text *name, text *passwd)
 {
 		Cda_Def cursor;
-		text *sql_stat = "ALTER SESSION SET NLS_DATE_FORMAT = 'MM/DD/YYYY HH24:MI:SS'";
+		char *sql_stat = "ALTER SESSION SET NLS_DATE_FORMAT = 'MM/DD/YYYY HH24:MI:SS'";
 
 		if (olog (&lda, (ub1 *)hda, name, -1, passwd, -1,
 				(text *) 0, -1, OCI_LM_DEF))
@@ -736,7 +731,7 @@ int ora_connect (text *name, text *passwd)
 		}
 		//connections++
 		oopen (&cursor, &lda, (text *) 0, -1, -1, (text *) 0, -1);
-		oparse (&cursor, sql_stat, -1, 1, 2);
+		oparse (&cursor, (text *) sql_stat, -1, 1, 2);
 		oexec(&cursor);
 		return 0;
 }
@@ -755,19 +750,18 @@ int ora_disconnect (void)
   int count;
   
   ora_clear_error ();
-  for (count = 0; count < MAX_DESCRIPTOR; count++)
+	/* Clean all the allocated descriptor, here we allocated
+	   `descriptor - 1' descriptors. */
+  for (count = 0; count < descriptor; count++)
     {
       ora_terminate_order (count);
     }
-  if (ologof(&lda))
-  {
+  if (ologof(&lda)) {
 	ora_error_handler(&lda);
 	}
 
   ora_tranNumber = 0;
   return error_number;
-
-
 }
 
 /*****************************************************************/
@@ -873,7 +867,7 @@ int ora_get_date_data (int no_des, int i)
 {
 	int size;
 	
-	if (desc[i-1].dbtype == D_TYPE)
+	if (desc[i-1].dbtype == DATE_TYPE)
 	{
 		size = desc[i-1].buflen;
 		memcpy (&date, def[i-1].buf, sizeof(date));
@@ -883,39 +877,39 @@ int ora_get_date_data (int no_des, int i)
 	return 0;
 }
 
-char ora_get_year(void)
+char *ora_get_year(void)
 {
-	strncpy (&y, &date[6], 4);
+	strncpy ((char *) &y, &date[6], 4);
 	return y;
 }
 
-char ora_get_month(void)
+char *ora_get_month(void)
 {
-	strncpy (&d, &date[0], 2);
+	strncpy ((char *) &d, &date[0], 2);
 	return d;
 }
 
-char ora_get_day(void)
+char *ora_get_day(void)
 {
-	strncpy (&d, &date[3], 2);
+	strncpy ((char *) &d, &date[3], 2);
 	return d;
 }
 
-char ora_get_hour(void)
+char *ora_get_hour(void)
 {
-	strncpy (&d, &date[11], 2);
+	strncpy ((char *) &d, &date[11], 2);
 	return d;
 }
 
-char ora_get_min(void)
+char *ora_get_min(void)
 {
-	strncpy (&d, &date[14], 2);
+	strncpy ((char *) &d, &date[14], 2);
 	return d;
 }
 
-char ora_get_sec(void)
+char *ora_get_sec(void)
 {
-	strncpy (&d, &date[17], 2);
+	strncpy ((char *) &d, &date[17], 2);
 	return d;
 }
 
@@ -929,24 +923,24 @@ int ora_get_data_len (int no_des, int i)
 	  return desc[i-1].buflen;
 }
 
-int ora_conv_type (int i)
+int ora_conv_type (int precision, i)
 	/*char syb_conv_type (int i)*/
 {
 	switch (i)
 	{
 		case VARCHAR2_TYPE:
-		case STRG_TYPE:
-			return STRING_TYPE;
+		case STRING_TYPE:
+			return ORA_EIF_STRING_TYPE;
 		case INT_TYPE:
-			return INTEGER_TYPE;
+			return ORA_EIF_INTEGER_TYPE;
 		case NUMBER_TYPE:
-			return REAL_TYPE;
-		case FLT_TYPE:
-			return FLOAT_TYPE;
-		case D_TYPE:
-			return DATE_TYPE;
+			return ORA_EIF_REAL_TYPE;
+		case FLOAT_TYPE:
+			return ORA_EIF_FLOAT_TYPE;
+		case DATE_TYPE:
+			return ORA_EIF_DATE_TYPE;
 		default:
-			return UNKNOWN_TYPE;
+			return ORA_EIF_UNKNOWN_TYPE;
 																    }
 }
 int ora_get_col_type (int no_des, int i)
@@ -966,39 +960,39 @@ int ora_get_col_len (int no_des, int i)
 
 int ora_c_string_type ()
 {
-	  return STRING_TYPE;
+	  return ORA_EIF_STRING_TYPE;
 }
 
 int ora_c_character_type ()
 {
-	  return CHARACTER_TYPE;
+	  return ORA_EIF_CHARACTER_TYPE;
 }
 
 int ora_c_integer_type ()
 {
-	  return INTEGER_TYPE;
+	  return ORA_EIF_INTEGER_TYPE;
 }
 
 int ora_c_float_type ()
 {
-	  return FLOAT_TYPE;
+	  return ORA_EIF_FLOAT_TYPE;
 }
 
 
 int ora_c_real_type ()
 {
-	  return REAL_TYPE;
+	  return ORA_EIF_REAL_TYPE;
 }
 
 
 int ora_c_boolean_type ()
 {
-	  return BOOLEAN_TYPE;
+	  return ORA_EIF_BOOLEAN_TYPE;
 }
 
 int ora_c_date_type ()
 {
-	  return DATE_TYPE;
+	  return ORA_EIF_DATE_TYPE;
 }
 
 /*****************************************************************/
@@ -1015,14 +1009,13 @@ void ora_clear_error (void)
 
 
 
-char * ora_get_error_message (void)
+char *ora_get_error_message (void)
 {
-  return error_message;
+  return (char *) error_message;
 }
 
 
-
-ora_c_free(char *ptr) {
+void ora_c_free(char *ptr) {
 	free(ptr);
 }
 

@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 		end
 
 feature {NONE} -- Implementation
-
+feature {ANY} -- Not permanent exportation
 	feature_tool_mgr: EB_FEATURE_TOOL_LIST
 		-- Manager for feature tools 
 
@@ -141,8 +141,8 @@ feature -- Properties
 			-- (system and class) having been modified?
 		do
 			Result := class_tool_mgr.changed
---				or else
---			(is_system_tool_valid and then system_tool.changed)
+				or else
+			(system_tool_is_valid and then system_tool.changed)
 		end
 				
 	is_class_opened (cl_name:STRING):BOOLEAN is

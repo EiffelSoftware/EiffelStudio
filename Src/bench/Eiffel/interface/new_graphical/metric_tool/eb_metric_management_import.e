@@ -473,27 +473,8 @@ feature -- Importation
 					list_item.set_text (new_name)
 					cell.item1.set_name (new_name)
 					create l_namespace.make ("", "")
-					l_att_list := cell.item2.attributes
-					from
-						l_att_list.start
-					until
-						l_att_list.after
-					loop
-						if l_att_list.item_for_iteration.name.is_equal ("Name") then
-							l_att_list.item_for_iteration.set_name (new_name)
-						end
-						l_att_list.forth						
-					end
-
-						-- Has to be debugged...
-					create name_attribute.make ("Name", l_namespace, new_name, cell.item2)
---					cell.item2.attributes.replace_ (name_attribute, "Name")
-					cell.item2.search_forth (name_attribute) -- attributes.re
-					if not cell.item2.after then
-						cell.item2.remove_right
-					end
+					cell.item2.remove_attribute_by_name ("Name")
 					cell.item2.add_attribute ("Name", l_namespace, new_name) 
-
 					list_item.pointer_double_press_actions.wipe_out
 					list_item.pointer_double_press_actions.extend (~double_click_remove)
 					current_metric_list.extend (list_item)

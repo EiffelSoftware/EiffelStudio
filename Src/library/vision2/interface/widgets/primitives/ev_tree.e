@@ -47,7 +47,8 @@ create
 feature -- Access
 
 	selected_item: EV_TREE_NODE is
-			-- Currently selected item.
+			-- Currently selected item at any level
+			-- within tree hierarchy.
 		require
 			not_destroyed: not is_destroyed
 		do
@@ -71,6 +72,7 @@ feature -- Status report
 
 	selected: BOOLEAN is
 			-- Is an item selected in `Current' ?
+		obsolete "Use selected_item /= Void instead."
 		require
 			not_destroyed: not is_destroyed
 		do

@@ -57,11 +57,33 @@ feature {NONE} -- Implementation
 	
 	display_directory_dialog is
 			-- Called by `select_actions' of `select_directory_button'.
+		local
+			directory: DIRECTORY
+			error_dialog: EV_WARNING_DIALOG
+			valid_directory: BOOLEAN
+			cancelled: BOOLEAN
 		do
-			directory_dialog.show_modal_to_window (Current)
-			directory_display.set_text (Directory_dialog.directory)
-			if not directory_display.text.is_empty then
-				ok_button.enable_sensitive	
+			from
+			until
+				valid_directory or cancelled
+			loop
+				directory_dialog.show_modal_to_window (Current)
+				create directory.make (directory_dialog.directory)
+				if directory.exists then
+					valid_directory := True
+				elseif Directory_dialog.selected_button.is_equal ((create {EV_DIALOG_CONSTANTS}).ev_cancel) then
+					cancelled := True
+				else
+					create error_dialog.make_with_text ("The selected directory does not exist.%NPlease select a valid directory.")
+					error_dialog.show_modal_to_window (Current)
+				end
+			end
+			if not cancelled then
+				directory_display.set_text (Directory_dialog.directory)			
+				ok_button.enable_sensitive
+			else
+				directory_display.remove_text
+				ok_button.disable_sensitive
 			end
 		end
 

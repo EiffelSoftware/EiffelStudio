@@ -97,6 +97,8 @@ feature -- Initialization
 			global_verti_split_window.update_split
 			hori_split_window.update_split
 			top_verti_split_window.update_split
+
+			display_welcome_info
 		end
 
 feature -- Resource Update
@@ -437,6 +439,30 @@ feature -- Pulldown Menus
 
 	recent_project_menu: INTEGER is 16
 			-- ID Recent project menu for the file menu
+
+	active_menus (erase: BOOLEAN) is
+			-- Enable all the menus and if `erase' clean
+			-- the content of the Project tool.
+		do
+			menus.item (compile_menu).set_sensitive
+			menus.item (debug_menu).set_sensitive
+			menus.item (format_menu).set_sensitive
+			menus.item (special_menu).set_sensitive
+			menus.item (window_menu).set_sensitive
+			if erase then
+				text_window.clear_window
+			end
+		end
+
+	disable_menus is
+			-- Disable all the menus.
+		do
+			menus.item (compile_menu).set_insensitive
+			menus.item (debug_menu).set_insensitive
+			menus.item (format_menu).set_insensitive
+			menus.item (special_menu).set_insensitive
+			menus.item (window_menu).set_insensitive
+		end
 
 feature -- Modifiable menus
 
@@ -900,6 +926,9 @@ feature -- Graphical Interface
 			else
 				display_object_cmd.show
 			end
+
+				-- Make all the entry disabled.
+			disable_menus
 		end
 
 	build_menu is
@@ -2003,7 +2032,31 @@ feature -- Information
 			end
 		end
 
-	structured_system_info:STRUCTURED_TEXT is
+	display_welcome_info is
+		do
+			debug_window.clear_window
+			debug_window.process_text (welcome_info)
+			debug_window.set_top_character_position (0)
+			debug_window.display
+		end
+
+	welcome_info: STRUCTURED_TEXT is
+			-- Display information on how to launch EiffelBench.
+		local
+		do
+			!! Result.make
+			Result.add_new_line
+			Result.add_comment_text ("To start using EiffelBench choose either")
+			Result.add_new_line
+			Result.add_comment_text ("%"New Project...%" or %"Open Project...%"")
+			Result.add_new_line
+			Result.add_comment_text ("from the File menu.")
+			Result.add_new_line
+		ensure
+			Result_not_void: Result /= Void
+		end
+
+	structured_system_info: STRUCTURED_TEXT is
 		local
 			root_class_name: STRING
 			root_class_c: CLASS_C
@@ -2043,8 +2096,8 @@ feature -- Information
 					st.add_new_line
 					st.add_comment_text ("PROJECT PATH  : ")
 					st.add_string (eiffel_project.name)
-					st.add_new_line
-					st.add_new_line
+--					st.add_new_line
+--					st.add_new_line
 -- 					st.add_comment_text ("$EIFFEL4      = ")
 -- 					st.add_string (execution_environment.get ("EIFFEL4"))
 -- 					st.add_new_line
@@ -2055,9 +2108,9 @@ feature -- Information
 -- 					st.add_string (execution_environment.get ("COMPILER"))
 -- 					st.add_new_line
 				end
+				Result := st
 			end
-
-			Result := st
 		end
 
-end -- class PROJECT_W
+end
+

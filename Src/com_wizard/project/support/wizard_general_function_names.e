@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Feature nameS of class GENERAL and MEMORY"
 	status: "See notice at end of class";
 	date: "$Date$"
 	revision: "$Revision$"
@@ -56,6 +56,66 @@ feature -- Access
 	print_routine: STRING is "print"
 
 	tagged_out_routine:STRING is "tagged_out"
+
+	allocate_compact_routine:STRING is "allocate_compact"
+
+	allocate_fast_routine:STRING is "allocate_fast"
+
+	allocate_tiny_routine:STRING is "allocate_tiny"
+
+	chunk_size_routine:STRING is "chunk_size"
+
+	coalesce_period_routine:STRING is "coalesce_period"
+
+	collect_routine:STRING is "collect"
+
+	collecting_routine:STRING is "collecting"
+
+	collection_off_routine:STRING is "collection_off"
+
+	collection_on_routine:STRING is "collection_on"
+
+	collection_period_routine:STRING is "collection_period"
+
+	disable_time_accounting_routine:STRING is "disable_time_accounting"
+
+	dispose_routine:STRING is "dispose"
+
+	enable_time_accounting_routine:STRING is "enable_time_accounting"
+
+	free_routine:STRING is "free"
+
+	full_coalesce_routine:STRING is "full_coalesce"
+
+	full_collect_routine:STRING is "full_collect"
+
+	gc_monitoring_routine:STRING is "gc_monitoring"
+
+	gc_statistics_routine:STRING is "gc_statistics"
+
+	generation_object_limit_routine:STRING is "generation_object_limit"
+
+	largest_coalesced_block_routine:STRING is "largest_coalesced_block"
+
+	max_mem_routine:STRING is "max_mem"
+
+	mem_free_routine:STRING is "mem_free"
+
+	memory_statistics_routine:STRING is "memory_statistics"
+
+	memory_threshold_routine:STRING is "memory_threshold"
+
+	scavenge_zone_size_routine:STRING is "scavenge_zone_size"
+
+	set_coalesce_period_routine:STRING is "set_coalesce_period"
+
+	set_collection_period_routine:STRING is "set_collection_period"
+
+	set_max_mem_routine:STRING is "set_max_mem"
+
+	set_memory_threshold_routine:STRING is "set_memory_threshold"
+
+	tenure_routine:STRING is "tenure"
 
 end -- class WIZARD_GENERAL_FUNCTION_NAMES
 

@@ -1763,6 +1763,7 @@ feature -- Debugging
 				and then (not is_constant)
 				and then (not is_deferred)
 				and then (not is_unique)
+				and then (written_class.has_types)
 		end;
 
 	debuggables: LINKED_LIST [DEBUGGABLE] is

@@ -82,6 +82,7 @@ feature
 			client: CLASS_C;
 			ftable: FEATURE_TABLE;
 			first_time: BOOLEAN
+			feat: FEATURE_I
 		do
 			fid := feature_i.feature_id;
 			clients := class_c.clients;
@@ -113,7 +114,18 @@ feature
 							end;
 							first_time := False;
 							display.put_string ("   ");
-							client.feature_table.item (cfeat).append_clickable_name (display, client);
+debug
+	io.error.putstring ("Feature name: ");
+	io.error.putstring (cfeat);
+	io.error.new_line
+end;
+							feat := client.feature_table.item (cfeat);
+							if feat = Void then
+								--| Has to be an invariant
+								display.put_string ("invariant");
+							else
+								feat.append_clickable_name (display, client);
+							end;
 							display.new_line;
 						end;
 						fdep.forth

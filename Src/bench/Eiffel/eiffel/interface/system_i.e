@@ -843,6 +843,9 @@ end;
 				io.error.putstring ("Melting changes%N");
 
 				make_update;
+debug ("VERBOSE")
+	io.error.putstring ("Saving .workbench%N");
+end;
 			end;
 			first_compilation := False;
 		end;

@@ -20,6 +20,13 @@ extern "C" {
 #include "eif_globals.h"
 #include "eif_portable.h"
 
+#ifdef EIF_WIN32
+#include <windows.h>
+#ifndef MAX_PATH
+#define MAX_PATH 255
+#endif
+#endif
+
 /*
  * Options in workbench mode
  */

@@ -1,11 +1,10 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Error when a class inherits from a frozen class."
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
-	IL_INHERIT_ERROR
+	VIFI
 
 	-- Replace ANY below by the name of parent class if any (adding more parents
 	-- if necessary); otherwise you can remove inheritance clause altogether.
@@ -63,4 +62,4 @@ feature -- Output
 			parent_class.append_signature (st)			
 		end
 
-end -- class IL_INHERIT_ERROR
+end -- class VIFI

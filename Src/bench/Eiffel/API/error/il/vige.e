@@ -4,7 +4,7 @@ indexing
 	revision: "$Revision$"
 
 class
-	IL_ERROR
+	VIGE
 
 inherit
 	ERROR

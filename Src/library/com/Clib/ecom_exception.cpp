@@ -104,6 +104,7 @@ HRESULT Formatter::hresult (int code)
 	}
 	else
 	{
+	  	GTCX
 		if ((echval != 0) && (echtg != (char *) 0))
 			result = ccom_hresult (echtg); 
 

@@ -47,7 +47,7 @@ feature {NONE} -- Initialization
 
 			create sep.make (Current)
 			create hbox.make (Current)
-			hbox.set_expand (False)
+			set_child_expandable (hbox, False)
 			hbox.set_border_width (20)
 			create button.make_with_text (hbox, "Create timeout")
 			button.set_horizontal_resize (False)

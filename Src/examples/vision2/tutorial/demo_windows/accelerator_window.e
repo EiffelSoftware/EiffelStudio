@@ -68,7 +68,7 @@ feature {NONE} -- Initialization
 			create lab4.make (vbox)
 			lab4.set_editable (False)
 			!! but.make_with_text (vbox, "Choose")
-			but.set_expand (False)
+			vbox.set_child_expandable (but, False)
 			!! cmd.make (~execute_button)
 			but.add_click_command (cmd, Void)
 

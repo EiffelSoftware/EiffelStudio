@@ -95,7 +95,7 @@ feature -- Assertion test
 	add_child_ok: BOOLEAN is
 			-- Used in the precondition of
 			-- 'add_child'. True, if it is ok to add a
-			-- child to container.
+			-- child to container.			
 		do
 			Result := c_gtk_container_nb_children (widget)= 0
 		end
@@ -125,7 +125,7 @@ feature {EV_WIDGET_IMP} -- Implementation
 
 --	child_expand_changed (the_child: EV_WIDGET_IMP) is
 --		deferred	
- --		end
+--		end
 
 --	child_vertresize_changed (the_child: EV_WIDGET_IMP) is
 --		deferred	

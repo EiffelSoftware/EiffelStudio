@@ -72,7 +72,7 @@ feature {EV_TREE_ITEM_IMP} -- Implementation
 		 	t_item ?= eif_object_from_c (a_tree_item)
 
 			if previous_selected_item /= Void and then
-			previous_selected_item.parent_tree = interface and
+			previous_selected_item.parent_tree = interface and then
 			previous_selected_item /= t_item.interface then
 				previous_selected_item.deselect_actions.call ([])
 			end
@@ -257,6 +257,9 @@ end -- class EV_TREE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.33  2000/03/07 01:28:18  king
+--| Optimized loop by adding and then
+--|
 --| Revision 1.32  2000/03/06 20:13:51  king
 --| Made compatible with new action sequence
 --|

@@ -27,11 +27,7 @@ feature -- Properties
 	command_shell_name: STRING is
 			-- Name of the command to execute in the shell window.
 		do
-			if tool = Project_tool then
-				Result := General_resources.project_shell_command.value
-			else
-				Result := General_resources.shell_command.value
-			end
+			Result := General_resources.shell_command.value
 		end;
 
 	symbol: PIXMAP is 
@@ -111,10 +107,6 @@ feature {NONE} -- Implementation
 					if feature_stone /= Void then
 						process_feature (feature_stone)
 					end
-				elseif tool = Project_tool then
-					cmd_string.replace_substring_all ("$target", Eiffel_system.name);
-					!! req;
-					req.execute (cmd_string);
 				elseif tool.file_name /= Void and then tool.stone /= Void then
 					class_tool ?= tool;
 					if class_tool /= Void and then (

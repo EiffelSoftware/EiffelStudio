@@ -130,6 +130,8 @@ double *usertime, *systime;
 public void getcputime(usertime, systime)
 double *usertime, *systime;
 {
+	*usertime = 0;
+	*systime = 0;
 }
 #endif
 

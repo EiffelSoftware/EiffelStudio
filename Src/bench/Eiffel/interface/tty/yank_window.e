@@ -1,47 +1,40 @@
+indexing
 
--- Stores the output in a string
+	description: 
+		"Stores the output in a string.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class YANK_WINDOW
 
 inherit
 
 	WINDOWS;
-
 	OUTPUT_WINDOW
 
 creation
 
 	make
 
-feature
-
-	stored_output: STRING
+feature -- Initalization
 
 	make is
 		do
 			!!stored_output.make (0);
 		end;
 
+feature -- Properties
+
+	stored_output: STRING
+
+feature -- Element change
+
 	reset_output is
 		do
 			stored_output.wipe_out
 		end;
 
---	open_file is
---		local
---			retried: BOOLEAN
---		do
---			if not retried then
---				open_write
---			end;
---		rescue
-----			io.error.putstring ("Cannot create file: ");
---			io.error.putstring ("Cannot create file: ");
---			io.error.putstring (name);
---			io.error.new_line;
-----			retried := True;
---			retry
---		end;
+feature -- Output
 
 	put_string (s: STRING) is
 		do
@@ -61,4 +54,4 @@ feature
 			stored_output.extend ('%N')
 		end;
 
-end
+end -- class YANK_WINDOW

@@ -64,10 +64,6 @@ extern void wstdinit(char *obj, char *parent);				/* Composite objects initializ
 extern char *cr_exp(uint32 type);				/* Creation of expanded objects */
 #endif
 
-#ifdef __cplusplus
-}
-#endif
-
 /*
  * Run time declarations (tables produced by the compiler).
  */
@@ -82,25 +78,21 @@ extern char *(**ecreate)();			/* Initialization routines */
 extern char *(**dle_make)();		/* Make routines of DYNAMIC descendants */
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #define System(type)		esystem[type]	/* Object description */
 
 #ifndef WORKBENCH
-#define References(type)	nbref[type]	 	/* # of references */
-#define Size(type)			esize[type]	 	/* Object's size */
+#define References(type)	nbref[type] 	/* # of references */
+#define Size(type)		esize[type] 	/* Object's size */
 #define Dispose(type)		edispose[type]	/* Dispose routine */
-#define Disp_rout(type) 	Dispose(type)	/* Does type have disp routine */
-#define XCreate(type)	     ecreate[type]   /* Initialization routine */
+#define Disp_rout(type)	Dispose(type)	/* Does type have disp routine */
+#define XCreate(type)		ecreate[type]	/* Initialization routine */
 #else
 #define References(type)	esystem[type].nb_ref
-#define Size(type)			esystem[type].size
-#define Disp_rout(type)		esystem[type].cn_disposed
-											/* Does type have disp routine ? */
+#define Size(type)		esystem[type].size
+#define Disp_rout(type)	esystem[type].cn_disposed
+								/* Does type have disp routine ? */
 #define Dispose(type) ((void (*)()) wdisp(type));
-											/* Dispose routine */
+										/* Dispose routine */
 #define XCreate(type)	     \
 	(esystem[type].cn_composite ? (char *(*)()) wstdinit : (char *(*)()) 0)
 #endif
@@ -138,6 +130,8 @@ extern EIF_BOOLEAN econfg(char *obj1, char *obj2);	/* Conformance query in class
 extern int econfm(int ancestor, int heir);			/* Conformance query for assignment attempt */
 extern long sp_count(char *spobject);			/* Count of a special object */
 extern void chkinv(char *obj, int where);			/* Invariant control call */
+extern char estypeg(char *obj1, char *obj2);
+
 #ifdef WORKBENCH
 extern void chkcinv(char *obj);			/* Creation invariant call */	
 #endif

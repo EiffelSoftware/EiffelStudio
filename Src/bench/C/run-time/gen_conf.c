@@ -343,13 +343,13 @@ rt_private void eif_put_gen_seq (int16, int16*, int16*, int16);
 /* Public features protected with a MUTEX.                          */
 /*------------------------------------------------------------------*/
 
-rt_public int16 eif_compound_id (int16 *cache, EIF_REFERENCE Current, int16 base_id, int16 *types)
+rt_public int16 eif_compound_id (int16 *cache, int16 current_dftype, int16 base_id, int16 *types)
 {
 	int16   result;
 
 	EIFMTX_LOCK;
 
-	result = eifthd_compound_id (cache, Current, base_id, types);
+	result = eifthd_compound_id (cache, current_dftype, base_id, types);
 
 	EIFMTX_UNLOCK;
 
@@ -793,8 +793,6 @@ rt_shared void eif_gen_conf_cleanup ()
 	eif_free (eif_cid_map);		/* (int16 *) */
 } /* eif_gen_conf_cleanup () */
 
-
-
 /*------------------------------------------------------------------*/
 /* Compute id for `types'. `cache' is used to cache the result in   */
 /* the generated C code if possible.                                */
@@ -805,7 +803,7 @@ rt_shared void eif_gen_conf_cleanup ()
 /* Result  : Resulting id; RTUD(yes)                                */
 /*------------------------------------------------------------------*/
 
-rt_public int16 eif_compound_id (int16 *cache, EIF_REFERENCE Current, int16 base_id, int16 *types)
+rt_public int16 eif_compound_id (int16 *cache, int16 current_dftype, int16 base_id, int16 *types)
 {
 	int16   result, gresult;
 	int16   outtab [256], *outtable, *intable;
@@ -844,12 +842,7 @@ rt_public int16 eif_compound_id (int16 *cache, EIF_REFERENCE Current, int16 base
 		outtable = outtab;
 		cachable = (char) 1;
 
-		if (Current != (EIF_REFERENCE ) 0)
-			gresult = eif_id_of (*types, &intable, &outtable,
-								 (int16)Dftype(Current),1, &cachable);
-		else
-			gresult = eif_id_of (*types, &intable, &outtable, 0, 1, &cachable);
-
+		gresult = eif_id_of (*types, &intable, &outtable, current_dftype, 1, &cachable);
 		
 #ifdef GEN_CONF_DEBUG
 		log_puts (eif_typename(gresult));
@@ -877,6 +870,7 @@ rt_public int16 eif_compound_id (int16 *cache, EIF_REFERENCE Current, int16 base
 
 	return RTUD(result);
 }
+
 /*------------------------------------------------------------------*/
 /* Compute id for `gttable' (generic type list for feature in final */
 /* mode).                                                           */
@@ -898,7 +892,7 @@ rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, EIF_R
 		if ((gtp != (int16 *) 0) && (*(gtp+1) != TERMINATOR))
 		{
 			*gtp = stype;
-			return eif_compound_id ((int16 *)0, Current, ttable[dtype], gtp);
+			return eif_compound_id ((int16 *)0, (int16) Dftype (Current), ttable[dtype], gtp);
 		}
 	}
 
@@ -1502,7 +1496,7 @@ rt_public int16 eif_typeof_array_of (int16 dtype)
 	typearr [2] = RTUD_INV(dtype);			/* Parameter type */
 	typearr [3] = TERMINATOR;
 
-	result = eif_compound_id (NULL, NULL, typearr[1], typearr);
+	result = eif_compound_id (NULL, (int16) 0, typearr[1], typearr);
 	eif_free (typearr);
 	return result;
 }
@@ -1510,19 +1504,19 @@ rt_public int16 eif_typeof_array_of (int16 dtype)
 /* Full type name of `obj' as STRING object.                        */
 /*------------------------------------------------------------------*/
 
-rt_public EIF_REFERENCE eif_gen_typename (EIF_REFERENCE obj)
+rt_public EIF_REFERENCE eif_gen_typename_of_type (int16 current_dftype)
 {
 	char    *name;
 	EIF_REFERENCE ret;	/* Return value. */
 
-	if (obj == (EIF_REFERENCE ) 0)
+	if (current_dftype == (int16) 0)
 		return makestr("NONE", 4);
 
 #ifdef EIF_THREADS
 	EIFMTX_LOCK;
 #endif
 
-	name = eif_typename ((int16)Dftype(obj));
+	name = eif_typename (current_dftype);
 
 #ifdef EIF_THREADS
 	EIFMTX_UNLOCK;
@@ -1603,7 +1597,7 @@ rt_public int16 eif_gen_id_from_cid (int16 *a_cidarr, int *dtype_map)
 	REQUIRE ("Valid cid array", a_cidarr);
 
 	count   = *a_cidarr;
-	*a_cidarr = -10;
+	*a_cidarr = INTERNAL_TYPE;
 
 	if (dtype_map != (int *) 0) {
 			/* We need to map old dtypes to new dtypes */
@@ -1657,7 +1651,7 @@ rt_public int16 eif_gen_id_from_cid (int16 *a_cidarr, int *dtype_map)
 	}
 
 	a_cidarr [count+1] = TERMINATOR;
-	dftype  = eif_compound_id ((int16 *)0, (EIF_REFERENCE )0, *(a_cidarr+1), a_cidarr);
+	dftype  = eif_compound_id ((int16 *)0, (int16) 0, *(a_cidarr+1), a_cidarr);
 	*a_cidarr = count;
 
 	return dftype;
@@ -1961,6 +1955,13 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 		**outtab = dftype;
 		(*outtab)++;
 
+		if (dftype <= EXPANDED_LEVEL)
+		{
+			/* expanded */
+			dftype   = EXPANDED_LEVEL-dftype;
+			is_expanded = '1';
+		}
+
 		return (apply_rtud ? RTUD(dftype) : dftype);
 	}
 
@@ -2005,6 +2006,13 @@ rt_private int16 eif_id_of (int16 stype, int16 **intab,
 		(*intab)++;
 		**outtab = dftype;
 		(*outtab)++;
+
+		if (dftype <= EXPANDED_LEVEL)
+		{
+			/* expanded */
+			dftype   = EXPANDED_LEVEL-dftype;
+			is_expanded = '1';
+		}
 
 		return (apply_rtud ? RTUD(dftype) : dftype);
 	}

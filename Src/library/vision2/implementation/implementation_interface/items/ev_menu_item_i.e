@@ -12,13 +12,11 @@ deferred class
 	
 inherit
 	EV_ITEM_I
-
-	EV_MENU_ITEM_CONTAINER_I
-
-	EV_PIXMAPABLE_I
 		redefine
 			pixmap_size_ok
 		end
+
+	EV_MENU_ITEM_CONTAINER_I
 
 feature {NONE} -- Initialization
 	
@@ -52,12 +50,6 @@ feature {NONE} -- Implementation
 			-- Check if the size of the pixmap is ok for
 			-- the container.
 		do
---			io.put_string ("Width : ")
---			io.putint (pixmap.width)
---			io.put_new_line
---			io.put_string ("Height : ")
---			io.putint (pixmap.height)
---			io.put_new_line
 			Result := (pixmap.width <= 16) and (pixmap.height <= 16)
 		end
 

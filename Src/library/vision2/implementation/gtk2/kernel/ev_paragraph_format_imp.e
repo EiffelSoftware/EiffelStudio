@@ -186,7 +186,7 @@ feature {NONE} -- Implementation
 	destroy is
 			-- Clean up `Current'
 		do
-			
+			is_destroyed := True
 		end
 
 end -- class EV_PARAGRAPH_FORMAT

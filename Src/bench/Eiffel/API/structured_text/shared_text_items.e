@@ -300,6 +300,12 @@ feature {NONE} -- Keywords
 			create Result.make ("class")
 		end
 
+	ti_convert_keyword: KEYWORD_TEXT is
+			-- "convert" keyword
+		once
+			create Result.make ("convert")
+		end
+
 	ti_Create_keyword: KEYWORD_TEXT is
 			-- "create" keyword
 		once

@@ -1,0 +1,62 @@
+<!DOCTYPE HTML public "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+	<HEAD>
+		<TITLE>Once features in multithreaded mode</TITLE>
+		<META NAME="MS-HKWD" CONTENT="multithreaded systems and onces">
+		<META NAME="MS-HKWD" CONTENT="onces and multithreaded systems">
+		<LINK REL=Stylesheet HREF="/default.css" TYPE="text/css">
+	</HEAD>
+
+	<BODY>
+<H1>Once features in multithreaded mode</H1>
+<h2><a name="manipulating_once_features">Manipulating Once features in
+multithreaded mode</a></h2>
+<p>Eiffel introduced the powerful mechanism of once routines. A once routine has
+a body that will be executed only once, at the first call. Subsequent calls
+will have no further effect and, in the case of a function, will return the same
+result as the first. This provides a simple way of sharing objects in an
+object-oriented context.
+<p>For multithreaded applications, the appropriate semantics is that once
+routines must be called once per thread (rather than once per process). This is
+the semantics supported by EiffelThread.
+<p>Then the once feature is not initialized once per process but once per
+thread. Your once feature will be called again in any new thread execution.
+<h2><a name="once_per_process_thread">Once per Process/Thread</a></h2>
+<p>Current once features in Eiffel are once per thread. This means that when a
+once feature is called in a thread, the Eiffel run-time will check whether it
+has been already computed in this thread. If not, the once feature will be
+initialized and computed. This seems to be a relevant way of managing once
+features in multithreaded mode: most of the time, a once called in a thread&nbsp;is
+not likely to share its result.
+<p> However, in some case, we need to share once features.
+<p>Moreover, an Eiffel programmer should be able to have an alternative between
+a once per thread or per process implementation.
+<h2><a name="using_once_per_process_thread">Using Once per process/thread
+features in EIFFEL</a></h2>
+<p>Here is what you will do to implement a once per process feature:<pre>	<SPAN class="ekeyword">class</SPAN>
+		<SPAN class="eclass">TEST_ONCE_PER_PROCESS</SPAN>
+
+	<SPAN class="ekeyword">feature</SPAN>
+
+		<SPAN class="efeature">object_per_thread</SPAN>: <SPAN class="eclass">OBJECT</SPAN> <SPAN class="ekeyword">is</SPAN>
+				<SPAN class="ecomment">-- Once per thread.</SPAN>
+			<SPAN class="ekeyword">once</SPAN>
+				<SPAN class="ekeyword">create</SPAN> <SPAN class="ekeyword">Result</SPAN>.<SPAN class="efeature">make</SPAN>
+			<SPAN class="ekeyword">end</SPAN>
+
+		<SPAN class="efeature">object_per_process</SPAN>: <SPAN class="eclass">OBJECT</SPAN> <SPAN class="ekeyword">is</SPAN>
+				<SPAN class="ecomment">-- New 'object' (once per process)</SPAN>
+				<SPAN class="ecomment">-- that could be shared between threads</SPAN>
+				<SPAN class="ecomment">-- without reinitializing it.
+			<SPAN CLASS="ekeyword">indexing</SPAN>
+				<SPAN CLASS="estring">once_status</SPAN><SPAN CLASS="esymbol">:</SPAN> <SPAN CLASS="estring">global</SPAN>
+			<SPAN class="ekeyword">once</SPAN>
+				<SPAN CLASS="ekeyword">create</SPAN> <SPAN CLASS="esymbol">Result</SPAN><SPAN CLASS="esymbol">.</SPAN><SPAN CLASS="efeature">make</SPAN>
+			<SPAN class="ekeyword">end</SPAN>
+
+	<SPAN class="ekeyword">end</SPAN> <SPAN class="ecomment">-- class TEST_ONCE_PER_PROCESS</SPAN>
+
+</pre>
+<pre>You can do the same with once procedures.</pre>
+</BODY>
+</HTML>

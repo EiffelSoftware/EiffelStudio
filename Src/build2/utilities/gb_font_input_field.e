@@ -50,6 +50,7 @@ feature {NONE} -- Initialization
 			validate_agent := a_validate_agent
 			
 			create horizontal_box
+			horizontal_box.set_padding_width (object_editor_padding_width)
 			create select_button.make_with_text ("Select...")
 			select_button.select_actions.extend (agent select_font)
 			horizontal_box.extend (select_button)

@@ -162,7 +162,7 @@ feature -- Project Initialization
 					--| add a `Directory_separator' if it is needed.
 				if file_name.index_of (Operating_environment.Directory_separator, 1) /= 0 then
 					error_occurred := True
-					msg := "You cannot specifiy a project name which contains a directory separator%N"
+					msg := "You cannot specify a project name which contains a directory separator%N"
 					msg.append ("when you are specifying a project path.")
 				else
 					dir_name := clone (project_path_name)

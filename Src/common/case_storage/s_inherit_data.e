@@ -11,6 +11,4 @@ inherit
 
 	S_RELATION_DATA
 
-feature
-
 end -- class S_INHERIT_DATA

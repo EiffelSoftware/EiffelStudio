@@ -7,10 +7,6 @@ indexing
 
 class S_FEATURE_DATA
 
-creation
-
-	make
-
 feature -- Properties
 
 	name: STRING;
@@ -36,8 +32,10 @@ feature -- Properties
 	is_attribute: BOOLEAN;
 			-- Is Current feature an attribute?
 
-	is_constant: BOOLEAN is do end
+	is_constant: BOOLEAN is
 			-- Is Current feature a constant attribute ?
+		do
+		end
 
 	is_deferred: BOOLEAN;
 			-- Is Current feature deferred?
@@ -45,11 +43,14 @@ feature -- Properties
 	is_effective: BOOLEAN;
 			-- Is Current feature effecting an inherited feature?
 
-	is_once: BOOLEAN is do end
+	is_once: BOOLEAN is
 			-- Is Current feature a once?
-
-	is_expanded: BOOLEAN;
-			-- Is Current feature an expanded one?
+		do
+		end
+	
+	is_expanded: BOOLEAN
+	-- FOR NEXT VERSION ...
+			-- Is current feature expanded ?
 
 	is_redefined: BOOLEAN;
 			-- Is Current feature redefine?
@@ -94,34 +95,39 @@ feature -- Setting
 			is_attribute: is_attribute
 		end;
 
-	set_body (b: like body) is
+	set_body (b: FEATURE_BODY_DATA) is
 			-- Set `body' to `l'.
 		require
 			body_exists: b /= Void;
 			body_not_empty: not b.empty;
 		do
-			
-		ensure
-			body_set: body = b
 		end;
 
-	set_booleans (is_d, is_e, is_r, is_att, is_exp: BOOLEAN) is
+	set_booleans (is_d, is_e, is_r, is_att, is_ex: BOOLEAN) is
 			-- Set all booleans for Current.
 		do
-			is_deferred := is_d
-			is_effective := is_e
-			is_redefined := is_r
+			is_deferred := is_d;
+			is_effective := is_e;
+			is_redefined := is_r;
 			is_attribute := is_att
-			is_expanded := is_exp
+			is_expanded := is_ex
 		ensure
 			booleans_are_set: is_deferred = is_d and then
 								is_effective = is_e and then
 								is_attribute = is_att and then
-								is_redefined = is_r and then
-								is_expanded = is_exp
+								is_redefined = is_r
+								is_expanded = is_ex
 		end;
 
-	set_is_deferred is
+	set_is_expanded is
+			--Set is_expanded to 'True'
+		do
+			is_expanded := True
+		ensure
+			is_expanded = True
+	end
+
+	set_is_deferred(b:BOOLEAN) is
 			-- Set is_deferred to `True'.
 		do
 			is_deferred := True
@@ -220,6 +226,7 @@ feature -- Setting
 	set_reversed_engineered is
 			-- Set `is_reversed_engineered' to True.
 		do
+
 		ensure
 			is_reversed_engineered: is_reversed_engineered
 		end

@@ -21,7 +21,7 @@ feature {NONE} -- Implementation
 	System_id_name: STRING is "idfile";
 			-- File name for identifying eiffelcase projects
 
-	EiffelCase_project_type: STRING is "ISE.EiffelCase.4.0";
+	EiffelCase_project_type: STRING is "ISE.EiffelCase.4.3";
 			-- Idfile contains this
 
 	Tmp_file_name_ext: STRING is "TMP";

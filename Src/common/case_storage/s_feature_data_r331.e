@@ -14,7 +14,7 @@ inherit
 
 	S_FEATURE_DATA
 		redefine
-			is_reversed_engineered, set_reversed_engineered
+			is_reversed_engineered,set_reversed_engineered
 		end
 
 creation

@@ -2,7 +2,7 @@ indexing
 
 	description: "Feature argument.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class S_ARGUMENT_DATA
 

@@ -4,7 +4,7 @@ indexing
 		"Class content information that includes features%
 		%clauses, invariants and chart information";
 	date: "$Date$";
-	revision: "$Revision$"
+	revision: "$Revision $"
 
 class S_CLASS_CONTENT
 

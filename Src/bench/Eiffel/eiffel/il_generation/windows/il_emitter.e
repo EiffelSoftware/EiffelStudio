@@ -18,7 +18,9 @@ feature {NONE} -- Initialization
 		do
 			create l_path.make ((create {EIFFEL_ENV}).Eiffel_installation_dir_name)
 			implementation := (create {EMITTER_FACTORY}).new_emitter
-			implementation.initialize_with_path (l_path)
+			if implementation /= Void then
+				implementation.initialize_with_path (l_path)
+			end
 		end
 
 feature -- Status report

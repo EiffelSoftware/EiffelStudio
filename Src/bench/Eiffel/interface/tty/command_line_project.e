@@ -139,7 +139,6 @@ feature -- Project Initialization
 					io.error.new_line
 				end
 			end
-
 			project_is_new := True
 		end
 
@@ -253,26 +252,35 @@ feature -- Project retrieval
 		local
 			file: PLAIN_TEXT_FILE
 			path: FILE_NAME
+			l_retried: BOOLEAN
 		do
-			if is_loop then
-				if Ace_name /= Void then
-					check_ace_file (Ace_name);
-				end; 
-			elseif Ace_name = Void then
-				!! path.make_from_string (Execution_environment.current_working_directory)
-				path.set_file_name ("Ace.ace")	
-				!!file.make (path)
-				if file.exists then
-					Ace_name := path
-				else
+			if not l_retried then
+				if is_loop then
+					if Ace_name /= Void then
+						check_ace_file (Ace_name);
+					end; 
+				elseif Ace_name = Void then
 					!! path.make_from_string (Execution_environment.current_working_directory)
-					path.set_file_name ("Ace")	
-					Ace_name := path
-				end
-				check_ace_file (Ace_name);
-			end;
-			Eiffel_project.make_new (project_dir)
-			Eiffel_ace.set_file_name (Ace_name);
+					path.set_file_name ("Ace.ace")	
+					!!file.make (path)
+					if file.exists then
+						Ace_name := path
+					else
+						!! path.make_from_string (Execution_environment.current_working_directory)
+						path.set_file_name ("Ace")	
+						Ace_name := path
+					end
+					check_ace_file (Ace_name);
+				end;
+				Eiffel_project.make_new (project_dir, True)
+				Eiffel_ace.set_file_name (Ace_name)
+			end
+		rescue
+			l_retried := True
+			io.error.putstring ("An error occurred during removal of previous project.%N")
+			io.error.putstring ("Please make sure to have full permission to your exisiting project.%N")
+			error_occurred := True
+			retry
 		end
 
 feature -- Input/output

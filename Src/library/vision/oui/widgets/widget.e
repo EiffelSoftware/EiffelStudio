@@ -430,9 +430,9 @@ feature -- Windowing
 			-- Destroy actual screen object of Current
 			-- widget and of all children.
 		do
-			widget_manager.destroy (Current);
-			implementation.destroy;
-			implementation := Void
+			if not destroyed then
+				widget_manager.destroy (Current);
+			end
 		end;
 
 	destroyed: BOOLEAN is
@@ -448,7 +448,7 @@ feature -- Windowing
 		do
 			implementation.hide
 		ensure
-			Not_shown: not shown
+			not_shown: not shown
 		end;
 
 	show is
@@ -458,7 +458,8 @@ feature -- Windowing
 		do
 			implementation.show
 		ensure
-			Shown: (parent /= Void and then not parent.shown implies shown) or else
+			shown: (parent /= Void and then not 
+				parent.shown implies shown) or else
 				(parent = Void implies shown)
 		end;
 
@@ -475,7 +476,7 @@ feature -- Windowing
 		do
 			implementation.set_managed (True)
 		ensure
-			Managed: managed
+			managed: managed
 		end;
 
 	lower is
@@ -501,7 +502,7 @@ feature -- Windowing
 		do
 			implementation.set_managed (False)
 		ensure
-			Not_managed: not managed
+			not_managed: not managed
 		end;
 
 	managed: BOOLEAN is
@@ -535,7 +536,7 @@ feature -- Windowing
 		do
 			implementation.unrealize
 		ensure
-			not realized
+			not_realized: not realized
 		end;
 
 	realized: BOOLEAN is
@@ -549,7 +550,7 @@ feature -- Windowing
 		do
 			Result := widget_manager.screen (Current)
 		ensure
-			not (Result = Void)
+			valid_result: Result /= Void
 		end; 
 
 feature -- Event handling
@@ -630,7 +631,7 @@ feature -- Hierarchy
 		do
 			Result := widget_manager.top (Current)
 		ensure
-			not (Result = Void)
+			valid_result: Result /= Void
 		end;
 
 	parent: WIDGET is
@@ -645,7 +646,7 @@ feature
 			-- Does Current widget and `other' correspond
 			-- to the same screen object?
 		require
-			other_exists: not (other = Void)
+			other_exists: other /= Void
 		do
 			Result := other.implementation = implementation
 		end;
@@ -660,6 +661,16 @@ feature {G_ANY, G_ANY_I, WIDGET_I, TOOLKIT}
 
 	implementation: WIDGET_I;
 			-- Implementation of Current widget
+
+feature {W_MANAGER} 
+	
+	remove_implementation is
+			-- Remove implementation of Current widget.
+		do
+			implementation := Void
+		ensure
+			void_implementation: implementation = Void
+		end;
 
 feature {G_ANY, G_ANY_I, WIDGET_I}
 

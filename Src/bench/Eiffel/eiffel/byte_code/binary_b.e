@@ -197,25 +197,25 @@ feature
 
 	nested_b: NESTED_B is
 		local
-			Access_expr: ACCESS_EXPR_B;
+			access_expr: ACCESS_EXPR_B;
 			p: PARAMETER_B;
 			param: BYTE_LIST [PARAMETER_B];
 		do
 				-- Access on expression
-			create Access_expr
+			create access_expr
 
 				-- Nested buffer for byte code generation of a binary
 				-- operation on non-simple types					
 			create Result
-			Result.set_target (Access_expr)
-			Access_expr.set_parent (Result)
+			Result.set_target (access_expr)
+			access_expr.set_parent (Result)
 
 				-- Production of a nested structure: target is
 				-- an access expression (`left') and parameter
 				-- of `access' is expression `right'.
 			Result.set_message (access)
 			access.set_parent (Result)
-			Access_expr.set_expr (left)
+			access_expr.set_expr (left)
 
 			create param.make (1)
 			create p

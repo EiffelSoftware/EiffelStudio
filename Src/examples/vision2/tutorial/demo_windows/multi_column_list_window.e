@@ -39,11 +39,11 @@ feature {NONE} -- Initialization
 			row1.set_transported_data ("Bonjour")
 
 			!! row2.make (Current)
-			row2.set_text (<<"This","is","an","objet","row">>)
+			row2.set_text (<<"This","is", "2nd", "Created","Row">>)
 			row2.set_data (2)
-			!! row3.make_with_text (Current, <<"This","is","an","objet","row">>)
+			!! row3.make_with_text (Current, <<"This","is","2nd","created","row">>)
 			row3.set_data (3)
-			!! row4.make_with_all (Current, <<"This","is","an","objet","row4">>, 2)
+			!! row4.make_with_all (Current, <<"This","is","Last","created","row">>, 2)
 			row4.set_selected (True)
 			row4.set_data (4)
 		end
@@ -51,7 +51,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	row1, row2, row3, row4: EV_MULTI_COLUMN_LIST_ROW
-		-- Row
+		-- Rows
 
 end -- class MULTI_COLUMN_LIST_WINDOW
 

@@ -26,25 +26,43 @@ feature {NONE} -- Initialization
 			make_with_text (par, " Show ")
 			set_vertical_resize (False)
 			set_horizontal_resize (False)
-			!! cmd.make (~execute1)
+			create cmd.make (~execute1)
 			add_click_command (cmd, Void)
 		end
-
-feature -- Access
-
-	question: EV_QUESTION_DIALOG
-			-- The dialog
 
 feature -- Execution features
 
 	execute1 (arg: EV_ARGUMENT; data: EV_EVENT_DATA) is
 			-- Executed when we press the first button
+		local
+			question: EV_QUESTION_DIALOG
+				-- The dialog
+			cmd: EV_ROUTINE_COMMAND
+			arg1: EV_ARGUMENT1 [STRING]
+			arg2: EV_ARGUMENT1 [STRING]
 		do
-			if question /= Void then
-				question.show
-			else
-				!! question.make_default (parent, "Question Dialog", "What's up ?")
+			!! question.make_default (parent, "Question Dialog", "Are you alright ?")
+				-- creation of the question dialog.
+
+			create arg1.make ("Yes")
+			create arg2.make ("No")
+			create cmd.make (~execute2)
+			question.add_yes_command ( cmd, arg1)
+			question.add_no_command ( cmd, arg2)
+		end
+
+	execute2 (arg: EV_ARGUMENT1 [STRING]; data: EV_EVENT_DATA) is
+			-- Executed when the 'yes' or 'no' button is pressed.
+		require else
+			arg_ok: ((arg.first.is_equal ("Yes")) or (arg.first.is_equal ("No")))
+		do
+			io.new_line
+			if (arg.first.is_equal ("Yes")) then
+				io.put_string ("Yes, I am alright!")
+			elseif (arg.first.is_equal ("No")) then
+				io.put_string ("No, I am not alright")
 			end
+			io.new_line
 		end
 
 end -- class FIXED_WINDOW

@@ -270,25 +270,29 @@ feature -- Execution
 					create make_f.make (makefile_sh_name)
 	
 					if uf.exists then
-						if make_f.exists and then make_f.date > uf.date then
-								-- The Makefile file is more recent than the 
-								-- application
-							create cd.make_with_text_and_actions (Warning_messages.w_Makefile_more_recent (makefile_sh_name),
-								<<~c_compile>>)
-							cd.show_modal_to_window (window_manager.last_focused_development_window.window)
+						if Eiffel_system.system.il_generation then
+							(create {COMMAND_EXECUTOR}).execute (eiffel_system.application_name (True))
 						else
-							Output_manager.clear
-
-							launch_program := True
-							if Application.has_breakpoints and then Application.is_ignoring_stop_points then
-								create ignore_all_breakpoints_confirmation_dialog.make_initialized (
-									2, "confirm_ignore_all_breakpoints",
-									Warning_messages.w_Ignoring_all_stop_points, Interface_names.l_Do_not_show_again
-								)
-								ignore_all_breakpoints_confirmation_dialog.set_ok_action (agent start_program)
-								ignore_all_breakpoints_confirmation_dialog.show_modal_to_window (window_manager.last_focused_development_window.window)
+							if make_f.exists and then make_f.date > uf.date then
+									-- The Makefile file is more recent than the 
+									-- application
+								create cd.make_with_text_and_actions (Warning_messages.w_Makefile_more_recent (makefile_sh_name),
+									<<~c_compile>>)
+								cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 							else
-								start_program
+								Output_manager.clear
+
+								launch_program := True
+								if Application.has_breakpoints and then Application.is_ignoring_stop_points then
+									create ignore_all_breakpoints_confirmation_dialog.make_initialized (
+										2, "confirm_ignore_all_breakpoints",
+										Warning_messages.w_Ignoring_all_stop_points, Interface_names.l_Do_not_show_again
+									)
+									ignore_all_breakpoints_confirmation_dialog.set_ok_action (agent start_program)
+									ignore_all_breakpoints_confirmation_dialog.show_modal_to_window (window_manager.last_focused_development_window.window)
+								else
+									start_program
+								end
 							end
 						end
 					elseif make_f.exists then
@@ -299,20 +303,8 @@ feature -- Execution
 						create wd.make_with_text (Warning_messages.w_None_system)
 						wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 					else
-						if Eiffel_system.system.il_generation then
-								-- This is a .NET system, we need to check that the application is in the
-								-- F_code directory.
-							create uf.make (Eiffel_system.application_name (False))
-							if uf.exists then
-								(create {COMMAND_EXECUTOR}).execute (eiffel_system.application_name (False))
-							else
-								create wd.make_with_text (Warning_messages.w_No_dotnet_system_generated)
-								wd.show_modal_to_window (window_manager.last_focused_development_window.window)
-							end
-						else
-							create wd.make_with_text (Warning_messages.w_Must_compile_first)
-							wd.show_modal_to_window (window_manager.last_focused_development_window.window)
-						end
+						create wd.make_with_text (Warning_messages.w_Must_compile_first)
+						wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 					end
 				end
 			else

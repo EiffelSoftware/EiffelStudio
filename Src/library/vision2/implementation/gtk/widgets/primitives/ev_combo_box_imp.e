@@ -218,9 +218,8 @@ feature {NONE} -- Implementation
 			C.gtk_combo_set_item_string (container_widget, imp.c_object, $temp_string)
 			C.gtk_container_add (list_widget, imp.c_object)
 			imp.set_item_parent_imp (Current)
-			temp_string2 := ("button-press-event").to_c
-			temp_sig_id := c_signal_connect (imp.c_object, $temp_string2, agent on_item_clicked)
-			real_signal_connect (imp.c_object, "key-press-event", agent on_key_pressed, key_event_translate_agent)
+			imp.real_signal_connect (imp.c_object, "button-press-event", agent on_item_clicked, Default_translate)
+			imp.real_signal_connect (imp.c_object, "key-press-event", agent on_key_pressed, key_event_translate_agent)
 			if count = 1 and is_sensitive then
 				imp.enable_select
 			end
@@ -269,14 +268,10 @@ feature {NONE} -- Implementation
 			-- Redefined to counter repeated select signal of combo box. 
 		local
 			popwin: POINTER
-		do
+		do	
 			--| FIXME IEK Remove hacks when gtk+ 2.0 is out
 			if is_displayed then
-	
-			if not avoid_callback then
-					
-					--	Precursor (n, an_item)
-				if select_actions_internal /= Void and then select_actions_internal.count > 0 then
+				if not avoid_callback then
 				 	triggering_item ?= eif_object_from_c (gtk_marshal.gtk_value_pointer (an_item))
 					timer.set_interval (1)
 				 	if not button_pressed then
@@ -287,12 +282,10 @@ feature {NONE} -- Implementation
 							C.gdk_pointer_ungrab (0)
 						end
 					end
-			 	end
-				avoid_callback := True
-			else
-				avoid_callback := False
-			end
-			
+					avoid_callback := True
+				else
+					avoid_callback := False
+				end
 			end
 		end
 

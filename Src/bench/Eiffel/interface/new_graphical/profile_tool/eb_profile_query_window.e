@@ -204,7 +204,7 @@ feature {NONE} -- Graphical User Interface
 
 				-- query manager
 			create query_box.make (container)
-			query_box.set_expand (False)
+			container.set_child_expandable (query_box, False)
 			query_box.set_spacing (4)
 
 			create active_query_frame.make_with_text (query_box, Interface_names.l_Active_query)
@@ -213,7 +213,7 @@ feature {NONE} -- Graphical User Interface
 			active_query_window.set_multiple_selection
 
 			create query_button_form.make (query_box)
-			query_button_form.set_expand (False)
+			query_box.set_child_expandable (query_button_form, False)
 			query_button_form.set_spacing (4)
 
 			create reactivate_label.make_with_text (query_button_form, Interface_names.l_Reactivate)
@@ -254,7 +254,7 @@ feature {NONE} -- Graphical User Interface
 
 				-- subsquery frame
 			create subquery_frame.make_with_text (container, Interface_names.l_Subquery)
-			subquery_frame.set_expand (False)
+			container.set_child_expandable (subquery_frame, False)
 
 			create subquery_box.make (subquery_frame)
 			subquery_box.set_border_width (4)
@@ -265,19 +265,19 @@ feature {NONE} -- Graphical User Interface
 			create add_box.make (subquery_box)
 			add_box.set_spacing (16)
 			create add_label.make_with_text (add_box, Interface_names.l_Add)
-			add_label.set_expand (False)
+			add_box.set_child_expandable (add_label, False)
 
 			create add_subquery_cmd.make(Current)
 
 			create add_and_operator_button.make_with_text (add_box, Interface_names.b_And)
-			add_and_operator_button.set_expand (False)
+			add_box.set_child_expandable (add_and_operator_button, False)
 			add_and_operator_button.set_horizontal_resize (False)
 			add_and_operator_button.set_vertical_resize (False)
 			create string_arg.make("and")
 			add_and_operator_button.add_click_command (add_subquery_cmd, string_arg)
 
 			create add_or_operator_button.make_with_text (add_box, Interface_names.b_Or) 
-			add_or_operator_button.set_expand (False)
+			add_box.set_child_expandable (add_or_operator_button, False)
 			add_or_operator_button.set_horizontal_resize (False)
 			add_or_operator_button.set_vertical_resize (False)
 			create string_arg.make("or")
@@ -286,7 +286,7 @@ feature {NONE} -- Graphical User Interface
 				--| Build button bar
 
 			create button_box.make (container)
-			button_box.set_expand (False)
+			container.set_child_expandable (button_box, False)
 			button_box.set_border_width (4)
 
 			create run_button.make_with_text (button_box, Interface_names.b_Run)

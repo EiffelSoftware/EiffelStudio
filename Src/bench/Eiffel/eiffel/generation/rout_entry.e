@@ -8,11 +8,11 @@ inherit
 	SHARED_ID_TABLES;
 	SHARED_EXEC_TABLE;
 	SHARED_USED_TABLE;
-	SHARED_ENCODER;
+	COMPILER_EXPORTER
 
 feature
 
-	body_index: INTEGER;
+	body_index: BODY_INDEX;
 			-- Body index
 
 	written_type_id: INTEGER;
@@ -21,7 +21,7 @@ feature
 	pattern_id: INTEGER;
 			-- Pattern id of the entry
 
-	set_body_index (i: INTEGER) is
+	set_body_index (i: BODY_INDEX) is
 			-- Assign `i' to `body_index'.
 		do
 			body_index := i;
@@ -39,7 +39,7 @@ feature
 			pattern_id := i
 		end;
 
-	body_id: INTEGER is
+	body_id: BODY_ID is
 			-- Body id of the feature
 		do
 			Result := Body_index_table.item (body_index);
@@ -61,7 +61,7 @@ feature
 	routine_name: STRING is
 			-- Routine name to generate
 		do
-			Result := Encoder.feature_name (written_class_type.id.id, body_id);
+			Result := body_id.feature_name (written_class_type.id);
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is
@@ -72,7 +72,7 @@ feature
 				-- Dynamic type
 			ba.append_short_integer (type_id - 1);
 				-- Real body index
-			ba.append_short_integer (real_body_index);
+			ba.append_short_integer (real_body_index.id - 1);
 				-- Pattern id
 			ba.append_short_integer (pattern_id);
 		end;
@@ -81,7 +81,7 @@ feature
 			-- Generate call info
 		do
 			file.putstring ("{(int16) ");
-			file.putint (real_body_index);
+			file.putint (real_body_index.id - 1);
 			file.putstring (", (int16) ");
 			file.putint (pattern_id);
 			file.putchar ('}');
@@ -98,11 +98,11 @@ feature
 			Result := System.class_type_of_id (written_type_id)
 		end;
 
-	real_body_index: INTEGER is
+	real_body_index: REAL_BODY_INDEX is
 			-- Real body index
 		do
 			Result := Dispatch_table.real_body_index
-									(body_index, written_class_type) - 1;
+									(body_index, written_class_type)
 		end;
 
 feature -- DLE
@@ -111,7 +111,7 @@ feature -- DLE
 			-- Was the entry used in the extendible system?
 		local
 			remover: REMOVER;
-			old_body_id: INTEGER
+			old_body_id: BODY_ID
 		do
 			if type_id <= System.dle_max_dr_type_id then
 				remover := System.dle_remover;

@@ -37,7 +37,7 @@ inherit
 
 feature -- Access
 
-	children: LINKED_LIST [WEL_WINDOW] is
+	children: LIST [WEL_WINDOW] is
 			-- Construct a linear representation of children.
 		require
 			exists: exists
@@ -45,7 +45,7 @@ feature -- Access
 			hwnd: POINTER
 			win: WEL_WINDOW
 		do
-			create Result.make
+			create {ARRAYED_LIST [WEL_WINDOW]} Result.make (10)
 			from
 				hwnd := cwin_get_window (item, Gw_child)
 			until
@@ -53,8 +53,7 @@ feature -- Access
 			loop
 				win := window_of_item (hwnd)
 				if win /= Void then
-					Result.finish
-					Result.put_right (win)
+					Result.extend (win)
 				end
 				hwnd := cwin_get_window (hwnd, Gw_hwndnext)
 			end

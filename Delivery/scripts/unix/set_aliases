@@ -9,10 +9,14 @@ COMPILE_LOG=`pwd`/compile.log
 INSTALL_DIR=`pwd`/Eiffel55
 # Where the final delivery is set up (local machine). Warning: directory erased too!
 FINAL_INSTALL_DIR=`pwd`/Eiffel55
+# Where documentation will be generated
+DOCUMENT_DIR=`pwd`
 # Where all.tar.gz files should be stored
 EXPORT_DIR=`pwd`/PorterPackage
 # What tag to use to CVS export everything
 DEFAULT_CVS_TAG=HEAD
+# Version of GTK
+GTK_DIR=gtk2
 
 # Used only when making PorterPackage to checkout the sources
 NEW_EIFFEL_SRC=`pwd`/tmp52dev

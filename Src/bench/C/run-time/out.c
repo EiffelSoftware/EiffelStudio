@@ -25,7 +25,9 @@
 #include "rt_malloc.h"
 #include "rt_wbench.h"
 #include "rt_macros.h"
+#include "rt_gen_types.h"
 #include "x2c.h"		/* For macro LNGPAD */
+#include "rt_assert.h"
 #include <string.h>
 #include <stdio.h>
 
@@ -46,6 +48,7 @@ rt_private void write_out(void);		/* Write in `tagged_out' */
 rt_private void write_tab(register int tab);		/* Print tabulations */
 rt_private void rec_write(register EIF_REFERENCE object, int tab);	/* Write object print in `tagged_out' */
 rt_private void rec_swrite(register EIF_REFERENCE object, int tab);		/* Write special object */
+rt_private void rec_twrite(register EIF_REFERENCE object, int tab);		/* Write tuple object */
 rt_private void buffer_allocate(void);	/* Allocate initial buffer */
 rt_public char *eif_out(EIF_REFERENCE object);		/* Build a copy of "tagged_out" for CECIL programmer. */
 rt_shared char *build_out(EIF_OBJECT object);		/* Build `tagged_out' string */
@@ -116,11 +119,21 @@ rt_shared char *build_out(EIF_OBJECT object)
 	flags = HEADER(eif_access(object))->ov_flags;
 
 	if (flags & EO_SPEC) {
-		/* Special object */
-		sprintf(buffero, "SPECIAL [0x%lX]\n", (unsigned long) eif_access(object));
-		write_out();
-		/* Print recursively in `tagged_out' */
-		rec_swrite(eif_access(object), 0);
+		if (flags & EO_TUPLE) {
+			/* Special object */
+			sprintf(buffero, "%s [0x%lX]\n", eif_typename((int16) Dftype(eif_access(object))),
+				(unsigned long) eif_access(object));
+			write_out();
+			/* Print recursively in `tagged_out' */
+			rec_twrite(eif_access(object), 0);
+		} else {
+			/* Special object */
+			sprintf(buffero, "%s [0x%lX]\n", eif_typename((int16) Dftype(eif_access(object))),
+				(unsigned long) eif_access(object));
+			write_out();
+			/* Print recursively in `tagged_out' */
+			rec_swrite(eif_access(object), 0);
+		}
 	} else {
 		/* Print instance class name and object id */
 		sprintf(buffero, "%s [0x%lX]\n", System(Deif_bid(flags)).cn_generator,
@@ -267,7 +280,7 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 			break;
 		case SK_EXP:
 			/* Expanded attribute */
-			sprintf(buffero, "expanded %s\n", System(Dtype(o_ref)).cn_generator);
+			sprintf(buffero, "expanded %s\n", eif_typename((int16) Dftype(o_ref)));
 			write_out();
 			write_tab (tab + 2);
 			sprintf(buffero, "-- begin sub-object --\n");
@@ -289,21 +302,37 @@ rt_private void rec_write(register EIF_REFERENCE object, int tab)
 					sprintf(buffero, "POINTER = C pointer 0x%lX\n", (unsigned long) reference);
 					write_out();
 				} else if (ref_flags & EO_SPEC) {
-					/* Special object */
-					sprintf(buffero, "SPECIAL [0x%lX]\n", (unsigned long) reference);
-					write_out();
-					write_tab(tab + 2);
-					sprintf(buffero, "-- begin special object --\n");
-					write_out();
+					if (ref_flags & EO_TUPLE) {
+						sprintf(buffero, "%s [0x%lX]\n", eif_typename ((int16) Dftype(reference)),
+							(unsigned long) reference);
+						write_out();
+						write_tab(tab + 2);
+						sprintf(buffero, "-- begin tuple object --\n");
+						write_out();
 
-					rec_swrite(reference, tab + 3);
+						rec_twrite(reference, tab + 3);
 
-					write_tab(tab + 2);
-					sprintf(buffero, "-- end special object --\n");
-					write_out();
+						write_tab(tab + 2);
+						sprintf(buffero, "-- end tuple object --\n");
+						write_out();
+
+					} else {
+						sprintf(buffero, "%s [0x%lX]\n", eif_typename ((int16) Dftype(reference)),
+							(unsigned long) reference);
+						write_out();
+						write_tab(tab + 2);
+						sprintf(buffero, "-- begin special object --\n");
+						write_out();
+
+						rec_swrite(reference, tab + 3);
+
+						write_tab(tab + 2);
+						sprintf(buffero, "-- end special object --\n");
+						write_out();
+					}
 				} else {
 					sprintf(buffero, "%s [0x%lX]\n",
-						System(Dtype(reference)).cn_generator, (unsigned long) reference);
+						eif_typename((int16) Dftype(reference)), (unsigned long) reference);
 					write_out();
 				}
 			} else {
@@ -341,7 +370,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 				write_tab(tab + 1);
 				sprintf(buffero, "%ld: expanded ", (long) (old_count - count));
 				write_out();
-				sprintf(buffero, "%s\n", System(Dtype(o_ref)).cn_generator);
+				sprintf(buffero, "%s\n", eif_typename((int16)Dftype(o_ref)));
 				write_out();
 				write_tab(tab + 2);
 				sprintf(buffero, "-- begin sub-object --\n");
@@ -363,7 +392,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 					write_char(*o_ref, buffero);
 					write_out();
 				} else if (dtype == egc_sp_wchar) {
-					sprintf(buffero, "WIDE_CHARACTER = %lu\n", *(EIF_WIDE_CHAR *)o_ref);
+					sprintf(buffero, "WIDE_CHARACTER = U+%x\n", *(EIF_WIDE_CHAR *)o_ref);
 					write_out ();
 				} else if (dtype == egc_sp_int8) {
 					sprintf(buffero, "INTEGER_8 = %d\n", *(EIF_INTEGER_8 *)o_ref);
@@ -407,7 +436,7 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 		for (o_ref = object; count > 0; count--,
 					o_ref = (EIF_REFERENCE) ((EIF_REFERENCE *)o_ref + 1)) {
 			write_tab(tab + 1);
-			sprintf(buffero, "%ld: ", old_count - count);
+			sprintf(buffero, "%ld: ", (long) (old_count - count));
 			write_out();
 			reference = *(EIF_REFERENCE *) o_ref;
 			if (0 == reference)
@@ -416,9 +445,80 @@ rt_private void rec_swrite(register EIF_REFERENCE object, int tab)
 				sprintf(buffero, "POINTER = C pointer 0x%lX\n", (unsigned long) reference);
 			else
 				sprintf(buffero, "%s [0x%lX]\n",
-					System(Dtype(reference)).cn_generator, (unsigned long) reference);
+					eif_typename((int16) Dftype(reference)), (unsigned long) reference);
 			write_out();
 		}
+}
+
+rt_private void rec_twrite(register EIF_REFERENCE object, int tab)
+	/* Print tuple object */
+{
+	EIF_GET_CONTEXT
+	unsigned int count = RT_SPECIAL_COUNT (object);
+	unsigned int i = 1;
+	int16 dftype = Dftype (object);
+
+	REQUIRE("Is tuple", HEADER(object)->ov_flags & EO_TUPLE);
+
+	for (; i < count; i++) {
+		write_tab(tab + 1);
+		sprintf(buffero, "%ld: ", (long) i);
+		write_out();
+		switch (eif_gen_typecode_with_dftype(dftype, i)) {
+			case EIF_BOOLEAN_CODE:
+				sprintf(buffero, "BOOLEAN = %s\n", (eif_boolean_item(object, i) ? "True" : "False"));
+				write_out();
+				break;
+			case EIF_CHARACTER_CODE:
+				write_char(eif_character_item(object,i), buffero);
+				write_out();
+				break;
+			case EIF_DOUBLE_CODE:
+				sprintf(buffero, "DOUBLE = %.17g\n", eif_double_item(object,i));
+				write_out();
+				break;
+			case EIF_REAL_CODE:
+				sprintf(buffero, "REAL = %g\n", eif_real_item(object,i));
+				write_out();
+				break;
+			case EIF_INTEGER_32_CODE:
+				sprintf(buffero, "INTEGER = %d\n", eif_integer_32_item(object,i));
+				write_out();
+				break;
+			case EIF_POINTER_CODE:
+				sprintf(buffero, "POINTER = 0x%lX\n", (unsigned long) eif_pointer_item(object,i));
+				write_out();
+				break;
+			case EIF_REFERENCE_CODE:
+				if (eif_reference_item(object,i) == NULL) {
+					sprintf(buffero, "Void\n");
+					write_out();
+				} else {
+					sprintf(buffero, "%s [0x%lX]\n",
+						eif_typename((int16) Dftype(eif_reference_item(object,i))),
+						(unsigned long) eif_reference_item(object,i));
+					write_out();
+				}
+				break;
+			case EIF_INTEGER_8_CODE:
+				sprintf(buffero, "INTEGER_8 = %d\n", eif_integer_8_item(object,i));
+				write_out();
+				break;
+			case EIF_INTEGER_16_CODE:
+				sprintf(buffero, "INTEGER_16 = %d\n", eif_integer_16_item(object,i));
+				write_out();
+				break;
+			case EIF_INTEGER_64_CODE:
+				sprintf(buffero, "INTEGER_64 = %" EIF_INTEGER_64_DISPLAY "\n",
+					eif_integer_64_item(object,i));
+				write_out();
+				break;
+			case EIF_WIDE_CHAR_CODE:
+				sprintf(buffero, "WIDE_CHARACTER = U+%x\n", eif_wide_character_item(object,i));
+				write_out();
+				break;
+		}
+	}
 }
 
 rt_private void write_tab(register int tab)
@@ -562,7 +662,7 @@ rt_shared char *simple_out(struct item *val)
 		write_char(val->it_char, tagged_out);
 		break;
 	case SK_WCHAR:
-		sprintf(tagged_out, "WIDE_CHARACTER = %lu", val->it_wchar);
+		sprintf(tagged_out, "WIDE_CHARACTER = U+%x", val->it_wchar);
 		break;
 	case SK_INT8:
 		sprintf(tagged_out, "INTEGER_8 = %d", val->it_int8);

@@ -2136,6 +2136,11 @@ feature -- Externals
 			"C signature (GtkTextIter*): gboolean use <gtk/gtk.h>"
 		end
 
+	frozen gtk_text_iter_starts_line (a_iter: POINTER): BOOLEAN is
+		external
+			"C signature (GtkTextIter*): gboolean use <gtk/gtk.h>"
+		end
+
 	frozen gtk_text_iter_set_line (a_iter: POINTER; a_line: INTEGER)is
 		external
 			"C signature (GtkTextIter*, gint) use <gtk/gtk.h>"

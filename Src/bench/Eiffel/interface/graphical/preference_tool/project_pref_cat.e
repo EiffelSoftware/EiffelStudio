@@ -45,6 +45,8 @@ feature {NONE} -- Initialization
 				associated_category.debugger_show_all_callers, Current);
 			!! debugger_do_flat_in_breakpoints.make (
 				associated_category.debugger_do_flat_in_breakpoints, Current);
+			!! graphical_output_disabled.make (
+				associated_category.graphical_output_disabled, Current);
 
 			resources.extend (int_width);
 			resources.extend (int_height);
@@ -138,5 +140,6 @@ feature {NONE} -- Resources
 	bool_raise_on_error: BOOLEAN_PREF_RES;
 	debugger_show_all_callers: BOOLEAN_PREF_RES;
 	debugger_do_flat_in_breakpoints: BOOLEAN_PREF_RES;
+	graphical_output_disabled: BOOLEAN_PREF_RES;
 
 end -- class PROJECT_PREF_CAT

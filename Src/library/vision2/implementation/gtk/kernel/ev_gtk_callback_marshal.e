@@ -133,6 +133,8 @@ feature {EV_ANY_IMP} -- Access
 			dimension_tuple.put (a_4, 4)			
 		end
 
+feature {EV_ANY_IMP, EV_APPLICATION_IMP}
+
 	gdk_event_to_tuple (n_args: INTEGER; args: POINTER): TUPLE is
 			-- A TUPLE containing `args' data from a GdkEvent.
 			-- `n_args' is ignored.
@@ -245,7 +247,9 @@ feature {EV_ANY_IMP} -- Access
 			end
 			end
 		end
-		
+
+feature {EV_ANY_IMP}
+
 	key_event_translate (n: INTEGER; p: POINTER): TUPLE is
 			-- Convert GdkEventKey to tuple.
 		local
@@ -366,7 +370,7 @@ feature {EV_ANY_IMP} -- Tuple optimizations.
 		once
 			Result := [[]]
 		end
-
+		
 	pointer_tuple: TUPLE [POINTER] is
 			-- 
 		once

@@ -366,7 +366,7 @@ feature {EV_FONT_DIALOG_IMP} -- Implementation
 			end
 		end
 
-feature {NONE} -- Implementation
+feature {EV_FONT_IMP} -- Implementation
 
 	--| String-routines to facilitate in searching the best matching font.
 

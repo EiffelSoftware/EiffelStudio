@@ -3,8 +3,8 @@
 CC = cl
 CFLAGS = -c -MT -Ox -W3 -DEIF_IL_DLL \
 	-I..\spec\include \
-	-I$(ISE_EIFFEL)\C_library\libpng \
-	-I$(ISE_EIFFEL)\C_library\zlib \
+	-I..\..\..\C_library\libpng \
+	-I..\..\..\C_library\zlib \
 	-I$(ISE_EIFFEL)\studio\spec\windows\include
 
 .c.obj:

@@ -17,30 +17,49 @@ inherit
 		end;
 
 	MEL_LABEL_GADGET
+		rename
+			make as mel_label_make
+		export
+			{NONE} mel_label_make
 		redefine
-			make
+			parent
 		end
 
 creation 
 	make,
 	make_from_existing
 
-feature {NONE} -- Initialization
+feature -- Initialization
 
-	make (a_name: STRING; a_parent: MEL_COMPOSITE; do_manage: BOOLEAN) is
+	make (a_name: STRING; a_parent: MEL_ROW_COLUMN; do_manage: BOOLEAN) is
 			-- Create a motif cascade button gadget.
+		require
+			name_exists: a_name /= Void
+			parent_exists: a_parent /= Void and then not a_parent.is_destroyed;
+			valid_parent: a_parent.is_menu_bar or else
+					a_parent.is_menu_popup or else a_parent.is_menu_pulldown
 		local
 			widget_name: ANY
 		do
 			parent := a_parent;	
 			widget_name := a_name.to_c;
 			screen_object := xm_create_cascade_button_gadget (a_parent.screen_object, $widget_name, default_pointer, 0);
-			Mel_widgets.put (Current, screen_object);
+			Mel_widgets.add (Current);
 			set_default;
 			if do_manage then
 				manage
 			end
+		ensure
+			exists: not is_destroyed;
+			parent_set: parent = a_parent;
+			name_set: name.is_equal (a_name)
 		end;
+
+feature -- Access
+
+	parent: MEL_ROW_COLUMN;
+			-- Parent of cascade button (must be either a
+			-- MEL_MENU_BAR or MEL_MENU_POPUP or MEL_MENU_PULLDOWN)
 
 feature -- Satus report
 
@@ -49,9 +68,10 @@ feature -- Satus report
 		require
 			exists: not is_destroyed
 		do
-			Result := get_xt_pixmap (screen_object, XmNcascadePixmap);
+			Result := get_xt_pixmap (Current, XmNcascadePixmap);
 		ensure
-			cascade_pixmap_is_valid: Result /= Void and then Result.is_valid
+			valid_result: Result /= Void and then Result.is_valid;
+			result_has_same_display: Result.same_display (display) 
 		end;
 
 	mapping_delay: INTEGER is
@@ -80,7 +100,9 @@ feature -- Status setting
 			-- Set `cascade_pixmap' to `a_pixmap'.
 		require
 			exists: not is_destroyed;
-			a_pixmap_is_valid: a_pixmap /= Void and then a_pixmap.is_valid
+			valid_result: a_pixmap /= Void and then a_pixmap.is_valid;
+			is_pixmap: a_pixmap.is_pixmap;
+			same_display: a_pixmap.same_display (display)
 		do
 			set_xt_pixmap (screen_object, XmNcascadePixmap, a_pixmap)
 		ensure
@@ -102,7 +124,8 @@ feature -- Status setting
 			-- Set `sub_menu' to `a_menu'.
 		require
 			exists: not is_destroyed;
-			a_menu_exists: not a_menu.is_destroyed
+			a_menu_exists: not a_menu.is_destroyed;
+			valid_menu: a_menu.is_menu
 		do
 			set_xt_widget (screen_object, XmNsubMenuId, a_menu.screen_object)
 		ensure

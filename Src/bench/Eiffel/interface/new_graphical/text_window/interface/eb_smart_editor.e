@@ -911,7 +911,6 @@ feature {NONE} -- Implementation
 			dev_window_is_not_void: dev_window /= Void
 		local
 			syn_error: SYNTAX_ERROR
-			start_pos, stop_pos: INTEGER
 			txt: STRING
 			retried: BOOLEAN
 			fl: RAW_FILE
@@ -928,14 +927,7 @@ feature {NONE} -- Implementation
 						fl.read_stream (fl.count)
 						fl.close
 						txt := fl.last_string
---! FIXME : problem with unix files on windows
-						if platform_is_windows then
-							start_pos := syn_error.start_position + 1 - txt.substring (1, syn_error.start_position + 1).occurrences ('%N')
-							stop_pos := syn_error.end_position + 1 - txt.substring (1, syn_error.end_position + 1).occurrences ('%N')
-							highlight_when_ready (start_pos, stop_pos)
-						else
-							highlight_when_ready (syn_error.start_position + 1, syn_error.end_position + 1)
-						end
+						highlight_when_ready (syn_error.line, syn_error.line)
 						show_syntax_error
 					end
 				end

@@ -22,8 +22,8 @@ feature -- Properties
 			non_void_result: Result /= Void
 		end
 
-	text_length: INTEGER is
-			-- Number of characters in `text'
+	number_of_lines: INTEGER is
+			-- Number of lines in `text'
 		deferred
 		end
 
@@ -78,16 +78,11 @@ feature -- Text operations
 		end
 
 	highlight_selected (a, b: INTEGER) is
-			-- Highlight between positions `a' and `b' using reverse video.
+			-- Highlight between lines `a' and `b' using reverse video.
 		require
 			first_fewer_than_last: a <= b
 		do
-			if --b <= text_length and then 
-				b > a then
-					-- Does not highlight if `b' is beyond the
-					-- bounds of the text.
-				select_region (a, b)
-			end
+			select_lines (a, b)
 		end
 
 feature -- Status setting
@@ -120,12 +115,13 @@ feature -- Status setting
 			clear_window
 		end
 
-	select_region (first, last: INTEGER) is
-			-- Select the text between `first' and `last'.
+	select_lines (first, last: INTEGER) is
+			-- Select the text between `first' and `last' lines.
 			-- This text will be physically highlightened on the screen.
 		require
-			valid_start: first >= 1 and first <= text_length
-			valid_end: last >= 1 and last <= text_length
+			valid_start: first >= 1 and first <= number_of_lines
+			valid_end: last >= 1 and last <= number_of_lines
+			range_valid: first <= last
 		deferred
 		end
 

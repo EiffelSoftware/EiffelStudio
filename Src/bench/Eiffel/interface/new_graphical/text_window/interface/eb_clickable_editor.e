@@ -221,24 +221,24 @@ feature -- Possibly delayed operations
 		end
 
 	highlight_when_ready (a, b: INTEGER) is
-			-- same as select_region but scroll to the selected position
+			-- same as select_lines but scroll to the selected position
 			-- (beginning of selection at then bottom of the editor) and
 			-- does not need the text to be fully loaded	
 		local
 			fld: INTEGER
-			max_pos: INTEGER
+			max_line: INTEGER
 		do
-				if text_is_fully_loaded then
-					max_pos := text_displayed.text_length
-					select_region (a.min (max_pos), b.min (max_pos))
-					if number_of_lines > number_of_lines_displayed then
-						fld := text_displayed.selection_start.y_in_lines - number_of_lines_displayed + (number_of_lines_displayed // 2).min(2)
-						fld := fld.max (1).min (maximum_top_line_index)
-						set_first_line_displayed (fld, True)
-					end
-				else
-					after_reading_text_actions.extend(agent highlight_when_ready (a, b))
+			if text_is_fully_loaded then
+				max_line := text_displayed.number_of_lines
+				select_lines (a.min (max_line), b.min (max_line))
+				if number_of_lines > number_of_lines_displayed then
+					fld := text_displayed.selection_start.y_in_lines - number_of_lines_displayed + (number_of_lines_displayed // 2).min(2)
+					fld := fld.max (1).min (maximum_top_line_index)
+					set_first_line_displayed (fld, True)
 				end
+			else
+				after_reading_text_actions.extend(agent highlight_when_ready (a, b))
+			end
 		end
 
 	scroll_to_when_ready (pos: INTEGER) is
@@ -550,7 +550,7 @@ feature {EB_CLICKABLE_MARGIN} -- Pick and drop
 						x_pos < editor_area.width + offset
 					then
 						create cur.make_from_character_pos (1, 1, text_displayed)
-						position_cursor (cur, x_pos.max (1), y_pos)
+						position_cursor (cur, x_pos, y_pos)
 						Result := text_displayed.stone_at (cur)
 						if Result /= Void and then Result.is_valid then
 							bkst ?= Result

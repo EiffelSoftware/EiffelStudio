@@ -7,16 +7,11 @@ echo *  Generating `ISE.Reflection.Formatter.dll'  *
 echo ***********************************************
 
 cd ISE.Reflection.Emitter
-copy ..\..\..\tools\emitter\formatter.cs .
 gacutil -u ISE.Reflection.Formatter
 call make_formatter.bat
 gacutil -i ISE.Reflection.Formatter.dll
 copy ISE.Reflection.Formatter.dll ..\bin
 copy formatter.netmodule ..\bin
-del formatter.cs
-del ISE.Reflection.Formatter.dll
-del formatter.netmodule
-del Key
 cd ..
 
 echo *****************************************************************
@@ -247,38 +242,11 @@ echo *  Generating `ISE.Reflection.Emitter.exe'  *
 echo *********************************************
 
 cd ISE.Reflection.Emitter
-copy ..\..\..\tools\emitter\argparser.cs .
-copy ..\..\..\tools\emitter\eiffelclassfactory.cs .
-copy ..\..\..\tools\emitter\eiffelcreationroutine.cs .
-copy ..\..\..\tools\emitter\eiffelmethodfactory.cs .
-copy ..\..\..\tools\emitter\formatter.cs .
-copy ..\..\..\tools\emitter\globals.cs .
-copy ..\..\..\tools\emitter\newemitter.cs .
-copy ..\..\..\tools\emitter\newemittermain.cs .
-copy ..\..\..\tools\emitter\redefineclauses.cs .
-copy ..\..\..\tools\emitter\renameclauses.cs .
-copy ..\..\..\tools\emitter\selectclauses.cs .
-copy ..\..\..\tools\emitter\undefineclauses.cs .
-
 gacutil -u ISE.Reflection.Emitter
 sn -k Key
 call make.bat
 gacutil -i ISE.Reflection.Emitter.exe
 copy ISE.Reflection.Emitter.exe ..\bin
-del ISE.Reflection.Emitter.exe
-del argparser.cs
-del eiffelclassfactory.cs
-del eiffelcreationroutine.cs
-del eiffelmethodfactory.cs
-del formatter.cs
-del globals.cs
-del newemitter.cs
-del newemittermain.cs
-del redefineclauses.cs
-del renameclauses.cs
-del selectclauses.cs
-del undefineclauses.cs
-
 cd ..
 
 echo ******************************************

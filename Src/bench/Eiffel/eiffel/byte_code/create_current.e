@@ -38,8 +38,20 @@ feature -- Il code generation
 
 	generate_il is
 			-- Generate byte code for like Current creation type.
+		local
+			gen_type_i: GEN_TYPE_I
 		do
 			il_generator.create_like_current_object
+
+				-- FIXME: Manu 1/8/2002: setting of generic info
+				-- should be done on the real type of like Current
+				-- and not the one in which it is performed.
+			gen_type_i ?= context.current_type
+			if gen_type_i /= void then
+				il_generator.duplicate_top
+				gen_type_i.generate_gen_type_il (il_generator, True)
+				il_generator.assign_computed_type
+			end			
 		end
 
 feature -- Byte code generation

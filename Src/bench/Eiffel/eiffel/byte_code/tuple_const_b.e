@@ -83,7 +83,7 @@ feature -- IL generation
  			context.add_local (real_ty)
  			local_tuple := context.local_list.count
  			il_generator.put_dummy_local_info (real_ty, local_tuple)
-			il_generator.create_object (real_ty)
+			(create {CREATE_TYPE}.make (real_ty)).generate_il
  			il_generator.generate_local_assignment (local_tuple)
 
 				-- Call creation procedure of TUPLE

@@ -10,19 +10,26 @@ inherit
 		redefine
 			generate_cid, generate_reverse
 		end
+
+create
+	make
 	
+feature	{NONE} -- Initialization
+
+	make (t: TYPE_I) is
+			-- Assign `t' to `type'.
+		require
+			t_not_void: t /= Void
+		do
+			type := t
+		ensure
+			type_set: type = t
+		end
+
 feature -- Access
 
 	type: TYPE_I
 			-- Type to create
-
-feature -- Update 
-
-	set_type (t: TYPE_I) is
-			-- Assign `t' to `type'.
-		do
-			type := t
-		end
 
 feature -- C code generation
 
@@ -48,10 +55,17 @@ feature -- IL code generation
 			-- Generate IL code for a hardcoded creation type.
 		local
 			cl_type_i: CL_TYPE_I
+			gen_type_i: GEN_TYPE_I
 		do
 			cl_type_i ?= context.creation_type (type)
 			il_generator.create_object (cl_type_i)
-			il_generator.duplicate_top
+
+			gen_type_i ?= cl_type_i
+			if gen_type_i /= Void then
+				il_generator.duplicate_top
+				gen_type_i.generate_gen_type_il (il_generator, True)
+				il_generator.assign_computed_type
+			end
 		end
 
 feature -- Byte code generation

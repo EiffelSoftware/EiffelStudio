@@ -90,7 +90,7 @@ feature -- Il code generation
 			il_generator.generate_local_assignment (local_number)
 			
 				-- Create _REF class
-			il_generator.create_object (basic_i.associated_reference.type)
+			(create {CREATE_TYPE}.make (basic_i.associated_reference.type)).generate_il
 			il_generator.duplicate_top
 			
 				-- Call `set_item' from the _REF class

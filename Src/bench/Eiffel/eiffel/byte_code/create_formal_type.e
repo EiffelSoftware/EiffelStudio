@@ -11,28 +11,16 @@ inherit
 		redefine
 			generate, generate_gen_type_conversion,
 			generate_cid, type_to_create, make_byte_code,
-			analyze, generate_il
+			analyze, generate_il, type
 		end
 
 creation
 	make
 
-feature -- Initialization
-
-	make (n: INTEGER) is
-			-- Initialize
-		require
-			positive_position: n > 0
-		do
-			formal_position := n
-		ensure
-			formal_position_set: formal_position = n
-		end
-
 feature -- Access
 
-	formal_position: INTEGER
-				-- Position of the formal in current type.
+	type: FORMAL_I
+			-- Current type of creation.
 
 feature -- C code generation
 
@@ -54,7 +42,7 @@ feature -- C code generation
 			buffer.putchar (',')
 			context.current_register.print_register
 			buffer.putchar (',')
-			buffer.putint (formal_position)
+			buffer.putint (type.position)
 			buffer.putchar (')')
 		end
 
@@ -62,10 +50,16 @@ feature -- IL code generation
 
 	generate_il is
 			-- Generate IL code for a formal creation type.
+		local
+			formal: FORMAL_I
 		do
-			check
-				not_yet_implemented: False
-			end
+				-- Compute actual type of Current formal.
+			formal ?= type
+			formal.generate_gen_type_il (il_generator, True)
+			
+				-- Evaluate the type and create a corresponding object type.
+			il_generator.generate_current
+			il_generator.create_formal_type
 		end
 		
 feature -- Byte code generation
@@ -75,7 +69,7 @@ feature -- Byte code generation
 		do
 			ba.append (Bc_gen_param_create)
 			ba.append_short_integer (context.current_type.generated_id (False))
-			ba.append_integer (formal_position)
+			ba.append_integer (type.position)
 		end
 
 feature -- Generic conformance

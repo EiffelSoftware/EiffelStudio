@@ -31,6 +31,9 @@ feature
 			create Result
 		end
 
+	non_widget_test_area: EV_CELL
+			-- Cell that can contain {EV_TESTABLE_NON_WIDGET}.test_widget.
+
 	prepare is
 			-- Pre launch preperation.
 			--  Create some procedure widgets in a notebook.
@@ -217,7 +220,6 @@ feature
 		local
 			vb: EV_VERTICAL_BOX
 			nw_combo: EV_COMBO_BOX
-			client_area: EV_CELL
 			combo_item: EV_LIST_ITEM
 			testable: EV_TESTABLE_NON_WIDGET
 		once
@@ -227,8 +229,8 @@ feature
 			create nw_combo
 			vb.extend (nw_combo)
 			vb.disable_item_expand (nw_combo)
-			create client_area
-			vb.extend (client_area)
+			create non_widget_test_area
+			vb.extend (non_widget_test_area)
 			from
 				non_widgets.start
 			until
@@ -238,16 +240,14 @@ feature
 				if testable /= Void then
 					create combo_item.make_with_text (testable.generating_type)
 					nw_combo.extend (combo_item)
-					combo_item.select_actions.extend (~display_test (client_area, testable))
+					combo_item.select_actions.extend (~display_test (testable))
 				end
 				non_widgets.forth
 			end
 		end
 
-	display_test (an_area: EV_CELL; any_object: ANY) is
-			-- Display `any_object's test on `an_area'.
-		require
-			an_area_not_void: an_area /= Void
+	display_test (any_object: ANY) is
+			-- Display `any_object's test on `non_widget_test_area'.
 		local
 			a_testable: EV_TESTABLE_NON_WIDGET
 		do
@@ -259,9 +259,9 @@ feature
 			)
 			a_testable ?= any_object
 			if a_testable /= Void then
-				an_area.put (a_testable.test_widget)
+				non_widget_test_area.put (a_testable.test_widget)
 			else
-				an_area.put (create {EV_LABEL}.make_with_text ("(no test available yet)"))
+				non_widget_test_area.put (create {EV_LABEL}.make_with_text ("(no test available yet)"))
 			end
 		end
 
@@ -483,6 +483,9 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/04/26 18:32:35  brendel
+--| Reinserted changes.
+--|
 --| Revision 1.28  2000/04/26 18:22:58  oconnor
 --| more tests
 --|

@@ -32,6 +32,22 @@ inherit
 			{NONE} all
 		end
 
+create
+	make
+	
+feature {NONE} -- Initialization
+
+	make (id: INTEGER) is
+			-- Create new instance of `Current' with `base_id'
+			-- assigned with `id'.
+		require
+			valid_id: id > 0
+		do
+			base_id := id
+		ensure
+			base_id_set: base_id = id
+		end
+		
 feature -- Access
 
 	base_id: INTEGER
@@ -271,12 +287,6 @@ feature -- Status
 
 feature -- Setting
 
-	set_base_id (c: INTEGER) is
-			-- Assign `c' to `base_id'.
-		do
-			base_id := c
-		end
-
 	set_is_true_expanded (b: BOOLEAN) is
 			-- Assign `b' to `is_true_expanded'.
 		do
@@ -291,6 +301,8 @@ feature -- Setting
 
 	set_cr_info (cinfo : CREATE_INFO) is
 			-- Set `cr_info' to `cinfo'.
+		require
+			create_info_not_void: cinfo /= Void
 		do
 			cr_info := cinfo
 		ensure

@@ -208,17 +208,14 @@ feature -- Conveniences
 						i := 1
 						count := generics.count
 						create actual_generic.make (1, count)
-						Result := l_class.partial_actual_type (actual_generic,
-							is_expanded, is_separate)
 					until
 						i > count
 					loop
 						actual_generic.put (generics.i_th (i).actual_type, i)
 						i := i + 1
 					end
-				else
-					Result := l_class.partial_actual_type (Void, is_expanded, is_expanded)
 				end
+				Result := l_class.partial_actual_type (actual_generic, is_expanded, is_separate)
 
 				if Result.is_expanded and not Result.is_basic then
 						-- Only record when necessary.

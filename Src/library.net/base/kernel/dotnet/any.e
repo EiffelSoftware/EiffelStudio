@@ -7,17 +7,12 @@ class
 
 inherit
 	SYSTEM_OBJECT
+		export
+			{NONE} all
 		redefine
 			finalize, equals, get_hash_code, memberwise_clone, to_string
 		end
 	
-feature {NONE} -- Initialization
-
-	default_create is
-			-- Default initialization
-		do
-		end
-		
 feature -- Access
 
 	frozen generator: STRING is
@@ -53,13 +48,24 @@ feature -- Status report
 			-- Is type of current object identical to type of `other'?
 		require
 			other_not_void: other /= Void
+		local
+			l_other: SYSTEM_OBJECT
 		do
+			l_other := other
 			Result := get_type.is_instance_of_type (other) and then
-				other.get_type.is_instance_of_type (Current)
+				l_other.get_type.is_instance_of_type (Current)
 		ensure
 			definition: Result = (conforms_to (other) and
 										other.conforms_to (Current))
 		end
+
+ 	consistent (other: like Current): BOOLEAN is
+ 			-- Is current object in a consistent state so that `other'
+ 			-- may be copied onto it? (Default answer: yes).
+ 		obsolete
+ 			"Not used anymore, please remove it from your inheritance clauses if it appears."
+ 		do
+ 		end
 
 feature -- Comparison
 
@@ -191,11 +197,22 @@ feature -- Duplication
 		do
 			if other /= Void then
 					-- No need for removing assertions checking
-					-- as `internal_duplicate' will perform an atomic creation
-				Result := other.internal_duplicate
+					-- as `standard_twin' will perform an atomic creation
+				Result := other.standard_twin
 			end
 		ensure
 			equal: standard_equal (Result, other)
+		end
+
+	frozen standard_twin: like Current is
+			-- New object field-by-field identical to `other'.
+			-- Always uses default copying semantics.
+		do
+				-- Built-in
+			Result ?= memberwise_clone
+		ensure
+			standard_twin_not_void: Result /= Void
+			equal: standard_equal (Result, Current)
 		end
 
 	frozen deep_clone (other: ANY): like other is
@@ -223,6 +240,16 @@ feature -- Duplication
 		ensure
 			deep_equal: deep_equal (Current, other)
 		end
+
+ 	setup (other: like Current) is
+ 			-- Assuming current object has just been created, perform
+ 			-- actions necessary to ensure that contents of `other'
+ 			-- can be safely copied onto it.
+ 		obsolete
+ 			"Not used anymore by `clone', please remove it from your inheritance clauses%N%
+ 			%if it appears."
+ 		do
+ 		end
 
 feature -- Output
 
@@ -265,6 +292,12 @@ feature -- Basic operations
 		do
 		end
 
+	default_create is
+			-- Process instances of classes with no creation clause.
+			-- (Default: do nothing.)
+		do
+		end
+
 	frozen do_nothing is
 			-- Execute a null action.
 		do
@@ -286,17 +319,6 @@ feature -- Basic operations
 
 	frozen Void: NONE
 			-- Void reference
-
-feature -- Clone operations
-
-	frozen internal_duplicate: like Current is
-			-- Shallow copy of Current.
-			-- Has to be exported, but should not be called by user code.
-			-- as it will not be portable.
-		do
-				-- Built-in
-			Result ?= memberwise_clone
-		end
 
 feature {NONE} -- Disposal
 

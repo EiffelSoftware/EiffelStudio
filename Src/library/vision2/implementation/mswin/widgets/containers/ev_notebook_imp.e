@@ -86,6 +86,7 @@ inherit
 			on_wm_vscroll,
 			on_wm_hscroll,
 			on_key_down,
+			on_mouse_wheel,
 			on_char,
 			show,
 			hide,

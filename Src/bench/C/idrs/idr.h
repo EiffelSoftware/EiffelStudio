@@ -29,11 +29,7 @@
 #include "eif_portable.h"
 		/* Included after standard include files to avoid
 		 * redefinition of macros. */
-#ifdef I_STRING
 #include <string.h>
-#else
-#include <strings.h>
-#endif
 
 #ifdef EIF_WIN32
 #include "io.h"

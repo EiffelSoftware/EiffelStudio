@@ -17,6 +17,11 @@ inherit
 			{NONE} all
 		end
 		
+	SHARED_WORKBENCH
+		export
+			{NONE} all
+		end
+		
 	KL_EQUALITY_TESTER [NAMED_TYPE_A]
 		export
 			{NONE} all
@@ -340,13 +345,73 @@ feature -- Initialization/Checking
 					end
 				end
 			end
+
+			if not l_success then
+					-- Could not find a conversion routine. Search now for an implicit
+					-- conversion
+				if
+					System.il_generation and then
+					(not a_source_type.is_external or a_source_type.is_basic) and
+					a_target_type.is_external
+				then
+						-- Special conversion between eiffel types and SYSTEM_OBJECT.
+					l_cl_type ?= a_target_type
+					if l_cl_type /= Void and then l_cl_type.is_system_object then
+						if a_source_type.is_expanded then
+								-- Case of passing an expanded to .NET
+							create {BOX_CONVERSION_INFO} last_conversion_info.make (a_source_type)
+						else
+								-- Case of passing a reference to .NET
+							create {ANY_OBJECT_CONVERSION_INFO} last_conversion_info.make (a_target_type)
+						end
+						l_success := True
+					end
+				end
+			end
+			last_conversion_check_successful := l_success
+		end
+
+	check_formal_conversion (a_context_class: CLASS_C; a_formal: FORMAL_A; a_target_type: TYPE_A) is
+			-- In context of `a_context_class' check if `a_formal' converts to `a_target_type'.
+			-- If so set `last_conversion_check_successful' to True and set `last_conversion_info'
+			-- with proper conversion information.
+		require
+			a_context_class_not_void: a_context_class /= Void
+			context_class_has_generics: a_context_class.generics /= Void
+			a_formal_not_void: a_formal /= Void
+			valid_context_class: a_context_class.generics.count >= a_formal.position
+			a_target_type_not_void: a_target_type /= Void
+		local
+			l_success: BOOLEAN
+			l_other: FORMAL_A
+			l_constraint: TYPE_A
+			l_cl_type: CL_TYPE_A
+		do
+			l_other ?= a_target_type
+			if l_other = Void then
+				l_constraint := a_context_class.constraint (a_formal.position)
+				if l_constraint.conform_to (a_target_type) then
+						-- Constraint conform to target, we allow conversion.
+						-- It is a conversion and not a plain conformance because in case where
+						-- the formal generic is expanded it becomes a conversion.
+					create {FORMAL_CONVERSION_INFO} last_conversion_info.make (a_formal, a_target_type)
+					l_success := True
+				elseif System.il_generation and then a_target_type.is_external then
+					l_cl_type ?= a_target_type
+					if l_cl_type /= Void and then l_cl_type.is_system_object then
+							-- Reattachement of a formal to SYSTEM_OBJECT, we allow this.
+						create {FORMAL_DOTNET_CONVERSION_INFO} last_conversion_info.make (a_formal, a_target_type)
+						l_success := True
+					end
+				end
+			end
 			last_conversion_check_successful := l_success
 		end
 
 feature -- Status report
 
 	last_conversion_check_successful: BOOLEAN
-			-- Was last call to `check_conversion' successful?
+			-- Was last call to `check_conversion' or `check_formal_conversion' successful?
 	
 	last_conversion_info: CONVERSION_INFO
 			-- Information about last successful conversion checking

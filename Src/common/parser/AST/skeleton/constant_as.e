@@ -63,7 +63,8 @@ feature -- Conveniences
 	byte_node: BYTE_CODE is
 			-- Associated byte code
 		do
-			-- Do nothing
+		ensure then
+			False
 		end;
 
 	is_body_equiv (other: like Current): BOOLEAN is

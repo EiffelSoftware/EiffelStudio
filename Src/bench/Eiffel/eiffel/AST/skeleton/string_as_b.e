@@ -23,7 +23,7 @@ feature -- Initilization
 		do
 			value ?= yacc_arg (0);
 		ensure then
-			value_exists: not (value = Void or else value.empty);
+			value_exists: value /= Void;
 		end;
 
 feature -- Type check and byte code

@@ -10,13 +10,15 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EV_COMBO_BOX
+class 
+	EV_COMBO_BOX
 
 inherit
 
 	EV_TEXT_FIELD
 		redefine
-			implementation
+			implementation,
+			make
 		end
 
 creation
@@ -41,7 +43,7 @@ feature -- Access
 			index_large_enough: index >= 0
 			index_small_enough: index < count
 		do
-			implementation.read_element (index)
+			Result := implementation.read_element (index)
 		end
 
 feature -- Measurement
@@ -52,7 +54,17 @@ feature -- Measurement
 		require
 			exists: not destroyed
 		do
-			Result := implementation.
+			Result := implementation.extended_height
+		end
+
+feature -- Status report
+
+	count: INTEGER is
+			-- number of items in the list of the combo-box
+		require
+			exists: not destroyed
+		do
+			Result := implementation.count
 		end
 
 feature -- Element change

@@ -23,7 +23,7 @@ creation
 	make, put
 
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
 	frozen make, frozen put (obj: G) is
 			-- Make proxy denote `obj'.

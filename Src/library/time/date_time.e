@@ -13,14 +13,15 @@ inherit
 		undefine
 			out
 		redefine
-			infix "<"
+			infix "<", copy, is_equal
 		end;
 	DATE_TIME_VALUE
 		undefine
 			is_equal
 		redefine
 			date, 
-			time
+			time,
+			copy
 		end
 
 creation
@@ -31,6 +32,7 @@ creation
 	make_by_date,
 	make_now,
 	make_from_string
+	
 
 feature -- Initialization 
 
@@ -123,7 +125,6 @@ feature -- Initialization
 			-- "dd/mm/yyyy hh:mm:ss.sss".	
 		require
 			s_exists: s /= Void;
-			delim1_exist: 
 		do
 			!! date.make_from_string(s)
 			!! time.make_from_string(s)
@@ -177,6 +178,12 @@ feature -- Comparison
 				(time < other.time))
 		end;
 
+	is_equal (other: like Current): BOOLEAN is
+			-- Is the current object equal to `other'?
+		do
+			Result := equal (date, other.date) and then equal (time, other.time)
+		end
+
 feature -- Measurement 
  
 	duration: DATE_TIME_DURATION is 
@@ -209,12 +216,20 @@ feature -- Element Change
 			time_set: time = t 
 		end;
 
+	copy (other: like Current) is
+			-- set `date' and `time' with the `other' attributes.
+		do
+			{ABSOLUTE} Precursor (other)
+			date := clone (other.date)
+			time := clone (other.time)
+		end
+
 feature -- Basic operations
 
 	infix "+" (d: DATE_TIME_DURATION): like Current is
 			-- Sum the current object with `d'
 		do
-			Result := deep_clone (Current);
+			Result := clone (Current)
 			Result.add (d)
 		ensure
 			result_exists: Result /= Void

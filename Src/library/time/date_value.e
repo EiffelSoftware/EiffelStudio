@@ -30,13 +30,28 @@ feature -- Access
 feature -- Conversion
 		
 	out : STRING is
-		-- printable representation of `Current' 
+		-- printable representation of `Current' with "standard"
+		-- Form: "dd/mm/yyyy"
 		do
-			Result := year.out;
+			Result := day.out;
+			if day < 10 then 
+				Result.prepend("0")
+			end
 			Result.extend('/');
+			if month < 10 then
+				Result.append("0")
+			end
 			Result.append(month.out);
 			Result.extend('/');
-			Result.append(day.out);
+			if year < 10 then
+				Result.append("000")
+			elseif year < 100 then
+				Result.append("00")
+			elseif year < 1000 then
+				Result.append("0")
+			end		
+			Result.append(year.out);
+
 		end;
 
 end -- class DATE_VALUE

@@ -108,7 +108,7 @@ feature -- Initialization
 			-- initialise from a "standard" string of form
 			-- "dd/mm/yyyy hh:mm:ss.sss".
 		require
-			s_exits: s /= Void;
+			s_exists: s /= Void;
 			date_valid: date_valid(s)
 		local
 			 pos1, pos2, pos3, pos4:INTEGER
@@ -135,18 +135,22 @@ feature -- conditions
 			pos1, pos2, pos3, pos4: INTEGER
 			substrg1, substrg2, substrg3: STRING
 		do
-			pos1:=s.index_of(Std_date_delim,1)
-			pos2:=s.index_of(Std_date_delim,pos1+1)
-			pos3:=s.index_of(Std_date_time_delim,1)
-			pos4:=s.count+1
-			substrg1:=s.substring(1, pos1-1)
-			substrg2:=s.substring(pos1+1, pos2-1)
-			if pos3/=0 then
-				substrg3:=s.substring(pos2+1, pos3-1)
-			else
-				substrg3:=s.substring(pos2+1, pos4-1)
-			end
-			Result:=s.item(pos1)=Std_date_delim and s.item(pos1+3)=Std_date_delim and substrg1.is_integer and substrg2.is_integer and substrg3.is_integer; 
+			if not(s.count < 10) then
+				-- If the count of the string is less than 10 then
+				-- This is not a date format.
+				pos1:=s.index_of(Std_date_delim,1)
+				pos2:=s.index_of(Std_date_delim,pos1+1)
+				pos3:=s.index_of(Std_date_time_delim,1)
+				pos4:=s.count+1
+				substrg1:=s.substring(1, pos1-1)
+				substrg2:=s.substring(pos1+1, pos2-1)
+				if pos3/=0 then
+					substrg3:=s.substring(pos2+1, pos3-1)
+				else
+					substrg3:=s.substring(pos2+1, pos4-1)
+				end
+				Result:=s.item(pos1)=Std_date_delim and s.item(pos1+3)=Std_date_delim and substrg1.is_integer and substrg2.is_integer and substrg3.is_integer; 
+			end -- if
 		end
 feature -- Access
 

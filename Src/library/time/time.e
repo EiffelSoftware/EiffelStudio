@@ -76,7 +76,7 @@ feature -- Initialization
 			c_get_date_time;
 			hour := c_hour;
 			minute := c_minute;
-			fine_second := c_second;
+			fine_second := (c_second + c_millisecond / 1000);
 		end;
 
 	make_by_seconds (s: INTEGER) is
@@ -111,7 +111,7 @@ feature -- Initialization
 			-- initialise from a "standard" string of form
 			-- "dd/mm/yyyy hh:mm:ss.sss".
 		require 
-			s_exits: s /= Void;
+			s_exists: s /= Void;
 			time_valid: time_valid(s);
 		local
 			 t:STRING
@@ -137,15 +137,19 @@ feature -- conditions
 			pos1, pos2, pos3, pos4: INTEGER
 			substrg1, substrg2, substrg3: STRING
 		do
-			pos1:=s.index_of(Std_date_time_delim,1)
-			pos2:=s.index_of(Std_time_delim,1)
-			pos3:=s.index_of(Std_time_delim,pos2+1)
-			pos4:=s.count+1
-			substrg1:=s.substring(pos1+1, pos2-1)
-			substrg2:=s.substring(pos2+1, pos3-1)
-			substrg3:=s.substring(pos3+1, pos4-1)
+			if not(s.count < 12) then
+				-- If the count of the string is less than 12 then
+				-- This is not a time format.
+				pos1:=s.index_of(Std_date_time_delim,1)
+				pos2:=s.index_of(Std_time_delim,1)
+				pos3:=s.index_of(Std_time_delim,pos2+1)
+				pos4:=s.count+1
+				substrg1:=s.substring(pos1+1, pos2-1)
+				substrg2:=s.substring(pos2+1, pos3-1)
+				substrg3:=s.substring(pos3+1, pos4-1)
 			
-			Result:=s.item(pos1+3)=Std_time_delim and s.item(pos2+3)=Std_time_delim and substrg1.is_integer and substrg2.is_integer and substrg3.is_real; 
+				Result:=s.item(pos1+3)=Std_time_delim and s.item(pos2+3)=Std_time_delim and substrg1.is_integer and substrg2.is_integer and substrg3.is_real; 
+			end -- if
 		end
 		
 			
@@ -404,6 +408,11 @@ feature {NONE} -- Externals
 		end;
 
 	c_second: INTEGER is
+		external
+			"C"
+		end;
+
+	c_millisecond: INTEGER is
 		external
 			"C"
 		end;

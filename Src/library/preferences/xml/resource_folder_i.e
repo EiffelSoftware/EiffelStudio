@@ -111,6 +111,7 @@ feature -- Initialization
 			create description.make (20)
 			create {ARRAYED_LIST [RESOURCE_FOLDER_I]} child_list.make (10)
 			create {ARRAYED_LIST [RESOURCE]} resource_list.make (20)
+			resource_list.compare_objects
 			cursor := xml_elem.new_cursor
 			from
 				cursor.start
@@ -292,6 +293,8 @@ feature {NONE} -- Implementation
 				end
 				cursor.forth
 			end
+			resource_description := Void
+			resource_name := Void
 		end
 
 	process_unit_specific (node: XML_ELEMENT): RESOURCE is

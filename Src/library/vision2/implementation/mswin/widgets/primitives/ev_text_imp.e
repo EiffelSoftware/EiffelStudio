@@ -14,7 +14,7 @@ inherit
 	EV_TEXT_COMPONENT_IMP
 		undefine
 			on_key_down,
-			build
+			set_default_options
 		end
 
 	WEL_MULTIPLE_LINE_EDIT
@@ -51,27 +51,21 @@ inherit
 		end
 
 creation
-
-	make
+	make,
+	make_with_text
 
 feature -- Initialization
 
-	make (par: EV_CONTAINER) is
-			-- Create the label with an empty label.
+	make is
+			-- Create an empty text area.
 		do
-			make_with_text (par, "")
+			make_with_text ("")
 		end
 
-	make_with_text (par: EV_CONTAINER; txt: STRING) is
-			-- Create the label with `txt'.
-		local
-			par_imp: WEL_WINDOW
+	make_with_text (txt: STRING) is
+			-- Create a text area with `txt' as label.
 		do
-			par_imp ?= par.implementation
-			check
-				par_imp /= Void
-			end
-			wel_make (par_imp, txt, 0, 0, 0, 0, 0)
+			wel_make (default_parent.item, txt, 0, 0, 0, 0, 0)
 		end
 
 feature {NONE} -- Implementation
@@ -79,8 +73,11 @@ feature {NONE} -- Implementation
 	default_style: INTEGER is
 			-- Default style used to create the control
 		do
-			Result := {WEL_MULTIPLE_LINE_EDIT} Precursor
-						+ Es_wantreturn
+			Result := Ws_child + Ws_visible + Ws_group 
+					+ Ws_tabstop + Ws_border + Es_left
+					+ Es_autohscroll + Es_autovscroll
+					+ Ws_vscroll + Ws_hscroll + Es_multiline
+					+ Es_wantreturn
 		end
 
 	default_ex_style: INTEGER is

@@ -10,9 +10,6 @@ class
 
 inherit
 	EV_TOGGLE_BUTTON_I
-		undefine
-			build
-		end
 
 	EV_BUTTON_IMP
 		redefine

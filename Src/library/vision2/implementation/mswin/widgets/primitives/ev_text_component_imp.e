@@ -14,22 +14,20 @@ inherit
 
 	EV_PRIMITIVE_IMP
 		undefine
-			build
+			set_default_colors,
+			set_default_options
 		redefine
-			plateform_build
+			set_default_minimum_size
 		end
 
 	EV_BAR_ITEM_IMP
 
-	EV_DEFAULT_COLORS
-
 feature {NONE} -- Initialization
 
-	plateform_build (par: EV_CONTAINER_IMP) is
+	set_default_minimum_size is
 			-- Called after creation. Set the current size and
 			-- notify the parent.
 		do
-			{EV_PRIMITIVE_IMP} Precursor (par)
 			set_minimum_height (wel_font.log_font.height + 7)
 			set_minimum_width (30)
 		end
@@ -48,14 +46,15 @@ feature -- Status setting
 			-- `flag' true make the component read-write and
 			-- `flag' false make the component read-only.
 		local
-			color: EV_COLOR
+			default_colors: EV_DEFAULT_COLORS
 		do
+			!! default_colors
 			if flag then
 				set_read_write
-				set_background_color (Color_read_write)
+				set_background_color (default_colors.Color_read_write)
 			else
 				set_read_only
-				set_background_color (Color_read_only)
+				set_background_color (default_colors.Color_read_only)
 			end
 		end
 

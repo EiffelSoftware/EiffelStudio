@@ -57,24 +57,18 @@ creation
 	make,
 	make_with_text
 
-feature -- Initialization
+feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
-			-- Create the label with an empty label.
+	make is
+			-- Create an empty text field.
 		do
-			make_with_text (par, "")
+			make_with_text ("")
 		end
 
-	make_with_text (par: EV_CONTAINER; txt: STRING) is
-			-- Create the label with `txt' as label.
-		local
-			par_imp: WEL_WINDOW
+	make_with_text (txt: STRING) is
+			-- Create a text field with `txt' as label.
 		do
-			par_imp ?= par.implementation
-			check
-				par_imp /= Void
-			end
-			wel_make (par_imp, txt, 0, 0, 0, 0, 1)
+			wel_make (default_parent.item, txt, 0, 0, 0, 0, 0)
 		end
 
 feature -- Event - command association
@@ -136,8 +130,8 @@ feature {NONE} -- Implementation
 			-- the system keep on beeping when we press the
 			-- return key.
 		do
-			Result := Ws_visible + Ws_child + Ws_group 
-				+ Ws_tabstop + Ws_border + Es_left + Es_autohscroll
+			Result := Ws_child + Ws_visible + Ws_tabstop
+						+ Ws_border + Es_left + Es_autohscroll
 		end
 
 	next_dlgtabitem (hdlg, hctl: POINTER; previous: BOOLEAN): POINTER is

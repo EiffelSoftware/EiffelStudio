@@ -10,12 +10,9 @@ class
 
 inherit
 	EV_RADIO_BUTTON_I
-		undefine
-			build
-		end
 		
 	EV_CHECK_BUTTON_IMP
-		undefine
+		redefine
 			default_style
 		end
 
@@ -47,11 +44,22 @@ inherit
 			on_set_focus,
 			on_kill_focus,
 			process_notification
+		redefine
+			default_style
 		end
 		
 creation
 	make,
 	make_with_text
+
+feature {NONE} -- WEL Implementation
+
+	default_style: INTEGER is
+			-- Default style used to create the control
+		do
+			Result := Ws_child + Ws_visible + Ws_tabstop
+						+ Bs_autoradiobutton
+		end
 
 end -- class EV_RADIO_BUTTON_IMP
 

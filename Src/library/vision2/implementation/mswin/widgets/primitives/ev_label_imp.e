@@ -15,14 +15,14 @@ inherit
 		undefine
 			on_key_down
 		redefine
-			plateform_build
+			set_default_minimum_size
 		end
 
 	EV_BAR_ITEM_IMP
 
 	EV_TEXTABLE_IMP
 		redefine
-			set_default_size,
+			set_default_minimum_size,
 			set_center_alignment,
 			set_right_alignment,
 			set_left_alignment
@@ -64,35 +64,22 @@ inherit
 		end
 
 creation
+	make,
 	make_with_text
 
 feature {NONE} -- Initialization
 
-	make (par: EV_CONTAINER) is
+	make is
 			-- Create an empty label.
 		do
-			make_with_text (par, "")
+			make_with_text ("")
 		end
 
-	make_with_text (par: EV_CONTAINER; txt: STRING) is
+	make_with_text (txt: STRING) is
 			-- Create the label with `txt' as label.
-		local
-			par_imp: WEL_WINDOW
 		do
-			par_imp ?= par.implementation
-			check
-				par_imp /= Void
-			end
-			wel_make (par_imp, txt, 0, 0, 0, 0, 0)
-		end
-
-	plateform_build (par: EV_CONTAINER_IMP) is
-			-- Called after creation. Set the current size and
-			-- notify the parent.
-		do
-			{EV_PRIMITIVE_IMP} Precursor (par)
+			wel_make (default_parent.item, txt, 0, 0, 0, 0, 0)
 			set_font (font)
-			set_default_size
 		end
 
 feature -- Status setting
@@ -115,9 +102,7 @@ feature -- Status setting
 			set_Style (basic_style + Ss_left)
 		end
 
-feature {NONE} -- Basic operation
-
-	set_default_size is
+	set_default_minimum_size is
 		-- Resize to a default size.
 		local
 			fw: EV_FONT_IMP
@@ -126,24 +111,22 @@ feature {NONE} -- Basic operation
 			check
 				font_not_void: fw /= Void
 			end
-			set_minimum_width (fw.string_width (Current, text) + Extra_width)
+			set_minimum_width (fw.string_width (Current, text) + 10)
 			set_minimum_height (7 * fw.string_height (Current, text) // 4 - 2)
 		end
-
-	Extra_width: INTEGER is 10
 
 feature {NONE} -- Implementation
 
 	basic_style: INTEGER is
 			-- Basic style without any option
 		do
-			Result := Ws_visible + Ws_child + Ws_group
+			Result := Ws_visible + Ws_child
 		end
 
    	default_style: INTEGER is
    			-- Default style used to create the control
    		do
- 			Result := basic_style + Ss_left
+ 			Result := Ws_child + Ws_visible + Ss_left
  		end
 
 	wel_background_color: WEL_COLOR_REF is

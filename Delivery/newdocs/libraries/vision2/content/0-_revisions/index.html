@@ -122,7 +122,7 @@
 					implementation, and calling `wipe_out' on `expose_actions' would stop the image
 					from being redrawn. There are now no side effects related to `expose_actions'.
 					</li>
-					<LI> Calling `copy' on a pixmap that was parented in an EV_CONTAINER, and therefore displayed on screen had no visual effect until the window was re-painted. The image is now updated immediately.</li>
+					<LI> Calling `copy' on a pixmap that was parented in an EV_CONTAINER, and therefore displayed on screen had no visual effect until the window was re-painted. The image is now updated immediately. Also, using `copy' on a pixmap in a similar situation that was originally set with a masked icon, and passing a pixmap created from a bitmap file would cause a crash.</li>
 </ul>
 					<LI>
 						<B>EV_LIST</B>

@@ -403,22 +403,28 @@ feature -- Element change
 		end;
 
 	left_adjust is
-			-- Remove leading blanks.
+			-- Remove leading whitespace.
 		do
 			count := str_left ($area, count);
 		ensure
-			new_count: (count /= 0) implies (item (1) /= ' ')
+			new_count: (count /= 0) implies 
+				((item (1) /= ' ') and
+				 (item (1) /= '%T') and
+				 (item (1) /= '%R') and
+				 (item (1) /= '%N'))
 		end;
 
 	right_adjust is
-			-- Remove trailing blanks.
+			-- Remove trailing whitespace.
 		do
 			count := str_right ($area, count)
 		ensure
-			new_count: (count /= 0) implies (item (count) /= ' ')
+			new_count: (count /= 0) implies 
+				((item (count) /= ' ') and
+				 (item (count) /= '%T') and
+				 (item (count) /= '%R') and
+				 (item (count) /= '%N'))
 		end;
-
-
 
 	share (other: like Current) is
 			-- Make current string share the text of `other'.
@@ -1119,15 +1125,15 @@ feature {STRING} -- Implementation
 		end;
 
 	str_left (c_string: like area; length: INTEGER): INTEGER is
-			-- Remove all leading blanks from `c_string'.
-			-- Return the new number of character making `c_string'
+			-- Remove all leading whitespace from `c_string'.
+			-- Return the new number of characters making `c_string'
 		external
 			"C"
 		end;
 
 	str_right (c_string: like area; length: INTEGER): INTEGER is
-			-- Remove all trailing blanks from `c_string'.
-			-- Return the new number of character making `c_string'
+			-- Remove all trailing whitespace from `c_string'.
+			-- Return the new number of characters making `c_string'
 		external
 			"C"
 		end;

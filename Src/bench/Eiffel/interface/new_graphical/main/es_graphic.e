@@ -28,7 +28,6 @@ feature -- Access
 			display_name: STRING
 			exc: EXCEPTIONS
 			exec_env: EXECUTION_ENVIRONMENT
---			g_degree_output: GRAPHICAL_DEGREE_OUTPUT
 		do
 				-- display issues: to be implemented later
 --			if not ewb_display.is_valid then
@@ -61,6 +60,7 @@ feature -- Access
 
 	initialize is
 		do
---			splash_pixmap (bm_ISE_Power)
+			splash_pixmap (bm_ISE_Power)
 		end
+
 end -- class ES_GRAPHIC

@@ -285,7 +285,7 @@ feature {EV_ANY_I, EV_INTERNAL_TOOLBAR_IMP}-- Status report
 			end
 		end
 
-feature {EV_ANY_I, EV_PICK_AND_DROPABLE_IMP} -- Status Report
+feature {EV_ANY_I, EV_PICK_AND_DROPABLE_IMP, EV_INTERNAL_COMBO_FIELD_IMP} -- Status Report
 
 	pick_and_drop_source: EV_PICK_AND_DROPABLE_IMP
 		-- The current pick and drop source.

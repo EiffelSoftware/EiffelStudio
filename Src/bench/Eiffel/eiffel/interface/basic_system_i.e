@@ -84,7 +84,7 @@ feature -- Access
 	pointer_ref_class: CLASS_I
 			-- Class POINTER_REF
 
-	memory_class: CLASS_I
+	disposable_class: CLASS_I
 			-- Class MEMORY
 
 	tuple_class: CLASS_I
@@ -586,14 +586,14 @@ feature -- Settings
 			pointer_ref_class_set: pointer_ref_class = c
 		end
 
-	set_memory_class (c: CLASS_I) is
-			-- Assign `c' to `memory_class'.
+	set_disposable_class (c: CLASS_I) is
+			-- Assign `c' to `disposable_class'.
 		require
 			c_not_void: c /= Void
 		do
-			memory_class := c
+			disposable_class := c
 		ensure
-			memory_class_set: memory_class = c
+			disposable_class_set: disposable_class = c
 		end
 
 	set_tuple_class (c: CLASS_I) is

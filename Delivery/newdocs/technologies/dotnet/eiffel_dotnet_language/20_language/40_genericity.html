@@ -12,7 +12,7 @@
 			We got a very short introduction to&nbsp;
 			<MSHELP:LINK tabIndex="0" indexMoniker="!DefaultKeywordIndex" keywords="generic class">generic
 classes</MSHELP:LINK>
-			when we were looking at the formal generic part of class structure in <A href="../../eiffel_for_dotnet/20_Eiffel_Classes.htm">
+			when we were looking at the formal generic part of class structure in <A href="../../eiffel_for_dotnet/20_language/10_eiffel_classes.html">
 				Eiffel Classes</A>. That discussion left to the imagination the motivation
 			and benefits for creating generic classes.
 		</P>
@@ -26,7 +26,7 @@ classes</MSHELP:LINK>
 			represent a list of things. Some one might ask "What kinds of things?" To which
 			the producer would reply, "Just things. I want my list to be usable for all
 			kinds of things."</P>
-		<P>Using the idea of polymorphic attachment that we learned in&nbsp;<A href="../../eiffel_for_dotnet/40_Inheritance.htm">Inheritance</A>,
+			<P>Using the idea of polymorphic attachment that we learned in&nbsp;<A href="../../eiffel_for_dotnet/20_language/30_inheritance.html">Inheritance</A>,
 			the producer could build such a class. It might have a&nbsp;query&nbsp;<SPAN CLASS="efeature">item</SPAN>
 			which would return the thing from the list to which a cursor currently points.
 			It might have a command <SPAN CLASS="efeature">put</SPAN> which would enter some new thing into the list.</P>
@@ -87,7 +87,7 @@ classes</MSHELP:LINK>
 		</CODE>
 		<P>This is because "item" is type ANY and although it may be currently attached to
 			an instance of CAT, the static typing system cannot guarantee that. So you must
-			use assignment attempt as we saw in the polymorphism example in <A href="../../eiffel_for_dotnet/40_Inheritance.htm">
+			use assignment attempt as we saw in the polymorphism example in <A href="../../eiffel_for_dotnet/20_language/30_inheritance.html">
 				Inheritance</A>.</P>
 		<CODE>
 
@@ -190,7 +190,7 @@ classes</MSHELP:LINK>
 		<CODE>
 			<P><SPAN CLASS="ekeyword">class</SPAN>&nbsp;<BR>&nbsp;&nbsp;&nbsp;&nbsp;<SPAN CLASS="eclass">SORTED_LIST</SPAN> [<SPAN CLASS="egeneric">G</SPAN> -&gt; <SPAN CLASS="eclass">COMPARABLE</SPAN>]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</P>
 		</CODE>
-		<P>You may remember from&nbsp;<A href="../../eiffel_for_dotnet/40_Inheritance.htm">Inheritance</A>
+		<P>You may remember from&nbsp;<A href="../../eiffel_for_dotnet/20_language/30_inheritance.html">Inheritance</A>
 			that if we make instances of a class comparable with each other, then we make
 			the class inherit from <SPAN CLASS="eclass">COMPARABLE</SPAN> and effect the feature "&lt;".
 		</P>

@@ -329,6 +329,54 @@ feature {GB_TOOL_HOLDER} -- Implementation
 	
 	restore_pixmap: EV_PIXMAP
 	
+	initialize_docking_areas (a_holder: GB_TOOL_HOLDER) is
+			--
+		local
+			index_of_tool: INTEGER
+			vertical_box, vb: EV_VERTICAL_BOX
+			cell: EV_CELL
+		do
+			index_of_tool := all_holders.index_of (a_holder, 1)
+			from
+				all_holders.start
+			until
+				all_holders.off
+			loop
+				if all_holders.index < index_of_tool - 1 or
+					all_holders.index > index_of_tool + 1 then
+					vertical_box := all_holders.item.upper_box
+					
+					
+					
+					create cell
+					cell.set_data (all_holders.index)
+					vertical_box.extend (cell)
+					vertical_box.disable_item_expand (cell)
+					cell.enable_docking
+					all_holders.item.set_real_target (cell)
+				end
+				all_holders.forth
+			end
+		end
+		
+	remove_docking_areas is
+			--
+		do
+			from
+				all_holders.start
+			until
+				all_holders.off
+			loop
+				if not all_holders.item.upper_box.is_empty then
+					--| FIXME also need to ensure that we do not remove a minimized item
+					--| if there were some in the box that did not allow docking.
+					all_holders.item.upper_box.start
+					all_holders.item.upper_box.remove
+				end
+				all_holders.forth
+			end
+		end
+	
 	maximize_tool (a_tool: GB_TOOL_HOLDER) is
 			--
 		do
@@ -879,6 +927,33 @@ feature {GB_TOOL_HOLDER} -- Implementation
 		ensure
 			result_not_void: Result /= Void
 		end
+		
+	update_for_holder_position_change (original_position, new_position: INTEGER) is
+			--
+		require
+			positions_different: original_position /= new_position
+		local
+			real_new_position: INTEGER
+			holder: GB_TOOL_HOLDER
+			widget: EV_WIDGET
+		do
+			if original_position < new_position then
+				real_new_position := new_position - 1
+			else
+				real_new_position := new_position
+			end
+			linear_representation.go_i_th (original_position)
+			widget := linear_representation.item
+			linear_representation.remove
+			linear_representation.go_i_th (real_new_position)
+			linear_representation.put_left (widget)
+			all_holders.go_i_th (original_position)
+			holder := all_holders.item
+			all_holders.remove
+			all_holders.go_i_th (real_new_position)
+			all_holders.put_left (holder)
+		end
+		
 
 invariant
 	linear_representation_not_void: linear_representation /= Void

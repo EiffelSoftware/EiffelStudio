@@ -205,7 +205,7 @@ feature {NONE} -- Message loop, we redefine it because the user
 					main_win /= Void
 				end
 			until
-				done
+				done or else is_destroyed
 			loop
 				msg.peek_all
 				if msg.last_boolean_result then
@@ -342,6 +342,9 @@ end -- class EV_APPLICATION_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.28  2000/04/06 00:04:50  brendel
+--| message_loop now ends when destroyed.
+--|
 --| Revision 1.27  2000/04/03 17:50:13  rogers
 --| Redefined run from WEL_APPLICATION to avoid `first_window'
 --| being shown automatically.

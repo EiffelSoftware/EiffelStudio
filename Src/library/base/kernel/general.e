@@ -175,10 +175,14 @@ feature -- Duplication
 			-- Void if `other' is void; otherwise new object
 			-- field-by-field identical to `other'.
 			-- Always uses default copying semantics.
+		local
+			temp: BOOLEAN
 		do
 			if other /= Void then
+				temp := c_check_assert (False);
 				Result := other.c_standard_clone ($other);
 				Result.standard_copy (other)
+				temp := c_check_assert (temp);
 			end
 		ensure
 			equal: standard_equal (Result, other)

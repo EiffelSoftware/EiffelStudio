@@ -835,9 +835,9 @@ rt_public void reclaim(void)
 		eif_cleanup(); 
 #endif /* EIF_WIN32 */
 
-#if defined EIF_THREAD && !defined VXWORKS
+#if defined EIF_THREADS && !defined VXWORKS
 		eif_destroy_once_per_process (); /* remove the tables and mutex for once per process */
-#endif /* EIF_THREAD && !VXWORKS */
+#endif /* EIF_THREADS && !VXWORKS */
 	}
 
 	for (c = cklst.ck_head; c != (struct chunk *) 0; c = cn)

@@ -130,7 +130,6 @@ feature -- Initialization
 	format_double_demo is
 		local
 			d : DOUBLE
-			r : REAL
 			fd : FORMAT_DOUBLE
 		do
 			d := random.double_i_th (item) 

@@ -119,13 +119,13 @@ feature {IDENTIFIED} -- Implementation
 feature {NONE} -- Externals
 
 	eif_id_object (an_id: INTEGER): IDENTIFIED is
-			-- Get the object associated with `an_id'
+			-- Object associated with `an_id'
 		external
 			"C"
 		end
 
 	eif_object_id (an_object: IDENTIFIED): INTEGER is
-			-- Get an identifier for `an_object'
+			-- New identifier for `an_object'
 		external
 			"C"
 		end

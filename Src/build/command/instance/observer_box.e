@@ -33,8 +33,8 @@ feature
 			if parent_scrolled_w /= Void then
 				parent_scrolled_w.set_working_area (Current)
 			end
-			set_row_layout
-			set_preferred_count (5)
+			set_column_layout
+			set_preferred_count (3)
 		end;
 
 feature {NONE}

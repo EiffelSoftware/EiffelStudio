@@ -127,12 +127,14 @@ feature -- Basic operations
 			until
 				after
 			loop
-				a_type_library_descriptor := library_descriptor_for_iteration
-				a_type_library_descriptor.set_complete
-				a_type_library_descriptor.finalize_aliases
-				a_type_library_descriptor.finalize_names
-				a_type_library_descriptor.finalize_interface_feature_names
-				a_type_library_descriptor.create_implemented_interfaces
+				if not Non_generated_type_libraries.has (library_descriptor_for_iteration.guid) then
+					a_type_library_descriptor := library_descriptor_for_iteration
+					a_type_library_descriptor.set_complete
+					a_type_library_descriptor.finalize_aliases
+					a_type_library_descriptor.finalize_names
+					a_type_library_descriptor.finalize_interface_feature_names
+					a_type_library_descriptor.create_implemented_interfaces
+				end
 				forth
 			end
 			from
@@ -140,7 +142,9 @@ feature -- Basic operations
 			until
 				after
 			loop
-				library_descriptor_for_iteration.finalize_coclass_feature_names
+				if not Non_generated_type_libraries.has (library_descriptor_for_iteration.guid) then
+					library_descriptor_for_iteration.finalize_coclass_feature_names
+				end
 				forth
 			end
 		end

@@ -19,6 +19,12 @@ inherit
 	COMPILER_EXPORTER
 	SHARED_GEN_CONF_LEVEL
 
+	
+	DEBUG_OUTPUT
+		export
+			{NONE} all
+		end
+
 feature -- Access
 
 	static_type_id: INTEGER is
@@ -65,15 +71,12 @@ feature -- Status report
 
 	instantiation_in (other: GEN_TYPE_I): TYPE_I is
 			-- Instantiation of Current in context of `other'
-			-- FIXME: other not used in most implementors, and causes
-			-- a crash when compiling generic expandeds
 		require
 			good_argument: other /= Void
-			other_is_data: not other.has_formal
 		do
 			Result := Current
 		ensure
-			no_formal_in_result: not Result.has_formal
+			Result_not_void: Result /= Void
 		end
 		
 	complete_instantiation_in (other: GEN_TYPE_I): TYPE_I is
@@ -81,21 +84,20 @@ feature -- Status report
 			-- Actual generics of reference type are kept.
 		require
 			good_argument: other /= Void
-			other_is_data: not other.has_formal
 		do
-			Result := Current
+			Result := instantiation_in (other)
+		ensure
+			Result_not_void: Result /= Void
 		end
 
-	creation_instantiation_in (other: GEN_TYPE_I): TYPE_I is
-			-- Instantiation of Current in context of `other'
-			-- Actual generics of reference type are kept.
-			-- Act like `complete_instantiation_in' but it does a complete
-			-- recursion. This is only used to generate the
-			-- correct code at run-time.
-		require
-			good_argument: other /= Void
+	generic_derivation: TYPE_I is
+			-- Precise generic derivation of current type.
+			-- That is to say given a type, it gives the associated TYPE_I
+			-- which can be used to search its associated CLASS_TYPE.
 		do
 			Result := Current
+		ensure
+			cleaned_not_void: Result /= Void
 		end
 
 	c_type: TYPE_C is
@@ -133,6 +135,13 @@ feature -- Status report
 			il_type_name_not_empty: not Result.is_empty
 		end
 
+	name: STRING is
+			-- Name of current class type
+		deferred
+		ensure
+			name_not_void: Result /= Void
+		end
+		
 	is_valid: BOOLEAN is
 			-- Is the associated class still in the system ?
 		do
@@ -152,9 +161,17 @@ feature -- Status report
 		end
 		
 	is_external: BOOLEAN is
-			-- Is class an external one?
+			-- Is current type based on an external class?
 		do
 			-- Do nothing
+		end
+	
+	is_generated_as_single_type: BOOLEAN is
+			-- Is associated type generated as a single type or as an interface type and 
+			-- an implementation type.
+		require
+			il_generation: System.il_generation
+		do
 		end
 		
 	is_boolean: BOOLEAN is
@@ -208,7 +225,6 @@ feature -- Status report
 	is_expanded: BOOLEAN is
 			-- Is the type an expanded/basic one ?
 		do
-			Result := is_basic or else is_true_expanded
 		end
 
 	is_basic: BOOLEAN is
@@ -220,7 +236,7 @@ feature -- Status report
 	is_true_expanded: BOOLEAN is
 			-- Is type an true expanded one, ie not a basic one?
 		do
-			-- Do nothing
+			Result := is_expanded and not is_basic
 		end
 
 	is_separate: BOOLEAN is
@@ -261,15 +277,12 @@ feature -- Status report
 
 feature -- Formatting
 
-	append_signature (st: STRUCTURED_TEXT) is
-		deferred
-		end
-
 	dump (buffer: GENERATION_BUFFER) is
 			-- Debug purpose
 		require
 			buffer_exists: buffer /= Void
-		deferred
+		do
+			buffer.putstring (name)
 		end
 
 feature -- Comparison
@@ -294,12 +307,8 @@ feature -- Debugging
 
 	trace is
 			-- Debug purpose
-		local
-			s: GENERATION_BUFFER
 		do
-			create s.make (0)
-			dump (s)
-			io.error.put_string (s.as_string)
+			io.error.put_string (name)
 		end
 
 feature -- Code generation
@@ -327,6 +336,11 @@ feature -- Code generation
 
 	cecil_value: INTEGER is
 			-- Generate type value for cecil (byte_code)
+		deferred
+		end
+		
+	tuple_code: INTEGER_8 is
+			-- Code for TUPLE type.
 		deferred
 		end
 
@@ -366,7 +380,7 @@ feature -- Generic conformance
 	generated_id (final_mode : BOOLEAN) : INTEGER is
 			-- Mode dependent type id - just for convenience
 		do
-			Result := Internal_type       -- Invalid type id.
+			Result := terminator_type       -- Invalid type id.
 			check
 				not_called: False
 			end
@@ -427,6 +441,14 @@ feature -- Generic conformance for IL
 		require
 			il_generator_not_void: il_generator /= Void
 		do
+		end
+		
+feature {NONE} -- Debug output
+
+	debug_output: STRING is
+			-- Output displayed in debugger.
+		do
+			Result := name
 		end
 		
 end -- class TYPE_I

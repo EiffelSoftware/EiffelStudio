@@ -27,7 +27,7 @@
 #ifdef WORKBENCH
 #include "update.h"
 #endif
-#ifdef DLFCN
+#ifdef I_DLFCN
 #include <dlfcn.h>
 #endif
 
@@ -47,7 +47,7 @@ rt_public int dynamic_dtype;			/* Dynamic type of DYNAMIC */
 rt_private EIF_PROC eif_set_dtype;		/* `set_dynamic_type' eiffel routine */
 rt_private int dle_loaded = 0;			/* Has a DC-Set already been loaded */
 rt_private int old_scount = 0;			/* Old number of dynamic types */
-#ifdef DLFCN
+#ifdef HAS_DLOPEN
 rt_private void *dle_handle = (void *) 0;		/* C shared library handle */
 #endif
 #ifdef WORKBENCH
@@ -81,7 +81,7 @@ rt_public EIF_INTEGER dle_retrieve(EIF_REFERENCE obj, EIF_REFERENCE dle_path)
 	char has_frozen;					/* Has the DC-set been frozen? */
 	char is_melted;						/* Is the DC-set melted? */
 	int in_project_dir = 0;			/* Is the DC-set info in the project dir */
-#ifdef DLFCN
+#ifdef HAS_DLOPEN
 	void (*dle_load_fptr)();			/* function pointer */
 #endif
 
@@ -131,7 +131,7 @@ rt_public EIF_INTEGER dle_retrieve(EIF_REFERENCE obj, EIF_REFERENCE dle_path)
 
 	if (has_frozen == '\01') {
 			/* The Dynamic Class Set has been frozen */
-#ifdef DLFCN
+#ifdef HAS_DLOPEN
 		strcpy (filename, (char *) eif_access(dle_path));
 		if (in_project_dir)
 			strcat(filename, DLE_DIR);
@@ -225,16 +225,28 @@ rt_public EIF_INTEGER dle_retrieve(EIF_REFERENCE obj, EIF_REFERENCE dle_path)
 			/*** Allocation of variable `esystem' ***/
 
 	if (esystem == fsystem) {
+#ifdef CONCURRENT_EIFFEL
+		esystem = (struct cnode *) cmalloc((scount+1) * sizeof(struct cnode));
+		if (esystem == (struct cnode *) 0)
+			enomem();
+		bcopy(fsystem, esystem, (old_scount+1) * sizeof(struct cnode));
+#else
 		esystem = (struct cnode *) cmalloc(scount * sizeof(struct cnode));
 		if (esystem == (struct cnode *) 0)
 			enomem();
 		bcopy(fsystem, esystem, old_scount * sizeof(struct cnode));
+#endif
 	} else {
 			/* `esystem' has already been "cmalloc"ed when we loaded
 			 * the static melted code. We just have to realloc it.
 			 */
+#ifdef CONCURRENT_EIFFEL
+		esystem = 
+			(struct cnode *)crealloc(esystem, (scount+1) * sizeof(struct cnode));
+#else
 		esystem = 
 			(struct cnode *)crealloc(esystem, scount * sizeof(struct cnode));
+#endif
 		if (esystem == (struct cnode *) 0)
 			enomem();
 	}
@@ -317,7 +329,7 @@ rt_public EIF_INTEGER dle_retrieve(EIF_REFERENCE obj, EIF_REFERENCE dle_path)
 	} else {
 
 			/* The Dynamic Class Set has been frozen */
-#ifdef DLFCN
+#ifdef HAS_DLOPEN
 		init_desc();
 		(*dle_load_fptr)();
 #endif
@@ -432,7 +444,7 @@ if (body_id >= 0)
 
 #else
 
-#ifndef DLFCN
+#ifndef HAS_DLOPEN
 
 	return (EIF_INTEGER) DLE_F_READ_ERR;
 
@@ -586,16 +598,16 @@ rt_public void dle_reclaim(void)
 			for (i = 0; i < dle_melt_count; i++)
 				if (dle_melt[i] != (char *) 0)
 					xfree(dle_melt[i]);
-			xfree((char *) dle_melt);
+			xfree((char *)dle_melt);
 		}
 	
 				/*** Free memory for variable `dle_mpatidtab' ***/
 		if (dle_mpatidtab != (int *) 0) {
 			dle_mpatidtab += dle_zeroc;
-			xfree((char *) dle_mpatidtab);
+			xfree((char *)dle_mpatidtab);
 		}
 
-#ifdef DLFCN
+#ifdef HAS_DLOPEN
 
 		{
 			void (*dle_free_fptr)();			/* function pointer */
@@ -617,7 +629,7 @@ rt_public void dle_reclaim(void)
 	}
 
 #else
-#ifdef DLFCN
+#ifdef HAS_DLOPEN
 
 	void (*dle_free_fptr)();			/* function pointer */
 

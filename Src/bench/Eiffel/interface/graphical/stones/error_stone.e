@@ -114,10 +114,17 @@ feature -- Access
 		end
 
 	stone_cursor: SCREEN_CURSOR is
-			-- Cursor associated with
-			-- Current stone during transport.
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is compatible with Current stone
 		do
 			Result := cur_Explain
+		end;
+
+	x_stone_cursor: SCREEN_CURSOR is
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is not compatible with Current stone
+		do
+			Result := cur_X_explain
 		end;
 
 feature -- Update

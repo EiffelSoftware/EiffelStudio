@@ -1,6 +1,6 @@
 indexing
 	description	: "Emitter's root class"
-	assembly_attribute:
+	assembly_metadata:
 		create {COM_VISIBLE_ATTRIBUTE}.make (False) end,
 		create {ASSEMBLY_COMPANY_ATTRIBUTE}.make ("Eiffel Software") end,
 		create {ASSEMBLY_COPYRIGHT_ATTRIBUTE}.make ("Copyright Eiffel Software 1985-2003") end

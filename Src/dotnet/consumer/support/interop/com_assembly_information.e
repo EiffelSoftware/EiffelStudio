@@ -2,7 +2,7 @@ indexing
 	description: "COM visible class representing an assemblies information"
 	date: "$Date$"
 	revision: "$Revision$"
-	interface_attribute:
+	interface_metadata:
 		create {COM_VISIBLE_ATTRIBUTE}.make (True) end,
 		create {GUID_ATTRIBUTE}.make ("E1FFE1B6-5067-499a-9A25-E6DDA9076E77") end
 
@@ -70,7 +70,7 @@ feature {NONE} -- Implementation
 	impl: CONSUMED_ASSEMBLY
 			-- Implementation object.
 		indexing
-			attribute: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
+			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		end
 		
 invariant

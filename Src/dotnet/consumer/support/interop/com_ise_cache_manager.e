@@ -2,12 +2,12 @@ indexing
 	description: "COM interface for the Emitter"
 	date: "$Date$"
 	revision: "$Revision$"
-	attribute:
+	metadata:
 		create {COM_VISIBLE_ATTRIBUTE}.make (True) end
-	class_attribute:
+	class_metadata:
 		create {CLASS_INTERFACE_ATTRIBUTE}.make (feature {CLASS_INTERFACE_TYPE}.none) end,
 		create {GUID_ATTRIBUTE}.make ("E1FFE16A-FB59-4f0c-9D85-ADDD9366E359") end
-	interface_attribute:
+	interface_metadata:
 		create {GUID_ATTRIBUTE}.make ("E1FFE157-2182-4c1b-8D26-AC4BB334A7C8") end
 
 class
@@ -205,7 +205,7 @@ feature {NONE} -- Implementation
 			-- Void it contains a list of assemblies which needs to be added
 			-- in `private_bin_path' of newly created APP_DOMAIN_SETUP instance.
 		indexing
-			attribute: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
+			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		local
 			l_private_bin_path: SYSTEM_STRING
 		do
@@ -233,7 +233,7 @@ feature {NONE} -- Implementation
 	new_evidence: EVIDENCE is
 			-- New evidence for soon to be created AppDomain
 		indexing
-			attribute: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
+			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		do
 			-- Void for the moment. If it is not Void we get too many security exceptions.
 		end
@@ -241,7 +241,7 @@ feature {NONE} -- Implementation
 	update_current (a_impl: MARSHAL_ISE_CACHE_MANAGER) is
 			-- Update Current with `a_impl'.
 		indexing
-			attribute: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
+			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		require
 			a_impl_not_void: a_impl /= Void
 		do
@@ -252,7 +252,7 @@ feature {NONE} -- Implementation
 	new_cache_manager (a_app_domain: APP_DOMAIN): MARSHAL_ISE_CACHE_MANAGER is
 			-- New instance of `MARSHAL_ISE_CACHE_MANAGER' created in `a_app_domain'.
 		indexing
-			attribute: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
+			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		require
 			a_app_domain_not_void: a_app_domain /= Void
 		do
@@ -276,13 +276,13 @@ feature {NONE} -- Implementation
 	clr_version: SYSTEM_STRING
 			-- Version of CLR used to emit data
 		indexing
-			attribute: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
+			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		end
 		
 	eac_path: SYSTEM_STRING
 			-- Location of EAC `Eiffel Assembly Cache'
 		indexing
-			attribute: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
+			metadata: create {COM_VISIBLE_ATTRIBUTE}.make (False) end
 		end
 
 end -- class MARSHAL_ISE_CACHE_MANAGER

@@ -31,10 +31,6 @@ extern "C" {
 
 #define cwel_temp_dialog_value (0x01)
 
-#define c_set_flag(_flags_, _mask_) ((((EIF_INTEGER) _flags_) | ((EIF_INTEGER) _mask_)))
-#define c_clear_flag(_flags_, _mask_) ((((EIF_INTEGER) _flags_) & ((EIF_INTEGER) ~_mask_)))
-#define c_flag_set(_flags_, _mask_) ((((((EIF_INTEGER) _flags_) & ((EIF_INTEGER) _mask_)) == (EIF_INTEGER) _mask_ ) ? 1 : 0))
-
 #define c_mouse_message_x(_lparam_) ((short) LOWORD(_lparam_))
 #define c_mouse_message_y(_lparam_) ((short) HIWORD(_lparam_))
 

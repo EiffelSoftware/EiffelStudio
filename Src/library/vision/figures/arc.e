@@ -108,7 +108,7 @@ feature -- Modification & Insertion
     	set_center (a_center: like center) is
             		-- Set `center' to `an_center'.
         	require
-            		a_center_exists: not (a_center = Void)
+            		a_center_exists: a_center /= Void
         	do
             		center := a_center;			
 					set_conf_modified
@@ -133,7 +133,7 @@ feature -- Modification & Insertion
         	do
             		origin_user_type := 2;
         	ensure
-            		origin.is_surimposable (center)
+            		origin.is_superimposable (center)
         	end;
 
     	set_radius1 (a_radius: like radius1) is
@@ -205,8 +205,8 @@ feature -- Output
 
 feature -- Status report
 
-    	is_surimposable (other: like Current): BOOLEAN is
-            		-- Is `other' surimposable to current arc ?
+    	is_superimposable (other: like Current): BOOLEAN is
+            		-- Is `other' superimposable to current arc ?
             		--| not done
         	do
         	end;
@@ -232,16 +232,16 @@ feature {CONFIGURE_NOTIFY} -- Updating
 
 invariant
 
-    	not (center = Void);
-    	origin_user_type <= 2;
-    	radius1 >= 0;
-    	radius2 >= 0;
-    	orientation < 360;
-    	orientation >= 0;
-    	angle1 < 360;
-    	angle1 >= 0;
-    	angle2 <= 360;
-    	angle2 >= 0
+    	center_exists: center /= Void;
+    	origin_type_constraint: origin_user_type <= 2;
+    	meaningful_radius1: radius1 >= 0;
+    	meaningful_radius2: radius2 >= 0;
+    	orientation_small_enough: orientation < 360;
+    	orientation_large_enough: orientation >= 0;
+    	angle1_small_enough: angle1 < 360;
+    	angle1_large_enough: angle1 >= 0;
+    	angle2_small_enough: angle2 <= 360;
+    	angles2_large_enough: angle2 >= 0
 
 end -- class ARC
 

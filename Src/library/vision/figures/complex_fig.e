@@ -208,12 +208,8 @@ feature -- Modification & Insertion
 
 	set_origin (p: like origin) is
 			-- Set `origin' to `p'.
-		require else
-			p_exists: not (p = Void)
 		do
 			origin := p
-		ensure then
-			origin = p
 		end;
 
 feature -- Removal
@@ -262,8 +258,6 @@ feature {NONE} -- Modification & Insertion
 			-- Erase definition of `origin'.
 		do
 			origin := Void
-		ensure then
-			(origin = Void)
 		end;
 
 feature {NONE} -- Cursor movement

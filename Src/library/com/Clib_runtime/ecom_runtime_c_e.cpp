@@ -15,6 +15,91 @@ ecom_runtime_ce rt_ce;
 
 //-------------------------------------------------------------------------
 
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_currency (CURRENCY a_currency)
+
+// Create Eiffel object ECOM_CURRENCY from C
+{
+	EIF_OBJECT result;
+	EIF_TYPE_ID eif_currency_id;
+	EIF_PROC currency_make;
+	EIF_POINTER_FUNCTION item;
+	EIF_POINTER an_item;
+
+	eif_currency_id = eif_type_id ("ECOM_CURRENCY");
+	currency_make = eif_proc ("make", eif_currency_id);
+	result = eif_create (eif_currency_id);
+	currency_make (eif_access (result));
+	item = eif_pointer_function ("item", eif_currency_id);
+	an_item = item (eif_access (result));
+	memcpy (an_item, &a_currency, sizeof (CURRENCY));
+	return eif_wean (result);
+};
+//-------------------------------------------------------------------------
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_decimal (DECIMAL a_decimal)
+
+// Create ECOM_DECIMAL from C
+{
+	EIF_OBJECT result;
+	EIF_TYPE_ID eif_decimal_id;
+	EIF_PROC make;
+	EIF_POINTER_FUNCTION item;
+	EIF_POINTER an_item;
+
+	eif_decimal_id = eif_type_id ("ECOM_DECIMAL");
+	make = eif_proc ("make", eif_decimal_id);
+	result = eif_create (eif_decimal_id);
+	make (eif_access (result));
+	item = eif_pointer_function ("item", eif_decimal_id);
+	an_item = item (eif_access (result));
+	memcpy (an_item, &a_decimal, sizeof (DECIMAL));
+	return eif_wean (result);
+};
+//-------------------------------------------------------------------------
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_variant (VARIANT a_variant)
+
+// Create ECOM_VARIANT from C
+{
+	EIF_OBJECT result;
+	EIF_TYPE_ID eif_variant_id;
+	EIF_PROC make;
+	EIF_POINTER_FUNCTION item;
+	EIF_POINTER an_item;
+
+	eif_variant_id = eif_type_id ("ECOM_VARIANT");
+	make = eif_proc ("make", eif_variant_id);
+	result = eif_create (eif_variant_id);
+	make (eif_access (result));
+	item = eif_pointer_function ("item", eif_variant_id);
+	an_item = item (eif_access (result));
+	memcpy (an_item, &a_variant, sizeof (VARIANT));
+	return eif_wean (result);
+};
+
+//-------------------------------------------------------------------------
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_record (void * a_record_pointer, char * a_class_name, int a_size)
+
+// Create Eiffel object from C structure
+{
+	EIF_OBJECT result;
+	EIF_TYPE_ID type_id;
+	EIF_PROC make;
+	EIF_POINTER_FUNCTION item;
+	EIF_POINTER an_item;
+
+	type_id = eif_type_id (a_class_name);
+	make = eif_proc ("make", type_id);
+	result = eif_create (type_id);
+	make (eif_access (result));
+	item = eif_pointer_function ("item", type_id);
+	an_item = item (eif_access (result));
+	memcpy (an_item, &a_record_pointer, a_size);
+	return eif_wean (result);
+};
+//-------------------------------------------------------------------------
+
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_date (DATE a_date)
 
 //  Create an Eiffel DATE_TIME object with 'a_date'.
@@ -149,13 +234,13 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_variant (VARIANT * a_variant)
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_unknown (IUnknown * a_unknown)
 
-// Create Eiffel ECOM_GENERIC_INTERFACE from C
+// Create Eiffel ECOM_UNKNOWN_INTERFACE from C
 {
 	EIF_OBJECT result;
 	EIF_TYPE_ID eif_id;
 	EIF_PROCEDURE make;
 
-	eif_id = eif_type_id ("ECOM_GENERIC_INTERFACE");
+	eif_id = eif_type_id ("ECOM_UNKNOWN_INTERFACE");
 	make = eif_proc ("make_from_pointer", eif_id);
 	result = eif_create (eif_id);
 	make (eif_access (result), (EIF_POINTER)a_unknown);
@@ -165,13 +250,13 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_unknown (IUnknown * a_unknown)
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_dispatch (IDispatch * a_dispatch)
 
-// Create Eiffel ECOM_GENERIC_DISPINTERFACE from C
+// Create Eiffel ECOM_AUTOMATION_INTERFACE from C
 {
 	EIF_OBJECT result;
 	EIF_TYPE_ID eif_id;
 	EIF_PROCEDURE make;
 
-	eif_id = eif_type_id ("ECOM_GENERIC_DISPINTERFACE");
+	eif_id = eif_type_id ("ECOM_AUTOMATION_INTERFACE");
 	make = eif_proc ("make_from_pointer", eif_id);
 	result = eif_create (eif_id);
 	make (eif_access (result), (EIF_POINTER)a_dispatch);

@@ -23,9 +23,12 @@
 				<list ordered="false">
 					<item>Added `pointed_tab_index' which returns the index of the tab beneath the mouse pointer or 0 if none.</item>
 					<item>Added EV_NOTEBOOK_TAB which may be queried via the new query `item_tab'. The object represented by this new class provides the ability to set both the text and a pixmap for the tab item.</item>
-					<item>Now inherits EV_ITEM_PIXMAP_SCALER as the tabs support pixmaps through the use of EV_NOTEBOOK_TAB.</item>
+					<item>Now inherits EV_ITEM_PIXMAP_SCALER as the tabs support pixmaps through the use of EV_NOTEBOOK_TAB.</item>					
 				</list>
 			</item>
+				<item>
+					<bold>EV_COMBO_BOX</bold> - Added `drop_down_actions', fired as the list is dropped down which permits dynamic filling of the combo box as its contents are displayed.
+				</item>
 			<item>
 				<bold>EV_WIDGET</bold> - Removed postcondition `has_focus' from `set_focus' since in most cases it does not hold. Indeed between the time you set the focus and the time you check if you still have the focus something could have happen that would remove the focus.
 			</item>

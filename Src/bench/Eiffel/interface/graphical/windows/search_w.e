@@ -31,11 +31,9 @@ feature -- Initialization
 			text_window := t_w;
 			prompt_dialog_create (l_Search, a_composite);
 			set_title (l_Search);
-			set_selection_label ("search for...");
+			set_selection_label ("Search");
 			hide_apply_button;
 			hide_help_button;
-			!!ok_it;
-			!!cancel_it;
 			set_width (200);
 			set_ok_label ("Next");
 			add_ok_action (Current, ok_it);
@@ -64,8 +62,17 @@ feature -- Access
 
 feature {NONE} -- Properties
 
-	ok_it, cancel_it: ANY;
-			-- Arguments for the command
+	ok_it: ANY is
+			-- Argument for `work' if ok button pressed
+		once
+			!! Result
+		end;
+
+	cancel_it: ANY is
+			-- Argument for `work' if cancel button pressed
+		once
+			!! Result
+		end;
 
 	text_window: TEXT_WINDOW
 			-- Text_window which popped up current

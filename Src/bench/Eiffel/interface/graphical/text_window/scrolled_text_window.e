@@ -51,7 +51,8 @@ feature -- Initialization
 			initialize_transport;
 			upper := -1 			-- Init clickable array.
 			add_default_callbacks;
-			set_accelerators
+			set_accelerators;
+			!! matcher.make_empty;
 		end;
 
 feature -- Fonts
@@ -319,42 +320,44 @@ feature
 			search_sub: STRING;
 			c_pos: INTEGER;
 			start_position: INTEGER;
-			temp: STRING
+			temp: STRING;
 		do
 			local_text := text;
+
+			if changed or else not equal(matcher.text, local_text) then
+				matcher.set_text (local_text)
+			end;
+			if not equal(matcher.pattern, s) then
+				matcher.set_pattern (s)
+			end;
+
 			c_pos := cursor_position;
 			if
 				(c_pos >= 0)	and then
 				(c_pos + 1 < local_text.count)
 			then
-				search_sub := local_text.substring (c_pos + 1, local_text.count);
-				search_sub.to_lower;
-				temp := clone (s);
-				temp.to_lower;	
-				start_position := search_sub.substring_index (temp, 1) - 1;
-				if start_position >= 0 then
-					start_position := start_position + c_pos;
-					highlight_selected (start_position, start_position + temp.count);
+				matcher.start_at (c_pos);
+				matcher.search_for_pattern;
+				if matcher.found then
+					start_position := matcher.found_at - 1;
+					highlight_selected (start_position, start_position + s.count);
 					set_cursor_position (start_position + s.count);
 					found := true
 				else
 					if (c_pos > 0) then
-						search_sub := local_text.substring (1, c_pos);
-						search_sub.to_lower;
-						temp := clone (s);
-						temp.to_lower;
-						start_position := 
-							search_sub.substring_index (temp, 1) - 1;
-						if start_position >= 0 then
-							start_position := start_position;
-							highlight_selected 
-								(start_position, start_position + temp.count);
-							set_cursor_position (start_position + temp.count);
+						matcher.start_at (0);
+						matcher.search_for_pattern;
+						if matcher.found then
+							start_position := matcher.found_at - 1;
+							highlight_selected (start_position, start_position + s.count);
+							set_cursor_position (start_position + s.count);
 							found := true
-						end;	
-					end;
+						else
+							found := false
+						end
+					end
 				end
-			end;
+			end
 		end;
 
 feature -- Focus Access
@@ -407,6 +410,12 @@ feature {NONE} -- Callback values
 			add_modify_action (Current, modify_event);
 			set_action ("!c<Btn3Down>", Current, new_tooler)
 		end;
+
+feature {NONE} -- Properties
+
+	matcher: KMP_MATCHER;
+			-- Smart search algorithm in Eiffel.
+			-- In final mode as fast as the old one (hehe).
 	
 feature {TOOL_W} -- Objects in Current text area
 

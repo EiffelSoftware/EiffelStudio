@@ -1,7 +1,9 @@
-class WILDCARD_MATCHER
+class OLD_WILDCARD_MATCHER
+
+obsolete "Use KMP_WILD"
 
 inherit
-	MATCHER
+	OLD_MATCHER
 
 creation
 	make
@@ -92,4 +94,4 @@ feature -- Access
 			end
 		end
 
-end -- class WILDCARD_MATCHER
+end -- class OLD_WILDCARD_MATCHER

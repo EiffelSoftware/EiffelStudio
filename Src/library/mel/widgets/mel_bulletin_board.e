@@ -92,6 +92,26 @@ feature {NONE} -- Initialization
 			end
 		end;
 
+feature -- Access
+
+	focus_command: MEL_COMMAND_EXEC is
+			-- Command set for the focus callback
+		do
+			Result := motif_command (XmNfocusCallback)
+		end;
+
+	map_command: MEL_COMMAND_EXEC is
+			-- Command set for the map callback
+		do
+			Result := motif_command (XmNmapCallback)
+		end;
+
+	unmap_command: MEL_COMMAND_EXEC is
+			-- Command set for the unmap callback
+		do
+			Result := motif_command (XmNunmapCallback)
+		end
+
 feature -- Status report
 
 	overlap_allowed: BOOLEAN is
@@ -591,67 +611,72 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_focus_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the widget or one of its descendants
-			-- receives the input focus.
+	set_focus_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the widget or one of
+			-- its descendents receives the input focus. 
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNfocusCallback, a_callback, an_argument)
+			set_callback (XmNfocusCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (focus_command, a_command, an_argument)
 		end;
 
-	add_map_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the widget is mapped, if the
-			-- widget is a child of a dialog shell.
+	set_map_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the widget is mapped, 
+			-- if the widget is a child of a dialog shell.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNmapCallback, a_callback, an_argument)
+			set_callback (XmNmapCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (map_command, a_command, an_argument)
 		end;
 
-	add_unmap_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the widget is unmapped, if the
-			-- widget is a child of a dialog shell.
+	set_unmap_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the widget is unmapped, 
+			-- if the widget is a child of a dialog shell.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNunmapCallback, a_callback, an_argument)
+			set_callback (XmNunmapCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (unmap_command, a_command, an_argument)
 		end;
 
 feature -- Removal
 
-	remove_focus_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the widget or one of its descendants
-			-- receives the input focus.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_focus_callback is
+			-- Remove the command for the focus callback.
 		do
-			remove_callback (XmNfocusCallback, a_callback, an_argument)
+			remove_callback (XmNfocusCallback)
+		ensure
+			removed: focus_command = Void
 		end;
 
-	remove_map_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the widget is mapped, if the
-			-- widget is a child of a dialog shell.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_map_callback is
+			-- Remove the command for the map callback.
 		do
-			remove_callback (XmNmapCallback, a_callback, an_argument)
+			remove_callback (XmNmapCallback)
+		ensure
+			removed: map_command = Void
 		end;
 
-	remove_unmap_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the widget is unmapped, if the
-			-- widget is a child of a dialog shell.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_unmap_callback is
+			-- Remove the command for the unmap callback.
 		do
-			remove_callback (XmNunmapCallback, a_callback, an_argument)
+			remove_callback (XmNunmapCallback)
+		ensure
+			removed: unmap_command = Void
 		end;
+
+feature {MEL_DISPATCHER} -- Implementation
 
 	create_callback_struct (a_callback_struct_ptr,
 				resource_name: POINTER): MEL_ANY_CALLBACK_STRUCT is

@@ -49,6 +49,38 @@ feature -- Initialization
 			name_set: name.is_equal (a_name)
 		end;
 
+feature -- Access
+
+	entry_command: MEL_COMMAND_EXEC is
+			-- Command set for the entry callback
+		do
+			Result := motif_command (XmNentryCallback)
+		end
+
+	tear_off_menu_activate_command: MEL_COMMAND_EXEC is
+			-- Command set for the tear off menu callback
+		do
+			Result := motif_command (XmNtearOffMenuActivateCallback)
+		end
+
+	tear_off_menu_deactivate_command: MEL_COMMAND_EXEC is
+			-- Command set for the tear off menu deactivate callback
+		do
+			Result := motif_command (XmNtearOffMenuDeactivateCallback)
+		end
+
+	map_command: MEL_COMMAND_EXEC is
+			-- Command set for the map callback
+		do
+			Result := motif_command (XmNmapCallback)
+		end
+
+	unmap_command: MEL_COMMAND_EXEC is
+			-- Command set for the unmap callback
+		do
+			Result := motif_command (XmNunmapCallback)
+		end;
+
 feature -- Measurement
 
 	entry_border: INTEGER is
@@ -905,106 +937,113 @@ feature -- Miscellaneaous
 
 feature -- Element change
 
-	add_entry_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when any button is pressed or when its
-			-- value changes.
+	set_entry_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when any button is pressed
+			-- is when its value changes.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 	   require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNentryCallback, a_callback, an_argument)
+			set_callback (XmNentryCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (entry_command, a_command, an_argument)	
 		end;
 
-	add_tear_off_menu_activate_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when a tear-off menu pane is going to
-			-- be torn on.
+	set_tear_off_menu_activate_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when a tear_off menu pane is
+			-- is going to be torn off.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNtearOffMenuActivateCallback, a_callback, an_argument)
+			set_callback (XmNtearOffMenuActivateCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (tear_off_menu_activate_command, 
+					a_command, an_argument)	
 		end;
 
-	add_tear_off_menu_deactivate_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when a tear-off menu pane is going to
-			-- be deactivated.
+	set_tear_off_menu_deactivate_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when a tear_off menu pane is
+			-- is going to be deactivated.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNtearOffMenuDeactivateCallback, a_callback, an_argument)
+			set_callback (XmNtearOffMenuDeactivateCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (tear_off_menu_deactivate_command, 
+					a_command, an_argument)	
 		end;
 
-	add_map_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the widget is mapped, if the
+	set_map_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the widget is mapped, if the
 			-- widget is a child of a dialog shell.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNmapCallback, a_callback, an_argument)
+			set_callback (XmNmapCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (map_command, a_command, an_argument)	
 		end;
 
-	add_unmap_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the widget is unmapped, if the
+	set_unmap_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the widget is unmapped, if the
 			-- widget is a child of a dialog shell.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNunmapCallback, a_callback, an_argument)
+			set_callback (XmNunmapCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (unmap_command, a_command, an_argument)	
 		end;
 
 feature -- Removal
 
-	remove_entry_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when any button is pressed or when its
-			-- value changes.
-	   require
-			a_callback_not_void: a_callback /= Void
+	remove_entry_callback is
+			-- Remove the command for the entry callback.
 		do
-			remove_callback (XmNentryCallback, a_callback, an_argument)
+			remove_callback (XmNentryCallback)
+		ensure
+			removed: entry_command = Void
 		end;
 
-	remove_tear_off_menu_activate_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when a tear-off menu pane is going to
-			-- be torn on.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_tear_off_menu_activate_callback is
+			-- Remove the command for the tear off menu callback.
 		do
-			remove_callback (XmNtearOffMenuActivateCallback, a_callback, an_argument)
+			remove_callback (XmNtearOffMenuActivateCallback)
+		ensure
+			removed: tear_off_menu_activate_command = Void
 		end;
 
-	remove_tear_off_menu_deactivate_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when a tear-off menu pane is going to
-			-- be deactivated.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_tear_off_menu_deactivate_callback is
+			-- Remove the command for the tear off menu deactivate callback.
 		do
-			remove_callback (XmNtearOffMenuDeactivateCallback, a_callback, an_argument)
+			remove_callback (XmNtearOffMenuDeactivateCallback)
+		ensure
+			removed: tear_off_menu_deactivate_command = Void
 		end;
 
-	remove_map_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the widget is mapped, if the
-			-- widget is a child of a dialog shell.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_map_callback is
+			-- Remove the command for the map callback.
 		do
-			remove_callback (XmNmapCallback, a_callback, an_argument)
+			remove_callback (XmNmapCallback)
+		ensure
+			removed: map_command = Void
 		end;
 
-	remove_unmap_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the widget is unmapped, if the
-			-- widget is a child of a dialog shell.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_unmap_callback is
+			-- Remove the command for the unmap callback.
 		do
-			remove_callback (XmNunmapCallback, a_callback, an_argument)
+			remove_callback (XmNunmapCallback)
+		ensure
+			removed: unmap_command = Void
 		end;
 
 feature {MEL_DISPATCHER} -- Basic operations

@@ -66,24 +66,22 @@ feature -- Status report
 		end;
 
 	last_id: MEL_IDENTIFIER is
-			-- Id from `add_input', `add_timer' and 
-			-- `add_work' callbacks.
+			-- Id from `set_input', `set_time_out' and 
+			-- `set_work' callbacks.
 		do
 			Result := Mel_dispatcher.last_id
 		end;
 
 	pending: INTEGER is
 			-- Mask of pending event 
-			-- (Null, if there are none)
+			-- (Zero, if there are none)
 		require
 			is_valid: is_valid
 		do
 			Result := xt_app_pending (handle)
 		ensure
 			valid_result: Result /= 0 implies
-					(Result = XtIMAlternateInput) or else 
-					(Result = XtIMTimer) or else 
-					(Result = XtIMXEvent) 
+					(Result <= XtIMAll) 
 		end;
 
 	next_event: MEL_EVENT is
@@ -163,115 +161,122 @@ feature -- Element change
 			set_fallback_res (handle, ext, number)
 		end;
 
-	add_input_read_callback (a_file: IO_MEDIUM; a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add input callback for source file `a_file' to 
-			-- a pending read on `a_file'.
+	set_input_read_callback (a_file: IO_MEDIUM; a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed for a pending read on a `a_file'.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 			-- Set the id of the input callback to `last_id'.
-			-- (Associated callback struct of `a_callback' is of type MEL_ID_CALLBACK_STRUCT).
+			-- (Associated callback struct of `a_command' is of type MEL_ID_CALLBACK_STRUCT).
 		require
 			is_valid: is_valid;
 			file_not_void: a_file /= Void;
-			callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		local
-			a_callback_exec: MEL_CALLBACK_EXEC
+			a_command_exec: MEL_COMMAND_EXEC
 		do
-			!! a_callback_exec.make (a_callback, an_argument);
-			Mel_dispatcher.add_input_callback
-					(Current, a_file, XtInputReadMask, a_callback_exec);
+			!! a_command_exec.make (a_command, an_argument);
+			Mel_dispatcher.set_input_callback
+					(Current, a_file, XtInputReadMask, a_command_exec);
 		ensure
 			valid_last_id: last_id /= Void and then last_id.is_valid
 		end;
 
-	add_input_write_callback (a_file: IO_MEDIUM; a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add input callback for source file `a_file' to 
-			-- a pending write on `a_file'.
+	set_input_write_callback (a_file: IO_MEDIUM; a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed for a pending write to a `a_file'.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 			-- Set the id of the input callback to `last_id'.
-			-- (Associated callback struct of `a_callback' is of type MEL_ID_CALLBACK_STRUCT).
+			-- (Associated callback struct of `a_command' is of type MEL_ID_CALLBACK_STRUCT).
 		require
 			is_valid: is_valid;
 			file_not_void: a_file /= Void;
-			callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		local
-			a_callback_exec: MEL_CALLBACK_EXEC
+			a_command_exec: MEL_COMMAND_EXEC
 		do
-			!! a_callback_exec.make (a_callback, an_argument);
-			Mel_dispatcher.add_input_callback
-					(Current, a_file, XtInputWriteMask, a_callback_exec);
+			!! a_command_exec.make (a_command, an_argument);
+			Mel_dispatcher.set_input_callback
+					(Current, a_file, XtInputWriteMask, a_command_exec);
 		ensure
 			valid_last_id: last_id /= Void and then last_id.is_valid
 		end;
 
-	add_input_except_callback (a_file: IO_MEDIUM; a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add input callback for source file `a_file' to 
-			-- a pending I/O error on `a_file'.
+	set_input_except_callback (a_file: IO_MEDIUM; a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed for a pending I/O on `a_file'.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 			-- Set the id of the input callback to `last_id'.
-			-- (Associated callback struct of `a_callback' is of type MEL_ID_CALLBACK_STRUCT).
+			-- (Associated callback struct of `a_command' is of type MEL_ID_CALLBACK_STRUCT).
 		require
 			is_valid: is_valid;
 			file_not_void: a_file /= Void;
-			callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		local
-			a_callback_exec: MEL_CALLBACK_EXEC
+			a_command_exec: MEL_COMMAND_EXEC
 		do
-			!! a_callback_exec.make (a_callback, an_argument);
-			Mel_dispatcher.add_input_callback
-					(Current, a_file, XtInputExceptMask, a_callback_exec);
+			!! a_command_exec.make (a_command, an_argument);
+			Mel_dispatcher.set_input_callback
+					(Current, a_file, XtInputExceptMask, a_command_exec);
 		ensure
 			valid_last_id: last_id /= Void and then last_id.is_valid
 		end;
 
-	add_input_none_callback (a_file: IO_MEDIUM; a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add input callback for source file `a_file' so that it
-			-- never calls the registered function.
+	set_input_none_callback (a_file: IO_MEDIUM; a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed so that it never calls
+			-- the registered function.
+			-- `argument' will be passed to `a_command' whenever it is
 			-- Set the id of the input callback to `last_id'.
-			-- (Associated callback struct of `a_callback' is of type MEL_ID_CALLBACK_STRUCT).
+			-- (Associated callback struct of `a_command' is of type MEL_ID_CALLBACK_STRUCT).
 		require
 			is_valid: is_valid;
 			file_not_void: a_file /= Void;
-			callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		local
-			a_callback_exec: MEL_CALLBACK_EXEC
+			a_command_exec: MEL_COMMAND_EXEC
 		do
-			!! a_callback_exec.make (a_callback, an_argument);
-			Mel_dispatcher.add_input_callback
-					(Current, a_file, XtInputNoneMask, a_callback_exec);
+			!! a_command_exec.make (a_command, an_argument);
+			Mel_dispatcher.set_input_callback
+					(Current, a_file, XtInputNoneMask, a_command_exec);
 		ensure
 			valid_last_id: last_id /= Void and then last_id.is_valid
 		end;
 
-	add_time_out_callback (a_delay: INTEGER; a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add time out callback for `a_callback' after `a_delay'
+	set_time_out_callback (a_delay: INTEGER; a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed after `a_delay'
 			-- milliseconds has elapsed.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- Add time out callback for `a_command' after `a_delay'
 			-- Set the id of the timer callback to `last_id'.
-			-- (Associated callback struct of `a_callback' is of type MEL_ID_CALLBACK_STRUCT).
+			-- (Associated callback struct of `a_command' is of type MEL_ID_CALLBACK_STRUCT).
 			-- (The time out callback is automatically removed after it has been invoked).
 		require
 			is_valid: is_valid;
 			valid_time: a_delay > 0;
-			callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		local
-			a_callback_exec: MEL_CALLBACK_EXEC
+			a_command_exec: MEL_COMMAND_EXEC
 		do
-			!! a_callback_exec.make (a_callback, an_argument);
-			Mel_dispatcher.add_timer_callback
-					(Current, a_delay, a_callback_exec);
+			!! a_command_exec.make (a_command, an_argument);
+			Mel_dispatcher.set_time_out_callback
+					(Current, a_delay, a_command_exec);
 		ensure
 			valid_last_id: last_id /= Void and then last_id.is_valid
 		end;
 
-	add_work_proc_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add work procedure callback `a_callback'. 
+	set_work_proc_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed for work procedure callback.
+			-- `argument' will be passed to `a_command' whenever it is
 			-- Set the id of the work proc to `last_id'.
-			-- (Associated callback struct of `a_callback' is of type MEL_ID_CALLBACK_STRUCT).
+			-- (Associated callback struct of `a_command' is of type MEL_ID_CALLBACK_STRUCT).
 		require
 			is_valid: is_valid;
-			callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		local
-			a_callback_exec: MEL_CALLBACK_EXEC
+			a_command_exec: MEL_COMMAND_EXEC
 		do
-			!! a_callback_exec.make (a_callback, an_argument);
-			Mel_dispatcher.add_work_proc_callback
-					(Current, a_callback_exec);
+			!! a_command_exec.make (a_command, an_argument);
+			Mel_dispatcher.set_work_proc_callback
+					(Current, a_command_exec);
 		ensure
 			valid_last_id: last_id /= Void and then last_id.is_valid
 		end;
@@ -293,10 +298,7 @@ feature -- Update
 			-- becomes available.
 		require
 			is_valid: is_valid;
-			valid_mask: a_mask = XtIMAlternateInput or else
-					a_mask = XtIMTimer or else
-					a_mask = XtIMXEvent or else
-					a_mask = XtIMAll
+			valid_mask: a_mask <= XtIMAll
 		do
 			xt_app_process_event (handle, a_mask)
 		end;
@@ -401,9 +403,9 @@ feature {NONE} -- Implementation
 		end;
 
  	global_xevent_ptr: POINTER is
-        external
-            "C : XEvent * | %"mel.h%""
-        end;
+		external
+			"C : XEvent * | %"mel.h%""
+		end;
 
 end -- class MEL_APPLICATION_CONTEXT
 

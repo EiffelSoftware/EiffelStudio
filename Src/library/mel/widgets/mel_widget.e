@@ -43,6 +43,34 @@ feature -- Access
 			Result := not is_destroyed
 		end;
 
+	event_command (a_mask: INTEGER): MEL_COMMAND_EXEC is
+			-- Command set for the xt event `a_mask'
+		local
+			cb: like callbacks;
+			a_key: MEL_CALLBACK_KEY
+		do
+			cb := callbacks;
+			if cb /= Void then
+				!! a_key.make_xt_event (a_mask);
+				Result := cb.item (a_key)
+			end
+		end;
+
+	translation_command (a_translation: STRING): MEL_COMMAND_EXEC is
+			-- Command set for the translation action `a_translation'
+		require
+			translation_not_void: a_translation /= Void
+		local
+			cb: like callbacks;
+			a_key: MEL_CALLBACK_KEY
+		do
+			cb := callbacks;
+			if cb /= Void then
+				!! a_key.make_translation (a_translation.hash_code);
+				Result := cb.item (a_key)
+			end
+		end;
+
 feature -- Status Report
 
 	is_mapped_when_managed: BOOLEAN is
@@ -184,33 +212,53 @@ feature -- Miscellaneous
 
 feature -- Element change
 
-	add_event_handler (a_mask: INTEGER; a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callback list of the widget called specified by event mask `a_mask'.
+	set_event_handler (a_mask: INTEGER; a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when event callback
+			-- with `a_mask' is invoked.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 			-- (All masks are defined in class `MEL_EVENT_MASK_CONSTANTS')
 		require
 			exists: not is_destroyed;
 			a_mask_not_void: a_mask /= 0;
-			non_void_a_callback: a_callback /= Void
+			command_not_void: a_command /= Void
 		local
-			a_callback_exec: MEL_CALLBACK_EXEC
+			a_command_exec: MEL_COMMAND_EXEC;
+			a_key: MEL_CALLBACK_KEY
 		do
-			!! a_callback_exec.make (a_callback, an_argument);
-			Mel_dispatcher.add_event_handler (screen_object, a_mask, a_callback_exec)
+			!! a_key.make_xt_event (a_mask);
+			!! a_command_exec.make (a_command, an_argument);
+			if add_to_callbacks (a_command_exec, a_key) then
+				c_add_event_handler (screen_object, a_mask)
+			end
+		ensure
+			command_set: command_set (event_command (a_mask),
+					a_command, an_argument)
 		end;
 
-	set_override_translation (a_translation: STRING; a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Set `a_callback' to be executed with `an_argument' when `a_translation' occurs.
+	set_translation (a_translation: STRING; a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when `a_translation' occurs.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 			-- `a_translation' is specified with Xtoolkit convention.
 			-- An existing translation for `a_translation' will be overriden.
 		require
 			exists: not is_destroyed;
 			non_void_a_translation: a_translation /= Void
 		local
-			a_callback_exec: MEL_CALLBACK_EXEC
+			a_command_exec: MEL_COMMAND_EXEC;
+			a_key: MEL_CALLBACK_KEY;
+			ext_string: ANY
 		do
-			!! a_callback_exec.make (a_callback, an_argument);
-			Mel_dispatcher.set_translation (screen_object, a_translation, a_callback_exec)
+			!! a_key.make_translation (a_translation.hash_code);
+			!! a_command_exec.make (a_command, an_argument);
+			if add_to_callbacks (a_command_exec, a_key) then
+				ext_string := xt_translation_string (a_translation).to_c;
+				c_set_override_translations (screen_object, $ext_string)
+			end
+		ensure
+			command_set: command_set (translation_command (a_translation),
+					a_command, an_argument)
 		end;
 
 	define_cursor (a_cursor: MEL_SCREEN_CURSOR) is
@@ -219,7 +267,7 @@ feature -- Element change
 			-- the parent's cursor displayed in the Current window.
 		require
 			valid_cursor: a_cursor /= Void implies a_cursor.is_valid;
-			same_display: a_cursor.same_display (display)	
+			same_display: a_cursor /= Void implies a_cursor.same_display (display)	
 		local
 			cursor_id, w: POINTER
 		do
@@ -271,29 +319,40 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_event_handler (a_mask: INTEGER; a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callback list of the widget called specified by event mask `a_mask;.
+	remove_event_handler (a_mask: INTEGER) is
+			-- Remove the command for event callback with `a_mask'.
 			-- (All masks are defined in class `MEL_EVENT_MASK_CONSTANTS')
 		require
 			exists: not is_destroyed;
 			a_mask_not_null: a_mask /= 0;
-			non_void_a_callback: a_callback  /= Void
 		local
-			a_callback_exec: MEL_CALLBACK_EXEC
+			a_key: MEL_CALLBACK_KEY;
+			ext_string: ANY
 		do
-			!! a_callback_exec.make (a_callback, an_argument);
-			Mel_dispatcher.remove_event_handler (screen_object, a_mask, a_callback_exec)
+			!! a_key.make_xt_event (a_mask);
+			if remove_from_callbacks (a_key) then
+				c_remove_event_handler (screen_object, a_mask)
+			end;
+		ensure
+			removed: event_command (a_mask) = Void
 		end;
 
-	remove_override_translation (a_translation: STRING) is
+	remove_translation (a_translation: STRING) is
 			-- Remove the callback for `a_translation'.
-			-- Do nothing if `a_translation' was not set.
 		require
 			exists: not is_destroyed;
-			non_void_a_translation: a_translation /= Void
+			non_void_a_translation: a_translation /= Void;
+		local
+			a_key: MEL_CALLBACK_KEY;
+			ext_string: ANY
 		do
-			Mel_dispatcher.remove_translation (screen_object, a_translation)
+			!! a_key.make_translation (a_translation.hash_code);
+			if remove_from_callbacks (a_key) then
+				ext_string := xt_translation_null_string (a_translation).to_c;
+				c_set_override_translations (screen_object, $ext_string)
+			end;
+		ensure
+			removed: translation_command (a_translation) = Void
 		end;
 
 	undefine_cursor is
@@ -324,7 +383,65 @@ feature {NONE} -- Implementation
 			Result := display.handle
 		end
 
+	xt_translation_string (translation_string: STRING): STRING is
+			-- Translation string to be passed out
+			-- to XtOverrideTranslations that will execute
+			-- the callback with arguments
+		do
+			!! Result.make (0)
+			Result.append (translation_string);
+			Result.append (": ");
+			Result.append (external_translation_routine_name);
+			Result.extend ('(');
+			Result.append_integer (translation_string.hash_code)
+			Result.append (")%N");
+		end;
+
+	xt_translation_null_string (translation_string: STRING): STRING is
+			-- An Translation string to be passed out
+			-- to XtOverrideTranslations that will execute
+			-- the callback with no arguments
+		do
+			!! Result.make (0);
+			Result.append (translation_string)
+			Result.append (": ");
+			Result.append (external_translation_routine_name);
+			Result.extend ('(');
+			Result.append (")%N");
+		end;
+
+	external_translation_routine_name: STRING is
+			-- External routine name for handling
+			-- translations
+		once
+			!! Result.make (0);
+			Result.from_c (c_trans_name)
+		end;
+
 feature {NONE} -- External features
+
+	c_trans_name: POINTER is
+			-- Adopt object `obj'
+		external
+			"C [macro %"mel.h%"]"
+		alias
+			"c_trans_routine"
+		end;
+
+	c_set_override_translations (scr_obj: POINTER; a_trans: POINTER) is
+		external
+			"C"
+		end;
+
+	c_add_event_handler (scr_obj: POINTER; mask: INTEGER) is
+		external
+			"C"
+		end;
+
+	c_remove_event_handler (scr_obj: POINTER; mask: INTEGER) is
+		external
+			"C"
+		end;
 
 	x_propagate_event (scr_obj: POINTER; c_bool: BOOLEAN) is
 		external

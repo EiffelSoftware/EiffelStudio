@@ -49,6 +49,26 @@ feature -- Initialization
 			name_set: name.is_equal (a_name)
 		end;
 
+feature -- Access
+
+	activate_command: MEL_COMMAND_EXEC is
+			-- Command set for the activate callback
+		do
+			Result := motif_command (XmNactivateCallback)
+		end;
+
+	arm_command: MEL_COMMAND_EXEC is
+			-- Command set for the arm callback
+		do
+			Result := motif_command (XmNarmCallback)
+		end;
+
+	disarm_command: MEL_COMMAND_EXEC is
+			-- Command set for the disarm callback
+		do
+			Result := motif_command (XmNdisarmCallback)
+		end
+
 feature -- Status report
 
 	is_up: BOOLEAN is
@@ -91,14 +111,14 @@ feature -- Status report
 			Result := get_xt_unsigned_char (screen_object, XmNmultiClick) = XmMULTICLICK_KEEP
 		end;
 
-    is_multiclick_discarded: BOOLEAN is
-            -- Are the successive button clicks discard?
-        require
-            exists: not is_destroyed
-        do
-            Result := get_xt_unsigned_char 
-                (screen_object, XmNmultiClick) = XmMULTICLICK_DISCARD
-        end;
+	is_multiclick_discarded: BOOLEAN is
+			-- Are the successive button clicks discard?
+		require
+			exists: not is_destroyed
+		do
+			Result := get_xt_unsigned_char 
+				(screen_object, XmNmultiClick) = XmMULTICLICK_DISCARD
+		end;
 
 feature -- Status setting
 
@@ -164,60 +184,68 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_activate_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the button is pressed and released.
+	set_activate_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the button is
+			-- is pressed and released.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNactivateCallback, a_callback, an_argument)
+			set_callback (XmNactivateCallback, a_command, an_argument);
+		ensure
+			command_set: command_set (activate_command, a_command, an_argument)
+
 		end;
 
-	add_arm_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the button is pressed.
+	set_arm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the button is pressed.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNarmCallback, a_callback, an_argument)
+			set_callback (XmNarmCallback, a_command, an_argument);
+		ensure
+			command_set: command_set (arm_command, a_command, an_argument)
 		end;
 
-	add_disarm_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the button is released.
+	set_disarm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the button is released.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNdisarmCallback, a_callback, an_argument)
+			set_callback (XmNdisarmCallback, a_command, an_argument);
+		ensure
+			command_set: command_set (disarm_command, a_command, an_argument)
 		end;
 
 feature -- Removal
 
-	remove_activate_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the button is pressed and released.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_activate_callback is
+			-- Remove the command for the activate callback.
 		do
-			remove_callback (XmNactivateCallback, a_callback, an_argument)
+			remove_callback (XmNactivateCallback)
+		ensure
+			removed: activate_command = Void
 		end;
 
-	remove_arm_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the button is pressed.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_arm_callback is
+			-- Remove the command for the arm callback.
 		do
-			remove_callback (XmNarmCallback, a_callback, an_argument)
+			remove_callback (XmNarmCallback)
+		ensure
+			removed: arm_command = Void
 		end;
 
-	remove_disarm_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the button is released.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_disarm_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Remove the command for the disarm callback.
 		do
-			remove_callback (XmNdisarmCallback, a_callback, an_argument)
+			remove_callback (XmNdisarmCallback)
+		ensure
+			removed: disarm_command = Void
 		end;
 
 feature {MEL_DISPATCHER} -- Basic operations

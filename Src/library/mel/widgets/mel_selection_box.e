@@ -195,6 +195,30 @@ feature -- Access
 			end;
 		end;
 
+	apply_command: MEL_COMMAND_EXEC is
+			-- Command set for the apply callback
+		do
+			Result := motif_command (XmNapplyCallback)
+		end;
+
+	cancel_command: MEL_COMMAND_EXEC is
+			-- Command set for the cancel callback
+		do
+			Result := motif_command (XmNcancelCallback)
+		end;
+
+	ok_command: MEL_COMMAND_EXEC is
+			-- Command set for the ok callback
+		do
+			Result := motif_command (XmNokCallback)
+		end;
+
+	no_match_command: MEL_COMMAND_EXEC is
+			-- Command set for the no match callback
+		do
+			Result := motif_command (XmNnoMatchCallback)
+		end;
+
 feature -- Status report
 
 	apply_label_string: MEL_STRING is
@@ -603,80 +627,90 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_apply_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the users selects the applyl button.
+	set_apply_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the user selects
+			-- the `apply_button'.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNapplyCallback, a_callback, an_argument)
+			set_callback (XmNapplyCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (apply_command, a_command, an_argument)
 		end;
 
-	add_cancel_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the users selects the cancel button.
+	set_cancel_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the user selects
+			-- the `cancel_button'.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNcancelCallback, a_callback, an_argument)
+			set_callback (XmNcancelCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (cancel_command, a_command, an_argument)
 		end;
 
-	add_ok_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the users selects the OK button.
+	set_ok_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the user selects
+			-- the `ok_button'.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNokCallback, a_callback, an_argument)
+			set_callback (XmNokCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (ok_command, a_command, an_argument)
 		end;
 
-	add_no_match_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the users types a selection in the
-			-- text area that does not match an item in the list.
+	set_no_match_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the user types a selection
+			-- in the text area that does not match an item in the list.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNnoMatchCallback, a_callback, an_argument)
+			set_callback (XmNnoMatchCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (no_match_command, a_command, an_argument)
 		end;
 
 feature -- Removal
 
-	remove_apply_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the users selects the apply button.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_apply_callback is
+			-- Remove the command for the apply callback.
 		do
-			remove_callback (XmNapplyCallback, a_callback, an_argument)
+			remove_callback (XmNapplyCallback)
+		ensure
+			removed: apply_command = Void
 		end;
 
-	remove_cancel_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the users selects the cancel button.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_cancel_callback is
+			-- Remove the command for the cancel callback.
 		do
-			remove_callback (XmNcancelCallback, a_callback, an_argument)
+			remove_callback (XmNcancelCallback)
+		ensure
+			removed: cancel_command = Void
 		end;
 
-	remove_ok_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the users selects the OK button.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_ok_callback is
+			-- Remove the command for the ok callback.
 		do
-			remove_callback (XmNokCallback, a_callback, an_argument)
+			remove_callback (XmNokCallback)
+		ensure
+			removed: ok_command = Void
 		end;
 
-	remove_no_match_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the users types a selection in the
-			-- text area that does not match an item in the list.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_no_match_callback is
+			-- Remove the command for the no match callback.
 		do
-			remove_callback (XmNnoMatchCallback, a_callback, an_argument)
+			remove_callback (XmNnoMatchCallback)
+		ensure
+			removed: no_match_command = Void
 		end;
 
 feature {MEL_DISPATCHER} -- Basic operations

@@ -100,6 +100,25 @@ feature -- Access
 			"CurrentTime"
 		end;
 
+	command_set (a_command_exec: MEL_COMMAND_EXEC;
+			a_command: MEL_COMMAND; an_argument: ANY): BOOLEAN is
+		require
+			command_exec_not_void: a_command_exec /= Void
+		do
+			Result := a_command_exec.command = a_command and then
+				a_command_exec.argument = an_argument
+		ensure
+			set_if_cmd_and_arg_equal: Result implies
+				a_command_exec.command = a_command and then
+					a_command_exec.argument = an_argument
+		end;
+
+	destroy_command: MEL_COMMAND_EXEC is
+			-- Command set for the destroy callback
+		do
+			Result := motif_command (XmNdestroyCallback)
+		end
+
 feature -- Status report
 
 	realized: BOOLEAN is
@@ -254,56 +273,58 @@ feature -- Update
 
 feature -- Element change
 
-	add_callback (a_callback_resource: POINTER; a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callback list of the widget called when
-			-- `a_callback_resource' is triggered.
+	set_callback (a_callback_resource: POINTER; a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when callback of type 
+			-- `a_callback_resource' is performed.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
 			exists: not is_destroyed;
 			a_callback_resource_not_void: a_callback_resource /= default_pointer;
-			non_void_a_callback: a_callback /= Void
+			command_not_void: a_command /= Void
 		local
-			a_callback_exec: MEL_CALLBACK_EXEC
+			a_command_exec: MEL_COMMAND_EXEC;
+			a_key: MEL_CALLBACK_KEY
 		do
-			!! a_callback_exec.make (a_callback, an_argument);
-			Mel_dispatcher.add_callback 
-					(screen_object, a_callback_resource, a_callback_exec);
+			!! a_key.make_motif (a_callback_resource);
+			!! a_command_exec.make (a_command, an_argument);
+			if add_to_callbacks (a_command_exec, a_key) then
+				c_add_callback (screen_object, a_callback_resource)
+			end
 		end;
 
-	add_destroy_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the object is is_destroyed.
+	set_destroy_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when an object is destroyed.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void;
+			command_not_void: a_command /= Void;
 		do
-			add_callback (XmNdestroyCallback, a_callback, an_argument);
+			set_callback (XmNdestroyCallback, a_command, an_argument);
+		ensure
+			command_set: command_set (destroy_command, a_command, an_argument)
 		end;
 
 feature -- Removal
 
-	remove_callback (a_callback_resource: POINTER; a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callback list of the widget called when `a_callback_resource' 
-			-- is triggered. 
+	remove_callback (a_callback_resource: POINTER) is
+			-- Remove the command specified by callback type `a_callback_resource'.
 		require
 			exists: not is_destroyed;
-			a_callback_resource_not_null: a_callback_resource /= default_pointer;
-			non_void_a_callback: a_callback  /= Void
+			callback_resource_not_null: a_callback_resource /= default_pointer
 		local
-			a_callback_exec: MEL_CALLBACK_EXEC
+			a_key: MEL_CALLBACK_KEY
 		do
-			!! a_callback_exec.make (a_callback, an_argument);
-			Mel_dispatcher.remove_callback 
-					(screen_object, a_callback_resource, a_callback_exec);
+			!! a_key.make_motif (a_callback_resource);
+			if remove_from_callbacks (a_key) then
+				c_remove_callback (screen_object, a_callback_resource)
+			end;
 		end;
 
-	remove_destroy_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the object is is_destroyed.
-		require
-			a_callback_not_void: a_callback /= Void;
+	remove_destroy_callback is
+			-- Remove the command for the destroy callback.
 		do
-			remove_callback (XmNdestroyCallback, a_callback, an_argument);
+			remove_callback (XmNdestroyCallback)
 		end;
 
 	destroy is
@@ -311,7 +332,9 @@ feature -- Removal
 		require
 			exists: not is_destroyed
 		local
-			clean_up_callback: MEL_CLEAN_UP_CALLBACK
+			clean_up_callback: MEL_CLEAN_UP_CALLBACK;
+			dc: like destroy_command;
+			list: MEL_COMMAND_LIST
 		do
 debug ("MEL")
 	io.error.putstring ("destroying widget: ");
@@ -323,9 +346,13 @@ end;
 			check
 				is_in_widget_manager: Mel_widgets.has (screen_object)
 			end
-			if Mel_dispatcher.has_callback (screen_object, XmNdestroyCallback) then
+			dc := destroy_command;
+			if dc /= Void then
+				!! list.make;
+				list.add_command (dc.command, dc.argument);
 				!! clean_up_callback;
-				add_destroy_callback (clean_up_callback, Void);
+				list.add_command (clean_up_callback, Void);
+				set_destroy_callback (list, Void);
 				xt_destroy_widget (screen_object)
 			else
 				xt_destroy_widget (screen_object);
@@ -357,16 +384,6 @@ feature -- Initialization
 			exists: not is_destroyed;
 			set: screen_object = a_screen_object and then parent = a_parent
 		end
-
-feature {MEL_COMPOSITE, MEL_CLEAN_UP_CALLBACK} -- Basic operations
-
-	clean_up_callbacks is
-			-- Remove callback structures associated with Current.
-		do
-			Mel_dispatcher.clean_up_object (Current)
-		ensure
-			cleaned_up: Mel_dispatcher.cleaned_up (Current)
-		end;
 
 feature {MEL_DISPATCHER} -- Implementation
 
@@ -400,15 +417,95 @@ debug ("MEL")
 	io.error.new_line;
 end;
 			Mel_widgets.remove (screen_object);
-			clean_up_callbacks;
 			screen_object := default_pointer;
+			callbacks := Void;
 			parent := Void
 		ensure
 			destroyed: is_destroyed;
+			reset_callbacks: callbacks = Void;
 			no_parent: parent = Void
 		end;
 
 feature {NONE} -- Implementation
+
+	add_to_callbacks (a_command: MEL_COMMAND_EXEC; 
+			a_key: MEL_CALLBACK_KEY): BOOLEAN is
+			-- Add `a_command' with `a_key' to the callback table.
+			-- Set Result to `True' if `a_key' did not exist (i.e callback
+			-- was already registered)
+		local
+			cb: like callbacks
+		do
+			cb := callbacks;
+			if cb = Void then
+				Result := True;
+				!! cb.make (1);
+				callbacks := cb
+				cb.put (a_command, a_key)
+			elseif cb.has (a_key) then
+				cb.force (a_command, a_key)
+			else
+				Result := True;
+				cb.put (a_command, a_key)
+			end;
+		ensure
+			command_set: callbacks.has (a_key)
+		end;
+
+	remove_from_callbacks (a_key: MEL_CALLBACK_KEY): BOOLEAN is
+			-- Remove entry with `a_key'.
+			-- Set Result to `True' if `a_key' existed (i.e callback
+			-- was registered)
+		local
+			cb: like callbacks
+		do
+			cb := callbacks;
+			if cb /= Void then
+				cb.remove (a_key);
+				Result := cb.removed
+			end;
+		ensure
+			command_removed: callbacks /= Void implies not callbacks.has (a_key)
+		end;
+
+	motif_command (a_callback_resource: POINTER): MEL_COMMAND_EXEC is
+			-- Command set for motif callback `a_callback_resource'
+		local
+			cb: like callbacks;
+			a_key: MEL_CALLBACK_KEY
+		do
+			cb := callbacks;
+			if cb /= Void then
+				!! a_key.make_motif (a_callback_resource);
+				Result := cb.item (a_key)
+			end
+		end;
+
+feature {MEL_DISPATCHER} -- Implementation
+
+	callbacks: HASH_TABLE [MEL_COMMAND_EXEC, MEL_CALLBACK_KEY];
+			-- Table of command hashed on callback type
+
+	execute_callback (
+				a_key: MEL_CALLBACK_KEY;
+				a_callback_struct: MEL_CALLBACK_STRUCT) is
+		require
+			has_callback: callbacks.has (a_key)
+		do
+			callbacks.item (a_key).execute (a_callback_struct)
+		end
+
+feature {NONE} -- Implementation
+
+	c_add_callback (scr_obj: POINTER; resource_name: POINTER) is
+		external
+			"C"
+		end;
+
+	c_remove_callback (scr_obj: POINTER; resource_name: POINTER) is
+		external
+			"C"
+		end;
 
 	xm_process_traversal (a_target: POINTER; dir: INTEGER): BOOLEAN is
 		external

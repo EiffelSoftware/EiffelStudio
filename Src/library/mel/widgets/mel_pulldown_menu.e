@@ -28,7 +28,9 @@ inherit
 		end
 
 creation 
-	make
+	make,
+	build_pulldown_menu,
+	build_pulldown_menu_gadget
 
 feature -- Initialization
 

@@ -49,6 +49,56 @@ feature -- Initialization
 			name_set: name.is_equal (a_name)
 		end;
 
+feature -- Access
+
+	drag_command: MEL_COMMAND_EXEC is
+			-- Command set for the drag callback
+		do
+			Result := motif_command (XmNdragCallback)
+		end;
+
+	value_changed_command: MEL_COMMAND_EXEC is
+			-- Command set for the value changed callback
+		do
+			Result := motif_command (XmNvalueChangedCallback)
+		end;
+
+	increment_command: MEL_COMMAND_EXEC is
+			-- Command set for the increment callback
+		do
+			Result := motif_command (XmNincrementCallback)
+		end;
+
+	decrement_command: MEL_COMMAND_EXEC is
+			-- Command set for the decrement callback
+		do
+			Result := motif_command (XmNdecrementCallback)
+		end;
+
+	page_decrement_command: MEL_COMMAND_EXEC is
+			-- Command set for the page decrement callback
+		do
+			Result := motif_command (XmNpageDecrementCallback)
+		end;
+
+	page_increment_command: MEL_COMMAND_EXEC is
+			-- Command set for the page increment callback
+		do
+			Result := motif_command (XmNvalueChangedCallback)
+		end;
+
+	to_bottom_command: MEL_COMMAND_EXEC is
+			-- Command set for the to bottom callback
+		do
+			Result := motif_command (XmNtoBottomCallback)
+		end;
+
+	to_top_command: MEL_COMMAND_EXEC is
+			-- Command set for the to top callback
+		do
+			Result := motif_command (XmNtoTopCallback)
+		end;
+
 feature -- Status report
 
 	value: INTEGER is
@@ -400,152 +450,173 @@ feature  -- Status setting
 
 feature  -- Element change
 
-	add_drag_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the slider is being dragged.
+	set_drag_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the slider is
+			-- being dragged.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNdragCallback, a_callback, an_argument)
+			set_callback (XmNdragCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (drag_command, a_command, an_argument)
 		end;
 
-	add_value_changed_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the position of the slider has changed.
+	set_value_changed_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the slider value changes.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNvalueChangedCallback, a_callback, an_argument)
+			set_callback (XmNvalueChangedCallback, a_command, an_argument);
+		ensure
+			command_set: command_set (value_changed_command, a_command, an_argument)
 		end;
 
-	add_decrement_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the value of the scrollbar
-			-- decreases by one increment.
+	set_decrement_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the slider value 
+			-- descreases by one increment.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNdecrementCallback, a_callback, an_argument)
+			set_callback (XmNdecrementCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (decrement_command, a_command, an_argument)
 		end;
 
-	add_increment_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the value of the scrollbar
+	set_increment_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the slider value 
 			-- increases by one increment.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNincrementCallback, a_callback, an_argument)
+			set_callback (XmNincrementCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (increment_command, a_command, an_argument)
 		end;
 
-	add_page_decrement_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the value of the scrollbar
+	set_page_decrement_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the slider value 
 			-- decreases by one page increment.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNpageDecrementCallback, a_callback, an_argument)
+			set_callback (XmNpageDecrementCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (page_decrement_command, a_command, an_argument)
 		end;
 
-	add_page_increment_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the value of the scrollbar
+	set_page_increment_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the slider value 
 			-- increases by one page increment.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNpageIncrementCallback, a_callback, an_argument)
+			set_callback (XmNpageIncrementCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (page_increment_command, a_command, an_argument)
 		end;
 
-	add_to_bottom_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the slider is moved to the maximum value
-			-- of the scrollbar.
+	set_to_bottom_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the slider is moved
+			-- to the maximum value of the scrollbar.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNtoBottomCallback, a_callback, an_argument)
+			set_callback (XmNtoBottomCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (to_bottom_command, a_command, an_argument)
 		end;
 
-	add_to_top_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the slider is moved to the minimum value
-			-- of the scrollbar.
+	set_to_top_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the slider is moved
+			-- to the minimum value of the scrollbar.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNtoTopCallback, a_callback, an_argument)
+			set_callback (XmNtoTopCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (to_top_command, a_command, an_argument)
 		end;
 
 feature  -- Removal
 
-	remove_drag_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the slider is being dragged.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_drag_callback is
+			-- Remove the command for the drag callback.
 		do
-			remove_callback (XmNdragCallback, a_callback, an_argument)
+			remove_callback (XmNdragCallback)
+		ensure
+			removed: drag_command = Void
 		end;
 
-	remove_value_changed_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the position of the slider has changed.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_value_changed_callback is
+			-- Remove the command for the value changed callback.
 		do
-			remove_callback (XmNvalueChangedCallback, a_callback, an_argument)
+			remove_callback (XmNvalueChangedCallback)
+		ensure
+			removed: value_changed_command = Void
 		end;
 
-	remove_increment_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the value of the scrollbar
-			-- increases by one increment.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_increment_callback is
+			-- Remove the command for the increment callback.
 		do
-			remove_callback (XmNincrementCallback, a_callback, an_argument)
+			remove_callback (XmNincrementCallback)
+		ensure
+			removed: increment_command = Void
 		end;
 
-	remove_page_decrement_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the value of the scrollbar
-			-- decreases by one page increment.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_decrement_callback is
+			-- Remove the command for the decrement callback.
 		do
-			remove_callback (XmNpageDecrementCallback, a_callback, an_argument)
+			remove_callback (XmNdecrementCallback)
+		ensure
+			removed: decrement_command = Void
 		end;
 
-	remove_page_increment_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the value of the scrollbar
-			-- increases by one page increment.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_page_decrement_callback is
+			-- Remove the command for the page decrement callback.
 		do
-			remove_callback (XmNpageIncrementCallback, a_callback, an_argument)
+			remove_callback (XmNpageDecrementCallback)
+		ensure
+			removed: page_decrement_command = Void
 		end;
 
-	remove_to_bottom_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the slider is moved to the maximum value
-			-- of the scrollbar.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_page_increment_callback is
+			-- Remove the command for the page increment callback.
 		do
-			remove_callback (XmNtoBottomCallback, a_callback, an_argument)
+			remove_callback (XmNpageIncrementCallback)
+		ensure
+			removed: page_increment_command = Void
 		end;
 
-	remove_to_top_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the slider is moved to the minimum value
-			-- of the scrollbar.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_to_bottom_callback is
+			-- Remove the command for the to bottom callback.
 		do
-			remove_callback (XmNtoTopCallback, a_callback, an_argument)
+			remove_callback (XmNtoBottomCallback)
+		ensure
+			removed: to_bottom_command = Void
+		end;
+
+	remove_to_top_callback is
+			-- Remove the command for the to top callback.
+		do
+			remove_callback (XmNtoTopCallback)
+		ensure
+			removed: to_top_command = Void
 		end;
 
 feature {MEL_DISPATCHER} -- Basic operations

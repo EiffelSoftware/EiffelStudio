@@ -15,6 +15,14 @@ inherit
 
 	MEL_WIDGET
 
+feature -- Access
+
+	help_command: MEL_COMMAND_EXEC is
+			-- Command set for the help callback
+		do
+			Result := motif_command (XmNhelpCallback)
+		end
+
 feature -- Status report
 
 	bottom_shadow_color: MEL_PIXEL is
@@ -447,24 +455,26 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_help_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when help is requested.
+	set_help_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when help is requested.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void;
+			command_not_void: a_command /= Void;
 		do
-			add_callback (XmNhelpCallback, a_callback, an_argument);
+			set_callback (XmNhelpCallback, a_command, an_argument);
+		ensure
+			command_set: command_set (help_command, a_command, an_argument)
 		end;
 
 feature -- Removal
 
-	remove_help_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when help is requested.
-		require
-			a_callback_not_void: a_callback /= Void;
+	remove_help_callback is
+			-- Remove command for the help callback.
 		do
-			remove_callback (XmNhelpCallback, a_callback, an_argument);
+			remove_callback (XmNhelpCallback)
+		ensure
+			removed: help_command = Void
 		end;
 
 feature {NONE} -- Implementation

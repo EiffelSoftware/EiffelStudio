@@ -108,6 +108,18 @@ feature -- Access
 			non_void_result: Result /= Void
 		end;
 
+	drag_command: MEL_COMMAND_EXEC is
+			-- Command set for the drag callback
+		do
+			Result := motif_command (XmNdragCallback)
+		end;
+
+	value_changed_command: MEL_COMMAND_EXEC is
+			-- Command set for the drag callback
+		do
+			Result := motif_command (XmNvalueChangedCallback)
+		end;
+
 feature -- Status report
 
 	value: INTEGER is
@@ -482,42 +494,47 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_drag_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the slider is being dragged.
+	set_drag_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the slider is
+			-- being dragged.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNdragCallback, a_callback, an_argument)
+			set_callback (XmNdragCallback, a_command, an_argument)
+		ensure
+			 command_set: command_set (drag_command, a_command, an_argument)
 		end;
 
-	add_value_changed_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the position of the slider has changed.
+	set_value_changed_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the slider value changes.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNvalueChangedCallback, a_callback, an_argument)
+			set_callback (XmNvalueChangedCallback, a_command, an_argument);
+		ensure
+			 command_set: command_set (value_changed_command, a_command, an_argument)
 		end;
 
 feature -- Removal
 
-	remove_drag_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the slider is being dragged.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_drag_callback is
+			-- Remove the command for the drag callback.
 		do
-			remove_callback (XmNdragCallback, a_callback, an_argument)
+			remove_callback (XmNdragCallback)
+		ensure
+			removed: drag_command = Void
 		end;
 
-	remove_value_changed_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the position of the slider has changed.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_value_changed_callback is
+			-- Remove the command for the value changed callback.
 		do
-			remove_callback (XmNvalueChangedCallback, a_callback, an_argument)
+			remove_callback (XmNvalueChangedCallback)
+		ensure
+			removed: value_changed_command = Void
 		end;
 
 feature {MEL_DISPATCHER} -- Basic operations

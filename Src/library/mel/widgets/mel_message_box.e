@@ -124,6 +124,18 @@ feature -- Access
 			end
 		end;
 
+	ok_command: MEL_COMMAND_EXEC is
+			-- Command set for the ok callback
+		do
+			Result := motif_command (XmNokCallback)
+		end;
+
+	cancel_command: MEL_COMMAND_EXEC is
+			-- Command set for the cancel callback
+		do
+			Result := motif_command (XmNcancelCallback)
+		end
+
 feature -- Status report
 
 	message_string: MEL_STRING is
@@ -501,42 +513,48 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_cancel_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the user selects `cancel_button'.
+	set_cancel_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the user selects
+			-- the `cancel_button'.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNcancelCallback, a_callback, an_argument)
+			set_callback (XmNcancelCallback, a_command, an_argument)
+		ensure
+			command_set (cancel_command, a_command, an_argument)
 		end;
 
-	add_ok_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the user selects `ok_button'.
+	set_ok_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the user selects
+			-- the `ok_button'.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNokCallback, a_callback, an_argument)
+			set_callback (XmNokCallback, a_command, an_argument)
+		ensure
+			command_set (ok_command, a_command, an_argument)
 		end;
 
 feature -- Removal
 
-	remove_cancel_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the user selects `cancel_button'.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_cancel_callback is
+			-- Remove the command for the cancel callback.
 		do
-			remove_callback (XmNcancelCallback, a_callback, an_argument)
+			remove_callback (XmNcancelCallback)
+		ensure
+			removed: cancel_command = Void
 		end;
 
-	remove_ok_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the user selects `ok_button'.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_ok_callback is
+			-- Remove the command for the cancel callback.
 		do
-			remove_callback (XmNokCallback, a_callback, an_argument)
+			remove_callback (XmNokCallback)
+		ensure
+			removed: cancel_command = Void
 		end;
 
 feature {NONE} -- Implementation

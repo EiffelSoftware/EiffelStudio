@@ -91,6 +91,60 @@ feature -- Access
 			Result := xm_text_xy_to_pos (screen_object, x_coord, y_coord)
 		end;
 
+	activate_command: MEL_COMMAND_EXEC is
+			-- Command set for the activate callback
+		do
+			Result := motif_command (XmNactivateCallback)
+		end;
+
+	focus_command: MEL_COMMAND_EXEC is
+			-- Command set for the focus callback
+		do
+			Result := motif_command (XmNfocusCallback)
+		end;
+
+	gain_primary_command: MEL_COMMAND_EXEC is
+			-- Command set for the gain primary callback
+		do
+			Result := motif_command (XmNgainPrimaryCallback)
+		end;
+
+	lose_primary_command: MEL_COMMAND_EXEC is
+			-- Command set for the lose primary callback
+		do
+			Result := motif_command (XmNlosePrimaryCallback)
+		end;
+
+	losing_focus_command: MEL_COMMAND_EXEC is
+			-- Command set for the losing focus callback
+		do
+			Result := motif_command (XmNlosingFocusCallback)
+		end;
+
+	modify_verify_command: MEL_COMMAND_EXEC is
+			-- Command set for the modify verify callback
+		do
+			Result := motif_command (XmNmodifyVerifyCallback)
+		end;
+
+	modify_verify_wcs_command: MEL_COMMAND_EXEC is
+			-- Command set for the modify verify wcs callback
+		do
+			Result := motif_command (XmNmodifyVerifyCallbackWcs)
+		end;
+
+	motion_verify_command: MEL_COMMAND_EXEC is
+			-- Command set for the motion verify callback
+		do
+			Result := motif_command (XmNmotionVerifyCallback)
+		end;
+
+	value_changed_command: MEL_COMMAND_EXEC is
+			-- Command set for the value changed callback
+		do
+			Result := motif_command (XmNvalueChangedCallback)
+		end
+
 feature -- Status report
 
 	begin_of_selection: INTEGER is
@@ -497,94 +551,121 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_activate_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the user causes the text field
-			-- widget to be activated.
+	set_activate_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the user causes
+			-- the text widget to be activate.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNactivateCallback, a_callback, an_argument)
+			set_callback (XmNactivateCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (activate_command, a_command, an_argument)
 		end;
 
-	add_focus_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the text widget receives
-			-- the focus.
+	set_focus_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the text widget
+			-- receives the focus.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNfocusCallback, a_callback, an_argument)
+			set_callback (XmNfocusCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (focus_command, a_command, an_argument)
 		end;
 
-	add_gain_primary_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the text widget gains
-			-- ownership of the primary selection.
+	set_gain_primary_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the text widget
+			-- gains ownership of the primary selection.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNgainPrimaryCallback, a_callback, an_argument)
+			set_callback (XmNgainPrimaryCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (gain_primary_command, a_command, an_argument)
 		end;
 
-	add_lose_primary_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the text widget loses
-			-- ownership of the primary selection.
+	set_lose_primary_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the text widget
+			-- loses ownership of the primary selection.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNlosePrimaryCallback, a_callback, an_argument)
+			set_callback (XmNlosePrimaryCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (lose_primary_command, a_command, an_argument)
 		end;
 
-	add_losing_focus_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the text widget loses
-			-- the focus.
+	set_losing_focus_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the text widget
+			-- loses the focus.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNlosingFocusCallback, a_callback, an_argument)
+			set_callback (XmNlosingFocusCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (losing_focus_command, a_command, an_argument)
 		end;
 
-	add_modify_verify_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called before the value of the text field
-			-- widget is changed.
+	set_modify_verify_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the text widget
+			-- is changed.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNmodifyVerifyCallback, a_callback, an_argument)
+			set_callback (XmNmodifyVerifyCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (modify_verify_command, a_command, an_argument)
 		end;
 
-	add_modify_verify_callback_wcs (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called before the value of the text field
-			-- widget is changed.
+	set_modify_verify_callback_wcs (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the text widget
+			-- is changed.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNmodifyVerifyCallbackWcs, a_callback, an_argument)
+			set_callback (XmNmodifyVerifyCallbackWcs, a_command, an_argument)
+		ensure
+			command_set: command_set (modify_verify_wcs_command, a_command, an_argument)
 		end;
 
-	add_motion_verify_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called before the insertion cursor is moved
-			-- in the text widget.
+	set_motion_verify_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the insertion cursor
+			-- is moved in the text widget.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNmotionVerifyCallback, a_callback, an_argument)
+			set_callback (XmNmotionVerifyCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (motion_verify_command, a_command, an_argument)
 		end;
 
-	add_value_changed_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called after the value of the text field
-			-- widget is changed.
+	set_value_changed_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed after the value of the text widget
+			-- is changed.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNvalueChangedCallback, a_callback, an_argument)
+			set_callback (XmNvalueChangedCallback, a_command, an_argument)
+		ensure
+			command_set: command_set (value_changed_command, a_command, an_argument)
 		end;
 
 	append (a_text: STRING) is
@@ -665,94 +746,76 @@ feature -- Element change
 
 feature -- Removal
 
-	remove_activate_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the user causes the text field
-			-- widget to be activated.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_activate_callback is
+			-- Remove the command for the activate callback.
 		do
-			remove_callback (XmNactivateCallback, a_callback, an_argument)
+			remove_callback (XmNactivateCallback)
+		ensure
+			removed: activate_command = Void
 		end;
 
-	remove_focus_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the text widget receives
-			-- the focus.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_focus_callback is
+			-- Remove the command for the focus callback.
 		do
-			remove_callback (XmNfocusCallback, a_callback, an_argument)
+			remove_callback (XmNfocusCallback)
+		ensure
+			removed: focus_command = Void
 		end;
 
-	remove_gain_primary_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the text widget gains
-			-- ownership of the primary selection.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_gain_primary_callback is
+			-- Remove the command for the gain primary callback.
 		do
-			remove_callback (XmNgainPrimaryCallback, a_callback, an_argument)
+			remove_callback (XmNgainPrimaryCallback)
+		ensure
+			removed: gain_primary_command = Void
 		end;
 
-	remove_lose_primary_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the text widget loses
-			-- ownership of the primary selection.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_lose_primary_callback is
+			-- Remove the command for the lost primary callback.
 		do
-			remove_callback (XmNlosePrimaryCallback, a_callback, an_argument)
+			remove_callback (XmNlosePrimaryCallback)
+		ensure
+			removed: lose_primary_command = Void
 		end;
 
-	remove_losing_focus_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the text widget loses
-			-- the focus.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_losing_focus_callback is
+			-- Remove the command for the losing focus callback.
 		do
-			remove_callback (XmNlosingFocusCallback, a_callback, an_argument)
+			remove_callback (XmNlosingFocusCallback)
+		ensure
+			removed: losing_focus_command = Void
 		end;
 
-	remove_modify_verify_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called before the value of the text field
-			-- widget is changed.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_modify_verify_callback is
+			-- Remove the command for the modify verify callback.
 		do
-			remove_callback (XmNmodifyVerifyCallback, a_callback, an_argument)
+			remove_callback (XmNmodifyVerifyCallback)
+		ensure
+			removed: modify_verify_command = Void
 		end;
 
-	remove_modify_verify_callback_wcs (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called before the value of the text field
-			-- widget is changed.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_modify_verify_callback_wcs is
+			-- Remove the command for the modify verify callback.
 		do
-			remove_callback (XmNmodifyVerifyCallbackWcs, a_callback, an_argument)
+			remove_callback (XmNmodifyVerifyCallbackWcs)
+		ensure
+			removed: modify_verify_wcs_command = Void
 		end;
 
-	remove_motion_verify_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called before the insertion cursor is moved
-			-- in the text widget.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_motion_verify_callback is
+			-- Remove the command for the motion verify callback.
 		do
-			remove_callback (XmNmotionVerifyCallback, a_callback, an_argument)
+			remove_callback (XmNmotionVerifyCallback)
+		ensure
+			removed: motion_verify_command = Void
 		end;
 
-	remove_value_changed_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called after the value of the text field
-			-- widget is changed.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_value_changed_callback is
+			-- Remove the command for the value changed callback.
 		do
-			remove_callback (XmNvalueChangedCallback, a_callback, an_argument)
+			remove_callback (XmNvalueChangedCallback)
+		ensure
+			removed: value_changed_command = Void
 		end;
 
 	clear is

@@ -84,6 +84,14 @@ feature -- Initialization
 			name_set: name.is_equal (a_name)
 		end;
 
+feature -- Access
+
+	traverse_obscured_command: MEL_COMMAND_EXEC is
+			-- Command set for the traverse obscured callback
+		do
+			Result := motif_command (XmNtraverseObscuredCallback)
+		end
+
 feature -- Status report
 
 	clip_window: MEL_DRAWING_AREA;
@@ -363,26 +371,28 @@ feature -- Status setting
 
 feature -- Element change
 
-	add_traverse_obscured_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Add the callback `a_callback' with argument `an_argument'
-			-- to the callbacks called when the keyboard focus is moved to
-			-- a widget or a gadget that is obscured from view.
+	set_traverse_obscured_callback (a_command: MEL_COMMAND; an_argument: ANY) is
+			-- Set `a_command' to be executed when the keyboard focus is
+			-- moved to a widget of a gadget that is obscured from view.
+			-- `argument' will be passed to `a_command' whenever it is
+			-- invoked as a callback.
 		require
-			a_callback_not_void: a_callback /= Void
+			command_not_void: a_command /= Void
 		do
-			add_callback (XmNtraverseObscuredCallback, a_callback, an_argument)
+			set_callback (XmNtraverseObscuredCallback, a_command, an_argument)
+		ensure
+			command_set: command_set 
+				(traverse_obscured_command, a_command, an_argument)
 		end;
 
 feature -- Removal
 
-	remove_traverse_obscured_callback (a_callback: MEL_CALLBACK; an_argument: ANY) is
-			-- Remove the callback `a_callback' with argument `an_argument'
-			-- from the callbacks called when the keyboard focus is moved to
-			-- a widget or a gadget that is obscured from view.
-		require
-			a_callback_not_void: a_callback /= Void
+	remove_traverse_obscured_callback is
+			-- Remove the command for traverse obscured callback.
 		do
-			remove_callback (XmNtraverseObscuredCallback, a_callback, an_argument)
+			remove_callback (XmNtraverseObscuredCallback)
+		ensure
+			removed: traverse_obscured_command = Void
 		end;
 
 feature {MEL_DISPATCHER} -- Basic operations

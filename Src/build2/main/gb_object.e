@@ -247,101 +247,48 @@ feature -- Access
 		end
 
 	flatten is
-			-- Flatten `Current' so that it is no longer a representation of a top level object.
+			-- Flatten `Current' so that it is no longer a representation of a top level object and is a
+			-- completely flat widget structure.
 		require
 			is_instance_of_top_level_object: is_instance_of_top_level_object
 		local
 			associated_object: GB_OBJECT
-			all_children_of_current, all_children_of_associated: ARRAYED_LIST [GB_OBJECT]
 		do
-			associated_object := object_handler.deep_object_from_id (associated_top_level_object)
-			
---			recursive_flatten (Current, associated_object)
---			
---			
-			associated_top_level_object := 0
+				-- Ensure that for all objects contained in `Current' the association is removed.
+			unconnect_instance_referers (object_handler.deep_object_from_id (associated_top_level_object), Current)
+
+			associated_object := object_handler.object_from_id (associated_top_level_object)
 			associated_object.instance_referers.remove (id)
-			
-			
-			create all_children_of_associated.make (50)
-			associated_object.all_children_recursive (all_children_of_associated)
-			create all_children_of_current.make (50)
-			all_children_recursive (all_children_of_current)
-			check
-				recursive_children_count_consistent: all_children_of_associated.count = all_children_of_current.count
+			if associated_top_level_object /= 0 then
+				remove_associated_top_level_object
+				connect_display_object_events
+				represent_as_non_locked_instance
+				update_representations_for_name_or_type_change
 			end
-			from
-				all_children_of_associated.start
-				all_children_of_current.start
-			until
-				all_children_of_associated.off
-			loop
-				
-		
-				all_children_of_associated.item.instance_referers.remove (all_children_of_current.item.id)
-				
-					-- Reconnect the events for all objects comprising `Current' recursively as they may be
-					-- once again built into as no longer locked.
-				all_children_of_current.item.connect_display_object_events
-				
-				all_children_of_associated.forth
-				all_children_of_current.forth
+			if layout_item.is_expandable then
+				-- `layout_item' may be empty and therefore not expandable.
+				layout_item.expand
 			end
-			
-				-- Reconnect events for `display_object' of `Current'.
-			connect_display_object_events
-				-- Update graphical representation.
-			represent_as_non_locked_instance
-				-- Ensure the text of the layout item is up to date as the type of `Current' has now changed
-				-- to the actual widget type.
-			update_representations_for_name_or_type_change
 		ensure
 			not_is_instance_of_top_level_object: not is_instance_of_top_level_object
 		end
 		
-	recursive_flatten (current_object, associated_object: GB_OBJECT) is
-			--
+	shallow_flatten is
+			-- Flatten `Current' so that it is no longer a representation of a top level object, although
+			-- all instances of other top level objects within the structure are retained.
 		require
-			current_object_not_void: current_object /= Void
-			associated_object_not_void: associated_object /= Void
-			current_object.children.count = associated_object.children.count
-		local
-			current_object_children: ARRAYED_LIST [GB_OBJECT]
-			associated_object_children: ARRAYED_LIST [GB_OBJECT]
-			current_item, current_associated_item: GB_OBJECT
-			top_object: GB_OBJECT
+			is_instance_of_top_level_object: is_instance_of_top_level_object
 		do
-			current_object_children := current_object.children
-			associated_object_children := associated_object.children
-			from
-				current_object_children.start
-				associated_object_children.start
-			until
-				current_object_children.off
-			loop
-				current_item := current_object_children.item
-				current_associated_item := associated_object_children.item				
-				check
-					not current_associated_item.is_instance_of_top_level_object implies current_associated_item.instance_referers.has (current_item.id)
-				end
---				if current_a.instance_referers.has (current_associated_item.id) then
---					current_item.instance_referers.remove (current_associated_item.id)
---				end
-				
---				if current_associated_item.is_instance_of_top_level_object then
---					top_object ?= object_handler.deep_object_from_id (current_associated_item.associated_top_level_object)
---					current_associated_item.remove_associated_top_level_object
---					top_object.instance_referers.remove (current_associated_item.id)
---					--current_associated_item.represent_as_non_locked_instance
---				end
-				
-				recursive_flatten (current_item, current_associated_item)
-				
-				associated_object_children.forth
-				current_object_children.forth
+				-- Ensure that for all objects contained in `Current' the association is removed.
+			unconnect_instance_referers (object_handler.deep_object_from_id (associated_top_level_object), Current)
+			internal_shallow_flatten (Current, object_handler.deep_object_from_id (associated_top_level_object))
+			if layout_item.is_expandable then
+				-- `layout_item' may be empty and therefore not expandable.
+				layout_item.expand
 			end
+		ensure
+			not_is_instance_of_top_level_object: not is_instance_of_top_level_object
 		end
-		
 
 	new_top_level_representation: GB_OBJECT is
 			-- `Result' is a copy of `Current' with a new set of id's, representing
@@ -452,7 +399,7 @@ feature -- Access
 			until
 				new_linear_representation.off
 			loop
-				original_linear_representation.item.instance_referers.extend (new_linear_representation.item.id, new_linear_representation.item.id)
+				original_linear_representation.item.instance_referers.put (new_linear_representation.item.id, new_linear_representation.item.id)
 				if is_top_level_object then
 					original_linear_representation.item.layout_item.set_data ("pop")
 				end
@@ -903,7 +850,7 @@ feature {GB_OBJECT_HANDLER, GB_OBJECT, GB_BUILDER_WINDOW} -- Element change
 					if not dependents.has (dependent_object.id) then
 							-- Only add if it is not already contained as an object may rely on another
 							-- object multiple times in it's structure.
-						dependents.extend (dependent_object, dependent_object.id)
+						dependents.put (dependent_object, dependent_object.id)
 					end
 					all_dependents_recursive (dependent_object, dependents)
 				else
@@ -1574,6 +1521,56 @@ feature {NONE} -- Implementation
 				end
 				an_object.set_name (temp_name)	
 			end
+		end
+		
+	internal_shallow_flatten (current_object, associated_object: GB_OBJECT) is
+			-- Recursively flatten all instance representations of `Current' object to `associated_object' if the
+			-- current structure is not a representation of another top level object. If it is, reconnect
+			-- all instance referers in the `current_object' structure to those in the `associated_object' structure.
+		require
+			current_object_not_void: current_object /= Void
+			associated_object_not_void: associated_object /= Void
+			current_object.children.count = associated_object.children.count
+		local
+			current_object_children, associated_object_children: ARRAYED_LIST [GB_OBJECT]
+			current_item, current_associated_item: GB_OBJECT
+		do
+			if current_object.associated_top_level_object /= 0 then
+				current_object.remove_associated_top_level_object
+				current_object.connect_display_object_events
+				current_object.represent_as_non_locked_instance
+				current_object.update_representations_for_name_or_type_change
+			end
+			associated_object.instance_referers.remove (current_object.id)
+			
+			current_object_children := current_object.children
+			associated_object_children := associated_object.children
+			from
+				current_object_children.start
+				associated_object_children.start
+			until
+				current_object_children.off
+			loop
+				current_item := current_object_children.item
+				current_associated_item := associated_object_children.item			
+				if current_associated_item.associated_top_level_object > 0 then
+						-- If the current associated object has a reference to a top level object then we must
+						-- set the current object as an association to this top level object directly.
+					current_item.set_associated_top_level_object (object_handler.deep_object_from_id (current_associated_item.associated_top_level_object))
+					connect_instance_referers (object_handler.deep_object_from_id (current_associated_item.associated_top_level_object), current_item)
+					
+						-- Ensure that the representations are updated to reflect the fact that they are locked.
+					current_item.represent_as_locked_instance
+					current_item.update_representations_for_name_or_type_change
+				else
+					internal_shallow_flatten (current_item, current_associated_item)
+				end
+				
+				associated_object_children.forth
+				current_object_children.forth
+			end
+		ensure
+			current_object_is_not_top_level_instance: not current_object.is_instance_of_top_level_object
 		end
 		
 feature {GB_OBJECT_HANDLER} -- Implementation

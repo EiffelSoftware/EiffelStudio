@@ -107,7 +107,7 @@ feature {ROUTINE_TEXT_FIELD} -- Implementation
 				if choice_position /= 0 then
 					class_i := class_list.i_th (choice_position);
 					class_list := Void;
-					cname := clone (class_i.class_name);
+					cname := clone (class_i.name);
 					cname.to_upper;
 					set_text (cname);
 					execute (class_i)
@@ -222,10 +222,10 @@ feature {NONE} -- Implementation
 			!! class_names.make (class_list.count);
 			from class_list.start until class_list.after loop
 				class_i := class_list.item;
-				cname := clone (class_i.class_name);
+				cname := clone (class_i.name);
 				if
 					last_class /= Void and then
-					last_class.class_name.is_equal (cname)
+					last_class.name.is_equal (cname)
 				then
 					if not first_ambiguous then
 						first_ambiguous := True

@@ -328,7 +328,7 @@ feature -- Access
 				!! unique_counter
 				!! unique_values.make (7)
 
-				ast.assign_unique_values (unique_counter, unique_values)
+				ast_b.assign_unique_values (unique_counter, unique_values)
 
 					-- Compute the values of the unique constants
 				class_info.set_unique_values (unique_values);

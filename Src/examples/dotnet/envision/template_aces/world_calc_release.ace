@@ -1,0 +1,74 @@
+system
+	"world_calc"
+
+root
+	world_calc: make
+
+default
+	arguments (" ")
+	assertion (no)
+	msil_generation (yes)
+	disabled_debug (yes)
+	debug (no)
+	line_generation (no)
+	precompiled ("$ISE_EIFFEL\ebcl\release")
+	il_verifiable (yes)
+	cls_compliant (yes)
+	dotnet_naming_convention (yes)
+	use_cluster_name_as_namespace (yes)
+	use_all_cluster_name_as_namespace (yes)
+	msil_generation_type ("exe")
+	msil_assembly_compatibility ("None")
+	check_vape (yes)
+	console_application (no)
+
+
+--	my_parser:	"parser"
+
+cluster
+	root_cluster:		"$ISE_EIFFEL\..\samples\winforms\window_calculator"
+
+
+	all base:		"$ISE_EIFFEL\library\base"
+		exclude
+			"table_eiffel3"; "desc"; "classic"; 
+		end
+
+	all base_net:		"$ISE_EIFFEL\library.net\base"
+
+assembly
+	math:	"$ISE_EIFFEL\examples\dotnet\winforms\applications\world_calc\math.dll"
+
+	parser_util:	"$ISE_EIFFEL\examples\dotnet\winforms\applications\world_calc\parserutils.dll"
+		prefix
+			"parser_"
+		end
+
+	mscorlib:	"mscorlib","1.0.3300.0","neutral","b77a5c561934e089"
+
+	system_:	"System","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			system_dll_
+		end
+
+	system_xml:	"System.Xml","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			xml_
+		end
+
+	system_drawing:	"System.Drawing","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+		prefix
+			drawing_
+		end
+
+	accessibility:	"Accessibility","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+
+	system_runtime_serialization_formatters_soap:	"System.Runtime.Serialization.Formatters.Soap","1.0.3300.0","neutral","b03f5f7f11d50a3a"
+
+	system_windows_forms:	"System.Windows.Forms","1.0.3300.0","neutral","b77a5c561934e089"
+		prefix
+			winforms_
+		end
+
+
+end

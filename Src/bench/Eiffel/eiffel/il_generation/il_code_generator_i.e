@@ -99,18 +99,34 @@ feature -- Class info
 		 print ("")
 		end
 
-	generate_class_mappings (class_name: STRING;
+	generate_class_mappings (il_name, class_name: STRING;
 			id, interface_id: INTEGER; filename, element_type: STRING)
 		is
-			-- Create a mapping table between `id' and `class_name'.
+			-- Create a correspondance table between `id' and `class_name'.
 			-- `filename' is the path to the source file of `class_name'
 		require
-			name_not_void: class_name /= Void
-			name_not_empty: not class_name.is_empty
+			il_name_not_void: il_name /= Void
+			il_name_not_empty: not il_name.is_empty
+			class_name_not_void: class_name /= Void
+			class_name_not_empty: not class_name.is_empty
 			id_positive: id > 0
 			interface_id_positive: interface_id > 0
 			non_void_filename: filename /= Void
 			element_type_not_void: element_type /= Void
+		deferred
+		end
+
+	generate_type_class_mapping,
+	generate_class_type_class_mapping,
+	generate_basic_type_class_mapping,
+	generate_generic_type_class_mapping,
+	generate_formal_type_class_mapping,
+	generate_anchored_type_class_mapping (type_id: INTEGER) is
+			-- Create correspondance between `type_id' and ISE.Runtime.TYPE,
+			-- ISE.Runtime.CLASS_TYPE, ISE.Runtime.GENERIC_TYPE,
+			-- ISE.Runtime.FORMAL_TYPE and ISE.Runtime.ANCHORED_TYPE.
+		require
+			type_id_set: type_id > 0
 		deferred
 		end
 
@@ -303,6 +319,14 @@ feature -- IL Generation
 		deferred
 		end
 
+	generate_formal_feature (feature_id: INTEGER) is
+			-- Specifies for which feature of `feature_id' written in class of `type_id'
+			-- IL code will be generated.
+		require
+			positive_feature_id: feature_id > 0
+		deferred
+		end
+
 	generate_implementation_feature_il (feature_id: INTEGER) is
 			-- Specifies for which feature of `feature_id' written in class of `type_id'
 			-- IL code will be generated.
@@ -335,7 +359,7 @@ feature -- IL Generation
 		deferred
 		end
 
-	generate_external_call (base_name: STRING; name: STRING; ext_kind: INTEGER; parameters_type: ARRAY [STRING]; return_type: STRING; is_virtual: BOOLEAN; type_id: INTEGER; feature_id: INTEGER) is
+	generate_external_call (base_name: STRING; name: STRING; ext_kind: INTEGER; parameters_type: ARRAY [STRING]; return_type: STRING; is_virtual: BOOLEAN) is
 			-- Generate call to `name' with signature `parameters_type'.
 		require
 			base_name_not_void: base_name /= Void
@@ -383,13 +407,6 @@ feature -- Object creation
 		require
 			positive_type_id: type_id > 0
 			positive_feature_id: feature_id > 0
-		deferred
-		end
-
-	set_eiffel_type (type_id: INTEGER) is
-			-- Set `Type_id' to newly created Eiffel object.
-		require
-			positive_type_id: type_id > 0
 		deferred
 		end
 
@@ -454,6 +471,13 @@ feature -- Variables access
 		require
 			positive_type_id: type_id > 0
 			positive_feature_id: feature_id > 0
+		deferred
+		end
+
+	put_type_token (type_id: INTEGER) is
+			-- Put associated metadata token to type `type_id'.
+		require
+			positive_type_id: type_id > 0
 		deferred
 		end
 
@@ -772,7 +796,7 @@ feature -- Constants generation
 		deferred
 		end
 		
-	put_real_constant (r: REAL) is
+	put_real_constant (r: DOUBLE) is
 			-- put `r' on IL stack.
 		deferred
 		end

@@ -174,9 +174,19 @@ feature {NONE} -- Type description
 				i := classes.lower
 				nb := classes.upper
 				compiled_classes_count := 0
-				il_generator.start_class_mappings (static_type_id_counter.count)
 				j := classes_count
 				degree_output.put_start_degree (1, j)
+
+					-- We add `1' because it is for ISE.Runtiume.TYPE
+				il_generator.start_class_mappings (static_type_id_counter.count + 6)
+					-- Identify `ISE.Runtime.TYPE'.
+				il_generator.set_type_id (static_type_id_counter.count + 1)
+				il_generator.set_class_type_id (static_type_id_counter.count + 2)
+				il_generator.set_generic_type_id (static_type_id_counter.count + 3)
+				il_generator.set_formal_type_id (static_type_id_counter.count + 4)
+				il_generator.set_anchored_type_id (static_type_id_counter.count + 5)
+				il_generator.set_basic_type_id (static_type_id_counter.count + 6)
+				il_generator.generate_type_class_mappings
 			variant
 				nb - i + 1
 			until

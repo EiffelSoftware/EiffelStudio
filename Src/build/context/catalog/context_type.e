@@ -17,7 +17,7 @@ creation
 	
 feature  {NONE}
 
-	make (a_name: STRING; a_context: CONTEXT) is
+	make (a_name: STRING; a_context: like dummy_context) is
 			-- create a context type associated with `a_context'
 		do
 			dummy_context := a_context;

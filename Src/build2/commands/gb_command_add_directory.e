@@ -137,13 +137,13 @@ feature -- Basic Operation
 			end
 			create directory_item.make_with_name (directory_name)
 			if parent_directory_path.is_empty then
-				window_selector.extend (directory_item)	
+				add_to_tree_node_alphabetically (window_selector, directory_item)
 			else
 				window_node ?= tree_item_matching_path (window_selector, parent_directory_path)
 				check
 					window_node_not_void: window_node /= Void
 				end
-				window_node.extend (directory_item)
+				add_to_tree_node_alphabetically (window_node, tree_item)
 					-- Ensure `directory_item' is now visible.
 				tree_item ?= window_node
 				check

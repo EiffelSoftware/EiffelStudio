@@ -171,8 +171,6 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 					-- As `object' = Void, it means that we are building a new object,
 					-- and hence we must create it accordingly.
 				an_object := object_handler.add_root_window (window.attribute_by_name (type_string).value)
-				unparent_tree_node (an_object.window_selector_item)
-				parent_list.extend (an_object.window_selector_item)
 			else
 				an_object := object
 			end
@@ -195,6 +193,8 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 						if current_name.is_equal (Internal_properties_string) then
 							an_object.modify_from_xml (current_element)
 							object_handler.add_object_to_objects (an_object)
+							unparent_tree_node (an_object.window_selector_item)
+							add_to_tree_node_alphabetically (parent_list, an_object.window_selector_item)
 						elseif current_name.is_equal (Events_string) then
 								-- We now add the event information from `current_element'
 								-- into `window_object'.
@@ -421,7 +421,7 @@ feature {NONE} -- Implementation
 									if current_name.is_equal (Internal_properties_string)  then
 										create directory_item.make_with_name ("")
 										directory_item.modify_from_xml (window_element)
-										parent_node_list.extend (directory_item)			
+										add_to_tree_node_alphabetically (parent_node_list, directory_item)
 									end
 								end
 								current_element.forth

@@ -14,12 +14,12 @@ inherit
 		undefine
 			same_as, associated_eiffel_class
 		redefine
-			formal_name, constraint, is_deep_equal
+			formal_name, constraint
 		end;
 
 	FORMAL_AS_B
 		undefine
-			set, is_deep_equal, text_position, simple_format
+			set, is_equivalent, text_position, simple_format
 		end
 
 feature -- Attributes
@@ -40,26 +40,6 @@ feature -- Initialization
 				Result := Any_constraint_type;
 			else
 				Result := constraint.actual_type;
-			end;
-		end;
-
-	is_deep_equal (other: TYPE_B): BOOLEAN is
-		local
-			o: like Current;
-			o_c: TYPE_B;
-		do
-			o ?= other;
-			Result := o /= Void and then
-				formal_name.is_equal (o.formal_name) and then
-				position = o.position;
-			if Result then
-				o_c := o.constraint;
-				if constraint = Void then
-					Result := o_c = Void
-				else
-					Result := o_c /= Void and then
-					constraint.is_deep_equal (o_c)
-				end;
 			end;
 		end;
 

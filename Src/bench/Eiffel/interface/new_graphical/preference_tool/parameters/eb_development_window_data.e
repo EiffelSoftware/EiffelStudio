@@ -59,13 +59,13 @@ feature -- Access
 	left_panel_layout: ARRAY [STRING] is
 			-- Layout of the left panel of the window.
 		do
-			Result := array_resource_value ("development_window__left_panel_layout", <<"visible","visible","visible">>)
+			Result := array_resource_value ("development_window__left_panel_layout_new", <<"Features", "visible", "0", "0", "0", "100", "Clusters", "visible", "0", "0", "0", "100">>)
 		end
 
 	right_panel_layout: ARRAY [STRING] is
 			-- Layout of the left panel of the window.
 		do
-			Result := array_resource_value ("development_window__right_panel_layout", <<"visible", "visible">>)
+			Result := array_resource_value ("development_window__right_panel_layout_new", <<"Editor", "visible", "0", "0", "0", "200", "Context", "visible", "0", "0", "0", "200">>)
 		end
 
 	show_general_toolbar: BOOLEAN is
@@ -143,14 +143,14 @@ feature -- Element change
 			-- Save the layout of the left panel of the window.
 			-- Call `commit_save' to have the changes actually saved.
 		do
-			set_array_resource ("development_window__left_panel_layout", a_layout)
+			set_array_resource ("development_window__left_panel_layout_new", a_layout)
 		end
 
 	save_right_panel_layout (a_layout: ARRAY [STRING]) is
 			-- Save the layout of the left panel of the window.
 			-- Call `commit_save' to have the changes actually saved.
 		do
-			set_array_resource ("development_window__right_panel_layout", a_layout)
+			set_array_resource ("development_window__right_panel_layout_new", a_layout)
 		end
 
 	save_search_tool_options (search_tool: EB_SEARCH_TOOL) is

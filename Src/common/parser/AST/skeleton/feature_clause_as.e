@@ -56,14 +56,12 @@ feature -- Formatting
 				clients.format (ctxt);
 			end;
 			ctxt.put_trailing_comment (position);
-			if ctxt.is_reconstitution then
-				ctxt.next_line;
-				ctxt.indent_one_more;
-				ctxt.next_line;
-				ctxt.new_line_between_tokens;
-				ctxt.set_separator (void);
-				features.format (ctxt);
-			end;
+			ctxt.next_line;
+			ctxt.indent_one_more;
+			ctxt.next_line;
+			ctxt.new_line_between_tokens;
+			ctxt.set_separator (void);
+			features.format (ctxt);
 			ctxt.commit;
 		end;
 

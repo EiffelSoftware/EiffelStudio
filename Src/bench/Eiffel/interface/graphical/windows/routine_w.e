@@ -52,13 +52,14 @@ feature {NONE}
 				format_bar.attach_top (showtext_command, 0);
 				format_bar.attach_left (showtext_command, 0);
 
-		--	!!showroutclients_command.make (format_bar, text_window);
-			format_bar.attach_top (showroutclients_command, 0);
-	--			format_bar.attach_left_widget (showtext_command, showroutclients_command, 0);
+			!!showroutclients_command.make (format_bar, text_window);
+				format_bar.attach_top (showroutclients_command, 0);
+				format_bar.attach_left_widget (showtext_command, showroutclients_command, 0);
 
 			!!debug_run_command.make (format_bar, text_window);
 				format_bar.attach_top (debug_run_command, 0);
---				format_bar.attach_left_widget (showroutclients_command, debug_run_command, 50);
+				format_bar.attach_left_widget (showroutclients_command, debug_run_command, 50);
+
 			!!step_command.make (format_bar, text_window);
 				format_bar.attach_top (step_command, 0);
 				format_bar.attach_left_widget (debug_run_command, step_command, 50);
@@ -84,7 +85,8 @@ feature {NONE}
 	next_command: NEXT;
 	line_command: TIL_LINE;
 	continue_command: CONTINUE;
-	break_command: SET_BREAKPOINT;
+--	break_command: SET_BREAKPOINT;
+	break_command: SHOW_BREAKPOINTS;	
 	debug_quit_command: DEBUG_QUIT;
 	showroutclients_command: SHOW_ROUTCLIENTS;
 

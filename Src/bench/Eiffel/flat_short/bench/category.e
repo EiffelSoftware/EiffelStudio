@@ -26,17 +26,10 @@ feature
 			from
 				clauses.start
 			until
-				clauses.offright
+				clauses.after
 			loop
 				clauses.item.set_comment (comment);
 				clauses.forth
-			end;
-			if comment /= void then
-				io.putstring ("CATEGORY ");
-				io.putstring (c.text.item (0));
-				io.new_line;
-			else
-				io.putstring ("EMPTY CATEGORY COMMENT %N");
 			end;
 		end;
 
@@ -53,7 +46,7 @@ feature
 			from
 				clauses.start
 			until
-				clauses.offright or else not Result
+				clauses.after or else not Result
 			loop
 				Result := clauses.item.empty
 			end;
@@ -84,13 +77,13 @@ feature
 				- clauses.position - other.clauses.position	
 			--	clauses_count + other_count - new_clauses.count + 1
 			until
-				clauses.offright
-				and other.clauses.offright
+				clauses.after
+				and other.clauses.after
 			loop
 				from
 				until
-					clauses.offright 
-					or else ((not other.clauses.offright)
+					clauses.after 
+					or else ((not other.clauses.after)
 						and then clauses.item > other.clauses.item )
 				loop
 					new_clauses.add_right (clauses.item);
@@ -105,8 +98,8 @@ feature
 				end;
 				from
 				until
-					other.clauses.offright
-					or else ((not clauses.offright)
+					other.clauses.after
+					or else ((not clauses.after)
 						and then not (other.clauses.item >= clauses.item))
 				loop
 					new_clauses.add_right (other.clauses.item);
@@ -131,13 +124,13 @@ feature
 				synonymous := names_adapter.synonymous;
 				synonymous.start;
 			until
-				synonymous.offright
+				synonymous.after
 			loop
 				names := synonymous.item;
 				from
 					clauses.start
 				until
-					clauses.offright 
+					clauses.after
 					or else clauses.item.export_less_than (names)
 				loop
 					clauses.forth;
@@ -163,7 +156,7 @@ feature
 			from
 				clauses.start
 			until
-				clauses.offright
+				clauses.after
 			loop
 				clauses.item.format (ctxt);
 				clauses.forth

@@ -51,9 +51,6 @@ feature
 	compatible (other: like Current): BOOLEAN is
 		do
 			Result := other.reference.same_as (reference);	
-			io.putstring ("Compatible: ");
-			io.putbool (Result);
-			io.new_line;
 		end;
 
 	export_less_than (names: NAMES_LIST): BOOLEAN is
@@ -88,7 +85,7 @@ feature
 			from
 				features.start
 			until
-				features.offright
+				features.after
 			loop
 				features.item.format (ctxt);
 				features.forth;

@@ -13,20 +13,26 @@ feature
 			local_types := global_types;
 		end;
 
-	position_in_text : INTEGER;
-		-- text length at creation
+	position_in_text : CURSOR;
+		-- end of text at creation
 	
-	insertion_point: INTEGER;
-		-- text length at last position for left parantheses
+	insertion_point: CURSOR;
+		-- last position for left parantheses
 	
 	separator: STRING;
 		-- separator between token of the processed EIFFEL_LIST
 
 	is_separator_special: BOOLEAN;
 		-- must separator be printed as a special symbol?
+	
+	is_separator_keyword: BOOLEAN;
+		-- must separator be printed as a keyword?
 
 	indent_between_tokens: BOOLEAN;
 		-- must insert new_line and indent between EIFFEL_LIST token?
+
+	new_line_before_separator: BOOLEAN;
+		-- must insert new_line and indent before a separator?
 
 	indent_depth : INTEGER;
 		-- number of tab after new_line
@@ -68,7 +74,7 @@ feature
 		-- will a dot be needed before next call
 		
 
-	set_position(pos : INTEGER) is
+	set_position(pos : like position_in_text) is
 		do
 			position_in_text := pos;
 		end;
@@ -105,6 +111,9 @@ feature
 
 	set_classes (source_class, target_class: CLASS_C) is
 			-- flat, text from source class rewritten for target_class
+		require	
+			source_not_void: source_class /= void;
+			target_not_void: target_class /= void;
 		do
 			!!global_types;
 			global_types.set_source_type(source_class.actual_type);
@@ -128,7 +137,7 @@ feature
 			local_types := f;
 		end;
 	
-	set_insertion_point (p : INTEGER) is
+	set_insertion_point (p : like insertion_point) is
 		do
 			insertion_point := p;
 		end;

@@ -7,9 +7,6 @@ indexing
 class
 	WEL_INPUT_CONSTANTS
 
-create
-	default_create
-
 feature -- Mouse Activate constants.
 
 	Ma_activate: INTEGER is 1

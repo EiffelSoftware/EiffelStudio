@@ -711,31 +711,52 @@ feature -- Specific Generation
 		local
 			text: STRUCTURED_TEXT
 			class_c: CLASS_C
+			retried: BOOLEAN
 		do
-			class_c := class_i.compiled_class
-			inspect
-				format.type
-			when cf_Chart then
-				text := class_chart_text (class_c)
-			when cf_Diagram then
-				text := class_relations_text (class_c)
-			when cf_Clickable then
-				text := class_text (class_c, False, False)
-				filter.set_feature_redirect (Void)
-			when cf_Flat then
-				text := class_text (class_c, True, False)
-				filter.set_feature_redirect (Void)
-			when cf_Short then
-				text := class_text (class_c, False, True)
-				filter.set_feature_redirect (Void)
-			when cf_Flatshort then
-				text := class_text (class_c, True, True)
-				filter.set_feature_redirect (Void)
+			if not retried then
+				class_c := class_i.compiled_class
+				inspect
+					format.type
+				when cf_Chart then
+					text := class_chart_text (class_c)
+				when cf_Diagram then
+					text := class_relations_text (class_c)
+				when cf_Clickable then
+					text := class_text (class_c, False, False)
+					filter.set_feature_redirect (Void)
+				when cf_Flat then
+					text := class_text (class_c, True, False)
+					filter.set_feature_redirect (Void)
+				when cf_Short then
+					text := class_text (class_c, False, True)
+					filter.set_feature_redirect (Void)
+				when cf_Flatshort then
+					text := class_text (class_c, True, True)
+					filter.set_feature_redirect (Void)
+				end
+			else
+					-- An error occurred due to an internal bug while doing the formal for
+					-- `class_c'. Instead of failing the whole documentation generation process,
+					-- we generate an empty class and continue to the next class.
+					-- Note: we need to insert `ti_before_class_declaration' and
+					-- `ti_after_class_declaration' so that `insert_class_menu_bars'
+					-- works properly.
+				create text.make
+				text.add (ti_before_class_declaration)
+				text.add_new_line
+				text.add_string ("Internal compiler error while generating documentation %
+					%for class ")
+				text.add_class (class_i)
+				text.add_new_line
+				text.add (ti_after_class_declaration)
 			end
 			filter.prepend_to_file_suffix (format.file_extension)
 			insert_class_menu_bars (text, class_i.name, format)
 			generate_from_structured_text (text)
 			filter.set_feature_redirect (feature_links)
+		rescue
+			retried := True
+			retry
 		end
 
 feature {NONE} -- Menu bars

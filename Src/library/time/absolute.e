@@ -26,7 +26,7 @@ feature -- Access
 feature -- Measurement
 
 	duration: DURATION is
-			-- Lenght of the interval of time since `origin'
+			-- Length of the interval of time since `origin'
 		deferred
 		end;
 	
@@ -49,10 +49,12 @@ feature -- Basic operations
 			!! Result.make (other, Current)
 		ensure
 			result_exists: Result /= Void;
-			result_set: Result.start_bound.is_equal (other) and then Result.end_bound.is_equal (Current)
+			result_set: Result.start_bound.is_equal (other) and then 
+					Result.end_bound.is_equal (Current)
 		end;
 
 	relative_duration (other: like Current): DURATION is
+			-- Relative duration from `Current' to `other'
 		require
 			other_exists: other /= Void
 		deferred

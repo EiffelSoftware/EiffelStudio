@@ -84,7 +84,7 @@ rt_public void free_sorted_attributes(void);
 /*
  * Shared data declarations
  */
-rt_shared char *account = (char *) 0;			/* Array of traversed dyn types */
+rt_shared char * account = (char *) 0;			/* Array of traversed dyn types */
 rt_shared unsigned int **sorted_attributes = (unsigned int **) 0;	/* Array of sorted attributes */
 
 rt_private int accounting = 0;

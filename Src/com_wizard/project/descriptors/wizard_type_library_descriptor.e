@@ -378,7 +378,7 @@ feature -- Basic operations
 								not Non_generated_type_libraries.has (guid) 
 							then
 								if not (interface_descriptor.inherited_interface = Void) then
-									create implemented_interface_descriptor.make_from_interface (interface_descriptor)
+									implemented_interface_descriptor := interface_descriptor.implemented_interface
 									system_descriptor.interfaces.force (implemented_interface_descriptor)
 								end
 							end

@@ -61,7 +61,8 @@ create
 feature {NONE} -- Initialization
 
 	make (an_interface: like interface) is
-			-- Create the frame with the default options.
+			-- Create `Current' with the default options.
+			-- Assign `Ev_frame_etched_in' to `frame_style'.
 		do
 			base_make (an_interface)
 			ev_wel_control_container_make
@@ -137,7 +138,7 @@ feature -- Element change
 feature -- Status setting
 
 	set_default_minimum_size is
-			-- Initialize the size of the widget.
+			-- Initialize the size of `Current'.
 		do
 			internal_set_minimum_size (2 * Text_padding, 2 * Border_width)
 		end
@@ -167,7 +168,7 @@ feature -- Element change
 
 	set_top_level_window_imp (a_window: EV_WINDOW_IMP) is
 			-- Make `a_window' the new `top_level_window_imp'
-			-- of the widget.
+			-- of `Current'.
 		do
 			top_level_window_imp := a_window
 			if item_imp /= Void then
@@ -178,7 +179,7 @@ feature -- Element change
 feature {NONE} -- Implementation for automatic size compute.
 
 	compute_minimum_width is
-			-- Recompute the minimum_width of the object.
+			-- Recompute the minimum_width of `Current'.
 		local
 			minwidth: INTEGER
 		do
@@ -204,7 +205,7 @@ feature {NONE} -- Implementation for automatic size compute.
 
 	compute_minimum_size is
 			-- Recompute both the minimum_width and then
-			-- minimum_height of the object.
+			-- minimum_height of `Current'.
 		local
 			minheight, minwidth: INTEGER
 		do
@@ -221,7 +222,7 @@ feature {NONE} -- Implementation for automatic size compute.
 feature {NONE} -- WEL Implementation
 
 	top_level_window_imp: EV_WINDOW_IMP
-			-- Top level window that contains the current widget.
+			-- Top level window that contains `Current'.
 
 	wel_move_and_resize (a_x, a_y, a_width, a_height: INTEGER;
 		repaint: BOOLEAN) is
@@ -254,7 +255,7 @@ feature {NONE} -- WEL Implementation
 			-- Height of `text' displayed at top.
 
 	text_width: INTEGER
-			-- Height of `text' displayed at top.
+			-- Width of `text' displayed at top.
 
 	alignment: EV_TEXT_ALIGNMENT
 			-- Placement of `text'.
@@ -263,7 +264,7 @@ feature {NONE} -- WEL Implementation
 			-- Appearance of `text'.
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
-			-- Redraw frame with `frame_style'.
+			-- Redraw `Current' with `frame_style'.
 		local
 			wel_style: INTEGER
 			text_pos: INTEGER
@@ -321,7 +322,7 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_FRAME_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -335,13 +336,16 @@ end -- class EV_FRAME_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2000/05/03 16:18:16  rogers
+--| Comments, formatting.
+--|
 --| Revision 1.34  2000/04/28 21:03:38  brendel
 --| Changed border to be of width 1 when lowered or raised.
 --|

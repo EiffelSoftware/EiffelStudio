@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 			ok_button: EV_BUTTON
 			list_item: EV_LIST_ITEM
 			grid_control_holder: EV_FRAME
-			cell: EV_CELL
+			status_bar: EV_FRAME
 		do
 			create Result
 			create vertical_box
@@ -328,13 +328,18 @@ feature {NONE} -- Implementation
 			create scrollable_area
 			scrollable_area.set_minimum_size (200, 200)
 			create ok_button.make_with_text ("Done")
+			create status_timer.make_with_interval (50)
+			ok_button.select_actions.extend (agent status_timer.destroy)
 			ok_button.select_actions.extend (agent Result.destroy)
 			create h1
-			create cell
-			h1.extend (cell)
+			status_timer.actions.extend (agent update_status)
+			create status_bar
+			create prompt_label.make_with_text (select_widget_prompt)
+			prompt_label.pointer_button_press_actions.force_extend (agent clicked_for_enlarge)
+			status_bar.set_style ((create {EV_FRAME_CONSTANTS}).Ev_frame_lowered)
+			status_bar.extend (prompt_label)
+			h1.extend (status_bar)
 			h1.extend (ok_button)
-			create cell
-			h1.extend (cell)
 			h1.disable_item_expand (ok_button)
 			vertical_box.extend (h1)
 			vertical_box.disable_item_expand (h1)
@@ -464,6 +469,11 @@ feature {NONE} -- Implementation
 			until
 				first.off
 			loop
+				-- Containers have a default size of 0, 0.
+				-- This means they do not show up, which is very misleading.
+				-- Here, we force all widgets to a minimum size of 5x5.
+			--	set_item_width (first.item, 30)
+			--	set_item_height (first.item, 30)
 				listi := list.selected_item
 				if list.selected_item /= Void and then first.item = list.selected_item.data then
 					selected_item_index := first.index
@@ -566,7 +576,11 @@ feature {NONE} -- Implementation
 			if widget.width /= new_width then
 				first.set_item_width (widget, new_width)
 				second := objects @ 2
-				second.set_item_width (second @ first.index_of (widget, 1), new_width)
+					-- Only set width of second if greater than minimum_width.
+					-- This is because the item in second is displayed larger due to frame.
+				if (second @ first.index_of (widget, 1)).minimum_width < new_width then
+					second.set_item_width (second @ first.index_of (widget, 1), new_width)
+				end
 				must_update_editors := True
 					-- Update project.
 				enable_project_modified
@@ -582,7 +596,11 @@ feature {NONE} -- Implementation
 			if widget.height /= new_height then
 				first.set_item_height (widget, new_height)
 				second := objects @ 2
-				second.set_item_height (second @ first.index_of (widget, 1), new_height)
+					-- Only set height of second if greater than minimum_width.
+					-- This is because the item in second is displayed larger due to frame.
+				if (second @ first.index_of (widget, 1)).minimum_height < new_height then
+					second.set_item_height (second @ first.index_of (widget, 1), new_height)
+				end
 				must_update_editors := True
 					-- Update project.
 				enable_project_modified
@@ -1025,6 +1043,38 @@ feature {NONE} -- Implementation
 			end
 			drawing_area.set_pointer_style (cursor)
 		end
+		
+	update_status is
+			-- Display status message in `prompt_label'.
+			-- This behaves as instructions.
+		do
+			if list.selected_item = Void then
+				prompt_label.set_text (select_widget_prompt)
+			else
+				if (first @ (list.index_of (list.selected_item, 1))).width < 3 and
+				(first @ (list.index_of (list.selected_item, 1))).height < 3 then
+					prompt_label.set_text (widget_size_prompt)
+				else
+					prompt_label.set_text (resize_widget_prompt)
+				end
+			end
+		end
+		
+	clicked_for_enlarge is
+			-- Enlarge selected widget if sizing prompt
+			-- is displayed.
+		local
+			widget: EV_WIDGET
+		do
+			if prompt_label.text.is_equal (widget_size_prompt) then
+				widget := (first @ (list.index_of (list.selected_item, 1)))
+					-- We do not enlarge the display widget, as they are already
+					-- larger.
+				first.set_item_width (widget, 50)
+				first.set_item_height (widget, 50)
+				draw_widgets
+			end
+		end
 
 feature {NONE} -- Scrolling attributes.
 
@@ -1066,6 +1116,13 @@ feature {NONE} -- Scrolling attributes.
 		-- button 1 release?
 
 feature {NONE} -- Attributes
+
+	status_timer: EV_TIMEOUT
+		-- Timer executed to keep `prompt_label'
+		-- current.
+
+	prompt_label: EV_LABEL
+		-- A label displaying information to user.
 
 	snap_button: EV_CHECK_BUTTON
 		-- Snap to grid enabled?

@@ -57,60 +57,63 @@ feature
 			current_class: CLASS_C;
 			id: CLASS_ID;
 			deg_output: DEGREE_OUTPUT
+			local_changed_classes: PART_SORTED_TWO_WAY_LIST [PASS2_C];
+			local_extra_check_list: PART_SORTED_TWO_WAY_LIST [CLASS_C];
 		do
+			local_changed_classes := changed_classes
 			deg_output := Degree_output;
-			deg_output.put_start_degree (Degree_number, changed_classes.count)
+			deg_output.put_start_degree (Degree_number, local_changed_classes.count)
 
 			from
-				changed_classes.start
+				local_changed_classes.start
 			until
-				changed_classes.after
+				local_changed_classes.after
 			loop
-				pass2_c := changed_classes.item;
-				current_class := pass2_c.associated_class;
+				current_class := local_changed_classes.item.associated_class;
 				if current_class.changed and then current_class.generics /= Void	then
 					System.set_current_class (current_class);
 					current_class.check_constraint_genericity;
 				end;
-				changed_classes.forth
+				local_changed_classes.forth
 			end;
 				-- Cannot continue if there is an error in the
 				-- constraint genericity clause of a class
 			Error_handler.checksum;
 
 			from
+				local_extra_check_list := extra_check_list
 			until
-				changed_classes.empty
+				local_changed_classes.empty
 			loop
-				pass2_c := changed_classes.first;
+				pass2_c := local_changed_classes.first;
 				current_class := pass2_c.associated_class;
 				System.set_current_class (current_class)
 
-				pass2_c.execute (deg_output, changed_classes.count)
+				pass2_c.execute (deg_output, local_changed_classes.count)
 
-				if not extra_check_list.has (current_class) then
-					extra_check_list.extend (current_class)
+				if not local_extra_check_list.has (current_class) then
+					local_extra_check_list.extend (current_class)
 				end
 
-				changed_classes.start;
-				changed_classes.search (pass2_c);
-				if not changed_classes.after then
-					changed_classes.remove;
+				local_changed_classes.start;
+				local_changed_classes.search (pass2_c);
+				if not local_changed_classes.after then
+					local_changed_classes.remove;
 				end
 			end
 			deg_output.put_end_degree;
 
-			if System.has_expanded and then not extra_check_list.empty then
+			if System.has_expanded and then not local_extra_check_list.empty then
 				System.check_vtec;
 			end;
 
 			if not System.code_replication_off then
 				from
-					extra_check_list.start;
+					local_extra_check_list.start;
 				until
-					extra_check_list.empty
+					local_extra_check_list.empty
 				loop
-					current_class := extra_check_list.first;
+					current_class := local_extra_check_list.first;
 					System.set_current_class (current_class);
 					id := current_class.id;
 					if Tmp_rep_info_server.has (id) then
@@ -118,7 +121,7 @@ feature
 					elseif Tmp_rep_server.has (id) then
 						Tmp_rep_server.remove (id)
 					end;
-					extra_check_list.remove;
+					local_extra_check_list.remove;
 				end;
 			end;
 
@@ -130,18 +133,20 @@ feature
 	remove_class (a_class: CLASS_C) is
 		local
 			found: BOOLEAN
+			local_extra_check_list: PART_SORTED_TWO_WAY_LIST [CLASS_C]
 		do	
 			{SORTED_PASS} Precursor (a_class);
 			from
-				extra_check_list.start
+				local_extra_check_list := extra_check_list
+				local_extra_check_list.start
 			until
-				extra_check_list.after or else found
+				local_extra_check_list.after or else found
 			loop
-				if extra_check_list.item = a_class then
+				if local_extra_check_list.item = a_class then
 					found := True;
-					extra_check_list.remove;
+					local_extra_check_list.remove;
 				else
-					extra_check_list.forth
+					local_extra_check_list.forth
 				end;
 			end;
 		end;

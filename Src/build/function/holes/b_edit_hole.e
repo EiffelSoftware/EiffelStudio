@@ -5,8 +5,7 @@ inherit
 
 	FUNC_EDIT_HOLE
 		redefine
-			process_behavior, function_editor, 
-			set_widget_default
+			process_behavior, function_editor
 		end;
 	BEHAVIOR_STONE
 
@@ -26,6 +25,11 @@ feature {NONE}
 	symbol: PIXMAP is
 		do
 			Result := Pixmaps.behavior_pixmap
+		end;
+
+	full_symbol: PIXMAP is
+		do
+			Result := Pixmaps.behavior_dot_pixmap
 		end;
 
 	focus_string: STRING is

@@ -48,6 +48,11 @@ feature {NONE}
 			Result := Pixmaps.event_pixmap
 		end;
 
+	full_symbol: PIXMAP is
+		do
+			Result := Pixmaps.event_dot_pixmap
+		end;
+
 	focus_label: FOCUS_LABEL is
 		do
 			Result := editor.focus_label
@@ -81,5 +86,21 @@ feature {NONE}
 			editor.set_edited_translation (edited_translation);
 			transl_add.execute (edited_translation);
 		end;
+
+feature
+
+	set_empty_symbol is
+		do
+			if pixmap /= symbol then
+				set_symbol (symbol)
+			end
+		end
+
+	set_full_symbol is
+		do
+			if pixmap /= full_symbol then
+				set_symbol (full_symbol)
+			end
+		end
 
 end

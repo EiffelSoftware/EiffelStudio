@@ -63,6 +63,7 @@ feature -- Edited function
 			if not input_list.empty then
 				edited_function.go_i_th (1);
 			end;
+			menu_bar.update_edit_hole_symbol;
 			display_page_number;
 		end;
 
@@ -93,6 +94,7 @@ feature -- Edited function
 			-- Clear Current function editor.
 		do
 			save_previous_function;
+			menu_bar.clear;
 			input_list.wipe_out;
 			output_list.wipe_out;
 			edited_function := Void;

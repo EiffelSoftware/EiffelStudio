@@ -9,20 +9,16 @@ feature
 
 	help_text: STRING is
 		local
-			full_path: STRING;
+			full_path: FILE_NAME;
 			help_file: PLAIN_TEXT_FILE;
 			temp: STRING;
 		do
-			!! full_path.make (0);
-			full_path.append (Environment.help_directory);
-			full_path.extend (Environment.directory_separator);
+			!! full_path.make_from_string (Environment.help_directory);
 			temp := clone (help_file_name);
 			temp.to_lower;
-			full_path.append (temp);
+			full_path.extend (temp);
 			!! help_file.make (full_path);
-			if
-				help_file.exists and then help_file.is_readable
-			then
+			if help_file.exists and then help_file.is_readable then
 				help_file.open_read;
 				from
 					help_file.readstream (256);

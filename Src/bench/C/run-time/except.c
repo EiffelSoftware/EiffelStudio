@@ -548,6 +548,7 @@ int sig;						/* Caught signal */
 	register1 struct ex_vect *trace;		/* Top of Eiffel trace stack */
 	jmp_buf env;							/* Environment saving for setjmp */
 	char gc_status;							/* Saved GC status */
+	RTXD;									/* Save stack contexts */
 
 	/* There is no need to protect against signals here, as this routine can
 	 * only be called via the signal handler, which takes care of blocking
@@ -599,6 +600,7 @@ int sig;						/* Caught signal */
 	 */
 
 	if (setjmp(env)) {				/* Returning from an exception */
+		RTXSC;						/* Restore stack contexts */
 		g_data.status = gc_status;	/* Restore previous GC status */
 		xraise(EN_HDLR);			/* Raise exception in signal handler */
 		return;						/* Exception ignored */
@@ -1872,7 +1874,7 @@ private void print_top()
 	 * the routine name to 22 characters. These should be #defined--RAM, FIXME.
 	 */
 
-	char buf[25];				/* To pre-compute the (From orig) string */
+	char buf[30];				/* To pre-compute the (From orig) string */
 	char code = except.code;	/* Exception's code */
 	struct ex_vect *top;		/* Top of stack */
 

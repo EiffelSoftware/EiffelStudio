@@ -727,8 +727,10 @@ feature {NONE} -- Implementation: deep cloning
 						source_array = (Array) obj;
 						if (source_array.Rank == 1) {
 							target_array = (Array) source_array.Clone();
-							Array.Clear(target_array, target_array.GetLowerBound (0),
-								target_array.GetUpperBound (0));
+							if (source_array.Length > 0) {
+								Array.Clear(target_array, target_array.GetLowerBound (0),
+									target_array.GetUpperBound (0));
+							}
 							attribute.SetValue (target, target_array);
 							i = target_array.GetLowerBound (0);
 							foreach (Object o in source_array) {

@@ -17,6 +17,8 @@ class BOOL_STRING inherit
 		export
 			{NONE} all
 			{BOOL_STRING} area
+		redefine
+			item, infix "@", put, valid_index
 		end
 
 create
@@ -37,14 +39,19 @@ feature -- Initialization
 
 feature -- Access
 
-	item (i: INTEGER): BOOLEAN is
+	item, infix "@" (i: INTEGER): BOOLEAN is
 			-- Boolean at `i'-th position,
 			-- beginning at left, 1 origin
-		require
-			index_large_enough: 1 <= i
-			index_small_enough: i <= count
 		do
 			Result := area.item (i - 1)
+		end
+
+feature -- Status report
+
+	valid_index (i: INTEGER): BOOLEAN is
+			-- Is `i' within the bounds of Current?
+		do
+			Result := (1 <= i) and then (i <= count)
 		end
 
 feature -- Measurement
@@ -60,9 +67,6 @@ feature -- Element change
 	put (v: like item; i: INTEGER) is
 			-- Put boolean `v' at `i'-th position
 			-- beginning at left, 1 origin.
-		require
-			index_large_enough: 1 <= i
-			index_small_enough: i <= count
 		do
 			area.put (v, i - 1)
 		end

@@ -1,4 +1,3 @@
--- Unique strings generator
 -- Non persistent
 
 class LOCAL_NAMER 

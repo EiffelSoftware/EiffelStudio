@@ -5,8 +5,11 @@ inherit
 		
 	STORABLE
 		rename
-			retrieved as storable_retrieved
+			retrieved as storable_retrieved,
+			retrieve_by_name as storable_retrieve_by_name,
+			store_by_name as storable_store_by_name
 		end
+
 	
 feature 
 
@@ -16,7 +19,7 @@ feature
 		local
 			f: UNIX_FILE;
 		do
-			!!f.make_open_read (file_name);
+			!!f.make_open_binary_read (file_name);
 			retrieved ?= storable_retrieved (f);
 			f.close
 		end;
@@ -25,7 +28,7 @@ feature
 		local
 			f: UNIX_FILE;
 		do
-			!!f.make_open_write (file_name);
+			!!f.make_open_binary_write (file_name);
 			general_store (f);
 			f.close
 		end; 

@@ -1,16 +1,23 @@
-
 class SAVE_AS_BUTTON 
-
 inherit
 
-	FOCUSABLE;
+	FOCUSABLE
+--	PUSH_B
+--		rename 
+--			make as push_b_make
+--		undefine
+--			init_toolkit
+--		end	
+	 
 	EB_PICT_B
-		undefine
-			init_toolkit
-		end;	
-	WINDOWS;
-	PIXMAPS;
-	LICENCE_COMMAND;
+        export
+            {NONE} all
+        undefine
+            init_toolkit
+        end
+	WINDOWS
+	PIXMAPS
+	LICENCE_COMMAND
 
 creation
 
@@ -18,29 +25,32 @@ creation
 
 feature -- Creation
 
-	make (a_name: STRING; a_parent: COMPOSITE) is
+	make (a_name: STRING a_parent: COMPOSITE) is
 		local
 			Nothing: ANY
 		do
-			make_visible (a_parent);
-			set_symbol (Save_as_pixmap);
-			add_activate_action (Current, Nothing);
-			initialize_focus;
-		end;
+			make_visible (a_parent)
+			set_symbol (Save_as_pixmap)
+	--		push_b_make (a_name, a_parent)
+	--		set_text ("Save As")
+	--		set_size (125, 30)
+			add_activate_action (Current, Nothing)
+			initialize_focus
+		end
 
 feature {NONE} -- Focusable
 
 	focus_source: WIDGET is
 		do
 			Result := Current
-		end;
+		end
 
-	focus_string: STRING is "Save project as...";
+	focus_string: STRING is "Save project as..."
 
 	focus_label: LABEL is
 		do
 			Result := main_panel.focus_label
-		end;
+		end
 
 feature {NONE} -- Execute
 
@@ -50,13 +60,13 @@ feature {NONE} -- Execute
 			pw: SAVE_AS_PROJ_WIN	
 		do
 			if main_panel.project_initialized then
-				!!pw.make ("Save project as...", main_panel.base);
+				!!pw.make ("Save project as...", main_panel.base)
 				pw.popup
 			end
-		end;
+		end
 
-	continue_after_popdown (box: MESSAGE_D; ok: BOOLEAN) is
+	continue_after_popdown (box: MESSAGE_D ok: BOOLEAN) is
 		do
-		end;
+		end
 
 end

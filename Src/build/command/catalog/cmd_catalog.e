@@ -5,7 +5,8 @@ inherit
 
 	CATALOG [CMD]
 		rename
-			make as catalog_make
+			make as catalog_make,
+			execute as catalog_execute
 		export
 			{ANY} all
 		undefine
@@ -91,10 +92,8 @@ feature
 				l.after
 			loop
 				cl := l.item;
-				from
-					cl.start
-				until
-					cl.after
+				from cl.start
+				until cl.after
 				loop
 					p := pages.item;
 					p.extend (cl.item);
@@ -211,15 +210,15 @@ feature
 			attach_left (button_form, 10);
 			attach_right (button_form, 10);
 			attach_top (button_form, 10);
-			attach_left (separator, 10);
-			attach_right (separator, 10);
+			attach_left (separator, 1);
+			attach_right (separator, 1);
 			attach_top_widget (button_form, separator, 10);
 			attach_left (type_label, 10);
 			attach_right (focus_label, 10);
 			attach_top_widget (separator, focus_label, 10);
 			attach_top_widget (separator, type_label, 10);
-			attach_left (separator1, 10);
-			attach_right (separator1, 10);
+			attach_left (separator1, 1);
+			attach_right (separator1, 1);
 			attach_top_widget (focus_label, separator1, 10);
 			attach_top_widget (type_label, separator1, 10);
 			attach_left (page_sw, 10);
@@ -230,7 +229,22 @@ feature
 			!!pages.make;
 			define_command_pages;
 			update_interface;
+			set_action("Shift<Btn2Down>", Current, raise_arg)
 		end;
+
+	raise_arg: ANY is
+		once
+			!!Result
+		end
+
+	execute (arg: ANY) is
+		do
+			if arg = raise_arg then
+				main_panel.base.raise
+			else
+				catalog_execute(arg)
+			end
+		end
 
 	add_first_button (b: ICON; i: INTEGER) is 
 		do

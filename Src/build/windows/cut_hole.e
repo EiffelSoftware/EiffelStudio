@@ -56,7 +56,7 @@ feature {NONE}
 				r.remove_yourself;
 				n ?= stone.original_stone;
 				if not (n = Void) then
-					main_panel.namer_hole.reset (n)
+					--main_panel.namer_hole.reset (n)
 				end
 			end;
 		end;

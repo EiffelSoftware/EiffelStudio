@@ -24,7 +24,8 @@ feature {NONE}
 		do
 			source.add_button_press_action (2, show_command, Current);
 			source.add_button_release_action (2, show_command, Nothing);
-			source.add_button_press_action (3, transport_command, Current);
+			source.set_action ("!<Btn3Down>", transport_command, Current);			
+			source.set_action ("!Shift<Btn3Down>", name_command, Current);
 		end;
 	
 feature 

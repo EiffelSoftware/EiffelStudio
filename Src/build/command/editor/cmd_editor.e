@@ -366,6 +366,7 @@ feature {NONE}
 	separator, separator1: SEPARATOR;
 	label_sw, argument_sw: SCROLLED_W;
 	undoable_t: TOGGLE_B;
+	save_b: SAVE_BUTTON
 	
 feature 
 
@@ -402,6 +403,7 @@ feature
 			!!label1.make (L_abel1, form3);
 			!!label_sw.make (S_croll2, form3);
 			!!labels.make (I_con_box3, label_sw, Current);
+			!!save_b.make("cmd_save", form1)
 				-- *******************
 				-- Perform attachments
 				-- *******************
@@ -431,8 +433,10 @@ feature
 			form1.attach_bottom (inherit_hole, 0);
 			form1.attach_top (instance_hole, 0);
 			form1.attach_top (undoable_t, 0);
+			form1.attach_top (save_b, 0)
 			form1.attach_right_widget (close_b, instance_hole, 40);
 			form1.attach_right_widget (instance_hole, undoable_t, 10);
+			form1.attach_right_widget (undoable_t, save_b, 10)
 			form1.attach_top (close_b, 0);
 			form1.attach_left_widget (edit_hole, inherit_hole, 40);
 			form1.attach_right (close_b, 0);
@@ -464,10 +468,18 @@ feature
 			label_name.add_activate_action (Current, label_name);
 			edit_hole.add_button_press_action (2, Current, edit_hole);
 			undoable_t.add_activate_action (Current, undoable_t);
+			form1.set_action("Shift<Btn2Down>", Current, raise_arg)
+			form2.set_action("Shift<Btn2Down>", Current, raise_arg)
+			form3.set_action("Shift<Btn2Down>", Current, raise_arg)
 		end;
 
 	
 feature {NONE}
+
+	raise_arg: ANY is
+		once
+			!!Result
+		end
 
 	execute (argument: ANY) is
 			-- Execute routine. Used:
@@ -478,7 +490,9 @@ feature {NONE}
 			undo_cmd: CMD_UNDOABLE;
 			msg: STRING
 		do
-			if (argument = label_name) then
+			if (argument = raise_arg) then
+				main_panel.base.raise
+			elseif (argument = label_name) then
 				if	not label_name.text.empty then
 					add_label;
 					label_name.set_text ("");

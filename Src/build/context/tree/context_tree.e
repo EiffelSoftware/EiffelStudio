@@ -433,6 +433,8 @@ feature {NONE}
 				not (context_type = Void) and then
 				context_type.equivalent (context_catalog.perm_wind_type) then
 					new_context := context_type.create_context (a_composite_c);
+					-- arm the interface button
+					main_panel.t7.arm
 			elseif  
 				not (context_type = Void) and then
 				context_type.equivalent (context_catalog.temp_wind_type) then

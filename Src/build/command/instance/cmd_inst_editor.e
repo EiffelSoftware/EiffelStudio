@@ -26,6 +26,7 @@ inherit
 		end;
 
 	WINDOWS	
+	COMMAND
 
 creation
 
@@ -161,7 +162,18 @@ feature
 			arguments.set_row_layout;
 			separator.set_single_line;
 			separator.set_horizontal (True);
+			form.set_action("Shift<Btn2Down", Current, raise_arg)
 		end;
 
+	raise_arg: ANY is
+		once
+			!!Result
+		end
 
+	execute (arg: ANY) is
+		do
+			if arg = raise_arg then
+				main_panel.base.raise
+			end
+		end
 end

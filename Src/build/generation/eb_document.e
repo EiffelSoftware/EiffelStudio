@@ -88,7 +88,7 @@ feature
 			unix_command.append (new_template_file_name);
 
 			system (unix_command);
-			if return_code /= 0 then
+			if return_code < 0 then
 				!!msg.make (0);
 				msg.append ("System call failed%N");
 				msg.append ("%NCould not update ");

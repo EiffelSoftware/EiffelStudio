@@ -78,3 +78,37 @@ EIF_POINTER f;
 	XtSetArg (wargs[n], XmNfontList, (XmFontList) f); n++;
 	XtSetValues ((Widget) w, wargs, n);
 }
+
+/*
+ * Text character position within a scrolled text area
+ */
+EIF_INTEGER x_pos (widget, cursor_position, text_x, text_y)
+Widget widget;
+int text_x, text_y;
+XmTextPosition cursor_position;
+{
+    Position x0, y0;
+
+    XmTextPosToXY (widget, cursor_position, &x0, &y0);
+    return (EIF_INTEGER) x0 + text_x;
+}
+
+EIF_INTEGER y_pos (widget, cursor_position, text_x, text_y)
+Widget widget;
+Position text_x, text_y;
+XmTextPosition cursor_position;
+{
+    Position x0, y0;
+
+    XmTextPosToXY (widget, cursor_position, &x0, &y0);
+    return (EIF_INTEGER) y0 + text_y;
+}
+
+EIF_INTEGER cur_pos (widget, cursor_x, cursor_y)
+Widget widget;
+Position cursor_x, cursor_y;
+{
+    return (EIF_INTEGER) XmTextXYToPos (widget, cursor_x, cursor_y);
+}
+
+

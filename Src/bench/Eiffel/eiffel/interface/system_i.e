@@ -1253,10 +1253,11 @@ end;
 			cl_type: CLASS_TYPE;
 
 			root_feat: FEATURE_I;
-			static_type: INTEGER;
 			dtype: INTEGER;
-			feature_id: INTEGER;
 			has_argument: INTEGER;
+			rout_info: ROUT_INFO;
+			rcorigin, rcoffset: INTEGER;
+			rout_id: INTEGER
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("Updating melted.eif%N");
@@ -1270,17 +1271,21 @@ end;
 				-- Update the root class info
 			a_class := root_class.compiled_class;
 			dtype := a_class.types.first.type_id - 1;
-			static_type := a_class.types.first.id - 1;
 			if creation_name /= Void then
 				root_feat := a_class.feature_table.item (creation_name);
-				feature_id := root_feat.feature_id;
 				if root_feat.has_arguments then
 					has_argument := 1;
 				end;
+				rout_id := root_feat.rout_id_set.first;
+				rout_info := System.rout_info_table.item (rout_id);
+				rcorigin := rout_info.origin;
+				rcoffset := rout_info.offset
+			else
+				rcorigin := -1
 			end;
-			write_int (file_pointer, static_type);
+			write_int (file_pointer, rcorigin);
 			write_int (file_pointer, dtype);
-			write_int (file_pointer, feature_id);
+			write_int (file_pointer, rcoffset);
 			write_int (file_pointer, has_argument);
 
 				-- Write first the number of class types now available
@@ -3162,14 +3167,16 @@ feature -- Main file generation
 			final_mode: BOOLEAN;
 			cl_type: CLASS_TYPE;
 
-			static_type: INTEGER;
-			feature_id: INTEGER;
 			has_argument: BOOLEAN;
 			i, nb: INTEGER;
 			Initialization_file: INDENT_FILE
 
 			rout_id: INTEGER;
-			rout_table: ROUT_TABLE
+			rout_table: ROUT_TABLE;
+
+			rout_info: ROUT_INFO;
+			rcorigin: INTEGER;
+			rcoffset: INTEGER
 		do
 
 			final_mode := byte_context.final_mode;
@@ -3179,13 +3186,17 @@ feature -- Main file generation
 			cl_type := root_cl.types.first;
 			dtype := cl_type.type_id - 1;
 
-			static_type := cl_type.id - 1;
 			if creation_name /= Void then
 				root_feat := root_cl.feature_table.item (creation_name);
-				feature_id := root_feat.feature_id;
 				if root_feat.has_arguments then
 					has_argument := True;
 				end;
+				rout_id := root_feat.rout_id_set.first;
+				rout_info := System.rout_info_table.item (rout_id);
+				rcorigin := rout_info.origin;
+				rcoffset := rout_info.offset;
+			else
+				rcorigin := -1
 			end;
 
 			Initialization_file.open_write;
@@ -3195,12 +3206,12 @@ feature -- Main file generation
 				%#include %"struct.h%"%N%N");
 
 			if not final_mode then
-				Initialization_file.putstring ("int rcst = ");
-				Initialization_file.putint (static_type);
+				Initialization_file.putstring ("int32 rcorigin = ");
+				Initialization_file.putint (rcorigin);
 				Initialization_file.putstring (";%Nint rcdt = ");
 				Initialization_file.putint (dtype);
-				Initialization_file.putstring (";%Nint32 rcfid = ");
-				Initialization_file.putint (feature_id);
+				Initialization_file.putstring (";%Nint32 rcoffset = ");
+				Initialization_file.putint (rcoffset);
 				Initialization_file.putstring (";%Nint rcarg = ");
 				if has_argument then
 					Initialization_file.putstring ("1");
@@ -3219,7 +3230,6 @@ feature -- Main file generation
 
 			if 	creation_name /= Void then
 				if final_mode then
-					rout_id := root_feat.rout_id_set.first;
 					rout_table ?= Eiffel_table.item_id (rout_id);
 					c_name := rout_table.feature_name (cl_type.id);
 					Initialization_file.putstring ("%Textern void ");
@@ -3254,11 +3264,11 @@ feature -- Main file generation
 					Initialization_file.putstring (");%N");
 				end;
 			else
-				Initialization_file.putstring ("%Tif (rcfid)%N%
+				Initialization_file.putstring ("%Tif (rcorigin != -1)%N%
 					%%T%Tif (rcarg)%N%
-					%%T%T%T((void (*)()) RTWF(rcst, rcfid, rcdt))(root_obj, argarr(argc, argv));%N%
+					%%T%T%T((void (*)()) RTWPF(rcorigin, rcoffset, rcdt))(root_obj, argarr(argc, argv));%N%
 					%%T%Telse%N%
-					%%T%T%T((void (*)()) RTWF(rcst, rcfid, rcdt))(root_obj);%N");
+					%%T%T%T((void (*)()) RTWPF(rcorigin, rcoffset, rcdt))(root_obj);%N");
 			end;
 
 			Initialization_file.putstring ("}%N");
@@ -3718,11 +3728,13 @@ feature -- Debug purpose
 			end;
 		end;
 
-feature {NONE} -- External features
+feature {SYSTEM_I} -- Implementation
 
 	private_freeze: BOOLEAN;
 			-- Freeze set if externals or new derivation
 			-- of special is generated
+
+feature {NONE} -- External features
 
 	write_int (f: POINTER; v: INTEGER) is
 		external

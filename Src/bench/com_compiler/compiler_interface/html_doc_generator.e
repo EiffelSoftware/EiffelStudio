@@ -7,59 +7,89 @@ class
 	HTML_DOC_GENERATOR
 	
 inherit
-	CEIFFEL_HTMLDOC_GENERATOR_COCLASS_IMP
+	IEIFFEL_HTMLDOC_GENERATOR_IMPL_STUB
 		redefine
-			make,
+			is_corrupted,
+			is_loaded,
+			is_incompatible,
 			add_excluded_cluster,
 			remove_excluded_cluster,
-			generate
+			generate,
+			add_status_callback,
+			remove_status_callback
 		end
 		
 	SHARED_EIFFEL_PROJECT
 		export {NONE}
 			all
 		end
-
+	
+	EIFFEL_ENV
+		export
+			{NONE} all
+		end
+		
+	SHARED_PROJECT_PROPERTIES
+		export
+			{NONE} all
+		end
+		
 create 
 	make
 	
 feature {NONE} -- Implementation 
 
-	make is
+	make  is
 			-- create and instance
+		local
+			--resource: RESOURCE_STRUCTURE
+			--kernel: EB_KERNEL
+			--eifgen_init: INIT_SERVERS
+			--new_resources: TTY_RESOURCES
 		do
-			Precursor
+			create output.make	
+			Eiffel_project.set_degree_output (output)
 			create excluded_clusters.make
+
+			-- initialize the resources needed to create the HTML docs
+			--create kernel.make
+			--create eifgen_init.make
+			--initialize_resources (System_general, Eiffel_preferences)
+			--create pref_strs
+			--create new_resources.initialize
 		end
-		
+
 
 feature -- Access
-
-	project_file: PROJECT_EIFFEL_FILE
-			-- eiffel project file to generate the project docs from
-			
+	
 	excluded_clusters: LINKED_LIST[STRING]
 			-- sorted list of excluded clusters
-			
-feature -- Measurement
 
 feature -- Status report
 
-	is_incompatible: BOOLEAN is
-			-- is the project incompatible with current compiler
-		require else
-			project_loaded: project_file /= Void
+	is_loaded: BOOLEAN is
+			-- is the project loaded?
 		do
-			Result := project_file.is_incompatible
+			if Eiffel_project /= Void then
+				Result := True
+			end
+		end
+
+	is_incompatible: BOOLEAN is
+			-- is the project incompatible with current compiler?
+		do
+			if Eiffel_project /= Void then
+				Result := Eiffel_project.is_incompatible	
+			end
 		end
 		
 	is_corrupted: BOOLEAN is
-			-- is the project corrupted
-		require else
-			project_loaded: project_file /= Void
+			-- is the project corrupted?
 		do
-			Result := project_file.is_corrupted
-		end
+			if Eiffel_project /= Void then
+				Result := Eiffel_project.is_corrupted
+			end
+		end		
 
 feature -- Status setting
 
@@ -76,27 +106,8 @@ feature -- Status setting
 				a_list.forth
 			end
 		end
-		
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
 
 feature -- Basic operations
-
-
 
 	add_excluded_cluster (a_cluster_name: STRING) is
 			-- add a 'a_cluster_name' to the list of excluded clusters
@@ -108,7 +119,6 @@ feature -- Basic operations
 			--excluded_clusters.object_comparison
 			if not excluded_clusters.has (a_cluster_name) then
 				excluded_clusters.extend (a_cluster_name)
-				io.putstring ("cluster: " + a_cluster_name + " added%N")
 			end
 		ensure then
 		end
@@ -136,54 +146,103 @@ feature -- Basic operations
 	generate (generation_path: STRING) is
 			-- generate the HTML documentation into 'generation_path'
 		local
-			doc_generator: DOCUMENTATION
-			output: DEGREE_OUTPUT
+			du: DOCUMENTATION_UNIVERSE
 			retried: BOOLEAN
 		do
 			if not retried then
 				create doc_generator.make
+				create du.make_all
 				doc_generator.set_filter ("html-stylesheet")
 				doc_generator.set_directory (create {DIRECTORY}.make (generation_path))
 				doc_generator.set_all_universe
 				add_default_excluded_clusters
-				io.putstring ("number of cluster to be excluded : ")
-				io.putint (excluded_clusters.count)
-				doc_generator.set_excluded_indexing_items (excluded_clusters)
 				doc_generator.set_cluster_formats (true, false)
 				doc_generator.set_system_formats (true, true, true)
 				doc_generator.set_class_formats (false, false, false, true, false, false)
-				create output
-				doc_generator.generate (output)
+				
+				-- set the excluded clusters
+				from
+					excluded_clusters.start
+				until
+					excluded_clusters.after
+				loop
+					du.exclude_cluster (doc_generator.Universe.cluster_of_name (excluded_clusters.item), true)
+					excluded_clusters.forth
+				end
+				doc_generator.set_universe (du)
+				
+				doc_generator.set_excluded_indexing_items (create {LINKED_LIST[STRING]}.make)
+				
+				set_html_document_generator (Current)
+				main_window.process_generate_message
+			else
+				output.put_string ("Unable to complete generation of documentation")
 			end
 		rescue
-			retried := true
-			retry
+			retried := True
+			Retry
 		end
+		
+	generate_docs is
+			-- generate the documentation
+		do
+			-- generate the output
+			doc_generator.generate (output)	
+		end
+		
+		
+	add_status_callback (interface: IEIFFEL_HTMLDOC_EVENTS_INTERFACE) is
+			-- add an interface to the list of call backs
+		do
+			output.add_callback (interface)			
+		end
+		
+	remove_status_callback (interface: IEIFFEL_HTMLDOC_EVENTS_INTERFACE) is
+			-- remove an interface from the list of call backs
+		do
+			output.remove_callback (interface)
+		end
+		
+		
 		
 feature {NONE} -- Basic Operations 
 
 	add_default_excluded_clusters is
-			-- add the library and assembly clusters to the list of excluded clusters
+			-- remove the default set of clusters - these include those that are external (precompiled or assemblies)
+		local
+			clusters: ARRAYED_LIST [CLUSTER_I]
+			cluster: CLUSTER_I
+			assembly: ASSEMBLY_I
 		do
-			
+			clusters := Eiffel_universe.clusters
+			from 
+				clusters.start
+			until
+				clusters.after
+			loop
+				cluster := clusters.item
+				if cluster.is_library then
+					add_excluded_cluster (cluster.cluster_name)
+				else
+					assembly ?= cluster
+					if assembly /= Void then
+						add_excluded_cluster (cluster.cluster_name)	
+					end
+				end
+				clusters.forth
+			end
 		end
-		
-feature -- Obsolete
-
-	load_project (filename: STRING): BOOLEAN is
-			-- load the project file. returns true if successful
-		do
-			create project_file.make (filename)
-			Result := project_file.error
-		end
-
-feature -- Inapplicable
 
 feature {NONE} -- Implementation
 
-	
-
+	output: COM_HTML_DOC_DEGREE_OUTPUT
+			-- generation output
+			
+	doc_generator: DOCUMENTATION
+			-- html documentation generator
+			
 invariant
-	excluded_clusters_exists: excluded_clusters /= Void
+	non_void_excluded_clusters: excluded_clusters /= Void
+	non_void_output: output /= Void
 
 end -- class HTML_DOC_GENERATOR

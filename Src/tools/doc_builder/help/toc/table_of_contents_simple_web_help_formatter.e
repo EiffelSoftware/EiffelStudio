@@ -41,13 +41,13 @@ feature -- Processing
 			
 				-- Add parent links
 			if a_node.has_parent then
-				Result.append ("<tr><td>You are in:<br><br></td></tr>")
+				Result.append ("<tr><td>&nbsp;You are in:<br><br></td></tr>")
 				Result.append (parent_hierarchy_text (a_node))
 				Result.append ("<tr><td>" + spacer_html (number_of_parents (a_node)))
 				Result.append ("<a href=%"" + a_node.parent.id.out + ".html" + "%"><img src=%"../folder_open.gif%" align=%"center%"></a>&nbsp;" + a_node.title)
 --				Result.append ("<a href=%"" + a_node.id.out + ".html" + "%">&nbsp;" + l_title "</a></td></tr>%N")				
 				Result.append ("<tr><td><br></td></tr>")
-				Result.append ("<tr><td>Topics:<br><br></td></tr>")
+				Result.append ("<tr><td>&nbsp;Topics:<br><br></td></tr>")
 			end
 
 				-- Child links
@@ -112,11 +112,7 @@ feature {NONE} -- Implementation
 			node_has_parent: a_node.has_parent
 		local
 			l_parent: like a_node
-			l_title,
-			l_url,
-			l_name,
-			l_anchor: STRING
-			l_util: UTILITY_FUNCTIONS
+			l_title: STRING			
 		do
 			create Result.make_empty
 			l_parent := a_node.parent

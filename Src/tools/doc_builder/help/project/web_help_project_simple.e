@@ -11,19 +11,15 @@ inherit
 	WEB_HELP_PROJECT
 		redefine
 			create_toc_frame,
+			create_filter_frame,
 			full_filter_text
 		end
 
 create
 	make
 
-feature -- Access
+feature -- Commands
 
-	full_toc_text: STRING is
-			-- Full TOC text
-		do			
-		end
-		
 	create_toc_frame is
 			-- Create left side navigation (toc)
 		do				
@@ -31,7 +27,63 @@ feature -- Access
 			if toc.has_child then							
 				create_node_sub_toc (toc)				
 			end
-		end			
+		end	
+
+	create_filter_frame is
+			-- Create left side navigation (filter)
+		local
+			l_file,
+			l_dest_file: PLAIN_TEXT_FILE			
+			l_text: STRING
+			l_filename: FILE_NAME
+			l_util: UTILITY_FUNCTIONS
+			l_dir: DIRECTORY
+			l_formatter: TABLE_OF_CONTENTS_WEB_HELP_TOC_HASH_BUILDER
+		do				
+			create l_formatter.make (toc)			
+		
+				-- Open TOC template and fill with project toc data
+			create l_util
+			create l_file.make_open_read_write (filter_template_file_name)
+			l_file.readstream (l_file.count)
+			l_text := l_file.last_string.twin
+			replace_token (l_text, html_subtoc_hash_token, l_formatter.text)
+			replace_token (l_text, html_filter_token, full_filter_text)		
+			replace_token (l_text, html_filter_search_token, search_text)
+			l_file.close
+			
+				-- Now create toc file based on toc data
+			create l_filename.make_from_string (shared_constants.application_constants.temporary_help_directory.string)
+			if shared_constants.application_constants.is_gui_mode then
+				if (create {PLAIN_TEXT_FILE}.make (toc.name)).exists then
+					l_filename.extend (l_util.file_no_extension (l_util.short_name (toc.name)))
+				else						
+					l_filename.extend (toc.name)	
+				end
+				create l_dir.make (l_filename.string)
+				if not l_dir.exists then
+					l_dir.create_dir
+				end
+				replace_token (l_text, html_toc_script_token, "../simple_toc.js")
+				replace_token (l_text, html_toc_style_token, "../toc.css")
+			else
+				replace_token (l_text, html_toc_script_token, "simple_toc.js")
+				replace_token (l_text, html_toc_style_token, "toc.css")
+			end
+			
+				-- And write to it and close
+			l_filename.extend (l_util.short_name (filter_template_file_name))
+			create l_dest_file.make_create_read_write (l_filename.string)
+			l_dest_file.put_string (l_text)
+			l_dest_file.close
+		end
+
+feature -- Access
+
+	full_toc_text: STRING is
+			-- Full TOC text
+		do			
+		end		
 		
 	full_filter_text: STRING is
 			-- Create filter HTML for client-side filter processing
@@ -48,6 +100,7 @@ feature -- Access
 			if shared_constants.application_constants.is_gui_mode then
 				Result.append ("Show documentation for:<br>")
 				if shared_project.preferences.generate_dhtml_filter then
+					create l_util
 					l_filters := shared_project.filter_manager.filters
 					Result.append ("<select name=%"filterMenu%" onChange=%"swapTOC (this)%">")
 					from
@@ -236,6 +289,17 @@ feature {NONE} -- Implementation
 			Result.extend ("go_up.gif")
 			Result.extend ("sync_button.gif")			
 			Result.extend ("spacer.gif")
+		end
+
+	root_resource_files: ARRAYED_LIST [STRING] is
+			-- List of root level resource file to copy with project
+		once		
+			create Result.make (6)
+			Result.extend ("toc.css")
+			Result.extend ("simple_toc.js")
+			Result.extend ("header.html")
+			Result.extend ("header_mainarea.jpg")
+			Result.extend ("header.css")	
 		end
 		
 end -- class WEB_HELP_PROJECT_SIMPLE

@@ -563,13 +563,8 @@ feature {NONE} -- Sorting
 				if a_node.url_is_file then
 					
 						-- First determine if node needs filterng out
-					l_url := a_node.url
-					
---					l_doc := manager.shared_document_manager.document_by_name (l_url)
---					if l_doc = Void then
-						create l_doc.make_from_file (create {PLAIN_TEXT_FILE}.make (l_url))
---						manager.shared_document_manager.add_document (l_doc)
---					end
+					l_url := a_node.url					
+					create l_doc.make_from_file (create {PLAIN_TEXT_FILE}.make (l_url))
 					
 					if is_code_document (l_doc) then
 						Result := not is_required_library_document (l_url)

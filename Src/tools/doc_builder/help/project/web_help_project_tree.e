@@ -63,4 +63,15 @@ feature {NONE} -- Implementation
 			Result.extend ("sync_button.gif")
 		end	
 		
+	root_resource_files: ARRAYED_LIST [STRING] is
+			-- List of root level resource file to copy with project
+		once		
+			create Result.make (6)
+			Result.extend ("toc.css")
+			Result.extend ("toc.js")	
+			Result.extend ("header.html")
+			Result.extend ("header_mainarea.jpg")
+			Result.extend ("header.css")	
+		end	
+		
 end -- class WEB_HELP_PROJECT_TREE

@@ -13,7 +13,7 @@ inherit
 	SHARED_APPLICATION_EXECUTION;
 	PROJECT_CONTEXT;
 	COMMAND_W;
-	LICENSED_COMMAND
+	BENCH_LICENSED_COMMAND
 		rename
 			parent_window as Project_tool
 		end;

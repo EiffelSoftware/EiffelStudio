@@ -21,13 +21,15 @@ inherit
 			interface,
 			insert_text,
 			initialize,
-			create_change_actions
+			create_change_actions,
+			dispose
 		end
 		
 	EV_FONTABLE_IMP
 		redefine
 			interface,
-			visual_widget
+			visual_widget,
+			dispose
 		end
 
 create
@@ -44,6 +46,7 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gtk_widget_show (text_view)
 			feature {EV_GTK_EXTERNALS}.gtk_container_add (c_object, text_view)
 			text_buffer := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_view_get_buffer (text_view)
+			feature {EV_GTK_EXTERNALS}.object_ref (text_buffer)
 			feature {EV_GTK_EXTERNALS}.gtk_widget_set_usize (text_view, 1, 1)
 				-- This is needed so the text doesn't influence the size of the whole widget itself.
 		end
@@ -489,6 +492,13 @@ feature -- Assertions
 		end
 		
 feature {NONE} -- Implementation
+
+	dispose is
+			-- Clean up `Current'
+		do
+			Precursor {EV_TEXT_COMPONENT_IMP}
+			feature {EV_GTK_EXTERNALS}.object_unref (text_buffer)
+		end
 
 	on_change_actions is
 			-- The text within the widget has changed.

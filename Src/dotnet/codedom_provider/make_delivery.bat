@@ -18,7 +18,7 @@ mkdir delivery\system32
 
 copy build\ISE.Base\bin\Release\ISE.Base.dll delivery\bin\
 copy build\ISE.Base\bin\Release\libISE.Base.dll delivery\system32\
+copy build\ISE.EiffelVision2\bin\Release\ISE.EiffelVision2.dll delivery\bin\
+copy build\ISE.EiffelVision2\bin\Release\libISE.EiffelVision2.dll delivery\system32\
 copy build\ISE.CacheBrowser\bin\Release\ISE.CacheBrowser.dll delivery\bin\
-copy build\ISE.CacheBrowser\bin\Release\libISE.CacheBrowser.dll delivery\system32\
 copy build\ISE.EiffelCodeDomProvider\bin\Release\ISE.EiffelCodeDomProvider.dll delivery\bin\
-copy build\ISE.EiffelCodeDomProvider\bin\Release\libISE.EiffelCodeDomProvider.dll delivery\system32\

@@ -728,9 +728,12 @@ rt_public void failure(void)
 		 * a local variable since all Eiffel calls have been executed.
 		 * Doing so, enables a safe `reclaim' that will not traverse `loc_set'
 		 * objects.
+		 * We then create an empty `loc_set' as most of the run-time macros for stack
+		 * management expect `loc_set' to have at least one chunk.
 		 */
 #ifdef ISE_GC
 	st_reset (&loc_set);
+	st_alloc (&loc_set, STACK_CHUNK);
 #endif
 
 	trapsig(emergency);					/* Weird signals are trapped */

@@ -1,6 +1,6 @@
 <document title="MANUAL IDENTIFICATION AND COPYRIGHT" output="studio">
 	<meta_data>
-		<help/>
+		<help></help>
 	</meta_data>
 	<paragraph>
 		<heading>
@@ -11,13 +11,13 @@
 			An Eiffel Tutorial,  Eiffel Software  Technical Report TR-EI-66/TU.  
 		</paragraph>
 		<paragraph>Publication history</paragraph>
-		<paragraph>First published July 2001.  Corresponds to release 5.  0 of the  Eiffel Software  Eiffel environment.  </paragraph>
+		<paragraph>First published July 2001.  Corresponds to release 5.0 of the EiffelStudio environment.  </paragraph>
 		<paragraph>Author</paragraph>
 		<paragraph>Software credits</paragraph>
 		<paragraph>See acknowledgments in book 
 			<span>
 				<link>
-					<url>http://www.eiffel.com/doc/page.xml</url><anchor_name>etl</anchor_name>
+					<url>http://www.eiffel.com/doc/page.html</url><anchor_name>etl</anchor_name>
 					<label>Eiffel: The Language</label>
 				</link>
 			</span>.  
@@ -25,13 +25,13 @@
 		<paragraph>Cover design</paragraph>
 		<paragraph>Rich Ayling.  </paragraph>
 		<paragraph>Copyright notice and proprietary information</paragraph>
-		<paragraph>Copyright Interactive Software Engineering Inc.  ( Eiffel Software ), 2001.  May not be reproduced in any form (including electronic storage) without the written permission of  Eiffel Software .  "Eiffel Power" and the Eiffel Power logo are trademarks of  Eiffel Software .  </paragraph>
+		<paragraph>Copyright Interactive Software Engineering Inc.  (Eiffel Software), 2001.  May not be reproduced in any form (including electronic storage) without the written permission of  Eiffel Software .  "Eiffel Power" and the Eiffel Power logo are trademarks of  Eiffel Software .  </paragraph>
 		<paragraph>All uses of the product documented here are subject to the terms and conditions of the  Eiffel Software  Eiffel user license.  Any other use or duplication is a violation of the applicable laws on copyright, trade secrets and intellectual property.  </paragraph>
 		<paragraph>Special duplication permission for educational institutions</paragraph>
 		<paragraph>Degree-granting educational institutions using  Eiffel Software  Eiffel for teaching purposes as part of the 
 			<span>
 				<link>
-					<url> http://www.eiffel.com/educators/resources.xml</url>
+					<url> http://www.eiffel.com/educators/resources.html</url>
 					<label>Eiffel University Partnership Program</label>
 				</link>
 			</span> may be permitted under certain conditions to copy specific parts of this book.  Contact  Eiffel Software  for details.  

@@ -1051,6 +1051,8 @@ feature {NONE} -- Implementation
 									process.kill
 								end
 							end
+						else
+							sort_assemblies
 						end
 					else
 						sort_assemblies
@@ -1077,6 +1079,10 @@ feature {NONE} -- Implementation
 							if process /= Void then
 								process.kill
 							end
+						end
+					else
+						if imported_assemblies /= Void and then imported_assemblies.get_count > 0 then
+							sort_assemblies
 						end
 					end
 				end

@@ -217,6 +217,8 @@ feature -- Retrieval
 			error: ISE_REFLECTION_ERRORINFO
 			retried: BOOLEAN
 			white_space_handling: SYSTEM_XML_WHITESPACEHANDLING
+			an_eiffel_assembly: ISE_REFLECTION_EIFFELASSEMBLY
+			dir: SYSTEM_IO_DIRECTORY
 		do
 			if not retried then
 				create Result.make
@@ -225,43 +227,69 @@ feature -- Retrieval
 				index_path := reflection_support.Eiffel_delivery_path
 				index_path := index_path.Concat_String_String_String_String (index_path, reflection_support.Assemblies_Folder_Path, Index_Filename, Xml_Extension)
 
-				create xml_reader.make_xmltextreader_10 (index_path)
-				xml_reader.set_Whitespace_Handling (white_space_handling.none)
-				xml_reader.Read_Start_Element_String (Assemblies_Element)
-				last_read_successful := True
-				from					
-				until
-					not xml_reader.get_Name.Equals_String (Assembly_Filename_Element) 
-				loop
-					assembly_path := xml_reader.read_element_string_string (Assembly_Filename_Element)	
-					assembly_path := assembly_path.replace (reflection_support.eiffel_key, reflection_support.Eiffel_delivery_path)
-					if support.Has_Read_Lock (assembly_path) then
-						support.create_error_from_info (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
-						last_error := support.get_last_error
-						last_read_successful := False
-					else
-						if support.Has_Write_Lock (assembly_path) then
-							support.create_error_from_info (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
-							last_error := support.get_last_error
-							last_read_successful := False		
-						else
-							read_lock := file.Create_ (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))	
-							if read_lock = Void then
-								support.create_error_from_info (Read_lock_creation_failed_code, error_messages.Read_lock_creation_failed, error_messages.Read_lock_creation_failed_message)
-						 		last_error := support.get_last_error
+				if file.exists (index_path) then
+					create xml_reader.make_xmltextreader_10 (index_path)
+					xml_reader.set_Whitespace_Handling (white_space_handling.none)
+					xml_reader.Read_Start_Element_String (Assemblies_Element)
+					last_read_successful := True
+					from					
+					until
+						not xml_reader.get_Name.Equals_String (Assembly_Filename_Element) 
+					loop
+						assembly_path := xml_reader.read_element_string_string (Assembly_Filename_Element)	
+						assembly_path := assembly_path.replace (reflection_support.eiffel_key, reflection_support.Eiffel_delivery_path)
+						if dir.exists (assembly_path) then
+							if support.Has_Read_Lock (assembly_path) then
+								support.create_error_from_info (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
+								last_error := support.get_last_error
 								last_read_successful := False
 							else
-								read_lock.Close
-								assembly_xml_filename := assembly_path.Concat_String_String_String_String (assembly_path, "\", Dtd_Assembly_Filename, Xml_Extension)
-								assembly_added := Result.Add (eiffel_assembly (assembly_xml_filename))
-								last_read_successful := True
-								file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
+								if support.Has_Write_Lock (assembly_path) then
+									support.create_error_from_info (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
+									last_error := support.get_last_error
+									last_read_successful := False		
+								else
+									read_lock := file.Create_ (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))	
+									if read_lock = Void then
+										support.create_error_from_info (Read_lock_creation_failed_code, error_messages.Read_lock_creation_failed, error_messages.Read_lock_creation_failed_message)
+										last_error := support.get_last_error
+										last_read_successful := False
+									else
+										read_lock.Close
+										assembly_xml_filename := assembly_path.Concat_String_String_String_String (assembly_path, "\", Dtd_Assembly_Filename, Xml_Extension)
+										if file.exists (assembly_xml_filename) then
+											an_eiffel_assembly := eiffel_assembly (assembly_xml_filename)
+											if an_eiffel_assembly /= Void then
+												assembly_added := Result.Add (an_eiffel_assembly)
+												last_read_successful := True
+											else
+												support.create_error (error_messages.No_such_assembly, error_messages.No_such_assembly_message)
+												last_error := support.get_last_error
+												last_read_successful := False
+											end
+										else
+											support.create_error (error_messages.No_such_assembly, error_messages.No_such_assembly_message)
+											last_error := support.get_last_error
+											last_read_successful := False										
+										end
+										file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
+									end
+								end
 							end
+						else
+							support.create_error (error_messages.No_such_assembly, error_messages.No_such_assembly_message)
+							last_error := support.get_last_error
+							last_read_successful := False
 						end
 					end
+					xml_reader.Read_End_Element
+					xml_reader.Close
+				else
+					Result := Void 
+					support.create_error (error_messages.No_index, error_messages.No_index_message)
+					last_error := support.get_last_error
+					last_read_successful := False
 				end
-				xml_reader.Read_End_Element
-				xml_reader.Close
 			else
 				Result := Void
 				support.create_error (error_messages.No_assembly, error_messages.No_assembly_message)
@@ -294,6 +322,7 @@ feature -- Retrieval
 			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
 			error: ISE_REFLECTION_ERRORINFO
 			retried: BOOLEAN
+			dir: SYSTEM_IO_DIRECTORY 
 		do
 			if not retried then
 				current_history.search_for_assembly (a_descriptor)
@@ -304,30 +333,50 @@ feature -- Retrieval
 					reflection_support.Make
 					assembly_path := reflection_support.eiffel_delivery_path
 					assembly_path := assembly_path.concat_string_string (assembly_path, reflection_support.Assembly_Folder_Path_From_Info (a_descriptor))
-					if support.Has_Read_Lock (assembly_path) then
-						support.create_error_from_info (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
-						last_error := support.get_last_error
-						last_read_successful := False
-					else
-						if support.Has_Write_Lock (assembly_path) then
-							support.create_error_from_info (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
+					if dir.exists (assembly_path) then				
+						if support.Has_Read_Lock (assembly_path) then
+							support.create_error_from_info (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
 							last_error := support.get_last_error
-							last_read_successful := False		
+							last_read_successful := False
 						else
-							read_lock := file.Create_ (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))	
-							if read_lock = Void then
-								support.create_error_from_info (Read_lock_creation_failed_code, error_messages.Read_lock_creation_failed, error_messages.Read_lock_creation_failed_message)
+							if support.Has_Write_Lock (assembly_path) then
+								support.create_error_from_info (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
 								last_error := support.get_last_error
-								last_read_successful := False					
+								last_read_successful := False		
 							else
-								read_lock.Close					
-								assembly_xml_filename := assembly_path.Concat_String_String_String_String (assembly_path, "\", Dtd_Assembly_Filename, Xml_Extension)
-								Result := eiffel_assembly (assembly_xml_filename)
-								current_history.add_assembly (a_descriptor, Result)
-								last_read_successful := True
-								file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
+								read_lock := file.Create_ (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))	
+								if read_lock = Void then
+									support.create_error_from_info (Read_lock_creation_failed_code, error_messages.Read_lock_creation_failed, error_messages.Read_lock_creation_failed_message)
+									last_error := support.get_last_error
+									last_read_successful := False					
+								else
+									read_lock.Close					
+									assembly_xml_filename := assembly_path.Concat_String_String_String_String (assembly_path, "\", Dtd_Assembly_Filename, Xml_Extension)
+									if file.exists (assembly_xml_filename) then
+										Result := eiffel_assembly (assembly_xml_filename)
+										if Result /= Void then
+											current_history.add_assembly (a_descriptor, Result)
+											last_read_successful := True
+										else
+											support.create_error (error_messages.No_such_assembly, error_messages.No_such_assembly_message)
+											last_error := support.get_last_error
+											last_read_successful := False
+										end
+									else
+										Result := Void
+										support.create_error (error_messages.No_such_assembly, error_messages.No_such_assembly_message)
+										last_error := support.get_last_error
+										last_read_successful := False									
+									end
+									file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
+								end
 							end
 						end
+					else
+						Result := Void
+						support.create_error (error_messages.No_such_assembly, error_messages.No_such_assembly_message)
+						last_error := support.get_last_error
+						last_read_successful := False					
 					end
 				end
 			else
@@ -364,6 +413,7 @@ feature -- Retrieval
 			reflection_support: ISE_REFLECTION_REFLECTIONSUPPORT
 			error: ISE_REFLECTION_ERRORINFO
 			retried: BOOLEAN
+			dir: SYSTEM_IO_DIRECTORY
 		do
 			if not retried then
 				current_history.search_for_type (a_type)
@@ -380,33 +430,47 @@ feature -- Retrieval
 						create formatter.make
 						assembly_path := reflection_support.Eiffel_delivery_path
 						assembly_path := assembly_path.concat_string_string (assembly_path, reflection_support.Assembly_Folder_Path_From_Info (a_descriptor))
-						if support.Has_Read_Lock (assembly_path) then
-							support.create_error_from_info (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
+						if dir.exists (assembly_path) then
+							if support.Has_Read_Lock (assembly_path) then
+								support.create_error_from_info (Has_read_lock_code, error_messages.Has_read_lock, error_messages.Has_read_lock_message)
+								last_error := support.get_last_error
+								last_read_successful := False
+							else
+								if support.Has_Write_Lock (assembly_path) then
+									support.create_error_from_info (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
+									last_error := support.get_last_error
+									last_read_successful := False		
+								else
+									read_lock := file.Create_ (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
+									if read_lock = Void then
+										support.create_error_from_info (Read_lock_creation_failed_code, error_messages.Read_lock_creation_failed, error_messages.Read_lock_creation_failed_message)
+										last_error := support.get_last_error
+										last_read_successful := False
+									else
+										read_lock.Close
+										xml_type_filename := assembly_path.Concat_String_String_String_String (assembly_path, "\", formatter.Format_Type_Name (a_type.get_Full_Name).To_Lower, Xml_Extension)
+										if file.exists (xml_type_filename) then
+											Result := eiffel_type (xml_type_filename)
+											if Result /= Void then
+												current_history.add_type (a_type, Result)
+											end
+											last_read_successful := True
+										else
+											Result := Void
+											support.create_error (error_messages.No_such_type, error_messages.No_such_type_message)
+											last_error := support.get_last_error
+											last_read_successful := False										
+										end
+										file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
+									end
+								end
+							end	
+						else
+							Result := Void
+							support.create_error (error_messages.No_such_type, error_messages.No_such_type_message)
 							last_error := support.get_last_error
 							last_read_successful := False
-						else
-							if support.Has_Write_Lock (assembly_path) then
-								support.create_error_from_info (Has_write_lock_code, error_messages.Has_write_lock, error_messages.Has_write_lock_message)
-								last_error := support.get_last_error
-								last_read_successful := False		
-							else
-								read_lock := file.Create_ (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
-								if read_lock = Void then
-									support.create_error_from_info (Read_lock_creation_failed_code, error_messages.Read_lock_creation_failed, error_messages.Read_lock_creation_failed_message)
-									last_error := support.get_last_error
-									last_read_successful := False
-								else
-									read_lock.Close
-									xml_type_filename := assembly_path.Concat_String_String_String_String (assembly_path, "\", formatter.Format_Type_Name (a_type.get_Full_Name).To_Lower, Xml_Extension)
-									Result := eiffel_type (xml_type_filename)
-									if Result /= Void then
-										current_history.add_type (a_type, Result)
-									end
-									last_read_successful := True
-									file.Delete (assembly_path.Concat_String_String_String (assembly_path, "\", support.Read_Lock_Filename))
-								end
-							end
-						end	
+						end
 					end
 				end
 			else
@@ -478,10 +542,15 @@ feature {NONE} -- Implementation
 			non_void_filename: xml_filename /= Void
 			not_emtpy_filename: xml_filename.get_length > 0
 		local
+			file: SYSTEM_IO_FILE
 			retried: BOOLEAN
 		do
 			if not retried then
-				Result := support.Eiffel_Assembly_From_Xml (xml_filename)
+				if file.exists (xml_filename) then
+					Result := support.Eiffel_Assembly_From_Xml (xml_filename)
+				else
+					Result := Void
+				end
 			else
 				Result := Void
 			end	
@@ -499,9 +568,15 @@ feature {NONE} -- Implementation
 			not_emtpy_filename: xml_filename.get_length > 0
 		local
 			retried: BOOLEAN
+			file: SYSTEM_IO_FILE
 		do
 			if not retried then
-				Result := support.Eiffel_Class_From_Xml (xml_filename)
+				if file.exists (xml_filename) then
+					Result := support.Eiffel_Class_From_Xml (xml_filename)
+				else
+					create Result.make1
+					Result.make				
+				end
 			else
 				create Result.make1
 				Result.make

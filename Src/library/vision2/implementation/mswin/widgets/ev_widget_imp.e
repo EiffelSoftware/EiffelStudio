@@ -140,7 +140,7 @@ feature -- Access
 			Result ?= top_level_window_imp.interface
 		end
 
-	default_parent: EV_INTERNAL_SILLY_WINDOW_IMP is
+	Default_parent: EV_INTERNAL_SILLY_WINDOW_IMP is
 			-- A default parent for creation of `Current'.
 		once
 			create Result.make_top ("Eiffel Vision default parent window")
@@ -148,13 +148,13 @@ feature -- Access
 			valid_parent: Result /= Void
 		end
 
-	focus_on_widget: CELL [EV_WIDGET_IMP] is
+	Focus_on_widget: CELL [EV_WIDGET_IMP] is
 			-- Widget that has currently the focus.
 		once
 			create Result.put (Void)
 		end
 
-	cursor_on_widget: CELL [EV_WIDGET_IMP] is
+	Cursor_on_widget: CELL [EV_WIDGET_IMP] is
 			-- This cell contains the widget_imp that currently
 			-- has the pointer of the mouse. As it is a once 
 			-- feature, it is a shared data.
@@ -410,8 +410,8 @@ feature -- Element change
 
 	set_parent (par: EV_CONTAINER) is
 			-- Make `par' the new parent of `Current'.
-			-- `par' can be Void then the parent is the
-			-- default_parent.
+			-- `par' can be Void then the parent is
+			-- `Default_parent'.
 		deferred
 		end
 
@@ -447,7 +447,7 @@ feature {EV_CONTAINER_IMP, EV_PRIMITIVE_IMP} -- Implementation
 	parent_imp: EV_CONTAINER_IMP is
 			-- Parent container of `Current'.
 		do
-			if wel_parent = default_parent then
+			if wel_parent = Default_parent then
 				Result := Void
 			else
 				Result ?= wel_parent
@@ -644,7 +644,7 @@ feature {NONE} -- Implementation
 		do
 			if msg = Wm_mouseleave then
 				on_mouse_leave
-				cursor_on_widget.put (Void)
+				Cursor_on_widget.put (Void)
 			end
 		end
 
@@ -702,7 +702,7 @@ feature {NONE} -- Implementation
 				end
 		
 				on_mouse_enter
-				cursor_on_widget.replace (Current)	
+				Cursor_on_widget.replace (Current)	
 				track_mouse.dispose
 			end
 			if (is_transport_enabled and mode_is_drag_and_drop) or
@@ -856,7 +856,7 @@ feature {NONE} -- Implementation, focus event
 				application_imp.set_window_with_focus (top_level_titled_window)
 			end
 			update_current_push_button
-			focus_on_widget.put (Current)
+			Focus_on_widget.put (Current)
 			if focus_in_actions_internal /= Void then
 				focus_in_actions_internal.call ([])
 			end

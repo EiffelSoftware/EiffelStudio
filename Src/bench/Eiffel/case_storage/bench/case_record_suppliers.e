@@ -50,7 +50,7 @@ feature {NONE} -- Recording information for eiffelcase
 					features.after
 				loop
 						-- Suppliers resulting from implementation
-					feat_dep := class_dep.item (features.item.name);
+					feat_dep := class_dep.item_of_name (features.item.name)
 					if feat_dep /= Void then
 						from
 							feat_dep.start
@@ -63,7 +63,7 @@ feature {NONE} -- Recording information for eiffelcase
 									c_l.start
 								until
 									c_l.after or else 
-					c_l.item.supplier = sup_class_id.id
+										c_l.item.supplier = sup_class_id.id
 								loop
 									c_l.forth
 								end;

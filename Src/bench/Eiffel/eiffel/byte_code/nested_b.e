@@ -14,11 +14,6 @@ inherit
 			has_separate_call
 		end
 
-	SHARED_IL_CONSTANTS
-		export
-			{NONE} all
-		end
-
 feature 
 
 	target: ACCESS_B;

@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision application, implementation interface."
 	status: "See notice at end of class"
@@ -7,7 +6,7 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 	
-deferred class 
+deferred class
 	EV_APPLICATION_I
 	
 feature {EV_APPLICATION} -- Initialization
@@ -45,12 +44,64 @@ feature -- Basic operation
 		deferred
 		end
 
+	splash_pixmap (pix: EV_PIXMAP) is
+			-- Show the splash screen pixmap `pix'.
+		deferred
+		end
+
 feature {EV_APPLICATION} -- Implementation
 	
 	iterate is
-                        -- Loop the application.
-                deferred
-                end	
+			-- Loop the application.
+		deferred
+		end	
+
+feature {EV_UNTITLED_WINDOW_IMP} -- Root windows management
+
+	root_windows: ARRAYED_LIST [EV_UNTITLED_WINDOW_IMP] is
+			-- List of the root windows
+		once
+			create Result.make (0)
+		end
+
+	add_root_window (w: EV_UNTITLED_WINDOW_IMP) is
+			-- Add `w' to the list of root windows.
+		require
+			valid_window: w /= Void
+		do
+			root_windows.extend (w)
+		end
+
+	remove_root_window (w: EV_UNTITLED_WINDOW_IMP) is
+			-- Remove `w' from the root windows list.
+		require
+			valid_window: w /= Void
+		do
+			if root_windows.count /= 1 then
+				root_windows.start
+				if root_windows.item = w then
+					root_windows.remove
+					set_root_window
+				else
+					root_windows.prune (w)
+				end
+			end
+		end
+
+	set_root_window is
+			-- Set the root window for the application.
+		require
+			valid_root_window: root_window /= Void
+		deferred
+		end
+
+	root_window: EV_UNTITLED_WINDOW_IMP is
+			-- The root window of the application.
+		do
+			if not root_windows.empty then
+				Result := root_windows.first
+			end
+		end
 
 end -- class EV_APPLICATION_I
 

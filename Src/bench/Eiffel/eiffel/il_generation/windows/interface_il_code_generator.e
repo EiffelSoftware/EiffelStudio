@@ -79,15 +79,15 @@ feature -- IL Generation
 			set_current_type_id (class_type.implementation_id)
 			current_class_token := class_mapping.item (current_type_id)
 
+				-- Define all features used by ISE runtime.
+			define_runtime_features (class_type)
+
 				-- Generate current features implement locally in `current_class_type'
 				-- and traverse parents to define inherited features.
 			generate_il_implementation_local (class_interface, class_c, class_type)
 			generate_il_implementation_parents (class_interface)
 			generate_il_type_features (class_c, class_type, class_c.generic_features)
 			generate_il_type_features (class_c, class_type, class_c.anchored_features)
-
-				-- Define all features used by ISE runtime.
-			define_runtime_features (class_type)
 			
 				-- Reset global variable for collection.
 			current_class_type := Void

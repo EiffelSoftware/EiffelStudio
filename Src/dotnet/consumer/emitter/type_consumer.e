@@ -255,7 +255,7 @@ feature -- Basic Operation
 						end
 						if is_consumed_field (l_field) then
 							l_fields.extend (consumed_field (l_field))
-							if is_public_static_field (l_field) then
+							if is_public_field (l_field) then
 								l_procedures.extend (attribute_setter_feature (l_field, l_fields.last.eiffel_name))
 							end
 						end
@@ -1148,7 +1148,7 @@ feature {NONE} -- Added features for ENUM types.
 			-- attribute setter feature.
 		require
 			non_void_field: a_field /= Void
-			public_and_static_field: is_public_static_field (a_field)
+			public_and_static_field: is_public_field (a_field)
 			valid_field_name: a_field_name /= Void and then not a_field_name.is_empty
 		local
 			l_eiffel_name: STRING

@@ -48,7 +48,6 @@ feature {NONE} -- Initialization
 
 			!! text_background_color.make (associated_category.text_background_color);
 			!! text_foreground_color.make (associated_category.text_foreground_color);
-			!! background_color.make (associated_category.background_color);
 			if not Platform_constants.is_windows then
 				!! focus_label_color.make (associated_category.focus_label_color)
 				!! progress_bar_color.make (associated_category.progress_bar_color);
@@ -85,7 +84,6 @@ feature {NONE} -- Initialization
 			resources.extend (symbol_font);
 			resources.extend (html_font);
 
-			resources.extend (background_color);
 			resources.extend (foreground_color);
 			resources.extend (text_background_color);
 			resources.extend (text_foreground_color);
@@ -148,41 +146,40 @@ feature -- Properties
 
 feature {NONE} -- Resources
 
-    font,
-    text_font,
-    default_text_font,
-    comment_font,
-    string_text_font,
-    class_font,
+	font,
+	text_font,
+	default_text_font,
+	comment_font,
+	string_text_font,
+	class_font,
 	cluster_font,
-    feature_font,
-    object_font,
-    error_font,
-    breakable_font,
-    keyword_font,
+	feature_font,
+	object_font,
+	error_font,
+	breakable_font,
+	keyword_font,
 	symbol_font,
 	html_font: FONT_PREF_RES
- 
-    text_background_color,
-    text_foreground_color,
-    background_color,
-    foreground_color,
-    focus_label_color,
-    progress_bar_color,
-    string_text_color,
-    default_text_color,
-    stop_color,
-    breakable_color,
-    symbol_color,
+
+	text_background_color,
+	text_foreground_color,
+	foreground_color,
+	focus_label_color,
+	progress_bar_color,
+	string_text_color,
+	default_text_color,
+	stop_color,
+	breakable_color,
+	symbol_color,
 	html_color,
-    class_color,
+	class_color,
 	cluster_color,
-    feature_color,
-    error_color,
-    object_color,
-    comment_color,
-    keyword_color,
-    highlight_line_background_color,
-    highlight_line_foreground_color: COLOR_PREF_RES
+	feature_color,
+	error_color,
+	object_color,
+	comment_color,
+	keyword_color,
+	highlight_line_background_color,
+	highlight_line_foreground_color: COLOR_PREF_RES
 
 end -- class GRAPHICAL_PREF_CAT

@@ -462,8 +462,7 @@ feature {NONE} -- Update
 
 	Bitmap_path: DIRECTORY_NAME is
 		once
-			!! Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name);
-			Result.extend_from_array (<<"bench", "bitmaps">>);
+			Result := clone ((create {EIFFEL_ENV}).Bitmaps_path)
 			Result.extend (Pixmap_suffix)
 		end;
 

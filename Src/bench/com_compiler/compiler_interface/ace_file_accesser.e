@@ -883,6 +883,16 @@ feature -- Element change
 			end
 		end
 
+--	set_default(new_value: STRING; is_string: BOOLEAN; code: INTEGER)
+--			-- sets a default
+--		local
+--			defaults: LACE_LIST [D_OPTION_SD]
+--			free_opt: FREE_OPTION_SD
+--			is_item_removable: BOOLEAN
+--		do
+--			
+--		end
+
 	set_il_generation (b: BOOLEAN) is
 			-- Generate IL code if `b'.
 		local
@@ -986,7 +996,42 @@ feature -- Element change
 					end
 				end
 			end
-			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Namespace, namespace, True))
+			defaults.extend (new_special_option_sd (ace_dictionary.Namespace_keyword, namespace, True))
+		end
+		
+	set_working_directory (directory: STRING) is
+			-- Set the system's working directory
+		require
+			directory_exists: directory /= Void
+		local
+			defaults: LACE_LIST [D_OPTION_SD]
+			free_opt: FREE_OPTION_SD
+			is_item_removable: BOOLEAN
+		do
+			defaults := root_ast.defaults
+			if defaults /= Void then
+				from
+					defaults.start
+				until
+					defaults.after
+				loop
+					is_item_removable := False
+					if defaults.item.option.is_free_option then
+						free_opt ?= defaults.item.option
+						if free_opt.code = free_opt.Working_directory then
+							is_item_removable := True
+						end
+					end
+					if is_item_removable then
+						defaults.remove
+					else
+						defaults.forth
+					end
+				end
+			end
+			if not directory.is_empty then
+				defaults.extend (new_special_option_sd (ace_dictionary.working_directory_keyword, directory, True))	
+			end
 		end
 		
 	set_console_application (b: BOOLEAN) is

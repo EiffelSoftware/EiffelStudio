@@ -24,6 +24,7 @@ inherit
 			assemblies,
 			compilation_type,
 			console_application,
+			working_directory,
 			apply,
 			set_system_name,
 			set_default_namespace,
@@ -37,6 +38,7 @@ inherit
 			set_compilation_type,
 			set_console_application,
 			set_debug_info,
+			set_working_directory,
 			update_project_ace_file,
 			synchronize_with_project_ace_file
 		end
@@ -209,7 +211,13 @@ feature -- Access
 			end
 		end
 		
-
+	working_directory: STRING is
+			-- system working directory
+		do
+			if is_valid then 
+				Result := ace.working_directory
+			end
+		end
 		
 feature -- Element change
 
@@ -332,6 +340,15 @@ feature -- Element change
 		do
 			if is_valid then
 				ace.set_line_generation (return_value)
+				dirty := true
+			end
+		end
+		
+	set_working_directory (directory: STRING) is 
+			-- Set the systems working directory
+		do
+			if is_valid then
+				ace.set_working_directory(directory)
 				dirty := true
 			end
 		end

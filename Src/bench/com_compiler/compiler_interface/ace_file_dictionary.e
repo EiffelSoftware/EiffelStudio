@@ -76,16 +76,17 @@ feature -- Access
 			Result.extend (trace_keyword)
 			Result.extend (use_keyword)
 			Result.extend (visible_keyword)
-			Result.extend ("adapt_keyword")
-			Result.extend ("as_keyword")
-			Result.extend ("creation_keyword")
-			Result.extend ("create_keyword")
-			Result.extend ("depend_keyword")
-			Result.extend ("export_keyword")
-			Result.extend ("generate_keyword")
-			Result.extend ("ignore_keyword")
-			Result.extend ("rename_keyword")
-			Result.extend ("yes_keyword")
+			Result.extend (adapt_keyword)
+			Result.extend (as_keyword)
+			Result.extend (creation_keyword)
+			Result.extend (create_keyword)
+			Result.extend (depend_keyword)
+			Result.extend (export_keyword)
+			Result.extend (generate_keyword)
+			Result.extend (ignore_keyword)
+			Result.extend (rename_keyword)
+			Result.extend (yes_keyword)
+			Result.extend (working_directory_keyword)
 			--Result.extend ("")
 		end
 		
@@ -196,5 +197,7 @@ feature -- Access
 		use_keyword: STRING is "use"
 		
 		visible_keyword: STRING is "visible"
+		
+		working_directory_keyword: STRING is "working_directory"
 
 end -- class ACE_FILE_DICTIONARY

@@ -1,19 +1,24 @@
 # eifole.lib - Makefile for Microsoft C
 
+LIB_LOCATION = "C:"
+COMP_LOC = "C:\Eiffel43-15"
 CC = cl
-CFLAGS = -c -Ox -I$(EIFFEL4)\library\wel\spec\windows\include -I$(EIFFEL4)\bench\spec\windows\include -I$(EIFFEL4)\library\com\spec\windows\include
+CFLAGS = -c -Ox -I$(LIB_LOCATION)\library\wel\spec\windows\include -I$(COMP_LOC)\bench\spec\windows\include -I$(LIB_LOCATION)\library\old_com\spec\windows\include
+
+.c.obj:
+	$(CC) $(CFLAGS) $<
 
 .cpp.obj:
 	$(CC) $(CFLAGS) $<
 
-OBJ = Eautostr.obj Eoccstr.obj Eoleauto.obj Eolemisc.obj iclsfact.obj iconpnt.obj iconptc.obj ieconpnt.obj ienumcon.obj ienumukn.obj Ifont.obj ipersist.obj ipict.obj iprclinf.obj istorage.obj Iunknown.obj Ocxcecil.obj ocxmain.obj selectpicture.obj large_integer.obj safearray.obj safearraybound.obj itypecomp.obj
+OBJ = Eautostr.obj Eoccstr.obj Eoleauto.obj Eolemisc.obj iclsfact.obj iconpnt.obj iconptc.obj ieconpnt.obj ienumcon.obj ienumukn.obj Ifont.obj ipersist.obj ipict.obj iprclinf.obj istorage.obj Iunknown.obj Ocxcecil.obj ocxmain.obj selectpicture.obj large_integer.obj safearray.obj safearraybound.obj itypecomp.obj activex.obj
 
 eifole.lib: $(OBJ)
 	if exist $@ del $@
 	lib /OUT:$@ $(OBJ)
-	if not exist $(EIFFEL4)\library\com\spec\msc mkdir $(EIFFEL4)\library\com\spec\msc
-	if not exist $(EIFFEL4)\library\com\spec\msc\lib mkdir $(EIFFEL4)\library\com\spec\msc\lib
-	copy $@ $(EIFFEL4)\library\com\spec\msc\lib
+	if not exist $(LIB_LOCATION)\library\old_com\spec\msc mkdir $(LIB_LOCATION)\library\old_com\spec\msc
+	if not exist $(LIB_LOCATION)\library\old_com\spec\msc\lib mkdir $(LIB_LOCATION)\library\old_com\spec\msc\lib
+	copy $@ $(LIB_LOCATION)\library\old_com\spec\msc\lib
 	del $@
 	del *.obj
 

@@ -32,7 +32,14 @@ inherit
 			compute_minimum_size,
 			interface,
 			enable_sensitive,
-			disable_sensitive
+			disable_sensitive,
+			initialize
+		end
+		
+	EV_FONTABLE_IMP
+		redefine
+			interface,
+			set_font
 		end
 		
 	EV_TEXT_ALIGNABLE_IMP
@@ -50,7 +57,9 @@ inherit
 
 	EV_WEL_CONTROL_CONTAINER_IMP
 		rename
-			make as ev_wel_control_container_make
+			make as ev_wel_control_container_make,
+			set_font as wel_set_font,
+			font as wel_font
 		redefine
 			on_paint,
 			top_level_window_imp,
@@ -71,9 +80,16 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			ev_wel_control_container_make
 			frame_style := Ev_frame_etched_in
-			wel_font := (create {WEL_SHARED_FONTS}).gui_font
 			text_alignment := default_alignment
 		end
+		
+	initialize is
+			-- Initialize `Current'.
+		do
+			set_default_font
+			Precursor {EV_SINGLE_CHILD_CONTAINER_IMP}
+		end
+		
 
 feature -- Access
 
@@ -106,6 +122,17 @@ feature -- Access
 
 feature -- Element change
 
+	set_font (ft: EV_FONT) is
+			-- Make `ft' new font of `Current'.
+		local
+			local_font_windows: EV_FONT_IMP
+		do
+			Precursor {EV_FONTABLE_IMP} (ft)
+			update_text_size
+			notify_change (2 + 1, Current)
+			invalidate
+		end
+
 	enable_sensitive is
 			-- Set `item' sensitive to user actions.
 		do
@@ -131,20 +158,40 @@ feature -- Element change
 			-- Assign `a_text' to `text'.
 		local
 			t: TUPLE [INTEGER, INTEGER]
+			font_imp: EV_FONT_IMP
 		do
 			if a_text.is_empty then
 				text_width := 0
 				text_height := 0
 				Precursor {EV_TEXT_ALIGNABLE_IMP} (a_text)
-			else		
-				t := wel_font.string_size (" " + a_text + " ")
-				text_width := t.integer_item (1)
-				text_height := t.integer_item (2)
+			else
 				Precursor {EV_TEXT_ALIGNABLE_IMP} (a_text)
+				update_text_size
 			end
 			notify_change (2 + 1, Current)
 			invalidate
 		end
+		
+	update_text_size is
+			-- Update `text_width' and `text_size' based on
+			-- current font.
+		local
+			font_imp: EV_FONT_IMP
+			t: TUPLE [INTEGER, INTEGER]
+		do
+			if private_font /= Void then
+					font_imp ?= private_font.implementation
+					check
+						font_not_void: font_imp /= Void
+					end
+					t := font_imp.wel_font.string_size (" " + text + " ")
+				else
+					t := private_wel_font.string_size (" " + text + " ")
+				end
+				text_width := t.integer_item (1)
+				text_height := t.integer_item (2)
+		end
+		
 
 feature -- Status setting
 
@@ -255,9 +302,6 @@ feature {NONE} -- WEL Implementation
 	text_width: INTEGER
 			-- Width of `text' displayed at top.
 
-	wel_font: WEL_FONT
-			-- Appearance of `text'.
-
 	on_erase_background (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Wm_erasebkgnd message.
 			-- May be redefined to paint something on
@@ -280,6 +324,7 @@ feature {NONE} -- WEL Implementation
 			r: WEL_RECT
 			bk_brush: WEL_BRUSH
 			pen: WEL_PEN
+			font_imp: EV_FONT_IMP
 		do
 			
 				-- Cache value of `ev_width' and `ev_height' for
@@ -375,7 +420,15 @@ feature {NONE} -- WEL Implementation
 			end
 
 			if not text.is_empty then
-				paint_dc.select_font (wel_font)
+				if private_font /= Void then
+					font_imp ?= private_font.implementation
+					check
+						font_not_void: font_imp /= Void
+					end
+					paint_dc.select_font (font_imp.wel_font)
+				else
+					paint_dc.select_font (private_wel_font)
+				end
 				paint_dc.set_text_color (wel_foreground_color)
 				paint_dc.set_background_color (wel_background_color)
 				if is_sensitive then
@@ -389,6 +442,7 @@ feature {NONE} -- WEL Implementation
 						)
 				end
 			end
+			paint_dc.unselect_all
 		end
 
 feature {EV_ANY_I} -- Implementation

@@ -16,6 +16,16 @@ inherit
 			parent
 		end
 
+	EV_PND_SOURCE
+		redefine
+			implementation
+		end
+
+	EV_PND_TARGET
+		redefine
+			implementation
+		end
+
 creation
 	make,
 	make_with_text,

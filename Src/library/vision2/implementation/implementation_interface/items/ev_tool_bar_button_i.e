@@ -14,6 +14,10 @@ inherit
 			pixmap_size_ok
 		end
 
+	EV_PND_SOURCE_I
+
+	EV_PND_TARGET_I
+
 feature -- Access
 
 	index: INTEGER is
@@ -78,29 +82,29 @@ feature -- Event : command association
 		deferred
 		end	
 
-	add_button_press_command (mouse_button: INTEGER; 
-		 cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when button number 'mouse_button' is pressed.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-			button_large_enough: mouse_button > 0
-			button_small_enough: mouse_button < 4
-		deferred
-		end
-
-	add_button_release_command (mouse_button: INTEGER;
-		    cmd: EV_COMMAND; arg: EV_ARGUMENT) is
-			-- Add `cmd' to the list of commands to be executed
-			-- when button number 'mouse_button' is released.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-			button_large_enough: mouse_button > 0
-			button_small_enough: mouse_button < 4
-		deferred
-		end
+--	add_button_press_command (mouse_button: INTEGER; 
+--		 cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--			-- Add `cmd' to the list of commands to be executed
+--			-- when button number 'mouse_button' is pressed.
+--		require
+--			exists: not destroyed
+--			valid_command: cmd /= Void
+--			button_large_enough: mouse_button > 0
+--			button_small_enough: mouse_button < 4
+--		deferred
+--		end
+--
+--	add_button_release_command (mouse_button: INTEGER;
+--		    cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+--			-- Add `cmd' to the list of commands to be executed
+--			-- when button number 'mouse_button' is released.
+--		require
+--			exists: not destroyed
+--			valid_command: cmd /= Void
+--			button_large_enough: mouse_button > 0
+--			button_small_enough: mouse_button < 4
+--		deferred
+--		end
 
 feature -- Event -- removing command association
 

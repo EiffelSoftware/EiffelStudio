@@ -43,7 +43,6 @@ feature -- Access
 			-- Width of line for device.
 		require
 			exists: not destroyed
-			drawable: is_drawable
 		do
 			Result := implementation.line_width
 		end
@@ -52,7 +51,6 @@ feature -- Access
 			-- Drawing mode
 		require
 			exists: not destroyed
-			drawable: is_drawable
 		do
 			Result := implementation.logical_mode
 		end
@@ -131,6 +129,7 @@ feature -- Clearing operations
 			-- Clear the entire area.
 		require
 			exists: not destroyed
+			drawable: is_drawable
 		do
 			implementation.clear
 		end
@@ -138,6 +137,9 @@ feature -- Clearing operations
 	clear_rect (left, top, right, bottom: INTEGER) is
 			-- Clear the rectangular area defined by
 			-- `left', `top', `right', `bottom'.
+		require
+			exists: not destroyed
+			drawable: is_drawable
 		do
 			implementation.clear_rect (left, top, right, bottom)
 		end
@@ -147,6 +149,8 @@ feature -- Drawing operations
 	draw_point (pt: EV_COORDINATES) is
 			-- Draw a point at the position `pt'.
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			valid_point: pt /= Void
 		do
 			implementation.draw_point (pt)
@@ -155,7 +159,9 @@ feature -- Drawing operations
 	draw_text (pt: EV_COORDINATES; text: STRING) is
 			-- Draw `text' at the position `pt'
 		require
-			vlid_text: text /= Void
+			exists: not destroyed
+			drawable: is_drawable
+			valid_text: text /= Void
 			valid_point: pt /= Void
 		do
 			implementation.draw_text (pt, text)
@@ -164,6 +170,8 @@ feature -- Drawing operations
 	draw_segment (pt1, pt2: EV_COORDINATES) is
 			-- Draw a segment between `pt1' and `pt2'.
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			valid_point1: pt1 /= Void
 			valid_point2: pt2 /= Void
 		do
@@ -172,6 +180,9 @@ feature -- Drawing operations
 
 	draw_straight_line (pt1, pt2: EV_COORDINATES) is
 			-- Draw an infinite line traversing `point1' and `point2'.
+		require
+			exists: not destroyed
+			drawable: is_drawable
 		do
 			implementation.draw_straight_line (pt1, pt2)
 		end
@@ -179,6 +190,8 @@ feature -- Drawing operations
 	draw_polyline (pts: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
 			-- Draw a polyline, close it automatically if `is_closed'.
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			points_exists: pts /= Void
 			points_large_enough: not pts.empty
 			points_small_enough: pts.count <= max_count_for_draw_polyline
@@ -190,6 +203,8 @@ feature -- Drawing operations
 			-- Draw a rectangle whose center is `pt' and size is `w' and `h'
 			-- and that has the orientation `orientation'.
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			valid_point: pt /= Void
 			width_positive: w >= 0
 			height_positive: h >= 0
@@ -208,6 +223,8 @@ feature -- Drawing operations
 			--    0 : the first point is linked to the last point
 			--    1 : the first and the last point are linked to the center `pt'
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			valid_point: pt /= Void
 			positive_radius1: r1 >= 0;
 			positive_radius2: r2 >= 0;
@@ -225,6 +242,8 @@ feature -- Drawing operations
 			-- Draw an ellipse centered in `pt' with a great radius of `r1' and a small radius
 			-- of `r2' with the orientation `orientation'.
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			valid_point: pt /= Void
 			positive_radius1: r1 >= 0;
 			positive_radius2: r2 >= 0;
@@ -237,6 +256,8 @@ feature -- Drawing operations
 	draw_pixmap (pt: EV_COORDINATES; pix : EV_PIXMAP) is
 			-- Copy `pix' into the drawable at the point `pt'.
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			valid_point: pt /= Void
 			valid_pixmap: is_valid (pix)
 		do
@@ -248,6 +269,8 @@ feature -- filling operations
 	fill_polygon (pts: ARRAY [EV_COORDINATES]) is
 			 -- Fill a polygon.
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			points_exists: pts /= Void
 			points_large_enough: not pts.empty
 			points_small_enough: pts.count <= max_count_for_draw_polyline
@@ -259,6 +282,8 @@ feature -- filling operations
 			-- Fill a rectangle whose center is `pt' and size is `w' and `h'
 			-- with an orientation `orientation'.
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			valid_point: pt /= Void
 			width_positive: w >= 0
 			height_positive: h >= 0
@@ -277,6 +302,8 @@ feature -- filling operations
 			--    0 : the first point is linked to the last point
 			--    1 : the first and the last point are linked to the center `pt'
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			valid_point: pt /= Void
 			positive_radius1: r1 >= 0;
 			positive_radius2: r2 >= 0;
@@ -294,6 +321,8 @@ feature -- filling operations
 			-- Fill an ellipse centered in `pt' with a great radius of `r1' and a small radius
 			-- of `r2' with the orientation `orientation'.
 		require
+			exists: not destroyed
+			drawable: is_drawable
 			valid_point: pt /= Void
 			positive_radius1: r1 >= 0;
 			positive_radius2: r2 >= 0;

@@ -24,6 +24,9 @@ inherit
 		end
 
 	WEL_DIB_COLORS_CONSTANTS
+		export
+			{NONE} all
+		end
 
 	WM_CONTROL_WINDOWS
 
@@ -39,33 +42,12 @@ feature -- Initialization
 				show
 			end
 		end
+
 feature -- Access
 
 	bar: BAR_WINDOWS
  
 feature -- Status setting
-
-	associate_bar (new_bar: BAR_WINDOWS) is
-		require
-			bar_exists: new_bar /= Void
-		do
-			bar := new_bar
-			if exists then
-				adding_menu := true
-				wel_set_menu (bar)
-				adding_menu := false
-			end
-		end
-
-	remove_bar is
-		do
-			bar := Void
-			if exists then
-				adding_menu := true
-				unset_menu
-				adding_menu := false
-			end
-		end
 
 	set_title (a_title: STRING) is
 			-- Set `title' to `a_title'.
@@ -78,12 +60,33 @@ feature -- Status setting
 			private_title := clone (a_title);
 		end;
 
-	default_style: INTEGER is
-		once
-			Result := Ws_overlappedwindow + ws_visible
+	associate_bar (new_bar: BAR_WINDOWS) is
+		require
+			bar_exists: new_bar /= Void
+		do
+			if bar = Void then
+				shell_height := shell_height + menu_bar_height
+			end
+			bar := new_bar
+			if exists then
+				wel_set_menu (bar)
+			end
 		end
 
-feature -- Implementation
+feature -- Removal
+
+	remove_bar is
+		require
+			bar_present: bar /= Void
+		do
+			bar := Void
+			if exists then
+				unset_menu
+			end
+			shell_height := shell_height - menu_bar_height
+		end
+
+feature {NONE} -- Implementation
 
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Wm_paint message.
@@ -145,12 +148,13 @@ feature -- Implementation
 			-- Wm_size message
 			-- See class WEL_SIZE_CONSTANTS for `size_type' value
 		do
-			if adding_menu then
-				private_attributes.set_height (a_height)
-				private_attributes.set_width (a_width)				
-			else
-				resize_shell_children (a_width, a_height)
-			end
+			resize_shell_children (a_width, a_height)
+		end
+
+	default_style: INTEGER is
+			-- Default style for creation
+		once
+			Result := Ws_overlappedwindow + ws_visible
 		end
 
 	class_name: STRING is
@@ -158,12 +162,6 @@ feature -- Implementation
 		once
 			Result := "EvisionWmShell"
 		end
-
-	adding_menu: BOOLEAN
-		-- Are we currently adding a menu
-		--| do not resize children at this time as forms will
-		--| be further resized
-
 
 end -- class WM_SHELL_WINDOWS
  

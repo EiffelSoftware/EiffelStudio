@@ -892,7 +892,9 @@ end
 							-- Force a change on all feature of current class if line
 							-- debugging is turned on. Not doing so could make obsolete
 							-- line information on non-changed features.
-						feature_changed := System.line_generation
+							-- This should also be done for IL code generation, otherwise
+							-- debug info is inconsistent.
+						feature_changed := System.line_generation or System.il_generation
 					end
 
 					feature_changed := feature_changed and not feature_i.is_attribute
@@ -1873,9 +1875,7 @@ feature -- Class initialization
 			if System.il_generation and then old_is_frozen /= is_frozen then
 					-- Class has its `frozen' status changed. We have to
 					-- reset its `types' so that it is recomputed.
-				if has_types then
-					types.wipe_out
-				end
+				remove_types
 				changed_status := True
 			end
 
@@ -2614,12 +2614,29 @@ feature -- Parent checking
 				and then not is_class_any)
 			if System.il_generation and then l_old_is_single /= is_single then
 					-- Class has its `is_single' status changed. We have to
-					-- reset its `types' so that they are recomputed.
-				if has_types then
-					types.wipe_out
-				end
+					-- reset its `types' so that they are recomputed and we have
+					-- to remove existing types from `System.class_types'
+				remove_types
 			end
 			Error_handler.checksum
+		end
+
+	remove_types is
+			-- Removes all types from system
+		do
+			if has_types then
+				from
+					types.start
+				until
+					types.after
+				loop
+					System.class_types.put (Void, types.item.type_id)
+					types.forth
+				end
+				types.wipe_out
+			end
+		ensure
+			types_empty: not has_types
 		end
 
 feature -- Supplier checking

@@ -189,7 +189,7 @@ feature -- Output
 			end;
 			cur := points.cursor;
 			from
-				!! list.make (points_count);
+				!! list.make_filled (points_count);
 				list.start;
 				points.start
 			until
@@ -283,7 +283,7 @@ feature -- Output
 		do
 			cur := points.cursor;
 			from
-				!! list.make (points.count);
+				!! list.make_filled (points.count);
 				list.start;
 				points.start
 			until

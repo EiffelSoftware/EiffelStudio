@@ -11,6 +11,11 @@ indexing
 
 class PLATFORM
 
+feature -- Platform
+
+	is_dotnet: BOOLEAN is True
+			-- Are we targetting .NET?
+
 feature -- Access bytes size
 
 	Boolean_bytes: INTEGER is

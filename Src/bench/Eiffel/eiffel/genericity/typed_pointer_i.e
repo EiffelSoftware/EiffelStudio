@@ -22,7 +22,7 @@ inherit
 			element_type, reference_type, tuple_code
 		end
 		
-	GEN_TYPE_I
+	ONE_GEN_TYPE_I
 		undefine
 			is_basic, is_reference, cecil_value, is_void, c_type, is_valid, generate_cecil_value, dump
 		redefine
@@ -32,25 +32,16 @@ inherit
 		end
 
 create
-	make_typed
+	make
 
-feature {NONE} -- Initialization
-
-	make_typed (id: INTEGER; a_type: TYPE_A) is
-			-- Create new instance of TYPED_POINTER.
-		require
-			a_type_not_void: a_type /= Void
-		do
-			old_make (id)
-			create meta_generic.make (1)
-			create true_generics.make (1, 1)
-			meta_generic.put (a_type.meta_type, 1)
-			true_generics.put (a_type.type_i, 1)
-		ensure
-			class_id_set: class_id = id
-		end
-		
 feature -- Access
+
+	il_type_name (a_prefix: STRING): STRING is
+			-- Name of current class
+		do
+			Result := true_generics.item (1).il_type_name (a_prefix).twin
+			Result.append ("&")
+		end
 
 	reference_type: CL_TYPE_I is
 			-- Type to which we metamorphose. Because generation of
@@ -63,7 +54,7 @@ feature -- Access
 	element_type: INTEGER_8 is
 			-- Pointer element type
 		do
-			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_ptr
+			Result := feature {MD_SIGNATURE_CONSTANTS}.Element_type_byref
 		end
 
 	tuple_code: INTEGER_8 is

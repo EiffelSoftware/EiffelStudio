@@ -342,9 +342,35 @@ feature -- Basic operations
 				invalidate
 				update
 
+			elseif virtual_key = 88 then
+				if ctrled_key then
+						-- Ctrl-X (cut)
+					cut_selection
+					invalidate
+					update
+				end
+
+			elseif virtual_key = 67 then
+				if ctrled_key then
+						-- Ctrl-C (copy)
+					copy_selection
+				end
+
+			elseif virtual_key = 86 then
+				if ctrled_key then
+						-- Ctrl-V (paste)
+					paste_selection
+					invalidate
+					update
+				end
+
 			elseif virtual_key = Vk_Shift then
 					-- Shift key action
 				shifted_key := True
+
+			elseif virtual_key = Vk_Control then
+					-- Ctrl key action
+				ctrled_key := True
 
 			else
 				-- Key not handled, do nothing
@@ -358,6 +384,10 @@ feature -- Basic operations
 			if virtual_key = Vk_Shift then
 					-- Notice that all shift key are released.
 				shifted_key := False
+
+			elseif virtual_key = Vk_control then
+					-- Ctrl key action
+				ctrled_key := False
 			end
 		end
 
@@ -368,8 +398,8 @@ feature -- Basic operations
 			c		: CHARACTER
 			wel_rect: WEL_RECT
    		do
-
-			if (character_code /= Vk_Back) and then	(character_code /= Vk_return) then
+			if (character_code >= 32) then
+					-- Ignoring special characters
 				c := character_code.ascii_char
 				if has_selection then
 					delete_selection
@@ -478,16 +508,30 @@ feature -- Selection Handling
 
 	cut_selection is
 		do
-			copy_selection
-			delete_selection
+			if has_selection then
+				copy_selection
+				delete_selection
+			end
 		end
 
 	copy_selection is
 		do
+			if has_selection then
+				if (cursor < selection_start) then
+					clipboard := text_displayed.string_selected (cursor, selection_start)
+				else
+					clipboard := text_displayed.string_selected (selection_start, cursor)
+				end
+				io.put_string ("Put %""+ clipboard+"%" in clipboard%N")
+			end
 		end
 
 	paste_selection is
 		do
+			if has_selection then
+				delete_selection
+			end
+			cursor.insert_string (clipboard)
 		end
 
 	delete_selection is
@@ -690,7 +734,6 @@ feature {NONE} -- Display functions
 			end
 		end
 
-
 feature {NONE} -- Status Report
 	
 	number_of_lines: INTEGER is
@@ -767,8 +810,14 @@ feature {NONE} -- Private Characteristics of the window
 	shifted_key: BOOLEAN
 			-- Is any of the shift key pushed?
 
+	ctrled_key: BOOLEAN
+			-- Is any of the ctrl key pushed?
+
 	mouse_left_button_down: BOOLEAN
 			-- Is the left button of the mouse down?
+
+	clipboard: STRING
+			-- clipboard string.
 
 feature {NONE} -- Private Constants
 

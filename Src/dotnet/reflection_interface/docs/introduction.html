@@ -7,20 +7,40 @@
 	</HEAD>
 
 	<BODY>
-		<H1>Description</H1>
-		<P>Version: 1.0</P>
-		<P>Availability: Enterprise Edition</P>
+		<H1>Introduction to the Assembly Manager</H1>
+
+		<h2>
+            Description
+		</h2>
 
 		<p>
-			To use the APIs of the .NET framework in your Eiffel Sharp systems, you need to emit the <a href = "./reference/00_definitions/external_class.html">external Eiffel classes</a> corresponding to these assemblies.	ISE Assembly Manager provides you with a simple way to do this. The only requirement is that the assembly you want to import to the "<a href = "./reference/00_definitions/eiffel_assembly_cache.html">Eiffel assembly cache</a>" is signed.<br>
-			Once you have imported the assemblies to the Eiffel assembly cache, ISE Assembly Manager gives you another powerful ability: edit types of the imported assemblies. Thus you will be able to change the automatically generated names of class features and arguments to have a user-friendlier interface. Of course, ISE Assembly Manager will check the consistency of your modifications before saving the changes and updating the corresponding Eiffel classes.
+            The Assembly Manager allows you to import, edit and manage existing
+            .NET assemblies so that you can reuse the types they define in your
+            Eiffel projects. There are two ways of reusing existing .NET types
+            in your Eiffel systems:
 		</p>
-		<p>
-			Since the importation time is quite long (a few minutes to up to twenty minutes for assemblies such as `System.Windows.Forms.dll', which have many dependencies), the most commonly used assemblies of the .NET framework are already imported to the Eiffel assembly cache in the delivery. <br>
-			Thus you will be able to enjoy the possibility of renaming your Eiffel classes features as soon as you get the ISE Assembly Manager delivery.
-		</p>
-		<p>
-			<b>Happy Eiffel Sharp developing with ISE Assembly Manager !</b>
-		</p>
+        <ul>
+          <li>You can import assemblies <i>locally</i> to a project using the <a href="../../../help/wizards/edotnet/docs/index.html">.NET
+            Wizard</a>.</li>
+          <li>You can import assemblies into the <a href = "./reference/00_definitions/eiffel_assembly_cache.html">Eiffel
+            Assembly Cache</a> using the Assembly Manager (accessible both from
+            the <a href="../wizards/dotnet/index.html">.NET Wizard</a> and
+            EiffelStudio). The assembly manager will then let you edit the names
+            of the types, the features and the feature arguments defined in the
+            assemblies.</li>
+        </ul>
+        <p>In general it is recommended that you use the <a href = "./reference/00_definitions/eiffel_assembly_cache.html">Eiffel
+        Assembly Cache</a> to reuse .NET assemblies in Eiffel projects. However,
+        the Assembly Manager requires that the assembly be signed before it can
+        be imported. This means that you will have to use the .NET Wizard to
+        import non-signed assemblies locally.</p>
+        <ul>
+          <li>The <a href="guided_tour/index.html">Guided Tour</a> takes you
+            through the different features supported by the Assembly Manager.</li>
+          <li>The <a href="how_to_s/index.html">How </a><a href="how_to_s/index.html">To's</a>
+            answer the most commonly asked questions.</li>
+          <li>The <a href="reference/index.html">Reference</a> describes every
+            feature of the Manager in details.</li>
+        </ul>
 	</BODY>
 </HTML>

@@ -2,43 +2,42 @@
 
 <HTML>
 	<HEAD>
-		<TITLE>Developing .NET applications with EiffelStudio</TITLE>
+		<TITLE>External Classes</TITLE>
 		<LINK REL=StyleSheet HREF="../../default.css">
 	</HEAD>
 	<BODY>
-		<br>
 		<center>
 			<h1>External classes</h1>
 		</center>
-		<br>
-		<br>
-		<p>
-			External classes only include external features, i.e. features that are not written in Eiffel but are rather methods or functions on an already existing .NET Framework type.
-		</p>
-		<p class = "note">
-			<b>Note</b>: The external classes do not include any logic; they are just needed for the Eiffel type system. This means that the Eiffel# compiler does not generate any IL code for these classes. Any call to functions on external classes are direct calls to the .NET Framework type; there are no indirections and thus no performance penalty.
-		</p>
-		<br>
-
-		<p>
-			All the features of an external class should be features belonging to the same .NET Framework type. You can declare such a type with the following syntax:
-		</p>
+        Whenever a new assembly is imported into the Eiffel Assembly Cache, the
+        Assembly Manager generates corresponding Eiffel.NET external classes.
+        <p>
+			External classes only include external features, i.e. features that are not written in Eiffel but are rather methods or functions already existing
+        on a .NET Framework type. They do not include any logic; they are just needed for the Eiffel type system. This means that the
+        Eiffel.NET compiler does not generate any IL code for these classes. Any call to functions on external classes are direct calls to the .NET Framework type; there are no indirections and thus no performance penalty.
+        All the features of an external class belong to the same .NET Framework type.
+        They are declared as follows:</p>
 		<a name = class_declaration></a>
 		<p class = "code">
 			<span class = "ekeyword">indexing</span><br>
 				&nbsp;&nbsp;&nbsp;&nbsp;<span class = "ekeyword">external_name</span><span class = "esymbol">:</span><span class = "estring"> "System.Console"</span><br>
 			<br>
 			<span class = "ekeyword">frozen external class </span><br>
-		    	&nbsp;&nbsp;&nbsp;&nbsp;<span class = "eclass">SYSTEM _CONSOLE </span>
+		    	&nbsp;&nbsp;&nbsp;&nbsp;<span class = "eclass">SYSTEM_CONSOLE </span>
 		</p>
 		<p>
-			The string that follows <span class = "ekeyword">external_name</span> contains the name of the .NET Framework type that the Eiffel class wraps. Since .NET types might be sealed (they might forbid other types to inherit from them) and since such a concept does not exist in Eiffel, Eiffel# introduces a new use for the Eiffel keyword &quot;<span class = "ekeyword">frozen</span>". You may use <span class = "ekeyword">frozen</span> in front of <span class = "ekeyword">external</span> to tell the Eiffel# compiler that no Eiffel# class should inherit from the .NET Framework type.
+			The string that follows <span class = "ekeyword">external_name</span> contains the name of the .NET Framework type that the
+            external class wraps. Since .NET types might be sealed (they might forbid other types to inherit from them) and since such a concept does not exist in Eiffel,
+            Eiffel.NET introduces a new use for the Eiffel keyword <span class = "ekeyword">frozen</span>.
+            <span class = "ekeyword">frozen</span> in front of <span class = "ekeyword">external</span>
+            tells the Eiffel.NET compiler that no Eiffel.NET class can inherit from the .NET Framework type.
 		</p>
 		<p>
-			The external class should then list all the features you need to access. All these features are external features. The syntax for an external .NET Framework feature is the following:
+			The external class then list all the public features available on
+            the .NET Framework type. All these features are external features. The syntax for an external .NET Framework feature is the following:
 		</p>
 		<p class = "code">
-			<span class = "ekeyword">frozen</span> <span class = "efeature">ReadLine</span><span class = "esymbol">:</span><span class = "eclass"> STRING</span><span class = "ekeyword"> is</span><br>
+			<span class = "ekeyword">frozen</span> <span class = "efeature">read_line</span><span class = "esymbol">:</span><span class = "eclass"> STRING</span><span class = "ekeyword"> is</span><br>
 				  &nbsp;&nbsp;&nbsp;&nbsp;<span class = "ekeyword">external</span><br>
 						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class = "estring">"IL static signature :System.String use System.Console"</span><br>
 				  &nbsp;&nbsp;&nbsp;&nbsp;<span class = "ekeyword">alias</span><br>
@@ -47,16 +46,11 @@
 		</p>
 		<p>
 			The keyword <span class = "ekeyword">frozen</span> indicates that the feature may not be redefined in a descendant.
-		</p>
-		<p class = "note">
-			<b>Note</b>: You may redefine external features if they are virtual, in which case <span class = "ekeyword">frozen</span> should not be used.
-		</p>
-		<br>
-		<p>
-			<span class = "efeature">ReadLine</span> is the Eiffel# feature name and <span class = "eclass">STRING</span> the return type of the feature. <br>
-			The string that follows the <span class = "ekeyword">external</span> keyword specifies the kind of external, the .NET Framework function signature, as well as the .NET Framework type on which the function is defined. <br>
-			The string following the <span class = "ekeyword">alias</span> keyword contains the .NET Framework name of the function. <br>
-			There are different kinds of external features, depending on the type of method they provide access to. Eiffel# defines seven new kinds of externals listed in the following table:
+            <span class = "efeature">read_line</span> is the Eiffel.NET feature name and <span class = "eclass">STRING</span> the return type of the feature.
+            The string that follows the <span class = "ekeyword">external</span> keyword specifies the kind of external, the .NET Framework function signature, as well as the .NET Framework type on which the function is defined.
+            The string following the <span class = "ekeyword">alias</span> keyword contains the .NET Framework name of the function.
+            There are different kinds of external features, depending on the type of method they provide access to.
+            Eiffel.NET defines seven new kinds of externals listed in the following table:
 		</p>
 		<center>
 		<table border>
@@ -70,9 +64,5 @@
 			<tr><td>Operator</td><td>&quot;<i>IL operator signature ... use class_name</i>&quot;</td></tr>
 		</table></center>
 
-		<p>
-			The .NET Framework type name that appears at the end of the string following the <span class = "ekeyword">external</span> keyword should be the same as the one that appears after the <span class = "ekeyword">external_name</span> keyword, following the <a href = "./external_class.html#class_declaration">declaration of the class</a>.
-		</p>
-		<br>
 	</BODY>
 </HTML>

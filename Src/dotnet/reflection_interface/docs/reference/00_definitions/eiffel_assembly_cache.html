@@ -2,7 +2,7 @@
 
 <HTML>
 	<HEAD>
-		<TITLE>Developing .NET applications with EiffelStudio</TITLE>
+		<TITLE>Eiffel Assembly Cache</TITLE>
 		<LINK REL=StyleSheet HREF="../../default.css">
 	</HEAD>
 	<BODY>
@@ -16,17 +16,26 @@
 			The Eiffel Assembly Cache is a repository where the compiler saves the required information to be able to <b>associate Eiffel names with .NET names</b>.
 		</p>
 		<p>
-			It also <b>keeps tracks of the changes</b> you make when editing types via the <a href = "../30_type_view/index.html">type view</a>:
-			the Eiffel Assembly Cache is updated (i.e. existing names replaced by the new ones) once ISE Assembly Manager has checked  the changes consistency.<br>
-			ISE Assembly Manager is notified whenever the Eiffel Assembly Cache is modified, so that it always <b>displays the relevant names</b>.
+            It <b>keeps tracks of the changes</b> you make when editing types via the <a href = "../30_type_view/index.html">Type
+            View</a>:
+			the Eiffel Assembly Cache is updated (i.e. old names replaced by new ones)
+            after the Assembly Manager has checked that the changes are
+            consistent.
+		</p>
+		<p>
+            The Assembly Manager is notified whenever the Eiffel Assembly Cache is modified, so that it always <b>displays the relevant names</b>.
 		</p>
 		<p class = "note">
-			<b>Note</b> that the Eiffel Assembly Cache is <b>self-sufficient</b>: When you launch the Eiffel code generation from ISE Assembly Manager (via the <a href = "../50_eiffel_generation_dialog/index.html">Eiffel generation dialog</a>), the generator finds all needed information in the Eiffel Assembly Cache. There is no need to explore the assembly metadata anymore, which results in noteworthy gain of time.
+			<b>Note:</b> The Eiffel Assembly Cache is <b>self-sufficient</b>: When you launch the Eiffel code generation from
+            the Assembly Manager (via the <a href = "../40_eiffel_generation_dialog/index.html">Eiffel
+            Generation Dialog</a>), the generator finds all the information it
+            needs in the Eiffel Assembly Cache. There is no need to explore the assembly metadata anymore, which results in
+            a noteworthy gain of time.
 		</p>
 
-		<br>
 		<p>
-			The Eiffel Assembly Cache is located in &quot;$ISE_EIFFEL&quot;\dotnet\assemblies&quot;, where $ISE_EIFFEL is the path to your Eiffel delivery.
+			The Eiffel Assembly Cache is located in <i>$ISE_EIFFEL\dotnet\assemblies</i>, where
+            <i> $ISE_EIFFEL</i> is the path to your Eiffel delivery.
 			If you explore it, you will see that information is saved in separate folders, each folder corresponding to one imported assembly.
 		</p>
 	</BODY>

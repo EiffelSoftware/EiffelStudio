@@ -81,6 +81,10 @@ feature -- Properties
 	current_execution_stack_number: INTEGER;
 			-- Stack number currently displaying the locals and arguments
 
+	interrupt_number: INTEGER
+			-- Number that specifies the `n' breakable points in	
+			-- which the application will check if an interrupt was pressed
+
 	debugged_routines: LINKED_LIST [E_FEATURE] is
 			-- Routines that are currently debugged
 		do
@@ -357,6 +361,7 @@ feature -- Execution
 		require
 			app_not_running: not is_running;
 			application_exists: exists;
+			non_negative_interrupt: interrupt_number >= 0
 		local
 			app: STRING
 		do
@@ -384,7 +389,8 @@ feature -- Execution
 		require
 			is_running: is_running;
 			is_stopped: is_stopped;
-			non_void_keep_objects: kept_objects /= Void
+			non_void_keep_objects: kept_objects /= Void;
+			non_negative_interrupt: interrupt_number >= 0
 		local
 			ok: BOOLEAN
 		do
@@ -395,7 +401,8 @@ feature -- Execution
 			end;
 			debug_info.tenure;
 			status.set_is_stopped (False);
-			cont_request.send_rqst_1 (Rqst_resume, Resume_cont);
+			cont_request.send_rqst_2 (Rqst_resume, Resume_cont, 
+				interrupt_number);
 		end;
 
 	interrupt is
@@ -441,6 +448,16 @@ feature -- Setting
 			execution_mode := exec_mode
 		ensure
 			set: execution_mode = exec_mode
+		end;
+
+	set_interrupt_number (a_nbr: like interrupt_number) is
+			-- Set `interrupt_number' to `a_nbr'.
+		require
+			non_negative_nbr: a_nbr >= 0
+		do
+			interrupt_number := a_nbr
+		ensure
+			set: interrupt_number = a_nbr
 		end;
 
 	set_launched_command (cmd: like application_launched_command) is

@@ -104,6 +104,7 @@ feature -- Basic operations
 				else
 					insert_into_window (new_clipboard_object.object, clipboard_dialog)
 				end
+				clipboard_dialog.set_size (clipboard_dialog.minimum_width, clipboard_dialog.minimum_height)
 				clipboard_dialog.show_modal_to_window (main_window)
 				
 				if system_status.is_in_debug_mode then

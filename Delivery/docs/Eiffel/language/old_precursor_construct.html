@@ -1,0 +1,174 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Old Precursor Specification</title>
+<link rev="made" href="mailto:webmaster@eiffel.com">
+<link rel="stylesheet" href="../../styles/tech.css" type="text/css">
+<meta name="Microsoft Border" content="t, default">
+</head>
+
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td valign="top" bgcolor="#000063" width="291"><b><font face="Arial" size="4" color="#FFFFFF">Interactive<br>
+      Software Engineering</font></b></td>
+    <td valign="top" bgcolor="#000063" width="720"><b><font face="Arial" size="6" color="#FFFFCC">Old Precursor Specification</font></b></td>
+  </tr>
+  <tr>
+    <td colspan="2" valign="top" width="100%">
+<p align="center"><nobr>[&nbsp;<a href="../../index.html">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../release_notes.html">Release&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../papers/index.html">Technology&nbsp;Papers</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../../install.html">Installation&nbsp;Notes</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="../index.html">About&nbsp;Eiffel</a>&nbsp;]</nobr>
+<hr>
+
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+
+<table cols="1" cellpadding="5" cellspacing="0" border="0">
+  <tr>
+    <td>
+      <h1>Precursor construct: the original proposal</h1>
+      <p>The Precursor mechanism is a recently introduced Eiffel construct The
+      mechanism was proposed in mid-1997 (see <a HREF="#credits">credits</a> at
+      the end) to the language committee of NICE, the Nonprofit International
+      Consortium for Eiffel, and formally approved by the committee in a vote of
+      October 1997.
+      <p>The rest of this document contains the text of the formal proposal as
+      adopted by the NICE language committee. You should first have read the
+      companion document presenting an
+      <p><b>January 1999 note:</b> For an up-to-date version see a <a HREF="formal.html">small
+      revision</a> of this proposal. The changes are a change of order of
+      components in the syntax (the old order is still supported in ISE Eiffel
+      4.3) and a simplification/refinement of the validity rule. <a HREF="index.html">informal
+      description</a> of the mechanism.
+      <p>&nbsp;
+      <h2>New reserved word</h2>
+      <p>(To be added to list in &quot;Eiffel: The Language&quot;, page 553.)
+      <p>&nbsp;
+      <ul>
+        <font COLOR="#0000F0"><i>Precursor</i></font>
+      </ul>
+      <p>&nbsp;
+      <h2>Syntax change</h2>
+      Page 342, definition of Unqualified_call (previously <font COLOR="#0000F0">Entity
+      [Actuals]</font>) becomes
+      <p>&nbsp;
+      <ul>
+        <font COLOR="#0000F0">Unqualified_call == Feature_of_call [Actuals]</font>
+      </ul>
+      <p>with the new construct definitions
+      <p>&nbsp;
+      <ul>
+        <font COLOR="#0000F0">Feature_of_call == Entity | Precursor<br>
+        Precursor == [Parent_qualification] <i>Precursor</i><br>
+        Parent_qualification == &quot;{&quot; Class_name &quot;}&quot;</font>
+      </ul>
+      <p>&nbsp;
+      <h2>Validity changes</h2>
+      Note (not subject to vote): everything could be done within VUEX, page
+      368. I have found it more clear to introduce two new constraints. In VUEX,
+      page 368, replace condition 1 by
+      <p>&nbsp;
+      <ul>
+        <font COLOR="#0000F0">1. The call is an Unqualified_call.</font>
+      </ul>
+      <p>With the new validity rule VUNQ
+      <p>&nbsp;
+      <ul>
+        <font COLOR="#0000F0">An Unqualified_call appearing in a routine r of a
+        class <i>C</i> is valid if and only if it satisfies one of the following
+        two conditions:
+        <ul>
+          <p><img SRC="/icons/greenball.gif"> 1. Its Feature_of_call is the
+          final name of a feature of <i>C</i>.
+          <p><img SRC="/icons/greenball.gif"> 2. Its Feature_of_call is of the
+          Precursor kind.
+        </ul>
+        </font>
+      </ul>
+      <p>and the new validity rule VUPR (including a definition):
+      <p>&nbsp;
+      <ul>
+        <font COLOR="#0000F0">A Precursor is valid if and only if it satisfies
+        the following three conditions:
+        <ul>
+          <li> 1. It appears in a Routine_body.</li>
+          <li> 2. That Routine_body is part of
+          the declaration of exactly one routine <i>r</i> of <i>C</i>.</li>
+          <li> 3. That declaration is a
+          redefinition.</li>
+          <li> 4. If it is is the redefinition of
+          routines from more than one parent, the Parent_qualification part is
+          present.</li>
+          <li> 5. If the Parent_qualification
+          part is present, its Class_name is the name of one of the parents of <i>C</i>
+          from which <i>C</i> redefines <i>r</i>.</li>
+        </ul>
+        <p>The &quot;immediate precursor&quot; of <i>r</i> in this case is the
+        routine being redefined from a parent of <i>C</i>, determined in case of
+        ambiguity (under condition 2 of the rule) by the Class_name of the given
+        Parent_qualification.</font>
+      </ul>
+      <p>Also, in VUAR, page 369, rewrite the parenthetical sentence on line 2
+      of the rule by
+      <p>&nbsp;
+      <ul>
+        <font COLOR="#0000F0">(For an Unqualified_call take <i>target</i> to be <i>Current</i>;
+        if the Feature_of_call is of the Precursor kind, take <i>fname</i> to be
+        the immediate precursor of the enclosing routine.)</font>
+      </ul>
+      <p>&nbsp;
+      <h2>Semantics change</h2>
+      Insert a new section on page 345 between 21.8 and 21.9:
+      <p>&nbsp;
+      <ul>
+        <font COLOR="#0000F0">Precursor calls
+        <p>A call of the Precursor form, that is
+        <p>&nbsp;
+        <ul>
+          <i>Precursor</i> (...)
+        </ul>
+        or
+        <p>&nbsp;
+        <ul>
+          {<i>PARENT</i>} <i>Precursor</i> (...)
+        </ul>
+        <p>may only appear in the redefinition of a routine <i>r</i>. The
+        original version of <i>r</i> in the parent is known as the
+        &quot;immediate precursor&quot;.
+        <p>In this case the feature of the call, <i>fname</i>, is the immediate
+        precursor.</font>
+      </ul>
+      <p>Also, the next section (21.9) should begin
+      <p>&nbsp;
+      <ul>
+        <font COLOR="#0000F0">Now assume <i>target_value</i> is not void and the
+        call is not of the Precursor form.</font>
+      </ul>
+      <p>&nbsp;
+      <h2>Note</h2>
+      (This note is not part of the proposal and the vote does not apply to it.)
+      Since <a HREF="/doc/oosc.html"><i>Object-Oriented Software Construction,
+      second edition</i></a> (Prentice Hall, 1997) uses double braces, as in {{<i>PARENT</i>}},
+      rather than single braces as in {<i>PARENT</i>}, it may be desirable for
+      compilers to accept both forms. <a NAME="credits"></a>
+      <h2>Credits</h2>
+      <p>&nbsp;
+      <p>(This section is not part of the proposal and the vote does not apply
+      to it.)
+      <p>The Precursor proposal was put together and presented to NICE by
+      Bertrand Meyer of ISE but the language construct is the result of
+      collective work. The contributions of the following people are
+      acknowledged (please signal any omissions): Eric Bezault, Roger Browne,
+      James McKim, Xavier Le Vourch, Bertrand Meyer, Frieder Monninger, Steve
+      Tynor, Dino Valente, Kim Walden.
+      <p>&nbsp;</td>
+  </tr>
+</table>
+&nbsp;
+
+<!--msnavigation--></td></tr><!--msnavigation--></table></body>
+
+</html>

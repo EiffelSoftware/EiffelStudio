@@ -16,6 +16,8 @@ inherit
 			on_create_instance
 		end
 
+	EOLE_SERVER_CONFIGURATION
+
 feature -- Initialization
 
 	make is
@@ -45,8 +47,12 @@ feature {EOLE_CALL_DISPATCHER} -- Callback
 			-- Redefine in descendant if needed.
 		do
 			interface_id.to_upper
-			if interface_id.is_equal (Iid_dispatch) or interface_id.is_equal (Iid_unknown) then
+			if interface_id.is_equal (Iid_dispatch) or 
+				interface_id.is_equal (Iid_unknown)  or 
+				interface_id.is_equal (dispinterface_id)
+			then
 				Result := dispatch_interface.ole_interface_ptr
+				dispatch_interface.add_ref
 				set_last_hresult (S_ok)
 			else
 				set_last_hresult (E_nointerface)

@@ -8,33 +8,14 @@ class
 		EOLE_ACTIVEX_DISPINTERFACE
 
 inherit
-	EOLE_DISPATCH
-		redefine
-			make, 
-			on_release, on_add_ref,
-			interface_identifier_list
+	EOLE_DISPINTERFACE
+		redefine 
+			on_release, on_add_ref
 		end
-
-creation
+	creation
 	make
 
-feature -- Initialization
-
-	make is
-			-- Initialize OLE interface
-		do
-			Precursor
-			create_ole_interface_ptr
-		end
-
 feature -- Access
-
-	interface_identifier_list: LINKED_LIST [STRING] is
-			-- List of supported interfaces
-		once
-			Result := Precursor
-			Result.extend (class_factory.dispinterface_id)
-		end
 
 	class_factory:	EOLE_ACTIVEX
 			-- Reference to class factory that created `Current'

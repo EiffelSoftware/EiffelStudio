@@ -11,6 +11,7 @@ class
 inherit
 	EOLE_UNKNOWN
 		redefine
+			make,
 			interface_identifier,
 			interface_identifier_list
 		end
@@ -19,7 +20,16 @@ inherit
 
 creation
 	make
-		
+	
+feature {NONE}-- Initialization
+
+	make is
+			-- Initialize OLE interface
+		do
+			Precursor
+			create_ole_interface_ptr
+		end
+	
 feature -- Access
 
 	interface_identifier: STRING is

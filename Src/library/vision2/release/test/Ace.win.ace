@@ -25,11 +25,11 @@ cluster
 
 external
 	include_path:
-		"$VISION_PRERELEASE\library\wel\spec\windows\include",
-		"$VISION_PRERELEASE\library\vision2\spec\include"
+		"$VISION_PRERELEASE\wel\spec\windows\include",
+		"$VISION_PRERELEASE\vision2\spec\include"
 	object:
-		"$VISION_PRERELEASE\library\wel\spec\$(COMPILER)\lib\wel.lib",
-		"$VISION_PRERELEASE\library\vision2\spec\$(COMPILER)\lib\libpng.lib",
-		"$VISION_PRERELEASE\library\vision2\spec\$(COMPILER)\lib\zlib.lib",
-		"$VISION_PRERELEASE\library\vision2\spec\$(COMPILER)\lib\vision2.lib"
+		"$VISION_PRERELEASE\wel\spec\$(COMPILER)\lib\wel.lib",
+		"$VISION_PRERELEASE\vision2\spec\$(COMPILER)\lib\libpng.lib",
+		"$VISION_PRERELEASE\vision2\spec\$(COMPILER)\lib\zlib.lib",
+		"$VISION_PRERELEASE\vision2\spec\$(COMPILER)\lib\vision2.lib"
 end

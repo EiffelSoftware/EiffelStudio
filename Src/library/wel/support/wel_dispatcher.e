@@ -72,7 +72,9 @@ feature {NONE} -- Implementation
 					has_return_value := window.has_return_value
 				end
 
-				if window.default_processing then
+				if window.default_processing and window.exists then
+						-- Previous call to `process_message' could have destroyed
+						-- `window' and therefore we cannot do calls on `window'.
 					Result := window.call_default_window_procedure (msg, wparam, lparam)
 				end
 

@@ -78,7 +78,7 @@ feature -- Basic Operation
 				-- from within one abject to another. In this case, we unparent first.
 			if previous_parent_id > 0 then
 				a_previous_parent := child_object.parent_object
-				child_object.unparent
+				a_previous_parent.remove_child (child_object)
 				update_parent_object_editors (child_object, a_previous_parent, all_editors)
 			end
 
@@ -105,7 +105,7 @@ feature -- Basic Operation
 			parent_object := Object_handler.deep_object_from_id (parent_id)
 
 			a_previous_parent := child_object.parent_object
-			child_object.unparent
+			a_previous_parent.remove_child (child_object)
 			update_parent_object_editors (child_object, a_previous_parent, all_editors)
 
 				-- If the object had a previous parent, we must put it back.

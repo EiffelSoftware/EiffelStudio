@@ -398,14 +398,16 @@ rt_shared void initsig(void)
 	sig_stk.s_pending = '\0';		/* No signals pending yet */
 
 	for (sig = 1; sig < NSIG; sig++) {
-#if defined EIF_LINUXTHREADS
+#ifdef EIF_THREADS
+#if defined EIF_DFT_SIGUSR
 	  if ((sig != SIGUSR1) && (sig != SIGUSR2))	/* Used by LinuxThreads */
 #elif defined EIF_PCTHREADS
 	  if (sig != SIGVTALRM)				/* Used by PCThread implementation */
 /* #elif defined VXWORKS */
 /* 	  if (sig == 34528) */
-#elif defined UNIXWARE_THREADS
+#elif defined EIF_DLT_SIGWAITING
 	if (sig !=SIGWAITING)	/* used by Unixware threads */
+#endif
 #endif
 		old = signal(sig, ehandlr);		/* Ignore EINVAL errors */
 		if (old == SIG_IGN)

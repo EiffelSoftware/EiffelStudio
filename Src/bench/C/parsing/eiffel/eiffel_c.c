@@ -11,10 +11,14 @@
 */
 
 #include "eif_config.h"
+#include "eif_portable.h"
 #include "eif_macros.h"
 #include "eiffel_c.h"
 #include "eif_plug.h"
 #include <stdio.h>
+#ifdef EIF_VMS
+#include <ctype.h>	/* for isupper, tolower */
+#endif
 
 /*
  * Declarations 

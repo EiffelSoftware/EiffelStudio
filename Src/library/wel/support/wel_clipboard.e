@@ -57,10 +57,16 @@ feature -- Element Change
 		end
 
 	open_clipboard (window: WEL_WINDOW) is
+			-- Open clipboard for `window'. If `Void',
+			-- clipboard is opened to the current task.
 		require
-			window_exists: window /= Void and then window.exists
+			window_exists: window /= Void implies window.exists
 		do
-			clipboard_open := cwel_open_clipboard (window.item)
+			if window /= Void then
+				clipboard_open := cwel_open_clipboard (window.item)
+			else
+				clipboard_open := cwel_open_clipboard (default_pointer)
+			end
 		end
 
 	close_clipboard is

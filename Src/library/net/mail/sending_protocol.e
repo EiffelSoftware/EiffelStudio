@@ -13,11 +13,9 @@ inherit
 
 feature -- Initialization
 
-	transfer is 
+	transfer is
+			-- Transfer any message.
 		deferred
 		end
-
-feature -- Access
-
 
 end -- class SENDING_PROTOCOL

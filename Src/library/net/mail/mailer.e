@@ -13,18 +13,16 @@ create
 feature -- Initialization
 
 	make (a_protocol: EMAIL_PROTOCOL) is
-			-- create the mailer with 'a_protocol'
+			-- create the mailer with 'a_protocol'.
 		require
 			not_void: a_protocol /= Void
 		do
 			protocol:= a_protocol
-				-- Should determine if the protocol is uni or bi-directionnal
-				-- Should we test here ?
 			is_sender:= True
 		end
 
 	make_with_email (a_protocol: EMAIL_PROTOCOL; an_email: EMAIL) is
-			-- create the mailer with 'an_email' and its 'a_protocol'
+			-- create the mailer with 'an_email' and its 'a_protocol'.
 		require
 			not_void: a_protocol /= Void and then an_email /= Void
 		do
@@ -32,32 +30,36 @@ feature -- Initialization
 			protocol.set_email (an_email)
 		end
 
-feature -- Actions
+feature -- Access
 
-	initiate is
-		do
-			protocol.initiate
-		end
+	protocol: EMAIL_PROTOCOL
+		-- Protocol used to handle email.
 
-	transfer is
-			-- transfer data .. bi-directionnal 
-			-- I still don't understand why can't we do 2 distincts features to send or
-			-- retrieve emails in this class
-		require
-			email_must_exists: (is_sender and protocol.email /= Void) or (is_receiver)
-		do
-			protocol.transfer
-			set_transfer_error (protocol.transfer_error)
-		end
+feature -- Status setting
 
-	quit is
-		do
-			protocol.quit
-		end
+	is_sender: BOOLEAN
+		-- Is the mailer in sending mode.
+
+	is_receiver: BOOLEAN
+		-- Is the mailer in receiving mode.
+
+	transfer_error: BOOLEAN
+		-- Has the transfer failed?
 
 feature -- Settings
 
+	set_from_resource is
+		do
+
+		end
+
+	set_to_resource is
+		do
+
+		end
+
 	set_email (an_email: EMAIL) is
+			-- Set email to the choosen protocol.
 		do
 --			email:= an_email
 			protocol.set_email (an_email)
@@ -71,35 +73,50 @@ feature -- Settings
 feature {NONE} -- Settings
 
 	set_transfer_error (b: BOOLEAN) is
+			-- Set error.
 		do
 			transfer_error:= b
 		end
 
 	set_is_sender (b: BOOLEAN) is
+			-- Set sender.
 		do
 			is_sender:= b
 		end
 
 	set_is_receiver (b: BOOLEAN) is
+			-- Set receiver.
 		do
 			is_receiver:= b
 		end
 
-feature -- Access
 
-	is_sender: BOOLEAN
-		-- Is the mailer in sending mode
+feature -- Basic operations
 
-	is_receiver: BOOLEAN
-		-- Is the mailer in receiving mode
+	initiate is
+			-- initiate the connection.
+		do
+			protocol.initiate
+		end
+
+	transfer is
+			-- transfer data .. bi-directionnal.
+		require
+			email_must_exists: (is_sender and protocol.email /= Void) or (is_receiver)
+		do
+			protocol.transfer
+			set_transfer_error (protocol.transfer_error)
+		end
+
+	terminate is
+			-- terminate hte connection.
+		do
+			protocol.terminate
+		end
+
+
 
 --	email: EMAIL
 --		-- Email message
-
-	protocol: EMAIL_PROTOCOL
-		-- Protocol used to handle email
-
-	transfer_error: BOOLEAN
-		-- Has the transfer failed ?
 
 end -- class MAILER

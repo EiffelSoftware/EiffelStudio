@@ -22,7 +22,7 @@ feature -- Access
 
 feature -- Status report
 
-	help: STRING is "Select %"Extend%", to add a new row to the list with column texts matching `text' of the text field, seperated by commas.%NFor example, a `text' of %"one,two,thee,four%" will add a row with four columns%NSelecting %"Wipe_out%" will clear the list." 
+	help: STRING is "Select %"Extend%", to add a new row to the list with column texts matching `text' of the text field, separated by commas.%NFor example, a `text' of %"one,two,thee,four%" will add a row with four columns%NSelecting %"Wipe_out%" will clear the list." 
 			-- Instructions on how to use the control.
 
 feature -- Status setting

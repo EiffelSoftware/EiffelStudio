@@ -60,8 +60,8 @@ To do:
 
 Feature/Bug requests:
 - EV_LABEL.vertical align_text_center. (jfiat@capgemini.fr)
+	(VB This should be the default value!)
 - EV_MULTI_COLUMN_LIST double click. (jfiat@capgemini.fr)
-- Link up to windows scroll bar width settings. (pichery@eiffel.com, PR 2390)
 - popup (message, help_anchor: STRING;
     <<["ok",~ok_action];["toto",~do_toto];["tata",Void];>>
   ) (pascalf@eiffel.com)
@@ -178,6 +178,7 @@ X   complete but found to have bugs
     widgets/containers/ev_split_area.e                  X    -     -     .
     widgets/containers/ev_horizontal_split_area.e       o    -     -     .
     widgets/containers/ev_vertical_split_area.e         o    -     -     .
+    widgets/containers/ev_fixed.e                       *    o 1   o 1   .
 
   Menu:
     widgets/uncommon_widgets/ev_menu.e                  *    *     o     .

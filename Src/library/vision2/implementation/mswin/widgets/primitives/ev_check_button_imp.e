@@ -17,6 +17,8 @@ inherit
 		undefine
 			default_alignment
 		redefine
+			enable_select,
+			disable_select,
 			default_style,
 			interface,
 			make,
@@ -35,6 +37,22 @@ feature {NONE} -- Initialization
 			wel_make (default_parent, "", 0, 0, 0, 0, 0)
 			extra_width := 20
 			text_alignment := default_alignment
+		end
+
+feature -- Status setting
+
+	enable_select is
+			-- Make `is_selected' True.
+		do
+			cwin_send_message (wel_item, bm_setcheck, 1, 0)
+			Precursor {EV_TOGGLE_BUTTON_IMP}
+		end
+
+	disable_select is
+			-- Make `is_selected' False.
+		do
+			cwin_send_message (wel_item, bm_setcheck, 0, 0)
+			Precursor {EV_TOGGLE_BUTTON_IMP}
 		end
 
 feature {NONE} -- Implementation

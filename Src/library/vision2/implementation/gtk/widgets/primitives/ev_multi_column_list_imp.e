@@ -1048,7 +1048,6 @@ feature {NONE} -- Implementation
 			end
 		end
 
-
 	ensure_item_visible (a_item: EV_MULTI_COLUMN_LIST_ROW) is
 			-- Ensure `a_item' is visible on the screen.
 		do
@@ -1160,6 +1159,23 @@ feature {NONE} -- Implementation
 	disconnect_all_signals is
 		do
 			--| FIXME
+		end
+
+feature {NONE} -- Externals
+		
+	sizeof_pointer: INTEGER is
+		external
+			"C [macro <stdio.h>]"
+		alias
+			"sizeof(void*)"
+		end
+		
+	gtk_args_array_i_th (args_array: POINTER; an_index: INTEGER): POINTER is
+			-- GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index) {
+			--	return (GtkArg*)(args_array + index);
+			-- }
+		external
+			"C | %"ev_c_util.h%""
 		end
 
 feature {EV_ANY_I} -- Implementation

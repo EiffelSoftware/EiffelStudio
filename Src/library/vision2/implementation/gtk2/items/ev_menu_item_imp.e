@@ -76,7 +76,7 @@ feature -- Element change
 			-- Assign `a_text' to `text'.
 		local
 			temp_string: STRING
-			tab_mod: INTEGER
+--			tab_mod: INTEGER
 		do
 			temp_string := a_text.twin
 --			tab_mod := temp_string.count \\ 8

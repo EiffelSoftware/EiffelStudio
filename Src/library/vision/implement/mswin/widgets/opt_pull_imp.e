@@ -299,7 +299,7 @@ feature {NONE} -- Implementation
 	number_of_buttons: INTEGER is
 			-- Number of buttons in option pull
 		do
-			if not button_list.empty then
+			if not button_list.is_empty then
 				Result := button_list.count - unmanaged_count (button_list.last) + 1
 			end 
 		end

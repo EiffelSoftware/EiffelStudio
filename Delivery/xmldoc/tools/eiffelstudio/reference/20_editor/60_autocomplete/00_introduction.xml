@@ -8,7 +8,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>EiffelStudio editor includes new features which were designed to help write Eiffel code. Automatic completion is one of those. This feature is available in two contexts:</paragraph>
+		<paragraph>EiffelStudio editor includes new features designed to help write Eiffel code. Automatic completion is one of those. This feature is available in three contexts:</paragraph>
 		<list ordered="false">
 			<item>
 				<link>
@@ -21,6 +21,8 @@
 					<url>20_feature_call_autocomplete.xml</url>
 					<label>when the user enters a feature call.</label>
 				</link>
+			</item>
+			<item><link><url>30_class_name_autocomplete.xml</url><label>when the user enters a class name</label></link>.
 			</item>
 		</list>
 		<paragraph>As, regarding automatic completion, expectations vary from one individual to another, this 

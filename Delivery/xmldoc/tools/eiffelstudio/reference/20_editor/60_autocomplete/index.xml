@@ -20,5 +20,11 @@
 					<label>Feature call auto-complete</label>
 				</link>
 			</item>
+			<item>
+				<link>
+					<url>./30_class_name_autocomplete.xml</url>
+					<label>Class name auto-complete</label>
+				</link>
+			</item>
 		</list>
 	</paragraph></document>

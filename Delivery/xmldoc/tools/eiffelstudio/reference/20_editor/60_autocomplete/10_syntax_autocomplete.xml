@@ -15,7 +15,19 @@
 			</item>
 			<item>
 				<paragraph>The editor can complete syntactic structures or part of them. The auto-complete is triggered when "Enter" or "Space" keys are pressed after a reserved word included in the following list:</paragraph>
-				<paragraph>The way these key words are completed is fully 
+				<table>
+					<row><cell>class</cell><cell>ensure</cell><cell>invariant</cell><cell>require else</cell></row>
+					<row><cell>check</cell><cell>ensure then</cell><cell>is</cell><cell>rescue</cell></row>
+					<row><cell>create</cell><cell>export</cell><cell>local</cell><cell>select</cell></row>
+					<row><cell>creation</cell><cell>external</cell><cell>loop</cell><cell>then</cell></row>
+					<row><cell>debug</cell><cell>feature</cell><cell>obsolete</cell><cell>undefine</cell></row>
+					<row><cell>deferred</cell><cell>from</cell><cell>once</cell><cell>until</cell></row>
+					<row><cell>do</cell><cell>if</cell><cell>precursor</cell><cell>variant</cell></row>
+					<row><cell>else</cell><cell>indexing</cell><cell>redefine</cell><cell>when</cell></row>
+					<row><cell>elseif</cell><cell>inherit</cell><cell>rename</cell></row>
+					<row><cell>end</cell><cell>inspect</cell><cell>require</cell></row> 
+				</table>
+				<paragraph>The way these reserved words are completed is fully 
 					<link>
 						<url>../../85_preferences/20_preferences_reference/20_tools/30_editor/30_automatic_completion_preferences/20_syntax_autocomplete/index.xml</url>
 						<label>customizable</label>
@@ -26,7 +38,7 @@
 		<seealso>
 			<bold>See Also</bold>
 			<line_break/>
-			<link>
+			To see how the editor completes by default and how it can be changed, please read the following pages: <link>
 				<url>../../85_preferences/20_preferences_reference/20_tools/30_editor/30_automatic_completion_preferences/20_syntax_autocomplete/index.xml</url>
 				<label>Syntax auto-complete preferences</label>
 			</link>

@@ -16,7 +16,7 @@
 				<link>
 					<url>./40_history_functionality.xml</url>
 					<label>Undo</label>
-				</link>: undo lastchange.
+				</link>: undo last change.
 			</item>
 			<item>
 				<link>
@@ -54,13 +54,13 @@
 				<link>
 					<url>./20_selection.xml</url>
 					<label>Select All</label>
-				</link>: Select the entiretext.
+				</link>: Select the entire text.
 			</item>
 			<item>
 				<link>
 					<url>../10_browsing_tools/60_search_tool.xml</url>
 					<label>Find</label>
-				</link>:Show and go to the 
+				</link>: Show and go to the 
 				<link>
 					<url>../10_browsing_tools/60_search_tool.xml</url>
 					<label>search panel</label>
@@ -70,7 +70,7 @@
 				<link>
 					<url>../10_browsing_tools/60_search_tool.xml</url>
 					<label>Replace</label>
-				</link>:Show and go to the 
+				</link>: Show and go to the 
 				<link>
 					<url>../10_browsing_tools/60_search_tool.xml</url>
 					<label>search panel</label>
@@ -80,7 +80,7 @@
 				<link>
 					<url>./50_search_functionality.xml</url>
 					<label>Search</label>
-				</link>:
+				</link>: 
 				<list ordered="false">
 					<item>
 						<link>
@@ -92,13 +92,13 @@
 						<link>
 							<url>./50_search_functionality.xml</url>
 							<label>Find previous</label>
-						</link>:Find the previous occurrence of the last searched expression.
+						</link>: Find the previous occurrence of the last searched expression.
 					</item>
 					<item>
 						<link>
 							<url>./50_search_functionality.xml</url>
 							<label>Find selection</label>
-						</link> :Find the next occurrence of the selected text.
+						</link>: Find the next occurrence of the selected text.
 					</item>
 				</list>
 			</item>
@@ -143,7 +143,13 @@
 					<item>
 						<link>
 							<url>60_autocomplete/20_feature_call_autocomplete.xml</url>
-							<label>Completew ord</label>
+							<label>Complete word</label>
+						</link>
+					</item>
+					<item>
+						<link>
+							<url>60_autocomplete/30_class_name_autocomplete.xml</url>
+							<label>Complete class name</label>
 						</link>
 					</item>
 				</list>

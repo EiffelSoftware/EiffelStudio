@@ -1290,6 +1290,7 @@ char *path;
 	 * with no write permissions...
 	 */
 
+	struct stat buf;			/* Buffer to get parent directory statistics */
 	char temp [PATH_MAX];
 	char *ptr;
 
@@ -1299,7 +1300,11 @@ char *path;
 		*ptr = '\0';
 	else
 		strcpy (temp, ".");
-	return (EIF_BOOLEAN) ((-1 != access(temp, W_OK)) ? '\01' : '\0');
+	
+	file_stat(temp, &buf);
+	if (buf.st_mode & S_IFDIR != 0)	/* Is parent a directory? */
+		return (EIF_BOOLEAN) ((-1 != access(temp, W_OK)) ? '\01' : '\0');
+	return (EIF_BOOLEAN) '\0';
 }
 
 public EIF_INTEGER file_fd(f)

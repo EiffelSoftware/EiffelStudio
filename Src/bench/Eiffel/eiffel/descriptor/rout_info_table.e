@@ -153,11 +153,10 @@ feature -- Query features
 
 feature -- Generation
 
-	generate (f: INDENT_FILE) is
+	generate (buffer: GENERATION_BUFFER) is
 			-- C code of run-time structure representing Current
 		require
-			file_not_void: f /= Void
-			file_exists: f.exists
+			buffer_not_void: buffer /= Void
 		local
 			rout_infos: ARRAY [ROUT_INFO]
 			nb_elements: INTEGER
@@ -167,14 +166,14 @@ feature -- Generation
 			rout_infos := renumbered_table
 			nb_elements := rout_infos.count
 
-			f.putstring ("#include %"eif_project.h%"%N%
+			buffer.putstring ("#include %"eif_project.h%"%N%
 						 %#include %"eif_macros.h%"%N%N")
-			f.putstring ("struct rout_info egc_forg_table_init[] = {%N")
+			buffer.putstring ("struct rout_info egc_forg_table_init[] = {%N")
 				-- C tables start at 0, we want to start at 1, to
 				-- that effect we insert a dummy entry.
-			f.putstring ("%T{(int16) -1, (int16) -1},%N")
+			buffer.putstring ("%T{(int16) -1, (int16) -1},%N")
 				-- Entry for the invariant "routine"
-			f.putstring ("%T{(int16) 0, (int16) 0},%N")
+			buffer.putstring ("%T{(int16) 0, (int16) 0},%N")
 
 			from
 				i := 2	
@@ -183,18 +182,18 @@ feature -- Generation
 			loop
 				ri := rout_infos.item (i)
 				if ri /= Void then
-					f.putstring ("%N%T{(int16) ")
-					f.putint (ri.origin.id)
-					f.putstring (", (int16) ")
-					f.putint (ri.offset)
-					f.putstring ("},")
+					buffer.putstring ("%N%T{(int16) ")
+					buffer.putint (ri.origin.id)
+					buffer.putstring (", (int16) ")
+					buffer.putint (ri.offset)
+					buffer.putstring ("},")
 				else
-					f.putstring ("%N%T{(int16) -1, (int16) -1},")
+					buffer.putstring ("%N%T{(int16) -1, (int16) -1},")
 				end
 				i := i + 1
 			end
 
-			f.putstring ("%N};%N")
+			buffer.putstring ("%N};%N")
 		end
 
 feature -- Melting

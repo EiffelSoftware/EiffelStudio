@@ -98,8 +98,8 @@ feature {NONE} -- Implementation
 			else
 				extension := "png"
 			end
-			if location /= Void then
-				create filename.make_from_string (location)
+			if installation_location /= Void then
+				create filename.make_from_string (installation_location)
 				filename.extend ("bitmaps")
 				filename.extend (extension)
 				filename.extend (a_type.as_lower + "." + extension)

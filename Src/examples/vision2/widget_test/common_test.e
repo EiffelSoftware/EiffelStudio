@@ -28,8 +28,8 @@ feature {NONE} -- Implementation
 			if all_loaded_pixmaps = Void then
 				create all_loaded_pixmaps.make (2)
 			end
-			if location /= Void then
-				create filename.make_from_string (location)
+			if installation_location /= Void then
+				create filename.make_from_string (installation_location)
 				filename.extend ("bitmaps")
 				filename.extend ("png")
 				filename.extend ("image" + a_number.out + ".png")

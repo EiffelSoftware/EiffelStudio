@@ -363,10 +363,10 @@ void c_gtk_signal_destroy_data (gpointer data)
 gint c_gtk_signal_connect_general (GtkObject *widget, 
 			   gchar *name, 
 			   EIF_PROC execute_func,
-			   EIF_POINTER object,
-			   EIF_POINTER argument,
-			   EIF_POINTER ev_data,
-			   EIF_POINTER ev_data_imp,
+			   EIF_REFERENCE object,
+			   EIF_REFERENCE argument,
+			   EIF_REFERENCE ev_data,
+			   EIF_REFERENCE ev_data_imp,
 			   EIF_PROC event_data_rtn,
 			   char mouse_button,
 			   char double_click,
@@ -387,14 +387,15 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
     /* do not allow the garbage collection of  object and argument */
     pcbd->rtn = execute_func;
     pcbd->obj = henter (object);
-    pcbd->argument = henter (argument);
-    pcbd->ev_data = henter (ev_data);
-    pcbd->ev_data_imp = henter (ev_data_imp);
-    pcbd->set_event_data = event_data_rtn;
+	pcbd->argument = henter (argument);
+	pcbd->ev_data = henter (ev_data);
+	pcbd->ev_data_imp = henter (ev_data_imp);
+	pcbd->set_event_data = event_data_rtn;
+
     pcbd->mouse_button = mouse_button;
     pcbd->double_click = double_click;  
 
-	pcbd->extra_data = extra_data;  
+	pcbd->extra_data = extra_data;
 
     /*  printf ("connect rtn= %d object= %d pcbd= %d\n", pcbd->rtn, (pcbd->obj), pcbd); */
 
@@ -504,10 +505,10 @@ gint c_gtk_signal_connect_general (GtkObject *widget,
 gint c_gtk_signal_connect (GtkObject *widget, 
 			   gchar *name, 
 			   EIF_PROC execute_func,
-			   EIF_POINTER object,
-			   EIF_POINTER argument,
-			   EIF_POINTER ev_data,
-			   EIF_POINTER ev_data_imp,
+			   EIF_REFERENCE object,
+			   EIF_REFERENCE argument,
+			   EIF_REFERENCE ev_data,
+			   EIF_REFERENCE ev_data_imp,
 			   EIF_PROC event_data_rtn,
 			   char mouse_button,
 			   char double_click,
@@ -1356,11 +1357,17 @@ void c_gtk_option_button_set_bg_color (GtkOptionMenu *option, gint r, gint g, gi
 /*********************************
  *
  * Function : `c_gtk_menu_remove_all_items' (1)
+ * 			  `c_gtk_menu_get_child'		(2)
+ * 			  `c_gtk_menu_nb_children'		(3)
  *			  
  * Note : (1) remove all the menu items of the given menu. 
+ * 		  (2) Pointer of to the child of the menu at the given position.
+ * 		  (3) Number of children of the menu.
  * 
  *********************************/
 
+
+	
 void c_gtk_menu_remove_all_items (GtkMenu *menu)
 {
 	GtkMenuShell *menu_shell;
@@ -1378,6 +1385,22 @@ void c_gtk_menu_remove_all_items (GtkMenu *menu)
     }
 }
 
+EIF_POINTER c_gtk_menu_get_child (GtkMenu *menu, gint i)
+{
+  GtkMenuShell *menu_shell;
+
+  menu_shell = GTK_MENU_SHELL (menu);
+  return g_list_nth_data (menu_shell->children, i);   
+}
+
+EIF_INTEGER c_gtk_menu_nb_children (GtkMenu *menu)
+{
+  GtkMenuShell *menu_shell;
+
+  menu_shell = GTK_MENU_SHELL (menu);
+  return g_list_length (menu_shell->children);   
+ 
+}
 /*********************************
  *
  * Data : `xpm_data'

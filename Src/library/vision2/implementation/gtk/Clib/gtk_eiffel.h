@@ -90,10 +90,10 @@ void c_gtk_signal_destroy_data (gpointer data);
 gint c_gtk_signal_connect (GtkObject *widget, 
 			   gchar *name, 
 			   EIF_PROC execute_func,
-			   EIF_POINTER object,
-			   EIF_POINTER argument,
-			   EIF_POINTER ev_data,
-			   EIF_POINTER ev_data_imp,
+			   EIF_REFERENCE object,
+			   EIF_REFERENCE argument,
+			   EIF_REFERENCE ev_data,
+			   EIF_REFERENCE ev_data_imp,
 			   EIF_PROC event_data_rtn,
 			   char mouse_button,
 			   char double_click,
@@ -340,6 +340,10 @@ void c_gtk_option_button_set_bg_color (GtkOptionMenu *option_menu, gint r, gint 
 ==============================================================================*/
 
 void c_gtk_menu_remove_all_items (GtkMenu *menu);
+
+EIF_POINTER c_gtk_menu_get_child (GtkMenu *menu, gint i);
+
+EIF_INTEGER c_gtk_menu_nb_children (GtkMenu *menu);
 
 /*==============================================================================
  text functions

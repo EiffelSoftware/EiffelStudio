@@ -80,7 +80,7 @@ feature {NONE}
 feature 
 
 	cut (elt: TREE_ELEMENT) is
-			-- Remove 'elt' from the tree
+			-- Remove 'elt' from the tree.
 		do
 			start;
 			search (elt);
@@ -90,6 +90,7 @@ feature
 		end;
 
 	append (elt: TREE_ELEMENT) is
+			-- Append 'elt' to the tree.
 		local
 			display_elt: BOOLEAN;
 			a_parent: CONTEXT;
@@ -224,6 +225,7 @@ feature
 			set_action ("<Key>osfRight", Current, Sixth);
 			set_action ("<Key>osfUp", Current, Seventh);
 			set_action ("<Key>osfDown", Current, Eighth);
+			top_shell.set_action ("<Configure>", Current, configure_action);
 
 			!!positions.make;
 			register;
@@ -240,6 +242,11 @@ feature
 		ensure
 			target_is_current: target = Current
 		end;
+
+	configure_action: ANY is
+		once
+			!! Result
+		end
 
 feature {TREE_ELEMENT}
 
@@ -301,12 +308,16 @@ feature
 					Shared_window_list.forth;
 					positions.forth;
 				end;
-				set_size (scrolled_w.width.max (max_x+20),
-					  	scrolled_w.height.max (max_y+20));
+				set_max_size;
 				draw;
 			end
 		end;
 
+	set_max_size is
+		do
+			set_size (scrolled_w.width.max (max_x+20),
+				  	scrolled_w.height.max (max_y+20));
+		end;
 	
 feature {NONE}
 
@@ -334,7 +345,9 @@ feature {NONE}
 			d_x, d_y: INTEGER;
 			wind_c: WINDOW_C;
 		do
-			if (argument = Second) then
+			if (argument = configure_action) then
+				set_max_size
+			elseif (argument = Second) then
 					-- Expose event
 				draw
 			else

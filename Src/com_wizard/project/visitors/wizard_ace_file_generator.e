@@ -344,10 +344,10 @@ feature -- Basic operations
 			Result.append (New_line_tab)
 			Result.append_character ('%"')
 			Result.append (Shared_wizard_environment.project_name)
-			Result.append_character ('%"')
 			if Shared_wizard_environment.client then
 				Result.append ("_client")
 			end
+			Result.append_character ('%"')
 			Result.append (New_line)
 			Result.append (Partial_ace_file)
 			Result.append (Shared_wizard_environment.destination_folder)

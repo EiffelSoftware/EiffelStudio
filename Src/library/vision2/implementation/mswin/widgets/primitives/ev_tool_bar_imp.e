@@ -24,7 +24,8 @@ inherit
 			on_right_button_down,
 			on_right_button_up,
 			on_middle_button_up,
-			on_middle_button_down
+			on_middle_button_down,
+			on_mouse_move
 		end
 
 	EV_SIZEABLE_CONTAINER_IMP
@@ -451,6 +452,7 @@ feature {NONE} -- WEL Implementation
 		do
 			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 			internal_propagate_event (Cmd_button_three_press, x_pos, y_pos)
+			disable_default_processing
 		end
 
 	on_left_button_up (keys, x_pos, y_pos: INTEGER) is
@@ -476,7 +478,18 @@ feature {NONE} -- WEL Implementation
 			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
 			internal_propagate_event (Cmd_button_three_release, x_pos, y_pos)
 		end
-	
+
+	on_mouse_move (keys, x_pos, y_pos: INTEGER) is
+			-- Executed when the mouse move.
+			-- We verify that there is indeed a command to avoid
+			-- the creation of an object for nothing.
+		do
+			{EV_PRIMITIVE_IMP} Precursor (keys, x_pos, y_pos)
+			if has_capture then
+				disable_default_processing
+			end
+		end
+
 end -- class EV_TOOL_BAR_IMP
 
 --|----------------------------------------------------------------

@@ -200,21 +200,79 @@ feature {NONE} -- Implementation
 			create constants_button
 			constants_button.set_tooltip (Select_constant_tooltip)
 			constants_button.select_actions.extend (agent switch_constants_mode)
-			constants_button.select_actions.extend (agent update_editors)
+			constants_button.select_actions.extend (agent update_editors_when_unselected)
 			constants_button.set_pixmap (Icon_format_onces @ 1)
 		ensure
 			constants_button_not_void: constants_button /= Void
 		end
 		
+	update_editors_when_unselected is
+			-- Call `update_editors' only if `constants_button' is not selected.
+		do
+			if not constants_button.is_selected then
+				update_editors
+			end
+		end
+
 	switch_constants_mode is
-			-- Switch constants mode based on selected state of `constants_button'.
+			-- Respond to a user press of `constants_button' and
+			-- update the displayed input fields accordingly.
+		do
+			if constants_button.is_selected then
+				enable_constant_mode
+			else
+				disable_constant_mode
+			end
+		end
+		
+	enable_constant_mode is
+			-- Ensure constant entry fields are displayed.
 		deferred
 		end
 		
+	disable_constant_mode is
+			-- Ensure constant entry fields are hidden.
+		deferred
+		end
+
 	update_editors is
 			-- Update editors.
 		do
 			update_editors_for_property_change (internal_gb_ev_any.objects.first, internal_gb_ev_any.type, internal_gb_ev_any.parent_editor)
 		end
+		
+		add_select_item is
+			-- Add an initial item to `constants_combo_box' prompting for item selection.
+		require
+			does_not_include_item: constants_combo_box.is_empty or else not has_select_item
+		local
+			list_item: EV_LIST_ITEM
+		do
+			create list_item.make_with_text (select_constant_string)
+			constants_combo_box.go_i_th (1)
+			constants_combo_box.put_left (list_item)
+			list_item.enable_select
+		ensure
+			count_increased: constants_combo_box.count = old constants_combo_box.count + 1
+			has_select_item: has_select_item
+		end
+		
+	remove_select_item is
+			-- Remove initial item which prompts for item selection from `constants_combo_box'.
+		require
+			has_select_item: has_select_item
+		do
+			constants_combo_box.prune_all (constants_combo_box.first)
+		ensure
+			count_decreased: constants_combo_box.count = old constants_combo_box.count - 1
+			not_has_select_item: not has_select_item
+		end
+		
+	has_select_item: BOOLEAN is
+			-- Does `constants_combo_box' contain the select item entry?
+		do
+			 Result := constants_combo_box.i_th (1).text.is_equal (select_constant_string)
+		end
+
 
 end -- class GB_INPUT_FIELD

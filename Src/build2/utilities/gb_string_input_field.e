@@ -97,6 +97,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 		local
 			constant_context: GB_CONSTANT_CONTEXT
 			list_item: EV_LIST_ITEM
+			blocked_list_item: EV_LIST_ITEM
 		do
 			constant_context := object.constants.item (internal_gb_ev_any.type + internal_type)
 			if constant_context /= Void then
@@ -106,11 +107,10 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 				list_item := constants_combo_box.selected_item
 				if list_item /= Void then
 					list_item.deselect_actions.block
+					blocked_list_item := list_item
 				end
-				switch_constants_mode
-				if list_item /= Void then
-					list_item.deselect_actions.resume
-				end
+				enable_constant_mode
+
 				list_item := list_item_with_matching_text (constants_combo_box, constant_context.constant.name)
 				check
 					list_item_not_void: list_item /= Void
@@ -118,15 +118,20 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 				list_item.select_actions.block
 				list_item.enable_select
 				list_item.select_actions.resume
+				if blocked_list_item /= Void then
+					blocked_list_item.deselect_actions.resume
+				end
 			else
 				constants_button.select_actions.block
 				constants_button.disable_select
 				constants_button.select_actions.resume
-				switch_constants_mode
-				constants_combo_box.first.enable_select
+				disable_constant_mode
 				text_entry.change_actions.block
 				text_entry.set_text (a_value)
 				text_entry.change_actions.resume
+				if has_select_item then
+					remove_select_item
+				end
 			end
 		end
 
@@ -165,11 +170,16 @@ feature {NONE} -- Implementation
 			-- Validate information in `text_field' and execute `execute_agent'
 			-- if valid. If not valid, then restore previous value to `text_field'.
 		do
-			validate_agent.call ([text_entry.text])
-			if validate_agent.last_result then
-				execute_agent (text_entry.text)
-			else
-				text_entry.set_text (value_on_entry)
+				-- After resetting an object, it appears that the focus in and out actions may be called
+				-- sometimes. To prevent us from working on the old object, we check that `Current' is
+				-- still valid.
+			if object.object /= Void then
+				validate_agent.call ([text_entry.text])
+				if validate_agent.last_result then
+					execute_agent (text_entry.text)
+				else
+					text_entry.set_text (value_on_entry)
+				end
 			end
 		end
 		
@@ -223,10 +233,9 @@ feature {NONE} -- Implementation
 			horizontal_box.disable_item_expand (tool_bar)
 			populate_constants
 		end
-		
-	switch_constants_mode is
-			-- Respond to a user press of `constants_button' and
-			-- update the displayed input fields accordingly.
+
+	enable_constant_mode is
+			-- Ensure constant entry fields are displayed.
 		local
 			entry_widget: EV_WIDGET
 		do
@@ -234,16 +243,30 @@ feature {NONE} -- Implementation
 			check
 				text_entry_was_widget: entry_widget /= Void
 			end
-			if constants_button.is_selected then
-				entry_widget.hide
-				constants_combo_box.show
+			entry_widget.hide
+			constants_combo_box.show
+			if object.constants.item (internal_gb_ev_any.type + internal_type) = Void then
+				if not has_select_item then
+					add_select_item
+				end
 				constants_combo_box.first.enable_select
-			else
-				constants_combo_box.hide
-				entry_widget.show
-				constants_combo_box.remove_selection
 			end
 		end
+		
+	disable_constant_mode is
+			-- Ensure constant entry fields are hidden.
+		local
+			entry_widget: EV_WIDGET
+		do
+			entry_widget ?= text_entry
+			check
+				text_entry_was_widget: entry_widget /= Void
+			end
+			constants_combo_box.hide
+			entry_widget.show
+			constants_combo_box.remove_selection
+		end
+		
 		
 	populate_constants is
 			-- Populate `constants_combo_box' with string constants.
@@ -253,8 +276,10 @@ feature {NONE} -- Implementation
 			lookup_string: STRING
 		do
 			constants_combo_box.wipe_out
-			create list_item.make_with_text (select_constant_string)
-			constants_combo_box.extend (list_item)
+			lookup_string := internal_gb_ev_any.type + internal_type
+			if internal_gb_ev_any.object.constants.item (lookup_string) = Void then
+				add_select_item
+			end
 			string_constants := Constants.string_constants
 			from
 				string_constants.start
@@ -263,8 +288,13 @@ feature {NONE} -- Implementation
 			loop
 				create list_item.make_with_text (string_constants.item.name)
 				list_item.set_data (string_constants.item)
-				
 				constants_combo_box.extend (list_item)
+				
+				list_item.deselect_actions.block
+				list_item.disable_select
+				list_item.deselect_actions.resume
+				
+				
 				if internal_type /= Void then
 					lookup_string := internal_gb_ev_any.type + internal_type
 					if internal_gb_ev_any.object.constants.has (lookup_string) and
@@ -297,7 +327,13 @@ feature {NONE} -- Implementation
 					constant.add_referer (constant_context)
 					object.add_constant_context (constant_context)
 					execute_agent (constant.value)
+					if has_select_item then
+						remove_select_item
+					end
 				else
+					if not has_select_item then
+						add_select_item
+					end
 					constants_combo_box.first.enable_select
 				end
 			end

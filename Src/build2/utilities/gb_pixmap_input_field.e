@@ -100,6 +100,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 			pixmap: EV_PIXMAP
 			l_pixmap_path: STRING
 			error_label: EV_LABEL
+			blocked_list_item: EV_LIST_ITEM
 		do
 			constant_context := object.constants.item (internal_gb_ev_any.type + internal_type)
 			if constant_context /= Void then
@@ -109,18 +110,20 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 				list_item := constants_combo_box.selected_item
 				if list_item /= Void then
 					list_item.deselect_actions.block
+					blocked_list_item := list_item
 				end
-				switch_constants_mode
-				if list_item /= Void then
-					list_item.deselect_actions.resume
-				end
+				enable_constant_mode
+
 				list_item := list_item_with_matching_text (constants_combo_box, constant_context.constant.name)
 				check
 					list_item_not_void: list_item /= Void
 				end
 				list_item.select_actions.block
 				list_item.enable_select
-				list_item.select_actions.resume	
+				list_item.select_actions.resume
+				if blocked_list_item /= Void then
+					blocked_list_item.deselect_actions.resume
+				end
 			else
 				pixmap_path_agent.call (Void)
 				l_pixmap_path := pixmap_path_agent.last_result
@@ -130,8 +133,11 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 			
 				constants_button.select_actions.block
 				constants_button.disable_select
-				switch_constants_mode
+				disable_constant_mode
 				constants_button.select_actions.resume
+				if has_select_item then
+					remove_select_item
+				end
 				if has_pixmap then
 					add_pixmap_to_pixmap_container (pixmap)
 					modify_button.set_text (Remove_button_text)
@@ -169,26 +175,34 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 		end
 
 feature {NONE} -- Implementation
-		
-	switch_constants_mode is
-			-- Switch interface between constants selection
-			-- and standard selection modes.
+
+	enable_constant_mode is
+			-- Ensure constant entry fields are displayed.
 		do
-			if constants_button.is_selected then
-				if pixmap_container.full then
-					modify_pixmap
-				end
-				filler_label.hide
-				modify_button.parent.hide
-				constants_combo_box.show
-				pixmap_container.wipe_out
-				filler_label.wipe_out
-			else
-				filler_label.show
-				modify_button.parent.show
-				constants_combo_box.hide
-				constants_combo_box.remove_selection
+			if pixmap_container.full then
+				modify_pixmap
 			end
+			filler_label.hide
+			modify_button.parent.hide
+			constants_combo_box.show
+			pixmap_container.wipe_out
+			filler_label.wipe_out
+			if object.constants.item (internal_gb_ev_any.type + internal_type) = Void then
+				if not has_select_item then
+					add_select_item
+				end
+				constants_combo_box.first.enable_select
+			end
+		end
+		
+
+	disable_constant_mode is
+			-- Ensure constant entry fields are hidden.
+		do
+			filler_label.show
+			modify_button.parent.show
+			constants_combo_box.hide
+			constants_combo_box.remove_selection
 		end
 		
 	modify_button: EV_TOOL_BAR_BUTTON
@@ -282,8 +296,10 @@ feature {NONE} -- Implementation
 			lookup_string: STRING
 		do
 			constants_combo_box.wipe_out
-			create list_item.make_with_text (select_constant_string)
-			constants_combo_box.extend (list_item)
+			lookup_string := internal_gb_ev_any.type + internal_type
+			if internal_gb_ev_any.object.constants.item (lookup_string) = Void then
+				add_select_item
+			end
 			pixmap_constants := constants.pixmap_constants
 			from
 				pixmap_constants.start
@@ -295,7 +311,11 @@ feature {NONE} -- Implementation
 				list_item.set_data (pixmap_constant)
 				list_item.set_pixmap (pixmap_constant.small_pixmap)
 				constants_combo_box.extend (list_item)
-				lookup_string := internal_type
+				
+				list_item.deselect_actions.block
+				list_item.disable_select
+				list_item.deselect_actions.resume
+				
 				if object.constants.has (lookup_string) and
 					pixmap_constant = object.constants.item (lookup_string).constant then
 					constants_button.enable_select
@@ -402,6 +422,9 @@ feature {NONE} -- Implementation
 					object.add_constant_context (constant_context)
 					execute_agent (constant.pixmap, constant.pixmap.pixmap_path)
 					update_editors
+					if has_select_item then
+						remove_select_item
+					end
 --				else
 --					constants_combo_box.first.enable_select
 --				end

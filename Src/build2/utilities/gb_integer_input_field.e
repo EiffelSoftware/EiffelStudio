@@ -80,6 +80,7 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 		local
 			constant_context: GB_CONSTANT_CONTEXT
 			list_item: EV_LIST_ITEM
+			blocked_list_item: EV_LIST_ITEM
 		do
 			constant_context := object.constants.item (internal_gb_ev_any.type + internal_type)
 			if constant_context /= Void then
@@ -89,11 +90,10 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 				list_item := constants_combo_box.selected_item
 				if list_item /= Void then
 					list_item.deselect_actions.block
+					blocked_list_item := list_item
 				end
-				switch_constants_mode
-				if list_item /= Void then
-					list_item.deselect_actions.resume
-				end
+				enable_constant_mode
+			
 				list_item := list_item_with_matching_text (constants_combo_box, constant_context.constant.name)
 				check
 					list_item_not_void: list_item /= Void
@@ -101,15 +101,20 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 				list_item.select_actions.block
 				list_item.enable_select
 				list_item.select_actions.resume
+				if blocked_list_item /= Void then
+					blocked_list_item.deselect_actions.resume
+				end
 			else
 				constants_button.select_actions.block
 				constants_button.disable_select
 				constants_button.select_actions.resume
-				switch_constants_mode
-				constants_combo_box.first.enable_select
+				disable_constant_mode
 				text_field.change_actions.block
 				text_field.set_text (a_value)
 				text_field.change_actions.resume
+				if has_select_item then
+					remove_select_item
+				end
 			end
 		end
 
@@ -147,19 +152,32 @@ feature {NONE} -- Implementation
 		local
 			stripped_text: STRING
 		do
-			stripped_text := remove_leading_and_trailing_spaces (text_field.text)
-			if not stripped_text.is_equal (value_on_entry) then
-				if not stripped_text.is_empty and stripped_text.is_integer then
-					validate_agent.call ([stripped_text.to_integer])
-					if validate_agent.last_result then
-						text_field.set_text (stripped_text)
-						execute_agent (stripped_text.to_integer)
-						update_editors
+				-- After resetting an object, it appears that the focus in and out actions may be called
+				-- sometimes. To prevent us from working on the old object, we check that `Current' is
+				-- still valid.
+			if object.object /= Void then
+				stripped_text := remove_leading_and_trailing_spaces (text_field.text)
+				if not stripped_text.is_equal (value_on_entry) then
+					if not stripped_text.is_empty and stripped_text.is_integer then
+						validate_agent.call ([stripped_text.to_integer])
+						if validate_agent.last_result then
+							text_field.set_text (stripped_text)
+							execute_agent (stripped_text.to_integer)
+							if has_select_item then
+								remove_select_item
+							end
+						else
+							text_field.set_text (value_on_entry)
+							if not has_select_item then
+								add_select_item
+							end
+						end
 					else
 						text_field.set_text (value_on_entry)
+						if not has_select_item then
+							add_select_item
+						end
 					end
-				else
-					text_field.set_text (value_on_entry)
 				end
 			end
 		end
@@ -200,22 +218,28 @@ feature {NONE} -- Implementation
 			text_field.focus_in_actions.extend (agent set_initial)
 			text_field.focus_out_actions.extend (agent process)
 		end
-		
-	switch_constants_mode is
-			-- Respond to a user press of `constants_button' and
-			-- update the displayed input fields accordingly.
+
+	disable_constant_mode is
+			-- Ensure constant entry fields are hidden.
 		do
-			if constants_button.is_selected then
-				text_field.hide
-				constants_combo_box.show
-				constants_combo_box.first.enable_select
-			else
-				constants_combo_box.hide
-				text_field.show
-				constants_combo_box.remove_selection
-			end
+			constants_combo_box.hide
+			text_field.show
+			constants_combo_box.remove_selection
 		end
 		
+	enable_constant_mode is
+			-- Ensure constant entry fields are displayed.
+		do
+			text_field.hide
+			constants_combo_box.show
+			if object.constants.item (internal_gb_ev_any.type + internal_type) = Void then
+				if not has_select_item then
+					add_select_item
+				end
+				constants_combo_box.first.enable_select
+			end
+		end
+
 	populate_constants  is
 			-- Populate all
 		local
@@ -224,8 +248,10 @@ feature {NONE} -- Implementation
 			lookup_string: STRING
 		do
 			constants_combo_box.wipe_out
-			create list_item.make_with_text (select_constant_string)
-			constants_combo_box.extend (list_item)
+			lookup_string := internal_gb_ev_any.type + internal_type
+			if internal_gb_ev_any.object.constants.item (lookup_string) = Void then
+				add_select_item
+			end
 			integer_constants := Constants.integer_constants
 			from
 				integer_constants.start
@@ -234,10 +260,13 @@ feature {NONE} -- Implementation
 			loop
 				create list_item.make_with_text (integer_constants.item.name)
 				list_item.set_data (integer_constants.item)
-				
 				constants_combo_box.extend (list_item)
+				
+				list_item.deselect_actions.block
+				list_item.disable_select
+				list_item.deselect_actions.resume
+				
 				if internal_type /= Void then
-					lookup_string := internal_gb_ev_any.type + internal_type
 					if internal_gb_ev_any.object.constants.has (lookup_string) and
 						integer_constants.item = internal_gb_ev_any.object.constants.item (lookup_string).constant then
 						constants_button.enable_select
@@ -269,6 +298,9 @@ feature {NONE} -- Implementation
 					constant.add_referer (constant_context)
 					object.add_constant_context (constant_context)
 					execute_agent (constant.value)
+					if has_select_item then
+						remove_select_item
+					end
 				else
 					create warning_dialog.make_initialized (1, show_invalid_constant_selection_warning, constant_rejected_warning, Constants_do_not_show_again)
 					warning_dialog.set_icon_pixmap (Icon_build_window @ 1)
@@ -276,6 +308,9 @@ feature {NONE} -- Implementation
 					warning_dialog.set_title ("Invalid Constant Selected")
 					warning_dialog.show_modal_to_window (parent_window (Current))
 					preferences.save_resources
+					if not has_select_item then
+						add_select_item
+					end
 					constants_combo_box.first.enable_select
 				end
 			end

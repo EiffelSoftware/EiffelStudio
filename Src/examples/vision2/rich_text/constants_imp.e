@@ -65,6 +65,16 @@ feature -- Access
 			Result := 100
 		end
 
+	italic_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (rich_text_example_root)
+			a_file_name.set_file_name ("italic.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
 	left_alignment_png: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
@@ -135,6 +145,26 @@ feature -- Access
 			Result := 50
 		end
 
+	justified_ico: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (rich_text_example_root)
+			a_file_name.set_file_name ("justified.ico")
+			set_with_named_file (Result, a_file_name)
+		end
+
+	center_alignment_png: EV_PIXMAP is
+		local
+			a_file_name: FILE_NAME
+		Once
+			create Result
+			create a_file_name.make_from_string (rich_text_example_root)
+			a_file_name.set_file_name ("center_alignment.png")
+			set_with_named_file (Result, a_file_name)
+		end
+
 	font_selection_combo_box_width: INTEGER is 
 			-- `Result' is INTEGER constant named font_selection_combo_box_width.
 		once
@@ -147,13 +177,13 @@ feature -- Access
 			Result := "E:\projects\rich_text"
 		end
 
-	center_alignment_png: EV_PIXMAP is
+	icon_save_color_png: EV_PIXMAP is
 		local
 			a_file_name: FILE_NAME
 		Once
 			create Result
 			create a_file_name.make_from_string (rich_text_example_root)
-			a_file_name.set_file_name ("center_alignment.png")
+			a_file_name.set_file_name ("icon_save_color.png")
 			set_with_named_file (Result, a_file_name)
 		end
 

@@ -123,11 +123,12 @@ feature -- Access
 			pixmaps: GB_SHARED_PIXMAPS
 		do
 			create Result
-			Result.select_actions.extend (agent window_selector.add_new_directory)
+			Result.select_actions.extend (agent window_selector.add_new_directory (Void))
 				-- Assign the appropriate pixmap.
 			create pixmaps
 			Result.set_pixmap (pixmaps.pixmap_by_name ("icon_new_cluster_small_color"))
 			Result.set_tooltip (new_directory_button_tooltip)
+			Result.set_pebble (create {GB_NEW_DIRECTORY_PEBBLE})
 		ensure
 			result_not_void: Result /= Void
 		end

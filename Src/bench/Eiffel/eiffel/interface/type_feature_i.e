@@ -37,7 +37,7 @@ inherit
 				set_origin_feature_id, set_feature_name_id,
 				instantiate, duplicate, new_rout_id
 		redefine
-			new_entry, is_type_feature, check_expanded
+			new_entry, is_type_feature, check_expanded, is_valid
 		end
 	
 feature -- Access
@@ -50,6 +50,12 @@ feature -- Access
 
 feature -- Status report
 
+	is_valid: BOOLEAN is
+			-- Is Current still valid?
+		do
+			Result := type.is_valid
+		end
+		
 	is_type_feature: BOOLEAN is True
 			-- Current represents a type feature.
 			

@@ -104,7 +104,21 @@ feature
 			System.reset_melted_conformance_table
 		end
 
+	has_cpp_externals: BOOLEAN
+			-- Does current class_type contain C++ externals
+
+	has_cpp_status_changed: BOOLEAN
+			-- Has the class changed its `has_cpp_externals' flag
+			-- after a recompilation.
+
 feature -- Conveniences
+
+	set_has_cpp_externals (b: BOOLEAN) is
+			-- Assign `b' to `has_cpp_externals'.
+		do
+			has_cpp_status_changed := b /= has_cpp_externals
+			has_cpp_externals := b
+		end
 
 	set_type (t: CL_TYPE_I) is
 			-- Assign `t' to `type'.
@@ -370,7 +384,16 @@ feature -- Generation
 					end
 					buffer.close_c
 
-					file := open_generation_file (byte_context.has_cpp_externals_calls)
+					if not final_mode then
+							-- Give the information status in Workbench mode only on the
+							-- C generate file type (either .c/.x or .cpp/.xpp)
+							-- This information is used later to create the `file_to_compile'
+							-- file in each sudirectories of the W_code.
+						set_has_cpp_externals (byte_context.has_cpp_externals_calls)
+						file := open_generation_file (has_cpp_externals)
+					else
+						file := open_generation_file (byte_context.has_cpp_externals_calls)
+					end
 					if not final_mode then
 						file.put_string (header_generation_buffer)
 					end
@@ -396,21 +419,39 @@ feature -- Generation
 			f.generate (Current, buffer)
 		end
 
-	open_generation_file (has_cpp_externals: BOOLEAN): INDENT_FILE is
+	open_generation_file (has_cpp_externals_calls: BOOLEAN): INDENT_FILE is
 			-- Open in write mode a file for generating class code
 			-- of the current class type
 		local
 			file_name: STRING
+			previous_file_name: STRING
+			previous_file: PLAIN_TEXT_FILE
 		do
 			file_name := full_file_name (Class_suffix)
 			if byte_context.final_mode then
-				if has_cpp_externals then
+					-- In final mode we do not check about status changes
+					-- since we delete the content of the F_code directory.
+				if has_cpp_externals_calls then
 					file_name.append (Dot_xpp)
 				else
 					file_name.append (Dot_x)
 				end
 			else
-				if has_cpp_externals then
+					-- If the status of the file has been changed we delete the
+					-- previous version.
+				if has_cpp_status_changed then
+					previous_file_name := clone (file_name)
+					if has_cpp_externals_calls then
+						previous_file_name.append (Dot_c)
+					else
+						previous_file_name.append (Dot_cpp)
+					end
+					create previous_file.make (previous_file_name)
+					if previous_file.exists and then previous_file.is_writable then
+						previous_file.delete
+					end
+				end
+				if has_cpp_externals_calls then
 					file_name.append (Dot_cpp)
 				else
 					file_name.append (Dot_c)
@@ -448,25 +489,34 @@ feature -- Generation
 			dir: DIRECTORY
 			f_name: FILE_NAME
 			dir_name: DIRECTORY_NAME
+			finished_file: PLAIN_TEXT_FILE
+			finished_file_name: FILE_NAME
 		do
 			if System.in_final_mode then
 				Result := final_generation_path
 			else
 				Result := workbench_generation_path
 			end
-			!!subdirectory.make (5)
+			!! subdirectory.make (5)
 			subdirectory.append (sub_dir_prefix)
 			subdirectory.append_integer (packet_number)
 
-			!!dir_name.make_from_string (Result)
+			!! dir_name.make_from_string (Result)
 			dir_name.extend (subdirectory)
-			!!dir.make (dir_name)
+			!! dir.make (dir_name)
 			if not dir.exists then
 				dir.create_dir
 			end
-			!!f_name.make_from_string (dir_name)
+			!! f_name.make_from_string (dir_name)
 			f_name.set_file_name (base_file_name)
 			Result := f_name
+
+			!! finished_file_name.make_from_string (dir_name)
+			finished_file_name.set_file_name ("finished")
+			!! finished_file.make (finished_file_name)
+			if finished_file.exists and then finished_file.is_writable then
+				finished_file.delete	
+			end
 		end
 
 	base_file_name: STRING is

@@ -13,26 +13,29 @@ inherit
 			real_class_ids
 		end
 
+	COMPILER_EXPORTER
+
 creation
 	
 	make
 
 feature {NONE} -- Initialization
 
-	make (s: STRING; id: like class_id) is
+	make (s: STRING; id: CLASS_ID) is
 			-- Set id to `s' and set
 			-- class_id to `id'.
 		require
-			valid_s: s = Void implies id > 0; 
-			valid_id: id = 0 implies s /= void; 
+			valid_s: s = Void implies id.id > 0; 
+			valid_id: id.id = 0 implies s /= void; 
 		do
 			if s /= Void then
 				free_text_name := clone (s);
 				free_text_name.to_upper;
 			end;
-			class_id := id
+			class_id := id.id
+			complete_class_id := id
 		ensure
-			class_id_set: class_id = id;
+			class_id_set: class_id = id.id;
 		end;
 
 feature -- Properties
@@ -40,16 +43,18 @@ feature -- Properties
 	class_id: INTEGER;
 			-- Class id for Current class type
 
-	real_class_ids: LINKED_LIST [INTEGER] is
+	complete_class_id: CLASS_ID
+
+	real_class_ids: LINKED_LIST [CLASS_ID] is
 			-- List container Current class_id if positive
 		do
 			!! Result.make;
-			if class_id /= 0 then
-				Result.put_front (class_id)
+			if complete_class_id.dummy_id /= 0 then
+				Result.put_front (complete_class_id)
 			end;
 		ensure then
 			has_current: class_id /= 0 implies 
-							(Result.has (class_id) and then
+							(Result.has (complete_class_id) and then
 							Result.count = 1);
 		end;
 

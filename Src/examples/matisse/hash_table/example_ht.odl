@@ -1,0 +1,27 @@
+/*
+ *	
+ * Zip Code Data Model for Hash Table Example
+ *	
+ *	
+ */
+
+#include "../../odl_include/mt_eif.odl"
+
+interface ZIP_CODE : persistent
+{
+	attribute Unsigned Long zip_code;
+	attribute List<String> city_names;
+	attribute List<String> states;
+	attribute List<Long> zip_types;
+};
+
+mt_relationship List<ZIP_CODE_TABLE> of_zip_table
+	inverse ZIP_CODE_TABLE::zip_table;
+		
+interface ZIP_CODE_TABLE : persistent
+{
+	relationship MT_HASH_TABLE <HASH_TABLE> zip_table [0, 1]
+  		inverse of_zip_table
+		mt_instance_of HashTableRelationship
+		mt_container_parameters {ZIP_CODE, INTEGER};
+};

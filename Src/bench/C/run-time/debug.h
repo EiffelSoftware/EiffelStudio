@@ -13,6 +13,10 @@
 #ifndef _debug_h_
 #define _debug_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /* Start of workbench-specific features */
 #ifdef WORKBENCH
 #include "interp.h"
@@ -142,7 +146,7 @@ extern struct dcall *dtop();	/* Current top value */
 extern void dmove();			/* Move active routine cursor */
 
 /* Breakpoint handling */
-extern shared void dbreak();	/* Program execution stopped */
+extern rt_shared void dbreak();	/* Program execution stopped */
 
 /* Once list handling */
 extern uint32 *onceadd();		/* Add once body_id to list */	
@@ -172,6 +176,10 @@ extern void drecord_bc();		/* Record new byte code in run-time tables */
 #define PG_VIOL			2		/* Implicitely raised exception */
 #define PG_BREAK		3		/* Break point */
 #define PG_INTERRUPT	4		/* Application interrupted */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
 

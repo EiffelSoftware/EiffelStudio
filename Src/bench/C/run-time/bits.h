@@ -13,6 +13,10 @@
 #ifndef _bits_h_
 #define _bits_h_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "portable.h"
 #include "plug.h"
 
@@ -29,7 +33,7 @@
 /* 
  * Functions declarations
  */
-public int b_equal();	/* needed in interp.c */
+rt_public int b_equal();	/* needed in interp.c */
 
 extern char *b_clone();			/* Clones bit */
 extern void b_copy();			/* Copies bit */
@@ -46,5 +50,9 @@ extern char *b_not();
 extern char *b_out();
 extern char *b_mirror();
 extern int bit_dtype;
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

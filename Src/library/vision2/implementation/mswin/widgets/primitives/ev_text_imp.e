@@ -238,13 +238,16 @@ feature -- Status Report
 
 	last_position_from_line_number (a_line: INTEGER): INTEGER is
 			-- Position of the last character on the `i'-th line.
+		local
+			new_lines_to_first_position: INTEGER
 		do
 			if
 				valid_line_index (a_line + 1)
 			then
 				Result := first_position_from_line_number (a_line + 1) - 1
 			else
-				Result := wel_text_length - 1
+				new_lines_to_first_position := wel_text.substring (1, wel_line_index (a_line - 1)).occurrences ('%R')
+				Result := wel_text_length - new_lines_to_first_position 
 			end
 		end
 		

@@ -290,7 +290,7 @@ rt_shared void eif_gen_conf_cleanup ();
 rt_private EIF_MUTEX_TYPE   *eif_gen_mutex = (EIF_MUTEX_TYPE *) 0;
 
 rt_public int16 eifthd_compound_id (int16 *, int16, int16, int16 *);
-rt_public int16 eifthd_final_id (int16, int16 *, int16 **, EIF_REFERENCE );
+rt_public int16 eifthd_final_id (int16, int16 *, int16 **, EIF_REFERENCE, int );
 rt_public int16 eifthd_gen_param (int16, EIF_REFERENCE , int, char *, long *);
 rt_public int eifthd_gen_count (EIF_REFERENCE );
 rt_public char eifthd_gen_typecode (EIF_REFERENCE , int);
@@ -355,13 +355,13 @@ rt_public int16 eif_compound_id (int16 *cache, int16 current_dftype, int16 base_
 }
 /*------------------------------------------------------------------*/
 
-rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, EIF_REFERENCE Current)
+rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, EIF_REFERENCE Current, int offset)
 {
 	int16   result;
 
 	EIFMTX_LOCK;
 
-	result = eifthd_final_id (stype, ttable, gttable, Current);
+	result = eifthd_final_id (stype, ttable, gttable, Current, offset);
 
 	EIFMTX_UNLOCK;
 
@@ -877,24 +877,24 @@ rt_public int16 eif_compound_id (int16 *cache, int16 current_dftype, int16 base_
 /* Result : RTUD(yes); doesn't matter since in final mode           */
 /*------------------------------------------------------------------*/
 
-rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, EIF_REFERENCE Current)
+rt_public int16 eif_final_id (int16 stype, int16 *ttable, int16 **gttable, EIF_REFERENCE Current, int offset)
 
 {
 	int16   result, *gtp;
-	int16	dtype = Dtype (Current);
+	int	table_index = Dtype (Current) - offset;
 
 	if (gttable != (int16 **) 0)
 	{
-		gtp = gttable [dtype];
+		gtp = gttable [table_index];
 
 		if ((gtp != (int16 *) 0) && (*(gtp+1) != TERMINATOR))
 		{
 			*gtp = stype;
-			return eif_compound_id ((int16 *)0, (int16) Dftype (Current), ttable[dtype], gtp);
+			return eif_compound_id ((int16 *)0, (int16) Dftype (Current), ttable[table_index], gtp);
 		}
 	}
 
-	result = ttable[dtype];
+	result = ttable[table_index];
 
 	if (result <= EXPANDED_LEVEL)        /* expanded */
 		return EXPANDED_LEVEL - result;

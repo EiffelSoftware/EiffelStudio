@@ -198,7 +198,7 @@ rt_public SMART_STRING ex_string = {	/* Container of the exception trace */ /* %
  */
 rt_private char *ex_tag[] = {
 	(char *) 0,							/* Nothing */
-	"Applied to void reference.",		/* EN_VOID */
+	"Feature call on void target.",		/* EN_VOID */
 	"No more memory.",					/* EN_MEM */
 	"Precondition violated.",			/* EN_PRE */
 	"Postcondition violated.",			/* EN_POST */
@@ -223,9 +223,7 @@ rt_private char *ex_tag[] = {
 	"Retrieval error.",					/* EN_RETR */
 	"Developer exception.",				/* EN_PROG */
 	"Eiffel run-time fatal error.",		/* EN_FATAL */
-#ifdef WORKBENCH
 	"CECIL cannot call melted code",	/* EN_DOL */
-#endif
 };
 
 /* Converts a vector's type in the stack to an exception code, i.e. given a

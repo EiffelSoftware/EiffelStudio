@@ -385,12 +385,17 @@ feature -- Generation constants
 			".show" + indent_less_one + "end"
 		end
 
-	window_inheritance: STRING is
-			-- String used to generate inheritance from window in implementation class.
+	window_inheritance_part1: STRING is
+			-- Part 1 of string used to generate inheritance from window in implementation class.
 		once
 			Result := "inherit" + Indent_less_two + Ev_titled_window_string + Indent_less_one + "redefine" + indent +
-			"initialize, is_in_default_state" + Indent_less_one + "end" + indent + indent_less_two + "CONSTANTS" +
-			Indent_less_one + "undefine" + indent + "is_equal, default_create, copy" + Indent_less_one + "end"
+			"initialize, is_in_default_state" + Indent_less_one + "end" + indent + indent_less_two
+		end
+	
+	window_inheritance_part2: STRING is
+			-- Part 2 of string used to generate inheritance from window in implementation class.
+		once
+			Result := Indent_less_one + "undefine" + indent + "is_equal, default_create, copy" + Indent_less_one + "end"
 		end
 		
 	window_access: STRING is

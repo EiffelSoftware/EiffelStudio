@@ -49,6 +49,27 @@ feature -- Access
 
 feature -- Element change
 
+	set_values (a_family, a_weight, a_shape, a_height: INTEGER;
+		a_preferred_face: STRING) is
+			-- Set `a_family', `a_weight', `a_shape' `a_height' and
+			-- `a_preferred_face' at the same time for speed.
+		require
+			a_family_valid: valid_family (a_family)
+			a_weight_valid: valid_weight (a_weight)
+			a_shape_valid: valid_shape (a_shape)
+			a_height_bigger_than_zero: a_height > 0
+		do
+			set_family (a_family)
+			set_weight (a_weight)
+			set_shape (a_shape)
+			set_height (a_height)
+			if a_preferred_face /= Void then
+				set_preferred_face (a_preferred_face)
+			else
+				remove_preferred_face
+			end
+		end
+
 	set_family (a_family: INTEGER) is
 			-- Set `a_family' as preferred font category.
 		require
@@ -211,6 +232,9 @@ end -- class EV_FONT_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/28 21:48:14  brendel
+--| Added set_values, to be redefined by toolkits for speed.
+--|
 --| Revision 1.13  2000/03/03 00:52:37  brendel
 --| Added precondition to string_width.
 --|

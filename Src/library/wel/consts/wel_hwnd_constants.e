@@ -37,6 +37,13 @@ feature -- Access
 			"HWND_NOTOPMOST"
 		end
 
+	Hwnd_broadcast: POINTER is
+		external
+			"C [macro <windows.h>] : EIF_POINTER"
+		alias
+			"HWND_BROADCAST"
+		end
+
 feature -- Status report
 
 	valid_hwnd_constant (c: POINTER): BOOLEAN is

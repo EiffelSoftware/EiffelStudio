@@ -173,8 +173,7 @@ feature -- Commands
 			l_constants: APPLICATION_CONSTANTS
 			l_help_project: HELP_PROJECT
 			l_root_dir,
-			l_html_directory,
-			l_help_directory: DIRECTORY			
+			l_html_directory: DIRECTORY			
 			l_toc: TABLE_OF_CONTENTS		
 			l_filter: DOCUMENT_FILTER
 			l_date_time: DATE_TIME

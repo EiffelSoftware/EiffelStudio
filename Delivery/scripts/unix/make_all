@@ -29,6 +29,9 @@ cp -f PorterPackage_enterprise.tar ~/
 #Let's compile for Solaris on mosis in background
 /bin/sh make_solaris local &
 
+#Let's compile for Red Hat 9.0 on rh9 in background
+/bin/sh make_linuxrh9 local &
+
 #Let's do the Linux version
 rm -rf PorterPackage
 

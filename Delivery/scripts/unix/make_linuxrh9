@@ -1,0 +1,29 @@
+#!/bin/sh
+
+if [ "$1" == "local" ]; then
+	echo $1
+	export REMOTE=rh9
+	cp -f make_linuxrh9 ~/
+	# Launch platform specific scripts
+	rsh $REMOTE "cd local/TEST_DELIV ; mv -f ~/make_linuxrh9 ."
+	rsh $REMOTE "cd local/TEST_DELIV ; ./make_linuxrh9"
+
+ftp -n << EOF 
+verbose 
+open rh9.ise 
+user manus manus 
+binary
+get local/TEST_DELIV/PorterPackage/Eiffel54_enterprise.tgz Eiffel54_rh9.tgz
+get local/TEST_DELIV/PorterPackage/Eiffel54_enterprise.iso Eiffel54_enterprise_rh9.iso
+close 
+EOF
+
+	echo LinuxPPC compilation done
+else
+	rm -rf PorterPackage
+	tar xvf ~/PorterPackage_enterprise.tar
+	cd PorterPackage
+	export ISE_PLATFORM=linux-glibc2.1
+	compile_exes
+	make_images
+fi

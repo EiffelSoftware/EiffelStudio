@@ -75,6 +75,9 @@ feature -- Access: IL code generation
 	il_verifiable: BOOLEAN
 			-- Should generated IL code be verifiable?
 
+	clr_runtime_version: STRING
+			-- Version of IL runtime available.
+
 	msil_generation_type: STRING
 			-- Type of IL generation?
 
@@ -156,6 +159,17 @@ feature -- Update
 			il_verifiable_set: il_verifiable = b
 		end
 
+	set_clr_runtime_version (version: like clr_runtime_version) is
+			-- Set `clr_runtime_version' to `version'.
+		require
+			version_not_void: version /= Void
+			version_not_empty: not version.is_empty
+		do
+			clr_runtime_version := version
+		ensure
+			clr_runtime_version_set: clr_runtime_version = version
+		end
+		
 	set_msil_generation_type (s: STRING) is
 			-- Set `msil_generation_type' to `b'
 		require

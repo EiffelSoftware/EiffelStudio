@@ -10,21 +10,6 @@ class
 inherit
 	WIZARD_REGISTRATION_GENERATOR
 
-feature  -- Initialization
-
-	initialize is
-			-- Initialize
-		do
-			c_writer := Void
-			type_library_name := Void
-			coclass_guid := Void
-			type_library_guid := Void
-		ensure
-			type_library_guid = Void
-			void_writer: c_writer = Void
-			void_coclass_guid: coclass_guid = Void
-			void_type_library_name: type_library_name = Void
-		end
 
 feature -- Access
 

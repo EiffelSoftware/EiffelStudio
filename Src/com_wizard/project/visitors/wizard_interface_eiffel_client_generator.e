@@ -13,15 +13,6 @@ inherit
 			generate
 		end
 
-feature -- Initialization
-
-	initialize is
-			-- Initialize generator.
-		do
-			eiffel_writer := Void
-		ensure
-			void_writer: eiffel_writer = Void
-		end
 
 feature -- Basic operation
 
@@ -32,6 +23,8 @@ feature -- Basic operation
 
 			Shared_file_name_factory.create_file_name (Current, eiffel_writer)
 			eiffel_writer.save_file (Shared_file_name_factory.last_created_file_name)
+
+			eiffel_writer := Void
 		end
 
 	create_file_name (a_factory: WIZARD_FILE_NAME_FACTORY) is

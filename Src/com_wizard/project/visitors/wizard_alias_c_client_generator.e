@@ -12,15 +12,6 @@ inherit
 			generate
 		end
 
-feature -- Initialization
-
-	initialize is
-			-- Initialize generator.
-		do
-			c_writer := Void
-		ensure
-			void_writer: c_writer = Void
-		end
 
 feature -- Access
 

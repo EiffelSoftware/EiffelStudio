@@ -10,17 +10,6 @@ class
 inherit
 	WIZARD_CPP_WRITER_GENERATOR
 
-feature -- Initialization
-
-	initialize is
-			-- Initialize.
-		do
-			cpp_class_writer := Void
-			coclass_descriptor := Void
-		ensure
-			void_class_writer: cpp_class_writer = Void
-			void_coclass_descriptor: coclass_descriptor = Void
-		end
 
 feature -- Access
 

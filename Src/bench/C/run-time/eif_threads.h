@@ -759,15 +759,15 @@ typedef struct thr_list_struct {
  */
  
 typedef struct {
-    EIF_OBJECT current;
-    EIF_POINTER routine;
-    EIF_MUTEX_TYPE *children_mutex;
-    thr_list_t **addr_thr_list;
-    int *addr_n_children;
+    EIF_OBJECT current;				/* Root object of Thread creator. */
+    EIF_POINTER routine;			/* routine `execute' of thread. */
+    EIF_MUTEX_TYPE *children_mutex;	/* Mutex for `join_all' */
+    thr_list_t **addr_thr_list;		/* List of thread children. */
+    int *addr_n_children;			/* Number of thread children. */
 #ifndef EIF_NO_CONDVAR
-    EIF_COND_TYPE *children_cond;
+    EIF_COND_TYPE *children_cond;	/* For `join_all'.*/
 #endif  
-    EIF_THR_TYPE *tid;
+    EIF_THR_TYPE *tid;				/* Thread id of new thread. */
 } start_routine_ctxt_t;
 
 #else

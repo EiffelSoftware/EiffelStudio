@@ -35,8 +35,6 @@ void c_ev_gtk_callback_marshal_delayed_agent_call (gint, EIF_OBJECT);
 
 guint c_ev_gtk_callback_marshal_timeout_connect (gint, EIF_OBJECT);
 
-guint c_ev_gtk_callback_marshal_idle_connect (EIF_OBJECT);
-
 guint c_ev_gtk_callback_marshal_delete_connect (GtkObject*, EIF_OBJECT);
 
 void* gtk_value_pointer (void*);
@@ -50,6 +48,9 @@ int gtk_value_int (void*);
 //------------------------------------------------------------------------------
 //
 // $Log$
+// Revision 1.7  2003/08/13 20:32:41  king
+// Removed idle handling code as we now perform this in our main loop
+//
 // Revision 1.6  2001/06/29 19:56:43  king
 // Updated signal connect true signature to return connect id
 //

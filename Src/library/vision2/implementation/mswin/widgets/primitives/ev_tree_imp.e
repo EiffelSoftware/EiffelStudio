@@ -12,8 +12,7 @@ inherit
 	EV_TREE_I
 		redefine
 			interface,
-			initialize,
-			pixmaps_size_changed
+			initialize
 		end
 
 	EV_PRIMITIVE_IMP

@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 			message.append (", error in format near: ``");
 			message.extend (description.item (error_position));
 			message.append ("''%N(");
-			message.append (error_position.out);
+			message.append_integer (error_position);
 			message.append ("-th significant character of the description).%N");
 			if expected = '%U' then
 				message.append (mes)

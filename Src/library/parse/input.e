@@ -148,7 +148,7 @@ feature  -- Output
 				error_message.append (file_name); 
 			end
 			error_message.append (" (line "); 
-			error_message.append (token.line_number.out);
+			error_message.append_integer (token.line_number);
 			error_message.append ("): "); 
 			error_message.append (s); 
 			io.error.put_string (error_message);

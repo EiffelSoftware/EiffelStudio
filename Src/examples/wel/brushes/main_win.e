@@ -59,14 +59,7 @@ feature {NONE} -- Implementation
 			elseif control = rectangle_button then
 				!! rectangle_demo.make
 			elseif control = demo3d_button then
-				if is_win32 then
-					!! three_d_demo.make
-				else
-					warning_message_box ("Sorry, 3D demonstration %
-						%is not available under%NWindows 3.1 for %
-						%DC limitation problems.%NRetry under %
-						%Windows 95/NT.", "3D")
-				end
+				!! three_d_demo.make
 			end
 		end
 

@@ -139,7 +139,6 @@ feature {NONE} -- Implementation
 
 	last_confirmer_cell: CELL [CONFIRMER_W] is
 			-- Cell containing the last confirmer window created
-
 		once
 			!! Result.put (Void)
 		end;

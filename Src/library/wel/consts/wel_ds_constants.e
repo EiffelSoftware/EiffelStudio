@@ -22,10 +22,10 @@ feature -- Constants
 			-- combined with a title bar and window menu by specifying the
 			-- Ws_caption and Ws_sysmenu styles. (See: WEL_WS_CONSTANTS).
 
-	Ds_noidlemsg: INTEGER is 160
+	Ds_noidlemsg: INTEGER is 256
 			-- Wm_enteridle message will not be sent.
 
-	Ds_setforeground: INTEGER is 320
+	Ds_setforeground: INTEGER is 512
 			-- Causes the system to use the SetForegroundWindow function to
 			-- bring the dialog box to the foreground. This style is useful
 			-- for modal dialog boxes that require immediate attention from

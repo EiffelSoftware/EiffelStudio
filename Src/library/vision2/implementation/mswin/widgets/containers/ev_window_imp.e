@@ -53,12 +53,12 @@ inherit
 			set_height as wel_set_height,
 			item as wel_item,
 			enabled as is_sensitive,
-			set_x as set_x_position,
-			set_y as set_y_position,
+			set_x as wel_set_x,
+			set_y as wel_set_y,
 			width as wel_width,
 			height as wel_height,
-			x as x_position,
-			y as y_position,
+			x as wel_x,
+			y as wel_y,
 			move as wel_move,
 			resize as wel_resize,
 			move_and_resize as wel_move_and_resize,
@@ -90,8 +90,6 @@ inherit
 			on_destroy,
 			on_char,
 			on_desactivate,
-			x_position,
-			y_position,
 			on_sys_key_down,
 			on_sys_key_up,
 			on_notify,
@@ -110,8 +108,6 @@ inherit
 			on_wm_close,
 			on_wm_window_pos_changing,
 			on_wm_setting_change,
-			set_y_position,
-			set_x_position,
 			show,
 			hide,
 			class_requires_icon
@@ -299,7 +295,7 @@ feature -- Element change
 			child_cell.set_is_positioned
 			ev_move (x_position, a_y)
 		end
-	
+
 	set_parent (par: EV_CONTAINER) is
 			-- Make `par' the new parent of `Current'.
 			-- `par' can be Void then the parent is the screen.
@@ -1060,6 +1056,11 @@ feature {EV_ANY_I} -- Implementation
 			-- If `True', then on_window_pos_changing will not raise
 			-- `Current' to foreground.
 
+	has_title_bar: BOOLEAN is
+			-- Does current have a title bar?
+		do
+		end
+
 	internal_height, internal_width: INTEGER
 		-- Calling `hide' then `show' would loose the settings of
 		-- `height' and `width'. Therefore we store them internally,
@@ -1085,7 +1086,9 @@ feature {EV_PND_TRANSPORTER_IMP, EV_WIDGET_IMP}
 	title_height: INTEGER is
 			-- `Result' is absolute x position of client rect.
 		do
-			Result := title_bar_height
+			if has_title_bar then
+				Result := title_bar_height
+			end
 		end
 
 	frame_height: INTEGER is

@@ -16,7 +16,7 @@ inherit
 			selected_items
 		end
 		
-	EV_ITEM_LIST_IMP [EV_LIST_ITEM]
+	EV_LIST_ITEM_LIST_IMP
 		redefine
 			initialize,
 			interface
@@ -113,7 +113,7 @@ feature {NONE} -- Initialization
 	initialize is
 		do
 			{EV_PRIMITIVE_IMP} Precursor
-			{EV_ITEM_LIST_IMP} Precursor
+			{EV_LIST_ITEM_LIST_IMP} Precursor
 		end
 
 feature -- Access
@@ -275,7 +275,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 		end
 
 	internal_get_index (item_imp: EV_LIST_ITEM_IMP): INTEGER is
-			-- Return the index of `item' in the list.
+			-- Return the index of `item_imp' in the list.
 		do
 			Result := ev_children.index_of (item_imp, 1)
 		end
@@ -290,7 +290,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 			Result := flag_set (i, Lvis_selected)
 		end
 
-	internal_select (item_imp: EV_LIST_ITEM_IMP) is
+	internal_select_item (item_imp: EV_LIST_ITEM_IMP) is
 			-- Select `item_imp' in the list.
 		local
 			i, flags: INTEGER
@@ -304,7 +304,7 @@ feature {EV_LIST_ITEM_I} -- Implementation
 				litem.to_integer)
 		end
 
-	internal_deselect (item_imp: EV_LIST_ITEM_IMP) is
+	internal_deselect_item (item_imp: EV_LIST_ITEM_IMP) is
 			-- Deselect `item_imp' in the list.
 		local
 			i, flags: INTEGER
@@ -550,6 +550,10 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.74  2000/04/20 01:24:53  pichery
+--| Changed the inheritance to take into
+--| account EV_COMBO_BOX_IMP.
+--|
 --| Revision 1.73  2000/04/19 03:12:29  pichery
 --| Fixed bugs
 --|

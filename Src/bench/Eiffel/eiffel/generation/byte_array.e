@@ -57,7 +57,9 @@ feature
 			!!forward_marks.make;
 			!!forward_marks2.make;
 			!!forward_marks3.make;
+			!!forward_marks4.make;
 			!!backward_marks.make;
+			!!sep_backward_marks.make;
 		end;
 
 	Chunk: INTEGER is 5000;
@@ -397,6 +399,28 @@ feature -- Forward and backward jump managment
 			position := pos;
 		end;
 
+	forward_marks4: EXTEND_STACK [INTEGER];
+			-- Forward jump stack
+ 
+	mark_forward4 is
+			-- Mark a forward offset
+		do
+			forward_marks4.put (position);
+			append_integer (0);
+		end;
+
+	write_forward4 is
+			-- Write Current position at previous mark
+		local
+			pos: INTEGER;
+		do
+			pos := position;
+			position := forward_marks4.item;
+			forward_marks4.remove;
+			append_integer (pos - position - Long_size);
+			position := pos;
+		end;
+
 	backward_marks: EXTEND_STACK [INTEGER];
 			-- Backward jump stack
 
@@ -528,6 +552,24 @@ feature -- Debugger
 		do
 			append (Bc_cont);
 		end;
+
+feature -- Concurrent Eiffel
+ 
+       sep_backward_marks: EXTEND_STACK [INTEGER];
+		      -- Backward jump stack
+ 
+       sep_mark_backward is
+		       -- Mark a backward offset
+	       do
+		      sep_backward_marks.put (position);
+	       end;
+ 
+       sep_write_backward is
+		       -- Write a backward jump
+	       do
+		       append_integer (- position - Long_size + sep_backward_marks.item);
+		       sep_backward_marks.remove;
+			end
 
 invariant
 

@@ -16,6 +16,9 @@ inherit
 	EV_PIXMAPABLE_I
 
 	EV_CONTAINER_IMP
+		redefine
+			set_foreground_color
+		end
 	
 feature -- Initialization
 
@@ -95,6 +98,14 @@ feature {EV_CONTAINER} -- Element change
 			-- updating status
 			pixmap := Void
 			set_pixmap_widget (default_pointer)
+		end
+
+	set_foreground_color (color: EV_COLOR) is
+			-- Make `color' the new `foreground_color'.
+			-- Redefined because the text is in a gtk_label.
+		do
+			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
+			c_gtk_widget_set_fg_color (label_widget, color.red, color.green, color.blue)
 		end
 
 feature -- Implementation

@@ -332,22 +332,20 @@ feature {NONE} -- Query
 			create l_link.make (filename, a_url)
 			create l_filename.make_from_string (l_link.absolute_url)
 			create l_dir.make (l_filename.string)
-			if not l_dir.exists then
-				create l_filename.make_from_string (l_util.file_no_extension (l_filename.string))
-				if not l_filename.is_empty then
-					l_filename.add_extension ("html")
-				end
-				if not l_link.external_link then										
-					if l_shared.shared_constants.help_constants.is_web_help then
-							-- For web help we always convert to relative links
-						Result := l_link.relative_url
-					else					
-						Result := l_filename.string	
+			if not l_dir.exists then				
+				if not l_link.external_link then								
+						-- Convert to relative links
+					Result := l_link.relative_url
+					create l_filename.make_from_string (l_util.file_no_extension (Result))
+					if not l_filename.is_empty then
+						l_filename.add_extension ("html")
+						Result := l_filename.string
 					end
 				else
 					Result := a_url
-				end	
+				end				
 			else
+					-- A directory
 				Result := a_url
 			end		
 		end		

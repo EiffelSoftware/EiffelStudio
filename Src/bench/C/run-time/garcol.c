@@ -319,7 +319,7 @@ public int acollect()
 	int freemem;					/* Amount of free memory */
 	int tau;						/* Mean allocation rate */
 	int allocated;					/* Memory used since last full collect */
-	int started_here;			/* Was this the original entry point? */
+	int started_here = 0;			/* Was this the original entry point? */
 
 	if (!gc_running) {
 		double dummy;
@@ -408,7 +408,7 @@ int i;					/* Index in g_stat array where statistics are kept */
 	int status;							/* Status reported by GC function */
 	struct gacstat *gstat = &g_stat[i];	/* Address where stats are kept */
 	int nbstat;							/* Current number of statistics */
-	int started_here;
+	int started_here = 0;
 
 	if (!gc_running) {
 		double dummy;
@@ -610,7 +610,7 @@ public void mksp()
 	 * maintain statistics on every call.
 	 */
 
-	int started_here;
+	int started_here = 0;
 
 	if (!gc_running) {
 		double dummy;
@@ -1641,7 +1641,7 @@ public void plsc()
 	 * updating (available to the user via MEMORY).
 	 */
 
-	int started_here;
+	int started_here = 0;
 
 	if (!gc_running) {
 		double dummy;
@@ -1704,7 +1704,7 @@ char **object;
 	 * which must be part of the local roots for the collector.
 	 */
 
-	int started_here;
+	int started_here = 0;
 
 	if (!gc_running) {
 		double dummy;
@@ -2559,7 +2559,7 @@ public int collect()
 	 */
 
 	int result;
-	int started_here;
+	int started_here = 0;
 
 	if (!gc_running) {
 		double dummy;

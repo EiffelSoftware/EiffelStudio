@@ -179,7 +179,7 @@ end
 				Extern_declarations.generate (buffer)
 				Extern_declarations.wipe_out
 
-				!! address_file.make_open_write (final_file_name ("eaddress", Dot_h))
+				!! address_file.make_open_write (final_file_name ("eaddress", Dot_h, 1))
 			else
 					-- Generate the dispatch table in Workbench mode
 				generate_dispatch_table (buffer)

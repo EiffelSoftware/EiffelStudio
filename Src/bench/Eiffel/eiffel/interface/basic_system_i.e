@@ -67,6 +67,14 @@ feature
 	tuple_class: CLASS_I
 			-- Class TUPLE
 
+	routine_class: CLASS_I
+			-- Class ROUTINE
+
+	procedure_class: CLASS_I
+			-- Class PROCEDURE
+
+	function_class: CLASS_I
+			-- Class FUNCTION
 
 	set_general_class (c: CLASS_I) is
 			-- Assign `c' to `general_class'.
@@ -192,6 +200,24 @@ feature
 			-- Assign `c' to `tuple_class'.
 		do
 			tuple_class := c
+		end
+
+	set_routine_class (c: CLASS_I) is
+			-- Assign `c' to `routine_class'.
+		do
+			routine_class := c
+		end
+
+	set_procedure_class (c: CLASS_I) is
+			-- Assign `c' to `procedure_class'.
+		do
+			procedure_class := c
+		end
+
+	set_function_class (c: CLASS_I) is
+			-- Assign `c' to `function_class'.
+		do
+			function_class := c
 		end
 
 
@@ -373,6 +399,33 @@ feature
 			compiled: tuple_class.compiled
 		do
 			Result := tuple_class.compiled_class.id
+		end
+
+	routine_class_id: CLASS_ID is
+			-- Id of class ROUTINE
+		require
+			routine_class_exists: routine_class /= Void
+			compiled: routine_class.compiled
+		do
+			Result := routine_class.compiled_class.id
+		end
+
+	procedure_class_id: CLASS_ID is
+			-- Id of class PROCEDURE
+		require
+			procedure_class_exists: procedure_class /= Void
+			compiled: procedure_class.compiled
+		do
+			Result := procedure_class.compiled_class.id
+		end
+
+	function_class_id: CLASS_ID is
+			-- Id of class FUNCTION
+		require
+			function_class_exists: function_class /= Void
+			compiled: function_class.compiled
+		do
+			Result := function_class.compiled_class.id
 		end
 
 	pointer_ref_dtype: INTEGER is

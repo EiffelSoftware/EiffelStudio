@@ -431,6 +431,9 @@ feature {COMPILER_EXPORTER} -- Implementation
 			system.set_pointer_ref_class (unique_class("pointer_ref"))
 			system.set_memory_class_i (unique_class ("memory"))
 			system.set_tuple_class (unique_class ("tuple"))
+			system.set_routine_class (unique_class ("routine"))
+			system.set_procedure_class (unique_class ("procedure"))
+			system.set_function_class (unique_class ("function"))
 				-- Check sum error
 			Error_handler.checksum
 		end

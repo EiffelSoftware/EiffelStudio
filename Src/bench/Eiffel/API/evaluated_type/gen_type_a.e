@@ -115,13 +115,12 @@ feature -- Output
 		do
 			{CL_TYPE_A} Precursor (st)
 
-			-- TUPLE may have zero generic parameters
-
+			count := generics.count
+				-- TUPLE may have zero generic parameters
 			if count > 0 then
 				st.add_string (" [")
 				from
 					i := 1
-					count := generics.count
 				until
 					i > count
 				loop

@@ -104,6 +104,7 @@ feature -- Generation
 			buffer.clear_all
 
 			buffer.putstring ("#include %"eif_eiffel.h%"%N")
+			buffer.putstring ("#include %"eif_rout_obj.h%"%N")
 
 			if final_mode then
 				buffer.putstring ("#include %"eaddress")
@@ -147,6 +148,7 @@ debug ("DOLLAR")
 	io.new_line
 end
 								generate_feature (a_class, a_feature, final_mode, buffer)
+								generate_feature_for_rout (a_class, a_feature, final_mode, buffer)
 							end
 							features.forth
 						end
@@ -171,6 +173,7 @@ end
 
 				buffer.clear_all
 				buffer.putstring ("#include %"eif_eiffel.h%"%N")
+				buffer.putstring ("#include %"eif_rout_obj.h%"%N")
 
 				Extern_declarations.generate_header (buffer)
 				Extern_declarations.generate (buffer)
@@ -247,7 +250,12 @@ feature {NONE} -- Generation
 							buffer.putstring ("f")
 							buffer.putstring (a_type.id.address_table_name (i))
 							buffer.putstring (",%N")
+							buffer.putstring ("(char *(*)())")
+							buffer.putstring ("_f")
+							buffer.putstring (a_type.id.address_table_name (i))
+							buffer.putstring (",%N")
 						else
+							buffer.putstring ("(char *(*)()) 0,%N")
 							buffer.putstring ("(char *(*)()) 0,%N")
 						end
 						i := i + 1
@@ -280,7 +288,7 @@ feature {NONE} -- Generation
 							buffer.putstring ("eif_address_t")
 							buffer.putint (a_type.id.id)
 							buffer.putstring (" - ")
-							buffer.putint (found_item.first)
+							buffer.putint (2*(found_item.first))
 							buffer.putstring (",%N")
 						else
 							buffer.putstring ("(fnptr *) 0,%N")
@@ -420,7 +428,7 @@ feature {NONE} -- Generation
 					a_types := arg_types (args)
 					buffer.generate_function_signature
 						(return_type_string, f_name, True, buffer,
-					 	arg_names (args.count), a_types)
+						arg_names (args.count), a_types)
 				else
 					a_types := <<"EIF_REFERENCE">>
 					buffer.generate_function_signature
@@ -430,7 +438,7 @@ feature {NONE} -- Generation
 				buffer.putstring ("%N%T")
 
 				if final_mode then
-					entry := Eiffel_table.poly_table (rout_id)
+					entry :=  Eiffel_table.poly_table (rout_id)
 					if entry = Void then
 						-- Function pointer associated to a deferred feature
 						-- without any implementation
@@ -500,4 +508,201 @@ feature {NONE} -- Generation
 			end
 		end
 
+	arg_tags (args: FEAT_ARG): ARRAY [STRING] is
+			-- Generate union tag names for the argument types.
+		require
+			arg_non_void: args /= Void
+		local
+			i, nb: INTEGER
+			solved_arg_type: TYPE_I
+			arg_type_a: TYPE_A
+		do
+			from
+				i := 1
+				nb := args.count
+				!! Result.make (1, nb)
+			until
+				i > nb
+			loop
+				arg_type_a := args.i_th (i).actual_type
+				Result.put (solved_type (arg_type_a).union_tag, i)
+				i := i + 1
+			end
+		end
+
+	generate_arg_list_for_rout (buffer: GENERATION_BUFFER; nb: INTEGER; tags : ARRAY [STRING]) is
+			-- Generate declaration of `n' arguments for routine objects.
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				i > nb
+			loop
+				buffer.putstring (", args[")
+				buffer.putint (i-1)
+				buffer.putstring ("].")
+				buffer.putstring (tags.item (i))
+				i := i + 1
+			end
+		end
+
+	generate_feature_for_rout (a_class: CLASS_C; a_feature: FEATURE_I; final_mode: BOOLEAN; buffer: GENERATION_BUFFER) is
+			-- Generate feature for routine objects
+		local
+			types: TYPE_LIST
+			feature_id: INTEGER
+			rout_id: ROUTINE_ID
+			args: FEAT_ARG
+			has_arguments: BOOLEAN
+			return_type: TYPE_A
+			return_type_string: STRING
+			c_return_type: TYPE_C
+			f_name: STRING
+			a_types: like arg_types
+			table_name, function_name: STRING
+			entry: POLY_TABLE [ENTRY]
+			cursor: CURSOR
+			rout_info: ROUT_INFO
+		do
+			feature_id := a_feature.feature_id
+			rout_id := a_feature.rout_id_set.first
+			if a_feature.has_arguments then
+				has_arguments := True
+				args := a_feature.arguments
+			end
+			return_type := a_feature.type.actual_type
+
+				-- get class types and generate encapsulation for each of them
+			from
+				types := a_class.types
+				types.start
+			until
+				types.after
+			loop
+				a_type := types.item
+
+				cursor := types.cursor
+
+				function_name := a_type.id.address_table_name (feature_id)
+
+				buffer.putstring ("%T/* ")
+				a_type.type.dump (buffer)
+				buffer.putstring (" ")
+				buffer.putstring (a_feature.feature_name)
+				buffer.putstring (" */%N")
+
+				c_return_type := solved_type (return_type)
+				return_type_string := c_return_type.c_string
+
+				f_name := "_f"
+				f_name.append (function_name)
+
+				if has_arguments then
+					a_types := arg_types (args)
+				else
+					a_types := <<"EIF_REFERENCE">>
+				end
+
+				buffer.generate_function_signature
+					("char", f_name, True, buffer,
+					<<"Current", "args", "res">>, <<"EIF_REFERENCE", "EIF_ARG_UNION *", "EIF_ARG_UNION *">>)
+
+				buffer.putstring ("%N%T")
+
+				if final_mode then
+					entry :=  Eiffel_table.poly_table (rout_id)
+					if entry = Void then
+						-- Function pointer associated to a deferred feature
+						-- without any implementation
+						buffer.putstring ("RTNR();")
+					else
+						if a_feature.is_function then
+							buffer.putstring ("((*res).")
+							buffer.putstring (c_return_type.union_tag)
+							buffer.putstring (" = ");
+						end
+
+						buffer.putchar ('(')
+						c_return_type.generate_function_cast (buffer, a_types)
+						table_name := rout_id.table_name
+						buffer.putchar ('(')
+						buffer.putstring (table_name)
+						buffer.putchar ('-')
+						buffer.putint (entry.min_used - 1)
+						buffer.putstring (")[Dtype(Current)])(Current")
+
+						if has_arguments then
+							generate_arg_list_for_rout (buffer, args.count,
+														arg_tags (args))
+						end
+
+						if a_feature.is_function then
+							buffer.putstring (")");
+						end
+
+						buffer.putstring (");%N")
+
+							-- Mark table used.
+						Eiffel_table.mark_used (rout_id)
+
+							-- Remember extern declarations
+						Extern_declarations.add_routine_table (table_name)
+					end
+				else
+						-- Workbench mode
+
+					if a_feature.is_function then
+						buffer.putstring ("((*res).")
+						buffer.putstring (c_return_type.union_tag)
+						buffer.putstring (" = ");
+					end
+
+					buffer.putchar ('(')
+					c_return_type.generate_function_cast (buffer, a_types)
+
+					if
+						Compilation_modes.is_precompiling or else
+						a_type.associated_class.is_precompiled
+					then
+						rout_info := System.rout_info_table.item (rout_id)
+						buffer.putstring ("RTWPF(")
+						rout_info.origin.generated_id (buffer)
+						buffer.putstring (", ")
+						buffer.putint (rout_info.offset)
+					else
+						buffer.putstring ("RTWF(")
+						buffer.putint (a_type.id.id - 1)
+						buffer.putstring (", ")
+						buffer.putint (feature_id)
+					end
+					buffer.putstring (", Dtype (Current)))(Current")
+					if has_arguments then
+						generate_arg_list_for_rout (buffer, args.count,
+													arg_tags (args))
+					end
+
+					if a_feature.is_function then
+						buffer.putstring (")");
+					end
+					buffer.putstring (");%N")
+				end
+
+				buffer.putstring ("%Treturn '");
+
+				if a_feature.is_function then
+					buffer.putchar (c_return_type.union_tag.item (1))
+				else
+					buffer.putchar ('v');
+				end
+
+				buffer.putstring ("';%N}%N%N") -- ss MT
+
+				types.go_to (cursor)
+				types.forth
+			end
+		end
+
 end -- class ADDRESS_TABLE
+

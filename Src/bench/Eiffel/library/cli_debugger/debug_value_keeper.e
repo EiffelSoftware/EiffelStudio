@@ -1,11 +1,14 @@
 indexing
-	description: "Objects that ..."
-	author: ""
+	description: "Objects that keep a reference to the debug value indexed by address..."
+	author: "$Author$"
 	date: "$Date$"
 	revision: "$Revision$"
 
 class
 	DEBUG_VALUE_KEEPER
+	
+inherit
+	ICOR_EXPORTER
 
 create {SHARED_DEBUG_VALUE_KEEPER}
 	make
@@ -18,7 +21,7 @@ feature {NONE} -- Initialization
 			debug_value_kept.compare_objects
 		end
 
-feature -- Operation
+feature {APPLICATION_EXECUTION_DOTNET} -- Operation
 
 	recycle is
 		do
@@ -27,27 +30,12 @@ feature -- Operation
 
 feature -- Access
 
-	know_about (l_k: STRING): BOOLEAN is
-			-- 
-		do
-			Result := debug_value_kept.has (l_k)
-		end
-		
-
-	item (l_k: STRING): ABSTRACT_DEBUG_VALUE is
-		require
-			know_about (l_k)
-		do
-			Result := debug_value_kept.item (l_k)
-		ensure
-			Result /= Void
-		end
-
 	keep (dv: ABSTRACT_DEBUG_VALUE) is
 		require
 			dv /= Void
 		local
 			l_address: STRING
+			l_ddv: EIFNET_ABSTRACT_DEBUG_VALUE
 		do
 			l_address := dv.address
 			if l_address /= Void then
@@ -57,15 +45,38 @@ feature -- Access
 			end
 		end
 		
-	remove_by_address (a_address: STRING) is
+	keep_dotnet_value (ddv: EIFNET_ABSTRACT_DEBUG_VALUE) is
 		require
-			a_address /= Void and not a_address.is_empty
+			ddv /= Void
+		local
+			l_address: STRING
 		do
-			if debug_value_kept.has (a_address) then
-				debug_value_kept.remove (a_address)
+			l_address := ddv.address
+			if l_address /= Void then
+				if not debug_value_kept.has (l_address) then
+					debug_value_kept.put (ddv, l_address)
+				end
 			end
+		end		
+
+	know_about (l_k: STRING): BOOLEAN is
+			-- Has a Debug Value object address by `l_k'
+		do
+			Result := debug_value_kept.has (l_k)
 		end
-		
+
+	item (l_k: STRING): ABSTRACT_DEBUG_VALUE is
+			-- Debug Value object address by `l_k'
+		require
+			know_about (l_k)
+		do
+			Result := debug_value_kept.item (l_k)
+		ensure
+			Result /= Void
+		end		
+
+feature {APPLICATION_EXECUTION_DOTNET} -- Implementation
+
 	keep_only (l_addresses: LIST [STRING]) is
 			-- Clean all the value except the one from l_addresses
 		local
@@ -83,6 +94,8 @@ feature -- Access
 				debug_value_kept.forth
 			end
 		end
+		
+feature {NONE} -- restricted access
 	
 	debug_value_kept: HASH_TABLE [ABSTRACT_DEBUG_VALUE, STRING]
 

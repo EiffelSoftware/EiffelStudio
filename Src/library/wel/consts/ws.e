@@ -9,7 +9,7 @@ class
 
 feature -- Basic window types
 
-	Ws_overlapped: INTEGER is
+	Ws_overlapped, Ws_tiled: INTEGER is
 		external
 			"C [macro <wel.h>]"
 		alias
@@ -64,7 +64,7 @@ feature -- Generic window states
 
 feature -- Main window states
 
-	Ws_minimize: INTEGER is
+	Ws_minimize, Ws_iconic: INTEGER is
 		external
 			"C [macro <wel.h>]"
 		alias
@@ -122,7 +122,7 @@ feature -- Main window styles
 			"WS_SYSMENU"
 		end
 
-	Ws_thickframe: INTEGER is
+	Ws_thickframe, Ws_sizebox: INTEGER is
 		external
 			"C [macro <wel.h>]"
 		alias
@@ -161,7 +161,7 @@ feature -- Control window styles
 
 feature -- Common window styles
 
-	Ws_overlappedwindow: INTEGER is
+	Ws_overlappedwindow, Ws_tiledwindow: INTEGER is
 		external
 			"C [macro <wel.h>]"
 		alias

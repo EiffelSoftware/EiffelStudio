@@ -45,6 +45,18 @@ feature -- Access
 			Result := Current
 		end;
 
+	focus_label: FOCUS_LABEL_I is
+			-- Focus_label
+		local
+			ti: TOOLTIP_INITIALIZER
+		do
+			ti ?= top
+			check
+				has_tooltip: ti /= Void
+			end
+			Result := ti.label
+		end
+
 feature -- Status Setting
 
 	set_symbol (p: PIXMAP) is

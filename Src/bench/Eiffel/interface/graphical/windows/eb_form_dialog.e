@@ -88,7 +88,7 @@ feature -- Setting
 				end
 				set_x_y (new_x, new_y)
 				popup
-				focus_label.initialize_focusables (Current)
+				tooltip_realize
 			end
 		end
 

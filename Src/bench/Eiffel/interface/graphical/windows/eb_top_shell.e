@@ -65,7 +65,7 @@ feature -- Display
 				show
 			else
 				realize
-				focus_label.initialize_focusables (Current)
+				tooltip_realize
 			end
 			raise
 		end

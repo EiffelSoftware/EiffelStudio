@@ -88,7 +88,7 @@ feature -- Initialization
 			set_default_position
 
 			realize
-			focus_label.initialize_focusables (Current)
+			tooltip_realize
 			init_text_window
 			set_composite_attributes (Current)
 			feature_part.init_text_window

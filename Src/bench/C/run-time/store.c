@@ -169,8 +169,8 @@ rt_public void rmake_header(void);
 #ifdef RECOVERABLE_SCAFFOLDING
 rt_public void imake_header(void);				/* Make header */
 #endif
-rt_private void object_write (char *object);
-rt_private void gen_object_write (char *object);
+rt_private void object_write (char *object, uint32);
+rt_private void gen_object_write (char *object, uint32);
 rt_private void st_write_cid (uint32);
 rt_private void ist_write_cid (uint32);
 rt_public long get_offset (uint32 o_type, uint32 attrib_num);
@@ -180,13 +180,6 @@ rt_public void allocate_gen_buffer(void);
 rt_public void buffer_write(register char *data, int size);
 
 rt_public void rt_reset_store (void);
-rt_public void rt_init_store(
-	void (*store_function) (void),
-	int (*char_write_function)(char *, int),
-	void (*flush_buffer_function) (void),
-	void (*st_write_function) (char *),
-	void (*make_header_function) (void),
-	int accounting_type);
 
 rt_private struct cecil_info * cecil_info_for_dynamic_type (uint32 dtype);
 
@@ -212,14 +205,14 @@ doc:	</attribute>
 rt_private void (*flush_buffer_func)(void);
 
 /*
-doc:	<attribute name="st_write_func" return_type="void (*)(EIF_REFERENCE)" export="private">
+doc:	<attribute name="st_write_func" return_type="void (*)(EIF_REFERENCE, uint32)" export="private">
 doc:		<summary>Action called to store an Eiffel object.</summary>
 doc:		<access>Read/Write</access>
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private void (*st_write_func)(EIF_REFERENCE);
+rt_private void (*st_write_func)(EIF_REFERENCE, uint32);
 
 /*
 doc:	<attribute name="make_header_func" return_type="void (*)(void)" export="private">
@@ -272,14 +265,14 @@ doc:	</attribute>
 rt_private void (*old_flush_buffer_func)(void);
 
 /*
-doc:	<attribute name="old_st_write_func" return_type="void (*)(EIF_REFERENCE)" export="private">
+doc:	<attribute name="old_st_write_func" return_type="void (*)(EIF_REFERENCE, uint32)" export="private">
 doc:		<summary>Store default version of `st_write_func'.</summary>
 doc:		<access>Read/Write</access> 
 doc:		<thread_safety>Safe</thread_safety>
 doc:		<synchronization>Private per thread data</synchronization>
 doc:	</attribute>
 */
-rt_private void (*old_st_write_func)(EIF_REFERENCE);
+rt_private void (*old_st_write_func)(EIF_REFERENCE, uint32);
 
 /*
 doc:	<attribute name="old_make_header_func" return_type="void (*)()" export="private">
@@ -413,7 +406,7 @@ rt_public void rt_init_store(
 	void (*store_function) (void),
 	int (*char_write_function)(char *, int),
 	void (*flush_buffer_function) (void),
-	void (*st_write_function) (EIF_REFERENCE),
+	void (*st_write_function) (EIF_REFERENCE, uint32),
 	void (*make_header_function) (void),
 	int accounting_type)
 {
@@ -937,22 +930,20 @@ rt_private void st_store(EIF_REFERENCE object)
 	}
 
 	if (!is_expanded)
-		st_write_func(object);		/* write the object */
+		st_write_func(object, HEADER(object)->ov_flags);		/* write the object */
 
 }
 
-rt_public void st_write(EIF_REFERENCE object)
+rt_public void st_write(EIF_REFERENCE object, uint32 fflags)
 {
 	/* Write an object'.
 	 * Use for basic and general (before 3.3) store
 	 */
 
 	register2 union overhead *zone;
-	uint32 flags, fflags;
+	uint32 flags;
 	register1 uint32 nb_char;
 
-	zone = HEADER(object);
-	fflags = zone->ov_flags;
 	flags = Mapped_flags(fflags);
 
 	/* Write address */
@@ -967,6 +958,9 @@ rt_public void st_write(EIF_REFERENCE object)
 #endif
 
 	if (flags & EO_SPEC) {
+			/* It is safe to query the header here, since a special always have
+			 * a header. */
+		zone = HEADER(object);
 		/* We have to save the size of the special object */
 		buffer_write((char *)(&(zone->ov_size)), sizeof(uint32));
 
@@ -995,18 +989,15 @@ rt_public void st_write(EIF_REFERENCE object)
 
 }
 
-rt_public void gst_write(EIF_REFERENCE object)
+rt_public void gst_write(EIF_REFERENCE object, uint32 fflags)
 {
 	/* Write an object.
 	 * used for general store
 	 */
 
 	register2 union overhead *zone;
-	uint32 flags, fflags;
-	/*register1 uint32 nb_char;*/ /* %%ss removed unused */
+	uint32 flags;
 
-	zone = HEADER(object);
-	fflags = zone->ov_flags;
 	flags = Mapped_flags(fflags);
 
 	/* Write address */
@@ -1023,6 +1014,9 @@ rt_public void gst_write(EIF_REFERENCE object)
 	if (flags & EO_SPEC) {
 		EIF_REFERENCE o_ptr;
 		uint32 count, elm_size;
+			/* It is safe to query the header here, since a special always have
+			 * a header. */
+		zone = HEADER(object);
 		o_ptr = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
 		count = (uint32) (RT_SPECIAL_COUNT_WITH_INFO(o_ptr));
 		elm_size = (uint32)(RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr));
@@ -1039,26 +1033,22 @@ rt_public void gst_write(EIF_REFERENCE object)
 
 	} 
 	/* Write the body of the object */
-	gen_object_write(object);
+	gen_object_write(object, fflags);
 
 }
 
-rt_public void ist_write(EIF_REFERENCE object)
+rt_public void ist_write(EIF_REFERENCE object, uint32 fflags)
 {
 	/* Write an object.
 	 * used for independent store
 	 */
 
-	register2 union overhead *zone;
-	uint32 flags, fflags;
-	/* register1 uint32 nb_char;*/ /* %%ss removed unused */
+	uint32 flags;
 
 #ifdef RECOVERABLE_DEBUG
-	printf ("%2ld: %s [%p]\n", ++object_count, eif_typename ((int16) Dftype (object)), object);
+	printf ("%2ld: %s [%p]\n", ++object_count, eif_typename ((int16) (fflags & EO_TYPE)), object);
 #endif
 
-	zone = HEADER(object);
-	fflags = zone->ov_flags;
 	flags = Mapped_flags(fflags);
 
 	/* Write address */
@@ -1074,7 +1064,11 @@ rt_public void ist_write(EIF_REFERENCE object)
 
 	if (flags & EO_SPEC) {
 		EIF_REFERENCE o_ptr;
+		register2 union overhead *zone;
 		uint32 count, elm_size;
+			/* It is safe to access, object's header because a special always
+			 * has a header. */
+		zone = HEADER(object);
 		o_ptr = RT_SPECIAL_INFO_WITH_ZONE(object, zone);
 		count = (uint32)(RT_SPECIAL_COUNT_WITH_INFO(o_ptr));
 		elm_size = (uint32)(RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr));
@@ -1091,7 +1085,7 @@ rt_public void ist_write(EIF_REFERENCE object)
 
 	} 
 	/* Write the body of the object */
-	object_write(object);
+	object_write(object, fflags);
 
 }
 
@@ -1135,8 +1129,17 @@ rt_public long get_alpha_offset(uint32 o_type, uint32 attrib_num)
 #endif
 }
 
+/*
+doc:	<routine name="gen_object_write" export="private">
+doc:		<summary>Store object using platform general format.</summary>
+doc:		<param name="object" type="char *">Pointer to the object being stored. It is a `char *' and not an `EIF_REFERENCE' because some time `object' may not have an object header (car of an expanded without references in a SPECIAL instance.</param>
+doc:		<param name="fflags" type="uint32">Flags associated to the type of object pointed by `object'.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_eo_store_mutex</synchronization>
+doc:	</routine>
+*/
 
-rt_private void gen_object_write(char *object)
+rt_private void gen_object_write(char *object, uint32 fflags)
 {
 		/* Writes an object to disk (used by the new (3.3) general store)
 		 * It uses the same algorithm as `object_write' and should be updated
@@ -1147,7 +1150,6 @@ rt_private void gen_object_write(char *object)
 	/* int z;*/ /* %%ss removed */
 	uint32 o_type;
 	uint32 num_attrib;
-	uint32 fflags = HEADER(object)->ov_flags;
 	uint32 flags, hflags, hfflags;
 
 	flags = Mapped_flags(fflags);
@@ -1196,7 +1198,7 @@ rt_private void gen_object_write(char *object)
 					}
 					break;
 				case SK_EXP:
-					gst_write (object + attrib_offset);
+					gst_write (object + attrib_offset, HEADER(object + attrib_offset)->ov_flags);
 					break;
 				case SK_REF:
 				case SK_POINTER:
@@ -1261,14 +1263,20 @@ rt_private void gen_object_write(char *object)
 							break;
 						case SK_EXP:
 							elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-							hfflags = HEADER(object + OVERHEAD)->ov_flags;
+							hfflags = eif_gen_param_id(-1, (int16) o_type, 1);
 							hflags = Mapped_flags(hfflags);
 							buffer_write((char *) (&hflags), sizeof(uint32));
 							st_write_cid (hfflags & EO_TYPE);
 
-							for (ref = object + OVERHEAD; count > 0;
-								count --, ref += elem_size) {
-								gen_object_write(ref);
+#ifdef WORKBENCH
+							ref = object + OVERHEAD;
+#else
+								/* In finalized mode, there is no header in a special which
+								 * does not have the EO_REF flag. */
+							ref = object;
+#endif
+							for (; count > 0; count --, ref += elem_size) {
+								gen_object_write(ref, hfflags);
 							}
 							break;
 						default:
@@ -1279,14 +1287,13 @@ rt_private void gen_object_write(char *object)
 					if (!(flags & EO_COMP)) {	/* Special of references */
 						buffer_write(object, count*sizeof(EIF_REFERENCE));
 					} else {			/* Special of composites */
-						hfflags = HEADER(object)->ov_flags;
+						hfflags = eif_gen_param_id(-1, (int16) o_type, 1);
 						hflags = Mapped_flags(hfflags);
 						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
 						buffer_write((char *)(&hflags), sizeof(uint32));
 						st_write_cid (hfflags & EO_TYPE);
-						for (ref = object + OVERHEAD; count > 0;
-								count --, ref += elem_size) {
-							gen_object_write(ref);
+						for (ref = object + OVERHEAD; count > 0; count --, ref += elem_size) {
+							gen_object_write(ref, hfflags);
 						}
 					}
 				}
@@ -1330,7 +1337,17 @@ rt_private void object_tuple_write (EIF_REFERENCE object)
 	}
 }
 
-rt_private void object_write(char *object)
+/*
+doc:	<routine name="object_write" export="private">
+doc:		<summary>Store object using platform independent format.</summary>
+doc:		<param name="object" type="char *">Pointer to the object being stored. It is a `char *' and not an `EIF_REFERENCE' because some time `object' may not have an object header (car of an expanded without references in a SPECIAL instance.</param>
+doc:		<param name="fflags" type="uint32">Flags associated to the type of object pointed by `object'.</param>
+doc:		<thread_safety>Safe</thread_safety>
+doc:		<synchronization>eif_eo_store_mutex</synchronization>
+doc:	</routine>
+*/
+
+rt_private void object_write(char * object, uint32 fflags)
 {
 	long attrib_offset;
 #if DEBUG &1
@@ -1338,7 +1355,6 @@ rt_private void object_write(char *object)
 #endif
 	uint32 o_type;
 	uint32 num_attrib;
-	uint32 fflags = HEADER(object)->ov_flags;
 	uint32 flags, hflags, hfflags;
 
 	flags = Mapped_flags(fflags);
@@ -1396,7 +1412,7 @@ rt_private void object_write(char *object)
 
 					break;
 				case SK_EXP:
-					ist_write (object + attrib_offset);
+					ist_write (object + attrib_offset, HEADER(object + attrib_offset)->ov_flags);
 					break;
 				case SK_REF:
 				case SK_POINTER:
@@ -1465,14 +1481,20 @@ rt_private void object_write(char *object)
 							break;
 						case SK_EXP:
 							elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-							hfflags = HEADER(object + OVERHEAD)->ov_flags;
+							hfflags = eif_gen_param_id(-1, (int16) o_type, 1);
 							hflags = Mapped_flags(hfflags);
-							widr_norm_int (&hflags);		/* %%zs misuse, removed ",1" */
+							widr_norm_int (&hflags);
 							ist_write_cid (hfflags & EO_TYPE);
 
-							for (ref = object + OVERHEAD; count > 0;
-								count --, ref += elem_size) {
-								object_write(ref);
+#ifdef WORKBENCH
+							ref = object + OVERHEAD;
+#else
+								/* In finalized mode, there is no header in a special which
+								 * does not have the EO_REF flag. */
+							ref = object;
+#endif
+							for (; count > 0; count --, ref += elem_size) {
+								object_write(ref, hfflags);
 							}
 							break;
 
@@ -1485,14 +1507,13 @@ rt_private void object_write(char *object)
 						widr_multi_any (object, count);
 					} else {			/* Special of composites */
 						elem_size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ptr);
-						hfflags = HEADER(object)->ov_flags;
+						hfflags = eif_gen_param_id(-1, (int16) o_type, 1);
 						hflags = Mapped_flags(hfflags);
 						widr_norm_int (&hflags);	/* %%zs misuse, removed ",1" */
 						ist_write_cid (hflags & EO_TYPE);
 
-						for (ref = object + OVERHEAD; count > 0;
-								count --, ref += elem_size) {
-							object_write(ref);
+						for (ref = object + OVERHEAD; count > 0; count --, ref += elem_size) {
+							object_write(ref, hfflags);
 						}
 					}
 				}

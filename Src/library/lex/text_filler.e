@@ -83,8 +83,8 @@ feature -- Status setting
 				previous_buffer := clone (buffer);
 				buffer.resize (buffer_size);
 				buffer.append (previous_buffer);
-				line_nb_array.resize (1, buffer_size);
-				column_nb_array.resize (1, buffer_size);
+				line_nb_array.conservative_resize (1, buffer_size);
+				column_nb_array.conservative_resize (1, buffer_size);
 				if source_is_file then
 					fill_from_file (b, previous_buffer_size, buffer_size)
 				else
@@ -98,8 +98,8 @@ feature -- Status setting
 				end;
 				buffer_size := buf;
 				buffer.resize (buffer_size);
-				line_nb_array.resize (1, buffer_size);
-				column_nb_array.resize (1, buffer_size)
+				line_nb_array.conservative_resize (1, buffer_size);
+				column_nb_array.conservative_resize (1, buffer_size)
 			end
 		ensure
 			buffer_size = buf

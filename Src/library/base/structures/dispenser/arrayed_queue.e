@@ -244,7 +244,7 @@ feature {ARRAYED_QUEUE} -- Implementation
 			default_value: G
 		do
 			i := array_count
-			resize (1, capacity + additional_space)
+			conservative_resize (1, capacity + additional_space)
 			if out_index > 1 then
 				from
 					j := capacity

@@ -189,7 +189,7 @@ feature {NONE} -- Status setting
 					make_default_table (g)
 				else
 					if map_table.count < f then
-						map_table.resize (1, f)
+						map_table.conservative_resize (1, f)
 					end
 					from
 						ind := 1
@@ -226,7 +226,7 @@ feature {NONE} -- Status setting
 			if map_table = Void then
 				create map_table.make (1, i)
 			elseif map_table.count < i then
-				map_table.resize (1, i)
+				map_table.conservative_resize (1, i)
 			end
 			from
 				j := 1

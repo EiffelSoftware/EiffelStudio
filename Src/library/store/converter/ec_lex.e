@@ -95,7 +95,7 @@ feature -- Status setting
 				end
 			end;
 			if not ecl_error then
-				ecl_token_array.resize(1,ecl_nb_token)
+				ecl_token_array.conservative_resize(1,ecl_nb_token)
 			end
 		end;
 

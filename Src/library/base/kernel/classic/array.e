@@ -356,11 +356,11 @@ feature -- Resizing
 			-- Change the capacity to at least `i'.
 		do
 			if i > capacity then
-				resize (lower, upper + i - capacity)
+				conservative_resize (lower, upper + i - capacity)
 			end
 		end
 
-	resize (min_index, max_index: INTEGER) is
+	conservative_resize (min_index, max_index: INTEGER) is
 			-- Rearrange array so that it can accommodate
 			-- indices down to `min_index' and up to `max_index'.
 			-- Do not lose any previously entered item.
@@ -390,6 +390,21 @@ feature -- Resizing
 			end
 			lower := new_lower
 			upper := new_upper
+		ensure
+			no_low_lost: lower = min_index or else lower = old lower
+			no_high_lost: upper = max_index or else upper = old upper
+		end
+
+	resize (min_index, max_index: INTEGER) is
+			-- Rearrange array so that it can accommodate
+			-- indices down to `min_index' and up to `max_index'.
+			-- Do not lose any previously entered item.
+		obsolete
+			"Use `conservative_resize' instead as future versions will implement `resize' as specified in ELKS."
+		require
+			good_indices: min_index <= max_index
+		do
+			conservative_resize (min_index, max_index)
 		ensure
 			no_low_lost: lower = min_index or else lower = old lower
 			no_high_lost: upper = max_index or else upper = old upper

@@ -458,6 +458,8 @@ feature {NONE} -- Implementation
 					end
 					Result := l_features.first
 					members_cache.put (l_features, a_name)
+				else
+					Event_manager.raise_event (feature {CODE_EVENTS_IDS}.Missing_dotnet_member, [a_name, name])
 				end
 			end
 		end

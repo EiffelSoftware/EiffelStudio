@@ -477,8 +477,8 @@ feature {EV_ANY_I} -- Implementation
 			it := find_item_at_position (x_pos, y_pos)
 			pt := client_to_screen (x_pos, y_pos)
 			if it /= Void then
-				it.interface.pointer_motion_actions.call ([x_pos,y_pos -
-					lative_y, 0.0, 0.0, 0.0, pt.x, pt.y])
+				it.interface.pointer_motion_actions.call ([x_pos, y_pos -
+					it.relative_y, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end
 			if pnd_item_source /= Void then
 				pnd_item_source.pnd_motion (x_pos, y_pos, pt.x, pt.y)
@@ -570,6 +570,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.65  2000/04/11 23:56:03  brendel
+--| Fixed cut/paste error.
+--|
 --| Revision 1.64  2000/04/11 19:01:25  brendel
 --| Removed resolved FIXME's.
 --| Formatted for 80 columns.

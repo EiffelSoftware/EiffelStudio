@@ -63,6 +63,7 @@ feature
 	quit_label: STRING is "Exit application"
 	raise_widget_label: STRING is "Raise widget"
 	resize_policy_label: STRING is "Resize policy"
+	reset_label: STRING is "Reset commands"
 	return_label: STRING is "Return"
 	save_project_label: STRING is "Save project"
 	save_project_as_label: STRING is "Save project as..."

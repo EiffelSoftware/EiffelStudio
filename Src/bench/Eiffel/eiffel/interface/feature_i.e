@@ -675,6 +675,12 @@ feature -- Conveniences
 			-- Do nothing
 		end
 
+	is_formal_attribute: BOOLEAN is
+			-- Is current feature a formal attribute?
+		do
+			-- Do nothing
+		end
+
 	is_attribute: BOOLEAN is
 			-- Is current feature an attribute ?
 		do

@@ -47,7 +47,6 @@ feature
 			a_point_exists: not (a_point = Void);
 			a_bitmap_exists: not (a_bitmap = Void);
 			a_bitmap_valid: a_bitmap.is_valid
-		
 		local
 			resource_x: POINTER;
 			a_bitmap_implementation: PIXMAP_X	
@@ -131,7 +130,6 @@ feature
 		require
 			point1_exists: not (point1 = Void);
 			point2_exists: not (point2 = Void)
-		
 		local
 			x1, y1, x2, y2: INTEGER;
 			coord1, coord2: INTEGER
@@ -153,7 +151,6 @@ feature
 
 	draw_point (a_point: COORD_XY) is
 			-- Draw `a_point'.
-		
 		do
 			x_draw_point (display_pointer, window_object, graphic_context, a_point.x, a_point.y)
 		end;
@@ -164,13 +161,12 @@ feature
 			points_exists: not (points = Void);
 			list_not_empty: not points.empty;
 			list_not_too_large: points.count <= max_count_for_draw_polyline
-		
 		local
 			array_points: POINTER;
 			points_count: INTEGER;
 			keep_cursor: CURSOR;
 		do
-			if is_closed and ((points.first.x /= points.last.x) or (points.first.x /= points.last.y)) then
+			if is_closed and ((points.first.x /= points.last.x) or (points.first.y /= points.last.y)) then
 				points_count := points.count+1
 			else
 				points_count := points.count
@@ -202,7 +198,6 @@ feature
 			height_positive: r_height >= 0;
 			an_orientation_positive: orientation >= 0;
 			an_orientation_less_than_360: orientation < 360
-		
 		do
 			if (orientation = 0.0) or (orientation = 180.0) then
 				x_draw_rectangle (display_pointer, window_object, graphic_context, center.x-(r_width // 2), center.y-(r_height // 2), r_width-1, r_height-1)
@@ -218,7 +213,6 @@ feature
 		require
 			point1_exists: not (point1 = Void);
 			point2_exists: not (point2 = Void)
-		
 		do
 			x_draw_line (display_pointer, window_object, graphic_context, point1.x, point1.y, point2.x, point2.y)
 		end;
@@ -235,7 +229,6 @@ feature
 			x_draw_string (display_pointer, window_object, graphic_context, base.x, base.y, $ext_name, text.count)
 		end; 
 
-	
 feature {NONE}
 
 	fill_arc (center: COORD_XY; radius1, radius2: INTEGER; angle1, angle2, orientation: REAL; arc_style: INTEGER) is
@@ -254,7 +247,6 @@ feature {NONE}
 			orientation < 360;
 			arc_style >= 0;
 			arc_style <= 1
-		
 		do
 			if radius1 = radius2 then
 				set_arc_style (arc_style);
@@ -267,7 +259,6 @@ feature {NONE}
 			end
 		end;
 
-	
 feature 
 
 	fill_polygon (points: LIST [COORD_XY]) is
@@ -276,7 +267,6 @@ feature
 			points_exists: not (points = Void);
 			list_with_two_points_at_least: points.count >= 3;
 			list_not_too_large: points.count <= max_count_for_draw_polyline
-		
 		local
 			array_points: POINTER;
 			keep_cursor: CURSOR;
@@ -305,7 +295,6 @@ feature
 			height_positive: r_height >= 0;
 			an_orientation_positive: orientation >= 0;
 			an_orientation_less_than_360: orientation < 360
-		
 		local
 			half_width, half_height: INTEGER
 		do
@@ -320,7 +309,6 @@ feature
 			end
 		end; 
 
-	
 feature {NONE}
 
 	height: INTEGER is
@@ -335,7 +323,6 @@ feature {NONE}
 			not (center = Void);
 			arc_style >= 0;
 			arc_style <= 1
-		
 		do
 			if (arc_style = 0) then
 				x_draw_line (display_pointer, window_object, graphic_context, x0, y0, x1, y1)
@@ -345,12 +332,10 @@ feature {NONE}
 			end
 		end;
 
-	
 feature 
 
 	max_count_for_draw_polyline: INTEGER is
 			-- Maximum value for `points.count' for `draw_polyline'
-		
 		do
 			Result := (x_max_request_size (display_pointer)-3) // 2
 		ensure
@@ -390,14 +375,12 @@ feature
 			set_gc_foreground (foreground_color_implementation.pixel (screen))
 		end;
 
-	
 feature {NONE}
 
 	width: INTEGER is
 			-- Width of drawing area
 		deferred
 		end;
-
 
 feature {NONE} -- External features
 
@@ -574,11 +557,9 @@ feature {NONE} -- External features
 
 end
 
-
-
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.
---| Copyright (C) 1989, 1991, 1993, 1994, Interactive Software
+--| Copyright (C) 1989, 1991, 1993, 1994, 1995 Interactive Software
 --|   Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --|

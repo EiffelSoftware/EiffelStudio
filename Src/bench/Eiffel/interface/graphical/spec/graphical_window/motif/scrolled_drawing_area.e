@@ -23,10 +23,6 @@ inherit
 		redefine
 			context_data_useful
 		end;
-	MEL_CALLBACK
-		undefine
-			object_comparison
-		end;
 	MEL_KEYSYMDEF_CONSTANTS
 		export
 			{NONE} all
@@ -76,7 +72,7 @@ feature -- Initialization
 			add_button_release_action (1, Current, Release_action);
 			!! to_refresh.make;
 			mel_frame ?= frame.implementation;
-			mel_frame.set_shadow_in (True);
+			mel_frame.set_shadow_in;
 			vertical_scrollbar.set_minimum (0);
 			horizontal_scrollbar.set_minimum (0);
 			horizontal_scrollbar.set_granularity (10);
@@ -261,10 +257,10 @@ end
 				if arg = Key_action then
 					key_event ?= last_callback_struct.event;
 					keysym := key_event.keysym;
-					if keysym = XK_Page_Up then
+					if keysym = XK_Prior then
 						mel_sb ?= vertical_scrollbar.implementation;
 						y_incr := -mel_sb.page_increment
-					elseif keysym = XK_Page_Down then
+					elseif keysym = XK_Next then
 						mel_sb ?= vertical_scrollbar.implementation;
 						y_incr := mel_sb.page_increment;
 					elseif keysym = XK_Down then

@@ -31,15 +31,11 @@ OBJECT = main.o
 $spitshell >>Makefile <<'!NO!SUBS!'
 
 
-all: compile_eiffel compile_c mklink cecil 
+all: cecil 
 
-compile_eiffel:
-	$(EC) -freeze; 
-
-compile_c:
-	cd EIFGEN/W_code; $(ISE_EIFFEL)/studio/spec/$(ISE_PLATFORM)/bin/finish_freezing -silent; $(MAKE) cecil
-
-mklink:
+$(EIFLIB):
+	$(EC) -freeze -c_compile
+	cd EIFGEN/W_code; $(MAKE) cecil
 	$(LN) EIFGEN/W_code/cecil.melted .
 
 cecil: $(OBJECT) $(EIFLIB)

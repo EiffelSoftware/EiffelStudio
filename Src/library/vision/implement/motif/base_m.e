@@ -33,25 +33,31 @@ feature
 
 	make (a_base: BASE; application_class: STRING) is
 		local
-			ext_name_base, ext_name_appl: ANY
+			ext_name_base, ext_name_appl: ANY;
+			scr_obj: POINTER
 		do
+			widget_index := widget_manager.last_inserted_position;
 			oui_top := a_base;
--- FIXME (Cf notes)
 			ext_name_base := to_c_if_not_void (a_base.identifier);
 			ext_name_appl := to_c_if_not_void (application_class);
-			screen_object:= xt_create_app_shell (a_base.screen.implementation.screen_object, $ext_name_base, $ext_name_appl);
+			scr_obj := a_base.screen.implementation.screen_object;
+			screen_object:= xt_create_app_shell (scr_obj, 
+							$ext_name_base, $ext_name_appl);
 			a_base.set_wm_imp (Current);
-			xm_delete_window_protocol (a_base.screen.implementation.screen_object, screen_object, Current, $delete_window_action)
+			cdfd := xm_delete_window_protocol (scr_obj, 
+							screen_object, Current, 
+							$delete_window_action)
 		end
 
 feature {NONE} -- External features
 
-	xt_create_app_shell (src_obj: POINTER; b_name, a_name: ANY): POINTER is
+	xt_create_app_shell (src_obj: POINTER; 
+			b_name, a_name: ANY): POINTER is
 		external
 			"C"
 		end;
 
-end
+ end
 
 
 

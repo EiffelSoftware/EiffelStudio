@@ -207,6 +207,12 @@ feature -- Eiffel source line information
 
 feature 
 
+	null_byte_node: BYTE_LIST [BYTE_NODE] is
+			-- Null instructions
+		once
+			create Result.make (0)
+		end
+	
 	buffer: GENERATION_BUFFER is
 			-- Generated file
 		do

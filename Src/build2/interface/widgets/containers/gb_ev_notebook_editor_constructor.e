@@ -63,7 +63,21 @@ feature -- Access
 				text_entries.extend (text_entry)
 				first.forth
 			end
-
+			if not first.is_empty then
+				create label.make_with_text ("Item pixmaps:")
+				Result.extend (label)
+			end
+			create pixmap_entries.make (4)
+			from
+				first.start
+			until
+				first.off
+			loop
+				create pixmap_entry.make (Current, Result, Item_pixmap_string + first.index.out, "Pixmap", "Pixmap", agent set_pixmap (?, ?, first.index), agent validate (?, ?), agent return_pixmap (first.index), agent return_pixmap_path (first.index))
+				pixmap_entry.hide_frame
+				pixmap_entries.extend (pixmap_entry)
+				first.forth
+			end
 			update_attribute_editor
 			
 			disable_all_items (Result)
@@ -73,6 +87,8 @@ feature -- Access
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
+		local
+			notebook_tab: EV_NOTEBOOK_TAB
 		do
 			combo_box.select_actions.block
 			if first.tab_position = first.tab_top then
@@ -92,6 +108,15 @@ feature -- Access
 			loop
 				text_entries.item.update_constant_display (first.item_text (first.i_th (text_entries.index)))
 				text_entries.forth
+			end
+			from
+				pixmap_entries.start
+			until
+				pixmap_entries.off
+			loop
+				notebook_tab := first.item_tab (first.i_th (pixmap_entries.index))
+				pixmap_entries.item.update_constant_display (notebook_tab.pixmap)
+				pixmap_entries.forth
 			end
 		end
 
@@ -116,8 +141,33 @@ feature {NONE} -- Implementation
 			loop
 				validate_agents.extend (agent validate_true (?), item_text_string + counter.out)
 				execution_agents.extend (agent set_text (?, counter), item_text_string + counter.out)
+				execution_agents.extend (agent set_pixmap (?, ?,  counter), Item_pixmap_string + counter.out)
 				counter := counter + 1
 			end
+		end
+		
+	validate (a_pixmap: EV_PIXMAP; pixmap_path: STRING): BOOLEAN is
+			-- Validate pixmap `a_pixmap' with path `pixmap_path'.
+		do
+			--| No validation is currently performed on pixmaps, so return True
+			Result := True
+		end
+		
+	return_pixmap (index: INTEGER): EV_PIXMAP is
+			-- `Result' is pixmap used for `Current'.
+		require
+			index_valid: index <= objects.first.count
+		local
+			notebook_tab: EV_NOTEBOOK_TAB
+		do
+			notebook_tab := objects.first.item_tab (objects.first.i_th (index))
+			Result := notebook_tab.pixmap
+		end
+		
+	return_pixmap_path (index: INTEGER): STRING is
+			-- `Result' is path used to retrieve pixmap.
+		do
+			Result := objects.first.pixmap_paths.item (index)
 		end
 
 	selection_changed is
@@ -126,24 +176,8 @@ feature {NONE} -- Implementation
 			for_all_objects (agent {EV_NOTEBOOK}.set_tab_position (position_from_text (combo_box.selected_item.text)))
 		end
 
-	change_item_text (text_field: EV_TEXT_FIELD; index: INTEGER) is
-			-- Modify representations of EV_NOTEBOOK to reflect a text change
-			-- on layout item `index'. We cannot use `for_all_objects' as
-			-- we need to get access to the real widget in each representation
-			-- so doing it this way is easier.
-		local
-			second: like ev_type
-		do
-			first.set_item_text (first.i_th (index), text_field.text)
-			second := objects @ 2
-			if second /= Void then
-				second.set_item_text (second.i_th (index), text_field.text)
-			end
-			enable_project_modified
-		end
-
 	set_text (a_string: STRING; index: INTEGER) is
-			--
+			-- Set `a_string' as item text of notebook item indexed by `index'.
 		local
 			second: like ev_type
 		do
@@ -151,6 +185,42 @@ feature {NONE} -- Implementation
 			second := objects @ 2
 			if second /= Void then
 				second.set_item_text (second.i_th (index), a_string)
+			end
+			enable_project_modified
+		end
+		
+	set_pixmap (a_pixmap: EV_PIXMAP; path: STRING; index: INTEGER) is
+			-- Set `a_pixmap' to notebook tab of item indexed by `index' within notebook.
+			-- If `a_pixmap' is Void, remove the pixmap.
+		local
+			second: like ev_type
+			notebook_tab: EV_NOTEBOOK_TAB
+		do
+			notebook_tab := first.item_tab (first.i_th (index))
+			if path /= Void then
+				first.pixmap_paths.put (path, index)
+			else
+				first.pixmap_paths.remove (index)
+			end
+			if a_pixmap /= Void then
+				notebook_tab.set_pixmap (a_pixmap)
+			else
+				notebook_tab.remove_pixmap
+			end
+
+			second := objects @ 2
+			if second /= Void then
+				notebook_tab := second.item_tab (second.i_th (index))
+				if path /= Void then
+					second.pixmap_paths.put (path, index)
+				else
+					second.pixmap_paths.remove (index)
+				end
+				if a_pixmap /= Void then
+					notebook_tab.set_pixmap (a_pixmap)
+				else
+					notebook_tab.remove_pixmap
+				end
 			end
 			enable_project_modified
 		end
@@ -209,7 +279,10 @@ feature {NONE} -- Implementation
 		
 	text_entries: ARRAYED_LIST [GB_STRING_INPUT_FIELD]
 		-- All text entries created to permit entry of item texts.
-
+		
+	pixmap_entries: ARRAYED_LIST [GB_PIXMAP_INPUT_FIELD]
+		-- All pixmap entries created to permit entry of item texts.
+		
 	combo_box: EV_COMBO_BOX
 		-- Holds possible tab positions.
 		
@@ -221,12 +294,15 @@ feature {NONE} -- Implementation
 	
 	Tab_position_string: STRING is "Tab_position"
 		-- String used to represent the tab position in the XML.
-	Item_text_string: STRING is "Item_text"
-		-- String used to represent the texts of the tabs in the XML.
 		
 	Item_text_string_new: STRING is "Item_texts"
 		-- String used to represent the parent node for the texts in the XML.
 		-- This has been added to permit the item texts of notebooks to
+		-- support constants.
+		
+	Item_pixmap_string_new: STRING is "Item_pixmaps"
+		-- String used to represent the parent node for the pixmaps in the XML.
+		-- This has been added to permit the tab pixmaps of notebooks to
 		-- support constants.
 	
 	separator_char: CHARACTER is '^'
@@ -236,5 +312,8 @@ feature {NONE} -- Implementation
 		
 	text_entry: GB_STRING_INPUT_FIELD
 		-- Input field for text.
+		
+	pixmap_entry: GB_PIXMAP_INPUT_FIELD
+		-- Input field for pixmap.
 
 end -- class GB_EV_NOTEBOOK_EDITOR_CONSTRUCTOR

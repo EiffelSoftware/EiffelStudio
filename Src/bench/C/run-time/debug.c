@@ -342,11 +342,8 @@ rt_public void dsetbreak(int body_id, uint32 offset, int what)
 	}
 }
 
-/*
- * Computing position within program.
- */
-
-rt_shared void ewhere(EIF_CONTEXT struct where *where)
+/* Computing position within program. */
+rt_shared void ewhere(struct where *where)
                     		/* Structure filled in with current position */
 {
 	/* Compute position within the program, using the Eiffel execution stack to

@@ -30,4 +30,4 @@ iff not defined BUILD_ENTERPRISE_ONLY then
 		CANCEL
 	endiff
 	move build.exe %INSTALL_DIR\releases\free_version
-end
+endiff

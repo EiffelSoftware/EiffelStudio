@@ -38,8 +38,13 @@ feature -- Access
 		require
 			a_column_positive: a_column > 0
 			a_column_not_greater_than_column_count: a_column <= column_count
+		local
+			a_col_i: EV_GRID_COLUMN_I
 		do
-			Result := grid_columns @ a_column
+			a_col_i := grid_columns @ a_column
+			if a_col_i /= Void then
+				Result := a_col_i.interface
+			end
 		ensure
 			column_not_void: Result /= Void
 		end
@@ -52,9 +57,10 @@ feature -- Access
 			a_column_positive: a_column > 0
 			a_column_less_than_column_count: a_column <= column_count
 		local
-			grid_row: SPECIAL [EV_GRID_ITEM]
+			grid_row: SPECIAL [EV_GRID_ITEM_I]
 			a_item: EV_GRID_ITEM
 			a_grid_column: EV_GRID_COLUMN
+			grid_item_i: EV_GRID_ITEM_I
 		do
 			grid_row :=  row_list @ (a_row - 1)
 			if grid_row = Void then
@@ -65,13 +71,14 @@ feature -- Access
 				enlarge_row (a_row, a_column)
 			end
 			
-			Result := grid_row @ (a_column - 1)
+			grid_item_i := grid_row @ (a_column - 1)
 			
-			if Result = Void  then
+			if grid_item_i = Void  then
 				create a_item
-				grid_row.put (a_item, (a_column - 1))
-				Result := a_item
+				grid_item_i := a_item.implementation
+				grid_row.put (grid_item_i, (a_column - 1))
 			end
+			Result := grid_item_i.interface
 		ensure
 			item_not_void: Result /= Void
 		end
@@ -272,18 +279,18 @@ feature -- Element change
 			i_positive: a_index > 0
 		local
 			a_grid_row: EV_GRID_ROW
-			a_row_data: SPECIAL [EV_GRID_ITEM]
+			a_row_data: SPECIAL [EV_GRID_ITEM_I]
 		do
 			create a_grid_row
 			a_grid_row.implementation.set_grid_i (Current)
 			
 			create a_row_data.make (1)
-			if a_row_data.count < a_index then
+			if row_list.count < a_index then
 				enlarge_row_list (a_index)
 			end
 			row_list.put (a_row_data, a_index - 1)
 			
-			grid_rows.put (a_grid_row, a_index)
+			grid_rows.put (a_grid_row.implementation, a_index)
 			row_count := row_count + 1
 		ensure
 			row_count_set: row_count = old row_count + 1
@@ -314,7 +321,7 @@ feature -- Element change
 			a_column.implementation.set_grid_i (Current)
 			a_column.implementation.set_index (a_index)
 			a_column.implementation.set_physical_index (column_count)
-			grid_columns.put (a_column, a_index)
+			grid_columns.put (a_column.implementation, a_index)
 			column_count := column_count + 1
 		ensure
 			column_count_set: column_count = old column_count + 1
@@ -352,25 +359,25 @@ feature -- Element change
 			a_row_positive: a_row > 0
 			a_item_not_void: a_item /= Void
 		local
-			a_grid_col: EV_GRID_COLUMN
-			a_grid_row: EV_GRID_ROW
+			a_grid_col_i: EV_GRID_COLUMN_I
+			a_grid_row_i: EV_GRID_ROW_I
 		do
 			a_item.implementation.set_parent_grid_i (Current)
-			a_grid_col :=  grid_columns @ a_column
-			if a_grid_col = Void then
+			a_grid_col_i :=  grid_columns @ a_column
+			if a_grid_col_i = Void then
 				insert_new_column (a_column)
-				a_grid_col := grid_columns @ a_column
+				a_grid_col_i := grid_columns @ a_column
 			end
-			a_grid_row := grid_rows @ a_row
-			if a_grid_row = Void then
+			a_grid_row_i := grid_rows @ a_row
+			if a_grid_row_i = Void then
 				insert_new_row (a_row)
-				a_grid_row := grid_rows @ a_row
+				a_grid_row_i := grid_rows @ a_row
 			end
-			if a_grid_row.count < a_column then
+			if a_grid_row_i.count < a_column then
 				enlarge_row (a_row, a_column)
 			end
 			
-			row_list.item (a_row - 1).put (a_item, a_grid_col.implementation.physical_index)
+			row_list.item (a_row - 1).put (a_item.implementation, a_grid_col_i.physical_index)
 			
 		ensure
 			inserted: column (a_column).item (a_row) = a_item
@@ -418,7 +425,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I} -- Implementation
 			-- index of column `a_column'.
 		require
 			a_column /= Void
-			a_column_parent_grid_is_current: grid_columns.has_item (a_column)
+			a_column_parent_grid_is_current: grid_columns.has_item (a_column.implementation)
 		do
 			Result := grid_columns.key_for_iteration
 		end
@@ -442,14 +449,14 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 			row_exists: row_list @ (a_index - 1) /= Void
 			row_can_expand: (row_list @ a_index).count < new_count
 		local
-			a_row: SPECIAL [EV_GRID_ITEM]
+			a_row: SPECIAL [EV_GRID_ITEM_I]
 		do
 			a_row := row_list @ (a_index - 1)
 			a_row := a_row.aliased_resized_area (new_count)
 			row_list.put (a_row, (a_index - 1))
 		end
 
-	row_list: SPECIAL [SPECIAL [EV_GRID_ITEM]]
+	row_list: SPECIAL [SPECIAL [EV_GRID_ITEM_I]]
 		-- Array of individual row's data, row by row
 		-- The row data returned from `row_list' @ i may be Void for optimization purposes
 		-- If the row data returned is not Void, some of the contents of this returned row data may be Void
@@ -471,10 +478,10 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
 			end
 		end
 	
-	grid_rows: HASH_TABLE [EV_GRID_ROW, INTEGER]
+	grid_rows: HASH_TABLE [EV_GRID_ROW_I, INTEGER]
 		-- Hash table returning the appropriate EV_GRID_ROW from a given index
 
-	grid_columns: HASH_TABLE [EV_GRID_COLUMN, INTEGER]
+	grid_columns: HASH_TABLE [EV_GRID_COLUMN_I, INTEGER]
 		-- Hash table returning the appropriate EV_GRID_COLUMN from a given index
 
 	visible_column_list: SPECIAL [INTEGER]

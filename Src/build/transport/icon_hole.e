@@ -47,5 +47,6 @@ feature
                         Result := ti.label
                 end
 
-	-- end of samik
+	is_centered: BOOLEAN 
+		
 end

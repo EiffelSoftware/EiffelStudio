@@ -8,6 +8,8 @@ class
 
 inherit
 	ECDP_REFERENCE_EXPRESSION
+	
+	ECDP_SHARED_CONSUMER_CONTEXT
 
 create
 	make
@@ -79,7 +81,7 @@ feature -- Access
 				Result.append (Dictionary.Set_keyword)
 				Result.append ("_")
 			end
-			Result.append (Eiffel_types.find_variable_name (property_name))
+			Result.append (Resolver.eiffel_entity_name (property_name))
 		end
 		
 feature -- Status Report
@@ -98,9 +100,9 @@ feature -- Status Report
 			if is_set_reference then
 				Result := Void
 			else
-				l_dotnet_type_name := Eiffel_types.returned_type_feature (target_object.type, property_name, arguments)
+				l_dotnet_type_name := Resolver.feature_result_type (target_object.type, property_name, arguments)
 				if l_dotnet_type_name /= Void then
-					Result := Eiffel_types.dotnet_type (l_dotnet_type_name)
+					Result := Dotnet_types.dotnet_type (l_dotnet_type_name)
 				end
 			end
 		end

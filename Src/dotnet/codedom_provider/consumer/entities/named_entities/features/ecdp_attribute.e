@@ -101,10 +101,6 @@ feature -- Code Generation
 			not_void_name: name /= void
 			not_void_type: type /= void
 		local
-			attribute_name: STRING
-			type_attribute: ECDP_TYPE
-			type_name: STRING
-			an_external_type: ECDP_EXTERNAL_TYPE
 			returned_type_name: STRING
 		do
 			check 
@@ -114,10 +110,10 @@ feature -- Code Generation
 			
 			create Result.make (120)
 			Result.append (indent_string)
-			Result.append (Eiffel_types.find_variable_name (name))
+			Result.append (Resolver.eiffel_entity_name (name))
 			Result.append (Dictionary.Colon)
 			Result.append (Dictionary.Space)
-			returned_type_name := Eiffel_types.eiffel_type_name (type)
+			returned_type_name := Resolver.eiffel_type_name (type)
 			if is_array_type then
 				Result.append ("NATIVE_ARRAY [")
 				Result.append (returned_type_name)

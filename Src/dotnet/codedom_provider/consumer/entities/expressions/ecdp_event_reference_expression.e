@@ -8,7 +8,10 @@ class
 
 inherit
 	ECDP_REFERENCE_EXPRESSION
+	
 	EVENT_TYPE
+	
+	ECDP_SHARED_CONSUMER_CONTEXT
 
 create
 	make
@@ -72,8 +75,8 @@ feature -- Status Report
 				valid_event_type: valid_event_type (event_type)
 			end
 
-			l_dotnet_type_name := Eiffel_types.returned_type_feature (target_object.type, event_type + event_name, arguments)
-			Result := Eiffel_types.dotnet_type (l_dotnet_type_name)
+			l_dotnet_type_name := Resolver.feature_result_type (target_object.type, event_type + event_name, arguments)
+			Result := Dotnet_types.dotnet_type (l_dotnet_type_name)
 
 			check
 				non_void_result: Result /= Void

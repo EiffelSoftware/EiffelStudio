@@ -15,6 +15,14 @@ inherit
 			set_name
 		end
 
+	ECDP_SHARED_DATA
+		export
+			{NONE} all
+		undefine
+			default_create,
+			is_equal
+		end
+
 feature {NONE} -- Initialization
 
 	make is

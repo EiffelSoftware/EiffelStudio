@@ -9,6 +9,8 @@ class
 inherit
 	ECDP_REFERENCE_EXPRESSION
 
+	ECDP_SHARED_CONSUMER_CONTEXT
+
 create
 	make
 
@@ -85,7 +87,7 @@ feature -- Access
 				end
 			end
 
-			Result.append (Eiffel_types.find_variable_name (attribute_name))
+			Result.append (Resolver.eiffel_entity_name (attribute_name))
 		end
 
 feature -- Status Report
@@ -101,8 +103,8 @@ feature -- Status Report
 		local
 			l_dotnet_type_name: STRING
 		do
-			l_dotnet_type_name := Eiffel_types.returned_type_feature (target_object.type, attribute_name, arguments)
-			Result := Eiffel_types.dotnet_type (l_dotnet_type_name)
+			l_dotnet_type_name := Resolver.feature_result_type (target_object.type, attribute_name, arguments)
+			Result := Dotnet_types.dotnet_type (l_dotnet_type_name)
 		end
 
 feature -- Status Setting

@@ -32,7 +32,7 @@ feature -- Access
 			loop
 				a_type := types.item
 				if a_type /= Void then
-					Eiffel_types.initialize_features (a_type)
+					Resolver.initialize_features (a_type)
 					if types.isfirst and then not Ace_file.path_to_generated_src.is_empty then
 						Result := a_type.code
 					else

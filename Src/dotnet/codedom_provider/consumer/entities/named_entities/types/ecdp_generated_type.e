@@ -98,22 +98,21 @@ feature -- Status Report
 	has_feature (a_feature_name: STRING; arguments: LINKED_LIST [ECDP_EXPRESSION]): BOOLEAN is
 			-- Does `features' or `creation_routines' or `parents' contain `a_feature'?
 		local
-			type_features: LINKED_LIST [ECDP_FEATURE]
-			old_cursor: CURSOR
+			l_old_cursor: CURSOR
 		do
 			Result := has_immediate_feature (a_feature_name)
 			
 			if not Result then
 				from
-					old_cursor := parents.cursor
+					l_old_cursor := parents.cursor
 					parents.start
 				until
 					parents.after or Result
 				loop
-					Result := Eiffel_types.has_feature (parents.item.name, a_feature_name, arguments)
+					Result := Feature_finder.has_feature (parents.item.name, a_feature_name, arguments)
 					parents.forth
 				end
-				parents.go_to (old_cursor)
+				parents.go_to (l_old_cursor)
 			end
 		end
 
@@ -263,11 +262,11 @@ feature -- Basics Operations on inheritance clauses
 			until
 				parents.after or Result /= Void
 			loop
-				if Eiffel_types.has_feature (parents.item.name, a_dotnet_feature_name, arguments) then
-					if Eiffel_types.is_generated_type (parents.item.name) then
+				if Feature_finder.has_feature (parents.item.name, a_dotnet_feature_name, arguments) then
+					if Resolver.is_generated_type (parents.item.name) then
 						l_feature_name := a_dotnet_feature_name
 					else
-						l_feature_name := Eiffel_types.eiffel_feature_name_from_dynamic_args (Eiffel_types.dotnet_type (parents.item.name), a_dotnet_feature_name, arguments)
+						l_feature_name := Feature_finder.eiffel_feature_name_from_dynamic_args (Dotnet_types.dotnet_type (parents.item.name), a_dotnet_feature_name, arguments)
 					end
 					add_redefine_clause (parents.item.name, l_feature_name)
 					Result := l_feature_name
@@ -366,14 +365,6 @@ feature -- Code generation
 		require
 			ready: ready
 			not_empty_parents: parents.count > 0
-		local
-			parent_name: STRING
-			parent_clauses: ARRAY [LINKED_LIST [ECDP_INHERITANCE_CLAUSE]]
-			rename_clauses: LINKED_LIST [ECDP_INHERITANCE_CLAUSE]
-			undefine_clauses: LINKED_LIST [ECDP_INHERITANCE_CLAUSE]
-			redefine_clauses: LINKED_LIST [ECDP_INHERITANCE_CLAUSE]
-			select_clauses: LINKED_LIST [ECDP_INHERITANCE_CLAUSE]
-			export_clauses: LINKED_LIST [ECDP_INHERITANCE_CLAUSE]
 		do
 			create Result.make (200)
 			Result.append (dictionary.Inherit_keyword)
@@ -395,8 +386,6 @@ feature -- Code generation
 		require
 			non_void_list: a_list /= Void
 			not_empty_list: a_list.count > 0
-		local
-			l_clause: ECDP_INHERITANCE_CLAUSE	
 		do
 			create Result.make (120)
 			from
@@ -459,14 +448,14 @@ feature -- Code generation
 			from
 				creation_routines.start
 				if not creation_routines.after then
-					Result.append (Eiffel_types.find_variable_name (creation_routines.item.name))
+					Result.append (Resolver.eiffel_entity_name (creation_routines.item.name))
 					creation_routines.forth
 				end
 			until
 				creation_routines.after
 			loop
 				Result.append (Dictionary.Comma)
-				Result.append (Eiffel_types.find_variable_name (creation_routines.item.name))
+				Result.append (Resolver.eiffel_entity_name (creation_routines.item.name))
 				Result.append (Dictionary.New_line)
 				Result.append (Dictionary.Tab)
 				creation_routines.forth
@@ -532,14 +521,14 @@ feature -- Code generation
 					l_features.start
 					if not l_features.after then
 						Result.append (l_clauses.key_for_iteration)
-						Eiffel_types.clear_all_local_variables
+						Resolver.clear_all_local_variables
 						Result.append (l_features.item.code)
 						l_features.forth
 					end
 				until
 					l_features.after
 				loop
-					Eiffel_types.clear_all_local_variables
+					Resolver.clear_all_local_variables
 					Result.append (l_features.item.code)
 					l_features.forth
 				end

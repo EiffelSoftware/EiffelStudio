@@ -41,7 +41,7 @@ feature -- Access
 			if not retried then
 				create Result.make (120)
 				Result.append ("feature {TYPE}.get_type_string (")
-				Result.append (Eiffel_types.dotnet_type_name (target))
+				Result.append (Resolver.dotnet_type_name (target))
 				Result.append (Dictionary.Closing_round_bracket)
 			else
 				create Result.make_from_string (target)

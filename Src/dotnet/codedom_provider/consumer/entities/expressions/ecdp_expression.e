@@ -8,6 +8,11 @@ deferred class
 
 inherit
 	ECDP_ENTITY
+	
+	ECDP_SHARED_DATA
+		export
+			{NONE} all
+		end
 		
 feature -- Status Repport
 

@@ -248,7 +248,7 @@ feature -- Basic operations
 				if item < other_item then
 					search_after (other_item)
 				end;
-				if after and then other_item.is_equal (item) then
+				if not after and then other_item.is_equal (item) then
 					remove
 				end;
 				other.forth

@@ -18,6 +18,7 @@ DLLFLAGS = $dllflags
 
 CFLAGS = -I. -I$(TOP) -I$(TOP)/idrs -I$(TOP)/console -I$(TOP)/ipc/app
 NETWORK = $(TOP)\ipc\app\network.$lib
+MT_NETWORK = $(TOP)\ipc\app\mtnetwork.$lib
 
 LIBDIR=$(OUTDIR)
 DLLDIR=$(OUTDIR)

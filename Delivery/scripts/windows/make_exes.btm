@@ -9,13 +9,14 @@ remtrace "A tout seigneur tout honneur", let's start with the run-time
 remtrace Compile a run-time for Borland
 exprt -r %DEFAULT_CVS_TAG -d C runtime
 cd C
-sed -e s/d:\\Eiffel50/%ISE_EIFFEL/g config.bsh >> new_config.bsh
+rem This doesn't work because sed messes up the \ in ISE_EIFFEL.
+rem sed -e 's/d:\\Eiffel50/%ISE_EIFFEL/g' config.bsh >> new_config.bsh
 move new_config.bsh config.bsh
 alias pause echo
 call configure win32 b >>& %INSTALL_LOG
 unalias pause
 cd %EIFFEL_SRC
-copy C\run-time\LIB\*lib*.lib %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\bcb
+copy C\run-time\LIB\*.lib %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\bcb
 fullrf %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\bcb\ebench.lib
 remtrace Compile a dynamic run-time
 fullrd C
@@ -23,11 +24,14 @@ exprt -r %DEFAULT_CVS_TAG -d C runtime
 cd C
 sed -e s/d:\\apps\\MSVC\\VC98/%C_COMPILER_PATH/g config.msh >> new_config.msh
 move new_config.msh config.msh
-sed -e s/\-W3/-DEIF_MAKE_DLL -W3/g config.msh >> new_config.msh
+sed -e "s/\-W3/\-DEIF_MAKE_DLL\ \-DISE_GC\ \-W3/g" config.msh >> new_config.msh
+move new_config.msh config.msh
+sed -e "s/standard mtstandard/dll mtdll/g" config.msh >> new_config.msh
 move new_config.msh config.msh
 alias pause echo
 call configure win32 m >>& %INSTALL_LOG
 unalias pause
+cd %EIFFEL_SRC
 copy C\run-time\LIB\*dll* %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\msc
 fullrf %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\msc\ebench.lib
 cd %EIFFEL_SRC
@@ -40,8 +44,10 @@ move new_config.msh config.msh
 alias pause echo
 call configure win32 m >>& %INSTALL_LOG
 unalias pause
-copy C\run-time\LIB\*lib*.lib %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\msc
+cd %EIFFEL_SRC
+copy C\run-time\LIB\*.lib %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\msc
 fullrf %INSTALL_DIR\studio\spec\%ISE_PLATFORM\lib\msc\ebench.lib
+copy %EIFFEL_SRC\C\run-time\*.h %INSTALL_DIR\studio\spec\%ISE_PLATFORM\include
 cd %EIFFEL_SRC
 
 remtrace Compile com_il_generation

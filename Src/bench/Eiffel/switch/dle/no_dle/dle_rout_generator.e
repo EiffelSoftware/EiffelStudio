@@ -1,0 +1,5 @@
+class DLE_ROUT_GENERATOR inherit
+
+	ROUT_GENERATOR
+
+end -- class DLE_ROUT_GENERATOR

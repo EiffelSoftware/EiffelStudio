@@ -359,75 +359,77 @@ feature {NONE} -- Byte code generation
 				if a_class = Void then
 						-- No generics
 					ba.append_short_integer (0)
-						-- No meta-types
+						-- No dynamic type
 					ba.append_short_integer (0)
 				else
 					l_is_generic := a_class.is_generic
 						-- Number of generics
-					if l_is_generic then
-						ba.append_short_integer (a_class.generics.count)
-					else
+					if not l_is_generic then
 						ba.append_short_integer (0)
-					end
-
-						-- Compute number of types that needs to be generated.
-					from
-						l_types := a_class.types
-						nb_types := 0
-						l_types.start
-					until
-						l_types.after
-					loop
-						if
-							(for_expanded and l_types.item.is_expanded) or
-							(not for_expanded and not l_types.item.is_expanded)
-						then
-							nb_types := nb_types + 1
-						end
-						l_types.forth
-					end
-
-					check
-						has_types: nb_types > 0
-					end
-					ba.append_short_integer (nb_types)
-
-						-- Meta type description array
-					from
-						l_types.start
-					until
-						l_types.after
-					loop
-						if
-							(for_expanded and l_types.item.is_expanded) or
-							(not for_expanded and not l_types.item.is_expanded)
-						then
-							if l_is_generic then
-								gen_type ?= l_types.item.type
-								check
-									gen_type_not_void: gen_type /= Void
-								end
-								gen_type.meta_generic.make_byte_code (ba)
-							else
-								ba.append_int32_integer (l_types.item.type.cecil_value)
+						ba.append_short_integer (a_class.types.first.type_id - 1)
+					else
+						ba.append_short_integer (a_class.generics.count)
+						ba.append_short_integer (0)
+	
+							-- Compute number of types that needs to be generated.
+						from
+							l_types := a_class.types
+							nb_types := 0
+							l_types.start
+						until
+							l_types.after
+						loop
+							if
+								(for_expanded and l_types.item.is_expanded) or
+								(not for_expanded and not l_types.item.is_expanded)
+							then
+								nb_types := nb_types + 1
 							end
+							l_types.forth
 						end
-						l_types.forth
-					end
-
-						-- Dynamic type array
-					from
-						l_types.start
-					until
-						l_types.after
-					loop
-						if
-							(for_expanded and l_types.item.is_expanded) or
-							(not for_expanded and not l_types.item.is_expanded)
-						then
-							ba.append_short_integer (l_types.item.type_id - 1)
+	
+						check
+							has_types: nb_types > 0
 						end
-						l_types.forth
+						ba.append_short_integer (nb_types)
+	
+							-- Meta type description array
+						from
+							l_types.start
+						until
+							l_types.after
+						loop
+							if
+								(for_expanded and l_types.item.is_expanded) or
+								(not for_expanded and not l_types.item.is_expanded)
+							then
+								if l_is_generic then
+									gen_type ?= l_types.item.type
+									check
+										gen_type_not_void: gen_type /= Void
+									end
+									gen_type.meta_generic.make_byte_code (ba)
+								else
+									ba.append_int32_integer (l_types.item.type.cecil_value)
+								end
+							end
+							l_types.forth
+						end
+	
+							-- Dynamic type array
+						from
+							l_types.start
+						until
+							l_types.after
+						loop
+							if
+								(for_expanded and l_types.item.is_expanded) or
+								(not for_expanded and not l_types.item.is_expanded)
+							then
+								ba.append_short_integer (l_types.item.type_id - 1)
+							end
+							l_types.forth
+						end
 					end
 				end
 				i := i + 1

@@ -8,10 +8,8 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-
 class
 	EV_TEST
-
 
 inherit
 	EV_APPLICATION
@@ -30,6 +28,33 @@ feature
 		once
 			create Result
 		end
+
+--	prepare is
+--		do
+--			post_launch_actions.extend (~show_splash_screen)
+--			post_launch_actions.extend (~prepare_main_window)
+--			post_launch_actions.extend (~remove_splash_screen)
+--		end
+
+--	splash_screen: EV_WINDOW
+--			-- Application logo window.
+
+--	show_splash_screen is
+--			-- Display application logo window.
+--		do
+--			create splash_screen
+--			splash_screen.extend (create {EV_PIXMAP}.make_for_test)
+--			splash_screen.show
+--		end
+
+--	remove_splash_screen is
+--			-- Hide application logo window.
+--		do
+--			splash_screen.destroy
+--		end
+
+	non_widget_test_area: EV_CELL
+			-- Cell that can contain {EV_TESTABLE_NON_WIDGET}.test_widget.
 
 	prepare is
 			-- Pre launch preperation.
@@ -53,7 +78,6 @@ feature
 			create {EV_VERTICAL_BOX} box
 			create hb
 			hb.extend (non_widgets_frame)
-			hb.disable_item_expand (non_widgets_frame)
 			first_window.extend (box)
 			box.extend (hb)
 			create scroll
@@ -65,8 +89,6 @@ feature
 			widget_label.align_text_left
 			description_frame.extend (widget_label)
 			box.disable_item_expand (description_frame)
-			box.extend (widget_tool)
-			box.disable_item_expand (widget_tool)
 
 			menu_bar.extend (decendants (first_window))
 
@@ -78,6 +100,7 @@ feature
 				create menu_item.make_with_text (
 					non_widgets.item.generating_type
 				)
+				menu_item.select_actions.extend (~display_test (non_widgets.item))
 				object_menu.extend (menu_item)
 				non_widgets.forth
 			end
@@ -92,46 +115,6 @@ feature
 			"C [macro <stdio.h>]"
 		alias
 			"exit(0)"
-		end
-
-	widget_tool: EV_WIDGET is
-			-- Tool for viewing widget properties.
-		local
-			main: EV_HORIZONTAL_BOX
-			hole: EV_PIXMAP
-			black_hole: EV_PIXMAP
-			label: EV_LABEL
-		once
-			create main
-			main.set_background_color (create {EV_COLOR}.make_with_rgb (1, 1, 1))
-			Result := main
-			create hole
-			hole.set_with_named_file ("hole.png")
-			main.extend (hole)
-			main.disable_item_expand (hole)
-			create label.make_with_text ("<-- Drop stuff here to see class name.     Or try the bottomless pit. -->")
-			label.set_background_color (create {EV_COLOR}.make_with_rgb (1, 1, 1))
-			main.extend (label)
-			hole.drop_actions.extend (~update_widget_tool (label, ?))
-			hole.set_target_name ("Widget tool")
-			create black_hole
-			black_hole.set_with_named_file ("black.png")
-			main.extend (black_hole)
-			main.disable_item_expand (black_hole)
-			black_hole.drop_actions.extend (~nuke)
-			black_hole.set_target_name ("Black hole")
-			black_hole.set_background_color (create {EV_COLOR}.make_with_rgb (1, 1, 1))
-		end
-	
-	update_widget_tool (a_tool: EV_LABEL; a_widget: EV_WIDGET) is
-			-- Update `widget_tool'.
-		do
-			a_tool.set_text (a_widget.generating_type)
-		end
-
-	nuke (w: EV_WIDGET) is
-		do
-			do_once_on_idle (w~destroy)
 		end
 
 	widgets_frame: EV_FRAME is
@@ -175,10 +158,6 @@ feature
 					l.set_background_color (create {EV_COLOR}.make_with_rgb (0.7, 0.7, 1.0))
 					wbox.extend (l)
 					wbox.extend (widgets.item)
-					widgets.item.set_pebble (widgets.item)
-					if widgets.index \\ 2 = 0 then
-						widgets.item.set_target_menu_mode
-					end
 					wbox.disable_item_expand (l)
 					widgets.forth
 					i := i + 1
@@ -194,18 +173,17 @@ feature
 		local
 			vb: EV_VERTICAL_BOX
 			nw_combo: EV_COMBO_BOX
-			client_area: EV_CELL
 			combo_item: EV_LIST_ITEM
 			testable: EV_TESTABLE_NON_WIDGET
-		once
+		do
 			create Result.make_with_text ("Non-widget tests")
 			create vb
 			Result.extend (vb)
 			create nw_combo
 			vb.extend (nw_combo)
 			vb.disable_item_expand (nw_combo)
-			create client_area
-			vb.extend (client_area)
+			create non_widget_test_area
+			vb.extend (non_widget_test_area)
 			from
 				non_widgets.start
 			until
@@ -215,16 +193,14 @@ feature
 				if testable /= Void then
 					create combo_item.make_with_text (testable.generating_type)
 					nw_combo.extend (combo_item)
-					combo_item.select_actions.extend (~display_test (client_area, testable))
+					combo_item.select_actions.extend (~display_test (testable))
 				end
 				non_widgets.forth
 			end
 		end
 
-	display_test (an_area: EV_CELL; any_object: ANY) is
-			-- Display `any_object's test on `an_area'.
-		require
-			an_area_not_void: an_area /= Void
+	display_test (any_object: ANY) is
+			-- Display `any_object's test on `non_widget_test_area_area'.
 		local
 			a_testable: EV_TESTABLE_NON_WIDGET
 		do
@@ -236,9 +212,9 @@ feature
 			)
 			a_testable ?= any_object
 			if a_testable /= Void then
-				an_area.put (a_testable.test_widget)
+				non_widget_test_area.put (a_testable.test_widget)
 			else
-				an_area.put (create {EV_LABEL}.make_with_text ("(no test available yet)"))
+				non_widget_test_area.put (create {EV_LABEL}.make_with_text ("(no test available yet)"))
 			end
 		end
 
@@ -254,14 +230,12 @@ feature
 			Result.extend (create {EV_CELL}.make_for_test)
 			Result.extend (create {EV_FRAME}.make_for_test)
 			Result.extend (create {EV_HORIZONTAL_BOX}.make_for_test)
-			Result.last.set_minimum_size (200,100)
 			Result.extend (create {EV_HORIZONTAL_SPLIT_AREA}.make_for_test)
 			Result.extend (create {EV_NOTEBOOK}.make_for_test)
 			Result.extend (create {EV_SCROLLABLE_AREA}.make_for_test)
 			Result.extend (create {EV_VERTICAL_BOX}.make_for_test)
 			Result.extend (create {EV_VERTICAL_SPLIT_AREA}.make_for_test)
 			Result.extend (create {EV_VIEWPORT}.make_for_test)
-			Result.last.set_minimum_size (100,100)
 			Result.extend (create {EV_BUTTON}.make_for_test)
 			Result.extend (create {EV_CHECK_BUTTON}.make_for_test)
 			Result.extend (create {EV_DRAWING_AREA}.make_for_test)
@@ -283,7 +257,6 @@ feature
 			Result.extend (create {EV_VERTICAL_SCROLL_BAR}.make_for_test)
 			Result.extend (create {EV_VERTICAL_SEPARATOR}.make_for_test)
 			Result.extend (create {EV_PIXMAP}.make_for_test)
-			Result.last.set_minimum_size (100,100)
 			Result.extend (create {EV_TEXT}.make_for_test)
 			Result.extend (create {EV_PASSWORD_FIELD}.make_for_test)
 			Result.extend (create {EV_COMBO_BOX}.make_for_test)
@@ -316,7 +289,7 @@ feature
 			-- List of other Vision objects.
 		once
 			create Result.make
-			Result.extend (create {EV_FIGURE_ARC})
+			Result.extend (create {EV_FIGURE_ARC}.make_for_test)
 			Result.extend (create {EV_FIGURE_DOT}.make_for_test)
 --|FIXME		Result.extend (create {EV_FIGURE_DRAWER})
 			Result.extend (create {EV_FIGURE_ELLIPSE}.make_for_test)
@@ -327,7 +300,7 @@ feature
 			Result.extend (create {EV_FIGURE_PICTURE}.make_for_test)
 			Result.extend (create {EV_FIGURE_PIE_SLICE}.make_for_test)
 			Result.extend (create {EV_FIGURE_POLYGON}.make_for_test)
-			Result.extend (create {EV_FIGURE_POLYLINE})
+			Result.extend (create {EV_FIGURE_POLYLINE}.make_for_test)
 			Result.extend (create {EV_FIGURE_RECTANGLE}.make_for_test)
 			Result.extend (create {EV_FIGURE_TEXT}.make_for_test)
 			Result.extend (create {EV_FIGURE_WORLD})
@@ -460,6 +433,10 @@ end
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.27  2000/04/26 17:18:59  brendel
+--| Added make_for_test for applicable figures.
+--| Added select action for non-widget menu.
+--|
 --| Revision 1.26  2000/04/26 17:06:42  oconnor
 --| removed EV_TRIANGLE
 --|

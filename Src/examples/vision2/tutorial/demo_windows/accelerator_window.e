@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 			create cmd.make (~execute3)
 			frame.add_accelerator_command (acc, cmd, Void)
 
-			create frame.make_with_text (Current, "Choose your accelerator")
+			create frame.make_with_text (Current, "Choose your accelerator - None")
 			frame.set_foreground_color (color.red)
 			create vbox.make (frame)
 			vbox.set_spacing (5)
@@ -71,7 +71,6 @@ feature {NONE} -- Initialization
 			vbox.set_child_expandable (but, False)
 			create cmd.make (~execute_button)
 			but.add_click_command (cmd, Void)
-
 			set_parent (par)
 		end
 
@@ -131,7 +130,7 @@ feature -- Execution features
 		end
 
 	execute5 (arg: EV_ARGUMENT; data: EV_KEY_EVENT_DATA) is
-			-- Executed when we press the first button
+			-- Executed when we press the ok button
 		local
 			cmd: EV_ROUTINE_COMMAND
 		do
@@ -139,8 +138,14 @@ feature -- Execution features
 			if accelerator /= Void then
 				frame.remove_accelerator_commands (accelerator)
 			end
-			accelerator := dialog.accelerators.first
-			frame.add_accelerator_command (accelerator, cmd, arg)
+			if dialog.accelerators.first /= Void then
+				accelerator := dialog.accelerators.first
+				frame.add_accelerator_command (accelerator, cmd, arg)
+				frame.set_text ("Accelerator chosen")
+			else
+				frame.set_text ("Choose your accelerator - None")
+				lab4.set_text ("")
+			end
 		end
 
 	execute_button (arg: EV_ARGUMENT; data: EV_KEY_EVENT_DATA) is
@@ -152,9 +157,9 @@ feature -- Execution features
 			create action.make
 			action.extend ("Your accelerator")
 			create dialog.make_with_actions (parent, action)
-			dialog.show
 			create cmd.make (~execute5)
 			dialog.add_ok_command (cmd, Void)
+			dialog.show
 		end
 
 	accelerator: EV_ACCELERATOR

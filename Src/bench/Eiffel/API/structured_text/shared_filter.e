@@ -1,6 +1,13 @@
+indexing
+
+	description: 
+		"Major syntactic construct names.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class SHARED_FILTER
 
-feature {NONE} -- Major syntactic construct names
+feature {NONE} -- Implementation
 
 	f_Class_declaration: STRING is		"class_declaration";
 	f_Class_end: STRING is				"class_end";

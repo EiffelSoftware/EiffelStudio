@@ -7,7 +7,7 @@ deferred class
 	BASIC_TYPE
 
 inherit
-	EIFFEL_TYPE
+	TYPE_AS
 
 	CLICKABLE_AST
 		redefine

@@ -46,7 +46,7 @@ feature -- Visitor
 
 feature -- Attributes
 
-	constraint: EIFFEL_TYPE
+	constraint: TYPE_AS
 			-- Constraint of the formal generic
 
 	creation_feature_list: EIFFEL_LIST [FEATURE_NAME]

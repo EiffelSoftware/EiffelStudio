@@ -54,7 +54,7 @@ feature -- Visitor
 
 feature -- Attributes
 
-	class_type: EIFFEL_TYPE
+	class_type: TYPE_AS
 			-- Type in which `feature_name' is defined.
 
 feature -- Comparison

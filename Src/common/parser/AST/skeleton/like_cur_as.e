@@ -8,7 +8,7 @@ class
 	LIKE_CUR_AS
 
 inherit
-	EIFFEL_TYPE
+	TYPE_AS
 		redefine
 			has_like--, simple_format
 		end

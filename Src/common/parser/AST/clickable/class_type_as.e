@@ -8,7 +8,7 @@ class
 	CLASS_TYPE_AS
 
 inherit
-	EIFFEL_TYPE
+	TYPE_AS
 		redefine
 			has_like,
 			is_equivalent
@@ -52,7 +52,7 @@ feature -- Attributes
 	class_name: ID_AS;
 			-- Class type name
 
-	generics: EIFFEL_LIST [EIFFEL_TYPE];
+	generics: EIFFEL_LIST [TYPE_AS];
 			-- Possible generical parameters
 
 	is_class: BOOLEAN is True

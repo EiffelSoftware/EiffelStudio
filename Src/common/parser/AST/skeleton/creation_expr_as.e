@@ -44,7 +44,7 @@ feature -- Attributes
 	location: TOKEN_LOCATION
 			-- Location of current.
 
-	type: EIFFEL_TYPE
+	type: TYPE_AS
 			-- Creation Type.
 
 	call: ACCESS_INV_AS

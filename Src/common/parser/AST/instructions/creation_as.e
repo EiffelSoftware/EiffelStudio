@@ -52,7 +52,7 @@ feature -- Visitor
 
 feature -- Attributes
 
-	type: EIFFEL_TYPE
+	type: TYPE_AS
 			-- Creation type
 
 	target: ACCESS_AS

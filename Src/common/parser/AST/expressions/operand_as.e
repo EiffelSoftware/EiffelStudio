@@ -44,7 +44,7 @@ feature -- Visitor
 
 feature -- Attributes
 
-	class_type: EIFFEL_TYPE
+	class_type: TYPE_AS
 			-- Type from which the feature comes if specified
 
 	target : ID_AS

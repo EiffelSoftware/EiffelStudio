@@ -8,7 +8,7 @@ class
 	FORMAL_AS
 
 inherit
-	EIFFEL_TYPE
+	TYPE_AS
 
 	CLICKABLE_AST
 		redefine

@@ -24,17 +24,17 @@ cluster
 	root_cluster:	"<FL_LOCATION>"
 
 		-- WEL
-	all wel: 		"$EIFFEL4\library\wel"
+	all wel: 		"$EIFFEL5\library\wel"
 
 		-- EiffelBase
-	all base: 		"$EIFFEL4\library\base"
+	all base: 		"$EIFFEL5\library\base"
 		exclude
 			"table_eiffel3"
 			"desc"
 		end
 
 external
-	include_path:	"$(EIFFEL4)\library\wel\spec\windows\include"
-	object: 		"$(EIFFEL4)\library\wel\spec\$(COMPILER)\lib\wel.lib"
+	include_path:	"$(EIFFEL5)\library\wel\spec\windows\include"
+	object: 		"$(EIFFEL5)\library\wel\spec\$(COMPILER)\lib\wel.lib"
 
 end

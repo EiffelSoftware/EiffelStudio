@@ -6,6 +6,6 @@ class
 
 feature -- Access
 
-	Id_ico_application: INTEGER is 1
+	Idr_mainframe: INTEGER is 128
 
 end -- class APPLICATION_IDS

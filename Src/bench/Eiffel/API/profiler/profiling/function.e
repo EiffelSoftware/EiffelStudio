@@ -45,6 +45,16 @@ feature -- Status report
 			Result := cycle_num;
 		end;
 
+feature -- Output
+
+	append_to (st: STRUCTURED_TEXT) is
+			-- Append Current function to `st'.
+		require
+			valid_st: st /= Void
+		do
+			st.add_string (out)
+		end;
+
 	out: STRING is
 			-- Representation for output.
 		do

@@ -357,6 +357,42 @@ feature {EV_ANY_IMP} -- Agent implementation routines
 			end
 		end
 
+	mcl_event_intermediary (a_c_object: POINTER; a_event_number: INTEGER; a_tup_int: TUPLE [INTEGER]) is
+			-- 
+		local
+			a_mcl_imp: EV_MULTI_COLUMN_LIST_IMP
+		do
+			a_mcl_imp ?= c_get_eif_reference_from_object_id (a_c_object)
+			inspect
+				a_event_number
+			when 1 then		
+				a_mcl_imp.select_callback (a_tup_int)
+			when 2 then
+				a_mcl_imp.deselect_callback (a_tup_int)
+			when 3 then
+				a_mcl_imp.column_click_callback (a_tup_int)
+			when 4 then
+				a_mcl_imp.column_resize_callback (a_tup_int)
+			end
+		end
+		
+	gtk_value_int_to_tuple (n_args: INTEGER; args: POINTER): TUPLE [INTEGER] is
+			-- Tuple containing integer value from first of `args'.
+		do
+			integer_tuple.put (gtk_value_int (args), 1)
+			Result := integer_tuple
+		end	
+		
+	column_resize_callback_translate (n: INTEGER; args: POINTER): TUPLE is
+			-- Translate function for MCL
+		local
+			gtkarg2: POINTER
+		do
+			gtkarg2 := gtk_args_array_i_th (args, 1)
+			Result := [gtk_value_int (args) + 1, gtk_value_int (gtkarg2)]
+			-- Column is zero based in gtk.
+		end
+	
 	kamikaze_agent (an_action_sequence: ARRAYED_LIST [PROCEDURE [ANY, TUPLE]];
 		target: PROCEDURE [ANY, TUPLE]):
 		PROCEDURE [ANY, TUPLE []] is
@@ -508,6 +544,14 @@ feature {EV_ANY_IMP} -- Externals
 			-- Integer value from a GtkArg.
 		external
 			"C | %"ev_gtk_callback_marshal.h%""
+		end
+		
+	gtk_args_array_i_th (args_array: POINTER; an_index: INTEGER): POINTER is
+			-- GtkArg* gtk_args_array_i_th (GtkArg** args_array, int index) {
+			--	return (GtkArg*)(args_array + index);
+			-- }
+		external
+			"C | %"ev_c_util.h%""
 		end
 		
 feature {EV_APPLICATION_IMP} -- Externals

@@ -51,6 +51,9 @@ feature -- Initialization
 				message = Wm_windowposchanging then
 				!WEL_WINDOW_POSITION_MESSAGE! message_information.make (
 					window, message, wparam, lparam)
+			elseif message = Wm_notify then
+				!WEL_NOTIFY_MESSAGE! message_information.make (
+					window, message, wparam, lparam)
 			elseif message = Wm_char or
 				message = Wm_syschar or
 				message = Wm_keydown or

@@ -19,6 +19,7 @@ default
 	msil_assembly_compatibility ("None")
 	check_vape (yes)
 	console_application (yes)
+	msil_clr_version ("v1.0.3705")
 
 cluster
 

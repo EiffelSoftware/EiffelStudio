@@ -253,6 +253,29 @@ feature -- Drawing operations
 			dc.line_to (pt2.x, pt2.y)
 		end
 
+	draw_straight_line (point1, point2: EV_COORDINATES) is
+			-- Draw an infinite line traversing `point1' and `point2'.
+		require else
+			dc_not_void: dc /= Void
+		local
+			x1, x2, y1, y2, dx, dy: INTEGER
+		do
+			dx := (point2.x - point1.x)
+			dy := (point2.y - point1.y)
+			if point1.y /= point2.y then
+				x1 := point1.x - ((dx / dy) * point1.y).rounded
+				x2 := point1.x - ((dx / dy) * (point1.y - height)).rounded
+				y1 := 0
+				y2 := height
+			else
+				y1 := point1.y - ((dy / dx) * point1.x).rounded
+				y2 := point1.y - ((dy / dx) * (point1.x - width)).rounded
+				x1 := 0
+				x2 := width
+			end
+			dc.line (x1, y1, x2, y2)
+		end
+
 	draw_polyline (pts: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
 			-- Draw a polyline, close it automatically if `is_closed'.
 		require else
@@ -781,7 +804,7 @@ feature {NONE} -- To check -- Temp
 			set_stipple (a_tile)
 		end
 
-	copy_pixmap (a_point: EV_COORDINATES; a_pixmap : EV_PIXMAP) is
+	copy_pixmap (a_point: EV_COORDINATES; a_pixmap: EV_PIXMAP) is
 			-- Copy `a_pixmap' to the drawing at `a_point'.
 			-- If there is not enough space to create auxiliery bitmap (DDB) 
 			-- exception will be raised
@@ -789,7 +812,7 @@ feature {NONE} -- To check -- Temp
 			dc_not_void: dc /= Void
 			dc_exists: dc.exists
 		local
-			pw: EV_PIXMAP_IMP
+--			pw: EV_PIXMAP_IMP
 --			bitmap: WEL_BITMAP
 --			dib: WEL_DIB
 --			icon: WEL_ICON
@@ -820,30 +843,6 @@ feature {NONE} -- To check -- Temp
 ----					dc.draw_icon (icon, a_point.x, a_point.y)
 ----				end
 ----			end
-		end
-
-	draw_inf_line (point1, point2: EV_COORDINATES) is
-			-- Draw an infinite line traversing `point1' and `point2'.
-		require else
-			dc_not_void: dc /= Void
-		local
-			x1, x2, y1, y2, dx, dy: INTEGER
-		do
-			dc.line (point1.x, point1.x, point2.x, point2.y)
-			dx := (x2 - x1)
-			dy := (y2 - y1)
-			if point1.y /= point2.y then
-				x1 := point1.x + ((dx / dy) * point1.y).rounded
-				x2 := point1.x + ((dx / dy) * (point1.y - height)).rounded
-				y1 := 0
-				y2 := height
-			else
-				y1 := point1.y + ((dy / dx) * point1.x).rounded
-				y2 := point1.y + ((dy / dx) * (point1.x - width)).rounded
-				x1 := 0
-				x2 := width
-			end
-			dc.line (x1, y1, x2, y2)
 		end
 
 end -- class EV_DRAWABLE_IMP

@@ -23,8 +23,10 @@
  */
 
 #include "eif_config.h"
-#include "ipcvms.h"		/* only affects VMS */
 #include "eif_portable.h"
+#ifdef EIF_VMS
+#include "ipcvms.h"		/* only affects VMS */
+#endif
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "eif_logfile.h"

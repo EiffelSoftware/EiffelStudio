@@ -9,13 +9,18 @@
 
 	Contains all socket/pipes messages routines.
 
+	$Id$
+
 	As signal may arrive, we must check when an error occurs, that
 	it is not the signal's fault.
 */
 
+#ifdef __VMS	/* module name clash with .../library/clib/network.c */
+#pragma module IPC_NETWORK
+#endif /* __VMS */
+
 #include "eif_portable.h"
 #include "eif_network.h"
-#include "ipcvms.h"	/* only affects VMS */
 #include <stdio.h>
 #include <errno.h>
 #include <signal.h>
@@ -29,6 +34,10 @@
 #else
 #include <unistd.h>
 #endif
+
+#ifdef EIF_VMS
+#include "ipcvms.h"
+#endif  /* EIF_VMS */
 
 extern unsigned TIMEOUT;		/* Time out on reads */
 
@@ -59,8 +68,9 @@ rt_private void CALLBACK timeout(HWND, UINT, UINT, DWORD);	/* Signal handler for
 #else
 rt_private Signal_t broken(void);	/* Signal handler for SIGPIPE */
 rt_private Signal_t timeout(void);	/* Signal handler for read timeouts */
-
-extern int errno;
+#ifndef EIF_VMS
+extern int errno;	/* shouldn't this be #include <errno.h> for all platforms??? */
+#endif
 #endif
 
 #ifdef EIF_WIN32
@@ -261,7 +271,7 @@ rt_public int net_send(int cs, char *buffer, int size)
 			if (errno != EINTR){
 #ifdef EIF_VMS
 				printf ("%s: net_send: write failed. fdesc = %i, errno = %i (VMS %i)\n", 
-					ipcvms_get_progname(NULL), cs, errno, vaxc$errno);
+					eifrt_vms_get_progname (NULL,0), cs, errno, vaxc$errno);
 				perror (" ");
 #else
 				printf ("net_send: write failed. fdesc = %i, errno = %i\n", cs,  errno);
@@ -282,6 +292,9 @@ rt_public int net_send(int cs, char *buffer, int size)
 #ifndef EIF_WIN32
 rt_private Signal_t broken(void)
 {
+#ifdef USE_ADD_LOG
+	add_log(20, "SIGPIPE signal handler broken() called in network.c");
+#endif
 	longjmp(env, 1);			/* SIGPIPE was received */
 	/* NOTREACHED */
 }

@@ -3,29 +3,204 @@ doc:<file name="eifrtvms.c" version="$Id$" summary="VMS specific runtime tools">
 */
 
 /* 
-    This file contains VMS specific code. 
-    It is used by the ebench daemon as well as eiffel applications.
-    Some of this code used to live in lmalloc.c
-
+    This file contains VMS platform specific code. 
+    It is used by the Eiffel workbench daemon as well as Eiffel applications.
+    Some of this code used to live in ipcvms.c and lmalloc.c
 */
 
+#ifdef __VMS		/* this runs for the rest of the module */
+
+#pragma module EIFRTVMS	    // force uppercase module name
 #include "eif_config.h"
 #include "eif_portable.h"
 
-
-#ifdef EIF_VMS		/* this runs for the entire module */
+#include <ctype.h>
+#include <errno.h>
 
 #include <lib$routines>
+#include <clidef>
 #include <dvidef>
+#include <jpidef>
 #include <ssdef>
-#pragma message disable (NEEDCONSTEXT)	/* skip non-constant address warnings */
-#pragma message disable (ADDRCONSTEXT)	/* skip non-constant address warnings */
-#define DX_BUF(d,buf) DX d = { sizeof buf, DSC$K_DTYPE_T, DSC$K_CLASS_S, (char*)&buf }
-#include <starlet>		/* vms system services */
-#include <descrip>		/* descriptor data structures */
-#include <lnmdef>		/* sys$crelnm, etc. LNM$ symbols */
+#include <starlet>	/* vms system services */
+#include <descrip>	/* descriptor data structures */
+#include <lnmdef>	/* sys$crelnm, etc. LNM$ symbols */
+#include <fab>		/* RMS FAB definitions */
+#include <nam>		/* RMS NAM (name block) definitions */
 
-/* Problem: Unix-centric programs often check each element of a path name for		*/
+/* Define some useful macros for dealing with descriptors		*/
+/* (most are not portable because of aggregate initialization).		*/
+#pragma message disable (NEEDCONSTEXT,ADDRCONSTEXT)  /* skip non-constant address warnings */
+//#define DX_BUF(d,buf) DX d = { sizeof(buf), DSC$K_DTYPE_T, DSC$K_CLASS_S, (char*)&buf }
+#define DX_BLD(d,ptr,len) DX d = { len, DSC$K_DTYPE_T, DSC$K_CLASS_S, (char*)ptr }
+#define DX_STR(d,ptr) DX d = { strlen(ptr), DSC$K_DTYPE_T, DSC$K_CLASS_S, ptr }
+#define DX_STRLIT(d,ptr) DX d = { sizeof(ptr)-1, DSC$K_DTYPE_T, DSC$K_CLASS_S, ptr }
+#define DX_DYN(d) DX d = { 0, DSC$K_DTYPE_T, DSC$K_CLASS_D, 0 }
+#define DX_ATOMIC(d,var,dtyp) DX d = { sizeof(var), dtyp, DSC$K_CLASS_S, &(var) }
+/* access to descriptor components */
+#define DXLEN(d) ( (d).dsc$w_length )
+#define DXPTR(d) ( (d).dsc$a_pointer )
+
+/* take care when using these, trailing semicolon is not desired */
+#define RETURN_ERR(err)   { ipcvms_errno = errno = err; return -1; }
+#define RETURN_VMSERR(st) { ipcvms_status = vaxc$errno = st; RETURN_ERR(EVMSERR) }
+
+
+
+/* UNIX style dirname: returns the length of directory part of the path,    */
+/* including final path delimiter; zero if none (path is file name only).   */
+/* Unlike VMS C library dirname, this works for Unix or VMS paths.	    */
+/* Note: this should work for all platforms, but is only tested on VMS.	    */
+rt_public size_t eifrt_vms_dirname_len (const char* path)
+{
+    size_t result;
+    const char *delim, *p, *lastp;
+    const char delims[] = "/\\:]>";	/* set of all possible delimiters   */
+
+    /* find rightmost delimiter in path */
+    for (lastp = NULL, delim = delims;  *delim;  ++delim) {
+	if (p = strrchr (path, *delim))
+	    if (p > lastp)
+		lastp = p;
+    }
+    if (lastp)
+	result = lastp - path + 1;
+    else result = 0;
+    return result;
+} /* end eifrt_vms_dirname_len() */
+
+
+/* Returns full filename of current program image executable.  Places	    */
+/* result in output buffer, which must be big enough, else output is	    */
+/* truncated.  If output buffer NULL, returns pointer to static storage.    */
+const char* eifrt_vms_imagename (char* buf, size_t bufsiz)
+{
+    const char* result;
+    /* I think that 4098 is the new maximum long filename length on VMS; I can't find a symbolic definition. */
+    static char imagename[4099]	 = {'\0'};	/* full image file name + nul  */
+
+    if (*imagename == '\0') {   /* if we have not done this yet */
+	VMS_STS st; 
+	int32 item = JPI$_IMAGNAME;
+	DX_BUF (imag_d, imagename);
+	uint16 retlen = 0;
+	st = lib$getjpi (&JPI$_IMAGNAME, NULL,NULL, NULL, &imag_d, &retlen);
+	if (VMS_SUCCESS (st)) {
+	    imagename[retlen] = '\0';	/* null terminate returned string */
+	    result = imagename;
+	} else	/* getjpi failed??? */
+	    result = NULL;
+    } else { /* been here, done this; return the previous result */
+	result = imagename;
+    }
+    if (buf && result) {
+	if (strlen(result) < bufsiz)
+	    result = strcpy (buf, result);
+	else {
+	    strncpy (buf, result, --bufsiz);
+	    buf[bufsiz] = '\0';
+	    result = NULL;
+	}
+    }
+    return (result);
+} /* end eifrt_vms_imagename() */
+
+
+
+/* Returns name of program image executing. Used for messages, etc.	*/
+/* In UNIX terms, basename(argv[0]) 					*/
+/* Returns result in output buffer, which must be big enough.		*/
+/* If output buffer NULL, returns pointer to static storage.		*/
+
+const char* eifrt_vms_get_progname (char* buf, size_t bufsiz)
+{
+    const char* result;
+    /* I think that 4098 is the new maximum long filename length on VMS; I can't find a symbolic definition. */
+    static char progname[FILENAME_MAX] = {'\0'};	/* like argv[0] - image file basename */
+    //static const int filename_max = FILENAME_MAX;
+
+    if (*progname == '\0') {   /* if we have not done this yet */
+	char *p, imagename[4099];
+	/* point to basename */
+	p = (char*) eifrt_vms_imagename (NULL,0);
+	p += eifrt_vms_dirname_len (p);
+	result = strcpy (progname, p);
+	/* hack: remove extension and version (***FIXME*** do a sys$parse(), the right way) */
+	if ( (p = strrchr (progname, '.')) )
+	    *p = '\0';
+    } else { /* already been through here, return the previous result */
+	result = progname;
+    }
+    if (buf && result) {
+	if (strlen (result) < bufsiz)
+	    result = strcpy (buf, result);
+	else {
+	    strncpy (buf, result, --bufsiz);
+	    buf[bufsiz] = '\0';
+	    result = NULL;
+	}
+    }
+    return (result);
+} /* end eifrt_vms_get_progname() */
+
+
+
+/* eifrt_vms_spawn - used to issue an asynchronous "system" command.	*/
+int eifrt_vms_spawn (const char *cmd, int async)
+{
+    int result;
+    char vms_cmd[NAML$C_MAXRSS * 2 + 1];
+    DX_BLD (cmd_d, NULL, 0);
+    DX_STRLIT (inp_d, "nla0:");	    /* thats /dev/null to you */
+    VMS_STS sts;
+    uint32 flags = 0;
+    static int err, erv;
+    struct FAB fab = cc$rms_fab;
+    struct NAM nam = cc$rms_nam;
+    char esb[NAM$C_MAXRSS +1], rsb[NAM$C_MAXRSS +1];
+    static const char* dnm = ".*";
+
+    err = access (cmd, F_OK);
+    flags = 0;
+    if (async) 
+	flags |= CLI$M_NOWAIT;
+
+    /* ensure we have a VMS filespec */
+    cmd = eifrt_vms_filespec (cmd, vms_cmd);
+
+    /* if 'vms_cmd' is a command procedure (.com file), prepend "@" */
+    /* perform a parse on the name supplied */
+    fab.fab$l_dna = (char*)dnm; fab.fab$b_dns = strlen(dnm);
+    fab.fab$l_fna = (char*)vms_cmd; fab.fab$b_fns = strlen(vms_cmd);
+    fab.fab$l_nam = &nam;
+    nam.nam$l_esa = esb; nam.nam$b_ess = sizeof esb -1;
+    nam.nam$l_rsa = rsb; nam.nam$b_rss = sizeof rsb -1;
+    /* VMS debug note: use nam.nam$r_nop_overlay. { nam$b_nop | nam$r_nop_bits } to examine. */
+    nam.nam$b_nop |= NAM$M_SYNCHK;	/* request syntax check only, no lookup */
+    sts = sys$parse (&fab);
+    if (VMS_SUCCESS(sts))
+	sts = sys$search (&fab);
+    if (VMS_SUCCESS(sts)) {
+	if (!strncasecmp (nam.nam$l_type, ".COM", nam.nam$b_type)) {
+	    /* prepend "@" to vms_cmd */
+	    memmove (vms_cmd+1, vms_cmd, strlen(vms_cmd)+1);
+	    vms_cmd[0] = '@';
+	}
+    }
+    DXPTR(cmd_d) = vms_cmd;
+    DXLEN(cmd_d) = strlen(vms_cmd);
+    sts = lib$spawn(&cmd_d, 0,0, &flags);
+    if (VMS_SUCCESS(sts))
+	result = err = erv = 0;
+    else {
+    	errno = err = EVMSERR;
+	vaxc$errno = erv = sts;
+	result = -1;
+    }
+    return result;
+} /* end eifrt_vms_spawn */
+
+/* Problem: Unix-centric programs often check each element of a path name for		*/
 /* environment variables ($-prefixed names) and translate them in place, emulating	*/
 /* shell processing. On VMS, logical names are made to appear as environment variables	*/
 /* by the VMS DECC RTL implementation of getenv().  Many VMS DECC RTL functions, and	*/
@@ -101,7 +276,7 @@ rt_public char* eif_vms_getenv (const char* name)
 	return (char*)name;	/* const_cast<char*>(name) */
 #endif
     return crtval;
-}
+} /* end eif_vms_getenv() */
 
 
 /* Special version of getenv() that bypasses the hack above.		*/
@@ -114,7 +289,7 @@ rt_public char* eif_getenv_ (const char* name)
 {
     char* crtval = getenv (name);	/* call the real getenv() */
     return crtval;
-}
+} /* end eif_getenv_() */
 
 
 #ifdef EIF_VMS_OLD
@@ -131,7 +306,7 @@ rt_public char* eif_getenv_ (const char* name)
 /* mode (so that it doesn't outlive the currently running image).  This	*/
 /* behavior is more akin to unix putenv, which doesn't permit a		*/
 /* subprocess to modify a parent's environment.  This routine was	*/
-/* pinched from the C/ipc/ipcshared/ipcvms.c version.			*/
+/* pinched from the C/ipc/shared/ipcvms.c version.			*/
 
 
 rt_public int eif_vms_putenv (const char *envstring)
@@ -255,7 +430,7 @@ main () {
 }
 #endif	/* TEST */
 
-#endif /* EIF_VMS */
+#endif /* __VMS */
 
 /*
 doc:</file>

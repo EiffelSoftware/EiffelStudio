@@ -44,8 +44,10 @@
 #include "rt_assert.h"
 
 #ifdef EIF_VMS
-#include "ipcvms.h"
-#endif
+#include <starlet.h>	/* for SYS$FORCEX */
+#include <ssdef.h>	/* for SS$_ABORT */
+#include "ipcvms.h"	/* for IPCVMS_WAKE_EWB */
+#endif /* EIF_VMS */
 
 #ifdef EIF_WIN32
 #define OTHER(x) ((x) == daemon_data.d_cs ? daemon_data.d_as : daemon_data.d_cs)
@@ -190,6 +192,9 @@ rt_private void dprocess_request(int s, Request *rqst)
 		write_application_interruption_flag(INTERRUPT_APPLICATION);
 #else	/* EIF_WIN32 */
 #ifdef USE_SIGNAL
+#ifdef USE_ADD_LOG
+		add_log(20, "sending interrupt request/signal to process %d\n", daemon_data.d_app);
+#endif
 		if (daemon_data.d_app != 0)
 			/* If we send the signal too early, d_app is not initialized, 
 			 * and in this case kill sends the signal to estudio, which kills it */
@@ -216,12 +221,14 @@ rt_private void dprocess_request(int s, Request *rqst)
 		interrupted = FALSE;
 		break;
 
-#ifdef EIF_VMS	/* this is probably no longer necessary */
+#if defined(EIF_VMS) && defined(IPCVMS_WAKE_EWB)  	/* this is probably no longer necessary */
 	case STOPPED:	/* application is stopped at a brkpoint */
+		//printf ("File: %s line: %d: IPCVMS_WAKE_EWB\n", __FILE__, __LINE__);
 		send_packet(writefd(OTHER(s)), rqst);
 		IPCVMS_WAKE_EWB(writefd(OTHER(s)));
 		break;
-#endif
+#endif /* EIF_VMS && IPCVMS_WAKE_EWB */
+
 	case RESUME:			/* Debugger asking to resume application */
 		interrupted = FALSE;
 		/* Fall through */	/* i.e. send the request to application */
@@ -503,6 +510,9 @@ rt_private void run_command(int s)
 	char 					*current_dir;
 #else
 	STREAM *sp;			/* Stream to be used for communications */
+#ifdef EIF_VMS
+	size_t dirname_size;
+#endif
 
 	sp = stream_by_fd[s];				/* Fetch associated stream */
 #endif
@@ -516,9 +526,13 @@ rt_private void run_command(int s)
 		dexit (1);
 	}
 
-#ifdef __VMS
+#ifdef EIF_VMS_V6_ONLY
 	appname = rindex (meltpath, ']');
 	if (!appname)
+		strcpy (meltpath, "[]");
+#elif defined EIF_VMS
+	dirname_size = eifrt_vms_dirname_len (meltpath);
+	if (!dirname_size)
 		strcpy (meltpath, "[]");
 #else
 	appname = rindex (meltpath, '/');
@@ -625,6 +639,9 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	int status;			/* Command status, as returned by system() */
 	char *meltpath, *appname, *envstring;	/* set MELT_PATH */
 	STREAM *sp;			/* Stream to be used for communications */
+#ifdef EIF_VMS
+	size_t dirname_size;
+#endif
 
 	sp = stream_by_fd[s];				/* Fetch associated stream */
 #endif
@@ -707,10 +724,16 @@ rt_private void run_asynchronous(int s, Request *rqst)
 		dexit (1);
 	}
 
-#ifdef EIF_VMS
+#ifdef EIF_VMS_V6_ONLY
 	appname = rindex (meltpath, ']');
 	if (appname)
 		*appname = 0;
+	else
+		strcpy (meltpath, "[]");
+#elif defined EIF_VMS
+	dirname_size = eifrt_vms_dirname_len (meltpath);
+	if (dirname_size)
+		meltpath[--dirname_size] = '\0';
 	else
 		strcpy (meltpath, "[]");
 #else
@@ -729,7 +752,7 @@ rt_private void run_asynchronous(int s, Request *rqst)
 	}
 	sprintf (envstring, "MELT_PATH=%s", meltpath);
 	putenv (envstring);
-#if defined (BSD) || defined (__VMS)
+#if defined (BSD) || defined (EIF_VMS)
 	signal (SIGCHLD, SIG_DFL);
 #else
 	signal (SIGCLD, SIG_DFL);
@@ -738,7 +761,7 @@ rt_private void run_asynchronous(int s, Request *rqst)
 #ifndef EIF_VMS
 	status = system(cmd);				/* Run command via /bin/sh */
 #else	/* VMS */
-	status = ipcvms_spawn(cmd, 1);
+	status = eifrt_vms_spawn(cmd, 1);
 #endif	/* EIF_VMS */
 
 	if (status == 0)
@@ -748,7 +771,7 @@ rt_private void run_asynchronous(int s, Request *rqst)
 
 #ifdef EIF_VMS
 	if (status) {	/* command failed */
-		char *pgmname = ipcvms_get_progname(NULL);
+		const char *pgmname = eifrt_vms_get_progname (NULL,0);
 		fprintf (stderr, "%s: %s: \n-- error from system() call: %d\n"
 		"-- failed cmd: \"%s\" -- %s\n", 
 		pgmname, __FILE__, errno, cmd, strerror(errno));
@@ -881,10 +904,20 @@ rt_private void kill_app (void)
 	/* Kill the application brutally */
 
 	if (daemon_data.d_app != 0)		/* Check the application is still running */
+#ifdef USE_ADD_LOG
+	add_log(8, "killing application process %d", daemon_data.d_app);
+#endif
+
 #ifdef EIF_WIN32
 	{
 		TerminateProcess (daemon_data.d_app, 0);
 		rem_input (daemon_data.d_as);
+	}
+#elif defined(EIF_VMS)
+	{
+		VMS_STS sts;
+		unsigned int pid = daemon_data.d_app;
+		sts = SYS$FORCEX (&pid, 0, SS$_ABORT);
 	}
 #else
 		kill((Pid_t) daemon_data.d_app, SIGKILL);

@@ -9,6 +9,8 @@
 
 	Maps file descriptor on STREAM structure.
 
+	$Id$
+
 	The motivation for the STREAM structure is to make it easy later to use
 	sockets in place of pipes when networking code will be activated. A
 	single socket descriptor may be use bidirectionnally, but a pipe is
@@ -22,11 +24,13 @@
 */
 
 #include "eif_config.h"
-#include "ipcvms.h"		/* only affects VMS */
 #include "eif_portable.h"
 #include "stream.h"
 #ifndef EIF_WIN32
 #include <unistd.h>
+#ifdef EIF_VMS
+#include "ipcvms.h"		/* only affects VMS */
+#endif
 #endif
 
 #define MAX_FILE_DESC	64		/* To be Configured--FIXME */
@@ -64,6 +68,9 @@ rt_public STREAM *new_stream(int read_fd, int write_fd)
 #else
 	stream_by_fd[read_fd] = sp;		/* Enable searching by fd */
 	stream_by_fd[write_fd] = sp;
+#ifdef USE_ADD_LOG
+	add_log(20, "new stream created, read_fd: %d, write_fd: %d", read_fd, write_fd);
+#endif
 #endif
 
 	return sp;			/* Associated stream structure */
@@ -82,10 +89,14 @@ rt_public void close_stream(STREAM *sp)
 	writefd(sp) = NULL;
 	readev(sp) = NULL;
 	writeev(sp) = NULL;
+
 #else
+
+#ifdef USE_ADD_LOG
+	add_log(20, "close stream (read_fd: %d, write_fd: %d)", readfd(sp), writefd(sp));
+#endif
 	close(readfd(sp));
 	close(writefd(sp));
-
 	stream_by_fd[readfd(sp)] = (STREAM *) 0;
 	stream_by_fd[writefd(sp)] = (STREAM *) 0;
 #endif

@@ -8,6 +8,7 @@
  ######     #     ####      #    ######  #    #   ###     ####
 
 	Wide listening on all opened file descriptors (read).
+	$Id$
 */
 
 #include "eif_config.h"
@@ -225,7 +226,7 @@ rt_private int active_check(STREAM *sp, int pid)
 	    /* (in nonpaged pool) for minimum overhead */
 	    st = lib$getjpi(&JPI$_STATE, &pid, 0, &schstate, 0,0);
 	    if (st == SS$_SUSPENDED) st = 1;
-	    if ((st&1) != 1) {
+	    if (!VMS_SUCCESS (st)) {
 #ifdef USE_ADD_LOG
 		if (st != SS$_NONEXPR) {
 		    vaxc$errno = st;
@@ -250,8 +251,8 @@ rt_private int active_check(STREAM *sp, int pid)
 	if (!has_input(readfd(sp)))			/* Failure, could not send request */
 		return 1;						/* Child is dead */
 	}
-#endif
-#endif
+#endif /* PIDCHECK */
+#endif /* (platform) */
 	return 0;		/* Ok, child still alive */
 }
 

@@ -1,0 +1,377 @@
+########################################################################
+# Makefile generated from Makefile.SH on Fri Nov 18 08:53:42 PST 1994
+#   .../C/idrs/Makefile for VMS
+
+SHELL = /bin/sh
+JMAKE = jmake
+TOP = [-]
+CURRENT = [.idrs]
+DIR = [.idrs]
+
+########################################################################
+# Parameters set by Configure -- edit config.sh if changes are needed
+
+#AR = libr/create
+#CC = cc
+CTAGS = ctags
+JCFLAGS = $(CFLAGS) /jcflag
+LINT = lint
+MAKE = make
+MKDEP = /home/tomh/Eiffel3/C/mkdep $(DPFLAGS) --
+MV = move
+#RANLIB = dirl
+#RM = purge/log
+SED = /bin/sed
+
+########################################################################
+# Automatically generated parameters -- do not edit
+
+SOURCES =  $(LSRC)
+OBJECTS =  $(LOBJ)
+
+########################################################################
+# New suffixes and associated building rules -- edit with care
+
+#.c.o:
+#	$(RM) $@
+#	@write sys$$output "JCFLAGS = $(JCFLAGS)
+#	@write sys$$output "DEBUG_CFLAGS = $(DEBUG_CFLAGS)
+#	$(CC)  $(JCFLAGS) $<
+
+
+########################################################################
+# Jmake rules for building libraries, programs, scripts, and data files
+# $X-Id: Jmake.rules,v 2.8.1.4 91/11/18 13:19:07 ram Exp Locker: ram $
+
+########################################################################
+# Force 'make depend' to be performed first -- do not edit
+
+.FORCE_DEPEND::
+
+#all:: .FORCE_DEPEND
+
+########################################################################
+# Start of Jmakefile
+
+# define vms specific symbols for compiling, etc.
+include $(TOP)makeinc.vms
+
+# to compile for debugging, say	    make <target> "DEBUG_CFLAGS=/debug/noopt"
+# to compile for distribution, say  make <target> "DEBUG_CFLAGS="
+#                              or   make <target> "DEBUG_CFLAGS=/opt"
+
+#DPFLAGS = /inc=$(TOP)/prefix=all/names=as_is
+#DPFLAGS = /incl=($(TOP),[-.run-time])/prefix=all
+CINCLUDES = /incl=($(TOP),[-.run-time])
+CINCLUDES = /incl=($(DECC_INCLUDES),[-.run-time])
+DPFLAGS = $(CINCLUDES)$(CDEFINES)
+CFLAGS = $(DECC_FLAGS)$(DPFLAGS)
+
+LSRC = \
+	idrf_creat.c \
+	idrf_dstry.c \
+	idrf_pos.c \
+	idrm_creat.c \
+	idrm_dstry.c \
+	idr_array.c \
+	idr_char.c \
+	idr_double.c \
+	idr_float.c \
+	idr_getpos.c \
+	idr_int.c \
+	idr_long.c \
+	idr_opaque.c \
+	idr_poly.c \
+	idr_read.c \
+	idr_setpos.c \
+	idr_short.c \
+	idr_size.c \
+	idr_stack.c \
+	idr_string.c \
+	idr_uchar.c \
+	idr_uint.c \
+	idr_ulong.c \
+	idr_union.c \
+	idr_ushort.c \
+	idr_vector.c \
+	idr_void.c \
+	idr_write.c 
+
+
+LOBJ = $(patsubst %.c,%.obj,$(LSRC))
+#LOBJ$(CSSUF) = $(patsubst %.c,%.obj$(CSSUF),$(LSRC))
+
+#$(LOBJ) $(LOBJ$(CSSUF)) : $(MAKEFILE) # make objects depend on this makefile 
+$(LOBJ) : $(MAKEFILE) # make objects depend on this makefile 
+
+LIBS = idr.olb # idr.olb$(CSSUF)
+all :: $(LIBS)
+#	write sys$$output "Makefile = $(MAKEFILES), MAKEFLAGS = $(MAKEFLAGS)"
+
+local_realclean::
+	$(RM) $(LIBS);*,$(OBJECTS)
+
+idr.olb: $(LOBJ)
+#	$(RM) $@
+#	$(AR) $@ $(LOBJC)   too long...
+#	$(AR) $@ *.obj
+#	$(RANLIB) $@
+# doesn't work, too long	libr/create/insert $@ $^
+	libr/create/insert $@ *.obj
+
+ifneq ($(CSSUF),)
+idr.olb$(CSSUF): $(LOBJ$(CSSUF))
+	libr/create/insert $@ *.obj$(CSSUF)
+endif
+
+foo :
+	write sys$$output "makefile = ""$(CC)"""
+
+depend:: ../mkdep
+
+../mkdep:
+	@echo "You have to run Configure in $(TOP) first."; exit 1
+
+depend::
+	($(SED) '/^# DO NOT DELETE/q' Makefile && \
+	$(MKDEP) $(SOURCES) | \
+	$(SED) 's/: \.\//: /; /\/usr\/include/d' \
+	) > Makefile.new
+	cp Makefile Makefile.bak
+	cp Makefile.new Makefile
+	$(RM) Makefile.new
+
+lint:
+	$(LINT) $(LINTFLAGS) $(SOURCES) $(LINTLIBS)
+
+########################################################################
+# Common rules for all Makefiles -- do not edit
+
+emptyrule::
+
+clean: local_clean
+realclean: local_realclean
+clobber: local_clobber
+
+local_clean::
+	$(RM) *.obj;*,*.dia;*, *.olb;*
+
+local_realclean:: local_clean
+
+local_clobber:: local_realclean
+	$(RM) Makefile config.sh
+
+Makefile.SH: Jmakefile
+	-@if test -f $(TOP)/.package; then \
+		if test -f Makefile.SH; then \
+			echo "	$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~"; \
+			$(RM) Makefile.SH~; $(MV) Makefile.SH Makefile.SH~; \
+		fi; \
+		echo "	$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT)" ; \
+		$(JMAKE) -DTOPDIR=$(TOP) -DCURDIR=$(CURRENT) ; \
+	else touch $@; exit 0; fi
+
+Makefile: Makefile.SH
+	/bin/sh Makefile.SH
+
+tags::
+	$(CTAGS) -w *.[ch]
+	$(CTAGS) -xw *.[ch] > tags
+
+local_clobber::
+	$(RM) tags
+
+########################################################################
+# Empty rules for directories with no sub-directories -- do not edit
+
+install::
+	@echo "install in $(CURRENT) done."
+
+deinstall::
+	@echo "deinstall in $(CURRENT) done."
+
+install.man::
+	@echo "install.man in $(CURRENT) done."
+
+deinstall.man::
+	@echo "deinstall.man in $(CURRENT) done."
+
+Makefiles::
+
+Makefiles.SH::
+
+########################################################################
+# Dependencies generated by make depend
+# DO NOT DELETE THIS LINE -- make depend relies on it
+idr_double.obj: idr_double.c
+idr_double.obj: idr.h
+idr_double.obj: ../eif_config.h
+idr_double.obj: ../eif_portable.h
+idr_double.obj: ../eif_confmagic.h
+idr_double.obj: idrs.h
+idr_float.obj: idr_float.c
+idr_float.obj: idr.h
+idr_float.obj: ../eif_config.h
+idr_float.obj: ../eif_portable.h
+idr_float.obj: ../eif_confmagic.h
+idr_float.obj: idrs.h
+idr_array.obj: idr_array.c
+idr_array.obj: idr.h
+idr_array.obj: ../eif_config.h
+idr_array.obj: ../eif_portable.h
+idr_array.obj: ../eif_confmagic.h
+idr_array.obj: idrs.h
+idr_char.obj: idr_char.c
+idr_char.obj: idr.h
+idr_char.obj: ../eif_config.h
+idr_char.obj: ../eif_portable.h
+idr_char.obj: ../eif_confmagic.h
+idr_char.obj: idrs.h
+idr_getpos.obj: idr_getpos.c
+idr_getpos.obj: idr.h
+idr_getpos.obj: ../eif_config.h
+idr_getpos.obj: ../eif_portable.h
+idr_getpos.obj: ../eif_confmagic.h
+idr_getpos.obj: idrs.h
+idr_int.obj: idr_int.c
+idr_int.obj: idr.h
+idr_int.obj: ../eif_config.h
+idr_int.obj: ../eif_portable.h
+idr_int.obj: ../eif_confmagic.h
+idr_int.obj: idrs.h
+idr_long.obj: idr_long.c
+idr_long.obj: idr.h
+idr_long.obj: ../eif_config.h
+idr_long.obj: ../eif_portable.h
+idr_long.obj: ../eif_confmagic.h
+idr_long.obj: idrs.h
+idr_long.obj: ../run-time/eif_size.h
+idr_long.obj: ../eif_config.h
+idr_opaque.obj: idr_opaque.c
+idr_opaque.obj: idr.h
+idr_opaque.obj: ../eif_config.h
+idr_opaque.obj: ../eif_portable.h
+idr_opaque.obj: ../eif_confmagic.h
+idr_opaque.obj: idrs.h
+idr_poly.obj: idr_poly.c
+idr_poly.obj: idr.h
+idr_poly.obj: ../eif_config.h
+idr_poly.obj: ../eif_portable.h
+idr_poly.obj: ../eif_confmagic.h
+idr_poly.obj: idrs.h
+idr_read.obj: idr_read.c
+idr_read.obj: idr.h
+idr_read.obj: ../eif_config.h
+idr_read.obj: ../eif_portable.h
+idr_read.obj: ../eif_confmagic.h
+idr_read.obj: idrs.h
+idr_setpos.obj: idr_setpos.c
+idr_setpos.obj: idr.h
+idr_setpos.obj: ../eif_config.h
+idr_setpos.obj: ../eif_portable.h
+idr_setpos.obj: ../eif_confmagic.h
+idr_setpos.obj: idrs.h
+idr_short.obj: idr_short.c
+idr_short.obj: idr.h
+idr_short.obj: ../eif_config.h
+idr_short.obj: ../eif_portable.h
+idr_short.obj: ../eif_confmagic.h
+idr_short.obj: idrs.h
+idr_size.obj: idr_size.c
+idr_size.obj: idr.h
+idr_size.obj: ../eif_config.h
+idr_size.obj: ../eif_portable.h
+idr_size.obj: ../eif_confmagic.h
+idr_size.obj: idrs.h
+idr_stack.obj: idr_stack.c
+idr_stack.obj: idr.h
+idr_stack.obj: ../eif_config.h
+idr_stack.obj: ../eif_portable.h
+idr_stack.obj: ../eif_confmagic.h
+idr_stack.obj: idrs.h
+idr_string.obj: idr_string.c
+idr_string.obj: idr.h
+idr_string.obj: ../eif_config.h
+idr_string.obj: ../eif_portable.h
+idr_string.obj: ../eif_confmagic.h
+idr_string.obj: idrs.h
+idr_uchar.obj: idr_uchar.c
+idr_uchar.obj: idr.h
+idr_uchar.obj: ../eif_config.h
+idr_uchar.obj: ../eif_portable.h
+idr_uchar.obj: ../eif_confmagic.h
+idr_uchar.obj: idrs.h
+idr_uint.obj: idr_uint.c
+idr_uint.obj: idr.h
+idr_uint.obj: ../eif_config.h
+idr_uint.obj: ../eif_portable.h
+idr_uint.obj: ../eif_confmagic.h
+idr_uint.obj: idrs.h
+idr_ulong.obj: idr_ulong.c
+idr_ulong.obj: idr.h
+idr_ulong.obj: ../eif_config.h
+idr_ulong.obj: ../eif_portable.h
+idr_ulong.obj: ../eif_confmagic.h
+idr_ulong.obj: idrs.h
+idr_ulong.obj: ../run-time/eif_size.h
+idr_ulong.obj: ../eif_config.h
+idr_union.obj: idr_union.c
+idr_union.obj: idr.h
+idr_union.obj: ../eif_config.h
+idr_union.obj: ../eif_portable.h
+idr_union.obj: ../eif_confmagic.h
+idr_union.obj: idrs.h
+idr_ushort.obj: idr_ushort.c
+idr_ushort.obj: idr.h
+idr_ushort.obj: ../eif_config.h
+idr_ushort.obj: ../eif_portable.h
+idr_ushort.obj: ../eif_confmagic.h
+idr_ushort.obj: idrs.h
+idr_vector.obj: idr_vector.c
+idr_vector.obj: idr.h
+idr_vector.obj: ../eif_config.h
+idr_vector.obj: ../eif_portable.h
+idr_vector.obj: ../eif_confmagic.h
+idr_vector.obj: idrs.h
+idr_void.obj: idr_void.c
+idr_void.obj: idr.h
+idr_void.obj: ../eif_config.h
+idr_void.obj: ../eif_portable.h
+idr_void.obj: ../eif_confmagic.h
+idr_void.obj: idrs.h
+idr_write.obj: idr_write.c
+idr_write.obj: idr.h
+idr_write.obj: ../eif_config.h
+idr_write.obj: ../eif_portable.h
+idr_write.obj: ../eif_confmagic.h
+idr_write.obj: idrs.h
+idrf_creat.obj: idrf_creat.c
+idrf_creat.obj: ../eif_config.h
+idrf_creat.obj: ../eif_portable.h
+idrf_creat.obj: ../eif_confmagic.h
+idrf_creat.obj: idrf.h
+idrf_creat.obj: idrs.h
+idrf_dstry.obj: idrf_dstry.c
+idrf_dstry.obj: ../eif_config.h
+idrf_dstry.obj: ../eif_portable.h
+idrf_dstry.obj: ../eif_confmagic.h
+idrf_dstry.obj: idrf.h
+idrf_dstry.obj: idrs.h
+idrf_pos.obj: idrf_pos.c
+idrf_pos.obj: ../eif_config.h
+idrf_pos.obj: ../eif_portable.h
+idrf_pos.obj: ../eif_confmagic.h
+idrf_pos.obj: idrf.h
+idrf_pos.obj: idrs.h
+idrm_creat.obj: idrm_creat.c
+idrm_creat.obj: idr.h
+idrm_creat.obj: ../eif_config.h
+idrm_creat.obj: ../eif_portable.h
+idrm_creat.obj: ../eif_confmagic.h
+idrm_creat.obj: idrs.h
+idrm_dstry.obj: idrm_dstry.c
+idrm_dstry.obj: idr.h
+idrm_dstry.obj: ../eif_config.h
+idrm_dstry.obj: ../eif_portable.h
+idrm_dstry.obj: ../eif_confmagic.h
+idrm_dstry.obj: idrs.h

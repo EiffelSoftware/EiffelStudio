@@ -1,6 +1,7 @@
-/* ipcvms.c */
-
-/* 
+/*
+**  ipcvms.c --- [C.ipc.shared]ipcvms.c
+**  $Id$
+**
 ********************************************************************************
     This module (together with ipcvms.h and ipcvmsdef.h) handles the vms
     specific issues for the inter-process communication (ipc) runtime code.
@@ -8,7 +9,8 @@
     supplied in the VMS runtime library, in particular pipe, select, read, 
     and write.
 
--- Runtime configuration contols (logical names)
+-- Run-time configuration controls (logical names):
+
 EIF_IPCVMS_LOG
     Causes all low level (read/write) pipe i/o to be logged to files named
     "IPCVMS_LOG_<programname>.LOG"
@@ -22,12 +24,14 @@ EIF_IPCVMS_SPURIOUS_NEWLINE_HACK
     See the code in ipcvms_read. 
 
 
--- Configuration control macros:
+-- Compile-time Configuration control macros:
+
 MY_PIPE
     Bypasses the C library pipe() function and does all the I/O directly.
     Currently disabled because forking needs to inherit open pipes, and I
-    haven't written code to deal with that. Also, it seems like the 
-    DECC RTL code for VMS 6.2 and later works pretty well.
+    haven't written code to deal with that. Also, it seems that the DECC RTL
+    pipe() for VMS 6.2 and later works well (except for not supporting
+    select(), but I have that one covered).
 
 SELECT_EVENT_DRIVEN
     uses new, improved, event driven code to wait for select rather 
@@ -41,14 +45,29 @@ DEBUG
     guess
 
 USE_STDARG
-    uses facilities defined in <stdarg.h>, as opposed to the obsolescent
-    <varargs.h>. At issue because I need the va_count macro (see below).
-
+    Uses ANSI-standard facilities defined in <stdarg.h>, as opposed to the
+    obsolete <varargs.h>. At issue because I need the va_count macro (see
+    below). This is enabled by default. The non-standard case has not been
+    tested recently.
 
 ********************************************************************************
 */
 
+
+#ifdef __VMS	/* This runs for the rest of the module */
+
+#pragma module IPCVMS	// force uppercase module name
+
+/*** Define configuration control macros here ***/
+
+#define SELECT_EVENT_DRIVEN
+#define USE_STDARG	/* <stdarg.h>, as opposed to the obsolescent <varargs.h> */
 /* #define MY_PIPE 1 */
+
+#if defined(MY_PIPE) && defined(EOFPIPE)
+#error configuration error, EOFPIPE and MY_PIPE are mutually exclusive
+#endif
+
 #ifndef DEBUG	/* if not already defined */
 #define DEBUG	/* force debug for now */
 #define DEBUG	/* ...this one generates a compile-time warning */
@@ -57,8 +76,6 @@ USE_STDARG
 #ifndef DEBUG
 #define NDEBUG 1	    /* disables assert checks (for speed) */
 #endif
-
-#define USE_STDARG	/* <stdarg.h>, as opposed to the obsolescent <varargs.h> */
 
 
 #include "eif_config.h"
@@ -69,30 +86,35 @@ USE_STDARG
 /* The DECbrains should have defined these in uppercase in <errno.h> so	*/
 /* that when compiling with /name=as_is (which prevents external	*/
 /* symbols from being forced to uppercase) they are correctly defined.	*/
+/* n.b. commented out, but may still be needed for VAXC. */
 /* #define cma$tis_errno_get_addr CMA$TIS_ERRNO_GET_ADDR
-#define cma$tis_vmserrno_get_addr CMA$TIS_VMSERRNO_GET_ADDR
-#include <errno.h>
+** #define cma$tis_vmserrno_get_addr CMA$TIS_VMSERRNO_GET_ADDR
+** #include <errno.h>
 */
 #include <limits.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#ifdef MY_PIPE
 #include <signal.h>	    /* when pipes break, raise a signal */
+#endif
 #include <time.h>
 
 #include <processes.h>	    /* pipe, exec, vfork... */
 #include <unixlib.h>	    /* getpid, ... */
 #include <unixio.h>	    /* open, close, read, write, dup, ... */
+#include <fcntl.h>
 /* #include <file.h>	*//* O_RDWR, O_NDELAY, ... */
 #include file		    /* be sure to get the VMS, not the Eiffel file.h */
 #include <ints.h>
 
 /* VMS specific definitions */
-/* Oops. On VMS/VAX, the linker doesn't resolve system symbols that are	    */
+/* Oops. On VMS/VAX, the LINKer doesn't resolve system symbols that are	    */
 /* specified in lower case when compiling with /NAME=AS_IS. Therefore, we   */
 /* force them to uppercase here with the following macros. There is	    */
 /* currently no solution, only this workaround. Curiously, the problem does */
-/* not exist on VMS/AXP. Oh well, that's life...			    */
+/* not exist on VMS/Alpha. Oh well, that's life...			    */
+#ifdef VAXC
 #define lib$format_date_time LIB$FORMAT_DATE_TIME
 #define lib$get_ef LIB$GET_EF
 #define lib$getjpi LIB$GETJPI
@@ -115,6 +137,7 @@ USE_STDARG
 #define sys$setimr SYS$SETIMR
 #define sys$synch SYS$SYNCH
 #define sys$waitfr SYS$WAITFR
+#endif /* VAXC */
 
 #include <unixio.h>		/* unix "system" i/o functions */
 #include <descrip.h>		/* descriptors */
@@ -131,24 +154,30 @@ USE_STDARG
 #include <lib$routines.h>	/* lib$ routines (gee, that was hard) */
 #include <libdtdef.h>		/* lib$format_date_time symbols */
 
-#include "ipcvms.h"		/* public definitions */
+//#include "ipcvms.h"		/* public definitions */
 #include "ipcvmsdef.h"		/* private definitions for ipcvms facility */
 /* This must come after most all other includes (not my fault) */
 /* #include "bitmask.h"		/* defines fd_mask and FD_ macros */
 
+#ifdef USE_VMS_JACKETS
+#else  /* (not) USE_VMS_JACKETS */
+#endif /* USE_VMS_JACKETS */
+
+/*** Forward References (jackets) ***/
 
 #if defined(__VAX) && !defined(va_count)
 /* Ok ok, I know this is cheating. This macro is defined in <stdarg.h> for  */
-/* VMS/AXP, but only in <varargs.h> for this version (4.0) of the DEC C	    */
-/* compiler on VMS/VAX.							    */
+/* VMS/Alpha, but only in <varargs.h> for the latest version (4.0) of the   */
+/* DEC C compiler on VMS/VAX that I have used.				    */
 void decc$va_count( int *__count );
-#define va_count(count)		decc$va_count (&count)
+#define va_count(count)	    decc$va_count (&count)
 #endif	/* __VAX */
 
 
-/* global variables */
-int ipcvms_errno;
-int ipcvms_status;
+/* Eiffel runtime tools */
+#ifdef USE_ADD_LOGxxx
+#include "eif_logfile.h"	/* defines add_log(), dexit() */
+#endif
 
 
 #ifdef TRUE
@@ -170,17 +199,14 @@ int ipcvms_status;
 #define RETURN_ERR(err)   { ipcvms_errno = errno = err; return -1; }
 #define RETURN_VMSERR(st) { ipcvms_status = vaxc$errno = st; RETURN_ERR(EVMSERR) }
 
-/* Macros to test for VMS-style (low bit) success/failure. */
-#define  SUCCESS(x)	(   (x)&1	)
-#define  FAILURE(x)	(   !((x)&1)	)
 /* Macro to return the cardinality of an array (number of elements) */
 #define CARD(a)	    ( sizeof(a) / sizeof((a)[0]) )
 #define MIN(a,b)    ( (a) <= (b) ? (a) : (b) )
 #define MAX(a,b)    ( (a) >= (b) ? (a) : (b) )
 
 /* allocate/copy a string */
-#define strnnew(s,l)	( strncpyz(malloc((l)+1), (s), (l)) )
-#define strnew(s)	( strcpy(malloc(strlen(s)+1), (s)) )
+/* #define strnnew(s,l)	( strncpyz(malloc((l)+1), (s), (l)) ) */
+/* #define strnew(s)	( strcpy(malloc(strlen(s)+1), (s)) )  */
 
 #define MAX_DEVNAM  65		/* includes trailing null byte */
 
@@ -207,8 +233,8 @@ typedef int bool_t;			/* boolean type */
 
 /* Define some useful macros for dealing with descriptors		*/
 /* (most are not portable because of aggregate initialization).		*/
-#pragma message disable (NEEDCONSTEXT)	/* skip non-constant address warnings */
-#pragma message disable (ADDRCONSTEXT)	/* skip non-constant address warnings */
+//#pragma message disable (NEEDCONSTEXT)	/* skip non-constant address warnings */
+//#pragma message disable (ADDRCONSTEXT)	/* skip non-constant address warnings */
 #define DX_BUF(d,buf) DX d = { sizeof(buf), DSC$K_DTYPE_T, DSC$K_CLASS_S, (char*)&buf }
 #define DX_BLD(d,ptr,len) DX d = { len, DSC$K_DTYPE_T, DSC$K_CLASS_S, (char*)ptr }
 #define DX_STR(d,ptr) DX d = { strlen(ptr), DSC$K_DTYPE_T, DSC$K_CLASS_S, ptr }
@@ -219,9 +245,6 @@ typedef int bool_t;			/* boolean type */
 #define DXLEN(d) ( (d).dsc$w_length )
 #define DXPTR(d) ( (d).dsc$a_pointer )
 
-
-/* Forward References */
-static VMS_STS post_attn(FD fd, int flag) ;
 
 /* Data structure definitions */
 
@@ -234,7 +257,7 @@ typedef int SYSPARAM;
 
 /* I/O status block */
 typedef struct _iosb {
-    UWORD	sts, bcnt;
+    UWORD	sts, bytcnt;
     unsigned long pid;
     } IOSB;
 #define NULL_IOSB   {1,0,0,}	/* success (nothing pending), no data... */
@@ -252,11 +275,10 @@ typedef struct _iosb {
 */
 
 
-
 typedef enum {io_unk = 0, io_read=1, io_write=2, io_readwrite=3} io_mode;
 
 /* structure for storing file descriptor (FD) information */
-struct fdinfo {
+typedef struct fdinfo {
 	char *fdnam;
 	io_mode mode;
 	size_t devbufsiz;
@@ -269,8 +291,8 @@ struct fdinfo {
 	    attn_rd,		/* ... and it's a read request		*/
 	    attn_posted:1,	/* r/w attn is posted (outstanding)	*/
 	    /* attn_delivered:1,   /* ... it was delivered		*/
-	    :0; } flags; } ;
-static struct fdinfo null_fdinfo = {NULL, 0, 0, 0,0, 0, {0,0,0,0} };
+	    :0; } flags; } FDINFO;
+static FDINFO null_fdinfo = {NULL, 0, 0, 0,0, 0, {0,0,0,0} };
 
 /* structure for storing pipe/mailbox info when we do the i/o (MY_PIPE)	*/
 typedef struct _pcbdef {
@@ -307,9 +329,94 @@ typedef struct _myiobuf {
     } IOB;
 #endif
 
+
+
+/*** Forward References ***/
+static VMS_STS post_attn (FD fd, int flag) ;
+static PCB * ipcvms_get_info (int fd) ;
+static FILE* do_log_file (void) ;
+static void do_log_fd_dump (FILE* lfp_in, va_list ap) ;
+static void do_log_oper (FD fd, PCB *pcb, int err, char *fmt, ...) ;
+
+
+/*** Global Variables (useful for debugging) ***/
+int ipcvms_errno;
+int ipcvms_status;
+
+/* process id */
+static long int ipcvms_pid = 0;
+/* name of program image executing. Used for messages, etc.  == argv[0] */
+static char ipcvms_progname[FILENAME_MAX];	/* like argv[0] - image file basename */
+
 
+/* Eiffel Runtime Support VMS Utility Routines */
+/* (These execute with any VMS-specific wrappers defined) */
+
+/* Called by child process to clean up unused pipes. */
+void ipcvms_cleanup_fd (fd_set* maskp, int max_fd)
+{
+    /* close pipes that are open from parent. This is necessary because of  */
+    /* the way VMS uses vfork() to start child processes.		    */
+    /* See commentary in spawn_child() in C/ipc/daemon/child.c		    */
+    struct stat stbuf;
+    int fd;
+    max_fd = NOFILE;
+    /* assume 0==stdin, 1==stdout, 2==stderr */
+    do_log_oper (-1, NULL, 0, "ipcvms_cleanup_fd: bitmask %08x %08x", *maskp, ((int*)maskp)+sizeof(int));
+    for (fd=3;  fd < max_fd;  ++fd) {
+#ifdef DEBUG
+	int dbg = isapipe(fd);
+#endif /* DEBUG */
+	if (!FD_ISSET(fd, maskp) && 1 == isapipe (fd))
+	    close (fd);
+    }
+}
+
+/* dump all open file descriptors to log file */
+void ipcvms_fd_dump (const char* fmt, ...)
+{
+    FILE *lfp = do_log_file ();
+    if (lfp) {
+	va_list ap;
+	VA_START (ap, fmt);
+	va_end (ap);
+	do_log_fd_dump (NULL, ap);
+    }
+}
+
+
+
+#ifdef moose
+/* This abstracts the EWB wakeup mechanism. In the future, it will be	*/
+/* nugatory.  For now, it uses Tom's common event flag kludge.		*/
+void ipcvms_wake_ewb(int s)
+{
+    unsigned int st;
+    static int kludge_efn = 69;
+
+#ifdef USE_ADD_LOG
+    add_log(10, "Attempting to set the common kludge event flag %d", kludge_efn);
+#endif
+    st = sys$setef(kludge_efn);
+    if (VMS_FAILURE(st)) {
+#ifdef DEBUG
+	printerr(EVMSERR, "ipcvms_wake_ewb: error %%x%x from sys$setef(%d)\n-- %s\n",
+		st, kludge_efn, strerror(EVMSERR,st));
+#endif /* DEBUG */
+#ifdef USE_ADD_LOG
+	add_log(1, "Unable to set common kludge event flag %d, status = %08x", kludge_efn, st);
+	dexit(1);
+#endif
+    }
+} /* end ipcvms_wake_ewb() */
+#endif /* moose */
+
+
+
+
 /* MISC UTILITY ROUTINES */
 
+#ifdef moose
 /* like strncpy, but always null-terminates destination string.		*/
 /* n.b. output must be [at least] one byte longer than maxsiz.		*/
 static char *strncpyz(char *out, CONST char *inp, size_t maxsiz)
@@ -318,43 +425,10 @@ static char *strncpyz(char *out, CONST char *inp, size_t maxsiz)
     out[maxsiz] = '\0';	    /* force last byte to be null, just in case */
     return(out);
 } /* end strncpyz() */
+#endif
 
 
-/* name of program image executing. Used for messages, etc.  == argv[0] */
-static long int ipcvms_pid = 0;
-static char ipcvms_imagename[FILENAME_MAX];	/* full image file name */
-static char ipcvms_progname[FILENAME_MAX];	/* like argv[0] - image file basename */
-
-/* This ones fills in the name of the currently executing program - 	*/
-/* basename(argv[0]) in unix terms.					*/
-char* ipcvms_get_progname(char* buf)
-{
-    char *p;
-
-    if (*ipcvms_progname == '\0') { /* have we not done this yet? */
-	VMS_STS st; 
-	char *p, *q;
-	DX_BUF(imag_d, ipcvms_imagename);
-	st = lib$getjpi(&JPI$_IMAGNAME, NULL,NULL, NULL, &imag_d, &DXLEN(imag_d));
-	DXPTR(imag_d)[DXLEN(imag_d)] = '\0';
-	/* make it lowercase, in true c/unix fasion */    
-	for (p = q = ipcvms_imagename; *q; ++q)
-	    if (isupper(*q))
-		*q = _tolower(*q);
-	/* remove the device and directory prefix */
-	while (q = strpbrk(p, "]>"))	/* while there's a directory delim, */
-	    p = ++q;			/*  skip past it */
-	p = strcpy(ipcvms_progname, p);
-	q = strstr(p, ".");		/* is there a ext delim? */
-	if (q) *q = '\0';		/* if so, clobber it */
-	p = strcpy(ipcvms_progname, p);
-    } else p = ipcvms_progname;
-    if (buf) p = strcpy(buf, p);
-    return (p);
-} /* end ipcvms_get_progname() */
-
-
-    /* Routine for generating error messages. */
+/* Routine for generating error messages. */
 
 static int printerr(int err, char *fmt, ...)
 {
@@ -363,6 +437,8 @@ static int printerr(int err, char *fmt, ...)
     VA_START(ap, fmt);
     fprintf(stdout, "%s error: ", ipcvms_progname);
     vfprintf(stdout, fmt, ap); 
+    va_end(ap);
+    VA_START(ap, fmt);
     if (fmt[strlen(fmt)-1] != '\n')
 	puts("");		/* rap, rap, wrap, ... */
     if (strcmp(getname(fileno(stdout), outnam),getname(fileno(stderr),errnam)) || ap) {
@@ -374,7 +450,7 @@ static int printerr(int err, char *fmt, ...)
 } /* end printerr() */
 
 
-#if defined(DEBUG) || defined(WORKBENCH) || 1==1
+#if defined(DEBUG) || 1 == 1		/* i.e. always (for now) */
 /* functions used solely for debugging, to provide access to errno global */
 static int get_errno()
 {
@@ -399,89 +475,50 @@ static void print_filnam(FD fd)
 }
 
 #endif /* DEBUG et. al. */
-
-/* This abstracts the EWB wakeup mechanism. In the future, it will be	*/
-/* nugatory.  For now, it uses Tom's common event flag kludge.		*/
-void ipcvms_wake_ewb(int s)
-{
-    unsigned int st;
-    static int kludge_efn = 69;
-
-#ifdef USE_ADD_LOG
-    add_log(100, "Attempting to set the common kludge event flag %d",efn);
-#endif
-    st = sys$setef(kludge_efn);
-    if (FAILURE(st)) {
-#ifdef DEBUG
-	printerr(EVMSERR, "ipcvms_wake_ewb: error %%x%x from sys$setef(%d)\n-- %s\n",
-		st, kludge_efn, strerror(EVMSERR,st));
-#endif /* DEBUG */
-#ifdef USE_ADD_LOG
-	add_log(1,"Unable to set common kludge event flag %d, status = %08x", 
-		efn, st);
-	dexit();
-#endif
-    }
-    
-} /* end ipcvms_wake_ewb() */
-
-
-#ifdef moose	/* this now in C/run-time/misc.c */
-/* VMS version of "putenv" (note - VMS V7 onward has a putenv; I'm not	*/
-/* sure exactly what it does.  This one creates a logical name		*/
-/* definition (in _user_ mode so that it doesn't outlive the running	*/
-/* program. This is analogous to unix putenv, which doesn't allow a	*/
-/* subprocess to modify a parent's environment.				*/
-int ipcvms_putenv(char *envstring)
-{
-    VMS_STS st;
-    char *eq;
-    DX_BLD(nam_d,0,0);
-    $DESCRIPTOR(tabnam_d, "LNM$PROCESS");
-    ITEMLIST lnm_list = { ITEM(LNM$_STRING, NULL, 0, NULL), ITEMLIST_END };
-
-    /* parse the argument: it should be of the form <name>=<value>	*/        
-    eq = strchr(envstring, '=');
-    if (!eq) return -1;			/* invalid argument */
-    DXPTR(nam_d) = envstring;
-    DXLEN(nam_d) = eq - envstring;
-    lnm_list[0].bufadr = ++eq;
-    lnm_list[0].buflen = strlen(eq);
-    st = sys$crelnm(0, &tabnam_d, &nam_d, 0, &lnm_list);
-    if (FAILURE(st)) {
-#ifdef DEBUG
-	printerr(EVMSERR, "ipcvms_putenv: error %%x%x from sys$crelnm(%s)\n-- %s",
-		st, envstring, strerror(EVMSERR,st));
-#endif /* DEBUG */
-	return -1;
-    }
-    return 0;
-} /* end ipcvms_putenv() */
-#endif
 
 
-/* ipcvms_spawn - used to issue an asynchronous "system" command.	*/
-int ipcvms_spawn(char *cmd, int async)
-{
-    DX_STR(cmd_d, cmd);
-    DX_STRLIT(inp_d,"nla0:");	    /* thats /dev/null to you */
-    int flags;
-    VMS_STS st;
 
-    flags = 0;
-    if (async) flags |= CLI$M_NOWAIT;
-    st = lib$spawn(&cmd_d, 0,0, &flags);
-#ifdef DEBUG
-#endif
-    if (SUCCESS(st)) return 0;
-    else RETURN_VMSERR(st)
+/* undefine all IPCVMS_ jacket macros */
+#undef close
+#undef dup
+#undef dup2
+#undef fcntl
+#undef read
+#undef write
+#undef select
+#undef pipe
+//#undef open
+//#undef fdopen
 
-} /* end ipcvms_spawn */
+#ifdef USE_VMS_JACKETS	/* if use VMS Porting library (aka The Jackets) */
+#define DECC_FCNTL  GENERIC_FCNTL
+#define DECC_WRITE  GENERIC_WRITE
+//#define DECC_SELECT GENERIC_SELECT_JACKET
+#else
+#define DECC_FCNTL  DECC$FCNTL
+#define DECC_WRITE  DECC$WRITE
+//#define DECC_SELECT DECC$SELECT
+#endif /* USE_VMS_JACKETS */
+#define DECC_PIPE   DECC$PIPE
 
-
+#define DECC_CLOSE  DECC$CLOSE
+#define DECC_DUP    DECC$DUP
+#define DECC_DUP2   DECC$DUP2
+#define DECC_FDOPEN DECC$FDOPEN
+#define DECC_READ   DECC$READ
+int DECC_CLOSE (FD) ;
+int DECC_DUP (FD) ;
+int DECC_DUP2 (FD, FD) ;
+int DECC_FCNTL (FD, int cmd, ...) ;
+FILE* DECC_FDOPEN (int fd, char* a_mode) ;
+int DECC_READ (FD, void* buf, size_t nbytes) ;
+int DECC_WRITE (FD, const void* buf, size_t nbytes) ;
+//int DECC_SELECT (int nfds, fd_set* rdfds, fd_set* wrtfds, fd_set* excpfds, struct timeval *tm) ;
+int DECC_PIPE (int fd[2], ...) ;
+
 /* local routine to return the file name associated with an open file	*/
 /* descriptor (less the nugatory delimiters if a device name).		*/
-static char* get_fdname(FD fd, char *buf)
+static char* get_fdname (FD fd, char *buf)
 {
     char *p;
     static char localbuf[FILENAME_MAX];
@@ -500,7 +537,7 @@ static char* get_fdname(FD fd, char *buf)
 /* The date, if requested, is returned using the local language format.	*/
 /* The time is always returned as hh:mm:ss.cc because local language	*/
 /* time formats may eliminate the fractional second (.cc) field.	*/
-static char* get_time_str(int dateflag)
+static char* get_time_str (int dateflag)
 {
     static char timbuf[80];
 #ifdef moose /* c routines give 1-second granularity, we want finer */
@@ -519,7 +556,7 @@ static char* get_time_str(int dateflag)
 	long int llen, lflags;
 	lflags = LIB$M_DATE_FIELDS;
 	st = lib$format_date_time(&tim_d, &timquad, 0, &llen, &lflags);
-	if (SUCCESS(st)) {
+	if (VMS_SUCCESS(st)) {
 	    DXPTR(tim_d)[llen++] = ' ';
 	    DXLEN(tim_d) -= llen;
 	    DXPTR(tim_d) += llen; 
@@ -527,7 +564,7 @@ static char* get_time_str(int dateflag)
     } else ;
     /* append the time in system format (ignore local time format) */
     st = sys$asctim(&shlen, &tim_d, &timquad, nodate);
-    if (!SUCCESS(st))
+    if (!VMS_SUCCESS(st))
 	shlen = 0;
     DXPTR(tim_d)[shlen] = '\0';
 #endif
@@ -537,7 +574,7 @@ static char* get_time_str(int dateflag)
 /* local routine to wait for a brief time (denoted in millisecs).  The	*/
 /* maximum time that can be specified is slightly over 7 minutes (the	*/
 /* max number of VMS 100-nanosecond time units in a 32 bit integer).	*/
-static int wait_brief(FD fd, PCB *pcb, int efn, int msecs)
+static int wait_brief (FD fd, PCB *pcb, int efn, int msecs)
 {
     VMS_STS st; VMS_BINTIM timquad;
 #ifdef DEBUG
@@ -563,14 +600,114 @@ static int wait_brief(FD fd, PCB *pcb, int efn, int msecs)
 
 static struct _fdvec { struct fdinfo _info; PCB *pcb; } ipcvms_fdvec[256];
 
+static struct _fdvec * fdvec_get (int fd)
+{
+    if (fd >= 0 && fd < CARD(ipcvms_fdvec))
+	return &ipcvms_fdvec[fd];
+    return NULL;
+}
+
+static int fdvec_exists (int fd) {
+    struct _fdvec *p = fdvec_get (fd);
+    if (p)
+	return BOOLEAN (p->_info.flags.inited);
+    return 0;
+}
+
+static int fdvec_new (FD fd, PCB *pcb, char *devnam, io_mode rwmode, int bufsiz) 
+{
+    assert (fd < CARD(ipcvms_fdvec));
+    /* assert ("fd is closed"); */
+
+    ipcvms_fdvec[fd]._info.fdnam = strdup (devnam);
+    ipcvms_fdvec[fd]._info.mode = rwmode;
+    ipcvms_fdvec[fd]._info.devbufsiz = bufsiz;
+    ipcvms_fdvec[fd]._info.flags.inited = TRUE;
+    if ( (ipcvms_fdvec[fd].pcb = pcb) )		/* copy pcb. if not null */
+	++pcb->fdrefcnt;			/*  then incr ref count */
+    return (fd);
+} /* end fdvec_new() */
+
+
+/* local function called to remove a pcb reference when a file is	*/
+/* closed. The pcb is freed (and its mailbox channel(s) deassigned)	*/
+/* if there are no other open files which reference to it.		*/
+static void fdvec_remove_pcbref (FD fd, PCB *pcb)
+{
+    assert (fd < CARD(ipcvms_fdvec));
+    assert (pcb == ipcvms_fdvec[fd].pcb);
+    if (pcb) {
+	if (!pcb->fdrefcnt) {	/* if there's no more references to this pcb */
+free_pcb:   /* label for debugging porpoises */
+	    if (pcb->devnam) 
+		assert (pcb->devnam == ipcvms_fdvec[fd]._info.fdnam);
+	    if (pcb->chan)
+		sys$dassgn(pcb->chan);
+	    if (pcb->rdbuf)
+		free(pcb->rdbuf);
+	    pcb->rdbuf = NULL;			/* nugatory */
+	    pcb->devnam = NULL; pcb->chan = 0;		/* nugatory */
+	    free(pcb);
+	} /* end if (pcb has no more references) */
+    }
+} /* end fdvec_remove_pcbref() */
+
+
+/* This routine is called to "forget" the information for a file	*/
+/* descriptor, usually when the file is closed.				*/
+static void fdvec_destroy (FD fd, PCB *pcb)
+{
+    assert (ipcvms_fdvec[fd].pcb == pcb);
+    if (ipcvms_fdvec[fd]._info.flags.inited) {
+	ipcvms_free_fd_efn (fd);
+	if (ipcvms_fdvec[fd].pcb) {
+	    --ipcvms_fdvec[fd].pcb->fdrefcnt;
+	    fdvec_remove_pcbref(fd, ipcvms_fdvec[fd].pcb);
+	    ipcvms_fdvec[fd].pcb = NULL; 
+	}
+	/* clear fdinfo structure */
+	if (ipcvms_fdvec[fd]._info.fdnam)
+	    free(ipcvms_fdvec[fd]._info.fdnam);
+#ifdef moose
+	ipcvms_fdvec[fd]._info.fdnam = NULL;
+	ipcvms_fdvec[fd]._info.mode = 0;
+	ipcvms_fdvec[fd]._info.devbufsiz = 0;
+	ipcvms_fdvec[fd]._info.flags.inited = FALSE;
+#else
+	ipcvms_fdvec[fd]._info = null_fdinfo;
+#endif
+    }
+} /* end fdvec_destroy() */
+
+static void fdvec_dup (FD fd1, FD fd2)
+{
+    assert (!ipcvms_fdvec[fd2]._info.flags.inited);
+    ipcvms_fdvec[fd2] = ipcvms_fdvec[fd1];
+    ipcvms_fdvec[fd2]._info.fdnam = strdup (ipcvms_fdvec[fd1]._info.fdnam);
+    if (ipcvms_fdvec[fd2].pcb)
+	++ipcvms_fdvec[fd2].pcb->fdrefcnt;
+}
+
+/* local function to determine mode (read/write/both) */
+static io_mode get_mode (int flags)
+{
+    if (flags & O_RDWR)
+	return io_readwrite;
+    if (flags & O_WRONLY)
+	return io_write;
+    assert (O_RDONLY == 0);	/* stupid constant tricks */
+    return io_read;
+}
+
+
 /* functions/data to log i/o requests performed on pipe mailboxes */
-static char log_file[FILENAME_MAX];
+static char log_file_name[FILENAME_MAX];
 /* static char log_image[FILENAME_MAX]; */
 /* static long log_pid; */
 
 /* return the current time in printable format for the trace log. */
 /* if dateflag is nonzero, date is included, else just time. */
-static char* log_time(int dateflag)
+static char* log_time (int dateflag)
 {
     static char timbuf[80];
     strcpy(timbuf, get_time_str(dateflag));
@@ -578,7 +715,7 @@ static char* log_time(int dateflag)
 }
 
 /* local function returns TRUE if logging std FD (stdin/stdout/stderr) */
-static int log_std(FD fd)
+static int log_std (FD fd)
 {
     char *p;
     if ( (p=getenv("EIF_IPCVMS_LOG_STD")) || (p=getenv("EIF_IPCVMS_LOG_SYS"))
@@ -588,7 +725,7 @@ static int log_std(FD fd)
 }
 
 /* create a new logfile. Should only be called once. */
-static void log_init()
+static void log_init (void)
 {
     char *p;
     VMS_STS st; 
@@ -610,18 +747,18 @@ static void log_init()
 	FILE *lfp;
 	struct tm *now; time_t now_time; char nowbuf[40];
 
-	strcpy(log_file, p);
-	if ((p=strchr(log_file, '*'))) {
+	strcpy(log_file_name, p);
+	if ((p=strchr(log_file_name, '*'))) {
 	    strcpy(p + strlen(ipcvms_progname), p+1);
 	    strncpy(p, ipcvms_progname, strlen(ipcvms_progname));
 	} else
-	    strcat(strcat(strcpy(log_file, "IPCVMS_"), ipcvms_progname), ".log");
-	lfp = fopen(log_file, "w+");		/* create new file version */
+	    strcat(strcat(strcpy(log_file_name, "IPCVMS_"), ipcvms_progname), ".log");
+	lfp = fopen(log_file_name, "w+");		/* create new file version */
 	if (!lfp) {
-	    log_file[0] = '\0';
+	    log_file_name[0] = '\0';
 	    return;
 	}
-	getname(fileno(lfp), log_file);		/* save full log file name */
+	getname(fileno(lfp), log_file_name);	/* save full log file name */
 	now_time = time(NULL);			/* get current time in secs */
 	now = localtime(&now_time);		/* get current time */
 	strftime(nowbuf, sizeof(nowbuf), "%d-%b-%y %H:%M:%S", now);
@@ -630,16 +767,17 @@ static void log_init()
 	    strcpy(nowbuf, nowbuf+1);
 	fprintf(lfp, "-- IPCVMS trace log for  %s   -- created %s --"
 		     "\n--    (%s)  --\n", 
-		ipcvms_progname, nowbuf, log_file, log_file);
+		ipcvms_progname, nowbuf, log_file_name, log_file_name);
 	if (log_std(0))
 	    fputs  ("--    logging all read/write i/o (including stderr/stdout)\n", lfp);
 	else fputs ("--    logging only read/write i/o to fd > 2\n", lfp);
 	fclose(lfp);
+	do_log_fd_dump (NULL, NULL);
     }
 } /* end log_init() */
 
 /* local function to return the device/file name for a FD */
-static char* log_devnam(FD fd, PCB *pcb)
+static char* log_devnam (FD fd, PCB *pcb)
 {
     if (pcb && 0)
 	return (pcb->devnam);
@@ -652,65 +790,95 @@ static char* log_devnam(FD fd, PCB *pcb)
 /* We need to handle the case where do_log_file is called to open the	*/
 /* log file when it is already open. This can happen when an exception	*/
 /* occurs that causes... */
-
-static FILE* do_log_file(FD fd)
+static FILE* do_log_file (void)
 {
     static FILE *fh, *prev;
 
-    if (*log_file && (fd > 2 || log_std(fd))) {
+    if (*log_file_name) {
 	prev = fh;
-	fh = fopen(log_file, "a");
-	if (!fh) {
+	fh = fopen(log_file_name, "a");
+	if (fh) {
+	    int oldfd, newfd;
+	    FILE* newfh;
+	    /* reopen stream on high numbered file descriptor */
+	    oldfd = fileno (fh);
+	    newfd = dup2 (oldfd, 19);
+	    if (newfd != -1) {
+		newfh = fdopen (newfd, "a");
+		if (newfh) {
+		    fclose (fh);
+		    fh = newfh;
+		}
+	    }
+	} else {
 log_debug:
 	    fprintf(stderr, "%s: ipcvms_log: failure opening log file %s: error %d"
-	    "\n-- %s\n", ipcvms_progname, log_file, errno, strerror(errno));
-	    fh = fopen(log_file, "a");	    /* try again */
+	    "\n-- %s\n", ipcvms_progname, log_file_name, errno, strerror(errno));
+	    fh = fopen(log_file_name, "a");	    /* try again */
 	}
 	return (fh);
     }
     else return NULL;
 }
 
-static void do_log_entry(FD fd, char *ent, ...)
+/* open the log file if we are tracking this fd */
+static FILE* do_log_file_if_tracked (FD fd, PCB* pcb)
 {
-    FILE *lfp = do_log_file(fd);
-    va_list ap;
+    FILE* result;
+
+    /* Note: isapipe(fd) will return -1 if the file is not open, which causes it to be logged. */
+#ifdef USE_ADD_LOG
+    int log_fd = get_log_file();    /* will cause IMPLICITFUNC compiler informational diagnostic */
+#else
+    int log_fd = -1;
+#endif
+    if ( fdvec_exists(fd) || pcb || isapipe(fd) || fd == log_fd || log_std(fd) )
+	result = do_log_file();
+    else result = NULL;
+    return result;
+}
+
+static void do_log_entry (FD fd, PCB* pcb, char *ent, ...)
+{
+    FILE *lfp = do_log_file();
     if (lfp) {
+	va_list ap;
 	VA_START(ap, ent);
 	if (ent)
 	    vfprintf(lfp, ent, ap);
 	else fputs("?", lfp);
-	fclose(lfp);
 	va_end(ap);
+	fclose(lfp);
     }
 } /* end do_log_entry() */
 
-static void do_log_oper(FD fd, PCB *pcb, int err, char *fmt, ...)
+/* log a file operation */
+static void do_log_oper (FD fd, PCB *pcb, int err, char *fmt, ...)
 {
-    FILE *lfp = do_log_file(fd);
-    va_list ap;
+    FILE *lfp = do_log_file();
     if (lfp) {
+	va_list ap;
 	char buf[1024];
 	VA_START(ap, fmt);
 	if (fmt)
 	    vsprintf(buf, fmt, ap);
 	else strcpy(buf, "?");
-	fprintf(lfp, "\n-- %s: %s  (%s), result = %d\n",
-		log_time(0), buf, fd ? log_devnam(fd,pcb) : "", err);
+	va_end(ap);
+	fprintf(lfp, "\n-- %s: %s  (%s), result: %d.\n",
+		log_time(0), buf, fd >= 0 ? log_devnam(fd,pcb) : "", err);
 	if (err < 0)
 	    fprintf(lfp, "-- \t%s\n", strerror(errno));
 	fclose(lfp);
-	va_end(ap);
     }
 } /* end do_log_oper() */
 
 /* like do_log_oper except that since the fd is already closed, we	*/
 /* can't get the filename.						*/
-static void do_log_close(FD fd, PCB *pcb, int err, char *fdname)
+static void do_log_close (FD fd, PCB *pcb, int err, char *fdname)
 {
-    FILE *lfp = do_log_file(fd);
+    FILE *lfp = do_log_file();
     if (lfp) {
-	fprintf(lfp, "\n-- %s: close(%d)  (%s), result = %d\n",
+	fprintf(lfp, "\n-- %s: close(%d)  (%s), result: %d.\n",
 		log_time(0), fd, fdname, err);
 	if (err < 0)
 	    fprintf(lfp, "-- \t%s\n", strerror(errno));
@@ -718,29 +886,32 @@ static void do_log_close(FD fd, PCB *pcb, int err, char *fdname)
     }
 } /* end do_log_close() */
 
-static void do_log_xfer(FD fd, PCB *pcb, char *rqtyp, size_t siz)
+/* log a transfer (i/o) operation */
+static void do_log_xfer (FD fd, PCB *pcb, char *rqtyp, size_t siz)
 {
-    FILE *lfp = do_log_file(fd);
+    FILE *lfp = do_log_file_if_tracked (fd, pcb);
     if (lfp) {
-	fprintf(lfp, "\n-- %s: %s fd %d (%s), nbytes = %d\n", 
+	fprintf(lfp, "\n-- %s: %s fd %d (%s), nbytes = %d.\n", 
 		log_time(0), rqtyp, fd, log_devnam(fd,pcb), siz);
 	fclose(lfp);
     }
 } /* end do_log_xfer() */
 
-static int do_log_fin(FD fd, PCB *pcb, char *rqtyp, int nbytes)
+/* log the final result of a transfer */
+static int do_log_result (FD fd, PCB *pcb, char *rqtyp, int nbytes)
 {
-    FILE *lfp = do_log_file(fd);
+    FILE *lfp = do_log_file();
     if (lfp) {
-	fprintf(lfp, "\t%s completed, actual nbytes = %d\n", rqtyp, nbytes);
+	fprintf(lfp, "\t%s completed, actual nbytes: %d\n", rqtyp, nbytes);
 	fclose(lfp);
     }
     return (nbytes);
-} /* end do_log_fin() */
+} /* end do_log_result() */
 
-static int do_log_err(FD fd, char *rqtyp, int err)
+static int do_log_error (FD fd, char *rqtyp, int err)
 {
-    FILE *lfp = do_log_file(fd);
+    PCB* pcb = ipcvms_get_info (fd);
+    FILE *lfp = do_log_file();
     if (lfp) {
 	fprintf(lfp, "\t%s failed, error %d: %s\n", rqtyp, errno, strerror(errno));
 	fclose(lfp);
@@ -748,8 +919,52 @@ static int do_log_err(FD fd, char *rqtyp, int err)
     return err;
 }
 
+/* report state of file descriptor */
+static char* get_fd_state (int fd, char* buf, size_t siz)
+{
+    int err, flag;
+    char* p;
+    err = DECC_FCNTL (fd, F_GETFD);
+    if (err != -1) {
+	p = getname (fd, buf);
+	if (!p)
+	    p = strcpy (buf, "[unknown]");
+	sprintf (p + strlen(p), " (FD_CLOEXEC: %d)", err);
+    } else
+	p = strcpy (buf, "[closed]");
+    assert (strlen(buf) < siz);
+    return buf;
+}
+
+/* dump open file descriptors, close log file */
+static void do_log_fd_dump (FILE* lfp_in, va_list ap)
+{
+    FILE* lfp = lfp_in;
+    if (!lfp)
+	lfp = do_log_file();
+    if (lfp) {
+	int ii;
+	char *p;
+	char buf[FILENAME_MAX *2 +100];
+	if (ap) {
+	    char* fmt;
+	    fmt = va_arg (ap, char*);
+	    vsprintf (buf, fmt, ap);
+	    fprintf (lfp, "\n-- %s: Dump of file descriptors %s:\n",
+		log_time(0), buf);
+	} else
+	    fprintf (lfp, "\n-- %s: Dump of file descriptors:\n", log_time(0));
+	for (ii=3;  ii <= 20;  ++ii) {
+	    p = get_fd_state (ii, buf, sizeof buf);
+	    fprintf (lfp, "--  file #%d: %s\n", ii, p ? p : "?");
+	}
+	if (!lfp_in)
+	    fclose (lfp);
+    }
+}
+
 /* find the next bit set in a mask */
-static int find_next_set(int *mask, int start, int max)
+static int find_next_set (int *mask, int start, int max)
 {
     int ii;
     for (ii = start; ii < max; ++ii)
@@ -758,7 +973,7 @@ static int find_next_set(int *mask, int start, int max)
     return -1;
 }
 
-static void do_log_select_rdy_bits(char *buf, int nfds, int *mask, char *type)
+static void do_log_select_rdy_bits (char *buf, int nfds, int *mask, char *type)
 {
     int ii;
     char *p;
@@ -772,18 +987,18 @@ static void do_log_select_rdy_bits(char *buf, int nfds, int *mask, char *type)
     }
 }
 
-static void do_log_select(int nfds, int *rdfds, int *wrtfds, int *excpfds, struct timeval *tm)
+static void do_log_select (int nfds, int *rdfds, int *wrtfds, int *excpfds, struct timeval *tm)
 {
-    FILE *lfp = do_log_file(3);
+    FILE *lfp = do_log_file();
     if (lfp) {
 	char buf[1024];
 	if (tm)
-	    fprintf(lfp, "\n-- %s: select(timeout=%d.%06d secs)",
+	    fprintf(lfp, "\n-- %s: select (timeout=%d.%06d secs)",
 		log_time(0), tm->tv_sec, tm->tv_usec);
-	else fprintf(lfp, "\n-- %s: select(timeout=null)", log_time(0));
+	else fprintf(lfp, "\n-- %s: select (timeout=null)", log_time(0));
 
 #define PRT_MASK(p,s,c)	\
-	if (p) sprintf(buf+strlen(buf), s " mask = %08x" c, *p);	\
+	if (p) sprintf (buf+strlen(buf), s " mask = %08x" c, *p);	\
 	else sprintf(buf+strlen(buf), s " mask = <null>" c);		\
 
 	*buf = '\0';
@@ -797,12 +1012,12 @@ static void do_log_select(int nfds, int *rdfds, int *wrtfds, int *excpfds, struc
 }
 
 
-static void do_log_select_result(int nrdy, int nfds, int *rdfds, int *wrtfds, int *excpfds, struct timeval *tm)
+static void do_log_select_result (int nrdy, int nfds, int *rdfds, int *wrtfds, int *excpfds, struct timeval *tm)
 {
-    FILE *lfp = do_log_file(3);
+    FILE *lfp = do_log_file();
     if (lfp) {
 	char buf[1024];
-	fprintf(lfp, "\n\tresult = %d ", nrdy);
+	fprintf(lfp, "\n   %s:  result: %d -- ", log_time(0), nrdy);
 	if (nrdy > 0) {
 	    *buf = '\0';
 	    if (rdfds)   do_log_select_rdy_bits(buf, nfds, rdfds,  "read");
@@ -810,15 +1025,16 @@ static void do_log_select_result(int nrdy, int nfds, int *rdfds, int *wrtfds, in
 	    if (excpfds) do_log_select_rdy_bits(buf, nfds, excpfds,"except");
 	    fputs(buf, lfp);
 	}
-	else fputs("(none ready)", lfp);
+	else fputs("none ready", lfp);
 	fputc('\n', lfp);
 	fclose(lfp);
     }
 }
 
-static void do_log_dump(FD fd, char *pos, size_t siz, int offset)
+static void do_log_dump (FD fd, const void* pos_in, size_t siz, int offset)
 {
-    FILE *lfp = do_log_file(fd);
+    PCB* pcb = ipcvms_get_info (fd);
+    FILE* lfp = do_log_file_if_tracked (fd, pcb);
 #define INCR	10	/* chars per line to dump */
     static char nulbuf[INCR];
 
@@ -826,7 +1042,14 @@ static void do_log_dump(FD fd, char *pos, size_t siz, int offset)
 	int ii, jj; size_t l;
 	char decbuf[120], ascbuf[80];
 	char *p, *q;
-	if (fd <= 2) 
+	char* pos = (char*)pos_in;
+
+#ifdef USE_ADD_LOG
+    int log_fd = get_log_file();    /* will cause IMPLICITFUNC compiler informational diagnostic */
+#else
+    int log_fd = -1;
+#endif
+	if (fd <= 2 || fd == log_fd) 
 	    fwrite(pos, siz, 1, lfp);
 	else for (ii = 0;  ii < siz;  ii += INCR) {
 	    /* if there's a string of nulls */
@@ -856,109 +1079,12 @@ static void do_log_dump(FD fd, char *pos, size_t siz, int offset)
 } /* end do_log_dump() */
 
 
-/* undefine all jacket macros */
-#undef pipe
-#undef open
-#undef close
-#undef fdopen
-#undef dup
-#undef dup2
-#undef read
-#undef write
-#undef select
-
 /* event flags to use for read and write qio calls */
 static unsigned int read_efn, write_efn;
 #define SELECT_EFN write_efn
 
-static int fdvec_new(FD fd, PCB *pcb, char *devnam, io_mode rwmode, int bufsiz) 
-{
-    assert (fd < CARD(ipcvms_fdvec));
-    /* assert ("fd is closed"); */
-
-    ipcvms_fdvec[fd]._info.fdnam = strnew(devnam);
-    ipcvms_fdvec[fd]._info.mode = rwmode;
-    ipcvms_fdvec[fd]._info.devbufsiz = bufsiz;
-    ipcvms_fdvec[fd]._info.flags.inited = TRUE;
-    if ( (ipcvms_fdvec[fd].pcb = pcb) )		/* copy pcb. if not null */
-	++pcb->fdrefcnt;			/*  then incr ref count */
-    return (fd);
-} /* end fdvec_new() */
-
-
-/* local function called to remove a pcb reference when a file is	*/
-/* closed. The pcb is freed (and its mailbox channel(s) deassigned)	*/
-/* if there are no other open files which reference to it.		*/
-static void fdvec_remove_pcbref(FD fd, PCB *pcb)
-{
-    assert (fd < CARD(ipcvms_fdvec));
-    assert (pcb == ipcvms_fdvec[fd].pcb);
-    if (pcb) {
-	if (!pcb->fdrefcnt) {	/* if there's no more references to this pcb */
-free_pcb:   /* label for debugging porpoises */
-	    if (pcb->devnam) 
-		assert (pcb->devnam == ipcvms_fdvec[fd]._info.fdnam);
-	    if (pcb->chan)
-		sys$dassgn(pcb->chan);
-	    if (pcb->rdbuf)
-		free(pcb->rdbuf);
-	    pcb->rdbuf = NULL;			/* nugatory */
-	    pcb->devnam = NULL; pcb->chan = 0;		/* nugatory */
-	    free(pcb);
-	} /* end if (pcb has no more references) */
-    }
-} /* end fdvec_remove_pcbref() */
-
-
-/* This routine is called to "forget" the information for a file	*/
-/* descriptor, usually when the file is closed.				*/
-static void fdvec_destroy(FD fd, PCB *pcb)
-{
-    assert (ipcvms_fdvec[fd].pcb == pcb);
-    if (ipcvms_fdvec[fd]._info.flags.inited) {
-	ipcvms_free_fd_efn(fd);
-	if (ipcvms_fdvec[fd].pcb) {
-	    --ipcvms_fdvec[fd].pcb->fdrefcnt;
-	    fdvec_remove_pcbref(fd, ipcvms_fdvec[fd].pcb);
-	    ipcvms_fdvec[fd].pcb = NULL; 
-	}
-	/* clear fdinfo structure */
-	if (ipcvms_fdvec[fd]._info.fdnam)
-	    free(ipcvms_fdvec[fd]._info.fdnam);
-#ifdef moose
-	ipcvms_fdvec[fd]._info.fdnam = NULL;
-	ipcvms_fdvec[fd]._info.mode = 0;
-	ipcvms_fdvec[fd]._info.devbufsiz = 0;
-	ipcvms_fdvec[fd]._info.flags.inited = FALSE;
-#else
-	ipcvms_fdvec[fd]._info = null_fdinfo;
-#endif
-    }
-} /* end fdvec_destroy() */
-
-static void fdvec_dup(FD fd1, FD fd2)
-{
-    assert (!ipcvms_fdvec[fd2]._info.flags.inited);
-    ipcvms_fdvec[fd2] = ipcvms_fdvec[fd1];
-    ipcvms_fdvec[fd2]._info.fdnam = strnew(ipcvms_fdvec[fd1]._info.fdnam);
-    if (ipcvms_fdvec[fd2].pcb)
-	++ipcvms_fdvec[fd2].pcb->fdrefcnt;
-}
-
-/* local function to determine mode (read/write/both) */
-static io_mode get_mode(int flags)
-{
-    if (flags & O_RDWR)
-	return io_readwrite;
-    if (flags & O_WRONLY)
-	return io_write;
-    assert (O_RDONLY == 0);	/* stupid constant tricks */
-    return io_read;
-}
-
-
 /* This function performs some checking and one-time initialization. */
-static void ipcvms_init(FD fd)
+static void ipcvms_init (FD fd)
 {
     VMS_STS st;
     static int init_done;
@@ -968,17 +1094,18 @@ static void ipcvms_init(FD fd)
 	unsigned int efn;
 	init_done = TRUE;
 	ipcvms_pid = getpid();
-	ipcvms_get_progname(NULL);
+	eifrt_vms_get_progname (ipcvms_progname, sizeof ipcvms_progname);
 	st = lib$get_ef(&read_efn);
 	if (&read_efn != &write_efn)
 	    st = lib$get_ef(&write_efn);
 	log_init();
-	/* free event flags 2 to 22, which are initially allocated	*/
+	/* Free event flags 4 to 20, which are initially allocated	*/
 	/* [reserved] by default. We may need to allocate specific	*/
 	/* flags in this range if ipcvms_get_fd_efn is called.  We	*/
 	/* should really free [1-23] but I'd like to avoid using the	*/
-	/* "obvious" ones.						*/
-	for (efn=2; efn <= 22; ++efn) {
+	/* "obvious" ones. Further, GTK 1.2.8 uses event flags 2 and 3	*/
+	/* without reserving them.					*/
+	for (efn=4;  efn <= 20;  ++efn) {
 	    st = lib$free_ef(&efn);
 	}
     }
@@ -1002,7 +1129,7 @@ static PCB *fd_to_pcb(FD fd)
 
 
 /* local routine to get info for a file descriptor */
-static PCB *ipcvms_get_info(fd)
+static PCB *ipcvms_get_info (int fd)
 {
     PCB *pcb;
 
@@ -1029,7 +1156,7 @@ static PCB *ipcvms_get_info(fd)
 	get_fdname(fd, fdnam);
 	DXLEN(fdnam_d) = strlen(fdnam);
 	st = sys$getdviw(1, 0, &fdnam_d, dvi_list, &iosb, 0,0,0);
-	if (FAILURE(st)) return NULL;
+	if (VMS_FAILURE(st)) return NULL;
 	/* is it a mailbox? if so, save the buffer size */
 	if (devclass != DC$_MAILBOX)
 	    devbufsiz = 0;
@@ -1052,13 +1179,13 @@ static VMS_STS read_done(PCB *pcb)
 	/* make sure that it was the other guy who "closed" the pipe. */
 	else if (pcb->iosb.pid == ipcvms_pid) {
 read_bogus_eof:	    /* **FIXIT** WHY WHY WHY DOES THIS HAPPEN? */
-	    do_log_entry(fd, "\teof (my pid=%d) ignored\n", pcb->iosb.pid);
+	    do_log_entry (fd, pcb, "\teof (my pid=%d) ignored\n", pcb->iosb.pid);
 	    /* here is a really good place for a goto! */
 	    return my_read(fd, pcb, buf, nbytes, read_async);
 	    /* too bad I don't belive in them! */
 	} else { /* pipe closed (writer closed it or crashed) */
 	    pcb->flags.closed = TRUE;
-	    do_log_entry(fd, "\teof (pid=%d), pipe closed\n", pcb->iosb.pid);
+	    do_log_entry (fd, pcb, "\teof (pid=%d), pipe closed\n", pcb->iosb.pid);
 	    /* raise(SIGPIPE) to writer somehow? */
 	    return (0);		/* this means eof on unix */
 	}
@@ -1081,7 +1208,7 @@ static VMS_STS read_post(FD fd, PCB *pcb, int reserved)
     pcb->flags.busy = TRUE;			/* this is about to be true */
     st = sys$qio(read_efn, pcb->chan, IO$_READVBLK, &pcb->iosb, 
 		0,0, pcb->rdbuf, pcb->maxmsg, 0,0,0,0);
-    if (SUCCESS(st))
+    if (VMS_SUCCESS(st))
 	st = pcb->iosb.sts;
     else {
 	ipcvms_status = vaxc$errno = st; 
@@ -1089,8 +1216,8 @@ static VMS_STS read_post(FD fd, PCB *pcb, int reserved)
 	fprintf(stderr, "%s: ipcvms read_post: unexpected qio error %08x on fd #%d (%s)\n    %s\n",
 		    ipcvms_progname, st, fd, pcb->devnam, strerror(EVMSERR,st));
     }
-    if (SUCCESS(st))
-	err = pcb->iosb.bcnt;
+    if (VMS_SUCCESS(st))
+	err = pcb->iosb.bytcnt;
     else if (st != 0) {	    /* if not i/o pending */
 	fprintf(stderr, "%s: ipcvms read_post: unexpected i/o error %08x on fd #%d (%s)\n    %s\n",
 		    ipcvms_progname, st, fd, pcb->devnam, strerror(EVMSERR,st));
@@ -1111,8 +1238,8 @@ static signed int read_avail(PCB *pcb)
     case SS$_ENDOFFILE:
 	return -1;	/* exception */
     default:
-	if (SUCCESS(pcb->iosb.sts))
-	    return pcb->iosb.bcnt;
+	if (VMS_SUCCESS(pcb->iosb.sts))
+	    return pcb->iosb.bytcnt;
 	printf("ipcvms: read_avail: unexpected read error %08x on %s\n", 
 		pcb->iosb.sts, pcb->devnam);
     } /* end switch */
@@ -1133,15 +1260,20 @@ static signed int read_avail(PCB *pcb)
 /* contradiction to the pipe example in the DEC C Runtime Library	*/
 /* Reference Manual, which shows the use of a pipe for bidirectional	*/
 /* communications.							*/
-/* 									*/
+/*									*/
+/* If MY_PIPE is not defined, then we use the DEC C RTL pipe() function	*/
+/* to create the pipe, then post read and write attention QIOs to the   */
+/* mailbox in order to support the select functionality. This seems to	*/
+/* work fine with VMS V6 and later.					*/
+/*									*/
 /*  Usage:								*/
-/*	err = ipcvms_pipe(fdsc[1], [ flags , maxmsg , bufquo ] )	*/
+/*	res = IPCVMS_PIPE_JACKET (fdsc[1], [ flags, maxmsg, bufquo ]	)*/
 /*									*/
 /*									*/
-int ipcvms_pipe(FD fdsc[2], ...)
+int IPCVMS_PIPE_JACKET (FD fdsc[2], ...)
 {
     VMS_STS st;		
-    int err, argc, flags, bufsiz, bufquo; 
+    int res, argc, flags, bufsiz, bufquo; 
     va_list ap;
     PCB *pcb;
     char devnam[MAX_DEVNAM];
@@ -1177,9 +1309,11 @@ int ipcvms_pipe(FD fdsc[2], ...)
 #define DEFAULT_MAXMSG	512		/* [stupid] default for DEC C */
 #define MAX_MBXMAXMSG	1024
 #define xxMAX_MBXMAXMSG	512		/* warn: just for debugging! */
+#define MIN_MBXMAXMSG	1024		/* ebench/estudio/ec write this size messages */
+#define BUFIO_OVERHEAD	20		/* number of bytes of overhead for buffered I/O operation */
 
     ipcvms_init(0);			/* one-time initialization */
-    assert (ipcvms_pid);			/* we must now know our pid */
+    assert (ipcvms_pid);		/* we must now know our pid */
     assert (ipcvms_progname);		/*  and our program (image) name */
 pipe_debug: /* label for debugging. I still don't use goto's */
 
@@ -1197,15 +1331,17 @@ pipe_debug: /* label for debugging. I still don't use goto's */
     /* if (bufsiz > 8192) bufsiz = 8192; */
     if (bufsiz > MAX_MBXMAXMSG)
 	bufsiz = MAX_MBXMAXMSG;
+    if (bufsiz < MIN_MBXMAXMSG)
+	bufsiz = MIN_MBXMAXMSG;
     if (argc >= 4)
 	bufquo = va_arg (ap, int);
-    else bufquo = (bufsiz+12)*2;	/* ...for DEC C environment */
+    else bufquo = (bufsiz + BUFIO_OVERHEAD) * 2;	/* ...for DEC C environment */
     va_end (ap);
     /* Restriction: bufquo maximum (see VMS System Services manual */
     /* In VMS V6, the max was lowered (from 65535) to 60000! */
     bufquo = MIN(bufquo, 60000);	/* V6 restriction */
     /* Gigantic mailbox bufquo consumes process BYTLM quota */
-    bufquo = bufsiz+12;
+    bufquo = bufsiz + BUFIO_OVERHEAD;
 
 #ifdef MY_PIPE
     /* allocate pcbs, create the mailboxes, etc. */
@@ -1215,13 +1351,13 @@ pipe_debug: /* label for debugging. I still don't use goto's */
     memset(pcb, -1, sizeof(PCB));
     *pcb = null_pcb; 
     st = sys$crembx(0, &pcb->chan, bufsiz, bufquo, DEFAULT_PROTMASK, 0,0);
-    if (FAILURE(st)) {
+    if (VMS_FAILURE(st)) {
 	fprintf(stderr, "%s: ipcvms_pipe: sys$crembx failed, VMS status %d\n    %s\n", 
-		ipcvms_progname, st, strerror(EVMSERR, st);
+		ipcvms_progname, st, strerror(EVMSERR, st));
 	RETURN_VMSERR(st)
     }
     st = sys$getdviw(1, pcb->chan, 0, dvi_list1, &pcb->iosb, 0,0,0);
-    assert (SUCCESS(st));
+    assert (VMS_SUCCESS(st));
     DXPTR(devnam_d)[DXLEN(devnam_d)] = '\0';
     /* pcb->devnam = strnnew(DXPTR(devnam_d), DXLEN(devnam_d)); */
 
@@ -1230,36 +1366,36 @@ pipe_debug: /* label for debugging. I still don't use goto's */
 
     pcb->modearg = flags;
     pcb->flags.async = BOOLEAN(flags & O_NDELAY);
-    assert (SUCCESS(pcb->iosb.sts));
+    assert (VMS_SUCCESS(pcb->iosb.sts));
     assert (pcb->iosb.siz == 0);
 
     /* open write mailbox using C library function */
 #ifdef USE_NDELAY
-    err = open(devnam, O_WRONLY|(flags & ~O_NDELAY), 0);
+    res = open(devnam, O_WRONLY|(flags & ~O_NDELAY), 0);
 #else
-    err = open(devnam, O_WRONLY, 0);
+    res = open(devnam, O_WRONLY, 0);
 #endif
-    if (err < 0) {
+    if (res < 0) {
 	fprintf(stderr, "%s: ipcvms_pipe: error %d on open pipe write mbx %s\n    %s\n", 
 		ipcvms_progname, errno, devnam, strerror(errno));
 	ipcvms_errno = errno;
-	return err;
+	return res;
     }
     **FIXIT** use get_fdname to get cannonical device name
-    fdsc[1] = fdvec_new(err, pcb, devnam, io_write, pcb->maxmsg);
-    pcb->devnam = ipcvms_fdvec[err]._info.fdnam;
-    assert (SUCCESS(pcb->iosb.sts));
+    fdsc[1] = fdvec_new(res, pcb, devnam, io_write, pcb->maxmsg);
+    pcb->devnam = ipcvms_fdvec[res]._info.fdnam;
+    assert (VMS_SUCCESS(pcb->iosb.sts));
     assert (pcb->iosb.siz == 0);
 
     /* open read mailbox using C library function */
     /* flags &= ~O_NDELAY;			/* clear all bits but O_NDELAY */
-    err = open(devnam, O_RDONLY, 0);		/* DONT SPECIFY NDELAY! */
-    if (err < 0) {
+    res = open(devnam, O_RDONLY, 0);		/* DONT SPECIFY NDELAY! */
+    if (res < 0) {
 	fprintf(stderr, "ipcvms_pipe: failed to open pipe read mbx %s", devnam);
-	return err;
+	return res;
     }
     **FIXIT** use get_fdname to get cannonical device name
-    fdsc[0] = fdvec_new(err, pcb, devnam, io_read, pcb->maxmsg);
+    fdsc[0] = fdvec_new(res, pcb, devnam, io_read, pcb->maxmsg);
     /* pcb->rdbuf = malloc(pcb->maxmsg); */
     /* read_post(fdsc[0], pcb, 1); */
 
@@ -1269,43 +1405,45 @@ pipe_debug: /* label for debugging. I still don't use goto's */
     st = sys$getdviw(1, pcb->chan, 0, dvi_list3, &pcb->iosb, 0,0,0);
     st = isapipe (fdsc[0]);
     st = isapipe (fdsc[1]);
+
 #else	/* not MY_PIPE */
     pcb = NULL;
-    err = pipe(fdsc, O_RDWR, bufsiz);
-    if (!err) {
+    res = DECC_PIPE (fdsc, O_RDWR, bufquo);
+    if (!res) {
 	fdvec_new(fdsc[0], NULL, get_fdname(fdsc[0], NULL), io_read, bufsiz);
 	fdvec_new(fdsc[1], NULL, get_fdname(fdsc[1], NULL), io_write, bufsiz);
     }
-#endif
-    /* do_log_oper(err, pcb, 0, "pipe() = [%d,%d]", fdsc[0], fdsc[1]); */
-    do_log_oper(fdsc[0], pcb, err, "pipe() = [%d,%d]", fdsc[0], fdsc[1]);
-    return err;		/* should be zero */
+#endif /* MY_PIPE */
+
+    /* do_log_oper(res, pcb, 0, "pipe() = [%d,%d]", fdsc[0], fdsc[1]); */
+    do_log_oper(fdsc[0], pcb, res, "pipe() = [%d,%d]", fdsc[0], fdsc[1]);
+    return res;		/* should be zero */
 } /* end ipcvms_pipe() */
 
 /* see if you can guess what this does */
-int ipcvms_close(FD fd)
+int IPCVMS_CLOSE_JACKET (FD fd)
 {
-    int err;
+    int res;
     PCB *pcb = ipcvms_get_info(fd);
     char fdname[FILENAME_MAX];
 
     get_fdname(fd, fdname);
-    err = close(fd);
+    res = DECC_CLOSE (fd);
     if (pcb) {
-	assert (err >= 0);		/* assert close did not fail */
+	assert (res >= 0);		/* assert close did not fail */
     } 
-    do_log_close(fd, pcb, err, fdname);
-    fdvec_destroy(fd, pcb);
-    return (err);
+    do_log_close (fd, pcb, res, fdname);
+    fdvec_destroy (fd, pcb);
+    return (res);
 }
 
 /* one of them thar unixisms - duplicate a file descriptor */
-int ipcvms_dup(FD fd1)
+int IPCVMS_DUP_JACKET (FD fd1)
 {
     FD fd2;
     PCB *pcb = ipcvms_get_info(fd1);
 
-    fd2 = dup(fd1);
+    fd2 = DECC_DUP (fd1);
     do_log_oper(fd1, pcb, fd2, "dup(%d)", fd1);
     if (fd2 >= 0) { /* dup succeeded */
 	assert (fd2 < CARD(ipcvms_fdvec) );
@@ -1315,42 +1453,107 @@ int ipcvms_dup(FD fd1)
     return fd2;
 }
 
-/* what will this do in the (pathological) case of dup2(i,i)? */
-int ipcvms_dup2(FD fd1, FD fd2)
+/* duplicate fd1 on fd2, first close fd2 if open */
+/* just return fd2 if fd1 == fd2 */
+int IPCVMS_DUP2_JACKET (FD fd1, FD fd2)
 {
-    int err;
+    int res;
     PCB *pcb;
-    char buf[80];
+    char buf[FILENAME_MAX + 40];
 
     /* always close fd2, if open, first */
     /* if ((pcb = ipcvms_get_info(fd2))) {
         do_close(fd2, pcb); 
     } */
+    /* get info on fd2, will be implicitly closed */
     pcb = ipcvms_get_info(fd2);		/* get info before closed */
-    err = dup2(fd1, fd2);		/* this will close fd2 if open */
-    if (pcb)				/* if (known) fd2 closed by dup2 */
-	sprintf(buf, "[closed %d (%s)]", fd2, pcb->devnam);
-    else buf[0] = '\0';
+    buf[0] = '\0';
+    if (fd1 != fd2) {
+	char nambuf[FILENAME_MAX +1];
+	char *p = getname (fd2, nambuf);
+	if (p)
+	    sprintf(buf, "[closed %d (%s)]", fd2, nambuf);
+    }
+    res = DECC_DUP2 (fd1, fd2);		/* this will close fd2 if open */
     fdvec_destroy(fd2, pcb);		/* implicit close on fd2	*/
     pcb = ipcvms_get_info(fd1);
-    do_log_oper(fd1, pcb, err, "dup2(%d,%d) %s", fd1, fd2, buf);
-    if (err >= 0) {			/* dup2 succeeded */
+    do_log_oper(fd1, pcb, res, "dup2(%d,%d) %s", fd1, fd2, buf);
+    if (res >= 0) {			/* dup2 succeeded */
 	if (pcb) 			/* if fd1 is one of ours */
 	    assert (ipcvms_fdvec[fd2].pcb == NULL);
 	assert (fd2 < CARD(ipcvms_fdvec) );
 	fdvec_dup(fd1, fd2);
     } else { 
 	/* dup2 failed: what to do now? */  
-	fprintf(stderr, "%s: ipcvms_dup2: dup2(%d,%d) failed, err=%d\n    %s\n",
-		    ipcvms_progname, fd1, fd2, err, strerror(err));
+	fprintf(stderr, "%s: ipcvms_dup2: dup2(%d,%d) failed, res=%d\n    %s\n",
+		    ipcvms_progname, fd1, fd2, res, strerror(res));
     }
-    return err;
+    return res;
 }
+
+/* return "name" of fcntl cmd */
+static const char* get_fcntl_cmd_name (int cmd)
+{
+#define CASEVAL(val)   case val: return #val
+    switch (cmd) {
+#ifdef USE_VMS_JACKETS
+#else  /* (not) USE_VMS_JACKETS */
+#endif /* USE_VMS_JACKETS */
+#ifdef F_FDDUMP
+	CASEVAL (F_FDDUMP);
+#endif
+#ifdef F_GETFL
+	CASEVAL (F_GETFL); 
+#endif
+#ifdef F_SETFL
+	CASEVAL (F_SETFL); 
+#endif
+#ifdef F_GETLK
+	CASEVAL (F_GETLK); 
+#endif
+#ifdef F_SETLK
+	CASEVAL (F_SETLK); 
+#endif
+#ifdef F_SETLKW
+	CASEVAL (F_SETLKW); 
+#endif
+    } /* end switch */
+    return "?";
+}
+
+/* Jacket routine for fcntl. Needs work for optional argument.		*/
+int IPCVMS_FCNTL_JACKET (FD fd, int cmd, ...)
+{
+//#ifdef USE_MY_JACKETS
+    int result, argc, optarg;
+    PCB* pcb = ipcvms_get_info(fd);
+
+    /* check for optional argument */
+    va_count(argc);
+    va_list ap;
+    VA_START (ap, cmd);
+    /* Note: the lock options use a pointer for the 3rd argument. */
+    if (argc > 2)
+	optarg = va_arg (ap, int);
+    else optarg = -1;
+    va_end (ap);
+    if (argc > 2) {
+	result = DECC_FCNTL (fd, cmd, optarg);
+	do_log_oper (fd, pcb, result, "fcntl (%d, %d [%s], %d)", fd, cmd, get_fcntl_cmd_name(cmd), optarg);
+    } else {
+	result = DECC_FCNTL (fd, cmd);
+	do_log_oper (fd, pcb, result, "fcntl (%d, %d [%s])", fd, cmd, get_fcntl_cmd_name(cmd));
+    }
+    return result;
+//#else
+//#endif
+} /* IPCVMS_FCNTL_JACKET */
+
 
 /* Since we can't intercept read/write from inside the DEC C RTL,  	*/
 /* we can't support this (until we provide a complete set of our own	*/
 /* stream i/o jacket routines).						*/
-FILE *ipcvms_fdopen(FD fd, char *mode)
+FILE *IPCVMS_FDOPEN_JACKET (int fd, char *mode, ...)
 {
     PCB *pcb = ipcvms_get_info(fd);
     if (pcb) {
@@ -1361,7 +1564,7 @@ FILE *ipcvms_fdopen(FD fd, char *mode)
 		ipcvms_progname, fd, pcb->devnam);
 	/* return NULL; *** let it fall thru for now */
     }
-    return fdopen(fd, mode);
+    return DECC_FDOPEN (fd, mode);
 }
 
 #ifdef moose	/* still needs work */
@@ -1408,22 +1611,23 @@ static bool_t check_read(FD fd, PCB *pcb)
     return pcb->flags.read_rdy;
 }
 
+#ifdef moose
 /* local routine to save the "partner" pid */
 static void save_pid (PCB *pcb)
 {
     /* save partner (reader/writer) pid from previous i/o if known */
-    if (SUCCESS(pcb->iosb.sts) && pcb->iosb.pid && pcb->iosb.pid != ipcvms_pid) 
+    if (VMS_SUCCESS(pcb->iosb.sts) && pcb->iosb.pid && pcb->iosb.pid != ipcvms_pid) 
 	pcb->partner_pid = pcb->iosb.pid;
 }
-
+#endif
 
 /* local routine to perform writes */
-static my_write(FD fd, PCB *pcb, char *buf, size_t nbytes)
+static my_write (FD fd, PCB *pcb, const void* buf, size_t nbytes)
 {
     int err; VMS_STS st; 
 
     if (!pcb)	/* it's one of theirs */
-	err = write(fd, buf, nbytes);
+	err = DECC_WRITE(fd, (void*)buf, nbytes);
     else {
 #ifdef MY_PIPE
 # ifdef NONBLOCKING_PIPE
@@ -1451,7 +1655,7 @@ pipe_broken:
 	if (pcb->flags.busy)
 	    st = sys$synch(write_efn, &pcb->iosb);
 	/* save partner (reader) pid from previous write if we know it */
-	if (SUCCESS(pcb->iosb.sts) && pcb->iosb.pid && pcb->iosb.pid != ipcvms_pid) 
+	if (VMS_SUCCESS(pcb->iosb.sts) && pcb->iosb.pid && pcb->iosb.pid != ipcvms_pid) 
 	    pcb->partner_pid = pcb->iosb.pid;
 	pcb->flags.busy = TRUE;			/* this is about to be true */
 	st = sys$qio(write_efn, pcb->chan, IO$_WRITEVBLK,
@@ -1461,9 +1665,9 @@ pipe_broken:
 	/* system service request (i.e. whether i/o was accepted	*/
 	/* and enqueued to i/o subsystem), not i/o completion	*/
 	/* status, which is posted in the iosb.			*/
-	if (SUCCESS(st))			/* if qio successful */
+	if (VMS_SUCCESS(st))			/* if qio successful */
 	    st = pcb->iosb.sts;			/*   get i/o status */
-	if (st == 0 || SUCCESS(st))		/* i/o pending or successful */
+	if (st == 0 || VMS_SUCCESS(st))		/* i/o pending or successful */
 	    err = nbytes;
 	else {	/* qio or i/o failed - either way, it's a bummer */
 write_error: 
@@ -1485,11 +1689,11 @@ write_error:
 
 /* jacket for unixio write(). */
 /* *tbs* optional arg: O_NDELAY == nonblocking write */
-int ipcvms_write(FD fd, char *buf, size_t nbytes)
+int IPCVMS_WRITE_JACKET (FD fd, const void* buf, size_t nbytes)
 {
     int err;
     PCB *pcb = ipcvms_get_info(fd);
-    char *pos;					/* can't increment a void* */
+    const char *pos;				/* can't increment a void* */
     size_t maxmsg, rembytes, chunksiz;
 #ifdef DEBUGxxx
     char filnam[FILENAME_MAX];
@@ -1513,9 +1717,9 @@ int ipcvms_write(FD fd, char *buf, size_t nbytes)
 	  pos += err, rembytes -= err)    {
 	err = my_write(fd, pcb, pos, chunksiz);
 	if (err < 0) 
-	    return do_log_err(fd, "write", err);
+	    return do_log_error (fd, "write", err);
 	if (err > 0)
-	    do_log_dump(fd, pos, err, pos-buf);
+	    do_log_dump(fd, pos, err, (char*)pos - (char*)buf);
     } /* end for (each chunk) */
     post_attn(fd, O_WRONLY);		/* repost attn ast, if requested */
     return ((char*)pos - (char*)buf);
@@ -1526,7 +1730,7 @@ static int my_read(FD fd, PCB *pcb, char *buf, size_t nbytes, bool_t read_async)
     int err; VMS_STS st;
 
     if (!pcb) {	/* it's one of theirs */
-	err = read(fd, buf, nbytes);
+	err = DECC_READ(fd, buf, nbytes);
     } else {	/* it's one of ours */
 #ifdef MY_PIPE
 	int async_mod;
@@ -1542,7 +1746,7 @@ static int my_read(FD fd, PCB *pcb, char *buf, size_t nbytes, bool_t read_async)
 	/* if (pcb->iosb.pid) pcb->partner_pid = pcb->iosb.pid; */
 	st = sys$qiow(read_efn, pcb->chan, IO$_READVBLK|async_mod, &pcb->iosb, 
 		0,0, buf, MIN(nbytes, pcb->maxmsg), 0,0,0,0);
-	if (SUCCESS(st))			/* if qio successful */
+	if (VMS_SUCCESS(st))			/* if qio successful */
 	    st = pcb->iosb.sts;			/*   get i/o status */
 	else {	/* qio failed, usually a bug of some sort */
 	    fprintf(stderr, "%s: ipcvms_read: unexpected qio error %08x\n    %s\n",
@@ -1553,16 +1757,18 @@ static int my_read(FD fd, PCB *pcb, char *buf, size_t nbytes, bool_t read_async)
 	    return 0;
 	}
 
-	if (SUCCESS(st)) {
+	if (VMS_SUCCESS(st)) {
 	    err = pcb->iosb.siz;
+#ifdef moose
 	    if (err == 0) {
 read_zero:  
-		do_log_entry(fd, "\tzero bytes read (pid=%d), ignored\n", pcb->iosb.pid);
+		do_log_entry (fd, pcb, "\tzero bytes read (pid=%d), ignored\n", pcb->iosb.pid);
 		/* wait for a brief interval (.010 secs == 10 msecs) */
 		wait_brief(fd, pcb, read_efn, 10); 
 		return my_read(fd, pcb, buf, nbytes, read_async);
 	    }
-	    do_log_entry(fd, "\t%d bytes read (writer pid=%d)\n", err, pcb->iosb.pid);
+#endif
+	    do_log_entry (fd, pcb, "\t%d bytes read (writer pid=%d)\n", err, pcb->iosb.pid);
 	    /* save partner (writer) pid if known */
 	    if (pcb->iosb.pid) 
 		pcb->partner_pid = pcb->iosb.pid;
@@ -1576,13 +1782,13 @@ read_error:
 		/* make sure that it was the other guy who "closed" the pipe. */
 		if (pcb->iosb.pid == ipcvms_pid) {
 read_bogus_eof:	    /* **FIXIT** WHY WHY WHY DOES THIS HAPPEN? */
-		    do_log_entry(fd, "\teof (my pid=%d) ignored\n", pcb->iosb.pid);
-		    /* here is a really good place for a goto! */
+		    do_log_entry (fd, pcb, "\teof (my pid=%d) ignored\n", pcb->iosb.pid);
+		    /* here is yet another really good place for a goto! */
 		    return my_read(fd, pcb, buf, nbytes, read_async);
 		    /* too bad I don't belive in them! */
 		} else { /* pipe closed (writer closed it or exited) */
 		    pcb->flags.closed = TRUE;
-		    do_log_entry(fd, "\teof (pid=%d), pipe closed\n", pcb->iosb.pid);
+		    do_log_entry (fd, pcb, "\teof (pid=%d), pipe closed\n", pcb->iosb.pid);
 		    /* raise(SIGPIPE) to writer somehow? */
 		    return (0);		/* this means eof on unix */
 		}
@@ -1615,9 +1821,9 @@ read_bogus_eof:	    /* **FIXIT** WHY WHY WHY DOES THIS HAPPEN? */
 } /* end my_read() */
 
 /* *tbs* optional arg: O_NDELAY == nonblocking read */
-int ipcvms_read(FD fd, char *buf, size_t nbytes)
+int IPCVMS_READ_JACKET (FD fd, void* buf, size_t nbytes)
 {
-    int err; bool_t read_async; 
+    int argc, res; bool_t read_async; 
     PCB *pcb = ipcvms_get_info(fd);
     char *pos;					/* can't increment a void* */
     size_t maxmsg, rembytes, chunksiz;
@@ -1632,8 +1838,8 @@ int ipcvms_read(FD fd, char *buf, size_t nbytes)
     if (pcb && pcb->flags.async && FALSE)
 	read_async = TRUE;
     /* check for optional argument */
-    va_count(err);
-    if (err > 3) {
+    va_count(argc);
+    if (argc > 3) {
 	va_list ap;
 	int optarg;
 	VA_START (ap, nbytes);
@@ -1651,45 +1857,45 @@ int ipcvms_read(FD fd, char *buf, size_t nbytes)
 	    RETURN_ERR(EIO)			/* old macdonald? */
 	}
     }
-    do_log_xfer(fd, pcb, "read", nbytes);
+    do_log_xfer (fd, pcb, "read", nbytes);
     /* read data in chunks as large as the device will permit */
     if (0 == (maxmsg = ipcvms_fdvec[fd]._info.devbufsiz))
 	maxmsg = nbytes;
-    for ( pos = buf, rembytes = nbytes;
-	  chunksiz = MIN(rembytes, maxmsg); 
-	  pos += err, rembytes -= err)	    {
-	err = my_read(fd, pcb, pos, chunksiz, read_async);
-	if (err == 0) break;		    /* writer closed pipe */
-	else if (err < 0) 
-	    return do_log_err(fd, "read", err);
+    for (   pos = buf, rembytes = nbytes; 
+	    chunksiz = MIN(rembytes, maxmsg); 
+	    pos += res, rembytes -= res)	    {
+	res = my_read(fd, pcb, pos, chunksiz, read_async);
+	if (res == 0) break;		    /* writer closed pipe */
+	else if (res < 0) 
+	    return do_log_error (fd, "read", res);
 
 #ifndef SKIP_NEWLINE_HACK   /* default = do the hack */
 	/* Hack: C rtl read function seems to return a spurious newline	*/
 	/* when an attempt is made to read from an empty mailbox/pipe.	*/
-	if (err == 1 && *pos == '\n' && pos == buf) {
+	if (res == 1 && *pos == '\n' && pos == buf) {
 # ifdef DEBUG	    /* shout it to the world? */
 	    if (getenv("EIF_IPCVMS_SPURIOUS_NEWLINE_HACK"))
 		fprintf(stderr, "%s: ipcvms_read: warning: spurious newline found in %d bytes\n", 
-			ipcvms_progname, err);
+			ipcvms_progname, res);
 # endif
 newline_hack:
-	    do_log_entry(fd, "\t\t(spurious newline ignored)\n");
-	    --err;		/* ignore the scurilous newline */
+	    do_log_entry (fd, pcb, "\t\t(spurious newline ignored)\n");
+	    --res;		/* ignore the scurilous newline */
 	    /* wait for a very short time then iterate loop [retry read] */
 	    wait_brief(fd, pcb, read_efn, 10);
 	}
 #endif /* SKIP_NEWLINE_HACK */
 
-	else if (err > 0) {
-	    do_log_dump(fd, pos, err, pos-buf);
-	    if (err < chunksiz)		/* if read less then requested */
+	else if (res > 0) {
+	    do_log_dump (fd, pos, res, pos - (char*)buf);
+	    if (res < chunksiz)		/* if read less then requested */
 	    break;			/* then that's all there is */
 	}
     } /* end for (each chunk) */
-    err = (char*)pos - (char*)buf;	/* actual number of bytes read */
-    do_log_fin(fd, pcb, "read", err);	/* Log 'em, Danno! */
-    post_attn(fd, O_RDONLY);		/* repost attn ast, if requested */
-    return (err);
+    res = (char*)pos - (char*)buf;	/* actual number of bytes read	    */
+    do_log_result (fd, pcb, "read", res);  /* Log 'em, Danno!		    */
+    post_attn (fd, O_RDONLY);		/* repost attn ast, if requested    */
+    return (res);
 } /* end ipcvms_read() */
 
 
@@ -1697,7 +1903,7 @@ newline_hack:
 
 /* very local routine to return the number of messages pending in a pipe (mailbox) */
 /* assumes ipcvms_get_info has been called to get fdname */
-static unsigned int pending_message_count(FD fd, PCB *pcb)
+static unsigned int pending_message_count (FD fd, PCB *pcb)
 {
     int err; VMS_STS st; unsigned int devdep, devclass;
     DX_BLD(fdnam_d, 0,0);
@@ -1717,7 +1923,7 @@ static unsigned int pending_message_count(FD fd, PCB *pcb)
     }
     DXLEN(fdnam_d) = strlen(DXPTR(fdnam_d) = ipcvms_fdvec[fd]._info.fdnam);
     st = sys$getdviw(1, 0, &fdnam_d, dvi_list, &iosb, 0,0,0);
-    if (FAILURE(st)) {
+    if (VMS_FAILURE(st)) {
 	fprintf(stderr, "%s: ipcvms.pending_message_count(%d): [%s] - sys$getdvi status %d\n    %s\n", 
 	    ipcvms_progname, fd, ipcvms_fdvec[fd]._info.fdnam, st, strerror(EVMSERR,st));
 	return -1;
@@ -1795,7 +2001,7 @@ found_excep:
 		fprintf(stderr, "%s: ipcvms.do_select: exception check on fd %d [%s]\n",
 		    ipcvms_progname, ii, ipcvms_fdvec[ii]._info.fdnam);
 #endif
-		if (pcb && (pcb->flags.closed || pcb->iosb.sts && !SUCCESS(pcb->iosb.sts)))
+		if (pcb && (pcb->flags.closed || pcb->iosb.sts && !VMS_SUCCESS(pcb->iosb.sts)))
 		    ++excpcnt;
 		else if (clrbits) BIT_CLEAR(excpfds,ii);
 	    }
@@ -1805,7 +2011,6 @@ found_excep:
 }
 
 
-#define SELECT_EVENT_DRIVEN
 
 #ifdef SELECT_EVENT_DRIVEN
 
@@ -1814,7 +2019,7 @@ static void select_attn_ast(int param)
     VMS_STS st;
     st = sys$setef(param);
 #ifdef DEBUG
-    if (FAILURE(st))
+    if (VMS_FAILURE(st))
 	printerr(EVMSERR, "ipcvms.select_attn_ast: error %%x%x from sys$setef(%d)\n-- %s",
 		st, param, strerror(EVMSERR,st));
 #endif /* DEBUG */
@@ -1837,26 +2042,26 @@ static int select_attn_post(int efn, int fd, int flag)
     select_data[select_data_numb].fd = fd;
     DXLEN(fdnam_d) = strlen(DXPTR(fdnam_d) = ipcvms_fdvec[fd]._info.fdnam);
     st = sys$assign(&fdnam_d, &select_data[select_data_numb].chan, 0, 0, AGN$M_READONLY);
-    if (FAILURE(st)) {
+    if (VMS_FAILURE(st)) {
 #ifdef DEBUG
 	printerr(EVMSERR, "ipcvms.select_post: cannot assign channel to mbx %s for fd %d - error %%x%x\n-- %s",
 		ipcvms_fdvec[fd]._info.fdnam, fd, st, strerror(EVMSERR,st));
 	RETURN_VMSERR(st);
     }
-#endif
+#endif /* DEBUG */
 
     st = sys$qiow(1, select_data[select_data_numb].chan, 
 		IO$_SETMODE | (flag == O_RDONLY ? IO$M_WRTATTN : IO$M_READATTN),
 		&iosb, 0,0,
 		(void*)&select_attn_ast, efn, 0,0,0,0);
-    if (FAILURE(st)) {
+    if (VMS_FAILURE(st)) {
 #ifdef DEBUG
 	fprintf(stderr, "%s: ipcvms.select_attn : unexpected qiow error %08x on fd #%d (%s)\n    %s\n",
 		    ipcvms_progname, st, fd, ipcvms_fdvec[fd]._info.fdnam, strerror(EVMSERR,st));
 #endif
 	RETURN_VMSERR(st);
     }
-    else if (FAILURE(st = iosb.sts)) {
+    else if (VMS_FAILURE(st = iosb.sts)) {
 #ifdef DEBUG
 	fprintf(stderr, "%s: ipcvms.select_attn : unexpected io error %08x on fd #%d (%s)\n    %s\n",
 		    ipcvms_progname, st, fd, ipcvms_fdvec[fd]._info.fdnam, strerror(EVMSERR,st));
@@ -1885,6 +2090,7 @@ static void select_attn_cleanup()
 
 /* local routine to setup attention ast's for selected mailboxes */
 static void select_attn_set(int efn, int nfds, int *fdset, int flag)
+//static void select_attn_set(int efn, int nfds, fd_set* fdset, int flag)
 {
     VMS_STS st; int ii;
 
@@ -1914,7 +2120,7 @@ static int timer_ast(int *param)
     return 1;
 }
 
-int my_select(int nfds, int *rdfds, int *wrtfds, int *excpfds, struct timeval *tm)
+static int my_select(int nfds, int *rdfds, int *wrtfds, int *excpfds, struct timeval *tm)
 {
     VMS_STS st;
     int rdy;
@@ -1993,7 +2199,7 @@ int my_select(int nfds, int *rdfds, int *wrtfds, int *excpfds, struct timeval *t
     return (rdy);			/* better luck next time */
 } /* end my_select() */
 
-int ipcvms_select(int nfds, Select_fd_set_t rdfds, Select_fd_set_t wrtfds, Select_fd_set_t excpfds, struct timeval *tm)
+int IPCVMS_SELECT_JACKET (int nfds, fd_set* rdfds, fd_set* wrtfds, fd_set* excpfds, struct timeval *tm)
 {
     int err;
     /* char logbuf[1024]; */
@@ -2007,7 +2213,7 @@ int ipcvms_select(int nfds, Select_fd_set_t rdfds, Select_fd_set_t wrtfds, Selec
 
 /* This routine is used (as a temporary hack) by ewb to make sure that	*/
 /* data is available in a "pipe" before reading it.			*/
-int ipcvms_read_avail(FD fd)
+int IPCVMS_READ_avail (FD fd)
 {
     int err;
     PCB *pcb = ipcvms_get_info(fd);
@@ -2030,7 +2236,7 @@ int ipcvms_read_avail(FD fd)
 /* Vision/Clib/X/io_handler is uses this facility to support calling	*/
 /* XtAppAddInput.							*/
 
-int ipcvms_get_fd_efn(FD fd, int flag)
+int ipcvms_get_fd_efn (FD fd, int flag)
 {
     VMS_STS st;
     unsigned int efn; UWORD chan;
@@ -2059,18 +2265,18 @@ int ipcvms_get_fd_efn(FD fd, int flag)
 	RETURN_ERR(EBUSY)
     }
 
-    /* reserve an event flag in the proper range. Xt Intrinsics require	*/
+    /* Reserve an event flag in the proper range. Xt Intrinsics require	*/
     /* that it is in the range 0-31. VMS convention reserves 24-31 for	*/
-    /* system use, so we start with 23 and work down. We have to do it	*/
+    /* system use, so we start with 22 and work down. We have to do it	*/
     /* in this awkward fashion because LIB$GET_EF will allocate an	*/
     /* arbitrary event flag in the range 1-23,32-63, and only event	*/
     /* flags in the range 0-31 can be used with XtAppAddInput, but we	*/
-    /* restrict the range to [2-22] (inclusive)				*/
-    for (efn=22;  efn >= 2;  --efn) {
-	if (SUCCESS(st = lib$reserve_ef(&efn)))
+    /* restrict the range to [4:22] (inclusive).			*/
+    for (efn = 22;  efn >= 4;  --efn) {
+	if (VMS_SUCCESS(st = lib$reserve_ef(&efn)))
 	    break;
     }
-    if (FAILURE(st)) {
+    if (VMS_FAILURE(st)) {
 #ifdef DEBUG
 	printerr(EVMSERR, "ipcvms_get_fd_efn: cannot reserve event flag - error %%x%x\n-- %s\n",
 		st, strerror(EVMSERR,st));
@@ -2079,7 +2285,7 @@ int ipcvms_get_fd_efn(FD fd, int flag)
     }
     DXLEN(fdnam_d) = strlen(DXPTR(fdnam_d) = ipcvms_fdvec[fd]._info.fdnam);
     st = sys$assign(&fdnam_d, &chan, 0, 0, AGN$M_READONLY);
-    if (FAILURE(st)) {
+    if (VMS_FAILURE(st)) {
 	lib$free_ef(&efn);
 #ifdef DEBUG
 	printerr(EVMSERR, "ipcvms_get_fd_efn: cannot assign channel to mbx %s for fd %d - error %%x%x\n-- %s",
@@ -2093,8 +2299,8 @@ int ipcvms_get_fd_efn(FD fd, int flag)
     ipcvms_fdvec[fd]._info.flags.attn_rd = (flag == O_RDONLY);
     
     st = post_attn(fd, flag);
-    if (FAILURE(st)) {
-	ipcvms_free_fd_efn(fd);
+    if (VMS_FAILURE(st)) {
+	ipcvms_free_fd_efn (fd);
 	RETURN_VMSERR(st);
     }
     return efn;
@@ -2102,7 +2308,7 @@ int ipcvms_get_fd_efn(FD fd, int flag)
 
 
 /* And here we have the free function... */
-void ipcvms_free_fd_efn(fd)
+void ipcvms_free_fd_efn (fd)
 {
     VMS_STS st; 
 
@@ -2132,7 +2338,7 @@ static void mbx_attn(FD fd)
     assert (ipcvms_fdvec[fd]._info.flags.inited);
     if (ipcvms_fdvec[fd]._info.xefn) {
 	st = sys$setef(ipcvms_fdvec[fd]._info.xefn);
-	if (FAILURE(st)) {
+	if (VMS_FAILURE(st)) {
 #ifdef DEBUG
 	    printerr(EVMSERR, "ipcvms.mbx_attn: error %%x%x from sys$setef(%d)\n-- %s",
 		    st, ipcvms_fdvec[fd]._info.xefn, strerror(EVMSERR,st));
@@ -2175,7 +2381,7 @@ static VMS_STS repost_attn(FD fd, int flag, int efn)
 	DX_BLD(fdnam_d, 0,0);
 	DXLEN(fdnam_d) = strlen(DXPTR(fdnam_d) = ipcvms_fdvec[fd]._info.fdnam);
 	st = sys$assign(&fdnam_d, &ipcvms_fdvec[fd]._info.xchan, 0,0,AGN$M_READONLY);
-	if (FAILURE(st)) {
+	if (VMS_FAILURE(st)) {
 	    printerr(EVMSERR, "ipcvms.post_attn: cannot reassign channel to mbx %s for fd %d - error %%x%x\n-- %s",
 		    ipcvms_fdvec[fd]._info.fdnam, fd, st, strerror(EVMSERR,st));
 	return st;	
@@ -2198,15 +2404,15 @@ static VMS_STS repost_attn(FD fd, int flag, int efn)
 		&iosb, 0,0,
 		(void*)&mbx_attn, fd, 0,0,0,0);
 #ifdef DEBUG
-    if (FAILURE(st)) 
+    if (VMS_FAILURE(st)) 
 	fprintf(stderr, "%s: ipcvms.post_attn : unexpected qiow error %08x on fd #%d (%s)\n    %s\n",
 		    ipcvms_progname, st, fd, ipcvms_fdvec[fd]._info.fdnam, strerror(EVMSERR,st));
-    else if (FAILURE(st = iosb.sts)) 
+    else if (VMS_FAILURE(st = iosb.sts)) 
 	fprintf(stderr, "%s: ipcvms.post_attn : unexpected io error %08x on fd #%d (%s)\n    %s\n",
 		    ipcvms_progname, st, fd, ipcvms_fdvec[fd]._info.fdnam, strerror(EVMSERR,st));
 #endif /* DEBUG */
 
-    if ( FAILURE(st) || FAILURE(st = iosb.sts)) {
+    if ( VMS_FAILURE(st) || VMS_FAILURE(st = iosb.sts)) {
 	ipcvms_fdvec[fd]._info.flags.attn_posted = FALSE;
 	--ipcvms_fdvec[fd]._info.postcnt;
     }
@@ -2228,7 +2434,12 @@ static VMS_STS post_attn(FD fd, int flag)
 
 } /* end post_attn() */
 
-void * ipcvms_dummy(void)
+
+#ifdef moose
+void * ipcvms_dummy (void)
 {
     return (void*)(ipcvms_dummy);
 }
+#endif /* moose */
+
+#endif /* __VMS */

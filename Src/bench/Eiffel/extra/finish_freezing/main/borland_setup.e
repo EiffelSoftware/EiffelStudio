@@ -27,7 +27,6 @@ feature -- Initialization
 			l_config_file: RAW_FILE
 			l_arg_string: STRING
 			l_file_name: FILE_NAME
-			eiffel_dir: STRING
 		do
 			eiffel_dir := (create {EXECUTION_ENVIRONMENT}).get ("ISE_EIFFEL")
 			create l_file_name.make_from_string (eiffel_dir)

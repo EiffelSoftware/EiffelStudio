@@ -242,7 +242,8 @@ feature -- Element change
 		require
 			a_point_exists: a_point /= Void
 		do
-			top_left.set (a_point.x - (string_width // 2), a_point.y - (ascent+descent) // 2)
+			top_left.set (a_point.x - (string_width // 2),
+						a_point.y - (ascent + descent) // 2)
 			set_modified
 		ensure
 			middle_center.is_superimposable (a_point)
@@ -420,11 +421,15 @@ feature -- Output
 			-- Draw the current text.
 		require else
 			a_drawing_attached: drawing /= Void
+		local
+			lint: EV_INTERIOR
 		do
 			if drawing.is_drawable then
+				create lint.make
 				set_drawing_attributes (drawing)
 --				drawing.set_drawing_font (font)
 				drawing.draw_text (base_left,text) 
+				lint.set_drawing_attributes (drawing)
 			end
 		end
 
@@ -451,13 +456,12 @@ feature {CONFIGURE_NOTIFY} -- Updating
 
 	recompute is
 		do
---			if drawing /= Void and
---				font.implementation.is_valid then
---					ascent := font.implementation.ascent
---					descent :=font.implementation.descent
---					string_width := font.implementation.width_of_string (text)
---					unset_modified
---			end
+			if drawing /= Void and then drawing.is_valid (font) then
+				ascent := font.ascent
+				descent := font.descent
+				string_width := font.string_width (text)
+				unset_modified
+			end
 			surround_box.set (top_left.x, top_left.y, bottom_right.x - top_left.x, bottom_right.y - top_left.y)
 		end
 

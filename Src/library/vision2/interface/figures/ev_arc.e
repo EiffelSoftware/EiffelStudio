@@ -189,12 +189,17 @@ feature -- Output
 
 	draw is
 			-- draw the arc.
+		local
+			lpath: EV_PATH
 		do
 			if drawing.is_drawable then
+				create lpath.make
+				lpath.get_drawing_attributes (drawing)
 --				drawing.set_cap_style (cap_style)
 				set_drawing_attributes (drawing)
 				drawing.draw_arc (center, radius1, radius2, angle1, angle2,
 					orientation, -1)
+				lpath.set_drawing_attributes (drawing)
 			end
 		end
 

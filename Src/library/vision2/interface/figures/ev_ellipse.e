@@ -155,15 +155,24 @@ feature -- Output
 
 	draw is
 			-- Draw the ellipse.
+		local
+			lint: EV_INTERIOR
+			lpath: EV_PATH
 		do
 			if drawing.is_drawable then
 				if interior /= Void then
+					create lint.make
+					lint.get_drawing_attributes (drawing)
 					interior.set_drawing_attributes (drawing)
 					drawing.fill_arc (center, radius1, radius2, 0, 360, orientation, 0)
+					lint.set_drawing_attributes (drawing)
 				end
 				if path /= Void then
+					create lpath.make
+					lpath.get_drawing_attributes (drawing)
 					path.set_drawing_attributes (drawing)
 					drawing.draw_arc (center, radius1, radius2, 0, 360, orientation, -1)
+					lpath.set_drawing_attributes (drawing)
 				end
 			end
 		end

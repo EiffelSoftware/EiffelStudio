@@ -379,8 +379,11 @@ feature -- Output
 		local
 			p1, p2: EV_PIXEL
 			keep_cursor: CURSOR
+			lpath: EV_PATH
 		do
 			if drawing.is_drawable then
+				create lpath.make
+				lpath.get_drawing_attributes (drawing)
 --				drawing.set_cap_style (cap_style)
 				set_drawing_attributes (drawing)
 				keep_cursor := cursor
@@ -400,6 +403,7 @@ feature -- Output
 					end
 				end
 				go_to (keep_cursor)
+				lpath.set_drawing_attributes (drawing)
 			end
 		end
 

@@ -127,13 +127,16 @@ feature -- Output
 		require else
 			drawing_attached: drawing /= Void
 			pixmap_valid: pixmap.is_valid (pixmap)
+		local
+			dr_att: EV_DRAWING_ATTRIBUTES
 		do
 			if drawing.is_drawable then
-				drawing.set_logical_mode (logical_function_mode)
+				create dr_att
+				dr_att.get_drawing_attributes (drawing)
+				set_drawing_attributes (drawing)
 --				drawing.set_subwindow_mode (subwindow_mode)
-				drawing.set_foreground_color (foreground_color)
-				drawing.set_background_color (background_color)
 				drawing.draw_pixmap (upper_left, pixmap)
+				dr_att.set_drawing_attributes (drawing)
 			end
 		end
 

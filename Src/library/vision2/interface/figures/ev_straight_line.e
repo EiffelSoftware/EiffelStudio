@@ -65,11 +65,16 @@ feature -- Output
 
 	draw is
 			-- Draw the line.
+		local
+			lpath: EV_PATH
 		do
 			if drawing.is_drawable then
+				create lpath.make
+				lpath.get_drawing_attributes (drawing)
 --				drawing.set_cap_style (CapProjecting)
 				set_drawing_attributes (drawing)
 				drawing.draw_straight_line (p1, p2)
+				lpath.set_drawing_attributes (drawing)
 			end
 		end
 

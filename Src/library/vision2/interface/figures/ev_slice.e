@@ -71,15 +71,24 @@ feature -- Output
 
 	draw is
 			-- Draw the slice.
+		local
+			lint: EV_INTERIOR
+			lpath: EV_PATH
 		do
 			if drawing.is_drawable then
 				if interior /= Void then
+					create lint.make
+					lint.get_drawing_attributes (drawing)
 					interior.set_drawing_attributes (drawing)
 					drawing.fill_arc (center, radius1, radius2, angle1, angle2, orientation, arc_style)
+					lint.set_drawing_attributes (drawing)
 				end
 				if path /= Void then
+					create lpath.make
+					lpath.get_drawing_attributes (drawing)
 					path.set_drawing_attributes (drawing)
 					drawing.draw_arc (center, radius1, radius2, angle1, angle2, orientation, arc_style)
+					lpath.set_drawing_attributes (drawing)
 				end
 			end
 		end

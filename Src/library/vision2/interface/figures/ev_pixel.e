@@ -82,10 +82,15 @@ feature -- Output
 
 	draw is
 			-- Draw current point.
+		local
+			lint: EV_INTERIOR
 		do
 			if drawing.is_drawable then
+				create lint.make
+				lint.get_drawing_attributes (drawing)
 				set_drawing_attributes (drawing)
 				drawing.draw_point (Current)
+				lint.set_drawing_attributes (drawing)
 			end
 		end
 

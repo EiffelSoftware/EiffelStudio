@@ -93,11 +93,16 @@ feature -- Output
 
 	draw is
 			-- Draw the segment.
+		local
+			lpath: EV_PATH
 		do
 			if drawing.is_drawable then
+				create lpath.make
+				lpath.get_drawing_attributes (drawing)
 --				drawing.set_cap_style (cap_style)
 				set_drawing_attributes (drawing)
 				drawing.draw_segment (p1, p2)
+				lpath.set_drawing_attributes (drawing)
 			end
 		end
 

@@ -20,6 +20,18 @@ inherit
 
 	BYTE_CONST
 
+feature {CLASS_B} -- Settings
+
+	set_class_id (an_id: like class_id) is
+			-- Assign `an_id' to Current.
+		require
+			positive_id: an_id > 0
+		do
+			class_id := an_id
+		ensure
+			class_id_set: class_id = an_id
+		end
+
 feature
 
 	c_type: TYPE_C is

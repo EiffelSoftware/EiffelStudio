@@ -50,7 +50,6 @@ feature -- Initialization
 			-- Has client been successful in decrementing semaphore
 			-- count with only `a_timeout' ?
 		local
-			dummy_boolean: BOOLEAN
 		do
 			feature {MONITOR}.enter (Current)
 			Result := (count > 0) 

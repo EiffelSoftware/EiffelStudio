@@ -27,13 +27,10 @@ feature -- Initialization
 	initialize is
 			-- Initialize `Current'.
 			-- Set pixmap and connect agents.
-		local
-			a_pixmap: EV_PIXMAP
 		do
 			Precursor {EV_TOOL_BAR_BUTTON}
-			create a_pixmap
-			a_pixmap.set_with_named_file ("D:\EIffel50\bench\bitmaps\png\icon_object_symbol.png")
-			set_pixmap (a_pixmap)
+			set_pixmap ((create {GB_SHARED_PIXMAPS}).icon_object_symbol)
+			set_tooltip ("New object editor")
 			select_actions.extend (agent new_object_editor_empty)
 			drop_actions.extend (agent new_object_editor (?))
 			drop_actions.set_veto_pebble_function (agent do_not_allow_object_type (?))

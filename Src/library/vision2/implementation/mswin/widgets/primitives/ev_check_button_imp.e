@@ -22,7 +22,8 @@ inherit
 			default_style,
 			interface,
 			make,
-			internal_default_height
+			internal_default_height,
+			set_default_minimum_size
 		end
 
 create
@@ -40,6 +41,18 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Status setting
+
+	set_default_minimum_size is
+			-- Reset `Current' to its default minimum size.
+		do
+				-- This extra width only needs to be added if
+				-- we are using a large font, hence we do nothing
+				-- with the system font.
+			if not has_system_font and not text.is_empty then
+				extra_width := 20 + wel_font.height // 2
+			end
+			Precursor {EV_TOGGLE_BUTTON_IMP}
+		end
 
 	enable_select is
 			-- Make `is_selected' True.
@@ -61,6 +74,9 @@ feature {NONE} -- Implementation
 			-- The default minimum height of `Current' with no text.
 			-- This is used in set_default_size.
 		do
+				--|FIXME As soon as we find a nice way to
+				--| know how large the check part of `Current'
+				--| will be drawn by Windows, we can query this directly.
 			Result := 13
 		end
 

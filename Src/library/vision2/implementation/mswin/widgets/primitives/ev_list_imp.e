@@ -370,7 +370,7 @@ feature {EV_ANY_I} -- Implementation
 			if top_index > 0 then
 				temporary_position := top_index + temporary_position
 			end
-			if temporary_position <= count then
+			if temporary_position <= count and temporary_position > 0 then
 				Result := ev_children @ temporary_position
 			end
 		end
@@ -570,6 +570,9 @@ end -- class EV_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.66  2000/04/17 23:32:02  rogers
+--| Fixed bug in find_item_at_position.
+--|
 --| Revision 1.65  2000/04/11 23:56:03  brendel
 --| Fixed cut/paste error.
 --|

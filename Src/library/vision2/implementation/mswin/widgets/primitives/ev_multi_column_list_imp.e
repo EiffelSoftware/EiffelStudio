@@ -109,9 +109,8 @@ feature {NONE} -- Initialization
 			base_make (an_interface)
 			create ev_children.make (0)
 			wel_make (default_parent, 0, 0, 0, 0, 0)
-			--|FIXME This is only required as column title does not correctly
-			--|Work at the moment.
-		--	create column_titles.make (1, 1)
+			--| FIXME
+			row_height := 16
 		end
 
 	initialize is
@@ -152,12 +151,8 @@ feature -- Access
 			end			
 		end
 
-	row_height: INTEGER is
+	row_height: INTEGER
 			-- Height in pixels of each row.
-		do
-			Result := 16
-			--| FIXME To be implemented
-		end
 
 feature -- Status report
 
@@ -279,9 +274,8 @@ feature -- Element change
 	set_row_height (a_height: INTEGER) is
 			-- Assign `a_height' to ??.
 		do
-			check
-				to_be_implemented: False
-			end
+			row_height := a_height
+			--| FIXME TBI
 		end
 
 feature {NONE} -- Implementation
@@ -402,6 +396,7 @@ feature -- Access
 
 	last_column_width_setting: INTEGER
 		-- The width that the last column was set to by the user.
+		--| Used by compute_column_widths somehow.
 
 	find_item_at_position (x_pos, y_pos: INTEGER): EV_MULTI_COLUMN_LIST_ROW_IMP is
 			-- Find the item at the given position.
@@ -478,24 +473,24 @@ feature -- Status setting
 		-- We need this, as if set_columns has not already been called then
 		-- we must set the number of columns before adding the row.
 
-	set_column_alignment (type: INTEGER; column: INTEGER) is
+	--set_column_alignment (type: INTEGER; column: INTEGER) is
 			-- Align the text of the column.
 			-- 0: Left, 
 			-- 1: Right,
 			-- 2: Center,
 			-- 3: Justify
-		do
-			inspect type
-			when 0 then
-				set_column_format (column - 1, Lvcfmt_left)
-			when 1 then
-				set_column_format (column - 1, Lvcfmt_right)
-			when 2 then
-				set_column_format (column - 1, Lvcfmt_center)
-			when 3 then
-				set_column_format (column - 1, Lvcfmt_justifymask)
-			end
-		end
+	--	do
+	--		inspect type
+	--		when 0 then
+	--			set_column_format (column - 1, Lvcfmt_left)
+	--		when 1 then
+	--			set_column_format (column - 1, Lvcfmt_right)
+	--		when 2 then
+	--			set_column_format (column - 1, Lvcfmt_center)
+	--		when 3 then
+	--			set_column_format (column - 1, Lvcfmt_justifymask)
+	--		end
+	--	end
 
 feature -- Element change
 
@@ -550,14 +545,13 @@ feature -- Element change
 
 feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
-
-	item_type: EV_MULTI_COLUMN_LIST_ROW_IMP is
+--	item_type: EV_MULTI_COLUMN_LIST_ROW_IMP is
 			-- An empty feature to give a type.
 			-- We don't use the genericity because it is
 			-- too complicated with the multi-platform design.
 			-- Need to be redefined.
-		do
-		end
+	--	do
+	--	end
 
 	insert_item (item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP; an_index: INTEGER) is
 			-- Insert `item_imp' at `index'.
@@ -672,11 +666,6 @@ feature {EV_MULTI_COLUMN_LIST_ROW_I} -- Implementation
 
 feature {NONE} -- WEL Implementation
 
-	--column_titles: ARRAY [STRING]
-		--|FIXME This has been added as the column_title appears not to
-		--|be working correctly in WEL. This needs to be tested and fixed.
-		--|Julian Rogers 03/21/00
-
 	internal_propagate_pointer_press (event_id, x_pos, y_pos, button: INTEGER) is
 			-- Propagate `event_id' to the good item. 
 		local 
@@ -697,7 +686,6 @@ feature {NONE} -- WEL Implementation
 				y_pos - offsets.integer_arrayed @ 2, button, 0.0, 0.0, 0.0, pt.x, pt.y])
 			end 
 		end 
-
 
 	process_message (hwnd: POINTER; msg,
 			wparam, lparam: INTEGER): INTEGER is
@@ -732,19 +720,19 @@ feature {NONE} -- WEL Implementation
 		local
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
-		if info.uchanged = Lvif_state and info.isubitem = 0 then
-			if flag_set(info.unewstate, Lvis_selected) and
-					not flag_set(info.uoldstate, Lvis_selected) then
-				item_imp := ev_children @ (info.iitem + 1)
-				item_imp.interface.select_actions.call ([])
-				interface.select_actions.call ([item_imp.interface])
-			elseif flag_set(info.uoldstate, Lvis_selected) and
-				not flag_set(info.unewstate, Lvis_selected) then
-				item_imp := ev_children @ (info.iitem + 1)
-				item_imp.interface.deselect_actions.call ([])
-				interface.deselect_actions.call ([item_imp.interface])
+			if info.uchanged = Lvif_state and info.isubitem = 0 then
+				if flag_set(info.unewstate, Lvis_selected) and
+						not flag_set(info.uoldstate, Lvis_selected) then
+					item_imp := ev_children @ (info.iitem + 1)
+					item_imp.interface.select_actions.call ([])
+					interface.select_actions.call ([item_imp.interface])
+				elseif flag_set(info.uoldstate, Lvis_selected) and
+					not flag_set(info.unewstate, Lvis_selected) then
+					item_imp := ev_children @ (info.iitem + 1)
+					item_imp.interface.deselect_actions.call ([])
+					interface.deselect_actions.call ([item_imp.interface])
+				end
 			end
-		end
 		end
 
 	on_left_button_down (keys, x_pos, y_pos: INTEGER) is
@@ -913,6 +901,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.66  2000/03/25 01:45:57  brendel
+--| Cleanup.
+--|
 --| Revision 1.65  2000/03/25 01:14:56  brendel
 --| Implemented according to new _I.
 --|

@@ -1,5 +1,19 @@
 /*-----------------------------------------------------------
 Component registration code
+
+WARNING!!!: If you are planning to overwrite this file then
+please be sure that you add both of the following things to
+the new server_registration.cpp.
+
+> replace REGCLS_MULTIPLEUSE with REGCLS_SINGLEUSE in
+  ccom_initialize_com_function().
+  -- Lines 427, 434, 441
+
+> Added ProxyStubClsid32 reg key and value to CEiffelProject
+  coclass and any other newly added creatable coclasses.
+  Note: The GUID for the proxy stub should be the same GUID
+  as the first interface in the compiler type library.
+  -- Lines 83 - 88
 -----------------------------------------------------------*/
 
 #include "server_registration.h"
@@ -31,13 +45,13 @@ const REG_DATA reg_entries[] =
 {
 
 	{
-		__TEXT("CLSID\\{5B4A07BB-BA73-4D00-B0FE-352FC4127B9E}"),
+		__TEXT("CLSID\\{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}"),
 		0,
 		__TEXT("CEiffelProject Class"),
 		TRUE
 	},
 	{
-		__TEXT("AppID\\{5B4A07BB-BA73-4D00-B0FE-352FC4127B9E}"),
+		__TEXT("AppID\\{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}"),
 		0,
 		"CEiffelProject Application",
 		TRUE
@@ -45,39 +59,46 @@ const REG_DATA reg_entries[] =
 	{
 		__TEXT("AppID\\ISE"),
 		__TEXT("AppID"),
-		__TEXT("{5B4A07BB-BA73-4D00-B0FE-352FC4127B9E}"),
+		__TEXT("{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}"),
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{5B4A07BB-BA73-4D00-B0FE-352FC4127B9E}\\LocalServer32"),
+		__TEXT("CLSID\\{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}\\LocalServer32"),
 		0,
 		file_name,
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{5B4A07BB-BA73-4D00-B0FE-352FC4127B9E}\\LocalServer32"),
+		__TEXT("CLSID\\{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}\\LocalServer32"),
 		__TEXT("ThreadingModel"),
 		__TEXT("Apartment"),
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{5B4A07BB-BA73-4D00-B0FE-352FC4127B9E}"),
+		__TEXT("CLSID\\{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}"),
 		__TEXT("AppID"),
-		__TEXT("{5B4A07BB-BA73-4D00-B0FE-352FC4127B9E}"),
+		__TEXT("{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}"),
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{5B4A07BB-BA73-4D00-B0FE-352FC4127B9E}\\ProgID"),
+		__TEXT("CLSID\\{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}\\ProgID"),
 		0,
 		__TEXT("EiffelComCompiler.CEiffelProject.1"),
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{5B4A07BB-BA73-4D00-B0FE-352FC4127B9E}\\VersionIndependentProgID"),
+		__TEXT("CLSID\\{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}\\ProxyStubClsid32"),
+		0,
+		__TEXT("{E1FFE10C-06F1-448E-A221-9C702B9DF685}"),
+		TRUE
+	},
+	{
+		__TEXT("CLSID\\{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}\\VersionIndependentProgID"),
 		0,
 		__TEXT("EiffelComCompiler.CEiffelProject"),
 		TRUE
 	},
+
 	{
 		__TEXT("EiffelComCompiler.CEiffelProject.1"),
 		0,
@@ -87,7 +108,7 @@ const REG_DATA reg_entries[] =
 	{
 		__TEXT("EiffelComCompiler.CEiffelProject.1\\CLSID"),
 		0,
-		__TEXT("{5B4A07BB-BA73-4D00-B0FE-352FC4127B9E}"),
+		__TEXT("{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}"),
 		TRUE
 	},
 	{
@@ -99,7 +120,7 @@ const REG_DATA reg_entries[] =
 	{
 		__TEXT("EiffelComCompiler.CEiffelProject\\CLSID"),
 		0,
-		__TEXT("{5B4A07BB-BA73-4D00-B0FE-352FC4127B9E}"),
+		__TEXT("{E1FFE1BB-BA73-4D00-B0FE-352FC4127B9E}"),
 		TRUE
 	},
 	{
@@ -109,13 +130,13 @@ const REG_DATA reg_entries[] =
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{CA54EDD7-9FDE-4260-9055-9AB7E92122CD}"),
+		__TEXT("CLSID\\{E1FFE1D7-9FDE-4260-9055-9AB7E92122CD}"),
 		0,
 		__TEXT("CEiffelCompiler Class"),
 		TRUE
 	},
 	{
-		__TEXT("AppID\\{CA54EDD7-9FDE-4260-9055-9AB7E92122CD}"),
+		__TEXT("AppID\\{E1FFE1D7-9FDE-4260-9055-9AB7E92122CD}"),
 		0,
 		"CEiffelCompiler Application",
 		TRUE
@@ -123,35 +144,35 @@ const REG_DATA reg_entries[] =
 	{
 		__TEXT("AppID\\ISE"),
 		__TEXT("AppID"),
-		__TEXT("{CA54EDD7-9FDE-4260-9055-9AB7E92122CD}"),
+		__TEXT("{E1FFE1D7-9FDE-4260-9055-9AB7E92122CD}"),
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{CA54EDD7-9FDE-4260-9055-9AB7E92122CD}\\LocalServer32"),
+		__TEXT("CLSID\\{E1FFE1D7-9FDE-4260-9055-9AB7E92122CD}\\LocalServer32"),
 		0,
 		file_name,
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{CA54EDD7-9FDE-4260-9055-9AB7E92122CD}\\LocalServer32"),
+		__TEXT("CLSID\\{E1FFE1D7-9FDE-4260-9055-9AB7E92122CD}\\LocalServer32"),
 		__TEXT("ThreadingModel"),
 		__TEXT("Apartment"),
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{CA54EDD7-9FDE-4260-9055-9AB7E92122CD}"),
+		__TEXT("CLSID\\{E1FFE1D7-9FDE-4260-9055-9AB7E92122CD}"),
 		__TEXT("AppID"),
-		__TEXT("{CA54EDD7-9FDE-4260-9055-9AB7E92122CD}"),
+		__TEXT("{E1FFE1D7-9FDE-4260-9055-9AB7E92122CD}"),
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{CA54EDD7-9FDE-4260-9055-9AB7E92122CD}\\ProgID"),
+		__TEXT("CLSID\\{E1FFE1D7-9FDE-4260-9055-9AB7E92122CD}\\ProgID"),
 		0,
 		__TEXT("EiffelComCompiler.CEiffelCompiler.1"),
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{CA54EDD7-9FDE-4260-9055-9AB7E92122CD}\\VersionIndependentProgID"),
+		__TEXT("CLSID\\{E1FFE1D7-9FDE-4260-9055-9AB7E92122CD}\\VersionIndependentProgID"),
 		0,
 		__TEXT("EiffelComCompiler.CEiffelCompiler"),
 		TRUE
@@ -165,7 +186,7 @@ const REG_DATA reg_entries[] =
 	{
 		__TEXT("EiffelComCompiler.CEiffelCompiler.1\\CLSID"),
 		0,
-		__TEXT("{CA54EDD7-9FDE-4260-9055-9AB7E92122CD}"),
+		__TEXT("{E1FFE1D7-9FDE-4260-9055-9AB7E92122CD}"),
 		TRUE
 	},
 	{
@@ -177,7 +198,7 @@ const REG_DATA reg_entries[] =
 	{
 		__TEXT("EiffelComCompiler.CEiffelCompiler\\CLSID"),
 		0,
-		__TEXT("{CA54EDD7-9FDE-4260-9055-9AB7E92122CD}"),
+		__TEXT("{E1FFE1D7-9FDE-4260-9055-9AB7E92122CD}"),
 		TRUE
 	},
 	{
@@ -187,13 +208,13 @@ const REG_DATA reg_entries[] =
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{BCA3E550-3E39-4A44-A034-38F8B422D8DF}"),
+		__TEXT("CLSID\\{E1FFE150-3E39-4A44-A034-38F8B422D8DF}"),
 		0,
 		__TEXT("CEiffelCompletionInfo Class"),
 		TRUE
 	},
 	{
-		__TEXT("AppID\\{BCA3E550-3E39-4A44-A034-38F8B422D8DF}"),
+		__TEXT("AppID\\{E1FFE150-3E39-4A44-A034-38F8B422D8DF}"),
 		0,
 		"CEiffelCompletionInfo Application",
 		TRUE
@@ -201,35 +222,35 @@ const REG_DATA reg_entries[] =
 	{
 		__TEXT("AppID\\ISE"),
 		__TEXT("AppID"),
-		__TEXT("{BCA3E550-3E39-4A44-A034-38F8B422D8DF}"),
+		__TEXT("{E1FFE150-3E39-4A44-A034-38F8B422D8DF}"),
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{BCA3E550-3E39-4A44-A034-38F8B422D8DF}\\LocalServer32"),
+		__TEXT("CLSID\\{E1FFE150-3E39-4A44-A034-38F8B422D8DF}\\LocalServer32"),
 		0,
 		file_name,
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{BCA3E550-3E39-4A44-A034-38F8B422D8DF}\\LocalServer32"),
+		__TEXT("CLSID\\{E1FFE150-3E39-4A44-A034-38F8B422D8DF}\\LocalServer32"),
 		__TEXT("ThreadingModel"),
 		__TEXT("Apartment"),
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{BCA3E550-3E39-4A44-A034-38F8B422D8DF}"),
+		__TEXT("CLSID\\{E1FFE150-3E39-4A44-A034-38F8B422D8DF}"),
 		__TEXT("AppID"),
-		__TEXT("{BCA3E550-3E39-4A44-A034-38F8B422D8DF}"),
+		__TEXT("{E1FFE150-3E39-4A44-A034-38F8B422D8DF}"),
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{BCA3E550-3E39-4A44-A034-38F8B422D8DF}\\ProgID"),
+		__TEXT("CLSID\\{E1FFE150-3E39-4A44-A034-38F8B422D8DF}\\ProgID"),
 		0,
 		__TEXT("EiffelComCompiler.CEiffelCompletionInfo.1"),
 		TRUE
 	},
 	{
-		__TEXT("CLSID\\{BCA3E550-3E39-4A44-A034-38F8B422D8DF}\\VersionIndependentProgID"),
+		__TEXT("CLSID\\{E1FFE150-3E39-4A44-A034-38F8B422D8DF}\\VersionIndependentProgID"),
 		0,
 		__TEXT("EiffelComCompiler.CEiffelCompletionInfo"),
 		TRUE
@@ -243,7 +264,7 @@ const REG_DATA reg_entries[] =
 	{
 		__TEXT("EiffelComCompiler.CEiffelCompletionInfo.1\\CLSID"),
 		0,
-		__TEXT("{BCA3E550-3E39-4A44-A034-38F8B422D8DF}"),
+		__TEXT("{E1FFE150-3E39-4A44-A034-38F8B422D8DF}"),
 		TRUE
 	},
 	{
@@ -255,7 +276,7 @@ const REG_DATA reg_entries[] =
 	{
 		__TEXT("EiffelComCompiler.CEiffelCompletionInfo\\CLSID"),
 		0,
-		__TEXT("{BCA3E550-3E39-4A44-A034-38F8B422D8DF}"),
+		__TEXT("{E1FFE150-3E39-4A44-A034-38F8B422D8DF}"),
 		TRUE
 	},
 	{
@@ -278,7 +299,7 @@ EIF_INTEGER Unregister( const REG_DATA *rgEntries, int cEntries )
 	Unregister Server/Component
 	-----------------------------------------------------------*/
 {
-	static const IID LIBID_EiffelComCompiler_ = {0x06b5d7c0,0x2c7d,0x4d1c,{0xa9,0x8b,0x45,0x99,0xbd,0xcd,0xfa,0x58}};
+	static const IID LIBID_EiffelComCompiler_ = {0xe1ffe1c0,0x2c7d,0x4d1c,{0xa9,0x8b,0x45,0x99,0xbd,0xcd,0xfa,0x58}};
 	HRESULT hr = UnRegisterTypeLib (LIBID_EiffelComCompiler_, 1, 0, 0, SYS_WIN32);
 	BOOL bSuccess = SUCCEEDED (hr);
 	for (int i= cEntries -1; i >= 0; i--)

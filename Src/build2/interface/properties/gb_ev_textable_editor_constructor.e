@@ -29,34 +29,16 @@ feature -- Access
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		do
-			--Result := Precursor {GB_EV_ANY}
 			create Result
 			initialize_attribute_editor (Result)
-			create label.make_with_text (gb_ev_textable_text)
-			label.set_tooltip (gb_ev_textable_text_tooltip)
-			Result.extend (label)
-			if is_instance_of (first, dynamic_type_from_string ("EV_TEXT")) or is_instance_of (first, dynamic_type_from_string ("EV_LABEL")) then
-				create text_entry
-				text_entry.set_minimum_height (50)
-				text_entry.set_tooltip (gb_ev_textable_text_tooltip)
-				text_entry.change_actions.extend (agent set_text)
-				text_entry.change_actions.extend (agent update_editors)
-				Result.extend (text_entry)
-			else
-				create text_field_entry	
-				text_field_entry.set_tooltip (gb_ev_textable_text_tooltip)
-				text_field_entry.change_actions.extend (agent set_text)
-				text_field_entry.change_actions.extend (agent update_editors)
-				Result.extend (text_field_entry)
-			end
-
+				create text_entry.make (Current, Result, text_string, Gb_ev_textable_text, Gb_ev_textable_text_tooltip,
+				agent set_text (?), agent valid_value (?))
 			update_attribute_editor
 
 			disable_all_items (Result)
 			align_labels_left (Result)
 		ensure
-			text_or_field_not_void: (text_entry /= Void or text_field_entry /= Void) and not
-				(text_entry /= Void and text_field_entry /= Void)
+			text_entry_not_void: text_entry /= Void
 		end
 
 feature {NONE} -- Implementation
@@ -65,33 +47,23 @@ feature {NONE} -- Implementation
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
 		do
-			if text_entry /= Void then
-				text_entry.change_actions.block
-				text_entry.set_text (first.text)
-				text_entry.change_actions.resume
-			else
-				text_field_entry.change_actions.block
-				text_field_entry.set_text (first.text)
-				text_field_entry.change_actions.resume
-			end	
+			text_entry.set_text (first.text)
 		end
 
-	set_text is
+	set_text (a_text: STRING) is
 			-- Assign `text' of `text_entry' to all objects.
 		do
-			if text_entry /= Void then
-				for_all_objects (agent {EV_TEXTABLE}.set_text (text_entry.text))
-			else
-				for_all_objects (agent {EV_TEXTABLE}.set_text (text_field_entry.text))
-			end
+			for_all_objects (agent {EV_TEXTABLE}.set_text (a_text))
 		end
 		
+	valid_value (a_value: STRING): BOOLEAN is
+			-- Is `a_value' valid for the text?
+		do
+			Result := True
+		end
 		
-	label: EV_LABEL
-		-- Identifies `combo_box'.
-		
-	text_entry: EV_TEXT
-	text_field_entry: EV_TEXT_FIELD
+	text_entry: GB_STRING_INPUT_FIELD
+		-- Input field for text.
 
 	Text_string: STRING is "Text"
 	

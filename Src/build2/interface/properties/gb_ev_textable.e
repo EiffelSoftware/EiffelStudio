@@ -62,8 +62,8 @@ feature {GB_XML_STORE} -- Output
 			textable: EV_TEXTABLE
 		do
 			textable ?= default_object_by_type (class_name (first))
-			if not objects.first.text.is_empty then
-				add_element_containing_string (element, text_string, enclose_in_cdata (objects.first.text))
+			if not textable.text.is_equal (objects.first.text) or object.constants.item (type + Text_string) /= Void then
+				add_string_element (element, Text_string, objects.first.text)
 			end
 		end
 		
@@ -79,8 +79,7 @@ feature {GB_XML_STORE} -- Output
 				-- while resetting an object. When we are using the XML document, this is stripped
 				-- automatically so we do not encounter it.
 			if element_info /= Void and then element_info.data.count /= 0 then
-				stripped_text := strip_cdata (element_info.data)
-				for_all_objects (agent {EV_TEXTABLE}.set_text (stripped_text))
+				for_all_objects (agent {EV_TEXTABLE}.set_text (retrieve_and_set_string_value (text_string)))
 			end
 		end
 		

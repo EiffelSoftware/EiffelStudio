@@ -1,0 +1,4 @@
+Type warning: Generic parameter in TUPLE do not conform to expected generic type
+  allthough code was valid in former revision of ISE Eiffel. 
+What to do: make sure that type of generic parameter (right-hand side)
+  conforms to type of target generic type. 

@@ -406,10 +406,10 @@ feature {GB_DELETE_OBJECT_COMMAND} -- Basic operation
 			command_delete_directory: GB_COMMAND_DELETE_DIRECTORY
 		do
 			from
-				a_directory.start
 			until
-				a_directory.off
+				a_directory.is_empty
 			loop
+				a_directory.start
 				current_directory_item ?= a_directory.item
 				if current_directory_item /= Void then
 					delete_objects_in_directory (current_directory_item)
@@ -491,8 +491,8 @@ feature {GB_WINDOW_SELECTOR_DIRECTORY_ITEM} -- Implementation
 							object_handler.add_new_object (an_object)
 						end
 						create command_add_window.make (an_object, Void)
-						command_add_window.execute
 						an_object.set_name (dialog.name.as_lower)
+						command_add_window.execute
 					else
 						create command_convert_to_top_level.make (an_object, dialog.name.as_lower)
 						command_convert_to_top_level.execute	
@@ -968,11 +968,6 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 			selector_item: GB_WINDOW_SELECTOR_ITEM
 		do
 			create selector_item.make_with_object (window_object)
-			
-			extend (selector_item)
-			selector_item.enable_select
-		ensure
-			has_selected_item: selected_window /= Void
 		end
 
 feature {GB_COMMAND_DELETE_DIRECTORY} -- Implementation
@@ -991,7 +986,7 @@ feature {GB_COMMAND_DELETE_DIRECTORY} -- Implementation
 		do
 			create directory_item.make_with_name (directory_name.i_th (directory_name.count))
 			if directory_name.count = 1 then
-				extend (directory_item)
+				add_to_tree_node_alphabetically (Current, directory_item)
 			else
 				parent_name := directory_name.twin
 				parent_name.prune_all (parent_name.last)
@@ -999,7 +994,7 @@ feature {GB_COMMAND_DELETE_DIRECTORY} -- Implementation
 				check
 					parent_directory_found: parent_directory /= Void
 				end
-				parent_directory.extend (directory_item)
+				add_to_tree_node_alphabetically (parent_directory, directory_item)
 			end
 				-- Update project so it may be saved.
 			system_status.enable_project_modified
@@ -1385,5 +1380,8 @@ feature {NONE} -- Implementation
 				represented_path.prune_all (represented_path.last)
 			end
 		end
+		
+invariant
+	contents_alphabetical: tree_node_contents_alphabetical (Current)
 
 end -- class GB_WINDOW_SELECTOR

@@ -85,7 +85,7 @@ feature -- Basic operation
 			if file_handler.last_load_successful then
 				check
 					data_not_void: data /= Void
-					data_count_is_4: data.count = 4
+					data_count_is_5: data.count = 5
 				end
 				temp_tuple := data @ 1
 				temp_string ?= temp_tuple @ 2

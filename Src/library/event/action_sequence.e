@@ -54,10 +54,7 @@ creation
 feature {NONE} -- Initialization
 
 	make is
-			-- Create with `a_name' and
-			-- `some_event_data_names' describing each event datum.
 			-- Begin in `Normal_state'.
-		require
 		do
 			linked_list_make
 			create is_aborted_stack.make
@@ -74,12 +71,16 @@ feature -- Basic operations
 			-- If `is_paused' delay execution until `resume'.
 			-- Stop at current point in list on `abort'.
 		require
-			event_data_not_void: event_data /= Void
+	--		event_data_not_void: event_data /= Void
 		local
 			snapshot: LINKED_LIST [PROCEDURE [ANY, EVENT_DATA]]
 		do
 			create snapshot.make
 			snapshot.fill (Current)
+			if kamikazes /= Void then
+				call_action_list (kamikazes)
+				kamikazes := Void
+			end
 			inspect
 				state
 			when
@@ -214,6 +215,17 @@ feature -- Status report
 
 feature  -- Element Change
 
+	prune_when_called (an_action: like item) is
+			-- Remove `an_action' after the next time it is called.
+		require
+			has (an_action)
+		do
+			if kamikazes = Void then
+				create kamikazes.make
+			end
+			kamikazes.extend (~prune (an_action))
+		end
+
 	merge_left (other: like Current) is
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'
@@ -311,6 +323,7 @@ feature {NONE} -- Implementation
 				snapshot.after
 			loop
 				snapshot.item.call ([])
+				--snapshot.item.call (Void)
 				snapshot.forth
 			end
 		end
@@ -333,6 +346,9 @@ feature {NONE} -- Implementation
 
 	dummy_event_data_internal: EVENT_DATA
 			-- See dummy_event_data.
+	
+	kamikazes: LINKED_LIST [PROCEDURE [ANY, TUPLE[]]]
+			-- Used by `prune_when_called'.
 
 invariant
 	is_aborted_stack_not_void: is_aborted_stack /= Void
@@ -368,6 +384,9 @@ end
 --|-----------------------------------------------------------------------------
 --| 
 --| $Log$
+--| Revision 1.20  2000/09/04 22:18:32  oconnor
+--| added prune_when_called
+--|
 --| Revision 1.19  2000/07/24 22:43:17  oconnor
 --| removed textual identifiers
 --|

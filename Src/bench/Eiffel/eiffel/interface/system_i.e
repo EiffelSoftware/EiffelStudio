@@ -3804,6 +3804,13 @@ feature -- DLE
 		do
 		end;
 
+	dynamic_class_ids: SEARCH_TABLE [CLASS_ID] is
+			-- Set of ids of dynamic classes
+		require
+			dynamic_system: is_dynamic
+		do
+		end;
+
 	was_used (f: FEATURE_I): BOOLEAN is
 			-- Was feature `f' used in the static system?
 		require

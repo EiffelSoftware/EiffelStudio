@@ -85,6 +85,15 @@ feature -- Access
 	Com_exception: INTEGER is 28;
 			-- Exception code for a COM error.
 
+	number_of_codes: INTEGER is 28
+			-- How many codes are there to represent exceptions?
+
+	valid_code (c: INTEGER): BOOLEAN is
+			-- Is `c' a valid code to represent some kind of exceptions?
+		do
+			Result := c >= 1 and c <= number_of_codes
+		end
+
 indexing
 
 	library: "[

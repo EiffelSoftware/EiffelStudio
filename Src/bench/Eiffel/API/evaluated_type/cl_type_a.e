@@ -293,8 +293,7 @@ feature {COMPILER_EXPORTER} -- Instantiation of a type in the context of a desce
 					-- current actual class type
 				instantiation := Current;
 			else
-				instantiation := find_class_type
-											(System.class_of_id (class_id));
+				instantiation := find_class_type (System.class_of_id (class_id));
 			end;
 			Result := type.actual_type;
 			if instantiation.generics /= Void then

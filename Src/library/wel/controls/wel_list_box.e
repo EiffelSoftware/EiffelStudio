@@ -25,6 +25,8 @@ inherit
 			{NONE} all
 		end
 
+	WEL_COLOR_CONTROL
+
 feature {NONE} -- Initialization
 
 	make (a_parent: WEL_WINDOW; a_x, a_y, a_width, a_height, an_id: INTEGER) is
@@ -98,6 +100,22 @@ feature -- Access
 		ensure
 			positive_result: Result >= 0
 			same_result_as_strings: Result = strings.item (i).count
+		end
+
+	foreground_color: WEL_COLOR_REF is
+			-- foreground color used for the text of the
+			-- control
+			-- Can be redefined by the user
+		do
+			!! Result.make_system (Color_windowtext)
+		end
+
+	background_color: WEL_COLOR_REF is
+			-- Background color used for the background of the
+			-- control
+			-- Can be redefined by the user
+		do
+			!! Result.make_rgb (255, 255, 255)
 		end
 
 feature -- Element change

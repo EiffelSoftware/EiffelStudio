@@ -728,14 +728,6 @@ feature -- Element change
 		ensure
 			inserted: column (a_column).item (a_row) = a_item
 		end
-		
-	do_something is
-			--
-		do
-			do_not_compute_scroll_bar := True
-		end
-		
-	do_not_compute_scroll_bar: BOOLEAN
 
 feature -- Removal
 
@@ -925,7 +917,7 @@ feature {EV_GRID_COLUMN_I, EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I, EV_GRID_I
 					rows.go_i_th (an_index)
 				end
 				
-				if row_offsets.count < rows.count then
+				if row_offsets.count < rows.count + 1 then
 					row_offsets.resize (rows.count + 1)
 				end
 				
@@ -1628,9 +1620,7 @@ feature {NONE} -- Implementation
 			grid_row_i.set_parent_i (Current)
 
 			recompute_row_offsets (a_index)
-			if do_not_compute_scroll_bar then
-				recompute_vertical_scroll_bar
-			end
+			recompute_vertical_scroll_bar
 		end
 
 	update_grid_row_indices (a_index: INTEGER) is

@@ -8,10 +8,8 @@ indexing
 class QUIT_PROFILE_TOOL
 
 inherit
-	TOOL_COMMAND
-		rename
-			tool as old_tool
-		end
+	EB_CONSTANTS;
+	ISE_COMMAND
 
 creation
 	make

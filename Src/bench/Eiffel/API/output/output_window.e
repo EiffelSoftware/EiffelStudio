@@ -10,7 +10,7 @@ deferred class OUTPUT_WINDOW
 inherit
 	TEXT_FORMATTER
 		redefine
-			process_string_text
+			process_string_text, process_difference_text_item
 		end
 
 feature {TEXT_ITEM} -- Text processing
@@ -336,6 +336,12 @@ feature -- Ouput
 			valid_e_feature: e_feature /= Void
 		do
 			put_string (str)
+		end;
+
+	process_difference_text_item (text: DIFFERENCE_TEXT_ITEM) is
+				-- Process difference text text.
+		do
+			put_string (text.image)
 		end;
 
 end -- class OUTPUT_WINDOW

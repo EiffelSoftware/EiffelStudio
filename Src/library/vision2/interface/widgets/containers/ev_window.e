@@ -31,8 +31,8 @@ feature {NONE} -- Initialization
 		do
 			!EV_WINDOW_IMP!implementation.make (par)
 			implementation.set_interface (Current)
+			implementation.plateform_build (par.implementation)
 			implementation.build
---			implementation.initialize_colors
 		end
 	
     make_top_level is
@@ -43,8 +43,8 @@ feature {NONE} -- Initialization
 		do
 			!EV_WINDOW_IMP!implementation.make_top_level 
 			implementation.set_interface (Current)
+			implementation.plateform_build (Void)
 			implementation.build
---			implementation.initialize_colors
 		end
 	
 feature  -- Access
@@ -62,6 +62,37 @@ feature  -- Access
 			else
 				Result := Void
 			end
+		end
+
+	maximum_width: INTEGER is
+			-- Maximum width that application wishes widget
+			-- instance to have
+		require
+			exists: not destroyed
+		do
+			Result := implementation.maximum_width
+		ensure
+			Result >= 0
+		end
+
+	maximum_height: INTEGER is
+			-- Maximum height that application wishes widget
+			-- instance to have
+		require
+			exists: not destroyed
+		do
+			Result := implementation.maximum_height
+		ensure
+			Result >= 0
+		end
+
+	title: STRING is
+			-- Application name to be displayed by
+			-- the window manager
+		require
+			exists: not destroyed
+		do
+			Result := implementation.title
 		end
 
 	icon_name: STRING is
@@ -94,90 +125,18 @@ feature  -- Access
 		ensure
 			valid_result: Result /= Void
 		end
-	
-	title: STRING is
-                        -- Application name to be displayed by
-                        -- the window manager
-                require
-                        exists: not destroyed
-                do
-                        Result := implementation.title
-                end
 
 	widget_group: EV_WIDGET is
-                        -- Widget with wich current widget is associated.
-                        -- By convention this widget is the "leader" of a group
-                        -- widgets. Window manager will treat all widgets in
-                        -- a group in some way; for example, it may move or
-                        -- iconify them together
-                require
-                        exists: not destroyed
-                do
-                        Result := implementation.widget_group
-                end 
-
-
-feature -- Element change
-	
-	set_icon_mask (mask: EV_PIXMAP) is
-                        -- Set `icon_mask' to `mask'.
-                require
-                        exists: not destroyed
-                        not_mask_void: mask /= Void
-                do
-                        implementation.set_icon_mask (mask)
-                end
-
-	set_icon_pixmap (pixmap: EV_PIXMAP) is
-                        -- Set `icon_pixmap' to `pixmap'.
-                require
-                        exists: not destroyed
-                        not_pixmap_void: pixmap /= Void
---XX                        valid_pixmap: pixmap.is_valid
-                do
-                        implementation.set_icon_pixmap (pixmap)
-                end
-
-	set_title (new_title: STRING) is
-                        -- Set `title' to `new_title'.
-                require
-                        exists: not destroyed
-                        not_title_void: new_title /= Void
-                do
-                        implementation.set_title (new_title)
-                end
-
-	set_widget_group (group_widget: EV_WIDGET) is
-                        -- Set `widget_group' to `group_widget'.
-                require
-                        exists: not destroyed
-                do
-                        implementation.set_widget_group (group_widget)
-                end
-
-feature -- Measurement
-
-	maximum_width: INTEGER is
-			-- Maximum width that application wishes widget
-			-- instance to have
+			-- Widget with wich current widget is associated.
+			-- By convention this widget is the "leader" of a group
+			-- widgets. Window manager will treat all widgets in
+			-- a group in some way; for example, it may move or
+			-- iconify them together
 		require
 			exists: not destroyed
 		do
-			Result := implementation.maximum_width
-		ensure
-			Result >= 0
-		end
-
-	maximum_height: INTEGER is
-			-- Maximum height that application wishes widget
-			-- instance to have
-		require
-			exists: not destroyed
-		do
-			Result := implementation.maximum_height
-		ensure
-			Result >= 0
-		end
+			Result := implementation.widget_group
+		end 
 
 feature -- Status report
 
@@ -190,6 +149,22 @@ feature -- Status report
 		end
 
 feature -- Status setting
+
+	forbid_resize is
+			-- Forbid the resize of the window.
+		require
+			exists: not destroyed
+		do
+			implementation.forbid_resize
+		end
+
+	allow_resize is
+			-- Allow the resize of the window.
+		require
+			exists: not destroyed
+		do
+			implementation.allow_resize
+		end
 
 	set_iconic_state is
 			-- Set start state of the application
@@ -219,21 +194,10 @@ feature -- Status setting
 
 feature -- Element change
 
-        set_icon_name (new_name: STRING) is
-                        -- Set `icon_name' to `new_name'.
-                require
-                        exists: not destroyed
-                        Valid_name: new_name /= Void
-                do
-                        implementation.set_icon_name (new_name)
-                end
-
-        set_close_command (c: EV_COMMAND) is
-                do
-                        implementation.set_close_command (c)
-                end
-
-feature -- Resizing
+	set_close_command (c: EV_COMMAND) is
+		do
+			implementation.set_close_command (c)
+		end
 
 	set_maximum_width (max_width: INTEGER) is
 			-- Make `max_width' the new `maximum_width'.
@@ -256,6 +220,51 @@ feature -- Resizing
 		ensure
 			max_height = max_height
 		end
+
+	set_title (new_title: STRING) is
+                        -- Set `title' to `new_title'.
+                require
+                        exists: not destroyed
+                        not_title_void: new_title /= Void
+                do
+                        implementation.set_title (new_title)
+                end
+
+	set_icon_name (new_name: STRING) is
+			-- Set `icon_name' to `new_name'.
+		require
+			exists: not destroyed
+			Valid_name: new_name /= Void
+		do
+			implementation.set_icon_name (new_name)
+		end
+
+	set_icon_mask (mask: EV_PIXMAP) is
+                        -- Set `icon_mask' to `mask'.
+                require
+                        exists: not destroyed
+                        not_mask_void: mask /= Void
+                do
+                        implementation.set_icon_mask (mask)
+                end
+
+	set_icon_pixmap (pixmap: EV_PIXMAP) is
+                        -- Set `icon_pixmap' to `pixmap'.
+                require
+                        exists: not destroyed
+                        not_pixmap_void: pixmap /= Void
+--XX                        valid_pixmap: pixmap.is_valid
+                do
+                        implementation.set_icon_pixmap (pixmap)
+                end
+
+	set_widget_group (group_widget: EV_WIDGET) is
+                        -- Set `widget_group' to `group_widget'.
+                require
+                        exists: not destroyed
+                do
+                        implementation.set_widget_group (group_widget)
+                end
 
 feature -- Event - command association
 

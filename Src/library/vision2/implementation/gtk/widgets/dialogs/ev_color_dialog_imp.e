@@ -73,13 +73,17 @@ feature -- Access
 			a_colorsel: POINTER
 			a_colors: POINTER
 		do
-			a_colorsel := gtk_color_selection_dialog_struct_colorsel (c_object)
-			a_colors := gtk_color_selection_struct_values (a_colorsel)
-			create Result.make_with_rgb (
-				double_array_i_th (a_colors, 3), -- values [3] == RED
-				double_array_i_th (a_colors, 4),
-				double_array_i_th (a_colors, 5)
-			)
+			if not user_clicked_ok and then internal_set_color /= Void then
+				Result := clone (internal_set_color)
+			else
+				a_colorsel := gtk_color_selection_dialog_struct_colorsel (c_object)
+				a_colors := gtk_color_selection_struct_values (a_colorsel)
+				create Result.make_with_rgb (
+					double_array_i_th (a_colors, 3), -- values [3] == RED
+					double_array_i_th (a_colors, 4),
+					double_array_i_th (a_colors, 5)
+				)
+			end
 		end
 
 feature -- Element change
@@ -90,6 +94,7 @@ feature -- Element change
 			a_color_array: ARRAY [DOUBLE]
 			a_array_pointer: ANY
 		do
+			internal_set_color := clone (a_color)
 			create a_color_array.make (1, 4)
 			a_color_array.put (a_color.red, 1)
 			a_color_array.put (a_color.green, 2)
@@ -102,6 +107,11 @@ feature -- Element change
 		end
 
 feature {NONE} -- Implementation
+
+	internal_set_color: EV_COLOR
+		-- Color explicitly set with `set_color'.
+		
+feature {NONE} -- Externals
 
 	gtk_color_selection_dialog_struct_colorsel (a_c_struct: POINTER): POINTER is
 		external
@@ -172,6 +182,9 @@ end -- class EV_COLOR_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2001/06/29 22:26:08  king
+--| Corrected color retrieval
+--|
 --| Revision 1.11  2001/06/22 00:49:27  king
 --| Calling initialize Precursor
 --|

@@ -14,6 +14,7 @@ feature {NONE} -- Execute
 			i: INTEGER;
 			start, modval: INTEGER;
 			argument: STRING;
+			query_parser: QUERY_PARSER
 		do
 			command_arguments := command_line_io.command_arguments;
 			if command_arguments.argument_count >= 4 then
@@ -24,14 +25,16 @@ feature {NONE} -- Execute
 					io.putstring ("--> Subquery: ");
 					command_line_io.get_name;
 					command_arguments := command_line_io.command_arguments;
+					!! query_parser
 				until
-					command_arguments.argument_count = 3
+					query_parser.parse (query_string (command_arguments), Current)
+						--| Guillaume - 09/18/97
 				loop
 					io.putstring ("--> Subquery: ");
 					command_line_io.get_name;
 					command_arguments := command_line_io.command_arguments;
 				end;
-				!! subquery.make (command_arguments.item (1), command_arguments.item (2), command_arguments.item (3));
+				-- !! subquery.make (command_arguments.item (1), command_arguments.item (2), command_arguments.item (3)); --| Done in query_parser.parse
 			end;
 			execute;
 		end;
@@ -40,7 +43,7 @@ feature {NONE} -- Execute
 		local
 			sq_op: SUBQUERY_OPERATOR
 		do
-			subqueries.extend (subquery);
+			-- subqueries.extend (subquery); --| Done in query_parser.parse
 			if subqueries.count > 1 then
 				!! sq_op.make ("and");
 				subquery_operators.extend (sq_op);
@@ -87,12 +90,27 @@ feature -- Properties
 
 feature {NONE} -- Implementation
 
+	query_string (command_arguments: EWB_ARGUMENTS): STRING is
+		local
+			i : INTEGER
+		do
+			from
+				i := 0
+				!! Result.make (0)
+			until
+				i = command_arguments.argument_count
+			loop
+				Result.append (command_arguments.item (i))
+				i := i + 1
+			end
+		end
+
 	extra_help is
 			-- Prints some extra help on this command.
 		do
 			io.putstring ("A subquery has the following form: ");
 			io.putstring ("attribute operator value%N%N");
-			io.putstring ("attribute is one of: featurename, calls, total, self, descendents, percentage%N");
+			io.putstring ("attribute is one of: featurename, calls, total, self, descendants, percentage%N");
 			io.putstring ("operator is one of: < > <= >= = /= in%N");
 			io.putstring ("value is one of: integer (for calls), string_with_wildcards (for featurename)%N");
 			io.putstring ("%T%T real (for other attributes) or a bounded_value%N");

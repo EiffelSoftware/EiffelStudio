@@ -578,27 +578,123 @@ feature -- Implementation
 				print ("Start PND for MC LIST%N")
 			end
 			
-			Precursor (
-			a_type,
-			a_x, a_y, a_button,
-			a_x_tilt, a_y_tilt, a_pressure,
-			a_screen_x, a_screen_y)			
+
+			if pnd_row_imp /= Void or else pebble /= Void then
+				Precursor (
+				a_type,
+				a_x, a_y, a_button,
+				a_x_tilt, a_y_tilt, a_pressure,
+				a_screen_x, a_screen_y)
+			end			
 		end
 
 	pnd_row_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 			-- Implementation object of the current row if in PND transport.
 
+	temp_pebble: ANY
 
+	temp_pebble_function: FUNCTION [ANY, TUPLE [], ANY]
+			-- Returns data to be transported by PND mechanism.
+
+	temp_accept_cursor, temp_deny_cursor: EV_CURSOR
+	
 	pre_pick_steps (a_x, a_y, a_screen_x, a_screen_y: INTEGER) is
+			-- Steps to perform before transport initiated.
+		local
+			env: EV_ENVIRONMENT
+			app_imp: EV_APPLICATION_IMP
+			curs_code: EV_CURSOR_CODE
+			pnd_mode: BOOLEAN
 		do
-			Precursor (a_x, a_y, a_screen_x, a_screen_y)
+			create env
+			app_imp ?= env.application.implementation
+			check
+				app_imp_not_void: app_imp /= Void
+			end
+
+			if pnd_row_imp /= Void then
+				temp_pebble := pebble
+				temp_pebble_function := pebble_function
+				pebble := pnd_row_imp.pebble
+				pebble_function := pnd_row_imp.pebble_function
+			end
+
+			if pebble_function /= Void then
+				pebble_function.call ([a_x, a_y]);
+				pebble := pebble_function.last_result
+			end
+
+			app_imp.on_pick (pebble)
+
+			create curs_code
+
+			if pnd_row_imp /= Void then
+				pnd_row_imp.interface.pick_actions.call ([a_x, a_y])
+				pnd_mode := pnd_row_imp.mode_is_pick_and_drop
+				if pnd_row_imp.accept_cursor /= Void then
+					temp_accept_cursor := accept_cursor
+					accept_cursor := pnd_row_imp.accept_cursor
+				end
+				if pnd_row_imp.deny_cursor /= Void then
+					temp_deny_cursor := deny_cursor
+					deny_cursor := pnd_row_imp.deny_cursor
+				end
+			else
+				interface.pick_actions.call ([a_x, a_y])
+				pnd_mode := mode_is_pick_and_drop
+			end
+
+			if pnd_mode then
+				is_pnd_in_transport := True
+			else
+				is_dnd_in_transport := True
+			end
+
+			
+			if accept_cursor = Void then
+				create accept_cursor.make_with_code (curs_code.standard)
+			end
+			if deny_cursor = Void then
+				create deny_cursor.make_with_code (curs_code.no)
+			end
+
+			pointer_x := a_screen_x
+			pointer_y := a_screen_y
+			if pick_x = 0 and pick_y = 0 then
+				pick_x := a_screen_x
+				pick_y := a_screen_y
+			end
 		end
 
 	post_drop_steps is
+			-- Steps to perform once an attempted drop has happened.
+		local
+			env: EV_ENVIRONMENT
+			app_imp: EV_APPLICATION_IMP
 		do
-			Precursor
+			create env
+			app_imp ?= env.application.implementation
+			check
+				app_imp_not_void: app_imp /= Void
+			end
+			app_imp.on_drop (pebble)
+			pick_x := 0 --| FIXME IEK This wipes out user setting of pick position
+			pick_y := 0
+			last_pointed_target := Void
+
+			if pebble_function /= Void then
+				temp_pebble := Void
+				--| FIXME Wipeout pebble for row.
+			end
+
+			pebble := temp_pebble
+			pebble_function := temp_pebble_function
+
+			temp_pebble := Void
+			temp_pebble_function := Void
 			pnd_row_imp := Void
 		end
+
 
 feature {EV_MULTI_COLUMN_LIST_ROW_IMP} -- Implementation
 
@@ -785,6 +881,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.61  2000/04/05 22:37:41  king
+--| Basic implementation of row PND
+--|
 --| Revision 1.60  2000/04/05 21:16:10  brendel
 --| Merged changes from LIST_REFACTOR_BRANCH.
 --|

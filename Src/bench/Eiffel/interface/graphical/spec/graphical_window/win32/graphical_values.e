@@ -33,6 +33,10 @@ feature {NONE} -- Initialization
 				format_creation (
 					Graphical_resources.class_color.valid_actual_value,
 					Graphical_resources.class_font.valid_actual_value)
+			cluster_format :=
+				format_creation (
+					Graphical_resources.cluster_color.valid_actual_value,
+					Graphical_resources.cluster_font.valid_actual_value)
 			feature_format :=
 				format_creation (
 					Graphical_resources.feature_color.valid_actual_value,
@@ -72,6 +76,9 @@ feature -- Access
 
 	class_format: WEL_CHARACTER_FORMAT;
 			-- Class format for text
+
+	cluster_format: WEL_CHARACTER_FORMAT;
+			-- Cluster format for text
 
 	feature_format: WEL_CHARACTER_FORMAT;
 			-- Feature format for text

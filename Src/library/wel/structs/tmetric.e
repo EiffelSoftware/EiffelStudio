@@ -75,7 +75,7 @@ feature -- Access
 			Result := cwel_text_metric_get_tmexternalleading (item)
 		end
 
-	average_caracter_width: INTEGER is
+	average_character_width: INTEGER is
 			-- Average width of characters in the font (generally
 			-- defined as the width of the letter x)
 		require

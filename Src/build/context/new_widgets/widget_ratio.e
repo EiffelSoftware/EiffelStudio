@@ -27,12 +27,12 @@ feature
 		local
 			width, height: REAL;
 		do
-			width := integer_to_real (parent_width);
-			height := integer_to_real (parent_height);
-			x_ratio := integer_to_real (x)/ width;
-			y_ratio := integer_to_real (y)/ height;
-			width_ratio := integer_to_real (w)/ width;
-			height_ratio := integer_to_real (h)/ height;
+			width := (parent_width);
+			height :=  (parent_height);
+			x_ratio :=  (x)/ width;
+			y_ratio := (y)/ height;
+			width_ratio :=  (w)/ width;
+			height_ratio :=  (h)/ height;
 			initialized := True;
 		end;
 

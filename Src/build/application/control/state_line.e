@@ -107,8 +107,8 @@ feature
 				if
 					bi_directional
 				then
-					point1.rotate (integer_to_real (20), source.center);
-					point2.rotate (integer_to_real (340), destination.center);
+					point1.rotate (20, source.center);
+					point2.rotate (340, destination.center);
 				end
 			else
 				point2 := sub_app.closest_point (point1);
@@ -176,7 +176,7 @@ feature {NONE}
 			coeff: REAL;
 			tempX, tempY: INTEGER
 		do
-			point := calculate_vector (pt1, pt2, integer_to_real (source.radius));
+			point := calculate_vector (pt1, pt2, (source.radius));
 			p_high := clone (pt2);
 			p_low := clone (pt1);
 			p_high.xytranslate (- point.x, - point.y);

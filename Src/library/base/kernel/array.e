@@ -377,12 +377,14 @@ feature -- Obsolete
 feature {NONE} -- Inapplicable
 
 	prune (v: G) is
-			-- Precondition is always false here.
+			-- Remove first occurrence of `v' if any.
+			-- (Precondition is false.)
 		do
 		end;
 
 	extend (v: G) is
-			-- Precondition is always false here.
+			-- Add `v' to structure.
+			-- (Precondition is false.)
 		do
 		end;
 

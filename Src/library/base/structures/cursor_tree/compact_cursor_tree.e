@@ -186,9 +186,12 @@ feature -- Cursor movement
 			index, next: INTEGER
 		do
 			if below then
-					--| Here after is true, because:
-					--| [(below => (before or after))
-					--| and not before]
+					check
+						after
+					end
+					-- This is because:
+					-- below implies (before or after),
+					-- and before is false.
 				after := false;
 				before := true
 			elseif after then
@@ -226,9 +229,12 @@ feature -- Cursor movement
 			index: INTEGER;
 		do
 			if below then
-					-- Here before is true, because:
-					-- [(below -> (before or after))
-					-- and not after]
+					check 
+						before
+					end
+					-- This is because:
+					-- below implies (before or after),
+					-- and after is false.
 				before := false;
 				after := true
 			elseif before then
@@ -340,7 +346,7 @@ feature -- Element change
 		end;
 
 	put_right (v: G) is
-			-- Put a leaf `v' to the right of cursor position.
+			-- Add a leaf `v' to the right of cursor position.
 		local
 			index, new: INTEGER;
 			extra_block_size: INTEGER
@@ -367,7 +373,7 @@ feature -- Element change
 		end;
 		
 	put_left (v: G) is
-			-- Put `v' at the left of current position.
+			-- Add `v' to the left of current position.
 		require else
 			not_above: not above
 		local
@@ -390,7 +396,7 @@ feature -- Element change
 		end;
 		
 	put_front (v: G) is
-			-- Insert a leaf `v' as first child.
+			-- Add a leaf `v' as first child.
 			-- If `above' and `empty', make `v' the root value
 		local
 			old_active: like active;
@@ -483,9 +489,8 @@ feature -- Removal
 
 	remove is
 			-- Remove node at cursor position
-			-- (and consequently the corresponding
-			-- subtree). Cursor moved to the next sibiling or after.
-			-- Beyond if no sibling
+			-- (and consequently the corresponding subtree).
+			-- Move cursor to next sibling or `after' if none.
 		local
 			removed, index, next: INTEGER;
 		do
@@ -527,12 +532,9 @@ feature -- Removal
 		end;
 
 	remove_node is
-			-- Remove node at cursor position.
-			-- Insert its child among the child of parent,
-			-- at current position.
-			-- If current is the root node, it must not have more
-			-- than one child.
-			-- Move the cursor up
+			-- Remove node at cursor position; insert children into
+			-- parent's children at current position; move cursor up.
+			-- If node is root, it must not have more than one child.
 		require
 			not_off: not off;
 			is_root implies arity <= 1

@@ -32,7 +32,7 @@ feature -- Status report
 feature -- Element change
 
 	extend (v: like item) is
-			-- Insert `v' as new child.
+			-- Add `v' as new child.
 		do
 			child_extend (v)
 		end;
@@ -135,7 +135,7 @@ feature -- Removal
 
 	remove_child is
 			-- Remove child at cursor position.
-			-- Move cursor to the next sibling or after if none
+			-- Move cursor to next sibling. or `after' if none
 		require
 			child_not_off: not child_off
 		deferred

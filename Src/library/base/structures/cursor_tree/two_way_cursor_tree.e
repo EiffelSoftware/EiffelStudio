@@ -47,7 +47,7 @@ feature -- Status report
 feature -- Element change
 
 	put_right (v: G) is
-			-- Put `v' to the right of cursor position.
+			-- Add `v' to the right of cursor position.
 		do
 			if below then
 				active.child_put_right (v);

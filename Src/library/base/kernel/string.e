@@ -465,7 +465,7 @@ feature -- Element change
 		end;
 
 	insert (s: like Current; i: INTEGER) is
-			-- Insert `s' to the left of position `i' in current string.
+			-- Add `s' to the left of position `i' in current string.
 		require
 			string_exists: s /= Void;
 			index_small_enough: i <= count;
@@ -500,8 +500,7 @@ feature -- Removal
 		end;
 
 	prune (c: CHARACTER) is
-			-- Remove first occurrence of `c'.
-			-- No effect if string does not include `c'.
+			-- Remove first occurrence of `c', if any.
 		require else
 			true
 		local

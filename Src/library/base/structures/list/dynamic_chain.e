@@ -35,7 +35,7 @@ feature -- Status report
 feature -- Element change
 
 	put_front (v: like item) is
-			-- Add `v' to beginning.
+			-- Add `v' at beginning.
 			-- Do not move cursor.
 		deferred
 		ensure

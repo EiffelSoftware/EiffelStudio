@@ -184,7 +184,7 @@ feature -- Element change
 		end
 	
 	put_right (v : like item) is
-			-- Put `v' to the right of cursor position.
+			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		do
 			list.put_right(v)
@@ -213,7 +213,7 @@ feature -- Element change
 		end
 
 	put_left (v : like item) is
-			-- Put `v' to the left of cursor position.
+			-- Add `v' to the left of cursor position.
 			-- Do not move cursor.
 		do
 			list.put_left (v)

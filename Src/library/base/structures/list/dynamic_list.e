@@ -41,7 +41,7 @@ deferred class DYNAMIC_LIST [G] inherit
 feature -- Element change
 
 	put_left (v: like item) is
-			-- Put `v' to the left of cursor position.
+			-- Add `v' to the left of cursor position.
 			-- Do not move cursor.
 		local
 			temp: like item
@@ -61,7 +61,7 @@ feature -- Element change
 		end;
 
 	put_right (v: like item) is
-			-- Put `v' to the right of cursor position.
+			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		deferred
 		end;
@@ -100,7 +100,7 @@ feature -- Removal
 	remove is
 			-- Remove current item.
 			-- Move cursor to right neighbor
-			-- (or after if no right neighbor).
+			-- (or `after' if no right neighbor).
 		deferred
 		ensure then
 			after_when_empty: empty implies after

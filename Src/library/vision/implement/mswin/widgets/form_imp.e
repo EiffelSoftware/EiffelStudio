@@ -8,26 +8,6 @@ class
 
 inherit
 	BULLETIN_IMP
-		rename
-			show as bulletin_show,
-			realize_current as bulletin_realize_current,
-			set_size as bulletin_set_size,
-			set_width as bulletin_set_width,
-			set_height as bulletin_set_height
-		export
-			{WIDGET_IMP, ATTACHMENT_LIST_WINDOWS}
-				children,
-				children_list
-		redefine
-			child_has_resized,
-			make,
-			realize,
-			class_name,
-			set_enclosing_size,
-			resize_for_shell
-		end;
-
-	BULLETIN_IMP
 		export
 			{WIDGET_IMP, ATTACHMENT_LIST_WINDOWS}
 				children,
@@ -38,10 +18,7 @@ inherit
 			realize, class_name,
 			set_enclosing_size,
 			resize_for_shell
-		select
-			show, realize_current, set_size, 
-			set_width, set_height
-		end;
+		end
 
 	FORM_I
 
@@ -79,7 +56,7 @@ feature -- Status setting
 			-- Show current form.
 		do
 			update_all
-			bulletin_show
+			{BULLETIN_IMP} Precursor
 		end
 
 	set_enclosing_size is
@@ -102,7 +79,7 @@ feature -- Status setting
 		do
 			if private_attributes.width /= new_width
 			or else private_attributes.height /= new_height then
-				bulletin_set_size (new_width, new_height)
+				{BULLETIN_IMP} Precursor (new_width, new_height)
 				if not updating then
 					update_all
 				end
@@ -113,7 +90,7 @@ feature -- Status setting
 			-- Set width to `new_width'.
 		do
 			if private_attributes.width /= new_width then
-				bulletin_set_width (new_width)
+				{BULLETIN_IMP} Precursor (new_width)
 				if not updating then
 					update_all
 				end
@@ -124,7 +101,7 @@ feature -- Status setting
 			-- Set height to `new_height'.
 		do
 			if private_attributes.height /= new_height then
-				bulletin_set_height (new_height)
+				{BULLETIN_IMP} Precursor (new_height)
 				if not updating then
 					update_all
 				end
@@ -160,7 +137,7 @@ feature -- Status setting
 			update_all
 			set_enclosing_size
 				-- set initial focus
-			if initial_focus /= void then
+			if initial_focus /= Void then
 				initial_focus.wel_set_focus
 			end			
 		end
@@ -240,7 +217,7 @@ feature	-- Implementation
 			a_childw : WIDGET_IMP
 		do
 			a_childw  ?= a_child
-			form_child_list.attach_left (a_childw, current, left_offset, false)
+			form_child_list.attach_left (a_childw, Current, left_offset, false)
 			if realized then 
 				update_all
 			end

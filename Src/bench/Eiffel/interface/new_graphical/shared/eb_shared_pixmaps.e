@@ -1078,23 +1078,17 @@ feature {NONE} -- Update
 	Pixmap_suffix: STRING is "png"
 			-- Suffix for pixmaps.
 
-	Bitmaps_path: DIRECTORY_NAME is
-		once
-			create Result.make_from_string (Eiffel_installation_dir_name)
-			Result.extend_from_array (<<"bench", "bitmaps">>)
-		end
-
 	Bitmap_path: DIRECTORY_NAME is
 			-- Path for Bmp/Xpm for Windows/Unix.
 		once
-			create Result.make_from_string (Bitmaps_path)
+			create Result.make_from_string ((create {EIFFEL_ENV}).Bitmaps_path)
 			Result.extend (Pixmap_suffix)
 		end
 
 	Icon_path: DIRECTORY_NAME is
 			-- Path for Icons for Windows.
 		once
-			create Result.make_from_string (Bitmaps_path)
+			create Result.make_from_string ((create {EIFFEL_ENV}).Bitmaps_path)
 			Result.extend ("ico")
 		end
 

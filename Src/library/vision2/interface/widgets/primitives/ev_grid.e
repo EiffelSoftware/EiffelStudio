@@ -230,6 +230,17 @@ feature -- Access
 		ensure
 			result_non_negative: result >= 0
 		end
+		
+	subrow_indent: INTEGER is
+			-- Number of pixels horizontally by which each subrow is indented
+			-- from its `parent_row'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.subrow_indent
+		ensure
+			result_non_negative: result >= 0
+		end
 
 feature -- Status setting
 
@@ -559,6 +570,17 @@ feature -- Status setting
 		ensure
 			dynamic_content_function_set: dynamic_content_function = a_function
 		end
+		
+	set_subrow_indent (a_subrow_indent: INTEGER) is
+			-- Set `subrow_indent' to `a_subrow_indent'.
+		require
+			not_destroyed: not is_destroyed
+			a_subrow_indent_non_negtive: a_subrow_indent >= 0
+		do
+			implementation.set_subrow_indent (a_subrow_indent)
+		ensure
+			subrow_indent_set: subrow_indent = a_subrow_indent
+		end
 
 feature -- Status report
 
@@ -789,6 +811,18 @@ feature -- Measurements
 			result_positive: Result >= 1
 		end
 		
+	tree_node_spacing: INTEGER is
+			-- Spacing value used around the expand/collapse node of a 
+			-- subrow. For example, to determine the height available for the node image
+			-- within a subrow, subtract 2 * tree_node_spacing from the `row_height'.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.tree_node_spacing
+		ensure
+			result_positive: Result >= 1
+		end
+
 feature {NONE} -- Contract support
 
 	is_in_default_state: BOOLEAN is
@@ -796,7 +830,7 @@ feature {NONE} -- Contract support
 		do
 			Result := not is_horizontal_scrolling_per_item and
 				is_vertical_scrolling_per_item and is_header_displayed and
-				is_row_height_fixed
+				is_row_height_fixed and subrow_indent = 0
 		end
 			
 feature {EV_ANY, EV_ANY_I} -- Implementation

@@ -40,7 +40,8 @@ inherit
 			hide,
 			internal_set_minimum_size,
 			on_widget_mapped,
-			destroy
+			destroy,
+			has_focus
 		end
 
 	EV_GTK_WINDOW_IMP
@@ -51,7 +52,8 @@ inherit
 			parent_imp
 		redefine
 			interface,
-			on_key_event
+			on_key_event,
+			has_focus
 		end
 
 	EV_WINDOW_ACTION_SEQUENCES_IMP
@@ -72,6 +74,12 @@ feature -- Initialization
 		end
 
 feature  -- Access
+
+	has_focus: BOOLEAN is
+			-- Does `Current' have the keyboard focus?
+		do
+			Result := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_window_has_toplevel_focus (c_object)
+		end
 
 	item: EV_WIDGET
 			-- Current item.

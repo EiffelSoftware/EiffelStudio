@@ -1,7 +1,5 @@
 <document title="9 BROWSING FEATURES" output="studio">
-	<meta_data>
-		<help></help>
-	</meta_data>
+	<meta_data/>
 	<paragraph>
 		<heading>
 			<size>1</size>9 Browsing Features
@@ -122,7 +120,7 @@
 				<url>index.html#FLAT FORM OF CLASS</url>
 			</link> ), gives the full text of a feature, taking into account any inherited precondition or postcondition clauses.  Here the feature as declared in the class appears in the top Editing Tool, with no precondition and an 
 			<code>
-				<keyword>then ensure</keyword>
+				<keyword>ensure then</keyword>
 			</code> postcondition clause.  But it's a redefinition of an inherited feature; the flat view in the bottom Context Tool shows the full precondition, inherited from the ancestor 
 			<code>
 				<string>LINEAR</string>
@@ -271,7 +269,7 @@
 					<string>LINEAR</string>
 				</code> and subsequent redeclarations(redefinitions or effectings).  The mention 
 				<code>
-					<keyword>from) (version</keyword>
+					<keyword>(from version)</keyword>
 				</code> signals the version applicable to the current class, here 
 				<code>
 					<string>LIST</string>

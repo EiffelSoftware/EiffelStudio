@@ -34,13 +34,13 @@ feature -- Access
 		deferred
 		end
 		
-	connect_event_output_agent (object: EV_ANY; action_sequence: STRING; adding: BOOLEAN; textable: EV_TEXTABLE) is
+	connect_event_output_agent (object: EV_ANY; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER) is
 			-- If `adding', then connect an agent to `action_sequence' actions of `object' which will display name of 
-			-- action sequence and all arguments in `textable'. If no `adding' then `wipe_out' `action_sequence'.
+			-- action sequence and all arguments in `textable'. If not `adding' then `wipe_out' `action_sequence'.
 		require
 			object_not_void: object /= Void
 			action_sequence_not_void_or_empty: action_sequence /= Void and not action_sequence.is_empty
-			textable_not_void: textable /= Void
+			string_handler_not_void: string_handler /= Void
 		deferred
 		end
 		

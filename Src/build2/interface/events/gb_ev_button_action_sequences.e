@@ -35,9 +35,9 @@ feature -- Access
 			Result.extend ("-- Actions to be performed when button is pressed then released.")
 		end
 		
-	connect_event_output_agent (object: EV_ANY; action_sequence: STRING; adding: BOOLEAN; textable: EV_TEXTABLE) is
+	connect_event_output_agent (object: EV_ANY; action_sequence: STRING; adding: BOOLEAN; string_handler: ORDERED_STRING_HANDLER) is
 			-- If `adding', then connect an agent to `action_sequence' actions of `object' which will display name of 
-			-- action sequence and all arguments in `textable'. If no `adding' then `wipe_out' `action_sequence'.
+			-- action sequence and all arguments in `string_handler'. If no `adding' then `wipe_out' `action_sequence'.
 		
 		local
 			notify_sequence: GB_EV_NOTIFY_ACTION_SEQUENCE
@@ -50,7 +50,7 @@ feature -- Access
 			if action_sequence.is_equal ("select_actions") then
 				if adding then
 					notify_sequence ?= new_instance_of (dynamic_type_from_string ("GB_EV_NOTIFY_ACTION_SEQUENCE"))
-					button.select_actions.extend (notify_sequence.display_agent (action_sequence, textable))
+					button.select_actions.extend (notify_sequence.display_agent (action_sequence, string_handler))
 				else
 					button.select_actions.wipe_out
 				end

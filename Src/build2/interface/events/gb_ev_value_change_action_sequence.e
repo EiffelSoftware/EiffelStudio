@@ -26,26 +26,26 @@ feature -- Access
 			Result.extend ("a_value")
 		end
 		
-	display_agent (name: STRING; textable: EV_TEXTABLE): PROCEDURE [ANY, TUPLE [INTEGER]] is
+	display_agent (name: STRING; string_handler: ORDERED_STRING_HANDLER): PROCEDURE [ANY, TUPLE [INTEGER]] is
 			-- `Result' is agent which will display all arguments passed to an 
 			-- action sequence represented by `Current', using name `name' and
-			-- outputs to `textable'.
+			-- outputs to `string_handler'.
 		require
-			textable_not_void: textable /= Void
+			string_handler_not_void: string_handler /= Void
 			name_not_void_or_empty: name /= Void and not name.is_empty
 		do
-			Result := agent internal_display_agent (?, name, textable)
+			Result := agent internal_display_agent (?, name, string_handler)
 		ensure
 			Result_not_void: Result /= Void
 		end
 		
 feature {NONE} -- Implementation
 
-	internal_display_agent (value: INTEGER; name: STRING; textable: EV_TEXTABLE) is
-			-- Display all other arguments of `Current' on `textable', prepended
+	internal_display_agent (value: INTEGER; name: STRING; string_handler: ORDERED_STRING_HANDLER) is
+			-- Display all other arguments of `Current' on `string_handler', prepended
 			-- with `name' fired.
 		do
-			textable.set_text (name + " fired.%Nvalue : " + value.out)
+			string_handler.record_string (name + " fired.%Nvalue : " + value.out)
 		end
 
 end -- class GB_EV_VALUE_CHANGE_ACTION_SEQUENCE

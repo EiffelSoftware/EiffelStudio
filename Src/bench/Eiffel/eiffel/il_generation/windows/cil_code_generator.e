@@ -2187,9 +2187,8 @@ feature -- IL Generation
 			l_meth_token: INTEGER
 			i, nb: INTEGER
 		do
-			l_meth_token := feature_token (current_type_id, feat.feature_id)
-
 			l_token := last_non_recorded_feature_token
+			l_meth_token := feature_token (current_type_id, feat.feature_id)
 
 			if is_debug_info_enabled then
 					-- Enable debugger to go through stub definition.
@@ -2301,7 +2300,7 @@ feature -- IL Generation
 			-- Signature of last external processed through `external_token'.
 
 	last_non_recorded_feature_token: INTEGER
-			-- Token of last defined override feature.
+			-- Token of last defined feature that we did not record or last override.
 
 	override_counter: COUNTER
 			-- Number of generated override methods.
@@ -2547,7 +2546,7 @@ feature -- IL Generation
 			else
 				l_meth_sig := method_sig
 				l_meth_sig.reset
-				if ext_kind = static_type then
+				if ext_kind = Static_type or ext_kind = Operator_type then
 					l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
 				else
 					l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
@@ -2682,7 +2681,7 @@ feature -- IL Generation
 			else
 				l_meth_sig := method_sig
 				l_meth_sig.reset
-				if ext_kind = static_type then
+				if ext_kind = Static_type or ext_kind = Operator_type then
 					l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
 				else
 					l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
@@ -2746,7 +2745,7 @@ feature -- IL Generation
 				l_token := md_emit.define_member_ref (uni_string, l_class_token, l_meth_sig)
 
 				inspect ext_kind
-				when Creator_call_type, Static_type then
+				when Creator_call_type, Static_type, Operator_type then
 					method_body.put_call (feature {MD_OPCODES}.Call, l_token, nb, l_has_return_type)
 				when Normal_type, Deferred_type then
 					if is_virtual then

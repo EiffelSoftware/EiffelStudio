@@ -406,18 +406,12 @@ feature {
 				-- Turn off invariant checking.
 			is_initialized := False
 			dc.decrement_reference
-			if dc.references_count = 0 then
-				dc.unselect_all
-			end
 			dc := Void
 			internal_bitmap.decrement_reference
 			internal_bitmap := Void
 
 			if has_mask then
 				mask_dc.decrement_reference
-				if mask_dc.references_count = 0 then
-					mask_dc.unselect_all
-				end
 				mask_dc := Void
 				internal_mask_bitmap.decrement_reference
 				internal_mask_bitmap := Void

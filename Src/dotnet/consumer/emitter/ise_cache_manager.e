@@ -45,6 +45,8 @@ feature {NONE}-- Initialization
 			create consumed_assemblies.make
 			consumed_assemblies.compare_objects
 			
+			create assembly_resolver.make (feature {APP_DOMAIN}.current_domain)
+			
 			assembly_consumer.set_status_printer (agent display_status)
 			assembly_consumer.set_error_printer (agent process_error)
 		end
@@ -66,6 +68,9 @@ feature -- Access
 	
 	last_error_message: STRING
 		-- last error message
+		
+	assembly_resolver: ASSEMBLY_RESOLVER
+		-- assembly resolver used to resolve references that cannot be resolved by default implementation
 		
 feature -- Basic Oprtations
 
@@ -221,6 +226,6 @@ feature {NONE} -- Internal Agents
 		
 
 invariant
-	invariant_clause: True -- Your invariant here
+	non_void_assembly_resolver: assembly_resolver /= Void
 
 end -- class ISE_CACHE_MANAGER

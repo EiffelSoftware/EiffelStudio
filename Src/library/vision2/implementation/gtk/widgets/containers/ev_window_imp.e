@@ -55,7 +55,7 @@ feature -- Initialization
 			C.gdk_window_set_decorations (C.gtk_widget_struct_window (c_object), 0)
 			C.gdk_window_set_functions (C.gtk_widget_struct_window (c_object), 0)
 			
-			C.gtk_window_set_policy (c_object, 1, 1, 0) -- allow_shrink = True, allow_grow = True, auto_shrink = False
+			C.gtk_window_set_policy (c_object, 0, 1, 0) -- allow_shrink = False, allow_grow = True, auto_shrink = False
 			accel_group := C.gtk_accel_group_new
 			C.gtk_window_add_accel_group (c_object, accel_group)
 			default_height := -1
@@ -181,9 +181,6 @@ feature  -- Access
 			Result := C.gtk_window_struct_modal (c_object) = 1
 		end
 
-	blocking_window: EV_WINDOW
-			-- Window that `Current' is a transient for.
-
 feature -- Status setting
 
 	block is
@@ -209,16 +206,6 @@ feature -- Status setting
 			-- Set `is_modal' to `False'.
 		do
 			C.gtk_window_set_modal (c_object, False)
-		end
-
-	set_blocking_window (a_window: EV_WINDOW) is
-			-- Set as transient for `a_window'.
-		local
-			win_imp: EV_WINDOW_IMP
-		do
-			blocking_window := a_window
-			win_imp ?= a_window.implementation
-			C.gtk_window_set_transient_for (c_object, win_imp.c_object)
 		end
 
 	set_x_position (a_x: INTEGER) is
@@ -272,7 +259,7 @@ feature -- Status setting
 	allow_resize is
 			-- Allow the resize of the window.
 		do
-			C.gtk_window_set_policy (c_object, 1, 1, 0)
+			C.gtk_window_set_policy (c_object, 0, 1, 0)
 		end
 
 	destroy is
@@ -500,7 +487,7 @@ feature {NONE} -- Implementation
 		end
 		
 	initialize_client_area is
-				--
+			-- FIXME: Need comments
 		local
 			scr: EV_SCREEN
 			bar_imp: EV_VERTICAL_BOX_IMP

@@ -1,14 +1,11 @@
 indexing
-
-	description: 
-		"Error for invalid reverse assignment attempt.";
+	description: "Error for invalid reverse assignment attempt.";
 	date: "$Date$";
 	revision: "$Revision $"
 
 class VJRV 
 
 inherit
-
 	FEATURE_ERROR
 		redefine
 			build_explain

@@ -85,14 +85,16 @@ feature -- Initialization
 			valid_port: a_peer_port >= 0
 		local
 			h_address: HOST_ADDRESS;
-			i, code: INTEGER;
+			i, count: INTEGER;
+			code: CHARACTER;
 			is_hostname: BOOLEAN
 		do
 			make;
 			is_open_write := True;
-			from i := 1 until i > a_peer_host.count or is_hostname loop
-				code := a_peer_host.item_code (i);
-				is_hostname := (code /= 46 and then (code < 48 or else code > 57));
+			count := a_peer_host.count
+			from i := 1 until i > count or is_hostname loop
+				code := a_peer_host.item (i);
+				is_hostname := (code /= '.' and then (code < '0' or else code > '9'));
 				i := i + 1
 			end;
 			if descriptor_available then

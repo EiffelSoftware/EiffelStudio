@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 			function_body: STRING
 		do
 			create Result.make
-			Result.set_name (ccom_last_error_code_name)
+			Result.set_name (ccom_last_source_of_exception_name)
 			Result.set_comment ("Last source of exception")
 			Result.set_result_type  (Eif_reference)
 
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 			function_body: STRING
 		do
 			create Result.make
-			Result.set_name (ccom_last_error_code_name)
+			Result.set_name (ccom_last_error_description_name)
 			Result.set_comment ("Last error description")
 			Result.set_result_type  (Eif_reference)
 
@@ -253,7 +253,7 @@ feature {NONE} -- Implementation
 			function_body: STRING
 		do
 			create Result.make
-			Result.set_name (ccom_last_error_code_name)
+			Result.set_name (ccom_last_error_help_file_name)
 			Result.set_comment ("Last error help file")
 			Result.set_result_type  (Eif_reference)
 

@@ -1,0 +1,327 @@
+indexing
+	description	: "Simple drawing program."
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date		: "$Date$"
+	revision	: "$Revision$"
+
+class
+	DA_TEST
+
+inherit
+	EV_APPLICATION
+
+	EV_DRAWABLE_CONSTANTS
+		undefine
+			default_create
+		end
+
+	EV_FONT_CONSTANTS
+		export
+			{NONE} all
+		undefine
+			default_create
+		end
+
+create
+	make_and_launch
+
+feature -- Initialization
+
+	prepare is
+			-- Initialize world.
+		local
+			basic_interval: INTEGER_INTERVAL
+			a_menu_bar: EV_MENU_BAR
+			a_menu: EV_MENU
+			a_menu_item: EV_MENU_ITEM
+			a_menu_separator: EV_MENU_SEPARATOR
+			a_toolbar_button: EV_TOOL_BAR_BUTTON
+			a_toolbar_separator: EV_TOOL_BAR_SEPARATOR
+			a_icon: EV_PIXMAP
+			a_gray_icon: EV_PIXMAP
+			
+			a_color: EV_COLOR
+			a_label: EV_LABEL
+		do
+			create a_color
+			a_color.set_rgb (1.0, 0.0, 0.0)
+
+				-- Create the container
+			create my_container
+
+			create a_icon
+			a_icon.set_with_named_file("d:\car.png")
+			create a_toolbar_separator
+
+			initialize_drawing_operations			
+
+			create da_direct
+			da_direct.set_line_width (5)
+
+			create da_paint
+			da_paint.set_line_width (5)
+
+			create my_separator
+			create a_label.make_with_text ("<-- Direct Drawing%N%N%N Drawing via expose_actions --> ")
+			my_separator.extend (a_label)
+
+			my_container.extend (da_direct)
+			my_container.extend (my_separator)
+			my_container.extend (da_paint)
+
+			my_container.disable_item_expand(my_separator)
+
+			
+				-- Add widgets to our window
+			first_window.extend(my_container)
+
+			idle_actions.extend (~on_idle_action)
+			da_paint.expose_actions.extend (~on_paint)
+		end
+
+	first_window: EV_TITLED_WINDOW is
+			-- The window with the drawable area.
+		once
+			create Result
+			Result.set_title ("Vision2 Drawing Area example")
+			Result.set_size (800, 400)
+		end
+
+feature {NONE} -- Graphical interface
+
+	my_container: EV_HORIZONTAL_BOX
+			-- Container that groups the da.
+
+	my_separator: EV_HORIZONTAL_BOX
+			-- Separator between the two da.
+
+	da_direct: EV_DRAWING_AREA
+
+	da_paint: EV_DRAWING_AREA
+
+feature {NONE} -- Implementation
+	
+	on_paint(x, y, width, height: INTEGER) is
+		do
+			draw (da_paint)
+		end
+
+	on_idle_action is
+		do
+			draw (da_direct)
+
+			da_paint.redraw
+			da_paint.flush
+		end
+
+	draw(da: EV_DRAWING_AREA) is
+		local
+			random_int: INTEGER
+			drawing_primitive: PROCEDURE[DA_TEST,TUPLE]
+		do
+			random_int := (get_random_real * Number_drawing_operations).floor
+			drawing_primitive := drawing_operations @ random_int
+
+			da.set_foreground_color (get_random_color)
+			drawing_primitive.call([da])
+		end
+
+feature {NONE} -- Drawing Operations
+
+	draw_polyline(da: EV_DRAWING_AREA) is
+		local
+			i: INTEGER
+			ev_coord: EV_COORDINATES
+			poly_coord: ARRAY [EV_COORDINATES]
+			nb_summit: INTEGER
+			poly_closed: BOOLEAN
+			filled: BOOLEAN
+		do
+			nb_summit := get_random_int (10) + 2
+			
+			create poly_coord.make (0, nb_summit)
+
+				-- Draw the rectangle on the direct Drawing Area
+			from i := 0 until i > nb_summit loop
+				create ev_coord.set (get_random_x(da), get_random_y(da))
+				poly_coord.put (ev_coord, i)
+				i := i + 1
+			end
+
+			filled := (get_random_int(2) = 1)
+			if filled then
+				da.fill_polygon (poly_coord)
+			else
+				poly_closed := (get_random_int(2) = 1)
+				da.draw_polyline (poly_coord, poly_closed)
+			end
+		end
+
+	draw_text (da: EV_DRAWING_AREA) is
+		local
+			a_font: EV_FONT
+		do
+			create a_font
+			a_font.set_family (get_random_int(5)+1)
+			a_font.set_weight (get_random_int(4)+6)
+			a_font.set_shape (get_random_int(2)+10)
+			a_font.set_height (get_random_int(40)+8)
+			da.set_font (a_font)
+			da.draw_text (
+				get_random_x(da), 
+				get_random_y(da),
+				"Text"
+				)
+		end
+
+	draw_point (da: EV_DRAWING_AREA) is
+		do
+			da.draw_point (
+				get_random_x(da), get_random_y(da)
+				)
+		end
+
+	draw_line (da: EV_DRAWING_AREA) is
+		local
+			is_segment: BOOLEAN
+		do
+			is_segment := (get_random_int(2) = 1)
+
+			if is_segment then
+				da.draw_segment (
+					get_random_x(da), get_random_y(da),
+					get_random_x(da), get_random_y(da)
+					)
+			else
+				da.draw_straight_line (
+					get_random_x(da), get_random_y(da),
+					get_random_x(da), get_random_y(da)
+					)
+			end
+		end
+
+	draw_ellipse (da: EV_DRAWING_AREA) is
+		local
+			filled: BOOLEAN
+		do
+			filled := (get_random_int(2) = 1)
+
+			if filled then
+				da.fill_ellipse (
+					get_random_x(da), get_random_y(da),
+					get_random_x(da)//2, get_random_y(da)//2
+					)
+			else
+				da.draw_ellipse (
+					get_random_x(da), get_random_y(da),
+					get_random_x(da)//2, get_random_y(da)//2
+					)
+			end
+		end
+
+	draw_arc (da: EV_DRAWING_AREA) is
+		local
+			filled: BOOLEAN
+			poly_closed: BOOLEAN
+		do
+			filled := (get_random_int(2) = 1)
+			poly_closed := (get_random_int(2) = 1)
+
+			if filled then
+				da.fill_pie_slice (
+					get_random_x(da), get_random_y(da),
+					get_random_x(da)//2, get_random_y(da)//2,
+					get_random_real * 2 * 3.14, get_random_real * 2 * 3.14
+					)
+			else
+				if poly_closed then
+					da.draw_pie_slice (
+						get_random_x(da), get_random_y(da),
+						get_random_x(da)//2, get_random_y(da)//2,
+						get_random_real * 2 * 3.14, get_random_real * 2 * 3.14
+						)
+				else
+					da.draw_arc (
+						get_random_x(da), get_random_y(da),
+						get_random_x(da)//2, get_random_y(da)//2,
+						get_random_real * 2 * 3.14, get_random_real * 2 * 3.14
+						)
+				end
+			end
+		end
+
+	draw_rectangle (da: EV_DRAWING_AREA) is
+		local
+			filled: BOOLEAN
+			x1, x2, y1, y2: INTEGER
+		do
+			filled := (get_random_int(2) = 1)
+			x1 := get_random_x(da)
+			x2 := get_random_x(da)
+			y1 := get_random_y(da)
+			y2 := get_random_y(da)
+
+			if filled then
+				da.fill_rectangle (x1, y1, (x2-x1).abs, (y2-y1).abs)
+			else
+				da.draw_rectangle (x1, y1, (x2-x1).abs, (y2-y1).abs)
+			end
+		end
+
+feature {NONE} -- Random Drawing 
+
+	drawing_operations: ARRAY [PROCEDURE[DA_TEST,TUPLE]]
+	
+	initialize_drawing_operations is
+		do
+			create drawing_operations.make (0, Number_drawing_operations)
+			drawing_operations.put (~draw_polyline, 0)
+			drawing_operations.put (~draw_text, 1)
+			drawing_operations.put (~draw_arc, 2)
+			drawing_operations.put (~draw_point, 3)
+			drawing_operations.put (~draw_ellipse, 4)
+			drawing_operations.put (~draw_rectangle, 5)
+		end
+
+	Number_drawing_operations: INTEGER is 6
+
+feature {NONE} -- Random Implementation
+
+	get_random_color: EV_COLOR is
+		do
+			create Result.make_with_rgb (
+				get_random_real,
+				get_random_real,
+				get_random_real
+				)
+		end
+
+	get_random_x (da: EV_DRAWING_AREA): INTEGER is
+		do
+			Result := (get_random_real * da.width).floor
+		end
+
+	get_random_y (da: EV_DRAWING_AREA): INTEGER is
+		do
+			Result := (get_random_real * da.height).floor
+		end
+
+	random: RANDOM is
+		once
+			create Result.make
+		end
+
+	random_index: INTEGER
+
+	get_random_real: REAL is
+		do
+			random_index := random_index + 1
+			Result := random.real_i_th (random_index)
+		end
+
+	get_random_int (max_int: INTEGER): INTEGER is
+		do
+			Result := (get_random_real * max_int).floor
+		end
+
+end -- class DRAWING_AREA_TEST

@@ -48,9 +48,6 @@ feature -- Basic Operation
 			locals_grouped.select_actions.extend (agent update_locals_grouped)
 			
 			create attributes_local.make_with_text ("Generate attributes as locals")
-			check
-				False
-			end
 			if project_settings.attributes_local.is_equal (True_string) then
 				attributes_local.enable_select
 			end

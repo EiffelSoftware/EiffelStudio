@@ -86,6 +86,17 @@ feature -- Basic operations
 			transient_writer := Void
 		end
 
+	create_source_inner_class_name (a_writer: WIZARD_WRITER_C) is
+			-- File name for inner class.
+		do
+			transient_writer := a_writer
+			
+			create_directory_prefix (Server)
+			
+			process_c (True)
+			transient_writer := Void
+		end
+
 feature {WIZARD_TYPE_GENERATOR, WIZARD_REGISTRATION_GENERATOR} -- Visitor
 
 	process_alias_c_client is

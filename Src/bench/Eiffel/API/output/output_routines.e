@@ -60,7 +60,9 @@ feature -- Miscellaneous
 
 				creation_name := Eiffel_system.system.creation_name
 				if root_class.compiled_class /= Void and creation_name /= Void then
-					cr_f := root_class.compiled_class.feature_with_name (creation_name)
+					if root_class.compiled_class.has_feature_table then
+						cr_f := root_class.compiled_class.feature_with_name (creation_name)
+					end
 					if cr_f /= Void then
 						text.add (ti_Colon)
 						text.add_space

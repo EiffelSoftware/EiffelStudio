@@ -69,7 +69,7 @@ feature
 	generate_compound is
 			-- Call the external function
 		do
-			if context.result_used or postcondition /= Void then
+			if context.result_used or postcondition /= Void or context.has_invariant then
 				generated_file.putstring ("Result = ");
 			else
 				generated_file.putstring ("return ");
@@ -85,7 +85,7 @@ feature
 	generate_return_exp is
 			-- Generate the final return
 		do
-			if context.result_used or postcondition /= Void then
+			if context.result_used or postcondition /= Void or context.has_invariant then
 				generated_file.putstring ("return Result;");
 				generated_file.new_line;
 			end;

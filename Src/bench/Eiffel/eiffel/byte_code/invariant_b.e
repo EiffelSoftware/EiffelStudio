@@ -134,8 +134,8 @@ feature -- Byte code geenration
 		do
 			Temp_byte_code_array.clear;
 				-- Default precond- and postcondition offsets
-			Temp_byte_code_array.append_integer (0);
-			Temp_byte_code_array.append_integer (0);
+			--Temp_byte_code_array.append_integer (0);
+			--Temp_byte_code_array.append_integer (0);
 		
 			Temp_byte_code_array.append (Bc_start);
 
@@ -151,7 +151,7 @@ feature -- Byte code geenration
 			ba.append ('%U');
 			context.set_assertion_type (In_invariant);
 			byte_list.make_byte_code (ba);
-			ba.append (Bc_null);
+			ba.append (Bc_inv_null);
 
 			from
                 local_list := context.local_list;

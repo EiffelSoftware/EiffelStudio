@@ -149,7 +149,7 @@ feature -- stoning
 			a_feature_i: FEATURE_I
 		do
 			a_feature_i := reference_class.feature_named (feature_names.first.internal_name);
-			!!Result.make (a_feature_i, start_position, end_position)
+			!!Result.make (a_feature_i, reference_class, start_position, end_position)
 		end;
 
 	start_position, end_position: INTEGER

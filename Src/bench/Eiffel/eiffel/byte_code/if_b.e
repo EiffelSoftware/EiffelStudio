@@ -111,7 +111,8 @@ feature
 					-- means we are followed by an implicit return Result.
 				Result := false;
 			end;
-			Result := Result and not context.has_postcondition;
+			Result := Result and not context.has_postcondition and
+					not context.has_invariant;
 		end;
 
 	analyze is

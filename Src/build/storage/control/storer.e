@@ -97,10 +97,7 @@ feature
 		local
 			c: STATE_CIRCLE;
 			a_context: CONTEXT;
-			old_gc_status: BOOLEAN;
 		do
-			old_gc_status := collecting;
-			collection_off;
 			for_save.set_item (True);
 			clear_all;
 			group_storer.retrieve (dir_name);
@@ -108,6 +105,16 @@ feature
 			Shared_group_list.merge_right (group_storer.retrieved_data);
 			context_catalog.update_groups;
 			context_storer.retrieve (dir_name);
+
+			translation_storer.retrieve (dir_name);
+			Shared_translation_list.merge_right (translation_storer.retrieved_data);
+			command_storer.retrieve (dir_name);
+			commands := command_storer.retrieved_data;
+			command_catalog.merge (commands);
+			namer_storer.retrieve (dir_name);
+
+				-- Display main windows
+			display_init_windows;
 			contexts := context_storer.retrieved_data;
 			from
 				contexts.start;
@@ -120,47 +127,25 @@ feature
 				contexts.forth
 			end;
 			tree.enable_drawing;
-			translation_storer.retrieve (dir_name);
-			Shared_translation_list.merge_right (translation_storer.retrieved_data);
-			command_storer.retrieve (dir_name);
-			commands := command_storer.retrieved_data;
-			command_catalog.merge (commands);
+			if not Shared_window_list.empty then
+				tree.display (Shared_window_list.first)
+			end;
+
+				-- Order is important. Need to
+				-- retrieve oui widgets before
+				-- calling state storer.
 			state_storer.retrieve (dir_name);
 			states := state_storer.retrieved_data;
 			application_storer.retrieve (dir_name);
-			namer_storer.retrieve (dir_name);
 			application_storer.rebuild_graph;
 			if (application_storer.has_initial_circle) then
 				c := circle_table.item (application_storer.initial_circle);
 				app_editor.set_initial_state_circle (c);
 				c.set_double_thickness;
 			end;
+
 			clear_uneeded;
 			for_save.set_item (False);
-			if old_gc_status then
-				collection_on;
-			end;
-		end;
-
-	display_retrieved_windows is
-		local
-			window_c: WINDOW_C
-		do
-			if not Shared_window_list.empty then
-				tree.display (Shared_window_list.first)
-			end;
-			from
-				Shared_window_list.start;
-			until
-				Shared_window_list.after
-			loop
-				window_c := Shared_window_list.item;
-				window_c.realize;
-				if not window_c.is_perm_window then
-					window_c.show
-				end;
-				Shared_window_list.forth
-			end;
 		end;
 
 end

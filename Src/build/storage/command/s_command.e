@@ -125,21 +125,17 @@ feature
 
 	get_new_text (dir_name: STRING): STRING is
 		local
-			cmd_file_name: STRING;
+			cmd_file_name: FILE_NAME;
 			cfile: PLAIN_TEXT_FILE;
 			s: STRING;
 		do
-			!! cmd_file_name.make (10);
-			cmd_file_name.append (dir_name);
-			cmd_file_name.extend (Environment.directory_separator);
-			cmd_file_name.append (Environment.classes_name);
-			cmd_file_name.extend (Environment.directory_separator);
-			cmd_file_name.append (Environment.Commands_name);
-			cmd_file_name.extend (Environment.directory_separator);
+			!! cmd_file_name.make_from_string (dir_name);
+			cmd_file_name.extend (Environment.classes_name);
+			cmd_file_name.extend (Environment.Commands_name);
 			s := clone (internal_name);
 			s.to_lower;
-			cmd_file_name.append (s);
-			cmd_file_name.append (".e");
+			cmd_file_name.set_file_name (s);
+			cmd_file_name.add_extension ("e");
 			!! cfile.make (cmd_file_name);
 			if cfile.exists and then 
 				cfile.is_readable 

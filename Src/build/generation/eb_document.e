@@ -32,32 +32,29 @@ feature
 	update (s: STRING) is
 		
 		local
-			template_file_name: STRING;
-			class_file_name: STRING;	
-			new_template_file_name: STRING;
+			template_file_name: FILE_NAME;
+			class_file_name: FILE_NAME;	
+			new_template_file_name: FILE_NAME;
 			file: PLAIN_TEXT_FILE;
 			unix_command: STRING;
 			mp: MOUSE_PTR;
 		do
-			template_file_name := clone (Environment.templates_directory);
-			template_file_name.extend (Environment.directory_separator);
-			template_file_name.append (document_name);
+			!! template_file_name.make_from_string (Environment.templates_directory);
+			template_file_name.set_file_name (document_name);
 
-			class_file_name := clone (directory_name);
-			class_file_name.extend (Environment.directory_separator);
-			class_file_name.append (document_name);
-			class_file_name.append (".e");
+			!! class_file_name.make_from_string (directory_name);
+			class_file_name.set_file_name (document_name);
+			class_file_name.add_extension ("e");
 
-			new_template_file_name := clone (template_file_name);
-			new_template_file_name.append (".n");
+			!! new_template_file_name.make_from_string (template_file_name);
+			new_template_file_name.add_extension ("n");
 			!!file.make_open_write (new_template_file_name);
 			file.putstring (s);
 			file.close;
 
-			!!unix_command.make (0);
-			unix_command.append (Environment.eiffelBuild_bin);
-			unix_command.extend (Environment.directory_separator);
-			unix_command.append (Environment.merge1_file_name);
+			!! unix_command.make (10);
+			unix_command.append (Environment.merge1_file);
+
 			unix_command.extend (' ');
 			unix_command.append (class_file_name);
 			unix_command.extend (' ');
@@ -74,28 +71,52 @@ feature
 			end;
 		end;
 
-	updated_text: STRING is
+	foo: STRING is
 		local
-			class_file_name: STRING;
+			class_file_name: FILE_NAME;
 			file: PLAIN_TEXT_FILE;	
 		do
-
-			class_file_name := clone (directory_name);
-			class_file_name.extend (Environment.directory_separator);
-			class_file_name.append (document_name);
-			class_file_name.append (".e");
-			!!file.make_open_read (class_file_name);
-			!!Result.make (0);
-			from
-				file.readline;
-			until
-				file.end_of_file
-			loop
-				Result.append (file.laststring);
-				Result.append ("%N");
-				file.readline;
+			!! class_file_name.make_from_string (directory_name);
+			class_file_name.set_file_name (document_name);
+			class_file_name.add_extension ("e");
+			!! file.make (class_file_name);
+			if file.exists and then file.is_readable then
+				file.open_read;
+				!! Result.make (0);
+				from
+					file.readline;
+				until
+					file.end_of_file
+				loop
+					Result.append (file.laststring);
+					Result.append ("%N");
+					file.readline;
+				end;
+			else
+				Result := "Cannot read file ";
+				Result.append (file.name)
 			end;
 			file.close;
-	end;
+		end;
+
+	save_text (txt: STRING) is
+		local
+			file: PLAIN_TEXT_FILE;
+			class_file_name: FILE_NAME;
+		do
+			!! class_file_name.make_from_string (directory_name);
+			class_file_name.set_file_name (document_name);
+			class_file_name.add_extension ("e");
+			!! file.make (class_file_name);
+			if file.is_creatable then
+				file.open_write;
+				file.putstring (txt);
+				file.close
+			else
+				Error_box.popup (Current,
+						  Messages.write_file_er,
+						  file.name)
+			end;
+		end;
 
 end	

@@ -133,6 +133,7 @@ feature -- Output
 		do
 			set_changed (True);
 			st_process_text (texts);
+			set_cursor_position (0);
 			set_changed (False)
 		end;
 

@@ -40,18 +40,16 @@ create
 
 feature {NONE}-- Initialization 
 
-	make (a_clr_version: STRING) is
+	make is
 			-- create an instance of CACHE_MANAGER
 		do
-			cache_path_make (a_clr_version)
 			is_successful := True
 			last_error_message := ""	
-			create cache_writer.make (clr_version)
-			create cache_reader.make (clr_version)
-			create assembly_resolver.make (feature {APP_DOMAIN}.current_domain)
+			create cache_writer.make
+			create cache_reader
 		end
 		
-	make_with_path (a_path: STRING; a_clr_version: STRING) is
+	make_with_path (a_path: STRING) is
 			-- create instance of CACHE_MANAGER with ISE_EIFFEL path set to `a_path'
 		require
 			non_void_path: a_path /= Void
@@ -59,7 +57,7 @@ feature {NONE}-- Initialization
 			path_exists: (create {DIRECTORY}.make (a_path)).exists
 		do
 			set_internal_eiffel_cache_path (a_path.twin)
-			make (a_clr_version)
+			make
 		end
 		
 feature -- Access
@@ -68,9 +66,6 @@ feature -- Access
 	
 	last_error_message: STRING
 		-- last error message
-		
-	assembly_resolver: ASSEMBLY_RESOLVER
-		-- assembly resolver used to resolve references that cannot be resolved by default implementation
 		
 feature -- Basic Oprtations
 
@@ -82,6 +77,7 @@ feature -- Basic Oprtations
 			valid_name: not a_name.is_empty
 		local
 			l_assembly: ASSEMBLY
+			l_resolver: AR_RESOLVER
 		do
 			is_successful := True
 			last_error_message := ""
@@ -89,9 +85,11 @@ feature -- Basic Oprtations
 			add_to_eac := True
 			l_assembly := load_assembly_from_full_name (fully_quantified_name (a_name, a_version, a_culture, a_key))
 			if l_assembly /= Void then
-				assembly_resolver.add_resolver_path_from_assembly (l_assembly)
+				create l_resolver.make
+				l_resolver.add_resolve_path_from_file_name (l_assembly.location)
+				resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
 				add_assembly_to_eac (l_assembly.location)
-				assembly_resolver.remove_resolver_path_from_assembly (l_assembly)
+				resolve_subscriber.unsubscribe ({APP_DOMAIN}.current_domain, l_resolver)
 			end
 		ensure
 			successful: is_successful
@@ -104,29 +102,24 @@ feature -- Basic Oprtations
 			valid_path: not a_path.is_empty			
 		local
 			l_paths: LIST [STRING]
+			l_resolver: AR_RESOLVER
 		do	
 			is_successful := True
 			last_error_message := ""
-
+			
+			add_to_eac := True
+			
 			from
 				l_paths := a_path.split (';')
 				l_paths.start
 			until
 				l_paths.after
-			loop			
-				assembly_resolver.add_resolver_assembly (l_paths.item)
-				l_paths.forth
-			end
-
-			add_to_eac := True
-			from
-				l_paths.start
-			until
-				l_paths.after
 			loop
-				assembly_resolver.add_resolver_path_from_file_name (l_paths.item)
+				create l_resolver.make
+				l_resolver.add_resolve_path_from_file_name (l_paths.item)
+				resolve_subscriber.subscribe ({APP_DOMAIN}.current_domain, l_resolver)
 				add_assembly_to_eac (l_paths.item)
-				assembly_resolver.remove_resolver_path_from_file_name (l_paths.item)
+				resolve_subscriber.unsubscribe ({APP_DOMAIN}.current_domain, l_resolver)
 				l_paths.forth
 			end
 		ensure
@@ -217,7 +210,6 @@ feature {NONE} -- Internal Agents
 		end		
 
 invariant
-	assembly_resolver_not_void: assembly_resolver /= Void
 	cache_writer_not_void: cache_writer /= Void
 	cache_reader_not_void: cache_reader /= Void
 

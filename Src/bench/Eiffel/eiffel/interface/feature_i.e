@@ -285,7 +285,7 @@ feature
 feature -- Incrementality
 
 	equiv (other: FEATURE_I): BOOLEAN is
-			-- Incrementality test on instance fo FEATURE_I during
+			-- Incrementality test on instance of FEATURE_I during
 			-- second pass.
 		require
 			good_argument: other /= Void
@@ -333,6 +333,14 @@ end;
 					Result := (other.assert_id_set = Void)
 				end
 			end
+
+			if Result and then equal (rout_id_set.first, 
+									  System.default_rescue_id) then
+				-- This is the default rescue feature.
+				-- Test whether emptiness of body has changed.
+				Result := (empty_body = other.empty_body)
+			end
+
 debug ("ACTIVITY")
 	if not Result then
 		io.error.putstring ("%T%T");
@@ -424,6 +432,37 @@ debug ("ACTIVITY")
 	end;
 end;
 		end;
+
+feature -- test for empty body
+
+	empty_body : BOOLEAN        -- Does feature have an empty body?
+
+	set_empty_body (b : BOOLEAN) is
+			-- Set `empty_body' to `b'
+		do
+			empty_body := b
+		ensure
+			set : empty_body = b
+		end
+
+feature -- creation of default rescue clause
+
+	create_default_rescue (def_resc_name : STRING) is
+			-- Create default_rescue clause if necessary
+		require
+			valid_feature_name : def_resc_name /= Void
+		local
+			my_body : like body
+		do
+			if not (is_attribute or is_constant or 
+									is_external or is_deferred) then
+				my_body := body
+
+				if (my_body /= Void) then 
+					my_body.create_default_rescue (def_resc_name)
+				end
+			end
+		end
 
 feature -- Type id
 

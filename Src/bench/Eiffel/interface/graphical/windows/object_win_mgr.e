@@ -13,11 +13,11 @@ inherit
 		rename
 			make as mgr_make
 		redefine
-			editor_type, synchronize
+			editor_type
 		end;
 	EDITOR_MGR
 		redefine
-			editor_type, synchronize, make
+			editor_type, make
 		select
 			make
 		end;
@@ -55,8 +55,9 @@ feature -- Properties
 
 feature -- Synchronization
 
-	synchronize is
-			-- Synchronize object tools (after the application stopped).
+	synchronize_objects is
+			-- Synchronize the object in the
+			-- object tools (after the application stopped).
 		do
 			from
 				active_editors.start

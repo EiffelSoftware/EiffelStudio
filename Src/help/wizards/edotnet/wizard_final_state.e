@@ -138,6 +138,7 @@ feature {NONE} -- Constants
 				Result.append ("Creation routine name: " + Tab + wizard_information.creation_routine_name + New_line)
 			end
 			Result.append (New_line)
+			Result.append ("Target CLR version: " + Tab + wizard_information.clr_version + New_line)
 		ensure
 			non_void_message: Result /= Void
 			not_empty_message: not Result.is_empty

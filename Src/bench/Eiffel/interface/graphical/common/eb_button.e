@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 
 feature -- Properties
 
-	associated_command: ICONED_COMMAND_2;
+	associated_command: ICONED_COMMAND;
 			-- The associated command.
 
 feature -- Access
@@ -74,12 +74,6 @@ feature -- Status Setting
 			end
 		end;
 
-feature {NONE} -- Properties
-
-	button_name: STRING is "push_b"
-
-feature {NONE} -- Implementation
-
 	set_symbol (p: PIXMAP) is
 			-- Set the pixmap if it it valid
 		require
@@ -89,5 +83,9 @@ feature {NONE} -- Implementation
 				set_pixmap (p)
 			end;
 		end;
+
+feature {NONE} -- Properties
+
+	button_name: STRING is "push_b"
 
 end -- class EB_BUTTON

@@ -9,7 +9,7 @@ class FILTER_COMMAND
 
 inherit
 
-	ICONED_COMMAND_2
+	ICONED_COMMAND
 		redefine
 			text_window
 		end;
@@ -45,7 +45,7 @@ feature -- Callbacks
 			-- been pressed in the warner window
 			-- for text modification.
 		do
-			text_window.last_format.filter (filter_name)
+			text_window.last_format_2.associated_command.filter (filter_name)
 		end;
 
 feature -- Properties
@@ -116,11 +116,11 @@ feature {NONE} -- Implementation
 				if text_window.changed then
 					warner (text_window).call (Current, l_File_changed)
 				else
-					text_window.last_format.filter (filter_name)
+					text_window.last_format_2.associated_command.filter (filter_name)
 				end
 			elseif text_window.root_stone /= Void then
 					-- Execute the shell command
-				filterable_format ?= text_window.last_format;
+				filterable_format ?= text_window.last_format_2.associated_command;
 				if filterable_format = Void then
 					warner (text_window).gotcha_call (w_Not_a_filterable_format)
 				else

@@ -9,7 +9,7 @@ class SLICE_COMMAND
 
 inherit
 
-	ICONED_COMMAND_2
+	ICONED_COMMAND
 		redefine
 			text_window
 		end;
@@ -69,7 +69,7 @@ feature {NONE} -- Implementation
 			-- If left mouse button was pressed -> truncate special objects
 			-- If right mouse button was pressed -> bring up slice window. 
 		local
-			current_format: FORMATTER_2;
+			current_format: FORMATTER;
 			old_do_format: BOOLEAN;
 			mp: MOUSE_PTR
 		do
@@ -78,8 +78,8 @@ feature {NONE} -- Implementation
 					-- 3rd button pressed
 				slice_window.call 
 			elseif argument = slice_window then
-				current_format := text_window.last_format_2.associated_formatter;
-				if current_format = text_window.tool.showattr_frmt_holder.associated_formatter then
+				current_format := text_window.last_format_2.associated_command;
+				if current_format = text_window.tool.showattr_frmt_holder.associated_command then
 					old_do_format := current_format.do_format;
 					current_format.set_do_format (true);
 					current_format.execute (text_window.root_stone);

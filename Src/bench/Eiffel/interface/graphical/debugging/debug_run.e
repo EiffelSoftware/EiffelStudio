@@ -19,7 +19,7 @@ inherit
 		export
 			{NONE} all
 		end;
-	ICONED_COMMAND_2
+	ICONED_COMMAND
 		redefine
 			text_window
 		end;

@@ -11,7 +11,7 @@ inherit
 
 	PROJECT_CONTEXT;
 	SHARED_APPLICATION_EXECUTION;
-	ICONED_COMMAND_2
+	ICONED_COMMAND
 		redefine
 			licence_checked
 		end;

@@ -9,13 +9,13 @@ class SHOW_BREAKPOINTS
 
 inherit
 
-	FORMATTER_2
+	FORMATTER
 		rename
 			format as old_format
 		redefine
 			dark_symbol, display_temp_header
 		end;
-	FORMATTER_2
+	FORMATTER
 		redefine
 			dark_symbol, format, display_temp_header
 		select

@@ -20,10 +20,10 @@ inherit
 
 feature -- Standard Initialization
 
-	make (c: COMPOSITE; a_text_window: PROJECT_TEXT) is
+	make (a_text_window: PROJECT_TEXT) is
 			-- Initialize the command, and set an action.
 		do
-			init (c, a_text_window);
+			init (a_text_window);
 			set_action ("!c<Btn1Down>", Current, Format_and_run)
 		end;
 
@@ -39,7 +39,7 @@ feature -- Execution
 			if argument = Format_and_run then
 				text_window.tool.debug_run_cmd_holder.associated_command.execute (Void)
 			end;
-			text_window.set_last_format (Current)
+			text_window.set_last_format_2 (holder)
 		end;
 
 feature -- Formatting

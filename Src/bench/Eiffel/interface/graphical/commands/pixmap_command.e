@@ -5,7 +5,7 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class ICONED_COMMAND 
+deferred class ICONED_COMMAND
 
 inherit
 
@@ -14,63 +14,30 @@ inherit
 			execute
 		end;
 	NAMER;
-	PICT_COLOR_B
-		rename
-			make as pict_create
-		end;
 	SHARED_PIXMAPS;
 	LICENCED_COMMAND
 		rename
 			parent_window as Project_tool
 		end;
 	SHARED_ACCELERATOR
-	FOCUSABLE
 
 feature {NONE} -- Implementation
 
-	init (a_composite: COMPOSITE; a_text_window: TEXT_WINDOW) is
+	init (a_text_window: TEXT_WINDOW) is
 			-- Initialize a command with the `symbol' icon,
-			-- in the composite `a_composite'.
-			-- `a_text_window' is passed as argument to the activation action
+			-- `a_text_window' is passed as argument to the activation action.
 		require
 			a_text_window_not_void: a_text_window /= Void
 		do
-			pict_create (new_name, a_composite);
-			set_symbol (symbol);
-			initialize_focus;
-			add_activate_action (Current, a_text_window);
 			text_window := a_text_window
 		ensure
-			parent = a_composite
-		end;
-	
-feature -- Access
-
-	focus_source: WIDGET is
-			-- Widget representing
-			-- Current on the screen
-		do
-			Result := Current;
+			text_window_set: equal (text_window, a_text_window)
 		end;
 
-	focus_string: STRING is
-			-- String to be associated
-			-- with Current when it is
-			-- in focus
-		do
-			Result := name;
-		end;
+feature -- Callbacks
 
-feature -- Status Setting
-
-	darken (b: BOOLEAN) is
-			-- Darken the symbol of current button if `b', lighten it otherwize
+	set_action (a_translation: STRING; a_command: COMMAND; argument: ANY) is
 		do
-			if b then
-				set_symbol (dark_symbol)
-			else
-				set_symbol (symbol)
-			end
 		end;
 
 feature -- Properties
@@ -84,7 +51,26 @@ feature -- Properties
 		deferred
 		end;
 
-feature {TEXT_WINDOW} -- Restricted Properties
+	dark_symbol: PIXMAP is
+			-- Darkened version of `symbol'.
+		do
+			Result := symbol
+		end;
+
+	full_symbol: PIXMAP is
+			-- Symbol representing a targeted tool.
+		do
+			Result := symbol
+		end;
+
+	icon_symbol: PIXMAP is	
+			-- Symbol used for an iconified tool window.
+		do
+			Result := symbol
+		end;
+
+	holder: HOLDER;
+			-- Holder of Current.
 
 	name: STRING is
 			-- Name of the command.
@@ -103,23 +89,27 @@ feature -- Execute
 			execute_licenced (argument)
 		end;
 	
-feature {NONE} -- Implementation
+feature -- Setting
 
-	set_symbol (p: PIXMAP) is
-			-- Set the pixmap if it it valid
-		require
-			non_void_arg: p /= Void
+	set_holder (fh: like holder) is
+			-- Assign `fh' to `holder'.
 		do
-			if p.is_valid then
-				set_pixmap (p)
-			end;
+			holder := fh
 		end;
 
-	dark_symbol: PIXMAP is
-			-- Dark version of `symbol'
+	set_empty_symbol is
 		do
-			Result := symbol
-		end;
+			if holder.associated_button.pixmap /= symbol then
+				holder.associated_button.set_symbol (symbol)
+			end
+		end
+
+	set_full_symbol is
+		do
+			if holder.associated_button.pixmap /= full_symbol then
+				holder.associated_button.set_symbol (full_symbol)
+			end
+		end
 
 invariant
 

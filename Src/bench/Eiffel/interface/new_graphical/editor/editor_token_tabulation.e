@@ -26,14 +26,11 @@ feature -- Initialisation
 		do
 			number_of_tabs := number
 			create image.make(number)
-			from
-				i := 1
-			until
-				i > number
-			loop
+			from i := 1 until i > number loop
 				image.append_character('%T')
 				i := i + 1
 			end
+			length := editor_preferences.tabulation_spaces * number_of_tabs
 		end
 
 feature -- Miscellaneous

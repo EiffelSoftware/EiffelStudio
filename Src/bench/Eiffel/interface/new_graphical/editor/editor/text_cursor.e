@@ -43,15 +43,11 @@ feature -- Access
 
 feature -- Element change
 
-	set_token (t: EDITOR_TOKEN) is
+	set_current_char (t: EDITOR_TOKEN; p: INTEGER) is
 			-- Make `t' be the new value of `token'.
+			-- Set the value of `pos_in_token' to `p'.
 		do
 			token := t
-		end
-
-	set_pos_in_token (p: INTEGER) is
-			-- Set the value of `pos_in_token' to p.
-		do
 			pos_in_token := t
 		end
 

@@ -1,8 +1,9 @@
 indexing
-	description: "Objects that ..."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Objects that represent a space token. %
+				  %It represents one of more spaces."
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	EDITOR_TOKEN_SPACE
@@ -19,7 +20,7 @@ feature -- Initialisation
 		local
 			i: INTEGER
 		do
-			number_of_spaces := number
+			length := number
 			create image.make(number)
 			from i := 1 until i > number loop
 				image.append_character(' ')
@@ -37,7 +38,5 @@ feature -- Miscellaneous
 		end
 
 feature {NONE} -- Implementation
-
-	number_of_spaces: INTEGER
 
 end -- class EDITOR_TOKEN_SPACE

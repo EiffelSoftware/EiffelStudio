@@ -388,6 +388,12 @@ feature {NONE} -- Implementation
 						sep_imp.create_radio_group
 							-- First item inserted in the group is selected.
 						radio_imp.enable_select
+					else
+							-- We are adding to an existing group,
+							-- so there must be a radio button already checked.
+							-- Therefore, we uncheck this one.
+						uncheck_item (radio_imp.id)
+						radio_imp.disable_select
 					end
 					radio_imp.set_radio_group (sep_imp.radio_group)
 				else

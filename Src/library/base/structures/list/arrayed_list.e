@@ -572,11 +572,16 @@ feature {NONE} --Internal
 			i,j: INTEGER;
 			p : INTEGER;
 			last_value: like item;
+			last_item: like item;
 		do
-			if index >= pos then index := index + 1 end;
-			force_i_th  (last, count + 1);
+			if index >= pos then 
+				index := index + 1 
+			end;
+			last_item := last;
+			count := count + 1;
+			force_i_th  (last_item, count);
 			from
-				i := count - 1
+				i := count - 2
 			until
 				i < pos
 			loop
@@ -584,7 +589,6 @@ feature {NONE} --Internal
 				area.put (area.item (j), i);
 				i := j;
 			end;
-			count := count + 1;
 			put_i_th (v, pos);
 		ensure
 			new_count: count = old count + 1;

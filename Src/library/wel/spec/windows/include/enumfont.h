@@ -53,7 +53,7 @@ int CALLBACK cwel_enum_font_fam_procedure (ENUMLOGFONT *, NEWTEXTMETRIC *, DWORD
 #	define cwel_set_font_family_enumerator_object(_addr_)  (wel_set_font_family_enumerator_object(_addr_))
 		/* Set `font_family_enumerator' with `addr' */
 		
-	extern EIF_OBJ wel_release_font_family_enumerator_object() ;
+	extern EIF_REFERENCE wel_release_font_family_enumerator_object() ;
 #	define cwel_release_font_family_enumerator_object (wel_release_font_family_enumerator_object ())
 		/* Release `font_family_enumerator' with `addr' */
 		

@@ -26,7 +26,7 @@ default
 
 
 cluster
-	all root_cluster:		"$EIFFEL_SRC/examples/vision2/widget_test"
+	all root_cluster:		"."
 		exclude
 			"templates"; 
 		end

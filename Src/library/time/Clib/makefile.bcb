@@ -2,7 +2,7 @@
 
 CC = $(ISE_EIFFEL)\BCC55\bin\bcc32
 AR = $(ISE_EIFFEL)\BCC55\bin\tlib
-CFLAGS = -q -c -w-8065 -O2 -I$(ISE_EIFFEL)\bench\spec\$(ISE_PLATFORM)\include  -I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib -DEIF_BORLAND
+CFLAGS = -q -c -w-8065 -O2 -I$(ISE_EIFFEL)\studio\spec\$(ISE_PLATFORM)\include  -I$(ISE_EIFFEL)\BCC55\include  -L$(ISE_EIFFEL)\BCC55\lib -DEIF_BORLAND
 RM = -del
 
 .c.obj:

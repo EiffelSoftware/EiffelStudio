@@ -23,6 +23,7 @@ feature -- Basic operation
 		local
 			objects: ARRAYED_LIST [GB_OBJECT]
 			counter: INTEGER
+			objects_without_ids: BOOLEAN
 		do
 				-- First, intialization.
 			create existing_ids.make (50)
@@ -42,6 +43,8 @@ feature -- Basic operation
 						-- were no ids in the system, so ignore.
 				if existing_ids @ counter /= 0  then
 					lookup.extend (counter, existing_ids @ counter)
+				else
+					objects_without_ids := True
 				end
 				counter := counter + 1
 			end
@@ -58,6 +61,22 @@ feature -- Basic operation
 				objects.forth
 			end
 			set_current_id_counter (objects.count + 1)
+			
+			
+				-- Now, if `objects_without_ids' is `True', it means
+				-- that some of the objects referenced in the save file
+				-- do not have ids (an old save file). So we must now add ids
+				-- to all of these objects.
+			from
+				objects.start
+			until
+				objects.off
+			loop
+				if objects.item.id = 0 then
+					objects.item.assign_id
+				end
+				objects.forth
+			end
 		end
 		
 	compress_object_id (an_object: GB_OBJECT; start_value: INTEGER) is

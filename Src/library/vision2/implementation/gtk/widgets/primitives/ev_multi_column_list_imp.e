@@ -68,6 +68,7 @@ feature {NONE} -- Initialization
 			C.gtk_widget_show (scroll_window)
 			C.gtk_container_add (c_object, scroll_window)
 			create ev_children.make (0)
+			set_rows_height (15)
 		end
 
 	create_list (a_columns: INTEGER) is
@@ -480,7 +481,7 @@ feature -- Element change
 
 feature {EV_APPLICATION_IMP} -- Implementation
 
-	pebble_over_widget (a_gdkwin: POINTER): BOOLEAN is
+	pebble_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
 		local
 			gdkwin_parent, gdkwin_parent_parent: POINTER
 			clist_parent: POINTER
@@ -507,11 +508,11 @@ feature {NONE} -- Implementation
 			item_imp: EV_MULTI_COLUMN_LIST_ROW_IMP
 		do
 			if list_widget = Default_pointer then
-				create_list (v.columns)
+				create_list (v.count)
 			end
 
 			item_imp ?= v.implementation
-			item_imp.set_columns (columns)
+			--| FIXME N/A item_imp.set_columns (columns)
 			item_imp.set_parent_imp (Current)
 
 			-- update the list of rows of the column list:
@@ -522,14 +523,14 @@ feature {NONE} -- Implementation
 
 			-- add text in the gtk column list row:
 			from
-				item_imp.internal_text.start
-				column_i := 1
+				--item_imp.internal_text.start
+				--column_i := 1
 			until
 				column_i > columns
 			loop
-				item_imp.set_cell_text (column_i, item_imp.internal_text.item)
-				item_imp.internal_text.forth
-				column_i := column_i + 1
+				--item_imp.set_cell_text (column_i, item_imp.internal_text.item)
+				--item_imp.internal_text.forth
+				--column_i := column_i + 1
 			end
 		end
 
@@ -631,6 +632,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.45  2000/03/23 19:19:38  king
+--| Made compilable due to new row structure
+--|
 --| Revision 1.44  2000/03/22 22:02:52  king
 --| Implemented pebble_over_widget to deal with mclist and title windows
 --|

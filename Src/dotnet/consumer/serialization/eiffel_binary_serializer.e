@@ -6,6 +6,9 @@ class
 
 inherit
 	EIFFEL_XML_SERIALIZATION_ERRORS
+		export
+			{NONE} all
+		end
 
 feature -- Basic Operation
 

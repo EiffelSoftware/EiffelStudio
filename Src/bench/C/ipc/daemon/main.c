@@ -161,13 +161,17 @@ rt_public void init_bench(int argc, char **argv)
 #ifdef EIF_WIN32
 	eiffel4 = win_eif_getenv("EIFFEL4", "es4");		/* Installation directory */
 	if ((eiffel4 == (char *) 0) || (strlen (eiffel4) == 0)) {	/* Environment variable not set */
+		MessageBox (NULL, "The ISE EIFFEL4 registry key is not set.\nYou should probably reinstall the software.",
+						  "Execution terminated", MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
+		exit (1);
+	}
 #else
 	eiffel4 = getenv("EIFFEL4");		/* Installation directory */
 	if (eiffel4 == (char *) 0) {		/* Environment variable not set */
-#endif
 		print_err_msg (stderr, "The environment variable EIFFEL4 is not set\n");
 		exit (1);
 	}
+#endif
 
 	ewb_path = (char *) malloc(2048);
 	if (ewb_path == (char *) 0) {
@@ -185,28 +189,31 @@ rt_public void init_bench(int argc, char **argv)
 #ifdef EIF_WIN32
 	platform = win_eif_getenv ("PLATFORM", "es4");
 	if ((platform == (char *) 0) || (strlen(platform) == 0)){		/* Environment variable not set */
+		MessageBox (NULL, "The ISE PLATFORM registry key is not set.\nYou should probably reinstall the software.",
+						  "Execution terminated", MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
+		exit (1);
+	}
 #else
 	platform = getenv ("PLATFORM");
 	if (platform == (char *) 0) {		/* Environment variable not set */
-#endif
 		print_err_msg(stderr, "The environment variable PLATFORM is not set\n");
 		exit (1);
 	}
+#endif
 
 	strcat(ewb_path, platform);
 	strcat(ewb_path, EWB);				/* Append process name */
 
-	/* FIXME
-		FIXME
-		FIXME
-		FIXME
-		FIXME
-		check that es4 exists
-	*/
+/* FIXME: check that es4 exists */
 
 	sp = spawn_child(ewb_path, &pid);	/* Bring workbench to life */
 	if (sp == (STREAM *) 0)	{			/* Could not do it */
+#ifdef EIF_WIN32
+		MessageBox (NULL, "The es4.exe cannot be launched",
+						  "Execution terminated", MB_OK + MB_ICONERROR + MB_TASKMODAL + MB_TOPMOST);
+#else
 		print_err_msg(stderr, "%s: could not launch %s\n", progname, ewb_path);
+#endif
 		exit(1);
 	}
 
@@ -220,6 +227,7 @@ rt_public void init_bench(int argc, char **argv)
 
 #ifdef EIF_WIN32
 	free (ewb_path);
+	InvalidateRect (NULL, NULL, FALSE);
 #endif
 
 	dwide_listen();					/* Enter server mode... */
@@ -319,17 +327,23 @@ HANDLE hInst;				/* Application main instance			 */
 HWND hwnd;				/* Handle of temporary ebench window 	*/
 
 char slogan1 [] = "Inquire about our hands-on Eiffel sessions in Santa Barbara\nthe ideal way to learn from the experts.\n<info@eiffel.com>, 805-685-1006.";
-char slogan2 [] = "\"Object-Oriented Software Construction\": the long-awaited\nsecond edition of this all-time best seller will be out\nin January of 1997! Reserve your copy today.";
-char slogan3 [] = "SPECIAL MAINTENANCE DEAL covering all releases for 1997.\nGet the new, exciting Eiffel developments as they come out.\n<info@eiffel.com>, 805-685-1006.";
+char slogan2 [] = "\"Object-Oriented Software Construction\": the definitive\nreference on object technology\nOrder from your bookstore or directly from ISE for immediate delivery";
+char slogan3 [] = "SPECIAL MAINTENANCE DEAL covering all releases for one year.\nGet the new, exciting Eiffel developments as they come out.\n<info@eiffel.com>, 805-685-1006.";
 char slogan4 [] = "For the latest on ISE Eiffel, Eiffel projects, on-line\ndocumentation, new products: come back often to\nhttp://www.eiffel.com - 4-star McKinley award-winning site.";
 char slogan5 [] = "Windows Tech Journal about ISE Eiffel, December 1996:\n\"Eiffel may be the most thoroughly object-oriented\nlanguage that's commercially available\".";
 char slogan6 [] = "Object Magazine, Editor's Choice, December 96: ISE Eiffel.\n\"My favorite testing tool is the Eiffel language. Eiffel\nprevents bugs by facilitation good software engineering.\"";
 char slogan7 [] = "Windows Tech Journal on ISE Eiffel, December 96:\"Tired of\ndevelopment environments that only pretend to be O-O?\nISE Eiffel will have you marching to a different drummmer\"";
-char slogan8 [] = "GUI building: are you aware of the Eiffel Resource Bench?\nFREE until January 31, 1997, with any purchase of\nISE Eiffel 4. <info@eiffel.com>, 805-685-1006.";
-char slogan9[] = "Do you know about Eiffel's approach to Simple Concurrent\nObject-Oriented Programming? See http://www.eiffel.com\nor write to <info@eiffel.com>, 805-685-1006.";
-char slogan10[] = "Tell us about your project! Let us study with you how\nISE Eiffel 4 can help you gain the competitive edge.\nWrite to <info@eiffel.com>.";
-char slogan11[] = "Do you know about Eiffel on other platforms? The most\nportable environment in the industry also runs on\nUnix, Linux, VMS, OS/2 and more.";
-
+char slogan8 [] = "GUI building: are you aware of the Eiffel Resource Bench?\nFREE for a limited time only with purchase of\nISE Eiffel 4. <info@eiffel.com>, 805-685-1006.";
+char slogan9 [] = "Tell us about your project! Let us study with you how\nISE Eiffel 4 can help you gain the competitive edge.\nWrite to <info@eiffel.com>.";
+char slogan10 [] = "Do you know about Eiffel on other platforms? The most\nportable environment in the industry also runs on\nUnix, Linux, VMS, and more.";
+char slogan11 [] = "How to build quality reusable component libraries? Read the definitive reference:\n\"Reusable Software\", Prentice Hall. See http://www.eiffel.com/doc/books/reusable.html";
+char slogan12 [] = "Does your manager understand objects? Be kind: get him or her a copy of\n\"Object Success: A Mantger's Guide to Object Technolol.com/doc/books/success.html";
+char slogan13 [] = "Addison-Wesley has a whole book series devoted to Eiffel:\"Eiffel in Practice\".\n See http://www.awl.com/cp/eiffel.html";
+char slogan14 [] = "Interested in the CORBA-Eiffel interface?\n Contact ISE <info@eiffel.com> for pricing.";
+char slogan15 [] = "Lots of Eiffel books are available.\n See http://www.eiffel.com/doc/documentation.html.";
+char slogan16 [] = "Eiffel spells reuse! The Eiffel Shelf wants your libraries.";
+char slogan17 [] = "High-level consulting: have ISE's world-class experts review your architecture.";
+char slogan18 [] = "Get published! Many magazines are eager to publish Eiffel experience reports.\nContact ISE and we'll help you submit your article to the right publication";
 
 /*----------------------------------------------------------------*/
 /* Display a splash window while loading ise4.exe */
@@ -437,7 +451,7 @@ void display_splash()
     i=0;
     j=0;
     lines=0;
-    random = GetTickCount () % 11;
+    random = GetTickCount () % 19;
     switch (random)
     {
 	case 0: slogan = slogan1;
@@ -462,6 +476,22 @@ void display_splash()
 		break;
 	case 10: slogan = slogan11;
 		break;
+	case 11: slogan = slogan11;
+		break;
+	case 12: slogan = slogan12;
+		break;
+	case 13: slogan = slogan13;
+		break;
+	case 14: slogan = slogan14;
+		break;
+	case 15: slogan = slogan15;
+		break;
+	case 16: slogan = slogan16;
+		break;
+	case 17: slogan = slogan17;
+		break;
+	case 18: slogan = slogan18;
+		break;
     }
 
     while (j<strlen(slogan))
@@ -485,11 +515,6 @@ void display_splash()
     DeleteObject (SelectObject (MemDC, OldBitmap));
     DeleteDC (MemDC);
     DeleteDC (dc);
-
-	Wait = GetTickCount() + 2000;
-    while (GetTickCount() < Wait);
-
-	InvalidateRect (NULL, NULL, FALSE);
 }
 
 /*** Callback for the temporary ebench window ***/

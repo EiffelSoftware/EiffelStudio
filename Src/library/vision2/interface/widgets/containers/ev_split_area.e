@@ -79,6 +79,8 @@ feature -- Status setting
 			-- `value' is given in pixels.
 			-- Has an effect only if the split area has
 			-- already a child.
+			-- And on Linux, has an effect an effect only when the window
+			-- in which the paned is, is shown.
 		require
 			exists: not destroyed
 		do

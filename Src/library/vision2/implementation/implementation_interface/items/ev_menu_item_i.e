@@ -15,7 +15,7 @@ inherit
 
 	EV_MENU_ITEM_CONTAINER_I
 
-	EV_PIXMAP_CONTAINER_I
+	EV_PIXMAPABLE_I
 		redefine
 			pixmap_size_ok
 		end

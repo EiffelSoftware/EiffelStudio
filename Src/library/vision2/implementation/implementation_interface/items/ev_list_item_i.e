@@ -13,7 +13,7 @@ deferred class
 inherit
 	EV_ITEM_I
 
-	EV_PIXMAP_CONTAINER_I
+	EV_PIXMAPABLE_I
 
 feature {NONE} -- Initialization
 

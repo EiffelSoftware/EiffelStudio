@@ -45,18 +45,20 @@ feature -- Execution
 				until
 					classes.after
 				loop
-					e_class := classes.item;
-					other_feature := e_class.feature_with_rout_id (rout_id_set.item (i));
-					if other_feature /= Void then
-						e_class.append_name (structured_text);
-						structured_text.add (ti_Space);
-						other_feature.append_signature (structured_text);
-						structured_text.add_new_line;
-						structured_text.add_indent;
-						structured_text.add_string ("Version from class ");
-						other_feature.written_class.append_name (structured_text);
-						structured_text.add_new_line;	
-					end;
+					e_class := classes.item
+					if e_class.has_feature_table then
+						other_feature := e_class.feature_with_rout_id (rout_id_set.item (i))
+						if other_feature /= Void then
+							e_class.append_name (structured_text)
+							structured_text.add (ti_Space)
+							other_feature.append_signature (structured_text)
+							structured_text.add_new_line
+							structured_text.add_indent
+							structured_text.add_string ("Version from class ")
+							other_feature.written_class.append_name (structured_text)
+							structured_text.add_new_line
+						end
+					end
 					classes.forth
 				end;
 				i := i + 1

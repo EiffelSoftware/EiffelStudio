@@ -157,14 +157,16 @@ feature {NONE} -- Implementation
 				descendants.after
 			loop
 				a_class := descendants.item;
-				a_feat := a_class.feature_with_rout_id (rid)
-					-- FIXME: Manu: 03/25/2004:
-					-- Temporary fix for .NET as .NET classes don't have yet
-					-- the routine of ANY
-				debug ("FIXME") check fixme: False end end
-				if a_feat /= Void then
-					create cell.make (a_class, a_feat)
-					a_list.extend (cell)
+				if a_class.has_feature_table then
+					a_feat := a_class.feature_with_rout_id (rid)
+						-- FIXME: Manu: 03/25/2004:
+						-- Temporary fix for .NET as .NET classes don't have yet
+						-- the routine of ANY
+					debug ("FIXME") check fixme: False end end
+					if a_feat /= Void then
+						create cell.make (a_class, a_feat)
+						a_list.extend (cell)
+					end
 				end
 				descendants.forth
 			end;

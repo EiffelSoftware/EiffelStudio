@@ -64,15 +64,17 @@ feature -- Execution
 				loop
 					c := classes.item;
 					written_in := c.class_id;
-					feat := c.feature_with_rout_id (rout_id);
-					if feat /= Void and then feat.written_in = written_in then
-						c.append_name (structured_text);
-						structured_text.add (ti_Space);
-						feat.append_name (structured_text);
-						if c = written_cl then
-							structured_text.add_string (" (version from)");
-						end;
-						structured_text.add_new_line;
+					if c.has_feature_table then
+						feat := c.feature_with_rout_id (rout_id);
+						if feat /= Void and then feat.written_in = written_in then
+							c.append_name (structured_text);
+							structured_text.add (ti_Space);
+							feat.append_name (structured_text);
+							if c = written_cl then
+								structured_text.add_string (" (version from)");
+							end;
+							structured_text.add_new_line;
+						end
 					end
 					classes.forth
 				end;

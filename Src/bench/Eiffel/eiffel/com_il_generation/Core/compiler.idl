@@ -3,7 +3,7 @@
 // typelib filename: EiffelCompiler.tlb
 
 [
-  uuid(C947355E-AE58-3607-957C-7565E8CC09A1),
+  uuid(FEA1D8C7-0C0B-352D-9A59-1E2E768EA771),
   version(5.1)
 ]
 library EiffelCompiler
@@ -272,7 +272,7 @@ library EiffelCompiler
     };
 
     [
-      uuid(284806C7-1637-361D-9C9E-2E4B4C00378A),
+      uuid(7B9FA8F1-CA49-3A7D-A206-D08D67AB42B9),
       version(1.0)
     ]
     coclass COMPILER_PROXY {

@@ -124,7 +124,7 @@
 						<italic>iom1 </italic>(whether    a file, a socket or some other IO-medium) a copy of the entire object    structure starting at 
 						<italic>struc1</italic>. Together with the retrieval    routines seen below, they apply the principle of reference completeness    stated in [1] and [2]:
 					</paragraph>
-					<table>
+					<table><border>1</border>
 						<row>
 							<cell>Whenever a routine of class <code><class_name>STORABLE</class_name></code>        stores an object into an external file, it stores with it the        dependents of that object.</cell>
 							<cell>Whenever one of the associated retrieval routines retrieves a        previously stored object, it also retrieves all its dependents.</cell>

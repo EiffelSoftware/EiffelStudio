@@ -4,11 +4,11 @@ root
 	join (ROOT_CLUSTER): "make_join"
 
 default
---	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
 
 cluster
-	ROOT_CLUSTER: 	".";
-	common_classes:	"../common";
+	ROOT_CLUSTER: 	"$EIFFEL4/examples/net/advanced/join";
+	common_classes:	"$EIFFEL4/examples/net/advanced/common";
 
 	-- EiffelNet
 	net:				"$EIFFEL4/library/net";
@@ -32,6 +32,6 @@ cluster
 external
 	-- External EiffelNet library 
 	object:
-		"$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a"
--- win		"$(EIFFEL4)/library/net/spec/$(COMPILER)/lib/net.lib"
+--unix		"$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a"
+		"$(EIFFEL4)/library/net/spec/$(COMPILER)/lib/net.lib"
 end

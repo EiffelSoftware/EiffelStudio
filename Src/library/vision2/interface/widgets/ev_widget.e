@@ -39,8 +39,9 @@ feature -- Access
 			-- Position of the screen pointer relative to `Current'.
 		do
 			Result := implementation.pointer_position
-		ensure
-			bridge_ok: Result = implementation.pointer_position
+			-- Because the pointer position may have changed between assigning
+			-- `Result' and calling the post conditions, there is no
+			-- post condition on this feature.
 		end 
 
 	pointer_style: EV_CURSOR is
@@ -807,6 +808,9 @@ end -- class EV_WIDGET
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.79  2000/05/01 18:59:12  rogers
+--| Removed post condition on pointer_position and added a comment explaing why.
+--|
 --| Revision 1.78  2000/04/25 00:48:23  oconnor
 --| added center_pointer is
 --| Position screen pointer over center of `Current'.

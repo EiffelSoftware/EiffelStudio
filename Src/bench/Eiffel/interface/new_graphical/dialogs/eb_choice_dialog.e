@@ -39,7 +39,7 @@ feature -- Initialization
 			create exit_b.make_with_text (action_area, Interface_names.b_Cancel)
 			allow_resize
 			set_modal (True)
-			list.add_selection_command (Current, Void)
+			list.add_select_command (Current, Void)
 			exit_b.add_click_command (Current, exit_it)
 --			set_composite_attributes (Current)
 --			set_default_position (False)
@@ -112,7 +112,7 @@ feature
 			p: INTEGER
 			arg: EV_ARGUMENT1 [EB_CHOICE_DIALOG]
 		do
-			list.remove_selection_commands
+			list.remove_select_commands
 				-- In gtk, an selection event is send when the list
 				-- is destroyed, while having a non-void selection.
 				-- Of course we do not want this to disturb us.

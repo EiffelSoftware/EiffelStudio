@@ -527,7 +527,8 @@ feature -- Basic operations
 		require
 			non_void_interface_descriptor: an_interface_pointer_descriptor /= Void
 		local
-			tmp_element_c_type, tmp_element_eiffel_type, tmp_string: STRING
+			tmp_element_c_type, tmp_element_eiffel_type: STRING
+			tmp_string, tmp_element_ec_function: STRING
 			a_visitor: WIZARD_DATA_TYPE_VISITOR
 			library_guid, element_guid: ECOM_GUID
 			library_guid_str, element_guid_str: STRING
@@ -552,6 +553,16 @@ feature -- Basic operations
 			major_ver_number := an_interface_descriptor.library_descriptor.major_version_number
 			minor_ver_number := an_interface_descriptor.library_descriptor.minor_version_number
 			a_lcid := an_interface_descriptor.library_descriptor.lcid
+			
+			create tmp_element_ec_function.make (100)
+			if a_visitor.need_generate_ce then
+				tmp_element_ec_function.append (Generated_ce_mapper)
+			else
+				tmp_element_ec_function.append (Ce_mapper)
+			end
+			tmp_element_ec_function.append (Dot)
+			tmp_element_ec_function.append (a_visitor.ec_function_name)
+
 
 			create tmp_string.make (100)
 			tmp_string.append_integer (major_ver_number)
@@ -623,10 +634,9 @@ feature -- Basic operations
 					%%>%N%T%T%
 					%eif_element = eif_protect ((FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))f_array_item)%N%T%T%T%
 						%(eif_access (eif_safe_array), eif_access (eif_index)));%N%T%T%
-					%an_element = (" + tmp_element_c_type + ") eif_field (eif_access (eif_element), %"item%", EIF_POINTER);%N%T%T%
+					%an_element = (" + tmp_element_c_type + ") " + tmp_element_ec_function + "(eif_access (eif_element));%N%T%T%
 					%eif_wean (eif_element);%N%T%T%
-					%an_element->AddRef ();%N%T%T%
-					%hr = SafeArrayPutElement (c_safe_array, c_index, &an_element);%N%T%T%
+					%hr = SafeArrayPutElement (c_safe_array, c_index, an_element);%N%T%T%
 					%if (FAILED (hr))%N%T%T%
 					%%<%N%T%T%T%
 						%com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));%N%T%T%

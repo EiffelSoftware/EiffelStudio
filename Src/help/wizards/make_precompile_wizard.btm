@@ -27,7 +27,7 @@ cdd %TEMP%\precomp_wizard\EIFGEN\F_Code
 echo -----------------------------------------------------------------
 echo ------- Compress generated executable file ----------------------
 echo -----------------------------------------------------------------
-iff not defined WIN64
+iff not defined WIN64 then
 	upx wizard.exe
 endiff
 echo -----------------------------------------------------------------

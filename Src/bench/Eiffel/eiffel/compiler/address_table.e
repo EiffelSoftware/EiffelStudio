@@ -1,13 +1,13 @@
 class ADDRESS_TABLE
 
 inherit
-	HASH_TABLE [TWO_WAY_SORTED_SET [INTEGER], CLASS_ID]
+	EXTEND_TABLE [TWO_WAY_SORTED_SET [INTEGER], CLASS_ID]
 		rename
 			has as class_has_dollar_operator,
 			cursor as ht_cursor
 		export
 			{NONE} all;
-			{ANY} class_has_dollar_operator
+			{ANY} class_has_dollar_operator, merge
 		end
 	SHARED_CODE_FILES
 		undefine
@@ -96,6 +96,9 @@ feature -- Generation
 				gen_file.putstring ("eaddress")
 				gen_file.putstring (Dot_h)
 				gen_file.putstring ("%"%N%N")
+			else
+				System.class_counter.generate_extern_offsets (gen_file);
+				gen_file.new_line
 			end
 
 			from
@@ -470,7 +473,7 @@ feature {NONE} -- Generation
 					then
 						rout_info := System.rout_info_table.item (rout_id);
 						gen_file.putstring ("RTWPF(")
-						gen_file.putint (rout_info.origin.id);
+						gen_file.putstring (rout_info.origin.generated_id);
 						gen_file.putstring (", ")
 						gen_file.putint (rout_info.offset);
 					else

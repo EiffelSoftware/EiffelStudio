@@ -676,7 +676,7 @@ rt_public EIF_REFERENCE sprealloc(EIF_REFERENCE ptr, long int nbitems)
 
 	if (object != ptr && zone->ov_flags & EO_REM)
 	{
-#if EIF_REM_SET_OPTIMIZATION 
+#ifdef EIF_REM_SET_OPTIMIZATION 
 		if (zone->ov_flags & EO_REF)
 		{
 #ifdef SPREALLOC_DEBUG

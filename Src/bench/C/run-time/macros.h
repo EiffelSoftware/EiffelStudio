@@ -49,6 +49,22 @@ extern int in_assertion;
 #define EIF_FALSE (EIF_BOOLEAN) '\0'
 #define EIF_TEST(x) ((EIF_BOOLEAN)((x)?EIF_TRUE:EIF_FALSE))
 
+/* ANSI/K&R/C++ protection macros */
+
+#if defined(__STDC__) || defined(__cplusplus__)
+#define EXTERN_DECL(r_type, name, args) extern r_type name args
+#else  /* K&R */
+#define EXTERN_DECL(r_type, name, args) extern r_type name()
+#endif
+
+#ifdef __cplusplus
+#define CPP_WRAPPER_START extern "C" {
+#define CPP_WRAPPER_END }
+#else
+#define CPP_WRAPPER_START
+#define CPP_WRAPPER_END
+#endif
+
 /* Macro used for initialization of GC profiling:
  *  RTGC calls initialization of GC profiling
  */

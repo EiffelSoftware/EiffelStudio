@@ -10,8 +10,11 @@ default
 	il_generation ("dll")
 
 cluster	
-	root_cluster: "F:\reflection_interface\ISE.Reflection.EiffelComponents"
-	
-	all dot_net_base: "F:\Eiffel50\library\base.net"
-	
+	root_cluster: "F:\Src\dotnet\reflection_interface\ISE.Reflection.EiffelComponents"
+
+	all dot_net_base: "F:\Src\dotnet\library.net"
+		exclude
+			"accessibility"; "system"; "system.data"; "system.drawing"; "system.xml"; "system.windows.forms";
+		end
+		
 end

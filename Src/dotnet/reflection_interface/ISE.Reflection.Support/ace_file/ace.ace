@@ -2,7 +2,7 @@ system
 	"ISE.Reflection.Support"
 
 root
-	SUPPORT (root_cluster): "make"
+	SUPPORTS (root_cluster): "make"
 
 default
 	assertion (all)
@@ -10,20 +10,20 @@ default
 	il_generation ("dll")
 
 cluster	
-	root_cluster: "F:\reflection_interface\ISE.Reflection.Support"
+	root_cluster: "F:\Src\dotnet\reflection_interface\ISE.Reflection.Support"
 
-	eiffel_components_generated: "F:\reflection_interface\generated\eiffel_components_generated"
+	eiffel_components_generated: "F:\Src\dotnet\reflection_interface\generated\eiffel_components_generated"
 		
-	emitter_generated: "F:\reflection_interface\generated\emitter_generated"
+	emitter_generated: "F:\Src\dotnet\reflection_interface\generated\emitter_generated"
 	
-	all dot_net_base: "$EIFFEL\library\base.net"
+	all dot_net_base: "F:\Src\dotnet\library.net"
 		exclude
-			"accessbility"; "system_data"; "system_drawing"; "system_web"; "system_web_services"; "system_windows_forms";
+			"accessibility"; "system.data"; "system.drawing"; "system.windows.forms";
 		end
 		
 external
-	assembly: 	"F:\reflection_interface\generated\eiffel_components_generated\ISE.Reflection.EiffelComponents.dll",
-			"F:\reflection_interface\generated\emitter_generated\NewEmitterMain.exe",
+	assembly: 	"F:\Src\dotnet\reflection_interface\generated\eiffel_components_generated\ISE.Reflection.EiffelComponents.dll",
+			"F:\Src\dotnet\reflection_interface\generated\emitter_generated\emitter.exe",
 			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.XML.dll",
 			"C:\WINNT\Microsoft.NET\Framework\v1.0.2728\System.dll"
 end

@@ -162,7 +162,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make_by_color (cwin_get_bk_color (item))
+			create Result.make_by_color (cwin_get_bk_color (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -172,7 +172,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make_by_color (cwin_get_text_color (item))
+			create Result.make_by_color (cwin_get_text_color (item))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -200,7 +200,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make_by_color (cwin_get_pixel (item, x, y))
+			create Result.make_by_color (cwin_get_pixel (item, x, y))
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -210,7 +210,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make (0, 0)
+			create Result.make (0, 0)
 			cwin_get_viewport_org_ex (item, Result.item)
 		ensure
 			result_not_void: Result /= Void
@@ -221,7 +221,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make (0, 0)
+			create Result.make (0, 0)
 			cwin_get_viewport_ext_ex (item, Result.item)
 		ensure
 			result_not_void: Result /= Void
@@ -232,7 +232,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make (0, 0)
+			create Result.make (0, 0)
 			cwin_get_window_org_ex (item, Result.item)
 		ensure
 			result_not_void: Result /= Void
@@ -243,7 +243,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make (0, 0)
+			create Result.make (0, 0)
 			cwin_get_window_ext_ex (item, Result.item)
 		ensure
 			result_not_void: Result /= Void
@@ -254,7 +254,7 @@ feature -- Status report
 		require
 			exists: exists
 		do
-			!! Result.make (0, 0)
+			create Result.make (0, 0)
 			cwin_get_current_position_ex (item, Result.item)
 		ensure
 			result_exists: Result /= Void
@@ -268,8 +268,8 @@ feature -- Status report
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (s)
-			!! Result.make (0, 0)
+			create a_wel_string.make (s)
+			create Result.make (0, 0)
 			cwin_get_text_extend_point (item, a_wel_string.item, s.count,
 				Result.item)
 		ensure
@@ -309,10 +309,10 @@ feature -- Status report
 			a_wel_string: WEL_STRING
 			size: INTEGER
 		do
-			!! a_wel_string.make (text)
+			create a_wel_string.make (text)
 			size := cwin_get_tabbed_text_extent (item, a_wel_string.item,
 				text.count, 0, default_pointer)
-			!! Result.make (cwin_lo_word (size), cwin_hi_word (size))
+			create Result.make (cwin_lo_word (size), cwin_hi_word (size))
 		ensure
 			result_not_void: Result /= Void
 			positive_width: Result.width >= 0
@@ -354,11 +354,11 @@ feature -- Status report
 			a_wel_string: WEL_STRING
 			size: INTEGER
 		do
-			!! a_wel_string.make (text)
-			!! a.make (tabulations)
+			create a_wel_string.make (text)
+			create a.make (tabulations)
 			size := cwin_get_tabbed_text_extent (item, a_wel_string.item,
 				text.count, tabulations.count, a.item)
-			!! Result.make (cwin_lo_word (size), cwin_hi_word (size))
+			create Result.make (cwin_lo_word (size), cwin_hi_word (size))
 		ensure
 			result_not_void: Result /= Void
 			positive_width: Result.width >= 0
@@ -923,7 +923,7 @@ feature -- Basic operations
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (string)
+			create a_wel_string.make (string)
 			cwin_text_out (item, x, y, a_wel_string.item, string.count)
 		end
 
@@ -942,8 +942,8 @@ feature -- Basic operations
 			a: WEL_INTEGER_ARRAY
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (string)
-			!! a.make (tabulations)
+			create a_wel_string.make (string)
+			create a.make (tabulations)
 			cwin_tabbed_text_out (item, x, y, a_wel_string.item, string.count,
 				tabulations.count, a.item, tabulations_origin)
 		end
@@ -959,7 +959,7 @@ feature -- Basic operations
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (string)
+			create a_wel_string.make (string)
 			cwin_draw_text (item, a_wel_string.item, string.count, rect.item,
 				format)
 		end
@@ -973,7 +973,7 @@ feature -- Basic operations
 		local
 			a_wel_string: WEL_STRING
 		do
-			!! a_wel_string.make (string)
+			create a_wel_string.make (string)
 			cwin_draw_text (item, a_wel_string.item, string.count, rect.item,
 				Dt_singleline + Dt_center + Dt_vcenter)
 		end
@@ -988,7 +988,7 @@ feature -- Basic operations
 		local
 			bitmap_dc: WEL_MEMORY_DC
 		do
-			!! bitmap_dc.make_by_dc (Current)
+			create bitmap_dc.make_by_dc (Current)
 			if palette_selected then
 				bitmap_dc.select_palette (palette)
 				bitmap_dc.realize_palette
@@ -1051,7 +1051,7 @@ feature -- Basic operations
 		local
 			a: WEL_INTEGER_ARRAY
 		do
-			!! a.make (points)
+			create a.make (points)
 			cwin_polyline (item, a.item, points.count // 2)
 		end
 
@@ -1156,7 +1156,7 @@ feature -- Basic operations
 		local
 			a: WEL_INTEGER_ARRAY
 		do
-			!! a.make (points)
+			create a.make (points)
 			cwin_polygon (item, a.item, points.count // 2)
 		end
 
@@ -1370,24 +1370,24 @@ feature -- Basic operations
 			rf: RAW_FILE
 			a: ANY
 		do
-			!! rgb_quad.make
-			!! bmi.make_by_dc (Current, a_bitmap, Dib_rgb_colors)
+			create rgb_quad.make
+			create bmi.make_by_dc (Current, a_bitmap, Dib_rgb_colors)
 			inspect
 				bmi.header.bit_count
 			when 24 then
 				size := bmi.header.structure_size
-				!! bmi2.make (bmi.header, 0)
+				create bmi2.make (bmi.header, 0)
 			when 16, 32 then
 				size := bmi.header.structure_size +
 					rgb_quad.structure_size * 3
-				!! bmi2.make (bmi.header, 3)
+				create bmi2.make (bmi.header, 3)
 			else
 				size := (bmi.header.structure_size +
 					rgb_quad.structure_size *
 					(2 ^ bmi.header.bit_count)).truncated_to_integer
-				!! bmi2.make (bmi.header, (2 ^ bmi.header.bit_count).truncated_to_integer)
+				create bmi2.make (bmi.header, (2 ^ bmi.header.bit_count).truncated_to_integer)
 			end
-			!! bfh.make
+			create bfh.make
 			bfh.set_type (19778) -- 'BM'
 			bfh.set_size (bfh.structure_size +
 				bmi2.header.structure_size + size +
@@ -1395,12 +1395,12 @@ feature -- Basic operations
 			bfh.set_off_bits (bfh.structure_size + size)
 
 			-- Create the file
-			!! rf.make_create_read_write (file)
+			create rf.make_create_read_write (file)
 
 			-- Write the file header
 			c_file_ps (rf.file_pointer, bfh.item, bfh.structure_size)
 
-			!! bits.make (di_bits (a_bitmap, 0, bmi2.header.height, bmi2,
+			create bits.make (di_bits (a_bitmap, 0, bmi2.header.height, bmi2,
 				Dib_rgb_colors))
 
 			-- Write the bitmap info header
@@ -1430,9 +1430,9 @@ feature -- Basic operations
 		local
 			a: WEL_CHARACTER_ARRAY
 		do
-			!! Result.make (1,
+			create Result.make (1,
 				bitmap_info.header.size_image)
-			!! a.make (Result)
+			create a.make (Result)
 			cwin_get_di_bits (item, a_bitmap.item, start_scan,
 				scan_lines, a.item, bitmap_info.item, usage)
 			Result := a.to_array (1)
@@ -1459,7 +1459,7 @@ feature -- Basic operations
 		local
 			a: WEL_INTEGER_ARRAY
 		do
-			!! a.make (points)
+			create a.make (points)
 			cwin_poly_bezier (item, a.item, points.count // 2)
 		end
 
@@ -1480,7 +1480,7 @@ feature -- Basic operations
 		local
 			a: WEL_INTEGER_ARRAY
 		do
-			!! a.make (points)
+			create a.make (points)
 			cwin_poly_bezier_to (item, a.item, points.count // 2)
 		end
 
@@ -1491,7 +1491,12 @@ feature -- Removal
 		require
 			exists: exists
 		do
-			cwin_delete_dc (item)
+				-- Protect the call to DeleteDC, because
+				-- delete can be called by the GC so without
+				-- assertions.
+			if item /= Void then
+				cwin_delete_dc (item)
+			end
 			item := default_pointer
 		ensure
 			not_exists: not exists

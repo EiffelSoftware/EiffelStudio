@@ -17,7 +17,12 @@ feature -- Removal
 		require
 			exists: exists
 		do
-			cwin_delete_object (item)
+				-- Protect the call to DeleteObject, because
+				-- delete can be called by the GC so without
+				-- assertions.
+			if item /= Void then
+				cwin_delete_object (item)
+			end
 			item := default_pointer
 		ensure
 			not_exists: not exists

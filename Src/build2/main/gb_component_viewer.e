@@ -8,7 +8,7 @@ class
 	GB_COMPONENT_VIEWER
 
 inherit
-	EV_TITLED_WINDOW
+	EV_DIALOG
 		export
 			{NONE} all
 			{ANY} is_show_requested, show, hide
@@ -48,6 +48,14 @@ inherit
 		undefine
 			copy, default_create
 		end
+		
+	GB_WIDGET_UTILITIES
+		export
+			{NONE} all
+		undefine
+			copy, default_create
+		end
+		
 	
 
 feature {NONE} -- Implementation
@@ -62,8 +70,11 @@ feature {NONE} -- Implementation
 			tool_bar_separator: EV_TOOL_BAR_SEPARATOR
 			horizontal_box: EV_HORIZONTAL_BOX
 		do
+			Precursor {EV_DIALOG}
 			set_title ("Component viewer ")
 			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_component_window @ 1)
+				-- Set up cancel actions on `Current'.
+			fake_cancel_button (Current, agent show_hide_component_viewer_command.execute)
 			create vertical_box
 			extend (vertical_box)
 			
@@ -108,7 +119,6 @@ feature {NONE} -- Implementation
 			set_minimum_size (300, 400)
 			is_initialized := True
 			display_view_enabled := True
-			close_request_actions.extend (agent (show_hide_component_viewer_command).execute)
 		end
 
 feature -- Access

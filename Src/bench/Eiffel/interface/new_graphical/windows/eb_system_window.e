@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Window holding a system tool"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -23,7 +23,6 @@ feature {NONE} -- Initialization
 			-- Create the widgets and show Current on the screen.
 		do
 			Precursor (par)
-
 			create tool.make (Current)
 			tool.build_interface
 

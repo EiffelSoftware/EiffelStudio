@@ -1,5 +1,5 @@
 indexing
-	description: "Objects that ..."
+	description: "Window holding a feature tool"
 	date: "$Date$"
 	revision: "$Revision$"
 

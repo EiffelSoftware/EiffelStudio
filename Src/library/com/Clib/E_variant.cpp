@@ -4,15 +4,27 @@
 
 #include "E_variant.h"
 
+ecom_variant::ecom_variant ()
+{
+	variant = (VARIANT*)CoTaskMemAlloc (sizeof (VARIANT));
+	VariantInit(variant);
+}
+
 ecom_variant::ecom_variant (VARIANT *a_ptr)
 {
-	variant = a_ptr;
+	variant = (VARIANT*)CoTaskMemAlloc (sizeof (VARIANT));
 	VariantInit(variant);
+	VariantCopy (variant, a_ptr);
 }
 
 ecom_variant::~ecom_variant()
 {
 	CoTaskMemFree (variant);
+}
+
+EIF_POINTER ecom_variant::ccom_variant_item ()
+{
+	return (EIF_POINTER) variant;
 }
 
 void ecom_variant::ccom_set_character_reference(EIF_OBJECT char_ref)
@@ -27,7 +39,7 @@ EIF_INTEGER ecom_variant::ccom_variable_type ()
 }
 
 void ecom_variant::ccom_set_variable_type(VARTYPE a_value)
-{		
+{
 	V_VT(variant) = a_value;
 }
 
@@ -821,7 +833,7 @@ void ecom_variant::ccom_set_safearray_dispatch_interface_reference (EIF_OBJECT a
 
 void ecom_variant::ccom_set_safearray_hresult_reference (EIF_OBJECT a_value)
 {
-	V_VT(variant) = VT_ARRAY|VT_BYREF|VT_ERROR; 
+	V_VT(variant) = VT_ARRAY|VT_BYREF|VT_ERROR;
 	V_ARRAYREF(variant) = (SAFEARRAY **)rt_ec.ccom_ec_pointed_c_pointer((void *)rt_ec.ccom_ec_safearray_hresult(eif_access(a_value)));
 }
 

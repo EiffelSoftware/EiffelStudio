@@ -19,7 +19,7 @@ feature -- Access
 			-- VARIANT structure with default value 
 			-- of parameter, described by PARAMDESC
 		do
-			!! Result.make_by_pointer (ccom_paramdescex_variant (item))
+			!! Result.make_from_pointer (ccom_paramdescex_variant (item))
 		end
 
 	bytes: INTEGER is

@@ -8,24 +8,21 @@ class
 	ECOM_VARIANT
 
 inherit
-	ECOM_STRUCTURE
-		redefine
-			make
-		end
+	ECOM_WRAPPER
 
 	ECOM_VAR_TYPE
 
 creation
 	make,
-	make_by_pointer
+	make_from_pointer
 
 feature -- Initialization
 
 	make is
-			-- Create and initialize object.
+			-- Create new variant.
 		do
-			precursor
-			initializer := create_ecom_variant (item)
+			initializer := ccom_new_variant
+			item := ccom_variant_item (initializer)
 		end
 
 feature -- Access
@@ -1305,8 +1302,17 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
-	initializer: POINTER
-			-- Pointer to 'ecom_variant' object
+	create_wrapper (a_pointer: POINTER): POINTER is
+			-- Create C++ wrapper
+		do
+			Result := create_ecom_variant (a_pointer)
+		end
+
+	delete_wrapper is
+			-- Delete C++ wrapper
+		do
+			ccom_delete_variant (initializer)
+		end
 
 	variant_true: INTEGER is -1
 			-- True value of type VARAINT_BOOL
@@ -1333,9 +1339,24 @@ feature {NONE} -- Externals
 			"sizeof(VARIANT)"
 		end
 
+	ccom_variant_item (a_pointer: POINTER): POINTER is
+		external
+			"C++ [ecom_variant %"E_variant.h%"](): EIF_POINTER"
+		end
+
+	ccom_delete_variant (a_pointer: POINTER) is
+		external
+			"C++ [delete ecom_variant %"E_variant.h%"]()"
+		end
+
 	create_ecom_variant (a_ptr: POINTER): POINTER is
 		external
 			"C++ [new ecom_variant %"E_variant.h%"](VARIANT *)"
+		end
+
+	ccom_new_variant: POINTER is
+		external
+			"C++ [new ecom_variant %"E_variant.h%"]"
 		end
 
 	ccom_variable_type (a_ptr: POINTER): INTEGER is

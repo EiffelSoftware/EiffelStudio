@@ -202,6 +202,12 @@ feature -- Implementation
 	on_select is
 			-- Load files when possible
 		do
+			is_shown := True
+			if must_set_stone then
+				real_set_stone (stone_to_set)
+				stone_to_set := Void
+				must_set_stone := False
+			end
 			if widget.is_sensitive then
 				file_handler.load_files
 				enable_commands_in_toolbar
@@ -217,6 +223,7 @@ feature -- Implementation
 		require
 			tool_built: development_window.metric_menu /= Void
 		do
+			is_shown := False
 			development_window.metric_menu.disable_sensitive
 		end
 
@@ -772,67 +779,17 @@ feature -- Access
 feature -- Status setting
 
 	set_stone (a_stone: STONE) is
-			-- Assign `a_stone' as new stone.
-		local
-			new_feature_stone: FEATURE_STONE
-			new_cluster_stone: CLUSTER_STONE
-			new_class_stone: CLASSI_STONE
-			new_scope: INTEGER
+			-- Change the target of `Current'.
+			--| The implementation is delayed for optimization purposes.
 		do
-			new_feature_stone ?= a_stone
-			if new_feature_stone /= Void then
-				if new_feature_stone.is_valid and then not 
-					(
-						feature_stone /= Void
-							and then
-						feature_stone.is_valid
-							and then
-						new_feature_stone.same_as (feature_stone)
-					)
-				then
-					feature_stone := new_feature_stone
-					new_scope := scope (interface_names.metric_this_feature).index
-				end
+			if not is_shown then
+				stone_to_set := a_stone
+				must_set_stone := True
 			else
-				new_class_stone ?= a_stone
-				if new_class_stone /= Void then 
-					if new_class_stone.is_valid and then not
-						(
-							class_stone /= Void
-								and then
-							class_stone.is_valid
-								and then
-							new_class_stone.same_as (class_stone)
-						)
-					then
-						class_stone := new_class_stone
-						new_scope := scope (interface_names.metric_this_class).index
-					end
-				else
-					new_cluster_stone ?= a_stone
-					if new_cluster_stone /= Void then
-						if not new_cluster_stone.same_as (cluster_stone) then
-							cluster_stone := new_cluster_stone
-							new_scope := scope (interface_names.metric_this_cluster).index
-						end
-					else
-						new_scope := scope (interface_names.metric_this_system).index
-					end
-				end
+				must_set_stone := False
+				stone_to_set := Void
+				real_set_stone (a_stone)
 			end
-			if new_scope /= 0 then
-				min_scope_available := new_scope
-				adjust_scope (min_scope_available)
-				text_area.remove_text
-				if details_hidden then
-					details.disable_sensitive
-					if details_cmd_in_menu /= Void then
-						details_cmd_in_menu.disable_sensitive					
-					end
-				end
-			end
-		ensure
-			correct_range: min_scope_available >= Feature_scope and min_scope_available <= System_scope
 		end
 
 feature -- Selected object
@@ -1485,5 +1442,78 @@ feature {NONE} -- Implementation
 
 	internal_multi_column_list: EV_MULTI_COLUMN_LIST
 		-- Internal representation of `multi_column_list'.
+
+	is_shown: BOOLEAN
+			-- Is `Current' currently displayed in the context tool?
+
+	must_set_stone: BOOLEAN
+			-- Do we need to set the stone when we are next displayed?
+
+	stone_to_set: STONE
+			-- Stone that should be set, but we wait until we are displayed to set it.
+
+	real_set_stone (a_stone: STONE) is
+			-- Assign `a_stone' as new stone.
+		local
+			new_feature_stone: FEATURE_STONE
+			new_cluster_stone: CLUSTER_STONE
+			new_class_stone: CLASSI_STONE
+			new_scope: INTEGER
+		do
+			new_feature_stone ?= a_stone
+			if new_feature_stone /= Void then
+				if new_feature_stone.is_valid and then not 
+					(
+						feature_stone /= Void
+							and then
+						feature_stone.is_valid
+							and then
+						new_feature_stone.same_as (feature_stone)
+					)
+				then
+					feature_stone := new_feature_stone
+					new_scope := scope (interface_names.metric_this_feature).index
+				end
+			else
+				new_class_stone ?= a_stone
+				if new_class_stone /= Void then 
+					if new_class_stone.is_valid and then not
+						(
+							class_stone /= Void
+								and then
+							class_stone.is_valid
+								and then
+							new_class_stone.same_as (class_stone)
+						)
+					then
+						class_stone := new_class_stone
+						new_scope := scope (interface_names.metric_this_class).index
+					end
+				else
+					new_cluster_stone ?= a_stone
+					if new_cluster_stone /= Void then
+						if not new_cluster_stone.same_as (cluster_stone) then
+							cluster_stone := new_cluster_stone
+							new_scope := scope (interface_names.metric_this_cluster).index
+						end
+					else
+						new_scope := scope (interface_names.metric_this_system).index
+					end
+				end
+			end
+			if new_scope /= 0 then
+				min_scope_available := new_scope
+				adjust_scope (min_scope_available)
+				text_area.remove_text
+				if details_hidden then
+					details.disable_sensitive
+					if details_cmd_in_menu /= Void then
+						details_cmd_in_menu.disable_sensitive					
+					end
+				end
+			end
+		ensure
+			correct_range: min_scope_available >= Feature_scope and min_scope_available <= System_scope
+		end
 
 end -- class EB_METRIC_TOOL

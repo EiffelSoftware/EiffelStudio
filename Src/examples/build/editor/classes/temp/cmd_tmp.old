@@ -1,24 +1,33 @@
-class COMMAND3
+class COMMAND1
 
 inherit
 
-	NON_UNDOABLE_CMD
+	BUILD_OPEN
+		rename
+			argument1 as build_open_argument1
+		redefine
+			execute,
+			make
+		end
 
 creation
 
 	make
 
-feature
+feature -- Initialization
 
-	modify_label: STRING is "modify";
+	make (arg1: SCROLLED_T) is
+		do
+			{BUILD_OPEN} Precursor (arg1)
+		end
+
+feature -- Access
+
+feature -- Command
 
 	execute is
 		do
-			set_transition_label (modify_label);
-		end;
-
-	make is
-		do
-		end;
+			{BUILD_OPEN} Precursor
+		end
 
 end

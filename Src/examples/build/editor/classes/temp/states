@@ -2,14 +2,14 @@ class STATES
 
 feature
 
-	Exit_from_application: INTEGER is -2;
+	Exit_from_application: INTEGER is -2
 
-	Return_to_previous: INTEGER is -1;
+	Return_to_previous: INTEGER is -1
 
-	BASIC: INTEGER is 1;	-- BASIC
+	BASIC: INTEGER is 1	-- BASIC
 
-	VIEWING: INTEGER is 2;	-- VIEWING
+	Editing: INTEGER is 2	-- Editing
 
-	EDITING: INTEGER is 3;	-- EDITING
+	Viewing: INTEGER is 3	-- Viewing
 
 end

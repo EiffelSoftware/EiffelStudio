@@ -156,22 +156,30 @@ rt_public void mem_coalesc(void)
 
 rt_public long mem_tget(void)
 {
+	EIF_GET_CONTEXT
 	return th_alloc;			/* Current allocation threshold */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void mem_tset(long int value)
 {
+	EIF_GET_CONTEXT
 	th_alloc = value;			/* Set new allocation threshold */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public long mem_pget(void)
 {
+	EIF_GET_CONTEXT
 	return plsc_per;			/* Current full collection period */
+	EIF_END_GET_CONTEXT
 }
 
 rt_public void mem_pset(long int value)
 {
+	EIF_GET_CONTEXT
 	plsc_per = value;			/* Set new full collection period */
+	EIF_END_GET_CONTEXT
 }
 
 /*
@@ -180,7 +188,6 @@ rt_public void mem_pset(long int value)
 #ifndef EIF_THREADS
 rt_private struct emallinfo mem_stats; /* %%ss mt */
 #endif /* EIF_THREADS */
-
 rt_public void mem_stat(long int type)
 {
 	/* Initialize the mem statistics buffer, which will be used by the mem_info
@@ -224,11 +231,13 @@ rt_public long mem_info(long int field)
  */
 #ifndef EIF_THREADS
 rt_private struct gacstat gc_stats; /* %%ss mt */
-rt_private long gc_count = 0; /* %%ss mt */
+rt_private long gc_count; /* %%ss mt */
 #endif /* EIF_THREADS */
 
 rt_public void gc_mon(char flag)
+	EIF_GET_CONTEXT
 {
+	EIF_END_GET_CONTEXT
 	gc_monitor = (int) flag;	/* Turn GC statistics on/off */
 }
 

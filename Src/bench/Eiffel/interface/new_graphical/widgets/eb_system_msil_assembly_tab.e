@@ -196,22 +196,27 @@ feature -- Actions
 			list_not_void: assembly_list /= Void
 		local
 			list_row, selected_item: EV_MULTI_COLUMN_LIST_ROW
+			l_ass_name: STRING
 		do			
 			selected_item := assembly_list.selected_item
 			if selected_item /= Void then
 				assembly_interface.go_i_th (assembly_list.index_of (selected_item, 1) - 1)
+				l_ass_name := clone (selected_item @ 1)
 				create list_row
 				list_row.extend (unique_assembly_cluster_name ("GAC",
-									clone (selected_item @ 1),
+									l_ass_name,
 									clone (selected_item @ 2),
 									clone (selected_item @ 3),
 									clone (selected_item @ 4)))
-				list_row.extend ("")
+				list_row.extend (assembly_prefix (l_ass_name))	
 				list_row.extend (selected_item @ 1)
 				list_row.extend (selected_item @ 2)
 				list_row.extend (selected_item @ 3)
 				list_row.extend (selected_item @ 4)
 				gac_assembly_list.extend (list_row)
+				if special_assembly (l_ass_name) then
+					gac_assembly_list.set_row_editable (False, gac_assembly_list.index_of (list_row, 1))	
+				end
 				assembly_list.go_i_th (assembly_list.index_of (assembly_list.selected_item, 1))
 				assembly_list.remove
 			end	
@@ -268,7 +273,7 @@ feature -- Actions
 
 			gac_dialog.extend (vbox)
 			gac_dialog.set_size (400, 400)	
-			populate_gac_assembly_dialog (assembly_list)			
+			populate_gac_assembly_dialog (assembly_list)
 			gac_dialog.show_modal_to_window (system_window.window)
 		end
 
@@ -497,6 +502,7 @@ feature -- Implementation
 				end
 				assembly_interface.forth
 			end
+			assembly_list.resize_column_to_content (1)
 		end
 	
 	unique_assembly_cluster_name (ass_type, a_name, a_culture, a_version, a_public_key: STRING): STRING is
@@ -517,7 +523,9 @@ feature -- Implementation
 				when 1 then
 					if a_name.is_empty then 
 						create temp_id_string.make_from_string ("Assembly")
-					else
+					elseif a_name.is_equal ("System") then
+						create temp_id_string.make_from_string (a_name + "_")
+					else	
 						create temp_id_string.make_from_string (a_name)
 					end
 				when 2 then
@@ -617,6 +625,36 @@ feature -- Implementation
 			end
 			Result := valid
 		end	
+		
+	special_assembly (a_name: STRING): BOOLEAN is
+			-- Is assembly with name 'a_name' a special assembly?
+		require
+			a_name_not_void: a_name /= Void
+		do
+			Result := 	a_name.is_equal ("System") or
+						a_name.is_equal ("System.Xml") or
+						a_name.is_equal ("System.Windows.Forms")
+		end
+		
+	assembly_prefix (a_name: STRING): STRING is
+			-- Return the required prefix for the assembly with name 'a_name'.
+		require
+			a_name_not_void: a_name /= Void
+		do
+			if special_assembly (a_name) then
+				if a_name.is_equal ("System") then
+					Result := "system_dll_"
+				elseif a_name.is_equal ("System.Xml") then
+					Result := "xml_"
+				elseif a_name.is_equal ("System.Windows.Forms") then
+					Result := "winforms_"
+				end
+			else
+				Result := ""
+			end
+		ensure
+			result_not_void: Result /= Void			
+		end
 		
 	cluster_names: ARRAYED_LIST [STRING] is
 			-- Get the cluster names for referenced assemblies

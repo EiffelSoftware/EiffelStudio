@@ -705,7 +705,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			else
 					-- Check if there is a creation constraint clause
 				formal_type_dec_as := context_class.generics.i_th (formal_type.position)
-				if formal_type_dec_as /= Void then
+				if formal_type_dec_as /= Void and then formal_type_dec_as.has_creation_constraint then
 						-- Check if we have m >= n as specified above.
 					formal_crc_list := formal_type_dec_as.constraint_creation_list
 					if formal_crc_list.count >= crc_list.count then

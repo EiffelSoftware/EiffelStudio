@@ -609,7 +609,11 @@ end
 				eiffel_file := Void;
 			else
 				class_comments := Void;
-				!! eiffel_file.make (current_class.file_name, current_ast.end_position);
+				if not current_class.is_true_external then
+					create eiffel_file.make (current_class.file_name, current_ast.end_position);
+				else
+					eiffel_file := Void
+				end
 			end;
 			current_ast.register (Current);
 		ensure

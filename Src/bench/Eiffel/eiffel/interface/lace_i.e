@@ -109,7 +109,7 @@ feature -- Status setting
 		local
 			ptr: ANY
 			file: PLAIN_TEXT_FILE
-			vd22: VD22
+			vd21: VD21
 		do
 			if not full_degree_6_needed then
 				ptr := file_name.to_c
@@ -117,9 +117,9 @@ feature -- Status setting
 				has_changed := False
 				if not file.exists then
 					successful := False
-					create vd22
-					vd22.set_file_name (file_name)
-					Error_handler.insert_error (vd22)
+					create vd21
+					vd21.set_file_name (file_name)
+					Error_handler.insert_error (vd21)
 					Error_handler.raise_error
 				end
 					

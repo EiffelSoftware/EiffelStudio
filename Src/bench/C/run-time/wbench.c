@@ -331,7 +331,7 @@ rt_public int wtype_gen(int static_type, int32 feature_id, EIF_REFERENCE object)
 	CGENFeatType(type,gen_type,rout_id,dyn_type);
 
 	if (gen_type != (int16 *) 0)
-		*gen_type = (int16) eif_find_true_type ((int16)dyn_type);
+		*gen_type = (int16) eif_id_for_typarr ((int16)dyn_type);
 
 	return (int) eif_compound_id ((int16 *)0, (int16) Dftype (object), type, gen_type);
 }
@@ -350,7 +350,7 @@ rt_public int wptype_gen(int static_type, int32 origin, int32 offset, EIF_REFERE
 	desc = desc_tab[origin][dyn_type] + offset;
 
 	if (desc->gen_type != (int16 *) 0)
-		*(desc->gen_type) = (int16) eif_find_true_type((int16)dyn_type);
+		*(desc->gen_type) = (int16) eif_id_for_typarr ((int16)dyn_type);
 
 	return (int) eif_compound_id ((int16 *) 0, (int16) Dftype (object), desc->type, desc->gen_type);
 }

@@ -3059,23 +3059,6 @@ rt_private void eif_compute_anc_id_map (int16 dftype)
 	(map->map)[RTUD_INV(dtype)-(map->min_id)] = dftype;
 }
 
-rt_shared int16 eif_find_true_type (int16 x)
-	/* Find true type of an object after many compilations in workbench mode
-	 * `x' being the compiled type, it returns the type in current compilation */
-{
-#ifdef EIF_THREADS
-	int16 result;
-	EIFMTX_LOCK;
-
-	result = RTUD_INV(x);
-
-	EIFMTX_UNLOCK;
-
-	return result;
-#else
-	return RTUD_INV(x);
-#endif
-}
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/
 /*------------------------------------------------------------------*/

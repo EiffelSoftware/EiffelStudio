@@ -71,7 +71,11 @@ feature {NONE} -- Implementation
 				visitor := func_desc.return_type.visitor
 
 				if visitor.is_basic_type or visitor.is_enumeration then
-					ccom_feature_writer.set_result_type (visitor.cecil_type)
+					if visitor.vt_type = Vt_void then
+						ccom_feature_writer.set_result_type (visitor.c_type)
+					else
+						ccom_feature_writer.set_result_type (visitor.cecil_type)
+					end
 				elseif (visitor.vt_type = Vt_bool) then
 					ccom_feature_writer.set_result_type (Eif_boolean)
 				else

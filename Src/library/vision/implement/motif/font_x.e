@@ -276,10 +276,8 @@ feature
 
 	is_valid (a_widget: WIDGET_I): BOOLEAN is
 			-- Is the font valid in `a_widget''s display ?
-		require else
-			font_specified: is_specified
 		do
-			Result := true
+			Result := resource (a_widget.screen) /= default_pointer
 		end;
 
 	
@@ -419,9 +417,12 @@ feature
 				a_resource := find_same_display (a_screen);
 				if (a_resource = Void) then
 					ext_name := name.to_c;
-					Result := x_load_query_font (a_screen.screen_object, $ext_name);
-					!FONT_RES_X! a_resource.make (a_screen, Result, true);
-					put_front (a_resource);
+					Result := x_load_query_font 
+								(a_screen.screen_object, $ext_name);
+					if Result /= default_pointer then
+						!FONT_RES_X! a_resource.make (a_screen, Result, true);
+						put_front (a_resource);
+					end
 				else
 					Result := a_resource.identifier
 				end

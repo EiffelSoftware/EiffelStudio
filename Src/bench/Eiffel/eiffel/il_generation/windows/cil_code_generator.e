@@ -866,14 +866,39 @@ feature -- Class info
 			class_type_not_void: class_type /= Void
 		local
 			l_ca_factory: CUSTOM_ATTRIBUTE_FACTORY
+			l_class: CLASS_C
+			l_attributes: EIFFEL_LIST [CREATION_EXPR_AS]
 		do
 			current_class_type := class_type
+			l_class := class_type.associated_class
+			check
+				l_class.most_recent_ast /= Void
+			end
 			create l_ca_factory
-			l_ca_factory.set_class_custom_attributes (
-				class_type_token (class_type.static_type_id))
-			if class_type.implementation_id /= class_type.static_type_id then
-				l_ca_factory.set_class_custom_attributes (
-					class_type_token (class_type.implementation_id))
+				-- First we generate attributes common to both generated class and interface.
+			l_attributes := l_class.most_recent_ast.custom_attribute
+			if l_attributes /= Void then
+				l_ca_factory.generate_custom_attribute (
+					class_type_token (class_type.implementation_id), class_type, l_attributes)
+					-- Generate custome attribute on interface if it is generated.
+				if class_type.static_type_id /= class_type.implementation_id then
+					l_ca_factory.generate_custom_attribute (
+						class_type_token (class_type.static_type_id), class_type, l_attributes)
+				end
+			end
+				-- Then we generate only class or interface specific attribute if we indeed
+				-- generate a class and an interface associated to an Eiffel class.
+			if class_type.static_type_id /= class_type.implementation_id then
+				l_attributes := l_class.most_recent_ast.class_custom_attribute
+				if l_attributes /= Void then
+					l_ca_factory.generate_custom_attribute (
+						class_type_token (class_type.implementation_id), class_type, l_attributes)
+				end
+				l_attributes := l_class.most_recent_ast.interface_custom_attribute
+				if l_attributes /= Void then
+					l_ca_factory.generate_custom_attribute (
+						class_type_token (class_type.static_type_id), class_type, l_attributes)
+				end
 			end
 		end
 

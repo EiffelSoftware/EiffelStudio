@@ -40,6 +40,8 @@ cluster
 		yacc:				"$BENCH/Eiffel/yacc";
 		const:				"$BENCH/Eiffel/const";
 
+		common_eiffel_parser:	"$BENCH/Eiffel/common/parser/parser";
+
 	-- Lace compilation:
 
 		env:				"$BENCH/Eiffel/lace/env";

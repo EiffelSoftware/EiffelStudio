@@ -106,6 +106,7 @@ cluster
 		-- General compilation:
 	common:				"$EIFFEL_SRC\common"
 	common_parser (common):				"$\parser"
+	common_eiffel_parser (common_parser):		"$\parser";
 
 	flat_short (common_parser):			"$\flat_short"
 		exclude

@@ -5,6 +5,7 @@ remtrace Update all source files.
 cd $EIFFEL_SRC
 exprt -r $DEFAULT_CVS_TAG -d Eiffel Eiffel
 exprt -r $DEFAULT_CVS_TAG -d build2 Src/build2
+exprt -r $DEFAULT_CVS_TAG -d vision2_tour Src/examples/vision2/widget_test
 exprt -r $DEFAULT_CVS_TAG -d C runtime
 exprt -r $DEFAULT_CVS_TAG -d dotnet Src/dotnet
 exprt -r $DEFAULT_CVS_TAG -d C_library Src/C_library
@@ -18,6 +19,25 @@ safe_md $INSTALL_DIR/studio/spec/unix/lib
 safe_md $INSTALL_DIR/build/spec
 safe_md $INSTALL_DIR/build/spec/unix
 safe_md $INSTALL_DIR/build/spec/unix/bin
+
+remtrace Recompile Vision2 Tour
+cd $EIFFEL_SRC/vision2_tour
+safe_md $EXPORT_DIR/vision2_tour
+source retrieve_build_files $DEFAULT_CVS_TAG &> $INSTALL_LOG >> $INSTALL_LOG
+source retrieve_flat_short &> $INSTALL_LOG >> $INSTALL_LOG
+cd $EIFFEL_SRC/vision2_tour
+clean_project
+finalize linuxace.ace
+tgz_ccode vision2_tour
+if [ ! -f vision2_tour.tar.gz ]; then
+	echo Could not finalize a new Vision2 tour
+	CANCEL
+fi
+clean_project
+move $EIFFEL_SRC/vision2_tour/flatshort $INSTALL_DIR/vision2_tour
+move $EIFFEL_SRC/vision2_tour/tests $INSTALL_DIR/vision2_tour
+move vision2_tour.tar.gz $EXPORT_DIR/vision2_tour
+
 
 remtrace Recompile EiffelBuild
 cd $EIFFEL_SRC/build2

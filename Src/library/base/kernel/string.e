@@ -650,6 +650,19 @@ feature -- Element change
 			-- appended: For every `i' in 1..`s'.`count', `item' (old `count'+`i') = `s'.`item' (`i')
 		end;
 
+	infix "+" (s: STRING): STRING is
+		-- Append a copy of 's' at the end of a copy of Current,
+		-- Then return the Result.
+		require
+			argument_not_void: s /= Void	
+		do
+			Result := clone(Current)
+			Result.append(s)
+		ensure
+			Result_exists: Result /= Void
+			new_count: count = Result.count - s.count	
+		end
+
 	append_string (s: STRING) is
 			-- Append a copy of `s', if not void, at end.
 		do

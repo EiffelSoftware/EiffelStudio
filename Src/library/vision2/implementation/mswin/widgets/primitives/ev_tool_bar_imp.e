@@ -30,7 +30,8 @@ inherit
 			on_key_down,
 			destroy,
 			interface,
-			initialize
+			initialize,
+			on_left_button_double_click
 		end
 
 	EV_SIZEABLE_CONTAINER_IMP
@@ -80,7 +81,6 @@ inherit
 			on_left_button_up,
 			on_right_button_down,
 			on_right_button_up,
-			on_left_button_double_click,
 			on_right_button_double_click,
 			on_key_up,
 			on_key_down,
@@ -95,7 +95,8 @@ inherit
 			wel_resize,
 			wel_move,
 			wel_move_and_resize,
-			default_process_message
+			default_process_message,
+			on_left_button_double_click
 		end
 
 	WEL_COLOR_CONSTANTS
@@ -546,6 +547,15 @@ feature {NONE} -- WEL Implementation
 			process_tab_key (virtual_key)
 		end
 
+	on_left_button_double_click (keys, x_pos, y_pos: INTEGER) is
+			-- Left mouse button has been double clicked.
+			--| This has been redefined so that if you double click
+			--| on a radio button, we can stop Windows altering the
+			--| buttons state. 
+		do
+			disable_default_processing
+		end
+
 feature {EV_TOOL_BAR_IMP} -- Implementation
 
 	radio_group: LINKED_LIST [EV_TOOL_BAR_RADIO_BUTTON_IMP]
@@ -702,6 +712,10 @@ end -- class EV_TOOL_BAR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.56  2000/04/25 18:52:21  rogers
+--| Redefined on_left_button_double_click to fix bug with double
+--| clicks unselecting radio buttons.
+--|
 --| Revision 1.55  2000/04/24 22:26:47  rogers
 --| Removed redundent code.
 --|

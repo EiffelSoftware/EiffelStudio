@@ -15,8 +15,6 @@ inherit
 
 	SOCKET_RESOURCES
 
-	STORABLE
-
 feature -- Access
 
 	in : SOCKET;
@@ -25,7 +23,7 @@ feature -- Access
 	outflow : like in;
 			-- Service socket
 
-	received: STORABLE;
+	received: ANY;
 			-- Last message from socket
 
 	execute is
@@ -43,9 +41,9 @@ feature -- Access
 
 	queued: INTEGER;
 
-	resend (msg: STORABLE) is
+	resend (msg: ANY) is
 		do
-			msg.independent_store (outflow)
+			outflow.independent_store (msg)
 		end;
 
 	set_queued (n:INTEGER) is

@@ -37,9 +37,9 @@ feature -- Access
 			in_out.close
 		end;
 
-	send (msg : STORABLE) is
+	send (msg : ANY) is
 		do
-			msg.independent_store (in_out)
+			in_out.independent_store (msg)
 		end
 
 end -- class NETWORK_CLIENT

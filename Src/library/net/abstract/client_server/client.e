@@ -15,28 +15,26 @@ inherit
 
 	SOCKET_RESOURCES
 
-	STORABLE
-
 feature -- Access
 
 	in_out: SOCKET;
 			-- Receive and send socket.
 
-	received : STORABLE;
+	received : ANY;
 			-- message received on `in'
 
 	cleanup is
 		deferred
 		end;
 
-	send (msg : STORABLE) is
+	send (msg : ANY) is
 		do
-			msg.independent_store (in_out)
+			in_out.independent_store (msg)
 		end;
 
 	receive is
 		do
-			received ?= retrieved (in_out)
+			received ?= in_out.retrieved
 		end
 	
 end -- class CLIENT

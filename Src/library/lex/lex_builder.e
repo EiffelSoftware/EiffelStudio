@@ -965,11 +965,8 @@ feature -- Input
 		local
 			retrieved_file: RAW_FILE
 		do
-			if analyzer = Void then
-				!! analyzer.make
-			end;
 			!! retrieved_file.make_open_read (file_name);
-			analyzer ?= analyzer.retrieved (retrieved_file);
+			analyzer ?= retrieved_file.retrieved;
 			retrieved_file.close
 		end;
 
@@ -986,7 +983,7 @@ feature -- Output
 				!! analyzer.make
 			end;
 			!! store_file.make_open_write (file_name);
-			analyzer.basic_store (store_file);
+			store_file.basic_store (analyzer);
 			store_file.close
 		end;
 

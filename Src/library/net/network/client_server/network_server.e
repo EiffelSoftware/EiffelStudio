@@ -49,10 +49,10 @@ feature -- Access
 			received ?= retrieved (outflow)
 		end;
 
-	resend (msg: STORABLE) is
+	resend (msg: ANY) is
 			-- Send back message `msg'.
 		do
-			msg.independent_store (outflow)
+			outflow.independent_store (msg)
 		end;
 	
 	close is

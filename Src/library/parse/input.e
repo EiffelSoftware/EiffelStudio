@@ -118,11 +118,8 @@ feature  -- Input
 		local
 			retrieved_file: RAW_FILE
 		do
-			if analyzer = Void then
-				!! analyzer.make
-			end;
 			!! retrieved_file.make_open_read (filename);
-			analyzer ?= analyzer.retrieved (retrieved_file);
+			analyzer ?= retrieved_file.retrieved;
 			retrieved_file.close
 		end;
 

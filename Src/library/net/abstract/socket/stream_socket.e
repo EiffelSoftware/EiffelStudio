@@ -14,10 +14,18 @@ class
 inherit
 
 	SOCKET
+		redefine
+			support_storable
+		end
 
 creation {STREAM_SOCKET}
 
 	create_from_descriptor
+
+feature -- Status report
+
+	support_storable: BOOLEAN is True
+			-- Can medium be used to store an Eiffel structure?
 
 feature
 
@@ -52,58 +60,6 @@ feature
 				accepted := Void
 			end
 		end;
-
-	basic_send (an_object: STORABLE) is
-			-- Send object `an_object' on socket with
-			-- basic_store method.
-		require
-			socket_exists: exists;
-			opened_for_write: is_open_write;
-			object_exists: an_object /= Void
-		do
-			an_object.basic_store (Current)
-		end;
-
-	general_send (an_object: STORABLE) is
-			-- Send object `an_object' on socket with
-			-- general_store method.
-		require
-			socket_exists: exists;
-			opened_for_write: is_open_write;
-			object_exists: an_object /= Void
-		do
-			an_object.general_store (Current)
-		end;
-
-	independent_send (an_object: STORABLE) is
-			-- Send object `an_object' on socket with
-			-- independent_store method.
-		require
-			socket_exists: exists;
-			opened_for_write: is_open_write;
-			object_exists: an_object /= Void
-		do
-			an_object.independent_store (Current)
-		end;
-
-	 retrieved: STORABLE is
-			-- Receive object from socket with retreived method.
-		require
-			socket_exists: exists;
-			opened_for_read: is_open_read
-		local
-			storable_tool: STORABLE;
-			was_blocking: BOOLEAN
-		do
-			was_blocking := is_blocking;
-			set_blocking;
-			!! storable_tool;
-			Result := storable_tool.retrieved (Current);
-			if not was_blocking then
-				set_non_blocking
-			end
-		end
-
 
 feature {NONE} -- Externals
 

@@ -16,12 +16,7 @@
 #include "eif_logfile.h"
 #include "stream.h"
 #include "ewbio.h"
-
-#ifdef I_STRING
 #include <string.h>
-#else
-#include <strings.h>
-#endif
 
 extern void welcome(void);			/* Print a welcome message */
 rt_public void dexit(int status);	/* Final exiting with logging message */

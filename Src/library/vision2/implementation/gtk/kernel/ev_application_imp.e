@@ -53,6 +53,8 @@ feature {NONE} -- Initialization
 			
 				-- Initialize the dependent routines object
 			create gtk_dependent_routines
+			
+			--feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_set_debug_updates (True)
 
 		end
 
@@ -191,7 +193,7 @@ feature -- Basic operation
 			until 
 				stop_processing_requested
 			loop
-				-- We want blocking enabled to avoid 100% CPU time when there is no events to be processed.
+					-- We want blocking enabled to avoid 100% CPU time when there is no events to be processed.
 				main_not_running := feature {EV_GTK_EXTERNALS}.gtk_main_iteration_do (True)
 			end
 		end
@@ -215,7 +217,8 @@ feature -- Basic operation
 		local
 			main_not_running: INTEGER
 		do
-			-- We do not want nested loops of process events.
+				-- We do not want nested loops of process events.
+			--feature {EV_GTK_DEPENDENT_EXTERNALS}.gdk_window_process_all_updates
 			if not processing_events then
 				from
 					processing_events := True

@@ -16,7 +16,7 @@ library EiffelCompiler
 
     [
       odl,
-      uuid(55D899F7-FFB4-3990-841F-C1899E2983F2),
+      uuid(7D495B9C-DF55-3C93-A0A0-E730C6B670A8),
       version(1.0),
       oleautomation
     ]
@@ -226,6 +226,7 @@ library EiffelCompiler
         HRESULT _stdcall GenerateOnceResultInfo(
                         [in] BSTR Name, 
                         [in] long TypeID);
+        HRESULT _stdcall generate_once_computed();
         HRESULT _stdcall GenerateOnceTest();
         HRESULT _stdcall GenerateOnceResult();
         HRESULT _stdcall GenerateOnceStoreResult();
@@ -285,3 +286,4 @@ library EiffelCompiler
         [default] interface COMPILER_PROXY_I;
     };
 };
+

@@ -415,6 +415,8 @@ feature -- Generation structure
 
 	void GenerateOnceResultInfo( string name, int TypeID );
 
+	void generate_once_computed ();
+
 	void GenerateOnceTest();
 
 	void GenerateOnceResult();

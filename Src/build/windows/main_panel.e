@@ -47,24 +47,28 @@ feature -- Creation
 				--| Menu bar
 			!! menu_bar.make (Menu_names.Menu_bar, base)
 			!! file_category.make (Menu_names.File, menu_bar)
+			!! action_category.make (Menu_names.Actions, menu_bar)
 			!! view_category.make (Menu_names.View, menu_bar)
 			!! help_category.make (Menu_names.Help, menu_bar)
 			!! generate_menu_entry.make (Menu_names.Generate, file_category)
 			!! import_menu_entry.make (Menu_names.Import, file_category)
 			!! menu_separator.make ("", file_category)
 			!! exit_menu_entry.make (Menu_names.Exit, file_category)
-			!! context_catalog_entry.make (Menu_names.Context_catalog, view_category)
-			!! context_editor_entry.make (Menu_names.Context_editor, view_category)
-			!! context_tree_entry.make (Menu_names.Context_tree, view_category)
-			!! history_window_entry.make (Menu_names.History_window, view_category)
-			!! command_catalog_entry.make (Menu_names.Command_catalog, view_category)
-			!! command_editor_entry.make (Menu_names.Command_editor, view_category)
-			!! command_tool_entry.make (Menu_names.Instance_editor, view_category)
-			!! editors_entry.make (Menu_names.Editors, view_category)
+			!! create_command_entry.make (Menu_names.create_command, action_category)
 			!! application_editor_entry.make (Menu_names.Application_editor, view_category)
+			!! class_selector_entry.make (Menu_names.Class_selector, view_category)
+			!! command_sub_menu.make (Menu_names.Command, view_category)
+			!! context_sub_menu.make (Menu_names.Context, view_category)
+			!! editors_entry.make (Menu_names.Editors, view_category)
+			!! history_window_entry.make (Menu_names.History_window, view_category)
 			!! interface_entry.make (Menu_names.Interface, view_category)
 			!! interface_only_entry.make (Menu_names.Interface_only, view_category) 
-			!! class_selector_entry.make (Menu_names.Class_selector, view_category)
+			
+			!! context_catalog_entry.make (Menu_names.Context_catalog, context_sub_menu)
+			!! context_editor_entry.make (Menu_names.Context_editor, context_sub_menu)
+			!! context_tree_entry.make (Menu_names.Context_tree, context_sub_menu)
+			!! command_catalog_entry.make (Menu_names.Command_catalog, command_sub_menu)
+			!! command_tool_entry.make (Menu_names.Instance_editor, command_sub_menu)
 				--| Separators
 			!! separator1.make (widget_names.separator, form)
 			!! separator2.make (widget_names.separator, form)
@@ -248,6 +252,7 @@ feature -- Creation
 					--| Context tree split form
 			context_tree_split_form.attach_top (scrolled_w, 0)
 			context_tree_split_form.attach_top (context_tree_button_form, 0)
+			context_tree_split_form.attach_top (vertical_separator, 0)
 			context_tree_split_form.attach_left (context_tree_button_form, 0)
 			context_tree_split_form.attach_bottom (context_tree_button_form, 0)
 			context_tree_split_form.attach_left_widget (context_tree_button_form, vertical_separator, 2)
@@ -445,12 +450,17 @@ feature -- Graphical interface
 	file_category: MENU_PULL
 	view_category: MENU_PULL
 	help_category: MENU_PULL
+	action_category: MENU_PULL
 		--| Entries in the File category
 	generate_menu_entry: PUSH_B
 	import_menu_entry: PUSH_B
 	menu_separator: SEPARATOR
 	exit_menu_entry: PUSH_B
+		--| Entries in the Actions category
+	create_command_entry: NEW_COMMAND_BUTTON
 		--| Entries in the View category
+	context_sub_menu: MENU_PULL
+	command_sub_menu: MENU_PULL
 	context_catalog_entry: CONTEXT_CATALOG_ENTRY
 	context_editor_entry: CONTEXT_EDITOR_ENTRY
 	context_tree_entry: CONTEXT_TREE_ENTRY
@@ -550,6 +560,8 @@ feature -- Realization
 			context_catalog_widget.realize
 			context_tree_widget.realize
 			command_catalog.realize
+			hide_context_tree
+			show_context_tree
 		end
 
 feature -- Closing Current

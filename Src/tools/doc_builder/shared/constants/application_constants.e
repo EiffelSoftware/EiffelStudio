@@ -114,7 +114,7 @@ feature -- Display Constants
 	no_error_color: EV_COLOR is
 			-- Color for non-error messages
 		once
-			create Result.make_with_rgb (0.0, 0.8, 0.0)
+			create Result.make_with_rgb (1.0, 1.0, 1.0)
 		end
 
 feature -- Schema preferences			
@@ -123,16 +123,6 @@ feature -- Schema preferences
 			-- Should document auto validate against schema
 			-- during editing?
 
-	output_list: ARRAYED_LIST [STRING] is
-			-- List of possible output types
-		once
-			create Result.make (3)
-			Result.compare_objects
-			Result.extend ("all")
-			Result.extend ("studio")
-			Result.extend ("envision")
-		end		
-
 feature -- Table of Contents Preferences
 
 	index_file_name: STRING
@@ -140,6 +130,85 @@ feature -- Table of Contents Preferences
 
 	html_location: STRING
 			-- Location of HTML from which TOC is generated
+			
+	code_directories: ARRAYED_LIST [STRING] is
+			-- Directories containing code XML.  Output specific to output type.
+		local
+			l_project_root,
+			l_code_dir: FILE_NAME
+			l_filter: DOCUMENT_FILTER
+			l_proj: DOCUMENT_PROJECT
+		do
+			create Result.make (10)
+			Result.compare_objects
+			l_proj := (create {SHARED_OBJECTS}).shared_project
+			create l_project_root.make_from_string (l_proj.root_directory)
+			l_filter := l_proj.filter_manager.filter
+			
+			l_project_root.extend ("libraries")
+				-- Base
+			create l_code_dir.make_from_string (l_project_root.string)
+			l_code_dir.extend ("base")
+			l_code_dir.extend ("reference")
+			Result.extend (l_code_dir.string)
+			
+				-- Wel
+			create l_code_dir.make_from_string (l_project_root.string)
+			l_code_dir.extend ("wel")			
+			l_code_dir.extend ("reference")
+			Result.extend (l_code_dir.string)
+			
+				-- Vision2
+			create l_code_dir.make_from_string (l_project_root.string)
+			l_code_dir.extend ("vision2")
+			l_code_dir.extend ("reference")
+			Result.extend (l_code_dir.string)
+			
+			
+			if not l_filter.description.is_equal ((create {SHARED_OBJECTS}).Shared_constants.Output_constants.Envision_desc) then
+						-- Lex
+				create l_code_dir.make_from_string (l_project_root.string)
+				l_code_dir.extend ("lex")
+				l_code_dir.extend ("reference")
+				Result.extend (l_code_dir.string)
+				
+					-- COM
+				create l_code_dir.make_from_string (l_project_root.string)			
+				l_code_dir.extend ("com")
+				l_code_dir.extend ("reference")
+				Result.extend (l_code_dir.string)
+				
+					-- Java
+				create l_code_dir.make_from_string (l_project_root.string)
+				l_code_dir.extend ("eiffel2java")
+				l_code_dir.extend ("reference")
+				Result.extend (l_code_dir.string)
+				
+					-- Parse
+				create l_code_dir.make_from_string (l_project_root.string)
+				l_code_dir.extend ("parse")
+				l_code_dir.extend ("reference")
+				Result.extend (l_code_dir.string)
+				
+					-- Net	
+				create l_code_dir.make_from_string (l_project_root.string)
+				l_code_dir.extend ("net")			
+				l_code_dir.extend ("reference")
+				Result.extend (l_code_dir.string)
+				
+					-- Time
+				create l_code_dir.make_from_string (l_project_root.string)			
+				l_code_dir.extend ("time")
+				l_code_dir.extend ("reference")
+				Result.extend (l_code_dir.string)
+				
+					-- Web
+				create l_code_dir.make_from_string (l_project_root.string)
+				l_code_dir.extend ("web")
+				l_code_dir.extend ("reference")
+				Result.extend (l_code_dir.string)			
+			end			
+		end		
 			
 feature -- Status Setting
 
@@ -154,12 +223,6 @@ feature -- Status Setting
 		do
 			html_location := a_location	
 		end		
-
-	set_synchronize_document_widgets (a_flag: BOOLEAN) is
-			-- Set 'synchronize_document_widgets'
-		do
-			synchronize_document_widgets := a_flag
-		end
 
 	set_index_file_name (a_name: STRING) is
 			-- Set `index_file_name'
@@ -189,10 +252,13 @@ feature -- Status Setting
 			tags_set: tags_uppercase = flag
 		end
 
+	add_code_directory (a_dir_name: STRING) is
+			-- Add to `code_directories'
+		do
+			code_directories.extend (a_dir_name)	
+		end		
+
 feature -- Document
-			
-	synchronize_document_widgets: BOOLEAN
-			-- Should widgets representing document views be in synch?		
 			
 	tags_uppercase: BOOLEAN
 			-- Should element tags be uppercase?			

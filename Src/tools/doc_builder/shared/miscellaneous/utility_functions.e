@@ -15,7 +15,7 @@ feature -- Copying
 			directories_exist: a_dir.exists and target.exists
 			directories_not_already_open: a_dir.is_closed and target.is_closed
 		local
-			cnt: INTEGER
+			cnt, l_cnt: INTEGER
 			sub_dir, src_sub_dir: DIRECTORY
 			l_file, target_file: RAW_FILE
 			path: STRING
@@ -25,8 +25,9 @@ feature -- Copying
 				a_dir.open_read
 				a_dir.start
 				path := a_dir.name
+				l_cnt := a_dir.count
 			until
-				cnt = a_dir.count
+				cnt = l_cnt
 			loop	
 				a_dir.readentry
 				if not (a_dir.lastentry.is_equal (".") or a_dir.lastentry.is_equal ("..")) then
@@ -109,14 +110,15 @@ feature -- Directory
 			-- Number of children (files and sub-folders) of `a_dir'
 		local
 			sub_dir: DIRECTORY
-			cnt: INTEGER
+			cnt, l_cnt: INTEGER
 			l_filename: FILE_NAME
 		do
 			from
 				a_dir.open_read
 				cnt := 0
+				l_cnt := a_dir.count
 			until
-				cnt = a_dir.count
+				cnt = l_cnt
 			loop
 				a_dir.readentry
 				if not (a_dir.lastentry.is_equal (".") or a_dir.lastentry.is_equal ("..")) then
@@ -341,13 +343,25 @@ feature -- Document
 			Result := l_name.string
 		end		
 
+	is_code_document (a_doc: DOCUMENT): BOOLEAN is
+			-- Is `a_doc' a code document
+		local
+			l_code_dir: FILE_NAME
+		do
+			create l_code_dir.make_from_string (a_doc.shared_project.root_directory)
+			l_code_dir.extend ("libraries")
+			if a_doc.name.has_substring (l_code_dir.string) then
+				Result := a_doc.name.has_substring ("reference")
+			end
+		end
+
 feature {NONE} -- Implementation
 
 	temporary_location (a_name: STRING; a_root: STRING): STRING is
 			-- Temporary location
 		require
 			doc_not_void: a_name /= Void
-			rooT_not_void: a_root /= Void
+			root_not_void: a_root /= Void
 		local
 			l_proj_root: STRING
 			l_sub_dir_name,
@@ -359,7 +373,14 @@ feature {NONE} -- Implementation
 			Result := clone (a_name)
 			l_proj_root := (create {SHARED_OBJECTS}).Shared_project.root_directory
 			if l_proj_root /= Void then
-				Result.replace_substring_all (l_proj_root, "")
+				if Result.has_substring (l_proj_root) then
+					Result.replace_substring_all (l_proj_root, "")
+				else
+					if Result.has (':') then
+						Result := short_name (Result)
+					end
+				end
+				
 			end
 			create l_file_name.make_from_string (a_root)
 			if (Result.item (1) = '\' or Result.item (1) = '/') then

@@ -1763,6 +1763,7 @@ rt_private void interpret(int flag, int where)
 			uint32 elem_size = 0, bit_size = 0, i = 0;
 			uint32 flags = 0;
 			struct item *nb_item;
+			int16 exp_type;
 			uint32 nb = 0;
 
 			type = get_creation_type ();
@@ -1773,7 +1774,9 @@ rt_private void interpret(int flag, int where)
 			is_expanded = EIF_TEST(*IC++);
 
 			if (is_expanded) {
-				elem_size = OVERHEAD + EIF_Size(RTUD(get_short ()));
+					/* Need local since RTUD evaluates twice its argument. */
+				exp_type = get_short();
+				elem_size = OVERHEAD + EIF_Size(RTUD(exp_type));
 			} else {
 				switch (get_uint32() & SK_HEAD) {
 					case SK_CHAR: elem_size = sizeof(EIF_CHARACTER); break;

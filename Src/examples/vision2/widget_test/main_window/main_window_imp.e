@@ -91,9 +91,8 @@ feature {NONE}-- Initialization
 			create search_button
 			create match_case_button
 			create l_frame_2
-			create l_horizontal_box_8
-			create increase_text_button
-			create decrease_text_button
+			create l_cell_3
+			create modify_text_size
 			
 				-- Build_widget_structure.
 			set_menu_bar (l_menu_bar_1)
@@ -161,9 +160,8 @@ feature {NONE}-- Initialization
 			l_horizontal_box_7.extend (search_button)
 			l_horizontal_box_7.extend (match_case_button)
 			l_horizontal_box_6.extend (l_frame_2)
-			l_frame_2.extend (l_horizontal_box_8)
-			l_horizontal_box_8.extend (increase_text_button)
-			l_horizontal_box_8.extend (decrease_text_button)
+			l_frame_2.extend (l_cell_3)
+			l_cell_3.extend (modify_text_size)
 			
 				-- Initialize properties of all widgets.
 			
@@ -263,8 +261,9 @@ feature {NONE}-- Initialization
 			match_case_button.set_text ("Match Case")
 			match_case_button.set_tooltip ("Should next search be case insensitive?")
 			l_frame_2.set_text ("Text Size")
-			increase_text_button.set_tooltip ("Increase size of displayed text")
-			decrease_text_button.set_tooltip ("Decrease size of displayed text")
+			modify_text_size.set_text ("4")
+			modify_text_size.value_range.adapt(create {INTEGER_INTERVAL}.make (4, 75))
+			modify_text_size.set_value (4)
 			
 				--Connect events.
 			close_request_actions.extend (agent close_test)
@@ -277,6 +276,7 @@ feature {NONE}-- Initialization
 			clear_all.select_actions.extend (agent clear_all_events)
 			search_button.select_actions.extend (agent start_search)
 			match_case_button.select_actions.extend (agent update_case_matching)
+			modify_text_size.change_actions.extend (agent update_text_size (?))
 				-- Close the application when an interface close
 				-- request is recieved on `Current'. i.e. the cross is clicked.
 			close_request_actions.extend (agent ((create {EV_ENVIRONMENT}).application).destroy)
@@ -308,11 +308,12 @@ feature {NONE} -- Implementation
 	l_horizontal_separator_1, l_horizontal_separator_2: EV_HORIZONTAL_SEPARATOR
 	l_horizontal_box_1, main_notebook_properties_item, horizontal_spacing_box, l_horizontal_box_2, 
 	l_horizontal_box_3, main_notebook_tests, l_horizontal_box_4, l_horizontal_box_5, 
-	l_horizontal_box_6, l_horizontal_box_7, l_horizontal_box_8: EV_HORIZONTAL_BOX
+	l_horizontal_box_6, l_horizontal_box_7: EV_HORIZONTAL_BOX
 	l_tool_bar_1, l_tool_bar_2, l_tool_bar_3, l_tool_bar_4: EV_TOOL_BAR
 	generate_button: EV_TOOL_BAR_BUTTON
 	l_cell_1, l_cell_2, widget_selector_parent, left_spacing_cell, top_spacing_cell, 
-	widget_holder, bottom_spacing_cell, right_spacing_cell, padding_cell, controller_parent: EV_CELL
+	widget_holder, bottom_spacing_cell, right_spacing_cell, padding_cell, controller_parent, 
+	l_cell_3: EV_CELL
 	l_vertical_separator_1: EV_VERTICAL_SEPARATOR
 	properties_button, tests_button, documentation_button: EV_TOOL_BAR_TOGGLE_BUTTON
 	main_split_area: EV_HORIZONTAL_SPLIT_AREA
@@ -322,11 +323,12 @@ feature {NONE} -- Implementation
 	scrollable_widget_area: EV_SCROLLABLE_AREA
 	event_output: EV_LIST
 	event_selector_list: EV_CHECKABLE_LIST
-	select_all, clear_all, search_button, increase_text_button, decrease_text_button: EV_BUTTON
+	select_all, clear_all, search_button: EV_BUTTON
 	l_vertical_split_area_1: EV_VERTICAL_SPLIT_AREA
 	test_class_display, flat_short_display: EV_TEXT
 	search_field: EV_TEXT_FIELD
 	match_case_button: EV_CHECK_BUTTON
+	modify_text_size: EV_SPIN_BUTTON
 	
 	close_test is
 			-- Called by `close_request_actions' of `Current'.
@@ -365,6 +367,11 @@ feature {NONE} -- Implementation
 	
 	update_case_matching is
 			-- Called by `select_actions' of `match_case_button'.
+		deferred
+		end
+	
+	update_text_size (a_value: INTEGER) is
+			-- Called by `change_actions' of `modify_text_size'.
 		deferred
 		end
 	

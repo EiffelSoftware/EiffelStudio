@@ -30,8 +30,10 @@ ldflags=''
 ldsharedflags='-G'
 
 libs='-lsocket -lnsl -lm'
+sharedlibs='-lsocket -lnsl -lm'
 mtlibs='-lsocket -lnsl -lm -lthread'
-
+mtsharedlibs='-lsocket -lnsl -lm -lthread'
+sharedlink='ld'
 prefix='lib'
 mt_prefix='mt'
 concurrent_prefix='c'

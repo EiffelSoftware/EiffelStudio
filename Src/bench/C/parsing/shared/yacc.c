@@ -529,9 +529,3 @@ long yacc_prev_pos (n)
 }
 
 
-void pos_stack_end ()
-{
-	if (pos_stack - basic_pos_stack)
-		free (pos_stack);
-}
-

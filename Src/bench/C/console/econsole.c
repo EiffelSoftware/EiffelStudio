@@ -459,7 +459,8 @@ void show_trace()
 	if (exception_trace_string != NULL)
 		{
 		(void) DialogBox (eif_hInstance, "EIF_EXCEPTION_TRACE", NULL, exception_trace_dialog);
-		free (exception_trace_string);
+		//free (exception_trace_string);
+		*exception_trace_string = '\0';
 		}
 }
 
@@ -491,7 +492,7 @@ void eif_make_console()
 			WS_VISIBLE | WS_THICKFRAME | WS_OVERLAPPED | WS_MINIMIZEBOX | WS_MAXIMIZEBOX, CW_USEDEFAULT, CW_USEDEFAULT, 400, 200, 
 			NULL,0, eif_hInstance, NULL);
 		ShowWindow (eif_conout_window, SW_SHOW);
-		SetWindowPos (eif_conout_window, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+		SetWindowPos (eif_conout_window, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
 		}
 	else
 		{
@@ -586,35 +587,71 @@ LRESULT CALLBACK eif_console_wndproc (HWND hwnd, UINT wMsg, WPARAM wParam, LONG 
 void eif_PutWindowedOutput(char *s, int l)
 {
 #define BUFSIZE 16000
-	char buffer [BUFSIZE], *sp, *bp;
-	int size, t;
+	char *buffer, *sp, *bp, *ss = s;
+	MSG msg;
+	int size, t, lv = l, newlines = 0;
 	BOOL update = FALSE;
 
+	if ((buffer = calloc (BUFSIZE+1,1)) == NULL) return;
+
+	while (PeekMessage (&msg, (HWND) eif_conout_window, 0L, 0L, PM_REMOVE))
+		{
+		TranslateMessage (&msg);
+		DispatchMessage (&msg);
+		}
+
 	size = SendMessage (hEdit, WM_GETTEXT, BUFSIZE, (LPARAM) buffer);
-	t = l+size - BUFSIZE;
-	for (sp = s; *sp; sp++)
+
+	// Count the number of newlines
+
+	for (sp = ss, lv = l; lv; lv --, sp++)
 		if (*sp == '\n')
-			t++;
-	if (t >= 0)
+			newlines ++;
+	update = newlines > 0;
+
+	// Can we fit the current string?
+
+	if (BUFSIZE - size > l + newlines)
 		{
-		memmove (buffer, buffer+t+1, size-t);
-		size -= (t+1);
-		}
-	for (sp = s, bp = buffer + size; l; l--, sp++, bp++)
-		{
-		if (*sp == '\n')
+		// Yes it fits just append it
+		for (sp = ss, bp = buffer + size; l; l--, sp++, bp++)
 			{
-			update = TRUE;
-			*bp = '\r';
-			bp++;
+			if (*sp == '\n')
+				{
+				*bp = '\r';
+				bp++;
+				}
+			*bp = *sp;
 			}
-		*bp = *sp;
 		}
-	*bp = '\0';
+	else // No it doesn't fit
+		// Will the string fit in the buffer?
+		{
+		if (l + newlines < BUFSIZE)
+			{
+			// Yes
+			}
+		else	// String won't fit in buffer at all
+			{
+			ss = ss + l + newlines - BUFSIZE + 1;
+			}
+		memset (buffer, 0, BUFSIZE);
+		for (sp = ss, bp = buffer; *sp; sp++, bp++)
+			{
+			if (*sp == '\n')
+				{
+				*bp = '\r';
+				bp++;
+				}
+			*bp = *sp;
+			}
+		}
 	SendMessage (hEdit, WM_SETTEXT, 0, (LPARAM) buffer);
 	if (update)
 		{
+		SetWindowPos (eif_conout_window, HWND_TOP, 0,0,0,0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
 		SendMessage (hEdit, EM_SETSEL, size, size);
 		SendMessage (hEdit, EM_SCROLLCARET, 0, 0);
 		}
+	free (buffer);
 }

@@ -87,7 +87,7 @@ libmtnet.a: $(MT_OBJECTS)
 
 libmtnet.so: $(MT_OBJECTS)
 	$(RM) $@
-	$(SHAREDLINK) $(LDSHAREDFLAGS) -o $@ $(MT_OBJECTS)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(MT_OBJECTS)
 
 libnet.a: $(OBJECTS)
 	$(RM) $@
@@ -96,7 +96,7 @@ libnet.a: $(OBJECTS)
 
 libnet.so: $(OBJECTS)
 	$(RM) $@
-	$(SHAREDLINK) $(LDSHAREDFLAGS) -o $@ $(OBJECTS)
+	$(SHAREDLINK) $(LDSHAREDFLAGS) $@ $(OBJECTS)
 
 local_realclean::
 	$(RM) $(NET_LIBS) $(ALL_OBJECTS)

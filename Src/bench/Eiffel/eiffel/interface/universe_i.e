@@ -83,11 +83,12 @@ feature -- Properties
 
 feature -- Access
 
-	class_with_file_name (f_name: STRING): CLASS_I is
+	class_with_file_name (f_name: FILE_NAME): CLASS_I is
 			-- Class with name `f_name' found in the Universe
 		local
 			cur: CURSOR;
-			classes: HASH_TABLE [CLASS_I, STRING]
+			classes: HASH_TABLE [CLASS_I, STRING];
+			fn: FILE_NAME
 		do
 			cur := clusters.cursor;
 			from 
@@ -101,7 +102,8 @@ feature -- Access
 				until
 					classes.after or else Result /= Void
 				loop
-					if f_name.is_equal (classes.item_for_iteration.file_name) then
+					!! fn.make_from_string (classes.item_for_iteration.file_name);
+					if f_name.is_equal (fn) then
 						Result := classes.item_for_iteration
 					end
 					classes.forth	

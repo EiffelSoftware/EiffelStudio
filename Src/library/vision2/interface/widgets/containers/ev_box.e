@@ -45,7 +45,19 @@ feature -- Access
 			positive_result: Result >= 0
 		end 
 
-feature -- Element change (box specific)
+feature -- Status report
+
+	is_child_expandable (child: EV_WIDGET): BOOLEAN is
+			-- Is the child corresponding to `index' expandable. ie: does it
+			-- accept the parent to resize or move it.
+		require
+			exist: not destroyed
+			has_child: -- To do
+		do
+			Result := implementation.is_child_expandable (child)
+		end
+
+feature -- Statu setting
 	
 	set_homogeneous (flag: BOOLEAN) is
 			-- Homogenous controls whether each object in
@@ -75,10 +87,21 @@ feature -- Element change (box specific)
 		do
 			implementation.set_spacing (value)
 		end
-		
-feature {NONE} -- Implementation
+
+	set_child_expandable (child: EV_WIDGET; flag: BOOLEAN) is
+			-- Make the child corresponding to `index' expandable if `flag',
+			-- not expandable otherwise.
+		require
+			exist: not destroyed
+			has_child: -- To do
+		do
+			implementation.set_child_expandable (child, flag)
+		end
+
+feature -- Implementation
 	
 	implementation: EV_BOX_I
+			-- Platform dependent access.
 			
 end -- class EV_BOX
 

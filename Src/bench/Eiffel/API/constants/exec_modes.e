@@ -1,9 +1,7 @@
 indexing
-
-	description: 
-		"Constants for execution modes."
+	description: "Constants for execution modes."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class
 

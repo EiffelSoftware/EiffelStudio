@@ -2,7 +2,7 @@
 
 
 /* File created by MIDL compiler version 5.01.0164 */
-/* at Wed Aug 28 18:50:53 2002
+/* at Mon Sep 02 11:45:29 2002
  */
 /* Compiler settings for ise_cache_manager.idl:
     Os (OptLev=s), W1, Zp8, env=Win32, ms_ext, c_ext
@@ -128,7 +128,7 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE _set_impl( 
             /* [in] */ IUnknown __RPC_FAR *p1) = 0;
         
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE _emitter_type_1891( 
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE _emitter_type_1892( 
             /* [retval][out] */ void __RPC_FAR *__RPC_FAR *pRetVal) = 0;
         
     };
@@ -238,7 +238,7 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
             ISE_Cache_COM_ISE_CACHE_MANAGER __RPC_FAR * This,
             /* [in] */ IUnknown __RPC_FAR *p1);
         
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *_emitter_type_1891 )( 
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *_emitter_type_1892 )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER __RPC_FAR * This,
             /* [retval][out] */ void __RPC_FAR *__RPC_FAR *pRetVal);
         
@@ -317,8 +317,8 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
 #define ISE_Cache_COM_ISE_CACHE_MANAGER__set_impl(This,p1)	\
     (This)->lpVtbl -> _set_impl(This,p1)
 
-#define ISE_Cache_COM_ISE_CACHE_MANAGER__emitter_type_1891(This,pRetVal)	\
-    (This)->lpVtbl -> _emitter_type_1891(This,pRetVal)
+#define ISE_Cache_COM_ISE_CACHE_MANAGER__emitter_type_1892(This,pRetVal)	\
+    (This)->lpVtbl -> _emitter_type_1892(This,pRetVal)
 
 #endif /* COBJMACROS */
 
@@ -490,12 +490,12 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER__set_impl_Stub(
     DWORD *_pdwStubPhase);
 
 
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER__emitter_type_1891_Proxy( 
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER__emitter_type_1892_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER __RPC_FAR * This,
     /* [retval][out] */ void __RPC_FAR *__RPC_FAR *pRetVal);
 
 
-void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER__emitter_type_1891_Stub(
+void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER__emitter_type_1892_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,
@@ -521,6 +521,9 @@ EXTERN_C const IID IID_ISE_Cache_COM_ASSEMBLY_INFORMATION;
     ISE_Cache_COM_ASSEMBLY_INFORMATION : public IDispatch
     {
     public:
+        virtual /* [id] */ HRESULT STDMETHODCALLTYPE culture( 
+            /* [retval][out] */ BSTR __RPC_FAR *pRetVal) = 0;
+        
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE public_key_token( 
             /* [retval][out] */ BSTR __RPC_FAR *pRetVal) = 0;
         
@@ -537,9 +540,6 @@ EXTERN_C const IID IID_ISE_Cache_COM_ASSEMBLY_INFORMATION;
             /* [retval][out] */ BSTR __RPC_FAR *pRetVal) = 0;
         
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE version( 
-            /* [retval][out] */ BSTR __RPC_FAR *pRetVal) = 0;
-        
-        virtual /* [id] */ HRESULT STDMETHODCALLTYPE culture( 
             /* [retval][out] */ BSTR __RPC_FAR *pRetVal) = 0;
         
     };
@@ -590,6 +590,10 @@ EXTERN_C const IID IID_ISE_Cache_COM_ASSEMBLY_INFORMATION;
             /* [out] */ EXCEPINFO __RPC_FAR *pExcepInfo,
             /* [out] */ UINT __RPC_FAR *puArgErr);
         
+        /* [id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *culture )( 
+            ISE_Cache_COM_ASSEMBLY_INFORMATION __RPC_FAR * This,
+            /* [retval][out] */ BSTR __RPC_FAR *pRetVal);
+        
         /* [id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *public_key_token )( 
             ISE_Cache_COM_ASSEMBLY_INFORMATION __RPC_FAR * This,
             /* [retval][out] */ BSTR __RPC_FAR *pRetVal);
@@ -611,10 +615,6 @@ EXTERN_C const IID IID_ISE_Cache_COM_ASSEMBLY_INFORMATION;
             /* [retval][out] */ BSTR __RPC_FAR *pRetVal);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *version )( 
-            ISE_Cache_COM_ASSEMBLY_INFORMATION __RPC_FAR * This,
-            /* [retval][out] */ BSTR __RPC_FAR *pRetVal);
-        
-        /* [id] */ HRESULT ( STDMETHODCALLTYPE __RPC_FAR *culture )( 
             ISE_Cache_COM_ASSEMBLY_INFORMATION __RPC_FAR * This,
             /* [retval][out] */ BSTR __RPC_FAR *pRetVal);
         
@@ -654,6 +654,9 @@ EXTERN_C const IID IID_ISE_Cache_COM_ASSEMBLY_INFORMATION;
     (This)->lpVtbl -> Invoke(This,dispIdMember,riid,lcid,wFlags,pDispParams,pVarResult,pExcepInfo,puArgErr)
 
 
+#define ISE_Cache_COM_ASSEMBLY_INFORMATION_culture(This,pRetVal)	\
+    (This)->lpVtbl -> culture(This,pRetVal)
+
 #define ISE_Cache_COM_ASSEMBLY_INFORMATION_public_key_token(This,pRetVal)	\
     (This)->lpVtbl -> public_key_token(This,pRetVal)
 
@@ -672,14 +675,23 @@ EXTERN_C const IID IID_ISE_Cache_COM_ASSEMBLY_INFORMATION;
 #define ISE_Cache_COM_ASSEMBLY_INFORMATION_version(This,pRetVal)	\
     (This)->lpVtbl -> version(This,pRetVal)
 
-#define ISE_Cache_COM_ASSEMBLY_INFORMATION_culture(This,pRetVal)	\
-    (This)->lpVtbl -> culture(This,pRetVal)
-
 #endif /* COBJMACROS */
 
 
 #endif 	/* C style interface */
 
+
+
+/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION_culture_Proxy( 
+    ISE_Cache_COM_ASSEMBLY_INFORMATION __RPC_FAR * This,
+    /* [retval][out] */ BSTR __RPC_FAR *pRetVal);
+
+
+void __RPC_STUB ISE_Cache_COM_ASSEMBLY_INFORMATION_culture_Stub(
+    IRpcStubBuffer *This,
+    IRpcChannelBuffer *_pRpcChannelBuffer,
+    PRPC_MESSAGE _pRpcMessage,
+    DWORD *_pdwStubPhase);
 
 
 /* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION_public_key_token_Proxy( 
@@ -748,18 +760,6 @@ void __RPC_STUB ISE_Cache_COM_ASSEMBLY_INFORMATION_name_Stub(
 
 
 void __RPC_STUB ISE_Cache_COM_ASSEMBLY_INFORMATION_version_Stub(
-    IRpcStubBuffer *This,
-    IRpcChannelBuffer *_pRpcChannelBuffer,
-    PRPC_MESSAGE _pRpcMessage,
-    DWORD *_pdwStubPhase);
-
-
-/* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ASSEMBLY_INFORMATION_culture_Proxy( 
-    ISE_Cache_COM_ASSEMBLY_INFORMATION __RPC_FAR * This,
-    /* [retval][out] */ BSTR __RPC_FAR *pRetVal);
-
-
-void __RPC_STUB ISE_Cache_COM_ASSEMBLY_INFORMATION_culture_Stub(
     IRpcStubBuffer *This,
     IRpcChannelBuffer *_pRpcChannelBuffer,
     PRPC_MESSAGE _pRpcMessage,

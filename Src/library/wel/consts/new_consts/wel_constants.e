@@ -40,5 +40,17 @@ feature -- Access
 		once
 			create Result
 		end
-	
+
+	Wel_color_constants: WEL_COLOR_CONSTANTS is
+			-- Access to COLOR_xxx constants.
+		once
+			create Result
+		end
+
+	Wel_ht_constants: WEL_HT_CONSTANTS is
+			-- Access to Ht_xxxconstnats
+		once
+			create Result
+		end
+
 end -- class WEL_CONSTANTS

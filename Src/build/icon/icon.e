@@ -227,6 +227,7 @@ feature {EB_BOX}
 			color: COLOR	
 			font: FONT
 			res: like Resources
+			par: MANAGER
 		do
 			res := Resources
 			color := parent.background_color
@@ -234,7 +235,12 @@ feature {EB_BOX}
 				set_background_color (color)
 				icon_label.set_background_color (color)
 			end	
-			color := res.foreground_color
+			par ?= parent
+			if par = Void then
+				color := res.foreground_color
+			else
+				color := par.foreground_color
+			end
 			if color /= Void then
 				button.set_foreground_color (color)
 				icon_label.set_foreground_color (color)

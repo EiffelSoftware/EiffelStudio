@@ -8,7 +8,7 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	ROUTINE [BASE_TYPE, OPEN_ARGS -> TUPLE]
+	ROUTINE [BASE_TYPE, OPEN_ARGS -> TUPLE create make end]
 
 inherit
 	HASHABLE
@@ -24,19 +24,10 @@ feature -- Initialization
 		require
 			other_exists: other /= Void
 			conforming: conforms_to (other)
-		local
-			null_ptr: POINTER
 		do
-			-- Free own C argument structure
-			if rout_arguments /= Void then
-				rout_arguments := Void
-			end
-
-			operands := other.operands
-			operands_set_by_user := other.operands_set_by_user
-			closed_operands := other.closed_operands
+			internal_operands := other.internal_operands
+			target_object := other.target_object
 			open_map := other.open_map
-			closed_map := other.closed_map
 			rout_disp := other.rout_disp
 		ensure
 			same_call_status: other.callable implies callable
@@ -44,42 +35,43 @@ feature -- Initialization
 
 feature -- Access
 
-	operands: OPEN_ARGS
+	operands: OPEN_ARGS is
 			-- Open operands.
+		local
+			i, nb: INTEGER
+			l_open_map: like open_map
+			l_pos: INTEGER
+			l_item: SYSTEM_OBJECT
+			l_internal: like internal_operands
+		do
+			create Result.make
+			l_open_map := open_map
+			if l_open_map /= Void then
+				from
+					i := 0
+					nb := l_open_map.count - 1
+					l_internal := internal_operands
+				until
+					i > nb
+				loop
+					l_pos := l_open_map.item (i) - 1
+					if l_pos = 0 then
+						l_item := target_object
+					else
+						l_item := l_internal.item (l_pos - 1)
+					end
+					Result.put (l_item, i + 1)
+					i := i + 1
+				end
+			end
+		end
 
 	target: ANY is
 			-- Target of call.
 		do
-			if
-				closed_map.count > 0 and then
-				closed_map.item (closed_map.lower) = 0
-			then
-				Result := closed_operands.item (closed_operands.lower)
-			elseif
-				operands /= Void and then operands.count > 0
-			then
-				Result := operands.item (operands.lower)
-			end
+			Result ?= internal_operands.item (0)
 		end
 
-	open_operand_type (i: INTEGER): INTEGER is
-			-- Type of `i'th open operand.
-		require
-			positive: i >= 1
-			within_bounds: i <= open_count
-		do
-			if open_types = Void then
-				create open_types.make (1, open_map.count)
-			end
-			Result := open_types.item (i)
-			if Result = 0 then
-				Result := eif_gen_param_id (
-					- 1,
-					eif_gen_create (Current, 2),
-					i)
-				open_types.force (Result, i)
-			end
-		end
 
 	hash_code: INTEGER is
 			-- Hash code value.
@@ -116,11 +108,10 @@ feature -- Status report
 			-- associated with `other'.
 		do
 				--| Do not compare implementation data
-			Result := equal (operands, other.operands)
-				and then equal (closed_operands, other.closed_operands)
+			Result := internal_operands.equals (other.internal_operands)
 				and then open_map.equals (other.open_map)
-				and then closed_map.equals (other.closed_map)
 				and then (rout_disp = other.rout_disp)
+				and then (target_object = other.target_object)
 		end
 
 	valid_operands (args: OPEN_ARGS): BOOLEAN is
@@ -144,32 +135,46 @@ feature -- Measurement
 
 feature -- Element change
 
-	set_operands (args: OPEN_ARGS) is
+	frozen set_operands (args: OPEN_ARGS) is
 			-- Use `args' as operands for next call.
 		require
 			valid_operands: valid_operands (args)
+		local
+			i, nb: INTEGER
+			l_pos: INTEGER
+			l_open_map: like open_map
+			l_internal: like internal_operands
 		do
-			operands := args
-			operands_set_by_user := True
+			l_open_map := open_map
+			if l_open_map /= Void then
+				from
+					i := 0
+					nb := l_open_map.count - 1
+					l_internal := internal_operands
+				until
+					i > nb
+				loop
+					l_pos := l_open_map.item (i) - 1
+					if l_pos = 0 then
+						target_object := args.fast_item (i)
+					else
+						l_internal.put (l_pos - 1, args.fast_item (i))
+					end
+					i := i + 1
+				end
+			end
+		ensure
+			operands_set: equal (operands, args)
 		end
 
 feature -- Duplication
 
 	copy (other: like Current) is
 			-- Use same routine as `other'.
-		local
-			null_ptr: POINTER
 		do
-			-- Free own C argument structure
-			if rout_arguments /= Void then
-				rout_arguments := Void
-			end
-
-			operands := other.operands
-			operands_set_by_user := other.operands_set_by_user
-			closed_operands := other.closed_operands
+			internal_operands := other.internal_operands
+			target_object := other.target_object
 			open_map := other.open_map
-			closed_map := other.closed_map
 			rout_disp := other.rout_disp
 		ensure then
 			same_call_status: other.callable implies callable
@@ -183,10 +188,10 @@ feature -- Basic operations
 			valid_operands: valid_operands (args)
 			callable: callable
 		do
-			operands := args
+			set_operands (args)
 			apply
-			if not operands_set_by_user then
-				operands := Void
+			if is_cleanup_needed then
+				remove_gc_reference
 			end
 		end
 
@@ -216,123 +221,104 @@ feature -- Obsolete
 
 feature {ROUTINE, E_FEATURE} -- Implementation
 
-	frozen operands_set_by_user: BOOLEAN
-			-- Are operands set throug call to `set_operands'.
-			-- If not, we can delete them after routine call for
-			-- later collection.
+	frozen target_object: SYSTEM_OBJECT
+			-- Target of call.
 
-	frozen closed_operands: TUPLE
-			-- Closed arguments provided at creation time
+	frozen internal_operands: NATIVE_ARRAY [SYSTEM_OBJECT]
+			-- All open and closed arguments provided at creation time
 
 	frozen open_map: NATIVE_ARRAY [INTEGER]
 			-- Index map for open arguments
 
-	frozen closed_map: NATIVE_ARRAY [INTEGER]
-			-- Index map for closed arguments
-
-	frozen open_types: ARRAY [INTEGER]
-			-- Types of open operands
-
 	frozen rout_disp: METHOD_BASE
 			-- Routine dispatcher
 
-	frozen set_rout_disp (handle: RUNTIME_METHOD_HANDLE; closed_args: TUPLE; 
-						 omap, cmap: ARRAY [INTEGER]) is
+	frozen is_cleanup_needed: BOOLEAN
+			-- If open arguments contain some references, we need
+			-- to clean them up after call.
+
+	frozen set_rout_disp (handle: RUNTIME_METHOD_HANDLE; args: TUPLE; 
+						 omap: ARRAY [INTEGER]) is
 			-- Initialize object. 
 		require
 			handle_not_void: handle /= Void
-			consistent_args: (closed_args = Void and cmap = Void)
-						or else (closed_args /= Void and cmap /= Void)
-						and then (closed_args.count >= cmap.count)
-			valid_maps: not (omap = Void and cmap = Void)
+			args_not_void: args /= Void
+		local
+			i, nb: INTEGER
+			l_internal: like internal_operands
 		do
 			rout_disp := feature {METHOD_BASE}.get_method_from_handle (handle)
-			closed_operands := closed_args
+
+			target_object := args.fast_item (0)
+			from
+				i := 1
+				nb := args.count - 1
+				create l_internal.make (nb)
+			until
+				i > nb
+			loop
+				l_internal.put (i - 1, args.fast_item (i))
+				i := i + 1
+			end
+			internal_operands := l_internal
+
 			if omap /= Void then
 				open_map := omap.to_cil
-			end
-			if cmap /= Void then
-				closed_map := cmap.to_cil
+			else
+				open_map := Void
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	frozen rout_target: SYSTEM_OBJECT
-			-- Target of call.
+	frozen open_types: ARRAY [INTEGER]
+			-- Types of open operands
 
-	frozen rout_arguments: NATIVE_ARRAY [SYSTEM_OBJECT]
-			-- Routine operands.
-
-	frozen rout_set_cargs is
-			-- Allocate and fill argument structure
+	frozen remove_gc_reference is
+			-- Remove all references from `internal_operands' so that GC
+			-- can collect them if necessary.
+		require
+			is_cleanup_needed: is_cleanup_needed
+			has_open_operands: open_map /= Void
 		local
-			new_args: like rout_arguments
-			i, j, ocnt, ccnt: INTEGER
-			code: INTEGER_8
-			ref_arg: ANY
-			null_ptr: POINTER
-			was_on: BOOLEAN
-			loc_open_map: like open_map
-			loc_closed_map: like closed_map
-			loc_operands: like operands
-			loc_closed_operands: like closed_operands
+			l_open_map: like open_map
+			i, nb, l_pos: INTEGER
+			l_internal: like internal_operands
 		do
-				-- Compute no. operands, including target.
-			loc_open_map := open_map
-			if loc_open_map /= Void then
-				ocnt := loc_open_map.count
-				loc_operands := operands
-			end
-
-			loc_closed_map := closed_map
-			if loc_closed_map /= Void then
-				ccnt := loc_closed_map.count
-				loc_closed_operands := closed_operands
-			end
-
-				-- Create new_args if not already created.
-			new_args := rout_arguments
-			if new_args = Void then
-				create new_args.make (ocnt + ccnt - 1)
-				rout_arguments := new_args
-			end
-
-				-- Initializes argument array
-			check
-				open_operands_not_void: ocnt > 0 implies loc_operands /= Void
-				closed_operands_not_void: ccnt > 0 implies loc_closed_operands /= Void
-			end
-
+			l_open_map := open_map
 			from
 				i := 0
+				nb := l_open_map.count - 1
+				l_internal := internal_operands
 			until
-				i >= ocnt
+				i > nb
 			loop
-				j := loc_open_map.item (i)
-				if j = 0 then
-						-- Target of call is always a reference type.
-					rout_target := loc_operands.fast_item (i)
+				l_pos := l_open_map.item (i) - 1
+				if l_pos = 0 then
+					target_object := Void
 				else
-					new_args.put (j - 1, loc_operands.fast_item (i))
+					l_internal.put (l_pos - 1, Void)
 				end
-
 				i := i + 1
 			end
-
-			from
-				i := 0
-			until
-				i >= ccnt
-			loop
-				j := loc_closed_map.item (i)
-				if j = 0 then
-						-- Target of call is always a reference type.
-					rout_target := loc_closed_operands.fast_item (i)
-				else
-					new_args.put (j - 1, loc_closed_operands.fast_item (i))
-				end
-				i := i + 1
+		end
+		
+	open_operand_type (i: INTEGER): INTEGER is
+			-- Type of `i'th open operand.
+		require
+			positive: i >= 1
+			within_bounds: i <= open_count
+		do
+			if open_types = Void then
+				create open_types.make (1, open_map.count)
+			end
+			Result := open_types.item (i)
+			if Result = 0 then
+				Result := eif_gen_param_id (
+					- 1,
+					eif_gen_create (Current, 2),
+					i)
+				open_types.force (Result, i)
 			end
 		end
 

@@ -43,7 +43,6 @@ feature
 	generate (file: INDENT_FILE) is
 			-- Generate value in `file'.
 		do
---			file.putstring ("(double) ");
 			file.putstring (real_val);
 		end;
 

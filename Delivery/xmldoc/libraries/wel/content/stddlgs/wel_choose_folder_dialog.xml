@@ -7,7 +7,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>  The <link><url>../../reference/stddlgs/WEL_CHOOSE_FOLDER_DIALOG_chart.xml</url><label>WEL_CHOOSE_FOLDER_DIALOG</label></link> allows the directory structure to be viewed  and a folder selected. </paragraph>
+		<paragraph>  The <link><url>../../reference/stddlgs/wel_choose_folder_dialog_chart.xml</url><label>WEL_CHOOSE_FOLDER_DIALOG</label></link> allows the directory structure to be viewed  and a folder selected. </paragraph>
 		<heading>
 			<size>2</size>Appearance
 		</heading>

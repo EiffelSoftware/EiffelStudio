@@ -7,7 +7,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>This sample shows you how to respond to an event occurring within        your application. It also demonstrates the use of a <link><url>../../../reference/support/WEL_MSG_BOX_chart.xml</url><label>WEL_MSG_BOX</label></link> control and a redefinition of closeable from <link><url>../../../reference/windows/WEL_COMPOSITE_WINDOW_chart.xml</url><label>WEL_COMPOSITE_WINDOW</label></link>.</paragraph>
+		<paragraph>This sample shows you how to respond to an event occurring within        your application. It also demonstrates the use of a <link><url>../../../reference/support/wel_msg_box_chart.xml</url><label>WEL_MSG_BOX</label></link> control and a redefinition of closeable from <link><url>../../../reference/windows/wel_composite_window_chart.xml</url><label>WEL_COMPOSITE_WINDOW</label></link>.</paragraph>
 		<image> 
 			<url>step2.png</url> 
 			<alt_text>step2</alt_text>
@@ -21,7 +21,7 @@
 		<heading>
 			<size>2</size>Running
 		</heading>
-		<paragraph> After launching the sample, you should see a <link><url>../../../reference/windows/WEL_FRAME_WINDOW_chart.xml</url><label>WEL_FRAME_WINDOW</label></link> displayed. If you click the left mouse button in the client area of the window, a <link><url>../../../reference/support/WEL_MSG_BOX_chart.xml</url><label>WEL_MSG_BOX</label></link> will appear, notifying you of your click.</paragraph>
+		<paragraph> After launching the sample, you should see a <link><url>../../../reference/windows/wel_frame_window_chart.xml</url><label>WEL_FRAME_WINDOW</label></link> displayed. If you click the left mouse button in the client area of the window, a <link><url>../../../reference/support/wel_msg_box_chart.xml</url><label>WEL_MSG_BOX</label></link> will appear, notifying you of your click.</paragraph>
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
@@ -29,9 +29,9 @@
 			<link>
 				<url>/libraries/wel/content/common_concepts/index.xml</url><anchor_name>common_message_hooks</anchor_name>
 				<label>Common message hooks</label>
-			</link> for more information. In this example, on_left_button_down has been redefined from <link><url>../../../reference/windows/WEL_WINDOW_chart.xml</url><label>WEL_WINDOW</label></link> to display a <link><url>../../../reference/support/WEL_MSG_BOX_chart.xml</url><label>WEL_MSG_BOX</label></link> containing notification of the event occuring. 
+			</link> for more information. In this example, on_left_button_down has been redefined from <link><url>../../../reference/windows/wel_window_chart.xml</url><label>WEL_WINDOW</label></link> to display a <link><url>../../../reference/support/wel_msg_box_chart.xml</url><label>WEL_MSG_BOX</label></link> containing notification of the event occuring. 
 		</paragraph>
-		<paragraph>If you look at closeable from <code><class_name>MAIN_WINDOW</class_name></code>, you will see that it has been redefined to display a <link><url>../../../reference/support/WEL_MSG_BOX_chart.xml</url><label>WEL_MSG_BOX</label></link> and the result from this message box is used to generate the return value of closeable. If this Result is True, the window will be closed. 
+		<paragraph>If you look at closeable from <code><class_name>MAIN_WINDOW</class_name></code>, you will see that it has been redefined to display a <link><url>../../../reference/support/wel_msg_box_chart.xml</url><label>WEL_MSG_BOX</label></link> and the result from this message box is used to generate the return value of closeable. If this Result is True, the window will be closed. 
 			<paragraph>This sample contains the following classes: 
 				<list ordered="false">
 					<item><code><class_name>TUTORIAL_STEP2</class_name></code></item>

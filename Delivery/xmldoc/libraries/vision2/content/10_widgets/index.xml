@@ -83,7 +83,7 @@
 		<heading>
 			<size>2</size>Sizing
 		</heading>
-		<paragraph> As <link><url>../../reference/interface/widgets/primitives/EV_PRIMITIVE_chart.xml</url><label>EV_PRIMITIVE</label></link> is of type <link><url>../../reference/interface/widgets/EV_WIDGET_chart.xml</url><label>EV_WIDGET</label></link>, the following facilities are provided for setting the minimum size : set_minimum_width, set_minimum_height and set_minimum_size. </paragraph>
+		<paragraph> As <link><url>../../reference/interface/widgets/primitives/ev_primitive_chart.xml</url><label>EV_PRIMITIVE</label></link> is of type <link><url>../../reference/interface/widgets/ev_widget_chart.xml</url><label>EV_WIDGET</label></link>, the following facilities are provided for setting the minimum size : set_minimum_width, set_minimum_height and set_minimum_size. </paragraph>
 		<paragraph> The minimum size of a widget is the smallest possible size that it can possibly be inside its parent container. If an 
 			<link>
 				<url>../../reference/interface/widgets/primitives/ev_button_chart.xml</url>

@@ -32,10 +32,10 @@
 		<heading>
 			<size>2</size>Retrieving DB_RESULT objects
 		</heading>
-		<paragraph><link><url>/libraries/store/reference/interface/DB_SELECTION_flatshort.xml</url><label>DB_SELECTION</label></link> class provides different ways to customize result loading:</paragraph>
+		<paragraph><link><url>/libraries/store/reference/interface/db_selection_flatshort.xml</url><label>DB_SELECTION</label></link> class provides different ways to customize result loading:</paragraph>
 		<list ordered="false">
 			<item>You want to access an 
-				<bold>unique</bold> row: <link><url>/libraries/store/reference/interface/DB_RESULT_flatshort.xml</url><label>DB_RESULT</label></link> object is accessible via cursor:
+				<bold>unique</bold> row: <link><url>/libraries/store/reference/interface/db_result_flatshort.xml</url><label>DB_RESULT</label></link> object is accessible via cursor:
 <code_block>
 	<feature_name>selection</feature_name><symbol>:</symbol> <class_name>DB_SELECTION</class_name>
 	<feature_name>my_result</feature_name><symbol>:</symbol> <class_name>DB_RESULT</class_name>
@@ -48,7 +48,7 @@
 </code_block>
 			</item>
 			<item>You want to load a 
-				<bold>complete list</bold> of rows: <link><url>/libraries/store/reference/interface/DB_SELECTION_flatshort.xml</url><label>DB_SELECTION</label></link> can store <link><url>/libraries/store/reference/interface/DB_RESULT_flatshort.xml</url><label>DB_RESULT</label></link> objects in a list. To do this, you have mainly to provide a LIST object to DB_SELECTION with set_container:
+				<bold>complete list</bold> of rows: <link><url>/libraries/store/reference/interface/db_selection_flatshort.xml</url><label>DB_SELECTION</label></link> can store <link><url>/libraries/store/reference/interface/db_result_flatshort.xml</url><label>DB_RESULT</label></link> objects in a list. To do this, you have mainly to provide a LIST object to DB_SELECTION with set_container:
 <code_block>
 	<feature_name>selection</feature_name><symbol>:</symbol> <class_name>DB_SELECTION</class_name>
 	<feature_name>container</feature_name><symbol>:</symbol> <class_name>ARRAYED_LIST</class_name> <symbol>[</symbol><class_name>DB_RESULT</class_name><symbol>]</symbol>
@@ -65,13 +65,13 @@
 	<keyword>end</keyword>
 </code_block>
 				<tip>
-					<bold>Tip</bold>: Provide <link><url>/libraries/store/reference/interface/DB_SELECTION_flatshort.xml</url><label>DB_SELECTION</label></link> with the LIST structure convenient for what you need to do with the results.
+					<bold>Tip</bold>: Provide <link><url>/libraries/store/reference/interface/db_selection_flatshort.xml</url><label>DB_SELECTION</label></link> with the LIST structure convenient for what you need to do with the results.
 				</tip>
 			</item>
 			<item>You want to 
-				<bold>select part</bold> of the result set: you can set an action in <link><url>/libraries/store/reference/interface/DB_SELECTION_flatshort.xml</url><label>DB_SELECTION</label></link> that will be executed each time a row is loaded. This action can for instance manipulate current row and define a stop condition. 
+				<bold>select part</bold> of the result set: you can set an action in <link><url>/libraries/store/reference/interface/db_selection_flatshort.xml</url><label>DB_SELECTION</label></link> that will be executed each time a row is loaded. This action can for instance manipulate current row and define a stop condition. 
 				<list ordered="false">
-					<item>You need to define a descendant of class ACTION and set it to <link><url>/libraries/store/reference/interface/DB_SELECTION_flatshort.xml</url><label>DB_SELECTION</label></link>:
+					<item>You need to define a descendant of class ACTION and set it to <link><url>/libraries/store/reference/interface/db_selection_flatshort.xml</url><label>DB_SELECTION</label></link>:
 <code_block>
 	<keyword>class</keyword>
 		<class_name>MY_ACTION</class_name>
@@ -92,7 +92,7 @@
 		<keyword>end</keyword>
 </code_block>
 					</item>
-					<item>Then set action to <link><url>/libraries/store/reference/interface/DB_SELECTION_flatshort.xml</url><label>DB_SELECTION</label></link>:
+					<item>Then set action to <link><url>/libraries/store/reference/interface/db_selection_flatshort.xml</url><label>DB_SELECTION</label></link>:
 <code_block>
 	<feature_name>selection</feature_name><symbol>:</symbol> <class_name>DB_SELECTION</class_name>
 	<feature_name>action</feature_name><symbol>:</symbol> <class_name>MY_ACTION</class_name>

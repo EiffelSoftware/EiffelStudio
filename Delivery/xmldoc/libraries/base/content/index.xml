@@ -7,7 +7,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>  EiffelBase, covered by the open-source
+		<paragraph>  EiffelBase, covered by the open-source 
 			<link>
 				<url>../../../general/licenses/iffel.xml</url>
 				<label>IFFEL license</label>
@@ -15,25 +15,25 @@
 		</paragraph>
 		<paragraph>  The EiffelBase library includes:</paragraph>
 		<list ordered="false">
-			<item>A
+			<item>A 
 				<link>
 					<url>10_kernel/index.xml</url>
 					<label>Kernel</label>
 				</link> that defines the core  classes of all Eiffel systems.
 			</item>
-			<item>A
+			<item>A 
 				<link>
 					<url>20_structures/index.xml</url>
 					<label>Data Structures</label>
 				</link> cluster including classes for all the major data structures (sets, lists, tables etc...)
 			</item>
-			<item>A
+			<item>A 
 				<link>
 					<url>30_support/index.xml</url>
 					<label>Support</label>
 				</link> cluster that provide access to the environment, basic math operations and a few other helper classes.
 			</item>
-			<item>A
+			<item>A 
 				<link>
 					<url>40_desc/index.xml</url>
 					<label>Dynamic External Shared Call</label>

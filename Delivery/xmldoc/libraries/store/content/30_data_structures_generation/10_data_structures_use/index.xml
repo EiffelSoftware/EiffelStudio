@@ -68,7 +68,7 @@
 			<size>3</size>2.1. Storing table/view rows content
 		</heading>
 		<paragraph>You can store table/view rows content into classes that have the table or view name: one database table/view row correspond to one Eiffel object. Each table attribute will correspond to a class attribute with the same name. 
-			<italic>set</italic> commands enable to change the object content to insert rows in the database or update rows. <link><url>../../../reference/interface/DB_SELECTION_flatshort.xml</url><label>DB_SELECTION</label></link> class can directly map database results into these objects, and you can directly create a table/view row from one object with the <link><url>../../../reference/interface/DB_STORE_flatshort.xml</url><label>DB_STORE</label></link> class. Take a look at the 
+			<italic>set</italic> commands enable to change the object content to insert rows in the database or update rows. <link><url>../../../reference/interface/db_selection_flatshort.xml</url><label>DB_SELECTION</label></link> class can directly map database results into these objects, and you can directly create a table/view row from one object with the <link><url>../../../reference/interface/db_store_flatshort.xml</url><label>DB_STORE</label></link> class. Take a look at the 
 			<link>
 				<url>../../10_interface_layer/50_data_object_coupling/index.xml</url>
 				<label>data-object coupling</label>
@@ -77,8 +77,8 @@
 		<heading>
 			<size>3</size>2.2. Manipulating abstract table/view rows content
 		</heading>
-		<paragraph>Each table/view storage structure inherits from the <link><url>../../../reference/generation/tables_access/abstract/DB_TABLE_flatshort.xml</url><label>DB_TABLE</label></link> abstract class. This enables to handle <link><url>../../../reference/generation/tables_access/abstract/DB_TABLE_flatshort.xml</url><label>DB_TABLE</label></link> objects as abstract database table/view structures.</paragraph>
-		<paragraph>You can then access or modify <link><url>../../../reference/generation/tables_access/abstract/DB_TABLE_flatshort.xml</url><label>DB_TABLE</label></link> attributes: instead of accessing attributes with their 
+		<paragraph>Each table/view storage structure inherits from the <link><url>../../../reference/generation/tables_access/abstract/db_table_flatshort.xml</url><label>DB_TABLE</label></link> abstract class. This enables to handle <link><url>../../../reference/generation/tables_access/abstract/db_table_flatshort.xml</url><label>DB_TABLE</label></link> objects as abstract database table/view structures.</paragraph>
+		<paragraph>You can then access or modify <link><url>../../../reference/generation/tables_access/abstract/db_table_flatshort.xml</url><label>DB_TABLE</label></link> attributes: instead of accessing attributes with their 
 			<italic>name</italic>, which implies that the object type is known at compile-time, attributes can then be accessed with a 
 			<italic>code</italic>.
 		</paragraph>
@@ -93,7 +93,7 @@
 </code_block>
 		<note>
 			<bold>Note:</bold> to access attributes data with 
-			<italic>code</italic>, you need to use the <link><url>/libraries/store/reference/generation/tables_access/abstract/DB_TABLE_DESCRIPTION_flatshort.xml</url><label>DB_TABLE_DESCRIPTION</label></link> object associated to your <link><url>../../../reference/generation/tables_access/abstract/DB_TABLE_flatshort.xml</url><label>DB_TABLE</label></link>  object.
+			<italic>code</italic>, you need to use the <link><url>/libraries/store/reference/generation/tables_access/abstract/db_table_description_flatshort.xml</url><label>DB_TABLE_DESCRIPTION</label></link> object associated to your <link><url>../../../reference/generation/tables_access/abstract/db_table_flatshort.xml</url><label>DB_TABLE</label></link>  object.
 		</note>
 		<heading>
 			<size>3</size>2.3. Getting objects metadata
@@ -214,7 +214,7 @@
 					</link>.
 				</item>
 			</list>
-			<paragraph>These descriptions inherit from <link><url>../../../reference/generation/tables_access/abstract/DB_TABLE_DESCRIPTION_flatshort.xml</url><label>DB_TABLE_DESCRIPTION</label></link>.</paragraph>
+			<paragraph>These descriptions inherit from <link><url>../../../reference/generation/tables_access/abstract/db_table_description_flatshort.xml</url><label>DB_TABLE_DESCRIPTION</label></link>.</paragraph>
 			<paragraph>Since they only describes a table and provide tools, description objects can be unique. EiffelStore ensures their unicity for resources optimization.</paragraph>
 			<paragraph>
 				<bold>Tip:</bold> Use description classes to 

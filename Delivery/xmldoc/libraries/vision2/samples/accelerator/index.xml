@@ -34,12 +34,12 @@
 			<bold>See Also</bold>
 			<line_break/>
 			<link>
-				<url>/libraries/vision2/reference/interface/kernel/EV_ACCELERATOR_chart.xml</url>
+				<url>/libraries/vision2/reference/interface/kernel/ev_accelerator_chart.xml</url>
 				<label>EV_ACCELERATOR</label>
 			</link>
 			<line_break/>
 			<link>
-				<url>/libraries/vision2/reference/interface/kernel/EV_KEY_chart.xml</url>
+				<url>/libraries/vision2/reference/interface/kernel/ev_key_chart.xml</url>
 				<label>EV_KEY</label>
 			</link>
 			<line_break/>

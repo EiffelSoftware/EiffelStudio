@@ -7,7 +7,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>  A <link><url>../../reference/controls/WEL_OWNER_DRAW_BUTTON_chart.xml</url><label>WEL_OWNER_DRAW_BUTTON</label></link> is a control that the user can click to provide notification to the application, and  behaves in a similar fashion to <link><url>../../reference/controls/WEL_PUSH_BUTTON_chart.xml</url><label>WEL_PUSH_BUTTON</label></link> except that <code><feature_name>on_paint</feature_name></code> must be implemented to give the  button the desired appearance. </paragraph>
+		<paragraph>  A <link><url>../../reference/controls/wel_owner_draw_button_chart.xml</url><label>WEL_OWNER_DRAW_BUTTON</label></link> is a control that the user can click to provide notification to the application, and  behaves in a similar fashion to <link><url>../../reference/controls/wel_push_button_chart.xml</url><label>WEL_PUSH_BUTTON</label></link> except that <code><feature_name>on_paint</feature_name></code> must be implemented to give the  button the desired appearance. </paragraph>
 		<heading>
 			<size>2</size>Appearance
 		</heading>

@@ -7,17 +7,17 @@
 		</help>
 	</meta_data>
 	<paragraph>
-		<paragraph>  A <link><url>../../reference/controls/WEL_RADIO_BUTTON_chart.xml</url><label>WEL_RADIO_BUTTON</label></link> control can take two states,  checked or unchecked. By placing more than one of these in a <link><url>../../reference/controls/WEL_GROUP_BOX_chart.xml</url><label>WEL_GROUP_BOX</label></link>, they will  become grouped, and only one may be checked at once. </paragraph>
+		<paragraph>  A <link><url>../../reference/controls/wel_radio_button_chart.xml</url><label>WEL_RADIO_BUTTON</label></link> control can take two states,  checked or unchecked. By placing more than one of these in a <link><url>../../reference/controls/wel_group_box_chart.xml</url><label>WEL_GROUP_BOX</label></link>, they will  become grouped, and only one may be checked at once. </paragraph>
 		<heading>
 			<size>2</size>Appearance
-		</heading>A <link><url>../../reference/controls/WEL_RADIO_BUTTON_chart.xml</url><label>WEL_RADIO_BUTTON</label></link>
+		</heading>A <link><url>../../reference/controls/wel_radio_button_chart.xml</url><label>WEL_RADIO_BUTTON</label></link>
 		<line_break/>
 		<image> 
 			<url>images/wel_radio_button_unchecked.png</url> 
 			<alt_text>wel_radio_button_unchecked</alt_text>
 		</image>
 		<line_break/>
-		<line_break/>A checked <link><url>../../reference/controls/WEL_RADIO_BUTTON_chart.xml</url><label>WEL_RADIO_BUTTON</label></link>
+		<line_break/>A checked <link><url>../../reference/controls/wel_radio_button_chart.xml</url><label>WEL_RADIO_BUTTON</label></link>
 		<line_break/>
 		<image> 
 			<url>images/wel_radio_button_checked.png</url> 

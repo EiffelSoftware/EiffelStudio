@@ -1,7 +1,7 @@
 <document output="studio" title="Data Modification">
 	<meta_data/>
 	<paragraph>
-		<paragraph>Use the <link><url>/libraries/store/reference/interface/DB_CHANGE_flatshort.xml</url><label>DB_CHANGE</label></link> class to perform any operation on your database that does not require access to a result. You can for instance modify table row content, drop table rows, create and delete tables.</paragraph>
+		<paragraph>Use the <link><url>/libraries/store/reference/interface/db_change_flatshort.xml</url><label>DB_CHANGE</label></link> class to perform any operation on your database that does not require access to a result. You can for instance modify table row content, drop table rows, create and delete tables.</paragraph>
 		<note>
 			<bold>Note</bold>: Take a look at the 
 			<link>
@@ -10,7 +10,7 @@
 			</link> capability if you want to 
 			<bold>insert</bold> table rows.
 		</note>
-		<paragraph><link><url>/libraries/store/reference/interface/DB_CHANGE_flatshort.xml</url><label>DB_CHANGE</label></link> allows you to modify the database data using the SQL language:</paragraph>
+		<paragraph><link><url>/libraries/store/reference/interface/db_change_flatshort.xml</url><label>DB_CHANGE</label></link> allows you to modify the database data using the SQL language:</paragraph>
 		<list ordered="false">
 			<item>Prepare your SQL query and use modify:
 <code_block>

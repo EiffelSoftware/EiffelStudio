@@ -13,7 +13,7 @@
 		</heading>
 		<paragraph>The most general class describing sets is 
 			<link>
-				<url>../../reference/structures/set/SET_chart.xml</url>
+				<url>../../reference/structures/set/set_chart.xml</url>
 				<label>SET</label>
 			</link>. The usual operations of set theory such as union and intersection have been relegated to 
 			<link>

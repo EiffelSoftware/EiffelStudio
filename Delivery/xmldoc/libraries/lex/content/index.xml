@@ -12,7 +12,7 @@
 			<bold>parsing</bold> or 
 			<bold>syntax analysis</bold> and is studied in the next chapter.
 		</paragraph>
-		<paragraph>Figure 1 shows the inheritance structure of the classes discussed in this chapter. Class <link><url>/libraries/parse/reference/L_INTERFACE_chart.xml</url><label>L_INTERFACE</label></link> has also been included although we will only study it in the 
+		<paragraph>Figure 1 shows the inheritance structure of the classes discussed in this chapter. Class <link><url>/libraries/parse/reference/l_interface_chart.xml</url><label>L_INTERFACE</label></link> has also been included although we will only study it in the 
 			<link>
 				<url>../../parse/content/index.xml</url>
 				<label>next chapter</label>
@@ -43,34 +43,34 @@
 		<heading>
 			<size>3</size>Overview of the classes
 		</heading>
-		<paragraph>For the user of the Lex libraries, the classes of most direct interest are <link><url>/libraries/lex/reference/TOKEN_chart.xml</url><label>TOKEN</label></link>, <link><url>/libraries/lex/reference/LEXICAL_chart.xml</url><label>LEXICAL</label></link>, <link><url>/libraries/lex/reference/METALEX_chart.xml</url><label>METALEX</label></link> and <link><url>/libraries/lex/reference/SCANNING_chart.xml</url><label>SCANNING</label></link>.</paragraph>
-		<paragraph>An instance of <link><url>/libraries/lex/reference/TOKEN_chart.xml</url><label>TOKEN</label></link> describes a token read from an input file being analyzed, with such properties as the token type, the corresponding string and the position in the text (line, column) where it was found.</paragraph>
-		<paragraph>An instance of <link><url>/libraries/lex/reference/LEXICAL_chart.xml</url><label>LEXICAL</label></link> is a lexical analyzer for a certain lexical grammar. Given a reference to such an instance, say analyzer, you may analyze an input text through calls to the features of class <link><url>/libraries/lex/reference/LEXICAL_chart.xml</url><label>LEXICAL</label></link>, for example:</paragraph>
+		<paragraph>For the user of the Lex libraries, the classes of most direct interest are <link><url>/libraries/lex/reference/token_chart.xml</url><label>TOKEN</label></link>, <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link>, <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link> and <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link>.</paragraph>
+		<paragraph>An instance of <link><url>/libraries/lex/reference/token_chart.xml</url><label>TOKEN</label></link> describes a token read from an input file being analyzed, with such properties as the token type, the corresponding string and the position in the text (line, column) where it was found.</paragraph>
+		<paragraph>An instance of <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link> is a lexical analyzer for a certain lexical grammar. Given a reference to such an instance, say analyzer, you may analyze an input text through calls to the features of class <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link>, for example:</paragraph>
 		<code_block>	<feature_name>analyzer</feature_name>.<feature_name>get_token</feature_name></code_block>
-		<paragraph>Class <link><url>/libraries/lex/reference/METALEX_chart.xml</url><label>METALEX</label></link> defines facilities for building such lexical analyzers. In particular, it provides features for reading the grammar from a file and building the corresponding analyzer. Classes that need to build and use lexical analyzers may be written as descendants of <link><url>/libraries/lex/reference/METALEX_chart.xml</url><label>METALEX</label></link> to benefit from its general-purpose facilities.</paragraph>
-		<paragraph>Class <link><url>/libraries/lex/reference/SCANNING_chart.xml</url><label>SCANNING</label></link> is one such descendant of <link><url>/libraries/lex/reference/METALEX_chart.xml</url><label>METALEX</label></link>. It contains all the facilities needed to build an ordinary lexical analyzer and apply it to the analysis of input texts. Because these facilities are simpler to use and are in most cases sufficient, <link><label>SCANNING</label></link> will be discussed first; the finer-grain facilities of <link><url>/libraries/lex/reference/METALEX_chart.xml</url><label>METALEX</label></link> are described towards the end of this chapter.</paragraph>
-		<paragraph>These classes internally rely on others, some of which may be useful for more advanced applications. <link><url>/libraries/lex/reference/LEX_BUILDER_chart.xml</url><label>LEX_BUILDER</label></link>, one of the supporting classes, will be introduced after <link><url>/libraries/lex/reference/METALEX_chart.xml</url><label>METALEX</label></link>.</paragraph>
+		<paragraph>Class <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link> defines facilities for building such lexical analyzers. In particular, it provides features for reading the grammar from a file and building the corresponding analyzer. Classes that need to build and use lexical analyzers may be written as descendants of <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link> to benefit from its general-purpose facilities.</paragraph>
+		<paragraph>Class <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> is one such descendant of <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link>. It contains all the facilities needed to build an ordinary lexical analyzer and apply it to the analysis of input texts. Because these facilities are simpler to use and are in most cases sufficient, <link><label>SCANNING</label></link> will be discussed first; the finer-grain facilities of <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link> are described towards the end of this chapter.</paragraph>
+		<paragraph>These classes internally rely on others, some of which may be useful for more advanced applications. <link><url>/libraries/lex/reference/lex_builder_chart.xml</url><label>LEX_BUILDER</label></link>, one of the supporting classes, will be introduced after <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link>.</paragraph>
 		<heading>
 			<size>3</size>Library example
 		</heading>
 		<paragraph>The EiffelStudio delivery includes (in the examples/library/lex subdirectory) a simple example using the Lexical Library classes. The example applies Lex library facilities to the analysis of a language which is none other than Eiffel itself.</paragraph>
-		<paragraph>The root class of that example, <code><class_name>EIFFEL_SCAN</class_name></code>, is only a few lines long; it relies on the general mechanism provided by <link><url>/libraries/lex/reference/SCANNING_chart.xml</url><label>SCANNING</label></link> (see below). The actual lexical grammar is given by a lexical grammar file (a concept explained below): the file of name eiffel_regular in the same directory.</paragraph>
+		<paragraph>The root class of that example, <code><class_name>EIFFEL_SCAN</class_name></code>, is only a few lines long; it relies on the general mechanism provided by <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> (see below). The actual lexical grammar is given by a lexical grammar file (a concept explained below): the file of name eiffel_regular in the same directory.</paragraph>
 		<heading>
 			<size>3</size>Dealing with finite automata
 		</heading>
-		<paragraph>Lexical analysis relies on the theory of finite automata. The most advanced of the classes discussed in this chapter, <link><url>/libraries/lex/reference/LEX_BUILDER_chart.xml</url><label>LEX_BUILDER</label></link>, relies on classes describing various forms of automata:</paragraph>
+		<paragraph>Lexical analysis relies on the theory of finite automata. The most advanced of the classes discussed in this chapter, <link><url>/libraries/lex/reference/lex_builder_chart.xml</url><label>LEX_BUILDER</label></link>, relies on classes describing various forms of automata:</paragraph>
 		<list ordered="false">
-			<item><link><url>/libraries/lex/reference/DFA_chart.xml</url><label>DFA</label></link>: deterministic finite automata.</item>
-			<item><link><url>/libraries/lex/reference/PDFA_chart.xml</url><label>PDFA</label></link>: partially deterministic finite automata.</item>
-			<item><link><url>/libraries/lex/reference/NDFA_chart.xml</url><label>NDFA</label></link>: non-deterministic finite automata.</item>
-			<item><link><url>/libraries/lex/reference/AUTOMATON_chart.xml</url><label>AUTOMATON</label></link>, the most general: finite automata.</item>
-			<item><link><url>/libraries/lex/reference/FIXED_AUTOMATON_chart.xml</url><label>FIXED_AUTOMATON</label></link>, <link><url>/libraries/lex/reference/LINKED_AUTOMATON_chart.xml</url><label>LINKED_AUTOMATON</label></link>.</item>
+			<item><link><url>/libraries/lex/reference/dfa_chart.xml</url><label>DFA</label></link>: deterministic finite automata.</item>
+			<item><link><url>/libraries/lex/reference/pdfa_chart.xml</url><label>PDFA</label></link>: partially deterministic finite automata.</item>
+			<item><link><url>/libraries/lex/reference/ndfa_chart.xml</url><label>NDFA</label></link>: non-deterministic finite automata.</item>
+			<item><link><url>/libraries/lex/reference/automaton_chart.xml</url><label>AUTOMATON</label></link>, the most general: finite automata.</item>
+			<item><link><url>/libraries/lex/reference/fixed_automaton_chart.xml</url><label>FIXED_AUTOMATON</label></link>, <link><url>/libraries/lex/reference/linked_automaton_chart.xml</url><label>LINKED_AUTOMATON</label></link>.</item>
 		</list>
-		<paragraph>These classes may also be useful for systems that need to manipulate finite automata for applications other than lexical analysis. The interface of <link><url>/libraries/lex/reference/LEX_BUILDER_chart.xml</url><label>LEX_BUILDER</label></link>, which includes the features from <link><url>/libraries/lex/reference/AUTOMATON_chart.xml</url><label>AUTOMATON</label></link>, <link><url>/libraries/lex/reference/NDFA_chart.xml</url><label>NDFA</label></link> and <link><url>/libraries/lex/reference/PDFA_chart.xml</url><label>PDFA</label></link>, will provide the essential information.</paragraph>
+		<paragraph>These classes may also be useful for systems that need to manipulate finite automata for applications other than lexical analysis. The interface of <link><url>/libraries/lex/reference/lex_builder_chart.xml</url><label>LEX_BUILDER</label></link>, which includes the features from <link><url>/libraries/lex/reference/automaton_chart.xml</url><label>AUTOMATON</label></link>, <link><url>/libraries/lex/reference/ndfa_chart.xml</url><label>NDFA</label></link> and <link><url>/libraries/lex/reference/pdfa_chart.xml</url><label>PDFA</label></link>, will provide the essential information.</paragraph>
 		<heading>
 			<size>2</size>TOKENS
 		</heading>
-		<paragraph>A lexical analyzer built through any of the techniques described in the rest of this chapter will return tokens - instances of class <link><url>../reference/TOKEN_chart.xml</url><label>TOKEN</label></link>. Here are the most important features of this class:</paragraph>
+		<paragraph>A lexical analyzer built through any of the techniques described in the rest of this chapter will return tokens - instances of class <link><url>../reference/token_chart.xml</url><label>TOKEN</label></link>. Here are the most important features of this class:</paragraph>
 		<list ordered="false">
 			<item><code><feature_name>string_value</feature_name></code>: a string giving the token's contents.</item>
 		<item><code><feature_name>type</feature_name></code>: an integer giving the code of the token's type. The possible token types and associated integer codes are specified during the process of building the lexical analyzer in one of the ways described below.</item>
@@ -83,24 +83,24 @@
 		</heading>
 		<paragraph>The general method for performing lexical analysis is the following.</paragraph>
 		<list ordered="true">
-			<item>Create an instance of <link><url>/libraries/lex/reference/LEXICAL_chart.xml</url><label>LEXICAL</label></link>, giving a lexical analyzer for the desired grammar.</item>
+			<item>Create an instance of <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link>, giving a lexical analyzer for the desired grammar.</item>
 			<item>Store the analyzer into a file.</item>
 			<item>Retrieve the analyzer from the file.</item>
-			<item>Use the analyzer to analyze the tokens of one or more input texts by calling the various features of class <link><url>/libraries/lex/reference/LEXICAL_chart.xml</url><label>LEXICAL</label></link> on this object.</item>
+			<item>Use the analyzer to analyze the tokens of one or more input texts by calling the various features of class <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link> on this object.</item>
 		</list>
-		<paragraph>Steps 2 and 3 are obviously unnecessary if this process is applied as a single sequence. But in almost all practical cases you will want to use the same grammar to analyze many different input texts. Then steps 1 and 2 will be performed once and for all as soon as the lexical grammar is known, yielding an instance of <link><url>/libraries/lex/reference/LEXICAL_chart.xml</url><label>LEXICAL</label></link> that step 2 stores into a file; then in every case that requires analyzing a text you will simply retrieve the analyzer and apply it, performing steps 3 and 4 only.</paragraph>
-		<paragraph>The simplest way to store and retrieve the instance of <link><url>/libraries/lex/reference/LEXICAL_chart.xml</url><label>LEXICAL</label></link> and all related objects is to use the facilities of class <link><url>/libraries/base/reference/kernel/classic/STORABLE_chart.xml</url><label>STORABLE</label></link>: procedure store and one of the retrieval procedures. To facilitate this process, <link><url>/libraries/lex/reference/LEXICAL_chart.xml</url><label>LEXICAL</label></link> inherits from <link><url>/libraries/base/reference/kernel/classic/STORABLE_chart.xml</url><label>STORABLE</label></link>.</paragraph>
-		<paragraph>The next sections explain how to perform these various steps. In the most common case, the best technique is to inherit from class <link><url>/libraries/lex/reference/SCANNING_chart.xml</url><label>SCANNING</label></link>, which provides a framework for retrieving an analyzer file if it exists, creating it from a grammar description otherwise, and proceed with the lexical analysis of one or more input texts.</paragraph>
+		<paragraph>Steps 2 and 3 are obviously unnecessary if this process is applied as a single sequence. But in almost all practical cases you will want to use the same grammar to analyze many different input texts. Then steps 1 and 2 will be performed once and for all as soon as the lexical grammar is known, yielding an instance of <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link> that step 2 stores into a file; then in every case that requires analyzing a text you will simply retrieve the analyzer and apply it, performing steps 3 and 4 only.</paragraph>
+		<paragraph>The simplest way to store and retrieve the instance of <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link> and all related objects is to use the facilities of class <link><url>/libraries/base/reference/kernel/classic/storable_chart.xml</url><label>STORABLE</label></link>: procedure store and one of the retrieval procedures. To facilitate this process, <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link> inherits from <link><url>/libraries/base/reference/kernel/classic/storable_chart.xml</url><label>STORABLE</label></link>.</paragraph>
+		<paragraph>The next sections explain how to perform these various steps. In the most common case, the best technique is to inherit from class <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link>, which provides a framework for retrieving an analyzer file if it exists, creating it from a grammar description otherwise, and proceed with the lexical analysis of one or more input texts.</paragraph>
 		<heading>
 			<size>2</size>LEXICAL GRAMMAR FILES AND CLASS SCANNING
 		</heading>
-		<paragraph>Class <link><url>/libraries/lex/reference/SCANNING_chart.xml</url><label>SCANNING</label></link> may be used as an ancestor by classes that need to perform lexical analysis. When using <link><url>/libraries/lex/reference/SCANNING_chart.xml</url><label>SCANNING</label></link> you will need a 
+		<paragraph>Class <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> may be used as an ancestor by classes that need to perform lexical analysis. When using <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> you will need a 
 			<bold>lexical grammar file</bold> that contains the description of the lexical grammar. Since it is easy to edit and adapt a file without modifying the software proper, this technique provides flexibility and supports the incremental development and testing of lexical analyzers.
 		</paragraph>
 		<heading>
 			<size>3</size>The build procedure
 		</heading>
-		<paragraph>To obtain a lexical analyzer in a descendant of class <link><url>/libraries/lex/reference/SCANNING_chart.xml</url><label>SCANNING</label></link>, use the procedure</paragraph>
+		<paragraph>To obtain a lexical analyzer in a descendant of class <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link>, use the procedure</paragraph>
 
 
 <code_block>	<feature_name>build</feature_name> <symbol>(</symbol><feature_name>store_file_name</feature_name>, <feature_name>grammar_file_name</feature_name><symbol>:</symbol> <class_name>STRING</class_name><symbol>)</symbol></code_block>
@@ -175,7 +175,7 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 	<feature_name>analyze</feature_name> <symbol>(</symbol><local_variable>input_file_name</local_variable><symbol>: </symbol><class_name>STRING</class_name><symbol>)</symbol></code_block>
 			<paragraph>This will read in and process successive input tokens. Procedure analyze will apply to each of these tokens the action of procedure do_a_token. As defined in <link><label>SCANNING</label></link>, this procedure prints out information on the token: its string value, its type, whether it is a keyword and if so its code. You may redefine it in any descendant class so as to perform specific actions on each token.</paragraph>
 			<paragraph>The initial action <code><feature_name>begin_analysis</feature_name></code>, which by default prints a header, and the terminal action <code><feature_name>end_analysis</feature_name></code>, which by default does nothing, may also be redefined.</paragraph>
-			<paragraph>To build lexical analyzers which provide a higher degree of flexibility, use <link><url>/libraries/lex/reference/METALEX_chart.xml</url><label>METALEX</label></link> or <link><url>/libraries/lex/reference/LEX_BUILDER_chart.xml</url><label>LEX_BUILDER</label></link>, as described in the last part of this chapter.</paragraph>
+			<paragraph>To build lexical analyzers which provide a higher degree of flexibility, use <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link> or <link><url>/libraries/lex/reference/lex_builder_chart.xml</url><label>LEX_BUILDER</label></link>, as described in the last part of this chapter.</paragraph>
 			<heading>
 				<size>2</size>ANALYZING INPUT
 			</heading>
@@ -183,17 +183,17 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 			<heading>
 				<size>3</size>Class LEXICAL
 			</heading>
-			<paragraph>Procedure analyze takes care of the most common needs of lexical analysis. But if you need more advanced lexical analysis facilities you will need an instance of class <link><url>/libraries/lex/reference/LEXICAL_chart.xml</url><label>LEXICAL</label></link> (a direct instance of <link><url>/libraries/lex/reference/LEXICAL_chart.xml</url><label>LEXICAL</label></link> itself or of one of its proper descendants). If you are using class <link><url>/libraries/lex/reference/SCANNING_chart.xml</url><label>SCANNING</label></link> as described above, you will have access to such an instance through the attribute analyzer.</paragraph>
-			<paragraph>This discussion will indeed assume that you have an entity attached to an instance of <link><url>/libraries/lex/reference/LEXICAL_chart.xml</url><label>LEXICAL</label></link>. The name of that entity is assumed to be analyzer, although it does not need to be the attribute from <link><url>/libraries/lex/reference/SCANNING_chart.xml</url><label>SCANNING</label></link>. You can apply to that analyzer the various exported features features of class <link><url>/libraries/lex/reference/LEXICAL_chart.xml</url><label>LEXICAL</label></link>, explained below. All the calls described below should use analyzer as their target, as in</paragraph>
+			<paragraph>Procedure analyze takes care of the most common needs of lexical analysis. But if you need more advanced lexical analysis facilities you will need an instance of class <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link> (a direct instance of <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link> itself or of one of its proper descendants). If you are using class <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> as described above, you will have access to such an instance through the attribute analyzer.</paragraph>
+			<paragraph>This discussion will indeed assume that you have an entity attached to an instance of <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link>. The name of that entity is assumed to be analyzer, although it does not need to be the attribute from <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link>. You can apply to that analyzer the various exported features features of class <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link>, explained below. All the calls described below should use analyzer as their target, as in</paragraph>
 <code_block>	<feature_name>analyzer</feature_name><symbol>.</symbol><feature_name>set_file</feature_name> <symbol>(</symbol><string>"my_file_name"</string><symbol>)</symbol></code_block>
 			<heading>
 				<size>3</size>Creating, retrieving and storing an analyzer
 			</heading>
 			<paragraph>To create a new analyzer, use</paragraph>
 			<code_block>	<keyword>create</keyword> <feature_name>analyzer</feature_name><symbol>.</symbol><feature_name>make_new</feature_name></code_block>
-			<paragraph>You may also retrieve an analyzer from a previous session. <link><url>/libraries/lex/reference/LEXICAL_chart.xml</url><label>LEXICAL</label></link> is a descendant from <link><url>/libraries/base/reference/kernel/classic/STORABLE_chart.xml</url><label>STORABLE</label></link>, so you can use feature retrieved for that purpose. In a descendant of <link><url>/libraries/base/reference/kernel/classic/STORABLE_chart.xml</url><label>STORABLE</label></link>, simply write</paragraph>
+			<paragraph>You may also retrieve an analyzer from a previous session. <link><url>/libraries/lex/reference/lexical_chart.xml</url><label>LEXICAL</label></link> is a descendant from <link><url>/libraries/base/reference/kernel/classic/storable_chart.xml</url><label>STORABLE</label></link>, so you can use feature retrieved for that purpose. In a descendant of <link><url>/libraries/base/reference/kernel/classic/storable_chart.xml</url><label>STORABLE</label></link>, simply write</paragraph>
 			<code_block>	<feature_name>analyzer</feature_name> <symbol>?=</symbol> <feature_name>retrieved</feature_name></code_block>
-			<paragraph>If you do not want to make the class a descendant of <link><url>/libraries/base/reference/kernel/classic/STORABLE_chart.xml</url><label>STORABLE</label></link>, use the creation procedure make of <link><url>../reference/LEXICAL_chart.xml</url><label>LEXICAL</label></link>, not to be confused with make_new above:</paragraph>
+			<paragraph>If you do not want to make the class a descendant of <link><url>/libraries/base/reference/kernel/classic/storable_chart.xml</url><label>STORABLE</label></link>, use the creation procedure make of <link><url>../reference/lexical_chart.xml</url><label>LEXICAL</label></link>, not to be confused with make_new above:</paragraph>
 <code_block>
 	<keyword>create</keyword> <feature_name>analyzer</feature_name><symbol>.</symbol><feature_name>make</feature_name>
 	<feature_name>analyzer</feature_name> <symbol>?=</symbol> <feature_name>analyzer</feature_name><symbol>.</symbol><feature_name>retrieved</feature_name>
@@ -203,14 +203,14 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 			</heading>
 			<paragraph>To analyze a text, call <code><feature_name>set_file </feature_name></code>or <code><feature_name>set_string </feature_name></code>to specify the document to be parsed. With the first call, the analysis will be applied to a file; with the second, to a string.</paragraph>
 			<note>
-				<bold>Note</bold>: if you use procedure analyze of <link><url>/libraries/lex/reference/SCANNING_chart.xml</url><label>SCANNING</label></link>, you do not need any such call, since analyze calls set_file on the file name passed as argument.
+				<bold>Note</bold>: if you use procedure analyze of <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link>, you do not need any such call, since analyze calls set_file on the file name passed as argument.
 			</note>
 			<heading>
 				<size>3</size>Obtaining the tokens
 			</heading>
 			<paragraph>The basic procedure for analyzing successive tokens in the text is get_token, which reads in one token and sets up various attributes of the analyzer to record properties of that token:</paragraph>
 			<list ordered="false">
-				<item><code><feature_name>last_token</feature_name></code>, a function of type <link><url>/libraries/lex/reference/TOKEN_chart.xml</url><label>TOKEN</label></link>, which provides all necessary information on the last token read.</item>
+				<item><code><feature_name>last_token</feature_name></code>, a function of type <link><url>/libraries/lex/reference/token_chart.xml</url><label>TOKEN</label></link>, which provides all necessary information on the last token read.</item>
 				<item><code><feature_name>token_line_number</feature_name></code> and<code><feature_name> token_column_number</feature_name></code>, to know where the token is in the text. These queries return results of type <code><class_name>INTEGER</class_name></code>.</item>
 				<item><code><feature_name>token_type</feature_name></code>, giving the regular expression type, identified by its integer number (which is the value No_token if no correct token was recognized).</item>
 				<item><code><feature_name>other_possible_tokens</feature_name></code>, an array giving all the other possible token types of the last token. (If token_type is No_token the array is empty.)</item>
@@ -238,7 +238,7 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 	<keyword>end</keyword>
 	<feature_name>end_analysis</feature_name>
 </code_block>
-			<paragraph>This scheme is used by procedure analyze of class <link><url>/libraries/lex/reference/SCANNING_chart.xml</url><label>SCANNING</label></link>, so that in standard cases you may simply inherit from that class and redefine procedures begin_analysis, do_a_token and end_analysis. If you are not inheriting from <link><url>../reference/SCANNING_chart.xml</url><label>SCANNING</label></link>, these names simply denote procedures that you must provide.</paragraph>
+			<paragraph>This scheme is used by procedure analyze of class <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link>, so that in standard cases you may simply inherit from that class and redefine procedures begin_analysis, do_a_token and end_analysis. If you are not inheriting from <link><url>../reference/scanning_chart.xml</url><label>SCANNING</label></link>, these names simply denote procedures that you must provide.</paragraph>
 			<heading>
 				<size>2</size>REGULAR EXPRESSIONS
 			</heading>
@@ -246,7 +246,7 @@ Integer ['+'|'-'] '1'..'9' *('0'..'9')
 				<bold>regular expressions</bold>; any regular expression describes a set of possible tokens, called the 
 				<bold>specimens</bold> of the regular expression.
 			</paragraph>
-			<paragraph>Let us now study the format of regular expressions. This format is used in particular for the lexical grammar files needed by class <link><url>/libraries/lex/reference/SCANNING_chart.xml</url><label>SCANNING</label></link> and (as seen below) by procedure <code><feature_name>read_grammar</feature_name></code> of class <link><url>/libraries/lex/reference/METALEX_chart.xml</url><label>METALEX</label></link>. The 
+			<paragraph>Let us now study the format of regular expressions. This format is used in particular for the lexical grammar files needed by class <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> and (as seen below) by procedure <code><feature_name>read_grammar</feature_name></code> of class <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link>. The 
 				<italic>eiffel_regular</italic> grammar file in the examples directory provides an extensive example.
 			</paragraph>
 			<paragraph>Each regular expression denotes a set of tokens. For example, the first regular expression seen above,
@@ -576,7 +576,7 @@ BOOLEAN
 					<italic>Identifier</italic>, as shown above.
 				</warning>
 				<note>
-					<bold>Note</bold>: the rule that all keywords must be specimens of one token type is a matter of convenience and simplicity, and only applies if you are using SCANNING and lexical grammar files. There is no such restriction if you rely directly on the more general facilities provided by <link><url>/libraries/lex/reference/METALEX_chart.xml</url><label>METALEX</label></link> or <link><url>/libraries/lex/reference/LEX_BUILDER_chart.xml</url><label>LEX_BUILDER</label></link>. Then different keywords may be specimens of different regular expressions; you will have to specify the token type of every keyword, as explained later in this chapter.
+					<bold>Note</bold>: the rule that all keywords must be specimens of one token type is a matter of convenience and simplicity, and only applies if you are using SCANNING and lexical grammar files. There is no such restriction if you rely directly on the more general facilities provided by <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link> or <link><url>/libraries/lex/reference/lex_builder_chart.xml</url><label>LEX_BUILDER</label></link>. Then different keywords may be specimens of different regular expressions; you will have to specify the token type of every keyword, as explained later in this chapter.
 				</note>
 				<heading>
 					<size>3</size>Case sensitivity
@@ -594,7 +594,7 @@ BOOLEAN
 					<italic>exp</italic> is a regular expression. For example, 
 					<italic>~('A'..'Z')</italic> only covers single-upper-case-letter tokens. But for all other kinds of expression letter case is not taken into account.
 				</paragraph>
-				<paragraph>You may change this default behavior through a set of procedures introduced in class <link><url>../reference/LEX_BUILDER_chart.xml</url><label>LEX_BUILDER</label></link> and hence available in its descendants <link><url>../reference/METALEX_chart.xml</url><label>METALEX </label></link>and <link><url>../reference/SCANNING_chart.xml</url><label>SCANNING</label></link>.</paragraph>
+				<paragraph>You may change this default behavior through a set of procedures introduced in class <link><url>../reference/lex_builder_chart.xml</url><label>LEX_BUILDER</label></link> and hence available in its descendants <link><url>../reference/metalex_chart.xml</url><label>METALEX </label></link>and <link><url>../reference/scanning_chart.xml</url><label>SCANNING</label></link>.</paragraph>
 				<paragraph>To make subsequent regular expressions case-sensitive, call the procedure</paragraph>
 				<code_block>	<feature_name>ignore_case</feature_name></code_block>
 				<paragraph>To revert to the default mode where case is not significant, call the procedure</paragraph>
@@ -604,17 +604,17 @@ BOOLEAN
 				<code_block>	<feature_name>keywords_distinguish_case</feature_name></code_block>
 				<paragraph>The inverse call, corresponding to the default rule, is</paragraph>
 				<code_block>	<feature_name>keywords_ignore_case</feature_name></code_block>
-				<paragraph>Either of these calls must be executed before you define any keywords; if you are using <link><url>/libraries/lex/reference/SCANNING_chart.xml</url><label>SCANNING</label></link>, this means before calling procedure build. Once set, the keyword case-sensitivity policy cannot be changed.</paragraph>
+				<paragraph>Either of these calls must be executed before you define any keywords; if you are using <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link>, this means before calling procedure build. Once set, the keyword case-sensitivity policy cannot be changed.</paragraph>
 				<heading>
 					<size>2</size>USING METALEX TO BUILD A LEXICAL ANALYZER
 				</heading>
 				<paragraph>(You may skip the rest of this chapter if you only need simple lexical facilities.)</paragraph>
-				<paragraph>Class <link><url>/libraries/lex/reference/SCANNING_chart.xml</url><label>SCANNING</label></link>, as studied above, relies on a class <link><url>/libraries/lex/reference/METALEX_chart.xml</url><label>METALEX</label></link>. In some cases, you may prefer to use the features of <link><url>/libraries/lex/reference/METALEX_chart.xml</url><label>METALEX</label></link> directly. Since <link><url>../reference/SCANNING_chart.xml</url><label>SCANNING</label></link> inherits from <link><url>/libraries/lex/reference/METALEX_chart.xml</url><label>METALEX</label></link>, anything you do with <link><url>/libraries/lex/reference/METALEX_chart.xml</url><label>METALEX</label></link> can in fact be done with <link><url>/libraries/lex/reference/SCANNING_chart.xml</url><label>SCANNING</label></link>, but you may wish to stay with just <link><url>/libraries/lex/reference/METALEX_chart.xml</url><label>METALEX</label></link> if you do not need the additional features of <link><url>/libraries/lex/reference/SCANNING_chart.xml</url><label>SCANNING</label></link>.</paragraph>
+				<paragraph>Class <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link>, as studied above, relies on a class <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link>. In some cases, you may prefer to use the features of <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link> directly. Since <link><url>../reference/scanning_chart.xml</url><label>SCANNING</label></link> inherits from <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link>, anything you do with <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link> can in fact be done with <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link>, but you may wish to stay with just <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link> if you do not need the additional features of <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link>.</paragraph>
 				<heading>
 					<size>3</size>Steps in using METALEX
 				</heading>
-				<paragraph><link><url>/libraries/lex/reference/METALEX_chart.xml</url><label>METALEX</label></link> has an attribute analyzer which will be attached to a lexical analyzer. This class provides tools for building a lexical analyzer incrementally through explicit feature calls; you can still use a lexical grammar file, but do not have to.</paragraph>
-				<paragraph>The following extract from a typical descendant of <link><url>/libraries/lex/reference/METALEX_chart.xml</url><label>METALEX</label></link> illustrates the process of building a lexical analyzer in this way:</paragraph>
+				<paragraph><link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link> has an attribute analyzer which will be attached to a lexical analyzer. This class provides tools for building a lexical analyzer incrementally through explicit feature calls; you can still use a lexical grammar file, but do not have to.</paragraph>
+				<paragraph>The following extract from a typical descendant of <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link> illustrates the process of building a lexical analyzer in this way:</paragraph>
 <code_block>
 	<feature_name>Upper_identifier</feature_name>, <feature_name>Lower_identifier</feature_name>, <feature_name>Decimal_constant</feature_name>, <feature_name>Octal_constant</feature_name>, <feature_name>Word</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name> <keyword>is</keyword> <keyword>unique</keyword>
 	...
@@ -631,14 +631,14 @@ BOOLEAN
 	...
 	<feature_name>make_analyzer</feature_name>
 </code_block>
-				<paragraph>This example follows the general scheme of building a lexical analyzer with the features of <link><url>/libraries/lex/reference/METALEX_chart.xml</url><label>METALEX</label></link>, in a class that will normally be a descendant of <link><url>../reference/METALEX_chart.xml</url><label>METALEX</label></link>:</paragraph>
+				<paragraph>This example follows the general scheme of building a lexical analyzer with the features of <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link>, in a class that will normally be a descendant of <link><url>../reference/metalex_chart.xml</url><label>METALEX</label></link>:</paragraph>
 				<list ordered="true">
 					<item>Set options, such as case sensitivity.</item>
 					<item>Record regular expressions.</item>
 					<item>Record keywords (this may be interleaved with step 2.)</item>
 					<item>"Freeze" the analyzer by a call to <code><feature_name>make_analyzer</feature_name></code>.</item>
 				</list>
-				<paragraph>To perform steps 2 to 4 in a single shot and generate a lexical analyzer from a lexical grammar file, as with <link><url>/libraries/lex/reference/SCANNING_chart.xml</url><label>SCANNING</label></link>, you may use the procedure</paragraph>
+				<paragraph>To perform steps 2 to 4 in a single shot and generate a lexical analyzer from a lexical grammar file, as with <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link>, you may use the procedure</paragraph>
 				<code_block>	<feature_name>read_grammar</feature_name> <symbol>(</symbol><local_variable>grammar_file_name</local_variable><symbol>: </symbol><class_name>STRING</class_name><symbol>)</symbol></code_block>
 				<paragraph>In this case all the expressions and keywords are taken from the file of name 
 					<code>
@@ -658,7 +658,7 @@ BOOLEAN
 					<paragraph>Procedure 
 						<code>
 							<feature_name>declare_keyword</feature_name>
-						</code> records a keyword. The first argument is a string containing the keyword; the second argument is the regular expression of which the keyword must be a specimen. The example shows that here - in contrast with the rule enforced by <link><url>/libraries/lex/reference/SCANNING_chart.xml</url><label>SCANNING</label></link> - not all keywords need be specimens of the same regular expression.
+						</code> records a keyword. The first argument is a string containing the keyword; the second argument is the regular expression of which the keyword must be a specimen. The example shows that here - in contrast with the rule enforced by <link><url>/libraries/lex/reference/scanning_chart.xml</url><label>SCANNING</label></link> - not all keywords need be specimens of the same regular expression.
 					</paragraph>
 					<paragraph>The calls seen so far record a number of regular expressions and keywords, but do not give us a lexical analyzer yet. To obtain a usable lexical analyzer, you must call</paragraph>
 					<code_block>	<feature_name>make_analyzer</feature_name></code_block>
@@ -667,15 +667,15 @@ BOOLEAN
 							<bold>Note</bold>: for readers knowledgeable in the theory of lexical analysis: one of the most important effects of the call to make_analyzer is to transform the non-deterministic finite automaton resulting from calls such as the ones above into a deterministic finite automaton.
 						</note>
 						<paragraph>Remember that if you use procedure read_grammar, you need not worry about make_analyzer, as the former procedure calls the latter.
-							<paragraph>Another important feature of class <link><url>/libraries/lex/reference/METALEX_chart.xml</url><label>METALEX</label></link> is procedure <code><feature_name>store_analyzer</feature_name></code>, which stores the analyzer into a file whose name is passed as argument, for use by later lexical analysis sessions. To retrieve the analyzer, simply use procedure <code><feature_name>retrieve_analyzer</feature_name></code>, again with a file name as argument.</paragraph>
+							<paragraph>Another important feature of class <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link> is procedure <code><feature_name>store_analyzer</feature_name></code>, which stores the analyzer into a file whose name is passed as argument, for use by later lexical analysis sessions. To retrieve the analyzer, simply use procedure <code><feature_name>retrieve_analyzer</feature_name></code>, again with a file name as argument.</paragraph>
 							<heading>
 								<size>2</size>BUILDING A LEXICAL ANALYZER WITH LEX_BUILDER
 							</heading>
-							<paragraph>To have access to the most general set of lexical analysis mechanisms, you may use class <link><url>/libraries/lex/reference/LEX_BUILDER_chart.xml</url><label>LEX_BUILDER</label></link>, which gives you an even finer grain of control than <link><url>/libraries/lex/reference/METALEX_chart.xml</url><label>METALEX</label></link>. This is not necessary in simple applications.</paragraph>
+							<paragraph>To have access to the most general set of lexical analysis mechanisms, you may use class <link><url>/libraries/lex/reference/lex_builder_chart.xml</url><label>LEX_BUILDER</label></link>, which gives you an even finer grain of control than <link><url>/libraries/lex/reference/metalex_chart.xml</url><label>METALEX</label></link>. This is not necessary in simple applications.</paragraph>
 							<heading>
 								<size>3</size>Building a lexical analyzer
 							</heading>
-							<paragraph><link><url>/libraries/lex/reference/LEX_BUILDER_chart.xml</url><label>LEX_BUILDER</label></link> enables you to build a lexical analyzer by describing successive token types and keywords. This is normally done in a descendant of <link><url>/libraries/lex/reference/LEX_BUILDER_chart.xml</url><label>LEX_BUILDER</label></link>. For each token type, you call a procedure that builds an object, or 
+							<paragraph><link><url>/libraries/lex/reference/lex_builder_chart.xml</url><label>LEX_BUILDER</label></link> enables you to build a lexical analyzer by describing successive token types and keywords. This is normally done in a descendant of <link><url>/libraries/lex/reference/lex_builder_chart.xml</url><label>LEX_BUILDER</label></link>. For each token type, you call a procedure that builds an object, or 
 								<bold>tool</bold>, representing the associated regular expression.
 							</paragraph>
 							<paragraph>For the complete list of available procedures, refer to the flat-short form of the class; there is one procedure for every category of regular expression studied earlier in this chapter. Two typical examples of calls are:</paragraph>
@@ -692,7 +692,7 @@ BOOLEAN
 								<heading>
 									<size>3</size>An example
 								</heading>
-								<paragraph>The following extract from a typical descendant of <link><url>/libraries/lex/reference/LEX_BUILDER_chart.xml</url><label>LEX_BUILDER</label></link> illustrates how to create a tool representing the identifiers of an Eiffel-like language.</paragraph>
+								<paragraph>The following extract from a typical descendant of <link><url>/libraries/lex/reference/lex_builder_chart.xml</url><label>LEX_BUILDER</label></link> illustrates how to create a tool representing the identifiers of an Eiffel-like language.</paragraph>
 
 <code_block>
 	<feature_name>Identifier</feature_name>, <feature_name>Letter</feature_name>, <feature_name>Digit</feature_name>, <feature_name>Underlined</feature_name>, <feature_name>Suffix</feature_name>, <feature_name>Suffix_list</feature_name><symbol>:</symbol> <class_name>INTEGER</class_name>

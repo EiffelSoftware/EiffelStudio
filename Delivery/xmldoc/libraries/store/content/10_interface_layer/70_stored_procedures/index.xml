@@ -4,7 +4,7 @@
 		<paragraph>When sending requests to the database, the request is first parsed then executed. Instead of parsing many times the same requests, i.e. with only changes in expression values, most of RDBMS enable to 
 			<bold>precompile</bold> requests. These requests can then be executed as routines and are identified by a name and a signature.
 		</paragraph>
-		<paragraph>EiffelStore lets you use stored procedures with <link><url>/libraries/store/reference/interface/DB_PROC_flatshort.xml</url><label>DB_PROC</label></link> class to:</paragraph>
+		<paragraph>EiffelStore lets you use stored procedures with <link><url>/libraries/store/reference/interface/db_proc_flatshort.xml</url><label>DB_PROC</label></link> class to:</paragraph>
 		<list ordered="false">
 			<item>
 				<link>
@@ -24,7 +24,7 @@
 		</heading>
 		<paragraph>To execute a stored procedure:</paragraph>
 		<list ordered="false">
-			<item>Create a <link><url>/libraries/store/reference/interface/DB_PROC_flatshort.xml</url><label>DB_PROC</label></link> object and load the stored procedure you want to use:
+			<item>Create a <link><url>/libraries/store/reference/interface/db_proc_flatshort.xml</url><label>DB_PROC</label></link> object and load the stored procedure you want to use:
 <code_block>
 	<feature_name>procedure</feature_name><symbol>:</symbol> <class_name>DB_PROC</class_name>
 	...
@@ -35,10 +35,10 @@
 	<keyword>end</keyword>
 </code_block>
 			</item>
-			<item>Execute the procedure through a <link><url>/libraries/store/reference/interface/DB_SELECTION_chart.xml</url><label>DB_SELECTION</label></link> (if a result is expected) or a <link><url>/libraries/store/reference/interface/DB_CHANGE_chart.xml</url><label>DB_CHANGE </label></link>object (otherwise). 
+			<item>Execute the procedure through a <link><url>/libraries/store/reference/interface/db_selection_chart.xml</url><label>DB_SELECTION</label></link> (if a result is expected) or a <link><url>/libraries/store/reference/interface/db_change_chart.xml</url><label>DB_CHANGE </label></link>object (otherwise). 
 				<note>
-					<bold>Note</bold>: Requests with a result (<link><url>/libraries/store/reference/interface/DB_SELECTION_chart.xml</url><label>DB_SELECTION</label></link>) or without (<link><url>/libraries/store/reference/interface/DB_CHANGE_chart.xml</url><label>DB_CHANGE</label></link>) are both abstract 
-					<bold>expressions</bold>. DB_PROC executes an abstract expression using an object of <link><url>/libraries/store/reference/interface/DB_EXPRESSION_chart.xml</url><label>DB_EXPRESSION</label></link> type, which corresponds to an abstract expression. <link><url>/libraries/store/reference/interface/DB_SELECTION_chart.xml</url><label>DB_SELECTION</label></link> and <link><url>/libraries/store/reference/interface/DB_CHANGE_chart.xml</url><label>DB_CHANGE</label></link> inherits from <link><url>/libraries/store/reference/interface/DB_EXPRESSION_chart.xml</url><label>DB_EXPRESSION</label></link>.
+					<bold>Note</bold>: Requests with a result (<link><url>/libraries/store/reference/interface/db_selection_chart.xml</url><label>DB_SELECTION</label></link>) or without (<link><url>/libraries/store/reference/interface/db_change_chart.xml</url><label>DB_CHANGE</label></link>) are both abstract 
+					<bold>expressions</bold>. DB_PROC executes an abstract expression using an object of <link><url>/libraries/store/reference/interface/db_expression_chart.xml</url><label>DB_EXPRESSION</label></link> type, which corresponds to an abstract expression. <link><url>/libraries/store/reference/interface/db_selection_chart.xml</url><label>DB_SELECTION</label></link> and <link><url>/libraries/store/reference/interface/db_change_chart.xml</url><label>DB_CHANGE</label></link> inherits from <link><url>/libraries/store/reference/interface/db_expression_chart.xml</url><label>DB_EXPRESSION</label></link>.
 				</note>You can execute your request mostly like a basic one:
 				<list ordered="false">
 					<item>Create your request.</item>

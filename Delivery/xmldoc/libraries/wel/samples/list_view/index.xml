@@ -30,12 +30,12 @@
 		</list>
 		<heading>
 			<size>2</size>Running
-		</heading> After launching the program, a window will be displayed containing a pair of <link><url>../../reference/controls/WEL_LIST_VIEW_chart.xml</url><label>WEL_LIST_VIEW</label></link>. Clicking the button marked "style" will modify the style of the lower list view. If you click the mouse within this lower list view, you will see notification of events appearing in the upper list view. 
+		</heading> After launching the program, a window will be displayed containing a pair of <link><url>../../reference/controls/wel_list_view_chart.xml</url><label>WEL_LIST_VIEW</label></link>. Clicking the button marked "style" will modify the style of the lower list view. If you click the mouse within this lower list view, you will see notification of events appearing in the upper list view. 
 		<heading>
 			<size>2</size>Under the Hood
 		</heading>
-		<paragraph><code><class_name>LISTVIEW_DEMO</class_name></code> redefines <code><feature_name>init_application</feature_name></code> in order to load the <link><url>../../reference/controls/WEL_COMMON_CONTROLS_DLL_chart.xml</url><label>WEL_COMMON_CONTROLS_DLL</label></link> and the <link><url>../../reference/controls/WEL_RICH_EDIT_DLL_chart.xml</url><label>WEL_RICH_EDIT_DLL</label></link>.</paragraph>
-		<paragraph><code><class_name>LISTVIEW</class_name></code> redefines many of the `on_' features inherited from <link><url>../../reference/controls/WEL_LIST_VIEW_chart.xml</url><label>WEL_LIST_VIEW</label></link> in order to generate output for the user.</paragraph>
+		<paragraph><code><class_name>LISTVIEW_DEMO</class_name></code> redefines <code><feature_name>init_application</feature_name></code> in order to load the <link><url>../../reference/controls/wel_common_controls_dll_chart.xml</url><label>WEL_COMMON_CONTROLS_DLL</label></link> and the <link><url>../../reference/controls/wel_rich_edit_dll_chart.xml</url><label>WEL_RICH_EDIT_DLL</label></link>.</paragraph>
+		<paragraph><code><class_name>LISTVIEW</class_name></code> redefines many of the `on_' features inherited from <link><url>../../reference/controls/wel_list_view_chart.xml</url><label>WEL_LIST_VIEW</label></link> in order to generate output for the user.</paragraph>
 		<paragraph>The style of the <code><class_name>LISTVIEW_DEMO</class_name></code> is changed by calling <code><feature_name>set_style</feature_name></code> with the required new style.</paragraph>
 		<paragraph>This sample contains the following classes: 
 			<list ordered="false">

@@ -73,13 +73,19 @@ feature -- Byte code generation
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for an assignment
 		local
-			source_type: TYPE_I;
-			target_type: TYPE_I;
+			source_type: TYPE_I
+			target_type: TYPE_I
+			hector_b: HECTOR_B
 		do
 			generate_melted_debugger_hook (ba);
 
 				-- Generate expression byte code
 			source.make_byte_code (ba);
+
+			if source.is_hector then
+				hector_b ?= source
+				hector_b.make_protected_byte_code (ba, 0)
+			end
 
 				-- Generate assignment header depending of the type
 				-- of the target (local, attribute or result).

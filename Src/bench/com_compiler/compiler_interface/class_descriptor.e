@@ -52,7 +52,8 @@ feature -- Access
 	name: STRING is
 			-- Class name.
 		do
-			Result := compiler_class.name
+			Result := clone (compiler_class.name)
+			REsult.to_upper
 		ensure then
 			result_exists: Result /= Void
 		end
@@ -69,27 +70,55 @@ feature -- Access
 			-- Class description.
 		local
 			indexing_clause: INDEXING_CLAUSE_AS
+			compiled_class: CLASS_C
+			a_description: STRING
 		do
-			indexing_clause := compiler_class.compiled_class.ast.top_indexes
-			if indexing_clause /= Void then
-				Result := indexing_clause.description
-				Result.prune_all ('%R')
-				Result.replace_substring_all ("%N", " ")
-				Result.prune_all ('%T')
-			else
-				create Result.make_from_string ("No description available")
+			compiled_class := compiler_class.compiled_class
+			create Result.make (50)
+			if is_deferred then
+				Result.append ("deferred ")
 			end
+			if is_generic then
+				Result.append ("generic ")
+			end
+			if is_external then
+				Result.append ("external ")
+			end
+			Result.append ("class " + name)
+			if is_external then
+				Result.append (", %Nexternal name: " + external_name)
+			end
+			if compiled_class /= Void then			
+				Result.append ("%N")
+				indexing_clause := compiled_class.ast.top_indexes
+				if indexing_clause /= Void then
+					a_description := indexing_clause.description
+					if 
+						a_description /= Void and then 
+						not a_description.is_empty
+					then
+						Result.append ("Description: ")
+						Result.append (a_description)
+					end
+				end
+			end
+			Result.prune_all ('%R')
+			Result.prune_all ('%T')
 		end
 
 	feature_names: ECOM_ARRAY [STRING] is
 			-- List of names of class flat features.
 		local
 			names, res: ARRAY [STRING]
+			compiled_class: CLASS_C
 		do
-			names := compiler_class.compiled_class.api_feature_table.current_keys
-			create res.make (1, names.count)
-			res.copy (names)
-			create Result.make_from_array (res, 1, <<1>>, <<res.count>>)
+			compiled_class := compiler_class.compiled_class
+			if compiled_class /= Void then
+				names := compiled_class.api_feature_table.current_keys
+				create res.make (1, names.count)
+				res.copy (names)
+				create Result.make_from_array (res, 1, <<1>>, <<res.count>>)
+			end
 		ensure then
 			result_exists: Result /= Void
 		end
@@ -100,27 +129,36 @@ feature -- Access
 			res: ARRAYED_LIST [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
 			l: LIST [E_FEATURE]
 			f: FEATURE_DESCRIPTOR
+			compiled_class: CLASS_C
 		do
-			l := compiler_class.compiled_class.written_in_features
-			create res.make (l.count)
-			from
-				l.start
-			until
-				l.after
-			loop
-				create f.make_with_class_i_and_feature_i (compiler_class, l.item.associated_feature_i)
-				res.extend (f)
-				l.forth
+			compiled_class := compiler_class.compiled_class
+			if compiled_class /= Void then
+				l := compiled_class.written_in_features
+				create res.make (l.count)
+				from
+					l.start
+				until
+					l.after
+				loop
+					create f.make_with_class_i_and_feature_i (compiler_class, l.item.associated_feature_i)
+					res.extend (f)
+					l.forth
+				end
+				create Result.make (res)
 			end
-			create Result.make (res)
 		ensure then
 			result_exists: Result /= Void
 		end
 		
 	feature_count: INTEGER is
 			-- Number of class features.
+		local
+			compiled_class: CLASS_C
 		do
-			Result := compiler_class.compiled_class.written_in_features.count
+			compiled_class := compiler_class.compiled_class
+			if compiled_class /= Void then
+				Result := compiled_class.written_in_features.count
+			end
 		end
 
 	flat_features: FEATURE_ENUMERATOR is
@@ -129,27 +167,36 @@ feature -- Access
 			res: ARRAYED_LIST [IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE]
 			l: ARRAYED_LIST [FEATURE_I]
 			f: FEATURE_DESCRIPTOR
+			compiled_class: CLASS_C
 		do
-			l := compiler_class.compiled_class.feature_table.linear_representation
-			create res.make (l.count)
-			from
-				l.start
-			until
-				l.after
-			loop
-				create f.make_with_class_i_and_feature_i (compiler_class, l.item)
-				res.extend (f)
-				l.forth
+			compiled_class := compiler_class.compiled_class
+			if compiled_class /= Void then
+				l := compiled_class.feature_table.linear_representation
+				create res.make (l.count)
+				from
+					l.start
+				until
+					l.after
+				loop
+					create f.make_with_class_i_and_feature_i (compiler_class, l.item)
+					res.extend (f)
+					l.forth
+				end
+				create Result.make (res)
 			end
-			create Result.make (res)
 		ensure then
 			result_exists: Result /= Void			
 		end
 
 	flat_feature_count: INTEGER is
 			-- Number of flat class features.
+		local
+			compiled_class: CLASS_C 
 		do
-			Result := compiler_class.compiled_class.feature_table.count
+			compiled_class := compiler_class.compiled_class
+			if compiled_class /= Void then
+				Result := compiled_class.feature_table.count
+			end
 		end
 		
 	feature_with_name (a_name: STRING): IEIFFEL_FEATURE_DESCRIPTOR_INTERFACE is
@@ -159,10 +206,14 @@ feature -- Access
 			name_not_void: a_name /= Void
 		local
 			f: FEATURE_I
+			compiled_class: CLASS_C 
 		do
-			f := compiler_class.compiled_class.feature_table.item (a_name)
-			if f /= Void then
-				create {FEATURE_DESCRIPTOR} Result.make_with_class_i_and_feature_i (compiler_class, f)
+			compiled_class := compiler_class.compiled_class
+			if compiled_class /= Void then
+				f := compiler_class.compiled_class.feature_table.item (a_name)
+				if f /= Void then
+					create {FEATURE_DESCRIPTOR} Result.make_with_class_i_and_feature_i (compiler_class, f)
+				end
 			end
 		end
 
@@ -172,19 +223,23 @@ feature -- Access
 			client_list: LINKED_LIST [CLASS_C]
 			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
 			client: CLASS_DESCRIPTOR
+			compiled_class: CLASS_C 
 		do
-			client_list := compiler_class.compiled_class.clients
-			create res.make (client_list.count)
-			from
-				client_list.start
-			until
-				client_list.after
-			loop
-				if client_list.item /= compiler_class.compiled_class then
-					create client.make_with_class_i (client_list.item.lace_class)
-					res.extend (client)
+			compiled_class := compiler_class.compiled_class
+			if compiled_class /= Void then
+				client_list := compiled_class.clients
+				create res.make (client_list.count)
+				from
+					client_list.start
+				until
+					client_list.after
+				loop
+					if client_list.item /= compiler_class.compiled_class then
+						create client.make_with_class_i (client_list.item.lace_class)
+						res.extend (client)
+					end
+					client_list.forth
 				end
-				client_list.forth
 			end
 			create Result.make (res)
 		ensure then
@@ -193,8 +248,13 @@ feature -- Access
 
 	client_count: INTEGER is
 			-- Number of class clients.
+		local
+			compiled_class: CLASS_C 
 		do
-			Result := compiler_class.compiled_class.clients.count - 1
+			compiled_class := compiler_class.compiled_class
+			if compiled_class /= Void then
+				Result := compiled_class.clients.count - 1
+			end
 		end
 		
 	suppliers: CLASS_ENUMERATOR is
@@ -224,8 +284,13 @@ feature -- Access
 
 	supplier_count: INTEGER is
 			-- Number of class suppliers.
+		local
+			compiled_class: CLASS_C 
 		do
-			Result := compiler_class.compiled_class.suppliers.classes.count - 1
+			compiled_class := compiler_class.compiled_class
+			if compiled_class /= Void then
+				Result := compiled_class.suppliers.classes.count - 1
+			end
 		end
 
 	ancestors: CLASS_ENUMERATOR is
@@ -253,8 +318,13 @@ feature -- Access
 
 	ancestor_count: INTEGER is
 			-- Number of direct ancestors.
+		local
+			compiled_class: CLASS_C 
 		do
-			Result := compiler_class.compiled_class.parents.count
+			compiled_class := compiler_class.compiled_class
+			if compiled_class /= Void then
+				Result := compiled_class.parents.count
+			end
 		end
 		
 	descendants: CLASS_ENUMERATOR is
@@ -282,8 +352,13 @@ feature -- Access
 		
 	descendant_count: INTEGER is
 			-- Number of direct descendants.
+		local
+			compiled_class: CLASS_C 
 		do
-			Result := compiler_class.compiled_class.descendants.count
+			compiled_class := compiler_class.compiled_class
+			if compiled_class /= Void then
+				Result := compiled_class.descendants.count
+			end
 		end
 		
 	class_path: STRING is
@@ -296,20 +371,35 @@ feature -- Access
 
 	is_deferred: BOOLEAN is
 			-- Is class deferred?
+		local
+			compiled_class: CLASS_C 
 		do
-			Result := compiler_class.compiled_class.is_deferred
+			compiled_class := compiler_class.compiled_class
+			if compiled_class /= Void then
+				Result := compiled_class.is_deferred
+			end
 		end
 
 	is_external: BOOLEAN is
 			-- Is class external?
+		local
+			compiled_class: CLASS_C 
 		do
-			Result := compiler_class.compiled_class.is_external
+			compiled_class := compiler_class.compiled_class
+			if compiled_class /= Void then
+				Result := compiled_class.is_external
+			end
 		end
 
 	is_generic: BOOLEAN is
 			-- Is class generic?
+		local
+			compiled_class: CLASS_C 
 		do
-			Result := compiler_class.compiled_class.generics /= Void
+			compiled_class := compiler_class.compiled_class
+			if compiled_class /= Void then
+				Result := compiled_class.generics /= Void
+			end
 		end
 
 feature {NONE} -- Implementation

@@ -58,7 +58,7 @@ feature {COMPILER_EXPORTER} -- Setting
 		require
 			valid_o: o /= Void
 		do
-			other_class := o.e_class;
+			other_class := o
 		end;
 
 	set_op_name (s: STRING) is

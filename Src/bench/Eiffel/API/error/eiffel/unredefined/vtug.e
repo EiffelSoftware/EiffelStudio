@@ -72,7 +72,7 @@ feature {COMPILER_EXPORTER}
 		require
 			valid_c: c /= Void
 		do
-			base_class := c.e_class;
+			base_class := c
 		end;
 
 	set_type (t: TYPE_A) is

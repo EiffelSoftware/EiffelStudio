@@ -84,7 +84,7 @@ feature {COMPILER_EXPORTER}
 				fs.after
 			loop
 				inh_info := fs.item;
-				parent := inh_info.parent.parent.e_class;
+				parent := inh_info.parent.parent;
 				e_feature := inh_info.a_feature.api_feature (parent.id);
 				!! cell2.make (e_feature, parent);
 				features.extend (cell2);

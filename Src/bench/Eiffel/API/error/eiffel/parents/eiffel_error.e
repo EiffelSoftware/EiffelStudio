@@ -59,7 +59,7 @@ feature {COMPILER_EXPORTER}
 		require
 			valid_c: c /= Void
 		do
-			e_class := c.e_class
+			e_class := c
 		end;
 
 end -- class EIFFEL_ERROR

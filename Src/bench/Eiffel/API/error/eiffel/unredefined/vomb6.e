@@ -71,7 +71,7 @@ feature {COMPILER_EXPORTEr}
 		require
 			valid_c: c /= Void
 		do
-			written_class := c.e_class;
+			written_class := c
 		end;
 
 end -- class VOMB6

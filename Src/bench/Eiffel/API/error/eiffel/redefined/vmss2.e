@@ -74,7 +74,7 @@ feature {COMPILER_EXPORTER}
 		require
 			valid_c: c /= Void
 		do
-			parent := c.e_class;
+			parent := c
 		end;
 
 end -- class VMSS2

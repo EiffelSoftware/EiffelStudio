@@ -47,7 +47,7 @@ feature {COMPILER_EXPORTER}
 	set_parent (p: CLASS_C) is
 			-- Assign `p' to `parent_id'.
 		do
-			parent := p.e_class;
+			parent := p
 		end;
 
 end -- class VLEL

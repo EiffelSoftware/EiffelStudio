@@ -44,7 +44,7 @@ feature -- Access
 		do
 			Result := implementation.selected_items
 		ensure
-			bridge_ok: Result = implementation.selected_items
+			bridge_ok: lists_equal (Result, implementation.selected_items)
 		end
 
 feature -- Status setting
@@ -135,6 +135,9 @@ end -- class EV_TREE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.24  2000/03/01 23:44:50  king
+--| Changed selected_item post-condition to use lists_equal
+--|
 --| Revision 1.23  2000/03/01 19:48:54  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

@@ -38,39 +38,79 @@ feature -- Output
 	trace_warnings (handler: ERROR_HANDLER) is
 			-- Display warnings messages from `handler'.
 		local
-			warning_list: LINKED_LIST [WARNING];
+			warning_list: LINKED_LIST [ERROR]
 			st: STRUCTURED_TEXT
+			warning: WARNING
+			obs_class_warning: OBS_CLASS_WARN
+			obs_feat_warning: OBS_FEAT_WARN
+			unused_local_warning: UNUSED_LOCAL_WARNING
+			line_pos: INTEGER
+			col_pos: INTEGER
+			warning_file: STRING
+			warning_string: STRING
+			short_warning: STRING
 		do
 			if not retried then
 				from
-					create st.make;
+					create st.make
 					warning_list := handler.warning_list
 					warning_list.start
 				until
 					warning_list.after
 				loop
-					display_separation_line (st);
-					st.add_new_line;
-					warning_list.item.trace (st);
-					st.add_new_line;
-					warning_list.forth;
-				end;
-				if handler.error_list.is_empty then
-						-- There is no error in the list
-						-- put a separation before the next message
-					display_separation_line (st)
-				end;
+					warning_file := Void
+					line_pos := 0
+					col_pos := 0
+					
+					-- Discover type of warning
+					obs_class_warning ?= warning_list.item
+					unused_local_warning ?= warning_list.item
+					warning ?= warning_list.item
+
+					if warning /= Void then
+						-- not a real warning
+						create st.make
+						warning.trace (st)
+						warning_string := st.image						
+					
+						if obs_class_warning /= Void then
+							-- Obsolete class/feature warning
+							warning_file := obs_class_warning.obsolete_class.file_name
+							obs_feat_warning ?= obs_class_warning
+							if obs_feat_warning /= Void then
+								-- Obsolete feature
+								line_pos := obs_feat_warning.a_feature.ast.location.line_number
+								col_pos := obs_feat_warning.a_feature.ast.location.start_column_position
+								short_warning := "Feature '" + obs_feat_warning.obsolete_feature.name + "' from '" +  
+									obs_feat_warning.obsolete_feature.associated_class.name + "' is obsolete: '" + 
+									obs_feat_warning.obsolete_feature.obsolete_message + "'."
+							else
+								-- Obsolete class
+								line_pos := obs_class_warning.associated_class.ast.line_number
+								short_warning := "Class '" + obs_class_warning.obsolete_class.name + "' is obsolete: '" + 
+									obs_class_warning.obsolete_class.obsolete_message + "'."
+							end
+						elseif unused_local_warning /= Void then
+							warning_file := unused_local_warning.associated_feature.associated_class.file_name
+							line_pos := unused_local_warning.associated_feature.ast.location.line_number
+							col_pos := unused_local_warning.associated_feature.ast.location.start_column_position
+							short_warning := "'" + unused_local_warning.associated_local + "' is declared but never used."
+						end
+						if display_warnings then
+							compiler_coclass.event_output_warning (warning_string, short_warning, warning.code, warning_file, line_pos, col_pos)							
+						end
+					end
+					warning_list.forth
+				end
 			else
-				retried := False;
-				display_error_error (st)
-			end;
-			output_window.process_text (st)
+				retried := False
+			end
 		rescue
 			if not fail_on_rescue then
-				retried := True;
-				retry;
-			end;
-		end;
+				retried := True
+				retry
+			end
+		end
 
 	trace_errors (handler: ERROR_HANDLER) is
 			-- Display error messages from `handler'.
@@ -81,8 +121,11 @@ feature -- Output
 			feature_error: FEATURE_ERROR
 			eiffel_error: EIFFEL_ERROR
 			error: ERROR
-			error_pos: INTEGER
-			error_file, error_string: STRING
+			line_pos: INTEGER
+			col_pos: INTEGER
+			error_file: STRING
+			error_string: STRING
+			short_error: STRING
 		do
 			if not retried then
 				from
@@ -91,36 +134,38 @@ feature -- Output
 					error_list.start
 				until
 					error_list.after
+
 				loop
 					error_file := Void
-					error_pos := 0
-					error_string := ""
+					line_pos := 0
+					col_pos := 0
 					
 					syntax_error ?= error_list.item
 					feature_error ?= error_list.item
 					eiffel_error ?= error_list.item
 					error := error_list.item
-					
+
 					if error /= Void then
+						
 						create st.make
 						error.trace (st)
 						error_string := st.image
-					end
-					if eiffel_error /= Void then
-						if eiffel_error.class_c /= Void then
-							error_file := eiffel_error.class_c.file_name
+						
+						if eiffel_error /= Void then
+							if eiffel_error.class_c /= Void then
+								error_file := eiffel_error.class_c.file_name
+							end
 						end
+						if feature_error /= Void then
+							line_pos := feature_error.line_number
+							short_error := "Feature error: " + feature_error.error_string
+						elseif syntax_error /= Void then
+							line_pos := syntax_error.line_number
+							col_pos := syntax_error.start_position
+							short_error := "Syntax Error: " + syntax_error.syntax_message
+						end
+						compiler_coclass.event_output_error (error_string, short_error, error.code, error_file, line_pos, col_pos)
 					end
-					if feature_error /= Void then
-						error_pos := feature_error.line_number
-						error_file := feature_error.class_c.file_name
-					elseif syntax_error /= Void then
-						error_pos := line_number (syntax_error.file_name, syntax_error.start_position)
-						error_file := syntax_error.file_name
-						error_string := "Syntax Error: " + syntax_error.syntax_message
-					end
-					compiler_coclass.event_output_string ("%N" + error_string)
-					compiler_coclass.event_last_error (error_string, error_file, error_pos)
 					error_list.forth
 				end
 			else
@@ -132,6 +177,20 @@ feature -- Output
 				retry
 			end
 		end
+
+feature {COMPILER} -- Compiler Implmentation
+
+	display_warnings: BOOLEAN
+			-- should all warnings be displayed?
+	
+	set_display_warnings (display: BOOLEAN) is
+			-- set `display_warnings' to `display'
+		do
+			display_warnings := display
+		ensure
+			display_warnings_set: display_warnings = display
+		end
+		
 
 feature {NONE} -- Implementation
 	

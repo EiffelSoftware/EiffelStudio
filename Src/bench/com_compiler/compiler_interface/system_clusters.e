@@ -9,23 +9,17 @@ class
 inherit
 	IEIFFEL_SYSTEM_CLUSTERS_IMPL_STUB
 		redefine
-			is_valid_name,
-			is_valid_name_user_precondition,
-			cluster_properties_by_id,
-			cluster_properties_by_id_user_precondition,
-			cluster_properties,
-			cluster_properties_user_precondition,
-			remove_cluster,
-			remove_cluster_user_precondition,
-			add_cluster,
-			add_cluster_user_precondition,
-			store,
-			cluster_tree,
-			flat_clusters,
+			get_cluster_tree,
+			get_all_clusters,
+			get_cluster_full_name,
+			get_cluster_properties,
+			get_cluster_properties_by_id,
 			change_cluster_name,
-			change_cluster_name_user_precondition,
-			get_cluster_fullname,
-			get_cluster_fullname_user_precondition
+			add_cluster,
+			remove_cluster,
+			store,
+			is_cluster_name_available,
+			is_valid_cluster_name
 		end
 	
 	LACE_AST_FACTORY
@@ -98,19 +92,94 @@ feature -- Initialization
 
 feature -- Access
 
-	cluster_tree: CLUSTER_PROP_ENUMERATOR is
+	get_cluster_tree: CLUSTER_PROP_ENUMERATOR is
 			-- Cluster tree.
 		do
 			create Result.make (clusters_impl)
 		end
 		
-	flat_clusters: CLUSTER_PROP_ENUMERATOR is
+	get_all_clusters: CLUSTER_PROP_ENUMERATOR is
 			-- Clusters in flat form
 		do
 			create Result.make (clusters_table.linear_representation)
 		end
+
+	get_cluster_full_name (cluster_name: STRING): STRING is
+			-- Get the clusters full name from 'cluster_name' cluster
+		require else
+			non_void_cluster_name: cluster_name /= Void
+			valid_cluster_name: is_valid_cluster_name (cluster_name)
+			has_cluster: has_cluster (cluster_name)
+		local
+			cluster: CLUSTER_PROPERTIES
+		do
+			cluster ?= clusters_table.item (cluster_name)
+			if cluster /= Void then
+				Result := cluster_name.clone(cluster_name)
+				if cluster.has_parent then
+					Result.prepend_character('.')
+					Result.prepend(get_cluster_full_name(cluster.parent_name))
+				end				
+			end
+		end
+		
+	get_cluster_properties (cluster_name: STRING): CLUSTER_PROPERTIES is
+			-- Cluster properties.
+			-- `cluster_name' [in].
+		require else
+			non_void_cluster_name: cluster_name /= Void
+			valid_cluster_name: is_valid_cluster_name (cluster_name)
+		do
+			Result := clusters_table.item (cluster_name)
+		end
+
+	get_cluster_properties_by_id (cluster_id: INTEGER): CLUSTER_PROPERTIES is
+			-- Cluster properties.
+			-- `cluster_id' [in].
+		require else
+			index_big_enough: cluster_id > 0
+		do
+			Result := cluster_table_by_id.item (cluster_id)
+		end
 		
 feature -- Basic Operations
+
+	change_cluster_name (a_name: STRING; a_new_name: STRING) is
+			-- Renames and cluster
+			-- 'a_name' [in]
+			-- 'a_new_name' [in]
+		require else
+			non_void_name: a_name /= Void
+			non_void_new_name: a_new_name /= Void
+			invalid_name: is_valid_cluster_name (a_name);
+			invalid_cluster_name: is_valid_cluster_name (a_new_name);
+			has_cluster: has_cluster (a_name)
+		local
+			cluster: CLUSTER_PROPERTIES
+			replaced: BOOLEAN
+		do
+			cluster ?= clusters_table.item (a_name)
+			if cluster /= Void then
+				-- check to see if the cluster has already been renamed.
+				from
+					renamed_clusters_table.start
+				until
+					renamed_clusters_table.after or replaced
+				loop
+					if renamed_clusters_table.item_for_iteration.is_equal (a_name) then
+						renamed_clusters_table.replace (a_new_name, renamed_clusters_table.key_for_iteration)
+						replaced := true;
+					end
+					renamed_clusters_table.forth
+				end	
+				-- if it has not been renamed then added it to the renamed table
+				if renamed_clusters_table.after then
+					renamed_clusters_table.put (a_new_name, a_name)
+				end
+				clusters_table.replace_key (a_new_name, a_name)
+				cluster.set_name (a_new_name);
+			end
+		end
 
 	add_cluster (cluster_name: STRING; parent_name: STRING; cluster_path: STRING) is
 			-- Add a cluster to the project.
@@ -121,7 +190,7 @@ feature -- Basic Operations
 			non_void_cluster_name: cluster_name /= Void
 			valid_cluster_name: not cluster_name.is_empty
 			non_void_cluster_path: cluster_path /= Void
-			cluster_already_exists: not has_cluster (cluster_name)
+			cluster_name_available: is_cluster_name_available (cluster_name)
 		local
 			cluster_sd: CLUSTER_SD
 			parent_id: ID_SD
@@ -138,7 +207,7 @@ feature -- Basic Operations
 				parent_id := new_id_sd (parent_name, False)
 				parent_cluster := clusters_table.item (parent_name)
 			end
-			create cluster_sd.initialize (new_id_sd (cluster_name, False), 
+			create cluster_sd.initialize (new_id_sd (cluster_name, True), 
 										parent_id,
 										new_id_sd (temp_cluster_path, True),
 										Void, False, False)
@@ -153,51 +222,13 @@ feature -- Basic Operations
 			cluster_table_by_id.put (cluster_prop, next_id)
 			next_id := next_id + 1
 		end
-
-	cluster_properties (cluster_name: STRING): CLUSTER_PROPERTIES is
-			-- Cluster properties.
-			-- `cluster_name' [in].
-		require else
-			non_void_cluster_name: cluster_name /= Void
-			valid_cluster_name: is_valid_name (cluster_name)
-		do
-			Result := clusters_table.item (cluster_name)
-		end
-
-	cluster_properties_by_id (cluster_id: INTEGER): CLUSTER_PROPERTIES is
-			-- Cluster properties.
-			-- `cluster_id' [in].
-		require else
-			index_big_enough: cluster_id > 0
-		do
-			Result := cluster_table_by_id.item (cluster_id)
-		end
-
-	get_cluster_fullname (cluster_name: STRING): STRING is
-			-- Get the clusters full name from 'cluster_name' cluster
-		require else
-			non_void_cluster_name: cluster_name /= Void
-			valid_cluster_name: is_valid_name (cluster_name)
-			has_cluster: has_cluster (cluster_name)
-		local
-			cluster: CLUSTER_PROPERTIES
-		do
-			cluster ?= clusters_table.item (cluster_name)
-			if cluster /= Void then
-				Result := cluster_name.clone(cluster_name)
-				if cluster.has_parent then
-					Result.prepend_character('.')
-					Result.prepend(get_cluster_fullname(cluster.parent_name))
-				end				
-			end
-		end
 		
 	remove_cluster (cluster_name: STRING) is
 			-- Remove 'cluster_name' cluster from the project.
 			-- `cluster_name' [in].  
 		require else
 			non_void_cluster_name: cluster_name /= Void
-			valid_cluster_name: is_valid_name (cluster_name)
+			valid_cluster_name: is_valid_cluster_name (cluster_name)
 			has_cluster: has_cluster (cluster_name)
 		local
 			removed: BOOLEAN
@@ -303,107 +334,33 @@ feature -- Basic Operations
 			ace_accesser.apply
 		end
 
-feature -- Element change
-
-	change_cluster_name (a_name: STRING; a_new_name: STRING) is
-			-- Renames and cluster
-			-- 'a_name' [in]
-			-- 'a_new_name' [in]
-		require else
-			non_void_name: a_name /= Void
-			non_void_new_name: a_new_name /= Void
-			invalid_name: is_valid_name (a_name);
-			invalid_cluster_name: is_valid_name (a_new_name);
-			has_cluster: has_cluster (a_name)
-		local
-			cluster: CLUSTER_PROPERTIES
-			replaced: BOOLEAN
-		do
-			cluster ?= clusters_table.item (a_name)
-			if cluster /= Void then
-				-- check to see if the cluster has already been renamed.
-				from
-					renamed_clusters_table.start
-				until
-					renamed_clusters_table.after or replaced
-				loop
-					if renamed_clusters_table.item_for_iteration.is_equal (a_name) then
-						renamed_clusters_table.replace (a_new_name, renamed_clusters_table.key_for_iteration)
-						replaced := true;
-					end
-					renamed_clusters_table.forth
-				end	
-				-- if it has not been renamed then added it to the renamed table
-				if renamed_clusters_table.after then
-					renamed_clusters_table.put (a_new_name, a_name)
-				end
-				clusters_table.replace_key (a_new_name, a_name)
-				cluster.set_name (a_new_name);
-			end
-		end
 		
-feature {NONE} -- User Preconditions
-
-	is_valid_name_user_precondition (a_name: STRING): BOOLEAN is 
-			-- 'is_valid_name' precondition
-		do
-			Result := False
-		end
-
-	add_cluster_user_precondition (cluster_name: STRING; parent_name: STRING; cluster_path: STRING): BOOLEAN is
-			-- 'add_cluster' precondition
-		do
-			Result := False
-		end
-
-	change_cluster_name_user_precondition (a_name: STRING; a_new_name: STRING): BOOLEAN is
-			-- 'change_cluster_name' preconditions
-		do
-			Result := False
-		end
-
-	cluster_properties_user_precondition (cluster_name: STRING): BOOLEAN is
-			-- 'cluster_properties' preconditions
-		do
-			Result := False
-		end
-		
-	cluster_properties_by_id_user_precondition (cluster_id: INTEGER): BOOLEAN is
-			-- 'cluster_properties_by_id' precondition
-		do
-			Result := False
-		end
-		
-	get_cluster_fullname_user_precondition (cluster_name: STRING): BOOLEAN is
-			-- 'get_cluster_fullname' precondition
-		do
-			Result := False
-		end
-
-	remove_cluster_user_precondition (cluster_name: STRING): BOOLEAN is
-			-- 'remove_cluster' precondition
-		do
-			Result := False
-		end
-
 feature -- Validation
 
-	has_cluster (a_cluster_name: STRING): BOOLEAN is
-			-- has 'a_cluster_name' already been added to project?
-		require
+	is_cluster_name_available (a_cluster_name: STRING): BOOLEAN is
+			-- is 'a_cluster_name' available for a cluster name?
+		require else
 			non_void_cluster_name: a_cluster_name /= Void
-			valid_cluter_name: is_valid_name (a_cluster_name)
+			valid_cluter_name: is_valid_cluster_name (a_cluster_name)
 		do
 			Result := clusters_table.has (a_cluster_name)
 		end
 		
-	is_valid_name (a_name: STRING): BOOLEAN is
+	is_valid_cluster_name (a_name: STRING): BOOLEAN is
 			-- Checks to see if 'a_name' is a valid cluster name.
 		require else
 			non_void_name: a_name /= Void
 		do
 			Result := not a_name.is_empty
 		end	
+		
+	has_cluster (a_cluster_name: STRING): BOOLEAN is
+			-- does cluster 'a_cluster_name' exists?
+		do
+			clusters_table.compare_objects
+			Result := clusters_table.has (a_cluster_name)
+		end
+		
 
 feature {NONE} -- Implementation		
 

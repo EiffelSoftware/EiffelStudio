@@ -34,7 +34,8 @@ inherit
 			generate_msil_keyfile_user_precondition,
 			expand_path_user_precondition,
 			set_output_pipe_name_user_precondition,
-			can_run
+			can_run,
+			set_display_warnings
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -72,7 +73,7 @@ feature {NONE} -- Initialization
 		do
 			is_successful := False
 			create last_error_message.make_from_string ("System has not been compiled")
-			
+			display_warnings := True
 			set_compiler (Current)
 		end
 
@@ -208,19 +209,22 @@ feature -- Basic Operations
 				if not Eiffel_project.is_compiling then
 					if is_output_piped then
 						set_piped_output (output_pipe_name)
+						event_begin_compile
 						Eiffel_project.melt
 						close_output_pipe
 					else
 						set_default_output
+						event_begin_compile
 						Eiffel_project.melt
 					end
 					if Eiffel_project.successful then
 						is_successful := True
--- TODO: Set warnings from compiler here
 					end
+					event_end_compile (is_successful)
 				end
 			else
 				output_error
+				event_end_compile (False)
 			end
 		rescue
 			last_exception := exception_trace
@@ -252,18 +256,22 @@ feature -- Basic Operations
 				if not Eiffel_project.is_compiling then
 					if is_output_piped then
 						set_piped_output (output_pipe_name)
+						event_begin_compile
 						Eiffel_project.finalize (False)
 						close_output_pipe
 					else
 						set_default_output
+						event_begin_compile
 						Eiffel_project.finalize (False)
 					end
 					if Eiffel_project.successful then
 						is_successful := True
 					end
+					event_end_compile (is_successful)
 				end
 			else
 				output_error
+				event_end_compile (False)
 			end
 		rescue
 			last_exception := exception_trace
@@ -294,18 +302,22 @@ feature -- Basic Operations
 				if not Eiffel_project.is_compiling then
 					if is_output_piped then
 						set_piped_output (output_pipe_name)
+						event_begin_compile
 						Eiffel_project.precompile (True)
 						close_output_pipe
 					else
 						set_default_output
+						event_begin_compile
 						Eiffel_project.precompile (True)
 					end
 					if Eiffel_project.successful then
 						is_successful := True
 					end
+					event_end_compile (is_successful)
 				end
 			else
 				output_error
+				event_end_compile (False)
 			end
 		rescue
 			close_output_pipe
@@ -396,6 +408,15 @@ feature -- Element Change
 			output_pipe_name_set: output_pipe_name.is_equal (a_name)
 		end
 		
+	set_display_warnings (display: BOOLEAN) is
+			-- set `display_warnings' to `display'
+		do
+			display_warnings := display
+		ensure then
+			display_warnings_set: display_warnings = display
+		end
+		
+		
 feature {PROJECT_MANAGER, COMPILER_TESTER} -- Element Change
 
 	set_output_to_console is
@@ -484,6 +505,7 @@ feature {NONE} -- Implementation
 				create l_degree_output.make (Current)
 				create l_output_win.make (Current)
 				create l_err_displayer.make_with_coclass (l_output_win, Current)
+				l_err_displayer.set_display_warnings (display_warnings)
 				Eiffel_project.set_degree_output (l_degree_output)
 				Eiffel_project.set_error_displayer (l_err_displayer)
 			end
@@ -505,5 +527,25 @@ feature {NONE} -- Implementation
 			
 	output_pipe: WEL_PIPE
 			-- pipe to send output to
+			
+	display_warnings: BOOLEAN
+			-- should warnings be displayed?
+		
+	-- TEMP
+	output_info is
+			-- output test information
+		local
+			file: PLAIN_TEXT_FILE
+		do
+			create file.make_open_write ("c:\compilation.txt")
+			file.put_string ("EIFGEN:")
+			file.put_string (Eiffelgen)
+			file.put_string ("%NPath:")
+			file.put_string (Eiffel_project.Compilation_path.string)
+			file.put_string ("%NPath2:")
+			file.put_string (Eiffel_system.Compilation_path.string)
+			file.close
+		end
+		
 				
 end -- class COMPILER

@@ -21,7 +21,7 @@ Set 2: 2, 4, 5,
 Create string set as type LINKED_SET
 reference comparison set
 Filling string set
-Set 1: foo, bar, bla, baz, 
+Set 1: baz, bar, bla, foo, 
 Set 2: boo, bla, baz, 
 Create string set as type LINKED_SET
 object comparison set

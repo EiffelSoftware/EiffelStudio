@@ -1,16 +1,17 @@
-: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 2.8 PL13]
-: $X-Id: Jmake.tmpl,v 2.8.1.2 91/11/18 13:22:54 ram Exp Locker: ram $
+: Makefile.SH generated from Jmake.tmpl and Jmakefile [jmake 3.0 PL15]
+: $X-Id: Jmake.tmpl,v 3.0.1.1 1993/08/20 07:36:36 ram Exp $
 
 case $CONFIG in
 '')
-	if test ! -f config.sh; then
-		ln ../config.sh . || \
-		ln ../../config.sh . || \
-		ln ../../../config.sh . || \
-		ln ../../../../config.sh . || \
-		(echo "Can't find config.sh."; exit 1)
-	fi 2>/dev/null
-	. ./config.sh
+	if test -f config.sh; then TOP=.;
+	elif test -f ../config.sh; then TOP=..;
+	elif test -f ../../config.sh; then TOP=../..;
+	elif test -f ../../../config.sh; then TOP=../../..;
+	elif test -f ../../../../config.sh; then TOP=../../../..;
+	else
+		echo "Can't find config.sh."; exit 1
+	fi
+	. $TOP/config.sh
 	;;
 esac
 case "$0" in
@@ -33,7 +34,9 @@ DIR = $DIR
 ########################################################################
 # Parameters set by Configure -- edit config.sh if changes are needed
 
+CC = $cc
 CTAGS = ctags
+JCFLAGS = \$(CFLAGS) $optimize $ccflags $large
 LD = ld
 MAKE = make
 MKDEP = $mkdep \$(DPFLAGS) --
@@ -46,12 +49,19 @@ SED = $sed
 
 SOURCES =  \$(LIB)
 
+########################################################################
+# New suffixes and associated building rules -- edit with care
+
+.c.o:
+	\$(RM) \$@
+	\$(CC) -c \$(JCFLAGS) \$<
+
 !GROK!THIS!
 $spitshell >>Makefile <<'!NO!SUBS!'
 
 ########################################################################
 # Jmake rules for building libraries, programs, scripts, and data files
-# $X-Id: Jmake.rules,v 2.8.1.4 91/11/18 13:19:07 ram Exp Locker: ram $
+# $X-Id: Jmake.rules,v 3.0 1993/08/18 12:04:14 ram Exp $
 
 ########################################################################
 # Force 'make depend' to be performed first -- do not edit

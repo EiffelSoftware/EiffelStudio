@@ -28,6 +28,8 @@
 #include <strings.h>
 #endif
 
+#include "confmagic.h"
+
 #define null (char *) 0					/* Null pointer */
 
 public int cc_for_speed = 1;			/* Fast memory allocation */

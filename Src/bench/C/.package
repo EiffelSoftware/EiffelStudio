@@ -1,19 +1,19 @@
-: basic variables
-package=Eiffel-3.0
-baserev=1.1
-patchbranch=1
-developbranch=2
-mydiff=''
-maintname='Raphael Manfredi'
-maintloc='ram@york.eiffel.com'
-ftpsite=''
-orgname='/home/ram/etc/organization'
-newsgroups=''
-recipients=''
-ftpdir=''
-
-: derivative variables--do not change
-revbranch="$baserev.$patchbranch"
-devbranch="$baserev.$developbranch"
-devrev="$baserev.$developbranch.0"
+: This file was created by running packinit on Fri Jan 14 15:08:40 PST 1994.
+: Do not hand edit; run packinit again if changes are to be made.
 packver='3'
+: Basic variables
+package=Eiffel-3
+baserev=2.3
+patchbranch=1
+copyright=' '
+mydiff=''
+maintname=''
+maintloc='eiffel@eiffel.com'
+ftpsite=''
+orgname='ISE'
+newsgroups='eiffel@eiffel.com'
+recipients='eiffel@eiffel.com'
+ftpdir=''
+mailagent='false'
+: Derivative variables -- do not change
+revbranch="$baserev.$patchbranch"

@@ -50,6 +50,8 @@
 
 #include "file.h"
 
+#include "confmagic.h"
+
 #define FS_START	0			/* Beginning of file for `fseek' */
 #define FS_CUR		1			/* Current position for `fseek' */
 #define FS_END		2			/* End of file for `fseek' */

@@ -41,6 +41,7 @@ DependTarget()
 AllTarget($(OBJ))
 ++SOURCES $(LIB)
 
+NormalLibraryObjectRule()
 RemoteTargetDependency(network.o,$(LIBDIR),$(LIBNAME))
 RemoteTargetDependency(network.o,$(LIBIDR),$(LIBIDRNAME))
 PrelinkedRelocatableTarget(network,$(LOBJ),$(LIBARCH) $(LIBIDRARCH))

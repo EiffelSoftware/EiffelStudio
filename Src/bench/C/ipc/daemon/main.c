@@ -25,6 +25,9 @@
 #include "stream.h"
 #include "stdlib.h"
 
+#include "confmagic.h"
+
+
 #define EIFFEL3		"/usr/lib/Eiffel3"	/* Default installation directory */
 #define EWB			"/bin/es3 -bench"	/* Ewb process within Eiffel dir */
 
@@ -180,4 +183,21 @@ int code;
 #endif
 	exit(code);
 }
+
+#ifndef HAS_STRDUP
+
+public char *strdup (s)
+char * s;
+{
+	char *new;
+	int l = strlen (s) + 1;
+
+	if (new = (char *) malloc (l))
+		strncpy (new, s, l);
+	else
+		return (char *) 0;
+
+	return new;
+}
+#endif
 

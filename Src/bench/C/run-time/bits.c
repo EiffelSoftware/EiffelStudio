@@ -16,6 +16,7 @@
 #include "garcol.h"
 #include "malloc.h"
 #include "cecil.h"
+#include "macros.h"					/* for BIT_PACKSIZE, BIT_UNIT */
 #include "bits.h"
 #include "local.h"
 #include "plug.h"

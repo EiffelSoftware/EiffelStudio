@@ -16,15 +16,6 @@
 #include "portable.h"
 #include "plug.h"
 
-/* Bits are stored in unsigned 32 bits integer, and padding occurs if needed.
- * This means some garbage bits may be found at the end of the bit field.
- * BIT_NBPACK computes the number of 'uint32' fields (bit units) needed to
- * store a given amount of bits.
- */
-#define BIT_PACKSIZE	sizeof(uint32)		/* Size of a bit unit in bytes */
-#define BIT_UNIT		32					/* Size of a bit unit in bits */
-#define BIT_NBPACK(s)	(((s) / BIT_UNIT) + (((s) % BIT_UNIT) ? 1 : 0))
-
 #define LENGTH(b)	(((struct bit *) b)->b_length)
 #define ARENA(b)	(((struct bit *) b)->b_value)
 

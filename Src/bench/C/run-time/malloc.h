@@ -18,7 +18,7 @@
 /*
  * General information structure.
  */
-struct mallinfo {
+struct emallinfo {
 	int ml_chunk;			/* Number of chunks */
 	long ml_total;			/* Total space used by malloc */
 	long ml_used;			/* Real space used, in bytes */
@@ -59,6 +59,9 @@ struct ck_list {
 	struct chunk *eck_tail;		/* Tail of Eiffel list */
 };
 
+/* HP-UX has the good idea of defining sc_flags in its <sys/signal.h> */
+#undef sc_flags
+
 /* Description of a scavenging space */
 struct sc_zone {
 	int sc_size;				/* Space's size (in bytes) */
@@ -68,9 +71,6 @@ struct sc_zone {
 	char *sc_end;				/* First location beyond space */
 	uint32 sc_flags;			/* ov_size in the selected malloc block */
 };
-
-/* HP-UX has the good idea of defining sc_flags in its <sys/signal.h> */
-#undef sc_flags
 
 /* Overhead for each memory segment allocated. All these objects
  * are linked by size when they are free. This link field is used
@@ -158,6 +158,6 @@ extern void xfree();				/* Free */
 extern char *crealloc();			/* Reallocate a C object */
 extern char *xrealloc();			/* Reallocate with GC turned on/off */
 extern char *sprealloc();			/* Reallocate an Eiffel special object */
-extern struct mallinfo *meminfo();	/* Memory statistics */
+extern struct emallinfo *meminfo();	/* Memory statistics */
 
 #endif

@@ -34,6 +34,7 @@
 #include "eif_urgent.h"
 #include "eif_search.h"
 #include "eif_gen_conf.h"	/* For eif_gen_conf_cleanup () */
+#include "rt_gen_types.h"	/* For tuple marking */
 #include "eif_cecil.h"
 #include "x2c.h"		/* For macro LNGPAD */
 #ifdef VXWORKS
@@ -1842,26 +1843,54 @@ marked: /* Goto label needed to avoid code duplication */
 			o_ref = RT_SPECIAL_INFO_WITH_ZONE(current, zone);
 			count = offset = RT_SPECIAL_COUNT_WITH_INFO(o_ref);	/* Get # of items */
 
-			/* Treat arrays of expanded object here, because we have a special
-			 * way of looping over the array (we must take the size of each item
-			 * into account). Code below is somewhat duplicated with the normal
-			 * code for regular objects or arrays of references, but this is
-			 * because we have to increment our pointers by size and I do not
-			 * want to to slow down the normal loop--RAM.
-			 */
-			if (flags & EO_COMP) {
+			if (flags & EO_TUPLE) {
+				EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) current;
+					/* Don't forget that first element of TUPLE is just a placeholder
+					 * to avoid offset computation from Eiffel code */
+				l_item++;
+				offset--;
+				if (g_data.status & (GC_PART | GC_GEN)) {
+					for (; offset > 1; offset--, l_item++ ) {
+						if (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) {
+							eif_reference_tuple_item(l_item) =
+								hybrid_mark (&eif_reference_tuple_item(l_item));
+						}
+					}
+				} else {
+					for (; offset > 1; offset--, l_item++ ) {
+						if (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) {
+							(void) hybrid_mark(&eif_reference_tuple_item(l_item));
+						}
+					}		
+				}
+				if ((count >= 1) && (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE)) {
+						/* If last element of TUPLE is a reference, then we continue the
+						 * iteration. */
+					prev = &eif_reference_tuple_item(l_item);
+					current = eif_reference_tuple_item(l_item);
+					continue;
+				} else
+					goto done;		/* End of iteration; exit procedure */
+			} else if (flags & EO_COMP) {
+				/* Treat arrays of expanded object here, because we have a special
+				 * way of looping over the array (we must take the size of each item
+				 * into account). Code below is somewhat duplicated with the normal
+				 * code for regular objects or arrays of references, but this is
+				 * because we have to increment our pointers by size and I do not
+				 * want to to slow down the normal loop--RAM.
+				 */
 				size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);	/* Item's size */
 				if (g_data.status & (GC_PART | GC_GEN)) {	/* Moving objects */
 					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */
 					for (; offset > 1; offset--) {		/* Loop over array */
 						*object = hybrid_mark(object);
-						object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
+						object = (EIF_REFERENCE *) ((char *) object + size);
 					}
 				} else {								/* Object can't move */
 					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */
 					for (; offset > 1; offset--) {		/* Loop over array */
 						(void) hybrid_mark(object);
-						object = (EIF_REFERENCE *) ((EIF_REFERENCE) object + size);
+						object = (EIF_REFERENCE *) ((char *) object + size);
 					}
 				}
 				/* Keep iterating if and only if the current object has at
@@ -3315,12 +3344,39 @@ rt_private EIF_REFERENCE hybrid_gen_mark(EIF_REFERENCE *a_root)
 			o_ref = RT_SPECIAL_INFO_WITH_ZONE(current, zone);
 			count = offset = RT_SPECIAL_COUNT_WITH_INFO(o_ref);	/* Get # items */
 
-			/* Treat arrays of expanded object here, because we have a special
-			 * way of looping over the array (we must take the size of each item
-			 * into account).
-			 */
-
-			if (flags & EO_COMP) {
+			if (flags & EO_TUPLE) {
+				EIF_TYPED_ELEMENT *l_item = (EIF_TYPED_ELEMENT *) current;
+					/* Don't forget that first element of TUPLE is just a placeholder
+					 * to avoid offset computation from Eiffel code */
+				l_item++;
+				offset--;
+				if (gen_scavenge & GS_ON) {
+					for (; offset > 1; offset--, l_item++ ) {
+						if (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) {
+							eif_reference_tuple_item(l_item) =
+								hybrid_gen_mark (&eif_reference_tuple_item(l_item));
+						}
+					}
+				} else {
+					for (; offset > 1; offset--, l_item++ ) {
+						if (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE) {
+							(void) hybrid_gen_mark(&eif_reference_tuple_item(l_item));
+						}
+					}		
+				}
+				if ((count >= 1) && (eif_tuple_item_type(l_item) == EIF_REFERENCE_CODE)) {
+						/* If last element of TUPLE is a reference, then we continue the
+						 * iteration. */
+					prev = &eif_reference_tuple_item(l_item);
+					current = eif_reference_tuple_item(l_item);
+					continue;
+				} else
+					goto done;		/* End of iteration; exit procedure */
+			} else if (flags & EO_COMP) {
+				/* Treat arrays of expanded object here, because we have a special
+				 * way of looping over the array (we must take the size of each item
+				 * into account).
+				 */
 				size = RT_SPECIAL_ELEM_SIZE_WITH_INFO(o_ref);	/* Item's size */
 				if (gen_scavenge & GS_ON) {					/* Moving objects */
 					object = (EIF_REFERENCE *) (current + OVERHEAD);/* First expanded */

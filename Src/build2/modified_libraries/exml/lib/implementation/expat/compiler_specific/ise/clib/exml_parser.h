@@ -88,7 +88,7 @@ typedef (* EIF_ON_COMMENT_PROC)
 
 
 #define ptr_contents(_ptr_) (EIF_POINTER)*((void**)_ptr_)
-#define ptr_move(_ptr_,_pos_) (EIF_POINTER)(((int*)_ptr_) + _pos_)
+#define ptr_move(_ptr_,_pos_) (EIF_POINTER)(((EIF_POINTER *)_ptr_) + _pos_)
 
 
 #define EXML_ParserCreate(_a_) (EIF_POINTER) XML_ParserCreate ((const char*)_a_)

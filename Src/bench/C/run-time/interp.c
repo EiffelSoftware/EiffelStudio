@@ -557,7 +557,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 				last->it_ref = RTLN(type);
 				epop(&loc_stack, 1);
 				last->type = SK_EXP;
-				ecopy(ref, last->it_ref);
+				eif_std_ref_copy(ref, last->it_ref);
 				break;
 			case SK_BIT:
 				epush(&loc_stack, (char *)(&ref));
@@ -925,7 +925,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 
 			if (ref == (char *) 0)
 				xraise(EN_VEXP);	/* Void assigned to expanded */
-			ecopy(ref, iresult->it_ref);
+			eif_std_ref_copy(ref, iresult->it_ref);
 
 			if (is_once) {
 				last = iresult;
@@ -984,7 +984,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			if (ref == (char *) 0)
 				xraise(EN_VEXP);	/* Void assigned to expanded */
 			code = get_short();		/* Get the local # (from 1 to locnum) */
-			ecopy(ref, loc(code)->it_ref);		/* Copy */
+			eif_std_ref_copy(ref, loc(code)->it_ref);		/* Copy */
 		}
 		break;
 
@@ -1041,7 +1041,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			code = get_short();			/* Get the static type */
 			type = get_uint32();		/* Get attribute meta-type */
 			offset = RTWA(code, offset, icur_dtype);
-			ecopy (ref, icurrent->it_ref + offset);
+			eif_std_ref_copy (ref, icurrent->it_ref + offset);
 		}
 		break;
 
@@ -1064,7 +1064,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 			ooffset = get_long();		/* Get the offset in origin */
 			type = get_uint32();		/* Get attribute meta-type */
 			offset = RTWPA(origin, ooffset, icur_dtype);
-			ecopy (ref, icurrent->it_ref + offset);
+			eif_std_ref_copy (ref, icurrent->it_ref + offset);
 		}
 		break;
 
@@ -1199,7 +1199,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 										 * routines of expanded objects.
 										 */
 				sync_registers(MTC scur, stop);
-			ecopy(ref, last->it_ref);	/* Copy to complete the clone */
+			eif_std_ref_copy(ref, last->it_ref);	/* Copy to complete the clone */
 		}
 		break;
 	
@@ -2428,7 +2428,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 						break;
 					case SK_EXP:
 						elem_size = *(long *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD_2 + sizeof(long));
-						ecopy(it->it_ref, sp_area + OVERHEAD + elem_size * curr_pos);
+						eif_std_ref_copy(it->it_ref, sp_area + OVERHEAD + elem_size * curr_pos);
 						break;
 					case SK_REF:
 						/* No need to call RTAS as the area is the last object allocated and is thus in the NEW set */
@@ -2524,7 +2524,7 @@ rt_private void interpret(EIF_CONTEXT int flag, int where)
 						break;
 					case SK_EXP:
 						elem_size = *(long *) (sp_area + (HEADER(sp_area)->ov_size & B_SIZE) - LNGPAD_2 + sizeof(long));
-						ecopy(it->it_ref, sp_area + OVERHEAD + elem_size * curr_pos);
+						eif_std_ref_copy(it->it_ref, sp_area + OVERHEAD + elem_size * curr_pos);
 						break;
 					case SK_REF:
 						/* No need to call RTAS as the area is the last object allocated and is thus in the NEW set */

@@ -117,10 +117,7 @@ rt_shared void traversal(char *object, int p_accounting)
 
 		if (p_accounting & TR_MAP) {
 			epush(&loc_stack, (char *) &object);		/* Protection against GC */
-			if (flags & EO_SPEC)
-				new = spclone(object);
-			else
-				new = emalloc(flags & EO_TYPE);
+			new = eclone(object);
 			mapped = hrecord(new);
 			if (-1 == epush((struct stack *) &map_stack, (char *) mapped))
 				eraise("map table recording", EN_MEM);

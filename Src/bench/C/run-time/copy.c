@@ -42,6 +42,7 @@ rt_private void rdeepclone(EIF_REFERENCE source, EIF_REFERENCE enclosing, int of
 rt_private void expanded_update(EIF_REFERENCE source, EIF_REFERENCE target, int shallow_or_deep);		/* Expanded reference update */
 rt_private EIF_REFERENCE duplicate(EIF_REFERENCE source, EIF_REFERENCE enclosing, int offset);			/* Duplication with aging tests */
 rt_private EIF_REFERENCE spclone(register EIF_REFERENCE source);/* Clone for special object */
+rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE target);
 
 #ifndef lint
 rt_private char *rcsid =
@@ -53,11 +54,33 @@ rt_public EIF_REFERENCE eclone(register EIF_REFERENCE source)
 	/* Clone an of Eiffel object `source'. Assumes that source is not a
 	 * special object.
 	 */
-	register uint32 flags = HEADER(source)->ov_flags;	
+	register uint32 flags = HEADER(source)->ov_flags;
+
 	if (flags & EO_SPEC) 
 		return spclone (source);
+	else if ((int16)(flags & EO_TYPE) == (int16) egc_bit_dtype)
+		return b_clone(source);
 	else
 		return emalloc(flags & EO_TYPE);
+}
+
+rt_public void ecopy(register EIF_REFERENCE source, register EIF_REFERENCE target)
+{
+	/* Copy Eiffel object `source' into Eiffel object `target'.
+	 * Problem: updating intra-references on expanded object
+	 * because the garbage collector needs to explore those references.
+	 * Dynamic type of `source' is supposed to be the same as dynamic type
+	 * of `target'.
+	 */
+
+	register uint32 flags = HEADER(source)->ov_flags;
+
+	if (flags & EO_SPEC)
+		spcopy(source, target);
+	else if ((int16)(flags & EO_TYPE) == (int16) egc_bit_dtype)
+		b_copy(source, target);
+	else
+		eif_std_ref_copy(source, target);
 }
 
 rt_private EIF_REFERENCE spclone(EIF_REFERENCE source)
@@ -209,7 +232,7 @@ rt_public EIF_REFERENCE rtclone(EIF_REFERENCE source)
 		spcopy(source, result);
 	} else {
 		result = eclone(source);	/* Usual Eiffel object cloning */
-		ecopy(source, result);
+		eif_std_ref_copy(source, result);
 	}
 
 	epop(&loc_stack, 1);			/* Remove the source object */
@@ -389,10 +412,10 @@ rt_public void xcopy(EIF_REFERENCE source, EIF_REFERENCE target)
 	if (source == (EIF_REFERENCE)  0)
 		xraise(MTC EN_VEXP);			/* Void assigned to expanded */
 	
-	ecopy(source, target);
+	eif_std_ref_copy(source, target);
 }
 
-rt_public void ecopy(register EIF_REFERENCE source, register EIF_REFERENCE target)
+rt_public void eif_std_ref_copy(register EIF_REFERENCE source, register EIF_REFERENCE target)
 {
 	/* Copy Eiffel object `source' into Eiffel object `target'.
 	 * Problem: updating intra-references on expanded object
@@ -473,7 +496,7 @@ rt_public void ecopy(register EIF_REFERENCE source, register EIF_REFERENCE targe
 	}
 }
 
-rt_public void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE target)
+rt_private void spcopy(register EIF_REFERENCE source, register EIF_REFERENCE target)
 {
 	/* Copy a special Eiffel object into another one. It assumes that
 	 * `source' and `target' are not NULL. Precondition of redefined

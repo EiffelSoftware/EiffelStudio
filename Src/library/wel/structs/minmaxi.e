@@ -19,8 +19,6 @@ feature -- Access
 
 	max_size: WEL_POINT is
 			-- Maximized width and height of the window
-		require
-			exists: exists
 		do
 			!! Result.make_by_pointer (cwel_minmaxinfo_get_maxsize (item))
 		ensure
@@ -30,8 +28,6 @@ feature -- Access
 	max_position: WEL_POINT is
 			-- Position of the left side of the maximized window
 			-- and the position of the top of the maximized window
-		require
-			exists: exists
 		do
 			!! Result.make_by_pointer (cwel_minmaxinfo_get_maxposition (item))
 		ensure
@@ -41,8 +37,6 @@ feature -- Access
 	min_track_size: WEL_POINT is
 			-- Minimum tracking width and the minimum tracking
 			-- height of the window
-		require
-			exists: exists
 		do
 			!! Result.make_by_pointer (cwel_minmaxinfo_get_mintracksize (item))
 		ensure
@@ -52,8 +46,6 @@ feature -- Access
 	max_track_size: WEL_POINT is
 			-- Maximum tracking width and the minimum tracking
 			-- height of the window
-		require
-			exists: exists
 		do
 			!! Result.make_by_pointer (cwel_minmaxinfo_get_maxtracksize (item))
 		ensure
@@ -65,9 +57,7 @@ feature -- Element change
 	set_max_size (point: WEL_POINT) is
 			-- Set `max_size' with `point'.
 		require
-			exists: exists
 			point_not_void: point /= Void
-			point_exists: point.exists
 		do
 			cwel_minmaxinfo_set_maxsize (item, point.item)
 		ensure
@@ -77,9 +67,7 @@ feature -- Element change
 	set_max_position (point: WEL_POINT) is
 			-- Set `max_position' with `point'.
 		require
-			exists: exists
 			point_not_void: point /= Void
-			point_exists: point.exists
 		do
 			cwel_minmaxinfo_set_maxposition (item, point.item)
 		ensure
@@ -89,9 +77,7 @@ feature -- Element change
 	set_min_track_size (point: WEL_POINT) is
 			-- Set `min_track_size' with `point'.
 		require
-			exists: exists
 			point_not_void: point /= Void
-			point_exists: point.exists
 		do
 			cwel_minmaxinfo_set_mintracksize (item, point.item)
 		ensure
@@ -101,9 +87,7 @@ feature -- Element change
 	set_max_track_size (point: WEL_POINT) is
 			-- Set `max_track_size' with `point'.
 		require
-			exists: exists
 			point_not_void: point /= Void
-			point_exists: point.exists
 		do
 			cwel_minmaxinfo_set_maxtracksize (item, point.item)
 		ensure

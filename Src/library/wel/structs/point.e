@@ -46,16 +46,12 @@ feature -- Access
 
 	x: INTEGER is
 			-- x position
-		require
-			exists: exists
 		do
 			Result := cwel_point_get_x (item)
 		end
 
 	y: INTEGER is
 			-- y position
-		require
-			exists: exists
 		do
 			Result := cwel_point_get_y (item)
 		end
@@ -64,8 +60,6 @@ feature -- Element change
 
 	set_x (a_x: INTEGER) is
 			-- Set `x' with `a_x'
-		require
-			exists: exists
 		do
 			cwel_point_set_x (item, a_x)
 		ensure
@@ -74,8 +68,6 @@ feature -- Element change
 
 	set_y (a_y: INTEGER) is
 			-- Set `y' with `a_y'
-		require
-			exists: exists
 		do
 			cwel_point_set_y (item, a_y)
 		ensure
@@ -84,8 +76,6 @@ feature -- Element change
 
 	set_cursor_position is
 			-- Set `x' and `y' to the current cursor position.
-		require
-			exists: exists
 		do
 			cwin_get_cursor_position (item)
 		end
@@ -94,8 +84,6 @@ feature -- Status report
 
 	window_at: WEL_WINDOW is
 			-- Window containing current point
-		require
-			exists: exists
 		do
 			Result := windows.item (cwin_window_from_point (item))
 		end
@@ -115,7 +103,6 @@ feature -- Conversion
 			-- `window' is the client area to be used for
 			-- the conversion
 		require
-			exists: exists
 			window_not_void: window /= Void
 			window_exists: window.exists
 		do
@@ -127,7 +114,6 @@ feature -- Conversion
 			-- `window' is the client area to be used for
 			-- the conversion
 		require
-			exists: exists
 			window_not_void: window /= Void
 			window_exists: window.exists
 		do

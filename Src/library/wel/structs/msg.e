@@ -28,32 +28,24 @@ feature -- Access
 
 	hwnd: POINTER is
 			-- Window which has received the message
-		require
-			exists: exists
 		do
 			Result := cwel_msg_get_hwnd (item)
 		end
 
 	message: INTEGER is
 			-- Message identifier
-		require
-			exists: exists
 		do
 			Result := cwel_msg_get_message (item)
 		end
 
 	wparam: INTEGER is
 			-- Additional information about `message'
-		require
-			exists: exists
 		do
 			Result := cwel_msg_get_wparam (item)
 		end
 
 	lparam: INTEGER is
 			-- Additional information about `message'
-		require
-			exists: exists
 		do
 			Result := cwel_msg_get_lparam (item)
 		end
@@ -70,8 +62,6 @@ feature -- Status report
 
 	quit: BOOLEAN is
 			-- Is `message' equal to `Wm_quit'?
-		require
-			exists: exists
 		do
 			--| We call directly the macro instead of `message'.
 			Result := cwel_msg_get_message (item) = Wm_quit
@@ -81,8 +71,6 @@ feature -- Basic operations
 
 	get_all is
 			-- Get all messages.
-		require
-			exists: exists
 		do
 			last_boolean_result := cwin_get_message (item,
 				default_pointer, 0, 0)
@@ -90,8 +78,6 @@ feature -- Basic operations
 
 	peek_all is
 			-- Peek all messages.
-		require
-			exists: exists
 		do
 			last_boolean_result := cwin_peek_message (item,
 				default_pointer, 0, 0, Pm_remove)
@@ -99,8 +85,6 @@ feature -- Basic operations
 
 	dispatch is
 			-- Dispatch the message to a window procedure
-		require
-			exists: exists
 		do
 			dispatch_result := cwin_dispatch_message (item)
 		end
@@ -108,8 +92,6 @@ feature -- Basic operations
 	translate is
 			-- Translate virtual-key messages
 			-- into character messages.
-		require
-			exists: exists
 		do
 			last_boolean_result := cwin_translate_message (item)
 		end
@@ -118,7 +100,6 @@ feature -- Basic operations
 			accelerators: WEL_ACCELERATORS) is
 			-- Process accelerator keys for menu commands
 		require
-			exists: exists
 			window_not_void: window /= Void
 			window_exists: window.exists
 			accelerators_not_void: accelerators /= Void
@@ -133,7 +114,6 @@ feature -- Basic operations
 			-- Process accelerator keys for system menu commands
 			-- of MDI interface child windows.
 		require
-			exists: exists
 			window_not_void: window /= Void
 			window_exists: window.exists
 		do
@@ -143,8 +123,6 @@ feature -- Basic operations
 
 	wait is
 			-- Wait for a message.
-		require
-			exists: exists
 		do
 			last_boolean_result := cwin_wait_message
 		end
@@ -153,7 +131,6 @@ feature -- Basic operations
 			-- Determines whether a message is intended for
 			-- `dialog' and, if it is, processes the message.
 		require
-			exists: exists
 			dialog_not_void: dialog /= Void
 			dialog_exists: dialog.exists
 		do
@@ -163,8 +140,6 @@ feature -- Basic operations
 
 	process_dialog_message (dialog: POINTER) is
 			-- Process a dialog message for `dialog'.
-		require
-			exists: exists
 		do
 			last_boolean_result :=
 				cwin_is_dialog_message (dialog, item)

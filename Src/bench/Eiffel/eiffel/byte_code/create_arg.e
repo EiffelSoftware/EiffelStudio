@@ -187,7 +187,7 @@ feature -- Generic conformance
 			buffer.putstring ("RTCA(arg")
 			buffer.putint (position)
 			buffer.putchar (',')
-			buffer.putint (Internal_type)
+			buffer.putint (None_type)
 			buffer.putstring ("), ")
 		end
 
@@ -217,7 +217,7 @@ feature -- Generic conformance
 			buffer.putstring ("] = RTID(RTCA(arg")
 			buffer.putint (position)
 			buffer.putchar (',')
-			buffer.putint (Internal_type)
+			buffer.putint (None_type)
 			buffer.putstring ("));")
 			buffer.new_line
 			dummy := idx_cnt.next

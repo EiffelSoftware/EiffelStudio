@@ -40,7 +40,7 @@ feature -- Measurement
 			--| Return a "reasonable" value:
 			--| compromise between time and space
 		do
-			Result := max (capacity // Extra_percentage, Minimal_increase)
+			Result := max (capacity * Extra_percentage // 100, Minimal_increase)
 		end;
 
 feature -- Resizing
@@ -62,9 +62,5 @@ feature -- Resizing
 		ensure
 			new_capacity: capacity >= i
 		end;
-	
-	
-
-
 
 end -- class RESIZABLE

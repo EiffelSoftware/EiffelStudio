@@ -65,8 +65,8 @@ feature -- Basic operation
 	infix "and" (other: like Current): like Current is
 		-- Logical and of 'Current' and `other'
 		require
-			same_size: other.count = count;
 			other_not_void: other /= Void;
+			same_size: other.count = count;
 		local
 			other_area, result_area: like area;
 		do
@@ -79,8 +79,8 @@ feature -- Basic operation
 	infix "or" (other: like Current): like Current is
 			-- Logical or of 'Current' and `other'
 		require
-			same_size: other.count = count;
 			other_not_void: other /= Void;
+			same_size: other.count = count;
 		local
 			other_area, result_area: like area;
 		do
@@ -93,8 +93,8 @@ feature -- Basic operation
 	infix "xor" (other: like Current): like Current is
 		-- Logical exclusive or of 'Current' and `other'	
 		require
-			same_size: other.count = count;
 			other_not_void: other /= Void;
+			same_size: other.count = count;
 		local
 			other_area, result_area: like area;
 		do

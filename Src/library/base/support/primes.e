@@ -17,9 +17,9 @@ class PRIMES
 
 feature -- Access
 
-	 Smallest_prime: INTEGER is 2;
+	Smallest_prime: INTEGER is 2;
 
-         Smallest_odd_prime: INTEGER is 3;
+	Smallest_odd_prime: INTEGER is 3;
 
 
 	next_prime (n: INTEGER): INTEGER is
@@ -74,10 +74,10 @@ feature -- Access
 		local
 			i, j: INTEGER
 		do
-				-- All odd numbers are candidates
+				-- All odd numbers except 1 are candidates
 			from
 				!!Result.make (1, n);
-				i := 1
+				i := 3
 			until
 				i > n
 			loop

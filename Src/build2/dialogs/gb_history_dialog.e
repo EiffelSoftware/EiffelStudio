@@ -23,11 +23,9 @@ inherit
 			default_create, copy
 		end
 	
-	GB_COMMAND_HANDLER
+	GB_SHARED_COMMAND_HANDLER
 		export
 			{NONE} all
-		undefine
-			default_create, copy
 		end
 		
 	GB_ICONABLE_TOOL
@@ -61,7 +59,7 @@ feature -- Initialization
 			set_default_size_for_button (close_button)
 			horizontal_box.extend (close_button)
 			set_default_push_button (close_button)
-			close_button.select_actions.extend (agent show_hide_history_command.execute)
+			close_button.select_actions.extend (agent (command_handler.show_hide_history_command).execute)
 			set_icon_pixmap (icon)
 			set_default_cancel_button (close_button)
 			set_minimum_size (250, 250)
@@ -172,12 +170,14 @@ feature {NONE} -- Implementation
 			index_of_current_item: INTEGER
 		do
 			index_of_current_item := history_list.index_of (history_list.selected_item, 1)
-				if last_selected_item > index_of_current_item then
-					history.step_from (last_selected_item, index_of_current_item)
-				elseif last_selected_item < index_of_current_item then
-					history.step_from (last_selected_item + 1, index_of_current_item)
-				end	
-				last_selected_item := index_of_current_item
+			if last_selected_item > index_of_current_item then
+				history.step_from (last_selected_item, index_of_current_item)
+			elseif last_selected_item < index_of_current_item then
+				history.step_from (last_selected_item + 1, index_of_current_item)
+			end	
+			last_selected_item := index_of_current_item
+				-- We must now update
+			command_handler.update
 		end
 
 	history_list: EV_LIST

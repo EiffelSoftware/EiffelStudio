@@ -103,9 +103,6 @@ rt_public long *nbref;						/* Gives # of references (updated by DLE) */
 #define exvec() exset(null, 0, null)	/* How to get an execution vector */
 #endif
 
-rt_public struct eif_par_types **eif_par_table;	/*Parent table */
-rt_public int eif_par_table_size;			/* size of parent table */
-
 rt_public void failure(void);					/* The Eiffel exectution failed */
 rt_private Signal_t emergency(int sig);			/* Emergency exit */
 rt_public unsigned TIMEOUT;     /* Time out for interprocess communications */

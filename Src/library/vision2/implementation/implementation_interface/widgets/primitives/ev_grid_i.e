@@ -118,6 +118,9 @@ feature -- Access
 		
 	is_header_displayed: BOOLEAN
 			-- Is the header displayed in `Current'.
+			
+	is_resizing_divider_enabled: BOOLEAN
+			-- Is a vertical divider displayed during column resizing?
 
 feature -- Status setting
 
@@ -245,6 +248,22 @@ feature -- Status setting
 		ensure
 			-- Enough following rows implies `first_visible_row' = a_row.
 			-- Can be calculated from `height' of `Current' and row heights.
+		end
+		
+	enable_resizing_divider is
+			-- Ensure a vertical divider is displayed during column resizing.
+		do
+			is_resizing_divider_enabled := True
+		ensure
+			resizing_divider_enabled: is_resizing_divider_enabled
+		end
+		
+	disable_resizing_divider is
+			-- Ensure no vertical divider is displayed during column resizing.
+		do
+			is_resizing_divider_enabled := False
+		ensure
+			resizing_divider_disabled: not is_resizing_divider_enabled
 		end
 
 feature -- Status report
@@ -610,7 +629,7 @@ feature {NONE} -- Drawing implementation
 				-- Now connect events to `header' which are used to update the "physical size" of
 				-- Current in response to their re-sizing.
 			header.item_resize_actions.extend (agent header_item_resizing)
-			header.item_resize_end_actions.extend (agent header_item_resized)
+			header.item_resize_end_actions.extend (agent header_item_resize_ended)
 			
 			header.set_minimum_height (default_header_height)
 			vertical_box.extend (header)
@@ -668,6 +687,11 @@ feature {NONE} -- Drawing implementation
 				viewport.set_x_offset ((l_total_header_width - viewport.width).max (0))
 				horizontal_scroll_bar.change_actions.resume
 			end
+			
+			if is_resizing_divider_enabled then
+					-- Draw a resizing line if enabled.
+				draw_resizing_line (header.item_x_offset (header_item) + header_item.width)
+			end
 		end
 		
 	total_header_width: INTEGER is
@@ -678,13 +702,17 @@ feature {NONE} -- Drawing implementation
 			result_non_negative: Result >= 0
 		end
 		
-	header_item_resized (header_item: EV_HEADER_ITEM) is
+	header_item_resize_ended (header_item: EV_HEADER_ITEM) is
 			-- Resizing has completed on `header_item'.
 		require
 			header_item_not_void: header_item /= Void
 		local
 			l_total_header_width: INTEGER
 		do
+			if is_resizing_divider_enabled then
+				remove_resizing_line
+			end
+			
 			l_total_header_width := total_header_width
 				-- Ensure that the total width of `header' and `drawable' are equal
 				-- to the width of all headers combined or the client area of `viewport'.
@@ -693,11 +721,50 @@ feature {NONE} -- Drawing implementation
 			end
 		end
 		
+	screen: EV_SCREEN is
+			-- Once access to object of type EV_SCREEN.
+		once
+			create Result
+		end
+		
+	draw_resizing_line (position: INTEGER) is
+			-- Draw a resizing line at horizontal position relative to `drawable'.
+			-- Clip line to drawable width.
+		do
+			if (position - viewport.x_offset > viewport.width) or
+				(position - viewport.x_offset < 0) then
+				remove_resizing_line
+			else
+					-- Draw dashed line representing position
+				screen.enable_dashed_line_style
+				screen.set_invert_mode
+				screen.draw_segment (drawable.screen_x + position, drawable.screen_y + resizing_line_border, drawable.screen_x + position, drawable.screen_y + drawable.height - resizing_line_border)
+				if last_dashed_line_position > 0 then
+					screen.draw_segment (last_dashed_line_position, drawable.screen_y + resizing_line_border, last_dashed_line_position, drawable.screen_y + drawable.height - resizing_line_border)
+				end
+				last_dashed_line_position := drawable.screen_x + position
+			end
+		end
+		
+	remove_resizing_line is
+			-- Remove resizing line drawn on `drawable'.
+		do
+			screen.enable_dashed_line_style
+			screen.set_invert_mode
+			screen.draw_segment (last_dashed_line_position, drawable.screen_y + resizing_line_border, last_dashed_line_position, drawable.screen_y + drawable.height - resizing_line_border)
+			last_dashed_line_position := - 1
+		ensure
+			last_position_negative: last_dashed_line_position = -1
+		end
+		
+	last_dashed_line_position: INTEGER
+		-- Last horizontal coordinate of dashed line drawn when slider is moved.
+
 	recompute_horizontal_scroll_bar is
 			-- Recompute horizontal scroll bar positioning.
 		do
 			header_item_resizing (header.last)
-			header_item_resized (header.last)
+			header_item_resize_ended (header.last)
 		end
 
 	horizontal_scroll_bar_changed (a_value: INTEGER) is
@@ -728,12 +795,23 @@ feature {NONE} -- Drawing implementation
 		require
 			a_width_non_negative: a_width >= 0
 			a_height_non_negative: a_height >= 0
+		local
+			new_width, new_height: INTEGER
 		do
-			if viewport.item.width < viewport.width or viewport.item.height < viewport.height then
-					-- If the item contained in `viewport' is smaller than the viewport, enlarge it
-					-- to fill `viewport'.
-				viewport.set_item_size (viewport.width, viewport.height)
-			end	
+				-- If the width of the item contained in `viewport' is smaller than the width of the viewport,
+				-- enlarge it to the viewport's width.
+			if viewport.item.width < viewport.width then
+				new_width := viewport.width
+			else
+				new_width := viewport.item.width
+			end
+				-- Ensure that the height of the viewport's item always matches that of the viewport.
+			if viewport.item.height /= viewport.height then
+				new_height := viewport.height
+			end
+				-- Now actually perform size setting.
+			viewport.set_item_size (new_width, new_height)
+
 			if not header.is_empty then
 					-- Update horizontal scroll bar settings.
 				header_item_resizing (header.last)
@@ -770,6 +848,9 @@ feature {NONE} -- Drawing implementation
 	
 	default_minimum_size: INTEGER is 50
 		-- Default minimum size dimensions for `Current'.
+		
+	resizing_line_border: INTEGER is 4
+		-- Distance that resizing line is displayed from top and bottom edges of `drawable'.
 
 feature {EV_ANY_I, EV_GRID_ROW, EV_GRID_COLUMN, EV_GRID} -- Implementation
 

@@ -47,6 +47,7 @@ feature {NONE} -- Initialization
 			-- can be added here.
 		do
 			set_icon_pixmap (Icon_build_window @ 1)
+			set_title ("EV_TABLE child positioner")
 		end
 		
 	make_with_editor (an_editor: GB_EV_TABLE_EDITOR_CONSTRUCTOR) is

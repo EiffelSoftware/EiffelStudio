@@ -23,7 +23,8 @@ inherit
 
 creation
 	make,
-	make_no_auto_unmanage
+	make_no_auto_unmanage,
+	make_from_existing
 
 feature {NONE} -- Initialization
 
@@ -39,8 +40,6 @@ feature {NONE} -- Initialization
 					xm_create_command (p_so,
 						$w_name, auto_unmanage_arg, 1);
 			end;
-			Mel_widgets.put (Current, screen_object);
-			create_selection_children
 		end
 
 feature -- Status report

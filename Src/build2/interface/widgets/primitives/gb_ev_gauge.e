@@ -38,14 +38,15 @@ feature {GB_XML_STORE} -- Output
 			gauge: EV_GAUGE
 		do
 			gauge ?= default_object_by_type (class_name (first))
-			if gauge.value /= first.value then
-				add_element_containing_integer (element, Value_string, objects.first.value)
+			
+			if gauge.value /= first.value or object.constants.item (type + Value_string) /= Void then
+				add_integer_element (element, Value_string, objects.first.value)
 			end
-			if gauge.step /= first.step then
-				add_element_containing_integer (element, Step_string, objects.first.step)
+			if gauge.step /= first.step or object.constants.item (type + Step_string) /= Void then
+				add_integer_element (element, Step_string, objects.first.step)
 			end
-			if gauge.leap /= first.leap then
-				add_element_containing_integer (element, Leap_string, objects.first.leap)
+			if gauge.leap /= first.leap or object.constants.item (type + leap_string) /= Void then
+				add_integer_element (element, Leap_string, objects.first.leap)
 			end
 				-- We always store the lower and upper values for the value range, as it is much easier to
 				-- restore them if we know they are always together. We need them in pairs for the
@@ -59,10 +60,9 @@ feature {GB_XML_STORE} -- Output
 	modify_from_xml (element: XM_ELEMENT) is
 			-- Update all items in `objects' based on information held in `element'.
 		local
-			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
-			element_info: ELEMENT_INFORMATION
-			element_info2: ELEMENT_INFORMATION
+			element_info, element_info2: ELEMENT_INFORMATION
 			interval: INTEGER_INTERVAL
+			integer_constant: GB_INTEGER_CONSTANT
 		do
 			full_information := get_unique_full_info (element)
 			
@@ -78,20 +78,15 @@ feature {GB_XML_STORE} -- Output
 				first.value_range.adapt (interval)
 				(objects @ 2).value_range.adapt (interval)
 			end
-			
-			element_info := full_information @ (Value_string)
-			if element_info /= Void then
-				for_all_objects (agent {EV_GAUGE}.set_value (element_info.data.to_integer))
+
+			if full_information @ Value_string /= Void then
+				for_all_objects (agent {EV_GAUGE}.set_value (retrieve_and_set_integer_value (Value_string)))
 			end
-			
-			element_info := full_information @ (Step_string)
-			if element_info /= Void then
-				for_all_objects (agent {EV_GAUGE}.set_step (element_info.data.to_integer))
+			if full_information @ Step_string /= Void then
+				for_all_objects (agent {EV_GAUGE}.set_step (retrieve_and_set_integer_value (Step_string)))
 			end
-			
-			element_info := full_information @ (Leap_string)
-			if element_info /= Void then
-				for_all_objects (agent {EV_GAUGE}.set_leap (element_info.data.to_integer))
+			if full_information @ Leap_string /= Void then
+				for_all_objects (agent {EV_GAUGE}.set_leap (retrieve_and_set_integer_value (Leap_string)))
 			end
 		end
 		
@@ -102,7 +97,6 @@ feature {GB_CODE_GENERATOR} -- Output
 			-- settings held in `Current' which is
 			-- in a compilable format.
 		local
-			full_information: HASH_TABLE [ELEMENT_INFORMATION, STRING]
 			element_info, element_info2: ELEMENT_INFORMATION
 			lower, upper: STRING
 		do

@@ -318,7 +318,9 @@ feature {NONE} -- Implementation
 						a_type := arguments.item.type.visitor.vt_type
 					end
 					
-					if is_paramflag_fout (arguments.item.flags) or is_byref (a_type) then
+					if 
+						is_byref (a_type) 
+					then
 						out_variable := True  
 						if is_paramflag_fin (arguments.item.flags) then
 							Result.append (inout_parameter_set_up (arguments.item.name, counter, visitor))

@@ -227,7 +227,11 @@ feature -- Element change
 			par_imp: EV_CONTAINER_IMP
 		do
 			if parent_imp /= Void then
-				gtk_object_ref (widget)
+				if (box_widget /= Void) then
+					gtk_object_ref (box_widget)
+				else
+					gtk_object_ref (widget)
+				end
 				parent_imp.remove_child (Current)
 				parent_imp := Void
 			end
@@ -239,7 +243,11 @@ feature -- Element change
 				parent_imp ?= par_imp
 				par_imp.add_child (Current)
 				show
-				gtk_object_unref (widget)
+				if (box_widget /= default_pointer) then
+					gtk_object_unref (box_widget)
+				else
+					gtk_object_unref (widget)
+				end
 			end
 		end
 

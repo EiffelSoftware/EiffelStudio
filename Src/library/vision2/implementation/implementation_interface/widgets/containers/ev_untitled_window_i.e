@@ -26,8 +26,6 @@ feature {NONE} -- Initialization
 
 	make_root is
 			-- Create a root window for the application.
---		deferred
---		end
 		local
 			window_imp: EV_UNTITLED_WINDOW_IMP
 		do

@@ -28,7 +28,7 @@ feature {NONE} -- Initialization
 		require
 			valid_string: txt /= Void
 		deferred
-        end	
+		end	
 
 feature -- Event - command association
 

@@ -21,7 +21,6 @@
           <Component Id="vision2_tour" Guid="0E8DAE43-1031-414A-A9CE-7EC5C95BFDE4">
             <File Id="readme.html" Name="README~1.HTM" LongName="readme.html" KeyPath="yes" />
 		</Component>
-	<!--
           <Directory Id="flatshort" Name="FLATSH~1" LongName="flatshort">
             <Component Id="flatshort" Guid="5754CA71-FC52-4FDB-8E3B-779BBC6B2E60">
 				<File Id="ev_horizontal_box_flatshort.rtf" Name="EV_HOR~1.RTF" LongName="ev_horizontal_box_flatshort.rtf" KeyPath="yes" />
@@ -62,7 +61,6 @@
 			  <File Id="ev_fixed_flatshort.rtf" Name="EV_FIX~1.RTF" LongName="ev_fixed_flatshort.rtf" />
             </Component>
 		</Directory>
-		-->
           <Directory Id="templates" Name="TEMPLA~1" LongName="templates">
             <Component Id="templates" Guid="72593478-561B-45E6-A483-7CCD2D161E36">
               <File Id="application_template.e" Name="APPLIC~1.E" LongName="application_template.e" KeyPath="yes" />

@@ -23,10 +23,17 @@ inherit
 			set_default_colors
 		redefine
 			set_default_minimum_size,
-			interface
+			interface,
+			initialize
 		end
 
 feature {NONE} -- Initialization
+
+	initialize is
+		do
+			wel_set_font (create {WEL_DEFAULT_GUI_FONT}.make)
+			{EV_PRIMITIVE_IMP} Precursor
+		end
 
 	set_default_minimum_size is
 			-- Called after creation. Set the current size and
@@ -169,6 +176,11 @@ feature -- Basic operation
 			set_caret_position (pos)
 		end
 
+	wel_set_font (a_wel_font: WEL_FONT) is
+			-- Set the font used by this control
+		deferred
+		end
+
 feature -- Event - command association
 
 --|FIXME	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
@@ -286,6 +298,10 @@ end -- class EV_TEXT_COMPONENT_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2000/04/27 23:18:02  pichery
+--| Changed the default font for EV_TEXT_COMPONENT
+--| and its descendants.
+--|
 --| Revision 1.30  2000/04/27 23:04:25  pichery
 --| Added set_default_minimum_size
 --|

@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			interior.set_no_op_mode
 			radius := 0
 			number_of_sides := 3
-			orientation := 0
+			create orientation.make (0)
 		end
 
 feature -- Access 
@@ -46,8 +46,8 @@ feature -- Access
 	number_of_sides: INTEGER
 			-- Number of sides
 
-	orientation: REAL
-			-- Orientation in degree of the reg_polygon
+	orientation: EV_ANGLE
+			-- Orientation in radians of the reg_polygon
 
 	origin: EV_POINT is
 			-- Origin of reg_polygon
@@ -66,8 +66,11 @@ feature -- Access
 
 	size_of_side: INTEGER is
 			-- Size of a side
+		local
+			angle: EV_ANGLE
 		do
-			Result := (2 * radius / (cos(180.0 / number_of_sides))).truncated_to_integer
+			create angle.make_in_degrees (180 / number_of_sides)
+			Result := (2 * radius / (cos(angle))).truncated_to_integer
 		end
 
 feature -- Element change
@@ -96,9 +99,6 @@ feature -- Element change
 
 	set_orientation (new_orientation: like orientation) is
 			-- Set `orientation' to `new_orientation'.
-		require
-			orientation_positive: new_orientation >= 0
-			orientation_smaller_than_360: new_orientation < 360
 		do
 			orientation := new_orientation
 			set_modified
@@ -129,18 +129,21 @@ feature -- Element change
 			-- Set `size_of_side' to `a_size', change `radius'.
 		require
 			a_size_positive: a_size >= 0
+		local
+			angle: EV_ANGLE
 		do
-			radius := (a_size*cos (180.0/number_of_sides)/2).truncated_to_integer
+			create angle.make_in_degrees (180.0 / number_of_sides)
+			radius := (a_size*cos (angle)/2).truncated_to_integer
 			set_modified
 		ensure
 			--rounding_error_allowance: a_size - 1 <= size_of_side and size_of_side <= a_size + 1
 		end
 
-	xyrotate (a: REAL; px, py: INTEGER) is
+	xyrotate (a: EV_ANGLE; px, py: INTEGER) is
 			-- Rotate figure by `a' relative to (`px', `py').
 			-- Angle `a' is measured in degrees.
 		do
-			orientation := mod360 (orientation+a)
+			orientation := orientation + a
 			center.xyrotate (a, px, py)
 			set_modified
 		end
@@ -170,7 +173,7 @@ feature -- Output
 			polygon: EV_POLYGON
 			a_point: EV_POINT
 			i: INTEGER
-			angle: INTEGER
+			angle: EV_ANGLE
 			lint: EV_INTERIOR
 			lpath: EV_PATH
 		do
@@ -182,7 +185,7 @@ feature -- Output
 				until
 					i >= number_of_sides
 				loop
-					angle := (i * (360 // number_of_sides) + orientation.truncated_to_integer) \\ 360
+					create angle.make_in_degrees ((i * (360 // number_of_sides) + orientation.degrees.truncated_to_integer) \\ 360)
 					create a_point.set (center.x + (radius *
 										cos (angle)).truncated_to_integer,
 									center.y + (radius *
@@ -242,8 +245,6 @@ invariant
 	non_negative_radius: radius >= 0
 	side_size_meaningful: size_of_side >= 0
 	side_count_constraint: number_of_sides >= 3
-	orientation_small_enough: orientation < 360
-	orientation_large_enough: orientation >= 0
 	center_exists: center /= Void
 
 end -- class EV_REGULAR_POLYGON

@@ -222,13 +222,13 @@ feature -- Element change
 			updated_y: y = old y - other.y
 		end
 
-	xyrotate (a: REAL; px,py: INTEGER) is
+	xyrotate (a: EV_ANGLE; px,py: INTEGER) is
 			-- Rotate by `a' relative to (`px', `py').
 		local
 			xr, yr: INTEGER
 			cosinus, sinus: REAL
 		do
-			if a  /= 0.0 then
+			if a.radians  /= 0.0 then
 				xr := x - px
 				yr := y - py
 				cosinus := cos (a)

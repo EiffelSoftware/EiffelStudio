@@ -33,7 +33,7 @@ feature -- Initialization
 			interior.set_no_op_mode
 			radius1 := 1
 			radius2 := 1
-			orientation := 0.0
+			create orientation.make (0.0)
 		end
 
 feature -- Access
@@ -41,7 +41,7 @@ feature -- Access
 	center: EV_POINT
 			-- Center of the ellipse.
 
-	orientation: REAL
+	orientation: EV_ANGLE
 			-- Angle which specifies the position of the first ray
 			-- (length `radius1') relative to the three-o'clock position
 			-- from the center
@@ -84,9 +84,6 @@ feature -- Status setting
 
 	set_orientation (an_orientation: like orientation) is
 			-- Set `orientation' to `an_orientation'.
-		require
-			orientation_smaller_than_360: an_orientation < 360
-			orientation_positive: an_orientation >= 0
 		do
 			orientation := an_orientation
 			set_modified
@@ -124,12 +121,12 @@ feature -- Status setting
 			radius2 = new_radius2
 		end
 
-	xyrotate (a: REAL; px, py: INTEGER) is
+	xyrotate (a: EV_ANGLE; px, py: INTEGER) is
 			-- Rotate figure by `a' relative to (`px', `py').
-			-- Angle `a' is measured in degrees.
+			-- Angle `a' is measured in radians.
 		do
 			center.xyrotate (a, px, py)
-			orientation := mod360 (orientation+a)
+			orientation := orientation + a
 			set_modified
 		end
 
@@ -158,20 +155,23 @@ feature -- Output
 		local
 			lint: EV_INTERIOR
 			lpath: EV_PATH
+			angle1,angle2: EV_ANGLE
 		do
 			if drawing.is_drawable then
+				create angle1.make (0.0)
+				create angle2.make (Pi * 2)
 				if interior /= Void then
 					create lint.make
 					lint.get_drawing_attributes (drawing)
 					interior.set_drawing_attributes (drawing)
-					drawing.fill_arc (center, radius1, radius2, 0, 360, orientation, 0)
+					drawing.fill_arc (center, radius1, radius2, angle1, angle2, orientation, 0)
 					lint.set_drawing_attributes (drawing)
 				end
 				if path /= Void then
 					create lpath.make
 					lpath.get_drawing_attributes (drawing)
 					path.set_drawing_attributes (drawing)
-					drawing.draw_arc (center, radius1, radius2, 0, 360, orientation, -1)
+					drawing.draw_arc (center, radius1, radius2, angle1, angle2, orientation, -1)
 					lpath.set_drawing_attributes (drawing)
 				end
 			end
@@ -208,8 +208,6 @@ invariant
 	origin_user_type_constraint: origin_user_type <= 2
 	meaningful_radius1: radius1 >= 0
 	meaningful_radius2: radius2 >= 0
-	orientation_small_enough: orientation < 360
-	orientation_large_enough: orientation >= 0
 	center_exists: center /= Void
 
 end -- class EV_ELLIPSE

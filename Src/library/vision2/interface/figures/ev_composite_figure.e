@@ -66,7 +66,7 @@ feature -- Element change
 		deferred
 		end
 
-	rotate (a: REAL; p: like origin) is
+	rotate (a: EV_ANGLE; p: like origin) is
 			-- Rotate figure by `a' relative to `p'.
 			-- Angle `a' is measured in degrees.
 		do
@@ -99,7 +99,7 @@ feature -- Element change
 			set_modified
 		end
 
-	self_rotate (a: REAL) is
+	self_rotate (a: EV_ANGLE) is
 			-- Rotate figure by `a' relative to `origin'.
 			-- Angle is measured in degrees.
 		do
@@ -148,7 +148,7 @@ feature -- Element change
 			set_modified
 		end
 
-	xyrotate (a: REAL; px, py: INTEGER) is
+	xyrotate (a: EV_ANGLE; px, py: INTEGER) is
 			-- Rotate figure by `a' relative to (`px', `py').
 			-- Angle `a' is measured in degrees.
 		require else

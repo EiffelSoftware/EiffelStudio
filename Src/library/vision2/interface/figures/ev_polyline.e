@@ -182,12 +182,10 @@ feature  -- Element change
 			set_modified
 		end
 
-	rotate (a: REAL; p: like origin) is
+	rotate (a: EV_ANGLE; p: like origin) is
 			-- Rotate figure by `a' relative to `p'.
-			-- Angle `a' is measured in degrees.
+			-- Angle `a' is measured in radians.
 		require else
-			a_smaller_than_360: a < 360
-			a_positive: a >= 0.0
 			point_exists: p /= Void
 		local
 			keep_cursor: CURSOR
@@ -226,12 +224,10 @@ feature  -- Element change
 			set_modified
 		end
 
-	self_rotate (a: REAL) is
+	self_rotate (a: EV_ANGLE) is
 			-- Rotate figure by `a' relative to `origin'.
 			-- Angle is measured in degrees.
 		require else
-			a_smaller_than_360: a < 360
-			a_positive: a >= 0.0
 			origin_exists: origin /= Void
 		local
 			keep_cursor: CURSOR
@@ -301,12 +297,9 @@ feature  -- Element change
 			set_modified
 		end
 
-	xyrotate (a: REAL; px, py: INTEGER) is
+	xyrotate (a: EV_ANGLE; px, py: INTEGER) is
 			-- Rotate figure by `a' relative to (`px', `py').
-			-- Angle `a' is measured in degrees.
-		require else
-			a_smaller_than_360: a < 360
-			a_positive: a >= 0.0
+			-- Angle `a' is measured in radians.
 		local
 			keep_cursor: CURSOR
 		do

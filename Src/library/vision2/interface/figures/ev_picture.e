@@ -92,7 +92,7 @@ feature -- Element change
 			a_point = upper_left
 		end
 
-	xyrotate (a: REAL; px,py: INTEGER) is
+	xyrotate (a: EV_ANGLE; px,py: INTEGER) is
 			-- Rotate by `a' relative to (`px', `py').
 			-- Warning: don't rotate `pixmap' but just `upper_left'.
 		require else

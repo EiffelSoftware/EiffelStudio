@@ -387,12 +387,9 @@ feature -- Element change
 		end
 
 
-	xyrotate (a: REAL; px,py: INTEGER) is
+	xyrotate (a: EV_ANGLE; px,py: INTEGER) is
 			-- Rotate by `a' relative to (`px', `py').
 			-- Warning: don't rotate `pixmap' but just `top_left'.
-		require else
-			a_smaller_than_360: a < 360
-			a_positive: a >= 0.0
 		do
 			top_left.xyrotate (a, px ,py)
 			set_modified

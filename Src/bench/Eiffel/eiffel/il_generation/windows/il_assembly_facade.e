@@ -14,7 +14,7 @@ create
 feature	-- Initialization
 
 	make is
-			-- Initialize the assembly interface information
+			-- Create the COM component to access assembly data
 		do
 				-- Initialize COM if not done yet.
 			(create {CLI_COM}).initialize_com
@@ -23,12 +23,20 @@ feature	-- Initialization
 		end
 		
 	initialize is
-			-- 
+			-- Initilaization
 		do
-			assemblies := assembly_interface.assemblies
+			if exists then
+				assemblies := assembly_interface.assemblies
+			end
 		end
 
 feature -- Access
+
+	exists: BOOLEAN is
+			-- Does interface exist?
+		do
+			Result := assembly_interface.exists
+		end
 
 	assembly_name: STRING is
 			-- Name of assembly at 'item'

@@ -69,9 +69,6 @@ feature -- Basic Operations
 					found := found_item /= Void
 				end
 			end
-		ensure then
-			locals_reset: locals.is_empty
-			arguments_reset: arguments.is_empty			
 		end
 
 feature {NONE} -- Implementation

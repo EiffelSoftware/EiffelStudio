@@ -100,7 +100,14 @@ feature -- Status Report
 		end
 
 	shown: BOOLEAN is
-			-- Is current widget visible?
+			-- Is current widget visible in the parent?
+		require
+			exists: not destroyed
+		deferred
+		end
+
+	displayed: BOOLEAN is
+			-- Is the current widget visible on the screen?
 		require
 			exists: not destroyed
 		deferred

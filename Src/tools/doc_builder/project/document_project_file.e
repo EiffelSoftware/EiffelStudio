@@ -47,8 +47,11 @@ feature -- Initialization
 
 feature -- Access
 
-	is_valid: BOOLEAN
+	is_valid: BOOLEAN is
 			-- Are loaded preferences valid?
+		do
+			Result := project.name /= Void and project.root_directory /= Void 
+		end
 
 feature -- Basic operations
 
@@ -61,8 +64,6 @@ feature -- Basic operations
 			if document /= Void then
 				process_element (document.root_element)				
 			end
-			
-			is_valid := project.name /= Void and project.root_directory /= Void 
 				
 			if not is_valid then
 				create l_error_report.make ("Could not load project.")

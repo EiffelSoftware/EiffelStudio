@@ -280,20 +280,7 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 				a_text_tag_name := "fg" + fcolor.out
 				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
---					a_red := (fcolor & 0x000000FF) |<< 16
---					a_green := (fcolor & 0x0000FF00)
---					a_blue := fcolor |>> 16
---					temp_string := (a_red + a_green + a_blue).to_hex_string
---					temp_string.keep_tail (6)
---					prop_value_string := "#" +  temp_string
---					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
---					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (a_text_tag, foreground_string.item, prop_value_string.item)
---					feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_add (a_tag_table, a_text_tag)
-
-
 					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
---					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (a_text_tag, background_string.item, prop_value_string.item)
-
 
 					feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (App_implementation.reusable_color_struct, (fcolor |>> 16) * 257)
 					feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (App_implementation.reusable_color_struct, ((fcolor |<< 16) |>> 24) * 257)
@@ -305,18 +292,10 @@ feature {EV_RICH_TEXT_IMP} -- Implementation
 			end
 
 			if applicable_attributes.background_color then
-				a_text_tag_name := "bg" + fcolor.out
+				a_text_tag_name := "bg" + bcolor.out
 				a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_table_lookup (a_tag_table, a_text_tag_name.item)
 				if a_text_tag = default_pointer then
---					a_red := (bcolor & 0x000000FF) |<< 16
---					a_green := (bcolor & 0x0000FF00)
---					a_blue := bcolor |>> 16
---					temp_string := (a_red + a_green + a_blue).to_hex_string
---					temp_string.keep_tail (6)
---					prop_value_string := "#" +  temp_string
 					a_text_tag := feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_text_tag_new (a_text_tag_name.item)
---					feature {EV_GTK_DEPENDENT_EXTERNALS}.g_object_set_string (a_text_tag, background_string.item, prop_value_string.item)
-
 
 					feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_blue (App_implementation.reusable_color_struct, (bcolor |>> 16) * 257)
 					feature {EV_GTK_EXTERNALS}.set_gdk_color_struct_green (App_implementation.reusable_color_struct, ((bcolor |<< 16) |>> 24) * 257)

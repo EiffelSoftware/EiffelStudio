@@ -71,7 +71,7 @@ inherit
 			{NONE} all
 			{ANY} valid_rop2_constant
 		end
-
+		
 feature -- Access
 
 	pen: WEL_PEN
@@ -1743,6 +1743,7 @@ feature {NONE} -- Removal
 				-- Protect the call to DeleteDC, because `destroy_item' can 
 				-- be called by the GC so without assertions.
 			if item /= a_default_pointer then
+				unselect_all
 				cwin_delete_dc (item)
 				item := a_default_pointer
 			end

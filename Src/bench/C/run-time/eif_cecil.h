@@ -49,15 +49,16 @@ extern "C" {
  * (I mean, within the run-time source, of course. However, sometimes it makes
  * things a lot easier to grasp--see hector.c for instance.)
  */
-typedef void			(*EIF_PROC)();		/* Function returning void */
-typedef long			(*EIF_FN_INT)();	/* Function returning long */
-typedef char			(*EIF_FN_BOOL)();	/* Function returning boolean */
-typedef char			(*EIF_FN_CHAR)();	/* Function returning char */
-typedef float			(*EIF_FN_FLOAT)();	/* Function returning float */
-typedef double			(*EIF_FN_DOUBLE)();	/* Function returning double */
-typedef char *			(*EIF_FN_REF)();	/* Function returning reference */
-typedef char *			(*EIF_FN_POINTER)();	/* Function returning pointer */
-typedef struct bit *	(*EIF_FN_BIT)();	/* Function returning bits */
+typedef void	(*EIF_PROC)(EIF_REFERENCE, ...);		/* Returns void */
+typedef long	(*EIF_FN_INT)(EIF_REFERENCE, ...);		/* Returns long */
+typedef char	(*EIF_FN_BOOL)(EIF_REFERENCE, ...);		/* Returns boolean */
+typedef char	(*EIF_FN_CHAR)(EIF_REFERENCE, ...);		/* Returns char */
+typedef float	(*EIF_FN_FLOAT)(EIF_REFERENCE, ...);	/* Returns float */
+typedef double	(*EIF_FN_DOUBLE)(EIF_REFERENCE, ...);	/* Returns double */
+typedef char *	(*EIF_FN_REF)(EIF_REFERENCE, ...);		/* Returns reference */
+typedef char *	(*EIF_FN_POINTER)(EIF_REFERENCE, ...);	/* Returns pointer */
+typedef struct bit*	(*EIF_FN_BIT)(EIF_REFERENCE, ...);	/* Returns bits */
+
 typedef char *			EIF_OBJ;			/* Object through hector tables */
 typedef struct bit *	EIF_BIT;			/* Structure used for bits */
 typedef int32			EIF_TYPE_ID;		/* Type handled by Cecil */

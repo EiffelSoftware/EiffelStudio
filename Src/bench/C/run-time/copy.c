@@ -765,7 +765,7 @@ rt_public void spclearall (EIF_POINTER spobj)
 		init = (char *(*)(char *)) (XCreate(dtype)); /* %%ss cast? added */
 #ifdef MAY_PANIC
 		if ((char *(*)(char *)) 0 == init)		/* There MUST be a routine */
-			eif_panic("init routine lost");
+			eif_panic("Init routine lost");
 #endif
 		for (i = 0; i < count; i++, ref += elem_size) {
 			zone = HEADER(ref);

@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			-- Deactivate drag mechanism
 		do
 			if drag_button_press_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, drag_button_press_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, drag_button_press_connection_id)
 				drag_button_press_connection_id := 0
 			end
 		end
@@ -166,11 +166,11 @@ feature {NONE} -- Implementation
 			disable_capture
 			set_composite_widget_pointer_style (NULL)
 			if drag_button_release_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, drag_button_release_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, drag_button_release_connection_id)
 				drag_button_release_connection_id := 0
 			end
 			if drag_motion_notify_connection_id > 0 then
-				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (visual_widget, drag_motion_notify_connection_id)
+				feature {EV_GTK_DEPENDENT_EXTERNALS}.signal_disconnect (event_widget, drag_motion_notify_connection_id)
 				drag_motion_notify_connection_id := 0
 			end
 			if not dawaiting_movement then
@@ -182,7 +182,7 @@ feature {NONE} -- Implementation
 				if widget_imp_at_pointer_position = Current then
 					-- We are dropping back on to the same widget, therefore prevent selection events if applicable.
 					--| FIXME IEK Need to find a better method of preventing execution of selection actions.
-					signal_emit_stop (visual_widget, "button_release_event")
+					signal_emit_stop (event_widget, "button_release_event")
 				end
 				complete_dock
 				original_x_offset := -1
@@ -222,6 +222,11 @@ feature {NONE} -- Implementation
 	signal_emit_stop (a_c_object: POINTER; signal: STRING) is
 		deferred
 		end
+
+	event_widget: POINTER is
+			-- Pointer to the GtkWidget to which the events are hooked up to
+		deferred
+		end	
 		
 feature {EV_ANY_I} -- Implementation
 

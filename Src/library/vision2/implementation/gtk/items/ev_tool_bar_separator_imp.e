@@ -28,9 +28,9 @@ feature {NONE} -- Initialization
 	is_dockable: BOOLEAN is False
 
 	make (an_interface: like interface) is
-			-- 
+			-- Create implementation for `an_interface'
 		do
-			base_make (interface)
+			base_make (an_interface)
 			set_c_object (feature {EV_GTK_EXTERNALS}.gtk_vseparator_new)
 		end
 	

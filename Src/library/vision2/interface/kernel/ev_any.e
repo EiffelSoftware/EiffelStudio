@@ -114,9 +114,8 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 
 	replace_implementation (new_implementation: like implementation) is
 			-- Replace `implementation' with `new_implementation'.
-			-- The old `implementation' is marked as not initialized but the
-			-- caller has complete responsibility for releasing any resources
-			-- that it holds.
+			-- The caller has complete responsibility for releasing any
+			-- resources held by the old `implementation'.
 			--| See `clone' for useage of `c_check_assert'.
 		require
 			implementation_not_void: implementation /= Void
@@ -126,10 +125,9 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		do
 			temp := c_check_assert (False)
 			implementation.set_interface (Void)
-			implementation.set_initialized (False)
 			new_implementation.set_interface(Current)
 			implementation := new_implementation
-			implementation.set_initialized (True)
+			implementation.set_initialized
 			temp := c_check_assert (temp)
 		end
 
@@ -299,6 +297,9 @@ end -- class EV_ANY
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/04/11 17:55:47  oconnor
+--| oops
+--|
 --| Revision 1.16  2000/04/11 17:29:06  oconnor
 --| added replace_implementation
 --|

@@ -10,9 +10,6 @@ deferred class
 
 inherit
 	EV_ITEM_HOLDER_IMP
---		redefine
---			on_draw
---		end
 
 feature -- Access
 

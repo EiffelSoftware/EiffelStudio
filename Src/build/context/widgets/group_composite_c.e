@@ -8,15 +8,13 @@ inherit
 			create_context as old_create_context
 		redefine
 			is_group_composite, set_size, 
-			retrieve_oui_widget, import_oui_widget,
-			set_width, set_size_for_group_comp
+			retrieve_oui_widget, import_oui_widget
 		end;
 
 	COMPOSITE_C
 		redefine
 			create_context, is_group_composite, set_size, 
-			retrieve_oui_widget, import_oui_widget,
-			set_width, set_size_for_group_comp
+			retrieve_oui_widget, import_oui_widget
 		select
 			create_context
 		end
@@ -54,7 +52,7 @@ feature
 		end;
 
 	set_size (new_w, new_h: INTEGER) is
-            -- Set new size of widget
+			-- Set new size of widget
 			-- Create or delete toggle buttons if needed
 		local
 			children_number: INTEGER;
@@ -103,55 +101,28 @@ feature
 			if modification then
 				tree.display (Current);
 			end;
-			set_width (new_w);
 			widget.manage
 		end;
 
-	set_width (new_w: INTEGER) is
+	update_form_for_all_children (form_nr: INTEGER) is
+			-- Update form `form_nr' for all children of Current.
+		local
+			toggle_b_c: TOGGLE_B_C
+			other_editor: CONTEXT_EDITOR
 		do
-			if new_w /= width then
-				widget.set_width (new_w);
-				from
-					child_start
-				until
-					child_offright
-				loop
-					child.widget.unmanage;
-					child.set_width (new_w);
-					child_forth
+			from
+				child_start
+			until
+				child_offright
+			loop
+				toggle_b_c ?= child;
+				if toggle_b_c /= Void then
+					other_editor := context_catalog.editor (toggle_b_c, form_nr)
+					if other_editor /= Void then
+						other_editor.reset_current_form
+					end
 				end;
-				from
-					child_start
-				until
-					child_offright
-				loop
-					child.widget.manage;
-					child_forth
-				end;
-			end;
-		end;
-
-	set_size_for_group_comp (new_w, new_h: INTEGER) is
-		do
-			if new_w /= width then
-				widget.set_width (new_w);
-				from
-					child_start
-				until
-					child_offright
-				loop
-					child.widget.unmanage;
-					child.set_size_for_group_comp (new_w, new_h);
-					child_forth
-				end;
-				from
-					child_start
-				until
-					child_offright
-				loop
-					child.widget.manage;
-					child_forth
-				end;
+				child_forth
 			end;
 		end;
 

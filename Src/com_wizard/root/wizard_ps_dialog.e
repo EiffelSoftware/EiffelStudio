@@ -5,16 +5,11 @@ class
 	WIZARD_PS_DIALOG
 
 inherit
-	WEL_MODAL_DIALOG
+	WIZARD_DIALOG
 		redefine
-			notify,
+			setup_dialog,
 			on_ok,
-			setup_dialog
-		end
-
-	WIZARD_SHARED_DATA
-		export
-			{NONE} all
+			notify
 		end
 
 	APPLICATION_IDS
@@ -22,7 +17,7 @@ inherit
 			{NONE} all
 		end
 
-create
+creation
 	make
 
 feature {NONE} -- Initialization
@@ -38,11 +33,11 @@ feature {NONE} -- Initialization
 			create standard_radio.make_by_id (Current, Standard_radio_constant)
 			create id_ok.make_by_id (Current, Idok)
 			create proxy_stub_file_edit.make_by_id (Current, Proxy_stub_file_edit_constant)
-			create marshaling_static.make_by_id (Current, Marshaling_static_constant)
-			create proxy_stub_static.make_by_id (Current, Proxy_stub_static_constant)
-			create id_cancel.make_by_id (Current, Idcancel)
+			create id_back.make_by_id (Current, Idback_constant)
 			create browse_button.make_by_id (Current, Browse_button_constant)
 			create help_button.make_by_id (Current, Help_button_constant)
+			create id_cancel.make_by_id (Current, Idcancel)
+			create msg_box.make
 		end
 
 feature -- Behavior
@@ -63,29 +58,6 @@ feature -- Behavior
 			end
 		end
 
-	on_ok is
-			-- Process next button activation
-		local
-			a_file: RAW_FILE
-		do
-			shared_wizard_environment.set_use_universal_marshaller (universal_radio.checked)
-			if not universal_radio.checked then
-				if proxy_stub_file_edit.text /= Void and then not proxy_stub_file_edit.text.empty then
-					!! a_file.make (proxy_stub_file_edit.text)
-					if a_file.exists then
-						shared_wizard_environment.set_proxy_stub_file_name (proxy_stub_file_edit.text)
-						Precursor
-					else
-						msg_box.error_message_box (Current, "Proxy/Stub file not valid!", "Wizard Error")
-					end
-				else
-					msg_box.error_message_box (Current, "Proxy/Stub file empty!", "Wizard Error")
-				end
-			else
-				Precursor
-			end
-		end
-
 	setup_dialog is
 			-- Initialize radio buttons.
 		do
@@ -100,7 +72,30 @@ feature -- Behavior
 				proxy_stub_file_edit.set_text (shared_wizard_environment.proxy_stub_file_name)
 			end
 		end
-		
+
+	on_ok is
+			-- Process next button activation
+		local
+			a_file: RAW_FILE
+		do
+			shared_wizard_environment.set_use_universal_marshaller (universal_radio.checked)
+			if not universal_radio.checked then
+				if proxy_stub_file_edit.text /= Void and then not proxy_stub_file_edit.text.empty then
+					!! a_file.make (proxy_stub_file_edit.text)
+					if a_file.exists then
+						shared_wizard_environment.set_proxy_stub_file_name (proxy_stub_file_edit.text)
+						Precursor {WIZARD_DIALOG}
+					else
+						msg_box.error_message_box (Current, "Proxy/Stub file not valid!", "Wizard Error")
+					end
+				else
+					msg_box.error_message_box (Current, "Proxy/Stub file empty!", "Wizard Error")
+				end
+			else
+				Precursor {WIZARD_DIALOG}
+			end
+		end
+
 feature -- Access
 
 	universal_radio: WEL_RADIO_BUTTON
@@ -109,26 +104,14 @@ feature -- Access
 	standard_radio: WEL_RADIO_BUTTON
 			-- Standard marshaling radio button
 
-	id_ok: WEL_PUSH_BUTTON
-			-- Next button
-
 	proxy_stub_file_edit: WEL_SINGLE_LINE_EDIT
 			-- Proxy/Stub file edit
  
 	marshaling_static: WEL_GROUP_BOX
 			-- Marshaling group box title
 
-	proxy_stub_static: WEL_STATIC
-			-- Proxy/Stub file edit title
-
-	id_cancel: WEL_PUSH_BUTTON
-			-- Back button
-
 	browse_button: WEL_PUSH_BUTTON
 			-- Browse button
-
-	help_button: WEL_PUSH_BUTTON
-			-- Help button
 
 	File_selection_dialog: WEL_OPEN_FILE_DIALOG is
 			-- File selection dialog
@@ -137,13 +120,10 @@ feature -- Access
 			Result.set_filter (<<"Dynamic Link Library (*.dll)">>, <<"*.dll">>)
 		end
 
-feature {NONE} -- Implementation
-
-	msg_box: WEL_MSG_BOX is
+	msg_box: WEL_MSG_BOX
 			-- Message box
-		once
-			create Result.make
-		end
+
+feature {NONE} -- Implementation
 
 	uncheck_all is
 			-- Uncheck all buttons.
@@ -151,7 +131,6 @@ feature {NONE} -- Implementation
 			universal_radio.set_unchecked
 			standard_radio.set_unchecked
 		end
-
 
 end -- class WIZARD_PS_DIALOG
 

@@ -145,8 +145,10 @@ feature -- Start output features
 	finish_degree_output is
 			-- Process end degree output.
 		do
-			Project_tool.set_icon_name (icon_name);
-			icon_name := Void;
+			if icon_name /= Void then
+				Project_tool.set_icon_name (icon_name);
+				icon_name := Void;
+			end;
 			unmanage
 		end;
 

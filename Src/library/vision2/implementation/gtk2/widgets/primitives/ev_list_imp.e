@@ -14,7 +14,8 @@ inherit
 			selected_items,
 			call_pebble_function
 		redefine
-			interface
+			interface,
+			disable_default_key_processing
 		end
 
 	EV_LIST_ITEM_LIST_IMP
@@ -359,6 +360,13 @@ feature {EV_INTERMEDIARY_ROUTINES} -- Implementation
 		end
 	
 feature {NONE} -- Implementation
+
+	disable_default_key_processing is
+			-- Ensure default key processing is not performed.
+		do
+			Precursor {EV_LIST_I}
+			{EV_GTK_DEPENDENT_EXTERNALS}.gtk_tree_view_set_enable_search (tree_view, False)
+		end
 
 	tree_view: POINTER
 		-- Pointer to the view widget used to display the model within `Current'

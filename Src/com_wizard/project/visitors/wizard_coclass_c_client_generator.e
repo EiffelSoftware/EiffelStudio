@@ -40,7 +40,6 @@ feature -- Implementation
 			cpp_class_writer.set_name (a_descriptor.c_type_name)
 			cpp_class_writer.set_header (a_descriptor.description)
 			cpp_class_writer.set_header_file_name (a_descriptor.c_header_file_name)
-			cpp_class_writer.add_other (clsid_declaration (a_descriptor.name))
 			cpp_class_writer.add_other_source (clsid_definition (a_descriptor.name, a_descriptor.guid))
 
 			process_interfaces (a_descriptor)

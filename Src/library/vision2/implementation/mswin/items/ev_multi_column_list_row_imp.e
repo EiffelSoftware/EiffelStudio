@@ -1,6 +1,7 @@
 --| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description: "EiffelVision multi-column list row, mswindows implementation"
+	description:
+		"Eiffel Vision multi column list row. Mswindows implementation."
 	status: "See notice at end of class"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -85,13 +86,6 @@ feature -- Status setting
 			-- Must be in a multi column list.
 		do
 			parent_imp.internal_deselect (Current)
-		end
-
-feature {NONE} -- Implementation
-
-	update is
-			-- Layout of row has been changed.
-		do
 		end
 
 feature {EV_ANY_I} -- Access
@@ -217,6 +211,9 @@ end -- class EV_MULTI_COLUMN_LIST_ROW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/03/24 17:30:44  brendel
+--| Moved update into _I.
+--|
 --| Revision 1.29  2000/03/23 19:36:56  brendel
 --| Removed feature `toggle'.
 --|

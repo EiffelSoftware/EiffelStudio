@@ -26,7 +26,7 @@ feature {NONE} -- Creation
 			-- Caution: `a_pointer' must be a pointer
 			-- coming from Windows.
 		do
-			Precursor (a_pointer)
+			Precursor {WEL_ANY} (a_pointer)
 			gdi_make
 		end
 

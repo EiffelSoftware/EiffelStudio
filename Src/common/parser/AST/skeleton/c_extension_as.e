@@ -1,7 +1,6 @@
 indexing
 
-	description:
-		"Encapsulation of a C external extension.";
+	description: "Encapsulation of a C external extension.";
 	date: "$Date$";
 	revision: "$Revision$"
 
@@ -54,6 +53,7 @@ debug
 	io.error.putint (end_file)
 	io.error.new_line
 end
+
 			if end_file = 0 then
 					-- Invalid file
 				raise_error ("Invalid file name")

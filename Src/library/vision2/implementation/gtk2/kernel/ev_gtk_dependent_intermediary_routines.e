@@ -43,6 +43,15 @@ feature {EV_ANY_I} -- Implementation
 			end
 		end
 
+	pnd_deferred_parent_start_transport_filter_intermediary (a_c_object: POINTER; a_type: INTEGER; a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
+			-- Start of pick and drop transport
+		local
+			pnd_par: EV_PND_DEFERRED_ITEM_PARENT
+		do
+			pnd_par ?= c_get_eif_reference_from_object_id (a_c_object)
+			pnd_par.start_transport_filter (a_type, a_x, a_y, a_button, a_x_tilt, a_y_tilt, a_pressure, a_screen_x, a_screen_y)
+		end
+
 	mcl_column_click_callback (a_object_id: INTEGER; int: TUPLE [INTEGER]) is
 		local
 			temp_int: INTEGER_REF

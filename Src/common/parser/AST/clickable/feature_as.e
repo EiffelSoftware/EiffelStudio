@@ -48,11 +48,7 @@ feature {NONE} -- Initialization
 			start_position := start_position - feature_names.first.offset
 		end;
 
-feature -- Properties
-
-	id: INTEGER;
-			-- Id of the current instance used by the temporary AST
-			-- server.
+feature -- Access
 
 	feature_names: EIFFEL_LIST [FEATURE_NAME];
 			-- Names of feature
@@ -225,8 +221,7 @@ feature {COMPILER_EXPORTER} -- Initialization
 		do
 			body := other.body;
 			start_position := other.start_position;
-			end_position := other.end_position;
-			id := other.id;
+			end_position := other.end_position
 		end;
 
 	trace is
@@ -237,9 +232,7 @@ feature {COMPILER_EXPORTER} -- Initialization
 			io.error.putint (start_position);
 			io.error.new_line;
 			io.error.putstring (feature_names.first.internal_name);
-			io.error.new_line;
-			io.error.putint (id);
-			io.error.new_line;
+			io.error.new_line
 		end;
 
 feature {COMPILER_EXPORTER} -- Conveniences
@@ -290,11 +283,6 @@ feature {COMPILER_EXPORTER} -- Setting
 	set_body (b: like body) is
 		do
 			body := b
-		end;				
-
-	set_id (i: like id) is
-		do
-			id := i
 		end;				
 
 end -- class FEATURE_AS

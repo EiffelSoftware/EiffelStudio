@@ -293,12 +293,10 @@ feature -- Output
 			elseif is_expanded then
 				Result.append ("expanded ")
 			end
-			Result.append (name)
-			Result.to_upper
+			Result.append (name.as_upper)
 			if has_constraint then
 				Result.append (" -> ")
-				Result.append (constraint.dump)
-				Result.to_upper
+				Result.append (constraint.dump.as_upper)
 				if has_creation_constraint then
 					from
 						creation_feature_list.start

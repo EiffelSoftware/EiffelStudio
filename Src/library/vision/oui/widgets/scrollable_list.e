@@ -722,6 +722,14 @@ feature -- Status setting
 			implementation.select_item
 		end;
 
+	deselect_item is
+			-- Deselect item at current position.
+		require
+			not_off: not off
+		do
+			implementation.deselect_item
+		end;
+
 	select_i_th (i: INTEGER) is
 			-- Select item at `i'-th position.
 		require
@@ -729,6 +737,15 @@ feature -- Status setting
 			index_small_enough: i <= count
 		do
 			implementation.select_i_th (i)
+		end;
+
+	deselect_i_th (i: INTEGER) is
+			-- Deselect item at `i'-th position.
+		require
+			index_large_enough: i >= 1;
+			index_small_enough: i <= count
+		do
+			implementation.deselect_i_th (i)
 		end;
 
 	set_multiple_selection is

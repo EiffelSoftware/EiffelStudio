@@ -39,7 +39,7 @@ alias remtrace `echo %$ & echo -------------------------------- >>& %INSTALL_LOG
 REM Give info concerning the elapsed time
 alias give_time_to `remtrace time used to %$: & remtrace %@TIMER[1] & TIMER ON /1 >> NUL`
 REM Clean exit
-alias cancel `echo Exiting... & set PATH=%OLD_PATH & cdd %INIT_DIR & set EIFFEL_SRC=%OLD_EIFFEL_SRC & *cancel`
+alias cancel `echo Exiting... & set PATH=%OLD_PATH & cdd %INIT_DIR & set EIFFEL_SRC=%OLD_EIFFEL_SRC & iff defined TMP_ISE_EIFFEL then & set ISE_EIFFEL=%TMP_ISE_EIFFEL & set TMP_ISE_EIFFEL= & endiff & *cancel`
 
 REM CVS Commands: up, checkout, export
 alias up `cvs -q up -Pd %$ >>& %INSTALL_LOG`
@@ -69,9 +69,11 @@ alias clean_project `iff exist EIFGEN .or. isdir EIFGEN then & fullrd EIFGEN & e
 REM Finish to freeze a finalized version
 alias fff `iff isdir EIFGEN\F_code then & cd EIFGEN\F_code & finish_freezing -silent >>& %INSTALL_LOG & cd ..\.. & endiff`
 REM Finish to freeze a workbench version
-alias wff `iff isdir EIFGEN\W_code then & cd EIFGEN\W_code & finish_freezing -silent & cd ..\.. & endiff`
+alias wff `iff isdir EIFGEN\W_code then & cd EIFGEN\W_code & finish_freezing -silent >>& %INSTALL_LOG & cd ..\.. & endiff`
 REM Finalize at the Eiffel level only
 alias finalize `ec -batch -finalize -ace %$ >>& %INSTALL_LOG`
+REM Melt at the Eiffel level only
+alias melt `ec -batch -freeze -ace %$ >>& %INSTALL_LOG`
 REM Move up the generated finalized exe (its name is the parameter) and delete the compiled files
 alias cleanup_eiffel `iff exist EIFGEN\F_code\%1 then & move EIFGEN\F_code\%1 . & clean_project & endiff`
 

@@ -60,8 +60,6 @@ feature {NONE} -- Execution
 					tool.show_new_window (st, profiler_query, profiler_options, executer.last_output)
 				else
 					!! error_dialog.make ("Query_syntax", tool)
-					error_dialog.hide_cancel_button
-					error_dialog.hide_help_button
 					error_dialog.set_message (message)
 					error_dialog.popup
 				end
@@ -81,7 +79,10 @@ feature {NONE} -- Help message
 			Result.append ("	self <= 3.4%N")
 			Result.append ("	descendants in 23 - 34%N")
 			Result.append ("	total >= 12.3%N")
-			Result.append ("	percentage /= 2%N%N")
+			Result.append ("	percentage /= 2%N")
+			Result.append ("	calls > avg%N")
+			Result.append ("	self <= max%N")
+			Result.append ("	total > min%N%N")
 			Result.append ("You can combine subqueries with 'and' and 'or', for example:%N%N")
 			Result.append ("	calls > 2 and self <= 3.4 or percentage in 2.3 - 3.5")
 		end

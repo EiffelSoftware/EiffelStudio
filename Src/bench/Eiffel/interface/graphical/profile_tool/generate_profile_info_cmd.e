@@ -99,10 +99,11 @@ feature {NONE} -- Implementation
 			-- Explains that an error occured while loading the
 			-- profiler specific configuration file.
 		local
-			l_warner: ERROR_D
+			error_dlg: ERROR_WINDOW
 		do
-			!! l_warner.make (Warning_messages.w_Load_configuration, profile_tool)
-			l_warner.popup
+			!! error_dlg.make (Interface_names.t_Configuration_error, profile_tool)
+			error_dlg.set_message (Warning_messages.w_Load_configuration)
+			error_dlg.popup
 		end
 
 end -- class GENERATE_PROFILE_INFO_CMD

@@ -402,12 +402,6 @@ feature {NONE} -- Attributes
 	change_operator_label: LABEL;
 			-- Label for 'change_operator_button'
 
-	subquery_text: TEXT_FIELD;
-			-- Text field for eventual subqueries
-
-	-- operator_box: RADIO_BOX
-			-- Select 'and' or 'or' operator
-
 	text_window: TEXT_WINDOW;
 			-- Output window for the results
 
@@ -433,9 +427,6 @@ feature {NONE} -- Attributes
 	set_or_operator_button: PUSH_B
 			-- Button to set all the selected subqueries operators
 			-- to 'or'
-
-	--change_operator_button: PUSH_B
-			-- Button to change a subquery operator
 
 	run_query_cmd: RUN_QUERY_CMD;
 			-- Command to run a subquery from Current
@@ -495,6 +486,10 @@ feature {CHANGE_OPERATOR_CMD} -- Attributes
 
 feature {ADD_SUBQUERY_CMD, CHANGE_OPERATOR_CMD} -- Attributes
 
+	subquery_text: TEXT_FIELD;
+			-- Text field for eventual subqueries
+
+
 	all_subqueries: LINKED_LIST[SUBQUERY]
 			-- all the subqueries typed
 
@@ -539,7 +534,6 @@ feature {NONE} -- Implementation
 			Result := Configure_resources.get_boolean (r_Graphics_disabled, False) 
 		end
 
-		--|
 	count_active_subqueries is
 		do
 			from

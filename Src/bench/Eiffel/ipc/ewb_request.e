@@ -87,7 +87,7 @@ feature
 
 	send_breakpoints is
 		local
-			bpts: LINKED_LIST [BREAKPOINT];
+			bpts: BREAK_LIST;
 			bp: BREAKPOINT;
 			routine: FEATURE_I
 		do
@@ -175,9 +175,9 @@ feature
 			from
 				bpts.start
 			until
-				bpts.after
+				bpts.off
 			loop
-				bp := bpts.item;
+				bp := bpts.item_for_iteration;
 				if bp.is_continue then
 					send_rqst_3 (Rqst_break, 
 							bp.real_body_id - 1,
@@ -189,8 +189,10 @@ feature
 							Break_set,
 							bp.offset - 1);
 				end;
+				debug_info.sent_breakpoints.extend (bp);
 				bpts.forth
-			end			
+			end;
+			bpts.wipe_out
 		end;
 
 	make (code: INTEGER) is

@@ -2,6 +2,8 @@ indexing
 	description:
 		"Top level window. Contains a single widget.%N%
 		%`title' is not displayed."
+	note:
+		"At any time, when all windows are destroyed, the application quits."
 	appearance:
 		" _____________ %N%
 		%|____________X|%N%
@@ -385,6 +387,9 @@ end -- class EV_WINDOW
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.53  2000/04/20 18:30:02  brendel
+--| Added note.
+--|
 --| Revision 1.52  2000/03/27 19:48:14  oconnor
 --| added fixme
 --|

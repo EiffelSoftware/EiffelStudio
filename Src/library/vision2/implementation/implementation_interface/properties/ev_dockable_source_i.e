@@ -663,7 +663,7 @@ feature {NONE} -- Implementation
 			end
 		end
 		
-	item_source_being_docked: EV_ITEM_IMP is
+	item_source_being_docked: EV_ITEM_I is
 			-- `Result' is `source_being_docked' or `Void' if
 			-- it is not an item.
 		do

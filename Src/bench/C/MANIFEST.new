@@ -263,7 +263,6 @@ parsing/shared
 parsing/shared/Jmakefile
 parsing/shared/Makefile.SH
 parsing/shared/click.c
-parsing/shared/limits.h
 parsing/shared/strsave.c
 parsing/shared/typenode.h
 parsing/shared/yacc.c
@@ -333,6 +332,7 @@ run-time/plug.c
 run-time/plug.h
 run-time/retrieve.c
 run-time/retrieve.h
+run-time/rtlimits.h
 run-time/run_idr.c
 run-time/run_idr.h
 run-time/search.c

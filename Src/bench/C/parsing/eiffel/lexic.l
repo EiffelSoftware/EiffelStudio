@@ -27,7 +27,7 @@ Ftp server: ftp.eiffel.com
 
 #include <ctype.h>
 
-#include "limits.h" 	
+#include "rtlimits.h" 	
 #include "macros.h"
 #include "parser.h"
 

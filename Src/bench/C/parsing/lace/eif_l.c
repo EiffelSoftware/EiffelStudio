@@ -596,7 +596,7 @@ char *zztext_ptr;
 #include "macros.h"
 
 #include "lace_y.h"
-#include "limits.h"
+#include "rtlimits.h"
 #include <ctype.h>
 
 /* private functions for lex */

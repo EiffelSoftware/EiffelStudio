@@ -113,11 +113,12 @@ feature -- Basic operations
 				i > count + 1
 			loop
 				arg_name := clone (some_names.item (i))
-				if arg_name = Void or else arg_name.count = 0 then
+				if arg_name = Void or else arg_name.empty then
 					create arg_name.make (0)
 					arg_name.append ("arg_")
 					arg_name.append_integer (i - 1)
 				end
+				arg_name := name_for_feature (arg_name)
 				a_param_descriptor := parameter_descriptor_factory.create_descriptor (arg_name, a_type_info,
 						parameters.item (i - 1), system_descriptor)
 				Result.force (a_param_descriptor)

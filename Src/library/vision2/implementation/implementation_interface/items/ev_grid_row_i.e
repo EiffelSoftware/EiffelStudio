@@ -36,13 +36,14 @@ feature {NONE} -- Initialization
 			create subrows.make
 			internal_height := 16
 			depth_in_tree := 1
+			indent_depth_in_tree := 1
 			subnode_count_recursive := 0
 			expanded_subnode_count_recursive := 0
 			is_expanded := False
 			is_initialized := True
 		end
 
-feature {EV_GRID_I} -- Initialization
+feature {EV_GRID_I, EV_GRID_ROW_I} -- Initialization
 
 	internal_index: INTEGER
 			-- Index of `Current' in parent grid
@@ -425,6 +426,33 @@ feature {EV_GRID_ROW_I} -- Implementation
 		do
 			parent_row_i := a_parent_row
 			depth_in_tree := a_parent_row.depth_in_tree + 1
+			indent_depth_in_tree := a_parent_row.indent_depth_in_tree + 1
+			if parent_row_i.first_set_item_index /= first_set_item_index then
+				indent_depth_in_tree := 1
+			end
+		end
+
+	first_set_item_index : INTEGER is
+			-- Return the first item within `Current' that has been set.
+		local
+			counter: INTEGER
+			current_row_list: SPECIAL [EV_GRID_ITEM_I]
+			row_count: INTEGER
+		do
+			current_row_list := parent_i.row_list @ (index - 1)
+			row_count := parent_i.row_count
+			from
+				counter := 0
+			until
+				counter = row_count or Result > 0
+			loop
+				if current_row_list.item (counter) /= Void then
+					Result := counter
+				end
+				counter := counter + 1
+			end
+		ensure
+			result_positive: Result >= 0
 		end
 
 feature {EV_GRID_ITEM_I} -- Implementation
@@ -489,6 +517,8 @@ feature {EV_GRID_I, EV_GRID_DRAWER_I, EV_GRID_ROW_I} -- Implementation
 		
 	depth_in_tree: INTEGER
 		-- Depth of `Current' within a tree structure.
+		
+	indent_depth_in_tree: INTEGER
 		
 	set_subnode_count_recursive (a_count: INTEGER) is
 			-- Assign `a_count' to `subnode_count_recursive'.

@@ -34,8 +34,6 @@ feature {NONE, GROUP}
 			x,y,w,h: INTEGER;
 			a_context: CONTEXT;
 			s_context: S_CONTEXT;
-			void_context: CONTEXT;
-
 			is_bulletin: BOOLEAN;
 			a_bulletin: BULLETIN_C;
 			group_c: GROUP_C;
@@ -48,14 +46,15 @@ feature {NONE, GROUP}
 			entity_name := clone (a_name);
 			table_create (50);
 
-				-- get the composite_c from the context
+				-- Get the composite_c from the context
 			parent_context ?= context_list.first.parent;
 			is_bulletin := (context_list.count = 1) and
 							(context_list.first.is_bulletin);
 
 			if is_bulletin then
+					-- Use the bulletin for group parent
 				a_context := context_list.first;
-				!!container.make (a_context);
+				!! container.make (a_context);
 				container.save_group_attributes 
 						(a_context.width, a_context.height, a_context.arity);
 				context_list.wipe_out;
@@ -71,6 +70,8 @@ feature {NONE, GROUP}
 					a_context.child_forth;
 				end;
 			else
+					-- Figure out the size to enclose grouped
+					-- widgets.
 				x := context_list.first.x;
 				y := context_list.first.y;
 
@@ -80,20 +81,21 @@ feature {NONE, GROUP}
 					context_list.after
 				loop
 					a_context := context_list.item;
-					x := min (x, a_context.x);
-					y := min (y, a_context.y);
-					w := max (w, a_context.x+a_context.width);
-					h := max (h, a_context.y+a_context.height);
+					x := x.min (a_context.x);
+					y := y.min (a_context.y);
+					w := w.max (a_context.x+a_context.width);
+					h := h.max (a_context.y+a_context.height);
 					context_list.forth;
 				end;
 				w := w - x;
 				h := h - y;
-				x := x - 2;
-				y := y - 2;
-				w := w + 4;
-				h := h + 4;
+				x := x - 3;
+				y := y - 3;
+				w := w + 5;
+				h := h + 5;
 
-				!!container.make (void_context);
+					-- Create a container and save size attributes.
+				!! container.make (Void);
 				container.save_group_attributes (w, h, context_list.count);
 			end;
 			from
@@ -102,6 +104,8 @@ feature {NONE, GROUP}
 				context_list.after
 			loop
 				s_context := save_context (context_list.item);
+					-- Reset the position relative to the new
+					-- group parent.
 				s_context.reset_position (x, y);
 				--remove_context_from_table (context_list.item);
 				context_list.forth
@@ -109,7 +113,7 @@ feature {NONE, GROUP}
 			trim;
 				-- Creation of the first instance
 				-- to replace the grouped contexts
-			!!group_c;
+			!! group_c;
 			group_c.set_type (Current);
 
 			parent_context.append (group_c);
@@ -134,7 +138,7 @@ feature {NONE, GROUP}
 				for_import.set_item (False);
 					-- Clear the context table.
 				context_table.clear_all;
-				!!create_command;
+				!! create_command;
 				create_command.group_create (group_c, context_list);
 				create_command.execute (group_c);
 
@@ -433,11 +437,17 @@ feature
 feature {NONE}
 
 	save_context (a_context: CONTEXT): S_CONTEXT is
+			-- Convert `a_context' to storage data (S_CONTEXT).
+			-- Store Result into current table (side effect
+			-- in routine but needs to be done since current
+			-- is stored to disk and we don't want temporary
+			-- attributes).
 		local
 			lost_s_context: S_CONTEXT;
 		do
 			Result := a_context.stored_node;
 			put (Result);
+				-- Recursive store the children
 			from
 				a_context.child_start
 			until
@@ -448,7 +458,6 @@ feature {NONE}
 			end;
 		end;
 
-	
 feature 
 	
 	create_oui_group (group_c: GROUP_C) is

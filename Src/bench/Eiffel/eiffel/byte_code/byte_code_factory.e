@@ -114,6 +114,7 @@ feature {NONE} -- Implementation: status report
 			a_target_type_not_void: a_target_type /= Void
 		local
 			l_string_b: STRING_B
+			l_hector_b: HECTOR_B
 		do
 			if
 				System.il_generation and
@@ -121,6 +122,9 @@ feature {NONE} -- Implementation: status report
 			then
 				l_string_b ?= a_expr
 				Result := l_string_b /= Void
+			elseif a_source_type.is_typed_pointer and a_target_type.is_pointer then
+				l_hector_b ?= a_expr
+				Result := l_hector_b /= Void
 			end
 		end
 		
@@ -135,6 +139,7 @@ feature {NONE} -- Implementation: Byte node
 			is_basic_conversion: is_basic_conversion (a_expr, a_source_type, a_target_type)
 		local
 			l_string_b: STRING_B
+			l_hector_b: HECTOR_B
 		do
 			if
 				System.il_generation and
@@ -146,6 +151,13 @@ feature {NONE} -- Implementation: Byte node
 				end
 				l_string_b.set_is_dotnet_string (True)
 				Result := l_string_b
+			elseif a_source_type.is_typed_pointer and a_target_type.is_pointer then
+				l_hector_b ?= a_expr
+				check
+					l_hector_b_not_void: l_hector_b /= Void
+				end
+				l_hector_b.set_is_pointer
+				Result := l_hector_b
 			end			
 		end
 
@@ -168,5 +180,5 @@ feature {NONE} -- Implementation: Access
 		ensure
 			system_string_type_not_void: Result /= Void
 		end
-		
+
 end -- class BYTE_CODE_FACTORY

@@ -257,7 +257,7 @@ feature {NONE} -- Implementation
 				create cursor.make_from_integer (1, Current)
 				selection_cursor := clone (cursor)
 			end
-			{TEXT} Precursor (was_first_block)
+			Precursor {TEXT} (was_first_block)
 		end
 
 	string_selected (start_sel, end_sel: like cursor): STRING is

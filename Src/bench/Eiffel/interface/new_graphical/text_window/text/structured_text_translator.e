@@ -87,7 +87,7 @@ feature -- Text processing
 			-- Process structured text `text' to be
 			-- generated as output.
 		do
-			{TEXT_FORMATTER} Precursor (a_text)
+			Precursor {TEXT_FORMATTER} (a_text)
 			disable_has_breakable_slots
 		end
 

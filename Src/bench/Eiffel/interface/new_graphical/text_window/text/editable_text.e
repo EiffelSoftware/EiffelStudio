@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 	make is
 			-- create an empty text
 		do
-			{SELECTABLE_TEXT} Precursor
+			Precursor {SELECTABLE_TEXT}
 			create history.make (Current)
 			if Editor_preferences.use_tab_for_indentation then
 				tabulation_symbol := "%T"
@@ -506,7 +506,7 @@ feature -- Reinitialization
 	reset_text is
 			-- put Current back in its original state
 		do
-			{SELECTABLE_TEXT} Precursor
+			Precursor {SELECTABLE_TEXT}
 			history.initialize
 		end
 
@@ -517,7 +517,7 @@ feature -- Reinitialization
 			history.reset
 			history.set_mark
 
-			{SELECTABLE_TEXT} Precursor
+			Precursor {SELECTABLE_TEXT}
 		end
 
 feature {UNDO_CMD} -- Operations on selected text

@@ -62,9 +62,8 @@ feature -- Basic operations
 feature {NONE} -- Implementation
 
 	description_message: STRING is 
-		"Objectes of this class set the registry keys necessary for COM to access the component%%%N%T%T%T%T  %
-		% %%and activate a new instance of the component whenever COM asks for if.%%%N%T%T%T%T  %
-		% %%User should not inherit from this class or modify it."
+		"Set the registry keys necessary for COM to activate the component%%%N%T%T%T%T  %
+		% %%Do not modify this class."
 
 	Local_string_var: STRING is "local_string"
 			-- Used for code generation.

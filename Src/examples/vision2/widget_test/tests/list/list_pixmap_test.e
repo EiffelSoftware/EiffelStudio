@@ -44,7 +44,7 @@ feature {NONE} -- Implementation
 				create list_item.make_with_text ("Item " + counter.out)
 				list_item.select_actions.extend (agent select_pixmap)
 
-				list_item.set_pixmap (unselected_pixmap)
+				list_item.set_pixmap (numbered_pixmap (1))
 				list.extend (list_item)
 				counter := counter + 1
 			end
@@ -56,34 +56,34 @@ feature {NONE} -- Implementation
 
 	list: EV_LIST
 	
-	selected_pixmap: EV_PIXMAP is
-			--
+	numbered_pixmap (a_number: INTEGER): EV_PIXMAP is
+			-- `Result' is pixmap named "image" + a_number.out.
 		local
 			filename: FILE_NAME
-		once
+		do
+			if all_loaded_pixmaps = Void then
+				create all_loaded_pixmaps.make (2)
+			end
 			create filename.make_from_string (current_working_directory)
 			filename.extend ("png")
-			filename.extend ("shell.png")
-			create Result
-			Result.set_with_named_file (filename)	
+			filename.extend ("image" + a_number.out + ".png")
+			if all_loaded_pixmaps @ filename /= Void then
+				Result := all_loaded_pixmaps @ filename
+			else
+				create Result
+				Result.set_with_named_file (filename)	
+				all_loaded_pixmaps.put (Result, filename)
+			end
 		end
 		
-	unselected_pixmap: EV_PIXMAP is
-			--
-		local
-			filename: FILE_NAME
-		once
-			create filename.make_from_string (current_working_directory)
-			filename.extend ("png")
-			filename.extend ("info.png")
-			create Result
-			Result.set_with_named_file (filename)	
-		end
+	all_loaded_pixmaps: HASH_TABLE [EV_PIXMAP, STRING]
+			-- All pixmaps laready loaded, referenced by their names.
+			-- For quick access.
 	
 	select_pixmap is
 			-- Assign `selected_pixmap' to `selected_item' of `list'.
 		do
-			list.selected_item.set_pixmap (selected_pixmap)
+			list.selected_item.set_pixmap (numbered_pixmap (2))
 		end
 
 	reset is
@@ -94,7 +94,7 @@ feature {NONE} -- Implementation
 			until
 				list.off
 			loop
-				list.item.set_pixmap (unselected_pixmap)
+				list.item.set_pixmap (numbered_pixmap (1))
 				list.forth
 			end
 		end

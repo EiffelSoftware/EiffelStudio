@@ -369,4 +369,21 @@ feature -- Initialization
 			as142.pass_click_set;
 		end;
 
+feature {NONE} -- Implementation
+
+	-- Dummies, intended to be redefined if a specific version is
+	-- needed.
+
+	anchor_class_as: CLASS_AS is
+		do
+		end;
+
+	anchor_feature_as: FEATURE_AS is
+		do
+		end;
+
+	anchor_feature_clause_as: FEATURE_CLAUSE_AS is
+		do
+		end;
+
 end -- class YACC_EIFFEL

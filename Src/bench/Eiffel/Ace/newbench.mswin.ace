@@ -220,7 +220,7 @@ cluster
 
 	all activation_checker:		"$EIFFEL_SRC\Eiffel\library\activation"
 		exclude
-			"free"; "command_line"; "CVS"; 
+			"free"; "command_line"; "CVS"; "unix";
 		end
 
 	all keygen:		"$EIFFEL_SRC\library\keygen"

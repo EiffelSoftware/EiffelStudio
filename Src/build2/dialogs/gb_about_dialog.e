@@ -47,8 +47,7 @@ feature -- Initialization
 			disable_user_resize
 
 				-- Create controls.
-			create eiffel_image
-			eiffel_image.set_with_named_file ("bm_About.png")
+			eiffel_image := (create {GB_SHARED_PIXMAPS}).Help_about_pixmap
 			eiffel_image.set_minimum_size (eiffel_image.width, dialog_unit_to_pixels(200))
 			eiffel_image.set_background_color (White)
 			create info_label.make_with_text (t_info)

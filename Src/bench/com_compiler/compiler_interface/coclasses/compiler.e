@@ -214,9 +214,6 @@ feature -- Basic Operations
 						Eiffel_project.finalize (discard_assertions)
 					when feature {ECOM_EIF_COMPILATION_MODE_ENUM}.eif_compilation_mode_precompile then
 						Eiffel_project.precompile (True)
-					else
-						-- invalid arg
-						(create {ECOM_EXCEPTION}).trigger (feature {ECOM_EXCEPTION_CODES}.e_invalidarg)
 					end
 					
 					-- close output pipe for piped output

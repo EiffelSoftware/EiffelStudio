@@ -382,8 +382,6 @@ feature -- Element change
         do
         	if (valid_clr_versions.has (a_version)) then
 	            ace.set_target_clr_version (a_version)        		
-	        else
-	        	trigger (e_invalidarg)
         	end
         end
         

@@ -13,8 +13,9 @@
 	executable.
 */
 
-#include <signal.h>
 #include "eif_config.h"
+
+#include <signal.h>
 #include <stdio.h>
 #ifdef I_STRING
 #include <string.h>
@@ -31,6 +32,7 @@
 #include "eif_main.h"
 #include "eif_garcol.h"
 #include "eif_error.h"
+#include "eif_lmalloc.h"		/* for eif_free, eif_realloc */
 
 #ifdef EIF_WIN32
 #include "eif_econsole.h"

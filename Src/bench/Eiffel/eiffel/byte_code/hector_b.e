@@ -75,6 +75,9 @@ feature -- Byte code generation
 				ba.append (Bc_reserve)
 			else
 				expr.make_byte_code (ba);
+				if expr.type.is_reference then
+					ba.append (Bc_ref_to_ptr);
+				end;
 			end
 		end;
 

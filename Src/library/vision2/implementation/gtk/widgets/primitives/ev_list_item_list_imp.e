@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 		
 					-- Creating the gtk_list, pointed by `list_widget':
 			list_widget := feature {EV_GTK_EXTERNALS}.gtk_list_new
-			gtk_widget_set_flags (
+			feature {EV_GTK_EXTERNALS}.gtk_widget_set_flags (
 				c_object,
 				feature {EV_GTK_EXTERNALS}.GTK_CAN_FOCUS_ENUM
 			)

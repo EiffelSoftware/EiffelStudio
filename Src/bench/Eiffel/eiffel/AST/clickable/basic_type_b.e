@@ -29,9 +29,9 @@ feature -- Signature
 
 feature -- Stoning
 
-	stone (reference_class: CLASS_C): CLASSC_STONE is
+	stone (reference_class: E_CLASS): CLASSC_STONE is
 		do
-			!!Result.make (actual_type.associated_class)
+			!!Result.make (actual_type.associated_eclass)
 		end;
 
 feature -- Formatting

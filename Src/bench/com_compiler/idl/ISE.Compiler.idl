@@ -28,6 +28,7 @@ import "oaidl.idl";
 //---------------------------------------------------------------------
 ///////////////////////////////////////////////////////////////////////
 
+#define EIFFEL_BASE_DISPID  10000
 
 interface IEiffelProject;
 interface IEiffelCompletionInfo;
@@ -73,6 +74,105 @@ enum EIF_CLUSTER_NAMESPACE_GENERATION;
 //
 //---------------------------------------------------------------------
 ///////////////////////////////////////////////////////////////////////
+
+enum
+{
+    // IEiffelProjectProperties Dispatch ID's
+    DISPID_system_name = EIFFEL_BASE_DISPID,
+    DISPID_root_class_name,
+    DISPID_creation_routine,
+    DISPID_namespace_generation,
+    DISPID_default_namespace,
+    DISPID_project_type,
+    DISPID_dot_net_naming_convention,
+    DISPID_generate_debug_info,
+    DISPID_precompiled_library,
+    DISPID_assertions,
+    DISPID_clusters,
+    DISPID_externals,
+    DISPID_assemblies,
+    DISPID_title,
+    DISPID_description,
+    DISPID_company,
+    DISPID_product,
+    DISPID_version,
+    DISPID_trademark,
+    DISPID_copyright,
+    DISPID_culture,
+    DISPID_key_file_name,
+    DISPID_working_directory,
+    DISPID_Apply,
+
+    // IEiffelSystemClusters Dispatch ID's
+    DISPID_cluster_tree,
+    DISPID_flat_clusters,
+    DISPID_store,
+    DISPID_add_cluster,
+    DISPID_remove_cluster,
+    DISPID_cluster_properties,
+    DISPID_cluster_properties_by_id,
+    DISPID_change_cluster_name,
+    DISPID_is_valid_name,
+    DISPID_get_cluster_fullname,
+
+    // IEiffelSystemAssemblies Dispatch ID's
+    DISPID_add_assembly,
+    DISPID_add_local_assembly,
+    DISPID_remove_assembly,
+    DISPID_assembly_properties,
+    DISPID_is_valid_cluster_name,
+    DISPID_contains_assembly,
+    DISPID_contains_gac_assembly,
+    DISPID_contains_local_assembly,
+    DISPID_cluster_name_from_gac_assembly,
+    DISPID_cluster_name_from_local_assembly,
+    DISPID_is_valid_prefix,
+
+    // IEiffelClusterProperties Dispatch ID's
+    DISPID_name,
+    DISPID_cluster_path,
+    DISPID_override,
+    DISPID_is_library,
+    DISPID_all,
+    DISPID_use_system_default,
+    DISPID_evaluate_require_by_default,
+    DISPID_evaluate_ensure_by_default,
+    DISPID_evaluate_check_by_default,
+    DISPID_evaluate_loop_by_default,
+    DISPID_evaluate_invariant_by_default,
+    DISPID_set_assertions,
+    DISPID_excluded,
+    DISPID_add_exclude,
+    DISPID_remove_exclude,
+    DISPID_parent_name,
+    DISPID_has_parent,
+    DISPID_subclusters,
+    DISPID_has_children,
+    DISPID_cluster_id,
+    DISPID_is_eiffel_library,
+    DISPID_expanded_cluster_path,
+    DISPID_cluster_namespace,
+
+    // IEiffelAssemblyProperties Dispatch ID's
+    DISPID_assembly_name,
+    DISPID_assembly_version,
+    DISPID_assembly_culture,
+    DISPID_assembly_public_key_token,
+    DISPID_is_local,
+    DISPID_assembly_cluster_name,
+    DISPID_assembly_prefix,
+    DISPID_is_prefix_read_only,
+
+    // IEiffelSystemExternals Dispatch ID's
+    DISPID_add_include_path,
+    DISPID_remove_include_path,
+    DISPID_replace_include_path,
+    DISPID_include_paths,
+    DISPID_add_object_file,
+    DISPID_remove_object_file,
+    DISPID_replace_object_file,
+    DISPID_object_files
+};
 
 
 
@@ -953,334 +1053,331 @@ interface IEiffelParameterDescriptor: IUnknown
 //---------------------------------------------------------------------
 
 [
+    dual,
     object,
     uuid (UUID_IEiffelProjectProperties),
     helpstring ("Eiffel Project Properties.")
 ]
-interface IEiffelProjectProperties: IUnknown
+interface IEiffelProjectProperties: IDispatch
 {
-
-    [helpstring ("System name."), propget]
+    [id (DISPID_system_name), helpstring ("System name."), propget]
     HRESULT system_name ([out, retval] BSTR * return_value);
 
-    [helpstring ("System name."), propput]
+    [id (DISPID_system_name), helpstring ("System name."), propput]
     HRESULT system_name ([in] BSTR a_name);
 
-    [helpstring ("Root class name."), propget]
+    [id (DISPID_root_class_name), helpstring ("Root class name."), propget]
     HRESULT root_class_name ([out, retval] BSTR * return_value);
 
-    [helpstring ("Root class name."), propput]
+    [id (DISPID_root_class_name), helpstring ("Root class name."), propput]
     HRESULT root_class_name ([in] BSTR a_name);
 
-    [helpstring ("Creation routine name."), propget]
+    [id (DISPID_creation_routine), helpstring ("Creation routine name."), propget]
     HRESULT creation_routine ([out, retval] BSTR * return_value);
 
-    [helpstring ("Creation routine name."), propput]
+    [id (DISPID_creation_routine), helpstring ("Creation routine name."), propput]
     HRESULT creation_routine ([in] BSTR a_routine);
 
-    [helpstring ("Namespace generation for cluster"), propget]
+    [id (DISPID_namespace_generation), helpstring ("Namespace generation for cluster"), propget]
     HRESULT namespace_generation ([out, retval] EIF_CLUSTER_NAMESPACE_GENERATION* penuClusterNamespaceGeneration);
 
-    [helpstring ("Namespace generation for cluster"), propput]
+    [id (DISPID_namespace_generation), helpstring ("Namespace generation for cluster"), propput]
     HRESULT namespace_generation ([in] EIF_CLUSTER_NAMESPACE_GENERATION enuClusterNamespaceGeneration);
-    
-    [helpstring ("Default namespace."), propget]
+
+    [id (DISPID_default_namespace), helpstring ("Default namespace."), propget]
     HRESULT default_namespace ([out, retval] BSTR * return_value);
 
-    [helpstring ("Default namespace."), propput]
+    [id (DISPID_default_namespace), helpstring ("Default namespace."), propput]
     HRESULT default_namespace ([in] BSTR a_namespace);
 
-    [helpstring ("Project type"), propget]
+    [id (DISPID_project_type), helpstring ("Project type"), propget]
     HRESULT project_type ([out, retval] EIF_PROJECT_TYPES* penumProjectType);
 
-    [helpstring ("Project type"), propput]
+    [id (DISPID_project_type), helpstring ("Project type"), propput]
     HRESULT project_type ([in] EIF_PROJECT_TYPES enumProjectType);
-    
-    [helpstring (".NET Naming convention"), propget]
+
+    [id (DISPID_dot_net_naming_convention), helpstring (".NET Naming convention"), propget]
     HRESULT dot_net_naming_convention ([out, retval] VARIANT_BOOL* pvbNamingConvention);
 
-    [helpstring (".NET Naming convention"), propput]
+    [id (DISPID_dot_net_naming_convention), helpstring (".NET Naming convention"), propput]
     HRESULT dot_net_naming_convention ([in] VARIANT_BOOL pvbNamingConvention);
 
-    [helpstring ("Generate debug info?"), propget]
+    [id (DISPID_generate_debug_info), helpstring ("Generate debug info?"), propget]
     HRESULT generate_debug_info ([out, retval] VARIANT_BOOL * return_value);
 
-    [helpstring ("Generate debug info?"), propput]
+    [id (DISPID_generate_debug_info), helpstring ("Generate debug info?"), propput]
     HRESULT generate_debug_info ([in] VARIANT_BOOL new_value);
 
-    [helpstring ("Precompiled file."), propget]
+    [id (DISPID_precompiled_library), helpstring ("Precompiled file."), propget]
     HRESULT precompiled_library ([out, retval] BSTR * return_value);
 
-    [helpstring ("Precompiled file."), propput]
+    [id (DISPID_precompiled_library), helpstring ("Precompiled file."), propput]
     HRESULT precompiled_library([in] BSTR new_value);
 
-    [helpstring ("Project assertions"), propget]
+    [id (DISPID_assertions), helpstring ("Project assertions"), propget]
     HRESULT assertions ([out, retval] ULONG* pAssertions);
-    
-    [helpstring ("Project assertions"), propput]
+
+    [id (DISPID_assertions), helpstring ("Project assertions"), propput]
     HRESULT assertions ([in] ULONG pAssertions);
 
-    [helpstring ("Project Clusters."), propget]
+    [id (DISPID_clusters), helpstring ("Project Clusters."), propget]
     HRESULT clusters ([out, retval] IEiffelSystemClusters ** return_value);
 
-    [helpstring ("Externals."), propget]
+    [id (DISPID_externals), helpstring ("Externals."), propget]
     HRESULT externals ([out, retval] IEiffelSystemExternals ** return_value);
 
-    [helpstring ("Assemblies."), propget]
+    [id (DISPID_assemblies), helpstring ("Assemblies."), propget]
     HRESULT assemblies ([out, retval] IEiffelSystemAssemblies ** return_value);
 
-    [helpstring ("Project title."), propget]
+    [id (DISPID_title), helpstring ("Project title."), propget]
     HRESULT title ([out, retval] BSTR * return_value);
 
-    [helpstring ("Project title."), propput]
+    [id (DISPID_title), helpstring ("Project title."), propput]
     HRESULT title ([in] BSTR new_value);
 
-    [helpstring ("Project description."), propget]
+    [id (DISPID_description), helpstring ("Project description."), propget]
     HRESULT description ([out, retval] BSTR * return_value);
 
-    [helpstring ("Project description."), propput]
+    [id (DISPID_description), helpstring ("Project description."), propput]
     HRESULT description ([in] BSTR new_value);
 
-    [helpstring ("Project company."), propget]
+    [id (DISPID_company), helpstring ("Project company."), propget]
     HRESULT company ([out, retval] BSTR * return_value);
 
-    [helpstring ("Project company."), propput]
+    [id (DISPID_company), helpstring ("Project company."), propput]
     HRESULT company ([in] BSTR new_value);
 
-    [helpstring ("Product."), propget]
+    [id (DISPID_product), helpstring ("Product."), propget]
     HRESULT product ([out, retval] BSTR * return_value);
 
-    [helpstring ("Product."), propput]
+    [id (DISPID_product), helpstring ("Product."), propput]
     HRESULT product ([in] BSTR new_value);
 
-    [helpstring ("Project version."), propget]
+    [id (DISPID_version), helpstring ("Project version."), propget]
     HRESULT version ([out, retval] BSTR * return_value);
 
-    [helpstring ("Project version."), propput]
+    [id (DISPID_version), helpstring ("Project version."), propput]
     HRESULT version ([in] BSTR new_value);
 
-    [helpstring ("Project trademark."), propget]
+    [id (DISPID_trademark), helpstring ("Project trademark."), propget]
     HRESULT trademark ([out, retval] BSTR * return_value);
 
-    [helpstring ("Project trademark."), propput]
+    [id (DISPID_trademark), helpstring ("Project trademark."), propput]
     HRESULT trademark ([in] BSTR new_value);
 
-    [helpstring ("Project copyright."), propget]
+    [id (DISPID_copyright), helpstring ("Project copyright."), propget]
     HRESULT copyright ([out, retval] BSTR * return_value);
 
-    [helpstring ("Project copyright."), propput]
+    [id (DISPID_copyright), helpstring ("Project copyright."), propput]
     HRESULT copyright ([in] BSTR new_value);
 
-    [helpstring ("Asembly culture."), propget]
+    [id (DISPID_culture), helpstring ("Asembly culture."), propget]
     HRESULT culture ([out, retval] BSTR * return_value);
 
-    [helpstring ("Asssembly culture."), propput]
+    [id (DISPID_culture), helpstring ("Asssembly culture."), propput]
     HRESULT culture ([in] BSTR new_value);
 
-    [helpstring ("Asembly signing key file name."), propget]
+    [id (DISPID_key_file_name), helpstring ("Asembly signing key file name."), propget]
     HRESULT key_file_name ([out, retval] BSTR * return_value);
 
-    [helpstring ("Assembly signing key file name."), propput]
+    [id (DISPID_key_file_name), helpstring ("Assembly signing key file name."), propput]
     HRESULT key_file_name ([in] BSTR new_value);
 
-    [helpstring ("Project working directory"), propget]
+    [id (DISPID_working_directory), helpstring ("Project working directory"), propget]
     HRESULT working_directory ([out, retval] BSTR* pbstrWorkingDirectory);
-    
-    [helpstring ("Project working directory"), propput]
+
+    [id (DISPID_working_directory), helpstring ("Project working directory"), propput]
     HRESULT working_directory ([in] BSTR bstrWorkingDirectory);
 
-    [helpstring ("Apply changes")]
+    [id (DISPID_Apply), helpstring ("Apply changes")]
     HRESULT Apply ();
-
 };
 //---------------------------------------------------------------------
 
 [
+    dual,
     object,
     uuid (UUID_IEiffelSystemClusters),
     helpstring ("Eiffel System Clusters.")
 ]
-interface IEiffelSystemClusters: IUnknown
+interface IEiffelSystemClusters: IDispatch
 {
-    [helpstring ("Cluster tree.")]
+    [id (DISPID_cluster_tree), helpstring ("Cluster tree.")]
     HRESULT cluster_tree ([out, retval] IEnumClusterProp ** return_value);
 
-    [helpstring ("Cluster in a flat form.")]
+    [id (DISPID_flat_clusters), helpstring ("Cluster in a flat form.")]
     HRESULT flat_clusters ([out, retval] IEnumClusterProp ** return_value);
 
-    [helpstring ("Save changes.")]
+    [id (DISPID_store), helpstring ("Save changes.")]
     HRESULT store ();
 
-    [helpstring ("Add a cluster to the project.")]
+    [id (DISPID_add_cluster), helpstring ("Add a cluster to the project.")]
     HRESULT add_cluster ([in] BSTR cluster_name, [in] BSTR parent_name, [in] BSTR cluster_path);
 
-    [helpstring ("Remove a cluster from the project.")]
+    [id (DISPID_remove_cluster), helpstring ("Remove a cluster from the project.")]
     HRESULT remove_cluster ([in] BSTR cluster_name);
 
-    [helpstring ("Cluster properties.")]
+    [id (DISPID_cluster_properties), helpstring ("Cluster properties.")]
     HRESULT cluster_properties ([in] BSTR cluster_name, [out, retval] IEiffelClusterProperties ** return_value);
 
-    [helpstring ("Cluster properties.")]
+    [id (DISPID_cluster_properties_by_id), helpstring ("Cluster properties.")]
     HRESULT cluster_properties_by_id ([in] ULONG cluster_id, [out, retval] IEiffelClusterProperties ** return_value);
 
-    [helpstring ("Change cluster name.")]
+    [id (DISPID_change_cluster_name), helpstring ("Change cluster name.")]
     HRESULT change_cluster_name ([in] BSTR a_name, [in] BSTR a_new_name);
 
-    [helpstring ("Checks to see if a cluster name is valid")]
+    [id (DISPID_is_valid_name), helpstring ("Checks to see if a cluster name is valid")]
     HRESULT is_valid_name ([in] BSTR cluster_name, [out, retval] VARIANT_BOOL * return_value);
 
-    [helpstring ("Retrieves a clusters full name from its name")]
+    [id (DISPID_get_cluster_fullname), helpstring ("Retrieves a clusters full name from its name")]
     HRESULT get_cluster_fullname ([in] BSTR cluster_name, [out, retval] BSTR * return_value);
 };
 
 //---------------------------------------------------------------------`
 
 [
+    dual,
     object,
     uuid (UUID_IEiffelSystemAssemblies),
     helpstring ("Eiffel System Assemblies.")
 ]
-interface IEiffelSystemAssemblies: IUnknown
+interface IEiffelSystemAssemblies: IDispatch
 {
-    [helpstring ("Save changes.")]
+    [id (DISPID_store), helpstring ("Save changes.")]
     HRESULT store ();
 
-    [helpstring ("Add a signed assembly to the project.")]
+    [id (DISPID_add_assembly), helpstring ("Add a signed assembly to the project.")]
     HRESULT add_assembly ([in] BSTR assembly_prefix, [in] BSTR cluster_name, [in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey);
 
-    [helpstring ("Add a local assembly to the project.")]
+    [id (DISPID_add_local_assembly), helpstring ("Add a local assembly to the project.")]
     HRESULT add_local_assembly ([in] BSTR assembly_prefix, [in] BSTR cluster_name, [in] BSTR a_path);
 
-    [helpstring ("Remove an assembly from the project.")]
+    [id (DISPID_remove_assembly), helpstring ("Remove an assembly from the project.")]
     HRESULT remove_assembly ([in] BSTR assembly_identifier);
 
-    [helpstring ("Assembly properties.")]
+    [id (DISPID_assembly_properties), helpstring ("Assembly properties.")]
     HRESULT assembly_properties ([in] BSTR cluster_name, [out, retval] IEiffelAssemblyProperties ** return_value);
 
-    [helpstring ("Checks to see if a assembly cluster name is valid")]
+    [id (DISPID_is_valid_cluster_name), helpstring ("Checks to see if a assembly cluster name is valid")]
     HRESULT is_valid_cluster_name ([in] BSTR cluster_name, [out, retval] VARIANT_BOOL * return_value);
 
-    [helpstring ("Checks to see if a assembly cluster name has already been added to the project")]
+    [id (DISPID_contains_assembly), helpstring ("Checks to see if a assembly cluster name has already been added to the project")]
     HRESULT contains_assembly ([in] BSTR cluster_name, [out, retval] VARIANT_BOOL * return_value);
 
-    [helpstring ("Checks to see if a signed assembly has already been added to the project")]
+    [id (DISPID_contains_gac_assembly), helpstring ("Checks to see if a signed assembly has already been added to the project")]
     HRESULT contains_gac_assembly ([in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey, [out, retval] VARIANT_BOOL * return_value);
 
-    [helpstring ("Checks to see if a unsigned assembly has already been added to the project")]
+    [id (DISPID_contains_local_assembly), helpstring ("Checks to see if a unsigned assembly has already been added to the project")]
     HRESULT contains_local_assembly ([in] BSTR a_path, [out, retval] VARIANT_BOOL * return_value);
 
-    [helpstring ("Retrieves the cluster name for a signed assembly in the project")]
+    [id (DISPID_cluster_name_from_gac_assembly), helpstring ("Retrieves the cluster name for a signed assembly in the project")]
     HRESULT cluster_name_from_gac_assembly ([in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey, [out, retval] BSTR * return_value);
 
-    [helpstring ("Retrieves the cluster name for a unsigned assembly in the project")]
+    [id (DISPID_cluster_name_from_local_assembly), helpstring ("Retrieves the cluster name for a unsigned assembly in the project")]
     HRESULT cluster_name_from_local_assembly ([in] BSTR a_path, [out, retval] BSTR * return_value);
 
-    [helpstring ("Is 'prefix' a valid assembly prefix")]
+    [id (DISPID_is_valid_prefix), helpstring ("Is 'prefix' a valid assembly prefix")]
     HRESULT is_valid_prefix ([in] BSTR assembly_prefix, [out, retval] VARIANT_BOOL * return_value);
 
-    [propget, helpstring ("Returns all of the assemblies in an enumerator")]
+    [id (DISPID_assemblies), helpstring ("Returns all of the assemblies in an enumerator"), propget]
     HRESULT assemblies ([out, retval] IEnumAssembly ** return_value);
 };
 
 //---------------------------------------------------------------------
 
 [
+    dual,
     object,
     uuid (UUID_IEiffelClusterProperties),
     helpstring ("Eiffel Cluster Properties (for Ace file).")
 ]
-interface IEiffelClusterProperties: IUnknown
+interface IEiffelClusterProperties: IDispatch
 {
-
-    [helpstring ("Cluster name."), propget]
+    [id (DISPID_name), helpstring ("Cluster name."), propget]
     HRESULT name ([out, retval] BSTR * return_value);
 
-    [helpstring ("Full path to cluster."), propget]
+    [id (DISPID_cluster_path), helpstring ("Full path to cluster."), propget]
     HRESULT cluster_path ([out, retval] BSTR * path);
 
-    [helpstring ("Full path to cluster."), propput]
+    [id (DISPID_cluster_path), helpstring ("Full path to cluster."), propput]
     HRESULT cluster_path ([in] BSTR path);
 
-    [helpstring ("Should this cluster classes take priority over other classes with same name?"), propget]
+    [id (DISPID_override), helpstring ("Should this cluster classes take priority over other classes with same name?"), propget]
     HRESULT override ([out, retval] VARIANT_BOOL * return_value);
 
-    [helpstring ("Should this cluster classes take priority over other classes with same name?"), propput]
+    [id (DISPID_override), helpstring ("Should this cluster classes take priority over other classes with same name?"), propput]
     HRESULT override ([in] VARIANT_BOOL a_bool);
 
-    [helpstring ("Should this cluster be treated as library?"), propget]
+    [id (DISPID_is_library), helpstring ("Should this cluster be treated as library?"), propget]
     HRESULT is_library ([out, retval] VARIANT_BOOL * return_value);
 
-    [helpstring ("Should this cluster be treated as library?"), propput]
+    [id (DISPID_is_library), helpstring ("Should this cluster be treated as library?"), propput]
     HRESULT is_library ([in] VARIANT_BOOL a_bool);
 
-    [helpstring ("Should all subclusters be included?"), propget]
+    [id (DISPID_all), helpstring ("Should all subclusters be included?"), propget]
     HRESULT all ([out, retval] VARIANT_BOOL * return_value);
 
-    [helpstring ("Should all subclusters be included?"), propput]
+    [id (DISPID_all), helpstring ("Should all subclusters be included?"), propput]
     HRESULT all ([in] VARIANT_BOOL new_value);
 
-    [helpstring ("Should use system default?"), propget]
+    [id (DISPID_use_system_default), helpstring ("Should use system default?"), propget]
     HRESULT use_system_default ([out, retval] VARIANT_BOOL * return_value);
 
-    [helpstring ("Should use system default?"), propput]
+    [id (DISPID_use_system_default), helpstring ("Should use system default?"), propput]
     HRESULT use_system_default ([in] VARIANT_BOOL new_value);
 
-    [helpstring ("Should preconditions be evaluated by default?"), propget]
+    [id (DISPID_evaluate_require_by_default), helpstring ("Should preconditions be evaluated by default?"), propget]
     HRESULT evaluate_require_by_default ([out, retval] VARIANT_BOOL * return_value);
 
-    [helpstring ("Should postconditions be evaluated by default?"), propget]
+    [id (DISPID_evaluate_ensure_by_default), helpstring ("Should postconditions be evaluated by default?"), propget]
     HRESULT evaluate_ensure_by_default ([out, retval] VARIANT_BOOL * return_value);
 
-    [helpstring ("Should check assertions be evaluated by default?"), propget]
+    [id (DISPID_evaluate_check_by_default), helpstring ("Should check assertions be evaluated by default?"), propget]
     HRESULT evaluate_check_by_default ([out, retval] VARIANT_BOOL * return_value);
 
-    [helpstring ("Should loop assertions be evaluated by default?"), propget]
+    [id (DISPID_evaluate_loop_by_default), helpstring ("Should loop assertions be evaluated by default?"), propget]
     HRESULT evaluate_loop_by_default ([out, retval] VARIANT_BOOL * return_value);
 
-    [helpstring ("Should class invariants be evaluated by default?"), propget]
+    [id (DISPID_evaluate_invariant_by_default), helpstring ("Should class invariants be evaluated by default?"), propget]
     HRESULT evaluate_invariant_by_default ([out, retval] VARIANT_BOOL *return_value);
 
-    [helpstring ("Set assertions for cluster.")]
-    HRESULT set_assertions ([in] VARIANT_BOOL evaluate_check,
-                                                    [in] VARIANT_BOOL evaluate_require,
-                                                    [in] VARIANT_BOOL evaluate_ensure,
-                                                    [in] VARIANT_BOOL evaluate_loop,
-                                                    [in] VARIANT_BOOL evaluate_invariant);
+    [id (DISPID_set_assertions), helpstring ("Set assertions for cluster.")]
+    HRESULT set_assertions ([in] VARIANT_BOOL evaluate_check, [in] VARIANT_BOOL evaluate_require, [in] VARIANT_BOOL evaluate_ensure, [in] VARIANT_BOOL evaluate_loop, [in] VARIANT_BOOL evaluate_invariant);
 
-    [helpstring ("List of excluded directories.")]
+    [id (DISPID_excluded), helpstring ("List of excluded directories.")]
     HRESULT excluded ([out, retval] IEnumClusterExcludes ** return_value);
 
-    [helpstring ("Add a directory to exclude.")]
+    [id (DISPID_add_exclude), helpstring ("Add a directory to exclude.")]
     HRESULT add_exclude ([in] BSTR dir_name);
 
-    [helpstring ("Remove a directory to exclude.")]
+    [id (DISPID_remove_exclude), helpstring ("Remove a directory to exclude.")]
     HRESULT remove_exclude ([in] BSTR dir_name);
 
-    [helpstring ("Name of the parent cluster."), propget]
+    [id (DISPID_parent_name), helpstring ("Name of the parent cluster."), propget]
     HRESULT parent_name ([out, retval] BSTR * return_value);
 
-    [helpstring ("Does the current cluster have a parent cluster?"), propget]
+    [id (DISPID_has_parent), helpstring ("Does the current cluster have a parent cluster?"), propget]
     HRESULT has_parent ([out, retval] VARIANT_BOOL * return_value);
 
-    [helpstring ("List subclusters (list of IEiffelClusterProperties*).")]
+    [id (DISPID_subclusters), helpstring ("List subclusters (list of IEiffelClusterProperties*)."), propget]
     HRESULT subclusters ([out, retval] IEnumClusterProp ** return_value);
 
-    [helpstring ("Does the current cluster have children?"), propget]
+    [id (DISPID_has_children), helpstring ("Does the current cluster have children?"), propget]
     HRESULT has_children ([out, retval] VARIANT_BOOL * return_value);
 
-    [helpstring ("Cluster identifier."), propget]
+    [id (DISPID_cluster_id), helpstring ("Cluster identifier."), propget]
     HRESULT cluster_id ([out, retval] ULONG * return_value);
 
-    [helpstring ("Is the cluster in the Eiffel library")]
+    [id (DISPID_is_eiffel_library), helpstring ("Is the cluster in the Eiffel library")]
     HRESULT is_eiffel_library ([out, retval] VARIANT_BOOL * return_value);
 
-    [helpstring ("Full path to cluster with ISE_EIFFEL env var expanded."), propget]
+    [id (DISPID_expanded_cluster_path), helpstring ("Full path to cluster with ISE_EIFFEL env var expanded."), propget]
     HRESULT expanded_cluster_path ([out, retval] BSTR * path);
 
-    [helpstring ("Cluster namespace."), propget]
+    [id (DISPID_cluster_namespace), helpstring ("Cluster namespace."), propget]
     HRESULT cluster_namespace ([out, retval] BSTR * a_namespace);
 
-    [helpstring ("Cluster namespace."), propput]
+    [id (DISPID_cluster_namespace), helpstring ("Cluster namespace."), propput]
     HRESULT cluster_namespace ([in] BSTR a_namespace);
 };
 //---------------------------------------------------------------------
@@ -1292,31 +1389,31 @@ interface IEiffelClusterProperties: IUnknown
 ]
 interface IEiffelAssemblyProperties: IUnknown
 {
-    [helpstring ("Assembly name."), propget]
+    [id (DISPID_assembly_name), helpstring ("Assembly name."), propget]
     HRESULT assembly_name ([out, retval] BSTR * return_value);
 
-    [helpstring ("Assembly version."), propget]
+    [id (DISPID_assembly_version), helpstring ("Assembly version."), propget]
     HRESULT assembly_version ([out, retval] BSTR * path);
 
-    [helpstring ("Assembly culture."), propget]
+    [id (DISPID_assembly_culture), helpstring ("Assembly culture."), propget]
     HRESULT assembly_culture ([out, retval] BSTR *path);
 
-    [helpstring ("Assembly public key token"), propget]
+    [id (DISPID_assembly_public_key_token), helpstring ("Assembly public key token"), propget]
     HRESULT assembly_public_key_token ([out, retval] BSTR * return_value);
 
-    [helpstring ("Is the assembly local"), propget]
+    [id (DISPID_is_local), helpstring ("Is the assembly local"), propget]
     HRESULT is_local ([out, retval] VARIANT_BOOL * a_bool);
 
-    [helpstring ("Assembly cluster name."), propget]
+    [id (DISPID_assembly_cluster_name), helpstring ("Assembly cluster name."), propget]
     HRESULT assembly_cluster_name ([out, retval] BSTR * return_value);
 
-    [helpstring ("Prefix."), propget]
+    [id (DISPID_assembly_prefix), helpstring ("Prefix."), propget]
     HRESULT assembly_prefix ([out, retval] BSTR * return_value);
 
-    [helpstring ("Prefix."), propput]
+    [id (DISPID_assembly_prefix), helpstring ("Prefix."), propput]
     HRESULT assembly_prefix ([in] BSTR a_prefx);
 
-    [helpstring ("Is assembly prefix read only.")]
+    [id (DISPID_is_prefix_read_only), helpstring ("Is assembly prefix read only.")]
     HRESULT is_prefix_read_only ([out, retval] VARIANT_BOOL* is_prefix_read_only);
 };
 //---------------------------------------------------------------------
@@ -1328,33 +1425,32 @@ interface IEiffelAssemblyProperties: IUnknown
 ]
 interface IEiffelSystemExternals: IUnknown
 {
-    [helpstring ("Save changes.")]
+    [id (DISPID_store), helpstring ("Save changes.")]
     HRESULT store ();
 
-    [helpstring ("Add a include path to the project.")]
+    [id (DISPID_add_include_path), helpstring ("Add a include path to the project.")]
     HRESULT add_include_path ([in] BSTR include_path);
 
-    [helpstring ("Remove a include path from the project.")]
+    [id (DISPID_remove_include_path), helpstring ("Remove a include path from the project.")]
     HRESULT remove_include_path ([in] BSTR include_path);
 
-    [helpstring ("Replace an include path in the project.")]
+    [id (DISPID_replace_include_path), helpstring ("Replace an include path in the project.")]
     HRESULT replace_include_path ([in] BSTR new_include_path, [in] BSTR old_include_path);
 
-    [helpstring ("Include paths.")]
+    [id (DISPID_include_paths), helpstring ("Include paths.")]
     HRESULT include_paths ([out, retval] IEnumIncludePaths ** return_value);
 
-    [helpstring ("Add a object file to the project.")]
+    [id (DISPID_add_object_file), helpstring ("Add a object file to the project.")]
     HRESULT add_object_file ([in] BSTR object_file);
 
-    [helpstring ("Remove a object file from the project.")]
+    [id (DISPID_remove_object_file), helpstring ("Remove a object file from the project.")]
     HRESULT remove_object_file ([in] BSTR object_file);
 
-    [helpstring ("Replace an object file in the project.")]
+    [id (DISPID_replace_object_file), helpstring ("Replace an object file in the project.")]
     HRESULT replace_object_file ([in] BSTR new_include_path, [in] BSTR old_object_file);
 
-    [helpstring ("Object files.")]
+    [id (DISPID_object_files), helpstring ("Object files.")]
     HRESULT object_files ([out, retval] IEnumObjectFiles ** return_value);
-
 };
 
 

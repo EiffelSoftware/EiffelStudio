@@ -12,11 +12,6 @@ inherit
 			{NONE} all
 		end
 
-	WIZARD_SHARED_DATA
-		export
-			{NONE} all
-		end
-
 feature -- Operations
 
 	visit (a_descriptor: WIZARD_TYPE_DESCRIPTOR) is

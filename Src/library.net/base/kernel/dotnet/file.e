@@ -687,7 +687,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			internal_stream := create {FILE_STREAM}.make (hdl, feature {FILE_ACCESS}.read)
+			internal_stream := create {FILE_STREAM}.make_from_handle_and_access (hdl, feature {FILE_ACCESS}.read)
 			mode := Read_file
 		ensure
 			exists: exists
@@ -700,7 +700,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			internal_stream := create {FILE_STREAM}.make (hdl, feature {FILE_ACCESS}.write)
+			internal_stream := create {FILE_STREAM}.make_from_handle_and_access (hdl, feature {FILE_ACCESS}.write)
 			mode := Write_file
 		ensure
 			exists: exists
@@ -713,7 +713,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			internal_stream := create {FILE_STREAM}.make (hdl, feature {FILE_ACCESS}.write)
+			internal_stream := create {FILE_STREAM}.make_from_handle_and_access (hdl, feature {FILE_ACCESS}.write)
 			mode := Append_file
 		ensure
 			exists: exists
@@ -726,7 +726,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			internal_stream := create {FILE_STREAM}.make (hdl, feature {FILE_ACCESS}.read_write)
+			internal_stream := create {FILE_STREAM}.make_from_handle_and_access (hdl, feature {FILE_ACCESS}.read_write)
 			mode := Read_write_file
 		ensure
 			exists: exists
@@ -741,7 +741,7 @@ feature -- Status setting
 			hdl: POINTER
 		do
 			hdl := hdl + fd
-			internal_stream := create {FILE_STREAM}.make (hdl, feature {FILE_ACCESS}.read_write)
+			internal_stream := create {FILE_STREAM}.make_from_handle_and_access (hdl, feature {FILE_ACCESS}.read_write)
 			mode := Append_read_file
 		ensure
 			exists: exists

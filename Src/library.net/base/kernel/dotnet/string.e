@@ -116,7 +116,7 @@ feature -- Initialization
 		local
 			sys: SYSTEM_STRING
 		do
-			sys := create {SYSTEM_STRING}.make (arr)
+			sys := create {SYSTEM_STRING}.make_from_value (arr)
 			create internal_string_builder.make_from_value (sys)
 		end
 

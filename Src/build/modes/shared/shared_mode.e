@@ -12,12 +12,6 @@ class
 	
 feature
 
-	current_mode_ref: INTEGER_REF is
-			-- Current execution/editing mode.
-		once
-			!! Result
-		end
-		
 	current_mode: INTEGER is
 			-- Current execution/editing mode.
 		do
@@ -28,6 +22,14 @@ feature
 			-- Set `current_mode' to `new_mode'.
 		do
 			current_mode_ref.set_item (new_mode)
+		end
+
+feature {NONE} -- Attribute
+
+	current_mode_ref: INTEGER_REF is
+			-- Current execution/editing mode.
+		once
+			!! Result
 		end
 		
 end -- Class SHARED_MODE

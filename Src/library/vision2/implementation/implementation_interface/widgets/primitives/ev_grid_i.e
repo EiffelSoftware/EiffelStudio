@@ -14,7 +14,9 @@ inherit
 		rename
 			item as cell_item,
 			pointer_motion_actions as cell_pointer_motion_actions,
-			pointer_motion_actions_internal as cell_pointer_motion_actions_internal
+			pointer_motion_actions_internal as cell_pointer_motion_actions_internal,
+			pointer_double_press_actions as cell_pointer_double_press_actions,
+			pointer_double_press_actions_internal as cell_pointer_double_press_actions_internal
 		redefine
 			interface
 		end
@@ -205,6 +207,7 @@ feature -- Access
 				sel_columns.item.disable_select
 				sel_columns.remove
 			end
+			fixme ("Remove this full redraw and only redraw those items that have actually changed.")
 			redraw_client_area
 		ensure
 			selected_items_empty: selected_items.is_empty
@@ -2197,7 +2200,17 @@ feature {NONE} -- Event handling
 
 	pointer_double_press_received (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is
 			-- Called by `pointer_double_press_actions' of `drawable'.
+		local
+			pointed_item: EV_GRID_ITEM_I
 		do
+			if pointer_double_press_actions_internal /= Void and then not pointer_double_press_actions_internal.is_empty then
+				pointed_item := drawer.item_at_position (a_x, a_y)
+				if pointed_item /= Void then
+					pointer_double_press_actions_internal.call ([a_x + internal_client_x - viewport_x_offset, a_y + internal_client_y - viewport_y_offset, a_button, pointed_item.interface])
+				else
+					pointer_double_press_actions_internal.call ([a_x + internal_client_x - viewport_x_offset, a_y + internal_client_y - viewport_y_offset, a_button, Void])
+				end
+			end
 		end
 
 	pointer_button_release_received (a_x, a_y, a_button: INTEGER; a_x_tilt, a_y_tilt, a_pressure: DOUBLE; a_screen_x, a_screen_y: INTEGER) is

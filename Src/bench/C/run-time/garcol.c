@@ -937,8 +937,10 @@ rt_public void reclaim(void)
 
 	full_sweep();				/* Reclaim ALL the objects in the system */
 
+#ifdef EIF_REM_SET_OPTIMIZATION
 	if (special_rem_set)
 		spt_free (special_rem_set);	/* Free special_rem_set */
+#endif
 	eif_free (EIF_once_values); /* have been allocated with eif_malloc */
 #ifdef EIF_THREADS 
 	if (eif_thr_is_root ())

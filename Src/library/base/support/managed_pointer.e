@@ -100,7 +100,7 @@ feature -- Format independant
 	read_integer_8 (pos: INTEGER): INTEGER_8 is
 			-- Read INTEGER_8 at position `pos'.
 		require
-			valid_position: pos <= count
+			valid_position: (pos + 1) <= count
 		do
 			($Result).memory_copy (item + pos, 1)
 		end

@@ -5,25 +5,32 @@ root
 	DEMO (root_cluster): "make"
 
 default
-	assertion (no)
-	precompiled ("$ISE_EIFFEL\precomp\spec\$ISE_PLATFORM\wel")
+	assertion (all)
 
 cluster
 	root_cluster:	"$ISE_EIFFEL/examples/vision/test_all_widgets"
 
-		-- EiffelVision
-    all vision:        	"$ISE_EIFFEL\library\vision"
+	-- EiffelBase
+	all base: 		"$ISE_EIFFEL\library\base"
 		exclude
-			"motif"
-			"x"
-			"gtk"
+			"table_eiffel3";
+			"desc"
 		end
 
-external
-	include_path:
-		"$(ISE_EIFFEL)\library\wel\spec\windows\include";
+		-- WEL
+	all wel:		"$ISE_EIFFEL\library\wel"
 
-	object:
- 		"$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib";
+		-- EiffelVision
+	all vision:		"$ISE_EIFFEL\library\vision"
+		exclude
+			"obsolete"; "motif"; "gtk"; "x"; "CVS"
+		default
+			assertion(no);
+		end	
+
+external
+	include_path: "$(ISE_EIFFEL)\library\wel\spec\windows\include";
+
+	object: "$(ISE_EIFFEL)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib";
 
 end

@@ -83,7 +83,8 @@ feature {NONE}
 			!!mp;
 			mp.set_watch_shape;
 			!! import_directory.make_from_string (import_window.file_selec.selected_file);
-			import_directory.extend (Environment.storage_name);
+			import_directory.extend (Environment.Buildgen_name);
+			import_directory.extend (Environment.Storage_name);
 			!! dir_name.make_from_string (import_directory);
 			if import_window.groups.state then
 				!! group_storer;

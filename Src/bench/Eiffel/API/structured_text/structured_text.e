@@ -209,12 +209,21 @@ feature -- Element change
 			add (create {STRING_TEXT}.make (s))
 		end
 
-	add_multiline_string (s: STRING) is
+	add_multiline_string (s: STRING; indent: INTEGER) is
 			-- Put string `s' at current position.
-			-- Break `s' up in multiple tokens, if a link is
-			-- present.
+			-- Break `s' up in multiple lines, if it has new line character(s).
+			-- Indent each line `indent' times in the latter case.
+			-- Example:
+			--    add_multiline_string ("123", 3) with last string "ABC":
+			--       ABC123
+			--    add_multiline_string ("1%N2%N3", 1) with last string "ABC":
+			--       ABC
+			--        1
+			--        2
+			--        3
 		require
 			s_not_void: s /= Void
+			non_negative_indent: indent >= 0
 		local
 			l_pos, l_previous: INTEGER
 		do
@@ -225,12 +234,14 @@ feature -- Element change
 				until
 					l_pos = 0
 				loop
+					add_indents (indent)
 					add (create {STRING_TEXT}.make (s.substring (l_previous, l_pos -1)))
 					add_new_line
 					l_previous := l_pos + 1
 					l_pos := s.index_of ('%N', l_previous)
 				end
 				if l_previous < s.count then
+					add_indents (indent)
 					add (create {STRING_TEXT}.make (s.substring (l_previous, s.count)))
 				end
 			else
@@ -445,7 +456,11 @@ feature -- Element change
 	add_indents (nr: INTEGER) is
 			-- Add `nr' indentations.
 		do
-			add (create {INDENT_TEXT}.make (nr))
+			if nr = 1 then
+				add_indent
+			else
+				add (create {INDENT_TEXT}.make (nr))
+			end
 		end
 
 	add_class_syntax (syn: SYNTAX_MESSAGE; e_class: CLASS_C; str: STRING) is

@@ -10,6 +10,7 @@
 		</help>
 	</meta_data>
 	<paragraph>
+		<output output="studio">
 		<list ordered="false">
 			<item>
 				<output output="studio">
@@ -45,5 +46,29 @@
 					<label>Reparent an object</label>
 				</link>
 			</item>
+			<item><link><url>60_import_project/index.xml</url><label>Import a Project</label></link></item>
 		</list>
+		</output>
+		<output output="envision">
+		<list ordered="false">
+			<item>
+				<link>
+					<url>20_create_an_object/index</url>
+					<label>Create an object</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>30_delete_an_object/index</url>
+					<label>Delete an object</label>
+				</link>
+			</item>
+			<item>
+				<link>
+					<url>50_reparent_an_object/index</url>
+					<label>Reparent an object</label>
+				</link>
+			</item>
+		</list>
+		</output>
 	</paragraph></document>

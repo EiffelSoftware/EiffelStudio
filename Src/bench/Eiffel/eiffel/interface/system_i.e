@@ -20,7 +20,6 @@ inherit
 	SHARED_CECIL;
 	SHARED_BODY_ID;
 	SHARED_ENCODER;
-	SHARED_GENERATOR;
 	SHARED_USED_TABLE;
 	SHARED_BYTE_CONTEXT
 		rename
@@ -396,8 +395,7 @@ end;
 			-- Used during the time check and the genericity check after pass1
 		do	
 			new_class := True;
-			new_classes.start;
-			new_classes.add_left (a_class);
+			new_classes.add_front (a_class);
 		end;
 
 	remove_class (a_class: CLASS_C) is
@@ -483,7 +481,7 @@ end;
 					supplier := local_cursor.item.supplier;
 					supplier_clients := supplier.syntactical_clients;
 					supplier_clients.start;
-					supplier_clients.search_same (a_class);
+					supplier_clients.search (a_class);
 					check
 						not_after: not supplier_clients.after
 					end;
@@ -616,8 +614,8 @@ end;
 					-- even if the compilation fails after this point, the
 					-- check must not be done again if no classes are introduced
 					-- before the recompilation
-				new_class := False
 			end;
+			new_class := False;
 
 			if not precompilation then
 					-- The root class is not generic
@@ -705,6 +703,7 @@ end;
 				make_update;
 			end;
 
+			first_compilation := False;
 		end;
 
 	check_generics is
@@ -897,8 +896,7 @@ end;
 							-- Skeleton of the class has changed: the
 							-- `changed_skeletons' list is sorted in reversal order
 							-- i.e descendants first.
-						changed_skeletons.start;
-						changed_skeletons.add_left (a_class);
+						changed_skeletons.add_front (a_class);
 					end;
 						-- Check valididty of special classes ARRAY, STRING,
 						-- TO_SPECIAL, SPECIAL
@@ -1284,7 +1282,6 @@ end;
 				-- sort.
 			update_sort := False;
 			moved := False;
-			first_compilation := False;
 
 				-- Reset the classes as unchanged
 			from
@@ -1327,25 +1324,90 @@ feature  -- Freeezing
 			a_class: CLASS_C;
 			id_list: LINKED_LIST [INTEGER];
 			id_cursor: LINKABLE [INTEGER];
-			i: INTEGER;
+			descriptors: ARRAY [INTEGER];
+			i, nb: INTEGER;
 		do
 				-- Re-process dynamic types
 			process_dynamic_types;
 
 				-- Process the C pattern table
+debug ("ACTIVITY")
+	io.error.putstring ("pattern_table.process%N");
+end;
 			pattern_table.process;
 
+debug ("ACTIVITY")
+	io.error.putstring ("Clear the melted code servers%N");
+end;
 				-- Clear the melted byte code servers
 			m_feat_tbl_server.clear;
 			m_feature_server.clear;
 			m_rout_id_server.clear;
-			m_desc_server.clear;
 
+debug ("ACTIVITY")
+	io.error.putstring ("Shake%N");
+end;
 				-- Rebuild the dispatch table and the execution tables
 			shake;
 
 				-- Set the generation mode in workbench mode
 			byte_context.set_workbench_mode;
+
+
+				-- Generation of the descriptor tables
+			if First_compilation then
+				from
+					id_list := freeze_set2;
+debug ("COUNT")
+	i := id_list.count;
+end;
+					id_cursor := id_list.first_element
+				until
+					id_cursor = Void
+				loop
+					a_class := id_array.item (id_cursor.item);
+debug ("COUNT")
+	io.error.putstring ("(");
+	io.error.putint (i);
+	io.error.putstring (") ");
+	i := i - 1;
+end;
+						-- Verbose
+					io.error.putstring ("Generating descriptors of ");
+					io.error.putstring (a_class.class_name);
+					io.error.new_line;
+	
+					a_class.generate_descriptor_tables;
+
+					id_cursor := id_cursor.right
+				end;
+			else
+				from
+					descriptors := m_desc_server.current_keys;		
+					i := 1;
+					nb := descriptors.count;
+				until
+					i > nb
+				loop
+					a_class := id_array.item (descriptors.item (i));
+					if a_class /= Void then
+debug ("COUNT")
+	io.error.putstring ("(");
+	io.error.putint (nb -i + 1);
+	io.error.putstring (") ");
+end;
+							-- Verbose
+						io.error.putstring ("Generating descriptors of ");
+						io.error.putstring (a_class.class_name);
+						io.error.new_line;
+	
+						a_class.generate_descriptor_tables;
+					end;
+					i := i + 1;
+				end;
+			end;
+
+			m_desc_server.clear;
 
 			from
 				id_list := freeze_set1;
@@ -1395,7 +1457,6 @@ end;
 				io.error.new_line;
 
 				a_class.generate_feature_table;
-				a_class.generate_descriptor_tables;
 
 				id_cursor := id_cursor.right
 			end;
@@ -1436,7 +1497,7 @@ end;
 			Update_file.close;
 		end;
 
-	shake is
+	real_shake is
 			-- Rebuild `dispatch_table' and `execution_table'
 		local
 			new_exec: like execution_table;
@@ -1480,7 +1541,18 @@ end;
 
 			execution_table.copy (new_exec);
 			dispatch_table.copy (new_dispatch);
-	
+		end;
+
+	shake is
+		do
+		
+				-- Real shake compresses the dispatch and execution tables
+				-- Not called because the descriptors must be reprocessed
+				-- if a dispatch unit is moved (real_body_index changes)
+
+			--real_shake;
+
+
 				-- Reset the frozen level since the execution table
 				-- is re-built now.
 			frozen_level := execution_table.count;
@@ -1528,14 +1600,17 @@ feature -- Final mode generation
 				i := i + 1;
 			end;
 			History_control.transfer;
+			tmp_poly_server.flush;
 
 				-- Verbose
 			io.error.putstring ("Pass 5 on system%N");
 
 				-- Dead code removal
---			remove_dead_code;
+			remove_dead_code;
 
 			process_dynamic_types;
+
+			Makefile_generator.init;
 
 				-- Generation of C files associated to the classes of
 				-- the system.
@@ -1550,6 +1625,11 @@ feature -- Final mode generation
 					-- not Void.
 				if a_class /= Void then
 						-- Verbose
+debug ("COUNT")
+	io.error.putstring ("(");
+	io.error.putint (nb-i+1);
+	io.error.putstring (") ");
+end;
 					io.error.putstring ("Pass 6 on class ");
 					io.error.putstring (a_class.class_name);
 					io.error.new_line;
@@ -1563,7 +1643,8 @@ feature -- Final mode generation
 			generate_table;
 
 				-- Generate makefile
-			generate_make_file;
+			Makefile_generator.generate;
+			Makefile_generator.clear;
 
 				-- Clean Eiffel table
 			Eiffel_table.wipe_out;
@@ -1582,7 +1663,6 @@ feature -- Dead code removal
 		local
 			a_class: CLASS_C;
 			root_feat: FEATURE_I;
-			to_special_cl: TO_SPECIAL_B;
 			i, nb: INTEGER;
 		do
 			!!remover.make;
@@ -1605,14 +1685,16 @@ feature -- Dead code removal
 					and then
 					a_class.visible_level.has_visible
 				then
-					a_class.remove_visible (remover)
+					a_class.mark_visible (remover)
 				end;
 				i := i + 1
 			end;
 
 				-- Protection of the attribute `area' in class TO_SPECIAL
-			to_special_cl ?= to_special_class.compiled_class;
-			to_special_cl.mark_area_used (remover);
+			to_special_class.compiled_class.mark_all_used (remover);
+
+				-- Protection of `make' from ARRAY
+			array_class.compiled_class.mark_all_used (remover);
 
 				-- Protection of features written in basic reference classes
 			character_ref_class.compiled_class.mark_all_used (remover);
@@ -1624,7 +1706,6 @@ feature -- Dead code removal
 
 				-- Protection of feature `make' of class STRING
 			string_class.compiled_class.mark_all_used (remover);
-		
 		end;
 
 	is_used (f: FEATURE_I): BOOLEAN is
@@ -1678,6 +1759,9 @@ feature -- Generation
 				-- CLASS_TYPE available in attribute list `types' of
 				-- instances of CLASS_C
 
+debug ("ACTIVITY")
+	io.error.putstring ("Process dynamic types%N");
+end;
 				-- Sort the class_list by type id in `class_list'.
 			from
 				i := 1;
@@ -1735,31 +1819,30 @@ end;
 
 	generate_routine_table is
 			-- Generate routine tables
+		require
+			in_final_mode: byte_context.final_mode
 		local
-			final_mode: BOOLEAN;
 			rout_id: INTEGER;
 			table: POLY_TABLE [ENTRY];
 		do
-			final_mode := byte_context.final_mode;
 			Attr_generator.init;
 			Rout_generator.init;
 
-			if final_mode then
-				from
-					Tmp_poly_server.start
-				until
-					Tmp_poly_server.offright
-				loop
-					rout_id := Tmp_poly_server.key_for_iteration;
-					if Eiffel_table.is_used (rout_id) then
-						table := Tmp_poly_server.item (rout_id).poly_table;
-						table.write;
-					end;
-					Tmp_poly_server.forth;
+			from
+				Tmp_poly_server.start
+			until
+				Tmp_poly_server.offright
+			loop
+				rout_id := Tmp_poly_server.key_for_iteration;
+
+				if Eiffel_table.is_used (rout_id) then
+					table := Tmp_poly_server.item (rout_id).poly_table;
+					table.write;
 				end;
-				generate_initialization_table;
-				generate_dispose_table;
+				Tmp_poly_server.forth;
 			end;
+			generate_initialization_table;
+			generate_dispose_table;
 
 			Attr_generator.finish;
 			Rout_generator.finish;
@@ -1914,7 +1997,7 @@ end;
 				i := i + 1;
 			end;
 
-			if byte_context.final_mode then
+			if final_mode then
 				Skeleton_file.putstring ("struct cnode esystem[] = {");
 			else
 				Skeleton_file.putstring ("struct cnode fsystem[] = {");
@@ -2008,7 +2091,7 @@ end;
 				i := i + 1;
 			end;
 
-			if byte_context.final_mode then
+			if final_mode then
 					-- Extern declarations for previous file
 				f_name := generation_path.twin;
 				f_name.append ("/Ececil.h");
@@ -2271,7 +2354,10 @@ feature -- Plug and Makefile file
 			arr_make_name: STRING;
 			special_cl: SPECIAL_B;
 			cl_type: CLASS_TYPE;
+			final_mode: BOOLEAN;
 		do
+			final_mode := byte_context.final_mode;
+
 			Plug_file.open_write;
 
 			Plug_file.putstring ("#include %"portable.h%"%N%N");
@@ -2314,7 +2400,7 @@ feature -- Plug and Makefile file
 			Plug_file.putstring (arr_make_name);
 			Plug_file.putstring ("();%N");
 
-			if byte_context.final_mode then
+			if final_mode then
 				init_name :=
 						Encoder.table_name (Initialization_id).duplicate;
 				dispose_name := 
@@ -2368,7 +2454,7 @@ feature -- Plug and Makefile file
 			Plug_file.putint (type_id - 1);
 			Plug_file.putstring (";%N");
 
-			if byte_context.final_mode then
+			if final_mode then
 					-- Initialization routines
 				Plug_file.putstring ("char *(**ecreate)() = ");
 				Plug_file.putstring (init_name);
@@ -2390,11 +2476,10 @@ feature -- Plug and Makefile file
 
 	generate_make_file is
 			-- Generate make file
-		local
-			makefile_generator: MAKEFILE_GENERATOR;
 		do
-			!!makefile_generator.make;
-			makefile_generator.generate;
+			Makefile_generator.init;
+			Makefile_generator.generate;
+			Makefile_generator.clear;
 		end;
 
 feature -- Dispatch and execution tables generation

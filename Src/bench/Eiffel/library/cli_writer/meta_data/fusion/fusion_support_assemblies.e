@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 	c_count (p, cnt: POINTER): INTEGER is
 			-- Call `IEnumAssemblies->Count'.
 		external
-			"C++ IEnumAssemblies signature (long *): EIF_INTEGER use %"vs_support.h%""
+			"C++ IEnumAssemblies signature (long *): EIF_INTEGER use %"ise_vs_fusion_support.h%""
 		alias
 			"get_Count"
 		end
@@ -47,7 +47,7 @@ feature {NONE} -- Implementation
 		is
 			-- Call `IEnumAssemblies->IthItem'.
 		external
-			"C++ IEnumAssemblies signature (long, IAssemblyInfo**): EIF_INTEGER use %"vs_support.h%""
+			"C++ IEnumAssemblies signature (long, IAssemblyInfo**): EIF_INTEGER use %"ise_vs_fusion_support.h%""
 		alias
 			"IthItem"
 		end

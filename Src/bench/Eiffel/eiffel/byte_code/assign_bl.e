@@ -20,10 +20,11 @@ feature
 	target_propagated: BOOLEAN;
 			-- Has target been propagated ?
 
-	
 	expand_return: BOOLEAN;
 			-- Do we have to expand the assignment in Result ?
-
+	
+	is_bit_assignment: BOOLEAN;
+			-- Do we have an assignment to a bit?
 	
 	register: REGISTRABLE;
 			-- Where result is stored, for case where an entity is
@@ -187,6 +188,8 @@ feature
 							register := target;
 						end;
 						register_for_metamorphosis := true;
+					elseif target_type.is_bit and source_type.is_bit then
+						is_bit_assignment := true
 					else
 							-- Do not propagate something expanded as the
 							-- routines in NESTED_BL and friends won't know
@@ -224,6 +227,8 @@ feature
 						source.propagate (No_register);
 						get_register;
 						register_for_metamorphosis := true;
+					elseif target_type.is_bit and source_type.is_bit then
+						is_bit_assignment := true
 					else
 							-- I can't expand because of the aging tests.
 							-- (macro RTAP evaluates its argument more than
@@ -462,8 +467,25 @@ feature
 			end;
 			if how /= Copy_assignment then
 				if how = Simple_assignment or need_aging_tests then
-					target.print_register;
-					generated_file.putstring (" = ");
+					if is_bit_assignment then
+						if target.is_result then
+							-- If the target is a Result then clone 
+							-- source. This is a special case because
+							-- I could not set the default value of
+							-- a Result bit (DINOV).
+							target.print_register;	
+							generated_file.putstring (" = RTCB(");
+						else
+							-- Otherwize, copy bit since I know that
+							-- bits (other than Result) have a 
+							-- default value.
+							generated_file.putstring ("RTXB(");
+							source_print_register;
+						end;
+					else
+						target.print_register;
+						generated_file.putstring (" = ");
+					end
 				end;
 			else
 				generated_file.putstring ("RTXA(");
@@ -473,13 +495,30 @@ feature
 					if register /= Void and not register_for_metamorphosis then
 						print_register;
 					else
-						source_print_register;
+						if is_bit_assignment then
+							generated_file.putstring (", ");
+							target.print_register;
+							generated_file.putchar (')');
+						else
+							source_print_register;
+						end;
 					end;
 					generated_file.putchar (';');
 					generated_file.new_line;
 				else
 					if how = Simple_assignment or need_aging_tests then
-						source_print_register;
+						if is_bit_assignment then
+							if target.is_result then
+								source_print_register;
+								generated_file.putchar (')');
+							else
+								generated_file.putstring (", ");
+								target.print_register;
+								generated_file.putchar (')');
+							end
+						else
+							source_print_register;
+						end;
 						generated_file.putchar (';');
 						generated_file.new_line;
 					end;

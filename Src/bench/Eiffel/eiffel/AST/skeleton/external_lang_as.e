@@ -226,10 +226,6 @@ end
 									-- Even if used in a C++ context it is not a
 									-- CPP extension.
 								is_cpp_extension := False
-							elseif special_type.is_equal (dll16_string) then
-								!! dll_ext
-								dll_ext.set_dll_type (dll16_type)
-								extension := dll_ext
 							elseif special_type.is_equal (dll32_string) then
 								!! dll_ext
 								dll_ext.set_dll_type (dll32_type)

@@ -9,8 +9,6 @@ feature -- String constants
 
 	struct_string: STRING is "struct"
 
-	dll16_string: STRING is "dll16"
-
 	dll32_string: STRING is "dll32"
 
 	dllwin32_string: STRING is "dllwin32"
@@ -18,8 +16,6 @@ feature -- String constants
 feature -- Integer constants
 
 	macro_type: INTEGER is 1
-
-	dll16_type: INTEGER is 2
 
 	dll32_type: INTEGER is 3
 

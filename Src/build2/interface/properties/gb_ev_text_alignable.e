@@ -44,7 +44,7 @@ feature -- Access
 			-- A vision2 component to enable modification
 			-- of items held in `objects'.
 		do	
-			create Result
+			Result := Precursor {GB_EV_ANY}
 			create label.make_with_text ("Text alignment")
 			Result.extend (label)
 			create combo_box

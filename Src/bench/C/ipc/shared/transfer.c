@@ -27,6 +27,8 @@ rt_public STREAM *sp;				/* Stream used for communications */
 #else
 rt_private STREAM *sp;				/* Stream used for communications */
 #endif
+rt_private char* reading_buffer;		/* Buffer used for communication, grows as needed */
+rt_private int allocated_buffer_size; 	/* Currently allocated size for buffer */
 
 extern Malloc_t malloc(register unsigned int nbytes);		/* Memory allocation */
 
@@ -55,7 +57,6 @@ rt_public char *tread(int *size)
 	 */
 
 	Request rqst;		/* Leading request */
-	char *buffer;		/* Where bytes are stored */
 
 	Request_Clean (rqst);
 #ifdef DEBUG
@@ -87,9 +88,16 @@ rt_public char *tread(int *size)
 	add_log(20, "expecting %d bytes from remote process", rqst.rq_ack.ak_type);
 #endif
 #endif
-
-	buffer = (char *) malloc(rqst.rq_ack.ak_type);
-	if (buffer == (char *) 0) {
+	
+		/* + 1 to prevent errors if we need a 0-sized buffer and no buffer has been allocated yet */
+	if (allocated_buffer_size < rqst.rq_ack.ak_type + 1) {
+			/* We need to allocate a bigger buffer */
+		if (reading_buffer != NULL) free (reading_buffer);
+		reading_buffer = (char *) malloc(rqst.rq_ack.ak_type + 1);
+		allocated_buffer_size = rqst.rq_ack.ak_type + 1;
+	}
+		/* FIXME XR: Is this really needed?? If we can't allocate memory, we're really in deep trouble anyway */
+	if (reading_buffer == (char *) 0) {
 #ifdef USE_ADD_LOG
 		add_log(1, "ERROR cannot allocate %d bytes", rqst.rq_ack.ak_type);
 #endif
@@ -108,14 +116,13 @@ rt_public char *tread(int *size)
 	add_log(9, "expecting %d bytes from remote process", rqst.rq_ack.ak_type);
 #endif
 
-	if (-1 == net_recv(sp, buffer, rqst.rq_ack.ak_type, TRUE)) {
+	if (-1 == net_recv(sp, reading_buffer, rqst.rq_ack.ak_type, TRUE)) {
 #else
-	if (-1 == net_recv(readfd(sp), buffer, rqst.rq_ack.ak_type)) {
+	if (-1 == net_recv(readfd(sp), reading_buffer, rqst.rq_ack.ak_type)) {
 #endif
 #ifdef USE_ADD_LOG
 		add_log(1, "ERROR net_recv: %m (%e)");
 #endif
-		free(buffer);
 		if (size != (int *) 0)
 			*size = 0;
 		return (char *) 0;
@@ -124,7 +131,7 @@ rt_public char *tread(int *size)
 	if (size != (int *) 0)
 		*size = (int) rqst.rq_ack.ak_type;
 
-	return buffer;
+	return reading_buffer;
 }
 
 rt_public int twrite(void *buffer, int size)
@@ -193,4 +200,12 @@ rt_public void swallow(int fd, int size)
 			return;
 		size -= amount;
 	}
+}
+
+/* After debugging completed, we need to free the communication buffer */
+rt_public void end_debug()
+{
+	if (reading_buffer != NULL) free (reading_buffer);
+	reading_buffer = NULL;
+	allocated_buffer_size = 0;
 }

@@ -52,6 +52,7 @@ feature {NONE} -- Initialization
 		do
 				-- Vision2 initialization
 			create window
+			window.show_actions.extend (agent window_displayed)
 			init_size_and_position
 			window.close_request_actions.wipe_out
 			window.close_request_actions.put_front (agent destroy)
@@ -494,6 +495,12 @@ feature {EB_WINDOW_MANAGER} -- Commands
 			-- Command to display the dynamic library editor.
 
 feature {NONE} -- Implementation / Flags
+
+	window_displayed is
+			-- `Current' has been displayed on screen.
+		do
+			--| redefine this feature to perform any processing post display.
+		end
 
 	initialized: BOOLEAN
 			-- Is the "initialization sequence" finished?

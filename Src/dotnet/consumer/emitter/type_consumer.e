@@ -329,9 +329,9 @@ feature -- Basic Operation
 			non_void_functions: consumed_type.functions /= Void
 			non_void_properties: consumed_type.properties /= Void
 			non_void_events: consumed_type.events /= Void
-		rescue
-			rescued := True
-			retry
+--		rescue
+--			rescued := True
+--			retry
 		end
 
 
@@ -461,45 +461,43 @@ feature {NONE} -- Implementation
 				is_property_or_event (info),
 				referenced_type_from_type (info.get_declaring_type))			
 		end
-	
+
 	consumed_property (info: PROPERTY_INFO): CONSUMED_PROPERTY is
 			-- Process property `info'.
 		require
 			non_void_property_info: info /= Void
 		local
 			dotnet_name: STRING
+			l_getter: CONSUMED_FUNCTION
+			l_setter: CONSUMED_PROCEDURE
 			l_info, l_info_setter: METHOD_INFO
 			l_eiffel_getter_property_name, l_eiffel_setter_property_name: STRING
 		do
+			create dotnet_name.make_from_cil (info.get_name)
 			if info.get_can_read then
 				l_info := info.get_get_method
-				l_eiffel_getter_property_name := overload_solver.unique_eiffel_name (l_info.get_name, l_info.get_parameters)
+				l_getter := consumed_function (l_info)
 			end
 			if info.get_can_write then
 				l_info := info.get_set_method
-				l_eiffel_setter_property_name := overload_solver.unique_eiffel_name (l_info.get_name, l_info.get_parameters)
+				l_setter := consumed_procedure (l_info)
 			end
 			check
 				is_property: l_info /= Void
-				setter_or_getter_name_not_empty: l_eiffel_setter_property_name.is_empty implies not l_eiffel_getter_property_name.is_empty 
-				setter_or_getter_name_not_empty: l_eiffel_getter_property_name.is_empty implies not l_eiffel_setter_property_name.is_empty 
+				non_void_setter_or_getter: l_setter = Void implies l_getter /= Void 
+				non_void_setter_or_getter: l_getter = Void implies l_setter /= Void 
 			end
-			create dotnet_name.make_from_cil (info.get_name)
-			create Result.make (
-				l_eiffel_getter_property_name,
-				l_eiffel_setter_property_name,
+			create Result.my_make (
 				dotnet_name,
-				consumed_arguments (l_info),
-				info.get_can_read,
-				info.get_can_write,
 				l_info.get_is_public,
 				l_info.get_is_static,
-				referenced_type_from_type (info.get_property_type),
-				referenced_type_from_type (info.get_declaring_type))
+				referenced_type_from_type (info.get_declaring_type),
+				l_getter,
+				l_setter)
 		ensure
 			non_void_property: Result /= Void
 		end
-		
+
 	consumed_event (info: EVENT_INFO): CONSUMED_EVENT is
 			-- Process event `info'.
 		require

@@ -143,7 +143,6 @@ feature -- For DATABASE_SELECTION, DATABASE_CHANGE
 			object : ANY
 			tmp_str: STRING
 			tmp_c: ANY
-			tmp_p: POINTER
 			tmp_date: DATE_TIME
 			type: INTEGER
 			ptr : POINTER_REF
@@ -1051,7 +1050,6 @@ feature {NONE} -- External features
 			i: INTEGER
 			tmp_str: STRING
 			tmp_c: ANY
-			tmp_p: POINTER
 			tmp_date: DATE_TIME
 			type: INTEGER
 		do

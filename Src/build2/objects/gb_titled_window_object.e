@@ -268,7 +268,7 @@ feature -- Access
 			end
 		end
 		
-feature {GB_WINDOW_SELECTOR_ITEM} -- Implementation
+feature {GB_WINDOW_SELECTOR_ITEM, GB_OBJECT_HANDLER} -- Implementation
 		
 	set_window_selector_item (a_window_selector_item: GB_WINDOW_SELECTOR_ITEM) is
 			-- Assign `a_window_selctor_item' to `window_selector_item'.

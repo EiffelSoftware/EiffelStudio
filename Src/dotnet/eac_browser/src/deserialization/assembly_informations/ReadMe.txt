@@ -1,3 +1,6 @@
+.NET Framework SDK Documentation: ms-help://MS.NETFrameworkSDK/csref/html/vcwlkxmldocumentationtutorial.htm
+
+
 Hypotheses:
 
 Structure:

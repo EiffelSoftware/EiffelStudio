@@ -24,12 +24,13 @@ create
 
 feature -- Status Setting
 
-	set_rich_text (a_rich_text: EV_RICH_TEXT_IMP) is
-			-- Assign `a_rich_text' to `rich_text'.
+	set_rich_text (a_rich_text: EV_RICH_TEXT_I) is
+			-- Assign `a_rich_text' to `rich_text' and initialize buffering structures.
 		require
 			a_rich_text_not_void: a_rich_text /= Void
 		do
 			rich_text := a_rich_text
+			clear_structures
 		end
 
 	clear_structures is
@@ -72,12 +73,7 @@ feature -- Status Setting
 		do
 			clear_structures
 		end
-		
-	generate_complete_rtf is
-			-- Generate a complete RTF file into `internal_text' ready for saving.
-		do	
-		end
-		
+
 	append_text_for_rtf (a_text: STRING; a_format: EV_CHARACTER_FORMAT) is
 			-- Append RTF representation of `a_text' with format `a_format' to `internal_text'
 			-- and store information required from `a_format' ready for completion of buffering.
@@ -145,12 +141,6 @@ feature -- Status Setting
 			vertical_offset := formats.i_th (format_index).effects.vertical_offset
 			if vertical_offset /= current_vertical_offset then
 				temp_string.append (start_vertical_offset)
-					-- Create a screen DC for access to metrics
-					-- We must specify the vertical offset in half points.
-				--create screen_dc
-				--screen_dc.get
-				--temp_string.append ((pixel_to_point (screen_dc, vertical_offset) * 2).out)
-				--screen_dc.release
 				height_in_half_points := ((vertical_offset * 72 / screen.vertical_resolution) * 2).truncated_to_integer
 				temp_string.append (height_in_half_points.out)
 				current_vertical_offset := vertical_offset
@@ -187,15 +177,15 @@ feature -- Status Setting
 	
 feature -- Access
 
-	rich_text: EV_RICH_TEXT_IMP
+	rich_text: EV_RICH_TEXT_I
 			-- Rich text associated with `Current'.
 
 	internal_text: STRING
 			-- Text used for building RTF strings internally before buffering or saving.
-			
-feature {NONE} -- Implementation
 
-	generate_rtf_heading_for_buffered_append is
+feature {EV_ANY_I} -- Implementation			
+
+	generate_complete_rtf_from_buffering is
 			-- Generate the rtf heading for buffered operations into `internal_text'.
 			-- Current contents of `internal_text' are lost.
 		local
@@ -217,6 +207,8 @@ feature {NONE} -- Implementation
 			internal_text.append (internal_text_twin)
 			internal_text.append ("}")
 		end
+		
+feature {NONE} -- Implementation
 
 	build_font_from_format (a_format: EV_CHARACTER_FORMAT) is
 			-- Update font text `font_text' for addition of a new format to the buffering.

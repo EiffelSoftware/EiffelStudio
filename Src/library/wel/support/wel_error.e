@@ -40,18 +40,20 @@ feature {NONE} -- Implementation
 			"C [macro <wel.h>]"
 		alias
 			"{%N%
-			%LPVOID lpMsgBuf;%N%
-			%FormatMessage( %N%
+			%%TLPVOID lpMsgBuf;%N%
+			%%TCHAR szBuf[5120]; DWORD dw = GetLastError();%N%
+			%%TFormatMessage( %N%
 			%%TFORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,%N%
 			%%TNULL,%N%
-			%%TGetLastError(),%N%
+			%%Tdw,%N%
 			%%TMAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Default language%N%
 			%%T(LPTSTR) &lpMsgBuf,%N%
 			%%T0,%N%
 			%%TNULL %N%
-			%);%N%
-			%MessageBox( NULL, (LPCTSTR)lpMsgBuf, %"EV_DIALOG_IMP Error%", MB_OK | MB_ICONINFORMATION );%N%
-			%LocalFree( lpMsgBuf );%N%
+			%%T);%N%
+			%%Tsprintf(szBuf, %"%%s\nGetLastError returned %%u\n%", lpMsgBuf, dw);%N%
+			%%TMessageBox( NULL, szBuf, %"EV_DIALOG_IMP Error%", MB_OK | MB_ICONINFORMATION );%N%
+			%%TLocalFree( lpMsgBuf );%N%
 			%}"
 		end
 		

@@ -103,7 +103,7 @@ feature -- Access
 	Iunknown_guid: ECOM_GUID is
 			-- IUnknown IID
 		once
-			create Result.make_from_string (Iunknown_guid_string)
+			create Result.make_from_string (clone (Iunknown_guid_string))
 		end
 
 	Iunknown_guid_string: STRING is "{00000000-0000-0000-C000-000000000046}"

@@ -38,17 +38,6 @@ extern fnptr init_array[];				/* Initialization routines array */
 
 
 /*
- * String mode parsing
- */
-
-extern char *to_parse;
-extern int to_parse_size;
-extern int string_mode;
-extern char string_input();				/* String mode input for lex */
-extern void string_unput();				/* String mode unput for lex */
-
-
-/*
  * Id managment
  */
 

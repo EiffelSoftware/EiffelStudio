@@ -60,6 +60,33 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  */
 #define BYTEORDER 0x$byteorder	/* large digits for MSB */
 
+/* CAT2:
+ *	This macro catenates 2 tokens together.
+ */
+#if $cpp_stuff == 1
+#define CAT2(a,b)a/**/b
+#define CAT3(a,b,c)a/**/b/**/c
+#define CAT4(a,b,c,d)a/**/b/**/c/**/d
+#define CAT5(a,b,c,d,e)a/**/b/**/c/**/d/**/e
+#define STRINGIFY(a)"a"
+		/* If you can get stringification with catify, tell me how! */
+#endif
+#if $cpp_stuff == 42
+#define CAT2(a,b)a ## b
+#define CAT3(a,b,c)a ## b ## c
+#define CAT4(a,b,c,d)a ## b ## c ## d
+#define CAT5(a,b,c,d,e)a ## b ## c ## d ## e
+#define StGiFy(a)# a
+#define STRINGIFY(a)StGiFy(a)
+#define SCAT2(a,b)StGiFy(a) StGiFy(b)
+#define SCAT3(a,b,c)StGiFy(a) StGiFy(b) StGiFy(c)
+#define SCAT4(a,b,c,d)StGiFy(a) StGiFy(b) StGiFy(c) StGiFy(d)
+#define SCAT5(a,b,c,d,e)StGiFy(a) StGiFy(b) StGiFy(c) StGiFy(d) StGiFy(e)
+#endif
+#ifndef CAT2
+#include "Bletch: How does this C preprocessor catenate tokens?"
+#endif
+
 /* VAL_NOFILE:
  *	This symbol contains the number of file descriptors available to the
  *	process, as determined at configuration time. Unless a static constant

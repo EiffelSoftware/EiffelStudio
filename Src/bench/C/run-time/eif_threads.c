@@ -106,7 +106,7 @@ rt_public void eif_thr_register(void)
 	   * Also set value root thread id.
 	   */
 
-		EIF_once_values = (char **) malloc (EIF_once_count * sizeof (char *));
+		EIF_once_values = (char **) realloc (EIF_once_values, EIF_once_count * sizeof (char *));
 			/* needs malloc; crashes otherwise on some pure C-ansi compiler (SGI)*/
 		if (EIF_once_values == (char **) 0) /* Out of memory */
 			enomem();

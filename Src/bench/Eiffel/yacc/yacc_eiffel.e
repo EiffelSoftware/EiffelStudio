@@ -116,6 +116,7 @@ feature -- Initialization
 			as98: like anchor_feature_clause_as;
 			as99: CREATION_AS;
 			as100: ARRAY_AS;
+			as100_bis: TUPLE_AS;
 			as101: UN_STRIP_AS;
 			as102: NONE_TYPE_AS;
 			as103: CLIENT_AS;
@@ -134,6 +135,9 @@ feature -- Initialization
 			as116: EXPR_ADDRESS_AS;
 			as117: SEPARATE_TYPE_AS;
 			as118: PRECURSOR_AS
+			as119: CREATION_EXPR_AS
+			as120: ROUTINE_CREATION_AS
+			as122: OPERAND_AS
 
 			-- Initialized by lace normally but since we are not
 			-- using lace for parsing eiffel we need to initialize

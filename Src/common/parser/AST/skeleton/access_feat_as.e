@@ -49,6 +49,14 @@ feature -- Properties
 			Result := feature_name
 		end;
 
+feature -- Delayed calls
+
+	is_delayed : BOOLEAN is
+			-- Is this access delayed?
+		do
+			-- Default: No
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is

@@ -48,6 +48,14 @@ feature -- Access
 		do
 			Result := fl.item (out_index)
 		end
+		
+	item_for_iteration: G is
+			-- Element at current iteration position
+		require
+			not_off: not off
+		do
+			Result := fl.item (index)
+		end
 
 	has (v: like item): BOOLEAN is
 			-- Does queue include `v'?

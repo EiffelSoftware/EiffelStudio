@@ -74,8 +74,10 @@ lngpad_2='LNGPAD(2)'
 #Formatting
 inttypes_include=''
 eif_integer_64_display='"I64d"'
+eif_natural_64_display='"I64u"'
 eif_pointer_display='"llX"'
 eif_integer_64_constant='CAT2(x,i64)'
+d_uint64_to_real='define'
 
 #File system
 nofile='60'

@@ -106,24 +106,24 @@ rt_public int spt_realloc (struct special_table *spt, int size)
 	assert (size > spt->count);					/* Must be necessary. */
 	/* End of preconditions. */
 
-	temp = (void *) realloc (spt->h_keys, size * LNGSIZ);	
+	temp = (void *) eif_realloc (spt->h_keys, size * LNGSIZ);	
 									/* Mallocs array of keys */
 	if (temp == (void *) 0)			/* Has reallocation failed? */
 		return -1;					/* Reallocation failed. */	
 	spt->h_keys = (EIF_INTEGER *) temp;	/* Update h_keys. */
 
-	temp = (void *) realloc (spt->h_values, size * REFSIZ);
+	temp = (void *) eif_realloc (spt->h_values, size * REFSIZ);
 	if (temp == (void *) 0) {		/* Did it fail? */
-		free(spt->h_keys);			/* Free keys array.*/
+		eif_free(spt->h_keys);			/* Free keys array.*/
 		return -1;					/* Reallocation failed. */
 	}
 	spt->h_values = (EIF_REFERENCE *) temp;/* Update h_values. */
 
-	temp = (void *) realloc (spt->old_values, size * REFSIZ);
+	temp = (void *) eif_realloc (spt->old_values, size * REFSIZ);
 									/* Reallocate array of old values. */
 	if (temp == (void *) 0) {		/* Did it fail? */
-		free(spt->h_keys);			/* Free keys array. */
-		free(spt->h_values);		/* Free pointers array. */
+		eif_free(spt->h_keys);			/* Free keys array. */
+		eif_free(spt->h_values);		/* Free pointers array. */
 		return -1;					/* Reallocation failed. */
 	}
 	spt->old_values = (EIF_REFERENCE *) temp;
@@ -169,24 +169,24 @@ rt_public int spt_create(struct special_table *spt, int  size)
 	assert (size > 0);				/* Size strictly positive, for resizing. */
 	/* End of preconditions. */
 
-	hkeys = (EIF_INTEGER  *) calloc(size, sizeof(long));	/* Mallocs array of keys */
+	hkeys = (EIF_INTEGER  *) eif_calloc(size, sizeof(long));	/* Mallocs array of keys */
 	if (hkeys == (long *) 0)
 		return -1;					/* Malloc failed */
 	spt->h_keys = hkeys;			/* Where array of keys is stored */
 
-	hvalues = (EIF_REFERENCE *) malloc(size * REFSIZ);
+	hvalues = (EIF_REFERENCE *) eif_malloc(size * REFSIZ);
 									/* Mallocs array of values */
 	if (hvalues == (EIF_REFERENCE *) 0) {
-		free(spt->h_keys);			/* Free keys array */
+		eif_free(spt->h_keys);			/* Free keys array */
 		return -1;					/* Malloc failed */
 	}
 	spt->h_values = hvalues;		/* Where array of values is stored */
 
-	oldvalues = (EIF_REFERENCE *) malloc(size * REFSIZ);
+	oldvalues = (EIF_REFERENCE *) eif_malloc(size * REFSIZ);
 									/* Mallocs array of old values */
 	if (oldvalues == (EIF_REFERENCE *) 0) {
-		free(spt->h_keys);			/* Free keys array */
-		free(spt->h_values);		/* Free pointers array */
+		eif_free(spt->h_keys);			/* Free keys array */
+		eif_free(spt->h_values);		/* Free pointers array */
 		return -1;					/* Malloc failed */
 	}
 	spt->old_values = oldvalues;	/* Where array of old values is stored */
@@ -525,9 +525,9 @@ rt_public void spt_free(struct special_table *spt)
 {
 	/* Free hash table arrays and descriptor. */
 
-	free(spt->h_values);
-	free(spt->h_keys);
-	free((char *) spt);
+	eif_free(spt->h_values);
+	eif_free(spt->h_keys);
+	eif_free((char *) spt);
 }	/* spt_free () */
 
 #endif /* EIF_REM_SET_OPTIMIZATION */

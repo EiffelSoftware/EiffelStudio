@@ -244,8 +244,6 @@ feature {NONE} -- Implementation
 		do
 			if visual_studio_information.is_visual_studio_wizard then
 				create Result.make_from_string (visual_studio_information.wizard_installation_path)
-				Result.extend ("Wizards")
-				Result.extend ("Build")
 				Result.extend ("components")
 				Result.extend ("components.xml")
 			else

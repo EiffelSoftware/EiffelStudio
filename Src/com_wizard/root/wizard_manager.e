@@ -33,6 +33,19 @@ inherit
 			{NONE} all
 		end
 
+	WIZARD_PROGRESS_REPORT
+		rename
+			finish as report_finish,
+			parent as report_parent
+		export
+			{NONE} all
+		end
+
+	WIZARD_RESCUABLE
+		export
+			{NONE} all
+		end
+
 create
 	make
 
@@ -72,7 +85,7 @@ feature -- Access
 	Analysis_title: STRING is "Analysing Type Library"
 			-- Analysis title
 
-	Generation_title: STRING is "Generating Code"
+	Generation_title2: STRING is "Generating Code"
 			-- Generation title
 
 feature -- Basic Operations
@@ -80,17 +93,23 @@ feature -- Basic Operations
 	run is
 			-- Start generation.
 		do
-			initialize_log_file
 
 			-- Compile IDL
 			if shared_wizard_environment.abort then
 				finish
 			elseif shared_wizard_environment.idl then
+				set_parent (parent)
+				initialize_log_file
+				parent.disable
+				set_title (Idl_compilation_title)
+				start
+				set_range (5)
 				parent.add_title (Idl_compilation_title)
 				Idl_compiler.compile_idl
 				if shared_wizard_environment.abort then
 					finish
 				else
+					step
 					-- Create Proxy/Stub
 					if not shared_wizard_environment.use_universal_marshaller then
 						-- Compile c iid file
@@ -99,24 +118,28 @@ feature -- Basic Operations
 						if shared_wizard_environment.abort then
 							finish
 						else
+							step
 							-- Compile c dlldata file
 							parent.add_title (Data_compilation_title)
 							Idl_compiler.compile_data
 							if shared_wizard_environment.abort then
 								finish
 							else
+								step
 								-- Compile c proxy/stub file
 								parent.add_title (Ps_compilation_title)
 								Idl_compiler.compile_ps
 								if shared_wizard_environment.abort then
 									finish
 								else
+									step
 									-- Final link
 									parent.add_title (Link_title)
 									Idl_compiler.link
 									if shared_wizard_environment.abort then
 										finish
 									else
+										step
 										generate
 									end
 								end
@@ -125,13 +148,18 @@ feature -- Basic Operations
 					end
 				end
 			else
+				set_parent (parent)
+				initialize_log_file
+				parent.disable
 				generate
 			end
 			close_log_file
 		rescue
-			shared_wizard_environment.set_abort (10)
-			close_log_file
-			retry
+			if not failed_on_rescue then
+				shared_wizard_environment.set_abort (Standard_abort_value)
+				close_log_file
+				retry
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -139,10 +167,12 @@ feature {NONE} -- Implementation
 	generate is
 			-- Generate Eiffel/C++ code.
 		local
-			i: INTEGER
+			i, a_range: INTEGER
 		do
 			parent.add_title (Analysis_title)
 			set_system_descriptor (create {WIZARD_SYSTEM_DESCRIPTOR}.make)
+			set_range (0)
+			set_progress (0)
 			system_descriptor.generate (shared_wizard_environment.type_library_file_name)
 
 			intialize_file_directories
@@ -153,10 +183,21 @@ feature {NONE} -- Implementation
 				until
 					system_descriptor.after
 				loop
+					a_range := a_range + system_descriptor.library_descriptor_for_iteration.descriptors.count
+					system_descriptor.forth
+				end
+				set_range (a_range)
+				from
+					system_descriptor.start
+					start
+					set_title (Generation_title2)
+				until
+					system_descriptor.after
+				loop
 					from
 						i := 1
 					until
-						i > system_descriptor.library_descriptor_for_iteration.descriptors.count
+						i > system_descriptor.library_descriptor_for_iteration.descriptors.count or Shared_wizard_environment.abort
 					loop
 						if system_descriptor.library_descriptor_for_iteration.descriptors.item (i) /= Void then
 							if shared_wizard_environment.client then
@@ -169,9 +210,12 @@ feature {NONE} -- Implementation
 							end
 						end
 						i := i + 1
+						step
 					end	
 					system_descriptor.forth
 				end
+				report_finish
+				parent.enable
 			end
 		end
 		
@@ -180,9 +224,19 @@ feature {NONE} -- Implementation
 		local
 			a_string: STRING
 		do
-			a_string := clone (Failed_message)
-			a_string.append_integer (shared_wizard_environment.return_code)
+			inspect
+				Shared_wizard_environment.return_code
+			when Standard_abort_value then
+				a_string := clone (Standard_failure_error_message)
+			else
+				a_string.append_integer (Shared_wizard_environment.return_code)
+				a_string := clone (Failed_message)
+			end
 			parent.add_error (a_string)
+			if running then
+				report_finish
+			end
+			parent.enable
 		end
 
 	Idl_compiler: WIZARD_IDL_COMPILER is
@@ -315,7 +369,13 @@ feature {NONE} -- Implementation
 
 	Failed_message: STRING is "Failed with return code "
 			-- Failure message
-			
+	
+	Standard_failure_error_message: STRING is "Failed"
+			-- Generic failure message
+
+	Generation_title: STRING is "Generating code"
+			-- Generation message
+		
 end -- class WIZARD_MANAGER
 
 --|----------------------------------------------------------------

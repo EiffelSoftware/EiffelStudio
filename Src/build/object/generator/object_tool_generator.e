@@ -46,6 +46,10 @@ feature -- Creation
 			!! exclude_all_button.make ("", arrow_form)
 			!! excluded_label.make ("Excluded queries", top_form)
 			!! included_label.make ("Included queries", top_form)
+			!! default_label.make ("Default:", arrow_form)
+			!! select_radio_box.make ("", arrow_form)	
+			!! precondition_test.make("Test preconditions", select_radio_box)
+			!! no_precondition_test.make ("No preconditions test", select_radio_box)
 			!! scrolled_w.make ("", top_form)
 			!! properties_rc.make ("", scrolled_w)
 			!! generate_button.make ("Generate", top_form)
@@ -73,6 +77,7 @@ feature -- Creation
 			exclude_all_button.set_up
 			included_list.set_multiple_selection
 			excluded_list.set_multiple_selection
+			precondition_test.arm
 			scrolled_w.set_working_area (properties_rc)
 			properties_rc.set_same_size
 			!! set_colors
@@ -100,16 +105,19 @@ feature -- Creation
 			arrow_form.attach_bottom (exclude_all_button, 0)
 			arrow_form.attach_bottom (exclude_all_label, 0)
 
-			arrow_form.attach_left_position (include_button, 20)
-			arrow_form.attach_left_position (exclude_button, 20)
+			arrow_form.attach_top (default_label, 5)
+			arrow_form.attach_top (select_radio_box, 3)
+			arrow_form.attach_right_widget (select_radio_box, default_label, 10)
+			arrow_form.attach_right (select_radio_box, 10)
+			arrow_form.attach_left (include_button, 10)
+			arrow_form.attach_left (exclude_button, 10)
 			arrow_form.attach_left_widget (include_button, include_label, 3)
 			arrow_form.attach_left_widget (exclude_button, exclude_label, 3)
 
-			arrow_form.attach_left_position (include_all_button, 70)
-			arrow_form.attach_left_position (exclude_all_button, 70)
-			arrow_form.attach_left_widget (include_all_button, include_all_label, 3)
+			arrow_form.attach_left_widget (include_label, include_all_button, 13)
+			arrow_form.attach_left_widget (exclude_label, exclude_all_button, 10)
+			arrow_form.attach_left_widget (include_all_button, include_all_label, 3) 
 			arrow_form.attach_left_widget (exclude_all_button, exclude_all_label, 3)
-
 			top_form.attach_top (excluded_label, 0)
 			top_form.attach_left (excluded_label, 0)
 			top_form.attach_right (excluded_label, 0)
@@ -119,8 +127,8 @@ feature -- Creation
 			top_form.attach_top_widget (excluded_list, arrow_form, 5)
 			top_form.attach_left (arrow_form, 0)
 			top_form.attach_right (arrow_form, 0)
-			top_form.attach_top_widget (arrow_form, included_label, 5)
-			top_form.attach_left (included_label, 5)
+			top_form.attach_top_widget (arrow_form, included_label, 10)
+			top_form.attach_left (included_label, 0)
 			top_form.attach_right (included_label, 5)
 			top_form.attach_top_widget (included_label, included_list, 5)
 			top_form.attach_left (included_list, 5)
@@ -174,8 +182,11 @@ feature {NONE} -- GUI attributes
 	exclude_label,
 			-- Exclude button label
 
-	exclude_all_label: LABEL
+	exclude_all_label,
 			-- Exclude all button label
+
+	default_label: LABEL
+			-- default label	
 
 	include_button,
 			-- Include button
@@ -188,6 +199,9 @@ feature {NONE} -- GUI attributes
 
 	exclude_all_button: ARROW_B
 			-- Exclude all button
+
+	select_radio_box: RADIO_BOX
+			-- Radio box used to select the preconditions test by default
 
 	scrolled_w: SCROLLED_W
 			-- Scrolled window containing the various properties
@@ -204,6 +218,15 @@ feature {NONE} -- GUI attributes
 
 	excluded_list: SCROLLABLE_LIST
 			-- List of excluded queries
+	
+feature {ANY_QUERY_EDITOR_FORM}
+
+	no_precondition_test,
+			-- No preconditions test by default field
+
+	precondition_test: TOGGLE_B
+			-- Preconditions test by default field
+
 
 feature -- Command execution
 

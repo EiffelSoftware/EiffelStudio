@@ -152,10 +152,10 @@ rt_public void run_idr_destroy (void)
  * equal to 4.2F */
 rt_private int old_run_idr_read (IDR *bu)
 {
-	EIF_GET_CONTEXT
 	register char * ptr = bu->i_buf;
 	short read_size, amount_left;
-	register int part_read = 0, total_read = 0;
+	register int part_read;
+	register int total_read = 0;
 
 	if ((char_read_func ((char *)(&read_size), sizeof (short))) < sizeof (short))
 		eise_io("Independent retrieve: unable to read buffer size.");
@@ -175,15 +175,14 @@ rt_private int old_run_idr_read (IDR *bu)
 		amount_left -= part_read;
 		}
 	return total_read;
-	EIF_END_GET_CONTEXT
 }
 
 rt_private int run_idr_read (IDR *bu)
 {
-	EIF_GET_CONTEXT
 	register char * ptr = bu->i_buf;
 	long read_size, amount_left;
-	register int part_read = 0, total_read = 0;
+	register int part_read;
+	register int total_read = 0;
 
 	if ((char_read_func ((char *)(&read_size), sizeof (long))) < sizeof (long))
 		eise_io("Independent retrieve: unable to read buffer size.");
@@ -203,12 +202,10 @@ rt_private int run_idr_read (IDR *bu)
 		amount_left -= part_read;
 		}
 	return total_read;
-	EIF_END_GET_CONTEXT
 }
 
 rt_private void run_idr_write (IDR *bu)
 {
-	EIF_GET_CONTEXT
 	register char * ptr = idrs_buf (bu);
 	long host_send, send_size = (long) (bu->i_ptr - ptr);
 	register int number_writen;
@@ -229,7 +226,6 @@ rt_private void run_idr_write (IDR *bu)
 		send_size -= number_writen;
 		ptr += number_writen;
 		}
-	EIF_END_GET_CONTEXT
 }
 
 rt_public void check_capacity (IDR *bu, int size)

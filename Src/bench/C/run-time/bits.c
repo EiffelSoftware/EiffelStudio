@@ -41,7 +41,7 @@ char *bit;
 	char *c_string, *result;
 
 	c_string = b_out(bit);					/* Build C string */
-	result = makestr(c_string,LENGTH(bit));	/* Build Eiffel string */
+	result = makestr(c_string, strlen (c_string));	/* Build Eiffel string */
 	xfree(c_string);						/* Free C string */
 
 	return result;
@@ -58,7 +58,7 @@ char *bit;
 
 	len = LENGTH(bit);
 	arena = ARENA(bit);
-	result = cmalloc((len + 1) * sizeof(char));
+	result = cmalloc((len + 3) * sizeof(char));
 	ptr = result;
 	last = arena + (BIT_NBPACK(len) - 1);
 	for (; arena < last; arena++) {			/* Print fulled packs */

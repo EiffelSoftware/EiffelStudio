@@ -33,7 +33,7 @@ extern struct stack hec_saved;		/* Saved indirection pointers */
 /* Declaration of hector routines */
 extern char *efreeze();				/* Freeze object's address (no more move) */
 extern EIF_OBJ eadopt();			/* The C wants to keep the reference */
-extern void ewean();				/* Weans a previously adopted reference */
+extern EIF_OBJ ewean();				/* Weans a previously adopted reference */
 extern void eufreeze();				/* Forget a frozen memory address */
 extern EIF_OBJ hrecord();			/* Record entry in hector table */
 extern EIF_OBJ henter();			/* Low-level entry in hector table */

@@ -26,7 +26,9 @@ IDR *idrs;
 	/* Release the memory used by the IDR stream */
 
 	idrs->i_size = 0;
-	free(idrs->i_buf);
-	idrs->i_buf = idrs->i_ptr = (char *) 0;
+	if (idrs->i_buf != (char *) 0) {
+		free(idrs->i_buf);
+		idrs->i_buf = idrs->i_ptr = (char *) 0;
+	}
 }
 

@@ -20,10 +20,26 @@
 
 #include "idr.h"
 
+/*
+
 public bool_t idr_u_int(idrs, ip)
 IDR *idrs;
 unsigned int *ip;
 {
 	return idr_int(idrs, (unsigned int *) ip);
+}
+*/
+
+public bool_t idr_u_int(idrs, ip)
+IDR *idrs;
+unsigned int *ip;
+{
+	unsigned long lip;
+	bool_t ok_bool;
+
+	lip = (unsigned long) *ip;
+	ok_bool = idr_u_long(idrs, &lip);
+	*ip = (unsigned int) lip;
+	return ok_bool;
 }
 

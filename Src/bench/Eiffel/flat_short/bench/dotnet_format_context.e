@@ -12,11 +12,6 @@ inherit
 			make as format_context_make
 		end
 		
-	IL_ENVIRONMENT
-		export
-			{NONE} all
-		end	
-
 feature {NONE} -- Initialization
 
 	make (a_consumed: CONSUMED_TYPE) is
@@ -27,7 +22,7 @@ feature {NONE} -- Initialization
 			consumed_t := a_consumed
 			set_assembly_name
 --			if not cached_xml.has (assembly_name) then
-				create assembly_info.make
+				create assembly_info.make (System.clr_runtime_version)
 --				if is_dotnet_installed then
 --					assembly_info.initialize (dotnet_framework_path + assembly_name + ".xml")
 --					cached_xml.put (assembly_info, assembly_name)

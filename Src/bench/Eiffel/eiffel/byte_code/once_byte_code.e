@@ -41,7 +41,6 @@ feature -- IL code generation
 				-- Put a breakable point on feature name.
 			il_generator.put_line_info (start_line_number)
 			il_generator.flush_sequence_points (context.class_type)
-			il_generator.generate_once_prologue
 			generate_il_body
 			il_generator.put_debug_info (end_location)
 			il_generator.generate_once_epilogue

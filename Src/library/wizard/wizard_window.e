@@ -101,23 +101,6 @@ feature -- Access
 			-- needed to be completed by the user in order
 			-- to be performed.
 
-feature -- Status setting
-
-	lock_update is
-			-- Lock updates for this window on certain platforms until
-			-- `unlock_update' is called.
-			--
-			-- Note: The window cannot be moved while update is locked.
-		do
-			implementation.lock_update
-		end
-
-	unlock_update is
-			-- Unlock updates for this window on certain platforms.
-		do
-			implementation.unlock_update
-		end
-
 feature {NONE} -- Implementation
 
 	previous_b, next_b, cancel_b: EV_BUTTON

@@ -111,11 +111,21 @@ feature -- Basic operations
 			-- `Result' is name and type of object as STRING.
 		require
 			object_not_void: an_object /= Void
+		local
+			displayed_name: STRING
 		do
-			if an_object.output_name.is_empty then
+			if an_object.output_name.is_empty and an_object.name.is_empty then
 				Result := an_object.type.substring (4, an_object.type.count)
 			else		
-				Result := an_object.output_name + ": " + an_object.type.substring (4, an_object.type.count)
+					-- Decide which name to use. If the output name is longer,
+					-- it means that we are editing tha name, and the output name should
+					-- be displayed.
+				if an_object.output_name.count > an_object.name.count then
+					displayed_name := an_object.output_name
+				else
+					displayed_name := an_object.name
+				end
+				Result := displayed_name + ": " + an_object.type.substring (4, an_object.type.count)
 			end
 		ensure
 			Result_not_void: Result /= Void

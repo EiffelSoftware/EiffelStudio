@@ -47,13 +47,8 @@ feature
 			i_not_void: i /= Void
 			j_not_void: j /= Void
 		do
-			if i < j then
-				lower := i
-				upper := j
-			else
-				lower := j
-				upper := i
-			end
+			lower := i
+			upper := j
 		end
 
 	disjunction (other: like Current): BOOLEAN is
@@ -104,6 +99,5 @@ feature -- Byte code generation
 invariant
 	lower_not_void: lower /= Void
 	upper_not_void: upper /= Void
-	lower_less_than_upper: lower <= upper
 
 end

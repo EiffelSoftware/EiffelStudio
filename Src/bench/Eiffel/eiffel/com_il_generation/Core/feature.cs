@@ -338,11 +338,11 @@ internal class FEATURE
 	}
 
 	// Debugger CAs to hide dummy callbacks routine
-	private static CustomAttributeBuilder internal_debugger_step_through_attr;
-	private static CustomAttributeBuilder internal_debugger_hidden_attr;
-	private static CustomAttributeBuilder internal_suppress_check_attr;
+	internal static CustomAttributeBuilder internal_debugger_step_through_attr;
+	internal static CustomAttributeBuilder internal_debugger_hidden_attr;
+	internal static CustomAttributeBuilder internal_suppress_check_attr;
 
-	private static CustomAttributeBuilder debugger_step_through_attr ()
+	internal static CustomAttributeBuilder debugger_step_through_attr ()
 		// Once: Predefined Custom attribute to force debugger
 		// to skip certain routines.
 	{
@@ -355,7 +355,7 @@ internal class FEATURE
 		return internal_debugger_step_through_attr;
 	}
 
-	private static CustomAttributeBuilder debugger_hidden_attr ()
+	internal static CustomAttributeBuilder debugger_hidden_attr ()
 		// Once: Predefined Custom attribute to force debugger
 		// to hide certain routines.
 	{
@@ -368,7 +368,7 @@ internal class FEATURE
 		return internal_debugger_hidden_attr;
 	}
 
-	private static CustomAttributeBuilder suppress_check_attr ()
+	internal static CustomAttributeBuilder suppress_check_attr ()
 		// Once: Predefined Custom attribute to force .net runtime
 		// not to perform a stack walk when calling a C external.
 	{

@@ -13,17 +13,12 @@ inherit
 	INTERNAL
 	
 	GB_CONSTANTS
-
-create
-	initialize
-
-feature -- Initialization
-
-	initialize is
-			-- `Create' Current and initialize.
-		do
-			
-		end
+	
+	XML_UTILITIES
+	
+	TOE_TREE_FACTORY
+	
+	GB_ACCESSIBLE
 		
 feature -- Basic operations
 
@@ -45,6 +40,106 @@ feature -- Basic operations
 			xml_load.load
 		end
 		
+	load_components is
+			-- Load previously stored components in `component_document',
+			-- or create `component_document' if no component file exists.
+		require
+			component_doc_void: component_document = Void
+		local
+			file: RAW_FILE
+			xml_store: GB_XML_STORE
+			an_element, component_element: XML_ELEMENT
+			toe_document: TOE_DOCUMENT
+			buffer: STRING
+			parser: XML_TREE_PARSER
+		do
+			create file.make (component_filename)
+			if file.exists then
+					-- Load the existing file into `component document'
+				parser := create_tree_parser
+				file.make_open_read (component_filename)
+				create buffer.make (file.count)
+				file.start
+				file.read_stream (file.count)
+				buffer := file.last_string
+				parser.parse_from_string (buffer)
+				parser.set_end_of_document
+				component_document := parser.document
+				an_element ?= component_document.first
+				component_element ?= an_element.first
+				
+				component_selector.add_components (all_child_element_names (an_element))
+			else
+					-- Create `component_document'.
+				component_element := new_root_element ("components", "")
+				add_attribute_to_element (component_element, "xsi", "xmlns", "http://www.w3.org/1999/XMLSchema-instance")
+				create toe_document.make
+				create component_document.make_from_imp (toe_document)
+				component_document.start
+				component_document.force_first (component_element)
+			end
+		ensure
+			component_doc_not_void: component_document /= Void
+		end
+
+	add_new_component (an_object: GB_OBJECT; component_name: STRING) is
+			-- Add a new component based on `an_object', named `component_name'
+			-- to `component_document'.
+		require
+			object_not_void: an_object /= Void
+			name_ok: component_name /= Void and not component_name.is_empty
+		local
+			xml_store: GB_XML_STORE
+			first_element: XML_ELEMENT
+			component_element: XML_ELEMENT
+			new_element: XML_ELEMENT
+		do
+			create xml_store
+			first_element ?= component_document.first
+			component_element := new_child_element (first_element, component_name, "Component")
+			first_element.force_last (component_element)
+			new_element := create_widget_instance (component_element, an_object.type)
+			component_element.force_last (new_element)
+			xml_store.add_new_object_to_output (an_object, new_element, False)
+		end
+
+	save_components is
+			-- Store `component_document' into file
+			-- `component_filename'.
+		require
+			component_doc_not_void: component_document /= Void
+		local
+			formater: XML_FORMATER
+			file: RAW_FILE
+		do
+			create formater.make
+			formater.process_document (component_document)
+			create file.make_open_write (component_filename)
+			file.start
+			file.putstring (xml_format)
+			file.putstring (formater.last_string.to_utf8)
+			file.close
+		end
 		
+feature {GB_COMPONENT} -- Implementation
+
+	xml_element_representing_named_component (a_name: STRING): XML_ELEMENT is
+			-- `Result' is the element representing component `a_name' in
+			-- `component_document'.
+		local
+			an_element: XML_ELEMENT
+		do
+			an_element ?= component_document.first
+			Result := child_element_by_name (an_element, a_name)
+		ensure
+			result_not_void: Result /= Void
+		end
+		
+		
+feature {NONE} -- Implementation
+
+	component_document: XML_DOCUMENT
+		-- Document which contains representations of all components
+		-- that have been defined by the user.
 
 end -- class GB_XML_HANDLER

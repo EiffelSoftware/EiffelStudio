@@ -269,14 +269,14 @@ feature {NONE} -- Implementation
 			retried: BOOLEAN
 		do
 			if not retried then
-				if consume_from_fullname then
-					assembly := feature {ASSEMBLY}.load_string (target_path.to_cil)
-				else
-					assembly := feature {ASSEMBLY}.load_from (target_path.to_cil)
-				end
-				
 				if not (list_assemblies or init or usage_display) and target_path = Void then
 					set_error (No_target, Void)
+				elseif not (list_assemblies or init or usage_display) then
+					if consume_from_fullname then
+						assembly := feature {ASSEMBLY}.load_string (target_path.to_cil)
+					else
+						assembly := feature {ASSEMBLY}.load_from (target_path.to_cil)
+					end					
 				elseif put_in_eac and destination_path /= Void then
 					set_error (No_destination_if_put_in_eac, Void)
 				elseif put_in_eac and force_local_generation then

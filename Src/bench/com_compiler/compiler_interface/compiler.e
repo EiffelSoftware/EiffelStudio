@@ -195,7 +195,9 @@ feature -- Basic Operations
 	remove_file_locks is
 			-- Close the open EIFGEN files so that they may be removed by another compiler instance.
 		do
-			Eiffel_system.System.server_controler.wipe_out
+			if Eiffel_system.System.server_controler /= Void then
+				Eiffel_system.System.server_controler.wipe_out
+			end
 		end
 		
 end -- class COMPILER

@@ -30,7 +30,8 @@ inherit
 			text,
 			set_text,
 			process_notification_info,
-			caret_position
+			caret_position,
+			set_caret_position
 		end
 
 	WEL_RICH_EDIT_MESSAGE_CONSTANTS
@@ -289,10 +290,25 @@ feature -- Status setting
 		local
 			range: WEL_CHARACTER_RANGE
 		do
-			!! range.make (start_position, end_position)
+--			create range.make (start_position, end_position)
+--			cwin_send_message (item, Em_exsetsel, 0, range.to_integer)
+  			cwin_send_message (item, em_setsel, start_position, end_position)
+--  			if scroll_caret_at_selection then
+--  				cwin_send_message (item, em_scrollcaret, 0, 0)
+--  			end
+		end
+
+	set_caret_position (position: INTEGER) is
+   			-- Set the caret position with `position'.
+   			-- If `scroll_caret_at_selection' is True, the
+   			-- caret will be scrolled to `position'.
+ 		local
+			range: WEL_CHARACTER_RANGE
+ 		do
+			create range.make (position, position)
 			cwin_send_message (item, Em_exsetsel, 0,
 				range.to_integer)
-		end
+  		end;
 
 	
 	move_to_selection is

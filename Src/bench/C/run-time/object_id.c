@@ -2,6 +2,7 @@
 	Object id externals
 */
 
+#include "config.h"
 #include "portable.h"
 #include "macros.h"
 #include "garcol.h"

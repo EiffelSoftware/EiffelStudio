@@ -77,7 +77,7 @@ feature -- IL generation
 			base_class := real_ty.base_class
 			feat_tbl := base_class.feature_table
 			make_feat := feat_tbl.item_id (make_name_id)
-			put_feat := feat_tbl.item_id (put_value_at_name_id)
+			put_feat := feat_tbl.item_id (put_name_id)
 			
 				-- Creation of Array
  			context.add_local (real_ty)
@@ -106,11 +106,7 @@ feature -- IL generation
  				expr.generate_il
  				if actual_type /= Void and then actual_type.is_basic then 
  						-- We generate a metamorphosed version of type.
- 					expr.generate_il_eiffel_metamorphose (actual_type)
- 					basic_i ?= actual_type
-					il_generator.put_integer_8_constant (basic_i.typecode)
-				else
-					il_generator.put_integer_8_constant (0)
+ 					expr.generate_il_metamorphose (actual_type, Void, True)
  				end
 
  				il_generator.put_integer_32_constant (i)

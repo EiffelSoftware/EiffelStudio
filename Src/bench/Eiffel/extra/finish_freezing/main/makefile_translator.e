@@ -844,7 +844,7 @@ feature {NONE} -- Translation
 			if appl /= Void and then lastline.count>=appl.count and then lastline.substring (1, appl.count).is_equal (appl) then
 				translate_appl
 			elseif lastline.count>13 and then lastline.substring (1,13).is_equal ("STATIC_CECIL=") then
-				translate_cecil
+				translate_cecil_and_dll
 			else
 				debug ("translate_line_change")
 					debug ("output")
@@ -940,7 +940,7 @@ feature {NONE} -- Translation
 			makefile.new_line
 		end
 
-	translate_cecil is
+	translate_cecil_and_dll is
 			-- Translate cecil.
 		local
 			lastline: STRING
@@ -969,7 +969,7 @@ feature {NONE} -- Translation
 				lastline := clone (options.get_string ("cecil_text", Void))
 			end
 
-			debug ("translate_cecil")
+			debug ("translate_cecil_and_dll")
 				debug ("input")
 					io.putstring ("IN: ")
 					io.putstring (lastline)
@@ -981,7 +981,7 @@ feature {NONE} -- Translation
 			subst_library (lastline)
 			subst_precomp_libs (lastline, precompile_libs)
 
-			debug ("translate_cecil")
+			debug ("translate_cecil_and_dll")
 				debug ("output")
 					io.putstring ("OUT: ")
 					io.putstring (lastline)
@@ -1017,6 +1017,8 @@ feature {NONE} -- Translation
 			then 
 				lastline := clone (options.get_string ("cecil_def", Void))
 				lastline.replace_substring_all ("$appl", appl)
+				subst_eiffel (lastline)
+				subst_platform (lastline)
 				makefile.putstring (lastline)
 			end
 			makefile.new_line
@@ -1031,13 +1033,11 @@ feature {NONE} -- Translation
 			read_next
 			lastline := clone (makefile_sh.laststring)
 			lastline.replace_substring_all (".o", ".obj")
-
 			subst_library (lastline)
 			subst_precomp_libs (lastline, precompile_libs)
-
+			subst_dir_sep (lastline)
 			makefile.putstring (lastline)
 			makefile.new_line
-
 
 -- SHAREDFLAGS
 			read_next
@@ -1070,8 +1070,133 @@ feature {NONE} -- Translation
 			makefile.putstring (makefile_sh.laststring)
 			makefile.new_line
 
-	end
+-------------------------------------------------
+-- Search the beginning of the SYSTEM_IN_DLL part
+			read_next
+			lastline := clone (makefile_sh.laststring)
+			from
+			until
+				lastline.count>14 and then lastline.substring (1,14).is_equal ("SYSTEM_IN_DLL=")
+			loop
+				read_next
+				lastline := clone (makefile_sh.laststring)
+			end
 
+			makefile.putstring ("%N#SYSTEM_IN_DLL PART%N%N")
+
+-- SYSTEM_IN_DLL= appl.dll
+			lastline.replace_substring_all (".so", ".dll")
+			makefile.putstring (lastline)
+			makefile.new_line
+
+-- DEF_FILE= appl.def
+			makefile.putstring ("DEF_FILE= ")
+			makefile.putstring (appl)
+			makefile.putstring (".def")
+			makefile.new_line
+
+-- dll: $(SYSTEM_IN_DLL)
+			read_next
+			makefile.putstring (makefile_sh.laststring)
+			makefile.new_line
+
+-- egc_dll.obj
+			read_next
+			lastline := clone (makefile_sh.laststring)
+			lastline.replace_substring_all (".o", ".obj")
+			subst_eiffel (lastline)
+			subst_platform (lastline)
+			subst_compiler (lastline)
+			subst_dir_sep (lastline)
+			makefile.putstring (lastline)
+			makefile.new_line
+
+			read_next -- $(MV) $(EIFFEL4....
+			lastline := clone (makefile_sh.laststring)
+			subst_eiffel (lastline)
+			subst_platform (lastline)
+			subst_compiler (lastline)
+			subst_dir_sep (lastline)
+			makefile.putstring (lastline)
+			makefile.new_line
+
+			read_next -- cd E1 ...
+			makefile.putstring (makefile_sh.laststring)
+			makefile.new_line
+
+			read_next -- $(MAKE) ...
+			lastline := clone (makefile_sh.laststring)
+			lastline.replace_substring_all (".o", ".obj")
+			makefile.putstring (lastline)
+			makefile.new_line
+
+			read_next -- cd ..
+			makefile.putstring (makefile_sh.laststring)
+			makefile.new_line
+
+-- edll.obj
+			read_next
+			lastline := clone (makefile_sh.laststring)
+			lastline.replace_substring_all (".o", ".obj")
+			subst_dir_sep (lastline)
+			makefile.putstring (lastline)
+			makefile.new_line
+
+			read_next -- cd E1 ...
+			makefile.putstring (makefile_sh.laststring)
+			makefile.new_line
+
+			read_next -- $(MAKE) ...
+			lastline := clone (makefile_sh.laststring)
+			lastline.replace_substring_all (".o", ".obj")
+			makefile.putstring (lastline)
+			makefile.new_line
+
+			read_next -- cd ..
+			makefile.putstring (makefile_sh.laststring)
+			makefile.new_line
+
+-- SYSTEM_IN_DLL_OBJ
+			read_next
+			lastline := clone (makefile_sh.laststring)
+			lastline.replace_substring_all (".o", ".obj")
+			subst_library (lastline)
+			subst_precomp_libs (lastline, precompile_libs)
+			subst_dir_sep (lastline)
+			makefile.putstring (lastline)
+			makefile.new_line
+
+-- DLLSHAREDFLAGS
+			read_next
+			lastline := clone (makefile_sh.laststring)
+			makefile.putstring (lastline)
+			if options.has ("system_dll") 
+			then 
+				makefile.putstring (" \%N")
+				lastline := clone (options.get_string ("system_dll", Void))
+				lastline.replace_substring_all ("$appl", appl)
+				makefile.putstring (lastline)
+				makefile.new_line
+			else
+				makefile.new_line
+			end
+
+-- SYSTEM_IN_DLL
+			read_next
+			makefile.putstring (makefile_sh.laststring)
+			makefile.putstring (" $(DEF_FILE)")
+			makefile.new_line 
+
+-- $(RM) "$(SYSTEM_IN_DLL)"
+			read_next
+			makefile.putstring (makefile_sh.laststring)
+			makefile.new_line
+
+-- $(SHAREDLINK) $(DLLSHAREDFLAGS) $(SYSTEM_IN_DLL_OBJ) $(SHAREDLIBS)
+			read_next
+			makefile.putstring (makefile_sh.laststring)
+			makefile.new_line
+	end
 
 feature {NONE}	-- substitutions
 
@@ -1297,6 +1422,8 @@ feature {NONE} -- Implementation
 					end
 
 					wordstart := wordstart + replacement.count - 2
+				elseif word.substring(1,18).is_equal("external_makefiles") then
+					-- $EXTERNAL_MAKEFILES must not be replaced.
 				else
 					io.error.putstring ("WARNING: Option '")
 					io.error.putstring (word)

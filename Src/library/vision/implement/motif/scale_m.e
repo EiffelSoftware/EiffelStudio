@@ -29,8 +29,8 @@ inherit
 		export
 			{NONE} all
 		redefine
-			set_foreground,
-			update_foreground, action_target, set_background_color,
+			set_foreground_color,
+			update_foreground_color, action_target, set_background_color,
 			update_background_color
 		end;
 
@@ -39,7 +39,7 @@ inherit
 			{NONE} all
 		redefine
 			set_size, set_width, set_height, action_target,
-			set_foreground, update_foreground, set_background_color,
+			set_foreground_color, update_foreground_color, set_background_color,
 			update_background_color, width, height,
 			clean_up
 		select
@@ -58,9 +58,9 @@ creation
 
 	make
 
-feature -- Creation
+feature {NONE} -- Creation
 
-	make (a_scale: SCALE) is
+	make (a_scale: SCALE; man: BOOLEAN) is
 			-- Create a motif scale.
 		local
 			ext_name: ANY
@@ -68,17 +68,18 @@ feature -- Creation
 			widget_index := widget_manager.last_inserted_position;
 			ext_name := a_scale.identifier.to_c;
 			screen_object := create_scale ($ext_name,
-					parent_screen_object (a_scale, widget_index));
+					parent_screen_object (a_scale, widget_index),
+					man);
 			a_scale.set_font_imp (Current);
 			granularity := 10
 		ensure
-			mamimum_set: maximum = 100;
-			minimum_set: minimum = 0;
-			gradularity_set: granularity = 10;
-			value_equal_0: value = 0;
-			--not_horizontal: not is_horizontal;
-			--not_value_shown: not is_value_shown;
-			--not_max_right_bottom: not is_maximum_right_bottom
+			--default_mamimum_set: maximum = 100;
+			--default_minimum_set: minimum = 0;
+			--default_gradularity_set: granularity = 10;
+			--default_value_equal_0: value = 0;
+			--default_orientation: not is_horizontal;
+			--default_value_shown: not is_value_shown;
+			--default_not_max_right_bottom: not is_maximum_right_bottom
 		end;
 
 feature 
@@ -462,7 +463,6 @@ feature
 			screen_object := temp_p;
 		end;
 
-
 	set_background_color (a_color: COLOR) is
 			-- Set background_color to `a_color'.
 		require else
@@ -472,28 +472,27 @@ feature
 			color_implementation: COLOR_X;
 			ext_name: ANY
 		do
-			if not (background_pixmap = Void) then
-				pixmap_implementation ?= background_pixmap.implementation;
+			if bg_pixmap /= Void then
+				pixmap_implementation ?= bg_pixmap.implementation;
 				pixmap_implementation.remove_object (Current);
-				background_pixmap := Void
+				bg_pixmap := Void
 			end;
-			if not (background_color = Void) then
-				color_implementation ?= background_color.implementation;
+			if bg_color /= Void then
+				color_implementation ?= bg_color.implementation;
 				color_implementation.remove_object (Current)
 			end;
 			bg_color := a_color;
 			color_implementation ?= background_color.implementation;
 			color_implementation.put_object (Current);
 			ext_name := Mbackground.to_c;
-			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name);
-			c_set_color (slide_widget, color_implementation.pixel (screen), $ext_name);
-		ensure then
-			background_color = a_color;
-			(background_pixmap = Void)
+			c_set_color (screen_object, 
+						color_implementation.pixel (screen), $ext_name);
+			c_set_color (slide_widget, 
+						color_implementation.pixel (screen), $ext_name);
 		end;
 
-	set_foreground (a_color: COLOR) is
-			-- Set `foreground' to `a_color'.
+	set_foreground_color (a_color: COLOR) is
+			-- Set `foreground_color' to `a_color'.
 		require else
 			a_color_exists: not (a_color = Void)
 		
@@ -501,17 +500,17 @@ feature
 			color_implementation: COLOR_X;
 			ext_name: ANY
 		do
-			if not (foreground = Void) then
-				color_implementation ?= foreground.implementation;
+			if not (foreground_color = Void) then
+				color_implementation ?= foreground_color.implementation;
 				color_implementation.remove_object (Current)
 			end;
 			color_implementation ?= a_color.implementation;
 			color_implementation.put_object (Current);
-			ext_name := Mforeground.to_c;
+			ext_name := Mforeground_color.to_c;
 			c_set_color (slide_widget, color_implementation.pixel (screen), $ext_name);
 			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name);
 		ensure then
-			foreground = a_color
+			foreground_color = a_color
 		end;
 
 feature {COLOR_X}
@@ -528,14 +527,14 @@ feature {COLOR_X}
 			c_set_color (slide_widget, color_implementation.pixel (screen), $ext_name);
 		end;
 
-	update_foreground is
+	update_foreground_color is
 			-- Update the X color after a change inside the Eiffel color.
 		local
 			ext_name: ANY;
 			color_implementation: COLOR_X
 		do
-			ext_name := Mforeground.to_c;
-			color_implementation ?= foreground.implementation;
+			ext_name := Mforeground_color.to_c;
+			color_implementation ?= foreground_color.implementation;
 			c_set_color (screen_object, color_implementation.pixel (screen), $ext_name);
 			c_set_color (slide_widget, color_implementation.pixel (screen), $ext_name);
 		end
@@ -647,7 +646,8 @@ feature {NONE}
 
 feature {NONE} -- External features
 
-	create_scale (s_name: ANY; scr_obj: POINTER): POINTER is
+	create_scale (s_name: ANY; scr_obj: POINTER;
+			man: BOOLEAN): POINTER is
 		external
 			"C"
 		end;

@@ -237,7 +237,7 @@ feature -- Basic Operations
 			tmp_string.to_lower
 			if library_headers.has (tmp_string) then
 				if not standard_structures.has (a_name) then
-					Result.insert ("_x", Result.index_of ('.', 1))
+					Result.insert_string ("_x", Result.index_of ('.', 1))
 				end
 			end
 		ensure

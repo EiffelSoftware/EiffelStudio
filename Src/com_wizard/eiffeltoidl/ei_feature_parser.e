@@ -133,7 +133,7 @@ feature {NONE} -- Implementation
 				if index > 0 then
 					l_buffer := input.substring (1, index - 1)
 					parse_parameter (l_buffer)
-					input.tail (input.count - index)
+					input.keep_tail (input.count - index)
 					input.left_adjust
 				else
 					input.right_adjust
@@ -171,7 +171,7 @@ feature {NONE} -- Implementation
 			loop
 				if comma_index > 0 then
 					create para.make (input.substring (1, comma_index-1), l_type)
-					input.tail (input.count - comma_index - 1)
+					input.keep_tail (input.count - comma_index - 1)
 					input.left_adjust
 				end
 				parsed_feature.add_parameter (para)

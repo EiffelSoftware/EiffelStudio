@@ -366,7 +366,7 @@ feature {NONE} -- Implementation
 			valid_syntax: a_filename.substring (a_filename.count - 1, a_filename.count).is_equal (Header_file_extension)
 		do
 			Result := clone (a_filename)
-			Result.head (Result.count - 2)
+			Result.keep_head (Result.count - 2)
 			if is_cpp then
 				Result.append (Cpp_file_extension)
 			else

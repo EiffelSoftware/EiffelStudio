@@ -75,7 +75,7 @@ feature -- Behavior
 				msg_box.error_message_box (Current, Empty_destination_folder, Initialization_error)
 			else
 				if folder_name.item (folder_name.count) = Directory_separator then
-					folder_name.head (folder_name.count -1)
+					folder_name.keep_head (folder_name.count -1)
 				end
 				create a_file.make (folder_name)
 				if not a_file.exists then

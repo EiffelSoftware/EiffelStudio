@@ -27,7 +27,7 @@ feature -- Basic Operations
 		do
 			Result := clone (a_file_name)
 			dot_index := Result.index_of ('.', 1)
-			Result.head (dot_index)
+			Result.keep_head (dot_index)
 			Result.append ("obj")
 		ensure
 			changed: Result.substring (Result.count - 3, Result.count).is_equal (".obj")

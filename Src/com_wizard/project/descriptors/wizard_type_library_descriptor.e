@@ -319,7 +319,7 @@ feature -- Basic operations
 								descriptors.item (i).c_header_file_name /= Void and then 
 								not descriptors.item (i).c_header_file_name.is_empty 
 							then
-								descriptors.item (i).c_header_file_name.insert 
+								descriptors.item (i).c_header_file_name.insert_string 
 									(tmp_string, descriptors.item (i).c_header_file_name.index_of ('.', 1))
 							end
 						end

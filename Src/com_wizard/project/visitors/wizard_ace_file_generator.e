@@ -109,7 +109,7 @@ feature -- Access
 					loop
 						if original_cluster_info.clusters.item.substring_index ("%".%"", 1) > 0 then
 							str_buffer := clone (shared_wizard_environment.eiffel_project_name)
-							str_buffer.head (str_buffer.last_index_of ('\', str_buffer.count) - 1)
+							str_buffer.keep_head (str_buffer.last_index_of ('\', str_buffer.count) - 1)
 							str_buffer.prepend ("%"")
 							str_buffer.append ("%"")
 							original_cluster_info.clusters.item.replace_substring_all ("%".%"", str_buffer)		
@@ -521,14 +521,14 @@ feature -- Basic operations
 						(a_cluster.item (a_class_index_after) = ';') or
 						(a_cluster.item (a_class_index_after) = '%N')))
 					then
-						a_cluster.insert (
+						a_cluster.insert_string (
 							"%N%T%T%T" + shared_wizard_environment.eiffel_class_name+ ";",
 							a_cluster.substring_index ("visible", 1) + 7)
 					end
 				else
 					a_cluster.prune (';')
 					if a_cluster.substring_index ("end", 1) >= a_cluster.count - 3 then
-						a_cluster.head (a_cluster.substring_index ("end", 1) - 1)
+						a_cluster.keep_head (a_cluster.substring_index ("end", 1) - 1)
 					end
 					a_cluster.append (
 						"%N%T%Tvisible%N%

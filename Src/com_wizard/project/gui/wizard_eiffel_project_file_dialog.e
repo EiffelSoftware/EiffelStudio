@@ -265,7 +265,7 @@ feature {NONE} -- Implementation
 		do
 			Result := project_file_edit.text
 			separator_index := Result.last_index_of (Directory_separator, Result.count)
-			Result.tail (Result.count - separator_index)
+			Result.keep_tail (Result.count - separator_index)
 		end
 
 end -- class WIZARD_EIFFEL_PROJECT_FILE_DIALOG

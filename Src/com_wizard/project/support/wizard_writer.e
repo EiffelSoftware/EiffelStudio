@@ -126,7 +126,7 @@ feature {NONE} -- Implementation
 			Result := clone (a_file_name)
 			an_index := Result.last_index_of ('.', 1) - 1
 			if an_index > 0 then
-				Result.head (an_index)
+				Result.keep_head (an_index)
 			end
 			Result.append (Backup_file_extension)
 		end

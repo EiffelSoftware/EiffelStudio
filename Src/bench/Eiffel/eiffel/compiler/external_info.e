@@ -13,6 +13,12 @@ feature
 	execution_unit: EXT_EXECUTION_UNIT;
 			-- External execution unit
 
+	is_cpp: BOOLEAN is
+			-- Is the external represented by Current written in C++?
+		do
+			Result := execution_unit.is_cpp
+		end
+
 	add_occurence is
 			-- Increment `occurence' by 1.
 		do

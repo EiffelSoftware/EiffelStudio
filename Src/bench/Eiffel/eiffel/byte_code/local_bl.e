@@ -67,6 +67,6 @@ feature
 	free_register is
 			-- Do nothing
 		do
-		end;
+		end
 
 end

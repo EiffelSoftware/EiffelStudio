@@ -161,7 +161,7 @@ feature -- Generation
 				until
 					parameters.after
 				loop
-					expr ?= parameters.item;
+					expr := parameters.item;
 					argument_regs.item (i).print_register;
 					generated_file.putstring (" = ");
 					expr.print_register;

@@ -115,13 +115,13 @@ feature -- Code generation
 				generated_file.putstring (gc_comma);
 			end;
 
-			expr ?= parameters @ 1;
+			expr := parameters @ 1;
 			expr.print_register
 
 			if not is_item then
 				generated_file.putstring (gc_comma);
 					-- Index
-				expr ?= parameters @ 2
+				expr := parameters @ 2
 				expr.print_register
 			end
 			generated_file.put_character (')');

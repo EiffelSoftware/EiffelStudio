@@ -17,9 +17,9 @@ feature -- Status setting
 		end
 
 	set_map_name (n: ANY; key: STRING) is
-			-- Store item `n' whith key `key'.
+			-- Store item `n' with key `key'.
+			-- `n' can be `Void'.
 		require
-			argument_exists: n /= Void
 			key_exists: key /= Void
 			not_key_in_table: not is_mapped (key)
 		do

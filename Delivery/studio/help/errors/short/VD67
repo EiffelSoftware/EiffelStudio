@@ -1,0 +1,3 @@
+Lace error: Could not initialize Eiffel Assembly Cache in specified path.
+What to do: Make sure the path to Eiffel Assembly Cache is correct and can
+	be found on the local disk or on the network

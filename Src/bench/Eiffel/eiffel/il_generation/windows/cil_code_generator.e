@@ -1060,6 +1060,7 @@ feature -- Features info
 			l_ext: IL_EXTENSION_I
 			l_naming_convention: BOOLEAN
 			l_is_single_class: BOOLEAN
+			l_is_static: BOOLEAN
 		do
 			l_class_type := class_types.item (a_type_id)
 			l_class_token := class_type_token (a_type_id)
@@ -1070,9 +1071,15 @@ feature -- Features info
 
 			byte_context.set_class_type (l_class_type)
 
---			if l_feat.is_il_external then
---				define_external_feature_reference (l_feat, a_type_id)
---			elseif l_feat.feature_name_id /= Names_heap.void_name_id then
+			if l_feat.is_il_external then
+				l_ext ?= l_feat.extension
+				check
+					has_extension: l_ext /= Void
+				end
+				l_is_static := not l_ext.need_current (l_ext.type)
+			else
+				l_is_static := is_static
+			end
 			if l_feat.feature_name_id /= Names_heap.void_name_id then
 				l_is_attribute := l_feat.is_attribute
 				l_is_c_external := l_feat.is_c_external
@@ -1082,7 +1089,7 @@ feature -- Features info
 				l_signature.compare_references
 
 				l_return_type := argument_actual_type (l_feat.type.actual_type.type_i)
-				if (l_is_single_class or (not in_interface and is_static)) and l_is_attribute then
+				if (l_is_single_class or (not in_interface and l_is_static)) and l_is_attribute then
 					l_field_sig := field_sig
 					l_field_sig.reset
 					set_signature_type (l_field_sig, l_return_type)
@@ -1090,13 +1097,13 @@ feature -- Features info
 				else
 					l_meth_sig := method_sig
 					l_meth_sig.reset
-					if is_static and not in_interface then
+					if l_is_static and not in_interface then
 						l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Default_sig)
 					else
 						l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
 					end
 
-					if is_static and not l_is_c_external then
+					if l_is_static and not l_is_c_external then
 						l_meth_sig.set_parameter_count (l_parameter_count + 1)
 					else
 						l_meth_sig.set_parameter_count (l_parameter_count)
@@ -1114,7 +1121,7 @@ feature -- Features info
 							feature {MD_SIGNATURE_CONSTANTS}.Element_type_void, 0)
 					end
 
-					if is_static and not l_is_c_external then
+					if l_is_static and not l_is_c_external then
 						set_signature_type (l_meth_sig, l_class_type.type)
 					end
 
@@ -1143,14 +1150,13 @@ feature -- Features info
 
 					-- When we are handling with an external feature, we have to extract its
 					-- real name, not the Eiffel one.
-				l_ext ?= l_feat.extension
 				if l_ext /= Void then
 					l_name := l_ext.alias_name
 				else
 					if l_feat.is_type_feature then
 						l_name := l_feat.feature_name
 					else
-						if is_static then
+						if l_is_static then
 							if l_is_c_external then
 								l_name := encoder.feature_name (l_class_type.static_type_id,
 									l_feat.body_index)
@@ -1174,7 +1180,7 @@ feature -- Features info
 
 				uni_string.set_string (l_name)
 
-				if (l_is_single_class or (not in_interface and is_static)) and l_is_attribute then
+				if (l_is_single_class or (not in_interface and l_is_static)) and l_is_attribute then
 					l_meth_token := md_emit.define_member_ref (uni_string, l_class_token,
 						l_field_sig)
 
@@ -1184,7 +1190,7 @@ feature -- Features info
 					l_meth_token := md_emit.define_member_ref (uni_string, l_class_token,
 						l_meth_sig)
 
-					if not is_static and l_is_attribute and not is_override then
+					if not l_is_static and l_is_attribute and not is_override then
 							-- Let's define attribute setter.
 						l_meth_sig.reset
 						l_meth_sig.set_method_type (feature {MD_SIGNATURE_CONSTANTS}.Has_current)
@@ -1208,7 +1214,7 @@ feature -- Features info
 							insert_feature (l_meth_token, a_type_id, l_feat.feature_id)
 							insert_signature (l_signature, a_type_id, l_feat.feature_id)
 						else
-							if is_static then
+							if l_is_static then
 								insert_implementation_feature (l_meth_token, a_type_id,
 									l_feat.feature_id)
 								insert_implementation_signature (l_signature, a_type_id,
@@ -1243,12 +1249,17 @@ feature -- Features info
 				l_ext_not_void: l_ext /= Void
 			end
 			l_token := l_ext.token
-			l_signature := last_external_signature
+			
+			if a_feat.is_attribute then
+				insert_attribute (l_token, a_type_id, a_feat.feature_id)
+			else
+				l_signature := last_external_signature
 
-			insert_implementation_feature (l_token, a_type_id, a_feat.feature_id)
-			insert_implementation_signature (l_signature, a_type_id, a_feat.feature_id)
-			insert_feature (l_token, a_type_id, a_feat.feature_id)
-			insert_signature (l_signature, a_type_id, a_feat.feature_id)
+				insert_implementation_feature (l_token, a_type_id, a_feat.feature_id)
+				insert_implementation_signature (l_signature, a_type_id, a_feat.feature_id)
+				insert_feature (l_token, a_type_id, a_feat.feature_id)
+				insert_signature (l_signature, a_type_id, a_feat.feature_id)
+			end
 		end
 	
 	generate_feature (feat: FEATURE_I; in_interface, is_static, is_override_or_c_external: BOOLEAN) is
@@ -2038,7 +2049,6 @@ feature -- IL Generation
 			-- to `current_class_type' and `cur_feat'.
 		require
 			cur_feat_not_void: cur_feat /= Void
-			cur_feat_not_il_external: not cur_feat.is_il_external
 			parent_type_not_void: parent_type /= Void
 			inh_feat_not_void: inh_feat /= Void
 		local

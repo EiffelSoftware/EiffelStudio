@@ -119,6 +119,7 @@ feature -- Access
 				-- at least once, so this is a temporary fix.
 			if world /= Void then
 				selected_item := Void
+				prompt_label.set_text (select_prompt)
 				draw_widgets
 			end
 			homogeneous_button.select_actions.resume
@@ -466,6 +467,7 @@ feature {NONE} -- Implementation
 			vertical_box: EV_VERTICAL_BOX
 			ok_button: EV_BUTTON
 			cell: EV_CELL
+			status_bar: EV_FRAME
 		do
 			create Result
 			Result.set_title ("EV_TABLE child positioner")
@@ -490,11 +492,12 @@ feature {NONE} -- Implementation
 			create scrollable_area
 			scrollable_area.set_minimum_size (200, 200)
 			create h1
-			create cell
-			h1.extend (cell)
+			create status_bar
+			status_bar.set_style ((create {EV_FRAME_CONSTANTS}).Ev_frame_lowered)
+			h1.extend (status_bar)
+			create prompt_label.make_with_text (select_prompt)
+			status_bar.extend (prompt_label)
 			h1.extend (ok_button)
-			create cell
-			h1.extend (cell)
 			h1.disable_item_expand (ok_button)
 			vertical_box.extend (h1)
 			vertical_box.disable_item_expand (h1)
@@ -942,7 +945,12 @@ feature {NONE} -- Implementation
 				y := y // grid_size + 1
 					-- Only perform the query if valid coordinates.
 				if x <= first.columns and y <= first.rows then
-					selected_item := first.item (x, y)	
+					selected_item := first.item (x, y)
+					if selected_item = Void then
+						prompt_label.set_text (select_prompt)
+					else
+						prompt_label.set_text ("Position highlighted widget")
+					end
 				end
 				draw_widgets
 			end
@@ -1052,6 +1060,8 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
+	prompt_label: EV_LABEL
+
 	rows_entry, columns_entry, row_spacing_entry, column_spacing_entry, border_width_entry: GB_INTEGER_INPUT_FIELD
 		-- Input widgets used.
 		
@@ -1142,5 +1152,8 @@ feature {NONE} -- Attributes
 		-- when button was pressed. These values are used in `track_movement' to
 		-- calculate new size/position of `selected_item', based on the current mouse
 		-- position.
+		
+	select_prompt: STRING is "Please select desired widget"
+		-- Prompt to help user.
 
 end -- class GB_EV_TABLE

@@ -74,7 +74,7 @@ feature -- Access
     name: STRING is
             -- Cluster name.
         do
-            Result := cluster_sd.cluster_name
+            Result := clone (cluster_sd.cluster_name)
             if Result = Void then
                 Result := ""
             end
@@ -99,7 +99,7 @@ feature -- Access
                         if defaults.item.option.is_free_option then
                             free_opt ?= defaults.item.option
                             if free_opt.code = free_opt.Namespace then
-                                Result := defaults.item.value.value
+                                Result := clone (defaults.item.value.value)
                             end
                         end
                         defaults.forth
@@ -116,7 +116,7 @@ feature -- Access
     cluster_path: STRING is
             -- Full path to cluster.
         do
-            Result := cluster_sd.directory_name
+            Result := clone (cluster_sd.directory_name)
             if Result = Void then
                 Result := ""
             end
@@ -126,7 +126,7 @@ feature -- Access
             -- Name of parent cluster.
         do
             if parent_cluster /= Void then
-                Result := parent_cluster.name
+                Result := clone (parent_cluster.name)
             else
                 create Result.make_empty
             end
@@ -353,8 +353,12 @@ feature -- Access
                     end
                 end
             end
-            create Result.make (res)                
+            create Result.make (res)
+            internal_excluded := Result -- Keep copy for GC
         end
+        
+    internal_excluded: EIFFEL_STRING_ENUMERATOR
+    	
         
     expanded_cluster_path: STRING is
             -- return the full cluster path
@@ -730,31 +734,31 @@ feature -- Element change
                 create v.make_invariant
                 create ass
                 create d_option.initialize (ass, v)
-                new_defaults.put_front (d_option)
+                new_defaults.extend (d_option)
             end         
             if evaluate_loop then
                 create v.make_loop
                 create ass
                 create d_option.initialize (ass, v)
-                new_defaults.put_front (d_option)   
+                new_defaults.extend (d_option)   
             end
             if evaluate_ensure then
                 create v.make_ensure
                 create ass
                 create d_option.initialize (ass, v)
-                new_defaults.put_front (d_option)   
+                new_defaults.extend (d_option)   
             end
             if evaluate_require then
                 create v.make_require
                 create ass
                 create d_option.initialize (ass, v)
-                new_defaults.put_front (d_option)   
+                new_defaults.extend (d_option)   
             end 
             if evaluate_check then
                 create v.make_check
                 create ass
                 create d_option.initialize (ass, v)
-                new_defaults.put_front (d_option)   
+                new_defaults.extend (d_option)   
             end
         end
 
@@ -947,19 +951,7 @@ feature {SYSTEM_CLUSTERS} -- Element Changes
                 cluster_sd.set_parent_name (new_id_sd (parent_name, False))
             end
         end
-        
-        
-        
-feature -- Externals
-
-    ccom_release (cpp_obj: POINTER) is
-            -- Last error code
-        external
-            "C++ [ecom_EiffelComCompiler::IEiffelClusterProperties_impl_stub %"ecom_EiffelComCompiler_IEiffelClusterProperties_impl_stub_s.h%"]"
-        alias
-            "Release"
-        end
-        
+      
 feature {NONE} -- Implementation
 
     ace: ACE_FILE_ACCESSER
@@ -970,7 +962,6 @@ feature {NONE} -- Implementation
             
     subclusters_impl: ARRAYED_LIST [like Current]
             -- Subclusters.
-            
             
     parent_cluster: CLUSTER_PROPERTIES
             -- parent cluster

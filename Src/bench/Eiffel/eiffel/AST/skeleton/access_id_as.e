@@ -31,7 +31,9 @@ feature
 			a_feature: FEATURE_I
 		do
 			a_feature := context.a_feature
-			Result := a_feature.argument_position (feature_name) /= 0
+			if a_feature /= Void then
+				Result := a_feature.argument_position (feature_name) /= 0
+			end
 		end
 
 	access_type: TYPE_A is
@@ -55,7 +57,9 @@ feature
 
 			a_feature := context.a_feature
 				-- Look for an argument
-			argument_position := a_feature.argument_position (feature_name)
+			if a_feature /= Void then
+				argument_position := a_feature.argument_position (feature_name)
+			end
 			if argument_position /= 0 then
 					-- Found argument
 				Result ?= a_feature.arguments.i_th (argument_position)

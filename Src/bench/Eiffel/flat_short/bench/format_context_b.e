@@ -378,7 +378,9 @@ feature -- Execution
 					client := system.any_class.compiled_class;
 				end;
 				!! format_registration.make (class_c, client);
-				format_registration.set_feature_clause_order (feature_clause_order);
+				if not order_same_as_text then
+					format_registration.set_feature_clause_order (feature_clause_order);
+				end;
 				format_registration.fill (current_class_only);
 				System.set_current_class (class_c);
 				if format_registration.target_ast /= void then

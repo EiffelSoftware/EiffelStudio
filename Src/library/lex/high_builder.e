@@ -124,11 +124,12 @@ feature -- Implementation
 
 	description: STRING;
 			-- Description of the regular expression
+			
+	cursor: INTEGER;
+			-- Position in description.
 
 feature {NONE} -- Implementation
 
-	cursor: INTEGER;
-			-- Position in description.
 
 	description_length: INTEGER;
 			-- Length of description.

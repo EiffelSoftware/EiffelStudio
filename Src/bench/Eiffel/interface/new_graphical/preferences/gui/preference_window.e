@@ -174,7 +174,7 @@ feature {NONE} -- Execution
 					not right_list.has_focus
 				then
 					clear
-					right_list.clear_selection
+					right_list.remove_selection
 				end
 			end
 		end
@@ -198,7 +198,7 @@ feature {NONE} -- Execution
 				end
 
 				clear
-				right_list.clear_selection
+				right_list.remove_selection
 				inside_on_resize_right_list_column := False
 			end
 		end

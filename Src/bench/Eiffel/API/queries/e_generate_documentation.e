@@ -143,8 +143,8 @@ feature -- Execution
 					st.add_new_line;
 					st.add_new_line;
 					generate_cluster_list (st, Eiffel_system.sub_clusters, 1);
-					generate_output (filter, file_name, st);
 					st.add (ti_After_cluster_declaration);
+					generate_output (filter, file_name, st);
 				end;
 				!! list.make;
 				from 

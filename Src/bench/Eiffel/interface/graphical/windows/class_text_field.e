@@ -13,6 +13,8 @@ inherit
 	TEXT_FIELD
 		rename
 			make as text_field_make
+		export
+			{NAVIGATE_CMD} implementation
 		end;
 	SHARED_EIFFEL_PROJECT
 
@@ -25,8 +27,15 @@ feature -- Initialization
 	make (a_parent: COMPOSITE; a_tool: CLASS_W) is
 			-- Initialize the text field "Class_name".
 			-- Set up the activate actions.
+		local
+			debug_tip_cmd: DEBUG_TOOLTIP_CMD
+			imp: TEXT_FIELD_IMP
 		do
-			text_field_make ("", a_parent);
+			text_field_make ("", a_parent); 
+			!! debug_tip_cmd
+			imp ?= implementation
+			imp.set_motion_verify_callback (debug_tip_cmd, Void)
+			imp.disable_verify_bell
 			add_activate_action (Current, Void);
 			tool := a_tool
 		end;
@@ -259,5 +268,7 @@ feature {NONE} -- Execution
 			end;
 			choice.popup (Current, class_names, Interface_names.t_Select_class)
 		end
+
+feature -- focus action
 
 end -- class CLASS_TEXT_FIELD

@@ -8,25 +8,22 @@ class
 
 inherit
 	REFACTORING_HELPER
+		undefine
+			default_create, copy, is_equal
+		end
 	
 	EV_GRID_ROW_ACTION_SEQUENCES
-	
--- EV_SELECTABLE
-
-create {EV_GRID_I}
-	make_with_grid_i
-
-feature {NONE} -- Initialization
-
-	make_with_grid_i (a_grid_i: EV_GRID_I) is
-			-- Make `Current' associated with `a_grid_i'
-		require
-			a_grid_i_not_void: a_grid_i /= Void
-		do
-			parent_grid_i := a_grid_i
-		ensure
-			parent_grid_i = a_grid_i
+		undefine
+			default_create, copy, is_equal
 		end
+	
+	EV_SELECTABLE
+		redefine
+			implementation
+		end
+
+create
+	{EV_GRID_I} default_create
 
 feature -- Access
 
@@ -37,7 +34,7 @@ feature -- Access
 			i_positive: i > 0
 			i_less_than_subrow_count: i <= subrow_count
 		do
-			to_implement ("EV_GRID_ROW.subrow")
+			Result := implementation.subrow (i)
 		ensure
 			subrow_not_void: Result /= Void
 			subrow_valid: (Result.parent /= Void) and then has_subrow (Result) and then Result.parent_row = Current
@@ -49,7 +46,7 @@ feature -- Access
 			a_row_not_void: a_row /= Void
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_ROW.has_subrow")
+			Result := implementation.has_subrow (a_row)
 		ensure
 			has_subrow_same_parent: Result implies
 				((a_row.parent /= Void and parent /= Void) and then a_row.parent = parent)
@@ -58,7 +55,7 @@ feature -- Access
 	parent_row: EV_GRID_ROW is
 			-- Parent of Current if any, Void otherwise
 		do
-			to_implement ("EV_GRID_ROW.parent_row")
+			Result := implementation.parent_row
 		ensure
 			has_parent: Result /= Void implies Result.has_subrow (Current)
 		end
@@ -66,9 +63,7 @@ feature -- Access
 	parent: EV_GRID is
 			-- Grid to which current row belongs
 		do
-			if parent_grid_i /= Void then
-				Result := parent_grid_i.interface
-			end
+			Result := implementation.parent
 		end
 
 	item (i: INTEGER): EV_GRID_ITEM is
@@ -77,7 +72,7 @@ feature -- Access
 			i_within_bounds: i > 0 and i <= count
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_ROW.item")
+			Result := implementation.item (i)
 		ensure
 			item_not_void: Result /= Void
 		end
@@ -87,7 +82,7 @@ feature -- Access
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_ROW.selected_items")
+			Result := implementation.selected_items
 		ensure
 			result_not_void: Result /= Void
 		end
@@ -95,7 +90,7 @@ feature -- Access
 	is_expanded: BOOLEAN is
 			-- Are subrows of `Current' displayed?
 		do
-			to_implement ("EV_GRID_ROW.is_expanded")
+			Result := implementation.is_expanded
 		end
 		
 	height: INTEGER is
@@ -103,7 +98,7 @@ feature -- Access
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_ROW.height")
+			Result := implementation.height
 		ensure
 			result_not_negative: Result >= 0
 		end
@@ -115,7 +110,7 @@ feature -- Status report
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_ROW.subrow_count")
+			Result := implementation.subrow_count
 		ensure
 			subrow_count_non_negative: subrow_count >= 0
 			subrow_count_in_range: subrow_count <= (parent.row_count - index)
@@ -126,7 +121,7 @@ feature -- Status report
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_ROW.index")
+			Result := implementation.index
 		ensure
 			index_positive: Result > 0
 			index_less_than_row_count: Result <= parent.row_count
@@ -135,7 +130,7 @@ feature -- Status report
 	count: INTEGER is
 			-- Number of items in current
 		do
-			to_implement ("EV_GRID_ROW.count")
+			Result := implementation.count
 		ensure
 			count_positive: count > 0
 		end
@@ -148,7 +143,7 @@ feature -- Status setting
 			has_subrows: subrow_count > 0
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_ROW.expand")
+			implementation.expand
 		ensure
 			is_expanded: is_expanded
 		end
@@ -158,7 +153,7 @@ feature -- Status setting
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_ROW.collapse")
+			implementation.expand
 		ensure
 			not_is_expanded: not is_expanded
 		end
@@ -168,7 +163,7 @@ feature -- Status setting
 		require
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_ROW.set_height")
+			implementation.set_height (a_height)
 		ensure
 			height_set: height = a_height
 		end
@@ -182,7 +177,7 @@ feature -- Element change
 			a_item_not_void: a_item /= Void
 			is_parented: parent /= Void
 		do
-			to_implement ("EV_GRID_ROW.set_item")
+			implementation.set_item (i, a_item)
 		ensure
 			item_set: item (i) = a_item
 		end
@@ -203,7 +198,7 @@ feature -- Element change
 				True -- for (i in index .. a_row.index - 1) there exists i where
 				-- parent.row (i).parent_row = Current
 		do
-			to_implement ("EV_GRID_ROW.add_subrow")
+			implementation.add_subrow (a_row)
 		ensure
 			added: a_row.parent_row = Current
 			subrow (subrow_count) = a_row
@@ -215,27 +210,23 @@ feature -- Element change
 			is_parented: parent /= Void
 			a_color_not_void: a_color /= Void
 		do
-			to_implement ("EV_GRID_ROW.set_background_color")
+			implementation.set_background_color (a_color)
 		ensure
 			--color_set: forall (item(i).background_color  = a_color)
 		end
+		
+feature {EV_ANY, EV_ANY_I} -- Implementation
 
-feature {EV_GRID_I} -- Implementation
+	implementation: EV_GRID_ROW_I
+		-- Responsible for interaction with native graphics toolkit.
+	
+feature {NONE} -- Implementation
 
-	remove_parent_grid_i  is
-			-- Set `parent_grid_i' to `Void.
-		require
-			is_parented: parent /= Void
+	create_implementation is
+			-- See `{EV_ANY}.create_implementation'.
 		do
-			parent_grid_i := Void
-		ensure
-			parent_grid_i_unset: parent_grid_i = Void
+			create {EV_GRID_ROW_I} implementation.make (Current)
 		end
-
-feature {EV_GRID_I, EV_GRID_DRAWER_I} -- Implementation
-
-	parent_grid_i: EV_GRID_I
-		-- Grid that `Current' resides in.
 		
 invariant
 	no_subrows_implies_not_expanded: subrow_count = 0 implies not is_expanded

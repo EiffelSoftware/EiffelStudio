@@ -6,7 +6,6 @@
 class DESCRIPTOR
 
 inherit
-
 	EXTEND_TABLE [DESC_UNIT, CLASS_ID]
 		rename
 			put as table_put,
@@ -21,9 +20,12 @@ inherit
 		undefine
 			copy, is_equal
 		end
+	SHARED_GENERATION
+		undefine
+			copy, is_equal
+		end
 
 creation
-
 	make
 
 feature
@@ -56,54 +58,56 @@ feature -- Generation
 			-- Generate descriptor table and initialization
 			-- function of current class type.
 		local
-			f: INDENT_FILE
+			descriptor_file: INDENT_FILE
+			buffer: GENERATION_BUFFER
 		do
-			f := class_type.descriptor_file;
-			f.open_write;
+				-- Retrieve the buffer and clear it
+			buffer := generation_buffer
+			buffer.clear_all
 
-			f.putstring ("#include %"eif_macros.h%"%N%N");
-			Class_counter.generate_extern_offsets (f);
-			Static_type_id_counter.generate_extern_offsets (f);
+			buffer.append ("#include %"eif_macros.h%"%N%N");
+			Class_counter.generate_extern_offsets (buffer);
+			Static_type_id_counter.generate_extern_offsets (buffer);
 			if Compilation_modes.is_precompiling then
-				Real_body_index_counter.generate_extern_offsets (f);
-				f.new_line;
-
-				f.generate_static_declaration ("void", "build_desc", <<"void">>);
-				f.new_line
-				descriptor_generate_generic (f)
-				f.new_line
-				descriptor_generate_precomp (f)
+				Real_body_index_counter.generate_extern_offsets (buffer);
+				buffer.new_line
+				buffer.generate_static_declaration ("void", "build_desc", <<"void">>);
+				buffer.new_line
+				descriptor_generate_generic (buffer)
+				buffer.new_line
+				descriptor_generate_precomp (buffer)
 			else
-				f.new_line
-				descriptor_generate_generic (f)
-				f.new_line
-				descriptor_generate (f)
+				buffer.new_line
+				descriptor_generate_generic (buffer)
+				buffer.new_line
+				descriptor_generate (buffer)
 			end;
 
-			generate_init_function (f)
+			generate_init_function (buffer)
 
-			f.close
+			descriptor_file := class_type.open_descriptor_file
+			descriptor_file.put_string (buffer)
+			descriptor_file.close
 		end;
 
-	descriptor_generate (f: INDENT_FILE) is
+	descriptor_generate (buffer: GENERATION_BUFFER) is
 			-- C code of corresponding to run-time
 			-- structure of Current descriptor
 		require
-			file_not_void: f /= Void
-			file_exists: f.exists
+			buffer_not_void: buffer /= Void
 		local
 			cnt : COUNTER
 		do
-			f.putstring ("static struct desc_info desc[] = {%N");
+			buffer.putstring ("static struct desc_info desc[] = {%N");
 
 			if (invariant_entry = Void) then
-				f.putstring ("%T{(uint16) ");
-				f.putint (Invalid_index);
-				f.putstring (", (int16) -1, (int16 *) 0},%N")
+				buffer.putstring ("%T{(uint16) ");
+				buffer.putint (Invalid_index);
+				buffer.putstring (", (int16) -1, (int16 *) 0},%N")
 			else
-				f.putstring ("%T{(uint16) ");
-				f.putint (invariant_entry.real_body_index.id - 1);
-				f.putstring (", (int16) -1, (int16 *) 0},%N")
+				buffer.putstring ("%T{(uint16) ");
+				buffer.putint (invariant_entry.real_body_index.id - 1);
+				buffer.putstring (", (int16) -1, (int16 *) 0},%N")
 			end;
 
 			from
@@ -112,18 +116,17 @@ feature -- Generation
 			until
 				after
 			loop
-				item_for_iteration.generate (f, cnt)
+				item_for_iteration.generate (buffer, cnt)
 				forth
 			end
 
-			f.putstring ("%N};%N")
+			buffer.putstring ("%N};%N")
 		end;
 
-	descriptor_generate_generic (f : INDENT_FILE) is
+	descriptor_generate_generic (buffer : GENERATION_BUFFER) is
 			-- C code for generic type arrays.
 		require
-			file_not_void: f /= Void
-			file_exists: f.exists
+			buffer_not_void: buffer /= Void
 		local
 			cnt : COUNTER
 		do
@@ -133,38 +136,37 @@ feature -- Generation
 			until
 				after
 			loop
-				item_for_iteration.generate_generic (f, cnt);
+				item_for_iteration.generate_generic (buffer, cnt);
 				forth
 			end;
-			f.putstring ("%N")
+			buffer.putstring ("%N")
 		end;
 
-	descriptor_generate_precomp (f: INDENT_FILE) is
+	descriptor_generate_precomp (buffer: GENERATION_BUFFER) is
 			-- C code of corresponding to run-time
 			-- structure of Current precompiled descriptor
 		require
-			file_not_void: f /= Void
-			file_exists: f.exists
+			buffer_not_void: buffer /= Void
 		local
 			i: INTEGER
 			cnt: COUNTER
 		do
-			f.putstring ("static struct desc_info desc");
-			f.putstring ("[")
-			f.putint (table_size)
-			f.putstring ("];%N%Nstatic void build_desc (void) {%N")
+			buffer.putstring ("static struct desc_info desc");
+			buffer.putstring ("[")
+			buffer.putint (table_size)
+			buffer.putstring ("];%N%Nstatic void build_desc (void) {%N")
 
 			if (invariant_entry = Void) then
-				f.putstring ("%Tdesc[0].info = (uint16) ")
-				f.putint (Invalid_index)
-				f.putstring (";%N")
-				f.putstring ("%Tdesc[0].type = (int16) -1;%N")
-				f.putstring ("%Tdesc[0].gen_type = (int16 *) 0;%N")
+				buffer.putstring ("%Tdesc[0].info = (uint16) ")
+				buffer.putint (Invalid_index)
+				buffer.putstring (";%N")
+				buffer.putstring ("%Tdesc[0].type = (int16) -1;%N")
+				buffer.putstring ("%Tdesc[0].gen_type = (int16 *) 0;%N")
 			else
-				f.putstring ("%Tdesc[0].info = (uint16) (")
-				f.putstring (invariant_entry.real_body_index.generated_id)
-				f.putstring (");%N%Tdesc[0].type = (int16) -1;%N")
-				f.putstring ("%Tdesc[0].gen_type = (int16 *) 0;%N")
+				buffer.putstring ("%Tdesc[0].info = (uint16) (")
+				invariant_entry.real_body_index.generated_id (buffer)
+				buffer.putstring (");%N%Tdesc[0].type = (int16) -1;%N")
+				buffer.putstring ("%Tdesc[0].gen_type = (int16 *) 0;%N")
 			end;
 
 			from
@@ -174,63 +176,64 @@ feature -- Generation
 			until
 				after
 			loop
-				item_for_iteration.generate_precomp (f,i,cnt)
+				item_for_iteration.generate_precomp (buffer,i,cnt)
 				i := i + item_for_iteration.count
 				forth
 			end;
-			f.putstring ("}%N");
+			buffer.putstring ("}%N");
 		end;
 
-	generate_init_function (f: INDENT_FILE) is
+	generate_init_function (buffer: GENERATION_BUFFER) is
 			-- C code of initialization function of Current
 			-- descriptor
 		local
 			i: INTEGER
 			class_type_id: TYPE_ID
 			init_name: STRING
+			desc, rtud, init_macro, sep: STRING
 		do
 			class_type_id := class_type.id;
 			init_name := class_type_id.init_name;
+			init_macro := "%TIDSC"
+			rtud := ", RTUD("
+			rtud.append (class_type_id.generated_id_string)
+			rtud.append ("));%N")
 
-			f.generate_extern_declaration ("void", init_name, <<"void">>);
 
-			f.putstring ("void ");
-			f.putstring (init_name);
-			f.putstring ("(void)%N{%N");
+			buffer.generate_extern_declaration ("void", init_name, <<"void">>);
+
+			buffer.putstring ("void ");
+			buffer.putstring (init_name);
+			buffer.putstring ("(void)%N{%N");
 			if Compilation_modes.is_precompiling then
-				f.putstring ("%Textern char desc_fill;%N");
-				f.putstring ("%Tif (desc_fill != 0)%N%T%Tbuild_desc();%N")
+				buffer.putstring ("%Textern char desc_fill;%N%
+								%%Tif (desc_fill != 0)%N%T%Tbuild_desc();%N")
 			end;
 
 				-- Special descriptor unit (invariant)
-			f.putstring ("%T");
-			f.putstring (Init_macro);
-			f.putstring ("(desc");
-			f.putstring (", 0, RTUD(");
-			f.putstring (class_type_id.generated_id);
-			f.putstring ("));%N");	
+			buffer.putstring (init_macro);
+			buffer.putstring ("(desc, 0")
+			buffer.putstring (rtud)
 
 				-- Descriptor units for origin classes
 			from
-				start;
+				desc := "(desc + "
+				sep := ", "
+				start
 				i := 1
 			until
 				after
 			loop
-				f.putstring ("%T");
-				f.putstring (Init_macro);
-				f.putstring ("(desc");
-				f.putstring ("+");
-				f.putint (i);
-				f.putstring (",");
-				f.putstring (key_for_iteration.generated_id);
-				f.putstring (",RTUD(");
-				f.putstring (class_type_id.generated_id);
-				f.putstring ("));%N");
+				buffer.putstring (init_macro);
+				buffer.putstring (desc);
+				buffer.putint (i);
+				buffer.putstring (sep);
+				key_for_iteration.generated_id (buffer);
+				buffer.putstring (rtud);
 				i := i + item_for_iteration.count;
 				forth
 			end;
-			f.putstring ("}%N")
+			buffer.putstring ("}%N")
 		end;
 
 	table_size: INTEGER is
@@ -285,10 +288,5 @@ feature -- Melting
 				forth
 			end;
 		end;
-
-feature -- DLE
-
-	Init_macro: STRING is "IDSC"
-			-- Macro for descriptor initialization
 
 end

@@ -34,7 +34,7 @@ feature -- Creation
 
 feature -- Generation
 
-	generate (f: INDENT_FILE; cnt : COUNTER) is
+	generate (buffer: GENERATION_BUFFER; cnt : COUNTER) is
 			-- C code of Current descriptor unit
 			--|Note1: Currently the feature type is written for all the 
 			--|features when in practice it is used rather seldom. Try
@@ -43,8 +43,7 @@ feature -- Generation
 			--|Note2: The offset of an attribute is coded on 16 bits
 			--|which might not be enough.
 		require
-			file_not_void: f /= Void
-			file_exists: f.exists
+			buffer_not_void: buffer /= Void
 			valid_counter: cnt /= Void
 		local
 			i,j: INTEGER
@@ -52,9 +51,17 @@ feature -- Generation
 			ae: ATTR_ENTRY
 			entry_item: ENTRY
 			local_copy: ARRAY [ENTRY]
+			uint16, int16, gen_type, separator, null_init: STRING
+			invalid_entry: STRING
 		do
 			from
+				uint16 := "%N%T{(uint16) "
+				int16 := ", (int16) "
+				gen_type := ", gen_type"
+				separator := "}, "
+				null_init := ", (int16 *) 0"
 				local_copy := Current
+				Invalid_entry := ", (int16) -1, (int16 *) 0},"
 				i := lower
 			until
 				i > upper
@@ -67,20 +74,20 @@ feature -- Generation
 							-- Write the body index of the routine (index
 							-- into the run-time dispatch table) and the type
 							-- of the feature.
-						f.putstring ("%N%T{(uint16) ");
-						f.putint (re.real_body_index.id - 1);
-						f.putstring (", (int16) ");
-						f.putint (re.static_feature_type_id - 1);
+						buffer.putstring (uint16);
+						buffer.putint (re.real_body_index.id - 1);
+						buffer.putstring (int16);
+						buffer.putint (re.static_feature_type_id - 1);
 
 						if re.is_generic then
-							f.putstring (", gen_type");
-							f.putint (cnt.value);
+							buffer.putstring (gen_type);
+							buffer.putint (cnt.value);
 							j := cnt.next
 						else           
-							f.putstring (", (int16 *) 0");
+							buffer.putstring (null_init);
 						end;
 
-						f.putstring ("},");
+						buffer.putstring (separator);
 					else
 						ae ?= entry_item
 						if ae /= Void then
@@ -88,34 +95,34 @@ feature -- Generation
 								-- Write the offset of the attribute in the 
 								-- run-time structure (object) and the type of
 								-- the feature.
-							f.putstring ("%N%T{(uint16) ");
-							f.putint (ae.workbench_offset);
-							f.putstring (", (int16) ");
-							f.putint (ae.static_feature_type_id - 1);
+							buffer.putstring (uint16);
+							buffer.putint (ae.workbench_offset);
+							buffer.putstring (int16);
+							buffer.putint (ae.static_feature_type_id - 1);
 
 							if ae.is_generic then
-								f.putstring (", gen_type");
-								f.putint (cnt.value);
+								buffer.putstring (gen_type);
+								buffer.putint (cnt.value);
 								j := cnt.next
 							else           
-								f.putstring (", (int16 *) 0");
+								buffer.putstring (null_init);
 							end;
 
-							f.putstring ("},");
+							buffer.putstring (separator);
 						end
 					end;
 				else
 						-- The entry corresponds to a routine that
 						-- is not polymorphic.
-					f.putstring ("%N%T{(uint16) ");
-					f.putint (Invalid_index);
-					f.putstring (", (int16) -1, (int16 *) 0},")
+					buffer.putstring (uint16);
+					buffer.putint (Invalid_index);
+					buffer.putstring (invalid_entry)
 				end;
 				i := i + 1
 			end;
 		end;
 
-	generate_precomp (f: INDENT_FILE; start: INTEGER; cnt : COUNTER) is
+	generate_precomp (buffer: GENERATION_BUFFER; start: INTEGER; cnt : COUNTER) is
 			-- C code of Current precompiled descriptor unit
 			--|Note1: Currently the feature type is written for all the 
 			--|features when in practice it is used rather seldom. Try
@@ -124,8 +131,7 @@ feature -- Generation
 			--|Note2: The offset of an attribute is coded on 16 bits
 			--|which might not be enough.
 		require
-			file_not_void: f /= Void
-			file_exists: f.exists
+			buffer_not_void: buffer /= Void
 			valid_counter: cnt /= Void
 		local
 			i,j: INTEGER;
@@ -161,25 +167,25 @@ feature -- Generation
 							-- Write the body index of the routine (index
 							-- into the run-time dispatch table) and the type
 							-- of the feature.
-						f.putstring (desc1);
-						f.putint (nb);
-						f.putstring (info);
-						re.real_body_index.generated_id (f);
-						f.putstring (desc2);
-						f.putint (nb);
-						f.putstring (type);
-						re.generated_static_feature_type_id (f)
-						f.putstring (desc2);
-						f.putint (nb);
-						f.putstring (gen_type);
+						buffer.putstring (desc1);
+						buffer.putint (nb);
+						buffer.putstring (info);
+						re.real_body_index.generated_id (buffer);
+						buffer.putstring (desc2);
+						buffer.putint (nb);
+						buffer.putstring (type);
+						re.generated_static_feature_type_id (buffer)
+						buffer.putstring (desc2);
+						buffer.putint (nb);
+						buffer.putstring (gen_type);
 
 						if re.is_generic then
-							f.putstring (gen_type_string);
-							f.putint (cnt.value);
-							f.putstring (end_of_line)
+							buffer.putstring (gen_type_string);
+							buffer.putint (cnt.value);
+							buffer.putstring (end_of_line)
 							j := cnt.next
 						else
-							f.putstring (non_generic)
+							buffer.putstring (non_generic)
 						end
 					else
 						ae ?= entry_item
@@ -188,54 +194,53 @@ feature -- Generation
 								-- Write the offset of the attribute in the 
 								-- run-time structure (object) and the type of
 								-- the feature.
-							f.putstring (desc1);
-							f.putint (nb);
-							f.putstring (info);
-							f.putint (ae.workbench_offset);
-							f.putstring (desc2);
-							f.putint (nb);
-							f.putstring (type);
-							ae.generated_static_feature_type_id (f)
-							f.putstring (desc2);
-							f.putint (nb);
-							f.putstring (gen_type);
+							buffer.putstring (desc1);
+							buffer.putint (nb);
+							buffer.putstring (info);
+							buffer.putint (ae.workbench_offset);
+							buffer.putstring (desc2);
+							buffer.putint (nb);
+							buffer.putstring (type);
+							ae.generated_static_feature_type_id (buffer)
+							buffer.putstring (desc2);
+							buffer.putint (nb);
+							buffer.putstring (gen_type);
 
 							if ae.is_generic then
-								f.putstring (gen_type_string);
-								f.putint (cnt.value);
-								f.putstring (end_of_line)
+								buffer.putstring (gen_type_string);
+								buffer.putint (cnt.value);
+								buffer.putstring (end_of_line)
 								j := cnt.next
 							else
-								f.putstring (non_generic)
+								buffer.putstring (non_generic)
 							end
 						end
 					end;
 				else
 						-- The entry corresponds to a routine that
 						-- is not polymorphic.
-					f.putstring (desc1);
-					f.putint (nb);
-					f.putstring (info);
-					f.putint (Invalid_index);
-					f.putstring (desc2);
-					f.putint (nb);
-					f.putstring (type)
-					f.putint (-1)
-					f.putstring (desc2);
-					f.putint (nb);
-					f.putstring (gen_type)
-					f.putint (0)
-					f.new_line
+					buffer.putstring (desc1);
+					buffer.putint (nb);
+					buffer.putstring (info);
+					buffer.putint (Invalid_index);
+					buffer.putstring (desc2);
+					buffer.putint (nb);
+					buffer.putstring (type)
+					buffer.putint (-1)
+					buffer.putstring (desc2);
+					buffer.putint (nb);
+					buffer.putstring (gen_type)
+					buffer.putint (0)
+					buffer.new_line
 				end;
 				i := i + 1
 			end;
 		end;
 
-	generate_generic (f : INDENT_FILE; cnt : COUNTER) is
+	generate_generic (buffer: GENERATION_BUFFER; cnt : COUNTER) is
 			-- C code for generic types in Current descriptor unit
 		require
-			file_not_void: f /= Void
-			file_exists: f.exists
+			buffer_not_void: buffer /= Void
 			valid_counter : cnt /= Void
 		local
 			i, j: INTEGER;
@@ -243,8 +248,12 @@ feature -- Generation
 			ae: ATTR_ENTRY
 			entry_item: ENTRY
 			local_copy: ARRAY [ENTRY]
+			static_decl, start_decl, end_decl: STRING
 		do
 			from
+				static_decl := "static int16 gen_type"
+				start_decl := " [] = {0, "
+				end_decl := "-1};%N"
 				local_copy := Current
 				i := lower
 			until
@@ -254,21 +263,21 @@ feature -- Generation
 				if entry_item /= Void and then entry_item.is_generic then
 					re ?= entry_item
 					if re /= Void then
-						f.putstring ("static int16 gen_type");
-						f.putint (cnt.value);
+						buffer.putstring (static_decl);
+						buffer.putint (cnt.value);
 						j := cnt.next;
-						f.putstring (" [] = {0,");
-						re.generate_cid (f, False);
-						f.putstring ("-1};%N")
+						buffer.putstring (start_decl);
+						re.generate_cid (buffer, False);
+						buffer.putstring (end_decl)
 					else
 						ae ?= entry_item
 						if ae /= Void then
-							f.putstring ("static int16 gen_type");
-							f.putint (cnt.value);
+							buffer.putstring (static_decl);
+							buffer.putint (cnt.value);
 							j := cnt.next;
-							f.putstring (" [] = {0,");
-							ae.generate_cid (f, False);
-							f.putstring ("-1};%N")
+							buffer.putstring (start_decl);
+							ae.generate_cid (buffer, False);
+							buffer.putstring (end_decl)
 						end
 					end;
 				end;

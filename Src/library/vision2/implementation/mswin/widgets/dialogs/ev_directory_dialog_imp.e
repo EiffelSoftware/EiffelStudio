@@ -15,11 +15,15 @@ class
 
 inherit
 	EV_DIRECTORY_DIALOG_I
+		undefine
+			copy, is_equal
 		redefine
 			interface
 		end
 
 	EV_STANDARD_DIALOG_IMP
+		undefine
+			copy, is_equal
 		redefine
 			interface
 		end
@@ -31,7 +35,12 @@ inherit
 		end
 
 	WEL_WINDOWS_VERSION
-
+		export
+			{NONE} all
+		undefine
+			copy, is_equal
+		end
+		
 create
 	make
 

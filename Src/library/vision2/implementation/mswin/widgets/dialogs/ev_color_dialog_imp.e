@@ -10,11 +10,15 @@ class
 
 inherit
 	EV_COLOR_DIALOG_I
+		undefine
+			copy, is_equal
 		redefine
 			interface
 		end
 
 	EV_STANDARD_DIALOG_IMP
+		undefine
+			copy, is_equal
 		redefine
 			interface
 		end

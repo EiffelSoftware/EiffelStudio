@@ -73,10 +73,8 @@ feature -- format
 							(do_format and tool.last_format.associated_command = Current))
 						then
 							cur := text_window.cursor
-						else
-							text_window.set_cursor_position (0)
-							cur := text_window.cursor
-						end;
+						end
+
 						text_window.clear_window;
 						tool.set_editable_text;
 						filed_stone ?= stone;
@@ -118,7 +116,9 @@ feature -- format
 
 						if cur /= Void then
 							text_window.go_to (cur)
-						end;
+						else
+							text_window.set_top_character_position (0)
+						end
 
 						tool.set_mode_for_editing;
 						tool.show_editable_text;

@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			second_expandable := True
 			user_split_position := -1
 			feature {EV_GTK_EXTERNALS}.gtk_container_set_border_width (container_widget, 0)
-			real_signal_connect (visual_widget, "map-event", agent (App_implementation.gtk_marshal).on_widget_show (c_object), App_implementation.default_translate)
+			real_signal_connect (container_widget, "map-event", agent (App_implementation.gtk_marshal).on_widget_show (c_object), App_implementation.default_translate)
 			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_redraw_on_allocate (container_widget, False)
 		end
 

@@ -81,6 +81,9 @@ feature -- Basic operation
 	load is
 			-- Load the system.
 		do
+				-- Flag to the system that a load is now underway.
+			System_status.enable_loading_project
+			
 			initialize_load_output
 				-- Do initialization necessary
 			parser := create_tree_parser
@@ -106,6 +109,9 @@ feature -- Basic operation
 			system_status.disable_project_modified
 			
 			remove_load_output
+			
+				-- Flag to the system that a load is no longer underway.
+			System_status.disable_loading_project
 		end
 
 feature {GB_OBJECT_HANDLER} -- Implementation
@@ -151,6 +157,8 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 					directory_item.extend (window_object.window_selector_item)
 					directory_item.expand
 				end
+			else
+				window_object := titled_window_object
 			end
 				--| FIXME we must now look at the current type of `window'
 				--| which must be an EV_TITLED_WINDOW, and then add any attributes that
@@ -172,14 +180,6 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 					else
 							-- We must check for internal properties, else set the properties of the component
 						if current_name.is_equal (Internal_properties_string) then
-							layout_constructor_item ?= layout_constructor.first
-							check
-								layout_item_not_void: layout_constructor_item /= Void
-							end
-							window_object ?= layout_constructor_item.object
-							check
-								window_object_not_void: window_object /= Void
-							end
 							window_object.modify_from_xml (current_element)
 						elseif current_name.is_equal (Events_string) then
 								-- We now add the event information from `current_element'

@@ -142,7 +142,7 @@ feature
 					file.putstring (") = arg1;");
 				when C_pointer then
 					file.putstring
-					("%T*(fnptr *)(Current + arg2 * sizeof(fnptr)) = arg1;");
+					("%T*(char **)(Current + arg2 * sizeof(char *)) = arg1;");
 				end;
 				file.new_line;
 			end;
@@ -245,7 +245,7 @@ feature
 					file.putstring (");");
 				when C_pointer then
 					file.putstring
-					("%Treturn *(fnptr *)(Current + arg1 * sizeof(fnptr));");
+					("%Treturn *(char **)(Current + arg1 * sizeof(char *));");
 				end;
 				file.new_line;
 			end;

@@ -6,7 +6,8 @@ inherit
 		redefine
 			class_icon,
 			on_paint,
-			on_control_command
+			on_control_command,
+			on_timer
 		end
 
 	APPLICATION_IDS
@@ -34,6 +35,10 @@ feature {NONE} -- Initialization
 				10, 70, 90, 35, -1)
 			create demo3d_button.make (Current, "3D",
 				10, 110, 90, 35, -1)
+				-- Set a timer for the 3d_demo.
+				-- `demo_timer_id' is the timer id and 50 is the
+				-- interval length in milliseconds.
+			set_timer (demo_timer_id, 50)	
 		end
 
 feature -- Access
@@ -66,9 +71,23 @@ feature {NONE} -- Implementation
 	on_paint (paint_dc: WEL_PAINT_DC; invalid_rect: WEL_RECT) is
 			-- Draw the ISE logo bitmap
 		do
-			paint_dc.draw_bitmap (ise_logo, 158, 10, 
-				ise_logo.width, ise_logo.height)
+			--paint_dc.draw_bitmap (ise_logo, 158, 10, 
+			--	ise_logo.width, ise_logo.height)
 		end
+		
+	on_timer (timer_id: INTEGER) is
+			-- Wm_timer message.
+			-- A Wm_timer has been received from `timer_id'
+			-- We use this timer to 
+		do
+			if timer_id = demo_timer_id and then
+				three_d_demo /= Void and then
+				three_d_demo.exists and then
+				three_d_demo.ready then
+				three_d_demo.go
+			end
+		end
+		
 
 	class_icon: WEL_ICON is
 			-- Window's icon
@@ -85,7 +104,10 @@ feature {NONE} -- Implementation
 		end
 
 	Title: STRING is "WEL GDI demo"
-			-- Window's title
+		-- Window's title
+			
+	demo_timer_id: INTEGER is unique
+		-- Unique integer for timer.
 
 end -- class MAIN_WINDOW
 

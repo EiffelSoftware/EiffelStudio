@@ -179,7 +179,7 @@ feature -- Access
 				screen_dc.get
 				screen_dc.select_font (Current)
 
-				screen_dc.draw_text (a_string, bounding_rect, Dt_calcrect | Dt_expandtabs)
+				screen_dc.draw_text (a_string, bounding_rect, Dt_calcrect | Dt_expandtabs | Dt_noprefix)
 				cur_width := bounding_rect.width
 				cur_height := bounding_rect.height
 

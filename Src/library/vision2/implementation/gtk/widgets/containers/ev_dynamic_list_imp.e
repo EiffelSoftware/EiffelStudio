@@ -47,9 +47,13 @@ feature -- Measurement
 
 	count: INTEGER is
 			-- Number of items.
+		local
+			a_child_list: POINTER
 		do
 			if list_widget /= NULL and then not is_destroyed then
-				Result := C.g_list_length (C.gtk_container_children (list_widget))
+				a_child_list := C.gtk_container_children (list_widget)
+				Result := C.g_list_length (a_child_list)
+				C.g_list_free (a_child_list)
 			end
 		end
 

@@ -9,173 +9,77 @@ class
 
 feature -- Access
 
-	Hterror: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTERROR"
-		end
+	Hterror: INTEGER is -2
+			-- Declared in Windows as HTERROR
 
-	Httransparent: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTTRANSPARENT"
-		end
+	Httransparent: INTEGER is -1
+			-- Declared in Windows as HTTRANSPARENT
 
-	Htnowhere: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTNOWHERE"
-		end
+	Htnowhere: INTEGER is 0
+			-- Declared in Windows as HTNOWHERE
 
-	Htclient: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTCLIENT"
-		end
+	Htclient: INTEGER is 1
+			-- Declared in Windows as HTCLIENT
 
-	Htcaption: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTCAPTION"
-		end
+	Htcaption: INTEGER is 2
+			-- Declared in Windows as HTCAPTION
 
-	Htsysmenu: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTSYSMENU"
-		end
+	Htsysmenu: INTEGER is 3
+			-- Declared in Windows as HTSYSMENU
 
-	Htsize: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTSIZE"
-		end
+	Htsize: INTEGER is 4
+			-- Declared in Windows as HTSIZE
 
-	Htmenu: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTMENU"
-		end
+	Htmenu: INTEGER is 5
+			-- Declared in Windows as HTMENU
 
-	Hthscroll: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTHSCROLL"
-		end
+	Hthscroll: INTEGER is 6
+			-- Declared in Windows as HTHSCROLL
 
-	Htvscroll: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTVSCROLL"
-		end
+	Htvscroll: INTEGER is 7
+			-- Declared in Windows as HTVSCROLL
 
-	Htminbutton: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTMINBUTTON"
-		end
+	Htminbutton: INTEGER is 8
+			-- Declared in Windows as HTMINBUTTON
 
-	Htmaxbutton: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTMAXBUTTON"
-		end
+	Htmaxbutton: INTEGER is 9
+			-- Declared in Windows as HTMAXBUTTON
 
-	Htleft: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTLEFT"
-		end
+	Htleft: INTEGER is 10
+			-- Declared in Windows as HTLEFT
 
-	Htright: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTRIGHT"
-		end
+	Htright: INTEGER is 11
+			-- Declared in Windows as HTRIGHT
 
-	Httop: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTTOP"
-		end
+	Httop: INTEGER is 12
+			-- Declared in Windows as HTTOP
 
-	Httopleft: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTTOPLEFT"
-		end
+	Httopleft: INTEGER is 13
+			-- Declared in Windows as HTTOPLEFT
 
-	Httopright: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTTOPRIGHT"
-		end
+	Httopright: INTEGER is 14
+			-- Declared in Windows as HTTOPRIGHT
 
-	Htbottom: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTBOTTOM"
-		end
+	Htbottom: INTEGER is 15
+			-- Declared in Windows as HTBOTTOM
 
-	Htbottomleft: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTBOTTOMLEFT"
-		end
+	Htbottomleft: INTEGER is 16
+			-- Declared in Windows as HTBOTTOMLEFT
 
-	Htbottomright: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTBOTTOMRIGHT"
-		end
+	Htbottomright: INTEGER is 17
+			-- Declared in Windows as HTBOTTOMRIGHT
 
-	Htborder: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTBORDER"
-		end
+	Htborder: INTEGER is 18
+			-- Declared in Windows as HTBORDER
 
-	Htgrowbox: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTGROWBOX"
-		end
+	Htgrowbox: INTEGER is 4
+			-- Declared in Windows as HTGROWBOX
 
-	Htreduce: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTREDUCE"
-		end
+	Htreduce: INTEGER is 8
+			-- Declared in Windows as HTREDUCE
 
-	Htzoom: INTEGER is
-		external
-			"C [macro %"wel.h%"]"
-		alias
-			"HTZOOM"
-		end
+	Htzoom: INTEGER is 9
+			-- Declared in Windows as HTZOOM
 
 end -- class WEL_HT_CONSTANTS
 

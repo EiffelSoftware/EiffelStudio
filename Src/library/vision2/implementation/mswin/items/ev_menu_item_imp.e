@@ -141,7 +141,13 @@ feature {EV_CONTAINER_IMP} -- Implementation
 			-- Is called by the menu when the item is activated.
 		do
 			execute_command (Cmd_item_activate, Void)
-			parent_container.on_selection_changed (Current)
+			parent.on_selection_changed (Current)
+		end
+
+	on_selection_changed (sitem: EV_MENU_ITEM_IMP) is
+			-- `sitem' has been selected'
+		do
+			parent.on_selection_changed (sitem)
 		end
 
 end -- class EV_MENU_ITEM_IMP

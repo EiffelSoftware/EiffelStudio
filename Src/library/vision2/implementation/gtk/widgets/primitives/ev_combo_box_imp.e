@@ -51,6 +51,8 @@ inherit
 			selected_item
 		end
 
+	EV_COMBO_BOX_ACTION_SEQUENCES_IMP
+
 	EV_KEY_CONSTANTS
 
 create

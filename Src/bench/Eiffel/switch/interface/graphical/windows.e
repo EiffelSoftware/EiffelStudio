@@ -23,7 +23,7 @@ feature {NONE}
 	system_tool: SYSTEM_W is
 			-- Unique assembly tool
 		once
-			!! Result
+			!! Result.make
 		end;
 
 	name_chooser (popup_parent: COMPOSITE): NAME_CHOOSER_W is

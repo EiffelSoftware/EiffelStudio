@@ -217,6 +217,7 @@ feature -- Execution
 			body_index: INTEGER
 			old_bp_status: INTEGER
 			wd: EV_WARNING_DIALOG
+			cond: EB_EXPRESSION
 		do
 			if Eiffel_project.successful then
 				f := bs.routine
@@ -225,18 +226,25 @@ feature -- Execution
 					body_index := bs.body_index
 						-- Remember the status of the breakpoint
 					old_bp_status := Application.breakpoint_status (f, index)
+					if old_bp_status /= 0 then
+						cond := Application.condition (f, index)
+					end
 						-- Enable the breakpoint
 					Application.enable_breakpoint (f, index)
+					Application.remove_condition (f, index)
 						-- Run the program
 					execute
 						-- Put back the status of the modified breakpoint.
 					Application.set_breakpoint_status (f, index, old_bp_status)
+					if old_bp_status /= 0 then
+						Application.set_condition (f, index, cond)
 					end
-				else
-					create wd.make_with_text (Warning_messages.w_Cannot_debug)
-					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 				end
+			else
+				create wd.make_with_text (Warning_messages.w_Cannot_debug)
+				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 			end
+		end
 
 	launch_application is
 			-- Launch the program from the project target.

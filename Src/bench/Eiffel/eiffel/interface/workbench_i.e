@@ -148,6 +148,7 @@ feature -- Conveniences
 			-- Initialize `Current' accordingly.
 		do
 			is_compiling := False
+			forbid_degree_6 := False
 		end
 
 feature -- Initialization
@@ -177,8 +178,7 @@ feature -- Commands
 			missing_class_error: BOOLEAN
 			degree_6_done: BOOLEAN
 		do
-			is_compiling := True
-			Eiffel_project.Manager.on_project_compiles
+			start_compilation
 				-- We perform a degree 6 only when it is the first the compilation or
 				-- when there was an error during the compilation concerning a missing
 				-- class and that no degree 6 has been done before.
@@ -257,8 +257,7 @@ feature -- Commands
 				save_backup_info
 			end
 
-			Eiffel_project.Manager.on_project_recompiled
-			is_compiling := False
+			stop_compilation
 		ensure
 			increment_compilation_counter:
 				(successful and (System.has_been_changed or else System.freezing_occurred))
@@ -307,8 +306,7 @@ feature -- Commands
 				end
 				retry
 			else
-				is_compiling := False
-				Eiffel_project.Manager.on_project_recompiled
+				stop_compilation
 			end
 		end
 
@@ -539,6 +537,22 @@ feature -- Automatic backup
 			file.close
 
 			new_session := False
+		end
+
+feature {E_PROJECT} -- Status update
+
+	start_compilation is
+			-- Warn the interface that a new compilation is beginning.
+		do
+			is_compiling := True
+			Eiffel_project.Manager.on_project_compiles
+		end
+
+	stop_compilation is
+			-- Warn the interface that a compilation is over.
+		do
+			is_compiling := False
+			Eiffel_project.Manager.on_project_recompiled
 		end
 
 feature {NONE} -- Automatic Backup

@@ -12,28 +12,28 @@ inherit
 	
 	EB_CONSTANTS
 	
-	EIFFEL_SHARED_DIAGRAM_PREFERENCES
+	EB_SHARED_PREFERENCES
 
 feature {NONE} -- Bon class
 		
 	bon_class_name_font: EV_IDENTIFIED_FONT is
 		do
-			Result := diagram_preferences.bon_class_name_font
+			Result := preferences.diagram_tool_data.bon_class_name_font
 		end
 
 	bon_class_name_color: EV_COLOR is
 		do
-			Result := diagram_preferences.bon_class_name_color
+			Result := preferences.diagram_tool_data.bon_class_name_color
 		end
 
 	bon_class_fill_color: EV_COLOR is
 		do
-			Result := diagram_preferences.bon_class_fill_color
+			Result := preferences.diagram_tool_data.bon_class_fill_color
 		end
 		
 	bon_class_uncompiled_fill_color: EV_COLOR is
 		do
-			Result := diagram_preferences.bon_class_uncompiled_fill_color
+			Result := preferences.diagram_tool_data.bon_class_uncompiled_fill_color
 		end
 
 	bon_class_line_color: EV_COLOR is
@@ -45,12 +45,12 @@ feature {NONE} -- Bon class
 
 	bon_generics_font: EV_IDENTIFIED_FONT is
 		do
-			Result := diagram_preferences.bon_generics_font
+			Result := preferences.diagram_tool_data.bon_generics_font
 		end
 
 	bon_generics_color: EV_COLOR is
 		do
-			Result := diagram_preferences.bon_generics_color	
+			Result := preferences.diagram_tool_data.bon_generics_color	
 		end
 
 	max_class_name_length: INTEGER is 15
@@ -106,7 +106,7 @@ feature {NONE} -- Cluster
 
 	bon_cluster_line_color: EV_COLOR is
 		do
-			Result := diagram_preferences.bon_cluster_line_color
+			Result := preferences.diagram_tool_data.bon_cluster_line_color
 		end
 
 	bon_cluster_line_width: INTEGER is 1
@@ -115,22 +115,22 @@ feature {NONE} -- Cluster
 
 	bon_cluster_iconified_fill_color: EV_COLOR is
 		do
-			Result := diagram_preferences.bon_cluster_iconified_fill_color
+			Result := preferences.diagram_tool_data.bon_cluster_iconified_fill_color
 		end
 
 	bon_cluster_name_area_color: EV_COLOR is
 		do
-			Result := diagram_preferences.bon_cluster_name_area_color
+			Result := preferences.diagram_tool_data.bon_cluster_name_area_color
 		end
 
 	bon_cluster_name_color: EV_COLOR is
 		do
-			Result := diagram_preferences.bon_cluster_name_color
+			Result := preferences.diagram_tool_data.bon_cluster_name_color
 		end
 	
 	bon_cluster_name_font: EV_IDENTIFIED_FONT is
 		do
-			Result := diagram_preferences.bon_cluster_name_font
+			Result := preferences.diagram_tool_data.bon_cluster_name_font
 		end
 		
 	max_cluster_name_length: INTEGER is 25
@@ -139,34 +139,34 @@ feature {NONE} -- Client supplier link
 
 	bon_client_label_font: EV_IDENTIFIED_FONT is
 		do
-			Result := diagram_preferences.bon_client_label_font
+			Result := preferences.diagram_tool_data.bon_client_label_font
 		end
 
 	bon_client_label_color: EV_COLOR is
 		do
-			Result := diagram_preferences.bon_client_label_color
+			Result := preferences.diagram_tool_data.bon_client_label_color
 		end
 
 	bon_client_color: EV_COLOR is
 		do
-			Result := diagram_preferences.bon_client_color
+			Result := preferences.diagram_tool_data.bon_client_color
 		end
 	
 	bon_client_line_width: INTEGER is 
 		do
-			Result := diagram_preferences.bon_client_line_width
+			Result := preferences.diagram_tool_data.bon_client_line_width
 		end
 	
 feature {NONE} -- Inheritance link
 
 	bon_inheritance_color: EV_COLOR is
 		do
-			Result := diagram_preferences.bon_inheritance_color
+			Result := preferences.diagram_tool_data.bon_inheritance_color
 		end
 	
 	bon_inheritance_line_width: INTEGER is 
 		do
-			Result := diagram_preferences.bon_inheritance_line_width
+			Result := preferences.diagram_tool_data.bon_inheritance_line_width
 		end
 
 end -- class BON_CONSTANTS

@@ -36,6 +36,11 @@ inherit
 			default_create
 		end
 		
+	EB_SHARED_PREFERENCES
+		undefine
+			default_create
+		end
+		
 create
 	make_with_model,
 	default_create
@@ -60,7 +65,7 @@ feature {NONE} -- Initialization
 			aggregate_group.extend (aggregate_figure)
 			extend (aggregate_group)
 			
-			diagram_preferences.add_observer (Current)
+			preferences.diagram_tool_data.add_observer (Current)
 			retrieve_preferences
 			
 			create name_group

@@ -56,6 +56,11 @@ inherit
 			default_create
 		end
 		
+	EB_SHARED_PREFERENCES
+		undefine
+			default_create
+		end
+		
 create
 	make_with_model,
 	default_create
@@ -82,7 +87,7 @@ feature {NONE} -- Initialization
 			
 			label_move_handle.set_pointer_style (default_pixmaps.sizeall_cursor)
 			
-			diagram_preferences.add_observer (Current)
+			preferences.diagram_tool_data.add_observer (Current)
 			retrieve_preferences
 			
 			is_label_shown := True
@@ -191,7 +196,7 @@ feature -- Element change
 			label_group.pointer_double_press_actions.prune_all (agent on_label_group_double_clicked)
 			model.is_aggregated_changed.prune_all (agent on_is_aggregated_change)
 			polyline_lable_recycle
-			diagram_preferences.remove_observer (Current)
+			preferences.diagram_tool_data.remove_observer (Current)
 		end
 
 	hide_label is

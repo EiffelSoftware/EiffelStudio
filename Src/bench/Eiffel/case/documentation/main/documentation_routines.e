@@ -10,6 +10,8 @@ inherit
 	OUTPUT_ROUTINES
 
 	SHARED_EIFFEL_PROJECT
+	
+	EB_SHARED_PREFERENCES
 
 feature -- Status setting
 
@@ -234,7 +236,7 @@ feature -- Access
 			create formatter
 			formatter.set_clickable
 			if flat then
-				formatter.set_feature_clause_order ((create {EB_FLAT_SHORT_DATA}).feature_clause_order)
+				formatter.set_feature_clause_order (preferences.flat_short_data.feature_clause_order)
 			else
 				formatter.set_one_class_only
 				formatter.set_order_same_as_text

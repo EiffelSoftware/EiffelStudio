@@ -27,6 +27,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	EB_SHARED_PREFERENCES
+		undefine
+			default_create
+		end
 
 create
 	make_with_model,
@@ -40,7 +45,7 @@ feature {NONE} -- Initialization
 			default_create
 			model := a_model
 			initialize
-			diagram_preferences.add_observer (Current)
+			preferences.diagram_tool_data.add_observer (Current)
 			retrieve_preferences
 			real_arrow_head_size := 20
 			line.set_arrow_size (20)

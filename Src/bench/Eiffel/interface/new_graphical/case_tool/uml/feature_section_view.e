@@ -36,6 +36,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	EB_SHARED_PREFERENCES
+		undefine
+			default_create
+		end
 
 create
 	make
@@ -125,7 +130,7 @@ feature {NONE} -- Initialize
 			feature_group.hide
 			disable_pick_and_drop
 
-			diagram_preferences.add_observer (Current)
+			preferences.diagram_tool_data.add_observer (Current)
 			retrieve_preferences
 			
 		ensure

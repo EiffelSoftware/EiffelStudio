@@ -39,6 +39,11 @@ inherit
 		undefine
 			default_create
 		end
+		
+	EB_SHARED_PREFERENCES
+		undefine
+			default_create
+		end
 	
 create
 	default_create,
@@ -84,7 +89,7 @@ feature {NONE} -- Initialization
 			disable_rotating
 			disable_scaling
 			
-			diagram_preferences.add_observer (Current)
+			preferences.diagram_tool_data.add_observer (Current)
 			retrieve_preferences
 			
 			is_default_background_color_used := True
@@ -274,7 +279,7 @@ feature -- Element change
 			Precursor {EIFFEL_CLASS_FIGURE}			
 			model.properties_changed_actions.prune_all (agent set_bon_icons)
 			model.generics_changed_actions.prune_all (agent set_generics)
-			diagram_preferences.remove_observer (Current)
+			preferences.diagram_tool_data.remove_observer (Current)
 		end
 
 	set_background_color (a_color: EV_COLOR) is

@@ -46,7 +46,7 @@ inherit
 			default_create
 		end
 
-	EB_FORMATTER_DATA
+	EB_SHARED_PREFERENCES
 		export
 			{NONE} all
 		undefine
@@ -68,6 +68,11 @@ inherit
 		end
 		
 	EB_SHARED_MANAGERS
+		undefine
+			default_create
+		end
+		
+	FEATURE_CLAUSE_NAMES
 		undefine
 			default_create
 		end
@@ -1146,7 +1151,7 @@ feature {NONE} -- Implementation
 			a_clause_not_void: a_clause /= Void
 		do
 			create Result.make (20)
-			Result.fill (feature_clause_order)
+			Result.fill (preferences.flat_short_data.feature_clause_order)
 			Result.compare_objects
 			if not Result.is_empty then
 				Result.start

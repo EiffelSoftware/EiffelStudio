@@ -56,19 +56,30 @@ feature -- Update
 			send_rqst_3 (Rqst_sp_lower, 0, sp_lower, sp_upper)
 			send_rqst_3 (request_code, In_h_addr, 0, hex_to_integer (object_address))
 			is_special := to_boolean (c_tread)
+			is_tuple := to_boolean (c_tread)
 			debug ("DEBUG_RECV")
 				io.error.putstring ("Grepping object at address ")
 				io.error.putstring (object_address)
 				io.error.putstring (".%N")
+				io.error.putstring ("Object is a special? ")
+				io.error.put_boolean (is_special)
+				io.error.put_new_line
+				io.error.putstring ("Object is a tuple? ")
+				io.error.put_boolean (is_tuple)
+				io.error.put_new_line
 			end
 			object_type_id := to_integer (c_tread) + 1
 			if is_special then
 				debug ("DEBUG_RECV")
-					io.error.putstring ("Oh oooh. This is a special object...%N")
+					if is_tuple then
+						io.error.putstring ("Oh oooh. This is a TUPLE object...%N")
+					else
+						io.error.putstring ("Oh oooh. This is a special object...%N")
+					end
 				end;
 				create attributes.make
 				debug("DEBUG_RECV")
-					io.error.putstring ("Getting the attributes from the special object...%N")
+					io.error.putstring ("Getting the attributes from object...%N")
 					io.error.putstring ("Capacity is ")
 					io.error.putint (capacity)
 					io.error.putstring (".%N")
@@ -176,31 +187,38 @@ feature {NONE} -- Implementation
 				when Sk_ref then
 						-- Is this a special object?
 					if to_boolean (c_tread) then
-						debug("DEBUG_RECV")
-							io.error.putstring ("Creating special object.%N")
-						end
-						create spec_attr.make_attribute (attr_name, e_class, to_pointer (c_tread).out, to_integer (c_tread))
-						debug("DEBUG_RECV")
-							io.error.putstring ("Attribute name: ");
-							io.error.putstring (attr_name);
-							io.error.new_line;
-							io.error.putstring ("The eiffel class: ");
-							io.error.putstring (e_class.name_in_upper);
-							io.error.new_line
-						end;
-						if sp_upper = -1 then
-							spec_attr.set_sp_bounds (sp_lower, spec_attr.capacity);
+							-- Is this a tuple object?
+						if to_boolean (c_tread) then
+							type_id := to_integer (c_tread) + 1
+							create {REFERENCE_VALUE} attr.make_attribute (attr_name, e_class, 
+								type_id, to_pointer (c_tread).out)
 						else
-							spec_attr.set_sp_bounds (sp_lower, sp_upper);
-						end;
-						max_capacity := max_capacity.max (spec_attr.capacity);
-						attr := spec_attr;
-						debug("DEBUG_RECV")
-							io.error.putstring ("Receiving attributes in the special object.%N")
-						end;
-						recv_attributes (spec_attr.items, Void);
-						debug("DEBUG_RECV")
-							io.error.putstring ("Done receiving attributes in the special object.%N")
+							debug("DEBUG_RECV")
+								io.error.putstring ("Creating special object.%N")
+							end
+							create spec_attr.make_attribute (attr_name, e_class, to_pointer (c_tread).out, to_integer (c_tread))
+							debug("DEBUG_RECV")
+								io.error.putstring ("Attribute name: ");
+								io.error.putstring (attr_name);
+								io.error.new_line;
+								io.error.putstring ("The eiffel class: ");
+								io.error.putstring (e_class.name_in_upper);
+								io.error.new_line
+							end;
+							if sp_upper = -1 then
+								spec_attr.set_sp_bounds (sp_lower, spec_attr.capacity);
+							else
+								spec_attr.set_sp_bounds (sp_lower, sp_upper);
+							end;
+							max_capacity := max_capacity.max (spec_attr.capacity);
+							attr := spec_attr;
+							debug("DEBUG_RECV")
+								io.error.putstring ("Receiving attributes in the special object.%N")
+							end;
+							recv_attributes (spec_attr.items, Void);
+							debug("DEBUG_RECV")
+								io.error.putstring ("Done receiving attributes in the special object.%N")
+							end
 						end
 					else
 							-- Is this a void object?
@@ -216,6 +234,9 @@ feature {NONE} -- Implementation
 				else
 						-- We should never go through this path.
 					check False end
+					debug ("DEBUG_RECV")
+						io.error.putstring ("Should never go there!!")
+					end
 				end
 				debug("DEBUG_RECV")
 					io.error.putstring ("Putting `attr' in `attr_list'.%N")
@@ -250,6 +271,9 @@ feature -- Special object properties
 
 	is_special: BOOLEAN;
 			-- Is the object being inspected SPECIAL?
+			
+	is_tuple: BOOLEAN
+			-- Is object being inspected of type TUPLE?
 
 feature {NONE} -- Implementation
 

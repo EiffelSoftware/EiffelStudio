@@ -165,7 +165,8 @@ debug ("TRANSFER")
 			print (new_units.count)
 			print ("%N... out transfer")
 end
-			wipe_out
+			new_units.clear_all
+			count := 0
 			mem.full_collect
 			mem.full_coalesce
 		ensure

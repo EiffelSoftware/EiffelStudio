@@ -561,17 +561,19 @@ feature {NONE}
 			form.set_fraction_base (4);
 			form.attach_right_position (drawing_sw, 3);
 			form.attach_left_position (form1, 3);
+
+			form.attach_top (form1, 5)
+			form.attach_left_position (form1, 3);
+			form.attach_right (form1, 2);
+			form.attach_bottom (form1, 2);
+
 			form.attach_top (menu_bar, 5);
 			form.attach_left (menu_bar, 5);
-			form.attach_right (menu_bar, 5);
+			form.attach_right_position (menu_bar, 3);
 
 			form.attach_left (drawing_sw, 2);
 			form.attach_bottom (drawing_sw, 2);
 			form.attach_top_widget (menu_bar, drawing_sw, 5);
-
-			form.attach_right (form1, 2);
-			form.attach_bottom (form1, 2);
-			form.attach_top_widget (menu_bar, form1, 5);
 
 			form1.set_fraction_base (2);
 			form1.attach_bottom_position (state_list, 1);

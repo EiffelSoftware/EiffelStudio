@@ -15,6 +15,11 @@ inherit
 		undefine
 			copy, is_equal
 		end
+		
+	WEL_HDF_CONSTANTS
+		undefine
+			copy, is_equal
+		end
 
 create
 	make,
@@ -105,7 +110,13 @@ feature -- Access
 			Result := cwel_hd_item_get_l_param (item)
 		end
 
-
+	iimage: INTEGER is
+			-- Zero-based index of an image within the image list.
+		require
+			exists: exists
+		do
+			Result := cwel_hditem_get_iimage (item)
+		end
 
 feature -- Element change
 
@@ -132,6 +143,8 @@ feature -- Element change
 			cwel_hd_item_set_psz_text (item, str_text.item)
 			cwel_hd_item_set_cch_text_max (item, str_text.length)
 			set_mask (set_flag (mask, feature {WEL_HDI_CONSTANTS}.Hdi_text))
+			set_format (clear_flag (format, hdf_bitmap))
+			set_format (set_flag (format, hdf_string))
 		ensure
 			text_set: text.is_equal (a_text)
 			text_count_set: a_text.count = text_count
@@ -206,6 +219,17 @@ feature -- Element change
 			mask_set: flag_set (mask, feature {WEL_HDI_CONSTANTS}.Hdi_lparam)
 		end
 		
+	set_iimage (an_index: INTEGER) is
+			-- Zero-based index of an image within the image list.
+		require
+			exists: exists
+			an_index_positive: an_index >= 0
+		do
+			cwel_hditem_set_iimage (item, an_index)
+			set_mask (set_flag (mask, feature {WEL_HDI_CONSTANTS}.hdi_image))
+			set_format (set_flag (format, feature {WEL_HDF_CONSTANTS}.hdf_image))
+		end
+		
 feature -- Measurement
 
 	structure_size: INTEGER is
@@ -220,78 +244,91 @@ feature {NONE} -- Externals
 		external
 			"C [macro %"nmtb.h%"]"
 		alias
-			"sizeof (HD_ITEM)"
+			"sizeof (HDITEM)"
 		end
 
 	cwel_hd_item_get_mask (ptr: POINTER): INTEGER is
 		external
-			"C [macro %"hd_item.h%"] (HD_ITEM*): EIF_INTEGER"
+			"C [macro %"hd_item.h%"] (HDITEM*): EIF_INTEGER"
 		end
 
 	cwel_hd_item_set_mask (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro %"hd_item.h%"] (HD_ITEM*, UINT)"
+			"C [macro %"hd_item.h%"] (HDITEM*, UINT)"
 		end
 
 	cwel_hd_item_get_cxy (ptr: POINTER): INTEGER is
 		external
-			"C [macro %"hd_item.h%"] (HD_ITEM*): EIF_INTEGER"
+			"C [macro %"hd_item.h%"] (HDITEM*): EIF_INTEGER"
 		end
 
 	cwel_hd_item_set_cxy (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro %"hd_item.h%"] (HD_ITEM*, int)"
+			"C [macro %"hd_item.h%"] (HDITEM*, int)"
 		end
 
 	cwel_hd_item_get_psz_text (ptr: POINTER): POINTER is
 		external
-			"C [macro %"hd_item.h%"] (HD_ITEM*): EIF_POINTER"
+			"C [macro %"hd_item.h%"] (HDITEM*): EIF_POINTER"
 		end
 
 	cwel_hd_item_set_psz_text (ptr: POINTER; value: POINTER) is
 		external
-			"C [macro %"hd_item.h%"] (HD_ITEM*, LPTSTR)"
+			"C [macro %"hd_item.h%"] (HDITEM*, LPTSTR)"
 		end
 
 	cwel_hd_item_get_hbm (ptr: POINTER): POINTER is
 		external
-			"C [macro %"hd_item.h%"] (HD_ITEM*): EIF_POINTER"
+			"C [macro %"hd_item.h%"] (HDITEM*): EIF_POINTER"
 		end
 
 	cwel_hd_item_set_hbm (ptr: POINTER; value: POINTER) is
 		external
-			"C [macro %"hd_item.h%"] (HD_ITEM*, HBITMAP)"
+			"C [macro %"hd_item.h%"] (HDITEM*, HBITMAP)"
 		end
 
 	cwel_hd_item_get_cch_text_max (ptr: POINTER): INTEGER is
 		external
-			"C [macro %"hd_item.h%"] (HD_ITEM*): EIF_INTEGER"
+			"C [macro %"hd_item.h%"] (HDITEM*): EIF_INTEGER"
 		end
 
 	cwel_hd_item_set_cch_text_max (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro %"hd_item.h%"] (HD_ITEM*, int)"
+			"C [macro %"hd_item.h%"] (HDITEM*, int)"
 		end
-
 
 	cwel_hd_item_get_fmt (ptr: POINTER): INTEGER is
 		external
-			"C [macro %"hd_item.h%"] (HD_ITEM*): EIF_INTEGER"
+			"C [macro %"hd_item.h%"] (HDITEM*): EIF_INTEGER"
 		end
 
 	cwel_hd_item_set_fmt (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro %"hd_item.h%"] (HD_ITEM*, int)"
+			"C [macro %"hd_item.h%"] (HDITEM*, int)"
 		end
 
 	cwel_hd_item_get_l_param (ptr: POINTER): INTEGER is
 		external
-			"C [macro %"hd_item.h%"] (HD_ITEM*): EIF_INTEGER"
+			"C [macro %"hd_item.h%"] (HDITEM*): EIF_INTEGER"
 		end
 
 	cwel_hd_item_set_l_param (ptr: POINTER; value: INTEGER) is
 		external
-			"C [macro %"hd_item.h%"] (HD_ITEM*, LPARAM)"
+			"C [macro %"hd_item.h%"] (HDITEM*, LPARAM)"
+		end
+		
+	cwel_hditem_get_iimage (ptr: POINTER): INTEGER is
+		external
+			"C [struct %"commctrl.h%"] (HDITEM): EIF_INTEGER"
+		alias
+			"iImage"
+		end
+		
+	cwel_hditem_set_iimage (ptr: POINTER; value: INTEGER) is
+		external
+			"C [struct %"commctrl.h%"] (HDITEM, EIF_INTEGER)"
+		alias
+			"iImage"
 		end
 
 end -- class WEL_HDI_ITEM

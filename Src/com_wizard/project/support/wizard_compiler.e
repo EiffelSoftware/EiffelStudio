@@ -4,6 +4,11 @@ class
 inherit
 	WIZARD_C_COMPILER
 
+	WIZARD_VARIABLE_NAME_MAPPER
+		export
+			{NONE} all
+		end
+
 	WIZARD_SHARED_DATA
 		export
 			{NONE} all
@@ -296,78 +301,11 @@ feature {NONE} -- Implementation
 			a_file.close
 		end
 
-	generate_user_def_file is
-			-- Generate DLL definition file
-		local
-			a_string: STRING
-			a_raw_file: RAW_FILE
-			retried: BOOLEAN
-		do
-			if not retried then
-				a_string := clone (Shared_wizard_environment.destination_folder)
-				a_string.append (User_def_file_name)
-				create a_raw_file.make_open_write (a_string)
-				a_raw_file.put_string (server_dll_export (Register_dll_server_function_name, Dll_register_server, Register_server_ordinal))
-				a_raw_file.put_string (server_dll_export (Unregister_dll_server_function_name, Dll_unregister_server, Unregister_server_ordinal))
-				a_raw_file.put_string (server_dll_export (Get_class_object_function_name, Dll_get_class_object, Get_class_object_ordianl))
-				a_raw_file.put_string (server_dll_export (Can_unload_dll_now_function_name, Dll_can_unload_now, Can_unload_now_ordinal))
-				a_raw_file.close
-			end
-		rescue
-			if not failed_on_rescue then
-				retried := True
-				retry
-			end
-		end	
-
-	Register_server_ordinal: INTEGER is 1
-			-- Ordinal of DllRegisterServer function
-
-	Unregister_server_ordinal: INTEGER is 2
-			-- Ordinal of DllUnregisterServer function
-
-	Get_class_object_ordianl: INTEGER is 3
-			-- Ordinal of DllGetClassObject function
-
-	Can_unload_now_ordinal: INTEGER is 4
-			-- Ordinal of DllCanUnloadNow function
-
-	server_dll_export (a_eiffel_name, a_c_name: STRING; a_ordinal: INTEGER): STRING is
-			-- Generate the specified export for the DLL definition file
-		require
-			non_void_eiffel_name: a_eiffel_name /= Void
-			non_void_c_name: a_c_name /= Void
-			valid_eiffel_name: not a_eiffel_name.empty
-			valid_c_name: not a_c_name.empty
-			valid_ordinal: a_ordinal >= 1
-		do
-			Result := clone (registration_class_name)
-			Result.append (Semicolon)
-			Result.append (Space)
-			Result.append (a_eiffel_name)
-			Result.append (Space)
-			Result.append (At_sign)
-			Result.append (Space)
-			Result.append (a_ordinal.out)
-			Result.append (Space)
-			Result.append (Alias_keyword)
-			Result.append (Space)
-			Result.append (a_c_name)
-			Result.append (Space)
-			Result.append (Call_type)
-			Result.append (Space)
-			Result.append (Stdcall)
-			Result.append (New_line)
-		ensure
-			valid_export: Result /= Void
-		end
-
 	server_generated_ace_file: STRING is
 			-- Beginning of server generated Ace file
 		do
-			generate_user_def_file
 			Result := client_generated_ace_file
-			Result.replace_substring_all (Any_type, Shared_wizard_environment.project_name)
+			Result.replace_substring_all (Any_type, name_for_class (Shared_wizard_environment.project_name, Tkind_coclass, False))
 			Result.replace_substring_all (Default_keyword, Shared_library_option)
 			Result.replace_substring_all (Client, Server)
 		end
@@ -382,6 +320,33 @@ feature {NONE} -- Implementation
 			Result.append (Partial_ace_file)
 			Result.append (Shared_wizard_environment.destination_folder)
 			Result.append (Client)
+			Result.append (Double_quote)
+			if Shared_wizard_environment.server then
+				Result.append (New_line_tab_tab)
+				Result.append (Visible)
+				Result.append (New_line_tab_tab_tab)
+				Result.append (Registration_class_name)
+				Result.append (Semicolon)
+				Result.append (New_line_tab_tab)
+				Result.append (End_keyword)
+				Result.append (Semicolon)
+			end
+			Result.append (New_line)
+			Result.append (New_line_tab)
+			Result.append (Common_cluster)
+			Result.append (Colon)
+			Result.append (Tab)
+			Result.append (Tab)
+			Result.append (Tab)
+			Result.append (Tab)
+			Result.append (Tab)
+			Result.append (Tab)
+			Result.append (Double_quote)
+			Result.append (Shared_wizard_environment.destination_folder)
+			Result.append (Common)
+			Result.append (Double_quote)
+			Result.append (New_line)
+			Result.append (New_line)
 			Result.append (Partial_ace_file_part_two)
 			Result.append (Tab)
 			Result.append (Tab)
@@ -480,7 +445,7 @@ feature {NONE} -- Implementation
 	eiffel_compile_command: STRING is
 			-- Eiffel compiler command line to freeze
 		do
-			Result := "es4 -freeze -batch -ace "
+			Result := "es4 -batch -ace "
 			Result.append (Ace_file_name)
 		end
 
@@ -559,12 +524,13 @@ feature {NONE} -- Implementation
 		%	inlining_size (%"4%")%N%N%
 		%cluster%N%
 		%	all component: %""
+	
+	Common_cluster: STRING is "all common"
+			-- Common cluster
 
 	Partial_ace_file_part_two: STRING is
 			-- Ace file used to precompile generated Eiffel system
-		"%";%N%N%
-		%	all common: %"..\common%"%N%N%
-		%	-- BASE%N%
+		"	-- BASE%N%
 		%	all base:						%"$EIFFEL4\library\base%"%N%
 		%		exclude%N%
 		%			%"table_eiffel3%";%N%
@@ -624,9 +590,8 @@ feature {NONE} -- Implementation
 			-- Dll definition file for Ace file
 		do
 			Result := "default%N%Tshared_library_definition (%""
-			Result.append (Def_file_name)
-			Result.append (")%"")
-			Result.append (Semicolon)
+			Result.append (User_def_file_name)
+			Result.append ("%")")
 		end
 
 	Stdcall: STRING is "__stdcall"
@@ -634,5 +599,8 @@ feature {NONE} -- Implementation
 
 	Call_type: STRING is "call_type"
 			-- DLL Defintion type call_type option
+
+	Visible: STRING is "visible"
+			-- Lace `visible' keyword
 
 end -- class WIZARD_IDL_COMPILER

@@ -74,9 +74,9 @@ feature -- Basic operations
 		do
 			description := resource.description
 			if description /= Void and then not description.is_empty then
-				s := clone (description)
+				s := description.twin
 			else
-				s := clone (resource.name)
+				s := resource.name.twin
 				s.replace_substring_all ("_", " ")
 			end
 			s.prune_all ('%N')

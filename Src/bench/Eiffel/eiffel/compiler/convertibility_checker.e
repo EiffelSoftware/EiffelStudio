@@ -313,6 +313,12 @@ feature {NONE} -- Implementation: checking
 					Error_handler.insert_error (l_vncp)
 					has_error := True
 				end
+			else
+				create l_vncp.make ("Routine not found: " +
+					a_convert_feat.feature_name.internal_name)
+				l_vncp.set_class (a_class)
+				Error_handler.insert_error (l_vncp)
+				has_error := True
 			end
 		end
 

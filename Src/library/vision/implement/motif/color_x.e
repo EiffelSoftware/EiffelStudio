@@ -9,172 +9,94 @@ class COLOR_X
 
 inherit
 
-	COLOR_I;
+	COLOR_I
+		undefine
+			is_equal
+		end;
 
-	RESOURCES_X [ANY]
+	RESOURCE_X
+		undefine
+			is_equal
+		end;
+
+	MEL_PIXEL
 		rename
-			make as resources_x_make
+			red as mel_red,
+			green as mel_green,
+			blue as mel_blue
+		undefine
+			has_valid_display
+		redefine
+			display
+		end;
+
+	MEMORY
+		rename
+			free as gc_free
+		export
+			{NONE} all
+		undefine
+			is_equal
+		redefine
+			dispose
 		end
 
 creation
 
-	make
+	make, 
+	make_for_screen
 
-feature {NONE} -- Creation
+feature {NONE} -- Initialization
 
 	make (a_color: COLOR) is
 			-- Create a color
 		require
-			valid_color: a_color /= Void
+			last_open_display_not_null: last_open_display /= Void
 		do
-			resources_x_make
+			display := last_open_display
 		end; 
 
-feature {NONE}
-
-	allocate (a_screen: SCREEN_I): POINTER is
-			-- Pixel of current color on `a_screen'
+	make_for_screen (a_color: COLOR; a_screen: SCREEN) is
+			-- Create a font.
+		require
+			valid_screen: a_screen /= Void and then a_screen.is_valid
 		local
-			ext_name: ANY;
+			mel_display: MEL_DISPLAY
 		do
-			is_real_allocated := false;
-			if (name = Void) then
-				if not pixel_set then  -- rgb color
-					if c_allocate_color (a_screen.screen_object, red, green, blue) then
-						Result := c_pixel_allocated_color;
-						is_real_allocated := true
-					end;
-				else  --  pixel color
-					Result := the_pixel;
-				end;
-			else  -- name color
-				ext_name := name.to_c;
-				if c_parse_name_color (a_screen.screen_object, $ext_name) then
-					if c_allocate_wanted_color (a_screen.screen_object) then
-						Result := c_pixel_allocated_color;
-						is_real_allocated := true
-					end
-				end
-			end;
-			if (Result /= the_pixel) and then not is_real_allocated then
-				if is_white_by_default then
-					Result := white_pixel (a_screen.screen_object)
-				else
-					Result := black_pixel (a_screen.screen_object)
-				end
+			display ?= a_screen.implementation;
+			check
+				valid_display: display /= Void
 			end
-		end; 
-	
-feature 
+		end;
 
-	allocated_blue (a_widget: WIDGET_I): INTEGER is
+feature -- Access
+
+	display: MEL_DISPLAY;
+			-- Display where resource is allocated
+
+	allocated_blue: INTEGER is
 			-- Allocated blue saturation level for `a_widget'
-		require else
-			a_widget_exists: not (a_widget = Void);
-			a_widget_realized: a_widget.realized
-		local
-			a_screen_object: POINTER
 		do
-			a_screen_object := a_widget.screen_object;
-			c_query_color (xt_display (a_screen_object), pixel (a_widget.screen));
-			Result := c_blue_allocated_color
+			allocate_pixel;
+			Result := red
 		end; 
 
-	allocated_green (a_widget: WIDGET_I): INTEGER is
+	allocated_green: INTEGER is
 			-- Allocated green saturation level for `a_widget'
-		require else
-			a_widget_exists: not (a_widget = Void);
-			a_widget_realized: a_widget.realized
-		
-		local
-			a_screen_object: POINTER
 		do
-			a_screen_object := a_widget.screen_object;
-			c_query_color (xt_display (a_screen_object), pixel (a_widget.screen));
-			Result := c_green_allocated_color
+			allocate_pixel;
+			Result := green
 		end; 
 
-	allocated_red (a_widget: WIDGET_I): INTEGER is
+	allocated_red: INTEGER is
 			-- Allocated red saturation level for `a_widget'
-		require else
-			a_widget_exists: not (a_widget = Void);
-			a_widget_realized: a_widget.realized
-		
-		local
-			a_screen_object: POINTER
 		do
-			a_screen_object := a_widget.screen_object;
-			c_query_color (xt_display (a_screen_object), pixel (a_widget.screen));
-			Result := c_red_allocated_color
+			allocate_pixel;
+			Result := red
 		end; 
 
-feature {NONE}
+feature -- Status report
 
-	black_pixel (a_display_pointer: POINTER) : POINTER is
-			-- Index of black color in `a_display_pointer'
-		do
-			Result := c_black_pixel (a_display_pointer)
-		end; 
-	
-feature {NONE}
-
-	free_resources is
-			-- Free all color resources.
-		do
-			from
-				start
-			until
-				off
-			loop
-				if item.is_allocated then
-					c_free_color (item.screen.screen_object, item.identifier);
-					item.set_allocated (False);
-				end;
-				forth
-			end;
-			wipe_out
-		end; 
-
-feature {NONE}
-
-	is_real_allocated: BOOLEAN;
-			-- Is the color really allocated ?
-
-	is_used_by (a_widget: WIDGET): BOOLEAN is
-			-- Is `a_widget' using this resource ?
-		require else
-			a_widget_exists: not (a_widget = Void)
-		local
-			primitive: PRIMITIVE;
-			manager: MANAGER;
-			color: COLOR
-		do
-			color := a_widget.background_color;
-			Result := (color /= Void) and then 
-						(color.implementation = Current);
-			if not Result then
-				primitive ?= a_widget;
-				if primitive /= Void then
-					color := primitive.foreground_color;
-					Result := (color /= Void) and then 
-								(color.implementation = Current)
-				else
-					manager ?= a_widget;
-					if manager /= Void then
-						color := manager.foreground_color;
-						Result := (color /= Void) and then 
-								(color.implementation = Current)
-					end
-				end
-			end
-		ensure then
-			(number_of_uses = 0) implies (not Result)
-		end; 
-	
-feature 
-
-	pixel_set: BOOLEAN;
-	
 	blue: INTEGER;
 			-- Blue saturation level
 
@@ -188,131 +110,76 @@ feature
 	name: STRING;
 			-- name of desired color for current
 
-	pixel (a_screen: SCREEN_I): POINTER is
-			-- Pixel value of color for `a_screen'
-		require
-			a_screen_exists: a_screen /= Void
-		local
-			a_resource: RESOURCE_X
-		do
-			a_resource := find_same_screen (a_screen);
-			if (a_resource = Void) then
-				Result := allocate (a_screen);
-				!COLOR_RES_X! a_resource.make (a_screen, Result, is_real_allocated);
-				put_front (a_resource)
-			else
-				Result := a_resource.identifier
-			end
-		end; 
-
 	red: INTEGER;
 			-- Red saturation level
+
+feature -- Status setting
 
 	set_black_default is
 			-- Set black color to be used by default if
 			-- it is impossible to allocate desire color.
 		do
 			is_white_by_default := false
-		ensure then
-			not is_white_by_default
 		end; 
 
 	set_blue (blue_value: INTEGER) is
 			-- Set blue saturation level to `blue_value'.
-		require else
-			blue_value_small_enough: blue_value  <= 65535;
-			blue_value_not_negative: blue_value >= 0
 		do
 			blue := blue_value;
 			name := Void;
-			pixel_set := False;
-			free_resources;
+			dispose;
 			update_widgets
-		ensure then
-			name = Void;
-			blue = blue_value
 		end; 
 
 	set_green (green_value: INTEGER) is
 			-- Set green saturation level to `green_value'.
-		require else
-			green_value_small_enough: green_value  <= 65535;
-			green_value_not_negative: green_value >= 0
 		do
 			green := green_value;
 			name := Void;
-			pixel_set := False;
-			free_resources;
+			dispose;
 			update_widgets
-		ensure then
-			name = Void;
-			green = green_value
 		end; 
 
 	set_name (a_name: STRING) is
 			-- Set color name to `a_name'.
-		require else
-			a_name_not_void: not (a_name = Void)
 		do
 			name := clone (a_name);
-			pixel_set := False;
-			free_resources;
+			dispose;
 			update_widgets
-		ensure then
-			not (name = Void);
-			name.is_equal (a_name)
 		end; 
 
-	set_pixel (pixel_value: POINTER) is
-			-- Set the Pixel color to `pixel_value'
+	set_default_pixel (a_pixel: MEL_PIXEL; cmap: MEL_COLORMAP) is
+			-- Set the default Pixel color to `pixel_value'
+		require
+			valid_pixel: a_pixel /= Void and then a_pixel.is_valid;
+			cmap_value_not_void: cmap /= Void
 		do
-			the_pixel := pixel_value;
+			identifier := a_pixel.identifier;
+			colormap_identifier := cmap.identifier;	
+			display_handle := a_pixel.display_handle;
+			is_allocated := True;
 			name := Void;
-			pixel_set := True
-		ensure then
-			name = Void;
-			the_pixel = pixel_value
 		end;
 			
 	set_red (red_value: INTEGER) is
 			-- Set red saturation level to `red_value'.
-		require else
-			red_value_small_enough: red_value  <= 65535;
-			red_value_not_negative: red_value >= 0
 		do
 			red := red_value;
 			name := Void;
-			pixel_set := False;
-			free_resources;
+			dispose;
 			update_widgets
-		ensure then
-			name = Void;
-			red = red_value
 		end; 
 
 	set_rgb (red_value, green_value, blue_value: INTEGER) is
 			-- Set red, green and blue saturation level respectivly to
 			-- `red_value', `green_value' and `blue_value'.
-		require else
-			red_value_small_enough: red_value  <= 65535;
-			red_value_not_negative: red_value >= 0;
-			green_value_small_enough: green_value  <= 65535;
-			green_value_not_negative: green_value >= 0;
-			blue_value_small_enough: blue_value  <= 65535;
-			blue_value_not_negative: blue_value >= 0
 		do
 			red := red_value;
 			green := green_value;
 			blue := blue_value;
 			name := Void;
-			pixel_set := False;
-			free_resources;
+			dispose;
 			update_widgets
-		ensure then
-			name = Void;
-			red = red_value;
-			green = green_value;
-			blue = blue_value
 		end; 
 
 	set_white_default is
@@ -320,125 +187,93 @@ feature
 			-- it is impossible to allocate desire color.
 		do
 			is_white_by_default := true
-		ensure then
-			is_white_by_default
 		end; 
 
-	the_pixel: POINTER;
-			-- Pixel color 
+feature -- Element change
 
-feature {NONE}
-
-	update_widgets is
-			-- Update widgets.
+	allocate_pixel is
+			-- Allocate Pixel of current color on `a_screen' if
+			-- it has not been done.
 		local
-			widgets_to_update: LINKED_LIST [WIDGET_M];
-			primitive: PRIMITIVE_I;
-			manager: MANAGER_I;
-			w: WIDGET_M;
-			c: COLOR
+			cmap: MEL_COLORMAP;
+			default_screen: MEL_SCREEN;
 		do
-			from
-				widgets_to_update ?= objects;
-				widgets_to_update.start
-			until
-				widgets_to_update.after
-			loop
-				w := widgets_to_update.item;
-				c := w.background_color;	
-				if (c /= Void) and then (c.implementation = Current) then
-					w.update_background_color;
+			if not is_allocated then
+				is_real_allocated := False;
+					-- Means that color has not been allocated or tried
+					-- to be allocated.
+				default_screen := display.default_screen;
+				cmap := default_screen.default_colormap;
+				if (name = Void) then
+						-- Use rgb values
+					make_by_rgb_value (display, cmap, red, green, blue);
+				else  
+					make_by_name (display, cmap, name);
 				end;
-				primitive ?= w;
-				if primitive /= Void then
-					c := primitive.foreground_color;
-					if (c /= Void) and then (c.implementation = Current) then
-						primitive.update_foreground_color;
-					end
+				if is_valid then
+					is_real_allocated := True
 				else
-					manager ?= w;
-					if manager /= Void then 
-						c := manager.foreground_color;
-						if (c /= Void) and then (c.implementation = Current) then
-							manager.update_foreground_color;
-						end
-					end
+						-- Reset status 
+					status := 0;
+					if is_white_by_default then
+						identifier := default_screen.white_pixel.identifier
+					else
+						identifier := default_screen.black_pixel.identifier
+					end;
 				end;
-				widgets_to_update.forth;
+				is_allocated := True;
 			end
-		end; 
-
-	white_pixel (a_display_pointer: POINTER): POINTER is
-			-- Index of white color in current colormap
-		
-		do
-			Result := c_white_pixel (a_display_pointer)
 		end
 
-feature {NONE} -- External features
+feature {NONE} -- Implementation
 
-	c_parse_name_color (scr_obj: POINTER; ext_name: POINTER): BOOLEAN is
-		external
-			"C"
+	is_real_allocated: BOOLEAN
+			-- Was the X color structure allocated?
+
+	dispose is
+			-- Free color resource.
+		do
+			if is_real_allocated then
+				free
+			end;
+			is_allocated := False;
+			is_real_allocated := False;
+			identifier := default_pointer;
 		end; 
 
-	c_white_pixel (scr_obj: POINTER): POINTER is
-		external
-			"C"
+	update_widget_resource (widget_m: WIDGET_M) is
+			-- Update resource for `widget_m'.
+			-- Set `updated' to True if the resource was set.
+		local
+			primitive: PRIMITIVE_M;
+			manager: MANAGER_M;
+			c: COLOR;
+		do
+			c := widget_m.private_background_color;	
+			if (c /= Void) and then (c.implementation = Current) then
+				number_of_users := number_of_users + 1;
+				widget_m.update_background_color;
+			end;
+			primitive ?= widget_m;
+			if primitive /= Void then
+				c := primitive.private_foreground_color;
+				if (c /= Void) and then (c.implementation = Current) then
+					number_of_users := number_of_users + 1;
+					primitive.update_foreground_color;
+				end
+			else
+				manager ?= widget_m;
+				if manager /= Void then 
+					c := manager.private_foreground_color;
+					if (c /= Void) and then (c.implementation = Current) then
+						number_of_users := number_of_users + 1;
+						manager.update_foreground_color;
+					end
+				end
+			end;
 		end; 
 
-	c_free_color (scr_obj: POINTER; ident: POINTER) is
-		external
-			"C"
-		end; 
-
-	c_black_pixel (dsp_ptr: POINTER): POINTER is
-		external
-			"C"
-		end; 
-
-	c_red_allocated_color: INTEGER is
-		external
-			"C"
-		end; 
-
-	c_green_allocated_color: INTEGER is
-		external
-			"C"
-		end; 
-
-	c_blue_allocated_color: INTEGER is
-		external
-			"C"
-		end; 
-
-	c_query_color (dsp: POINTER; pix: POINTER) is
-		external
-			"C"
-		end; 
-
-	xt_display (scr_obj: POINTER): POINTER is
-		external
-			"C"
-		end; 
-
-	c_pixel_allocated_color: POINTER is
-		external
-			"C"
-		end; 
-
-	c_allocate_color (scr_obj: POINTER; r, g, b: INTEGER): BOOLEAN is
-		external
-			"C"
-		end; 
-
-	c_allocate_wanted_color (scr_obj: POINTER): BOOLEAN is
-		external
-			"C"
-		end; 
-
-end 
-
+end -- class COLOR_X
 
 --|----------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel 3.

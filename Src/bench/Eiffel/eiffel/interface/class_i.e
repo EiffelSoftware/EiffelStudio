@@ -558,7 +558,7 @@ feature {TEXT_FILTER} -- Document processing
 			-- Use `sep' as platform specific file separator.
 		do
 			Result := cluster.relative_path (sep)
-			Result.extend (name)
+			Result.extend (name.as_lower)
 		ensure
 			Result_exists: Result /= Void
 		end

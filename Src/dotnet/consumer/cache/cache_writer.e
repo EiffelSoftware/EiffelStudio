@@ -398,7 +398,7 @@ feature {NONE} -- Implementation
 				if not Result then
 					-- User could have swaped file to an older version
 					l_new_ca := create_consumed_assembly_from_path ("dummy", a_path)
-					Result := not l_new_ca.out.is_equal (l_ca.out)
+					Result := not l_new_ca.is_assembly_info_equal (l_ca)
 				end
 				if not Result then
 						-- now check in consumer is newer

@@ -209,12 +209,20 @@ feature -- Termination monitoring ...
 			timer_monitor_process_termination_on_exit.actions.extend (agent monitor_process_termination_on_exit)
 		end
 		
+	destroy_monitoring_of_process_termination_on_exit is
+			-- Destroy and clean timer
+		do
+			if timer_monitor_process_termination_on_exit /= Void then
+				timer_monitor_process_termination_on_exit.destroy
+				timer_monitor_process_termination_on_exit := Void
+			end
+		end
+
 	monitor_process_termination_on_exit is
 			-- Check if the debugging is done and continue the termination
 		do
 			if exit_process_occurred and then not is_dbg_synchronizing then
-				timer_monitor_process_termination_on_exit.destroy
-				timer_monitor_process_termination_on_exit := Void
+				destroy_monitoring_of_process_termination_on_exit
 				--FIXME JFIAT:  try to reuse timer object !
 				Application.process_termination
 			end

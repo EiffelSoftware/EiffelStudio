@@ -86,13 +86,22 @@ feature -- Status setting
 			end
 			service := s.substring (1, pos - 1)
 			address := s.substring (pos + 3, s.count)
-			setup_factory
-			if url_function /= Void then 
+			if is_service_supported then 
+				setup_factory
+					check
+						function_set: url_function /= Void
+							-- Because we know that the requested service is
+							-- supported.
+					end
 				url_function.call([])
 				url := url_function.last_result
+			else
+				address := Void
+				service := Void
 			end
 		ensure
-			address_set: is_address_set
+			address_set_if_supported: is_service_supported implies 
+					is_address_set
 		end
 
 	set_default_service (service_name: STRING) is
@@ -239,7 +248,6 @@ invariant
 
 	default_service_specified: default_service /= Void and then
 							not default_service.is_empty
-	url_constraint: is_address_set implies url /= Void
 
 end -- class DATA_RESOURCE_FACTORY_IMPL
 

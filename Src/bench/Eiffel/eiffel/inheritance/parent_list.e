@@ -2,15 +2,23 @@
 
 class PARENT_LIST 
 
-
 inherit
-
 	FIXED_LIST [PARENT_C]
+		redefine
+			make
+		end
 
 creation
-
 	make
 
+feature -- initialization
+
+	make (n: INTEGER) is
+			-- Replace `make' by `make_filled' from FIXED_LIST in order
+			-- to minimize the change on the compiler due to the new FIXED_LIST
+		do
+			make_filled (n)
+		end
 	
 feature 
 

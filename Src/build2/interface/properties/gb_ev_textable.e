@@ -60,8 +60,6 @@ feature -- Access
 	update_attribute_editor is
 			-- Update status of `attribute_editor' to reflect information
 			-- from `objects.first'.
-		local
-			alignment: EV_TEXT_ALIGNMENT
 		do
 			text_entry.change_actions.block
 			text_entry.set_text (first.text)
@@ -73,10 +71,7 @@ feature {GB_XML_STORE} -- Output
 	generate_xml (element: XML_ELEMENT) is
 			-- Generate an XML representation of `Current' in `element'.
 		local
-			alignment: EV_TEXT_ALIGNMENT
-			alignment_text: STRING
 			textable: EV_TEXTABLE
-			default_alignment: EV_TEXT_ALIGNMENT
 		do
 			textable ?= new_instance_of (dynamic_type_from_string (class_name (first)))
 			textable.default_create

@@ -167,7 +167,7 @@ feature -- Creation
 			v_separator_2.set_horizontal (False)
 			v_separator_3.set_horizontal (False)
 			main_split_window.set_proportion (30)
-			bottom_split_window.set_proportion (70)
+			bottom_split_window.set_proportion (75)
 			context_split_window.set_proportion (25)
 		end
 

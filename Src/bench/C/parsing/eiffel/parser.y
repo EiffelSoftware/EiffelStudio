@@ -29,7 +29,8 @@
 #endif
 
 extern char token_str[];
-int fclause_pos;
+int fclause_pos;	/* To memorize the beginning of a feature clause */
+int fbody_pos;		/* To memorize the beginning of a feature body */
 
 #define CR_EMPTY	0
 #define CR_ROUTINE	1
@@ -640,10 +641,10 @@ Type_mark:					/* empty */
 	;
 
 
-Routine:					Obsolete {$<loc>$ = current_location;} 
-							Precondition Local_declarations 
+Routine:					Obsolete {fbody_pos = current_location->start_position;} 
+							Precondition Local_declarations
 							Routine_body Postcondition Rescue TE_END
-								{$$ = create_routine_as($1,$<loc>2->start_position,$3,$4,$5,$6,$7);}
+								{$$ = create_routine_as($1,fbody_pos,$3,$4,$5,$6,$7);}
 	;
 
 Routine_body: 				Internal

@@ -2,4 +2,5 @@ source_path $TESTROOTDIR
 
 test	make-from-string					datetimestring001 tcf string
 
+test	time-duration						duration001 tcf duration
 test	date-duration						duration002 tcf duration

@@ -12,7 +12,6 @@
 */
 
 #include "config.h"
-#include "portable.h"
 
 /* #include <stdio.h>	*/	/* %%zs here, moved <stdio.h> into file.h */
 #include <errno.h>
@@ -81,6 +80,7 @@
 #include <sys/file.h>
 #endif
 
+#include "portable.h"
 #include "except.h"
 #include "plug.h"
 #include "error.h"

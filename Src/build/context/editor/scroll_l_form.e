@@ -69,8 +69,14 @@ feature
 
 	apply is
 		do
-			if not visible_item_count.same_value (context.visible_item_count) then
-				context.set_visible_item_count (visible_item_count.int_value);
+			if not visible_item_count.same_value 
+					(context.visible_item_count) 
+			then
+				if visible_item_count.int_value > 0 then
+					context.set_visible_item_count (visible_item_count.int_value);
+				else
+					reset
+				end
 			end;
 		end;
 

@@ -30,7 +30,6 @@ extern "C" {
 	RT_LNK void (*egc_strmake)(EIF_REFERENCE, EIF_INTEGER);	/* STRING creation feature */
 	RT_LNK void (*egc_strset)(EIF_REFERENCE, EIF_INTEGER);	/* STRING `set_count' feature */
 	RT_LNK void (*egc_arrmake)(EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER);/* ARRAY creation feature */
-	RT_LNK void (*egc_tupmake)(EIF_REFERENCE);	/* TUPLE creation feature */
 	RT_LNK void (*egc_routdisp)(char *, char *, char *, char *, EIF_INTEGER);		/* ROUTINE `set_rout_disp' feature */
 	RT_LNK int egc_str_dtype;				/* Dynamic type for string */
 	RT_LNK int egc_arr_dtype;				/* Dynamic type for ARRAY[ANY] */

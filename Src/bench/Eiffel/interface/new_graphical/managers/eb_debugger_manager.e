@@ -468,6 +468,12 @@ feature -- Status setting
 			end
 		
 			raised := False
+				-- Clear all tool windows from `debugging_window' as we will now rebuild
+				-- the left and right panels. Note that it is only necessary to clear the tool
+				-- windows after debugging, as a number of tools may be docked out that are
+				-- not contained in the standard layout when not debugging so are not hidden
+				-- as a result of rebuilding the panels.
+			debugging_window.remove_all_tool_windows
 				-- Change the state of the debugging window.
 			debugging_window.left_panel.load_from_resource (normal_left_layout)
 			debugging_window.right_panel.load_from_resource (normal_right_layout)

@@ -268,7 +268,8 @@ feature -- Duplication
 feature {NONE} -- Retrieval
 
 	frozen internal_correct_mismatch is
-			-- Called from runtime to peform a proper dynamic dispatch on `correct_mismatch' from MISMATCH_CORRECTOR.
+			-- Called from runtime to perform a proper dynamic dispatch on `correct_mismatch' 
+			-- from MISMATCH_CORRECTOR.
 		local
 			l_corrector: MISMATCH_CORRECTOR
 			l_msg: STRING
@@ -394,6 +395,3 @@ indexing
 			]"
 
 end -- class ANY
-
-
-

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="us-ascii"?>
 <document output="studio" title="Major changes between ISE Eiffel 5.5 and ISE Eiffel 5.6">
 	<meta_data></meta_data>
 	<paragraph>
@@ -5,17 +6,22 @@
 			<size>2</size>What's new
 		</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Implemented once manifest strings. They can be used at the same places where normal manifest strings can be used, e.g.:
+				<code_block><local_variable>s</local_variable> <symbol>:=</symbol> <keyword>once</keyword> <string>"abc"</string>
+<feature_name>io</feature_name>.<feature_name>put_string</feature_name> (<keyword>once</keyword> <string>"Hello World!"</string>)</code_block>
+				Once manifest strings are not created every time they are accessed. Instead one instance is created at the first access and then it is reused for subsequent accesses. In multithreaded application one instance is created for one thread.</item>
+			<item>Supported aligned and non-aligned verbatim strings. Aligned verbatim strings use characters <code><character>[</character></code> and <code><character>]</character></code> in opening and closing sequence respectively, non-aligned verbatim strings &#x2013; <code><character>{</character></code> and <code><character>}</character></code>.</item>
 		</list>
 		<heading><size>2</size>Improvements</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Optimized .NET code generated for <code><keyword>inspect</keyword></code> instruction.</item>
 		</list>
 		<heading>
 			<size>2</size>Changes
 		</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Changed behavior of once routines in .NET  mode from once-per-process to once-per-thread to match behavior in classic mode.</item>
+			<item>Provided project options (<code>old_verbatim_strings</code> and <code>old_verbatim_strings_warning</code>) to support semantics of verbatim strings as in previous versions when they were not left-aligned.</item>
 		</list>
 		<heading>
 			<size>2</size>Bug fixes
@@ -24,7 +30,7 @@
 			<size>3</size>Language issues
 		</heading>
 		<list ordered="false">
-			<item></item>
+			<item>Used <code><character>'%N'</character></code> as an end of line in verbatim strings regardless of the end of line sequence in source code.</item><item>Fixed incorrect handling of negative hexadecimal integer literals.</item>
 		</list>
 		<heading>
 			<size>3</size>Compiler issues
@@ -44,7 +50,9 @@
 		<list ordered="false">
 			<item></item>
 		</list>
-		<heading>	<size>3</size>Store/Retrieve issues</heading>
+		<heading>
+			<size>3</size>Store/Retrieve issues
+		</heading>
 		<list ordered="false">
 			<item></item>
 		</list>

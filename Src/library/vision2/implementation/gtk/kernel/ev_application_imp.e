@@ -12,7 +12,7 @@ class
 	
 	
 inherit
-	EV_GTK_EXTERNALS
+	EV_GTK_GENERAL_EXTERNALS
 	
 	EV_APPLICATION_I
 creation 
@@ -21,7 +21,7 @@ creation
 	
 feature {NONE} -- Initialization
 	
-	make is
+	make (interf: EV_APPLICATION) is
 		do
 			init_windowing
 		end

@@ -1093,7 +1093,6 @@ feature -- Byte code computation
 			in_pass3: in_pass3
 		local
 			byte_code: BYTE_CODE
-			l_inline: INLINE_EXTENSION_I
 		do
 				-- Process byte code
 			byte_code := body.byte_node
@@ -1104,13 +1103,6 @@ feature -- Byte code computation
 				byte_code.set_old_expressions (byte_context.old_expressions)
 			end
 			byte_context.clear_old_expressions
-
-				-- When handling an inline external routine, we need to force a freeze if
-				-- something was changed.
-			l_inline ?= extension
-			if l_inline /= Void then
-				System.set_freeze
-			end
 
 			Tmp_byte_server.put (byte_code)
 		end

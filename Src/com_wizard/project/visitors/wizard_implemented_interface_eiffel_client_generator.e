@@ -41,7 +41,7 @@ feature -- Basic operations
 
 			a_class_name := a_descriptor.eiffel_class_name
 
-			dispatch_interface := (a_descriptor.interface_descriptor.dispinterface and not a_descriptor.interface_descriptor.dual)
+			dispatch_interface := (a_descriptor.interface_descriptor.dispinterface or a_descriptor.interface_descriptor.dual)
 
 			eiffel_writer.set_class_name (a_class_name)
 			eiffel_writer.set_description (a_descriptor.description)

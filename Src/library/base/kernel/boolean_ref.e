@@ -44,7 +44,7 @@ feature -- Element change
 
 feature -- Basic operations
 
-	infix "and" (other: BOOLEAN_REF): BOOLEAN is
+	infix "and" (other: like Current): BOOLEAN is
 			-- Boolean conjunction with `other'
 		require
 			other_exists: other /= Void
@@ -57,7 +57,7 @@ feature -- Basic operations
 			consistent_with_semi_strict: Result implies (Current and then other)
 		end;
 
-	infix "and then" (other: BOOLEAN_REF): BOOLEAN is
+	infix "and then" (other: like Current): BOOLEAN is
 			-- Boolean semi-strict conjunction with `other'
 		require
 			other_exists: other /= Void
@@ -68,7 +68,7 @@ feature -- Basic operations
 			de_morgan: Result = not (not Current or else not other)
 		end;
 
-	infix "implies" (other: BOOLEAN_REF): BOOLEAN is
+	infix "implies" (other: like Current): BOOLEAN is
 			-- Boolean implication of `other'
 			-- (semi-strict)
 		require
@@ -79,14 +79,14 @@ feature -- Basic operations
 			definition: Result = (not Current or else other)
 		end;
 
-	prefix "not" : BOOLEAN_REF is
+	prefix "not" : like Current is
 			-- Negation
 		do
 			!! Result;
-			Result.set_item (not item)
+			Result.set_item ( item)
 		end;
 
-	infix "or" (other: BOOLEAN_REF): BOOLEAN is
+	infix "or" (other: like Current): BOOLEAN is
 			-- Boolean disjunction with `other'
 		require
 			other_exists: other /= Void
@@ -99,7 +99,7 @@ feature -- Basic operations
 			consistent_with_semi_strict: Result implies (Current or else other)
 		end;
 
-	infix "or else" (other: BOOLEAN_REF): BOOLEAN is
+	infix "or else" (other: like Current): BOOLEAN is
 			-- Boolean semi-strict disjunction with `other'
 		require
 			other_exists: other /= Void
@@ -110,7 +110,7 @@ feature -- Basic operations
 			de_morgan: Result = not (not Current and then not other)
 		end;
 
-	infix "xor" (other: BOOLEAN_REF): BOOLEAN is
+	infix "xor" (other: like Current): BOOLEAN is
 			-- Boolean exclusive or with `other'
 		require
 			other_exists: other /= Void

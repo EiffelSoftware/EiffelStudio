@@ -11,72 +11,14 @@ expanded class INTEGER inherit
 
 	INTEGER_REF
 		redefine
-			infix "<",
-			infix "+",
-			infix "-",
-			infix "*",
 			infix "/",
-			infix "^",
-			prefix "+",
-			prefix "-",
-			infix "//",
-			infix "\\"
+			infix "^"
 		end
-
-feature -- Comparison
-
-	infix "<" (other: like Current): BOOLEAN is
-			-- Is `other' greater than current integer?
-		do
-			-- Built-in
-		end;
 
 feature -- Basic operations
 
-	infix "+" (other: like Current): like Current is
-			-- Sum with `other'
-		do
-			-- Built-in
-		end;
-
-	infix "-" (other: like Current): like Current is
-			-- Result of subtracting `other'
-		do
-			-- Built-in
-		end;
-
-	infix "*" (other: like Current): like Current is
-			-- Product by `other'
-		do
-			-- Built-in
-		end;
-
 	infix "/" (other: like Current): DOUBLE is
 			-- Division by `other'
-		do
-			-- Built-in
-		end;
-
-	prefix "+": like Current is
-			-- Unary plus
-		do
-			-- Built-in
-		end;
-
-	prefix "-": like Current is
-			-- Unary minus
-		do
-			-- Built-in
-		end;
-
-	infix "//" (other: like Current): like Current is
-			-- Integer division of Current by `other'
-		do
-			-- Built-in
-		end;
-
-	infix "\\" (other: like Current): like Current is
-			-- Remainder of the integer division of Current by `other'
 		do
 			-- Built-in
 		end;

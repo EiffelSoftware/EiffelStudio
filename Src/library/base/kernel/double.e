@@ -11,64 +11,13 @@ expanded class DOUBLE inherit
 
 	DOUBLE_REF
 		redefine
-			infix "<",
-			infix "+",
-			infix "-",
-			infix "*",
-			infix "/",
-			infix "^",
-			prefix "+",
-			prefix "-"
+			infix "^"
 		end
-
-feature -- Comparison
-
-	infix "<" (other: like Current): BOOLEAN is
-			-- Is `other' greater than current double?
-		do
-			-- Built-in
-		end;
 
 feature -- Basic operations
 
-	infix "+" (other: like Current): like Current is
-			-- Sum with `other'
-		do
-			-- Built-in
-		end;
-
-	infix "-" (other: like Current): like Current is
-			-- Result of subtracting `other'
-		do
-			-- Built-in
-		end;
-
-	infix "*" (other: like Current): like Current is
-			-- Product with `other'
-		do
-			-- Built-in
-		end;
-
-	infix "/" (other: like Current): like Current is
-			-- Division by `other'
-		do
-			-- Built-in
-		end;
-
 	infix "^" (other: NUMERIC): DOUBLE is
 			-- Current double to the power `other'
-		do
-			-- Built-in
-		end;
-
-	prefix "+": like Current is
-			-- Unary plus
-		do
-			-- Built-in
-		end;
-
-	prefix "-": like Current is
-			-- Unary minus
 		do
 			-- Built-in
 		end;

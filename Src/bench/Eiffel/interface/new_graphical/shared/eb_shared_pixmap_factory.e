@@ -15,28 +15,28 @@ feature
 			full_path: FILE_NAME
 			retried: BOOLEAN
 			warning_dialog: EV_WARNING_DIALOG
---			a_coord: TUPLE [INTEGER, INTEGER]
---			a_row, a_column, a_x_offset, a_y_offset: INTEGER
---			a_icon_matrix: EV_PIXMAP
+			a_coord: TUPLE [INTEGER, INTEGER]
+			a_row, a_column, a_x_offset, a_y_offset: INTEGER
+			a_icon_matrix: EV_PIXMAP_I
 		do
 			if not retried then
---				a_coord := pixmap_lookup @ fn
---				if a_coord /= Void then
---						-- We are looking up a 16 by 16 icon
---					a_column := a_coord.integer_32_item (2)
---					a_row := a_coord.integer_32_item (1)
---					a_icon_matrix := studio_icon_matrix
---					a_x_offset := (a_column - 1) * (1 + 16) + 1
---					a_y_offset := (a_row - 1) * (1 + 16) + 1
---					Result := a_icon_matrix.sub_pixmap (create {EV_RECTANGLE}.make (a_x_offset, a_y_offset, 16, 16))
---				else
+				a_coord := pixmap_lookup @ fn
+				if a_coord /= Void then
+						-- We are looking up a 16 by 16 icon
+					a_column := a_coord.integer_32_item (2)
+					a_row := a_coord.integer_32_item (1)
+					a_icon_matrix ?= studio_icon_matrix.implementation
+					a_x_offset := (a_column - 1) * (1 + 16) + 1
+					a_y_offset := (a_row - 1) * (1 + 16) + 1
+					Result := a_icon_matrix.sub_pixmap (create {EV_RECTANGLE}.make (a_x_offset, a_y_offset, 16, 16))
+				else
 						-- Initialize the pathname & load the file
 					create Result
 					create full_path.make_from_string (pixmap_path)
 					full_path.set_file_name (fn)
 					full_path.add_extension (Pixmap_suffix)
 					Result.set_with_named_file (full_path)
---				end
+				end
 			else
 				create warning_dialog.make_with_text (
 					"Cannot read pixmap file:%N" + full_path + ".%N%

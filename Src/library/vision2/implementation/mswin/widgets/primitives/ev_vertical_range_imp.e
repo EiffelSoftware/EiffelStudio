@@ -46,9 +46,6 @@ feature -- Status setting
    			-- Plateform dependant initializations.
    		do
 			internal_set_minimum_width (30)
-			if parent_imp /= Void then
-				notify_change (1)
-			end
  		end
 
 end -- class EV_VERTICAL_RANGE_IMP

@@ -27,9 +27,6 @@ feature -- Status setting
    			-- Plateform dependant initializations.
    		do
 			internal_set_minimum_width (2)
-			if parent_imp /= Void then
-				notify_change (1)
-			end
  		end
 
 feature {NONE} -- Implementation

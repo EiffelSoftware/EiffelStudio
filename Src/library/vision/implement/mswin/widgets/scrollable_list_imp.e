@@ -617,14 +617,18 @@ feature -- Element change
 	merge_right (other: like Current) is
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'.
+		local
+			i: INTEGER
 		do
+			i := index
 			if realized then
 				from
 					other.start
 				until
 					other.after
 				loop
-					private_add (other.item.value, index)
+					private_add (other.item.value, i)
+					i := i + 1
 					other.forth
 				end
 			end

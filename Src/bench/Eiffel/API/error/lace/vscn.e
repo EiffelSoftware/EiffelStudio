@@ -38,11 +38,11 @@ feature
 		do
 			io.error.putstring ("code VSCN: cluster ");
 			io.error.putstring (cluster.path);
-			io.error.putstring ("\n\tfirst class ");
+			io.error.putstring ("%N%Tfirst class ");
 			io.error.putstring (first.class_name);
 			io.error.putstring (" in ");
 			io.error.putstring (first.cluster.path);
-			io.error.putstring ("\n\tsecond class ");
+			io.error.putstring ("%N%Tsecond class ");
 			io.error.putstring (second.class_name);
 			io.error.putstring (" in ");
 			io.error.putstring (second.cluster.path);

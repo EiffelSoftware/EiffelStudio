@@ -6,7 +6,7 @@ class DLE_STATIC_CALLS inherit
 			set_id as set_type_id
 		end;
 
-	LINKED_SET [INTEGER]
+	LINKED_SET [ROUTINE_ID]
 		rename
 			make as linked_set_make
 		end

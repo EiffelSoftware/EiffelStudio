@@ -84,6 +84,12 @@ feature {NONE} -- Implementation
 			redraw_rectangle (x1, y1, x2, y2)
 		end
 
+	flush is
+			-- Redraw the screen immediately (useless with GTK)
+		do
+			-- do nothing
+		end
+
 feature {EV_DRAWABLE_IMP} -- Implementation
 
 	drawable: POINTER is
@@ -114,6 +120,9 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/03 03:59:03  pichery
+--| added feature `flush'
+--|
 --| Revision 1.10  2000/02/22 18:39:38  oconnor
 --| updated copyright date and formatting
 --|
@@ -184,7 +193,8 @@ end -- class EV_DRAWING_AREA_IMP
 --|
 --| Revision 1.6.4.1.2.8  1999/12/06 17:58:26  brendel
 --| Changed creation sequence. We just create the `c_object' now and do
---| not have to worry about the `gc', since that is all handled in EV_DRAWABLE_IMP.
+--| not have to worry about the `gc', since that is all handled in
+--| EV_DRAWABLE_IMP.
 --|
 --| Revision 1.6.4.1.2.7  1999/12/04 00:40:51  brendel
 --| Removed all pixmapable stuff.
@@ -199,7 +209,8 @@ end -- class EV_DRAWING_AREA_IMP
 --| Tried something with creating c_object.
 --|
 --| Revision 1.6.4.1.2.3  1999/12/01 01:02:33  brendel
---| Rearranged externals to GEL or EV_C_GTK. Modified some features that relied on specific things like return value BOOLEAN instead of INTEGER.
+--| Rearranged externals to GEL or EV_C_GTK. Modified some features that relied
+--| on specific things like return value BOOLEAN instead of INTEGER.
 --|
 --| Revision 1.6.4.1.2.2  1999/11/24 22:48:06  brendel
 --| Just managed to compile figure cluster example.

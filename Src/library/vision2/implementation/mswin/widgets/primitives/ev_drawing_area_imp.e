@@ -190,7 +190,12 @@ feature {NONE} -- Implementation
 			reset_brush
 
 				-- Call registered onPaint actions
-			interface.expose_actions.call ([invalid_rect.x, invalid_rect.y, invalid_rect.width, invalid_rect.height])
+			interface.expose_actions.call ([
+				invalid_rect.x,
+				invalid_rect.y,
+				invalid_rect.width,
+				invalid_rect.height
+				])
 
 				-- Switch back the dc fron paint_dc to screen_dc.
 			internal_paint_dc := screen_dc
@@ -200,7 +205,12 @@ feature {NONE} -- Implementation
 	on_size (size_type, a_width, a_height: INTEGER)is
 			-- Wm_size message.
 		do
-			interface.resize_actions.call ([x_position, y_position, a_width, a_height])
+			interface.resize_actions.call ([
+				x_position,
+				y_position,
+				a_width,
+				a_height
+				])
 		end
 
 	clear_and_redraw_rectangle (x1, y1, x2, y2: INTEGER) is
@@ -251,6 +261,16 @@ feature {NONE} -- Implementation
 			invalidate
 		end
 
+	flush is
+			-- Update immediately the screen if needed
+		do
+			--| for better performance, we can't use a rename in the
+			--| inheritance clause instead.
+			--| Not done currently because that make the compiler
+			--| 4.6.010 crashing.
+			update
+		end
+
 	default_style: INTEGER is
 			-- Default style that memories the drawings.
 		do
@@ -262,7 +282,12 @@ feature {NONE} -- Implementation
    			-- Can be redefined to return a user-defined style.
    			-- (from WEL_FRAME_WINDOW)
    		once
-			Result := cs_hredraw + cs_vredraw + cs_dblclks + Cs_owndc + Cs_savebits
+			Result := 
+				cs_hredraw + 
+				cs_vredraw + 
+				cs_dblclks + 
+				Cs_owndc + 
+				Cs_savebits
  		end
 
 feature {NONE} -- Feature that should be directly implemented by externals
@@ -394,16 +419,36 @@ feature -- Drawing primitives
 			end
 		end
 
-	draw_arc (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+	draw_arc (
+		a_x, 
+		a_y,
+		a_vertical_radius,
+		a_horizontal_radius: INTEGER;
+		a_start_angle,
+		an_aperture: REAL) is
 			-- Lock the device context, call precursor
 			-- and release the device context.
 		do
 			if not in_paint then
 				dc.get
-				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
+				Precursor (
+					a_x,
+					a_y,
+					a_vertical_radius,
+					a_horizontal_radius,
+					a_start_angle,
+					an_aperture
+				)
 				dc.release
 			else
-				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
+				Precursor (
+					a_x,
+					a_y,
+					a_vertical_radius,
+					a_horizontal_radius,
+					a_start_angle,
+					an_aperture
+				)
 			end
 		end
 
@@ -459,16 +504,19 @@ feature -- Drawing primitives
 			end
 		end
 
-	draw_pie_slice (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+	draw_pie_slice (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER;
+				   	a_start_angle, an_aperture: REAL) is
 			-- Lock the device context, call precursor
 			-- and release the device context.
 		do
 			if not in_paint then
 				dc.get
-				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
+				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius,
+							a_start_angle, an_aperture)
 				dc.release
 			else
-				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
+				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius,
+							a_start_angle, an_aperture)
 			end
 		end
 
@@ -511,16 +559,19 @@ feature -- Drawing primitives
 			end
 		end
 
-	fill_pie_slice (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER; a_start_angle, an_aperture: REAL) is
+	fill_pie_slice (a_x, a_y, a_vertical_radius, a_horizontal_radius: INTEGER;
+				   	a_start_angle, an_aperture: REAL) is
 			-- Lock the device context, call precursor
 			-- and release the device context.
 		do
 			if not in_paint then
 				dc.get
-				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
+				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, 
+							a_start_angle, an_aperture)
 				dc.release
 			else
-				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius, a_start_angle, an_aperture)
+				Precursor (a_x, a_y, a_vertical_radius, a_horizontal_radius,
+							a_start_angle, an_aperture)
 			end
 		end
 
@@ -559,6 +610,9 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.36  2000/03/03 03:57:30  pichery
+--| added feature `flush'
+--|
 --| Revision 1.35  2000/02/25 01:08:20  pichery
 --| Added support for resize_actions to Drawing areas.
 --|
@@ -588,7 +642,8 @@ end -- class EV_DRAWING_AREA_IMP
 --| released
 --|
 --| Revision 1.28  2000/02/16 18:08:52  pichery
---| implemented the newly added features: redraw_rectangle, clear_and_redraw, clear_and_redraw_rectangle
+--| implemented the newly added features: redraw_rectangle, clear_and_redraw, 
+--| clear_and_redraw_rectangle
 --|
 --| Revision 1.26.10.11  2000/01/29 01:05:03  brendel
 --| Tweaked inheritance clause.
@@ -613,7 +668,8 @@ end -- class EV_DRAWING_AREA_IMP
 --| Changed implementation of colors.
 --|
 --| Revision 1.26.10.4  1999/12/17 00:41:32  rogers
---| Altered to fit in with the review branch. Altered to compile, as last CVS commit of these files would not compile at all.
+--| Altered to fit in with the review branch. Altered to compile, as last CVS
+--| commit of these files would not compile at all.
 --|
 --| Revision 1.26.10.3  1999/12/08 17:34:24  brendel
 --| Commented out old inheritance directives.
@@ -624,7 +680,8 @@ end -- class EV_DRAWING_AREA_IMP
 --| Commented out all pixmapable features since drawing area is not pixmapable
 --| anymore.
 --| Improved indexing clause. Moved internal `note' to comment in `make'.
---| Commmented out color setting routines, since that is handled in EV_DRAWING_AREA
+--| Commmented out color setting routines, since that is handled in
+--| EV_DRAWING_AREA
 --| Needs implementation of new events!
 --|
 --| Revision 1.26.10.2  1999/12/07 23:40:07  rogers

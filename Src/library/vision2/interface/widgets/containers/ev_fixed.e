@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision fixed. Invisible container that allows unlimited number of other widgets to be put inside it. The location of each widget inside is specified by the coordinates of the widget."
 	status: "See notice at end of class"
@@ -19,7 +18,6 @@ inherit
 		end
 	
 creation
-	
 	make
 	
 feature {NONE} -- Initialization
@@ -28,7 +26,7 @@ feature {NONE} -- Initialization
 			-- Create a fixed widget with, `par' as
 			-- parent
 		do
-			!EV_FIXED_IMP!implementation.make (par)
+			!EV_FIXED_IMP!implementation.make
 			widget_make (par)
 		end
 

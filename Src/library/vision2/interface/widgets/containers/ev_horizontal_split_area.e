@@ -11,7 +11,6 @@ class
 	EV_HORIZONTAL_SPLIT_AREA
 
 inherit
-
 	EV_SPLIT_AREA
 		redefine
 			make,			
@@ -19,7 +18,6 @@ inherit
 		end
 	
 creation
-	
 	make
 	
 feature {NONE} -- Initialization
@@ -27,7 +25,7 @@ feature {NONE} -- Initialization
         make (par: EV_CONTAINER) is
                         -- Create a widget with, `par' as parent
 		do
-			!EV_HORIZONTAL_SPLIT_AREA_IMP!implementation.make (par)
+			!EV_HORIZONTAL_SPLIT_AREA_IMP!implementation.make
 			widget_make (par)
 		end	
 	

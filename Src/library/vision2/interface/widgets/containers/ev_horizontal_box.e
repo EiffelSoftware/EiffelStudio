@@ -1,5 +1,4 @@
 indexing
-
 	description: 
 		"EiffelVision horizontal box."
 	status: "See notice at end of class"
@@ -11,7 +10,6 @@ class
 	EV_HORIZONTAL_BOX
 
 inherit
-
 	EV_BOX
 		redefine
 			make,			
@@ -19,7 +17,6 @@ inherit
 		end
 	
 creation
-	
 	make
 	
 feature {NONE} -- Initialization
@@ -28,7 +25,7 @@ feature {NONE} -- Initialization
                         -- Create an horizontal box with `par' as
                         -- parent.
 		do
-			!EV_HORIZONTAL_BOX_IMP!implementation.make (par)
+			!EV_HORIZONTAL_BOX_IMP!implementation.make
 			widget_make (par)
 		end	
 	

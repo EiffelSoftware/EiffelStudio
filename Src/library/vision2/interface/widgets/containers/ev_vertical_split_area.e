@@ -7,10 +7,10 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EV_VERTICAL_SPLIT_AREA
+class
+	EV_VERTICAL_SPLIT_AREA
 
 inherit
-
 	EV_SPLIT_AREA 
 		redefine
 			make,
@@ -18,16 +18,15 @@ inherit
 		end
 	
 creation
-	
 	make
 	
 feature {NONE} -- Initialization
 
         make (par: EV_CONTAINER) is
-                        -- Create a fixed widget with, `par' as
-                        -- parent
+			-- Create a fixed widget with, `par' as
+			-- parent
 		do
-			!EV_VERTICAL_SPLIT_AREA_IMP!implementation.make (par)
+			!EV_VERTICAL_SPLIT_AREA_IMP!implementation.make
 			widget_make (par)
 		end
 			

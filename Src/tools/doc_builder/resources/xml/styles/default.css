@@ -58,7 +58,7 @@ td
 	background:#eeedde;	
 }
 
-td.header_filler
+td.header_filler, td.bordered_cell
 {	
 	text-align: right;
 	background-color: #6699cc;
@@ -75,6 +75,7 @@ td.navigation
 	text-align: left;
 	padding-left: 15px;
 	margin: 0px 0px 0px 0px;
+	background:white;
 }
 
 td.product_type
@@ -87,6 +88,7 @@ td.product_type
 td.title_style
 {
 	padding-left: 20px;	
+	background: white;
 }
 
 a 
@@ -124,16 +126,6 @@ h4, h5, h6
 {
 	font-size: 100%;
 	font-style: italic;
-}
-
-ol, ul 
-{
-	margin: 5px 5px 15px 5px;
-}
-
-li 
-{
-	margin: 5px 5px 5px 5px;
 }
 
 pre, code, .code 
@@ -265,6 +257,8 @@ a.feature:hover
 .local_variable, .local_variable_quoted 
 {
 	font-family: verdana;
+	color: #006400;
+	font-style: italic;
 }
 
 .generic, .generics 
@@ -380,6 +374,8 @@ a.block_feature:hover
 .block_local_variable, .block_local_variable_quoted 
 {
 	font-family: courier new, courier, mono;
+	color: #006400;
+	font-style: italic;
 }
 
 .block_generic, .block_generics 

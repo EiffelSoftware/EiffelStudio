@@ -109,7 +109,6 @@ feature {NONE} -- Implementation
 		local
 			cecil_call, arguments, variables, out_value, free_object: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
-			pointed_data_type_descriptor: WIZARD_POINTED_DATA_TYPE_DESCRIPTOR
 		do
 			Result := clone (Ecatch)
 
@@ -136,8 +135,7 @@ feature {NONE} -- Implementation
 					visitor.visit (func_desc.arguments.item.type)
 
 					if is_paramflag_fout (func_desc.arguments.item.flags) then
-						pointed_data_type_descriptor ?= func_desc.arguments.item.type
-						if pointed_data_type_descriptor = Void then
+						if not visitor.is_pointed then
 			 				message_output.add_warning (Current, message_output.Not_pointer_type)
 						end							
 						variables.append (out_variable_set_up (func_desc.arguments.item.name, visitor))
@@ -202,8 +200,7 @@ feature {NONE} -- Implementation
 				if visitor.c_type.is_equal (Void_c_keyword) then
 					cecil_call := cecil_procedure_set_up
 				else
-					pointed_data_type_descriptor ?= func_desc.return_type
-					cecil_call := cecil_function_set_up (visitor, pointed_data_type_descriptor /= Void)
+					cecil_call := cecil_function_set_up (visitor)
 				end
 	
 				arguments.append (Close_parenthesis)

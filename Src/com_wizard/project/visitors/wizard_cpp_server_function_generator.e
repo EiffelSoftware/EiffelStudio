@@ -110,7 +110,7 @@ feature {NONE} -- Implementation
 						return_value.append (return_value_set_up (func_desc.arguments.item.name, func_desc.arguments.item.type))
 						return_value.append (New_line_tab)
 
-						cecil_call.append (cecil_function_set_up (visitor, FALSE))
+						cecil_call.append (cecil_function_set_up (visitor))
 
 						if not visitor.is_basic_type then
 							protect_object := clone (Eif_object)
@@ -234,7 +234,7 @@ feature {NONE} -- Implementation
 				Result.append (Close_parenthesis)
 
 				Result.append (arg_name)
-			elseif is_boolean (visitor.vt_type) then
+			elseif is_boolean (visitor.vt_type) and not visitor.is_pointed then
 				Result.append (Eif_boolean)
 				Result.append (Space)
 				Result.append (Tmp_clause)
@@ -422,7 +422,7 @@ feature {NONE} -- Implementation
 				Result.append (visitor.ec_function_name)
 				Result.append (Space_open_parenthesis)
 
-				if is_boolean (visitor.vt_type) then
+				if is_boolean (visitor.vt_type) and not visitor.is_pointed then
 					Result.append (Tmp_clause)
 					Result.append (arg_name)
 				else
@@ -476,7 +476,7 @@ feature {NONE} -- Implementation
 			Result.append (Eiffel_procedure_variable_name)
 		end
 
-	cecil_function_set_up (visitor: WIZARD_DATA_TYPE_VISITOR; pointed_type: BOOLEAN): STRING is
+	cecil_function_set_up (visitor: WIZARD_DATA_TYPE_VISITOR): STRING is
 			-- Code to set up eif_function call
 		require
 			non_void_visitor: visitor /= Void
@@ -501,7 +501,7 @@ feature {NONE} -- Implementation
 					Result.append (New_line_tab)
 					Result.append (Eif_double)
 				end
-			elseif is_boolean (visitor.vt_type) and not pointed_type then
+			elseif is_boolean (visitor.vt_type) and not visitor.is_pointed then
 				Result := cecil_function_code (Eif_boolean_function, Eif_boolean_function_name)
 				Result.append (New_line_tab)
 				Result.append (Eif_boolean)

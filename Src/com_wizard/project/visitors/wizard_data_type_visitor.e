@@ -374,6 +374,14 @@ feature -- Element change
 			valid_result: is_basic_type = a_boolean
 		end
 
+	set_pointed_type (a_boolean: BOOLEAN) is
+			-- Set `is_pointed' with `a_boolean'.
+		do
+			is_pointed := a_boolean
+		ensure
+			valid_result: is_pointed = a_boolean
+		end
+
 	set_basic_type_ref (a_boolean: BOOLEAN) is
 			-- Set `is_basic_type_ref' with `a_boolean'.
 		do

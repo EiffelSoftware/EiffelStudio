@@ -756,9 +756,16 @@ feature {NONE} -- Implementation
 
 	Generated_resource_file: STRING is 
 			-- Resource file content
+		local
+			str_buffer: STRING
 		do
 			Result := "1 typelib "
-			Result.append (Shared_wizard_environment.type_library_file_name)
+			Result.append (Double_quote)
+			str_buffer := clone (Shared_wizard_environment.type_library_file_name)
+			str_buffer.replace_substring_all ("%H", "%H%H")
+
+			Result.append (str_buffer)
+			Result.append (Double_quote)
 		end
 
 	Resource_file_name: STRING is

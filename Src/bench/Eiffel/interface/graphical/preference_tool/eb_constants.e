@@ -60,7 +60,7 @@ feature {NONE} -- Resources
 	Interface_names: INTERFACE_NAMES is
 			-- All names used in the interface
 		once
-			!! Result.make
+			!! Result
 		end
 
 end -- class EB_CONSTANTS

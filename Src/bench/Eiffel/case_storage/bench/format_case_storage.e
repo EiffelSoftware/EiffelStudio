@@ -23,11 +23,13 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (ow: like output_window; rew: like reverse_engineering_window) is
+	make (ow: like output_window; rew: like reverse_engineering_window;
+			generate_all_clusters: BOOLEAN) is
 			-- Set `output_window' to `ow'.
 		do
 			output_window := ow
 			reverse_engineering_window := rew
+			generate_all := generate_all_clusters
 		end;
 
 feature -- Access
@@ -36,6 +38,11 @@ feature -- Access
 
 	reverse_engineering_window: DEGREE_OUTPUT
 			-- Reverse engineering window
+
+	generate_all: BOOLEAN
+			-- Do we generate all the clusters?
+
+	list_clusters : ARRAYED_LIST [CLUSTER_I]
 
 feature -- Execution
 
@@ -50,6 +57,7 @@ feature -- Execution
 			fn: FILE_NAME;
 			prev_class: CLASS_C;
 			prev_cluster: CLUSTER_I
+			case_tool: CASE_W
 		do
 			if not rescued then
 				if not Workbench.system_defined then
@@ -80,7 +88,11 @@ feature -- Execution
 								reset_format_booleans;
 								set_order_same_as_text;
 								initialize_view_ids;
-								process_clusters;
+								if generate_all then
+									process_clusters;
+								else
+									process_specific_clusters
+								end
 								Reverse_engineering_window.put_start_reverse_engineering (System.classes.count);
 								convert_to_case_format;
 								remove_old_classes;
@@ -120,6 +132,21 @@ feature -- Execution
 				rescued := True;
 				retry
 			end;
+		end
+
+feature -- Update
+
+	set_list_clusters (l: LINKED_LIST [CLUSTER_I]) is
+		do
+			!! list_clusters.make_filled (l.count)
+			from 
+				l.start
+			until 
+				l.after
+			loop
+				list_clusters.extend (l.item)
+				l.forth
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -228,6 +255,31 @@ feature {NONE} -- Implementation
 			create_cluster_hierarchy (root_cluster_info, Eiffel_system.sub_clusters);	
 		end;
 
+	process_specific_clusters is
+		local
+			list: SORTED_TWO_WAY_LIST [CLUSTER_I];
+			cluster_names_list: LINKED_LIST [STRING];
+			other_cluster_info: like root_cluster_info;
+			parent_cluster_info: like root_cluster_info;
+			s_name: STRING;
+			root_file_name, file_name: STRING;
+			full_path: DIRECTORY_NAME
+		do
+			!! root_cluster_info.make;
+			-- Need to covert to a string since
+			-- the dynamic type of cluster name
+			-- in cluster_i is ID_SD.
+			!! s_name.make (0);
+			s_name.append (System.system_name);
+			s_name.to_upper;
+			root_cluster_info.set_name (s_name);
+			!! root_file_name.make (s_name.count);
+			root_file_name.append (s_name);
+			root_file_name.to_lower;
+			root_cluster_info.set_file_name (root_file_name);
+			create_cluster_hierarchy (root_cluster_info, list_clusters);
+		end
+
 	create_cluster_hierarchy (a_parent_info: CASE_CLUSTER_INFO;
 				sub_clusters: ARRAYED_LIST [CLUSTER_i]) is
 			-- Create the cluster hierarchy for processing EiffelCase
@@ -243,13 +295,15 @@ feature {NONE} -- Implementation
 				sub_clusters.after
 			loop
 				cluster_i := sub_clusters.item;
-				paths := extract_directories (cluster_i.path);
-				!! other_cluster_info.make;
-				other_cluster_info.set_file_name (paths.last);
-				other_cluster_info.set_cluster_i (cluster_i);
-				a_parent_info.add_cluster (other_cluster_info);
-				create_cluster_hierarchy (other_cluster_info, 
+				if cluster_i /= Void then
+					paths := extract_directories (cluster_i.path);
+					!! other_cluster_info.make;
+					other_cluster_info.set_file_name (paths.last);
+					other_cluster_info.set_cluster_i (cluster_i);
+					a_parent_info.add_cluster (other_cluster_info);
+					create_cluster_hierarchy (other_cluster_info, 
 					cluster_i.sub_clusters);
+				end
 				sub_clusters.forth
 			end;
 		end;

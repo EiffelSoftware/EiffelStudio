@@ -81,14 +81,14 @@ feature -- Access
 			Result := C.gtk_adjustment_struct_step_increment (vertical_adjustment).rounded
 		end
 
-	is_horizontal_scrollbar_visible: BOOLEAN is
-			-- Should horizontal scrollbar be displayed?
+	is_horizontal_scroll_bar_visible: BOOLEAN is
+			-- Should horizontal scroll bar be displayed?
 		do
 			Result := horizontal_policy = C.GTK_POLICY_ALWAYS_ENUM
 		end
 
-	is_vertical_scrollbar_visible: BOOLEAN is
-			-- Should vertical scrollbar be displayed?
+	is_vertical_scroll_bar_visible: BOOLEAN is
+			-- Should vertical scroll bar be displayed?
 		do
 			Result := vertical_policy = C.GTK_POLICY_ALWAYS_ENUM
 		end
@@ -130,26 +130,26 @@ feature -- Element change
 			end
 		end
 
-	show_horizontal_scrollbar is
-			-- Display horizontal scrollbar.
+	show_horizontal_scroll_bar is
+			-- Display horizontal scroll bar.
 		do
 			set_scrolling_policy (C.GTK_POLICY_ALWAYS_ENUM, vertical_policy)			
 		end
 
-	hide_horizontal_scrollbar is
-			-- Do not display horizontal scrollbar.
+	hide_horizontal_scroll_bar is
+			-- Do not display horizontal scroll bar.
 		do
 			set_scrolling_policy (C.GTK_POLICY_NEVER_ENUM, vertical_policy)
 		end
 
-	show_vertical_scrollbar is
-			-- Display vertical scrollbar.
+	show_vertical_scroll_bar is
+			-- Display vertical scroll bar.
 		do
 			set_scrolling_policy (horizontal_policy, C.GTK_POLICY_ALWAYS_ENUM)
 		end
 
-	hide_vertical_scrollbar is
-			-- Do not display vertical scrollbar.
+	hide_vertical_scroll_bar is
+			-- Do not display vertical scroll bar.
 		do
 			set_scrolling_policy (horizontal_policy, C.GTK_POLICY_NEVER_ENUM)
 		end
@@ -218,6 +218,9 @@ end -- class EV_SCROLLABLE_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.12  2000/04/22 00:21:47  brendel
+--| scrollbar -> scroll_bar.
+--|
 --| Revision 1.11  2000/03/21 22:39:43  king
 --| Made c_object an event_box
 --|

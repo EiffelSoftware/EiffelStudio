@@ -4,10 +4,10 @@ indexing
 	revision: "$Revision$"
 
 deferred class
-	ISE_SERVER [G -> SERVER_INFO, T -> IDABLE, H -> COMPILER_ID]
+	ISE_SERVER [G -> SERVER_INFO, T -> IDABLE]
 
 inherit
-	EXTEND_TABLE [G, H]
+	EXTEND_TABLE [G, INTEGER]
 		rename
 			make as tbl_make,
 			item as tbl_item,
@@ -40,20 +40,20 @@ feature -- Initialization
 
 feature -- Access
 
-	has, frozen server_has (i: H): BOOLEAN is
+	has, frozen server_has (i: INTEGER): BOOLEAN is
 			-- Does the server contain an element of id `i'?
 		do
-			Result := tbl_has (updated_id(i))
+			Result := tbl_has (i)
 		end
 
-	server_item, item (an_id: H): T is
+	server_item, item (an_id: INTEGER): T is
 			-- Object of id `an_id'
 		require
 			an_id_in_table: has (an_id)
 		deferred
 		end
 		
-	disk_item (an_id: H):T is
+	disk_item (an_id: INTEGER):T is
 			-- Object of id `an_id'
 		require
 			an_id_in_table: has (an_id)
@@ -62,47 +62,12 @@ feature -- Access
 
 feature -- Removal
 	
-	remove (an_id: H) is
+	remove (an_id: INTEGER) is
 			-- Remove an element from the Server
 		deferred
 		end
 
 feature -- Update
-
-	updated_id (i: H): H is
-		do
-			Result := i	
-		end
-
-	ontable: O_N_TABLE [H] is
-			-- Mapping table between old id s and new ids.
-			-- Used by `change_id'
-			-- By default, this mechanism is disabled, hence the
-			-- `False' precondition
-		require
-			False
-		do
-		end
-
-	change_id (new_value, old_value: H) is
-		require
-			Has_old: has (old_value)
-		local
-			info: G
-			temp: T
-			real_id: H
-		do
-			real_id := updated_id (old_value)
-
-			temp := cache.item_id (real_id)
-			if temp /= Void then
-				temp.set_id (new_value)
-			end
-
-			info := tbl_item (real_id)
-			tbl_remove (real_id)
-			tbl_put (info, new_value)
-		end
 
 	clear is
 			-- Clear the server.
@@ -121,7 +86,7 @@ feature -- Server size configuration
 
 feature -- Implementation
 
-	cache: CACHE [T, H] is
+	cache: CACHE [T] is
 			-- Server cache, to make things faster
 		deferred
 		end

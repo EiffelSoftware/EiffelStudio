@@ -96,25 +96,26 @@ feature -- Output
 			Result.append (">>")
 		end
 
-	append_to (st: STRUCTURED_TEXT) is
+	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
 		local
 			i: INTEGER
 			local_copy: like Current
 		do
-			st.add_string ("<<")
+			st.add (ti_L_array)
 			from
 				local_copy := Current
 				i := 1
 			until
 				i > count
 			loop
-				local_copy.item (i).append_to (st)
+				local_copy.item (i).ext_append_to (st, f)
 				if i /= count then
-					st.add_string (", ")
+					st.add (ti_Comma)
+					st.add_space
 				end
 				i := i + 1
 			end
-			st.add_string (">>")
+			st.add (ti_R_array)
 		end
 
 feature {COMPILER_EXPORTER}
@@ -130,7 +131,7 @@ feature {COMPILER_EXPORTER}
 			gen_type ?= other
 			if
 				gen_type /= Void and then
-				equal (gen_type.base_class_id, System.array_id)
+				gen_type.base_class_id = System.array_id
 			then
 				generic_param := gen_type.generics.item (1)
 				from
@@ -143,8 +144,8 @@ feature {COMPILER_EXPORTER}
 				loop
 					type_a := local_copy.item (i)
 					Result := type_a.conform_to (generic_param) 
-								and then not (type_a.is_expanded 
-									and not generic_param.is_expanded)
+								and then not (type_a.is_true_expanded 
+									and not generic_param.is_true_expanded)
 					i := i + 1
 				end
 			end
@@ -200,18 +201,4 @@ feature {COMPILER_EXPORTER}
 			False
 		end
 	
-feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
-
-	storage_info (classc: CLASS_C): S_GEN_TYPE_INFO is
-			-- Storage info for Current type in class `classc'
-		do
-			Result := last_type.storage_info (classc)
-		end
-
-	storage_info_with_name (classc: CLASS_C): S_GEN_TYPE_INFO is
-			-- Storage info for Current type in class `classc'
-		do
-			Result := last_type.storage_info_with_name (classc)
-		end
-
 end -- class MULTI_TYPE_A

@@ -1,15 +1,15 @@
--- Cache for byte code routine
+indexing
+	description: "Cache for byte code routine indexed by body_index"
+	date: "$Date: "
+	revision: "$Revision$"
 
 class BYTE_CACHE 
 
 inherit
-
-	CACHE [BYTE_CODE, BODY_ID]
+	CACHE [BYTE_CODE]
 
 creation
-
 	make
-
 	
 feature 
 

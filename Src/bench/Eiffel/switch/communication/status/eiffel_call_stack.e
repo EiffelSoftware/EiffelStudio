@@ -1,8 +1,6 @@
 indexing
-
-	description: 
-		"Eiffel call stack for the stopped application.";
-	date: "$Date$";
+	description: "Eiffel call stack for the stopped application."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class EIFFEL_CALL_STACK
@@ -38,9 +36,10 @@ feature -- Output
 	display_stack (st: STRUCTURED_TEXT) is
 			-- Display callstack in `st'.
 		local
-			stack_num, i: INTEGER;
+			stack_num, i: INTEGER
 			cs: CALL_STACK_ITEM
 		do
+			debug ("DEBUGGER_TRACE"); io.error.putstring ("%TEIFFEL_CALL_STACK: Displaying stack %N"); end
 			st.add_new_line;
 			st.add_string ("Call stack:");
 			st.add_new_line;
@@ -61,7 +60,11 @@ feature -- Output
 			st.add_column_number (26);
 			st.add_string ("-------");
 			st.add_new_line;
+
+			debug ("DEBUGGER_TRACE"); io.error.putstring ("%TEIFFEL_CALL_STACK: getting stack number %N"); end
 			stack_num := Application.current_execution_stack_number;
+
+			debug ("DEBUGGER_TRACE"); io.error.putstring ("%TEIFFEL_CALL_STACK: processing %N"); end
 			from
 				start;
 				i := 1
@@ -80,6 +83,7 @@ feature -- Output
 				i := i + 1;
 			end;
 			st.add_new_line
+			debug ("DEBUGGER_TRACE"); io.error.putstring ("%TEIFFEL_CALL_STACK: end displaying call stack %N"); end
 		end;
 
 feature {NONE} -- Initialization
@@ -88,41 +92,43 @@ feature {NONE} -- Initialization
 			-- Fill where with the calls stack
 			-- where is left empty if there is an error
 		local
-			call: CALL_STACK_ELEMENT
+			call	: CALL_STACK_ELEMENT
+			level	: INTEGER
 		do
-debug ("DEBUGGER_TRACE")
-	io.error.putstring ("%TCreating Eiffel Stack (EIFFEL_CALL_STACK)%N")
-end
-			error_occurred := False;
-			list_make;
+			debug ("DEBUGGER_TRACE"); io.error.putstring ("%TEIFFEL_CALL_STACK: Creating Eiffel Stack%N"); end
+			error_occurred := False
+			list_make
+	
 			from
-				request_dump;
-				!! call.make;
+				request_dump
+				level := 1			-- we start from the top of the call stack.
+				create call.make(level)
 			until
 				call.is_exhausted or call.error
 			loop
-				extend (call);
-				!! call.make;
-			end;
+				extend (call)
+				level := level + 1
+				create call.make(level)
+			end
+
 			if call.error then
-				error_occurred := True;
-				wipe_out;
-			end;
-			call := void;
-				-- Convert the physical addresses received from
-				-- application to hector addresses.
-			from
-				start;
-			until
-				after
-			loop
-				item.set_hector_addr;
+				error_occurred := True
+				wipe_out
+			end
+
+			debug ("DEBUGGER_TRACE");
+				io.error.putstring ("%TEIFFEL_CALL_STACK: Finished creating Eiffel Stack%N");
+				io.error.putstring ("%TEIFFEL_CALL_STACK: Adopting callstack objects%N");
+			end
+			
+				-- Now we adopt each object situated on the callstack
+			from start until after loop
+				item.set_hector_addr_for_current_object
 				forth
-			end;
-debug ("DEBUGGER_TRACE")
-	io.error.putstring ("%TFinished creating Eiffel Stack:%N")
-end
-		end;
+			end
+						
+			debug ("DEBUGGER_TRACE"); io.error.putstring ("%TEIFFEL_CALL_STACK: Finished Adopting callstack objects%N"); end
+		end
 
 feature {NONE} -- Externals
 
@@ -133,6 +139,6 @@ feature {NONE} -- Externals
 
 invariant
 
-	empty_if_error: error_occurred implies empty
+	empty_if_error: error_occurred implies is_empty
 
 end -- class EIFFEL_CALL_STACK

@@ -9,7 +9,7 @@ inherit
 	BASIC_A
 		redefine
 			is_double, associated_class, same_as,
-			is_numeric, heaviest, internal_conform_to
+			is_numeric, weight, internal_conform_to
 		end
 
 feature -- Property
@@ -47,11 +47,9 @@ feature {COMPILER_EXPORTER}
 	is_numeric: BOOLEAN is True
 			-- Is the current type a numeric type ?
 
-	heaviest (type: TYPE_A): TYPE_A is
-			-- Heaviest numeric type for balancing rule
-		do	
-			Result := Current
-		end
+	weight: INTEGER is 16
+			-- Weight of Current.
+			-- Used to evaluate type of an expression with balancing rule.
 
 	type_i: DOUBLE_I is
 			-- C type

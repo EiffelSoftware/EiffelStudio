@@ -8,7 +8,7 @@ inherit
 		redefine
 			used, generate, parent, set_parent,
 			free_register, print_register, propagate,
-			type, print_register_by_name
+			type
 		end;
 
 creation
@@ -65,28 +65,11 @@ feature
 			if context.result_used then
 					-- Once function have their result recorded into the GC,
 					-- so it's useless to use an l[] variable.
-				if c_type.is_pointer then
-					print_register_by_name;
-				else
-					buffer.putstring (register_name);
-				end;
+				buffer.putstring (register_name);
 			else
 				type_i := real_type (context.byte_code.result_type);
 				type_i.c_type.generate_cast (buffer);
 				buffer.putchar ('0');
-			end;
-		end;
-
-	print_register_by_name is
-			-- Print "Result" in once functions, regardless of the type of
-			-- the result, otherwise call the standard function.
-			-- The reason is that once function record their Result variable
-			-- into the GC, so there is no need to use an l[] function.
-		do
-			if not context.byte_code.is_once then
-				{RESULT_B} Precursor;
-			else
-				buffer.putstring (register_name);
 			end;
 		end;
 

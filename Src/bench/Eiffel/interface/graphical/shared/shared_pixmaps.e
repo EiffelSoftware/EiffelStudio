@@ -28,6 +28,16 @@ feature -- Access
 			Result := pixmap_file_content ("clr_bp")
 		end
 
+	bm_Disable_breakpoints: PIXMAP is
+		once
+			Result := pixmap_file_content ("dis_bp")
+		end
+
+	bm_Debug_edit_object: PIXMAP is
+		once
+			Result := pixmap_file_content ("editobj")
+		end
+
 	bm_Graph: PIXMAP is
 		once
 			Result := pixmap_file_content ("graph")
@@ -88,9 +98,19 @@ feature -- Access
 			Result := pixmap_file_content ("current")
 		end
 
+	bm_Debug_dynamic_eval: PIXMAP is
+		once
+			Result := pixmap_file_content ("dbg_dyneval")
+		end
+
 	bm_Debug_quit: PIXMAP is
 		once
 			Result := pixmap_file_content ("dbgquit")
+		end
+
+	bm_Debug_interrupt: PIXMAP is
+		once
+			Result := pixmap_file_content ("dbgstop")
 		end
 
 	bm_Debug_run: PIXMAP is
@@ -121,6 +141,11 @@ feature -- Access
 	bm_Exec_step: PIXMAP is
 		once
 			Result := pixmap_file_content ("execstep")
+		end
+
+	bm_Exec_into: PIXMAP is
+		once
+			Result := pixmap_file_content ("execinto")
 		end
 
 	bm_Exec_stop: PIXMAP is
@@ -435,14 +460,9 @@ feature {NONE} -- Update
 			end
 		end
 
-	Eiffel_installation_dir_name: STRING is
-		once
-			Result := Execution_environment.get ("EIFFEL4")
-		end;
-
 	Bitmap_path: DIRECTORY_NAME is
 		once
-			!! Result.make_from_string (Eiffel_installation_dir_name);
+			!! Result.make_from_string ((create {EIFFEL_ENV}).Eiffel_installation_dir_name);
 			Result.extend_from_array (<<"bench", "bitmaps">>);
 			Result.extend (Pixmap_suffix)
 		end;

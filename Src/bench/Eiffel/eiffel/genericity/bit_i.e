@@ -53,10 +53,10 @@ feature
 		local
 			other_bit: BIT_I
 		do
-			other_bit ?= other
-			Result := 	other_bit /= Void
-						and then
-						size = other_bit.size
+			if other.is_bit then
+				other_bit ?= other
+				Result := other_bit /= Void and then size = other_bit.size
+			end
 		end
 
 	description: BITS_DESC is
@@ -73,7 +73,7 @@ feature
 			buffer.putint (size)
 		end
 
-	c_string: STRING is "char *"
+	c_string: STRING is "EIF_REFERENCE"
 			-- String generated for the type.
 
 	union_tag : STRING is "rarg"
@@ -83,30 +83,6 @@ feature
 
 	separate_send_macro: STRING is "not_implemented"
 			-- String generated to return the result of a separate call
-
-	generate (buffer: GENERATION_BUFFER) is
-			-- Generate C type in `buffer'.
-		do
-			buffer.putstring ("char *")
-		end
-
-	generate_cast (buffer: GENERATION_BUFFER) is
-			-- Generate C cast in `buffer'.
-		do
-			buffer.putstring ("(char *) ")
-		end
-
-	generate_access_cast (buffer: GENERATION_BUFFER) is
-			-- Generate access C cast in `buffer'.
-		do
-			buffer.putstring ("(char **) ")
-		end
-
-	generate_size (buffer: GENERATION_BUFFER) is
-			-- Generate size of C type
-		do
-			buffer.putstring ("sizeof(EIF_REFERENCE)")
-		end
 
 	hash_code: INTEGER is
 			-- Hash code for current type
@@ -153,15 +129,14 @@ feature
 
 	type_a: BITS_A is
 		do
-			!!Result
-			Result.set_bit_count (size)
+			create Result.make (size)
 		end
 
 feature -- Generic conformance
 
 	generated_id (final_mode : BOOLEAN) : INTEGER is
 		do
-			Result := -7        -- Code for BITs
+			Result := Bit_type
 		end
 
 	generate_cid (buffer : GENERATION_BUFFER; final_mode, use_info : BOOLEAN) is

@@ -4,7 +4,7 @@ inherit
 
 	EXPR_B
 		redefine
-			enlarged, make_byte_code
+			enlarged, make_byte_code, generate_il
 		end
 
 feature 
@@ -25,14 +25,6 @@ feature
 			Result.set_size (value.count);
 		end;
 
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a bit constant
-		do
-			ba.append (Bc_bit);
-			ba.append_integer (value.count)
-			ba.append_bit (value)
-		end;
-
 	enlarged: BIT_CONST_BL is
 			-- Enlarged node
 		do
@@ -44,5 +36,24 @@ feature
             -- Is register `r' used in local or forthcomming dot calls ?
         do
         end;
+
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for bit constant.
+			--| Not applicable
+		do
+			check False end
+		end
+
+feature -- Byte code generation
+
+	make_byte_code (ba: BYTE_ARRAY) is
+			-- Generate byte code for a bit constant
+		do
+			ba.append (Bc_bit);
+			ba.append_integer (value.count)
+			ba.append_bit (value)
+		end;
 
 end

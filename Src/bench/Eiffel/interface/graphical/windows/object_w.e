@@ -86,7 +86,6 @@ feature -- Access
 			-- objects kept in history
 		local
 			obj_stone: OBJECT_STONE
-			history_list: LINEAR [STONE]
 			pos: INTEGER
 		do
 			Result := text_window.kept_objects
@@ -446,28 +445,6 @@ feature {NONE} -- Implementation; Graphical Interface
 			end
 		end
 
-	build_widgets is
-		do
-			create_toolbar (global_form)
-
-			build_text_windows (global_form)
-			if not is_in_project_tool then
-				build_menus
-			end
-			build_object_toolbar
-			if not is_in_project_tool then
-				fill_menus
-			end
-			build_toolbar_menu
-			set_last_format (default_format)
-
-			if resources.command_bar.actual_value = False then
-				object_toolbar.remove
-			end
-
-			attach_all
-		end
-
 	attach_all is
 		do
 			if not is_in_project_tool then
@@ -488,6 +465,30 @@ feature {NONE} -- Implementation; Graphical Interface
 			global_form.attach_right (text_window.widget, 0)
 			global_form.attach_bottom (text_window.widget, 0)
 			global_form.attach_top_widget (toolbar_parent, text_window.widget, 0)
+		end
+
+feature {DEBUG_DYNAMIC_EVAL_HOLE} -- Implementation
+
+	build_widgets is
+		do
+			create_toolbar (global_form)
+
+			build_text_windows (global_form)
+			if not is_in_project_tool then
+				build_menus
+			end
+			build_object_toolbar
+			if not is_in_project_tool then
+				fill_menus
+			end
+			build_toolbar_menu
+			set_last_format (default_format)
+
+			if resources.command_bar.actual_value = False then
+				object_toolbar.remove
+			end
+
+			attach_all
 		end
 
 feature {NONE} -- Properties

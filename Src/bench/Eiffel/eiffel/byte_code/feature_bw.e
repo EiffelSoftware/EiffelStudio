@@ -70,10 +70,12 @@ feature
 			-- Generate feature call in a `typ' context
 		local
 			is_nested: BOOLEAN;
-			r_id: ROUTINE_ID;
+			r_id: INTEGER;
 			rout_info: ROUT_INFO;
 			base_class: CLASS_C;
 			buf: GENERATION_BUFFER
+			gen_type_i: GEN_TYPE_I
+			cl_type_i: CL_TYPE_I
 		do
 			is_nested := not is_first;
 			buf := buffer
@@ -93,7 +95,7 @@ feature
 				r_id := base_class.feature_table.item
 					(feature_name).rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				rout_info.origin.generated_id (buf);
+				buf.generate_class_id (rout_info.origin)
 				buf.putstring (gc_comma);
 				buf.putint (rout_info.offset);
 			else
@@ -102,17 +104,24 @@ feature
 				else
 					buf.putstring ("RTWF(");
 				end;
-				buf.putint (typ.associated_class_type.id.id - 1);
+				buf.putint (typ.associated_class_type.static_type_id - 1);
 				buf.putstring (gc_comma);
 				buf.putint (real_feature_id);
 			end;
 			buf.putstring (gc_comma);
 			if not is_nested then
 				if precursor_type /= Void then
-					-- Use dynamic type of parent instead 
-					-- of dynamic type of Current.
+						-- Use dynamic type of parent instead 
+						-- of dynamic type of Current.
 					buf.putstring ("RTUD(");
-					precursor_type.associated_class_type.id.generated_id (buf)
+
+					gen_type_i ?= context.current_type
+					if gen_type_i /= Void then
+						cl_type_i := precursor_type.instantiation_in (gen_type_i)
+						buf.generate_type_id (cl_type_i.associated_class_type.static_type_id)
+					else
+						buf.generate_type_id (precursor_type.associated_class_type.static_type_id)
+					end
 					buf.putchar (')');
 				else
 					context.generate_current_dtype;

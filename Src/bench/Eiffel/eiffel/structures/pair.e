@@ -10,10 +10,10 @@ class
 feature -- Access
 
 	first: G
-			-- First item of the pair.
+			-- First item of pair.
 
 	second: H
-			-- Second item of the pair.
+			-- Second item of pair.
 
 feature -- Settings
 

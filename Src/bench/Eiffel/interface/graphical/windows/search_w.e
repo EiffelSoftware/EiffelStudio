@@ -27,8 +27,6 @@ feature -- Initialization
 			-- Create a search and replace dialog.
 		require
 			a_tool_not_void: a_tool /= Void
-		local
-			void_argument: ANY
 		do
 			tool := a_tool;
 			srd_make (Interface_names.n_X_resource_name, a_tool.popup_parent);
@@ -120,7 +118,7 @@ feature {NONE} -- Implementation
 			end;
 			if argument = cancel_it then
 				popdown
-			elseif not search_text.empty then 
+			elseif not search_text.is_empty then 
 				if argument = find_it then
 					tool.text_window.search_text (search_text, case_sensitive)
 				elseif argument = replace_it then

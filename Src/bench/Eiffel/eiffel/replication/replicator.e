@@ -47,7 +47,7 @@ feature
 			new_pairs: S_REP_NAME_LIST;
 			feat_table: FEATURE_TABLE;
 			found: BOOLEAN;
-			body_id: BODY_ID;
+			body_id: INTEGER;
 			feature_i: FEATURE_I;
 			feature_as: FEATURE_AS;
 			new_name: FEATURE_NAME
@@ -59,7 +59,7 @@ feature
 			adapter.set_target_type (d.actual_type);
 			new_pairs := clone (pairs);
 			if old_feat.written_class /= a then
-				feat_table := Feat_tbl_server.item (a.id);		
+				feat_table := Feat_tbl_server.item (a.class_id);		
 				from
 					new_pairs.start
 				until
@@ -73,7 +73,7 @@ feature
 						feat_table.after or else found
 					loop
 						feature_i := feat_table.item_for_iteration;
-						if equal (feature_i.body_id, body_id) then
+						if feature_i.body_id = body_id then
 							found := true;
 							new_pairs.item.set_old_feature (feature_i);
 						else

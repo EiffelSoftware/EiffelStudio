@@ -36,6 +36,12 @@ feature -- Setting
 		deferred
 		end
 
+	set_effect_is_delayed (new_value: BOOLEAN) is
+			-- Set `immediate_change' to `new_value'.
+		do
+			effect_is_delayed := new_value
+		end
+
 feature -- Access
 
 	name: STRING
@@ -53,6 +59,10 @@ feature -- Access
 
 	description: STRING
 			-- Description of what the resource is all about.
+
+	effect_is_delayed: BOOLEAN
+			-- Will a change in the resource not be immediately taken into
+			-- account by the application ?
 
 	value: STRING is
 			-- Value of the resource as it appears to the right

@@ -3,26 +3,32 @@
 class CONSTANT_I 
 
 inherit
-	FEATURE_I
+	ENCAPSULATED_I
 		rename
 			check_types as old_check_types,
 			equiv as basic_equiv
 		redefine
 			transfer_to, access, melt, generate,
 			is_once, in_pass3, redefinable, is_constant,
-			set_type, type, can_be_inlined
+			set_type, type, generate_il, to_generate_in,
+			new_rout_entry
 		end
 
-	FEATURE_I
+	ENCAPSULATED_I
 		redefine
 			transfer_to, check_types, access, equiv,
 			melt, generate, is_once, in_pass3, redefinable, is_constant,
-			set_type, type, can_be_inlined
+			set_type, type, generate_il, to_generate_in,
+			new_rout_entry
 		select
 			check_types, equiv
 		end
 
 	SHARED_TYPE_I
+
+	SHARED_GENERATION
+
+	SHARED_IL_CODE_GENERATOR
 
 	BYTE_CONST
 	
@@ -63,11 +69,10 @@ feature
 	check_types (feat_tbl: FEATURE_TABLE) is
 			-- Check Result and argument types 
 		local
-			actual_type: TYPE_A;	
-			good_constant_type: BOOLEAN
+			actual_type	: TYPE_A
 			vqmc: VQMC
 		do
-			{FEATURE_I} Precursor (feat_tbl)
+			Precursor {ENCAPSULATED_I} (feat_tbl)
 			actual_type := type.actual_type
 			if value.valid_type (actual_type) then
 				value.set_real_value (actual_type)
@@ -78,7 +83,56 @@ feature
 				Error_handler.insert_error (vqmc)
 			end
 		end
-		
+
+	new_rout_entry: ROUT_ENTRY is
+			-- New routine unit
+		require else
+			has_to_be_generated: generate_in > 0
+		do
+			create Result
+			Result.set_body_index (body_index)
+			Result.set_type_a (type.actual_type)
+			if
+				not byte_context.workbench_mode and then generate_in /= 0
+			then
+				Result.set_written_in (generate_in)
+			else
+				Result.set_written_in (written_in)
+			end
+			Result.set_pattern_id (pattern_id)
+			Result.set_feature_id (feature_id)
+		end
+
+feature -- Status
+
+	to_generate_in (a_class: CLASS_C): BOOLEAN is
+			-- Has current feature in class `a_class" to be generated ?
+		local
+			class_id: INTEGER
+			once_feat: BOOLEAN
+		do
+			class_id := a_class.class_id
+			if
+				not byte_context.workbench_mode
+			then 
+					-- We need to generate current constant if:
+					-- 1 - `generate_in' has the same value as `class_id': in this
+					--     an encapsulation is needed because `a_class' has some
+					--     redefinition into a constant.
+					-- 2 - current constant is not a once and needs to be generated
+					--     because `a_class' has some visible features.
+					-- 3 - current constant is a once written in `a_class'.
+				Result := (class_id = generate_in)
+				if not Result then
+					once_feat := is_once
+					Result := (not once_feat and then a_class.has_visible)
+						or else (once_feat and then class_id = written_in)
+				end
+			else
+				Result := class_id = written_in
+			end
+		end
+
 feature -- Incrementality
 
 	equiv (other: FEATURE_I): BOOLEAN is
@@ -88,7 +142,7 @@ feature -- Incrementality
 		do
 			other_constant ?= other
 			if other_constant /= Void then
-				Result := {FEATURE_I} Precursor (other_constant)
+				Result := Precursor {ENCAPSULATED_I} (other_constant)
 						and then value.is_propagation_equivalent (other_constant.value)
 			end
 		end
@@ -97,40 +151,23 @@ feature -- C code generation
 
 	generate (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER) is
 			-- Generate feature written in `class_type' in `buffer'.
+		require else
+			valid_buffer: buffer /= Void
+			not_deferred: not is_deferred
+			to_generate_in: to_generate_in (class_type.associated_class)
 		local
 			type_i: TYPE_I
-			cl_type_i: CL_TYPE_I
 			internal_name: STRING
 			local_byte_context: BYTE_CONTEXT
 			class_id: INTEGER
+			header_buffer: GENERATION_BUFFER
+			special_once_generation: BOOLEAN
 		do
-			local_byte_context := byte_context
-			if
-				class_type.associated_class = written_class
-				and then (local_byte_context.workbench_mode
-					or else
-						-- Polymorphic function redefined as a constant
-						-- or a constant string implies the generation
-						-- of a C function.
-
--- FIXME: Constants are generated if they are used in the system
--- even if they are not called polymorphically.
-
--- This is done to generate the correct code for:
--- class CONST feature c: INTEGER is 1 end
--- class P feature f: INTEGER is deferred end; end
--- class D inherit P; CONST rename c as f end; end
--- class TEST p: P; make !D!p; p.f; end
-
--- c must be generated even if it is an origin !!!
-
---					((is_once or else not is_origin)
---						and then
-					(System.is_used (Current)))
-			then
+			if used then
+				local_byte_context := byte_context
 				generate_header (buffer)
 				type_i := type.actual_type.type_i
-				internal_name := body_id.feature_name (class_type.id)
+				internal_name := Encoder.feature_name (class_type.static_type_id, body_index)
 				add_in_log (class_type, internal_name)
 					-- Generation of function's header
 				buffer.generate_function_signature ( type_i.c_type.c_string,
@@ -140,37 +177,92 @@ feature -- C code generation
 					-- Function's body
 					-- If constant is a string, it is the semantic of a once
 				if is_once then
-					class_id := byte_context.original_class_type.id.id
-					buffer.putstring ("%TEIF_REFERENCE *PResult;%N%
-						%%Tif (MTOG((EIF_REFERENCE *),*(EIF_once_values + EIF_oidx_off")
-					buffer.putint (class_id)
-					buffer.putstring (" + ")
-					buffer.putint (local_byte_context.once_index)
-					buffer.putstring ("),PResult)) return *PResult;")
-					buffer.putstring (";%N%
-						%%TPResult = (EIF_REFERENCE *) RTOC(0);%N%
-						%%TMTOS(*(EIF_once_values + EIF_oidx_off")
-					buffer.putint (class_id)
-					buffer.putstring (" + ")
-					buffer.putint (local_byte_context.once_index)
-					buffer.putstring ("),PResult);%N%
-						%%T*PResult = ")
-					value.generate (buffer)
-					buffer.putchar (';')
+					if local_byte_context.workbench_mode or else System.has_multithreaded then
+						class_id := byte_context.original_class_type.static_type_id
+						buffer.putstring ("%TEIF_REFERENCE *PResult;%N%
+							%%Tif (MTOG((EIF_REFERENCE *),*(EIF_once_values + EIF_oidx_off")
+						buffer.putint (class_id)
+						buffer.putstring (" + ")
+						buffer.putint (local_byte_context.once_index)
+						buffer.putstring ("),PResult)) return *PResult;")
+						buffer.putstring (";%N%
+							%%TPResult = (EIF_REFERENCE *) RTOC(0);%N%
+							%%TMTOS(*(EIF_once_values + EIF_oidx_off")
+						buffer.putint (class_id)
+						buffer.putstring (" + ")
+						buffer.putint (local_byte_context.once_index)
+						buffer.putstring ("),PResult);%N%
+							%%T*PResult = ")
+						value.generate (buffer)
+						buffer.putchar (';')
+						buffer.new_line
 
-					if local_byte_context.workbench_mode then
-							-- Real body id to be stored in the id list of 
-							-- already called once routines.
-						buffer.putstring ("%TRTWO(")
-						real_body_id.generated_id (buffer)
-						buffer.putstring (");%N")
+						if local_byte_context.workbench_mode then
+								-- Real body id to be stored in the id list of 
+								-- already called once routines.
+							buffer.putstring ("%TRTWO(")
+							buffer.generate_real_body_id (real_body_id)
+							buffer.putstring (");")
+							buffer.new_line
+						end
+						buffer.putstring ("%Treturn *PResult")
+					else
+						special_once_generation := True
+						header_buffer := local_byte_context.header_buffer
+						header_buffer.new_line
+						header_buffer.putstring ("extern EIF_REFERENCE ")
+						header_buffer.putstring (internal_name)
+						header_buffer.putstring ("_result;")
+						header_buffer.new_line
+						header_buffer.putstring ("extern EIF_BOOLEAN ")
+						header_buffer.putstring (internal_name)
+						header_buffer.putstring ("_done;")
+						header_buffer.new_line
+						header_buffer.new_line
+					
+						buffer.indent
+						buffer.putstring ("if (")
+						buffer.putstring (internal_name)
+						buffer.putstring ("_done) return ")
+						buffer.putstring (internal_name)
+						buffer.putstring ("_result;")
+						buffer.new_line
+						buffer.putstring (internal_name)
+						buffer.putstring ("_done = EIF_TRUE;")
+						buffer.new_line
+						buffer.putstring (internal_name)
+						buffer.putstring ("_result = ")
+						value.generate (buffer)
+						buffer.putchar (';')
+						buffer.new_line
+						buffer.putstring ("RTOC_NEW(")
+						buffer.putstring (internal_name)
+						buffer.putstring ("_result);")
+						buffer.new_line
+						buffer.putstring ("return ")
+						buffer.putstring (internal_name)
+						buffer.putstring ("_result;")
+						buffer.exdent
 					end
-					buffer.putstring ("%Treturn *PResult")
 				else
+					buffer.indent
 					buffer.putstring ("return ")
 					value.generate (buffer)
+					buffer.exdent
 				end
-				buffer.putstring (";%N}%N%N")
+				buffer.putstring (";%N}%N")
+				if special_once_generation then
+					buffer.new_line
+					buffer.putstring ("EIF_REFERENCE ")
+					buffer.putstring (internal_name)
+					buffer.putstring ("_result = NULL;")
+					buffer.new_line
+					buffer.putstring ("EIF_BOOLEAN ")
+					buffer.putstring (internal_name)
+					buffer.putstring ("_done = EIF_FALSE;")
+					buffer.new_line
+					buffer.new_line
+				end
 			elseif not System.is_used (Current) then
 				System.removed_log_file.add (class_type, feature_name)
 			end
@@ -183,19 +275,32 @@ feature -- C code generation
 		do
 			if is_once then
 					-- Cannot hardwire string constants, ever.
-				Result := {FEATURE_I} Precursor (access_type)
+				Result := Precursor {ENCAPSULATED_I} (access_type)
 			else
 					-- Constants are hardwired in final mode
 				!!constant_b
-				constant_b.set_access ({FEATURE_I} Precursor (access_type))
+				constant_b.set_access (Precursor {ENCAPSULATED_I} (access_type))
 				constant_b.set_value (value)
 				Result := constant_b
 			end
 		end
 
+feature -- IL Code generation
+
+	generate_il is
+			-- Generate IL code for constant.
+		local
+			type_i: TYPE_I
+		do
+			type_i := type.actual_type.type_i
+			il_generator.put_result_info (type_i)
+			value.generate_il
+			il_generator.generate_return
+		end
+
 feature -- Byte code generation
 
-	melt (dispatch: DISPATCH_UNIT; exec: EXECUTION_UNIT) is
+	melt (exec: EXECUTION_UNIT) is
 			-- Generate byte code for constant.
 			-- [Remember there is no byte code tree for constant].
 		local
@@ -221,20 +326,14 @@ feature -- Byte code generation
 				-- Start	
 			ba.append (Bc_start)
 				-- Routine id
-			ba.append_integer (rout_id_set.first.id)
+			ba.append_integer (rout_id_set.first)
+				-- Real body id ( -1 because it's a constant. We can't set a breakpoint )
+			ba.append_integer (-1)
 				-- Meta-type of Result
 			result_type := byte_context.real_type (type.actual_type.type_i)
 			ba.append_integer (result_type.sk_value)
 				-- Argument count
 			ba.append_short_integer (0)
-
-			if is_once then
-					-- Real body id to be stored in the id list of already 
-					-- called once routines to prevent supermelting them
-					-- (losing in that case their memory (already called and
-					-- result)) and to allow result inspection.
-				ba.append_integer (real_body_id.id - 1)
-			end
 
 				-- Local count
 			ba.append_short_integer (0)
@@ -245,15 +344,6 @@ feature -- Byte code generation
 				-- Type where the feature is written in
 			static_type := byte_context.current_type.type_id - 1
 			ba.append_short_integer (static_type)
-
-			-- Put class name in file.
-			-- NOTE: May be removed later.
-
-			if System.java_generation then
-				ba.append_raw_string (byte_context.current_type.associated_class_type.associated_class.name)
-				-- Not a special feature
-				ba.append ('%U')
-			end
 
 				-- No rescue
 			ba.append ('%U')
@@ -266,12 +356,11 @@ feature -- Byte code generation
 			ba.append (Bc_null)
 				
 			melted_feature := ba.melted_feature
-			melted_feature.set_real_body_id (dispatch.real_body_id)
+			melted_feature.set_real_body_id (exec.real_body_id)
 			if not System.freeze then
 				Tmp_m_feature_server.put (melted_feature)
 			end
 
-			Dispatch_table.mark_melted (dispatch)
 			Execution_table.mark_melted (exec)
 		end
 
@@ -292,7 +381,7 @@ feature -- Byte code generation
 			Result := rep
 		end
 
-	unselected (in: CLASS_ID): FEATURE_I is
+	unselected (in: INTEGER): FEATURE_I is
 			-- Unselected feature
 		local
 			unselect: D_CONSTANT_I
@@ -306,14 +395,10 @@ feature -- Byte code generation
 	transfer_to (other: like Current) is
 			-- Transfer datas form `other' into Current
 		do
-			{FEATURE_I} Precursor (other)
+			Precursor {ENCAPSULATED_I} (other)
 			other.set_type (type)
 			other.set_value (value)
 		end
-
-feature -- Inlining
-
-	can_be_inlined: BOOLEAN is False
 
 feature {NONE} -- Implementation
 

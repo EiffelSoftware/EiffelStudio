@@ -42,7 +42,6 @@ feature {NONE} -- Execution
 			grpc: GRAPHICAL_PREF_CAT; -- Preference category for the graphical values
 			prpc: PROFILE_PREF_CAT; -- Preference category for the profile tool
 			mp: MOUSE_PTR;
-			att: WINDOW_ATTRIBUTES;
 			p_tool: EB_PREFERENCE_TOOL
 		do
 			!! mp.set_watch_cursor;

@@ -49,7 +49,7 @@ feature -- Initialization
 			-- (This routine can be called in wrap before scanning
 			-- another input buffer.)
 		do
-			Precursor
+			Precursor {LACE_SCANNER}
 			!! click_list.make (1)
 		end
 
@@ -138,7 +138,7 @@ feature {NONE} -- Keywords
 	All_keyword: ALL_SD is
 			-- ALL keyword AST node
 		once
-			Result := new_all_sd (new_id_sd ("all"))
+			Result := new_all_sd (new_id_sd ("all", False))
 		ensure
 			all_keyword_void: Result /= Void
 		end
@@ -151,18 +151,10 @@ feature {NONE} -- Keywords
 			assertion_keyword_void: Result /= Void
 		end
 
-	C_keyword: C_NAME_SD is
-			-- C keyword AST node
-		once
-			Result := new_c_name_sd (new_id_sd ("c"))
-		ensure
-			c_keyword_not_void: Result /= Void
-		end
-
 	Check_keyword: CHECK_SD is
 			-- CHECK keyword AST node
 		once
-			Result := new_check_sd (new_id_sd ("check"))
+			Result := new_check_sd (new_id_sd ("check", False))
 		ensure
 			check_keyword_not_void: Result /= Void
 		end
@@ -170,7 +162,17 @@ feature {NONE} -- Keywords
 	Debug_keyword: DEBUG_SD is
 			-- DEBUG keyword AST node
 		once
-			Result := new_debug_sd
+				-- Create an enabled DEBUG_SD node
+			Result := new_debug_sd (True)
+		ensure
+			debug_keyword_void: Result /= Void
+		end
+
+	Disabled_debug_keyword: DEBUG_SD is
+			-- DISABLED_DEBUG keyword AST node
+		once
+				-- Create an enabled DEBUG_SD node
+			Result := new_debug_sd (False)
 		ensure
 			debug_keyword_void: Result /= Void
 		end
@@ -178,31 +180,15 @@ feature {NONE} -- Keywords
 	Ensure_keyword: ENSURE_SD is
 			-- ENSURE keyword AST node
 		once
-			Result := new_ensure_sd (new_id_sd ("ensure"))
+			Result := new_ensure_sd (new_id_sd ("ensure", False))
 		ensure
 			ensure_keyword_not_void: Result /= Void
-		end
-
-	Executable_keyword: EXECUTABLE_NAME_SD is
-			-- EXECUTABLE keyword AST node
-		once
-			Result := new_executable_name_sd (new_id_sd ("executable"))
-		ensure
-			executable_keyword_not_void: Result /= Void
-		end
-
-	Include_path_keyword: INCLUDE_PATH_NAME_SD is
-			-- INCLUDE_PATH keyword AST node
-		once
-			Result := new_include_path_name_sd (new_id_sd ("include_path"))
-		ensure
-			include_path_keyword_not_void: Result /= Void
 		end
 
 	Invariant_keyword: INVARIANT_SD is
 			-- INVARIANT keyword AST node
 		once
-			Result := new_invariant_sd (new_id_sd ("invariant"))
+			Result := new_invariant_sd (new_id_sd ("invariant", False))
 		ensure
 			invariant_keyword_not_void: Result /= Void
 		end
@@ -210,33 +196,17 @@ feature {NONE} -- Keywords
 	Loop_keyword: LOOP_SD is
 			-- LOOP keyword AST node
 		once
-			Result := new_loop_sd (new_id_sd ("loop"))
+			Result := new_loop_sd (new_id_sd ("loop", False))
 		ensure
 			loop_keyword_not_void: Result /= Void
-		end
-
-	Make_keyword: MAKE_NAME_SD is
-			-- MAKE keyword AST node
-		once
-			Result := new_make_name_sd (new_id_sd ("make"))
-		ensure
-			make_keyword_not_void: Result /= Void
 		end
 
 	No_keyword: NO_SD is
 			-- NO keyword AST node
 		once
-			Result := new_no_sd (new_id_sd ("no"))
+			Result := new_no_sd (new_id_sd ("no", False))
 		ensure
 			no_keyword_not_void: Result /= Void
-		end
-
-	Object_keyword: OBJECT_NAME_SD is
-			-- OBJECT keyword AST node
-		once
-			Result := new_object_name_sd (new_id_sd ("object"))
-		ensure
-			object_keyword_not_void: Result /= Void
 		end
 
 	Optimize_keyword: OPTIMIZE_SD is
@@ -258,7 +228,7 @@ feature {NONE} -- Keywords
 	Require_keyword: REQUIRE_SD is
 			-- REQUIRE keyword AST node
 		once
-			Result := new_require_sd (new_id_sd ("require"))
+			Result := new_require_sd (new_id_sd ("require", False))
 		ensure
 			require_keyword_not_void: Result /= Void
 		end
@@ -274,7 +244,7 @@ feature {NONE} -- Keywords
 	Yes_keyword: YES_SD is
 			-- YES keyword AST node
 		once
-			Result := new_yes_sd (new_id_sd ("yes"))
+			Result := new_yes_sd (new_id_sd ("yes", False))
 		ensure
 			yes_keyword_not_void: Result /= Void
 		end
@@ -288,7 +258,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", is_in_use_file)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -302,7 +272,7 @@ feature {NONE} -- Constants
 			af: AST_FACTORY
 		once
 			!! af
-			Result := af.new_integer_type_as
+			Result := af.new_integer_type_as (32)
 		ensure
 			dummy_clicable_as_not_void: Result /= Void
 		end

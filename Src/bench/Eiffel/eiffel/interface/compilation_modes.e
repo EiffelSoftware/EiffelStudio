@@ -12,9 +12,6 @@ feature -- Properties
 	is_precompiling, is_quick_melt: BOOLEAN
 			-- Type of compilation.
 
-	need_melt: BOOLEAN
-			-- Do we need to do a `melt' even if the user choose `quick melt'.
-
 feature -- Update
 
 	set_is_freezing is
@@ -27,12 +24,6 @@ feature -- Update
 			-- Set `is_freezing' to `True'
 		do
 			is_quick_melt := True
-		end
-
-	set_need_melt is
-			-- Set `need_melt' to `True'.
-		do
-			need_melt := True
 		end
 
 	set_is_finalizing is
@@ -51,7 +42,6 @@ feature -- Setting
 
 	reset_modes is
 		do
-			need_melt := False
 			is_quick_melt := False
 			is_freezing := False
 			is_finalizing := False

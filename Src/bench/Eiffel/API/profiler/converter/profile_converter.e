@@ -11,8 +11,8 @@ inherit
 
 	SHARED_EIFFEL_PROJECT;
 	COMPILER_EXPORTER;
-	STORABLE;
 	PROJECT_CONTEXT
+	EXCEPTIONS
 
 creation
 	make
@@ -258,7 +258,7 @@ end;
 		local
 			space, number: INTEGER;
 			num_str: STRING;
-			class_n, feature_n, cluster_n: STRING;
+			class_n, feature_n: STRING;
 			class_id, temp_int: INTEGER;
 			eclass: CLASS_C;
 			a_cluster: CLUSTER_I
@@ -650,6 +650,7 @@ feature {NONE} -- Commands
 			retried: BOOLEAN
 			file: PLAIN_TEXT_FILE
 			table_file: PLAIN_TEXT_FILE
+			binary_file: RAW_FILE
 			table_name: FILE_NAME
 		do
 			if not config.get_config_name.is_equal ("eiffel") then
@@ -676,7 +677,12 @@ feature {NONE} -- Commands
 						file.close;
 						make_function_table (table_name)
 					else
-						functions ?= retrieve_by_name(table_name);
+						create binary_file.make (table_name)
+						if binary_file.exists and then binary_file.is_readable then
+							binary_file.open_read
+							functions ?= binary_file.retrieved
+							binary_file.close
+						end
 						if functions = Void then
 							file.open_read;
 							file.read_stream (file.count);

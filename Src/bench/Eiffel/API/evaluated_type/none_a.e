@@ -10,8 +10,7 @@ inherit
 	TYPE_A
 		redefine
 			is_none, dump, type_i, same_as,
-			internal_conform_to, append_to,
-			storage_info, storage_info_with_name
+			internal_conform_to
 		end
 
 feature -- Comparison
@@ -45,9 +44,9 @@ feature -- Output
 	dump: STRING is "NONE"
 			-- Dumped trace
 
-	append_to (st: STRUCTURED_TEXT) is
+	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
 		do
-			st.add_string ("NONE")
+			st.add (ti_None_class)
 		end
 
 feature {COMPILER_EXPORTER}
@@ -75,17 +74,7 @@ feature {COMPILER_EXPORTER}
 -- FIXME: This test needs to be done, but since it's causing to much trouble for now
 -- we just desactivated it and we are back to the previous implementation
 --			Result := not (other.is_basic or else other.is_expanded)
-			Result := True
+			Result := not other.is_void
 		end
-
-    storage_info, storage_info_with_name (classc: CLASS_C): S_CLASS_TYPE_INFO is
-            -- Storage info for Current type in class `classc'
-            -- and store the name of the class for Current
-	local
-		fake_id: CLASS_ID
-        do
-		!! fake_id.make (0)
-		!! Result.make_for_bench ("NONE", fake_id)
-        end
 
 end -- class NONE_A

@@ -88,7 +88,7 @@ feature
 					-- and if it is not used later in the expression.
 					-- We never grab temporary registers in the middle of a
 					-- multidot expression.
-				if not (r.is_temporary or forth_used (r)) then
+				if not (r.is_temporary or used (r)) then
 					if local_type.c_type.same_class_type (r.c_type) then
 							-- Don't bother calling set_propagated, because we
 							-- know it'll be done at the end of the call anyway.
@@ -221,7 +221,6 @@ feature
 			-- Analyze expression
 		local
 			msg_target: ACCESS_B
-			reg: REGISTER;		-- For debug
 		do
 debug
 io.error.putstring ("In nested_bl%N")
@@ -330,7 +329,11 @@ end
 			if parent = Void then
 					-- This is the first call. Generate the target.
 				target.generate
-					-- Generate a call on an entity stored in `target'
+					-- generate a hook
+				if target.is_feature then 
+					generate_frozen_debugger_hook_nested
+				end
+						-- Generate a call on an entity stored in `target'
 				generate_call (target, with_inv)
 			else
 					-- This is part of a dot call. Generate a call on the
@@ -338,6 +341,8 @@ end
 				generate_call (parent.register, with_inv)
 			end
 			if message.target /= message then
+					-- generate a hook
+				generate_frozen_debugger_hook_nested
 					-- We are not the last call on the chain.
 				message.generate
 			end
@@ -347,6 +352,10 @@ end
 			-- Generate creation call
 		do
 			target.generate
+				-- generate a hook
+			if target.is_feature then 
+				generate_frozen_debugger_hook_nested
+			end
 			generate_call (target, False)
 		end
 
@@ -355,7 +364,6 @@ end
 		local
 			message_target: ACCESS_B
 			value_type: TYPE_I
-			cl_type: CL_TYPE_I
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
@@ -403,7 +411,7 @@ end
 						buf.putstring ("CURGI(0);")
 					elseif value_type.is_feature_pointer then
 						buf.putstring ("CURGP(0);")
-					elseif value_type.is_expanded then
+					elseif value_type.is_true_expanded then
 						buf.putstring ("CURGO(0);")
 					else
 					-- if value_type.is_separate or value_type.is_reference then

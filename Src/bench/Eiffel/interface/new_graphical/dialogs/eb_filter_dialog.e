@@ -8,49 +8,63 @@ class
 
 inherit
 	EV_COMMAND
+		undefine
+			default_create
+		end
 	EV_DIALOG
 	EB_GENERAL_DATA
+		undefine
+			default_create
+		end
 	NEW_EB_CONSTANTS
+		undefine
+			default_create
+		end
 	EIFFEL_ENV	
+		undefine
+			default_create
+		end
 
 creation
 
-	make_with_command
+	make
 	
 feature -- Initialization
 
-	make_with_command (cmd: EB_TOOL_COMMAND) is
+	make (cmd: like filter_command) is
 			-- Create a filter window.
 		local
 			display_button, execute_button, cancel_button: EV_BUTTON
 			filter_label, shell_label: EV_LABEL
 		do
-			make (cmd.tool.parent_window)
+			default_create
 			set_title (Interface_names.t_Filter_w)
 
-			associated_command := cmd
+			filter_command := cmd
 
-			create filter_label.make_with_text (display_area, "Select a filter")
-			filter_label.set_left_alignment
+			create filter_label.make_with_text ("Select a filter")
+			extend (filter_label)
+			filter_label.align_text_left
 
-			create list.make (display_area)
---			list.compare_objects
---			list.set_visible_item_count (9)
-			list.add_select_command (Current, list_it)
+			create list
+			extend (list)
 
-			filter_command ?= cmd
 			if filter_command /= Void then
-				create shell_label.make_with_text (display_area, "Command to be executed")
-				shell_label.set_left_alignment
-				create text_field.make (display_area)
-				create display_button.make_with_text (action_area, Interface_names.b_Display)
-				display_button.add_click_command (Current, display_it)
+				create shell_label.make_with_text ("Command to be executed")
+				extend (shell_label)
+				shell_label.align_text_left
+				create text_field
+				extend (text_field)
+				create display_button.make_with_text (Interface_names.b_Display)
+				extend (display_button)
+				display_button.select_actions.extend (~display)
 			end
-			create execute_button.make_with_text (action_area, Interface_names.b_Execute)
-			execute_button.add_click_command (Current, execute_it)
+			create execute_button.make_with_text (Interface_names.b_Execute)
+			extend (execute_button)
+			execute_button.select_actions.extend (~execute)
 
-			create cancel_button.make_with_text (action_area, Interface_names.b_Cancel)			
-			cancel_button.add_click_command (Current, cancel_it)
+			create cancel_button.make_with_text (Interface_names.b_Cancel)			
+			extend (cancel_button)
 --			set_composite_attributes (Current)
 		end
 
@@ -59,75 +73,37 @@ feature -- Execution Implementation
 	filter_name: STRING is
 			-- Filter name 
 		once
-			Result := clone (filter_name)
+			if filter_command /= Void then
+				Result := clone (filter_command.filter_name)
+			else
+				Result := ""
+			end
 		end
 	
-	call (cmd: like associated_command) is
+	call (cmd: like filter_command) is
 		local
-			index: INTEGER
 			str_element: EV_LIST_ITEM
-			wd: EV_WARNING_DIALOG
 		do
-			associated_command := cmd
-			warning_message := Void
+			filter_command := cmd
 			fill_list
 			if filter_command = Void then
-				create str_element.make_with_text (list, filter_name)
-				index := str_element.index
+				create str_element.make_with_text (filter_name)
+				list.extend (str_element)
+				str_element.enable_select
 			else
-				create str_element.make_with_text (list, filter_command.filter_name)
-				index := str_element.index
+				create str_element.make_with_text (filter_command.filter_name)
+				list.extend (str_element)
 				text_field.set_text (general_filter_command)
+				str_element.enable_select
 			end
-			if index = 0 then index := 1 end
-			list.select_item (index)
-			last_selected_item := list.get_item (index)
-			show
-			if warning_message /= Void then
-				create wd.make_default (associated_command.tool.parent,
-					Interface_names.t_Warning, warning_message)
-			end
+			show_modal
 		end
 	
-	selected_filter: STRING is
-			-- Selected filter item
-		do
-			Result := last_selected_item.text
-		end
-
 feature {NONE} -- Properties
-
-	display_it: EV_ARGUMENT1 [ANY] is
-			-- Argument for the command.
-		once
-			create Result.make (Void)
-		end
-
-	execute_it: EV_ARGUMENT1 [ANY] is
-			-- Argument for the command.
-		once
-			create Result.make (Void)
-		end
-
-	cancel_it: EV_ARGUMENT1 [ANY] is
-			-- Argument for the command.
-		once
-			create Result.make (Void)
-		end
-
-	list_it: EV_ARGUMENT1 [ANY] is
-			-- Argument for the command.
-		once
-			create Result.make (Void)
-		end
 
 	filter_command: EB_FILTER_CMD
 
-	associated_command: EB_TOOL_COMMAND
-
 	list: EV_LIST
-
-	last_selected_item: EV_LIST_ITEM
 
 	text_field: EV_TEXT_FIELD
 
@@ -135,41 +111,39 @@ feature {NONE} -- Properties
 
 feature {NONE} -- Implementation
 
-	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
+	execute is
 		local
 			tmp_name: STRING
 		do
-			if argument = list_it then
-				if list.selected_item = Void then
-						-- The user tried to deselect the current filter
-						-- name by clicking twice on it. No way!!
-					last_selected_item.set_selected (True)
-				else
-					last_selected_item := list.selected_item
+			if filter_command = Void then
+				filter_name.wipe_out
+				filter_name.append (list.selected_item.text)
+			else
+				tmp_name := filter_command.filter_name
+				tmp_name.wipe_out
+				if list.selected_item /= Void then
+					tmp_name.append (list.selected_item.text)
 				end
-			elseif argument = cancel_it then
-				popdown
-			elseif argument = display_it or argument = execute_it then
-				if filter_command = Void then
-					filter_name.wipe_out
-					filter_name.append (list.selected_item.text)
-				else
-					tmp_name := filter_command.filter_name
-					tmp_name.wipe_out
-					if list.selected_item /= Void then
-						tmp_name.append (list.selected_item.text)
-					end
-					tmp_name := general_filter_command
-					tmp_name.wipe_out
-					tmp_name.append (text_field.text)
-				end
-				if argument = display_it then
-					filter_command.execute (filter_command.filter_it, data)
-				elseif argument = execute_it then
-					associated_command.execute (execute_it, data)
-					popdown
-				end
+				tmp_name := general_filter_command
+				tmp_name.wipe_out
+				tmp_name.append (text_field.text)
 			end
+			filter_command.execute_filter_callback
+		end
+
+	display is
+		local
+			tmp_name: STRING
+		do
+			tmp_name := filter_command.filter_name
+			tmp_name.wipe_out
+			if list.selected_item /= Void then
+				tmp_name.append (list.selected_item.text)
+			end
+			tmp_name := general_filter_command
+			tmp_name.wipe_out
+			tmp_name.append (text_field.text)
+			filter_command.display_filter
 		end
 
 	fill_list is
@@ -185,12 +159,14 @@ feature {NONE} -- Implementation
 			create filter_dir.make (filter_path)
 			if not filter_dir.exists then
 				warning_message := Warning_messages.w_Directory_not_exist (filter_path)
-				list.clear_items
-				create str_element.make (list)
+				list.wipe_out
+				create str_element
+				list.extend (str_element)
 			elseif not filter_dir.is_readable then
 				warning_message := Warning_messages.w_Cannot_read_directory (filter_path)
-				list.clear_items
-				create str_element.make (list)
+				list.wipe_out
+				create str_element
+				list.extend (str_element)
 			else
 				create filter_names.make
 				filter_dir.open_read
@@ -214,27 +190,22 @@ feature {NONE} -- Implementation
 					file_name := filter_dir.lastentry
 				end
 				filter_dir.close
-				list.clear_items
+				list.wipe_out
 				if filter_names.empty then
-					create str_element.make (list)
+					create str_element
+					list.extend (str_element)
 				else
 					from
 						filter_names.start
 					until
 						filter_names.after
 					loop
-						create str_element.make_with_text (list, filter_names.item)
+						create str_element.make_with_text (filter_names.item)
+						list.extend (str_element)
 						filter_names.forth
 					end
 				end
 			end
-		end
-
-	popdown is
-		-- destroy the dialog without calling a "selection changed" event
-		do
-			list.remove_select_commands
-			destroy
 		end
 
 invariant

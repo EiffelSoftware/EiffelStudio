@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			name := a_name
 			default_value := def_value;
 			value := rt.get_string (a_name, def_value);
-			if value /= Void and then not value.empty then
+			if value /= Void and then not value.is_empty then
 				!! actual_value.make
 				actual_value.set_name (value);
 				if not actual_value.is_font_valid then
@@ -69,7 +69,7 @@ feature -- Access
 		local
 			font: FONT
 		do
-			if not a_value.empty then
+			if not a_value.is_empty then
 				!! font.make;
 				font.set_name (a_value);
 				Result := font.is_font_valid
@@ -90,7 +90,7 @@ feature -- Setting
 	set_value (new_value: STRING) is
 			-- Set `value' to `new_value'.
 		do
-			if not new_value.empty then	
+			if not new_value.is_empty then	
 				!! actual_value.make;
 				actual_value.set_name (new_value)
 			else

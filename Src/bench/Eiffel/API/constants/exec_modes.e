@@ -1,8 +1,8 @@
 indexing
 
 	description: 
-		"Constants for execution modes.";
-	date: "$Date$";
+		"Constants for execution modes."
+	date: "$Date$"
 	revision: "$Revision $"
 
 class
@@ -16,27 +16,19 @@ feature -- Execution mode properties
 
 	User_stop_points: INTEGER is 2;
 			-- Execution with user-defined stop points taken into account
+			-- default execution mode (big yellow arrow)
 
-	All_breakable_points: INTEGER is 3;
-			-- -- Execution with all breakable points set
+	step_into: INTEGER is 3;
+			-- Execution with all breakable points set
+			-- the flag 'step_into' is set, so that application
+			-- know it must stop to the next breakable statement
 
-	Routine_breakables: INTEGER is 4;
-			-- Execution with only breakable points of current 
-			-- routine taken into account
+	step_by_step: INTEGER is 4;
+			-- Execution with all breakable points of current
+			-- routine set and a breakpoint set just after the
+			-- calling routine (like step-out)
 
-	Routine_breakables_and_user_stop_points: INTEGER is 5;
-			-- Execution with breakable points of current routine 
-			-- and user-defined stop points taken into account
-
-	Routine_stop_points: INTEGER is 6;
-			-- Execution with only user-defined stop points of 
-			-- current routine taken into account
-
-	Last_routine_breakable: INTEGER is 7;
-			-- Execution with only the last breakable point of 
-			-- current routine taken into account
-
-	Out_of_routine: INTEGER is 8;
+	Out_of_routine: INTEGER is 5;
 			-- Execution with all breakable points set except
 			-- those of the current routine.
 

@@ -32,13 +32,19 @@ feature
 
 	append_signature (st: STRUCTURED_TEXT) is
 		do
-			st.add_string ("REFERENCE")
+			st.add_string ("EIF_REFERENCE")
 		end
 
 	dump (buffer: GENERATION_BUFFER) is
 			-- Debug purpose
 		do
 			buffer.putstring ("REFERENCE")
+		end
+
+	il_type_name: STRING is
+			-- Name of current class type.
+		do
+			Result := "System.Object"
 		end
 
 	same_as (other: TYPE_I): BOOLEAN is
@@ -76,30 +82,6 @@ feature
 	separate_send_macro: STRING is "CURSQRSO"
 			-- String generated to return the result of a separate call
 
-	generate (buffer: GENERATION_BUFFER) is
-			-- Generate C type in `buffer'.
-		do
-			buffer.putstring ("EIF_REFERENCE ")
-		end
-
-	generate_access_cast (buffer: GENERATION_BUFFER) is
-			-- Generate access C cast in `buffer'.
-		do
-			buffer.putstring ("(EIF_REFERENCE *) ")
-		end
-
-	generate_cast (buffer: GENERATION_BUFFER) is
-			-- Generate C cast in `buffer'.
-		do
-			buffer.putstring ("(EIF_REFERENCE) ")
-		end
-
-	generate_size (buffer: GENERATION_BUFFER) is
-			-- Generate size of C type
-		do
-			buffer.putstring ("sizeof(EIF_REFERENCE)")
-		end
-
 	hash_code: INTEGER is
 			-- Hash code for current type
 		once
@@ -111,7 +93,7 @@ feature
 		do
 			Result := Sk_ref
 		end
-
+	
 	cecil_value: INTEGER is
 		do
 			Result := Sk_dtype

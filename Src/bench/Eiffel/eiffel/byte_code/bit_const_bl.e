@@ -81,7 +81,7 @@ feature
 				-- RTMB is the macro used to create Eiffel strings from C ones
 			buf.putstring ("RTMB(")
 			buf.putchar('"')
-			buf.escape_string (value)
+			buf.escape_string (buf,value)
 			buf.putchar ('"')
 			buf.putstring(", ")
 			buf.putint (value.count)

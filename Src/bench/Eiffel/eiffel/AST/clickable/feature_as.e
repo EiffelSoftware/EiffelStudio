@@ -1,18 +1,17 @@
 indexing
-	description:
-			"Abstract class for abstract description of Eiffel features. %
-			%Version for Bench."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Abstract class for abstract description of Eiffel features. %
+				  %Version for Bench."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class FEATURE_AS
 		
 inherit
 	AST_EIFFEL
 		redefine
-			type_check, byte_node, find_breakable, 
+			type_check, byte_node,
 			format, fill_calls_list, replicate,
-			is_feature_obj, number_of_stop_points
+			is_feature_obj, number_of_breakpoint_slots
 		end
 
 	COMPARABLE
@@ -22,8 +21,8 @@ inherit
 
 	IDABLE
 		rename
-			id as body_id,
-			set_id as set_body_id
+			id as body_index,
+			set_id as set_body_index
 		end
 
 	CLICKABLE_AST
@@ -35,15 +34,17 @@ inherit
 
 feature {AST_FACTORY} -- Initialization
 
-	initialize (f: like feature_names; b: like body; s, e: INTEGER) is
+	initialize (f: like feature_names; b: like body; i: like indexes; s, e: INTEGER) is
 			-- Create a new FEATURE AST node.
 		require
 			f_not_void: f /= Void
-			f_not_empty: not f.empty
+			f_not_empty: not f.is_empty
 			b_not_void: b /= Void
+			can_have_indexes: i /= Void implies f.count = 1
 		do
 			feature_names := f
 			body := b
+			indexes := i
 			start_position := s
 			end_position := e
 			id := System.feature_as_counter.next_id
@@ -54,27 +55,11 @@ feature {AST_FACTORY} -- Initialization
 		ensure
 			feature_names_set: feature_names = f
 			body_set: body = b
+			indexes_set: indexes = i
 		end
 
 feature {NONE} -- Initialization
  
-	set is
-			-- Yacc initialization
-		do
-			feature_names ?= yacc_arg (0)
-			body ?= yacc_arg (1)
-			start_position := yacc_int_arg (0)
-			end_position := yacc_int_arg (1)
-			id := System.feature_as_counter.next_id
-			if body.is_unique then
-				System.current_class.set_has_unique
-			end
-			set_start_position
-		ensure then
-			feature_names /= Void
-			body /= Void
-		end
-
 	set_start_position is
 		do
 			--| No need to test whether feature_names is empty, because the class is
@@ -92,27 +77,60 @@ feature -- Access
 			-- second pass of the compiler in order to see if a feature
 			-- has change of body.
 
-	body_id: BODY_ID
-			-- Body id
+	indexes: INDEXING_CLAUSE_AS
+			-- Indexing clause for IL to specify `custom attributes' and `alias' name.
 
-	id: FEATURE_AS_ID
+	id: INTEGER
 			-- Id of the current instance used by the temporary AST server
 
 	start_position, end_position: INTEGER
 			-- Start and end of the text of the feature in origin file
 
+	external_name: STRING is
+			-- External name if any of current feature.
+		require
+			il_generation: System.il_generation
+		do
+			if indexes /= Void then
+				Result := indexes.external_name
+			end
+		end
+		
 feature -- Property
 
 	is_feature: BOOLEAN is True
 			-- Does the Current AST represent a feature?
 
-feature -- Setting
-
-	set_body_id (i: BODY_ID) is
-			-- Set `body_id' to `i'.
+	is_attribute: BOOLEAN is
+			-- Does Current AST represent an attribute?
 		do
-			body_id := i
+			Result := body.content = Void
 		end
+
+	is_function: BOOLEAN is
+			-- Does Current AST represent a function?
+		do
+			Result := body.type /= Void and not is_attribute
+		end
+
+	is_deferred: BOOLEAN is
+			-- Does Current AST represent a deferred feature?
+		require
+			body_has_content: body.content /= Void
+		local
+			rout: ROUT_BODY_AS
+			routine_as: ROUTINE_AS
+		do
+			routine_as ?= body.content
+			if routine_as /= Void then
+				rout := routine_as.routine_body
+				if rout /= Void then
+					Result := rout.is_deferred
+				end
+			end
+		end
+
+feature -- Setting
 
 	set_id (i: like id) is
 			-- Set `id' to `i'.
@@ -132,11 +150,28 @@ feature -- Comparison
 
 feature -- Access
 
-	number_of_stop_points: INTEGER is
-			-- Number of stop points for AST
+	number_of_breakpoint_slots: INTEGER is
+			-- Number of stop points for AST (inherited pre/postconditions
+			-- are not taken into account)
 		do
-				-- Traverse tree to record instructions
-			Result := body.number_of_stop_points
+				-- Traverse tree to get the number of slots
+			Result := body.number_of_breakpoint_slots
+		end
+
+	number_of_precondition_slots: INTEGER is
+			-- Number of preconditions
+			-- (inherited assertions are not taken into account)
+		do
+				-- Traverse tree
+			Result := body.number_of_precondition_slots
+		end
+
+	number_of_postcondition_slots: INTEGER is
+			-- Number of postconditions
+			-- (inherited assertions are not taken into account)
+		do
+				-- Traverse tree
+			Result := body.number_of_postcondition_slots
 		end
 
 	feature_name: STRING is
@@ -220,6 +255,14 @@ feature -- Access
 			Result := body.index_of_instruction (i)
 		end
 
+	custom_attribute: EIFFEL_LIST [CREATION_EXPR_AS] is
+			-- Custom attribute of current class if any.
+		do
+			if indexes /= Void then
+				Result := indexes.custom_attribute
+			end
+		end
+
 feature -- Update
 
 	assign_unique_values (counter: COUNTER; values: HASH_TABLE [INTEGER, STRING]) is
@@ -239,10 +282,10 @@ feature -- Update
 
 feature -- empty body
 
-	empty : BOOLEAN is
+	is_empty : BOOLEAN is
 				-- Is body empty?
 		do
-			Result := (body = Void) or else (body.empty)
+			Result := (body = Void) or else (body.is_empty)
 		end
 
 feature -- default rescue
@@ -345,28 +388,22 @@ feature -- Stoning
 
 feature -- Debugger
  
-	find_breakable is
-			-- Look for breakable instructions.
-			-- Definition: a breakable instruction is an Eiffel instruction
-			-- which may be followed by a breakpoint.
-		do
-			context.start_lines;	-- Initialize instruction FIFO stack
-			body.find_breakable;	-- Traverse tree to record instructions
-		end
-
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		local
 			comments: EIFFEL_COMMENTS
 			cont: CONTENT_AS
 			is_const_or_att: BOOLEAN
+			feature_dec: FEATURE_DEC_ITEM
 		do
 			ctxt.begin
 			ctxt.new_line
 			ctxt.set_separator (ti_Comma)
 			ctxt.set_space_between_tokens
 			ctxt.abort_on_failure
-			ctxt.put_text_item (ti_Before_feature_declaration)
+			create feature_dec.make (feature_names.first.associated_feature_name)
+			feature_dec.set_before
+			ctxt.put_text_item (feature_dec)
 			if ctxt.has_feature_i then
 					--| Should only be one feature name
 				feature_names.first.main_feature_format (ctxt)
@@ -377,11 +414,10 @@ feature -- Debugger
 				ctxt.rollback
 			else
 				body.format (ctxt)
-				if ctxt.is_feature_short then
-					ctxt.put_text_item_without_tabs (ti_After_feature_declaration)
-				else
-					ctxt.put_text_item_without_tabs (ti_Semi_colon)
-					ctxt.put_text_item_without_tabs (ti_After_feature_declaration)
+				create feature_dec.make (feature_names.first.associated_feature_name)
+				feature_dec.set_after
+				ctxt.put_text_item_without_tabs (feature_dec)
+				if not ctxt.is_feature_short then
 					ctxt.new_line
 				end
 					-- Print comment if the content of the body is
@@ -425,30 +461,6 @@ feature -- Replication
 			new_feature_names.extend (ctxt.replicated_name)
 			Result.set_feature_names (new_feature_names)
 			Result.set_body (body.replicate (ctxt))
-		end
-
-feature {FEATURE_CLAUSE_AS, FEATURE_CLAUSE_EXPORT} -- Case storage
-
-	storage_info: S_FEATURE_DATA is
-			-- Storage information for Current
-		require
-			not_be_called: False
-		do
-		end
-
-feature {FEATURE_ADAPTER, CASE_RECORD_INHERIT_INFO} -- Case storage
-
-	store_information (f: S_FEATURE_DATA) is
-			-- Store current information into `f'.
-		require
-			valid_f: f /= Void
-		local
-			rout_as: ROUTINE_AS
-		do
-			rout_as ?= body.content
-			if rout_as /= Void then
-				rout_as.store_information (f)
-			end
 		end
 
 feature {COMPILER_EXPORTER} -- Setting
@@ -545,5 +557,8 @@ feature {COMPILER_EXPORTER} -- Initialization
 			io.error.putstring (feature_names.first.internal_name)
 			io.error.new_line
 		end
+
+invariant
+	can_have_indexing_clause: indexes /= Void implies feature_names.count = 1
 
 end -- class FEATURE_AS

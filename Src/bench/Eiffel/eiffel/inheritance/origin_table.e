@@ -21,7 +21,7 @@
 class ORIGIN_TABLE 
 
 inherit
-	EXTEND_TABLE [SELECTION_LIST, ROUTINE_ID]
+	EXTEND_TABLE [SELECTION_LIST, INTEGER]
 
 	SHARED_WORKBENCH
 		export
@@ -57,7 +57,7 @@ feature
 		local
 			rout_id_set: ROUT_ID_SET;
 			i, nb: INTEGER;
-			rout_id: ROUTINE_ID;
+			rout_id: INTEGER;
 			l: SELECTION_LIST;
 		do
 			from
@@ -89,7 +89,7 @@ feature
 		local
 			rout_id_set: ROUT_ID_SET;
 			i, nb: INTEGER;
-			rout_id: ROUTINE_ID;
+			rout_id: INTEGER;
 			l: SELECTION_LIST;
 		do
 			from

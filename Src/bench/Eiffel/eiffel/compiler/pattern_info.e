@@ -23,23 +23,23 @@ creation
 
 feature 
 
-	pattern_id: PATTERN_ID;
+	pattern_id: INTEGER;
 			-- Pattern unique identifier
 
-	written_in: CLASS_ID;
+	written_in: INTEGER;
 			-- Id of the class where the pattern comes from
 
 	pattern: PATTERN;
 			-- Pattern
 
-	make (i: CLASS_ID; p: PATTERN) is
+	make (i: INTEGER; p: PATTERN) is
 			-- Initialization
 		do
 			written_in := i;
 			pattern := p;
 		end;
 
-	set_written_in (i: CLASS_ID) is
+	set_written_in (i: INTEGER) is
 			-- Assign `i' to `written_in'.
 		do
 			written_in := i;
@@ -51,7 +51,7 @@ feature
 			pattern := p;
 		end;
 
-	set_pattern_id (i: PATTERN_ID) is
+	set_pattern_id (i: INTEGER) is
 			-- Assign `i' to `pattern_id'.
 		do
 			pattern_id := i;
@@ -61,15 +61,14 @@ feature
 			-- Is `other' equal to Current ?
 		do
 			Result :=
-				written_in.is_equal (other.written_in)
-				and then
-				pattern.is_equal (other.pattern);
+				written_in = other.written_in
+				and then pattern.is_equal (other.pattern);
 		end;
 
 	hash_code: INTEGER is
 			-- Hash code
 		do
-			Result := written_in.hash_code + pattern.hash_code;
+			Result := written_in + pattern.hash_code;
 		end;
 
 	associated_class: CLASS_C is

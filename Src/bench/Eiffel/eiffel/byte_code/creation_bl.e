@@ -117,15 +117,14 @@ feature
 			target_type: TYPE_I;
 			basic_type: BASIC_I
 			is_expanded: BOOLEAN;
-			gen_type: GEN_TYPE_I
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
 			generate_line_info;
 
 			target_type := Context.real_type (target.type);
-			gen_type    ?= target_type
 
+			generate_frozen_debugger_hook
 			info.generate_start (Current);
 			info.generate_gen_type_conversion (Current);
 
@@ -154,7 +153,7 @@ feature
 						basic_type.generate_basic_creation (buf)
 						buf.putchar (';')
 						buf.new_line;
-					elseif target_type.is_expanded then
+					elseif target_type.is_true_expanded then
 						buf.putstring ("RTXA(");
 						buf.putstring ("RTLN(");
 						info.generate;
@@ -211,14 +210,14 @@ feature
 						buf.putstring ("RTAR(");
 						print_register;
 						buf.putstring (gc_comma);
-						context.Current_register.print_register_by_name;
+						context.Current_register.print_register;
 						buf.putchar (')');
 						buf.putchar (';');
 						buf.new_line;
 					end;
 					generate_assignment (is_expanded);
 				elseif not target_type.is_basic then
-					is_expanded := target_type.is_expanded;
+					is_expanded := target_type.is_true_expanded;
 					if not is_expanded then
 						generate_register_assignment;
 						generate_creation;
@@ -252,7 +251,7 @@ feature
 						buf.putstring ("RTAR(");
 						print_register;
 						buf.putstring (gc_comma);
-						context.Current_register.print_register_by_name;
+						context.Current_register.print_register;
 						buf.putchar (')');
 						buf.putchar (';');
 						buf.new_line;

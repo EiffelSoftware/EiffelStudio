@@ -9,32 +9,28 @@
 class REP_CLASS_INFO 
 
 inherit
-
 	LINKED_LIST [S_REP_NAME_LIST]
 		rename
 			make as ll_make
-		end;
+		end
+
 	IDABLE
+		rename
+			id as class_id,
+			set_id as set_class_id
+		end
 
 creation
-
 	make
 
 feature 
 
-	id: CLASS_ID;
-
-	set_id (i: CLASS_ID) is
-		do
-			id := i
-		end;
-
-	make (class_id: CLASS_ID) is
+	make (a_class_id: INTEGER) is
 		require
-			valid_arg1: class_id /= Void
+			valid_arg1: a_class_id /= 0
 		do
 			ll_make;
-			id := class_id;
+			class_id := a_class_id;
 		end;
 
 	has_list (other: S_REP_NAME_LIST): BOOLEAN is

@@ -97,13 +97,12 @@ feature {NONE} -- Execution
 			-- Execute the command.
 		local
 			classc: CLASSC_STONE
-			output_list: LINKED_LIST [STRING]
 			classi: CLASSI_STONE
 		do
 			if (choice /= Void) and then (arg = choice) then
 				if choice.position /= 0 then
 					if text_window.changed then
-						warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
+						warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed (Void),
 								Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
 					else
 						read_in_file (Void)
@@ -187,6 +186,16 @@ feature {NONE} -- Implementation
 			end
 			stone := tool.stone
 			choice.popup (Current, output_list, Interface_names.t_Select_class_version)
+		end
+		
+feature {NONE} -- Externals
+
+	date_string (a_date: INTEGER): STRING is
+			-- String representation of `a_date'
+		external
+			"C"
+		alias
+			"eif_date_string"
 		end
 
 end -- class CLASS_VERSIONS

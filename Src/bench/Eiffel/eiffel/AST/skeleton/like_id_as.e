@@ -27,16 +27,6 @@ feature {AST_FACTORY} -- Initialization
 			anchor_set: anchor = a
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			anchor ?= yacc_arg (0)
-		ensure then
-			anchor_exists: anchor /= Void
-		end
-
 feature -- Attributes
 
 	anchor: ID_AS
@@ -60,7 +50,7 @@ feature -- Implementation of inherited deferred features
 	actual_type: UNEVALUATED_LIKE_TYPE is
 			-- Create an UNEVALUATED_LIKE_TYPE
 		do
-			!! Result.make (anchor)
+			create Result.make (anchor)
 		end
 
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): TYPE_A is
@@ -71,13 +61,12 @@ feature -- Implementation of inherited deferred features
 			-- type definition, then attribute `actual_type' of Result is Void.
 		local
 			anchor_feature: FEATURE_I
-			anchor_type, argument_type: TYPE
+			anchor_type: TYPE
 			argument_position: INTEGER
-			rout_id: ROUTINE_ID
+			rout_id: INTEGER
 			like_argument: LIKE_ARGUMENT
 			like_feature: LIKE_FEATURE
 			depend_unit: DEPEND_UNIT
-			s: STRING
 			veen: VEEN
 		do
 			anchor_feature := feat_table.item (anchor)
@@ -104,7 +93,7 @@ feature -- Implementation of inherited deferred features
 					if System.in_pass3 then
 							-- There is a dependance between `f' and the `anchor_feature'
 							-- Record it for the propagation of the recompilations
-						!! depend_unit.make (context.a_class.id, anchor_feature)
+						!! depend_unit.make (context.a_class.class_id, anchor_feature)
 						context.supplier_ids.extend (depend_unit)
 					end
 				end

@@ -1,22 +1,25 @@
--- Server of class dependances for incremental type check 
--- used during the compilation. The goal is to merge the file Tmp_depend_file
--- and Depend_file if the compilation is successful.
+indexing
+	description: "Server of class dependances for incremental type check%
+				%used during the compilation. The goal is to merge the file Tmp_depend_file%
+				%and Depend_file if the compilation is successful.%
+				%Indexed by class id."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class TMP_REP_DEPEND_SERVER 
 
 inherit
-	DELAY_SERVER [REP_CLASS_DEPEND, CLASS_ID]
-
+	DELAY_SERVER [REP_CLASS_DEPEND]
 
 creation
 	make
 	
 feature 
 
-	id (t: REP_CLASS_DEPEND): CLASS_ID is
+	id (t: REP_CLASS_DEPEND): INTEGER is
 			-- Id associated with `t'
 		do
-			Result := t.id
+			Result := t.class_id
 		end
 
 	cache: REP_DEPEND_CACHE is
@@ -25,14 +28,14 @@ feature
 			!! Result.make
 		end
 
-	Delayed: SEARCH_TABLE [CLASS_ID] is
+	Delayed: SEARCH_TABLE [INTEGER] is
 			-- Cache for delayed items
 			-- Cache for delayed items
 		once
 			!!Result.make ((3 * Cache.cache_size) // 2)
 		end
 
-	update (table: EXTEND_TABLE [REP_CLASS_DEPEND, CLASS_ID]) is
+	update (table: EXTEND_TABLE [REP_CLASS_DEPEND, INTEGER]) is
 			-- Update server using `table'
 		do
 			from 

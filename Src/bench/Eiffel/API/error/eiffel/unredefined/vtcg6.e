@@ -49,15 +49,15 @@ feature {COMPILER_EXPORTER} -- Setting
 			feature_name_set: feature_name = a_name
 		end
 
-	set_constraint_class (class_c: CLASS_C) is
-			-- Set `class_c' to `constraint_class' which does not
+	set_constraint_class (c: CLASS_C) is
+			-- Set `c' to `constraint_class' which does not
 			-- contain `feature_name'
 		require
-			class_exists: class_c /= Void
+			class_exists: c /= Void
 		do
-			constraint_class := class_c
+			constraint_class := c
 		ensure
-			constraint_class_set: constraint_class = class_c
+			constraint_class_set: constraint_class = c
 		end
 
 end -- class VTCG6

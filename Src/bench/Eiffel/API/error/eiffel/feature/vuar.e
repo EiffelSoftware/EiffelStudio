@@ -1,14 +1,11 @@
 indexing
-
-	description: 
-		"Error for a feature call.";
-	date: "$Date$";
-	revision: "$Revision $"
+	description: "Error for a feature call."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class VUAR 
 
 inherit
-
 	FEATURE_ERROR
 		redefine
 			is_defined
@@ -16,9 +13,9 @@ inherit
 	
 feature -- Properties
 
-	called_feature: E_FEATURE;
+	called_feature: E_FEATURE
 
-	code: STRING is "VUAR";
+	code: STRING is "VUAR"
 
 feature -- Access
 
@@ -38,21 +35,24 @@ feature -- Output
 		local
 			a_class: CLASS_C
 		do
-			a_class := called_feature.written_class;
-			st.add_string ("Called feature: ");
-			called_feature.append_signature (st);
-			st.add_string (" from ");
-			a_class.append_name (st);
-			st.add_new_line;
-		end;
+			a_class := called_feature.written_class
+			st.add_string ("Called feature: ")
+			called_feature.append_signature (st)
+			st.add_string (" from ")
+			a_class.append_name (st)
+			st.add_new_line
+		end
 
 feature {ACCESS_FEAT_AS, PRECURSOR_AS} -- Setting
 
-	set_called_feature (f: FEATURE_I) is
+	set_called_feature (f: FEATURE_I; class_id: INTEGER) is
 		require
 			valid_f: f /= Void
+			valid_class_id: class_id > 0
 		do
-			called_feature := f.api_feature (f.written_in);
-		end;
+			called_feature := f.api_feature (class_id)
+		ensure
+			called_feature_not_void: called_feature /= Void
+		end
 
 end -- class VUAR

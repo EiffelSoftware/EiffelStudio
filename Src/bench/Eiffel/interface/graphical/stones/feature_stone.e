@@ -119,7 +119,6 @@ feature -- dragging
 			-- Text of the feature
 		local
 			temp: STRING;
-			cn: STRING;
 		do
 			Result := "-- Version from class: ";
 			Result.append (e_feature.written_class.name_in_upper);

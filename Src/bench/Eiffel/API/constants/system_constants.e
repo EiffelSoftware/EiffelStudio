@@ -1,51 +1,43 @@
 indexing
-
-	description: 
-		"System level constants.";
+	description: "System level constants.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class SYSTEM_CONSTANTS
 
 inherit
 	SHARED_PLATFORM_CONSTANTS
 
+	PRODUCT_NAMES
+
 feature {NONE}
 
-	Backup: STRING is "BACKUP";
+	Backup: STRING is "BACKUP"
 
-	Backup_info: STRING is "Info";
+	Backup_info: STRING is "compilation_info.txt"
 
-	Bench_Directory_List: STRING is "DIRECTORYLIST"
+	Bench_directory_list: STRING is "DIRECTORYLIST"
 
-	Bench_Recent_Files: STRING is "BENCH_RECENT_FILES"
+	Bench_recent_files: STRING is "BENCH_RECENT_FILES"
 
-	Casegen: STRING is "CASEGEN";
+	Casegen: STRING is "CASEGEN"
 
-	Case_storage: STRING is "Storage";
+	Case_storage: STRING is "Storage"
 
-	C_prefix: STRING is "C"
+	C_prefix: CHARACTER is 'C'
 			-- Prefix for C generated directories and object files
+
+	System_object_prefix: CHARACTER is 'E'
 
 	Continuation: CHARACTER is '\'
 
 	Comp: STRING is "COMP"
 
-	Copy_cmd: STRING is
-		once
-			Result := Platform_constants.Copy_cmd
-		end;
+	Default_ace_file: STRING is "default.ace"
 
-	Default_Ace_file: STRING is "default.ace";
-
-	Default_Class_filename: STRING is "default.cls";
+	Default_class_filename: STRING is "default.cls"
 
 	Descriptor_file_suffix: CHARACTER is 'd'
-
-	Directory_separator: CHARACTER is
-		once
-			Result := Operating_environment.Directory_separator
-		end
 
 	Documentation: STRING is "Documentation"
 
@@ -55,17 +47,7 @@ feature {NONE}
 
 	Dot_cpp: STRING is ".cpp"
 
-	Dot_e: STRING is
-		once
-			Result := Platform_constants.Dot_e
-		end;
-
 	Dot_h: STRING is ".h"
-
-	Dot_o: STRING is
-		once
-			Result := Platform_constants.Dot_o
-		end;
 
 	Dot_workbench: STRING is "precomp.epr"
 
@@ -74,11 +56,6 @@ feature {NONE}
 	Dot_xpp: STRING is ".xpp"
 
 	Dot_profile_information: STRING is "pfi"
-
-	Driver: STRING is
-		once
-			Result := Platform_constants.Driver
-		end;
 
 	Epoly: STRING is "epoly"
 
@@ -120,21 +97,11 @@ feature {NONE}
 
 	Evisib: STRING is "evisib"
 
-	Executable_suffix: STRING is
-		once
-			Result := Platform_constants.Executable_suffix
-		end;
-
 	F_code: STRING is "F_code"
-
-	Finish_freezing_script: STRING is
-		once
-			Result := Platform_constants.Finish_freezing_script
-		end;
 
 	Feature_table_file_suffix: CHARACTER is 'f'
 
-	Makefile_SH: STRING is "Makefile.SH"
+	Makefile_sh: STRING is "Makefile.SH"
 
 	updt_dle: STRING is "melted.dle";
 
@@ -142,18 +109,11 @@ feature {NONE}
 
 	Prelink_script: STRING is "prelink"
 
-	Preobj: STRING is
-		once
-			Result := Platform_constants.Preobj
-		end
-
 	Profiler: STRING is "Profiler"
 
 	Removed_log_file_name: STRING is "REMOVED";
 
 	Static_log_file_name: STRING is "STATIC";
-
-	System_object_prefix: STRING is "E";
 
 	Translation_log_file_name: STRING is "TRANSLAT";
 
@@ -163,7 +123,13 @@ feature {NONE}
 
 	W_code: STRING is "W_code"
 
-	project_extension: STRING is ".epr"
+	project_extension: STRING is "epr"
+
+	Debug_info_extension: STRING is ".edb"
+			-- breakpoints file (extension)
+
+	Debug_info_name: STRING is "options"
+			-- breakpoints file (core name)	
 
 	info_flag_begin: STRING is "-- System name is "
 
@@ -172,17 +138,27 @@ feature {NONE}
 feature {NONE, AUXILIARY_FILES} -- Versioning
 
 	Precompilation_id_tag: STRING is "precompilation_id"
-	Version_number: STRING is "4.5.021"
-	Version_tag: STRING is "0x00000025"
 	Version_number_tag: STRING is "version_number"
-	Storable_version_number: STRING is "4.5.020"
-	Storable_version_number_tag: STRING is "storable_version_number"
+	Ace_file_path_tag: STRING is "ace_file_path"
+			-- Tags used in project file header.
 
-feature {NONE}
+	Major_version_number: INTEGER is 5
+	Minor_version_number: INTEGER is 0
+	Build_version_number: INTEGER is 36
+			-- Version number
 
-	Max_non_encrypted: INTEGER is 2
-		-- Maximum number of non encrypted characters during
-		-- code generation
-		--| The class FEATURE_I will be generated in the file 'fe<n>.c'
+	Version_number: STRING is
+			-- Version number composed of
+			-- `Major_version_number' . `Minor_version_number' . `Build_version_number'.
+		once
+			create Result.make (10)
+			Result.append_integer (Major_version_number)
+			Result.append_character ('.')
+			Result.append_integer (Minor_version_number)
+			Result.append_character ('.')
+			Result.append_integer (Build_version_number)
+		end
+
+	Version_tag: INTEGER is 0x00000026
 
 end -- class SYSTEM_CONSTANTS

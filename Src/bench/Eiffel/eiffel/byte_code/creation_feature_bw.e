@@ -17,7 +17,7 @@ inherit
 
 	FEATURE_BW
 		undefine
-			enlarged, generate, is_first, context_type
+			enlarged, generate, is_first, context_type, generate_end
 		redefine
 			parent
 		end

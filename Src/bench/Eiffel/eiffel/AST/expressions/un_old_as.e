@@ -74,7 +74,7 @@ feature -- Type check, byte code and dead code removal
 		local
 			old_expr: EXPR_B
 		do
-			!! Result
+			create Result
 			old_expr := expr.byte_node
 			Result.set_expr (old_expr)
 			Result.add_old_expression
@@ -117,6 +117,16 @@ feature {AST_EIFFEL} -- Output
 			ctxt.put_text_item (ti_Old_keyword)
 			ctxt.put_space
 			expr.simple_format (ctxt)
+		end
+
+feature {NONE} -- Implementation
+
+	internal_byte_node: UN_OLD_B is
+			-- Do nothing
+		do
+			check
+				False
+			end
 		end
 
 end -- class UN_OLD_AS

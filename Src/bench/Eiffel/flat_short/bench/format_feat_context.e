@@ -29,29 +29,28 @@ feature -- Execution
 			class_set: class_c /= Void 
 			valid_target_feat: a_target_feat /= Void 
 		local
-			start_pos, end_pos: INTEGER;
-			file: RAW_FILE;
-			f_ast: FEATURE_AS;
-			rout_as: ROUTINE_AS;
-			comment: EIFFEL_COMMENTS;
-			written_in_class: CLASS_C;
-			c_comments: CLASS_COMMENTS;
-			source_feat: FEATURE_I;
-			target_feat: FEATURE_I;
-			prev_class: CLASS_C;
+			start_pos, end_pos: INTEGER
+			file: RAW_FILE
+			f_ast: FEATURE_AS
+			rout_as: ROUTINE_AS
+			written_in_class: CLASS_C
+			c_comments: CLASS_COMMENTS
+			source_feat: FEATURE_I
+			target_feat: FEATURE_I
+			prev_class: CLASS_C
 			prev_cluster: CLUSTER_I
 		do
 			if not rescued then
-				prev_class := System.current_class;
-				prev_cluster := Inst_context.cluster;
-				target_feat := a_target_feat.associated_feature_i;
-				execution_error := false;
-				Error_handler.wipe_out;
-				f_ast := target_feat.body;
-				export_status := target_feat.export_status;
-				!! format_stack.make;
-				!! text.make;
-				!! format;
+				prev_class := System.current_class
+				prev_cluster := Inst_context.cluster
+				target_feat := a_target_feat.associated_feature_i
+				execution_error := false
+				Error_handler.wipe_out
+				f_ast := target_feat.body
+				export_status := target_feat.export_status
+				create format_stack.make
+				create text.make
+				create format
 				last_was_printed := True;
 				format_stack.extend (format);
 				System.set_current_class (class_c);
@@ -80,17 +79,23 @@ feature -- Execution
 				rout_as ?= f_ast.body.content;
 				start_pos := f_ast.start_position;
 				if written_in_class.is_precompiled then
-					if Class_comments_server.has (written_in_class.id) then
-						c_comments := Class_comments_server.disk_item (written_in_class.id);
+					if Class_comments_server.has (written_in_class.class_id) then
+						c_comments := Class_comments_server.disk_item (written_in_class.class_id);
 						feature_comments := c_comments.item (start_pos)
 					end
 				else
 					!! file.make (written_in_class.file_name);
-					if file.exists and then rout_as /= Void then
-						end_pos := rout_as.body_start_position;
-						!! eiffel_file.make_with_positions (file.name, start_pos, end_pos);
-						eiffel_file.set_current_feature (f_ast);
-						feature_comments := eiffel_file.current_feature_comments;
+					if file.exists then
+						if rout_as /= Void then
+							end_pos := rout_as.body_start_position;
+							!! eiffel_file.make_with_positions (file.name, start_pos, end_pos);
+							eiffel_file.set_current_feature (f_ast);
+							feature_comments := eiffel_file.current_feature_comments;
+						elseif f_ast.is_attribute then
+							!! eiffel_file.make_with_positions (file.name, f_ast.start_position, f_ast.end_position);
+							eiffel_file.set_current_feature (f_ast);
+							feature_comments := eiffel_file.current_feature_comments;
+						end
 					end;
 				end;
 				!! assert_server.make_for_feature (target_feat, f_ast);

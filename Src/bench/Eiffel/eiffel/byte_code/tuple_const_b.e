@@ -8,7 +8,7 @@ inherit
 		redefine
 			make_byte_code, enlarged, enlarge_tree, is_unsafe,
 			optimized_byte_node, calls_special_features, size,
-			pre_inlined_code, inlined_byte_code
+			pre_inlined_code, inlined_byte_code, generate_il
 		end
 	
 feature 
@@ -51,6 +51,93 @@ feature
 			Result.enlarge_tree;
 		end;
 
+feature -- IL generation
+
+	generate_il is
+			-- Generate IL code for manifest tuple.
+		local
+			real_ty: TUPLE_TYPE_I
+			actual_type: CL_TYPE_I
+			tuple_make: FEATURE_I
+			expr: EXPR_B
+			array_class: CLASS_C
+			class_type, array_any, array_char: SPECIAL_CLASS_TYPE
+			local_array_any, local_array_char: INTEGER
+			i: INTEGER
+		do
+			real_ty ?= context.real_type (type)
+
+				-- Retrieve info on `make' of TUPLE.
+			tuple_make := real_ty.base_class.feature_table.item ("make")
+
+				-- Retrieve info on ARRAY [ANY] and ARRAY [CHARACTER]
+				-- in order to create them.
+			array_class := System.special_class.compiled_class
+			from
+				array_class.types.start
+			until
+				array_class.types.after
+			loop
+				class_type ?= array_class.types.item
+				if class_type.is_character_array then
+					array_char := class_type
+				elseif class_type.is_any_array then
+					array_any := class_type
+				end
+				array_class.types.forth
+			end
+
+				-- Creation of an ARRAY [CHARACTER]
+			context.add_local (array_char.type)
+			local_array_char := context.local_list.count
+			il_generator.put_local_info (array_char.type, "dummy_" + local_array_char.out)
+			il_generator.put_integer_32_constant (expressions.count)
+			array_char.generate_il ("make")
+			il_generator.generate_local_assignment (local_array_char)
+
+				-- Creation of an ARRAY [ANY]
+			context.add_local (array_any.type)
+			local_array_any := context.local_list.count
+			il_generator.put_local_info (array_any.type, "dummy_" + local_array_any.out)
+			il_generator.put_integer_32_constant (expressions.count)
+			array_any.generate_il ("make")
+			il_generator.generate_local_assignment (local_array_any)
+
+			from
+				expressions.start
+			until
+				expressions.after
+			loop
+				expr ?= expressions.item
+				actual_type ?= context.real_type (expr.type)
+
+					-- Prepare call to `put'.
+				il_generator.generate_local (local_array_any)
+				il_generator.put_integer_32_constant (i)
+
+					-- Generate expression
+				expr.generate_il
+				if
+					actual_type /= Void and then
+					actual_type.is_expanded
+				then 
+						-- We generate a boxed version of type.
+					expr.generate_il_metamorphose (actual_type, True)
+				end
+				array_any.generate_il ("put")
+				i := i + 1
+				expressions.forth
+			end
+
+			il_generator.create_object (real_ty)
+			il_generator.duplicate_top
+			il_generator.generate_local (local_array_any)
+			il_generator.generate_local (local_array_char)
+			il_generator.generate_feature_access (real_ty, tuple_make.feature_id, True)
+		end
+
+feature -- Byte code generation
+
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a manifest tuple
 		local
@@ -61,7 +148,7 @@ feature
 			feat_id: INTEGER;
 			expr: EXPR_B;
 			base_class: CLASS_C;
-			r_id: ROUTINE_ID;
+			r_id: INTEGER;
 			rout_info: ROUT_INFO
 		do
 			real_ty ?= context.real_type (type);
@@ -92,18 +179,18 @@ feature
 				ba.append (Bc_parray);
 				r_id := feat_i.rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				ba.append_integer (rout_info.origin.id);
+				ba.append_integer (rout_info.origin);
 				ba.append_integer (rout_info.offset);	
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
-				ba.append_short_integer (context.class_type.id.id-1)
+				ba.append_short_integer (context.class_type.static_type_id-1)
 				real_ty.make_gen_type_byte_code (ba, true)
 				ba.append_short_integer (-1);
 			else
 				ba.append (Bc_array);
-				ba.append_short_integer (real_ty.associated_class_type.id.id - 1);
+				ba.append_short_integer (real_ty.associated_class_type.static_type_id - 1);
 				ba.append_short_integer (real_ty.associated_class_type.type_id - 1);
 				ba.append_short_integer
-					(context.current_type.associated_class_type.id.id - 1)
+					(context.current_type.associated_class_type.static_type_id - 1)
 				real_ty.make_gen_type_byte_code (ba, true)
 				ba.append_short_integer (-1);
 				feat_id := feat_i.feature_id;

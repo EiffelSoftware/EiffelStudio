@@ -27,7 +27,7 @@ inherit
 			execute_warner_ok as open_project
 		end
 
-	BENCH_COMMAND_EXECUTOR
+	COMMAND_EXECUTOR
 		rename
 			execute as launch_ebench
 		end
@@ -91,9 +91,7 @@ feature {NONE} -- Implementation
 	work (argument: ANY) is
 			-- Popup and let the user choose what he wants.
 		local
-			last_char: CHARACTER
 			file_name: STRING
-			expiration: INTEGER
 			new_name_chooser: NAME_CHOOSER_W
 			file: RAW_FILE
 			environment_variable: EXECUTION_ENVIRONMENT
@@ -135,7 +133,7 @@ feature {NONE} -- Implementation
 						end
 					else
 						file_name := clone (last_name_chooser.selected_file)
-						if file_name.empty then
+						if file_name.is_empty then
 							choose_again := True
 							warner (Project_tool).custom_call (Current,
 								Warning_messages.w_file_not_exist (file_name), 
@@ -162,7 +160,7 @@ feature {NONE} -- Implementation
 								Warning_messages.w_file_not_exist (project_file_name), 
 								Interface_names.b_Ok, Void, Void)
 					else
-						ebench_name := ebench_command_name
+						ebench_name := clone ((create {EIFFEL_ENV}).Ebench_command_name)
 						ebench_name.append (" ")
 						ebench_name.append (project_file_name)
 						launch_ebench (ebench_name)
@@ -192,7 +190,7 @@ feature {NONE} -- Implementation
 						end
 					else
 						file_name := clone (last_name_chooser.selected_file)
-						if file_name.empty then
+						if file_name.is_empty then
 							choose_again := True
 							warner (Project_tool).custom_call (Current,
 								Warning_messages.w_file_not_exist (file_name), 
@@ -205,7 +203,7 @@ feature {NONE} -- Implementation
 									Warning_messages.w_file_not_exist (file_name), 
 									Interface_names.b_Ok, Void, Void)
 							else
-								ebench_name := ebench_command_name
+								ebench_name := clone ((create {EIFFEL_ENV}).Ebench_command_name)
 								ebench_name.append (" ")
 								ebench_name.append (file_name)
 								launch_ebench (ebench_name)
@@ -243,13 +241,10 @@ feature -- Project Initialization
 			given_project_file_name_exists: file_name /= Void
 		local
 			dir_name: STRING
-	 		root_class_name: STRING
-			root_class_c: CLASS_C
-			project_text:GRAPHICAL_TEXT_WINDOW
 		do
 			if has_project_name then
 				dir_name := file_name.substring (1, file_name.last_index_of
-							(directory_separator, file_name.count) - 1)
+							(Operating_environment.directory_separator, file_name.count) - 1)
 			else
 				dir_name := clone (last_name_chooser.directory)
 			end
@@ -333,10 +328,21 @@ feature -- Project Initialization
 
 			if not Eiffel_project.error_occurred then
 				init_project
+
+					-- Retrieve breakpoints list
+				project_tool.set_title ("Retrieving debug information...")
+					-- These 2 lines will update effectively the project tool.
+				!! mp.do_nothing
+				mp.restore
+				if Application /= Void then
+					Application.load_debug_info
+				end
+
+					-- display the title of the main window
 				title := clone (Interface_names.t_Project)
 				title.append (": ")
 				project_name := project_dir.name
-				if project_name.item (project_name.count) = Directory_separator then
+				if project_name.item (project_name.count) = Operating_environment.Directory_separator then
 					project_name.head (project_name.count -1)
 				end
 				title.append (project_name)
@@ -432,7 +438,7 @@ feature {NONE} -- Implementation
 			last_char: CHARACTER
 		do
 			last_char := file_name.item (file_name.count)
-			if last_char = Directory_separator then
+			if last_char = Operating_environment.Directory_separator then
 				Result := clone (file_name)
 				Result.remove (file_name.count)
 			else

@@ -1,14 +1,11 @@
 indexing
-
-	description: 
-		"Abstract notion of system commands with associated commands.";
+	description: "Abstract notion of system commands with associated commands.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 deferred class EWB_SYSTEM
 
 inherit
-	
 	EWB_CMD
 
 feature {NONE}
@@ -18,16 +15,16 @@ feature {NONE}
 		deferred
 		ensure
 			non_void_result: Result /= Void
-		end;
+		end
 
 	execute is
 		local
 			cmd: like associated_cmd
 		do
-			cmd := associated_cmd;
-			cmd.execute;
-			output_window.put_string (cmd.structured_text.image);
-			output_window.new_line;
-		end;
+			cmd := associated_cmd
+			cmd.execute
+			output_window.put_string (cmd.structured_text.image)
+			output_window.new_line
+		end
 
 end -- class EWB_SYSTEM

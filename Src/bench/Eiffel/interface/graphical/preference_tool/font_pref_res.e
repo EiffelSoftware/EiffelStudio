@@ -22,7 +22,7 @@ feature -- Validation
 			-- Validate Current's new value.
 		do
 			if text /= Void then
-				if text.text.empty then
+				if text.text.is_empty then
 					is_resource_valid := True
 				else
 					is_resource_valid := associated_resource.is_valid (text.text)
@@ -82,7 +82,7 @@ feature {PREFERENCE_CATEGORY} -- Access
 			if text = Void or else equal (ar.value, text.text) then
 					--| text /= Void means: text has been displayed
 					--| and thus the user could have changed the value.
-				if ar.value = Void or else ar.value.empty then
+				if ar.value = Void or else ar.value.is_empty then
 					file.putstring ("%"%"")
 				else
 					file.putchar ('%"')
@@ -90,7 +90,7 @@ feature {PREFERENCE_CATEGORY} -- Access
 					file.putchar ('%"')
 				end
 			else
-				if text.text.empty then
+				if text.text.is_empty then
 					file.putstring ("%"%"")
 				else
 					file.putchar ('%"')
@@ -108,7 +108,7 @@ feature {PREFERENCE_CATEGORY} -- Access
 			font := associated_resource.actual_value;
 			if 	
 				text /= Void and then 
-				((font = Void and then not text.text.empty) or else
+				((font = Void and then not text.text.is_empty) or else
 				(font /= Void and then not font.name.is_equal (text.text)))
 			then
 				Result := True

@@ -35,20 +35,6 @@ feature {AST_FACTORY} -- Initialization
 			parameters_set: parameters = p
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			feature_name ?= yacc_arg (0)
-			parameters ?= yacc_arg (1)
-			if parameters /= Void then
-				parameters.start
-			end
-		ensure then
-			feature_name_exists: feature_name /= Void
-		end
-
 feature -- Attributes
 
 	feature_name: ID_AS
@@ -100,7 +86,7 @@ feature -- Type check, byte code and dead code removal
 			Error_handler.checksum
 			if id_type = Void then
 					-- Undeclared identifier
-				!!veen
+				create veen
 				context.init_error (veen)
 				veen.set_identifier (feature_name)
 				Error_handler.insert_error (veen)
@@ -128,12 +114,12 @@ feature -- Type check, byte code and dead code removal
 		local
 			arg_type: TYPE_A
 			a_feature: FEATURE_I
-			i, count, arg_count, argument_position: INTEGER
+			i, count, arg_count: INTEGER
 				-- Id of the class type on the stack
 			current_item: TYPE_A
 			last_type, last_constrained: TYPE_A
 				-- Type onto the stack
-			last_id: CLASS_ID
+			last_id: INTEGER
 			context_count: INTEGER
 				-- Id of the class correponding to `last_type'
 			last_class: CLASS_C
@@ -151,8 +137,19 @@ feature -- Type check, byte code and dead code removal
 			vape: VAPE
 			formal_type: FORMAL_A
 			operand: OPERAND_AS
+			open_type: OPEN_TYPE_A
+			is_in_creation_expression: BOOLEAN
 		do
 			last_type := context.item
+
+				-- Retrieve if we are type checking a routine that is the creation
+				-- routine of a creation expression. As soon as we know this, we
+				-- reset `is_in_creation_expression' to False, so that if any parameter
+				-- of the creation routine is also a creation expression we perform
+				-- a correct type checking of the VAPE errors.
+			is_in_creation_expression := context.is_in_creation_expression
+			context.set_is_in_creation_expression (False)
+
 			if last_type.is_multi_type then
 				last_type := System.instantiator.array_type_a
 				context.replace (last_type)
@@ -161,13 +158,13 @@ feature -- Type check, byte code and dead code removal
 
 			if last_constrained.is_void then
 					-- No call when target is a procedure
-				!!vkcn3
+				create vkcn3
 				context.init_error (vkcn3)
 				Error_handler.insert_error (vkcn3)
 					-- Cannot go on here
 				Error_handler.raise_error
 			elseif last_constrained.is_none then
-				!!vhne
+				create vhne
 				context.init_error (vhne)
 				Error_handler.insert_error (vhne)
 					-- Cannot go on here
@@ -175,7 +172,7 @@ feature -- Type check, byte code and dead code removal
 			end
 
 			last_class := last_constrained.associated_class
-			last_id := last_class.id
+			last_id := last_class.class_id
 
 				-- Look for a feature in the class associated to the
 				-- last actual type onto the context type stack. If it
@@ -183,7 +180,7 @@ feature -- Type check, byte code and dead code removal
 			a_feature := last_class.feature_table.item (feature_name)
 			if a_feature /= Void then
 					-- Supplier dependances update
-				!!depend_unit.make (last_id, a_feature)
+				create depend_unit.make (last_id, a_feature)
 				context.supplier_ids.extend (depend_unit)
 				
 					-- Attachments type check
@@ -194,12 +191,12 @@ feature -- Type check, byte code and dead code removal
 					-- Delayed call with all arguments open.
 					-- Create parameters.
 					from
-						!!parameters.make_filled (arg_count)
+						create parameters.make_filled (arg_count)
 						parameters.start
 					until
 						parameters.after
 					loop
-						!!operand
+						create operand
 						parameters.put (operand)
 						parameters.forth
 					end
@@ -207,9 +204,9 @@ feature -- Type check, byte code and dead code removal
 					parameters.start
 				end
 				if count /= a_feature.argument_count then
-					!!vuar1
+					create vuar1
 					context.init_error (vuar1)
-					vuar1.set_called_feature (a_feature)
+					vuar1.set_called_feature (a_feature, last_id)
 					vuar1.set_argument_count (count)
 					Error_handler.insert_error (vuar1)
 						-- Cannot go on here: too dangerous
@@ -255,10 +252,19 @@ feature -- Type check, byte code and dead code removal
 							-- Conformance: take care of constrained
 							-- genericity
 						current_item := context.i_th (context_count + i); 
-						if not current_item.conform_to (arg_type) then
-							!!vuar2
+							-- We must generate an error when `arg_type' becomes
+							-- an OPEN_TYPE_A, for example "~equal (?, b)" will
+							-- check that the type of `b' conforms to type of `?'
+							-- since `equal' is defined as `equal (a: ANY; b: like a)'.
+							-- However `conform_to' does not work when parameter
+							-- is an OPEN_TYPE_A type. Since this checks can only
+							-- happens in type checking of an agent, we can do it
+							-- at only one place, ie here.
+						open_type ?= arg_type
+						if open_type /= Void or else not current_item.conform_to (arg_type) then
+							create vuar2
 							context.init_error (vuar2)
-							vuar2.set_called_feature (a_feature)
+							vuar2.set_called_feature (a_feature, last_id)
 							vuar2.set_argument_position (i)
 							vuar2.set_argument_name (a_feature.argument_names.i_th (i))
 							vuar2.set_formal_type (arg_type)
@@ -329,7 +335,7 @@ feature -- Type check, byte code and dead code removal
 				Result := Result.instantiation_in (last_type, last_id).actual_type
 					-- Export validity
 				if not is_export_valid (a_feature) then
-					!!vuex
+					create vuex
 					context.init_error (vuex)
 					vuex.set_static_class (last_class)
 					vuex.set_exported_feature (a_feature)
@@ -345,7 +351,7 @@ feature -- Type check, byte code and dead code removal
 					and then (context.a_feature = Void or else
 						not context.a_feature.is_obsolete)
 				then
-					!!obs_warn
+					create obs_warn
 					obs_warn.set_class (context.a_class)
 					obs_warn.set_obsolete_class (context.last_class)
 					obs_warn.set_obsolete_feature (a_feature)
@@ -355,9 +361,10 @@ feature -- Type check, byte code and dead code removal
 				if
 					not System.do_not_check_vape and then
 					context.level4 and then
+					not is_in_creation_expression and then
 					context.check_for_vape
 				then
-					-- In precondition and checking for vape
+						-- In precondition and checking for vape
 					context_export := context.a_feature.export_status
 					feature_export := a_feature.export_status
 debug
@@ -378,7 +385,7 @@ end
 						not a_feature.feature_name.is_equal (Void_feature_name) and then
 						not context_export.is_subset (feature_export) 
 					then
-						!!vape
+						create vape
 						context.init_error (vape)
 						vape.set_exported_feature (a_feature)
 						Error_handler.insert_error (vape)
@@ -398,18 +405,17 @@ end
 			access_line: ACCESS_LINE
 			params: BYTE_LIST [PARAMETER_B]
 			p: PARAMETER_B
-			t: TYPE_I
 			i, nb: INTEGER
 		do
 			if parameters /= Void then
 				from
 					nb := parameters.count
-					!! params.make_filled (nb)
+					create params.make_filled (nb)
 					i := 1
 				until
 					i > nb
 				loop
-					!!p
+					create p
 					p.set_expression (parameters.i_th (i).byte_node)
 					params.put_i_th (p, i)
 					i := i + 1	
@@ -508,7 +514,7 @@ feature -- Replication
 				l.add (feature_name)
 			end
 			if parameters /= Void then
-			 	!!new_list.make
+			 	create new_list.make
 				parameters.fill_calls_list (new_list)
 				l.merge (new_list)
 			end

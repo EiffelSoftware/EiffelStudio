@@ -1,10 +1,17 @@
+indexing
+	description	: "Abstract description of an Eiffel list of assertions%
+				  %Version for Bench."
+	date		: "$Date$"
+	revision	: "$Revision$"
+
 class ASSERT_LIST_AS
 
 inherit
 	AST_EIFFEL
 		redefine
 			type_check, byte_node, format,
-			fill_calls_list, replicate
+			fill_calls_list, replicate,
+			number_of_breakpoint_slots
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -17,12 +24,14 @@ feature {AST_FACTORY} -- Initialization
 			assertions_set: assertions = a
 		end
 
-feature {NONE} -- Initialization
+feature -- Access
 
-	set is
-			-- Yacc initialization
+	number_of_breakpoint_slots: INTEGER is
+			-- Number of stop points for AST
 		do
-			assertions ?= yacc_arg (0)
+			if assertions /= Void then
+				Result := assertions.number_of_breakpoint_slots
+			end
 		end
 
 feature -- Attributes
@@ -81,38 +90,17 @@ feature -- Format
 
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text
-		local
-			source_cl, target_cl: CLASS_C
 		do
-			if assertions /= Void then
-				ctxt.begin
-				put_clause_keywords (ctxt)
-				source_cl := ctxt.global_adapt.source_enclosing_class
-				target_cl := ctxt.global_adapt.target_enclosing_class
-				if source_cl /= target_cl then
-					ctxt.put_space
-					ctxt.put_text_item (ti_Dashdash)
-					ctxt.put_space
-					ctxt.put_comment_text ("from ")
-					ctxt.put_classi (source_cl.lace_class)
-				end
-				ctxt.indent; 
-				ctxt.new_line
-				ctxt.set_separator (ti_Semi_colon)
-				ctxt.set_new_line_between_tokens
-				ctxt.continue_on_failure
-				format_assertions (ctxt)
-				ctxt.exdent
-				if ctxt.last_was_printed then
-					ctxt.set_first_assertion (false)
-					ctxt.commit
-				else
-					ctxt.rollback
-				end
-			end 			
+			internal_format (ctxt, False)
 		end
 
-	format_assertions (ctxt: FORMAT_CONTEXT) is
+	format_without_breakable_marks (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text without creating the breakable marks
+		do
+			internal_format (ctxt, True)
+		end
+
+	format_assertions (ctxt: FORMAT_CONTEXT; hide_breakable_marks: BOOLEAN) is
 		local
 			i, l_count: INTEGER
 			not_first: BOOLEAN
@@ -129,7 +117,11 @@ feature -- Format
 				end
 				ctxt.begin
 				ctxt.new_expression
-				assertions.i_th(i).format(ctxt)
+				if hide_breakable_marks then
+					assertions.i_th(i).format_without_breakable_marks (ctxt)
+				else
+					assertions.i_th(i).format (ctxt)
+				end
 				if ctxt.last_was_printed then
 					not_first := True
 					ctxt.commit
@@ -144,6 +136,40 @@ feature -- Format
 				ctxt.commit
 			else
 				ctxt.rollback
+			end
+		end
+
+feature {NONE} -- Format
+
+	internal_format (ctxt: FORMAT_CONTEXT; hide_breakable_marks: BOOLEAN) is
+			-- Reconstitute text
+		local
+			source_cl, target_cl: CLASS_C
+		do
+			if assertions /= Void then
+				ctxt.begin
+				put_clause_keywords (ctxt)
+				source_cl := ctxt.global_adapt.source_enclosing_class
+				target_cl := ctxt.global_adapt.target_enclosing_class
+				if source_cl /= target_cl then
+					ctxt.put_space
+					ctxt.put_text_item (ti_Dashdash)
+					ctxt.put_space
+					ctxt.put_comment_text ("from ")
+					ctxt.put_classi (source_cl.lace_class)
+				end
+				ctxt.indent
+				ctxt.new_line
+				ctxt.set_new_line_between_tokens
+				ctxt.continue_on_failure
+				format_assertions (ctxt, hide_breakable_marks)
+				ctxt.exdent
+				if ctxt.last_was_printed then
+					ctxt.set_first_assertion (false)
+					ctxt.commit
+				else
+					ctxt.rollback
+				end
 			end
 		end
 
@@ -165,36 +191,12 @@ feature	-- Replication
 		end
 
 
-feature {NONE}
+feature {NONE} -- Implementation
 	
 	put_clause_keywords (ctxt: FORMAT_CONTEXT) is
 			-- Append the assertion keywords ("require", "require else",
 			-- "ensure", "ensure then" or "invariant").
 		do
-		end
-
-feature {ROUTINE_AS} -- Case Storage
-
-	storage_info: FIXED_LIST [S_TAG_DATA] is
-			-- Assertion storage info for Case in the 
-			-- context of class `class_c'
-		require
-			 valid_assertions: assertions /= Void
-		local
-			 ctxt: FORMAT_CONTEXT
-		do
-			!! Result.make_filled (assertions.count)
-			!! ctxt.make_for_case
-			from
-				Result.start
-				assertions.start
-			until
-				assertions.after
-			loop
-				Result.replace (assertions.item.storage_info (ctxt))
-				Result.forth
-				assertions.forth
-			end
 		end
 
 feature {AST_EIFFEL} -- Output
@@ -203,7 +205,7 @@ feature {AST_EIFFEL} -- Output
 			-- Reconstitute text
 		do
 			if assertions /= Void then
-				simple_put_clause_keywords (ctxt)
+				put_clause_keywords (ctxt)
 				ctxt.new_line
 				ctxt.set_new_line_between_tokens
 				ctxt.indent
@@ -248,12 +250,4 @@ feature {ASSERT_LIST_AS, REQUIRE_MERGER, ENSURE_MERGER} -- Replication
 			assertions := l
 		end
 	
-feature {NONE}
-	
-	simple_put_clause_keywords (ctxt: FORMAT_CONTEXT) is
-			-- Append the assertion keywords ("require", "require else",
-			-- "ensure", "ensure then" or "invariant").
-		do
-		end
-
 end -- class ASSERT_LIST_AS

@@ -56,12 +56,11 @@ feature {NONE} -- Properties
 	create_structured_text (object: OBJECT_STONE): STRUCTURED_TEXT is
 		local
 			obj: DEBUGGED_OBJECT;
-			attributes: LIST [DEBUG_VALUE];
+			attributes: LIST [ABSTRACT_DEBUG_VALUE];
 			type_name: STRING;
 			is_special: BOOLEAN;
 			dynamic_class: CLASS_C;
 			status: APPLICATION_STATUS;
-			stone: CLASSC_STONE;
 		do
 			status := Application.status;
 			if status = Void then
@@ -85,7 +84,7 @@ feature {NONE} -- Properties
 				Result.add_new_line;
 				Result.add_new_line;
 				if 
-					is_special and then (attributes.empty or else 
+					is_special and then (attributes.is_empty or else 
 					attributes.first.name.to_integer > 0) 
 				then
 					Result.add_indent;
@@ -101,7 +100,7 @@ feature {NONE} -- Properties
 					attributes.forth
 				end;
 				if 
-					is_special and then (attributes.empty or else 
+					is_special and then (attributes.is_empty or else 
 					attributes.last.name.to_integer < obj.capacity - 1)
 				then
 					Result.add_indent;

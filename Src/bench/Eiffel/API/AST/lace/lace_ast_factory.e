@@ -7,11 +7,57 @@ indexing
 
 class LACE_AST_FACTORY
 
+feature -- Checking
+
+	valid_identifier (st: STRING): BOOLEAN is
+			-- Is `st' a valid identifer for Lace syntax.
+		local
+			i, nb: INTEGER
+		do
+			Result := st /= Void and then not st.is_empty
+			if
+				Result and then
+				valid_first_identifier_character (st.item (1))
+			then
+				from
+					nb := st.count
+					i := 2
+				until
+					i > nb or not Result
+				loop
+					Result := valid_identifier_character (st.item (i))
+					i := i + 1
+				end
+			end
+		end
+
+	valid_first_identifier_character (c: CHARACTER): BOOLEAN is
+			-- Is `c' a good character as first character of a Lace identifier?
+		do
+			inspect
+				c
+			when 'a'..'z', 'A'..'Z' then
+				Result := True
+			else
+			end
+		end
+
+	valid_identifier_character (c: CHARACTER): BOOLEAN is
+			-- Is `c' a good character as first character of a Lace identifier?
+		do
+			inspect
+				c
+			when 'a'..'z', 'A'..'Z', '0'..'9', '_' then
+				Result := True
+			else
+			end
+		end
+
 feature -- Access
 
 	new_ace_sd (sn: ID_SD; r: ROOT_SD; d: LACE_LIST [D_OPTION_SD];
 		c: LACE_LIST [CLUSTER_SD]; e: LACE_LIST [LANG_TRIB_SD];
-		g: LACE_LIST [LANG_GEN_SD]; cl: CLICK_LIST): ACE_SD is
+		cl: CLICK_LIST): ACE_SD is
 			-- New ACE AST node
 		require
 			sn_not_void: sn /= Void
@@ -19,7 +65,7 @@ feature -- Access
 			cl_not_void: cl /= Void
 		do
 			!! Result
-			Result.initialize (sn, r, d, c, e, g, cl)
+			Result.initialize (sn, r, d, c, e, cl)
 		ensure
 			ace_sd_not_void: Result /= Void
 			system_name_set: Result.system_name = sn
@@ -27,7 +73,6 @@ feature -- Access
 			defaults_set: Result.defaults = d
 			clusters_set: Result.clusters = c
 			externals_set: Result.externals = e
-			generation_set: Result.generation = g
 			click_list_set: Result.click_list = cl
 		end
 
@@ -50,18 +95,6 @@ feature -- Access
 			Result.initialize
 		ensure
 			assertion_sd_not_void: Result /= Void
-		end
-
-	new_c_name_sd (ln: ID_SD): C_NAME_SD is
-			-- New C_NAME AST node
-		require
-			ln_not_void: ln /= Void
-		do
-			!! Result
-			Result.initialize (ln)
-		ensure
-			c_name_sd_not_void: Result /= Void
-			language_name_set: Result.language_name = ln
 		end
 
 	new_check_sd (v: ID_SD): CHECK_SD is
@@ -119,14 +152,15 @@ feature -- Access
 			cluster_name_set: Result.cluster_name = cn
 		end
 
-	new_clust_prop_sd (us: ID_SD; iop: LACE_LIST [INCLUDE_SD];
-		eo: LACE_LIST [EXCLUDE_SD]; ao: LACE_LIST [CLUST_ADAPT_SD];
-		dop: LACE_LIST [D_OPTION_SD]; o: LACE_LIST [O_OPTION_SD];
-		vo: LACE_LIST [CLAS_VISI_SD]): CLUST_PROP_SD is
+	new_clust_prop_sd (dep: LACE_LIST [DEPEND_SD]; us: ID_SD;
+		iop: LACE_LIST [INCLUDE_SD]; eo: LACE_LIST [EXCLUDE_SD];
+		ao: LACE_LIST [CLUST_ADAPT_SD]; dop: LACE_LIST [D_OPTION_SD];
+		o: LACE_LIST [O_OPTION_SD]; vo: LACE_LIST [CLAS_VISI_SD]
+		): CLUST_PROP_SD is
 			-- New CLUST_PROP AST node
 		do
 			!! Result
-			Result.initialize (us, iop, eo, ao, dop, o, vo)
+			Result.initialize (dep, us, iop, eo, ao, dop, o, vo)
 		ensure
 			clust_prop_sd_not_void: Result /= Void
 			use_name_set: Result.use_name = us
@@ -151,20 +185,22 @@ feature -- Access
 			renamings_set: Result.renamings = r
 		end
 
-	new_cluster_sd (cn, pn, dn: ID_SD; cp: CLUST_PROP_SD; is_recursive: BOOLEAN): CLUSTER_SD is
+	new_cluster_sd (cn, pn, dn: ID_SD; cp: CLUST_PROP_SD; is_recursive, is_library: BOOLEAN): CLUSTER_SD is
 			-- New CLUSTER AST node
 		require
 			cn_not_void: cn /= Void
 			dn_not_void: dn /= Void
 		do
 			!! Result
-			Result.initialize (cn, pn, dn, cp, is_recursive)
+			Result.initialize (cn, pn, dn, cp, is_recursive, is_library)
 		ensure
 			cluster_sd_not_void: Result /= Void
 			cluster_name_set: Result.cluster_name = cn
 			parent_name_set: Result.parent_name = pn
 			directory_name_set: Result.directory_name = dn
 			cluster_properties_set: Result.cluster_properties = cp
+			recursive_cluster_set: Result.is_recursive = is_recursive
+			library_cluster_set: Result.is_library = is_library
 		end
 
 	new_d_option_sd (o: OPTION_SD; v: OPT_VAL_SD): D_OPTION_SD is
@@ -195,11 +231,11 @@ feature -- Access
 			renamings_set: Result.renamings = r
 		end
 
-	new_debug_sd: DEBUG_SD is
+	new_debug_sd (enabled: BOOLEAN): DEBUG_SD is
 			-- New DEBUG AST node
 		do
-			!! Result
-			Result.initialize
+			create Result
+			Result.initialize (enabled)
 		ensure
 			debug_sd_not_void: Result /= Void
 		end
@@ -228,18 +264,6 @@ feature -- Access
 			file__name: Result.file__name = fn
 		end
 
-	new_executable_name_sd (ln: ID_SD): EXECUTABLE_NAME_SD is
-			-- New EXECUTABLE_NAME AST node
-		require
-			ln_not_void: ln /= Void
-		do
-			!! Result
-			Result.initialize (ln)
-		ensure
-			executable_name_sd_not_void: Result /= Void
-			language_name_set: Result.language_name = ln
-		end
-
 	new_free_option_sd (on: ID_SD): FREE_OPTION_SD is
 			-- New FREE_OPTION AST node
 		require
@@ -249,16 +273,19 @@ feature -- Access
 			Result.initialize (on)
 		ensure
 			free_option_sd_not_void: Result /= Void
-			option_name_set: Result.option_name = on
+			option_name_set: Result.option_name.is_equal (on)
 		end
 
-	new_id_sd (s: STRING): ID_SD is
+	new_id_sd (s: STRING; is_str: BOOLEAN): ID_SD is
 			-- New ID AST node
 		require
 			s_not_void: s /= Void
-			s_not_empty: not s.empty
+			s_not_empty: not s.is_empty
 		do
 			!! Result.initialize (s)
+			if is_str then
+				Result.set_is_string
+			end
 		ensure
 			id_sd_not_void: Result /= Void
 		end
@@ -273,18 +300,6 @@ feature -- Access
 		ensure
 			include_sd_not_void: Result /= Void
 			file__name: Result.file__name = fn
-		end
-
-	new_include_path_name_sd (ln: ID_SD): INCLUDE_PATH_NAME_SD is
-			-- New INCLUDE_PATH_NAME AST node
-		require
-			ln_not_void: ln /= Void
-		do
-			!! Result
-			Result.initialize (ln)
-		ensure
-			include_path_name_sd_not_void: Result /= Void
-			language_name_set: Result.language_name = ln
 		end
 
 	new_invariant_sd (v: ID_SD): INVARIANT_SD is
@@ -307,7 +322,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_lace_list_clust_adapt_sd (n: INTEGER): LACE_LIST [CLUST_ADAPT_SD] is
@@ -318,7 +333,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_lace_list_cluster_sd (n: INTEGER): LACE_LIST [CLUSTER_SD] is
@@ -329,7 +344,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_lace_list_d_option_sd (n: INTEGER): LACE_LIST [D_OPTION_SD] is
@@ -340,7 +355,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_lace_list_exclude_sd (n: INTEGER): LACE_LIST [EXCLUDE_SD] is
@@ -351,7 +366,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_lace_list_id_sd (n: INTEGER): LACE_LIST [ID_SD] is
@@ -362,7 +377,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_lace_list_include_sd (n: INTEGER): LACE_LIST [INCLUDE_SD] is
@@ -373,18 +388,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
-		end
-
-	new_lace_list_lang_gen_sd (n: INTEGER): LACE_LIST [LANG_GEN_SD] is
-			-- New empty list of LANG_GEN_SD
-		require
-			n_positive: n >= 0
-		do
-			!! Result.make (n)
-		ensure
-			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_lace_list_lang_trib_sd (n: INTEGER): LACE_LIST [LANG_TRIB_SD] is
@@ -395,7 +399,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_lace_list_o_option_sd (n: INTEGER): LACE_LIST [O_OPTION_SD] is
@@ -406,7 +410,7 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
 	new_lace_list_two_name_sd (n: INTEGER): LACE_LIST [TWO_NAME_SD] is
@@ -417,23 +421,18 @@ feature -- Access
 			!! Result.make (n)
 		ensure
 			list_not_void: Result /= Void
-			list_empty: Result.empty
+			list_empty: Result.is_empty
 		end
 
-	new_lang_gen_sd (ln: LANGUAGE_NAME_SD;
-		gv: YES_OR_NO_SD; fn: ID_SD): LANG_GEN_SD is
-			-- New LANG_GEN AST node
+	new_lace_list_depend_sd (n: INTEGER): LACE_LIST [DEPEND_SD] is
+			-- New empty list of DEPEND_SD
 		require
-			ln_not_void: ln /= Void
-			fn_not_void: fn /= Void
+			n_positive: n >= 0
 		do
-			!! Result
-			Result.initialize (ln, gv, fn)
+			!! Result.make (n)
 		ensure
-			lang_gen_sd_not_void: Result /= Void
-			language_name_set: Result.language_name = ln
-			generate_value_set: Result.generate_value = gv
-			file__name_set: Result.file__name = fn
+			list_not_void: Result /= Void
+			list_empty: Result.is_empty
 		end
 
 	new_lang_trib_sd (ln: LANGUAGE_NAME_SD; fn: LACE_LIST [ID_SD]): LANG_TRIB_SD is
@@ -474,18 +473,6 @@ feature -- Access
 			value_set: Result.value = v
 		end
 
-	new_make_name_sd (ln: ID_SD): MAKE_NAME_SD is
-			-- New MAKE_NAME AST node
-		require
-			ln_not_void: ln /= Void
-		do
-			!! Result
-			Result.initialize (ln)
-		ensure
-			make_name_sd_not_void: Result /= Void
-			language_name_set: Result.language_name = ln
-		end
-
 	new_name_sd (v: ID_SD): NAME_SD is
 			-- New NAME AST node
 		require
@@ -522,18 +509,6 @@ feature -- Access
 			option_set: Result.option = o
 			value_set: Result.value = v
 			target_list_set: Result.target_list = t
-		end
-
-	new_object_name_sd (ln: ID_SD): OBJECT_NAME_SD is
-			-- New OBJECT_NAME AST node
-		require
-			ln_not_void: ln /= Void
-		do
-			!! Result
-			Result.initialize (ln)
-		ensure
-			object_name_sd_not_void: Result /= Void
-			language_name_set: Result.language_name = ln
 		end
 
 	new_optimize_sd: OPTIMIZE_SD is
@@ -603,6 +578,20 @@ feature -- Access
 			new_name_set: Result.new_name = n
 		end
 
+	new_depend_sd (d: LACE_LIST [ID_SD]; s: ID_SD): DEPEND_SD is
+			-- New DEPEND AST node
+		require
+			d_not_void: d /= Void
+			s_not_void: s /= Void
+		do
+			!! Result
+			Result.initialize (d, s)
+		ensure
+			depend_sd_not_void: Result /= Void
+			depend_on_set: Result.depend_on = d
+			script_set: Result.script = s
+		end
+
 	new_yes_sd (v: ID_SD): YES_SD is
 			-- New YES AST node
 		require
@@ -616,7 +605,6 @@ feature -- Access
 		end
 
 end -- class LACE_AST_FACTORY
-
 
 --|----------------------------------------------------------------
 --| Copyright (C) 1999, Interactive Software Engineering Inc.

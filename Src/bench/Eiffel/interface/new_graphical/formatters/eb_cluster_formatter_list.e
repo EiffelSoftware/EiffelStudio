@@ -1,7 +1,7 @@
 indexing
 	description:
 		"Implementation of EB_FORMAT_LIST for %
-			%the EiffelBench Cluster Tool"
+			%the $EiffelGraphicalCompiler$ Cluster Tool"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -24,9 +24,13 @@ feature {NONE} -- Initialization
 		local
 			f : EB_FORMATTER
 		do
-			Precursor (a_tool)
+			Precursor {EB_FORMATTER_LIST} (a_tool)
 			
-			create {EB_CLUSTERS_FORMATTER} f.make (tool)
+			create {EB_CLASS_FILES_FORMATTER} f.make (tool)
+			add_formatter (f)
+			create {EB_CLUSTER_FORMATTER} f.make (tool)
+			add_formatter (f)
+			create {EB_CLUSTER_INDEXATION_FORMATTER} f.make (tool)
 			add_formatter (f)
 		end
 

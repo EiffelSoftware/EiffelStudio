@@ -32,6 +32,8 @@ feature -- Setting
 			-- Set `type' to `t'.
 		require
 			valid_t: t /= Void
+			t_not_void_type: not t.is_void
+				-- VB: See exported features of DYNAMIC_CHAIN: `remove: Void'.
 		do
 			type := t
 		ensure

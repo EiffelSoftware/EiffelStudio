@@ -11,7 +11,7 @@ inherit
 		rename
 			initialize as initialize_formal_as
 		redefine
-			set, is_equivalent, format, simple_format
+			is_equivalent, format, simple_format
 		end
 
 	SHARED_SERVER
@@ -38,19 +38,6 @@ feature {AST_FACTORY} -- Initialization
 			position_set: position = p
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			formal_name ?= yacc_arg (0)
-			constraint ?= yacc_arg (1)
-			creation_feature_list ?= yacc_arg (2)
-			position := yacc_int_arg (0)
-		ensure then
-			formal_name_exists: formal_name /= Void
-		end; 
-
 feature -- Attributes
 
 	formal_name: ID_AS
@@ -74,7 +61,7 @@ feature -- Status
 			-- Does the construct have a creation constraint?
 		do
 			Result := creation_feature_list /= Void
-				and then not creation_feature_list.empty
+				and then not creation_feature_list.is_empty
 		end
 
 	has_default_create: BOOLEAN
@@ -134,7 +121,7 @@ feature -- Status
 			has_computed_feature_table: has_computed_feature_table
 		local
 			class_type: CL_TYPE_A
-			class_id: CLASS_ID
+			class_id: INTEGER
 			feature_name: STRING
 			feat_table: FEATURE_TABLE
 		do
@@ -159,8 +146,8 @@ feature -- Status
 					Result.forth
 
 					if not has_default_create then
-						has_default_create := equal (feat_table.found_item.rout_id_set.first,
-													System.default_create_id)
+						has_default_create := feat_table.found_item.rout_id_set.first =
+													System.default_create_id
 					end
 					creation_feature_list.forth
 				end
@@ -286,6 +273,7 @@ feature -- Output
 		do
 			!! Result.make (50)
 			Result.append (formal_name)
+			Result.to_upper
 			if has_constraint then
 				Result.append (" -> ")
 				Result.append (constraint.dump)
@@ -322,31 +310,29 @@ feature -- Output
 		do
 			c_name := clone (formal_name)
 			c_name.to_upper
-			st.add_string (c_name)
+			st.add (create {GENERIC_TEXT}.make (c_name))
 			if has_constraint then
-				st.add (ti_Space)
+				st.add_space
 				st.add (ti_Constraint)
-				st.add (ti_Space)
+				st.add_space
 				constraint.append_to (st)
 				if has_creation_constraint then
 					from
 						creation_feature_list.start
-						st.add (ti_Space)
+						st.add_space
 						st.add (ti_Create_keyword)
-						st.add (ti_Space)
-						eiffel_name := creation_feature_list.item.internal_name
-						st.add_string (eiffel_name)
-						creation_feature_list.forth
 					until
 						creation_feature_list.after
 					loop
-						st.add (ti_Comma)
-						st.add (ti_Space)
+						st.add_space
 						eiffel_name := creation_feature_list.item.internal_name
-						st.add_string (eiffel_name)
+						st.add_default_string (eiffel_name)
 						creation_feature_list.forth
+						if not creation_feature_list.after then
+							st.add (ti_Comma)
+						end
 					end
-					st.add (ti_Space)
+					st.add_space
 					st.add (ti_End_keyword)
 				end
 			end
@@ -368,7 +354,7 @@ feature -- Output
 			if new_type = Void then
 				s := clone (formal_name)
 				s.to_upper
-				ctxt.put_string (s)
+				ctxt.put_text_item (create {GENERIC_TEXT}.make (s))
 				if has_constraint then
 					ctxt.put_space
 					ctxt.put_text_item_without_tabs (ti_Constraint)

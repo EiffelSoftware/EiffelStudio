@@ -41,7 +41,7 @@ feature
 						a_class.generics /= Void
 					end
 					buffer.putstring ("static int32 patterns")
-					buffer.putint (a_class.id.id)
+					buffer.putint (a_class.class_id)
 					buffer.putstring (" [] = {%N")
 					from
 						types := a_class.types
@@ -56,7 +56,7 @@ feature
 					buffer.putstring ("SK_INVALID%N};%N%N")
 					
 					buffer.putstring ("static int16 dyn_types")
-					buffer.putint (a_class.id.id)
+					buffer.putint (a_class.class_id)
 					buffer.putstring (" [] = {%N")
 					from
 						types.start
@@ -86,9 +86,9 @@ feature
 					buffer.putstring ("{(int) ")
 					buffer.putint (a_class.generics.count)
 					buffer.putstring (", patterns")
-					buffer.putint (a_class.id.id)
+					buffer.putint (a_class.class_id)
 					buffer.putstring (", dyn_types")
-					buffer.putint (a_class.id.id)
+					buffer.putint (a_class.class_id)
 					buffer.putchar ('}')
 				end
 				buffer.putstring (",%N")

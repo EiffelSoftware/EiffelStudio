@@ -40,14 +40,12 @@ feature
 			end;
 			context.init_propagation;
 			source_type := context.real_type (source.type);
-			target_type := context.real_type (target.type);
+			target_type := context.creation_type (target.type);
 				-- We won't attempt a propagation of the target if the
 				-- target is a reference and the source is a basic type
 				-- or an expanded. Note that the target cannot be an expanded
 				-- nor a basic type so the only other possibility is NONE.
-			if not target_type.is_none and
-				(source_type.is_basic or source_type.is_expanded)
-			then
+			if not target_type.is_none and source_type.is_expanded then
 				source.propagate (No_register);
 				register_for_metamorphosis := true;
 			else
@@ -105,7 +103,7 @@ feature
 			source.generate;
 			generate_special (how);
 
-			cl_type_i ?= real_type (target.type);   -- Cannot fail
+			cl_type_i ?= Context.creation_type (target.type);   -- Cannot fail
 			gen_type  ?= cl_type_i;
 
 			if gen_type /= Void then
@@ -140,7 +138,7 @@ feature
 					buf.putstring (" = RTRM(");
 					source_print_register;
 					buf.putstring (gc_comma);
-					context.Current_register.print_register_by_name;
+					context.Current_register.print_register;
 					buf.putchar (')');
 					buf.putchar (';');
 					buf.new_line;
@@ -165,7 +163,7 @@ feature
 					else
 						if cr_info = Void then
 							buf.putstring ("RTUD(");
-							cl_type_i.associated_class_type.id.generated_id (buf)
+							buf.generate_type_id (cl_type_i.associated_class_type.static_type_id)
 							buf.putchar (')');
 						else
 							cr_info.generate_reverse (buf, False)

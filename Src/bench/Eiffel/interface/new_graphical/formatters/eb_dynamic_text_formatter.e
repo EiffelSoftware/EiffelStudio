@@ -64,7 +64,7 @@ feature -- Formatting
 --			mp: MOUSE_PTR
 --			cur: CURSOR
 			cur: INTEGER
-			st: STRUCTURED_TEXT
+--			st: STRUCTURED_TEXT
 			wd: EV_WARNING_DIALOG
 		do
 			if not retried then
@@ -85,8 +85,8 @@ feature -- Formatting
 --				if mp /= Void then
 --					mp.restore
 --				end
-				create wd.make_default (tool.parent, Interface_names.t_Warning,
-					Warning_messages.w_Cannot_retrieve_info)
+				create wd.make_with_text (Warning_messages.w_Cannot_retrieve_info)
+				wd.show_modal
 			end
 		rescue
 			if original_exception = Io_exception then
@@ -114,9 +114,9 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Properties
 
-	file_name (s: FILED_STONE): STRING is
+	file_name: STRING is
 		do
-			Result := s.file_name
+			Result := tool.stone.file_name
 		end
 
 	name: STRING is

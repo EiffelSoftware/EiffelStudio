@@ -9,7 +9,6 @@ inherit
 	EXTERNAL_EXT_I
 		redefine
 			is_struct, is_equal, is_cpp,
-			generate_header_files,
 			has_standard_prototype, 
 			generate_external_name
 		end
@@ -35,16 +34,9 @@ feature -- Properties
 	is_cpp: BOOLEAN
 		-- Is Current struct a C++ one?
 
-	special_file_name: STRING
-			-- Special file name (dll or macro)
-
-feature -- Initialization
-
-	set_special_file_name (f: STRING) is
-			-- Assign `f' to `special_file_name'.
-		do
-			special_file_name := f
-		end
+	field_name: STRING
+			-- Name of struct.
+			--| Can be empty if parsed through the old syntax
 
 feature -- Comparison
 
@@ -54,19 +46,20 @@ feature -- Comparison
 				equal (return_type, other.return_type) and then
 				array_is_equal (argument_types, other.argument_types) and then
 				array_is_equal (header_files, other.header_files) and then
-				equal (special_file_name, other.special_file_name)
+				equal (field_name, other.field_name)
+		end
+
+feature -- Settings
+
+	set_field_name (s: STRING) is
+			-- Assign `s' to `field_name'.
+		do
+			field_name := s
+		ensure
+			field_name_set: field_name = s
 		end
 
 feature -- Code generation
-
-	generate_header_files is
-			-- Generate header files for the extension.
-		do
-			{EXTERNAL_EXT_I} Precursor
-			if not shared_include_queue.has (special_file_name) then
-				shared_include_queue.extend (special_file_name)
-			end
-		end
 
 	generate_external_name (buffer: GENERATION_BUFFER; external_name: STRING;
 				type: CL_TYPE_I; ret_type: TYPE_C) is
@@ -86,14 +79,27 @@ feature -- Code generation
 		local
 			arg_types: ARRAY [STRING]
 			special_access: BOOLEAN
+			name: STRING
+			setter: BOOLEAN
+			new_syntax: BOOLEAN
 		do
 			if is_cpp then
 				context.set_has_cpp_externals_calls (True)
 			end
 
+			name := field_name
+			if name = Void then
+				name := external_name
+			else
+				new_syntax := True
+			end
+
+			setter := (new_syntax and then argument_types.count = 2)
+					or else (not new_syntax and then not has_return_type)
+
 			arg_types := argument_types
-			if has_return_type then
-				if external_name.item (1) = '&' and then external_name.count > 1 then
+			if not setter then
+				if name.item (1) = '&' and then name.count > 1 then
 					buffer.putchar ('&')
 					special_access := True
 				end
@@ -103,9 +109,9 @@ feature -- Code generation
 				parameters.first.print_register
 				buffer.putstring (")->")
 				if not special_access then
-					buffer.putstring (external_name)
+					buffer.putstring (name)
 				else
-					buffer.putstring (external_name.substring (2, external_name.count))
+					buffer.putstring (name.substring (2, name.count))
 				end
 			else
 				parameters.start
@@ -115,7 +121,7 @@ feature -- Code generation
 				parameters.item.print_register
 				parameters.forth
 				buffer.putstring (")->")
-				buffer.putstring (external_name)
+				buffer.putstring (name)
 				buffer.putstring (" = (")
 				buffer.putstring (arg_types.item (2))
 				buffer.putstring (")(")

@@ -8,23 +8,22 @@ deferred class
 
 inherit
 	STONE
-		undefine
-			header
 		redefine
-			is_valid
+			is_valid,
+			synchronized_stone
 		end
 	
 feature -- Access
 
-	file_name: STRING is 
+	file_name: FILE_NAME is 
 			-- Name of the file which parsing led 
-			-- to the creation of current AST node
+			-- to the creation of current AST node.
 		deferred
 		end
 
 	origin_text: STRING is
 			-- Content of the file named `file_name'
-			-- Void if unreadable file
+			-- Void if unreadable file.
 		require else
 			true
 		local
@@ -41,23 +40,24 @@ feature -- Access
 			end
 		end
 
-feature -- Setting
-
-	set_file_name (s: STRING) is
-			-- Assign `s' to `file_name'.
-		deferred
-		ensure
-			name_set: file_name.is_equal (s)
-		end
-
-feature -- Status report
-
 	is_valid: BOOLEAN is
-			-- Is `Current' a valid stone?
+			-- Does `Current' still represent a valid file?
+		local
+			testfile: RAW_FILE
 		do
-			Result := file_name /= Void
-		ensure then
-			Result implies file_name /= Void
+			create testfile.make (file_name)
+			if testfile.exists then
+				Result := True
+			end
 		end
 
+	synchronized_stone: STONE is
+			-- Valid stone corresponding to `Current' if `is_valid'
+			-- or Void if not.
+		do
+			if is_valid then
+				Result := Current
+			end
+		end
+		
 end -- class FILED_STONE

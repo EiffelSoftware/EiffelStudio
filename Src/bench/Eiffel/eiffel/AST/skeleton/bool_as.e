@@ -21,14 +21,6 @@ feature {AST_FACTORY} -- Initialization
 			value_set: value = b
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			value := yacc_bool_arg (0)
-		end
-
 feature -- Properties
 
 	value: BOOLEAN

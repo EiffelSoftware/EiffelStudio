@@ -24,14 +24,6 @@ feature {AST_FACTORY} -- Initialization
 			-- Do nothing.
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			-- Do nothing
-		end
-
 feature -- Properties
 
 	access_name: STRING is "Result"

@@ -24,8 +24,6 @@ inherit
 
 	SHARED_EXEC_ENVIRONMENT
 
-	WARNING_MESSAGES
-
 feature -- Properties
 
 	project_file_name: STRING;
@@ -67,7 +65,7 @@ feature -- Update
 			e_displayer: DEFAULT_ERROR_DISPLAYER
 		do
 				--| Initialization of the display
-			!! e_displayer.make (Error_window);
+			create e_displayer.make (Error_window);
 			Eiffel_project.set_error_displayer (e_displayer)
 
 				-- If `file_name' is Void it means the user did not specify
@@ -100,7 +98,7 @@ feature -- Project Initialization
 				-- command line.
 			if project_path_name /= Void then
 					-- Check the validity of the path given in argument
-				!! d.make (project_path_name)
+				create d.make (project_path_name)
 				if d.exists then
 					Project_directory_name.wipe_out
 					Project_directory_name.set_directory (project_path_name)
@@ -113,12 +111,12 @@ feature -- Project Initialization
 			end
 
 				-- We create a project without an existing Eiffel Project file.
-			!! project_dir.make (Project_directory_name, Void);
+			create project_dir.make (Project_directory_name, Void);
 
 				-- Check the existence of an already existing Eiffel project.
-			!! d_name.make_from_string (project_dir.name)
+			create d_name.make_from_string (project_dir.name)
 			d_name.extend (Eiffelgen)
-			!! d.make (d_name)
+			create d.make (d_name)
 			if d.exists then
 					-- A Project exist
 				if stop_on_error then
@@ -146,7 +144,8 @@ feature -- Project Initialization
 			-- Initialize project as a new one or retrieving
 			-- existing data in the valid directory `project_dir'.
 		require
-			project_directory_exist: project_dir /= Void
+--| FIXME Failed for command line: -short -filter html-css -all -project d:\46dev\eiffel\ace\test_project\test.epr
+--|			project_directory_exist: project_dir /= Void
 		local
 			dir_name: STRING
 			new_file_name: STRING
@@ -159,7 +158,7 @@ feature -- Project Initialization
 					--| We raise an error if it is the case.
 					--| If not, we append the `file_name' to `project_path_name', we
 					--| add a `Directory_separator' if it is needed.
-				if file_name.index_of (Directory_separator, 1) /= 0 then
+				if file_name.index_of (Operating_environment.Directory_separator, 1) /= 0 then
 					error_occurred := True
 					msg := "You cannot specifiy a project name which contains a directory separator%N"
 					msg.append ("when you are specifying a project path.")
@@ -167,8 +166,8 @@ feature -- Project Initialization
 					dir_name := clone (project_path_name)
 					Project_directory_name.set_directory (dir_name)
 					new_file_name := clone (project_path_name)
-					if new_file_name.item (new_file_name.count) /= Directory_separator then
-						new_file_name.append_character (Directory_separator)
+					if new_file_name.item (new_file_name.count) /= Operating_environment.Directory_separator then
+						new_file_name.append_character (Operating_environment.Directory_separator)
 					end
 					new_file_name.append (file_name)
 				end
@@ -177,17 +176,17 @@ feature -- Project Initialization
 					-- a file name or a path name.
 					--| If it is a relative path name, we prepend `Current_working_directory' to it.
 					--| Otherwise, we extract the `Project_directory_name' from the path.
-				if file_name.index_of (Directory_separator, 1) /= 0 then
+				if file_name.index_of (Operating_environment.Directory_separator, 1) /= 0 then
 					dir_name := file_name.substring (1, file_name.last_index_of
-								(directory_separator, file_name.count) - 1)
+								(Operating_environment.Directory_separator, file_name.count) - 1)
 					Project_directory_name.set_directory (dir_name)
 					new_file_name := file_name
 				else
 					dir_name := Execution_environment.current_working_directory
 					Project_directory_name.set_directory (dir_name)
 					new_file_name := clone (dir_name)
-					if new_file_name.item (new_file_name.count) /= Directory_separator then
-						new_file_name.append_character (Directory_separator)
+					if new_file_name.item (new_file_name.count) /= Operating_environment.Directory_separator then
+						new_file_name.append_character (Operating_environment.Directory_separator)
 					end
 					new_file_name.append (file_name)
 				end
@@ -195,8 +194,8 @@ feature -- Project Initialization
 
 			if not error_occurred then
 					--| Retrieve existing project
-				!! project_file.make (new_file_name)
-				!! project_dir.make (dir_name, project_file)
+				create project_file.make (new_file_name)
+				create project_dir.make (dir_name, project_file)
 			else
 				if msg /= Void then
 					io.error.putstring (msg)
@@ -214,8 +213,6 @@ feature -- Project retrieval
 			project_directory_exists: project_dir /= Void
 		local
 			msg: STRING
-			title: STRING
-			old_title: STRING
 		do	
 			io.error.putstring ("Retrieving project...%N")
 				-- Retrieve the project
@@ -223,19 +220,19 @@ feature -- Project retrieval
 
 			if Eiffel_project.retrieval_error then
 				if Eiffel_project.is_incompatible then
-					msg := w_Project_incompatible (project_dir.name, 
+					msg := Warning_messages.w_Project_incompatible (project_dir.name, 
 						version_number, Eiffel_project.incompatible_version_number)
 				else
 					if Eiffel_project.is_corrupted then
-						msg := w_Project_corrupted (project_dir.name)
+						msg := Warning_messages.w_Project_corrupted (project_dir.name)
 					elseif Eiffel_project.retrieval_interrupted then
-						msg := w_Project_interrupted (project_dir.name)
+						msg := Warning_messages.w_Project_interrupted (project_dir.name)
 					end
 				end
 			elseif Eiffel_project.incomplete_project then
-				msg := w_Project_directory_not_exist (project_file.name, project_dir.name)
+				msg := Warning_messages.w_Project_directory_not_exist (project_file.name, project_dir.name)
 			elseif Eiffel_project.read_write_error then
-				msg := w_Cannot_open_project
+				msg := Warning_messages.w_Cannot_open_project
 			end
 
 			if msg /= Void then
@@ -260,19 +257,22 @@ feature -- Project retrieval
 						check_ace_file (Ace_name);
 					end; 
 				elseif Ace_name = Void then
-					!! path.make_from_string (Execution_environment.current_working_directory)
+					create path.make_from_string (Execution_environment.current_working_directory)
 					path.set_file_name ("Ace.ace")	
 					!!file.make (path)
 					if file.exists then
 						Ace_name := path
 					else
-						!! path.make_from_string (Execution_environment.current_working_directory)
+						create path.make_from_string (Execution_environment.current_working_directory)
 						path.set_file_name ("Ace")	
 						Ace_name := path
 					end
 					check_ace_file (Ace_name);
 				end;
-				Eiffel_project.make_new (project_dir, True)
+				Eiffel_project.make_new (project_dir, True, Void, Void)
+				check
+					Project_initialized: Eiffel_project.initialized
+				end
 				Eiffel_ace.set_file_name (Ace_name)
 			end
 		rescue
@@ -311,7 +311,7 @@ feature -- Check Ace file
 		local
 			f: PLAIN_TEXT_FILE
 		do
-			!! f.make (fn);
+			create f.make (fn);
 			if
 				not (f.exists and then f.is_readable and then f.is_plain)
 			then
@@ -325,5 +325,13 @@ feature -- Check Ace file
 				lic_die (-1)
 			end
 		end;
+
+feature {NONE} -- Error messages
+
+	Warning_messages: WARNING_MESSAGES is
+			-- Placeholder to access all warning messages.
+		once
+			create Result
+		end
 
 end -- class COMMAND_LINE_PROJECT

@@ -1,1 +1,0 @@
-This cluster deal with the commands which are not undoable.

@@ -54,7 +54,7 @@ feature -- Access
 			-- to a file named `fn'.
 		require
 			fn_not_void: fn /= Void;
-			fn_not_empty: not fn.empty
+			fn_not_empty: not fn.is_empty
 		local
 			ptf: RAW_FILE;	-- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
 			aok: BOOLEAN
@@ -163,7 +163,7 @@ feature -- Update
 					loop
 						!! scrollable_subquery.make (all_operators.item.actual_operator, all_subqueries.item.image, i )
 						if all_subqueries.item.is_active then
-							if active_query_window.empty then
+							if active_query_window.is_empty then
 								!! scrollable_subquery.make ("", all_subqueries.item.image, i) 
 							end
 							active_query_window.force (scrollable_subquery)
@@ -600,7 +600,7 @@ feature {NONE} -- Implementation
 							--| FIXME: Guillaume - 28/09/97
 							--| Not correct. Must find a way to get the right index 
 							--| of active_query_window.item
-						if not inactive_subqueries_window.empty then
+						if not inactive_subqueries_window.is_empty then
 							from
 								inactive_element ?= inactive_subqueries_window.item
 							until
@@ -619,7 +619,7 @@ feature {NONE} -- Implementation
 						all_subqueries.item.inactivate
 						
 							--| inactivate the subquery operator in 'all_operators'
-						if not all_operators.empty then
+						if not all_operators.is_empty then
 							if inactive_element = void or else inactive_element.index = 1 then
 								all_operators.go_i_th ( 1 )
 							else
@@ -673,7 +673,7 @@ feature {NONE} -- Implementation
 				loop
 					if i = selected_positions.item then
 						inactive_element ?= inactive_subqueries_window.item
-						if not active_query_window.empty then
+						if not active_query_window.is_empty then
 							from
 								active_element ?= active_query_window.item
 							until
@@ -693,7 +693,7 @@ feature {NONE} -- Implementation
 						all_subqueries.item.activate
 						
 							--| reactivate the subquery operator in 'all_operators'
-						if not all_operators.empty then
+						if not all_operators.is_empty then
 							if active_element = void or else active_element.index = 1 then
 								all_operators.go_i_th ( 1 )
 							else

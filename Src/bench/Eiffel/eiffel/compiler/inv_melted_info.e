@@ -1,10 +1,20 @@
--- Melted information for invariant
+indexing
+	description: "Information about invariant recently added to system"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class INV_MELTED_INFO
 
 inherit
-
 	MELTED_INFO
+
+	SHARED_TYPE_I
+		undefine
+			is_equal
+		end
+
+create
+	make
 
 feature
 
@@ -12,17 +22,19 @@ feature
 			-- Associated feature
 		do
 			check
-				concistecy: feat_tbl.associated_class.invariant_feature /= Void
-			end;
+				has_invariant: feat_tbl.associated_class.invariant_feature /= Void
+			end
 			Result := feat_tbl.associated_class.invariant_feature
-		end;
+		end
 
-	feature_name: STRING is "_invariant";
-			-- Feature name for invariant feature
+feature {NONE} -- Implementation
 
-	is_valid (associated_class: CLASS_C): BOOLEAN is
+	internal_execution_unit (class_type: CLASS_TYPE): INV_EXECUTION_UNIT is
+			-- Create new EXECUTION_UNIT corresponding to Current type.
 		do
-			Result := associated_class.has_invariant
-		end;
+			create Result.make (class_type)
+			Result.set_body_index (body_index)
+			Result.set_type (Void_c_type)
+		end
 
 end

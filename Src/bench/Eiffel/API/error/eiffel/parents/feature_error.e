@@ -53,14 +53,14 @@ feature -- Output
 		do
 			print_error_message (st);
 			st.add_string ("Class: ");
-			e_class.append_signature (st);
+			class_c.append_signature (st);
 			st.add_new_line;
 			st.add_string ("Feature: ");
 			if error_position /= 0 then
 				if e_feature /= Void then
 					st.add_feature_error (e_feature, e_feature.name, error_position)
 				elseif feature_name /= Void then
-					st.add_feature_error (e_feature, e_feature.name, error_position)
+					st.add_feature_error (e_feature, feature_name, error_position)
 				else
 					st.add_string ("invariant")
 				end;
@@ -84,9 +84,9 @@ feature {COMPILER_EXPORTER} -- Implementation
 			-- Assign `f' to `feature'.
 		require
 			valid_f: f /= Void;
-			non_void_e_class: e_class /= Void
+			non_void_class_c: class_c /= Void
 		do
-			e_feature := f.api_feature (e_class.id)
+			e_feature := f.api_feature (class_c.class_id)
 		end;
 
 feature {ERROR_HANDLER} -- Implementation
@@ -116,7 +116,7 @@ feature {NONE} -- Implementation
 			line_number: INTEGER;
 			file_name: STRING
 		do
-			file_name := e_class.file_name;
+			file_name := class_c.file_name;
 			!! file.make (file_name);
 			if file.exists and then file.is_readable then
 				file.open_read;
@@ -148,28 +148,28 @@ feature {NONE} -- Implementation
 				st.add_string ("Character position: ");
 				st.add_string (error_position.out);
 			end;
-			if e_class.lace_class.date_has_changed then
+			if class_c.lace_class.date_has_changed then
 				st.add_string (" (source code has changed)");
 				st.add_new_line
 			elseif line_number > 0 then
 				st.add_new_line;
 				st.add_string ("  ");
 				if previous_line /= Void then
-					if not previous_line.empty then
+					if not previous_line.is_empty then
 						previous_line.replace_substring_all ("%T", "  ");
 					end;
 					st.add_string (previous_line);
 					st.add_new_line;
 				end;
 				st.add_string ("->");
-				if not current_line.empty then
+				if not current_line.is_empty then
 					current_line.replace_substring_all ("%T", "  ");
 				end;
 				st.add_string (current_line);
 				st.add_new_line;
 				if next_line /= Void then
 					st.add_string ("  ");
-					if not next_line.empty then
+					if not next_line.is_empty then
 						next_line.replace_substring_all ("%T", "  ");
 					end;
 					st.add_string (next_line);

@@ -9,6 +9,7 @@ indexing
 class
 	XML_DOCUMENTATION_READER
 
+
 creation
 	make
 
@@ -17,7 +18,7 @@ feature -- Initialization
 	make is
 		do
 			Create list.make
- 			Create items.make(10)
+			Create items.make(10)
 		end
 
 feature -- Access
@@ -80,8 +81,11 @@ feature -- Actions
 					(ind<1)
 				loop
 					ind := ss.substring_index("<FL_LOOP>",1)
-					ind2 := ss.substring_index("</FL_LOOP>",ind)
-					if ind >=1 and then ind2>ind then
+					if ind > 0 then
+						ind2 := ss.substring_index("</FL_LOOP>",ind)
+						check
+							has_end_fl_loop: ind2 > 0
+						end
 						if ind>1 then
 							list.extend(ss.substring(1,ind-1))
 						end
@@ -172,7 +176,11 @@ feature -- Actions
 					(ind<1)
 				loop
 					ind := Result.substring_index("<FL ARG=%"",ind)
-					ind2 := Result.substring_index("%">",ind)
+					if ind > 0 then
+						ind2 := Result.substring_index("%">",ind)
+					else
+						ind2 := 0
+					end
 					if ind >1 and then ind2>ind+9 then
 						s := Result.substring(ind+9,ind2-1)
 						ind := ind+1

@@ -14,9 +14,8 @@ feature
 			nb: INTEGER
 		do
 			inlining_on := System.inlining_on
-			onbidt := System.onbidt
 
-			nb := System.body_id_counter.total_count
+			nb := System.body_index_counter.count
 			!! processed_features.make (1, nb)
 			!! to_be_inlined.make (1, nb)
 
@@ -25,16 +24,15 @@ feature
 
 feature {NONE}
 
-	onbidt: O_N_TABLE [BODY_ID] 
-
 	min_inlining_threshold: INTEGER
 			-- Byte code smaller than `min_inlining_threshold' will be inlined
 			-- even if they are called several times
 
+	processed_features: ARRAY [BOOLEAN]
+			-- Is item at index `body_index' to be processed?
 
-	processed_features: ARRAY [BOOLEAN];
-
-	to_be_inlined: ARRAY [BOOLEAN];
+	to_be_inlined: ARRAY [BOOLEAN]
+			-- Is item at ìndex `body_index' to be processed?
 
 feature -- Current inlined feature
 
@@ -64,55 +62,66 @@ feature  -- Status
 
 feature -- Conversion
 
-	bid_cid_table: EXTEND_TABLE [CLASS_ID, BODY_ID] is
+	bindex_cid_table: EXTEND_TABLE [INTEGER, INTEGER] is
+			-- Table with `body_index' as keys and `class_id' as items.
 		once
-			Result := Depend_server.bid_cid_table
-		end
-
-	updated_id (bid: BODY_ID): BODY_ID is
-		do
-			Result := onbidt.item (bid)
+			Result := Depend_server.bindex_cid_table
 		end
 
 feature -- Status
 
-	inline (type: TYPE_I; body_id: BODY_ID): BOOLEAN is
+	inline (type: TYPE_I; body_index: INTEGER): BOOLEAN is
 			-- Can we inline `f' ?
 		require
 			is_inlining_enabled: inlining_on
-		local
-			body_id_id: INTEGER
-			new_body_id: BODY_ID
 		do
-			new_body_id := updated_id (body_id)
-			body_id_id := new_body_id.id
-			if not processed_features.item (body_id_id) then
-				processed_features.put (True, body_id_id)
-				if can_be_inlined (type, new_body_id) then
-					to_be_inlined.put (True, body_id_id)
+			if not processed_features.item (body_index) then
+				processed_features.put (True, body_index)
+				if can_be_inlined (type, body_index) then
+					to_be_inlined.put (True, body_index)
 					Result := True
 				end
 			else
-				Result := to_be_inlined.item (body_id_id)
+				Result := to_be_inlined.item (body_index)
 			end
 		end
 
-	can_be_inlined (type: TYPE_I; body_id: BODY_ID): BOOLEAN is
-			-- Tell us if we can inline the code corresponding to `body_id'
+	can_be_inlined (type: TYPE_I; body_index: INTEGER): BOOLEAN is
+			-- Tell us if we can inline the code corresponding to `body_index'
 		local
 			byte_code: BYTE_CODE;
-			body_id_id, size, i: INTEGER
+			i: INTEGER
 			type_i: TYPE_I	
 			types: ARRAY [TYPE_I]
 			wc: CLASS_C
-			cid: CLASS_ID
+			cid: INTEGER
 		do
- 			if byte_server.server_has (body_id) then
- 				byte_code := Byte_server.disk_item (body_id)
+				-- Make sure we can find the BYTE_CODE
+ 			if byte_server.server_has (body_index) then
+ 				byte_code := Byte_server.disk_item (body_index)
  			end
 
-			if byte_code /= Void then
-				Result := (type = Void or else not (type.is_expanded or else type.is_bit))
+				-- A feature call can be inlined only if it is not a call
+				-- to a deferred feature or a once. Previously this computation
+				-- was done in FEATURE_I and its descendants. This computation was
+				-- not done in the case of the following descendants and was returning
+				-- always false:
+				--  * EXTERNAL_I
+				--  * INVARIANT_FEAT_I
+				--  * ONCE_PROC_I
+				--  * DEF_PROC_I
+				--  * CONSTANT_I
+				-- For INVARIANT_FEAT_I, EXTERNAL_I and CONSTANT_I, the current feature
+				-- won't be called because their version of `inlined_byte_code' does
+				-- not call this computation. Only for ONCE_PROC_I and DEF_PROC_I, we
+				-- have to do a special check, and since the information is in BYTE_CODE
+				-- we can do it easily in order to avoid the inlining.
+			if
+				byte_code /= Void and then
+				not byte_code.is_deferred and then
+				not byte_code.is_once
+			then
+				Result := (type = Void or else not (type.is_true_expanded or else type.is_bit))
 					and then (byte_code.rescue_clause = Void)
 
 				if Result then
@@ -124,7 +133,7 @@ feature -- Status
 							i = 0 or else not Result
 						loop
 							type_i := types.item (i)
-							Result := not (type_i.is_expanded or else type_i.is_bit)
+							Result := not (type_i.is_true_expanded or else type_i.is_bit)
 							i := i - 1
 						end
 					end
@@ -139,15 +148,15 @@ feature -- Status
 							i = 0 or else not Result
 						loop
 							type_i := types.item (i)
-							Result := not (type_i.is_expanded or else type_i.is_bit)
+							Result := not (type_i.is_true_expanded or else type_i.is_bit)
 							i := i - 1
 						end
 					end
 				end
 
 				if Result then
-					cid := bid_cid_table.item (body_id)
-					wc := System.class_of_id (bid_cid_table.item (body_id))
+					cid := bindex_cid_table.item (body_index)
+					wc := System.class_of_id (cid)
 					Result := not (wc.is_basic or else (wc.is_special
 							and then byte_code.feature_name.is_equal ("make_area")))
 				end

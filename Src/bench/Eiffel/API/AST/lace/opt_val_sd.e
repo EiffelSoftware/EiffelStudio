@@ -1,17 +1,14 @@
 indexing
-
-	description: 
-		"Heirs are standrad value or a name.";
+	description: "Heirs are standrad value or a name.";
 	date: "$Date$";
 	revision: "$Revision$"
 
-class OPT_VAL_SD
+deferred class OPT_VAL_SD
 
 inherit
-
 	AST_LACE
 
-feature {LACE_AST_FACTORY} -- Initialization
+feature {OPT_VAL_SD, LACE_AST_FACTORY} -- Initialization
 
 	initialize (v: like value) is
 			-- Create a new OPT_VAL AST node.
@@ -21,22 +18,6 @@ feature {LACE_AST_FACTORY} -- Initialization
 			value := v
 		ensure
 			value_set: value = v
-		end
-
-feature {NONE} -- Initialization 
-
-	set is
-			-- Yacc initialization
-		do
-			value ?= yacc_arg (0)
-		end;
-
-feature {COMPILER_EXPORTER} -- Setting
-
-	set_value (v: like value) is
-			-- Assign `v' to `value'.
-		do
-			value := v
 		end
 
 feature -- Properties
@@ -96,5 +77,32 @@ feature -- Properties
 		do
 			-- Do nothing
 		end;
+
+feature -- Duplication
+
+	duplicate: like Current is
+			-- Duplicate current object
+		do
+			Result := clone (Current)
+			Result.initialize (value.duplicate)
+		end
+
+feature -- Comparison
+
+	same_as (other: like Current): BOOLEAN is
+			-- Is `other' same as Current?
+		do
+			Result := other /= Void and then value.same_as (other.value)
+		end
+
+feature -- Saving
+
+	save (st: GENERATION_BUFFER) is
+			-- Append current in `st'.
+		do
+			st.putstring ("(")
+			value.save (st)
+			st.putstring (")")
+		end
 
 end -- class OPT_VAL_SD

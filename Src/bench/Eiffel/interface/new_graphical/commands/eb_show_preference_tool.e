@@ -1,61 +1,60 @@
 indexing
+	description	: "Command to show the preference window."
+	author		: "Arnaud PICHERY [aranud@mail.dotcom.fr]"
+	date		: "$Date$"
+	revision	: "$Revision$"
 
-	description:
-		"Put your description here."
-	date: "$Date$"
-	revision: "$Revision$"
-
-class EB_SHOW_PREFERENCE_TOOL
+class EB_SHOW_PREFERENCES_COMMAND
 
 inherit
-	EB_SHARED_INTERFACE_TOOLS
-	EV_COMMAND
+	EB_MENUABLE_COMMAND
 
-	INTERFACE_NAMES
+	EB_SHARED_WINDOW_MANAGER
+		export
+			{NONE} all
+		end
 
-creation
+create
 	make
 
 feature {NONE} -- Initialization
 
 	make is
+			-- Create this command.
 		do
 		end
 
 feature {NONE} -- Execution
 
-	execute (arg: EV_ARGUMENT1 [EV_CONTAINER]; data: EV_EVENT_DATA) is
-		local
---			p_win: EB_PREFERENCE_WINDOW
-			p_win: PREFERENCE_WINDOW
+	execute is
+			-- Execute command.
 		do
---			if
---				not preference_tool_is_valid
---			then
---				create p_win.make_top_level
---				set_preference_tool (p_win.tool)
---			end
---			preference_tool.show
-				-- should be `raise'
-			create p_win.make_top_level
+			if preference_window = Void or else preference_window.is_destroyed then
+					-- Preference tool is not currently displayed, create and display it.
+				create preference_window.make
+			else
+					-- Preference is currently displayed, raise it.
+				preference_window.raise
+			end
 		end
 
 feature -- Properties
 
 	name: STRING is 
+			-- Command name
 		do
-			Result := f_Preferences
+			Result := Interface_names.f_Preferences
 		end
 
 	menu_name: STRING is
 			-- Name used in menu entry
 		do
-			Result := m_Preferences
+			Result := Interface_names.m_Preferences
 		end
 
-	accelerator: STRING is
-			-- Accelerator action for menu entry
-		do
-		end
+feature {NONE} -- Implementation
+
+	preference_window: PREFERENCE_WINDOW
+			-- Current preference window if any.
 
 end -- class EB_SHOW_PREFERENCE_TOOL

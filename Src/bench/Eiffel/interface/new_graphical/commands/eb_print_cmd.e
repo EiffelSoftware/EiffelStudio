@@ -37,12 +37,12 @@ feature -- Access
 
 feature -- Execution
 
-	execute (argument: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	execute is
 			-- Popup the print dialog.
 		local
 			print_window: EB_PRINT_DIALOG	
 		do
-			if Project_tool.initialized then
+			if Eiffel_project.initialized then
 				create print_window.make_default (tool)
 				print_window.show
 			end

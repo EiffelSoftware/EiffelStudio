@@ -96,7 +96,6 @@ feature -- Access
 			-- workbench is stored
 		do
 			!! Result.make_from_string (name);
-			Result.extend (Eiffelgen);
 			Result.set_file_name (Dot_workbench);
 		end
 
@@ -129,7 +128,7 @@ feature -- Access
 			makefile_name := Environ.translated_string (dollar_name);
 			!! Result.make_from_string (makefile_name);
 			Result.extend_from_array (<<Eiffelgen, W_code>>);
-			Result.set_file_name (Preobj)
+			Result.set_file_name (Platform_constants.Preobj)
 		end
 
 	precompiled_driver: FILE_NAME is
@@ -137,7 +136,7 @@ feature -- Access
 		do
 			!! Result.make_from_string (name);
 			Result.extend_from_array (<<Eiffelgen, W_code>>);
-			Result.set_file_name (Driver)
+			Result.set_file_name (Platform_constants.Driver)
 		end
 
 	system_name: STRING
@@ -189,7 +188,7 @@ feature -- Check
 			check_file (<<Eiffelgen>>, Shared_precomp_eif);
 				-- EIFGEN/W_code/driver and EIFGEN/W_code/preobj.o
 				-- should be present. If they are not, issue a warning.
-			check_precompiled_optional (<<Eiffelgen, W_code>>, Driver);
+			check_precompiled_optional (<<Eiffelgen, W_code>>, Platform_constants.Driver);
 --			if has_precompiled_preobj then
 --				check_precompiled_optional (<<Eiffelgen, W_code>>, Preobj)
 --			end;
@@ -228,7 +227,7 @@ feature {NONE} -- Implementation
 
 				-- EIFGEN/project.eif file must be
 				-- readable.
-			check_file (<<Eiffelgen>>, Dot_workbench);
+			check_file (<<>>, Dot_workbench);
 
 				-- EIFGEN/W_code file must be
 				-- readable.
@@ -332,6 +331,16 @@ feature {NONE} -- Implementation
 					Error_handler.insert_warning (vd43);
 				end
 			end
+		end
+
+feature {NONE} -- Externals
+
+	date_string (a_date: INTEGER): STRING is
+			-- String representation of `a_date'
+		external
+			"C"
+		alias
+			"eif_date_string"
 		end
 
 end -- class REMOTE_PROJECT_DIRECTORY

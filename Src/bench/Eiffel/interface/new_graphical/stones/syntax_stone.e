@@ -8,12 +8,21 @@ indexing
 class
 	SYNTAX_STONE
 
+--| FIXME XR: The point of ERROR_STONE's is to have an explanatory message.
+--| Since syntax errors do not provide this, there is no point in inheriting from ERROR_STONE.
+--inherit
+--	ERROR_STONE
+--		rename
+--			make as make_simple_error
+--		redefine
+--			code, file_name, help_text
+--		end
+--
+
 inherit
-	ERROR_STONE
-		rename
-			make as make_simple_error
+	FILED_STONE
 		redefine
-			code, file_name, help_text
+			help_text
 		end
 
 creation
@@ -32,16 +41,33 @@ feature -- Properties
 
 feature -- Access
 
-	file_name: STRING is
+	file_name: FILE_NAME is
 			-- The one from SYNTAX_ERROR: where it happened
 		do
-			Result := syntax_error_i.file_name
+			create Result.make_from_string (syntax_error_i.file_name)
 		end
 
-	help_text: LINKED_LIST [STRING] is
+	help_text: STRING is
 		do
-			create Result.make
-			Result.put_front (Interface_names.h_No_help_available)
+			Result := clone (Interface_names.h_No_help_available)
+		end
+
+	history_name: STRING is
+		do
+			Result := "Error " + header
+		end
+
+	stone_signature: STRING is
+		do
+			Result := code
+		end
+
+	header: STRING is 
+		do 
+			Result := code
+			if Result = Void then
+				create Result.make (0)
+			end
 		end
 
 	start_position: INTEGER is do Result := syntax_error_i.start_position end
@@ -53,5 +79,19 @@ feature -- Access
 
 	code: STRING is "Syntax error"
 			-- Error code
+
+	stone_cursor: EV_CURSOR is
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is compatible with Current stone
+		do
+			Result := Cursors.cur_Interro
+		end
+
+	x_stone_cursor: EV_CURSOR is
+			-- Cursor associated with Current stone during transport
+			-- when widget at cursor position is not compatible with Current stone
+		do
+			Result := Cursors.cur_X_interro
+		end
 
 end -- class SYNTAX_STONE

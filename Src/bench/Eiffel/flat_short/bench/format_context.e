@@ -23,7 +23,7 @@ inherit
 	COMPILER_EXPORTER
 
 creation
-	make, make_for_case
+	make, make_for_case, make_for_appending
 
 feature -- Initialization
 
@@ -50,9 +50,20 @@ feature -- Initialization
 			-- image of precondition and postcondition).
 		do
 			is_for_case := True
-			!! format_stack.make
-			!! text.make
-			!! format
+			create format_stack.make
+			create text.make
+			create format
+			format_stack.extend (format)
+		end
+
+	make_for_appending (a_text: like text) is
+			-- Create context for appending an AST item to `a_text'.
+		do
+			text := a_text
+			reset_format_booleans
+			last_was_printed := True
+			create format_stack.make
+			create format
 			format_stack.extend (format)
 		end
 
@@ -87,9 +98,9 @@ feature -- Initialization
 			valid_ast: feature_as /= Void
 			valid_target: target /= Void
 		do
-			!! global_adapt.make (source, target, class_c)
+			create global_adapt.make (source, target, class_c)
 			global_adapt.set_locals (feature_as)
-			!! unnested_local_adapt
+			create unnested_local_adapt
 			unnested_local_adapt.update_from_global (global_adapt)
 			local_adapt := unnested_local_adapt
 		ensure
@@ -246,6 +257,12 @@ feature -- Properties
 
 feature -- Indentation
 
+	indent_depth: INTEGER is
+			-- Number of tabs leading the next line.
+		do
+			Result := format.indent_depth
+		end
+
 	tabs_emitted: BOOLEAN
 			-- Have leading tabs already been emitted?
 
@@ -292,6 +309,14 @@ feature -- Access
 		end
 
 feature -- Setting
+
+	set_indent_depth (d: INTEGER) is
+			-- Assign `d' to `indent_depth'.
+		do
+			format.set_indent_depth (d)
+		ensure
+			assigned: d = indent_depth
+		end
 
 	set_last_was_printed (v: BOOLEAN) is
 			-- Set `v' to `last_was_printed'.
@@ -413,8 +438,8 @@ feature -- Setting
 			both_void: source = Void implies target = Void
 			both_non_void: source /= Void implies target /= Void
 		do
-			!! global_adapt.make_with_classes (source, target)
-			!! local_adapt
+			create global_adapt.make_with_classes (source, target)
+			create local_adapt
 			if source /= Void then
 				local_adapt.update_from_global (global_adapt)
 			end
@@ -509,12 +534,24 @@ feature -- Setting local format details
 			format.dot_needed
 		end
 
+	set_in_indexing_clause (b: BOOLEAN) is
+			-- Should manifest strings be formatted over multiple
+			-- lines if encountered? For details, see STRING_AS.simple_format.
+		do
+			in_indexing_clause := b
+		end
+
+feature {STRING_AS} -- Access
+
+	in_indexing_clause: BOOLEAN
+			-- Should strings be formatted over multiple lines?
+			-- For details, see STRING_AS.simple_format.
+	
 feature -- Execution
 
 	execute is
 				-- Execute the flat or flat_short.
 		local
-			name: STRING
 			prev_class: CLASS_C
 			prev_cluster: CLUSTER_I
 		do
@@ -529,7 +566,7 @@ feature -- Execution
 					client := system.any_class.compiled_class
 				end
 
-				!! format_registration.make (class_c, client)
+				create format_registration.make (class_c, client)
 				if is_flat_short then
 					format_registration.initialize_creators
 				end
@@ -549,6 +586,8 @@ feature -- Execution
 					execution_error := true
 				end
 			else
+				Rescue_status.set_is_error_exception (False)
+				Error_handler.trace
 				execution_error := True
 				rescued := False
 			end
@@ -556,8 +595,6 @@ feature -- Execution
 			Inst_context.set_cluster (prev_cluster)
 		rescue
 			if Rescue_status.is_error_exception then
-				Rescue_status.set_is_error_exception (False)
-				Error_handler.trace
 				rescued := True
 				retry
 			end
@@ -578,9 +615,9 @@ feature -- Update
 	initialize is
 			-- Initialize structures for Current.
 		do
-			!! format_stack.make
-			!! text.make
-			!! format
+			create format_stack.make
+			create text.make
+			create format
 			format_stack.extend (format)
 		end
 
@@ -803,12 +840,6 @@ feature -- Element change
 
 feature -- Output
 
-	reversed_format_list (list: EIFFEL_LIST [AST_EIFFEL]) is
-			-- Format `list' in reverse order.
-		do
-			list.reversed_format (Current)
-		end
-
 	register_ancestors_invariants is
 			-- Register the invariants for target class.
 		do
@@ -823,9 +854,16 @@ feature -- Output
 		end
 
 	format_invariants is
-			-- Format the categories for class_c.
+			-- Format the invariants for class_c.
+		local
+			old_is_with_breakable: BOOLEAN
 		do
+			old_is_with_breakable := is_with_breakable
+			set_is_without_breakable
 			format_registration.format_invariants (Current)
+			if old_is_with_breakable then
+				set_is_with_breakable
+			end
 		end
 
 	format_ast (ast: AST_EIFFEL) is
@@ -841,7 +879,7 @@ feature -- Output
 	put_separator is
 			-- Append the current separator to `text'.
 		do
-			if format.separator /= Void then
+			if format.separator /= Void and then format.separator /= ti_empty then
 				text.add (format.separator)
 			end
 			if format.space_between_tokens then
@@ -891,6 +929,21 @@ feature -- Output
 			text.add (t)
 		end
 
+	put_string_item (s: STRING) is
+			-- Append `s' as STRING_TEXT to `text'. Emit tabs if needed.
+		require
+			s_not_void: s /= Void
+		do
+			if not tabs_emitted then
+				emit_tabs
+			end
+			if in_indexing_clause then
+				text.add_indexing_string (s)
+			else
+				text.add_string (s)
+			end
+		end
+
 	put_front_text_item (t: TEXT_ITEM) is
 			-- Insert `t' to `text' in front of list.
 		do
@@ -928,8 +981,6 @@ feature -- Output
 			-- Put Current feature.
 		local
 			arg: EIFFEL_LIST [EXPR_AS]
-			item: BASIC_TEXT
-			i, nb: INTEGER
 		do
 			if is_for_case then
 				if format.dot_needed then
@@ -974,7 +1025,7 @@ feature -- Output
 				comments.after
 			loop
 				txt := comments.item
-				if txt.empty or else txt.item (1) /= '|' then
+				if txt.is_empty or else txt.item (1) /= '|' then
 					put_text_item (ti_Dashdash)
 					put_comment_text (comments.item)
 					new_line
@@ -988,40 +1039,11 @@ feature -- Output
 			-- and append it to `text'.
 		require
 			c_not_void: c /= Void
-		local
-			quoted_text: QUOTED_TEXT
-			comment_text: COMMENT_TEXT
-			i, c_count: INTEGER
-			c_area: SPECIAL [CHARACTER]
-			between_quotes: BOOLEAN
-			s: STRING
 		do
-			from
-				!! s.make (0)
-				c_count := c.count
-				c_area := c.area
-			until
-				i >= c_count
-			loop
-				if between_quotes and c_area.item (i) = '%'' then
-					if not s.empty then
-						text.add_quoted_text (s)
-						!! s.make (0)
-					end
-					between_quotes := false
-				elseif not between_quotes and c_area.item (i) = '`' then
-					if not s.empty then
-						text.add_comment_text (s)
-						!! s.make (0)
-					end
-					between_quotes := true
-				else
-					s.extend (c_area.item (i))
-				end
-				i := i + 1
-			end
-			if not s.empty then
-				text.add_comment_text (s)
+			--| VB 06/15/2000 Entire implementation removed.
+			--| Quoted text will now be taken care of by STRUCTURED_TEXT.add_comment_text.
+			if not c.is_empty then
+				text.add_comment_text (c)
 			end
 		end
 
@@ -1042,18 +1064,22 @@ feature -- Implementation
 				if not tabs_emitted then
 					emit_tabs
 				end
-				if (in_assertion and then not is_feature_visible) then
-					last_was_printed := false
-				end
+--| FIXME VB 06/13/2000 Removed this:
+--|				if (in_assertion and then not is_feature_visible) then
+--|					last_was_printed := false
+--|				end
+--| ... and suddenly all contracts seem to be printed...!?!
+--| I presume the purpose is to hide assertions that have non-exported
+--| features in them but that did not work AT ALL.
 			end
 			if last_was_printed then
 				adapt := local_adapt
 				feature_i := adapt.target_feature
 				f_name := adapt.final_name
 				if feature_i /= Void and then in_bench_mode then
-					!FEATURE_TEXT! item.make (feature_i.api_feature (adapt.target_class.id), f_name)
+					!FEATURE_TEXT! item.make (feature_i.api_feature (adapt.target_class.class_id), f_name)
 				else			
-					!! item.make (f_name)
+					!LOCAL_TEXT! item.make (f_name)
 				end
 				text.add (item)
 				args := arguments
@@ -1087,69 +1113,47 @@ feature -- Implementation
 	put_prefix_feature is
 			-- Put prefix feature.
 		local
-			feature_i: FEATURE_I; 
 			item: BASIC_TEXT
-			ot: OPERATOR_TEXT
-			f_name: STRING
-			adapt: like local_adapt
-			is_key: BOOLEAN
 		do
 			if is_for_case then
 				if not tabs_emitted then
 					emit_tabs
 				end
-				f_name := name_of_current_feature
-				if f_name.item (1).is_alpha then
-					!KEYWORD_TEXT! item.make (f_name)
-				else
-					!SYMBOL_TEXT! item.make (f_name)
-				end
-				text.add (item)
+				text.add (operator_to_item (name_of_current_feature, Void))
 			else
-				adapt := local_adapt
-				f_name := adapt.final_name
-					-- Use source feature for stone.
-				feature_i := adapt.target_feature
-				if f_name.item (1).is_alpha then
-					is_key := True
-				end
-				last_was_printed := True
-				if feature_i /= Void and then in_bench_mode then
-					!! ot.make (feature_i.api_feature (adapt.target_class.id), f_name)
-					if is_key then
-						ot.set_is_keyword
-					end
-					item := ot
-				else
-					if is_key then
-						!KEYWORD_TEXT! item.make (f_name)
-					else
-						!SYMBOL_TEXT! item.make (f_name)
-					end
-				end
-				text.insert_two (format.insertion_point, item, ti_Space)
+				item :=  operator_to_item (local_adapt.final_name, local_adapt)
+				text.go_to (format.insertion_point)
+				text.add (item)
 				last_was_printed := True
 			end
 		end
-	
+
+feature {UNARY_AS} -- Implementation
+
+	put_prefix_space is
+			-- Append extra space after prefix feature.
+			-- This used to be automatically added, but this is
+			-- not correct, since it also showed up in the
+			-- feature declaration (prefix "not "). This function
+			-- is called by UNARY_AS.format.
+		do
+			text.go_to (format.insertion_point)
+			text.forth
+			text.add (ti_Space)
+		end
+
+feature -- Implementation
+
 	put_infix_feature is
 			-- Put infix feature.
 		local
 			args: like arguments
 			adapt: like local_adapt
 			arg: EXPR_AS
-			item: BASIC_TEXT
-			name: STRING
 		do
 			if is_for_case then
-				name := name_of_current_feature
-				if name.item (1).is_alpha then
-					!KEYWORD_TEXT! item.make (name)
-				else
-					!SYMBOL_TEXT! item.make (name)
-				end
 				text.add_space
-				text.add (item)
+				text.add (operator_to_item (name_of_current_feature, Void))
 				text.add_space
 				arg ?= arguments
 				if arg /= Void then
@@ -1180,33 +1184,26 @@ feature -- Implementation
 		end
 
 	put_infix_name (adapt: like local_adapt) is
-			-- Put infix feature.
-		local
-			feature_i: FEATURE_I
-			f_name: STRING
-			item: BASIC_TEXT
-			ot: OPERATOR_TEXT
-			is_key: BOOLEAN
 		do
-			f_name := adapt.final_name
-				-- Use source feature for stone.
-			if f_name.item (1).is_alpha then
-				is_key := True
-			end
-			feature_i := adapt.target_feature
-			if feature_i /= Void and then in_bench_mode then
-				!! ot.make (feature_i.api_feature (adapt.target_class.id), f_name)
-				if is_key then
-					ot.set_is_keyword
-				end
-				item := ot
-			elseif is_key then
-				!KEYWORD_TEXT! item.make (f_name)
-			else
-				!SYMBOL_TEXT! item.make (f_name)
-			end
-			text.add (item)
+			text.add (operator_to_item (adapt.final_name, adapt))
 			last_was_printed := true
+		end
+
+	operator_to_item (a_visual_name: STRING; adapt: like local_adapt): BASIC_TEXT is
+			-- Get structured text item for infix/prefix `a_target_feature' with `a_visual_name'.
+		do
+			if adapt /= Void and then adapt.target_feature /= Void and then in_bench_mode then
+				create {OPERATOR_TEXT} Result.make (
+					adapt.target_feature.api_feature (
+						adapt.target_class.class_id
+					),
+					a_visual_name
+				)
+			elseif (a_visual_name @ 1).is_alpha then
+				create {KEYWORD_TEXT} Result.make (a_visual_name)
+			else
+				create {SYMBOL_TEXT} Result.make (a_visual_name)
+			end
 		end
 
 feature {NONE} -- Implementation

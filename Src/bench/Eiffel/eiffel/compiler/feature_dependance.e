@@ -21,7 +21,7 @@ creation
 
 feature
 
-	suppliers: TWO_WAY_SORTED_SET [CLASS_ID]
+	suppliers: TWO_WAY_SORTED_SET [INTEGER]
 			-- Set of all the syntactical suppliers of the feature
 
 	add_supplier (a_class: CLASS_C) is
@@ -29,15 +29,14 @@ feature
 		require
 			good_argument: a_class /= Void
 		do
-			suppliers.extend (a_class.id)
+			suppliers.extend (a_class.class_id)
 		end;
 
 	make is 
 		do
 			Precursor {TWO_WAY_SORTED_SET}
 			compare_objects
-			!!suppliers.make
-			suppliers.compare_objects
+			create suppliers.make
 		end;
 
 	wipe_out is 
@@ -101,7 +100,7 @@ feature -- Incrementality
 			until
 				after or else Result
 			loop
-				if System.class_of_id (item.id) = Void then
+				if System.class_of_id (item.class_id) = Void then
 					Result := True
 				end;
 				forth
@@ -119,7 +118,7 @@ feature -- Debug
 				suppliers.after
 			loop
 				io.error.putstring ("Supplier id: ");
-				suppliers.item.trace;
+				io.error.putint (suppliers.item);
 				io.error.new_line;
 				suppliers.forth
 			end;

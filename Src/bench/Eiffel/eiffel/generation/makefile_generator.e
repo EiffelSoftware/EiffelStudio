@@ -1,7 +1,12 @@
--- Makefile generation control. The generated Makefile.SH is to be run through
--- /bin/sh to get properly instantiated for a given platform. A partial linking
--- of `Packet_number' files is done, as needed to avoid kernel internal argument
--- space overflow.
+indexing
+	description: "[
+		Makefile generation control. The generated Makefile.SH is to be run through
+		/bin/sh to get properly instantiated for a given platform. A partial linking
+		of `Packet_number' files is done, as needed to avoid kernel internal argument
+		space overflow.
+		]"
+	date: "$Date$"
+	revision: "$Revision$"
 
 deferred class MAKEFILE_GENERATOR 
 
@@ -35,7 +40,7 @@ feature -- Attributes
 			-- Run-time object files to be put in the Cecil
 			-- archive
 
-	empty_class_types: SEARCH_TABLE [TYPE_ID]
+	empty_class_types: SEARCH_TABLE [INTEGER]
 			-- Set of all the class types that have no used
 			-- features (final mode), i.e. the C file would
 			-- be empty.
@@ -70,7 +75,7 @@ feature -- Initialization
 			basket: LINKED_LIST [STRING]
 		do
 			if System.in_final_mode then
-				basket_nb := 1 + System.static_type_id_counter.total_count // Final_packet_number
+				basket_nb := 1 + System.static_type_id_counter.count // Final_packet_number
 				system_basket_nb := (Rout_generator.file_counter - 1) // System_packet_number + 2
 			else
 				basket_nb := 1 + System.static_type_id_counter.current_count // Packet_number
@@ -224,8 +229,6 @@ feature -- Generate Dynamic Library
 
 	generate_dynamic_lib is
 		local
-			i, nb: INTEGER
-			edynlib_file: STRING
 			egc_dynlib_file: STRING
 		do
 			-- Generate the line concerning edynlib.o and egc_dynlib.o
@@ -236,33 +239,33 @@ feature -- Generate Dynamic Library
 
 			-- Generate "E1/egc_dynlib.o"
 			make_file.putstring ("%N")
-			make_file.putstring (System_object_prefix)
+			make_file.putchar (System_object_prefix)
 			make_file.putint (1)
-			make_file.putstring ("/egc_dynlib.o: Makefile $(EIFFEL4)/bench/spec/$(PLATFORM)/templates/")
+			make_file.putstring ("/egc_dynlib.o: Makefile $(ISE_EIFFEL)/bench/spec/$(ISE_PLATFORM)/templates/")
 			make_file.putstring (egc_dynlib_file)
-			make_file.putstring ("%N%T$(MV) $(EIFFEL4)/bench/spec/$(PLATFORM)/templates/")
+			make_file.putstring ("%N%T$(CP) $(ISE_EIFFEL)/bench/spec/$(ISE_PLATFORM)/templates/")
 			make_file.putstring (egc_dynlib_file)
 			make_file.putstring (" ")
-			make_file.putstring (System_object_prefix)
+			make_file.putchar (System_object_prefix)
 			make_file.putint (1)
 			make_file.putstring ("/egc_dynlib.c") 
 
 			make_file.putstring ("%N%Tcd ")
-			make_file.putstring (System_object_prefix)
+			make_file.putchar (System_object_prefix)
 			make_file.putint (1)
 			make_file.putstring (" ; $(MAKE) egc_dynlib.o")
 			make_file.putstring (" ; cd ..")
 
 			-- Generate "E1/edynlib.o"
 			make_file.putstring ("%N")
-			make_file.putstring (System_object_prefix)
+			make_file.putchar (System_object_prefix)
 			make_file.putint (1)
 			make_file.putstring ("/edynlib.o: Makefile ")
-			make_file.putstring (System_object_prefix)
+			make_file.putchar (System_object_prefix)
 			make_file.putint (1)
 			make_file.putstring ("/edynlib.c ")
 			make_file.putstring ("%N%Tcd ")
-			make_file.putstring (System_object_prefix)
+			make_file.putchar (System_object_prefix)
 			make_file.putint (1)
 			make_file.putstring (" ; $(MAKE) edynlib.o")
 			make_file.putstring (" ; cd ..%N")
@@ -341,7 +344,7 @@ feature -- Actual generation
 
 feature -- Sub makefile generation
 
-	generate_sub_makefiles (sub_dir: STRING; baskets: ARRAY [LINKED_LIST [STRING]]) is
+	generate_sub_makefiles (sub_dir: CHARACTER; baskets: ARRAY [LINKED_LIST [STRING]]) is
 				-- Generate makefile in subdirectories.
 		local
 			new_makefile, old_makefile: INDENT_FILE
@@ -358,13 +361,14 @@ feature -- Sub makefile generation
 				i > baskets_count
 			loop
 				basket := baskets.item (i)
-				if not basket.empty then
+				if not basket.is_empty then
 					if system.in_final_mode then
 						!!f_name.make_from_string (Final_generation_path)
 					else
 						!!f_name.make_from_string (Workbench_generation_path)
 					end
-					subdir_name := clone (sub_dir)
+					create subdir_name.make (5)
+					subdir_name.append_character (sub_dir)
 					subdir_name.append_integer (i)
 					f_name.extend (subdir_name)
 					f_name.set_file_name (Makefile_SH)
@@ -381,7 +385,7 @@ feature -- Sub makefile generation
 					generate_macro ("OBJECTS", basket)
 						-- Generate partial object.
 					make_file.putstring ("all: ")
-					make_file.putstring (sub_dir)
+					make_file.putchar (sub_dir)
 					make_file.putstring ("obj")
 					make_file.putint (i)
 					make_file.putstring (".o")
@@ -484,8 +488,12 @@ feature -- Generation, Header
 				make_file.putstring ("-DCONCURRENT_EIFFEL ")
 			end
 
+			if not System.uses_ise_gc_runtime then
+				make_file.putstring ("-DNO_ISE_GC ")
+			end
+
 			generate_specific_defines
-			make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include -I. %H$(INCLUDE_PATH)%N")
+			make_file.putstring ("-I%H$(ISE_EIFFEL)/bench/spec/%H$(ISE_PLATFORM)/include -I. %H$(INCLUDE_PATH)%N")
 
 			if System.in_final_mode then
 				make_file.putstring ("CPPFLAGS = $optimize ")
@@ -504,7 +512,7 @@ feature -- Generation, Header
 			end
 
 			generate_specific_defines
-			make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include -I. %H$(INCLUDE_PATH)%N")
+			make_file.putstring ("-I%H$(ISE_EIFFEL)/bench/spec/%H$(ISE_PLATFORM)/include -I. %H$(INCLUDE_PATH)%N")
 
 			make_file.putstring ("LDFLAGS = ")
 
@@ -542,9 +550,12 @@ feature -- Generation, Header
 				%LD = $ld%N%
 				%MKDEP = $mkdep %H$(DPFLAGS) --%N%
 				%MV = $mv%N%
+				%CP = $cp%N%
 				%RANLIB = $ranlib%N%
 				%RM = $rm -f%N%
 				%RMDIR = $rmdir%N")
+
+			make_file.putstring ("X2C = \$(ISE_EIFFEL)/bench/spec/\$(ISE_PLATFORM)/bin/x2c%N")
 			make_file.putstring ("SHAREDLINK = $sharedlink%N")
 			make_file.putstring ("SHAREDLIBS = $sharedlibs%N")
 			make_file.putstring ("SHARED_SUFFIX = $shared_suffix%N")
@@ -712,7 +723,7 @@ feature -- Generation (Linking rules)
 			make_file.putstring (": ")
 			make_file.putstring ("$(OBJECTS) ")
 			make_file.putchar (' ')
-			make_file.putstring (System_object_prefix)
+			make_file.putchar (System_object_prefix)
 			make_file.putint (1)
 			make_file.putstring ("/emain.o Makefile%N%T$(RM) ") 
 			make_file.putstring (system_name)
@@ -729,12 +740,12 @@ feature -- Generation (Linking rules)
 			make_file.putstring (system_name)
 			make_file.putstring ("%
 				% $(C")
-			if System.externals.has_cpp_externals then
+			if System.has_cpp_externals then
 				make_file.putstring ("PP")
 			end
 			make_file.putstring ("FLAGS) $(LDFLAGS) ")
 			make_file.putstring (" $(OBJECTS) ")
-			make_file.putstring (System_object_prefix)
+			make_file.putchar (System_object_prefix)
 			make_file.putint (1)
 			make_file.putstring ("/emain.o ") 
 			make_file.putchar (Continuation)
@@ -795,13 +806,13 @@ feature -- Generation (Linking rules)
 			until
 				i > baskets_count
 			loop
-				if not object_baskets.item (i).empty then
+				if not object_baskets.item (i).is_empty then
 					if not_first then
 						make_file.putchar (' ')
 					else
 						not_first := true
 					end
-					make_file.putstring (C_prefix)
+					make_file.putchar (C_prefix)
 					make_file.putint (i)
 				end
 				i := i + 1
@@ -813,9 +824,9 @@ feature -- Generation (Linking rules)
 			until
 				i > baskets_count
 			loop
-				if not system_baskets.item (i).empty then
+				if not system_baskets.item (i).is_empty then
 					make_file.putchar (' ')
-					make_file.putstring (System_object_prefix)
+					make_file.putchar (System_object_prefix)
 					make_file.putint (i)
 				end
 				i := i + 1
@@ -825,11 +836,11 @@ feature -- Generation (Linking rules)
 			make_file.new_line
 		end
 
-	generate_partial_objects_linking (dir_prefix: STRING; index: INTEGER) is
+	generate_partial_objects_linking (dir_prefix: CHARACTER; index: INTEGER) is
 			-- Generate rules to produce partial linking and the
 			-- final executable linked in with `run_time'.
 		do
-			make_file.putstring (dir_prefix)
+			make_file.putchar (dir_prefix)
 			make_file.putstring ("obj")
 			make_file.putint (index)
 			make_file.putstring (".o: $(OBJECTS) Makefile")
@@ -838,7 +849,7 @@ feature -- Generation (Linking rules)
 				-- their own linker).
 				-- FIXME
 			make_file.putstring ("%T$(LD) $(LDFLAGS) -r -o ")
-			make_file.putstring (dir_prefix)
+			make_file.putchar (dir_prefix)
 			make_file.putstring ("obj")
 			make_file.putint (index)
 			make_file.putstring (".o $(OBJECTS)")
@@ -862,33 +873,33 @@ feature -- Generation (Linking rules)
 			end
 
 				-- Generate the dependence rule for E1/Makefile
-			make_file.putstring (System_object_prefix)
+			make_file.putchar (System_object_prefix)
 			make_file.putint (1)
 			make_file.putstring ("/Makefile: ")
-			make_file.putstring (System_object_prefix)
+			make_file.putchar (System_object_prefix)
 			make_file.putint (1)
 			make_file.putstring ("/Makefile.SH")
 			make_file.putstring ("%N%Tcd ")
-			make_file.putstring (System_object_prefix)
+			make_file.putchar (System_object_prefix)
 			make_file.putint (1)
 			make_file.putstring (" ; $(SHELL) Makefile.SH%N%N")
 
 				-- Generate the dependence rule for E1/emain.o
-			make_file.putstring (System_object_prefix)
+			make_file.putchar (System_object_prefix)
 			make_file.putint (1)
 			make_file.putstring ("/emain.o: Makefile ")
-			make_file.putstring (System_object_prefix)
+			make_file.putchar (System_object_prefix)
 			make_file.putint (1)
-			make_file.putstring ("/Makefile $(EIFFEL4)/bench/spec/$(PLATFORM)/templates/")
+			make_file.putstring ("/Makefile $(ISE_EIFFEL)/bench/spec/$(ISE_PLATFORM)/templates/")
 			make_file.putstring (emain_file)
-			make_file.putstring ("%N%Tcp $(EIFFEL4)/bench/spec/$(PLATFORM)/templates/")
+			make_file.putstring ("%N%T$(CP) $(ISE_EIFFEL)/bench/spec/$(ISE_PLATFORM)/templates/")
 			make_file.putstring (emain_file)
 			make_file.putchar (' ')
-			make_file.putstring (System_object_prefix)
+			make_file.putchar (System_object_prefix)
 			make_file.putint (1)
 			make_file.putstring ("/emain.c")
 			make_file.putstring ("%N%Tcd ")
-			make_file.putstring (System_object_prefix)
+			make_file.putchar (System_object_prefix)
 			make_file.putint (1)
 			make_file.putstring (" ; $(MAKE) emain.o ; $(RM) emain.c%N%N")
 
@@ -898,28 +909,28 @@ feature -- Generation (Linking rules)
 			until
 				i > nb
 			loop
-				make_file.putstring (System_object_prefix)
+				make_file.putchar (System_object_prefix)
 				make_file.putint (i)
 				make_file.putchar ('/')
-				make_file.putstring (System_object_prefix)
+				make_file.putchar (System_object_prefix)
 				make_file.putstring ("obj")
 				make_file.putint (i)
 				if i = 1 then
 					make_file.putstring (".o: Makefile ")
-					make_file.putstring (System_object_prefix)
+					make_file.putchar (System_object_prefix)
 					make_file.putint (i)
 					make_file.putstring ("/Makefile%N%Tcd ")
 				else
 					make_file.putstring (".o: Makefile%N%Tcd ")
 				end
-				make_file.putstring (System_object_prefix)
+				make_file.putchar (System_object_prefix)
 				make_file.putint (i)
 				if i = 1 then
 					make_file.putstring (" ; $(START_TEST) $(MAKE) ")
 				else
 					make_file.putstring (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) ")
 				end
-				make_file.putstring (System_object_prefix)
+				make_file.putchar (System_object_prefix)
 				make_file.putstring ("obj")
 				make_file.putint (i)
 				make_file.putstring (".o $(END_TEST)%N%N")
@@ -939,15 +950,15 @@ feature -- Generation (Linking rules)
 			until
 				i > baskets_count
 			loop
-				if not object_baskets.item (i).empty then
-					make_file.putstring (C_prefix)
+				if not object_baskets.item (i).is_empty then
+					make_file.putchar (C_prefix)
 					make_file.putint (i)
 					make_file.putchar ('/')
-					make_file.putstring (C_prefix)
+					make_file.putchar (C_prefix)
 					make_file.putstring ("obj")
 					make_file.putint (i)
 					make_file.putstring (".o: Makefile%N%Tcd ")
-					make_file.putstring (C_prefix)
+					make_file.putchar (C_prefix)
 					make_file.putint (i)
 					make_file.putstring (" ; $(START_TEST) $(SHELL) Makefile.SH ; $(MAKE) $(END_TEST)")
 					make_file.new_line
@@ -1008,7 +1019,7 @@ feature -- Generation, Tail
 
 feature -- Removal of empty classes
 
-	record_empty_class_type (a_class_type: TYPE_ID) is
+	record_empty_class_type (a_class_type: INTEGER) is
 			-- add `a_class_type' to the set of class types that
 			-- are not generated
 		do
@@ -1017,11 +1028,10 @@ feature -- Removal of empty classes
 
 feature {NONE} -- Implementation
 
-	generate_basket_objects (baskets: ARRAY [LINKED_LIST [STRING]]; dir_prefix: STRING) is
+	generate_basket_objects (baskets: ARRAY [LINKED_LIST [STRING]]; dir_prefix: CHARACTER) is
 			-- Generate the object macros in `baskets'.
 		require
 			baskets_not_void: baskets /= Void
-			dir_prefix_not_void: dir_prefix /= Void
 		local
 			i, baskets_count: INTEGER
 			not_first: BOOLEAN
@@ -1032,16 +1042,16 @@ feature {NONE} -- Implementation
 			until
 				i > baskets_count
 			loop
-				if not baskets.item (i).empty then
+				if not baskets.item (i).is_empty then
 					if not_first then
 						make_file.putchar (' ')
 					else
 						not_first := true
 					end
-					make_file.putstring (dir_prefix)
+					make_file.putchar (dir_prefix)
 					make_file.putint (i)
 					make_file.putchar ('/')
-					make_file.putstring (dir_prefix)
+					make_file.putchar (dir_prefix)
 					make_file.putstring ("obj")
 					make_file.putint (i)
 					make_file.putstring (".o")

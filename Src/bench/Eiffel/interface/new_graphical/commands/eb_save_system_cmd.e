@@ -11,9 +11,9 @@ inherit
 	SHARED_RESCUE_STATUS	
 	PROJECT_CONTEXT
 
-	EB_SAVE_FILE_CMD
+	EB_SAVE_CMD
 		redefine
-			tool, execute
+			tool
 		end
 
 	EB_SYSTEM_TOOL_DATA
@@ -28,7 +28,7 @@ feature -- Properties
 feature {NONE} -- Implementation
 feature -- Execution
 
-	execute (argument: EV_ARGUMENT; data: EV_EVENT_DATA) is
+	execute is
 			-- Save a file with the chosen name.
 		local   
 			new_file, tmp_file: RAW_FILE	-- It should be PLAIN_TEXT_FILE, however windows will expand %R and %N as %N
@@ -51,15 +51,16 @@ feature -- Execution
 			aok := True
 			if (new_file.exists) and then (not new_file.is_plain) then
 				aok := False
-				create wd.make_default (tool.parent, Interface_names.t_Warning, Warning_messages.w_Not_a_plain_file (new_file.name))
-
+				create wd.make_with_text (Warning_messages.w_Not_a_plain_file (new_file.name))
+				wd.show_modal
 			elseif new_file.exists and then (not new_file.is_writable) then
 				aok := False
-				create wd.make_default (tool.parent, Interface_names.t_Warning, Warning_messages.w_Not_writable (new_file.name))
-
+				create wd.make_with_text (Warning_messages.w_Not_writable (new_file.name))
+				wd.show_modal
 			elseif (not new_file.exists) and then (not new_file.is_creatable) then
 				aok := False
-				create wd.make_default (tool.parent, Interface_names.t_Warning, Warning_messages.w_Not_creatable (new_file.name))
+				create wd.make_with_text (Warning_messages.w_Not_creatable (new_file.name))
+				wd.show_modal
 			end
 
 				-- Create a backup of the file in case there will be a problem during the savings.

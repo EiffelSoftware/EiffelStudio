@@ -22,7 +22,7 @@ feature
 
 	execute is
 			-- Register that the application is stopped
-			-- and parse ths string passed from C.
+			-- and parse the string passed from C.
 			-- The format of the passed string is:
 			--    feature name
 			--    object address
@@ -41,78 +41,104 @@ feature
 			reason: INTEGER;
 			status: APPLICATION_STATUS;	
 			e_cmd: E_CMD
+			retry_clause: BOOLEAN
+			
 		do
-			e_cmd := Application.before_stopped_command;
-			if e_cmd /= Void then
-				e_cmd.execute
-			end;
-debug ("DEBUGGER_TRACE")
-	io.error.putstring ("Application stopped - reading (STOPPED_HDLR):%N");
-end;
-				-- Physical address of objects held in object tools
-				-- may have been change...
-			update_addresses;
+			if not retry_clause then
+				e_cmd := Application.before_stopped_command;
+				if e_cmd /= Void then
+					e_cmd.execute
+				end;
 
-			position := 1;
+				debug ("DEBUGGER_TRACE")
+					io.error.putstring ("STOPPED_HDLR: Application is stopped - reading information from application%N")
+				end
+					-- Physical address of objects held in object tools
+					-- may have been change...
+				update_addresses;
+	
+				position := 1;
 
-				-- Read feature name.
-			read_string;
-			name := last_string;
+					-- Read feature name.
+				read_string;
+				name := last_string;
 
-				-- Read object address and convert it to hector address.
-			read_string;
+					-- Read object address and convert it to hector address.
+				read_string;
 
-			address := hector_addr (last_string);
+				address := hector_addr (last_string);
+	
+					-- Read origin of feature
+				read_int;
+				org_type := last_int + 1;
 
-				-- Read origin of feature
-			read_int;
-			org_type := last_int + 1;
+					-- Read type of current object.
+					--| Note: the type id on the C side must be 
+					--| incremented by one.
+				read_int;
+				dyn_type := last_int + 1;
 
-				-- Read type of current object.
-				--| Note: the type id on the C side must be 
-				--| incremented by one.
-			read_int;
-			dyn_type := last_int + 1;
+					-- Read offset in byte code.
+				read_int;
+				offset := last_int;
 
-				-- Read offset in byte code.
-			read_int;
-			offset := last_int;
+					-- Read reason for stopping.
+				read_int;
+				reason := last_int;
 
-				-- Read reason for stopping.
-			read_int;
-			reason := last_int;
+					-- Read exception code.
+				read_int;
 
-				-- Read exception code.
-			read_int;
+					-- Read assertion tag.
+				read_string;
 
-				-- Read assertion tag.
-			read_string;
+				debug ("DEBUGGER_TRACE")
+					io.error.putstring ("STOPPED_HDLR: Application is stopped - finished reading%N")
+					io.error.putstring ("              Setting app status for routine: ")
+					io.error.putstring (name)
+					io.error.new_line
+				end
+				status := Application.status;
+				check
+					application_launched: status /= Void
+				end
+				status.set_is_stopped (true)
+				status.set (name, address, org_type, dyn_type, offset, reason)
+				status.set_exception (last_int, last_string)
 
-debug ("DEBUGGER_TRACE")
-	io.error.putstring ("Application stopped - finished reading%N");
-	io.error.putstring ("Setting app status for routine: ");
-	io.error.putstring (name);
-	io.error.new_line
-end;
-			status := Application.status;
-			check
-				application_launched: status /= Void
-			end;
-			status.set_is_stopped (true);
-			status.set (name, address, org_type, dyn_type, offset, reason);
-			status.set_exception (last_int, last_string);
+				debug ("DEBUGGER_TRACE")
+					io.error.putstring ("STOPPED_HDLR: Finished setting status (Now calling after cmd)%N")
+				end
 
-debug ("DEBUGGER_TRACE")
-	io.error.putstring ("Finished setting status (Now calling after cmd)%N")
-end;
-			e_cmd := Application.after_stopped_command;
-			if e_cmd /= Void then
-				e_cmd.execute
-			end;
-debug ("DEBUGGER_TRACE")
-	io.error.putstring ("Finished calling after_cmd (STOPPED_HDLR)%N")
-end;
-		end;
+				if reason /= Pg_new_breakpoint then
+					e_cmd := Application.after_stopped_command
+					if e_cmd /= Void then
+						e_cmd.execute
+					end
+				
+					debug ("DEBUGGER_TRACE")
+						io.error.putstring ("STOPPED_HDLR: Finished calling after_cmd%N")
+					end
+				else
+						-- If the reason is Pg_new_breakpoint, the application sends the
+						-- new breakpoints and then automatically resume its execution.
+					debug ("DEBUGGER_TRACE")
+						io.error.putstring ("STOPPED_HDLR: New breakpoint added, do nothing%N")
+					end
+				end
+			else -- retry_clause
+				if Application.is_running then
+					Application.process_termination;
+				end
+			end
+--		rescue
+-- FIXME ARNAUD
+-- toTo: write a beautiful message box instead of this crappy message
+--			io.putstring("Error while getting Application status. Application will be terminated%N")
+-- END FIXME
+--			retry_clause := True
+--			retry
+		end
 
 feature {} -- parsing features
 

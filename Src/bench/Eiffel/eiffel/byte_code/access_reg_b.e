@@ -1,4 +1,8 @@
--- Accessing a pre-defined register
+indexing
+	description: "Accessing a pre-defined register"
+	note: "Does not apply for IL or Byte code generation"
+	date: "$Date$"
+	version: "$Revision$"
 
 class ACCESS_REG_B 
 

@@ -1,9 +1,12 @@
--- Server controller
+indexing
+	description: "Server file controler."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class SERVER_CONTROL
 
 inherit
-	CACHE [SERVER_FILE, FILE_ID]
+	CACHE [SERVER_FILE]
 		redefine
 			make, wipe_out
 		end
@@ -23,11 +26,11 @@ feature -- Initialization
 
 feature -- Status
 
-	files: EXTEND_TABLE [SERVER_FILE, FILE_ID];
+	files: EXTEND_TABLE [SERVER_FILE, INTEGER];
 			-- Table of all the files under the control of the
 			-- current object
 
-	removed_files: HASH_TABLE [SERVER_FILE, FILE_ID]
+	removed_files: HASH_TABLE [SERVER_FILE, INTEGER]
 			-- Table of all the removed files
 
 	remove_right_away: BOOLEAN
@@ -38,7 +41,7 @@ feature -- Status
 	file_counter: FILE_COUNTER;
 			-- Server file id counter
 
-	last_computed_id: FILE_ID;
+	last_computed_id: INTEGER;
 			-- Last new computed server file id
 
 	Chunk: INTEGER is 50;
@@ -59,9 +62,9 @@ feature -- Ids creation
 	compute_new_id is
 			-- Compute a new server file id and assign it to `last_computed_id'.
 		local
-			local_files: HASH_TABLE [SERVER_FILE, FILE_ID]
+			local_files: HASH_TABLE [SERVER_FILE, INTEGER]
 			new_file: SERVER_FILE
-			id: FILE_ID
+			id: INTEGER
 		do
 				-- Get a new ID.
 			local_files := removed_files
@@ -78,7 +81,7 @@ feature -- Ids creation
 			last_computed_id := id
 debug ("SERVER")
 	io.error.put_string ("Creating new file: ")
-	io.error.put_string (id.file_name)
+	io.error.put_string (new_file.file_name (id))
 	io.error.new_line
 end;
 		end
@@ -97,14 +100,14 @@ feature -- File operations
 				if f.is_open then
 						-- If the file is open then it is in the cache
 					f.close;
-					remove_id (f.id);
+					remove_id (f.file_id);
 debug ("SERVER")
 	io.error.put_string ("Forget file: ");
-	io.error.put_string (f.id.file_name);
+	io.error.put_string (f.file_name (f.file_id));
 	io.error.new_line;
 end;
 				end;
-				files.remove (f.id)
+				files.remove (f.file_id)
 				add_to_removed_files (f)
 			end
 		end;
@@ -117,17 +120,17 @@ end;
 			if f.is_open then
 					-- If the file is open then it is in the cache
 				f.close;
-				remove_id (f.id);
+				remove_id (f.file_id);
 			end;
 				-- Remove `f' from the controler
-			files.remove (f.id)
+			files.remove (f.file_id)
 			add_to_removed_files (f)
 
 				-- Remove file from the disk
 			f.delete;
 debug ("SERVER")
 	io.error.put_string ("Remove file: ");
-	io.error.put_string (f.id.file_name);
+	io.error.put_string (f.file_name (f.file_id));
 	io.error.new_line;
 end;
 		end;
@@ -136,7 +139,7 @@ end;
 			-- Move `f' in `removed_files' only if it is possible
 		do
 			if not f.precompiled then
-				removed_files.put (f, f.id)
+				removed_files.put (f, f.file_id)
 			end
 		end
 
@@ -144,7 +147,7 @@ end;
 			-- Remove all empty files from disk
 		local
 			file: SERVER_FILE
-			local_files: HASH_TABLE [SERVER_FILE, FILE_ID]
+			local_files: HASH_TABLE [SERVER_FILE, INTEGER]
 		do
 				-- Delete files from disk which are already not used
 			from
@@ -161,10 +164,10 @@ end;
 			end
 		end;
 
-	file_of_id (i: FILE_ID): SERVER_FILE is
+	file_of_id (i: INTEGER): SERVER_FILE is
 			-- File of id `i'.
 		require
-			id_not_void: i /= Void
+			id_not_void: i /= 0
 			file_exists: files.has (i)
 		do
 			Result := files.item (i)
@@ -181,12 +184,12 @@ end;
 			if last_removed_item /= Void then
 				last_removed_item.close
 				check 
-					not_in_cache: not has_id (last_removed_item.id)
+					not_in_cache: not has_id (last_removed_item.file_id)
 				end
 			end
 debug ("SERVER")
 	io.error.put_string ("Opening file: ");
-	io.error.put_string (f.id.file_name);
+	io.error.put_string (f.file_name (f.file_id));
 	io.error.new_line;
 end;
 		ensure
@@ -215,7 +218,7 @@ feature -- Status report
 			-- Are the server files readable?
 		local
 			file: SERVER_FILE
-			local_files: EXTEND_TABLE [SERVER_FILE, FILE_ID]
+			local_files: EXTEND_TABLE [SERVER_FILE, INTEGER]
 		do
 			from
 				Result := true;
@@ -236,7 +239,7 @@ feature -- Status report
 			-- Are the server files readable and writable?
 		local
 			file: SERVER_FILE
-			local_files: EXTEND_TABLE [SERVER_FILE, FILE_ID]
+			local_files: EXTEND_TABLE [SERVER_FILE, INTEGER]
 		do
 			from
 				Result := True;
@@ -260,8 +263,7 @@ feature -- Status report
 	exists: BOOLEAN is
 			-- Do the server files exist?
 		local
-			file: SERVER_FILE
-			local_files: EXTEND_TABLE [SERVER_FILE, FILE_ID]
+			local_files: EXTEND_TABLE [SERVER_FILE, INTEGER]
 		do
 			from
 				Result := True;
@@ -280,8 +282,7 @@ feature -- Initialization
 	init is
 			-- Update the path names of the various server files.
 		local
-			file: SERVER_FILE
-			local_files: EXTEND_TABLE [SERVER_FILE, FILE_ID]
+			local_files: EXTEND_TABLE [SERVER_FILE, INTEGER]
 		do
 			from
 				local_files := files
@@ -319,8 +320,7 @@ feature -- Debug
 
 	trace is
 		local
-			file: SERVER_FILE
-			local_files: EXTEND_TABLE [SERVER_FILE, FILE_ID]
+			local_files: EXTEND_TABLE [SERVER_FILE, INTEGER]
 		do
 			from
 				local_files := files

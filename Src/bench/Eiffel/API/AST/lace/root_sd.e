@@ -1,9 +1,7 @@
 indexing
-
-	description: 
-		"";
-	date: "$Date$";
-	revision: "$Revision $"
+	description: "Representation of a root class specification"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ROOT_SD
 
@@ -21,7 +19,7 @@ inherit
 			valid_reference_class, is_class
 		end
 
-feature {LACE_AST_FACTORY} -- Initialization
+feature {ROOT_SD, LACE_AST_FACTORY} -- Initialization
 
 	initialize (rn: like root_name; cm: like cluster_mark;
 		cp: like creation_procedure_name) is
@@ -45,23 +43,6 @@ feature {LACE_AST_FACTORY} -- Initialization
 			creation_procedure_name_set: creation_procedure_name = cp
 		end
 
-feature {NONE} -- Initialization 
-
-	set is
-			-- Yacc initialization
-		do
-			root_name ?= yacc_arg (0);
-			root_name.to_lower;
-			cluster_mark ?= yacc_arg (1);
-			if cluster_mark /= Void then
-				cluster_mark.to_lower;
-			end;
-			creation_procedure_name ?= yacc_arg (2);
-			if creation_procedure_name /= Void then
-				creation_procedure_name.to_lower;
-			end;
-		end;
-
 feature -- Properties
 
 	root_name: ID_SD;
@@ -69,12 +50,37 @@ feature -- Properties
 
 	cluster_mark: ID_SD;
 			-- Cluster where the root class is
+			-- Can be Void
 
 	creation_procedure_name: ID_SD;
 			-- Creation procedure
 
 	file_name: STRING;
 			-- Updated by `adapt'
+
+feature -- Setting
+
+	set_root_name (rn: like root_name) is
+			-- Set `root_name' with `rn'.
+		require	
+			rn_not_void: rn /= Void
+		do
+			root_name := rn
+		ensure
+			root_name_set: root_name = rn
+		end
+
+	set_creation_procedure_name (cp: like creation_procedure_name) is
+			-- Set `creation_procedure_name' with lower case version
+			-- of `cp'.
+		do
+			if cp /= Void then
+				cp.to_lower
+			end
+			creation_procedure_name := cp
+		ensure
+			creation_procedure_name_set: creation_procedure_name = cp
+		end
 
 feature -- Access
 
@@ -88,6 +94,45 @@ feature -- Access
 	associated_eiffel_class (reference_class: CLASS_C): CLASS_C is
 		do
 			Result := System.root_class.compiled_class
+		end
+
+feature -- Duplication
+
+	duplicate: like Current is
+			-- Duplicate current object.
+		do
+			create Result
+			Result.initialize (root_name.duplicate, duplicate_ast (cluster_mark),
+				duplicate_ast (creation_procedure_name))
+		end
+
+feature -- Comparison
+
+	same_as (other: like Current): BOOLEAN is
+			-- Is `other' same as Current?
+		do
+			Result := other /= Void and then root_name.same_as (other.root_name)
+					and then same_ast (cluster_mark, other.cluster_mark)
+					and then same_ast (creation_procedure_name, other.creation_procedure_name)
+		end
+
+feature -- Save
+
+	save (st: GENERATION_BUFFER) is
+			-- Save current in `st'.
+		do
+			root_name.save (st)
+		
+			if cluster_mark /= Void then
+				st.putstring (" (")
+				cluster_mark.save (st)
+				st.putstring (")")
+			end
+
+			if creation_procedure_name /= Void then
+				st.putstring (": ")
+				creation_procedure_name.save (st)
+			end
 		end
 
 feature {COMPILER_EXPORTER}
@@ -110,7 +155,6 @@ feature {COMPILER_EXPORTER}
 			found: BOOLEAN;
 			vd29: VD29;
 			vd30: VD30;
-			id_sd: ID_SD;
 			compile_all: BOOLEAN;
 		do
 			if compile_all_classes then

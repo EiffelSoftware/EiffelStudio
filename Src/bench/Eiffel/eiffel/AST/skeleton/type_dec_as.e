@@ -28,18 +28,6 @@ feature {AST_FACTORY} -- Initialization
 			type_set: type = t
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			id_list ?= yacc_arg (0)
-			type ?= yacc_arg (1)
-		ensure then
-			good_list: id_list /= Void
-			type_exists: type /= Void
-		end
-
 feature -- Attributes
 
 	id_list: EIFFEL_LIST [ID_AS]
@@ -102,7 +90,21 @@ feature {AST_EIFFEL} -- Output
 		do
 			ctxt.set_separator (ti_Comma)
 			ctxt.set_space_between_tokens
-			ctxt.format_ast (id_list)
+
+			from
+				id_list.start
+			until
+				id_list.after
+			loop
+				ctxt.put_text_item (
+					create {LOCAL_TEXT}.make (id_list.item)
+				)
+				id_list.forth
+				if not id_list.after then
+					ctxt.put_separator
+				end
+			end
+
 			ctxt.put_text_item_without_tabs (ti_Colon)
 			ctxt.put_space
 			ctxt.format_ast (type)

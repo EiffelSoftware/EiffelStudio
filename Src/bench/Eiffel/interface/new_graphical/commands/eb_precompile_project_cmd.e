@@ -1,78 +1,75 @@
 indexing
-	description: "Command to precompile the Eiffel code."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Command to precompile the Eiffel code."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
-	EB_PRECOMPILE_PROJECT_CMD
+	EB_PRECOMPILE_PROJECT_COMMAND
 
 inherit
-	EB_MELT_PROJECT_CMD
+	EB_MELT_PROJECT_COMMAND
 		redefine
 			launch_c_compilation,
 			confirm_and_compile,
---			name, menu_name, accelerator,
+			name, menu_name,
 			perform_compilation,
-			is_precompiling
+			is_precompiling,
+			make
+		end
+
+	EB_SHARED_WINDOW_MANAGER
+		export
+			{NONE} all
 		end
  
-creation
-
+create
 	make
+
+feature {NONE} --Initialization
+
+	make is
+			-- Initialize `Current'.
+		do
+			Precursor {EB_MELT_PROJECT_COMMAND}
+			accelerator := Void
+		end
 
 feature {NONE} -- Implementation
 
-	confirm_and_compile (arg: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
+	confirm_and_compile is
 			-- Ask for confirmation, and compile thereafter.
 		local
-			wd: EV_WARNING_DIALOG
-			cmd: EV_ROUTINE_COMMAND
+			qd: EV_QUESTION_DIALOG
 		do
-			if arg = precompile_no_c then
-				start_c_compilation := False
-			elseif arg = precompile_now then
-				start_c_compilation := True
-			end				
-			if 
-				(arg = Void) 
-			then
-				create wd.make_with_text (tool.parent, Interface_names.t_Warning,
-					Warning_messages.w_Freeze_warning)
-				wd.show_yes_no_cancel_buttons
-				create cmd.make (~confirm_and_compile)
-				wd.add_yes_command (cmd, precompile_now)
-				wd.add_no_command (cmd, precompile_no_c)
-				wd.show
---				warner (popup_parent).custom_call
---							(Current, Warning_messages.w_Precompile_warning,
---							Interface_names.b_Precompile_now,
---							Interface_names.b_Precompile_now_but_no_C,
---							Interface_names.b_Cancel)
-			else
-				compile
-			end
+			create qd.make_with_text (Warning_messages.w_Precompile_warning)
+			qd.button ("Yes").select_actions.extend (~set_c_compilation_and_compile (True))
+			qd.button ("No").select_actions.extend (~set_c_compilation_and_compile (False))
+			qd.show_modal_to_window (window_manager.last_focused_development_window.window)
+		end
+
+	set_c_compilation_and_compile (c_comp: BOOLEAN) is
+		do
+			start_c_compilation := c_comp
+			compile
 		end
 
 	launch_c_compilation is
 			-- Launch the C compilation in the background.
 		local
-			window: EB_CLICKABLE_RICH_TEXT
+			output_text: STRUCTURED_TEXT
 		do
-			window ?= Error_window
-			if window /= Void then
-				window.set_changed (True)
-			end
-
-			Error_window.put_string ("System recompiled")
+			create output_text.make
+			output_text.add_string ("Eiffel system recompiled")
+			output_text.add_new_line
 	
 			if start_c_compilation then
-				error_window.put_string ("%NLaunching C compilation in background...%N")
+				output_text.add_string ("Launching C compilation in background...")
+				output_text.add_new_line
 				Eiffel_project.call_finish_freezing (True)
 			end
-		
-			if window /= Void then
-				window.set_changed (False)
-			end
+
+				-- Display message.
+			output_manager.process_text (output_text)
 		end
 
 	perform_compilation is
@@ -84,35 +81,14 @@ feature {NONE} -- Implementation
 
 feature {NONE} -- Attributes
 
-	precompile_now: EV_ARGUMENT1 [ANY] is
-			-- Argument used for a normal request.
+	name: STRING is "Precompile"
+			-- Name of precompile command.
+
+	menu_name: STRING is
+			-- Name used in menu entry
 		once
-			create Result.make (Void)
+			Result := Interface_names.m_Precompile_new
 		end
-
-	precompile_no_c: EV_ARGUMENT1 [ANY] is
-			-- Argument used when files needs to be saved before compiling.
-		once
-			create Result.make (Void)
-		end
-
---	name: STRING is
---			-- Name of the command.
---		once
---			Result := Interface_names.f_Precompile
---		end
-
---	menu_name: STRING is
---			-- Name used in menu entry
---		once
---			Result := Interface_names.m_Precompile
---		end
-
---	accelerator: STRING is
---			-- Accelerator action for menu entry
---		once
---			Result := Interface_names.a_Precompile
---		end
 
 	is_precompiling: BOOLEAN is True
 			-- We are doing a precompilation here.

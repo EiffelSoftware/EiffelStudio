@@ -31,10 +31,10 @@ feature {EXTERNAL_LANG_AS, EXTERNAL_EXTENSION_AS} -- Setting
 			external_error_message := clone (message)
 		end
 
-	set_file_name (s: STRING) is
-			-- Assign `s' to `file_name'.
+	set_file_name (new_filename: FILE_NAME) is
+			-- Assign `new_filename' to `file_name'.
 		do
-			file_name := s
+			file_name := new_filename
 		end
 
 	set_start_position (i: INTEGER) is

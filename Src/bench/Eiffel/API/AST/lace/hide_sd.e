@@ -1,8 +1,8 @@
 indexing
-	description:	"AST structure in Lace file for hide%
+	description: "AST structure in Lace file for hide%
 			%option for hiding precompiled classes.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class
 	HIDE_SD

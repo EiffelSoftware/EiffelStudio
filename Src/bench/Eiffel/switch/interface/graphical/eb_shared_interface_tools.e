@@ -12,6 +12,51 @@ inherit
 			init_error_window
 		end
 
+	SHARED_EIFFEL_PROJECT
+
+feature -- Argument passed to running program.
+
+	Argument_list: ARRAYED_LIST [STRING] is
+			-- List of arguments used while debugging.
+		do
+			Result := Eiffel_Ace.lace.argument_list
+		end
+	
+	current_cmd_line_argument: STRING is
+			-- Current selected command line argument.
+		require
+			Argument_list_big_enough: not Argument_list.is_empty
+		do
+			if not Argument_list.is_empty then
+				Result := Argument_list.i_th (1)
+			else
+				Result := ""
+			end
+		end
+
+	application_working_directory: STRING is
+			-- Current selected application working directory.
+		do
+			Result := Eiffel_ace.lace.application_working_directory
+			if Result = Void then
+				Result := "."
+			end
+		end
+
+	set_current_cmd_line_argument (arg: STRING) is
+			-- Set `arg' to be `current_cmd_line_argument'.
+		obsolete
+			"Obsolete in new bench but not in old"
+		require
+			arg_not_void: arg /= Void
+		do
+			if Argument_list.is_empty then
+				Argument_list.extend (arg)
+			else
+				Argument_list.put_i_th (arg, 1)
+			end
+		end
+
 feature {NONE} -- Shared tools access
 
 	Project_tool: PROJECT_W is
@@ -160,12 +205,6 @@ feature {NONE} -- Shared tools access
 			!! Result.make (project_tool.screen)
 		end
 
-	Argument_window: ARGUMENT_W is
-			-- General argument window.
-		once
-			!! Result.make
-		end
-
 	Preference_tool: EB_PREFERENCE_TOOL is
 			-- The preference tool
 		do
@@ -241,7 +280,6 @@ feature {NONE} -- Implementation
 			display_name: STRING
 			exc: EXCEPTIONS
 			exec_env: EXECUTION_ENVIRONMENT
-			g_degree_output: GRAPHICAL_DEGREE_OUTPUT
 			launched_project_tool: PROJECT_W
 		do
 			if not ewb_display.is_valid then
@@ -269,7 +307,7 @@ feature {NONE} -- Implementation
 		end
 
 	ewb_display: SCREEN is
-			-- Display of EiffelBench.
+			-- Display of $EiffelGraphicalCompiler$.
 		local
 			p: PLATFORM_CONSTANTS
 		once

@@ -50,7 +50,7 @@ feature
 			-- Generate value in `buffer'.
 		do
 			buffer.putstring ("RTMB(%"");
-			buffer.escape_string (bit_val);
+			buffer.escape_string (buffer,bit_val);
 			buffer.putchar ('"')
 			buffer.putstring (", ")
 			buffer.putint (bit_count)
@@ -68,8 +68,16 @@ feature
 						bit_val.count <= class_type.bit_count 
 		end;
 
+	generate_il is
+			-- Generate IL code for BIT constant value.
+		do
+			check
+				not_implemented: False
+			end
+		end
+
 	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for a string constant value.
+			-- Generate byte code for a BIT constant value.
 		do
 			ba.append (Bc_bit);
 			ba.append_integer (bit_count)

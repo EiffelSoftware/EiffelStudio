@@ -5,7 +5,7 @@ inherit
 	EXPR_B
 		redefine
 			print_register, make_byte_code,
-			is_simple_expr
+			is_simple_expr, is_predefined, generate_il
 		end;
 	
 feature 
@@ -46,10 +46,22 @@ feature
 	is_simple_expr: BOOLEAN is true;
 			-- A constant is a simple expression
 
+	is_predefined: BOOLEAN is true
+			-- A constant is a predefined structure.
+
+
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for integer constant.
+		do
+			il_generator.put_integer_32_constant (value)
+		end
+
 feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for an integer constant
+			-- Generate byte code for an integer constant.
 		do
 			ba.append (Bc_int);
 			ba.append_integer (value);

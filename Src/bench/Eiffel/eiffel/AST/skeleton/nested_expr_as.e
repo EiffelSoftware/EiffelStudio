@@ -30,18 +30,6 @@ feature {AST_FACTORY} -- Initialization
 			message_set: message = m
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initilization
-		do
-			target ?= yacc_arg (0)
-			message ?= yacc_arg (1)
-		ensure then
-			target_exists: target /= Void
-			message_exists: message /= Void
-		end
-
 feature -- Attributes
 
 	target: EXPR_AS

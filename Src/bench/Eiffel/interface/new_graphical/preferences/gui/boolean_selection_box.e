@@ -17,9 +17,26 @@ inherit
 create
 	make
 
-feature -- Commit
+feature -- Display
+	
+	display (new_resource: like resource) is
+			-- Display Current with title 'txt' and content 'new_value'.
+		do
+			Precursor (new_resource)
+			check 
+				change_item_widget_created: change_item_widget /= Void
+			end
+			
+			if resource.actual_value then
+				yes_item.enable_select
+			else
+				no_item.enable_select
+			end
+		end
 
-	commit is
+feature {NONE} -- Implementation
+
+	update_changes is
 			-- Commit the resource.
 		local
 			new_value: BOOLEAN
@@ -31,24 +48,26 @@ feature -- Commit
 			if resource.actual_value /= new_value then
 				resource.set_actual_value (new_value)
 				update_resource
-				caller.update
+				caller.update (resource)
 			end
 		end
 
-feature -- Display
-	
-	display (new_resource: like resource) is
-			-- Display Current with title 'txt' and content 'new_value'.
+	build_change_item_widget is
+			-- Create and setup `change_item_widget'.
+		local
+			combobox: EV_COMBO_BOX
 		do
-			Precursor (new_resource)
-			if resource.actual_value then
-				yes_item.enable_select
-			else
-				no_item.enable_select
-			end
-		end
+			create combobox
+			combobox.set_minimum_width (Layout_constants.Dialog_unit_to_pixels(50))
+			combobox.disable_edit
+			create yes_item.make_with_text ("True")
+			create no_item.make_with_text ("False")
+			combobox.extend (yes_item)
+			combobox.extend (no_item)
+			combobox.select_actions.extend (agent update_changes)
 
-feature {NONE} -- Implementation
+			change_item_widget := combobox
+		end
 
 	resource: BOOLEAN_RESOURCE
 			-- Resource.
@@ -58,28 +77,5 @@ feature {NONE} -- Implementation
 
 	no_item: EV_LIST_ITEM
 			-- "False" item in the combo box.
-
-	build_change_item_widget is
-			-- Create and setup `change_item_widget'.
-		local
-			combobox: EV_COMBO_BOX
-			hbox: EV_HORIZONTAL_BOX
-		do
-			create combobox
-			combobox.set_minimum_width (Layout_constants.Dialog_unit_to_pixels(50))
-			combobox.disable_edit
-			create yes_item.make_with_text ("True")
-			create no_item.make_with_text ("False")
-			combobox.extend (yes_item)
-			combobox.extend (no_item)
-			combobox.select_actions.extend (~commit)
-
-			create hbox
-			hbox.extend (combobox)
-			hbox.disable_item_expand (combobox)
-			hbox.extend (create {EV_CELL})			
-
-			change_item_widget := hbox
-		end
-
+	
 end -- class BOOLEAN_SELECTION_BOX

@@ -1,5 +1,7 @@
-
--- Internal representation of a system.
+indexing
+	description: "Internal representation of a system."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class SYSTEM_I 
 
@@ -31,7 +33,6 @@ inherit
 
 	SHARED_TIME
 	SHARED_CECIL
-	SHARED_USED_TABLE
 
 	SHARED_BYTE_CONTEXT
 		rename
@@ -42,7 +43,7 @@ inherit
 
 	SHARED_ARRAY_BYTE
 	SHARED_DECLARATIONS
-	SHARED_PASS
+	SHARED_DEGREES
 	SHARED_RESCUE_STATUS
 	COMPILER_EXPORTER
 	SHARED_EIFFEL_PROJECT
@@ -61,38 +62,31 @@ feature -- Counters
 	static_type_id_counter: TYPE_COUNTER
 			-- Counter of instances of CLASS_TYPE
 
-	body_id_counter: BODY_ID_COUNTER
-			-- Counter for body ids
-
 	body_index_counter: BODY_INDEX_COUNTER
 			-- Body index counter
 
-	feature_as_counter: FEATURE_AS_COUNTER
+	feature_as_counter: COMPILER_COUNTER
 			-- Counter of instances of FEATURE_AS
 
 	init_counters is
-			-- Initialize various counters.
+			-- Initialize various counters when using a precompiled library.
 		do
-			set_compilation_id
-			classes.init_server
-			routine_id_counter.init_counter
-			class_counter.init_counter
-			static_type_id_counter.init_counter
-			body_id_counter.init_counter
-			body_index_counter.init_counter
-			dispatch_table.counter.init_counter
-			execution_table.counter.init_counter
-			server_controler.file_counter.init_counter
-			feature_as_counter.init_counter
-			pattern_table.pattern_id_counter.init_counter
+				-- Current compilation_id is just the one retrieved from the
+				-- precompiled library we are using plus one.
+			set_compilation_id (compilation_id + 1)
+
+				-- We just get Current from a precompiled library,
+				-- we need to increment the current counters with their
+				-- respective precompiled offset for current compilation.
+			body_index_counter.append (body_index_counter)
+			class_counter.append (class_counter)
+			feature_as_counter.append (feature_as_counter)
+			routine_id_counter.append (routine_id_counter)
+			static_type_id_counter.append (static_type_id_counter)
+			server_controler.append (server_controler)
 		end
 
 feature -- Properties
-
-	changed_body_ids: EXTEND_TABLE [CHANGED_BODY_ID_INFO, BODY_ID] is
-		once
-			!! Result.make (2)
-		end
 
 	rout_info_table: ROUT_INFO_TABLE
 			-- Global routine info table
@@ -120,15 +114,14 @@ feature -- Properties
 	successful: BOOLEAN
 			-- Was the last recompilation successful?
 
+	has_been_changed: BOOLEAN
+			-- Did last recompilation changed data of compiler?
+
 	freeze: BOOLEAN is
 			-- Has the system to be frozen again ?
 		do
-			if not java_generation then
-				Result := (not Lace.compile_all_classes)
+			Result := (not Lace.compile_all_classes or else il_generation)
 					and then (private_freeze or else Compilation_modes.is_freezing)
-			else
-				-- Avoid freezing or re-freezing at all costs!
-			end
 		end
 
 	freezing_occurred: BOOLEAN
@@ -156,6 +149,9 @@ feature -- Properties
 	first_compilation: BOOLEAN
 			-- Is it the first compilation of the system
 			-- Used by the time check
+
+	project_creation_time: INTEGER
+			-- Time of creation of current project.
 
 	marked_precompiled_classes: BOOLEAN
 			-- Is it the first compilation of the system
@@ -193,22 +189,12 @@ feature -- Properties
 			-- Value from which to start the dynamic type_id numbering
 			-- for newly created class types
 
-	melted_set: SEARCH_TABLE [CLASS_C]
-			-- Set of class ids for which feature table needs to be updated
-			-- when melting
-
-	freeze_set: SEARCH_TABLE [CLASS_C]
-			-- List of class ids for which a source C compilation is
-			-- needed when freezing.
+	degree_minus_1: DEGREE_MINUS_1
+			-- List of class ids for which a source C compilation is needed
+			-- when freezing
 
 	is_conformance_table_melted: BOOLEAN
 			-- Is the conformance table melted ?
-
-	melted_conformance_table: CHARACTER_ARRAY
-			-- Byte array representation of the melted conformance
-			-- table.
-			--| Once melted, it is kept in memory so it won't be re-processed
-			--| each time
 
 	melted_parent_table: CHARACTER_ARRAY
 			-- Byte array representation of the melted parent
@@ -216,28 +202,20 @@ feature -- Properties
 			--| Once melted, it is kept in memory so it won't be re-processed
 			--| each time
 
-	frozen_level: INTEGER
-			-- Frozen level
+	nb_frozen_features: INTEGER
+			-- Number of frozen features in system.
 
-	body_index_table: BODY_INDEX_TABLE
+	body_index_table: ARRAY [INTEGER]
 			-- Body index table
 			--| Correspondance of generic body index and generic body
 			--| id.
 
-	original_body_index_table: BODY_INDEX_TABLE
+	original_body_index_table: ARRAY [INTEGER]
 			-- Original body index table.
 			-- | Since during second pass, correpondaces between body indexes
 			-- | and body ids are changing, the second class must use a
 			-- | duplicated one in order to compair versions of a same
 			-- | feature.
-
-	onbidt: O_N_TABLE [BODY_ID]
-			-- Correspondance table between old body ids
-			-- (changed trough `change_body_id' of FEATURE_I)
-			-- and new body id.
-
-	dispatch_table: DISPATCH_TABLE
-			-- Dispatch table
 
 	execution_table: EXECUTION_TABLE
 			-- Execution table
@@ -247,10 +225,6 @@ feature -- Properties
 
 	keep_assertions: BOOLEAN
 			-- Are the assertions kept in final mode?
-
-	current_pass: PASS
-			-- Current compiler pass
-			-- Useful for `current_class'
 
 	current_class: CLASS_C
 			-- Current processed class
@@ -280,79 +254,66 @@ feature -- Properties
 			-- Name of the C routine corresponding to the
 			-- make routine of TUPLE. See also comment above.
 
-	optimization_tables: OPTIMIZATION_TABLES
-			-- Tables keeping track of flags for optimization
+	optimization_tables: SEARCH_TABLE [OPTIMIZE_UNIT]
+			-- Tables keeping track of flags for loop optimization
 			-- Based on the body_index of a feature
 
 	make is
 			-- Create the system.
 		do
-			set_compilation_id
+			set_compilation_id (1)
 
 				-- Creation of all the servers.
 			server_make
 
 				-- Creation of the system hash table
-			!! class_types.make (1, System_chunk)
-			!! new_classes.make
+			create class_types.make (1, System_chunk)
+			create new_classes.make
 
 				-- Creation of a topological sorter
-			!! sorter.make
+			create sorter.make
 
 				-- Counter creation
-			!! routine_id_counter.make
-			!! class_counter.make
-			!! static_type_id_counter.make
-			!! body_id_counter.make
-			!! body_index_counter.make
-			!! feature_as_counter.make
-			!! type_id_counter
+			create routine_id_counter.make
+			create class_counter.make
+			create static_type_id_counter.make
+			create body_index_counter.make
+			create feature_as_counter.make
+			create type_id_counter
 
 				-- Routine table controler creation
-			!! history_control.make
-			!! instantiator.make
-			instantiator.compare_objects
+			create history_control.make
+			create instantiator.make
 
 				-- Type set creation
-			!! type_set.make (100)
+			create type_set.make (100)
 
 				-- External table creation
-			!! externals.make
+			create externals.make
 
 				-- Pattern table creation
-			!! pattern_table.make
+			create pattern_table.make
 
 				-- Freeze control sets creation
-			!! melted_set.make (200)
-			!! freeze_set.make (200)
+			create degree_minus_1.make
 
 				-- Body index table creation
-			!! body_index_table.make (System_chunk)
-			!! original_body_index_table.make (1)
+			create body_index_table.make (0, System_chunk)
+			create original_body_index_table.make (1, 0)
 
 				-- Run-time table creation
-			!! dispatch_table.make
-			!! execution_table.make
-			!! rout_info_table.make (500)
-			!! onbidt.make (50)
-			!! optimization_tables.make
+			create execution_table.make
+			create rout_info_table.make (500)
+			create optimization_tables.make (300)
 
 				-- Address table
-			!! address_table.make (100)
-		end
-
-	reset_debug_counter is
-			-- Reset the debugger counters.
-		do
-			if execution_table /= Void then
-				execution_table.reset_debug_counter
-			end
+			create address_table.make (100)
 		end
 
 	init is
 			-- System initialization
 		require
-			general_class: general_class /= Void
+			any_class: any_class /= Void
 		local
 			local_workbench: WORKBENCH_I
 		do
@@ -364,25 +325,32 @@ feature -- Properties
 				-- not compiled. So we must say to the workbench to compile
 				-- classes ANY, DOUBLE... ARRAY
 				-- It is very important that these classes were protected.
-			protected_classes := True
-			local_workbench.change_class (general_class)
 			local_workbench.change_class (any_class)
 			local_workbench.change_class (double_class)
 			local_workbench.change_class (real_class)
-			local_workbench.change_class (integer_class)
+			local_workbench.change_class (integer_8_class)
+			local_workbench.change_class (integer_16_class)
+			local_workbench.change_class (integer_32_class)
+			local_workbench.change_class (integer_64_class)
 			local_workbench.change_class (boolean_class)
 			local_workbench.change_class (character_class)
 			local_workbench.change_class (special_class)
-			local_workbench.change_class (to_special_class)
-			local_workbench.change_class (array_class)
-			local_workbench.change_class (bit_class)
 			local_workbench.change_class (pointer_class)
+
+			if not il_generation then
+				local_workbench.change_class (tuple_class)
+				local_workbench.change_class (wide_char_class)
+				local_workbench.change_class (to_special_class)
+				local_workbench.change_class (array_class)
+				local_workbench.change_class (bit_class)
+				local_workbench.change_class (routine_class)
+				local_workbench.change_class (procedure_class)
+				local_workbench.change_class (function_class)
+			end
+
 			local_workbench.change_class (string_class)
-			local_workbench.change_class (tuple_class)
-			local_workbench.change_class (routine_class)
-			local_workbench.change_class (procedure_class)
-			local_workbench.change_class (function_class)
-			protected_classes := False
+
+			protected_classes_level := string_class.compiled_class.class_id
 				-- The root class is not protected 
 				-- Godammit.
 			local_workbench.change_class (root_class)
@@ -398,23 +366,29 @@ feature -- Properties
 			not_is_precompiling: not Compilation_modes.is_precompiling
 		do
 			marked_precompiled_classes := True
-			general_class.compiled_class.record_precompiled_class_in_system
 			any_class.compiled_class.record_precompiled_class_in_system
 			double_class.compiled_class.record_precompiled_class_in_system
 			real_class.compiled_class.record_precompiled_class_in_system
-			integer_class.compiled_class.record_precompiled_class_in_system
+			integer_8_class.compiled_class.record_precompiled_class_in_system
+			integer_16_class.compiled_class.record_precompiled_class_in_system
+			integer_32_class.compiled_class.record_precompiled_class_in_system
+			integer_64_class.compiled_class.record_precompiled_class_in_system
 			boolean_class.compiled_class.record_precompiled_class_in_system
 			character_class.compiled_class.record_precompiled_class_in_system
-			special_class.compiled_class.record_precompiled_class_in_system
-			to_special_class.compiled_class.record_precompiled_class_in_system
-			array_class.compiled_class.record_precompiled_class_in_system
-			bit_class.compiled_class.record_precompiled_class_in_system
-			pointer_class.compiled_class.record_precompiled_class_in_system
 			string_class.compiled_class.record_precompiled_class_in_system
-			tuple_class.compiled_class.record_precompiled_class_in_system
-			routine_class.compiled_class.record_precompiled_class_in_system
-			procedure_class.compiled_class.record_precompiled_class_in_system
-			function_class.compiled_class.record_precompiled_class_in_system
+			special_class.compiled_class.record_precompiled_class_in_system
+			pointer_class.compiled_class.record_precompiled_class_in_system
+
+			if not il_generation then
+				tuple_class.compiled_class.record_precompiled_class_in_system
+				wide_char_class.compiled_class.record_precompiled_class_in_system
+				to_special_class.compiled_class.record_precompiled_class_in_system
+				array_class.compiled_class.record_precompiled_class_in_system
+				bit_class.compiled_class.record_precompiled_class_in_system
+				routine_class.compiled_class.record_precompiled_class_in_system
+				procedure_class.compiled_class.record_precompiled_class_in_system
+				function_class.compiled_class.record_precompiled_class_in_system
+			end
 		end
 
 	add_visible_classes is
@@ -466,9 +440,9 @@ feature -- Properties
 			end
 		end
 
-	protected_classes: BOOLEAN
+	protected_classes_level: INTEGER
 			-- Useful for remove_useless_classes
-			-- Protected classes are GENERAL, ANY, DOUBLE, REAL,
+			-- Protected classes are ANY, DOUBLE, REAL,
 			-- INTEGER, BOOLEAN, CHARACTER, ARRAY, BIT, POINTER, STRING,
 			-- TUPLE, ROUTINE, PROCEDURE, FUNCTION
 
@@ -477,25 +451,22 @@ feature -- Properties
 		require
 			good_argument: a_class /= Void
 		local
-			new_id: CLASS_ID
+			new_id: INTEGER
 		do
-			if protected_classes then
-				new_id := class_counter.next_protected_id
-			else
-				new_id := class_counter.next_id
-			end
+			new_id := class_counter.next_id
+
 				-- Give a compiled class a frozen id
-			a_class.set_id (new_id)
+			a_class.set_class_id (new_id)
 debug ("ACTIVITY")
 io.error.putstring ("%TInserting class ")
 io.error.putstring (a_class.name)
-new_id.trace
+io.error.putint (new_id)
 io.error.new_line
 end
 
 				-- Give a class id to class `c' which maybe changed 
 				-- during the topological sort of a recompilation.
-			a_class.set_topological_id (new_id.id)
+			a_class.set_topological_id (new_id)
 				-- Insert the class
 			classes.put (a_class, new_id)
 
@@ -504,14 +475,12 @@ end
 
 				-- Update the freeze control list: the class can have no
 				-- features written in it (like ANY) and then not be
-				-- included in `freeze_set1' after the second pass and so
+				-- included in Degree 1 after the Degree 4 and so
 				-- not been generated. (we need a source file even if the
 				-- class is empty in terms of features written in it.).
-			melted_set.put (a_class)
-			a_class.set_must_be_recompiled (True)
-			a_class.set_generate_descriptors (True)
+			Degree_1.insert_class (a_class)
 		ensure
-			class_id_set: a_class.id /= Void
+			class_id_set: a_class.class_id /= 0
 		end
 
 	record_new_class_i (a_class: CLASS_I) is
@@ -528,27 +497,22 @@ end
 		require
 			 good_argument: a_class /= Void
 		local
-			parents: ARRAYED_LIST [CL_TYPE_A]
 			compiled_root_class: CLASS_C
-			descendants, suppliers, clients: LINKED_LIST [CLASS_C]
 			supplier: CLASS_C
 			supplier_clients: LINKED_LIST [CLASS_C]
-			id: CLASS_ID
-			types: TYPE_LIST
+			related_classes: LINKED_SET [CLASS_C]
+			finished: BOOLEAN
 			ftable: FEATURE_TABLE
+			id: INTEGER
+			types: TYPE_LIST
 			f: FEATURE_I
 			ext: EXTERNAL_I
 		do
 			if a_class.is_removable then
+				id := a_class.class_id
+
 				a_class.remove_c_generated_files
 
-				id := a_class.id
-
-debug ("ACTIVITY", "REMOVE_CLASS")
-	io.error.putstring ("%TRemoving class ")
-	io.error.putstring (a_class.name)
-	io.error.new_line
-end
 					-- Update control flags of the topological sort
 				moved := True
 
@@ -567,7 +531,7 @@ end
 						ftable.after
 					loop
 						f := ftable.item_for_iteration
-						if f.is_external and then f.written_in.is_equal (id) then
+						if f.is_external and then f.written_in = id then
 							ext ?= f
 								-- If the external is encapsulated then it was not added to
 								-- the list of new externals in inherit_table. Same thing
@@ -581,10 +545,10 @@ end
 				end
 
 					-- Remove class `a_class' from the lists of changed classes
-				pass1_controler.remove_class (a_class)
-				pass2_controler.remove_class (a_class)
-				pass3_controler.remove_class (a_class)
-				pass4_controler.remove_class (a_class)
+				Degree_5.remove_class (a_class)
+				Degree_4.remove_class (a_class)
+				Degree_3.remove_class (a_class)
+				Degree_2.remove_class (a_class)
 
 					-- Mark the class to remove uncompiled
 				a_class.lace_class.reset_compiled_class
@@ -601,11 +565,6 @@ end
 				end
 
 					-- Remove if from the servers
-debug ("ACTIVITY")
-	io.error.putstring ("%TRemoving id from servers: ")
-	id.trace
-	io.error.new_line
-end
 				Inv_byte_server.remove (id)
 				Ast_server.remove (id)
 				Feat_tbl_server.remove (id)
@@ -626,47 +585,83 @@ end
 				Tmp_ast_server.remove (id)
 				Tmp_feat_tbl_server.remove (id)
 				Tmp_class_info_server.remove (id)
-				Tmp_rep_info_server.remove (id)
 				Tmp_inv_ast_server.remove (id)
 				Tmp_depend_server.remove (id)
 				Tmp_rep_depend_server.remove (id)
 				Tmp_m_rout_id_server.remove (id)
 				Tmp_m_desc_server.remove (id)
 
-				melted_set.prune (a_class)
-				freeze_set.prune (a_class)
+				Degree_1.remove_class (a_class)
+				Degree_minus_1.remove_class (a_class)
 				classes.remove (id)
 
-					-- Remove client/supplier syntactical relations
-					-- and remove classes recursively
+					-- Create linked_set of classes that depends on current class.
+					-- We use `syntactical_suppliers', `syntactical_clients' and `clients'.
 				from
 					a_class.syntactical_suppliers.start
+					a_class.syntactical_clients.start
+					a_class.clients.start
+					create related_classes.make
+				until
+					finished
+				loop
+					finished := True
+					if not a_class.syntactical_suppliers.after then
+						supplier := a_class.syntactical_suppliers.item.supplier
+						related_classes.extend (supplier)
+						supplier.suppliers.remove_class (a_class)
+						a_class.syntactical_suppliers.forth
+						finished := False
+					end
+					if not a_class.syntactical_clients.after then
+						supplier := a_class.syntactical_clients.item
+						related_classes.extend (supplier)
+						supplier.suppliers.remove_class (a_class)
+						a_class.syntactical_clients.forth
+						finished := False
+					end
+					if not a_class.clients.after then
+						supplier := a_class.clients.item
+						related_classes.extend (supplier)
+						supplier.suppliers.remove_class (a_class)
+						a_class.clients.forth
+						finished := False
+					end
+				end
+
+					-- Remove supplier/clients syntactical relations of `a_class'
+					-- and remove classes recursively if needed.
+				from
+					related_classes.start
 					if root_class /= Void then
 						compiled_root_class := root_class.compiled_class
 					end
 				until
-					a_class.syntactical_suppliers.off
+					related_classes.after
 				loop
-					supplier := a_class.syntactical_suppliers.item.supplier
+					supplier := related_classes.item
+
+						-- Remove from `syntactical_clients'
 					supplier_clients := supplier.syntactical_clients
 					supplier_clients.start
 					supplier_clients.compare_references
 					supplier_clients.search (a_class)
-					check
-						not_after: not supplier_clients.after
+					if not supplier_clients.after then
+						supplier_clients.remove
 					end
-					supplier_clients.remove
+
 					if
-						supplier_clients.empty and then
+						supplier_clients.is_empty and then
 							-- The root class is not removed
 							-- true only if the root class has changed and
 							-- was a client for a removed class
 						supplier /= compiled_root_class and then
 							-- Cannot propagate for a protected class
-						not supplier.id.protected and then
+						supplier.class_id > protected_classes_level and then
 							-- A recursion may occur when removing a cluster
-						supplier.id.associated_class /= Void
+						class_of_id (supplier.class_id) /= Void
 					then
+							-- Recursively remove class.
 						remove_class (supplier)
 					elseif supplier.has_dep_class (a_class) then
 							-- Is it enough to remove the dependecies only on a class
@@ -677,20 +672,20 @@ end
 						supplier.remove_dep_class (a_class)
 					end
 
-					a_class.syntactical_suppliers.forth
+					related_classes.forth
 				end
 			end
 		end
 
-	class_of_id (id: CLASS_ID): CLASS_C is
+	class_of_id (id: INTEGER): CLASS_C is
 			-- Class of id `id'
 		require
-			id_not_void: id /= Void
+			id_not_void: id /= 0
 		do
-			Result := id.associated_class
+			Result := classes.item (id)
 debug ("CLASS_OF_ID")
 io.error.putstring ("Class of id ")
-id.trace
+io.error.putint (id)
 io.error.putstring (": ")
 if Result /= Void then
 	io.error.putstring (Result.name)
@@ -730,16 +725,12 @@ end
 		do
 			change_classes
 
-			private_freeze := private_freeze or else frozen_level = 0
-
 				-- If status of compilation is successful, copy
 				-- a duplication of the body index table in
 				-- `origin_body_index_table' and re-initialize the
 				-- melted set of feature tables.
 			if successful then
-					-- !!!!!!!!!!!!!!
 					-- Important Note
-					-- !!!!!!!!!!!!!!
 					-- There are other references in the system to "THE" 
 					-- Original Body Index table (Namely through onces)
 					-- We CANNOT do a simple assignment of twin. We need 
@@ -747,14 +738,14 @@ end
 					-- a session. If you want to change it, think thoroughly
 					-- before! (Dino, that's an allusion to you, -- FRED)
 				original_body_index_table.copy (body_index_table)
-				melted_set.wipe_out
+				Degree_1.wipe_out
 			end
 		end
 
 	change_classes is
 			-- Mark classes to be recompiled.
 		do
-			if not general_class.compiled then
+			if not any_class.compiled then
 					-- First compilation.
 				init
 			else
@@ -782,16 +773,16 @@ end
 
 feature -- default_rescue routine
 
-	default_rescue_id: ROUTINE_ID is
-			-- Routine id of default rescue from GENERAL.
-			-- Return 0 if GENERAL has not been compiled or
+	default_rescue_id: INTEGER is
+			-- Routine id of default rescue from ANY.
+			-- Return 0 if ANY has not been compiled or
 			-- does not have a feature named `default_rescue'.
 		local
 			feature_i: FEATURE_I
 		once
-			if general_class /= Void and then
-					general_class.compiled_class /= Void then
-				feature_i := general_class.compiled_class.feature_table.item 
+			if any_class /= Void and then
+					any_class.compiled_class /= Void then
+				feature_i := any_class.compiled_class.feature_table.item 
 														("default_rescue")
 				if feature_i /= Void then
 					Result := feature_i.rout_id_set.first
@@ -801,81 +792,21 @@ feature -- default_rescue routine
 
 feature -- default_create routine
 
-	default_create_id: ROUTINE_ID is
-			-- Routine id of default create from GENERAL.
-			-- Return 0 if GENERAL has not been compiled or
+	default_create_id: INTEGER is
+			-- Routine id of default create from ANY.
+			-- Return 0 if ANY has not been compiled or
 			-- does not have a feature named `default_create'.
 		local
 			feature_i: FEATURE_I
 		once
-			if general_class /= Void and then
-					general_class.compiled_class /= Void then
-				feature_i := general_class.compiled_class.feature_table.item 
+			if any_class /= Void and then
+					any_class.compiled_class /= Void then
+				feature_i := any_class.compiled_class.feature_table.item 
 														("default_create")
 				if feature_i /= Void then
 					Result := feature_i.rout_id_set.first
 				end
 			end
-		end
-
-feature -- Merging
-
-	merge (other: like Current) is
-			-- Merge `other' into `Current'.
-		require
-			other_not_void: other /= Void
-		local
-			was_precompiling: BOOLEAN
-		do
-			was_precompiling := Compilation_modes.is_precompiling
-			Compilation_modes.set_is_precompiling (True)
-			byte_context.set_workbench_mode
-			set_freeze
-				-- Counters.
-			body_id_counter.append (other.body_id_counter)
-			body_index_counter.append (other.body_index_counter)
-			class_counter.append (other.class_counter)
-			feature_as_counter.append (other.feature_as_counter)
-			routine_id_counter.append (other.routine_id_counter)
-			static_type_id_counter.append (other.static_type_id_counter)
-
-			classes.append (other.classes)
-			has_expanded := has_expanded or other.has_expanded
-			onbidt.append (other.onbidt)
-			body_index_table.append (other.body_index_table)
-			type_set.merge (other.type_set)
-			address_table.merge (other.address_table)
-			rout_info_table.append (other.rout_info_table)
-			execution_table.append (other.execution_table)
-			dispatch_table.append (other.dispatch_table)
-			frozen_level := execution_table.frozen_level
-			externals.append (other.externals)
-			pattern_table.append (other.pattern_table)
-
-				-- Servers.
-			server_controler.append (other.server_controler)
-			ast_server.take_control (other.ast_server)
-			body_server.merge (other.body_server)
-			byte_server.take_control (other.byte_server)
-			class_comments_server.take_control (other.class_comments_server)
-			class_info_server.take_control (other.class_info_server)
-			depend_server.take_control (other.depend_server)
-			feat_tbl_server.take_control (other.feat_tbl_server)
-			inv_ast_server.merge (other.inv_ast_server)
-			inv_byte_server.take_control (other.inv_byte_server)
-			rep_depend_server.take_control (other.rep_depend_server)
-			rep_feat_server.merge (other.rep_feat_server)
-			rep_server.take_control (other.rep_server)
-			server_controler.init
-
-				-- Topological sort
-			sorter.sort
-			Error_handler.checksum
-			build_conformance_table
-			sorter.clear
-			process_dynamic_types
-
-			Compilation_modes.set_is_precompiling (was_precompiling)
 		end
 
 feature -- Recompilation 
@@ -892,10 +823,11 @@ feature -- Recompilation
 			If System.uses_precompiled then
 				check_precompiled_licenses
 					-- Validate the precompilation.
-				!! precomp_r
+				create precomp_r
 				precomp_r.check_version_number
 			end
 
+			has_been_changed := False
 			do_recompilation
 			successful := True
 		rescue
@@ -908,13 +840,17 @@ feature -- Recompilation
 			-- Incremetal recompilation of the system.
 		local
 			root_class_c: CLASS_C
-			deg_output: DEGREE_OUTPUT
+			il_generator: IL_GENERATOR
 		do
 				-- Recompilation initialization
 			if Compilation_modes.is_precompiling then
 				init_precompilation
 			else
 				init_recompilation
+			end
+
+			if first_compilation then
+				project_creation_time := current_time
 			end
 
 				-- Set the generation mode in workbench mode
@@ -936,42 +872,53 @@ feature -- Recompilation
 				-- to be parsed.
 			if not poofter_finalization then
 				poofter_finalization := not (first_compilation or else
-					pass1_controler.changed_classes.empty)
+					Degree_5.is_empty)
 			end
 
 				-- Syntax analysis: This maybe add new classes to
 				-- the system (degree 5)
-			process_pass (pass1_controler)
+			if
+				first_compilation or else freeze or else private_melt or else
+				not Degree_5.is_empty or else
+				not Degree_4.is_empty or else
+				not Degree_3.is_empty or else
+				not Degree_2.is_empty
+			then
+					-- We compiled something we need to save project file.
+				has_been_changed := True
+
+					-- Perform parsing of Eiffel code
+				process_degree_5
 
 debug ("ACTIVITY")
 	io.error.putstring ("%Tnew_class = ")
 	io.error.putbool (new_class)
 	io.error.new_line
 end
-				-- Check generic validity on old classes
-				-- generic parameters cannot be new classes
-			if not first_compilation and then new_class then
-				check_generics
-					-- The association name <==> supplier has been done in pass1
-					-- so even if the compilation fails after this point, the
-					-- check must not be done again if no classes are introduced
-					-- before the recompilation
-			end
-			new_class := False
+					-- Check generic validity on old classes
+					-- generic parameters cannot be new classes
+				if not first_compilation and then new_class then
+					check_generics
+						-- The association name <==> supplier has been done in pass1
+						-- so even if the compilation fails after this point, the
+						-- check must not be done again if no classes are introduced
+						-- before the recompilation
+				end
+				new_class := False
 
-			if
-				not Compilation_modes.is_precompiling and
-				not Lace.compile_all_classes
-			then
-					-- The root class is not generic
-				root_class_c := root_class.compiled_class
-				current_class := root_class_c
-				root_class_c.check_non_genericity_of_root_class
-				current_class := Void
-					-- Remove useless classes i.e classes without 
-					-- syntactical clients
-				remove_useless_classes
-			end
+				if
+					not Compilation_modes.is_precompiling and
+					not Lace.compile_all_classes
+				then
+						-- The root class is not generic
+					root_class_c := root_class.compiled_class
+					current_class := root_class_c
+					root_class_c.check_non_genericity_of_root_class
+					current_class := Void
+						-- Remove useless classes i.e classes without 
+						-- syntactical clients
+					remove_useless_classes
+				end
 
 debug ("ACTIVITY")
 	io.error.putstring ("%Tmoved = ")
@@ -980,83 +927,137 @@ debug ("ACTIVITY")
 	io.error.putbool (update_sort)
 	io.error.new_line
 end
-				-- Topological sort and building of the conformance
-				-- table (if new classes have been added by first pass)
-			update_sort := update_sort or else moved
-			if update_sort then
-					-- Sort
-				sorter.sort
-					-- Check sum error
-				Error_handler.checksum
-					-- Re-sort the list `changed_classes' of `pass2',
-					-- because the topological sort modified the class ids,
-					-- and the second pass needs it and rebuild the
-					-- conformance tables
-				pass2_controler.sort
-				pass3_controler.sort
-				pass4_controler.sort
-				build_conformance_table
+					-- Topological sort and building of the conformance
+					-- table (if new classes have been added by first pass)
+				update_sort := update_sort or else moved
+				if update_sort then
+						-- Sort
+					sorter.sort
+						-- Check sum error
+					Error_handler.checksum
+						-- Re-sort the list of classes because the topological
+						-- sort modified the topological ids.
+					classes.sort
+					reset_conformance_table
+					build_conformance_table
 
-					-- Clear the topo sorter
-				sorter.clear
+						-- Clear the topo sorter
+					sorter.clear
 
-				reset_melted_conformance_table
-			end
-				-- Inheritance analysis: list `changed_classes' is
-				-- sorted by class ids so the parent come first the
-				-- heirs after
-			process_pass (pass2_controler)
+					reset_melted_conformance_table
+				end
+					-- Inheritance analysis: `Degree_4' is sorted by class 
+					-- topological ids so the parent come first the heirs after.
+				process_degree_4
 
-			if
-				not Compilation_modes.is_precompiling and
-				not Lace.compile_all_classes
-			then
-				root_class_c.check_root_class_creators
-			end
+				if
+					not Compilation_modes.is_precompiling and
+					not Lace.compile_all_classes
+				then
+					root_class_c.check_root_class_creators
+				end
 
-				-- Byte code production and type checking
-			process_pass (pass3_controler)
+					-- Byte code production and type checking
+				process_degree_3
 
-			Error_handler.set_error_position (0)
+				Error_handler.set_error_position (0)
 
-			if
-				not Compilation_modes.is_precompiling and
-				not Lace.compile_all_classes
-			then
-					-- Externals incrementality
-				private_freeze := private_freeze or else not externals.equiv
-			end
+				if
+					not Compilation_modes.is_precompiling and
+					not Lace.compile_all_classes
+				then
+						-- Externals incrementality
+					private_freeze := private_freeze or else not externals.equiv
+				end
 
-				-- Process the type system
-			process_type_system
+					-- Process the type system
+				process_type_system
 
-				-- Process the skeleton of classes
-			process_skeleton
+					-- Process the skeleton of classes
+				process_skeleton
 
-				-- Melt the changed features
-			melt
+					-- Reset `Memory_descendants' since they can have changed
+					--| Note: That is important to recompute it, especially if
+					--| someone removed an inheritance link to MEMORY.
+				reset_memory_descendants
 
-				-- Finalize a successful compilation
-			finish_compilation
+					-- Melt the changed features
+				melt
 
-				-- Produce the update file
-			deg_output := Degree_output
-			if freeze then
-				deg_output.put_freezing_message
+					-- Finalize a successful compilation
+				finish_compilation
 
-				freeze_system
-				private_freeze := False
-			else
-				deg_output.put_melting_changes_message
+					-- Produce the update file
+				private_melt := False
+				if not il_generation and then not freeze then
+					Degree_output.put_melting_changes_message
 
-				execution_table.set_levels
-					-- Create a non-empty melted file
-				make_update (False)
+						-- Create a non-empty melted file
+					make_update (False)
 debug ("VERBOSE")
 	io.error.putstring ("Saving melted.eif%N")
 end
+				end
+			end
+			if not il_generation and then freeze then
+				Degree_output.put_freezing_message
+				freeze_system
+				private_freeze := False
+			end
+			if il_generation then
+				create il_generator.make (Degree_output)
+				il_generator.generate
 			end
 			first_compilation := False
+		end
+
+	process_degree_5 is
+			-- Process Degree 5.
+			-- Syntax analysis: This may add new classes to the system.
+		do
+			Degree_5.execute
+		end
+
+	process_degree_4 is
+			-- Process Degree 4.
+			-- Inheritance analysis: `Degree_4' is sorted by class 
+			-- topological ids so parents come first heirs after.
+		do
+			Degree_4.execute
+		end
+
+	process_degree_3 is
+			-- Process Degree 3.
+			-- Byte code production and type checking.
+		do
+			in_pass3 := True
+			Degree_3.execute
+			in_pass3 := False
+		rescue
+			in_pass3 := False
+		end
+
+	process_degree_2 is
+			-- Process Degree 2.
+			-- Melt features (write feature byte code on disk).
+		do
+			Degree_2.execute
+		end
+
+	process_degree_1 is
+			-- Process Degree 1.
+			-- Melt the feature tables.
+			-- Open first the file for writing on disk melted feature
+			-- tables.
+		do
+			Degree_1.execute
+		end
+
+	process_degree_minus_1 is
+			-- Process Degree -1.
+			-- Freeze system: generate C files.
+		do
+			Degree_minus_1.execute
 		end
 
 	check_generics is
@@ -1066,38 +1067,29 @@ end
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
 			a_class: CLASS_C
-			local_classes: CLASS_C_SERVER
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("Check generics%N")
 end
+			class_array := classes
+			nb := class_counter.count
 			from
-				local_classes := classes
-				local_classes.start
+				i := 1
 			until
-				local_classes.after
+				i > nb
 			loop
-				class_array := local_classes.item_for_iteration
-				nb := class_counter.item (local_classes.key_for_iteration).count
-				from
-					i := 1
-				until
-					i > nb
-				loop
-					a_class := class_array.item (i)
-					if a_class /= Void then
-						if
-							a_class.generics /= Void
-							-- If the class is changed then `pass1' has been
-							-- done successfully on the class
-							and then not a_class.changed
-						then
-							a_class.check_generic_parameters
-						end
+				a_class := class_array.item (i)
+				if a_class /= Void then
+					if
+						a_class.generics /= Void
+						-- If the class is changed then `pass1' has been
+						-- done successfully on the class
+						and then not a_class.changed
+					then
+						a_class.check_generic_parameters
 					end
-					i := i + 1
 				end
-				local_classes.forth
+				i := i + 1
 			end
 			Error_handler.checksum
 		end
@@ -1109,91 +1101,99 @@ end
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
 			root_class_c: CLASS_C
-			marked_classes: SEARCH_TABLE [CLASS_ID]
-			local_classes: CLASS_C_SERVER
+			marked_classes: SEARCH_TABLE [INTEGER]
 		do
 				-- First mark all the classes that can be reached
 				-- from the root class
-			!! marked_classes.make (System_chunk)
+			create marked_classes.make (System_chunk)
 
 			root_class_c := root_class.compiled_class
 			root_class_c.mark_class (marked_classes)
-			general_class.compiled_class.mark_class (marked_classes)
+
 			any_class.compiled_class.mark_class (marked_classes)
 			double_class.compiled_class.mark_class (marked_classes)
 			real_class.compiled_class.mark_class (marked_classes)
-			integer_class.compiled_class.mark_class (marked_classes)
+			integer_8_class.compiled_class.mark_class (marked_classes)
+			integer_16_class.compiled_class.mark_class (marked_classes)
+			integer_32_class.compiled_class.mark_class (marked_classes)
+			integer_64_class.compiled_class.mark_class (marked_classes)
 			boolean_class.compiled_class.mark_class (marked_classes)
 			character_class.compiled_class.mark_class (marked_classes)
+			string_class.compiled_class.mark_class (marked_classes)
 			special_class.compiled_class.mark_class (marked_classes)
-			to_special_class.compiled_class.mark_class (marked_classes)
-			array_class.compiled_class.mark_class (marked_classes)
-			bit_class.compiled_class.mark_class (marked_classes)
 			pointer_class.compiled_class.mark_class (marked_classes)
-			tuple_class.compiled_class.mark_class (marked_classes)
-			routine_class.compiled_class.mark_class (marked_classes)
-			procedure_class.compiled_class.mark_class (marked_classes)
-			function_class.compiled_class.mark_class (marked_classes)
+
+			if not il_generation then
+				tuple_class.compiled_class.mark_class (marked_classes)
+				wide_char_class.compiled_class.mark_class (marked_classes)
+				to_special_class.compiled_class.mark_class (marked_classes)
+				array_class.compiled_class.mark_class (marked_classes)
+				bit_class.compiled_class.mark_class (marked_classes)
+				routine_class.compiled_class.mark_class (marked_classes)
+				procedure_class.compiled_class.mark_class (marked_classes)
+				function_class.compiled_class.mark_class (marked_classes)
+			end
 
 				-- Now mark all classes reachable from visible classes.
-
 			from
-				local_classes := classes
-				local_classes.start
+				class_array := classes
+				nb := class_counter.count
+				i := 1
 			until
-				local_classes.after
+				i > nb
 			loop
-				class_array := local_classes.item_for_iteration
-				nb := class_counter.item (local_classes.key_for_iteration).count
-				from
-					i := 1
-				until
-					i > nb
-				loop
-					a_class := class_array.item (i)
+				a_class := class_array.item (i)
 
-					if a_class /= Void and then
-							a_class.has_visible and then
-								not marked_classes.has (a_class.id) then
-						a_class.mark_class (marked_classes)
-					end
-					i := i + 1
+				if a_class /= Void and then
+						a_class.has_visible and then
+							not marked_classes.has (a_class.class_id) then
+					a_class.mark_class (marked_classes)
 				end
-				local_classes.forth
+				i := i + 1
 			end
 
 				-- Remove all the classes that cannot be reached if they are
 				-- not protected
 			from
-				local_classes.start
+				i := 1
 			until
-				local_classes.after
+				i > nb
 			loop
-				class_array := local_classes.item_for_iteration
-				nb := class_counter.item (local_classes.key_for_iteration).count
-				from
-					i := 1
-				until
-					i > nb
-				loop
-					a_class := class_array.item (i)
+				a_class := class_array.item (i)
 
-					if
-						a_class /= Void and then
-						not marked_classes.has (a_class.id)
-					then
+				if
+					a_class /= Void and then
+					not marked_classes.has (a_class.class_id)
+				then
 debug ("REMOVE_CLASS")
-	io.error.putstring ("Remove useless classes: ")
-	io.error.putstring (a_class.name)
-	io.error.new_line
+io.error.putstring ("Remove useless classes: ")
+io.error.putstring (a_class.name)
+io.error.new_line
 end
-						remove_class (a_class)
-					end
-					i := i + 1
+						-- Recursively remove `a_class' from system.
+					remove_class (a_class)
 				end
-				local_classes.forth
+				i := i + 1
 			end
 			Error_handler.checksum
+		end
+
+	reset_conformance_table is
+			-- Reset all conformance tables.
+		local
+			a_class: CLASS_C
+			class_array: ARRAY [CLASS_C]
+			i, nb: INTEGER
+		do
+			class_array := classes
+			nb := class_counter.count
+			from i := 1 until i > nb loop
+				a_class := class_array.item (i)
+				if a_class /= Void then
+					a_class.reset_dep_classes
+				end
+				i := i + 1
+			end
 		end
 
 	build_conformance_table is
@@ -1202,52 +1202,27 @@ end
 			a_class: CLASS_C
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
-			local_classes: CLASS_C_SERVER
 		do
-			from
-				local_classes := classes
-				local_classes.start
-			until
-				local_classes.after
-			loop
-				class_array := local_classes.item_for_iteration
-				nb := class_counter.item (local_classes.key_for_iteration).count
-				from i := 1 until i > nb loop
-					a_class := class_array.item (i)
-					if a_class /= Void then
-						a_class.fill_conformance_table
-					end
-					i := i + 1
+			class_array := classes
+			nb := class_counter.count
+			from i := 1 until i > nb loop
+				a_class := class_array.item (i)
+				if a_class /= Void then
+					a_class.fill_conformance_table
 				end
-				local_classes.forth
+				i := i + 1
 			end
 		end
 
 	process_type_system is
 			-- Compute the type system
 		local
-			a_class: CLASS_C
 			old_value: INTEGER
-			pass4_changed_classes: PART_SORTED_TWO_WAY_LIST [PASS4_C]
 		do
 			old_value := type_id_counter.value
-			from
-				pass4_changed_classes := pass4_controler.changed_classes
-				pass4_changed_classes.start
-			until
-				pass4_changed_classes.after
-			loop
-				a_class := pass4_changed_classes.item.associated_class
-				if a_class.changed and then a_class.generics = Void then
-					if a_class.types.empty then
-							-- For non generic classes, standard initialization
-							-- of their attribute `types'.
-						a_class.init_types
-					end
-				end
-				pass4_changed_classes.forth
-			end
-				-- For generic classes, compute the types
+				-- Initialize types of non-generic classes.
+			Degree_2.initialize_non_generic_types
+				-- For generic classes, compute the types.
 			Instantiator.process
 
 				-- If first compilation, re-order dynamic types
@@ -1263,71 +1238,13 @@ end
 			-- For a class marked `changed4', inspection of the types (instance
 			-- of CLASS_TYPE) looking for a new one (marked `is_changed also).
 		local
-			a_class: CLASS_C
-			skeleton: SKELETON
-			pass4_changed_classes: PART_SORTED_TWO_WAY_LIST [PASS4_C]
+			compile_all_classes: BOOLEAN
 		do
-debug ("ACTIVITY", "SKELETON")
-io.error.putstring ("Process_skeleton%N")
-end
-			pass4_changed_classes := pass4_controler.changed_classes
-			if
-				not Compilation_modes.is_precompiling and
-				not Lace.compile_all_classes
-			then
-				from
-					pass4_changed_classes.start
-				until
-					pass4_changed_classes.after
-				loop
-					a_class := pass4_changed_classes.item.associated_class
-debug ("ACTIVITY", "SKELETON")
-io.error.putstring ("%T")
-io.error.putstring (a_class.name)
-io.error.new_line
-end
-						-- Process skeleton(s) for `a_class'.
-					a_class.process_skeleton
-
-					check
-						has_class_type: not a_class.types.empty
-					end
-						-- Check valididty of special classes ARRAY, STRING,
-						-- TO_SPECIAL, SPECIAL
-					a_class.check_validity
-					pass4_changed_classes.forth
-				end
-			else
-				from
-					pass4_changed_classes.start
-				until
-					pass4_changed_classes.after
-				loop
-					a_class := pass4_changed_classes.item.associated_class
-debug ("ACTIVITY", "SKELETON")
-io.error.putstring ("%T")
-io.error.putstring (a_class.name)
-io.error.new_line
-end
-					if a_class.has_types then
-							-- Process skeleton(s) for `a_class'.
-						a_class.process_skeleton
-	
-						check
-							has_class_type: not a_class.types.empty
-						end
-							-- Check valididty of special classes ARRAY, STRING,
-							-- TO_SPECIAL, SPECIAL
-						a_class.check_validity
-					end
-					pass4_changed_classes.forth
-				end
-			end
-
-				-- Check expanded client relation
+			compile_all_classes := Compilation_modes.is_precompiling or Lace.compile_all_classes
+			Degree_2.process_skeleton (compile_all_classes)
+				-- Check expanded client relation.
 			check_expanded
-
-				-- Check sum error
+				-- Check sum error.
 			Error_handler.checksum
 		end
 
@@ -1336,81 +1253,28 @@ end
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
 			a_class: CLASS_C
-			local_classes: CLASS_C_SERVER	
 		do
-			from
-				local_classes := classes
-				local_classes.start
-			until
-				local_classes.after
-			loop
-				class_array := local_classes.item_for_iteration
-				nb := class_counter.item (local_classes.key_for_iteration).count
-				from i := 1 until i > nb loop
-					a_class := class_array.item (i)
-					if a_class /= Void then
-						if
-							a_class.has_expanded or else
-							a_class.is_used_as_expanded
-						then
-							set_current_class (a_class)
-							a_class.check_expanded
-						end
+			class_array := classes
+			nb := class_counter.count
+			from i := 1 until i > nb loop
+				a_class := class_array.item (i)
+				if a_class /= Void then
+					if
+						a_class.has_expanded or else
+						a_class.is_used_as_expanded
+					then
+						set_current_class (a_class)
+						a_class.check_expanded
 					end
-					i := i + 1
 				end
-				local_classes.forth
+				i := i + 1
 			end
 		end
 
 	check_expanded is
 			-- Check expanded client relation
-		local
-			class_type: CLASS_TYPE
-			types: TYPE_LIST
-			a_class: CLASS_C
-			check_exp: BOOLEAN
-			pass4_changed_classes: PART_SORTED_TWO_WAY_LIST [PASS4_C]
 		do
-			check_exp := has_expanded
-			from
-				pass4_changed_classes := pass4_controler.changed_classes
-				pass4_changed_classes.start
-			until
-				pass4_changed_classes.after
-			loop
-				a_class := pass4_changed_classes.item.associated_class
-
-debug ("CHECK_EXPANDED")
-	io.error.putstring ("Check expanded on ")
-	io.error.putstring (a_class.name)
-	io.error.new_line
-end
-				from
-					types := a_class.types
-					types.start
-				until
-					types.after
-				loop
-					class_type := types.item
-					if class_type.is_changed then
-
-debug ("CHECK_EXPANDED")
-	io.error.putstring ("Check expanded on type of ")
-	io.error.putstring (a_class.name)
-	io.error.new_line
-end
-						if check_exp then
-							Expanded_checker.set_current_type (class_type)
-							Expanded_checker.check_expanded
-						end
-						class_type.set_is_changed (False)
-					end
-
-					types.forth
-				end
-				pass4_changed_classes.forth
-			end
+			Degree_2.check_expanded (has_expanded)
 		end
 
 	melt is
@@ -1418,55 +1282,23 @@ end
 			-- descriptor tables in the system.
 		require
 			no_error: not Error_handler.has_error
-		local
-			a_class: CLASS_C
-			class_list: SEARCH_TABLE [CLASS_C]
-			i: INTEGER
-			deg_output: DEGREE_OUTPUT
 		do
 				-- Melt features
 				-- Open the file for writing on disk feature byte code
-			process_pass (pass4_controler)
-			current_pass := Void
+			process_degree_2
 
-				-- The dispatch and execution tables are now updated.
+				-- The execution table are now updated.
 
-			if not freeze then
-debug ("COUNT")
-	i := melted_set.count
-end
+			if not il_generation and then not freeze then
 					-- Melt the feature tables
 					-- Open first the file for writing on disk melted feature
 					-- tables
-				from
-					class_list := melted_set
-					i := class_list.count
-					deg_output := Degree_output
-					deg_output.put_start_degree (1, i)
-					class_list.start
-				until
-					class_list.after
-				loop
-					a_class := class_list.item_for_iteration
-						-- Verbose
-debug ("COUNT")
-	io.error.putstring ("[")
-	io.error.putint (i)
-	io.error.putstring ("] ")
-	i := i - 1
-end
-					deg_output.put_degree_1 (a_class, i)
-					a_class.melt_feature_and_descriptor_tables
-					a_class.set_generate_descriptors (False)
-					class_list.forth
-					i := i - 1
-				end
-				deg_output.put_end_degree
+				process_degree_1
 			end
-				-- Save the `melted_set' info in `freeze_set'. This way next time
-				-- we will freeze, all the melted classes will be in `freeze_set'
-			freeze_set.merge (melted_set)
-			melted_set.wipe_out
+				-- Transfer classes of Degree 1 into Degree -1 so that
+				-- next time we will freeze, all the melted classes will
+				-- be in `Degree_minus_1'.
+			Degree_1.transfer_to (Degree_minus_1)
 		end
 
 	make_update (empty: BOOLEAN) is
@@ -1481,7 +1313,7 @@ end
 			has_argument: INTEGER
 			rout_info: ROUT_INFO
 			rcorigin, rcoffset: INTEGER
-			rout_id: ROUTINE_ID
+			rout_id: INTEGER
 			melted_file: RAW_FILE
 			file_name: FILE_NAME
 			name: STRING
@@ -1515,24 +1347,15 @@ end
 				end	
 			end
 			name.append (".melted")
-			!! file_name.make_from_string (Workbench_generation_path)
+			create file_name.make_from_string (Workbench_generation_path)
 			file_name.set_file_name (name)
-			!! melted_file.make_open_write (file_name)
+			create melted_file.make_open_write (file_name)
 
 				-- There is something to update
 			if empty then
 				melted_file.putchar ('%/000/')
 			else
 				melted_file.putchar ('%/001/')
-			end
-
-				-- Flag indicating whether it's Java or Eiffel byte-code
-			if java_generation then
-					-- This is a Java byte-code file
-				melted_file.putchar ('%/001/')
-			else
-					-- This is an Eiffel byte-code file
-				melted_file.putchar ('%/000/')
 			end
 
 			if not empty then
@@ -1548,7 +1371,7 @@ end
 					end
 					rout_id := root_feat.rout_id_set.first
 					rout_info := rout_info_table.item (rout_id)
-					rcorigin := rout_info.origin.id
+					rcorigin := rout_info.origin
 					rcoffset := rout_info.offset
 				else
 					rcorigin := -1
@@ -1561,7 +1384,7 @@ end
 					-- Write first the number of class types now available
 				write_int (file_pointer, type_id_counter.value)
 					-- Write the number of classes now available
-				write_int (file_pointer, class_counter.total_count)
+				write_int (file_pointer, class_counter.count)
 					-- Write the profiler status
 				if Lace.ace_options.has_profile then
 					write_int (file_pointer, 3)
@@ -1570,14 +1393,9 @@ end
 				end
 				make_update_feature_tables (melted_file)
 				make_update_rout_id_arrays (melted_file)
-					-- Write first the new size of the dispatch table
-				Dispatch_table.write_dispatch_count (melted_file)
-					-- Update the dispatch table
-				Dispatch_table.make_update (melted_file)
 					-- Open the file for reading byte code for melted features
 					-- Update the execution table
-				execution_table.make_update (melted_file)
-				make_conformance_table_byte_code (melted_file)
+				Execution_table.make_update (melted_file)
 				make_parent_table_byte_code (melted_file)
 				make_option_table (melted_file)
 				make_rout_info_table (melted_file)
@@ -1595,69 +1413,8 @@ end
 		require
 			file_not_void: file /= Void
 			file_open_write: file.is_open_write
-		local
-			class_list: SEARCH_TABLE [CLASS_C]
-			types: TYPE_LIST
-			nb_tables: INTEGER
-			feat_tbl: MELTED_FEATURE_TABLE
 		do
-debug ("ACTIVITY")
-	io.error.putstring ("%Tfeature tables%N")
-end
-				-- Count of feature tables to update
-			from
-				class_list := freeze_set
-				class_list.start
-			until
-				class_list.after
-			loop
-debug ("ACTIVITY")
-	io.error.putstring ("%T%T")
-	io.error.putstring (class_list.item_for_iteration.name)
-	io.error.new_line
-end
-				nb_tables := nb_tables + class_list.item_for_iteration.types.nb_modifiable_types
-				class_list.forth
-			end
-
-				-- Write the number of feature tables to update
-			write_int (file.file_pointer, nb_tables)
-
-debug ("ACTIVITY")
-	io.error.putstring ("%Tbyte code%N")
-end
-
-				-- Write then the byte code for feature tables to update.
-			from
-				class_list.start
-			until
-				class_list.after
-			loop
-debug ("ACTIVITY")
-	io.error.putstring ("%T%T")
-	io.error.putstring (class_list.item_for_iteration.name)
-	io.error.new_line
-end
-				types := class_list.item_for_iteration.types
-				from
-					types.start
-				until
-					types.after
-				loop
-					if types.item.is_modifiable then
-						feat_tbl := m_feat_tbl_server.item (types.item.id)
-
-debug ("ACTIVITY")
-	io.error.putstring ("melting class desc of ")
-	types.item.type.trace
-	io.error.new_line
-end
-						feat_tbl.store (file)
-					end
-					types.forth
-				end
-				class_list.forth
-			end
+			Degree_minus_1.make_update_feature_tables (file)
 		end
 
 	make_update_rout_id_arrays (file: RAW_FILE) is
@@ -1666,7 +1423,7 @@ end
 			file_not_void: file /= Void
 			file_open_write: file.is_open_write
 		local
-			class_id: CLASS_ID
+			class_id: INTEGER
 			file_pointer: POINTER
 			types: TYPE_LIST
 			cl_type: CLASS_TYPE
@@ -1684,11 +1441,11 @@ end
 				class_id := m_rout_id_server.key_for_iteration
 debug ("ACTIVITY")
 io.error.putstring ("melting routine id array of ")
-class_id.trace
+io.error.putint (class_id)
 io.error.putstring (class_of_id (class_id).name)
 io.error.new_line
 end
-				write_int (file_pointer, class_id.id)
+				write_int (file_pointer, class_id)
 				m_rout_id_server.item (class_id).store (file)
 				types := class_of_id (class_id).types
 				from
@@ -1700,7 +1457,7 @@ end
 						-- Write dynamic type
 					write_int (file_pointer, cl_type.type_id - 1)
 						-- Write original dynamic type (first freezing)
-					write_int (file_pointer, cl_type.id.id - 1)
+					write_int (file_pointer, cl_type.static_type_id - 1)
 					types.forth
 				end
 				write_int (file_pointer, -1)
@@ -1715,7 +1472,7 @@ end
 			file_not_void: file /= Void
 			file_open_write: file.is_open_write
 		local
-			class_id: CLASS_ID
+			class_id: INTEGER
 		do
 			from
 				M_desc_server.start
@@ -1736,62 +1493,7 @@ end
 			is_conformance_table_melted := True
 				-- Trigger the recompuation of the conformance table
 				-- byte code
-			melted_conformance_table := Void
 			melted_parent_table := Void
-		end
-
-	make_conformance_table_byte_code (file: RAW_FILE) is
-			-- Generates conformance tables byte code in `file'.
-		local
-			i, nb: INTEGER
-			cl_type: CLASS_TYPE
-			to_append: CHARACTER_ARRAY
-		do
-			Byte_array.clear
-
-			if is_conformance_table_melted then
-				if melted_conformance_table = Void then
-						-- Compute `melted_conformance_table'.
-debug ("ACTIVITY")
-	io.error.putstring ("Generating conformance table%N")
-end
-					Byte_array.append ('%/001/')
-					from
-						i := 1
-						nb := Type_id_counter.value
-					until
-						i > nb
-					loop
-						cl_type := class_types.item (i)
-						if cl_type /= Void then
-								-- Classes could be removed
-							cl_type.make_conformance_table_byte_code (Byte_array)
-						end
-						i := i + 1
-					end
-
-						-- End mark
-					Byte_array.append_short_integer (-1)
-
-						-- Cecil structure
-					make_cecil_tables
-					Cecil2.make_byte_code (Byte_array)
-					Cecil3.make_byte_code (Byte_array)
-
-					melted_conformance_table := Byte_array.character_array
-				end
-				to_append := melted_conformance_table
-			else
-debug ("ACTIVITY")
-	io.error.putstring ("No changes in conformance table%N")
-end
-				Byte_array.append ('%U')
-				to_append := Byte_array.character_array
-			end
-
-				-- Put the condormance table in `file'.
-			to_append.store (file)
-
 		end
 
 	make_parent_table_byte_code (file: RAW_FILE) is
@@ -1823,6 +1525,10 @@ end
 
 						-- End mark
 					Byte_array.append_short_integer (-1)
+
+					create_cecil_tables
+					Cecil2.make_byte_code (Byte_array)
+					Cecil3.make_byte_code (Byte_array)
 
 					melted_parent_table := Byte_array.character_array
 				end
@@ -1895,7 +1601,7 @@ end
 			class_array: ARRAY [CLASS_C]
 			i, nb: INTEGER
 			a_class: CLASS_C
-			local_classes: CLASS_C_SERVER
+			mem: MEMORY
 		do
 				-- Reinitialization of control flags of the topological
 				-- sort.
@@ -1903,34 +1609,25 @@ end
 			moved := False
 
 				-- Reset the classes as unchanged
-			from
-				local_classes := classes
-				local_classes.start
-			until
-				local_classes.after
-			loop
-				class_array := local_classes.item_for_iteration
-				nb := class_counter.item (local_classes.key_for_iteration).count
-				from i := 1 until i > nb loop
-					a_class := class_array.item (i)
-					if a_class /= Void then
-						a_class.set_changed (False)
-						a_class.set_changed2 (False)
-						a_class.set_changed3a (False)
-						-- FIXME: changed4, changed5, changed6
-						a_class.changed_features.clear_all
-						a_class.propagators.wipe_out
-					end
-					i := i + 1
+			class_array := classes
+			nb := class_counter.count
+			from i := 1 until i > nb loop
+				a_class := class_array.item (i)
+				if a_class /= Void then
+					a_class.set_changed (False)
+					a_class.set_changed2 (False)
+					a_class.set_changed3a (False)
+					-- FIXME: changed4, changed5, changed6
+					a_class.changed_features.clear_all
+					a_class.propagators.wipe_out
 				end
-				local_classes.forth
+				i := i + 1
 			end
 
 				-- Update servers
 			Feat_tbl_server.take_control (Tmp_feat_tbl_server)
 			Tmp_body_server.finalize
 			Tmp_inv_ast_server.finalize
-			Tmp_rep_feat_server.finalize
 			Ast_server.take_control (Tmp_ast_server)
 			Class_info_server.take_control (Tmp_class_info_server)
 			Byte_server.take_control (Tmp_byte_server)
@@ -1941,17 +1638,12 @@ end
 			M_feature_server.take_control (Tmp_m_feature_server)
 			M_rout_id_server.take_control (Tmp_m_rout_id_server)
 			M_desc_server.take_control (Tmp_m_desc_server)
-			Rep_server.take_control (Tmp_rep_server)
 			Class_comments_server.take_control (Tmp_class_comments_server)
-				-- Just clear the rep info server
-			Tmp_rep_info_server.clear
 
-			-- NO !!!!!!! See comment in `init_recompilation'
-			--original_body_index_table := Void
-
-				-- DLE: get rid of the data stored during the last
-				-- final mode compilation normally used when finalizing
-				-- the Dynamic Class Set.
+				-- Clean Memory
+			create mem
+			mem.full_collect
+			mem.full_coalesce
 		end
 
 feature -- Freeezing
@@ -1960,13 +1652,6 @@ feature -- Freeezing
 			-- Worrkbench C code generation
 		require
 			root_class.compiled
-		local
-			a_class: CLASS_C
-			class_list: SEARCH_TABLE [CLASS_C]
-			i, nb: INTEGER
-			temp: STRING
-			descriptors: ARRAY [CLASS_ID]
-			deg_output: DEGREE_OUTPUT
 		do
 			freezing_occurred := True
 			if Compilation_modes.is_precompiling then
@@ -1995,145 +1680,12 @@ end
 debug ("ACTIVITY")
 	io.error.putstring ("Shake%N")
 end
-				-- Rebuild the dispatch table and the execution tables
+				-- Rebuild the execution table
 			shake
 
-			deg_output := Degree_output
 				-- Generation of the descriptor tables
-			if first_compilation and Compilation_modes.is_precompiling then
-				from
-					class_list := freeze_set
-					i := class_list.count
-					deg_output.put_start_degree (-1, i)
-					open_log_files
-					class_list.start
-				until
-					class_list.after
-				loop
-					a_class := class_list.item_for_iteration
-					deg_output.put_degree_minus_1 (a_class, i)
-debug ("COUNT")
-	io.error.putstring ("[")
-	io.error.putint (i)
-	io.error.putstring ("] ")
-end
-					a_class.generate_descriptor_tables
-					a_class.pass4
-						-- Reset the `generate_descriptors' and `must_be_recompiled' flags
-					a_class.clear_compilation_flags
-
-					i := i - 1
-					class_list.forth
-				end
-			elseif first_compilation then
-				from
-					class_list := freeze_set
-					i := class_list.count
-					deg_output.put_start_degree (-1, i)
-					open_log_files
-					class_list.start
-				until
-					class_list.after
-				loop
-					a_class := class_list.item_for_iteration
-					deg_output.put_degree_minus_1 (a_class, i)
-debug ("COUNT")
-	io.error.putstring ("[")
-	io.error.putint (i)
-	io.error.putstring ("] ")
-end
-					a_class.generate_workbench_files
-						-- Reset the `generate_descriptors' and `must_be_recompiled' flags
-					a_class.clear_compilation_flags
-
-					i := i - 1
-					class_list.forth
-				end
-			elseif Compilation_modes.is_precompiling then
-				from
-					class_list := freeze_set
-					i := class_list.count
-					deg_output.put_start_degree (-1, i)
-					class_list.start
-					open_log_files
-				until
-					class_list.after
-				loop
-					a_class := class_list.item_for_iteration
-debug ("COUNT")
-	io.error.putstring ("[")
-	io.error.putint (i)
-	io.error.putstring ("] ")
-end
-					if a_class /= Void then
-						deg_output.put_degree_minus_1 (a_class, i)
-						a_class.generate_descriptor_tables
-						if a_class.must_be_recompiled then
-							a_class.pass4
-							a_class.set_must_be_recompiled (False)
-						end
-					end
-					i := i - 1
-					class_list.forth
-				end
-			else
-				from
-					descriptors := m_desc_server.current_keys
-					i := 1
-					nb := descriptors.count
-				until
-					i > nb
-				loop
-					a_class := class_of_id (descriptors.item (i))
-					if a_class /= Void then
-						freeze_set.put (a_class)
-						a_class.set_generate_descriptors (True)
-					end
-					i := i + 1
-				end
-
-				from
-					class_list := freeze_set
-					i := class_list.count
-					deg_output.put_start_degree (-1, i)
-					class_list.start
-					open_log_files
-				until
-					class_list.after
-				loop
-					a_class := class_list.item_for_iteration
-debug ("COUNT")
-	io.error.putstring ("[")
-	io.error.putint (i)
-	io.error.putstring ("] ")
-end
-					if a_class /= Void then
-						deg_output.put_degree_minus_1 (a_class, i)
-						if a_class.generate_descriptors then
-							a_class.generate_descriptor_tables
-						end
-						
-						if a_class.must_be_recompiled then
-							a_class.pass4
-						end
-
-						if a_class.is_modifiable then
-							a_class.generate_feature_table
-						end
-							-- Reset the `generate_descriptors' and `must_be_recompiled' flags
-						a_class.clear_compilation_flags
-					end
-					i := i - 1
-					class_list.forth
-				end
-			end
-
-			deg_output.put_end_degree
+			process_degree_minus_1
 			m_desc_server.clear
-			close_log_files
-
-			melted_set.wipe_out
-			freeze_set.wipe_out
 			generate_main_eiffel_files
 		end
 
@@ -2144,79 +1696,50 @@ end
 			t: AUXILIARY_FILES
 			degree_message: STRING
 		do
-			!! t.make (Current, byte_context)
+			create t.make (Current, byte_context)
 			degree_message := "Generation of auxiliary files"
 			deg_output := Degree_output
 
-			deg_output.display_degree_output (degree_message, 12, 12)
-			generate_skeletons
-
-			deg_output.display_degree_output (degree_message, 11, 12)
+			deg_output.display_degree_output (degree_message, 10, 10)
 			generate_cecil
 
-			deg_output.display_degree_output (degree_message, 10, 12)
-			t.generate_conformance_table
+			deg_output.display_degree_output (degree_message, 9, 10)
+			generate_skeletons
+
+			deg_output.display_degree_output (degree_message, 8, 10)
+			generate_parent_tables
 			is_conformance_table_melted := False
-			melted_conformance_table := Void
 			melted_parent_table      := Void
 
-			deg_output.display_degree_output (degree_message, 9, 12)
-			generate_parent_tables
-
-			deg_output.display_degree_output (degree_message, 8, 12)
+			deg_output.display_degree_output (degree_message, 7, 10)
 			t.generate_plug
 
-			deg_output.display_degree_output (degree_message, 7, 12)
+			deg_output.display_degree_output (degree_message, 6, 10)
 			t.generate_dynamic_lib_file
 
-			deg_output.display_degree_output (degree_message, 6, 12)
+			deg_output.display_degree_output (degree_message, 5, 10)
 			generate_init_file
 
-			deg_output.display_degree_output (degree_message, 5, 12)
+			deg_output.display_degree_output (degree_message, 4, 10)
 			generate_option_file
 			address_table.generate (False)
 
-			deg_output.display_degree_output (degree_message, 4, 12)
+			deg_output.display_degree_output (degree_message, 3, 10)
 			generate_rout_info_table
 
-			deg_output.display_degree_output (degree_message, 3, 12)
+			deg_output.display_degree_output (degree_message, 2, 10)
 			generate_pattern_table
 
-			deg_output.display_degree_output (degree_message, 2, 12)
-			generate_dispatch_table
+			deg_output.display_degree_output (degree_message, 1, 10)
+			execution_table.generate
+				-- Empty melted list of execution table
+			execution_table.freeze
 
-			deg_output.display_degree_output (degree_message, 1, 12)
-			generate_exec_table
-
-			deg_output.display_degree_output (degree_message, 0, 12)
+			deg_output.display_degree_output (degree_message, 0, 10)
 			t.generate_make_file
 
 				-- Create an empty update file ("melted.eif")
 			make_update (True)
-		end
-
-	update_valid_body_ids is
-		local
-			class_list: SEARCH_TABLE [CLASS_C]
-			a_class: CLASS_C
-		do
-				-- If we are not using any precompilation, ie classes.count = 1
-				-- which correspond to the classes.item (Normal_compilation),
-				-- we don't need to update the body ids at the first compilation
-			if not (first_compilation and then classes.ht_count = 1) then
-				from
-					class_list := freeze_set
-					class_list.start
-				until
-					class_list.after
-				loop
-					a_class := class_list.item_for_iteration
-					if a_class.must_be_recompiled then
-						a_class.update_valid_body_ids
-					end
-					class_list.forth
-				end
-			end
 		end
 
 	shake is
@@ -2226,15 +1749,12 @@ end
 			info: EXTERNAL_INFO
 			exec_table: EXECUTION_TABLE
 		do
-				-- Real shake compresses the dispatch and execution tables
-				-- Not called because the descriptors must be reprocessed
-				-- if a dispatch unit is moved (real_body_index changes)
-
-			update_valid_body_ids
-
+				-- Compress execution table
 			exec_table := execution_table
-			exec_table.shake
-			dispatch_table.shake
+
+			if not first_compilation then
+				exec_table.shake
+			end
 
 			from
 				exec_table.start
@@ -2242,7 +1762,7 @@ end
 				exec_table.after
 			loop
 				exec_unit := exec_table.item_for_iteration
-				if exec_unit.is_external and then exec_unit.is_valid then
+				if exec_unit.is_external then
 					external_unit ?= exec_unit
 					check
 						externals.has (external_unit.external_name)
@@ -2255,16 +1775,11 @@ end
 
 				-- Reset the frozen level since the execution table
 				-- is re-built now.
-			frozen_level := exec_table.frozen_level
-			exec_table.set_levels
+			nb_frozen_features := exec_table.nb_frozen_features
 
 				-- Freeze the external table: reset the real body ids,
 				-- remove all unused externals and make the duplication
 			externals.freeze
-		end
-
-	shake_tables is
-		do
 		end
 
 feature -- Final mode generation
@@ -2284,131 +1799,198 @@ feature -- Final mode generation
 			old_exception_stack_managed: BOOLEAN
 			old_inlining_on, old_array_optimization_on: BOOLEAN
 			deg_output: DEGREE_OUTPUT
+			mem: MEMORY
+			retried: BOOLEAN
 		do
-				-- Set `Server_control' to remove right away extra unused
-				-- files (especially done for the TMP_POLY_SERVER).
-			Server_controler.set_remove_right_away (True)
+			if not retried and is_finalization_needed then
+					-- Set `Server_control' to remove right away extra unused
+					-- files (especially done for the TMP_POLY_SERVER).
+				Server_controler.set_remove_right_away (True)
 
-				-- Initialize `TMP_POLY_SERVER' and `TMP_OPT_BYTE_SERVER'
-			Tmp_poly_server.make
-			Tmp_opt_byte_server.make
+					-- Initialize `TMP_POLY_SERVER' and `TMP_OPT_BYTE_SERVER'
+				Tmp_poly_server.make
+				Tmp_opt_byte_server.make
 
-			keep_assertions := keep_assert and then Lace.has_assertions
+				keep_assertions := keep_assert and then Lace.has_assertions
 
-				-- Save the value of `remover_off'
-				-- and `exception_stack_managed'
-			old_remover_off := remover_off
-			old_exception_stack_managed := exception_stack_managed
-			old_inlining_on := inlining_on
-			old_array_optimization_on := array_optimization_on
+					-- Save the value of `remover_off'
+					-- and `exception_stack_managed'
+				old_remover_off := remover_off
+				old_exception_stack_managed := exception_stack_managed
+				old_inlining_on := inlining_on
+				old_array_optimization_on := array_optimization_on
 
-				-- Should dead code be removed?
-			if not remover_off then
-				remover_off := keep_assertions
+					-- Should dead code be removed?
+				if not remover_off then
+					remover_off := keep_assertions
+				end
+
+				if not exception_stack_managed then
+					exception_stack_managed := keep_assertions
+				end
+
+				inlining_on := inlining_on and not remover_off
+				array_optimization_on := array_optimization_on and not remover_off
+
+					-- Set the generation mode in final mode
+				byte_context.set_final_mode
+
+				process_degree_minus_2
+				
+					-- Clean Memory
+				create mem
+				mem.full_collect
+				mem.full_coalesce
+
+					-- Dead code removal
+				if not remover_off then
+					deg_output := Degree_output
+					deg_output.put_start_dead_code_removal_message
+					remove_dead_code
+					deg_output.put_end_dead_code_removal_message
+				end
+				tmp_opt_byte_server.flush
+
+				-- FIXME
+				--process_dynamic_types
+
+					-- Generation of C files associated to the classes of
+					-- the system.
+				Eiffel_table.start_degree_minus_3 (History_control.max_rout_id)
+				process_degree_minus_3
+				Eiffel_table.finish_degree_minus_3
+
+				generate_main_finalized_eiffel_files
+
+					-- Clean Eiffel table
+				Eiffel_table.wipe_out
+				Tmp_poly_server.clear
+				Tmp_opt_byte_server.clear
+
+				remover := Void
+
+					-- Set `Server_control' not to remove right away extra unused
+					-- files (especially done for the TMP_POLY_SERVER, but since we
+					-- are back now to a normal compilation we should not remove the
+					-- useless files).
+				Server_controler.set_remove_right_away (False)
+
+					-- Restore previous value
+				remover_off := old_remover_off
+				exception_stack_managed := old_exception_stack_managed
+				inlining_on := old_inlining_on
+				array_optimization_on := old_array_optimization_on
+
+					-- Clean `finalization_needed' tag from all CLASS_C
+				clean_finalization_tag
 			end
-
-			if not exception_stack_managed then
-				exception_stack_managed := keep_assertions
-			end
-
-			inlining_on := inlining_on and not remover_off
-			array_optimization_on := array_optimization_on and not remover_off
-
-				-- Set the generation mode in final mode
-			byte_context.set_final_mode
-
-			degree_minus_4
-			
-				-- Dead code removal
-			if not remover_off then
-				deg_output := Degree_output
-				deg_output.put_start_dead_code_removal_message
-				remove_dead_code
-				deg_output.put_end_dead_code_removal_message
-			end
-			tmp_opt_byte_server.flush
-
-			-- FIXME
-			--process_dynamic_types
-
-				-- Generation of C files associated to the classes of
-				-- the system.
-			Eiffel_table.start_degree_minus_5 (History_control.max_rout_id)
-			degree_minus_5
-			Eiffel_table.finish_degree_minus_5
-
-			generate_main_finalized_eiffel_files
-
-				-- Clean Eiffel table
-			Eiffel_table.wipe_out
-			Tmp_poly_server.clear
-			Tmp_opt_byte_server.clear
-
-			remover := Void
-
-				-- Set `Server_control' not to remove right away extra unused
-				-- files (especially done for the TMP_POLY_SERVER, but since we
-				-- are back now to a normal compilation we should not remove the
-				-- useless files).
-			Server_controler.set_remove_right_away (False)
-
-				-- Restore previous value
-			remover_off := old_remover_off
-			exception_stack_managed := old_exception_stack_managed
-			inlining_on := old_inlining_on
-			array_optimization_on := old_array_optimization_on
 		rescue
 				-- Clean the servers if the finalization is aborted
 			Tmp_poly_server.flush
 			Tmp_poly_server.clear
 			Tmp_opt_byte_server.flush
 			Tmp_opt_byte_server.clear
+			successful := False
+			if rescue_status.is_error_exception then
+				retried := True
+				if not compilation_modes.is_precompiling then
+					compilation_modes.reset_modes
+				end
+				rescue_status.set_is_error_exception (False)
+				error_handler.trace
+				set_current_class (Void)
+				retry
+			end
 		end
 
-	degree_minus_4 is
-			-- Process Degree -4.
+feature {NONE} -- Finalization implementation
+
+	is_finalization_needed: BOOLEAN is
+			-- Has system not yet be finalized or has system
+			-- changed since last finalization.
+		local
+			a_class: CLASS_C
+			i, j, nb: INTEGER
+			class_array: ARRAY [CLASS_C]
+		do
+			if not il_generation then
+				i := classes.count
+				class_array := classes
+				nb := class_counter.count
+				from
+					j := 1
+				until
+					Result or j > nb
+				loop
+					a_class := class_array.item (j)
+						-- Since a class can be removed, test if `a_class'
+						-- is not Void.
+					Result := a_class /= Void and then
+						((not a_class.is_precompiled or a_class.is_in_system)
+						and a_class.finalization_needed)
+					j := j + 1
+				end
+			end
+		end
+
+	clean_finalization_tag is
+			-- Reset all CLASS_C.finalization_needed to False.
+		local
+			a_class: CLASS_C
+			i, j, nb: INTEGER
+			class_array: ARRAY [CLASS_C]
+		do
+			i := classes.count
+			class_array := classes
+			nb := class_counter.count
+			from
+				j := 1
+			until
+				j > nb
+			loop
+				a_class := class_array.item (j)
+					-- Since a class can be removed, test if `a_class'
+					-- is not Void.
+				if
+					a_class /= Void and then
+					(not a_class.is_precompiled or a_class.is_in_system)
+				then
+					a_class.set_finalization_needed (False)
+				end
+				j := j + 1
+			end
+		end
+
+	process_degree_minus_2 is
+			-- Process Degree -2.
 		local
 			a_class: CLASS_C
 			i, j, nb: INTEGER
 			deg_output: DEGREE_OUTPUT
 			class_array: ARRAY [CLASS_C]
-			local_classes: CLASS_C_SERVER
-			is_topologic: BOOLEAN
 		do
-				-- Are we going to process degree minus 4 by following the topological
-				-- sort?
-			is_topologic := Configure_resources.get_boolean ("topo", True)
-
-			local_classes := classes
-			i := local_classes.count
+			i := classes.count
+			deg_output := Degree_output
+			deg_output.put_start_degree (-2, i)
+			class_array := classes
+			nb := class_counter.count
 			from
-				deg_output := Degree_output
-				deg_output.put_start_degree (-2, i)
-				local_classes.start
+				j := 1
 			until
-				local_classes.after
+				j > nb
 			loop
-				class_array := local_classes.item_for_iteration
-				nb := class_counter.item (local_classes.key_for_iteration).count
-				from
-					j := 1
-				until
-					j > nb
-				loop
-					a_class := class_array.item (j)
-						-- Since a class can be removed, test if `a_class'
-						-- is not Void.
-					if a_class /= Void then
-						if not a_class.is_precompiled or else a_class.is_in_system then
-							deg_output.put_degree_minus_2 (a_class, i)
-							a_class.process_polymorphism
-							History_control.check_overload
-						end
-						i := i - 1
+				a_class := class_array.item (j)
+					-- Since a class can be removed, test if `a_class'
+					-- is not Void.
+				if a_class /= Void then
+					if not a_class.is_precompiled or else a_class.is_in_system then
+						deg_output.put_degree_minus_2 (a_class, i)
+						a_class.process_polymorphism
+						History_control.check_overload
 					end
-					j := j + 1
+					i := i - 1
 				end
-				local_classes.forth
+				j := j + 1
 			end
 
 			History_control.transfer
@@ -2416,8 +1998,8 @@ feature -- Final mode generation
 			deg_output.put_end_degree
 		end
 
-	degree_minus_5 is
-			-- Process Degree -5.
+	process_degree_minus_3 is
+			-- Process Degree -3.
 			-- Generation of C files associated to the classes of
 			-- the system.
 		local
@@ -2426,41 +2008,32 @@ feature -- Final mode generation
 			a_class: CLASS_C
 			j: INTEGER
 			deg_output: DEGREE_OUTPUT
-			local_classes: CLASS_C_SERVER
 		do
-			Eiffel_project.delete_f_code_content
+			Eiffel_project.delete_f_code_content (Void, Void) -- No agent
+			!FINAL_MAKER! makefile_generator.make
+			open_log_files
+			j := classes.count
+			deg_output := Degree_output
+			deg_output.put_start_degree (-3, j)
+			class_array := classes
+			nb := class_counter.count
 			from
-				local_classes := classes
-				!FINAL_MAKER! makefile_generator.make
-				open_log_files
-				j := local_classes.count
-				deg_output := Degree_output
-				deg_output.put_start_degree (-3, j)
-				local_classes.start
+				i := 1
 			until
-				local_classes.after
+				i > nb
 			loop
-				class_array := local_classes.item_for_iteration
-				nb := class_counter.item (local_classes.key_for_iteration).count
-				from
-					i := 1
-				until
-					i > nb
-				loop
-					a_class := class_array.item (i)
-						-- Since a class can be removed, test if `a_class´
-						-- is not Void.
-					if a_class /= Void then
-						if not a_class.is_precompiled or else a_class.is_in_system then
-							deg_output.put_degree_minus_3 (a_class, j)
-							current_class := a_class
-							a_class.pass4
-						end
-						j := j - 1
+				a_class := class_array.item (i)
+					-- Since a class can be removed, test if `a_class´
+					-- is not Void.
+				if a_class /= Void then
+					if not a_class.is_precompiled or else a_class.is_in_system then
+						deg_output.put_degree_minus_3 (a_class, j)
+						current_class := a_class
+						a_class.pass4
 					end
-					i := i + 1
+					j := j - 1
 				end
-				local_classes.forth
+				i := i + 1
 			end
 			deg_output.put_end_degree
 			close_log_files
@@ -2476,9 +2049,8 @@ feature -- Dead code removal
 			a_class: CLASS_C
 			root_feat: FEATURE_I
 			ct: CLASS_TYPE
-			local_classes: CLASS_C_SERVER
 		do
-			!! remover.make
+			create remover.make
 
 			if array_optimization_on then
 				remover.record_array_descendants
@@ -2492,27 +2064,19 @@ feature -- Dead code removal
 			end
 
 			remover.mark_dispose
-			from
-				local_classes := classes
-				local_classes.start
-			until
-				local_classes.after
-			loop
-				class_array := local_classes.item_for_iteration
-				nb := class_counter.item (local_classes.key_for_iteration).count
-				from i := 1 until i > nb loop
-					a_class := class_array.item (i)
-					if
-						a_class /= Void and then
-						(not a_class.is_precompiled or else a_class.is_in_system)
-					then
-						if a_class.visible_level.has_visible then
-							a_class.mark_visible (remover)
-						end
+			class_array := classes
+			nb := class_counter.count
+			from i := 1 until i > nb loop
+				a_class := class_array.item (i)
+				if
+					a_class /= Void and then
+					(not a_class.is_precompiled or else a_class.is_in_system)
+				then
+					if a_class.visible_level.has_visible then
+						a_class.mark_visible (remover)
 					end
-					i := i + 1
 				end
-				local_classes.forth
+				i := i + 1
 			end
 
 			if has_expanded then
@@ -2554,7 +2118,7 @@ end
 		require
 			good_argument: f /= Void
 		do
-			Result := remover_off or else remover.is_alive (f.body_id.id)
+			Result := remover_off or else remover.is_alive (f.body_index)
 		end
 
 feature -- Generation
@@ -2567,7 +2131,7 @@ feature -- Generation
 			t: AUXILIARY_FILES
 			degree_message: STRING
 		do
-			!! t.make (Current, byte_context)
+			create t.make (Current, byte_context)
 			degree_message := "Generation of auxiliary files"
 			deg_output := Degree_output
 
@@ -2583,17 +2147,13 @@ feature -- Generation
 			deg_output.display_degree_output (degree_message, 8, 10)
 			generate_reference_table
 
-				-- Generation of the skeletons
-			deg_output.display_degree_output (degree_message, 7, 10)
-			generate_skeletons
-
 				-- Cecil structures generation
-			deg_output.display_degree_output (degree_message, 6, 10)
+			deg_output.display_degree_output (degree_message, 7, 10)
 			generate_cecil
 
--- 				-- Generation of the conformance table
--- 			deg_output.display_degree_output (degree_message, 5, 10)
--- 			t.generate_conformance_table
+				-- Generation of the skeletons
+			deg_output.display_degree_output (degree_message, 6, 10)
+			generate_skeletons
 
 				-- Generation of the parent table
 			deg_output.display_degree_output (degree_message, 5, 10)
@@ -2635,7 +2195,6 @@ feature -- Generation
 			a_class: CLASS_C
 			types: TYPE_LIST
 			i, nb: INTEGER
-			local_classes: CLASS_C_SERVER
 		do
 				-- First re-process all the type id of instances of
 				-- CLASS_TYPE available in attribute list `types' of
@@ -2645,23 +2204,15 @@ debug ("ACTIVITY")
 	io.error.putstring ("Process dynamic types%N")
 end
 				-- Sort the class_list by type id in `class_list'.
-			!!class_list.make (1, max_class_id)
-			from
-				local_classes := classes
-				local_classes.start
-			until
-				local_classes.after
-			loop
-				class_array := local_classes.item_for_iteration
-				nb := class_counter.item (local_classes.key_for_iteration).count
-				from i := 1 until i > nb loop
-					a_class := class_array.item (i)
-					if a_class /= Void then
-						class_list.put (a_class, a_class.topological_id)
-					end
-					i := i + 1
+			create class_list.make (1, max_class_id)
+			class_array := classes
+			nb := class_counter.count
+			from i := 1 until i > nb loop
+				a_class := class_array.item (i)
+				if a_class /= Void then
+					class_list.put (a_class, a_class.topological_id)
 				end
-				local_classes.forth
+				i := i + 1
 			end
 
 			nb := max_class_id
@@ -2701,7 +2252,7 @@ debug ("ACTIVITY")
 	io.error.putstring (": ")
 	class_type.type.trace
 	io.error.putstring (" [")
-	class_type.id.trace
+	io.error.putint (class_type.static_type_id)
 	io.error.putstring ("]%N")
 end
 				-- Update `class_types'
@@ -2713,9 +2264,8 @@ end
 		require
 			in_final_mode: byte_context.final_mode
 		local
-			rout_id: ROUTINE_ID
 			table: POLY_TABLE [ENTRY]
-			used: SEARCH_TABLE [ROUTINE_ID]
+			used: SEARCH_TABLE [INTEGER]
 		do
 			Attr_generator.init (generation_buffer)
 			Rout_generator.init (header_generation_buffer)
@@ -2774,7 +2324,7 @@ end
 			end
 			buffer.putstring ("};%N")
 
-			!! size_file.make_open_write (x_gen_file_name (byte_context.final_mode, Esize))
+			create size_file.make_c_code_file (x_gen_file_name (byte_context.final_mode, Esize))
 			size_file.put_string (buffer)
 			size_file.close
 		end
@@ -2819,7 +2369,7 @@ end
 			end
 			buffer.putstring ("%N};%N")
 
-			!! reference_file.make_open_write (final_file_name (Eref, Dot_c, 1));
+			create reference_file.make_c_code_file (final_file_name (Eref, Dot_c, 1));
 			reference_file.put_string (buffer)
 			reference_file.close
 		end
@@ -2841,8 +2391,10 @@ end
 
 			final_mode := byte_context.final_mode;
 
-			buffer.putstring ("#include %"eif_struct.h%"%N%N");
+			buffer.putstring ("#include %"eif_eiffel.h%"%N%N");
 
+			buffer.start_c_specific_code
+			
 			max_id := 0;
 
 			from
@@ -2870,7 +2422,7 @@ end
 
 			-- Now create 'used_ids' array and fill it
 
-			!!used_ids.make (0, max_id);
+			create used_ids.make (0, max_id);
 
 			from
 				i := 1;
@@ -2911,8 +2463,9 @@ end
 				i := i + 1;
 			end;
 			buffer.putstring ("(struct eif_par_types *)0};%N");
+			buffer.end_c_specific_code
 
-			!! parents_file.make_open_write (gen_file_name (final_mode, Eparents));
+			create parents_file.make_c_code_file (gen_file_name (final_mode, Eparents));
 			parents_file.put_string (buffer)
 			parents_file.close;
 		end;
@@ -2921,21 +2474,23 @@ end
 			-- Generate skeletons of class types
 		local
 			class_array: ARRAY [CLASS_C]
-			j, i, nb, nb_class, id: INTEGER
+			j, i, nb, id: INTEGER
 			cl_type: CLASS_TYPE
 			a_class: CLASS_C
-			has_attribute, final_mode: BOOLEAN
+			final_mode: BOOLEAN
 			types: TYPE_LIST
-			temp: STRING
 				-- cltype_array is indexed by `id' not by `type_id'
 				-- as `class_types'
 			cltype_array: ARRAY [CLASS_TYPE]
-			local_classes: CLASS_C_SERVER
-			skeleton_file, header_file: INDENT_FILE
+			skeleton_file: INDENT_FILE
 			buffer: GENERATION_BUFFER
 		do
 			nb := Type_id_counter.value
 			final_mode := byte_context.final_mode
+
+				-- Since generated file `eskelet.[cx]' can be very big 
+				-- every 500K we write onto disk.
+			create skeleton_file.make_c_code_file (x_gen_file_name (final_mode, Eskelet));
 
 			buffer := generation_buffer
 			buffer.clear_all
@@ -2948,56 +2503,52 @@ end
 					-- Hash table extern declaration in workbench mode
 				buffer.putstring ("#include %"eif_macros.h%"")
 				buffer.new_line
-				from
-					local_classes := classes
-					local_classes.start
-				until
-					local_classes.after
-				loop
-					class_array := local_classes.item_for_iteration
-					nb := class_counter.item (local_classes.key_for_iteration).count
-					from i := 1 until i > nb loop
-						a_class := class_array.item (i)
-						if a_class /= Void then
-							j := a_class.id.id
-							if
-								not Compilation_modes.is_precompiling and
-								not a_class.is_precompiled
-							then
-								buffer.putstring ("extern int32 ra")
-								buffer.putint (j)
+				buffer.start_c_specific_code
+				
+				class_array := classes
+				nb := class_counter.count
+				from i := 1 until i > nb loop
+					a_class := class_array.item (i)
+					if a_class /= Void then
+						j := a_class.class_id
+						if
+							not Compilation_modes.is_precompiling and
+							not a_class.is_precompiled
+						then
+							buffer.putstring ("extern int32 ra")
+							buffer.putint (j)
+							buffer.putstring ("[];%N")
+						end
+						if a_class.has_visible then
+							buffer.putstring ("extern char *cl")
+							buffer.putint (j)
+							buffer.putstring ("[];%N")
+							buffer.putstring ("extern uint32 cr")
+							buffer.putint (j)
+							buffer.putstring ("[];%N")
+						end
+						if not a_class.skeleton.is_empty then
+							from
+								types := a_class.types
+								types.start
+							until
+								types.off
+							loop
+								id := types.item.type_id
+								buffer.putstring ("extern uint32 types")
+								buffer.putint (id)
 								buffer.putstring ("[];%N")
-							end
-							if a_class.has_visible then
-								buffer.putstring ("extern char *cl")
-								buffer.putint (j)
-								buffer.putstring ("[];%N")
-								buffer.putstring ("extern uint32 cr")
-								buffer.putint (j)
-								buffer.putstring ("[];%N")
-							end
-							if not a_class.skeleton.empty then
-								from
-									types := a_class.types
-									types.start
-								until
-									types.off
-								loop
-									id := types.item.type_id
-									buffer.putstring ("extern uint32 types")
-									buffer.putint (id)
-									buffer.putstring ("[];%N")
-									types.forth
-								end
+								types.forth
 							end
 						end
-						i := i + 1
 					end
-					local_classes.forth
+					i := i + 1
 				end
 				buffer.new_line
 
-				!!cltype_array.make (1, static_type_id_counter.total_count)
+				create cltype_array.make (1, static_type_id_counter.count)
+			else
+				buffer.start_c_specific_code
 			end
 
 			from
@@ -3006,6 +2557,7 @@ end
 			until
 				i > nb
 			loop
+				buffer.flush_buffer (skeleton_file)
 				cl_type := class_types.item (i)
 					-- Classes could be removed
 if cl_type /= Void then
@@ -3027,7 +2579,7 @@ if cl_type /= Void then
 						-- of the same type.
 						-- Using cl_type.type.associated_class_type will make sure that both
 						-- derivations will share the same dynamic type.
-					cltype_array.put (cl_type.type.associated_class_type, cl_type.id.id)
+					cltype_array.put (cl_type.type.associated_class_type, cl_type.static_type_id)
 				end
 else
 		-- FIXME
@@ -3041,6 +2593,7 @@ end
 			until
 				i > nb
 			loop
+				buffer.flush_buffer (skeleton_file)
 				cl_type := class_types.item (i)
 if cl_type /= Void then
 				if final_mode then
@@ -3092,6 +2645,7 @@ end
 				until
 					i > nb
 				loop
+					buffer.flush_buffer (skeleton_file)
 					cl_type := cltype_array.item (i)
 					if
 						not Compilation_modes.is_precompiling and
@@ -3099,7 +2653,7 @@ end
 						not cl_type.associated_class.is_precompiled
 					then
 						buffer.putstring ("ra")
-						buffer.putint (cl_type.associated_class.id.id)
+						buffer.putint (cl_type.associated_class.class_id)
 					else
 						buffer.putstring ("(int32 *) 0")
 					end
@@ -3115,6 +2669,7 @@ end
 				until
 					i > nb
 				loop
+					buffer.flush_buffer (skeleton_file)
 					cl_type := cltype_array.item (i)
 					buffer.putstring ("(int16) ")
 					if cl_type /= Void then
@@ -3128,8 +2683,9 @@ end
 				buffer.putstring ("};%N")
 			end
 
+			buffer.end_c_specific_code
+			
 				-- Generate skeleton
-			!! skeleton_file.make_open_write (x_gen_file_name (final_mode, Eskelet));
 			skeleton_file.put_string (buffer)
 			skeleton_file.close
 		end
@@ -3138,7 +2694,7 @@ end
 			-- Generate Cecil structures
 		local
 			class_array: ARRAY [CLASS_C]
-			i, nb, generic, no_generic: INTEGER
+			i, nb: INTEGER
 			cl_type: CLASS_TYPE
 			a_class: CLASS_C
 			final_mode: BOOLEAN
@@ -3146,7 +2702,6 @@ end
 			subdir: DIRECTORY
 			f_name: FILE_NAME
 			dir_name: DIRECTORY_NAME
-			local_classes: CLASS_C_SERVER
 			cecil_file, header_file: INDENT_FILE
 			buffer, header_buffer: GENERATION_BUFFER
 		do
@@ -3164,25 +2719,19 @@ end
 				buffer.putstring ("#include %"ececil.h%"%N")
 			end
 			buffer.putstring ("#include %"eif_struct.h%"%N%N")
+			
+			buffer.start_c_specific_code
 
-			from
-				local_classes := classes
-				local_classes.start
-			until
-				local_classes.after
-			loop
-				class_array := local_classes.item_for_iteration
-				nb := class_counter.item (local_classes.key_for_iteration).count
-				from i := 1 until i > nb loop
-					a_class := class_array.item (i)
-					if a_class /= Void then
-						if a_class.has_visible then
-							a_class.generate_cecil
-						end
+			class_array := classes
+			nb := class_counter.count
+			from i := 1 until i > nb loop
+				a_class := class_array.item (i)
+				if a_class /= Void then
+					if a_class.has_visible then
+						a_class.generate_cecil
 					end
-					i := i + 1
 				end
-				local_classes.forth
+				i := i + 1
 			end
 
 			if final_mode then
@@ -3192,17 +2741,18 @@ end
 				Extern_declarations.wipe_out
 
 					-- Generation in file (we need to create the subdirectory
-				temp := clone (System_object_prefix)
+				create temp.make (2)
+				temp.append_character (System_object_prefix)
 				temp.append_integer (1)
-				!!dir_name.make_from_string (Final_generation_path)
+				create dir_name.make_from_string (Final_generation_path)
 				dir_name.extend (temp)
-				!! subdir.make (dir_name)
+				create subdir.make (dir_name)
 				if not subdir.exists then
 					subdir.create_dir
 				end
-				!!f_name.make_from_string (dir_name)
+				create f_name.make_from_string (dir_name)
 				f_name.set_file_name ("ececil.h")
-				!! header_file.make_open_write (f_name)
+				create header_file.make_open_write (f_name)
 				header_file.put_string (header_buffer)
 				header_file.close
 
@@ -3248,16 +2798,18 @@ end
 				end
 			end
 
-			make_cecil_tables
+			create_cecil_tables
 			Cecil2.generate
 			Cecil3.generate
 
-			!! cecil_file.make_open_write (gen_file_name (final_mode, Evisib));
+			buffer.end_c_specific_code
+			
+			create cecil_file.make_c_code_file (gen_file_name (final_mode, Evisib));
 			cecil_file.put_string (buffer)
 			cecil_file.close
 		end
 
-	make_cecil_tables is
+	create_cecil_tables is
 			-- Prepare cecil tables
 		local
 			class_array: ARRAY [CLASS_C]
@@ -3265,53 +2817,36 @@ end
 			generic, no_generic: INTEGER
 			a_class: CLASS_C
 			upper_class_name: STRING
-			local_classes: CLASS_C_SERVER
 		do
-			from
-				local_classes := classes
-				local_classes.start
-			until
-				local_classes.after
-			loop
-				class_array := local_classes.item_for_iteration
-				nb := class_counter.item (local_classes.key_for_iteration).count
-				from i := 1 until i > nb loop
-					a_class := class_array.item (i)
-					if a_class /= Void then
-						if a_class.generics = Void then
-							no_generic := no_generic + 1
-						else
-							generic := generic + 1
-						end
+			class_array := classes
+			nb := class_counter.count
+			from i := 1 until i > nb loop
+				a_class := class_array.item (i)
+				if a_class /= Void then
+					if a_class.generics = Void then
+						no_generic := no_generic + 1
+					else
+						generic := generic + 1
 					end
-					i := i + 1
 				end
-				local_classes.forth
+				i := i + 1
 			end
 
 			Cecil2.init (no_generic)
 			Cecil3.init (generic)
-			from
-				local_classes.start
-			until
-				local_classes.after
-			loop
-				class_array := local_classes.item_for_iteration
-				nb := class_counter.item (local_classes.key_for_iteration).count
-				from i := 1 until i > nb loop
-					a_class := class_array.item (i)
-					if a_class /= Void then
-						upper_class_name := clone (a_class.external_name)
-						upper_class_name.to_upper
-						if a_class.generics = Void then
-							Cecil2.put (a_class, upper_class_name)
-						else
-							Cecil3.put (a_class, upper_class_name)
-						end
+
+			from i := 1 until i > nb loop
+				a_class := class_array.item (i)
+				if a_class /= Void then
+					upper_class_name := clone (a_class.external_name)
+					upper_class_name.to_upper
+					if a_class.generics = Void then
+						Cecil2.put (a_class, upper_class_name)
+					else
+						Cecil3.put (a_class, upper_class_name)
 					end
-					i := i + 1
 				end
-				local_classes.forth
+				i := i + 1
 			end
 		end
 
@@ -3324,7 +2859,7 @@ end
 			class_type: CLASS_TYPE
 		do
 			from
-				!! rout_table.make (routine_id_counter.initialization_rout_id)
+				create rout_table.make (routine_id_counter.initialization_rout_id)
 				i := 1
 				nb := Type_id_counter.value
 				rout_table.create_block (nb)
@@ -3335,10 +2870,10 @@ end
 if class_type /= Void then
 -- FIXME
 				if class_type.has_creation_routine then
-					!!rout_entry
+					create rout_entry
 					rout_entry.set_type_id (i)
 					rout_entry.set_written_type_id (i)
-					rout_entry.set_body_id (body_id_counter.initialization_body_id)
+					rout_entry.set_body_index (body_index_counter.initialization_body_index)
 					rout_table.extend (rout_entry)
 				end
 end
@@ -3350,13 +2885,11 @@ end
 
 feature -- Dispose routine
 
-	memory_dispose_id: ROUTINE_ID is
+	memory_dispose_id: INTEGER is
 			-- Memory dispose routine id from class MEMORY. 
 			-- Return 0 if the MEMORY class has not been compiled.
 			--! (Assumed memory must have a dispose routine
 			--! called "dispose" - DINOV).
-		require
-			checked_desc: memory_descendants /= Void
 		local
 			feature_i: FEATURE_I
 		once
@@ -3371,6 +2904,8 @@ feature -- Dispose routine
 	memory_class: CLASS_C is
 			-- MEMORY class of system. Void if it has
 			-- not been compiled.
+		require
+			memory_class_i_not_void: memory_class_i /= Void
 		once
 			Result := memory_class_i.compiled_class
 		end
@@ -3378,9 +2913,19 @@ feature -- Dispose routine
 	memory_descendants: SEARCH_TABLE [CLASS_C] is
 			-- Memory descendants.
 		once
-			!! Result.make (50)
-			if memory_class /= Void then
-				formulate_mem_descendants (memory_class, Result)
+			create Result.make (50)
+		end
+	
+	reset_memory_descendants is
+			-- Recompute `memory_descendants' since some classes
+			-- may not inherit from MEMORY anymore.
+		do
+				-- Delete previous information
+			memory_descendants.clear_all
+
+				-- Recompute it if MEMORY is in system.
+			if memory_class_i /= Void then
+				formulate_mem_descendants (memory_class, memory_descendants)
 			end
 		end
  
@@ -3424,50 +2969,6 @@ feature -- Dispose routine
 											header_generation_buffer)
 		end 
 
-feature -- Dispatch and execution tables generation
-
-	generate_dispatch_table is
-			-- Generate `dispatch_table'.
-		local
-			buffer: GENERATION_BUFFER
-			dispatch_file: INDENT_FILE
-		do
-				-- Clear buffer for current generation
-			buffer := generation_buffer
-			buffer.clear_all
-
-			dispatch_table.generate (buffer)
-			dispatch_table.freeze
-				-- The melted list of the dispatch table
-				-- is now empty
-
-			!! dispatch_file.make_open_write (workbench_file_name (Edispatch));
-			dispatch_file.put_string (buffer)
-			dispatch_file.close
-		end
-
-	generate_exec_table is
-			-- Generate `execution_table'.
-		local
-			buffer: GENERATION_BUFFER
-			frozen_file: INDENT_FILE
-		do
-				-- Clear buffer for current generation
-			buffer := generation_buffer
-			buffer.clear_all
-
-			buffer.open_write_c
-			execution_table.generate (buffer)
-			execution_table.freeze
-			buffer.close_c
-				-- The melted list of the execution table
-				-- is now empty
-
-			!! frozen_file.make_open_write (workbench_file_name (Efrozen));
-			frozen_file.put_string (buffer)
-			frozen_file.close
-		end
-
 feature -- Pattern table generation
 
 	generate_pattern_table is
@@ -3489,7 +2990,6 @@ feature -- Pattern table generation
 		local
 			root_cl: CLASS_C
 			root_feat: FEATURE_I
-			ext_feat: EXTERNAL_I
 			c_name: STRING
 			dtype: INTEGER
 			final_mode: BOOLEAN
@@ -3500,11 +3000,8 @@ feature -- Pattern table generation
 			initialization_file: INDENT_FILE
 			buffer: GENERATION_BUFFER
 
-			rout_id: ROUTINE_ID
+			rout_id: INTEGER
 			rout_table: ROUT_TABLE
-
-			a_class: CLASS_C
-			class_array: ARRAY [CLASS_C]
 		do
 				-- Clear buffer for current generation
 			buffer := generation_buffer
@@ -3522,28 +3019,25 @@ feature -- Pattern table generation
 				rout_id := root_feat.rout_id_set.first
 			end
 
-			buffer.open_write_c
-
 			buffer.putstring ("%
 				%#include %"eif_project.h%"%N%
 				%#include %"eif_macros.h%"%N%
 				%#include %"eif_struct.h%"%N%N")
 
-			if not final_mode then
-				class_counter.generate_offsets (buffer)
-				static_type_id_counter.generate_offsets (buffer)
-				execution_table.counter.generate_offsets (buffer)
-				dispatch_table.counter.generate_offsets (buffer)
-			end	
-
 			if has_separate then
 				buffer.putstring ("#include %"eif_curextern.h%"%N%N")
 			end
 
+			buffer.start_c_specific_code
+			
 			if creation_name /= Void then
 				if final_mode then
 					rout_table ?= Eiffel_table.poly_table (rout_id)
-					c_name := rout_table.feature_name (cl_type.id.id)
+					rout_table.goto_implemented (cl_type.static_type_id)
+					check
+						is_implemented: rout_table.is_implemented
+					end
+					c_name := clone (rout_table.feature_name)
 					if root_feat.has_arguments then
 						buffer.generate_extern_declaration
 							("void", c_name, <<"EIF_REFERENCE", "EIF_REFERENCE">>)
@@ -3557,9 +3051,9 @@ feature -- Pattern table generation
 			buffer.generate_function_signature ("void", "emain", True, buffer,
 						<<"argc", "argv">>, <<"int", "char **">>)
 
-			buffer.putstring ("#ifndef EIF_THREADS%N%
-											%%Textern char *root_obj;%N%
-											%#endif%N")
+--			buffer.putstring ("#ifndef EIF_THREADS%N%
+--											%%Textern char *root_obj;%N%
+--											%#endif%N")
 
 
 			if has_separate then
@@ -3666,7 +3160,7 @@ feature -- Pattern table generation
 				loop
 					cl_type := class_types.item (i)
 					if cl_type /= Void then
-						buffer.generate_extern_declaration ("void", cl_type.id.init_name, <<"void">>)
+						buffer.generate_extern_declaration ("void", Encoder.init_name (cl_type.static_type_id), <<"void">>)
 					end
 					i := i + 1
 				end
@@ -3686,7 +3180,7 @@ feature -- Pattern table generation
 -- freeze_system.
 					if cl_type /= Void then
 						buffer.putchar ('%T')
-						buffer.putstring (cl_type.id.init_name)
+						buffer.putstring (Encoder.init_name (cl_type.static_type_id))
 						buffer.putstring ("();%N")
 					end
 					i := i + 1
@@ -3697,13 +3191,10 @@ feature -- Pattern table generation
 
 					-- Set C variable `ccount'.
 				buffer.putstring ("%Tccount = ")
-				buffer.putint (class_counter.total_count)
-					-- Set C variable `dcount'.
-				buffer.putstring (";%N%Tdcount = ")
-				buffer.putint (dispatch_table.counter.total_count)
+				buffer.putint (class_counter.count)
 					-- Set the frozen level
-				buffer.putstring (";%N%Tzeroc = ")
-				buffer.putint (frozen_level)
+				buffer.putstring (";%N%Teif_nb_features = ")
+				buffer.putint (nb_frozen_features)
 				buffer.putstring (";%N}%N%N")
 			end
 
@@ -3721,13 +3212,13 @@ feature -- Pattern table generation
 			loop
 				cl_type := class_types.item (i)
 
-				if cl_type /= Void and then not makefile_generator.empty_class_types.has (cl_type.id) then
+				if cl_type /= Void and then not makefile_generator.empty_class_types.has (cl_type.static_type_id) then
 					if
 						not final_mode or else
 						(not cl_type.is_precompiled or else cl_type.associated_class.is_in_system)
 					then
 						buffer.generate_extern_declaration (
-									"void", cl_type.id.module_init_name, <<"void">>)
+									"void", Encoder.module_init_name (cl_type.static_type_id), <<"void">>)
 					end
 				end
 				i := i + 1
@@ -3739,12 +3230,12 @@ feature -- Pattern table generation
 			buffer.generate_function_signature (
 				"void", "egc_system_mod_init_init", True, buffer, <<"">>, <<"void">>)
 
-			if license.demo_mode then
+			if license.demo_mode or else license.non_commercial_mode then
 					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag - 1
-				buffer.putstring ("%N%Tegc_type_of_gc = 123172;%N")
+				buffer.putstring ("%N%Tegc_type_of_gc = 123173;%N")
 			else
 					-- Set egc_type_of_gc = 25 * egc_platform_level + egc_compiler_tag
-				buffer.putstring ("%N%Tegc_type_of_gc = 123173;%N")
+				buffer.putstring ("%N%Tegc_type_of_gc = 123174;%N")
 			end
 
 			from
@@ -3755,13 +3246,13 @@ feature -- Pattern table generation
 			loop
 				cl_type := class_types.item (i)
 
-				if cl_type /= Void and then not makefile_generator.empty_class_types.has (cl_type.id) then
+				if cl_type /= Void and then not makefile_generator.empty_class_types.has (cl_type.static_type_id) then
 					if
 						not final_mode or else
 						(not cl_type.is_precompiled or else cl_type.associated_class.is_in_system)
 					then
 						buffer.putstring ("%T")
-						buffer.putstring (cl_type.id.module_init_name)
+						buffer.putstring (Encoder.module_init_name (cl_type.static_type_id))
 						buffer.putstring ("();%N")
 					end
 				end
@@ -3770,9 +3261,9 @@ feature -- Pattern table generation
 
 			buffer.putstring ("%N}%N%N")
 
-			buffer.close_c
+			buffer.end_c_specific_code
 
-			!! initialization_file.make_open_write (gen_file_name (final_mode, Einit));
+			create initialization_file.make_c_code_file (gen_file_name (final_mode, Einit));
 			initialization_file.put_string (buffer)
 			initialization_file.close
 		end
@@ -3790,7 +3281,7 @@ feature -- Workbench routine info table file generation
 				buffer.clear_all
 				rout_info_table.generate (buffer)
 
-				!! rout_info_file.make_open_write (workbench_file_name (Ecall));
+				create rout_info_file.make_c_code_file (workbench_file_name (Ecall));
 				rout_info_file.put_string (buffer)
 				rout_info_file.close
 			end
@@ -3806,7 +3297,6 @@ feature --Workbench option file generation
 			a_class: CLASS_C
 			partial_debug: DEBUG_TAG_I
 			class_type: CLASS_TYPE
-			local_classes: CLASS_C_SERVER
 			option_file: INDENT_FILE
 			buffer: GENERATION_BUFFER
 		do
@@ -3815,28 +3305,23 @@ feature --Workbench option file generation
 			buffer.clear_all
 
 			buffer.putstring ("#include %"eif_project.h%"%N%
-								   %#include %"eif_struct.h%"%N%N")
+								%#include %"eif_struct.h%"%N%
+								%#include %"eif_option.h%"%N%N")
 
+			buffer.start_c_specific_code
+			
 				-- First debug keys
-			from
-				local_classes := classes
-				local_classes.start
-			until
-				local_classes.after
-			loop
-				class_array := local_classes.item_for_iteration
-				nb := class_counter.item (local_classes.key_for_iteration).count
-				from i := 1 until i > nb loop
-					a_class := class_array.item (i)
-					if a_class /= Void then
-						partial_debug ?= a_class.debug_level
-						if partial_debug /= Void then
-							partial_debug.generate_keys (buffer, a_class.id)
-						end
+			class_array := classes
+			nb := class_counter.count
+			from i := 1 until i > nb loop
+				a_class := class_array.item (i)
+				if a_class /= Void then
+					partial_debug ?= a_class.debug_level
+					if partial_debug /= Void then
+						partial_debug.generate_keys (buffer, a_class.class_id)
 					end
-					i := i + 1
 				end
-				local_classes.forth
+				i := i + 1
 			end
 
 				-- Then option C array
@@ -3858,7 +3343,7 @@ feature --Workbench option file generation
 					buffer.putstring (", ")
 					a_class.profile_level.generate (buffer)
 					buffer.putstring (", ")
-					a_class.debug_level.generate (buffer, a_class.id)
+					a_class.debug_level.generate (buffer, a_class.class_id)
 				else
 					buffer.putstring ("(int16) 0, (int16) 0, (int16) 0,%
 						%{(int16) 0, (int16) 0, (char **) 0}")
@@ -3867,31 +3352,22 @@ feature --Workbench option file generation
 				i := i + 1
 			end
 			buffer.putstring ("};%N")
+			buffer.end_c_specific_code
 
-			!! option_file.make_open_write (workbench_file_name (Eoption));
+			create option_file.make_c_code_file (workbench_file_name (Eoption));
 			option_file.put_string (buffer)
 			option_file.close
 		end
 
 feature 
 
-	process_pass (a_pass: PASS) is
-			-- Process `a_pass'
-		do
-			current_pass := a_pass
-			a_pass.execute
-		end
-
 	set_current_class (a_class: CLASS_C) is
 		do
 			current_class := a_class
 		end
 
-	in_pass3: BOOLEAN is
-			-- Is `pass3' the current pass ?
-		do
-			Result := (current_pass = pass3_controler)
-		end
+	in_pass3: BOOLEAN
+			-- Is Degree 3 the current Degree?
 
 	System_chunk: INTEGER is 500
 
@@ -3960,7 +3436,7 @@ feature -- Precompilation
 	init_precompilation is
 			-- Initialization before a precompilation.
 		do
-			if not general_class.compiled then
+			if not any_class.compiled then
 				init
 			else
 				add_visible_classes
@@ -3993,21 +3469,21 @@ feature -- Log files
 		do
 			if in_final_mode then
 					-- removed_log_file is used only in final mode
-				!!f_name.make_from_string (Final_generation_path)
+				create f_name.make_from_string (Final_generation_path)
 				f_name.set_file_name (Removed_log_file_name)
-				!!removed_log_file.make (f_name)
+				create removed_log_file.make (f_name)
 
-				!!f_name.make_from_string (Final_generation_path)
+				create f_name.make_from_string (Final_generation_path)
 				f_name.set_file_name (Translation_log_file_name)
-				!!used_features_log_file.make (f_name)
+				create used_features_log_file.make (f_name)
 
 					-- Files are open using the `write' mode
 				removed_log_file.open_write
 				used_features_log_file.open_write
 			else
-				!!f_name.make_from_string (Workbench_generation_path)
+				create f_name.make_from_string (Workbench_generation_path)
 				f_name.set_file_name (Translation_log_file_name)
-				!!used_features_log_file.make (f_name)
+				create used_features_log_file.make (f_name)
 
 					-- File is open using the `append' mode
 					-- (refreezing)
@@ -4033,22 +3509,15 @@ feature -- Debug purpose
 			i, nb: INTEGER
 			a_class: CLASS_C
 		do
-			from
-				classes.start
-			until
-				classes.after
-			loop
-				class_array := classes.item_for_iteration
-				nb := class_counter.item (classes.key_for_iteration).count
-				from i := 1 until i > nb loop
-					a_class := class_array.item (i)
-					if a_class /= Void then
-						-- Do nothing. Specific debug
-						-- code can be inserted here.
-					end
-					i := i + 1
+			class_array := classes
+			nb := class_counter.count
+			from i := 1 until i > nb loop
+				a_class := class_array.item (i)
+				if a_class /= Void then
+					-- Do nothing. Specific debug
+					-- code can be inserted here.
 				end
-				classes.forth
+				i := i + 1
 			end
 		end
 
@@ -4057,6 +3526,24 @@ feature {NONE} -- External features
 	write_int (f: POINTER; v: INTEGER) is
 		external
 			"C"
+		end
+
+	current_time: INTEGER is
+			-- Elapsed time since the Epoch (00:00:00 UTC, January 1, 1970),
+			-- measured in seconds.
+		do
+			Result := c_time (default_pointer)
+		end
+		
+	c_time (p: POINTER): INTEGER is
+			-- Elapsed time since the Epoch (00:00:00 UTC, January 1, 1970),
+			-- measured in seconds.
+			-- If `p /= default_pointer' result will be stored in memory pointed
+			-- by `p'.
+		external
+			"C (time_t *): EIF_INTEGER | <time.h>"
+		alias
+			"time"
 		end
 
 feature -- Concurrent Eiffel

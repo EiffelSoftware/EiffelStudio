@@ -97,7 +97,7 @@ feature {NONE} -- Implementation
 				if aok then
 					to_write := text_window.text
 					tmp_file.open_write
-					if not to_write.empty then
+					if not to_write.is_empty then
 						to_write.prune_all ('%R')
 						if general_resources.text_mode.value.is_equal ("UNIX") then
 							tmp_file.putstring (to_write)

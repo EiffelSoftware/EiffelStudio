@@ -4,7 +4,8 @@ inherit
 
 	NUM_BINARY_B
 		rename
-			Bc_slash as operator_constant
+			Bc_slash as operator_constant,
+			il_slash as il_operator_constant
 		redefine
 			generate_operator, is_simple,
 			generate_simple, print_register

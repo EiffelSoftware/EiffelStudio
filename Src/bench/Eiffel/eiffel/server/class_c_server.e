@@ -1,16 +1,20 @@
--- Warning: this is not a real server!
+indexing
+	description: "Server to keep track of all classes in system.%
+				%Warning: this is not a real server!%
+				%Indexed by class id."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	CLASS_C_SERVER
 
 inherit
-	HASH_TABLE [ARRAY [CLASS_C], INTEGER]
+	ARRAY [CLASS_C]
 		rename
-			put as ht_put,
-			remove as ht_remove,
-			has as ht_has,
-			make as ht_make,
-			count as ht_count
+			put as array_put,
+			has as array_has,
+			make as array_make,
+			count as array_count
 		end
 
 	SHARED_COUNTER
@@ -24,6 +28,7 @@ inherit
 		end
 
 creation
+
 	make
 
 feature -- Initialization
@@ -31,132 +36,110 @@ feature -- Initialization
 	make is
 			-- Create a new class server.
 		do
-			ht_make (Initial_size);
-			!! current_classes.make (1, Chunk);
-			ht_put (current_classes, System.compilation_id)
-		end
-
-	init_server is
-			-- Initialize server before a new compilation.
-		do
-			!! current_classes.make (1, Chunk);
-			ht_put (current_classes, System.compilation_id)
+			array_make (1, Chunk)
+			!! sorted_classes.make (1, Chunk)
 		end
 
 feature -- Access
 
-	has (id: CLASS_ID): BOOLEAN is
+	sorted_classes: ARRAY [CLASS_C]
+			-- Classes sorted by topological id
+
+feature -- Status report
+
+	has (id: INTEGER): BOOLEAN is
 			-- Is there a class associated with `id'?
 		require
-			id_not_void: id /= Void
+			id_not_void: id > 0
 		do
-			Result := id.associated_class /= Void
+			Result := id <= upper and then item (id) /= Void
 		end
+
+feature -- Measurement
 
 	count: INTEGER
 			-- Number of classes
 
 feature -- Element change
 
-	put (class_c: CLASS_C; id: CLASS_ID) is
+	put (class_c: CLASS_C; id: INTEGER) is
 			-- Insert `class_c' at key `id'.
 		require
 			class_c_not_void: class_c /= Void
-			id_not_void: id /= Void
-			valid_id: id.compilation_id = System.compilation_id
+			id_not_void: id > 0
+			not_has_id: not has (id)
 		local
-			internal_id: INTEGER
+			class_id: INTEGER
 		do
-			internal_id := id.internal_id
-			if current_classes.upper < internal_id then
-				current_classes.resize (1, internal_id + Chunk)
-			end
-			current_classes.put (class_c, internal_id)
-			count := count + 1
+ 			class_id := id
+ 			if upper < class_id then
+ 				resize (1, class_id + Chunk)
+				sorted_classes.resize (1, class_id + Chunk)
+ 			end
+ 			array_put (class_c, class_id)
+			sorted_classes.put (class_c, class_c.topological_id)
+ 			count := count + 1
 		ensure
-			inserted: id.associated_class = class_c
+			inserted: item (id) = class_c
 		end
-	
-	remove (id: CLASS_ID) is
+
+feature -- Removal
+
+	remove (id: INTEGER) is
 			-- Remove class with `id'.
 		require
-			id_not_void: id /= Void
-			removable: id.compilation_id = System.compilation_id
+			id_not_void: id > 0
+			has_id: has (id)
 		local
-			internal_id: INTEGER
+			a_class: CLASS_C
 		do
-			current_classes.put (Void, id.internal_id)
+			a_class := item (id)
+			sorted_classes.put (Void, a_class.topological_id)
+			array_put (Void, id)
 			count := count - 1
 		ensure
 			removed: not has (id)
 		end
-			
-feature -- Merging
 
-	append (other: like Current) is
-			-- Append classes of `other' to `Current'.
-		require
-			other_not_void: other /= Void
+feature -- Sort
+
+	sort is
+			-- Sort `sorted_classes' by topological ids.
 		local
-			i, nb: INTEGER;
-			precomp_id: INTEGER;
-			old_cursor: CURSOR;
-			a_class: CLASS_C;
-			other_class_array, class_array: ARRAY [CLASS_C]
-			common_classes: HASH_TABLE [ARRAY [CLASS_C], INTEGER]
+			i, nb: INTEGER
+			a_class: CLASS_C
 		do
-			old_cursor := other.cursor;
-			!! common_classes.make (other.ht_count);
 			from
-				other.start
+				i := 1
+				nb := sorted_classes.upper
 			until
-				other.after
+				i > nb
 			loop
-				precomp_id := other.key_for_iteration;
-				class_array := other.item_for_iteration
-				if ht_has (precomp_id) then
-					common_classes.put (class_array, precomp_id)
-				else
-					ht_put (class_array, precomp_id);
-					nb := Class_counter.item (precomp_id).count
-					from i := 1 until i > nb loop
-						if class_array.item (i) /= Void then
-							count := count + 1
-						end
-						i := i + 1
-					end
+				sorted_classes.put (Void, i)
+				i := i + 1
+			end
+			from
+				i := 1
+				nb := count
+			until
+				nb = 0
+			loop
+				a_class := item (i)
+				if a_class /= Void then
+					sorted_classes.put (a_class, a_class.topological_id)
+					nb := nb - 1
 				end
-				other.forth
-			end;
-			other.go_to (old_cursor);
-				-- Merge contents of common classes only here because
-				-- descencant classes (in CLASS_C) must have already
-				-- been inserted into the server. 
-			from common_classes.start until common_classes.after loop
-				other_class_array := common_classes.item_for_iteration;
-				precomp_id := common_classes.key_for_iteration;
-				class_array := item (precomp_id);
-				nb := Class_counter.item (precomp_id).count
-				from i := 1 until i > nb loop
-					a_class := class_array.item (i);
-					if a_class /= Void then
-						a_class.merge (other_class_array.item (i))
-					end;
-					i := i + 1
-				end
-				common_classes.forth
+				i := i + 1
 			end
 		end
 
 feature {NONE} -- Implementation
 
-	current_classes: ARRAY [CLASS_C]
-			-- Classes of current compilation unit
-
 	Chunk: INTEGER is 150
 			-- Chunk size of class arrays
 
-	Initial_size: INTEGER is 5
-			-- Hash table initial size
-		
+invariant
+
+	sorted_classes_not_void: sorted_classes /= Void
+
 end -- class CLASS_C_SERVER

@@ -92,6 +92,10 @@ feature -- Access
 				Result.append_character (Directory_separator)
 				Result.append (e_class.lace_class.base_name)
 			end
+
+			if e_class.lace_class.is_read_only then
+				Result.append (" [READ-ONLY]")
+			end
 		end;
 
 	stone_type: INTEGER is 

@@ -49,7 +49,7 @@ feature {NONE} -- Implementation
 					text := e_feature.text;
 				end;
 				if text /= Void then
-					if filter_name /= Void and then not filter_name.empty then
+					if filter_name /= Void and then not filter_name.is_empty then
 						!! filter.make (filter_name);
 						filter.process_text (text);
 						output_window.put_string (filter.image)

@@ -1,14 +1,19 @@
+indexing
+	description: "Server for melted description indexed by class id."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class M_DESC_SERVER
 
 inherit
-	COMPILER_SERVER [MELTED_DESC, CLASS_ID]
+	COMPILER_SERVER [MELTED_DESC]
 
 creation
 	make
 
 feature -- Access
 
-	id (t: MELTED_DESC): CLASS_ID is
+	id (t: MELTED_DESC): INTEGER is
 			-- Id associated with `t'
 		do
 			Result := t.class_id

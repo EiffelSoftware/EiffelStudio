@@ -40,24 +40,32 @@ feature -- Update
 			end
 		end
 
-	show_stoppoint (routine: E_FEATURE index: INTEGER) is
-			-- Show the `index'-th breakable point of `routine' in
-			-- routine tools containing the related routine and
-			-- set with the `show_breakpoints' format.
-		require
-			routine_exists: routine /= Void
-		local
-			rout_window: ROUTINE_W
+	show_stoppoint (body_index: INTEGER; index: INTEGER) is
+			-- Resynchronize debugged routine window with feature `feat'.
+			-- If `feat' is void resynchronize debugged routine window
+			-- regardless.
 		do
-			if index > 0 then
-				from
-					active_editors.start
-				until
-					active_editors.after
-				loop
-					active_editors.item.show_stoppoint (routine, index)
-					active_editors.forth
-				end
+			from
+				active_editors.start
+			until
+				active_editors.after
+			loop
+				active_editors.item.show_stoppoint(body_index,index)
+				active_editors.forth
+			end
+		end
+
+	synchronize_with_callstack is
+			-- Display/Hide the arrow for all feature present in
+			-- the callstack.
+		do
+			from
+				active_editors.start
+			until
+				active_editors.after
+			loop
+				active_editors.item.synchronize_with_callstack
+				active_editors.forth
 			end
 		end
 

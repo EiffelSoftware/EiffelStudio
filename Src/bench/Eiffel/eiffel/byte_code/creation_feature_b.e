@@ -7,6 +7,8 @@ class
 	CREATION_FEATURE_B
 
 inherit
+	CREATION_EXPR_CALL_B
+
 	FEATURE_B
 		redefine
 			generate, enlarged, is_first, context_type
@@ -56,7 +58,6 @@ feature -- Code generation
 					buf.new_line
 					info.generate_end (Current)
 
---					if register.is_separate and then
 --						not context.real_type(type).is_separate then
 --						buf.putstring ("CURLTS(")
 --					end
@@ -85,32 +86,25 @@ feature -- Code generation
 			end
 		end
 
-feature -- Access
-
-	info: CREATE_TYPE
-
-	set_info (i: CREATE_TYPE) is
-		do
-			info := i
-		end
-
-	context_type: TYPE_I is
-			-- Context type of the access (properly instantiated)
-		do
-			Result := info.type
-		end
-
 feature -- Copy
 
-	fill_from (f: FEATURE_B) is
-			-- Fill in node with feature `f'
+	fill_from (f: CALL_ACCESS_B) is
+			-- Fill in node with call `f'
 		do
 			feature_name := f.feature_name
 			feature_id := f.feature_id
 			type := f.type
 			parameters := f.parameters
-			precursor_type := f.precursor_type
 			routine_id := f.routine_id
+			written_in := f.written_in
+		end
+
+feature -- Type info
+
+	context_type: TYPE_I is
+			-- Context type of the access (properly instantiated)
+		do
+			Result := Context.creation_type (info.type)
 		end
 
 end -- class CREATION_FEATURE_B

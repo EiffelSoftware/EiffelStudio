@@ -53,11 +53,11 @@ feature {NONE} -- Implementation
 			parent_class: CLASS_C;
 		do
 			if 
-				(not equal (c.id, Eiffel_system.any_id)) or else
+				(not (c.class_id = Eiffel_system.any_id)) or else
 				(c = current_class)
 			then
 				parents := c.parents;
-				if not parents.empty then
+				if not parents.is_empty then
 					from
 						parents.start
 					until
@@ -66,7 +66,10 @@ feature {NONE} -- Implementation
 						parent_class := parents.item.associated_class;
 						add_tabs (st, i);
 						parent_class.append_signature (st);
-						if already_processed (parents.item) then
+						if
+							already_processed (parents.item) and then
+							parent_class.class_id /= Eiffel_system.any_id
+						then
 							st.add_string ("...");
 							st.add_new_line;
 						else	

@@ -6,7 +6,7 @@ inherit
 
 feature
 
-	optimization_tables: OPTIMIZATION_TABLES is
+	optimization_tables: SEARCH_TABLE [OPTIMIZE_UNIT] is
 		do
 			Result := System.optimization_tables
 		end

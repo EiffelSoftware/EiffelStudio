@@ -8,7 +8,7 @@ inherit
 		redefine
 			enlarged, type, is_argument, is_local, is_creatable,
 			make_byte_code, register_name, array_descriptor,
-			pre_inlined_code
+			pre_inlined_code, print_register, generate_il_call_access
 		end;
 	
 feature 
@@ -65,6 +65,24 @@ feature
 			Result.append ("arg");
 			Result.append (position.out);
 		end;
+
+	print_register is
+			-- Print argument
+		do
+			buffer.putstring (register_name)
+		end
+
+feature -- IL code generation
+
+	generate_il_call_access (is_target_of_call: BOOLEAN) is
+			-- Generate IL code for an access to an argument
+		do
+			if is_target_of_call and then real_type (type).is_expanded then
+				il_generator.generate_argument_address (position)
+			else
+				il_generator.generate_argument (position)
+			end
+		end
 
 feature -- Byte code generation
 

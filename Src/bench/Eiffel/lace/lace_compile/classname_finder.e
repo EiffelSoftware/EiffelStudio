@@ -21,7 +21,7 @@ feature -- Status report
 	valid_start_condition (sc: INTEGER): BOOLEAN is
 			-- Is `sc' a valid start condition?
 		do
-			Result := (INITIAL <= sc and sc <= IN_CLASS)
+			Result := (INITIAL <= sc and sc <= VERBATIM_STR3)
 		end
 
 feature {NONE} -- Implementation
@@ -36,6 +36,7 @@ feature {NONE} -- Implementation
 			yy_ec ?= yy_ec_template
 			yy_meta ?= yy_meta_template
 			yy_accept ?= yy_accept_template
+			yy_acclist ?= yy_acclist_template
 		end
 
 	yy_execute_action (yy_act: INTEGER) is
@@ -60,21 +61,73 @@ when 4 then
 --|#line 39
 -- Ignore
 when 5 then
---|#line 42
--- Ignore
-when 6 then
 --|#line 43
 -- Ignore
+when 6 then
+--|#line 45
+
+				verbatim_marker.clear_all
+				append_text_substring_to_string (2, text_count - 1, verbatim_marker)
+				last_start_condition := start_condition
+				set_start_condition (VERBATIM_STR3)
+			
 when 7 then
---|#line 44
+--|#line 52
 -- Ignore
 when 8 then
---|#line 45
+--|#line 53
 -- Ignore
 when 9 then
---|#line 46
+--|#line 54
 -- Ignore
 when 10 then
+--|#line 59
+
+				set_start_condition (VERBATIM_STR1)
+			
+when 11 then
+--|#line 62
+
+					-- No final bracket-double-quote.
+				set_start_condition (last_start_condition)
+			
+when 12 then
+--|#line 74
+
+				if is_verbatim_string_closer then
+					set_start_condition (last_start_condition)
+				else
+					set_start_condition (VERBATIM_STR2)
+				end
+			
+when 13 then
+--|#line 81
+
+				set_start_condition (VERBATIM_STR2)
+			
+when 14 then
+--|#line 84
+
+				-- Ignore.
+			
+when 15 then
+--|#line 87
+
+					-- No final bracket-double-quote.
+				set_start_condition (last_start_condition)
+			
+when 16 then
+--|#line 99
+
+				set_start_condition (VERBATIM_STR1)
+			
+when 17 then
+--|#line 102
+
+					-- No final bracket-double-quote.
+				set_start_condition (last_start_condition)
+			
+when 18 then
 --|#line 0
 last_token := yyError_token
 fatal_error ("scanner jammed")
@@ -88,6 +141,24 @@ fatal_error ("scanner jammed")
 			-- Execute EOF semantic action.
 		do
 			inspect yy_sc
+when 2 then
+--|#line 0
+
+					-- No final bracket-double-quote.
+				set_start_condition (last_start_condition)
+			
+when 3 then
+--|#line 0
+
+					-- No final bracket-double-quote.
+				set_start_condition (last_start_condition)
+			
+when 4 then
+--|#line 0
+
+					-- No final bracket-double-quote.
+				set_start_condition (last_start_condition)
+			
 			else
 				terminate
 			end
@@ -100,21 +171,33 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    6,    7,    6,    8,    8,    9,   10,    6,    6,
-			   11,   11,   12,   11,   11,    6,   11,   11,   12,   11,
-			   11,   13,    7,   13,    8,    8,    9,   10,   13,   13,
-			   14,   14,   14,   14,   14,   13,   14,   14,   14,   14,
-			   14,   18,   19,   15,   35,   15,   25,   18,   19,   27,
-			   15,   20,   25,   29,   24,   32,   30,   31,   33,   28,
-			   24,   15,   30,   15,   33,   17,   31,   34,   15,   20,
-			   32,   15,   24,   34,   16,   22,   15,   21,   24,   17,
-			   16,   17,   17,   17,   17,   17,   17,   20,   35,   20,
-			   35,   20,   20,   20,   20,   23,   24,   24,   24,   35,
+			    0,   12,   12,   13,   14,   12,   15,   12,   12,   16,
+			   16,   17,   16,   16,   12,   12,   12,   16,   16,   17,
+			   16,   16,   18,   18,   13,   14,   18,   15,   18,   18,
+			   19,   19,   19,   19,   19,   18,   18,   18,   19,   19,
+			   19,   19,   19,   21,   22,   23,   28,   29,   28,   29,
+			   33,   34,   58,   39,   42,   43,   24,   21,   22,   23,
+			   35,   39,   42,   46,   41,   49,   50,   48,   52,   53,
+			   24,   30,   30,   54,   31,   30,   48,   30,   37,   37,
+			   37,   38,   37,   37,   30,   30,   37,   37,   37,   38,
+			   37,   37,   44,   42,   43,   57,   33,   34,   42,   43,
 
-			   23,   23,   23,   26,   26,   26,   22,   35,   22,   22,
-			   22,   22,   22,   22,    5,   35,   35,   35,   35,   35,
-			   35,   35,   35,   35,   35,   35,   35,   35,   35,   35,
-			   35,   35,   35,   35,   35>>)
+			   42,   46,   41,   57,   36,   45,   35,   55,   56,   33,
+			   34,   49,   50,   61,   33,   34,   52,   53,   31,   35,
+			   44,   42,   43,   53,   53,   61,   51,   59,   51,   58,
+			   60,   26,   26,   45,   61,   59,   61,   61,   60,   20,
+			   20,   20,   20,   20,   20,   20,   20,   25,   25,   25,
+			   25,   25,   25,   25,   25,   27,   27,   27,   27,   27,
+			   27,   27,   27,   30,   61,   61,   61,   30,   61,   30,
+			   32,   61,   32,   32,   32,   32,   32,   32,   38,   38,
+			   38,   38,   40,   40,   40,   40,   41,   41,   41,   41,
+			   41,   41,   41,   41,   45,   45,   45,   45,   45,   45,
+
+			   45,   45,   47,   47,   47,   47,   47,   47,   47,   47,
+			   51,   51,   51,   51,   51,   51,   51,   51,   36,   61,
+			   36,   36,   36,   36,   36,   36,   11,   61,   61,   61,
+			   61,   61,   61,   61,   61,   61,   61,   61,   61,   61,
+			   61,   61,   61,   61,   61,   61,   61,   61>>)
 		end
 
 	yy_chk_template: ANY is
@@ -124,19 +207,31 @@ feature {NONE} -- Table templates
 			Result := yy_fixed_array (<<
 			    0,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    3,    3,    3,    3,    3,    3,    3,    3,    3,
+			    1,    1,    3,    3,    3,    3,    3,    3,    3,    3,
 			    3,    3,    3,    3,    3,    3,    3,    3,    3,    3,
-			    3,    8,    8,   11,   19,   11,   12,   17,   17,   19,
-			   11,   21,   12,   21,   11,   29,   25,   27,   30,   20,
-			   11,   23,   25,   23,   30,   31,   31,   33,   23,   32,
-			   32,   36,   23,   33,   16,   10,   36,    9,   23,   37,
-			    7,   37,   37,   37,   37,   37,   37,   38,    5,   38,
-			    0,   38,   38,   38,   38,   39,   40,   40,   40,    0,
+			    3,    3,    3,    5,    5,    5,    9,    9,   10,   10,
+			   14,   14,   54,   17,   20,   20,    5,    6,    6,    6,
+			   14,   17,   24,   24,   24,   28,   28,   47,   34,   34,
+			    6,   16,   16,   34,   31,   16,   25,   16,   16,   16,
+			   16,   16,   16,   16,   16,   16,   16,   16,   16,   16,
+			   16,   16,   21,   21,   21,   39,   32,   32,   41,   41,
 
-			   39,   39,   39,   41,   41,   41,   42,    0,   42,   42,
-			   42,   42,   42,   42,   35,   35,   35,   35,   35,   35,
-			   35,   35,   35,   35,   35,   35,   35,   35,   35,   35,
-			   35,   35,   35,   35,   35>>)
+			   45,   45,   45,   39,   15,   21,   32,   35,   35,   35,
+			   35,   49,   49,   51,   51,   51,   52,   52,   13,   35,
+			   44,   44,   44,   53,   53,   11,   53,   57,   58,   58,
+			   59,    8,    7,   44,    0,   57,    0,    0,   59,   62,
+			   62,   62,   62,   62,   62,   62,   62,   63,   63,   63,
+			   63,   63,   63,   63,   63,   64,   64,   64,   64,   64,
+			   64,   64,   64,   65,    0,    0,    0,   65,    0,   65,
+			   66,    0,   66,   66,   66,   66,   66,   66,   67,   67,
+			   67,   67,   68,   68,   68,   68,   69,   69,   69,   69,
+			   69,   69,   69,   69,   70,   70,   70,   70,   70,   70,
+
+			   70,   70,   71,   71,   71,   71,   71,   71,   71,   71,
+			   72,   72,   72,   72,   72,   72,   72,   72,   73,    0,
+			   73,   73,   73,   73,   73,   73,   61,   61,   61,   61,
+			   61,   61,   61,   61,   61,   61,   61,   61,   61,   61,
+			   61,   61,   61,   61,   61,   61,   61,   61>>)
 		end
 
 	yy_base_template: ANY is
@@ -144,11 +239,14 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    0,    0,   20,    0,   88,    0,   78,   37,   72,
-			   68,   42,   33,  114,    0,    0,   72,   43,  114,   41,
-			   53,   45,    0,   60,    0,   46,    0,   48,  114,   46,
-			   44,   57,   61,   53,    0,  114,   70,   78,   86,   94,
-			   90,   97,  105>>)
+			    0,    0,    0,   21,    0,   41,   55,  129,  128,   44,
+			   46,  125,    0,  115,   46,   98,   70,   41,  226,    0,
+			   51,   90,  226,  226,   59,   73,  226,  226,   63,  226,
+			    0,   71,   92,  226,   66,  105,    0,    0,    0,   86,
+			    0,   95,  226,  226,  118,   97,  226,   64,  226,  109,
+			  226,  110,  114,  121,   44,    0,  226,  114,  121,  117,
+			    0,  226,  138,  146,  154,  162,  169,  173,  177,  185,
+			  193,  201,  209,  217>>)
 		end
 
 	yy_def_template: ANY is
@@ -156,11 +254,14 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,   35,    1,   35,    3,   35,   36,   35,   37,   38,
-			   35,   39,   40,   35,   41,   36,   35,   37,   35,   37,
-			   35,   38,   42,   39,   40,   40,   41,   35,   35,   35,
-			   40,   35,   35,   40,   40,    0,   35,   35,   35,   35,
-			   35,   35,   35>>)
+			    0,   61,    1,   61,    3,   62,   62,   63,   63,   64,
+			   64,   61,   65,   61,   66,   61,   61,   67,   61,   68,
+			   69,   69,   61,   61,   70,   71,   61,   61,   61,   61,
+			   65,   61,   66,   61,   72,   66,   73,   16,   67,   67,
+			   68,   69,   61,   61,   69,   70,   61,   71,   61,   61,
+			   61,   72,   61,   61,   61,   35,   61,   67,   61,   67,
+			   67,    0,   61,   61,   61,   61,   61,   61,   61,   61,
+			   61,   61,   61,   61>>)
 		end
 
 	yy_ec_template: ANY is
@@ -168,20 +269,20 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    2,    1,    1,    3,    1,    1,    1,    1,    1,    1,
+			    0,    1,    1,    1,    1,    1,    1,    1,    1,    2,
+			    3,    1,    1,    2,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-			    1,    1,    1,    1,    4,    1,    1,    5,    1,    6,
-			    1,    1,    1,    1,    1,    7,    1,    8,    9,    9,
-			    9,    9,    9,    9,    9,    9,    9,    9,    1,    1,
-			    1,    1,    1,    1,    1,   10,   11,   12,   11,   11,
-			   11,   11,   11,   11,   11,   11,   13,   11,   11,   11,
-			   11,   11,   11,   14,   11,   11,   11,   11,   11,   11,
-			   11,    1,    1,    1,    1,   15,    1,   16,   17,   18,
+			    1,    1,    2,    1,    4,    1,    1,    5,    1,    1,
+			    1,    1,    1,    1,    1,    6,    1,    7,    8,    8,
+			    8,    8,    8,    8,    8,    8,    8,    8,    1,    1,
+			    1,    1,    1,    1,    1,    9,   10,   11,   10,   10,
+			   10,   10,   10,   10,   10,   10,   12,   10,   10,   10,
+			   10,   10,   10,   13,   10,   10,   10,   10,   10,   10,
+			   10,   14,    1,   15,    1,   16,    1,   17,   18,   19,
 
-			   17,   17,   17,   17,   17,   17,   17,   17,   19,   17,
-			   17,   17,   17,   17,   17,   20,   17,   17,   17,   17,
-			   17,   17,   17,    1,    1,    1,    1,    1,    1,    1,
+			   18,   18,   18,   18,   18,   18,   18,   18,   20,   18,
+			   18,   18,   18,   18,   18,   21,   18,   18,   18,   18,
+			   18,   18,   18,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
 			    1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -203,9 +304,9 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    1,    2,    1,    3,    3,    4,    5,    1,    6,
-			    6,    6,    7,    6,    6,    6,    6,    6,    8,    6,
-			    6>>)
+			    0,    1,    1,    2,    3,    1,    4,    1,    5,    5,
+			    5,    6,    5,    7,    1,    1,    5,    5,    5,    8,
+			    5,    5>>)
 		end
 
 	yy_accept_template: ANY is
@@ -213,22 +314,40 @@ feature {NONE} -- Table templates
 			-- but once functions cannot be declared with anchored types.
 		once
 			Result := yy_fixed_array (<<
-			    0,    3,    3,    0,    0,   11,    3,    8,    9,    9,
-			    9,    3,    4,    9,    2,    3,    8,    0,    5,    5,
-			    0,    0,    7,    3,    4,    4,    2,    0,    6,    0,
-			    4,    0,    0,    4,    1,    0>>)
+			    0,    1,    2,    3,    3,    3,    4,    5,    6,    7,
+			    7,    7,    8,   11,   13,   15,   17,   21,   24,   26,
+			   29,   31,   33,   35,   37,   39,   41,   43,   45,   47,
+			   49,   50,   51,   51,   52,   52,   53,   54,   56,   57,
+			   58,   59,   60,   61,   62,   63,   64,   66,   67,   68,
+			   68,   69,   69,   69,   69,   69,   69,   70,   71,   71,
+			   72,   74,   74>>)
+		end
+
+	yy_acclist_template: ANY is
+			-- This is supposed to be "like FIXED_INTEGER_ARRAY_TYPE",
+			-- but once functions cannot be declared with anchored types.
+		once
+			Result := yy_fixed_array (<<
+			    0,    3,    3,   15,   15,   17,   17,   19,    3,    9,
+			   18,    8,   18,    9,   18,    9,   18,    3,    4,    9,
+			   18,    4,    9,   18,    9,   18,    2,    9,   18,   15,
+			   18,   15,   18,   14,   18,   13,   18,   15,   18,   17,
+			   18,   16,   18,   11,   18,   11,   18,   10,   18,    3,
+			    8,    5,  -24,    7,    3,    4,    4,    4,    2,   15,
+			   14,   13,   15,   15,   12,   13,   17,   16,   10,   -6,
+			    4,    4,    1,    4>>)
 		end
 
 feature {NONE} -- Constants
 
-	yyJam_base: INTEGER is 114
+	yyJam_base: INTEGER is 226
 			-- Position in `yy_nxt'/`yy_chk' tables
 			-- where default jam table starts
 
-	yyJam_state: INTEGER is 35
+	yyJam_state: INTEGER is 61
 			-- State id corresponding to jam state
 
-	yyTemplate_mark: INTEGER is 36
+	yyTemplate_mark: INTEGER is 62
 			-- Mark between normal states and templates
 
 	yyNull_equiv_class: INTEGER is 1
@@ -237,24 +356,27 @@ feature {NONE} -- Constants
 	yyReject_used: BOOLEAN is false
 			-- Is `reject' called?
 
-	yyVariable_trail_context: BOOLEAN is false
+	yyVariable_trail_context: BOOLEAN is true
 			-- Is there a regular expression with
 			-- both leading and trailing parts having
 			-- variable length?
 
-	yyReject_or_variable_trail_context: BOOLEAN is false
+	yyReject_or_variable_trail_context: BOOLEAN is true
 			-- Is `reject' called or is there a
 			-- regular expression with both leading
 			-- and trailing parts having variable length?
 
-	yyNb_rules: INTEGER is 10
+	yyNb_rules: INTEGER is 18
 			-- Number of rules
 
-	yyEnd_of_buffer: INTEGER is 11
+	yyEnd_of_buffer: INTEGER is 19
 			-- End of buffer rule code
 
 	INITIAL: INTEGER is 0
 	IN_CLASS: INTEGER is 1
+	VERBATIM_STR1: INTEGER is 2
+	VERBATIM_STR2: INTEGER is 3
+	VERBATIM_STR3: INTEGER is 4
 			-- Start condition codes
 
 feature -- User-defined features
@@ -265,7 +387,7 @@ end -- class CLASSNAME_FINDER
 
 
 --|----------------------------------------------------------------
---| Copyright (C) 1992-1999, Interactive Software Engineering Inc.
+--| Copyright (C) 1992-2000, Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited
 --| without prior agreement with Interactive Software Engineering.
 --|

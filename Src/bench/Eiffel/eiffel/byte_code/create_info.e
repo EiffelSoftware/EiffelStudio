@@ -12,6 +12,11 @@ inherit
 		export
 			{NONE} all
 		end
+
+	SHARED_IL_CODE_GENERATOR
+		export
+			{NONE} all
+		end
 	
 feature -- C code generation
 
@@ -24,6 +29,13 @@ feature -- C code generation
 			-- Generate creation type
 		deferred
 		end;
+
+feature -- IL code generation
+
+	generate_il is
+			-- Generate byte code for creation type evaluation
+		deferred
+		end
 
 feature -- Byte code generation
 

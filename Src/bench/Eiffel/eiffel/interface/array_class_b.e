@@ -24,6 +24,7 @@ feature
 			special_error: SPECIAL_ERROR;
 			creat_feat: FEATURE_I;
 			to_special_p, parent_t: CL_TYPE_A
+			done: BOOLEAN
 		do
 			-- First check if current class has one formal generic parameter
 			if (generics = Void) or else generics.count /= 1 then
@@ -60,14 +61,27 @@ feature
 
 			-- Fouth, check if there is only one creation procedure 
 			-- having only two integer arguments
-			error := (creators = Void) or else creators.count /= 1;
+			error := creators = Void
 			if not error then
-				creators.start;
-				creat_feat := feature_table.item (creators.key_for_iteration);
-				error := not creat_feat.same_signature (Make_signature); 
+				from
+					creators.start
+				until
+					done or else creators.after
+				loop
+					creat_feat := feature_table.item (creators.key_for_iteration);
+					if
+						creat_feat.feature_name.is_equal (Make_signature.feature_name) and then
+						creat_feat.same_signature (Make_signature)
+					then
+						done := True
+					else
+						creators.forth
+					end
+				end
+				error := not done
 			end;
 			if error then
-				!!special_error.make (Case_10, Current);
+				!! special_error.make (Case_10, Current);
 				Error_handler.insert_error (special_error);
 			end;
 				
@@ -76,16 +90,10 @@ feature
 feature	-- Dead code removal
 
 	mark_all_used (remover: REMOVER) is
-		local
-			feat: FEATURE_I;
-			feat_table: FEATURE_TABLE;
+			-- Mark `make', default creation routine of ARRAYS used at
+			-- run-time.
 		do
-			creators.start;
-			feat_table := feature_table;
-			feat := feat_table.item (creators.key_for_iteration);
---			if not feat.used then
-				remover.record (feat, Current);
---			end;
+			remover.record (feature_table.item ("make"), Current);
 		end;
 
 feature {NONE}
@@ -96,13 +104,12 @@ feature {NONE}
 			f: FORMAL_A;
 			gen: ARRAY [TYPE_A];
 		once
-			!!f;
-			f.set_position (1);
-			!!gen.make (1, 1);
-			gen.put (f, 1);
-			!!Result;
-			Result.set_generics (gen);
-			Result.set_base_class_id (System.to_special_id);
+			create f
+			f.set_position (1)
+			create gen.make (1, 1)
+			gen.put (f, 1)
+			create Result.make (gen)
+			Result.set_base_class_id (System.to_special_id)
 		end;
 
 	Make_signature: DYN_PROC_I is

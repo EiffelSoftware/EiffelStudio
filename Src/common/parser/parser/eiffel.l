@@ -11,6 +11,7 @@ class EIFFEL_SCANNER
 inherit
 
 	EIFFEL_SCANNER_SKELETON
+	STRING_HANDLER
 
 creation
 
@@ -18,10 +19,11 @@ creation
 
 %}
 
-%x IN_STR
+%x SPECIAL_STR VERBATIM_STR1 VERBATIM_STR2 VERBATIM_STR3
 %option nodefault outfile="eiffel_scanner.e"
 
 D		[0-9]
+H		([0-9]|[A-F]|[a-f])
 O		[0-7]
 E		(((e|E)[+-]?{D}+)?)
 A		([a-z]|[A-Z])
@@ -203,6 +205,10 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 
 -- Reserved words
 
+[aA][gG][eE][nN][tT]	{
+				current_position.go_to (5)
+				last_token := TE_AGENT
+			}
 [aA][lL][iI][aA][sS]	{
 				current_position.go_to (5)
 				last_token := TE_ALIAS
@@ -233,7 +239,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 			}
 [cC][rR][eE][aA][tT][eE]	{
 				current_position.go_to (6)
-				last_token := TE_CREATION
+				last_token := TE_CREATE
 			}
 [cC][rR][eE][aA][tT][iI][oO][nN]	{
 				current_position.go_to (8)
@@ -455,9 +461,21 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				current_position.go_to (6)
 				last_token := TE_DOUBLE_ID
 			}
+[iI][nN][tT][eE][gG][eE][rR]_8	{
+				current_position.go_to (9)
+				last_token := TE_INTEGER_8_ID
+			}
+[iI][nN][tT][eE][gG][eE][rR]_16	{
+				current_position.go_to (10)
+				last_token := TE_INTEGER_16_ID
+			}
 [iI][nN][tT][eE][gG][eE][rR]	{
 				current_position.go_to (7)
 				last_token := TE_INTEGER_ID
+			}
+[iI][nN][tT][eE][gG][eE][rR]_64	{
+				current_position.go_to (10)
+				last_token := TE_INTEGER_64_ID
 			}
 [nN][oO][nN][eE]	{
 				current_position.go_to (4)
@@ -470,6 +488,10 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 [rR][eE][aA][lL]	{
 				current_position.go_to (4)
 				last_token := TE_REAL_ID
+			}
+[wW][iI][dD][eE]_[cC][hH][aA][rR][aA][cC][tT][eE][rR]	{
+				current_position.go_to (14)
+				last_token := TE_WIDE_CHAR_ID
 			}
 {A}{X}*		{
 					-- Note: Identifiers are converted to lower-case.
@@ -514,6 +536,12 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_INTEGER
 			}
 
+[0][xX]{H}+	{		-- Recognizes hexadecimal integer numbers.
+				token_buffer.clear_all
+				append_text_to_string (token_buffer)
+				current_position.go_to (text_count)
+				last_token := TE_INTEGER
+			}
 
 -- Reals
 
@@ -780,20 +808,132 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				last_token := TE_EMPTY_STRING
 			}
 \"[^%\n"]+\" {
+					-- Regular string.
 				token_buffer.clear_all
 				append_text_substring_to_string (2, text_count - 1, token_buffer)
 				current_position.go_to (text_count)
 				last_token := TE_STRING
 			}
+\"[^\n"%]*\[/[ \t\r]*\n {
+					-- Verbatim string.
+				token_buffer.clear_all
+				verbatim_marker.clear_all
+				append_text_substring_to_string (2, text_count - 1, verbatim_marker)
+				current_position.go_to (text_count)
+				set_start_condition (VERBATIM_STR3)
+			}
+<VERBATIM_STR3>{
+		-- Discard space characters at the
+		-- end of Verbatim_string_opener.
+	[ \t\r]*\n {
+				line_number := line_number + 1
+				current_position.go_to (text_count)
+				current_position.set_line_number (line_number)
+				set_start_condition (VERBATIM_STR1)
+			}
+	.		{
+					-- No final bracket-double-quote.
+				current_position.go_to (text_count)
+				append_text_to_string (token_buffer)
+				set_start_condition (INITIAL)
+				report_missing_end_of_verbatim_string_error (token_buffer)
+			}
+	<<EOF>>	{
+					-- No final bracket-double-quote.
+				set_start_condition (INITIAL)
+				report_missing_end_of_verbatim_string_error (token_buffer)
+			}
+}
+<VERBATIM_STR1>{
+		-- Read one line of a verbatim string body
+		-- from the beginning of line.
+	[ \t\r]*\][^%\n"]*\" {
+				if is_verbatim_string_closer then
+					current_position.go_to (text_count)
+					set_start_condition (INITIAL)
+						-- Remove the trailing new-line.
+					if token_buffer.count >= 2 then
+						check new_line: token_buffer.item (token_buffer.count) = '%N' end
+						if token_buffer.item (token_buffer.count - 1) = '%R' then
+								-- Under Windows a we have \r\n.
+								-- Remove both characters.
+							token_buffer.set_count (token_buffer.count - 2)
+						else
+							token_buffer.set_count (token_buffer.count - 1)
+						end
+					elseif token_buffer.count = 1 then
+						check new_line: token_buffer.item (1) = '%N' end
+						token_buffer.clear_all
+					end
+					if token_buffer.is_empty then
+							-- Empty string.
+						last_token := TE_EMPTY_VERBATIM_STRING
+					else
+						last_token := TE_VERBATIM_STRING
+					end
+				else
+					current_position.go_to (text_count)
+					append_text_to_string (token_buffer)
+					set_start_condition (VERBATIM_STR2)
+				end
+			}
+	[^"\n]*\" {
+				current_position.go_to (text_count)
+				append_text_to_string (token_buffer)
+				set_start_condition (VERBATIM_STR2)
+			}
+	[^"\n]*\n {
+				line_number := line_number + 1
+				current_position.go_to (text_count)
+				current_position.set_line_number (line_number)
+				append_text_to_string (token_buffer)
+			}
+	[^"\n]* {
+					-- No final bracket-double-quote.
+				current_position.go_to (text_count)
+				append_text_to_string (token_buffer)
+				set_start_condition (INITIAL)
+				report_missing_end_of_verbatim_string_error (token_buffer)
+			}
+	<<EOF>>	{
+					-- No final bracket-double-quote.
+				set_start_condition (INITIAL)
+				report_missing_end_of_verbatim_string_error (token_buffer)
+			}
+}
+<VERBATIM_STR2>{
+		-- Read remaining characters of a line
+		-- in verbatim string body.
+	.*\n	{
+				line_number := line_number + 1
+				current_position.go_to (text_count)
+				current_position.set_line_number (line_number)
+				append_text_to_string (token_buffer)
+				set_start_condition (VERBATIM_STR1)
+			}
+	.*		{
+					-- No final bracket-double-quote.
+				current_position.go_to (text_count)
+				append_text_to_string (token_buffer)
+				set_start_condition (INITIAL)
+				report_missing_end_of_verbatim_string_error (token_buffer)
+			}
+	<<EOF>>	{
+					-- No final bracket-double-quote.
+				set_start_condition (INITIAL)
+				report_missing_end_of_verbatim_string_error (token_buffer)
+			}
+}
 \"[^%\n"]*	{
+					-- String with special characters.
 				token_buffer.clear_all
 				if text_count > 1 then
 					append_text_substring_to_string (2, text_count, token_buffer)
 				end
 				current_position.go_to (text_count)
-				set_start_condition (IN_STR)
+				set_start_condition (SPECIAL_STR)
 			}
-<IN_STR>{
+<SPECIAL_STR>{
 	[^%\n"]+	{
 				current_position.go_to (text_count)
 				append_text_to_string (token_buffer)
@@ -899,7 +1039,7 @@ U		([0-9]|[0-9][0-9]|[0-9][0-9][0-9])
 				end
 				current_position.go_to (text_count)
 				set_start_condition (INITIAL)
-				if token_buffer.empty then
+				if token_buffer.is_empty then
 						-- Empty string.
 					last_token := TE_EMPTY_STRING
 				else
@@ -950,7 +1090,7 @@ end -- class EIFFEL_SCANNER
 
 
 --|----------------------------------------------------------------
---| Copyright (C) 1992-1999, Interactive Software Engineering Inc.
+--| Copyright (C) 1992-2000, Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited
 --| without prior agreement with Interactive Software Engineering.
 --|

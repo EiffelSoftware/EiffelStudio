@@ -1,10 +1,10 @@
 indexing
-	description: "Command for stopped applications."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Command for stopped applications."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
-	EB_APPLICATION_STOPPED_CMD
+	EB_APPLICATION_STOPPED_COMMAND
 
 inherit
 	E_CMD
@@ -18,33 +18,27 @@ feature -- Execution
 			-- stopped in a breakpoint or an exception
 			-- occurred
 		local
-			status: APPLICATION_STATUS;
---			mp: MOUSE_PTR;
-			call_stack: CALL_STACK_ELEMENT;
-			e_feature: E_FEATURE;
-			break_index: INTEGER;
-			object_address: STRING;
-			dynamic_class: CLASS_C;
+			status: APPLICATION_STATUS
+			call_stack_elem: CALL_STACK_ELEMENT
 		do
---			create mp.do_nothing;
-			if Application.is_stopped then
+			status := Application.status
+			if Application.is_stopped and then status /= Void then
 					-- Application has stopped 
 					-- after receiving and updating stack info
-				tool_supervisor.object_tool_mgr.synchronize;
-				status := Application.status;
-				if status.e_feature /= Void then
-					call_stack := status.current_stack_element;
-					tool_supervisor.feature_tool_mgr.show_stoppoint
-								(status.e_feature, status.break_index);
-					debug_tool.show_current_stoppoint;
-					debug_tool.show_current_object;
-					debug_tool.display_exception_stack
-				end;
---				mp.restore
-			else
-					-- Before receiving and updating stack info
---				mp.set_watch_cursor
+
+				--| FIXME ARNAUD: Update the object tool here
+
+					-- Display the callstack, the current object & the current stop point.
+				Application.set_current_execution_stack (1)
+				call_stack_elem := status.current_stack_element
+				if call_stack_elem /= Void then
+--|					debug_tool.show_current_stoppoint
+--|					debug_tool.show_current_object
+--|					debug_tool.display_exception_stack
+				end
+					-- Display the callstack arrow in all opened windows.
+--|				window_manager.synchronize_with_callstack
 			end
 		end
 
-end -- class EB_APPLICATION_STOPPED_CMD
+end -- class EB_APPLICATION_STOPPED_COMMAND

@@ -4,7 +4,7 @@ inherit
 
 	VISIBLE_I
 		redefine
-			trace, nb_visible, generate_cecil_table, has_visible, mark_visible,
+			trace, generate_cecil_table, has_visible, mark_visible,
 			is_visible, make_byte_code
 		end
 
@@ -27,8 +27,9 @@ feature
 			visible_features := t;
 		end;
 
-	is_visible (feat: FEATURE_I): BOOLEAN is
-			-- Is `feat' visible from external code ?
+	is_visible (feat: FEATURE_I; class_id: INTEGER): BOOLEAN is
+			-- Is feature name `feat_name' visible in context 
+			-- of class `class_id'?
 		do
 			Result := visible_features.has (feat.feature_name);
 		end;
@@ -66,7 +67,7 @@ feature
 			prepare_table (a_class.feature_table);
 
 				-- Generation
-			Cecil1.generate_name_table (buffer, a_class.id);
+			Cecil1.generate_name_table (buffer, a_class.class_id);
 			if byte_context.final_mode then
 				from
 					types := a_class.types;
@@ -81,9 +82,9 @@ feature
 					types.forth
 				end;
 			elseif a_class.is_precompiled then
-				Cecil1.generate_precomp_workbench (buffer, a_class.id);
+				Cecil1.generate_precomp_workbench (buffer, a_class.class_id);
 			else
-				Cecil1.generate_workbench (buffer, a_class.id);
+				Cecil1.generate_workbench (buffer, a_class.class_id);
 			end;
 		end;
 
@@ -100,14 +101,17 @@ feature
 		local
 			a_feature: FEATURE_I;
 			a_class: CLASS_C;
+			class_id: INTEGER
 		do
 			Cecil1.wipe_out;
 
 			a_class := feat_table.associated_class;
+			class_id := a_class.class_id
 
 				-- Insertion in the cecil table of the effective features
 			from
 				Cecil1.init (prime_size (visible_features.count));
+				a_class.set_visible_table_size (Cecil1.capacity)
 				visible_features.start
 			until
 				visible_features.after
@@ -118,30 +122,9 @@ feature
 					-- FIXME: Illegal feature specified
 				else
 					if not (a_feature.is_deferred or else a_feature.is_attribute) then
-						Cecil1.put (a_feature, real_name (a_feature));
+						Cecil1.put (a_feature, real_name (a_feature, class_id));
 					end;
 				end
-				visible_features.forth;
-			end;
-		end;
-
-	nb_visible (a_class: CLASS_C): INTEGER is
-			-- Number of visible features from the class `a_class'.
-		local
-			feat_table: FEATURE_TABLE;
-			a_feature: FEATURE_I;
-		do
-			feat_table := a_class.feature_table;
-
-			from
-				visible_features.start
-			until
-				visible_features.after
-			loop
-				a_feature := feat_table.item (visible_features.item_for_iteration);
-				if a_feature /= Void and then not (a_feature.is_deferred or else a_feature.is_attribute)	then
-					Result := Result + 1;
-				end;
 				visible_features.forth;
 			end;
 		end;

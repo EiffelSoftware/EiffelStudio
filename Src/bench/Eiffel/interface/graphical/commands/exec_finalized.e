@@ -27,7 +27,7 @@ feature {NONE} -- Execution
 			-- Execute Current.
 		local
 			appl_name: STRING;
-			cmd_exec: EXTERNAL_COMMAND_EXECUTOR;
+			cmd_exec: COMMAND_EXECUTOR;
 			f: RAW_FILE;
 			f_name: FILE_NAME;
 			make_f: INDENT_FILE;
@@ -53,7 +53,7 @@ feature {NONE} -- Execution
 					else
 						!! mp.set_watch_cursor;
 						appl_name.extend (' ');
-						appl_name.append (argument_window.argument_list)
+						appl_name.append (current_cmd_line_argument)
 						!! cmd_exec;
 						cmd_exec.execute (appl_name);
 						mp.restore

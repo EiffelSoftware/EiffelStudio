@@ -1,147 +1,150 @@
 indexing
+	description: "Generic notion of basic type value during the execution of the application."
+	date: "$Date$"
+	revision: "$Revision$"
 
-	description: 
-		"Abstract notion of value during the execution of the application.";
-	date: "$Date$";
-	revision: "$Revision $"
-
-
-deferred class DEBUG_VALUE
+class
+	DEBUG_VALUE [G]
 
 inherit
-
-	SHARED_EIFFEL_PROJECT
+	ABSTRACT_DEBUG_VALUE
+	
+	COMPILER_EXPORTER
 		undefine
 			is_equal
-		end;
-	COMPARABLE
+		end
+	
+create {RECV_VALUE, ATTR_REQUEST}
+	make, make_attribute
+	
+feature {NONE} -- Initialization
 
-feature -- Properties
+	make (v: like value) is
+			-- 	Set `value' to `v'.
+		require
+			v_not_void: v /= Void
+		do
+			set_default_name
+			value := v
+		ensure
+			value_set: value = v
+		end
 
-	is_attribute: BOOLEAN;
-			-- Is current value an attribute
+	make_attribute (attr_name: like name; a_class: like e_class; v: like value) is
+			-- Set `attr_name' to `name' and `value' to `v'.
+		require
+			not_attr_name_void: attr_name /= Void
+			v_not_void: v /= Void
+		do
+			name := attr_name
+			if a_class /= Void then
+				e_class := a_class
+				is_attribute := True
+			end
+			value := v
+		ensure
+			value_set: value = v
+		end
+		
+feature -- Access
 
-	e_class: CLASS_C;
-			-- Class where attribute is defined
-			-- (Void for if not attribute)
-
-	name: STRING
-			-- Name of attribute or argument or local
+	value: G
+			-- Value of object.
 
 feature -- Access
 
 	dynamic_class: CLASS_C is
-			-- Return class of value
-		deferred
-		end;
-
-	attribute: E_FEATURE is
-			-- Attribute feature
-		require
-			is_attribute: is_attribute
-		do
-			Result := e_class.feature_with_name (name)
-		ensure
-			valid_result: Result /= Void implies Result.is_attribute and then
-				equal (Result.name, name)
-		end;
-
-feature -- Comparison
-
-	infix "<" (other: DEBUG_VALUE): BOOLEAN is
-			-- Is `Current''s name lexicographically lower than `other''s?
-		do
-			Result := name < other.name
-		end;
+			-- Find corresponding CLASS_C to type represented by `value'.
+		local
+			l_name: STRING
+			system: SYSTEM_I
+		once
+			l_name := value.generator
+			system := Eiffel_system.system
+			if l_name.is_equal (Integer_8_name) then
+				Result := system.Integer_8_class.compiled_class
+			elseif l_name.is_equal (Integer_16_name) then
+				Result := system.Integer_16_class.compiled_class
+			elseif l_name.is_equal (Integer_32_name) then
+				Result := system.Integer_32_class.compiled_class
+			elseif l_name.is_equal (Integer_64_name) then
+				Result := system.Integer_64_class.compiled_class
+			elseif l_name.is_equal (Boolean_name) then
+				Result := system.Boolean_class.compiled_class
+			elseif l_name.is_equal (Character_name) then
+				Result := system.Character_class.compiled_class
+			elseif l_name.is_equal (Wide_char_name) then
+				Result := system.Wide_char_class.compiled_class
+			elseif l_name.is_equal (Double_name) then
+				Result := system.Double_class.compiled_class
+			elseif l_name.is_equal (Real_name) then
+				Result := system.Real_class.compiled_class
+			elseif l_name.is_equal (Pointer_name) then
+				Result := system.Pointer_class.compiled_class
+			end
+		ensure then
+			non_void_result: Result /= Void
+		end
 
 feature -- Output
 
-	append_to (st: STRUCTURED_TEXT; indent: INTEGER) is
-			-- Append `Current' to `st' printing the name, type
-			-- and its value.
-		require
-			valid_st: st /= Void;
-			valid_indent: indent >= 0;
-			valid_name: name /= Void
-		do
-			append_tabs (st, indent);
-			if is_attribute then
-				st.add_feature_name (name, e_class)
-			else
-				st.add_string (name)
-			end;
-			st.add_string (": ");
-			append_type_and_value (st);
-			st.add_new_line
+	 append_type_and_value (st: STRUCTURED_TEXT) is 
+		do 
+			dynamic_class.append_name (st)
+			st.add_string (Equal_sign_str);
+			st.add_string (value.out)
 		end;
 
-	append_type_and_value (st: STRUCTURED_TEXT) is 
-			-- Append value of Current to `st'.
-		require
-			valid_st: st /= Void;
-			valid_name: name /= Void
-		deferred 
+	 append_value (st: STRUCTURED_TEXT) is 
+		do 
+			st.add_string (value.out)
 		end;
 
-feature {ONCE_REQUEST, CALL_STACK_ELEMENT, ATTR_REQUEST, EXPANDED_VALUE, SPECIAL_VALUE}
-
-	set_hector_addr is
-			-- Convert the physical addresses received from the application
-			-- to hector addresses. (should be called only once just after
-			-- all the information has been received from the application.)
+	output_value: STRING is
+			-- Return a string representing `Current'.
 		do
-		end;
-
-feature {RECV_VALUE} -- Setting
-
-	set_name (n: like name) is
-			-- Set `name' to `n'.
-		do
-			name := n
-		ensure
-			set: name = n
+			Result := value.out
 		end
 
-feature {NONE} -- Implementation
-
-	append_tabs (st: STRUCTURED_TEXT; indent: INTEGER) is
-			-- Append `indent' tabulation character to `st'.
-		require
-			st: st /= Void;
-			indent_positive: indent >= 0
-		local
-			i: INTEGER
+	type_and_value: STRING is
+			-- Return a string representing `Current'.
 		do
-			from
-				i := 1
-			until
-				i > indent
-			loop
-				st.add_indent;
-				i := i + 1
-			end
-		end;
-
-	set_default_name is
-			-- Set the name to `default' in order to	
-			-- satisfy the invariant and the less than routine.
-			-- When the client uses this
-			-- class the name will be set after the call info is
-			-- processed. This is done for optimization reasons.
-		require
-			not_is_attribute: not is_attribute
-		do
-			name := "default"
+			create Result.make (40)
+			Result.append (dynamic_class.name_in_upper)
+			Result.append (Equal_sign_str)
+			Result.append (value.out)
 		end
 
-	Any_class: CLASS_C is
-		once
-			Result := Eiffel_system.any_class.compiled_class
+	expandable: BOOLEAN is False
+			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
+
+	children: LIST [ABSTRACT_DEBUG_VALUE] is
+			-- List of all sub-items of `Current'. May be void if there are no children.
+			-- Generated on demand.
+		do
+			Result := Void
 		end
 
-invariant
+	Equal_sign_str: STRING is " = "
 
-	non_void_name: name /= Void;
-	valid_attribute: is_attribute implies e_class /= Void
+	kind: INTEGER is
+			-- Actual type of `Current'. cf possible codes underneath.
+			-- Used to display the corresponding icon.
+		do
+			Result := Immediate_value
+		end
 
+feature {NONE} -- Class constants
+
+	Boolean_name: STRING is "BOOLEAN"
+	Character_name: STRING is "CHARACTER"
+	Wide_char_name: STRING is "WIDE_CHARACTER"
+	Integer_8_name: STRING is "INTEGER_8"
+	Integer_16_name: STRING is "INTEGER_16"
+	Integer_32_name: STRING is "INTEGER"
+	Integer_64_name: STRING is "INTEGER_64"
+	Double_name: STRING is "DOUBLE"
+	Real_name: STRING is "REAL"
+	Pointer_name: STRING is "POINTER"
+	
 end -- class DEBUG_VALUE

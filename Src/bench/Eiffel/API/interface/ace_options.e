@@ -10,7 +10,6 @@ class ACE_OPTIONS
 feature -- Properties
 
 	has_assertion: BOOLEAN
-	has_debug: BOOLEAN
 	has_hide: BOOLEAN
 	has_profile: BOOLEAN
 	has_external_profile: BOOLEAN
@@ -30,12 +29,6 @@ feature -- Setting
 			-- Set `has_assertion' to `b'.
 		do
 			has_assertion := b
-		end
-
-	set_has_debug (b: BOOLEAN) is
-			-- Set `has_debug' to `b'.
-		do
-			has_debug := b
 		end
 
 	set_has_hide (b: BOOLEAN) is
@@ -70,7 +63,6 @@ feature -- Default value
 			--| we will launch a C-compilation.
 		do
 			has_assertion := False
-			has_debug := False
 			has_hide := False
 			has_profile := False
 			has_external_profile := False

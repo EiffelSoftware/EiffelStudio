@@ -31,11 +31,6 @@ feature
 			parent := p;
 		end;
 
-	forth_used (r: REGISTRABLE): BOOLEAN is
-			-- Is register `r' used in the forthcomming dot calls ?
-		deferred
-		end;
-
 	is_simple_expr: BOOLEAN is
 			-- A call/access is a simple expression
 		do
@@ -48,6 +43,23 @@ feature
 			-- or a call on a predefined target and with predefined arguments.
 		deferred
 		end;
+		
+	is_constant: BOOLEAN is
+			-- Is Current a call to a constant?
+		do
+		end
+
+	is_external: BOOLEAN is
+			-- 	Is Current a call to an external?
+		do
+		end
+
+	need_target: BOOLEAN is
+			-- Does current call really need a target to be performed?
+			-- E.g. not (a constant or a static external)
+		do
+			Result := True	
+		end
 
 	enlarged: like Current is
 			-- Redefined only for type check
@@ -75,6 +87,8 @@ feature -- Byte code generation
 
 	make_creation_byte_code (ba: BYTE_ARRAY) is
 			-- Generate call as a creation procedure
+		require
+			ba_not_void: ba /= Void
 		do
 			make_byte_code (ba);
 		end;

@@ -56,6 +56,18 @@ feature -- Setting
 			is_after: not is_before
 		end;
 
+feature {TEXT_FILTER} -- Access
+
+	on_before_processing (f: TEXT_FILTER) is
+			-- `Current' is about to be processed.
+		do
+		end
+
+	on_after_processing (f: TEXT_FILTER) is
+			-- `Current' has just been processed.
+		do
+		end
+
 feature {TEXT_FORMATTER} -- Implementation
 
     append_to (text: TEXT_FORMATTER) is

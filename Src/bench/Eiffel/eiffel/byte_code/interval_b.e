@@ -1,12 +1,17 @@
 deferred class INTERVAL_B 
 
 inherit
+	BYTE_NODE
 
-	BYTE_NODE;
 	COMPARABLE
 		undefine
 			is_equal
-		end;
+		end
+
+	IL_CONST
+		undefine
+			is_equal
+		end
 	
 feature 
 
@@ -58,6 +63,15 @@ feature
 			st.add_string ("..");
 			upper.display (st);
 		end;
+
+feature -- IL code generation
+
+	generate_il_interval (next_case_label: IL_LABEL) is
+			-- Generate IL code for interval range
+		require
+			next_case_label_not_void: next_case_label /= Void
+		deferred
+		end
 
 feature -- Byte code generation
 

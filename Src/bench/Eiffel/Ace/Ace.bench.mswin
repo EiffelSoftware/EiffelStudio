@@ -1,283 +1,247 @@
 system
-	es4
+	ec
 
 root
-	 ewb_windows (main): "make"
+	EWB_WINDOWS: make
 
 default
-	assertion (ensure)
-	console_application (yes)
-	dead_code_removal (yes)
--- RTEA version
-	exception_trace (yes)
--- Full optimized version
---	exception_trace (no)
---	array_optimization (yes)
---	inlining_size ("8")
---	inlining (yes)
-
-	--trace(yes)
-	--trace ("SERVER")
-	--debug ("CACHE_SERVER")
-	--debug ("Freeze_set")
-	--debug ("SERVER")
-	--debug ("DOCUMENT")
-	--debug ("DEBUGGER_TRACE")
-	--debug ("DRAWING")
-	--debug ("PARSE")
-	--debug ("FLAT_SHORT")
-	--debug ("LOCAL_FEAT_ADAPTATION")
-	--debug ("ACTIVITY")
-	--debug ("DEBUG_RECV")
-	--debug ("PASS3")
-	--debug ("TRANSFER")
-	--debug("DEAD_CODE")
-	--debug ("DLE SPY")
+	assertion(check)
+	assertion(require)
+	assertion(ensure)
+	arguments("-from_bench")
+	arguments(" ")
+	disabled_debug(yes)
+	disabled_debug("action")
+	disabled_debug("activity")
+	disabled_debug("actual_replication")
+	disabled_debug("assertion")
+	disabled_debug("assertions")
+	disabled_debug("byte_code")
+	disabled_debug("c_debugger")
+	disabled_debug("cache")
+	disabled_debug("cache_compiler")
+	disabled_debug("cache_research")
+	disabled_debug("cache_server")
+	disabled_debug("cache_stat")
+	disabled_debug("cecil")
+	disabled_debug("check_expanded")
+	disabled_debug("class_of_id")
+	disabled_debug("colors")
+	disabled_debug("comments")
+	disabled_debug("count")
+	disabled_debug("dead_code")
+	disabled_debug("dead_code_removal")
+	disabled_debug("debbugger_hook")
+	disabled_debug("debug_recv")
+	disabled_debug("debugger")
+	disabled_debug("debugger_hook")
+	disabled_debug("debugger_trace")
+	disabled_debug("dle topo")
+	disabled_debug("dlg_dispatcher")
+	disabled_debug("document")
+	disabled_debug("documentation")
+	disabled_debug("dollar")
+	disabled_debug("enumerated_font")
+	disabled_debug("filters")
+	disabled_debug("flat_short")
+	disabled_debug("flush_file")
+	disabled_debug("gdi_count")
+	disabled_debug("gelex")
+	disabled_debug("genericity")
+	disabled_debug("geyacc")
+	disabled_debug("has_calls")
+	disabled_debug("hector")
+	disabled_debug("hide_option")
+	disabled_debug("jvm_agen")
+	disabled_debug("jvm_dbc")
+	disabled_debug("jvm_gen")
+	disabled_debug("jvm_gen [ ]")
+	disabled_debug("jvm_gen2")
+	disabled_debug("jvm_once")
+	disabled_debug("jvm_stack")
+	disabled_debug("jvmgen")
+	disabled_debug("liman")
+	disabled_debug("local_feat_adaptation")
+	disabled_debug("once")
+	disabled_debug("optimization")
+	disabled_debug("options")
+	disabled_debug("parse")
+	disabled_debug("profile_convert")
+	disabled_debug("raster operations")
+	disabled_debug("remove_class")
+	disabled_debug("replication")
+	disabled_debug("resource_validate")
+	disabled_debug("sep_debug")
+	disabled_debug("server")
+	disabled_debug("show_prof_query")
+	disabled_debug("skeleton")
+	disabled_debug("trace_table")
+	disabled_debug("transfer")
+	disabled_debug("type_check")
+	disabled_debug("verbose")
+	disabled_debug("wel")
+	disabled_debug("wel_gdi_count")
+	disabled_debug("wel_gdi_references")
+	disabled_debug("win_dispatcher")
+	disabled_debug("windows")
+	debug(no)
+	line_generation(no)
+	profile(no)
+	trace(no)
+	il_verifiable(no)
+	msil_generation_type("exe")
+	check_vape(yes)
+	console_application(yes)
+	address_expression(no)
+	array_optimization(no)
+	dead_code_removal(yes)
+	dynamic_runtime(no)
+	exception_trace(yes)
+	inlining(no)
+	multithreaded(no)
 
 cluster
-
-		-- EiffelBase:
-	base:				"$EIFFEL_SRC\library\base"
-	structures(base):		"$\structures"
-
-	kernel(base):		"$\kernel"
---		default
---			profile (yes)
---		end
-
-	support(base):		"$\support"
-	access(structures):	"$\access"
-	cursors(structures):	"$\cursors"
-	dispenser(structures):	"$\dispenser"
-	list(structures):		"$\list"
-	set(structures):		"$\set"
-	sort(structures):		"$\sort"
-	storage(structures):	"$\storage"
-	table(structures):		"$\table_eiffel3"
-	traversing(structures):	"$\traversing"
-	tree(structures):		"$\tree"
-
-		-- Wel:
-	all wel:					"$EIFFEL_SRC\library\wel"
-
-		-- EiffelVision
-	all vision:							"$EIFFEL_SRC\library\vision"
+	all base:		"$EIFFEL_SRC\library\base"
 		exclude
-			"figures";
-			"obsolete";
-			"motif";
-			"gtk";
-			"x";
+			"table"; "CVS"; 
 		default
-			assertion(require);
-		end	
-
-		-- ES4 SPECIFIC CLUSTERS
-	liman:				"$EIFFEL_SRC\Eiffel\limand"
-
-	liman_bench(liman):		"$\bench"
-	liman_bench_graphical(liman):	"$\bench_graphical"
-	liman_abstract(liman):		"$\abstract"
-	liman_graphical(liman):		"$\graphical"
-
-	beurk:			"$EIFFEL_SRC\Eiffel\beurk"
-	compiler_support:		"$EIFFEL_SRC\Eiffel\support"
-	replication:		"$EIFFEL_SRC\Eiffel\eiffel\replication"
-
-		-- General compilation:
-	common:				"$EIFFEL_SRC\Eiffel\common"
-	common_parser (common):				"$\parser"
-	common_eiffel_parser (common_parser):		"$\parser";
-
-	flat_short (common_parser):			"$\flat_short"
-		exclude
-				-- This is excluded because we are defining them in EiffelBench in
-				-- order to avoid polymorphism calls
-			"format_context.e"
-			"local_format.e"
+			assertion(ensure)
+		visible
+			array
+				end
+			string
+				end
 		end
+
+	all wel:		"$EIFFEL_SRC\library\wel"
+		exclude
+			"CVS"; 
+		end
+
+	all vision:		"$EIFFEL_SRC\library\vision"
+		exclude
+			"figures"; "obsolete"; "motif"; "gtk"; "x"; "CVS"; 
+		default
+			assertion(no)
+		end
+
+	all com:		"$EIFFEL_SRC\library\com"
+		exclude
+			"CVS"; 
+		visible
+			ecom_array
+				end
+		end
+
+	liman:		"$EIFFEL_SRC\Eiffel\limand"
+
+	liman_bench (liman):		"$\bench"
+
+	liman_bench_graphical (liman):		"$\bench_graphical"
+
+	liman_abstract (liman):		"$\abstract"
+
+	liman_graphical (liman):		"$\graphical"
+
+	beurk:		"$EIFFEL_SRC\Eiffel\beurk"
+
+	compiler_support:		"$EIFFEL_SRC\Eiffel\support"
+
+	common:		"$EIFFEL_SRC\Eiffel\common"
+
+	common_parser (common):		"$\parser"
+
+	common_eiffel_parser (common_parser):		"$\parser"
+
+	resources (common):		"$\resources"
+
+	flat_short (common_parser):		"$\flat_short"
+		exclude
+			"format_context.e"; "local_format.e"; 
+		end
+
 	flat_short_b:		"$EIFFEL_SRC\Eiffel\flat_short\bench"
 
-	yacc:				"$EIFFEL_SRC\Eiffel\yacc"
-	const:			"$EIFFEL_SRC\Eiffel\const"
+	yacc:		"$EIFFEL_SRC\Eiffel\yacc"
 
-		-- Gobo Eiffel Parse Library
+	const:		"$EIFFEL_SRC\Eiffel\const"
+
 	pr_skeleton:		"$EIFFEL_SRC\library\gobo\library\parse\skeleton"
-		-- Gobo Eiffel Lexical Library
+
 	lx_skeleton:		"$EIFFEL_SRC\library\gobo\library\lexical\skeleton"
-		-- Gobo Eiffel Kernel Library
-	kl_kernel:			"$EIFFEL_SRC\library\gobo\library\kernel"
+
+	kl_kernel:		"$EIFFEL_SRC\library\gobo\library\kernel"
+
 	kl_kernel_spec:		"$EIFFEL_SRC\library\gobo\library\kernel\spec\ise"
 
-		-- Lace compilation:
-	env:				"$EIFFEL_SRC\Eiffel\lace\env"
-	lace_compile:		"$EIFFEL_SRC\Eiffel\lace\lace_compile"
-	lace_shared:		"$EIFFEL_SRC\Eiffel\lace\shared"
+	all documentation:		"$EIFFEL_SRC\Eiffel\case\documentation"
+		exclude
+			"CVS"; 
+		end
 
-		-- Eiffel compilation:
-	eiffel_comp:		"$EIFFEL_SRC\Eiffel\eiffel"
+	all lace:		"$EIFFEL_SRC\Eiffel\lace"
+		exclude
+			"CVS"; 
+		end
 
-	instructions_b(eiffel_comp):		"$\AST\instructions"
-	expressions_b(eiffel_comp):		"$\AST\expressions"
-	ast_skeleton_b(eiffel_comp):		"$\AST\skeleton"
-	ast_clickable_b(eiffel_comp):		"$\AST\clickable"
+	all compiler:		"$EIFFEL_SRC\Eiffel\eiffel"
+		exclude
+			"CVS"; "unix"; "Clib"; "Core"; "junk"; "kernel"; 
+		end
 
-	byte_code(eiffel_comp):			"$\byte_code"
-		--default
-			--profile (yes)
-		--end
-	cecil(eiffel_comp):			"$\cecil"
-	compiler(eiffel_comp):			"$\compiler"
-	eiffel_const(eiffel_comp):		"$\const"
-	generation(eiffel_comp):		"$\generation"
-		--default
-			--profile (yes)
-		--end
+	all compiler_api:		"$EIFFEL_SRC\Eiffel\API"
+		exclude
+			"CVS"; 
+		end
 
-	genericity(eiffel_comp):		"$\genericity"
+	all interface:		"$EIFFEL_SRC\Eiffel\interface"
+		exclude
+			"CVS"; "motif"; "new_graphical"; "new_tty"; 
+		end
 
-	compiler_ids(eiffel_comp):		"$\ids\compiler"
-	routine_ids(eiffel_comp):		"$\ids\routine"
-	class_ids(eiffel_comp):			"$\ids\class"
-	type_ids(eiffel_comp):			"$\ids\type"
-	body_ids(eiffel_comp):			"$\ids\body_id"
-	body_indexes(eiffel_comp):		"$\ids\body_index"
-	real_body_ids(eiffel_comp):		"$\ids\real_body_id"
-	real_body_indexes(eiffel_comp):	"$\ids\real_body_index"
-	file_ids(eiffel_comp):			"$\ids\file"
-	pattern_ids(eiffel_comp):		"$\ids\pattern"
-	feature_as_ids(eiffel_comp): 		"$\ids\feature_as"
-	inheritance(eiffel_comp):		"$\inheritance"
-	eiffel_interface(eiffel_comp):	"$\interface"
+	switch:		"$EIFFEL_SRC\Eiffel\switch"
 
-	polymorphism(eiffel_comp):		"$\polymorphism"
-		--default
-			--profile (yes)
-		--end
+	interface_switch (switch):		"$\interface\graphical"
 
-	server(eiffel_comp): 			"$\server"
-		--default
-			--profile (yes)
-		--end
+	time_lock (switch):		"$\license\time_lock"
 
-	eiffel_shared(eiffel_comp):		"$\shared"
-	skeleton(eiffel_comp):			"$\skeleton"
-	eiffel_structures(eiffel_comp):	"$\structures"
-	tables(eiffel_comp): 			"$\tables"
-	descriptor(eiffel_comp):		"$\descriptor"
+	encryption:		"$EIFFEL_SRC\library\encryption"
 
-		-- API cluster
-	api:				"$EIFFEL_SRC\Eiffel\API"
-
-	api_constants(api):	"$\constants"; 
-	api_shared(api):		"$\shared"
-	api_ids(api):		"$\ids"
-	api_queries(api):		"$\queries"
-	api_interface(api):	"$\interface"
-	api_common(api):		"$\common"
-	output(api):		"$\output"
-	evaluated_type(api):	"$\evaluated_type"
-
-		-- Error processing
-	error_common(api):	"$\error\common"
-	lace_error(api):		"$\error\lace"
-	feature_error(api):	"$\error\eiffel\feature"
-	parents_error(api):	"$\error\eiffel\parents"
-	redefined_error(api):	"$\error\eiffel\redefined"
-	unredefined_error(api):	"$\error\eiffel\unredefined"
-
-		-- Resources
-	resources(common):		"$\resources"
-
-		-- Profiling
-	converter(api):		"$\profiler\converter"
-	profiling(api):		"$\profiler\profiling"
-	querying(api):		"$\profiler\querying"
-	filters(api):		"$\profiler\filters"
-	struct_text(api):		"$\structured_text"
-
-		-- AST structures
-	lace_AST(api):	"$\AST\lace"
-
---	instructions(common_parser):	"$\AST\instructions"
---	expressions(common_parser):	"$\AST\expressions"
---	ast_skeleton(common_parser):	"$\AST\skeleton"
---	ast_stonables(common_parser):	"$\AST\clickable"
-
-		-- SWITCH clusters (chose one cluster per directory in switch directory)
-	switch:			"$EIFFEL_SRC\Eiffel\switch"
-	interface_switch(switch):	"$\interface\graphical"
-	--dle_switch(switch):	"$\dle\no_dle"
-	--license_switch(switch): "$\license\license";  	--unix
-	--license_switch(switch): "$\license\no_license";	--win
-	time_lock(switch):        	"$\license\time_lock";--win
-	encryption:				"$EIFFEL_SRC\library\encryption"
-
-		-- Communications
 	communications (switch):		"$\communication"
+
 	status (communications):		"$\status"
+
 	ipc (communications):		"$\ipc"
-	debuging_class (communications):	"$\debug"
-	debuging_commands (communications):	"$\commands"
-	debuging_formatters (communications):	"$\formatters"
 
-		-- INTERFACE CLUSTERS
-	interface:			"$EIFFEL_SRC\Eiffel\interface"
-	interface_shared(interface):	"$\shared"
+	debuging_class (communications):		"$\debug"
 
-		-- tty interace
-	tty(interface): 			"$\tty"
+	debuging_commands (communications):		"$\commands"
 
-		-- graphical interface (bench):
-	bench_common(interface):	"$\graphical\common"
-	case_tool(interface):		"$\graphical\case_tool"
-	commands(interface):		"$\graphical\commands"
-	debugging_tool (interface):	"$\graphical\debugging"
-	drag_and_drop(interface):	"$\graphical\drag_and_drop"
-	formatters(interface):		"$\graphical\formatters"
-	main(interface):			"$\graphical\main"
-		--default
-			--profile (yes)
-		--end
+	debuging_formatters (communications):		"$\formatters"
 
-	graphical_shared(interface):	"$\graphical\shared"
-	stones(interface):		"$\graphical\stones"
-	text_window(interface):		"$\graphical\text_window"
-	windows(interface):		"$\graphical\windows"
-	preference_tool(interface):	"$\graphical\preference_tool"
-	profile_tool(interface):	"$\graphical\profile_tool"
-	wizard_common(interface):	"$\graphical\wizard\common"
-	wizard_bench(interface):	"$\graphical\wizard\bench"
-
-		-- Windows specific classes
-	platform_mswin(interface):		"$\graphical\spec\widgets\win32"
-	win_graphical_window(interface):		"$\graphical\spec\graphical_window\win32"
-	win_formatters(interface):		"$\graphical\spec\formatters\win32";
-	win_commands(interface):			"$\graphical\spec\commands\win32"	
-
-		-- Case
-	case_common(common):		"$\case_storage"
-	case_bench:			"$EIFFEL_SRC\Eiffel\case_storage\bench"
+	io_watcher_implementation (communications):		"$\spec\mswin"
 
 external
+
 	include_path:
 		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
-		"$(EIFFEL_SRC)\C\parsing\shared",
-		"$(EIFFEL_SRC)\C\parsing\eiffel",
 		"$(EIFFEL_SRC)\C\bench",
 		"$(EIFFEL_SRC)\library\encryption\Clib",
-		"$(EIFFEL_SRC)\library\gobo\library\kernel\include"
+		"$(EIFFEL_SRC)\library\gobo\library\kernel\include",
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\Core\Clib",
+		"$(EIFFEL_SRC)\library\com\spec\windows\include"
 
 	object:
-		"$(EIFFEL_SRC)\library\wel\spec\$(COMPILER)\lib\wel.lib",
+		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib",
+		"$(EIFFEL_SRC)\C\minilzo\minilzo.obj",
 		"$(EIFFEL_SRC)\C\ipc\ewb\ewb.lib",
 		"$(EIFFEL_SRC)\C\ipc\shared\ipc.lib",
 		"$(EIFFEL_SRC)\C\idrs\idr.lib",
-		"$(EIFFEL_SRC)\C\parsing\eiffel\eiffel.lib",
-		"$(EIFFEL_SRC)\C\parsing\lace\lace.lib",
-		"$(EIFFEL_SRC)\C\parsing\shared\parsing.lib",
+		"$(EIFFEL_SRC)\C\bench\compiler.lib",
 		"$(EIFFEL_SRC)\C\platform\platform.lib",
-		"$(EIFFEL_SRC)\C\bench\special_tables.obj",
-		"$(EIFFEL_SRC)\library\encryption\spec\$(COMPILER)\lib\des.lib"
+		"$(EIFFEL_SRC)\library\encryption\spec\$(ISE_C_COMPILER)\lib\des.lib",
+		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
+		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib",
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib\ecom.lib"
 
 end

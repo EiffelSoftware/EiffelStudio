@@ -11,11 +11,12 @@ inherit
 			balanced
 		end
 
-feature -- Properties
+	PREFIX_INFIX_NAMES
+		rename
+			mod_infix as infix_function_name
+		end
 
-	infix_function_name: STRING is "_infix_mod"
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
+feature -- Properties
 
 	balanced: BOOLEAN is False
 			-- Is the bianry operation balanced ?

@@ -6,10 +6,13 @@ feature -- Access
 	Idb_logo_constant: INTEGER is 202
 	Idc_static_constant: INTEGER is -1
 	Idd_prompt_constant: INTEGER is 201
+	Idd_beta_constant: INTEGER is 204
 	Idc_user_constant: INTEGER is 2001
 	Idd_register_constant: INTEGER is 203
 	Idc_register_constant: INTEGER is 2000
 	Idc_key_constant: INTEGER is 2002
+	Idc_min_days_constant: INTEGER is 2003
+	Idc_max_days_constant: INTEGER is 2004
 	Idc_progress_constant: INTEGER is 1000
 
 end -- class APPLICATION_IDS

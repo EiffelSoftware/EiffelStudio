@@ -12,7 +12,8 @@ inherit
 			print_register, free_register,
 			type, enlarged, make_byte_code,
 			is_unsafe, optimized_byte_node,
-			pre_inlined_code, inlined_byte_code
+			pre_inlined_code, inlined_byte_code,
+			generate_il
 		end
 	
 feature 
@@ -35,12 +36,11 @@ feature
 	analyze is
 			-- Analyze expression and get a register to store the hector index
 		local
-			tmp_register: REGISTER;
 			ref_register: REF_REGISTER;
 		do
 			context.init_propagation;
 			expr.analyze;
-			!!ref_register.make (Ref_type);
+			!!ref_register.make (Reference_c_type);
 			register := ref_register;
 		end;
 
@@ -85,6 +85,20 @@ feature
 			register.free_register;
 			expr.free_register;
 		end;
+
+feature -- IL code generation
+
+	il_operator_constant: INTEGER is
+			-- Il operator value.
+		do
+			check False end
+		end
+
+	generate_il is
+			-- Generate IL code for protected expression.
+		do
+			check False end
+		end
 
 feature -- Byte code generation
 

@@ -1,16 +1,17 @@
 class ATTRIBUTE_I 
 
 inherit
-	FEATURE_I
+	ENCAPSULATED_I
 		redefine
 			transfer_to, process_pattern, unselected,
 			new_rout_entry, melt, access, generate, new_rout_id,
 			in_pass3, is_none_attribute, set_type, type, is_attribute,
-			has_entry, undefinable, to_generate_in, generation_class_id,
-			to_melt_in, check_expanded
+			has_entry, undefinable, check_expanded
 		end
 
 	SHARED_DECLARATIONS
+
+	SHARED_GENERATION
 
 	BYTE_CONST
 
@@ -26,19 +27,10 @@ feature
 			-- access function of this attribute in the C file associated
 			-- to the class where this attribute is available.
 
-	generate_in: CLASS_ID
-			-- Class id where an equivalent feature has to be generate
-
 	set_has_function_origin (b: BOOLEAN) is
 			-- Assign `b' to `has_function_origin'.
 		do
 			has_function_origin := b
-		end
-
-	set_generate_in (i: CLASS_ID) is
-			-- Assign `i' to `generate_in'.
-		do
-			generate_in := i
 		end
 
 	is_attribute: BOOLEAN is True
@@ -56,10 +48,13 @@ feature
 			Result := not is_none_attribute
 		end
 
+	extension: EXTERNAL_EXT_I
+			-- Deferred external information
+
 	new_rout_entry: ROUT_ENTRY is
 			-- New routine unit
 		require else
-			has_to_be_generated: generate_in /= Void
+			has_to_be_generated: generate_in > 0
 		do
 			!!Result
 			Result.set_body_index (body_index)
@@ -75,6 +70,18 @@ feature
 			-- Do nothing
 		end
 
+feature -- Element Change
+
+	set_extension (an_extension: like extension) is
+			-- Set `extension' with `an_extension'.
+		require
+			an_extension_not_void: an_extension /= Void
+		do
+			extension := an_extension
+		ensure
+			extension_set: extension = an_extension
+		end
+
 	set_type (t: TYPE) is
 			-- Assign `t' to `type'.
 		do
@@ -87,22 +94,10 @@ feature
 			-- Do nothing
 		end
 
-	new_rout_id: ATTRIBUTE_ID is
+	new_rout_id: INTEGER is
 			-- New routine id for attribute
 		do
 			Result := Routine_id_counter.next_attr_id
-		end
-
-	to_melt_in (a_class: CLASS_C): BOOLEAN is
-			-- Has the current feature in class `a_class" ?
-		do
-			Result := to_generate_in (a_class)
-		end
-
-	to_generate_in (a_class: CLASS_C): BOOLEAN is
-			-- Has the current feature in class `a_class" ?
-		do
-			Result := equal (a_class.id, generate_in)
 		end
 
 	check_expanded (class_c: CLASS_C) is
@@ -111,15 +106,14 @@ feature
 			vlec: VLEC
 			solved_type: TYPE_A
 		do
-			{FEATURE_I} Precursor (class_c)
+			Precursor {ENCAPSULATED_I} (class_c)
 			if class_c.is_expanded then
 				solved_type ?= type
 				if
-					solved_type.is_expanded
-				and then
+					solved_type.is_true_expanded and then
 					solved_type.associated_class = class_c
 				then
-					!!vlec
+					create vlec
 					vlec.set_class (solved_type.associated_class)
 					vlec.set_client (class_c)
 					Error_handler.insert_error (vlec)
@@ -132,17 +126,30 @@ feature
 		local
 			attribute_b: ATTRIBUTE_B
 			attribute_bs: ATTRIBUTE_BS
+			external_b: EXTERNAL_B
 		do
-			if context.last_constrained_type /= Void and then context.last_constrained_type.is_separate then
-				!!attribute_bs
+			if
+				context.last_constrained_type /= Void and then
+				context.last_constrained_type.is_separate
+			then
+				create attribute_bs
 				attribute_bs.init (Current)
 				attribute_bs.set_type (access_type)
 				Result := attribute_bs
 			else
-				!!attribute_b
-				attribute_b.init (Current)
-				attribute_b.set_type (access_type)
-				Result := attribute_b
+				if extension /= Void then
+					create external_b
+					external_b.init (Current)
+					external_b.set_type (access_type)
+					external_b.set_external_name (external_name)
+					external_b.set_extension (extension)
+					Result := external_b
+				else
+					create attribute_b
+					attribute_b.init (Current)
+					attribute_b.set_type (access_type)
+					Result := attribute_b
+				end
 			end
 		end
 
@@ -164,26 +171,24 @@ feature
 			result_type: TYPE_I
 			gen_type: GEN_TYPE_I
 			table_name, internal_name: STRING
-			skeleton: SKELETON
-			rout_id: ROUTINE_ID
+			rout_id: INTEGER
 			rout_info: ROUT_INFO
 			array_index: INTEGER
 		do
 			generate_header (buffer)
-			skeleton := class_type.skeleton
 			result_type := type.actual_type.type_i
 			if result_type.has_formal then
 				gen_type ?= class_type.type
 				result_type := result_type.instantiation_in (gen_type)
 			end
-			internal_name := body_id.feature_name (class_type.id)
+			internal_name := Encoder.feature_name (class_type.static_type_id, body_index)
 			add_in_log (class_type, internal_name)
 
 			buffer.generate_function_signature (result_type.c_type.c_string,
 				internal_name, True, Byte_context.header_buffer,
 				<<"Current">>, <<"EIF_REFERENCE">>)
 			buffer.indent
-			if not result_type.is_expanded and then not result_type.is_bit then
+			if not result_type.is_true_expanded and then not result_type.is_bit then
 				buffer.putstring ("return *")
 				result_type.c_type.generate_access_cast (buffer)
 			else
@@ -196,7 +201,7 @@ feature
 			if byte_context.final_mode then
 				array_index := Eiffel_table.is_polymorphic (rout_id, class_type.type_id, False)
 				if array_index >= 0 then
-					table_name := rout_id.table_name
+					table_name := Encoder.table_name (rout_id)
 					buffer.putstring ("+ (")
 					buffer.putstring (table_name)
 					buffer.putchar ('-')
@@ -211,7 +216,7 @@ feature
 						--| arguments. This means we won't generate anything if there is nothing
 						--| to generate. Remember that `True' is used in the generation of attributes
 						--| table in Final mode.
-					skeleton.generate_offset (buffer, feature_id, False)
+					class_type.skeleton.generate_offset (buffer, feature_id, False)
 				end
 			elseif
 				Compilation_modes.is_precompiling or
@@ -219,18 +224,23 @@ feature
 			then
 				rout_info := System.rout_info_table.item (rout_id)
 				buffer.putstring (" + RTWPA(")
-				rout_info.origin.generated_id (buffer)
+				buffer.generate_class_id (rout_info.origin)
 				buffer.putchar (',')
 				buffer.putint (rout_info.offset)
 				buffer.putstring (", Dtype(Current))")
 			else
 				buffer.putstring (" + RTWA(")
-				buffer.putint (class_type.id.id - 1)
+				buffer.putint (class_type.static_type_id - 1)
 				buffer.putchar (',')
 				buffer.putint (feature_id)
 				buffer.putstring (", Dtype(Current))")
-			end;		
-			buffer.putstring(");%N}%N%N")
+			end;
+			buffer.putstring(");")
+			buffer.exdent
+			buffer.new_line
+			buffer.putchar ('}')
+			buffer.new_line
+			buffer.new_line
 		end
 
 	replicated: FEATURE_I is
@@ -244,7 +254,7 @@ feature
 			Result := rep
 		end
 
-	unselected (in: CLASS_ID): FEATURE_I is
+	unselected (in: INTEGER): FEATURE_I is
 			-- Unselected attribute
 		local
 			s: D_ATTRIBUTE_I
@@ -256,33 +266,23 @@ feature
 		end
 
 	transfer_to (other: like Current) is
-			-- Transfer datas form `other' into Current
+			-- Transfer data from `Current' to `other'.
 		do
-			{FEATURE_I} Precursor (other)
+			Precursor {ENCAPSULATED_I} (other)
 			other.set_type (type)
 			other.set_has_function_origin (has_function_origin)
-			other.set_generate_in (generate_in)
-		end
-
-	generation_class_id: CLASS_ID is
-			-- Id of the class where the feature has to be generated in
-		do
-			if generate_in /= Void then
-				Result := generate_in
-			else
-				Result := written_in
-			end
+			extension := other.extension
 		end
 
 	process_pattern is
 			-- Process pattern
 		do
 			if not is_none_attribute then
-				{FEATURE_I} Precursor
+				Precursor {ENCAPSULATED_I}
 			end
 		end
 
-	melt (dispatch: DISPATCH_UNIT; exec: EXECUTION_UNIT) is
+	melt (exec: EXECUTION_UNIT) is
 			-- Melt an attribute
 		local
 			melted_feature: MELT_FEATURE
@@ -291,7 +291,7 @@ feature
 			static_type: INTEGER
 			current_type: CL_TYPE_I
 			base_class: CLASS_C
-			r_id: ROUTINE_ID
+			r_id: INTEGER
 			rout_info: ROUT_INFO
 		do
 			ba := Byte_array
@@ -302,7 +302,9 @@ feature
 				-- Start	
 			ba.append (Bc_start)
 				-- Routine id
-			ba.append_integer (rout_id_set.first.id)
+			ba.append_integer (rout_id_set.first)
+				-- Real body id ( -1 because it's an attribute. We can't set a breakpoint )
+			ba.append_integer (-1)
 				-- Meta-type of Result
 			result_type := byte_context.real_type (type.actual_type.type_i)
 			ba.append_integer (result_type.sk_value)
@@ -319,15 +321,6 @@ feature
 			static_type := current_type.type_id - 1
 			ba.append_short_integer (static_type)
 
-			-- Put class name in file.
-			-- NOTE: May be removed later.
-
-			if System.java_generation then
-				ba.append_raw_string (byte_context.current_type.associated_class_type.associated_class.name)
-				-- Not a special feature
-				ba.append ('%U')
-			end
-
 				-- No rescue
 			ba.append ('%U')
 				-- Access to attribute; Result := <attribute access>
@@ -337,7 +330,7 @@ feature
 				r_id := rout_id_set.first
 				rout_info := System.rout_info_table.item (r_id)
 				ba.append (Bc_pattribute)
-				ba.append_integer (rout_info.origin.id)
+				ba.append_integer (rout_info.origin)
 				ba.append_integer (rout_info.offset)
 			else
 				ba.append (Bc_attribute)
@@ -345,7 +338,7 @@ feature
 				ba.append_integer (feature_id)
 					-- Static type
 				ba.append_short_integer
-					(current_type.associated_class_type.id.id - 1)
+					(current_type.associated_class_type.static_type_id - 1)
 			end
 				-- Attribute meta-type
 			ba.append_uint32_integer (result_type.sk_value)
@@ -355,12 +348,11 @@ feature
 			ba.append (Bc_null)
 				
 			melted_feature := ba.melted_feature
-			melted_feature.set_real_body_id (dispatch.real_body_id)
+			melted_feature.set_real_body_id (exec.real_body_id)
 			if not System.freeze then
 				Tmp_m_feature_server.put (melted_feature)
 			end
 
-			Dispatch_table.mark_melted (dispatch)
 			Execution_table.mark_melted (exec)
 		end
 

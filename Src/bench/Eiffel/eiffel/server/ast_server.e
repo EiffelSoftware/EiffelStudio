@@ -1,19 +1,22 @@
--- Server for routine tables
+indexing
+	description: "Server for storing AST indexed by class id"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class AST_SERVER 
 
 inherit
-	COMPILER_SERVER [CLASS_AS, CLASS_ID]
+	COMPILER_SERVER [CLASS_AS]
 
 creation
 	make
 	
 feature -- Access
 
-	id (t: CLASS_AS): CLASS_ID is
+	id (t: CLASS_AS): INTEGER is
 			-- Id associated with `t'
 		do
-			Result := t.id
+			Result := t.class_id
 		end
 
 	cache: AST_CACHE is

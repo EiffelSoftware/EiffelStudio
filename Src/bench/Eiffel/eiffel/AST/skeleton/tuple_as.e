@@ -25,20 +25,6 @@ feature {AST_FACTORY} -- Initialization
 			expressions_set: expressions = exp
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			expressions ?= yacc_arg (0)
-			if expressions = Void then
-					-- Create empty list
-				!! expressions.make_filled (0)
-			end
-		ensure then
-			expressions_exists: expressions /= Void
-		end
-
 feature -- Attributes
 
 	expressions: EIFFEL_LIST [EXPR_AS]
@@ -77,9 +63,8 @@ feature -- Type check, byte code, dead code removal and formatter
 				i := i - 1
 			end
 				-- Update type stack
-			!! tuple_type
+			create tuple_type.make (generics)
 			tuple_type.set_base_class_id (System.tuple_id)
-			tuple_type.set_generics (generics)
 
 			context.replace (tuple_type)
 				-- Update the tuple type stack
@@ -120,11 +105,11 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt : FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_text_item (ti_L_array)
+			ctxt.put_text_item (ti_L_bracket)
 			ctxt.set_separator (ti_Comma)
 			ctxt.set_space_between_tokens
 			ctxt.format_ast (expressions)
-			ctxt.put_text_item_without_tabs (ti_R_array)
+			ctxt.put_text_item_without_tabs (ti_R_bracket)
 		end
 
 	string_value: STRING is ""

@@ -51,8 +51,6 @@ feature
 			type /= Void
 			feat_table /= Void
 			f /= Void
-		local
-			error_msg: VTAT1
 		do
 			if Rescue_status.is_like_exception or else 
 				Rescue_status.is_error_exception

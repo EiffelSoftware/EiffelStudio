@@ -27,7 +27,6 @@ feature {NONE} -- Initialization
 		do
 			name := a_name
 			default_value := a_value
-			set_value (a_value)
 			if a_value /= Void then
 				set_value (a_value)
 			end
@@ -47,11 +46,11 @@ feature -- Access
 			until
 				j = 0
 			loop
-				Result.preferred_faces.extend (faces.substring (i, j))
+				Result.preferred_families.extend (faces.substring (i, j))
 				i := j + 1
 				j := faces.index_of (',', i)
 			end
-			Result.preferred_faces.extend (faces.substring (i, faces.count))
+			Result.preferred_families.extend (faces.substring (i, faces.count))
 		end
 
 	valid_actual_value: EV_FONT is
@@ -97,11 +96,106 @@ feature -- Status Setting
 			end
 		end
 
-feature -- Implementation
+	set_actual_value (f: EV_FONT) is
+			-- Set the value with the wanted font.
+		require
+			valid_font: f /= Void and then not f.is_destroyed
+		do
+			actual_faces := f.preferred_families
+			shape := f.shape
+			weight := f.weight
+			height := f.height
+			family := f.family
+			generate_value
+		end
+
+feature {NONE} -- Implementation
 
 	faces : STRING
 
 	shape, weight, height, family: INTEGER
+
+feature -- Output
+
+	xml_trace: STRING is
+			-- XML representation of current
+		local
+			xml_name, xml_value: STRING
+		do
+			xml_name := name
+			xml_value := value
+
+			create Result.make (27 + xml_name.count + xml_value.count)
+			Result.append ("<TEXT>")
+			Result.append (xml_name)
+			Result.append ("<FONT>")
+			Result.append (xml_value)
+			Result.append ("</FONT></TEXT>")
+		end
+
+	registry_name: STRING is
+			-- name of Current in the registry
+		do
+			Result := "EIFFON_" + name
+		end
+
+feature {NONE} -- Implementation
+
+	actual_faces: ACTIVE_LIST [STRING]
+
+	generate_value is
+			-- Generate `value' and `faces' according to `actual_faces', `weight', `height', `family' and `shape'.
+		local
+			v: STRING
+		do
+			create v.make (50)
+			from
+				actual_faces.start
+			until
+				actual_faces.after
+			loop
+				v.append (actual_faces.item)
+				actual_faces.forth
+				if not actual_faces.after then
+					v.append (",")
+				end
+			end
+			faces := clone (v)
+			v.append ("-")
+			inspect shape
+			when shape_italic then
+				v.append ("i")
+			when shape_regular then
+				v.append ("r")
+			end
+			v.append ("-")
+			inspect weight
+			when weight_black then
+				v.append ("black")
+			when weight_thin then
+				v.append ("thin")
+			when weight_regular then
+				v.append ("regular")
+			when weight_bold then
+				v.append ("bold")
+			end
+			v.append ("-")
+			v.append (height.out)
+			v.append ("-")
+			inspect family
+			when family_roman then
+				v.append ("roman")
+			when family_screen then
+				v.append ("screen")
+			when family_sans then
+				v.append ("sans")
+			when family_modern then
+				v.append ("modern")
+			when family_typewriter then
+				v.append ("typewriter")
+			end
+			value := v
+		end
 
 	set_shape (s: STRING) is
 			-- Set shape according to `s'.
@@ -170,30 +264,5 @@ feature -- Implementation
 				height := s.to_integer
 			end
 		end
-
-feature -- Output
-
-	xml_trace: STRING is
-			-- XML representation of current
-		local
-			xml_name, xml_value: STRING
-		do
-			xml_name := name
-			xml_value := value
-
-			create Result.make (27 + xml_name.count + xml_value.count)
-			Result.append ("<TEXT>")
-			Result.append (xml_name)
-			Result.append ("<FONT>")
-			Result.append (xml_value)
-			Result.append ("</FONT></TEXT>")
-		end
-
-	registry_name: STRING is
-			-- name of Current in the registry
-		do
-			Result := "EIFFON_" + name
-		end
-
 
 end -- class FONT_RESOURCE

@@ -1,5 +1,6 @@
 indexing
-	description: "Command to flat of feature."
+	description: "Command to display the flat aspect of a feature."
+	author: "Xavier Rousselot"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -7,57 +8,47 @@ class
 	EB_FEATURE_FLAT_FORMATTER
 
 inherit
-	EB_FILTERABLE
-		rename
-			create_structured_text as rout_flat_context_text
+	EB_FEATURE_TEXT_FORMATTER
 		redefine
-			display_temp_header
+			feature_cmd
 		end
-	SHARED_SERVER
-	EB_SHARED_FORMAT_TABLES
 
 creation
-
 	make
-
+	
 feature -- Properties
 
-	symbol: EV_PIXMAP is
+	symbol: ARRAY [EV_PIXMAP] is
+			-- Graphical representation of the command.
 		once
-			Result := Pixmaps.bm_Showflat
+			create Result.make (1, 2)
+			Result.put (Pixmaps.bm_Showflat, 1)
 		end
+ 
+	feature_cmd: E_SHOW_ROUTINE_FLAT
+			-- Feature command that can generate the information.
 
 feature {NONE} -- Properties
 
-	title_part: STRING is
+	command_name: STRING is
+			-- Name of the command.
 		do
-			Result := Interface_names.t_Feature_flat_form_of
+			Result := Interface_names.l_Flat
 		end
 
-	post_fix: STRING is "ffl"
-
-	name: STRING is
-		do
-			Result := Interface_names.f_Showflat
-		end
-
-	menu_name: STRING is
-			-- Name used in menu entry
-		do
-			Result := Interface_names.m_Showflat
-		end
-
-	accelerator: STRING is
-			-- Accelerator action for menu entry
-		do
-		end
+	post_fix: STRING is "fla"
+			-- String symbol of the command, used as an extension when saving.
 
 feature {NONE} -- Implementation
 
-	display_temp_header (stone: STONE) is
-			-- Display a temporary header during the format processing.
+	create_feature_cmd is
+			-- Create `feature_cmd'.
+		require else
+			associated_feature_non_void: associated_feature /= Void
 		do
-			tool.set_title ("Exploring ancestors to produce flat form...")
+			create feature_cmd.make (associated_feature)
 		end
 
 end -- class EB_FEATURE_FLAT_FORMATTER
+
+

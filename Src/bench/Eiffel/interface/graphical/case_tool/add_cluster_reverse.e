@@ -111,7 +111,6 @@ feature {NONE} -- Implementation
 			-- also : if the cluster has some sub-clusters, 
 			-- deals with it thanks to loop_for_clusters ...
 		local
-			ind : INTEGER
 			cluster : CLUSTER_I
 		do
 			scroll2.extend(item)

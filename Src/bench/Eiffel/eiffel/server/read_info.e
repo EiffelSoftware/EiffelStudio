@@ -1,4 +1,7 @@
--- Information for reading a feature in file ".AST"
+indexing
+	description: "Information required to read in a file of the EIFGEN/COMP directory."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class READ_INFO 
 
@@ -12,7 +15,7 @@ inherit
 	
 feature -- Access
 
-	class_id: CLASS_ID;
+	class_id: INTEGER;
 			-- Id of the class
 
 	object_count: INTEGER;
@@ -32,7 +35,7 @@ feature -- Update
 			object_count := i;
 		end;
 
-	set_class_id (i: CLASS_ID) is
+	set_class_id (i: INTEGER) is
 			-- Assign `i' to `class_id'.
 		do
 			class_id := i;
@@ -45,7 +48,7 @@ feature -- Trace
 			io.error.putstring ("READ_INFO:%NPosition: ");
 			io.error.putint (Position);
 			io.error.putstring ("%NClass_id: ");
-			class_id.trace;
+			io.error.putint (class_id);
 			io.error.putstring ("%Nobject_count: ");
 			io.error.putint (object_count);
 			io.error.new_line;

@@ -81,7 +81,7 @@ feature -- Implementation
 						type := array_type
 						name := name.substring (8, name.count)
 					elseif equal (sprefix, "EIFSTR_") then
-						type := array_type
+						type := string_type
 						name := name.substring (8, name.count)
 					else
 						check
@@ -104,7 +104,9 @@ feature -- Implementation
 					elseif type = array_type then
 						create {ARRAY_RESOURCE} value.make_from_string (name, s)
 					else
-						create {STRING_RESOURCE} value.make (name, s)
+						check
+							error: False
+						end
 					end
 				else
 					check
@@ -118,9 +120,7 @@ feature -- Implementation
 			-- Gets the appropriate resource from `key_value'
 			-- if the type is unknown, it is assumed to be a string.
 		do
-			create key_value.make
-			key_value.set_type (key_value.Reg_sz)
-			key_value.set_string_value (value.value)
+			create key_value.make ((create {WEL_REGISTRY_KEY_VALUE_TYPE}).Reg_sz, value.value)
 		end
 
 feature {NONE} -- Constants

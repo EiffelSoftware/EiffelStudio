@@ -1,9 +1,9 @@
 indexing
-	description: "Cache for data";
+	description: "Cache for data, the index is an integer number";
 	date: "$Date$";
 	revision: "$Revision$"
 
-deferred class CACHE [T -> IDABLE, H -> COMPILER_ID]
+deferred class CACHE [T -> IDABLE]
 
 inherit
 	
@@ -94,16 +94,16 @@ end
 
 feature -- Cache manipulations
 							
-	has_id (id: H): BOOLEAN is
+	has_id (id: INTEGER): BOOLEAN is
 			-- Is an item of id `i' in the cache ?
 		require
-			not_void: id /= Void
+			not_void: id /= 0
 		local
 			i, j, k: INTEGER			
 			found: BOOLEAN
 			l_array: ARRAY [H_CELL[T]]
 		do
-			k := id.internal_id
+			k := id
 			i := k \\ Size
 			from
 				l_array := area.item (i)
@@ -111,7 +111,7 @@ feature -- Cache manipulations
 			until
 				j = 0 or else found
 			loop
-				found := equal(l_array.item(j).item.id,id)
+				found := l_array.item(j).item.id = id
 				j := j - 1
 			end
 			Result := found
@@ -162,18 +162,18 @@ Debug ("CACHE_STAT")
 end
 		end
 
-	item_id (id: H): T is
+	item_id (id: INTEGER): T is
 			-- Item which id is `an_id'
 			-- Void if not found
 		require
-			not_void: id /= Void
+			not_void: id /= 0
 		local
 			i, j, k: INTEGER			
 			found: BOOLEAN
 			l_array: ARRAY [H_CELL[T]]
 			tmp: H_CELL[T]
 		do
-			k := id.internal_id
+			k := id
 			i := k \\ Size
 			from
 				l_array := area.item (i)
@@ -182,7 +182,7 @@ end
 			until
 				j = 0 or else found
 			loop
-				found := equal(l_array.item (j).item.id, id)
+				found := l_array.item (j).item.id = id
 				j := j - 1
 			end
 			if found then
@@ -240,18 +240,18 @@ Debug ("CACHE_STAT")
 end
 		end
 	
-	remove_id (id: H) is
+	remove_id (id: INTEGER) is
 			-- Remove item of id `i' form cache.
 			-- better use force instead
 		require
-			not_void: id /= Void
+			not_void: id /= 0
 		local
 			i, j, k: INTEGER			
 			found: BOOLEAN
 			l_array: ARRAY [H_CELL[T]]
 			tmp: H_CELL[T]
 		do
-			k := id.internal_id
+			k := id
 			i := k \\ Size
 			from
 				l_array := area.item (i)
@@ -259,7 +259,7 @@ end
 			until
 				j = 0 or else found
 			loop
-				found := equal (l_array.item (j).item.id, id)
+				found := l_array.item (j).item.id = id
 				j := j - 1
 			end
 			if found then
@@ -293,7 +293,7 @@ end
 			h_cell: H_CELL[T]
 			to_remove: T
 		do	
-			i := e.id.internal_id \\ Size
+			i := e.id \\ Size
 			l_array := area.item (i)
 			history.add (e)
 			!! h_cell.make (e, history.younger)
@@ -372,25 +372,27 @@ feature -- linear iteration
 
 	start is
 			-- put item_for_iteration on the first element of the cache
-		require
-			not_empty: not is_empty
 		local
 			item_array: INTEGER
 		do
-			from
-				item_array := 0
-			until
-				item_array = size or else area.item (item_array).item (1) /= Void
-			loop
-				item_array := item_array + 1
-			end
-			if item_array = Size then
+			if is_empty then
 				after := True
 			else
-				after := False
-				last_item_array := area.item (item_array)
-				last_item_array_number := item_array
-				last_item_pos := 1
+				from
+					item_array := 0
+				until
+					item_array = size or else area.item (item_array).item (1) /= Void
+				loop
+					item_array := item_array + 1
+				end
+				if item_array = Size then
+					after := True
+				else
+					after := False
+					last_item_array := area.item (item_array)
+					last_item_array_number := item_array
+					last_item_pos := 1
+				end
 			end
 		end
 
@@ -464,19 +466,18 @@ feature {NONE} -- to implement force
 		local
 			i, j, k: INTEGER			
 			found: BOOLEAN
-			id: COMPILER_ID
+			id: INTEGER
 			l_array: ARRAY [H_CELL[T]]
 		do
 			id := e.id
-			k := id.internal_id
-			i := k \\ Size
+			i := id \\ Size
 			from
 				l_array := area.item (i)
 				j := array_count.item (i)
 			until
 				j = 0 or else found
 			loop
-				found := equal (l_array.item (j).item.id, id)
+				found := l_array.item (j).item.id = id
 				j := j - 1
 			end
 DEBUG ("CACHE_RESEARCH")

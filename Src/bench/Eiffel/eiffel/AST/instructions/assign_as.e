@@ -30,20 +30,6 @@ feature {AST_FACTORY} -- Initialization
 			line_number_set: line_number = l
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			target ?= yacc_arg (0)
-			source ?= yacc_arg (1)
-			start_position := yacc_position
-			line_number    := yacc_line_number
-		ensure then
-			target_exists: target /= Void
-			source_exists: source /= Void
-		end
-
 feature -- Attributes
 
 	target: ACCESS_AS
@@ -66,7 +52,6 @@ feature {NONE} -- Type check, byte code production, dead_code_removal
 	perform_type_check is
 			-- Type check an assignment
 		local
-			source_type, target_type: TYPE_A
 			access: ACCESS_B
 			ve03: VE03
 		do
@@ -101,7 +86,6 @@ feature {NONE} -- Type check, byte code production, dead_code_removal
 			-- Check if the target type conforms to the source one
 		local
 			source_type, target_type: TYPE_A
-			not_has_error: BOOLEAN
 		do
 				-- Stack mangment
 			source_type := context.item
@@ -123,7 +107,7 @@ feature {NONE} -- Type check, byte code production, dead_code_removal
 	byte_node: ASSIGN_B is
 			-- Associated byte node
 		do
-			!!Result
+			create Result
 			Result.set_target (target.byte_node)
 			Result.set_source (source.byte_node)
 			Result.set_line_number (line_number)
@@ -137,7 +121,7 @@ feature -- Replication
 			new_list: like l
 		do
 			target.fill_calls_list (l)
-			!!new_list.make
+			create new_list.make
 			source.fill_calls_list (new_list)
 			l.merge (new_list)
 		end

@@ -8,25 +8,14 @@ inherit
 			free_register, print_register,
 			has_gcable_variable, propagate, generate, unanalyze,
 			optimized_byte_node, inlined_byte_code,
-			has_separate_call
+			has_separate_call, generate_il
 		end
 	
-feature 
+feature -- Access
 
 	parameters: BYTE_LIST [EXPR_B] is
 		do
 			-- no parameters
-		end
-
-	set_parameters (p: like parameters) is
-		do
-			-- Do nothing
-		end
-
-	read_only: BOOLEAN is
-			-- Is the access a read-only one ?
-		do
-			Result := True
 		end
 
 	target: ACCESS_B is
@@ -41,6 +30,41 @@ feature
 			creatable: is_creatable
 		do
 			Result := Current
+		end
+
+	context_type: TYPE_I is
+			-- Context type of the access (properly instantiated)
+		local
+			a_parent: NESTED_B
+		do
+			if parent = Void then
+				Result := context.current_type
+			elseif is_message then
+				Result := parent.target.type
+			else 
+				a_parent := parent.parent
+				if a_parent = Void then
+					Result := context.current_type
+				else
+					Result := a_parent.target.type
+				end
+			end
+			Result := Context.real_type (Result)
+		end
+
+	sub_enlarged (p: NESTED_BL): ACCESS_B is
+			-- Enlarge node and set parent to `p'
+		do
+			Result := enlarged
+			Result.set_parent (p)
+		end
+
+feature -- Status
+
+	read_only: BOOLEAN is
+			-- Is the access a read-only one ?
+		do
+			Result := True
 		end
 
 	current_needed_for_access: BOOLEAN is
@@ -153,6 +177,8 @@ feature
 			Result := false
 		end
 
+feature -- Element change
+
 	propagate (r: REGISTRABLE) is
 			-- Propagate register across access
 		do
@@ -175,38 +201,14 @@ feature
 			end
 		end
 
-	forth_used (r: REGISTRABLE): BOOLEAN is
-			-- Is register `r' used in local access ?
+feature -- Setting
+
+	set_parameters (p: like parameters) is
 		do
-			Result := used (r)
+			-- Do nothing
 		end
 
-	context_type: TYPE_I is
-			-- Context type of the access (properly instantiated)
-		local
-			a_parent: NESTED_B
-		do
-			if parent = Void then
-				Result := context.current_type
-			elseif is_message then
-				Result := parent.target.type
-			else 
-				a_parent := parent.parent
-				if a_parent = Void then
-					Result := context.current_type
-				else
-					Result := a_parent.target.type
-				end
-			end
-			Result := Context.real_type (Result)
-		end
-
-	sub_enlarged (p: NESTED_BL): ACCESS_B is
-			-- Enlarge node and set parent to `p'
-		do
-			Result := enlarged
-			Result.set_parent (p)
-		end
+feature -- C generation
 
 	print_register is
 			-- Print register or generate if there are no register.
@@ -292,13 +294,10 @@ feature
 
 	unanalyze is
 			-- Undo the analysis
-		local
-			void_register: REGISTER
 		do
-			set_register (void_register)
+			set_register (Void)
 			unanalyze_parameters
 		end
-
 	
 	Current_register: REGISTRABLE is
 			-- The "Current" entity
@@ -405,11 +404,6 @@ feature -- Conveniences
 		do
 		end
 
-	is_external: BOOLEAN is
-			-- Is access an external call
-		do
-		end
-
 	is_void_entity: BOOLEAN is
 			-- Is access the 'Void' entity?
 		do
@@ -476,6 +470,81 @@ end
 			end
 		end
 
+feature -- IL code generation
+
+	generate_il_call_access (is_target_of_call: BOOLEAN) is
+			-- Generate `Current' which `is_predefined'.
+			-- If `is_target_of_call' we might need to do some
+			-- special transformation if Current type is expanded.
+		require
+			il_generation: System.il_generation
+		do
+				-- Mutual recursive call in ACCESS_B, but
+				-- `is_predefined' descendants will stop
+				-- recursion when it occurs because current
+				-- feature is redefined.
+			generate_il
+		end
+
+	generate_il is
+			-- Generate IL for Current.
+		do
+				-- Mutual recursive call in ACCESS_B, but
+				-- not `is_predefined' descendants will stop
+				-- recursion when it occurs because current
+				-- feature is redefined.
+			generate_il_call_access (False)	
+		end
+
+	generate_il_start_assignment is
+			-- Generate location of assignment if needed.
+		do
+			if is_attribute then
+				il_generator.generate_current
+			end
+		end
+
+	generate_il_assignment (source_type: TYPE_I)  is
+			-- Generate source assignment IL code.
+		require
+			is_creatable
+		local
+			attr: ATTRIBUTE_B
+			loc: LOCAL_B
+			res: RESULT_B
+			target_type: TYPE_I
+		do
+			target_type := Context.real_type (type)
+			if target_type.is_reference and then source_type.is_expanded then
+				generate_il_metamorphose (source_type, True)
+			end
+
+					-- Generate cast if we have to generate verifiable code
+					-- since access might have been redefined and in this
+					-- case its type for IL generation is the one from the
+					-- parent not the redefined one. Doing the cast enable
+					-- the verifier to find out that what we are doing is
+					-- correct. Cast is not needed for expanded type since
+					-- they cannot be redefined.
+			if
+				System.il_verifiable and then not target_type.is_expanded
+				and then not target_type.is_none
+			then
+				il_generator.generate_check_cast (source_type, target_type)
+			end
+
+			if is_attribute then
+				attr ?= Current
+				il_generator.generate_attribute_assignment (attr.attribute_id)
+			elseif is_local then
+				loc ?= Current
+				il_generator.generate_local_assignment (loc.position)
+			elseif is_result then
+				res ?= Current
+				il_generator.generate_result_assignment
+			end
+		end
+
 feature -- Byte code generation
 
 	make_assignment_code (ba: BYTE_ARRAY; source_type: TYPE_I) is
@@ -493,7 +562,7 @@ feature -- Byte code generation
 			target_type := Context.real_type (type)
 			if target_type.is_none then
 				ba.append (Bc_none_assign)
-			elseif target_type.is_expanded then
+			elseif target_type.is_true_expanded then
 					-- Target is expanded: copy with possible exeception
 				ba.append (expanded_assign_code)
 				assignment := True
@@ -510,7 +579,7 @@ feature -- Byte code generation
 						basic_target ?= target_type
 						basic_source ?= source_type
 						if basic_target.level /= basic_source.level then
-							ba.append (basic_target.byte_code_cast)
+							basic_target.generate_byte_code_cast (ba)
 						end
 					end
 					ba.append (assign_code)
@@ -523,7 +592,7 @@ feature -- Byte code generation
 						-- metamorphose and simple attachment
 					basic_type ?= source_type
 					ba.append (Bc_metamorphose)
-				elseif source_type.is_expanded then
+				elseif source_type.is_true_expanded then
 						-- Source is expanded and target is a reference: clone
 						-- and simple attachment
 					ba.append (Bc_clone)
@@ -576,9 +645,9 @@ feature -- Byte code generation
 			cl_type: CL_TYPE_I
 			gen_type: GEN_TYPE_I
 		do
-			target_type := Context.real_type (type)
+			target_type := Context.creation_type (type)
 			check
-				not_expanded: not target_type.is_expanded
+				not_expanded: not target_type.is_true_expanded
 				not_basic: not target_type.is_basic
 			end
 			if target_type.is_none then
@@ -590,7 +659,7 @@ feature -- Byte code generation
 						-- metamorphose and simple attachment
 					basic_type ?= source_type
 					ba.append (Bc_metamorphose)
-				elseif source_type.is_expanded then
+				elseif source_type.is_true_expanded then
 						-- Source is expanded and target is a reference: clone
 						-- and simple attachment
 					ba.append (Bc_clone)

@@ -1,5 +1,5 @@
 indexing
-	description: "EiffelBench basic colors table"
+	description: "$EiffelGraphicalCompiler$ basic colors table"
 	date: "$Date$"
 	revision: "$Revision$"
 

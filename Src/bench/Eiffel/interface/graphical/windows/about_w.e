@@ -63,7 +63,7 @@ feature -- Constant strings
 
 	t_info:STRING is
 		once
-			if license.username /= Void and then not license.username.empty then
+			if license.username /= Void and then not license.username.is_empty then
 				Result := "Version registered to: " + license.username + "%R%N%R%N"
 			else
 				Result := ""
@@ -103,7 +103,6 @@ feature -- Attachements
 	set_values is
 		local
 			intro_color: COLOR
-			info_color: COLOR
 		do
 			!!intro_color.make
 			intro_color.set_name ("white")

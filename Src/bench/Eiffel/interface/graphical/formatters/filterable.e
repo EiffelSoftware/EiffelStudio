@@ -60,7 +60,7 @@ feature -- Filtering; Properties
 			tmp_text: STRUCTURED_TEXT;
 			text_filter: TEXT_FILTER
 		do
-			if filtername.empty then
+			if filtername.is_empty then
 				warner (popup_parent).gotcha_call (Warning_messages.w_No_filter_selected)
 			else
 				!!full_pathname.make_from_string (filter_path);
@@ -109,14 +109,14 @@ feature -- Filtering; Properties
 
 				!!fname.make_from_string (Result);
 				if file_suffix /= Void then
-					if not file_suffix.empty then
+					if not file_suffix.is_empty then
 						fname.add_extension (file_suffix)
 					end
 				else
 					fsuffix := clone (filtername);
 					fsuffix.head (3);
 					fsuffix.to_lower;
-					if not fsuffix.empty then
+					if not fsuffix.is_empty then
 						fname.add_extension (fsuffix)
 					end
 				end;
@@ -151,7 +151,7 @@ feature -- Filtering; Properties
 				fname.set_file_name (temp_name);
 				if file_suffix /= Void then
 					if 
-						not file_suffix.empty and then
+						not file_suffix.is_empty and then
 						fname.is_extension_valid (file_suffix)
 					then
 						fname.add_extension (file_suffix)
@@ -160,7 +160,7 @@ feature -- Filtering; Properties
 					fsuffix := clone (filtername);
 					fsuffix.head (3);
 					fsuffix.to_lower;
-					if not fsuffix.empty then
+					if not fsuffix.is_empty then
 						fname.add_extension (fsuffix)
 					end
 				end;

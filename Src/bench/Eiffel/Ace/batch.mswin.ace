@@ -1,0 +1,202 @@
+system
+	ec
+
+root
+	ES: make
+
+default
+	assertion(require)
+	assertion(ensure)
+	assertion(check)
+	address_expression(no)
+	array_optimization(no)
+	console_application(yes)
+	dead_code_removal(yes)
+	dynamic_runtime(no)
+	exception_trace(yes)
+	inlining(no)
+	multithreaded(no)
+	check_vape(yes)
+	disabled_debug(yes)
+	disabled_debug("jvmgen")
+	disabled_debug("assertion")
+	disabled_debug("liman")
+	disabled_debug("dead_code")
+	disabled_debug("type_check")
+	disabled_debug("jvm_dbc")
+	disabled_debug("c_debugger")
+	disabled_debug("profile_convert")
+	disabled_debug("remove_class")
+	disabled_debug("debbugger_hook")
+	disabled_debug("cache_compiler")
+	disabled_debug("check_expanded")
+	disabled_debug("cecil")
+	disabled_debug("dle topo")
+	disabled_debug("jvm_gen2")
+	disabled_debug("replication")
+	disabled_debug("document")
+	disabled_debug("jvm_gen [ ]")
+	disabled_debug("class_of_id")
+	disabled_debug("actual_replication")
+	disabled_debug("comments")
+	disabled_debug("flat_short")
+	disabled_debug("resource_validate")
+	disabled_debug("jvm_agen")
+	disabled_debug("hide_option")
+	disabled_debug("parse")
+	disabled_debug("skeleton")
+	disabled_debug("activity")
+	disabled_debug("local_feat_adaptation")
+	disabled_debug("trace_table")
+	disabled_debug("options")
+	disabled_debug("cache")
+	disabled_debug("dollar")
+	disabled_debug("cache_server")
+	disabled_debug("genericity")
+	disabled_debug("documentation")
+	disabled_debug("dead_code_removal")
+	disabled_debug("filters")
+	disabled_debug("cache_stat")
+	disabled_debug("debugger_hook")
+	disabled_debug("jvm_once")
+	disabled_debug("gelex")
+	disabled_debug("cache_research")
+	disabled_debug("show_prof_query")
+	disabled_debug("geyacc")
+	disabled_debug("flush_file")
+	disabled_debug("transfer")
+	disabled_debug("verbose")
+	disabled_debug("jvm_stack")
+	disabled_debug("has_calls")
+	disabled_debug("jvm_gen")
+	disabled_debug("sep_debug")
+	disabled_debug("byte_code")
+	disabled_debug("count")
+	disabled_debug("server")
+	disabled_debug("assertions")
+	disabled_debug("optimization")
+	debug(no)
+	line_generation(no)
+	profile(no)
+	trace(no)
+
+
+cluster
+	all base:		"$EIFFEL_SRC\library\base"
+		exclude
+			"table"; "CVS"; 
+		visible
+			array
+				end
+			string
+				end
+		end
+
+	all wel:		"$EIFFEL_SRC\library\wel"
+		exclude
+			"CVS"; 
+		end
+
+	all com:		"$EIFFEL_SRC\library\com"
+		exclude
+			"CVS"; 
+		visible
+			ecom_array
+				end
+		end
+
+	liman:		"$EIFFEL_SRC\Eiffel\limand"
+
+	liman_bench (liman):		"$\bench"
+
+	liman_abstract (liman):		"$\abstract"
+
+	beurk:		"$EIFFEL_SRC\Eiffel\beurk"
+
+	compiler_support:		"$EIFFEL_SRC\Eiffel\support"
+
+	common:		"$EIFFEL_SRC\Eiffel\common"
+
+	common_parser (common):		"$\parser"
+
+	common_eiffel_parser (common_parser):		"$\parser"
+
+	old_resources (common):		"$\resources"
+
+	flat_short (common_parser):		"$\flat_short"
+		exclude
+			"format_context.e"; "local_format.e"; 
+		end
+
+	flat_short_b:		"$EIFFEL_SRC\Eiffel\flat_short\bench"
+
+	yacc:		"$EIFFEL_SRC\Eiffel\yacc"
+
+	const:		"$EIFFEL_SRC\Eiffel\const"
+
+	all gobo:		"$EIFFEL_SRC\library\gobo\library"
+		exclude
+			"hact"; "se"; "ve"; "base"; "CVS"; 
+		end
+
+	all documentation:		"$EIFFEL_SRC\Eiffel\case\documentation"
+		exclude
+			"CVS"
+		end
+
+	all lace:		"$EIFFEL_SRC\Eiffel\lace"
+		exclude
+			"CVS"; 
+		end
+
+	all compiler:		"$EIFFEL_SRC\Eiffel\eiffel"
+		exclude
+			"CVS"; "unix"; "Clib"; "Core"; "junk"; "kernel";
+		end
+
+	all compiler_api:		"$EIFFEL_SRC\Eiffel\API"
+		exclude
+			"CVS"; 
+		end
+
+	switch:		"$EIFFEL_SRC\Eiffel\switch"
+
+	interface_switch (switch):		"$\interface\batch_only"
+
+	license_switch (switch):		"$\license\no_license"
+
+	communications (switch):		"$\no_communication"
+
+	status (communications):		"$\status"
+
+	debuging_class (communications):		"$\debug"
+
+	interface:		"$EIFFEL_SRC\Eiffel\interface"
+
+	interface_shared (interface):		"$\shared"
+
+	tty (interface):		"$\tty"
+
+	preference_tool (interface):		"$\graphical\preference_tool"
+
+	profile_tool (interface):		"$\graphical\profile_tool"
+
+external
+
+	include_path:
+		"$(EIFFEL_SRC)\C\bench",
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\Clib",
+		"$(EIFFEL_SRC)\library\com\spec\windows\include",
+		"$(EIFFEL_SRC)\library\wel\spec\windows\include",
+		"$(EIFFEL_SRC)\library\gobo\library\kernel\include"
+
+	object:
+		"$(EIFFEL_SRC)\C\bench\compiler.lib",
+		"$(EIFFEL_SRC)\C\platform\platform.lib",
+		"$(EIFFEL_SRC)\C\minilzo\minilzo.obj",
+		"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib\ecom.lib",
+		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com.lib",
+		"$(EIFFEL_SRC)\library\com\spec\$(ISE_C_COMPILER)\lib\com_runtime.lib",
+		"$(EIFFEL_SRC)\library\wel\spec\$(ISE_C_COMPILER)\lib\wel.lib"
+
+end

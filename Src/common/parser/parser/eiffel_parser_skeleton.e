@@ -33,7 +33,7 @@ inherit
 feature {NONE} -- Initialization
 
 	make is
-			-- Create a new Eiffel parser.
+			-- Create a new pure Eiffel parser.
 		do
 			make_eiffel_scanner
 			make_parser_skeleton
@@ -42,6 +42,13 @@ feature {NONE} -- Initialization
 			!! formal_parameters.make (Initial_formal_parameters_capacity)
 			formal_parameters.compare_objects
 			id_level := Normal_level
+		end
+
+	make_il_parser is
+			-- Create a new IL Eiffel parser.
+		do
+			il_parser := True
+			make
 		end
 
 feature -- Initialization
@@ -56,7 +63,13 @@ feature -- Initialization
 			!! suppliers.make
 			formal_parameters.wipe_out
 			id_level := Normal_level
+			real_class_end_position := 0
 		end
+
+feature -- Status report
+
+	il_parser: BOOLEAN
+			-- Is current Eiffel parser an IL Eiffel parser?
 
 feature -- Parsing
 
@@ -73,6 +86,22 @@ feature -- Parsing
 			input_buffer := File_buffer
 			yy_load_input_buffer
 			filename := a_file.name
+			yyparse
+			reset
+		rescue
+			reset
+		end
+
+	parse_from_string (a_string: STRING) is
+			-- Parse Eiffel class text in `a_string'.
+			-- Make result available in `root_node'.
+			-- An exception is raised if a syntax error is found.
+		require
+			a_string_not_void: a_string /= Void
+		do
+			root_node := Void
+			create input_buffer.make (a_string)
+			yy_load_input_buffer
 			yyparse
 			reset
 		rescue
@@ -99,6 +128,19 @@ feature -- Access
 
 	click_list: CLICK_LIST
 			-- List of clickable elements read so far
+
+	real_class_end_position: INTEGER
+			-- When `inherit_context' becomes `True', when an
+			-- empty parent specification is encountered, the
+			-- position is saved in this variable.
+			-- If this was the last token, this position is used
+			-- for the insertion positions in `root_node'.
+
+	formal_generics_start_position: INTEGER
+			-- Start of formal generics, if present.
+
+	formal_generics_end_position: INTEGER
+			-- End of formal generics, if present.
 
 feature -- Setting
 
@@ -141,6 +183,15 @@ feature {NONE} -- Implementation
 	is_expanded: BOOLEAN
 			-- Boolean mark for expanded class
 
+	is_frozen_class: BOOLEAN
+			-- Boolean mark for sealed/frozen class, ie not
+			-- inheritable by other classes.
+
+	is_external_class: BOOLEAN
+			-- Boolean mark for class that should not be generated
+			-- by Eiffel compiler since they are already generated
+			-- within runtime environment.
+
 	is_separate: BOOLEAN
 			-- Boolean mark for separate class
 
@@ -152,6 +203,10 @@ feature {NONE} -- Implementation
 
 	fbody_pos: INTEGER
 			-- To memorize the beginning of a feature body
+
+	feature_indexes: INDEXING_CLAUSE_AS
+			-- Indexing clause for an Eiffel feature.
+			-- IL only
 
 feature {NONE} -- Actions
 
@@ -175,11 +230,12 @@ feature {NONE} -- Actions
 			end
 		end
 
-	new_class_description (n: PAIR [ID_AS, CLICK_AST]; is_d, is_e, is_s: BOOLEAN;
-		first_ind, last_ind: EIFFEL_LIST [INDEX_AS]; g: EIFFEL_LIST [FORMAL_DEC_AS];
+	new_class_description (n: PAIR [ID_AS, CLICK_AST]; n2: STRING_AS;
+		is_d, is_e, is_s, is_fc, is_ex: BOOLEAN;
+		first_ind, last_ind: INDEXING_CLAUSE_AS; g: EIFFEL_LIST [FORMAL_DEC_AS];
 		p: EIFFEL_LIST [PARENT_AS]; c: EIFFEL_LIST [CREATE_AS];
 		f: EIFFEL_LIST [FEATURE_CLAUSE_AS]; inv: INVARIANT_AS;
-		s: SUPPLIERS_AS; o: STRING_AS; cl: CLICK_LIST; e: INTEGER): CLASS_AS is
+		s: SUPPLIERS_AS; o: STRING_AS; cl: CLICK_LIST): CLASS_AS is
 			-- New CLASS AST node;
 			-- Update the clickable list.
 		require
@@ -189,27 +245,30 @@ feature {NONE} -- Actions
 			s_not_void: s /= Void
 			cl_not_void: cl /= Void
 		local
-			ind: EIFFEL_LIST [INDEX_AS]
+			ext_name: STRING
 		do
-				-- Merging of the two indexing clauses
-			if first_ind /= Void then
-				ind := first_ind
-				if last_ind /= Void then
-					ind.append (last_ind)
+			if n2 /= Void then
+				if not il_parser then
+						-- Trigger a syntax error.
+					raise_error
+				else
+					ext_name := n2.value
 				end
-			else
-				ind := last_ind
 			end
-			Result := new_class_as (n.first, is_d, is_e, is_s, ind, g, p, c, f, inv, s, o, cl, e)
+			Result := new_class_as (n.first, ext_name, is_d, is_e, is_s, is_fc, is_ex, first_ind, last_ind, g, p, c, f, inv, s, o, cl)
 			n.second.set_node (Result)
 		ensure
 			class_description_not_void: Result /= Void
 			class_name_set: Result.class_name = n.first
+			external_class_name_set: (n2 /= Void and then Result.external_class_name = n2.value)
+							or else (Result.external_class_name = Void)
 			is_deferred_set: Result.is_deferred = is_d
 			is_expanded_set: Result.is_expanded = is_e
 			is_separate_set: Result.is_separate = is_s
-			first_indexes_set: first_ind /= Void implies Result.indexes = first_ind
-			last_indexes_set: first_ind = Void implies Result.indexes = last_ind
+			is_frozen_set: Result.is_frozen = is_fc
+			is_external_set: Result.is_external = is_ex
+			first_indexes_set: Result.top_indexes = first_ind
+			last_indexes_set: Result.bottom_indexes = last_ind
 			generics_set: Result.generics = g
 			parents_set: Result.parents = p
 			creators_set: Result.creators = c
@@ -219,7 +278,6 @@ feature {NONE} -- Actions
 			suppliers_set: Result.suppliers = s
 			obsolete_message_set: Result.obsolete_message = o
 			click_list_set: Result.click_list = cl
-			end_position_set: Result.end_position = e
 			click_ast_updated: n.second.node = Result
 		end
 
@@ -251,24 +309,26 @@ feature {NONE} -- Actions
 			content_set: Result.content = content
 		end
 
-	new_feature_declaration (f: PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]; b: BODY_AS): FEATURE_AS is
+	new_feature_declaration (f: PAIR [EIFFEL_LIST [FEATURE_NAME], CLICK_AST]; b: BODY_AS; i: INDEXING_CLAUSE_AS ): FEATURE_AS is
 			-- New FEATURE AST node;
 			-- Update the clickable list.
 		require
 			f_not_void: f /= Void
 			feature_names_not_void: f.first /= Void
-			feature_names_not_empty: not f.first.empty
+			feature_names_not_empty: not f.first.is_empty
 			click_ast_not_void: f.second /= Void
+			can_have_indexing_clause: i /= Void implies f.first.count = 1
 		local
 			click_ast: CLICK_AST
 		do
 			click_ast := f.second
-			Result := new_feature_as (f.first, b, click_ast.start_position, current_position.start_position)
+			Result := new_feature_as (f.first, b, i, click_ast.start_position, current_position.start_position)
 			click_ast.set_node (Result)
 		ensure
 			feature_declaration_not_void: Result /= Void
 			feature_names_set: Result.feature_names = f.first
 			body_set: Result.body = b
+			indexes_set: Result.indexes = i
 			click_ast_updated: f.second.node = Result
 		end
 
@@ -335,10 +395,15 @@ feature {NONE} -- Actions
 
 feature {NONE} -- ID factory
 
-	new_integer_id_as: ID_AS is
-			-- New ID AST node for "INTEGER"
+	new_integer_id_as (n: INTEGER): ID_AS is
+			-- New ID AST node for "INTEGER" of `n' bits.
 		do
-			Result := new_id_as (Integer_classname)
+			inspect n
+			when 8 then Result := new_id_as (Integer_8_classname)
+			when 16 then Result := new_id_as (Integer_16_classname)
+			when 32 then Result := new_id_as (Integer_classname)
+			when 64 then Result := new_id_as (Integer_64_classname)
+			end
 		ensure
 			id_as_not_void: Result /= Void
 		end
@@ -351,10 +416,14 @@ feature {NONE} -- ID factory
 			id_as_not_void: Result /= Void
 		end
 
-	new_character_id_as: ID_AS is
+	new_character_id_as (is_wide: BOOLEAN): ID_AS is
 			-- New ID AST node for "CHARACTER"
 		do
-			Result := new_id_as (Character_classname)
+			if is_wide then
+				Result := new_id_as (Wide_char_classname)
+			else
+				Result := new_id_as (Character_classname)
+			end
 		ensure
 			id_as_not_void: Result /= Void
 		end
@@ -543,6 +612,16 @@ feature {NONE} -- String factory
 			Result := new_string_as ("")
 		ensure
 			string_as_not_void: Result /= Void
+		end
+
+	new_empty_verbatim_string_as (marker: STRING): VERBATIM_STRING_AS is
+			-- New verbatim string AST node for ""
+		require
+			marker_not_void: marker /= Void
+		do
+			Result := new_verbatim_string_as ("", marker)
+		ensure
+			verbatim_string_as_not_void: Result /= Void
 		end
 
 feature {NONE} -- Clickable factory
@@ -780,7 +859,7 @@ feature {NONE} -- Type factory
 			click_ast_updated: click_ast.node = Result
 		end
 
-	new_character_type (click_ast: CLICK_AST; is_generic: BOOLEAN): CHAR_TYPE_AS is
+	new_character_type (click_ast: CLICK_AST; is_generic, is_wide: BOOLEAN): CHAR_TYPE_AS is
 			-- New character class type;
 			-- Update the clickable list and report
 			-- error if `is_generic' is true.
@@ -790,7 +869,7 @@ feature {NONE} -- Type factory
 			if is_generic then
 				report_basic_generic_type_error
 			end
-			Result := new_character_type_as
+			Result := new_character_type_as (is_wide)
 			click_ast.set_node (Result)
 		ensure
 			type_not_void: Result /= Void
@@ -814,17 +893,18 @@ feature {NONE} -- Type factory
 			click_ast_updated: click_ast.node = Result
 		end
 
-	new_integer_type (click_ast: CLICK_AST; is_generic: BOOLEAN): INT_TYPE_AS is
+	new_integer_type (click_ast: CLICK_AST; is_generic: BOOLEAN; n: INTEGER): INT_TYPE_AS is
 			-- New integer class type;
 			-- Update the clickable list and report
 			-- error if `is_generic' is true.
 		require
 			click_ast_not_void: click_ast /= Void
+			valid_n: n = 8 or n = 16 or n = 32 or n = 64
 		do
 			if is_generic then
 				report_basic_generic_type_error
 			end
-			Result := new_integer_type_as
+			Result := new_integer_type_as (n)
 			click_ast.set_node (Result)
 		ensure
 			type_not_void: Result /= Void
@@ -889,7 +969,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: BASIC_GEN_TYPE_ERR
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -902,7 +982,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -915,7 +995,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -926,7 +1006,7 @@ feature {NONE} -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -937,14 +1017,18 @@ feature {NONE} -- Constants
 			-- Dummy CLICKABLE_AST used to temporarily
 			-- fill `node' in CLICK_AST
 		once
-			Result := new_integer_type_as
+			Result := new_integer_type_as (32)
 		ensure
 			dummy_clicable_as_not_void: Result /= Void
 		end
 
+	Integer_8_classname: STRING is "integer_8"
+	Integer_16_classname: STRING is "integer_16"
 	Integer_classname: STRING is "integer"
+	Integer_64_classname: STRING is "integer_64"
 	Boolean_classname: STRING is "boolean"
 	Character_classname: STRING is "character"
+	Wide_char_classname: STRING is "wide_character"
 	Double_classname: STRING is "double"
 	None_classname: STRING is "none"
 	Pointer_classname: STRING is "pointer"
@@ -995,6 +1079,9 @@ invariant
 	no_void_formal_parameter: not formal_parameters.has (Void)
 	valid_id_level: (id_level = Normal_level) or
 		(id_level = Assert_level) or (id_level = Invariant_level)
+	is_frozen_class_not_set: not il_parser implies not is_frozen_class
+	is_external_class_not_set: not il_parser implies not is_external_class
+	
 
 end -- class EIFFEL_PARSER_SKELETON
 

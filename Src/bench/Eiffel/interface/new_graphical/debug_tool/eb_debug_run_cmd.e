@@ -1,15 +1,32 @@
 indexing
-	description: "Command to run the system while debugging."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Command to run the system while debugging."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
-	EB_DEBUG_RUN_CMD
+	EB_DEBUG_RUN_COMMAND
 
 inherit
+	EB_TOOLBARABLE_AND_MENUABLE_COMMAND
+		redefine
+			new_toolbar_item,
+			new_menu_item
+		end
+
+	EB_SHARED_GRAPHICAL_COMMANDS
+		export
+			{NONE} all
+		end
+
 	IPC_SHARED
+		export
+			{NONE} all
+		end
 
 	SHARED_EIFFEL_PROJECT
+		export
+			{NONE} all
+		end
 
 	PROJECT_CONTEXT
 		export
@@ -21,31 +38,41 @@ inherit
 			{NONE} all
 		end
 
-	EB_TEXT_TOOL_CMD
-		redefine
-			tool, make
+	SHARED_APPLICATION_EXECUTION
+		export
+			{NONE} all
 		end
 
-	SHARED_APPLICATION_EXECUTION
+	EB_SHARED_MANAGERS
+		export
+			{NONE} all
+		end
 
-	EB_SHARED_INTERFACE_TOOLS
-
-	NEW_EB_CONSTANTS
-
---	WARNER_CALLBACKS
+	EB_SHARED_ARGUMENTS
+		export
+			{NONE} all
+		end
 
 	EXEC_MODES
+		export
+			{NONE} all
+		end
 
-creation
+	SHARED_STATUS
+		export
+			{NONE} all
+		end
+
+create
 	make
 
 feature -- Initialization
 
-	make (a_tool: EB_DEBUG_TOOL) is
+	make is
 			-- Initialize the command, create a couple of requests and windows.
 			-- Add some actions as well.
 		do
-			precursor (a_tool)
+			initialize
 			create run_request.make (Rqst_application)
 			create cont_request.make (Rqst_cont)
 		end
@@ -66,165 +93,250 @@ feature -- Callbacks
 			end
 		end
 
-feature -- Properties
+feature -- Access
 
-	tool: EB_DEBUG_TOOL
-			-- The text for the project tool.
-
---	symbol: EV_PIXMAP is 
---			-- Pixmap for the button.
---		once 
---			Result := Pixmaps.bm_Debug_run 
---		end
-
-	parent: EV_CONTAINER
-			-- Parent for the argument window
-
-	melt_and_run: EV_ARGUMENT1 [ANY] is
-			-- Third button action
-		once
-		 	create Result.make (Void)
+	new_toolbar_item (display_text: BOOLEAN; use_gray_icons: BOOLEAN): EB_COMMAND_TOOL_BAR_BUTTON is
+		do
+			Result := {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} Precursor (display_text, use_gray_icons)
+			Result.select_actions.put_front (~execute_from (Result))
 		end
 
-feature -- Close window
-
-	close is
-                        -- Close `argument_window'.
-		obsolete
-			"Use destroy or hide instead"
+	new_menu_item: EB_COMMAND_MENU_ITEM is
 		do
---			argument_window.close
+			Result := {EB_TOOLBARABLE_AND_MENUABLE_COMMAND} Precursor
+			Result.select_actions.put_front (~execute_from (Result))
 		end
 
 feature -- Execution
 
-	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
-			-- What to do?
-		local
---			update_command: UPDATE_PROJECT
---			argument_window: EB_ARGUMENT_DIALOG
+	execute is
+			-- Launch program in debugger with mode `User_stop_points' (i.e "Run").
 		do
-			if Project_tool.initialized then
-				if argument = melt_and_run then
---					update_command ?= project_tool.quick_melt_cmd
---					update_command.set_run_after_melt (True)
---					need_to_wait := True
---					update_command.execute (Void, Void)
---					need_to_wait := False
---					Application.set_execution_mode (User_stop_points)
---					launch_application
---					update_command.set_run_after_melt (false)
---				elseif argument = button_three_action then
---					if argument_window.destroyed then
---						argument_window.initialize (popup_parent, Current)
---						argument_window.call
---					else
---						argument_window.destroy
---					end
+			execute_with_mode (User_stop_points)
+		end
+		
+	execute_with_mode (execution_mode: INTEGER) is
+			-- Launch program in debugger with mode `execution_mode'.
+		local
+			cd: EV_CONFIRMATION_DIALOG
+		do
+			Application.set_execution_mode (execution_mode)
+			if
+				Eiffel_project.initialized and then
+				not Eiffel_project.Workbench.is_compiling
+			then
+				if not Eiffel_project.Workbench.successful then
+						-- The last compilation was not successful.
+						-- It is VERY dangerous to launch the debugger in these conditions.
+						-- However, forbidding it completely may be too frustating.
+					create cd.make_with_text (Warning_messages.w_Debug_not_compiled)
+					cd.button ("OK").select_actions.extend (~launch_application)
+					cd.show_modal_to_window (Window_manager.last_focused_window.window)
 				else
-					if argument = Void  and then not need_to_wait then
-							--| It means that the user clicked on the EXEC_STOP, EXEC_STEP,
-							--| EXEC_NOSTOP or EXEC_LAST button and not on the RUN button
-						launch_application
-					elseif not need_to_wait then
-							--| The user clicked on the Run button and since `execution_mode'
-							--| is a shared variable, we need to update its value before to
-							--| launch the execution
-						Application.set_execution_mode (User_stop_points)
-						launch_application
-					end
+					launch_application
 				end
 			end
 		end
-		
+
+	execute_from (widget: EV_CONTAINABLE) is
+			-- Set widget's top-level window as the debugging window.
+		local
+			trigger: EV_CONTAINABLE
+			cont: EV_ANY
+			window: EV_WINDOW
+			wd: EV_WARNING_DIALOG
+		do
+			from
+				trigger := widget
+				cont := trigger.parent
+			until
+				cont = Void
+			loop
+				trigger ?= cont
+				if trigger /= Void then
+					cont := trigger.parent
+				else
+					cont := Void
+				end
+			end
+			window ?= trigger
+			if window /= Void then
+				debugger_manager.set_debugging_window (
+					window_manager.development_window_from_window (window)
+				)
+			else
+				create wd.make_with_text ("Could not initialize debugging tools")
+				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+			end
+		end
+
+	melt_and_execute is
+			-- Melt system, then launch it.
+		local
+			melt_command: EB_MELT_PROJECT_COMMAND
+		do
+			if Eiffel_project.initialized then
+--				melt_command ?= project_window.quick_melt_cmd
+				melt_command.set_run_after_melt (True)
+--				need_to_wait := True
+--				melt_command.execute (Void, Void)
+--				need_to_wait := False
+				Application.set_execution_mode (User_stop_points)
+				launch_application
+--				melt_command.set_run_after_melt (false)
+			end
+		end
+
+	c_compile is
+			-- Freeze system.
+		do
+			if Eiffel_project.initialized then
+				Eiffel_project.call_finish_freezing (True)
+--				Application.set_execution_mode (User_stop_points)
+--				launch_application
+			end
+		end
+
+	process_breakable (bs: BREAKABLE_STONE) is
+			-- Process breakable stone: i.e. run to cursor.
+		local
+			index: INTEGER
+			f: E_FEATURE
+			body_index: INTEGER
+			old_bp_status: INTEGER
+			wd: EV_WARNING_DIALOG
+		do
+			if Eiffel_project.successful then
+				f := bs.routine
+				if f.is_debuggable then
+					index := bs.index
+					body_index := bs.body_index
+						-- Remember the status of the breakpoint
+					old_bp_status := Application.breakpoint_status (f, index)
+						-- Enable the breakpoint
+					Application.enable_breakpoint (f, index)
+						-- Run the program
+					execute
+						-- Put back the status of the modified breakpoint.
+					Application.set_breakpoint_status (f, index, old_bp_status)
+					end
+				else
+					create wd.make_with_text (Warning_messages.w_Cannot_debug)
+					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+				end
+			end
+
 	launch_application is
-			-- Launch the program from the project tool.
+			-- Launch the program from the project target.
 		local
 			makefile_sh_name: FILE_NAME
 			status: APPLICATION_STATUS
-			ok: BOOLEAN
 			uf: RAW_FILE
 			make_f: PLAIN_TEXT_FILE
 			kept_objects: LINKED_SET [STRING]
-			ready_to_run: BOOLEAN
-			temp: STRING
---			mp: MOUSE_PTR
 			wd: EV_WARNING_DIALOG
+			cd: EV_CONFIRMATION_DIALOG
+			ignore_all_breakpoints_confirmation_dialog: EB_STANDARD_DISCARDABLE_CONFIRMATION_DIALOG
 		do
-			if 
-				not project_tool_is_valid or else
-				not Eiffel_project.system_defined or else
-				Eiffel_System.name = Void
-			then
-				tool.display_string ("System not compiled%N")
-			elseif not Application.is_running then
-					-- Application is not running. Start it.
-debug
-	io.error.putstring (generator)
-	io.error.putstring (": Start execution%N")
-end
-				create makefile_sh_name.make_from_string (Workbench_generation_path)
-				makefile_sh_name.set_file_name (Makefile_SH)
-
-				create uf.make (Eiffel_system.application_name (True))
-				create make_f.make (makefile_sh_name)
-
-				if uf.exists then
-					if make_f.exists and then make_f.date > uf.date then
-							-- The Makefile file is more recent than the 
-							-- application
---						create wd.make_with_text (tool.parent, Interface_names.t_Warning,
---							Warning_messages.w_Makefile_more_recent (Makefile_SH)) 
---							wd.show_ok_cancel_buttons
---							wd.add_ok_command (Current, Void)
---							wd.show
-					else
-						launch_program := True
-						if Application.has_breakpoints and then Application.is_ignoring_stop_points then	
---							create wd.make_with_text (tool.parent, Interface_names.t_Warning,
---								Warning_messages.w_Ignoring_all_stop_points)
---							wd.show_ok_cancel_buttons
---							wd.add_ok_command (Current, Void)
---							wd.show
+			if  (not Eiffel_project.system_defined) or else (Eiffel_System.name = Void) then
+				create wd.make_with_text (Warning_messages.w_No_system)
+				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+			elseif (not Application.is_running) then
+				if
+					Eiffel_project.initialized and then
+					not Eiffel_project.Workbench.is_compiling
+				then
+						-- Application is not running. Start it.
+	debug("DEBUGGER")
+		io.error.putstring (generator)
+		io.error.putstring ("(DEBUG_RUN): Start execution%N")
+	end
+					create makefile_sh_name.make_from_string (Workbench_generation_path)
+					makefile_sh_name.set_file_name (Makefile_SH)
+					
+					Output_manager.clear
+	
+					create uf.make (Eiffel_system.application_name (True))
+					create make_f.make (makefile_sh_name)
+	
+					if uf.exists then
+						if make_f.exists and then make_f.date > uf.date then
+								-- The Makefile file is more recent than the 
+								-- application
+							create cd.make_with_text_and_actions (Warning_messages.w_Makefile_more_recent (makefile_sh_name),
+								<<~c_compile>>)
+							cd.show_modal_to_window (window_manager.last_focused_development_window.window)
 						else
-							start_program
+							launch_program := True
+							if Application.has_breakpoints and then Application.is_ignoring_stop_points then
+								create ignore_all_breakpoints_confirmation_dialog.make_initialized (
+									2, "confirm_ignore_all_breakpoints",
+									Warning_messages.w_Ignoring_all_stop_points, Interface_names.l_Do_not_show_again
+								)
+								ignore_all_breakpoints_confirmation_dialog.set_ok_action (agent start_program)
+								ignore_all_breakpoints_confirmation_dialog.show_modal_to_window (window_manager.last_focused_development_window.window)
+							else
+								start_program
+							end
+						end
+					elseif make_f.exists then
+							-- There is no application.
+						create wd.make_with_text (Warning_messages.w_No_system_generated)
+						wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+					elseif Eiffel_project.Lace.compile_all_classes then
+						create wd.make_with_text (Warning_messages.w_None_system)
+						wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+					else
+						if Eiffel_system.system.il_generation then
+								-- This is a .NET system, we need to check that the application is in the
+								-- F_code directory.
+							create uf.make (Eiffel_system.application_name (False))
+							if uf.exists then
+								(create {COMMAND_EXECUTOR}).execute (eiffel_system.application_name (False))
+							else
+								create wd.make_with_text (Warning_messages.w_No_dotnet_system_generated)
+								wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+							end
+						else
+							create wd.make_with_text (Warning_messages.w_Must_compile_first)
+							wd.show_modal_to_window (window_manager.last_focused_development_window.window)
 						end
 					end
-				elseif make_f.exists then
-						-- There is no application
---					create wd.make_with_text (tool.parent, Interface_names.t_Warning,
---						Warning_messages.w_No_system_generated)
---					wd.show_ok_cancel_buttons
---					wd.add_ok_command (Current, Void)
---					wd.show
-				else
-					create wd.make_default (tool.parent, Interface_names.t_Warning,
-						Warning_messages.w_Must_compile_first)
 				end
 			else
 				status := Application.status
-				if status.is_stopped then
+				if status /= Void and then status.is_stopped then
 					-- Application is stopped. Continue execution.
-debug
+debug("DEBUGGER")
 	io.error.putstring (generator)
 	io.error.putstring (": Contine execution%N")
 end
---					create mp.set_watch_cursor
 						-- Ask the application to wean objects the
 						-- debugger doesn't need anymore.
-					kept_objects := tool_supervisor.object_tool_mgr.objects_kept
-					kept_objects.merge (debug_tool.kept_objects)
-					Application.continue (kept_objects)
-					tool_supervisor.object_tool_mgr.hang_on
-					if status.e_feature /= Void then
-						tool_supervisor.feature_tool_mgr.show_stoppoint 
-							(status.e_feature, status.break_index)
-						tool.show_stoppoint
-							(status.e_feature, status.break_index)
+--| FIXME ARNAUD
+--					kept_objects := window_manager.object_tool_mgr.objects_kept
+--					kept_objects.merge (debug_target.kept_objects)
+					if debugger_manager /= Void then
+						kept_objects := debugger_manager.kept_objects
+					else
+						create kept_objects.make
 					end
-					debug_tool.save_current_cursor_position
-					debug_tool.display_string ("System is running%N")
---					mp.restore
+					Application.continue (kept_objects)
+--					window_manager.object_tool_mgr.hang_on
+--					if status.e_feature /= Void then
+--						window_manager.feature_tool_mgr.show_stoppoint 
+--							(status.e_feature, status.break_index)
+--						target.show_stoppoint
+--							(status.e_feature, status.break_index)
+--					end
+--					target.refresh_current_stoppoint
+--					Window_manager.feature_tool_mgr.synchronize_with_callstack
+--					debug_target.save_current_cursor_position
+--					debug_target.display_string ("System is running%N")
+					if debugger_manager /= Void then
+						debugger_manager.on_application_resumed
+					end
+--| END FIXME
 				end
 			end
 		end
@@ -232,25 +344,51 @@ end
 	start_program is
 			-- Launch the program to be debugged.
 		local
---			mp: MOUSE_PTR
+			output_text: STRUCTURED_TEXT
+			wd: EV_WARNING_DIALOG
+			working_dir: STRING
 		do
-			tool.save_current_cursor_position
-			tool.display_string ("Launching system...%N")
---			create mp.set_watch_cursor
-			Application.run (Argument_list)
-			if Application.is_running then
-				debug_tool.display_string ("System is running%N")
-			else
-					-- Something went wrong
-				debug_tool.display_string (Application.eiffel_timeout_message)
+			create output_text.make
+			if not Application.is_running then
+					-- First time we launch the program, we clear the output tool.
+				output_manager.clear
 			end
---			mp.restore
+			output_text.add_string ("Launching system...")
+			output_text.add_new_line
+			
+			working_dir := application_working_directory
+			if not (create {DIRECTORY} .make (working_dir)).exists then
+				create wd.make_with_text (Warning_messages.w_Invalid_working_directory (working_dir))
+				wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+				output_text.add_string (Warning_messages.w_Invalid_working_directory (working_dir))
+			else
+				Application.run (current_cmd_line_argument, working_dir)
+				if Application.is_running then
+					output_text.add_string ("System is running")
+					output_text.add_new_line
+					if debugger_manager /= Void then
+						debugger_manager.on_application_launched
+					end
+				else
+						-- Something went wrong
+					create wd.make_with_text (Application.eiffel_timeout_message)
+					wd.show_modal_to_window (window_manager.last_focused_development_window.window)
+					output_text.add_string ("Could not launch system")
+				end
+			end
+			output_manager.process_text (output_text)
 		end
 
-feature {NONE} -- Attributes
+feature {NONE} -- Implementation / Attributes
 
-	name: STRING is
-			-- Name of the command.
+	tooltip: STRING is
+			-- Tooltip for the command.
+		do
+			Result := Interface_names.f_Debug_run
+		end
+
+	description: STRING is
+			-- Description for the command.
 		do
 			Result := Interface_names.f_Debug_run
 		end
@@ -261,10 +399,15 @@ feature {NONE} -- Attributes
 			Result := Interface_names.m_Debug_run
 		end
 
-	accelerator: STRING is
-			-- Accelerator action for menu entry
+	name: STRING is "Run"
+			-- Name of the command. Used to store the command in the
+			-- preferences.
+
+	pixmap: ARRAY [EV_PIXMAP] is
+			-- Pixmaps representing the command (one for the
+			-- gray version, one for the color version).
 		do
-			Result := Interface_names.a_Debug_run
+			Result := Pixmaps.Icon_run
 		end
 
 	run_request: RUN_REQUEST
@@ -279,4 +422,4 @@ feature {NONE} -- Attributes
 	need_to_wait: BOOLEAN
 			-- Do we need to wait until the end of the compilation?
 
-end -- class EB_DEBUG_RUN_CMD
+end -- class EB_DEBUG_RUN_COMMAND

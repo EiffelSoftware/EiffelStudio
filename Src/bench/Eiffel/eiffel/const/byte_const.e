@@ -53,6 +53,7 @@ feature {NONE}
 	Bc_char:			CHARACTER is '%/045/';
 	Bc_bool:			CHARACTER is '%/046/';
 	Bc_int:				CHARACTER is '%/047/';
+	Bc_int32:			CHARACTER is '%/047/';
 	Bc_double:			CHARACTER is '%/048/';
 	Bc_result:			CHARACTER is '%/049/';
 	Bc_local:			CHARACTER is '%/050/';
@@ -71,7 +72,7 @@ feature {NONE}
 	Bc_power:			CHARACTER is '%/063/';
 	Bc_le:				CHARACTER is '%/064/';
 	Bc_div:				CHARACTER is '%/065/';
-	Bc_break:			CHARACTER is '%/066/';
+	Bc_nhook:			CHARACTER is '%/066/';
 	Bc_and:				CHARACTER is '%/067/';
 	Bc_slash:			CHARACTER is '%/068/';
 	Bc_mod:				CHARACTER is '%/069/';
@@ -84,7 +85,6 @@ feature {NONE}
 	Bc_protect:			CHARACTER is '%/076/';
 	Bc_release:			CHARACTER is '%/077/';
 	Bc_jmp_t:			CHARACTER is '%/078/';
-	Bc_debuggable:		CHARACTER is '%/079/';
 	Bc_rescue: 			CHARACTER is '%/080/';
 	Bc_end_rescue:		CHARACTER is '%/081/';
 	Bc_retry:			CHARACTER is '%/082/';
@@ -101,7 +101,7 @@ feature {NONE}
 	Bc_true_compar:		CHARACTER is '%/093/';
 	Bc_standard_equal:	CHARACTER is '%/094/';
 	Bc_bit_standard_equal:	CHARACTER is '%/095/';
-	Bc_cont:			CHARACTER is '%/096/';
+	Bc_hook:			CHARACTER is '%/096/';
 	Bc_bit:				CHARACTER is '%/097/';
 	Bc_array:			CHARACTER is '%/098/';
 	Bc_retrieve_old:	CHARACTER is '%/099/';
@@ -114,7 +114,6 @@ feature {NONE}
 	Bc_goto_body:		CHARACTER is '%/106/';
 	Bc_not_rec:			CHARACTER is '%/107/';
 	Bc_end_pre:			CHARACTER is '%/108/';
-	Bc_end_first_pre:	CHARACTER is '%/109/';
 	Bc_cast_long:		CHARACTER is '%/110/';
 	Bc_cast_float:		CHARACTER is '%/111/';
 	Bc_cast_double:		CHARACTER is '%/112/';
@@ -142,11 +141,31 @@ feature {NONE}
 	Bc_gen_param_create:CHARACTER is '%/134/';
 	Bc_create_exp:		CHARACTER is '%/135/';
 	Bc_null_pointer:	CHARACTER is '%/136/';
-	Bc_max:				CHARACTER is '%/137/'
-	Bc_min:				CHARACTER is '%/138/'
-	Bc_generator:		CHARACTER is '%/139/'
-	Bc_zero:			CHARACTER is '%/140/'
-	Bc_one:				CHARACTER is '%/141/'
+
+		-- Special instructions operation for basic type optimisations
+	Bc_basic_operations:	CHARACTER is '%/137/'
+	Bc_max:			CHARACTER is '%/001/'
+	Bc_min:			CHARACTER is '%/002/'
+	Bc_generator:		CHARACTER is '%/003/'
+	Bc_offset:			CHARACTER is '%/004/'
+	Bc_zero:			CHARACTER is '%/005/'
+	Bc_one:			CHARACTER is '%/006/'
+
+		-- Special instructions for Bit operations
+	Bc_int_bit_op:		CHARACTER is '%/138/'
+	bc_int_bit_and:		CHARACTER is '%/001/'
+	bc_int_bit_or:		CHARACTER is '%/002/'
+	bc_int_bit_xor:		CHARACTER is '%/003/'
+	bc_int_bit_not:		CHARACTER is '%/004/'
+	bc_int_bit_shift_left:		CHARACTER is '%/005/'
+	bc_int_bit_shift_right:		CHARACTER is '%/006/'
+	bc_int_bit_test:		CHARACTER is '%/007/'
+
+		-- New basic types
+	Bc_wchar:			CHARACTER is '%/139/'
+	Bc_int8:			CHARACTER is '%/140/'
+	Bc_int16:			CHARACTER is '%/141/'
+	Bc_int64:			CHARACTER is '%/142/'
 
 		-- Instructions for Concurrent Eiffel
 

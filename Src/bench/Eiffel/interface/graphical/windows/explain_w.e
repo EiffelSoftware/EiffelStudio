@@ -94,7 +94,7 @@ feature -- Graphical Interface
 			!! file_menu.make (Interface_names.m_File, menu_bar)
 			!! edit_menu.make (Interface_names.m_Edit, menu_bar)
 			!! special_menu.make (Interface_names.m_Special, menu_bar)
-			!! window_menu.make (Interface_names.m_Windows, menu_bar)
+			!! window_menu.make (Interface_names.m_window, menu_bar)
 			build_help_menu
 			fill_menus
 		end

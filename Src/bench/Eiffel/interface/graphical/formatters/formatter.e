@@ -71,8 +71,6 @@ feature -- Execution
 
 	execute (argument: ANY) is
 			-- Execute current command but don't change the cursor into watch shape.
-		local
-			mp: MOUSE_PTR
 		do
 			if last_warner /= Void then
 				last_warner.popdown
@@ -86,7 +84,7 @@ feature -- Execution
 			if not text_window.changed then
 				execute_licensed (formatted)
 			else
-				warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
+				warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed (Void),
 					Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
 			end
 		end;

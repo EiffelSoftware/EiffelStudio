@@ -57,7 +57,8 @@ feature {NONE}
 			finished_file: PLAIN_TEXT_FILE
 			finished_file_name: FILE_NAME
 		do
-			subdir_name := clone (System_object_prefix);
+			create subdir_name.make (5)
+			subdir_name.append_character (System_object_prefix);
 			subdir_name.append_integer (n);
 
 			!!dir_name.make_from_string (Final_generation_path);
@@ -90,7 +91,8 @@ feature {NONE}
 			finished_file: PLAIN_TEXT_FILE
 			finished_file_name: FILE_NAME
 		do
-			subdir_name := clone (System_object_prefix);
+			create subdir_name.make (5)
+			subdir_name.append_character (System_object_prefix);
 			subdir_name.append_integer (1);
 
 			!!dir_name.make_from_string (Workbench_generation_path);

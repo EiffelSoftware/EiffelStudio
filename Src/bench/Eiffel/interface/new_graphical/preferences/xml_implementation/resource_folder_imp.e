@@ -8,6 +8,11 @@ class
 inherit
 	RESOURCE_FOLDER_I
 
+	WARNING_MESSAGES
+		export
+			{NONE} All
+		end
+
 create
 	make, make_root, make_default, make_default_root
 
@@ -50,17 +55,11 @@ feature -- Update
 				parser.set_end_of_file
 				file.close
 				if not parser.root_element.name.is_equal ("EIFFEL_DOCUMENT") then
-					error_message := "EIFFEL_DOCUMENT TAG missing%N"
+					io.put_string (w_Invalid_preference_file_root (file_name))
 				else
 					xml_data := parser.root_element
 					update_attributes (xml_data)
 				end
-			else
-				error_message := "does not exist%N"
-				error_message.prepend (file_name)
-			end
-			if error_message /= Void then
-				io.put_string (error_message)
 			end
 		end
 
@@ -103,6 +102,10 @@ feature -- Update
 						resource_list.compare_objects
 						resource_list.search(resource)
 						if not resource_list.exhausted then
+							if resource.description = Void and resource_list.item.description /= Void then
+								resource.set_description (resource_list.item.description)
+							end
+							resource.set_effect_is_delayed (resource_list.item.effect_is_delayed)
 							resource_list.remove
 						end
 						resource_list.extend (resource)
@@ -132,32 +135,45 @@ feature -- Saving
 			file: RAW_FILE
 			s: STRING
 			l: LINKED_LIST [RESOURCE_FOLDER_IMP]
+			retried: BOOLEAN
 		do
-			create file.make_open_write (location)
-			if file.exists then
-				s := "<EIFFEL_DOCUMENT>%N"
-				from
-					l := child_list
-					l.start
-				until
-					l.after
-				loop
-					s.append (l.item.xml_trace (""))
-					l.forth
+			if retried then
+				create file.make (location)
+				if file.exists then
+					io.error.putstring (w_Not_readable (location))
+				else
+					io.error.putstring (w_Not_creatable (location))
 				end
-				from
-					resource_list.start
-				until
-					resource_list.after
-				loop
-					s.append (resource_list.item.xml_trace)
-					s.extend ('%N')
-					resource_list.forth
+			else
+				create file.make_open_write (location)
+				if file.exists then
+					s := "<EIFFEL_DOCUMENT>%N"
+					from
+						l := child_list
+						l.start
+					until
+						l.after
+					loop
+						s.append (l.item.xml_trace (""))
+						l.forth
+					end
+					from
+						resource_list.start
+					until
+						resource_list.after
+					loop
+						s.append (resource_list.item.xml_trace)
+						s.extend ('%N')
+						resource_list.forth
+					end
+					s.append ("</EIFFEL_DOCUMENT>%N")
+					file.put_string (s)
+					file.close
 				end
-				s.append ("</EIFFEL_DOCUMENT>%N")
-				file.put_string (s)
-				file.close
 			end
+		rescue
+			retried := True
+			retry
 		end
 
 

@@ -3,7 +3,8 @@ class UN_PLUS_B
 inherit
 	UNARY_B
 		rename
-			Bc_uplus as operator_constant
+			Bc_uplus as operator_constant,
+			Il_uplus as il_operator_constant
 		redefine
 			generate_operator, is_built_in
 		end;

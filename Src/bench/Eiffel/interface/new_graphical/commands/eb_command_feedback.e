@@ -1,5 +1,5 @@
 indexing
-	description: "Command linked with insensitivable widgets"
+	description: "Command that may be linked with a toolbar button and a menu item."
 	author: "Christophe Bonnard"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,7 +8,7 @@ deferred class
 	EB_COMMAND_FEEDBACK
 
 inherit
-	EV_COMMAND
+	EB_COMMAND
 
 feature -- Initialization
 
@@ -18,7 +18,7 @@ feature -- Initialization
 			a_button_non_void: a_button /= Void
 		do
 			button := a_button
-			button.add_click_command (Current, Void)
+			button.select_actions.extend (~execute)
 		ensure
 			properly_set: button = a_button
 		end
@@ -29,32 +29,43 @@ feature -- Initialization
 			a_menu_item_non_void: a_menu_item /= Void
 		do
 			menu_item := a_menu_item
-			menu_item.add_select_command (Current, Void)
+			menu_item.select_actions.extend (~execute)
 		ensure
 			properly_set: menu_item = a_menu_item
 		end
 
 feature -- Status setting
 
-	set_insensitive (flag: BOOLEAN) is
-			-- Set both the `associated_button' and `associated_menu_entry'
-			-- to be insensitive or not, according to `flag'.
+	enable_sensitive is
+			-- Set both the `associated_button' and
+			-- `associated_menu_entry' to be sensitive.
 		do
 			if button /= Void then
-				button.set_insensitive (flag)
+				button.enable_sensitive
 			end
 			if menu_item /= Void then
-				menu_item.set_insensitive (flag)
+				menu_item.enable_sensitive
 			end
 		end
 
+	disable_sensitive is
+			-- Set both the `associated_button' and
+			-- `associated_menu_entry' to be insensitive.
+		do
+			if button /= Void then
+				button.disable_sensitive
+			end
+			if menu_item /= Void then
+				menu_item.disable_sensitive
+			end
+		end
 
 feature -- Access
 
 	button: EV_TOOL_BAR_BUTTON
-			-- Button on the toolbars.
+			-- Button on the toolbar.
 
 	menu_item: EV_MENU_ITEM
-			-- Menu entry in the menus.
+			-- Menu entry in the menu.
 
 end -- class EB_COMMAND_FEEDBACK

@@ -42,7 +42,7 @@ feature -- Access
 		deferred
 		end;
 
-	Size_limit: INTEGER is 30000;
+	Size_limit: INTEGER is 20000;
 			-- Limit of size for each generated file
 
 
@@ -56,7 +56,7 @@ feature -- Access
 			n := file_counter
 			temp.append_integer (n);
 			packet_number := n // System.makefile_generator.System_packet_number + 2
-			!! Result.make_open_write (final_file_name (temp, postfix_file_name, packet_number))
+			create Result.make_c_code_file (final_file_name (temp, postfix_file_name, packet_number))
 		end;
 
 	init_file (file: INDENT_FILE) is

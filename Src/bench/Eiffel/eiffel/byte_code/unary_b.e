@@ -14,16 +14,24 @@ inherit
 			is_unsafe, optimized_byte_node,
 			calls_special_features, size,
 			pre_inlined_code, inlined_byte_code,
-			has_separate_call
-		end;
+			has_separate_call, generate_il
+		end
+
+	IL_CONST
 	
 feature 
 
 	expr: EXPR_B;
 			-- Expression
 
-	access: FEATURE_B;
+	access: ACCESS_B;
 			-- Access when expression is not a simple type
+
+	is_built_in: BOOLEAN is
+			-- Is the unary operation a built-in one ?
+		do
+			-- Do nothing
+		end
 
 	type: TYPE_I is
 			-- Type of the prefixed feature
@@ -37,13 +45,13 @@ feature
 			expr := e;
 		end;
 
-	set_access (a: FEATURE_B) is
+	set_access (a: like access) is
 			-- Set `access' to `a'
 		do
 			access := a;
 		end;
 
-	init (a: FEATURE_B) is
+	init (a: like access) is
 			-- Initializes access
 		do
 			set_access (a);
@@ -118,6 +126,13 @@ feature
 	generate_operator is
 			-- Generate operator in C
 		do
+				-- Should never be called directly. Descendant of UNARY_B
+				-- not redefining `generate_operator' usually redefine
+				-- `print_register' and thus they might choose not to
+				-- use `generate_operator'.
+			check
+				False
+			end
 		end;
 
 	nested_b: NESTED_B is
@@ -125,14 +140,14 @@ feature
 		local
 			a_access_expr: ACCESS_EXPR_B;
 		do
-			!!Result;
-			!!a_access_expr;
-			a_access_expr.set_expr (expr);
-			a_access_expr.set_parent (Result);
-			Result.set_target (a_access_expr);
-			access.set_parent (Result);
-			Result.set_message (access);
-		end;
+			create Result
+			create a_access_expr
+			a_access_expr.set_expr (expr)
+			a_access_expr.set_parent (Result)
+			Result.set_target (a_access_expr)
+			access.set_parent (Result)
+			Result.set_message (access)
+		end
 
 	enlarged: EXPR_B is
 			-- Enlarge the expression
@@ -151,13 +166,29 @@ feature
 			end;
 		end;
 
-feature -- Byte code generation
+feature -- IL code generation
 
-	is_built_in: BOOLEAN is
-			-- is the unary operation a built-in one ?
+	generate_il is
+			-- Generate IL code for an unary expression
 		do
-			-- Do nothing
+			if is_built_in then
+					-- Polish notation
+				expr.generate_il
+
+					-- Write unary operator
+				il_generator.generate_unary_operator (il_operator_constant)
+			else
+				nested_b.generate_il
+			end
+		end
+
+	il_operator_constant: INTEGER is
+			-- Byte code constant associated to current binary
+			-- operation
+		deferred
 		end;
+
+feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for an unary expression
@@ -169,29 +200,8 @@ feature -- Byte code generation
 					-- Write unary operator
 				ba.append (operator_constant);
 			else
-				make_call_byte_code (ba);
+				nested_b.make_byte_code (ba);
 			end;
-		end;
-
-	make_call_byte_code (ba: BYTE_ARRAY) is
-			-- Make byte code for an infixed call
-		local
-			Nested: NESTED_B;
-			Access_expr: ACCESS_EXPR_B
-		do
-				-- Access on expression
-			!! Access_expr;
-				-- Nested buffer for byte code generation of a binary
-				-- operation on non-simple types
-			!! Nested;
-			Nested.set_target (Access_expr);
-			Access_expr.set_parent (Nested);
-				-- Production of a nested call wich target is `expr
-				-- and message `access'.
-			Nested.set_message (access);
-			access.set_parent (Nested);
-			Access_expr.set_expr (expr);
-			Nested.make_byte_code (ba);
 		end;
 
 	operator_constant: CHARACTER is

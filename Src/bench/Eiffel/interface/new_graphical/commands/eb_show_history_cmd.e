@@ -37,24 +37,6 @@ feature -- Properties
 
 feature {NONE} -- Execution
 
-	execute (arg: EV_ARGUMENT1 [EB_CHOICE_DIALOG]; data: EV_EVENT_DATA) is
-			-- Execute Current.
-		local
-			i: INTEGER
-		do
-			if arg = Void then
-					--| Argument is void, we have to popup the
-					--| history list.
-				create_and_show_choices
-			else
-					--| Argument is the list, so retargetting
-					--| the text_window will do.
-				i := arg.first.position
-				arg.first.destroy
-				retarget_text_area (i)
-			end
-		end
-
 feature {NONE} -- Implementation
 
 	create_and_show_choices is
@@ -64,7 +46,7 @@ feature {NONE} -- Implementation
 			a_list: TWO_WAY_LIST [STRING]
 			choice: EB_CHOICE_DIALOG
 		do
-			create choice.make_default (Current)
+			create choice.make_default (~retarget_text_area (?))
 			create a_list.make
 			fill_list (a_list)
 			choice.set_title (tool.history_dialog_title)

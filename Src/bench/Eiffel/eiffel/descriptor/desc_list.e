@@ -103,7 +103,7 @@ feature -- Insertion
 			end
 		end
 
-	put (r_id: ROUTINE_ID; f: FEATURE_I) is
+	put (r_id: INTEGER; f: FEATURE_I) is
 			-- Insert the routine id `r_id' into the descriptors 
 			-- of `base_class', and associate it with the feature `f'.
 			--|The (routine_id, FEATURE_I) pair is inserted into
@@ -114,12 +114,11 @@ feature -- Insertion
 		local
 			u: ENTRY
 			ri: ROUT_INFO
-			origin: CLASS_ID
+			origin: INTEGER
 			offset, nb_routines, i, nb: INTEGER
 			l_area: SPECIAL [DESCRIPTOR]
 			desc: DESCRIPTOR
 			du: DESC_UNIT
-			void_entry: ENTRY
 			local_class_types: TYPE_LIST
 		do
 				-- Get the polymorphical unit corresponding to `f'
@@ -214,7 +213,7 @@ feature -- Melting
 
 				-- Put the byte code in server.
 			md := ba.melted_descriptor
-			md.set_class_id (base_class.id)
+			md.set_class_id (base_class.class_id)
 			Tmp_m_desc_server.put (md)
 		end
 

@@ -1,13 +1,11 @@
 class ONCE_PROC_I 
 
 inherit
-
 	DYN_PROC_I
 		redefine
 			is_once,
 			replicated,
 			unselected,
-			can_be_inlined,
 			update_api
 		end
 	
@@ -27,7 +25,7 @@ feature
 			Result := rep;
 		end;
 
-	unselected (in: CLASS_ID): FEATURE_I is
+	unselected (in: INTEGER): FEATURE_I is
 			-- Unselected feature
 		local
 			unselect: D_ONCE_PROC_I;
@@ -38,16 +36,12 @@ feature
 			Result := unselect;
 		end;
 
-feature -- Inlining
-
-	can_be_inlined: BOOLEAN is False
-
 feature {NONE} -- Implementation
 
 	update_api (f: E_ROUTINE) is
 			-- Update api feature `f' attribute features.
 		do
-			{DYN_PROC_I} precursor (f);
+			Precursor {DYN_PROC_I} (f);
 			f.set_once (True)
 		end;
 

@@ -18,7 +18,7 @@ feature -- Parsing
 			-- information in the resource table `table'.
 		require
 			filename_not_void: filename /= Void;
-			filename_not_empty: not filename.empty
+			filename_not_empty: not filename.is_empty
 			table_not_void: table /= Void
 		local
 			resource_name: STRING

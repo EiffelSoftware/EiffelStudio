@@ -35,61 +35,6 @@ feature -- Access
 
 	context: BYTE_CONTEXT
 
-feature -- Plug and Makefile file
-
-	generate_conformance_table is
-			-- Generates conformance tables.
-		local
-			i, nb: INTEGER
-			cl_type: CLASS_TYPE
-			conformance_file: INDENT_FILE
-			buffer: GENERATION_BUFFER
-		do
-				-- Clear buffer for current generation
-			buffer := generation_buffer
-			buffer.clear_all
-
-			buffer.putstring ("#include %"eif_project.h%"%N%
-										%#include %"eif_struct.h%"%N%N")
-			from
-				i := 1
-				nb := system.type_id_counter.value
-			until
-				i > nb
-			loop
-				cl_type := system.class_types.item (i)
-if cl_type /= Void then
-		-- FIXME
-				cl_type.generate_conformance_table (buffer)
-end
-				i := i + 1
-			end
-
-			buffer.putstring ("struct conform *egc_fco_table_init[] = {%N")
-
-			from
-				i := 1
-			until
-				i > nb
-			loop
-				cl_type := system.class_types.item (i)
-if cl_type /= Void then
-				buffer.putstring ("&conf")
-				buffer.putint (cl_type.type_id)
-else
-		-- FIXME
-	buffer.putstring ("(struct conform *)0")
-end
-				buffer.putstring (",%N")
-				i := i + 1
-			end 
-			buffer.putstring ("};%N")
-
-			!! conformance_file.make_open_write (gen_file_name (context.final_mode, Econform));
-			conformance_file.put_string (buffer)
-			conformance_file.close
-		end
-
 feature -- Dynamic Library file
 
 	generate_dynamic_lib_file is
@@ -100,7 +45,6 @@ feature -- Dynamic Library file
 			dynamic_lib_def_file: INDENT_FILE
 			dynamic_lib_def_file_name: FILE_NAME
 			C_dynamic_lib_file: INDENT_FILE
-			C_dynamic_lib_file_name: STRING
 			is_dll_generated: BOOLEAN
 			eiffel_def_file: PLAIN_TEXT_FILE
 			dynamic_lib: E_DYNAMIC_LIB
@@ -114,6 +58,7 @@ feature -- Dynamic Library file
 			internal_creation_name: STRING
 			internal_feature_name: STRING
 			buffer, def_buffer: GENERATION_BUFFER
+			nb_ref: INTEGER
 		do
 				-- Clear buffers for current generation
 			buffer := generation_buffer
@@ -139,7 +84,7 @@ feature -- Dynamic Library file
 				end
 			end
 			if is_dll_generated then
-				!! eiffel_def_file.make (dynamic_lib.file_name)
+				create eiffel_def_file.make (dynamic_lib.file_name)
 				if
 					eiffel_def_file.exists and then
 					eiffel_def_file.is_readable and then
@@ -150,7 +95,7 @@ feature -- Dynamic Library file
 					eiffel_def_file.close
 					dynamic_lib_exports := dynamic_lib.dynamic_lib_exports
 					system_name := clone(system.eiffel_system.name)
-					is_dll_generated := not dynamic_lib_exports.empty
+					is_dll_generated := not dynamic_lib_exports.is_empty
 				else
 					is_dll_generated := False
 				end
@@ -185,12 +130,11 @@ feature -- Dynamic Library file
 					if (dynamic_lib_exports.item_for_iteration /= Void) then
 						def_buffer.putstring( "%N; CLASS [" )
 
-						class_name := clone(dynamic_lib_exports.item_for_iteration.item.compiled_class.name_in_upper)
-						def_buffer.putstring(class_name)
-						def_buffer.putstring( "]%N" )
-
 						from
 							dynamic_lib_exports.item_for_iteration.start
+							class_name := clone(dynamic_lib_exports.item_for_iteration.item.compiled_class.name_in_upper)
+							def_buffer.putstring(class_name)
+							def_buffer.putstring( "]%N" )
 						until
 							dynamic_lib_exports.item_for_iteration.after
 						loop
@@ -201,12 +145,13 @@ feature -- Dynamic Library file
 								buffer.putstring ("/***************************%N * ")
 								buffer.putstring (class_name)
 
-								if (dl_exp.creation_routine /= Void) and then (dl_exp.routine.id /= dl_exp.creation_routine.id) then
+								if (dl_exp.creation_routine /= Void) and then (dl_exp.routine.feature_id /= dl_exp.creation_routine.feature_id) then
 										buffer.putstring (" (")
 										buffer.putstring (dl_exp.creation_routine.name)
 										buffer.putstring (")")
-										internal_creation_name := dl_exp.creation_routine.body_id
-											.feature_name (dl_exp.creation_routine.written_in.associated_class.types.first.id)
+										internal_creation_name := clone (Encoder.feature_name (
+													System.class_of_id (dl_exp.creation_routine.written_in).types.first.static_type_id,
+													dl_exp.creation_routine.body_index))
 								elseif (dl_exp.creation_routine = Void) then
 										buffer.putstring (" (!!)")
 								end
@@ -216,8 +161,9 @@ feature -- Dynamic Library file
 									else
 										feature_name := clone(dl_exp.routine.name)
 									end
-									internal_feature_name := dl_exp.routine.body_id
-											.feature_name (dl_exp.routine.written_in.associated_class.types.first.id)
+									internal_feature_name := clone (Encoder.feature_name (
+											System.class_of_id (dl_exp.routine.written_in).types.first.static_type_id,
+											dl_exp.routine.body_index))
 									args:= dl_exp.routine.arguments
 
 									def_buffer.putstring("%T")
@@ -264,6 +210,9 @@ feature -- Dynamic Library file
 										loop
 											buffer.putstring (", ")
 											buffer.putstring (cecil_type(args.item))
+											if not args.item.is_basic then
+												nb_ref := nb_ref + 1
+											end
 											args.forth
 										end
 									end
@@ -311,8 +260,8 @@ feature -- Dynamic Library file
 									buffer.putstring (" ;*/")
 
 										--LOCAL VARIABLES
-									buffer.putstring ("%N%TEIF_OBJ main_obj;")
 									buffer.putstring ("%N%TEIF_PROC ep;")
+									buffer.putstring ("%N%TEIF_REFERENCE main_obj = (EIF_REFERENCE) 0;")
 									buffer.putstring ("%N%TEIF_TYPE_ID eti;")
 									if not return_type.is_equal("void") then
 										buffer.putstring ("%N%T")
@@ -320,15 +269,9 @@ feature -- Dynamic Library file
 										buffer.putstring (" Return_Value ;")
 									end -- When the feature return a value.
 										
-
 										--INITIALIZATION DYNAMIC_LIB and RT
 									buffer.putstring ("%N%TDYNAMIC_LIB_RT_INITIALIZE(")
-
-									if argument_names /= Void then
-										buffer.putint (argument_names.count+1)
-									else
-										buffer.putint (1)
-									end
+									buffer.putint (nb_ref + 1)
 									buffer.putstring (");%N")
 
 										-- AFFECTION OF THE LOCAL VARIABLES `l[i]'
@@ -340,12 +283,7 @@ feature -- Dynamic Library file
 										loop
 											if not args.i_th(argument_names.index).is_basic then
 												buffer.putstring ("%N%T")
-												buffer.put_protected_local (argument_names.index)
-												buffer.putstring (" = (")
-												buffer.putstring ( cecil_type(args.i_th(argument_names.index)) )
-												buffer.putstring (") ")
-												buffer.putstring(argument_names.item)
-												buffer.putstring (" ;"); 
+												buffer.put_local_registration (argument_names.index, argument_names.item)
 											end
 											argument_names.forth
 										end
@@ -354,12 +292,12 @@ feature -- Dynamic Library file
 
 										-- CALCULATE THE MAIN OBJECT.
 									buffer.putstring ("%N%T")
-									buffer.put_protected_local (0)
-									buffer.putstring (" = RTLN(")
+									buffer.put_local_registration (0, "main_obj")
+									buffer.putstring ("%N%Tmain_obj = RTLN(")
 
 									if Context.workbench_mode then
 										buffer.putstring ("RTUD(");
-										dl_exp.compiled_class.actual_type.type_i.associated_class_type.id.generated_id (buffer)
+										buffer.generate_type_id (dl_exp.compiled_class.actual_type.type_i.associated_class_type.static_type_id)
 										buffer.putchar (')');
 									else
 										buffer.putint (dl_exp.compiled_class.actual_type.type_i.type_id - 1);
@@ -371,7 +309,7 @@ feature -- Dynamic Library file
 										buffer.putstring ("%N%T/* Call the creation routine */%N%T")
 										buffer.putstring (internal_creation_name)
 										buffer.putchar ('(')
-										buffer.put_protected_local (0)
+										buffer.putstring ("main_obj")
 										buffer.putstring (");")
 									end
 									
@@ -385,7 +323,7 @@ feature -- Dynamic Library file
 									end -- When the feature return a value.
 									buffer.putstring (internal_feature_name)
 									buffer.putchar ('(')
-									buffer.put_protected_local (0)
+									buffer.putstring ("main_obj")
 
 									if argument_names /= Void then
 										from
@@ -393,13 +331,8 @@ feature -- Dynamic Library file
 										until
 											argument_names.after
 										loop
-											if not args.i_th(argument_names.index).is_basic then
-												buffer.putchar (',')
-												buffer.put_protected_local (argument_names.index)
-											else
-												buffer.putstring (", ")
-												buffer.putstring (argument_names.item)
-											end
+											buffer.putchar (',')
+											buffer.putstring (argument_names.item)
 											argument_names.forth
 										end
 									end
@@ -430,16 +363,16 @@ feature -- Dynamic Library file
 
 				system_name.append_string(".def")
 				if context.final_mode then
-					!! dynamic_lib_def_file_name.make_from_string (Final_generation_path)
+					create dynamic_lib_def_file_name.make_from_string (Final_generation_path)
 				else
-					!! dynamic_lib_def_file_name.make_from_string (Workbench_generation_path)
+					create dynamic_lib_def_file_name.make_from_string (Workbench_generation_path)
 				end
 				dynamic_lib_def_file_name.set_file_name (system_name)
-				!! dynamic_lib_def_file.make_open_write (dynamic_lib_def_file_name)
+				create dynamic_lib_def_file.make_open_write (dynamic_lib_def_file_name)
 				dynamic_lib_def_file.put_string (def_buffer)
 				dynamic_lib_def_file.close
 
-				!! C_dynamic_lib_file.make_open_write (gen_file_name (context.final_mode, "edynlib"));
+				create C_dynamic_lib_file.make_c_code_file (gen_file_name (context.final_mode, "edynlib"));
 				C_dynamic_lib_file.put_string (buffer)
 				C_dynamic_lib_file.close
 			end
@@ -448,11 +381,16 @@ feature -- Dynamic Library file
 feature {NONE} -- DYNAMIC_LIB features
 
 	cecil_type (type:TYPE_A): STRING is
+		local
+			int_a: INTEGER_A
+			char_a: CHARACTER_A
 		do
 			if type = Void then
 				Result := "void"
 			elseif type.is_integer then
-				Result := "EIF_INTEGER"
+				Result := "EIF_INTEGER_"
+				int_a ?= type
+				Result.append_integer (int_a.size)
 			elseif type.is_boolean then
 				Result := "EIF_BOOLEAN"
 			elseif type.is_real then
@@ -460,10 +398,15 @@ feature {NONE} -- DYNAMIC_LIB features
 			elseif type.is_double then
 				Result := "EIF_DOUBLE"
 			elseif type.is_character then
-				Result := "EIF_CHARACTER"
+				char_a ?= type
+				if char_a.is_wide then
+					Result := "EIF_WIDE_CHAR"
+				else
+					Result := "EIF_CHARACTER"
+				end
 			elseif type.is_bits then
 				Result := "EIF_BIT"
-			elseif type.is_expanded then
+			elseif type.is_true_expanded then
 				Result := "EIF_EXPANDED"
 			elseif type.is_pointer then
 				Result := "EIF_POINTER"
@@ -479,7 +422,7 @@ feature -- Plug and Makefile file
 		local
 			string_cl, bit_cl, array_cl, rout_cl: CLASS_C
 			arr_type_id, str_type_id, type_id: INTEGER
-			id: TYPE_ID
+			id: INTEGER
 			to_c_feat, set_count_feat, set_make_feat, creation_feature: FEATURE_I
 			set_rout_disp_feat: FEATURE_I
 			creators: EXTEND_TABLE [EXPORT_I, STRING]
@@ -505,16 +448,16 @@ feature -- Plug and Makefile file
 
 			final_mode := Context.final_mode
 
-			buffer.open_write_c
-
-			buffer.putstring ("#include %"egc_include.h%"%N")
 			buffer.putstring ("#include %"eif_project.h%"%N")
-			buffer.putstring ("#include %"eif_macros.h%"%N%N")
+			buffer.putstring ("#include %"eif_macros.h%"%N")
+			buffer.putstring ("#include %"egc_include.h%"%N%N")
+			
+			buffer.start_c_specific_code
 
 				-- Extern declarations
 			string_cl := system.class_of_id (system.string_id)
 			cl_type := string_cl.types.first
-			id := cl_type.id
+			id := cl_type.static_type_id
 			str_type_id := cl_type.type_id
 			creators := string_cl.creators
 			creators.start
@@ -522,8 +465,8 @@ feature -- Plug and Makefile file
 				-- Make string declaration
 			set_count_feat := string_cl.feature_table.item ("set_count")
 			set_make_feat := string_cl.feature_table.item ("make")
-			str_make_name := set_make_feat.body_id.feature_name (id)
-			set_count_name := set_count_feat.body_id.feature_name (id)
+			str_make_name := clone (Encoder.feature_name (id, set_make_feat.body_index))
+			set_count_name := clone (Encoder.feature_name (id, set_count_feat.body_index))
 			buffer.putstring ("extern void ")
 			buffer.putstring (str_make_name)
 			buffer.putstring ("();%Nextern void ")
@@ -531,7 +474,7 @@ feature -- Plug and Makefile file
 			buffer.putstring ("();%N")
 			if system.has_separate then
 				to_c_feat := string_cl.feature_table.item ("to_c")
-				to_c_name := to_c_feat.body_id.feature_name (id)
+				to_c_name := clone (Encoder.feature_name (id, to_c_feat.body_index))
 				buffer.putstring ("extern void ")
 				buffer.putstring (to_c_name)
 				buffer.putstring ("();%N")
@@ -547,12 +490,12 @@ feature -- Plug and Makefile file
 				array_cl := System.class_of_id (System.array_id)
 					--! Array ref type (i.e. ARRAY[ANY])
 				cl_type := System.Instantiator.Array_type.associated_class_type; 
-				id := cl_type.id
+				id := cl_type.static_type_id
 				arr_type_id := cl_type.type_id
 				creators := array_cl.creators
 				creators.start
-				creation_feature := array_cl.feature_table.item (creators.key_for_iteration)
-				arr_make_name := creation_feature.body_id.feature_name (id)
+				creation_feature := array_cl.feature_table.item ("make")
+				arr_make_name := clone (Encoder.feature_name (id, creation_feature.body_index))
 				system.set_array_make_name (arr_make_name)
 			else
 				cl_type := System.Instantiator.Array_type.associated_class_type; 
@@ -567,11 +510,11 @@ feature -- Plug and Makefile file
 				-- Make routine declaration
 			rout_cl := system.class_of_id (system.routine_class_id)
 
-			if rout_cl.types /= Void and then not rout_cl.types.empty then
+			if rout_cl.types /= Void and then not rout_cl.types.is_empty then
 				cl_type := rout_cl.types.first
-				id := cl_type.id
+				id := cl_type.static_type_id
 				set_rout_disp_feat := rout_cl.feature_table.item ("set_rout_disp")
-				set_rout_disp_name := set_rout_disp_feat.body_id.feature_name (id)
+				set_rout_disp_name := clone (Encoder.feature_name (id, set_rout_disp_feat.body_index))
 
 				buffer.putstring ("extern void ")
 				buffer.putstring (set_rout_disp_name)
@@ -586,8 +529,8 @@ feature -- Plug and Makefile file
 			end
 
 			if final_mode then
-				init_name := system.routine_id_counter.initialization_rout_id.table_name
-				dispose_name := system.routine_id_counter.dispose_rout_id.table_name
+				init_name := clone (Encoder.table_name (system.routine_id_counter.initialization_rout_id))
+				dispose_name := clone (Encoder.table_name (system.routine_id_counter.dispose_rout_id))
 
 				buffer.putstring ("extern char *(*")
 				buffer.putstring (init_name)
@@ -633,7 +576,7 @@ feature -- Plug and Makefile file
 
 				--Pointer on `set_rout_disp' of class ROUTINE
 			if set_rout_disp_name /= Void then
-				buffer.putstring ("%Tegc_routdisp = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE)) ")
+				buffer.putstring ("%Tegc_routdisp = (void (*)(EIF_REFERENCE, EIF_POINTER, EIF_POINTER, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE)) ")
 				buffer.putstring (set_rout_disp_name)
 				buffer.putstring (";%N")
 			end
@@ -651,7 +594,7 @@ feature -- Plug and Makefile file
 				-- Dispose routine id from class MEMORY (if compiled) 
 			buffer.putstring ("%Tegc_disp_rout_id = ")
 			if System.memory_class /= Void then
-				buffer.putint (System.memory_dispose_id.id)
+				buffer.putint (System.memory_dispose_id)
 			else
 				buffer.putstring ("-1")
 			end
@@ -671,11 +614,6 @@ feature -- Plug and Makefile file
 			buffer.putstring ("%N%Tegc_ce_type = egc_ce_type_init;%N")
 			buffer.putstring ("%Tegc_ce_gtype = egc_ce_gtype_init;%N")
 			buffer.putstring ("%Tegc_fsystem = egc_fsystem_init;%N")
-			if not final_mode then
-					-- FIXME: Needs to be removed in Workbench mode, but there is
-					-- still some work to do with the Byte code.
-				buffer.putstring ("%Tegc_fco_table = egc_fco_table_init;%N")
-			end
 			buffer.putstring ("%Tegc_system_mod_init = egc_system_mod_init_init;%N")
 			buffer.putstring ("%Tegc_partab = egc_partab_init;%N")
 			buffer.putstring ("%Tegc_partab_size = egc_partab_size_init;%N")
@@ -685,7 +623,6 @@ feature -- Plug and Makefile file
 				buffer.putstring ("%Tegc_fpatidtab = egc_fpatidtab_init;%N");
 				buffer.putstring ("%Tegc_foption = egc_foption_init;%N")
 				buffer.putstring ("%Tegc_address_table = egc_address_table_init;%N")
-				buffer.putstring ("%Tegc_fdispatch = egc_fdispatch_init;%N")
 				buffer.putstring ("%Tegc_fpattern = egc_fpattern_init;%N")
 				
 				buffer.putstring ("%N%Tegc_einit = egc_einit_init;%N")
@@ -724,8 +661,9 @@ feature -- Plug and Makefile file
 			buffer.putstring ("%N%Tegc_system_name = %"")
 			buffer.putstring (System.system_name)
 			buffer.putstring ("%";%N%Tegc_compiler_tag = ")
-			buffer.putstring (System.version_tag)
-			buffer.putstring (";%N%N")
+			buffer.putint (System.version_tag)
+			buffer.putstring (";%N%Tegc_project_version = ")
+			buffer.putint (System.project_creation_time)
 
 				-- Generate the number of static dynamic types.
 			buffer.putstring (";%N%Tscount = ")
@@ -739,7 +677,7 @@ feature -- Plug and Makefile file
 					root_feat := root_cl.feature_table.item (System.creation_name)
 					has_argument := root_feat.has_arguments
 					rout_info := System.rout_info_table.item (root_feat.rout_id_set.first)
-					rcorigin := rout_info.origin.id
+					rcorigin := rout_info.origin
 					rcoffset := rout_info.offset
 				else
 					rcorigin := -1
@@ -761,9 +699,9 @@ feature -- Plug and Makefile file
 			end
 
 			buffer.putstring ("%Tegc_platform_level = 0x00000D00;%N}%N")
-			buffer.close_c
+			buffer.end_c_specific_code
 
-			!! plug_file.make_open_write (gen_file_name (final_mode, Eplug));
+			create plug_file.make_c_code_file (gen_file_name (final_mode, Eplug));
 			plug_file.put_string (buffer)
 			plug_file.close
 		end
@@ -777,14 +715,22 @@ feature -- Plug and Makefile file
 		do
 			local_system := System
 
-			buffer.putstring ("%N%Tegc_int_ref_dtype = ")
-			buffer.putint (system.integer_ref_dtype - 1)
+			buffer.putstring ("%N%Tegc_int8_ref_dtype = ")
+			buffer.putint (system.integer_ref_dtype (8) - 1)
+			buffer.putstring (";%N%Tegc_int16_ref_dtype = ")
+			buffer.putint (system.integer_ref_dtype (16) - 1)
+			buffer.putstring (";%N%Tegc_int32_ref_dtype = ")
+			buffer.putint (system.integer_ref_dtype (32) - 1)
+			buffer.putstring (";%N%Tegc_int64_ref_dtype = ")
+			buffer.putint (system.integer_ref_dtype (64) - 1)
 			buffer.putstring (";%N%Tegc_bool_ref_dtype = ")
 			buffer.putint (system.boolean_ref_dtype - 1)
 			buffer.putstring (";%N%Tegc_real_ref_dtype = ")
 			buffer.putint (system.real_ref_dtype - 1)
 			buffer.putstring (";%N%Tegc_char_ref_dtype = ")
 			buffer.putint (system.character_ref_dtype - 1)
+			buffer.putstring (";%N%Tegc_wchar_ref_dtype = ")
+			buffer.putint (system.wide_char_ref_dtype - 1)
 			buffer.putstring (";%N%Tegc_doub_ref_dtype = ")
 			buffer.putint (system.double_ref_dtype - 1)
 			buffer.putstring (";%N%Tegc_point_ref_dtype = ")

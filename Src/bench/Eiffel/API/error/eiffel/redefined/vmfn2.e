@@ -3,7 +3,7 @@ indexing
 	description: 
 		"Error for name clash on non-deferred inherited features.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class VMFN2 
 
@@ -71,6 +71,7 @@ feature {COMPILER_EXPORTER}
 			-- Assign `fs' to `features'.
 		require
 			valid_fs: fs /= Void
+			class_c_set: class_c /= Void
 		local
 			cell2: CELL2 [E_FEATURE, CLASS_C];
 			inh_info: INHERIT_INFO;
@@ -86,7 +87,14 @@ feature {COMPILER_EXPORTER}
 			loop
 				inh_info := fs.item;
 				parent := inh_info.parent.parent;
-				e_feature := inh_info.a_feature.api_feature (parent.id);
+					-- Create a E_FEATURE object taken from current class so
+					-- that we get correct translation of any generic parameter:
+					-- Eg: in parent A [G] you have f (a: G)
+					-- in descendant B [G, H] inherit A [H], the signature of
+					-- `f' becomes f (a: H) and if you display the feature information
+					-- using parent class it will crash when trying to display the second
+					-- generic parameter which does not exist in B, only in A.
+				e_feature := inh_info.a_feature.api_feature (class_c.class_id);
 				!! cell2.make (e_feature, parent);
 				features_list.extend (cell2);
 				features_list.forth

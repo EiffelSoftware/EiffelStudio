@@ -1,10 +1,8 @@
 indexing
-
-	description: 
-		"Evaluates (adapts) source and target feature_i for a feature%
-		%ast structure which is used in the format context."
-	date: "$Date$";
-	revision: "$Revision $"
+	description	: "Evaluates (adapts) source and target feature_i for a feature%
+				  %ast structure which is used in the format context."
+	date		: "$Date$";
+	revision	: "$Revision $"
 
 class FEATURE_ADAPTER
 
@@ -20,23 +18,23 @@ inherit
 
 feature -- Properties
 
-	ast: FEATURE_AS;
+	ast: FEATURE_AS
 			-- Feature ast
 
-	body_index: BODY_INDEX;
+	body_index: INTEGER
 			-- Body index of source_feature
 
-	source_feature: FEATURE_I;
+	source_feature: FEATURE_I
 			-- Source feature_i where ast is defined
 
-	target_feature: FEATURE_I;
+	target_feature: FEATURE_I
 			-- Target feature where ast must be adapted to
 
-	source_class: CLASS_C;
+	source_class: CLASS_C
 			-- Source class of ast (used when source_feature
 			-- and target_feature are not found)
 
-	comments: EIFFEL_COMMENTS;
+	comments: EIFFEL_COMMENTS
 			-- Comments for ast
 
 feature -- Comparison
@@ -45,7 +43,7 @@ feature -- Comparison
 			-- Is Current adaptation less than `other'?
 		do	
 			Result := ast < other.ast
-		end;
+		end
 
 feature -- Element change
 
@@ -57,48 +55,19 @@ feature -- Element change
 			valid_ast: feature_as /= Void;
 			valid_format_reg: format_reg /= Void
 		local
-			same_class: BOOLEAN;
-			adapter: FEATURE_ADAPTER;
-			new_feature_as: like ast;
-			eiffel_list, names: EIFFEL_LIST [FEATURE_NAME];
+			same_class: BOOLEAN
+			adapter: FEATURE_ADAPTER
+			new_feature_as: like ast
+			eiffel_list, names: EIFFEL_LIST [FEATURE_NAME]
 			i, l_count: INTEGER
-			list: ARRAYED_LIST [FEATURE_I];
-			t_feat: FEATURE_I;
-			rep_table: EXTEND_TABLE [ARRAYED_LIST [FEATURE_I], BODY_INDEX];
-			f_name: FEATURE_NAME;
-			comment: STRING;
-			tmp: STRING;
+			list: ARRAYED_LIST [FEATURE_I]
+			t_feat: FEATURE_I
+			rep_table: EXTEND_TABLE [ARRAYED_LIST [FEATURE_I], INTEGER]
+			f_name: FEATURE_NAME
 			is_precompiled: BOOLEAN
 		do
 			names := feature_as.feature_names;
 			if names.count > 1 then
-				from
-					--| Separate all the feature names
-					--| i.e. one feature name per ast
-					!! comment.make (40);
-					i := 1;
-					l_count := names.count;
-					comment.append (" Was declared in ");
-					tmp := clone (format_reg.current_class.name);
-					tmp.to_upper;
-					comment.append (tmp);
-					comment.append (" as synonym of ")
-				until
-					i > l_count
-				loop
-					if i /= 1 then
-						if i = l_count then
-							comment.append (" and ")
-						else 
-							comment.append (", ")
-						end
-					end;
-					comment.extend ('`');
-					comment.append (names.i_th (i).visual_name);	
-					comment.extend ('%'');
-					i := i + 1
-				end;
-				comment.extend ('.');
 				is_precompiled := format_reg.current_class.is_precompiled;
 				from
 					--| Separate all the feature names
@@ -108,13 +77,13 @@ feature -- Element change
 				until
 					i > l_count
 				loop
-					!! eiffel_list.make (1);
+					create eiffel_list.make (1);
 					eiffel_list.extend (names.i_th (i));
 					new_feature_as := clone (feature_as);
 					new_feature_as.set_feature_names (eiffel_list);
-					!! adapter;
+					create adapter;
 					adapter.register (new_feature_as, format_reg);
-					adapter.add_comment (comment, is_precompiled);
+					adapter.add_comment (synonym_comment (i, names, format_reg.current_class.name), is_precompiled);
 					i := i + 1
 				end;
 			else
@@ -139,10 +108,10 @@ feature -- Element change
 					loop
 						t_feat := list.item;	
 						new_feature_as := clone (feature_as);
-						!! adapter;
+						create adapter;
 						f_name := clone (names.first)
 						f_name.set_name (source_feature.feature_name);
-						!! eiffel_list.make (1);
+						create eiffel_list.make (1);
 						eiffel_list.extend (f_name);
 						new_feature_as.set_feature_names (eiffel_list);
 						adapter.replicate_feature (source_feature,
@@ -156,6 +125,51 @@ feature -- Element change
 			end;
 		end;
 
+feature {NONE} -- Implementation
+
+	synonym_comment (exclude: INTEGER; names: EIFFEL_LIST [FEATURE_NAME]; class_name: STRING): STRING is
+			-- Create comment describing feature synonyms.
+			-- Do not include visual name with index `exclude'.
+		require
+			multiple_visual_names: names.count > 1
+			exclude_valid_index: exclude >= 1 and then exclude <= names.count
+		local
+			others: LINKED_LIST [STRING]
+			s: STRING
+		do
+			create others.make
+			from names.start until names.after loop
+				if names.index /= exclude then
+					others.extend (names.item.visual_name)
+				end
+				names.forth
+			end
+			create Result.make (40)
+			Result.append (" Was declared")
+			if class_name /= Void then
+				s := clone (class_name)
+				s.to_upper
+				Result.append (" in ")
+				Result.append (s)
+			end
+			Result.append (" as synonym of ")
+			from others.start until others.after loop
+				Result.extend ('`')
+				Result.append (others.item)
+				Result.extend ('%'')
+				others.forth
+				if not others.after then
+					if others.islast then
+						Result.append (" and ")
+					else 
+						Result.append (", ")
+					end
+				end
+			end
+			Result.extend ('.')
+		ensure
+			not_void: Result /= Void
+		end
 
 feature -- Output
 
@@ -173,9 +187,9 @@ feature -- Output
 				format_reg.assert_server.reset_current_assertion;
 				ctxt.init_uncompiled_feature_context (source_class, ast);
 			end;
-			ctxt.set_feature_comments (comments);
-			ast.format (ctxt);
-		end;
+			ctxt.set_feature_comments (comments)
+			ast.format (ctxt)
+		end
 
 feature {FEATURE_ADAPTER} -- Implementation
 
@@ -204,7 +218,7 @@ feature {NONE} -- Implementation
 			valid_format_reg: format_reg /= Void
 		local
 			t_feat, s_feat: FEATURE_I;
-			rout_id: ROUTINE_ID;
+			rout_id: INTEGER;
 			select_table: SELECT_TABLE;
 		do	
 			select_table := format_reg.target_feature_table.origin_table;
@@ -218,8 +232,8 @@ feature {NONE} -- Implementation
 					source_feature := s_feat;
 					target_feature := t_feat;
 					format_reg.assert_server.register_adapter (Current);
-					if equal (t_feat.written_in, s_feat.written_in) and then
-						equal (t_feat.body_index, s_feat.body_index)
+					if t_feat.written_in = s_feat.written_in and then
+						t_feat.body_index = s_feat.body_index
 					then
 						-- Only register if the target and source
 						-- feature are written in the same class
@@ -262,6 +276,7 @@ feature {NONE} -- Implementation
 			valid_feat: feat /= Void
 			valid_format_reg: format_reg /= Void
 		do
+			comments := format_reg.feature_comments (ast)
 			if format_reg.client = void or else 
 				feat.is_exported_for (format_reg.client) 
 			then
@@ -271,7 +286,7 @@ feature {NONE} -- Implementation
 				if not is_short or else
 					not feat.is_obsolete
 				then
-					comments := format_reg.feature_comments (ast);
+					--| VB 06/13/2000 (Moved up) comments := format_reg.feature_comments (ast)
 					if is_replicated then
 						format_reg.record_replicated_feature (Current);
 					else
@@ -279,6 +294,9 @@ feature {NONE} -- Implementation
 					end;
 				end;
 			end;
+				-- Record as creation feature.
+				-- `record_creation_feature' checks if `Current' is
+				-- a creation procedure and if so, adds it to format_reg.creation_table.
 			format_reg.record_creation_feature (Current)
 		end;
 
@@ -290,55 +308,6 @@ feature {NONE} -- Implementation
 			format_reg.record_feature (Current)
 		end;
 
-feature -- Case storage output
-
-	storage_info: S_FEATURE_DATA_R40 is
-			-- Storage information for Current
-		require else
-			valid_target_feature: target_feature /= Void
-		local
-			text: ARRAY [STRING];
-			i: INTEGER;
-			feature_comments: S_FREE_TEXT_DATA;
-			f_name: STRING;
-			c: EIFFEL_COMMENTS;
-			dummy_constant: CONSTANT_I
-		do
-			!! f_name.make (0);
-			f_name.append (target_feature.feature_name);
-			!! Result.make (f_name);
-			Result.set_reversed_engineered;
-			if target_feature.is_once then	
-				Result.set_is_once
-			end;
-			if target_feature.is_constant then	
-				Result.set_is_constant
-				dummy_constant ?= target_feature
-				if dummy_constant/= Void 
-					-- This should be anyway the case, but we never know ...
-					and then dummy_constant.value /= Void then
-					Result.set_constant_value(dummy_constant.value.string_value)
-				end
-			end;
-			ast.store_information (Result);
-			target_feature.store_case_information (Result);
-			c := comments;
-			if c /= Void then
-				!! feature_comments.make_filled (comments.count)
-				from
-					c.start;
-					feature_comments.start
-				until
-					c.after
-				loop
-					feature_comments.replace (c.item);
-					feature_comments.forth;
-					c.forth
-				end
-				Result.set_comments (feature_comments)
-			end
-		end
-
 feature {FEATURE_ADAPTER} -- Element change
 
 	add_comment (comment: STRING; is_precompiled: BOOLEAN) is
@@ -347,7 +316,7 @@ feature {FEATURE_ADAPTER} -- Element change
 			valid_comment: comment /= Void
 		do
 			if comments = Void then
-				!! comments.make 
+				create comments.make 
 			elseif is_precompiled then
 					-- Duplicate the result since it could be referencing
 					-- the same comments of other synonym precompiled feature asts.

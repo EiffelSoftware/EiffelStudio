@@ -5,7 +5,7 @@ inherit
 	EXPR_B
 		redefine
 			print_register, make_byte_code,
-			is_simple_expr
+			is_simple_expr, is_predefined, generate_il
 		end;
 	
 feature 
@@ -32,7 +32,7 @@ feature
 		do
 			buf := buffer
 			buf.putstring ("(EIF_CHARACTER) %'");
-			buf.escape_char (value);
+			buf.escape_char (buf,value);
 			buf.putchar ('%'');
 		end;
 
@@ -43,6 +43,17 @@ feature
 
 	is_simple_expr: BOOLEAN is true;
 			-- A constant is a simple expression
+
+	is_predefined: BOOLEAN is true
+			-- A constant is a predefined structure.
+
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for character constant
+		do
+			il_generator.put_character_constant (value)
+		end
 
 feature -- Byte code generation
 

@@ -21,24 +21,21 @@ inherit
 feature {NONE} -- Execution
 
 	loop_action is
-		local
-			command_arguments: EWB_ARGUMENTS;
-			new_commands: INTEGER;
 		do
 			command_line_io.get_prof_file_name;
-			if command_line_io.last_input.empty then
+			if command_line_io.last_input.is_empty then
 				proffile_dir := "profinfo"
 			else
 				proffile_dir := command_line_io.last_input
 			end
 			command_line_io.get_compile_type;
-			if command_line_io.last_input.empty then
+			if command_line_io.last_input.is_empty then
 				compile_type := "workbench"
 			else
 				compile_type := command_line_io.last_input
 			end;
 			command_line_io.get_profiler;
-			if command_line_io.last_input.empty then
+			if command_line_io.last_input.is_empty then
 				profiler := "eiffel"
 			else
 				profiler := command_line_io.last_input

@@ -33,7 +33,7 @@ feature
 
 	Clusters_abb: CHARACTER is 'c'
 
-	Cluster_hierarchy_abb: CHARACTER is 'h'
+	Cluster_hierarchy_abb: CHARACTER is 's'
 
 	Convert_profile_abb: CHARACTER is 'c'
 

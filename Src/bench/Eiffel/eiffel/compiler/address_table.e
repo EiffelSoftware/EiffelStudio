@@ -1,8 +1,13 @@
+indexing
+	description: "Address table indexed by class_id"
+	date: "$Date$"
+	revision: "$Revision$"
+
 class
 	ADDRESS_TABLE
 
 inherit
-	EXTEND_TABLE [TWO_WAY_SORTED_SET [INTEGER], CLASS_ID]
+	EXTEND_TABLE [TWO_WAY_SORTED_SET [INTEGER], INTEGER]
 		rename
 			has as class_has_dollar_operator,
 			cursor as ht_cursor
@@ -41,7 +46,7 @@ creation {SYSTEM_I}
 
 feature -- Access
 
-	has (class_id: CLASS_ID; feature_id: INTEGER): BOOLEAN is
+	has (class_id: INTEGER; feature_id: INTEGER): BOOLEAN is
 			-- Is the feature in the table?
 		do
 			if class_has_dollar_operator (class_id) then
@@ -49,7 +54,7 @@ feature -- Access
 			end
 debug ("DOLLAR")
 	io.putstring ("ADDRESS_TABLE.has ")
-	io.putstring (class_id.dump)
+	io.putint (class_id)
 	io.putchar (' ')
 	io.putint (feature_id)
 	io.putchar (' ')
@@ -60,7 +65,7 @@ end
 
 feature -- Insert
 
-	record (class_id: CLASS_ID; feature_id: INTEGER) is
+	record (class_id: INTEGER; feature_id: INTEGER) is
 			-- Record the feature in the 
 		require
 			not_in_the_table: not has (class_id, feature_id)
@@ -69,7 +74,7 @@ feature -- Insert
 		do
 debug ("DOLLAR")
 	io.putstring ("ADDRESS_TABLE.record ")
-	io.putstring (class_id.dump)
+	io.putint (class_id)
 	io.putchar (' ')
 	io.putint (feature_id)
 	io.new_line
@@ -92,11 +97,11 @@ feature -- Generation
 
 	generate (final_mode: BOOLEAN) is
 		local
-			class_id: CLASS_ID
+			class_id: INTEGER
 			feature_id: INTEGER
 			features: TWO_WAY_SORTED_SET [INTEGER]
 			buffer: GENERATION_BUFFER
-			address_file: INDENT_FILE
+			address_file, cecil_file: INDENT_FILE
 			a_class: CLASS_C
 			a_feature: FEATURE_I
 		do
@@ -110,11 +115,9 @@ feature -- Generation
 				buffer.putstring ("#include %"eaddress")
 				buffer.putstring (Dot_h)
 				buffer.putstring ("%"%N%N")
-			elseif Compilation_modes.is_precompiling then
-				System.class_counter.generate_extern_offsets (buffer)
-				System.static_type_id_counter.generate_extern_offsets (buffer)
-				buffer.new_line
 			end
+			
+			buffer.start_c_specific_code
 
 			from
 				start
@@ -123,6 +126,7 @@ feature -- Generation
 			loop
 				class_id := key_for_iteration
 				a_class := System.class_of_id (class_id)
+				System.set_current_class (a_class)
 				if a_class /= Void then
 					features := item_for_iteration
 					from
@@ -153,7 +157,7 @@ end
 							features.forth
 						end
 					end
-					if features.empty then
+					if features.is_empty then
 							-- None of the features are valid
 						remove (class_id)
 					end
@@ -164,10 +168,11 @@ end
 				forth
 			end
 
-			!! address_file.make_open_write (gen_file_name (final_mode, Ececil));
+			create cecil_file.make_c_code_file (gen_file_name (final_mode, Ececil));
 			if final_mode then
-				address_file.put_string (buffer)
-				address_file.close
+				buffer.end_c_specific_code
+				cecil_file.put_string (buffer)
+				cecil_file.close
 
 					-- Generate the extern declarations
 
@@ -179,13 +184,16 @@ end
 				Extern_declarations.generate (buffer)
 				Extern_declarations.wipe_out
 
-				!! address_file.make_open_write (final_file_name ("eaddress", Dot_h, 1))
+				create address_file.make_open_write (final_file_name ("eaddress", Dot_h, 1))
+				address_file.put_string (buffer)
+				address_file.close
 			else
 					-- Generate the dispatch table in Workbench mode
 				generate_dispatch_table (buffer)
+				buffer.end_c_specific_code
+				cecil_file.put_string (buffer)
+				cecil_file.close
 			end
-			address_file.put_string (buffer)
-			address_file.close
 
 			clean_up
 		end
@@ -213,7 +221,7 @@ feature {NONE} -- Generation
 			cursor: CURSOR
 			a_class: CLASS_C
 		do
-			!! type_id_array.make (0, System.static_type_id_counter.total_count)
+			!! type_id_array.make (0, System.static_type_id_counter.count)
 
 				-- First generate the tables per class type
 			from
@@ -233,10 +241,10 @@ feature {NONE} -- Generation
 					a_type := types.item
 					cursor := types.cursor
 
-					type_id_array.put (a_type.type_id, a_type.id.id)
+					type_id_array.put (a_type.type_id, a_type.static_type_id)
 
 					buffer.putstring ("char *(*feif_address_t")
-					buffer.putint (a_type.id.id)
+					buffer.putint (a_type.static_type_id)
 					buffer.putstring ("[])() = {%N")
 
 					from
@@ -248,11 +256,11 @@ feature {NONE} -- Generation
 						if sorted_set.has (i) then
 							buffer.putstring ("(char *(*)())")
 							buffer.putstring ("f")
-							buffer.putstring (a_type.id.address_table_name (i))
+							buffer.putstring (Encoder.address_table_name (i, a_type.static_type_id))
 							buffer.putstring (",%N")
 							buffer.putstring ("(char *(*)())")
 							buffer.putstring ("_f")
-							buffer.putstring (a_type.id.address_table_name (i))
+							buffer.putstring (Encoder.address_table_name (i, a_type.static_type_id))
 							buffer.putstring (",%N")
 						else
 							buffer.putstring ("(char *(*)()) 0,%N")
@@ -282,14 +290,14 @@ feature {NONE} -- Generation
 					a_type := System.class_type_of_id (type_id)
 					if a_type /= Void then
 						a_class := a_type.associated_class
-						if class_has_dollar_operator (a_class.id) then
-							buffer.putstring ("(fnptr *) ")
+						if class_has_dollar_operator (a_class.class_id) then
+							buffer.putstring ("(fnptr *) (")
 							buffer.putstring ("f")
 							buffer.putstring ("eif_address_t")
-							buffer.putint (a_type.id.id)
+							buffer.putint (a_type.static_type_id)
 							buffer.putstring (" - ")
 							buffer.putint (2*(found_item.first))
-							buffer.putstring (",%N")
+							buffer.putstring ("),%N")
 						else
 							buffer.putstring ("(fnptr *) 0,%N")
 						end
@@ -340,7 +348,6 @@ feature {NONE} -- Generation
 			arg_non_void: args /= Void
 		local
 			i, nb: INTEGER
-			solved_arg_type: TYPE_I
 			arg_type_a: TYPE_A
 		do
 			from
@@ -377,7 +384,7 @@ feature {NONE} -- Generation
 		local
 			types: TYPE_LIST
 			feature_id: INTEGER
-			rout_id: ROUTINE_ID
+			rout_id: INTEGER
 			args: FEAT_ARG
 			has_arguments, is_function: BOOLEAN
 			return_type: TYPE_A
@@ -411,7 +418,7 @@ feature {NONE} -- Generation
 
 				cursor := types.cursor
 
-				function_name := a_type.id.address_table_name (feature_id)
+				function_name := Encoder.address_table_name (feature_id, a_type.static_type_id)
 
 				buffer.putstring ("%T/* ")
 				a_type.type.dump (buffer)
@@ -451,7 +458,7 @@ feature {NONE} -- Generation
 
 						buffer.putchar ('(')
 						c_return_type.generate_function_cast (buffer, a_types)
-						table_name := rout_id.table_name
+						table_name := Encoder.table_name (rout_id)
 						buffer.putchar ('(')
 						buffer.putstring (table_name)
 						buffer.putchar ('-')
@@ -485,17 +492,19 @@ feature {NONE} -- Generation
 						a_type.associated_class.is_precompiled
 					then
 						rout_info := System.rout_info_table.item (rout_id)
-						buffer.putstring ("RTWPF(")
-						rout_info.origin.generated_id (buffer)
+						buffer.putstring ("RTVPF(")
+						buffer.generate_class_id (rout_info.origin)
 						buffer.putstring (", ")
 						buffer.putint (rout_info.offset)
 					else
-						buffer.putstring ("RTWF(")
-						buffer.putint (a_type.id.id - 1)
+						buffer.putstring ("RTVF(")
+						buffer.putint (a_type.static_type_id - 1)
 						buffer.putstring (", ")
 						buffer.putint (feature_id)
 					end
-					buffer.putstring (", Dtype (Current)))(Current")
+					buffer.putstring (", %"")
+					buffer.putstring (a_feature.feature_name)
+					buffer.putstring ("%", Current))(Current")
 					if has_arguments then
 						generate_arg_list (buffer, args.count)
 					end
@@ -515,7 +524,6 @@ feature {NONE} -- Generation
 			arg_non_void: args /= Void
 		local
 			i, nb: INTEGER
-			solved_arg_type: TYPE_I
 			arg_type_a: TYPE_A
 		do
 			from
@@ -554,7 +562,7 @@ feature {NONE} -- Generation
 		local
 			types: TYPE_LIST
 			feature_id: INTEGER
-			rout_id: ROUTINE_ID
+			rout_id: INTEGER
 			args: FEAT_ARG
 			has_arguments, is_function: BOOLEAN
 			return_type: TYPE_A
@@ -587,7 +595,7 @@ feature {NONE} -- Generation
 
 				cursor := types.cursor
 
-				function_name := a_type.id.address_table_name (feature_id)
+				function_name := Encoder.address_table_name (feature_id, a_type.static_type_id)
 
 				buffer.putstring ("%T/* ")
 				a_type.type.dump (buffer)
@@ -634,7 +642,7 @@ feature {NONE} -- Generation
 
 						buffer.putchar ('(')
 						c_return_type.generate_function_cast (buffer, a_types)
-						table_name := rout_id.table_name
+						table_name := Encoder.table_name (rout_id)
 						buffer.putchar ('(')
 						buffer.putstring (table_name)
 						buffer.putchar ('-')
@@ -675,17 +683,19 @@ feature {NONE} -- Generation
 						a_type.associated_class.is_precompiled
 					then
 						rout_info := System.rout_info_table.item (rout_id)
-						buffer.putstring ("RTWPF(")
-						rout_info.origin.generated_id (buffer)
+						buffer.putstring ("RTVPF(")
+						buffer.generate_class_id (rout_info.origin)
 						buffer.putstring (", ")
 						buffer.putint (rout_info.offset)
 					else
-						buffer.putstring ("RTWF(")
-						buffer.putint (a_type.id.id - 1)
+						buffer.putstring ("RTVF(")
+						buffer.putint (a_type.static_type_id - 1)
 						buffer.putstring (", ")
 						buffer.putint (feature_id)
 					end
-					buffer.putstring (", Dtype (Current)))(Current")
+					buffer.putstring (", %"")
+					buffer.putstring (a_feature.feature_name)
+					buffer.putstring ("%", Current))(Current")
 					if has_arguments then
 						generate_arg_list_for_rout (buffer, args.count,
 													arg_tags (args))

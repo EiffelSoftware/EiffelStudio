@@ -31,9 +31,8 @@ feature -- Access
 			argument_position: INTEGER
 			last_type: TYPE_A
 				-- Type onto the stack
-			last_id: CLASS_ID
+			last_id: INTEGER
 				-- Id of the class correponding to `last_type'
-			local_b: LOCAL_B
 			argument_b: ARGUMENT_B
 			local_info: LOCAL_INFO
 			a_feature: FEATURE_I
@@ -46,7 +45,7 @@ feature -- Access
 			if argument_position /= 0 then
 					-- Found argument
 				last_type := context.item
-				last_id := context.last_class.id
+				last_id := context.last_class.class_id
 				Result ?= a_feature.arguments.i_th (argument_position)
 				Result := Result.actual_type.instantiation_in
 												(last_type, last_id)

@@ -13,7 +13,7 @@ inherit
 		rename
 			make as make_compressed_scanner_skeleton
 		redefine
-			fatal_error
+			fatal_error, reset
 		end
 
 	SHARED_PARSER_FILE_BUFFER
@@ -25,12 +25,28 @@ feature {NONE} -- Initialization
 			-- Create a new classname finder.
 		do
 			make_with_buffer (Empty_buffer)
+			!! verbatim_marker.make (Initial_verbatim_marker_size)
 		end
 
+feature -- Initialization
+
+	reset is
+			-- Reset scanner before scanning next input source.
+			-- (This routine can be called in wrap before scanning
+			-- another input buffer.)
+		do
+			Precursor {YY_COMPRESSED_SCANNER_SKELETON}
+			verbatim_marker.clear_all
+			input_buffer.wipe_out
+		end
 feature -- Access
 
 	classname: STRING
 			-- Last classname found
+
+	verbatim_marker: STRING
+			-- Sequence of characters between " and [
+			-- in Verbatim_string_opener
 
 feature -- Parsing
 
@@ -59,9 +75,54 @@ feature -- Error handling
 		do
 		end
 
+feature {NONE} -- Implementation
+
+	is_verbatim_string_closer: BOOLEAN is
+			-- Is `text' a valid Verbatim_string_closer?
+		require
+			-- valid_text: `text' matches regexp [ \t\r]*\][^%\n"]*\"
+		local
+			i, j, nb: INTEGER
+			found: BOOLEAN
+		do
+				-- Look for first character ].
+				-- (Note that `text' matches the following
+				-- regexp:   [ \t\r]*\][^%\n"]*\"  .)
+			from j := 1 until found loop
+				if text_item (j) = ']' then
+					found := True
+				end
+				j := j + 1
+			end
+			nb := verbatim_marker.count
+			if nb = (text_count - j) then
+				Result := True
+				from i := 1 until i > nb loop
+					if verbatim_marker.item (i) = text_item (j) then
+						i := i + 1
+						j := j + 1
+					else
+						Result := False
+						i := nb + 1  -- Jump out of the loop.
+					end
+				end
+			end
+		end
+
+	last_start_condition: INTEGER
+			-- Start condition before entering
+			-- verbatim string parsing
+
 feature {NONE} -- Constants
 
+	Initial_verbatim_marker_size: INTEGER is 3
+			-- Initial size for `verbatim_marker'
+
 	TE_ID: INTEGER is 300
+
+invariant
+
+	verbatim_marker_not_void: verbatim_marker /= Void
 
 end -- class CLASSNAME_FINDER_SKELETON
 

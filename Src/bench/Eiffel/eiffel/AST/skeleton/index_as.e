@@ -11,7 +11,7 @@ class INDEX_AS
 inherit
 	AST_EIFFEL
 		redefine
-			is_equivalent
+			type_check
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -26,17 +26,6 @@ feature {AST_FACTORY} -- Initialization
 		ensure
 			tag_set: tag = t
 			index_list_set: index_list = i
-		end
-
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			tag ?= yacc_arg (0)
-			index_list ?= yacc_arg (1)
-		ensure then
-			list_exists: index_list /= Void
 		end
 
 feature -- Attributes
@@ -62,43 +51,35 @@ feature -- Comparison
 						equivalent (index_list, other.index_list)
 		end
 
-feature -- Case storage
+feature -- Type checking
 
-	is_description_tag: BOOLEAN is
-		local
-			tmp: STRING
+	type_check is
+			-- Type check a unique type
 		do
-			if tag /= Void then
-				tmp := clone (tag)
-				tmp.to_lower
-				Result := tmp.is_equal ("description") 
-			end
+			index_list.type_check
 		end
 
-	storage_info: S_TAG_DATA is
+feature {DOCUMENTATION_ROUTINES} -- Access
+
+	content_as_string: STRING is
+			-- Merge content into a single string.
 		local
-			txt: STRING
-			tmp: STRING
+			il: like index_list
 		do
-			!! txt.make (0)
-			if index_list /= Void then
+			create Result.make (20)
+			il := index_list
+			if il /= Void then
 				from
-					index_list.start
+					il.start
 				until
-					index_list.after
+					il.after
 				loop
-					txt.append (index_list.item.string_value)
-					index_list.forth
-					if not index_list.after then
-						txt.append (", ")
+					Result.append (il.item.string_value)
+					il.forth
+					if not il.after then
+						Result.append (", ")
 					end
 				end
-			end
-
-			if tag = Void then
-				!! Result.make (Void, txt)
-			else
-				!! Result.make (tag.string_value, txt)
 			end
 		end
 
@@ -108,15 +89,20 @@ feature {AST_EIFFEL} -- Output
 			-- Reconstitute text.
 		do
 			if tag /= Void then
-				ctxt.format_ast (tag)
+				ctxt.put_text_item (
+					create {INDEXING_TAG_TEXT}.make (tag.string_value)
+				)
 				ctxt.put_text_item_without_tabs (ti_Colon)
 				ctxt.put_space
 			end
-
 			if index_list /= Void then
+				ctxt.set_in_indexing_clause (True)
+				ctxt.put_text_item (ti_Before_indexing_content)
 				ctxt.set_space_between_tokens
 				ctxt.set_separator (ti_Comma)
 				ctxt.format_ast (index_list)
+				ctxt.put_text_item (ti_After_indexing_content)
+				ctxt.set_in_indexing_clause (False)
 			end
 		end
 	

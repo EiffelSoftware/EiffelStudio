@@ -1,12 +1,15 @@
--- General notion of class descriptor.
--- A descriptor is associated with one class type, is keyed by the class 
--- id's of the origin parent classes (parent classes which introduce actual 
--- routines).
+indexing
+	description: "General notion of class descriptor indexed by class id.%
+				%A descriptor is associated with one class type,%
+				%is keyed by the class id's of the origin parent%
+				%classes (parent classes which introduce actual routines)."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class DESCRIPTOR
 
 inherit
-	EXTEND_TABLE [DESC_UNIT, CLASS_ID]
+	EXTEND_TABLE [DESC_UNIT, INTEGER]
 		rename
 			put as table_put,
 			item as table_item,
@@ -67,19 +70,19 @@ feature -- Generation
 			buffer := generation_buffer
 			buffer.clear_all
 
-			class_id_string := class_type.id.id.out
+			class_id_string := class_type.static_type_id.out
 			class_id_string.prepend ("_")
 
 			is_precompiling := Compilation_modes.is_precompiling
+			buffer.append ("/*%N * Class ")
+			class_type.type.dump (buffer)
+			buffer.append ("%N */%N%N")
 			buffer.append ("#include %"eif_macros.h%"%N");
 			if is_precompiling then
 				buffer.append ("#include %"eif_wbench.h%"%N%N")	
 			end
 			buffer.start_c_specific_code
-			Class_counter.generate_extern_offsets (buffer);
-			Static_type_id_counter.generate_extern_offsets (buffer);
 			if is_precompiling then
-				Real_body_index_counter.generate_extern_offsets (buffer);
 				buffer.new_line
 				buffer.generate_static_declaration ("void", "build_desc" + class_id_string, <<"void">>);
 				buffer.new_line
@@ -119,7 +122,7 @@ feature -- Generation
 				buffer.putstring (", (int16) -1, (int16 *) 0},%N")
 			else
 				buffer.putstring ("%T{(uint16) ");
-				buffer.putint (invariant_entry.real_body_index.id - 1);
+				buffer.putint (invariant_entry.real_body_index - 1);
 				buffer.putstring (", (int16) -1, (int16 *) 0},%N")
 			end;
 
@@ -186,7 +189,7 @@ feature -- Generation
 			else
 				buffer.putstring (entry_name)
 				buffer.putstring ("[0].info = (uint16) (")
-				invariant_entry.real_body_index.generated_id (buffer)
+				buffer.generate_real_body_index (invariant_entry.real_body_index)
 				buffer.putstring (");%N%T")
 				buffer.putstring (entry_name)
 				buffer.putstring ("[0].type = (int16) -1;%N%T")
@@ -213,15 +216,15 @@ feature -- Generation
 			-- descriptor
 		local
 			i: INTEGER
-			class_type_id: TYPE_ID
+			class_type_id: INTEGER
 			init_name: STRING
 			desc, rtud, init_macro, sep, plus: STRING
 		do
-			class_type_id := class_type.id;
-			init_name := class_type_id.init_name;
+			class_type_id := class_type.static_type_id;
+			init_name := Encoder.init_name (class_type_id)
 			init_macro := "%TIDSC("
 			rtud := ", RTUD("
-			rtud.append (class_type_id.generated_id_string)
+			rtud.append (Encoder.generate_type_id_name (class_type_id))
 			rtud.append ("));%N")
 
 
@@ -258,7 +261,7 @@ feature -- Generation
 				buffer.putstring (plus);
 				buffer.putint (i);
 				buffer.putstring (sep);
-				key_for_iteration.generated_id (buffer);
+				buffer.generate_class_id (key_for_iteration);
 				buffer.putstring (rtud);
 				i := i + item_for_iteration.count;
 				forth
@@ -286,7 +289,7 @@ feature -- Melting
 			--    3) Sequence of descriptor units
 		do
 				-- Write the id of the class type
-			ba.append_short_integer (class_type.id.id);
+			ba.append_short_integer (class_type.static_type_id);
 				-- Write the number of descriptor units
 				-- +1, for the special routines (invariant...)
 			ba.append_short_integer (count + 1);
@@ -300,7 +303,7 @@ feature -- Melting
 			if (invariant_entry = Void) then
 				ba.append_short_integer (-1)
 			else
-				ba.append_short_integer	(invariant_entry.real_body_index.id - 1)
+				ba.append_short_integer	(invariant_entry.real_body_index - 1)
 			end;
 
 			-- No type

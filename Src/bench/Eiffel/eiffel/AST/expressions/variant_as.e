@@ -1,7 +1,7 @@
 indexing
-	description: "Description of variant loop. Version for Bench."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Description of variant loop. Version for Bench."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class VARIANT_AS
 
@@ -23,7 +23,7 @@ feature -- Type check and byte node
 				-- Check if the type of the expression is boolean
 			current_context := context.item
 			if not current_context.is_integer then
-				!! vave
+				create vave
 				context.init_error (vave)
 				vave.set_type (current_context)
 				Error_handler.insert_error (vave)
@@ -36,7 +36,7 @@ feature -- Type check and byte node
 	byte_node: VARIANT_B is
 			-- Associated byte code
 		do
-			!! Result
+			create Result
 			Result.set_tag (tag)
 			Result.set_expr (expr.byte_node)
 		end

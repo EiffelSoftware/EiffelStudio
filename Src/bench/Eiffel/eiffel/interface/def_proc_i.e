@@ -5,10 +5,10 @@ inherit
 	PROCEDURE_I			
 		redefine
 			is_deferred, has_entry, to_generate_in,
-			to_melt_in, can_be_inlined, update_api
+			to_melt_in, update_api, transfer_to
 		end
 	
-feature 
+feature -- Status Report
 
 	has_entry: BOOLEAN is False;
 			-- No polymorphic unit for deferred features
@@ -18,12 +18,14 @@ feature
 			Result := True
 		end;
 
+feature -- Conversion
+
 	to_melt_in (a_class: CLASS_C): BOOLEAN is
 			-- Has the current feature to be melted in class `a_class' ?
 			-- (Deferred routines with pre or post conditions are
 			-- melted)
 		do
-			Result := equal (a_class.id, written_in) and then 
+			Result := a_class.class_id = written_in and then 
 					(has_precondition or else has_postcondition);
 		end;
 
@@ -34,6 +36,17 @@ feature
 		do
 			-- Do nothing
 		end;
+
+feature -- Basic Operation
+
+	transfer_to (other: DEF_PROC_I) is
+			-- Transfer datas form `other' into Current.
+		do
+			Precursor {PROCEDURE_I} (other)
+			extension := other.extension
+		end
+
+feature -- Access
 
 	replicated: FEATURE_I is
 			-- Replication
@@ -46,7 +59,7 @@ feature
 			Result := rep;
 		end;
 
-	unselected (in: CLASS_ID): FEATURE_I is
+	unselected (in: INTEGER): FEATURE_I is
 			-- Unselected feature
 		local
 			unselect: D_DEF_PROC_I
@@ -57,9 +70,20 @@ feature
 			Result := unselect;
 		end;
 
-feature -- Inlining
+	extension: EXTERNAL_EXT_I
+			-- Deferred external information
 
-	can_be_inlined: BOOLEAN is False
+feature -- Element Change
+
+	set_extension (an_extension: like extension) is
+			-- Set `extension' with `an_extension'.
+		require
+			an_extension_not_void: an_extension /= Void
+		do
+			extension := an_extension
+		ensure
+			extension_set: extension = an_extension
+		end
 
 feature {NONE} -- Implementation
 

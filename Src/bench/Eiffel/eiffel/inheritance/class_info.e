@@ -16,18 +16,20 @@ inherit
 		export
 			{ANY} all
 		end;
-	IDABLE;
+	IDABLE
+		rename
+			id as class_id,
+			set_id as set_class_id
+		end
+
 	COMPILER_EXPORTER
 
 feature -- Access
 
-	id: CLASS_ID;
-			-- Class id
-
 	parents: PARENT_LIST;
 			-- Compiled parent clause
 
-	index: HASH_TABLE [READ_INFO, FEATURE_AS_ID];
+	index: HASH_TABLE [READ_INFO, INTEGER];
 			-- Indexes left by the server `Tmp_ast_server' during
 			-- execution of feature `pass1' of CLASS_C. Useful
 			-- for second pass
@@ -44,12 +46,12 @@ feature -- Access
 	features: EIFFEL_LIST [FEATURE_CLAUSE_AS] is
 			-- Feature abstract syntax
 		require
-			ast_server_ok: Tmp_ast_server.has (id) or else Ast_server.has (id);
+			ast_server_ok: Tmp_ast_server.has (class_id) or else Ast_server.has (class_id);
 		do
-			if Tmp_ast_server.has (id) then
-				Result := Tmp_ast_server.item (id).features;
+			if Tmp_ast_server.has (class_id) then
+				Result := Tmp_ast_server.item (class_id).features;
 			else
-				Result := Ast_server.item (id).features;
+				Result := Ast_server.item (class_id).features;
 			end;
 		end;
 
@@ -145,12 +147,6 @@ feature -- Access
 		end;
 
 feature -- Settings
-
-	set_id (i: CLASS_ID) is
-			-- Assign `i' to `id'.
-		do
-			id := i;
-		end;
 
 	set_invariant_info (i: like invariant_info) is
 			-- Assign `i' to `invariant_info'.

@@ -10,8 +10,10 @@ class EWB_ARGUMENTS
 
 inherit
 	ARRAY [STRING]
+		rename
+			wipe_out as na_wipe_out
 		redefine
-			wipe_out, force
+			force
 		end
 
 creation
@@ -54,8 +56,6 @@ feature -- Update
 
 	wipe_out is
 			-- Clear arguments.
-		require else
-			True
 		do
 			make (lower, upper);
 			argument_position := 1;

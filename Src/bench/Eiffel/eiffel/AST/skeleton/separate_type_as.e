@@ -11,7 +11,7 @@ inherit
 	CLASS_TYPE_AS
 		redefine
 			initialize,
-			set, dump, simple_format,
+			dump, simple_format,
 			actual_type, solved_type
 		end
 
@@ -20,26 +20,19 @@ feature {AST_FACTORY} -- Initialization
 	initialize (n: like class_name; g: like generics) is
 			-- Create a new SEPARATE_CLASS_TYPE AST node.
 		do
-			Precursor (n, g)
+			Precursor {CLASS_TYPE_AS} (n, g)
 			record_separate
 		end
 
 feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			{CLASS_TYPE_AS} Precursor
-			record_separate
-		end
 
 	record_separate is
 			-- Record the use of the separate keyword
 		do
 			if System.Concurrent_eiffel then
 				System.set_has_separate
-			elseif System.current_class.lace_class = System.general_class then
-				-- Allow declaration of `deep_import' in GENERAL
+			elseif System.current_class.lace_class = System.any_class then
+				-- Allow declaration of `deep_import' in ANY
 			else
 				Error_handler.make_separate_syntax_error
 			end

@@ -3,26 +3,17 @@
 class D_DYN_FUNC_I
 
 inherit
-
-	DYN_FUNC_I
-		rename
-			transfer_to as dyn_func_transfer_to
-		redefine
-			unselected, access_in, replicated, is_unselected
-		end;
 	DYN_FUNC_I
 		redefine
 			unselected, access_in, replicated, is_unselected, transfer_to
-		select
-			transfer_to
-		end;
+		end
 
 feature
 
-	access_in: CLASS_ID;
+	access_in: INTEGER;
 			-- Access class id
 
-	set_access_in (i: CLASS_ID) is
+	set_access_in (i: INTEGER) is
 			-- Assign `i' to `access_in'
 		do
 			access_in := i
@@ -39,7 +30,7 @@ feature
 			Result := rep;
 		end; -- replicated
 
-	unselected (i: CLASS_ID): FEATURE_I is
+	unselected (i: INTEGER): FEATURE_I is
 			-- Unselected feature
 		local
 			rep: RD1_DYN_FUNC_I
@@ -53,7 +44,7 @@ feature
 	transfer_to (f: like Current) is
 			-- Data transfer
 		do
-			dyn_func_transfer_to (f);
+			Precursor {DYN_FUNC_I} (f);
 			f.set_access_in (access_in);
 		end;
 

@@ -53,6 +53,12 @@ feature
 			buffer.putstring ("NONE")
 		end
 
+	il_type_name: STRING is
+			-- Name of current class type.
+		do
+			Result := "NONE"
+		end
+
 	same_as (other: TYPE_I): BOOLEAN is
 			-- Is `other' the equal to Current ?
 		do
@@ -71,7 +77,7 @@ feature
 			buffer.putstring ("SK_DTYPE")
 		end
 
-	c_string: STRING is "char *"
+	c_string: STRING is "EIF_REFERENCE"
 			-- String generated for the type.
 
 	union_tag: STRING is "rarg"
@@ -81,30 +87,6 @@ feature
 
 	separate_send_macro: STRING is "not_implemented"
 			-- String generated to return the result of a separate call
-
-	generate (buffer: GENERATION_BUFFER) is
-			-- Generate C type in `buffer'.
-		do
-			buffer.putstring ("char *")
-		end
-
-	generate_cast (buffer: GENERATION_BUFFER) is
-			-- Generate C cast in `buffer'.
-		do
-			buffer.putstring ("(char *) ")
-		end
-
-	generate_access_cast (buffer: GENERATION_BUFFER) is
-			-- Generate access C cast in `buffer'.
-		do
-			buffer.putstring ("(char **) ")
-		end
-
-	generate_size (buffer: GENERATION_BUFFER) is
-			-- Generate size of C type
-		do
-			buffer.putstring ("sizeof(char *)")
-		end
 
 	hash_code: INTEGER is
 			-- Hash code for current type
@@ -140,7 +122,7 @@ feature
 		do
 			buffer.putstring ("SK_REF")
 		end
-
+	
 	type_a: NONE_A is
 		do
 			!! Result
@@ -155,9 +137,9 @@ feature
 feature -- Generic conformance
 
 	generated_id (final_mode : BOOLEAN) : INTEGER is
-
+			-- Id corresponding to current type.
 		do
-			Result := -9        -- Code for NONE
+			Result := None_type
 		end
 
 end -- class NONE_I

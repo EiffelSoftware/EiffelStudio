@@ -2,7 +2,7 @@ indexing
 
 	description: 
 		"Description of a menu entry string for%
-		%command line option for es4 -loop.";
+		%command line option for ec -loop.";
 	date: "$Date$";
 	revision: "$Revision $"
 

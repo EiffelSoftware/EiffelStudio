@@ -88,18 +88,25 @@ feature -- Formatting
 			e_feature: E_FEATURE;
 			message: STRING
 			f_stone: FEATURE_STONE
+			routine_window: ROUTINE_W
 		do
 			f_stone ?= stone
 			if f_stone /= Void then
-				e_feature := f_stone.e_feature;
+				e_feature := f_stone.e_feature
 				if e_feature.is_debuggable then
 					old_format (f_stone)
+					if Application.is_running and then Application.is_stopped then
+						routine_window ?= tool
+						if routine_window /= Void then
+							routine_window.synchronize_with_callstack
+						end
+					end
 				else
 					bar_and_text_tool ?= tool;
 					if tool /= Void then
 						bar_and_text_tool.showtext_frmt_holder.execute (f_stone)
 					end;
-					if e_feature.body_id = Void then
+					if e_feature.body_index = 0 then
 						message := Warning_messages.w_Cannot_debug_feature
 					elseif e_feature.is_external then
 						message := Warning_messages.w_Cannot_debug_externals

@@ -12,11 +12,12 @@ inherit
 			numeric_balance
 		end
 
-feature -- Properties
+	PREFIX_INFIX_NAMES
+		rename
+			div_infix as infix_function_name
+		end
 
-	infix_function_name: STRING is "_infix_div"
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
+feature -- Properties
 
 	numeric_balance (left_type, right_type: TYPE_A): BOOLEAN is
 		do

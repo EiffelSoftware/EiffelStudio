@@ -14,23 +14,13 @@ feature {AST_FACTORY} -- Initialization
 			-- Create a new CLIENT AST node.
 		require
 			c_not_void: c /= Void
-			c_not_empty: not c.empty
+			c_not_empty: not c.is_empty
 		do
 			clients := c
 		ensure
 			clients_set: clients = c
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			clients ?= yacc_arg (0)
-		ensure then
-			not (clients = Void or else clients.empty)
-		end
-	
 feature -- Attributes
 
 	clients: EIFFEL_LIST [ID_AS]
@@ -99,7 +89,7 @@ feature -- Initialization
 				!!client_i
 				client_i.set_clients (clients)
 					-- Current class in second pass...
-				client_i.set_written_in (System.current_class.id)
+				client_i.set_written_in (System.current_class.class_id)
 				!!export_set.make
 				export_set.compare_objects
 				export_set.put (client_i)
@@ -113,7 +103,7 @@ feature -- Initialization
 			cluster: CLUSTER_I
 			client_classi: CLASS_I
 		do
-			cluster := System.class_of_id (ctxt.class_c.id).cluster
+			cluster := System.class_of_id (ctxt.class_c.class_id).cluster
 			ctxt.begin
 			ctxt.put_text_item (ti_L_curly)
 			ctxt.set_separator (ti_Comma)
@@ -145,6 +135,30 @@ feature -- Initialization
 				ctxt.commit
 			else
 				ctxt.rollback
+			end
+		end
+
+feature -- Output
+
+	dump: STRING is
+			-- Dump for comparison purposes.
+		do
+			create Result.make (3)
+			if clients /= Void then
+				from
+					clients.start
+				until
+					clients.after
+				loop
+					Result.append (clients.item)
+					clients.forth
+					if not clients.after then
+						Result.append (", ")
+					end
+				end
+			end
+			if Result.is_equal ("any") then
+				Result.wipe_out
 			end
 		end
 

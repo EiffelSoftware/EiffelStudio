@@ -1,0 +1,40 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>Multiple Inheritance on</title>
+<link rel="stylesheet" type="text/css" href="../default.css">
+</head>
+
+<body bgcolor="#FEFFE3">
+
+<h1>Multiple Inheritance on .NET</h1>
+<h2>Introduction</h2>
+<p>Implementing multiple inheritance on a platform that does not support it is a
+tough task. For example, the standard generation of ISE Eiffel is to produce C
+code that reflects the multiple inheritance aspect of the Eiffel classes.
+However when we do this, our C code is not easily understandable by others, that
+is why we created the CECIL library.</p>
+<p>One could have thought that having an object model like in .NET will make the
+task easier, but in fact it is even harder. The reason is that the .NET object
+model and the Eiffel one are quite different and there is no one to one mapping.
+So some conversion needs to be done to map the Eiffel multiple inheritance model
+to the .NET one. This is done through the use of multiple inheritance of
+interfaces as a general mechanism. The goal of this documentation is to explain
+what the ISE Eiffel compiler needs to perform this task.</p>
+<p>A side node comment regarding Java. The compiler supports generation of java
+byte code, but it lacks some feature that are really needed to implement
+multiple inheritance, renaming or covariance.</p>
+<p>&nbsp;</p>
+<h2>Content</h2>
+<ul>
+  <li><a href="dotnet_mapping.html">Multiple inheritance mapping to .NET</a></li>
+  <li><a href="assembly_manager.html">Assembly manager</a></li>
+  <li><a href="compiler_implementation.html">Compiler implementation</a></li>
+</ul>
+
+</body>
+
+</html>

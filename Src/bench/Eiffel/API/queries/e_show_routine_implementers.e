@@ -22,10 +22,9 @@ feature -- Execution
 		local
 			classes: PART_SORTED_TWO_WAY_LIST [CLASS_C];
 			rout_id_set: ROUT_ID_SET;
-			rout_id: ROUTINE_ID;
+			rout_id: INTEGER;
 			i: INTEGER;
-			stop: BOOLEAN;
-			written_in: CLASS_ID;
+			written_in: INTEGER;
 			feat: E_FEATURE;
 			c: CLASS_C;
 			written_cl: CLASS_C;
@@ -64,11 +63,9 @@ feature -- Execution
 					classes.after
 				loop
 					c := classes.item;
-					written_in := c.id;
+					written_in := c.class_id;
 					feat := c.feature_with_rout_id (rout_id);
-					if feat /= Void and then 
-						equal (feat.written_in, written_in)
-					then
+					if feat /= Void and then feat.written_in = written_in then
 						c.append_name (structured_text);
 						structured_text.add (ti_Space);
 						feat.append_name (structured_text);

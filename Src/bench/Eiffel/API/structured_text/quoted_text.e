@@ -8,10 +8,30 @@ indexing
 class QUOTED_TEXT
 
 inherit
-
-	TEXT_ITEM
+	FEATURE_TEXT
+		rename
+			make as feature_text_make
 		redefine
-			image
+			append_to
+		end
+
+	CLASS_NAME_TEXT
+		rename
+			make as class_text_make
+		redefine
+			append_to
+		end
+
+	CLUSTER_NAME_TEXT
+		rename
+			make as cluster_text_make
+		redefine
+			append_to
+		end
+
+	DOCUMENTATION_FACILITIES
+		export
+			{NONE} all
 		end
 
 creation
@@ -25,34 +45,42 @@ feature -- Initialization
 		require
 			valid_text: text /= Void
 		do
-			image_without_quotes := text;
+			image_without_quotes := text
+			image := clone (text)
+			image.precede ('`')
+			image.extend ('%'')
+			e_feature := feature_by_name (text)
+			if e_feature = Void then
+				if is_class_name (text) then
+					class_i := class_by_name (text)
+				end
+				if class_i = Void then
+					cluster_i := cluster_by_name (text)
+				end
+			end
 		ensure
 			image_without_quotes = text
-		end;
+		end
 
 feature -- Properties
 
-	image_without_quotes: STRING;
-			-- Image with the start and end quote
-
-	image: STRING is
-			-- Text representation of Current
-		do
-			!! Result.make (image_without_quotes.count + 2)
-			Result.extend ('`');
-			Result.append (image_without_quotes);
-			Result.extend ('%'')
-		ensure then
-			result_has_quotes: Result.item (1) = '`' and then
-					Result.item (Result.count) = '%''
-		end;
+	image_without_quotes: STRING
+			-- Used by documentation generation.
 
 feature {TEXT_FORMATTER} -- Implementation
 
 	append_to (text: TEXT_FORMATTER) is
 			-- Append quoted text to `text'.
 		do
-			text.process_quoted_text (Current)
+			if e_feature /= Void then
+				text.process_feature_text (Current)
+			elseif class_i /= Void then
+				text.process_class_name_text (Current)
+			elseif cluster_i /= Void then
+				text.process_cluster_name_text (Current)
+			else
+				text.process_quoted_text (Current)
+			end
 		end
 
 end -- class QUOTED_TEXT

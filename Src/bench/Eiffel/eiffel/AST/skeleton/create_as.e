@@ -18,17 +18,6 @@ feature {AST_FACTORY} -- Initialization
 			feature_list_set: feature_list = f
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			clients ?= yacc_arg (0)
-				--| A Void feature_list implies that we
-				--! have an empty creation clause
-			feature_list ?= yacc_arg (1)
-		end
-
 feature -- Attributes
 
 	clients: CLIENT_AS
@@ -92,7 +81,6 @@ feature -- formatter
 					ctxt.set_new_line_between_tokens
 					ctxt.set_classes (ctxt.class_c, ctxt.class_c)
 					if ctxt.is_flat_short then
-						ctxt.set_separator (ti_Semi_Colon)
 						format_features (ctxt, feature_list)
 					else
 						ctxt.set_separator (ti_Comma)
@@ -107,7 +95,8 @@ feature -- formatter
 feature {NONE} -- Implementation
 
 	format_features (ctxt: FORMAT_CONTEXT; list: like feature_list) is
-			-- Format the features in the creation clause
+			-- Format the features in the creation clause,
+			-- including header comment and contracts.
 		local
 			i, l_count: INTEGER
 			item: FEATURE_NAME
@@ -123,7 +112,7 @@ feature {NONE} -- Implementation
 				i > l_count 
 			loop
 				item := list.i_th (i)
-				feat_adapter := creators.item (item.internal_name);	
+				feat_adapter := creators.item (item.internal_name)
 				if feat_adapter /= Void then
 					feat_adapter.format (ctxt)
 				end

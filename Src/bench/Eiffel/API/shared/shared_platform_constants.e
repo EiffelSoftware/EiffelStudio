@@ -7,12 +7,12 @@ indexing
 class
 	SHARED_PLATFORM_CONSTANTS
 
-feature {NONE}
+feature -- Access
 
 	Platform_constants: PLATFORM_CONSTANTS is
 			-- To get on what kind of computer we are running
 		once
-			!! Result
-		end;
+			create Result
+		end
 
 end -- class SHARED_PLATFORM_CONSTANTS

@@ -10,10 +10,10 @@ inherit
 
 feature
 
-	access_in: CLASS_ID
+	access_in: INTEGER
 			-- Access class id
 
-	set_access_in (i: CLASS_ID) is
+	set_access_in (i: INTEGER) is
 			-- Assign `i' to `access_in'.
 		do
 			access_in := i
@@ -22,7 +22,7 @@ feature
 	transfer_to (f: like Current) is
 			-- Data transfer
 		do
-			{R_ATTRIBUTE_I} precursor (f)
+			Precursor {R_ATTRIBUTE_I} (f)
 			f.set_access_in (access_in)
 		end
 

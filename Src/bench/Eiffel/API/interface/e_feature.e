@@ -1,28 +1,39 @@
 indexing
-
-	description: 
-		"Representation of an Eiffel feature.";
-	date: "$Date$";
-	revision: "$Revision $"
+	description	: "Representation of an Eiffel feature.";
+	date		: "$Date$";
+	revision	: "$Revision $"
 
 class E_FEATURE
 
 inherit
+	COMPARABLE
 
-	COMPARABLE;
 	SHARED_EIFFEL_PROJECT
 		undefine
 			is_equal
-		end;
+		end
+
 	HASHABLE
 		undefine
 			is_equal
-		end;
+		end
+
 	SHARED_SERVER
 		undefine
 			is_equal
-		end;
+		end
+
 	COMPILER_EXPORTER
+		undefine
+			is_equal
+		end
+
+	SHARED_TEXT_ITEMS
+		undefine
+			is_equal
+		end
+
+	PREFIX_INFIX_NAMES
 		undefine
 			is_equal
 		end
@@ -33,29 +44,29 @@ feature -- Initialization
 			-- Initialize feature with name `n' with
 			-- identification `i'.
 		require
-			valid_n: n /= Void;
+			valid_n: n /= Void
 			positive_i: i >= 0
 		do
-			name := n;
-			id := i;
+			name := n
+			feature_id := i
 		ensure
-			set: name = n and then id = i
-		end;
+			set: name = n and then feature_id = i
+		end
 
 feature -- Properties
 
 	name: STRING;
 			-- Final name of the feature
 
-	id: INTEGER;
+	feature_id: INTEGER;
 			-- Unique identification for a feature
 
-	written_in: CLASS_ID
+	written_in: INTEGER
 			-- Class id where feature is written in
 
-	body_id: BODY_ID;
+	body_index: INTEGER;
 			-- Identification of the body
-			-- (Two features can have the same body_id if
+			-- (Two features can have the same body_index if
 			-- they are shared through replication)
 
 	rout_id_set: ROUT_ID_SET;
@@ -65,16 +76,19 @@ feature -- Properties
 			-- Export status of the feature
 
 	is_origin: BOOLEAN;
-			-- Is the feature an origin ?
+			-- Is feature an origin ?
 
 	is_frozen: BOOLEAN;
-			-- Is the feature frozen ?
+			-- Is feature frozen ?
+			-- Notes from Arnaud: it has nothing to do with
+			-- melted/frozen feature but refers to the keyword
+			-- frozen you can add before a feature name
 
 	is_infix: BOOLEAN;
-			-- Is the feature an infixed one ?
+			-- Is feature an infixed one ?
 
 	is_prefix: BOOLEAN;
-			-- Is the feature a prefixed one ?
+			-- Is feature a prefixed one ?
 
 	obsolete_message: STRING;
 			-- Obsolete message
@@ -89,49 +103,49 @@ feature -- Properties
 		end;
 
 	is_procedure: BOOLEAN is
-			-- Is the current feature a procedure ?
+			-- Is current feature a procedure ?
 		do
 			-- Do nothing
 		end;
 
 	is_function: BOOLEAN is
-			-- Is the cuurent feature a function ?
+			-- Is current feature a function ?
 		do
 			-- Do nothing
 		end;
 
 	is_attribute: BOOLEAN is
-			-- Is the current feature an attribute ?
+			-- Is current feature an attribute ?
 		do
 			-- Do nothing
 		end;
 
 	is_constant: BOOLEAN is
-			-- Is the current feature a constant ?
+			-- Is current feature a constant ?
 		do
 			-- Do nothing
 		end;
 
 	is_once: BOOLEAN is
-			-- Is the current feature a once one ?
+			-- Is current feature a once one ?
 		do
 			-- Do nothing
 		end;
 
 	is_deferred: BOOLEAN is
-			-- Is the current feature a deferred one ?
+			-- Is current feature a deferred one ?
 		do
 			-- Do nothing
 		end;
 
 	is_unique: BOOLEAN is
-			-- Is the current feature a unique constant ?
+			-- Is current feature a unique constant ?
 		do
 			-- Do nothing
 		end;
 
 	is_external: BOOLEAN is
-			-- Is the current feature an external one ?
+			-- Is current feature an external one ?
 		do
 			-- Do nothing
 		end;
@@ -143,22 +157,28 @@ feature -- Properties
 		end;
 
 	has_precondition: BOOLEAN is
-			-- Is the feature declaring some preconditions ?
+			-- Is feature declaring some preconditions ?
 		do
 			-- Do nothing
 		end;
 
 	has_postcondition: BOOLEAN is
-			-- Is the feature declaring some postconditions ?
+			-- Is feature declaring some postconditions ?
 		do
 			-- Do nothing
 		end;
 
 	has_assertion: BOOLEAN is
-			-- Is the feature declaring some pre or post conditions ?
+			-- Is feature declaring some pre or post conditions ?
 		do
 			Result := has_postcondition or else has_precondition
 		end;
+
+	has_arguments: BOOLEAN is
+ 			-- Has current feature some formal arguments ?
+		do
+			Result := arguments /= Void
+		end
 
 	arguments: E_FEATURE_ARGUMENTS is
 			-- Argument types
@@ -189,6 +209,39 @@ feature -- Properties
 		end;
 
 feature -- Access
+
+	ancestor_version (an_ancestor: CLASS_C): E_FEATURE is
+			-- Feature in `an_ancestor' of which `Current' is derived.
+			-- `Void' if not present in that class.
+		require
+			an_ancestor_not_void: an_ancestor /= Void
+		local
+			n, nb: INTEGER
+			ris: ROUT_ID_SET
+			rout_id: INTEGER
+		do
+			ris := rout_id_set
+			from
+				n := ris.lower
+				nb := ris.count
+			until
+				n > nb or else Result /= Void
+			loop
+				rout_id := ris.item (n)
+				if
+					rout_id /= 0 and then an_ancestor.is_valid
+					and then an_ancestor.has_feature_table
+				then
+					Result := an_ancestor.feature_with_rout_id (rout_id)
+				end
+				n := n + 1
+			end
+			if Result = Void then
+					-- Feature could still be present in `an_ancestor'.
+					-- it might be origin because other feature was selected.
+				Result := written_class.feature_with_body_index (body_index)
+			end
+		end
 
 	precursors: ARRAYED_LIST [CLASS_C] is
 			-- Precursor definition of written in classes
@@ -226,9 +279,9 @@ feature -- Access
 		end;
 
 	is_debuggable: BOOLEAN is
-			-- Is the feature debuggable?
+			-- Is feature debuggable?
 		do
-			Result := (body_id /= Void) and then
+			Result := (body_index /= 0) and then
 				(not is_external) and then
 				(not is_attribute) and then
 				(not is_constant) and then
@@ -237,7 +290,7 @@ feature -- Access
 				written_class.is_debuggable
 		ensure
 			debuggable_if: Result implies
-				(body_id /= Void) and then 
+				(body_index /= 0) and then 
 				(not is_external) and then
 				(not is_attribute) and then
 				(not is_constant) and then
@@ -283,7 +336,7 @@ feature -- Access
 			-- Class where the feature was evaluated in
 		do
 			check
-				valid_class: associated_class_id /= Void
+				valid_class: associated_class_id /= 0
 			end;
 			Result := Eiffel_system.class_of_id (associated_class_id);
 		end;
@@ -291,7 +344,7 @@ feature -- Access
 	written_class: CLASS_C is
 			-- Class where the feature is written in
 		require
-			good_written_in: written_in /= Void;
+			good_written_in: written_in /= 0;
 		do
 			Result := Eiffel_system.class_of_id (written_in);
 		end;
@@ -300,11 +353,11 @@ feature -- Access
 			-- Has the feature been compiled?
 			-- (Has been compiled if passed degree 4)
 		do
-			Result := body_id /= Void
+			Result := body_index /= 0
 		end;
 
 	is_exported_to (client: CLASS_C): BOOLEAN is
-			-- Is the current feature exported to class `client' ?
+			-- Is current feature exported to class `client' ?
 		require
 			good_argument: client /= Void;
 			has_export_status: export_status /= Void;
@@ -316,10 +369,10 @@ feature -- Access
 			-- Associated AST structure for feature
 		local
 			class_ast: CLASS_AS;
-			bid: BODY_ID
+			bid: INTEGER
 		do
-			bid := body_id;
-			if bid /= Void then
+			bid := body_index;
+			if bid /= 0 then
 					-- Server in the temporary server first to get the latest version of the AST.
 				if Tmp_ast_server.has (written_in) then
 					class_ast := Tmp_ast_server.item (written_in)
@@ -350,9 +403,9 @@ feature -- Access
 			cfeat: STRING;
 			current_d: DEPEND_UNIT;
 		do
-			!! Result.make;
-			dep := Depend_server.item (cl_class.id);
-			!! current_d.make (associated_class.id,associated_feature_i)
+			create Result.make
+			dep := Depend_server.item (cl_class.class_id)
+			create current_d.make (associated_class.class_id,associated_feature_i)
 			from
 				-- Loop through the features of each client
 				-- of current_class.
@@ -360,23 +413,23 @@ feature -- Access
 			until
 				dep.after
 			loop
-				fdep := dep.item_for_iteration;
+				fdep := dep.item_for_iteration
 				if fdep.has (current_d) then
-					--cfeat := dep.key_for_iteration;
+					--cfeat := dep.key_for_iteration
 					cfeat := fdep.feature_name
-					Result.put_front (cfeat);
-				end;
-				dep.forth;
-			end;
-			if Result.empty then
+					Result.put_front (cfeat)
+				end
+				dep.forth
+			end
+			if Result.is_empty then
 				Result := Void
 			else
 				Result.sort
-			end;
+			end
 		ensure
-			valid_result: Result /= Void implies not Result.empty
+			valid_result: Result /= Void implies not Result.is_empty
 					and then Result.sorted
-		end;
+		end
 
 	updated_version: E_FEATURE is
 			-- Updated version of feature after a compilation
@@ -391,10 +444,27 @@ feature -- Access
 				--| system, there is no `associated_class' and we should no go any
 				--| further.
 			class_c := associated_class
-			if class_c /= Void and then class_c.is_valid then
+			if
+				class_c /= Void and then class_c.is_valid
+				and then class_c.has_feature_table
+			then
 				Result := class_c.feature_with_name (name)
 			end
-		end;
+		end
+
+	number_of_breakpoint_slots: INTEGER is
+			-- Number of breakpoint slots in the feature (:::)
+			-- It includes the pre/postcondition (inner & herited)
+			-- and the rescue clause.
+		local
+			f: FEATURE_I
+		do
+			f := associated_feature_i
+			check
+				feature_upto_date: f /= Void
+			end
+			Result := f.number_of_breakpoint_slots
+		end
 
 feature -- Comparison
 
@@ -411,69 +481,128 @@ feature -- Output
 			non_void_st: st /= Void
 		local
 			args: like arguments
+			orig_type, cur_type: TYPE_A
+			same: BOOLEAN
 		do
-			args := arguments;
-			append_name (st);
+			args := arguments
+			if is_normal then
+				append_name (st)
+			else
+				append_special_name (st)
+			end
 			if args /= Void then
-				st.add_string (" (");
+				st.add_space
+				st.add (Ti_l_parenthesis)
 				from
 					args.start
 				until
 					args.after
 				loop
-					st.add_string (args.argument_names.i_th 
-									(args.index));
-					st.add_string (": ");
-					args.item.append_to (st);
-					args.forth;
-					if not args.after then
-						st.add_string ("; ")
+					orig_type := args.item
+					st.add_local (args.argument_names.i_th (args.index))
+					same := True
+					from args.forth until not same or else args.after loop
+						cur_type := args.item
+						if cur_type.same_type (orig_type) and then cur_type.is_equivalent (orig_type) then
+							st.add (Ti_comma)
+							st.add_space
+							st.add_local (args.argument_names.i_th (args.index))
+							args.forth
+						else
+							same := False
+						end
 					end
-				end;
-				st.add_char (')')
-			end;
-			if type /= Void then
-				st.add_string (": ");
-				type.append_to (st);
-			end;
-		end;
+					st.add (Ti_colon)
+					st.add_space
+					orig_type.ext_append_to (st, Current)
+					if not args.after then
+						st.add (Ti_semi_colon)
+						st.add_space
+					end
+				end
+				st.add (Ti_r_parenthesis)
+			end
+			if not is_procedure then
+				st.add (Ti_colon)
+				st.add_space
+				type.ext_append_to (st, Current)
+			end
+		end
 
 	append_name (st: STRUCTURED_TEXT) is
 			-- Append the name of the feature in `st'
 		require
 			valid_st: st /= Void
+		local
+			l_name: STRING
 		do
-			st.add_feature (Current, name) 
-		end;
+			l_name := clone (name)
+			l_name.to_lower
+			if is_once or else is_constant then
+				l_name.put ((l_name @ 1).upper, 1)
+			end
+			st.add_feature (Current, l_name) 
+		end
+
+	append_special_name (st: STRUCTURED_TEXT) is
+			-- Append formatted name of infix or prefix feature in `st'
+		require
+			valid_st: st /= Void
+			not_normal: not is_normal
+		local
+			ot: OPERATOR_TEXT
+		do
+			if is_infix then
+				st.add (Ti_infix_keyword)
+				if infix_reverse_table.has (name) then
+					create ot.make (Current, infix_reverse_table.found_item)
+				else
+					create ot.make (Current, name.substring (8, name.count))
+				end
+			else
+				st.add (Ti_prefix_keyword)
+				if prefix_reverse_table.has (name) then
+					create ot.make (Current, prefix_reverse_table.found_item)
+				else
+					create ot.make (Current, name.substring (9, name.count))
+				end
+			end
+			st.add_space
+			st.add (Ti_double_quote)
+			st.add (ot)
+			st.add (Ti_double_quote)
+		end
+
+feature -- Output
 
 	feature_signature: STRING is
 			-- Signature of Current feature
 		local
 			args: like arguments
 		do
-			!!Result.make (50);
-			Result.append (name);
-			args := arguments;
+			create Result.make (50)
+			Result.append (name)
+			args := arguments
 			if args /= Void then
-				Result.append (" (");
+				Result.append (" (")
 				from
 					args.start
 				until
 					args.after
 				loop
-					Result.append (args.argument_names.i_th (args.index));
-					Result.append (": ");
-					Result.append (args.item.dump);
-					args.forth;
+					Result.append (args.argument_names.i_th (args.index))
+					Result.append (": ")
+					Result.append (args.item.dump)
+					args.forth
 					if not args.after then
 						Result.append ("; ")
 					end
-				end;
+				end
 				Result.append (")")
-			end;
-		end;
+			end
+		end
 
-	valid_body_id: BOOLEAN is
+	valid_body_index: BOOLEAN is
 			-- The use of this routine as precondition for real_body_id
 			-- allows the enhancement of the external functions
 			-- Indeed, if an external has to be encapsulated (macro, signature)
@@ -489,28 +618,12 @@ feature -- Output
 					(is_constant and is_once);
 		end;
 
-    number_of_stop_points: INTEGER is
-            -- Number of stop points for eiffel feature
-		require
-			is_debuggable: is_debuggable
-		local
-			feature_as: like ast
-        do
-			feature_as := ast;
-			if feature_as /= Void then
-				Result := feature_as.number_of_stop_points
-			end 
-        end
+feature -- Implementation
 
-feature {DEBUG_INFO} -- Implementation
-
-	real_body_id: REAL_BODY_ID is
-			-- Real body id at compilation time. This id might be
-			-- obsolete after supermelting this feature.
-			--| In the latter case, the new real body id is kept
-			--| in DEBUGGABLE objects.
+	real_body_id: INTEGER is
+			-- Real body id at compilation time.
 		require
-			valid_body_id: valid_body_id
+			valid_body_index: valid_body_index
 		local
 			f: FEATURE_I
 		do
@@ -521,27 +634,9 @@ feature {DEBUG_INFO} -- Implementation
 			Result := f.real_body_id;
 		end;
 
-	debuggables: LINKED_LIST [DEBUGGABLE] is
-			-- List of byte code arrays and associated
-			-- information corresponding to Current
-			-- E_FEATURE defined in `from_c'.
-			--| The class in which the feature is
-			--| written might be generic, debugable
-			--| information must thus be generated
-			--| for each possible instantiation.
-		local
-			f: FEATURE_I
-		do
-			f := associated_feature_i;
-			check
-				feature_upto_date: f /= Void
-			end;
-			Result := f.debuggables;
-		end
-
 feature {NONE} -- Implementation
 
-	associated_class_id: CLASS_ID
+	associated_class_id: INTEGER
             -- Class id where the feature was evaluated in
 
 feature {COMPILER_EXPORTER} -- Implementation
@@ -554,22 +649,22 @@ feature {COMPILER_EXPORTER} -- Implementation
 
 feature {FEATURE_I} -- Setting
 
-	set_written_in (i: CLASS_ID) is
+	set_written_in (i: INTEGER) is
 			-- Set `written_in' to `i'.
 		do
 			written_in := i;
 		end;
 
-	set_associated_class_id (i: CLASS_ID) is
+	set_associated_class_id (i: INTEGER) is
 			-- Set `associated_class_id' to `i'.
 		do
 			associated_class_id := i
 		end;
 
-	set_body_id (i: BODY_ID) is
-			-- Assign `i' to `body_id'.
+	set_body_index (i: INTEGER) is
+			-- Assign `i' to `body_index'.
 		do
-			body_id := i;
+			body_index := i;
 		end;
 
 	set_is_origin (b: BOOLEAN) is

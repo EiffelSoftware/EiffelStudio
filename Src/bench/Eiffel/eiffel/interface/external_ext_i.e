@@ -66,6 +66,9 @@ feature -- Properties
 
 	header_files: ARRAY [STRING]
 
+	alias_name: STRING
+			-- Real name of external feature
+
 feature -- Initialization
 
 	set_argument_types (a: like argument_types) is
@@ -84,6 +87,17 @@ feature -- Initialization
 			-- Assign `r' to `return_type'.
 		do
 			return_type := r
+		end
+
+	set_alias_name (a_name: like alias_name) is
+			-- Set `alias_name' with `a_name'.
+		require
+			a_name_not_void: a_name /= Void
+			valid_name: not a_name.is_empty
+		do
+			alias_name := a_name
+		ensure
+			alias_name_set: alias_name = a_name
 		end
 
 feature -- Comparison
@@ -138,9 +152,7 @@ feature -- Code generation
 					i > nb
 				loop
 					header_file := header_files @ i
-					if not queue.has (header_file) then
-						queue.extend (header_file)
-					end
+					queue.put (header_file)
 					i := i + 1
 				end
 			end

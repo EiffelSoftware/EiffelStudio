@@ -1,17 +1,18 @@
 indexing
-	description:
-			"Abstract description of an Eiffel loop instruction. %
-			%Version for Bench."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Abstract description of an Eiffel loop instruction. %
+				  %Version for Bench."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class LOOP_AS
 
 inherit
 	INSTRUCTION_AS
 		redefine
-			number_of_stop_points,
-			byte_node, find_breakable, fill_calls_list, replicate
+			number_of_breakpoint_slots,
+			byte_node, 
+			fill_calls_list, 
+			replicate
 		end
 	
 	SHARED_OPTIMIZATION_TABLES
@@ -42,22 +43,6 @@ feature {AST_FACTORY} -- Initialization
 			line_number_set: line_number = l
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			from_part ?= yacc_arg (0)
-			invariant_part ?= yacc_arg (1)
-			variant_part ?= yacc_arg (2)
-			stop ?= yacc_arg (3)
-			compound ?= yacc_arg (4)
-			start_position := yacc_position
-			line_number := yacc_line_number
-		ensure then
-			stop_exists: stop /= Void
-		end
-
 feature -- Attributes
 
 	from_part: EIFFEL_LIST [INSTRUCTION_AS]
@@ -77,18 +62,30 @@ feature -- Attributes
 
 feature -- Access
 
-	number_of_stop_points: INTEGER is
+	number_of_breakpoint_slots: INTEGER is
 			-- Number of stop points for AST
 		do
-			Result := 1
+				-- "from" part
 			if from_part /= Void then
-				Result := Result + from_part.number_of_stop_points
+				Result := Result + from_part.number_of_breakpoint_slots
 			end
+
+				-- "invariant" part
+			if invariant_part /= Void then
+				Result := Result + invariant_part.number_of_breakpoint_slots
+			end
+				-- "variant" part
+			if variant_part /= Void then
+				Result := Result + variant_part.number_of_breakpoint_slots
+			end
+
+				-- "until" part
 			Result := Result + 1
+
+				-- "loop" part
 			if compound /= Void then
-				Result := Result + compound.number_of_stop_points
+				Result := Result + compound.number_of_breakpoint_slots
 			end
-			Result := Result + 1
 		end
 
 feature -- Comparison
@@ -110,8 +107,6 @@ feature -- Type check, byte code and dead code removal
 		local
 			current_context: TYPE_A
 			vwbe4: VWBE4
-			body_index: BODY_INDEX
-			opt_unit: OPTIMIZE_UNIT
 		do
 			if from_part /= Void then
 					-- Type check the from part
@@ -130,7 +125,7 @@ feature -- Type check, byte code and dead code removal
 				-- Check if if is a boolean expression
 			current_context := context.item
 			if not current_context.is_boolean then
-				!!vwbe4
+				create vwbe4
 				context.init_error (vwbe4)
 				vwbe4.set_type (current_context)
 				Error_handler.insert_error (vwbe4)
@@ -144,21 +139,20 @@ feature -- Type check, byte code and dead code removal
 				compound.type_check
 			end
 
-				-- Record the loop for optimizations in final mode
-			body_index := context.a_feature.body_index
 debug ("OPTIMIZATION")
 	io.error.putstring ("Recording loop in class ")
 	io.error.putstring (context.a_class.name)
 	io.error.putstring (" (")
-	context.a_class.id.trace
+	io.error.putint (context.a_class.class_id)
 	io.error.putstring ("), feature ")
 	io.error.putstring (context.a_feature.feature_name)
 	io.error.putstring (" (")
-	body_index.trace
+	io.error.putint (context.a_feature.body_index)
 	io.error.putstring (")%N")
 end
-			!!opt_unit.make (context.a_class.id, body_index)
-			optimization_tables.feature_set.extend (opt_unit)
+				-- Record loop for optimizations in final mode
+			optimization_tables.force (create {OPTIMIZE_UNIT}. make (context.a_class.class_id,
+				context.a_feature.body_index))
 		end
 
 	byte_node: LOOP_B is
@@ -167,7 +161,7 @@ end
 				-- Current feature has a loop.
 			context.set_has_loop (True)
 
-			!!Result
+			create Result
 			if from_part /= Void then
 				Result.set_from_part (from_part.byte_node)
 			end
@@ -182,23 +176,6 @@ end
 				Result.set_compound (compound.byte_node)
 			end
 			Result.set_line_number (line_number)
-		end
-
-feature -- Debugger
-
-	find_breakable is
-			-- Look for breakable instruction
-			-- Put a breakable point on each compound exit.
-		do
-			record_break_node
-			if from_part /= Void then
-				from_part.find_breakable
-			end
-			record_break_node
-			if compound /= Void then
-				compound.find_breakable
-			end
-			record_break_node
 		end
 
 feature -- Replication
@@ -253,9 +230,8 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_breakable
 			ctxt.put_text_item (ti_From_keyword)
-			ctxt.set_separator (ti_Semi_colon)
+			ctxt.set_separator (Void)
 			ctxt.set_new_line_between_tokens
 			if from_part /= Void then
 				ctxt.indent
@@ -266,7 +242,6 @@ feature {AST_EIFFEL} -- Output
 			else
 				ctxt.new_line
 			end
-			ctxt.put_breakable
 			if invariant_part /= Void then
 				ctxt.put_text_item (ti_Invariant_keyword)
 				ctxt.indent
@@ -287,6 +262,7 @@ feature {AST_EIFFEL} -- Output
 			ctxt.indent
 			ctxt.new_line
 			ctxt.new_expression
+			ctxt.put_breakable
 			ctxt.format_ast (stop)
 			ctxt.exdent
 			ctxt.new_line
@@ -298,7 +274,6 @@ feature {AST_EIFFEL} -- Output
 				ctxt.exdent
 			end
 			ctxt.new_line
-			ctxt.put_breakable
 			ctxt.put_text_item (ti_End_keyword)
 		end
 

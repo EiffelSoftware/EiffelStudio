@@ -262,7 +262,7 @@ feature {NONE} -- Implementation
 		end
 
 	ewb_display: SCREEN is
-			-- Display of EiffelBench.
+			-- Display of $EiffelGraphicalCompiler$.
 		local
 			p: PLATFORM_CONSTANTS
 		once

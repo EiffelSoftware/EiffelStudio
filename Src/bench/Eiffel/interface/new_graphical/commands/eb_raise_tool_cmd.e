@@ -16,7 +16,7 @@ creation
 
 feature -- Execution
 
-	execute (arg: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
+	execute is
 			-- Execute Current.
 		do
 			tool.raise

@@ -3,10 +3,9 @@
 class OPERAND_B 
 
 inherit
-
 	ACCESS_B
 		redefine
-			enlarged, make_byte_code
+			enlarged
 		end
 	
 feature 
@@ -33,11 +32,4 @@ feature
 			!OPERAND_BL!Result
 		end
 
-feature -- Byte code generation
-
-	make_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code
-		do
-			-- Nothing
-		end
 end

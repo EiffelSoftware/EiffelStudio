@@ -12,7 +12,7 @@ inherit
 		redefine
 			make
 		end
-	EB_CLASS_TOOL_DATA
+	EB_DEVELOPMENT_TOOL_DATA
 		rename
 			Class_resources as parameters
 		export

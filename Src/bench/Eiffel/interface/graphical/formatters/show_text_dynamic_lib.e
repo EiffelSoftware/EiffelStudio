@@ -59,7 +59,6 @@ feature -- Formatting
 			retried: BOOLEAN;
 			mp: MOUSE_PTR;
 			cur: CURSOR;
-			st: STRUCTURED_TEXT
 		do
 			if not retried then
 				!! mp.set_watch_cursor;

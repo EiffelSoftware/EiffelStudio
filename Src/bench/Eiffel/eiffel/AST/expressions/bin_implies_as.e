@@ -12,11 +12,13 @@ inherit
 			bit_balanced
 		end
 
-feature -- Properties
 
-	infix_function_name: STRING is "_infix_implies"
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
+	PREFIX_INFIX_NAMES
+		rename
+			implies_infix as infix_function_name
+		end
+
+feature -- Properties
 
 	bit_balanced: BOOLEAN is True
 			-- Is the current binary operation subject to the

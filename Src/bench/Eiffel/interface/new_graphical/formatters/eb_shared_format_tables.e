@@ -7,176 +7,176 @@ class
 	EB_SHARED_FORMAT_TABLES
 
 inherit
-	NEW_EB_CONSTANTS
-	EB_CLASS_TOOL_DATA
-	EB_TOOL_DATA
+	EB_CONSTANTS
+
+	EB_FORMATTER_DATA
 
 feature -- Properties
 
-	flat_context_text (stone: CLASSC_STONE): STRUCTURED_TEXT is
-			-- Format context of the flat form of `stone'
+	flat_context_text (a_class: CLASS_C): STRUCTURED_TEXT is
+			-- Format context of the flat form of `a_class'
 		require
-			stone_not_void: stone /= Void
-			valid_stone: stone.is_valid
+			a_class_not_void: a_class /= Void
+			valid_a_class: a_class.is_valid
 		local
+			an_item_and_table: CELL2 [HASHABLE, 
+							HASH_TABLE [STRUCTURED_TEXT, HASHABLE]]
 			ctxt: CLASS_TEXT_FORMATTER
 		do
-			if flat_table.has (stone) then
+			if flat_table.has (a_class) then
+				create an_item_and_table.make (a_class, flat_table)
 				Result := flat_table.found_item
+				history_list.start
+				history_list.search (an_item_and_table)
+				if not history_list.exhausted then
+					history_list.remove
+				end
+				history_list.extend (an_item_and_table)
 			else
 				create ctxt
 				ctxt.set_clickable
 				ctxt.set_feature_clause_order (feature_clause_order)
-				ctxt.format (stone.e_class)
+				ctxt.set_is_with_breakable
+				ctxt.format (a_class)
 				if not ctxt.error then
 					Result := ctxt.text
-					flat_table.put (Result, stone)
-					record_in_history (stone, flat_table)
+					record_in_history (a_class, flat_table, Result)
 				end
 			end
 		end
 		
-	flatshort_context_text (stone: CLASSC_STONE): STRUCTURED_TEXT is
-			-- Format context of the flatshort form of `stone'
+	flatshort_context_text (a_class: CLASS_C): STRUCTURED_TEXT is
+			-- Format context of the flatshort form of `a_class'
 		require
-			stone_not_void: stone /= Void
-			valid_stone: stone.is_valid
+			a_class_not_void: a_class /= Void
+			valid_a_class: a_class.is_valid
 		local
+			an_item_and_table: CELL2 [HASHABLE, 
+							HASH_TABLE [STRUCTURED_TEXT, HASHABLE]]
 			ctxt: CLASS_TEXT_FORMATTER
 		do
-			if flatshort_table.has (stone) then
+			if flatshort_table.has (a_class) then
+				create an_item_and_table.make (a_class, flatshort_table)
 				Result := flatshort_table.found_item
+				history_list.start
+				history_list.search (an_item_and_table)
+				if not history_list.exhausted then
+					history_list.remove
+				end
+				history_list.extend (an_item_and_table)
 			else
 				create ctxt
 				ctxt.set_clickable
 				ctxt.set_feature_clause_order (feature_clause_order)
 				ctxt.set_is_short
-				ctxt.format (stone.e_class)
+				ctxt.set_is_without_breakable
+				ctxt.format (a_class)
 				if not ctxt.error then
 					Result := ctxt.text
-					flatshort_table.put (Result, stone)
-					record_in_history (stone, flatshort_table)
+					record_in_history (a_class, flatshort_table, Result)
 				end
 			end
 		end
 		
-	short_context_text (stone: CLASSC_STONE): STRUCTURED_TEXT is
-			-- Format context of the short form of `stone'
+	short_context_text (a_class: CLASS_C): STRUCTURED_TEXT is
+			-- Format context of the short form of `a_class'
 		require
-			stone_not_void: stone /= Void
-			valid_stone: stone.is_valid
+			a_class_not_void: a_class /= Void
+			valid_a_class: a_class.is_valid
 		local
+			an_item_and_table: CELL2 [HASHABLE, 
+							HASH_TABLE [STRUCTURED_TEXT, HASHABLE]]
 			ctxt: CLASS_TEXT_FORMATTER
 		do
-			if short_table.has (stone) then
+			if short_table.has (a_class) then
+				create an_item_and_table.make (a_class, short_table)
 				Result := short_table.found_item
+				history_list.start
+				history_list.search (an_item_and_table)
+				if not history_list.exhausted then
+					history_list.remove
+				end
+				history_list.extend (an_item_and_table)
 			else
 				create ctxt
 				ctxt.set_clickable
 				ctxt.set_is_short
+				ctxt.set_is_without_breakable
 				ctxt.set_one_class_only
 				ctxt.set_feature_clause_order (feature_clause_order)
-				ctxt.format (stone.e_class)
+				ctxt.format (a_class)
 				if not ctxt.error then
 					Result := ctxt.text
-					short_table.put (Result, stone)
-					record_in_history (stone, short_table)
+					record_in_history (a_class, short_table, Result)
 				end
 			end
 		end
 		
-	clickable_context_text (stone: CLASSC_STONE): STRUCTURED_TEXT is
-			-- Format context of the clickable form of `stone'
+	clickable_context_text (a_class: CLASS_C): STRUCTURED_TEXT is
+			-- Format context of the clickable form of `a_class'
 		require
-			stone_not_void: stone /= Void
-			valid_stone: stone.is_valid
+			a_class_not_void: a_class /= Void
+			valid_a_class: a_class.is_valid
 		local
+			an_item_and_table: CELL2 [HASHABLE, 
+							HASH_TABLE [STRUCTURED_TEXT, HASHABLE]]
 			ctxt: CLASS_TEXT_FORMATTER
 		do
-			if clickable_table.has (stone) then
+			if clickable_table.has (a_class) then
+				create an_item_and_table.make (a_class, clickable_table)
 				Result := clickable_table.found_item
+				history_list.start
+				history_list.search (an_item_and_table)
+				if not history_list.exhausted then
+					history_list.remove
+				end
+				history_list.extend (an_item_and_table)
 			else
 				create ctxt
 				ctxt.set_clickable
 				ctxt.set_one_class_only
 				ctxt.set_order_same_as_text
-				ctxt.format (stone.e_class)
+				ctxt.set_is_without_breakable
+				ctxt.format (a_class)
 				if not ctxt.error then
 					Result := ctxt.text
-					clickable_table.put (Result, stone)
-					record_in_history (stone, clickable_table)
+					record_in_history (a_class, clickable_table, Result)
 				end
 			end
 		end
 		
-	rout_flat_context_text (stone: FEATURE_STONE): STRUCTURED_TEXT is
-			-- Format context of the flat form of `stone'
+	rout_flat_context_text (a_feature: E_FEATURE): STRUCTURED_TEXT is
+			-- Format context of the flat form of `a_feature'
 		require
-			stone_not_void: stone /= Void
-			valid_stone: stone.is_valid
+			a_feature_not_void: a_feature /= Void
 		local
+			f_id: EB_FEATURE_ID
+			an_item_and_table: CELL2 [HASHABLE, 
+							HASH_TABLE [STRUCTURED_TEXT, HASHABLE]]
 			ctxt: FEATURE_TEXT_FORMATTER
 		do
-			if rout_flat_table.has (stone) then
+			create f_id.make (a_feature)
+			if rout_flat_table.has (f_id) then
+				create an_item_and_table.make (f_id, rout_flat_table)
 				Result := rout_flat_table.found_item
+				history_list.start
+				history_list.search (an_item_and_table)
+				if not history_list.exhausted then
+					history_list.remove
+				end
+				history_list.extend (an_item_and_table)
 			else
 				create ctxt
 				ctxt.set_clickable
 					--| Show flat form of the routine (False)
-				ctxt.format (stone.e_feature, False)
+				ctxt.format (a_feature, True)
 				if not ctxt.error then
 					Result := ctxt.text
-					rout_flat_table.put (Result, stone)
-					record_in_history (stone, rout_flat_table)
+					record_in_history (f_id, rout_flat_table, Result)
 				end
 			end
 		end
 		
-	debug_context_text (stone: FEATURE_STONE): STRUCTURED_TEXT is
-			-- Format context of the debug form of `stone'
-		require
-			stone_not_void: stone /= Void
-			valid_stone: stone.is_valid
-		local
-			ctxt: FEATURE_TEXT_FORMATTER
-		do
-			if debug_table.has (stone) then
-				Result := debug_table.found_item
-			else
-				create ctxt
-				ctxt.set_clickable
-					--| Show flat form with debug point (True)
-				ctxt.format (stone.e_feature, True)
-				if not ctxt.error then
-					Result := ctxt.text
-					debug_table.put (Result, stone)
-					record_in_history (stone, debug_table)
-				end
-			end
-		end
-
-	simple_debug_context_text (stone: FEATURE_STONE): STRUCTURED_TEXT is
-			-- Simple formatting (nothing clickalbe)
-			-- of the debug form of `stone'
-		require
-			stone_not_void: stone /= Void
-			valid_stone: stone.is_valid
-		local
-			ctxt: FEATURE_TEXT_FORMATTER
-		do
-			if debug_table.has (stone) then
-				Result := debug_table.found_item
-			else
-				create ctxt
-				ctxt.simple_format_debuggable (stone.e_feature)
-				if not ctxt.error then
-					Result := ctxt.text
-					simple_debug_table.put (Result, stone)
-					record_in_history (stone, debug_table)
-				end
-			end
-		end
-
 feature -- Clearing tables
 
 	clear_format_tables is
@@ -187,8 +187,6 @@ feature -- Clearing tables
 			short_table.clear_all
 			clickable_table.clear_all
 			rout_flat_table.clear_all
-			debug_table.clear_all
-			simple_debug_table.clear_all
 			history_list.wipe_out
 		end
 
@@ -197,18 +195,18 @@ feature -- Clearing tables
 			-- the `clickable_table'.
 		local
 			found: BOOLEAN
-			a_stone: CLASSC_STONE
+			a_class: CLASS_C
 		do
 			from
 				history_list.start
 			until
 				history_list.after
 			loop
-				a_stone ?= history_list.item.item1
-				if a_stone /= Void then
-					found := flat_table.has (a_stone) or else
-						flatshort_table.has (a_stone) or else
-						short_table.has (a_stone) 
+				a_class ?= history_list.item.item1
+				if a_class /= Void then
+					found := flat_table.has (a_class) or else
+						flatshort_table.has (a_class) or else
+						short_table.has (a_class) 
 					if found then			
 						history_list.remove
 					else
@@ -226,83 +224,85 @@ feature -- Clearing tables
 feature {NONE} -- Attributes
 
 	History_size: INTEGER is
-		do
+		once
 			Result := editor_history_size
-			if Result < 1 or Result > 100 then
+			if Result < 1 then
+				Result := 5
+			elseif Result > 200 then
 					-- Just in case the user specified some weird values.
-				Result := 10
+				Result := 50
 			end
-			Result := Result * 3
 		end
 
-	flat_table: HASH_TABLE [STRUCTURED_TEXT, CLASSC_STONE] is
+	flat_table: HASH_TABLE [STRUCTURED_TEXT, CLASS_C] is
 			-- Table of the last flat formats
 		once
 			create Result.make (History_size)
 		end
 
-	flatshort_table: HASH_TABLE [STRUCTURED_TEXT, CLASSC_STONE] is
+	flatshort_table: HASH_TABLE [STRUCTURED_TEXT, CLASS_C] is
 			-- Table of the last flatshort formats
 		once
 			create Result.make (History_size)
 		end
 
-	short_table: HASH_TABLE [STRUCTURED_TEXT, CLASSC_STONE] is
+	short_table: HASH_TABLE [STRUCTURED_TEXT, CLASS_C] is
 			-- Table of the last short formats
 		once
 			create Result.make (History_size)
 		end
 
-	clickable_table: HASH_TABLE [STRUCTURED_TEXT, CLASSC_STONE] is
+	clickable_table: HASH_TABLE [STRUCTURED_TEXT, CLASS_C] is
 			-- Table of the last clickable formats
 		once
 			create Result.make (History_size)
 		end
 
-	rout_flat_table: HASH_TABLE [STRUCTURED_TEXT, FEATURE_STONE] is
+	rout_flat_table: HASH_TABLE [STRUCTURED_TEXT, EB_FEATURE_ID] is
 			-- Table of the last flat formats
 		once
 			create Result.make (History_size)
 		end
 
-	debug_table: HASH_TABLE [STRUCTURED_TEXT, FEATURE_STONE] is
-			-- Table of the last debug formats
-		once
-			create Result.make (History_size)
-		end
-
-	simple_debug_table: HASH_TABLE [STRUCTURED_TEXT, FEATURE_STONE] is
-			-- Table of the last debug formats
-		once
-			create Result.make (History_size)
-		end
-
-	history_list: LINKED_LIST [CELL2 [HASHABLE_STONE,
-						HASH_TABLE [STRUCTURED_TEXT, HASHABLE_STONE]]] is
-			-- History list. Only `History_size' contexts are kept in memory
+	history_list: LINKED_LIST [CELL2 [HASHABLE,
+						HASH_TABLE [STRUCTURED_TEXT, HASHABLE]]] is
+			-- History list. Only `History_size' contexts are kept in memory.
 		once
 			create Result.make
+			Result.compare_objects
 		end
 
 feature {NONE} -- Implementation
 
-	record_in_history (stone: HASHABLE_STONE;
-					table: HASH_TABLE [STRUCTURED_TEXT, HASHABLE_STONE]) is
-			-- Extend the history with `stone'. Remove the oldest from
+	record_in_history (an_item: HASHABLE;
+					table: HASH_TABLE [STRUCTURED_TEXT, HASHABLE];
+					text: STRUCTURED_TEXT) is
+			-- Extend the history with `an_item'. Remove the oldest from
 			-- the history list if it is full.
+			-- Add `text' to the memorized texts in `table'.
 		require
-			stone_not_void: stone /= Void
+			an_item_not_void: an_item /= Void
 			table_not_void: table /= Void
 		local
-			stone_and_table: CELL2 [HASHABLE_STONE, 
-							HASH_TABLE [STRUCTURED_TEXT, HASHABLE_STONE]]
+			an_item_and_table: CELL2 [HASHABLE, 
+							HASH_TABLE [STRUCTURED_TEXT, HASHABLE]]
 		do
-			create stone_and_table.make (stone, table)
-			history_list.extend (stone_and_table)
+			create an_item_and_table.make (an_item, table)
+			table.put (text, an_item)
+			if table.conflict then
+					-- Text was already memorized.
+					-- Raise it in history.
+				history_list.start
+				history_list.search (an_item_and_table)
+				if not history_list.exhausted then
+					history_list.remove
+				end
+			end
+			history_list.extend (an_item_and_table)
 			if history_list.count > History_size then
 				history_list.start
-				stone_and_table := history_list.item
-				stone_and_table.item2.remove (stone_and_table.item1)
+				an_item_and_table := history_list.item
+				an_item_and_table.item2.remove (an_item_and_table.item1)
 				history_list.remove
 			end
 		end

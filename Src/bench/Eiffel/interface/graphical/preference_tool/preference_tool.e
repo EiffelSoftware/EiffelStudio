@@ -163,7 +163,7 @@ feature -- Display
 		require
 			a_screen_is_valid: a_screen /= Void and then a_screen.is_valid;
 			not_created: destroyed;
-			list_not_empty: not category_list.empty
+			list_not_empty: not category_list.is_empty
 		do
 			top_shell_make (t_Tool_name, a_screen);
 			!! global_form.make (t_Empty, Current);
@@ -314,7 +314,7 @@ feature -- Access
 			mp: MOUSE_PTR
 		do
 			cats := category_list;
-			if not cats.empty then
+			if not cats.is_empty then
 				from
 					!! mp.set_watch_cursor;
 					cats.start

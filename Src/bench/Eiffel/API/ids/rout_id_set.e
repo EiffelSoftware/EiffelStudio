@@ -1,27 +1,30 @@
 indexing
- 
-	description:
-		"Routine identifier sets.";
+	description: "Routine identifier sets indexed by routine id.";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class ROUT_ID_SET 
 
 inherit
-
-	ARRAY [ROUTINE_ID]
+	ARRAY [INTEGER]
 		rename
 			make as array_create,
 			put as array_put,
 			count as array_count,
 			force as array_force,
 			empty as array_empty,
+			is_empty as array_is_empty,
 			full as array_full, 
 			has as array_has,
 			wipe_out as array_wipe_out
 		export
 			{NONE} array_create, array_put, array_count, array_force,
 				array_empty, array_full, array_has, array_wipe_out
+		end
+
+	SHARED_COUNTER
+		undefine
+			copy, is_equal
 		end
 
 	COMPILER_EXPORTER
@@ -48,26 +51,26 @@ feature -- Properties
 
 feature -- Access
 
-	first: ROUTINE_ID is
+	first: INTEGER is
 			-- First routine id
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		do
 			Result := item (1);
 		ensure
-			first_not_void: Result /= Void
+			first_not_void: Result /= 0
 		end;
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- Is the set empty ?
 		do
 			Result := count = 0;
 		end;
 
-	has (rout_id: ROUTINE_ID): BOOLEAN is
+	has (rout_id: INTEGER): BOOLEAN is
 			-- Is the routine id `rout_id' present in the set ?
 		require
-			rout_id_not_void: rout_id /= Void
+			rout_id_not_void: rout_id /= 0
 		local
 			i: INTEGER
 		do
@@ -76,7 +79,7 @@ feature -- Access
 			until
 				i > count or else Result
 			loop
-				Result := rout_id.is_equal (item (i));
+				Result := rout_id = item (i)
 				i := i + 1;
 			end;
 		end;
@@ -114,7 +117,7 @@ feature -- Output
 			until
 				i > count
 			loop
-				item (i).trace;
+				io.error.putint (item (i));
 				io.error.putchar (' ');
 				i := i + 1;
 			end;
@@ -129,14 +132,14 @@ feature {COMPILER_EXPORTER}
 			Result := count = array_count;
 		end;
 
-	put (rout_id: ROUTINE_ID) is
+	put (rout_id: INTEGER) is
 			-- Insert routine id `rout_id' in the set if not already
 			-- present.
 		require
-			rout_id_not_void: rout_id /= Void;
+			rout_id_not_void: rout_id /= 0;
 			not_full: not full;
 		local
-			temp: ROUTINE_ID
+			temp: INTEGER
 		do
 			if not has (rout_id) then
 					-- Routine id `rout_id' is not present in the set
@@ -147,7 +150,10 @@ feature {COMPILER_EXPORTER}
 				-- routine id set, if there are thw ids one for a routine
 				-- table and another one for an attribute table, the one
 				-- for the attribute table must be in first position;
-				if rout_id.is_attribute and not first.is_attribute then
+				if
+					Routine_id_counter.is_attribute (rout_id) and then
+					not Routine_id_counter.is_attribute (first)
+				then
 					temp := item (1);
 					array_put (rout_id, 1);
 					array_put (temp, count);
@@ -155,13 +161,13 @@ feature {COMPILER_EXPORTER}
 			end;
 		end;
 
-	force (rout_id: ROUTINE_ID) is
+	force (rout_id: INTEGER) is
 			-- Insert routine id `rout_id' in the set if not already
 			-- present. Resize the array if needed.
 		require
-			rout_id_not_void: rout_id /= Void
+			rout_id_not_void: rout_id /= 0
 		local
-			temp: ROUTINE_ID
+			temp: INTEGER
 		do
 			if not has (rout_id) then
 					-- Routine id `rout_id' is not present in the set.
@@ -172,7 +178,10 @@ feature {COMPILER_EXPORTER}
 				count := count + 1;
 				array_put (rout_id, count);
 					-- See comment in `put'
-				if rout_id.is_attribute and not first.is_attribute then
+				if
+					Routine_id_counter.is_attribute (rout_id) and then
+					not Routine_id_counter.is_attribute (first)
+				then
 					temp := item (1);	
 					array_put (rout_id, 1);
 					array_put (temp, count);
@@ -183,15 +192,15 @@ feature {COMPILER_EXPORTER}
 	has_attribute_origin: BOOLEAN is
 			-- Is in the routine id set an attribute offset table id ?
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		do
-			Result := first.is_attribute
+			Result := Routine_id_counter.is_attribute (first)
 		end;
 			
 	update (l: LINKED_LIST [INHERIT_INFO]) is
 			-- Update through inherited features in `l'.
 		require
-			good_argument: not (l = Void or else l.empty);
+			good_argument: not (l = Void or else l.is_empty);
 		do
 			from
 				l.start;

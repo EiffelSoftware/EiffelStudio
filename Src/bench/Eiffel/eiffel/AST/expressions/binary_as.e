@@ -29,18 +29,6 @@ feature {AST_FACTORY} -- Initialization
 			right_set: right = r
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			left ?= yacc_arg (0)
-			right ?= yacc_arg (1)
-		ensure then
-			left_exists: left /= Void
-			right_exists: right /= Void
-		end
-
 feature -- Attributes
 
 	left: EXPR_AS
@@ -107,35 +95,29 @@ feature -- Type check, byte code and dead code removal
 	type_check is
 			-- Type check a binary expression
 		local
-			bit_balance_in_effect, balance_in_effect: BOOLEAN
-			infix_function: FEATURE_I
-			infix_arg_type, infix_type, left_balance: TYPE_A
-			left_type, current_context: TYPE_A
-			last_constrained, left_constrained: TYPE_A
-			left_id: CLASS_ID
-			feature_b: FEATURE_B
-			feature_bs: FEATURE_BS
-			last_class: CLASS_C
-			depend_unit: DEPEND_UNIT
-			vwoe: VWOE
-			vwoe1: VWOE1
-			vhne: VHNE
-			vkcn3: VKCN3
-			vuex: VUEX
+			bit_balance_in_effect	: BOOLEAN
+			balance_in_effect		: BOOLEAN
+			infix_function			: FEATURE_I
+			infix_arg_type			: TYPE_A
+			infix_type				: TYPE_A
+			left_type				: TYPE_A
+			current_context			: TYPE_A
+			last_constrained		: TYPE_A
+			left_constrained		: TYPE_A
+			left_id					: INTEGER
+			last_class				: CLASS_C
+			depend_unit				: DEPEND_UNIT
+			vwoe					: VWOE
+			vwoe1					: VWOE1
+			vhne					: VHNE
+			vuex					: VUEX
 		do
 				-- First type check the left operand
 			left.type_check
 
 				-- Check if target is not of type NONE
 			left_constrained := context.last_constrained_type
-			if left_constrained.is_void then
-					-- No call when target is a procedure
-				!!vkcn3
-				context.init_error (vkcn3)
-				Error_handler.insert_error (vkcn3)
-					-- Cannot go on here
-				Error_handler.raise_error
-			elseif left_constrained.is_none then
+			if left_constrained.is_none then
 				!!vhne
 				context.init_error (vhne)
 				Error_handler.insert_error (vhne)
@@ -145,8 +127,7 @@ feature -- Type check, byte code and dead code removal
 
 				-- Check if we have then an infixed function
 			last_class := left_constrained.associated_class
-			infix_function := last_class.feature_table.item
-														(infix_function_name)
+			infix_function := last_class.feature_table.item (infix_function_name)
 			if infix_function = Void then
 					-- Error
 				!!vwoe
@@ -169,7 +150,7 @@ feature -- Type check, byte code and dead code removal
 			end
 
 			left_type := context.item
-			left_id := last_class.id
+			left_id := last_class.class_id
 
 				-- Suppliers update
 			!!depend_unit.make (left_id, infix_function)
@@ -214,6 +195,9 @@ feature -- Type check, byte code and dead code removal
 				Error_handler.insert_error (vwoe1)
 			end
 
+				-- Add type to `parameters' in case we will need it later.
+			attachment := infix_arg_type
+
 				-- Update the type stack: instantiate result type of the
 				-- infixed feature
 			infix_type ?= infix_function.type
@@ -248,26 +232,7 @@ feature -- Type check, byte code and dead code removal
 			end
 			context.put (infix_type)
 
-			if last_constrained /= Void and then last_constrained.is_separate then
-debug io.putstring ("Now,  In BINARY_AS we perform try-assign on class ")
-io.putstring (context.a_class.name_in_upper)
-io.putstring (" at feature ")
-io.putstring (context.feature_name)
-io.new_line
-io.putstring ("    ** BINARY_AS We created FEATURE_BS here: <")
-io.putstring (feature_b.feature_name)
-io.putstring (">%N"); end
-				!!feature_bs
-				feature_bs.init (infix_function)
-				feature_bs.set_type (infix_type.type_i)
-				context.access_line.insert (feature_bs)
-			else
-				!!feature_b
-				feature_b.init (infix_function)
-				feature_b.set_type (infix_type.type_i)
-				context.access_line.insert (feature_b)
-			end
-
+			context.access_line.insert (infix_function.access (infix_type.type_i))
 		end
 
 	byte_node: BINARY_B is
@@ -283,6 +248,7 @@ io.putstring (">%N"); end
 			access_line := context.access_line
 			feature_b ?= access_line.access
 			Result.init (feature_b)
+			Result.set_attachment (attachment.type_i)
 			access_line.forth
 		end
 
@@ -391,6 +357,9 @@ feature {AST_EIFFEL} -- Output
 
 feature {BINARY_AS}	-- Replication
 
+	attachment: TYPE_A
+			-- Type of right expression as defined in Eiffel source.
+
 	set_left (l: like left) is
 		require
 			valid_arg: l /= Void
@@ -406,3 +375,4 @@ feature {BINARY_AS}	-- Replication
 		end
 
 end -- class BINARY_AS
+

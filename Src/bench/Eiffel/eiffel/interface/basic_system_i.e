@@ -4,9 +4,6 @@ class BASIC_SYSTEM_I
 
 feature 
 
-	general_class: CLASS_I
-			-- Class GENERAL
-
 	any_class: CLASS_I
 			-- Class ANY
 
@@ -16,8 +13,12 @@ feature
 	character_class: CLASS_I
 			-- Class CHARACTER
 
-	integer_class: CLASS_I
-			-- Class INTEGER
+	wide_char_class: CLASS_I
+			-- Class UNICODE_CHARACTER
+
+	integer_8_class, integer_16_class,
+	integer_32_class, integer_64_class: CLASS_I
+			-- Class INTEGER 8, 16, 32 and 64 btis
 
 	real_class: CLASS_I
 			-- Class REAL
@@ -46,11 +47,15 @@ feature
 	character_ref_class: CLASS_I
 			-- Class CHARACTER_REF
 
+	wide_char_ref_class: CLASS_I
+			-- Class UNICODE_CHARACTER_REF
+
 	boolean_ref_class: CLASS_I
 			-- Class BOOLEAN_REF
 
-	integer_ref_class: CLASS_I
-			-- Class INTEGER_REF
+	integer_8_ref_class, integer_16_ref_class,
+	integer_32_ref_class, integer_64_ref_class: CLASS_I
+			-- Class INTEGER_REF 8, 16, 32 and 64 bits
 
 	real_ref_class: CLASS_I
 			-- Class REAL_REF
@@ -76,12 +81,6 @@ feature
 	function_class: CLASS_I
 			-- Class FUNCTION
 
-	set_general_class (c: CLASS_I) is
-			-- Assign `c' to `general_class'.
-		do
-			general_class := c
-		end
-	
 	set_any_class (c: CLASS_I) is
 			-- Assign `c' to `any_class'.
 		do
@@ -94,16 +93,25 @@ feature
 			boolean_class := c
 		end
 
-	set_character_class (c: CLASS_I) is
+	set_character_class (c: CLASS_I; is_wide: BOOLEAN) is
 			-- Assign `c' to `character_class'.
 		do
-			character_class := c
+			if is_wide then
+				wide_char_class := c
+			else
+				character_class := c
+			end
 		end
 
-	set_integer_class (c: CLASS_I) is
-			-- Assign `c' to `integer_class'.
+	set_integer_class (c: CLASS_I; n: INTEGER) is
+			-- Assign `c' to `integer_n_class'.
 		do
-			integer_class := c
+			inspect n
+			when 8 then integer_8_class := c
+			when 16 then integer_16_class := c
+			when 32 then integer_32_class := c
+			when 64 then integer_64_class := c
+			end
 		end
 
 	set_real_class (c: CLASS_I) is
@@ -154,10 +162,14 @@ feature
 			bit_class := c
 		end
 
-	set_character_ref_class (c: CLASS_I) is
+	set_character_ref_class (c: CLASS_I; is_wide: BOOLEAN) is
 			-- Assign `c' to `character_ref_class'.
 		do
-			character_ref_class := c
+			if is_wide then
+				wide_char_ref_class := c
+			else
+				character_ref_class := c
+			end
 		end
 
 	set_boolean_ref_class (c: CLASS_I) is
@@ -166,10 +178,15 @@ feature
 			boolean_ref_class := c
 		end
 
-	set_integer_ref_class (c: CLASS_I) is
-			-- Assign `c' to `integer_ref_class'.
+	set_integer_ref_class (c: CLASS_I; n: INTEGER) is
+			-- Assign `c' to `integer_n_ref_class'.
 		do
-			integer_ref_class := c
+			inspect n
+			when 8 then integer_8_ref_class := c
+			when 16 then integer_16_ref_class := c
+			when 32 then integer_32_ref_class := c
+			when 64 then integer_64_ref_class := c
+			end
 		end
 
 	set_real_ref_class (c: CLASS_I) is
@@ -220,212 +237,94 @@ feature
 			function_class := c
 		end
 
-
-	general_id: CLASS_ID is
-			-- Id of class GENERAL
-		require
-			general_class_exists: general_class /= Void
-			compiled: general_class.compiled
-		do
-			Result := general_class.compiled_class.id
-		end
-
-	any_id: CLASS_ID is
+	any_id: INTEGER is
 			-- Id of class ANY
 		require
 			any_class_exists: any_class /= Void
 			compiled: any_class.compiled
 		do
-			Result := any_class.compiled_class.id
+			Result := any_class.compiled_class.class_id
 		end
 
-	boolean_id: CLASS_ID is
-			-- Id of class BOOLEAN
-		require
-			boolean_class_exists: boolean_class /= Void
-			compiled: boolean_class.compiled
-		do
-			Result := boolean_class.compiled_class.id
-		end
-
-	character_id: CLASS_ID is
-			-- Id of class CHARACTER
-		require
-			character_class_exists: character_class /= Void
-			compiled: character_class.compiled
-		do
-			Result := character_class.compiled_class.id
-		end
-
-	integer_id: CLASS_ID is
-			-- Id of class INTEGER
-		require
-			integer_class_exists: integer_class /= Void
-			compiled: integer_class.compiled
-		do
-			Result := integer_class.compiled_class.id
-		end
-
-	real_id: CLASS_ID is
-			-- Id of class REAL
-		require
-			real_class_exists: real_class /= Void
-			compiled: real_class.compiled
-		do
-			Result := real_class.compiled_class.id
-		end
-
-	double_id: CLASS_ID is
-			-- Id of class DOUBLE
-		require
-			double_class_exists: double_class /= Void
-			compiled: double_class.compiled
-		do
-			Result := double_class.compiled_class.id
-		end
-
-	pointer_id: CLASS_ID is
-			-- Id of class POINTER
-		require
-			pointer_class_exists: pointer_class /= Void
-			compiled: pointer_class.compiled
-		do
-			Result := pointer_class.compiled_class.id
-		end
-
-	array_id: CLASS_ID is
+	array_id: INTEGER is
 			-- Id of class ARRAY
 		require
 			array_class_exists: array_class /= Void
 			compiled: array_class.compiled
 		do
-			Result := array_class.compiled_class.id
+			Result := array_class.compiled_class.class_id
 		end
 
-	string_id: CLASS_ID is
+	string_id: INTEGER is
 			-- Id of class STRING
 		require
 			string_class_exists: string_class /= Void
 			compiled: string_class.compiled
 		do
-			Result := string_class.compiled_class.id
+			Result := string_class.compiled_class.class_id
 		end; -- string_id
 
-	special_id: CLASS_ID is
+	special_id: INTEGER is
 			-- Id of class SPECIAL
 		require
 			special_class_exists: special_class /= Void
 			compiled: special_class.compiled
 		do
-			Result := special_class.compiled_class.id
+			Result := special_class.compiled_class.class_id
 		end; -- special_id
 
-	to_special_id: CLASS_ID is
+	to_special_id: INTEGER is
 			-- Id of class TO_SPECIAL
 		require
 			to_special_class_exists: to_special_class /= Void
 			compiled: to_special_class.compiled
 		do
-			Result := to_special_class.compiled_class.id
+			Result := to_special_class.compiled_class.class_id
 		end; -- to_special_id
 
-	bit_id: CLASS_ID is
+	bit_id: INTEGER is
 			-- Id of class BIT_REF
 		require
 			bit_class_exists: bit_class /= Void
 			compiled: bit_class.compiled
 		do
-			Result := bit_class.compiled_class.id
+			Result := bit_class.compiled_class.class_id
 		end; -- bit_id
 
-	character_ref_id: CLASS_ID is
-			-- Id of class CHARACTER_REF
-		require
-			character_ref_class_exists: character_ref_class /= Void
-			compiled: character_ref_class.compiled
-		do
-			Result := character_ref_class.compiled_class.id
-		end; -- character_ref_id
-
-	boolean_ref_id: CLASS_ID is
-			-- Id of class BOOLEAN_REF
-		require
-			boolean_ref_class_exists: boolean_ref_class /= Void
-			compiled: boolean_ref_class.compiled
-		do
-			Result := boolean_ref_class.compiled_class.id
-		end; -- boolean_ref_id
-
-	integer_ref_id: CLASS_ID is
-			-- Id of class INTEGER_REF
-		require
-			integer_ref_class_exists: integer_ref_class /= Void
-			compiled: integer_ref_class.compiled
-		do
-			Result := integer_ref_class.compiled_class.id
-		end; -- integer_ref_id
-
-	real_ref_id: CLASS_ID is
-			-- Id of class REAL_REF
-		require
-			real_ref_class_exists: real_ref_class /= Void
-			compiled: real_ref_class.compiled
-		do
-			Result := real_ref_class.compiled_class.id
-		end; -- real_ref_id
-
-	double_ref_id: CLASS_ID is
-			-- Id of class DOUBLE_REF
-		require
-			double_ref_class_exists: double_ref_class /= Void
-			compiled: double_ref_class.compiled
-		do
-			Result := double_ref_class.compiled_class.id
-		end; -- double_ref_id
-
-	pointer_ref_id: CLASS_ID is
-			-- Id of class POINTER_REF
-		require
-			pointer_ref_class_exists: pointer_ref_class /= Void
-			compiled: pointer_ref_class.compiled
-		do
-			Result := pointer_ref_class.compiled_class.id
-		end; -- pointer_ref_id
-
-	tuple_id: CLASS_ID is
+	tuple_id: INTEGER is
 			-- Id of class TUPLE
 		require
 			tuple_class_exists: tuple_class /= Void
 			compiled: tuple_class.compiled
 		do
-			Result := tuple_class.compiled_class.id
+			Result := tuple_class.compiled_class.class_id
 		end
 
-	routine_class_id: CLASS_ID is
+	routine_class_id: INTEGER is
 			-- Id of class ROUTINE
 		require
 			routine_class_exists: routine_class /= Void
 			compiled: routine_class.compiled
 		do
-			Result := routine_class.compiled_class.id
+			Result := routine_class.compiled_class.class_id
 		end
 
-	procedure_class_id: CLASS_ID is
+	procedure_class_id: INTEGER is
 			-- Id of class PROCEDURE
 		require
 			procedure_class_exists: procedure_class /= Void
 			compiled: procedure_class.compiled
 		do
-			Result := procedure_class.compiled_class.id
+			Result := procedure_class.compiled_class.class_id
 		end
 
-	function_class_id: CLASS_ID is
+	function_class_id: INTEGER is
 			-- Id of class FUNCTION
 		require
 			function_class_exists: function_class /= Void
 			compiled: function_class.compiled
 		do
-			Result := function_class.compiled_class.id
+			Result := function_class.compiled_class.class_id
 		end
 
 	pointer_ref_dtype: INTEGER is
@@ -455,13 +354,24 @@ feature
 			Result := real_ref_class.compiled_class.types.first.type_id
 		end; 
 
-	integer_ref_dtype: INTEGER is
-			-- Dynamic type_id of class INTEGER_REF
+	integer_ref_dtype (n: INTEGER): INTEGER is
+			-- Dynamic type_id of class INTEGER_REF with `n' bits.
 		require
-			int_ref_class_exists: integer_ref_class /= Void
-			compiled: integer_ref_class.compiled
+			int_ref_class_exists: integer_8_ref_class /= Void and then
+						integer_16_ref_class /= Void and then
+						integer_32_ref_class /= Void and then
+						integer_64_ref_class /= Void
+			compiled: integer_8_ref_class.compiled and then
+						integer_16_ref_class.compiled and then
+						integer_32_ref_class.compiled and then
+						integer_64_ref_class.compiled
 		do
-			Result := integer_ref_class.compiled_class.types.first.type_id
+			inspect n
+			when 8 then Result := integer_8_ref_class.compiled_class.types.first.type_id
+			when 16 then Result := integer_16_ref_class.compiled_class.types.first.type_id
+			when 32 then Result := integer_32_ref_class.compiled_class.types.first.type_id
+			when 64 then Result := integer_64_ref_class.compiled_class.types.first.type_id
+			end
 		end; 
 
 	boolean_ref_dtype: INTEGER is
@@ -482,33 +392,13 @@ feature
 			Result := character_ref_class.compiled_class.types.first.type_id
 		end; 
 
-feature -- DLE
-
-	dynamic_class: CLASS_I
-			-- Class DYNAMIC
-
-	set_dynamic_class (c: CLASS_I) is
-			-- Assign `c' to `dynamic_class'.
-		do
-			dynamic_class := c
-		end
-
-	dynamic_id: CLASS_ID is
-			-- Id of class DYNAMIC
+	wide_char_ref_dtype: INTEGER is
+			-- Dynamic type_id of class UNICODE_CHARACTER_REF
 		require
-			dynamic_class_exists: dynamic_class /= Void
-			compiled: dynamic_class.compiled
+			unicode_char_ref_class_exists: wide_char_ref_class /= Void
+			compiled: wide_char_ref_class.compiled
 		do
-			Result := dynamic_class.compiled_class.id
-		end
-
-	dynamic_dtype: INTEGER is
-			-- Dynamic type_id of class DYNAMIC
-		require
-			dynamic_class_exists: dynamic_class /= Void
-			compiled: dynamic_class.compiled
-		do
-			Result := dynamic_class.compiled_class.types.first.type_id
+			Result := wide_char_ref_class.compiled_class.types.first.type_id
 		end; 
 
 end -- class BASIC_SYSTEM_I

@@ -5,7 +5,7 @@ class EXT_EXECUTION_UNIT
 inherit
 	EXECUTION_UNIT
 		redefine
-			real_body_id, make, is_valid,
+			real_body_id, is_valid,
 			is_external, compound_name,
 			generate_declaration
 		end
@@ -13,41 +13,75 @@ inherit
 creation
 	make
 	
-feature 
+feature -- Access
 
-	external_name: STRING;
+	external_name: STRING
 			-- Name of the external
-
-	make (cl_type: CLASS_TYPE; f: EXTERNAL_I) is
-			-- Initialization
-		local
-			extension: EXTERNAL_EXT_I
-		do
-			{EXECUTION_UNIT} Precursor (cl_type, f);
-			is_cpp := f.is_cpp;
-			external_name := f.external_name;
-
-			extension := f.extension
-			if extension /= Void then
-				argument_types := extension.argument_types
-				if not (argument_types /= Void and then argument_types.count > 0) then
-					argument_types := Void
-				end
-				return_type := extension.return_type
-			end
-		end;
-
-	is_external: BOOLEAN is True
-			-- Is the current executino unit an external one ?
-
-	is_cpp: BOOLEAN
-			-- Is Current a C++ member?
 
 	argument_types: ARRAY [STRING]
 			-- Type of C external routine's arguments.
 
 	return_type: STRING
 			-- Return type of C external routine.
+
+feature -- Setting
+
+	set_external_name (name: like external_name) is
+			-- Assign `name' to `external_name'.
+		require
+			name_not_void: name /= Void implies not name.is_empty
+		do
+			external_name := name
+		ensure
+			external_name_set: external_name = name
+		end
+
+	set_argument_types (arr: like argument_types) is
+			-- Assign `arr' to `argument_types'.
+		do
+			argument_types := arr
+		ensure
+			argument_types_set: argument_types = arr
+		end
+
+	set_return_type (name: like return_type) is
+			-- Assign `name' to `return_type'.
+		require
+			name_not_void: name /= Void implies not name.is_empty
+		do
+			return_type := name
+		ensure
+			return_type_set: return_type = name
+		end
+
+feature -- Status
+
+	is_external: BOOLEAN is True
+			-- Is the current executino unit an external one ?
+
+	real_body_id: INTEGER is
+			-- Real body id
+		local
+			frozen_body_id: INTEGER
+		do
+			check
+				consistency: Externals.has (external_name)
+			end
+			frozen_body_id := Externals.item (external_name).real_body_id
+			if frozen_body_id > 0 then
+				Result := frozen_body_id
+			else
+				Result := {EXECUTION_UNIT} Precursor
+			end
+		end
+
+	is_valid: BOOLEAN is
+			-- Is execution unit still valid?
+		do
+			Result := Externals.has (external_name) and then Precursor {EXECUTION_UNIT}
+		end
+
+feature -- Generation
 
 	generate_declaration (buffer: GENERATION_BUFFER) is
 			-- Generate external declaration for the compound routine
@@ -97,73 +131,18 @@ feature
 					buffer.putstring ("extern ")
 					buffer.putstring (return_type)
 					buffer.putstring (" ")
-					buffer.putstring (external_name);
-					buffer.putstring ("();%N");
+					buffer.putstring (external_name)
+					buffer.putstring ("();%N")
 				else
 					{EXECUTION_UNIT} Precursor (buffer)
 				end
 			end
-		end;
+		end
 		
 	compound_name: STRING is
 			-- Compound C routine name
 		do
 			Result := external_name
-		end;
+		end
 
-	real_body_id: REAL_BODY_ID is
-			-- Real body id
-		local
-			frozen_body_id: REAL_BODY_ID;
-		do
-			check
-				consistency: Externals.has (external_name);
-			end;
-			frozen_body_id := Externals.item (external_name).real_body_id;
-			if frozen_body_id /= Void then
-				Result := frozen_body_id
-			else
-				Result := {EXECUTION_UNIT} Precursor;
-			end;
-		end;
-
-	is_valid: BOOLEAN is
-		do
-			Result := Externals.has (external_name) and then IRS_valid
-		end;
-
-	IRS_valid: BOOLEAN is
-			-- Is the execution unit still valid ?
-		local
-			written_type: CL_TYPE_I;
-			written_class: CLASS_C
-		do
-			written_class := System.class_of_id (written_in);
-			if written_class /= Void and then
-				System.class_type_of_id (type_id) /= Void
-			then
-				written_type := class_type.written_type (written_class);
-				if written_type /= Void then
-					if
-						written_type.associated_class_type.is_precompiled
-					then
-						Result := True
-						-- The next line is solely here to grow some extra
-						-- gray hair on the head of whoever is going to read it.
-						-- Seriously: the body id may correspond to a FEATURE_I
-						-- having undergone a "body id change". In that case the
-						-- body id is not valid if the system has an equivalent
-						-- one which is different.
-					elseif equal (System.onbidt.item (body_id), body_id) then
-						Result := server_has
-					end;
-				end;
-			end;
-		end;
-
-	server_has: BOOLEAN is
-		do
-			Result := Body_server.has (body_id)
-		end;
- 
 end

@@ -14,7 +14,7 @@ feature -- Parsing
 			-- return true if the query has a good syntax.
 		require
 			string_not_void: str /= Void
-			string_not_empty: not str.empty
+			string_not_empty: not str.is_empty
 			shared_query_values_not_void: sqv /= Void
 		do
 			Result := real_parse (str, sqv)
@@ -26,11 +26,10 @@ feature {NONE} -- Implementation
 			-- Real parsing feature.
 		local
 			col_name, operator, value, boolean_op: STRING
-			old_index, index, end_index: INTEGER
+			index, end_index: INTEGER
 			end_of_query, error: BOOLEAN
 			subquery: SUBQUERY
 			sub_operator: SUBQUERY_OPERATOR
-			-- index_ref: INTEGER_REF
 		do
 			from
 				index := 1
@@ -46,10 +45,14 @@ feature {NONE} -- Implementation
 				if col_name = Void then
 					error := True
 				elseif col_name.is_equal ("EOQ") then
+					if index = 1 then
+							-- This is an error to find "EOQ" the first time the loop is executed.
+							-- It means the query is not valid.
+						error := True 
+					end
 					end_of_query := True
 				else
 					index := index + col_name.count
-					-- index := index + 1 --| Guillaume - 09/17/97
 					index := index + white_space_length (str, index)
 					operator := operator_str (str, index)
 					if operator = void then
@@ -57,8 +60,6 @@ feature {NONE} -- Implementation
 					else
 						index := index + operator.count
 						index := index + white_space_length (str, index)
-						--create index_ref
-						--index_ref.set_item (index)
 						if index <= str.count then
 							end_index := stricly_positive_min (str.substring_index (" and ", index), str.substring_index (" or ", index), str.count) 
 							value := value_str (str, index, end_index)
@@ -253,8 +254,6 @@ feature {NONE} -- Implementation
 
 	white_space_length (str: STRING; idx: INTEGER): INTEGER is
 			-- Length of white space starting at `idx' in `str'
-		local
-			index: INTEGER
 		do
 			from
 				Result := 0

@@ -48,7 +48,6 @@ feature {NONE} -- Implementation
 	work (argument: ANY) is
 			-- Retarget the class tool with the current class if any.
 		local
-			e_class: CLASS_C;
 			status: APPLICATION_STATUS;
 			st: FEATURE_STONE
 		do

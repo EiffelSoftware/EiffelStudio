@@ -27,18 +27,6 @@ feature {AST_FACTORY} -- Initialization
 			new_name_set: new_name = n
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			old_name ?= yacc_arg (0)
-			new_name ?= yacc_arg (1)
-		ensure then
-			old_name_exists: old_name /= Void
-			new_name_exists: new_name /= Void
-		end
-
 feature -- Attributes
 
 	old_name: FEATURE_NAME

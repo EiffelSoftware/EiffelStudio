@@ -1,7 +1,7 @@
 indexing
 	description:
 		"Implementation of EB_FORMAT_LIST for %
-			%the EiffelBench Dynamic library Tool"
+			%the $EiffelGraphicalCompiler$ Dynamic library Tool"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -24,7 +24,7 @@ feature {NONE} -- Initialization
 		local
 			f : EB_FORMATTER
 		do
-			Precursor (a_tool)
+			Precursor {EB_FORMATTER_LIST} (a_tool)
 			
 			create {EB_DYNAMIC_TEXT_FORMATTER} f.make (tool)
 			add_formatter (f)

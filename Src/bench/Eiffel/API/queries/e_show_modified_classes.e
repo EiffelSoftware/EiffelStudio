@@ -28,7 +28,7 @@ feature -- Execution
 			structured_text.add_new_line;
 			structured_text.add_new_line;
 			clusters := Eiffel_universe.clusters;
-			if not clusters.empty then
+			if not clusters.is_empty then
 					--| Skip precompile clusters for now
 				from
 					clusters.start
@@ -71,7 +71,7 @@ feature {NONE} -- Implementation
 				end;
 				classes.forth
 			end;
-			if not sorted_class_names.empty then
+			if not sorted_class_names.is_empty then
 				sorted_class_names.sort;
 				structured_text.add_string ("Cluster: ");
 				structured_text.add_string (cluster.cluster_name);

@@ -1,19 +1,15 @@
 indexing
-
-	description: 
-		"";
+	description: "Assertion clause description in Ace";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class ASSERTION_SD
 
 inherit
-
 	OPTION_SD
 		redefine
 			is_assertion
-		end;
-	SHARED_ASSERTION_LEVEL
+		end
 
 feature -- Properties
 
@@ -33,20 +29,20 @@ feature {COMPILER_EXPORTER}
 		do
 			if value /= Void then
 				if value.is_no then
-					v := No_level;
+					create v.make_no
 				else
 					if value.is_require then
-						v := Require_level;
+						create v.make_require
 					elseif value.is_ensure then
-						v := Ensure_level;
+						create v.make_ensure
 					elseif value.is_invariant then
-						v := Invariant_level;
+						create v.make_invariant
 					elseif value.is_loop then
-						v := Loop_level;
+						create v.make_loop
 					elseif value.is_check then
-						v := Check_level;
+						create v.make_check
 					elseif value.is_all then
-						v := Check_level;
+						create v.make_all
 					else
 						error (value);
 					end;
@@ -55,7 +51,7 @@ feature {COMPILER_EXPORTER}
 					Lace.ace_options.set_has_assertion (True)
 				end
 			else
-				v := Require_level;
+				create v.make_no
 			end;
 			if v /= Void then
 				if list = Void then

@@ -1,0 +1,113 @@
+--	$Id$	
+system
+	ec
+
+root
+
+	es: "make"
+
+default
+	assertion (require)
+	assertion (ensure)
+	assertion (check)
+	console_application(yes)
+	exception_trace (yes)
+	dead_code_removal (yes)
+
+cluster
+
+	all base:		"$EIFFEL_SRC/library/base"
+		exclude
+			"table"; "CVS"; 
+		end
+
+	liman:		"$EIFFEL_SRC/Eiffel/limand"
+
+	liman_bench (liman):		"$/bench"
+
+	liman_abstract (liman):		"$/abstract"
+
+	beurk:		"$EIFFEL_SRC/Eiffel/beurk"
+
+	compiler_support:		"$EIFFEL_SRC/Eiffel/support"
+
+	common:		"$EIFFEL_SRC/Eiffel/common"
+
+	common_parser (common):		"$/parser"
+
+	common_eiffel_parser (common_parser):		"$/parser"
+
+	old_resources (common):		"$/resources"
+
+	flat_short (common_parser):		"$/flat_short"
+		exclude
+			"format_context.e"; "local_format.e"; 
+		end
+
+	flat_short_b:		"$EIFFEL_SRC/Eiffel/flat_short/bench"
+
+	yacc:		"$EIFFEL_SRC/Eiffel/yacc"
+
+	const:		"$EIFFEL_SRC/Eiffel/const"
+
+	all gobo:		"$EIFFEL_SRC/library/gobo/library"
+		exclude
+			"hact"; "se"; "ve"; "base"; "CVS"; 
+		end
+
+	all documentation:		"$EIFFEL_SRC/Eiffel/case/documentation"
+		exclude
+			"CVS"
+		end
+
+	all lace:		"$EIFFEL_SRC/Eiffel/lace"
+		exclude
+			"CVS"; 
+		end
+
+	all compiler:		"$EIFFEL_SRC/Eiffel/eiffel"
+		exclude
+			"CVS"; "com_il_generation"; "Clib"; "Core"; "junk"; "kernel";
+		end
+
+	all compiler_api:		"$EIFFEL_SRC/Eiffel/API"
+		exclude
+			"CVS"; 
+		end
+
+	switch:		"$EIFFEL_SRC/Eiffel/switch"
+
+	interface_switch (switch):		"$/interface/batch_only"
+
+	license_switch (switch):		"$/license/no_license"
+
+	communications (switch):		"$/no_communication"
+
+	status (communications):		"$/status"
+
+	debuging_class (communications):		"$/debug"
+
+	interface:		"$EIFFEL_SRC/Eiffel/interface"
+
+	interface_shared (interface):		"$/shared"
+
+	tty (interface):		"$/tty"
+
+	preference_tool (interface):		"$/graphical/preference_tool"
+
+	profile_tool (interface):		"$/graphical/profile_tool"
+
+
+external
+
+	include_path:
+		"\$(EIFFEL_SRC)/C/bench",
+		"\$(EIFFEL_SRC)/library/gobo/library/kernel/include"
+
+	object:
+		"\$(EIFFEL_SRC)/C/platform/libplatform.a",
+		"\$(EIFFEL_SRC)/C/bench/libcompiler.a",
+		"\$(EIFFEL_SRC)/C/minilzo/minilzo.o"
+
+
+end

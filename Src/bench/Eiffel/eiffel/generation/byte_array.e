@@ -28,54 +28,53 @@ creation
 	
 feature 
 
-	position: INTEGER;
+	position: INTEGER
 			-- Posiiton of the cursor in the array
 
-	last_string: STRING;
+	last_string: STRING
 			-- Last string read by `last_string'.
 
-	last_long_integer: INTEGER;
+	last_long_integer: INTEGER
 			-- Last long integer read by `read_long_integer'.
 
-	last_short_integer: INTEGER;
+	last_short_integer: INTEGER
 			-- Last short integer read by `read_short_integer'.
 
 	set_position (i: INTEGER) is
 			-- Assign `i' to `position'.
 		require
-			pos_large_enough: i > 0;
-			pos_small_enough: i <= size;
+			pos_large_enough: i > 0
+			pos_small_enough: i <= size
 		do
-			position := i;
-		end;
+			position := i
+		end
 
 	make is
 			-- Initialization
 		do
-			basic_make (Chunk);
-			position := 1;
-			!!forward_marks.make;
-			!!forward_marks2.make;
-			!!forward_marks3.make;
-			!!forward_marks4.make;
-			!!backward_marks.make;
-			!!sep_backward_marks.make;
-		end;
+			basic_make (Chunk)
+			position := 1
+			!!forward_marks.make
+			!!forward_marks2.make
+			!!forward_marks3.make
+			!!forward_marks4.make
+			!!backward_marks.make
+			!!sep_backward_marks.make
+		end
 
-	Chunk: INTEGER is 5000;
+	Chunk: INTEGER is 5000
 			-- Chunk array
 
 	clear is
 			-- Clear the structure
-		
 		do
-			position := 1;
-			last_string := Void;
-			last_long_integer := 0;
-			last_short_integer := 0;
-			retry_position := 0;
-			ca_zero ($area, size);
-		end;
+			position := 1
+			last_string := Void
+			last_long_integer := 0
+			last_short_integer := 0
+			retry_position := 0
+			ca_zero ($area, size)
+		end
 
 	character_array: CHARACTER_ARRAY is
 			-- Simple character array
@@ -150,12 +149,22 @@ feature
 			position := new_position;
 		end;
 
+	append_boolean (b: BOOLEAN) is
+			-- Append boolean `b' in array.
+		do
+			if b then
+				append ('%/001/')
+			else
+				append ('%U')
+			end
+		end
+
 	append_integer (i: INTEGER) is
 			-- Append long integer `i' in the array
 		local
 			new_position: INTEGER
 		do
-			new_position := position + Long_size;
+			new_position := position + Int32_size;
 			if new_position > size then
 				resize (size + Chunk);
 			end;
@@ -290,8 +299,14 @@ feature
 				t.c_type.level
 			when C_char then
 				new_position := position + Char_size;
-			when C_long then
-				new_position := position + Long_size;
+			when C_int8 then
+				new_position := position + Int8_size;
+			when C_int16, C_wide_char then
+				new_position := position + Int16_size;
+			when C_int32 then
+				new_position := position + Int32_size;
+			when C_int64 then
+				new_position := position + Int64_size;
 			when C_float then
 				new_position := position + Float_size;
 			when C_double then
@@ -308,26 +323,6 @@ feature
 				resize (size + Chunk);
 			end;
 			position := new_position;
-		end;
-
-feature {NONE}
-
-	Short_size: INTEGER is
-			-- Size of a short integer
-		once
-			Result := ca_ssiz;
-		end;
-
-	Uint32_size: INTEGER is
-			-- Size of uint32 type
-		once
-			Result := ca_suint32;
-		end;
-
-	Int32_size: INTEGER is
-			-- Size of int32 type
-		once
-			Result := ca_sint32;
 		end;
 
 feature -- Forward and backward jump managment
@@ -350,7 +345,7 @@ feature -- Forward and backward jump managment
 			pos := position;
 			position := forward_marks.item;
 			forward_marks.remove;
-			append_integer (pos - position - Long_size);
+			append_integer (pos - position - Int32_size);
 			position := pos;
 		end;
 
@@ -373,7 +368,7 @@ feature -- Forward and backward jump managment
 			pos := position;
 			position := forward_marks2.item;
 			forward_marks2.remove;
-			append_integer (pos - position - Long_size);
+			append_integer (pos - position - Int32_size);
 			position := pos;
 		end;
 
@@ -395,7 +390,7 @@ feature -- Forward and backward jump managment
 			pos := position;
 			position := forward_marks3.item;
 			forward_marks3.remove;
-			append_integer (pos - position - Long_size);
+			append_integer (pos - position - Int32_size);
 			position := pos;
 		end;
 
@@ -417,7 +412,7 @@ feature -- Forward and backward jump managment
 			pos := position;
 			position := forward_marks4.item;
 			forward_marks4.remove;
-			append_integer (pos - position - Long_size);
+			append_integer (pos - position - Int32_size);
 			position := pos;
 		end;
 
@@ -433,7 +428,7 @@ feature -- Forward and backward jump managment
 	write_backward is
 			-- Write a backward jump
 		do
-			append_integer (- position - Long_size + backward_marks.item);
+			append_integer (- position - Int32_size + backward_marks.item);
 			backward_marks.remove;
 		end;
 
@@ -449,7 +444,7 @@ feature -- Forward and backward jump managment
 	write_retry is
 			-- Write a retry offset
 		do
-			append_integer (- position - Long_size + retry_position);
+			append_integer (- position - Int32_size + retry_position);
 		end;
 
 	prepend (other: BYTE_ARRAY) is
@@ -492,20 +487,21 @@ feature {NONE} -- Externals
 			"ca_zero"
 		end;
 
-	ca_sint32: INTEGER is
+	Short_size: INTEGER is
+			-- Size of a short integer
 		external
-			"C"
-		end;
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"sizeof(short)"
+		end
 
-	ca_suint32: INTEGER is
+	Uint32_size: INTEGER is
+			-- Size of uint32 type
 		external
-			"C"
-		end;
-
-	ca_ssiz: INTEGER is
-		external
-			"C"
-		end;
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"sizeof(uint32)"
+		end
 
 	ca_wint32 (ptr: POINTER; val: INTEGER; pos: INTEGER) is
 		external
@@ -533,9 +529,11 @@ feature {NONE} -- Externals
 		end;
 
 	ca_bsize (bit_count: INTEGER): INTEGER is
-			-- Numer of uint32 fields for encoding a bit of length `bit_count'
+			-- Number of uint32 fields for encoding a bit of length `bit_count'
 		external
-			"C"
+			"C [macro %"eif_eiffel.h%"] (long int): EIF_INTEGER"
+		alias
+			"BIT_NBPACK"
 		end;
 
 	ca_wbit(ptr: POINTER; val: POINTER; pos: INTEGER; bit_count: INTEGER) is
@@ -546,12 +544,21 @@ feature {NONE} -- Externals
 
 feature -- Debugger
 
-	mark_breakable is
-			-- Write continue mark (where breakpoint may be set by replacing
-			-- code with Bc_break).
+	generate_melted_debugger_hook(lnr: INTEGER) is
+			-- Write continue mark (where breakpoint may be set).
+			-- lnr is the current breakable line number index.
 		do
-			append (Bc_cont);
-		end;
+			append (Bc_hook)
+			append_integer (lnr)
+		end
+
+	generate_melted_debugger_hook_nested(lnr: INTEGER) is
+			-- Write continue mark (where breakpoint may be set).
+			-- lnr is the current breakable line number index (nested call).
+		do
+			append (Bc_nhook)
+			append_integer (lnr)
+		end
 
 feature -- Concurrent Eiffel
  
@@ -567,7 +574,7 @@ feature -- Concurrent Eiffel
        sep_write_backward is
 		       -- Write a backward jump
 	       do
-		       append_integer (- position - Long_size + sep_backward_marks.item);
+		       append_integer (- position - Int32_size + sep_backward_marks.item);
 		       sep_backward_marks.remove;
 			end
 

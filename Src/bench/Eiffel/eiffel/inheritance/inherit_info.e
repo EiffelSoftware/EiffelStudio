@@ -10,6 +10,18 @@ inherit
 			is_equal
 		end
 	
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (f: like a_feature) is
+		do
+			a_feature := f
+		ensure
+			a_feature_set: a_feature = f
+		end
+
 feature 
 
 	a_feature: FEATURE_I;
@@ -42,7 +54,7 @@ feature
 	infix "<" (other: INHERIT_INFO): BOOLEAN is
 			-- Is `other' greater than Current ?
 		do
-			Result := a_feature.body_id < other.a_feature.body_id;
+			Result := a_feature.body_index < other.a_feature.body_index;
 		end;
 
 	inherited_assertion: BOOLEAN is

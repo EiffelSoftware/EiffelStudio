@@ -73,19 +73,6 @@ feature -- Resource Update
 			unregister_to ("history_size")
 		end
 
---	update_integer_resource (old_res, new_res: INTEGER_RESOURCE) is
---			-- Update `old_res' with `new_res', if the value of
---			-- `new_res' is applicable.
---			-- Also, update the interface.
---		do
---			if old_res = General_resources.history_size then
---				if new_res.actual_value >= 1 and new_res.actual_value <= 100 then
---					{EB_RESOURCE_USER} Precursor (old_res, new_res)
---					rearrange_history
---				end
---			end
---		end
-
 feature -- Status setting
 
 	set_do_not_update (b: BOOLEAN) is
@@ -157,13 +144,18 @@ feature {NONE} -- Resizing
 feature -- Synchronization
 
 	synchronize is
-			-- Synchronize held stones. Reset the cursor position to the 
-			-- last inserted stone. Some of the stones may become Void 
-			-- (not valid anymore) and are therefore removed from the history.
+			-- Synchronize held stones. Leave cursor position unchanged,
+			-- except if current stone gets invalid. In this case leave
+			-- cursor in "after" position (so that `after' is True)
+			-- Some of the stones may become Void (not valid anymore)
+			-- and are therefore removed from the history.
 		local
 			new_stone: STONE
+			c: CURSOR
+			current_item_unvalid: BOOLEAN
 		do
 			from
+				c := cursor
 				start
 			until
 				after
@@ -173,10 +165,15 @@ feature -- Synchronization
 					put (new_stone)
 					forth
 				else
+					if c.is_equal (cursor) then
+						current_item_unvalid := True
+					end
 					remove
 				end
 			end
-			finish
+			if not current_item_unvalid then
+				go_to (c)
+			end
 		end
 
 invariant

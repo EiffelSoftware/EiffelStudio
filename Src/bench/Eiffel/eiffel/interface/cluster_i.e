@@ -1,41 +1,72 @@
--- Internal representation of a cluster
+indexing
+	description: "Internal representation of a cluster"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class CLUSTER_I
+class
+	CLUSTER_I
 
 inherit
-	SHARED_ERROR_HANDLER;
-	SHARED_WORKBENCH;
-	SHARED_EIFFEL_PROJECT;
-	SHARED_ENV;
-	SHARED_RESCUE_STATUS;
-	PROJECT_CONTEXT;
+	SHARED_ERROR_HANDLER
+
+	SHARED_WORKBENCH
+
+	SHARED_EIFFEL_PROJECT
+
+	SHARED_ENV
+
+	SHARED_RESCUE_STATUS
+
+	PROJECT_CONTEXT
+
 	COMPARABLE
 		undefine
 			is_equal
 		end
-	COMPILER_EXPORTER;
+
+	COMPILER_EXPORTER
+
 	SHARED_TEXT_ITEMS
+
 	SHARED_CONFIGURE_RESOURCES
+
 	SHARED_LACE_PARSER
 
-creation
+create
+	make_with_parent, 
+	make_from_old_cluster,
+	make_from_precompiled_cluster
 
-	make, 
-	make_from_old_cluster
+create {CLUSTER_I}
+	make
 
 feature {COMPILER_EXPORTER} -- Initialization
 
-	make (p: STRING) is
+	make_with_parent (p: STRING; par_clus: like Current) is
+			-- Create Current as a subcluster of `par_clus'.
+		require
+			path_not_void: p /= Void
 		do
-			dollar_path := p;
-			update_path;
-			!! classes.make (30);
-			!! renamings.make;
-			!! ignore.make;
-			!! sub_clusters.make (3);
-		end;
+			make (p)
+			if par_clus = Void then
+				Eiffel_system.add_sub_cluster (Current)
+			else
+				par_clus.add_sub_cluster (Current)
+			end
+		end
 
-	make_from_old_cluster (old_cluster_i: CLUSTER_I) is
+	make_from_old_cluster (old_cluster_i: CLUSTER_I; par_clus: like Current) is
+		require
+			valid_arg: old_cluster_i /= Void
+		do
+			make_with_parent (old_cluster_i.dollar_path, par_clus)
+
+			copy_old_cluster (old_cluster_i)
+
+			cluster_name := old_cluster_i.cluster_name
+		end
+
+	make_from_precompiled_cluster (old_cluster_i: CLUSTER_I) is
 		require
 			valid_arg: old_cluster_i /= Void
 		do
@@ -46,43 +77,56 @@ feature {COMPILER_EXPORTER} -- Initialization
 			cluster_name := old_cluster_i.cluster_name
 		end
 
+feature {CLUSTER_I} -- Internal initialization
+
+	make (p: STRING) is
+			-- Create Current with path `p'. 
+		do
+			dollar_path := p
+			update_path
+			create classes.make (30)
+			create renamings.make
+			create ignore.make
+			create sub_clusters.make (3)
+		end
+
 feature -- Attributes
 
-	date: INTEGER;
+	date: INTEGER
 			-- Date for time stamp
 
-	cluster_name: STRING;
+	cluster_name: STRING
 			-- Cluster name
 
-	dollar_path: STRING;
+	dollar_path: STRING
 			-- Path to the cluster (with environment variables)
 
-	path: STRING;
+	path: STRING
 			-- Path to the cluster (without environment variables)
 
-	classes: EXTEND_TABLE [CLASS_I, STRING];
+	classes: EXTEND_TABLE [CLASS_I, STRING]
 			-- Classes available in the cluster: key is the declared
 			-- name and entry is the class
 
-	renamings: LINKED_LIST [RENAME_I];
+	renamings: LINKED_LIST [RENAME_I]
 			-- Renamings for the cluster
 
-	ignore: LINKED_LIST [CLUSTER_I];
+	ignore: LINKED_LIST [CLUSTER_I]
 			-- Cluster to ignore
 
-	old_cluster: CLUSTER_I;
+	old_cluster: CLUSTER_I
 			-- Old version of the cluster
 
-	is_precompiled: BOOLEAN;
+	is_precompiled: BOOLEAN
 			-- Is the cluster precompiled
 			-- It won't be removed even if it is no more
 			-- in the local Ace file
 
-	precomp_id: INTEGER;
+	precomp_id: INTEGER
 			-- Id of the precompiled library to which the
 			-- cluster belongs
 
-	precomp_ids: ARRAY [INTEGER];
+	precomp_ids: ARRAY [INTEGER]
 			-- Ids of libraries used for precompilation
 			-- of current cluster; Void if not precompiled
 
@@ -109,6 +153,21 @@ feature -- Attributes
 	is_recursive: BOOLEAN
 			-- Are subclusters processed recursively?
 
+	is_library: BOOLEAN
+			-- Are cluster and subclusters part of a library whose classes
+			-- cannot be modified?
+	
+	belongs_to_all: BOOLEAN
+			-- Is cluster created because it was a subdirectory of a cluster
+			-- specified with `all' specification in Ace file?
+
+	indexes: EIFFEL_LIST [INDEX_AS] is
+			-- Indexing clause located in "indexing.txt".
+			--| NOTE: VB 07/03/2000 For now, not an attribute.
+		do
+			Result := build_indexes
+		end
+
 feature -- Access
 
 	has_base_name (b_name: STRING): BOOLEAN is
@@ -122,6 +181,40 @@ feature -- Access
 				classes.after or else Result
 			loop
 				Result := b_name.is_equal (classes.item_for_iteration.base_name);
+				classes.forth
+			end
+		end;
+
+	class_with_base_name (b_name: STRING): CLASS_I is
+			-- Class with base name `b_name' if any.
+		require
+			non_void_base_name: b_name /= Void
+		do
+			from
+				classes.start
+			until
+				classes.after
+			loop
+				if b_name.is_equal (classes.item_for_iteration.base_name) then
+					Result := classes.item_for_iteration
+				end
+				classes.forth
+			end
+		end;
+
+	class_with_name (b_name: STRING): CLASS_I is
+			-- Class with name `b_name' if any.
+		require
+			non_void_name: b_name /= Void
+		do
+			from
+				classes.start
+			until
+				classes.after
+			loop
+				if b_name.is_equal (classes.item_for_iteration.name) then
+					Result := classes.item_for_iteration
+				end
 				classes.forth
 			end
 		end;
@@ -164,6 +257,15 @@ feature -- Element change
 		end;
 
 feature {COMPILER_EXPORTER} -- Conveniences
+
+	set_parent_cluster (c: like parent_cluster) is
+			-- Set `parent_cluster' to `c'.
+			-- Use with c = Void to set `Current' as a root-level cluster.
+--		require
+--			valid_c: c /= Void
+		do
+			parent_cluster := c
+		end;
 
 	set_hide_implementation (is_hidden: BOOLEAN) is
 			-- Set `hide_implementation' to True.
@@ -208,14 +310,6 @@ feature {COMPILER_EXPORTER} -- Conveniences
 			update_path
 		end;
 
-	set_parent_cluster (c: like parent_cluster) is
-			-- Set `parent_cluster' to `c'.
-		require
-			valid_c: c /= Void
-		do
-			parent_cluster := c
-		end;
-
 	update_path is
 		do
 			if dollar_path /= Void then
@@ -235,6 +329,22 @@ feature {COMPILER_EXPORTER} -- Conveniences
 			is_recursive := is_rec
 		ensure
 			set: is_recursive = is_rec
+		end
+
+	set_is_library (is_lib: BOOLEAN) is
+			-- Set `is_library' to `is_lib'.
+		do
+			is_library := is_lib
+		ensure
+			set: is_library = is_lib
+		end
+
+	set_belongs_to_all (flag: BOOLEAN) is
+			-- Set `belongs_to_all' to `flag'.
+		do
+			belongs_to_all := flag
+		ensure
+			set: belongs_to_all = flag
 		end
 
 	set_path (p: STRING) is
@@ -292,6 +402,8 @@ end;
 			hide_implementation := old_cluster_i.hide_implementation;
 			set_date (old_cluster_i.date);
 			set_is_recursive (old_cluster_i.is_recursive)
+			set_is_library (old_cluster_i.is_library)
+			set_belongs_to_all (old_cluster_i.belongs_to_all)
 			exclude_list := old_cluster_i.exclude_list;
 			include_list := old_cluster_i.include_list;
 			from
@@ -379,18 +491,34 @@ end;
 		end;
 
 	duplicate: CLUSTER_I is
+			-- Duplicate content of Current.
 		do
-			!!Result.make_from_old_cluster (Current);
+			create Result.make (dollar_path)
+			Result.copy_old_cluster (Current)
+			Result.set_cluster_name (cluster_name)
 		end;
 
 	new_cluster (name: STRING; ex_l, inc_l: LACE_LIST [FILE_NAME_SD];
-				 process_subclusters: BOOLEAN): CLUSTER_I is
+				 process_subclusters, is_lib: BOOLEAN; par_clus: like Current): CLUSTER_I is
 		do
 				-- If the cluster has changed,
 				-- do a degree 6
-			if changed (ex_l, inc_l) or else
-					process_subclusters /= is_recursive then
-				!! Result.make (dollar_path);
+			if
+				is_override_cluster and then
+				Universe.has_override_cluster and then
+				Universe.override_cluster_name.is_equal (name)
+			then
+					-- Smart processing of Override cluster
+				create Result.make_from_old_cluster (Current, par_clus)
+				Result.set_cluster_name (name)
+				Result.rebuild
+				Universe.insert_cluster (Result)
+			elseif
+				not (is_lib and is_lib = is_library) and then
+				(changed (ex_l, inc_l) or else
+				process_subclusters /= is_recursive)
+			then
+				!! Result.make_with_parent (dollar_path, par_clus);
 				Result.set_cluster_name (name);
 				Universe.insert_cluster (Result);
 
@@ -399,10 +527,10 @@ debug ("REMOVE_CLASS")
 	io.error.putstring ("New cluster calling fill%N");
 end;
 				Result.set_is_recursive (process_subclusters)
+				Result.set_belongs_to_all (belongs_to_all)
 				Result.fill (ex_l, inc_l);
 			else
-				Degree_output.skip_entity;
-				!! Result.make_from_old_cluster (Current)
+				!! Result.make_from_old_cluster (Current, par_clus)
 				Result.set_cluster_name (name);
 				Universe.insert_cluster (Result);
 			end;
@@ -411,14 +539,12 @@ end;
 	fill (ex_l, inc_l: LACE_LIST [FILE_NAME_SD]) is
 			-- Fill the cluster name table with what is found in the path.
 		require
-			table_is_empty: classes.empty;
+			table_is_empty: classes.is_empty;
 		local
 			file_name, cl_id: STRING
 			i: INTEGER
 			already_done: LINKED_LIST [STRING]
 		do
-			Degree_output.put_degree_6 (Current)
-
 				-- Process the include and exclude lists
 			if ex_l /= Void then
 				from
@@ -530,6 +656,15 @@ end;
 					is_efile := (i > 2) and then
 								(file_name.item (i-1) = Dot) and then
 								valid_class_file_extension (file_name.item (i))
+
+					-- If there is a corresponding .e.out file we want to use that instead.
+					-- (We assume that it is the output of some preprocessing step.)
+					if is_efile and cluster_file.has_entry (file_name + ".out") then
+						--print ("Using %"" + file_name + ".out%" instead of %"" + file_name + "%"%N")
+						file_name := file_name + ".out"
+						check_dir := False
+							-- Paranoia. Dont want to look for directories called "xxx.e.out"
+					end
 
 					if check_dir or is_efile then
 						-- First check if it is excluded.
@@ -656,9 +791,7 @@ end;
 			a_class: CLASS_I;
 			class_name: STRING;
 			vd11: VD11;
-			cluster_file: DIRECTORY;
 			str: ANY;
-			file_date: INTEGER;
 		do
 			!!class_path.make_from_string (path);
 			class_path.set_file_name (file_name);
@@ -693,6 +826,7 @@ debug ("REMOVE_CLASS")
 end;
 						a_class.set_base_name (file_name);
 						a_class.set_cluster (Current);
+						a_class.set_read_only (is_library)
 						str := class_path.to_c;
 						if eif_file_has_changed ($str, a_class.date) then
 							if a_class.compiled then
@@ -707,11 +841,17 @@ end;
 debug ("REMOVE_CLASS")
 	io.error.putstring ("new class!!!%N");
 end;
-					!!a_class.make;
-					a_class.set_name (class_name);
+					!!a_class.make (class_name);
 					a_class.set_base_name (file_name);
+					if
+						file_name.count > 6 and -- 6 = (".e.out").count
+						(file_name.substring (file_name.count - 3, file_name.count).is_equal (".out"))
+					then
+						a_class.set_source_base_name (file_name.substring (1, file_name.count - 4))
+					end
 					a_class.set_cluster (Current);
 					a_class.set_date;
+					a_class.set_read_only (is_library)
 				end;
 				if Workbench.automatic_backup then
 					record_class (class_name)
@@ -731,8 +871,8 @@ end;
 			vd21: VD21;
 			vd22: VD22;
 		do
-			!!class_file.make (file_name);
-			if class_file.is_readable then
+			create class_file.make (file_name)
+			if class_file.exists and then class_file.is_readable then
 				if class_file.open_read_error then
 						-- Error when opening file
 					!!vd22;
@@ -781,11 +921,9 @@ end;
 		end;
 
 	remove_class_from_system (a_class: CLASS_I) is
-			-- Remove a class_c that is not present is the system any more
+			-- Remove a class_c that is not present in system any more
 		local
 			class_c: CLASS_C;
-			class_i: CLASS_I;
-			clients: LINKED_LIST [CLASS_C];
 		do
 debug ("REMOVE_CLASS")
 	io.error.putstring ("Removing class from system ");
@@ -861,6 +999,53 @@ end;
 			end;
 		end;
 
+	rebuild is
+			-- Rebuild a cluster without going through a full recompilation
+		local
+			cl_id: STRING
+			already_done: LINKED_LIST [STRING]
+			class_i: CLASS_I
+			old_classes: like classes
+		do
+			old_cluster := clone (Current)
+			old_classes := old_cluster.classes
+
+			create classes.make (30)
+			if is_recursive then
+				create already_done.make
+				already_done.compare_objects
+				cl_id := physical_id (path)
+				already_done.extend (cl_id)
+			end
+			fill_recursively (path, "", already_done)
+			old_cluster := Void
+			
+				-- Process removed classes
+			from
+				old_classes.start
+			until
+				old_classes.after
+			loop
+				class_i := old_classes.item_for_iteration
+				if not classes.has (class_i.name) then
+					if class_i.old_cluster_name /= Void then
+							-- Retrieve previous cluster location of class and reset
+							-- `class_i' object so that it can be put back to its
+							-- old location.
+						class_i.restore_class_i_information
+						Workbench.change_class (class_i)
+					else
+							-- Was only in override cluster, we need to remove it from system.
+						remove_class_from_system (class_i)
+						if Workbench.automatic_backup then
+							record_removed_class (class_i.name)
+						end
+					end
+				end
+				old_classes.forth
+			end
+		end
+
 	process_overrides (ovc : CLUSTER_I) is
 			-- Check if some classes have been overriden
 			-- and remove them from the system
@@ -868,11 +1053,10 @@ end;
 			override_cluster_exists : ovc /= Void
 			not_same                : Current /= ovc
 		local
-			a_class, ov_class : CLASS_I;
-			ovcc              : like classes
+			a_class, ov_class: CLASS_I;
+			ovcc: like classes
 		do
-			-- precompiled classes cannot be overriden.
-
+				-- Precompiled classes cannot be overriden.
 			if not is_precompiled and then ovc.classes /= Void then
 				from
 					ovcc := ovc.classes
@@ -882,9 +1066,17 @@ end;
 				loop
 					ov_class := ovcc.item_for_iteration;
 					if classes.has (ov_class.name) then
-						-- the class is overridden; remove it
+							-- Class is overridden; remove it and keep track of
+							-- its previous location
 						a_class := classes.found_item
-						remove_class (a_class);
+						classes.remove (a_class.name);
+						ov_class.set_old_location_info (Current, a_class.base_name)
+						ov_class.reset_class_c_information (a_class.compiled_class)
+						if a_class.compiled then
+								-- Add class to system only if it was already part
+								-- of system before.
+							Workbench.change_class (ov_class)
+						end
 					end
 					ovcc.forth;
 				end;
@@ -958,12 +1150,8 @@ end;
 			--- Check the new rename clauses and the deleted ones
 		require
 			old_cluster_not_void: old_cluster /= Void
-		local
-			old_list: like renamings;
-			cluster_i: CLUSTER_I;
-			rename_clause: RENAME_I;
 		do
-			if renamings.empty and old_cluster.renamings.empty then
+			if renamings.is_empty and old_cluster.renamings.is_empty then
 				Result := False
 			else
 				Result := True
@@ -1090,26 +1278,29 @@ end;
 			ptr: ANY
 		do
 			ptr := path.to_c;
-			Result := eif_file_has_changed ($ptr, date);
+			Result := eif_file_has_changed ($ptr, date) or else Lace.need_directory_lookup
 			
-			if not Result and then not Has_smart_file_system then
-					-- New Note: this comment has been previously done for Windows OS, however
-					-- the described situation can also occurs on other UNIX operating systems:
+--			if not Result and then not Has_smart_file_system then
+					-- New Note: this comment has been previously done for Windows OS,
+					-- however the described situation can also occurs on other UNIX
+					-- operating systems:
 					--
-					-- We need to check on Windows FAT file systems the content of a non-changed
-					-- directory since it can have been changed anyway (FAT is not a good file
-					-- system).
-					-- Problem: NTFS does not have this problem but there is no easy way to
-					-- know if we are on NTFS or not, that's why we are doing this check
+					-- We need to check on Windows FAT file systems the content of
+					-- a non-changed directory since it can have been changed
+					-- anyway (FAT is not a good file system).
+					-- Problem: NTFS does not have this problem but there is no
+					-- easy way to know if we are on NTFS or not, that's why we
+					-- are doing this check
 					--
-					-- FIXME: when the only file system will be NTFS or equivalent, we should remove
-					-- this test since the value returned by `eif_file_has_changed' will
-					-- be coherent
+					-- FIXME: when the only file system will be NTFS or equivalent,
+					-- we should remove this test since the value returned by
+					-- `eif_file_has_changed' will be coherent
 					-- %%MANU
 
-				Result := True
+--				Result := True
 
-			elseif not Result then
+--			elseif not Result then
+			if not Result then
 
 				from
 					classes.start
@@ -1134,7 +1325,7 @@ end;
 							i > inc_l.count or else Result
 						loop
 							include_list.start;
-							include_list.compare_references
+							include_list.compare_objects
 							include_list.search (inc_l.i_th (i).file__name);
 							Result := include_list.after
 							i := i + 1;
@@ -1155,7 +1346,7 @@ end;
 							i > ex_l.count or else Result
 						loop
 							exclude_list.start
-							exclude_list.compare_references
+							exclude_list.compare_objects
 							exclude_list.search (ex_l.i_th (i).file__name)
 							Result := exclude_list.after
 							i := i + 1
@@ -1170,9 +1361,58 @@ end;
 		require
 			a_cluster_not_void: a_cluster /= Void
 		do
-			Result := ignore.has (a_cluster);
+			Result := not ignore.is_empty and then ignore.has (a_cluster);
 			if not Result and precomp_ids /= Void then
 				Result := not precomp_ids.has (a_cluster.precomp_id)
+			end
+		end
+
+feature {CLUSTER_SD} -- `all' adaptation
+
+	update_with_all_classes is
+			-- Fill `classes' with all classes in subclusters.
+			--| Can be called only when Current was specified as `all'
+			-- or `library' in Ace file.
+		local
+			l_classes: like classes
+		do
+			if sub_clusters /= Void then
+				create l_classes.make (classes.count)
+				private_merge (l_classes, Current)
+				classes := l_classes
+			end
+		end
+
+	reset_classes (a_classes: like classes) is
+			-- Assign `a_classes' into `classes'.
+			-- Perform after call to `update_with_all_classes' to
+			-- restore existing state
+		require
+			a_classes_not_void: a_classes /= Void
+		do
+			classes := a_classes
+		ensure
+			classes_set: classes = a_classes
+		end
+
+feature {NONE} -- Implementation
+
+	private_merge (a_classes: like classes; clus: like Current) is
+			-- Merge `classes' in `sub_clusters' of `clus' into `a_classes'.
+		require
+			a_classes_not_void: a_classes /= Void
+			clus_not_void: clus /= Void
+		do
+			a_classes.merge (clus.classes)
+			if clus.sub_clusters /= Void then
+				from
+					clus.sub_clusters.start
+				until
+					clus.sub_clusters.after
+				loop
+					private_merge (a_classes, clus.sub_clusters.item)
+					clus.sub_clusters.forth
+				end
 			end
 		end
 
@@ -1189,6 +1429,7 @@ feature {COMPILER_EXPORTER} -- Automatic backup
 			-- Full directory path where the changes in Current will be stored
 		local
 			d: DIRECTORY
+			cluster: like Current
 		do
 			!! Result.make_from_string (Workbench.backup_subdirectory)
 			!! d.make (Result)
@@ -1196,7 +1437,19 @@ feature {COMPILER_EXPORTER} -- Automatic backup
 					-- Create the backup directory again just in case the user removes it.
 				d.create_dir
 			end
-			Result.extend (backup_subdirectory)
+
+			if belongs_to_all then
+				from
+					cluster := parent_cluster	
+				until
+					not cluster.belongs_to_all
+				loop
+					cluster := cluster.parent_cluster
+				end
+				Result.extend (cluster.backup_subdirectory)
+			else
+				Result.extend (backup_subdirectory)
+			end
 
 			!! d.make (Result)
 			if not d.exists then
@@ -1347,6 +1600,56 @@ feature -- Document processing
 			document_path_not_void: document_path /= Void
 		end;
 
+feature {DOCUMENTATION, TEXT_FILTER, CLASS_I, CLUSTER_I} -- Status report
+
+	base_relative_path (sep: CHARACTER): EB_FILE_NAME is
+			-- Relative path from `Current' to base path of generated documentation.
+		do
+			if parent_cluster /= Void then
+				Result := parent_cluster.base_relative_path (sep)
+				Result.extend ("..")
+			else
+				create Result.make_from_string ("..")
+				if sep /= '%U' then
+					Result.set_separator (sep)
+				end
+			end
+		end
+
+	relative_path (sep: CHARACTER): EB_FILE_NAME is
+			-- Relative path from documentation base path to `Current'.
+		local
+			real_name: STRING
+			pos: INTEGER
+		do
+			if belongs_to_all then
+					-- Fake generated name due to `all' or `library' specification.
+				pos := cluster_name.last_index_of ('.', cluster_name.count)
+				check
+					found_dummy_dot: pos > 0
+				end
+				real_name := cluster_name.substring (pos + 1, cluster_name.count)
+			else
+				real_name := cluster_name
+			end
+			if parent_cluster /= Void then
+				Result := parent_cluster.relative_path (sep)
+				Result.extend (real_name)
+			else
+				create Result.make_from_string (real_name)
+				if sep /= '%U' then
+					Result.set_separator (sep)
+				end
+			end
+		end
+
+	relative_file_name (sep: CHARACTER): EB_FILE_NAME is
+			-- Relative path from documentation base path to `Current'.
+		do
+			Result := relative_path (sep)
+			Result.extend ("index")
+		end
+
 feature {NONE} -- Document processing
 
 	No_word: STRING is "no";
@@ -1390,6 +1693,36 @@ feature {NONE} -- Implementation
 			--       loop in the worst case).
 
 			Result := cl_path
+		end
+
+	build_indexes: EIFFEL_LIST [INDEX_AS] is
+			-- Parsing results of file "indexing.txt".
+		local
+			file: RAW_FILE
+			fn: FILE_NAME
+		do
+			create fn.make_from_string (path)
+			fn.extend ("indexing")
+			fn.add_extension ("txt")
+			create file.make (fn)
+			if file.exists and then file.is_readable then
+				file.open_read
+				Cluster_indexing_parser.parse (file)
+				Result := Cluster_indexing_parser.root_node.top_indexes
+				file.close
+			end
+		rescue
+			if Rescue_status.is_error_exception then
+				if not (file = Void or else file.is_closed) then
+					file.close
+				end
+			end
+		end
+
+	Cluster_indexing_parser: CLUSTER_INDEXING_PARSER is
+			-- Parser adapted from the Eiffel parser.
+		once
+			create Result.make
 		end
 
 feature {NONE} -- Externals

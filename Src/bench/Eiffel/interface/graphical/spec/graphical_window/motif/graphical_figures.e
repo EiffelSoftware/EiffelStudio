@@ -726,7 +726,7 @@ feature {NONE} -- Implementation
 			status := Application.status;
 			if
 				status /= Void and status.is_stopped and
-				status.is_at (stone.routine, stone.index)
+				status.is_at (stone.body_index, stone.index)
 			then
 				check
 					highlighted_line_is_void: highlighted_line = Void;

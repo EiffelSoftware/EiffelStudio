@@ -21,18 +21,16 @@ feature {NONE} -- Execution
 		local
 			text: STRING;
 		do
-			if Eiffel_ace.file_name /= Void then
-				text := Eiffel_ace.text
+			check
+				has_ace_file: Eiffel_ace.file_name /= Void
 			end
+			text := Eiffel_ace.text
 
 			if text /= Void then
 				output_window.put_string (text)
 				output_window.new_line
-			elseif Eiffel_ace.file_name = Void then
-				output_window.put_string ("You must compile a project first%N")
 			else
-				output_window.put_string ("Cannot open ")
-				output_window.put_string (Eiffel_ace.file_name)
+				output_window.put_string (Warning_messages.w_Cannot_read_file (Eiffel_ace.file_name))
 				output_window.new_line
 			end
 		end

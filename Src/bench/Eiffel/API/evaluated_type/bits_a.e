@@ -9,8 +9,22 @@ inherit
 	BASIC_A
 		redefine
 			is_bits, internal_conform_to, associated_class, dump,
-			heaviest, same_as, append_to,
+			weight, same_as, ext_append_to,
 			check_conformance, format, is_equivalent
+		end
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (c: like bit_count) is
+		require
+			c_positive: c > 0
+		do
+			bit_count := c
+		ensure
+			bit_count_set: bit_count = c
 		end
 
 feature -- Property
@@ -48,14 +62,6 @@ feature -- Access
 	bit_count: INTEGER
 			-- Bit count
 
-feature -- Setting
-
-	set_bit_count (c: like bit_count) is
-			-- Assign `c' to `set_bit_count'.
-		do
-			bit_count := c
-		end
-
 feature -- Output
 
 	dump: STRING is
@@ -66,9 +72,10 @@ feature -- Output
 			Result.append_integer (bit_count)
 		end
 
-	append_to (st: STRUCTURED_TEXT) is
+	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
 		do
-			st.add_string ("BIT ")
+			st.add (ti_Bit_class)
+			st.add_space
 			st.add_int (bit_count)
 		end
 
@@ -109,20 +116,11 @@ feature {COMPILER_EXPORTER}
 			end
 		end
 
-	heaviest (type: TYPE_A): TYPE_A is
-			-- Heaviest numeric type for balancing rule
-		require else
-			good_argument: type /= Void
-			consistency: is_bits and then type.is_bits
-		local
-			other: BITS_A
+	weight: INTEGER is
+			-- Weight of Current.
+			-- Used to evaluate type of an expression with balancing rule.
 		do
-			other ?= type
-			if other.bit_count > bit_count then
-				Result := type
-			else
-				Result := Current
-			end
+			Result := bit_count
 		end
 
 	type_i: BIT_I is
@@ -137,5 +135,5 @@ feature {COMPILER_EXPORTER}
 			ctxt.put_string ("BIT ")
 			ctxt.put_string (bit_count.out)
 		end
-
+		
 end -- class BITS_A

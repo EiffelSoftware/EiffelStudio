@@ -32,14 +32,14 @@ feature {NONE} -- Initialization
 			!! command_bar.make (associated_category.command_bar);
 			!! format_bar.make (associated_category.format_bar);
 			!! parse_class_after_saving.make (associated_category.parse_class_after_saving)
-			!! feature_clause_order.make (associated_category.feature_clause_order);
+			!! private_feature_clause_order.make (associated_category.feature_clause_order);
 
 			resources.extend (tool_width);
 			resources.extend (tool_height);
 			resources.extend (command_bar);
 			resources.extend (format_bar);
 			resources.extend (parse_class_after_saving);
-			resources.extend (feature_clause_order)
+			resources.extend (private_feature_clause_order)
 		end;
 
 	init_colors is
@@ -80,6 +80,6 @@ feature {NONE} -- Resources
 	tool_width, tool_height: INTEGER_PREF_RES;
 	command_bar, format_bar: BOOLEAN_PREF_RES;
 	parse_class_after_saving: BOOLEAN_PREF_RES;
-	feature_clause_order: ARRAY_PREF_RES;
+	private_feature_clause_order: ARRAY_PREF_RES;
 
 end -- class CLASS_PREF_CAT

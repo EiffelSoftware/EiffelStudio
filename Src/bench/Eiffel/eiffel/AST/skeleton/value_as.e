@@ -24,16 +24,6 @@ feature {AST_FACTORY} -- Initialization
 			terminal_set: terminal = t
 		end
 
-feature {NONE} -- Initilization
-
-	set is
-			-- Yacc initialization
-		do
-			terminal ?= yacc_arg (0)
-		ensure then
-			terminal_exists: terminal /= Void
-		end
-
 feature -- Attributes
 
 	terminal: ATOMIC_AS

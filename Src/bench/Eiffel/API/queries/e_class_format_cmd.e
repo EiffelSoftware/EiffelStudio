@@ -51,10 +51,10 @@ feature -- Execution
 			feature_table: E_FEATURE_TABLE;
 			e_feature: E_FEATURE;
 			e_class: CLASS_C;
-			id: CLASS_ID;
+			id: INTEGER;
 				-- Temporary structures
 			list: SORTED_TWO_WAY_LIST [E_FEATURE];
-			table: EXTEND_TABLE [SORTED_TWO_WAY_LIST [E_FEATURE], CLASS_ID];
+			table: EXTEND_TABLE [SORTED_TWO_WAY_LIST [E_FEATURE], INTEGER];
 			classes: PART_SORTED_TWO_WAY_LIST [CLASS_C];
 			c: like current_class
 		do
@@ -72,7 +72,7 @@ feature -- Execution
 				e_feature := feature_table.item_for_iteration;
 				if criterium (e_feature) then
 					e_class := e_feature.written_class;
-					id := e_class.id;
+					id := e_class.class_id;
 					if table.has (id) then
 						list := table.found_item
 					else
@@ -98,7 +98,7 @@ feature -- Execution
 				structured_text.add_string (":");
 				structured_text.add_new_line;
 				structured_text.add_new_line;
-				list := table.item (e_class.id);
+				list := table.item (e_class.class_id);
 				list.sort;
 				from
 					list.start

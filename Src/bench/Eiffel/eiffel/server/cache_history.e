@@ -1,3 +1,9 @@
+indexing
+	description: "History used for cache remembering system, so that element%
+				%accessed more often are kept as much as possible."
+	date: "$Date$"
+	revision: "$Revision$"
+
 class
 	CACHE_HISTORY [G]
 

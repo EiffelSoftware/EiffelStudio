@@ -1,13 +1,14 @@
--- Cache for invariant byte code
+indexing
+	description: "Cache for invariant byte code indexed by class id."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class INV_BYTE_CACHE 
 
 inherit
-
-	CACHE [INVARIANT_B, CLASS_ID]
+	CACHE [INVARIANT_B]
 
 creation
-
 	make
 	
 feature 

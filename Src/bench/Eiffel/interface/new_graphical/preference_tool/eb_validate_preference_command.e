@@ -1,9 +1,7 @@
 indexing
-
-	description:
-		"Command to validate all changes made to resources."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Command to validate all changes made to resources."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class
 	EB_VALIDATE_PREFERENCE_COMMAND

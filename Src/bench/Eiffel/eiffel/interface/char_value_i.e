@@ -46,9 +46,15 @@ feature
 			-- Generate value in `buffer'.
 		do
 			buffer.putstring ("(EIF_CHARACTER) '");
-			buffer.escape_char (char_val);
+			buffer.escape_char (buffer,char_val);
 			buffer.putchar ('%'');
 		end;
+
+	generate_il is
+			-- Generate IL code for character constant value.
+		do
+			il_generator.put_character_constant (char_val)
+		end
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a character constant value.

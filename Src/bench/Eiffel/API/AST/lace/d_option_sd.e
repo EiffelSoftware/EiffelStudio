@@ -1,9 +1,7 @@
 indexing
-
-	description: 
-		"";
+	description: "Default option";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class D_OPTION_SD
 
@@ -14,7 +12,7 @@ inherit
 			adapt
 		end;
 
-feature {LACE_AST_FACTORY} -- Initialization
+feature {D_OPTION_SD, LACE_AST_FACTORY} -- Initialization
 
 	initialize (o: like option; v: like value) is
 			-- Create a new D_OPTION AST node.
@@ -23,24 +21,10 @@ feature {LACE_AST_FACTORY} -- Initialization
 		do
 			option := o
 			value := v
-			check_valid_free_options
 		ensure
 			option_set: option = o
 			value_set: value = v
 		end
-
-feature {NONE} -- Initialization 
-
-	set is
-			-- Yacc initialization
-		local
-			free_option: FREE_OPTION_SD
-			vd32: VD32
-		do
-			option ?= yacc_arg (0)
-			value ?= yacc_arg (1)
-			check_valid_free_options
-		end;
 
 feature -- Properties
 
@@ -50,23 +34,34 @@ feature -- Properties
 	value: OPT_VAL_SD
 			-- option value
 
-feature {NONE} -- Implementation
+feature -- Duplication
 
-	check_valid_free_options is
-		local
-			free_option: FREE_OPTION_SD;
-			vd32: VD32;
+	duplicate: like Current is
+			-- Duplicate current object
 		do
-			if option.is_free_option then
-				free_option ?= option
-				if not free_option.is_valid then
-						-- see also ETL p526 (VDOC error message)	
-					create vd32
-					vd32.set_option_name (free_option.option_name)
-					Error_handler.insert_error (vd32)
-				end;
-			end;
-		end;
+			create Result
+			Result.initialize (option.duplicate, duplicate_ast (value))
+		end
+
+feature -- Comparison
+
+	same_as (other: like Current): BOOLEAN is
+			-- Is `other' same as Current?
+		do
+			Result := same_ast (option, other.option)
+			 		and then same_ast (value, other.value)
+		end
+
+feature -- Saving
+
+	save (st: GENERATION_BUFFER) is
+			-- Save current in `st'.
+		do
+			option.save (st)
+			if value /= Void then
+				value.save (st)
+			end
+		end
 
 feature {COMPILER_EXPORTER} -- Lace compilation
 

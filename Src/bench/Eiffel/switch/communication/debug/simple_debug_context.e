@@ -1,14 +1,13 @@
 indexing
-
-	description: 
-		"Adding debug breakpoints to simple format text.";
-	date: "$Date$";
-	revision: "$Revision $"
+	description	: "Facilities to handle breakpoints adding in flat/short formats"
+	status		: "See notice at end of class."
+	date		: "$Date$"
+	revision	: "$Revision$"
+	author		: "Arnaud PICHERY [ aranud@mail.dotcom.fr ]"
 
 class SIMPLE_DEBUG_CONTEXT
 
 inherit
-
 	FORMAT_CONTEXT
 		rename
 			emit_tabs as old_emit_tabs,
@@ -16,6 +15,7 @@ inherit
 		redefine
 			put_breakable, formal_name, put_class_name
 		end
+
 	FORMAT_CONTEXT
 		rename
 			make as old_make
@@ -24,11 +24,11 @@ inherit
 			formal_name, put_class_name
 		select
 			emit_tabs
-		end;
+		end
+
 	SHARED_WORKBENCH
 
 creation
-
 	make
 
 feature {NONE} -- Initialization
@@ -57,11 +57,11 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	e_class: CLASS_C;
-			-- Class where feature is defined
+	e_class: CLASS_C
+			-- Class where feature is defined.
 
-	e_feature: E_FEATURE;
-			-- Class where feature is defined
+	e_feature: E_FEATURE
+			-- Current feature.
 
 feature -- Element change
 
@@ -69,27 +69,27 @@ feature -- Element change
 			-- Formal name of class_c generics at position `pos.
 		do
 			Result := clone (e_class.generics.i_th (pos).formal_name)
-			Result.to_upper;
-		end;
+			Result.to_upper
+		end
 
 	put_class_name (s: STRING) is
 			-- Append `s' to `text'.
 		local
-			classi: CLASS_I;
+			classi: CLASS_I
 			tmp: STRING
 		do
 			if not tabs_emitted then
-				emit_tabs;
-			end;
-			tmp := clone (s);
-			tmp.to_lower;
-			classi := Universe.class_named (tmp, e_class.cluster);
-			if classi = Void then
-				text.add_default_string (s);
-			else
-				text.add_classi (classi, s);
+				emit_tabs
 			end
-		end;
+			tmp := clone (s)
+			tmp.to_lower
+			classi := Universe.class_named (tmp, e_class.cluster)
+			if classi = Void then
+				text.add_default_string (s)
+			else
+				text.add_classi (classi, s)
+			end
+		end
 
 feature {NONE} -- Implementation
 
@@ -103,20 +103,20 @@ feature {NONE} -- Implementation
 		local
 			bp: BREAKPOINT_ITEM
 		do
-			breakpoint_index := breakpoint_index + 1;
-			!! bp.make (e_feature, breakpoint_index);
-			added_breakpoint := True;
+			breakpoint_index := breakpoint_index + 1
+			create bp.make (e_feature, breakpoint_index)
+			added_breakpoint := True
 			text.add (bp)
-		end;
+		end
 
 	emit_tabs is
 		do
 			if added_breakpoint then
-				added_breakpoint := false;
+				added_breakpoint := false
 			else
 				text.add (ti_padded_debug_mark)
-			end;
-			old_emit_tabs;
-		end;
+			end
+			old_emit_tabs
+		end
 
 end	 -- class SIMPLE_DEBUG_CONTEXT

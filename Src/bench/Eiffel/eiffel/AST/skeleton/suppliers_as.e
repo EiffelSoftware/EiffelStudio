@@ -10,9 +10,6 @@ class SUPPLIERS_AS
 
 inherit
 	AST_EIFFEL
-		redefine
-			pass_address
-		end
 
 creation
 	make, initialize
@@ -32,13 +29,6 @@ feature {NONE} -- Initialization
 		do
 			!!supplier_ids.make
 			supplier_ids.compare_objects
-		end
-
-feature {NONE} -- Initialization
-
-	set is 
-			-- Yacc/Eiffel interface
-		do
 		end
 
 feature -- Attributes
@@ -74,22 +64,6 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Do nothing.
 		do
-		end
-
-feature -- C interactions
-
-	pass_address (n: INTEGER) is
-			-- Yacc/Eiffel interface
-		do
-			c_get_address (n, $Current, $make)
-			c_get_set_put ($insert_supplier_id)
-		end
-
-feature {NONE} -- Externals
-
-	c_get_set_put (ptr: POINTER) is
-		external
-			"C"
 		end
 
 end -- class SUPPLIERS_AS

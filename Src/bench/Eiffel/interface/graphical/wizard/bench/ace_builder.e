@@ -34,12 +34,10 @@ feature -- Graphical User Interface
 	build_interface is
 		local
 			twl: TWO_WAY_LIST [STRING]
-			child: ARRAYED_LIST [WIDGET]
 			toggle: TOGGLE_B
 			first: BOOLEAN
 			subdir: DIRECTORY_NAME
 			l_s_d, l_s_d_lower, std_precomp_name, project_name: STRING
-			proj: STRING
 			sep1, sep2, sep3: THREE_D_SEPARATOR
 			inlining_cmd: INLINING_ACE_COMMAND
 			option_form, check_form, radio_form: FORM
@@ -304,7 +302,7 @@ feature -- Information Handling
 					id.append (creation_procedure_edit.text);
 					id.to_lower;
 					if
-						not (( id.empty and then
+						not (( id.is_empty and then
 							(c_name.is_equal ("ANY") or else c_name.is_equal ("NONE")))
 							or else id.is_valid)
 					then
@@ -439,11 +437,10 @@ feature {NONE} -- Properties
 
 	precompiles: TWO_WAY_LIST [STRING] is
 			-- Looks up the disk to find the precompiled libraries in
-			-- $EIFFEL4/precomp/spec/$PLATFORM/*.
+			-- $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM/*.
 			-- The list will only contain those precompiles that are actually
 			-- precompiled (by the means the file ./EIFGEN/project.eif exists).
 		local
-			new_precomp: STRING;
 			dir: DIRECTORY;
 			file_name: FILE_NAME;
 			file: RAW_FILE
@@ -500,7 +497,7 @@ feature -- Standard precompiles
 
 	standard_precompiles_reverse: HASH_TABLE [STRING, STRING];
 			-- A hash table of the qualified name of standard precompiles (EiffelBase, EiffelLex, etc.)
-			-- against their location in $EIFFEL4/precomp/spec/$PLATFORM (base, lex, etc.)
+			-- against their location in $ISE_EIFFEL/precomp/spec/$ISE_PLATFORM (base, lex, etc.)
 			--| Dynamically created.
 
 feature -- Subdirs from a directory name
@@ -549,7 +546,6 @@ feature {NONE} -- Implementation
 		local
 			child: ARRAYED_LIST [WIDGET];
 			toggle: TOGGLE_B;
-			t: STRING;
 			assert, precomp_lines, root_class_line: STRING;
 			d_name: DIRECTORY_NAME;
 			root_cluster_line: STRING;
@@ -559,7 +555,7 @@ feature {NONE} -- Implementation
 			contents.replace_substring_all ("$system_name", system_edit.text);	
 			root_class_line := clone (root_class_edit.text);
 			root_class_line.to_upper;
-			if not creation_procedure_edit.text.empty then
+			if not creation_procedure_edit.text.is_empty then
 				root_class_line.append (": %"");
 				root_class_line.append (creation_procedure_edit.text);
 				root_class_line.extend ('"');
@@ -600,7 +596,7 @@ feature {NONE} -- Implementation
 							precomp_lines.append ("%Tprecompiled (%"");
 							!! d_name.make;
 							d_name.extend_from_array (
-								<<"$EIFFEL4", "precomp", "spec", "$PLATFORM">>);
+								<<"$ISE_EIFFEL", "precomp", "spec", "$ISE_PLATFORM">>);
 							d_name.extend (standard_precompiles_reverse.item (toggle.text));
 							precomp_lines.append (d_name);
 							precomp_lines.append ("%");%N")
@@ -628,7 +624,7 @@ feature {NONE} -- Implementation
 			end;
 			contents.replace_substring_all ("$assertion_value", assert);	
 			!! root_cluster_line.make (0);
-			if not creation_procedure_edit.text.empty then
+			if not creation_procedure_edit.text.is_empty then
 				root_cluster_line.append ("%N%Troot_cluster: %"");
 				root_cluster_line.append (Project_directory_name);
 				root_cluster_line.append ("%";");
@@ -644,7 +640,7 @@ feature {NONE} -- Implementation
 			t: STRING
 		do
 			rc := clone (root_class_edit.text);
-			rc.append (Dot_e);
+			rc.append (".e");
 			rc.to_lower;
 			!! new_class.make (rc);
 			if not new_class.exists then
@@ -692,7 +688,7 @@ feature {NONE} -- Implementation
 
 			!! new_file.make (fname);
 			new_file.open_write;
-			if not contents.empty then
+			if not contents.is_empty then
 				contents.replace_substring_all ("%R", "")
 				new_file.putstring (contents);
 				char := contents.item (contents.count);

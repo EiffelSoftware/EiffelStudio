@@ -41,7 +41,7 @@ feature -- Access
 			tag := " [READ-ONLY]"
 			c_w ?= tool
 			if c_w /= Void then
-				c_w.set_read_only
+				c_w.set_read_only (True)
 			end
 		end
 
@@ -58,28 +58,24 @@ feature -- Access
 			o_w ?= tool
 
 			if c_w /= Void then
-				if c_w.class_text_field.text.empty then
+				if c_w.class_text_field.text.is_empty then
 					t:= clone (tool.title)
 				else
 					t := clone (tool.eb_shell.icon_name)
 				end
 			elseif r_w /= Void then
 				t := clone (tool.title)
-				if not t.empty then
+				if not t.is_empty then
 					t.replace_substring_all ("Feature: ","+ ")
 					t.replace_substring_all ("Class:","from:")
 				end
 			elseif o_w /= Void then
 				t := clone (tool.title)
---				if not t.empty then
---					t.replace_substring_all ("Feature: ","+ ")
---					t.replace_substring_all ("Class:","from:")
---				end
 			else
 				t := clone ("? Unknown Tool")
 			end
 
-			if t.empty then
+			if t.is_empty then
 --				t.append ("<<>> EL WHAT ??")
 			else
 				t.append (tag)

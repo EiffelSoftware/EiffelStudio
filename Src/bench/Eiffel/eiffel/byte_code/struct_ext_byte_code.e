@@ -14,19 +14,14 @@ inherit
 
 feature -- Properties
 
-	special_file_name: STRING
-			-- Special file name (dll or macro)
-
 	is_cpp_code: BOOLEAN
 			-- Is current macro to be generated in a CPP context?
 
-feature -- Initialization
+	field_name: STRING
+			-- Name of struct.
+			--| Can be empty if parsed through the old syntax
 
-	set_special_file_name (f: STRING) is
-			-- Assign `f' to `special_file_name'.
-		do
-			special_file_name := f
-		end
+feature -- Initialization
 
 	set_is_cpp_code (v: BOOLEAN) is
 			-- Assign `v' to `is_cpp_code'.
@@ -36,18 +31,19 @@ feature -- Initialization
 			is_cpp_code_set: is_cpp_code = v
 		end
 
+	set_field_name (s: STRING) is
+			-- Assign `s' to `field_name'.
+		do
+			field_name := s
+		ensure
+			field_name_set: field_name = s
+		end
+
 feature -- Code generation
 
 	generate is
-		local
-			buf: GENERATION_BUFFER
-			queue: like shared_include_queue
 		do
 			generate_include_files
-			queue := shared_include_queue
-			if not queue.has (special_file_name) then
-				queue.extend (special_file_name)
-			end
 			generate_signature
 		end
 
@@ -55,15 +51,34 @@ feature -- Code generation
 			-- Generate the body for an external of type macro
 		local
 			buf: GENERATION_BUFFER
+			special_access: BOOLEAN
+			name: STRING
+			setter: BOOLEAN
+			new_syntax: BOOLEAN
 		do
 			buf := buffer
 			if is_cpp_code then
 				context.set_has_cpp_externals_calls (True)
 			end
+			
+			name := field_name
+			if name = Void then
+				name := external_name
+			else
+				new_syntax := True
+			end
 
-			if has_return_type then
+			setter := (new_syntax and then argument_types.count = 2)
+					or else (not new_syntax and then not has_return_type)
+
+			if not setter then
 				buf.putstring ("return ");
 				result_type.c_type.generate_cast (buf)
+
+				if name.item (1) = '&' and then name.count > 1 then
+					buf.putchar ('&')
+					special_access := True
+				end
 
 					--| External structure access will be generated as:
 					--| (type_2) (((type_1 *) arg1)->alias_name);
@@ -71,7 +86,11 @@ feature -- Code generation
 				buf.putstring (argument_types.item(1))
 				buf.putstring (" *) arg1");
 				buf.putstring (")->")
-				buf.putstring (external_name)
+				if not special_access then
+					buf.putstring (name)
+				else
+					buf.putstring (name.substring (2, name.count))
+				end
 				buf.putstring (");")
 				buf.new_line;
 			else
@@ -81,7 +100,7 @@ feature -- Code generation
 				buf.putstring (argument_types.item(1))
 				buf.putstring (" *) arg1");
 				buf.putstring (")->")
-				buf.putstring (external_name)
+				buf.putstring (name)
 				buf.putstring (" = (")
 				buf.putstring (argument_types.item(2))
 				buf.putstring (")(arg2);");

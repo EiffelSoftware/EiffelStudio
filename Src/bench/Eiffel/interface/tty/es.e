@@ -3,7 +3,7 @@ indexing
 		"Batch compiler without invoking the -loop. This is the root%
 		%class for the personal version (which does allow c compilation)."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class
 	ES
@@ -18,6 +18,8 @@ inherit
 	SHARED_EWB_HELP
 
 	SHARED_EWB_CMD_NAMES
+
+	EIFFEL_ENV
 
 creation
 	make, make_unlicensed
@@ -47,65 +49,64 @@ feature {NONE} -- Initialization
 			-- license or not.
 		local
 			temp: STRING
-			new_resources: TTY_RESOURCES
 			eifgen_init: INIT_SERVERS
+			new_resources: TTY_RESOURCES
+			file_degree_output: FILE_DEGREE_OUTPUT
 		do
 			if not retried then
 					-- Check that environment variables
 					-- are properly set.
-				temp := Execution_environment.get ("EIFFEL4")
-				if (temp = Void) or else temp.empty then
-					io.error.putstring
-					("ISE Eiffel4: the environment variable $EIFFEL4 is not set%N")
-					die (-1)
-				end
-				temp := Execution_environment.get ("PLATFORM")
-				if (temp = Void) or else temp.empty then
-					io.error.putstring
-					("ISE Eiffel4: the environment variable $PLATFORM is not set%N")
-					die (-1)
-				end
+				check_environment_variable
+
 					--| Initialization of the run-time, so that at the end of a store/retrieve
 					--| operation (like retrieving or storing the project, creating the CASEGEN
 					--| directory, generating the profile information, ...) the run-time is initialized
 					--| back to the values which permits the compiler to access correctly the EIFGEN
 					--| directory
-				!! eifgen_init.make
+				create eifgen_init.make
 
 					-- Call `init_license' only if `licensed' is `True'
 				if not licensed or else init_license then
 					if has_limited_license then
 						io.error.putstring (expiration_message)
 					end
-						-- Read the resource files
-					!! new_resources.initialize
+							-- Read the resource files
+					create new_resources.initialize
 
-					analyze_options
-					if option_error then
-						print_option_error
-					elseif help_only then
-						print_help
-					elseif version_only then
-						print_version
-					elseif not file_error then
-						if output_window = Void then
-							command.set_output_window (error_window)
-						else
-							command.set_output_window (output_window)
-							output_window.close
-						end
-						init_project (Project_file_name); 
-						if not error_occurred then
-							if project_is_new then
-								make_new_project (equal (command.name, loop_cmd_name))
+					if not new_resources.error_occurred then
+						analyze_options
+						if option_error then
+							print_option_error
+						elseif help_only then
+							print_help
+						elseif version_only then
+							print_version
+						elseif not file_error then
+							if output_window = Void then
+								command.set_output_window (Error_window)
 							else
-								retrieve_project
+								command.set_output_window (output_window)
+								output_window.close
 							end
+							init_project (Project_file_name)
+							if not error_occurred then
+								if project_is_new then
+									make_new_project (equal (command.name, loop_cmd_name))
+								else
+									retrieve_project
+								end
+							end
+	
+							if output_file_option then
+								create file_degree_output.make (output_file_name)
+								Eiffel_project.set_degree_output (file_degree_output)
+							end
+	
+							if not error_occurred then
+								command.execute
+							end
+							discard_licenses
 						end
-						if not error_occurred then
-							command.execute
-						end
-						discard_licenses
 					end
 				end
 			else
@@ -113,7 +114,7 @@ feature {NONE} -- Initialization
 			end
 		rescue
 			discard_licenses
-			io.error.putstring ("ISE Eiffel4: Session aborted%N")
+			io.error.putstring ("ISE Eiffel 5: Session aborted%N")
 			io.error.putstring ("Exception tag: ")
 			temp := original_tag_name
 			if temp /= Void then
@@ -152,13 +153,20 @@ feature -- Properties
 	version_only: BOOLEAN
 			-- Print version information?
 
+	output_file_option: BOOLEAN
+			-- Redirect output to `output_file_name'?
+
+	output_file_name: STRING
+			-- File which Output is redirected into
+			-- if `output_file_option' is set to True.
+
 	option: STRING
 			-- Current option being analyzed
 
 	help_messages: EXTEND_TABLE [STRING, STRING] is
 			-- Help message table
 		once
-			!!Result.make (25)
+			create Result.make (25)
 			Result.put (ace_help, ace_cmd_name)
 			Result.put (ancestors_help, ancestors_cmd_name)
 			Result.put (aversions_help, aversions_cmd_name)
@@ -187,7 +195,7 @@ feature -- Properties
 	loop_cmd: EWB_LOOP is
 			-- Loop command 
 		do
-			!! Result
+			create Result
 		end
 
 feature -- Access
@@ -209,7 +217,7 @@ feature -- Setting
 	set_file (filename: STRING) is
 			-- Set the output_window file to `filename'.
 		do
-			!! output_window.make (filename)
+			create output_window.make (filename)
 			if output_window.exists then
 				io.error.putstring ("File exists.%N")
 				file_error := True
@@ -228,8 +236,6 @@ feature -- Output
 
 	print_option_error is
 			-- Print the correct usage of ewb.
-		local
-			i: INTEGER
 		do	
 			io.putstring (argument (0))
 			io.putstring (": incorrect options%N"); 
@@ -264,7 +270,7 @@ feature -- Output
 	print_version is
 			-- Print Version Number
 		do
-			io.put_string ("ISE EiffelBench version " + Version_number + "%N")
+			io.put_string ("ISE Eiffel Explorer version " + Version_number + "%N")
 		end
 
 	print_help is
@@ -279,7 +285,7 @@ feature -- Output
 			io.putstring ("%NOptions:%N"); 
 			io.putstring ("%Tdefault (no option): recompile the system.%N%N")
 
-			!!command_list.make
+			create command_list.make
 			keys := help_messages.current_keys
 			from
 				i := keys.lower
@@ -326,8 +332,6 @@ feature -- Update
 
 	analyze_options is
 			-- Analyze the options entered by the user.
-		local
-			i: INTEGER
 		do
 					-- Default Project Options
 			Project_directory_name.set_directory (clone (Execution_environment.current_working_directory))
@@ -470,7 +474,7 @@ feature -- Update
 							cn := argument (current_option)
 							current_option := current_option + 1
 							fn := argument (current_option)
-							!! ewb_senders.make (cn, fn, filter_name)
+							create ewb_senders.make (cn, fn, filter_name)
 							if show_all then
 								ewb_senders.set_all_callers
 							end;	
@@ -516,18 +520,18 @@ feature -- Update
 							cn := argument (current_option)
 							if option.is_equal ("-short") then
 								if cn.is_equal ("-all") then
-									!EWB_DOCUMENTATION! command.make_short (filter_name, false)
+									create {EWB_DOCUMENTATION} command.make_short (filter_name, false)
 								elseif cn.is_equal ("-all_and_parents") then
-									!EWB_DOCUMENTATION! command.make_short (filter_name, true)
+									create {EWB_DOCUMENTATION} command.make_short (filter_name, true)
 								else
-									!EWB_SHORT!command.make (cn, filter_name)
+									create {EWB_SHORT} command.make (cn, filter_name)
 								end
 							elseif cn.is_equal ("-all") then
-								!EWB_DOCUMENTATION! command.make_flat_short (filter_name, false)
+								create {EWB_DOCUMENTATION} command.make_flat_short (filter_name, false)
 							elseif cn.is_equal ("-all_and_parents") then
-								!EWB_DOCUMENTATION! command.make_flat_short (filter_name, true)
+								create {EWB_DOCUMENTATION} command.make_flat_short (filter_name, true)
 							else
-								!EWB_FS!command.make (cn, filter_name)
+								create {EWB_FS} command.make (cn, filter_name)
 							end
 						end
 					end
@@ -644,7 +648,7 @@ feature -- Update
 						end
 						if not option_error then
 							cn := argument (current_option)
-							!EWB_SUPPLIERS!command.make (cn, filter_name)
+							create {EWB_SUPPLIERS} command.make (cn, filter_name)
 						end
 					end
 				else
@@ -667,7 +671,7 @@ feature -- Update
 						end
 						if not option_error then
 							cn := argument (current_option)
-							!EWB_DESCENDANTS!command.make (cn, filter_name)
+							create {EWB_DESCENDANTS} command.make (cn, filter_name)
 						end
 					end
 				else
@@ -680,6 +684,18 @@ feature -- Update
 				else
 					option_error := True
 				end
+
+			elseif option.is_equal ("-output_file") then
+				if current_option < argument_count then
+					current_option := current_option + 1
+					output_file_name := argument (current_option)
+					if output_file_name /= Void and then not output_file_name.is_empty then
+						output_file_option := True
+					end
+				else
+					option_error := True
+				end
+
 			elseif option.is_equal ("-project_path") then
 				if current_option < argument_count then
 					current_option := current_option + 1
@@ -705,17 +721,54 @@ feature -- Update
 				else
 					option_error := True
 				end
+			elseif option.is_equal ("-dumploop") then
+					create {EWB_DUMP_LOOP} command.do_nothing
+			elseif option.is_equal ("-dumpuniverse") then
+				if current_option < argument_count then
+					create {EWB_DUMP_UNIVERSE} command.do_nothing
+				else
+					option_error := True
+				end
+			elseif option.is_equal ("-dumpclasses") then
+				if current_option < argument_count then
+					create {EWB_DUMP_CLASSES} command.do_nothing
+				else
+					option_error := True
+				end
+			elseif option.is_equal ("-dumpfeatures") then
+				if current_option < argument_count then
+					current_option := current_option + 1
+					cn := argument (current_option)
+					if argument (current_option + 1).is_equal ("verbose") then
+						current_option := current_option + 1;
+						create {EWB_DUMP_FEATURES} command.make_verbose (cn)
+					else
+						create {EWB_DUMP_FEATURES} command.make (cn)
+					end
+				else
+					option_error := True
+				end
+			elseif option.is_equal ("-dumpoperands") then
+				if current_option < argument_count then
+					current_option := current_option + 1
+					cn := argument (current_option)
+					current_option := current_option + 1
+					fn := argument (current_option)
+					create {EWB_DUMP_OPERANDS} command.make (cn, fn, Void)
+				else
+					option_error := True
+				end
 			elseif is_precompiled_option then
 				if command /= Void then
 					option_error := True
 				else
-					!EWB_PRECOMP!command.make (False)
+					create {EWB_PRECOMP} command.make (False)
 				end
 			elseif is_precompiled_licensed_option then
 				if command /= Void then
 					option_error := True
 				else
-					!EWB_PRECOMP!command.make (True)
+					create {EWB_PRECOMP} command.make (True)
 				end
 			else
 				process_special_options
@@ -732,7 +785,7 @@ feature -- Update
 				if command /= Void then
 					option_error := True
 				else
-					!EWB_FREEZE!command
+					create {EWB_FREEZE} command
 				end
 			elseif option.is_equal ("-finalize") then
 				if command /= Void then
@@ -744,7 +797,7 @@ feature -- Update
 							keep := True
 						end
 					end
-					!EWB_FINALIZE!command.make (keep)
+					create {EWB_FINALIZE} command.make (keep)
 				end
 			else
 				option_error := True

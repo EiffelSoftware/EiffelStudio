@@ -3,10 +3,17 @@
 class SUPPLIER_LIST 
 
 inherit
+	LINKED_LIST [SUPPLIER_INFO]
 
-	LINKED_LIST [SUPPLIER_INFO];
-	SHARED_EIFFEL_PROJECT;
+	SHARED_EIFFEL_PROJECT
+		undefine
+			copy, is_equal
+		end
+
 	COMPILER_EXPORTER
+		undefine
+			copy, is_equal
+		end
 
 creation
 
@@ -22,8 +29,8 @@ feature
 			consistency: is_ok (l);
 		local
 			suppl_info: SUPPLIER_INFO;
-			id: CLASS_ID;
-			s: TWO_WAY_SORTED_SET [CLASS_ID]
+			id: INTEGER;
+			s: TWO_WAY_SORTED_SET [INTEGER]
 		do
 			s := suppliers (l);
 			from
@@ -53,8 +60,8 @@ feature
 			good_argument: l /= Void
 		local
 			suppl_info: SUPPLIER_INFO;
-			id: CLASS_ID;
-			s: TWO_WAY_SORTED_SET [CLASS_ID]
+			class_id: INTEGER;
+			s: TWO_WAY_SORTED_SET [INTEGER]
 		do
 			s := suppliers (l);
 			from
@@ -62,15 +69,15 @@ feature
 			until
 				s.after
 			loop
-				id := s.item;
+				class_id := s.item;
 debug ("ACTIVITY");
 	io.error.putstring ("SUPPLIER_LIST add_occurence: ");
-	io.error.putstring (Eiffel_system.class_of_id (id).name);
+	io.error.putstring (Eiffel_system.class_of_id (class_id).name);
 	io.error.new_line;
 end;
-				suppl_info := info (id);
+				suppl_info := info (class_id);
 				if suppl_info = Void then
-					!! suppl_info.make (Eiffel_system.class_of_id (id));
+					!! suppl_info.make (class_id);
 					put_front (suppl_info);
 				else
 					suppl_info.add_occurence;
@@ -97,7 +104,7 @@ end;
 			end
 		end;
 
-	e_classes: LINKED_LIST [CLASS_C] is
+	classes: LINKED_LIST [CLASS_C] is
 			-- List of `CLASS_C'es
 		do
 			from
@@ -112,38 +119,53 @@ end;
 			end
 		end;
 
+	remove_class (a_class: CLASS_C) is
+			-- Remove `a_class' from Current.
+			-- Cursor can be moved
+		require
+			a_class_not_void: a_class /= Void
+		local
+			class_id: INTEGER
+			found: BOOLEAN
+		do
+			from
+				start
+				class_id := a_class.class_id
+			until
+				after or found
+			loop
+				if item.supplier_id = class_id then
+					remove
+					found := True
+				else
+					forth
+				end
+			end
+		end
+
 feature {NONE}
 
-	suppliers (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]): TWO_WAY_SORTED_SET [CLASS_ID] is
-		local
-			id: CLASS_ID
+	suppliers (l: TWO_WAY_SORTED_SET [DEPEND_UNIT]): TWO_WAY_SORTED_SET [INTEGER] is
 		do
 debug ("ACTIVITY")
 	io.error.putstring ("SUPPLIER_lIST.suppliers%N");
 end;
-			!!Result.make;
-			Result.compare_objects;
+			create Result.make
 			from
 				l.start
 			until
 				l.after
 			loop
-				id := l.item.id;
-				if not Result.has (id) then
-		-- **** FIXME **** 
-		-- doesn't extend check to if id already exists since
-		-- result is set !!!???!! dinov
+				Result.extend (l.item.class_id)
 debug ("ACTIVITY")
-	id.trace;
+	io.error.putint (l.item.class_id);
 	io.error.new_line;
 end;
-					Result.extend (id);
-				end;
 				l.forth
 			end;
 		end;
 
-	goto (id: CLASS_ID) is
+	goto (id: INTEGER) is
 			-- Move cursor to supplier info of id `id'.
 		require
 			consistency: info (id) /= Void
@@ -153,16 +175,16 @@ end;
 			until	
 					-- The test for `after' is a defensive programming
 					-- test!!!
-				after or else item.supplier.id.is_equal (id)
+				after or else item.supplier_id = id
 			loop
 				forth;
 			end;
 		end;
 		
-	info (id: CLASS_ID): SUPPLIER_INFO is
+	info (id: INTEGER): SUPPLIER_INFO is
 			-- Supplier information associated to supplier of id `id'.
 		require
-			valid_id: id /= Void
+			valid_id: id /= 0
 		local
 			cur: CURSOR;
 		do
@@ -172,7 +194,7 @@ end;
 			until
 				after or else Result /= Void
 			loop
-				if equal (item.supplier.id, id) then
+				if item.supplier_id = id then
 					Result := item;
 				end;
 				forth;
@@ -188,8 +210,8 @@ feature
 			good_argument: l /= Void
 		local
 			suppl_info: SUPPLIER_INFO;
-			id: CLASS_ID;
-			s: TWO_WAY_SORTED_SET [CLASS_ID];
+			id: INTEGER;
+			s: TWO_WAY_SORTED_SET [INTEGER];
 		do
 debug ("ACTIVITY")
 	trace;

@@ -11,17 +11,27 @@
 class INSTANTIATOR 
 
 inherit
-
 	FILTER_LIST
 		redefine
 			trace
-		end;
-	SHARED_WORKBENCH;
-	COMPILER_EXPORTER;
+		end
+
+	SHARED_WORKBENCH
+		undefine
+			copy, is_equal
+		end
+
+	COMPILER_EXPORTER
+		undefine
+			copy, is_equal
+		end
+
 	SHARED_COUNTER
+		undefine
+			copy, is_equal
+		end
 
 creation
-
 	make
 	
 feature -- Attributes
@@ -46,7 +56,7 @@ feature -- Attributes
 			type_i := generic_type.type_i
 
 				-- In case of expanded
-			type_i.set_is_expanded (False)
+			type_i.set_is_true_expanded (False)
 
 				-- Check if it is a data or a filter
 			if type_i.has_formal then
@@ -63,7 +73,7 @@ feature -- Attributes
 debug
 	io.error.putstring ("Dispatch : ");
 	io.error.putstring (a_class.name);
-	a_class.id.trace;
+	io.error.putint (a_class.class_id);
 	io.error.new_line;
 	io.error.putstring (generic_type.dump);
 	io.error.new_line;
@@ -101,21 +111,22 @@ end;
 			a_class: CLASS_C;
 			types: TYPE_LIST;
 			class_type: CLASS_TYPE;
-			classes: CLASS_C_SERVER;
 			class_array: ARRAY [CLASS_C];
 			i, nb: INTEGER
 		do
-				-- Check array class
-			check_array_class
+			if not System.il_generation then
+					-- Check array class
+				check_array_class
 
-				-- Check tuple class
-			check_tuple_class
+					-- Check tuple class
+				check_tuple_class
 
-				-- Check function class
-			check_function_class
+					-- Check function class
+				check_function_class
 
-				-- Check procedure class
-			check_procedure_class
+					-- Check procedure class
+				check_procedure_class
+			end
 
 				-- Remove the obsolete types
 			clean;
@@ -137,37 +148,33 @@ end;
 			derivations.clear_all;
 
 				-- Remove the obsolete class types
-			classes := System.classes;
-			from classes.start until classes.after loop
-				class_array := classes.item_for_iteration;
-				nb := Class_counter.item (classes.key_for_iteration).count
-				from i := 1 until i > nb loop
-					a_class := class_array.item (i)
-					if a_class /= Void then
-						from
-							types := a_class.types;
-							types.start
-						until
-							types.after
-						loop
-							class_type := types.item;
-							if not class_type.type.is_valid then
+			class_array := System.classes
+			nb := Class_counter.count
+			from i := 1 until i > nb loop
+				a_class := class_array.item (i)
+				if a_class /= Void then
+					from
+						types := a_class.types;
+						types.start
+					until
+						types.after
+					loop
+						class_type := types.item;
+						if not class_type.type.is_valid then
 debug
-	io.error.putstring ("Removing a type of ");
-	io.error.putstring (a_class.name);
-	io.error.new_line;
+io.error.putstring ("Removing a type of ");
+io.error.putstring (a_class.name);
+io.error.new_line;
 end;
-								System.class_types.put (Void, class_type.type_id);
-								types.remove;
-							else
-								types.forth
-							end;
+							System.class_types.put (Void, class_type.type_id);
+							types.remove;
+						else
+							types.forth
 						end;
-					end
-					i := i + 1
+					end;
 				end
-				classes.forth
-			end;
+				i := i + 1
+			end
 		end;
 
 	derivations: DERIVATIONS is
@@ -247,26 +254,28 @@ feature
 			generics: ARRAY [TYPE_A];
 		do
 				-- Not once because array_id and any_id can change
-			!!Result;
-			Result.set_base_class_id (System.array_id);
-			!!generics.make (1, 1);
-			!!any_type;
-			any_type.set_base_class_id (System.any_id);
-			generics.put (any_type, 1);
-			Result.set_generics (generics);
-			Result.set_is_expanded (False);
+			create generics.make (1, 1)
+			create any_type
+			any_type.set_base_class_id (System.any_id)
+			generics.put (any_type, 1)
+
+			create Result.make (generics)
+			Result.set_base_class_id (System.array_id)
+			Result.set_is_true_expanded (False)
 		end;
 
 	Tuple_type_a: TUPLE_TYPE_A is
 			-- Default tuple type: TUPLE
 		require
 			tuple_compiled: System.tuple_class.compiled
+		local
+			generics: ARRAY [TYPE_A]
 		do
 				-- Not once because tuple_id can change
-			!!Result
+			create generics.make (1, 0)
+			create Result.make (generics)
 			Result.set_base_class_id (System.tuple_id)
-			Result.set_generics (Void)
-			Result.set_is_expanded (False)
+			Result.set_is_true_expanded (False)
 		end;
 
 	Function_type_a: GEN_TYPE_A is
@@ -281,16 +290,16 @@ feature
 			generics: ARRAY [TYPE_A]
 		do
 				-- Not once because function_id can change
-			!!Result
-			Result.set_base_class_id (System.function_class_id)
-			!!generics.make (1, 3)
-			!!any_type
+			create generics.make (1, 3)
+			create any_type
 			any_type.set_base_class_id (System.any_id)
 			generics.put (any_type, 1)
 			generics.put (Tuple_type_a, 2)
 			generics.put (any_type, 3)
-			Result.set_generics (generics)
-			Result.set_is_expanded (False)
+
+			create Result.make (generics)
+			Result.set_base_class_id (System.function_class_id)
+			Result.set_is_true_expanded (False)
 		end
 
 	Procedure_type_a: GEN_TYPE_A is
@@ -305,15 +314,15 @@ feature
 			generics: ARRAY [TYPE_A]
 		do
 				-- Not once because procedure_id can change
-			!!Result
-			Result.set_base_class_id (System.procedure_class_id)
-			!!generics.make (1, 2)
-			!!any_type
+			create generics.make (1, 2)
+			create any_type
 			any_type.set_base_class_id (System.any_id)
 			generics.put (any_type, 1)
 			generics.put (Tuple_type_a, 2)
-			Result.set_generics (generics)
-			Result.set_is_expanded (False)
+
+			create Result.make (generics)
+			Result.set_base_class_id (System.procedure_class_id)
+			Result.set_is_true_expanded (False)
 		end
 
 feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES, MULTI_TYPE_A}
@@ -354,6 +363,8 @@ feature {STRIP_B, SYSTEM_I, AUXILIARY_FILES, MULTI_TYPE_A}
 			-- Default tuple type
 		do
 			Result := Tuple_type_a.type_i
+		ensure
+			Result_not_void: Result /= Void
 		end;
 
 feature -- Debug

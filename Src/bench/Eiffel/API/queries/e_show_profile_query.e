@@ -98,7 +98,7 @@ feature {QUERY_EXECUTER} -- Implementation
 		local
 			retried: BOOLEAN;
 			current_item: STRING;
-			store: STORABLE;
+			profile_file: RAW_FILE;
 			line_str: STRING
 		do
 			if not retried then
@@ -113,8 +113,12 @@ debug("SHOW_PROF_QUERY")
 	io.error.putstring ("current_item /= last_output");
 	io.error.new_line
 end;
-					!! store;
-					profile_information ?= store.retrieve_by_name (current_item);
+					create profile_file.make (current_item)
+					if profile_file.exists and then profile_file.is_readable then
+						profile_file.open_read
+						profile_information ?= profile_file.retrieved
+						profile_file.close
+					end
 					if profile_information /= Void then
 debug("SHOW_PROF_QUERY")
 	io.error.putstring ("profile information not VOID");
@@ -224,7 +228,7 @@ debug("SHOW_PROF_QUERY")
 	io.error.putbool(wildcard_matcher.found)
 	io.error.new_line;
 end;
-							if wildcard_matcher.search_for_pattern then
+							if wildcard_matcher.pattern_matches then
 								entries_name := clone (dir_name)
 								-- entries_name.append_character (Operating_environment.Directory_separator)
 								entries_name.append (entries.item)

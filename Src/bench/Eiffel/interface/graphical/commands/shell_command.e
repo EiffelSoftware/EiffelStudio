@@ -55,12 +55,12 @@ feature -- Update
 	process_feature (fs: FEATURE_STONE) is
 			-- Process feature stone.
 		local
-			req: EXTERNAL_COMMAND_EXECUTOR;
+			req: COMMAND_EXECUTOR;
 			cmd_string: STRING
 		do
 				-- routine text window
 			cmd_string := clone (command_shell_name);
-			if not cmd_string.empty then
+			if not cmd_string.is_empty then
 
 				replace_target(cmd_string, fs.file_name)
 				cmd_string.replace_substring_all ("$line", fs.line_number.out)
@@ -72,11 +72,11 @@ feature -- Update
 	process_class (cs: CLASSC_STONE) is
 			-- Process class stone.
 		local
-			req: EXTERNAL_COMMAND_EXECUTOR;
+			req: COMMAND_EXECUTOR;
 			cmd_string: STRING
 		do
 			cmd_string := clone (command_shell_name);
-			if not cmd_string.empty then
+			if not cmd_string.is_empty then
 				replace_target(cmd_string, cs.file_name)
 				cmd_string.replace_substring_all ("$line", "1")
 				!! req;
@@ -88,11 +88,11 @@ feature -- Update
 			-- Process class syntax stone.
 			-- (from HOLE)
 		local
-			req: EXTERNAL_COMMAND_EXECUTOR;
+			req: COMMAND_EXECUTOR;
 			cmd_string: STRING
 		do
 			cmd_string := clone (command_shell_name)
-			if not cmd_string.empty then
+			if not cmd_string.is_empty then
 				replace_target(cmd_string, syn.file_name)
 				cmd_string.replace_substring_all ("$line", "1")
 				!! req;
@@ -108,7 +108,6 @@ feature -- Update
 			target_string: STRING
 			cwd:STRING
 			file:PLAIN_TEXT_FILE
-			code:INTEGER
 		do
 			cwd := current_working_directory
 				--| Move to the "EIFGEN" directory and try to open
@@ -123,7 +122,7 @@ feature -- Update
 			else
 				change_working_directory (cwd)
 				target_string := clone (fn)
-				target_string.prepend_character (Directory_separator)
+				target_string.prepend_character (Operating_environment.Directory_separator)
 				target_string.prepend (current_working_directory)
 			end
 			cmd.replace_substring_all ("$target", target_string);
@@ -136,7 +135,7 @@ feature {NONE} -- Implementation
 			-- If left mouse button was pressed -> execute command.
 			-- If right mouse button was pressed -> bring up shell window. 
 		local
-			req: EXTERNAL_COMMAND_EXECUTOR;
+			req: COMMAND_EXECUTOR;
 			cmd_string: STRING;
 			routine_tool: ROUTINE_W;
 			class_tool: CLASS_W;
@@ -166,7 +165,7 @@ feature {NONE} -- Implementation
 					then
 						line_nb := text_window.current_line;
 					end;
-					if not cmd_string.empty then
+					if not cmd_string.is_empty then
 						fs ?= tool.stone;
 						replace_target(cmd_string, fs.file_name)
 						cmd_string.replace_substring_all ("$line", line_nb.out)

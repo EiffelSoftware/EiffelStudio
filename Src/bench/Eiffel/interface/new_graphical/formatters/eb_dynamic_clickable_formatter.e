@@ -66,8 +66,8 @@ feature -- Formatting
 --					if mp /= Void then
 --						mp.restore
 --					end
-					create wd.make_default (tool.parent, Interface_names.t_Warning,
-						Warning_messages.w_Cannot_retrieve_info)
+					create wd.make_with_text (Warning_messages.w_Cannot_retrieve_info)
+					wd.show_modal
 				end
 			end
 		rescue

@@ -1,14 +1,11 @@
 indexing
-
-	description: 
-		"";
+	description: "Include clause description in Ace";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class INCLUDE_SD
 
 inherit
-
-	FILE_NAME_SD;
+	FILE_NAME_SD
 
 end -- class INCLUDE_SD

@@ -87,6 +87,14 @@ feature {FORMAT_CONTEXT, STRUCTURED_TEXT} -- Local formatting control
 			decremented: indent_depth = (old indent_depth) - 1
 		end
 
+	set_indent_depth (d: INTEGER) is
+			-- Assign `d' to `indent_depth'.
+		do
+			indent_depth := d
+		ensure
+			assigned: d = indent_depth
+		end
+
 	set_dot_needed (b: BOOLEAN) is
 			-- Set `dot_needed' to `b'.
 		do

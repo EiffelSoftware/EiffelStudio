@@ -1,14 +1,18 @@
--- Body server associated to file ".AST". Remmber also the body ids to
--- erase from the table (body ids from changed features).
+indexing
+	description: "Body server indexed by body_index.%
+				%Remember also the body indexes to erase from the table (body indexes%
+				%from changed features)."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class TMP_BODY_SERVER 
 
 inherit
-	READ_SERVER [FEATURE_AS, BODY_ID]
+	READ_SERVER [FEATURE_AS]
 		export
 			{BODY_SERVER} tbl_item
 		redefine
-			clear, make, ontable, updated_id, has, trace
+			clear, make, has, trace
 		end
 
 creation
@@ -17,7 +21,7 @@ creation
 	
 feature 
 
-	has (an_id: BODY_ID): BOOLEAN is
+	has (an_id: INTEGER): BOOLEAN is
 		local
 			i: INTEGER
 		do
@@ -28,41 +32,24 @@ feature
 				until
 					(i > nb_useless) or else not Result
 				loop
-					if useless_body_ids.item (i) /= Void then
-						Result := not equal (updated_id (an_id),
-								updated_id (useless_body_ids.item (i)))
-					end;
+					Result := not (an_id = useless_body_indexes.item (i))
 					i := i + 1
 				end;
 			end;
 		end;
 
-	ontable: O_N_TABLE [BODY_ID] is
-			-- Mapping table between old id s and new ids.
-			-- Used by `change_id'
-		require else
-			True
-		once
-			Result := System.onbidt
-		end;
-
-	updated_id (i: BODY_ID): BODY_ID is
-		do
-			Result := ontable.item (i)
-		end;
-
-	useless_body_ids: ARRAY [BODY_ID];
-			-- Set of body ids which have to desappear after a successful
+	useless_body_indexes: ARRAY [INTEGER];
+			-- Set of body_indexes ids which have to desappear after a successful
 			-- recompilation
 
 	nb_useless: INTEGER;
-			-- Count of body ids in `useless_body_ids'.
+			-- Count of body_indexes ids in `useless_body_indexes'.
 
 	make is
 			-- Initialization
 		do
 			{READ_SERVER} Precursor
-			!!useless_body_ids.make (1, array_chunk)
+			!!useless_body_indexes.make (1, array_chunk)
 		end;
 
 	cache: BODY_CACHE is
@@ -71,108 +58,109 @@ feature
 			!! Result.make
 		end
 		
-	offsets: EXTEND_TABLE [SERVER_INFO, CLASS_ID] is
+	offsets: EXTEND_TABLE [SERVER_INFO, INTEGER] is
 		do
 			Result := Tmp_ast_server;
 		end;
 
-	desactive (body_id: BODY_ID) is
-			-- Put `body_id' in `useless_body_ids'.
+	desactive (body_index: INTEGER) is
+			-- Put `body_index' in `useless_body_indexes'.
 		local
 			nb: INTEGER;
 		do
 debug
 	io.error.putstring ("TMP_BODY_SERVER.desactivate ");
-	body_id.trace;
+	io.error.putint (body_index);
 	io.error.new_line;
 end;
 				-- Check if resizing is needed.
 			nb_useless := nb_useless + 1;
-			nb := useless_body_ids.count;
+			nb := useless_body_indexes.count;
 			if nb_useless > nb then
-				useless_body_ids.resize (1, nb + array_chunk);
+				useless_body_indexes.resize (1, nb + array_chunk);
 			end;
 
-			useless_body_ids.put (body_id, nb_useless);
+			useless_body_indexes.put (body_index, nb_useless);
 		end;
 
-	reactivate (body_id: BODY_ID) is
+	reactivate (body_index: INTEGER) is
 		local
-			i: INTEGER;
-			real_id, ubi: BODY_ID
+			i: INTEGER
 		do
 debug
 	io.error.putstring ("TMP_BODY_SERVER.reactivate ");
-	body_id.trace;
+	io.error.putint (body_index);
 	io.error.new_line;
 end;
-			real_id := updated_id (body_id);
 			from
 				i := 1
 			until
 				i > nb_useless
 			loop
-				ubi := useless_body_ids.item (i);
-				if (ubi /= Void) and then equal (updated_id(ubi), real_id) then
-					useless_body_ids.put (Void, i);
-				end;
+				if useless_body_indexes.item (i) = body_index then
+					useless_body_indexes.put (0, i)
+				end
 				i := i + 1
-			end;
-		end;
+			end
+		end
 
-	array_chunk: INTEGER is 10;
+	array_chunk: INTEGER is 10
 			-- Array chunk
 
 	finalize is
 			-- Finalization after a successful recompilation.
 		local
-			i: INTEGER;
-			body_id, useless_body_id: BODY_ID;
-			read_info: READ_INFO;
+			i: INTEGER
+			useless_body_index: INTEGER
 		do
 debug
-	io.error.putstring ("TMP_BODY_SERVER.finalize%N");
+	io.error.putstring ("TMP_BODY_SERVER.finalize%N")
 end;
 				-- Desactive useless ids
 			from
-				i := 1;
+				i := 1
 			until
 				i > nb_useless
 			loop
-				useless_body_id := useless_body_ids.item (i);
-				if useless_body_id /= Void then
+				useless_body_index := useless_body_indexes.item (i)
+				if useless_body_index /= 0 then
 						-- Note: `remove' will get the updated id
 						-- before performing the removal.
 debug
-	io.error.putstring ("Useless body_id: ");
-	useless_body_id.trace;
-	io.error.new_line;
+	io.error.putstring ("Useless body_index: ")
+	io.error.putint (useless_body_index)
+	io.error.new_line
 end;
-					Body_server.remove (useless_body_id);
-				end;
-				i := i + 1;
-			end;
+						-- Remove non-used `body_index' from both
+						-- Current and BODY_SERVER, otherwise during
+						-- `merge' we will add them back to BODY_SERVER
+						-- making this step useless.
+					remove (useless_body_index)
+					Body_server.remove (useless_body_index)
+				end
+				i := i + 1
+			end
 
 				-- Update indexes
-			Body_server.merge (Current);
+			Body_server.merge (Current)
 				-- Update cache
-			Body_server.cache.copy (cache);
-			cache.make;
+			Body_server.cache.copy (cache)
+			cache.make
 
-			clear;
-		end;
+			clear
+		end
 
 	clear is
 			-- Clear the structure
 		do
 			{READ_SERVER} Precursor
 			nb_useless := 0
-			useless_body_ids.clear_all
-		end;
+			useless_body_indexes.clear_all
+		end
 
 	trace is
 		local
-			i: INTEGER;
+			i: INTEGER
 		do
 			from
 				start
@@ -181,7 +169,7 @@ end;
 				after
 			loop
 				io.error.putstring ("%T");
-				key_for_iteration.trace;
+				io.error.putint (key_for_iteration);
 				io.error.new_line;
 				forth
 			end;
@@ -192,12 +180,11 @@ end;
 				i > nb_useless
 			loop
 				io.error.putstring ("%T");
-				useless_body_ids.item (i).trace;
+				io.error.putint (useless_body_indexes.item (i));
 				io.error.new_line;
 				i := i + 1
 			end;
 			io.error.putstring ("O_N_TABLE:%N");
-			ontable.trace;
 		end;
 
 end

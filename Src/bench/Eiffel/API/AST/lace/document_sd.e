@@ -1,9 +1,7 @@
 indexing
-
-	description:
-		"AST structure in Lace file for document option."
+	description: "AST structure in Lace file for document option."
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class DOCUMENT_SD
 

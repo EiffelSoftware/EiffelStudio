@@ -26,7 +26,7 @@ feature
 			io.error.putstring ("all debug");
 		end;
 
-	generate (buffer: GENERATION_BUFFER; id: CLASS_ID) is
+	generate (buffer: GENERATION_BUFFER; id: INTEGER) is
 			-- Generate assertion value in `buffer'.
 		do
 			buffer.putstring ("{OPT_ALL, (int16) 0, (char **) 0}");

@@ -26,7 +26,8 @@ inherit
 	WINDOWS;
 	EIFFEL_ENV;
 	WINDOW_ATTRIBUTES
-
+	COMPILER_EXPORTER
+	
 creation
 
 	make
@@ -185,14 +186,14 @@ feature -- Access
 			file_entry.set_text (file_name);
 			new_width := file_name.count;
 			clus_list := Eiffel_universe.clusters_sorted_by_tag
-			if not clus_list.empty then
+			if not clus_list.is_empty then
 				from
 					clus_list.start
 				until
 					clus_list.after
 				loop
 					clus := clus_list.item;
-					if not clus.is_precompiled then
+					if not (clus.is_precompiled or clus.is_library) then
 						!! str_el.make (0);
 						str_el.append (clus.cluster_name);
 						cluster_list.extend (str_el);
@@ -200,7 +201,7 @@ feature -- Access
 					end;
 					clus_list.forth
 				end;
-				if cluster_list.empty then
+				if cluster_list.is_empty then
 					create_b.set_insensitive
 				else
 					if cl = Void then
@@ -241,7 +242,7 @@ feature -- Access
 				clu := Eiffel_universe.cluster_of_name (clun);
 				if clu = Void then
 					aok := False;
-					warner (tool.popup_parent).gotcha_call (Warning_messages.w_Invalid_cluster_name)
+					warner (tool.popup_parent).gotcha_call (Warning_messages.w_Invalid_cluster_name (clun))
 				else
 					aok := True;
 					cluster := clu
@@ -263,7 +264,6 @@ feature -- Execution
 			f_name: FILE_NAME;
 			--file: PLAIN_TEXT_FILE;
 			file: RAW_FILE; -- Windows specific 
-			str: STRING;
 			base_name: STRING;
 		do
 			if argument = create_new_class then
@@ -274,7 +274,8 @@ feature -- Execution
 					f_name.set_file_name (file_name);
 					base_name := file_name;
 					!! file.make (f_name);
-					!! class_i.make_with_cluster (cluster);
+					!! class_i.make (class_name)
+					class_i.set_cluster (cluster);
 					class_i.set_file_details (class_name, base_name);
 					if cluster.has_base_name (base_name) then
 						warner (tool.popup_parent).gotcha_call 

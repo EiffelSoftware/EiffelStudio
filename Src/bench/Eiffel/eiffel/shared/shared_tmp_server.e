@@ -102,21 +102,6 @@ feature {NONE}
 			!!Result.make;
 		end;
 
-	Tmp_rep_feat_server: TMP_REP_FEAT_SERVER is
-		once
-			!!Result.make;
-		end;
-
-	Tmp_rep_server: TMP_REP_SERVER is
-		once
-			!!Result.make;
-		end;
-
-	Tmp_rep_info_server: TMP_REP_INFO_SERVER is
-		once
-			!!Result.make;
-		end;
-
 	Tmp_rep_depend_server: TMP_REP_DEPEND_SERVER is
 		once
 			!!Result.make;

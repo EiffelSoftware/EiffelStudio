@@ -1,5 +1,4 @@
 indexing
-
 	description:
 			"Abstract description of a elsif clause of a condition %
 			%instruction. Version for Bench."
@@ -11,9 +10,13 @@ class ELSIF_AS
 inherit
 	AST_EIFFEL
 		redefine
-			number_of_stop_points, is_equivalent, line_number,
-			type_check, byte_node, find_breakable, 
-			fill_calls_list, replicate
+			number_of_breakpoint_slots, 
+			is_equivalent, 
+			line_number,
+			type_check, 
+			byte_node,
+			fill_calls_list, 
+			replicate
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -30,18 +33,6 @@ feature {AST_FACTORY} -- Initialization
 			expr_set: expr = e
 			compound_set: compound = c
 			line_number_set: line_number = l
-		end
-
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			expr ?= yacc_arg (0)
-			compound ?= yacc_arg (1)
-			line_number := yacc_line_number
-		ensure then
-			expr_exists: expr /= Void
 		end
 
 feature -- Attributes
@@ -63,15 +54,15 @@ feature -- Comparison
 
 feature -- Access
 
-	line_number : INTEGER
+	line_number: INTEGER
 
-	number_of_stop_points: INTEGER is
+	number_of_breakpoint_slots: INTEGER is
 			-- Number of stop points for AST
 		do
+			Result := 1 -- condition test
 			if compound /= Void then
-				Result := compound.number_of_stop_points
+				Result := Result + compound.number_of_breakpoint_slots
 			end
-			Result := Result + 1
 		end
 
 feature -- Type check, byte code and dead code removal
@@ -107,22 +98,12 @@ feature -- Type check, byte code and dead code removal
 	byte_node: ELSIF_B is
 			-- Associated byte code
 		do
-			!!Result
+			create Result
 			Result.set_expr (expr.byte_node)
 			if compound /= Void then
 				Result.set_compound (compound.byte_node)
 			end
 			Result.set_line_number (line_number)
-		end
-
-feature -- Debugging
-
-	find_breakable is
-		do
-			if compound /= Void then
-				compound.find_breakable
-			end
-			record_break_node
 		end
 
 feature	-- Replication
@@ -151,6 +132,7 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
+			ctxt.put_breakable
 			ctxt.put_text_item (ti_Elseif_keyword)
 			ctxt.put_space
 			ctxt.new_expression
@@ -165,7 +147,6 @@ feature {AST_EIFFEL} -- Output
 				ctxt.format_ast (compound)
 			end
 			ctxt.new_line
-			ctxt.put_breakable
 		end
 
 feature {ELSIF_AS} -- Replication

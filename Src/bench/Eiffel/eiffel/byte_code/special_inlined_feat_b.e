@@ -17,11 +17,7 @@ feature -- Generation
 
 	generate_parameters (gen_reg: REGISTRABLE) is
 		local
-			i, count: INTEGER
-			expr: EXPR_B
-			current_t: CL_TYPE_I
 			buf: GENERATION_BUFFER
-			local_inliner: INLINER
 			type_c: TYPE_C
 		do
 			if feature_name.is_equal ("put") then
@@ -39,8 +35,16 @@ feature -- Generation
 					type_c.level
 				when C_char then
 					buf.putstring ("*((EIF_CHARACTER *)")
-				when C_long then
-					buf.putstring ("*((EIF_INTEGER *)")
+				when C_wide_char then
+					buf.putstring ("*((EIF_WIDE_CHAR *)")
+				when C_int8 then
+					buf.putstring ("*((EIF_INTEGER_8 *)")
+				when C_int16 then
+					buf.putstring ("*((EIF_INTEGER_16 *)")
+				when C_int32 then
+					buf.putstring ("*((EIF_INTEGER_32 *)")
+				when C_int64 then
+					buf.putstring ("*((EIF_INTEGER_64 *)")
 				when C_float then
 					buf.putstring ("*((EIF_REAL *)")
 				when C_double then
@@ -92,8 +96,16 @@ feature -- Generation
 					type_c.level
 				when C_char then
 					buf.putstring ("*((EIF_CHARACTER *)")
-				when C_long then
-					buf.putstring ("*((EIF_INTEGER *)")
+				when C_wide_char then
+					buf.putstring ("*((EIF_WIDE_CHAR *)")
+				when C_int8 then
+					buf.putstring ("*((EIF_INTEGER_8 *)")
+				when C_int16 then
+					buf.putstring ("*((EIF_INTEGER_16 *)")
+				when C_int32 then
+					buf.putstring ("*((EIF_INTEGER_32 *)")
+				when C_int64 then
+					buf.putstring ("*((EIF_INTEGER_64 *)")
 				when C_float then
 					buf.putstring ("*((EIF_REAL *)")
 				when C_double then

@@ -1,5 +1,5 @@
 indexing
-	description: "Directory for an eiffelbench project.";
+	description: "Directory for an eiffel project.";
 	date: "$Date$";
 	revision: "$Revision $"
 
@@ -48,9 +48,9 @@ feature -- Access
 			dir_name: DIRECTORY_NAME
 			eif_gen_d: DIRECTORY
 		do
-			!! dir_name.make_from_string (name)
+			create dir_name.make_from_string (name)
 			dir_name.extend (Eiffelgen)
-			!! eif_gen_d.make (dir_name)
+			create eif_gen_d.make (dir_name)
 			Result := not eif_gen_d.exists
 			if not Result then
 					-- A `EIFGEN' directory exists, we need to check
@@ -81,14 +81,16 @@ feature -- Access
 
 	is_readable: BOOLEAN is
 			-- May the project be used for browsing and debugging?
+		require
+			project_eif_file_set: project_eif_file /= Void
 		local
 			w_code_dir, f_code_dir, comp_dir: DIRECTORY;
 			project_file: RAW_FILE
 		do
-			!! w_code_dir.make (temp_workbench_generation_path);
-			!! f_code_dir.make (temp_final_generation_path);
-			!! comp_dir.make (temp_compilation_path);
-			!! project_file.make (project_eif_file.name);
+			create w_code_dir.make (temp_workbench_generation_path);
+			create f_code_dir.make (temp_final_generation_path);
+			create comp_dir.make (temp_compilation_path);
+			create project_file.make (project_eif_file.name);
 			Result := is_base_readable and then w_code_dir.is_readable
 					and then f_code_dir.is_readable and then comp_dir.is_readable
 					and then project_file.is_readable
@@ -99,14 +101,16 @@ feature -- Access
 
 	is_writable: BOOLEAN is
 			-- May the project be both compiled and used for browsing?
+		require
+			project_eif_file_set: project_eif_file /= Void
 		local
-			w_code_dir, f_code_dir, comp_dir: DIRECTORY;
+			w_code_dir, f_code_dir, comp_dir: DIRECTORY
 			project_file: RAW_FILE
 		do
-			!! w_code_dir.make (temp_workbench_generation_path);
-			!! f_code_dir.make (temp_final_generation_path);
-			!! comp_dir.make (temp_compilation_path);
-			!! project_file.make (project_eif_file.name);
+			create w_code_dir.make (temp_workbench_generation_path)
+			create f_code_dir.make (temp_final_generation_path)
+			create comp_dir.make (temp_compilation_path)
+			create project_file.make (project_eif_file.name)
 			Result := is_base_writable and then w_code_dir.is_writable
 					and then f_code_dir.is_writable and then comp_dir.is_writable
 					and then project_file.is_writable
@@ -118,14 +122,16 @@ feature -- Access
 	exists: BOOLEAN is
 			-- Does the project exist?
 			--| Ie, Comp, F_code, W_code and project file exist?
+		require
+			project_eif_file_set: project_eif_file /= Void
 		local
-			w_code_dir, f_code_dir, comp_dir: DIRECTORY;
+			w_code_dir, f_code_dir, comp_dir: DIRECTORY
 			project_file: RAW_FILE
 		do
-			!! w_code_dir.make (temp_workbench_generation_path);
-			!! f_code_dir.make (temp_final_generation_path);
-			!! comp_dir.make (temp_compilation_path);
-			!! project_file.make (project_eif_file.name);
+			create w_code_dir.make (temp_workbench_generation_path)
+			create f_code_dir.make (temp_final_generation_path)
+			create comp_dir.make (temp_compilation_path)
+			create project_file.make (project_eif_file.name)
 			Result := base_exists and then w_code_dir.exists
 				and then f_code_dir.exists and then comp_dir.exists
 				and then project_file.exists
@@ -140,9 +146,9 @@ feature -- Access
 			base: DIRECTORY
 			base_name: DIRECTORY_NAME
 		do
-			!! base_name.make_from_string (Project_directory_name)
+			create base_name.make_from_string (Project_directory_name)
 			base_name.extend (Eiffelgen)
-			!! base.make (base_name)
+			create base.make (base_name)
 
 			Result := base_exists and then base.exists
 		end
@@ -168,7 +174,7 @@ feature -- Access
 			new_name: STRING
 			eifgen_dir: DIRECTORY
 		do
-			!! old_name.make_from_string (name)
+			create old_name.make_from_string (name)
 			old_name.set_subdirectory (Eiffelgen)
 
 			new_name ?= clone (old_name)
@@ -176,7 +182,7 @@ feature -- Access
 
 				--| Change the name of the directory
 				--| If the directory exists, it will raise an exception
-			!! eifgen_dir.make (old_name)
+			create eifgen_dir.make (old_name)
 			eifgen_dir.change_name (new_name)
 		end
 

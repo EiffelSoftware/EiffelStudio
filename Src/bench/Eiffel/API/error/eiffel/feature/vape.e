@@ -47,7 +47,7 @@ feature -- Output
 			st.add_new_line;
 		end;
 
-feature {ACCESS_FEAT_AS} -- Setting
+feature {ACCESS_FEAT_AS, CREATION_EXPR_AS} -- Setting
 
 	set_exported_feature (f: FEATURE_I) is
 		require

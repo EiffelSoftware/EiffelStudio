@@ -1,12 +1,15 @@
--- Server for routine tables
+indexing
+	description: "Server for byte code routine indexed by body_index"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	BYTE_SERVER 
 
 inherit
-	COMPILER_SERVER [BYTE_CODE, BODY_ID]
+	COMPILER_SERVER [BYTE_CODE]
 		redefine
-			disk_item, has, item, ontable, updated_id, change_id
+			disk_item, has, item
 		end
 
 creation
@@ -14,24 +17,10 @@ creation
 
 feature -- Update
 
-	ontable: O_N_TABLE [BODY_ID] is
-			-- Mapping table between old id s and new ids.
-			-- Used by `change_id'
-		require else
-			True
-		once
-			Result := System.onbidt
-		end;
-
-	updated_id (i: BODY_ID): BODY_ID is
-		do
-			Result := ontable.item (i)
-		end;
-
-	id (t: BYTE_CODE): BODY_ID is
+	id (t: BYTE_CODE): INTEGER is
 			-- Id associated with `t'
 		do
-			Result := t.byte_id
+			Result := t.body_index
 		end
 
 	cache: BYTE_CACHE is
@@ -42,8 +31,8 @@ feature -- Update
 	
 feature -- Access
 
-	item (an_id: BODY_ID): BYTE_CODE is
-			-- Byte code of body id `and_id'. Look first in the temporary
+	item (an_id: INTEGER): BYTE_CODE is
+			-- Byte code of body index `an_id'. Look first in the temporary
 			-- byte code server
 		do
 			if Tmp_byte_server.has (an_id) then
@@ -53,8 +42,8 @@ feature -- Access
 			end;
 		end;
 
-	disk_item (an_id: BODY_ID): BYTE_CODE is
-			-- Byte code of body id `and_id'. Look first in the temporary
+	disk_item (an_id: INTEGER): BYTE_CODE is
+			-- Byte code of body index `an_id'. Look first in the temporary
 			-- byte code server
 		do
 			if Tmp_byte_server.has (an_id) then
@@ -64,27 +53,13 @@ feature -- Access
 			end;
 		end;
 
-	has (an_id: BODY_ID): BOOLEAN is
+	has (an_id: INTEGER): BOOLEAN is
 			-- Is the id `an_id' present in `Tmp_byte_server' or
 			-- Current ?
 		require else
-			positive_id: an_id /= Void;
+			positive_id: an_id /= 0;
 		do
 			Result := server_has (an_id) or else Tmp_byte_server.has (an_id);
-		end;
-
-feature -- Update
-
-	change_id (new_value, old_value: BODY_ID) is
-		require else
-			True
-		do
-			if server_has (old_value) then
-				{COMPILER_SERVER} Precursor (new_value, old_value)
-			end;
-			if Tmp_byte_server.has (old_value) then
-				Tmp_byte_server.change_id (new_value, old_value)
-			end;
 		end;
 
 feature -- Server size configuration

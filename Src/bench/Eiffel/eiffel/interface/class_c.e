@@ -1,15 +1,11 @@
 indexing
 	description: "Representation of a compiled class."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class CLASS_C
 
 inherit
-	CLASS_C_ROUTINES
-		export
-			{ANY} feature_table, types, invariant_feature
-		end
 
 	SHARED_COUNTER
 
@@ -32,11 +28,43 @@ inherit
 
 	SK_CONST
 
-	SHARED_ASSERTION_LEVEL
-
 	COMPILER_EXPORTER
 
 	SHARED_GENERATION
+
+	PART_COMPARABLE
+
+	PROJECT_CONTEXT
+
+	SHARED_WORKBENCH
+
+	SHARED_DEGREES
+		export
+			{ANY} Degree_1
+		end
+
+	SHARED_EIFFEL_PROJECT
+
+	SHARED_SERVER
+		export
+			{ANY} all
+		end
+
+	SHARED_INSTANTIATOR
+
+	SHARED_INST_CONTEXT
+
+	SHARED_ERROR_HANDLER
+
+	SHARED_RESCUE_STATUS
+
+	SHARED_TEXT_ITEMS
+
+	IDABLE
+		rename
+			id as class_id,
+			set_id as set_class_id
+		end
 
 creation
 
@@ -51,20 +79,21 @@ feature {NONE} -- Initialization
 		do
 			initialize (l)
 				-- Creation of a conformance table
-			!! conformance_table.make (1,0)
+			create conformance_table.make (0)
 				-- Creation of the syntactical supplier list
-			!! syntactical_suppliers.make
+			create syntactical_suppliers.make
 				-- Creation of the syntactical client list
-			!! syntactical_clients.make
+			create syntactical_clients.make
 				-- Filter list creation
-			!! filters.make
-			filters.compare_objects
+			create filters.make
 				-- Feature id counter creation
-			!! feature_id_counter
+			create feature_id_counter
 				-- Changed features list creation
-			!! changed_features.make (20)
+			create changed_features.make (20)
 				-- Propagator set creation
-			!! propagators.make
+			create propagators.make
+
+			internal_feature_table_file_id := -1
 		end
 
 feature -- Access
@@ -130,7 +159,7 @@ feature -- Access
 	is_used_as_expanded: BOOLEAN
 			-- Is `Current' used as an expanded class ?
 
-	conformance_table: ARRAY [BOOLEAN]
+	conformance_table: PACKED_BOOLEANS
 			-- Conformance table of the class: once a class has changed
 			-- it must be reprocessed and the conformance table of the
 			-- recursive descendants also.
@@ -160,7 +189,7 @@ feature -- Access
 	creation_feature: FEATURE_I
 			-- Creation feature for expanded types
 
-	melted_set: TWO_WAY_SORTED_SET [MELTED_INFO]
+	melted_set: SEARCH_TABLE [MELTED_INFO]
 			-- Melting information list
 			-- [Processed by the third pass.]
 
@@ -177,33 +206,7 @@ feature -- Access
 			-- Has the class already been compiled before the current
 			-- compilation ?
 		do
-			Result := Ast_server.has (id)
-		end
-
-	generate_descriptors: BOOLEAN
-			-- Does `Current' have to generate its descriptor table?
-
-	must_be_recompiled: BOOLEAN
-			-- Does `Current' have to be regenerated at the C level?
-
-	set_must_be_recompiled (v: BOOLEAN) is
-			-- Make `Current' a class which needs to be regenerated at the C level.
-		do
-			must_be_recompiled := v
-		end
-
-	set_generate_descriptors (v: BOOLEAN) is
-			-- Make `Current' a class which needs to generate its descriptor table.
-		do
-			generate_descriptors := v
-		end
-
-	clear_compilation_flags is
-			-- Reset all the compilation flags `generate_descriptors' and
-			-- `must_be_recompiled'.
-		do
-			generate_descriptors := False
-			must_be_recompiled := False
+			Result := Ast_server.has (class_id)
 		end
 
 feature -- Action
@@ -215,16 +218,14 @@ feature -- Action
 			l_types: TYPE_LIST
 			cl_type: CLASS_TYPE
 			object_name: STRING
-			description_dir, feature_tbl_dir, code_dir: DIRECTORY_NAME
 			generation_dir: DIRECTORY_NAME
-			dir_name: STRING
 			c_file_name: FILE_NAME
 			packet_nb: INTEGER
 			file: PLAIN_TEXT_FILE
 			finished_file_name: FILE_NAME
 			finished_file: PLAIN_TEXT_FILE
 		do
-			if not retried and System.makefile_generator /= Void then
+			if not retried and System.makefile_generator /= Void and then not types.is_empty then
 				!! generation_dir.make_from_string (Workbench_generation_path)
 				
 				from
@@ -238,11 +239,14 @@ feature -- Action
 						packet_nb := cl_type.packet_number
 	
 							-- Descriptor file removal
-						object_name := clone (C_prefix)
+						create object_name.make (5)
+						object_name.append_character (C_prefix)
 						object_name.append_integer (packet_nb)
 						!! c_file_name.make_from_string (generation_dir)
 						c_file_name.extend (object_name)
-						object_name := cl_type.base_file_name
+
+						create object_name.make (12)
+						object_name.append (base_file_name)
 						object_name.append_character (Descriptor_file_suffix)
 						object_name.append (Dot_c)
 						finished_file_name := clone (c_file_name)
@@ -264,11 +268,13 @@ feature -- Action
 	
 							-- C Code file removal
 						!! c_file_name.make_from_string (generation_dir)
-						object_name := clone (C_prefix)
+						create object_name.make (5)
+						object_name.append_character (C_prefix)
 						object_name.append_integer (packet_nb)
 						c_file_name.extend (object_name)
 						finished_file_name := clone (c_file_name)
-						object_name := cl_type.base_file_name
+						create object_name.make (12)
+						object_name.append (base_file_name)
 						if cl_type.has_cpp_externals then
 							object_name.append (Dot_cpp)
 						else
@@ -295,12 +301,14 @@ feature -- Action
 
 				if not is_precompiled then
 					!! c_file_name.make_from_string (generation_dir)
-					object_name := clone (C_prefix)
+					create object_name.make (5)
+					object_name.append_character (C_prefix)
 					object_name.append_integer (packet_number)
 					c_file_name.extend (object_name)
 					finished_file_name := clone (c_file_name)
-					object_name := base_file_name
-					object_name.append_integer (id.id)
+					create object_name.make (12)
+					object_name.append (base_file_name)
+					object_name.append_integer (feature_table_file_id)
 					object_name.append_character (Feature_table_file_suffix)
 					object_name.append (Dot_c)
 					c_file_name.set_file_name (object_name)
@@ -323,8 +331,10 @@ feature -- Action
 			retry
 		end
 
-	build_ast: CLASS_AS is
-			-- Parse the file and generate the AST
+	build_ast (save_copy: BOOLEAN): CLASS_AS is
+			-- Parse file and generate AST.
+			-- If `save_copy' a copy will be made in BACKUP
+			-- directory of EIFGEN.
 		local
 			parser: like eiffel_parser
 			file, copy_file: RAW_FILE
@@ -362,7 +372,7 @@ feature -- Action
 			end
 
 				-- Save the source class in a Backup directory
-			if Workbench.automatic_backup then
+			if save_copy and Workbench.automatic_backup then
 				!! f_name.make_from_string (cluster.backup_directory)
 				f_name.extend (lace_class.name)
 				f_name.add_extension ("e")
@@ -402,9 +412,9 @@ feature -- Action
 		do
 			if not is_in_system then
 				set_is_in_system (True)
-				ast_b := Ast_server.item (id)
+				ast_b := Ast_server.item (class_id)
 				supplier_list := ast_b.suppliers.supplier_ids
-				if not supplier_list.empty then
+				if not supplier_list.is_empty then
 					check_suppliers (supplier_list)
 				end
 				parent_list := ast_b.parents
@@ -438,7 +448,7 @@ feature -- Action
 			old_syntactical_suppliers := syntactical_suppliers
 			!! syntactical_suppliers.make
 			supplier_list := ast_b.suppliers.supplier_ids
-			if not supplier_list.empty then
+			if not supplier_list.is_empty then
 				check_suppliers (supplier_list)
 			end
 			parent_list := ast_b.parents
@@ -450,7 +460,7 @@ feature -- Action
 
 				-- Process a compiled form of the parents
 			class_info := ast_b.info
-			class_info.set_id (id)
+			class_info.set_class_id (class_id)
 
 				-- Initialization of the current class
 			init (ast_b, class_info, old_syntactical_suppliers)
@@ -463,15 +473,15 @@ feature -- Action
 
 				-- The class has not been removed (modification of the
 				-- number of generics)
-if System.class_of_id (id) /= Void then
+if System.class_of_id (class_id) /= Void then
 				-- Update syntactical supplier/client relations and take
 				-- care of removed classes
 			update_syntactical_relations (old_syntactical_suppliers)
 
 				-- Save the abstract syntax tree: the AST of a class
 				-- (instance of CLASS_C) is retrieved through the feature
-				-- `id' of CLASS_C and file ".TMP_AST".
-			ast_b.set_id (id)
+				-- `class_id' of CLASS_C and file ".TMP_AST".
+			ast_b.set_class_id (class_id)
 			Tmp_ast_server.put (ast_b)
 
 			if has_unique then
@@ -490,7 +500,7 @@ if System.class_of_id (id) /= Void then
 			invariant_info := Tmp_ast_server.invariant_info
 			if invariant_info /= Void then
 				class_info.set_invariant_info (Tmp_ast_server.invariant_info)
-				Tmp_inv_ast_server.force (invariant_info, id)
+				Tmp_inv_ast_server.force (invariant_info, class_id)
 			end
 
 				-- Put class information in class information table for
@@ -517,7 +527,7 @@ end
 
 feature -- Conformance dependencies
 
-	conf_dep_table: ARRAY [BOOLEAN]
+	conf_dep_table: PACKED_BOOLEANS
 			-- Table for quick lookup
 
 	conf_dep_classes : LINKED_LIST [CLASS_C]
@@ -532,12 +542,12 @@ feature -- Conformance dependencies
 		local
 			topid: INTEGER
 			loc_list: LINKED_LIST [CLASS_C]
-			loc_tab: ARRAY [BOOLEAN]
+			loc_tab: PACKED_BOOLEANS
 		do
 			topid := a_class.topological_id
 
 			if conf_dep_table = Void then
-				!! conf_dep_table.make (0, topid + 32)
+				create conf_dep_table.make (topid + 32)
 
 				if conf_dep_classes /= Void then
 					-- Topological ids have changed
@@ -557,8 +567,8 @@ feature -- Conformance dependencies
 			end
 
 			if conf_dep_classes = Void then
-				!! conf_dep_classes.make
-				!! conf_dep_table.make (0, topid + 32)
+				create conf_dep_classes.make
+				create conf_dep_table.make (topid + 32)
 			end
 
 			loc_list := conf_dep_classes
@@ -566,7 +576,7 @@ feature -- Conformance dependencies
 
 			if topid > loc_tab.upper then
 					-- Table needs resizing
-				loc_tab.resize (0, topid + 32)
+				loc_tab.resize (topid + 32)
 			end
 
 			if not loc_tab.item (topid) then
@@ -597,7 +607,7 @@ feature -- Conformance dependencies
 			not_void : a_class /= Void
 		local
 			topid: INTEGER
-			loc_tab: ARRAY [BOOLEAN]
+			loc_tab: PACKED_BOOLEANS
 		do
 			topid := a_class.topological_id
 			loc_tab := conf_dep_table
@@ -606,7 +616,30 @@ feature -- Conformance dependencies
 					and then (topid <= loc_tab.upper)
 					and then loc_tab.item (topid)
 		end
- 
+
+	reset_dep_classes is
+			-- Update `conf_dep_classes' with removed classes.
+		local
+			a_class: CLASS_C
+		do
+			if conf_dep_classes /= Void then
+				from
+					conf_dep_classes.start
+				until
+					conf_dep_classes.after
+				loop
+					a_class := conf_dep_classes.item
+					if System.classes.item (a_class.class_id) = Void then
+							-- Class has been removed and we should discard
+							-- any previous dependency.
+						conf_dep_classes.remove
+					else
+						conf_dep_classes.forth
+					end
+				end
+			end
+		end
+
 feature -- Building conformance table
 
 	fill_conformance_table is
@@ -617,7 +650,7 @@ feature -- Building conformance table
 			topological_id_processed: topological_id > 0
 		do
 				-- Resize the table after the topological sort
-			conformance_table.resize (1, topological_id)
+			conformance_table.resize (topological_id)
 			conformance_table.clear_all
 			conf_dep_table := Void
 			build_conformance_table_of (Current)
@@ -632,7 +665,7 @@ feature -- Building conformance table
 			conformance: topological_id <= cl.topological_id
 		local
 			a_parent: CLASS_C
-			a_table: ARRAY [BOOLEAN]
+			a_table: PACKED_BOOLEANS
 			l_area: SPECIAL [CL_TYPE_A]
 			i, nb: INTEGER
 		do
@@ -721,77 +754,67 @@ feature -- Third pass: byte code production and type check
 			feature_name: STRING
 			f_suppliers: FEATURE_DEPENDANCE
 			removed_features: SEARCH_TABLE [FEATURE_I]
-			melted_info: FEAT_MELTED_INFO
-			melt_set: like melted_set
 			type_check_error: BOOLEAN
 			check_local_names_needed: BOOLEAN
 			byte_code_generated, has_default_rescue: BOOLEAN
-			body_id: BODY_ID
-			feat_dep: FEATURE_DEPENDANCE
+			body_index: INTEGER
 			rep_removed: BOOLEAN
 
 				-- Invariant
 			invar_clause: INVARIANT_AS
 			invar_byte: INVARIANT_B
 			invariant_changed: BOOLEAN
-			inv_melted_info: INV_MELTED_INFO
 
-			new_body_id: BODY_ID
-			old_body_id: BODY_ID
-			changed_body_ids: EXTEND_TABLE [CHANGED_BODY_ID_INFO, BODY_ID]
-			changed_body_id_info: CHANGED_BODY_ID_INFO
-			old_invariant_body_id: BODY_ID
-			feature_body_id: BODY_ID
+			old_invariant_body_index: INTEGER
+			feature_body_index: INTEGER
 
 				-- For Concurrent Eiffel
-			body_id_changed: BOOLEAN
 			def_resc_depend: DEPEND_UNIT
-			type_checked   : BOOLEAN
+			type_checked: BOOLEAN
 		do
-			def_resc := default_rescue_feature
-
 			from
-				system.changed_body_ids.clear_all
-
 					-- Initialization for actual types evaluation
 				Inst_context.set_cluster (cluster)
 				
 					-- For a changed class, the supplier list has
 					-- to be updated
-				if Tmp_depend_server.has (id) then
-					dependances := Tmp_depend_server.item (id)
-				elseif Depend_server.has (id) then
-					dependances := Depend_server.item (id)
+				if Tmp_depend_server.has (class_id) then
+					dependances := Tmp_depend_server.item (class_id)
+				elseif Depend_server.has (class_id) then
+					dependances := Depend_server.item (class_id)
 				else
 					!!dependances.make (changed_features.count)
-					dependances.set_id (id)
+					dependances.set_class_id (class_id)
 				end
 
-				if Rep_depend_server.server_has (id) then
-					rep_dep := Rep_depend_server.server_item (id)
-				elseif Tmp_rep_depend_server.has (id) then
-					rep_dep := Tmp_rep_depend_server.item (id)
+				if Rep_depend_server.server_has (class_id) then
+					rep_dep := Rep_depend_server.server_item (class_id)
+				elseif Tmp_rep_depend_server.has (class_id) then
+					rep_dep := Tmp_rep_depend_server.item (class_id)
 				end
 
 				if changed then
 					new_suppliers := suppliers.same_suppliers
 				end
 
-				feat_table := Feat_tbl_server.item (id)
+				feat_table := Feat_tbl_server.item (class_id)
+				def_resc := default_rescue_feature (feature_table)
 
 				ast_context.set_a_class (Current)
 
-				!!melt_set.make
-				melt_set.compare_objects
+				if melted_set /= Void then
+					melted_set.clear_all
+				end
+
 				feat_table.start
 			until
 				feat_table.after
 			loop
 				feature_i := feat_table.item_for_iteration
-				feature_name := feature_i.feature_name
 				type_checked := False
 
 debug ("SEP_DEBUG")
+feature_name := feature_i.feature_name
 io.error.putstring ("CLASS_C.PASS3 Feature ")
 io.error.putstring (feature_name)
 io.error.putstring (" whose FEATURE_ID: ")
@@ -800,6 +823,7 @@ io.error.new_line
 end
 
 				if feature_i.to_melt_in (Current) then
+					feature_name := feature_i.feature_name
 
 					has_default_rescue := False
 					if
@@ -816,19 +840,25 @@ debug ("SEP_DEBUG", "ACTIVITY")
 	io.error.putstring (feature_name)
 	io.error.new_line
 end
-					if System.has_separate then
-						body_id_changed := False 
-					end
 						-- For a feature written in the class
 					feature_changed := 	changed_features.has (feature_name)
-										and not feature_i.is_attribute
+					
+					if not feature_changed then
+							-- Force a change on all feature of current class if line
+							-- debugging is turned on. Not doing so could make obsolete
+							-- line information on non-changed features.
+						feature_changed := System.line_generation
+					end
+
+					feature_changed := feature_changed and not feature_i.is_attribute
+
 debug ("SEP_DEBUG", "ACTIVITY")
 	io.error.putstring ("%T%Tfeature_changed: ")
 	io.error.putbool (feature_changed)
 	io.error.new_line
 end
 			
-					f_suppliers := dependances.item (feature_i.body_id)
+					f_suppliers := dependances.item (feature_i.body_index)
 
 						-- Feature is considered syntactically changed if
 						-- some of the entities used by it have changed
@@ -848,10 +878,6 @@ end
 
 						if feature_changed then
 								-- Automatic melting of the feature
-							if System.has_separate then
-								body_id_changed := True 
-							end
-							feature_i.change_body_id
 							if new_suppliers = Void then
 								new_suppliers := suppliers.same_suppliers
 							end
@@ -861,11 +887,7 @@ end
 					if feature_i.is_attribute then	
 							-- Redefinitions of functions into attributes are
 							-- always melted
-						if System.has_separate then
-							body_id_changed := True 
-						end
 						feature_changed := True
-						feature_i.change_body_id
 					end
 	
 					ast_context.set_a_feature (feature_i)
@@ -920,33 +942,31 @@ end
 										new_suppliers := suppliers.same_suppliers
 									end
 									new_suppliers.remove_occurence (f_suppliers)
-									dependances.remove (feature_i.body_id)
+									dependances.remove (feature_i.body_index)
 								end
 										
-								if not feature_i.is_code_replicated then
-										-- Dependances update: add new
-										-- dependances for `feature_name'.
+									-- Dependances update: add new
+									-- dependances for `feature_name'.
 
-									f_suppliers := clone (ast_context.supplier_ids)
+								f_suppliers := clone (ast_context.supplier_ids)
 
-									if
-										def_resc /= Void and then
-										not feature_i.is_deferred and then
-										not feature_i.is_external and then
-										not feature_i.is_attribute and then
-										not feature_i.is_constant
-									then
-											-- Make it dependant on `default_rescue'
-										!!def_resc_depend.make (id, def_resc)
-										f_suppliers.extend (def_resc_depend)
-									end
-									f_suppliers.set_feature_name (feature_name)
-									dependances.put (f_suppliers, feature_i.body_id)
-									if new_suppliers = Void then
-										new_suppliers := suppliers.same_suppliers
-									end
-									new_suppliers.add_occurence (f_suppliers)
+								if
+									def_resc /= Void and then
+									not feature_i.is_deferred and then
+									not feature_i.is_external and then
+									not feature_i.is_attribute and then
+									not feature_i.is_constant
+								then
+										-- Make it dependant on `default_rescue'
+									!!def_resc_depend.make (class_id, def_resc)
+									f_suppliers.extend (def_resc_depend)
 								end
+								f_suppliers.set_feature_name (feature_name)
+								dependances.put (f_suppliers, feature_i.body_index)
+								if new_suppliers = Void then
+									new_suppliers := suppliers.same_suppliers
+								end
+								new_suppliers.add_occurence (f_suppliers)
 
 									-- Byte code processing
 debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
@@ -954,13 +974,8 @@ debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
 	io.error.putstring (feature_name)
 	io.error.new_line
 end
-									if System.has_separate and then not body_id_changed then
-										body_id_changed := True 
-										feature_i.change_body_id
-									end
-									feature_i.compute_byte_code (has_default_rescue)
-									byte_code_generated := True
-
+								feature_i.compute_byte_code (has_default_rescue)
+								byte_code_generated := True
 							end
 						else
 							-- Check the conflicts between local variable names
@@ -986,8 +1001,7 @@ debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
 end
 							-- Remember the melted feature information
 							-- if it is not deferred.
-						!!melted_info.make (feature_i)
-						melt_set.put (melted_info)
+						add_feature_to_melted_set (feature_i)
 					end
 					type_check_error := False
 					byte_code_generated := False
@@ -1010,7 +1024,7 @@ end
 				elseif
 					((not feature_i.in_pass3)
 							-- The feature is deferred and written in the current class
-					or else (feature_i.is_deferred and then id.is_equal (feature_i.written_in)))
+					or else (feature_i.is_deferred and then class_id = feature_i.written_in))
 				then
 					if feature_i.is_deferred then
 							-- Just type check it. See if VRRR or
@@ -1032,15 +1046,15 @@ debug ("SEP_DEBUG", "VERBOSE", "ACTIVITY")
 end
 
 			if invariant_feature /= Void then
-				old_invariant_body_id := invariant_feature.body_id
-				f_suppliers := dependances.item (old_invariant_body_id)
+				old_invariant_body_index := invariant_feature.body_index
+				f_suppliers := dependances.item (old_invariant_body_index)
 			else
 				f_suppliers := Void
 			end
 
 			if propagators.invariant_removed then
-				if old_invariant_body_id /= Void then
-					dependances.remove (old_invariant_body_id)
+				if old_invariant_body_index /= 0 then
+					dependances.remove (old_invariant_body_index)
 				end
 				if new_suppliers = Void then
 					new_suppliers := suppliers.same_suppliers
@@ -1057,14 +1071,11 @@ end
 				end
 				if invariant_changed then
 					if invariant_feature = Void then
-						!!invariant_feature.make (Current)
+						create invariant_feature.make (Current)
 						invariant_feature.set_body_index
 											(Body_index_counter.next_id)
+						invariant_feature.set_feature_id (feature_id_counter.next)
 					end
-					new_body_id := Body_id_counter.next_id
-					System.body_index_table.force
-								(new_body_id, invariant_feature.body_index)
-					--invariant_feature.change_body_id
 				end
 				if
 					invariant_changed
@@ -1072,7 +1083,7 @@ end
 								or else (propagators.empty_intersection (f_suppliers)
 								and then propagators.changed_status_empty_intersection (f_suppliers.suppliers)))
 				then
-					invar_clause := Inv_ast_server.item (id)
+					invar_clause := Inv_ast_server.item (class_id)
 					Error_handler.mark
 
 debug ("SEP_DEBUG", "ACTIVITY")
@@ -1088,14 +1099,14 @@ end
 								new_suppliers := suppliers.same_suppliers
 							end
 							new_suppliers.remove_occurence (f_suppliers)
-							if old_invariant_body_id /= Void then
-								dependances.remove (old_invariant_body_id)
+							if old_invariant_body_index /= 0 then
+								dependances.remove (old_invariant_body_index)
 							end
 						end
 						f_suppliers := clone (ast_context.supplier_ids)
 						if invariant_feature /= Void then
 							f_suppliers.set_feature_name ("_inv_")
-							dependances.put (f_suppliers, invariant_feature.body_id)
+							dependances.put (f_suppliers, invariant_feature.body_index)
 						end
 						if new_suppliers = Void then
 							new_suppliers := suppliers.same_suppliers
@@ -1108,12 +1119,11 @@ end
 
 						ast_context.start_lines
 						!!invar_byte
-						invar_byte.set_id (id)
+						invar_byte.set_class_id (class_id)
 						invar_byte.set_byte_list (invar_clause.byte_node)
 						Tmp_inv_byte_server.put (invar_byte)
 
-						!!inv_melted_info
-						melt_set.put (inv_melted_info)
+						add_feature_to_melted_set (invariant_feature)
 					end
 						-- Clean context
 					ast_context.clear2
@@ -1133,18 +1143,15 @@ end
 					removed_features.after
 				loop
 					feature_i := removed_features.item_for_iteration
-					feature_body_id := feature_i.body_id
-					if not feature_i.is_code_replicated then
-						f_suppliers := dependances.item (feature_body_id)
-						if f_suppliers /= Void then
-							if new_suppliers = Void then
-								new_suppliers := suppliers.same_suppliers
-							end
-							new_suppliers.remove_occurence (f_suppliers)
+					feature_body_index := feature_i.body_index
+					f_suppliers := dependances.item (feature_body_index)
+					if f_suppliers /= Void then
+						if new_suppliers = Void then
+							new_suppliers := suppliers.same_suppliers
 						end
-						dependances.remove (feature_body_id)
-
+						new_suppliers.remove_occurence (f_suppliers)
 					end
+					dependances.remove (feature_body_index)
 					if
 						rep_dep /= Void and then
 						rep_dep.has (feature_name)
@@ -1157,15 +1164,11 @@ end
 						rep_dep.remove (feature_name)
 						rep_removed := True
 					end
-					body_id := feature_i.body_id
+					body_index := feature_i.body_index
 						-- Second pass desactive body id of changed
 						-- features only. Deactive body ids of removed
 						-- features.
-					if not feature_i.is_code_replicated then
-						Tmp_body_server.desactive (body_id)
-					else
-						Tmp_rep_feat_server.desactive (body_id)
-					end
+					Tmp_body_server.desactive (body_index)
 
 					removed_features.forth
 				end
@@ -1185,20 +1188,10 @@ end
 
 			end
 
-				-- Update `melted_set'.
-			if melted_set = Void then
-				melted_set := melt_set
-			else
-				melted_set.merge (melt_set)
-			end
-
-			if not melted_set.empty then
-				System.melted_set.put (Current)
-				set_must_be_recompiled (True)
-				set_generate_descriptors (True)
+			if has_features_to_melt then
+				Degree_1.insert_class (Current)
 			elseif propagators.invariant_removed then
-				System.melted_set.put (Current)
-				set_generate_descriptors (True)
+				Degree_1.insert_class (Current)
 			end
 		ensure
 			No_error: not Error_handler.has_error
@@ -1207,34 +1200,6 @@ end
 					-- Clean context if error
 						-- FIXME call clear1 ????
 				ast_context.clear2
-
-					-- Undo the `change_body_id' calls
-				from
-					changed_body_ids := system.changed_body_ids
-					changed_body_ids.start
-				until
-					changed_body_ids.after
-				loop
-					changed_body_id_info := changed_body_ids.item_for_iteration
-					old_body_id := changed_body_ids.key_for_iteration
-					new_body_id := changed_body_id_info.new_body_id
-						-- Undo
-					if not changed_body_id_info.is_code_replicated then
-						Body_server.change_id (old_body_id, new_body_id)
-					else
-						Rep_feat_server.change_id (old_body_id, new_body_id)
-					end
-					System.depend_server.change_ids (old_body_id, new_body_id)
-
-					Byte_server.change_id (old_body_id, new_body_id)
-					System.Body_index_table.force (old_body_id, changed_body_id_info.body_index)
-					System.onbidt.undo_put (old_body_id, new_body_id)
-					if changed_body_id_info.has_to_update_dependances then
-						depend_server.item (changed_body_id_info.written_in).replace_key (old_body_id, new_body_id)
-					end
-					
-					changed_body_ids.forth
-				end
 
 					-- Clean the caches if error
 
@@ -1246,25 +1211,23 @@ end
 
 				Tmp_ast_server.cache.wipe_out
 				Tmp_body_server.cache.wipe_out
-				Tmp_rep_feat_server.cache.wipe_out
 				Tmp_inv_ast_server.cache.wipe_out
 			end
 		end
 
 	record_suppliers (feature_i: FEATURE_I; dependances: CLASS_DEPENDANCE) is
 		local
-			feature_name: STRING
 			f_suppliers: FEATURE_DEPENDANCE
-			body_id: BODY_ID
+			body_index: INTEGER
 		do
-			body_id := feature_i.body_id
-			if dependances.has (body_id) then
-				dependances.remove (body_id)
+			body_index := feature_i.body_index
+			if dependances.has (body_index) then
+				dependances.remove (body_index)
 			end
 			!!f_suppliers.make
 			f_suppliers.set_feature_name (feature_i.feature_name)
 			feature_i.record_suppliers (f_suppliers)
-			dependances.put (f_suppliers, body_id)
+			dependances.put (f_suppliers, body_index)
 		end
 
 	invariant_pass3 (	dependances: CLASS_DEPENDANCE
@@ -1281,7 +1244,7 @@ end
 --			f_suppliers: FEATURE_DEPENDANCE
 --			invariant_changed: BOOLEAN
 --			melted_info: INV_MELTED_INFO
---			new_body_id: BODY_ID
+--			new_body_index: INTEGER
 		do
 --			f_suppliers := dependances.item ("_inv_")
 --
@@ -1301,9 +1264,9 @@ end
 --						invariant_feature.set_body_index
 --											(Body_index_counter.next_id)
 --					end
---					new_body_id := Body_id_counter.next
+--					new_body_index := Body_id_counter.next
 --					System.body_index_table.force
---								(new_body_id, invariant_feature.body_index)
+--								(new_body_index, invariant_feature.body_index)
 --				end
 --				if	(	invariant_changed
 --						or else
@@ -1315,7 +1278,7 @@ end
 --							)
 --					)
 --				then
---					invar_clause := Tmp_inv_ast_server.item (id)
+--					invar_clause := Tmp_inv_ast_server.item (class_id)
 --					Error_handler.mark
 --
 --debug ("ACTIVITY")
@@ -1341,7 +1304,7 @@ end
 --
 --						ast_context.start_lines
 --						!!invar_byte
---						invar_byte.set_id (id)
+--						invar_byte.set_class_id (class_id)
 --						invar_byte.set_byte_list (invar_clause.byte_node)
 --						Tmp_inv_byte_server.put (invar_byte)
 --
@@ -1389,12 +1352,6 @@ end
 
 feature -- Generation
 
-	update_valid_body_ids is
-		do
-			Inst_context.set_cluster (cluster)
-			types.update_valid_body_ids
-		end
-
 	pass4 is
 			-- Generation of C files for each type associated to the current
 			-- class
@@ -1406,24 +1363,6 @@ feature -- Generation
 		end
 
 feature -- Melting
-
-	update_melted_set is
-			-- Remove the non valid MELTED_INFO
-		do
-			if melted_set /= Void then
-				from
-					melted_set.start
-				until
-					melted_set.after
-				loop
-					if not melted_set.item.is_valid (Current) then
-						melted_set.remove
-					else
-						melted_set.forth
-					end
-				end
-			end
-		end
 
 	melt is
 			-- Melt changed features.
@@ -1437,13 +1376,13 @@ feature -- Melting
 			melted_set := Void
 		end
 	
-	update_dispatch_table is
-			-- Update dispatch table.
+	update_execution_table is
+			-- Update execution table.
 		require
 			good_context: has_features_to_melt
 		do
 			Inst_context.set_cluster (cluster)
-			types.update_dispatch_table
+			types.update_execution_table
 
 				-- Forget melted list
 			melted_set := Void
@@ -1451,8 +1390,11 @@ feature -- Melting
 
 	has_features_to_melt: BOOLEAN is
 			-- Has the current class features to melt ?
+		local
+			melt_set: like melted_set
 		do
-			Result := not (melted_set = Void or else melted_set.empty)
+			melt_set := melted_set
+			Result := melt_set /= Void and then not melt_set.is_empty
 		end
 
 	melt_all is
@@ -1460,16 +1402,9 @@ feature -- Melting
 		local
 			c_dep: CLASS_DEPENDANCE
 			tbl: FEATURE_TABLE
-			melted_info: FEAT_MELTED_INFO
-			inv_melted_info: INV_MELTED_INFO
-			new_body_id: BODY_ID
 			feature_i: FEATURE_I
 		do
 			Inst_context.set_cluster (cluster)
-			if melted_set = Void then
-				!!melted_set.make
-				melted_set.compare_objects
-			end
 
 				-- Melt feature written in the class
 			from
@@ -1480,70 +1415,37 @@ feature -- Melting
 			loop
 				feature_i := tbl.item_for_iteration
 				if feature_i.to_generate_in (Current) then
-					!!melted_info.make (feature_i)
-					if not melted_set.has (melted_info) then
-						melted_set.put (melted_info)
-						feature_i.change_body_id
-					end
+					add_feature_to_melted_set (feature_i)
 				end
 				tbl.forth
 			end
-			c_dep := depend_server.item (id)
+			c_dep := depend_server.item (class_id)
 			depend_server.put (c_dep)
 
 				-- Melt possible invariant clause
 			if invariant_feature /= Void then
-				!!inv_melted_info
-				if not melted_set.has (inv_melted_info) then
-					melted_set.put (inv_melted_info)
-					--new_body_id := Body_id_counter.next_id
-					--System.body_index_table.force (new_body_id, invariant_feature.body_index)
-					invariant_feature.change_body_id
-				end
+				add_feature_to_melted_set (invariant_feature)
 			end
 
-			if not Tmp_m_rout_id_server.has (id) then
+			if not Tmp_m_rout_id_server.has (class_id) then
 					-- If not already done, Melt routine id array
 				tbl.melt
 			end
 				-- Mark the class to be frozen later again.
-			System.melted_set.put (Current)
-			set_must_be_recompiled (True)
-			set_generate_descriptors (True)
-			pass4_controler.insert_new_class (Current)
-		end
-
-	melt_feature_table is
-			-- Melt feature table.
-			--|Don't forget to modify also `melt_feature_and_descriptor_tables'
-			--|when modifying this function
-		require
-			good_context: System.melted_set.has (Current)
-		do
-			if not types.empty then
-				Inst_context.set_cluster (cluster)
-				types.melt_feature_table
-			end
-		end
-
-	melt_descriptor_tables is
-			-- Melt descriptor tables of associated class types
-			--|Don't forget to modify also `melt_feature_and_descriptor_tables'
-			--|when modifying this function
-		require
-			good_context: System.melted_set.has (Current)
-		do
-			feature_table.origin_table.melt (Current)
+			Degree_1.insert_class (Current)
+			Degree_2.insert_new_class (Current)
 		end
 
 	melt_feature_and_descriptor_tables is
 			-- Melt feature table.
 			-- Melt descriptor tables of associated class types
 		require
-			good_context: System.melted_set.has (Current)
+			good_context: Degree_1.has_class (Current)
 		do
+			System.set_current_class (Current)
+
 				-- Melt feature table.
-			if not types.empty then
+			if not types.is_empty then
 				Inst_context.set_cluster (cluster)
 				types.melt_feature_table
 			end
@@ -1560,23 +1462,21 @@ feature -- Workbench feature and descriptor table generation
 			--|Don't forget to modify also `generate_workbench_files' when modifying
 			--|this function
 		local
-			table_file_name: STRING
 			file: INDENT_FILE
 			buffer: GENERATION_BUFFER
 		do
 				-- Clear buffer for Current generation
 			buffer := generation_buffer
 			buffer.clear_all
+			buffer.putstring ("/*%N * Class ")
+			buffer.putstring (external_class_name)
+			buffer.putstring ("%N */%N%N")
 			buffer.putstring ("#include %"eif_macros.h%"%N#include %"eif_struct.h%"%N%N")
 			buffer.start_c_specific_code
 			feature_table.generate (buffer)
 			buffer.end_c_specific_code
 
-			table_file_name := full_file_name
-			table_file_name.append_integer (id.id)
-			table_file_name.append_character (feature_table_file_suffix)
-			table_file_name.append (Dot_c)
-			!! file.make_open_write (table_file_name)
+			create file.make_c_code_file (feature_table_file_name)
 			file.put_string (buffer)
 			file.close
 		end
@@ -1587,11 +1487,12 @@ feature -- Workbench feature and descriptor table generation
 			-- in case of first compilation.
 			-- Just a problem of efficiency
 		local
-			table_file_name: STRING
 			file: INDENT_FILE
 			buffer: GENERATION_BUFFER
 			feat_tbl: FEATURE_TABLE
 		do
+			System.set_current_class (Current)
+
 			feat_tbl := feature_table
 
 				-- Generation of workbench mode descriptor tables
@@ -1605,6 +1506,9 @@ feature -- Workbench feature and descriptor table generation
 				-- Clear buffer for Current generation
 			buffer := generation_buffer
 			buffer.clear_all
+			buffer.putstring ("/*%N * Class ")
+			buffer.putstring (external_class_name)
+			buffer.putstring ("%N */%N%N")
 			buffer.putstring ("#include %"eif_macros.h%"%N#include %"eif_struct.h%"%N%N")
 			buffer.start_c_specific_code
 			feat_tbl.generate (buffer)
@@ -1612,11 +1516,7 @@ feature -- Workbench feature and descriptor table generation
 
 				-- Generation of workbench mode feature table for
 				-- the current class
-			table_file_name := full_file_name
-			table_file_name.append_integer (id.id)
-			table_file_name.append_character (feature_table_file_suffix)
-			table_file_name.append (Dot_c)
-			!! file.make_open_write (table_file_name)
+			create file.make_c_code_file (feature_table_file_name)
 			file.put_string (buffer)
 			file.close
 
@@ -1634,6 +1534,7 @@ feature -- Workbench feature and descriptor table generation
 			--|Don't forget to modify also `generate_workbench_files' when modifying
 			--|this function
 		do
+			System.set_current_class (Current)
 			if has_types then
 				feature_table.origin_table.generate (Current)
 			end
@@ -1641,60 +1542,81 @@ feature -- Workbench feature and descriptor table generation
 
 feature
 
-	full_file_name: STRING is
+	feature_table_file_name: FILE_NAME is
 			-- Generated file name prefix
 			-- Side effect: Create the corresponding subdirectory if it
 			-- doesnot exist yet.
 		local
-			subdirectory: STRING
+			subdirectory, base_name: STRING
 			dir: DIRECTORY
-			f_name: FILE_NAME
 			dir_name: DIRECTORY_NAME
 			finished_file: PLAIN_TEXT_FILE
 			finished_file_name: FILE_NAME
 		do
 			if System.in_final_mode then
-				Result := Final_generation_path
+				dir_name := clone (Final_generation_path)
 			else
-				Result := Workbench_generation_path
+				dir_name := clone (Workbench_generation_path)
 			end
-			!! subdirectory.make (5)
-			subdirectory.append (C_prefix)
+
+			create subdirectory.make (5)
+			subdirectory.append_character (C_prefix)
 			subdirectory.append_integer (packet_number)
 
-			!! dir_name.make_from_string (Result)
 			dir_name.extend (subdirectory)
-			!! dir.make (dir_name)
+			create dir.make (dir_name)
 			if not dir.exists then	
 				dir.create_dir
 			end
-			!! f_name.make_from_string (dir_name)
-			f_name.set_file_name (base_file_name)
-			Result := f_name
+				
+			create base_name.make (12)
+			base_name.append (base_file_name)
+			base_name.append_integer (feature_table_file_id)
+			base_name.append_character (feature_table_file_suffix)
+			base_name.append (Dot_c)
+			create Result.make_from_string (dir_name)
+			Result.set_file_name (base_name)
 
-			!! finished_file_name.make_from_string (dir_name)
+			create finished_file_name.make_from_string (dir_name)
 			finished_file_name.set_file_name (Finished_file_for_make)
-			!! finished_file.make (finished_file_name)
+			create finished_file.make (finished_file_name)
 			if finished_file.exists and then finished_file.is_writable then
 				finished_file.delete	
 			end
 		end
 
 	base_file_name: STRING is
-			-- Generated base file name prefix
+			-- Generated base file name prefix. Keep first two letters
+			-- of class `name'. 
+			--| Once per object: meaning that even if `name' changes
+			--| we keep same C generated file name.
 		do
-			!!Result.make (11)
-			if name.count > Max_non_encrypted then
-				Result.append (name.substring (1, Max_non_encrypted))
-			else
-				Result.append (name)
+			Result := private_base_file_name
+			if Result = Void then
+				Result := name.substring (1, name.count.min (2))
+				private_base_file_name := Result
 			end
 		end
 
 	packet_number: INTEGER is
 			-- Packet in which the file will be generated
 		do
-			Result := id.packet_number
+			Result := System.static_type_id_counter.packet_number (feature_table_file_id)
+		end
+
+	feature_table_file_id: INTEGER is
+			-- Number added at end of C file corresponding to generated
+			-- feature table. Initialized by default to -1.
+		require
+			types_not_void: types /= Void
+			types_not_empty: not types.is_empty
+		do
+			if internal_feature_table_file_id = -1 then
+				Result := types.first.static_type_id
+				internal_feature_table_file_id := Result
+			else
+				Result := internal_feature_table_file_id
+			end
 		end
 
 feature -- Skeleton processing
@@ -1708,7 +1630,6 @@ feature -- Skeleton processing
 		local
 			feature_table_changed: BOOLEAN
 			class_type: CLASS_TYPE
-			type_i: CL_TYPE_I
 			new_skeleton, old_skeleton: SKELETON
 		do
 debug ("SKELETON")
@@ -1743,8 +1664,7 @@ old_skeleton.trace
 io.error.new_line
 end
 
-						System.melted_set.put (Current)
-						set_generate_descriptors (True)
+						Degree_1.insert_class (Current)
 					else
 debug ("SKELETON")
 io.error.putstring ("Skeleton has not changed:%N")
@@ -1782,6 +1702,8 @@ feature -- Class initialization
 			parent_list: PARENT_LIST
 			parent_c: PARENT_C
 			ve04: VE04
+			vhpr1: VHPR1
+			dummy_list: LINKED_LIST [INTEGER]
 			is_exp, old_is_expanded: BOOLEAN
 			old_is_separate: BOOLEAN
 			old_is_deferred: BOOLEAN
@@ -1795,6 +1717,22 @@ feature -- Class initialization
 			gens: like generics
 			obs_msg: like obsolete_message
 		do
+				-- Assign external name clause
+			if System.il_generation then
+				if ast_b.top_indexes /= Void then
+					private_external_name := ast_b.top_indexes.external_name
+					set_is_enum (ast_b.top_indexes.enum_type /= Void)
+				elseif ast_b.bottom_indexes /= Void then
+					private_external_name := ast_b.bottom_indexes.external_name
+					set_is_enum (ast_b.bottom_indexes.enum_type /= Void)
+				end
+				if private_external_name = Void then
+					private_external_name := ast_b.external_class_name
+				end
+			else
+				private_external_name := Void
+			end
+
 				-- Check if obsolete clause was present.
 				-- (Void if none was present)
 			if ast_b.obsolete_message /= Void then
@@ -1817,7 +1755,7 @@ feature -- Class initialization
 			old_is_deferred := is_deferred
 			set_is_deferred (ast_b.is_deferred)
 			if (old_is_deferred /= is_deferred and then old_parents /= Void) then
-				pass2_controler.set_deferred_modified (Current)
+				Degree_4.set_deferred_modified (Current)
 				changed_status := True
 			end
 
@@ -1833,9 +1771,14 @@ feature -- Class initialization
 					Current /= System.boolean_class.compiled_class and then
 					Current /= System.character_class.compiled_class and then
 					Current /= System.double_class.compiled_class and then
-					Current /= System.integer_class.compiled_class and then
+					Current /= System.integer_8_class.compiled_class and then
+					Current /= System.integer_16_class.compiled_class and then
+					Current /= System.integer_32_class.compiled_class and then
+					Current /= System.integer_64_class.compiled_class and then
 					Current /= System.real_class.compiled_class and then
-					Current /= System.pointer_class.compiled_class
+					(not System.il_generation and then
+					Current /= System.wide_char_class.compiled_class and then
+					Current /= System.pointer_class.compiled_class)
 				then
 					System.set_has_expanded
 				end
@@ -1844,7 +1787,7 @@ feature -- Class initialization
 			if (is_exp /= old_is_expanded and then old_parents /= Void) then
 					-- The expanded status has been modifed
 					-- (`old_parents' is Void only for the first compilation of the class)
-				pass2_controler.set_expanded_modified (Current)
+				Degree_4.set_expanded_modified (Current)
 				changed_status := True
 				changed_expanded := True
 			end
@@ -1858,14 +1801,18 @@ feature -- Class initialization
 				set_is_separate (False)
 			end
 
+				-- Class status
+			is_external := ast_b.is_external
+			is_frozen := ast_b.is_frozen
+
 			if (is_separate /= old_is_separate and then old_parents /= Void) then
-				pass2_controler.set_separate_modified (Current)
+				Degree_4.set_separate_modified (Current)
 				changed_status := True
 				changed_separate := True
 			end
 
 			if changed_status then
-				pass2_controler.add_changed_status (Current)
+				Degree_4.add_changed_status (Current)
 				from
 					syntactical_clients.start
 				until
@@ -1879,15 +1826,15 @@ feature -- Class initialization
 						if not a_client.changed then
 							a_client.set_changed (True)
 								-- The ast is in the temporary server
-								-- so pass 2 can be done the same way
-							pass1_controler.insert_changed_class (a_client)
+								-- so Degree 4 can be done the same way
+							Degree_5.insert_changed_class (a_client)
 						end
 					else
 						set_changed2 (True)
 					end
-					pass2_controler.set_supplier_status_modified (a_client)
-					pass3_controler.insert_new_class (a_client)
-					pass4_controler.insert_new_class (a_client)
+					Degree_4.set_supplier_status_modified (a_client)
+					Degree_3.insert_new_class (a_client)
+					Degree_2.insert_new_class (a_client)
 					syntactical_clients.forth
 				end
 
@@ -1900,7 +1847,7 @@ feature -- Class initialization
 				loop
 					cl_type := types.item
 					cl_type.set_is_changed (True)
-					cl_type.type.set_is_expanded (is_expanded)
+					cl_type.type.set_is_true_expanded (is_expanded)
 					types.forth
 				end
 			end
@@ -1916,7 +1863,16 @@ feature -- Class initialization
 			parents_as := ast_b.parents
 			parent_list := class_info.parents
 
-			if parents_as /= Void then
+			if parents_as /= Void and then not parents_as.is_empty then
+				if class_id = System.any_id then
+					create vhpr1
+					create dummy_list.make
+					dummy_list.extend (class_id)
+					vhpr1.set_involved_classes (dummy_list)
+					Error_handler.insert_error (vhpr1)
+						-- Cannot go on here
+					Error_handler.raise_error
+				end
 
 					-- Separate loop for VHPR3 checking
 				from
@@ -1935,7 +1891,7 @@ feature -- Class initialization
 						ve04.set_class (Current)
 						ve04.set_parent_type (parent_type)
 						Error_handler.insert_error (ve04)
-							-- Cannot ge on here
+							-- Cannot go on here
 						Error_handler.raise_error
 					end
 					lower := lower + 1
@@ -1966,9 +1922,9 @@ feature -- Class initialization
 					pars.put_i_th (parent_type, lower)
 					lower := lower + 1
 				end
-			elseif not id.is_equal (System.general_id) then
+			elseif not (class_id = System.any_id) then
 					-- No parents are syntactiaclly specified: ANY is
-					-- the default parent, except for class GENERAL which has
+					-- the default parent, except for class ANY which has
 					-- no parent at all (we don't want a cycle in the
 					-- inheritance graph, otherwise the topological sort
 					-- on the classes will fail...).
@@ -1979,7 +1935,7 @@ feature -- Class initialization
 					-- Fill parent list of corresponding class info
 				parent_list.put_i_th (Any_parent, 1)
 			else
-					-- In case of the GENERAL class, just create an empty
+					-- In case of the ANY class, just create an empty
 					-- parent structure
 				!! pars.make (0)
 			end
@@ -2051,39 +2007,28 @@ feature -- Class initialization
 					set_changed3a (True)
 					System.set_update_sort (True)
 
---						-- Take care of signature conformance for redefinion of
---						-- f(p:PARENT) in f(c: CHILD). If CHILD does not inherit
---						-- from PARENT anymore, the redefinition of f is not valid
---					if removed_parent (old_parents) then
---						from
---							syntactical_clients.start
---						until
---							syntactical_clients.after
---						loop
---							a_client := syntactical_clients.item
---							a_client.set_changed2 (True)
---							pass2_controler.insert_new_class (a_client)
---							syntactical_clients.forth
---						end
---					end
+						-- Take care of signature conformance for redefinion of
+						-- f(p:PARENT) in f(c: CHILD). If CHILD does not inherit
+						-- from PARENT anymore, the redefinition of f is not valid
+					if removed_parent (old_parents) then
+						from
+							syntactical_clients.start
+						until
+							syntactical_clients.after
+						loop
+							a_client := syntactical_clients.item
+							a_client.set_changed2 (True)
+							Degree_4.insert_new_class (a_client)
+							syntactical_clients.forth
+						end
+					end
 				end
 				if not changed then
 						-- If the class is not changed, it is marked `changed2'
 					changed2 := True
 				end
 			else
-				-- First compilation of the class
-				System.set_update_sort (True)
-			end
-
-				-- Conformance tables incrementality
-			if 	(not System.update_sort)	-- Topological sort not already
-				and then					-- set on.
-				(	old_parents = Void		-- First compilation of the class
-					or else
-					not same_parents (old_parents))	-- Parent changed from the
-			then									-- inheritance graph point
-													-- of view
+					-- First compilation of the class
 				System.set_update_sort (True)
 			end
 		ensure
@@ -2132,7 +2077,6 @@ feature -- Class initialization
 		require
 			good_argument: old_parents /= Void
 		local
-			pos: INTEGER
 			parent_class: CLASS_C
 			l_area, o_area: SPECIAL [CL_TYPE_A]
 			i, nb: INTEGER
@@ -2178,7 +2122,7 @@ feature
 
 	update_syntactical_relations
 		(old_syntactical_suppliers: like syntactical_suppliers) is
-			-- Remove syntactical client/supplier relations ans take
+			-- Remove syntactical client/supplier relations and take
 			-- care of possible removed classes
 		local
 			a_class: CLASS_C
@@ -2273,13 +2217,13 @@ feature
 			end
 		end
 
-	mark_class (marked_classes: SEARCH_TABLE [CLASS_ID]) is
+	mark_class (marked_classes: SEARCH_TABLE [INTEGER]) is
 			-- Mark the class as used in the system
 			-- and propagate to the suppliers
 			-- Used by remove_useless_classes in SYSTEM_I
 		do
-			if not marked_classes.has (id) then
-				marked_classes.put (id)
+			if not marked_classes.has (class_id) then
+				marked_classes.put (class_id)
 				from
 					syntactical_suppliers.start
 				until
@@ -2301,9 +2245,12 @@ feature
 			generic_name: ID_AS
 			vcfg1: VCFG1
 			vcfg2: VCFG2
+			vgcp3: VGCP3
 			error: BOOLEAN
 			l_area: SPECIAL [FORMAL_DEC_AS]
 			i, j, nb: INTEGER
+			duplicate_name: SEARCH_TABLE [STRING]
+			f_list: EIFFEL_LIST [FEATURE_NAME]
 		do
 			from
 				l_area := generics.area
@@ -2342,6 +2289,33 @@ feature
 						end
 					end
 					j := j + 1
+				end
+
+					-- Third, check that if there is a creation routine specified in
+					-- constraint, it does not appear twice in list.
+				if generic_dec.has_creation_constraint then
+					if duplicate_name /= Void then
+						duplicate_name.wipe_out
+					else
+						create duplicate_name.make (5)
+					end
+
+					from
+						f_list := generic_dec.creation_feature_list
+						f_list.start
+					until
+						f_list.after
+					loop
+						if duplicate_name.has (f_list.item.internal_name) then
+							create vgcp3
+							vgcp3.set_class (Current)
+							vgcp3.set_feature_name (f_list.item.internal_name)
+							Error_handler.insert_error (vgcp3)
+						else
+							duplicate_name.put (f_list.item.internal_name)
+						end
+						f_list.forth
+					end
 				end
 				i := i + 1
 			end
@@ -2386,7 +2360,6 @@ feature
 			generics_exists: generics /= Void
 		local
 			generic_dec: FORMAL_DEC_AS
-			constraint_type: TYPE
 			l_area: SPECIAL [FORMAL_DEC_AS]
 			i, nb: INTEGER
 		do
@@ -2438,6 +2411,7 @@ feature -- Parent checking
 		local
 			vtug: VTUG
 			vtcg4: VTCG4
+			il_inherit_error: IL_INHERIT_ERROR
 			parent_actual_type: CL_TYPE_A
 			l_area: SPECIAL [CL_TYPE_A]
 			i, nb: INTEGER
@@ -2462,13 +2436,23 @@ feature -- Parent checking
 						-- Check constrained genericity validity rule
 					parent_actual_type.reset_constraint_error_list
 					parent_actual_type.check_constraints (Current)
-					if not parent_actual_type.constraint_error_list.empty then
+					if not parent_actual_type.constraint_error_list.is_empty then
 						!!vtcg4
 						vtcg4.set_class (Current)
 						vtcg4.set_error_list (parent_actual_type.constraint_error_list)
 						vtcg4.set_parent_type (parent_actual_type)
 						Error_handler.insert_error (vtcg4)
 					end
+				end
+
+				if parent_actual_type.associated_class.is_frozen then
+						-- Error which occurs only during IL generation.
+					check
+						il_generation: System.il_generation
+					end
+					create il_inherit_error.make (Current)
+					il_inherit_error.set_parent_class (parent_actual_type.associated_class)
+					Error_handler.insert_error (il_inherit_error)
 				end
 				i := i + 1
 			end
@@ -2508,9 +2492,7 @@ feature -- Supplier checking
 			-- and add perhaps classes to the system.
 		require
 			good_argument: not
-				(supplier_list = Void or else supplier_list.empty)
-		local
-			old_cursor: CURSOR
+				(supplier_list = Void or else supplier_list.is_empty)
 		do
 			from
 				supplier_list.start
@@ -2705,13 +2687,12 @@ feature -- Supplier checking
 			array_generics: ARRAY [TYPE_A]
 			string_type: CL_TYPE_A
 		once
-			!!Result
-			Result.set_base_class_id (System.array_id)
-			!! string_type
+			create string_type
 			string_type.set_base_class_id (System.string_id)
-			!!array_generics.make (1, 1)
+			create array_generics.make (1, 1)
 			array_generics.put (string_type, 1)
-			Result.set_generics (array_generics)
+			create Result.make (array_generics)
+			Result.set_base_class_id (System.array_id)
 		end
 
 feature -- Order relation for inheritance and topological sort
@@ -2751,13 +2732,13 @@ feature -- Order relation for inheritance and topological sort
 						and then conformance_table.item (otopid)
 							-- Check conformance table
 
-				if Result and then (not is_class_none) and then (not other.is_class_any) then
-					dep_class := System.current_class
-
-					if dep_class /= Void and then dep_class /= Current then
-						add_dep_class (dep_class)
-					end
-				end
+ 				if Result and then (not is_class_none) and then (not other.is_class_any) then
+ 					dep_class := System.current_class
+ 
+ 					if dep_class /= Void and then dep_class /= Current then
+ 						add_dep_class (dep_class)
+ 					end
+ 				end
 			end
 		end
 
@@ -2878,6 +2859,16 @@ feature -- Convenience features
 			creators := c
 		end
 
+	set_visible_table_size (i: INTEGER) is
+			-- Assign `i' to `visible_table_size'
+		require
+			i_positive: i >= 0
+		do
+			visible_table_size := i
+		ensure
+			visible_table_size_set: visible_table_size = i
+		end
+
 	add_descendant (c: CLASS_C) is
 			-- Insert class `c' into the descendant list
 		require
@@ -2910,7 +2901,7 @@ feature -- Convenience features
 					-- In final mode we do not generate assertions
 					-- if the dead code remover is on.
 				if not System.keep_assertions then
-					Result := No_level
+					create Result.make_no
 				else
 					Result := lace_class.assertion_level
 				end
@@ -2959,20 +2950,17 @@ feature -- Actual class type
 			-- Actual type of the class
 		local
 			i, count: INTEGER
-			gen_type: GEN_TYPE_A
 			actual_generic: ARRAY [FORMAL_A]
 			formal: FORMAL_A
 		do
 			if generics = Void then
 				!!Result
 			else
-				!!gen_type
-				Result := gen_type
 				from
 					i := 1
 					count := generics.count
-					!! actual_generic.make (1, count)
-					gen_type.set_generics (actual_generic)
+					create actual_generic.make (1, count)
+					create {GEN_TYPE_A} Result.make (actual_generic)
 				until
 					i > count
 				loop
@@ -2982,8 +2970,8 @@ feature -- Actual class type
 					i := i + 1
 				end
 			end
-			Result.set_base_class_id (id)
-			Result.set_is_expanded (is_expanded)
+			Result.set_base_class_id (class_id)
+			Result.set_is_true_expanded (is_expanded)
 		end
 		
 	insert_changed_feature (feature_name: STRING) is
@@ -3048,7 +3036,7 @@ end
 			type_i: CL_TYPE_I
 		do
 			!!type_i
-			type_i.set_base_id (id)
+			type_i.set_base_id (class_id)
 			class_type := new_type (type_i)
 			types.put_front (class_type)
 			System.insert_class_type (class_type)
@@ -3064,9 +3052,9 @@ end
 			filter: GEN_TYPE_I
 			new_class_type: CLASS_TYPE
 		do
-			if not derivations.has_derivation (id, data) then
+			if not derivations.has_derivation (class_id, data) then
 					-- The recursive update is done only once
-				derivations.insert_derivation (id, data)
+				derivations.insert_derivation (class_id, data)
 				
 debug ("GENERICITY")
 	io.error.putstring ("Update_types%N")
@@ -3088,14 +3076,14 @@ end
 						-- If the $ operator is used in the class,
 						-- an encapsulation of the feature must be generated
 
-					if System.address_table.class_has_dollar_operator (id) then
+					if System.address_table.class_has_dollar_operator (class_id) then
 						System.set_freeze
 					end
 
 						-- Mark the class `changed4' because there is a new
 						-- type
 					changed4 := True
-					pass4_controler.insert_new_class (Current)
+					Degree_2.insert_new_class (Current)
 						-- Insertion of the new class type
 					types.put_front (new_class_type)
 					System.insert_class_type (new_class_type)
@@ -3167,7 +3155,7 @@ feature -- Meta-type
 					-- the feature is written in the context of the actual
 					-- type of the base class of `class_type'.
 				written_actual_type ?= actual_type.instantiation_in
-											(actual_class_type, id)
+											(actual_class_type, class_id)
 					-- Ask for the meta-type
 				Result := written_actual_type.type_i
 					-- Meta instantiation
@@ -3188,26 +3176,25 @@ feature -- Validity class
 
 feature -- default_rescue routine
 
-	default_rescue_feature: FEATURE_I is
-			-- The version of `default_rescue' from GENERAL.
-			-- Void if GENERAL has not been compiled yet or
+	default_rescue_feature (ftab: FEATURE_TABLE): FEATURE_I is
+			-- The version of `default_rescue' from ANY.
+			-- Void if ANY has not been compiled yet or
 			-- does not posess the feature.
 		local
-			ftab: FEATURE_TABLE
 			item: FEATURE_I
-			pos : INTEGER
+			pos, id: INTEGER
 		do
-			if (System.general_class /= Void) then
+			if (System.any_class /= Void) then
 				from
-					ftab := feature_table
 					pos  := ftab.iteration_position
+					id := System.default_rescue_id
 					ftab.start
 				until
 					ftab.after or (Result /= Void)
 				loop
 					item := ftab.item_for_iteration
 
-					if equal (item.rout_id_set.first, System.default_rescue_id) then
+					if item.rout_id_set.first = id then
 						Result := item
 					end
 
@@ -3221,15 +3208,15 @@ feature -- default_rescue routine
 feature -- default_create routine
 
 	default_create_feature : FEATURE_I is
-			-- The version of `default_create' from GENERAL.
-			-- Void if GENERAL has not been compiled yet or
+			-- The version of `default_create' from ANY.
+			-- Void if ANY has not been compiled yet or
 			-- does not posess the feature or class is deferred.
 		local
 			ftab: FEATURE_TABLE
 			item: FEATURE_I
 			pos : INTEGER
 		do
-			if not is_deferred and then (System.general_class /= Void) then
+			if not is_deferred and then (System.any_class /= Void) then
 				from
 					ftab := feature_table
 					pos  := ftab.iteration_position
@@ -3239,7 +3226,7 @@ feature -- default_create routine
 				loop
 					item := ftab.item_for_iteration
 
-					if equal (item.rout_id_set.first, System.default_create_id) then
+					if item.rout_id_set.first = System.default_create_id then
 						Result := item
 					end
 
@@ -3263,7 +3250,7 @@ feature -- default_create routine
 				-- 'default_create'
 				if dcr_feat /= Void then
 					Result := (creators = Void) or else
-							  (not creators.empty and then
+							  (not creators.is_empty and then
 							   creators.has (dcr_feat.feature_name))
 				end
 			end
@@ -3286,7 +3273,7 @@ feature -- Dispose routine
 					ftab.after or (Result /= Void)
 				loop
 					item := ftab.item_for_iteration
-					if equal (item.rout_id_set.first, System.memory_dispose_id) then
+					if item.rout_id_set.first = System.memory_dispose_id then
 						Result := item
 					end
 					ftab.forth
@@ -3334,21 +3321,8 @@ feature -- Dead code removal
 			Result := visible_level.has_visible
 		end
 
-	nb_visible: INTEGER is
-			-- Number of visible features from the class
-		require
-			visible_level /= Void
-		do
-			Result := visible_level.nb_visible (Current)
-		end
-
-	visible_table_size: INTEGER is
-			-- Size of the hash table for the visible features
-		require
-			visible_level /= Void
-		do
-			Result := visible_level.visible_table_size (Current)
-		end
+	visible_table_size: INTEGER
+			-- Size of hash table for visible features of Current class.
 
 feature -- Cecil
 
@@ -3357,6 +3331,9 @@ feature -- Cecil
 		require
 			has_visible: has_visible
 		do
+				-- Reset hash-table size which will be computed during
+				-- generation. 
+			set_visible_table_size (0)
 			visible_level.generate_cecil_table (Current)
 		end
 
@@ -3391,37 +3368,8 @@ feature -- Conformance table generation
 
 	process_polymorphism is
 		do
-			feature_table.origin_table.add_units (id)
-		end
-
-	make_conformance_table (t: CONFORM_TABLE) is
-			-- Make final conformance table
-		require
-			good_argument: t /= Void
-		local
-			dec: LINKED_LIST [CLASS_C]
-			type_list: TYPE_LIST
-		do
-				-- Mark conformance table `t' first.
-			from
-				type_list := types
-				type_list.start
-			until
-				type_list.off
-			loop
-				t.mark (type_list.item.type_id)
-				type_list.forth
-			end
-				-- Recursion on descendants
-			from
-				dec := descendants
-				dec.start
-			until
-				dec.after
-			loop
-				dec.item.make_conformance_table (t)
-				dec.forth
-			end
+			System.set_current_class (Current)
+			feature_table.origin_table.add_units (class_id)
 		end
 
 feature -- Redeclaration valididty
@@ -3443,12 +3391,6 @@ feature -- Invariant feature
 			Result := invariant_feature /= Void
 		end
 			
-	is_basic: BOOLEAN is
-			-- Is the current class a basic class ?
-		do
-			-- Do nothing
-		end
-
 feature -- Process the creation feature
 
 	process_creation_feature (tbl: like feature_table) is
@@ -3456,7 +3398,7 @@ feature -- Process the creation feature
 			-- `creation_feature'.
 		do
 			if creators /= Void then
-				if not creators.empty then
+				if not creators.is_empty then
 					creators.start
 					creation_feature := tbl.item (creators.key_for_iteration)
 				end
@@ -3478,7 +3420,7 @@ feature -- Replication
 			feat_depend: REP_FEATURE_DEPEND
 			f_table: FEATURE_TABLE
 			feat: FEATURE_I
-			class_id: CLASS_ID
+			cid: INTEGER
 			found: BOOLEAN
 		do
 			from
@@ -3487,8 +3429,8 @@ feature -- Replication
 				feat_dep.after
 			loop
 				unit := feat_dep.item
-				class_id := unit.id
-				class_c := System.class_of_id (class_id)
+				cid := unit.class_id
+				class_c := System.class_of_id (cid)
 					-- Get feature table
 				if class_c /= Void then
 					-- Class exists in system
@@ -3501,12 +3443,12 @@ feature -- Replication
 					then
 						-- Then Propagate
 						class_c.set_changed2 (True)
-						pass2_controler.insert_new_class (class_c)
-						if Rep_depend_server.server_has (class_id) then
-							rep_depend := Rep_depend_server.server_item (class_id)
+						Degree_4.insert_new_class (class_c)
+						if Rep_depend_server.server_has (cid) then
+							rep_depend := Rep_depend_server.server_item (cid)
 							found := True
-						elseif Tmp_rep_depend_server.has (class_id) then
-							rep_depend := Tmp_rep_depend_server.item (class_id)
+						elseif Tmp_rep_depend_server.has (cid) then
+							rep_depend := Tmp_rep_depend_server.item (cid)
 							found := True
 						else
 							found := False
@@ -3518,7 +3460,7 @@ feature -- Replication
 								if feat_depend.count > 0 then
 									Tmp_rep_depend_server.put (rep_depend)
 								else
-									Tmp_rep_depend_server.remove (class_id)
+									Tmp_rep_depend_server.remove (cid)
 								end
 							end
 						end
@@ -3556,145 +3498,11 @@ end
 			end
 		end
 
-	process_replicated_features is
-			-- Process replicated features for Current
-		require
-			have_replicated_features: Tmp_rep_info_server.has (id)
-		local
-			rep_class_info: REP_CLASS_INFO	
-			stored_rep_name_list: S_REP_NAME_LIST
-			replicator: REPLICATOR
-			rep_name: S_REP_NAME
-			old_feat, new_feat: FEATURE_I
-			old_body_id, new_body_id: BODY_ID
-			rep_table: REP_FEATURES
-			new_feat_as, old_feat_as: FEATURE_AS
-			rep_features: LINKED_LIST [S_REP_NAME]
-		do
-			rep_class_info := Tmp_rep_info_server.item (id)
-debug ("ACTUAL_REPLICATION", "REPLICATION")
-	io.error.putstring ("Replication for class ")
-	io.error.putstring (name)
-	io.error.new_line
-	rep_class_info.trace	
-end
-			from
-				!!rep_table.make (rep_class_info.count, id)
-				rep_class_info.start
-			until
-				rep_class_info.after
-			loop
-				stored_rep_name_list := rep_class_info.item
-				rep_features := stored_rep_name_list.replicated_features
-				from
-					rep_features.start
-				until
-					rep_features.after
-				loop
-					rep_name := rep_features.item
-					old_feat := rep_name.old_feature
-					new_feat := rep_name.new_feature
-					!!replicator.make (old_feat,
-									new_feat,
-									stored_rep_name_list,
-									stored_rep_name_list.parent,
-									Current,
-									new_feat.feature_name)
-					new_feat_as := replicator.ast
-					new_body_id := new_feat.body_id
-					if new_body_id = Void then
-						-- Must check old and new ast for incrementality
-						old_body_id := new_feat.original_body_id
-						old_feat_as := Rep_feat_server.server_item (old_body_id)
-						if
-							not old_feat_as.is_assertion_equiv (new_feat_as)
-							or else not old_feat_as.is_body_equiv (new_feat_as)
-						then
-						--	new_body_id := Body_id_counter.next_id
-							new_feat.change_body_id
-							new_body_id := new_feat.body_id
-							insert_changed_feature (new_feat.feature_name)
-
-								-- We do not have enough information to know
-								-- in which server we should deactivate, so
-								-- we do it in both -- FRED
-							Tmp_body_server.desactive (old_body_id)
-							Tmp_rep_feat_server.desactive (old_body_id)
-
-debug ("REPLICATION")
-	io.error.putstring ("following feature AST was NOT equiv to previous%N")
-end
-						else
-							new_body_id := old_body_id
-debug ("REPLICATION")
-	io.error.putstring ("following feature AST was equiv to previous%N")
-end
-						end
-					
-						--	System.body_index_table.force (new_body_id, new_feat.body_index)
-					end
-					rep_table.force (new_feat_as, new_body_id)
-debug ("ACTUAL_REPLICATION", "REPLICATION")
-	new_feat.trace
-end
-					rep_features.forth
-				end
-				rep_class_info.forth
-			end
-			update_rep_feat_server (rep_table)
-		end
-
-	update_rep_feat_server (rep_table: REP_FEATURES) is
-				-- Update the rep_feat_server with body_id
-				-- and its corresponding read_info
-		local
-			index: EXTEND_TABLE [READ_INFO, FEATURE_AS_ID]
-			read_info: READ_INFO
-			rep_body_table: EXTEND_TABLE [READ_INFO, BODY_ID]
-		do
-				-- Clear index
-			Tmp_rep_server.clear_index
-
-				-- Put formulates read info index
-			Tmp_rep_server.put (rep_table)
-			index := Tmp_rep_server.index
-			-- Clear index for next class
-
-			from
-				!!rep_body_table.make (rep_table.count)
-				rep_table.start
-			until
-				rep_table.after
-			loop
-					-- `rep_table.item_for_iteration' contains a FEATURE_AS
-				read_info := index.item (rep_table.item_for_iteration.id)
-
-					-- Place the read_info for the feature's body id
-				rep_body_table.force (read_info, rep_table.key_for_iteration)
-				rep_table.forth
-			end
-
-			-- Update read info in rep_feat servers
-			Tmp_rep_feat_server.merge (rep_body_table)
-			Tmp_rep_server.clear_index
-		end
-
 	insert_changed_assertion (a_feature: FEATURE_I) is
 			-- Insert `a_feature' in the melted set
-		local
-			melted_info: FEAT_MELTED_INFO
 		do
-			--! Give a new body id so it is greater
-			--! than the frozen level
-			a_feature.change_body_id
-			if melted_set = Void then
-				!! melted_set.make
-				melted_set.compare_objects
-			end
-			!! melted_info.make (a_feature)
-			melted_set.put (melted_info)
-			System.melted_set.put (Current)
-			set_must_be_recompiled (True)
+			add_feature_to_melted_set (a_feature)
+			Degree_1.insert_class (Current)
 		end
 
 feature -- Merging
@@ -3704,7 +3512,7 @@ feature -- Merging
 			-- Used when merging precompilations.
 		require
 			other_not_void: other /= Void
-			same_class: id.is_equal (other.id)
+			same_class: class_id = other.class_id
 		local
 			classes, desc: LINKED_LIST [CLASS_C]
 			class_c: CLASS_C
@@ -3720,7 +3528,7 @@ feature -- Merging
 			until 
 				classes.after 
 			loop
-				class_c := System.class_of_id (classes.item.id)
+				class_c := System.class_of_id (classes.item.class_id)
 				if not clients.has (class_c) then
 					clients.extend (class_c)
 					clients.forth
@@ -3736,7 +3544,7 @@ feature -- Merging
 			until 
 				classes.after 
 			loop
-				class_c  := System.class_of_id (classes.item.id)
+				class_c  := System.class_of_id (classes.item.class_id)
 				if not desc.has (class_c) then
 					desc.extend (class_c)
 					desc.forth
@@ -3750,4 +3558,979 @@ feature -- Merging
 				--| doesn't matter if `syntactical_clients' is out-of-date.
 		end
 
+feature {NONE} -- Implementation
+
+	add_feature_to_melted_set (f: FEATURE_I) is
+		local
+			melt_set: like melted_set
+			melted_info: MELTED_INFO
+			ext: EXTERNAL_I
+		do
+			melt_set := melted_set
+			if melt_set = Void then
+				create melt_set.make (melted_set_chunk)
+				melted_set := melt_set
+			end
+
+			if f.is_external then
+				ext ?= f
+				if ext.is_cpp or ext.is_special or ext.encapsulated then
+					create {FEAT_MELTED_INFO} melted_info.make (f, Current)
+				else
+					create {EXT_FEAT_MELTED_INFO} melted_info.make (f, Current)
+				end
+			elseif f = invariant_feature then
+				create {INV_MELTED_INFO} melted_info.make (f, Current)
+			else
+				create {FEAT_MELTED_INFO} melted_info.make (f, Current)
+			end
+			melt_set.force (melted_info)
+		end
+
+	Melted_set_chunk: INTEGER is 20
+			-- Size of `melted_set' which contains melted features.
+
+feature -- Initialization
+
+	initialize (l: CLASS_I) is
+			-- Initialization of Current.
+		require
+			good_argument: l /= Void
+		do
+			lace_class := l
+				-- Set `is_class_any' and `is_class_none'
+			is_class_any := name_in_upper.is_equal ("ANY")
+			is_class_none := name_in_upper.is_equal ("NONE")
+				-- Creation of the descendant list
+			!! descendants.make
+				-- Creation of the supplier list
+			!! suppliers.make
+				-- Creation of the client list
+			!! clients.make
+				-- Types list creation
+			!! types.make
+		end
+
+feature -- Properties
+
+	lace_class: CLASS_I
+			-- Lace class 
+
+	parents: FIXED_LIST [CL_TYPE_A]
+			-- Parent classes
+
+	descendants: LINKED_LIST [CLASS_C]
+			-- Direct descendants of the current class
+
+	clients: LINKED_LIST [CLASS_C]
+			-- Clients of the class
+
+	suppliers: SUPPLIER_LIST
+			-- Suppliers of the class in terms of calls
+			-- [Useful for incremental type check].
+
+	generics: EIFFEL_LIST [FORMAL_DEC_AS]
+			-- Formal generical parameters
+
+	topological_id: INTEGER
+			-- Unique number for a class. Could change during a topological
+			-- sort on classes.
+
+	reverse_engineered: BOOLEAN
+			-- Does the Storage mechanism for EiffelCase need
+			-- to regenerate the EiffelCase description for Current class?
+
+	is_deferred: BOOLEAN
+			-- Is class deferred ?
+
+	is_expanded: BOOLEAN
+			-- Is class expanded?
+
+	is_enum: BOOLEAN
+			-- Is class an IL enum type?
+			-- Useful to perform call optimization on enum type in FEATURE_B.
+
+	is_basic: BOOLEAN is
+			-- Is class basic?
+		do
+		end
+
+	is_separate: BOOLEAN
+			-- Is the class separate ?
+
+	is_frozen: BOOLEAN
+			-- Is class frozen, ie we cannot inherit from it?
+
+	is_external: BOOLEAN
+			-- Is class an external one?
+			-- If yes, we do not generate it.
+
+	obsolete_message: STRING
+			-- Obsolete message
+			-- (Void if Current is not obsolete)
+
+	name: STRING is
+			-- Class name
+		do
+			Result := lace_class.name
+		end
+
+	external_class_name: STRING is
+			-- External class name.
+		do
+			if private_external_name /= Void then
+				Result := private_external_name
+			else
+				Result := clone (name)
+				Result.to_upper
+			end
+		end
+
+	text: STRING is
+			-- Class text
+		require
+			valid_file_name: file_name /= Void
+		do
+			Result := lace_class.text
+		end
+
+feature -- status
+
+	hash_code: INTEGER is
+			-- Hash code value corresponds to `class_id'.
+		do
+			Result := class_id
+		end
+
+feature {CLASS_I} -- Settings
+
+	set_lace_class (cl: CLASS_I) is
+			-- Assign `cl' to `lace_class'.
+		require
+			cl_not_void: cl /= Void
+			cl_different_from_current_lace_class: cl /= lace_class
+		do
+			lace_class := cl
+		ensure
+			lace_class_set: lace_class = cl
+		end
+
+feature -- Access
+
+	is_fully_deferred: BOOLEAN is
+			-- Are parents of current class either ANY or a fully deferred class?
+			-- Does current class contain only deferred features?
+		require
+			has_feature_table: has_feature_table
+		local
+			feat: FEATURE_I
+			feat_tbl: FEATURE_TABLE
+			written_in: INTEGER
+			par: like parents
+		do
+			Result := True
+			if not is_class_any then
+				Result := is_deferred
+				if Result then
+					from
+						par := parents
+					  	par.start
+					until
+						par.after or else not Result
+					loop
+						Result := Result and then par.item.associated_class.is_fully_deferred
+						par.forth
+					end
+					if Result then
+						from
+							written_in := class_id
+							feat_tbl := feature_table
+							feat_tbl.start
+						until
+							feat_tbl.after or else not Result
+						loop
+							feat := feat_tbl.item_for_iteration
+							if feat.written_in = written_in then
+								Result := Result and then feat.is_deferred
+							end
+							feat_tbl.forth
+						end
+					end
+				end
+			end
+		end
+
+	name_in_upper: STRING is
+			-- Class name in upper case
+		do
+			Result := clone (name)
+			Result.to_upper
+		end
+
+	ast: CLASS_AS is
+			-- Associated AST structure
+		do
+			if Ast_server.has (class_id) then
+				Result := Ast_server.item (class_id)
+			elseif Tmp_ast_server.has (class_id) then
+				Result := Tmp_ast_server.item (class_id)
+			end
+		ensure
+			non_void_result_if: has_ast implies Result /= Void 
+		end
+
+	most_recent_ast: CLASS_AS is
+			-- Last stored AST structure.
+		do
+			if Tmp_ast_server.has (class_id) then
+				Result := Tmp_ast_server.item (class_id)
+			elseif Ast_server.has (class_id) then
+				Result := Ast_server.item (class_id)
+			end
+		ensure
+			non_void_result_if: has_ast implies Result /= Void 
+		end
+
+	invariant_ast: INVARIANT_AS is
+			-- Associated invariant AST structure
+		do
+			if invariant_feature /= Void then
+				Result := Inv_ast_server.item (class_id)
+			end
+		end
+
+	has_types: BOOLEAN is
+			-- Are there any generic instantiations of Current
+			-- in the system or is Current a non generic class?
+		do
+			Result := (types /= Void) and then (not types.is_empty)
+		end
+
+	is_obsolete: BOOLEAN is
+			-- Is Current feature obsolete?
+		do
+			Result := obsolete_message /= Void
+		end
+
+	feature_with_name (n: STRING): E_FEATURE is
+			-- Feature whose internal name is `n'
+		require
+			valid_n: n /= Void
+			has_feature_table: has_feature_table
+		local
+			f: FEATURE_I
+		do
+			f := feature_table.item (n)
+			if f /= Void then
+				Result := f.api_feature (class_id)
+			end
+		end
+
+	feature_with_body_index (bid: INTEGER): E_FEATURE is
+			-- Feature whose body id `bid'.
+		require
+			valid_body_index: bid /= 0
+			has_feature_table: has_feature_table
+		local
+			feat: FEATURE_I
+		do
+			feat := feature_table.feature_of_body_index (bid)
+			if feat /= Void then
+				Result := feat.api_feature (class_id)
+			end
+		end
+
+	feature_with_rout_id (rout_id: INTEGER): E_FEATURE is
+			-- Feature whose routine id `rout_id'.
+		require
+			valid_rout_id: rout_id /= 0
+			has_feature_table: has_feature_table
+		local
+			feat: FEATURE_I
+		do
+			feat := feature_table.origin_table.item (rout_id)
+			if feat /= Void then
+				Result := feat.api_feature (class_id)
+			end
+		end
+
+	api_feature_table: E_FEATURE_TABLE is	
+			-- Feature table for current class
+			--| Can be Void when `feature_table' has not yet
+			--| been computed (for example, error at degree 5).
+		do
+			if feature_table /= Void then
+				Result := feature_table.api_table
+			end
+		end
+
+	once_functions: SORTED_TWO_WAY_LIST [E_FEATURE] is
+			-- List of once functions
+		local
+			f_table: FEATURE_TABLE
+			feat: FEATURE_I
+			cid: INTEGER
+		do
+			cid := class_id
+			!! Result.make
+			f_table := feature_table
+			from
+				f_table.start
+			until
+				f_table.after
+			loop
+				feat := f_table.item_for_iteration
+				if feat.is_once and then feat.is_function then
+					Result.put_front (feat.api_feature (cid))
+				end
+				f_table.forth
+			end
+			Result.sort
+		ensure
+			non_void_result: Result /= Void
+			result_sorted: Result.sorted
+		end
+
+	is_valid: BOOLEAN is
+			-- Is the current class valid?
+			-- (After a compilation Current may become 
+			-- invalid)
+		do
+			Result := class_id > 0 and then class_id <= System.classes.array_count
+				and then System.class_of_id (class_id) = Current
+		end
+
+	written_in_features: LIST [E_FEATURE] is
+			-- List of features defined in current class
+		require
+			has_feature_table: has_feature_table
+		do
+			Result := feature_table.written_in_features
+		ensure
+			non_void_Result: Result /= Void
+		end
+
+	is_class_any: BOOLEAN
+			-- Is it class ANY?
+
+	is_class_none: BOOLEAN
+			-- Is it class NONE?
+
+feature -- Precompilation Access
+
+	is_precompiled: BOOLEAN is
+			-- Is class precompiled?
+		do	
+			Result := System.class_counter.is_precompiled (class_id)
+		end
+
+feature -- Server Access
+
+	has_ast: BOOLEAN is
+			-- Does Current class have an AST structure?
+		do
+			Result := Ast_server.has (class_id) or else Tmp_ast_server.has (class_id)
+		end
+
+	click_list: CLICK_LIST is
+			-- Associated click list
+		local
+			l_ast: like ast
+		do
+			l_ast := most_recent_ast
+			if l_ast /= Void then
+				Result := l_ast.click_list
+			end
+		ensure
+			valid_result: Result /= Void implies has_ast
+		end
+
+	cluster: CLUSTER_I is
+			-- Cluster to which the class belongs to
+		do
+			Result := lace_class.cluster
+		end
+
+	hidden: BOOLEAN is
+			-- Is the class hidden in the precompilation sets?
+		do
+			Result := lace_class.hidden
+		ensure
+			hide_only_when_precompiled: Result implies is_precompiled
+		end
+
+	file_name: STRING is
+			-- File name of the class
+		do
+			Result := lace_class.file_name
+		end
+
+	file_is_readable: BOOLEAN is
+			-- Is file with `file_name' readable?
+		local
+			f: PLAIN_TEXT_FILE
+		do
+			!! f.make (file_name)
+			Result := f.is_readable	
+		end
+
+	has_syntax_error: BOOLEAN is
+			-- Does class have a syntax error (after calling `parse_ast')?
+		do
+			Result := last_syntax_error /= Void
+		ensure
+			ok_result: Result = (last_syntax_error /= Void)
+		end
+
+	last_syntax_error: SYNTAX_ERROR is
+			-- Last syntax error generated after calling
+			-- routine `parse_ast'
+		do
+			Result := last_syntax_cell.item
+		end
+
+feature -- Comparison
+
+	infix "<" (other: like Current): BOOLEAN is
+			-- Order relation on classes
+		do
+			Result := topological_id < other.topological_id
+		end
+
+feature -- Element change
+
+	parse_ast is
+			-- Parse the AST structure of current class if it has changed.
+			-- Set `last_syntax_error' if a syntax error ocurred.
+			--| Save the AST in the temporary server and add it to the
+			--| pass one controller (need to still do the end of pass1 process).
+		require
+			not_precompiled: not is_precompiled
+			file_is_readable: file_is_readable
+		local
+			class_ast: CLASS_AS
+			error: BOOLEAN
+			syntax_error: SYNTAX_ERROR
+			compiled_info: CLASS_C
+			prev_class: CLASS_C
+		do
+			if not error then
+				prev_class := System.current_class
+				compiled_info ?= Current
+				System.set_current_class (compiled_info)
+				last_syntax_cell.put (Void)
+				class_ast := build_ast (False)
+				class_ast.set_class_id (class_id)
+					-- Mark the class if it has syntactically changed
+					--| Improvement: We can retrieve the previous version of
+					--| the AST and compare the new one with the old one.
+					--| If they are different, we should put the new one in the
+					--| server and make the old one obsolete (so that it can be
+					--| removed from the server and avoided a growing EIFGEN).
+				set_changed (True)
+				Tmp_ast_server.put (class_ast)
+					-- Clear index of the temporary ast server for next first pass.
+				Tmp_ast_server.clear_index
+				Degree_5.insert_parsed_class (compiled_info)
+				Degree_4.insert_new_class (compiled_info)
+				Degree_3.insert_new_class (compiled_info)
+				Degree_2.insert_new_class (compiled_info)
+				lace_class.set_date
+			else
+				syntax_error ?= Error_handler.error_list.first
+				check
+					syntax_error_not_void: syntax_error /= Void
+				end
+				Error_handler.error_list.wipe_out
+				last_syntax_cell.put (syntax_error)
+				error := False
+			end
+			System.set_current_class (prev_class)
+		rescue
+			if Rescue_status.is_error_exception then
+				Rescue_status.set_is_error_exception (False)
+				error := True
+				retry
+			end
+		end
+
+feature -- Output
+
+	class_signature: STRING is
+			-- Signature of class
+		local
+			formal_dec: FORMAL_DEC_AS
+			old_cluster: CLUSTER_I
+			gens: like generics
+		do
+			!!Result.make (50)
+			Result.append (name)
+			Result.to_upper
+			gens := generics
+			if gens /= Void then
+				old_cluster := Inst_context.cluster
+				Inst_context.set_cluster (cluster)
+				Result.append (" [")
+				from
+					gens.start
+				until
+					gens.after
+				loop
+					formal_dec ?= gens.item
+					Result.append (formal_dec.constraint_string)
+					gens.forth
+					if not gens.after then
+						Result.append (", ")
+					end
+				end
+				Inst_context.set_cluster (old_cluster)
+				Result.append ("]")
+			end
+		end
+
+	append_header (st: STRUCTURED_TEXT) is
+			-- Append class header to `st'.
+		do
+			if is_expanded then
+				st.add (ti_Expanded_keyword)
+				st.add_space
+			elseif is_deferred then
+				st.add (ti_Deferred_keyword)
+				st.add_space
+			end
+			st.add (ti_Class_keyword)
+			st.add_new_line
+			st.add_indent
+			append_signature (st)
+			st.add_new_line
+		end
+
+	append_signature (st: STRUCTURED_TEXT) is
+			-- Append the signature of current class in `st'
+		require
+			non_void_st: st /= Void
+		local
+			formal_dec: FORMAL_DEC_AS
+			old_cluster: CLUSTER_I
+			gens: like generics
+		do
+			append_name (st)
+			gens := generics
+			if gens /= Void then
+				old_cluster := Inst_context.cluster
+				Inst_context.set_cluster (cluster)
+				st.add_space
+				st.add (ti_L_bracket)
+				from
+					gens.start
+				until
+					gens.after
+				loop
+					formal_dec ?= gens.item
+					formal_dec.append_signature (st)
+					gens.forth
+					if not gens.after then
+						st.add (ti_Comma)
+						st.add_space
+					end
+				end
+				st.add (ti_R_bracket)
+				Inst_context.set_cluster (old_cluster)
+			end
+		end
+
+	append_name (st: STRUCTURED_TEXT) is
+			-- Append the name ot the current class in `st'
+		require
+			non_void_st: st /= Void
+		do
+			st.add_classi (lace_class, name_in_upper)
+		end
+
+feature {COMPILER_EXPORTER} -- Setting
+
+	set_topological_id (i: INTEGER) is
+			-- Assign `i' to `topological_id'.
+		do
+			topological_id := i
+		end
+
+	set_is_deferred (b: BOOLEAN) is
+			-- Assign `b' to `is_deferred'.
+		do
+			is_deferred := b
+		end
+
+	set_is_expanded (b: BOOLEAN) is
+			-- Assign `b' to `is_expanded'.
+		do
+			is_expanded := b
+		end
+
+	set_is_enum (b: BOOLEAN) is
+			-- Assign `b' to `is_enum'.
+		require
+			il_generation: System.il_generation
+		do
+			is_enum := b
+		ensure
+			is_enum_set: is_enum = b
+		end
+
+	set_is_separate (b: BOOLEAN) is
+			-- Assign `b' to `is_separate'.
+		do
+			is_separate := b
+		end
+
+	set_parents (p: like parents) is
+			-- Assign `p' to `parents'.
+		do
+			parents := p
+		end
+
+	set_suppliers (s: like suppliers) is
+			-- Assign `s' to `suppliers'.
+		do
+			suppliers := s
+		end
+
+	set_generics (g: like generics) is
+			-- Assign `g' to `generics'.
+		do
+			generics := g
+		end
+
+	set_reverse_engineered (b: BOOLEAN) is
+			-- Set reversed_engineered to `b'.
+		do
+			reverse_engineered := b
+		ensure
+			reverse_engineered_set: reverse_engineered = b
+		end
+
+	set_obsolete_message (m: like obsolete_message) is
+			-- Set `obsolete_message' to `m'.
+		do
+			obsolete_message := m
+		end
+
+feature -- Removal
+
+	clear_syntax_error is
+			-- Clear the syntax error information.
+		do
+			last_syntax_cell.put (Void)
+		ensure
+			not_has_syntax: not has_syntax_error
+		end
+
+feature -- Implementation
+
+	invariant_feature: INVARIANT_FEAT_I
+			-- Invariant feature
+
+	types: TYPE_LIST
+			-- Meta-class types associated to the class: it contains
+			-- only one type if the class is not generic
+
+	feature_named (n: STRING): FEATURE_I is
+			-- Feature whose internal name is `n'
+		local
+			ftbl: like feature_table
+		do
+			ftbl := feature_table
+			if ftbl /= Void then
+				Result := ftbl.item (n)
+			end
+		end
+
+feature -- Implementation
+
+	feature_table: FEATURE_TABLE is
+			-- Compiler feature table
+		require
+			has_feature_table: has_feature_table
+		do
+			Result := Feat_tbl_server.item (class_id)
+		ensure
+			valid_result: Result /= Void
+		end
+
+	has_feature_table: BOOLEAN is
+			-- Has Current a feature table
+		do
+			Result := Feat_tbl_server.has (class_id)
+		end
+
+feature {NONE} -- Implementation
+
+	private_external_name: STRING
+			-- Store class alias name clause value.
+
+	private_base_file_name: STRING
+			-- Base file name used in code generation.
+
+	last_syntax_cell: CELL [SYNTAX_ERROR] is
+			-- Stored value of last generated syntax error generated calling
+			-- routine `parse_ast'
+		once
+			!! Result.put (Void)
+		end
+
+feature {DEGREE_5} -- Degree 5
+
+	add_to_degree_5 is
+			-- Add current class to Degree 5.
+		do
+			degree_5_needed := True
+		ensure
+			added: degree_5_needed
+		end
+
+	remove_from_degree_5 is
+			-- Remove current class from Degree 5.
+		do
+			degree_5_needed := False
+			parsing_needed := False
+		ensure
+			removed: not degree_5_needed
+		end
+
+	degree_5_needed: BOOLEAN
+			-- Does current class need to be
+			-- processed in Degree 5?
+
+	parsing_needed: BOOLEAN
+			-- Does current class need to be
+			-- parsed during Degree 5?
+
+	set_parsing_needed (b: BOOLEAN) is
+			-- Set `parsing_needed' to `b'.
+		do
+			parsing_needed := b
+		ensure
+			parsing_needed_set: parsing_needed = b
+		end
+
+feature {DEGREE_4} -- Degree 4
+
+	add_to_degree_4 is
+			-- Add current class to Degree 4.
+		do
+			degree_4_needed := True
+		ensure
+			added: degree_4_needed
+		end
+
+	remove_from_degree_4 is
+			-- Remove current class from Degree 4.
+		do
+			degree_4_needed := False
+			degree_4_processed := False
+			expanded_modified := False
+			deferred_modified := False
+			separate_modified := False
+			supplier_status_modified := False
+		ensure
+			removed: not degree_4_needed
+		end
+
+	degree_4_needed: BOOLEAN
+			-- Does current class need to be
+			-- processed in Degree 4?
+
+	degree_4_processed: BOOLEAN
+			-- Has current class been processed in
+			-- first pass of Degree 4?
+
+	expanded_modified: BOOLEAN
+			-- Has the expanded status of current
+			-- class been modified?
+
+	separate_modified: BOOLEAN
+			-- Has the separate status of current
+			-- class been modified?
+
+	supplier_status_modified: BOOLEAN
+			-- Has the status of a supplier changed?
+
+	set_degree_4_processed is
+			-- Set `degree_4_processed' to True.
+		do
+			degree_4_processed := True
+		ensure
+			degree_4_processed_set: degree_4_processed
+		end
+
+	set_expanded_modified is
+			-- Set `expanded_modifed' to True.
+		do
+			expanded_modified := True
+		ensure
+			expanded_modified_set: expanded_modified
+		end
+
+	set_deferred_modified is
+			-- Set `deferred_modified' to True.
+		do
+			deferred_modified := True
+		ensure
+			deferred_modified_set: deferred_modified
+		end
+
+	set_separate_modified is
+			-- Set `separate_modified' to True.
+		do
+			separate_modified := True
+		ensure
+			separate_modified_set: separate_modified
+		end
+
+	set_supplier_status_modified is
+			-- Set `supplier_status_modified' to True.
+		do
+			supplier_status_modified := True
+		ensure
+			supplier_status_modified_set: supplier_status_modified
+		end
+
+feature {DEGREE_4, INHERIT_TABLE} -- Degree 4
+
+	deferred_modified: BOOLEAN
+			-- Has the deferred status of current
+			-- class been modified?
+
+feature {DEGREE_4, DEGREE_3} -- Used by degree 4 and 3 to compute new assertions
+
+	assert_prop_list: LINKED_LIST [INTEGER]
+			-- List of routine ids to be propagated
+
+	set_assertion_prop_list (l: like assert_prop_list) is
+			-- Set `assert_prop_list' to `l'.
+		do
+			assert_prop_list := l
+		ensure
+			assert_prop_list_set: assert_prop_list = l
+		end
+
+feature {DEGREE_3} -- Degree 3
+
+	add_to_degree_3 is
+			-- Add current class to Degree 3.
+			-- Set `finalization_needed' to True
+		do
+			degree_3_needed := True
+			finalization_needed := True
+		ensure
+			added: degree_3_needed
+		end
+
+	remove_from_degree_3 is
+			-- Remove current class from Degree 3.
+		do
+			degree_3_needed := False
+		ensure
+			removed: not degree_3_needed
+		end
+
+	degree_3_needed: BOOLEAN
+			-- Does current class need to be
+			-- processed in Degree 3?
+
+feature {DEGREE_2} -- Degree 2
+
+	add_to_degree_2 is
+			-- Add current class to Degree 2.
+		do
+			degree_2_needed := True
+		ensure
+			added: degree_2_needed
+		end
+
+	remove_from_degree_2 is
+			-- Remove current class from Degree 2.
+		do
+			degree_2_needed := False
+		ensure
+			removed: not degree_2_needed
+		end
+
+	degree_2_needed: BOOLEAN
+			-- Does current class need to be
+			-- processed in Degree 2?
+
+feature {DEGREE_1} -- Degree 1
+
+	add_to_degree_1 is
+			-- Add current class to Degree 1.
+		do
+			degree_1_needed := True
+		ensure
+			added: degree_1_needed
+		end
+
+	remove_from_degree_1 is
+			-- Remove current class from Degree 1.
+		do
+			degree_1_needed := False
+		ensure
+			removed: not degree_1_needed
+		end
+
+	degree_1_needed: BOOLEAN
+			-- Does current class need to be
+			-- processed in Degree 1?
+
+feature {DEGREE_MINUS_1} -- Degree -1
+
+	add_to_degree_minus_1 is
+			-- Add current class to Degree -1.
+		do
+			degree_minus_1_needed := True
+		ensure
+			added: degree_minus_1_needed
+		end
+
+	remove_from_degree_minus_1 is
+			-- Remove current class from Degree -1.
+		do
+			degree_minus_1_needed := False
+		ensure
+			removed: not degree_minus_1_needed
+		end
+
+	degree_minus_1_needed: BOOLEAN
+			-- Does current class need to be
+			-- processed in Degree -1?
+
+feature -- Degree -2/-3
+
+	finalization_needed: BOOLEAN
+			-- Does current class need to be processed for
+			-- finalization?
+
+	set_finalization_needed (v: BOOLEAN) is
+			-- Assign `finalization_needed' with `v'.
+		do
+			finalization_needed := v
+		ensure
+			finalization_needed_set: finalization_needed = v
+		end
+
+feature {NONE} -- Implementation
+
+	internal_feature_table_file_id: INTEGER
+			-- Number added at end of C file corresponding to generated
+			-- feature table. Initialized by default to -1.
+
+invariant
+
+	lace_class_exists: lace_class /= Void
+	descendants_exists: descendants /= Void
+	suppliers_exisis: suppliers /= Void
+	clients_exists: clients /= Void
+
 end -- class CLASS_C
+
+

@@ -70,7 +70,7 @@ feature {COMPILER_EXPORTER}
             good_arguments: not (old_feature = Void or else 
 					new_feature = Void)
 		do
-			e_class := System.current_class
+			class_c := System.current_class
 			redeclaration := new_feature.api_feature (new_feature.written_in)
 			precursor_of_redeclaration := old_feature.api_feature (old_feature.written_in)
 		end

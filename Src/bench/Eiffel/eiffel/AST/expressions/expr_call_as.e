@@ -26,16 +26,6 @@ feature {AST_FACTORY} -- Initialization
 			call_set: call = c
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			call ?= yacc_arg (0)
-		ensure then
-			call_exists: call /= Void
-		end
-
 feature -- Attributes
 
 	call: CALL_AS
@@ -53,12 +43,22 @@ feature -- Type check, byte code and dead code removal
 
 	type_check is
 			-- Type check of a call as an expression.
+		local
+			expr_type: TYPE_A
+			vkcn3: VKCN3
 		do
 				-- Put an actual type of the current analyzed class
 			context.begin_expression
-				-- Type check the call
 
+				-- Type check the call
 			call.type_check
+			expr_type := context.last_constrained_type
+			if expr_type.is_void then
+				create vkcn3
+				context.init_error (vkcn3)
+				error_handler.insert_error (vkcn3)
+				error_handler.raise_error	
+			end
 		end
 
 	byte_node: CALL_B is
@@ -100,3 +100,4 @@ feature {EXPR_CALL_AS, OPERAND_AS}
 		end
 
 end -- class EXPR_CALL_AS
+

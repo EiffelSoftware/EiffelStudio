@@ -97,7 +97,7 @@ feature -- Update
 		end
 
 	process_object (object_stone: OBJECT_STONE) is
-			-- Process ace syntax stone.
+			-- Process object stone.
 		require
 			valid_stone: object_stone /= Void
 		do

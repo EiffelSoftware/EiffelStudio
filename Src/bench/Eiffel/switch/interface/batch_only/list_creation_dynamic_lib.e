@@ -61,8 +61,6 @@ feature {NONE} -- Execution
 
 	work (argument: ANY) is
 			-- Execute Current.
-		local
-			d_creation: E_FEATURE
 		do
 			if argument = Void then
 				selected := Void

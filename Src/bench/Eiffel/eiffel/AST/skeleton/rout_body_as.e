@@ -54,7 +54,7 @@ feature -- Byte code
 
 feature -- test for empty body
 
-	empty : BOOLEAN is
+	is_empty : BOOLEAN is
 			-- Is body empty?
 		do
 			Result := True  -- redefined in INTERNAL_AS

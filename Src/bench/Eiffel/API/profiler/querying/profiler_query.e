@@ -77,12 +77,12 @@ feature -- Status setting
 			-- Merge contents of `other' into Current.
 		do
 			if subqueries = Void then
-				!! subqueries.make
+				create subqueries.make
 			end;
 			if subquery_operators = Void then
-				!! subquery_operators.make
-			end;
-			append_subqueries (other.subqueries);
+				create subquery_operators.make
+			end
+			append_subqueries (other.subqueries)
 			append_subquery_operators (other.subquery_operators)
 		end
 
@@ -90,7 +90,7 @@ feature -- Status setting
 			-- Add only one operator to subquery_operators
 		do
 			if new_operator.is_active then
-					subquery_operators.extend (new_operator)
+				subquery_operators.extend (new_operator)
 			end
 		end
 
@@ -99,27 +99,27 @@ feature -- Status report
 	image: STRING is
 			-- Image of all subqueries and operators.
 		local
-			sq: SUBQUERY;
-			i: INTEGER;
+			sq: SUBQUERY
+			i: INTEGER
 			so: SUBQUERY_OPERATOR
 		do
 			from
-				i := 1;
-				!! Result.make (0)
+				i := 1
+				create Result.make (0)
 			until
 				i > subqueries.count
 			loop
-				sq := subquery_at (i);
-				Result.append (sq.image);
-				if i < subquery_operators.count then
-					Result.extend (' ');
-					so := operator_at (i);
-					Result.append (so.actual_operator);
-					Result.extend ('%N')
+				sq := subquery_at (i)
+				Result.append (sq.image)
+				if i <= subquery_operators.count then
+					Result.extend (' ')
+					so := operator_at (i)
+					Result.append (so.actual_operator)
 				end
+				Result.extend ('%N')
 				i := i + 1
 			end
-		end;
+		end		
 
 	subquery_at (index: INTEGER): SUBQUERY is
 			-- Result is the subquery at position `index'.

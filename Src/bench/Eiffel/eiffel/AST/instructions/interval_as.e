@@ -33,17 +33,6 @@ feature {AST_FACTORY} -- Initialization
 			upper_set: upper = u
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			lower ?= yacc_arg (0)
-			upper ?= yacc_arg (1)
-		ensure then
-			lower_exists: lower /= Void
-		end
-
 feature -- Attributes
 
 	lower: ATOMIC_AS

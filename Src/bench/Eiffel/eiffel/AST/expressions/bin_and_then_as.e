@@ -9,11 +9,13 @@ class
 inherit
 	BINARY_AS
 
-feature -- Properties
+	PREFIX_INFIX_NAMES
+		rename
+			and_then_infix as infix_function_name
+		end
 
-	infix_function_name: STRING is "_infix_and_then"
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
+
+feature -- Properties
 
 	byte_anchor: B_AND_THEN_B is
 			-- Byte code type

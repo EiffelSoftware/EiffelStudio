@@ -5,7 +5,7 @@ inherit
 		rename
 			initialize as initialize_basic_type
 		redefine
-			set, is_equivalent
+			is_equivalent
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -14,20 +14,20 @@ feature {AST_FACTORY} -- Initialization
 			-- Create a new BITS AST node.
 		require
 			v_not_void: v /= Void
+		local
+			vtbt: VTBT_SIMPLE
 		do
 			bits_value := v
+			if (bits_value.value <= 0) then
+				create vtbt
+				vtbt.set_class (System.current_class)
+				vtbt.set_value (bits_value.value)
+				Error_handler.insert_error (vtbt)
+					-- Cannot go on here
+				Error_handler.raise_error
+			end
 		ensure
 			bits_value_set: bits_value = v
-		end
-
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initilization
-		do
-			bits_value ?= yacc_arg (0)
-		ensure then
-			bits_value_exists: bits_value /= Void
 		end
 
 feature -- Attributes
@@ -66,8 +66,7 @@ feature
 	actual_type: BITS_A is
 			-- Actual bits type
 		do
-			!! Result
-			Result.set_bit_count (bits_value.value)
+			create Result.make (bits_value.value)
 		end
 
 feature -- Output

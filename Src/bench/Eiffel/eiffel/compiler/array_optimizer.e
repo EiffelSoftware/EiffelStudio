@@ -12,6 +12,8 @@ inherit
 	SHARED_BYTE_CONTEXT
 
 	SHARED_TABLE
+	
+	SHARED_GENERATION
 
 	COMPILER_EXPORTER
 
@@ -26,11 +28,10 @@ feature
 		do
 			array_optimization_on := System.array_optimization_on
 
-			!! optimized_features.make
-			optimized_features.compare_objects
+			create optimized_features.make (300)
 
-			nb := System.body_id_counter.total_count
-			!!unsafe_body_ids.make (1, nb)
+			nb := System.body_index_counter.count
+			!!unsafe_body_indexes.make (1, nb)
 
 			{FEAT_ITERATOR} Precursor
 
@@ -85,8 +86,8 @@ feature {NONE} -- Array optimization
 
 	array_optimization_on: BOOLEAN
 
-	put_rout_id, item_rout_id, infix_at_rout_id: ROUTINE_ID
-	make_area_rout_id, set_area_rout_id, lower_rout_id, area_rout_id: ROUTINE_ID
+	put_rout_id, item_rout_id, infix_at_rout_id: INTEGER
+	make_area_rout_id, set_area_rout_id, lower_rout_id, area_rout_id: INTEGER
 			-- rout_ids of the special/unsafe features
 
 	array_descendants: LINKED_LIST [CLASS_C]
@@ -102,13 +103,12 @@ feature {NONE} -- Array optimization
 			ftable: FEATURE_TABLE
 			select_table: SELECT_TABLE
 			a_feature: FEATURE_I
-			feature_name: STRING
 			class_depend: CLASS_DEPENDANCE
 			depend_list: FEATURE_DEPENDANCE
 			byte_code: BYTE_CODE
 			dep: DEPEND_UNIT
 			lower, area: FEATURE_I
-			b_id: BODY_ID
+			body_index: INTEGER
 		do
 				-- Callers of area, lower with assignment
 			from
@@ -119,7 +119,7 @@ feature {NONE} -- Array optimization
 				a_class := array_descendants.item
 				ftable := a_class.feature_table
 				select_table := ftable.origin_table
-				class_depend := Depend_server.item (a_class.id)
+				class_depend := Depend_server.item (a_class.class_id)
 
 				from
 					ftable.start
@@ -128,7 +128,7 @@ feature {NONE} -- Array optimization
 				loop
 					a_feature := ftable.item_for_iteration
 					if a_feature.written_class = a_class then
-						depend_list := class_depend.item (a_feature.body_id)
+						depend_list := class_depend.item (a_feature.body_index)
 						if
 							depend_list /= Void
 						and then
@@ -136,8 +136,8 @@ feature {NONE} -- Array optimization
 						then
 								-- Calls to `lower' or `area'
 								-- See if assignment
-							b_id := a_feature.body_id
-							byte_code := Byte_server.item (b_id)
+							body_index := a_feature.body_index
+							byte_code := Byte_server.item (body_index)
 							if lower = Void then
 									-- Optimization: get the FEATURE_Is only
 									-- if the sets are not disjoint
@@ -149,7 +149,7 @@ feature {NONE} -- Array optimization
 							or else
 								byte_code.assigns_to (area.feature_id)
 							then
-								unsafe_body_ids.put (True, b_id.id)
+								unsafe_body_indexes.put (True, body_index)
 							end
 						end
 					end
@@ -175,7 +175,7 @@ feature {NONE} -- Array optimization
 					ftable.after
 				loop
 					a_feature := ftable.item_for_iteration
-					if unsafe_body_ids.item (a_feature.body_id.id) then
+					if unsafe_body_indexes.item (a_feature.body_index) then
 debug ("OPTIMIZATION")
 	io.error.putstring ("Inserting ")
 	io.error.putstring (a_feature.feature_name)
@@ -183,30 +183,30 @@ debug ("OPTIMIZATION")
 	io.error.putstring (a_class.name)
 	io.error.new_line
 end
-						!!dep.make (a_class.id, a_feature)
+						!!dep.make (a_class.class_id, a_feature)
 						unsafe_features.extend (dep)
-						mark_alive (a_feature.body_id.id)
+						mark_alive (a_feature.body_index)
 					end
 					ftable.forth
 				end
 				array_descendants.forth
 			end
 				-- FIXME
-				-- features from GENERAL (hints to stop propagation)
+				-- features from ANY (hints to stop propagation)
 				-- Does it work?
-			a_class := System.general_class.compiled_class
+			a_class := System.any_class.compiled_class
 			a_feature := a_class.feature_table.item ("clone")
-			!!dep.make (a_class.id, a_feature)
+			!!dep.make (a_class.class_id, a_feature)
 			unsafe_features.extend (dep)
-			unsafe_body_ids.put (True, a_feature.body_id.id)
-			mark_alive (a_feature.body_id.id)
+			unsafe_body_indexes.put (True, a_feature.body_index)
+			mark_alive (a_feature.body_index)
 		end
 
 	record_descendants (a_class: CLASS_C) is
 			-- Recursively records `a_class' and its descendants in `descendants'
 		local
 			d: LINKED_LIST [CLASS_C]
-			an_id: CLASS_ID
+			an_id: INTEGER
 			ftable: FEATURE_TABLE
 			select_table: SELECT_TABLE
 			dep: DEPEND_UNIT
@@ -219,7 +219,7 @@ debug ("OPTIMIZATION")
 end
 				array_descendants.extend (a_class)
 				array_descendants.forth
-				an_id := a_class.id
+				an_id := a_class.class_id
 				ftable := a_class.feature_table
 				select_table := ftable.origin_table
 
@@ -255,17 +255,17 @@ end
 
 feature
 
-	process (a_class: CLASS_C; body_index: BODY_INDEX; body_id: BODY_ID; depend_list: FEATURE_DEPENDANCE) is
+	process (a_class: CLASS_C; body_index: INTEGER; depend_list: FEATURE_DEPENDANCE) is
 		local
 			opt_unit: OPTIMIZE_UNIT
 			byte_code: BYTE_CODE
 		do
 			if array_optimization_on then
-				!! opt_unit.make (a_class.id, body_index)
+				!! opt_unit.make (a_class.class_id, body_index)
 				if
 						-- The feature was marked during the type check
 						-- and hasn't been processed yet
-					optimization_tables.feature_set.has (opt_unit)
+					optimization_tables.has (opt_unit)
 					and then not optimized_features.has (opt_unit)
 				then
 						-- See if the routine really has a loop
@@ -273,7 +273,7 @@ feature
 						-- then if the routine has a descendant of ARRAY
 						-- as a local variable, an argument or Result and then
 						-- calls put or item on this local/argument/Result
-					byte_code := Byte_server.disk_item (body_id)
+					byte_code := Byte_server.disk_item (body_index)
 						-- `disk_item' is used because the byte code will be modified and
 						-- we don't want the modified byte code to remain in the cache
 					if
@@ -298,14 +298,14 @@ feature
 
 							if current_feature_optimized then
 									-- Mark the feature
-								optimized_features.extend (opt_unit)
+								optimized_features.force (opt_unit)
 									-- Store the new byte code
 								tmp_opt_byte_server.put (byte_code)
 
 							end
 
 							check
-								context_stack.empty
+								context_stack.is_empty
 							end
 							current_feature_optimized := False
 
@@ -317,7 +317,7 @@ feature
 			end
 		end
 
-	optimized_features: TWO_WAY_SORTED_SET [OPTIMIZE_UNIT]
+	optimized_features: SEARCH_TABLE [OPTIMIZE_UNIT]
 
 	current_feature_optimized: BOOLEAN
 
@@ -368,8 +368,8 @@ feature -- Contexts
 			f := array_type.base_class.feature_table.origin_table.item (item_rout_id)
 
 			type_a ?= f.type
-			type_a := type_a.instantiation_in (array_type_a, array_type.base_class.id)
-								--(array_type_a, System.current_class.id)
+			type_a := type_a.instantiation_in (array_type_a, array_type.base_class.class_id)
+								--(array_type_a, System.current_class.class_id)
 
 			if type_a.is_formal then
 				formal_a ?= type_a
@@ -387,14 +387,14 @@ feature -- Contexts
 		end
 
 	generate_feature_table (buffer: GENERATION_BUFFER; table_name: STRING
-			rout_id: ROUTINE_ID) is
+			rout_id: INTEGER) is
 		local
 			entry: POLY_TABLE [ENTRY]
 			temp: STRING
 		do
 			entry := Eiffel_table.poly_table (rout_id)
 			Eiffel_table.mark_used (rout_id)
-			temp := rout_id.table_name
+			temp := Encoder.table_name (rout_id)
 			buffer.putstring ("extern long ")
 			buffer.putstring (temp)
 			buffer.putstring ("[];%Nlong *")
@@ -416,7 +416,7 @@ feature -- Detection of safe/unsafe features
 			-- Set of all the features that cannot be called
 			-- within a loop
 
-	unsafe_body_ids: ARRAY [BOOLEAN]
+	unsafe_body_indexes: ARRAY [BOOLEAN]
 
 	test_safety (a_feature: FEATURE_I; a_class: CLASS_C) is
 			-- Insert the feature in the safe or unsafe set
@@ -425,8 +425,8 @@ feature -- Detection of safe/unsafe features
 			good_feature: a_feature /= Void
 			good_class: a_class /= Void
 		do
-			if not (a_feature.is_attribute or else is_treated (a_feature.body_id.id, a_feature.rout_id_set.first)) then
-				mark (a_feature.feature_id, a_feature.body_index, a_feature.body_id, a_class.id, a_feature.written_in, a_feature.rout_id_set.first)
+			if not (a_feature.is_attribute or else is_treated (a_feature.body_index, a_feature.rout_id_set.first)) then
+				mark (a_feature.feature_id, a_feature.body_index, a_class.class_id, a_feature.written_in, a_feature.rout_id_set.first)
 			end
 		end
 
@@ -434,10 +434,9 @@ feature -- Detection of safe/unsafe features
 			-- Can the feature be safely called within an optimized loop?
 		local
 			table: ROUT_TABLE
-			rout_id_val: ROUTINE_ID
-			other_body_id: BODY_ID
+			rout_id_val: INTEGER
+			other_body_index: INTEGER
 			unit: ROUT_ENTRY
-			body_table: BODY_INDEX_TABLE
 			descendant_class, written_class: CLASS_C
 		do
 			if dep.is_external then
@@ -446,40 +445,37 @@ feature -- Detection of safe/unsafe features
 				rout_id_val := dep.rout_id
 
 				if
-					not rout_id_val.is_attribute and then
+					not System.routine_id_counter.is_attribute (rout_id_val) and then
 					Tmp_poly_server.has (rout_id_val)
 				then	
-					written_class := dep.written_in.associated_class
+					written_class := System.class_of_id (dep.written_in)
 					table ?= Tmp_poly_server.item (rout_id_val)
 					from
 						Result := True
-						body_table := System.body_index_table
 						table.start
 					until
 						table.after or else not Result
 					loop
 						unit := table.item
-						descendant_class := unit.id.associated_class
+						descendant_class := System.class_of_id (unit.class_id)
 						if descendant_class.simple_conform_to (written_class) then
-							other_body_id := body_table.item (unit.body_index)
-							Result := not unsafe_body_ids.item (other_body_id.id)
+							other_body_index := unit.body_index
+							Result := not unsafe_body_indexes.item (other_body_index)
 						end
 						table.forth
 					end
 				else
-					Result := not unsafe_body_ids.item (body_index_table.item (dep.body_index).id)
+					Result := not unsafe_body_indexes.item (dep.body_index)
 				end
 			end
 		end
 
 feature {NONE} -- Detection of safe/unsafe features
 
-	propagate_feature (written_class_id: CLASS_ID; original_body_index: BODY_INDEX; original_body_id: BODY_ID; depend_list: FEATURE_DEPENDANCE) is
+	propagate_feature (written_class_id: INTEGER; original_body_index: INTEGER; depend_list: FEATURE_DEPENDANCE) is
 		local
 			depend_unit: DEPEND_UNIT
-			depend_feature: FEATURE_I
-			static_class: CLASS_C
-			body_id: BODY_ID
+			body_index: INTEGER
 			unsafe: BOOLEAN
 		do
 			from
@@ -489,17 +485,18 @@ feature {NONE} -- Detection of safe/unsafe features
 			loop
 				depend_unit := depend_list.item
 				if not depend_unit.is_special then
-					body_id := body_index_table.item (depend_unit.body_index)
+					body_index := depend_unit.body_index
 					if
-						not (depend_unit.rout_id.is_attribute or else is_treated (body_id.id, depend_unit.rout_id))
+						not (System.routine_id_counter.is_attribute (depend_unit.rout_id) or else
+						is_treated (body_index, depend_unit.rout_id))
 					then
-						mark_treated (body_id.id, depend_unit.rout_id)
-						mark (depend_unit.feature_id, depend_unit.body_index, body_id, depend_unit.id, depend_unit.written_in, depend_unit.rout_id)
+						mark_treated (body_index, depend_unit.rout_id)
+						mark (depend_unit.feature_id, body_index, depend_unit.class_id, depend_unit.written_in, depend_unit.rout_id)
 					end
 						-- get the status ...
 					if not is_safe (depend_unit) then
 						unsafe := True
-						unsafe_body_ids.put (True, body_id.id)
+						unsafe_body_indexes.put (True, body_index)
 					end
 				end
 				depend_list.forth

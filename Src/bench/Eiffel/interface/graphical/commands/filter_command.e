@@ -93,7 +93,7 @@ feature {NONE} -- Implementation
 		local
 			cmd_string: STRING
 			filterable_format: FILTERABLE
-			shell_request: EXTERNAL_COMMAND_EXECUTOR
+			shell_request: COMMAND_EXECUTOR
 			filename, new_text: STRING
 			mp: MOUSE_PTR
 		do
@@ -108,7 +108,7 @@ feature {NONE} -- Implementation
 			elseif argument = filter_window then
 					-- Display the filter output in `text_window'
 				if text_window.changed then
-					warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
+					warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed (Void),
 						Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
 				else
 					tool.last_format.associated_command.filter (filter_name)
@@ -144,7 +144,7 @@ feature {NONE} -- Implementation
 						end
 					end
 					cmd_string := clone (General_resources.filter_command.value)
-					if not cmd_string.empty then
+					if not cmd_string.is_empty then
 						cmd_string.replace_substring_all ("$target", filename)
 					end
 					!!shell_request
@@ -163,7 +163,7 @@ feature {NONE} -- Implementation
 			char: CHARACTER
 			new_file: PLAIN_TEXT_FILE
 		do
-			if not a_filename.empty then
+			if not a_filename.is_empty then
 				!!new_file.make (a_filename)
 				if new_file.exists and then not new_file.is_plain then
 					warner (popup_parent).gotcha_call 
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 						(Warning_messages.w_Not_creatable (new_file.name))
 				else
 					new_file.open_write
-					if not a_text.empty then
+					if not a_text.is_empty then
 						new_file.putstring (a_text)
 						char := a_text.item (a_text.count)
 						if Platform_constants.is_unix and then char /= '%N' and then char /= '%R' then

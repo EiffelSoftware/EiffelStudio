@@ -3,7 +3,6 @@
 class FEATURE_BL 
 
 inherit
-
 	FEATURE_B
 		redefine
 			free_register,
@@ -11,8 +10,9 @@ inherit
 			generate_access_on_type, is_polymorphic, has_call,
 			set_register, register, set_parent, parent, generate_access,
 			generate_on, analyze_on, analyze, generate_special_feature,
-			allocates_memory
+			allocates_memory, generate_end
 		end
+
 	SHARED_DECLARATIONS
 
 feature 
@@ -80,7 +80,7 @@ end
 					-- on which the attribute access is made. The lifetime of
 					-- this temporary is really short: just the time to make
 					-- the call...
-				!!tmp_register.make (Ref_type)
+				!!tmp_register.make (Reference_c_type)
 				basic_register := tmp_register
 			end
 			if parameters /= Void then
@@ -117,15 +117,8 @@ end
 
 	generate_special_feature (reg: REGISTRABLE; basic_type: BASIC_I) is
 			-- Generate code for special routines (is_equal, copy ...).
-		local
-			expr: EXPR_B
-			buf: GENERATION_BUFFER
 		do
-			if parameters /= Void then
-				special_routines.generate (buffer, basic_type, reg, parameters.first)
-			else
-				special_routines.generate (buffer, basic_type, reg, Void)
-			end
+			special_routines.generate (buffer, basic_type, reg, parameters)
 		end
 
 	generate_access is
@@ -185,14 +178,45 @@ end
 			end
 		end
 
+	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; is_class_separate: BOOLEAN) is
+			-- Generate final portion of C code.
+		local
+			buf: GENERATION_BUFFER
+		do
+			is_polymorphic_once.set_item (True)
+			generate_access_on_type (gen_reg, class_type);
+			buf := buffer;
+			if
+				is_once and then
+				not System.has_multithreaded and then
+				not is_polymorphic_once.item
+			then
+				buf.putchar (',')
+				buf.putchar ('(')
+				gen_reg.print_register
+				if parameters /= Void then
+					generate_parameters_list
+				end
+				buf.putchar (')')
+			else
+				buf.putchar ('(')
+				gen_reg.print_register
+				if parameters /= Void then
+					generate_parameters_list
+				end;
+			end
+			buf.putchar (')')
+		end
+		
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
 			-- Generate feature call in a `typ' context
 		local
-			internal_name, table_name: STRING
-			rout_table: ROUT_TABLE
-			type_c: TYPE_C
-			buf: GENERATION_BUFFER
-			array_index: INTEGER
+			internal_name		: STRING
+			table_name			: STRING
+			rout_table			: ROUT_TABLE
+			type_c				: TYPE_C
+			buf					: GENERATION_BUFFER
+			array_index			: INTEGER
 			local_argument_types: ARRAY [STRING]
 		do
 			array_index := Eiffel_table.is_polymorphic (routine_id, typ.type_id, True)
@@ -208,7 +232,7 @@ end
 					-- The call is polymorphic, so generate access to the
 					-- routine table. The dereferenced function pointer has
 					-- to be enclosed in parenthesis.
-				table_name := routine_id.table_name
+				table_name := Encoder.table_name (routine_id)
 				buf.putchar ('(')
 				real_type (type).c_type.generate_function_cast (buf, argument_types)
 				buf.putchar ('(')
@@ -235,18 +259,37 @@ end
 					-- and get the routine name of the first entry in the
 					-- routine table.
 				rout_table ?= Eiffel_table.poly_table (routine_id)
+				rout_table.goto_implemented (typ.type_id)
 
-				if rout_table.is_implemented (typ.type_id) then
-					internal_name := clone (rout_table.feature_name (typ.type_id))
+				if rout_table.is_implemented then
+					internal_name := rout_table.feature_name
 					type_c := real_type (type).c_type
 
-					rout_table.goto_used (typ.type_id)
+					if is_once then
+						is_polymorphic_once.set_item (False)
+						if not System.has_multithreaded then
+							if type_c.is_void then
+									-- It is a once procedure
+								buf.putstring ("RTOVP(")
+							else
+									-- It is a once function
+								buf.putstring ("RTOVF(")
+							end
+							buf.putstring (internal_name)
+							buf.putchar (',')
+						end
+					end
 
 					local_argument_types := argument_types
-					if not rout_table.item.written_type_id.is_equal (Context.original_class_type.type_id) then
+					if
+						not (rout_table.item.written_type_id = Context.original_class_type.type_id)
+					then
 							-- Remember extern routine declaration
 						Extern_declarations.add_routine_with_signature (type_c,
 								internal_name, local_argument_types)
+						if is_once and then not System.has_multithreaded then
+							Extern_declarations.add_once (type_c, internal_name)
+						end
 					end
 
 					buf.putchar ('(')
@@ -294,14 +337,13 @@ end
 								loc_idx := context.local_index (para.stored_register.register_name)
 								para_type := real_type(para.attachment_type)
 								if para_type /= Void and then para_type.is_separate then
-									buf.put_protected_local (context.ref_var_used + loc_idx)
+									buf.put_protected_local_set (context.ref_var_used + loc_idx)
 								else
 									expr.print_register
 								end
 							else
 								expr.print_register
 							end
-								i := i + 1
 							i := i + 1
 						end
 					else
@@ -328,6 +370,7 @@ end
 			parameters := f.parameters
 			precursor_type := f.precursor_type
 			routine_id := f.routine_id
+			is_once := f.is_once
 			enlarge_parameters
 		end
 
@@ -437,7 +480,7 @@ feature -- Concurrent Eiffel
 							loc_idx := -1
 						end
 						if loc_idx /= -1 then
-							buf.put_protected_local (context.ref_var_used + loc_idx)
+							buf.put_protected_local_set (context.ref_var_used + loc_idx)
 						else
 							-- It'll be the case when the value is "Void"
 							expr.print_register
@@ -457,5 +500,11 @@ feature {NONE} -- Implementation
 
 	is_deferred: BOOLEAN
 			-- Is current feature call a deferred feature without implementation?
+
+	is_polymorphic_once: BOOLEAN_REF is
+			-- Is current call a call on a once which is not a polymorphic call?
+		once
+			create Result
+		end
 
 end

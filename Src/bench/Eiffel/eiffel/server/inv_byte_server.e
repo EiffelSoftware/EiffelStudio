@@ -1,10 +1,13 @@
--- Server for invariants byte code
+indexing
+	description: "Server for invariants byte code indexed by class id."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	INV_BYTE_SERVER 
 
 inherit
-	COMPILER_SERVER [INVARIANT_B, CLASS_ID]
+	COMPILER_SERVER [INVARIANT_B]
 		redefine
 			has, item, disk_item
 		end
@@ -20,13 +23,13 @@ feature -- Access
 			!! Result.make
 		end
 		
-	id (t: INVARIANT_B): CLASS_ID is
+	id (t: INVARIANT_B): INTEGER is
 			-- Id associated with `t'
 		do
-			Result := t.id
+			Result := t.class_id
 		end
 
-	item (an_id: CLASS_ID): INVARIANT_B is
+	item (an_id: INTEGER): INVARIANT_B is
 			-- Byte code of body id `and_id'. Look first in the temporary
 			-- byte code server
 		do
@@ -39,7 +42,7 @@ feature -- Access
 			Result_exists: Result /= Void
 		end;
 
-	disk_item (an_id: CLASS_ID): INVARIANT_B is
+	disk_item (an_id: INTEGER): INVARIANT_B is
 			-- Byte code of body id `and_id'. Look first in the temporary
 			-- byte code server
 		do
@@ -50,7 +53,7 @@ feature -- Access
 			end;
 		end;
 
-	has (an_id: CLASS_ID): BOOLEAN is
+	has (an_id: INTEGER): BOOLEAN is
 			-- Is the id `an_id' present in `Tmp_inv_byte_server' or
 			-- Current ?
 		do

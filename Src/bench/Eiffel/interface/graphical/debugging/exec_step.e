@@ -12,7 +12,9 @@ class
 inherit
 	EXEC_FORMAT
 		rename
-			All_breakable_points as execution_mode
+			step_by_step as execution_mode
+		redefine
+			work
 		end
 
 creation
@@ -24,7 +26,15 @@ feature -- Properties
 			-- Pixmap for the button.
 		once
 			Result := Pixmaps.bm_Exec_step
-		end;
+		end
+
+feature -- Formatting
+
+	work (argument: ANY) is
+			-- Set the execution format to `stone'.
+		do
+			precursor(argument)
+		end
 
 feature {NONE} -- Attributes
 
@@ -32,17 +42,17 @@ feature {NONE} -- Attributes
 			-- Name of the command.
 		once
 			Result := Interface_names.f_Exec_step
-		end;
+		end
 
 	menu_name: STRING is
 			-- Name used in menu entry
 		once
 			Result := Interface_names.m_Exec_step
-		end;
+		end
 
 	accelerator: STRING is
 			-- Accelerator action for menu entry
 		do
-		end;
+		end
 
 end -- class EXEC_STEP

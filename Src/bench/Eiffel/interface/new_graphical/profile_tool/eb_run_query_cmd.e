@@ -27,8 +27,8 @@ feature {NONE} -- Initialization
 
 feature -- Command Execution
 
-	execute (arg: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
-			-- Execute Current
+	execute is
+			-- Extract the current query and display the results.
 		local
 			profiler_query: PROFILER_QUERY
 			st: STRUCTURED_TEXT
@@ -52,5 +52,6 @@ feature -- Command Execution
 feature {NONE} -- Attributes
 
 	query_window: EB_PROFILE_QUERY_WINDOW
+		-- The window where query results will be displayed.
 
 end -- class EB_RUN_QUERY_CMD

@@ -1,0 +1,212 @@
+system
+	ec
+
+root
+	 eb_kernel: "make"
+
+default
+	arguments ("-from_bench")
+	assertion (require);
+	assertion (ensure);
+	assertion (check)
+	dead_code_removal (yes);
+-- RTEA version
+	exception_trace (yes);
+-- Full optimized version
+--	exception_trace (no);
+--	array_optimization (yes);
+--	inlining_size ("8");
+--	inlining (yes);
+
+	profile (no)
+
+	debug ("DEBUGGER")
+
+	--trace (yes)
+	--trace ("SERVER");
+	--debug ("CACHE_SERVER");
+	--debug ("Freeze_set");
+	--debug ("SERVER");
+	--debug ("DOCUMENT");
+	--debug ("DEBUGGER_TRACE");
+	--debug ("DRAWING")
+	--debug ("PARSE")
+	--debug ("FLAT_SHORT");
+	--debug ("LOCAL_FEAT_ADAPTATION");
+	--debug ("ACTIVITY")
+	--debug ("DEBUG_RECV")
+	--debug ("PASS3")
+	--debug ("CACHE")
+	--debug ("DEAD_CODE_REMOVAL")
+	--debug ("SPLIT")
+
+cluster
+
+
+		-- EiffelBase:
+	all base:				"$EIFFEL_SRC/library/base"
+		exclude
+			"table";"CVS"
+		default
+			assertion (require)
+			assertion (ensure)
+		end
+
+		-- Gel
+	gel:					"$EIFFEL_SRC/library/gel"
+		exclude "CVS" end
+
+		-- Events
+	events:					"$EIFFEL_SRC/library/event"
+		exclude "CVS" end
+
+		-- EiffelVision
+	all vision:				"$EIFFEL_SRC/library/vision2"
+		exclude
+			"CVS"; "mswin"; "obsolete";
+		default
+			assertion (require)
+			assertion (ensure)
+		end
+
+		-- EiffelNet
+	all net:				"$EIFFEL_SRC/library/net"
+		exclude
+			"CVS"
+		end
+
+		-- Liman
+	liman:					"$EIFFEL_SRC/Eiffel/limand";
+
+	liman_bench(liman):			"$/bench";
+	liman_client(liman):			"$/client";
+	liman_shared(liman):			"$/shared";
+	liman_bench_graphical(liman):		"$/bench_graphical";
+	liman_abstract(liman):			"$/abstract";
+	liman_graphical(liman):			"$/graphical";
+
+
+	beurk:					"$EIFFEL_SRC/Eiffel/beurk";
+	compiler_support:			"$EIFFEL_SRC/Eiffel/support";
+
+
+		-- General compilation:
+	common:					"$EIFFEL_SRC/Eiffel/common";
+	common_parser (common):			"$/parser";
+	common_eiffel_parser (common_parser):	"$/parser";
+
+		-- Resources
+	old_resources(common):			"$/resources";
+
+	flat_short (common_parser):		"$/flat_short"
+		exclude
+			"format_context.e";"local_format.e";
+		end
+
+	flat_short_b:				"$EIFFEL_SRC/Eiffel/flat_short/bench";
+
+	yacc:					"$EIFFEL_SRC/Eiffel/yacc";
+	const:					"$EIFFEL_SRC/Eiffel/const";
+
+		-- XML Parser
+	xml:					"$EIFFEL_SRC/library/exml";
+	xml_main (xml):				"$/main";
+	xml_tree_parser (xml_main):		"$/tree_parser";
+	xml_spec (xml):				"$/compiler_specific/ise";
+
+		-- Observer
+	observer:				"$EIFFEL_SRC/library/patterns/observer";
+
+		-- Gobo Eiffel Structure Library
+	all gobo:				"$EIFFEL_SRC/library/gobo/library"
+		exclude
+			"CVS";"hact";"se";"ve";"base"
+		end
+
+		-- Documentation
+	all case:				"$EIFFEL_SRC/Eiffel/case"
+		exclude "CVS" end
+
+		-- Lace compilation:
+	all lace:				"$EIFFEL_SRC/Eiffel/lace"
+		exclude "CVS" end
+
+
+		-- Eiffel compilation:
+	all compiler:				"$EIFFEL_SRC/Eiffel/eiffel"
+		exclude
+			"CVS";"com_il_generation";"kernel"
+		end
+
+		-- API cluster
+	all compiler_api:			"$EIFFEL_SRC/Eiffel/API"
+		exclude "CVS" end
+
+		-- Encryption
+	encryption:				"$EIFFEL_SRC/library/encryption"
+		exclude
+			"des_encoder.e"
+		end
+
+		-- SWITCH clusters (chose one cluster per directory in switch directory)
+	switch:					"$EIFFEL_SRC/Eiffel/switch";
+	interface_switch(switch):		"$/interface/new_graphical";
+	--dle_switch(switch):			"$/dle/no_dle";
+	license_switch(switch): 		"$/license/license";  	--unix
+	--license_switch(switch): 		"$/license/no_license";	--win
+
+		-- Communications
+	communications (switch):		"$/communication";
+	status (communications):		"$/status"
+	ipc (communications):			"$/ipc";
+	debuging_class (communications):	"$/debug";
+	debuging_formatters (communications):	"$/formatters";
+	io_watcher(communications):		"$/spec/gtk";
+
+		-- INTERFACE CLUSTERS
+	all interface:				"$EIFFEL_SRC/Eiffel/interface"
+		exclude
+			"CVS";"graphical";"win32";"mswin";"new_tty";"tty";"Not_in_System";"registry";
+	--	default
+	--		assertion (check)
+	--		assertion (require)
+		end
+
+		-- tty interface
+	tty (interface):			"$/tty"
+		exclude
+			"output_window.e";"tty_resources.e";"eb_diagram_html_generator.e"
+		end
+
+	new_tty(interface): 			"$/new_tty"
+
+
+external
+	include_path:
+		"\$(EIFFEL_SRC)/C/bench",
+		"\$(EIFFEL_SRC)/C/liman/shared",
+		"\$(EIFFEL_SRC)/library/event/Clib",
+		"\$(EIFFEL_SRC)/library/gobo/library/kernel/include",
+		"\$(EIFFEL_SRC)/C_library/expat/xmlparse",
+		"\$(EIFFEL_SRC)/library/exml/compiler_specific/ise/clib",
+		"\$(EIFFEL_SRC)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`",
+		"\$(EIFFEL_SRC)/library/vision2/spec/include";		
+				
+
+	object:
+		"$(EIFFEL_SRC)/C/bench/libcompiler.a",
+		"$(EIFFEL_SRC)/C/ipc/ewb/libewb.a",
+		"$(EIFFEL_SRC)/C/ipc/shared/libipc.a",
+		"$(EIFFEL_SRC)/C/platform/libplatform.a",
+		"$(EIFFEL_SRC)/C/liman/lm/liblm.a",
+		"$(EIFFEL_SRC)/C/liman/shared/libshared.a",
+		"$(EIFFEL_SRC)/C/idrs/libidr.a",
+		"$(EIFFEL_SRC)/C_library/expat/xmlparse/libexpat.a",
+		"$(EIFFEL_SRC)/library/event/spec/$(ISE_PLATFORM)/lib/io_watcher.o",
+		"$(EIFFEL_SRC)/library/exml/compiler_specific/ise/spec/$(ISE_PLATFORM)/lib/exml_parser.o",
+		"$(EIFFEL_SRC)/library/net/spec/$(ISE_PLATFORM)/lib/libnet.a",
+		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
+		"$(EIFFEL_SRC)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
+		"$(EIFFEL_SRC)/C/minilzo/minilzo.o",
+		"-L/usr/X11R6/lib -lXt -lX11 -lpng -lz -lXext -lXp -lSM -lICE -lXtst"
+end

@@ -1,140 +1,143 @@
--- Byte code for conditional instruction
+indexing
+	description	: "Byte code for conditional instruction."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class IF_B 
 
 inherit
-
 	INSTR_B
 		redefine
 			analyze, generate, enlarge_tree,
 			find_assign_result, last_all_in_result, make_byte_code,
-			assigns_to, is_unsafe,
+			assigns_to, is_unsafe, generate_il,
 			optimized_byte_node, calls_special_features,
 			size, inlined_byte_code, pre_inlined_code
-		end;
+		end
+
 	VOID_REGISTER
 		export
 			{NONE} all
-		end;
+		end
 	
-feature 
+feature -- Access
 
-	condition: EXPR_B;
+	condition: EXPR_B
 			-- Conditional expression
 
-	compound: BYTE_LIST [BYTE_NODE];
+	compound: BYTE_LIST [BYTE_NODE]
 			-- Main compound {list of INSTR_B}
 
-	elsif_list: BYTE_LIST [BYTE_NODE];
+	elsif_list: BYTE_LIST [BYTE_NODE]
 			-- Alternatives {list of ELSIF_B}
 
-	else_part: BYTE_LIST [BYTE_NODE];
+	else_part: BYTE_LIST [BYTE_NODE]
 			-- Default compound {list of INSTR_B}
 
 	set_condition (c: like condition) is
 			-- Assign `c' to `condition'.
 		do
-			condition := c;
-		end;
+			condition := c
+		end
 
 	set_compound (c: like compound) is
 			-- Assign `c' to `compound'.
 		do
-			compound := c;
-		end;
+			compound := c
+		end
 
 	set_elsif_list (e: like elsif_list) is
 			-- Assign `e' to `elsif_list'.
 		do
-			elsif_list := e;
-		end;
+			elsif_list := e
+		end
 
 	set_else_part (e: like else_part) is
 			-- Assign `e' to `elsif_list'.
 		do
-			else_part := e;
-		end;
+			else_part := e
+		end
 
 	enlarge_tree is
 			-- Enlarge the if construct
 		do
-			condition := condition.enlarged;
+			condition := condition.enlarged
 			if compound /= Void then
-				compound.enlarge_tree;
-			end;
+				compound.enlarge_tree
+			end
 			if elsif_list /= Void then
-				elsif_list.enlarge_tree;
-			end;
+				elsif_list.enlarge_tree
+			end
 			if else_part /= Void then
-				else_part.enlarge_tree;
-			end;
-		end;
+				else_part.enlarge_tree
+			end
+		end
 
 	find_assign_result is
 			-- Find all terminal assignments made to Result
 		do
 			if compound /= Void then
-				compound.finish;
-				compound.item.find_assign_result;
-			end;
+				compound.finish
+				compound.item.find_assign_result
+			end
 			if elsif_list /= Void then
-				elsif_list.finish;
-				elsif_list.item.find_assign_result;
-			end;
+				elsif_list.finish
+				elsif_list.item.find_assign_result
+			end
 			if else_part /= Void then
-				else_part.finish;
-				else_part.item.find_assign_result;
-			end;
-		end;
+				else_part.finish
+				else_part.item.find_assign_result
+			end
+		end
 
 	last_all_in_result: BOOLEAN is
 			-- Are all the exit points in the function assignments
 			-- in a Result entity ?
 		do
 			if compound /= Void then
-				compound.finish;
-				Result := compound.item.last_all_in_result;
-			end;
+				compound.finish
+				Result := compound.item.last_all_in_result
+			end
 			if elsif_list /= Void and Result then
 				from
-					elsif_list.start;
+					elsif_list.start
 				until
 					elsif_list.after or not Result
 				loop
-					Result := Result and elsif_list.item.last_all_in_result;
-					elsif_list.forth;
-				end;
-			end;
+					Result := Result and elsif_list.item.last_all_in_result
+					elsif_list.forth
+				end
+			end
 			if else_part /= Void and Result then
-				else_part.finish;
-				Result := Result and else_part.item.last_all_in_result;
+				else_part.finish
+				Result := Result and else_part.item.last_all_in_result
 			else
 					-- No else part, so we may continue.
 					-- As this is the LAST compound statement, this
 					-- means we are followed by an implicit return Result.
-				Result := false;
-			end;
+				Result := false
+			end
 			Result := Result and not context.has_postcondition and
-					not context.has_invariant;
-		end;
+					not context.has_invariant
+		end
 
 	analyze is
 			-- Builds a proper context (for C code).
 		do
-			context.init_propagation;
-			condition.propagate (No_register);
-			condition.analyze;
-			condition.free_register;
+			context.init_propagation
+			condition.propagate (No_register)
+			condition.analyze
+			condition.free_register
 			if compound /= Void then
-				compound.analyze;
-			end;
+				compound.analyze
+			end
 			if elsif_list /= Void then
-				elsif_list.analyze;
-			end;
+				elsif_list.analyze
+			end
 			if else_part /= Void then
-				else_part.analyze;
-			end;
-		end;
+				else_part.analyze
+			end
+		end
 
 	generate is
 			-- Generate C code in `buffer'.
@@ -142,85 +145,159 @@ feature
 			buf: GENERATION_BUFFER
 		do
 			buf := buffer
-			generate_line_info;
+			generate_line_info
 				-- Outstanding of if..then..else..end
-			buf.new_line;
-			condition.generate;
-			buf.putstring (gc_if_l_paran);
-			condition.print_register;
-			buf.putstring (") {");
-			buf.new_line;
+			buf.new_line
+
+				-- Generate the hook for "if cond then"
+			generate_frozen_debugger_hook
+
+			condition.generate
+			buf.putstring (gc_if_l_paran)
+			condition.print_register
+			buf.putstring (") {")
+			buf.new_line
 			if compound /= Void then
-				buf.indent;
-				compound.generate;
-				buf.exdent;
-			end;
-			buf.putchar ('}');
+				buf.indent
+				compound.generate
+				buf.exdent
+			end
+			buf.putchar ('}')
 			if elsif_list /= Void then
-				elsif_list.generate;
-			end;
+				elsif_list.generate
+			end
 			if else_part /= Void then
-				buf.putstring (" else {");
-				buf.new_line;
-				buf.indent;
-				else_part.generate;
-				buf.exdent;
-				buf.putchar ('}');
-			end;
-			generate_closing_brakets;
-			buf.new_line;
+				buf.putstring (" else {")
+				buf.new_line
+				buf.indent
+				else_part.generate
+				buf.exdent
+				buf.putchar ('}')
+			end
+			generate_closing_brakets
+			buf.new_line
 				-- Leave one blank line after the construct
-			buf.new_line;
-		end;
+			buf.new_line
+		end
 
 	generate_closing_brakets is
 			-- Generate one closing braket for each generated elsif
 		local
-			i: INTEGER;
+			i: INTEGER
 			buf: GENERATION_BUFFER
 		do
 			if elsif_list /= Void then
 				from
 					buf := buffer
-					i := elsif_list.count;
+					i := elsif_list.count
 				until
 					i = 0
 				loop
-					buf.putchar ('}');
-					i := i - 1;
-				end;
-			end;
-		end;
+					buf.putchar ('}')
+					i := i - 1
+				end
+			end
+		end
+
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for conditional instruction.
+		local
+			elsif_clause: ELSIF_B
+			cmp: like compound
+			nb_jumps: INTEGER
+			else_label, end_label, elsif_label: IL_LABEL
+		do
+			generate_il_line_info
+				-- Generated byte code for condition
+			condition.generate_il
+				-- Generated a test
+			else_label := il_label_factory.new_label
+			il_generator.branch_on_false (else_label)
+
+			if compound /= Void then
+					-- Generated IL code for first compound (if any).
+				compound.generate_il
+			end
+
+			end_label := il_label_factory.new_label
+			il_generator.branch_to (end_label)
+
+			nb_jumps := nb_jumps + 1
+	
+				-- Else label
+			il_generator.mark_label (else_label)
+
+			if elsif_list /= Void then
+					-- Generates IL code for alternatives
+				from
+					elsif_list.start
+				until
+					elsif_list.after
+				loop
+					elsif_clause ?= elsif_list.item
+						-- Generate byte code for expression
+					elsif_clause.generate_il_line_info
+					elsif_clause.expr.generate_il
+
+						-- Test if false
+					elsif_label := il_label_factory.new_label
+					il_generator.branch_on_false (elsif_label)
+
+					cmp := elsif_clause.compound
+					if cmp /= Void then
+							-- Generate alternative compound byte code
+						cmp.generate_il
+					end
+
+					il_generator.branch_to (end_label)
+
+					il_generator.mark_label (elsif_label)
+					elsif_list.forth
+				end
+			end
+						
+			if else_part /= Void then
+					-- Generates byte code for default compound.
+				else_part.generate_il
+			end
+
+				-- End of `if' statement.
+			il_generator.mark_label (end_label)
+		end
 
 feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generates byte code for a conditional instruction.
 		local
-			elsif_clause: ELSIF_B;
-			cmp: like COMPOUND;
-			i, nb_jumps: INTEGER;
-		do
-			make_breakable (ba);
+			elsif_clause: ELSIF_B
+			cmp: like compound
+			i, nb_jumps: INTEGER
+		do	
+				-- Generate hook for the condition test
+			context.generate_melted_debugger_hook (ba)
 
 				-- Generated byte code for condition
-			condition.make_byte_code (ba);
+			condition.make_byte_code (ba)
+
 				-- Generated a test
-			ba.append (Bc_jmp_f);
+			ba.append (Bc_jmp_f)
+
 				-- Deferred writing of the jump value
-			ba.mark_forward;
+			ba.mark_forward
 
 			if compound /= Void then
 					-- Generated byte code for first compound (if any).
-				compound.make_byte_code (ba);
-			end;
-			make_breakable (ba);
-			ba.append (Bc_jmp);
-			ba.mark_forward2;
-			nb_jumps := nb_jumps + 1;
+				compound.make_byte_code (ba)
+			end
+			ba.append (Bc_jmp)
+			ba.mark_forward2
+			nb_jumps := nb_jumps + 1
 	
 				-- Writes the relative jump value.
-			ba.write_forward;
+			ba.write_forward
 
 			if elsif_list /= Void then
 					-- Generates byte code for alternatives
@@ -229,36 +306,37 @@ feature -- Byte code generation
 				until
 					elsif_list.after
 				loop
-					elsif_clause ?= elsif_list.item;
+					elsif_clause ?= elsif_list.item
 					
+						-- Generate hook for the condition test
+					context.generate_melted_debugger_hook (ba)
+	
 						-- Generate byte code for expression
-					elsif_clause.expr.make_byte_code (ba);
+					elsif_clause.expr.make_byte_code (ba)
 
 						-- Test if false
-					ba.append (Bc_jmp_f);
-					ba.mark_forward;
+					ba.append (Bc_jmp_f)
+					ba.mark_forward
 
-					cmp:= elsif_clause.compound;
+					cmp:= elsif_clause.compound
 					if cmp /= Void then
 							-- Generate alternative compound byte code
-						cmp.make_byte_code (ba);
-					end;
-					make_breakable (ba);
-					ba.append (Bc_jmp);
-					ba.mark_forward2;
-					nb_jumps := nb_jumps + 1;
+						cmp.make_byte_code (ba)
+					end
+					ba.append (Bc_jmp)
+					ba.mark_forward2
+					nb_jumps := nb_jumps + 1
 
-					ba.write_forward;
+					ba.write_forward
 				
-					elsif_list.forth;
-				end;
-			end;
+					elsif_list.forth
+				end
+			end
 						
 			if else_part /= Void then
 					-- Generates byte code for default compound.
-				else_part.make_byte_code (ba);
-				make_breakable (ba)
-			end;
+				else_part.make_byte_code (ba)
+			end
 
 			from
 					-- Generate jump values for unconditional jumps
@@ -268,10 +346,10 @@ feature -- Byte code generation
 			until
 				i > nb_jumps
 			loop
-				ba.write_forward2;
+				ba.write_forward2
 				i := i + 1
-			end;
-		end;
+			end
+		end
 
 feature -- Array optimization
 
@@ -281,7 +359,7 @@ feature -- Array optimization
 				(compound /= Void and then compound.assigns_to (i)) or else
 				(else_part /= Void and then else_part.assigns_to (i)) or else
 				(elsif_list /= Void and then elsif_list.assigns_to (i))
-		end;
+		end
 
 	calls_special_features (array_desc: INTEGER): BOOLEAN is
 		do
@@ -333,7 +411,7 @@ feature -- Inlining
 	pre_inlined_code: like Current is
 		do
 			Result := Current
-			condition := condition.pre_inlined_code;
+			condition := condition.pre_inlined_code
 			if compound /= Void then
 				compound := compound.pre_inlined_code
 			end
@@ -348,7 +426,7 @@ feature -- Inlining
 	inlined_byte_code: like Current is
 		do
 			Result := Current
-			condition := condition.inlined_byte_code;
+			condition := condition.inlined_byte_code
 			if compound /= Void then
 				compound := compound.inlined_byte_code
 			end

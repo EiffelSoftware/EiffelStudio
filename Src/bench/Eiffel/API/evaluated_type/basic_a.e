@@ -46,7 +46,7 @@ feature {COMPILER_EXPORTER}
 				other_class := other.actual_type.associated_class
 					-- Note that Void type has no associated class
 				if other_class /= Void then
-					Result :=  (not other.is_expanded)
+					Result :=  (not other.is_true_expanded)
 							and then associated_class.conform_to (other_class)
 				end
 			end
@@ -58,13 +58,13 @@ feature {COMPILER_EXPORTER}
 			Result ?= f.type
 		end
 
-	instantiation_in (type: TYPE_A; written_id: CLASS_ID): like Current is
+	instantiation_in (type: TYPE_A; written_id: INTEGER): like Current is
 			-- Instantiated type in the context of `type'
 		do
 			Result := Current
 		end
 
-	instantiation_of (type: TYPE; class_id: CLASS_ID): TYPE_A is
+	instantiation_of (type: TYPE; class_id: INTEGER): TYPE_A is
 			-- Insatiation of `type' in s simple type
 		do
 			Result := type.actual_type
@@ -82,7 +82,7 @@ feature {COMPILER_EXPORTER}
 		end
 
 	good_generics: BOOLEAN is
-			-- Has the current type the tight numerb of generic types ?
+			-- Has the current type the right number of generic types ?
 		do
 			Result := True
 		end

@@ -59,13 +59,13 @@ feature
 		do
 			n := argument_count;
 			Result :=  n = other.argument_count and then
-					type_deep_equal (result_type, other.result_type)
+					equivalent_type (result_type, other.result_type)
 			from
 				i := 1;
 			until
 				i > n or else not Result
 			loop
-				Result := type_deep_equal (argument_types.item (i), (other.argument_types.item (i)));
+				Result := equivalent_type (argument_types.item (i), (other.argument_types.item (i)));
 				i := i + 1;
 			end;
 		end;
@@ -73,29 +73,22 @@ feature
 	hash_code: INTEGER is
 			-- Hash code for pattern
 		local
-			i, n, m: INTEGER;
+			i, n: INTEGER
 		do
-			Result := result_type.hash_code;
-			n := argument_count;
+			Result := result_type.hash_code
+			n := argument_count
 			if n > 0 then
 				from
-					i := 1;
+					i := 1
 				until
 					i > n
 				loop
-					inspect i \\ 6
-					when 1 then m := 10;
-					when 2 then m := 100;
-					when 3 then m := 1000;
-					when 4 then m := 10000;
-					when 5 then m := 100000;
-					when 0 then m := 1000000;
-					end;
-					Result := Result + m * argument_types.item (i).hash_code;
-					i := i + 1;
-				end;
-			end;
-		end;
+					Result := Result + (argument_types.item (i).hash_code |<< (i \\ 16))
+					i := i + 1
+				end
+				Result := Result.abs
+			end
+		end
 
 feature -- Pattern generation
 
@@ -218,40 +211,15 @@ feature -- Pattern generation
 			end;
 		end;
 
-	generate_arguments_in_call (buffer: GENERATION_BUFFER) is
-			-- Generate arguments in call
-		local
-			i, nb: INTEGER;
-		do
-			from
-				i := 1;
-				nb := argument_count;
-			until
-				i > nb
-			loop
-				if argument_types.item (i).is_pointer then
-					buffer.putchar (',');
-					buffer.put_protected_local (argument_hook_index (i));
-				else
-					buffer.putstring (", arg");
-					buffer.putint (i);
-				end;
-				i := i + 1;
-			end;
-		end;
-
 	generate_pattern (id: INTEGER; buffer: GENERATION_BUFFER) is
 			-- Generate pattern
-		local
-			arg: TYPE_C;
-			i, nb: INTEGER;
 		do
 				-- Generate pattern from C code to interpreter
-			generate_toi_compound (id, buffer);
+			generate_toi_compound (id, buffer)
 
 				-- Compound pattern from interpreter to C code
-			generate_toc_compound (id, buffer);
-		end;
+			generate_toc_compound (id, buffer)
+		end
 
 	generate_separate_pattern (id: INTEGER; buffer: GENERATION_BUFFER) is
 		local
@@ -497,35 +465,32 @@ feature {NONE} -- Implemantation
 			Result := <<"fnptr", "int">>
 		end
 
-	type_deep_equal (first_type, other_type: TYPE_C): BOOLEAN is
-			-- Deep equal comparison wich does not compare the `cr_info´ attribute
-			-- declared in CL_TYPE_I.
+	equivalent_type (first_type, other_type: TYPE_C): BOOLEAN is
+			-- Are `first_type' and `other_type' equivalent regarding C types
+			-- used for generation.
 		require
 			first_type_not_void: first_type /= Void
 			other_type_not_void: other_type /= Void
 		local
-			bit_i, other_bit_i: BIT_I
-			cl_type_i, other_cl_type_i: CL_TYPE_I
+			basic_i, other_basic_i: BASIC_I
 		do
+				-- Check if they have the exact same object type.
+				-- If not they are different.
 			if (first_type.same_type (other_type)) then
-				cl_type_i ?= first_type
-				if cl_type_i /= Void then
-					bit_i ?= first_type
-					if bit_i /= Void then
-						other_bit_i ?= other_type
-						Result := bit_i.size = other_bit_i.size
-					else
-						Result := True
-					end
-					
-					other_cl_type_i ?= other_type
-					Result := Result and then deep_equal (cl_type_i.base_id, other_cl_type_i.base_id)
-					Result := Result and then (cl_type_i.is_expanded = other_cl_type_i.is_expanded)
-					Result := Result and then (cl_type_i.is_separate = other_cl_type_i.is_separate)
-				else
-						-- There is no attributes to compare in the case of
-						-- VOID_I, REFERENCE_I and NONE_I
-					Result := deep_equal (first_type, other_type)	
+				Result := True
+
+					-- If type is basic, we can call `same_as' to ensure that they
+					-- are the same kind of basic types (eg LONG_I is used to
+					-- represent all INTEGER classes, or CHAR_I to represent an ASCII
+					-- character or a wide character).
+					--
+					-- If it is not, it means that we have either a NONE_I, a REFERENCE_I
+					-- or a VOID_I and are test on the type ensure that here we have to
+					-- we return True.
+				basic_i ?= first_type
+				if basic_i /= Void then
+					other_basic_i ?= other_type
+					Result := basic_i.same_as (other_basic_i)
 				end
 			end
 		end

@@ -38,7 +38,7 @@ feature {NONE} -- Implementation
 			descendant_class: CLASS_C;
 		do
 			descendants := c.descendants;
-			if not descendants.empty then
+			if not descendants.is_empty then
 				from
 					descendants.start
 				until
@@ -48,7 +48,7 @@ feature {NONE} -- Implementation
 					add_tabs (st, i);
 					descendant_class.append_signature (st);
 					if displayed.has (descendant_class) then
-						if not descendant_class.descendants.empty then
+						if not descendant_class.descendants.is_empty then
 							st.add_string ("...")
 						end;
 						st.add_new_line;

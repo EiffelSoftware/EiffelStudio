@@ -1,21 +1,11 @@
 class DEF_FUNC_I 
 
 inherit
-
-	DEF_PROC_I
-		rename
-			transfer_to as procedure_transfer_to
-		redefine
-			unselected, replicated, set_type, is_function, type,
-			new_api_feature
-		end;
 	DEF_PROC_I
 		redefine
 			transfer_to,
 			unselected, replicated, set_type, is_function, type,
 			new_api_feature
-		select
-			transfer_to
 		end
 	
 feature 
@@ -43,7 +33,7 @@ feature
 			Result := rep;
 		end;
 
-	unselected (in: CLASS_ID): FEATURE_I is
+	unselected (in: INTEGER): FEATURE_I is
 			-- Unselected feature
 		local
 			unselect: D_DEF_FUNC_I
@@ -57,7 +47,7 @@ feature
 	transfer_to (other: like Current) is
 			-- Transfer datas form `other' into Current
 		do
-			procedure_transfer_to (other);
+			Precursor {DEF_PROC_I} (other);
 			other.set_type (type);
 		end;
 

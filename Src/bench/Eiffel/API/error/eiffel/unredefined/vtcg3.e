@@ -20,9 +20,11 @@ feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is
 		do
-			st.add_string ("Entity name: ")
-			st.add_string (entity_name)
-			st.add_new_line
+			if entity_name /= Void then
+				st.add_string ("Entity name: ")
+				st.add_string (entity_name)
+				st.add_new_line
+			end
 			{VTCG} Precursor (st)
 		end
 

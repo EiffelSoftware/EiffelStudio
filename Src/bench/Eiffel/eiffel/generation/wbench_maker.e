@@ -18,7 +18,7 @@ feature
 			-- Generates the .c -> .o compilation rule
 		do
 			Make_file.putstring ("%
-				%%N.SUFFIXES:.cpp%N%N%
+				%%N.SUFFIXES:.cpp .o%N%N%
 				%.c.o:%N%
 				%%T$(CC) $(CFLAGS) -c $<%N%N%
 				%.cpp.o:%N%
@@ -35,11 +35,9 @@ feature
 	add_specific_objects is
 			-- Add workbench mode specific files to the object list
 		do
-			add_in_primary_system_basket (Econform)
 			add_in_primary_system_basket (Eoption);
 			add_in_primary_system_basket (Epattern);
 			add_in_primary_system_basket (Efrozen);
-			add_in_primary_system_basket (Edispatch);
 			add_in_primary_system_basket (Ecall);
 		end;
 
@@ -97,6 +95,7 @@ feature
 				cecil_basket.extend ("weif_threads.o"); cecil_basket.finish
 				cecil_basket.extend ("eif_rw_lock.o"); cecil_basket.finish
 				cecil_basket.extend ("wgen_conf.o"); cecil_basket.finish
+				cecil_basket.extend ("weif_type_id.o"); cecil_basket.finish
 				cecil_basket.extend ("wrout_obj.o"); cecil_basket.finish
 				cecil_basket.extend ("eif_once.o"); cecil_basket.finish
 				cecil_basket.extend ("weif_project.o"); cecil_basket.finish
@@ -151,6 +150,7 @@ feature
 				cecil_basket.extend ("MTweif_threads.o"); cecil_basket.finish
 				cecil_basket.extend ("MTeif_rw_lock.o"); cecil_basket.finish
 				cecil_basket.extend ("MTwgen_conf.o"); cecil_basket.finish
+				cecil_basket.extend ("MTweif_type_id.o"); cecil_basket.finish
 				cecil_basket.extend ("MTwrout_obj.o"); cecil_basket.finish
 				cecil_basket.extend ("MTeif_once.o"); cecil_basket.finish
 				cecil_basket.extend ("MTweif_project.o"); cecil_basket.finish
@@ -167,79 +167,77 @@ feature
 			types: TYPE_LIST;
 			cl_type: CLASS_TYPE;
 			object_name, file_name: STRING;
-			classes: CLASS_C_SERVER;
 			class_array: ARRAY [CLASS_C];
 			i, nb, packet_nb: INTEGER;
 			string_list: LINKED_LIST [STRING]
 		do
-			classes := System.classes;
-			from classes.start until classes.after loop
-				class_array := classes.item_for_iteration;
-				nb := Class_counter.item (classes.key_for_iteration).count
-				from i := 1 until i > nb loop
-					a_class := class_array.item (i)
-					if a_class /= Void then
-						from
-							types := a_class.types;
-							types.start
-						until
-							types.after
-						loop
-							cl_type := types.item;
-							if
-								types.has_type (cl_type.type)
-								and then types.found_item = cl_type
-							then
-								-- Do not generate twice the same type if it
-								-- has been derived in two different merged
-								-- precompiled libraries.
-		
-								if (not cl_type.is_precompiled) then
-									packet_nb := cl_type.packet_number
-										-- C code
-									object_name := cl_type.base_file_name;
-									!!file_name.make (16);
-									file_name.append (object_name);
-									file_name.append (".o");
-									string_list := object_baskets.item (packet_nb)
-									string_list.extend (file_name)
-									string_list.finish
+			from
+				class_array := System.classes
+				nb := Class_counter.count
+				i := 1
+			until
+				i > nb
+			loop
+				a_class := class_array.item (i)
+				if a_class /= Void then
+					from
+						types := a_class.types;
+						types.start
+					until
+						types.after
+					loop
+						cl_type := types.item;
+						if
+							types.has_type (cl_type.type)
+							and then types.found_item = cl_type
+						then
+							-- Do not generate twice the same type if it
+							-- has been derived in two different merged
+							-- precompiled libraries.
+	
+							if (not cl_type.is_precompiled) then
+								packet_nb := cl_type.packet_number
+									-- C code
+								object_name := cl_type.base_file_name;
+								!!file_name.make (16);
+								file_name.append (object_name);
+								file_name.append (".o");
+								string_list := object_baskets.item (packet_nb)
+								string_list.extend (file_name)
+								string_list.finish
 
-										-- Descriptor file
-									!!file_name.make (16);
-									file_name.append (object_name);
-									file_name.append_character (Descriptor_file_suffix);
-									file_name.append (".o");
-									string_list := object_baskets.item (packet_nb)
-									string_list.extend (file_name)
-									string_list.finish
-								end;
-
+									-- Descriptor file
+								!!file_name.make (16);
+								file_name.append (object_name);
+								file_name.append_character (Descriptor_file_suffix);
+								file_name.append (".o");
+								string_list := object_baskets.item (packet_nb)
+								string_list.extend (file_name)
+								string_list.finish
 							end;
-							types.forth;
+
 						end;
-		
-						if (not a_class.is_precompiled) then
-								-- Feature table
-							object_name := a_class.base_file_name;
-							!!file_name.make (16);
-							file_name.append (object_name);
-							file_name.append_integer (a_class.id.id);
-							file_name.append_character (Feature_table_file_suffix);
-							file_name.append (".o");
-							object_baskets.item (a_class.packet_number).extend (file_name);
-						end;
-					end
-					i := i + 1
+						types.forth;
+					end;
+	
+					if (not a_class.is_precompiled) then
+							-- Feature table
+						!!file_name.make (16);
+						file_name.append (a_class.base_file_name);
+						file_name.append_integer (a_class.feature_table_file_id);
+						file_name.append_character (Feature_table_file_suffix);
+						file_name.append (".o");
+						object_baskets.item (a_class.packet_number).extend (file_name);
+					end;
 				end
-				classes.forth
-			end;
+				i := i + 1
+			end
 		end;
 
 	run_time: STRING is
 			-- Run time with which the application must be linked
 		do
-			Result := "\$(EIFFEL4)/bench/spec/\$(PLATFORM)/lib/"
+			Result := "\$(ISE_EIFFEL)/bench/spec/\$(ISE_PLATFORM)/lib/"
 
 			if System.has_dynamic_runtime then
 				Result.append ("$shared_prefix")
@@ -258,13 +256,13 @@ feature
 			Result.append ("$wkeiflib")
 
 			if System.has_dynamic_runtime then
-				Result.append ("$shared_suffix")
+				Result.append ("$shared_rt_suffix")
 			else
 				Result.append ("$suffix")
 			end
 
 			if System.has_separate then
-				Result.append ("\$(EIFFEL4)/library/net/spec/\$(PLATFORM)/lib/libnet.a")
+				Result.append ("\$(ISE_EIFFEL)/library/net/spec/\$(ISE_PLATFORM)/lib/libnet.a")
 			end
 		end;
 

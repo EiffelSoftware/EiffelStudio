@@ -46,7 +46,7 @@ feature
 			real_ty ?= context.real_type (type);
 			target_gen_type := real_ty.meta_generic.item (1);
 			get_register;
-			!!array_area_reg.make (ref_type.c_type);
+			!!array_area_reg.make (Reference_c_type.c_type);
 			from
 				expressions.start
 			until
@@ -89,6 +89,7 @@ feature
 	free_register is
 			-- Free the registers.
 		do
+			Precursor {ARRAY_CONST_B}
 			if array_area_reg /= Void then
 				array_area_reg.free_register
 			end;
@@ -163,10 +164,10 @@ feature {NONE} -- C code generation
 			position: INTEGER;
 			buf: GENERATION_BUFFER
 		do
-			is_expanded := target_type.is_expanded;
+			is_expanded := target_type.is_true_expanded;
 			array_area_reg.print_register;
 			buf := buffer
-			buf.putstring (" = * (char **) ");
+			buf.putstring (" = * (EIF_REFERENCE *) ");
 			print_register;
 			buf.putchar (';');
 			buf.new_line;
@@ -243,34 +244,36 @@ feature {NONE} -- C code generation
 						buf.putchar (')');
 						buf.new_line;
 					end
-				end;
-				buf.putchar (';');
-				buf.new_line;
-				expressions.forth;
-				position := position + 1;
-			end;
+				end
+				buf.putchar (';')
+				buf.new_line
+				expressions.forth
+				position := position + 1
+			end
 			if (is_expanded and expressions.count > 0) then
-				buf.exdent;
-				buf.putchar ('}');
-				buf.new_line;
-			end;
-		end;
+				buf.exdent
+				buf.putchar ('}')
+				buf.new_line
+			end
+		end
 
 	generate_final_array_make (real_ty: GEN_TYPE_I)	is
 				-- Generate code to call the make routine 
 				-- of the manifest array in final mode.
 		local
-			entry: POLY_TABLE [ENTRY];
-			rout_table: ROUT_TABLE;
-			internal_name, table_name: STRING;
-			rout_id: ROUTINE_ID;
+			rout_table: ROUT_TABLE
+			internal_name: STRING
+			rout_id: INTEGER
 		do
 			rout_id := real_ty.base_class.feature_table.item ("make").rout_id_set.first;
-			entry := Eiffel_table.poly_table (rout_id);
-			rout_table ?= entry;
+			rout_table ?= Eiffel_table.poly_table (rout_id);
 
 				-- Generate the signature of the function
-			internal_name := clone (rout_table.feature_name (real_ty.type_id))
+			rout_table.goto_implemented (real_ty.type_id)
+			check
+				is_implemented: rout_table.is_implemented
+			end
+			internal_name := clone (rout_table.feature_name)
 			buffer.putstring ("(FUNCTION_CAST(void, (EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER))")
 			buffer.putstring (internal_name);
 			buffer.putstring (")")
@@ -292,7 +295,7 @@ feature {NONE} -- C code generation
 		local
 			f_table: FEATURE_TABLE;
 			feat_i: FEATURE_I;
-			r_id: ROUTINE_ID;
+			r_id: INTEGER;
 			rout_info: ROUT_INFO;
 			base_class: CLASS_C
 			buf: GENERATION_BUFFER
@@ -309,12 +312,12 @@ feature {NONE} -- C code generation
 				buf.putstring ("RTWPF(");
 				r_id := feat_i.rout_id_set.first;
 				rout_info := System.rout_info_table.item (r_id);
-				rout_info.origin.generated_id (buf);
+				buf.generate_class_id (rout_info.origin);
 				buf.putstring (gc_comma);
 				buf.putint (rout_info.offset);
 			else
 				buf.putstring (" RTWF(");
-				buf.putint (real_ty.associated_class_type.id.id - 1);
+				buf.putint (real_ty.associated_class_type.static_type_id - 1);
 				buf.putstring (gc_comma);
 				buf.putint (feat_i.feature_id);
 			end;

@@ -58,7 +58,7 @@ feature -- Output
 			w_class.append_name (st);
 			st.add_new_line;
 			st.add_string ("Not exported to class ");
-			e_class.append_name (st);
+			class_c.append_name (st);
 			st.add_new_line
 		end
 

@@ -64,7 +64,7 @@ feature -- Access
 			lexer: RESOURCE_STRING_LEX;
 			str: STRING
 		do
-			if not a_value.empty then
+			if not a_value.is_empty then
 				if a_value @ 1 /= '%"' then
 					!! str.make (0);
 					str.extend ('%"');

@@ -11,7 +11,7 @@ inherit
 		redefine
 			initialize,
 			actual_type, solved_type,
-			set, dump, simple_format
+			dump, simple_format
 		end
 
 feature {AST_FACTORY} -- Initialization
@@ -19,18 +19,11 @@ feature {AST_FACTORY} -- Initialization
 	initialize (n: like class_name; g: like generics) is
 			-- Create a new EXPANDED_CLASS_TYPE AST node.
 		do
-			Precursor (n, g)
+			Precursor {CLASS_TYPE_AS} (n, g)
 			record_expanded
 		end
 
 feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			{CLASS_TYPE_AS} Precursor
-			record_expanded
-		end
 
 	record_expanded is
 			-- This must be done before pass2
@@ -46,7 +39,7 @@ feature
 	solved_type (feat_table: FEATURE_TABLE; f: FEATURE_I): CL_TYPE_A is
 		do
 			Result := {CLASS_TYPE_AS} Precursor (feat_table, f)
-			Result.set_is_expanded (True)
+			Result.set_is_true_expanded (True)
 			record_exp_dependance (Result.associated_class)
 		end
 
@@ -54,7 +47,7 @@ feature
 			-- Expanded actual class type
 		do
 			Result := {CLASS_TYPE_AS} Precursor
-			Result.set_is_expanded (True)
+			Result.set_is_true_expanded (True)
 			record_exp_dependance (Result.associated_class)
 		end
 

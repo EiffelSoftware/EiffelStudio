@@ -12,7 +12,8 @@ inherit
 	EIFFEL_ENV
 	FILED_STONE
 		redefine
-			help_text
+			help_text,
+			is_storable
 		end
 
 creation
@@ -46,92 +47,47 @@ feature -- Access
 			end
 		end
 
-	stone_type: INTEGER is do Result := Explain_type end
-
-	stone_name: STRING is
+	is_storable: BOOLEAN is
+			-- Error stone are not kept.
 		do
-			Result := Interface_names.s_Explain_stone
+			Result := False
 		end
 
-	help_text: LINKED_LIST [STRING] is
-			-- Content of the file where the help is
-		local
-			a_file: RAW_FILE
-			a_line: STRING
+	help_text: STRING is
+			-- Content of the file where the help is.
 		do
-			create Result.make
-			if is_valid then
-				create a_file.make (file_name)
-				if a_file.exists and then a_file.is_readable then
-					from
-						a_file.open_read
-						a_file.readline
-					until
-						a_file.end_of_file
-					loop
-						a_line := clone (a_file.laststring)
-						Result.extend (a_line)
-						a_file.readline
-					end
-				end
-			end
-			if Result.empty then
-				Result.put_front (Interface_names.h_No_help_available)
+			Result := origin_text
+			if Result = Void or else Result.is_equal ("") then
+				Result := clone (Interface_names.h_No_help_available)
 			end
 		end
 
-	file_name: STRING is
+	history_name: STRING is
+		do
+			Result := "Error " + header
+		end
+
+	file_name: FILE_NAME is
 			-- File where the help is
-		local
-			fn: FILE_NAME
 		do
-			create fn.make_from_string (help_path)
-			fn.set_file_name (error_i.help_file_name)
-			Result := fn
+			create Result.make_from_string (help_path)
+			Result.set_file_name (error_i.help_file_name)
 		end
-
-	set_file_name (s: STRING) is do end
-			-- Do nothing
-
-	click_list: ARRAY [CLICK_STONE] is do end
 
 	stone_signature: STRING is do Result := code end
 
-	icon_name: STRING is
-		do
-			Result := code
-			if Result = Void then
-				create Result.make (0)
-			end
-		end
-
-	clickable: BOOLEAN is
-			-- Is Current an element with recorded structures information?
-			-- No
-		do
-			-- Do nothing
-		end
-
---	stone_cursor: SCREEN_CURSOR is
+	stone_cursor: EV_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
---		do
---			Result := Cursors.cur_Explain
---		end
+		do
+			Result := Cursors.cur_Interro
+		end
 
---	x_stone_cursor: SCREEN_CURSOR is
+	x_stone_cursor: EV_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
---		do
---			Result := Cursors.cur_X_explain
---		end
-
-feature -- Update
-
---	process (hole: HOLE) is
---			-- Process Current stone dropped in hole `hole'.
---		do
---			hole.process_error (Current)
---		end
+		do
+			Result := Cursors.cur_X_interro
+		end
 
 end -- class ERROR_STONE

@@ -1,10 +1,14 @@
--- Invariant server associated to file "._TMP_AST". Remmber also the body ids to
--- erase from the table (body ids from changed features).
+indexing
+	description: "Invariant server. Remember also the body ids to erase from the%
+				%erase from the table (body ids from changed features).%
+				%Indexed by class id."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class TMP_INV_AST_SERVER 
 
 inherit
-	READ_SERVER [INVARIANT_AS, CLASS_ID]
+	READ_SERVER [INVARIANT_AS]
 		rename
 			tmp_ast_server as offsets
 		redefine
@@ -12,12 +16,11 @@ inherit
 		end
 
 creation
-
 	make
 	
 feature
 
-	to_remove: LINKED_LIST [CLASS_ID];
+	to_remove: LINKED_LIST [INTEGER];
 			-- Id of invariants to remove from the invariant server
 			-- when finalization
 
@@ -35,7 +38,7 @@ feature
 			!! Result.make
 		end
 		
-	remove_id (i: CLASS_ID) is
+	remove_id (i: INTEGER) is
 			-- Insert `i' in `to_remove'.
 		do
 			if not to_remove.has (i) then

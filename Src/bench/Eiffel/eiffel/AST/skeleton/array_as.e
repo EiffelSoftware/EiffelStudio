@@ -19,20 +19,6 @@ feature {AST_FACTORY} -- Initialization
 			expressions_set: expressions = exp
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			expressions ?= yacc_arg (0)
-			if expressions = Void then
-					-- Create empty list
-				!! expressions.make_filled (0)
-			end
-		ensure then
-			expressions_exists: expressions /= Void
-		end
-
 feature -- Attributes
 
 	expressions: EIFFEL_LIST [EXPR_AS]

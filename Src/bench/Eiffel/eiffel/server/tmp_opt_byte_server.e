@@ -1,9 +1,12 @@
--- Temporary server of optimized byte code
+indexing
+	description: "Temporary server of optimized byte code indexed by body id."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class TMP_OPT_BYTE_SERVER
 
 inherit
-	DELAY_SERVER [BYTE_CODE, BODY_ID]
+	DELAY_SERVER [BYTE_CODE]
 		redefine
 			clear
 		end
@@ -13,10 +16,10 @@ creation
 
 feature
 
-	id (t: BYTE_CODE): BODY_ID is
+	id (t: BYTE_CODE): INTEGER is
 			-- Id associated with `t'
 		do
-			Result := t.byte_id
+			Result := t.body_index
 		end
 
 	cache: BYTE_CACHE is
@@ -25,7 +28,7 @@ feature
 			!! Result.make
 		end
 
-	Delayed: SEARCH_TABLE [BODY_ID] is
+	Delayed: SEARCH_TABLE [INTEGER] is
 			-- Cache for delayed items
 		once
 			!!Result.make ((3 * Cache.cache_size) // 2)

@@ -8,7 +8,7 @@ inherit
 			is_numeric,
 			same_as,
 			description, sk_value, generate_cecil_value, hash_code,
-			byte_code_cast, generated_id, heaviest
+			generate_byte_code_cast, generated_id, heaviest
 		end
 
 	BYTE_CONST
@@ -21,10 +21,10 @@ feature
 			Result := C_float
 		end
 
-	byte_code_cast: CHARACTER is
+	generate_byte_code_cast (ba: BYTE_ARRAY) is
 			-- Code for interpreter cast
 		do
-			Result := Bc_cast_float
+			ba.append (Bc_cast_float)
 		end
 
 	is_float: BOOLEAN is True
@@ -52,7 +52,7 @@ feature
 	dump (buffer: GENERATION_BUFFER) is
 			-- Debug purpose
 		do
-			buffer.putstring ("FLOAT")
+			buffer.putstring ("EIF_REAL")
 		end
 
 	description: REAL_DESC is
@@ -77,30 +77,6 @@ feature
 
 	separate_send_macro: STRING is "CURSQRR"
 			-- String generated to return the result of a separate call
-
-	generate (buffer: GENERATION_BUFFER) is
-			-- Generate C type in `buffer'.
-		do
-			buffer.putstring ("EIF_REAL ")
-		end
-
-	generate_cast (buffer: GENERATION_BUFFER) is
-			-- Generate C cast in `buffer'.
-		do
-			buffer.putstring ("(EIF_REAL) ")
-		end
-
-	generate_access_cast (buffer: GENERATION_BUFFER) is
-			-- Generate access C cast in `buffer'.
-		do
-			buffer.putstring ("(EIF_REAL *) ")
-		end
-
-	generate_size (buffer: GENERATION_BUFFER) is
-			-- Generate size of C type
-		do
-			buffer.putstring ("sizeof(EIF_REAL)")
-		end
 
 	hash_code: INTEGER is
 			-- Hash code for current type
@@ -143,7 +119,7 @@ feature -- Generic conformance
 	generated_id (final_mode : BOOLEAN) : INTEGER is
 
 		do
-			Result := -5        -- Code for REAL
+			Result := Real_type
 		end
 feature
 

@@ -36,7 +36,7 @@ feature -- Properties
 	comments: EIFFEL_COMMENTS;
 			-- Comments for Current category
 
-	clauses: PART_SORTED_TWO_WAY_LIST [FEATURE_CLAUSE_EXPORT];
+	clauses: LINKED_LIST [FEATURE_CLAUSE_EXPORT];
 			-- Sorted list of features based on export clauses
 			-- with same comments
 
@@ -45,16 +45,16 @@ feature -- Properties
 
 feature -- Access
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- Are the clauses empty?
 		do
-			Result := true;
+			Result := True;
 			from
 				clauses.start
 			until
 				clauses.after or else not Result
 			loop
-				Result := clauses.item.empty;
+				Result := clauses.item.is_empty;
 				clauses.forth
 			end;
 		end;
@@ -104,9 +104,8 @@ feature -- Element change
 		require
 			good_argument: other /= Void
 		local
-			other_clauses: like clauses;
-			clauses_count, other_count: INTEGER;
-			found: BOOLEAN;
+			other_clauses: like clauses
+			found: BOOLEAN
 			item: FEATURE_CLAUSE_EXPORT
 		do
 			from
@@ -172,7 +171,7 @@ feature -- Element change
 		local
 			new_clause: FEATURE_CLAUSE_EXPORT;
 		do
-			if clauses.empty then
+			if clauses.is_empty then
 				!! new_clause.make (feat_adapter);
 				clauses.finish;
 				clauses.put_right (new_clause)
@@ -187,10 +186,6 @@ feature -- Context output
 	format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text
 		do
-			if not order_same_as_text then
-					-- Sort features if needed
-				clauses.sort
-			end;
 			from
 				clauses.start
 			until
@@ -208,38 +203,6 @@ feature -- Removal
 		do
 			clauses.wipe_out;	
 			comments := Void
-		end;	
-
-feature {FLAT_STRUCT, FORMAT_REGISTRATION} -- Implementation
-
-	storage_info: S_FEATURE_CLAUSE is
-			-- Feature clause data for EiffelCase
-		require
-			must_have_one_entry: clauses.count = 1
-		local
-			f_clause: FEATURE_CLAUSE_EXPORT;
-			comment_data: S_FREE_TEXT_DATA
-		do
-			f_clause := clauses.first;
-			if comments = Void then
-				!! comment_data.make (0);
-			else
-				!! comment_data.make_filled (comments.count);
-				from	
-					comment_data.start;
-					comments.start
-				until	
-					comment_data.after
-				loop
-					comment_data.replace (comments.item);
-					comment_data.forth;
-					comments.forth
-				end
-			end;
-			!! Result.make (
-				f_clause.features_storage_info,
-				f_clause.export_status.storage_info, 
-				comment_data);
 		end;	
 
 invariant

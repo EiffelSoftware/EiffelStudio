@@ -37,7 +37,7 @@ feature -- Formatting
 			-- Set the execution format to `stone'.
 		do
 			Application.set_execution_mode (execution_mode)
-			tool.debug_run_cmd_holder.associated_command.execute (Current)
+			tool.debug_run_hole_holder.associated_command.execute (Current)
 		end;
 
 feature -- Properties

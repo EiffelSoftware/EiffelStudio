@@ -33,19 +33,6 @@ feature {AST_FACTORY} -- Initialization
 			is_frozen_set: is_frozen = b
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			fix_operator ?= yacc_arg (0);
-				-- (Free) operators are not case sensitive
-			fix_operator.value.to_lower;
-			is_frozen := yacc_bool_arg (0);
-		ensure then
-			fix_operator_exists: fix_operator /= Void
-		end;
-
 feature -- Attributes
 
 	fix_operator: STRING_AS;

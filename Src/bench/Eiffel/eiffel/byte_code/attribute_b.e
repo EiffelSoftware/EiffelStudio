@@ -44,6 +44,7 @@ feature
 			attribute_name := a.feature_name
 			attribute_id := a.feature_id
 			routine_id := a.rout_id_set.first
+			written_in := a.written_in
 		end
 
 	is_attribute: BOOLEAN is True
@@ -85,6 +86,71 @@ feature
 			Result := attr_bl
 		end
 
+feature -- IL code generation
+
+	generate_il_call (invariant_checked: BOOLEAN) is
+			-- Generate IL code for feature call.
+			-- If `invariant_checked' generates invariant check
+			-- before call.
+		local
+			r_type: TYPE_I
+			cl_type: CL_TYPE_I
+		do
+				-- Type of attribute in current context
+			r_type := Context.real_type (type)
+
+			if r_type.is_none then
+					-- Accessing Void attribute from ANY
+				il_generator.put_default_value (r_type)
+			else
+					-- Type of class which defines current attribute.
+				cl_type ?= context_type
+				check
+					valid_type: cl_type /= Void
+				end
+
+				if is_first then
+						-- Accessing attribute written in current analyzed class.
+					if cl_type.is_reference then
+							-- Normal access we simply push current
+						il_generator.generate_current
+					else
+							-- It is declared in an expanded class, we need to
+							-- load the address of current register.
+						if need_real_metamorphose (cl_type) then
+								-- Current attribute is written in a non-expanded class
+								-- we need to box current register to be able to
+								-- access urrent attribute.
+							il_generator.generate_metamorphose (cl_type)
+						end
+					end
+				elseif not cl_type.is_reference then
+						-- Current attribute coming from an expanded class need a special
+						-- transformation of the `parent' if we want to access it.
+						-- If `need_real_metamorphose (cl_type)' a box operation will
+						-- occur meaning that current attribute was written in a
+						-- non-expanded class.
+					generate_il_metamorphose (cl_type, need_real_metamorphose (cl_type))
+				end
+
+					-- We push code to access Current attribute.
+				il_generator.generate_attribute (cl_type, attribute_id)
+
+					-- Generate cast if we have to generate verifiable code
+					-- since attribute might have been redefined and in this
+					-- case its type for IL generation is the one from the
+					-- parent not the redefined one. Doing the cast enable
+					-- the verifier to find out that what we are doing is
+					-- correct.
+				if
+					system.il_verifiable and then not r_type.is_expanded
+					and then not r_type.is_none
+				then
+					il_generator.generate_check_cast (r_type, r_type)
+				end
+			end
+		end
+
 feature -- Byte code generation
 
 	assign_code: CHARACTER is
@@ -118,7 +184,7 @@ feature -- Byte code generation
 		local
 			instant_context_type: CL_TYPE_I
 			base_class: CLASS_C
-			r_id: ROUTINE_ID
+			r_id: INTEGER
 			rout_info: ROUT_INFO
 		do
 			instant_context_type ?= context_type
@@ -127,14 +193,14 @@ feature -- Byte code generation
 				r_id := base_class.feature_table.item
 					(attribute_name).rout_id_set.first
 				rout_info := System.rout_info_table.item (r_id)
-				ba.append_integer (rout_info.origin.id)
+				ba.append_integer (rout_info.origin)
 				ba.append_integer (rout_info.offset)
 			else
 					-- Generate attribute id
 				ba.append_integer (attribute_id)
 					-- Generate static type of the call
 				ba.append_short_integer
-					(instant_context_type.associated_class_type.id.id - 1)
+					(instant_context_type.associated_class_type.static_type_id - 1)
 			end
 				-- Generate attribute meta-type
 			ba.append_uint32_integer (Context.real_type (type).sk_value)
@@ -158,7 +224,7 @@ feature -- Byte code generation
 		local
 			instant_context_type: CL_TYPE_I
 			base_class: CLASS_C
-			r_id: ROUTINE_ID
+			r_id: INTEGER
 			rout_info: ROUT_INFO
 		do
 			instant_context_type ?= context_type
@@ -167,14 +233,14 @@ feature -- Byte code generation
 				r_id := base_class.feature_table.item
 					(attribute_name).rout_id_set.first
 				rout_info := System.rout_info_table.item (r_id)
-				ba.append_integer (rout_info.origin.id)
+				ba.append_integer (rout_info.origin)
 				ba.append_integer (rout_info.offset)
 			else
 					-- Generate attribute id
 				ba.append_integer (attribute_id)
 					-- Generate static type of the call
 				ba.append_short_integer
-					(instant_context_type.associated_class_type.id.id - 1)
+					(instant_context_type.associated_class_type.static_type_id - 1)
 			end
 				-- Generate attribute meta-type
 			ba.append_uint32_integer (Context.real_type (type).sk_value)
@@ -188,14 +254,13 @@ feature -- Byte code generation
 			r_type := Context.real_type (type)
 			if r_type.is_none then
 				if is_first then
-					ba.append (Bc_Current)
+					ba.append (Bc_current)
 				end
 				ba.append (Bc_void)
 			else
 				standard_make_code (ba, flag)
 				ba.append_uint32_integer (r_type.sk_value)
 			end
-			make_java_typecode (ba)
 		end
 
 	code_first: CHARACTER is

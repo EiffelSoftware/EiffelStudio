@@ -12,8 +12,10 @@ inherit
 			has_call, allocates_memory, make_byte_code,
 			is_unsafe, optimized_byte_node, calls_special_features,
 			size, pre_inlined_code, inlined_byte_code,
-			has_separate_call
-		end;
+			has_separate_call, generate_il
+		end
+
+	IL_CONST
 	
 feature 
 
@@ -25,6 +27,10 @@ feature
 
 	access: FEATURE_B;
 			-- Access when left is not a simple type
+
+	attachment: TYPE_I
+			-- Type of `right' expression as described in
+			-- class text, used for metamorphosis of basic type.
 
 	type: TYPE_I is
 			-- Type of the infixed feature
@@ -50,6 +56,14 @@ feature
 			access := a;
 		end;
 			
+	set_attachment (a: TYPE_I) is
+			-- Set `attachment' to `a'.
+		do
+			attachment := a
+		ensure
+			attachment_set: attachment = a
+		end
+
 	init (a: FEATURE_B) is
 			-- Initializes node
 		do
@@ -183,38 +197,32 @@ feature
 
 	nested_b: NESTED_B is
 		local
-			a_access_expr: ACCESS_EXPR_B;
-			param: BYTE_LIST [EXPR_B];
-			--p: PARAMETER_B;
-			--param: BYTE_LIST [PARAMETER_B];
+			Access_expr: ACCESS_EXPR_B;
+			p: PARAMETER_B;
+			param: BYTE_LIST [PARAMETER_B];
 		do
-				-- Change this node into a nested call
-			!!Result;
-			!!a_access_expr;
-			a_access_expr.set_expr (left);
-			a_access_expr.set_parent (Result);
-			Result.set_target (a_access_expr);
-			!! param.make (1);
-			param.extend (right);
+				-- Access on expression
+			create Access_expr
 
--- FIXME PARAMETER_B takes care of the cast if needed
---			!!p;
---			p.set_expression (right);
---debug
---io.error.putstring (generator);
---io.error.putstring (" BINARY ENLARGED:%NRight:");
---io.error.putstring (right.out);
---io.error.new_line;
---io.error.putstring ("Expected type: ");
---a_access_expr.context_type.trace;
---io.error.putstring ("end display%N");
---end;
---			p.set_attachment_type (a_access_expr.context_type);
---			param.put_i_th (p, 1);
+				-- Nested buffer for byte code generation of a binary
+				-- operation on non-simple types					
+			create Result
+			Result.set_target (Access_expr)
+			Access_expr.set_parent (Result)
 
-			access.set_parameters (param);
-			access.set_parent (Result);
-			Result.set_message (access);
+				-- Production of a nested structure: target is
+				-- an access expression (`left') and parameter
+				-- of `access' is expression `right'.
+			Result.set_message (access)
+			access.set_parent (Result)
+			Access_expr.set_expr (left)
+
+			create param.make (1)
+			create p
+			p.set_expression (right)
+			p.set_attachment_type (attachment)
+			param.extend (p)
+			access.set_parameters (param)
 		end;
 
 	enlarged: EXPR_B is
@@ -237,19 +245,44 @@ feature
 			Result := Current;
 		end;
 
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for binary expression.
+		do
+			if is_built_in then
+				generate_standard_il
+			else
+				nested_b.generate_il
+			end
+		end
+
+	generate_standard_il is
+			-- Generate standard IL code for binary expression.
+		do
+			left.generate_il
+			right.generate_il
+			il_generator.generate_binary_operator (il_operator_constant)
+		end
+
+	il_operator_constant: INTEGER is
+			-- Byte code constant associated to current binary
+			-- operation
+		deferred
+		end;
+
 feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for binary expression
-		local
-			param: BYTE_LIST [BYTE_NODE];
 		do
 			if is_built_in then
-				make_standard_byte_code (ba);
+				make_standard_byte_code (ba)
 			else
-				make_call_byte_code (ba);
-			end;
-		end;
+					-- Make byte code with call to infix feature
+				nested_b.make_byte_code (ba)
+			end
+		end
 	
 	make_standard_byte_code (ba: BYTE_ARRAY) is
 			-- Generate standard byte code for binary expression
@@ -258,39 +291,6 @@ feature -- Byte code generation
 			right.make_byte_code (ba);
 				-- Write binary operator
 			ba.append (operator_constant);
-		end;
-
-	make_call_byte_code (ba: BYTE_ARRAY) is
-			-- Generate byte code for an inxed call
-		local
-			param: BYTE_LIST [EXPR_B];
-			Nested: NESTED_B;
-			Access_expr: ACCESS_EXPR_B
-			--p: PARAMETER_B;
-			--param: BYTE_LIST [PARAMETER_B];
-		do
-				-- Access on expression
-			!! Access_expr;
-				-- Nested buffer for byte code generation of a binary
-				-- operation on non-simple types
-			!! Nested;
-			Nested.set_target (Access_expr);
-			Access_expr.set_parent (Nested);
-				-- Production of a nested structure: target is
-				-- an access expression (`left') and parameter
-				-- of `access' is expression `right'.
-			Nested.set_message (access);
-			access.set_parent (Nested);
-			Access_expr.set_expr (left);
-			!! param.make (1);
-			param.extend (right);
---!!p;
---p.set_expression (right);
---p.set_attachment_type (Access_expr.context_type);
---param.put_i_th (p, 1);
-			access.set_parameters (param);
-				-- Byte code generation on a nested call
-			Nested.make_byte_code (ba);
 		end;
 
 	operator_constant: CHARACTER is

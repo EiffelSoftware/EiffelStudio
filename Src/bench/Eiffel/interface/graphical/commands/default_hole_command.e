@@ -66,7 +66,6 @@ feature -- Execution
 		local
 			ts: STONE;
 			new_tool: TOOL_W;
-			super_melt_cmd: SUPER_MELT
 		do
 			if argument = control_button_three_action then
 				ts := tool.stone;
@@ -74,8 +73,8 @@ feature -- Execution
 					Project_tool.receive (ts)
 				end
 			elseif argument = shift_button_three_action then
-				!! super_melt_cmd.make (tool);
-				super_melt_cmd.work (Void)
+--Arnaud 	create super_melt_cmd.make (tool);
+--Arnaud	super_melt_cmd.work (Void)
 			elseif tool = Project_tool then
 				inspect 
 					stone_type
@@ -108,8 +107,12 @@ feature -- Update
 	receive (a_stone: STONE) is
 			-- Process dropped stone `a_stone'
 		do
-			if a_stone.is_valid and then compatible (a_stone) then
-				tool.receive (a_stone)
+			if compatible (a_stone) then
+				if a_stone.is_valid then
+					tool.receive (a_stone)
+				else
+					a_stone.process (Current)
+				end
 			end
 		end;
 

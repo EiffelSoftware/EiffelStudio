@@ -68,33 +68,28 @@ feature
 			!! Result.make (10)
 			inspect
 				c_type.level
-			when C_long then
-				Result.append ("ti");
+			when C_int8 then
+				Result.append ("ti8_");
+			when C_int16 then
+				Result.append ("ti16_");
+			when C_int32 then
+				Result.append ("ti32_");
+			when C_int64 then
+				Result.append ("ti64_");
 			when C_ref then
 				Result.append ("tp");
 			when C_float then
 				Result.append ("tf");
 			when C_char then
 				Result.append ("tc");
+			when C_wide_char then
+				Result.append ("twc");
 			when C_double then
 				Result.append ("td");
 			when C_pointer then
 				Result.append ("ta");
 			end;
 			Result.append(regnum.out);
-		end;
-
-	print_register is
-			-- Print register.
-		local
-			str: STRING;
-			index: INTEGER;
-		do
-			if c_type.is_pointer then
-				print_register_by_name;
-			else
-				context.buffer.putstring (register_name);
-			end;
 		end;
 
 	is_temporary: BOOLEAN is true;

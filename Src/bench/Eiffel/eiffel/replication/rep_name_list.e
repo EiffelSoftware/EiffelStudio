@@ -10,10 +10,21 @@ inherit
 	SORTED_TWO_WAY_LIST [REP_NAME]
 		rename
 			make as old_make
-		end;
-	SHARED_SERVER;
-	SHARED_WORKBENCH;
+		end
+	SHARED_SERVER
+		undefine
+			is_equal
+		end
+
+	SHARED_WORKBENCH
+		undefine
+			is_equal
+		end
+
 	COMPILER_EXPORTER
+		undefine
+			is_equal
+		end
 
 creation
 
@@ -63,7 +74,6 @@ feature
 			cur: CURSOR;
 			f_name: STRING;
 			not_selected: BOOLEAN;
-			was_undefined: BOOLEAN;
 			old_feat: FEATURE_I;
 			new_feat: FEATURE_I;
 				-- Replicated feature
@@ -101,7 +111,7 @@ end;
 		end;
 
 	update_new_features (f_table: FEATURE_TABLE;
-						orig_written_in: CLASS_ID) is
+						orig_written_in: INTEGER) is
 			-- Update Current list using f_table. (update
 			-- the new feature attribute of rep_name); 
 			-- Record the dependencies between the origin (old_feature)
@@ -113,7 +123,7 @@ end;
 			dependencies: REP_CLASS_DEPEND;
 			feat_dependence: REP_FEATURE_DEPEND;
 			depend_unit: REP_DEPEND_UNIT;
-			written_in: CLASS_ID;
+			written_in: INTEGER;
 		do
 debug ("REPLICATION")
 	--io.error.putstring ("in update new features%N");
@@ -125,7 +135,7 @@ end;
 				dependencies := Rep_depend_server.server_item (orig_written_in);
 			else
 				!!dependencies.make (2);
-				dependencies.set_id (orig_written_in);
+				dependencies.set_class_id (orig_written_in);
 			end;
 			cur := cursor;
 			from
@@ -146,7 +156,7 @@ end;
 				if 
 					old_feat /= Void and then
 					not old_feat.is_deferred and then
-					equal (old_feat.written_in, orig_written_in)
+					old_feat.written_in = orig_written_in
 				then
 debug ("REPLICATION")
 	--io.error.putstring ("%Tcreating rep depend unit for: ");
@@ -178,10 +188,10 @@ end;
 		end;
 
 	update_old_features (f_table: FEATURE_TABLE;
-						orig_written_in: CLASS_ID) is
+						orig_written_in: INTEGER) is
 			-- Update old features of Current list.
 		require
-			not_empty: not empty
+			not_empty: not is_empty
 		local
 			cur: CURSOR;
 			old_feat: FEATURE_I;
@@ -224,14 +234,14 @@ end;
 		end;
 
 	old_feature_from_table (rep_feat: FEATURE_I; 
-							written_in: CLASS_ID): FEATURE_I is
+							written_in: INTEGER): FEATURE_I is
 			-- Feature in `written_in' using rep_feat routine id
 			-- set.
 		local
 			s_table: SELECT_TABLE;
 			rout_id_set: ROUT_ID_SET;
 			i: INTEGER;
-			rout_id: ROUTINE_ID;
+			rout_id: INTEGER;
 		do
 			s_table := Feat_tbl_server.item (written_in).origin_table;
 			rout_id_set := rep_feat.rout_id_set;

@@ -28,7 +28,7 @@ feature -- Properties
 			Result := Pixmaps.bm_Clickable 
 		end
  
-	tool: EB_CLASS_TOOL
+	tool: EB_DEVELOPMENT_TOOL
 			-- Tool of edited class
 
 feature -- Formatting
@@ -38,10 +38,10 @@ feature -- Formatting
 			-- if it's clickable; do nothing otherwise.
 		local
 --			cur: CURSOR
-			root_stone: CLASSC_STONE
+--			root_stone: CLASSC_STONE
 			retried: BOOLEAN
 --			mp: MOUSE_PTR
-			same_stone: BOOLEAN
+--			same_stone: BOOLEAN
 			c_stone: CLASSC_STONE
 			wd: EV_WARNING_DIALOG
 		do
@@ -66,7 +66,7 @@ feature -- Formatting
 --								cur := tool.text_area.cursor
 								tool.text_area.clear_window
 --								tool.set_editable (False)
-								tool.set_file_name (file_name (c_stone))
+								tool.set_file_name (file_name)
 								display_info (c_stone)
 --								if cur /= Void then
 --									tool.text_area.go_to (cur)
@@ -96,7 +96,8 @@ feature -- Formatting
 --				if mp /= Void then
 --					mp.restore
 --				end
-				create wd.make_default (tool.parent, Interface_names.t_Warning, Warning_messages.w_Cannot_retrieve_info)
+				create wd.make_with_text (Warning_messages.w_Cannot_retrieve_info)
+				wd.show_modal
 			end
 		rescue
 --			if original_exception = Io_exception then

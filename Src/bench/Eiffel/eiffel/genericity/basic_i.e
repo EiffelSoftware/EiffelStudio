@@ -37,9 +37,9 @@ feature
 	is_valid: BOOLEAN is True
 			-- A Basic type is always in the system
 
-	byte_code_cast: CHARACTER is
+	generate_byte_code_cast (ba: BYTE_ARRAY) is
 			-- Code for the interpreter cast
-		do	
+		do
 		end
 
 	associated_reference: CLASS_TYPE is
@@ -56,7 +56,11 @@ feature
 	base_class: CLASS_C is
 			-- Associated class
 		do
-			Result := associated_reference.associated_class
+			if System.il_generation then
+				Result := type_a.associated_class
+			else
+				Result := associated_reference.associated_class
+			end
 		end
 
 	metamorphose
@@ -74,7 +78,7 @@ feature
 			buffer.putstring("RTLN(")
 			if workbench_mode then
 				buffer.putstring ("RTUD(")
-				associated_reference.id.generated_id (buffer)
+				buffer.generate_type_id (associated_reference.static_type_id)
 				buffer.putchar (')')
 			else
 				buffer.putint (associated_dtype)

@@ -13,7 +13,7 @@ inherit
 			{NONE} all
 		end
 
-	EB_CLASS_TOOL_DATA
+	EB_FLAT_SHORT_DATA
 		export
 			{NONE} all
 		end

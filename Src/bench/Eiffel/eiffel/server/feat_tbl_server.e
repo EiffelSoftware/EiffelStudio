@@ -1,10 +1,13 @@
--- Server for routine tables associated to file ".FT"
+indexing
+	description: "Server for feature tables indexed by class id."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class
 	FEAT_TBL_SERVER 
 
 inherit
-	COMPILER_SERVER [FEATURE_TABLE, CLASS_ID]
+	COMPILER_SERVER [FEATURE_TABLE]
 		redefine
 			has, item
 		end
@@ -20,20 +23,20 @@ feature -- Access
 			!! Result.make
 		end
 		
-	has (an_id: CLASS_ID): BOOLEAN is
+	has (an_id: INTEGER): BOOLEAN is
 			-- Has the current server or the associated temporary 
 			-- server an item of id `an_id'.
 		do
 			Result := Tmp_feat_tbl_server.has (an_id) or else server_has (an_id)
 		end;
 
-	id (t: FEATURE_TABLE): CLASS_ID is
+	id (t: FEATURE_TABLE): INTEGER is
 			-- Id associated with `t'
 		do
 			Result := t.feat_tbl_id
 		end
 
-	item (an_id: CLASS_ID): FEATURE_TABLE is
+	item (an_id: INTEGER): FEATURE_TABLE is
 			-- Feature table of id `an_id'. Look first in the temporary
 			-- feature table server. It not present, look in itself.
 		do

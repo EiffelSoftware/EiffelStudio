@@ -34,7 +34,7 @@ feature
 			hash_size: INTEGER
 		do
 			hash_size := primes.higher_prime (bottom_int_div (5 * n, 4))
-			{CECIL_TABLE} Precursor (hash_size)
+			Precursor {CECIL_TABLE} (hash_size)
 		end
 
 	generate is

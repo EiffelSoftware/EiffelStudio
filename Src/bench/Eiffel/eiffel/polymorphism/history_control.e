@@ -23,22 +23,21 @@ feature -- Initialization
 
 feature
 
-	new_units: EXTEND_TABLE [POLY_TABLE [ENTRY], ROUTINE_ID];
+	new_units: EXTEND_TABLE [POLY_TABLE [ENTRY], INTEGER];
 			-- New units 
 
 	count: INTEGER;
 			-- Count of new and obsolete units already recorded
 
 	max_rout_id: INTEGER
-			-- What it the highest assigned ROUTINE_ID?
+			-- What it the highest assigned routine id?
 			--| Needed in EIFFEL_HISTORY to create the tables.
 
-	add_new (entry: ENTRY; rout_id: ROUTINE_ID) is
+	add_new (entry: ENTRY; rout_id: INTEGER) is
 			-- Add a new unit for routine id `rout_id' to the controler
 		require
 			good_argument: entry /= Void
 		local
-			old_count: INTEGER;
 			poly_table: POLY_TABLE [ENTRY];
 		do
 			poly_table := new_units.item (rout_id);
@@ -55,13 +54,13 @@ feature
 	create_poly_table_with_entry (poly_table: POLY_TABLE [ENTRY]; entry: ENTRY) is
 			-- Add `entry' in newly created `poly_table' with the generic derivations.
 		require
-			poly_table_empty: poly_table.empty
+			poly_table_empty: poly_table.is_empty
 		local
 			associated_class: CLASS_C
 			types: TYPE_LIST
 			modified_entry: ENTRY
 		do
-			associated_class := entry.id.associated_class
+			associated_class := System.class_of_id (entry.class_id)
 			if associated_class /= Void then
 					-- Classes could have been removed
 				from
@@ -82,13 +81,13 @@ feature
 	extend_poly_table_with_entry (poly_table: POLY_TABLE [ENTRY]; entry: ENTRY) is
 			-- Extend `poly_table' with `entry'
 		require
-			not_poly_table_empty: not poly_table.empty
+			not_poly_table_empty: not poly_table.is_empty
 		local
 			associated_class: CLASS_C
 			types: TYPE_LIST
 			modified_entry: ENTRY
 		do
-			associated_class := entry.id.associated_class
+			associated_class := System.class_of_id (entry.class_id)
 			if associated_class /= Void then
 					-- Classes could have been removed
 				from
@@ -111,17 +110,24 @@ feature
 			-- temporary server of polymorphic unit tables.
 		local
 			new_set, server_set: POLY_TABLE [ENTRY];
-			id: ROUTINE_ID;
+			id: INTEGER;
+			mem: MEMORY
 		do
 debug ("TRANSFER")
 			io.error.putstring("in transfer...%N")
 end
+			create mem
+
 			from
 				new_units.start
 			until
 				new_units.after
 			loop
 				new_set := new_units.item_for_iteration;
+					-- We need to sort the data so we can work with them later
+					-- either at degree 4 or degree 5.
+				new_set.sort
+
 				id := new_set.rout_id;
 				if Tmp_poly_server.has (id) then
 					server_set := Tmp_poly_server.item (id);
@@ -130,14 +136,11 @@ end
 				else
 					server_set := new_set;
 				end;
-					-- We need to sort the data so we can work with them later
-					-- either at degree 4 or degree 5.
-				server_set.sort
 				Tmp_poly_server.put (server_set);
 				new_units.forth;
 
-					-- Get the maximum encountered ROUTINE_ID
-				max_rout_id := max_rout_id.max (id.id)
+					-- Get the maximum encountered routine id
+				max_rout_id := max_rout_id.max (id)
 			end;
 debug ("TRANSFER")
 			print ("%NIs transferring")
@@ -149,9 +152,11 @@ debug ("TRANSFER")
 end
 			new_units.clear_all;
 			count := 0;
+			mem.full_collect
+			mem.full_coalesce
 		ensure
 			count = 0;
-			new_units.empty;
+			new_units.is_empty;
 		end;
 
 	check_overload is
@@ -162,6 +167,6 @@ end
 			end;
 		end;
 
-	Overload: INTEGER is 20000;
+	Overload: INTEGER is 120000;
 
 end

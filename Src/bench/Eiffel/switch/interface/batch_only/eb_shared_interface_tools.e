@@ -8,8 +8,6 @@ class
 
 inherit
 	EB_SHARED_OUTPUT_TOOLS
-		redefine
-			init_error_window
-		end
+
 
 end

@@ -8,8 +8,9 @@ indexing
 class SHARED_FORMAT_TABLES
 
 inherit
-
 	EB_CONSTANTS
+	
+	SHARED_FORMAT_INFO
 
 feature -- Properties
 
@@ -47,6 +48,7 @@ feature -- Properties
 			if flatshort_table.has (stone) then
 				Result := flatshort_table.found_item
 			else
+				set_is_without_breakable
 				!! ctxt;
 				ctxt.set_clickable;
 				ctxt.set_feature_clause_order (Class_resources.feature_clause_order.actual_value);
@@ -71,6 +73,7 @@ feature -- Properties
 			if short_table.has (stone) then
 				Result := short_table.found_item
 			else
+				set_is_without_breakable
 				!! ctxt;
 				ctxt.set_clickable;
 				ctxt.set_is_short;
@@ -96,6 +99,7 @@ feature -- Properties
 			if clickable_table.has (stone) then
 				Result := clickable_table.found_item
 			else
+				set_is_without_breakable
 				!! ctxt;
 				ctxt.set_clickable;
 				ctxt.set_one_class_only;
@@ -120,6 +124,7 @@ feature -- Properties
 			if rout_flat_table.has (stone) then
 				Result := rout_flat_table.found_item
 			else
+				set_is_without_breakable
 				!! ctxt;
 				ctxt.set_clickable;
 					--| Show flat form of the routine (False)
@@ -143,6 +148,7 @@ feature -- Properties
 			if debug_table.has (stone) then
 				Result := debug_table.found_item
 			else
+				set_is_with_breakable
 				!! ctxt;
 				ctxt.set_clickable;
 					--| Show flat form with debug point (True)
@@ -168,6 +174,7 @@ feature -- Properties
 				Result := debug_table.found_item
 			else
 				!! ctxt;
+				set_is_with_breakable
 				ctxt.simple_format_debuggable (stone.e_feature);
 				if not ctxt.error then
 					Result := ctxt.text;

@@ -3,7 +3,8 @@ class BIN_STAR_B
 inherit
 	NUM_BINARY_B
 		rename
-			Bc_star as operator_constant
+			Bc_star as operator_constant,
+			il_star as il_operator_constant
 		redefine
 			generate_operator, is_commutative,
 			is_simple, generate_simple

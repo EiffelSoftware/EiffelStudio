@@ -7,13 +7,13 @@ inherit
 	ACCESS_B
 		redefine
 			set_parent, canonical,
-			has_gcable_variable, is_single, enlarged,
+			has_gcable_variable, is_single, enlarged, is_constant,
 			propagate, print_register, free_register,
 			unanalyze, analyze, analyze_on, generate, generate_on,
-			make_byte_code, allocates_memory
+			make_byte_code, allocates_memory, generate_il, need_target
 		end
 	
-feature 
+feature -- Access
 
 	value: VALUE_I;
 			-- Constant value for hardwiring
@@ -33,6 +33,16 @@ feature
 			Result := access.type;
 		end;
 
+feature -- Status
+
+	is_constant: BOOLEAN is True
+			-- Current is constant
+
+	need_target: BOOLEAN is False
+			-- Current does not need a target to be accessed.
+
+feature -- Setting
+
 	set_value (v: like value) is
 			-- Assign `v' to `value'.
 		do
@@ -51,6 +61,8 @@ feature
 			parent := n;
 			access.set_parent (n);
 		end;
+
+feature -- Comparison
 
 	same (other: ACCESS_B): BOOLEAN is
 			-- Is `other' the same access to constant ?
@@ -165,6 +177,14 @@ feature
 	allocates_memory: BOOLEAN is
 		do
 			Result := value.is_string or else value.is_bit
+		end
+
+feature -- IL code generation
+
+	generate_il is
+			-- Generate byte code for a call to a constant.
+		do
+			value.generate_il
 		end
 
 feature -- Byte code generation

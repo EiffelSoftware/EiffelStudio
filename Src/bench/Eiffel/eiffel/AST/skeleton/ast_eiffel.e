@@ -6,8 +6,6 @@ indexing
 deferred class AST_EIFFEL
 
 inherit
-	AST_YACC
-
 	SHARED_ERROR_HANDLER
 
 	SHARED_TEXT_ITEMS
@@ -20,9 +18,10 @@ inherit
 
 feature -- Access
 
-	number_of_stop_points: INTEGER is
-			-- Number of stop points for AST
+	number_of_breakpoint_slots: INTEGER is
+			-- Number of stop points for AST (body only)
 		do
+			-- Return 0 by default
 		end
 
 feature {AST_EIFFEL, COMPILER_EXPORTER} -- Output
@@ -54,20 +53,6 @@ feature -- Formatter
 			valid_ctxt: ctxt /= Void
 		do
 			simple_format (ctxt)
-		end
-
-feature -- Debugger
- 
-	find_breakable is
-			-- Recursive traversal of the AST to record breakable points.
-		do
-			-- Do nothing
-		end
- 
-	record_break_node is
-			-- Record node in instruction FIFO stack.
-		do
-			context.instruction_line.insert (Current)
 		end
 
 feature -- Comparison

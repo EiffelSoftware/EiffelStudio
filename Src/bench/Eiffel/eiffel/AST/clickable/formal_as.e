@@ -30,14 +30,6 @@ feature {AST_FACTORY} -- Initialization
 			position_set: position = p
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			position := yacc_int_arg (0)
-		end
-
 feature -- Properties
 
 	position: INTEGER
@@ -110,7 +102,7 @@ feature {AST_EIFFEL} -- Output
 	simple_format (ctxt: FORMAT_CONTEXT) is
 			-- Reconstitute text.
 		do
-			ctxt.put_string (ctxt.formal_name (position))
+			ctxt.put_text_item (create {GENERIC_TEXT}.make (ctxt.formal_name (position)))
 		end
 
 feature {COMPILER_EXPORTER}

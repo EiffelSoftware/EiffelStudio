@@ -3,13 +3,14 @@ indexing
 	date: "$Date$"
 	revision: "$Revision$"
 
-class EB_CURRENT_CLASS_CMD
+class EB_CURRENT_CLASS_COMMAND
+
+obsolete "useless with merged debugging tool and class tool"
 
 inherit
-
 	EB_EDITOR_COMMAND
 		redefine
-			tool
+			target
 		end
 
 	SHARED_APPLICATION_EXECUTION
@@ -17,61 +18,38 @@ inherit
 	NEW_EB_CONSTANTS
 
 creation
-
 	make
 
 feature -- Properties
 
-	tool: EB_CLASS_TOOL
+	target: EB_DEVELOPMENT_WINDOW
 			-- should change, for the command work in a feature tool
-
---	symbol: EV_PIXMAP is
---			-- Pixmap for the button.
---		once
---			Result := Pixmaps.bm_Current
---		end
-
---	name: STRING is
---			-- Command name.
---		do
---			Result := Interface_names.f_Current
---		end
-
---	menu_name: STRING is
---			-- Name used in menu entry
---		do
---			Result := Interface_names.m_Current
---		end
-
---	accelerator: STRING is
---			-- Accelerator action for menu entry
---		do
---			Result := Interface_names.a_Current
---		end
 
 feature {NONE} -- Implementation
 
-	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
+	execute is
 			-- Retarget the class tool with the current class if any.
-		local
-			e_class: CLASS_C
-			status: APPLICATION_STATUS
-			st: FEATURE_STONE
-			wd: EV_WARNING_DIALOG
+--		local
+--			status: APPLICATION_STATUS
+--			st: FEATURE_STONE
+--			wd: EV_WARNING_DIALOG
 		do
-			status := Application.status
-			if status = Void then
-				create wd.make_default (tool.parent, Interface_names.t_Warning, Warning_messages.w_System_not_running)
-			elseif not status.is_stopped then
-				create wd.make_default (tool.parent, Interface_names.t_Warning, Warning_messages.w_System_not_stopped)
-			elseif status.e_feature = Void or status.dynamic_class = Void then
-					-- Should never happen.
-				create wd.make_default (tool.parent, Interface_names.t_Warning, Warning_messages.w_Unknown_class)
-			else
-					-- Show the current routine in that class.
-				create st.make (status.e_feature)
-				tool.process_feature (st)
-			end
-		end
+--			status := Application.status
+--			if status = Void then
+--				create wd.make_with_text (Warning_messages.w_System_not_running)
+--				wd.show_modal
+--			elseif not status.is_stopped then
+--				create wd.make_with_text (Warning_messages.w_System_not_stopped)
+--				wd.show_modal
+--			elseif status.e_feature = Void or status.dynamic_class = Void then
+--					-- Should never happen.
+--				create wd.make_with_text (Warning_messages.w_Unknown_class)
+--				wd.show_modal
+--			else
+--					-- Show the current routine in that class.
+--				create st.make (status.e_feature)
+--				tool.process_feature (st)
+--			end
+--		end
 
 end -- class EB_CURRENT_CLASS_CMD

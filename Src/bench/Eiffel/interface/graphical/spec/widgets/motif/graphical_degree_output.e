@@ -24,11 +24,12 @@ inherit
 			put_degree_2, put_degree_1, put_degree_minus_1, 
 			put_degree_minus_2, put_degree_minus_3,
 			put_dead_code_removal_message, finish_degree_output,
-			put_start_reverse_engineering, put_case_cluster_message,
-			put_case_class_message, put_case_message, put_string,
+			put_case_cluster_message,
+			put_case_class_message, put_string,
 			put_resynchronizing_breakpoints_message,
 			put_class_document_message,
 			put_start_documentation, put_recursive_degree_6,
+			put_initializing_documentation,
 			display_degree_output
 		end 
 
@@ -186,19 +187,10 @@ feature -- Start output features
 			end
 		end
 
-	put_start_reverse_engineering (total_num: integer) is
-			-- initialize the reverse engineering part.
+	put_initializing_documentation is
+			-- Start documentation generation.
 		do
-			parent.set_title (Interface_names.d_Reverse_engineering)
-			icon_name := Project_tool.icon_name	
-			total_number := total_num
-			processed := 0
-			degree_l.set_label_as_string (Interface_names.d_Compilation_cluster)
-			entity_l.set_label_as_string (Interface_names.d_Compilation_class)
-			nbr_to_go_l.set_label_as_string (Interface_names.d_Classes_to_go)
-			current_nbr_to_go_l.set_label_as_string (total_num.out)
-			current_entity_l.set_label_as_string (Empty_string)
-			set_project_icon_name (Interface_names.d_Reverse_engineering)
+			put_string ("Initializing")
 		end
 
 	put_start_documentation (total_num: INTEGER type: STRING) is
@@ -225,26 +217,6 @@ feature -- Start output features
 			set_project_icon_name (Interface_names.d_Documentation)
 		end
 
-	put_case_message (a_message: STRING) is
-			-- Put `a_message' to the output window.
-		do
-			if is_destroyed then	
-				create_window
-				degree_l.set_label_as_string (Empty_string)
-				degree_l.set_label_as_string (Empty_string)
-				entity_l.set_label_as_string (Empty_string)
-				nbr_to_go_l.set_label_as_string (Empty_string)
-				current_nbr_to_go_l.set_label_as_string (Empty_string)
-				current_degree_l.set_label_as_string (Empty_string)
-				current_entity_l.set_label_as_string (Empty_string)
-				percentage_l.set_label_as_string (Zero_percent)
-			end
-			if not is_managed then	
-				popup_window
-			end
-			put_non_degree_message (a_message)
-		end
-
 	put_resynchronizing_breakpoints_message is
 			-- Put a message to indicate that the
 			-- breakpoints are being resyncronized.
@@ -254,18 +226,16 @@ feature -- Start output features
 
 feature -- Output on per class
 
-	put_degree_6 (a_cluster: CLUSTER_I) is
+	put_degree_6 (a_cluster: CLUSTER_SD; nbr_to_go: INTEGER) is
 			-- Put message to indicate that `a_cluster' is being
 			-- compiled during degree six' clusters to go. 
 		local
 			a_per: INTEGER
-			nbr_of_clusters: INTEGER
 		do
-			nbr_of_clusters := total_number - processed
-			a_per := percentage_calculation (nbr_of_clusters)
-
-			progress_bar.increase_percentage (a_per)
-			update_interface (a_cluster.cluster_name, nbr_of_clusters, a_per)
+			total_number := nbr_to_go + processed
+			a_per := percentage_calculation (nbr_to_go)
+			progress_bar.update_percentage (a_per)
+			update_interface (a_cluster.cluster_name, nbr_to_go, a_per)
 			processed := processed + 1
 		end
 

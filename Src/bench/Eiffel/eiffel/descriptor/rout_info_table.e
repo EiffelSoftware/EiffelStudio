@@ -1,12 +1,14 @@
--- Direct access structure of ROUT_INFO objects indexed by the 
--- routine id's of the entire system.
-
+indexing
+	description: "Direct access structure of ROUT_INFO objects indexed by the%
+				%routine id's of the entire system."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class ROUT_INFO_TABLE
 
 inherit
 
-	EXTEND_TABLE [ROUT_INFO, ROUTINE_ID]
+	EXTEND_TABLE [ROUT_INFO, INTEGER]
 		rename
 			make as ht_make,
 			put as table_put
@@ -39,12 +41,12 @@ feature {NONE} -- Initialization
 
 feature -- Insertion
 
-	put (rout_id: ROUTINE_ID; org: CLASS_C) is
+	put (rout_id: INTEGER; org: CLASS_C) is
 			-- Record the routine id `rout_id', the origin 
 			-- of the corresponding routine and the offset of 
 			-- the routine in the origin class.
 		require
-			rout_id_not_void: rout_id /= Void
+			rout_id_not_void: rout_id /= 0
 			org_not_void: org /= Void
 		local
 			info: ROUT_INFO
@@ -53,12 +55,12 @@ feature -- Insertion
 					-- The routine id has been recorded 
 					-- earlier.
 				info := found_item
-				if not info.origin.is_equal (org.id) then
+				if not (info.origin = org.class_id) then
 						-- The origin of the routine has changed
 						-- a new offset must be computed, and the
 						-- origin value updated.
 					info.set_offset (new_offset (org))
-					info.set_origin (org.id)
+					info.set_origin (org.class_id)
 				end
 			else
 					-- The routine is brand new.
@@ -75,10 +77,10 @@ feature -- Offset processing
 			--|Beware: this function has a side effect!
 			--|Note: see if "obsolete" offsets could be reused.
 		local
-			class_id: CLASS_ID
+			class_id: INTEGER
 			counter: COUNTER
 		do
-			class_id := c.id
+			class_id := c.class_id
 			if not offset_counters.has (class_id) then
 				!! counter
 					-- Routine offsets start from 0.
@@ -90,16 +92,16 @@ feature -- Offset processing
 			Result := counter.next
 		end
 
-	offset_counters: EXTEND_TABLE [COUNTER, CLASS_ID]
+	offset_counters: EXTEND_TABLE [COUNTER, INTEGER]
 			-- Offset counters for feature introducted
 			-- in the corresponding class
 
 feature -- Query features
 
-	origin (rout_id: ROUTINE_ID): CLASS_C is
+	origin (rout_id: INTEGER): CLASS_C is
 			-- Origin of routine of id `rout_id'
 		require
-			rout_id_not_void: rout_id /= Void
+			rout_id_not_void: rout_id /= 0
 			has_rout_id: has (rout_id)
 		do
 			Result := System.class_of_id (item (rout_id).origin)
@@ -107,17 +109,17 @@ feature -- Query features
 			origin_not_void: Result /= Void
 		end
 
-	offset (rout_id: ROUTINE_ID): INTEGER is
+	offset (rout_id: INTEGER): INTEGER is
 			-- Offset of routine of id `rout_id'
 			-- in origin class
 		require
-			rout_id_not_void: rout_id /= Void
+			rout_id_not_void: rout_id /= 0
 			has_rout_id: has (rout_id)
 		do
 			Result := item (rout_id).offset
 		end
 
-	descriptor_size (class_id: CLASS_ID): INTEGER is
+	descriptor_size (class_id: INTEGER): INTEGER is
 			-- Number of routines introduced
 			-- in class of id `class_id'
 		do
@@ -134,7 +136,7 @@ feature -- Query features
 			rout_id, max: INTEGER
 		do
 			from start until after loop
-				rout_id := key_for_iteration.id
+				rout_id := key_for_iteration
 				if max < rout_id then
 					max := rout_id
 				end
@@ -146,7 +148,7 @@ feature -- Query features
 			until
 				after
 			loop
-				Result.put (item_for_iteration, key_for_iteration.id)
+				Result.put (item_for_iteration, key_for_iteration)
 				forth
 			end
 		end
@@ -168,6 +170,9 @@ feature -- Generation
 
 			buffer.putstring ("#include %"eif_project.h%"%N%
 						 %#include %"eif_macros.h%"%N%N")
+
+			buffer.start_c_specific_code
+			
 			buffer.putstring ("struct rout_info egc_forg_table_init[] = {%N")
 				-- C tables start at 0, we want to start at 1, to
 				-- that effect we insert a dummy entry.
@@ -183,7 +188,7 @@ feature -- Generation
 				ri := rout_infos.item (i)
 				if ri /= Void then
 					buffer.putstring ("%N%T{(int16) ")
-					buffer.putint (ri.origin.id)
+					buffer.putint (ri.origin)
 					buffer.putstring (", (int16) ")
 					buffer.putint (ri.offset)
 					buffer.putstring ("},")
@@ -194,6 +199,8 @@ feature -- Generation
 			end
 
 			buffer.putstring ("%N};%N")
+
+			buffer.end_c_specific_code
 		end
 
 feature -- Melting
@@ -234,7 +241,7 @@ feature -- Melting
 			loop
 				ri := rout_infos.item (i)
 				if ri /= Void then
-					Byte_array.append_short_integer (ri.origin.id)
+					Byte_array.append_short_integer (ri.origin)
 					Byte_array.append_short_integer (ri.offset)
 				else
 					Byte_array.append_short_integer (-1)

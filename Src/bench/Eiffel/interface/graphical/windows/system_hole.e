@@ -90,11 +90,9 @@ feature {NONE} -- Execution
 			-- With button select: popup the ACE.
 			-- With transport button, do nothing.
 		local
-			void_text: TEXT_WINDOW;
 			system_stone: SYSTEM_STONE;
 			fn: STRING;
 			f: PLAIN_TEXT_FILE;
-			temp: STRING
 		do
 			if is_system_tool_created and then tool = System_tool then
 				tool.synchronize
@@ -102,7 +100,7 @@ feature {NONE} -- Execution
 				if Eiffel_ace.file_name = Void then
 					if argument /= Void and then argument = last_name_chooser then
 						fn := clone (last_name_chooser.selected_file);
-						if not fn.empty then
+						if not fn.is_empty then
 							!! f.make (fn);
 							if 
 								f.exists and then 

@@ -39,13 +39,19 @@ feature -- DYNAMIC_LIB Exports processing.
 			dl_exp, dl_item: DYNAMIC_LIB_EXPORT_FEATURE
 			dl_exp_list: LINKED_LIST[DYNAMIC_LIB_EXPORT_FEATURE]
 			dl_creation:like d_creation
-			list_valid_creation: LINKED_LIST[E_FEATURE]
 			has_feature: BOOLEAN
 			i:INTEGER
 			list_dl: LIST_CREATION_DYNAMIC_LIB
-			tmp:STRING
 		do
 			if d_creation = Void then
+					--| FIXME XR: Huh, seems ugly.
+					--| In the old interface, this pops up a dialog to choose the creation procedure,
+					--| in the batch compiler, this does nothing,
+					--| I wonder if this clause is needed...
+					--| At least, it shouldn't be in the API\interface I believe.
+					--| (thinking aloud) When will we get rid of the old interface so that code can be cleaned up?!
+					--| END FIXME
+					
 					-- Addition of an export feature from the environment.
 				!! list_dl.make(d_class, d_routine,d_index, d_alias, d_call_type)
 				list_dl.choose_creation
@@ -60,11 +66,11 @@ feature -- DYNAMIC_LIB Exports processing.
 					-- Error: a deferred feature cannot be exported.
 				else
 					set_modified (True)
-					if dynamic_lib_exports.has (d_class.id.id) then
+					if dynamic_lib_exports.has (d_class.class_id) then
 						dl_exp_list := dynamic_lib_exports.found_item
 					else
 						!! dl_exp_list.make
-						dynamic_lib_exports.put (dl_exp_list, d_class.id.id)
+						dynamic_lib_exports.put (dl_exp_list, d_class.class_id)
 					end
 
 						-- Check if the feature is or is not in the list.
@@ -74,8 +80,8 @@ feature -- DYNAMIC_LIB Exports processing.
 						has_feature = True or else dl_exp_list.after
 					loop
 						dl_item := dl_exp_list.item
-						has_feature := (d_routine.id = dl_item.routine_id)
-										and then (d_creation.id = dl_item.creation_routine.id)
+						has_feature := (d_routine.feature_id = dl_item.feature_id)
+										and then (d_creation.feature_id = dl_item.creation_routine.feature_id)
 										and then (equal (d_alias, dl_item.alias_name))
 						i := dl_exp_list.index
 						dl_exp_list.forth
@@ -104,8 +110,8 @@ feature -- DYNAMIC_LIB Exports processing.
 					else
 						dl_exp_list.go_i_th(i)
 						dl_exp_list.remove
-						if dl_exp_list.empty then
-							dynamic_lib_exports.remove (d_class.id.id)
+						if dl_exp_list.is_empty then
+							dynamic_lib_exports.remove (d_class.class_id)
 						end
 					end
 
@@ -128,7 +134,7 @@ feature -- DYNAMIC_LIB Exports processing.
 
 				class_list := Eiffel_universe.compiled_classes_with_name (t_class)
 			
-				if class_list.empty then
+				if class_list.is_empty then
 						-- Error cannot process the line
 					class_list := Void;
 				elseif class_list.count = 1 then
@@ -193,7 +199,7 @@ feature -- DYNAMIC_LIB Exports processing.
 				lastline.left_adjust
 				lastline.right_adjust
 
-				if not lastline.substring(1,2).is_equal("--") and then not lastline.empty then
+				if not lastline.substring(1,2).is_equal("--") and then not lastline.is_empty then
 					from
 						pos := 0
 						done := 0
@@ -348,17 +354,17 @@ feature -- DYNAMIC_LIB Exports processing.
 					t_routine.right_adjust
 				end
 
-				if t_index /= Void and then not t_index.empty then
+				if t_index /= Void and then not t_index.is_empty then
 					t_index.left_adjust
 					t_index.right_adjust
 				end
 
-				if t_alias /= Void and then not t_alias.empty then
+				if t_alias /= Void and then not t_alias.is_empty then
 					t_alias.left_adjust
 					t_alias.right_adjust
 				end
 
-				if t_call_type /= Void and then not t_call_type.empty then
+				if t_call_type /= Void and then not t_call_type.is_empty then
 					t_call_type.left_adjust
 					t_call_type.right_adjust
 				end
@@ -378,6 +384,83 @@ feature -- DYNAMIC_LIB Exports processing.
 
 			end -- loop on file
 			set_modified(False)
+		end
+
+	save_to_file (f: PLAIN_TEXT_FILE) is
+		local
+			dl_exp:DYNAMIC_LIB_EXPORT_FEATURE
+			class_name: STRING
+			out_text: STRING
+		do
+			create out_text.make (200)
+			out_text.append ("%N-- EXPORTED FEATURE(s) OF THE SHARED LIBRARY %N-- SYSTEM : " )
+
+			out_text.append( eiffel_system.name )
+			out_text.append( "%N" )
+
+			from
+				dynamic_lib_exports.start
+			until
+				dynamic_lib_exports.after
+			loop
+				if
+					dynamic_lib_exports.item_for_iteration /= Void and then
+					not dynamic_lib_exports.item_for_iteration.is_empty
+				then
+					out_text.append( "%N-- CLASS [" )
+	
+					dynamic_lib_exports.item_for_iteration.start
+					class_name := clone(dynamic_lib_exports.item_for_iteration.item.compiled_class.name)
+	
+					class_name.to_upper
+					out_text.append(class_name)
+	
+					out_text.append( "]%N" )
+					from 
+					until
+						dynamic_lib_exports.item_for_iteration.after
+					loop
+						dl_exp := dynamic_lib_exports.item_for_iteration.item
+
+						class_name := clone (dl_exp.compiled_class.name)
+						class_name.to_upper
+						out_text.append (class_name)
+
+						if (dl_exp.creation_routine /= Void) and then (dl_exp.routine.feature_id /= dl_exp.creation_routine.feature_id) then
+							out_text.append (" (")
+							out_text.append (dl_exp.creation_routine.name)
+							out_text.append (")")
+						elseif (dl_exp.creation_routine = Void) then
+							out_text.append (" (create)")
+						end
+						if (dl_exp.routine /= Void) then
+							out_text.append (" : ")
+							out_text.append (dl_exp.routine.name)
+						end
+						if (dl_exp.index /= 0) then
+							out_text.append (" @ ")
+							out_text.append (dl_exp.index.out)
+						end
+
+						if dl_exp.alias_name /= Void then
+							out_text.append (" alias ")
+							out_text.append (dl_exp.alias_name)
+						end
+
+						if dl_exp.call_type /= Void then
+							out_text.append (" call_type ")
+							out_text.append (dl_exp.call_type)
+						end
+
+						out_text.append ("%N")
+
+						dynamic_lib_exports.item_for_iteration.forth
+					end
+				end
+				dynamic_lib_exports.forth
+			end
+			f.put_string (out_text)
+			set_modified (False)
 		end
 
 feature -- Access

@@ -49,10 +49,10 @@ feature -- Properties
 	
 feature -- Access
 
-	empty: BOOLEAN is
+	is_empty: BOOLEAN is
 			-- Are there any features?
 		do
-			Result := features.empty;
+			Result := features.is_empty;
 		end;
 
 feature -- Comparison
@@ -104,6 +104,7 @@ feature -- Context output
 			not_first: BOOLEAN
 		do
 			ctxt.put_text_item (ti_Before_feature_clause);
+			ctxt.put_text_item (ti_Before_feature_clause_header)
 			ctxt.put_text_item (ti_Feature_keyword);
 			ctxt.put_space;
 			if not export_status.is_all then
@@ -115,13 +116,14 @@ feature -- Context output
 			else
 				ctxt.put_comments (comments);
 			end;
+			ctxt.put_text_item (ti_After_feature_clause_header)
 			ctxt.indent;
 			ctxt.set_separator (Void);
 			ctxt.set_new_line_between_tokens;
 			if not order_same_as_text then
 					-- Sort features if needed
 				features.sort
-			end;
+			end
 			from
 				features.start
 			until
@@ -139,32 +141,20 @@ feature -- Context output
 			ctxt.new_line;
 		end
 
-feature -- EiffelCase output
-
-	features_storage_info: ARRAYED_LIST [S_FEATURE_DATA] is
-			-- List of features in case format within
-			-- a feature clause
-		local
-			f_adapter: FEATURE_ADAPTER
-		do
-			!! Result.make (features.count);
-			from
-				features.start
-			until
-				features.after
-			loop
-				f_adapter := features.item;
-				if f_adapter.target_feature /= Void then
-					Result.extend (f_adapter.storage_info)
-				end;
-				features.forth;
-			end;
-		end;	
-			
 feature {FEATURE_CLAUSE_EXPORT, CATEGORY} -- Implementation
 
 	export_status: EXPORT_I;
 			-- Export status of Current feature clause
+
+feature -- Debug
+		
+	trace is
+		do
+			from features.start until features.after loop
+				io.error.put_string ("%T" + features.item.ast.feature_name + "%N")
+				features.forth
+			end
+		end
 
 invariant
 	

@@ -10,7 +10,7 @@ class CPP_EXTENSION_I
 inherit
 	EXTERNAL_EXT_I
 		redefine
-			is_equal, is_cpp, generate_header_files,
+			is_equal, is_cpp,
 			has_standard_prototype, generate_external_name,
 			generate_parameter_list
 		end
@@ -24,19 +24,11 @@ feature -- Properties
 
 	class_name: STRING
 
-	class_header_file: STRING
-
 	type: INTEGER
 
 feature -- Convenience
 
 	is_cpp: BOOLEAN is True
-
-	set_class_header_file (h: STRING) is
-			-- Assign `h' to `class_header_file'.
-		do
-			class_header_file := h
-		end
 
 	set_class_name (n: STRING) is
 			-- Assign `n' to `class_name'.
@@ -59,7 +51,6 @@ feature -- Comparison
 				array_is_equal (argument_types, other.argument_types) and then
 				array_is_equal (header_files, other.header_files) and then
 				class_name.is_equal (other.class_name) and then
-				class_header_file.is_equal (other.class_header_file) and then
 				type = other.type
 		end
 
@@ -71,15 +62,6 @@ feature -- Code generation
 		do
 			check
 				final_mode: Context.final_mode
-			end
-		end
-
-	generate_header_files is
-			-- Generate header files for the extension.
-		do
-			Precursor {EXTERNAL_EXT_I}
-			if not shared_include_queue.has (class_header_file) then
-				shared_include_queue.extend (class_header_file)
 			end
 		end
 
@@ -132,7 +114,7 @@ feature -- Code generation
  
 			buffer.putchar (')')
 		end
-
+	
 	generate_parameter_list (parameters: BYTE_LIST [EXPR_B]) is
 			-- Generate parameters for C++ extension
 		local
@@ -176,8 +158,6 @@ feature {NONE} -- Code generation
 
 	generate_arguments_with_cast (parameters: BYTE_LIST [EXPR_B]) is
 			-- Generate the arguments to the C++ call
-		require
-			non_void_arg: parameters /= Void
 		local
 			expr: EXPR_B
 			i: INTEGER
@@ -191,13 +171,13 @@ feature {NONE} -- Code generation
 					if generate_parameter_cast then
 						generate_cast := True
 						arg_types := argument_types
+						i := arg_types.lower
 					end
 					parameters.start
 					if type = standard then
 							-- Skip C++ object
 						parameters.forth
 					end
-					i := 1
 				until
 					parameters.after
 				loop
@@ -206,15 +186,16 @@ feature {NONE} -- Code generation
 						buffer.putchar ('(')
 						buffer.putstring (arg_types.item (i))
 						buffer.putstring (") ")
+						i := i + 1
 					end
 					expr.print_register;
 					if not parameters.islast then
 						buffer.putstring (", ")
 					end
 					parameters.forth
-					i := i + 1
 				end
 			end
 		end
 
 end -- class CPP_EXTENSION_I
+

@@ -1,35 +1,36 @@
 indexing
-
-	description: 
-		"Controls execution of debugged application."
-	date: "$Date$"
-	revision: "$Revision $"
+	description	: "Controls execution of debugged application."
+	date		: "$Date$"
+	revision	: "$Revision $"
 
 class APPLICATION_EXECUTION
 
 inherit
-
 	PROJECT_CONTEXT
 		export
 			{NONE} all
 		end
+
 	OBJECT_ADDR
 		export
 			{NONE} all
 		end
+
 	EXEC_MODES
+
 	IPC_SHARED
+
 	SHARED_EIFFEL_PROJECT
 		export
 			{NONE} all
 			{ANY} Eiffel_project
 		end
+
 	SHARED_CONFIGURE_RESOURCES
 
-	EB_SHARED_INTERFACE_TOOLS
+	EB_ERROR_MANAGER
 
 creation {SHARED_APPLICATION_EXECUTION}
-
 	make
 
 feature {NONE} -- Initialization
@@ -37,12 +38,50 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize current.
 		do
-			!! debug_info.make
+			create debug_info.make
 			displayed_string_size := 50
 			current_execution_stack_number := 1
+			create {APPLICATION_STOPPED_CMD} before_stopped_command
+			create {APPLICATION_STOPPED_CMD} after_stopped_command
 		ensure
 			displayed_string_size: displayed_string_size = 50
 			current_execution_stack_number_is_one: current_execution_stack_number = 1
+		end
+
+feature -- load and save
+	
+	load_debug_info is
+			-- Load debug information (so far only the breakpoints)
+		local
+			load_filename: FILE_NAME
+		do
+			create load_filename.make
+			load_filename.set_directory (Workbench_generation_path)
+			load_filename.set_file_name (Debug_info_name + Debug_info_extension)
+
+			if debug_info = Void then
+				create debug_info.make
+			end
+			debug_info.load (load_filename)
+			resynchronize_breakpoints
+		end
+
+	save_debug_info is
+			-- Save debug information (so far only the breakpoints)
+		local
+			save_filename: FILE_NAME
+		do
+			create save_filename.make
+			save_filename.set_directory(Workbench_generation_path)
+			save_filename.set_file_name(Debug_info_name + Debug_info_extension)
+		
+			if debug_info = Void then
+				create debug_info.make
+			end
+			debug_info.save(save_filename)
+		rescue
+			set_error_message ("Unable to save project properties%N%
+					%Cause: Unable to open " + save_filename + " for writing")
 		end
 
 feature -- Properties
@@ -86,22 +125,6 @@ feature -- Properties
 			-- Number that specifies the `n' breakable points in	
 			-- which the application will check if an interrupt was pressed
 
-	debugged_routines: LINKED_LIST [E_FEATURE] is
-			-- Routines that are currently debugged
-		do
-			Result := debug_info.debugged_routines
-		ensure
-			valid_result: Result = debug_info.debugged_routines
-		end
-
-	removed_routines: LINKED_LIST [E_FEATURE] is
-			-- Routines that are not currently debugged
-		do
-			Result := debug_info.removed_routines
-		ensure
-			valid_result: Result = debug_info.removed_routines
-		end
-
 	is_running: BOOLEAN is
 			-- Is the application running?
 		do
@@ -111,7 +134,7 @@ feature -- Properties
 		end
 
 	is_stopped: BOOLEAN is
-			-- Is the application stop in its execution?
+			-- Is the application stopped in its execution?
 		require
 			is_running: is_running
 		do
@@ -124,31 +147,6 @@ feature -- Properties
 			-- Is the application ignoring all stop points?
 		do
 			Result := execution_mode = No_stop_points
-		ensure
-			yes_implies_status_is_stop: Result implies status.is_stopped
-		end
-
-	valid_debugged_feature (f: E_FEATURE): BOOLEAN is
-			-- Is the feature `f' valid for the
-			-- debugger context?
-		do
-			Result := f /= Void and then f.is_debuggable
-		ensure
-			valid_result: Result implies f /= Void and then	
-							f.is_debuggable
-		end
-
-	valid_breakpoint_for (f: E_FEATURE; i: INTEGER): BOOLEAN is
-			-- Is breakpoint `i' valid for feature `f'
-		require
-			has_feature: has_feature (f)
-			positive_i: i > 0
-			valid_debugged_feature: valid_debugged_feature (f)
-		local
-			deb: LINKED_LIST [DEBUGGABLE]
-		do
-			deb := debug_info.debuggables (f)
-			Result := i <= deb.first.breakable_points.count 
 		end
 
 	exists: BOOLEAN is
@@ -156,7 +154,7 @@ feature -- Properties
 		local
 			f: PLAIN_TEXT_FILE
 		do
-			!! f.make (Eiffel_system.application_name (True))
+			create f.make (Eiffel_system.application_name (True))
 			Result := f.exists
 		end
 
@@ -171,11 +169,10 @@ feature -- Properties
 			Result := is_hector_addr (addr)
 		end
 
-	has_debugging_information: BOOLEAN is
-			-- Has Current have any debug information?
+	error_in_bkpts: BOOLEAN is
+			-- Has an error occurred in the last modification/examination of breakpoints?
 		do
-			Result := not removed_routines.empty or else
-			 		not debugged_routines.empty
+			Result := debug_info.error_in_bkpts
 		end
 
 feature -- Access
@@ -187,13 +184,6 @@ feature -- Access
 			"C"
 		alias
 			"eif_timeout_msg"
-		end
-
-	has_feature (f: E_FEATURE): BOOLEAN is
-			-- Has debuggable byte code already been 
-			-- generated for feature `f'?
-		do
-			Result := debug_info.has_feature (f)
 		end
 
 	number_of_stack_elements: INTEGER is
@@ -208,89 +198,124 @@ feature -- Access
 
 feature -- Element change
 
-	super_melt_feature (f: E_FEATURE; insert_breakpoint: BOOLEAN) is
-			-- Super melt feature `f' if it has not been super melted.
-		require
-			valid_debugged_feature: valid_debugged_feature (f);	
-			successful_compilation: Eiffel_project.successful
-		do
-			if not has_feature (f) then
-				add_feature (f)
-				if insert_breakpoint and then not is_breakpoint_set (f, 1) then
-					switch_breakpoint (f, 1)
-					Window_manager.routine_win_mgr.show_stoppoint (f, 1)
-				end
-			end
-		end
-
-	super_melt_class (c: CLASS_C; insert_breakpoint: BOOLEAN) is
-			-- Super melt all features written in class `c'.
-		require
-			valid_c: c /= Void
-		local
-			list: LIST [E_FEATURE]
-		do
-			list := c.written_in_features
-			from
-				list.start
-			until	
-				list.after
-			loop
-				if list.item.is_debuggable then
-					super_melt_feature (list.item, insert_breakpoint)
-				end
-				list.forth
-			end
-		end
-
-	add_feature (f: E_FEATURE) is
-			-- Generate debuggable byte code corresponding to
-			-- `e_feature' and record the corresponding information.
-			-- Do nothing if `f' has previously been added.
-		require
-			valid_debugged_feature: valid_debugged_feature (f);	
-			successful_compilation: Eiffel_project.successful
-		do
-			debug_info.add_feature (f)
-		ensure
-			has_feature: has_feature (f)
-		end
-
 	has_breakpoints: BOOLEAN is
-			-- Does the program have some breakpoints?
-		require
-			successful_compilation: Eiffel_project.successful
+			-- Does the program have some breakpoints (enabled or disabled) ?
 		do
 			Result := debug_info.has_breakpoints
 		end
 
-	switch_feature (f: E_FEATURE) is
-			-- Switch `f' from debugged to removed or from removed to debugged.
-		require
-			has_feature: has_feature (f)
-			valid_debugged_feature: valid_debugged_feature (f);	
-			successful_compilation: Eiffel_project.successful
+	has_enabled_breakpoints: BOOLEAN is
+			-- Does the program have some breakpoints enabled ?
 		do
-			debug_info.switch_feature (f)
+			Result := debug_info.has_enabled_breakpoints
+		end
+
+	has_disabled_breakpoints: BOOLEAN is
+			-- Does the program have some breakpoints disabled ?
+		do
+			Result := debug_info.has_disabled_breakpoints
 		end
 
 	switch_breakpoint (f: E_FEATURE; i: INTEGER) is
-			-- Switch the `i'-th breakpoint of `f' ?
+			-- Switch the `i'-th breakpoint of `f'
 		require
-			valid_debugged_feature: valid_debugged_feature (f);	
 			positive_i: i > 0
-			valid_i: valid_breakpoint_for (f, i)
-			successful_compilation: Eiffel_project.successful
 		do
 			debug_info.switch_breakpoint (f, i)
+			if is_running and then not is_stopped then
+				-- If the application is running (and not stopped), we
+				-- must notify it to take the new breakpoint into account.
+				notify_newbreakpoint
+			end
 		end
 
-	is_breakpoint_set (f: E_FEATURE; i: INTEGER): BOOLEAN is
-			-- Is the `i'-th breakpoint of `f' set?
+	remove_breakpoint (f: E_FEATURE; i: INTEGER) is
+			-- remove the `i'-th breakpoint of `f'
+			-- if no breakpoint already exists for 'f' at 'i', do nothing
 		require
-			valid_debugged_feature: valid_debugged_feature (f);	
+			positive_i: i > 0
 		do
-			Result := debug_info.is_breakpoint_set (f, i)
+			debug_info.remove_breakpoint (f, i)
+			if is_running and then not is_stopped then
+				-- If the application is running (and not stopped), we
+				-- must notify it to take the new breakpoint into account.
+				notify_newbreakpoint
+			end
+		end
+
+	enable_breakpoint, set_breakpoint (f: E_FEATURE; i: INTEGER) is
+			-- enable the `i'-th breakpoint of `f'
+			-- if no breakpoint already exists for 'f' at 'i', a breakpoint is created
+		require
+			positive_i: i > 0
+		do
+			debug_info.enable_breakpoint (f, i)
+			if is_running and then not is_stopped then
+				-- If the application is running (and not stopped), we
+				-- must notify it to take the new breakpoint into account.
+				notify_newbreakpoint
+			end
+		end
+
+	disable_breakpoint (f: E_FEATURE; i: INTEGER) is
+			-- disable the `i'-th breakpoint of `f'
+			-- if no breakpoint already exists for 'f' at 'i', a disabled breakpoint is created
+		require
+			positive_i: i > 0
+		do
+			debug_info.disable_breakpoint (f, i)
+			if is_running and then not is_stopped then
+				-- If the application is running (and not stopped), we
+				-- must notify it to take the new breakpoint into account.
+				notify_newbreakpoint
+			end
+		end
+
+	set_breakpoint_status (f: E_FEATURE; i: INTEGER; bp_status: INTEGER) is
+			-- set the status of the `i'-th breakpoint of `f', on the bench
+			-- side. DO NOT NOTIFY the application of the change if the application
+			-- is running. 
+			-- 
+			-- bp_status =  0 <=> the breakpoint is not set,
+			-- bp_status =  1 <=> the breakpoint is set,
+			-- bp_status = -1 <=> the breakpoint is disabled
+		do
+			inspect bp_status
+			when 0 then
+				debug_info.remove_breakpoint (f, i)
+			when 1 then
+				debug_info.enable_breakpoint (f, i)
+			when -1 then
+				debug_info.disable_breakpoint (f, i)
+			end
+		end
+
+feature -- Access
+
+	is_breakpoint_set (f: E_FEATURE; i: INTEGER): BOOLEAN is
+			-- Is the `i'-th breakpoint of `f' set (enabled or disabled) ?
+		do
+			Result := debug_info.is_breakpoint_set(f, i)
+		end
+
+	is_breakpoint_enabled (f: E_FEATURE; i: INTEGER): BOOLEAN is
+			-- Is the `i'-th breakpoint of `f' enabled?
+		do
+			Result := debug_info.is_breakpoint_enabled(f, i)
+		end
+
+	is_breakpoint_disabled (f: E_FEATURE; i: INTEGER): BOOLEAN is
+			-- Is the `i'-th breakpoint of `f' disabled?
+		do
+			Result := debug_info.is_breakpoint_disabled(f, i)
+		end
+
+	breakpoint_status (f: E_FEATURE; i: INTEGER): INTEGER is
+			-- Returns 0 if the breakpoint is not set,
+			--         1 if the breakpoint is set and enabled,
+			--         -1 if the breakpoint is set but disabled
+		do
+			Result := debug_info.breakpoint_status(f, i)
 		end
 
 	has_breakpoint_set (f: E_FEATURE): BOOLEAN is
@@ -298,95 +323,190 @@ feature -- Element change
 		require
 			non_void_f: f /= Void
 		do
-			Result := debug_info.has_breakpoint_set (f)
+			Result := debug_info.has_breakpoint_set(f)
 		end
 
 	breakpoints_set_for (f: E_FEATURE): LIST [INTEGER] is
 			-- Breakpoints set for feature `f'
-		require
-			valid_debugged_feature: valid_debugged_feature (f);	
 		do
-			Result := debug_info.breakpoints_set_for (f)
+			Result := debug_info.breakpoints_set_for(f)
+		ensure
+			non_void_result: Result /= Void
+		end
+
+	breakpoints_enabled_for (f: E_FEATURE): LIST [INTEGER] is
+			-- Breakpoints set & enabled for feature `f'
+		do
+			Result := debug_info.breakpoints_enabled_for(f)
+		ensure
+			non_void_result: Result /= Void
+		end
+
+	breakpoints_disabled_for (f: E_FEATURE): LIST [INTEGER] is
+			-- Breakpoints set & disabled for feature `f'
+		do
+			Result := debug_info.breakpoints_disabled_for(f)
+		ensure
+			non_void_result: Result /= Void
+		end
+
+	features_with_breakpoint_set: LIST[E_FEATURE] is
+			-- returns the list of all features that contains at
+			-- least one breakpoint set (enabled or disabled)
+		do
+			Result := debug_info.features_with_breakpoint_set
 		ensure
 			non_void_result: Result /= Void
 		end
 
 feature -- Removal
 
+	remove_breakpoints_in_feature(f: E_FEATURE) is
+		require
+			non_void_f: f /= Void
+		do
+			debug_info.remove_breakpoints_in_feature(f)		
+			if is_running and then not is_stopped then
+				-- If the application is running (and not stopped), we
+				-- must notify it to take the new breakpoint into account.
+				notify_newbreakpoint
+			end
+		end
+
+	disable_breakpoints_in_feature(f: E_FEATURE) is
+		require
+			non_void_f: f /= Void
+		do
+			debug_info.disable_breakpoints_in_feature(f)		
+			if is_running and then not is_stopped then
+				-- If the application is running (and not stopped), we
+				-- must notify it to take the new breakpoint into account.
+				notify_newbreakpoint
+			end
+		end
+
+	enable_breakpoints_in_feature(f: E_FEATURE) is
+		require
+			non_void_f: f /= Void
+		do
+			if f.is_debuggable then
+				debug_info.enable_breakpoints_in_feature(f)		
+				if is_running and then not is_stopped then
+					-- If the application is running (and not stopped), we
+					-- must notify it to take the new breakpoint into account.
+					notify_newbreakpoint
+				end
+			end
+		end
+
+	enable_first_breakpoint_of_feature (f: E_FEATURE) is
+		require
+			non_void_f: f /= Void
+			debuggable: f.is_debuggable
+		do
+			debug_info.enable_first_breakpoint_of_feature (f)		
+			if is_running and then not is_stopped then
+				-- If the application is running (and not stopped), we
+				-- must notify it to take the new breakpoint into account.
+				notify_newbreakpoint
+			end
+		end
+
+	enable_first_breakpoints_in_class (c: CLASS_C) is
+		require
+			non_void_c: c /= Void
+		do
+			debug_info.enable_first_breakpoints_in_class (c)		
+			if is_running and then not is_stopped then
+				-- If the application is running (and not stopped), we
+				-- must notify it to take the new breakpoint into account.
+				notify_newbreakpoint
+			end
+		end
+
+	remove_breakpoints_in_class (c: CLASS_C) is
+		require
+			non_void_c: c /= Void
+		do
+			debug_info.remove_breakpoints_in_class(c)
+			if is_running and then not is_stopped then
+				-- If the application is running (and not stopped), we
+				-- must notify it to take the new breakpoint into account.
+				notify_newbreakpoint
+			end
+		end
+
+	disable_breakpoints_in_class(c: CLASS_C) is
+		require
+			non_void_c: c /= Void
+		do
+			debug_info.disable_breakpoints_in_class(c)
+			if is_running and then not is_stopped then
+				-- If the application is running (and not stopped), we
+				-- must notify it to take the new breakpoint into account.
+				notify_newbreakpoint
+			end
+		end
+
+	enable_breakpoints_in_class(c: CLASS_C) is
+		require
+			non_void_c: c /= Void
+		do
+			debug_info.enable_breakpoints_in_class(c)
+			if is_running and then not is_stopped then
+				-- If the application is running (and not stopped), we
+				-- must notify it to take the new breakpoint into account.
+				notify_newbreakpoint
+			end
+		end
+
+	disable_all_breakpoints is
+			-- disable all enabled breakpoints 
+		do
+			debug_info.disable_all_breakpoints	
+			if is_running and then not is_stopped then
+				-- If the application is running (and not stopped), we
+				-- must notify it to take the new breakpoint into account.
+				notify_newbreakpoint
+			end
+		end
+
+	enable_all_breakpoints is
+			-- enable all enabled breakpoints 
+		do
+			debug_info.enable_all_breakpoints	
+			if is_running and then not is_stopped then
+				-- If the application is running (and not stopped), we
+				-- must notify it to take the new breakpoint into account.
+				notify_newbreakpoint
+			end
+		end
+
 	clear_debugging_information is
 			-- Clear the debugging information.
 			-- Save the information if we want to restore it
 			-- after the compilation (do not save the information
 			-- if there are compilation errors).
-		local
-			list: LINKED_LIST [E_FEATURE]
 		do
 			if is_running then
 					-- Need to individually remove the breakpoints
 					-- since the sent_bp must be updated to
 					-- not stop.
-				!! list.make
-				list.append (debugged_routines)
-				list.append (removed_routines)
-				from
-					list.start
-				until
-					list.after
-				loop
-					remove_feature (list.item)
-					list.forth
+				debug_info.remove_all_breakpoints	
+				if not is_stopped then
+					-- If the application is running (and not stopped), we
+					-- must notify it to take the new breakpoint into account.
+					notify_newbreakpoint
 				end
 			else
 				debug_info.wipe_out
-			end
-		ensure
-			empty_removed_routines: removed_routines.empty
-			empty_debugged_routines: debugged_routines.empty
-		end
-
-	remove_feature (f: E_FEATURE) is
-			-- Remove debugging information for feature `f'.
-		require
-			successful_compilation: Eiffel_project.successful
-			valid_debugged_feature: valid_debugged_feature (f);	
-			has_feature: has_feature (f)
-		do
-			debug_info.remove_feature (f)
-		ensure
-			not_has_f: not has_feature (f)
-		end
-
-	remove_class (c: CLASS_C) is
-			-- Remove debugging information for features written in `c'.
-		require
-			valid_c: c /= Void
-		local
-			list: LINKED_LIST [E_FEATURE]
-			f: E_FEATURE
-			cid: CLASS_ID
-		do
-			cid := c.id
-			removed_routines.start
-			list := removed_routines.duplicate (removed_routines.count)
-			debugged_routines.start
-			list.append (debugged_routines.duplicate (debugged_routines.count))
-			from
-				list.start
-			until	
-				list.after
-			loop
-				f := list.item
-				if cid.is_equal (f.written_in) then
-					remove_feature (list.item)
-				end
-				list.forth
 			end
 		end
 
 feature -- Execution
 
-	run (args: STRING) is
-			-- Run application with arguments `args'.
+	run (args, cwd: STRING) is
+			-- Run application with arguments `args' in directory `cwd'.
 			-- If `is_running' is false after the
 			-- execution of this routine, it means that
 			-- the application was unable to be launched
@@ -406,6 +526,7 @@ feature -- Execution
 				app.append (args)
 			end
 			run_request.set_application_name (app)
+			run_request.set_working_directory (cwd)
 			run_request.send
 			if status /= Void then
 					-- Application was able to be started
@@ -426,31 +547,37 @@ feature -- Execution
 			is_stopped: is_stopped
 			non_void_keep_objects: kept_objects /= Void
 			non_negative_interrupt: interrupt_number >= 0
-		local
-			ok: BOOLEAN
 		do
 			keep_objects (kept_objects)
-			ok := cont_request.send_byte_code
-			if ok then
-				cont_request.send_breakpoints
-			end
-			debug_info.tenure
+			cont_request.send_breakpoints
 			status.set_is_stopped (False)
-			cont_request.send_rqst_2 (Rqst_resume, Resume_cont, 
-				interrupt_number)
+			cont_request.send_rqst_2 (Rqst_resume, Resume_cont, interrupt_number)
 		end
 
 	interrupt is
 			-- Send an interrupt to the application
-			-- which will stop at the next melted/super
-			-- melted routine.
+			-- which will stop at the next breakable line number
 		require
 			app_is_running: is_running
 			not_stopped: not is_stopped
-		do
+		do	
 			quit_request.make (Rqst_interrupt)
 			quit_request.send
 		end
+
+	notify_newbreakpoint is
+			-- Send an interrupt to the application
+			-- which will stop at the next breakable line number
+			-- in order to record the new breakpoint(s) before
+			-- automatically resuming its execution.
+		require
+			app_is_running: is_running
+			not_stopped: not is_stopped
+		do	
+			quit_request.make (Rqst_new_breakpoint)
+			quit_request.send
+		end
+		
 
 	kill is
 			-- Ask the application to terminate itself.
@@ -549,7 +676,7 @@ feature -- Setting
 			set: current_execution_stack_number = i
 		end
 
-feature {E_PROJECT} -- Implementation
+feature -- Implementation
 
 	resynchronize_breakpoints is
 			-- Resychronize the breakpoints after a compilation.
@@ -567,7 +694,7 @@ feature {DEAD_HDLR, RUN_REQUEST} -- Setting
 			set: status = s
 		end
 
-feature {DEAD_HDLR} -- Implemenation
+feature {DEAD_HDLR, STOPPED_HDLR, EDIT_ITEM, DEBUG_DYNAMIC_EVAL_HOLE} -- Implemenation
 
 	process_termination is
 			-- Process the termination of the executed
@@ -576,7 +703,6 @@ feature {DEAD_HDLR} -- Implemenation
 			is_running: is_running
 		do
 			debug_info.restore
-				-- Get rid of adopted objects
 			addr_table.clear_all
 			if termination_command /= Void then
 				termination_command.execute
@@ -600,11 +726,11 @@ feature {RUN_REQUEST} -- Implementation
 		do
 		end
 
-feature {SHARED_DEBUG} -- Implementation
+feature {SHARED_DEBUG, STOPPOINTS_STATUS, OPEN_PROJECT, QUIT_PROJECT}
 
 	debug_info: DEBUG_INFO
 
-feature {NONE} -- Implementation
+feature {APPLICATION_STATUS} 
 
 	quit_request: EWB_REQUEST is
 		once

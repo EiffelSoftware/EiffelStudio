@@ -80,7 +80,7 @@ feature
 				target_type := context.real_type (target.type);
 				source_type := context.real_type (source.type);
 				last_in_result :=
-					not target_type.is_expanded and
+					not target_type.is_true_expanded and
 						-- No optimization if metamorphosis
 					(target_type.is_basic or else (not source_type.is_basic))
 			else
@@ -182,10 +182,7 @@ feature
 						-- target is a reference and the source is a basic type
 						-- or an expanded.
 					context.init_propagation;
-					if
-						not (target_type.is_expanded or target_type.is_basic)
-						and (source_type.is_basic or source_type.is_expanded)
-					then
+					if not target_type.is_expanded and source_type.is_expanded then
 							-- Expand source but grab a register to hold cloned
 							-- or metamorphosed value as aging tests might have
 							-- to be performed.
@@ -200,7 +197,7 @@ feature
 							-- how to deal with that (they do real assignments,
 							-- not copies). In case target is expanded, we
 							-- do not propagate anything in the source.
-						if not target_type.is_expanded then
+						if not target_type.is_true_expanded then
 								-- If there is invariant checking and the target
 								-- is used in the source, do not propagate.
 								-- Case: p := p.right in a list and p becomes
@@ -221,10 +218,7 @@ feature
 				else
 						-- This is an assignment in an attribute.
 					context.init_propagation;
-					if
-						not (target_type.is_expanded or target_type.is_basic)
-						and (source_type.is_basic or source_type.is_expanded)
-					then
+					if not target_type.is_expanded and source_type.is_expanded then
 							-- Expand source but grab a register to hold cloned
 							-- or metamorphosed value as aging tests might have
 							-- to be performed.
@@ -310,6 +304,7 @@ feature
 			-- Generate assignment
 		do
 			generate_line_info;
+			generate_frozen_debugger_hook
 
 			if last_in_result then
 					-- Assignement in Result is the last expression and
@@ -362,7 +357,7 @@ feature
 			if target_type.is_basic and source_type.is_none then
 				buf.putstring ("RTEC(EN_VEXP);");
 				buf.new_line;
-			elseif target_type.is_expanded then
+			elseif target_type.is_true_expanded then
 				if source_type.is_none then
 					buf.putstring ("RTEC(EN_VEXP);");
 					buf.new_line;
@@ -374,7 +369,7 @@ feature
 			else
 				if source_type.is_basic then
 					generate_regular_assignment (Metamorphose_assignment);
-				elseif source_type.is_expanded then
+				elseif source_type.is_true_expanded then
 					generate_regular_assignment (Clone_assignment);
 				else
 					if source_type.is_none then
@@ -480,7 +475,7 @@ feature
 					buf.putstring ("RTAR(");
 					print_register;
 					buf.putstring (gc_comma);
-					context.Current_register.print_register_by_name;
+					context.Current_register.print_register;
 					buf.putchar (')');
 					buf.putchar (';');
 					buf.new_line;
@@ -488,7 +483,7 @@ feature
 					buf.putstring ("RTAR(");
 					source_print_register;
 					buf.putstring (gc_comma);
-					context.Current_register.print_register_by_name;
+					context.Current_register.print_register;
 					buf.putchar (')');
 					buf.putchar (';');
 					buf.new_line;
@@ -588,7 +583,7 @@ feature
 			else
 				if source_type.is_basic then
 					generate_last_assignment (Metamorphose_assignment);
-				elseif source_type.is_expanded then
+				elseif source_type.is_true_expanded then
 					generate_last_assignment (Clone_assignment);
 				else
 					if source_type.is_none then

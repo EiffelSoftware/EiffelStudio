@@ -47,7 +47,7 @@ feature {NONE} -- Execution
 			cmd := associated_cmd
 			cmd.make (e_class)
 			cmd.execute
-			if filter_name /= Void and then not filter_name.empty then
+			if filter_name /= Void and then not filter_name.is_empty then
 				!! filter.make (filter_name)
 				filter.process_text (cmd.structured_text)
 				output_window.put_string (filter.image)

@@ -13,15 +13,10 @@ inherit
 
 feature -- Access
 
-	file_name: STRING is
+	file_name: FILE_NAME is
 			-- Name of the DEF file
 		do
-			Result := Eiffel_dynamic_lib.file_name
-		end
- 
-	click_list: CLICK_STONE_ARRAY is
-		do
---			create Result.make (Eiffel_ace.click_list, Void)
+			create Result.make_from_string (Eiffel_dynamic_lib.file_name)
 		end
  
 	stone_signature: STRING is
@@ -29,57 +24,34 @@ feature -- Access
 			Result := ""
 		end
 
-	icon_name: STRING is "Dynamic Lib"
+	history_name: STRING is
+		do
+			Result := "Dynamic library"
+		end
 
 	header: STRING is "Dynamic Lib"
  
-	stone_type: INTEGER is 
-		do 
-			Result := Dynamic_lib_type 
-		end
-
---	stone_cursor: SCREEN_CURSOR is
+	stone_cursor: EV_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is compatible with Current stone
---		do
---			Result := Cursors.cur_System
---		end
+		do
+			Result := Cursors.cur_Cluster
+		end
  
---	x_stone_cursor: SCREEN_CURSOR is
+	x_stone_cursor: EV_CURSOR is
 			-- Cursor associated with Current stone during transport
 			-- when widget at cursor position is not compatible with Current stone
---		do
---			Result := Cursors.cur_X_system
---		end
- 
-	stone_name: STRING is 
-		do 
-			Result := Interface_names.s_Dynamic_lib_stone 
-		end
- 
-	clickable: BOOLEAN is
-			-- Is Current an element with recorded structures information?
 		do
---			Result := Eiffel_ace.click_list /= Void
-			Result := False
+			Result := Cursors.cur_X_cluster
 		end
-
+ 
 feature -- Setting
 
-	set_file_name (s: STRING) is
+	set_file_name (new_filename: FILE_NAME) is
 			-- Assign `s' to `file_name' of lace.
 		do
-			Eiffel_dynamic_lib.set_file_name (s)
+			Eiffel_dynamic_lib.set_file_name (new_filename)
 		end
-
- 
-feature -- Update
-
---	process (hole: HOLE) is
---			-- Process Current stone dropped in hole `hole'.
---		do
---			hole.process_dynamic_lib (Current)
---		end
 
 end -- class DYNAMIC_LIB_STONE
 

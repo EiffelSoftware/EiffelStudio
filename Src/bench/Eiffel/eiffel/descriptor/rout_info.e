@@ -22,13 +22,13 @@ feature -- Creation
 
 	make (org: CLASS_C; offs: INTEGER) is
 		do
-			origin := org.id;
+			origin := org.class_id;
 			offset := offs
 		end;
 
 feature -- Data
 
-	origin: CLASS_ID;
+	origin: INTEGER;
 		-- Class in which the routine was initially
 		-- declared
 
@@ -55,7 +55,7 @@ feature -- Trace
 	trace is
 		do
 			io.putstring (" Origin: ");
-			io.putstring (origin.dump);
+			io.putint (origin);
 			io.putstring (" Offset: ");
 			io.putint (offset);
 		end;

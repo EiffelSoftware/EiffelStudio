@@ -1,450 +1,1141 @@
 indexing
-
 	description:
-		"Constants for command names, etc.";
+		"Constants for command names, etc."
 	conventions:
 		"a_: Accelerator key combination; %
 		%b_: Button text; %
 		%d_: Degree outputter; %
-		%f_: Focus label text; %
+		%f_: Focus label text (tooltips); %
 		%h_: Help text; %
 		%i_: Icon ids for windows (ignored for motif); %
 		%m_: Mnemonic (menu entry); %
 		%l_: Label texts; %
 		%n_: widget Names; %
 		%s_: Stone names; %
-		%t_: Title (part)";
-	date: "$Date$";
+		%t_: Title (part); %
+		%e_: Short description, explanation; %
+		%wt_: Title for wizards step; %
+		%wb_: Body for wizards step; %
+		%ws_: Subtitle for wizards step"
+	date: "$Date$"
 	revision: "$Revision$"
 
-class INTERFACE_NAMES
+class
+	INTERFACE_NAMES
+
+inherit
+	PRODUCT_NAMES
 	
 feature -- Button texts
 
-	b_And: STRING is					"And"
-	b_Apply: STRING is					" Apply ";
-	b_All: STRING is					" All ";
-	b_Browse: STRING is					"Browse...";
-	b_Build: STRING is					"Build";
-	b_Cancel: STRING is					" Cancel ";
-	b_C_functions: STRING is			"C functions";
-	b_Close: STRING is					"Close";
-	b_Compile: STRING is				"Compile";
-	b_Create: STRING is					"Create";
-	b_Descendant_time: STRING is		"Descendant time";
-	b_Discard_assertions: STRING is		"Discard assertions";
-	b_Display: STRING is				" Display ";
-	b_Eiffel_features: STRING is		"Eiffel features";
-	b_Execute: STRING is				" Execute ";
-	b_Exit: STRING is					"Exit";
-	b_Exit_now: STRING is				"Exit now";
-	b_Feature_name: STRING is			"Feature name";
-	b_Final: STRING is					"Final mode";
-	b_Finalize_now: STRING is			"Finalize now";
-	b_Finalize_now_but_no_c: STRING is	"Finalize (no C comp)";
-	b_Freeze_now: STRING is				"Freeze now";
-	b_Freeze_now_but_no_c: STRING is	"Freeze (no C comp)";
-	b_Function_time: STRING is			"Function time";
-	b_Keep_assertions: STRING is		"Keep assertions";
-	b_No: STRING is						" No ";
-	b_Non_clickable_Stoppoints_of: STRING is "Non clickable stop points of ";
-	b_Number_of_calls: STRING is		"Number of calls";
-	b_Ok: STRING is						" OK ";
-	b_Or: STRING is						"Or";
-	b_Overwrite: STRING is				"Overwrite";
-	b_Percentage: STRING is				"Percentage";
-	b_Precompile_now: STRING is			"Precompile now";
-	b_Precompile_now_but_no_C: STRING is "Precompile (no C comp)";
-	b_Recursive_functions: STRING is	"Recursive functions";
-	b_Run: STRING is					"Run";
-	b_Run_query: STRING is				"Run query";
-	b_Run_subquery: STRING is			"Run subquery";
-	b_Save: STRING is					"Save";
-	b_Save_as: STRING is				"Save as";
-	b_Total_time: STRING is				"Total time";
-	b_Workbench: STRING is				"Workbench mode";
-	b_Yes: STRING is					" Yes ";
-
+	b_Abort: STRING is							"Abort"
+	b_Add_text: STRING is 						"Add ->"
+	b_And: STRING is							"And"
+	b_Apply: STRING is							"Apply"
+	b_All: STRING is							"All"
+	b_Browse: STRING is							"Browse..."
+	b_Build: STRING is							"Build"
+	b_Cancel: STRING is							" Cancel "
+	b_Cancel_text: STRING is 					"Cancel"
+	b_C_functions: STRING is					"C functions"
+	b_Close: STRING is							"Close"
+	b_Compile: STRING is						"Compile"
+	b_Continue_anyway: STRING is				"Continue anyway"
+	b_Create: STRING is							"Create"
+	b_Create_folder: STRING is					"Create Folder..."
+	b_Default: STRING is						"Default"
+	b_Descendant_time: STRING is				"Descendant time"
+	b_Discard_assertions: STRING is				"Discard assertions"
+	b_Discard_backup: STRING is					"Discard backup"
+	b_Display: STRING is						"Display"
+	b_Display_Exception_Trace: STRING is		"Display exception trace"
+	b_Down_text: STRING is 						"Down"
+	b_Edit_ace: STRING is						"Edit"
+	b_Eiffel_features: STRING is				"Eiffel features"
+	b_Execute: STRING is						"Execute"
+	b_Exit: STRING is							"Exit"
+	b_Exit_now: STRING is						"Exit now"
+	b_Feature_name: STRING is					"Feature name"
+	b_Final: STRING is							"Final mode"
+	b_Finalize_now: STRING is					"Finalize now"
+	b_Finalize_now_but_no_c: STRING is			"Finalize (no C comp)"
+	b_Finish: STRING is							"Finish"
+	b_Freeze_now: STRING is						"Freeze now"
+	b_Freeze_now_but_no_c: STRING is			"Freeze (no C comp)"
+	b_Function_time: STRING is					"Function time"
+	b_Help: STRING is							"Help"
+	b_Keep_assertions: STRING is				"Keep assertions"
+	b_Load_ace: STRING is						"Load from..."
+	b_Move_to_folder: STRING is					"Move to Folder..."
+	b_New_ace: STRING is						"Reset"
+	b_New_favorite_class: STRING is				"New Favorite Class..."
+	b_Next: STRING is							"Next"
+	b_No: STRING is								"No"
+	b_Non_clickable_Stoppoints_of: STRING is 	"Non clickable breakpoints of"
+	b_Number_of_calls: STRING is				"Number of calls"
+	b_Ok: STRING is								"OK"
+	b_Ok_text: STRING is 						"Ok"
+	b_Open_original: STRING is					"Open original file"
+	b_Open_backup: STRING is					"Open backup file"
+	b_Or: STRING is								"Or"
+	b_Overwrite: STRING is						"Overwrite"
+	b_Percentage: STRING is						"Percentage"
+	b_Precompile_now: STRING is					"Precompile now"
+	b_Precompile_now_but_no_C: STRING is		"Precompile (no C comp)"
+	b_Replace: STRING is						"Replace"
+	b_Recursive_functions: STRING is			"Recursive functions"
+	b_Reload: STRING is							"Reload"
+	b_Remove: STRING is							"Remove"
+	b_Remove_text: STRING is 					"<- Remove"
+	b_Restore_defaults: STRING is				"Restore Defaults"
+	b_Retry: STRING is							"Retry"
+	b_Run: STRING is							"Run"
+	b_Run_query: STRING is						"Run query"
+	b_Run_subquery: STRING is					"Run subquery"
+	b_Search: STRING is							"Search"
+	b_Save: STRING is							"Save"
+	b_Save_as: STRING is						"Save as"
+	b_Save_to_backup: STRING is					"Save to backup"
+	b_Slice: STRING is							"Resize..."
+	b_Total_time: STRING is						"Total time"
+	b_Up_text: STRING is 						"Up"
+	b_Update: STRING is 						"Update"
+	b_Workbench: STRING is						"Workbench mode"
+	b_Yes: STRING is							"Yes"
+	
 feature -- Graphical degree output
 
-	d_Classes_to_go: STRING is			"Classes to go:";
-	d_Clusters_to_go: STRING is			"Clusters to go:";
-	d_Compilation_class: STRING is		"Class:";
-	d_Compilation_cluster: STRING is	"Cluster:";
-	d_Compilation_progress: STRING is	"Compilation Progress";
-	d_Degree: STRING is					"Degree:";
-	d_Documentation: STRING is			"Documentation";
-	d_Features_processed: STRING is		"Features done: ";
-	d_Features_to_go: STRING is			"Features to go: ";
-	d_Generating: STRING is				"Generating: ";
-	d_Resynchronizing_breakpoints: STRING is "Resynchronizing breakpoints";
-	d_Resynchronizing_tools: STRING is	"Resynchronizing tools";
-	d_Reverse_engineering: STRING is	"Reverse Engineering Project";
+	d_Classes_to_go: STRING is					"Classes to go:"
+	d_Clusters_to_go: STRING is					"Clusters to go:"
+	d_Compilation_class: STRING is				"Class:"
+	d_Compilation_cluster: STRING is			"Cluster:"
+	d_Compilation_progress: STRING is			"Compilation Progress"
+	d_Degree: STRING is							"Degree:"
+	d_Documentation: STRING is					"Documentation"
+	d_Features_processed: STRING is				"Features done: "
+	d_Features_to_go: STRING is					"Features to go: "
+	d_Generating: STRING is						"Generating: "
+	d_Resynchronizing_breakpoints: STRING is 	"Resynchronizing breakpoints"
+	d_Resynchronizing_tools: STRING is			"Resynchronizing tools"
+	d_Reverse_engineering: STRING is			"Reverse Engineering Project"
+	d_Finished_removing_dead_code: STRING is	"Dead code removal completed"
 
 feature -- Help text
 
-	h_No_help_available: STRING is		"No help available for this element";
+	h_No_help_available: STRING is				"No help available for this element"
 
 feature -- Icon ids for Windows
 
-	i_Project_id: INTEGER is 1;
-	i_Object_id: INTEGER is 2;
-	i_Feature_id: INTEGER is 3;
-	i_Explain_id: INTEGER is 4;
-	i_Class_id: INTEGER is 5;
-	i_System_id: INTEGER is 6;
-	i_dynamic_lib_id: INTEGER is 7;
+	i_Project_id: INTEGER is 1
+	i_Object_id: INTEGER is 2
+	i_Feature_id: INTEGER is 3
+	i_Explain_id: INTEGER is 4
+	i_Class_id: INTEGER is 5
+	i_System_id: INTEGER is 6
+	i_dynamic_lib_id: INTEGER is 7
+
+feature -- File names
+
+	default_stack_file_name: STRING is			"stack"
 
 feature -- Accelerator, focus label and menu name
 
-	f_About: STRING is					"About ISE EiffelBench";
-	m_About: STRING is					"&About ISE EiffelBench";
-
+	f_About: STRING is
+		once
+			Result := "About ISE " + Workbench_name
+		end
+	m_About: STRING is
+		once
+			Result := "&About ISE " + Workbench_name
+		end
+	m_Advanced: STRING is				"Ad&vanced"
+	m_Add_to_favorites: STRING is		"&Add to favorites"
+	m_Address_toolbar: STRING is		"&Address Bar"
 	m_Apply: STRING is					"&Apply"
-	f_Case_storage: STRING is			"Reverse engineer (EiffelCase)";
-	m_Case_storage: STRING is			"&Reverse engineer (EiffelCase)";
-	f_Clear_breakpoints: STRING is		"Clear stop points";
-	m_Clear_breakpoints: STRING is		"C&lear stop points";
-	f_Close_all_tools: STRING is		"Close all tools";
-	m_Close_all_tools: STRING is		"Close &all tools";
-	f_Copy: STRING is					"Copy";
-	m_Windows_copy: STRING is			"&Copy%TCtrl+C";
-	m_Unix_copy: STRING is				"&Copy%TCtrl+Insert";
-	a_Current: STRING is				"Ctrl<Key>l";
-	f_Current: STRING is				"Current";
-	m_Current: STRING is				"C&urrent%TCtrl+L";
-	f_Cut: STRING is					"Cut";
-	m_Windows_cut: STRING is			"&Cut%TCtrl+X";
-	m_Unix_cut: STRING is				"&Cut%TShift+Delete";
-	a_Debug_quit: STRING is				"Ctrl<Key>e";
-	f_Debug_quit: STRING is				"Interrupt";
-	m_Debug_quit: STRING is				"E&nd run%TCtrl+E";
-	a_Debug_run: STRING is				"Ctrl<Key>r";
-	f_Debug_run: STRING is				"Run";
-	m_Debug_run: STRING is				"&Run%TCtrl+R";
-	f_Debug_status: STRING is			"Execution status";
-	m_Debug_status: STRING is			"E&xecution status";
-	f_Disable_stop_points: STRING is	"Disable all stop points";
-	m_Disable_stop_points: STRING is	"&Disable all stop points";
-	f_Down_stack: STRING is				"Go down one level";
-	m_Down_stack: STRING is				"Go &down one level";
-	f_Enable_stop_points: STRING is		"Enable all stop points";
-	m_Enable_stop_points: STRING is		"&Enable all stop points";
-	f_Exec_last: STRING is				"Out of routine";
-	m_Exec_last: STRING is				"&Out of routine";
-	f_Exec_nostop: STRING is			"Ignore stop points";
-	m_Exec_nostop: STRING is			"&Ignore stop points";
-	f_Exec_step: STRING is				"Step-by-step";
-	m_Exec_step: STRING is				"S&tep-by-step";
-	f_Exec_stop: STRING is				"To next stop point";
-	m_Exec_stop: STRING is				"To ne&xt stop point";
-	f_Exit: STRING is					"Exit tool";
-	m_Exit: STRING is					"E&xit tool";
-
-	f_new_project: STRING is			"New..."
-	m_new_project: STRING is			"&New...%TCtrl+N"
-	a_new_project: STRING is			"Ctrl<Key>n"
-	f_Open_project: STRING is			"Open..."
-	m_Open_project: STRING is			"&Open...%TCtrl+O"
-	a_Open_project: STRING is			"Ctrl<Key>o"
-	m_Recent_project: STRING is			"&Recent Projects"
+	f_Argument: STRING is				"Edit the argument line"
+	m_Argument: STRING is				"&Argument line"
+	f_Case_storage: STRING is			"Reverse engineer (EiffelCase)"
+	m_Case_storage: STRING is			"&Reverse engineer (EiffelCase)"
+	f_Clear_breakpoints: STRING is		"Remove all breakpoints"
+	m_Clear_breakpoints: STRING is		"Re&move all breakpoints"
+	f_Close_all_tools: STRING is		"Close all tools"
+	m_Close_all_tools: STRING is		"Close &all tools"
+	m_Comment: STRING is				"&Comment%TCtrl+K"
+	f_Comment: STRING is				"Comment selected lines"
+	m_Compilation: STRING is			"&Compilation"
+	m_Compilation_C_Workbench: STRING is	"Compile W&orkbench C code"
+	m_Compilation_C_Final: STRING is	"Compile F&inalized C code"
+	m_Contents: STRING is				"&Contents"
+	a_Current: STRING is				"Ctrl<Key>l"
+	f_Current: STRING is				"Current"
+	m_Current: STRING is				"C&urrent%TCtrl+L"
+	m_Customize_general: STRING is		"&Customize standard toolbar..."
+	m_Customize_project: STRING is		"&Customize project toolbar..."
+	m_Cut: STRING is					"Cu&t%TCtrl+X"
+	f_Cut: STRING is					"Cut (Ctrl+X)"
+	m_Call_stack_tool: STRING is		"Call stack"
+	f_Call_stack_tool: STRING is		"Call stack corresponding to current execution"
+	m_Cluster_tool: STRING is			"&Clusters"
+	f_Cluster_tool: STRING is			"Facility to view your cluster hierarchy"
+	m_Complete_word: STRING is			"Complete &word"
+	m_Context_tool: STRING is			"Conte&xt"
+	f_Context_tool: STRING is			"Context for current project and class"
+	m_Copy: STRING is					"C&opy%TCtrl+C"
+	f_Copy: STRING is					"Copy (Ctrl+C)"
+	f_Close: STRING is					"Close"
+	m_Close: STRING is					"&Close"
+	f_Create_new_cluster: STRING is		"Create a new cluster"
+	f_Create_new_class: STRING is		"Create a new class"
+	f_Create_new_feature: STRING is		"Create a new feature"
+	a_Debug_interrupt: STRING is		"Ctrl<Key>e"
+	f_Debug_interrupt: STRING is		"Interrupt"
+	m_Debug_interrupt: STRING is		"I&nterrupt application%TCtrl+E"
+	m_Debug_interrupt_new: STRING is	"I&nterrupt application"
+	f_Debug_edit_object: STRING is		"Edit Object content"
+	m_Debug_edit_object: STRING is		"Edit Object content"
+	f_Debug_dynamic_eval: STRING is		"Dynamic feature evaluation"
+	m_Debug_dynamic_eval: STRING is		"Dynamic feature evaluation"
+	f_Debug_kill: STRING is				"Kill application"
+	m_Debug_kill: STRING is				"&Kill application"
+	a_Debug_run: STRING is				"Ctrl<Key>r"
+	f_Debug_run: STRING is				"Run"
+	m_Debug_run: STRING is				"&Run%TCtrl+R"
+	m_Debug_run_new: STRING is			"&Run and debug"
+	f_Debug_status: STRING is			"Execution status"
+	m_Debug_status: STRING is			"E&xecution status"
+	f_Disable_stop_points: STRING is	"Disable all breakpoints"
+	m_Disable_stop_points: STRING is	"&Disable all breakpoints"
+	m_Debug_block: STRING is			"E&mbed in %"debug...%"%TCtrl+D"
+	f_Down_stack: STRING is				"Go down one level"
+	m_Down_stack: STRING is				"Go &down one level"
+	m_Editor: STRING is					"&Editor"
+	m_Eiffel_introduction: STRING is	"Introduction to Eiffel"
+	m_Eiffel_on_the_web: STRING is		"Eiffel on the &Web"
+	f_Enable_stop_points: STRING is		"Enable all breakpoints"
+	m_Enable_stop_points: STRING is		"&Enable all breakpoints"
+	f_Exec_last: STRING is				"Out of routine"
+	m_Exec_last: STRING is				"&Out of routine"
+	f_Exec_nostop: STRING is			"Ignore breakpoints"
+	m_Exec_nostop: STRING is			"&Ignore breakpoints"
+	f_Exec_step: STRING is				"Step-by-step"
+	m_Exec_step: STRING is				"&Step-by-step"
+	f_Exec_into: STRING is				"Step into"
+	m_Exec_into: STRING is				"Step in&to"
+	f_Exec_stop: STRING is				"To next stop point"
+	m_Exec_stop: STRING is				"To ne&xt stop point"
+	f_Exit: STRING is					"Close"
+	m_Exit: STRING is					"&Close"
 	f_Exit_project: STRING is			"Exit"
 	m_Exit_project: STRING is			"E&xit"
-
-	f_Filter: STRING is					"Filter";
-	m_Filter: STRING is					"&Filter";
-	f_Finalize: STRING is				"Finalize...";
-	m_Finalize: STRING is				"Finali&ze...";
-	f_Final_mode: STRING is				"Final mode";
-	m_Final_mode: STRING is				"&Final mode";
-	a_Find: STRING is					"Ctrl<Key>f";
-	f_Find: STRING is					"Find";
-	m_Find: STRING is					"&Find%TCtrl+F";
-	f_flat_doc: STRING is				"Flat";
-	m_flat_doc: STRING is				"&Flat";
-	f_flat_short_doc: STRING is			"Flat short";
-	m_flat_short_doc: STRING is			"F&lat short";
-	f_text_doc: STRING is				"Text";
-	m_text_doc: STRING is				"&Text";
-	f_short_doc: STRING is				"Short";
-	m_short_doc: STRING is				"&Short";
-	f_Show_cluster_heir_list: STRING is	"Show cluster hierarchy";
-	m_Show_cluster_heir_list: STRING is	"Cluster &hierarchy";
-	a_Freeze: STRING is					"Ctrl Shift<Key>f";
-	f_Freeze: STRING is					"Freeze...";
-	m_Freeze: STRING is					"&Freeze...%TCtrl+Shift+F";
-	f_Generate: STRING is				"Generate";
-	m_Generate: STRING is				"&Generate";
-	f_Help: STRING is					"Help";
-	m_Help: STRING is					"&Help";
-	f_Hide_feature: STRING is			"Hide feature";
-	m_Hide_feature: STRING is			"Hide &feature";
-	f_Hide_object: STRING is			"Hide object";
-	m_Hide_object: STRING is			"Hide &object";
-	f_List_targets: STRING is			"List targets";
-	m_List_targets: STRING is			"&List targets%TCtrl+L";
-	f_New_class: STRING is				"New Class tool";
-	m_New_class: STRING is				"New &Class tool";
-	m_New_dynamic_lib: STRING is		"New &Dynamic Library tool";
-	f_New_explain: STRING is			"New Explain tool";
-	m_New_explain: STRING is			"New &Explain tool";
-	f_New_object: STRING is				"New Object tool";
-	m_New_object: STRING is				"New &Object tool";
-	f_New_routine: STRING is			"New Feature tool";
-	m_New_routine: STRING is			"New &Feature tool";
-	f_Next_target: STRING is			"Next";
-	m_Next_target: STRING is			"N&ext";
-	a_Next_target: STRING is			"Alt<key>Right";
-	f_Non_clickable_showstops: STRING is "Non clickable stop points";
-	m_Non_clickable_showstops: STRING is "&Non clickable stop points";
-	m_Ok: STRING is						"&Ok";
-	a_Open: STRING is					"Ctrl<Key>o";
-	f_Open: STRING is					"Open";
-	m_Open: STRING is					"&Open%TCtrl+O";
-	f_Paste: STRING is					"Paste";
-	m_Windows_paste: STRING is			"&Paste%TCtrl+V";
-	m_Unix_Paste: STRING is				"&Paste%TShift+Insert";
-	a_Precompile: STRING is				"Ctrl Shift<Key>P";
-	f_Precompile: STRING is				"&Precompile...";
-	m_Precompile: STRING is				"Precompile...%TCtrl+Shift+P";
-	f_Print: STRING is					"Print...";
-	m_Print: STRING is					"&Print";
-	f_Preferences: STRING is			"Preferences";
-	m_Preferences: STRING is			"&Preferences";
-	f_Profile_tool: STRING is			"Profile tool";
-	m_Profile_tool: STRING is			"Pro&file tool";
-	f_Previous_target: STRING is		"Previous";
-	m_Previous_target: STRING is		"&Previous";
-	a_Previous_target: STRING is		"Alt<key>Left";
-	a_Quick_update: STRING is			"Ctrl Shift<Key>q";
-	f_Quick_update: STRING is			"Quick melt";
-	m_Quick_update: STRING is			"&Quick Melt%TCtrl+Shift+Q";
-	f_Raise_all_tools: STRING is		"Raise all tools";
-	m_Raise_all_tools: STRING is		"&Raise all tools";
-	f_Raise_project: STRING is			"Raise project tool";
-	m_Raise_project: STRING is			"&Raise project tool%TAlt+P";
-	a_Raise_project: STRING is			"Alt<Key>P";
-	f_Run_finalized: STRING is			"Run finalized system";
-	m_Run_finalized: STRING is			"&Run finalized system";
-	a_Save: STRING is					"Ctrl<Key>S";
-	f_Save: STRING is					"Save";
-	m_Save: STRING is					"&Save%TCtrl+S";
-	f_Save_As: STRING is				"Save as...";
-	m_Save_As: STRING is				"S&ave as...";
-	f_Shell: STRING is					"Shell";
-	m_Shell: STRING is					"S&hell";
-	f_Showallcallers: STRING is			"All callers";
-	m_Showallcallers: STRING is			"All &callers";
-	f_Showancestors: STRING is			"Ancestors";
-	m_Showancestors: STRING is			"&Ancestors";
-	f_Showattributes: STRING is			"Attributes";
-	m_Showattributes: STRING is			"A&ttributes";
-	f_Showcallers: STRING is			"Callers";
-	m_Showcallers: STRING is			"&Callers";
-	f_Showclass_list: STRING is			"Classes";
-	m_Showclass_list: STRING is			"C&lasses";
-	f_Showclick: STRING is				"Clickable";
-	m_Showclick: STRING is				"Cl&ickable";
-	f_Showclients: STRING is			"Clients";
-	m_Showclients: STRING is			"Cli&ents";
-	f_Showclusters: STRING is			"Clusters";
-	m_Showclusters: STRING is			"&Clusters";
-	f_Showdeferreds: STRING is			"Deferred";
-	m_Showdeferreds: STRING is			"&Deferred";
-	f_Showdescendants: STRING is		"Descendants";
-	m_Showdescendants: STRING is		"Des&cendants";
-	f_Showexported: STRING is			"Exported";
-	m_Showexported: STRING is			"E&xported";
-	f_Showexternals: STRING is			"Externals";
-	m_Showexternals: STRING is			"Ex&ternals";
-	f_Showflat: STRING is				"Flat";
-	m_Showflat: STRING is				"&Flat";
-	f_Showfs: STRING is					"Flat/short";
-	m_Showfs: STRING is					"Flat/s&hort";
-	f_Showfuture: STRING is				"Descendant versions";
-	m_Showfuture: STRING is				"&Descendant versions";
-	f_Showhistory: STRING is			"Implementers";
-	m_Showhistory: STRING is			"&Implementers";
-	f_Showindexing: STRING is			"Indexing clauses";
-	m_Showindexing: STRING is			"&Indexing clauses";
-	f_Showmodified: STRING is			"Modified classes";
-	m_Showmodified: STRING is			"&Modified classes";
-	f_Show_feature: STRING is			"Show feature";
-	m_Show_feature: STRING is			"Show &feature";
-	f_Show_object: STRING is			"Show object";
-	m_Show_object: STRING is			"Show &object";
-	f_Showonces: STRING is				"Once/Constants";
-	m_Showonces: STRING is				"&Once/Constants";
-	f_Showoncefunc: STRING is			"`Once' functions";
-	m_Showoncefunc: STRING is			"`&Once' functions";
-	f_Showpast: STRING is				"Ancestor versions";
-	m_Showpast: STRING is				"&Ancestor versions";
-	f_Showroutines: STRING is			"Routines";
-	m_Showroutines: STRING is			"&Routines";
-	f_Showshort: STRING is				"Short";
-	m_Showshort: STRING is				"&Short";
-	f_Showstatistics: STRING is			"Statistics";
-	m_Showstatistics: STRING is			"&Statistics";
-	f_Showhomonyms: STRING is			"Homonyms";
-	m_Showhomonyms: STRING is			"&Homonyms";
-	f_Showstops: STRING is				"Stop points";
-	m_Showstops: STRING is				"Stop &points";
-	f_Showsuppliers: STRING is			"Suppliers";
-	m_Showsuppliers: STRING is			"&Suppliers";
-	a_Showtext: STRING is				"Ctrl<Key>t";
-	f_Showtext: STRING is				"Text";
-	m_Showtext: STRING is				"&Text%TCtrl+T";
-	f_Slice: STRING is					"Slice";
-	m_Slice: STRING is					"S&lice";
-	f_Stoppable: STRING is				"Stoppable";
-	m_Stoppable: STRING is				"&Stoppable";
-	f_System: STRING is					"System";
-	m_System: STRING is					"&System tool";
-	a_Update: STRING is					"Ctrl Shift<Key>m";
-	f_Update: STRING is					"Melt";
-	m_Update: STRING is					"&Melt%TCtrl+Shift+M";
-	f_Up_stack: STRING is				"Go up one level";
-	m_Up_stack: STRING is				"Go &up one level";
-	m_Validate: STRING is				"&Validate";
-	m_Version: STRING is				"&Version";
+	m_Explorer_bar: STRING is			"&Explorer Bar"
+	m_Export_to: STRING is				"Save cop&y as..."
+	m_Export_XMI: STRING is 			"E&xport XMI..."
+	m_External_editor: STRING is		"&External editor"
+	m_Favorites_tool: STRING is			"F&avorites"
+	f_Favorites_tool: STRING is			"Facility to bookmark your favorite classes"
+	m_Features_tool: STRING is			"&Features"
+	f_Features_tool: STRING is			"Facility to view all features of currently edited class"
+	f_Filter: STRING is					"Filter"
+	m_Filter: STRING is					"&Filter"
+	f_Finalize: STRING is				"Finalize..."
+	m_Finalize: STRING is				"Finali&ze..."
+	m_Finalize_new: STRING is			"Finali&ze..."
+	f_Final_mode: STRING is				"Final mode"
+	m_Final_mode: STRING is				"&Final mode"
+	a_Find: STRING is					"Ctrl<Key>f"
+	f_Find: STRING is					"Find"
+	m_Find: STRING is					"&Search"
+	m_Find_next: STRING is				"Find &next"
+	m_Find_previous: STRING is			"Find &previous"
+	m_Find_selection: STRING is			"Find &selection"
+	m_Old_Find: STRING is				"&Find%TCtrl+F"
+	f_Flat_doc: STRING is				"Flat"
+	m_Flat_doc: STRING is				"&Flat"
+	f_Flat_short_doc: STRING is			"Flat Contract"
+	m_Flat_short_doc: STRING is			"F&lat Contract"
+	a_Freeze: STRING is					"Ctrl Shift<Key>f"
+	f_Freeze: STRING is					"Freeze..."
+	m_Freeze: STRING is					"&Freeze...%TCtrl+Shift+F"
+	m_Freeze_new: STRING is				"&Freeze..."
+	m_General_toolbar: STRING is		"&Standard buttons"
+	f_Generate: STRING is				"Generate"
+	m_Generate: STRING is				"&Generate"
+	m_Generate_documentation: STRING is "Generate &documentation..."
+	m_Guided_tour: STRING is			"Guided &Tour"
+	f_Help: STRING is					"Help"
+	m_Help: STRING is					"&Help"
+	m_Hide_favorites: STRING is			"&Hide favorites"
+	f_Hide_feature: STRING is			"Hide feature"
+	m_Hide_feature: STRING is			"Hide &feature"
+	f_Hide_object: STRING is			"Hide object"
+	m_Hide_object: STRING is			"Hide &object"
+	m_Hide_formatting_marks: STRING is		"&Hide formatting marks"
+	m_History_forth: STRING is			"&Forward"
+	m_History_back: STRING is			"&Back"
+	f_History_forth: STRING is			"Go forth"
+	f_History_back: STRING is			"Go back"
+	m_How_to_s: STRING is				"How to's"
+	m_If_block: STRING is				"&Embed in %"if...%"%TCtrl+I"
+	m_Indent: STRING is					"&Indent selection%TTab"
+	f_List_targets: STRING is			"List targets"
+	m_List_targets: STRING is			"&List targets%TCtrl+L"
+	f_Maximize: STRING is				"Maximize"
+	m_Melt: STRING is					"&Melt%TCtrl+Shift+M"
+	f_Melt: STRING is					"Compile current project"
+	m_Melt_new: STRING is				"&Melt"
+	f_Minimize: STRING is				"Minimize"
+	m_New: STRING is					"&New"
+	f_New_window: STRING is				"Create a new window"
+	m_New_window: STRING is				"New &window"
+	f_New_class: STRING is				"New Class tool"
+	m_New_class: STRING is				"New &Class tool"
+	m_New_dynamic_lib: STRING is		"&Dynamic Library Builder"
+	f_New_explain: STRING is			"New Explain tool"
+	m_New_explain: STRING is			"New &Explain tool"
+	f_New_object: STRING is				"New Object tool"
+	m_New_object: STRING is				"New &Object tool"
+	f_New_feature: STRING is			"New Feature tool"
+	m_New_feature: STRING is			"New &Feature tool"
+	f_New_routine: STRING is			"New Feature tool"
+	m_New_routine: STRING is			"New &Feature tool"
+	f_Next_target: STRING is			"Next"
+	m_Next_target: STRING is			"N&ext"
+	a_Next_target: STRING is			"Alt<key>Right"
+	f_New_project: STRING is			"New..."
+	m_New_project: STRING is			"&New Project..."
+	a_New_project: STRING is			"Ctrl<Key>n"
+	f_Non_clickable_showstops: STRING is "Non clickable stop points"
+	m_Non_clickable_showstops: STRING is "&Non clickable stop points"
+	m_Ok: STRING is						"&Ok"
+	m_Online_support: STRING is			"Online &Support"
+	a_Open: STRING is					"Ctrl<Key>o"
+	f_Open: STRING is					"Open"
+	m_Open: STRING is					"&Open...%TCtrl+O"
+	m_Open_new: STRING is				"Op&en..."
+	f_Open_project: STRING is			"Open Project..."
+	m_Open_project: STRING is			"&Open Project..."
+	a_Open_project: STRING is			"Ctrl<Key>o"
+	m_Organize_favorites: STRING is		"&Organize favorites..."
+	m_Output: STRING is					"&Output"
+	f_Paste: STRING is				"Paste (Ctrl+V)"
+	m_Paste: STRING is				"P&aste%TCtrl+V"
+	a_Precompile: STRING is				"Ctrl Shift<Key>P"
+	f_Precompile: STRING is				"&Precompile..."
+	m_Precompile: STRING is				"Precompile...%TCtrl+Shift+P"
+	f_Precompile_new: STRING is			"Precompile"
+	m_Precompile_new: STRING is			"Pre&compile"
+	f_Print: STRING is					"Print"
+	m_Print: STRING is					"&Print"
+	f_Preferences: STRING is			"Preferences"
+	m_Preferences: STRING is			"&Preferences..."
+	f_Profile_tool: STRING is			"Profiler"
+	m_Profile_tool: STRING is			"Pro&filer..."
+	f_Project_directory: STRING is		"Directory where project is stored"
+	m_Project_toolbar: STRING is		"&Project Bar"
+	f_Previous_target: STRING is		"Previous"
+	m_Previous_target: STRING is		"&Previous"
+	a_Previous_target: STRING is		"Alt<key>Left"
+	a_Quick_update: STRING is			"Ctrl Shift<Key>q"
+	f_Quick_update: STRING is			"Quick melt"
+	m_Quick_update: STRING is			"&Quick Melt%TCtrl+Shift+Q"
+	f_Raise_all_tools: STRING is		"Raise all tools"
+	m_Raise_all_tools: STRING is		"&Raise all tools"
+	f_Raise_project: STRING is			"Raise project tool"
+	m_Raise_project: STRING is			"&Raise project tool%TAlt+P"
+	a_Raise_project: STRING is			"Alt<Key>P"
+	f_Raise_unsaved_tools: STRING is	"Raise unsaved tools"
+	m_Raise_unsaved_tools: STRING is	"&Raise unsaved tools"
+	m_Recent_project: STRING is			"&Recent Projects"
+	m_Redo: STRING is					"&Redo%TCtrl+Y"
+	f_Redo: STRING is				"Redo (Ctrl+Y)"
+	m_Replace: STRING is				"&Replace..."
+	f_Restore: STRING is				"Restore"
+	f_Retarget_diagram: STRING is		"Target to cluster or class"
+	f_Run_finalized: STRING is			"Run finalized system"
+	m_Run_finalized: STRING is			"&Run finalized system"
+	a_Save: STRING is					"Ctrl<Key>S"
+	f_Save: STRING is					"Save"
+	m_Save: STRING is					"&Save%TCtrl+S"
+	m_Save_new: STRING is				"&Save"
+	f_Save_As: STRING is				"Save as..."
+	m_Save_As: STRING is				"S&ave as..."
+	m_Search: STRING is					"&Find..."
+	f_Search_tool: STRING is			"Facilities to search for a pattern"
+	m_Search_tool: STRING is			"&Search"
+	m_Select_all: STRING is				"Select &All%TCtrl+A"
+	m_Send_to: STRING is				"Sen&d to"
+	f_Shell: STRING is					"Shell"
+	m_Shell: STRING is					"S&hell"
+	f_Short_doc: STRING is				"Contract"
+	m_Short_doc: STRING is				"C&ontract"
+	m_Show_class_cluster: STRING is		"Find in cluster tree"
+	m_Show_favorites: STRING is			"&Show favorites"
+	m_Show_formatting_marks: STRING is		"&Show formatting marks"
+	f_Show_cluster_heir_list: STRING is	"Show cluster hierarchy"
+	m_Show_cluster_heir_list: STRING is	"Cluster &hierarchy"
+	f_Showallcallers: STRING is			"All callers"
+	m_Showallcallers: STRING is			"All &callers"
+	f_Showancestors: STRING is			"Ancestors"
+	m_Showancestors: STRING is			"&Ancestors"
+	f_Showattributes: STRING is			"Attributes"
+	m_Showattributes: STRING is			"A&ttributes"
+	f_Showcallers: STRING is			"Callers"
+	m_Showcallers: STRING is			"&Callers"
+	f_Showclass_list: STRING is			"Classes"
+	m_Showclass_list: STRING is			"C&lasses"
+	f_Showclick: STRING is				"Clickable"
+	m_Showclick: STRING is				"&Clickable"
+	f_Showclients: STRING is			"Clients"
+	m_Showclients: STRING is			"Cli&ents"
+	f_Showclusters: STRING is			"Clusters"
+	m_Showclusters: STRING is			"&Clusters"
+	f_Showdeferreds: STRING is			"Deferred"
+	m_Showdeferreds: STRING is			"&Deferred"
+	f_Showdescendants: STRING is		"Descendants"
+	m_Showdescendants: STRING is		"De&scendants"
+	f_Showexported: STRING is			"Exported"
+	m_Showexported: STRING is			"Ex&ported"
+	f_Showexternals: STRING is			"Externals"
+	m_Showexternals: STRING is			"E&xternals"
+	f_Showflat: STRING is				"Flat"
+	m_Showflat: STRING is				"&Flat"
+	f_Showfs: STRING is					"Falt Contract"
+	m_Showfs: STRING is					"F&lat Contract"
+	f_Showfuture: STRING is				"Descendant versions"
+	m_Showfuture: STRING is				"&Descendant versions"
+	f_Showhistory: STRING is			"Implementers"
+	m_Showhistory: STRING is			"&Implementers"
+	f_Showindexing: STRING is			"Indexing clauses"
+	m_Showindexing: STRING is			"&Indexing clauses"
+	f_Showmodified: STRING is			"Modified classes"
+	m_Showmodified: STRING is			"&Modified classes"
+	f_Show_feature: STRING is			"Show feature"
+	m_Show_feature: STRING is			"Show &feature"
+	f_Show_object: STRING is			"Show object"
+	m_Show_object: STRING is			"Show &object"
+	f_Showonces: STRING is				"Once/Constants"
+	m_Showonces: STRING is				"O&nce/Constants"
+	f_Showoncefunc: STRING is			"`Once' functions"
+	m_Showoncefunc: STRING is			"`O&nce' functions"
+	f_Showpast: STRING is				"Ancestor versions"
+	m_Showpast: STRING is				"&Ancestor versions"
+	f_Showroutines: STRING is			"Routines"
+	m_Showroutines: STRING is			"&Routines"
+	f_Showshort: STRING is				"Contract"
+	m_Showshort: STRING is				"C&ontract"
+	f_Showstatistics: STRING is			"Statistics"
+	m_Showstatistics: STRING is			"&Statistics"
+	f_Showhomonyms: STRING is			"Homonyms"
+	m_Showhomonyms: STRING is			"&Homonyms"
+	f_Showstops: STRING is				"Stop points"
+	m_Showstops: STRING is				"Stop &points"
+	f_Showsuppliers: STRING is			"Suppliers"
+	m_Showsuppliers: STRING is			"S&uppliers"
+	a_Showtext: STRING is				"Ctrl<Key>t"
+	f_Showtext: STRING is				"Text"
+	m_Showtext: STRING is				"&Text%TCtrl+T"
+	m_Showtext_new: STRING is			"Te&xt"
+	f_Slice: STRING is					"Slice"
+	m_Slice: STRING is					"S&lice"
+	f_Stoppable: STRING is				"Stoppable"
+	m_Stoppable: STRING is				"&Stoppable"
+	f_Super_cluster_diagram: STRING is	"Target to enclosing cluster"
+	f_System: STRING is					"System"
+	m_System: STRING is					"&System tool"
+	m_System_new: STRING is				"Project &settings..."
+	f_Text_doc: STRING is				"Text"
+	m_Text_doc: STRING is				"Te&xt"
+	m_Toolbars: STRING is				"&Toolbars"
+	m_To_lower: STRING is				"Set to &lowercase%TCtrl+Shift+U"
+	m_To_upper: STRING is				"Set to u&ppercase%TCtrl+U"
+	m_Uncomment: STRING is				"U&ncomment%TCtrl+Shift+K"
+	f_Uncomment: STRING is				"Uncomment selected lines"
+	m_Undo: STRING is					"&Undo%TCtrl+Z"
+	f_Undo: STRING is					"Undo (Ctrl+Z)"
+	m_Unindent: STRING is				"&Unindent selection%TShift+Tab"
+	m_Unix_copy: STRING is				"&Copy%TCtrl+Insert"
+	m_Unix_cut: STRING is				"&Cut%TShift+Delete"
+	m_Unix_Paste: STRING is				"&Paste%TShift+Insert"
+	a_Update: STRING is					"Ctrl Shift<Key>m"
+	f_Update: STRING is					"Melt"
+	m_Update: STRING is					"&Melt%TCtrl+Shift+M"
+	f_Up_stack: STRING is				"Go up one level"
+	m_Up_stack: STRING is				"Go &up one level"
+	m_Validate: STRING is				"&Validate"
+	m_Version: STRING is				"&Version"
+	m_Windows_copy: STRING is			"&Copy%TCtrl+C"
+	m_Windows_cut: STRING is			"&Cut%TCtrl+X"
+	m_Windows_paste: STRING is			"&Paste%TCtrl+V"
+	m_Windows_tool: STRING is			"&Windows"
+	f_Windows_tool: STRING is			"Facility to show opened windows"
+	m_Wizard_precompile: STRING is 		"Precompilation &Wizard..."
+	f_Wizard_precompile: STRING is		"Wizard to precompile libraries"
+	f_Workbench_mode: STRING is			"Workbench mode"
+	m_Workbench_mode: STRING is			"&Workbench mode"
 
 feature -- Menu mnenomics
 
-	m_Category: STRING is				"&Category";
-	m_Class_tools: STRING is			"&Class tools";
-	m_Dynamic_lib_tools: STRING is				"&Dynamic library tools";
-	m_Commands: STRING is				"&Commands";
-	m_Compile: STRING is				"&Compile";
-	m_C_Compilation: STRING is			"C Com&pilation";
-	m_Document: STRING is				"&Documentation";
-	m_Debug: STRING is					"&Debug";
-	m_Edit: STRING is					"&Edit";
-	m_Explain_tools: STRING is			"&Explain tools";
-	m_Feature: STRING is				"&Feature";
-	m_Feature_tools: STRING is			"&Feature tools";
-	m_File: STRING is					"&File";
-	m_Formats: STRING is				"F&ormat";
-	m_Object: STRING is					"&Object";
-	m_Object_tools: STRING is			"&Object tools";
-	m_Special: STRING is				"&Special";
-	m_Windows: STRING is				"&Window";
+	m_Add_exported_feature: STRING is	"&Add..."
+	m_Bkpt_info: STRING is				"Brea&kpoint information"
+	m_Category: STRING is				"&Category"
+	m_Class_info: STRING is				"C&lass views"
+	m_Check_exports: STRING is			"Chec&k export clauses"
+	m_Class_tools: STRING is			"&Class tools"
+	m_Commands: STRING is				"&Commands"
+	m_Compile: STRING is				"&Compile"
+	m_Create_new_cluster: STRING is		"New c&luster..."
+	m_Create_new_class: STRING is		"&New class..."
+	m_Create_new_feature: STRING is		"New fea&ture..."
+	m_C_Compilation: STRING is			"C Com&pilation"
+	m_Debug: STRING is					"&Debug"
+	m_Disable_this_bkpt: STRING is		"&Disable this breakpoint"
+	m_Display_error_help: STRING is		"Compilation error wizard"
+	m_Display_system_info: STRING is	"S&ystem info"
+	m_Document: STRING is				"&Documentation"
+	m_Dotnet_import: STRING is			"I&SE Assembly Manager"
+	m_Dynamic_lib_tools: STRING is		"&Dynamic library tools"
+	m_Edit: STRING is					"&Edit"
+	m_Edit_exported_feature: STRING is	"&Edit..."
+	m_Enable_this_bkpt: STRING is		"&Enable this breakpoint"
+	m_Explain_tools: STRING is			"&Explain tools"
+	m_Favorites: STRING is				"Fav&orites"
+	m_Feature: STRING is				"&Feature"
+	m_Feature_info: STRING is			"Feat&ure views"
+	m_Feature_tools: STRING is			"&Features"
+	m_File: STRING is					"&File"
+	m_Formats: STRING is				"F&ormat"
+	m_Formatter_separators: ARRAY [STRING] is
+		once
+			Result := <<"Text generators", "Class relations", "Restrictors", "Main editor views">>
+		end
+	m_History: STRING is				"&Go to"
+	m_Maximize: STRING is				"Ma&ximize"
+	m_Minimize: STRING is				"Mi&nimize"
+	m_Minimize_all: STRING is			"&Minimize all"
+	m_New_editor: STRING is				"New ed&itor window"
+	m_New_context_tool: STRING is		"New con&text window"
+	m_Object: STRING is					"&Object"
+	m_Object_tools: STRING is			"&Object tools"
+	m_Pretty_print: STRING is			"Expand an object"
+	m_Project: STRING is				"&Project"
+	m_Raise: STRING is					"&Raise"
+	m_Raise_all: STRING is				"&Raise all"
+	m_Raise_all_unsaved: STRING is		"Raise &unsaved windows"
+	m_Remove_class_cluster: STRING is	"&Remove current item"
+	m_Remove_exported_feature: STRING is	"&Remove"
+	m_Remove_this_bkpt: STRING is		"&Remove this breakpoint"
+	m_Run_to_this_point: STRING is		"&Run to this point"
+	m_Send_stone_to_context: STRING is	"Se&nd to the context tool"
+	m_Set_slice_size: STRING is			"&Alter size"
+	m_Special: STRING is				"&Special"
+	m_Separate_stone: STRING is			"I&solate context tool"
+	m_Tools: STRING is					"&Tools"
+	m_Unify_stone: STRING is			"&Merge context tool"
+	m_View: STRING is					"&View"
+	m_Window: STRING is					"&Window"
 
 feature -- Label texts
 
-	l_Active_query: STRING is			"Active query";
-	l_Add: STRING is					"Add:";
-	l_Change_operator: STRING is		"Change operator";
-	l_Cluster: STRING is				"Cluster:";
-	l_Compile_type: STRING is			"Compile type";
-	l_File_name: STRING is				"File name: ";
-	l_Inactivate: STRING is				"Inactivate";
-	l_Inactive_subqueries: STRING is	"Inactive subqueries";
-	l_Input_file: STRING is				"Input file";
-	l_Language_type: STRING is			"Language type";
-	l_Non_clickable_showstops: STRING is "Non clickable stop points";
-	l_Output_switches: STRING is		"Output switches";
-	l_Query: STRING is					"Query";
-	l_Reactivate: STRING is				"Reactivate";
-	l_Results: STRING is				"Results";
-	l_Select_profiler: STRING is		"Select used profiler";
-	l_Showallcallers: STRING is			"Show all callers";
-	l_Showcallers: STRING is			"Show static callers";
-	l_Showstops: STRING is				"Show stoppoints";
-	l_Specify_arguments: STRING is		"Specify arguments";
-	l_Subquery: STRING is				"Define new subquery";
+	l_Ace_file: STRING is				"Ace file: "
+	l_Ace_file_for_frame: STRING is		"Ace file "
+	f_Ace_file: STRING is				"File containing the compilation data%
+		% (cluster list, assertion level, optimisations...)"
+	l_Active_query: STRING is			"Active query"
+	l_Add: STRING is					"Add:"
+	l_Alias_name: STRING is				"Alias:"
+	l_Ancestors: STRING is				"ancestors"
+	l_Arguments: STRING is				"Arguments"
+	l_Attributes: STRING is				"attributes"
+	l_Available_buttons_text: STRING is "Available buttons"
+	l_Basic_application: STRING is		"Basic application (no graphics library included)"
+	l_Basic_text: STRING is				"basic text view"
+	l_Callers: STRING is				"callers"
+	l_Calling_convention: STRING is		"Calling convention:"
+	l_Change_operator: STRING is		"Change operator"
+	l_Choose_folder: STRING is			"Select the destination folder "
+	l_Choose_assembly: STRING is		"Select the source assembly "
+	l_Class: STRING is					"Class:"
+	l_Class_name: STRING is				"Class name "
+	l_Clients: STRING is				"clients"
+	l_Clickable: STRING is				"clickable view"
+	l_Close_warning: STRING is			"The text has not been saved.%NDo you want to save it before closing?"
+	l_Cluster: STRING is				"Cluster"
+	l_Cluster_name: STRING is			"Cluster name "
+	l_Compile_first: STRING is			"Compile to have information"
+	l_Compile_generated_project: STRING is "Compile the generated project"
+	l_Compile_type: STRING is			"Compile type"
+	l_Confirm_kill: STRING is			"Kill the debugged application?"
+	l_Create_a_new_project: STRING is 	"Create a new project "
+	l_Create_default_project: STRING is	"Create default project"
+	l_Creation: STRING is				"Creation procedure:"
+	l_Creation_procedure: STRING is		"Creation procedure name: "
+	l_Deferreds: STRING is				"deferred features"
+	l_Deleting_dialog_default: STRING is "Creating new project, please wait..."
+	l_Descendants: STRING is			"descendants"
+	l_Diagram_delete_view_cmd: STRING is	"Do you really want to delete current view?"
+	l_Discard_convert_project_dialog: STRING is	"Do not ask again, and always convert old projects"
+	l_Discard_dialog: STRING is			"Do not show again"
+	l_Discard_finalize_assertions: STRING is "Do not ask again, and always discard assertions when finalizing"
+	l_Discard_freeze_dialog: STRING is	"Do not ask again, and always compile C code"
+	l_Discard_save_before_compile_dialog: STRING is	"Do not ask again, and always save files before compiling"
+	l_Discard_starting_dialog: STRING is "Don't show this dialog at startup"
+	l_Displayed_buttons_text: STRING is "Displayed buttons"
+	l_Dont_ask_me_again: STRING is		"Do not ask me again"
+	l_Do_not_show_again: STRING is		"Do not show again"
+	l_Dummy: STRING is					"Should not be read"
+	l_Enter_folder_name: STRING is		"Enter the name of the new folder: "
+	l_Execution_interrupted: STRING is	"Execution interrupted"
+	l_Exit_application: STRING is
+		once
+			Result := "Are you sure you want to quit "+Workbench_name+"?"
+		end
+	l_Exit_warning: STRING is			"Some files have not been saved.%NDo you want to save them before exiting?"
+	l_Explicit_exception_pending: STRING is "Explicit exception pending"
+	l_Exported: STRING is				"exported features"
+	l_External: STRING is				"external features"
+	l_Feature: STRING is				"Feature:"
+	l_Feature_properties: STRING is		"Feature properties"
+	l_File_name: STRING is				"File name "
+	l_Finalized_mode: STRING is 		"Finalized mode"
+	l_Flat: STRING is					"flat view"
+	l_Flatshort: STRING is				"flat contract view"
+	l_Generate_profile_from_rtir: STRING is "Generate profile from Run-time information record"
+	l_Homonyms: STRING is				"homonyms"
+	l_Homonym_confirmation: STRING is	"Extracting the homonyms%Nmay take a long time."
+	l_Implicit_exception_pending: STRING is "Implicit exception pending"
+	l_Implementers: STRING is			"implementers"
+	l_Inactivate: STRING is				"Inactivate"
+	l_Inactive_subqueries: STRING is	"Inactive subqueries"
+	l_Index: STRING is					"Index:"
+	l_Input_file: STRING is				"Input file"
+	l_Language_type: STRING is			"Language type"
+	l_Literal_value: STRING is			"Literal Value"
+	l_Located_in: STRING is				" located in "
+	l_Location: STRING is 				"Location "
+	l_Locals: STRING is					"Locals"
+	l_Min_index: STRING is				"Minimum index displayed"
+	l_Match_case: STRING is				"Match case"
+	l_Max_index: STRING is				"Maximum index displayed"
+	l_More_items: STRING is				"Display limit reached"
+	l_New_breakpoint: STRING is			"New breakpoint(s) to commit"
+	l_No_feature: STRING is				"Select a compiled feature to have information about it."
+	l_No_feature_group_clause: STRING is "[Unnamed feature clause]"
+	l_No_text_text: STRING is 			"Never display text next to buttons"
+	l_Non_clickable_showstops: STRING is "Non clickable stop points"
+	l_Not_in_system_no_info: STRING is	"Select a class which is in the system to have information about it."
+	l_Not_yet_called: STRING is			": Not yet called"
+	l_Object_attributes: STRING is		"Attributes"
+	l_Of_class: STRING is				" of class "
+	l_Of_feature: STRING is				" of feature "
+	l_Onces: STRING is					"once routines and constants"
+	l_Once_functions: STRING is			"Once routines"
+	l_Open_project: STRING is			"Open a project"
+	l_Open_an_existing_project: STRING is "Open compiled project"
+	l_Options: STRING is				"Options"
+	l_Output_switches: STRING is		"Output switches"
+	l_Project_directory: STRING is		"Project directory: "
+	l_Project_location: STRING is		"The project location is the place where compilation%Nfiles will be generated by the compiler"
+	l_Project_name: STRING is			"Project name "
+	l_Profiler_used: STRING is			"Profiler used to produce the above record: "
+	l_Put_text_right_text: STRING is 	"Put associated text on the right of buttons"
+	l_Query: STRING is					"Query"
+	l_Reactivate: STRING is				"Reactivate"
+	l_Remove_object: STRING is			"Remove"
+	l_Remove_object_desc:STRING is		"Remove an object from the tree"
+	l_Replace_with: STRING is			"Replace with:"
+	l_Replace_with_ellipsis: STRING is	"Replace with..."
+	l_Replace_all: STRING is			"Replace all"
+	l_Result: STRING is					"Result"
+	l_Results: STRING is				"Results"
+	l_Root_class: STRING is				"Root class name: "
+	l_Routine_ancestors: STRING is		"ancestor versions"
+	l_Routine_descendants: STRING is	"descendant versions"
+	l_Routine_flat: STRING is			"flat view"
+	l_Routines: STRING is				"routines"
+	l_Runtime_information_record: STRING is "Run-time information record"
+	l_Same_class_name: STRING is		"---"
+	l_Search_backward: STRING is		"Search backward"
+	l_Search_for: STRING is				"Search for:"
+	l_Search_options_show: STRING is	"Options >>"
+	l_Search_options_hide: STRING is	"Options <<"	
+	l_Select_profiler: STRING is		"Select used profiler"
+	l_Set_slice_limits: STRING is		"Slice limits"
+	l_Set_slice_limits_desc: STRING is	"Set which values are shown in special objects"
+	l_Short: STRING is					"contract view"
+	l_Short_name: STRING is				"Short Name"
+	l_Showallcallers: STRING is			"Show all callers"
+	l_Showcallers: STRING is			"Show static callers"
+	l_Showstops: STRING is				"Show stop points"
+	l_Slice_taken_into_account1: STRING is "Warning: Modifications will be taken into account"
+	l_Slice_taken_into_account2: STRING is "for the next objects you will add in the object tree."
+	l_Specify_arguments: STRING is		"Specify arguments"
+	l_Stop_point_reached: STRING is		"Breakpoint reached"
+	l_Subquery: STRING is				"Define new subquery"
+	l_Suppliers: STRING is				"suppliers"
+	l_System_name: STRING is			"System name: "
+	l_System_running: STRING is			"System running"
+	l_Tab_output: STRING is 			"Output"
+	l_Tab_class_info: STRING is 		"Class"
+	l_Tab_feature_info: STRING is 		"Feature"
+	l_Tab_diagram: STRING is 			"Diagram"
+	l_Tab_metrics: STRING is 			"Metrics"
+	l_Three_dots: STRING is				"..."
+	l_Text_loading: STRING is		"Current text is being loaded. It is therefore%Nnot editable nor pickable."
+	l_Toolbar_with_gray_icons: STRING is "Display color icon when mouse cursor is over the button"
+	l_Toolbar_without_gray_icons: STRING is "Always display color icon"
+	l_Toolbar_select_text_position: STRING is "Text option: "
+	l_Toolbar_select_has_gray_icons: STRING is "Icon option: "
+	l_Unknown_status: STRING is			"Unknown application status"
+	l_Unknown_class_name: STRING is		"Unknown class name"
+	l_Use_existing_ace: STRING is		"Open existing Ace (control file)"
+	l_Use_existing_profile: STRING is	"Use existing profile: "
+	l_Use_wildcards: STRING is			"Use wildcards"
+	l_Use_wizard: STRING is 			"Create a new project"
+	l_Whole_word: STRING is				"Whole word"
+	l_Windows_only: STRING is			"(Windows only)"
+	l_Workbench_mode: STRING is 		"Workbench mode"
+	l_Working_formatter: STRING is		"Extracting "
 
 feature -- Widget names
 
-	n_Command_bar_name: STRING is		"Standard toolbar";
-	n_Format_bar_name: STRING is		"Formatting toolbar";
-	n_Tool_bar_name: STRING is			"Toolbar";
-	n_X_resource_name: STRING is		"ebench";
+	n_Command_bar_name: STRING is		"Standard toolbar"
+	n_Format_bar_name: STRING is		"Formatting toolbar"
+	n_Tool_bar_name: STRING is			"Toolbar"
+	n_X_resource_name: STRING is		"ebench"
 
 feature -- Stone names
 
-	s_Class_stone: STRING is			"Class";
-	s_Dynamic_lib_stone: STRING is		"Dynamic Library Specifications";
-	s_Explain_stone: STRING is			"Explanation";
-	s_Object_stone: STRING is			"Object";
-	s_Routine_stone: STRING is			"Feature";
-	s_Showstops: STRING is				"Show stoppoints";
-	s_System: STRING is					"System";
+	s_Class_stone: STRING is			"Class "
+	s_Cluster_stone: STRING is			"Cluster "
+	s_Dynamic_lib_stone: STRING is		"Dynamic Library Specifications"
+	s_Explain_stone: STRING is			"Explanation"
+	s_Object_stone: STRING is			"Object"
+	s_Feature_stone: STRING is			"Feature "
+	s_Routine_stone: STRING is			"Feature"
+	s_Showstops: STRING is				"Show stop points"
+	s_System: STRING is					"System"
 
 feature -- Title part
 
-	t_Ace_builder: STRING is			"Ace builder";
-	t_All_callers: STRING is			"All callers of ";
-	t_Argument_w: STRING is				"Execution arguments";
-	t_Ancestors_of: STRING is			"Ancestors of class ";
-	t_Attributes_of: STRING is			"Attributes of class ";
-	t_Attrvalues_of: STRING is			"Attributes of ";
-	t_Browse: STRING is					"Browse...";
-	t_Callers: STRING is				"Callers of ";
-	t_Class_list_of: STRING is			"Classes in universe ";
-	t_Click_form_of: STRING is			"Clickable form of class ";
-	t_Clients_of: STRING is				"Clients of class ";
-	t_Clusters_hierarchy: STRING is		"Cluster Hierarchy";
-	t_Clusters_of: STRING is			"Clusters in universe ";
-	t_Configuration_error: STRING is	"An error occured while loading the configuration for your profiler";
-	t_Confirm: STRING is				"Please confirm";
-	t_Custom_of: STRING is				"Custom view of class ";
-	t_Deferreds_of: STRING is			"Deferred routines of class ";
-	t_Descendants_of: STRING is			"Descendants of class ";
-	t_Empty: STRING is					"";
-	t_Empty_class: STRING is			"Empty class tool";
-	t_Empty_explain: STRING is			"Empty explain tool";
-	t_Empty_object: STRING is			"Empty object tool";
-	t_Empty_routine: STRING is			"Empty feature tool";
-	t_Exported_of: STRING is			"Exported features of ";
-	t_Externals_of: STRING is			"Externals of class ";
-	t_File_selection: STRING is			"File selection";
-	t_Filter_w: STRING is				"Filter selection";
-	t_Find: STRING is					"Find";
-	t_Flat_form_of: STRING is			"Flat form of class ";
-	t_Feature_flat_form_of: STRING is	"Flat form of feature ";
-	t_Flatshort_form_of: STRING is		"Interface of class ";
-	t_Future: STRING is					"Descendant versions of ";
-	t_Generation_options: STRING is		"Generation options...";
-	t_History: STRING is				"Implementers of ";
-	t_Homonyms_of: STRING is			"Homonyms of ";
-	t_Indexing_of: STRING is			"Indexing clauses of classes in universe ";
-	t_Modified_of: STRING is			"Modified classes in universe ";
-	t_Name_chooser: STRING is			"Name chooser...";
-	t_New_class: STRING is				"New class";
-	t_New_project: STRING is			"New project";
-	t_Non_clickable_stoppoints_of: STRING is "Non clickable stop points";
-	t_Onces_of: STRING is				"`Once/Constant' routines of class ";
-	t_Oncefunc_of: STRING is			"`Once' functions of ";
-	t_Past: STRING is					"Ancestor versions of ";
-	t_Print_to_file: STRING is			"Print to file";
-	t_Postscript: STRING is				"PostScript";
-	t_Project: STRING is				"ISE EiffelBench";
-	t_Profile_tool: STRING is			"Profile tool";
-	t_Profile_query_window: STRING is	"Profile query window";
-	t_Preference_tool: STRING is		"Preference tool";
-	t_Routines_of: STRING is			"Routines of class ";
-	t_Select_class: STRING is			"Select class";
-	t_Select_class_version: STRING is	"Select class version";
-	t_Select_color: STRING is			"Select color";
-	t_Select_feature: STRING is			"Select feature";
-	t_Select_object: STRING is			"Select object";
-	t_Shell_command: STRING is			"Shell Command: ";
-	t_Suppliers_of: STRING is			"Suppliers of class ";
-	t_Routine_custom_tool: STRING is	"Routine custom tool";
-	t_Search: STRING is					"Search";
-	t_Select_a_file: STRING is			"Select a file";
-	t_Select_a_directory: STRING is		"Select a directory";
-	t_Shell_w: STRING is				"Shell command";
-	t_Short_form_of: STRING is			"Short form of class ";
-	t_Specify_ace: STRING is			"Specify ace";
-	t_Specify_dynamic_lib: STRING is	"Choose your Eiffel Definition file for the Dynamic Library";
-	t_Stoppoints_of: STRING is			"Stop points of ";
-	t_Slice_w: STRING is				"Special object slice";
-	t_Statistics_of: STRING is			"Statistics of system ";
-	t_System: STRING is					"System";
-	t_Warning: STRING is				"Warning";
-	f_Workbench_mode: STRING is			"Workbench mode";
-	m_Workbench_mode: STRING is			"&Workbench mode";
+	t_About: STRING is
+		once
+			Result := "About ISE "+Workbench_name
+		end
+	t_Ace_builder: STRING is					"Ace builder"
+	t_Project_builder: STRING is				"Project builder"
+	t_Alias: STRING is							"Alias"
+	t_All_callers: STRING is					"All callers of "
+	t_Argument_w: STRING is						"Execution arguments"
+	t_Ancestors_of: STRING is					"Ancestors of class "
+	t_Attributes_of: STRING is					"Attributes of class "
+	t_Attrvalues_of: STRING is					"Attributes of "
+	t_Browse: STRING is							"Browse..."
+	t_Call_stack_tool: STRING is				"Call stack"
+	t_Callers: STRING is						"Callers of "
+	t_Calling_convention: STRING is				"Calling convention"
+	t_Choose_ace_file: STRING is 				"Choose an ace file"
+	t_Choose_ace_and_directory: STRING is		"Choose your ace file and directory"
+	t_Choose_class: STRING is					"Choose a class"
+	t_Choose_directory: STRING is 				"Choose your directory"
+	t_Choose_folder_name: STRING is				"Choose a folder name"
+	t_Choose_project_and_directory: STRING is 	"Choose your project name and directory"
+	t_Class: STRING is							"Class"
+	t_Class_list_of: STRING is					"Classes in universe "
+	t_Click_form_of: STRING is					"Clickable view of class "
+	t_Clients_of: STRING is						"Clients of class "
+	t_Cluster_tool: STRING is					"Clusters"
+	t_Clusters_hierarchy: STRING is				"Cluster Hierarchy"
+	t_Clusters_of: STRING is					"Clusters in universe "
+	t_Configuration_error: STRING is			"An error occurred while loading the configuration for your profiler"
+	t_Confirm: STRING is						"Please confirm"
+	t_Context_tool: STRING is					"Context"
+	t_Creation_routine: STRING is				"Creation procedure"
+	t_Custom_of: STRING is						"Custom view of class "
+	t_Customize_toolbar_text: STRING is 		"Customize toolbar"
+	t_Deferreds_of: STRING is					"Deferred routines of class "
+	t_Default_print_job_name: STRING is
+		once
+			Result := "From " + Workbench_name
+		end
+	t_Deleting_files: STRING is					"Deleting files"
+	t_Descendants_of: STRING is					"Descendants of class "
+	t_Dotnet_import: STRING is					"ISE Assembly Manager"
+	t_Dummy: STRING is							"Dummy"
+	t_Dynamic_lib_window: STRING is 			"Dynamic Library Builder"
+	t_Dynamic_type: STRING is					"In class"
+	t_Editor: STRING is							"Editor"
+	t_Empty: STRING is							""
+	t_Empty_class: STRING is					"Empty class tool"
+	t_Empty_explain: STRING is					"Empty explain tool"
+	t_Empty_object: STRING is					"Empty object tool"
+	t_Empty_feature: STRING is					"Empty feature tool"
+	t_Empty_routine: STRING is					"Empty feature tool"
+	t_Enhanced_display: STRING is				"Expanded display"
+	t_Exported_feature: STRING is				"Feature"
+	t_Exported_of: STRING is					"Exported features of "
+	t_Extended_explanation: STRING is			"Extended explanation"
+	t_External_edition: STRING is				"External edition"
+	t_Externals_of: STRING is					"Externals of class "
+	t_Favorites: STRING is						"Favorites"
+	t_Favorites_tool: STRING is					"Favorites"
+	t_Feature: STRING is						"In feature"
+	t_Feature_flat_form_of: STRING is			"Flat view of feature "
+	t_Feature_properties: STRING is				"Feature properties"
+	t_File_selection: STRING is					"File selection"
+	t_Filter_w: STRING is						"Filter selection"
+	t_Find: STRING is							"Find"
+	t_Flat_form_of: STRING is					"Flat view of class "
+	t_Flatshort_form_of: STRING is				"Flat Contract view of class "
+	t_Future: STRING is							"Descendant versions of "
+	t_Generation_options: STRING is				"Generation options..."
+	t_History: STRING is						"Implementers of "
+	t_Homonyms_of: STRING is					"Homonyms of "
+	t_Index: STRING is							"Index"
+	t_Indexing_of: STRING is					"Indexing clauses of classes in universe "
+	t_Line_number: STRING is					"Line"
+	t_Modified_of: STRING is					"Modified classes in universe "
+	t_Name_chooser: STRING is					"Name chooser..."
+	t_New_class: STRING is						"New class"
+	t_New_cluster: STRING is					"New cluster"
+	t_New_project: STRING is					"New project"
+	t_Non_clickable_stoppoints_of: STRING is 	"Non clickable stop points"
+	t_Object_address: STRING is					"In object"
+	t_Object_tool: STRING is					"Object editor"
+	t_Onces_of: STRING is						"`Once/Constant' routines of class "
+	t_Oncefunc_of: STRING is					"`Once' functions of "
+	t_Open_backup: STRING is					"Backup found"
+	t_Organize_favorites: STRING is				"Organize favorites"
+	t_Output: STRING is							"Output"
+	t_Past: STRING is							"Ancestor versions of "
+	t_Print_to_file: STRING is					"Print to file"
+	t_Postscript: STRING is						"PostScript"
+	t_Profile_tool: STRING is					"Profile tool"
+	t_Profile_query_window: STRING is			"Profile query window"
+	t_Profiler_wizard: STRING is				"Profiler Wizard"
+	t_Project: STRING is
+		once
+			Result := "ISE "+Workbench_name
+		end
+	t_Preference_tool: STRING is				"Preference tool"
+	t_Preference_window: STRING is				"Preferences"
+	t_Routines_of: STRING is					"Routines of class "
+	t_Select_class: STRING is					"Select class"
+	t_Select_class_version: STRING is			"Select class version"
+	t_Select_cluster: STRING is					"Select cluster"
+	t_Select_color: STRING is					"Select color"
+	t_Select_feature: STRING is					"Select feature"
+	t_Select_location: STRING is				"Select location"
+	t_Select_object: STRING is					"Select object"
+	t_Shell_command: STRING is					"Shell Command: "
+	t_Suppliers_of: STRING is					"Suppliers of class "
+	t_Routine_custom_tool: STRING is			"Routine custom tool"
+	t_Search: STRING is							"Search"
+	t_Search_tool: STRING is					"Search"
+	t_Select_a_file: STRING is					"Select a file"
+	t_Select_a_directory: STRING is				"Select a directory"
+	t_Shell_w: STRING is						"Shell command"
+	t_Short_form_of: STRING is					"Contract view of class "
+	t_Specify_ace: STRING is					"Specify ace"
+	t_Specify_dynamic_lib: STRING is			"Choose your Eiffel Definition file for the Dynamic Library"
+	t_Static_type: STRING is					"From class"
+	t_Starting_dialog: STRING is
+		once
+			Result := Workbench_name
+		end
+	t_Stoppoints_of: STRING is					"Stop points of "
+	t_Slice_w: STRING is						"Special object slice"
+	t_Slice_limits: STRING is					"Choose new slice limits for special objects"
+	t_Statistics_of: STRING is					"Statistics of system "
+	t_System: STRING is							"Project configuration"
+	t_Warning: STRING is						"Warning"
+	t_Windows_tool: STRING is					"Windows"
+	t_Features_tool: STRING is					"Features"
+	t_Empty_development_window: STRING is 		"Empty development tool"
+	t_Autocomplete_window: STRING is			"Auto-complete"
+	t_Diagram_class_header: STRING is			"Class header"
+	t_Diagram_context_depth: STRING is			"Select depths"
+	t_Diagram_link_tool: STRING is				"Link tool"
+	t_Diagram_delete_client_link: STRING is 	"Choose feature(s) to delete"
+	t_Diagram_history_tool: STRING is			"History tool"
+	t_Diagram_move_class_cmd: STRING is			"Move class"
+	t_Diagram_move_cluster_cmd: STRING is		"Move cluster"
+	t_Diagram_move_midpoint_cmd: STRING is		"Move midpoint"
+	t_Diagram_add_cs_link_cmd: STRING is		"Add client-supplier relation"
+	t_Diagram_add_inh_link_cmd: STRING is		"Add inheritance relation"
+	t_Diagram_include_class_cmd: STRING is		"Include class on diagram"
+	t_Diagram_insert_midpoint_cmd: STRING is	"Insert midpoint"
+	t_Diagram_change_color_cmd: STRING is		"Change class color"
+	t_Diagram_rename_class_locally_cmd: STRING is 	"Rename class locally"
+	t_Diagram_rename_class_globally_cmd: STRING is 	"Rename class globally"
+	t_Diagram_delete_client_link_cmd: STRING is 	"Delete client link"
+	t_Diagram_delete_inheritance_link_cmd: STRING is 	"Delete inheritance link"
+	t_Diagram_delete_class_cmd: STRING is		"Delete class"
+	t_Diagram_delete_cluster_cmd: STRING is		"Delete cluster"
+	t_Diagram_delete_midpoint_cmd: STRING is	"Delete midpoint"
+	t_Diagram_put_right_angles_cmd: STRING is	"Put right angles"
+	t_Diagram_put_one_handle_left_cmd: STRING is	"Put handle left"
+	t_Diagram_put_one_handle_right_cmd: STRING is	"Put handle right"
+	t_Diagram_put_two_handles_left_cmd: STRING is	"Put two handles left"
+	t_Diagram_put_two_handles_right_cmd: STRING is	"Put two handles right"
+	t_Diagram_remove_handles_cmd: STRING is		"Remove handles"
+	t_Diagram_change_depths_cmd: STRING is		"Change depths"
+	t_Diagram_zoom_in_cmd: STRING is			"Zoom in"
+	t_Diagram_zoom_out_cmd: STRING is			"Zoom out"
+
+feature -- Description texts
+
+	e_Add_exported_feature: STRING is	"Add a new feature to this dynamic library definition"
+	e_Bkpt_info: STRING is				"Display information about breakpoints"
+	e_Check_exports: STRING is			"Check the validity of the library definition"
+	e_Comment: STRING is				"Comment"
+	e_Copy: STRING is					"Copy"
+	e_Create_supplier_links: STRING is	"Create new client-supplier links"
+	e_Create_aggregate_supplier_links: STRING is "Create new aggregate client-supplier links"
+	e_Create_inheritance_links: STRING is "Create new inheritance links"
+	e_Cut: STRING is					"Cut"
+	e_Diagram_hole: STRING is			"Please drop a class or a cluster on this button %N%
+										%to view its diagram.%N%
+										%Use right click for both pick and drop actions."
+	e_Diagram_class_header: STRING is 	"Please drop a class on this button.%NUse right click for both%N%
+										%pick and drop actions."
+	e_Diagram_create_class: STRING is	"Please drop this button on the diagram.%N%
+										%Use right click for both%Npick and drop actions."
+	e_Diagram_delete_figure: STRING is	"Please drop a class, a cluster or a midpoint%N%
+										%on this button. Use right click for both%Npick and drop actions."
+	e_Diagram_delete_item: STRING is	"Please drop a class, a cluster or a link%N%
+										%on this button. Use right click for both%Npick and drop actions."
+	e_Display_error_help: STRING is		"Give help on compilation errors"
+	e_Display_system_info: STRING is	"Display information concerning current system"
+	e_Dotnet_import: STRING is			"ISE Assembly Manager"
+	e_Drop_an_error_stone: STRING is	"Pick the code of a compilation error (such as VEEN, VTCT,...)%N%
+										%and drop it in this dialog to have extended information about it."
+	e_Edit_exported_feature: STRING is	"Edit the properties of the selected feature"
+	e_Exec_debug: STRING is				"Run application and stop at breakpoints"
+	e_Exec_kill: STRING is				"Kill the debugged application"
+	e_Exec_into: STRING is				"Step into a routine"
+	e_Exec_no_stop: STRING is			"Run application without stopping at breakpoints"
+	e_Exec_out: STRING is				"Step out of a routine"
+	e_Exec_step: STRING is				"Execute the application one line at a time"
+	e_Exec_stop: STRING is				"Pause application at current point"
+	e_History_back: STRING is			"Back"
+	e_History_forth: STRING is			"Forward"
+	e_Minimize_all: STRING is			"Minimize all windows"
+	e_New_context_tool: STRING is		"Open a new context window"
+	e_New_dynamic_lib_definition: STRING is	"Create a new dynamic library definition"
+	e_New_editor: STRING is				"Open a new editor window"
+	e_New_window: STRING is				"New window"
+	e_Open_dynamic_lib_definition: STRING is "Open a dynamic library definition"
+	e_Open_file: STRING is				"Open a file"
+	e_Paste: STRING is					"Paste"
+	e_Pretty_print: STRING is			"Display an expanded view of objects"
+	e_Print: STRING is					"Print the currently edited text"
+	e_Project_settings: STRING is		"Change project settings"
+	e_Raise_all: STRING is				"Raise all windows"
+	e_Raise_all_unsaved: STRING is		"Raise all unsaved windows"
+	e_Redo: STRING is					"Redo"
+	e_Remove_class_cluster: STRING is	"Remove a class or a cluster from the system"
+	e_Remove_exported_feature: STRING is	"Remove the selected feature from this dynamic library definition"
+	e_Remove_object: STRING is			"Remove currently selected object"
+	e_Save: STRING is					"Save"
+	e_Save_call_stack: STRING is		"Save call stack to a text file"
+	e_Save_dynamic_lib_definition: STRING is "Save this dynamic library definition"
+	e_Show_class_cluster: STRING is		"Locate currently edited class or cluster"
+	e_Send_stone_to_context: STRING is	"Send current address to the context tool"
+	e_Separate_stone: STRING is			"Isolate the context tool from the other components"
+	e_Shell: STRING is					"Send to external editor"
+	e_Toggle_stone_management: STRING is "Isolate/Merge the context tool from/with other components"
+	e_Uncomment: STRING is				"Uncomment"
+	e_Undo: STRING is					"Undo"
+	e_Unify_stone: STRING is			"Merge the context tool with the other components"
+
+feature -- Wizard texts
+
+	wt_Profiler_welcome: STRING is "Welcome to the Profiler Wizard"
+	wb_Profiler_welcome: STRING is 
+				"Using this wizard you can analyze the result of a profiling.%N%
+				%%N%
+				%Profiling a system is used to analyze its run-time properties%N%
+				%and in particular the cost of each routine: number of calls,%N%
+				%time spent, etc. The profiler is a precious tool to understand%N%
+				%and optimize a system.%N%
+				%%N%
+				%To continue you need to have already executed your system%N%
+				%with the profiler activated. If this is not the case, please%N%
+				%refer to the documentation on how to profile a system.%N%
+				%%N%
+				%%N%
+				%To continue, click Next."
+
+	wt_Compilation_mode: STRING is "Compilation mode"
+	ws_Compilation_mode: STRING is "Select the Compilation mode."
+	wb_Compilation_mode: STRING is "Select the mode your profiled system has been compiled into."
+	
+	wt_Execution_Profile: STRING is "Execution Profile"
+	ws_Execution_Profile: STRING is "Reuse or Generate an Execution Profile."
+	wb_Execution_Profile: STRING is
+			"You can generate the Execution Profile from a Run-time Information Record%N%
+			%created by a profiler, or you can reuse an existing Execution Profile if you%N%
+			%have already generated one for this system."
+	
+	wt_Execution_Profile_Generation: STRING is "Execution Profile Generation"
+	ws_Execution_Profile_Generation: STRING is "Select a Run-time information record to generate the Execution profile"
+	wb_Execution_Profile_Generation: STRING is 
+				"Once an execution of an instrumented system has generated the proper file,%N%
+				%you must process it through a profile converter to produce the Execution%N%
+				%Profile. The need for the converter comes from the various formats that%N%
+				%profilers use to record run-time information during an execution.%N%
+				%%N%
+				%Provide the Run-time information record produced by the profiler and%N%
+				%select the profiler used to create this record.%
+				%%N%
+				%The Execution Profile will be generated under the file %"profinfo.pfi%"."
+				
+	wt_Switches_and_query: STRING is "Switches and Query"
+	ws_Switches_and_query: STRING is "Select the information you need and formulate your query."
+	
+	wt_Generation_error: STRING is "Generation Error"
+	wb_Click_back_and_correct_error: STRING is "Click Back if you can correct the problem or Click Abort."
+
+	wt_Runtime_information_record_error: STRING is "Runtime Information Record Error"
+	wb_Runtime_information_record_error (generation_path: STRING): STRING is
+		do
+			Result := 
+				"The file you have supplied as Runtime Information Record%N%
+				%does not exist or is not valid.%N%
+				%Do not forget that the Runtime Information Record has to%N%
+				%be located in the project directory:%N"
+				+ generation_path +
+				"%N%N%
+				%Please provide a valid file or execute your profiler again to%N%
+				%generate a valid Runtime Information Record.%N%
+				%%N%
+				%Click Back and select a valid file or Click Abort."
+		end
+		
+	wt_Execution_profile_error: STRING is "Execution Profile Error"
+	wb_Execution_profile_error: STRING is
+				"The file you have supplied as existring Execution Provide does%N%
+				%not exist or is not valid. Please provide a valid file or generate%N%
+				%a new one.%N%
+				%Click Back and select a valid file or choose the generate option."
+
+feature -- Metric constants (tooltips)
+
+	metric_this_archive: STRING is		"Archive..."
+	metric_this_system: STRING is		"System"
+	metric_this_cluster: STRING is		"Cluster"
+	metric_this_class: STRING is		"Class"
+	metric_this_feature: STRING is		"Feature"
+
+	metric_ignore: STRING is						"Ignore"
+
+	metric_all: STRING is							"All"
+	metric_classes: STRING is						"Classes"
+	metric_deferred_class: STRING is				"Deferred classes"
+	metric_effective_class: STRING is				"Effective"
+	metric_invariant_equipped: STRING is			"Invariant equipped"
+	metric_obsolete: STRING is						"Obsolete"
+	metric_no_invariant: STRING is					"No invariant"
+	metric_no_obsolete: STRING is					"Not obsolete"
+
+	metric_clusters: STRING is						"Clusters"
+
+	metric_compilations: STRING is					"Compilations"
+
+	metric_dependents: STRING is					"Dependents"
+	metric_clients: STRING is						"Clients"
+	metric_indirect_clients: STRING is				"Indirect clients"
+	metric_heirs: STRING is							"Heirs"
+	metric_indirect_heirs: STRING is				"Indirect heirs"
+	metric_parents: STRING is						"Parents"
+	metric_indirect_parents: STRING is				"Indirect parents"
+	metric_suppliers: STRING is						"Suppliers"
+	metric_indirect_suppliers: STRING is			"Indirect suppliers"
+	metric_self: STRING is							"Self"
+
+	metric_features: STRING is						"Features"
+	metric_attributes: STRING is					"Attributes"
+	metric_commands: STRING is						"Commands"
+	metric_deferred_feature: STRING is				"Deferred features"
+	metric_effective_feature: STRING is				"Effective features"
+	metric_exported: STRING is						"Exported"
+	metric_inherited: STRING is						"Inherited"
+	metric_functions: STRING is						"Functions"
+	metric_postcondition_equipped: STRING is		"Postcondition equipped"
+	metric_precondition_equipped: STRING is			"Precondition equipped"
+	metric_queries: STRING is						"Queries"
+	metric_routines: STRING is						"Routines"
+
+	metric_imm_features: STRING is					"Features: immediate"
+	metric_imm_attributes: STRING is				"Imm. attributes"
+	metric_imm_commands: STRING is					"Imm. commands"
+	metric_imm_deferred_feature: STRING is			"Imm. deferred features"
+	metric_imm_effective_feature: STRING is			"Imm. effective features"
+	metric_imm_exported: STRING is					"Imm. exported"
+	metric_imm_functions: STRING is					"Imm. functions"
+	metric_imm_postcondition_equipped: STRING is	"Imm. post equipped"
+	metric_imm_precondition_equipped: STRING is		"Imm. pre equipped"
+	metric_imm_queries: STRING is					"Imm. queries"
+	metric_imm_routines: STRING is					"Imm. routines"
+	metric_imm_inherited: STRING is					"Inherited"
+
+	metric_all_features: STRING is					"Features: all"
+	metric_all_attributes: STRING is				"All attributes"
+	metric_all_commands: STRING is					"All commands"
+	metric_all_deferred_feature: STRING is			"All deferred features"
+	metric_all_effective_feature: STRING is			"All effective features"
+	metric_all_exported: STRING is					"All exported"
+	metric_all_functions: STRING is					"All functions"
+	metric_all_postcondition_equipped: STRING is	"All post equipped"
+	metric_all_precondition_equipped: STRING is		"All pre equipped"
+	metric_all_queries: STRING is					"All queries"
+	metric_all_routines: STRING is					"All routines"
+
+	metric_imm_feature_assertions: STRING is		"Feature assertions: immediate"
+	metric_imm_precondition_clauses: STRING is		"Imm pre. clauses"
+	metric_imm_postcondition_clauses: STRING is		"Imm. post. clauses"
+
+	metric_all_feature_assertions: STRING is		"Feature assertions: all"
+	metric_all_precondition_clauses: STRING is		"All pre. clauses"
+	metric_all_postcondition_clauses: STRING is		"All post. clauses"
+
+	metric_formal_generics: STRING is				"Formal generics"
+	metric_formal_generics_constrained: STRING is	"Constrained"
+
+	metric_formals: STRING is						"Formals"
+	metric_imm_formals: STRING is					"Imm. formals"
+
+	metric_invariant_clauses: STRING is				"Invariant clauses"
+	metric_imm_invariant_clauses: STRING is			"Imm. invariant clauses"
+
+	metric_lines: STRING is							"Lines"
+
+	metric_locals: STRING is						"Locals"
+	metric_imm_locals: STRING is					"Imm. locals"
+
+--	metric_ancestors: STRING is						"Ancestors"
+--	metric_descendants: STRING is					"Descendents"
+--	metric_comment_lines: STRING is					"Comment lines"
+
+	metric_class_unit: STRING is			"Class"
+	metric_feature_unit: STRING is			"Feature"
+	metric_cluster_unit: STRING is			"Cluster"
+	metric_system_unit: STRING is			"System"
+	metric_line_unit: STRING is				"Line"
+	metric_contract_unit: STRING is			"Contract"
+	metric_contract_clause_unit: STRING is	"Contract clause"
+	metric_ratio_unit: STRING is			"Ratio"
+	metric_compilation_unit: STRING is		"Compilation"
+	metric_local_unit: STRING is			"Local"
+	metric_comment_unit: STRING is			"Comment"
+	
+	metric_calculate: STRING is				"Calculate"
+	metric_add: STRING is					"Add"
+	metric_delete: STRING is				"Delete"
+	metric_details: STRING is				"Show/hide details"
+	metric_new_metrics: STRING is			"New metrics"
+	metric_management: STRING is			"Metric management"
+	metric_archive: STRING is				"Archive"
 
 end -- class INTERFACE_NAMES
 	

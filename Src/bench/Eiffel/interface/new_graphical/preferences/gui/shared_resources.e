@@ -9,6 +9,9 @@ class
 
 inherit
 	EIFFEL_ENV
+		export
+			{NONE} all
+		end
 
 feature -- Access
 

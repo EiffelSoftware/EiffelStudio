@@ -6,7 +6,7 @@ inherit
 
 	ACCESS_B
 		redefine
-			make_byte_code, make_creation_byte_code
+			make_byte_code, make_creation_byte_code, generate_il
 		end
 
 feature
@@ -21,8 +21,58 @@ feature
 		deferred
 		end
 
-	routine_id: ROUTINE_ID
+	routine_id: INTEGER
 			-- Routine ID for the access (used in final mode generation)
+
+	written_in: INTEGER
+			-- Class ID where Current is written.
+
+	precursor_type : CL_TYPE_I
+			-- Type of parent in a precursor call if any.
+
+feature -- Setting
+
+	set_precursor_type (p_type : CL_TYPE_I) is
+			-- Assign `p_type' to `precursor_type'.
+		require
+			p_type_not_void: p_type /= Void
+			not_attribute: not is_attribute
+		do
+			precursor_type := p_type
+		ensure
+			precursor_set : precursor_type = p_type
+		end
+
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for feature call.
+		do
+			generate_il_call (False)
+		end
+
+	generate_il_call (invariant_checked: BOOLEAN) is
+			-- Generate IL code for feature call.
+			-- If `invariant_checked' generates invariant check
+			-- before call.
+		require
+			il_generation: System.il_generation
+		deferred
+		end
+
+	need_real_metamorphose (a_type: CL_TYPE_I): BOOLEAN is
+			-- Does call originate from a reference type?
+		require
+			a_type_not_void: a_type /= Void
+			a_type_has_associated_class: a_type.associated_class_type.associated_class /= Void
+		local
+			class_c: CLASS_C
+		do
+			class_c := a_type.associated_class_type.associated_class
+			Result := written_in /= class_c.class_id
+		end
+
+feature -- Byte code generation
 
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a feature call
@@ -41,6 +91,8 @@ feature
 			-- If not `flag', generate
 			-- an invariant check before the call.
 			-- Doesn't process the parameters
+		require
+			ba_not_void: ba /= Void
 		deferred
 		end
 
@@ -49,6 +101,8 @@ feature
 			-- an invariant check before the call.
 			-- if `meta', metamorphose the feature call.
 			-- Doesn't process the parameters
+		require
+			ba_not_void: ba /= Void
 		local
 			basic_type: BASIC_I
 			cl_type: CL_TYPE_I
@@ -59,7 +113,7 @@ feature
 			inst_cont_type: TYPE_I
 			metamorphosed: BOOLEAN
 			origin, offset: INTEGER
-			r_id: ROUTINE_ID
+			r_id: INTEGER
 			rout_info: ROUT_INFO
 		do
 			inst_cont_type := context_type
@@ -92,22 +146,22 @@ end
 					if associated_class.is_precompiled then
 						r_id := feat_tbl.item (feature_name).rout_id_set.first
 						rout_info := System.rout_info_table.item (r_id)
-						origin := rout_info.origin.id
+						origin := rout_info.origin
 						offset := rout_info.offset
 						make_end_precomp_byte_code (ba, flag, origin, offset)
 					else
 						real_feat_id := feat_tbl.item (feature_name).feature_id
-						static_type := basic_type.associated_reference.id.id - 1
+						static_type := basic_type.associated_reference.static_type_id - 1
 						make_end_byte_code (ba, flag, real_feat_id, static_type)
 					end
 				end
 			else
 				cl_type ?= inst_cont_type
-				if cl_type.is_expanded then
+				if cl_type.is_true_expanded then
 						-- Feature `type_id' of CL_TYPE_I needs the
 						-- the attribute `expanded' to be False
 					cl_type := clone (cl_type)
-					cl_type.set_is_expanded (False)
+					cl_type.set_is_true_expanded (False)
 				end
 				if is_first then 
 						--! Cannot melt basic calls hence is_first
@@ -124,12 +178,12 @@ end
 					r_id := associated_class.feature_table.item
 						(feature_name).rout_id_set.first
 					rout_info := System.rout_info_table.item (r_id)
-					origin := rout_info.origin.id
+					origin := rout_info.origin
 					offset := rout_info.offset
 					make_end_precomp_byte_code (ba, flag, origin, offset)
 				else
-					static_type := cl_type.associated_class_type.id.id - 1
-					real_feat_id := feature_id
+					static_type := cl_type.associated_class_type.static_type_id - 1
+					real_feat_id := real_feature_id
 					make_end_byte_code (ba, flag, real_feat_id, static_type)
 				end
 			end
@@ -138,6 +192,8 @@ end
 	make_end_byte_code (ba: BYTE_ARRAY; flag: BOOLEAN; 
 					real_feat_id: INTEGER; static_type: INTEGER) is
 			-- Make final portion of the standard byte code.
+		require
+			ba_not_void: ba /= Void
 		do
 			if 	is_first or flag then
 				ba.append (code_first)
@@ -156,6 +212,8 @@ end
 					origin: INTEGER; offset: INTEGER) is
 			-- Make final portion of the standard byte code
 			-- for a precompiled call.
+		require
+			ba_not_void: ba /= Void
 		do
 			if 	is_first or flag then
 				ba.append (precomp_code_first)
@@ -171,6 +229,8 @@ end
 
 	make_precursor_byte_code (ba: BYTE_ARRAY) is
 			-- Add dynamic type of parent, if necessary.
+		require
+			ba_not_void: ba /= Void
 		do
 			-- Nothing by default.
 		end
@@ -178,70 +238,25 @@ end
 	make_special_byte_code (ba: BYTE_ARRAY; basic_type: BASIC_I) is
 			-- Make byte code for special calls.
 			-- (To be redefined in FEATURE_B).
+		require
+			ba_not_void: ba /= Void
+			basic_type_not_void: basic_type /= Void
 		do
 			-- Do nothing
-		end
-
-	make_java_typecode (ba: BYTE_ARRAY) is
-			-- Add the sk_value of the type of this
-			-- call (true return type).
-		local
-			res_type_a: TYPE_A
-			res_type_i: TYPE_I
-			res_cname: STRING
-			f: FEATURE_I
-			ftype: FORMAL_A
-		do
-			if System.java_generation and then type /= Void then
-
-				f := context_type.type_a.associated_class.feature_table.item (feature_name)
-
-				res_type_i := Context.real_type (type)
-				res_type_a := res_type_i.type_a
-
-				if f /= Void then
-				   ftype ?= f.type
-				end
-
-				if ftype /= Void then
-					ba.append (Bc_java_rtype)
-
-					-- Output the name of the feature.
-					-- NOTE: May be removed later (for
-					--	   debugging purposes only)
-
-					ba.append_raw_string (feature_name)
-					ba.append_uint32_integer (res_type_i.sk_value)
-
-					if res_type_a /= Void and then
-								res_type_a.has_associated_class then
-						res_cname := res_type_a.associated_class.name
-					end
-
-					-- NOTE:
-					-- The name of the type is also provided for
-					-- debugging purposes. Will be removed soon.
-
-					if res_cname /= Void then
-						ba.append_raw_string (res_cname)
-					else
-						ba.append_raw_string ("-no type-")
-					end
-				end
-			else
-				-- Nothing: we're not generating Java byte-code.
-			end
 		end
 
 	real_feature_id: INTEGER is
 			-- The feature ID in INTEGER is not necessarily the same as
 			-- in the INTEGER_REF class. And likewise for other simple types.
+			-- But also for generic derivation which contains an expanded type
+			-- as a generic parameter.
 		local
 			associated_class: CLASS_C
 			feat_tbl: FEATURE_TABLE
 			instant_context_type: TYPE_I
 			basic_type: BASIC_I
-			static_type: INTEGER
+			cl_type: CL_TYPE_I
+			gen: GEN_TYPE_I
 		do
 			Result := feature_id
 			instant_context_type := context_type
@@ -249,13 +264,30 @@ end
 				instant_context_type.is_basic
 				and then not instant_context_type.is_bit
 			then
+					-- We perform a non-optimized call on a basic type
 				basic_type ?= instant_context_type
-				static_type := basic_type.associated_dtype
 					-- Process the feature id of `feature_name' in the
 					-- associated reference type
 				associated_class := basic_type.associated_reference.associated_class
 				feat_tbl := associated_class.feature_table
 				Result := feat_tbl.item (feature_name).feature_id
+			else
+					-- A generic parameter of current class has been derived
+					-- into an expanded type, so we need to find the `feature_id'
+					-- of the feature we want to call in the context of the 
+					-- expanded class.
+					-- FIXME: Manu 01/24/2000
+					-- We do the search even for a generic class which do not
+					-- have a generic parameter who has been derived into an expanded type
+					-- We could maybe find a way for not performing the check in the
+					-- above case.
+				gen ?= context.current_type
+				if gen /= Void and then instant_context_type.is_true_expanded then
+					cl_type ?= instant_context_type
+					associated_class := cl_type.associated_class_type.associated_class
+					feat_tbl := associated_class.feature_table
+					Result := feat_tbl.item (feature_name).feature_id
+				end
 			end
 		end
 
@@ -300,13 +332,19 @@ end
 		end
 
 	generate_access_on_type (reg: REGISTRABLE; typ: CL_TYPE_I) is
-			-- Generate access on `reg' in a `typ' context
+			-- Generate access on `reg' in a `typ' context\
+		require
+			reg_not_void: reg /= Void
+			typ_not_void: typ /= Void
 		do
 		end
 
 	generate_special_feature (reg: REGISTRABLE; basic_type: BASIC_I) is
 			-- Generate code for special routines (is_equal, copy ...).
 			-- (Only for feature calls)
+		require
+			reg_not_void: reg /= Void
+			basic_type_not_void: basic_type /= Void
 		do
 		end
 
@@ -363,6 +401,9 @@ end
 
 	generate_end (gen_reg: REGISTRABLE; class_type: CL_TYPE_I; is_class_separate: BOOLEAN) is
 			-- Generate final portion of C code.
+		require
+			gen_reg_not_void: gen_reg /= Void
+			class_type_not_void: class_type /= Void
 		local
 			buf: GENERATION_BUFFER
 		do
@@ -388,6 +429,11 @@ end
 	generate_metamorphose_end (gen_reg, meta_reg: REGISTRABLE; class_type: CL_TYPE_I;
 		basic_type: BASIC_I; buf: GENERATION_BUFFER) is
 			-- Generate final portion of C code.
+		require
+			gen_reg_not_void: gen_reg /= Void
+			meta_reg_not_void: meta_reg /= Void
+			basic_type_not_void: basic_type /= Void
+			buf_not_void: buf /= Void
 		local
 			is_class_separate: BOOLEAN
 		do

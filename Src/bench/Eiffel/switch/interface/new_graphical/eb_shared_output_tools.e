@@ -5,11 +5,8 @@ indexing
 
 class
 	EB_SHARED_OUTPUT_TOOLS
-		-- This class was created to improve the separation between text and graphic classes
-		-- actually, it still needs some improvements, because its operation is not understandable enough. 
-		-- maybe an error_window_cell should be created.
 
-feature
+feature -- Access
 
 	error_window: OUTPUT_WINDOW is
 			-- Error window that displays error message

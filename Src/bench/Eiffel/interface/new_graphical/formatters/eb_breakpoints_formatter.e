@@ -25,7 +25,7 @@ feature -- Initialization
 	make (a_tool: like tool) is
 			-- Initialize the command.
 		do
-			Precursor (a_tool)
+			Precursor {EB_FORMATTER} (a_tool)
 			do_flat := do_flat_in_breakpoints
 		end 
 
@@ -44,13 +44,13 @@ feature -- Formatting
 			if f_stone /= Void then
 				e_feature := f_stone.e_feature
 				if e_feature.is_debuggable then
-					precursor
+					Precursor {EB_FORMATTER}
 				else
 					edit_tool ?= tool
 					if tool /= Void then
 						edit_tool.format_list.text_format.format
 					end
-					if e_feature.body_id = Void then
+					if e_feature.body_index = Void then
 						message := Warning_messages.w_Cannot_debug_feature
 					elseif e_feature.is_external then
 						message := Warning_messages.w_Cannot_debug_externals
@@ -70,7 +70,8 @@ feature -- Formatting
 							-- Cannot debug routines from the DC-set.
 						message := Warning_messages.w_Cannot_debug_dynamics
 					end
-					create wd.make_default (tool.parent, Interface_names.t_Warning, message)
+					create wd.make_with_text (message)
+					wd.show_modal
 				end
 			end
 		end
@@ -84,7 +85,7 @@ feature -- Properties
 			-- Pixmap for the button.
 		once
 			Result := Pixmaps.bm_Breakpoint
-		end -- symbol
+		end -- Symbol
 
 feature -- Status setting
 

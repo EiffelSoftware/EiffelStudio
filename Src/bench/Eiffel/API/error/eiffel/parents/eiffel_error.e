@@ -16,7 +16,7 @@ inherit
 
 feature -- Properties
 
-	e_class: CLASS_C;
+	class_c: CLASS_C;
 			-- Class where the error is encountered
 
 feature -- Access
@@ -30,11 +30,11 @@ feature -- Access
 		end;
 
 	is_class_defined: BOOLEAN is
-			-- Is `e_class' defined for error?
+			-- Is `class_c' defined for error?
 		do
-			Result := e_class /= Void
+			Result := class_c /= Void
 		ensure
-			yes_implies_valid_class: Result implies e_class /= Void
+			yes_implies_valid_class: Result implies class_c /= Void
 		end;
 
 feature -- Output
@@ -43,7 +43,7 @@ feature -- Output
 		do
 			print_error_message (st);
 			st.add_string ("Class: ");
-			e_class.append_signature (st);
+			class_c.append_signature (st);
 			st.add_new_line;
 			build_explain (st)
 		end;
@@ -59,7 +59,7 @@ feature {COMPILER_EXPORTER}
 		require
 			valid_c: c /= Void
 		do
-			e_class := c
+			class_c := c
 		end;
 
 end -- class EIFFEL_ERROR

@@ -8,22 +8,23 @@ class BITS_SYMBOL_A
 inherit
 	BITS_A
 		rename
+			make as make_with_count,
 			base_class_id as class_id
 		redefine
-			solved_type, dump, append_to,
+			solved_type, dump, ext_append_to,
 			is_equivalent
 		end
 
 creation {COMPILER_EXPORTER}
-
 	make
 
 feature {NONE} -- Initialization
 
-	make (f: FEATURE_I) is
+	make (f: FEATURE_I; c: like bit_count) is
 		do
+			make_with_count (c)
 			feature_name := f.feature_name
-			class_id := System.current_class.id
+			class_id := System.current_class.class_id
 			rout_id := f.rout_id_set.first
 		end
 
@@ -31,7 +32,7 @@ feature -- Properties
 
 	feature_name: STRING
 
-	rout_id: ROUTINE_ID
+	rout_id: INTEGER
 
 feature -- Comparison
 
@@ -39,9 +40,9 @@ feature -- Comparison
 			-- Is `other' equivalent to the current object ?
 		do
 			Result := bit_count = other.bit_count and then
-				equal (rout_id, other.rout_id) and then
+				rout_id = other.rout_id and then
 				feature_name.is_equal (other.feature_name) and then
-				equal (class_id, other.class_id)
+				class_id = other.class_id
 		end
 
 feature -- Output
@@ -54,9 +55,10 @@ feature -- Output
 			Result.append (feature_name)
 		end
 
-	append_to (st: STRUCTURED_TEXT) is
+	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
 		do
-			st.add_string ("BIT ")
+			st.add (ti_Bit_class)
+			st.add_space
 			st.add_string (feature_name)
 		end
 
@@ -66,7 +68,7 @@ feature {COMPILER_EXPORTER}
 			-- Calculated type in function of the feauure `f' which has
 			-- the type Current and the feautre table `feat_table
 		local
-			origin_table: HASH_TABLE [FEATURE_I, ROUTINE_ID]
+			origin_table: HASH_TABLE [FEATURE_I, INTEGER]
 			anchor_feature: FEATURE_I
 			vtbt: VTBT
 			veen: VEEN
@@ -76,7 +78,7 @@ feature {COMPILER_EXPORTER}
 			int_value: INT_VALUE_I
 		do
 			origin_table := feat_table.origin_table
-			if not equal (System.current_class.id, class_id) then
+			if not (System.current_class.class_id = class_id) then
 				anchor_feature := System.class_of_id (class_id).feature_table
 								.item (feature_name)
 			else

@@ -69,27 +69,9 @@ feature {NONE}
 			Result := System.m_feature_server
 		end
  
-	M_rout_id_server: M_ROUT_ID_SERVER is
-			-- Server of mleted routine id array byte code
-		once
-			Result := System.m_rout_id_server
-		end
-
 	M_desc_server: M_DESC_SERVER is
 		once
 			Result := System.m_desc_server
-		end
- 
-	Rep_feat_server: REP_FEAT_SERVER is
-			-- Replicated features server
-		once
-			Result := System.Rep_feat_server
-		end
- 
-	Rep_server: REP_SERVER is
-			-- Replicated features server for classes
-		once
-			Result := System.Rep_server
 		end
  
 	Rep_depend_server: REP_DEPEND_SERVER is

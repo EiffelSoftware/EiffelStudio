@@ -8,18 +8,27 @@ feature {NONE}
 
 	Boolean_level: INTEGER is 3
 
-	Integer_level: INTEGER is 4
+	Integer_8_level: INTEGER is 4
+
+	Integer_16_level: INTEGER is 5
+
+	Wide_char_level: INTEGER is 6
+
+	Integer_level: INTEGER is 7
+	Integer_32_level: INTEGER is 7
 		
-	Real_level: INTEGER is 5
+	Real_level: INTEGER is 8
 
-	Pointer_level: INTEGER is 6
+	Pointer_level: INTEGER is 9
 
-	Double_level: INTEGER is 7
+	Integer_64_level: INTEGER is 10
 
-	Bits_level: INTEGER is 8
+	Double_level: INTEGER is 11
 
-	Expanded_level: INTEGER is 9
+	Bits_level: INTEGER is 12
 
-	Formal_level: INTEGER is 10
+	Expanded_level: INTEGER is 13
+
+	Formal_level: INTEGER is 14
 
 end

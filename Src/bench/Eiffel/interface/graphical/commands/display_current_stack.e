@@ -75,9 +75,7 @@ feature -- Execution
 			-- stopped in a breakpoint or an exception
 			-- occurred
 		local
-			mp: MOUSE_PTR;
 			stack_num: INTEGER;
-			app_cmd: APPLICATION_STOPPED_CMD
 		do
 			if Application.is_running and then Application.is_stopped then
 				stack_num := Application.current_execution_stack_number;
@@ -90,8 +88,9 @@ feature -- Execution
 					stack_num <= Application.number_of_stack_elements 
 				then
 					Application.set_current_execution_stack (stack_num);
-					!! app_cmd;
-					app_cmd.execute
+					Project_tool.show_current_stoppoint
+					Project_tool.display_exception_stack					
+					Project_tool.show_current_object
 				end
 			end
 		end

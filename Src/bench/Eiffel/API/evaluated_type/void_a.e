@@ -43,9 +43,9 @@ feature -- Output
 	dump: STRING is "Void"
 			-- Dumped trace
 
-	append_to (st: STRUCTURED_TEXT) is
+	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
 		do
-			st.add_string ("Void")
+			st.add (ti_Void_feature)
 		end
 
 feature {COMPILER_EXPORTER}
@@ -67,15 +67,6 @@ feature {COMPILER_EXPORTER}
 			-- Do nothing
 		ensure then
 			False
-		end
-
-feature -- Storage information for EiffelCase
-
-	storage_info_with_name, storage_info (classc: CLASS_C): S_TYPE_INFO is
-			-- Storage info for Current type in class `classc'
-		do
-		ensure then
-			not_to_be_called: False
 		end
 
 end -- class VOID_A

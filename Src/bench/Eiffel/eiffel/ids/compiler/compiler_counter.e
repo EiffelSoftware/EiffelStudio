@@ -1,56 +1,19 @@
-deferred class
+class
 	COMPILER_COUNTER
 
 inherit
-	HASH_TABLE [COMPILER_SUBCOUNTER, INTEGER]
-		rename
-			make as ht_make
-		redefine
-			item
-		end
-
 	SHARED_WORKBENCH
-		undefine
-			is_equal, copy
-		end
 
 	COMPILER_EXPORTER
-		undefine
-			is_equal, copy
-		end
+
+create
+	make
 
 feature -- Initialization
 
 	make is
 			-- Create a new counter.
-		local
-			compilation_id: INTEGER
 		do
-			ht_make (Initial_size);
-			compilation_id := System.compilation_id;
-			current_subcounter := new_subcounter (compilation_id);
-			put (current_subcounter, compilation_id)
-		end
-
-	init_counter is
-			-- Renumber ids already generated so far and continue
-			-- generation from there.
-		local
-			compilation_id: INTEGER
-			new_offset: INTEGER
-		do
-			compilation_id := System.compilation_id;
-			new_offset := total_count;
-			current_subcounter := new_subcounter (compilation_id);
-			current_subcounter.set_offset (new_offset);
-			put (current_subcounter, compilation_id)
-		end
-
-	new_subcounter (compilation_id: INTEGER): COMPILER_SUBCOUNTER is
-			-- New subcounter associated with `compilation_id'
-		deferred
-		ensure
-			new_subcounter_not_void: Result /= Void
 		end
 
 	append (other: like Current) is
@@ -58,52 +21,38 @@ feature -- Initialization
 			-- renumber the resulting set of ids.
 		require
 			other_not_void: other /= Void
-		local
-			counter: COMPILER_SUBCOUNTER;
-			nb, compilation_id: INTEGER
 		do
-			nb := current_subcounter.offset;
-			from other.start until other.after loop
-				compilation_id := other.key_for_iteration;
-				if not has (compilation_id) then
-					counter := other.item_for_iteration;
-					counter.set_offset (nb);
-					nb := nb + counter.count;
-					put (counter, compilation_id)
-				end;
-				other.forth
-			end;
-			current_subcounter.set_offset (nb)
+			precompiled_offset := (precompiled_offset).max (other.count)
+			count := precompiled_offset
 		end
 
 feature -- Access
 
-	next_id: COMPILER_ID is
+	next_id: INTEGER is
 			-- Next id
 		do
-			Result := current_subcounter.next_id
+			count := count + 1
+			Result := count
 		ensure
-			id_not_void: Result /= Void
+			id_not_void: Result > 0
 		end
 
-	item (i: INTEGER): like current_subcounter is
-			-- Subcounter associted with compilation `i'
-		do
-			Result ?= {HASH_TABLE} Precursor (i)
-		end
+	precompiled_offset: INTEGER
+			-- Last Ids retrieved from precompiled library.
+
+	count: INTEGER
+			-- Number of ids in system.
 
 	current_count: INTEGER is
-			-- Number of ids generated during the current compilation unit
-			-- (i.e. do not count precompiled ids when the system relies on
-			-- precompiled library)
+			-- Number of ids generated during current compilation.
 		do
-			Result := current_subcounter.count
+			Result := count - precompiled_offset
 		end
- 
-	total_count: INTEGER is
-			-- Total number of ids generated
+
+	is_precompiled (an_id: INTEGER): BOOLEAN is
+			-- Is `an_id' a precompiled id?
 		do
-			Result := current_subcounter.offset + current_subcounter.count
+			Result := an_id <= precompiled_offset
 		end
 
 feature -- Setting
@@ -112,19 +61,17 @@ feature -- Setting
 			-- Reset the counter so that next geneareted id
 			-- will be `value' + 1
 		do
-			current_subcounter.set_value (value)
+			count := value
 		end
 
-feature {NONE} -- Implementation
-
-	current_subcounter: COMPILER_SUBCOUNTER;
-			-- Current subcounter
-
-	Initial_size: INTEGER is 5;
-			-- Hash table initial size
-
-invariant
-
-	current_subcounter_not_void: current_subcounter /= Void
+	set_precompiled_offset (v: INTEGER) is
+			-- Assign `v' to `precompiled_offset'.
+		require
+			valid_value: v > 0
+		do
+			precompiled_offset := v
+		ensure
+			precompiled_offset_set: precompiled_offset = v
+		end
 
 end -- class COMPILER_COUNTER

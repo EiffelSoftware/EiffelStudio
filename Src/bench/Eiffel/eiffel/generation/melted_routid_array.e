@@ -12,18 +12,6 @@ inherit
 		end
 
 creation
-
 	make
-
-feature
-
-	class_id: CLASS_ID;
-			-- Id of the associated class type
-
-	set_class_id (i: CLASS_ID) is
-			-- Assign `i' to `class_id'.
-		do
-			class_id := i;
-		end;
 
 end

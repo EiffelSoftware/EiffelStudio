@@ -58,7 +58,7 @@ feature {NONE} -- Implementation
 			else
 				-- First click on open
 				if text_window.changed then
-					warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
+					warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed (Void),
 						Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
 				else
 					loose_changes

@@ -31,7 +31,7 @@ feature {NONE}
 		end
 
 	check_license, init_license: BOOLEAN is
-			-- Initialization of the EiffelBench license
+			-- Initialization of the $EiffelGraphicalCompiler$ license
 		do
 			license.get_license
 			Result := license.licensed

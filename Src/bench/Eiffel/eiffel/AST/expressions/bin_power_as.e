@@ -12,11 +12,12 @@ inherit
 			balanced
 		end
 
-feature -- Properties
+	PREFIX_INFIX_NAMES
+		rename
+			power_infix as infix_function_name
+		end
 
-	infix_function_name: STRING is "_infix_power"
-			-- Internal name of the infixed feature associated to the
-			-- binary expression
+feature -- Properties
 
 	balanced: BOOLEAN is False
 			-- Is the operation balanced ?

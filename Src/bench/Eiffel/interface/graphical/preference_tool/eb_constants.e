@@ -7,7 +7,7 @@ class EB_CONSTANTS
 
 inherit
 	TTY_CONSTANTS
-
+	
 feature {NONE} -- Resources
 
 	Graphical_resources: GRAPHICAL_CATEGORY is

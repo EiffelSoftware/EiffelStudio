@@ -5,7 +5,7 @@ inherit
 	VISIBLE_I
 		redefine
 			is_visible, mark_visible, has_visible,
-			generate_cecil_table, nb_visible, make_byte_code
+			generate_cecil_table, make_byte_code
 		end;
 	SHARED_AST_CONTEXT;
 	SHARED_SERVER;
@@ -14,8 +14,9 @@ inherit
 	
 feature
 
-	is_visible (feat: FEATURE_I): BOOLEAN is
-			-- Is the feature `feat' visible for external code ?
+	is_visible (feat: FEATURE_I; class_id: INTEGER): BOOLEAN is
+			-- Is feature name `feat_name' visible in context 
+			-- of class `class_id'?
 		local
 			creators: EXTEND_TABLE [EXPORT_I, STRING]
 		do
@@ -24,7 +25,7 @@ feature
 					-- If it is a creation routine, we can export
 					-- it, so that we match the Eiffel way to create
 					-- an object.
-				creators := feat.access_class.creators
+				creators := System.class_of_id (class_id).creators
 				if creators /= Void then
 					Result := creators.has (feat.feature_name)
 				end
@@ -37,16 +38,18 @@ feature
 	mark_visible (remover: REMOVER; feat_table: FEATURE_TABLE) is
 			-- Mark visible features from `feat_table'.
 		local
-			a_feature: FEATURE_I;
+			a_feature: FEATURE_I
+			class_id: INTEGER
 		do
 			from
+				class_id := feat_table.feat_tbl_id
 				feat_table.start
 			until
 				feat_table.after
 			loop
 				a_feature := feat_table.item_for_iteration;
 
-				if is_visible (a_feature) then
+				if is_visible (a_feature, class_id) then
 debug ("DEAD_CODE_REMOVAL")
 	io.error.putstring (generator);
 	io.error.putstring (": Recording feature ");
@@ -85,7 +88,7 @@ end;
 			prepare_table (a_class.feature_table);
 
 				-- Generation
-			Cecil1.generate_name_table (buffer, a_class.id);
+			Cecil1.generate_name_table (buffer, a_class.class_id);
 			if byte_context.final_mode then
 				from
 					types := a_class.types;
@@ -100,9 +103,9 @@ end;
 					types.forth
 				end;
 			elseif a_class.is_precompiled then
-				Cecil1.generate_precomp_workbench (buffer, a_class.id);
+				Cecil1.generate_precomp_workbench (buffer, a_class.class_id);
 			else
-				Cecil1.generate_workbench (buffer, a_class.id);
+				Cecil1.generate_workbench (buffer, a_class.class_id);
 			end;
 		end;
 
@@ -117,11 +120,13 @@ end;
 	prepare_table (feat_table: FEATURE_TABLE) is
 			-- Prepare hash table
 		local
-			a_feature: FEATURE_I;
-			a_class: CLASS_C;
-			nb: INTEGER;
+			a_feature: FEATURE_I
+			a_class: CLASS_C
+			class_id: INTEGER
+			nb: INTEGER
 		do
 			a_class := feat_table.associated_class;
+			class_id := a_class.class_id
 			Cecil1.wipe_out;
 
 			from
@@ -132,7 +137,7 @@ end;
 				a_feature := feat_table.item_for_iteration;
 				if
 					not (a_feature.is_deferred or else a_feature.is_attribute)
-					and then is_visible (a_feature)
+					and then is_visible (a_feature, class_id)
 				then
 					nb := nb + 1;
 				end;
@@ -142,6 +147,7 @@ end;
 				-- Insertion in the cecil table of the effective features
 			from
 				Cecil1.init (prime_size (nb));
+				a_class.set_visible_table_size (Cecil1.capacity)
 				feat_table.start
 			until
 				feat_table.after
@@ -149,32 +155,9 @@ end;
 				a_feature := feat_table.item_for_iteration;
 				if
 					not (a_feature.is_deferred or else a_feature.is_attribute)
-					and then is_visible (a_feature)
+					and then is_visible (a_feature, class_id)
 				then
-					Cecil1.put (a_feature, real_name (a_feature));
-				end;
-				feat_table.forth;
-			end;
-		end;
-
-	nb_visible (a_class: CLASS_C): INTEGER is
-			-- Number of visible features from the class `a_class'.
-		local
-			feat_table: FEATURE_TABLE;
-			a_feature: FEATURE_I;
-		do
-			feat_table := a_class.feature_table;
-
-			from
-				feat_table.start
-			until
-				feat_table.after
-			loop
-				a_feature := feat_table.item_for_iteration;
-				if 	not (a_feature.is_deferred or else a_feature.is_attribute)
-					and then is_visible (a_feature)
-				then
-					Result := Result + 1;
+					Cecil1.put (a_feature, real_name (a_feature, class_id));
 				end;
 				feat_table.forth;
 			end;

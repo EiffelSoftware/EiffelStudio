@@ -3,13 +3,14 @@
 class EXTERNAL_I 
 
 inherit
-
 	PROCEDURE_I
+		export
+			{NONE} set_external_name
 		redefine
 			transfer_to, equiv, update_api,
-			melt, execution_unit, generate,
+			melt, generate,
 			access, is_external, new_rout_entry, valid_body_id,
-			can_be_inlined, set_renamed_name
+			set_renamed_name, external_name, undefinable
 		end;
 	
 feature -- Attributes for externals
@@ -64,6 +65,12 @@ feature -- Routines for externals
 			end
 		end
 
+	undefinable: BOOLEAN is
+			-- Is an external undefinable?
+		do
+			Result := System.il_generation and then Precursor {PROCEDURE_I}
+		end
+
 	set_extension (e: like extension) is
 			-- Assign `e' to `extension'.
 		do
@@ -89,31 +96,26 @@ feature -- Incrementality
 		end
 
 	equiv (other: FEATURE_I): BOOLEAN is
-		local
-			other_ext: EXTERNAL_I
 		do
-			Result := {PROCEDURE_I} precursor (other) and then freezing_equiv (other)
+			Result := {PROCEDURE_I} Precursor (other) and then freezing_equiv (other)
 		end
 
 feature 
 
-	alias_name: STRING;
+	alias_name: STRING is
 			-- Alias for the external
+		do
+			Result := extension.alias_name
+		end
 
 	encapsulated: BOOLEAN;
 			-- Has the feature some assertion declared ?
-
-	set_alias_name (s: STRING) is
-			-- Assign `s' to `alias_name'.
-		do
-			alias_name := s;
-		end;
 
 	set_renamed_name (s: STRING) is
 			-- Assign `s' to `featurename'.
 		do
 			if alias_name = Void then
-				alias_name := feature_name
+				extension.set_alias_name (feature_name)
 			end
 			feature_name := s
 		end
@@ -148,11 +150,10 @@ feature
 	external_name: STRING is
 			-- External name
 		do
-			if alias_name = Void then
-				Result := feature_name;
-			else
-				Result := alias_name;
-			end;
+			Result := alias_name
+			if Result = Void then
+				Result := feature_name
+			end
 		end;
 
 	access (access_type: TYPE_I): ACCESS_B is
@@ -174,7 +175,6 @@ feature
 			-- Transfer datas form `other' into Current
 		do
 			{PROCEDURE_I} Precursor (other);
-			other.set_alias_name (alias_name);
 			other.set_encapsulated (encapsulated);
 			other.set_extension (extension);
 		end;
@@ -204,7 +204,7 @@ feature
 			Result := rep;
 		end;
 
-	unselected (in: CLASS_ID): FEATURE_I is
+	unselected (in: INTEGER): FEATURE_I is
 			-- Unselected feature
 		local
 			unselect: D_EXTERNAL_I
@@ -219,7 +219,7 @@ feature
 				-- Generate feature written in `class_type' in `buffer'.
 		require else
 			valid_buffer: buffer /= Void;
-			written_in_type: equal (class_type.associated_class.id, generation_class_id);
+			written_in_type: class_type.associated_class.class_id = generation_class_id
 			not_deferred: not is_deferred;
 		local
 			byte_code: BYTE_CODE;
@@ -229,11 +229,12 @@ feature
 					-- then encapsulated is True; otherwise do nothing
 				if encapsulated then
 					generate_header (buffer);
-					byte_code := Byte_server.disk_item (body_id);
+					byte_code := Byte_server.disk_item (body_index);
 						-- Generation of C code for an Eiffel feature written in
 						-- the associated class of the current type.
 					byte_context.set_byte_code (byte_code);
 						-- Generation of the C routine
+					byte_context.set_current_feature (Current)
 					byte_code.analyze;
 					byte_code.set_real_body_id (real_body_id);
 					byte_code.generate;
@@ -252,38 +253,20 @@ feature
 			Result := encapsulated;
 		end;
 
-	execution_unit (cl_type: CLASS_TYPE): EXECUTION_UNIT is
-			-- Execution unit
-		do
-			if is_cpp or is_special then
-				!! Result.make (cl_type, Current);
-			elseif has_include_list then
-				!EXT_INCL_EXEC_UNIT! Result.make (cl_type, Current)
-			else
-				!EXT_EXECUTION_UNIT! Result.make (cl_type, Current)
-			end;
-		end; 
-
-	melt (dispatch: DISPATCH_UNIT; exec: EXECUTION_UNIT) is
+	melt (exec: EXECUTION_UNIT) is
 			-- Generate byte code for the current feature
 		do
-				-- No byte code for externals
-			Dispatch_table.mark_melted (dispatch);
-				-- An external cannot be melted: no insertion of `exec' in
-				-- `Execution_table'.
-		end;
-
-feature -- Inlining
-
-	can_be_inlined: BOOLEAN is False
-			-- An external feature cannot be inlined.
+			check
+				False
+			end
+		end
 
 feature {NONE} -- Api
 	
 	update_api (f: E_ROUTINE) is
 			-- Update the attributes of api feature `f'.
 		do
-			{PROCEDURE_I} precursor (f)
+			{PROCEDURE_I} Precursor (f)
 			f.set_external (True)
 		end
 

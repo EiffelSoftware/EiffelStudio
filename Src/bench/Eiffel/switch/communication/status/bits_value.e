@@ -8,7 +8,7 @@ indexing
 class BITS_VALUE
 
 inherit
-	DEBUG_VALUE
+	ABSTRACT_DEBUG_VALUE
 		rename
 			set_hector_addr as get_value,
 			min as comp_min,
@@ -84,9 +84,55 @@ feature -- Output
 			st.add_classi (dynamic_class.lace_class, "BIT");
 			st.add (ti_Space);
 			st.add_int (value.count - 1);
-			st.add_string (" = ");
+			st.add_string (Equal_sign);
 			st.add_string (value)
 		end;
+
+	output_value: STRING is
+			-- Return a string representing `Current'.
+		do
+			Result := clone (value)
+		end
+
+	type_and_value: STRING is
+			-- Return a string representing `Current'.
+		local
+			cnt: INTEGER
+		do
+			cnt := value.count
+			create Result.make (cnt + 15)
+			Result.append (Bit_label)
+			Result.append ((cnt - 1).out)
+			Result.append (Equal_sign)
+			Result.append (value)
+		end
+
+	Equal_sign: STRING is " = "
+
+	Bit_label: STRING is "BIT "
+
+	append_value (st: STRUCTURED_TEXT) is
+			-- Append the value of `Current' to `st'. (Useful for pretty print).
+		do
+			st.add_string (value)
+		end
+
+	expandable: BOOLEAN is False
+			-- Does `Current' have sub-items? (Is it a non void reference, a special object, ...)
+
+	children: LIST [ABSTRACT_DEBUG_VALUE] is
+			-- List of all sub-items of `Current'. May be void if there are no children.
+			-- Generated on demand.
+		do
+			Result := Void
+		end
+
+	kind: INTEGER is
+			-- Actual type of `Current'. cf possible codes underneath.
+			-- Used to display the corresponding icon.
+		do
+			Result := Immediate_value
+		end
 
 feature {NONE} -- Implementation
 

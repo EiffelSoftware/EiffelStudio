@@ -159,7 +159,7 @@ feature -- Standard Interface
 			!! edit_menu.make (Interface_names.m_Edit, menu_bar)
 			!! format_menu.make (Interface_names.m_Formats, menu_bar)
 			!! special_menu.make (Interface_names.m_Special, menu_bar)
-			!! window_menu.make (Interface_names.m_Windows, menu_bar)
+			!! window_menu.make (Interface_names.m_window, menu_bar)
 			build_help_menu
 		end
 

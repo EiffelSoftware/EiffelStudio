@@ -17,6 +17,15 @@ feature -- Initialization
 			retrieve_init
 		end
 
+feature -- Disposal
+
+	dispose is
+		external
+			"C | %"pstore.h%""
+		alias
+			"parsing_store_dispose"
+		end
+
 feature {NONE} -- Externals
 
 	store_init is

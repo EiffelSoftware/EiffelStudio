@@ -120,7 +120,6 @@ feature -- Access
 			-- Update the resource users from
 			-- `associated_category'.
 		local
-			mod_res: MODIFIED_RESOURCE
 			res: like resources
 		do
 			from

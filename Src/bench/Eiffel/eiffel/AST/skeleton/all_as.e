@@ -16,13 +16,6 @@ feature {AST_FACTORY} -- Initialization
 			-- Do nothing.
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-		end
-
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is

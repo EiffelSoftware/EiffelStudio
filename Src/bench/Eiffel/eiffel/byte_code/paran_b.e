@@ -10,7 +10,8 @@ inherit
 			has_gcable_variable, has_call, make_byte_code,
 			is_unsafe, optimized_byte_node,
 			calls_special_features, size,
-			pre_inlined_code, inlined_byte_code
+			pre_inlined_code, inlined_byte_code,
+			generate_il
 		end;
 	
 feature 
@@ -113,6 +114,14 @@ feature
 				expr.print_register;
 			end;
 		end;
+
+feature -- IL code generation
+
+	generate_il is
+			-- Generate IL code for parenthesized expression
+		do
+			expr.generate_il
+		end
 
 feature -- Byte code generation
 

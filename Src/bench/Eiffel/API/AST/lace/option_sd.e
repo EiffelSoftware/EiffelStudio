@@ -1,9 +1,7 @@
 indexing
-
-	description: 
-		"Description for option supported by Eiffel compiler 4";
+	description: "Description for option supported by Eiffel compiler 4";
 	date: "$Date$";
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 deferred class OPTION_SD
 
@@ -19,13 +17,6 @@ feature {LACE_AST_FACTORY} -- Initialization
 			-- Create a new OPTION AST node.
 		do
 			-- Do nothing.
-		end
-
-feature {NONE} -- Initialization 
-
-	set is
-			-- Yacc initialization
-		do
 		end
 
 feature -- Properties
@@ -86,6 +77,31 @@ feature -- Free options properties
 		do
 			-- Do nothing
 		end;
+
+feature -- Duplication
+
+	duplicate: like Current is
+			-- Duplicate current object.
+		do
+				-- Nothing to be duplicated, so we do a basic clone.
+			Result := clone (Current)
+		end
+
+feature -- Comparison
+
+	same_as (other: like Current): BOOLEAN is
+			-- Is `other' same as Current?
+		do
+			Result := other /= Void and then option_name.is_equal (other.option_name)
+		end
+
+feature -- Saving
+
+	save (st: GENERATION_BUFFER) is
+			-- Save current in `st'.
+		do
+			st.putstring (option_name)
+		end
 
 feature {COMPILER_EXPORTER} -- Update
 

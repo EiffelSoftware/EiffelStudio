@@ -143,11 +143,11 @@ feature -- User interface
 			t_name := clone (t_w.eb_shell.icon_name)
 			!! tmp.make (t_w)
 
--- FIXME JOC: still need to decide what to do.
---    			if t_name /= Void and then is_tool_opened (t_name,t_w)
---   			then
+				-- If two classes are opened on the same class, the new opened class
+				-- is marked as read-only
+--			if t_name /= Void and then is_tool_read_only (t_name,t_w) then
 --				tmp.set_read_only
---  			end
+--			end
 
 			from
 				start
@@ -179,24 +179,43 @@ feature -- User interface
 
 feature -- Basic operations
 
-	is_tool_opened(tool_name:STRING; t_w:TOOL_W):BOOLEAN is
+	is_tool_read_only (tool_name: STRING; t_w: TOOL_W): BOOLEAN is
 		local
 			tmp:STRING
+			class_w: CLASS_W
+			classc_stone: CLASSC_STONE
+			classi_stone: CLASSI_STONE
 		do
-			Result := False
-			from
-				start
-			until
-				after or Result
-			loop
-				if item.tool /= t_w then
-					tmp := clone(item.value)
-					tmp.to_upper
-					if tmp /= Void and then tmp.is_equal(tool_name) then
-						Result := True
+			class_w ?= t_w
+			if class_w /= Void then
+				classc_stone ?= class_w.stone
+				if classc_stone /= Void then
+					Result := classc_stone.e_class.lace_class.is_read_only
+				else
+					classi_stone ?= class_w.stone
+					if classi_stone /= Void then
+						Result := classi_stone.class_i.is_read_only
 					end
 				end
-				forth	
+			end
+
+			if not Result then
+				from
+					start
+				until
+					after or Result
+				loop
+					if item.tool /= t_w then
+						tmp := clone(item.value)
+						tmp.to_upper
+						if tmp.substring_index ("[READ-ONLY]", 1) = 0 then
+							if tmp /= Void and then tmp.is_equal(tool_name) then
+								Result := True
+							end
+						end
+					end
+					forth	
+				end
 			end
 		end
 
@@ -209,7 +228,6 @@ feature -- Basic operations
 			arg_string: STRING
 			local_name:STRING
 			local_tool_w:TOOL_W
-			active_tool_editors: LINKED_LIST[TOOL_W]
 			selection: SCROLLABLE_LIST_SELECTOR_ELEMENT
 		do
 			arg_string ?= argument

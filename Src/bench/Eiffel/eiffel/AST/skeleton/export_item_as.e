@@ -23,15 +23,6 @@ feature {AST_FACTORY} -- Initialization
 			features_set: features = f
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			clients ?= yacc_arg (0)
-			features ?= yacc_arg (1)
-		end
-
 feature -- Attributes
 
 	clients: CLIENT_AS

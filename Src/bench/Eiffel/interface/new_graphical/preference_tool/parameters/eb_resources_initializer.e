@@ -1,7 +1,7 @@
 indexing
 	description:
 		"Class used for the initialization of all resources %
-		%used in EiffelBench"
+		%used in $EiffelGraphicalCompiler$"
 	date: "$Date$"
 	revision: "$Revision$"
 

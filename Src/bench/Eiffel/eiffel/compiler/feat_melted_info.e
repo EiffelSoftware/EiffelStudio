@@ -1,54 +1,69 @@
--- Meting information for a feature
+indexing
+	description: "Information about external feature recently added to system"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class FEAT_MELTED_INFO
 
 inherit
-
 	MELTED_INFO
+		redefine
+			make
+		end
 
 creation
-
 	make
 
-feature
+feature {NONE} -- Initialization
 
-	feature_name: STRING;
-			-- Feature to melt
-
-	make (f: FEATURE_I) is
+	make (f: FEATURE_I; associated_class: CLASS_C) is
 			-- Initialization
-		require
-			good_argument: f /= Void
 		do
-			feature_name := f.feature_name;
-		end;
+			Precursor {MELTED_INFO} (f, associated_class)
+			is_encapsulated_call := f.can_be_encapsulated
+			feature_name := f.feature_name
+		end
+
+feature {NONE} -- Implementation
+
+	feature_name: STRING
+			-- Name of current_feature
+
+	is_encapsulated_call: BOOLEAN
+			-- Is Current a feature encapsulation of something that we usually do
+			-- not generate (eg attribute)?
+
+	internal_execution_unit (class_type: CLASS_TYPE): EXECUTION_UNIT is
+			-- Create new EXECUTION_UNIT corresponding to Current type.
+		local
+			res: TYPE_I
+			gen_type: GEN_TYPE_I
+		do
+			if is_encapsulated_call then
+				create {ENCAPSULATED_EXECUTION_UNIT} Result.make (class_type)
+			else
+				create Result.make (class_type)
+			end
+			Result.set_body_index (body_index)
+			Result.set_pattern_id (pattern_id)
+			Result.set_written_in (written_in)
+
+			res := result_type
+			if res.has_formal then
+				gen_type ?= class_type.type
+				res := res.instantiation_in (gen_type) 
+			end
+
+			Result.set_type (res.c_type)
+		end
 
 	associated_feature (feat_tbl: FEATURE_TABLE): FEATURE_I is
 			-- Associated feature
 		do
 			check
 				consistency: feat_tbl.has (feature_name)
-			end;
+			end
 			Result := feat_tbl.item (feature_name)
-		end;
-
-	is_valid (associated_class: CLASS_C): BOOLEAN is
-			-- Is the melted info still valid ?
-		local
-			feat_tbl: FEATURE_TABLE;
-			f: FEATURE_I;
-		do
-			feat_tbl := associated_class.feature_table;
-			f := feat_tbl.item (feature_name)
-			Result := f /= Void and then
-				(not f.is_attribute or else f.to_generate_in (associated_class))
-debug ("ACTIVITY")
-	io.error.putstring ("FEAT_MELTED_INFO is_valid (");
-	io.error.putstring (feature_name);
-	io.error.putstring ("): ");
-	io.error.putbool (Result);
-	io.error.new_line;
-end;
-		end;
+		end
 
 end

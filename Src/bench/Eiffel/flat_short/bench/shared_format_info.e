@@ -31,6 +31,12 @@ feature -- Properties
 			Result := order_same_as_text_bool.item
 		end
 
+	is_with_breakable: BOOLEAN is
+			-- Do we show breakable position in class format?
+		do
+			Result := is_with_breakable_bool.item
+		end
+
 feature -- Setting
 
 	set_in_bench_mode is
@@ -73,6 +79,22 @@ feature -- Setting
 			not_in_assertion: not in_assertion
 		end
 
+	set_is_with_breakable is
+			-- Set is_with_breakable to True
+		do
+			is_with_breakable_bool.set_item (True)
+		ensure
+			is_with_breakable: is_with_breakable
+		end
+
+	set_is_without_breakable is
+			-- Set is_with_breakable to False
+		do
+			is_with_breakable_bool.set_item (False)
+		ensure
+			is_without_breakable: not is_with_breakable
+		end
+
 	reset_format_booleans is
 			-- Reset all booleans to false.
 		do
@@ -92,25 +114,31 @@ feature {NONE}
 	is_short_bool: BOOLEAN_REF is
 			-- Cell to store `is_short' flag
 		once
-			!! Result
+			create Result
 		end
 
 	in_bench_mode_bool: BOOLEAN_REF is
 			-- Cell to store `in_bench_mode' flag
 		once
-			!! Result
+			create Result
 		end
 
 	in_assertion_bool: BOOLEAN_REF is
 			-- Cell to store `in_assertion' flag
 		once
-			!! Result
+			create Result
 		end
 
 	order_same_as_text_bool: BOOLEAN_REF is
 			-- Cell to store `order_same_as_text' flag
 		once
-			!! Result
+			create Result
+		end
+
+	is_with_breakable_bool: BOOLEAN_REF is
+			-- Cell to store `is_with_breakable' flag
+		once
+			create Result
 		end
 
 end -- class SHARED_FORMAT_INFO

@@ -8,7 +8,7 @@ class E_PROJECT
 inherit
 	EIFFEL_ENV
 
-	BENCH_COMMAND_EXECUTOR
+	COMMAND_EXECUTOR
 
 	PROJECT_CONTEXT
 
@@ -22,6 +22,8 @@ inherit
 	SHARED_ERROR_HANDLER
 
 	SHARED_APPLICATION_EXECUTION
+
+	SHARED_EIFFEL_PARSER
 
 feature -- Initialization
 
@@ -39,58 +41,90 @@ feature -- Initialization
 		do
 			project_directory := project_dir
 			Workbench.make
-			Workbench.init
  			Execution_environment.change_working_directory (project_directory.name)
 			retrieve
+			if not error_occurred then
+				manager.on_project_create
+				manager.on_project_loaded
+			end
 		ensure
   			initialized_if_no_error: not error_occurred implies initialized
 		end
 
-	make_new (project_dir: PROJECT_DIRECTORY; deletion_requested: BOOLEAN) is
+	make_new (
+		project_dir: PROJECT_DIRECTORY
+		deletion_requested: BOOLEAN
+		deletion_agent: PROCEDURE [ANY, TUPLE]
+		cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
+	) is
 			-- Create an Eiffel Project. 
 			-- Also create, if needed, the sub-directories (EIFGEN, W_code ...)
 			-- (If a read-write error occured you must exit from
 			-- application.).
+			--
+			-- Arguments:
+			-- ----------
+			-- project_dir: 
+			--   Project directory.
+			--
+			-- deletion_requested:
+			--   Should the files present in `project_dir' be removed?
+			--
+			-- deletion_agent: 
+			--   Agent called each time `Deletion_agent_efficiency' files are deleted. 
+			--   You can set it to `Void' if you don't need any feedback.
+			--
+			-- cancel_agent: 
+			--   Agent called each time `Deletion_agent_efficiency' files are deleted. 
+			--   Make it return `True' to cancel the operation.
 		require
 			not_initialized: not initialized
 			is_readable: project_dir.is_base_readable
 			is_writable: project_dir.is_base_writable
 			is_executable: project_dir.is_base_executable
-			--is_creatable: project_dir.is_creatable
 			prev_read_write_error: not read_write_error
+			valid_deletion_agent: deletion_agent /= Void implies deletion_requested
 		local
 			d: DIRECTORY
 			new_name: STRING
 		do
-			!! d.make (Eiffel_gen_path);
+			create d.make (Eiffel_gen_path)
 			if d.exists then
 				new_name := clone (Eiffel_gen_path)
-				new_name.append ("_old")
+				if new_name.item (new_name.count) = ']' then
+						-- VMS specification. We need to append `_old' before the `]'.
+					new_name.insert ("_old", new_name.count - 1)
+				else
+					new_name.append ("_old")
+				end
 					-- Rename the old project
 				d.change_name (new_name)
 				if deletion_requested then
 						-- Rename the old project to EIFGEN so that we can
 						-- delete it.
 					d.change_name (Eiffel_gen_path)
-					delete_f_code_content
-					delete_w_code_content
-					delete_comp_content
+					delete_f_code_content (deletion_agent, cancel_agent)
+					delete_w_code_content (deletion_agent, cancel_agent)
+					delete_comp_content (deletion_agent, cancel_agent)
+					delete_backup_content (deletion_agent, cancel_agent)
 				end
 			end
-			project_directory := project_dir
-			Create_compilation_directory
-			Create_generation_directory
-			Workbench.make
-			Workbench.init
-			set_is_initialized
- 			Execution_environment.change_working_directory (project_directory.name)
+			if (cancel_agent = Void) or else (not cancel_agent.item ([])) then
+				project_directory := project_dir
+				Create_compilation_directory
+				Create_generation_directory
+				Workbench.make
+				set_is_initialized
+ 				Execution_environment.change_working_directory (project_directory.name)
+			end
+			manager.on_project_create
 		ensure
 			initialized: initialized
 		end
 
 	create_dynamic_lib is
 		do
-			!! dynamic_lib
+			create dynamic_lib
 		end
 
 feature -- Properties
@@ -98,7 +132,7 @@ feature -- Properties
 	ace: E_ACE is
 			-- Eiffel Ace file
 		once
-			!! Result
+			create Result
 		end
 
 	dynamic_lib: E_DYNAMIC_LIB
@@ -122,6 +156,12 @@ feature -- Properties
 			-- Displays error and warning messages
 		do
 			Result := Error_handler.error_displayer
+		end
+
+	manager: EB_PROJECT_MANAGER is
+			-- interface between `Current' and the user interface.
+		once
+			create Result.make (Current)
 		end
 
 feature -- Access
@@ -203,13 +243,13 @@ feature -- Access
 	is_new: BOOLEAN is
 			-- Is the Current Project new?
 		local
-			proj_dir: PROJECT_DIRECTORY
-			p: PROJECT_EIFFEL_FILE
+--			proj_dir: PROJECT_DIRECTORY
+--			p: PROJECT_EIFFEL_FILE
 		do	
 				-- The next two lines commented out by Manus, 23 Aug 98
 				-- Reason: the way how to do the check is incorrect, we need
 				-- to review it completely.
---			!! proj_dir.make (Project_directory_name, p)
+--			create proj_dir.make (Project_directory_name, p)
 --			Result := proj_dir.is_new
 			Result := True
 		end
@@ -315,8 +355,14 @@ feature -- Error status
 		require	
 			is_project_incompatible: is_incompatible
 		once
-			!! Result.make (0)
+			create Result.make (0)
 		end
+		
+	ace_file_path: STRING
+			-- Path for the ace file as written in the header of each .epr file
+			-- Used when the project can be retrieved.
+			--
+			-- Void if none.
 
 	is_incompatible: BOOLEAN is
 			-- Is the retrieved project incompatible with current version
@@ -418,32 +464,30 @@ feature -- Update
 				Workbench.recompile
 
 				if successful then
-					Comp_system.prepare_before_saving (True)
---					if not (Compilation_modes.is_quick_melt and then not freezing_occurred) then
-						save_project
---					end
-	
 					if not freezing_occurred then
-							link_driver
+						link_driver
 					end
 
-					if Application.has_debugging_information then
-						Application.resynchronize_breakpoints
+					if Application.has_breakpoints then
 						Degree_output.put_resynchronizing_breakpoints_message
+						Application.resynchronize_breakpoints
 					end
+					if not manager.is_project_loaded then
+						manager.on_project_loaded
+					end
+				elseif exit_on_error and then exit_agent /= Void then
+					exit_agent.call ([])
 				end
 				Compilation_modes.reset_modes
 				is_compiling_ref.set_item (False)
 			else
 				Compilation_modes.reset_modes
-				precompile (false)
+				precompile (False)
 			end
 		ensure
 			was_saved: successful and then not
 				error_occurred implies was_saved
 			error_implies: error_occurred implies save_error
-			freezing_occurred_if_successful: system /= Void and then
-					freezing_occurred implies successful 
 		end
 
 	quick_melt is
@@ -456,15 +500,14 @@ feature -- Update
 				if 
 					System_defined and then 
 					Ace.successful and then
-					not Ace.date_has_changed and then
-					not Compilation_modes.need_melt
+					not Ace.date_has_changed
 				then
 					Compilation_modes.set_is_quick_melt
 				end
 				melt
 			else
 				Compilation_modes.reset_modes
-				precompile (false)
+				precompile (False)
 			end
 		ensure
 			was_saved: successful and then not
@@ -496,17 +539,19 @@ feature -- Update
 		require
 			able_to_compile: able_to_compile
 		do
-			Compilation_modes.set_is_finalizing
 			melt
 			if
 				successful and then
-				not comp_system.lace.compile_all_classes
+				not comp_system.lace.compile_all_classes and then
+				not comp_system.il_generation
 			then
+				Compilation_modes.set_is_finalizing
 				set_error_status (Ok_status)
 				is_compiling_ref.set_item (True)
 				Comp_system.finalize_system (keep_assertions)
 				Comp_system.prepare_before_saving (True)
 				is_compiling_ref.set_item (False)
+				Compilation_modes.reset_modes
 			end
 		ensure
 			was_saved: successful and then not
@@ -540,17 +585,13 @@ feature -- Update
 			Workbench.recompile
 
 			if successful then
-					-- FIXME: We don't purge the system, because of a problems with IDs
-					-- and we give a `False' arguments to `prepare_before_saving'
-					-- i.e. the system which is using the precompiled can think that some
-					-- IDs are available but they are not. This is due because of a bad
-					-- merging of SERVER_CONTROLs from the different precompiled libraries.
-				Comp_system.prepare_before_saving (False)
 				Comp_system.set_licensed_precompilation (licensed)
 				Comp_system.save_precompilation_info
-				save_project
 				if not save_error then
 					save_precomp (licensed)
+				end
+				if not Manager.is_project_loaded then
+					Manager.on_project_loaded
 				end
 			end
 			--Compilation_modes.reset_modes
@@ -560,19 +601,48 @@ feature -- Update
 			successful_implies_freezing_occurred: successful implies freezing_occurred 
 		end
 
-	delete_f_code_content is
+	delete_f_code_content (
+		deletion_agent: PROCEDURE [ANY, TUPLE]
+		cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
+	) is
+			-- Delete the content of the F_code directory.
 		do
-			delete_generation_directory (Final_generation_path)
+			delete_generation_directory (Final_generation_path, deletion_agent, cancel_agent)
 		end
 
-	delete_w_code_content is
+	delete_w_code_content (
+		deletion_agent: PROCEDURE [ANY, TUPLE]
+		cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
+	) is
+			-- Delete the content of the W_code directory.
 		do
-			delete_generation_directory (Workbench_generation_path)
+			delete_generation_directory (Workbench_generation_path, deletion_agent, cancel_agent)
 		end
 
-	delete_comp_content is
+	delete_comp_content (
+		deletion_agent: PROCEDURE [ANY, TUPLE]
+		cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
+	) is
+			-- Delete the content of the COMP directory.
 		do
-			delete_generation_directory (compilation_path)
+			delete_generation_directory (Compilation_path, deletion_agent, cancel_agent)
+		end
+
+	delete_backup_content (
+		deletion_agent: PROCEDURE [ANY, TUPLE]
+		cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
+	) is
+			-- Delete the content of the COMP directory.
+		do
+			delete_generation_directory (Backup_path, deletion_agent, cancel_agent)
+		end
+
+	stop_and_exit (ag: like exit_agent) is
+			-- Stop the compilation and exit EiffelStudio.
+		do
+			exit_on_error := True
+			exit_agent := ag
+			error_handler.insert_interrupt_error (True)
 		end
 
 feature -- Output
@@ -594,11 +664,10 @@ feature -- Output
 			-- to disk.
 		require
 			initialized: initialized
-			compilation_successful: successful
+			compilation_successful: not Comp_system.il_generation implies successful
 		local
 			retried: BOOLEAN
 			file_name: FILE_NAME
-			project_name: STRING
 			project_file: RAW_FILE
 		do
 			if not retried then
@@ -607,38 +676,38 @@ feature -- Output
 					--| Prepare informations to store
 				Comp_system.server_controler.wipe_out
 				saved_workbench := workbench
-				!! file_name.make_from_string (Project_directory.name);
+				create file_name.make_from_string (Project_directory.name);
 				if Compilation_modes.is_precompiling then 
-					file_name.extend (eiffelgen);
 					file_name.set_file_name (dot_workbench)
 				else
-					project_name := clone (System.name)
-					project_name.append (Project_extension)
-					file_name.set_file_name (project_name)
+					file_name.set_file_name (System.name)
+					file_name.add_extension (Project_extension)
 				end
 
-				!! project_file.make_open_write (file_name)
-				project_file.putstring ("-- System name is ")
+				create project_file.make_open_write (file_name)
+				project_file.putstring (info_flag_begin)
 				project_file.putstring (System.name)
 				project_file.new_line
 				project_file.putstring (version_number_tag)
 				project_file.putstring (":")
 				project_file.putstring (version_number)
-				project_file.putstring ("%N")
-				project_file.putstring (storable_version_number_tag)
-				project_file.putstring (":")
-				project_file.putstring (storable_version_number)
-				project_file.putstring ("%N")
+				project_file.new_line
 				project_file.putstring (precompilation_id_tag)
 				project_file.putstring (":")
 				project_file.putstring (Comp_system.compilation_id.out)
-				project_file.putstring ("%N-- end of info%N")
+				project_file.new_line
+				project_file.putstring (ace_file_path_tag)
+				project_file.putstring (":")
+				project_file.putstring (ace.file_name)
+				project_file.new_line
+				project_file.putstring (info_flag_end)
+				project_file.new_line
 
 					--| To store correctly the information after the project
 					--| header, we need to set the position, otherwise the
 					--| result is quite strange and won't be retrievable
 				project_file.go (project_file.count)
-				project_file.independent_store (Current)
+				compiler_store (project_file.descriptor, $Current)
 				project_file.close
 			else
 				if project_file /= Void and then not project_file.is_closed then
@@ -667,10 +736,10 @@ feature -- Output
 		do
 			if not retried then
 				error_status_mode.set_item (Ok_status)
-				!! precomp_info.make (Precompilation_directories, licensed)
-				!! file.make (Precompilation_file_name)
+				create precomp_info.make (Precompilation_directories, licensed)
+				create file.make (Precompilation_file_name)
 				file.open_write
-				file.independent_store (precomp_info)
+				compiler_store (file.descriptor, $precomp_info)
 				file.close
 				set_file_status (read_only_status)
 			else
@@ -687,22 +756,12 @@ feature -- Output
 			retry
 		end
 
-feature {DEBUG_INFO} -- Clearing
-
-	reset_debug_counter is
-			-- Reset debug counters.
-		do
-			if Workbench.system_defined then
-				Comp_system.reset_debug_counter
-			end
-		end
-
 feature {LACE_I} -- Initialization
 
 	init_system is
 			-- Initializes the system.
 		do
-			!! system.make
+			create system.make
 		end
 
 feature {APPLICATION_EXECUTION}
@@ -727,9 +786,7 @@ feature {NONE} -- Retrieval
 			prev_read_write_error: not read_write_error
 		local
 			precomp_r: PRECOMP_R
-			temp: STRING
 			e_project: like Current
-			retried: BOOLEAN
 			p_eif: PROJECT_EIFFEL_FILE
 			precomp_dirs: EXTEND_TABLE [REMOTE_PROJECT_DIRECTORY, INTEGER]
 			remote_dir: REMOTE_PROJECT_DIRECTORY
@@ -745,12 +802,14 @@ feature {NONE} -- Retrieval
 				if p_eif.error then
 					if p_eif.is_corrupted then
 						set_error_status (Retrieve_corrupt_error_status)
+						ace_file_path := p_eif.ace_file_path
 					elseif p_eif.is_interrupted then
 						set_error_status (Retrieve_interrupt_error_status)
 					else
 						set_error_status (Retrieve_incompatible_error_status)
 						incompatible_version_number.wipe_out
 						incompatible_version_number.append (p_eif.project_version_number)
+						ace_file_path := p_eif.ace_file_path
 					end
 				else
 --!! FIXME: check Concurrent_Eiffel license
@@ -758,7 +817,6 @@ feature {NONE} -- Retrieval
 					system := e_project.system
 					dynamic_lib := e_project.dynamic_lib
 					Workbench.copy (e_project.saved_workbench)
-					Workbench.init
 					if Comp_system.is_precompiled then
 						precomp_dirs := Workbench.precompiled_directories
 						from
@@ -770,19 +828,20 @@ feature {NONE} -- Retrieval
 							precomp_dirs.forth
 						end
 						Precompilation_directories.copy (precomp_dirs)
-						!! remote_dir.make (project_directory.name)
+						create remote_dir.make (project_directory.name)
 						remote_dir.set_licensed (Comp_system.licensed_precompilation)
 						remote_dir.set_system_name (Comp_system.system_name)
 						Precompilation_directories.force
 							(remote_dir, Comp_system.compilation_id)
 					else
 						if Comp_system.uses_precompiled then
-							!! precomp_r
+							create precomp_r
 							precomp_r.set_precomp_dir
 						end
 					end
 
 					Comp_system.server_controler.init
+					set_il_parsing (Comp_system.il_generation)
 					Universe.update_cluster_paths
 					
 					check_permissions
@@ -827,19 +886,36 @@ feature {NONE} -- Implementation
 			end
 		end
 
-	delete_generation_directory (base_name: STRING) is
+	delete_generation_directory (
+		base_name: STRING
+		deletion_agent: PROCEDURE [ANY, TUPLE]
+		cancel_agent: FUNCTION [ANY, TUPLE, BOOLEAN]
+	) is
+			-- Delete then EIFFEL generated directory named `base_name'.
+			--
+			-- `deletion_agent' is called each time `Deletion_agent_efficiency'
+			-- files are deleted.
+			-- same for `cancel_agent'. Make it return `True' to cancel the operation.
 		local
 			generation_directory: DIRECTORY
 			retried: BOOLEAN
 		do
 			if not retried then
 				create generation_directory.make (base_name)
-				generation_directory.delete_content
+				if generation_directory.exists then
+					if (deletion_agent /= Void) or (cancel_agent /= Void) then
+						generation_directory.delete_content_with_action (deletion_agent, cancel_agent, Deletion_agent_efficiency)
+					else
+						generation_directory.delete_content
+					end
+				end
 			end
 		rescue
 			retried := True
 			retry
 		end
+
+	
 
 feature {NONE} -- Implementation
 
@@ -872,20 +948,20 @@ feature {NONE} -- Implementation
 	error_status_mode: INTEGER_REF is
 			-- Structure to keep the last error status.
 		once
-			!! Result
+			create Result
 			Result.set_item (Ok_status)
 		end
 
 	file_status_mode: INTEGER_REF is
 			-- Structure to keep the last file status.
 		once
-			!! Result
+			create Result
 			Result.set_item (Write_status)
 		end
 
 	initialized_mode: BOOLEAN_REF is
 		once
-			!! Result
+			create Result
 		end
 
 	set_is_initialized is
@@ -925,27 +1001,40 @@ feature {E_PROJECT, PRECOMP_R} -- Implementation
 
 feature {NONE} -- Implementation
 
+	Deletion_agent_efficiency: INTEGER is 50
+		-- When deleting a directory, the callback function is called 
+		-- each time `Deletion_agent_efficiency' files are deleted
+		--
+		-- Set this value to 1 for a better look, a to 50 for better
+		-- performances.
+
 	degree_output_cell: CELL [DEGREE_OUTPUT] is
 			-- Degree output window
 		local
 			deg_output: DEGREE_OUTPUT
 		once
-			!! deg_output
-			!! Result.put (deg_output)
+			create deg_output
+			create Result.put (deg_output)
 		end
+
+	exit_agent: PROCEDURE [ANY, TUPLE[]]
+			-- Optional procedure that should be called when an error occurs and `exit_on_error' is set.
 
 	mode: BOOLEAN_REF is
 			-- Is the compile in batch mode?
 		once
-			!! Result
+			create Result
 			Result.set_item (True)
 		end
 
 	is_compiling_ref: BOOLEAN_REF is
 			-- Is it compiling?
 		once
-			!! Result
+			create Result
 		end
+
+	exit_on_error: BOOLEAN
+			-- Should we exit EiffelStudio when an error occurs? (used to kill EiffelStudio during compilations)
 
 	link_driver is
 		local
@@ -960,14 +1049,16 @@ feature {NONE} -- Implementation
 -- FIXME: check Makefile.SH
 
 					-- Target
-				!!file_name.make_from_string (Workbench_generation_path)
-				app_name := clone (system.name)
-				app_name.append (Executable_suffix)
-				file_name.set_file_name (app_name)
+				create file_name.make_from_string (Workbench_generation_path)
+				file_name.set_file_name (System.name)
+				app_name := Platform_constants.Executable_suffix
+				if not app_name.is_empty then
+					file_name.add_extension (app_name)
+				end
 
-				!!uf.make (file_name)
+				create uf.make (file_name)
 				if not uf.exists then
-					!! uf.make (Precompilation_driver)
+					create uf.make (Precompilation_driver)
 					if uf.exists and then uf.is_readable then
 						link_eiffel_driver (Workbench_generation_path,
 							system.name,
@@ -976,6 +1067,15 @@ feature {NONE} -- Implementation
 					end
 				end
 			end
+		end
+
+feature {NONE} -- Implementation
+
+	compiler_store (f_desc: INTEGER; obj: POINTER) is
+		external
+			"C | %"pstore.h%""
+		alias
+			"parsing_store"
 		end
 
 invariant

@@ -7,459 +7,1124 @@ class
 	EB_SHARED_PIXMAPS
 
 inherit
-	SHARED_EXEC_ENVIRONMENT
+	EV_STOCK_PIXMAPS
 
-	SHARED_PLATFORM_CONSTANTS
+	EIFFEL_ENV
+		export
+			{NONE} all
+		end
+
+feature -- Pngs
+
+	bm_About: EV_PIXMAP is
+			-- Bitmap for the "About Dialog"
+		once
+			Result := pixmap_file_content ("bm_About")
+		end
+
+	bm_Wizard_blue: EV_PIXMAP is
+			-- Bitmap for the wizards
+		once
+			Result := pixmap_file_content ("bm_wizard_blue")
+		end
+
+	bm_Wizard_profiler_icon: EV_PIXMAP is
+			-- Icon Bitmap for the wizards
+		once
+			Result := pixmap_file_content ("bm_wizard_profiler_icon")
+		end
+
+	bm_Borland: EV_PIXMAP is
+			-- Bitmap for "About dialog" when Borland C++ is installed.
+		once
+			Result := pixmap_file_content ("borland_logo")
+		end
+
+feature -- Icons
+
+	Icon_dialog_window: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_dialog_window")
+		end
+
+	Icon_preference_window: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_preference_window")
+		end
+
+	Icon_format_feature_homonyms: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_feature_homonyms_color")
+		end
+
+	Icon_format_feature_implementers: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_feature_implementers_color")
+		end
+
+	Icon_format_feature_ancestors: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_feature_ancestors_color")
+		end
+
+	Icon_format_feature_descendants: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_feature_descendants_color")
+		end
+
+	Icon_format_feature_callers: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_feature_callers_color")
+		end
+
+	Icon_format_ancestors: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_ancestors_color")
+		end
+
+	Icon_format_descendants: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_descendants_color")
+		end
+
+	Icon_format_clients: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_clients_color")
+		end
+		
+	Icon_format_suppliers: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_suppliers_color")
+		end
+
+	Icon_format_externals: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_externals_color")
+		end
+
+	Icon_format_exporteds: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_exporteds_color")
+		end
+
+	Icon_format_deferreds: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_deferreds_color")
+		end
+
+	Icon_format_onces: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_onces_color")
+		end
+
+	Icon_format_attributes: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_attributes_color")
+		end
+
+	Icon_format_routines: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_routines_color")
+		end
+
+	Icon_format_text: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_text_color")
+		end
+
+	Icon_format_clickable: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_clickable_color")
+		end
+
+	Icon_format_flat: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_flat_color")
+		end
+
+	Icon_format_contract: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_contract_color")
+		end
+
+	Icon_format_interface: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_format_interface_color")
+		end
+
+	Icon_object_symbol: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_object_symbol")
+		end
+
+	Icon_once_objects: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_once_symbol")
+		end
+
+	Icon_attributes: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_attribute_symbol")
+		end
+
+	Icon_void_object: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_void_pointer")
+		end
+
+	Icon_dotnet_import: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("dotnet_import")
+		end
+
+	Icon_expanded_object: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_expanded_object")
+		end
+
+	Icon_immediate_value: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_immediate_value")
+		end
+
+	Icon_feature_clause_any: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_feature_clause_any")
+		end
+
+	Icon_feature_clause_some: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_feature_clause_some")
+		end
+
+	Icon_feature_clause_none: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_feature_clause_none")
+		end
+
+	Icon_nothing: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_nothing")
+		end
+		
+	Icon_down_triangle: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_down_triangle")
+		end
+
+	Icon_feature: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("feature")
+		end
+
+	Icon_toolbar_separator: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			create Result.make (1, 1)
+			Result.put (pixmap_file_content ("icon_toolbar_separator"), 1)
+		end
 
-feature -- Access
+	Icon_compile: ARRAY [EV_PIXMAP] is
+			-- Icon for "Melt project" command.
+		once
+			Result := build_text_pixmap ("compile")
+		end
+
+	Icon_finalize: ARRAY [EV_PIXMAP] is
+			-- Icon for "Finalize project" command
+		once
+			Result := build_classic_pixmap ("finalize")
+		end
+
+	Icon_freeze: ARRAY [EV_PIXMAP] is
+			-- Icon for "Freeze project" command
+		once
+			Result := build_classic_pixmap ("freeze")
+		end
+
+	Icon_system_info: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("system_info")
+		end
+
+	Icon_unify_stone: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("unify_stone")
+		end
+
+	Icon_send_stone_down: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("send_stone_down")
+		end
+
+	Icon_open_file: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("open_file")
+		end
+
+	Icon_wizard_precompile: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("wizard_precompile")
+		end
+
+	Icon_run: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("run")
+		end
+
+	Icon_run_debug: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_text_pixmap ("debug_run")
+		end
+		
+	Icon_save_call_stack: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+			-- Color with explaining text is at index 3, gray with explaining text at index 4
+		once
+			Result := build_classic_pixmap ("save_call_stack")
+		end
+
+	Icon_cluster_tool: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+			-- Color with explaining text is at index 3, gray with explaining text at index 4
+		once
+			Result := build_text_pixmap ("cluster_tool")
+		end
+
+	Icon_context_tool: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+			-- Color with explaining text is at index 3, gray with explaining text at index 4
+		once
+			Result := build_text_pixmap ("context_tool")
+		end
+
+	Icon_cut: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("cut")
+		end
+
+	Icon_copy: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("copy")
+		end
+
+	Icon_paste: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("past")
+		end
+
+	Icon_search: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+			-- Color with explaining text is at index 3, gray with explaining text at index 4
+		once
+			Result := build_text_pixmap ("search")
+		end
+
+	Icon_view_small: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("view_small")
+		end
+
+	Icon_windows: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+			-- Color with explaining text is at index 3, gray with explaining text at index 4
+		once
+			Result := build_text_pixmap ("windows")
+		end
+
+	Icon_favorites: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+			-- Color with explaining text is at index 3, gray with explaining text at index 4
+		once
+			Result := build_text_pixmap ("favorites")
+		end
+
+	Icon_features: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+			-- Color with explaining text is at index 3, gray with explaining text at index 4
+		once
+			Result := build_text_pixmap ("features")
+		end
+
+	Icon_help_tool: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+			-- Color with explaining text is at index 3, gray with explaining text at index 4
+		once
+			Result := build_classic_pixmap ("help_tool")
+		end
+
+
+	Icon_save: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("save")
+		end
+
+	Icon_save_measure: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("save_measure")
+		end
+
+	Icon_view_measure_minus: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("view_measure_minus")
+		end
+
+	Icon_view_measure_plus: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("view_measure_plus")
+		end
+
+	Icon_view_measure: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("view_measure")
+		end
+
+	Icon_undo: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("undo")
+		end
+
+	Icon_cmd_history: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("cmd_history")
+		end
+
+	Icon_redo: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("redo")
+		end
+
+	Icon_shell: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("shell")
+		end
+
+	Icon_new_development_tool: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("new_development_tool")
+		end
+
+	Icon_new_editor: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("new_editor")
+		end
+
+	Icon_new_context_tool: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("new_context_window")
+		end
+
+	Icon_new_dynamic_lib: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("new_dynamic_lib")
+		end
+
+	Icon_new_small: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("new_small")
+		end
+
+	Icon_new_cluster_small: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("new_cluster_small")
+		end
+
+	Icon_new_class_small: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("new_class_small")
+		end
 
-	bm_ISE_Power: EV_PIXMAP is
+	Icon_new_cluster: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("isepower")
+			Result := build_classic_pixmap ("new_cluster")
 		end
 
-	bm_Breakpoint: EV_PIXMAP is
+	Icon_new_class: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("breakpt")
+			Result := build_classic_pixmap ("new_class")
 		end
 
-	bm_Clear_breakpoints: EV_PIXMAP is
+	Icon_new_feature_small: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("clr_bp")
+			Result := build_classic_pixmap ("new_feature_small")
 		end
 
-	bm_Graph: EV_PIXMAP is
+	Icon_close: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("graph")
+			Result := build_classic_pixmap ("close")
 		end
 
-	bm_graphical_Breakablepoint: EV_PIXMAP is
+	Icon_minimize_all: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("gbreakpt")
+			Result := build_classic_pixmap ("minimize_all")
 		end
 
-	bm_graphical_Stoppoint: EV_PIXMAP is
+	Icon_new_measure: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("gstoppt")
+			Result := build_classic_pixmap ("new_measure")
 		end
 
-	bm_Case_storage: EV_PIXMAP is
+
+	Icon_raise_all: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
+		once
+			Result := build_classic_pixmap ("restore_all")
+		end
+
+	Icon_raise_all_unsaved: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("casestor")
+			Result := build_classic_pixmap ("restore_all")
 		end
 
-	bm_Class: EV_PIXMAP is
+	Icon_add_exported_feature: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("class")
+			Result := build_classic_pixmap ("add_exported_feature")
 		end
 
-	bm_Class_dot: EV_PIXMAP is
+	Icon_edit_exported_feature: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("classdot")
+			Result := build_classic_pixmap ("edit_exported_feature")
 		end
 
-	bm_Class_icon: EV_PIXMAP is
+	Icon_check_exports: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("classico")
+			Result := build_classic_pixmap ("check_exports")
 		end
 
-	bm_Dynamic_lib: EV_PIXMAP is
+	Icon_exec_step: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("dynlib")
+			Result := build_classic_pixmap ("exec_step")
 		end
 
-	bm_Dynamic_lib_dot: EV_PIXMAP is
+	Icon_step_into: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("dynlibdot")
+			Result := build_classic_pixmap ("step_into")
 		end
 
-	bm_Dynamic_lib_icon: EV_PIXMAP is
+	Icon_step_out: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("dynlibico")
+			Result := build_classic_pixmap ("step_out")
 		end
 
-	bm_Clickable: EV_PIXMAP is
+	Icon_exec_quit: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("clckable")
+			Result := build_classic_pixmap ("exec_quit")
 		end
 
-	bm_Current: EV_PIXMAP is
+	Icon_exec_stop: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("current")
+			Result := build_classic_pixmap ("exec_stop")
 		end
 
-	bm_Debug_quit: EV_PIXMAP is
+	Icon_no_stop: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("dbgquit")
+			Result := build_classic_pixmap ("no_stop")
 		end
 
-	bm_Debug_run: EV_PIXMAP is
+	Icon_minimize: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("dbgrun")
+			Result := build_classic_pixmap ("minimize")
 		end
 
-	bm_Debug_status: EV_PIXMAP is
+	Icon_maximize: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("dbgstatu")
+			Result := build_classic_pixmap ("maximize")
 		end
 
-	bm_Down_stack: EV_PIXMAP is
+	Icon_restore: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("dn_stack")
+			Result := build_classic_pixmap ("restore")
 		end
 
-	bm_Exec_last: EV_PIXMAP is
+	Icon_back: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("execlast")
+			Result := build_classic_pixmap ("back")
 		end
 
-	bm_Exec_nostop: EV_PIXMAP is
+	Icon_forth: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("execnost")
+			Result := build_classic_pixmap ("forth")
 		end
 
-	bm_Exec_step: EV_PIXMAP is
+	Icon_mini_back: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("execstep")
+			Result := build_classic_pixmap ("mini_back")
 		end
 
-	bm_Exec_stop: EV_PIXMAP is
+	Icon_mini_forth: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("execstop")
+			Result := build_classic_pixmap ("mini_forth")
 		end
 
-	bm_Explain: EV_PIXMAP is
+	Icon_class_symbol: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("explain")
+			Result := build_classic_pixmap ("class_symbol")
 		end
 
-	bm_Explain_dot: EV_PIXMAP is
+	Icon_class_symbol_color: EV_PIXMAP is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("expldot")
+			Result := pixmap_file_content ("icon_class_symbol_color")
 		end
 
-	bm_Explain_icon: EV_PIXMAP is
+	Icon_class_symbol_gray: EV_PIXMAP is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("explicon")
+			Result := pixmap_file_content ("icon_class_symbol_gray")
 		end
 
-	bm_General: EV_PIXMAP is
+	Icon_read_only_class_color: EV_PIXMAP is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("general")
+			Result := pixmap_file_content ("icon_light_class_color")
 		end
 
-	bm_Hide_object: EV_PIXMAP is
+	Icon_read_only_class_gray: EV_PIXMAP is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("obj_up")
+			Result := pixmap_file_content ("icon_light_class_gray")
 		end
 
-	bm_Hide_routine: EV_PIXMAP is
+	Icon_read_only_cluster: EV_PIXMAP is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("rout_up")
+			Result := pixmap_file_content ("icon_light_cluster_color")
 		end
 
-	bm_Next_target: EV_PIXMAP is
+	Icon_favorites_folder: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("histfort")
+			Result := build_classic_pixmap ("favorites_folder")
 		end
 
-	bm_disabled_next_target: EV_PIXMAP is
+	Icon_cluster_symbol: ARRAY [EV_PIXMAP] is
+			-- Array containing both the color & the gray pixmap
+			-- Color is at index 1, gray at index 2
 		once
-			Result := pixmap_file_content ("dis_histfort")
+			Result := build_classic_pixmap ("cluster_symbol")
 		end
 
-	bm_Object: EV_PIXMAP is
+	Icon_development_window: EV_PIXMAP is
+			-- Pixmap representing a development window
 		once
-			Result := pixmap_file_content ("object")
+			Result := pixmap_file_content ("icon_development_window")
 		end
 
-	bm_Object_dot: EV_PIXMAP is
+	Icon_profiler_window: EV_PIXMAP is
+			-- Pixmap representing a profiler window
 		once
-			Result := pixmap_file_content ("objdot")
+			Result := pixmap_file_content ("icon_profiler_window")
 		end
 
-	bm_Object_icon: EV_PIXMAP is
+	Icon_dynamiclib_window: EV_PIXMAP is
+			-- Pixmap representing a dynamic library builder window
 		once
-			Result := pixmap_file_content ("objicon")
+			Result := pixmap_file_content ("icon_dynamiclib_window")
 		end
 
-	bm_Open: EV_PIXMAP is
+	Icon_progress_dialog: EV_PIXMAP is
+			-- Pixmap representing a dynamic library builder window
 		once
-			Result := pixmap_file_content ("open")
+			Result := pixmap_file_content ("icon_progress_dialog")
 		end
 
-	bm_Preference_project: EV_PIXMAP is
+	Icon_bpslot: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("project")
+				-- Read the pixmaps 
+			create Result.make (1,3)
+			Result.put (pixmap_file_content ("icon_bpslot"), 1)
+			Result.put (pixmap_file_content ("icon_bpslot_stopped"), 2)
+			Result.put (pixmap_file_content ("icon_bpslot_top"), 3)
 		end
 
-	bm_Previous_target: EV_PIXMAP is
+	Icon_bpenabled: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("histback")
+				-- Read the pixmaps 
+			create Result.make (1,3)
+			Result.put (pixmap_file_content ("icon_bpenabled"), 1)
+			Result.put (pixmap_file_content ("icon_bpenabled_stopped"), 2)
+			Result.put (pixmap_file_content ("icon_bpenabled_top"), 3)
 		end
 
-	bm_Profiler: EV_PIXMAP is
+	Icon_bpdisabled: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("profiler")
+				-- Read the pixmaps 
+			create Result.make (1,3)
+			Result.put (pixmap_file_content ("icon_bpdisabled"), 1)
+			Result.put (pixmap_file_content ("icon_bpdisabled_stopped"), 2)
+			Result.put (pixmap_file_content ("icon_bpdisabled_top"), 3)
 		end
 
-	bm_Project_icon: EV_PIXMAP is
+	Icon_enable_bkpt: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("projicon")
+			Result := build_classic_pixmap ("enable_bkpt")
 		end
 
-	bm_Quick_update: EV_PIXMAP is
+	Icon_disable_bkpt: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("qupdate")
+			Result := build_classic_pixmap ("disable_bkpt")
 		end
 
-	bm_Quit: EV_PIXMAP is
+	Icon_forget_bkpt: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("quit")
+			Result := build_classic_pixmap ("del_bkpt")
 		end
 
-	bm_Routine: EV_PIXMAP is
+	Icon_bkpt_info: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("routine")
+			Result := build_classic_pixmap ("bkpt_info")
 		end
 
-	bm_Routine_dot: EV_PIXMAP is
+	Icon_new_feature: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("routdot")
+			Result := build_classic_pixmap ("new_feature")
 		end
 
-	bm_Routine_icon: EV_PIXMAP is
+	Icon_color: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("routicon")
+			Result := build_classic_pixmap ("color")
 		end
 
-	bm_Save: EV_PIXMAP is
+	Icon_new_supplier: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("save")
+			Result := build_classic_pixmap ("new_supplier")
 		end
 
-	bm_Modified: EV_PIXMAP is
+	Icon_new_aggregate_supplier: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("modified")
+			Result := build_classic_pixmap ("new_agg_supplier")
 		end
 
-	bm_Save_as: EV_PIXMAP is
+	Icon_new_inherit: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("save_as")
+			Result := build_classic_pixmap ("new_inherit")
 		end
 
-	bm_Search: EV_PIXMAP is
+	Icon_supplier: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("search")
+			Result := build_classic_pixmap ("supplier")
 		end
-	
-	bm_Setstop: EV_PIXMAP is
+
+	Icon_inherit: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("setstop")
+			Result := build_classic_pixmap ("inherit")
 		end
 
-	bm_Shell: EV_PIXMAP is
+	Icon_display_labels: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("shell")
+			Result := build_classic_pixmap ("display_labels")
 		end
-	
-	bm_Showaversions: EV_PIXMAP is
+
+	Icon_toggle_clusters: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("saversio")
+			Result := build_classic_pixmap ("toggle_clusters")
 		end
 
-	bm_Showdversions: EV_PIXMAP is
+	Icon_class_header: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("sdversio")
+			Result := build_classic_pixmap ("class_header")
 		end
 
-	bm_Showancestors: EV_PIXMAP is
+	Icon_super_cluster: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("sancesto")
+			Result := build_classic_pixmap ("super_cluster")
 		end
 
-	bm_Showhistory: EV_PIXMAP is
+	Icon_center_diagram: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("shistory")
+			Result :=  build_classic_pixmap ("center_diagram")
 		end
 
-	bm_Showindexing: EV_PIXMAP is
+	Icon_delete_view: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("sindexin")
+			Result := build_classic_pixmap ("delete_view")
 		end
 
-	bm_Showattributes: EV_PIXMAP is
+	Icon_export_to_png: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("sattribu")
+			Result := build_classic_pixmap ("export_to_png")
 		end
 
-	bm_Showcallers: EV_PIXMAP is
+	Icon_delete_small: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("scallers")
+			Result := build_classic_pixmap ("delete_small")
 		end
 
-	bm_Showclass_list: EV_PIXMAP is
+	Icon_delete_very_small: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("sclasses")
+			Result := build_classic_pixmap ("delete_very_small")
 		end
 
-	bm_Showclients: EV_PIXMAP is
+	Icon_delete_measure: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("sclients")
+			Result := build_classic_pixmap ("delete_measure")
 		end
 
-	bm_Showclusters: EV_PIXMAP is
+	Icon_remove_exported_feature: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("scluster")
+			Result := build_classic_pixmap ("remove_exported_feature")
 		end
 
-	bm_Showdeferreds: EV_PIXMAP is
+	Icon_set_arguments: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("sdeferre")
+			Result := build_classic_pixmap ("set_arguments")
 		end
 
-	bm_Showdescendants: EV_PIXMAP is
+	Icon_slice_limits_vsmall: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("sdescend")
+			Result := build_classic_pixmap ("slice_limits_vsmall")
 		end
 
-	bm_Showexported: EV_PIXMAP is
+	Icon_pretty_print: EV_PIXMAP is
+			-- Icon for the dialog that display expanded value of objects.
 		once
-			Result := pixmap_file_content ("sexporte")
+			Result := pixmap_file_content ("icon_pretty_print_16")
 		end
 
-	bm_Showexternals: EV_PIXMAP is
+	Icon_pretty_print_vsmall: ARRAY [EV_PIXMAP] is
+			-- Icon for the dialog that display expanded value of objects.
 		once
-			Result := pixmap_file_content ("sexterna")
+			create Result.make (1, 2)
+			Result.put (pixmap_file_content ("icon_pretty_print_8"), 1)
+			Result.put (pixmap_file_content ("icon_pretty_print_8"), 2)
 		end
 
-	bm_Showflat: EV_PIXMAP is
+	Icon_fill_cluster: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("sflat")
+			Result := build_classic_pixmap ("fill_cluster")
 		end
 
-	bm_Showfs: EV_PIXMAP is
+	Icon_link_tool: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("sfshort")
+			Result := build_classic_pixmap ("straight_arrows")
 		end
 
-	bm_Showcluster_hier_list: EV_PIXMAP is
+	Icon_reset_diagram: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("scluhier")
+			Result := build_classic_pixmap ("reset_diagram")
 		end
 
-	bm_Showmodified: EV_PIXMAP is
+	Icon_zoom_in: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("smodifie")
+			Result := build_classic_pixmap ("zoom_in")
 		end
 
-	bm_Showonces: EV_PIXMAP is
+	Icon_zoom_out: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("sonces")
+			Result := build_classic_pixmap ("zoom_out")
 		end
 
-	bm_Showroutines: EV_PIXMAP is
+	Icon_select_depth: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("sroutine")
+			Result := build_classic_pixmap ("select_depth")
 		end
 
-	bm_Showshort: EV_PIXMAP is
+	Icon_recycle_bin: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("sshort")
+			Result := build_classic_pixmap ("recycle_bin")
 		end
 
-	bm_Showstatistics: EV_PIXMAP is
+	Icon_new_metric: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("sstatist")
+			Result := build_classic_pixmap ("new_metric")
 		end
 
-	bm_Showsuppliers: EV_PIXMAP is
+	Icon_select_metrics: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("ssupplie")
+			Result := build_classic_pixmap ("select_metrics")
 		end
 
-	bm_Showhomonyms: EV_PIXMAP is
+	Icon_sorter: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("shomonym")
+			Result := build_classic_pixmap ("sorter")
 		end
 
-	bm_Showtext: EV_PIXMAP is
+	Icon_bon_deferred: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("stext")
+			Result := pixmap_file_content ("icon_bon_deferred")
 		end
 
-	bm_Show_object: EV_PIXMAP is
+	Icon_bon_effective: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("obj_down")
+			Result := pixmap_file_content ("icon_bon_effective")
 		end
 
-	bm_Show_routine: EV_PIXMAP is
+	Icon_bon_interfaced: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("routdown")
+			Result := pixmap_file_content ("icon_bon_interfaced")
 		end
 
-	bm_Slice: EV_PIXMAP is
+	Icon_bon_persistent: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("slice")
+			Result := pixmap_file_content ("icon_bon_persistent")
 		end
 
-	bm_System: EV_PIXMAP is
+	Icon_system: ARRAY [EV_PIXMAP] is
 		once
-			Result := pixmap_file_content ("system")
+			Result := build_classic_pixmap ("system")
 		end
 
-	bm_System_dot: EV_PIXMAP is
+	Icon_system_window: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("systdot")
+			Result := pixmap_file_content ("icon_system_color")
 		end
 
-	bm_Update: EV_PIXMAP is
+	Icon_green_arrow: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("update")
+			Result := pixmap_file_content ("icon_green_arrow")
 		end
 
-	bm_Up_stack: EV_PIXMAP is
+	Icon_green_tick: EV_PIXMAP is
 		once
-			Result := pixmap_file_content ("up_stack")
+			Result := pixmap_file_content ("icon_green_tick")
 		end
 
-feature {NONE} -- Update
+	Icon_red_cross: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_red_cross")
+		end
 
-	Pixmap_suffix: STRING is
-			-- Suffix for pixmaps (bmp for windows - xpm for motif).
+	Icons_progress_degree: ARRAY [EV_PIXMAP] is
+			-- Icons representing a thermometer a different temperatures.
+		local
+			i: INTEGER
 		once
-			if Platform_constants.is_windows then
-				Result := "bmp"
-			else
-				Result := "xpm"
+			create Result.make (-3, 6)
+			from
+				i := -3
+			until
+				i > 6
+			loop
+				Result.put (pixmap_file_content ("icon_degree"+i.out), i)
+				i := i + 1
 			end
 		end
 
-	Eiffel_installation_dir_name: STRING is
+	Icon_wizard_blank_project: EV_PIXMAP is
 		once
-			Result := Execution_environment.get ("EIFFEL4")
-		end;
+			Result := pixmap_file_content ("icon_wizard_blank_project")
+		end
 
-	Bitmap_path: DIRECTORY_NAME is
+	Icon_wizard_project: EV_PIXMAP is
 		once
-			create Result.make_from_string (Eiffel_installation_dir_name);
-			Result.extend_from_array (<<"bench", "bitmaps">>);
-			Result.extend (Pixmap_suffix)
-		end;
+			Result := pixmap_file_content ("icon_wizard_project")
+		end
+
+	Icon_wizard_ace_project: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_wizard_ace_project")
+		end
+
+	Icon_open_project: EV_PIXMAP is
+		once
+			Result := pixmap_file_content ("icon_open_project")
+		end
+
+	Icon_print: ARRAY [EV_PIXMAP] is
+		once
+			Result := build_classic_pixmap ("print")
+		end
+
+feature -- Reading
 
 	pixmap_file_content (fn: STRING): EV_PIXMAP is
 		local
 			full_path: FILE_NAME
+			retried: BOOLEAN
+			warning_dialog: EV_WARNING_DIALOG
 		do
-			create full_path.make_from_string (Bitmap_path)
-			full_path.set_file_name (fn)
-			full_path.add_extension (Pixmap_suffix)
-			create Result.make_from_file (full_path)
-	--		if not Result.is_valid then
-	--			io.error.putstring ("Warning: cannot read pixmap file ")
-	--			io.error.putstring (full_path)
-	--			io.error.new_line
-	--		end
+				-- Create the pixmap
+			create Result
+
+			if not retried then
+					-- Initialize the pathname & load the file
+				if
+					Platform_constants.is_windows and then
+					fn.substring_index ("icon_", 1) = 1
+				then
+					create full_path.make_from_string (Icon_path)
+					full_path.set_file_name (fn)
+					full_path.add_extension ("ico")
+				else
+					create full_path.make_from_string (Bitmap_path)
+					full_path.set_file_name (fn)
+					full_path.add_extension (Pixmap_suffix)
+				end
+				Result.set_with_named_file (full_path)
+			else
+				create warning_dialog.make_with_text (
+					"Cannot read pixmap file:%N" + full_path + ".%N%
+					%Please make sure the installation is not corrupted.")
+				warning_dialog.show
+				Result.set_size (16, 16) -- Default pixmap size
+			end
+		rescue
+			retried := True
+			retry
 		end
 
-end -- class EB_SHARED_PIXMAPS
+feature {NONE} -- Update
+
+	Pixmap_suffix: STRING is "png"
+			-- Suffix for pixmaps.
+
+	Bitmaps_path: DIRECTORY_NAME is
+		once
+			create Result.make_from_string (Eiffel_installation_dir_name)
+			Result.extend_from_array (<<"bench", "bitmaps">>)
+		end
+
+	Bitmap_path: DIRECTORY_NAME is
+			-- Path for Bmp/Xpm for Windows/Unix.
+		once
+			create Result.make_from_string (Bitmaps_path)
+			Result.extend (Pixmap_suffix)
+		end
+
+	Icon_path: DIRECTORY_NAME is
+			-- Path for Icons for Windows.
+		once
+			create Result.make_from_string (Bitmaps_path)
+			Result.extend ("ico")
+		end
+
+	build_classic_pixmap (pixmap_name: STRING): ARRAY [EV_PIXMAP] is
+			-- Build an array of 2 pixmaps. The first pixmap is the
+			-- colored pixmap, the second is the corresponding gray pixmap.
+			--
+			-- `pixmap_name' is the core name of the pixmap.
+		do
+				-- Read the pixmaps 
+			create Result.make (1,1)
+			Result.put (pixmap_file_content ("icon_" + pixmap_name + "_color"), 1)
+		ensure
+			result_valid: Result /= Void and then Result.count = 1
+		end
+
+	build_text_pixmap (pixmap_name: STRING): ARRAY [EV_PIXMAP] is
+			-- Build an array of 4 pixmaps. The first pixmap is the
+			-- colored pixmap, the second is the corresponding gray pixmap.
+			-- The third is a colored pixmap with some explaining text and
+			-- the forth is the grayed version of the third.
+			--
+			-- `pixmap_name' is the core name of the pixmap.
+		do
+				-- Read the pixmaps 
+			create Result.make (1,2)
+			Result.put (pixmap_file_content ("icon_" + pixmap_name + "_color"), 1)
+			Result.put (pixmap_file_content ("icon_" + pixmap_name + "_text_color"), 2)
+		ensure
+			result_valid: Result /= Void and then Result.count = 2
+		end
+
+end

@@ -34,8 +34,9 @@ feature {NONE} -- Initialization
 			-- Create a new Lace scanner.
 		do
 			make_with_buffer (Empty_buffer)
-			!! token_buffer.make (Initial_buffer_size)
-			!! current_position.reset
+			create token_buffer.make (Initial_buffer_size)
+			create comment_list.make (10)
+			create current_position.reset
 			line_number := 1
 			filename := ""
 		end
@@ -47,10 +48,16 @@ feature -- Initialization
 			-- (This routine can be called in wrap before scanning
 			-- another input buffer.)
 		do
-			Precursor
+			Precursor {YY_COMPRESSED_SCANNER_SKELETON}
 			token_buffer.clear_all
 			current_position.reset
 			line_number := 1
+		end
+
+	reset_comment_list is
+			-- Reset comment_list before scanning next input source.
+		do
+			create comment_list.make (10)
 		end
 
 feature -- Access
@@ -70,6 +77,9 @@ feature -- Access
 	token_buffer: STRING
 			-- Buffer for lexial tokens
 
+	comment_list: ARRAYED_LIST [STRING]
+			-- List all comments from file being parsed.
+
 feature -- Error handling
 
 	fatal_error (a_message: STRING) is
@@ -78,7 +88,7 @@ feature -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, a_message)
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, a_message, False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -88,7 +98,7 @@ feature -- Error handling
 		local
 			an_error: STRING_EXTENSION
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -101,7 +111,7 @@ feature -- Error handling
 		local
 			an_error: STRING_EXTENSION
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -116,7 +126,7 @@ feature -- Error handling
 		local
 			an_error: STRING_UNCOMPLETED
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 
@@ -129,7 +139,7 @@ feature -- Error handling
 		local
 			an_error: STRING_EMPTY
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end
@@ -139,7 +149,7 @@ feature -- Error handling
 		local
 			an_error: SYNTAX_ERROR
 		do
-			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "")
+			!! an_error.make (current_position.start_position, current_position.end_position, filename, 0, "", False)
 			Error_handler.insert_error (an_error)
 			Error_handler.raise_error
 		end

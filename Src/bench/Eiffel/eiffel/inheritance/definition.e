@@ -51,11 +51,11 @@ feature
 				new_feature := new_feat;
 			end;
 			deferred_features := old_features.deferred_features;
-			if not deferred_features.empty then
+			if not deferred_features.is_empty then
 				check_list (deferred_features, feat_tbl);
 			end;
 			features := old_features.features;
-			if not features.empty then
+			if not features.is_empty then
 				check_list (features, feat_tbl);
 			end;
 		end;
@@ -65,7 +65,7 @@ feature
 			-- features contained into `features' into `new_feature'.
 		require
 			good_argument: feats /= Void;
-			not_empty: not feats.empty;
+			not_empty: not feats.is_empty;
 		local
 			feature_i: FEATURE_I;
 		do
@@ -96,11 +96,12 @@ feature
 			-- Check redeclaration into an attribute.
 		local
 			attribute, old_attribute: ATTRIBUTE_I;
+			attr_precursor: ATTRIBUTE_I;
+			constant: CONSTANT_I
 			rout_id_set: ROUT_ID_SET;
-			new_rout_id: ROUTINE_ID;
+			new_rout_id: INTEGER;
 			attribute_list: LINKED_LIST [INHERIT_INFO];
 			stop: BOOLEAN;
-			attr_precursor: ATTRIBUTE_I;
 			info: INHERIT_INFO;
 		do
 			if new_feature.is_attribute then
@@ -109,7 +110,7 @@ feature
 						-- At least, the attribute is a redeclaration
 						-- of a deferred routine or an implemented function.
 						-- Remember to generate a function
-					if attribute.generate_in = Void then
+					if attribute.generate_in = 0 then
 						attribute.set_has_function_origin (True);
 						attribute.set_generate_in (new_tbl.feat_tbl_id);
 							-- Remember to process a pattern for this
@@ -145,21 +146,33 @@ feature
 						attribute_list.after or else stop
 					loop
 						attr_precursor ?= attribute_list.item.a_feature;
-						stop :=  attr_precursor.generate_in /= Void;
+						stop :=  attr_precursor.generate_in /= 0;
 						attribute_list.forth
 					end;
 					if stop then
 						attribute.set_generate_in (new_tbl.feat_tbl_id);
-							-- Remember to process a pattern for this
-							-- function
+							-- Remember to process a pattern for this function
 						pattern_list.put_front (attribute.feature_name);
 					end;
-				end;
-			end;
+				end
+			elseif new_feature.is_constant then
+				constant ?= new_feature
+					-- We do not need to force the generation of a constant
+					-- which is generated as a once function since it is
+					-- always generated in class where it is written.
+					--
+					-- Otherwise, an encapsulation function is required in
+					-- class that does the redefinition/merge.
+				if not constant.is_once and then constant.generate_in = 0 then
+					constant.set_generate_in (new_tbl.feat_tbl_id)
+						-- Remember to process a pattern for this function
+					pattern_list.put_front (constant.feature_name)
+				end
+			end
+
 				-- Insert the feature with new rout id in the origin
 				-- table for later process of a selection table
-			!!info;
-			info.set_a_feature (new_feature);
+			create info.make (new_feature)
 			origin_table.insert (info);
 		end;
 

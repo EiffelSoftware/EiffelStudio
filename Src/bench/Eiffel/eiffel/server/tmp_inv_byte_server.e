@@ -1,11 +1,15 @@
--- Server for invariant byte code on temporary file. This server is
--- used during the compilation. The goal is to merge the file Tmp_inv_byte_file
--- and Inv_byte_file if the compilation is successful.
+indexing
+	description: "Server for invariant byte code on temporary file. This server is%
+				%used during the compilation. The goal is to merge the file Tmp_inv_byte_file%
+				%and Inv_byte_file if the compilation is successful.%
+				%Indexed by class id."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class TMP_INV_BYTE_SERVER 
 
 inherit
-	DELAY_SERVER [INVARIANT_B, CLASS_ID]
+	DELAY_SERVER [INVARIANT_B]
 		redefine
 			flush, make
 		end
@@ -15,13 +19,13 @@ creation
 
 feature
 
-	to_remove: LINKED_LIST [CLASS_ID];
+	to_remove: LINKED_LIST [INTEGER];
 			-- Ids to remove during finalization
 
-	id (t: INVARIANT_B): CLASS_ID is
+	id (t: INVARIANT_B): INTEGER is
 			-- Id associated with `t'
 		do
-			Result := t.id
+			Result := t.class_id
 		end
 
 	make is
@@ -38,13 +42,13 @@ feature
 			!! Result.make
 		end
 
-	Delayed: SEARCH_TABLE [CLASS_ID] is
+	Delayed: SEARCH_TABLE [INTEGER] is
 			-- Cache for delayed items
 		once
 			!!Result.make ((3 * Cache.cache_size) // 2)
 		end
 
-	remove_id (i: CLASS_ID) is
+	remove_id (i: INTEGER) is
 			-- Insert `i' in `to_remove'.
 		do
 			if not to_remove.has (i) then

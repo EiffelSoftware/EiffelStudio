@@ -16,7 +16,7 @@ feature
 	actual_type: DOUBLE_A is
 			-- Actual double type
 		once
-			Result := Double_type;
+			Result := Double_type
 		end;
 
 	generate_cecil_value is

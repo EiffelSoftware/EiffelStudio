@@ -11,7 +11,7 @@ inherit
 		undefine
 			copy, is_equal
 		end
-	EXTEND_TABLE [FEATURE_I, ROUTINE_ID];
+	EXTEND_TABLE [FEATURE_I, INTEGER];
 	SHARED_HISTORY_CONTROL
 		undefine
 			copy, is_equal
@@ -23,13 +23,13 @@ creation
 
 feature -- Final mode
 
-	add_units (id: CLASS_ID) is
+	add_units (id: INTEGER) is
 			-- Insert units of Current in the history
 			-- controler (routine table construction)
 		local
 			new_unit: ENTRY;
 			feature_i: FEATURE_I;
-			rout_id: ROUTINE_ID;
+			rout_id: INTEGER;
 		do
 			from
 				start
@@ -40,7 +40,7 @@ feature -- Final mode
 				if feature_i.has_entry then
 					rout_id := key_for_iteration;
 					new_unit := feature_i.new_entry (rout_id);
-					new_unit.set_id (id);
+					new_unit.set_class_id (id);
 					History_control.add_new (new_unit, rout_id);
 				end;
 				forth;

@@ -67,18 +67,26 @@ feature -- Output
 		do
 			actual_dump := actual_type.dump
 			!!Result.make (16 + actual_dump.count)
-			Result.append ("(like arg #")
+			Result.append ("[like arg #")
 			Result.append_integer (position)
-			Result.append (")")
+			Result.append ("] ")
 			Result.append (actual_dump)
 		end
 
-	append_to (st: STRUCTURED_TEXT) is
+	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
 		do
-			st.add_string ("(like arg #")
-			st.add_int (position)
-			st.add_char (')')
-			actual_type.append_to (st)
+			st.add (ti_L_bracket)
+			st.add (ti_Like_keyword)
+			st.add_space
+			if f /= Void then
+				st.add (create {LOCAL_TEXT}.make (f.arguments.argument_names.i_th (position)))
+			else
+				st.add (ti_Argument_index)
+				st.add_int (position)
+			end
+			st.add (ti_R_bracket)
+			st.add_space
+			actual_type.ext_append_to (st, f)
 		end
 
 feature {COMPILER_EXPORTER} -- Primitives
@@ -103,7 +111,7 @@ feature {COMPILER_EXPORTER} -- Primitives
 			end
 		end
 
-	instantiation_in (type: TYPE_A; written_id: CLASS_ID): LIKE_ARGUMENT is
+	instantiation_in (type: TYPE_A; written_id: INTEGER): LIKE_ARGUMENT is
 			-- Instantiation of Current in the context of `class_type',
 			-- assuming that Current is written in class of id `written_id'.
 		do
@@ -124,26 +132,6 @@ feature {COMPILER_EXPORTER} -- Primitives
 		do
 			!! Result
 			Result.set_position (position)
-		end
-
-feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
-
-	storage_info (classc: CLASS_C): S_CLASS_TYPE_INFO is
-			-- Storage info for Current type in class `classc'
-		do
-			!! Result.make_for_bench (Void, associated_class.id)
-		end
-
-	storage_info_with_name (classc: CLASS_C): S_CLASS_TYPE_INFO is
-			-- Storage info for Current type in class `classc'
-			-- and store the name of the class for Current
-		local
-			ass_classc: CLASS_C
-			class_name: STRING
-		do
-			ass_classc := associated_class
-			class_name := clone (ass_classc.name)
-			!! Result.make_for_bench (class_name, ass_classc.id)
 		end
 
 end -- class LIKE_ARGUMENT

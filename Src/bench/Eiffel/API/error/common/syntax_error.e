@@ -33,7 +33,7 @@ creation
 
 feature {NONE} -- Initialization
 
-	make (s, e: INTEGER; f: like file_name; c: INTEGER; m: STRING) is
+	make (s, e: INTEGER; f: like file_name; c: INTEGER; m: STRING; u: BOOLEAN) is
 			-- Create a new SYNTAX_ERROR.
 		require
 			f_not_void: f /= Void
@@ -44,6 +44,7 @@ feature {NONE} -- Initialization
 			file_name := f
 			error_code := c
 			error_message := m
+			is_in_use_file := u
 		ensure
 			start_position_set: start_position = s
 			end_position_set: end_position = e
@@ -56,10 +57,12 @@ feature {NONE} -- Initialization
 			-- Initialize `start_position' and `end_position'.
 		local
 			p: like Eiffel_parser
+			a_filename: FILE_NAME
 		do
 			p := Eiffel_parser
-			make (p.start_position, p.end_position, p.filename,
-				p.error_code, p.error_message)
+			create a_filename.make_from_string (p.filename)
+			make (p.start_position, p.end_position, a_filename,
+				p.error_code, p.error_message, False)
 		end
 
 feature -- Properties
@@ -92,6 +95,9 @@ feature -- Properties
 	error_message: STRING
 			-- Specify the syntax error message.
 
+	is_in_use_file: BOOLEAN
+			-- Did error occured when parsing `Use' clause of an Ace file.
+
 feature -- Output
 
 	build_explain (st: STRUCTURED_TEXT) is
@@ -99,7 +105,7 @@ feature -- Output
 			msg: STRING
 		do
 			msg := syntax_message;
-			if not msg.empty then
+			if not msg.is_empty then
 				st.add_char ('(');
 				st.add_string (msg)
 				st.add_string (")");
@@ -136,28 +142,28 @@ feature -- Output
 
 			st.add_string ("Syntax error at line ");
 			st.add_int (line_number);
-			if Lace.parsed then
-				if Lace.successful then
-						-- Error happened in a class
-					st.add_string (" in class ");
-					st.add_class_syntax (Current, System.current_class, 
-							System.current_class.class_signature)
-					if error_message /= Void then
-						st.add_new_line;
-						st.add_string (error_message)
-						st.add_new_line;
-					end
+			if Lace.successful then
+					-- Error happened in a class
+				st.add_string (" in class ");
+				st.add_class_syntax (Current, System.current_class, 
+						System.current_class.class_signature)
+				if error_message /= Void then
+					st.add_new_line;
+					st.add_string (error_message)
+					st.add_new_line;
+				end
+			else
+				if not is_in_use_file then
+					st.add_ace_syntax (Current, " in Ace file")
 				else
 						-- Error happened while parsing a "use" file
 					st.add_string (" in Cluster_properties %"Use%" file")
 					if file_name /= Void then
-						st.add_new_line;
-						st.add_string ("	 File: "); 
-						st.add_string (file_name);
-					end;
+						st.add_new_line
+						st.add_string ("	 File: ");
+						st.add_string (file_name)
+					end
 				end
-			else
-				st.add_ace_syntax (Current, " in Ace file")
 			end;
 			st.add_new_line;
 			build_explain (st);

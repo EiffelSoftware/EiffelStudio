@@ -6,8 +6,7 @@ inherit
 
 	LOCAL_B
 		redefine
-			type,
-			print_register, free_register,
+			type, free_register,
 			analyze, generate, propagate,
 			used, parent, set_parent
 		end;
@@ -68,16 +67,6 @@ feature
 	free_register is
 			-- Do nothing
 		do
-		end;
-
-	print_register is
-			-- Print local
-		do
-			if c_type.is_pointer then
-				print_register_by_name;
-			else
-				buffer.putstring (register_name);
-			end;
-		end;
+		end
 
 end

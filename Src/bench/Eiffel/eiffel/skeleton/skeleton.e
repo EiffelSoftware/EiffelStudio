@@ -15,6 +15,10 @@ inherit
 	SHARED_DECLARATIONS;
 	COMPILER_EXPORTER
 	SHARED_GENERATION
+	SHARED_BYTE_CONTEXT
+		export
+			{ANY} context
+		end
 
 creation
 	make
@@ -36,6 +40,9 @@ feature -- Access
 
 	position: INTEGER
 			-- Current position in skeleton.
+
+	has_expanded: BOOLEAN
+			-- Does skeleton have an expanded attribute?
 
 	item: ATTR_DESC is
 			-- Access `position'-th element.
@@ -77,6 +84,7 @@ feature -- Element change
 			-- Replace `i'-th entry, if in index interval, by `v'.
 		do
 			area.put (v, i);
+			has_expanded := has_expanded or else v.is_expanded
 		end
 
 feature -- Cursor movement
@@ -162,19 +170,36 @@ feature -- Status
 			-- Number of character and boolean attributes
 			-- `nb_reference' has to be called before this function
 		do
-			Result := nb_level (position, Character_level) + nb_level (position, Boolean_level);
+			Result := nb_level (position, Character_level) +
+					  nb_level (position, Boolean_level) +
+					  nb_level (position, Integer_8_level)
 		end;
 
-	nb_integer: INTEGER is
-			-- Number of integer attributes
+	nb_integer_16: INTEGER is
+			-- Number of integer 16 bits attributes
 			-- `nb_character' has to be called before this function
 		do
-			Result := nb_level (position, Integer_level);
+			Result := nb_level (position, Integer_16_level) +
+					nb_level (position, Wide_char_level)
+		end
+
+	nb_wide_char: INTEGER is
+			-- Number of unicode characters
+			-- `nb_integer_16' has to be called before this function
+		do
+			Result := nb_level (position, Wide_char_level);
+		end
+
+	nb_integer_32: INTEGER is
+			-- Number of integer 32 bits attributes
+			-- `nb_integer_16' has to be called before this function
+		do
+			Result := nb_level (position, Integer_32_level);
 		end;
 
 	nb_real: INTEGER is
 			-- Number of real attributes
-			-- `nb_integer' has to be called before this function
+			-- `nb_integer_32' has to be called before this function
 		do
 			Result := nb_level (position, Real_level);
 		end;
@@ -186,9 +211,16 @@ feature -- Status
 			Result := nb_level (position, Pointer_level);
 		end;
 
+	nb_integer_64: INTEGER is
+			-- Number of integer 64 bits attributes
+			-- `nb_pointer' has to be called before this function
+		do
+			Result := nb_level (position, Integer_64_level);
+		end;
+
 	nb_double: INTEGER is
 			-- Number of double attributes
-			-- `nb_pointer' has to be called before this function
+			-- `nb_integer_64' has to be called before this function
 		do
 			Result := nb_level (position, Double_level);
 		end;
@@ -287,15 +319,18 @@ feature -- Status
 			expanded_desc: EXPANDED_DESC;
 			bit_desc: BITS_DESC;
 			expanded_skeleton: SKELETON;
-			nb_ref, nb_char, nb_int, nb_flt, nb_ptr, nb_dbl, nb_bit, nb_exp: INTEGER
+			nb_ref, nb_char, nb_int16, nb_int32, nb_int64: INTEGER
+			nb_flt, nb_ptr, nb_dbl, nb_bit, nb_exp: INTEGER
 			bits_pos, expanded_pos, i, nb: INTEGER
 			current_area: SPECIAL [ATTR_DESC]
 		do
 			nb_ref := nb_reference
 			nb_char := nb_character
-			nb_int := nb_integer
+			nb_int16 := nb_integer_16
+			nb_int32 := nb_integer_32
 			nb_flt := nb_real
 			nb_ptr := nb_pointer
+			nb_int64 := nb_integer_64
 			nb_dbl := nb_double
 				-- Record `position' where BIT description starts
 			bits_pos := position
@@ -309,11 +344,15 @@ feature -- Status
 			buffer.putchar (',');
 			buffer.putint (nb_char);
 			buffer.putchar (',');
-			buffer.putint (nb_int);
+			buffer.putint (nb_int16);
+			buffer.putchar (',');
+			buffer.putint (nb_int32);
 			buffer.putchar (',');
 			buffer.putint (nb_flt);
 			buffer.putchar (',');
 			buffer.putint (nb_ptr);
+			buffer.putchar (',');
+			buffer.putint (nb_int64);
 			buffer.putchar (',');
 			buffer.putint (nb_dbl);
 			buffer.putchar (')');
@@ -360,15 +399,18 @@ feature -- Status
 			expanded_desc: EXPANDED_DESC;
 			bit_desc: BITS_DESC;
 			expanded_skeleton: SKELETON;
-			nb_ref, nb_char, nb_int, nb_flt, nb_ptr, nb_dbl, nb_bit, nb_exp: INTEGER
+			nb_ref, nb_char, nb_int16, nb_int32, nb_int64: INTEGER
+			nb_flt, nb_ptr, nb_dbl, nb_bit, nb_exp: INTEGER
 			bits_pos, expanded_pos, i, nb: INTEGER
 			current_area: SPECIAL [ATTR_DESC]
 		do
 			nb_ref := nb_reference
 			nb_char := nb_character
-			nb_int := nb_integer
+			nb_int16 := nb_integer_16
+			nb_int32 := nb_integer_32
 			nb_flt := nb_real
 			nb_ptr := nb_pointer
+			nb_int64 := nb_integer_64
 			nb_dbl := nb_double
 				-- Record `position' where BIT description starts
 			bits_pos := position
@@ -377,7 +419,8 @@ feature -- Status
 			expanded_pos := position
 			nb_exp := nb_expanded
 
-			Result := objsiz(nb_ref + nb_exp, nb_char, nb_int, nb_flt, nb_ptr, nb_dbl);
+			Result := objsiz(nb_ref + nb_exp, nb_char, nb_int16, nb_int32,
+								nb_flt, nb_ptr, nb_int64, nb_dbl);
 
 			current_area := area
 			from
@@ -417,9 +460,19 @@ feature -- Status
 		end;
 
 	offset (feature_id: INTEGER): INTEGER is
+			-- Compute offset of `feature_id' in final code.
+		require
+			final_mode: context.final_mode
 		do
 			search_feature_id (feature_id)
-			Result := position
+			if has_expanded then
+				Result := position
+				if item.level > Reference_level then
+					Result := Result + nb_level (0, Expanded_level)
+				end
+			else
+				Result := position
+			end
 		end
 
 	generate_workbench_offset (buffer: GENERATION_BUFFER; feature_id: INTEGER) is
@@ -439,13 +492,13 @@ feature -- Status
 			not_off: not off;
 			good_argument: buffer /= Void;
 		local
-			nb_ref, nb_char, nb_int, nb_flt, nb_ptr, nb_dbl, nb_bit, nb_exp: INTEGER
-			bits_pos, expanded_pos: INTEGER
+			nb_ref, nb_char, nb_int16, nb_int32, nb_int64: INTEGER
+			nb_flt, nb_ptr, nb_dbl: INTEGER
+			bits_pos: INTEGER
 			current_area: SPECIAL [ATTR_DESC]
-			index, level, i: INTEGER;
-			real_nb_ref, nb: INTEGER;
-			expanded_desc: EXPANDED_DESC;
-			bit_desc: BITS_DESC;
+			index, level, i: INTEGER
+			expanded_desc: EXPANDED_DESC
+			bit_desc: BITS_DESC
 			value: INTEGER
 		do
 			level := item.level;
@@ -462,77 +515,126 @@ feature -- Status
 				elseif is_in_attr_table then
 					buffer.putchar ('0')
 				end
-			when Character_level, Boolean_level then
+			when Character_level, Boolean_level, Integer_8_level then
 				nb_ref := nb_reference;
 				buffer.putstring ("+ @CHROFF(");
 				buffer.putint (nb_ref + nb_expanded);
 				buffer.putchar (',');
 				buffer.putint (index - nb_ref)
 				buffer.putchar (')');
-			when Integer_level then
-				nb_ref := nb_reference;
-				nb_char := nb_character;
-				buffer.putstring ("+ @LNGOFF(");
+			when Integer_16_level, Wide_char_level then
+				nb_ref := nb_reference
+				nb_char := nb_character
+				buffer.putstring ("+ @I16OFF(")
 				buffer.putint (nb_ref + nb_expanded);
 				buffer.putchar (',');
 				buffer.putint (nb_char);
 				buffer.putchar (',');
 				buffer.putint (index - nb_ref - nb_char)
 				buffer.putchar (')');
+			when Integer_32_level then
+				nb_ref := nb_reference;
+				nb_char := nb_character;
+				nb_int16 := nb_integer_16
+				buffer.putstring ("+ @LNGOFF(");
+				buffer.putint (nb_ref + nb_expanded);
+				buffer.putchar (',');
+				buffer.putint (nb_char);
+				buffer.putchar (',');
+				buffer.putint (nb_int16);
+				buffer.putchar (',');
+				buffer.putint (index - nb_ref - nb_char - nb_int16 )
+				buffer.putchar (')');
 			when Real_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
-				nb_int := nb_integer;
+				nb_int16 := nb_integer_16
+				nb_int32 := nb_integer_32;
 				buffer.putstring ("+ @FLTOFF(");
 				buffer.putint (nb_ref + nb_expanded);
 				buffer.putchar (',');
 				buffer.putint (nb_char);
 				buffer.putchar (',');
-				buffer.putint (nb_int);
+				buffer.putint (nb_int16);
 				buffer.putchar (',');
-				buffer.putint (index - nb_ref - nb_char - nb_int)
+				buffer.putint (nb_int32);
+				buffer.putchar (',');
+				buffer.putint (index - nb_ref - nb_char - nb_int16 - nb_int32)
 				buffer.putchar (')');
 			when Pointer_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
-				nb_int := nb_integer;
+				nb_int16 := nb_integer_16
+				nb_int32 := nb_integer_32;
 				nb_flt := nb_real;
 				buffer.putstring ("+ @PTROFF(");
 				buffer.putint (nb_ref + nb_expanded);
 				buffer.putchar (',');
 				buffer.putint (nb_char);
 				buffer.putchar (',');
-				buffer.putint (nb_int);
+				buffer.putint (nb_int16);
+				buffer.putchar (',');
+				buffer.putint (nb_int32);
 				buffer.putchar (',');
 				buffer.putint (nb_flt);
 				buffer.putchar (',');
-				buffer.putint (index - nb_ref - nb_char - nb_int - nb_flt)
+				buffer.putint (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_flt)
 				buffer.putchar (')');
-			when Double_level then
+			when Integer_64_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
-				nb_int := nb_integer;
+				nb_int16 := nb_integer_16
+				nb_int32 := nb_integer_32;
 				nb_flt := nb_real;
 				nb_ptr := nb_pointer;
-				buffer.putstring ("+ @DBLOFF(");
+				buffer.putstring ("+ @I64OFF(");
 				buffer.putint (nb_ref + nb_expanded);
 				buffer.putchar (',');
 				buffer.putint (nb_char);
 				buffer.putchar (',');
-				buffer.putint (nb_int);
+				buffer.putint (nb_int16);
+				buffer.putchar (',');
+				buffer.putint (nb_int32);
 				buffer.putchar (',');
 				buffer.putint (nb_flt);
 				buffer.putchar (',');
 				buffer.putint (nb_ptr);
 				buffer.putchar (',');
-				buffer.putint (index - nb_ref - nb_char - nb_int - nb_flt - nb_ptr)
+				buffer.putint (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_flt - nb_ptr)
+				buffer.putchar (')');
+			when Double_level then
+				nb_ref := nb_reference;
+				nb_char := nb_character;
+				nb_int16 := nb_integer_16
+				nb_int32 := nb_integer_32;
+				nb_flt := nb_real;
+				nb_ptr := nb_pointer;
+				nb_int64 := nb_integer_64
+				buffer.putstring ("+ @DBLOFF(");
+				buffer.putint (nb_ref + nb_expanded);
+				buffer.putchar (',');
+				buffer.putint (nb_char);
+				buffer.putchar (',');
+				buffer.putint (nb_int16);
+				buffer.putchar (',');
+				buffer.putint (nb_int32);
+				buffer.putchar (',');
+				buffer.putint (nb_flt);
+				buffer.putchar (',');
+				buffer.putint (nb_ptr);
+				buffer.putchar (',');
+				buffer.putint (nb_int64);
+				buffer.putchar (',');
+				buffer.putint (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_flt - nb_ptr - nb_int64)
 				buffer.putchar (')');
 			else
 				nb_ref := nb_reference;
 				nb_char := nb_character;
-				nb_int := nb_integer;
+				nb_int16 := nb_integer_16
+				nb_int32 := nb_integer_32;
 				nb_flt := nb_real;
 				nb_ptr := nb_pointer;
+				nb_int64 := nb_integer_64
 				nb_dbl := nb_double;
 					-- Save where the Bit level start
 				bits_pos := position
@@ -541,11 +643,15 @@ feature -- Status
 				buffer.putchar (',');
 				buffer.putint (nb_char);
 				buffer.putchar (',');
-				buffer.putint (nb_int);
+				buffer.putint (nb_int16);
+				buffer.putchar (',');
+				buffer.putint (nb_int32);
 				buffer.putchar (',');
 				buffer.putint (nb_flt);
 				buffer.putchar (',');
 				buffer.putint (nb_ptr);
+				buffer.putchar (',');
+				buffer.putint (nb_int64);
 				buffer.putchar (',');
 				buffer.putint (nb_dbl);
 				buffer.putchar (')');
@@ -600,12 +706,13 @@ feature -- Status
 		require
 			not_off: not off;
 		local
-			nb_ref, nb_char, nb_int, nb_flt, nb_dbl, nb_ptr: INTEGER;
-			index, level, bits_pos: INTEGER;
-			real_nb_ref, nb, i: INTEGER;
-			expanded_desc: EXPANDED_DESC;
-			bit_desc: BITS_DESC;
-			exp_skel: SKELETON;
+			nb_ref, nb_char, nb_int16, nb_int32: INTEGER
+			nb_int64, nb_flt, nb_dbl, nb_ptr: INTEGER
+			index, level, bits_pos: INTEGER
+			i: INTEGER
+			expanded_desc: EXPANDED_DESC
+			bit_desc: BITS_DESC
+			exp_skel: SKELETON
 			current_area: SPECIAL [ATTR_DESC]
 		do
 			level := item.level;
@@ -615,45 +722,66 @@ feature -- Status
 				level
 			when Reference_level then
 				Result := refacs (index);
-			when Character_level, Boolean_level then
+			when Character_level, Boolean_level, Integer_8_level then
 				nb_ref := nb_reference;
 				Result := chroff (nb_ref + nb_expanded) + chracs (index - nb_ref);
-			when Integer_level then
+			when Integer_16_level, Wide_char_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
-				Result := lngoff (nb_ref + nb_expanded, nb_char) +
-							lngacs (index - nb_ref - nb_char);
+				Result := i16off (nb_ref + nb_expanded, nb_char) +
+							i16acs (index - nb_ref - nb_char);
+			when Integer_32_level then
+				nb_ref := nb_reference;
+				nb_char := nb_character;
+				nb_int16 := nb_integer_16
+				Result := i32off (nb_ref + nb_expanded, nb_char, nb_int16) +
+							i32acs (index - nb_ref - nb_char - nb_int16);
 			when Real_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
-				nb_int := nb_integer;
-				Result := fltoff (nb_ref + nb_expanded, nb_char, nb_int) +
-							fltacs (index - nb_ref - nb_char - nb_int); 
+				nb_int16 := nb_integer_16
+				nb_int32 := nb_integer_32;
+				Result := fltoff (nb_ref + nb_expanded, nb_char, nb_int16, nb_int32) +
+							fltacs (index - nb_ref - nb_char - nb_int16 - nb_int32); 
 			when Pointer_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
-				nb_int := nb_integer;
+				nb_int16 := nb_integer_16
+				nb_int32 := nb_integer_32;
 				nb_flt := nb_real;
-				Result := ptroff (nb_ref + nb_expanded, nb_char, nb_int, nb_flt) +
-							ptracs (index - nb_ref - nb_char - nb_int - nb_flt);
+				Result := ptroff (nb_ref + nb_expanded, nb_char, nb_int16, nb_int32, nb_flt) +
+							ptracs (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_flt);
+			when Integer_64_level then
+				nb_ref := nb_reference;
+				nb_char := nb_character;
+				nb_int16 := nb_integer_16
+				nb_int32 := nb_integer_32;
+				nb_flt := nb_real;
+				nb_ptr := nb_pointer;
+				Result := i64off (nb_ref+nb_expanded,nb_char,nb_int16,nb_int32,nb_flt,nb_ptr) +
+							dblacs (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_flt - nb_ptr);
 			when Double_level then
 				nb_ref := nb_reference;
 				nb_char := nb_character;
-				nb_int := nb_integer;
+				nb_int16 := nb_integer_16
+				nb_int32 := nb_integer_32;
 				nb_flt := nb_real;
 				nb_ptr := nb_pointer;
-				Result := dbloff (nb_ref+nb_expanded,nb_char,nb_int,nb_flt,nb_ptr) +
-							dblacs (index - nb_ref - nb_char - nb_int - nb_flt - nb_ptr);
+				nb_int64 := nb_integer_64;
+				Result := dbloff (nb_ref+nb_expanded,nb_char,nb_int16,nb_int32,nb_flt,nb_ptr,nb_int64) +
+							dblacs (index - nb_ref - nb_char - nb_int16 - nb_int32 - nb_flt - nb_ptr - nb_int64);
 			else
 				nb_ref := nb_reference;
 				nb_char := nb_character;
-				nb_int := nb_integer;
+				nb_int16 := nb_integer_16
+				nb_int32 := nb_integer_32;
 				nb_flt := nb_real;
 				nb_ptr := nb_pointer;
+				nb_int64 := nb_integer_64;
 				nb_dbl := nb_double;
 					-- Save where the Bit level start
 				bits_pos := position
-				Result := objsiz (nb_ref+nb_expanded,nb_char,nb_int,nb_flt,nb_ptr,nb_dbl);
+				Result := objsiz (nb_ref+nb_expanded,nb_char,nb_int16,nb_int32,nb_flt,nb_ptr,nb_int64,nb_dbl);
 				if level = Bits_level then
 					from
 						current_area := area
@@ -729,7 +857,7 @@ feature -- Skeleton byte code
 			until
 				i > nb
 			loop
-				ba.append_int32_integer (current_area.item (i).rout_id.id);
+				ba.append_int32_integer (current_area.item (i).rout_id);
 				i := i + 1;
 			end;
 		end;
@@ -749,11 +877,7 @@ feature -- Skeleton byte code
 			until
 				i > nb
 			loop
-				if System.java_generation then
-					ba.append_uint32_integer (current_area.item (i).real_sk_value)
-				else
-					ba.append_uint32_integer (current_area.item (i).sk_value)
-				end
+				ba.append_uint32_integer (current_area.item (i).sk_value)
 				i := i + 1
 			end;
 		end;
@@ -916,8 +1040,8 @@ feature -- Skeleton byte code
 			not empty;
 		local
 			buffer: GENERATION_BUFFER
-			rout_id: ROUTINE_ID;
-			tbl: ATTR_TABLE
+--			rout_id: INTEGER
+--			tbl: ATTR_TABLE
 			current_area: SPECIAL [ATTR_DESC]
 			i, nb: INTEGER
 		do
@@ -964,7 +1088,7 @@ feature -- Skeleton byte code
 			until
 				i > nb
 			loop
-				buffer.putint (current_area.item (i).rout_id.id);
+				buffer.putint (current_area.item (i).rout_id);
 				buffer.putstring (",%N");
 				i := i + 1;
 			end;
@@ -1081,39 +1205,57 @@ feature {NONE} -- Externals
 			"C"
 		end;
 
-	lngoff(nb_ref, nb_char: INTEGER): INTEGER is
-			-- Offset of first integer after `nb_ref' references,
+	i16off(nb_ref, nb_char: INTEGER): INTEGER is
+			-- Offset of first integer 16 bits after `nb_ref' references,
 			-- and `nb_char' characters
 		external
 			"C"
 		end;
 
-	fltoff (nb_ref, nb_char, nb_int: INTEGER): INTEGER is
+	i32off(nb_ref, nb_char, nb_int16: INTEGER): INTEGER is
+			-- Offset of first integer 32 bits after `nb_ref' references,
+			-- `nb_char' characters and `nb_int16' integers.
+		external
+			"C"
+		alias
+			"lngoff"
+		end;
+
+	fltoff (nb_ref, nb_char, nb_int16, nb_int32: INTEGER): INTEGER is
 			-- Offset of first float after `nb_ref' references,
-			-- `nb_char' characters and `nb_int' integers
+			-- `nb_char' characters, `nb_int16' integers and `nb_int32' integers
 		external
 			"C"
 		end;
 
-	ptroff (nb_ref, nb_char, nb_int, nb_flt: INTEGER): INTEGER is
+	ptroff (nb_ref, nb_char, nb_int16, nb_int32, nb_flt: INTEGER): INTEGER is
 			-- Offset of first pointer after `nb_ref' references,
-			-- `nb_char' characters, `nb_int' integers and `nb_flt' floats
+			-- `nb_char' characters, `nb_int16' integers, `nb_int32' integers
+			-- and `nb_flt' floats
 		external
 			"C"
 		end;
 
-	dbloff (nb_ref, nb_char, nb_int, nb_flt, nb_ptr: INTEGER): INTEGER is
+	i64off (nb_ref, nb_char, nb_int16, nb_int32, nb_flt, nb_ptr: INTEGER): INTEGER is
 			-- Offset of first pointer after `nb_ref' references,
-			-- `nb_char' characters, `nb_int' integers, `nb_flt' floats,
-			-- and `nb_ptr' pointers
+			-- `nb_char' characters, `nb_int16' integers, `nb_int32' integers,
+			-- `nb_flt' floats and `nb_ptr' pointers.
 		external
 			"C"
 		end;
 
-	objsiz (nb_ref, nb_char, nb_int, nb_flt, nb_ptr, nb_dbl: INTEGER): INTEGER is
+	dbloff (nb_ref, nb_char, nb_int16, nb_int32, nb_flt, nb_ptr, nb_int64: INTEGER): INTEGER is
+			-- Offset of first pointer after `nb_ref' references,
+			-- `nb_char' characters, `nb_int16' integers, `nb_int32' integers,
+			-- `nb_flt' floats, `nb_ptr' pointers and `nb_int64' integers.
+		external
+			"C"
+		end;
+
+	objsiz (nb_ref, nb_char, nb_int16, nb_int32, nb_flt, nb_ptr, nb_int64, nb_dbl: INTEGER): INTEGER is
 			-- Size of an object having `nb_ref' references,
-			-- `nb_char' characters, `nb_int' integers, `nb_flt' floats,
-			-- `nb_ptr' pointers and `nb_dbl' doubles
+			-- `nb_char' characters, `nb_int16' integers, `nb_int32' integers,
+			-- `nb_flt' floats, `nb_ptr' pointers, `nb_int64' integers and `nb_dbl' doubles
 		external
 			"C"
 		end;
@@ -1121,49 +1263,81 @@ feature {NONE} -- Externals
 	bitoff (bit_val: INTEGER): INTEGER is
 			-- Size of a bit object of size `bit_val'
 		external
-			"C"
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"BITOFF"
 		end;
 
 	chracs (n: INTEGER): INTEGER is
 			-- Size of `n' characters
 		external
-			"C"
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"CHRACS"
 		end;
 
 	refacs (n: INTEGER): INTEGER is
 			-- Size of `n' references
 		external
-			"C"
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"REFACS"
 		end;
 
-	lngacs (n: INTEGER): INTEGER is
-			-- Size of `n' integers
+	i16acs (n: INTEGER): INTEGER is
+			-- size of `n' integers 16 bits.
 		external
-			"C"
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"I16ACS"
+		end
+
+	i32acs (n: INTEGER): INTEGER is
+			-- Size of `n' integers 32 bits
+		external
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"LNGACS"
+		end;
+
+	i64acs (n: INTEGER): INTEGER is
+			-- Size of `n' integers 64 bits
+		external
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"I64ACS"
 		end;
 
 	fltacs (n: INTEGER): INTEGER is
 			-- Size of `n' reals
 		external
-			"C"
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"FLTACS"
 		end;
 
 	ptracs (n: INTEGER): INTEGER is
 			-- Size of `n' pointers
 		external
-			"C"
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"PTRACS"
 		end;
 
 	dblacs (n: INTEGER): INTEGER is
 			-- Size of `n' doubles
 		external
-			"C"
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"DBLACS"
 		end;
 
 	ovhsiz: INTEGER is
 			-- Size of the object header
 		external
-			"C"
+			"C [macro %"eif_eiffel.h%"]"
+		alias
+			"OVERHEAD"
 		end;
 
 end

@@ -1,16 +1,19 @@
--- Server for melted feature byte code associated to file ".MLT2"
+indexing
+	description: "Server for melted feature byte code indexed by real body id."
+	date: "$Date$"
+	revision: "$Revision$"
 
 class M_FEATURE_SERVER 
 
 inherit
-	COMPILER_SERVER [MELT_FEATURE, REAL_BODY_ID]
+	COMPILER_SERVER [MELT_FEATURE]
 
 creation
 	make
 	
 feature -- Access
 
-	id (t: MELT_FEATURE): REAL_BODY_ID is
+	id (t: MELT_FEATURE): INTEGER is
 			-- Id associated with `t'
 		do
 			Result := t.real_body_id

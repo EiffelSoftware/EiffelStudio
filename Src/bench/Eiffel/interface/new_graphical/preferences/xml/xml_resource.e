@@ -22,6 +22,7 @@ feature -- Initialization
 			txt: XML_TEXT
 			att: XML_ATTRIBUTE
 			att_table: XML_ATTRIBUTE_TABLE
+			val: STRING
 		do
 			create name.make (20)
 			att_table := root_resource.attributes
@@ -29,6 +30,14 @@ feature -- Initialization
 				att := att_table.item ("DESCRIPTION")
 				if att /= Void then
 					description := att.value
+				end
+			end
+			if att_table.has ("IMMEDIATE_EFFECT") then
+				att := att_table.item ("IMMEDIATE_EFFECT")
+				if att /= Void then
+					val := clone (att.value)
+					val.to_lower
+					effect_is_delayed := val.is_equal ("no")
 				end
 			end
 			cursor := root_resource.new_cursor
@@ -108,6 +117,7 @@ feature -- Implementation
 			if description /= Void then
 				value.set_description (description)
 			end
+			value.set_effect_is_delayed (effect_is_delayed)
 		end
 
 feature {NONE} -- Constants
@@ -128,6 +138,10 @@ feature -- Implementation
 
 	external_name: STRING
 		-- Name for the outside world of Current.
+
+	effect_is_delayed: BOOLEAN
+		-- Is a change in the resource reflected in the application
+		-- immediately ?
 
 invariant
 	XML_RESOURCE_exists: name /= Void and value /= Void

@@ -3,7 +3,6 @@
 class EXTERNAL_B 
 
 inherit
-
 	CALL_ACCESS_B
 		redefine
 			same, is_external, set_parameters, parameters, enlarged,
@@ -12,9 +11,17 @@ inherit
 			pre_inlined_code, inlined_byte_code,
 			has_separate_call, reset_added_gc_hooks,
 			make_end_byte_code, make_end_precomp_byte_code,
-			make_precursor_byte_code
-		end;
+			make_precursor_byte_code, need_target
+		end
+
 	SHARED_INCLUDE
+
+	SHARED_IL_CONSTANTS
+		rename
+			static_type as il_static_type
+		export
+			{NONE} all
+		end
 
 feature 
 
@@ -52,7 +59,7 @@ feature -- Routines for externals
 			extension := e
 		end;
 
-	 set_parameters (p: like parameters) is
+	set_parameters (p: like parameters) is
 			-- Assign `p' to `parameters'.
 		do
 			parameters := p;
@@ -64,15 +71,18 @@ feature -- Routines for externals
 			type := t;
 		end;
 
-	init (f: EXTERNAL_I) is
+	init (f: FEATURE_I) is
 			-- Initialization
 		require
-			good_argument: f /= Void;
-			not_attribute: not f.is_attribute;
+			good_argument: f /= Void
+			is_valid_feature_for_normal_generation: not System.il_generation implies f.is_external
+			is_valid_feature_for_il_generation:
+				System.il_generation implies (f.is_external or f.is_attribute)
 		do
-			feature_name := f.feature_name;
-			feature_id := f.feature_id;
+			feature_name := f.feature_name
+			feature_id := f.feature_id
 			routine_id := f.rout_id_set.first
+			written_in := f.written_in
 		end;
 
 	set_external_name (s: STRING) is
@@ -98,17 +108,121 @@ feature -- Routines for externals
 			end;
 		end;
 
-	enlarged: EXTERNAL_BL is
+	enlarged: EXTERNAL_B is
 			-- Enlarges the tree to get more attributes and returns the
 			-- new enlarged tree node.
+		local
+			external_bl: EXTERNAL_BL
 		do
 			if context.final_mode then
-				!!Result;
+				create external_bl
 			else
-				!EXTERNAL_BW!Result.make;
+				create {EXTERNAL_BW} external_bl.make
 			end;
-			Result.fill_from (Current);
+			external_bl.fill_from (Current)
+			Result := external_bl
 		end;
+
+feature -- IL code generation
+
+	need_target: BOOLEAN is
+			-- Does current call need a target to be performed?
+			-- Meaning that it is not a static call.
+		local
+			il_ext: IL_EXTENSION_I
+		do
+			if System.il_generation then
+				il_ext ?= extension
+				Result := need_current (il_ext.type)
+			else
+				Result := False
+			end
+		end
+
+	generate_il_call (invariant_checked: BOOLEAN) is
+			-- Generate byte code for call to an external feature.
+		local
+			cl_type: CL_TYPE_I
+			il_ext: IL_EXTENSION_I
+			real_metamorphose: BOOLEAN
+		do
+				-- Type of external.
+			il_ext ?= extension
+
+				-- Type of object on which we are performing call to Current.
+			cl_type ?= context_type
+
+			check
+				il_ext_not_void: il_ext /= Void
+				cl_type_not_void: cl_type /= Void
+			end
+
+			if cl_type.is_expanded then
+					-- Current type is expanded. We need to find out if
+					-- we need to generate a box operation, meaning that
+					-- the feature is inherited from a non-expanded class.
+				real_metamorphose := need_real_metamorphose (cl_type)
+			end
+
+			if is_first and then need_current (il_ext.type) then
+					-- First call in dot expression, we need to generate Current
+					-- only when we do not call a static feature.
+				if cl_type.is_reference then
+						-- Normal call, we simply push current object.
+					il_generator.generate_current
+				else
+					if real_metamorphose then
+							-- Feature is written in an inherited class of current
+							-- expanded class. We need to box.
+						il_generator.generate_metamorphose (cl_type)
+					end
+				end
+			elseif cl_type.is_expanded then
+					-- No need to do anything special in case of a call to
+					-- a constructor. The generation of `parent.target' already
+					-- did any special transformation to perfom call.
+				if il_ext.type /= creator_type then
+					if parent.target.is_predefined then
+							-- For same reason we don't do anything for a call to
+							-- a constructor, when `parent.target' is predefined
+							-- any special transformation have already been done.
+						if real_metamorphose then
+								-- Feature is written in an inherited class of current
+								-- expanded class. We need to box.
+							il_generator.generate_metamorphose (cl_type)
+						end
+					else
+							-- In all other cases we will generate the metamorphose.
+						generate_il_metamorphose (cl_type, real_metamorphose)
+					end
+				end
+			end
+			
+			if parameters /= Void then
+					-- Generate parameters if any.
+				parameters.generate_il
+			end
+
+			if context.il_external_creation or else il_ext.type /= creator_type then
+					-- We are not performing a creation call, neither a call
+					-- to a constructor.
+				if precursor_type /= Void then
+						-- A call to precursor is never polymorphic.
+					il_ext.generate_call (external_name, cl_type, feature_id, False)
+				else
+						-- Standard call to an external feature.
+						-- Call will be polymorphic if it target of call is a reference
+						-- or if target has been boxed, or if type of external
+						-- forces a static bindinf (eg static features).
+					il_ext.generate_call (external_name, cl_type, feature_id, cl_type.is_reference or else real_metamorphose)
+				end
+			else
+					-- Current external is a creation, we perform a slightly different
+					-- call to constructor, but basically it is very close to `generate_call'
+					-- but doing a static binding.
+				il_ext.generate_creation_call (external_name, cl_type, feature_id)
+			end
+		end
 
 feature -- Byte code generation
 
@@ -190,26 +304,6 @@ feature -- Byte code generation
 			end
 
 			standard_make_code (ba, flag);
-
-			if System.java_generation then
-				-- Add info about name of external
-
-				ba.append (Bc_java_external)
-
-				if feature_name /= Void then
-					ba.append_raw_string (feature_name)
-				else
-					ba.append_raw_string ("-no name-")
-				end
-
-				if external_name /= Void then
-					ba.append_raw_string (external_name)
-				else
-					ba.append_raw_string ("-no name-")
-				end
-			end
-
-			make_java_typecode (ba)
 
 				-- Generation hector realease if any
 			if nb_protections > 0 then
@@ -424,8 +518,7 @@ feature -- Concurrent Eiffel
 								loc_idx := -1;
 							end;
 							if loc_idx /= -1 then
-								buf.put_protected_local (context.ref_var_used + loc_idx);
-								buf.putstring (" = (EIF_REFERENCE) 0;");
+								buf.reset_local_registration (context.ref_var_used + loc_idx);
 								buf.new_line;
 							end
 						end
@@ -436,7 +529,7 @@ feature -- Concurrent Eiffel
 		end
 
 
-		make_end_byte_code (ba: BYTE_ARRAY; flag: BOOLEAN;
+	make_end_byte_code (ba: BYTE_ARRAY; flag: BOOLEAN;
 					real_feat_id: INTEGER; static_type: INTEGER) is
 			-- Make final portion of the standard byte code.
 		local

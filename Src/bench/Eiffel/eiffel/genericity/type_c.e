@@ -54,21 +54,42 @@ feature
 			-- Generate C type in `buffer'.
 		require
 			good_argument: buffer /= Void
-		deferred
+		do
+			buffer.putstring (C_string)
+			buffer.putchar (' ')
 		end
 
 	generate_cast (buffer: GENERATION_BUFFER) is
 			-- Generate C cast in `buffer'.
 		require
 			good_argument: buffer /= Void
-		deferred
+		do
+			buffer.putchar ('(')
+			buffer.putstring (C_string)
+			buffer.putchar (')')
 		end
 
 	generate_access_cast (buffer: GENERATION_BUFFER) is
 			-- Generate access C cast in `buffer'.
 		require
 			good_argument: buffer /= Void
-		deferred
+			not_void_type: not is_void
+		do
+			buffer.putchar ('(')
+			buffer.putstring (C_string)
+			buffer.putchar (' ')
+			buffer.putchar ('*')
+			buffer.putchar (')')
+		end
+
+	generate_size (buffer: GENERATION_BUFFER) is
+			-- Generate size of C type
+		require
+			good_argument: buffer /= Void
+		do
+			buffer.putstring (Sizeof)
+			buffer.putstring (C_string)
+			buffer.putchar (')')
 		end
 
 	generate_function_cast (buffer: GENERATION_BUFFER; arg_types: ARRAY [STRING]) is
@@ -129,21 +150,12 @@ feature
 			-- Generate C function cast in `buffer'.
 		require
 			good_arguments: buffer /= Void and extension /= Void
-		local
-			i, nb: INTEGER
 		do
 			buffer.putstring ("FUNCTION_CAST(")
 			buffer.putstring (c_string)
 			buffer.putstring (", (")
 			extension.generate_parameter_signature_list
 			buffer.putstring (")) ")
-		end
-
-	generate_size (buffer: GENERATION_BUFFER) is
-			-- Generate size of C type
-		require
-			good_argument: buffer /= Void
-		deferred
 		end
 
 	generate_union (buffer: GENERATION_BUFFER) is
@@ -180,5 +192,10 @@ feature
 			-- String generated to return the result of a separate call
 		deferred
 		end
+
+feature {NONE} -- Constants
+
+	Sizeof: STRING is "sizeof("
+			-- Used for generation.
 
 end

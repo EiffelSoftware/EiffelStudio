@@ -16,7 +16,7 @@ feature
 	current_type: CLASS_TYPE;
 			-- Current class type to check
 
-	id_set: TWO_WAY_SORTED_SET [CLASS_ID];
+	id_set: TWO_WAY_SORTED_SET [INTEGER];
 			-- Set of class id
 
 	make is
@@ -38,7 +38,7 @@ feature
 		do
 debug
 io.error.putstring ("Check expanded%N");
-io.error.putstring (current_type.associated_eclass.class_signature);
+io.error.putstring (current_type.associated_class.class_signature);
 io.error.new_line;
 end;
 			recursive_check (current_type);
@@ -58,15 +58,15 @@ feature {NONE}
 			expanded_desc: EXPANDED_DESC;
 			client_type: CLASS_TYPE;
 			client: CLASS_C;
-			current_id: CLASS_ID;
-			id: CLASS_ID;
+			current_id: INTEGER;
+			id: INTEGER;
 			vlec: VLEC;
 			finished: BOOLEAN;
 			attr_desc: ATTR_DESC;
 			stop_recursion: BOOLEAN;
 			position: INTEGER;
 		do
-			current_id := class_type.associated_class.id;
+			current_id := class_type.associated_class.class_id;
 			stop_recursion := id_set.has (current_id);
 			from
 				current_skeleton := class_type.skeleton;
@@ -88,8 +88,8 @@ end;
 					expanded_desc ?= attr_desc;
 					client_type := System.class_type_of_id (expanded_desc.type_id);
 					client := client_type.associated_class;
-					id := client.id;
-					if id.is_equal (current_type.associated_class.id) then
+					id := client.class_id;
+					if id = current_type.associated_class.class_id then
 							-- Found expanded circuit
 						!!vlec;
 						vlec.set_class (current_type.associated_class);
@@ -98,7 +98,7 @@ end;
 					else
 debug
 	io.error.putstring ("Inserting ");
-	id.trace;
+	io.error.putint (id);
 	io.error.putstring (" for class ");
 	io.error.putstring (client.name);
 	io.error.new_line;
@@ -139,11 +139,11 @@ feature {NONE}
 			vlec: VLEC;
 		do
 			if a_type.has_generics then
-				if a_type.is_expanded then
+				if a_type.is_true_expanded then
 					ass_c := a_type.associated_class;
-					if not id_set.has (ass_c.id) then
+					if not id_set.has (ass_c.class_id) then
 						if ass_c.is_expanded then
-							id_set.put (ass_c.id);
+							id_set.put (ass_c.class_id);
 						end;
 					else
 						!!vlec;

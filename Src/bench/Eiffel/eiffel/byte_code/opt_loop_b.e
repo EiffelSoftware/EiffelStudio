@@ -1,53 +1,55 @@
--- Optimized byte code for loops
+indexing
+	description	: "Optimized byte code for loops."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class OPT_LOOP_B
 
 inherit
-
 	LOOP_B
 		redefine
 			enlarged, size,
 			pre_inlined_code
 		end
 
-feature
+feature -- Access
 
 	enlarged: OPT_LOOP_BL is
 		do
-			!!Result;
+			create Result
 			Result.fill_from (Current)
 			Result.set_line_number (line_number)
-		end;
+		end
 
 	add_array_to_generate (arr_desc: INTEGER) is
 		do
 			if array_desc = Void then
-				!!array_desc.make;
-			end;
+				create array_desc.make
+			end
 			array_desc.extend (arr_desc)
-		end;
+		end
 
-	array_desc: TWO_WAY_SORTED_SET [INTEGER];
+	array_desc: TWO_WAY_SORTED_SET [INTEGER]
 
 	add_offset_to_generate (arr_desc: INTEGER) is
 		do	
 			if generated_offsets = Void then
-				!!generated_offsets.make
+				create generated_offsets.make
 			end
 			generated_offsets.extend (arr_desc)
-		end;
+		end
 
-	generated_offsets: TWO_WAY_SORTED_SET [INTEGER];
+	generated_offsets: TWO_WAY_SORTED_SET [INTEGER]
 
 	add_offset_already_generated (arr_desc: INTEGER) is
 		do
 			if already_generated_offsets = Void then
-				!!already_generated_offsets.make
+				create already_generated_offsets.make
 			end
 			already_generated_offsets.extend (arr_desc)
-		end;
+		end
 
-	already_generated_offsets: TWO_WAY_SORTED_SET [INTEGER];
+	already_generated_offsets: TWO_WAY_SORTED_SET [INTEGER]
 
 feature -- Inlining
 

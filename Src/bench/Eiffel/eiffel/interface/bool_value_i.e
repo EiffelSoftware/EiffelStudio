@@ -45,6 +45,12 @@ feature
 			end;
 		end;
 
+	generate_il is
+			-- Generate IL code for boolean constant value.
+		do
+			il_generator.put_boolean_constant (bool_val)	
+		end
+
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a boolean constant value.
 		do

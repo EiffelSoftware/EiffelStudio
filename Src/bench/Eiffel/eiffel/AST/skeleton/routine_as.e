@@ -1,9 +1,8 @@
 indexing
-	description:
-			"Abstract description of the content of a standard %
-			%feature. Version for Bench."
-	date: "$Date$"
-	revision: "$Revision$"
+	description	: "Abstract description of the content of a standard %
+				  %feature. Version for Bench."
+	date		: "$Date$"
+	revision	: "$Revision$"
 
 class ROUTINE_AS
 
@@ -12,10 +11,13 @@ inherit
 		redefine
 			is_require_else, is_ensure_then,
 			has_rescue, has_precondition, has_postcondition,
-			check_local_names, number_of_stop_points,
-			type_check, byte_node, find_breakable, 
+			check_local_names, 
+			type_check, byte_node,
 			fill_calls_list, replicate, local_table, format,
-			local_table_for_format, create_default_rescue, empty
+			local_table_for_format, create_default_rescue, is_empty,
+			number_of_precondition_slots,
+			number_of_postcondition_slots,
+			number_of_breakpoint_slots
 		end
 
 	SHARED_INSTANTIATOR
@@ -48,25 +50,9 @@ feature {AST_FACTORY} -- Initialization
 			body_start_position_set: body_start_position = p
 		end
 
-feature {NONE} -- Initialization
-
-	set is
-			-- Yacc initialization
-		do
-			obsolete_message ?= yacc_arg (0)
-			precondition ?= yacc_arg (1)
-			locals ?= yacc_arg (2)
-			routine_body ?= yacc_arg (3)
-			postcondition ?= yacc_arg (4)
-			rescue_clause ?= yacc_arg (5)
-			body_start_position := yacc_int_arg (0)
-		ensure then
-			routine_body /= Void
-		end
-
 feature -- Attributes
 
-	body_start_position: INTEGER;
+	body_start_position: INTEGER
 			-- Position at the start of the main body (after the comments)
 
 	obsolete_message: STRING_AS
@@ -128,7 +114,7 @@ feature -- Properties
 			-- Has the routine a non-empty rescue clause ?
 		do
 			Result := (rescue_clause /= Void) and then
-					  not rescue_clause.empty
+					  not rescue_clause.is_empty
 		end
 
 	is_deferred: BOOLEAN is
@@ -151,16 +137,43 @@ feature -- Properties
 
 feature -- Access
 
-	number_of_stop_points: INTEGER is
-			-- Number of stop points for AST
+	number_of_breakpoint_slots: INTEGER is
+			-- Number of stop points for AST (pre/post condition
+			-- included but the ones inherited)
 		do
-				-- Order matters.
+				-- At least one stoppoint, the one corresponding
+				-- to the feature end.
+			Result := 1 
+
+				-- Add the body stop points
 			if routine_body /= Void then
-				Result := routine_body.number_of_stop_points
+				Result := Result + routine_body.number_of_breakpoint_slots
 			end
-			if rescue_clause /= Void then
-				Result := Result + rescue_clause.number_of_stop_points
-				Result := Result + 1
+
+				-- Add the rescue stop points
+			if has_rescue then
+				Result := Result + rescue_clause.number_of_breakpoint_slots
+			end
+
+				-- Add the pre/postconditions slots
+			Result := Result + number_of_precondition_slots + number_of_postcondition_slots
+		end
+
+	number_of_precondition_slots: INTEGER is
+			-- Number of preconditions
+			-- (inherited assertions are not taken into account)
+		do
+			if has_precondition then
+				Result := precondition.number_of_breakpoint_slots
+			end
+		end
+
+	number_of_postcondition_slots: INTEGER is
+			-- Number of postconditions
+			-- (inherited assertions are not taken into account)
+		do
+			if has_postcondition then
+				Result := postcondition.number_of_breakpoint_slots
 			end
 		end
 
@@ -204,9 +217,9 @@ feature -- Comparison
 
 feature -- test for empty body
 
-	empty : BOOLEAN is
+	is_empty : BOOLEAN is
 		do
-			Result := (routine_body = Void) or else (routine_body.empty)
+			Result := (routine_body = Void) or else (routine_body.is_empty)
 		end
 
 feature -- default rescue
@@ -219,13 +232,13 @@ feature -- default rescue
 		do
 			if rescue_clause = Void and then
 			   not (routine_body.is_deferred or routine_body.is_external) then
-				!! def_resc_id.make (1)
+				create def_resc_id.make (1)
 				def_resc_id.load (def_resc_name)
-				!! def_resc_call
+				create def_resc_call
 				def_resc_call.set_feature_name (def_resc_id)
-				!! def_resc_instr
+				create def_resc_instr
 				def_resc_instr.set_call (def_resc_call)
-				!! rescue_clause.make (1)
+				create rescue_clause.make (1)
 				rescue_clause.extend (def_resc_instr)
 			end
 		end
@@ -375,15 +388,14 @@ feature -- Type check, byte code and dead code removal
 		do
 			context_class := context.a_class
 			if (is_deferred or is_external) then
-				!!vrrr2
+				create vrrr2
 				context.init_error (vrrr2)
 				vrrr2.set_is_deferred (is_deferred)
 				Error_handler.insert_error (vrrr2)
 			else
 				from
 					curr_feat := context.a_feature
-					track_local :=
-						equal (curr_feat.written_in, context_class.id)
+					track_local := curr_feat.written_in = context_class.class_id
 					--	and then
 					--	context_class.changed
 					context_locals := context.locals
@@ -414,7 +426,7 @@ feature -- Type check, byte code and dead code removal
 						if curr_feat.has_argument_name (local_name) then
 								-- The local name is an argument name of the
 								-- current analyzed feature
-							!!vrle2
+							create vrle2
 							context.init_error (vrle2)
 							vrle2.set_local_name (local_name)
 							Error_handler.insert_error (vrle2)
@@ -423,14 +435,14 @@ feature -- Type check, byte code and dead code removal
 						then
 								-- The local name is a feature name of the
 								-- current analyzed class.
-							!!vrle1
+							create vrle1
 							context.init_error (vrle1)
 							vrle1.set_local_name (local_name)
 							Error_handler.insert_error (vrle1)
 						end
 							-- Build the local table in the context
 						counter := counter + 1
-						!!local_info
+						create local_info
 							-- Check an expanded local type
 						if 	solved_type.has_expanded then
 							if	solved_type.expanded_deferred then
@@ -458,8 +470,8 @@ feature -- Type check, byte code and dead code removal
 							-- Check constraint genericity
 						solved_type.reset_constraint_error_list
 						solved_type.check_constraints (context_class)
-						if not solved_type.constraint_error_list.empty then
-							!!vtcg3
+						if not solved_type.constraint_error_list.is_empty then
+							create vtcg3
 							vtcg3.set_class (context_class)
 							vtcg3.set_feature (curr_feat)
 							vtcg3.set_entity_name (local_name)
@@ -471,7 +483,7 @@ feature -- Type check, byte code and dead code removal
 						local_info.set_position (counter)
 						if context_locals.has (local_name) then
 								-- Error: two locals withe the same name
-							!!vreg
+							create vreg
 							vreg.set_entity_name (local_name)
 							context.init_error (vreg)
 							Error_handler.insert_error (vreg)
@@ -518,7 +530,7 @@ feature -- Type check, byte code and dead code removal
 		do
 			if locals /= Void then
 				from
-					!!Result.make (2 * locals.count)
+					create Result.make (2 * locals.count)
 					feat_tbl := a_feature.written_class.feature_table
 					locals.start
 				until
@@ -535,7 +547,7 @@ feature -- Type check, byte code and dead code removal
 						id_list.after
 					loop
 						local_name := id_list.item
-						!!local_info
+						create local_info
 						local_info.set_type (solved_type)
 						Result.put (local_info, local_name)
 						id_list.forth
@@ -550,7 +562,7 @@ feature -- Type check, byte code and dead code removal
 	Empty_local_table: EXTEND_TABLE [LOCAL_INFO, STRING] is
 			-- Empty local table
 		once
-			!!Result.make (1)
+			create Result.make (1)
 		end
 
 feature -- Format Context
@@ -567,7 +579,7 @@ feature -- Format Context
 		do
 			if locals /= Void then
 				from
-					!! Result.make (2 * locals.count)
+					create Result.make (2 * locals.count)
 					if a_feature /= Void then
 						feat_tbl := a_feature.written_class.feature_table
 					end
@@ -609,21 +621,6 @@ feature -- Format Context
 					end
 					locals.forth
 				end
-			end
-		end
-
-feature -- Debugger
- 
-	find_breakable is
-			-- Look for breakable instructions.
-		do
-				-- Order matters.
-			if routine_body /= Void then
-				routine_body.find_breakable
-			end
-			if rescue_clause /= Void then
-				rescue_clause.find_breakable
-				record_break_node
 			end
 		end
 
@@ -710,7 +707,7 @@ feature -- Context format
 			if not ctxt.is_feature_short then
 				if locals /= Void then
 					ctxt.put_text_item (ti_Local_keyword)
-					ctxt.set_separator (ti_Semi_colon)
+					ctxt.set_separator (Void)
 					ctxt.indent
 					ctxt.set_new_line_between_tokens
 					ctxt.new_line
@@ -735,31 +732,22 @@ feature -- Context format
 					ctxt.put_text_item (ti_Rescue_keyword)
 					ctxt.indent
 					ctxt.new_line
-					ctxt.set_separator (ti_Semi_colon)
+					ctxt.set_separator (Void)
 					ctxt.set_new_line_between_tokens
 					rescue_clause.format (ctxt)
 					ctxt.exdent
 					ctxt.new_line
+				end
+				if
+					not is_deferred and
+					not is_external
+				then
+						-- Put the final breakable mark (the one before the final end).
 					ctxt.put_breakable
 				end
 				ctxt.put_text_item (ti_End_keyword)
 			end
 			ctxt.exdent
-		end
-
-feature -- Case storage
-
-	store_information (f: S_FEATURE_DATA) is
-			-- Store pre and post information into `f'.
-		require
-			valid_f: f /= Void
-		do
-			if precondition /= Void and then precondition.assertions /= Void then
-				f.set_preconditions (precondition.storage_info)
-			end
-			if postcondition /= Void and then postcondition.assertions /= Void then
-				f.set_postconditions (postcondition.storage_info)
-			end
 		end
 
 feature {AST_EIFFEL} -- Output

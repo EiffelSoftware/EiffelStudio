@@ -31,14 +31,14 @@ feature {NONE} -- Initialization
 			!! tool_height.make (associated_category.tool_height);
 			!! keep_toolbar.make (associated_category.keep_toolbar)
 			!! double_line_toolbar.make (associated_category.double_line_toolbar)
-			!! show_all_callers.make (associated_category.show_all_callers);
+			!! private_show_all_callers.make (associated_category.show_all_callers);
 			!! do_flat_in_breakpoints.make (associated_category.do_flat_in_breakpoints);
 
 			resources.extend (tool_width);
 			resources.extend (tool_height);
 			resources.extend (keep_toolbar);
 			resources.extend (double_line_toolbar);
-			resources.extend (show_all_callers);
+			resources.extend (private_show_all_callers);
 			resources.extend (do_flat_in_breakpoints)
 		end;
 
@@ -79,7 +79,7 @@ feature {NONE} -- Resources
 
 	tool_width, tool_height: INTEGER_PREF_RES;
 	double_line_toolbar, keep_toolbar: BOOLEAN_PREF_RES;
-	show_all_callers: BOOLEAN_PREF_RES;
+	private_show_all_callers: BOOLEAN_PREF_RES;
 	do_flat_in_breakpoints: BOOLEAN_PREF_RES;
 
 

@@ -18,8 +18,6 @@ inherit
 
 	EV_CONTAINER_IMP 
 		rename
-			interface as widget_interface,
-			set_interface as set_widget_interface,
 			set_parent as widget_set_parent,
 			add_double_click_command as old_add_dblclk,
 			remove_double_click_commands as old_remove_dblclk
@@ -29,9 +27,9 @@ inherit
 
 feature -- Deferred features
 
-	interface: EV_ANY is
-		deferred
-		end
+--	interface: EV_ANY is
+--		deferred
+--		end
 
 end -- class EV_MENU_ITEM_HOLDER_IMP
 

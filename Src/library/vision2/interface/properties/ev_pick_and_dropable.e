@@ -224,7 +224,9 @@ feature {EV_APPLICATION_I, EV_PICK_AND_DROPABLE_I} -- Implementation
 
 invariant
 	user_interface_modes_mutually_exclusive:
-		mode_is_pick_and_drop /= mode_is_drag_and_drop
+		mode_is_pick_and_drop.to_integer +
+		mode_is_drag_and_drop.to_integer +
+		mode_is_target_menu.to_integer = 1
 	pick_actions_not_void: pick_actions /= Void
 	conforming_pick_actions_not_void: conforming_pick_actions /= Void
 	drop_actions_not_void: drop_actions /= Void
@@ -252,6 +254,9 @@ end -- class EV_PICK_AND_DROPABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.10  2000/04/25 01:28:36  oconnor
+--| fixed invariant for mutual exclusion of UI modes
+--|
 --| Revision 1.9  2000/04/25 00:56:45  oconnor
 --| added right click context menu UI for PND.
 --|

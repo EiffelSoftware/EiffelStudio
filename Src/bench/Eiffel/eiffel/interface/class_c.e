@@ -914,9 +914,12 @@ end;
 				end;
 
 					-- Clean the caches if error
--- FIXME
--- can we loose some of the information in the cache ?????
--- (for some other classes for which pass3 was successfull)
+
+					--| TMP_AST_SERVER is a SERVER, not a DELAY_SERVER
+					--| Calling `wipe_out' on the cache won't remove anything
+					--| from the server itself
+
+					--| The other servers are READ_SERVERs.
 
 				tmp_ast_server.cache.wipe_out
 				tmp_body_server.cache.wipe_out
@@ -1299,7 +1302,7 @@ feature -- Workbench feature and descriptor table generation
 			feat_tbl := feature_table;
 			table_file_name := full_file_name;
 			table_file_name.append_integer (id);
-			table_file_name.append (feature_table_suffix);
+			table_file_name.append_character (feature_table_file_suffix);
 			table_file_name.append (Dot_c);
 			!!file.make (table_file_name);
 			file.open_write;

@@ -215,6 +215,9 @@ feature -- Status setting
 					-- Now send `Cbn_selchange' message to Current control
 					-- so that we know that a change occured and to handle
 					-- it as specified by user.
+				if selected then
+					execute_command (Cmd_unselect, Void)
+				end
 				cwin_send_message (parent_item, Wm_command, Cbn_selchange * 65536 + id,
 					cwel_pointer_to_integer (item))
 				execute_command (Cmd_select, Void)
@@ -435,9 +438,35 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- WEL Implemen
 	on_key_down (virtual_key, key_data: INTEGER) is
 			-- We check if the enter key is pressed)
 			-- 13 is the number of the return key.
+		local
+			temp: ANY
+			temp_text: STRING
+			tint: INTEGER
+			list: ARRAYED_LIST [EV_LIST_ITEM_IMP]
+			counter: INTEGER
+			found: BOOLEAN
 		do
 			{EV_TEXT_COMPONENT_IMP} Precursor (virtual_key, key_data)
 			process_tab_key (virtual_key)
+			if virtual_key = Vk_return then
+				-- If return pressed, select item with matching text.
+				if selected and then equal (selected_item.text, text) then
+				from
+					list := ev_children
+					list.start
+					counter := 1
+				until
+					counter = list.count + 1 or found
+				loop
+					if equal (list.item.text, text) then
+						select_item (counter)
+						found := True
+					end
+					list.forth
+					counter := counter + 1
+				end
+				end
+			end
 		end
 
 feature {NONE} -- WEL Implementation
@@ -452,6 +481,9 @@ feature {NONE} -- WEL Implementation
 	old_selected_item: EV_LIST_ITEM_IMP
 			-- The previously selected item
 
+	last_edit_change: STRING
+			-- The string resulting from the last edit change.
+
 	on_cben_endedit_item (info: WEL_NM_COMBO_BOX_EX_ENDEDIT) is
 			-- The user has concluded an operation within the edit box
 			-- or has selected an item from the control's drop-down list.
@@ -465,22 +497,24 @@ feature {NONE} -- WEL Implementation
 	on_cbn_selchange is
 			-- The selection is about to be changed.
 		do
-			-- Event for the unselected item
-			if old_selected_item /= Void and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
-				old_selected_item.execute_command (Cmd_item_deactivate, Void)
-				execute_command (Cmd_unselect, Void)
-			end
-
-			-- Event for the newly selected item
+				-- Event for the unselected item
+			--if selected and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
+			--end
+				-- Event for the newly selected item
+			if selected and then wel_selected_item /= Void then
 			if selected and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
+						old_selected_item.execute_command (Cmd_item_deactivate, Void)
+						execute_command (Cmd_unselect, Void)
+	
 					-- Only performed if an item is selected and the new selection is not equal to
 					-- the current selection.
 				old_selected_item := ev_children.i_th (wel_selected_item + 1)
 				old_selected_item.execute_command (Cmd_item_activate, Void)
 				execute_command (Cmd_select, Void)
 					-- Must now manually inform combo box that a selection is taking place
-			elseif not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
+			elseif wel_selected_item/= Void and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
 				old_selected_item := Void
+			end
 			end
 		end
 
@@ -495,11 +529,13 @@ feature {NONE} -- WEL Implementation
 	on_cbn_editchange is
 			-- The edit control portion is about to
 			-- display altered text.
+		local
+			s1,s2: STRING
 		do
-			if not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
-				-- Only performed if the old selected item is not equal to the new selected item.
+			if not equal (text, last_edit_change) then
 				execute_command (Cmd_change, Void)
 			end
+			last_edit_change := text
 		end
 
    	move_and_resize (a_x, a_y, a_width, a_height: INTEGER; repaint: BOOLEAN) is

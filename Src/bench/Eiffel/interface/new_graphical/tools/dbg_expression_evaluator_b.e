@@ -560,7 +560,13 @@ feature -- EXPR_B evaluation
 					fi := ef.associated_feature_i
 			
 					if fi.is_once then
-						evaluate_once (ef)
+--						evaluate_once (ef)
+						params := parameter_values_from_parameters_b (a_feature_b.parameters)
+						if tmp_target /= Void then
+							evaluate_once (tmp_target.value_address, tmp_target, ef, params)
+						else
+							evaluate_once (context_address, Void, ef, params)
+						end
 					elseif fi.is_constant then
 						evaluate_constant (ef)
 					elseif fi.is_function then					
@@ -569,7 +575,7 @@ feature -- EXPR_B evaluation
 						if tmp_target /= Void then
 							evaluate_function (tmp_target.value_address, tmp_target, ef, params)
 						else
-							evaluate_function (context_address, tmp_target, ef, params)
+							evaluate_function (context_address, Void, ef, params)
 						end
 					else
 						set_error_not_implemented (a_feature_b.generator +  " => ERROR : other than function, constant and once : not available")
@@ -820,14 +826,14 @@ feature -- Concrete evaluation
 			end
 		end
 
-	evaluate_once (f: E_FEATURE) is
+	evaluate_once (a_addr: STRING; a_target: DUMP_VALUE; f: E_FEATURE; params: LIST [DUMP_VALUE]) is
 			-- 
 		require
 			feature_not_void: f /= Void
 --			f_is_once: f.is_once
 --			f_is_once: f.associated_feature_i.is_once
 		local
-			once_r: ONCE_REQUEST			
+			once_r: ONCE_REQUEST
 		do
 			check
 				f_is_once: f.associated_feature_i.is_once
@@ -836,13 +842,17 @@ feature -- Concrete evaluation
 				set_error_evaluation ("Once evaluation on generic classes not available")
 			else
 				if application.is_dotnet then
+						--| Dotnet
 					tmp_result_value := dbg_evaluator.dotnet_evaluate_once_function (f)
 					tmp_result_static_type := f.type.associated_class
 				else
+						--| Classic
 					once_r := debug_info.once_request
 					if once_r.already_called (f) then
-						tmp_result_value := once_r.once_result (f).dump_value
-						tmp_result_static_type := f.type.associated_class
+						evaluate_function (a_addr, a_target, f, params)
+-- FIXME jfiat [2005/03/11] : changed
+--						tmp_result_value := once_r.once_result (f).dump_value
+--						tmp_result_static_type := f.type.associated_class
 					end				
 				end
 				if tmp_result_value = Void then

@@ -77,7 +77,8 @@ feature -- Status Report
 			Result := is_fdefault (a_flag) or
 					is_fsource (a_flag) or 
 					is_frestricted (a_flag) or
-					is_fdefaultvtable (a_flag)
+					is_fdefaultvtable (a_flag) or
+					(a_flag = 0)
 		end
 		
 end -- class ECOM_IMPLTYPEFLAGS

@@ -406,6 +406,7 @@ feature -- Execution
 			-- application. Also execute the `termination_command'.
 		do
 			Eifnet_debugger.reset_debugging_data
+			eifnet_debugger.destroy_monitoring_of_process_termination_on_exit
 			
 --			Eifnet_debugger.terminate_debugger_session
 -- this is now called directly from EIFNET_DEBUGGER.on_exit_process

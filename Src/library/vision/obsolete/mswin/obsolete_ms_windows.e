@@ -45,7 +45,7 @@ feature -- Access
 		end;
 
 	scroll_list (a_list: SCROLL_LIST; managed, is_fixed: BOOLEAN; 
-			oui_parent: COMPOSITE): SCROLL_LIST_WINDOWS is
+			oui_parent: COMPOSITE): SCROLL_LIST_IMP is
 			-- Ms Windows implementation of `a_list'
 		do
 			!! Result.make (a_list, managed, is_fixed, oui_parent)

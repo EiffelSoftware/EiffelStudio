@@ -9,7 +9,7 @@ class SEPARATOR_G_WINDOWS
 
 inherit
 
-        SEPARATOR_WINDOWS
+        SEPARATOR_IMP
         
         SEPARATO_G_I
 

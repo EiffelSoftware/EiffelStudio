@@ -7,7 +7,7 @@ class
 	PUSH_BG_WINDOWS
 
 inherit
-        PUSH_BUTTON_WINDOWS
+        PUSH_BUTTON_IMP
         
         PUSH_BG_I
 

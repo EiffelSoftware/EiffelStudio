@@ -52,7 +52,6 @@ feature -- Access
 			-- selection, it gives the last selected item.
 		require
 			exists: not destroyed
-			item_selected: selected
 		deferred
 		end
 
@@ -64,7 +63,6 @@ feature -- Access
 			-- `selected_items' for a single selection list
 		require
 			exists: not destroyed
-			item_selected: selected
 		deferred
 		end
 

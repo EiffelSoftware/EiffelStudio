@@ -2,42 +2,34 @@ system
 	test
 
 root
-	TEST: make_and_launch
+	EV_TEST: make_and_launch
 
 default
-
 	assertion (all)
 
-	--debug("EVENT_TRACE")
-	--debug("EV_GTK_DEBUG")
 cluster
+	library:				"$EIFFEL4\library"
 
-dev:						"e:\brendel"
+	all wel (library):			"$\wel"
 
-event(dev):					"$\event"
+	all vision2 (library):			"$\vision2"
+		exclude
+			"gtk"
+			"obsolete"
+		end
 
-all wel(dev):					"$\wel"
-
-all vision2(dev):				"$\vision2"
-	exclude
-		"test";
-		"gtk";
-		"EIFGEN";
-	end
-
-
-all base(dev):					"$\base"
-	exclude
-		"table_eiffel3"
-	end
-
-test(vision2):				"$\release\test"
+	all base (library):			"$\base"
+		exclude
+			"table_eiffel3"
+		end
 
 external
-
-	include_path:
-		"e:\work\wel\spec\windows\include";
-	object:
-		"e:\work\wel\spec\msc\lib"
-
+        include_path:
+			"$EIFFEL4\library\wel\spec\windows\include",
+			"$EIFFEL4\library\vision2\spec\include"
+        object:
+			"$EIFFEL4\library\wel\spec\$(COMPILER)\lib\wel.lib",
+			"$EIFFEL4\library\vision2\spec\$(COMPILER)\lib\libpng.lib",
+			"$EIFFEL4\library\vision2\spec\$(COMPILER)\lib\zlib.lib",
+			"$EIFFEL4\library\vision2\spec\$(COMPILER)\lib\vision2.lib"
 end

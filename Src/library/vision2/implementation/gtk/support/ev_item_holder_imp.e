@@ -191,8 +191,9 @@ feature -- Implementation
 		end
 
 	remove_item_from_position (a_position: INTEGER) is
-			-- Remove item at `a_position'
-		
+			-- Remove item at `a_position'.
+		require
+			a_position_valid: a_position > 0
 		do	
 			C.gtk_container_remove (
 				list_widget,
@@ -261,6 +262,9 @@ end -- class EV_ITEM_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.15  2000/03/13 19:04:22  king
+--| Added valid_position precondition to remove_item_at_position
+--|
 --| Revision 1.14  2000/03/08 21:36:56  king
 --| Corrected comment on remove
 --|

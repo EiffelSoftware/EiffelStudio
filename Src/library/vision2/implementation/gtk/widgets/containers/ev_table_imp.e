@@ -141,6 +141,43 @@ feature -- Status settings
 			C.gtk_container_remove (container_widget, item_imp.c_object)
 			C.gtk_object_unref (item_imp.c_object)
 		end
+		
+	set_item_span (v: EV_WIDGET; column_span, row_span: INTEGER) is
+			-- 
+		do
+			--| FIXME Implement me please
+		end
+		
+	set_item_position (v: EV_WIDGET; a_column, a_row: INTEGER) is
+			-- 
+		do
+			--| FIXME Implement me please
+		end
+		
+	item_column_span (widget: EV_WIDGET): INTEGER is
+			-- 
+		do	
+			--| FIXME Implement me please
+		end
+	
+	item_row_span (widget: EV_WIDGET): INTEGER is
+			-- 
+		do	
+			--| FIXME Implement me please
+		end
+		
+	item_row_position (widget: EV_WIDGET): INTEGER is
+			-- 
+		do	
+			--| FIXME Implement me please
+		end
+		
+	item_column_position (widget: EV_WIDGET): INTEGER is
+			-- 
+		do
+			--| FIXME Implement me please
+		end
+		
 
 feature {NONE} -- Externals
 

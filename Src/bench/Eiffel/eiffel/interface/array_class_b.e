@@ -23,6 +23,7 @@ feature
 			stop, error: BOOLEAN;
 			special_error: SPECIAL_ERROR;
 			creat_feat: FEATURE_I;
+			to_special_p, parent_t: CL_TYPE_A
 		do
 			-- First check if current class has one formal generic parameter
 			if (generics = Void) or else generics.count /= 1 then
@@ -34,10 +35,13 @@ feature
 			-- TO_SPECIAL [Generic #1]
 			from
 				parents.start
+				to_special_p := To_special_parent
 			until
 				parents.after or else stop
 			loop
-				stop := deep_equal (parents.item, To_special_parent);
+				parent_t := parents.item
+				stop := parent_t.same_type (to_special_p) and then
+					parent_t.is_equivalent (to_special_p)
 				parents.forth;
 			end;
 			if not stop then

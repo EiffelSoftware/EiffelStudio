@@ -1391,8 +1391,13 @@ end;
 					invar_clause := Tmp_inv_ast_server.item (class_id);
 				
 						-- Incrementality test on invariant clause
-					invariant_changed := not deep_equal
-											(invar_clause, old_invar_clause);
+					if invar_clause = Void then
+						invariant_changed := old_invar_clause /= Void
+					else
+						invariant_changed := not (
+							old_invar_clause /= Void and then
+							invar_clause.is_equivalent (old_invar_clause))
+					end
 				else
 					invariant_changed := True;
 				end;

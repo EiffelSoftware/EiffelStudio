@@ -25,15 +25,19 @@ feature
 			stop, error: BOOLEAN;
 			special_error: SPECIAL_ERROR;
 			creat_feat: FEATURE_I;
+			to_special_p, parent_t: CL_TYPE_A
 		do
 			-- First check if class inherits directly from parent
 			-- TO_SPECIAL [CHARACTER]
 			from
 				parents.start
+				to_special_p := To_special_parent
 			until
 				parents.after or else stop
 			loop
-				stop := deep_equal (parents.item, To_special_parent);
+				parent_t := parents.item
+				stop := parent_t.same_type (to_special_p) and then
+					to_special_p.is_equivalent (parent_t)
 				parents.forth;
 			end;
 			if not stop then

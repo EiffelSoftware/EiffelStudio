@@ -387,7 +387,7 @@ feature -- Iteration
 			iteration_position := pos_for_iter
 		end
 
-	after: BOOLEAN is
+	after, off: BOOLEAN is
 			-- Is the iteration cursor off ?
 		do
 			Result := iteration_position > capacity - 1

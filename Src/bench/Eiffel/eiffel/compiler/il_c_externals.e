@@ -12,6 +12,10 @@ class
 
 inherit
 	HASH_TABLE [SEARCH_TABLE [INTEGER], INTEGER]
+		export
+			{NONE} all
+			{ANY} has, remove, count
+		end
 	
 	SHARED_WORKBENCH
 		export
@@ -93,8 +97,10 @@ feature -- Code generation
 			buffer, header_buffer: GENERATION_BUFFER
 			external_file, header_file: INDENT_FILE
 			final_mode: BOOLEAN
+			l_extension: STRING
 		do
 			from
+				is_cpp := False
 				final_mode := context.final_mode
 				buffer := context.generation_buffer
 				header_buffer := context.header_generation_buffer
@@ -127,8 +133,14 @@ feature -- Code generation
 			header_file.put_string (header_buffer)
 			header_file.close
 
+			if is_cpp then
+				l_extension := ".cpp"
+			else
+				l_extension := ".c"
+			end
+			
 			create external_file.make_open_write (
-				full_file_name ("lib" + System.name + ".c", final_mode))
+				full_file_name ("lib" + System.name + l_extension, final_mode))
 			external_file.put_string (buffer)
 			external_file.close
 			
@@ -154,6 +166,7 @@ feature {NONE} -- Implementation
 				a_s.after
 			loop
 				ext ?= feat_tbl.item_id (a_s.item_for_iteration)
+				is_cpp := is_cpp or else ext.extension.is_cpp
 				ext.generate_c_il (buffer)
 				a_s.forth
 			end
@@ -188,4 +201,7 @@ feature {NONE} -- Path
 			end
 		end
 		
+	is_cpp: BOOLEAN
+			-- Does current has some C++ externals?
+
 end -- class IL_C_EXTERNALS

@@ -13,11 +13,8 @@ feature {NONE} -- Initialization
 
 	make (value: STRING) is
 			-- Initialize string with `value'.
-		local
-			a_internal: STRING
 		do
-			create a_internal.make (value)
-			internal := a_internal
+			internal := value
 		end
 
 feature -- Access
@@ -26,21 +23,24 @@ feature -- Access
 			-- Is string an integer?
 		local
 			i: INTEGER
+			c: CHARACTER
 		do
 			from
 				Result := true
 			until
 				i >= internal.count or not Result
 			loop
-				Result := internal.chars (i).isdigit (internal.chars (i))
+				Result := c.is_digit (internal.get_chars (i))
 				i := i + 1
 			end
 		end
 
 	to_integer: INTEGER is
 			-- Convert string to integer
+		local
+			convert: SYSTEM_CONVERT
 		do
-			Result := internal.ToInt32
+			Result := convert.to_int32_string (internal)
 		end
 
 feature {NONE} -- Implementation

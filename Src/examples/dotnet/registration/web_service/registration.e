@@ -8,28 +8,32 @@ alias
 
 inherit
 	DATABASE_ITEM
+		redefine
+			to_string
+		end
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_registrant_id: INTEGER;
+	make (a_registrant_id: STRING;
 			a_quantity, a_discount_plan: STRING;
 			a_preconf, a_wet, a_conference, a_esummit, a_postconf: BOOLEAN) is
 			-- Initialize new regsitrant with given values.
 		require
+			non_void_registrant_id: a_registrant_id /= Void
+			valid_registrant_id: a_registrant_id.count > 0
 			non_void_quantity: a_quantity /= Void
 			non_void_discount_plan: a_discount_plan /= Void
-			valid_registrant_id: a_registrant_id > 0
 			valid_discount_plan:
-								a_discount_plan.equals ("Regular")
+								a_discount_plan.is_equal ("Regular")
 									or
-								a_discount_plan.equals ("Non-academic Authors")
+								a_discount_plan.is_equal ("Non-academic Authors")
 									or
-								a_discount_plan.equals ("Full-Time Students")
+								a_discount_plan.is_equal ("Full-Time Students")
 									or
-								a_discount_plan.equals ("Full-Time Faculty Members")
+								a_discount_plan.is_equal ("Full-Time Faculty Members")
 		local
 			my_quantity: MY_STRING
 		do
@@ -49,19 +53,19 @@ feature {NONE} -- Initialization
 				initialized := True
 			end
 		ensure
-			registrant_id_set: initialized implies registrant_id.equals (a_registrant_id)
-			quantity_set: initialized implies integer.to_string (quantity).equals (a_quantity)
-			discount_plan_set: initialized implies discount_plan.equals (a_discount_plan)
-			preconf_set: initialized implies preconf.equals (a_preconf)
-			wet_set: initialized implies wet.equals (a_wet)
-			conference_set: initialized implies conference.equals (a_conference)
-			esummit_set: initialized implies esummit.equals (a_esummit)
-			postconf_set: initialized implies postconf.equals (a_postconf)
+			registrant_id_set: initialized implies registrant_id.is_equal (a_registrant_id)
+			quantity_set: initialized implies quantity.to_string.is_equal (a_quantity)
+			discount_plan_set: initialized implies discount_plan.is_equal (a_discount_plan)
+			preconf_set: initialized implies preconf.is_equal (a_preconf)
+			wet_set: initialized implies wet.is_equal (a_wet)
+			conference_set: initialized implies conference.is_equal (a_conference)
+			esummit_set: initialized implies esummit.is_equal (a_esummit)
+			postconf_set: initialized implies postconf.is_equal (a_postconf)
 		end
 
 feature -- Access
 
-	registrant_id: INTEGER
+	registrant_id: STRING
 			-- Associated registrant identifier
 
 	quantity: INTEGER
@@ -88,32 +92,32 @@ feature -- Access
 	to_string: STRING is
 			-- String representation
 		do
-			Result := string.concat_system_object (quantity)
-			Result := string.concat (Result, " ")
-			Result := string.concat (Result, discount_plan)
+			Result := string.concat_object (quantity)
+			Result := string.concat_string_string (Result, " ")
+			Result := string.concat_string_string (Result, discount_plan)
 			if quantity = 1 then
-				Result := string.concat (Result, " registration (number ")
+				Result := string.concat_string_string (Result, " registration (number ")
 			else
-				Result := string.concat (Result, " registrations (number ")
+				Result := string.concat_string_string (Result, " registrations (number ")
 			end
-			Result := string.concat_system_object_system_object (Result, identifier)
-			Result := string.concat (Result, ") for registrant ")
-			Result := string.concat_System_object_system_object (Result, registrant_id)
-			Result := string.concat (Result, ":\n")
+			Result := string.concat_object_object (Result, identifier)
+			Result := string.concat_string_string (Result, ") for registrant ")
+			Result := string.concat_object_object (Result, registrant_id)
+			Result := string.concat_string_string (Result, ":\n")
 			if preconf then
-				Result := string.concat (Result, "Pre-Conference")
+				Result := string.concat_string_string (Result, "Pre-Conference")
 			end
 			if wet then
-				Result := string.concat (Result, "Workshop for Education and Training")
+				Result := string.concat_string_string (Result, "Workshop for Education and Training")
 			end
 			if conference then
-				Result := string.concat (Result, "Main Conference")
+				Result := string.concat_string_string (Result, "Main Conference")
 			end
 			if esummit then
-				Result := string.concat (Result, "Eiffel Summit")
+				Result := string.concat_string_string (Result, "Eiffel Summit")
 			end
 			if postconf then
-				Result := string.concat (Result, "Post-Conference")
+				Result := string.concat_string_string (Result, "Post-Conference")
 			end
 		end
 
@@ -127,18 +131,18 @@ feature {NONE} -- Implementation
 
 invariant
 
-	valid_registrant_id: initialized implies (registrant_id > 0)
+	valid_registrant_id: initialized implies (registrant_id /= Void and then registrant_id.count > 0)
 	valid_quantity: initialized implies (quantity > 0)
 	valid_discount_plan:
 						initialized
 							implies
-						(discount_plan.equals ("Regular")
+						(discount_plan.is_equal ("Regular")
 							or
-						discount_plan.equals ("Non-academic Authors")
+						discount_plan.is_equal ("Non-academic Authors")
 							or
-						discount_plan.equals ("Full-Time Students")
+						discount_plan.is_equal ("Full-Time Students")
 							or
-						discount_plan.equals ("Full-Time Faculty Members"))
+						discount_plan.is_equal ("Full-Time Faculty Members"))
 
 end -- class REGISTRATION
 --|----------------------------------------------------------------

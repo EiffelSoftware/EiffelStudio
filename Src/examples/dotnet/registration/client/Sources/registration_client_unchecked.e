@@ -7,7 +7,7 @@ alias
 	"RegistrationClient.ClientUnchecked"
 
 inherit
-	SYSTEM_WINFORMS_FORM
+	SYSTEM_WINDOWS_FORMS_FORM
 	
 create
 	make
@@ -17,12 +17,11 @@ feature {NONE} -- Initialization
 	make is
 			-- create {a new client window.
 		local
-			return_value: INTEGER
+			return_value: SYSTEM_WINDOWS_FORMS_DIALOGRESULT
 		do
 			initialize_gui
 			create registrar.make_registrar
-			create input_checker.make
-			return_value := showdialog
+			return_value := show_dialog
 		end
 
 feature -- Access
@@ -32,300 +31,327 @@ feature -- Access
 
 feature -- GUI components
 
-	title_combo_box: SYSTEM_WINFORMS_COMBOBOX
+	title_combo_box: SYSTEM_WINDOWS_FORMS_COMBOBOX
 			-- Title combo box
 	
-	first_name_text_box: SYSTEM_WINFORMS_TEXTBOX
+	first_name_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
 			-- First name single line edit
 			
-	last_name_text_box: SYSTEM_WINFORMS_TEXTBOX
+	last_name_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
 			-- Last name single line edit
 			
-	company_name_text_box: SYSTEM_WINFORMS_TEXTBOX
+	company_name_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
 			-- Company name single line edit
 			
-	address_text_box: SYSTEM_WINFORMS_TEXTBOX
+	address_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
 			-- Address single line edit
 			
-	city_text_box: SYSTEM_WINFORMS_TEXTBOX
+	city_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
 			-- City name single line edit
 			
-	state_text_box: SYSTEM_WINFORMS_TEXTBOX
+	state_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
 			-- State code single line edit
 			
-	zip_code_text_box: SYSTEM_WINFORMS_TEXTBOX
+	zip_code_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
 			-- Zip code single line edit
 			
-	country_text_box: SYSTEM_WINFORMS_TEXTBOX
+	country_text_box: SYSTEM_WINDOWS_FORMS_TEXTBOX
 			-- Country name single line edit
 
-	quantity_up_down: SYSTEM_WINFORMS_NUMERICUPDOWN
+	quantity_up_down: SYSTEM_WINDOWS_FORMS_NUMERICUPDOWN
 			-- Participants number single line edit
 
-	discount_plan_combo_box: SYSTEM_WINFORMS_COMBOBOX
+	discount_plan_combo_box: SYSTEM_WINDOWS_FORMS_COMBOBOX
 			-- Discount plan type combo box
 
-	preconference_check_box: SYSTEM_WINFORMS_CHECKBOX
+	preconference_check_box: SYSTEM_WINDOWS_FORMS_CHECKBOX
 			-- Pre-conference check box
 			
-	wet_check_box: SYSTEM_WINFORMS_CHECKBOX
+	wet_check_box: SYSTEM_WINDOWS_FORMS_CHECKBOX
 			-- WET check box
 			
-	conference_check_box: SYSTEM_WINFORMS_CHECKBOX
+	conference_check_box: SYSTEM_WINDOWS_FORMS_CHECKBOX
 			-- Conference check box
 			
-	eiffel_summit_check_box: SYSTEM_WINFORMS_CHECKBOX
+	eiffel_summit_check_box: SYSTEM_WINDOWS_FORMS_CHECKBOX
 			-- Eiffel summit check box
 			
-	postconference_check_box: SYSTEM_WINFORMS_CHECKBOX
+	postconference_check_box: SYSTEM_WINDOWS_FORMS_CHECKBOX
 			-- Post-conference check box
 	
-	title_label: SYSTEM_WINFORMS_LABEL
+	title_label: SYSTEM_WINDOWS_FORMS_LABEL
 			-- Title label
 			
-	first_name_label: SYSTEM_WINFORMS_LABEL
+	first_name_label: SYSTEM_WINDOWS_FORMS_LABEL
 			-- First name label
 			
-	last_name_label: SYSTEM_WINFORMS_LABEL
+	last_name_label: SYSTEM_WINDOWS_FORMS_LABEL
 			-- Last name label
 			
-	company_name_label: SYSTEM_WINFORMS_LABEL
+	company_name_label: SYSTEM_WINDOWS_FORMS_LABEL
 			-- Company name label
 			
-	address_label: SYSTEM_WINFORMS_LABEL
+	address_label: SYSTEM_WINDOWS_FORMS_LABEL
 			-- Address label
 			
-	city_label: SYSTEM_WINFORMS_LABEL
+	city_label: SYSTEM_WINDOWS_FORMS_LABEL
 			-- City label
 			
-	state_label: SYSTEM_WINFORMS_LABEL
+	state_label: SYSTEM_WINDOWS_FORMS_LABEL
 			-- State label
 			
-	zip_code_label: SYSTEM_WINFORMS_LABEL
+	zip_code_label: SYSTEM_WINDOWS_FORMS_LABEL
 			-- Zip code label
 			
-	country_label: SYSTEM_WINFORMS_LABEL
+	country_label: SYSTEM_WINDOWS_FORMS_LABEL
 			-- Country label
 			
-	quantity_label: SYSTEM_WINFORMS_LABEL
+	quantity_label: SYSTEM_WINDOWS_FORMS_LABEL
 			-- Number of participants label
 			
-	discount_plan_label: SYSTEM_WINFORMS_LABEL
+	discount_plan_label: SYSTEM_WINDOWS_FORMS_LABEL
 			-- Discount plan label
 			
-	registration_type_label: SYSTEM_WINFORMS_LABEL
+	registration_type_label: SYSTEM_WINDOWS_FORMS_LABEL
 			-- Type of registration label
 	
-	ok_button: SYSTEM_WINFORMS_BUTTON
+	ok_button: SYSTEM_WINDOWS_FORMS_BUTTON
 			-- OK Button
 
 feature {NONE} -- Implementation
 
-	input_checker: INPUT_CHECKER
-			-- Data validity checker
-
-on_ok_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
-		-- Process ok button activation.
-	local
-		message_result: INTEGER
-	do
-		registrar.add_registrant (title_combo_box.text, first_name_text_box.text,
-				last_name_text_box.text, company_name_text_box.text, address_text_box.text,
-				city_text_box.text, state_text_box.text, zip_code_text_box.text,
-				country_text_box.text)
-		if registrar.last_operation_successful then
-			registrar.add_registration (registrar.last_registrant_identifier, quantity_up_down.value.tostring,
-				discount_plan_combo_box.text, preconference_check_box.checked,
-				wet_check_box.checked, conference_check_box.checked,
-				eiffel_summit_check_box.checked, postconference_check_box.checked)
+	on_ok_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
+			-- Process ok button activation.
+		local
+			message_result: expanded SYSTEM_WINDOWS_FORMS_DIALOGRESULT
+		do
+			registrar.add_registrant (title_combo_box.get_text, first_name_text_box.get_text,
+					last_name_text_box.get_text, company_name_text_box.get_text, address_text_box.get_text,
+					city_text_box.get_text, state_text_box.get_text, zip_code_text_box.get_text,
+					country_text_box.get_text)
+			if registrar.last_operation_successful then
+				registrar.add_registration (registrar.last_registrant_identifier, quantity_up_down.get_value.to_string,
+					discount_plan_combo_box.get_text, preconference_check_box.get_checked,
+					wet_check_box.get_checked, conference_check_box.get_checked,
+					eiffel_summit_check_box.get_checked, postconference_check_box.get_checked)
+			end
+			if registrar.last_operation_successful then
+				message_result := message_box_factory.show_string_string ("Registration successfully stored.", "Registration Success")
+			else
+				message_result := message_box_factory.show_string_string (registrar.last_error_message, "Registration Failure")
+			end
 		end
-		if registrar.last_operation_successful then
-			message_result := message_box_factory.show ("Registration successfully stored.", "Registration Success")
-		else
-			message_result := message_box_factory.show (registrar.last_error_message, "Registration Failure")
-		end
-	end
 
 	initialize_gui is
 			-- Initialize form.
 		local
 			on_ok_event_handler_delegate: SYSTEM_EVENTHANDLER
 			type: SYSTEM_TYPE
-			titles, plans: ARRAY [STRING]
 			decimal: SYSTEM_DECIMAL
+			border_styles: SYSTEM_WINDOWS_FORMS_FORMBORDERSTYLE
+			a_size: SYSTEM_DRAWING_SIZE
+			a_point: SYSTEM_DRAWING_POINT
 		do
 			set_text ("TOOLS Registration")
-			set_borderstyle (3)
-			setsize (450, 600)
+			set_form_border_style (Border_styles.fixed_dialog)
+			a_size.make_size_1 (380, 600)
+			set_size (a_size)
 
 			create title_label.make_label
 			title_label.set_text ("Title:")
-			title_label.set_location (create {SYSTEM_DRAWING_POINT}.make_point (30, 30))
+			a_point.make_point (30, 30)
+			title_label.set_location (a_point)
 			
 			create title_combo_box.make_combobox
-			title_combo_box.set_location (create {SYSTEM_DRAWING_POINT}.make_point (250, 30))
-			create titles.make (5)
-			titles.put (0, "Mr.")
-			titles.put (1, "Ms.")
-			titles.put (2, "Miss")
-			titles.put (3, "Mrs.")
-			titles.put (4, "Dr.")
-			title_combo_box.items.set_all (titles)--<<"Mr.", "Ms.", "Miss", "Mrs.", "Dr.">>)
+			a_point.make_point (180,30)
+			title_combo_box.set_location (a_point)
+			title_combo_box.get_items.add_range (<<"Mr.", "Ms.", "Miss", "Mrs.", "Dr.">>)
 			title_combo_box.set_text ("Mr.")
 			
 			create first_name_label.make_label
 			first_name_label.set_text ("First Name:")
-			first_name_label.set_location (create {SYSTEM_DRAWING_POINT}.make_point (30, 60))
+			a_point.make_point (30, 60)
+			first_name_label.set_location (a_point)
 			
 			create first_name_text_box.make_textbox
-			first_name_text_box.set_location (create {SYSTEM_DRAWING_POINT}.make_point (250, 60))
-			first_name_text_box.setsize (150, 20)
+			a_point.make_point (180, 60)
+			first_name_text_box.set_location (a_point)
+			a_size.make_size_1 (150,20)
+			first_name_text_box.set_size (a_size)
 			
 			create last_name_label.make_label
 			last_name_label.set_text ("Last Name:")
-			last_name_label.set_location (create {SYSTEM_DRAWING_POINT}.make_point (30, 90))
+			a_point.make_point (30, 90)
+			last_name_label.set_location (a_point)
 			
 			create last_name_text_box.make_textbox
-			last_name_text_box.set_location (create {SYSTEM_DRAWING_POINT}.make_point (250, 90))
-			last_name_text_box.setsize (150, 20)
+			a_point.make_point (180, 90)
+			last_name_text_box.set_location (a_point)
+			last_name_text_box.set_size (a_size)
 			
 			create company_name_label.make_label
 			company_name_label.set_text ("Company Name:")
-			company_name_label.set_location (create {SYSTEM_DRAWING_POINT}.make_point (30, 120))
+			a_point.make_point (30, 120)
+			company_name_label.set_location (a_point)
 			
 			create company_name_text_box.make_textbox
-			company_name_text_box.set_location (create {SYSTEM_DRAWING_POINT}.make_point (250, 120))
-			company_name_text_box.setsize (150, 20)
+			a_point.make_point (180, 120)
+			company_name_text_box.set_location (a_point)
+			company_name_text_box.set_size (a_size)
 			
 			create address_label.make_label
 			address_label.set_text ("Address:")
-			address_label.set_location (create {SYSTEM_DRAWING_POINT}.make_point (30, 150))
+			a_point.make_point (30, 150)
+			address_label.set_location (a_point)
 			
 			create address_text_box.make_textbox
-			address_text_box.set_location (create {SYSTEM_DRAWING_POINT}.make_point (250, 150))
-			address_text_box.setsize (150, 20)
+			a_point.make_point (180, 150)
+			address_text_box.set_location (a_point)
+			address_text_box.set_size (a_size)
 			
 			create city_label.make_label
 			city_label.set_text ("City:")
-			city_label.set_location (create {SYSTEM_DRAWING_POINT}.make_point (30, 180))
+			a_point.make_point (30, 180)
+			city_label.set_location (a_point)
 			
 			create city_text_box.make_textbox
-			city_text_box.set_location (create {SYSTEM_DRAWING_POINT}.make_point (250, 180))
-			city_text_box.setsize (150, 20)
+			a_point.make_point (180, 180)
+			city_text_box.set_location (a_point)
+			city_text_box.set_size (a_size)
 			
 			create state_label.make_label
 			state_label.set_text ("State:")
-			state_label.set_location (create {SYSTEM_DRAWING_POINT}.make_point (30, 210))
+			a_point.make_point (30, 210)
+			state_label.set_location (a_point)
 			
 			create state_text_box.make_textbox
-			state_text_box.set_location (create {SYSTEM_DRAWING_POINT}.make_point (250, 210))
-			state_text_box.setsize (40, 20)
+			a_point.make_point (180, 210)
+			state_text_box.set_location (a_point)
+			a_size.make_size_1 (40, 20)
+			state_text_box.set_size (a_size)
 			
 			create zip_code_label.make_label
 			zip_code_label.set_text ("Zip Code:")
-			zip_code_label.set_location (create {SYSTEM_DRAWING_POINT}.make_point (30, 240))
+			a_point.make_point (30, 240)
+			zip_code_label.set_location (a_point)
 			
 			create zip_code_text_box.make_textbox
-			zip_code_text_box.set_location (create {SYSTEM_DRAWING_POINT}.make_point (250, 240))
-			zip_code_text_box.setsize (50, 20)
+			a_point.make_point (180, 240)
+			zip_code_text_box.set_location (a_point)
+			a_size.make_size_1 (50, 20)
+			zip_code_text_box.set_size (a_size)
 			
 			create country_label.make_label
 			country_label.set_text ("Country:")
-			country_label.set_location (create {SYSTEM_DRAWING_POINT}.make_point (30, 270))
+			a_point.make_point (30, 270)
+			country_label.set_location (a_point)
 			
 			create country_text_box.make_textbox
-			country_text_box.set_location (create {SYSTEM_DRAWING_POINT}.make_point (250, 270))
-			country_text_box.setsize (50, 20)
+			a_point.make_point (180, 270)
+			country_text_box.set_location (a_point)
+			country_text_box.set_size (a_size)
 			
 			create quantity_label.make_label
 			quantity_label.set_text ("Number of participants:")
-			quantity_label.setsize (200, 30)
-			quantity_label.set_location (create {SYSTEM_DRAWING_POINT}.make_point (30, 300))
+			a_size.make_size_1 (180, 30)
+			quantity_label.set_size (a_size)
+			a_point.make_point (30, 300)
+			quantity_label.set_location (a_point)
 			
 			create quantity_up_down.make_numericupdown
 			decimal.make_decimal (1)
 			quantity_up_down.set_increment (decimal)
 			quantity_up_down.set_minimum (decimal)
-			quantity_up_down.set_location (create {SYSTEM_DRAWING_POINT}.make_point (250, 300))
-			quantity_up_down.set_decimalplaces (0)
-			quantity_up_down.setsize (50, 20)
+			a_point.make_point (180, 300)
+			quantity_up_down.set_location (a_point)
+			quantity_up_down.set_decimal_places (0)
+			a_size.make_size_1 (50, 20)
+			quantity_up_down.set_size (a_size)
 			
 			create discount_plan_label.make_label
 			discount_plan_label.set_text ("Registering as:")
-			discount_plan_label.set_location (create {SYSTEM_DRAWING_POINT}.make_point (30, 330))
+			a_point.make_point (30, 330)
+			discount_plan_label.set_location (a_point)
 			
 			create discount_plan_combo_box.make_combobox
-			discount_plan_combo_box.set_location (create {SYSTEM_DRAWING_POINT}.make_point (250, 330))
+			a_point.make_point (180, 330)
+			discount_plan_combo_box.set_location (a_point)
 			discount_plan_combo_box.set_text ("Regular")
-			create plans.make (4)
-			plans.put (0, "Regular")
-			plans.put (1, "Non-academic Authors")
-			plans.put (2, "Full-Time Students")
-			plans.put (3, "Full-Time Faculty Members")
-			discount_plan_combo_box.items.set_all (plans)
-			discount_plan_combo_box.setsize (150, 20)
+			discount_plan_combo_box.get_items.add_range (<<"Regular", "Non-academic Authors", "Full-Time Students", "Full-Time Faculty Members">>)
+			a_size.make_size_1 (150, 20)
+			discount_plan_combo_box.set_size (a_size)
 			
 			create registration_type_label.make_label
 			registration_type_label.set_text ("Registering for:")
-			registration_type_label.set_location (create {SYSTEM_DRAWING_POINT}.make_point (30, 360))
+			a_point.make_point (30, 360)
+			registration_type_label.set_location (a_point)
 			
 			create preconference_check_box.make_checkbox
 			preconference_check_box.set_text ("Pre-conference")
-			preconference_check_box.set_location (create {SYSTEM_DRAWING_POINT}.make_point (250, 360))
+			a_point.make_point (180, 360)
+			preconference_check_box.set_location (a_point)
 			
 			create wet_check_box.make_checkbox
 			wet_check_box.set_text ("WET")
-			wet_check_box.set_location (create {SYSTEM_DRAWING_POINT}.make_point (250, 390))
+			a_point.make_point (180, 390)
+			wet_check_box.set_location (a_point)
 			
 			create conference_check_box.make_checkbox
 			conference_check_box.set_text ("Conference")
-			conference_check_box.set_location (create {SYSTEM_DRAWING_POINT}.make_point (250, 420))
+			a_point.make_point (180, 420)
+			conference_check_box.set_location (a_point)
 
 			create eiffel_summit_check_box.make_checkbox
 			eiffel_summit_check_box.set_text ("Eiffel Summit")
-			eiffel_summit_check_box.set_location (create {SYSTEM_DRAWING_POINT}.make_point (250, 450))
+			a_point.make_point (180, 450)
+			eiffel_summit_check_box.set_location (a_point)
 
 			create postconference_check_box.make_checkbox
 			postconference_check_box.set_text ("Post-conference")
-			postconference_check_box.set_location (create {SYSTEM_DRAWING_POINT}.make_point (250, 480))
+			a_point.make_point (180, 480)
+			a_size.make_size_1 (200, 25)
+			postconference_check_box.set_size (a_size)
+			postconference_check_box.set_location (a_point)
 
 			create ok_button.make_button
-			ok_button.set_location (create {SYSTEM_DRAWING_POINT}.make_point (185, 530))
-			ok_button.setsize (80, 30)
+			a_point.make_point (150, 530)
+			ok_button.set_location (a_point)
+			a_size.make_size_1 (80, 25)
+			ok_button.set_size (a_size)
 			ok_button.set_text ("Register")
-			type := type_factory.GetType_System_String ("System.EventHandler");
-			on_ok_event_handler_delegate ?= delegate_factory.CreateDelegate_System_Type_System_Object (type, Current, "on_ok_event_handler")
-			ok_button.addonclick (on_ok_event_handler_delegate)
+			type := type_factory.get_type_string ("System.EventHandler");
+			on_ok_event_handler_delegate ?= delegate_factory.create_delegate_type_object_string (type, Current, "on_ok_event_handler")
+			ok_button.add_click (on_ok_event_handler_delegate)
 			
-			controls.add (title_combo_box)
-			controls.add (first_name_text_box)
-			controls.add (last_name_text_box)
-			controls.add (company_name_text_box)
-			controls.add (address_text_box)
-			controls.add (city_text_box)
-			controls.add (state_text_box)
-			controls.add (zip_code_text_box)
-			controls.add (country_text_box)
-			controls.add (quantity_up_down)
-			controls.add (discount_plan_combo_box)
-			controls.add (preconference_check_box)
-			controls.add (wet_check_box)
-			controls.add (conference_check_box)
-			controls.add (eiffel_summit_check_box)
-			controls.add (postconference_check_box)
-			controls.add (title_label)
-			controls.add (first_name_label)
-			controls.add (last_name_label)
-			controls.add (company_name_label)
-			controls.add (address_label)
-			controls.add (city_label)
-			controls.add (state_label)
-			controls.add (zip_code_label)
-			controls.add (country_label)
-			controls.add (quantity_label)
-			controls.add (discount_plan_label)
-			controls.add (registration_type_label)
-			controls.add (ok_button)
+			get_controls.add (title_combo_box)
+			get_controls.add (first_name_text_box)
+			get_controls.add (last_name_text_box)
+			get_controls.add (company_name_text_box)
+			get_controls.add (address_text_box)
+			get_controls.add (city_text_box)
+			get_controls.add (state_text_box)
+			get_controls.add (zip_code_text_box)
+			get_controls.add (country_text_box)
+			get_controls.add (quantity_up_down)
+			get_controls.add (discount_plan_combo_box)
+			get_controls.add (preconference_check_box)
+			get_controls.add (wet_check_box)
+			get_controls.add (conference_check_box)
+			get_controls.add (eiffel_summit_check_box)
+			get_controls.add (postconference_check_box)
+			get_controls.add (title_label)
+			get_controls.add (first_name_label)
+			get_controls.add (last_name_label)
+			get_controls.add (company_name_label)
+			get_controls.add (address_label)
+			get_controls.add (city_label)
+			get_controls.add (state_label)
+			get_controls.add (zip_code_label)
+			get_controls.add (country_label)
+			get_controls.add (quantity_label)
+			get_controls.add (discount_plan_label)
+			get_controls.add (registration_type_label)
+			get_controls.add (ok_button)
 		end
 		
 	delegate_factory: SYSTEM_DELEGATE
@@ -334,6 +360,6 @@ on_ok_event_handler (sender: ANY; arguments: SYSTEM_EVENTARGS) is
 	type_factory: SYSTEM_TYPE
 			-- Statics needed to create a type.
 			
-	message_box_factory: SYSTEM_WINFORMS_MESSAGEBOX
+	message_box_factory: SYSTEM_WINDOWS_FORMS_MESSAGEBOX
 
 end -- class REGISTRATION_CLIENT_CHECKED

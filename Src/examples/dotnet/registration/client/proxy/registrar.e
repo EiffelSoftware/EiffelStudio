@@ -1,276 +1,257 @@
 indexing
-	Generator: "Eiffel Emitter v2809.1"
+	generator: "Eiffel Emitter 2.8b2"
+	external_name: "Registrar"
+	assembly: "Registrar", "0.0.0.0", "neutral", ""
 
 external class
 	REGISTRAR
-alias
-	"Registrar"
 
 inherit
-	SYSTEM_WEB_SERVICES_PROTOCOLS_SOAPCLIENTPROTOCOL
+	SYSTEM_WEB_SERVICES_PROTOCOLS_SOAPHTTPCLIENTPROTOCOL
+	SYSTEM_COMPONENTMODEL_ICOMPONENT
+	SYSTEM_IDISPOSABLE
 
 create
 	make_registrar
 
 feature {NONE} -- Initialization
 
-	make_registrar is
+	frozen make_registrar is
 		external
 			"IL creator use Registrar"
 		end
 
 feature -- Basic Operations
 
-	frozen EndStart (asyncResult: SYSTEM_IASYNCRESULT) is
+	frozen start is
 		external
-			"IL signature (System.IAsyncResult): System.Void use Registrar"
+			"IL signature (): System.Void use Registrar"
 		alias
-			"EndStart"
+			"start"
 		end
 
-	frozen BeginLast_operation_successful (callback: SYSTEM_ASYNCCALLBACK; asyncState: ANY): SYSTEM_IASYNCRESULT is
-		external
-			"IL signature (System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
-		alias
-			"BeginLast_operation_successful"
-		end
-
-	frozen BeginSet_last_operation_successful (success: BOOLEAN; callback: SYSTEM_ASYNCCALLBACK; asyncState: ANY): SYSTEM_IASYNCRESULT is
-		external
-			"IL signature (System.Boolean, System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
-		alias
-			"BeginSet_last_operation_successful"
-		end
-
-	frozen EndAdd_registration (asyncResult: SYSTEM_IASYNCRESULT) is
-		external
-			"IL signature (System.IAsyncResult): System.Void use Registrar"
-		alias
-			"EndAdd_registration"
-		end
-
-	frozen BeginAdd_registrant (address_form: STRING; first_name: STRING; last_name: STRING; company_name: STRING; address: STRING; city: STRING; state: STRING; zip: STRING; country: STRING; callback: SYSTEM_ASYNCCALLBACK; asyncState: ANY): SYSTEM_IASYNCRESULT is
-		external
-			"IL signature (System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
-		alias
-			"BeginAdd_registrant"
-		end
-
-	frozen BeginLast_registrant_identifier (callback: SYSTEM_ASYNCCALLBACK; asyncState: ANY): SYSTEM_IASYNCRESULT is
+	frozen beginregistrations_database (callback: SYSTEM_ASYNCCALLBACK; async_state: ANY): SYSTEM_IASYNCRESULT is
 		external
 			"IL signature (System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
 		alias
-			"BeginLast_registrant_identifier"
+			"Beginregistrations_database"
 		end
 
-	frozen Add_registrant (address_form: STRING; first_name: STRING; last_name: STRING; company_name: STRING; address: STRING; city: STRING; state: STRING; zip: STRING; country: STRING) is
-		external
-			"IL signature (System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String): System.Void use Registrar"
-		alias
-			"Add_registrant"
-		end
-
-	frozen EndRegistrations_database (asyncResult: SYSTEM_IASYNCRESULT): DATABASE_SYSTEM_OBJECT_SYSTEM_INT32 is
-		external
-			"IL signature (System.IAsyncResult): DataBase_System_Object_System_Int32 use Registrar"
-		alias
-			"EndRegistrations_database"
-		end
-
-	frozen Last_error_message: STRING is
-		external
-			"IL signature (): System.String use Registrar"
-		alias
-			"Last_error_message"
-		end
-
-	frozen Last_registrant_identifier: INTEGER is
-		external
-			"IL signature (): System.Int32 use Registrar"
-		alias
-			"Last_registrant_identifier"
-		end
-
-	frozen BeginLast_error_message (callback: SYSTEM_ASYNCCALLBACK; asyncState: ANY): SYSTEM_IASYNCRESULT is
-		external
-			"IL signature (System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
-		alias
-			"BeginLast_error_message"
-		end
-
-	frozen BeginRegistrations_database (callback: SYSTEM_ASYNCCALLBACK; asyncState: ANY): SYSTEM_IASYNCRESULT is
-		external
-			"IL signature (System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
-		alias
-			"BeginRegistrations_database"
-		end
-
-	frozen Set_last_error_message (message: STRING) is
-		external
-			"IL signature (System.String): System.Void use Registrar"
-		alias
-			"Set_last_error_message"
-		end
-
-	frozen BeginSet_last_registrant_identifier (id: INTEGER; callback: SYSTEM_ASYNCCALLBACK; asyncState: ANY): SYSTEM_IASYNCRESULT is
-		external
-			"IL signature (System.Int32, System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
-		alias
-			"BeginSet_last_registrant_identifier"
-		end
-
-	frozen Begin_invariant (callback: SYSTEM_ASYNCCALLBACK; asyncState: ANY): SYSTEM_IASYNCRESULT is
-		external
-			"IL signature (System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
-		alias
-			"Begin_invariant"
-		end
-
-	frozen EndLast_error_message (asyncResult: SYSTEM_IASYNCRESULT): STRING is
+	frozen endlast_registrant_identifier (async_result: SYSTEM_IASYNCRESULT): STRING is
 		external
 			"IL signature (System.IAsyncResult): System.String use Registrar"
 		alias
-			"EndLast_error_message"
+			"Endlast_registrant_identifier"
 		end
 
-	frozen EndLast_registrant_identifier (asyncResult: SYSTEM_IASYNCRESULT): INTEGER is
+	frozen beginadd_registrant (address_form: STRING; first_name: STRING; last_name: STRING; company_name: STRING; address: STRING; city: STRING; state: STRING; zip: STRING; country: STRING; callback: SYSTEM_ASYNCCALLBACK; async_state: ANY): SYSTEM_IASYNCRESULT is
 		external
-			"IL signature (System.IAsyncResult): System.Int32 use Registrar"
+			"IL signature (System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
 		alias
-			"EndLast_registrant_identifier"
+			"Beginadd_registrant"
 		end
 
-	frozen a_invariant is
+	frozen endregistrants_database (async_result: SYSTEM_IASYNCRESULT): DATABASE_SYSTEM_OBJECT_SYSTEM_OBJECT is
 		external
-			"IL signature (): System.Void use Registrar"
+			"IL signature (System.IAsyncResult): DataBase_System_Object_System_Object use Registrar"
 		alias
-			"_invariant"
+			"Endregistrants_database"
 		end
 
-	frozen Set_last_operation_successful (success: BOOLEAN) is
-		external
-			"IL signature (System.Boolean): System.Void use Registrar"
-		alias
-			"Set_last_operation_successful"
-		end
-
-	frozen Set_last_registrant_identifier (id: INTEGER) is
-		external
-			"IL signature (System.Int32): System.Void use Registrar"
-		alias
-			"Set_last_registrant_identifier"
-		end
-
-	frozen Registrants_database: DATABASE_SYSTEM_OBJECT_SYSTEM_INT32 is
-		external
-			"IL signature (): DataBase_System_Object_System_Int32 use Registrar"
-		alias
-			"Registrants_database"
-		end
-
-	frozen End_invariant (asyncResult: SYSTEM_IASYNCRESULT) is
+	frozen endset_last_registrant_identifier (async_result: SYSTEM_IASYNCRESULT) is
 		external
 			"IL signature (System.IAsyncResult): System.Void use Registrar"
 		alias
-			"End_invariant"
+			"Endset_last_registrant_identifier"
 		end
 
-	frozen Registrations_database: DATABASE_SYSTEM_OBJECT_SYSTEM_INT32 is
-		external
-			"IL signature (): DataBase_System_Object_System_Int32 use Registrar"
-		alias
-			"Registrations_database"
-		end
-
-	frozen BeginStart (callback: SYSTEM_ASYNCCALLBACK; asyncState: ANY): SYSTEM_IASYNCRESULT is
-		external
-			"IL signature (System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
-		alias
-			"BeginStart"
-		end
-
-	frozen BeginSet_last_error_message (message: STRING; callback: SYSTEM_ASYNCCALLBACK; asyncState: ANY): SYSTEM_IASYNCRESULT is
-		external
-			"IL signature (System.String, System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
-		alias
-			"BeginSet_last_error_message"
-		end
-
-	frozen EndSet_last_operation_successful (asyncResult: SYSTEM_IASYNCRESULT) is
-		external
-			"IL signature (System.IAsyncResult): System.Void use Registrar"
-		alias
-			"EndSet_last_operation_successful"
-		end
-
-	frozen EndRegistrants_database (asyncResult: SYSTEM_IASYNCRESULT): DATABASE_SYSTEM_OBJECT_SYSTEM_INT32 is
-		external
-			"IL signature (System.IAsyncResult): DataBase_System_Object_System_Int32 use Registrar"
-		alias
-			"EndRegistrants_database"
-		end
-
-	frozen EndAdd_registrant (asyncResult: SYSTEM_IASYNCRESULT) is
-		external
-			"IL signature (System.IAsyncResult): System.Void use Registrar"
-		alias
-			"EndAdd_registrant"
-		end
-
-	frozen EndSet_last_error_message (asyncResult: SYSTEM_IASYNCRESULT) is
-		external
-			"IL signature (System.IAsyncResult): System.Void use Registrar"
-		alias
-			"EndSet_last_error_message"
-		end
-
-	frozen Add_registration (registrant_id: INTEGER; quantity: STRING; discount_plan: STRING; preconf: BOOLEAN; wet: BOOLEAN; conference: BOOLEAN; esummit: BOOLEAN; postconf: BOOLEAN) is
-		external
-			"IL signature (System.Int32, System.String, System.String, System.Boolean, System.Boolean, System.Boolean, System.Boolean, System.Boolean): System.Void use Registrar"
-		alias
-			"Add_registration"
-		end
-
-	frozen Last_operation_successful: BOOLEAN is
+	frozen last_operation_successful: BOOLEAN is
 		external
 			"IL signature (): System.Boolean use Registrar"
 		alias
-			"Last_operation_successful"
+			"last_operation_successful"
 		end
 
-	frozen EndSet_last_registrant_identifier (asyncResult: SYSTEM_IASYNCRESULT) is
-		external
-			"IL signature (System.IAsyncResult): System.Void use Registrar"
-		alias
-			"EndSet_last_registrant_identifier"
-		end
-
-	frozen BeginRegistrants_database (callback: SYSTEM_ASYNCCALLBACK; asyncState: ANY): SYSTEM_IASYNCRESULT is
-		external
-			"IL signature (System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
-		alias
-			"BeginRegistrants_database"
-		end
-
-	frozen EndLast_operation_successful (asyncResult: SYSTEM_IASYNCRESULT): BOOLEAN is
+	frozen endlast_operation_successful (async_result: SYSTEM_IASYNCRESULT): BOOLEAN is
 		external
 			"IL signature (System.IAsyncResult): System.Boolean use Registrar"
 		alias
-			"EndLast_operation_successful"
+			"Endlast_operation_successful"
 		end
 
-	frozen BeginAdd_registration (registrant_id: INTEGER; quantity: STRING; discount_plan: STRING; preconf: BOOLEAN; wet: BOOLEAN; conference: BOOLEAN; esummit: BOOLEAN; postconf: BOOLEAN; callback: SYSTEM_ASYNCCALLBACK; asyncState: ANY): SYSTEM_IASYNCRESULT is
+	frozen set_last_error_message (message: STRING) is
 		external
-			"IL signature (System.Int32, System.String, System.String, System.Boolean, System.Boolean, System.Boolean, System.Boolean, System.Boolean, System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
+			"IL signature (System.String): System.Void use Registrar"
 		alias
-			"BeginAdd_registration"
+			"set_last_error_message"
 		end
 
-	frozen Start is
+	frozen add_registrant (address_form: STRING; first_name: STRING; last_name: STRING; company_name: STRING; address: STRING; city: STRING; state: STRING; zip: STRING; country: STRING) is
 		external
-			"IL signature (): System.Void use Registrar"
+			"IL signature (System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String, System.String): System.Void use Registrar"
 		alias
-			"Start"
+			"add_registrant"
+		end
+
+	frozen beginstart (callback: SYSTEM_ASYNCCALLBACK; async_state: ANY): SYSTEM_IASYNCRESULT is
+		external
+			"IL signature (System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
+		alias
+			"Beginstart"
+		end
+
+	frozen endadd_registrant (async_result: SYSTEM_IASYNCRESULT) is
+		external
+			"IL signature (System.IAsyncResult): System.Void use Registrar"
+		alias
+			"Endadd_registrant"
+		end
+
+	frozen beginlast_error_message (callback: SYSTEM_ASYNCCALLBACK; async_state: ANY): SYSTEM_IASYNCRESULT is
+		external
+			"IL signature (System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
+		alias
+			"Beginlast_error_message"
+		end
+
+	frozen endregistrations_database (async_result: SYSTEM_IASYNCRESULT): DATABASE_SYSTEM_OBJECT_SYSTEM_OBJECT is
+		external
+			"IL signature (System.IAsyncResult): DataBase_System_Object_System_Object use Registrar"
+		alias
+			"Endregistrations_database"
+		end
+
+	frozen beginlast_operation_successful (callback: SYSTEM_ASYNCCALLBACK; async_state: ANY): SYSTEM_IASYNCRESULT is
+		external
+			"IL signature (System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
+		alias
+			"Beginlast_operation_successful"
+		end
+
+	frozen beginlast_registrant_identifier (callback: SYSTEM_ASYNCCALLBACK; async_state: ANY): SYSTEM_IASYNCRESULT is
+		external
+			"IL signature (System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
+		alias
+			"Beginlast_registrant_identifier"
+		end
+
+	frozen endset_last_error_message (async_result: SYSTEM_IASYNCRESULT) is
+		external
+			"IL signature (System.IAsyncResult): System.Void use Registrar"
+		alias
+			"Endset_last_error_message"
+		end
+
+	frozen endlast_error_message (async_result: SYSTEM_IASYNCRESULT): STRING is
+		external
+			"IL signature (System.IAsyncResult): System.String use Registrar"
+		alias
+			"Endlast_error_message"
+		end
+
+	frozen endset_last_operation_successful (async_result: SYSTEM_IASYNCRESULT) is
+		external
+			"IL signature (System.IAsyncResult): System.Void use Registrar"
+		alias
+			"Endset_last_operation_successful"
+		end
+
+	frozen endstart (async_result: SYSTEM_IASYNCRESULT) is
+		external
+			"IL signature (System.IAsyncResult): System.Void use Registrar"
+		alias
+			"Endstart"
+		end
+
+	frozen set_last_operation_successful (success: BOOLEAN) is
+		external
+			"IL signature (System.Boolean): System.Void use Registrar"
+		alias
+			"set_last_operation_successful"
+		end
+
+	frozen beginset_last_operation_successful (success: BOOLEAN; callback: SYSTEM_ASYNCCALLBACK; async_state: ANY): SYSTEM_IASYNCRESULT is
+		external
+			"IL signature (System.Boolean, System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
+		alias
+			"Beginset_last_operation_successful"
+		end
+
+	frozen beginset_last_error_message (message: STRING; callback: SYSTEM_ASYNCCALLBACK; async_state: ANY): SYSTEM_IASYNCRESULT is
+		external
+			"IL signature (System.String, System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
+		alias
+			"Beginset_last_error_message"
+		end
+
+	frozen registrations_database: DATABASE_SYSTEM_OBJECT_SYSTEM_OBJECT is
+		external
+			"IL signature (): DataBase_System_Object_System_Object use Registrar"
+		alias
+			"registrations_database"
+		end
+
+	frozen beginset_last_registrant_identifier (id: STRING; callback: SYSTEM_ASYNCCALLBACK; async_state: ANY): SYSTEM_IASYNCRESULT is
+		external
+			"IL signature (System.String, System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
+		alias
+			"Beginset_last_registrant_identifier"
+		end
+
+	frozen beginadd_registration (registrant_id: STRING; quantity: STRING; discount_plan: STRING; preconf: BOOLEAN; wet: BOOLEAN; conference: BOOLEAN; esummit: BOOLEAN; postconf: BOOLEAN; callback: SYSTEM_ASYNCCALLBACK; async_state: ANY): SYSTEM_IASYNCRESULT is
+		external
+			"IL signature (System.String, System.String, System.String, System.Boolean, System.Boolean, System.Boolean, System.Boolean, System.Boolean, System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
+		alias
+			"Beginadd_registration"
+		end
+
+	frozen last_registrant_identifier: STRING is
+		external
+			"IL signature (): System.String use Registrar"
+		alias
+			"last_registrant_identifier"
+		end
+
+	frozen endadd_registration (async_result: SYSTEM_IASYNCRESULT) is
+		external
+			"IL signature (System.IAsyncResult): System.Void use Registrar"
+		alias
+			"Endadd_registration"
+		end
+
+	frozen add_registration (registrant_id: STRING; quantity: STRING; discount_plan: STRING; preconf: BOOLEAN; wet: BOOLEAN; conference: BOOLEAN; esummit: BOOLEAN; postconf: BOOLEAN) is
+		external
+			"IL signature (System.String, System.String, System.String, System.Boolean, System.Boolean, System.Boolean, System.Boolean, System.Boolean): System.Void use Registrar"
+		alias
+			"add_registration"
+		end
+
+	frozen beginregistrants_database (callback: SYSTEM_ASYNCCALLBACK; async_state: ANY): SYSTEM_IASYNCRESULT is
+		external
+			"IL signature (System.AsyncCallback, System.Object): System.IAsyncResult use Registrar"
+		alias
+			"Beginregistrants_database"
+		end
+
+	frozen registrants_database: DATABASE_SYSTEM_OBJECT_SYSTEM_OBJECT is
+		external
+			"IL signature (): DataBase_System_Object_System_Object use Registrar"
+		alias
+			"registrants_database"
+		end
+
+	frozen set_last_registrant_identifier (id: STRING) is
+		external
+			"IL signature (System.String): System.Void use Registrar"
+		alias
+			"set_last_registrant_identifier"
+		end
+
+	frozen last_error_message: STRING is
+		external
+			"IL signature (): System.String use Registrar"
+		alias
+			"last_error_message"
 		end
 
 end -- class REGISTRAR

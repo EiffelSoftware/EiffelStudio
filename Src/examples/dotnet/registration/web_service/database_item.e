@@ -14,7 +14,7 @@ inherit
 	
 feature -- Access
 
-	identifier: INTEGER
+	identifier: STRING
 			-- Database item identifier
 
 	error_message: STRING

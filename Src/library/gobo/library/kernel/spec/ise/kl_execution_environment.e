@@ -159,14 +159,14 @@ feature {NONE} -- Externals
 
 	c_getenv (s: POINTER): POINTER is
 		external
-			"C (char *): EIF_POINTER"
+			"C (char *): EIF_POINTER | <stdlib.h>"
 		alias
 			"getenv"
 		end
 
 	c_putenv (s: POINTER): INTEGER is
 		external
-			"C (char *): EIF_INTEGER"
+			"C (char *): EIF_INTEGER | <stdlib.h>"
 		alias
 			"putenv"
 		end

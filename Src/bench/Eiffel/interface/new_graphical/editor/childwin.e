@@ -110,7 +110,8 @@ feature -- Initialization
 				file.read_line
 				curr_string := clone(file.last_string)
 				lexer.execute(curr_string)
-				text_displayed.extend(lexer.analysed_tokens)
+				create line_item.make_from_lexer(lexer)
+				text_displayed.extend(line_item)
 			end
 		end
 
@@ -215,9 +216,9 @@ feature -- Basic operations
 					text_displayed.after
 				loop
 					display_line (0,(curr_line - first_line_displayed)*line_increment,text_displayed.current_line, dc)
-					if curr_line = cursor.y_in_lines then
-						dc.text_out(cursor.x_in_pixels, (curr_line - first_line_displayed)*line_increment, "#")
-					end
+					--if curr_line = cursor.y_in_lines then
+					--	dc.text_out(cursor.x_in_pixels, (curr_line - first_line_displayed)*line_increment, "#")
+					--end
 					curr_line := curr_line + 1
 					text_displayed.forth
 				end

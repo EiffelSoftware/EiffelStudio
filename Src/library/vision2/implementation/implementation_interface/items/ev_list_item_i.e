@@ -50,12 +50,7 @@ feature -- Access
 	parent: EV_LIST_ITEM_LIST is
 			-- List containing `interface'.
 		do
-			if Precursor /= Void then
-				Result ?= Precursor
-				check
-					parent_is_list: Result /= Void
-				end
-			end
+			Result ?= Precursor
 		end
 
 feature {EV_LIST_ITEM_I} -- Implementation

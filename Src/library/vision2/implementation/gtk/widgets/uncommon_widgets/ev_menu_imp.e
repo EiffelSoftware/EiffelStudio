@@ -21,7 +21,9 @@ inherit
 			interface,
 			initialize,
 			set_text,
-			on_activate
+			on_activate,
+			dispose,
+			menu_item_type
 		end
 
 	EV_MENU_ITEM_LIST_IMP
@@ -29,7 +31,8 @@ inherit
 			interface,
 			initialize,
 			list_widget,
-			insert_menu_item
+			insert_menu_item,
+			dispose
 		end
 
 create
@@ -46,6 +49,16 @@ feature {NONE} -- Initialization
 			)
 			Precursor
 		end
+		
+	dispose is
+			-- 
+		do
+			Precursor
+		--	print ("Menu is being disposed%N")
+		--	gtk_object_unref (list_widget)
+			list_widget := NULL
+		end
+		
 
 feature -- Element change
 
@@ -119,6 +132,14 @@ feature {NONE} -- Implementation
 				end
 			end
 		end
+		
+		
+feature {EV_MENU_ITEM_LIST_IMP} -- Implementation
+
+	menu_item_type: INTEGER is
+		do
+			Result := Menu_type
+		end
 
 feature {EV_ANY_I} -- Implementation
 
@@ -133,7 +154,7 @@ feature {EV_ANY_I} -- Implementation
 				end
 			end
 			if select_actions_internal /= Void then
-				select_actions_internal.call ([])
+				select_actions_internal.call (empty_tuple)
 			end
 		end
 

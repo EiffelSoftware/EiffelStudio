@@ -114,6 +114,14 @@ private uint32 size_table[TENURE_MAX];		/* Amount of bytes/age */
 shared uint32 tenure = (uint32) TENURE_MAX;	/* Hector needs to see that */
 public long plsc_per = PLSC_PER;			/* Period of plsc in acollect */
 
+#ifdef __VMS
+public int r_fides;	/* moved here from retrieve.c */
+	/* Was getting a link warning that it couldn't find this symbol.
+	 * Under vms the linker won't include the symbol if at least one
+	 * routine from the module isn't used.
+	 */
+#endif
+
 /* Spoilt chunks are put into a search table, to avoid taking them as 'from'
  * space more than once: for each spoilt chunk we find, we have to allocate a
  * new 'to' zone at the next partial scavenge.

@@ -1,0 +1,38 @@
+system
+	our_client
+
+root
+	our_client (ROOT_CLUSTER): "make"
+
+default
+	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
+
+cluster
+	ROOT_CLUSTER: 	"$EIFFEL4/examples/net/two_mach/client";
+	common_classes:	"$EIFFEL4/examples/net/two_mach/common";
+
+		-- EiffelNet
+	net:				"$EIFFEL4/library/net";
+	abstract_socket (net):		"$/abstract/socket";
+	net_socket (net):		"$/network/socket";
+	local_socket (net):		"$/local/socket";
+
+	polling_abstract (net):		"$/polling/abstract";
+	polling_implementation (net):	"$/polling/implementation";
+
+	abstract_client_server (net):	"$/abstract/client_server";
+	net_client_server (net):	"$/network/client_server";
+	local_client_server (net):	"$/local/client_server";
+
+		-- EiffelBase
+	all base:			"$EIFFEL4/library/base"
+		exclude
+			"desc";"table_eiffel3"
+		end
+
+external
+	-- External EiffelNet library 
+	object:
+		"$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a"
+--mswin		"$(EIFFEL4)/library/net/spec/$(COMPILER)/lib/net.lib"
+end

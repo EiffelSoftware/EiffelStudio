@@ -1,14 +1,14 @@
 system our_client
 
 root
-	our_client (ROOT_CLUSTER): "make"
+	our_client (ROOT_CLUSTER): "make_client"
 
 default
 	precompiled ("$EIFFEL4/precomp/spec/$PLATFORM/base")
 
 cluster
-	ROOT_CLUSTER: 	"$EIFFEL4/examples/net/same_mach/client";
-	common_classes:	"$EIFFEL4/examples/net/same_mach/common";
+	ROOT_CLUSTER: 	"$EIFFEL4/examples/net/predef/client";
+	common_classes:	"$EIFFEL4/examples/net/predef/common";
 
 	-- EiffelNet
 	net:				"$EIFFEL4/library/net";
@@ -32,6 +32,6 @@ cluster
 external
 	-- External EiffelNet library 
 	object:
---unix		"$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a"
-		"$(EIFFEL4)/library/net/spec/$(COMPILER)/lib/net.lib"
+		"$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a"
+--mswin		"$(EIFFEL4)/library/net/spec/$(COMPILER)/lib/net.lib"
 end

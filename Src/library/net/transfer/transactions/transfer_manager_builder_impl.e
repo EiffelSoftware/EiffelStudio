@@ -128,7 +128,7 @@ feature -- Status report
 feature -- Element change
 
 	add_transaction (s, t: STRING) is
-			-- Add transactiom from source `s' to target `t'.
+			-- Add transaction from source `s' to target `t'.
 		require
 			source_exists: s /= Void
 			target_exists: t /= Void

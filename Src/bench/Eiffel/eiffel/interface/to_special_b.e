@@ -27,6 +27,9 @@ feature -- Types
 			-- New class type for class TO_SPECIAL
 		do
 			create Result.make (data)
+			if has_externals then
+				system.set_freeze
+			end
 		end
 
 feature -- Validity

@@ -93,6 +93,7 @@ void eif_console_cleanup (EIF_BOOLEAN crashed)
 			if (debug_mode) {
 				EIF_CHARACTER c;
 				printf ("\nPress Return to finish the execution...");
+				fflush(stdout);
 				scanf ("%c", &c);
 			}
 #endif

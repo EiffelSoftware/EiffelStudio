@@ -44,6 +44,38 @@ feature
 			uc.reset_name;
 		end;
 
+	command_with_class_name (cn: STRING): USER_CMD is
+			-- Find user command with class name `cn'
+		require
+			valid_cn_name: cn /= Void
+		local
+			user_cmds: LINKED_LIST [LINKED_LIST [USER_CMD]]
+			cmd_list: LINKED_LIST [USER_CMD];
+			class_name: STRING
+		do
+			class_name := clone (cn);
+			class_name.to_upper;
+			user_cmds := user_commands;
+			from
+				user_cmds.start
+			until
+				user_cmds.after or else Result /= Void
+			loop
+				cmd_list := user_cmds.item;
+				from
+					cmd_list.start
+				until
+					cmd_list.after or else Result /= Void
+				loop
+					if class_name.is_equal (cmd_list.item.eiffel_type_to_upper) then
+						Result := cmd_list.item
+					end
+					cmd_list.forth
+				end
+				user_cmds.forth
+			end
+		end;
+
 	user_commands: LINKED_LIST [LINKED_LIST [USER_CMD]] is
 		local
 			nl: LINKED_LIST [USER_CMD];
@@ -179,8 +211,10 @@ feature
 			-- Create command_catalog interface.
 		local
 			type_button: CMD_CAT_ED_H;
+			inst_button: CMD_I_ED_HOLE;
 			create_inst_b: CMD_CAT_CREATE_INST_H;
 			close_b: CLOSE_WINDOW_BUTTON;
+			trash_hole: CUT_HOLE;
 			top_form: FORM
 		do
 			!!top_form.make (Widget_names.form1, Current);
@@ -188,23 +222,31 @@ feature
 			button_rc.set_preferred_count (1);
 			button_rc.set_row_layout;
 			!!focus_label.make (top_form);
+			!!trash_hole.make (top_form, focus_label);
 			!!type_button.make (top_form); 
+			!!inst_button.make (top_form, focus_label); 
 			!!create_inst_b.make (top_form);
 			!!close_b.make (Current, top_form, focus_label);
 			!!page_sw.make (Widget_names.scroll, Current);
 			top_form.attach_left (type_button, 0);
-			top_form.attach_left_widget (type_button, create_inst_b, 0);
-			top_form.attach_left_widget (create_inst_b, focus_label, 0);
+			top_form.attach_left_widget (type_button, inst_button, 0);
+			top_form.attach_left_widget (inst_button, create_inst_b, 0);
+			top_form.attach_left_widget (create_inst_b, trash_hole, 0);
+			top_form.attach_left_widget (trash_hole, focus_label, 0);
 			top_form.attach_right_widget (close_b, focus_label, 0);
 			top_form.attach_right (close_b, 0);
 			top_form.attach_top (type_button, 0);
+			top_form.attach_top (inst_button, 0);
+			top_form.attach_top (trash_hole, 0);
 			top_form.attach_top (create_inst_b, 0);
 			top_form.attach_top (close_b, 0);
 			top_form.attach_top (focus_label, 0);
 			top_form.attach_bottom (focus_label, 0);
 			top_form.attach_bottom (create_inst_b, 0);
 			top_form.attach_bottom (type_button, 0);
+			top_form.attach_bottom (inst_button, 0);
 			top_form.attach_bottom (close_b, 0);
+			top_form.attach_bottom (trash_hole, 0);
 			attach_left (top_form, 0);
 			attach_right (top_form, 0);
 			attach_top_widget (top_form, page_sw, 2);
@@ -251,34 +293,6 @@ feature
 	
 feature 
 
-	update_name_in_editors (cmd: USER_CMD) is
-			-- Update the command edit stones of `cmd' is
-			-- currently being edited (in either the type or
-			-- instance editors)
-		local
-			cmd_eds: LINKED_LIST [CMD_EDITOR];
-			found: BOOLEAN;
-			ed: CMD_EDITOR
-		do
-			update_icon_stone (cmd);
-			cmd_eds := window_mgr.cmd_editors;
-			from
-				cmd_eds.start
-			until
-				cmd_eds.after or else found
-				--! There is only one type editor per command
-			loop
-				ed := cmd_eds.item;
-				if ed.current_command /= Void then
-					found := ed.current_command = cmd
-				end;
-				cmd_eds.forth
-			end;		
-			if found then
-				ed.update_title
-			end		
-		end;
-
     initialize_pages is
         do
             from
@@ -292,8 +306,6 @@ feature
                 pages.forth
             end;
         end;
-
-feature {NONE}
 
 	update_icon_stone (c: CMD) is
 		local		

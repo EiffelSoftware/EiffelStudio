@@ -26,8 +26,6 @@ feature {NONE}-- Initialization
 
 	initialize is
 			-- Initialize `Current'.
-		local
-			internal_pixmap: EV_PIXMAP
 		do
 			Precursor {EV_TITLED_WINDOW}
 			initialize_constants
@@ -174,7 +172,6 @@ feature {NONE}-- Initialization
 			create report_label
 			create l_ev_frame_7
 			create line_pos_label
-			create internal_pixmap
 			
 				-- Build_widget_structure.
 			set_menu_bar (l_ev_menu_bar_1)
@@ -324,7 +321,6 @@ feature {NONE}-- Initialization
 			set_title ("Document Builder")
 			file_menu.set_text ("File")
 			new_menu_item.set_text ("New..")
-			new_menu_item.set_pixmap (icon_new_doc_ico)
 			open_menu_item.set_text ("Open..")
 			open_menu_item.set_pixmap (icon_open_file_ico)
 			open_project_menu_item.set_text ("Open Project..")
@@ -437,22 +433,18 @@ feature {NONE}-- Initialization
 			toc_new_button.set_tooltip ("New Table of Contents")
 			toc_new_button.set_pixmap (icon_new_doc_ico)
 			toc_open_button.set_tooltip ("Open Table of Contents")
-			internal_pixmap.set_with_named_file ("D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_open_file.ico")
-			toc_open_button.set_pixmap (internal_pixmap)
+			toc_open_button.set_pixmap (icon_open_file_ico)
 			toc_save_button.set_tooltip ("Save")
 			toc_save_button.set_minimum_width (24)
 			toc_save_button.set_minimum_height (24)
-			internal_pixmap.set_with_named_file ("D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_save.ico")
-			toc_save_button.set_pixmap (internal_pixmap)
+			toc_save_button.set_pixmap (icon_save_ico)
 			toc_properties_button.set_tooltip ("Sort/Filter Table of Contents")
-			internal_pixmap.set_with_named_file ("D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_new_editor_color.ico")
-			toc_properties_button.set_pixmap (internal_pixmap)
+			toc_properties_button.set_pixmap (icon_new_editor_color_ico)
 			l_ev_cell_3.set_minimum_height (20)
 			toc_new_heading.set_tooltip ("New Topic Heading")
 			toc_new_heading.set_pixmap (icon_toc_folder_open_ico)
 			toc_new_page.set_tooltip ("New Topic File")
-			internal_pixmap.set_with_named_file ("D:\My Documents\Documentation Project\systems\doc_builder\resources\icons\icon_format_text_color.ico")
-			toc_new_page.set_pixmap (internal_pixmap)
+			toc_new_page.set_pixmap (icon_format_text_color_ico)
 			toc_remove_topic.set_tooltip ("Delete Topic")
 			toc_remove_topic.set_pixmap (icon_file_close_ico)
 			l_ev_cell_4.set_minimum_height (20)
@@ -488,6 +480,7 @@ feature {NONE}-- Initialization
 			l_ev_horizontal_box_4.disable_item_expand (l_ev_tool_bar_8)
 			title_label.set_text (" Sub Elements")
 			title_label.align_text_left
+			sub_element_close.set_pixmap (icon_close_color_ico)
 			editor_tool.set_style (1)
 			l_ev_vertical_box_5.disable_item_expand (l_ev_frame_5)
 			l_ev_frame_5.set_style (2)

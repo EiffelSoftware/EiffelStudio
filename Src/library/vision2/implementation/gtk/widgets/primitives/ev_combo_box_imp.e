@@ -33,7 +33,8 @@ inherit
 			has_focus,
 			destroy,
 			on_key_event,
-			set_focus
+			set_focus,
+			default_key_processing_blocked
 		end
 
 	EV_LIST_ITEM_LIST_IMP
@@ -56,7 +57,8 @@ inherit
 			destroy,
 			on_item_clicked,
 			on_key_event,
-			set_focus
+			set_focus,
+			default_key_processing_blocked
 		end
 
 	EV_KEY_CONSTANTS
@@ -186,6 +188,15 @@ feature -- Status setting
 		end
 
 feature {NONE} -- Implementation
+
+	default_key_processing_blocked (a_key: EV_KEY): BOOLEAN is
+			-- 
+		do
+			-- We don't want to lose focus on up or down keys.
+			if a_key.code = feature {EV_KEY_CONSTANTS}.key_down or else a_key.code = feature {EV_KEY_CONSTANTS}.key_up then
+				Result := True
+			end
+		end
 
 	attain_focus is
 			-- The list has just grabbed the focus.

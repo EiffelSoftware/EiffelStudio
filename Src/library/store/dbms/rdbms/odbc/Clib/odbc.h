@@ -20,6 +20,10 @@
 #ifndef _EIFFEL_ODBC_H_
 #define _EIFFEL_ODBC_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern char *error_message;
 extern char *warn_message;
 extern int error_number;
@@ -250,5 +254,9 @@ typedef ODBCSQLDA_TYPE(sqda_, ODBCSQLDA, IISQ_MAX_COLS);
 */
 # define        IISQDA_HEAD_SIZE        16
 # define        IISQDA_VAR_SIZE         sizeof(IISQLVAR)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* _EIFFEL_ODBC_H_ */

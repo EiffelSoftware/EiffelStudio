@@ -20,6 +20,10 @@
 #ifndef __SYBASE_H__ 
 #define __SYBASE_H__ 
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #define STRING_TYPE            10
 #define CHARACTER_TYPE          4
 #define INTEGER_TYPE            4
@@ -38,5 +42,9 @@
 extern void enomem ();
 /* Raises an "Out of memory" exception
    From Eiffel run-time library */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __SYBASE_H__ */

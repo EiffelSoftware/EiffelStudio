@@ -17,6 +17,9 @@
    Database: "Ingres"
 */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #define STRING_TYPE            10
 #define CHARACTER_TYPE          2
@@ -65,3 +68,8 @@ extern void enomem ();
 #define GetDbColType(daptr,i) ((((daptr)->sqlvar)[i]).sqltype)
 #define GetDbColLength(daptr,i) ((((daptr)->sqlvar)[i]).sqllen)
 #define GetDbColPtr(daptr,i) ((((daptr)->sqlvar)[i]).sqldata)
+
+
+#ifdef __cplusplus
+}
+#endif

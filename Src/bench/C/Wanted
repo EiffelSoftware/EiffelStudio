@@ -51,6 +51,7 @@
 >I_DIRECT
 >I_DIRENT
 >I_FCNTL
+>I_FD_SET_SYS_SELECT
 >I_GRP
 >I_LIMITS
 >I_NETINET_IN
@@ -88,6 +89,7 @@
 >R_OK
 >SIGNALS_KEPT
 >Signal_t
+>Strerror
 >Time_t
 >USE_ADD_LOG
 >USE_BSDJMP
@@ -175,6 +177,7 @@ d_socket
 d_strchr
 d_strctcpy
 d_strdup
+d_strerrm
 d_strerror
 d_sysernlst
 d_syserrlst
@@ -191,6 +194,7 @@ grep
 i_direct
 i_dirent
 i_fcntl
+i_fd_setsyss
 i_grp
 i_limits
 i_netns_ns

@@ -317,9 +317,15 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  *	available to translate an errno code into its symbolic name (e.g.
  * ENOENT). The extern int sys_nerrno gives the size of that table.
  */
+/* Strerror:
+ *	This preprocessor symbol is defined as a macro if strerror() is
+ *	not available to translate error numbers to strings but sys_errlist[]
+ *	array is there.
+ */
 #$d_strerror HAS_STRERROR		/**/
 #$d_syserrlst HAS_SYS_ERRLIST	/**/
 #$d_sysernlst HAS_SYS_ERRNOLIST	/**/
+#define Strerror(e) $d_strerrm
 
 /* HAS_TIME:
  *	This symbol, if defined, indicates that the time() routine exists.
@@ -654,6 +660,12 @@ sed <<!GROK!THIS! >config.h -e 's!^#undef!/\*#define!' -e 's!^#un-def!#undef!'
  * This is a pseudo unit for the Watcom C compiler (DOS)
  */
 #$i_direct I_DIRECT		/**/
+
+/* I_FD_SET_SYS_SELECT:
+ *	This symbol, if defined, indicates to the C program that it should
+ *	include <sys/select.h> in order to get definition of struct fd_set.
+ */
+#$i_fd_setsyss I_FD_SET_SYS_SELECT	/**/
 
 /* I_NETNS_NS:
  *	This symbol, if defined, indicates to the C program that it should

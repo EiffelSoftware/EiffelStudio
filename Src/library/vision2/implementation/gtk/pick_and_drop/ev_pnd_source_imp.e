@@ -374,6 +374,8 @@ feature -- Implementation
 			x, y: INTEGER
 		do
 			gdkwin := C.gdk_window_at_pointer ($x, $y)
+
+			print ("X = " + x.out + "  Y = " + y.out + "%N")
 			
 			create env
 			app_imp ?= env.application.implementation
@@ -381,13 +383,13 @@ feature -- Implementation
 				app_imp_not_void: app_imp /= Void
 			end
 			if gdkwin /= Default_pointer then
-				Result := app_imp.pnd_target_from_gdk_window (gdkwin)
+				Result := app_imp.pnd_target_from_gdk_window (gdkwin, x, y)
 			end
 		end
 
 feature {EV_APPLICATION_IMP} -- Implementation
 
-	pebble_over_widget (a_gdkwin: POINTER): BOOLEAN is
+	pebble_over_widget (a_gdkwin: POINTER; a_x, a_y: INTEGER): BOOLEAN is
 			-- Correct gdk window for pnd target.
 		do
 			Result := a_gdkwin = C.gtk_widget_struct_window (c_object)
@@ -460,6 +462,9 @@ end -- class EV_PICK_AND_DROPABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.17  2000/03/23 19:17:40  king
+--| Changed pebble_over_widget to pass mouse coords
+--|
 --| Revision 1.16  2000/03/22 22:00:21  king
 --| Revised pointed_target, added pebble_over_widget
 --|

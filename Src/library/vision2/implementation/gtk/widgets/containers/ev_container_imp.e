@@ -292,8 +292,8 @@ feature {NONE} -- Externals
 			until
 				cur = NULL
 			loop
-				Result.extend (gslist_struct_data (cur))
-				cur := gslist_struct_next (cur)
+				Result.extend (C.gslist_struct_data (cur))
+				cur := C.gslist_struct_next (cur)
 			end
 		ensure
 		--	same_size: Result.count = g_slist_length (gslist)

@@ -575,6 +575,7 @@ rt_public void exhdlr(EIF_CONTEXT Signal_t (*handler)(int), int sig)
 	 * stopped forever (we have to provide our onw setjmp/longjmp mechanism
 	 * which will know about the exception stack)--RAM.
 	 */
+
 	EIF_GET_CONTEXT
 	register1 struct ex_vect *trace;		/* Top of Eiffel trace stack */
 	jmp_buf env;							/* Environment saving for setjmp */
@@ -641,7 +642,6 @@ rt_public void exhdlr(EIF_CONTEXT Signal_t (*handler)(int), int sig)
 	g_data.status = gc_status;		/* Restore saved GC status */
 	expop(&eif_trace);				/* Remove EN_ILVL record */
 	expop(&eif_stack);				/* And EX_HDLR vector */
-
 	EIF_END_GET_CONTEXT
 }
 

@@ -33,7 +33,7 @@ feature -- Initialization
 			interior.set_no_op_mode
 			radius1 := 1
 			radius2 := 1
-			create orientation.make (0.0)
+			create orientation.make_radians (0.0)
 			set_origin_to_center
 		end
 
@@ -159,8 +159,8 @@ feature -- Output
 			angle1,angle2: EV_ANGLE
 		do
 			if drawing.is_drawable then
-				create angle1.make (0.0)
-				create angle2.make (Pi * 2)
+				create angle1.make_radians (0.0)
+				create angle2.make_radians (Pi * 2)
 				if interior /= Void then
 					create lint.make
 					lint.get_drawing_attributes (drawing)

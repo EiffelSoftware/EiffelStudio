@@ -243,8 +243,8 @@ feature -- Drawing operations
 		local
 			angle1, angle2: EV_ANGLE
 		do	
-			create angle1.make (0.0)
-			create angle2.make (6.283184)
+			create angle1.make_radians (0.0)
+			create angle2.make_radians (6.283184)
 			draw_arc (pt, r1, r2, angle1, angle2, orientation, 0)
 		end
 
@@ -317,8 +317,8 @@ feature -- filling operations
 		local
 			angle1, angle2: EV_ANGLE
 		do
-			create angle1.make (0)
-			create angle2.make (6.283184)
+			create angle1.make_radians (0)
+			create angle2.make_radians (6.283184)
 			fill_arc (pt, r1, r2, angle1, angle2, orientation, -1)
 		end
 

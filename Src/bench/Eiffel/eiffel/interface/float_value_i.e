@@ -52,9 +52,19 @@ feature -- Code generation
 			-- Generate value in `buffer'.
 		local
 			l_buf: like buffer
+			l_val: STRING
+			l_nb: INTEGER
 		do
 			l_buf := buffer
-			l_buf.putstring (real_value.out)
+			l_val := real_value.out
+			l_buf.putstring (l_val)
+			l_nb := l_val.count
+			if
+				l_val.last_index_of ('.', l_nb) = 0 and
+				l_val.last_index_of ('e', l_nb) = 0
+			then
+				l_buf.putchar ('.')
+			end
 			l_buf.putchar ('f')
 		end
 

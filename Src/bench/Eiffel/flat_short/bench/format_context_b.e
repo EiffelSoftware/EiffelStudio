@@ -159,7 +159,7 @@ feature -- Properties
 			-- Current internal formatting directives
 
 	last_was_printed: BOOLEAN;
-			-- Was we able to print a structure?
+			-- Were we able to print a structure?
 
 	was_infix_arguments: BOOLEAN;
 			-- Were the arguments when preparing for

@@ -20,7 +20,8 @@ inherit
 	EV_WINDOW_IMP
 		redefine
 			interface,
-			make
+			make,
+			has_wm_decorations
 		end
 		
 	EV_TITLED_WINDOW_ACTION_SEQUENCES_IMP
@@ -168,6 +169,14 @@ feature -- Element change
 			end
 
 			feature {EV_GTK_EXTERNALS}.gdk_window_set_icon (feature {EV_GTK_EXTERNALS}.gtk_widget_struct_window (c_object), NULL, pixmap_imp.drawable, pixmap_imp.mask)
+		end
+		
+feature {NONE} -- Implementation
+
+	has_wm_decorations: BOOLEAN is
+			-- Does the current window object have WM decorations?
+		do
+			Result := True
 		end
 
 feature {EV_ANY_I} -- Implementation

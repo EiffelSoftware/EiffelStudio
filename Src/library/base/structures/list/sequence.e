@@ -59,7 +59,7 @@ feature -- Element change
 			l: like s
 		do
 			if s = Current then
-				l := deep_clone (s)
+				l := clone (s)
 			else
 				l := s
 			end

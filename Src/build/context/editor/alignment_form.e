@@ -245,6 +245,9 @@ feature {NONE}
 	reset is
 		do
 			reference.reset;
+				--| Next line: To be able to see the label of `align_hole' on
+				--| Windows 95.
+			align_hole.set_managed (True);
 			horizontal.arm;
 			top_left.arm;
 			offset.arm;

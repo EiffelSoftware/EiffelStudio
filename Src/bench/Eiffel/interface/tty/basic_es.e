@@ -61,6 +61,8 @@ feature -- Creation
 					end;
 					discard_licence
 				end;
+			else
+				die (-1)
 			end;
 		rescue
 			discard_licence;

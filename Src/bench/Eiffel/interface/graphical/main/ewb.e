@@ -67,7 +67,8 @@ feature
 					end;
 				end;
 			else
-				-- Ensure clean exit in case of exception
+					-- Ensure clean exit in case of exception
+				die (-1)
 			end;
 		rescue
 			discard_licence;

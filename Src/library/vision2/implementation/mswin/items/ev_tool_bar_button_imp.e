@@ -19,17 +19,10 @@ inherit
 
 	EV_ITEM_IMP
 		undefine
-			parent,
-			set_pointer_style,
-			pnd_press
+			parent
 		redefine
 			set_pixmap,
 			parent_imp,
-			interface
-		end
-
-	EV_PICK_AND_DROPABLE_ITEM_IMP
-		redefine
 			interface
 		end
 
@@ -236,6 +229,9 @@ end -- class EV_TOOL_BAR_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.23  2000/04/11 19:12:18  rogers
+--| Removed repeated inheritance from EV_PICK_AND_DROPABLE_ITEM_IMP.
+--|
 --| Revision 1.22  2000/04/11 19:06:26  rogers
 --| Now inherits EV_PICK_AND_DROPABLE_ITEM_IMP. Removed pnd_press
 --| and set_pointer_Style as they are now inherited.

@@ -328,13 +328,6 @@ feature -- Resizing
 
 feature -- Conversion
 
-	to_pointer: POINTER is
-			-- Address of actual sequence of values,
-			-- for passing to external (non-Eiffel) routines
-		do
-			Result := conv_pp ($area)
-		end;
-
 	to_c: ANY is
 			-- Address of actual sequence of values,
 			-- for passing to external (non-Eiffel) routines.
@@ -454,12 +447,6 @@ feature {NONE} -- Implementation
 	empty_area: BOOLEAN is
 		do
 			Result := area = Void or else area.count = 0
-		end;
-
-	conv_pp (p: POINTER): POINTER is
-			-- Return its argument
-		external
-			"C"
 		end;
 
 invariant

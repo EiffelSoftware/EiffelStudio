@@ -205,7 +205,7 @@ feature -- Status setting
 		require
 			exists: exists
 			selection_in_lower_bound: start_position >= 0 and end_position >= 0
-			selection_in_upper_bound: start_position <= text_length and end_position <= text_length
+			selection_in_upper_bound: start_position <= text_length and end_position <= text_length + 1
 		do
 			cwin_send_message (item, Em_setsel, start_position, end_position)
 		ensure

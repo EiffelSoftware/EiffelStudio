@@ -11,12 +11,15 @@ inherit
 		redefine
 			actual_type, solved_type, has_like, instantiation_in, is_like,
 			is_basic, instantiated_in, same_as, conformance_type, meta_type,
-			is_like_argument, is_deep_equal, valid_base_type
+			is_like_argument, is_deep_equal, has_associated_class
 		end;
 	SHARED_LIKE_CONTROLER;
 	SHARED_ARG_TYPES;
 
-feature -- Access
+feature -- Properties
+
+	actual_type: TYPE_A;
+			-- Actual type of the argument
 
 	is_like: BOOLEAN is
 			-- Is the type an anchored one ?
@@ -30,11 +33,24 @@ feature -- Access
 			Result := True;
 		end;
 
-	valid_base_type: BOOLEAN is
-			-- Is the base type valid
+feature -- Access
+
+	has_associated_class: BOOLEAN is
+			-- Does Current have an associated class?
 		do
 			Result := evaluated_type /= Void and then
-				evaluated_type.valid_base_type
+				evaluated_type.has_associated_class
+		end;
+
+	same_as (other: TYPE_A): BOOLEAN is
+			-- Is the current type the same as `other' ?
+		local
+			other_like_arg: LIKE_ARGUMENT;
+		do
+			other_like_arg ?= other;
+			Result := 	other_like_arg /= Void
+						and then
+						other_like_arg.position = position
 		end;
 
 	associated_eclass: E_CLASS is
@@ -58,18 +74,15 @@ feature -- Output
 			Result.append (actual_dump);
 		end;
 
-	append_clickable_signature (a_clickable: CLICK_WINDOW) is
+	append_to (ow: OUTPUT_WINDOW) is
 		do
-			a_clickable.put_string ("(like arg #");
-			a_clickable.put_int (position);
-			a_clickable.put_char (')');
-			actual_type.append_clickable_signature (a_clickable);
+			ow.put_string ("(like arg #");
+			ow.put_int (position);
+			ow.put_char (')');
+			actual_type.append_to (ow);
 		end;
 
-feature -- Primitives
-
-	actual_type: TYPE_A;
-			-- Actual type of the argument
+feature {COMPILER_EXPORTER} -- Primitives
 
 	set_actual_type (a: TYPE_A) is
 			-- Assign `a' to `actual_type'.
@@ -161,17 +174,6 @@ feature -- Primitives
 			Result := actual_type.is_basic;
 		end;
 
-	same_as (other: TYPE_A): BOOLEAN is
-			-- Is the current type the same as `other' ?
-		local
-			other_like_arg: LIKE_ARGUMENT;
-		do
-			other_like_arg ?= other;
-			Result := 	other_like_arg /= Void
-						and then
-						other_like_arg.position = position
-		end;
-
 	is_deep_equal (other: TYPE_B): BOOLEAN is
 		local
 			other_like_arg: LIKE_ARGUMENT;
@@ -189,7 +191,7 @@ feature -- Primitives
 			Result.set_position (position);
 		end;
 
-feature -- Storage information for EiffelCase
+feature {COMPILER_EXPORTER} -- Storage information for EiffelCase
 
 	storage_info (classc: CLASS_C): S_CLASS_TYPE_INFO is
 			-- Storage info for Current type in class `classc'

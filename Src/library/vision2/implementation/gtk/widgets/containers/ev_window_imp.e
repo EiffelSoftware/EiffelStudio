@@ -80,6 +80,7 @@ feature  -- Access
 					o := eif_object_from_c (p)
 					Result ?= o.interface
 				end
+				C.g_list_free (p)
 			end
 		end
 

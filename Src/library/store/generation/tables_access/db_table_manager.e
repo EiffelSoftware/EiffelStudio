@@ -385,10 +385,6 @@ feature -- Update
 						description.attribute_list)
 				pr.execute (expr)
 				expr.clear_all
-						-- Patch.
-				if session_control.error_code = 1001 then
-					session_control.reset
-				end
 				commit
 				if database_manager.has_error then
 					has_error := True

@@ -1,12 +1,11 @@
 indexing
 	description: "VOID actual type."
 	date: "$Date$"
-	revision: "$Revision $"
+	revision: "$Revision$"
 
 class VOID_A
 
 inherit
-
 	TYPE_A
 		redefine
 			is_void, same_as
@@ -45,13 +44,13 @@ feature -- Output
 
 	ext_append_to (st: STRUCTURED_TEXT; f: E_FEATURE) is
 		do
-			st.add (ti_Void_feature)
+			st.add (ti_void)
 		end
 
 feature {COMPILER_EXPORTER}
 
-	internal_conform_to (other: TYPE_A; in_generics: BOOLEAN): BOOLEAN is
-			-- Does `other' conform to Current ?
+	conform_to (other: TYPE_A): BOOLEAN is
+			-- Does Current conform to `other'?
 		do
 			Result := other.actual_type.is_void
 		end

@@ -19,47 +19,31 @@ feature -- Basic Operations
 
 	handle_exception is
 			-- General exception hanlding.
+		local
+			msg: STRING
 		do
-			set_error ("Exception Handled by Eiffel Web")
-			raise_error
-		end
-
-	raise_error is
-			-- Display error message `msg' and exit.
-		do
-			if error_handler_activated.item then
-				response_header.generate_text_header
-				response_header.send_to_browser
-				output.put_string(error_message)
+			if raised_error /= Void then
+				msg := raised_error
+			else
+				msg := ""
 			end
-			die(0)
+			response_header.send_trace(msg+exception_trace)
 		end
 
-	set_error (msg: STRING) is
-			-- Set error message.
+	raise_error(msg: STRING) is
+			-- Raise an error
 		require
-			msg_exists: msg /= Void
+			message_exists: msg /= Void
 		do
-			if not error_happened then
-				error_message := msg
-				error_happened := True
-			end
+			raised_error := msg
+			handle_exception
+		ensure
+			exists: raised_error /= Void
 		end
 
-feature {CGI_INTERFACE} -- Access
+feature {CGI_ERROR_HANDLING} -- Access
 
-	error_handler_activated: BOOLEAN_REF is 
-			-- Will the exception track be sent to the browser ? 
-		once
-			Create Result
-		end
-
-feature {NONE} -- Implementation
-
-	error_happened: BOOLEAN
-			-- Did an error occur?
-
-	error_message: STRING
-			-- Message describing the error.
+		raised_error: STRING
+			-- Error explicitely raised by developer code.
 
 end -- class CGI_ERROR_HANDLING

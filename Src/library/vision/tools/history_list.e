@@ -151,9 +151,19 @@ feature
 
 	remove_after is
 			-- Remove all commands after the cursor position.
+		local
+			i, n: INTEGER
 		do
 			if (not islast) and (not empty) then
-				remove_n_right (count-index);
+				from
+					n := count-index
+					i := 1
+				until
+					islast or else (i > n)
+				loop
+					remove_right;
+					i := i + 1
+				end
 				from
 					history_windows.start
 				until

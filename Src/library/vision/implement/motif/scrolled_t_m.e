@@ -15,7 +15,8 @@ inherit
 		redefine
 			action_target, 
 			set_foreground_color, set_background_color,
-			update_foreground_color, update_background_color
+			update_foreground_color, update_background_color,
+			set_managed
 		end;
 
 	SCROLLED_W_R_M;
@@ -54,6 +55,22 @@ feature {NONE} -- Creation
 					man);
 			screen_object := xt_parent (action_target);
 			a_scrolled_text.set_font_imp (Current)
+		end;
+
+feature -- Managing
+
+	set_managed (flag: BOOLEAN) is
+			-- Enable geometry managment on screen widget implementation,
+			-- by window manager of parent widget if `flag', disable it
+			-- otherwise.
+		do
+			if flag then
+				xt_manage_child (action_target)
+				xt_manage_child (screen_object)
+			else
+				xt_unmanage_child (action_target)
+				xt_unmanage_child (screen_object)
+			end
 		end;
 
 feature -- Color
@@ -164,8 +181,8 @@ feature
 	is_horizontal_scrollbar: BOOLEAN is
 			-- Is horizontal scrollbar visible?
 		do
-            Result := xt_is_managed (horizontal_widget);
-            --Result := xt_boolean (action_target, MscrollHorizontal);
+			Result := xt_is_managed (horizontal_widget);
+			--Result := xt_boolean (action_target, MscrollHorizontal);
 		end;
 
 	is_vertical_scrollbar: BOOLEAN is

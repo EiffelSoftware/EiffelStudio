@@ -67,14 +67,6 @@ feature -- Element change
 		deferred
 		end
 
-	put_child (n: like parent) is
-			-- Add `n' to the list of children.
-			-- Do not move child cursor.
-		require else
-			non_void_argument: n /= Void
-		deferred
-		end
-
 	put_child_left (n: like parent) is
 			-- Add `n' to the left of cursor position.
 			-- Do not move cursor.
@@ -150,11 +142,6 @@ feature -- Removal
 		ensure
 			new_arity: arity = old arity - 1
 			new_child_index: child_index = old child_index
-		end
-
-	wipe_out is
-			-- Remove all child
-		deferred
 		end
 
 feature -- Conversion

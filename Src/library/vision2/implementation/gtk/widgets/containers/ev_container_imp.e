@@ -212,17 +212,18 @@ feature -- Status setting
 			end
 		end
 
-	set_background_pixmap (pixmap: EV_PIXMAP) is
+	set_background_pixmap (a_pixmap: EV_PIXMAP) is
 			-- Set the container background pixmap to `pixmap'.
 		local
 			pix_imp: EV_PIXMAP_IMP
 		do
-			pix_imp ?= pixmap.implementation
-
---|FIXME			C.c_gtk_container_set_bg_pixmap (container_widget, pix_imp.c_object)
---|FIXME			C.gtk_widget_show (pix_imp.c_object)
-
-			background_pixmap := pixmap
+			pix_imp ?= a_pixmap.implementation
+			C.gdk_window_set_back_pixmap (
+				C.gtk_widget_struct_window (pix_imp.c_object),
+				C.gtk_pixmap_struct_pixmap (pix_imp.c_object),
+				False
+			)
+			background_pixmap := clone (a_pixmap)
 		end
 			-- FIXME NPC
 

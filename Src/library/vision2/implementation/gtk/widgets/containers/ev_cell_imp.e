@@ -37,27 +37,27 @@ feature -- initialization
 
 feature -- Access
 
-	item: EV_WIDGET is
+	item: EV_WIDGET --is
 			-- Current item
-		local
-			p: POINTER
-			imp: EV_ANY_IMP
-			a_child_list: POINTER
-		do
-			a_child_list := C.gtk_container_children (container_widget)
-			if a_child_list /= NULL then
-				p := C.g_list_nth_data (a_child_list, 0)
-				if p /= NULL then
-					imp := eif_object_from_c (p)
-					check
-						imp_not_void: imp /= Void
-							-- C object should have Eiffel object.
-					end
-					Result ?= imp.interface
-				end
-				C.g_list_free (a_child_list)
-			end
-		end
+--		local
+--			p: POINTER
+--			imp: EV_ANY_IMP
+--			a_child_list: POINTER
+--		do
+--			a_child_list := C.gtk_container_children (container_widget)
+--			if a_child_list /= NULL then
+--				p := C.g_list_nth_data (a_child_list, 0)
+--				if p /= NULL then
+--					imp := eif_object_from_c (p)
+--					check
+--						imp_not_void: imp /= Void
+--							-- C object should have Eiffel object.
+--					end
+--					Result ?= imp.interface
+--				end
+--				C.g_list_free (a_child_list)
+--			end
+--		end
 
 feature -- Element change
 
@@ -68,6 +68,7 @@ feature -- Element change
 			imp: EV_WIDGET_IMP
 		do
 			i := item
+			item := v
 			if i /= Void then
 				on_removed_item (i)
 				imp ?= i.implementation

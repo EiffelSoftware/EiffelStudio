@@ -40,6 +40,8 @@ feature {NONE} -- Implementation
 			if i < count then
 				reorder_child (v, i)
 			end
+			child_array.go_i_th (i)
+			child_array.put_left (v)
 			on_new_item (v)
 		end
 
@@ -61,6 +63,8 @@ feature {NONE} -- Implementation
 			C.gtk_object_unref (p)
 			imp ?= eif_object_from_c (p)
 			imp.set_item_parent_imp (Void)
+			child_array.go_i_th (i)
+			child_array.remove
 		end
 
 feature {NONE} -- Implementation

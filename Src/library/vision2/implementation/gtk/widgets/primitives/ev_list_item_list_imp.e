@@ -32,7 +32,8 @@ inherit
 			list_widget,
 			add_to_container,
 			remove_i_th,
-			wipe_out
+			wipe_out,
+			initialize
 		end
 	
 	EV_LIST_ITEM_LIST_ACTION_SEQUENCES_IMP
@@ -78,6 +79,7 @@ feature {NONE} -- Initialization
 		local
 			temp_sig_id: INTEGER
 		do
+			{EV_ITEM_LIST_IMP} Precursor
 			{EV_PRIMITIVE_IMP} Precursor
 			real_signal_connect (
 				list_widget,
@@ -193,7 +195,7 @@ feature -- Removal
 				item_imp.set_item_parent_imp (Void)
 				forth
 			end
-
+			child_array.wipe_out
 			index := 0
 		end
 

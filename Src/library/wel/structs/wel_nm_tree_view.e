@@ -45,16 +45,24 @@ feature -- Access
 
 	new_item: WEL_TREE_VIEW_ITEM is
 			-- Information about the new item state
+		local
+			tree: WEL_TREE_VIEW
 		do
 			!! Result.make_by_pointer (cwel_nm_treeview_get_itemnew (item))
+			tree ?= hdr.window_from
+			Result := tree.get_item_with_data (Result)
 		ensure
 			result_not_void: Result /= Void
 		end
 
 	old_item: WEL_TREE_VIEW_ITEM is
 			-- Information about the old item state
+		local
+			tree: WEL_TREE_VIEW
 		do
 			!! Result.make_by_pointer (cwel_nm_treeview_get_itemold (item))
+			tree ?= hdr.window_from
+			Result := tree.get_item_with_data (Result)
 		ensure
 			result_not_void: Result /= Void
 		end

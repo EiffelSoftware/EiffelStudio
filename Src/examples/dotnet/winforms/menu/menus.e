@@ -31,10 +31,10 @@ feature {NONE} -- Initialization
 
 			--  Initialize Fonts - use generic fonts to avoid problems across
 			--  different versions of the OS
-			create monoSpaceFontFamily.make_from_generic_family (feature {DRAWING_GENERIC_FONT_FAMILIES}.monospace)
-			create sansSerifFontFamily.make_from_generic_family (feature {DRAWING_GENERIC_FONT_FAMILIES}.sans_serif)
-			create serifFontFamily.make_from_generic_family (feature {DRAWING_GENERIC_FONT_FAMILIES}.serif)
-			currentFontFamily := sansSerifFontFamily
+			create mono_space_font_family.make_from_generic_family (feature {DRAWING_GENERIC_FONT_FAMILIES}.monospace)
+			create sans_serif_font_family.make_from_generic_family (feature {DRAWING_GENERIC_FONT_FAMILIES}.sans_serif)
+			create serif_font_family.make_from_generic_family (feature {DRAWING_GENERIC_FONT_FAMILIES}.serif)
+			current_font_family := sans_serif_font_family
 
 			-- Add File Menu
 			mi_file := main_menu.get_menu_items.add (("&File").to_cil)
@@ -46,29 +46,29 @@ feature {NONE} -- Initialization
 			mi_format := main_menu.get_menu_items.add (("F&ormat").to_cil)
 
 			-- Font Face sub-menu
-			create mmiSansSerif.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&1. ").to_cil, sansSerifFontFamily.get_name), create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
-			mmiSansSerif.set_checked (True) 
-			mmiSansSerif.set_default_item (True) 
-			create mmiSerif.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&2. ").to_cil, serifFontFamily.get_name), create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
-			create mmiMonoSpace.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&3. ").to_cil, monoSpaceFontFamily.get_name), create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
+			create mmi_sans_serif.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&1. ").to_cil, sans_serif_font_family.get_name), create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
+			mmi_sans_serif.set_checked (True) 
+			mmi_sans_serif.set_default_item (True) 
+			create mmi_serif.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&2. ").to_cil, serif_font_family.get_name), create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
+			create mmi_mono_space.make_from_text_and_on_click ((("").to_cil).concat_string_string (("&3. ").to_cil, mono_space_font_family.get_name), create {EVENT_HANDLER}.make (Current, $FormatFont_Clicked))
 
 			create l_array_menu_item.make (3)
-			l_array_menu_item.put (0, mmiSansSerif)
-			l_array_menu_item.put (1, mmiSerif)
-			l_array_menu_item.put (2, mmiMonoSpace)
+			l_array_menu_item.put (0, mmi_sans_serif)
+			l_array_menu_item.put (1, mmi_serif)
+			l_array_menu_item.put (2, mmi_mono_space)
 			dummy := mi_format.get_menu_items.add_string_menu_item_array (("Font &Face").to_cil, l_array_menu_item)
 
 			-- Font Size sub-menu
-			create mmiSmall.make_from_text_and_on_click (("&Small").to_cil, create {EVENT_HANDLER}.make (Current, $FormatSize_Clicked))
-			create mmiMedium.make_from_text_and_on_click (("&Medium").to_cil, create {EVENT_HANDLER}.make (Current, $FormatSize_Clicked))
-			mmiMedium.set_checked (True) 
-			mmiMedium.set_default_item (True) 
-			create mmiLarge.make_from_text_and_on_click (("&Large").to_cil, create {EVENT_HANDLER}.make (Current, $FormatSize_Clicked))
+			create mmi_small.make_from_text_and_on_click (("&Small").to_cil, create {EVENT_HANDLER}.make (Current, $FormatSize_Clicked))
+			create mmi_medium.make_from_text_and_on_click (("&Medium").to_cil, create {EVENT_HANDLER}.make (Current, $FormatSize_Clicked))
+			mmi_medium.set_checked (True) 
+			mmi_medium.set_default_item (True) 
+			create mmi_large.make_from_text_and_on_click (("&Large").to_cil, create {EVENT_HANDLER}.make (Current, $FormatSize_Clicked))
 
 			create l_array_menu_item.make (3)
-			l_array_menu_item.put (0, mmiSmall)
-			l_array_menu_item.put (1, mmiMedium)
-			l_array_menu_item.put (2, mmiLarge)
+			l_array_menu_item.put (0, mmi_small)
+			l_array_menu_item.put (1, mmi_medium)
+			l_array_menu_item.put (2, mmi_large)
 			dummy := mi_format.get_menu_items.add_string_menu_item_array (("Font &Size").to_cil, l_array_menu_item)
 
 			-- Add Format to label context menu
@@ -76,19 +76,19 @@ feature {NONE} -- Initialization
 			dummy := label_1_context_menu.get_menu_items.add_menu_item (mi_format.clone_menu)
 
 			--  Set up the context menu items - we use these to check and uncheck items
-			cmiSansSerif := label_1_context_menu.get_menu_items.get_item (0).get_menu_items.get_item (0).get_menu_items.get_item (0)
-			cmiSerif := label_1_context_menu.get_menu_items.get_item (0).get_menu_items.get_item (0).get_menu_items.get_item (1)
-			cmiMonoSpace := label_1_context_menu.get_menu_items.get_item (0).get_menu_items.get_item (0).get_menu_items.get_item (2)
-			cmiSmall := label_1_context_menu.get_menu_items.get_item (0).get_menu_items.get_item (1).get_menu_items.get_item (0)
-			cmiMedium := label_1_context_menu.get_menu_items.get_item (0).get_menu_items.get_item (1).get_menu_items.get_item (1)
-			cmiLarge := label_1_context_menu.get_menu_items.get_item (0).get_menu_items.get_item (1).get_menu_items.get_item (2)
+			cmi_sans_serif := label_1_context_menu.get_menu_items.get_item (0).get_menu_items.get_item (0).get_menu_items.get_item (0)
+			cmi_serif := label_1_context_menu.get_menu_items.get_item (0).get_menu_items.get_item (0).get_menu_items.get_item (1)
+			cmi_mono_space := label_1_context_menu.get_menu_items.get_item (0).get_menu_items.get_item (0).get_menu_items.get_item (2)
+			cmi_small := label_1_context_menu.get_menu_items.get_item (0).get_menu_items.get_item (1).get_menu_items.get_item (0)
+			cmi_medium := label_1_context_menu.get_menu_items.get_item (0).get_menu_items.get_item (1).get_menu_items.get_item (1)
+			cmi_large := label_1_context_menu.get_menu_items.get_item (0).get_menu_items.get_item (1).get_menu_items.get_item (2)
 
 			-- We use these to track which menu items are checked
 			-- This is made more complex because we have both a menu and a context menu
-			miMainFormatFontChecked := mmiSansSerif
-			miMainFormatSizeChecked := mmiMedium
-			miContextFormatFontChecked := cmiSansSerif
-			miContextFormatSizeChecked := cmiMedium
+			mi_main_format_font_checked := mmi_sans_serif
+			mi_main_format_size_checked := mmi_medium
+			mi_context_format_font_checked := cmi_sans_serif
+			mi_context_format_size_checked := cmi_medium
 
 			dummy := my_window.show_dialog
 		end
@@ -100,26 +100,28 @@ feature -- Access
 			-- Main window.
 
 	components: SYSTEM_DLL_SYSTEM_CONTAINER
-			-- System.ComponentModel.Container 
+			-- System.ComponentModel.Container.
 
 	label_1: WINFORMS_LABEL
-			-- System.Windows.Forms.Label 
+			-- System.Windows.Forms.Label.
 
 	main_menu: WINFORMS_MAIN_MENU
-			-- System.Windows.Forms.MainMenu 
+			-- System.Windows.Forms.MainMenu.
 
 	label_1_context_menu: WINFORMS_CONTEXT_MENU
-			-- System.Windows.Forms.ContextMenu 
+			-- System.Windows.Forms.ContextMenu.
 
 	fontSize: DOUBLE
-			-- Font face and size
+			-- Font face and size.
 
-	mmiSansSerif, mmiSerif, mmiMonoSpace, mmiSmall, mmiMedium,
-	mmiLarge, cmiSansSerif, cmiSerif, cmiMonoSpace, cmiSmall,
-	cmiMedium, cmiLarge, miMainFormatFontChecked, miMainFormatSizeChecked,
-	miContextFormatFontChecked, miContextFormatSizeChecked : WINFORMS_MENU_ITEM
-
-	currentFontFamily, monoSpaceFontFamily, sansSerifFontFamily, serifFontFamily: DRAWING_FONT_FAMILY
+	mmi_sans_serif, mmi_serif, mmi_mono_space, mmi_small, mmi_medium,
+	mmi_large, cmi_sans_serif, cmi_serif, cmi_mono_space, cmi_small,
+	cmi_medium, cmi_large, mi_main_format_font_checked, mi_main_format_size_checked,
+	mi_context_format_font_checked, mi_context_format_size_checked : WINFORMS_MENU_ITEM
+			-- System.Windows.Forms.MenuItem.
+			
+	current_font_family, mono_space_font_family, sans_serif_font_family, serif_font_family: DRAWING_FONT_FAMILY
+			-- System.Windows.Forms.FontFamily.
 
 
 feature {NONE} -- Implementation
@@ -196,27 +198,27 @@ feature {NONE} -- Implementation
 		do
 			mi_clicked ?= sender
 
-			miMainFormatFontChecked.set_checked (False)
-			miContextFormatFontChecked.set_checked (False)
+			mi_main_format_font_checked.set_checked (False)
+			mi_context_format_font_checked.set_checked (False)
 
-			if mi_clicked.equals (mmiSansSerif) or mi_clicked.equals (cmiSansSerif) then
-				miMainFormatFontChecked := mmiSansSerif
-				miContextFormatFontChecked := cmiSansSerif
-				currentFontFamily := sansSerifFontFamily
-			elseif mi_clicked.equals (mmiSerif) or mi_clicked.equals (cmiSerif) then
-				miMainFormatFontChecked := mmiSerif
-				miContextFormatFontChecked := cmiSerif
-				currentFontFamily := serifFontFamily
+			if mi_clicked.equals (mmi_sans_serif) or mi_clicked.equals (cmi_sans_serif) then
+				mi_main_format_font_checked := mmi_sans_serif
+				mi_context_format_font_checked := cmi_sans_serif
+				current_font_family := sans_serif_font_family
+			elseif mi_clicked.equals (mmi_serif) or mi_clicked.equals (cmi_serif) then
+				mi_main_format_font_checked := mmi_serif
+				mi_context_format_font_checked := cmi_serif
+				current_font_family := serif_font_family
 			else
-				miMainFormatFontChecked := mmiMonoSpace
-				miContextFormatFontChecked := cmiMonoSpace
-				currentFontFamily := monoSpaceFontFamily
+				mi_main_format_font_checked := mmi_mono_space
+				mi_context_format_font_checked := cmi_mono_space
+				current_font_family := mono_space_font_family
 			end
 
-			miMainFormatFontChecked.set_checked (True)
-			miContextFormatFontChecked.set_checked (True)
+			mi_main_format_font_checked.set_checked (True)
+			mi_context_format_font_checked.set_checked (True)
 
-			label_1.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (currentFontFamily, fontSize))
+			label_1.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, fontSize))
 		end
 
 
@@ -228,29 +230,29 @@ feature {NONE} -- Implementation
 		do
 			mi_clicked ?= sender
 
-			miMainFormatSizeChecked.set_checked (False)
-			miContextFormatSizeChecked.set_checked (False)
+			mi_main_format_size_checked.set_checked (False)
+			mi_context_format_size_checked.set_checked (False)
 
 			font_size_string := mi_clicked.get_text
 
 			if font_size_string.equals (("&Small").to_cil) then
-				miMainFormatSizeChecked := mmiSmall
-				miContextFormatSizeChecked := cmiSmall
+				mi_main_format_size_checked := mmi_small
+				mi_context_format_size_checked := cmi_small
 				fontSize := font_sizes ("Small")
 			elseif font_size_string.equals (("&Large").to_cil) then
-				miMainFormatSizeChecked := mmiLarge
-				miContextFormatSizeChecked := cmiLarge
+				mi_main_format_size_checked := mmi_large
+				mi_context_format_size_checked := cmi_large
 				fontSize := font_sizes ("Large")
 			else
-				miMainFormatSizeChecked := mmiMedium
-				miContextFormatSizeChecked := cmiMedium
+				mi_main_format_size_checked := mmi_medium
+				mi_context_format_size_checked := cmi_medium
 				fontSize := font_sizes ("Medium")
 			end
 
-			miMainFormatSizeChecked.set_checked (True)
-			miContextFormatSizeChecked.set_checked (True)
+			mi_main_format_size_checked.set_checked (True)
+			mi_context_format_size_checked.set_checked (True)
 
-			label_1.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (currentFontFamily, fontSize))
+			label_1.set_font (create {DRAWING_FONT}.make_from_family_and_em_size (current_font_family, fontSize))
 		end
 
 

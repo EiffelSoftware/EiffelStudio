@@ -175,11 +175,10 @@ feature -- Status Report
 			until
 				selected_figures.after or else Result = False
 			loop
-				Result := has (selected_figures.item)
+				Result := has_deep (selected_figures.item)
 				selected_figures.forth
 			end
 		end
-		
 		
 feature -- Access
 

@@ -265,6 +265,35 @@ feature -- Access
 			end
 		end
 
+	precompiled: STRING is
+			-- Precompiled file
+		require
+			valid_ast: is_valid
+		local
+			defaults: LACE_LIST [D_OPTION_SD]
+			free_opt: FREE_OPTION_SD
+			found: BOOLEAN
+		do
+			Result := ""
+			defaults := root_ast.defaults
+			if defaults /= Void then
+				from
+					defaults.start
+				until
+					defaults.after or found
+				loop
+					if defaults.item.option.is_precompiled then
+						found := true
+						Result := defaults.item.value.value
+					end
+					defaults.forth
+				end
+			end
+		ensure
+			non_void_result: Result /= Void
+		end
+		
+
 	working_directory: STRING is
 			-- Application working directory.
 		do
@@ -382,9 +411,6 @@ feature{NONE} -- Element change
 
 	set_string_default (def_opt:INTEGER; new_value: STRING) is
 			-- Set the default
-		require
-			new_valuee_exists: new_value /= Void
-			valid_new_value: not new_value.is_empty
 		local
 			defaults: LACE_LIST [D_OPTION_SD]
 			free_opt: FREE_OPTION_SD
@@ -558,6 +584,39 @@ feature -- Element change
 				new_defaults.put_front (d_option)	
 			end
 		end
+		
+	set_precompiled (filename: STRING) is
+			-- Set precompiled default option with 'filename'
+		local
+			defaults: LACE_LIST [D_OPTION_SD]
+			opt: OPTION_SD
+			found: BOOLEAN
+			value: ID_SD 
+			d_option: D_OPTION_SD
+		do
+			defaults := root_ast.defaults
+			if defaults /= Void then
+				from
+					defaults.start
+				until
+					defaults.after or found
+				loop
+					opt := defaults.item.option
+					if opt.is_precompiled then
+						defaults.remove
+						found := True
+					end
+					defaults.forth
+				end
+			else
+				create defaults.make (10)
+				root_ast.set_defaults (defaults)
+			end
+			value := new_id_sd (filename, true)
+			create d_option.initialize (create {PRECOMPILED_SD}, create {OPT_VAL_SD}.make (value))
+			defaults.extend (d_option)
+		end
+		
 
 	set_il_generation (b: BOOLEAN) is
 			-- Generate IL code if `b'.

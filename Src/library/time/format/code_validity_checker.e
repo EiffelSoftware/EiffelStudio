@@ -300,8 +300,7 @@ feature -- Preconditions
 		local
 			tmp: STRING
 		do
-			tmp := clone (s)
-			tmp.to_upper
+			tmp := s.as_upper
 			Result := tmp.is_equal ("AM") or tmp.is_equal ("PM")
 		ensure
 			definition: Result = s.as_upper.is_equal ("AM") or

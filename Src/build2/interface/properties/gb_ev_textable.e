@@ -62,7 +62,7 @@ feature {GB_XML_STORE} -- Output
 			textable: EV_TEXTABLE
 		do
 			textable ?= default_object_by_type (class_name (first))
-			if not textable.text.is_equal (objects.first.text) or object.constants.item (type + Text_string) /= Void then
+			if not textable.text.is_equal (objects.first.text) or uses_constant (Text_string) then
 				add_string_element (element, Text_string, objects.first.text)
 			end
 		end

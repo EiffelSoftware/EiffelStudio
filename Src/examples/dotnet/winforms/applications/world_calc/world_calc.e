@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 			-- Entry point.
 		do
 			initialize_components
-			feature {WINFORMS_APPLICATION}.run_form (Current)
+			{WINFORMS_APPLICATION}.run_form (Current)
 		end
 
 feature -- Access
@@ -280,17 +280,17 @@ feature -- Implementation
 			l_int_math: INTEGER_MATH
 		do
 			if not retried then
-				if not txt_formula.text.equals (feature {SYSTEM_STRING}.empty) then
+				if not txt_formula.text.equals ({SYSTEM_STRING}.empty) then
 						-- parse the formula and get the arguments
 					create my_parse.make
 					l_args := my_parse.parse (txt_formula.text)
 					create l_int_math.make
 					txt_formula.set_text (l_int_math.get_result (
-						feature {SYSTEM_CONVERT}.to_int_32 (l_args.arg_1),
-						l_args.op, feature {SYSTEM_CONVERT}.to_int_32 (l_args.arg_2)))
+						{SYSTEM_CONVERT}.to_int_32 (l_args.arg_1),
+						l_args.op, {SYSTEM_CONVERT}.to_int_32 (l_args.arg_2)))
 				end
 			else
-				res := feature {WINFORMS_MESSAGE_BOX}.show (
+				res := {WINFORMS_MESSAGE_BOX}.show (
 					"Invalid calculation entered.%N%N  Enter 'num1' 'op' 'num2'%N%N")
 			end
 		rescue

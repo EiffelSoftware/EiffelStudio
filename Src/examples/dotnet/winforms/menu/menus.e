@@ -30,9 +30,9 @@ feature {NONE} -- Initialization
 
 				--  Initialize Fonts - use generic fonts to avoid problems across
 				--  different versions of the OS
-			create mono_space_font_family.make (feature {DRAWING_GENERIC_FONT_FAMILIES}.monospace)
-			create sans_serif_font_family.make (feature {DRAWING_GENERIC_FONT_FAMILIES}.sans_serif)
-			create serif_font_family.make (feature {DRAWING_GENERIC_FONT_FAMILIES}.serif)
+			create mono_space_font_family.make ({DRAWING_GENERIC_FONT_FAMILIES}.monospace)
+			create sans_serif_font_family.make ({DRAWING_GENERIC_FONT_FAMILIES}.sans_serif)
+			create serif_font_family.make ({DRAWING_GENERIC_FONT_FAMILIES}.serif)
 			current_font_family := sans_serif_font_family
 
 				-- Add File Menu
@@ -40,12 +40,12 @@ feature {NONE} -- Initialization
 			res := mi_file.menu_items.add_menu_item (
 				create {WINFORMS_MENU_ITEM}.make ("&Open...",
 					create {EVENT_HANDLER}.make (Current, $file_open_clicked),
-					feature {WINFORMS_SHORTCUT}.ctrl_o))
+					{WINFORMS_SHORTCUT}.ctrl_o))
 			res := mi_file.menu_items.add ("-")
 			res := mi_file.menu_items.add_menu_item (
 				create {WINFORMS_MENU_ITEM}.make ("E&xit",
 					create {EVENT_HANDLER}.make (Current, $file_exit_clicked),
-					feature {WINFORMS_SHORTCUT}.ctrl_x))
+					{WINFORMS_SHORTCUT}.ctrl_x))
 
 				-- Add Format Menu
 			mi_format := main_menu.menu_items.add ("F&ormat")
@@ -108,7 +108,7 @@ feature {NONE} -- Initialization
 			mi_context_format_font_checked := cmi_sans_serif
 			mi_context_format_size_checked := cmi_medium
 
-			feature {WINFORMS_APPLICATION}.run_form (Current)
+			{WINFORMS_APPLICATION}.run_form (Current)
 		ensure
 			non_void_mono_space_font_family: mono_space_font_family /= Void
 			non_void_sans_serif_font_family: sans_serif_font_family /= Void
@@ -168,7 +168,7 @@ feature {NONE} -- Implementation
 			create main_menu.make
 			set_menu (main_menu)
 
-			label_1.set_back_color (feature {DRAWING_COLOR}.light_steel_blue)
+			label_1.set_back_color ({DRAWING_COLOR}.light_steel_blue)
 			l_point.make (16, 24)
 			label_1.set_location (l_point)
 			label_1.set_tab_index (0)
@@ -215,7 +215,7 @@ feature {NONE} -- Implementation
 		local
 			res: WINFORMS_DIALOG_RESULT
 		do
-			res := feature {WINFORMS_MESSAGE_BOX}.show ("And why would this open a file?")
+			res := {WINFORMS_MESSAGE_BOX}.show ("And why would this open a file?")
 		end
 
 	format_font_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is

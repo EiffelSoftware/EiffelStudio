@@ -45,7 +45,7 @@ feature -- Initialization
 			
 			main_win.show
 			
-			feature {WINFORMS_APPLICATION}.run_form (main_win)
+			{WINFORMS_APPLICATION}.run_form (main_win)
 		end
 
 feature -- Access
@@ -66,7 +66,7 @@ feature -- Actions
 		local
 			res: WINFORMS_DIALOG_RESULT
 		do
-			res := feature {WINFORMS_MESSAGE_BOX}.show ("You just clicked on the %"Message%" button", "An Eiffel Message Box")
+			res := {WINFORMS_MESSAGE_BOX}.show ("You just clicked on the %"Message%" button", "An Eiffel Message Box")
 		end
 
 invariant

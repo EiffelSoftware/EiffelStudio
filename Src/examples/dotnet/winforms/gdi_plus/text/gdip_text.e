@@ -27,12 +27,12 @@ feature {NONE} -- Initialization
 		local
 			l_background_image, l_text_image: DRAWING_BITMAP
 		do
-			create serif_font_family.make (feature {DRAWING_GENERIC_FONT_FAMILIES}.serif)
+			create serif_font_family.make ({DRAWING_GENERIC_FONT_FAMILIES}.serif)
 
-			set_style (feature {WINFORMS_CONTROL_STYLES}.opaque, True)
+			set_style ({WINFORMS_CONTROL_STYLES}.opaque, True)
 
 				-- Make sure form redraws when it is resized
-			set_style (feature {WINFORMS_CONTROL_STYLES}.resize_redraw, True)
+			set_style ({WINFORMS_CONTROL_STYLES}.resize_redraw, True)
 
 			-- Load the image to be used for the background from the exe's resource fork
 			create l_background_image.make_from_filename ("colorbars.jpg")
@@ -51,13 +51,13 @@ feature {NONE} -- Initialization
 			create text_font.make (serif_font_family, 11)
 
 				-- Set up shadow brush - make it translucent
-			create title_shadow_brush.make (feature {DRAWING_COLOR}.from_argb (70, feature {DRAWING_COLOR}.black))
+			create title_shadow_brush.make ({DRAWING_COLOR}.from_argb (70, {DRAWING_COLOR}.black))
 
 				-- Set up fonts and brushes for printing japanese text
 			set_up_japanese_text
 
 			initialize_component
-			feature {WINFORMS_APPLICATION}.run_form (Current)
+			{WINFORMS_APPLICATION}.run_form (Current)
 		ensure
 			non_void_background_brush: background_brush /= Void
 			non_void_text_texture_brush: text_texture_brush /= Void
@@ -176,15 +176,15 @@ feature {NONE} -- Implementation
 		do
 			graph := e.graphics
 
-			e.graphics.set_smoothing_mode (feature {DRAWING_SMOOTHING_MODE}.anti_alias)
+			e.graphics.set_smoothing_mode ({DRAWING_SMOOTHING_MODE}.anti_alias)
 
 				-- Fill the background use the texture brush
 				-- and then apply a white wash
 			graph.fill_rectangle (background_brush, client_rectangle)
-			graph.fill_rectangle (create {DRAWING_SOLID_BRUSH}.make (feature {DRAWING_COLOR}.from_argb (180, feature {DRAWING_COLOR}.white)), client_rectangle)
+			graph.fill_rectangle (create {DRAWING_SOLID_BRUSH}.make ({DRAWING_COLOR}.from_argb (180, {DRAWING_COLOR}.white)), client_rectangle)
 
 				-- Simple draw hello world
-			graph.draw_string ("Hello World", font, create {DRAWING_SOLID_BRUSH}.make (feature {DRAWING_COLOR}.black), 10, 10)
+			graph.draw_string ("Hello World", font, create {DRAWING_SOLID_BRUSH}.make ({DRAWING_COLOR}.black), 10, 10)
 
 				-- Draw a textured string
 			title_text := "graphics  Samples"
@@ -197,21 +197,21 @@ feature {NONE} -- Implementation
 			window_center := display_rectangle.width / 2
 			string_size := e.graphics.measure_string (text_to_draw, text_font)
 			start_pos := window_center - (string_size.width / 2)
-			graph.draw_string (text_to_draw, text_font, create {DRAWING_SOLID_BRUSH}.make (feature {DRAWING_COLOR}.red), start_pos, 10)
+			graph.draw_string (text_to_draw, text_font, create {DRAWING_SOLID_BRUSH}.make ({DRAWING_COLOR}.red), start_pos, 10)
 
 				-- Now draw a string flowed into a rectangle
 			rectangle_11.make (20, 150, 250, 300)
 			rectangle_12.make (20, 150, 250, 300)
-			graph.fill_rectangle (create {DRAWING_SOLID_BRUSH}.make (feature {DRAWING_COLOR}.gainsboro), rectangle_12)
-			graph.draw_string (flowed_text_1, text_font, create {DRAWING_SOLID_BRUSH}.make (feature {DRAWING_COLOR}.Blue), rectangle_11)
+			graph.fill_rectangle (create {DRAWING_SOLID_BRUSH}.make ({DRAWING_COLOR}.gainsboro), rectangle_12)
+			graph.draw_string (flowed_text_1, text_font, create {DRAWING_SOLID_BRUSH}.make ({DRAWING_COLOR}.Blue), rectangle_11)
 
 				-- Draw more flowed text but this time center it
 			rectangle_21.make (450, 150, 250, 300)
 			rectangle_22.make (450, 150, 250, 300)
-			graph.fill_rectangle (create {DRAWING_SOLID_BRUSH}.make (feature {DRAWING_COLOR}.gainsboro), rectangle_22)
+			graph.fill_rectangle (create {DRAWING_SOLID_BRUSH}.make ({DRAWING_COLOR}.gainsboro), rectangle_22)
 			create format.make
-			format.set_alignment (feature {DRAWING_STRING_ALIGNMENT}.center)
-			graph.draw_string (flowed_text_2, text_font, create {DRAWING_SOLID_BRUSH}.make (feature {DRAWING_COLOR}.Blue), rectangle_21, format)
+			format.set_alignment ({DRAWING_STRING_ALIGNMENT}.center)
+			graph.draw_string (flowed_text_2, text_font, create {DRAWING_SOLID_BRUSH}.make ({DRAWING_COLOR}.Blue), rectangle_21, format)
 
 				-- If we have the Japanese language pack draw some text in Japanese
 				-- Rotate it to make life truly exciting
@@ -247,13 +247,13 @@ feature {NONE} -- Implementation
 				linear_grad_brush := create {DRAWING_LINEAR_GRADIENT_BRUSH}.make (
 													create {DRAWING_POINT}.make (0, 0), 
 													create {DRAWING_POINT}.make (0, 45), 
-													feature {DRAWING_COLOR}.Blue, 
-													feature {DRAWING_COLOR}.Red)
+													{DRAWING_COLOR}.Blue, 
+													{DRAWING_COLOR}.Red)
 			else
 				do_japanese_sample := False
 			end
 		rescue
-			res := feature {WINFORMS_MESSAGE_BOX}.show (
+			res := {WINFORMS_MESSAGE_BOX}.show (
 				"The Japanese font MS Mincho needs be present to run the Japanese part of this sample%N%N")
 			retried := True
 			retry

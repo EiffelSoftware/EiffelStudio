@@ -86,12 +86,12 @@ feature {NONE} -- Implementation
 					font_selection.remove_text
 					font_selection.remove_selection
 				end
-				if character_format.font.weight = feature {EV_FONT_CONSTANTS}.weight_bold and formatting.font_weight then
+				if character_format.font.weight = {EV_FONT_CONSTANTS}.weight_bold and formatting.font_weight then
 					bold_button.enable_select
 				else
 					bold_button.disable_select
 				end
-				if character_format.font.shape = feature {EV_FONT_CONSTANTS}.shape_italic and formatting.font_shape then
+				if character_format.font.shape = {EV_FONT_CONSTANTS}.shape_italic and formatting.font_shape then
 					italic_button.enable_select
 				else
 					italic_button.disable_select
@@ -110,12 +110,12 @@ feature {NONE} -- Implementation
 			font := character_format.font
 			block_events
 			
-			if character_format.font.weight = feature {EV_FONT_CONSTANTS}.weight_regular then
+			if character_format.font.weight = {EV_FONT_CONSTANTS}.weight_regular then
 				bold_button.disable_select
 			else
 				bold_button.enable_select
 			end
-			if character_format.font.shape = feature {EV_FONT_CONSTANTS}.shape_regular then
+			if character_format.font.shape = {EV_FONT_CONSTANTS}.shape_regular then
 				italic_button.disable_select
 			else
 				italic_button.enable_select
@@ -145,7 +145,7 @@ feature {NONE} -- Implementation
 			character_format.set_font (font)
 			
 			if rich_text.has_selection then
-				create format_range.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_family)
+				create format_range.make_with_flags ({EV_CHARACTER_FORMAT_CONSTANTS}.font_family)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, character_format, format_range)
 			else
 				rich_text.set_current_format (character_format)
@@ -170,14 +170,14 @@ feature {NONE} -- Implementation
 			
 			font := character_format.font
 			if bold_button.is_selected then
-				font.set_weight (feature {EV_FONT_CONSTANTS}.weight_bold)
+				font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 			else
-				font.set_weight (feature {EV_FONT_CONSTANTS}.weight_regular)
+				font.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
 			end
 			character_format.set_font (font)
 			
 			if rich_text.has_selection then
-				create format_range.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_weight)
+				create format_range.make_with_flags ({EV_CHARACTER_FORMAT_CONSTANTS}.font_weight)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, character_format, format_range)
 			else
 				rich_text.set_current_format (character_format)
@@ -200,14 +200,14 @@ feature {NONE} -- Implementation
 			
 			font := character_format.font
 			if italic_button.is_selected then
-				font.set_shape (feature {EV_FONT_CONSTANTS}.shape_italic)
+				font.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
 			else
-				font.set_shape (feature {EV_FONT_CONSTANTS}.shape_regular)
+				font.set_shape ({EV_FONT_CONSTANTS}.shape_regular)
 			end
 			character_format.set_font (font)
 			
 			if rich_text.has_selection then
-				create format_range.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_shape)
+				create format_range.make_with_flags ({EV_CHARACTER_FORMAT_CONSTANTS}.font_shape)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, character_format, format_range)
 			else
 				rich_text.set_current_format (character_format)

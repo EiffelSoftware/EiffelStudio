@@ -50,7 +50,7 @@ feature -- Initialization
 			main_window.show
 			on_resize (Void, Void)
 
-			feature {WINFORMS_APPLICATION}.run_form (main_window)
+			{WINFORMS_APPLICATION}.run_form (main_window)
 		end
 
 feature -- Access
@@ -128,7 +128,7 @@ feature {NONE} -- Implementation
 			northwind_connection.open
 			create command_on_suppliers.make ("SELECT * FROM Suppliers", northwind_connection)
 
-			command_on_suppliers.set_command_type (feature {DATA_COMMAND_TYPE}.Text)
+			command_on_suppliers.set_command_type ({DATA_COMMAND_TYPE}.Text)
 			suppliers_adapter.set_select_command (command_on_suppliers)
 
 			io.put_string ("The connection is open.%N")

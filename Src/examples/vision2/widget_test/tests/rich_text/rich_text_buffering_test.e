@@ -50,7 +50,7 @@ feature {NONE} -- Implementation
 			font1 := rich_text.font
 			font2 := font1.twin
 				-- Enable this font as bold.
-			font2.set_weight (feature {EV_FONT_CONSTANTS}.weight_bold)
+			font2.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 			
 				-- Create two formats used for buffering.
 			create character_format1.make_with_font_and_color (font1, (create {EV_STOCK_COLORS}).black, rich_text.background_color)

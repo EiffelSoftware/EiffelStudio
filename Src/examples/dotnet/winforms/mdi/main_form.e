@@ -34,16 +34,16 @@ feature {NONE} -- Initialization
 				-- Add File Menu
 			mi_file := main_menu.menu_items.add ("&File")
 			mi_file.set_merge_order (0)
-			mi_file.set_merge_type (feature {WINFORMS_MENU_MERGE}.merge_items)
+			mi_file.set_merge_type ({WINFORMS_MENU_MERGE}.merge_items)
 
 			create mi_add_doc.make ("&Add Document",
 				create {EVENT_HANDLER}.make (Current, $on_file_add_clicked),
-				feature {WINFORMS_SHORTCUT}.ctrl_a)
+				{WINFORMS_SHORTCUT}.ctrl_a)
 			mi_add_doc.set_merge_order (100)
 
 			create mi_exit.make ("E&xit",
 				create {EVENT_HANDLER}.make (Current, $on_file_exit_clicked),
-				feature {WINFORMS_SHORTCUT}.ctrl_x)
+				{WINFORMS_SHORTCUT}.ctrl_x)
 			mi_exit.set_merge_order (110)
 
 			res := mi_file.menu_items.add_menu_item (mi_add_doc)
@@ -61,7 +61,7 @@ feature {NONE} -- Initialization
 				create {EVENT_HANDLER}.make (Current, $on_window_tile_v_clicked))
 			mi_window.set_mdi_list (True)  -- Adds the MDI Window List to the bottom of the menu
 
-			feature {WINFORMS_APPLICATION}.run_form (Current)
+			{WINFORMS_APPLICATION}.run_form (Current)
 		ensure
 		
 		end
@@ -102,7 +102,7 @@ feature {NONE} -- Implementation
 			create main_menu.make
 			set_menu (main_menu)
 
-			status_bar.set_back_color (feature {DRAWING_SYSTEM_COLORS}.control)
+			status_bar.set_back_color ({DRAWING_SYSTEM_COLORS}.control)
 			l_point.make (0, 180)
 			status_bar.set_location (l_point)
 			l_size.make (450, 20)
@@ -181,7 +181,7 @@ feature {NONE} -- Implementation
 			non_void_sender: sender /= Void
 			non_void_args: args /= Void
 		do
-			layout_mdi (feature {WINFORMS_MDI_LAYOUT}.cascade)
+			layout_mdi ({WINFORMS_MDI_LAYOUT}.cascade)
 		end
 
 	on_window_tile_h_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
@@ -190,7 +190,7 @@ feature {NONE} -- Implementation
 			non_void_sender: sender /= Void
 			non_void_args: args /= Void
 		do
-			layout_mdi (feature {WINFORMS_MDI_LAYOUT}.tile_horizontal)
+			layout_mdi ({WINFORMS_MDI_LAYOUT}.tile_horizontal)
 		end
 
 	on_window_tile_v_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is
@@ -199,7 +199,7 @@ feature {NONE} -- Implementation
 			non_void_sender: sender /= Void
 			non_void_args: args /= Void
 		do
-			layout_mdi (feature {WINFORMS_MDI_LAYOUT}.tile_vertical)
+			layout_mdi ({WINFORMS_MDI_LAYOUT}.tile_vertical)
 		end
 
 invariant

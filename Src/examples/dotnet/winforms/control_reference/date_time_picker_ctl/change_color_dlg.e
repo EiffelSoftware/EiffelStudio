@@ -85,7 +85,7 @@ feature -- Implementation
 			set_maximize_box (False)
 			l_size.make (5, 13)
 			set_auto_scale_base_size (l_size)
-			set_form_border_style (feature {WINFORMS_FORM_BORDER_STYLE}.fixed_dialog)
+			set_form_border_style ({WINFORMS_FORM_BORDER_STYLE}.fixed_dialog)
 			set_minimize_box (False)
 			l_size.make (406, 194)
 			set_client_size (l_size)
@@ -100,13 +100,13 @@ feature -- Implementation
 
 			l_point.make (320, 160)
 			btn_OK.set_location (l_point)
-			btn_OK.set_dialog_result (feature {WINFORMS_DIALOG_RESULT}.OK)
+			btn_OK.set_dialog_result ({WINFORMS_DIALOG_RESULT}.OK)
 			l_size.make (75, 23)
 			btn_OK.set_size (l_size)
 			btn_OK.set_tab_index (9)
 			btn_OK.set_text ("&OK")
 
-			pnl_month_background.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3d)
+			pnl_month_background.set_border_style ({WINFORMS_BORDER_STYLE}.fixed_3d)
 			l_point.make (160, 43)
 			pnl_month_background.set_location (l_point)
 			l_size.make (48, 16)
@@ -122,7 +122,7 @@ feature -- Implementation
 			btn_title_back_color.set_text ("Change")
 			btn_title_back_color.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_title_back_color_click))
 
-			pnl_fore_color.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3d)
+			pnl_fore_color.set_border_style ({WINFORMS_BORDER_STYLE}.fixed_3d)
 			l_point.make (160, 19)
 			pnl_fore_color.set_location (l_point)
 			l_size.make (48, 16)
@@ -130,7 +130,7 @@ feature -- Implementation
 			pnl_fore_color.set_tab_index (10)
 			pnl_fore_color.set_text ("panel1")
 
-			pnl_title_fore_color.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3d)
+			pnl_title_fore_color.set_border_style ({WINFORMS_BORDER_STYLE}.fixed_3d)
 			l_point.make (160, 91)
 			pnl_title_fore_color.set_location (l_point)
 			l_size.make (48, 16)
@@ -146,7 +146,7 @@ feature -- Implementation
 			btn_month_background.set_text ("Change")
 			btn_month_background.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_month_background_click))
 
-			pnl_title_back_color.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3d)
+			pnl_title_back_color.set_border_style ({WINFORMS_BORDER_STYLE}.fixed_3d)
 			l_point.make (160, 67)
 			pnl_title_back_color.set_location (l_point)
 			l_size.make (48, 16)
@@ -177,7 +177,7 @@ feature -- Implementation
 			btn_fore_color.set_text ("Change")
 			btn_fore_color.add_click (create {EVENT_HANDLER}.make (Current, $on_btn_fore_color_click))
 
-			pnl_trailing_fore_color.set_border_style (feature {WINFORMS_BORDER_STYLE}.fixed_3d)
+			pnl_trailing_fore_color.set_border_style ({WINFORMS_BORDER_STYLE}.fixed_3d)
 			l_point.make (160, 115)
 			pnl_trailing_fore_color.set_location (l_point)
 			l_size.make (48, 16)
@@ -289,7 +289,7 @@ feature {NONE} -- Implementation
 		do
 			color_dialog.set_color (dtp.calendar_fore_color)
 			res := color_dialog.show_dialog
-			if res = feature {WINFORMS_DIALOG_RESULT}.OK then
+			if res = {WINFORMS_DIALOG_RESULT}.OK then
 				dtp.set_calendar_fore_color (color_dialog.color)
 				synchronize_panel_colors
 			end
@@ -305,7 +305,7 @@ feature {NONE} -- Implementation
 		do
 			color_dialog.set_color (dtp.calendar_month_background)
 			res := color_dialog.show_dialog
-			if res = feature {WINFORMS_DIALOG_RESULT}.OK then
+			if res = {WINFORMS_DIALOG_RESULT}.OK then
 				dtp.set_calendar_month_background (color_dialog.color)
 				synchronize_panel_colors
 			end
@@ -321,7 +321,7 @@ feature {NONE} -- Implementation
 		do
 			color_dialog.set_color (dtp.calendar_title_back_color)
 			res := color_dialog.show_dialog
-			if res = feature {WINFORMS_DIALOG_RESULT}.OK then 
+			if res = {WINFORMS_DIALOG_RESULT}.OK then 
 				dtp.set_calendar_title_back_color (color_dialog.color)
 				synchronize_panel_colors
 			end
@@ -337,7 +337,7 @@ feature {NONE} -- Implementation
 		do
 			color_dialog.set_color (dtp.calendar_title_fore_color)
 			res := color_dialog.show_dialog
-			if res = feature {WINFORMS_DIALOG_RESULT}.OK then
+			if res = {WINFORMS_DIALOG_RESULT}.OK then
 				dtp.set_calendar_title_fore_color (color_dialog.color)
 				synchronize_panel_colors
 			end
@@ -353,7 +353,7 @@ feature {NONE} -- Implementation
 		do
 			color_dialog.set_color (dtp.calendar_trailing_fore_color)
 			res := color_dialog.show_dialog
-			if res = feature {WINFORMS_DIALOG_RESULT}.OK then
+			if res = {WINFORMS_DIALOG_RESULT}.OK then
 				dtp.set_calendar_trailing_fore_color (color_dialog.color)
 				synchronize_panel_colors
 			end

@@ -30,16 +30,16 @@ feature {NONE} -- Initialization
 			
 			create combo_box
 			create list_item.make_with_text ("Lowered")
-			list_item.select_actions.extend (agent frame.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_lowered))
+			list_item.select_actions.extend (agent frame.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_lowered))
 			combo_box.extend (list_item)
 			create list_item.make_with_text ("Raised")
-			list_item.select_actions.extend (agent frame.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_raised))
+			list_item.select_actions.extend (agent frame.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_raised))
 			combo_box.extend (list_item)
 			create list_item.make_with_text ("Etched in")
-			list_item.select_actions.extend (agent frame.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_etched_in))
+			list_item.select_actions.extend (agent frame.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_etched_in))
 			combo_box.extend (list_item)
 			create list_item.make_with_text ("Etched out")
-			list_item.select_actions.extend (agent frame.set_style (feature {EV_FRAME_CONSTANTS}.Ev_frame_etched_out))
+			list_item.select_actions.extend (agent frame.set_style ({EV_FRAME_CONSTANTS}.Ev_frame_etched_out))
 			combo_box.extend (list_item)
 			
 			vertical_box.extend (combo_box)

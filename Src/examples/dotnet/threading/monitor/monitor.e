@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			until
 				counter > num_operations
 			loop
-				return := feature {THREAD_POOL}.queue_user_work_item (
+				return := {THREAD_POOL}.queue_user_work_item (
 					create {WAIT_CALLBACK}.make (Current, $update_resource), counter)
 				counter := counter + 1
 			end
@@ -74,7 +74,7 @@ feature -- Basic Operation
 		do
 			l_state ?= a_state
 			res.access_resource (l_state)
-			if feature {INTERLOCKED}.decrement_integer ($num_operations) <= 0 then
+			if {INTERLOCKED}.decrement_integer ($num_operations) <= 0 then
 				return := async_operations.set
 			end
 		end

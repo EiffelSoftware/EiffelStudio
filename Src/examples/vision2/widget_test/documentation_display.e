@@ -86,7 +86,7 @@ feature -- Status setting
 				font.preferred_families.extend ("Courier")
 				font.set_height_in_points (current_text_size)
 				format.set_font (font)
-				create format_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_height | feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_family)
+				create format_info.make_with_flags ({EV_CHARACTER_FORMAT_CONSTANTS}.font_height | {EV_CHARACTER_FORMAT_CONSTANTS}.font_family)
 				text.modify_region (1, text.text_length, format, format_info)
 			end
 		end

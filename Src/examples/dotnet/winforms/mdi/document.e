@@ -35,9 +35,9 @@ feature {NONE} -- Initialization
 
 				--  Initialize Fonts - use generic fonts to avoid problems across
 				--  different versions of the OS
-			create mono_space_font_family.make (feature {DRAWING_GENERIC_FONT_FAMILIES}.monospace)
-			create sans_serif_font_family.make (feature {DRAWING_GENERIC_FONT_FAMILIES}.sans_serif)
-			create serif_font_family.make (feature {DRAWING_GENERIC_FONT_FAMILIES}.serif)
+			create mono_space_font_family.make ({DRAWING_GENERIC_FONT_FAMILIES}.monospace)
+			create sans_serif_font_family.make ({DRAWING_GENERIC_FONT_FAMILIES}.sans_serif)
+			create serif_font_family.make ({DRAWING_GENERIC_FONT_FAMILIES}.serif)
 			current_font_family := sans_serif_font_family
 
 			set_text (doc_name)
@@ -50,7 +50,7 @@ feature {NONE} -- Initialization
 
 				-- Add File Menu
 			mi_file := main_menu.menu_items.add ("&File")
-			mi_file.set_merge_type (feature {WINFORMS_MENU_MERGE}.merge_items)
+			mi_file.set_merge_type ({WINFORMS_MENU_MERGE}.merge_items)
 			mi_file.set_merge_order (0)
 
 			l_text := "&Load Document ("
@@ -64,7 +64,7 @@ feature {NONE} -- Initialization
 			l_text.append (doc_name)
 			l_text.append (")")
 			mi_format := main_menu.menu_items.add (l_text)
-			mi_format.set_merge_type (feature {WINFORMS_MENU_MERGE}.add)
+			mi_format.set_merge_type ({WINFORMS_MENU_MERGE}.add)
 			mi_format.set_merge_order (5)
 
 				-- Font Face sub-menu
@@ -154,7 +154,7 @@ feature {NONE} -- Implementation
 			l_size.make (292, 273)
 			rich_text_box.set_size (l_size)
 			rich_text_box.set_tab_index (0)
-			rich_text_box.set_dock (feature {WINFORMS_DOCK_STYLE}.fill)
+			rich_text_box.set_dock ({WINFORMS_DOCK_STYLE}.fill)
 
 			set_text ("")
 			l_size.make (5, 13)
@@ -216,7 +216,7 @@ feature {NONE} -- Implementation
 		local
 			res: WINFORMS_DIALOG_RESULT
 		do
-			res := feature {WINFORMS_MESSAGE_BOX}.show (text)
+			res := {WINFORMS_MESSAGE_BOX}.show (text)
 		end
 
 	on_format_font_clicked (sender: SYSTEM_OBJECT args: EVENT_ARGS) is

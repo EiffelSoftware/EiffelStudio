@@ -135,15 +135,15 @@ feature {NONE} -- Event handling
 					font.set_weight ((create {EV_FONT_CONSTANTS}).weight_regular)
 				end	
 				format.set_font (font)
-				create char_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_weight)
+				create char_info.make_with_flags ({EV_CHARACTER_FORMAT_CONSTANTS}.font_weight)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 			else
 				format := rich_text.character_format (rich_text.caret_position)
 				font := format.font
-				if font.weight.is_equal (feature {EV_FONT_CONSTANTS}.weight_bold) then
-					font.set_weight (feature {EV_FONT_CONSTANTS}.weight_regular)
+				if font.weight.is_equal ({EV_FONT_CONSTANTS}.weight_bold) then
+					font.set_weight ({EV_FONT_CONSTANTS}.weight_regular)
 				else	
-					font.set_weight (feature {EV_FONT_CONSTANTS}.weight_bold)
+					font.set_weight ({EV_FONT_CONSTANTS}.weight_bold)
 				end
 				format.set_font (font)
 				rich_text.set_current_format (format)
@@ -163,7 +163,7 @@ feature {NONE} -- Event handling
 				font.preferred_families.wipe_out
 				font.preferred_families.extend (font_selection.selected_item.text)
 				format.set_font (font)
-				create char_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_family)
+				create char_info.make_with_flags ({EV_CHARACTER_FORMAT_CONSTANTS}.font_family)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 			else
 				format := rich_text.character_format (rich_text.caret_position)
@@ -196,7 +196,7 @@ feature {NONE} -- Event handling
 												
 						font.set_height_in_points (size)
 						format.set_font (font)
-						create char_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_height)
+						create char_info.make_with_flags ({EV_CHARACTER_FORMAT_CONSTANTS}.font_height)
 						rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 					end
 				end
@@ -228,20 +228,20 @@ feature {NONE} -- Event handling
 				format := rich_text.character_format (rich_text.selection_start)
 				font := format.font
 				if italic_button.is_selected then
-					font.set_shape (feature {EV_FONT_CONSTANTS}.shape_italic)
+					font.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
 				else	
-					font.set_shape (feature {EV_FONT_CONSTANTS}.shape_regular)
+					font.set_shape ({EV_FONT_CONSTANTS}.shape_regular)
 				end
 				format.set_font (font)
-				create char_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.font_shape)
+				create char_info.make_with_flags ({EV_CHARACTER_FORMAT_CONSTANTS}.font_shape)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 			else
 				format := rich_text.character_format (rich_text.caret_position)
 				font := format.font
-				if font.shape.is_equal (feature {EV_FONT_CONSTANTS}.shape_italic) then
-					font.set_shape (feature {EV_FONT_CONSTANTS}.shape_regular)
+				if font.shape.is_equal ({EV_FONT_CONSTANTS}.shape_italic) then
+					font.set_shape ({EV_FONT_CONSTANTS}.shape_regular)
 				else	
-					font.set_shape (feature {EV_FONT_CONSTANTS}.shape_italic)
+					font.set_shape ({EV_FONT_CONSTANTS}.shape_italic)
 				end
 				format.set_font (font)
 				rich_text.set_current_format (format)
@@ -264,7 +264,7 @@ feature {NONE} -- Event handling
 				format := rich_text.character_format (rich_text.selection_start)
 				if color_dialog.selected_button.is_equal ("OK") then
 					format.set_color (color_dialog.color)
-					create char_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.color)
+					create char_info.make_with_flags ({EV_CHARACTER_FORMAT_CONSTANTS}.color)
 					rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 				end
 			else
@@ -292,7 +292,7 @@ feature {NONE} -- Event handling
 				format := rich_text.character_format (rich_text.selection_start)
 				if color_dialog.selected_button.is_equal ("OK") then
 					format.set_background_color (color_dialog.color)
-					create char_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.background_color)
+					create char_info.make_with_flags ({EV_CHARACTER_FORMAT_CONSTANTS}.background_color)
 					rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 				end
 			else
@@ -320,7 +320,7 @@ feature {NONE} -- Event handling
 					effects.disable_underlined
 				end
 				format.set_effects (effects)
-				create char_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_underlined)
+				create char_info.make_with_flags ({EV_CHARACTER_FORMAT_CONSTANTS}.effects_underlined)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 			else
 				format := rich_text.character_format (rich_text.caret_position)
@@ -353,7 +353,7 @@ feature {NONE} -- Event handling
 					effects.disable_striked_out
 				end
 				format.set_effects (effects)
-				create char_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_striked_out)
+				create char_info.make_with_flags ({EV_CHARACTER_FORMAT_CONSTANTS}.effects_striked_out)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 			else
 				format := rich_text.character_format (rich_text.caret_position)
@@ -413,7 +413,7 @@ feature {NONE} -- Event handling
 			paragraph.enable_left_alignment
 			
 			if rich_text.has_selection then
-				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.alignment)
+				create paragraph_info.make_with_flags ({EV_PARAGRAPH_CONSTANTS}.alignment)
 				rich_text.modify_paragraph (rich_text.selection_start, rich_text.selection_end,
 					paragraph,
 					paragraph_info)
@@ -441,7 +441,7 @@ feature {NONE} -- Event handling
 			paragraph.enable_center_alignment
 			
 			if rich_text.has_selection then
-				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.alignment)
+				create paragraph_info.make_with_flags ({EV_PARAGRAPH_CONSTANTS}.alignment)
 				rich_text.modify_paragraph (rich_text.selection_start, rich_text.selection_end,
 					paragraph,
 					paragraph_info)
@@ -469,7 +469,7 @@ feature {NONE} -- Event handling
 			paragraph.enable_right_alignment
 			
 			if rich_text.has_selection then
-				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.alignment)
+				create paragraph_info.make_with_flags ({EV_PARAGRAPH_CONSTANTS}.alignment)
 				rich_text.modify_paragraph (rich_text.selection_start, rich_text.selection_end,
 					paragraph,
 					paragraph_info)
@@ -497,7 +497,7 @@ feature {NONE} -- Event handling
 			paragraph.enable_justification
 			
 			if rich_text.has_selection then
-				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.alignment)
+				create paragraph_info.make_with_flags ({EV_PARAGRAPH_CONSTANTS}.alignment)
 				rich_text.modify_paragraph (rich_text.selection_start, rich_text.selection_end,
 					paragraph,
 					paragraph_info)
@@ -547,7 +547,7 @@ feature {NONE} -- Implementation
 			
 				-- Updated Displayed font weight
 			bold_button.select_actions.block
-			if font.weight = feature {EV_FONT_CONSTANTS}.weight_bold then					
+			if font.weight = {EV_FONT_CONSTANTS}.weight_bold then					
 				bold_button.enable_select
 			else
 				bold_button.disable_select
@@ -556,7 +556,7 @@ feature {NONE} -- Implementation
 			
 				-- Update displayed font shape.
 			italic_button.select_actions.block
-			if font.shape = feature {EV_FONT_CONSTANTS}.shape_italic then					
+			if font.shape = {EV_FONT_CONSTANTS}.shape_italic then					
 				italic_button.enable_select
 			else
 				italic_button.disable_select
@@ -978,7 +978,7 @@ feature {NONE} -- Implementation
 			if rich_text.has_selection then
 				create paragraph
 				paragraph.set_left_margin (a_value)
-				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.left_margin)
+				create paragraph_info.make_with_flags ({EV_PARAGRAPH_CONSTANTS}.left_margin)
 				rich_text.modify_paragraph (rich_text.selection_start,
 						rich_text.selection_end,
 						paragraph,
@@ -1002,7 +1002,7 @@ feature {NONE} -- Implementation
 			if rich_text.has_selection then
 				create paragraph
 				paragraph.set_right_margin (a_value)
-				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.right_margin)
+				create paragraph_info.make_with_flags ({EV_PARAGRAPH_CONSTANTS}.right_margin)
 				rich_text.modify_paragraph (rich_text.selection_start, rich_text.selection_end,
 						paragraph,
 						paragraph_info)
@@ -1024,7 +1024,7 @@ feature {NONE} -- Implementation
 			if rich_text.has_selection then
 				create paragraph
 				paragraph.set_top_spacing (a_value)
-				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.top_spacing)
+				create paragraph_info.make_with_flags ({EV_PARAGRAPH_CONSTANTS}.top_spacing)
 				rich_text.modify_paragraph (rich_text.selection_start,
 						rich_text.selection_end,
 						paragraph,
@@ -1047,7 +1047,7 @@ feature {NONE} -- Implementation
 			if rich_text.has_selection then
 				create paragraph
 				paragraph.set_top_spacing (a_value)
-				create paragraph_info.make_with_flags (feature {EV_PARAGRAPH_CONSTANTS}.bottom_spacing)
+				create paragraph_info.make_with_flags ({EV_PARAGRAPH_CONSTANTS}.bottom_spacing)
 				rich_text.modify_paragraph (rich_text.selection_start, rich_text.selection_end,
 						paragraph,
 						paragraph_info)
@@ -1071,7 +1071,7 @@ feature {NONE} -- Implementation
 				effects := format.effects
 				effects.set_vertical_offset (a_value)
 				format.set_effects (effects)
-				create char_info.make_with_flags (feature {EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset)
+				create char_info.make_with_flags ({EV_CHARACTER_FORMAT_CONSTANTS}.effects_vertical_offset)
 				rich_text.modify_region (rich_text.selection_start, rich_text.selection_end + 1, format, char_info)
 			else
 				format := rich_text.character_format (rich_text.caret_position)

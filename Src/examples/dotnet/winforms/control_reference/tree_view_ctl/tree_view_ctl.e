@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			fill_directory_tree
 			image_list_combo_box.set_selected_index (1)
 			
-			feature {WINFORMS_APPLICATION}.run_form (Current)
+			{WINFORMS_APPLICATION}.run_form (Current)
 		end
 
 feature -- Access
@@ -93,11 +93,11 @@ feature {NONE} -- Implementation
 			create check_box_2.make
 			create label_1.make
 
-			check_box_7.set_text_align (feature {DRAWING_CONTENT_ALIGNMENT}.middle_left)
+			check_box_7.set_text_align ({DRAWING_CONTENT_ALIGNMENT}.middle_left)
 			l_point.make (16, 160)
 			check_box_7.set_location (l_point)
 			check_box_7.set_tab_index (6)
-			check_box_7.set_check_state (feature {WINFORMS_CHECK_STATE}.checked)
+			check_box_7.set_check_state ({WINFORMS_CHECK_STATE}.checked)
 			check_box_7.set_text ("hideSelected")
 			l_size.make (100, 23)
 			check_box_7.set_size (l_size)
@@ -106,7 +106,7 @@ feature {NONE} -- Implementation
 			check_box_7.add_click (create {EVENT_HANDLER}.make (Current, $check_box_7_click))
 
 			directory_tree.set_image_list (image_list_1)
-			directory_tree.set_fore_color (feature {DRAWING_SYSTEM_COLORS}.window_text)
+			directory_tree.set_fore_color ({DRAWING_SYSTEM_COLORS}.window_text)
 			l_point.make (24, 16)
 			directory_tree.set_location (l_point)
 			directory_tree.set_tab_index (0)
@@ -119,11 +119,11 @@ feature {NONE} -- Implementation
 			directory_tree.add_after_select (create {WINFORMS_TREE_VIEW_EVENT_HANDLER}.make (Current, $directory_tree_after_select))
 			directory_tree.add_before_expand (create {WINFORMS_TREE_VIEW_CANCEL_EVENT_HANDLER}.make (Current, $directory_tree_before_expand))
 
-			check_box_5.set_text_align (feature {DRAWING_CONTENT_ALIGNMENT}.middle_left)
+			check_box_5.set_text_align ({DRAWING_CONTENT_ALIGNMENT}.middle_left)
 			l_point.make (16, 112)
 			check_box_5.set_location (l_point)
 			check_box_5.set_tab_index (4)
-			check_box_5.set_check_state (feature {WINFORMS_CHECK_STATE}.checked)
+			check_box_5.set_check_state ({WINFORMS_CHECK_STATE}.checked)
 			check_box_5.set_text ("showPlusMinus")
 			l_size.make (120, 23)
 			check_box_5.set_size (l_size)
@@ -152,7 +152,7 @@ feature {NONE} -- Implementation
 			indent_up_down.set_size (l_size)
 			tool_tip.set_tool_tip (indent_up_down, "The indentation width of a child node in pixels.")
 
-			image_list_2.set_transparent_color (feature {DRAWING_COLOR}.transparent)
+			image_list_2.set_transparent_color ({DRAWING_COLOR}.transparent)
 			l_bitmap := loaded_bitmap ("diamond")
 			if l_bitmap /= Void then
 				image_list_2.images.add (l_bitmap)
@@ -169,7 +169,7 @@ feature {NONE} -- Implementation
 
 			tool_tip.set_active (True)
 
-			check_box_6.set_text_align (feature {DRAWING_CONTENT_ALIGNMENT}.middle_left)
+			check_box_6.set_text_align ({DRAWING_CONTENT_ALIGNMENT}.middle_left)
 			l_point.make (16, 136)
 			check_box_6.set_location (l_point)
 			check_box_6.set_tab_index (5)
@@ -179,7 +179,7 @@ feature {NONE} -- Implementation
 			tool_tip.set_tool_tip (check_box_6, "Indicates wheter checkboxes are displayed beside nodes")
 			check_box_6.add_click (create {EVENT_HANDLER}.make (Current, $check_box_6_click))
 
-			check_box_1.set_text_align (feature {DRAWING_CONTENT_ALIGNMENT}.middle_left)
+			check_box_1.set_text_align ({DRAWING_CONTENT_ALIGNMENT}.middle_left)
 			l_point.make (16, 16)
 			check_box_1.set_location (l_point)
 			check_box_1.set_tab_index (0)
@@ -189,11 +189,11 @@ feature {NONE} -- Implementation
 			tool_tip.set_tool_tip (check_box_1, "Indicates whether nodes are sorted.")
 			check_box_1.add_click (create {EVENT_HANDLER}.make (Current, $check_box1_add_click))
 
-			check_box_3.set_text_align (feature {DRAWING_CONTENT_ALIGNMENT}.middle_left)
+			check_box_3.set_text_align ({DRAWING_CONTENT_ALIGNMENT}.middle_left)
 			l_point.make (16, 64)
 			check_box_3.set_location (l_point)
 			check_box_3.set_tab_index (2)
-			check_box_3.set_check_state (feature {WINFORMS_CHECK_STATE}.checked)
+			check_box_3.set_check_state ({WINFORMS_CHECK_STATE}.checked)
 			check_box_3.set_text ("showLines")
 			l_size.make (100, 23)
 			check_box_3.set_size (l_size)
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 			tool_tip.set_tool_tip (check_box_3, "Indicates whether lines are displayed between sibling nodes and between parent and children nodes.")
 			check_box_3.add_click (create {EVENT_HANDLER}.make (Current, $check_box_3_click))
 
-			image_list_1.set_transparent_color (feature {DRAWING_COLOR}.transparent)
+			image_list_1.set_transparent_color ({DRAWING_COLOR}.transparent)
 			l_bitmap := loaded_bitmap ("clsdfold")
 			if l_bitmap /= Void then
 				image_list_1.images.add (l_bitmap)
@@ -211,7 +211,7 @@ feature {NONE} -- Implementation
 				image_list_1.images.add (l_bitmap)
 			end
 
-			image_list_combo_box.set_fore_color (feature {DRAWING_SYSTEM_COLORS}.window_text)
+			image_list_combo_box.set_fore_color ({DRAWING_SYSTEM_COLORS}.window_text)
 			l_point.make (88, 192)
 			image_list_combo_box.set_location (l_point)
 			image_list_combo_box.set_tab_index (8)
@@ -225,11 +225,11 @@ feature {NONE} -- Implementation
 			l_array.put (2, "bitmaps")
 			image_list_combo_box.items.add_range (l_array)
 
-			check_box_4.set_text_align (feature {DRAWING_CONTENT_ALIGNMENT}.middle_left)
+			check_box_4.set_text_align ({DRAWING_CONTENT_ALIGNMENT}.middle_left)
 			l_point.make (16, 88)
 			check_box_4.set_location (l_point)
 			check_box_4.set_tab_index (3)
-			check_box_4.set_check_state (feature {WINFORMS_CHECK_STATE}.checked)
+			check_box_4.set_check_state ({WINFORMS_CHECK_STATE}.checked)
 			check_box_4.set_text ("showRootLines")
 			l_size.make (120, 23)
 			check_box_4.set_size (l_size)
@@ -245,7 +245,7 @@ feature {NONE} -- Implementation
 			l_size.make (248, 264)
 			grp_tree_view.set_size (l_size)
 
-			check_box_2.set_text_align (feature {DRAWING_CONTENT_ALIGNMENT}.middle_left)
+			check_box_2.set_text_align ({DRAWING_CONTENT_ALIGNMENT}.middle_left)
 			l_point.make (16, 40)
 			check_box_2.set_location (l_point)
 			check_box_2.set_tab_index (1)
@@ -357,7 +357,7 @@ feature {NONE} -- Implementation
 				end
 			end
 		rescue
-			res := feature {WINFORMS_MESSAGE_BOX}.show (tag_name)
+			res := {WINFORMS_MESSAGE_BOX}.show (tag_name)
 			rescued := True
 			retry
 		end
@@ -416,20 +416,20 @@ feature {NONE} -- Implementation
 			l_ext: EXTERNALS
 			l_ptr: POINTER
 		do
-			drives := feature {ENVIRONMENT}.get_logical_drives
+			drives := {ENVIRONMENT}.get_logical_drives
 			create l_ext
 			from
 			until
 				i = drives.count
 			loop
 				l_drive := drives.item (i)
-				l_ptr := feature {MARSHAL}.string_to_h_global_ansi (l_drive)
+				l_ptr := {MARSHAL}.string_to_h_global_ansi (l_drive)
 				if l_ext.get_drive_type (l_ptr) = Drive_fixed then
 					create root.make_from_text (drives.item (i))
 					return := directory_tree.nodes.add_tree_node (root)
 					add_directories (root)
 				end
-				feature {MARSHAL}.free_h_global (l_ptr)
+				{MARSHAL}.free_h_global (l_ptr)
 				i := i + 1
 			end
 		rescue
@@ -443,7 +443,7 @@ feature {NONE} -- Implementation
 			if node.parent = Void then
 				Result := node.text
 			else
-				Result := feature {PATH}.combine (path_from_node (node.parent), node.text)
+				Result := {PATH}.combine (path_from_node (node.parent), node.text)
 			end
 		end
 

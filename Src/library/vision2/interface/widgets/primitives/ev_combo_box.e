@@ -18,6 +18,8 @@ class
 
 inherit
 	EV_TEXT_FIELD
+		undefine
+			make_for_test
 		redefine
 			create_action_sequences,
 			implementation,
@@ -100,6 +102,9 @@ end -- class EV_COMBO_BOX
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.30  2000/03/02 18:00:35  rogers
+--| Undefined make_from_test from ev_text_field, so it uses the make_from_test inherited from ev_list.
+--|
 --| Revision 1.29  2000/03/01 19:48:53  king
 --| Corrected export clauses for implementation and create_imp/act_seq
 --|

@@ -13,7 +13,7 @@ inherit
 
 --			build_format_bar, hole,
 			empty_tool_name,
---open_cmd, save_cmd,
+			save_text,
 --			editable,
 reset, build_interface,
 			close_windows,
@@ -236,73 +236,73 @@ feature -- Stone process
 			execute_last_format (s)
 		end
  
---	process_feature_error (s: FEATURE_ERROR_STONE) is
---			-- Proces feature stone.
---		local
---			cl_stone: CLASSC_STONE
---			e_class: CLASS_C
---			txt: STRING
---			pos, end_pos: INTEGER
---		do
---			e_class := s.e_feature.written_class
---			create cl_stone.make (e_class)
---
---			if e_class.lace_class.hide_implementation then
---				set_default_format
---				process_class (cl_stone)
---				text_window.search_stone (s)
---			else
---				showtext_frmt_holder.execute (cl_stone)
---				add_to_history (stone)
---				text_window.deselect_all
---				pos := s.error_position
---				txt := text_window.text
---				if txt.count > pos then
---					if txt.item (pos) = '%N' then	
---						end_pos := txt.index_of ('%N', pos + 1)
---					else
---						end_pos := txt.index_of ('%N', pos)
---					end
---					if pos /= 0 then
---						text_window.highlight_selected (pos, end_pos)
---					end
---				end
---				text_window.set_cursor_position (pos)
---			end
---		end
+	process_feature_error (s: FEATURE_ERROR_STONE) is
+			-- Proces feature stone.
+		local
+			cl_stone: CLASSC_STONE
+			e_class: CLASS_C
+			txt: STRING
+			pos, end_pos: INTEGER
+		do
+			e_class := s.e_feature.written_class
+			create cl_stone.make (e_class)
+
+			if e_class.lace_class.hide_implementation then
+				set_default_format
+				process_class (cl_stone)
+				text_window.search_stone (s)
+			else
+				format_list.text_format.format (cl_stone)
+				add_to_history (stone)
+				text_window.deselect_all
+				pos := s.error_position
+				txt := text_window.text
+				if txt.count > pos then
+					if txt.item (pos) = '%N' then	
+						end_pos := txt.index_of ('%N', pos + 1)
+					else
+						end_pos := txt.index_of ('%N', pos)
+					end
+					if pos /= 0 then
+						text_window.highlight_selected (pos, end_pos)
+					end
+				end
+				text_window.set_position (pos)
+			end
+		end
  
---	process_feature (s: FEATURE_STONE) is
---			-- Proces feature stone.
---		local
---			cl_stone: CLASSC_STONE
---			e_class: CLASS_C
---		do
---			e_class := s.e_feature.written_class
---			create cl_stone.make (e_class)
---
---			if e_class.lace_class.hide_implementation then
---				set_default_format
---				process_class (cl_stone)
---				text_window.search_stone (s)
---			else
---				showtext_frmt_holder.execute (cl_stone)
---				add_to_history (stone)
---				text_window.deselect_all
---				text_window.set_cursor_position (s.start_position)
---				text_window.highlight_selected (s.start_position, s.end_position)
---			end
---		end
+	process_feature (s: FEATURE_STONE) is
+			-- Proces feature stone.
+		local
+			cl_stone: CLASSC_STONE
+			e_class: CLASS_C
+		do
+			e_class := s.e_feature.written_class
+			create cl_stone.make (e_class)
+
+			if e_class.lace_class.hide_implementation then
+				set_default_format
+				process_class (cl_stone)
+				text_window.search_stone (s)
+			else
+				format_list.text_format.format (cl_stone)
+				add_to_history (stone)
+				text_window.deselect_all
+				text_window.set_position (s.start_position)
+				text_window.highlight_selected (s.start_position, s.end_position)
+			end
+		end
  
 	process_class_syntax (s: CL_SYNTAX_STONE) is
 			-- Process class syntax.
 		local
---			cl_stone: CLASSC_STONE
+			cl_stone: CLASSC_STONE
 		do
---			create cl_stone.make (s.associated_class)
---			showtext_frmt_holder.execute (cl_stone)
---			text_window.deselect_all
---			text_window.set_position (s.start_position)
---			text_window.highlight_selected (s.start_position, s.end_position)
+			create cl_stone.make (s.associated_class)
+			format_list.text_format.format (cl_stone)
+			text_window.deselect_all
+			text_window.set_position (s.start_position)
+			text_window.highlight_selected (s.start_position, s.end_position)
 		end
  
 	synchronize is
@@ -387,41 +387,42 @@ feature -- Update
 			-- Parse the file if possible.
 			-- (By default, do nothing).
 		local
---			syn_error: SYNTAX_ERROR
---			classc_stone: CLASSC_STONE
---			syn_stone: CL_SYNTAX_STONE
---			e_class: CLASS_C
---			txt, msg: STRING
---			error_message: STRING
---			error_code: INTEGER
+			syn_error: SYNTAX_ERROR
+			classc_stone: CLASSC_STONE
+			syn_stone: CL_SYNTAX_STONE
+			e_class: CLASS_C
+			txt, msg: STRING
+			error_message: STRING
+			error_code: INTEGER
+			wd: EV_WARNING_DIALOG
 		do
---			classc_stone ?= stone
---			if classc_stone /= Void then
---				e_class := classc_stone.e_class
---				if not e_class.is_precompiled then
---						-- Only interested in compiled classes.
---					e_class.parse_ast
---					syn_error := e_class.last_syntax_error
---
---					if syn_error /= Void then	
---						msg := syn_error.syntax_message
---						error_message := syn_error.error_message
---						error_code := syn_error.error_code
---
---						txt := "Class has syntax error."
---						txt.append ("%NSee highlighted area.")
---
---							-- syntax error occurred
---						!! syn_stone.make (syn_error, e_class)
---						process_class_syntax (syn_stone)
---						e_class.clear_syntax_error
---						warner (popup_parent).gotcha_call (txt)
---					else
---						update_clickable_format (e_class)
---						Result := not has_class_name_changed (e_class)
---					end
---				end
---			end
+			classc_stone ?= stone
+			if classc_stone /= Void then
+				e_class := classc_stone.e_class
+				if not e_class.is_precompiled then
+						-- Only interested in compiled classes.
+					e_class.parse_ast
+					syn_error := e_class.last_syntax_error
+
+					if syn_error /= Void then	
+						msg := syn_error.syntax_message
+						error_message := syn_error.error_message
+						error_code := syn_error.error_code
+
+						txt := "Class has syntax error."
+						txt.append ("%NSee highlighted area.")
+
+							-- syntax error occurred
+						create syn_stone.make (syn_error, e_class)
+						process_class_syntax (syn_stone)
+						e_class.clear_syntax_error
+						create wd.make_default (parent, Interface_names.t_Warning, txt)
+					else
+						update_clickable_format (e_class)
+						Result := not has_class_name_changed (e_class)
+					end
+				end
+			end
 		end
 
 feature -- Window Settings
@@ -461,17 +462,16 @@ feature -- Graphical Interface
 	raise_shell_popup is
 			-- Raise the shell command popup window if it is popped up.
 		local
-			shell_window: SHELL_W
-			shell_cmd: SHELL_COMMAND
+--			shell_window: SHELL_W
 		do
-			shell_cmd ?= shell.associated_command
-			shell_window := shell_cmd.shell_window
-			if shell_window /= Void and then shell_window.is_popped_up then
-				shell_window.raise
-			end
+--			shell_cmd ?= shell.associated_command
+--			shell_window := shell_cmd.shell_window
+--			if shell_window /= Void and then shell_window.is_popped_up then
+--				shell_window.raise
+--			end
 		end
 			
-feature {NONE} -- Properties Window Properties
+feature {NONE} -- Tool Properties
 
 --	container: EV_VERTICAL_BOX
 
@@ -487,18 +487,6 @@ feature {NONE} -- Properties Window Properties
 	hole: CLASS_HOLE
 			-- Hole caraterizing current
  
-feature {NONE} -- Implemetation Window Settings
-
-	resize_action is 
-			-- If the window is moved or resized, raise
-			-- popups with an exclusive grab.
-			-- Move also the choice window and update the text field.
-		do
-			raise
-			class_text_field.update_text
---			class_text_field.update_choice_position
-		end
-
 feature {SHOW_HTML_TEXT} -- Parsing checking
 
 	has_class_name_changed (e_class: CLASS_C): BOOLEAN is
@@ -518,21 +506,33 @@ feature {SHOW_HTML_TEXT} -- Parsing checking
 			end
 		end
 
-feature -- Exported Commands
-
-	save_cmd_holder: TWO_STATE_CMD_HOLDER
-
 feature {NONE} -- Commands
 
-	open_cmd_holder: COMMAND_HOLDER
+	save_cmd: EB_SAVE_FILE_CMD
 
-	shell: COMMAND_HOLDER
+	save_as_cmd: EB_SAVE_FILE_AS_CMD
+
+	open_cmd: EB_OPEN_FILE_CMD
+
+	shell_cmd: EB_OPEN_SHELL_CMD
+
+	filter_cmd: EB_FILTER_CMD
+
+	super_melt_cmd: EB_SUPER_MELT_CMD
 
 	current_target_cmd_holder: COMMAND_HOLDER
 
 	previous_target_cmd_holder: COMMAND_HOLDER
 
 	next_target_cmd_holder: COMMAND_HOLDER
+
+feature -- Implementation
+
+	save_text is
+			-- launches the save command, if any.
+		do
+			save_cmd.execute (Void, Void)
+		end
 
 feature {NONE} -- Implementation Graphical Interface
 
@@ -547,7 +547,7 @@ feature {NONE} -- Implementation Graphical Interface
 --			sep: SEPARATOR
 		do
 			create class_text_field.make_with_tool (edit_bar, Current)
-			class_text_field.set_width (200)
+--			class_text_field.set_width (200)
 --			!! open_cmd.make (Current)
 --			!! open_button.make (open_cmd, edit_bar)
 --			!! open_menu_entry.make (open_cmd, file_menu)
@@ -775,9 +775,6 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 	build_file_menu (a_menu: EV_MENU_ITEM_HOLDER) is
 		local
 			i: EV_MENU_ITEM
-			open_cmd: EB_OPEN_FILE_CMD
-			save_cmd: EB_SAVE_FILE_CMD
-			save_as_cmd: EB_SAVE_FILE_AS_CMD
 		do
 			create open_cmd.make (Current)
 			create i.make_with_text (a_menu, Interface_names.m_Open)
@@ -793,8 +790,6 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 	build_special_menu (a_menu: EV_MENU_ITEM_HOLDER) is
 		local
 			i: EV_MENU_ITEM
-			shell_cmd: EB_OPEN_SHELL_CMD
-			filter_cmd: EB_FILTER_CMD
 		do
 			create shell_cmd.make (Current)
 			create i.make_with_text (a_menu, Interface_names.m_Shell)
@@ -803,6 +798,10 @@ feature {EB_TOOL_MANAGER} -- Menus Implementation
 			create filter_cmd.make (Current)
 			create i.make_with_text (a_menu, Interface_names.m_Filter)
 			i.add_select_command (filter_cmd, Void)
+
+			create super_melt_cmd.make (Current)
+			create i.make_with_text (a_menu, Interface_names.m_Stoppable)
+			i.add_select_command (super_melt_cmd, Void)
 		end
 
 end -- class EB_CLASS_TOOL

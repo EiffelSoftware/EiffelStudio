@@ -15,6 +15,7 @@
 #include <sys/types.h>
 #include "eif_logfile.h"
 #include "shared.h"
+#include "com.h"
 #include "transfer.h"
 #include "request.h"
 #include "stream.h"

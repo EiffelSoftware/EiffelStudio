@@ -77,6 +77,7 @@ rt_public int dup2(int old, int new)
 rt_public int usleep (usec)
 {
 	Sleep (usec / 1000);
+	return 0;
 }
 
 #else
@@ -90,6 +91,7 @@ rt_public int usleep(int usec)
 	tm.tv_usec = (usec < 1000000) ? usec : usec % 1000000;
 
 	(void) select(1, (Select_fd_set_t) 0, (Select_fd_set_t) 0, (Select_fd_set_t) 0, &tm);
+	return 0;
 }
 #endif
 #define HAS_USLEEP

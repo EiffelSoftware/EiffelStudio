@@ -31,11 +31,11 @@
 #include "timehdr.h"
 #include "ewbio.h"
 #include "identify.h"
+#include "stdio.h"
 
 #ifdef EIF_WIN32
 #include "uu.h"
 #include <windows.h>
-
 HANDLE global_ewbin, global_ewbout, global_event_r, global_event_w;
 #endif
 

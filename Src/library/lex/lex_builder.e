@@ -16,8 +16,6 @@ class LEX_BUILDER inherit
 			put as pdfa_put,
 			wipe_out as pdfa_wipe_out,
 			move as pdfa_move
-		export
-			{ANY} charcode
 		redefine
 			dfa_set_final
 		end
@@ -160,9 +158,9 @@ feature -- Element change
 			-- Create regular expression `b'..`e', or `b' if `b' = `e'.
 		require
 			not_built: not lexical_frozen;
-			e_code_small_enough: charcode (e) <= last_character_code;
-			b_code_large_enough: charcode (b) >= 0;
-			b_before_e: charcode (b) <= charcode (e)
+			e_code_small_enough:  e.code <= last_character_code;
+			b_code_large_enough: b.code >= 0;
+			b_before_e: b.code <= e.code
 		local
 			i, ee, bb: INTEGER;
 			fa: PDFA;
@@ -170,8 +168,8 @@ feature -- Element change
 			list: LINKED_LIST [INTEGER]
 		do
 			!! fa.make (2, last_character_code);
-			bb := charcode (b);
-			ee := charcode (e);
+			bb := b.code;
+			ee := e.code;
 			from
 				i := bb
 			until
@@ -284,7 +282,7 @@ feature -- Element change
 			tool_list.go_i_th (r);
 			!! new.make (tool_list.item.nb_states, last_character_code);
 			new.include (tool_list.item, 0);
-			cc := charcode (c);
+			cc := c.code;
 			new.delete_transition (1, cc, 2);
 			if not case_sensitive then
 				new.remove_case_sensitiveness
@@ -937,7 +935,7 @@ feature -- Element change
 			until
 				i = s.count + 1
 			loop
-				l.put_right (categories_table.item (charcode (s.item (i))));
+				l.put_right (categories_table.item (s.item (i).code));
 				l.forth;
 				i := i + 1
 			end;
@@ -1199,7 +1197,7 @@ feature {NONE} -- Implementation
 			until
 				i = kwd.count + 1
 			loop
-				l.put_right (categories_table.item (charcode (kwd.item (i))));
+				l.put_right (categories_table.item (kwd.item (i).code));
 				l.forth;
 				i := i + 1
 			end;

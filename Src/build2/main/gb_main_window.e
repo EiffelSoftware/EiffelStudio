@@ -737,11 +737,8 @@ feature {NONE} -- Implementation
 
 	show_tip_of_day is
 			-- Display tip of day dialog.
-		local
-			tip_dialog: GB_TIP_OF_THE_DAY_DIALOG
 		do
-			create tip_dialog
-			tip_dialog.show_modal_to_window (Current)
+			(create {GB_TIP_OF_THE_DAY_DIALOG}).show_modal_and_centered_to_window (main_window)
 		end
 
 	initialize_tool_positions (info: ARRAY [STRING]) is

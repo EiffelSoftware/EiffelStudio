@@ -32,6 +32,16 @@ feature {NONE} -- GTK C functions for windows
 		external "C | <gtk/gtk.h>"
 		end
 
+	c_gtk_window_x (window: POINTER): INTEGER is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
+	c_gtk_window_y (window: POINTER): INTEGER is
+		external
+			"C | %"gtk_eiffel.h%""
+		end
+
 feature {NONE} -- GTK C functions for fixed containers
 
 	gtk_fixed_new: POINTER is
@@ -104,6 +114,11 @@ feature {NONE} -- GTK C functions for boxes
 	
 	gtk_box_set_spacing (box: POINTER; spacing: INTEGER) is
 		external "C | <gtk/gtk.h>"
+		end
+
+	c_gtk_box_set_child_options (box: POINTER; child: POINTER;
+				expand, fill: BOOLEAN) is
+		external "C | %"gtk_eiffel.h%""
 		end
 
 feature {NONE} -- GTK C functions for notebooks

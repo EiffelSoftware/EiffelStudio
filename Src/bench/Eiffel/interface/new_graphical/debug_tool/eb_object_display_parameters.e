@@ -126,6 +126,7 @@ feature -- Status report
 			create main_item.make_with_text (title)
 			create ost.make (address, " ", dtype)
 			main_item.set_accept_cursor (ost.stone_cursor)
+			main_item.set_deny_cursor (ost.X_stone_cursor)
 			main_item.set_pebble (ost)
 			main_item.set_data (address)
 			main_item.set_pixmap (Pixmaps.Icon_object_symbol)
@@ -385,6 +386,7 @@ feature {NONE} -- Implementation
 				ost.set_associated_tree_item (Result)
 				Result.set_pebble (ost)
 				Result.set_accept_cursor (ost.stone_cursor)
+				Result.set_deny_cursor (ost.X_stone_cursor)
 			end
 		end
 

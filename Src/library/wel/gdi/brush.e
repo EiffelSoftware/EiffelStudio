@@ -74,8 +74,6 @@ feature {NONE} -- Initialization
 			a_log_brush_not_void: a_log_brush /= Void
 		do
 			item := cwin_create_brush_indirect (a_log_brush.item)
-		ensure
-			exist: exists
 		end
 
 feature -- Access

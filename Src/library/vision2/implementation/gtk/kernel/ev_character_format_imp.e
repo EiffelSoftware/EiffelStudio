@@ -19,6 +19,8 @@ feature {NONE} -- Initialization
 	make is
 			-- Create a new character format object.
 		do
+			!! color.make_rgb (0, 0, 0)
+			!! font.make
 		end
 
 feature -- Access
@@ -39,17 +41,20 @@ feature -- Status report
 
 	is_bold: BOOLEAN is
 			-- Is the character bold?
+		local
+			font_imp: EV_FONT_IMP
 		do
+			font_imp ?= font.implementation
+			Result := font_imp.is_bold
 		end
 
 	is_italic: BOOLEAN is
 			-- Is the character in italic?
+		local
+			font_imp: EV_FONT_IMP
 		do
-		end
-
-	is_underline: BOOLEAN is
-			-- Is the character underline?
-		do
+			font_imp ?= font.implementation
+			Result := font_imp.is_italic
 		end
 
 feature -- Status setting
@@ -61,17 +66,20 @@ feature -- Status setting
 
 	set_bold (flag: BOOLEAN) is
 			-- Set bold characters if `flag', unset otherwise.
+		local
+			font_imp: EV_FONT_IMP
 		do
+			font_imp ?= font.implementation
+			font_imp.set_bold (flag)
 		end
 
 	set_italic (flag: BOOLEAN) is
 			-- Set italic characters if `flag', unset otherwise.
+		local
+			font_imp: EV_FONT_IMP
 		do
-		end
-
-	set_underline (flag: BOOLEAN) is
-			-- Set underline characters if `flag', unset otherwise.
-		do
+			font_imp ?= font.implementation
+			font_imp.set_italic (flag)
 		end
 
 feature -- Element change

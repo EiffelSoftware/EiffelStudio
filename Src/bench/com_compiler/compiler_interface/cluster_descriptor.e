@@ -103,7 +103,7 @@ feature -- Access
 			-- List of classes in cluster.
 		local
 			res: ARRAYED_LIST [IEIFFEL_CLASS_DESCRIPTOR_INTERFACE]
-			l: EXTEND_TABLE [CLASS_I, STRING]
+			l: HASH_TABLE [CLASS_I, STRING]
 			class_desc: CLASS_DESCRIPTOR
 		do
 			l := compiler_cluster.classes

@@ -126,6 +126,7 @@ external
 		"$(EIFFEL_SRC)\library\com\spec\msc\lib\com.lib",
 		"$(EIFFEL_SRC)\library\com\spec\msc\lib\com_runtime.lib",
 		"$(EIFFEL_SRC)\library\time\spec\msc\lib\datetime.lib",
-		"$(EIFFEL_SRC)\library\wizard\help\Clib\htmlhelp.lib"
+		"$(EIFFEL_SRC)\library\wizard\help\Clib\htmlhelp.lib",
+		"$(EIFFEL_SRC)\library\wizard\help\Clib\shell32.lib"
 
 end

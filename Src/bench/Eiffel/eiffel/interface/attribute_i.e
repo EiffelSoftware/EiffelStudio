@@ -133,20 +133,30 @@ feature -- Element Change
 		local
 			attribute_b: ATTRIBUTE_B
 			attribute_bs: ATTRIBUTE_BS
+			external_b: EXTERNAL_B
 		do
-			if
-				context.last_constrained_type /= Void and then
-				context.last_constrained_type.is_separate
-			then
-				create attribute_bs
-				attribute_bs.init (Current)
-				attribute_bs.set_type (access_type)
-				Result := attribute_bs
+			if extension /= Void then
+				create external_b
+				external_b.init (Current)
+				external_b.set_type (access_type)
+				external_b.set_external_name_id (external_name_id)
+				external_b.set_extension (extension)
+				Result := external_b
 			else
-				create attribute_b
-				attribute_b.init (Current)
-				attribute_b.set_type (access_type)
-				Result := attribute_b
+				if
+					context.last_constrained_type /= Void and then
+					context.last_constrained_type.is_separate
+				then
+					create attribute_bs
+					attribute_bs.init (Current)
+					attribute_bs.set_type (access_type)
+					Result := attribute_bs
+				else
+					create attribute_b
+					attribute_b.init (Current)
+					attribute_b.set_type (access_type)
+					Result := attribute_b
+				end
 			end
 		end
 

@@ -446,7 +446,14 @@ feature -- Generation, Header
 			Make_file.putstring ("%
 				%SHELL = /bin/sh%N%
 				%CC = $cc%N%
+				%CPP = $cpp%N%
 				%CFLAGS = $optimize $ccflags $large ");
+			if System.has_separate then
+				Make_file.putstring ("-DCONCURRENT_EIFFEL ");
+			end;
+			generate_specific_defines;
+			Make_file.putstring ("-I%H$(EIFFEL4)/bench/spec/%H$(PLATFORM)/include %H$(INCLUDE_PATH)%N%
+				%CPPFLAGS = $optimize $cppflags $large ");
 			if System.has_separate then
 				Make_file.putstring ("-DCONCURRENT_EIFFEL ");
 			end;
@@ -663,10 +670,20 @@ feature -- Generation (Linking rules)
 			if System.makefile_names /= Void then
 				generate_makefile_names;
 			end;
-			Make_file.putstring ("%T$(CC) -o ");
+			Make_file.putstring ("%T$(C");
+			if System.externals.has_cpp_externals then
+				Make_file.putstring ("PP")
+			else
+				Make_file.putstring ("C")
+			end
+			Make_file.putstring (") -o ");
 			Make_file.putstring (system_name);
 			Make_file.putstring ("%
-				% $(CFLAGS) $(LDFLAGS) ");
+				% $(C");
+			if System.externals.has_cpp_externals then
+				Make_file.putstring ("PP")
+			end
+			Make_file.putstring ("FLAGS) $(LDFLAGS) ");
 			generate_objects_macros;
 			Make_file.putchar (' ');
 			generate_system_objects_macros;

@@ -1,12 +1,33 @@
+////////////////////////////////////////////////////////////////////////////////////////
 //
-//    ISE.Compiler.idl
+// ISE.Compiler.idl
+// Definitions for ISE Eiffel COM Compiler
 //
+// (c)2002 Eiffel Software
 //
+////////////////////////////////////////////////////////////////////////////////////////
+
+//
+// Header files
 //
 
+#include "ise_compiler_guid.h"
+
+//
+// Dependant IDL
+//
 
 import "oaidl.idl";
-#include "ise_compiler_guid.h"
+
+
+///////////////////////////////////////////////////////////////////////
+//---------------------------------------------------------------------
+//
+// Forward Declarations
+//
+//---------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////
+
 
 interface IEiffelProject;
 interface IEiffelCompletionInfo;
@@ -36,66 +57,39 @@ interface IEnumParameter;
 interface IEiffelParameterDescriptor;
 interface IEiffelHTMLDocGenerator;
 interface IEiffelHTMLDocEvents;
-//interface IEiffelExceptionManager;
 interface IEiffelException;
-enum tagEIF_ENTITY_IMAGES;
-enum tagEIF_FEATURE_TYPES;
-enum tagEIF_EXCEPTIONS;
-enum tagEIF_PROJECT_TYPES;
-enum tagEIF_ASSERTIONS;
-enum tagEIF_CLUSTER_NAMESPACE_GENERATION;
+enum EIF_ENTITY_IMAGES;
+enum EIF_FEATURE_TYPES;
+enum EIF_EXCEPTIONS;
+enum EIF_PROJECT_TYPES;
+enum EIF_ASSERTIONS;
+enum EIF_CLUSTER_NAMESPACE_GENERATION;
 
-// IDispatch IDs
-enum
-{
-    ISECompilerID_store = 1,
-    ISECompilerID_add_include_path,
-    ISECompilerID_remove_include_path,
-    ISECompilerID_replace_include_path,
-    ISECompilerID_include_paths,
-    ISECompilerID_add_object_File,
-    ISECompilerID_remove_object_file,
-    ISECompilerID_replace_object_file,
-    ISECompilerID_object_files,
 
-    ISECompilerID_assembly_name,
-    ISECompilerID_assembly_version,
-    ISECompilerID_assembly_culture,
-    ISECompilerID_assembly_public_key_token,
-    ISECompilerID_is_local,
-    ISECompilerID_is_signed,
-    ISECompilerID_assembly_cluster_name,
-    ISECompilerID_assembly_prefix,
-    ISECompilerID_is_prefix_read_only,
-    ISECompilerID_is_precompiled,
+///////////////////////////////////////////////////////////////////////
+//---------------------------------------------------------------------
+//
+// Dispatch Id's
+//
+//---------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////
 
-    EIFFELCLUSTERPROP_Name,
-    EIFFELCLUSTERPROP_Path,
-    EIFFELCLUSTERPROP_Namespace,
-    EIFFELCLUSTERPROP_ExpandedClusterPath,
-    EIFFELCLUSTERPROP_IsEiffelLibrary,
-    EIFFELCLUSTERPROP_ClusterId,
-    EIFFELCLUSTERPROP_HasChildren,
-    EIFFELCLUSTERPROP_HasParent,
-    EIFFELCLUSTERPROP_ParentName,
-    EIFFELCLUSTERPROP_Invariant,
-    EIFFELCLUSTERPROP_Check,
-    EIFFELCLUSTERPROP_Loop,
-    EIFFELCLUSTERPROP_Ensure,
-    EIFFELCLUSTERPROP_Require,
-    EIFFELCLUSTERPROP_UseSysDefault,
-    EIFFELCLUSTERPROP_All,
-    EIFFELCLUSTERPROP_IsLibrary,
-    EIFFELCLUSTERPROP_Override,
 
-    ISECompilerID_add_exclude_cluster,
-    ISECompilerID_remove_exclude_cluster,
-    ISECompilerID_project,
-    ISECompilerID_generation_dir,
-    ISECompilerID_generate
-};
 
-typedef enum tagEIF_EXCEPTIONS
+///////////////////////////////////////////////////////////////////////
+//---------------------------------------------------------------------
+//
+// Enum Declarations
+//
+//---------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////
+
+
+[
+    uuid (UUID_EnumEIF_EXCEPTIONS),
+    helpstring ("Eiffel Exception Codes")
+]
+typedef enum EIF_EXCEPTIONS
 {
     EIF_EXCEPTIONS_Unspecified = 0,
     EIF_EXCEPTIONS_Successful = 1,
@@ -113,331 +107,347 @@ typedef enum tagEIF_EXCEPTIONS
     EIF_EXCEPTIONS_NonDotnetProject = 13
 
 } EIF_EXCEPTIONS;
-
-// Assertion levels
-typedef enum tagEIF_ASSERTIONS
-{
-  EIF_ASSERTIONS_None = 0,
-  EIF_ASSERTIONS_Require = 1,
-  EIF_ASSERTIONS_Ensure = 2,
-  EIF_ASSERTIONS_Check = 4,
-  EIF_ASSERTIONS_Invariant = 8,
-  EIF_ASSERTIONS_Loop = 16
-}EIF_ASSERTIONS;
-
-typedef enum tagEIF_CLUSTER_NAMESPACE_GENERATION
-{
-  EIF_CLUSTER_NAMESPACE_GENERATION_None = 0,
-  EIF_CLUSTER_NAMESPACE_GENERATION_ClusterName = 1,
-  EIF_CLUSTER_NAMESPACE_GENERATION_FullClusterName = 2
-}EIF_CLUSTER_NAMESPACE_GENERATION;
-
-// Project types
-typedef enum tagEIF_PROJECT_TYPES
-{
-  EIF_PROJECT_TYPES_ConsoleApplication = 0,
-  EIF_PROJECT_TYPES_WindowsApplication,
-  EIF_PROJECT_TYPES_ClassLibrary,
-  EIF_PROJECT_TYPES_PrecompiledLibrary
-}EIF_PROJECT_TYPES;
-
-// Eiffel Entities Image Indexes
-typedef enum tagEIF_ENTITY_IMAGES
-{
-  EIF_ENTITY_IMAGES_FrozenOnce = 24,
-  EIF_ENTITY_IMAGES_Obsolete = 23,
-  EIF_ENTITY_IMAGES_FrozenAttribute = 22,
-  EIF_ENTITY_IMAGES_Attribute = 19,
-  EIF_ENTITY_IMAGES_Once = 18,
-  EIF_ENTITY_IMAGES_FrozenExternal = 25,
-  EIF_ENTITY_IMAGES_FrozenFeature = 21,
-  EIF_ENTITY_IMAGES_ExternalFeature = 17,
-  EIF_ENTITY_IMAGES_Deferred = 16,
-  EIF_ENTITY_IMAGES_Feature = 4,
-  EIF_ENTITY_IMAGES_Variable = 26
-} EIF_ENTITY_IMAGES;
-
-// Eiffel feature types
-typedef enum tagEIF_FEATURE_TYPES
-{
-  EIF_FEATURE_TYPES_Attribute = 1,
-  EIF_FEATURE_TYPES_Constant = 2,
-  EIF_FEATURE_TYPES_Deferred = 4,
-  EIF_FEATURE_TYPES_External = 8,
-  EIF_FEATURE_TYPES_Frozen = 16,
-  EIF_FEATURE_TYPES_Function = 32,
-  EIF_FEATURE_TYPES_Infix = 64,
-  EIF_FEATURE_TYPES_Obsolete = 128,
-  EIF_FEATURE_TYPES_Once = 256,
-  EIF_FEATURE_TYPES_Prefix = 512,
-  EIF_FEATURE_TYPES_Procedure = 1024
-} EIF_FEATURE_TYPES;
+//---------------------------------------------------------------------
 
 [
-  oleautomation,
-  uuid (GUID_IEiffelException),
-  helpstring ("A single exception object")
+    uuid (UUID_EnumEIF_ASSERTIONS),
+    helpstring ("Assertion levels for project settings.")
+]
+typedef enum EIF_ASSERTIONS
+{
+    EIF_ASSERTIONS_None = 0,
+    EIF_ASSERTIONS_Require = 1,
+    EIF_ASSERTIONS_Ensure = 2,
+    EIF_ASSERTIONS_Check = 4,
+    EIF_ASSERTIONS_Invariant = 8,
+    EIF_ASSERTIONS_Loop = 16
+}EIF_ASSERTIONS;
+//---------------------------------------------------------------------
+
+[
+    uuid (UUID_EnumEIF_CLUSTER_NAMESPACE_GENERATION),
+    helpstring ("Type of cluster namespace generation.")
+]
+typedef enum EIF_CLUSTER_NAMESPACE_GENERATION
+{
+    EIF_CLUSTER_NAMESPACE_GENERATION_None = 0,
+    EIF_CLUSTER_NAMESPACE_GENERATION_ClusterName = 1,
+    EIF_CLUSTER_NAMESPACE_GENERATION_FullClusterName = 2
+}EIF_CLUSTER_NAMESPACE_GENERATION;
+//---------------------------------------------------------------------
+
+[
+    uuid (UUID_EnumEIF_PROJECT_TYPES),
+    helpstring ("Type of compilation for projects.")
+]
+typedef enum EIF_PROJECT_TYPES
+{
+    EIF_PROJECT_TYPES_ConsoleApplication = 0,
+    EIF_PROJECT_TYPES_WindowsApplication,
+    EIF_PROJECT_TYPES_ClassLibrary,
+    EIF_PROJECT_TYPES_PrecompiledLibrary
+}EIF_PROJECT_TYPES;
+//---------------------------------------------------------------------
+
+[
+    uuid (UUID_EnumEIF_ENTITY_IMAGES),
+    helpstring ("Image indexes associated with a feature.")
+]
+typedef enum EIF_ENTITY_IMAGES{
+    EIF_ENTITY_IMAGES_FrozenOnce = 24,
+    EIF_ENTITY_IMAGES_Obsolete = 23,
+    EIF_ENTITY_IMAGES_FrozenAttribute = 22,
+    EIF_ENTITY_IMAGES_Attribute = 19,
+    EIF_ENTITY_IMAGES_Once = 18,
+    EIF_ENTITY_IMAGES_FrozenExternal = 25,
+    EIF_ENTITY_IMAGES_FrozenFeature = 21,
+    EIF_ENTITY_IMAGES_ExternalFeature = 17,
+    EIF_ENTITY_IMAGES_Deferred = 16,
+    EIF_ENTITY_IMAGES_Feature = 4,
+    EIF_ENTITY_IMAGES_Variable = 26
+} EIF_ENTITY_IMAGES;
+//---------------------------------------------------------------------
+
+[
+    uuid (UUID_EnumEIF_FEATURE_TYPES),
+    helpstring ("Type of Eiffel feature.")
+]
+typedef enum EIF_FEATURE_TYPES
+{
+    EIF_FEATURE_TYPES_Attribute = 1,
+    EIF_FEATURE_TYPES_Constant = 2,
+    EIF_FEATURE_TYPES_Deferred = 4,
+    EIF_FEATURE_TYPES_External = 8,
+    EIF_FEATURE_TYPES_Frozen = 16,
+    EIF_FEATURE_TYPES_Function = 32,
+    EIF_FEATURE_TYPES_Infix = 64,
+    EIF_FEATURE_TYPES_Obsolete = 128,
+    EIF_FEATURE_TYPES_Once = 256,
+    EIF_FEATURE_TYPES_Prefix = 512,
+    EIF_FEATURE_TYPES_Procedure = 1024
+} EIF_FEATURE_TYPES;
+
+
+///////////////////////////////////////////////////////////////////////
+//---------------------------------------------------------------------
+//
+// Interface Declarations
+//
+//---------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////
+
+
+[
+    oleautomation,
+    uuid (UUID_IEiffelException),
+    helpstring ("A single exception object")
 ]
 interface IEiffelException: IUnknown
 {
-  [id(0x0), helpstring ("Get inner exception"), propget]
-  HRESULT inner_exception ([out, retval] IEiffelException** a_result);
-  
-  [id(0x1), helpstring ("Get exception message"), propget]
-  HRESULT message ([out, retval] BSTR* a_result);
-  
-  [id(0x2), helpstring ("Retrieve exception type"), propget]
-  HRESULT exception_code ([out, retval] EIF_EXCEPTIONS* a_result);
-}
-
-[
-  oleautomation,
-  uuid (53E4FF57-2F3C-4ed2-8B08-89AF6E2C10BA),
-  helpstring ("Eiffel Project.")
-]
-interface IEiffelProject: IUnknown
-{
-  [helpstring ("Retrieve Eiffel Project")]
-  HRESULT retrieve_eiffel_project ([in] BSTR a_project_file_name);
-
-  [helpstring ("Create new Eiffel project.")]
-  HRESULT create_eiffel_project ([in] BSTR a_ace_file_name, [in] BSTR a_project_directory_path);
-
-  [helpstring ("Retrieve project. Obsolete")]
-  HRESULT retrieve_project ([in] BSTR a_project_file_name);
-
-  [helpstring ("Create new project.")]
-  HRESULT create_project ([in] BSTR an_ace_file_name, [in] BSTR project_directory_path);
-
-  [helpstring ("Full path to .epr file.")]
-  HRESULT project_file_name ([out, retval] BSTR * return_value);
-
-  [helpstring ("Full path to Ace file.")]
-  HRESULT ace_file_name ([out, retval] BSTR * return_value);
-
-  [helpstring ("Project directory.")]
-  HRESULT project_directory ([out, retval] BSTR * return_value);
-
-  [helpstring ("Is project valid?")]
-  HRESULT valid_project ([out, retval] VARIANT_BOOL * return_value);
-
-  [helpstring ("Last error message")]
-  HRESULT last_error_message ([out, retval] BSTR * return_value);
-  
-  [helpstring ("Last exception raised")]
-  HRESULT last_exception ([out, retval] IEiffelException** a_result);
-
-  [helpstring ("Compiler.")]
-  HRESULT compiler ([out, retval] IEiffelCompiler ** return_value);
-
-  [helpstring ("Has system been compiled?")]
-  HRESULT is_compiled ([out, retval] VARIANT_BOOL * return_value);
-
-  [helpstring ("Has the project updated since last compilation?")]
-  HRESULT project_has_updated ([out, retval] VARIANT_BOOL * return_value);
-
-  [helpstring ("System Browser.")]
-  HRESULT system_browser ([out, retval] IEiffelSystemBrowser ** return_value);
-
-  [helpstring ("Project Properties.")]
-  HRESULT project_properties ([out, retval] IEiffelProjectProperties ** return_value);
-
-  [helpstring ("Completion information")]
-  HRESULT completion_information ([out, retval] IEiffelCompletionInfo ** return_value);
-
-  [helpstring ("Help documentation generator")]
-  HRESULT html_doc_generator ([out, retval] IEiffelHTMLDocGenerator ** return_value);
-};
-//---------------------------------------------------------------------
-
-[
-  oleautomation,
-  uuid (06B9F5AA-0E7D-4d84-800A-3866AC709503),
-  helpstring ("Eiffel Completion info.")
-]
-interface IEiffelCompletionInfo: IUnknown
-{
-  [helpstring ("Add a local variable used for solving member completion list")]
-  HRESULT add_local ([in] BSTR name, [in] BSTR type);
-
-  [helpstring ("Add an argument used for solving member completion list")]
-  HRESULT add_argument ([in] BSTR name, [in] BSTR type);
-
-  [helpstring ("Features accessible from target.")]
-  HRESULT target_features ([in] BSTR target, [in] BSTR feature_name, [in] BSTR file_name, [out] VARIANT* return_names, [out] VARIANT* return_signatures, [out] VARIANT* return_image_indexes);
-
-  [helpstring ("Feature information")]
-  HRESULT target_feature ([in] BSTR target, [in] BSTR feature_name, [in] BSTR file_name, [out, retval] IEiffelFeatureDescriptor** return_value);
-
-  [helpstring ("Flush temporary completion features for a specifi file")]
-  HRESULT flush_completion_features ([in] BSTR a_file_name);
-
-  [helpstring ("Initialize a feature for completion without compiltation")]
-  HRESULT initialize_feature ([in] BSTR a_name, [in] VARIANT a_arguments, [in] VARIANT a_argument_types, [in] BSTR a_return_type, [in] ULONG a_feature_type, [in] BSTR a_file_name);
-};
-//---------------------------------------------------------------------
-
-[
-  oleautomation,
-  uuid (590282FD-2BEE-44a1-91B3-61C926BAD512),
-  helpstring ("Eiffel Compiler.")
-]
-interface IEiffelCompiler: IUnknown
-{
-  [helpstring ("Compile.")]
-  HRESULT compile ();
-
-  [helpstring ("Finalize.")]
-  HRESULT finalize ();
-
-  [helpstring ("Precompile.")]
-  HRESULT precompile ();
-
-  [helpstring ("Compile with piped output.")]
-  HRESULT compile_to_pipe ();
-
-  [helpstring ("Finalize with piped output.")]
-  HRESULT finalize_to_pipe ();
-
-  [helpstring ("Precompile with piped output.")]
-  HRESULT precompile_to_pipe ();
-
-  [helpstring ("Was last compilation successful?")]
-  HRESULT is_successful ([out, retval] VARIANT_BOOL * return_value);
-
-  [helpstring ("Did last compile warrant a call to finish_freezing?")]
-  HRESULT freezing_occurred ([out, retval] VARIANT_BOOL * return_value);
-
-  [helpstring ("Compiler version.")]
-  HRESULT compiler_version ([out, retval] BSTR * return_value);
-
-  [helpstring ("Takes a path and expands it using the env vars.")]
-  HRESULT expand_path ([in] BSTR a_path, [out, retval] BSTR * return_value);
-
-  [helpstring ("Generate a cyrptographic key filename.")]
-  HRESULT generate_msil_keyfile ([in] BSTR filename);
-
-  [helpstring ("Eiffel Freeze command name")]
-  HRESULT freeze_command_name ([out, retval] BSTR * return_value);
-
-  [helpstring ("Eiffel Freeze command arguments")]
-  HRESULT freeze_command_arguments ([out, retval] BSTR * return_value);
-
-  [helpstring ("Is the compiler a trial version.")]
-  HRESULT has_signable_generation ([out, retval] VARIANT_BOOL * return_value);
-
-  [helpstring ("Remove file locks")]
-  HRESULT remove_file_locks ();
-
-  [helpstring ("Output pipe's name")]
-  HRESULT output_pipe_name ([out, retval] BSTR * return_value);
-
-  [helpstring ("Set output pipe's name")]
-  HRESULT set_output_pipe_name ([in] BSTR return_value);
-
-  [helpstring ("Is compiler output sent to pipe `output_pipe_name'")]
-  HRESULT is_output_piped ([out, retval] VARIANT_BOOL * return_value);
-
-  [helpstring ("Can product be run? (i.e. is it activated or was run less than 10 times)")]
-  HRESULT can_run ([out, retval] VARIANT_BOOL * return_value);
-};
-//---------------------------------------------------------------------
-
-[
-  oleautomation,
-  uuid (B16070BD-DECE-4e7a-803C-F7A45924CB88),
-  helpstring ("Eiffel Compiler Events.")
-]
-interface IEiffelCompilerEvents: IUnknown
-{
-  [helpstring ("Should compilation continue.")]
-  HRESULT should_continue ([in, out] VARIANT_BOOL * a_boolean);
-
-  [helpstring ("Output string.")]
-  HRESULT output_string ([in] BSTR a_string);
-
-  [helpstring ("Last error.")]
-  HRESULT last_error ([in] BSTR error_message, [in] BSTR file_name, [in] ULONG line_number);
-};
-//---------------------------------------------------------------------
-[
-  oleautomation,
-  uuid (AF48D380-8F9A-436c-9763-AE1C732AB3F1),
-  helpstring ("Eiffel Project HTML Documentation Generator.")
-]
-interface IEiffelHTMLDocGenerator: IUnknown
-{
-  [propget, helpstring ("Is the project loaded?")]
-  HRESULT is_loaded ([out, retval] VARIANT_BOOL* return_value);
-
-  [propget, helpstring ("Is the project oorrupted?")]
-  HRESULT is_corrupted ([out, retval] VARIANT_BOOL* return_value);
-
-  [propget, helpstring ("Is the project incompatible with the current version of the compiled?")]
-  HRESULT is_incompatible ([out, retval] VARIANT_BOOL* return_value);
-
-  [helpstring ("Add a callback interface.")]
-  HRESULT add_status_callback ([in] IEiffelHTMLDocEvents* new_callback);
-
-  [helpstring ("Remove a callback interface.")]
-  HRESULT remove_status_callback ([in] IEiffelHTMLDocEvents* old_callback);
-
-  [helpstring ("Exclude a cluster from being generated.")]
-  HRESULT add_excluded_cluster ([in] BSTR cluster_full_name);
-
-  [helpstring ("Include a cluster to be generated.")]
-  HRESULT remove_excluded_cluster ([in] BSTR cluster_full_name);
-
-  [helpstring ("Generate the HTML documents into path.")]
-  HRESULT generate ([in] BSTR path);
-};
-//---------------------------------------------------------------------
-
-[
- oleautomation,
-  uuid (62890DD1-7909-4a7d-890D-51DBEFE2BB12),
-  helpstring ("Callback interface for HTML Documentation Generator.")
-]
-interface IEiffelHTMLDocEvents: IUnknown
-{
-
-  [helpstring ("Put a header message to the output")]
-  HRESULT put_header ([in] BSTR new_value);
-
-  [helpstring ("Put a string to the output")]
-  HRESULT put_string ([in] BSTR new_value);
-
-  [helpstring ("Put a class name to the output")]
-  HRESULT put_class_document_message ([in] BSTR new_value);
-
-  [helpstring ("Notify that documentation generating is initializing")]
-  HRESULT put_initializing_documentation ();
-
-  [helpstring ("Notify that the percentage completed has changed")]
-  HRESULT put_percentage_completed ([in] ULONG new_value);
-
+    [helpstring ("Get inner exception"), propget]
+    HRESULT inner_exception ([out, retval] IEiffelException** a_result);
+    
+    [helpstring ("Get exception message"), propget]
+    HRESULT message ([out, retval] BSTR* a_result);
+    
+    [helpstring ("Retrieve exception type"), propget]
+    HRESULT exception_code ([out, retval] EIF_EXCEPTIONS* a_result);
 };
 //---------------------------------------------------------------------
 
 [
     oleautomation,
-    uuid(F09831BB-B43F-42db-821F-D1B3821397F0),
+    uuid (UUID_IEiffelProject),
+    helpstring ("Eiffel Project.")
+]
+interface IEiffelProject: IUnknown
+{
+    [helpstring ("Retrieve Eiffel Project")]
+    HRESULT retrieve_eiffel_project ([in] BSTR a_project_file_name);
+
+    [helpstring ("Create new Eiffel project.")]
+    HRESULT create_eiffel_project ([in] BSTR a_ace_file_name, [in] BSTR a_project_directory_path);
+
+    [helpstring ("Full path to .epr file.")]
+    HRESULT project_file_name ([out, retval] BSTR * return_value);
+
+    [helpstring ("Full path to Ace file.")]
+    HRESULT ace_file_name ([out, retval] BSTR * return_value);
+
+    [helpstring ("Project directory.")]
+    HRESULT project_directory ([out, retval] BSTR * return_value);
+
+    [helpstring ("Is project valid?")]
+    HRESULT valid_project ([out, retval] VARIANT_BOOL * return_value);
+
+    [helpstring ("Last exception raised")]
+    HRESULT last_exception ([out, retval] IEiffelException** a_result);
+
+    [helpstring ("Compiler.")]
+    HRESULT compiler ([out, retval] IEiffelCompiler ** return_value);
+
+    [helpstring ("Has system been compiled?")]
+    HRESULT is_compiled ([out, retval] VARIANT_BOOL * return_value);
+
+    [helpstring ("Has the project updated since last compilation?")]
+    HRESULT project_has_updated ([out, retval] VARIANT_BOOL * return_value);
+
+    [helpstring ("System Browser.")]
+    HRESULT system_browser ([out, retval] IEiffelSystemBrowser ** return_value);
+
+    [helpstring ("Project Properties.")]
+    HRESULT project_properties ([out, retval] IEiffelProjectProperties ** return_value);
+
+    [helpstring ("Completion information")]
+    HRESULT completion_information ([out, retval] IEiffelCompletionInfo ** return_value);
+
+    [helpstring ("Help documentation generator")]
+    HRESULT html_doc_generator ([out, retval] IEiffelHTMLDocGenerator ** return_value);
+};
+//---------------------------------------------------------------------
+
+[
+    oleautomation,
+    uuid (UUID_IEiffelCompletionInfo),
+    helpstring ("Eiffel Completion info.")
+]
+interface IEiffelCompletionInfo: IUnknown
+{
+    [helpstring ("Add a local variable used for solving member completion list")]
+    HRESULT add_local ([in] BSTR name, [in] BSTR type);
+
+    [helpstring ("Add an argument used for solving member completion list")]
+    HRESULT add_argument ([in] BSTR name, [in] BSTR type);
+
+    [helpstring ("Features accessible from target.")]
+    HRESULT target_features ([in] BSTR target, [in] BSTR feature_name, [in] BSTR file_name, [out] VARIANT* return_names, [out] VARIANT* return_signatures, [out] VARIANT* return_image_indexes);
+
+    [helpstring ("Feature information")]
+    HRESULT target_feature ([in] BSTR target, [in] BSTR feature_name, [in] BSTR file_name, [out, retval] IEiffelFeatureDescriptor** return_value);
+
+    [helpstring ("Flush temporary completion features for a specifi file")]
+    HRESULT flush_completion_features ([in] BSTR a_file_name);
+
+    [helpstring ("Initialize a feature for completion without compiltation")]
+    HRESULT initialize_feature ([in] BSTR a_name, [in] VARIANT a_arguments, [in] VARIANT a_argument_types, [in] BSTR a_return_type, [in] ULONG a_feature_type, [in] BSTR a_file_name);
+};
+//---------------------------------------------------------------------
+
+[
+    oleautomation,
+    uuid (UUID_IEiffelCompiler),
+    helpstring ("Eiffel Compiler.")
+]
+interface IEiffelCompiler: IUnknown
+{
+    [helpstring ("Compile.")]
+    HRESULT compile ();
+
+    [helpstring ("Finalize.")]
+    HRESULT finalize ();
+
+    [helpstring ("Precompile.")]
+    HRESULT precompile ();
+
+    [helpstring ("Compile with piped output.")]
+    HRESULT compile_to_pipe ();
+
+    [helpstring ("Finalize with piped output.")]
+    HRESULT finalize_to_pipe ();
+
+    [helpstring ("Precompile with piped output.")]
+    HRESULT precompile_to_pipe ();
+
+    [helpstring ("Was last compilation successful?")]
+    HRESULT is_successful ([out, retval] VARIANT_BOOL * return_value);
+
+    [helpstring ("Did last compile warrant a call to finish_freezing?")]
+    HRESULT freezing_occurred ([out, retval] VARIANT_BOOL * return_value);
+
+    [helpstring ("Compiler version.")]
+    HRESULT compiler_version ([out, retval] BSTR * return_value);
+
+    [helpstring ("Takes a path and expands it using the env vars.")]
+    HRESULT expand_path ([in] BSTR a_path, [out, retval] BSTR * return_value);
+
+    [helpstring ("Generate a cyrptographic key filename.")]
+    HRESULT generate_msil_keyfile ([in] BSTR filename);
+
+    [helpstring ("Eiffel Freeze command name")]
+    HRESULT freeze_command_name ([out, retval] BSTR * return_value);
+
+    [helpstring ("Eiffel Freeze command arguments")]
+    HRESULT freeze_command_arguments ([out, retval] BSTR * return_value);
+
+    [helpstring ("Is the compiler a trial version.")]
+    HRESULT has_signable_generation ([out, retval] VARIANT_BOOL * return_value);
+
+    [helpstring ("Remove file locks")]
+    HRESULT remove_file_locks ();
+
+    [helpstring ("Output pipe's name")]
+    HRESULT output_pipe_name ([out, retval] BSTR * return_value);
+
+    [helpstring ("Set output pipe's name")]
+    HRESULT set_output_pipe_name ([in] BSTR return_value);
+
+    [helpstring ("Is compiler output sent to pipe `output_pipe_name'")]
+    HRESULT is_output_piped ([out, retval] VARIANT_BOOL * return_value);
+
+    [helpstring ("Can product be run? (i.e. is it activated or was run less than 10 times)")]
+    HRESULT can_run ([out, retval] VARIANT_BOOL * return_value);
+};
+//---------------------------------------------------------------------
+
+[
+    oleautomation,
+    uuid (UUID_IEiffelCompilerEvents),
+    helpstring ("Eiffel Compiler Events.")
+]
+interface IEiffelCompilerEvents: IUnknown
+{
+    [helpstring ("Should compilation continue.")]
+    HRESULT should_continue ([in, out] VARIANT_BOOL * a_boolean);
+
+    [helpstring ("Output string.")]
+    HRESULT output_string ([in] BSTR a_string);
+
+    [helpstring ("Last error.")]
+    HRESULT last_error ([in] BSTR error_message, [in] BSTR file_name, [in] ULONG line_number);
+};
+//---------------------------------------------------------------------
+[
+    oleautomation,
+    uuid (UUID_IEiffelHTMLDocGenerator),
+    helpstring ("Eiffel Project HTML Documentation Generator.")
+]
+interface IEiffelHTMLDocGenerator: IUnknown
+{
+    [propget, helpstring ("Is the project loaded?")]
+    HRESULT is_loaded ([out, retval] VARIANT_BOOL* return_value);
+
+    [propget, helpstring ("Is the project oorrupted?")]
+    HRESULT is_corrupted ([out, retval] VARIANT_BOOL* return_value);
+
+    [propget, helpstring ("Is the project incompatible with the current version of the compiled?")]
+    HRESULT is_incompatible ([out, retval] VARIANT_BOOL* return_value);
+
+    [helpstring ("Add a callback interface.")]
+    HRESULT add_status_callback ([in] IEiffelHTMLDocEvents* new_callback);
+
+    [helpstring ("Remove a callback interface.")]
+    HRESULT remove_status_callback ([in] IEiffelHTMLDocEvents* old_callback);
+
+    [helpstring ("Exclude a cluster from being generated.")]
+    HRESULT add_excluded_cluster ([in] BSTR cluster_full_name);
+
+    [helpstring ("Include a cluster to be generated.")]
+    HRESULT remove_excluded_cluster ([in] BSTR cluster_full_name);
+
+    [helpstring ("Generate the HTML documents into path.")]
+    HRESULT generate ([in] BSTR path);
+};
+//---------------------------------------------------------------------
+
+[
+    oleautomation,
+    uuid (UUID_IEiffelHTMLDocEvents),
+    helpstring ("Callback interface for HTML Documentation Generator.")
+]
+interface IEiffelHTMLDocEvents: IUnknown
+{
+
+    [helpstring ("Put a header message to the output")]
+    HRESULT put_header ([in] BSTR new_value);
+
+    [helpstring ("Put a string to the output")]
+    HRESULT put_string ([in] BSTR new_value);
+
+    [helpstring ("Put a class name to the output")]
+    HRESULT put_class_document_message ([in] BSTR new_value);
+
+    [helpstring ("Notify that documentation generating is initializing")]
+    HRESULT put_initializing_documentation ();
+
+    [helpstring ("Notify that the percentage completed has changed")]
+    HRESULT put_percentage_completed ([in] ULONG new_value);
+};
+//---------------------------------------------------------------------
+
+[
+    oleautomation,
+    uuid(UUID_IEnumEiffelClass),
     helpstring ("Eiffel Class Enumeration.")
 ]
-
-interface IEnumEiffelClass : IUnknown
+interface IEnumEiffelClass: IUnknown
 {
-    HRESULT Next(
-        [out] IEiffelClassDescriptor **rgelt,
-        [out] ULONG *pceltFetched);
+    HRESULT Next([out] IEiffelClassDescriptor **rgelt, [out] ULONG *pceltFetched);
 
-    HRESULT Skip(
-        [in] ULONG celt);
+    HRESULT Skip([in] ULONG celt);
 
     HRESULT Reset();
 
-    HRESULT Clone(
-        [out] IEnumEiffelClass ** ppenum);
+    HRESULT Clone([out] IEnumEiffelClass ** ppenum);
 
     HRESULT ith_item ([in] ULONG an_index, [out] IEiffelClassDescriptor **rgelt);
 
@@ -446,24 +456,19 @@ interface IEnumEiffelClass : IUnknown
 //---------------------------------------------------------------------
 
 [
-    oleautomation,
-    uuid(7D904660-5A31-435a-B154-10CACDBD363C),
-    helpstring ("Eiffel Cluster Enumeration.")
+        oleautomation,
+        uuid(UUID_IEnumCluster),
+        helpstring ("Eiffel Cluster Enumeration.")
 ]
-
-interface IEnumCluster : IUnknown
+interface IEnumCluster: IUnknown
 {
-    HRESULT Next(
-        [out] IEiffelClusterDescriptor **rgelt,
-        [out] ULONG *pceltFetched);
+    HRESULT Next([out] IEiffelClusterDescriptor **rgelt, [out] ULONG *pceltFetched);
 
-    HRESULT Skip(
-        [in] ULONG celt);
+    HRESULT Skip([in] ULONG celt);
 
     HRESULT Reset();
 
-    HRESULT Clone(
-        [out] IEnumCluster ** ppenum);
+    HRESULT Clone([out] IEnumCluster ** ppenum);
 
     HRESULT ith_item ([in] ULONG an_index, [out] IEiffelClusterDescriptor **rgelt);
 
@@ -473,22 +478,22 @@ interface IEnumCluster : IUnknown
 
 [
     oleautomation,
-    uuid(30BF27F2-86DD-4589-AD8A-8E40FF3D4D07),
+    uuid(UUID_IEnumFeature),
     helpstring ("Eiffel Feature Enumeration.")
 ]
-interface IEnumFeature : IUnknown
+interface IEnumFeature: IUnknown
 {
     HRESULT Next(
-        [out] IEiffelFeatureDescriptor **rgelt,
-        [out] ULONG *pceltFetched);
+            [out] IEiffelFeatureDescriptor **rgelt,
+            [out] ULONG *pceltFetched);
 
     HRESULT Skip(
-        [in] ULONG celt);
+            [in] ULONG celt);
 
     HRESULT Reset();
 
     HRESULT Clone(
-        [out] IEnumFeature ** ppenum);
+            [out] IEnumFeature ** ppenum);
 
     HRESULT ith_item ([in] ULONG an_index, [out] IEiffelFeatureDescriptor **rgelt);
 
@@ -498,22 +503,22 @@ interface IEnumFeature : IUnknown
 
 [
     oleautomation,
-    uuid (743740A5-71C1-4141-A875-B337CE6DCAD6),
+    uuid (UUID_IEnumParameter),
     helpstring ("Feature paramaters enumeration.")
 ]
 interface IEnumParameter: IUnknown
 {
     HRESULT Next(
-        [out] IEiffelParameterDescriptor ** rgelt,
-        [out] ULONG *pceltFetched);
+            [out] IEiffelParameterDescriptor ** rgelt,
+            [out] ULONG *pceltFetched);
 
     HRESULT Skip(
-        [in] ULONG celt);
+            [in] ULONG celt);
 
     HRESULT Reset();
 
     HRESULT Clone(
-        [out] IEnumParameter ** ppenum);
+            [out] IEnumParameter ** ppenum);
 
     HRESULT ith_item ([in] ULONG an_index, [out] IEiffelParameterDescriptor ** rgelt);
 
@@ -524,23 +529,18 @@ interface IEnumParameter: IUnknown
 
 [
     oleautomation,
-    uuid(57C162F4-18A3-4abd-BDB1-3E8B759C3E4D),
+    uuid(UUID_IEnumClusterProp),
     helpstring ("Eiffel Cluster Properties Enumeration.")
 ]
-
-interface IEnumClusterProp : IUnknown
+interface IEnumClusterProp: IUnknown
 {
-    HRESULT Next(
-        [out] IEiffelClusterProperties **rgelt,
-        [out] ULONG *pceltFetched);
+    HRESULT Next([out] IEiffelClusterProperties **rgelt,[out] ULONG *pceltFetched);
 
-    HRESULT Skip(
-        [in] ULONG celt);
+    HRESULT Skip([in] ULONG celt);
 
     HRESULT Reset();
 
-    HRESULT Clone(
-        [out] IEnumClusterProp ** ppenum);
+    HRESULT Clone([out] IEnumClusterProp ** ppenum);
 
     HRESULT ith_item ([in] ULONG an_index, [out] IEiffelClusterProperties **rgelt);
 
@@ -554,19 +554,15 @@ interface IEnumClusterProp : IUnknown
     helpstring ("Eiffel Cluster Exluded Directories Enumeration.")
 ]
 
-interface IEnumClusterExcludes : IUnknown
+interface IEnumClusterExcludes: IUnknown
 {
-    HRESULT Next(
-        [out] BSTR *rgelt,
-        [out] ULONG *pceltFetched);
+    HRESULT Next([out] BSTR *rgelt, [out] ULONG *pceltFetched);
 
-    HRESULT Skip(
-        [in] ULONG celt);
+    HRESULT Skip([in] ULONG celt);
 
     HRESULT Reset();
 
-    HRESULT Clone(
-        [out] IEnumClusterExcludes ** ppenum);
+    HRESULT Clone([out] IEnumClusterExcludes ** ppenum);
 
     HRESULT ith_item ([in] ULONG an_index, [out] BSTR *rgelt);
 
@@ -576,22 +572,18 @@ interface IEnumClusterExcludes : IUnknown
 
 [
     oleautomation,
-    uuid(67297abc-a19a-4985-8f7e-90ac1f66ee6e),
+    uuid(UUID_IEnumAssembly),
     helpstring ("Eiffel Assembly Enumeration.")
 ]
-interface IEnumAssembly : IUnknown
+interface IEnumAssembly: IUnknown
 {
-    HRESULT Next(
-        [out] IEiffelAssemblyProperties ** rgelt,
-        [out] ULONG *pceltFetched);
+    HRESULT Next([out] IEiffelAssemblyProperties ** rgelt, [out] ULONG *pceltFetched);
 
-    HRESULT Skip(
-        [in] ULONG celt);
+    HRESULT Skip([in] ULONG celt);
 
     HRESULT Reset();
 
-    HRESULT Clone(
-        [out] IEnumAssembly ** ppenum);
+    HRESULT Clone([out] IEnumAssembly ** ppenum);
 
     HRESULT ith_item ([in] ULONG an_index, [out] IEiffelAssemblyProperties ** rgelt);
 
@@ -601,23 +593,18 @@ interface IEnumAssembly : IUnknown
 
 [
     oleautomation,
-    uuid(DB65539C-1C71-4a59-B548-22DA96BF0D13),
+    uuid(UUID_IEnumIncludePaths),
     helpstring ("Include Path Enumeration.")
 ]
-
-interface IEnumIncludePaths : IUnknown
+interface IEnumIncludePaths: IUnknown
 {
-    HRESULT Next(
-        [out] BSTR *rgelt,
-        [out] ULONG *pceltFetched);
+    HRESULT Next([out] BSTR *rgelt, [out] ULONG *pceltFetched);
 
-    HRESULT Skip(
-        [in] ULONG celt);
+    HRESULT Skip([in] ULONG celt);
 
     HRESULT Reset();
 
-    HRESULT Clone(
-        [out] IEnumIncludePaths ** ppenum);
+    HRESULT Clone([out] IEnumIncludePaths ** ppenum);
 
     HRESULT ith_item ([in] ULONG an_index, [out] BSTR *rgelt);
 
@@ -627,23 +614,18 @@ interface IEnumIncludePaths : IUnknown
 //---------------------------------------------------------------------
 [
     oleautomation,
-    uuid(5CE55179-0954-44f9-9E1F-A74456642047),
+    uuid(UUID_IEnumObjectFiles),
     helpstring ("Object File Enumeration.")
 ]
-
-interface IEnumObjectFiles : IUnknown
+interface IEnumObjectFiles: IUnknown
 {
-    HRESULT Next(
-        [out] BSTR *rgelt,
-        [out] ULONG *pceltFetched);
+    HRESULT Next([out] BSTR *rgelt, [out] ULONG *pceltFetched);
 
-    HRESULT Skip(
-        [in] ULONG celt);
+    HRESULT Skip([in] ULONG celt);
 
     HRESULT Reset();
 
-    HRESULT Clone(
-        [out] IEnumObjectFiles ** ppenum);
+    HRESULT Clone([out] IEnumObjectFiles ** ppenum);
 
     HRESULT ith_item ([in] ULONG an_index, [out] BSTR *rgelt);
 
@@ -652,803 +634,813 @@ interface IEnumObjectFiles : IUnknown
 //---------------------------------------------------------------------
 
 [
-  oleautomation,
-  uuid (A4CAF314-6659-48d8-A68E-463492D79D8A),
-  helpstring ("System Browser.")
+    oleautomation,
+    uuid (UUID_IEiffelSystemBrowser),
+    helpstring ("System Browser.")
 ]
 interface IEiffelSystemBrowser: IUnknown
 {
-  [helpstring ("List of classes in system.")]
-  HRESULT system_classes ([out, retval] IEnumEiffelClass ** some_classes);
+    [helpstring ("List of classes in system.")]
+    HRESULT system_classes ([out, retval] IEnumEiffelClass ** some_classes);
 
-  [helpstring ("Number of classes in system.")]
-  HRESULT class_count ([out, retval] ULONG * return_value);
+    [helpstring ("Number of classes in system.")]
+    HRESULT class_count ([out, retval] ULONG * return_value);
 
-  [helpstring ("List of system's clusters.")]
-  HRESULT system_clusters ([out, retval] IEnumCluster ** some_clusters);
+    [helpstring ("List of system's clusters.")]
+    HRESULT system_clusters ([out, retval] IEnumCluster ** some_clusters);
 
-  [helpstring ("List of system's external clusters.")]
-  HRESULT external_clusters ([out, retval] IEnumCluster ** some_clusters);
+    [helpstring ("List of system's external clusters.")]
+    HRESULT external_clusters ([out, retval] IEnumCluster ** some_clusters);
 
-  [propget, helpstring ("Returns all of the assemblies in an enumerator")]
-  HRESULT assemblies ([out, retval] IEnumAssembly ** return_value);
+    [propget, helpstring ("Returns all of the assemblies in an enumerator")]
+    HRESULT assemblies ([out, retval] IEnumAssembly ** return_value);
 
-  [helpstring ("Number of top-level clusters in system.")]
-  HRESULT cluster_count ([out, retval] ULONG * return_value);
+    [helpstring ("Number of top-level clusters in system.")]
+    HRESULT cluster_count ([out, retval] ULONG * return_value);
 
-  [propget, helpstring ("Number of top-level clusters in system.")]
-  HRESULT root_cluster ([out, retval] IEiffelClusterDescriptor ** return_value);
+    [propget, helpstring ("Number of top-level clusters in system.")]
+    HRESULT root_cluster ([out, retval] IEiffelClusterDescriptor ** return_value);
 
-  [helpstring ("Cluster descriptor.")]
-  HRESULT cluster_descriptor ([in] BSTR cluster_name, [out, retval] IEiffelClusterDescriptor ** return_value);
+    [helpstring ("Cluster descriptor.")]
+    HRESULT cluster_descriptor ([in] BSTR cluster_name, [out, retval] IEiffelClusterDescriptor ** return_value);
 
-  [helpstring ("Class descriptor.")]
-  HRESULT class_descriptor ([in] BSTR class_name, [out, retval] IEiffelClassDescriptor ** return_value);
+    [helpstring ("Class descriptor.")]
+    HRESULT class_descriptor ([in] BSTR class_name, [out, retval] IEiffelClassDescriptor ** return_value);
 
-  [helpstring ("Feature descriptor.")]
-  HRESULT feature_descriptor ([in] BSTR class_name, [in] BSTR feature_name, [out, retval] IEiffelFeatureDescriptor ** return_value);
+    [helpstring ("Feature descriptor.")]
+    HRESULT feature_descriptor ([in] BSTR class_name, [in] BSTR feature_name, [out, retval] IEiffelFeatureDescriptor ** return_value);
 
-  [helpstring ("Search classes with names matching `a_string'.")]
-  HRESULT search_classes ([in] BSTR a_string, [in] VARIANT_BOOL is_substring, [out, retval] IEnumEiffelClass ** some_classes);
+    [helpstring ("Search classes with names matching `a_string'.")]
+    HRESULT search_classes ([in] BSTR a_string, [in] VARIANT_BOOL is_substring, [out, retval] IEnumEiffelClass ** some_classes);
 
-  [helpstring ("Search feature with names matching `a_string'.")]
-  HRESULT search_features ([in] BSTR a_string, [in] VARIANT_BOOL is_substring, [out, retval] IEnumFeature ** some_features);
+    [helpstring ("Search feature with names matching `a_string'.")]
+    HRESULT search_features ([in] BSTR a_string, [in] VARIANT_BOOL is_substring, [out, retval] IEnumFeature ** some_features);
 
-  [helpstring ("Retrieve description from dotnet type")]
-  HRESULT description_from_dotnet_type ([in] BSTR a_assembly_name, [in] BSTR a_full_dotnet_type, [out, retval] BSTR *return_value);
+    [helpstring ("Retrieve description from dotnet type")]
+    HRESULT description_from_dotnet_type ([in] BSTR a_assembly_name, [in] BSTR a_full_dotnet_type, [out, retval] BSTR *return_value);
 
-  [helpstring ("Retrieve description from dotnet feature")]
-  HRESULT description_from_dotnet_feature ([in] BSTR a_assembly_name, [in] BSTR a_full_dotnet_type, [in] BSTR a_feature_signature, [out, retval] BSTR *return_value);
+    [helpstring ("Retrieve description from dotnet feature")]
+    HRESULT description_from_dotnet_feature ([in] BSTR a_assembly_name, [in] BSTR a_full_dotnet_type, [in] BSTR a_feature_signature, [out, retval] BSTR *return_value);
 
 };
 //---------------------------------------------------------------------
 
 
 [
-  oleautomation,
-  uuid (81062B0E-B1D6-4c5d-8B8B-71464E86B869),
-  helpstring ("Eiffel Cluster Descriptor.")
+    oleautomation,
+    uuid (UUID_IEiffelClusterDescriptor),
+    helpstring ("Eiffel Cluster Descriptor.")
 ]
 interface IEiffelClusterDescriptor: IUnknown
 {
-  [helpstring ("Cluster name.")]
-  HRESULT name ([out, retval] BSTR * return_value);
+    [helpstring ("Cluster name.")]
+    HRESULT name ([out, retval] BSTR * return_value);
 
-  [helpstring ("Cluster description.")]
-  HRESULT description ([out, retval] BSTR * return_value);
+    [helpstring ("Cluster description.")]
+    HRESULT description ([out, retval] BSTR * return_value);
 
-  [helpstring ("Cluster Tool Tip.")]
-  HRESULT tool_tip ([out, retval] BSTR * return_value);
+    [helpstring ("Cluster Tool Tip.")]
+    HRESULT tool_tip ([out, retval] BSTR * return_value);
 
-  [helpstring ("List of classes in cluster.")]
-  HRESULT classes ([out, retval] IEnumEiffelClass ** some_classes);
+    [helpstring ("List of classes in cluster.")]
+    HRESULT classes ([out, retval] IEnumEiffelClass ** some_classes);
 
-  [helpstring ("Number of classes in cluster.")]
-  HRESULT class_count ([out, retval] ULONG * return_value);
+    [helpstring ("Number of classes in cluster.")]
+    HRESULT class_count ([out, retval] ULONG * return_value);
 
-  [helpstring ("List of subclusters in cluster.")]
-  HRESULT clusters ([out, retval] IEnumCluster ** some_clusters);
+    [helpstring ("List of subclusters in cluster.")]
+    HRESULT clusters ([out, retval] IEnumCluster ** some_clusters);
 
-  [helpstring ("Number of subclusters in cluster.")]
-  HRESULT cluster_count ([out, retval] ULONG * return_value);
+    [helpstring ("Number of subclusters in cluster.")]
+    HRESULT cluster_count ([out, retval] ULONG * return_value);
 
-  [helpstring ("Full path to cluster.")]
-  HRESULT cluster_path ([out, retval] BSTR * path);
+    [helpstring ("Full path to cluster.")]
+    HRESULT cluster_path ([out, retval] BSTR * path);
 
-  [helpstring ("Relative path to cluster.")]
-  HRESULT relative_path ([out, retval] BSTR * path);
+    [helpstring ("Relative path to cluster.")]
+    HRESULT relative_path ([out, retval] BSTR * path);
 
-  [helpstring ("Should this cluster classes take priority over other classes with same name?")]
-  HRESULT is_override_cluster ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Should this cluster classes take priority over other classes with same name?")]
+    HRESULT is_override_cluster ([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Should this cluster be treated as library?")]
-  HRESULT is_library ([out, retval] VARIANT_BOOL * path);
+    [helpstring ("Should this cluster be treated as library?")]
+    HRESULT is_library ([out, retval] VARIANT_BOOL * path);
 };
 //---------------------------------------------------------------------
 
 [
-  oleautomation,
-  uuid (2138B7F7-250E-4156-A3F5-A4E9F4AF8C5D),
-  helpstring ("Eiffel Class Descriptor.")
+    oleautomation,
+    uuid (UUID_IEiffelClassDescriptor),
+    helpstring ("Eiffel Class Descriptor.")
 ]
 interface IEiffelClassDescriptor: IUnknown
 {
-  [helpstring ("Class name.")]
-  HRESULT name ([out, retval] BSTR * return_value);
+    [helpstring ("Class name.")]
+    HRESULT name ([out, retval] BSTR * return_value);
 
-  [helpstring ("Class description.")]
-  HRESULT description ([out, retval] BSTR * return_value);
+    [helpstring ("Class description.")]
+    HRESULT description ([out, retval] BSTR * return_value);
 
-  [helpstring ("Class external name.")]
-  HRESULT external_name ([out, retval] BSTR * return_value);
+    [helpstring ("Class external name.")]
+    HRESULT external_name ([out, retval] BSTR * return_value);
 
-  [helpstring ("Class Tool Tip.")]
-  HRESULT tool_tip ([out, retval] BSTR * return_value);
+    [helpstring ("Class Tool Tip.")]
+    HRESULT tool_tip ([out, retval] BSTR * return_value);
 
-  [helpstring ("Is class in system?")]
-  HRESULT is_in_system ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is class in system?")]
+    HRESULT is_in_system ([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("List of names of class features.")]
-  HRESULT feature_names ([out, retval] SAFEARRAY (BSTR) * names);
+    [helpstring ("List of names of class features.")]
+    HRESULT feature_names ([out, retval] SAFEARRAY (BSTR) * names);
 
-  [helpstring ("List of class features.")]
-  HRESULT features ([out, retval] IEnumFeature ** some_features);
+    [helpstring ("List of class features.")]
+    HRESULT features ([out, retval] IEnumFeature ** some_features);
 
-  [helpstring ("Number of class features.")]
-  HRESULT feature_count ([out, retval] ULONG * return_value);
+    [helpstring ("Number of class features.")]
+    HRESULT feature_count ([out, retval] ULONG * return_value);
 
-  [helpstring ("List of class features including ancestor features.")]
-  HRESULT flat_features ([out, retval] IEnumFeature ** some_features);
+    [helpstring ("List of class features including ancestor features.")]
+    HRESULT flat_features ([out, retval] IEnumFeature ** some_features);
 
-  [helpstring ("Number of flat class features.")]
-  HRESULT flat_feature_count ([out, retval] ULONG * return_value);
+    [helpstring ("Number of flat class features.")]
+    HRESULT flat_feature_count ([out, retval] ULONG * return_value);
 
-  [helpstring ("List of class inherited features.")]
-  HRESULT inherited_features ([out, retval] IEnumFeature ** some_features);
+    [helpstring ("List of class inherited features.")]
+    HRESULT inherited_features ([out, retval] IEnumFeature ** some_features);
 
-  [helpstring ("Number of inherited features.")]
-  HRESULT inherited_feature_count ([out, retval] ULONG * return_value);
+    [helpstring ("Number of inherited features.")]
+    HRESULT inherited_feature_count ([out, retval] ULONG * return_value);
 
-  [helpstring ("List of class creation routines.")]
-  HRESULT creation_routines ([out, retval] IEnumFeature ** some_features);
+    [helpstring ("List of class creation routines.")]
+    HRESULT creation_routines ([out, retval] IEnumFeature ** some_features);
 
-  [helpstring ("Number of creation routines.")]
-  HRESULT creation_routine_count ([out, retval] ULONG * return_value);
+    [helpstring ("Number of creation routines.")]
+    HRESULT creation_routine_count ([out, retval] ULONG * return_value);
 
-  [helpstring ("List of class clients.")]
-  HRESULT clients ([out, retval] IEnumEiffelClass ** some_clients);
+    [helpstring ("List of class clients.")]
+    HRESULT clients ([out, retval] IEnumEiffelClass ** some_clients);
 
-  [helpstring ("Number of class clients.")]
-  HRESULT client_count ([out, retval] ULONG * return_value);
+    [helpstring ("Number of class clients.")]
+    HRESULT client_count ([out, retval] ULONG * return_value);
 
-  [helpstring ("List of class suppliers.")]
-  HRESULT suppliers ([out, retval] IEnumEiffelClass ** some_suppliers);
+    [helpstring ("List of class suppliers.")]
+    HRESULT suppliers ([out, retval] IEnumEiffelClass ** some_suppliers);
 
-  [helpstring ("Number of class suppliers.")]
-  HRESULT supplier_count ([out, retval] ULONG * return_value);
+    [helpstring ("Number of class suppliers.")]
+    HRESULT supplier_count ([out, retval] ULONG * return_value);
 
-  [helpstring ("List of direct ancestors of class.")]
-  HRESULT ancestors ([out, retval] IEnumEiffelClass ** some_ancestors);
+    [helpstring ("List of direct ancestors of class.")]
+    HRESULT ancestors ([out, retval] IEnumEiffelClass ** some_ancestors);
 
-  [helpstring ("Number of direct ancestors.")]
-  HRESULT ancestor_count ([out, retval] ULONG * return_value);
+    [helpstring ("Number of direct ancestors.")]
+    HRESULT ancestor_count ([out, retval] ULONG * return_value);
 
-  [helpstring ("List of direct descendants of class.")]
-  HRESULT descendants ([out, retval] IEnumEiffelClass ** some_descendants);
+    [helpstring ("List of direct descendants of class.")]
+    HRESULT descendants ([out, retval] IEnumEiffelClass ** some_descendants);
 
-  [helpstring ("Number of direct descendants.")]
-  HRESULT descendant_count ([out, retval] ULONG * return_value);
+    [helpstring ("Number of direct descendants.")]
+    HRESULT descendant_count ([out, retval] ULONG * return_value);
 
-  [helpstring ("Full path to file.")]
-  HRESULT class_path ([out, retval] BSTR * path);
+    [helpstring ("Full path to file.")]
+    HRESULT class_path ([out, retval] BSTR * path);
 
-  [helpstring ("Is class deferred?")]
-  HRESULT is_deferred ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is class deferred?")]
+    HRESULT is_deferred ([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Is class external?")]
-  HRESULT is_external ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is class external?")]
+    HRESULT is_external ([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Is class generic?")]
-  HRESULT is_generic ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is class generic?")]
+    HRESULT is_generic ([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Is class part of a library?")]
-  HRESULT is_library ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is class part of a library?")]
+    HRESULT is_library ([out, retval] VARIANT_BOOL * return_value);
 };
 //---------------------------------------------------------------------
 
 [
-  oleautomation,
-  uuid (2CB5C09A-2222-42f7-9371-398FB71EBB93),
-  helpstring ("Eiffel Feature Descriptor.")
+    oleautomation,
+    uuid (UUID_IEiffelFeatureDescriptor),
+    helpstring ("Eiffel Feature Descriptor.")
 ]
 interface IEiffelFeatureDescriptor: IUnknown
 {
-  [helpstring ("Feature name.")]
-  HRESULT name ([out, retval] BSTR * return_value);
+    [helpstring ("Feature name.")]
+    HRESULT name ([out, retval] BSTR * return_value);
 
-  [helpstring ("Feature external name.")]
-  HRESULT external_name ([out, retval] BSTR * return_value);
+    [helpstring ("Feature external name.")]
+    HRESULT external_name ([out, retval] BSTR * return_value);
 
-  [helpstring ("Name of class where feature is written in.")]
-  HRESULT written_class ([out, retval] BSTR * return_value);
+    [helpstring ("Name of class where feature is written in.")]
+    HRESULT written_class ([out, retval] BSTR * return_value);
 
-  [helpstring ("Name of class where feature was evaluated in.")]
-  HRESULT evaluated_class ([out, retval] BSTR * return_value);
+    [helpstring ("Name of class where feature was evaluated in.")]
+    HRESULT evaluated_class ([out, retval] BSTR * return_value);
 
-  [helpstring ("Feature signature.")]
-  HRESULT signature ([out, retval] BSTR * return_value);
+    [helpstring ("Feature signature.")]
+    HRESULT signature ([out, retval] BSTR * return_value);
 
-  [helpstring ("Feature description.")]
-  HRESULT description ([out, retval] BSTR * return_value);
+    [helpstring ("Feature description.")]
+    HRESULT description ([out, retval] BSTR * return_value);
 
-  [helpstring ("Feature parameters.")]
-  HRESULT parameters ([out, retval] IEnumParameter** params);
+    [helpstring ("Feature parameters.")]
+    HRESULT parameters ([out, retval] IEnumParameter** params);
 
-  [helpstring ("Feature return type.")]
-  HRESULT return_type ([out, retval] BSTR* return_value);
+    [helpstring ("Feature return type.")]
+    HRESULT return_type ([out, retval] BSTR* return_value);
 
-  [helpstring ("Feature location, full path to file and line number")]
-  HRESULT feature_location (  [in, out] BSTR * file_path,
-                [in, out] ULONG * line_number);
+    [helpstring ("Feature location, full path to file and line number")]
+    HRESULT feature_location (    [in, out] BSTR * file_path,
+                                [in, out] ULONG * line_number);
 
-  [helpstring ("List of all feature callers, including callers of ancestor and descendant versions.")]
-  HRESULT all_callers ([out, retval] IEnumFeature ** some_callers);
+    [helpstring ("List of all feature callers, including callers of ancestor and descendant versions.")]
+    HRESULT all_callers ([out, retval] IEnumFeature ** some_callers);
 
-  [helpstring ("Number of all callers.")]
-  HRESULT all_callers_count ([out, retval] ULONG * return_value);
+    [helpstring ("Number of all callers.")]
+    HRESULT all_callers_count ([out, retval] ULONG * return_value);
 
-  [helpstring ("List of feature callers.")]
-  HRESULT local_callers ([out, retval] IEnumFeature ** some_callers);
+    [helpstring ("List of feature callers.")]
+    HRESULT local_callers ([out, retval] IEnumFeature ** some_callers);
 
-  [helpstring ("Number of local callers.")]
-  HRESULT local_callers_count ([out, retval] ULONG * return_value);
+    [helpstring ("Number of local callers.")]
+    HRESULT local_callers_count ([out, retval] ULONG * return_value);
 
-  [helpstring ("List of feature callers, including callers of descendant versions.")]
-  HRESULT descendant_callers ([out, retval] IEnumFeature ** some_callers);
+    [helpstring ("List of feature callers, including callers of descendant versions.")]
+    HRESULT descendant_callers ([out, retval] IEnumFeature ** some_callers);
 
-  [helpstring ("Number of descendant callers.")]
-  HRESULT descendant_callers_count ([out, retval] ULONG * return_value);
+    [helpstring ("Number of descendant callers.")]
+    HRESULT descendant_callers_count ([out, retval] ULONG * return_value);
 
-  [helpstring ("List of implementers.")]
-  HRESULT implementers ([out, retval] IEnumFeature ** some_implementers);
+    [helpstring ("List of implementers.")]
+    HRESULT implementers ([out, retval] IEnumFeature ** some_implementers);
 
-  [helpstring ("Number of feature implementers.")]
-  HRESULT implementer_count ([out, retval] ULONG * return_value);
+    [helpstring ("Number of feature implementers.")]
+    HRESULT implementer_count ([out, retval] ULONG * return_value);
 
-  [helpstring ("List of ancestor versions.")]
-  HRESULT ancestor_versions ([out, retval] IEnumFeature ** some_implementers);
+    [helpstring ("List of ancestor versions.")]
+    HRESULT ancestor_versions ([out, retval] IEnumFeature ** some_implementers);
 
-  [helpstring ("Number of ancestor versions.")]
-  HRESULT ancestor_version_count ([out, retval] ULONG * return_value);
+    [helpstring ("Number of ancestor versions.")]
+    HRESULT ancestor_version_count ([out, retval] ULONG * return_value);
 
-  [helpstring ("List of descendant versions.")]
-  HRESULT descendant_versions ([out, retval] IEnumFeature ** some_implementers);
+    [helpstring ("List of descendant versions.")]
+    HRESULT descendant_versions ([out, retval] IEnumFeature ** some_implementers);
 
-  [helpstring ("Number of descendant versions.")]
-  HRESULT descendant_version_count ([out, retval] ULONG * return_value);
+    [helpstring ("Number of descendant versions.")]
+    HRESULT descendant_version_count ([out, retval] ULONG * return_value);
 
-  [helpstring ("Is feature exported to all classes?")]
-  HRESULT exported_to_all ([out, retval] VARIANT_BOOL * names);
+    [helpstring ("Is feature exported to all classes?")]
+    HRESULT exported_to_all ([out, retval] VARIANT_BOOL * names);
 
-  [helpstring ("Is once feature?")]
-  HRESULT is_once ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is once feature?")]
+    HRESULT is_once ([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Is external feature?")]
-  HRESULT is_external ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is external feature?")]
+    HRESULT is_external ([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Is deferred feature?")]
-  HRESULT is_deferred ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is deferred feature?")]
+    HRESULT is_deferred ([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Is constant?")]
-  HRESULT is_constant ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is constant?")]
+    HRESULT is_constant ([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("is frozen feature?")]
-  HRESULT is_frozen ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("is frozen feature?")]
+    HRESULT is_frozen ([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Is infix?")]
-  HRESULT is_infix ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is infix?")]
+    HRESULT is_infix ([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Is prefix?")]
-  HRESULT is_prefix ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is prefix?")]
+    HRESULT is_prefix ([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Is attribute?")]
-  HRESULT is_attribute ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is attribute?")]
+    HRESULT is_attribute ([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Is procedure?")]
-  HRESULT is_procedure ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is procedure?")]
+    HRESULT is_procedure ([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Is function?")]
-  HRESULT is_function ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is function?")]
+    HRESULT is_function ([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Is unique?")]
-  HRESULT is_unique ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is unique?")]
+    HRESULT is_unique ([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Is obsolete feature?")]
-  HRESULT is_obsolete ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is obsolete feature?")]
+    HRESULT is_obsolete ([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Does feature have precondition?")]
-  HRESULT has_precondition([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Does feature have precondition?")]
+    HRESULT has_precondition([out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Does feature have postcondition?")]
-  HRESULT has_postcondition([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Does feature have postcondition?")]
+    HRESULT has_postcondition([out, retval] VARIANT_BOOL * return_value);
 };
 //---------------------------------------------------------------------
 
 [
-  oleautomation,
-  uuid (1863FC71-0E34-4ee6-9924-56D4B49069B0),
-  helpstring ("Feature parameter info.")
+    oleautomation,
+    uuid (UUID_IEiffelParameterDescriptor),
+    helpstring ("Feature parameter info.")
 ]
 interface IEiffelParameterDescriptor: IUnknown
 {
-  [helpstring ("Parameter name")]
-  HRESULT name ([out, retval] BSTR* return_value);
+    [helpstring ("Parameter name")]
+    HRESULT name ([out, retval] BSTR* return_value);
 
-  [helpstring ("Parameter display")]
-  HRESULT display ([out, retval] BSTR* return_value);
+    [helpstring ("Parameter display")]
+    HRESULT display ([out, retval] BSTR* return_value);
 };
 
 //---------------------------------------------------------------------
 
 [
-  dual, object,
-  uuid (C212FAAB-FAA8-48b9-9D4E-2D0CA4EB3354),
-  helpstring ("Eiffel Project Properties.")
+    object,
+    uuid (UUID_IEiffelProjectProperties),
+    helpstring ("Eiffel Project Properties.")
 ]
-interface IEiffelProjectProperties: IDispatch
+interface IEiffelProjectProperties: IUnknown
 {
 
-  [id (DISPID_VALUE), propget, helpstring ("System name.")]
-  HRESULT system_name ([out, retval] BSTR * return_value);
+    [helpstring ("System name."), propget]
+    HRESULT system_name ([out, retval] BSTR * return_value);
 
-  [id (DISPID_VALUE), propput, helpstring ("System name.")]
-  HRESULT system_name ([in] BSTR a_name);
+    [helpstring ("System name."), propput]
+    HRESULT system_name ([in] BSTR a_name);
 
-  [id (103), propget, helpstring ("Root class name.")]
-  HRESULT root_class_name ([out, retval] BSTR * return_value);
+    [helpstring ("Root class name."), propget]
+    HRESULT root_class_name ([out, retval] BSTR * return_value);
 
-  [id (103), propput, helpstring ("Root class name.")]
-  HRESULT root_class_name ([in] BSTR a_name);
+    [helpstring ("Root class name."), propput]
+    HRESULT root_class_name ([in] BSTR a_name);
 
-  [id (104), propget, helpstring ("Creation routine name.")]
-  HRESULT creation_routine ([out, retval] BSTR * return_value);
+    [helpstring ("Creation routine name."), propget]
+    HRESULT creation_routine ([out, retval] BSTR * return_value);
 
-  [id (104), propput, helpstring ("Creation routine name.")]
-  HRESULT creation_routine ([in] BSTR a_routine);
+    [helpstring ("Creation routine name."), propput]
+    HRESULT creation_routine ([in] BSTR a_routine);
 
-  [propget, helpstring ("Namespace generation for cluster")]
-  HRESULT namespace_generation ([out, retval] EIF_CLUSTER_NAMESPACE_GENERATION* penuClusterNamespaceGeneration);
+    [helpstring ("Namespace generation for cluster"), propget]
+    HRESULT namespace_generation ([out, retval] EIF_CLUSTER_NAMESPACE_GENERATION* penuClusterNamespaceGeneration);
 
-  [propput, helpstring ("Namespace generation for cluster")]
-  HRESULT namespace_generation ([in] EIF_CLUSTER_NAMESPACE_GENERATION enuClusterNamespaceGeneration);
-  
-  [id (118), propget, helpstring ("Default namespace.")]
-  HRESULT default_namespace ([out, retval] BSTR * return_value);
+    [helpstring ("Namespace generation for cluster"), propput]
+    HRESULT namespace_generation ([in] EIF_CLUSTER_NAMESPACE_GENERATION enuClusterNamespaceGeneration);
+    
+    [helpstring ("Default namespace."), propget]
+    HRESULT default_namespace ([out, retval] BSTR * return_value);
 
-  [id (118), propput, helpstring ("Default namespace.")]
-  HRESULT default_namespace ([in] BSTR a_namespace);
+    [helpstring ("Default namespace."), propput]
+    HRESULT default_namespace ([in] BSTR a_namespace);
 
-  [propget, helpstring ("Project type")]
-  HRESULT project_type ([out, retval] EIF_PROJECT_TYPES* penumProjectType);
+    [helpstring ("Project type"), propget]
+    HRESULT project_type ([out, retval] EIF_PROJECT_TYPES* penumProjectType);
 
-  [propput, helpstring ("Project type")]
-  HRESULT project_type ([in] EIF_PROJECT_TYPES enumProjectType);
-  
-  [propget, helpstring (".NET Naming convention")]
-  HRESULT dot_net_naming_convention ([out, retval] VARIANT_BOOL* pvbNamingConvention);
+    [helpstring ("Project type"), propput]
+    HRESULT project_type ([in] EIF_PROJECT_TYPES enumProjectType);
+    
+    [helpstring (".NET Naming convention"), propget]
+    HRESULT dot_net_naming_convention ([out, retval] VARIANT_BOOL* pvbNamingConvention);
 
-  [propput, helpstring (".NET Naming convention")]
-  HRESULT dot_net_naming_convention ([in] VARIANT_BOOL pvbNamingConvention);
+    [helpstring (".NET Naming convention"), propput]
+    HRESULT dot_net_naming_convention ([in] VARIANT_BOOL pvbNamingConvention);
 
-  [id (111), propget, helpstring ("Generate debug info?")]
-  HRESULT generate_debug_info ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Generate debug info?"), propget]
+    HRESULT generate_debug_info ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (111), propput, helpstring ("Generate debug info?")]
-  HRESULT generate_debug_info ([in] VARIANT_BOOL new_value);
+    [helpstring ("Generate debug info?"), propput]
+    HRESULT generate_debug_info ([in] VARIANT_BOOL new_value);
 
-  [id (120), propget, helpstring ("Precompiled file.")]
-  HRESULT precompiled_library ([out, retval] BSTR * return_value);
+    [helpstring ("Precompiled file."), propget]
+    HRESULT precompiled_library ([out, retval] BSTR * return_value);
 
-  [id (120), propput, helpstring ("Precompiled file.")]
-  HRESULT precompiled_library([in] BSTR new_value);
+    [helpstring ("Precompiled file."), propput]
+    HRESULT precompiled_library([in] BSTR new_value);
 
-  [propget, helpstring ("Project assertions")]
-  HRESULT assertions ([out, retval] ULONG* pAssertions);
-  
-  [propput, helpstring ("Project assertions")]
-  HRESULT assertions ([in] ULONG pAssertions);
+    [helpstring ("Project assertions"), propget]
+    HRESULT assertions ([out, retval] ULONG* pAssertions);
+    
+    [helpstring ("Project assertions"), propput]
+    HRESULT assertions ([in] ULONG pAssertions);
 
-  [id (112), propget, helpstring ("Project Clusters.")]
-  HRESULT clusters ([out, retval] IEiffelSystemClusters ** return_value);
+    [helpstring ("Project Clusters."), propget]
+    HRESULT clusters ([out, retval] IEiffelSystemClusters ** return_value);
 
-  [id (117), propget, helpstring ("Externals.")]
-  HRESULT externals ([out, retval] IEiffelSystemExternals ** return_value);
+    [helpstring ("Externals."), propget]
+    HRESULT externals ([out, retval] IEiffelSystemExternals ** return_value);
 
-  [id (119), propget, helpstring ("Assemblies.")]
-  HRESULT assemblies ([out, retval] IEiffelSystemAssemblies ** return_value);
+    [helpstring ("Assemblies."), propget]
+    HRESULT assemblies ([out, retval] IEiffelSystemAssemblies ** return_value);
 
-  [id (133), propget, helpstring ("Project title.")]
-  HRESULT title ([out, retval] BSTR * return_value);
+    [helpstring ("Project title."), propget]
+    HRESULT title ([out, retval] BSTR * return_value);
 
-  [id (133), propput, helpstring ("Project title.")]
-  HRESULT title ([in] BSTR new_value);
+    [helpstring ("Project title."), propput]
+    HRESULT title ([in] BSTR new_value);
 
-  [id (134), propget, helpstring ("Project description.")]
-  HRESULT description ([out, retval] BSTR * return_value);
+    [helpstring ("Project description."), propget]
+    HRESULT description ([out, retval] BSTR * return_value);
 
-  [id (134), propput, helpstring ("Project description.")]
-  HRESULT description ([in] BSTR new_value);
+    [helpstring ("Project description."), propput]
+    HRESULT description ([in] BSTR new_value);
 
-  [id (135), propget, helpstring ("Project company.")]
-  HRESULT company ([out, retval] BSTR * return_value);
+    [helpstring ("Project company."), propget]
+    HRESULT company ([out, retval] BSTR * return_value);
 
-  [id (135), propput, helpstring ("Project company.")]
-  HRESULT company ([in] BSTR new_value);
+    [helpstring ("Project company."), propput]
+    HRESULT company ([in] BSTR new_value);
 
-  [id (136), propget, helpstring ("Product.")]
-  HRESULT product ([out, retval] BSTR * return_value);
+    [helpstring ("Product."), propget]
+    HRESULT product ([out, retval] BSTR * return_value);
 
-  [id (136), propput, helpstring ("Product.")]
-  HRESULT product ([in] BSTR new_value);
+    [helpstring ("Product."), propput]
+    HRESULT product ([in] BSTR new_value);
 
-  [id (137), propget, helpstring ("Project version.")]
-  HRESULT version ([out, retval] BSTR * return_value);
+    [helpstring ("Project version."), propget]
+    HRESULT version ([out, retval] BSTR * return_value);
 
-  [id (137), propput, helpstring ("Project version.")]
-  HRESULT version ([in] BSTR new_value);
+    [helpstring ("Project version."), propput]
+    HRESULT version ([in] BSTR new_value);
 
-  [id (138), propget, helpstring ("Project trademark.")]
-  HRESULT trademark ([out, retval] BSTR * return_value);
+    [helpstring ("Project trademark."), propget]
+    HRESULT trademark ([out, retval] BSTR * return_value);
 
-  [id (138), propput, helpstring ("Project trademark.")]
-  HRESULT trademark ([in] BSTR new_value);
+    [helpstring ("Project trademark."), propput]
+    HRESULT trademark ([in] BSTR new_value);
 
-  [id (139), propget, helpstring ("Project copyright.")]
-  HRESULT copyright ([out, retval] BSTR * return_value);
+    [helpstring ("Project copyright."), propget]
+    HRESULT copyright ([out, retval] BSTR * return_value);
 
-  [id (139), propput, helpstring ("Project copyright.")]
-  HRESULT copyright ([in] BSTR new_value);
+    [helpstring ("Project copyright."), propput]
+    HRESULT copyright ([in] BSTR new_value);
 
-  [id (141), propget, helpstring ("Asembly culture.")]
-  HRESULT culture ([out, retval] BSTR * return_value);
+    [helpstring ("Asembly culture."), propget]
+    HRESULT culture ([out, retval] BSTR * return_value);
 
-  [id (141), propput, helpstring ("Asssembly culture.")]
-  HRESULT culture ([in] BSTR new_value);
+    [helpstring ("Asssembly culture."), propput]
+    HRESULT culture ([in] BSTR new_value);
 
-  [id (140), propget, helpstring ("Asembly signing key file name.")]
-  HRESULT key_file_name ([out, retval] BSTR * return_value);
+    [helpstring ("Asembly signing key file name."), propget]
+    HRESULT key_file_name ([out, retval] BSTR * return_value);
 
-  [id (140), propput, helpstring ("Assembly signing key file name.")]
-  HRESULT key_file_name ([in] BSTR new_value);
+    [helpstring ("Assembly signing key file name."), propput]
+    HRESULT key_file_name ([in] BSTR new_value);
 
-  [propget, helpstring ("Project working directory")]
-  HRESULT working_directory ([out, retval] BSTR* pbstrWorkingDirectory);
-  
-  [propput, helpstring ("Project working directory")]
-  HRESULT working_directory ([in] BSTR bstrWorkingDirectory);
+    [helpstring ("Project working directory"), propget]
+    HRESULT working_directory ([out, retval] BSTR* pbstrWorkingDirectory);
+    
+    [helpstring ("Project working directory"), propput]
+    HRESULT working_directory ([in] BSTR bstrWorkingDirectory);
 
-  [id (142), helpstring ("Apply changes")]
-  HRESULT Apply ();
+    [helpstring ("Apply changes")]
+    HRESULT Apply ();
 
 };
 //---------------------------------------------------------------------
 
 [
-  dual, object,
-  uuid (D2773ADF-FD21-4cfa-9A4F-8773CFF62CFD),
-  helpstring ("Eiffel System Clusters.")
+    object,
+    uuid (UUID_IEiffelSystemClusters),
+    helpstring ("Eiffel System Clusters.")
 ]
-interface IEiffelSystemClusters: IDispatch
+interface IEiffelSystemClusters: IUnknown
 {
-  [helpstring ("Cluster tree.")]
-  HRESULT cluster_tree ([out, retval] IEnumClusterProp ** return_value);
+    [helpstring ("Cluster tree.")]
+    HRESULT cluster_tree ([out, retval] IEnumClusterProp ** return_value);
 
-  [helpstring ("Cluster in a flat form.")]
-  HRESULT flat_clusters ([out, retval] IEnumClusterProp ** return_value);
+    [helpstring ("Cluster in a flat form.")]
+    HRESULT flat_clusters ([out, retval] IEnumClusterProp ** return_value);
 
-  [helpstring ("Save changes.")]
-  HRESULT store ();
+    [helpstring ("Save changes.")]
+    HRESULT store ();
 
-  [helpstring ("Add a cluster to the project.")]
-  HRESULT add_cluster ([in] BSTR cluster_name, [in] BSTR parent_name, [in] BSTR cluster_path);
+    [helpstring ("Add a cluster to the project.")]
+    HRESULT add_cluster ([in] BSTR cluster_name, [in] BSTR parent_name, [in] BSTR cluster_path);
 
-  [helpstring ("Remove a cluster from the project.")]
-  HRESULT remove_cluster ([in] BSTR cluster_name);
+    [helpstring ("Remove a cluster from the project.")]
+    HRESULT remove_cluster ([in] BSTR cluster_name);
 
-  [helpstring ("Cluster properties.")]
-  HRESULT cluster_properties ([in] BSTR cluster_name, [out, retval] IEiffelClusterProperties ** return_value);
+    [helpstring ("Cluster properties.")]
+    HRESULT cluster_properties ([in] BSTR cluster_name, [out, retval] IEiffelClusterProperties ** return_value);
 
-  [helpstring ("Cluster properties.")]
-  HRESULT cluster_properties_by_id ([in] ULONG cluster_id, [out, retval] IEiffelClusterProperties ** return_value);
+    [helpstring ("Cluster properties.")]
+    HRESULT cluster_properties_by_id ([in] ULONG cluster_id, [out, retval] IEiffelClusterProperties ** return_value);
 
-  [helpstring ("Change cluster name.")]
-  HRESULT change_cluster_name ([in] BSTR a_name, [in] BSTR a_new_name);
+    [helpstring ("Change cluster name.")]
+    HRESULT change_cluster_name ([in] BSTR a_name, [in] BSTR a_new_name);
 
-  [helpstring ("Checks to see if a cluster name is valid")]
-  HRESULT is_valid_name ([in] BSTR cluster_name, [out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Checks to see if a cluster name is valid")]
+    HRESULT is_valid_name ([in] BSTR cluster_name, [out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Retrieves a clusters full name from its name")]
-  HRESULT get_cluster_fullname ([in] BSTR cluster_name, [out, retval] BSTR * return_value);
+    [helpstring ("Retrieves a clusters full name from its name")]
+    HRESULT get_cluster_fullname ([in] BSTR cluster_name, [out, retval] BSTR * return_value);
 };
 
 //---------------------------------------------------------------------`
 
 [
-  dual, object,
-  uuid (85662941-227e-42cb-bc91-f4c17d4107e2),
-  helpstring ("Eiffel System Assemblies.")
+    object,
+    uuid (UUID_IEiffelSystemAssemblies),
+    helpstring ("Eiffel System Assemblies.")
 ]
-interface IEiffelSystemAssemblies: IDispatch
+interface IEiffelSystemAssemblies: IUnknown
 {
-  [helpstring ("Save changes.")]
-  HRESULT store ();
+    [helpstring ("Save changes.")]
+    HRESULT store ();
 
-  [helpstring ("Add a signed assembly to the project.")]
-  HRESULT add_assembly ([in] BSTR assembly_prefix, [in] BSTR cluster_name, [in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey);
+    [helpstring ("Add a signed assembly to the project.")]
+    HRESULT add_assembly ([in] BSTR assembly_prefix, [in] BSTR cluster_name, [in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey);
 
-  [helpstring ("Add a local assembly to the project.")]
-  HRESULT add_local_assembly ([in] BSTR assembly_prefix, [in] BSTR cluster_name, [in] BSTR a_path);
+    [helpstring ("Add a local assembly to the project.")]
+    HRESULT add_local_assembly ([in] BSTR assembly_prefix, [in] BSTR cluster_name, [in] BSTR a_path);
 
-  [helpstring ("Remove an assembly from the project.")]
-  HRESULT remove_assembly ([in] BSTR assembly_identifier);
+    [helpstring ("Remove an assembly from the project.")]
+    HRESULT remove_assembly ([in] BSTR assembly_identifier);
 
-  [helpstring ("Assembly properties.")]
-  HRESULT assembly_properties ([in] BSTR cluster_name, [out, retval] IEiffelAssemblyProperties ** return_value);
+    [helpstring ("Assembly properties.")]
+    HRESULT assembly_properties ([in] BSTR cluster_name, [out, retval] IEiffelAssemblyProperties ** return_value);
 
-  [helpstring ("Checks to see if a assembly cluster name is valid")]
-  HRESULT is_valid_cluster_name ([in] BSTR cluster_name, [out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Checks to see if a assembly cluster name is valid")]
+    HRESULT is_valid_cluster_name ([in] BSTR cluster_name, [out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Checks to see if a assembly cluster name has already been added to the project")]
-  HRESULT contains_assembly ([in] BSTR cluster_name, [out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Checks to see if a assembly cluster name has already been added to the project")]
+    HRESULT contains_assembly ([in] BSTR cluster_name, [out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Checks to see if a signed assembly has already been added to the project")]
-  HRESULT contains_gac_assembly ([in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey, [out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Checks to see if a signed assembly has already been added to the project")]
+    HRESULT contains_gac_assembly ([in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey, [out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Checks to see if a unsigned assembly has already been added to the project")]
-  HRESULT contains_local_assembly ([in] BSTR a_path, [out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Checks to see if a unsigned assembly has already been added to the project")]
+    HRESULT contains_local_assembly ([in] BSTR a_path, [out, retval] VARIANT_BOOL * return_value);
 
-  [helpstring ("Retrieves the cluster name for a signed assembly in the project")]
-  HRESULT cluster_name_from_gac_assembly ([in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey, [out, retval] BSTR * return_value);
+    [helpstring ("Retrieves the cluster name for a signed assembly in the project")]
+    HRESULT cluster_name_from_gac_assembly ([in] BSTR a_name, [in] BSTR a_version, [in] BSTR a_culture, [in] BSTR a_publickey, [out, retval] BSTR * return_value);
 
-  [helpstring ("Retrieves the cluster name for a unsigned assembly in the project")]
-  HRESULT cluster_name_from_local_assembly ([in] BSTR a_path, [out, retval] BSTR * return_value);
+    [helpstring ("Retrieves the cluster name for a unsigned assembly in the project")]
+    HRESULT cluster_name_from_local_assembly ([in] BSTR a_path, [out, retval] BSTR * return_value);
 
-  [helpstring ("Is 'prefix' a valid assembly prefix")]
-  HRESULT is_valid_prefix ([in] BSTR assembly_prefix, [out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is 'prefix' a valid assembly prefix")]
+    HRESULT is_valid_prefix ([in] BSTR assembly_prefix, [out, retval] VARIANT_BOOL * return_value);
 
-  [propget, helpstring ("Returns all of the assemblies in an enumerator")]
-  HRESULT assemblies ([out, retval] IEnumAssembly ** return_value);
+    [propget, helpstring ("Returns all of the assemblies in an enumerator")]
+    HRESULT assemblies ([out, retval] IEnumAssembly ** return_value);
 };
 
 //---------------------------------------------------------------------
 
 [
-  dual, object,
-  uuid (5D0B0013-F831-4ff6-A443-7B30882A5EB8),
-  helpstring ("Eiffel Cluster Properties (for Ace file).")
+    object,
+    uuid (UUID_IEiffelClusterProperties),
+    helpstring ("Eiffel Cluster Properties (for Ace file).")
 ]
-interface IEiffelClusterProperties: IDispatch
+interface IEiffelClusterProperties: IUnknown
 {
 
-  [id (EIFFELCLUSTERPROP_Name), propget, helpstring ("Cluster name.")]
-  HRESULT name ([out, retval] BSTR * return_value);
+    [helpstring ("Cluster name."), propget]
+    HRESULT name ([out, retval] BSTR * return_value);
 
-  [id (EIFFELCLUSTERPROP_Path), propget, helpstring ("Full path to cluster.")]
-  HRESULT cluster_path ([out, retval] BSTR * path);
+    [helpstring ("Full path to cluster."), propget]
+    HRESULT cluster_path ([out, retval] BSTR * path);
 
-  [id (EIFFELCLUSTERPROP_Path), propput, helpstring ("Full path to cluster.")]
-  HRESULT cluster_path ([in] BSTR path);
+    [helpstring ("Full path to cluster."), propput]
+    HRESULT cluster_path ([in] BSTR path);
 
-  [id (EIFFELCLUSTERPROP_Override), propget, helpstring ("Should this cluster classes take priority over other classes with same name?")]
-  HRESULT override ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Should this cluster classes take priority over other classes with same name?"), propget]
+    HRESULT override ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (EIFFELCLUSTERPROP_Override), propput, helpstring ("Should this cluster classes take priority over other classes with same name?")]
-  HRESULT override ([in] VARIANT_BOOL a_bool);
+    [helpstring ("Should this cluster classes take priority over other classes with same name?"), propput]
+    HRESULT override ([in] VARIANT_BOOL a_bool);
 
-  [id (EIFFELCLUSTERPROP_IsLibrary), propget, helpstring ("Should this cluster be treated as library?")]
-  HRESULT is_library ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Should this cluster be treated as library?"), propget]
+    HRESULT is_library ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (EIFFELCLUSTERPROP_IsLibrary), propput, helpstring ("Should this cluster be treated as library?")]
-  HRESULT is_library ([in] VARIANT_BOOL a_bool);
+    [helpstring ("Should this cluster be treated as library?"), propput]
+    HRESULT is_library ([in] VARIANT_BOOL a_bool);
 
-  [id (EIFFELCLUSTERPROP_All), propget, helpstring ("Should all subclusters be included?")]
-  HRESULT all ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Should all subclusters be included?"), propget]
+    HRESULT all ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (EIFFELCLUSTERPROP_All), propput, helpstring ("Should all subclusters be included?")]
-  HRESULT all ([in] VARIANT_BOOL new_value);
+    [helpstring ("Should all subclusters be included?"), propput]
+    HRESULT all ([in] VARIANT_BOOL new_value);
 
-  [id (EIFFELCLUSTERPROP_UseSysDefault), propget, helpstring ("Should use system default?")]
-  HRESULT use_system_default ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Should use system default?"), propget]
+    HRESULT use_system_default ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (EIFFELCLUSTERPROP_UseSysDefault), propput, helpstring ("Should use system default?")]
-  HRESULT use_system_default ([in] VARIANT_BOOL new_value);
+    [helpstring ("Should use system default?"), propput]
+    HRESULT use_system_default ([in] VARIANT_BOOL new_value);
 
-  [id (EIFFELCLUSTERPROP_Require), propget, helpstring ("Should preconditions be evaluated by default?")]
-  HRESULT evaluate_require_by_default ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Should preconditions be evaluated by default?"), propget]
+    HRESULT evaluate_require_by_default ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (EIFFELCLUSTERPROP_Ensure), propget, helpstring ("Should postconditions be evaluated by default?")]
-  HRESULT evaluate_ensure_by_default ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Should postconditions be evaluated by default?"), propget]
+    HRESULT evaluate_ensure_by_default ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (EIFFELCLUSTERPROP_Check), propget, helpstring ("Should check assertions be evaluated by default?")]
-  HRESULT evaluate_check_by_default ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Should check assertions be evaluated by default?"), propget]
+    HRESULT evaluate_check_by_default ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (EIFFELCLUSTERPROP_Loop), propget, helpstring ("Should loop assertions be evaluated by default?")]
-  HRESULT evaluate_loop_by_default ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Should loop assertions be evaluated by default?"), propget]
+    HRESULT evaluate_loop_by_default ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (EIFFELCLUSTERPROP_Invariant), propget, helpstring ("Should class invariants be evaluated by default?")]
-  HRESULT evaluate_invariant_by_default ([out, retval] VARIANT_BOOL *return_value);
+    [helpstring ("Should class invariants be evaluated by default?"), propget]
+    HRESULT evaluate_invariant_by_default ([out, retval] VARIANT_BOOL *return_value);
 
-  [helpstring ("Set assertions for cluster.")]
-  HRESULT set_assertions ([in] VARIANT_BOOL evaluate_check,
-                          [in] VARIANT_BOOL evaluate_require,
-                          [in] VARIANT_BOOL evaluate_ensure,
-                          [in] VARIANT_BOOL evaluate_loop,
-                          [in] VARIANT_BOOL evaluate_invariant);
+    [helpstring ("Set assertions for cluster.")]
+    HRESULT set_assertions ([in] VARIANT_BOOL evaluate_check,
+                                                    [in] VARIANT_BOOL evaluate_require,
+                                                    [in] VARIANT_BOOL evaluate_ensure,
+                                                    [in] VARIANT_BOOL evaluate_loop,
+                                                    [in] VARIANT_BOOL evaluate_invariant);
 
-  [helpstring ("List of excluded directories.")]
-  HRESULT excluded ([out, retval] IEnumClusterExcludes ** return_value);
+    [helpstring ("List of excluded directories.")]
+    HRESULT excluded ([out, retval] IEnumClusterExcludes ** return_value);
 
-  [helpstring ("Add a directory to exclude.")]
-  HRESULT add_exclude ([in] BSTR dir_name);
+    [helpstring ("Add a directory to exclude.")]
+    HRESULT add_exclude ([in] BSTR dir_name);
 
-  [id (213), helpstring ("Remove a directory to exclude.")]
-  HRESULT remove_exclude ([in] BSTR dir_name);
+    [helpstring ("Remove a directory to exclude.")]
+    HRESULT remove_exclude ([in] BSTR dir_name);
 
-  [id (EIFFELCLUSTERPROP_ParentName), propget, helpstring ("Name of the parent cluster.")]
-  HRESULT parent_name ([out, retval] BSTR * return_value);
+    [helpstring ("Name of the parent cluster."), propget]
+    HRESULT parent_name ([out, retval] BSTR * return_value);
 
-  [id (EIFFELCLUSTERPROP_HasParent), propget, helpstring ("Does the current cluster have a parent cluster?")]
-  HRESULT has_parent ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Does the current cluster have a parent cluster?"), propget]
+    HRESULT has_parent ([out, retval] VARIANT_BOOL * return_value);
 
-  [propget, helpstring ("List of subclusters (list of IEiffelClusterProperties*).")]
-  HRESULT subclusters ([out, retval] IEnumClusterProp ** return_value);
+    [helpstring ("List subclusters (list of IEiffelClusterProperties*).")]
+    HRESULT subclusters ([out, retval] IEnumClusterProp ** return_value);
 
-  [id (EIFFELCLUSTERPROP_HasChildren), propget, helpstring ("Does the current cluster have children?")]
-  HRESULT has_children ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Does the current cluster have children?"), propget]
+    HRESULT has_children ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (EIFFELCLUSTERPROP_ClusterId), propget, helpstring ("Cluster identifier.")]
-  HRESULT cluster_id ([out, retval] ULONG * return_value);
+    [helpstring ("Cluster identifier."), propget]
+    HRESULT cluster_id ([out, retval] ULONG * return_value);
 
-  [id (EIFFELCLUSTERPROP_IsEiffelLibrary), helpstring ("Is the cluster in the Eiffel library")]
-  HRESULT is_eiffel_library ([out, retval] VARIANT_BOOL * return_value);
+    [helpstring ("Is the cluster in the Eiffel library")]
+    HRESULT is_eiffel_library ([out, retval] VARIANT_BOOL * return_value);
 
-  [id (EIFFELCLUSTERPROP_ExpandedClusterPath), propget, helpstring ("Full path to cluster with ISE_EIFFEL env var expanded.")]
-  HRESULT expanded_cluster_path ([out, retval] BSTR * path);
+    [helpstring ("Full path to cluster with ISE_EIFFEL env var expanded."), propget]
+    HRESULT expanded_cluster_path ([out, retval] BSTR * path);
 
-  [id (EIFFELCLUSTERPROP_Namespace), propget, helpstring ("Cluster namespace.")]
-  HRESULT cluster_namespace ([out, retval] BSTR * a_namespace);
+    [helpstring ("Cluster namespace."), propget]
+    HRESULT cluster_namespace ([out, retval] BSTR * a_namespace);
 
-  [id (EIFFELCLUSTERPROP_Namespace), propput, helpstring ("Cluster namespace.")]
-  HRESULT cluster_namespace ([in] BSTR a_namespace);
+    [helpstring ("Cluster namespace."), propput]
+    HRESULT cluster_namespace ([in] BSTR a_namespace);
 };
 //---------------------------------------------------------------------
 
 [
-  dual, object,
-  uuid (c7650dc8-cdb5-4fa3-a1e4-e7ebd8a16be9),
-  helpstring ("Eiffel Assembly Properties (for Ace file).")
+    object,
+    uuid (UUID_IEiffelAssemblyProperties),
+    helpstring ("Eiffel Assembly Properties (for Ace file).")
 ]
-interface IEiffelAssemblyProperties: IDispatch
+interface IEiffelAssemblyProperties: IUnknown
 {
-  [id (ISECompilerID_assembly_name), propget, helpstring ("Assembly name.")]
-  HRESULT assembly_name ([out, retval] BSTR * return_value);
+    [helpstring ("Assembly name."), propget]
+    HRESULT assembly_name ([out, retval] BSTR * return_value);
 
-  [id (ISECompilerID_assembly_version), propget, helpstring ("Assembly version.")]
-  HRESULT assembly_version ([out, retval] BSTR * path);
+    [helpstring ("Assembly version."), propget]
+    HRESULT assembly_version ([out, retval] BSTR * path);
 
-  [id (ISECompilerID_assembly_culture), propget, helpstring ("Assembly culture.")]
-  HRESULT assembly_culture ([out, retval] BSTR *path);
+    [helpstring ("Assembly culture."), propget]
+    HRESULT assembly_culture ([out, retval] BSTR *path);
 
-  [id (ISECompilerID_assembly_public_key_token), propget, helpstring ("Assembly public key token")]
-  HRESULT assembly_public_key_token ([out, retval] BSTR * return_value);
+    [helpstring ("Assembly public key token"), propget]
+    HRESULT assembly_public_key_token ([out, retval] BSTR * return_value);
 
-  [id (ISECompilerID_is_local), propget, helpstring ("Is the assembly local")]
-  HRESULT is_local ([out, retval] VARIANT_BOOL * a_bool);
+    [helpstring ("Is the assembly local"), propget]
+    HRESULT is_local ([out, retval] VARIANT_BOOL * a_bool);
 
-  [id (ISECompilerID_assembly_cluster_name), propget, helpstring ("Assembly cluster name.")]
-  HRESULT assembly_cluster_name ([out, retval] BSTR * return_value);
+    [helpstring ("Assembly cluster name."), propget]
+    HRESULT assembly_cluster_name ([out, retval] BSTR * return_value);
 
-  [id (ISECompilerID_assembly_prefix), propget, helpstring ("Prefix.")]
-  HRESULT assembly_prefix ([out, retval] BSTR * return_value);
+    [helpstring ("Prefix."), propget]
+    HRESULT assembly_prefix ([out, retval] BSTR * return_value);
 
-  [id (ISECompilerID_assembly_prefix), propput, helpstring ("Prefix.")]
-  HRESULT assembly_prefix ([in] BSTR a_prefx);
+    [helpstring ("Prefix."), propput]
+    HRESULT assembly_prefix ([in] BSTR a_prefx);
 
-  [id (ISECompilerID_is_prefix_read_only), helpstring ("Is assembly prefix read only.")]
-  HRESULT is_prefix_read_only ([out, retval] VARIANT_BOOL* is_prefix_read_only);
-
-
-
+    [helpstring ("Is assembly prefix read only.")]
+    HRESULT is_prefix_read_only ([out, retval] VARIANT_BOOL* is_prefix_read_only);
 };
 //---------------------------------------------------------------------
 
 [
-  dual, object,
-  uuid (3B9EFC39-F565-4b15-9067-DB7C96A7FFD8),
-  helpstring ("Eiffel System Externals.")
+    object,
+    uuid (UUID_IEiffelSystemExternals),
+    helpstring ("Eiffel System Externals.")
 ]
-interface IEiffelSystemExternals: IDispatch
+interface IEiffelSystemExternals: IUnknown
 {
-  [id(ISECompilerID_store), helpstring ("Save changes.")]
-  HRESULT store ();
+    [helpstring ("Save changes.")]
+    HRESULT store ();
 
-  [id(ISECompilerID_add_include_path), helpstring ("Add a include path to the project.")]
-  HRESULT add_include_path ([in] BSTR include_path);
+    [helpstring ("Add a include path to the project.")]
+    HRESULT add_include_path ([in] BSTR include_path);
 
-  [id(ISECompilerID_remove_include_path), helpstring ("Remove a include path from the project.")]
-  HRESULT remove_include_path ([in] BSTR include_path);
+    [helpstring ("Remove a include path from the project.")]
+    HRESULT remove_include_path ([in] BSTR include_path);
 
-  [id(ISECompilerID_replace_include_path), helpstring ("Replace an include path in the project.")]
-  HRESULT replace_include_path ([in] BSTR new_include_path, [in] BSTR old_include_path);
+    [helpstring ("Replace an include path in the project.")]
+    HRESULT replace_include_path ([in] BSTR new_include_path, [in] BSTR old_include_path);
 
-  [id(ISECompilerID_include_paths), helpstring ("Include paths.")]
-  HRESULT include_paths ([out, retval] IEnumIncludePaths ** return_value);
+    [helpstring ("Include paths.")]
+    HRESULT include_paths ([out, retval] IEnumIncludePaths ** return_value);
 
-  [id(ISECompilerID_add_object_File), helpstring ("Add a object file to the project.")]
-  HRESULT add_object_file ([in] BSTR object_file);
+    [helpstring ("Add a object file to the project.")]
+    HRESULT add_object_file ([in] BSTR object_file);
 
-  [id(ISECompilerID_remove_object_file), helpstring ("Remove a object file from the project.")]
-  HRESULT remove_object_file ([in] BSTR object_file);
+    [helpstring ("Remove a object file from the project.")]
+    HRESULT remove_object_file ([in] BSTR object_file);
 
-  [id(ISECompilerID_replace_object_file), helpstring ("Replace an object file in the project.")]
-  HRESULT replace_object_file ([in] BSTR new_include_path, [in] BSTR old_object_file);
+    [helpstring ("Replace an object file in the project.")]
+    HRESULT replace_object_file ([in] BSTR new_include_path, [in] BSTR old_object_file);
 
-  [id(ISECompilerID_object_files), helpstring ("Object files.")]
-  HRESULT object_files ([out, retval] IEnumObjectFiles ** return_value);
+    [helpstring ("Object files.")]
+    HRESULT object_files ([out, retval] IEnumObjectFiles ** return_value);
 
 };
 
+
+///////////////////////////////////////////////////////////////////////
 //---------------------------------------------------------------------
+//
+// Library Declarations
+//
+//---------------------------------------------------------------------
+///////////////////////////////////////////////////////////////////////
 
 
 [
-  uuid (A81CA1A9-3EEF-4e47-BEAE-C16325EEFA3F)
+    uuid (UUID_LibEiffelCompiler),
+    helpstring ("Eiffel language compiler library.")
 ]
 library eiffel_compiler
 {
-  importlib ("stdole2.tlb");
-  importlib ("stdole2.tlb");
-  interface IEiffelProject;
-  interface IEiffelCompletionInfo;
-  interface IEiffelCompletionEntry;
-  interface IEiffelCompiler;
-  interface IEiffelCompilerEvents;
-  interface IEiffelSystemBrowser;
-  interface IEiffelClusterDescriptor;
-  interface IEiffelClassDescriptor;
-  interface IEiffelFeatureDescriptor;
-  interface IEiffelProjectProperties;
-  interface IEiffelSystemClusters;
-  interface IEiffelClusterProperties;
-  interface IEiffelSystemExternals;
-  interface IEiffelSystemAssemblies;
-  interface IEiffelAssemblyProperties;
-  interface IEnumEiffelClass;
-  interface IEnumCluster;
-  interface IEnumFeature;
-  interface IEnumClusterProp;
-  interface IEnumClusterExcludes;
-  interface IEnumIncludePaths;
-  interface IEnumObjectFiles;
-  interface IEnumAssembly;
-  interface IEnumCompletionEntry;
-  interface IEnumParameter;
-  interface IEiffelParameterDescriptor;
-  interface IEiffelHTMLDocGenerator;
-  interface IEiffelHTMLDocEvents;
-  //interface IEiffelExceptionManager;
-  interface IEiffelException;
-  enum tagEIF_ENTITY_IMAGES;
-  enum tagEIF_FEATURE_TYPES;
-  enum tagEIF_EXCEPTIONS;
-  enum tagEIF_PROJECT_TYPES;
-  enum tagEIF_ASSERTIONS;
-  enum tagEIF_CLUSTER_NAMESPACE_GENERATION;
+    //
+    // Dendant IDL/Type libraries
+    //
+    importlib ("stdole2.tlb");
+    importlib ("stdole2.tlb");
+    
+    //
+    // Interfaces
+    //
+    interface IEiffelProject;
+    interface IEiffelCompletionInfo;
+    interface IEiffelCompletionEntry;
+    interface IEiffelCompiler;
+    interface IEiffelCompilerEvents;
+    interface IEiffelSystemBrowser;
+    interface IEiffelClusterDescriptor;
+    interface IEiffelClassDescriptor;
+    interface IEiffelFeatureDescriptor;
+    interface IEiffelProjectProperties;
+    interface IEiffelSystemClusters;
+    interface IEiffelClusterProperties;
+    interface IEiffelSystemExternals;
+    interface IEiffelSystemAssemblies;
+    interface IEiffelAssemblyProperties;
+    interface IEnumEiffelClass;
+    interface IEnumCluster;
+    interface IEnumFeature;
+    interface IEnumClusterProp;
+    interface IEnumClusterExcludes;
+    interface IEnumIncludePaths;
+    interface IEnumObjectFiles;
+    interface IEnumAssembly;
+    interface IEnumCompletionEntry;
+    interface IEnumParameter;
+    interface IEiffelParameterDescriptor;
+    interface IEiffelHTMLDocGenerator;
+    interface IEiffelHTMLDocEvents;
+    interface IEiffelException;
+    
+    //
+    // Enums
+    //
+    enum EIF_ENTITY_IMAGES;
+    enum EIF_FEATURE_TYPES;
+    enum EIF_EXCEPTIONS;
+    enum EIF_PROJECT_TYPES;
+    enum EIF_ASSERTIONS;
+    enum EIF_CLUSTER_NAMESPACE_GENERATION;
 
-  [
-    uuid (28F511DB-0CCE-44c5-9DD5-E93066C0B00F)
-  ]
-  coclass CEiffelProject
-  {
-    [default] interface IEiffelProject;
-  };
+    //
+    // CoClasses
+    //
+    [uuid (UUID_CEiffelProject)]
+    coclass CEiffelProject
+    {
+        [default] interface IEiffelProject;
+    };
 
-  [
-    uuid (86D23C62-E03D-4a16-83F6-8F79D628110E),
-    noncreatable
-  ]
-  coclass CEiffelCompiler
-  {
-    [default] interface IEiffelCompiler;
-    [default, source] interface IEiffelCompilerEvents;
-  };
+    [uuid (UUID_CEiffelCompiler), noncreatable]
+    coclass CEiffelCompiler
+    {
+        [default] interface IEiffelCompiler;
+        [default, source] interface IEiffelCompilerEvents;
+    };
 
-  [
-    uuid (AABB3C81-5B4C-47df-A683-1FD716E975C6),
-    noncreatable
-  ]
-  coclass CEiffelCompletionInfo
-  {
-    [default] interface IEiffelCompletionInfo;
-  };
+    [uuid (UUID_CEiffelCompletionInfo), noncreatable]
+    coclass CEiffelCompletionInfo
+    {
+        [default] interface IEiffelCompletionInfo;
+    };
 };

@@ -200,7 +200,6 @@ feature -- Basic operation
 			-- Unselect the current selection.
 		require
 			exist: not destroyed
-			has_selection: has_selection
 		do
 			implementation.deselect_all
 		ensure

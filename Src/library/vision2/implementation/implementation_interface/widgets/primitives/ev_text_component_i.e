@@ -201,7 +201,6 @@ feature -- Basic operation
 			-- Unselect the current selection.
 		require
 			exist: not destroyed
-			has_selection: has_selection
 		deferred
 		ensure
 			has_no_selection: not has_selection

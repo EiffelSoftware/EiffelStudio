@@ -76,10 +76,10 @@ feature -- Standard Interface
 			
 			build_text_windows;
 			build_menus;
-			!! edit_bar.make (Interface_names.t_Empty, toolbar_parent);
+			!! edit_bar.make (Interface_names.n_Command_bar_name, toolbar_parent);
 			!! sep.make (Interface_names.t_Empty, toolbar_parent);
 			build_bar;
-			!! format_bar.make (Interface_names.t_Empty, toolbar_parent);
+			!! format_bar.make (Interface_names.n_Format_bar_name, toolbar_parent);
 			build_format_bar;
 			build_toolbar_menu;
 			set_last_format (default_format);
@@ -242,15 +242,21 @@ feature -- Window Implementation
 	fill_menus is
 			-- Adds entries to the `Window' menu.
 		local
-			class_menu_entry: EB_MENU_ENTRY;
-			feature_menu_entry: EB_MENU_ENTRY;
-			object_menu_entry: EB_MENU_ENTRY;
-			explain_menu_entry: EB_MENU_ENTRY
+			show_pref_cmd: SHOW_PREFERENCE_TOOL;
+			show_pref_menu_entry: EB_MENU_ENTRY;
+			menu_entry: EB_MENU_ENTRY;
+			raise_tool_cmd: RAISE_TOOL_CMD;
+			sep: SEPARATOR
 		do
-			!! class_menu_entry.make (Project_tool.class_hole_holder.associated_command, window_menu);
-			!! feature_menu_entry.make (Project_tool.routine_hole_holder.associated_command, window_menu);
-			!! object_menu_entry.make (Project_tool.object_hole_holder.associated_command, window_menu);
-			!! explain_menu_entry.make (Project_tool.explain_hole_holder.associated_command, help_menu);
+			!! menu_entry.make (Project_tool.class_hole_holder.associated_command, window_menu);
+			!! menu_entry.make (Project_tool.routine_hole_holder.associated_command, window_menu);
+			!! menu_entry.make (Project_tool.object_hole_holder.associated_command, window_menu);
+			!! sep.make (Interface_names.t_Empty, window_menu);
+			!! show_pref_cmd.make (resources);
+			!! show_pref_menu_entry.make_default (show_pref_cmd, window_menu);
+			!! raise_tool_cmd.make (Project_tool);
+			!! menu_entry.make (raise_tool_cmd, window_menu);
+			!! menu_entry.make (Project_tool.explain_hole_holder.associated_command, help_menu);
 		end;
 
 	set_x_y (new_x, new_y: INTEGER) is
@@ -306,17 +312,6 @@ feature -- Window Implementation
 			eb_shell.raise
 		end;
 
-	raise_forced is
-			-- Raise Current (even if popped down).
-		do
-			if is_a_shell then
-				if eb_shell.is_iconic_state then
-					eb_shell.set_normal_state
-				end;
-				eb_shell.raise
-			end
-		end;
-
 	create_edit_buttons is
 			-- Create the edit buttons needed for the edit bar.
 		local
@@ -337,11 +332,8 @@ feature -- Window Implementation
 
 	close_windows is
 			-- Close sub-windows.
-		local
-			ss: SEARCH_STRING
 		do
-			ss ?= search_cmd_holder.associated_command;
-			ss.close
+			close_search_window
 		end;
 
 	resize_action is
@@ -373,7 +365,7 @@ feature -- Window Settings
 			new_x, new_y: INTEGER;
 			s: SCREEN
 		do
-			if not System_resources.default_window_position.actual_value then
+			if not General_resources.default_window_position.actual_value then
 				s := eb_shell.screen;
 				new_x := s.x;
 				new_y := s.y;

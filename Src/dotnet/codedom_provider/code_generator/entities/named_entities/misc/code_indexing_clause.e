@@ -53,6 +53,7 @@ feature -- Status Setting
 			-- Set `text' with `a_text'.
 		require
 			non_void_text: a_text /= Void
+			is_in_code_analysis: current_state = Code_analysis
 		do
 			text := a_text
 		ensure
@@ -63,6 +64,7 @@ feature -- Status Setting
 			-- Add `a_custom_attribute' to `custom_attributes.
 		require
 			non_void_a_custom_attribute: a_custom_attribute /= Void
+			is_in_code_analysis: current_state = Code_analysis
 		do
 			custom_attributes.extend (a_custom_attribute)
 		ensure
@@ -73,6 +75,8 @@ feature {NONE} -- Implementation
 
 	custom_attributes_code: STRING is
 			-- generate indexing, custom attributes.
+		require
+			is_in_code_generation: current_state = Code_generation
 		do
 			create Result.make (200)
 			if custom_attributes.count > 0 then

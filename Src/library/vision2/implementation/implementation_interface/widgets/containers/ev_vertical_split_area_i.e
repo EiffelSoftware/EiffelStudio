@@ -14,6 +14,10 @@ deferred class
 inherit
 
 	EV_SPLIT_AREA_I
+		undefine
+			add_child1,
+			add_child2
+		end
 
 end -- class EV_VERTICAL_SPLIT_AREA_I
 

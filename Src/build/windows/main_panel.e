@@ -132,7 +132,7 @@ feature -- Creation
 		do
 			set_title (widget_names.main_panel)
 			resources.check_fonts (base)
-			base.forbid_resize
+--			base.forbid_resize
 			if Pixmaps.eiffelbuild_pixmap.is_valid then
 				base.set_icon_pixmap (Pixmaps.eiffelbuild_pixmap)
 			end
@@ -791,7 +791,6 @@ feature -- Enable/Disable EiffelBuild
 			-- hidden tools.
 		do
 			menu_bar.set_sensitive
-			menu_bar.manage
 		end
 
 	disable is
@@ -799,7 +798,6 @@ feature -- Enable/Disable EiffelBuild
 			-- every tools.
 		do
 			menu_bar.set_insensitive
-			menu_bar.manage
 		end
 
 feature -- Closing Current

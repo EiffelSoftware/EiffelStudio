@@ -10,14 +10,6 @@ class
 inherit
 	ANY
 
-	SHARED_RESOURCES
-		rename
-			initialize as initialize_resources,
-			initialized as resources_initialized
-		export
-			{NONE} all
-		end
-
 feature {NONE} -- Implementation
 
 	retrieve_toolbar (command_pool: LIST [EB_TOOLBARABLE_COMMAND]; layout: ARRAY [STRING]): EB_TOOLBAR is

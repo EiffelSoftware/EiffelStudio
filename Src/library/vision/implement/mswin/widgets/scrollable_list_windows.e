@@ -226,7 +226,7 @@ feature  -- Access
 						Result := i_th (private_selected_positions.first)
 					end
 				else
-					Result := i_th (private_selected_position - 1)
+					Result := i_th (private_selected_position)
 				end
 			end
 		end

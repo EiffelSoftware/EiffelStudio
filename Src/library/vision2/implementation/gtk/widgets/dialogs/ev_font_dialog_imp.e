@@ -134,6 +134,17 @@ feature -- Element change
 
 feature {NONE} -- Implementation
 
+	pointer_to_integer (pointer: POINTER): INTEGER is
+			-- int pointer_to_integer (void* pointer) {
+			--     return (int) pointer;
+			-- }
+			-- Hack used for Result = ((EIF_INTEGER)(pointer)), blank alias avoids parser rules.
+		external
+			"C [macro <stdio.h>] (EIF_POINTER): EIF_INTEGER"
+		alias
+			" "
+		end
+
 	gtk_font_selection_dialog_struct_ok_button (a_c_struct: POINTER): POINTER is
 		external
 			"C [struct <gtk/gtk.h>] (GtkFontSelectionDialog): EIF_POINTER"

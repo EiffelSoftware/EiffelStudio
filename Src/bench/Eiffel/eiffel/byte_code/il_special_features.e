@@ -215,6 +215,9 @@ feature -- IL code generation
 
 			when set_item_type then
 				generate_set_item (feat, type, parameters)
+
+			when is_digit_type then
+				il_generator.generate_is_digit
 				
 			else
 
@@ -271,6 +274,7 @@ feature {NONE} -- C and Byte code corresponding Eiffel function calls
 			Result.put (set_item_type, copy_name_id)
 			Result.put (set_item_type, deep_copy_name_id)
 			Result.put (set_item_type, standard_copy_name_id)
+			Result.put (is_digit_type, is_digit_name_id)
 
 -- FIXME: Manu 10/24/2001. Not yet implemented.
 -- 			Result.put (generator_type, generator_name_id)
@@ -314,7 +318,8 @@ feature -- Fast access to feature name
 	to_character_type: INTEGER is 29
 	From_integer_to_enum_type: INTEGER is 30
 	From_enum_to_integer_type: INTEGER is 31
-	max_type_id: INTEGER is 31
+	is_digit_type: INTEGER is 32
+	max_type_id: INTEGER is 32
 
 feature {NONE} -- IL code generation
 

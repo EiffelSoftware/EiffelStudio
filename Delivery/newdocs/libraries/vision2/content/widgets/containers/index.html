@@ -15,32 +15,64 @@
 		<P>
 		A container is a vision2 widget that may contain other widgets. Some containers such as <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_cell_chart.html">EV_CELL</A>
 		may only hold one widget while containers such as <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_box_chart.html">EV_BOX</A> may hold multiple widgets. As a container is
-		of type <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/ev_widget_chart.html">EV_WIDGET</A>, this means that a container may be placed within a container.
+		of type <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/ev_widget_chart.html">EV_WIDGET</A>, this means that a container may be placed within a container.&nbsp;
+        A list of the classes held within the container cluster can be found <a href="../../../reference/interface/widgets/containers/index.html">here</a>.&nbsp;
+        Windows inherit from EV_CELL and are therefore classed as containers
+        also.
 		</P>
-		<P CLASS="note"><B>Note:</B>An <A HREF="/libraries/vision2/content/items/index.html">item</A> may not be placed in a container, only in select primitives.</P>
+        <P CLASS="note"><B>Note: </B>Containers may only contain other
+        widgets.&nbsp; Items may only be placed in certain primitives.&nbsp; For
+        example, an EV_LIST_ITEM may be contained in an EV_LIST.</P>
 		<H2>Inheritance from Base</h2>
 		<P>
-		Wherever possible, vision2 containers are descendents of <A HREF="/libraries/base/index.html">Base</A> container structures. This provides three main advantages:
+		Wherever possible, Vision2 containers reuse the container structures
+        provided by Base. This provides three main advantages:
 			<OL>
 				<LI>Familiarity for operations such as access, insertions and removals. Anybody who already uses <A HREF="/libraries/base/index.html">Base</A> should
-				find it easy to adapt to using vision2 containers.
+				find it easy to adapt to using Vision2 containers.
 				<LI>The underlying structures used have been tried and tested for many years and their design has been proved to be robust and effective.
 				<LI>It provides powerful methods of querying the contents. In the original Vision library, you needed to keep reference to widgets
 				as you could not query the contents of a container.
 			</OL>
-		</P>
 		<P>For example, <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_container_chart.html">EV_CONTAINER</A> inherits <A CLASS="eclass" HREF="/libraries/base/reference/structures/storage/box_chart.html">BOX</A> and
 		<A CLASS="eclass" HREF="/libraries/base/reference/structures/access/collection_chart.html">COLLECTION</A>. Descendents of <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_container_chart.html">EV_CONTAINER</A> such as
 		<A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_box_chart.html">EV_BOX</A> may also inherit other structures from <A HREF="/libraries/base/index.html">Base</A>.
-		<H2>Sizing</H2>
-		As <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_container_chart.html">EV_CONTAINER</A> is of type <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/ev_widget_chart.html">EV_WIDGET</A>, the following facilites
-		are provided for setting the minimum size : <A CLASS="efeature" HREF="/libraries/vision2/reference/interface/widgets/ev_widget.html#f_set_minimum_width">set_minimum_width</A>, 
+		<P>&nbsp;
+		<H2>Usage of Containers</H2>
+        <P>The main role of a container is to position its children in a certain
+        way, an EV_HORIZONTAL_BOX for example positions it children side by side
+        along the horizontal axis, to get vertical stacking you would use an
+        EV_VERTICAL_BOX.<P>&nbsp;<P>An code example of adding widgets to a container
+        is as follows.
+          <blockquote>
+          <P>
+        <A CLASS="code">
+        add_to_container is<BR>
+        local <BR>  
+        &nbsp;&nbsp;&nbsp; a_window: EV_TITLED_WINDOW<BR>
+        &nbsp;&nbsp;&nbsp; a_hbox: EV_HORIZONTAL_BOX<BR>
+        &nbsp;&nbsp;&nbsp; a_button: EV_BUTTON<BR>
+        do<BR>
+        &nbsp;&nbsp;&nbsp; create a_window  <BR>      
+        &nbsp;&nbsp;&nbsp; create a_hbox        <BR>
+        &nbsp;&nbsp;&nbsp; create a_button.make_with_text (&quot;Button1&quot;)<BR>
+        &nbsp;&nbsp;&nbsp; hbox.extend (a_button)<BR>
+        &nbsp;&nbsp;&nbsp; hbox.extend (create {EV_BUTTON}.make_with_text (&quot;Button2&quot;))<BR>
+        &nbsp;&nbsp;&nbsp; hbox.extend (create {EV_BUTTON}.make_with_text (&quot;Button3&quot;))<BR>
+        &nbsp;&nbsp;&nbsp; a_window.extend (a_hbox)<BR>
+        &nbsp;&nbsp;&nbsp; a_window.show<BR>
+        end<BR>
+        </blockquote>
+        </A>
+        
+		<H2>Sizing of containers</H2>
+		As <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_container_chart.html">EV_CONTAINER</A> is of type <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/ev_widget_chart.html">EV_WIDGET</A>, the following
+        facilities are provided for setting the minimum size : <A CLASS="efeature" HREF="/libraries/vision2/reference/interface/widgets/ev_widget.html#f_set_minimum_width">set_minimum_width</A>, 
 		<A CLASS="efeature" HREF="/libraries/vision2/reference/interface/widgets/ev_widget.html#f_set_minimum_height">set_minimum_height</A> and <A CLASS="efeature" HREF="/libraries/vision2/reference/interface/widgets/ev_widget.html#f_set_minimum_size">set_minimum_size</A>.
 		It is important to remember that as a general rule, <B>the current size of a container is always at least the minimum size of all its contents.</B>
-		</P>
-		<P CLASS="note"><B>Note:</B>The exception to this is: <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_fixed_chart.html">EV_FIXED</A>,
+		<P CLASS="note"><B>Note: </B>The exception to this is: <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_fixed_chart.html">EV_FIXED</A>,
 		<A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_viewport_chart.html">EV_VIEWPORT</A> and <A CLASS="eclass" HREF="/libraries/vision2/reference/interface/widgets/containers/ev_scrollable_area_chart.html">EV_SCROLLABLE_AREA</A> which do actually allow
 		their contents to be larger than their current size.</P>
-		<P>Click <A HREF="/libraries/vision2/reference/interface/widgets/containers/index.html">here</A> to browse the containers cluster.</P>
+		<P>&nbsp;</P>
 	</BODY>
 </HTML>

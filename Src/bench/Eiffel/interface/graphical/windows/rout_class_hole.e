@@ -28,7 +28,7 @@ feature
 			if (rt /= Void) then
 				fs := rt.root_stone
 				if (fs /= Void) then
-					Result := fs.e_class.stone
+					!CLASSC_STONE! Result.make (fs.e_class)
 				end
 			end
 		end;

@@ -348,9 +348,9 @@ feature -- Event - command association
 
 	add_lose_focus_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
-			-- when the widget loose the focus.
+			-- when the widget lose the focus.
 		do
-			add_command (Cmd_loose_focus, cmd, arg)
+			add_command (Cmd_lose_focus, cmd, arg)
 		end
 
 feature -- Event -- removing command association
@@ -454,11 +454,11 @@ feature -- Event -- removing command association
 			remove_command (Cmd_get_focus)
 		end
 
-	remove_loose_focus_commands is
+	remove_lose_focus_commands is
 			-- Empty the list of commands to be executed when
-			-- the widget loose the focus.
+			-- the widget lose the focus.
 		do
-			remove_command (Cmd_loose_focus)
+			remove_command (Cmd_lose_focus)
 		end
 
 feature -- Implementation
@@ -725,7 +725,7 @@ feature {NONE} -- Implementation, focus event
 	on_kill_focus is
 			-- Wm_killfocus message
 		do
-			execute_command (Cmd_loose_focus, Void)
+			execute_command (Cmd_lose_focus, Void)
 		end
 
 feature -- Deferred features

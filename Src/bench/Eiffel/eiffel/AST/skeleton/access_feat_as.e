@@ -96,7 +96,7 @@ feature -- Type check, byte code and dead code removal
 			good_argument: feat /= Void
 		do
 				-- Delayed calls are always export valid!
-			Result := is_delayed or else feat.is_exported_for (context.a_class)
+			Result := is_delayed or else feat.is_exported_for (context.current_class)
 		end
 
 	access_type: TYPE_A is
@@ -329,17 +329,17 @@ feature -- Type check, byte code and dead code removal
 					a_feature.is_obsolete
 						-- If the obsolete call is in an obsolete class,
 						-- no message is displayed
-					and then not context.a_class.is_obsolete
+					and then not context.current_class.is_obsolete
 						-- The current feature is whether the invariant or
 						-- a non obsolete feature
-					and then (context.a_feature = Void or else
-						not context.a_feature.is_obsolete)
+					and then (context.current_feature = Void or else
+						not context.current_feature.is_obsolete)
 				then
 					create obs_warn
-					obs_warn.set_class (context.a_class)
+					obs_warn.set_class (context.current_class)
 					obs_warn.set_obsolete_class (context.last_class)
 					obs_warn.set_obsolete_feature (a_feature)
-					obs_warn.set_feature (context.a_feature)
+					obs_warn.set_feature (context.current_feature)
 					Error_handler.insert_warning (obs_warn)
 				end
 				if
@@ -349,11 +349,11 @@ feature -- Type check, byte code and dead code removal
 					context.check_for_vape
 				then
 						-- In precondition and checking for vape
-					context_export := context.a_feature.export_status
+					context_export := context.current_feature.export_status
 					feature_export := a_feature.export_status
 debug
 	io.error.putstring ("feature ")
-	io.error.putstring (context.a_feature.feature_name)
+	io.error.putstring (context.current_feature.feature_name)
 	io.error.putstring (" export ")
 	io.error.new_line
 	context_export.trace

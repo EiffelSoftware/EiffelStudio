@@ -141,18 +141,18 @@ feature -- Type check, byte code and dead code removal
 
 debug ("OPTIMIZATION")
 	io.error.putstring ("Recording loop in class ")
-	io.error.putstring (context.a_class.name)
+	io.error.putstring (context.current_class.name)
 	io.error.putstring (" (")
-	io.error.putint (context.a_class.class_id)
+	io.error.putint (context.current_class.class_id)
 	io.error.putstring ("), feature ")
-	io.error.putstring (context.a_feature.feature_name)
+	io.error.putstring (context.current_feature.feature_name)
 	io.error.putstring (" (")
-	io.error.putint (context.a_feature.body_index)
+	io.error.putint (context.current_feature.body_index)
 	io.error.putstring (")%N")
 end
 				-- Record loop for optimizations in final mode
-			optimization_tables.force (create {OPTIMIZE_UNIT}. make (context.a_class.class_id,
-				context.a_feature.body_index))
+			optimization_tables.force (create {OPTIMIZE_UNIT}. make (context.current_class.class_id,
+				context.current_feature.body_index))
 		end
 
 	byte_node: LOOP_B is

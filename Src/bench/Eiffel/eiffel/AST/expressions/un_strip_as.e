@@ -56,7 +56,7 @@ feature -- Type check, byte code and dead code removal
 			vwst2: VWST2
 		do
 			from
-				feature_table := context.a_class.feature_table
+				feature_table := context.current_class.feature_table
 				id_list.start
 			until
 				id_list.after
@@ -79,7 +79,7 @@ feature -- Type check, byte code and dead code removal
 						vwst1.set_attribute_name (Names_heap.item (an_id))
 						Error_handler.insert_error (vwst1)
 					else
-						!! depend_unit.make (context.a_class.class_id,
+						!! depend_unit.make (context.current_class.class_id,
 											attribute_i)
 						context.supplier_ids.extend (depend_unit)
 					end
@@ -117,7 +117,7 @@ feature -- Type check, byte code and dead code removal
 			from
 				id_list.start
 				!! Result.make
-				feature_table := context.a_class.feature_table
+				feature_table := context.current_class.feature_table
 			until
 				id_list.after
 			loop

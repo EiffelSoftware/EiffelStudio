@@ -392,7 +392,7 @@ feature -- Type check, byte code and dead code removal
 			curr_feat: FEATURE_I
 			vrrr2: VRRR2
 		do
-			context_class := context.a_class
+			context_class := context.current_class
 			if (is_deferred or is_external) then
 				create vrrr2
 				context.init_error (vrrr2)
@@ -400,7 +400,7 @@ feature -- Type check, byte code and dead code removal
 				Error_handler.insert_error (vrrr2)
 			else
 				from
-					curr_feat := context.a_feature
+					curr_feat := context.current_feature
 					track_local := curr_feat.written_in = context_class.class_id
 					--	and then
 					--	context_class.changed

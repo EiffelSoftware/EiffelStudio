@@ -111,7 +111,7 @@ feature -- Type check, byte code and dead code removal
 			end
 
 				--  Check that feature has a unique name (vupr1)
-			feat_ast := context.a_class.feature_with_name (context.a_feature.feature_name).ast
+			feat_ast := context.current_class.feature_with_name (context.current_feature.feature_name).ast
 
 			if feat_ast.feature_names.count > 1 then
 					-- feature has multiple names.
@@ -217,11 +217,11 @@ feature -- Type check, byte code and dead code removal
 				-- Type of feature has to be evaluated in the context of current
 				-- class type. That way types of return type, and parameters are
 				-- correctly evaluated.
-			last_id := context.a_class.class_id
+			last_id := context.current_class.class_id
 			
 				-- Supplier dependances update
 				-- Create self-dependance
-			create depend_unit.make (last_id, context.a_feature)
+			create depend_unit.make (last_id, context.current_feature)
 			context.supplier_ids.extend (depend_unit)
 
 				-- Create dependance on precursor
@@ -315,17 +315,17 @@ feature -- Type check, byte code and dead code removal
 				a_feature.is_obsolete
 					-- If the obsolete call is in an obsolete class,
 					-- no message is displayed
-				and then not context.a_class.is_obsolete
+				and then not context.current_class.is_obsolete
 					-- The current feature is whether the invariant or
 					-- a non obsolete feature
-				and then (context.a_feature = Void or else
-					not context.a_feature.is_obsolete)
+				and then (context.current_feature = Void or else
+					not context.current_feature.is_obsolete)
 			then
 				create obs_warn
-				obs_warn.set_class (context.a_class)
+				obs_warn.set_class (context.current_class)
 				obs_warn.set_obsolete_class (context.last_class)
 				obs_warn.set_obsolete_feature (a_feature)
-				obs_warn.set_feature (context.a_feature)
+				obs_warn.set_feature (context.current_feature)
 				Error_handler.insert_warning (obs_warn)
 			end
 
@@ -477,12 +477,12 @@ feature {NONE}  -- precursor table
 			r_class_i: CLASS_I
 			a_cluster: CLUSTER_I
 		do
-			rout_id_set := context.a_feature.rout_id_set
+			rout_id_set := context.current_feature.rout_id_set
 			rc := rout_id_set.count
 
 			if parent_name /= Void then
 				-- Take class renaming into account
-				a_cluster := context.a_class.cluster
+				a_cluster := context.current_class.cluster
 				r_class_i := Universe.class_named (parent_name, a_cluster)
 
 				if r_class_i /= Void then
@@ -497,7 +497,7 @@ feature {NONE}  -- precursor table
 			end
 
 			from
-				parents := context.a_class.parents
+				parents := context.current_class.parents
 				create Result.make
 				create check_written_in.make
 				check_written_in.compare_objects

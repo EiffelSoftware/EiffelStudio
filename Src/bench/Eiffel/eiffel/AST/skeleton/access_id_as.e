@@ -30,7 +30,7 @@ feature
 		local
 			a_feature: FEATURE_I
 		do
-			a_feature := context.a_feature
+			a_feature := context.current_feature
 			if a_feature /= Void then
 				Result := a_feature.argument_position (feature_name) /= 0
 			end
@@ -55,7 +55,7 @@ feature
 			last_type := context.item
 			last_id := context.last_class.class_id
 
-			a_feature := context.a_feature
+			a_feature := context.current_feature
 				-- Look for an argument
 			if a_feature /= Void then
 				argument_position := a_feature.argument_position (feature_name)

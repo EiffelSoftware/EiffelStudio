@@ -158,12 +158,12 @@ feature -- Type check, byte code and dead code removal
 			if
 				not System.do_not_check_vape and then
 				context.level4 and then context.check_for_vape and then
-				not context.a_feature.export_status.is_subset (infix_function.export_status) 
+				not context.current_feature.export_status.is_subset (infix_function.export_status) 
 			then
 					-- In precondition and checking for vape
 				create vape
 				context.init_error (vape)
-				vape.set_exported_feature (context.a_feature)
+				vape.set_exported_feature (context.current_feature)
 				Error_handler.insert_error (vape)
 				Error_handler.raise_error
 			end

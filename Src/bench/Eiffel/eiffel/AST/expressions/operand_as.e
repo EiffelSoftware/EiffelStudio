@@ -212,9 +212,9 @@ feature {NONE}  -- Type
 			vtug: VTUG
 			vtcg3: VTCG3
 		do
-			a_class := context.a_class
+			a_class := context.current_class
 			a_table := a_class.feature_table
-			a_feature := context.a_feature
+			a_feature := context.current_feature
 
 			-- First check generic parameters
 
@@ -222,8 +222,8 @@ feature {NONE}  -- Type
 
 			if not ttype.good_generics then
 				vtug := ttype.error_generics
-				vtug.set_class (context.a_class)
-				vtug.set_feature (context.a_feature)
+				vtug.set_class (a_class)
+				vtug.set_feature (context.current_feature)
 				Error_handler.insert_error (vtug)
 				Error_handler.raise_error
 			end
@@ -276,15 +276,15 @@ feature {NONE}  -- Type
 
 			gen_type ?= ttype
 			if gen_type /= Void then
-				System.instantiator.dispatch (gen_type, context.a_class)
+				System.instantiator.dispatch (gen_type, context.current_class)
 			end
 
 			ttype.reset_constraint_error_list
-			ttype.check_constraints (context.a_class)
+			ttype.check_constraints (context.current_class)
 			if not ttype.constraint_error_list.is_empty then
 				create vtcg3
-				vtcg3.set_class (context.a_class)
-				vtcg3.set_feature (context.a_feature)
+				vtcg3.set_class (context.current_class)
+				vtcg3.set_feature (context.current_feature)
 				vtcg3.set_entity_name (target)
 				vtcg3.set_error_list (ttype.constraint_error_list)
 				Error_handler.insert_error (vtcg3)

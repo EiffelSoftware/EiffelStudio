@@ -14,7 +14,8 @@ inherit
 		undefine
 			prune_all
 		redefine
-			implementation
+			implementation,
+			make_for_test
 		end
 
 	DYNAMIC_LIST [EV_WIDGET]
@@ -61,10 +62,10 @@ feature {NONE} -- Initialization
 			i: INTEGER
 		do
 			default_create
-			from i := 1 until i = 6 or container.full
+			from i := 1 until i = 6 or full
 			loop
 				create radio.make_with_text ("radio item " + i.out)
-				container.extend (radio)
+				extend (radio)
 				inspect i
 					when 1 then radio.set_background_color (create {EV_COLOR}.make_with_rgb (0.7,0.2,0.2))
 					when 2 then radio.set_background_color (create {EV_COLOR}.make_with_rgb (0.7,0.7,0.2))
@@ -375,6 +376,9 @@ end -- class EV_WIDGET_LIST
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.14  2000/03/07 02:58:50  brendel
+--| Added redefine of make_for_test.
+--|
 --| Revision 1.13  2000/03/07 02:43:59  brendel
 --| Added `make_for_test'.
 --|

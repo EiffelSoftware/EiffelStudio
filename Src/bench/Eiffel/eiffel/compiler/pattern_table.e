@@ -327,6 +327,33 @@ feature -- Concurrent Eiffel
 			final_pattern_file.close;
 		end;
 
+	sep_insert (written_in: CLASS_ID; pattern: PATTERN): BOOLEAN is
+		require
+			good_argument: pattern /= Void
+		local
+			other_pattern: PATTERN;
+			info, other_info: PATTERN_INFO;
+		do
+			!!info.make (written_in, pattern);
+			other_info := item (info);
+			if other_info = Void then
+				other_pattern := patterns.item (pattern);
+				if other_pattern = Void then
+					Result := True;
+					patterns.put (pattern);
+				else
+					info.set_pattern (other_pattern);
+				end;
+				put (info);
+
+				last_pattern_id := pattern_id_counter.next_id;
+				info.set_pattern_id (last_pattern_id);
+				info_array.put (info, last_pattern_id);
+			else
+				last_pattern_id := other_info.pattern_id;
+			end;
+		end;
+
 feature -- DLE
 
 	dle_level: INTEGER;

@@ -38,6 +38,9 @@ class_menu_item_disabled|<TD CLASS="nolink2">*</TD>%N
 
 cluster_name			|<A CLASS="ecluster" HREF="$file$">*</A>
 
+origin_comment			|
+tooltip					|<SPAN TITLE="$tooltip$">*</SPAN>
+
 -- Use possible hyperlinks inside strings and comments:
 comment_url				|<A CLASS="ecomment" HREF="$file$">*</A>
 string_url				|<A CLASS="estring" HREF="$file$">*</A>

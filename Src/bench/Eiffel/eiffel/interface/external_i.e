@@ -10,7 +10,7 @@ inherit
 			transfer_to, equiv, update_api,
 			melt, generate,
 			access, is_external, new_rout_entry, valid_body_id,
-			set_renamed_name, external_name, undefinable
+			set_renamed_name, set_renamed_name_id, external_name, undefinable
 		end;
 	
 feature -- Attributes for externals
@@ -118,6 +118,15 @@ feature
 				extension.set_alias_name (feature_name)
 			end
 			Precursor {PROCEDURE_I} (s)
+		end
+
+	set_renamed_name_id (id: INTEGER) is
+			-- Assign `id' to `feature_name_id'.
+		do
+			if alias_name = Void then
+				extension.set_alias_name (feature_name)
+			end
+			Precursor {PROCEDURE_I} (id)
 		end
 
 	set_encapsulated (b: BOOLEAN) is

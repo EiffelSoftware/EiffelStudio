@@ -39,7 +39,7 @@ create
 	make_from_string_with_base,
 	make_by_compact_date
 
-feature {DATE_TIME} -- Initialization
+feature -- Initialization
 
 	make (y, m, d: INTEGER) is
 			-- Set `year', `month' and `day' to `y', `m', `d' respectively.

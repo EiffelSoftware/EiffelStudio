@@ -90,6 +90,7 @@ feature
 			syntax_error: SYNTAX_ERROR
 		do
 			if not retried then
+				set_last_syntax_error (Void);
 				build_ast (file_name)
 			else
 				syntax_error ?= Error_handler.error_list.first;

@@ -8,7 +8,6 @@
 /*****************************************************************************/
 #include "Windows.h"
 #include "eif_portable.h"
-
 /*---------------------------------------------------------------------------*/
 /* Return the free disk space available for the current user in Mb.          */
 /*   - If the user is Administrator or if the OS is Windows95/98             */
@@ -17,6 +16,7 @@
 /*     maximum between its quota and the effective disk space                */
 /*---------------------------------------------------------------------------*/
 EIF_BOOLEAN cwin_query_disk_space(
+		EIF_POINTER CurrentObject,					// Object calling this function
 		EIF_CHARACTER DriveLetter,					// Letter of the drive to query
 		void (*SetAttributeFunction)(
 					EIF_INTEGER MBytes_FreeSpace, 	// Eiffel Callback function.

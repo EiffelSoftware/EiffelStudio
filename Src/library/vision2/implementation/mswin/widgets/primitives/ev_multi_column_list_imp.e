@@ -121,7 +121,8 @@ inherit
 			on_erase_background,
 			default_style,
 			process_message,
-			on_notify
+			on_notify,
+			default_ex_style
 		end
 
 	EV_MULTI_COLUMN_LIST_ACTION_SEQUENCES_IMP
@@ -174,7 +175,7 @@ feature {NONE} -- Initialization
 				-- Set the WEL extended view style
 			if comctl32_version >= version_470 then
 				set_extended_view_style (get_extended_view_style + 
-					Lvs_ex_fullrowselect)
+					Lvs_ex_fullrowselect + lvs_ex_infotip)
 			end
 		end
 
@@ -1216,6 +1217,11 @@ feature {NONE} -- WEL Implementation
 				+ Ws_tabstop + Ws_border + Ws_clipchildren
 				+ Lvs_report + Lvs_showselalways + Lvs_singlesel
 				+ Ws_clipsiblings + Lvs_shareimagelists
+		end
+		
+	default_ex_style: INTEGER is
+		do
+			Result := Lvs_ex_infotip
 		end
 
 	on_lvn_columnclick (info: WEL_NM_LIST_VIEW) is

@@ -14,8 +14,6 @@ inherit
 
 	EV_CONTAINER_IMP
 		redefine
-			child_width_changed,
-			child_height_changed,
 			child_minwidth_changed,
 			child_minheight_changed,
 			set_move_and_size,
@@ -32,7 +30,6 @@ inherit
 			set_width,
 			set_height,
 			remove_command,
---			destroy,
 			on_left_button_down,
 			on_right_button_down,
 			on_left_button_up,
@@ -80,34 +77,32 @@ feature {EV_WIDGET_IMP} -- Implementation
 				set_horizontal_range (0, maximal_horizontal_position - step)
 				horizontal_update (step, (horizontal_position + step).min (maximal_horizontal_position))
 			else
-				child_width_changed (child.width, child)
+				change_horizontal_range (child.width)
 			end
 			if client_height > child.height + child.y and child.y < 0 then
 				step := (client_height - child.height - child.y).min (-child.y) 
 				set_vertical_range (0, maximal_vertical_position - step)
 				vertical_update (step , (vertical_position + step).min (maximal_vertical_position))
 			else
-				child_height_changed (child.height, child)
+				change_vertical_range (child.height)
 			end
 		end
 	
-	child_width_changed (new_child_width: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- When the size of the children change, the area of
-			-- the scroller change too.
+	change_horizontal_range (value: INTEGER) is
+			-- Change the horizontal range according to the child's size.
 		do
-			if new_child_width > client_width then
-				set_horizontal_range (0, new_child_width - client_width)
+			if value > client_width then
+				set_horizontal_range (0, value - client_width)
 			else
 				set_horizontal_range (0, 0)
 			end
 		end
 
-	child_height_changed (new_child_height: INTEGER; the_child: EV_WIDGET_IMP) is
-			-- When the size of the children change, the area of
-			-- the scroller change too.
+	change_vertical_range (value: INTEGER) is
+			-- Change the vertical range according to the child's size.
 		do
-			if new_child_height > client_height then
-				set_vertical_range (0, new_child_height - client_height)
+			if value > client_height then
+				set_vertical_range (0, value - client_height)
 			else
 				set_vertical_range (0, 0)
 			end

@@ -13,36 +13,38 @@ inherit
 	EV_POPUP_MENU_I
 
 	EV_MENU_ITEM_HOLDER_IMP
-	
+
+	EV_MENU_ITEM_HANDLER_IMP
+
 	WEL_MENU
-		rename
-			make as wel_make
+		redefine
+			make
 		end
 
 creation
 	make
-	
+
 feature {NONE} -- Initialization
-	
+
 	make is         
 			-- Create an empty popup menu.
 		do
 			make_track
-		end	
+		end
 
 feature -- Access
-
-	parent: EV_CONTAINER is
-			-- Parent of the popup.
-		do
-			Result ?= parent_imp.interface
-		end
 
 	parent_imp: EV_CONTAINER_IMP
 			-- Implementation of the parent.
 
-	submenu: WEL_MENU is
+	menu: WEL_MENU is
 			-- Wel menu used when the item is a sub-menu.
+		do
+			Result := Current
+		end
+
+	item_handler: EV_MENU_ITEM_HANDLER_IMP is
+			-- The handler of the item.
 		do
 			Result := Current
 		end
@@ -50,7 +52,7 @@ feature -- Access
 feature -- Status report
 
 	destroyed: BOOLEAN is
-			-- Is the current menu destroyed ?
+			-- Is Current object destroyed?
 		do
 			Result := not exists
 		end
@@ -58,10 +60,23 @@ feature -- Status report
 feature -- Status setting
 
 	destroy is
-			-- Destroy the actual static menu-bar.
+			-- Destroy actual object.
 		do
-			destroy_item
+			interface.remove_implementation
+			interface := Void
+			remove_children
+			-- After, it will be collected
 		end
+
+feature -- Element change
+
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the popup.
+		do
+			parent_imp ?= par.implementation
+		end
+
+feature -- Basic operations
 
 	show is
 			-- Show the popup menu at the current position
@@ -89,21 +104,22 @@ feature -- Status setting
 			end
 		end
 
-feature -- Element change
-
-	set_parent (par: EV_CONTAINER) is
-			-- Make `par' the new parent of the popup.
-		do
-			parent_imp ?= par.implementation
-			ev_children := parent_imp.menu_items
-		end
-
 feature {NONE} -- Implementation
 
-	menu_container: WEL_MENU is
-			-- Actual WEL container
+	draw_menu is
+			-- Draw the menu bar associated with the window.
 		do
-			Result := Current
+			if parent_imp /= Void then
+				parent_imp.draw_menu
+			end
+		end
+
+	has_menu: BOOLEAN is
+			-- Does the window have a menu?
+		do
+			if parent_imp /= Void then
+				parent_imp.draw_menu
+			end
 		end
 
 feature {NONE} -- Inapplicable
@@ -117,10 +133,18 @@ feature {NONE} -- Inapplicable
 			end
 		end
 
+	update is
+			-- Redraw the menu
+		do
+			check
+				Nothing_to_do: True
+			end
+		end
+
 end -- class EV_POPUP_MENU_IMP
 
 --|----------------------------------------------------------------
---| Windows Eiffel Library: library of reusable components for ISE Eiffel.
+--| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 

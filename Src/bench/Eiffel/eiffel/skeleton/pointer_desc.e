@@ -1,35 +1,39 @@
+indexing
+	description: "Pointer description"
+	date: "$Date$"
+	revision: "$Revision$"
+
 class POINTER_DESC 
 
 inherit
-
 	ATTR_DESC
 		rename
-			Pointer_level as level
-		redefine
-			is_pointer
+			Pointer_level as level,
+			Pointer_c_type as type_i
 		end
 	
-feature 
-
-	is_pointer: BOOLEAN is True;
-			-- is the attribute a pointer one ?
+feature -- Access
 
 	sk_value: INTEGER is
 		do
 			Result := Sk_pointer
 		end
 
+feature -- Code generation
+
 	generate_code (buffer: GENERATION_BUFFER) is
 			-- Generate type code for current attribute description in
 			-- `buffer'.
 		do
-			buffer.putstring ("SK_POINTER");
-		end;
+			buffer.putstring ("SK_POINTER")
+		end
+
+feature -- Debug
 
 	trace is
 		do
-			io.error.putstring (attribute_name);
-			io.error.putstring ("[POINTER]");
-		end;
+			io.error.putstring (attribute_name)
+			io.error.putstring ("[POINTER]")
+		end
 
 end

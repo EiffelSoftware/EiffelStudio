@@ -191,9 +191,6 @@ feature {NONE} -- Initialization
 			create frame.make_with_text ("Object file")
 			frame.extend (object_file_list)
 			extend (frame)
-
-				-- Add C specific widgets
-			c_specific_widgets.extend (Current)
 		end
 
 invariant

@@ -11,7 +11,10 @@ deferred class SHELL
 inherit
 
 	COMPOSITE
-		redefine implementation
+		export
+			{NONE} set_managed, manage, unmanage, managed
+		redefine 
+			implementation
 		end
 	
 feature -- Windowing

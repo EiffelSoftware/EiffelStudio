@@ -238,6 +238,8 @@ rt_private char *rcsid =
 
 rt_public void metamorphose_top()
 {
+	EIF_GET_CONTEXT
+
 	EIF_REFERENCE new_obj = NULL;
 	uint32 head_type;
 	register2 struct item * last;	/* Last pushed value */

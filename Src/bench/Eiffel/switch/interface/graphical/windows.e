@@ -46,7 +46,7 @@ feature {NONE}
 		do
 			!! Result.make (popup_parent)
 			Result.set_window (popup_parent)
-			if last_name_chooser /= Void then
+			if last_name_chooser /= Void and then not last_name_chooser.destroyed then
 				last_name_chooser.popdown
 				last_name_chooser.destroy
 			end
@@ -94,7 +94,7 @@ feature {NONE}
 			!! Result.make (popup_parent)
 			Result.set_window (popup_parent)
 			old_confirmer := last_confirmer
-			if old_confirmer /= Void then
+			if old_confirmer /= Void and then not old_confirmer.destroyed then
 				old_confirmer.popdown
 				old_confirmer.destroy
 			end

@@ -7,78 +7,123 @@ indexing
 deferred class 
 	EV_MESSAGE_DIALOG_I
 
-feature {NONE} -- Initialization
-
-	make (par: EV_CONTAINER) is
-		require
-			parent_not_void: par /= Void
-		deferred
+inherit
+	EV_DIALOG_I
+		redefine
+			build
 		end
 
-	make_default (par: EV_CONTAINER; txt, title: STRING) is
-		require
-			parent_not_void: par /= Void
-			text_not_void: txt /= Void
-			title_not_void: title /= Void
-		deferred
+feature {EV_MESSAGE_DIALOG} -- Initialization
+
+	build is
+			-- Normal build and load icon
+		do
+			Precursor
+			icon_build (display_area)			
 		end
 
 feature -- Status settings
 
+	set_default (msg, dtitle: STRING) is
+			-- Set default settings
+		do
+			set_message (msg)
+			set_title (dtitle)
+			add_ok_button
+		end
+
+	set_message (msg: STRING) is
+			-- Set the message to be displayed
+		do
+			if message = Void then
+				!!message.make_with_text (display_area, msg)
+			else
+				message.set_text(msg)
+			end
+		end
+
 	add_ok_button is
 			-- Add an OK button in the dialog.
-		deferred
+		do
+			if ok_button = Void then
+				!!ok_button.make_with_text (action_area, "OK")
+				ok_button.set_expand(True)
+			end
 		end
 
 	add_help_button is
-			-- Add an Help button in the dialog.
-		deferred
+			-- Add a Help button in the dialog.
+		do
+			if help_button = Void then
+				!!help_button.make_with_text (action_area, "Help")
+				help_button.set_expand(True)
+			end
+		end
+	
+	add_cancel_button is
+			-- Add a cancel button in the dialog
+		do
+			if cancel_button = Void then
+				!!cancel_button.make_with_text (action_area, "Cancel")
+				cancel_button.set_expand(True)
+			end
 		end
 
 	add_okcancel_buttons is
 			-- Add two buttons : OK and Cancel.
-		deferred
+		do
+			add_ok_button
+			add_cancel_button
 		end
 
 feature -- Miscellaneous
 
-	display (txt, title: STRING) is
-			-- Must be called to display a dialog that wasn't
-			-- created with default options.
-		deferred
-		end
+--	display (txt, title: STRING) is
+--			-- Must be called to display a dialog that wasn't
+--			-- created with default options.
+--		do
+--		end
 
 feature -- Event - command association
 
-	add_ok_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_ok_command (cmd: EV_COMMAND; args: EV_ARGUMENTS) is
 			-- Add `cmd' to the list of commands to be executed when
 			-- the OK button is pressed.
 			-- If there is no OK button, the event never occurs.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
+		do
+			ok_button.add_click_command(cmd, args)
 		end
 
-	add_cancel_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_cancel_command (cmd: EV_COMMAND; args: EV_ARGUMENTS) is
 			-- Add `cmd' to the list of commands to be executed when
 			-- the Cancel button is pressed.
 			-- If there is no Cancel button, the event never occurs.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
-		deferred
+		do
+			cancel_button.add_click_command(cmd, args)
 		end
 
-	add_help_command (cmd: EV_COMMAND; arg: EV_ARGUMENTS) is
+	add_help_command (cmd: EV_COMMAND; args: EV_ARGUMENTS) is
 			-- Add `cmd' to the list of commands to be executed when
 			-- the Help button is pressed.
 			-- If there is no Help button, the event never occurs.
-		require
-			exists: not destroyed
-			valid_command: cmd /= Void
+		do
+			help_button.add_click_command(cmd, args)
+		end
+
+feature {NONE} -- Implementation
+
+	icon_build (par: EV_CONTAINER) is
+			-- Load the icon
 		deferred
 		end
+
+	message: EV_LABEL
+
+	ok_button: EV_BUTTON
+
+	help_button: EV_BUTTON
+
+	cancel_button: EV_BUTTON
 
 end -- class EV_MESSAGE_DIALOG_I
 

@@ -272,8 +272,12 @@ feature -- Access
 			proj_dir: PROJECT_DIRECTORY
 			p: PROJECT_EIFFEL_FILE
 		do	
-			!! proj_dir.make (Project_directory_name, p)
-			Result := proj_dir.is_new
+				-- The next two lines commented out by Manus, 23 Aug 98
+				-- Reason: the way how to do the check is incorrect, we need
+				-- to review it completely.
+--			!! proj_dir.make (Project_directory_name, p)
+--			Result := proj_dir.is_new
+			Result := True
 		end
 
 	batch_mode: BOOLEAN is
@@ -657,7 +661,7 @@ feature -- Output
 					--| header, we need to set the position, otherwise the
 					--| result is quite strange and won't be retrievable
 				project_file.go (project_file.count)
-				project_file.independent_store (Current)
+				project_file.basic_store (Current)
 				project_file.close
 			else
 				if project_file /= Void and then not project_file.is_closed then

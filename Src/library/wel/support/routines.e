@@ -134,7 +134,7 @@ feature {NONE} -- Externals
 			buffer: POINTER; buffer_size: INTEGER): INTEGER is
 			-- SDK LoadString
 		external
-			"C [macro <wel.h>] (HINSTANCE, UINT, LPSTR,%
+			"C [macro <wel.h>] (HINSTANCE, UINT, LPSTR, %
 				%int): EIF_INTEGER"
 		alias
 			"LoadString"

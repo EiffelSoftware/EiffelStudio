@@ -51,7 +51,7 @@ feature {NONE} -- Externals
 			a_style: INTEGER): INTEGER is
 			-- SDK MessageBox
 		external
-			"C [macro <wel.h>] (HWND, LPCSTR, LPCSTR,%
+			"C [macro <wel.h>] (HWND, LPCSTR, LPCSTR, %
 				%UINT): EIF_INTEGER"
 		alias
 			"MessageBox"

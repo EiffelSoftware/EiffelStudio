@@ -487,7 +487,7 @@ feature {NONE} -- Externals
 				max: INTEGER; flags: INTEGER): INTEGER is
 			-- SDK GetMenuString
 		external
-			"C [macro <wel.h>] (HMENU, UINT, LPSTR, int,%
+			"C [macro <wel.h>] (HMENU, UINT, LPSTR, int, %
 				%UINT): EIF_INTEGER"
 		alias
 			"GetMenuString"

@@ -280,27 +280,14 @@ feature {NONE} -- Implementation
 					if feat /= Void and then not feat.is_il_external then
 							-- Generate code for current class only.
 						if not feat.is_deferred then
-							if
-								feat.written_in = l_class_id or
-								(feat.is_attribute and
-									not main_parent.simple_conform_to (feat.written_class))
-							then
+							if feat.written_in = l_class_id or feat.is_attribute then
 								generate_local_feature (feat, inh_feat, class_type, False)
 								mark_as_treated (feat)
 							else
 									-- Case of local renaming or implicit
 									-- covariant redefinition.
-								if feat.is_attribute then
-									if
-										not main_parent.simple_conform_to (feat.written_class)
-									then
-										generate_inherited_feature (feat, inh_feat, class_type)
-										mark_as_treated (feat)
-									end
-								else
-									generate_inherited_feature (feat, inh_feat, class_type)
-									mark_as_treated (feat)
-								end
+								generate_inherited_feature (feat, inh_feat, class_type)
+								mark_as_treated (feat)
 							end
 						else
 								-- Nothing to be done here. Parent was deferred and we
@@ -353,9 +340,7 @@ feature {NONE} -- Implementation
 						-- This is where we should do a MethodImpl on the inherited
 						-- implementation and not on the interface.
 					feat := rout_ids_tbl.found_item
- 					if is_method_impl_needed (feat, inh_feat) then
-						generate_method_impl (feat, class_type, inh_feat)
- 					end
+					generate_method_impl (feat, class_type, inh_feat)
 				else
 						-- Note: `feat' might be Void in case of inherited external
 						-- static features.
@@ -363,11 +348,17 @@ feature {NONE} -- Implementation
 					if feat /= Void then
 							-- Generate code for current class only.
 						if not feat.is_deferred then
-							if feat.written_in = l_class_id then
+							if
+								feat.written_in = l_class_id and then
+								(not inh_feat.is_attribute or else feat.origin_class_id = l_class_id)
+							then
 								generate_local_feature (feat, inh_feat, class_type, False)
 								mark_as_treated (feat)
 							else
-								if not main_parent.simple_conform_to (feat.written_class) then
+								if
+									not inh_feat.is_attribute and 
+									not main_parent.simple_conform_to (feat.written_class)
+								then
 										-- Case of local renaming or implicit
 										-- covariant redefinition.
 									generate_inherited_feature (feat, inh_feat, class_type)
@@ -411,12 +402,10 @@ feature {NONE} -- Implementation
 				generate_feature_standard_twin (feat)
 			else
 				if not is_single_class then
-						-- Generate static definition of `feat'.
-					if not feat.is_deferred then
-						if not is_replicated then
-							generate_feature (feat, False, True, False)
-							generate_feature_code (feat)
-						end
+					if not is_replicated then
+							-- Generate static definition of `feat'.
+						generate_feature (feat, False, True, False)
+						generate_feature_code (feat)
 					end
 	
 						-- Generate local definition of `feat' which
@@ -424,6 +413,9 @@ feature {NONE} -- Implementation
 					if inh_feat /= Void then
 						l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat)
 						if not l_is_method_impl_generated then
+								-- Generate local definition signature using the parent
+								-- signature. We do not do it on the parent itself because
+								-- its `feature_id' is not appropriate in `current_class_type'.
 							Byte_context.set_class_type (class_type)
 							dup_feat := feat.duplicate
 							if dup_feat.is_procedure then
@@ -440,21 +432,19 @@ feature {NONE} -- Implementation
 						generate_feature (feat, False, False, False)
 					end
 					
-					if not feat.is_deferred then
-						if not is_replicated then
-							-- We call above generated static feature
-							generate_feature_il (feat,
-								current_class_type.implementation_id,
-								feat.feature_id)
-						else
-								-- We call static feature corresponding to current replicated
-								-- feature. This static feature is defined in parent which
-								-- explains the search made below to find in which parent's type.
-							generate_feature_il (feat,
-								implemented_type (feat.written_in,
-								current_class_type.type).associated_class_type.implementation_id,
-								feat.written_feature_id)
-						end
+					if not is_replicated then
+							-- We call locally above generated static feature
+						generate_feature_il (feat,
+							current_class_type.implementation_id,
+							feat.feature_id)
+					else
+							-- We call static feature corresponding to current replicated feature.
+							-- This static feature is defined in parent which explains the search
+							-- made below to find in which parent's type.
+						generate_feature_il (feat,
+							implemented_type (feat.written_in,
+							current_class_type.type).associated_class_type.implementation_id,
+							feat.written_feature_id)
 					end
 				else
 					if inh_feat /= Void then
@@ -473,7 +463,7 @@ feature {NONE} -- Implementation
 					generate_feature_code (feat)
 				end
 
-				if not feat.is_deferred and then l_is_method_impl_generated then
+				if l_is_method_impl_generated then
 						-- We need a MethodImpl here for mapping
 						-- inherited method to current defined one.
 					generate_method_impl (feat, class_type, inh_feat)
@@ -515,6 +505,9 @@ feature {NONE} -- Implementation
 				if inh_feat /= Void then
 					l_is_method_impl_generated := is_method_impl_needed (feat, inh_feat)
 					if not l_is_method_impl_generated then
+							-- Generate local definition signature using the parent
+							-- signature. We do not do it on the parent itself because
+							-- its `feature_id' is not appropriate in `current_class_type'.
 						Byte_context.set_class_type (class_type)
 						dup_feat := feat.duplicate
 						if dup_feat.is_procedure then
@@ -536,7 +529,7 @@ feature {NONE} -- Implementation
 				else
 					generate_feature_il (feat,
 						implemented_type (feat.written_in,
-							current_class_type.type).associated_class_type.implementation_id,
+							current_class_type.type).implementation_id,
 						feat.written_feature_id)
 				end
 
@@ -593,16 +586,6 @@ feature {NONE} -- Implementation
  						feature {IL_CASING_CONVERSION}.lower_case).is_equal (l_ext.alias_name)
  				end
  			end
-		end
-
-	same_main_parent_branch (a_class, a_parent_class: CLASS_C): BOOLEAN is
-			-- Does `a_parent_class' belong to main inheritance branch of `a_class'?
-		require
-			a_class_not_void: a_class /= Void
-			a_parent_class_not_void: a_parent_class /= Void
-		do
-			Result := a_class = a_parent_class or else
-				a_class.main_parent.simple_conform_to (a_parent_class)
 		end
 
 end -- class SINGLE_IL_CODE_GENERATOR

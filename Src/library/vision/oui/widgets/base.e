@@ -19,7 +19,7 @@ creation
 
 	make
 	
-feature -- Creation
+feature {NONE} -- Creation
 
 	make  (a_name: STRING; a_screen: SCREEN) is
 			-- Create a base with `a_name' as identifier,
@@ -31,7 +31,7 @@ feature -- Creation
 		do
 			depth := 0;
 			widget_manager.new (Current, nothing);
-			if not (a_name = Void) then
+			if a_name /= Void then
 				identifier:= clone (a_name);
 			end;	
 			screen := a_screen;

@@ -4,74 +4,74 @@
 		<table>
 			<row>
 				<cell>
-					<paragraph>Compiling is the process of building a project into an executable file which may  be then executed externally to ENViSioN!. To compile a project, select 
-						<bold>Build  Solution</bold> from the 
+					<paragraph>Compiling is the process of building a project into an executable file which may  be then executed externally to ENViSioN!. To compile a project, select
+						<bold>Build  Solution</bold> from the
 						<bold>Build</bold> menu as demonstrated below:
 					</paragraph>
 					<paragraph>
-						<image> 
-							<alt_text>Build Menu</alt_text> 
-							<url>BuildMenu.PNG</url>
+						<image>
+							<alt_text>Build Menu</alt_text>
+							<url>BuildMenu.png</url>
 						</image>
 					</paragraph>
-					<paragraph>There are eight entries on the 
+					<paragraph>There are eight entries on the
 						<bold>Build</bold> menu, each described below:
 					</paragraph>
 					<list ordered="false">
 						<item>
-							<bold>Build Solution</bold> - Compiles the current solution. All projects in the  current solution will be built. This process attempts to minimize the  compilation that must be undertaken, by only re-compiling files that have been  modified.  
+							<bold>Build Solution</bold> - Compiles the current solution. All projects in the  current solution will be built. This process attempts to minimize the  compilation that must be undertaken, by only re-compiling files that have been  modified.
 						</item>
 						<item>
-							<bold>Rebuild Solution</bold> - Compiles the current solution from scratch. All  projects in the current solution will be built. There is no optimization of  which files will be compiled, and it is equivalent to compiling a project for  the very first time.  
+							<bold>Rebuild Solution</bold> - Compiles the current solution from scratch. All  projects in the current solution will be built. There is no optimization of  which files will be compiled, and it is equivalent to compiling a project for  the very first time.
 						</item>
 						<item>
-							<bold>Clean Solution</bold> - Deletes all built/compiled outputs from the Solution.  
+							<bold>Clean Solution</bold> - Deletes all built/compiled outputs from the Solution.
 						</item>
 						<item>
-							<bold>Build Selection</bold> - Compiles only the currently selected project in the  
+							<bold>Build Selection</bold> - Compiles only the currently selected project in the
 							<link>
 								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
 								<label>Solution Explorer</label>
-							</link>.  The compilation method of this project is equivalent to that performed by 
-							<bold>Build   Solution</bold>. This menu entry is greyed out when there is no project  selected in the  
+							</link>.  The compilation method of this project is equivalent to that performed by
+							<bold>Build   Solution</bold>. This menu entry is greyed out when there is no project  selected in the
 							<link>
 								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
 								<label>Solution Explorer</label>
-							</link>.  
+							</link>.
 						</item>
 						<item>
-							<bold>Rebuild Selection</bold> - Compiles only the currently selected project in the  
+							<bold>Rebuild Selection</bold> - Compiles only the currently selected project in the
 							<link>
 								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
 								<label>Solution Explorer</label>
-							</link>.The  compilation method of this project is equivalent to that performed by 
-							<bold>Rebuild   Solution</bold>. This menu entry is greyed out when there is no project  selected in the  
+							</link>.The  compilation method of this project is equivalent to that performed by
+							<bold>Rebuild   Solution</bold>. This menu entry is greyed out when there is no project  selected in the
 							<link>
 								<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/20_Solution_Explorer/index.htm</url>
 								<label>Solution Explorer</label>
-							</link>.  
+							</link>.
 						</item>
 						<item>
-							<bold>Clean Selection</bold> - Removes all built/compiled outputs from the selected project.  
+							<bold>Clean Selection</bold> - Removes all built/compiled outputs from the selected project.
 						</item>
 						<item>
-							<bold>Batch Build...</bold> - Displays a dialog allowing you to specify which  Projects are to be compiled. This allows you to compile selected projects  within the current Solution.  
+							<bold>Batch Build...</bold> - Displays a dialog allowing you to specify which  Projects are to be compiled. This allows you to compile selected projects  within the current Solution.
 						</item>
 						<item>
-							<bold>Configuration Manager...</bold> - Displays a dialog allowing you to specify  Project configuration information for each Project in the Solution.  
+							<bold>Configuration Manager...</bold> - Displays a dialog allowing you to specify  Project configuration information for each Project in the Solution.
 						</item>
 					</list>
-					<paragraph>  The 
+					<paragraph>  The
 						<link>
 							<url>/10_Developing/20_Managing_Projects/10_Configuring_A_Project/10_Project_Property_Pages/ProjectConfiguration.htm</url>
 							<label>Project Property Pages</label>
-						</link>  allow you to adjust the properties of your project, many of which apply  directly to the compilation. 
+						</link>  allow you to adjust the properties of your project, many of which apply  directly to the compilation.
 					</paragraph>
-					<paragraph>  If your compilation fails, see  
+					<paragraph>  If your compilation fails, see
 						<link>
 							<url>/10_Developing/10_Getting_Started/10_Using_ENViSioN/60_Compiling_Projects/CompilationErrors.htm</url>
 							<label>Compilation Errors</label>
-						</link>  for more information on correcting such errors. 
+						</link>  for more information on correcting such errors.
 					</paragraph>
 					<seealso>
 						<bold>See also</bold>

@@ -4,31 +4,31 @@
 		<table>
 			<row>
 				<cell>
-					<paragraph>  The editor allows you to view and edit the Eiffel  
+					<paragraph>  The editor allows you to view and edit the Eiffel
 						<link>
 							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
 							<label>classes</label>
-						</link>  that are included in your solution. 
+						</link>  that are included in your solution.
 					</paragraph>
 					<paragraph>
-						<image> 
-							<alt_text>General Property Page</alt_text> 
-							<url>General_editor.PNG</url>
+						<image>
+							<alt_text>General Property Page</alt_text>
+							<url>General_editor.png</url>
 						</image>
 					</paragraph>
-					<paragraph>  The screenshot shows the editor with one  
+					<paragraph>  The screenshot shows the editor with one
 						<link>
 							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
 							<label>class</label>
-						</link>  open for editing, ROOT_CLASS. You can open as many  
+						</link>  open for editing, ROOT_CLASS. You can open as many
 						<link>
 							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
 							<label>class</label>
-						</link>  source texts as you desire and choose between them by clicking the tab  corresponding to the  
+						</link>  source texts as you desire and choose between them by clicking the tab  corresponding to the
 						<link>
 							<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
 							<label>class</label>
-						</link>  you wish to edit/view. 
+						</link>  you wish to edit/view.
 					</paragraph>
 					<seealso>
 						<bold>See also</bold>

@@ -15,10 +15,10 @@
 						<size>2</size>Page content
 					</heading>
 					<paragraph>To navigate to the desired page, select the page name which is displayed to the  left hand side of the window.</paragraph>
-					<paragraph>To cancel the wizard at any point, select the 
+					<paragraph>To cancel the wizard at any point, select the
 						<bold>Cancel</bold> button.
 					</paragraph>
-					<paragraph>To complete the wizard, using the current settings, select the 
+					<paragraph>To complete the wizard, using the current settings, select the
 						<bold>Finish</bold> button.
 						<heading>
 							<size>2</size>Navigation
@@ -27,14 +27,14 @@
 						<paragraph>
 							<bold>Overview</bold>
 						</paragraph>
-						<paragraph>This page displays the current settings that will be used when 
+						<paragraph>This page displays the current settings that will be used when
 							<bold>Finish</bold> is pressed.
 							<paragraph>
 								<bold>System Settings</bold>
 								<paragraph>
 									<image>
 										<alt_text>Import EiffelStudio Wizard</alt_text>
-										<url>precompile_wizard.PNG</url>
+										<url>precompile_wizard.png</url>
 									</image>
 								</paragraph>
 								<paragraph>By default the precompile project wizard will create a new precompile project  using the existing Eiffel Base Class (eBCL) precompile library. You may turn  this option off by un-checking the 'Use eBCL precompile?' option. If eBCL is  not used then you may select the Eiffel libraries you would like to include in  your procompile project via the 'Include Library' list.</paragraph>

@@ -10,14 +10,14 @@
 		<table>
 			<row>
 				<cell>
-					<paragraph>  The features and style of the editor viewer can be configured to suit your  preferencesand needs. To configure these select 
-						<bold>Options..</bold>  from the Visual Studio 
+					<paragraph>  The features and style of the editor viewer can be configured to suit your  preferencesand needs. To configure these select
+						<bold>Options..</bold>  from the Visual Studio
 						<bold>Tools </bold>menu.This will display the Options  dialog, and in the list to the left of the dialog, select 'Text Editor' and  then 'Eiffel' to browse to the editor settings for Eiffel source code.  The dialog should then have the following appearance:
 					</paragraph>
 					<paragraph>
 						<image>
 							<alt_text>General Property Page</alt_text>
-							<url>General_editor_advanced_settings.PNG</url>
+							<url>General_editor_advanced_settings.png</url>
 							<width>600</width>
 							<height>376</height>
 						</image>
@@ -27,21 +27,21 @@
 						<size>2</size>Statement Completion
 					</heading>
 					<list ordered="false">
-						<item>  Auto list members: when selected, a list of available members of a given 
+						<item>  Auto list members: when selected, a list of available members of a given
 							<link>
 								<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#object</url>
 								<label>object</label>
-							</link>  or 
+							</link>  or
 							<link>
 								<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#class</url>
 								<label>class</label>
 							</link>  displays at the appropriate places when you enter a line of code.
 						</item>
-						<item>  Parameter information: when selected, parameter information displays for the 
+						<item>  Parameter information: when selected, parameter information displays for the
 							<link>
 								<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#function</url>
 								<label>function</label>
-							</link>  or 
+							</link>  or
 							<link>
 								<url>/20_Language/10_Eiffel_NET/10_Conventions/10_Terminology.htm#procedure</url>
 								<label>procedure</label>

@@ -399,18 +399,22 @@ feature {COMPILER_EXPORTER} -- Access
 		do
 			if is_true_expanded then
 				a_class := associated_class
-				creators := a_class.creators
-				if creators = Void then
+				if a_class.is_true_external then
 					Result := True
-				elseif creators.count = 1 then
-					creators.start
-					creation_name := creators.key_for_iteration
-					creation_feature :=
-									a_class.feature_table.item (creation_name)
-					Result := creation_feature.argument_count = 0 and then
-						creators.item_for_iteration.valid_for (class_c)
-				else 
-					Result := False
+				else
+					creators := a_class.creators
+					if creators = Void then
+						Result := True
+					elseif creators.count = 1 then
+						creators.start
+						creation_name := creators.key_for_iteration
+						creation_feature :=
+										a_class.feature_table.item (creation_name)
+						Result := creation_feature.argument_count = 0 and then
+							creators.item_for_iteration.valid_for (class_c)
+					else 
+						Result := False
+					end
 				end
 			else
 				Result := True

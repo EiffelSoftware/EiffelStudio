@@ -40,11 +40,11 @@ feature -- Callbacks
 
 	freeze_now (argument: ANY) is
 		do
-			if Eiffel_project.lace_file_name = Void then
+			if Eiffel_ace.file_name = Void then
 				update_project_warner_ok (argument)
 			elseif Application.is_running then
 				end_run_confirmed := true;
-				confirmer (text_window).call (Current,
+				confirmer (popup_parent).call (Current,
 						"Recompiling project will end current run.%N%
 						%Start compilation anyway?", "Compile")
 			else
@@ -66,11 +66,11 @@ feature {NONE} -- Implementation
 			-- Ask for confirmation, and compile thereafter.
 		do
 			if 
-				(argument = text_window) or (argument = Current) or
+				(argument = tool) or (argument = Current) or
 				(argument /= Void and then 
 				argument = last_confirmer and not end_run_confirmed) 
 			then
-				warner (text_window).custom_call (Current, w_Freeze_warning,
+				warner (popup_parent).custom_call (Current, w_Freeze_warning,
 							"Freeze now", Void, "Cancel");
 			elseif (argument /= Void and then argument = last_warner) then
 					freeze_now (argument)
@@ -85,10 +85,11 @@ feature {NONE} -- Implementation
 	launch_c_compilation (argument: ANY) is
 			-- Launch the C compilation in the background.
 		do
-			error_window.put_string ("System recompiled%N");
+			error_window.put_string ("System recompiled");
+			error_window.new_line;
 			if start_c_compilation then
-				error_window.put_string
-						("Launching C compilation in background...%N");
+				error_window.put_string ("Launching C compilation in background...");
+				error_window.new_line;
 				Eiffel_project.call_finish_freezing (True);
 			end
 		end;

@@ -260,9 +260,6 @@ feature {NONE} -- Implementation
 	parser: XML_TREE_PARSER
 		-- XML tree parser.
 		
-	filename: STRING is "D:\work\build2\xml_output.xml"
-		-- File to be generated.
-		
 	document: XML_DOCUMENT
 		-- XML document generated from created window.
 	

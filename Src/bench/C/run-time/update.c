@@ -732,22 +732,18 @@ rt_public void option_updt(void)
 		wread(&c, 1);		   /* Assertion level byte code */
 		o_level = 0;
 		switch (c) {
-		case BC_NO:			o_level = OPT_NO;
-	break;
-		case BC_YES:			o_level = OPT_ALL;
-	break;
-		default:			eif_panic(MTC "invalid trace level");
+			case BC_NO:		o_level = OPT_NO; break;
+			case BC_YES:	o_level = OPT_ALL; break;
+			default:		eif_panic(MTC "invalid trace level");
 		}
 		current->trace_level = o_level;
 
 		wread(&c, 1);			/* Assertion level byte code */
 		o_level = 0;
 		switch (c) {
-		case BC_NO:		     o_level = OPT_NO;
-	break;
-		case BC_YES:		    o_level = OPT_ALL;
-	break;
-		default:			eif_panic(MTC "invalid profile level");
+			case BC_NO:		o_level = OPT_NO; break;
+			case BC_YES:	o_level = OPT_ALL; break;
+			default:		eif_panic(MTC "invalid profile level");
 		}
 		current->profile_level = o_level;
 	}

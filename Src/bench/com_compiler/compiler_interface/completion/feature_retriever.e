@@ -58,7 +58,7 @@ feature -- Basic Operations
 					if l_target_type /= void and then not l_target_type.is_void then
 						l_targets.start
 						l_targets.remove
-						feature_table := recursive_lookup (l_target_type, l_targets, feature_table, True)
+						feature_table := recursive_lookup (class_i, instantiated_type (class_i, Void, l_target_type), l_targets, feature_table, True)
 						if feature_table /= void then
 							found_item := completion_feature_from_name (l_lookup_name)
 						end

@@ -161,14 +161,6 @@ feature -- Removal
 			release_actions.remove (Current, a_command, arg)
 		end
 
-feature -- Behavior
-
-	on_activate is
-			-- Perform activate action.
- 		do
-			activate_actions.execute (Current, Void)
-		end
-
 feature -- Implementation
 
 	private_text: STRING

@@ -46,7 +46,7 @@ feature -- Access
 	tooltip: STRING is
 			-- Tooltip for the toolbar button.
 		do
-			Result := Interface_names.e_Switch_num_format
+			Result := Interface_names.e_switch_num_format_to_hex
 		end
 
 feature -- Measurement
@@ -59,7 +59,7 @@ feature -- Status report
 	name: STRING is
 			-- Name of the command.
 		do
-			Result := Interface_names.l_Switch_num_format
+			Result := Interface_names.e_Switch_num_formating
 		end
 
 	description: STRING is
@@ -75,9 +75,9 @@ feature -- Execution
 		do
 			tool.set_hexa_mode (toggle_button.is_selected)
 			if toggle_button.is_selected then
-				toggle_button.set_tooltip ("Switch to Dec format")
+				toggle_button.set_tooltip (interface_names.e_Switch_num_format_to_dec)
 			else
-				toggle_button.set_tooltip ("Switch to Hex format")
+				toggle_button.set_tooltip (interface_names.e_Switch_num_format_to_hex)
 			end			
 		end
 

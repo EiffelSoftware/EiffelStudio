@@ -12,6 +12,7 @@ inherit
 		redefine
 			make
 		end
+
 creation
 	make
 
@@ -24,7 +25,18 @@ feature
 			l_file : X_FILE
 			l_directory : EIFFEL_F_CODE_DIRECTORY
 		do
-			Precursor(a_path)
+			{DIRECTORY} Precursor (a_path)
+
+				-- Clean up previous conversion
+			if has_entry("Makefile.SHold") then
+				create makefile_sh.make(path("Makefile.SH"))
+				makefile_sh.delete
+				makefile_sh.make(path("Makefile.SHold"))
+				makefile_sh.change_name(path("Makefile.SH"))
+				create l_file.make(path("big_file.x"))
+				l_file.delete
+			end
+
 			create x_files.make
 			create directories.make
 			l_files := linear_representation
@@ -69,6 +81,12 @@ end
 				from l_x_files.start until l_x_files.off
 				loop
 					l_x_file := l_x_files.item
+debug ("OUTPUT")
+					print (makefile_sh.last_string)
+					io.new_line
+					print(l_x_file.name)
+					io.new_line
+end
 					l_x_file.open_read
 					l_x_file.read_all
 					big_file.put_string(l_x_file.last_string)
@@ -111,14 +129,16 @@ end
 				l_directories.off
 			loop
 debug ("OUTPUT")
-				print (l_directories.item.name);io.new_line
+				print (l_directories.item.name)
+				io.new_line
 end
 				l_directories.item.convert
 				l_directories.forth
 			end
 debug ("OUTPUT")
 			print("Makefile SH%N")
-			print (makefile_sh.name);io.new_line
+			print (makefile_sh.name)
+			io.new_line
 end
 		end
 

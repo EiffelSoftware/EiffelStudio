@@ -28,7 +28,7 @@ feature
 			last_string.set_count (l_status);
 		end
 
-	fread (l_string : POINTER;l_size : INTEGER;l_count : INTEGER;l_file : POINTER) : INTEGER is
+	fread (l_string: POINTER; l_size: INTEGER; l_count: INTEGER; l_file: POINTER): INTEGER is
 		external
 			"C [macro %"stdio.h%"]"
 		end

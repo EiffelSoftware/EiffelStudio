@@ -14,7 +14,13 @@
 #include "portable.h"
 #include "err_msg.h"
 #include <sys/types.h>
+
+#ifdef EIF_WIN32
+#include <signal.h>
+#else
 #include <sys/signal.h>
+#endif
+
 #include "request.h"
 #include "rqst_idrs.h"
 #include "com.h"
@@ -32,23 +38,41 @@
 #include "bits.h"
 #include "eiffel.h"
 
+#ifdef EIF_WIN32
+#include "stream.h"
+extern STREAM *sp;
+#endif
+
 extern void set_breakpoint_number(int num);	/* Sets the breakpoint interrupt number */
 rt_public int rqstcnt = 0;				/* Request count */
 rt_private char gc_stopped;
 
-rt_private void process_request(int s, Request *rqst);		/* Dispatch request processing */
-rt_private void inspect(int s, Opaque *what);				/* Object inspection */
-rt_private void adopt(int s, Opaque *what);				/* Adopt object */
-rt_private void ipc_access(int s, Opaque *what);			/* Access object through hector */
-rt_private void wean(int s, Opaque *what);				/* Wean adopted object */
+#ifdef EIF_WIN32
+rt_private void process_request(STREAM *s, Request *rqst);	/* Dispatch request processing */
+rt_private void inspect(STREAM *s, Opaque *what);			/* Object inspection */
+rt_private void adopt(EIF_LPSTREAM s, Opaque *what);		/* Adopt object */
+rt_private void ipc_access(EIF_LPSTREAM s, Opaque *what);	/* Access object through hector */
+rt_private void wean(EIF_LPSTREAM s, Opaque *what);			/* Wean adopted object */
 rt_private void load_bc(int slots, int amount);				/* Load byte code information */
 rt_private void obj_inspect(EIF_OBJ object);
 rt_private void bit_inspect(EIF_OBJ object);
-rt_private void string_inspect(EIF_OBJ object);		/* String object inspection */
-rt_private void once_inspect(int s, Opaque *what);		/* Once routines inspection */
+rt_private void string_inspect(EIF_OBJ object);				/* String object inspection */
+rt_private void once_inspect(EIF_LPSTREAM s, Opaque *what);	/* Once routines inspection */
+#else
+rt_private void process_request(int s, Request *rqst);		/* Dispatch request processing */
+rt_private void inspect(int s, Opaque *what);				/* Object inspection */
+rt_private void adopt(int s, Opaque *what);					/* Adopt object */
+rt_private void ipc_access(int s, Opaque *what);			/* Access object through hector */
+rt_private void wean(int s, Opaque *what);					/* Wean adopted object */
+rt_private void load_bc(int slots, int amount);				/* Load byte code information */
+rt_private void obj_inspect(EIF_OBJ object);
+rt_private void bit_inspect(EIF_OBJ object);
+rt_private void string_inspect(EIF_OBJ object);				/* String object inspection */
+rt_private void once_inspect(int s, Opaque *what);			/* Once routines inspection */
+#endif
 
 rt_private long sp_lower, sp_upper; /* Special objects' bounds to be inspected */
-rt_private IDRF idrf;			/* IDR filter for serialize communications */
+rt_private IDRF idrf;				/* IDR filter for serialize communications */
 
 extern char *simple_out(struct item *);	/* Out routine for simple time (from run-time) */
 
@@ -66,27 +90,47 @@ rt_public void prt_init(void)
  * Handling requests.
  */
 
+#ifdef EIF_WIN32
+rt_public void arqsthandle(STREAM *s)
+#else
 rt_public void arqsthandle(int s)
+#endif
 {
 	/* Given a connected socket, wait for a request and process it. Since it
 	 * is an error at the application level to not be able to receive a packet,
 	 * recv_packet will exit via esdie() as soon as the connection is broken.
 	 */
-	
+
 	Request rqst;		/* The request we are waiting for */
 
 	Request_Clean (rqst); /* zero recognized as non initialized -- Didier */
+
+#ifdef EIF_WIN32
+	recv_packet(s, &rqst, FALSE);		/* Get request */
+#else
 	recv_packet(s, &rqst);		/* Get request */
+#endif
+
 	process_request(s, &rqst);	/* Process the received request */
+
+#ifdef USE_ADD_LOG
+		add_log(9, "arqsthandle done");
+#endif
 }
 
+#ifdef EIF_WIN32
+rt_private void process_request(STREAM *s, Request *rqst)
+#else
 rt_private void process_request(int s, Request *rqst)
+#endif
       						/* The connected socket */
               				/* The received request to be processed */
 {
 	/* Process the received request */
 
+#ifndef EIF_WIN32
 	STREAM *sp = stream_by_fd[s];
+#endif
 
 #define arg_1	rqst->rq_opaque.op_first
 #define arg_2	rqst->rq_opaque.op_second
@@ -98,7 +142,11 @@ rt_private void process_request(int s, Request *rqst)
 
 	switch (rqst->rq_type) {
 	case INSPECT:					/* Object inspection */
-		inspect(writefd (sp), &rqst->rq_opaque);
+#ifdef EIF_WIN32
+		inspect (sp, &rqst->rq_opaque);
+#else
+		inspect(writefd(sp), &rqst->rq_opaque);
+#endif
 		break;
 	case SP_LOWER:					/* Bounds for special object inspection */
 		sp_lower = arg_3;
@@ -107,7 +155,11 @@ rt_private void process_request(int s, Request *rqst)
 		sp_upper = arg_3;
 		break;
 	case DUMP:						/* General stack dump request */
+#ifdef EIF_WIN32
+		send_stack(sp, arg_1);
+#else
 		send_stack(writefd (sp), arg_1);
+#endif
 		break;
 	case MOVE:						/* Change active routine */
 		dmove(arg_1);
@@ -119,6 +171,16 @@ rt_private void process_request(int s, Request *rqst)
 		if (!gc_stopped) gc_run();
 		set_breakpoint_number (arg_2);
 		dstatus(arg_1);				/* Debugger status (DX_STEP, DX_NEXT,..) */
+
+#ifdef EIF_WIN32
+#ifdef USE_ADD_LOG
+		add_log(9, "RESUME");
+		if ((void (*)()) 0 == rem_input(sp))
+			add_log(12, "rem_input: %s (%s)", s_strerror(), s_strname());
+#else
+		(void) rem_input(sp);		/* Stop selection -> exit listening loop */
+#endif
+#else
 #ifdef USE_ADD_LOG
 		add_log(9, "RESUME");
 		if ((void (*)()) 0 == rem_input(s))
@@ -126,11 +188,16 @@ rt_private void process_request(int s, Request *rqst)
 #else
 		(void) rem_input(s);		/* Stop selection -> exit listening loop */
 #endif
+#endif
 		break;
 	case QUIT:						/* Die, immediately */
 		esdie(0);
 	case HELLO:							/* Initial handshake */
+#ifdef EIF_WIN32
+		send_ack(sp, AK_OK);	/* Ok, we're up */
+#else
 		send_ack(writefd(sp), AK_OK);	/* Ok, we're up */
+#endif
 		break;
 	case KPALIVE:					/* Dummy request for connection checks */
 		break;
@@ -138,23 +205,47 @@ rt_private void process_request(int s, Request *rqst)
 		load_bc(arg_1, arg_2);
 		break;
 	case ADOPT:						/* Adopt object */
+#ifdef EIF_WIN32
+		adopt(sp, &rqst->rq_opaque);
+#else
 		adopt(writefd(sp), &rqst->rq_opaque);
+#endif
 		break;
 	case ACCESS:					/* Access object through hector */
+#ifdef EIF_WIN32
+		ipc_access(sp, &rqst->rq_opaque);
+#else
 		ipc_access(writefd(sp), &rqst->rq_opaque);
+#endif
 		break;
 	case WEAN:						/* Wean adopted object */
+#ifdef EIF_WIN32
+		wean(sp, &rqst->rq_opaque);
+#else
 		wean(writefd(sp), &rqst->rq_opaque);
+#endif
 		break;
 	case ONCE:						/* Once routines inspection */
-		once_inspect(writefd (sp), &rqst->rq_opaque);
+#ifdef EIF_WIN32
+		once_inspect(sp, &rqst->rq_opaque);
+#else
+		once_inspect(writefd(sp), &rqst->rq_opaque);
+#endif
 		break;
 	case INTERRUPT_OK:				/* Stop execution and send call stack */
+#ifdef EIF_WIN32
+		(void) rem_input(sp);		/* exit listening loop */
+#else
 		(void) rem_input(s);		/* exit listening loop */
+#endif
 		dbreak(PG_INTERRUPT);
 		break;
 	case INTERRUPT_NO:				/* Resume execution with no further ado */
+#ifdef EIF_WIN32
+		(void) rem_input(sp);		/* exit listening loop */
+#else
 		(void) rem_input(s);		/* exit listening loop */
+#endif
 		break;
 	}
 
@@ -167,12 +258,16 @@ rt_private void process_request(int s, Request *rqst)
  * Sending requests - Receiving answers
  */
 
+#ifdef EIF_WIN32
+rt_public void send_packet(STREAM *s, Request *rqst)
+#else
 rt_public void send_packet(int s, Request *rqst)
+#endif
       				/* The connected socket */
               		/* The request to be sent */
 {
 	/* Sends an answer to the client */
-	
+
 	rqstcnt++;			/* One more request sent to daemon */
 	idrf_pos(&idrf);	/* Reposition IDR streams */
 
@@ -192,7 +287,9 @@ rt_public void send_packet(int s, Request *rqst)
 #endif
 		print_err_msg(stderr, "cannot send request\n");
 		signal (SIGABRT, SIG_DFL);
+#ifdef SIGQUIT
 		signal (SIGQUIT, SIG_DFL);
+#endif
 		abort ();
 	}
 
@@ -201,7 +298,11 @@ rt_public void send_packet(int s, Request *rqst)
 #endif
 }
 
+#ifdef EIF_WIN32
+rt_public int recv_packet(STREAM *s, Request *dans, BOOL reset)
+#else
 rt_public int recv_packet(int s, Request *dans)
+#endif
       				/* The connected socket */
               		/* The daemon's answer */
 {
@@ -211,9 +312,13 @@ rt_public int recv_packet(int s, Request *dans)
 	 * no error recovery will be possible at the application level once the
 	 * debugging link to ised is broken, it is wise to exit by calling esdie().
 	 */
-	
+
 	/* Wait for request */
+#ifdef EIF_WIN32
+	if (-1 == net_recv(s, idrs_buf(&idrf.i_decode), IDRF_SIZE, reset))
+#else
 	if (-1 == net_recv(s, idrs_buf(&idrf.i_decode), IDRF_SIZE))
+#endif
 		esdie(1);		/* Connection lost, probably */
 
 	idrf_pos(&idrf);	/* Reposition IDR streams */
@@ -233,7 +338,11 @@ rt_public int recv_packet(int s, Request *dans)
  * Protocol specific routines
  */
 
+#ifdef EIF_WIN32
+rt_public void stop_rqst(STREAM *s)
+#else
 rt_public void stop_rqst(int s)
+#endif
 {
 	/* Send a stop request, using the Where structure to give the program
 	 * current location. We also indicate why the program stopped and set
@@ -294,8 +403,11 @@ rt_public void stop_rqst(int s)
 	EIF_END_GET_CONTEXT
 }
 
+#ifdef EIF_WIN32
+rt_private void inspect(STREAM *s, Opaque *what)
+#else
 rt_private void inspect(int s, Opaque *what)
-      
+#endif
              		/* Generic structure describing request */
 {
 	/* Inspect an object and return its tagged out form back to ewb. The
@@ -353,8 +465,12 @@ rt_private void inspect(int s, Opaque *what)
 	free(out);
 }
 
+#ifdef EIF_WIN32
+rt_private void once_inspect(EIF_LPSTREAM s, Opaque *what)
+#else
 rt_private void once_inspect(int s, Opaque *what)
-      				/* The connected socket */
+#endif
+					/* The connected socket */
              		/* Generic structure describing request */
 {
 	/* Check whether a once routine has already been called. In this case
@@ -380,8 +496,11 @@ rt_private void once_inspect(int s, Opaque *what)
 	}
 }
 
+#ifdef EIF_WIN32
+rt_private void adopt(EIF_LPSTREAM s, Opaque *what)
+#else
 rt_private void adopt(int s, Opaque *what)
-      
+#endif
              		/* Generic structure describing request */
 {
 	/* Adopt an object and return its hector address back to ewb. The
@@ -399,37 +518,45 @@ rt_private void adopt(int s, Opaque *what)
 	twrite(hector_addr, strlen(hector_addr));
 }
 
+#ifdef EIF_WIN32
+rt_private void ipc_access(EIF_LPSTREAM s, Opaque *what)
+#else
 rt_private void ipc_access(int s, Opaque *what)
-      
+#endif
+
              		/* Generic structure describing request */
 {
-	/* Access an object through hector and return its physical address 
-	 * back to ewb. The opaque structure describes the object. Note 
-	 * that the address is stored as a long, because XDR cannot pass 
-	 * pointers (without also sending the information referred to by 
+	/* Access an object through hector and return its physical address
+	 * back to ewb. The opaque structure describes the object. Note
+	 * that the address is stored as a long, because XDR cannot pass
+	 * pointers (without also sending the information referred to by
 	 * this pointer).
 	 */
 
 	char physical_addr[20];	/* Address of unprotected object */
 	char *hector_addr;		/* Hector address with indirection */
-	
+
 	hector_addr = (char *) what->op_third;
 	sprintf(physical_addr, "0x%lX", eif_access((EIF_OBJ) hector_addr));
 	twrite(physical_addr, strlen(physical_addr));
 }
 
+#ifdef EIF_WIN32
+rt_private void wean(EIF_LPSTREAM s, Opaque *what)
+#else
 rt_private void wean(int s, Opaque *what)
-      
+#endif
+
              		/* Generic structure describing request */
 {
 	/* Wean an adopted object. The opaque structure describes the object.
-	 * Note that the address is stored as a long, because XDR cannot pass 
-	 * pointers (without also sending the information referred to by 
+	 * Note that the address is stored as a long, because XDR cannot pass
+	 * pointers (without also sending the information referred to by
 	 * this pointer).
 	 */
 
 	char *hector_addr;		/* Hector address with indirection */
-	
+
 	hector_addr = (char *) what->op_third;
 	eif_wean((EIF_OBJ) hector_addr);
 }
@@ -447,19 +574,37 @@ rt_private void load_bc(int slots, int amount)
 	 * error, of course.
 	 */
 
+#ifndef EIF_WIN32
 	STREAM *sp = stream_by_fd[EWBOUT];
-	Request rqst;				/* Loading BYTECODE request */
-	char *bc;					/* Location of loaded byte code */
 	int s = writefd(sp);		/* Writing "socket" */
 	int r = readfd(sp);			/* Reading "socket" */
+#endif
+
+	Request rqst;				/* Loading BYTECODE request */
+	char *bc;					/* Location of loaded byte code */
 	int i;
+
+#ifdef USE_ADD_LOG
+		add_log(9, "in load_bc slots %d amount %d", slots, amount);
+#endif
 
 	Request_Clean (rqst);
 	if (-1 == dmake_room(slots)) {		/* Extend melting table */
+#ifdef EIF_WIN32
+		send_ack(sp, AK_ERROR);			/* Notify failure */
+		return;							/* Abort procedure */
+	} else
+		send_ack(sp, AK_OK);				/* Extension succeeded */
+#else
 		send_ack(s, AK_ERROR);			/* Notify failure */
 		return;							/* Abort procedure */
 	} else
 		send_ack(s, AK_OK);				/* Extension succeeded */
+#endif
+
+#ifdef USE_ADD_LOG
+		add_log(9, "made room");
+#endif
 
 #define arg_1	rqst.rq_opaque.op_first
 #define arg_2	rqst.rq_opaque.op_second
@@ -470,11 +615,44 @@ rt_private void load_bc(int slots, int amount)
 	 */
 
 	for (i = 0; i < amount; i++) {		/* Now loop to get all byte codes */
+#ifdef USE_ADD_LOG
+		add_log(9, "in load_bc loop");
+#endif
+#ifdef EIF_WIN32
+		recv_packet(sp, &rqst, TRUE);			/* Read BYTECODE request */
+		if (rqst.rq_type != BYTECODE) {	/* Wrong request */
+			send_ack(sp, AK_PROTO);		/* Protocol error */
+			return;
+		}
+#ifdef USE_ADD_LOG
+		add_log(9, "received packet BYTECODE");
+#endif
+		bc = tread((int *) 0);			/* Get byte code in memory */
+		if (bc == (char *) 0) {			/* Not enough memory */
+			send_ack(sp, AK_ERROR);		/* Notify failure */
+			return;						/* And abort downloading */
+		}
+#ifdef USE_ADD_LOG
+		add_log(9, "tread bytecode");
+#endif
+		drecord_bc(arg_1, arg_2, bc);	/* Place byte code in run-time tables*/
+#ifdef USE_ADD_LOG
+		add_log(9, "recorded bc");
+#endif
+		send_ack(sp, AK_OK);				/* Byte code loaded successfully */
+#ifdef USE_ADD_LOG
+		add_log(9, "sent ack");
+#endif
+
+#else
 		recv_packet(r, &rqst);			/* Read BYTECODE request */
 		if (rqst.rq_type != BYTECODE) {	/* Wrong request */
 			send_ack(s, AK_PROTO);		/* Protocol error */
 			return;
 		}
+#ifdef USE_ADD_LOG
+		add_log(9, "received packet BYTECODE");
+#endif
 		bc = tread((int *) 0);			/* Get byte code in memory */
 		if (bc == (char *) 0) {			/* Not enough memory */
 			send_ack(s, AK_ERROR);		/* Notify failure */
@@ -482,6 +660,7 @@ rt_private void load_bc(int slots, int amount)
 		}
 		drecord_bc(arg_1, arg_2, bc);	/* Place byte code in run-time tables*/
 		send_ack(s, AK_OK);				/* Byte code loaded successfully */
+#endif
 	}
 
 #undef arg_1
@@ -616,7 +795,7 @@ rt_private void rec_inspect(register1 char *object)
 			twrite (buffer, strlen(buffer));
 			sprintf(buffer, "%.17g", *(double *)o_ref);
 			twrite (buffer, strlen(buffer));
-			break;	
+			break;
 		case SK_BIT:
 			sprintf(buffer, "BIT");
 			twrite (buffer, strlen(buffer));
@@ -626,7 +805,7 @@ rt_private void rec_inspect(register1 char *object)
 				twrite (buffer, strlen(buffer));
 				xfree(str);
 			}
-			break;	
+			break;
 		case SK_EXP:
 			/* Expanded attribute */
 			sprintf(buffer, "expanded");
@@ -635,7 +814,7 @@ rt_private void rec_inspect(register1 char *object)
 			twrite (buffer, strlen(buffer));
 			rec_inspect((char *)o_ref);
 			break;
-		default: 
+		default:
 			/* Object reference */
 			reference = *(char **)o_ref;
 			if (0 != reference) {
@@ -693,7 +872,6 @@ rt_private void rec_sinspect(register1 char *object)
 	flags = zone->ov_flags;
 	dt_type = (int) (flags & EO_TYPE);
 
-	
 	/* Send the capacity of the special object */
 	sprintf(buffer, "%ld", count);
 	twrite (buffer, strlen(buffer));
@@ -709,7 +887,7 @@ rt_private void rec_sinspect(register1 char *object)
 		sp_start = 0;
 	else if (sp_lower > 0)			/* Must be truncated */
 		sp_start = sp_lower;
-		
+
 	if (sp_start > sp_end) {		/* No item within the bounds */
 		/* Send the number of items to be inspected */
 		sprintf(buffer, "0");
@@ -720,10 +898,10 @@ rt_private void rec_sinspect(register1 char *object)
 		twrite (buffer, strlen(buffer));
 
 		/* Send the items within the bounds */
-		if (!(flags & EO_REF)) 
-			if (flags & EO_COMP) 
-				for (o_ref = object + OVERHEAD + (sp_start * elem_size), 
-									sp_index = sp_start; sp_index <= sp_end; 
+		if (!(flags & EO_REF))
+			if (flags & EO_COMP)
+				for (o_ref = object + OVERHEAD + (sp_start * elem_size),
+									sp_index = sp_start; sp_index <= sp_end;
 									sp_index++, o_ref += elem_size) {
 					sprintf(buffer, "%ld", sp_index);
 					twrite (buffer, strlen(buffer));
@@ -734,8 +912,8 @@ rt_private void rec_sinspect(register1 char *object)
 					rec_inspect(o_ref);
 				}
 			else
-				for (o_ref = object + (sp_start * elem_size), 
-									sp_index = sp_start; sp_index <= sp_end; 
+				for (o_ref = object + (sp_start * elem_size),
+									sp_index = sp_start; sp_index <= sp_end;
 									sp_index++, o_ref += elem_size) {
 					sprintf(buffer, "%ld", sp_index);
 					twrite (buffer, strlen(buffer));
@@ -777,9 +955,9 @@ rt_private void rec_sinspect(register1 char *object)
 						twrite (buffer, strlen(buffer));
 					}
 				}
-		else 
-			for (o_ref = (char *) ((char **)object + sp_start), 
-						sp_index = sp_start; sp_index <= sp_end; sp_index++, 
+		else
+			for (o_ref = (char *) ((char **)object + sp_start),
+						sp_index = sp_start; sp_index <= sp_end; sp_index++,
 						o_ref = (char *) ((char **)o_ref + 1)) {
 				sprintf(buffer, "%ld", sp_index);
 				twrite (buffer, strlen(buffer));

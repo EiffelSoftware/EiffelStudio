@@ -17,13 +17,22 @@ feature -- Access
 	generate (a_descriptor: WIZARD_RECORD_DESCRIPTOR) is
 			-- Generate c client for record.
 		local
-			struct_def: STRING
+			struct_def, forward_def: STRING
 			a_data_visitor: WIZARD_DATA_TYPE_VISITOR
 			header: STRING
 		do
 			create c_writer.make
 
 			a_descriptor.fields.sort
+
+			create forward_def.make (0)
+			forward_def.append (typedef)
+			forward_def.append (Space)
+			forward_def.append (Struct)
+			forward_def.append (Space)
+			forward_def.append (a_descriptor.c_type_name)
+			forward_def.append (Semicolon)
+			c_writer.add_other_forward (forward_def)
 
 			create struct_def.make (0)
 			struct_def.append (typedef)

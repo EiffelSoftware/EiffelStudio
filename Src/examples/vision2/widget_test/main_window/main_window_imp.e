@@ -169,6 +169,7 @@ feature {NONE}-- Initialization
 			set_minimum_height (600)
 			set_title ("Vision2 Tour")
 			file_menu.set_text ("File")
+			file_generate.disable_sensitive
 			file_generate.set_text ("Generate")
 			file_exit.set_text ("Exit")
 			help_menu.set_text ("Help")

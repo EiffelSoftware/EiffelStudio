@@ -115,11 +115,13 @@ extern int eif_is_synchronized (void);
 #define EIF_COND_WAIT_WITH_TIMEOUT(pcond, pmutex, timeout, msg) \
 	{ \
 		int res = 0; \
+		time_t l_seconds = timeout / 1000;	/* `timeout' is in second */ \
+		long l_nano_seconds = (timeout % 1000) * 1000000;	/* Reminder in nanoseconds */ \
 		struct timespec tspec; \
-		tspec.tv_sec = time(NULL) + a_timeout; \
-		tspec.tv_nsec = 0; \
+		tspec.tv_sec = time(NULL) + l_seconds; \
+		tspec.tv_nsec = l_nano_seconds; \
 		res = pthread_cond_timedwait (pcond, pmutex, &tspec); \
-		if (res && (res != ETIMEDOUT)) eraise (msg, EN_EXT); \
+		if (res && !((res == ETIMEDOUT) || (res == ETIME))) eraise (msg, EN_EXT); \
 	}
 #endif
 

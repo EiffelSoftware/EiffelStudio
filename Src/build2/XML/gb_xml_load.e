@@ -211,8 +211,8 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 						end
 						
 							-- Add the appropriate objects to `objects'.
-						gb_ev_any.add_object (display_window)
-						gb_ev_any.add_object (builder_window)
+						gb_ev_any.add_object (window_object.object)
+						gb_ev_any.add_object (window_object.display_object)
 						
 							-- Call `modify_from_xml' which should modify the objects.
 						gb_ev_any.modify_from_xml (current_element)

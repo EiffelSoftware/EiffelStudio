@@ -14,7 +14,7 @@ inherit
 	
 	INTERNAL
 	
-feature {NONE} -- Implementation
+feature {GB_OBJECT, GB_EV_EDITOR_CONSTRUCTOR} -- Implementation
 
 	validate_agents: HASH_TABLE [FUNCTION [ANY, TUPLE, BOOLEAN], STRING] is
 			-- Agents to query if a property modification is permitted, accessible
@@ -85,6 +85,18 @@ feature {NONE} -- Implementation
 		deferred
 		end
 		
+	for_all_instance_referers (an_object: GB_OBJECT; p: PROCEDURE [ANY, TUPLE [GB_OBJECT]]) is
+			-- For all instance referers recursively of `an_object', call `p' with the current
+			-- instance referer filled as the open argument. Used in places where `for_all_objects'
+			-- can not be used directly as some level of indirection and/or calculation is required
+			-- for each individual setting.
+		require
+			an_object_not_void: an_object /= Void
+			procedure_not_void: p /= Void
+		deferred
+		end
+
+		
 	objects: ARRAYED_LIST [like ev_type] is
 			-- All objects to which `Current' represents.
 			-- Modifications must be made to all items
@@ -152,12 +164,6 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 			Result_has_text: not Result.text.is_empty
-		end
-		
-	set_default_icon_pixmap (dialog: EV_DIALOG) is
-			-- Assign the default Build icon to `dialog'.
-		do
-			dialog.set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).Icon_build_window @ 1)
 		end
 		
 	retrieve_pebble (a_widget: EV_WIDGET): ANY is

@@ -164,8 +164,8 @@ X   complete but found to have bugs
     widgets/containers/ev_container.e                   *    o .5  o     .
     widgets/containers/ev_cell.e                        *    o .5  *     .
     widgets/containers/ev_aggregate_cell.e              o    *     *     .
-    widgets/containers/ev_frame.e                       *    o 1   *     .
-    widgets/containers/ev_window.e                      *    o 2   o     .
+    widgets/containers/ev_frame.e                       *    *     o .2  .
+    widgets/containers/ev_window.e                      *    o 2.5 o .5  .
     widgets/containers/ev_dialog.e                      o    *     *     .
     widgets/containers/ev_titled_window.e               o    *     o     .
     widgets/containers/ev_viewport.e                    *    *     o     .
@@ -192,8 +192,8 @@ X   complete but found to have bugs
     items/ev_select_menu_item.e                         *    *     *     .
 
   Status bar:
-    items/ev_status_bar_item.e                          *    o     *     .
-    widgets/uncommon_widgets/ev_status_bar.e            *    o     *     .
+    items/ev_status_bar_item.e                          *    -     -     .
+    widgets/uncommon_widgets/ev_status_bar.e            *    -     -     .
 
   Tool bar:
     widgets/primitives/ev_tool_bar.e                    o    *     *     .

@@ -48,6 +48,7 @@ feature -- Access
 			a_header_file_name: STRING
 			a_constructor: WIZARD_WRITER_CPP_CONSTRUCTOR
 			empty_string: STRING
+			an_other_source: STRING
 		once
 			create Result.make
 			Result.set_header ("Writer for generated C to Eiffel mappers class")
@@ -61,6 +62,13 @@ feature -- Access
 			a_constructor.set_body (empty_string)
 			Result.add_constructor (a_constructor)
 			Result.add_import (Ecom_rt_globals_header_file_name)
+			Result.add_import_after (Ecom_generated_rt_globals_header_file_name)
+			create an_other_source.make (0)
+			an_other_source.append (Generated_ce_class_name)
+			an_other_source.append (Space)
+			an_other_source.append (Generated_ce_mapper)
+			an_other_source.append (Semicolon)
+			Result.add_other_source (an_other_source)
 		end
 
 	Generated_ec_mapper_writer: WIZARD_WRITER_CPP_CLASS is
@@ -69,6 +77,7 @@ feature -- Access
 			a_header_file_name: STRING
 			a_constructor: WIZARD_WRITER_CPP_CONSTRUCTOR
 			empty_string: STRING
+			an_other_source: STRING
 		once
 			create Result.make
 			Result.set_header ("Writer for generated Eiffel to C mappers class")
@@ -82,6 +91,13 @@ feature -- Access
 			a_constructor.set_body (empty_string)
 			Result.add_constructor (a_constructor)
 			Result.add_import (Ecom_rt_globals_header_file_name)
+			Result.add_import_after (Ecom_generated_rt_globals_header_file_name)
+			create an_other_source.make (0)
+			an_other_source.append (Generated_ec_class_name)
+			an_other_source.append (Space)
+			an_other_source.append (Generated_ec_mapper)
+			an_other_source.append (Semicolon)
+			Result.add_other_source (an_other_source)
 		end
 
 	Ecom_rt_globals_header_file_name: STRING is "ecom_rt_globals.h"

@@ -24,8 +24,7 @@ feature {NONE} -- Initialization
 			create {LINKED_LIST [STRING]} others_source.make
 			create {LINKED_LIST [STRING]} import_files.make
 			import_files.compare_objects
-			add_import (Eif_eiffel_h)
-			add_import (Windows_h)
+			standard_include
 		end
 
 feature -- Access

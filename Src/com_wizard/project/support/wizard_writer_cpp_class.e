@@ -26,13 +26,14 @@ feature {NONE} -- Initialization
 			create {LINKED_LIST [STRING]} parents.make
 			create {LINKED_LIST [STRING]} import_files.make
 			import_files.compare_objects
+			create {LINKED_LIST [STRING]} import_files_after.make
+			import_files_after.compare_objects
 			create {LINKED_LIST [STRING]} others.make
 			create {LINKED_LIST [STRING]} others_source.make
 			create {LINKED_LIST [WIZARD_WRITER_CPP_CONSTRUCTOR]} constructors.make
 			create {LINKED_LIST [WIZARD_WRITER]} ordered_elements.make
 			create {LINKED_LIST [WIZARD_WRITER_C_FUNCTION]} extern_functions.make
-			add_import (Eif_eiffel_h)
-			add_import (Windows_h)
+			standard_include
 		end
 
 feature -- Access
@@ -317,6 +318,22 @@ feature -- Access
 			Result.append (Close_curly_brace)
 			Result.append (Semicolon)
 			Result.append (New_line)
+			Result.append (New_line)
+
+			from
+				import_files_after.start
+			until
+				import_files_after.after
+			loop
+				Result.append (Include_clause)
+				Result.append (Space)
+				Result.append ("%"")
+				Result.append (import_files_after.item)
+				Result.append ("%"")
+				Result.append (New_line)
+				Result.append (New_line)
+				import_files_after.forth
+			end
 
 			Result.append (Sharp)
 			Result.append (Endif)
@@ -360,6 +377,9 @@ feature -- Access
 	ordered_elements: LIST [WIZARD_WRITER]
 			-- Ordered elements (appears in code with same order
 			-- as added)
+
+	import_files_after: LIST [STRING]
+			-- Imported header files
 
 feature -- Element Change
 
@@ -484,6 +504,20 @@ feature -- Element Change
 			extern_functions.extend (an_extern_function)
 		ensure
 			added: extern_functions.last = an_extern_function
+		end
+
+	add_import_after (an_import_file: STRING) is
+			-- Add `an_import_file' to list of imported header files.
+		require
+			non_void_import_file: an_import_file /= Void
+			valid_import_file: not an_import_file.empty
+			valid_syntax: an_import_file.item (1) /= '%N' and an_import_file.item (an_import_file.count) /= '%N'
+		do
+			if not import_files_after.has (an_import_file) then
+				import_files_after.extend (an_import_file)
+			end
+		ensure
+			added: import_files_after.has (an_import_file)
 		end
 
 feature -- Basic Operations

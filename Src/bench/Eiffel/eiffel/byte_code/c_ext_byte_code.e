@@ -15,10 +15,16 @@ feature -- Generation
 
 	generate_signature is
 		do
+			if is_during_il then
+				Precursor {EXT_EXT_BYTE_CODE}
+			end
 		end
 
 	generate_body is
 		do
+			if is_during_il then
+				Precursor {EXT_EXT_BYTE_CODE}
+			end
 		end
 
 end -- class C_EXT_BYTE_CODE

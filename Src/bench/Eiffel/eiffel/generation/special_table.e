@@ -34,6 +34,9 @@ feature
 			c_name := rout_id.table_name;
 			min_id := 1;
 			max_id := final_table_size;
+			if System.has_separate then
+				file.putstring ("extern void sep_obj_dispose();%N");
+			end;
 			from
 				file.putstring ("char *(*");
 				file.putstring (c_name);
@@ -60,6 +63,9 @@ feature
 					file.putstring ("(fnptr) 0,%N");
 				end;
 				i := i + 1;
+			end;
+			if System.has_separate then
+				file.putstring ("(fnptr) sep_obj_dispose%N");
 			end;
 			file.putstring ("};%N%N");
 

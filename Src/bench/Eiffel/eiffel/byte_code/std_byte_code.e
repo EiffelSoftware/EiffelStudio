@@ -1420,23 +1420,25 @@ feature -- Concurrent Eiffel
 						var_name.append("arg");
 						var_name.append(i.out);							
 						reg := context.associated_register_table.item(var_name);
+						generated_file.putstring ("if (CURRSO(");
 						if reg /= Void then
-							generated_file.putstring ("if (CURRSO(");
 							reg.print_register_by_name;
-							generated_file.putstring (")) {")
-							generated_file.indent;
-							generated_file.new_line;
-							free_partial_sep_paras (i);
-							generated_file.putstring ("CURRSFW;")
-							generated_file.new_line;
-							generated_file.putstring ("goto ")
-							Context.print_reservation_label;
-							generated_file.putstring (";")
-							generated_file.new_line;
-							generated_file.exdent;
-							generated_file.putstring ("}")
-							generated_file.new_line;
-						end
+						else
+							generated_file.putstring (var_name)
+						end;
+						generated_file.putstring (")) {")
+						generated_file.indent;
+						generated_file.new_line;
+						free_partial_sep_paras (i);
+						generated_file.putstring ("CURRSFW;")
+						generated_file.new_line;
+						generated_file.putstring ("goto ")
+						Context.print_reservation_label;
+						generated_file.putstring (";")
+						generated_file.new_line;
+						generated_file.exdent;
+						generated_file.putstring ("}")
+						generated_file.new_line;
 					end
 					i := i + 1;
 				end;
@@ -1465,11 +1467,13 @@ feature -- Concurrent Eiffel
                         var_name.append("arg");
                         var_name.append(i.out);                            
                         reg := context.associated_register_table.item(var_name);
+	                    generated_file.putstring ("CURFSO(");
                         if reg /= Void then
-	                        generated_file.putstring ("CURFSO(");
                             reg.print_register_by_name;
-                        	generated_file.putstring (");")
-                        end
+						else
+                        	generated_file.putstring (var_name);
+						end;
+                        generated_file.putstring (");")
                         generated_file.new_line;
                     end
                     i := i + 1;
@@ -1500,12 +1504,14 @@ feature -- Concurrent Eiffel
                         var_name.append("arg");
                         var_name.append(i.out);                            
                         reg := context.associated_register_table.item(var_name);
+	                    generated_file.putstring ("CURFSO(");
                         if reg /= Void then
-	                        generated_file.putstring ("CURFSO(");
                             reg.print_register_by_name;
-                        	generated_file.putstring (");")
-                        	generated_file.new_line;
+						else
+                        	generated_file.putstring (var_name)
                         end
+                      	generated_file.putstring (");")
+                       	generated_file.new_line;
                     end
                     i := i + 1;
                 end;

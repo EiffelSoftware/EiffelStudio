@@ -48,7 +48,7 @@ feature -- Callbacks
 			char: CHARACTER;
 			temp: STRING
 		do
-			fn := clone (name_chooser.selected_file);
+			fn := clone (last_name_chooser.selected_file);
 			if not fn.empty then
 				!!new_file.make (fn);
 				aok := True;
@@ -59,7 +59,7 @@ feature -- Callbacks
 					warner (text_window).gotcha_call 
 						(w_Not_a_plain_file (fn))
 				elseif 
-					argument = name_chooser and then 
+					argument = last_name_chooser and then 
 					(new_file.exists and then new_file.is_writable)
 				then
 					aok := False;
@@ -122,11 +122,11 @@ feature {NONE} -- Implementation
 	work (argument: ANY) is
 			-- Save a file with the chosen name.
 		do
-			if argument = name_chooser then
+			if argument /= Void and then argument = last_name_chooser then
 				save_it (argument)
 			elseif argument = text_window then
-				name_chooser.set_window (text_window);
-				name_chooser.call (Current)
+				name_chooser (text_window).set_window (text_window);
+				last_name_chooser.call (Current)
 			end
 		end;
 

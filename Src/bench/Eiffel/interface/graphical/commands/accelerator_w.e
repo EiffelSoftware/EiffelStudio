@@ -87,8 +87,8 @@ feature {NONE} -- Execution
 			elseif argument = raise_sys_acc then
 				System_tool.raise
 			elseif argument = raise_warner_acc then
-				if name_chooser.is_popped_up then
-					name_chooser.raise
+				if last_name_chooser.is_popped_up then
+					last_name_chooser.raise
 				end;
 				if 
 					last_confirmer /= Void and then 

@@ -34,29 +34,25 @@ inherit
 	ARGUMENTS
 		export
 			{NONE} all
-		end		
+		end
+		
+	SHARED_CLR_VERSION
+		export
+			{NONE} all
+			{ANY} clr_version
+		end
 
 create
 	make
 
 feature {NONE} -- Initialization
 
-	make (a_clr_version: STRING) is
+	make is
 			-- New instance of Current for runtime version `a_clr_version'.
-		require
-			a_clr_version_not_void: a_clr_version /= Void
 		do
-			clr_version := a_clr_version
-			create cache_reader.make (a_clr_version)
-		ensure
-			clr_version_set: clr_version = a_clr_version
+			create cache_reader
 		end
 	
-feature -- Access
-
-	clr_version: STRING
-			-- Version of CLR runtime.
-
 feature -- Basic Operations
 
 	add_assembly (a_path: STRING) is

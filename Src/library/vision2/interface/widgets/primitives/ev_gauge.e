@@ -146,7 +146,6 @@ feature -- Status setting
 			implementation.set_proportion (a_proportion)
 		end
 
-
 feature -- Element change
 
 	set_value (a_value: INTEGER) is

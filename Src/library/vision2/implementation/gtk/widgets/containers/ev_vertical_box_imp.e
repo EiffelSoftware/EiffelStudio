@@ -16,7 +16,10 @@ inherit
 	EV_VERTICAL_BOX_I
 		
 	EV_BOX_IMP
-	
+		redefine
+			child_packing_changed
+		end
+
 creation
 	
 	make
@@ -44,22 +47,12 @@ feature {EV_BOX} -- Implementation
 
 feature {EV_WIDGET_IMP} -- Implementation
 
-	child_expand_changed (the_child: EV_WIDGET_IMP) is
+	child_packing_changed (the_child: EV_WIDGET_IMP) is
 		do
 			c_gtk_box_set_child_options (widget, the_child.widget,
-				  the_child.expandable, the_child.vertical_resizable)
- 		end	
+				  the_child.expandable, the_child.expandable)
+		end	
 
-	child_vertresize_changed (the_child: EV_WIDGET_IMP) is
-		do
-			c_gtk_box_set_child_options (widget, the_child.widget,
-				  the_child.expandable, the_child.vertical_resizable)
-		end
-
-	child_horiresize_changed (the_child: EV_WIDGET_IMP) is
-		do
-			
-		end
 
 end -- class EV_VERTICAL_BOX_IMP
 

@@ -80,6 +80,7 @@ feature -- Basic Operation
 			parent_directory_item: GB_WINDOW_SELECTOR_COMMON_ITEM
 		do
 			child_object := Object_handler.deep_object_from_id (child_id)
+			child_object.remove_client_representation_recursively
 
 			new_object := Object_handler.deep_object_from_id (child_id).new_top_level_representation
 			new_object_id := new_object.id
@@ -183,6 +184,7 @@ feature -- Basic Operation
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
+			new_object.add_client_representation_recursively
 			child_object.update_representations_for_name_or_type_change
 			command_handler.update
 			executed_once := True
@@ -197,7 +199,7 @@ feature -- Basic Operation
 		do
 			child_object := Object_handler.deep_object_from_id (child_id)
 			new_object := Object_handler.deep_object_from_id (new_object_id)
-			
+			new_object.remove_client_representation_recursively
 			
 			create all_children_old.make (50)
 			child_object.all_children_recursive (all_children_old)
@@ -274,6 +276,7 @@ feature -- Basic Operation
 					--| FIXME
 					
 			child_object.update_representations_for_name_or_type_change
+			child_object.add_client_representation_recursively
 					
 			rebuild_associated_editors (child_object.object)
 

@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		require
 			gb_ev_any_not_void: any /= Void
 			a_parent_not_void: a_parent /= Void
-			label_text_not_void_or_empty: label_text /= Void and not label_text.is_empty
+			label_text_not_void_or_empty: label_text /= Void
 			an_agent_not_void: an_execution_agent /= Void
 			a_validate_agent_not_void: a_validate_agent /= Void
 		local
@@ -39,9 +39,11 @@ feature {NONE} -- Initialization
 				object_not_void: object /= Void
 			end
 			set_padding_width (object_editor_vertical_padding_width)	
-			create label.make_with_text (label_text)
-			label.align_text_left
-			extend (label)
+			if not label_text.is_empty then
+				create label.make_with_text (label_text)
+				label.align_text_left
+				extend (label)
+			end
 			create horizontal_box
 			extend (horizontal_box)
 			horizontal_box.set_padding_width (object_editor_padding_width)
@@ -157,22 +159,6 @@ feature {GB_EV_EDITOR_CONSTRUCTOR, GB_EV_ANY} -- Implementation
 				end
 			end
 		end
-		
-	hide_frame is
-			-- Ensure no frame is applied to `Current' and remove border from top level box.
-		local
-			container: EV_CONTAINER
-			widget: EV_WIDGET
-		do
-			container := frame.parent
-			container.prune (frame)
-			widget := frame.item
-			frame.wipe_out
-			horizontal_box.set_border_width (0)
-			container.extend (widget)
-		ensure
-			 frame_not_used: frame.parent = Void and frame.is_empty
-		end
 
 feature {NONE} -- Implementation
 
@@ -229,9 +215,6 @@ feature {NONE} -- Implementation
 	return_pixmap_agent: FUNCTION [ANY, TUPLE [], EV_PIXMAP]
 	
 	pixmap_path_agent: FUNCTION [ANY, TUPLE [], STRING]
-		
-	frame: EV_FRAME
-		-- Frame used for displaying title around `Current'.
 		
 	horizontal_box: EV_HORIZONTAL_BOX
 		-- Main horizontal box used in construction of `Current'.

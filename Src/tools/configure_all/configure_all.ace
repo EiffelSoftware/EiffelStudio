@@ -6,6 +6,8 @@ root
 
 default
 	assertion (require)
+	arguments ("nt wel %"D:\Installed Eiffel50\\%" %"C:\MyNewProjects\\%" InstallDotNet UseBorland")
+	arguments ("nt wel %"D:\Installed Eiffel50\\%" %"C:\MyNewProjects\\%" NoDotnet UseBorland")
 	arguments ("nt wel %"D:\InstalledEiffel50\\%" %"C:\MyNewProjects\\%" NoDotnet UseBorland")
 	arguments ("nt wel %"D:\InstalledEiffel50\\%" %"C:\MyNewProjects%" %"%" UseBorland")
 	arguments ("nt wel %"D:\InstalledEiffel50\\%" %"C:\MyNewProjects%" %"InstallDotNet%" UseBorland")

@@ -13,8 +13,6 @@ inherit
 		redefine	
 			interface,
 			is_usable
-		select
-			interface
 		end
 
 	EV_WIDGET_LIST_IMP
@@ -39,12 +37,11 @@ inherit
 		end
 
 	EV_FONTABLE_IMP
-		rename
-			interface as ev_fontable_imp_interface
 		undefine
 			is_usable
 		redefine
-			set_font
+			set_font,
+			interface
 		end
 
 	WEL_TAB_CONTROL
@@ -900,6 +897,9 @@ feature {NONE} -- Font implementation
 			if
 				(tab_pos = interface.Tab_top)
 				or else (tab_pos = interface.Tab_bottom)
+				--| FIXME, there appears to be no way to use a cusotm font
+				-- when the tabs are left or right. In this case, we use the default
+				-- font. Julian
 			then
 				if private_font /= Void then
 					local_font_windows ?= private_font.implementation
@@ -914,6 +914,7 @@ feature {NONE} -- Font implementation
 				cwin_send_message (wel_item, Wm_setfont, 0,
 					cwin_make_long (1, 0))
 			end
+			notify_change (2 + 1, Current)
 		end
 
 end -- EV_NOTEBOOK_IMP

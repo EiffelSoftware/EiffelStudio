@@ -83,7 +83,6 @@ feature {NONE} -- Implementation
 		local
 			container: EV_CONTAINER
 		do
-			--|FIXME for now, actually use a cell
 			container ?= vision2_object_from_type (type)
 			check
 				container_not_void: container /= Void

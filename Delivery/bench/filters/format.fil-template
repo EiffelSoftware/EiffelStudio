@@ -65,6 +65,15 @@ class_menu_item_disabled|*
 cluster_name			|*
 	-- Symbol: $file$.
 
+tooltip					|*
+	-- Text contained within this construct requests a tooltip.
+	-- Symbol: $tooltip$.
+	-- HTML Example: <SPAN TITLE="$tooltip$">*</SPAN>
+
+origin_comment			|*
+	-- Text describing the written class of a feature.
+	-- Example: -- from ANY
+
 -------------------------------------------------------------------------------
 -- Major syntactical constructs
 -------------------------------------------------------------------------------

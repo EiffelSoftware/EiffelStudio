@@ -115,7 +115,6 @@ feature -- Status setting
 			if drawing_dc /= Void then
 				update_dc
 				drawing_dc.set_bk_color (gc_bg_color)
-				drawing_dc.rectangle (0, 0, width, height)
 			end
 		end 
 
@@ -237,7 +236,7 @@ feature -- Status setting
 			a_mode <= 15
 		do
 			logical_mode := a_mode
-			if drawing_dc /= Void then
+			if (drawing_dc /= Void) and then (drawing_dc.exists )then
 				update_dc
 			end
 		end
@@ -301,7 +300,7 @@ feature -- Status setting
 			a_tile_exists: a_tile /= Void
 			a_tile_valid: a_tile.is_valid
 		local
-			a_tile_w: PIXMAP_WINDOWS
+			a_color: WEL_COLOR_REF
 		do
 			set_stipple (a_tile)
 		end
@@ -354,22 +353,44 @@ feature -- Output
 
 	clear is
 			-- Clear the entire area.
+		do
+			clear_rect (0, 0, width, height)
+		end
+
+	clear_rect (a_left, a_top, a_right, a_bottom: INTEGER) is
+			-- Clear the rectangular area defined by
+			-- `a_left', `a_top', `a_right', `a_bottom'.
 		local
 			color_ref: WEL_COLOR_REF
-			background_brush: WEL_BRUSH
+			background_brush, old_brush: WEL_BRUSH
+			background_pen, old_pen: WEL_PEN
 			a_rect: WEL_RECT
 			local_color: WEL_COLOR_REF
+			old_rop2: INTEGER
 		do
 			if is_drawable then
-				if gc_bg_color /= Void then
-					color_ref := gc_bg_color
+				if bg_color /= Void then
+					color_ref := bg_color
 				else
 					!! color_ref.make_system (Color_window)
 				end
+				old_rop2 := drawing_dc.rop2
+				old_brush := drawing_dc.brush
+				old_pen := drawing_dc.pen
+				drawing_dc.set_rop2 (r2_copypen)
 				!! a_rect.make (0, 0, width, height)
 				!! background_brush.make_solid (color_ref)
+				!! background_pen.make (Ps_solid, 1, color_ref)
 				drawing_dc.select_brush (background_brush)
-				drawing_dc.rectangle (0, 0, width, height)
+				drawing_dc.select_pen (background_pen)
+				drawing_dc.rectangle (a_left, a_top, a_right, a_bottom)
+				drawing_dc.set_rop2 (old_rop2)
+				if old_brush /= Void then
+					drawing_dc.select_brush (old_brush)
+				end
+				if old_pen /= Void then
+					drawing_dc.select_pen (old_pen)
+				end
 			end
 		end
 
@@ -403,8 +424,16 @@ feature -- Output
 			drawing_dc.set_text_color (gc_fg_color)
 			drawing_dc.set_bk_color (gc_bg_color)
 			drawing_dc.set_background_transparent
-			drawing_dc.set_text_alignment (ta_baseline)
+			set_text_alignment
 			drawing_dc.text_out (base.x, base.y, text)
+		end
+
+	set_text_alignment is
+			-- Set the default text alignment.
+		require
+			drawing_dc_not_void: drawing_dc /= Void
+		do
+			drawing_dc.set_text_alignment (ta_baseline)
 		end
 
 	draw_inf_line (point1, point2: COORD_XY) is
@@ -630,9 +659,6 @@ feature -- Implementation
 					drawing_dc.pie (left, top, right+1, bottom+1, x_start_arc, y_start_arc, x_end_arc, y_end_arc)
 				end
 			end
---			if not filled and draw_brush /= Void then
---				drawing_dc.select_brush (draw_brush)
---			end
 		end
 
 	draw_any_rectangle (center: COORD_XY; rwidth, rheight: INTEGER; an_orientation: REAL; filled: BOOLEAN) is
@@ -652,7 +678,9 @@ feature -- Implementation
 			null_brush: WEL_NULL_BRUSH
 		do
 			if not filled then
-				drawing_dc.unselect_brush
+				if drawing_dc.brush /= Void then
+					drawing_dc.unselect_brush	
+				end
 				!! null_brush.make
 				drawing_dc.select_brush (null_brush)
 			else
@@ -708,10 +736,9 @@ feature -- Implementation
 		require
 			drawing_dc: drawing_dc /= Void and drawing_dc.exists
 		do
-			--drawing_dc.unselect_brush
 			inspect fill_style
 				when 0 then
-					!! draw_brush.make_solid (gc_fg_color) 
+					!! draw_brush.make_solid (gc_fg_color)
 				when 1 then
 				when 2 then
 					drawing_dc.set_text_color (gc_fg_color)
@@ -727,7 +754,12 @@ feature -- Implementation
 		require
 			drawing_dc: drawing_dc /= Void and drawing_dc.exists
 		do
-			inspect
+			debug ("RASTER OPERATIONS")
+				print ("update_dc")
+				print (logical_mode)
+				print ("%N")
+			end
+				inspect
 				logical_mode
 			when 0 then
 				drawing_dc.set_rop2 (r2_black)
@@ -784,7 +816,9 @@ feature -- Implementation
 			pen: WEL_PEN
 		do
 			!! pen.make (line_style, line_width, gc_fg_color)
-			drawing_dc.unselect_pen
+			if drawing_dc.pen /= Void then
+				drawing_dc.unselect_pen
+			end
 			drawing_dc.select_pen (pen)
 		end
 
@@ -802,8 +836,11 @@ feature {NONE} -- Implementation
 	line_style: INTEGER
 			-- Style of a line
 
-	gc_bg_color: WEL_COLOR_REF
+	bg_color: WEL_COLOR_REF
 			-- Background color
+
+	gc_bg_color: WEL_COLOR_REF
+			-- Background color for the GC
 
 	gc_fg_color: WEL_COLOR_REF
 			-- Foreground color

@@ -103,26 +103,20 @@ feature -- Generation
 		require
 			class_c_not_void: class_c /= Void
 		local
-			feat_tbl: FEATURE_TABLE
-			features: SEARCH_TABLE [FEATURE_INFO]
-			f_info: FEATURE_INFO
+			select_tbl: SELECT_TABLE
+			features: SEARCH_TABLE [INTEGER]
 			feat: FEATURE_I
-			written_static_type_id: INTEGER
 		do
 			from
-				feat_tbl := class_c.feature_table
+				select_tbl := class_c.feature_table.origin_table
 				features := class_type.class_interface.features
-				written_static_type_id := current_class_type.static_type_id
-				il_generator.start_features_list (written_static_type_id)
+				il_generator.start_features_list (current_class_type.static_type_id)
 				features.start
 			until
 				features.after
 			loop
-				f_info := features.item_for_iteration
-				if f_info.is_in_interface then
-					feat := feat_tbl.item_id (f_info.feature_name_id)
-					generate_interface_feature (feat, written_static_type_id)
-				end
+				feat := select_tbl.item (features.item_for_iteration)
+				generate_interface_feature (feat)
 				features.forth
 			end
 
@@ -132,26 +126,20 @@ feature -- Generation
 	generate_implementation_features (class_c: CLASS_C; class_type: CLASS_TYPE) is
 			-- Generate features written in `class_c'.
 		local
-			feat_tbl: FEATURE_TABLE
-			features: SEARCH_TABLE [FEATURE_INFO]
-			f_info: FEATURE_INFO
+			select_tbl: SELECT_TABLE
+			features: SEARCH_TABLE [INTEGER]
 			feat: FEATURE_I
-			written_static_type_id: INTEGER
 		do
 			from
-				feat_tbl := class_c.feature_table
+				select_tbl := class_c.feature_table.origin_table
 				features := class_type.class_interface.features
-				written_static_type_id := current_class_type.static_type_id
-				il_generator.start_features_list (written_static_type_id)
+				il_generator.start_features_list (current_class_type.static_type_id)
 				features.start
 			until
 				features.after
 			loop
-				f_info := features.item_for_iteration
-				if f_info.is_in_interface then
-					feat := feat_tbl.item_id (f_info.feature_name_id)
-					generate_feature (feat, True, written_static_type_id, False)
-				end
+				feat := select_tbl.item (features.item_for_iteration)
+				generate_feature (feat, False)
 				features.forth
 			end
 
@@ -268,7 +256,7 @@ feature {NONE} -- Implementation: ancestors description
 
 feature {NONE} -- Feature generation
 
-	generate_interface_feature (feat: FEATURE_I; type_id: INTEGER) is
+	generate_interface_feature (feat: FEATURE_I) is
 			-- Generate interface `feat' description.
 		do
 			if feat.feature_name_id /= Names_heap.void_name_id then
@@ -290,7 +278,7 @@ feature {NONE} -- Feature generation
 			end
 		end
 
-	generate_feature (feat: FEATURE_I; in_current_class: BOOLEAN; type_id: INTEGER; is_static: BOOLEAN) is
+	generate_feature (feat: FEATURE_I; is_static: BOOLEAN) is
 			-- Generate `feat' description.
 		local
 			is_deferred: BOOLEAN
@@ -329,6 +317,45 @@ feature {NONE} -- Feature generation
 
 				if inv /= Void then
 					il_generator.mark_invariant (feat.feature_id)
+				end
+				il_generator.create_feature_description
+				generate_feature_custom_attribute (current_class_type, feat)
+			end
+		end
+
+	generate_inherited_feature (feat: FEATURE_I; feat_id: INTEGER) is
+			-- Generate `feat' description.
+		local
+			is_deferred: BOOLEAN
+			is_redefined: BOOLEAN
+			is_frozen: BOOLEAN
+			is_static: BOOLEAN
+			inv: INVARIANT_FEAT_I
+			name: STRING
+		do
+			if feat.feature_name_id /= Names_heap.void_name_id then
+				if feat.has_arguments then
+					il_generator.start_feature_description (feat.arguments.count)
+				else
+					il_generator.start_feature_description (0)
+				end
+				is_deferred := False
+				inv ?= feat
+				is_redefined := not feat.is_origin and then inv = Void
+				is_frozen := feat.is_frozen
+				is_static := False
+				
+				name := feat.external_name
+
+				il_generator.generate_feature_identification (name, feat_id,
+					is_redefined, is_deferred, is_frozen, feat.is_attribute,
+					is_static, is_static)
+				
+				generate_arguments (feat)
+				generate_return_type (feat)
+
+				if inv /= Void then
+					il_generator.mark_invariant (feat_id)
 				end
 				il_generator.create_feature_description
 				generate_feature_custom_attribute (current_class_type, feat)

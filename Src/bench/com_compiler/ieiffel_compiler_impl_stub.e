@@ -18,6 +18,12 @@ feature -- Access
 			-- Put Implementation here.
 		end
 
+	compiler_version: STRING is
+			-- Compiler version.
+		do
+			-- Put Implementation here.
+		end
+
 feature -- Basic Operations
 
 	compile is

@@ -25,7 +25,7 @@ feature -- Access
 		end
 
 	override: BOOLEAN is
-			-- Should this cluster classes take priority over other classes with same name.
+			-- Should this cluster classes take priority over other classes with same name?
 		do
 			-- Put Implementation here.
 		end
@@ -101,7 +101,7 @@ feature -- Basic Operations
 		end
 
 	set_override (return_value: BOOLEAN) is
-			-- Should this cluster classes take priority over other classes with same name.
+			-- Should this cluster classes take priority over other classes with same name?
 			-- `return_value' [in].  
 		do
 			-- Put Implementation here.

@@ -31,6 +31,12 @@ feature -- Access
 			Result := ccom_is_successful (initializer)
 		end
 
+	compiler_version: STRING is
+			-- Compiler version.
+		do
+			Result := ccom_compiler_version (initializer)
+		end
+
 feature -- Basic Operations
 
 	compile is
@@ -59,6 +65,12 @@ feature {NONE}  -- Externals
 			-- Was last compilation successful?
 		external
 			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"](): EIF_BOOLEAN"
+		end
+
+	ccom_compiler_version (cpp_obj: POINTER): STRING is
+			-- Compiler version.
+		external
+			"C++ [ecom_eiffel_compiler::IEiffelCompiler_impl_proxy %"ecom_eiffel_compiler_IEiffelCompiler_impl_proxy_s.h%"](): EIF_REFERENCE"
 		end
 
 	ccom_delete_ieiffel_compiler_impl_proxy (a_pointer: POINTER) is

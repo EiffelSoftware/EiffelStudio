@@ -79,11 +79,7 @@ feature -- Properties
 		once
 			!! full_path.make_from_string ("/turin1/guusl/resource_control");
 			full_path.set_file_name ("test_pixmap_1");
-			!! Result.make
-			Result.read_from_file (full_path);
-			if not Result.is_valid then
-				io.error.putstring ("Error while loading pixmap%N")
-			end
+			Result := read_pixmap (full_path)
 		end;
 
 	dark_symbol: PIXMAP is
@@ -93,11 +89,7 @@ feature -- Properties
 		once
 			!! full_path.make_from_string ("/turin1/guusl/resource_control")
 			full_path.set_file_name ("test_pixmap_3");
-			!! Result.make
-			Result.read_from_file (full_path);
-			if not Result.is_valid then
-				io.error.putstring ("Error while loading pixmap%N")
-			end
+			Result := read_pixmap (full_path)
 		end;
 
 feature -- User Interface

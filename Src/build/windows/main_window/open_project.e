@@ -30,8 +30,8 @@ feature
 			proj_dir: STRING
 		do
 			if main_panel.project_initialized then
-                clear_project
-            end;
+				clear_project
+			end;
 			to_create_project := False;
 			proj_dir := Environment.project_directory;
 			proj_dir.wipe_out;
@@ -66,9 +66,12 @@ feature
 					end;
 				else
 					to_create_project := True;
-					question_box.popup (Current,
+					question_box.popup_with_labels (Current,
 						Messages.not_eb_project_qu, 
-						Environment.project_directory);
+						Environment.project_directory,
+						Widget_names.create_name,
+						Widget_names.new_choice_name,
+						Void);
 				end;
 			else
 				handle_error (Messages.eb_project_not_exists_er, proj_dir);
@@ -89,8 +92,13 @@ feature
 		end;
 
 	question_cancel_action is
+		local
+			pw: OPEN_PROJ_WIN
 		do
-			if not to_create_project then
+			if to_create_project then
+				!! pw.make (main_panel.base)
+				pw.popup
+			else
 				retrieve_project (Environment.storage_directory);
 				history_window.set_saved_application;
 			end

@@ -61,7 +61,7 @@ feature
 						-- is in the Storage directory.
 					!!dir.make (storage_file_name);
 					if dir.exists then
-						question_box.popup_with_help 
+						question_box.popup_with_labels 
 								(Current, Messages.project_exists_qu, 
 								proj_dir,
 								Widget_names.open_name,

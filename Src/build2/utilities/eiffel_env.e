@@ -52,6 +52,20 @@ feature -- Access: environment variable
 		once
 			Result := Execution_environment.get ("ISE_PROJECTS")
 		end
+		
+	Eiffel_preferences: STRING is
+			-- Preferences location
+		local
+			fname: FILE_NAME
+		once
+			if Eiffel_platform.as_lower.is_equal ("windows") then
+				Result := "HKEY_CURRENT_USER\Software\ISE\EiffelBuild"
+			else
+				create fname.make_from_string (Execution_environment.home_directory_name)
+				fname.set_file_name (".buildrc")
+				Result := fname
+			end
+		end
 
 	Home: STRING is
 			-- HOME name.

@@ -8,6 +8,8 @@ class
 	PROGRESS_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_VERTICAL_BOX
 		redefine
 			make

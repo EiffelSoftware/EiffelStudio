@@ -8,6 +8,8 @@ class
 	QUESTION_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_BUTTON
 		redefine
 			make

@@ -8,6 +8,8 @@ class
 	LIST_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_LIST
 		redefine
 			make

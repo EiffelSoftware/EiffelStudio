@@ -4,10 +4,36 @@ indexing
 		% demonstration";
 	date: "$Date$";
 	revision: "$Revision$"
-class
+
+deferred class
 	DEMO_WINDOW
 
-feature -- 
+feature {NONE} -- Initialization
+
+  	make (par: EV_CONTAINER) is
+   			-- Create the demo in `par'.
+		deferred
+		end
+
+feature -- Status report
+
+	action_window_shown: BOOLEAN is
+			-- Is the action windo shown ?
+		do
+			if action_window /= Void then
+				Result := action_window.shown
+			else
+				Result := False
+			end
+		end
+
+	has_action_window: BOOLEAN is
+			-- Does the demo_window has an action_window?
+		do
+			Result := action_window /= Void
+		end
+
+feature -- Basic operation
 
 	show_action_window is
 			-- Shows the action window.
@@ -90,6 +116,7 @@ feature --
 		once
 			create Result.make (Void)
 		end
+
 	dyntable_tab: DYNTABLE_TAB is
 			-- Creation of the dynamic_table_tab.
 		once
@@ -112,6 +139,15 @@ feature --
 			-- Creation of the primitive tab.
 		once
 			create Result.make (Void)
+		end
+
+feature -- Deferred features
+
+	set_parent (par: EV_CONTAINER) is
+			-- Make `par' the new parent of the widget.
+			-- `par' can be Void then the parent is the
+			-- default_parent.
+		deferred
 		end
 		
 end -- class DEMO_WINDOW

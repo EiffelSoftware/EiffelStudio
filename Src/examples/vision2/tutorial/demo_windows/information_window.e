@@ -8,6 +8,8 @@ class
 	INFORMATION_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_BUTTON
 		redefine
 			make

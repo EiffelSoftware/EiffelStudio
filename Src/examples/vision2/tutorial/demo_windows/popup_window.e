@@ -8,6 +8,8 @@ class
 	POPUP_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_FIXED
 		redefine
 			make
@@ -28,9 +30,7 @@ feature {NONE} -- Initialization
 			!! cmd.make (~popup_cmd)
 			add_button_press_command (3, cmd, Void)
 
-			!! button.make (Current)
-			button.set_text ("I move")
-			button.set_default_minimum_size
+			!! button.make_with_text (Current, "I move")
 			button.set_x_y (10, 10)
 
 			!! popup.make (Current)

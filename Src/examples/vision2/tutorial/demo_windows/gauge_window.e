@@ -8,6 +8,8 @@ class
 	GAUGE_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_TABLE
 		redefine
 			make

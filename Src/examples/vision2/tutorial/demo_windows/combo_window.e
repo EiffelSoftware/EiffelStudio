@@ -8,6 +8,8 @@ class
 	COMBO_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_COMBO_BOX
 		redefine
 			make

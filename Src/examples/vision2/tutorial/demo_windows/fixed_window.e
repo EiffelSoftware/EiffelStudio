@@ -26,21 +26,16 @@ feature {NONE} -- Initialization
 		do
 			{EV_FIXED} Precursor (par)
 
-			!!button1.make (Current)
-			!!button2.make (Current)
-
-			button1.set_text ("Press me")
-			button1.set_default_minimum_size
+			!!button1.make_with_text (Current, "Press me")
+			!!button2.make_with_text (Current, "Me too!")
 			!! cmd.make (~execute1)
 			button1.add_click_command (cmd, Void)
-			button2.set_text ("Me too!")
-			button2.set_default_minimum_size
 			button1.set_x_y (10, 20)
 			button2.set_x_y (200, 50)
 			xvel:=20
 			yvel:=20
 
-				--Sets the tabs for the action window
+			--Sets the tabs for the action window
 			set_container_tabs
 			create action_window.make(Current,tab_list)
 		end

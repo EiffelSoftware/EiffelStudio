@@ -8,6 +8,8 @@ class
 	PIXMAP_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_VERTICAL_BOX
 		redefine
 			make
@@ -36,22 +38,28 @@ feature {NONE} -- Initialization
 
 			-- a button
 			create button.make_with_text (Current, "Press me!")
+			button.set_expand (False)
 
 			-- a toggle button
 			create toggle_button.make_with_text (Current, "A toggle button")
+			toggle_button.set_expand (False)
 
 			-- a check button
 			create check_button.make (Current)
 			check_button.set_text ("A check button")
+			check_button.set_expand (False)
 
 			-- a radio button
 			create radio_button.make_with_text (Current, "A first radio button")
+			radio_button.set_expand (False)
 			create radio_button.make_with_text (Current, "A second radio button")
+			radio_button.set_expand (False)
 
 			-- a combo box
 			create combo.make (Current)
 			create comboListItem.make_with_text (combo, "Combo item 1")
 			create comboListItem.make_with_text (combo, "Combo item 2")
+			combo.set_expand (False)
 
 			-- a Tree
 			create tree.make (Current)
@@ -67,6 +75,7 @@ feature {NONE} -- Initialization
 			create optionMenu.make_with_text (option, "An option button")
 			create optionMenuItem.make_with_text (optionMenu, "option menu item 1")
 			create optionMenuItem.make_with_text (optionMenu, "option menu item 2")
+			option.set_expand (False)
 
 			-- a multi column list
 			create mc.make_with_text (Current, <<"1st column", "2nd column", "3rd column">>)
@@ -74,13 +83,13 @@ feature {NONE} -- Initialization
 			create mcrow2.make_with_text (mc, <<"I am", "row", "two">>)
 
 			-- Catch some events
-			create arg.make (2)
-			button.add_click_command (Current, arg)
+--			create arg.make (2)
+--			button.add_click_command (Current, arg)
 
 			-- create the pixmaps
-			create buttonPix.make_from_file (pixmap_path ("open.bmp"))
-			create checkPix.make_from_file (pixmap_path ("open.bmp"))
-			create pix.make_from_file (pixmap_path ("open.bmp"))
+			create buttonPix.make_from_file (pixmap_path ("open"))
+			create checkPix.make_from_file (pixmap_path ("open"))
+			create pix.make_from_file (pixmap_path ("open"))
 
 			create pixArray.make (1,3)
 			pixArray.force (pix, 1)
@@ -92,7 +101,8 @@ feature {NONE} -- Initialization
 			button.set_pixmap (buttonPix)
 			treeItem3.set_pixmap (pix)
 			check_button.set_pixmap (checkPix)
-			optionMenuItem.set_pixmap (pix)
+	--		optionMenuItem.set_pixmap (pix)
+			radio_button.set_pixmap (pix)
 			comboListItem.set_pixmap (pix)
 
 			-- colors

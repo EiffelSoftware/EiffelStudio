@@ -47,8 +47,6 @@ feature -- Initialization
 				n1.append_page(tabs.item,tab_title)
 				tabs.forth
 			end
-			show
-
 			create cmd.make (~my_function)
 			create arg.make (1)
 			add_close_command (cmd, arg)

@@ -8,6 +8,8 @@ class
 	DRAWING_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_DRAWING_AREA
 		redefine
 			make

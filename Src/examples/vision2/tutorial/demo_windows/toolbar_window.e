@@ -8,6 +8,8 @@ class
 	TOOLBAR_WINDOW
 
 inherit
+	DEMO_WINDOW
+
 	EV_VERTICAL_BOX
 		redefine
 			make
@@ -27,14 +29,16 @@ feature {NONE} -- Initialization
 		local
 			sep: EV_HORIZONTAL_SEPARATOR
 		do
-			{EV_VERTICAL_BOX} Precursor (Void)
+			{EV_VERTICAL_BOX} Precursor (par)
 			create sep.make (Current)
 			create_first_bar (Current)
 			create sep.make (Current)
 			create_second_bar (Current)
 			create sep.make (Current)
 			create_splits (Current)
-			set_parent (par)
+
+-- Bug : Fix me.
+--			set_parent (par)
 		end
 
 feature {NONE} -- Basic operations
@@ -97,30 +101,30 @@ feature {NONE} -- Implementation
 			-- We create a first tool_bar
 			!! tool.make (hbox)
 			tool.set_expand (False)
-			add_button (tool, "", "explain.bmp")
-			add_button (tool, "", "system.bmp")
-			add_button (tool, "", "class.bmp")
-			add_button (tool, "", "routine.bmp")
-			add_button (tool, "", "dynlib.bmp")
-			add_button (tool, "", "shell.bmp")
-			add_button (tool, "", "object.bmp")
-			add_button (tool, "", "clr_bp.bmp")
-			add_button (tool, "", "setstop.bmp")
+			add_button (tool, "", "explain")
+			add_button (tool, "", "system")
+			add_button (tool, "", "class")
+			add_button (tool, "", "routine")
+			add_button (tool, "", "dynlib")
+			add_button (tool, "", "shell")
+			add_button (tool, "", "object")
+			add_button (tool, "", "clr_bp")
+			add_button (tool, "", "setstop")
 			create sep.make (tool)
-			add_button (tool, "", "obj_up.bmp")
-			add_button (tool, "", "rout_up.bmp")
+			add_button (tool, "", "obj_up")
+			add_button (tool, "", "rout_up")
 
 			create label.make (hbox)
 
 			-- We create a second tool_bar
 			!! tool.make (hbox)
 			tool.set_expand (False)
-			add_button (tool, "", "search.bmp")
+			add_button (tool, "", "search")
 			create sep.make (tool)
 			!! tool.make_with_size (hbox, 50, 16)
 			tool.set_expand (False)
-			add_button (tool, "", "update.bmp")
-			add_button (tool, "", "qupdate.bmp")
+			add_button (tool, "", "update")
+			add_button (tool, "", "qupdate")
 		end
 
 	create_second_bar (par: EV_VERTICAL_BOX) is
@@ -139,20 +143,20 @@ feature {NONE} -- Implementation
 			-- We create a tool_bar
 			!! tool.make (hbox)
 			tool.set_expand (False)
-			add_button (tool, "", "up_stack.bmp")
-			add_button (tool, "", "dn_stack.bmp")
-			add_button (tool, "", "current.bmp")
+			add_button (tool, "", "up_stack")
+			add_button (tool, "", "dn_stack")
+			add_button (tool, "", "current")
 			create sep.make (tool)
-			add_button (tool, "", "dbgquit.bmp")
+			add_button (tool, "", "dbgquit")
 			create sep.make (tool)
-			add_button (tool, "", "execstep.bmp")
-			add_button (tool, "", "execlast.bmp")
-			add_button (tool, "", "execnost.bmp")
+			add_button (tool, "", "execstep")
+			add_button (tool, "", "execlast")
+			add_button (tool, "", "execnost")
 			create sep.make (tool)
 
 			!! tool.make_with_size (hbox, 50, 16)
 			tool.set_expand (False)
-			add_button (tool, "", "dbgrun.bmp")
+			add_button (tool, "", "dbgrun")
 
 		end
 
@@ -176,33 +180,33 @@ feature {NONE} -- Implementation
 			-- We create a tool_bar
 			!! tool.make (hbox)
 			tool.set_expand (False)
-			add_button (tool, "", "routdot.bmp")
-			add_button (tool, "", "classdot.bmp")
+			add_button (tool, "", "routdot")
+			add_button (tool, "", "classdot")
 			create sep.make (tool)
-			add_button (tool, "", "search.bmp")
+			add_button (tool, "", "search")
 			create sep.make (tool)
 
 			create tool_button1.make (tool)
-			tool_button1.set_pixmap (pixmap ("stext.bmp"))
+			tool_button1.set_pixmap (pixmap ("stext"))
 			tool_button1.set_selected (True)
 			create tool_button2.make (tool)
-			tool_button2.set_pixmap (pixmap ("sflat.bmp"))
+			tool_button2.set_pixmap (pixmap ("sflat"))
 			tool_button2.set_peer (tool_button1)
 			tool_button2.set_selected (True)
 			create tool_button3.make (tool)
-			tool_button3.set_pixmap (pixmap ("breakpt.bmp"))
+			tool_button3.set_pixmap (pixmap ("breakpt"))
 			tool_button3.set_peer (tool_button2)
 			tool_button3.set_selected (True)
 
 			create sep.make (tool)
-			add_button (tool, "", "scallers.bmp")
-			add_button (tool, "", "shistory.bmp")
-			add_button (tool, "", "saversio.bmp")
-			add_button (tool, "", "sdversio.bmp")
+			add_button (tool, "", "scallers")
+			add_button (tool, "", "shistory")
+			add_button (tool, "", "saversio")
+			add_button (tool, "", "sdversio")
 			create sep.make (tool)
-			add_button (tool, "", "shomonym.bmp")
-			add_button (tool, "", "histback.bmp")
-			add_button (tool, "", "histfort.bmp")
+			add_button (tool, "", "shomonym")
+			add_button (tool, "", "histback")
+			add_button (tool, "", "histfort")
 
 			-- Then, the text fields of the right
 			create field.make_with_text (hbox, "widget_make")
@@ -227,15 +231,15 @@ feature {NONE} -- Implementation
 			-- We create a tool_bar
 			!! tool.make (hbox)
 			tool.set_expand (False)
-			add_toggle (tool, "", "sattribu.bmp")
-			add_toggle (tool, "", "sonces.bmp")
+			add_toggle (tool, "", "sattribu")
+			add_toggle (tool, "", "sonces")
 			create sep.make (tool)
-			add_button (tool, "", "slice.bmp")
+			add_button (tool, "", "slice")
 			create sep.make (tool)
-			add_button (tool, "", "search.bmp")
+			add_button (tool, "", "search")
 			create sep.make (tool)
-			add_button (tool, "", "histback.bmp")
-			add_button (tool, "", "histfort.bmp")
+			add_button (tool, "", "histback")
+			add_button (tool, "", "histfort")
 		end
 
 	create_splits (par: EV_VERTICAL_BOX) is

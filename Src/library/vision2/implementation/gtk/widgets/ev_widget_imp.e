@@ -136,6 +136,7 @@ feature -- Access
 		local
 			c_parent: POINTER
 			Result_imp: EV_CONTAINER_IMP
+			agg_cell: EV_AGGREGATE_CELL
 		do
 			from
 				c_parent := c_object
@@ -148,6 +149,14 @@ feature -- Access
 					if Result_imp /= Void then
 						Result := Result_imp.interface
 					end
+				end
+			end
+
+			agg_cell ?= Result
+			if agg_cell /= Void then
+				Result := agg_cell.real_parent
+				check
+					real_parent_not_void: Result /= Void
 				end
 			end
 		end
@@ -850,6 +859,9 @@ end -- class EV_WIDGET_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.64  2000/03/21 00:12:37  king
+--| Added code for parent to deal with aggregate cell
+--|
 --| Revision 1.63  2000/03/17 18:24:09  rogers
 --| Added screen_x and _screen_y using the old implementation taken directly from EV_WIDGET_I.
 --|

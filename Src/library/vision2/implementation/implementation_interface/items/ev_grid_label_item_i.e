@@ -55,7 +55,7 @@ feature -- Element change
 		do
 			internal_text := a_text
 			if parent_i /= Void then
-				parent_i.redraw_client_area
+				parent_i.redraw_item (Current)
 			end
 		end
 		
@@ -64,7 +64,7 @@ feature -- Element change
 		do
 			internal_font := ft
 			if parent_i /= Void then
-				parent_i.redraw_client_area
+				parent_i.redraw_item (Current)
 			end
 		end
 

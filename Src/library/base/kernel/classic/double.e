@@ -10,9 +10,38 @@ indexing
 expanded class DOUBLE inherit
 
 	DOUBLE_REF
- 
+
 create
-	default_create
+	default_create,
+	make_from_reference
+
+convert
+	make_from_reference ({reference DOUBLE}),
+	to_reference: {reference DOUBLE},
+	truncated_to_real: {REAL}
+
+feature {NONE} -- Initialization
+
+	make_from_reference (v: reference DOUBLE) is
+			-- Initialize `Current' with `v.item'.
+		require
+			v_not_void: v /= Void
+		do
+--			item := v.item
+		ensure
+--			item_set: item = v.item	
+		end
+
+feature -- Conversion
+
+	to_reference: reference DOUBLE is
+			-- Associated reference of Current
+		do
+			create Result
+--			Result.set_item (item)
+		ensure
+			to_reference_not_void: Result /= Void
+		end
 
 indexing
 

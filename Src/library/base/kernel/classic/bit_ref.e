@@ -17,7 +17,10 @@ class BIT_REF inherit
 			generator,
 			conforms_to
 		end
-
+	
+convert
+	to_reference: {BIT_REF}
+	
 feature -- Access
 
 	item, infix "@" (i: INTEGER): BOOLEAN is
@@ -87,7 +90,7 @@ feature -- Basic operations
 			Result := b_rotate ($Current, s)
 		end
 
-	infix "and" (other: BIT_REF): BIT_REF is
+	infix "and" (other: BIT_REF): like Current is
 			-- Bit-by-bit boolean conjunction with `other'
 		require
 			other_exists: other /= Void
@@ -96,7 +99,7 @@ feature -- Basic operations
 			Result := b_and ($Current, $other)
 		end
 
-	infix "implies" (other: BIT_REF): BIT_REF is
+	infix "implies" (other: BIT_REF): like Current is
 			-- Bit-by-bit boolean implication of `other'
 		require
 			other_exists: other /= Void
@@ -105,7 +108,7 @@ feature -- Basic operations
 			Result := b_implies ($Current, $other)
 		end
 
-	infix "or", infix "|" (other: BIT_REF): BIT_REF is
+	infix "or", infix "|" (other: BIT_REF): like Current is
 			-- Bit-by-bit boolean disjunction with `other'
 		require
 			other_exists: other /= Void
@@ -114,7 +117,7 @@ feature -- Basic operations
 			Result := b_or ($Current, $other)
 		end
 
-	infix "xor" (other: BIT_REF): BIT_REF is
+	infix "xor" (other: BIT_REF): like Current is
 			-- Bit-by-bit exclusive or with `other'
 		require
 			other_exists: other /= Void
@@ -137,6 +140,17 @@ feature -- Output
 			Result := c_out ($Current)
 		end
 
+feature -- Conversion
+
+	to_reference: BIT_REF is
+			-- Associated reference of Current.
+		local
+			l_out: ANY
+		do
+			l_out := out.to_c
+			Result := b_makebit_from ($l_out, count)
+		end
+		
 feature {NONE} -- Implementation
 
 	b_item (a_bit: POINTER; index: INTEGER): BOOLEAN is
@@ -151,43 +165,43 @@ feature {NONE} -- Implementation
 			"C signature (EIF_REFERENCE): EIF_INTEGER use %"eif_bits.h%""
 		end
 
-	b_shift (a_bit: POINTER; s: INTEGER): BIT_REF is
+	b_shift (a_bit: POINTER; s: INTEGER): like Current is
 			-- Result of shifting `a_bit' by `s' positions
 		external
 			"C signature (EIF_REFERENCE, EIF_INTEGER): EIF_REFERENCE use %"eif_bits.h%""
 		end
 
-	b_rotate (a_bit: POINTER; s: INTEGER): BIT_REF is
+	b_rotate (a_bit: POINTER; s: INTEGER): like Current is
 			-- Result of rotating `a_bit' by `s' positions
 		external
 			"C signature (EIF_REFERENCE, EIF_INTEGER): EIF_REFERENCE use %"eif_bits.h%""
 		end
 
-	b_and (a_bit1, a_bit2: POINTER): BIT_REF is
+	b_and (a_bit1, a_bit2: POINTER): like Current is
 			-- Conjunction of `a_bit1' with `a_bit2'
 		external
 			"C signature (EIF_REFERENCE, EIF_REFERENCE): EIF_REFERENCE use %"eif_bits.h%""
 		end
 
-	b_implies (a_bit1, a_bit2: POINTER): BIT_REF is
+	b_implies (a_bit1, a_bit2: POINTER): like Current is
 			-- Implication for `a_bit1' of `a_bit2'
 		external
 			"C signature (EIF_REFERENCE, EIF_REFERENCE): EIF_REFERENCE use %"eif_bits.h%""
 		end
 
-	b_or (a_bit1, a_bit2: POINTER): BIT_REF is
+	b_or (a_bit1, a_bit2: POINTER): like Current is
 			-- Disjunction of `a_bit1' with `a_bit2'
 		external
 			"C signature (EIF_REFERENCE, EIF_REFERENCE): EIF_REFERENCE use %"eif_bits.h%""
 		end
 
-	b_xor (a_bit1, a_bit2: POINTER): BIT_REF is
+	b_xor (a_bit1, a_bit2: POINTER): like Current is
 			-- Exclusive or of `a_bit1' with `a_bit2'
 		external
 			"C signature (EIF_REFERENCE, EIF_REFERENCE): EIF_REFERENCE use %"eif_bits.h%""
 		end
 
-	b_not (a_bit: POINTER): BIT_REF is
+	b_not (a_bit: POINTER): like Current is
 			-- Negation of `a_bit'
 		external
 			"C signature (EIF_REFERENCE): EIF_REFERENCE use %"eif_bits.h%""
@@ -207,6 +221,14 @@ feature {NONE} -- Implementation
 			"b_eout"
 		end
 
+	b_makebit_from (p: POINTER; n: INTEGER): BIT_REF is
+			-- From Eiffel object `p' generate a new BIT_REF instance of count `n'
+		external
+			"C signature (EIF_REFERENCE, EIF_INTEGER): EIF_REFERENCE use %"eif_bits.h%""
+		alias
+			"RTMB"
+		end
+		
 invariant
 	valid_count: count > 0
 	

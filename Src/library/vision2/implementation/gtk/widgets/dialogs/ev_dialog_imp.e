@@ -42,11 +42,19 @@ feature -- Basic operations
 
 	show_modal is
 			-- Show and wait until window is closed.
+		local
+			was_modal: BOOLEAN
 		do
-			enable_modal
+			if is_modal then
+				was_modal := True
+			else
+				enable_modal
+			end
 			show
 			block
-			disable_modal
+			if not was_modal then
+				disable_modal
+			end
 		end
 
 feature {NONE} -- Implementation
@@ -78,6 +86,9 @@ end -- class EV_DIALOG_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2000/03/01 00:10:49  brendel
+--| Improved imp of show_modal, as it now remembers the value of `is_modal'.
+--|
 --| Revision 1.10  2000/02/22 21:05:07  bonnard
 --| Fixed disfunctionment in `show_modal'. Now modality is supressed when dialog is hidden.
 --|

@@ -35,7 +35,7 @@ rt_public EIF_POINTER file_def(int file)
 	return 0; /* to avoid a warning */
 }
 
-rt_public EIF_POINTER console_def(int file)
+rt_public EIF_POINTER console_def (EIF_INTEGER file)
 {
 #ifdef EIF_WINDOWS
 	return (EIF_POINTER) NULL;

@@ -29,8 +29,8 @@ extern "C" {
 extern void eif_console_next_line(void);
 #endif
 
-extern EIF_POINTER console_def(int file);
-extern EIF_BOOLEAN console_eof(FILE *fp);
+extern EIF_POINTER console_def (EIF_INTEGER file);
+extern EIF_BOOLEAN console_eof (FILE *fp);
 extern EIF_CHARACTER console_separator(FILE *f);
 extern void console_ps(FILE *f, char *str, EIF_INTEGER len);
 extern void console_pr(FILE *f, EIF_REAL number);

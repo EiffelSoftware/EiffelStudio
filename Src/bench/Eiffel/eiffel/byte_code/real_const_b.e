@@ -44,9 +44,13 @@ feature -- Settings
 	set_value (v: STRING) is
 			-- Assign `v' to `value'.
 			-- Remove the '_' signs in the real number.
+		require
+			v_not_void: v /= Void
+			no_undescores_in_v: not v.has ('_')
 		do
 			value := v
-			value.replace_substring_all ("_","")
+		ensure
+			value_set: value = v
 		end
 
 feature -- C code generation

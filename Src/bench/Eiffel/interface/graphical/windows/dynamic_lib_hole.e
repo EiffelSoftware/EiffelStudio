@@ -25,9 +25,7 @@ inherit
 			execute_warner_ok as load_chosen
 		end
 
-
 creation
-
 	make
 
 feature -- Callbacks
@@ -195,9 +193,10 @@ feature {NONE} -- Execution
 			fn: STRING;
 			f: PLAIN_TEXT_FILE
 		do
-			if is_dynamic_lib_tool_created and then tool = dynamic_lib_tool then
-				tool.synchronize
-			elseif Project_tool.initialized then
+			if Project_tool.initialized and then Eiffel_project.system /= Void then
+				if is_dynamic_lib_tool_created and then tool = dynamic_lib_tool then
+					tool.synchronize
+				end
 				if Eiffel_dynamic_lib.file_name = Void then
 					if argument /= Void and then argument = last_name_chooser then
 						fn := clone (last_name_chooser.selected_file);
@@ -254,9 +253,6 @@ feature {NONE} -- Execution
 			end
 		end
 
-	
-
-
 feature {NONE} -- Implementation
 
 	open_dynamic_lib_tool (a_stone: STONE) is
@@ -267,8 +263,6 @@ feature {NONE} -- Implementation
 			dynamic_lib_tool.display
 			dynamic_lib_tool.receive (a_stone)
 		end;
-
-
 
 end -- class DYNAMIC_LIB_HOLE
 

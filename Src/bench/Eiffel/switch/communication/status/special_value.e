@@ -103,6 +103,11 @@ feature -- Access
 					end;
 				end
 			end
+			if Result = Void then
+				Result := ""
+			end
+		ensure
+			raw_string_value_not_void: Result /= Void
 		end
 
 	dump_value: DUMP_VALUE is

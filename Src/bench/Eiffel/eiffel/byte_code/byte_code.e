@@ -516,6 +516,7 @@ feature -- Byte code generation
 			expanded_type: CL_TYPE_I;
 			inh_assert: INHERITED_ASSERTION;
 			feat: FEATURE_I;
+			cl_name: STRING
 		do
 			local_list := context.local_list;
 			local_list.wipe_out;
@@ -550,6 +551,20 @@ feature -- Byte code generation
 				-- Argument number
 			Temp_byte_code_array.append_short_integer (argument_count);
 
+			if System.java_generation and then arguments /= Void then
+				-- Supply argument types
+				from
+					i := 1
+					nb := arguments.count
+				until
+					i > nb
+				loop
+					formal_type := context.real_type (arguments.item (i));
+					Temp_byte_code_array.append_integer (formal_type.sk_value)
+					i := i + 1;
+				end
+			end
+
 				-- Once mark
 			if is_once then
 				Temp_byte_code_array.append ('%/001/');
@@ -576,6 +591,33 @@ feature -- Byte code generation
 
 				-- Dynamic type where the feature is written in
 			ba.append_short_integer (context.current_type.type_id - 1);
+
+				-- Put class name in file.
+				-- NOTE: May be removed later.
+
+			if System.java_generation then
+				cl_name := context.current_type.associated_class_type.associated_class.name
+				ba.append_raw_string (cl_name)
+
+				-- Put 'special' indicator in bytecode.
+
+				if (cl_name.is_equal ("special") and then
+					(feature_name.is_equal ("item") or else
+					feature_name.is_equal ("put")
+					)
+					) or else
+					(cl_name.is_equal ("to_special") and then
+						(feature_name.is_equal ("make_area")
+					)
+					) then
+					-- These are built-ins and therefore have an
+					-- empty body.
+					ba.append ('%/001/')
+				else
+					-- Normal class/feature
+					ba.append ('%U')
+				end
+			end
 
 				-- Resue offset if any.
 			if rescue_clause /= Void then

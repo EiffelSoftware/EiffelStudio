@@ -93,6 +93,10 @@ feature {NONE} -- GTK C functions for multi-columns rows
 		external "C | <gtk/gtk.h>"
 		end
 
+	gtk_clist_get_text (list: POINTER; row, column: INTEGER; text: POINTER): INTEGER is
+		external "C | <gtk/gtk.h>"
+		end
+
 	gtk_clist_set_foreground (list: POINTER; row: INTEGER; color: POINTER) is
 		external "C | <gtk/gtk.h>"
 		end

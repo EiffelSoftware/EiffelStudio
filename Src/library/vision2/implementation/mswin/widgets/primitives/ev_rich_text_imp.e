@@ -341,7 +341,12 @@ feature -- Status report
 		local
 			wel_paragraph_format: WEL_PARAGRAPH_FORMAT2
 			alignment: INTEGER
+			screen_dc: WEL_SCREEN_DC
 		do
+				-- Create a screen DC for access to metrics
+			create screen_dc
+			screen_dc.get
+			
 			create wel_paragraph_format.make
 			cwin_send_message (wel_item, em_getparaformat, 1, wel_paragraph_format.to_integer)
 			
@@ -357,6 +362,12 @@ feature -- Status report
 			when pfa_justify then
 				Result.enable_justification
 			end
+			Result.set_left_margin (point_to_pixel (screen_dc, wel_paragraph_format.start_indent, 20))
+			Result.set_right_margin (point_to_pixel (screen_dc, wel_paragraph_format.right_indent, 20))
+			Result.set_top_spacing (point_to_pixel (screen_dc, wel_paragraph_format.space_before, 20))
+			Result.set_bottom_spacing (point_to_pixel (screen_dc, wel_paragraph_format.space_after, 20))
+			
+			screen_dc.release
 		end
 		
 	character_format_contiguous (start_index, end_index: INTEGER): BOOLEAN is
@@ -601,8 +612,8 @@ feature -- Status setting
 				-- Note that there are 20 Twips per point, hence the multiplcation by 20.
 			paragraph.set_start_indent (pixel_to_point (screen_dc, format.left_margin) * 20)
 			paragraph.set_right_indent (pixel_to_point (screen_dc, format.right_margin) * 20)
-			paragraph.set_space_before (pixel_to_point (screen_dc, format.top_spacing) * 20)
 			paragraph.set_space_after (pixel_to_point (screen_dc, format.bottom_spacing) * 20)
+			paragraph.set_space_before (pixel_to_point (screen_dc, format.top_spacing) * 20)
 
 
 			screen_dc.release

@@ -267,7 +267,7 @@ feature -- Obsolete
 			Result := last_double
 		end;
 
-feature -- Implementation 
+feature {STORABLE} -- Implementation 
 
 	storage_type: CHARACTER is
 			-- Type for storage mechanism

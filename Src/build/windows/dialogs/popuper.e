@@ -1,3 +1,8 @@
+indexing
+	description: "Object that can popup a message dialog."
+	date: "$Date$"
+	id: "$Id$"
+	revision: "$Revision$"
 
 deferred class POPUPER 
 	
@@ -5,11 +10,12 @@ feature
 
 	Messages: MESSAGE_CONSTANTS is
 		do
-			!! Result;
-		end;
+			!! Result
+		end
 
-	popuper_parent: COMPOSITE is
+	popuper_parent: EV_CONTAINER is
 		deferred
 		end 
 
-end
+end -- class POPUPER
+

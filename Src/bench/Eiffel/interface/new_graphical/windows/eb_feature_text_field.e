@@ -117,7 +117,7 @@ feature {EB_FEATURE_CLASS_TEXT_FIELD} -- Implementation
 									Warning_messages.w_Cannot_find_feature (rname, e_class.name))
 							else
 								create feature_stone.make (e_feature)
-								tool.process_feature (feature_stone)
+								tool.set_stone (feature_stone)
 --								mp.restore
 							end
 						end

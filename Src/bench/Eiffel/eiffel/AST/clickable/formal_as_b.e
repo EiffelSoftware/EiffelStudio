@@ -13,18 +13,17 @@ inherit
 	FORMAL_AS
 		undefine
 			is_deep_equal, same_as
+		redefine
+			associated_eiffel_class
 		select
 			text_position
 		end;
-
 	TYPE_B
 		rename
 			position as text_b_position
 		undefine
 			simple_format, format
 		end;
-
-	STONABLE;
 
 feature
 
@@ -62,12 +61,9 @@ feature -- Output
 
 feature -- Stoning
  
-	stone (reference_class: E_CLASS): CLASSC_STONE is
-		local
-			aclass: E_CLASS;
+	associated_eiffel_class (ref_class: E_CLASS): E_CLASS is
 		do  
-			aclass := actual_type.associated_eclass;
-			!!Result.make (aclass)
+			Result := actual_type.associated_eclass;
 		end;
 
 end -- class FORMAL_AS_B

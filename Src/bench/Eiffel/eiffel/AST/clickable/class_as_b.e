@@ -12,7 +12,8 @@ inherit
 		redefine
 			class_name, obsolete_message, indexes,
 			generics, parents, creators, features,
-			invariant_part, suppliers, set
+			invariant_part, suppliers, set,
+			associated_eiffel_class
 		end;
 
 	AST_EIFFEL_B
@@ -23,8 +24,6 @@ inherit
 	IDABLE;
 
 	SHARED_INST_CONTEXT;
-
-	STONABLE;
 
 	CLICKER;
 
@@ -117,13 +116,11 @@ feature {CLASS_C, COMPILED_CLASS_INFO} -- Class information
 
 feature -- Stoning
  
-	stone (reference_class: E_CLASS): CLASSC_STONE is
-		local
-			aclass: E_CLASS
+	associated_eiffel_class (reference_class: E_CLASS): E_CLASS is
 		do
-			aclass := Universe.class_named 
-						(class_name, reference_class.cluster).compiled_eclass;
-			!! Result.make (aclass)
+			Result := Universe.class_named 
+						(class_name, 
+						reference_class.cluster).compiled_eclass;
 		end;
 
 	click_list: CLICK_LIST;

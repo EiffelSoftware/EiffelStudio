@@ -171,7 +171,9 @@ feature -- Status report
 	is_selected (an_id: INTEGER): BOOLEAN is
 			-- Is item given by `an_id' selected?
 		do
-			Result := (an_id = wel_selected_item)
+			if selected then
+				Result := (an_id = wel_selected_item)
+			end
 		end
 
 	selected_item: EV_LIST_ITEM is
@@ -179,7 +181,9 @@ feature -- Status report
 			-- It start with a zero index in wel and with a
 			-- one index for the array.
 		do
-			Result ?= (ev_children.i_th (wel_selected_item + 1)).interface
+			if selected then
+				Result ?= (ev_children.i_th (wel_selected_item + 1)).interface
+			end
 		end
 
 	has_selection: BOOLEAN is
@@ -224,9 +228,10 @@ feature -- Status setting
 				if selected then
 					--|FIXME Old event system
 					--|execute_command (Cmd_unselect, Void)
+					interface.deselect_actions.call ([old_selected_item.index, (ev_children @ old_selected_item.index).interface])--([index, (ev_children @ index).interface])
 				end
 				wel_select_item (an_index - 1)
-				old_selected_item := ev_children @ (index)
+				old_selected_item := ev_children @ (an_index)
 					-- Now send `Cbn_selchange' message to Current control
 					-- so that we know that a change occured and to handle
 					-- it as specified by user.
@@ -234,6 +239,7 @@ feature -- Status setting
 					cwel_pointer_to_integer (wel_item))
 					--|FIXME Old event system
 					--|execute_command (Cmd_select, Void)
+					interface.select_actions.call ([an_index, (ev_children @ an_index).interface])
 				-- Must now manually inform the combo box that a selection is taking place.
 			end
 		end
@@ -455,6 +461,7 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- WEL Implemen
 			list: ARRAYED_LIST [EV_LIST_ITEM_IMP]
 			counter: INTEGER
 			found: BOOLEAN
+			t_item: EV_LIST_ITEM_imp
 		do
 			{EV_TEXT_COMPONENT_IMP} Precursor (virtual_key, key_data)
 			process_tab_key (virtual_key)
@@ -479,9 +486,13 @@ feature {EV_INTERNAL_COMBO_FIELD_IMP, EV_INTERNAL_COMBO_BOX_IMP} -- WEL Implemen
 			else
 				if selected and equal (text, selected_item.text) and (virtual_key /= 9) and
 					(virtual_key /= 40) and (virtual_key /= 38) then
-					clear_selection
+					--clear_selection
 					--|FIXME Old event system
 					--|execute_command (Cmd_unselect, Void)
+					t_item ?= selected_item.implementation
+					unselect
+					interface.deselect_actions.call ([t_item.index, (ev_children @ t_item.index).interface])
+					old_selected_item := Void
 				end
 			end
 		end
@@ -522,6 +533,7 @@ feature {NONE} -- WEL Implementation
 						--old_selected_item.execute_command (Cmd_item_deactivate, Void)
 						--|FIXME Old event system
 						--|execute_command (Cmd_unselect, Void)
+						interface.deselect_actions.call ([old_selected_item.index, (ev_children @ old_selected_item.index).interface])
 					end
 	
 						-- Only performed if an item is selected and the new selection is not equal to
@@ -531,6 +543,7 @@ feature {NONE} -- WEL Implementation
 					--old_selected_item.execute_command (Cmd_item_activate, Void)
 					--|FIXME Old event system
 					--|execute_command (Cmd_select, Void)
+					interface.select_actions.call ([wel_selected_item + 1, (ev_children @ (wel_selected_item + 1)).interface])
 						-- Must now manually inform combo box that a selection is taking place
 				elseif wel_selected_item/= Void and then not equal (old_selected_item, ev_children.i_th (wel_selected_item + 1)) then
 					old_selected_item := Void
@@ -669,6 +682,9 @@ end -- class EV_COMBO_BOX_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.55  2000/03/02 16:38:35  rogers
+--| Is selected and selected_item have had checks added, to limit the wel calls when unecessary. Fixed the call to deselect_actions in on_key_down.
+--|
 --| Revision 1.54  2000/03/01 16:39:10  rogers
 --| Redfined initialize, commented out old command association.
 --|

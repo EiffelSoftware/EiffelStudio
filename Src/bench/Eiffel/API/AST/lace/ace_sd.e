@@ -13,7 +13,6 @@ inherit
 		end;
 	SHARED_USE;
 	EIFFEL_ENV;
-	SHARED_MELT_ONLY;
 	SHARED_EIFFEL_PROJECT
 
 feature {NONE} -- Initialization
@@ -139,7 +138,6 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 							is_subset (object_file_names, System.object_file_names) and
 							is_subset (makefile_names, System.makefile_names)
 			if not no_change then
--- FIXME: test melt_only
 				System.set_freeze (True)
 			end
 		end
@@ -183,15 +181,6 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				-- value may be replaced during the first compilation (as soon
 				-- as we figured out whether the system describes a Dynamic
 				-- Class Set or not).
-			if
-				melt_only and then
-				not Compilation_modes.is_precompiling and then
-				Result.empty
-			then
-					-- For the melt_only version, if no precompiled project is
-					-- specified, return $EIFFEL4/precomp/spec/$PLATFORM/base
-				Result.extend (Default_precompiled_base_location)
-			end
 		ensure
 			precomp_project_names_not_void: Result /=  Void
 		end;
@@ -222,17 +211,6 @@ feature {COMPILER_EXPORTER} -- Lace compilation
 				-- value may be replaced during the first compilation (as soon
 				-- as we figured out whether the system describes a Dynamic
 				-- Class Set or not).
-			if
-				melt_only and then
-				not Compilation_modes.is_precompiling and then
-				Result.empty
-			then
-					-- For the melt_only version, if no precompiled project is
-					-- specified, return $EIFFEL4/precomp/spec/$PLATFORM/base
-				!! d_precompiled_option;
-				d_precompiled_option.set_default_base_location
-				Result.put (d_precompiled_option, Default_precompiled_base_location)
-			end
 		ensure
 			precompiled_options_not_void: precompiled_options /= Void
 		end;

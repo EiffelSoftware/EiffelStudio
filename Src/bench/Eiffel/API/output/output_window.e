@@ -90,7 +90,7 @@ feature {TEXT_ITEM} -- Text processing
 	process_indentation (text: INDENT_TEXT) is
 			-- Process indentation `t'.
 		do
-			put_indent (text.indent_depth, text.image)
+			put_string (text.image)
 		end;
 
 	process_after_class (text: AFTER_CLASS) is
@@ -310,14 +310,20 @@ feature -- Output
 	put_one_indent is
 			-- Put one indent to Current.
 		do
-			put_indent (1, "%T")
+			put_indent (1)
 		end;
 
-	put_indent (nbr_of_tabs: INTEGER; str: STRING) is
-			-- Put indent of `nbr_of_tabs' with image `str'.
+	put_indent (nbr_of_tabs: INTEGER) is
+			-- Put indent of `nbr_of_tabs'.
 		require
-			valid_str: str /= Void
+			valid_tabs: nbr_of_tabs > 0
+		local
+			str: STRING
 		do
+			str := "%T";
+			if nbr_of_tabs > 1 then
+				str.multiply (nbr_of_tabs)
+			end;
 			put_string (str)
 		end;
 

@@ -38,6 +38,19 @@ feature -- Property
 	e_feature: E_FEATURE;
 			-- Feature which breakpoint is in
 
+	display_number: BOOLEAN
+			-- Display the index number?
+
+feature -- Status setting
+
+	set_display_number is
+			-- Set `display_number' to True;
+		do
+			display_number := True
+		ensure
+			display_number: display_number
+		end
+
 feature {TEXT_FORMATTER} -- Implementation
 
 	append_to (text: TEXT_FORMATTER) is

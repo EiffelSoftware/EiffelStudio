@@ -95,6 +95,7 @@ feature -- Basic Operations
 				message_output.display_error
 			else
 				message_output.add_title ("Processing finished successfully")
+				message_output.add_message ("%R%N")
 			end
 			progress_report.finish
 		rescue

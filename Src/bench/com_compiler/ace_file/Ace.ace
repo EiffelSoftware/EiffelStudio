@@ -201,6 +201,7 @@ external
 			"$(EIFFEL_SRC)\library\gobo\library\kernel\include",
 			"$(EIFFEL_SRC)\library\encryption\Clib",
 			"$(EIFFEL_SRC)\C\bench",
+			"$(EIFFEL_SRC)\C\platform",
 			"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\core\Clib",
 			"$(EIFFEL_SRC)\Eiffel\eiffel\com_il_generation\eac\Clib"
 

@@ -97,7 +97,7 @@ feature -- Basic Operations
 			retried: BOOLEAN
 		do
 			if not retried then
-				if ieiffel_compiler_events_call_back_interface_table /= Void then
+				if ieiffel_compiler_events_call_back_interface_table /= Void and last_degree /= ul_degree then
 					from
 						ieiffel_compiler_events_call_back_interface_table.start
 					until
@@ -106,6 +106,7 @@ feature -- Basic Operations
 						ieiffel_compiler_events_call_back_interface_table.item_for_iteration.begin_degree (ul_degree)
 						ieiffel_compiler_events_call_back_interface_table.forth
 					end
+					last_degree := ul_degree
 				end
 			end
 		rescue
@@ -131,6 +132,7 @@ feature -- Basic Operations
 						ieiffel_compiler_events_call_back_interface_table.forth
 					end
 				end
+				last_degree := 0
 			end
 		rescue
 			stop_compilation := True
@@ -250,6 +252,9 @@ feature -- Basic Operations
 
 	stop_compilation: BOOLEAN
 			-- should compilation be stopped?
+			
+	last_degree: INTEGER
+			-- last degree processed
 
 end -- CEIFFEL_COMPILER_COCLASS
 

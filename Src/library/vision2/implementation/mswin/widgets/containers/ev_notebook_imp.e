@@ -180,6 +180,9 @@ feature -- Element change
 			widget_imp ?= child_imp
 			child_minwidth_changed (widget_imp.minimum_width, widget_imp)
 			child_minheight_changed (widget_imp.minimum_height, widget_imp)
+			if already_displayed then
+				adjust_items
+			end
 		end
 
 	set_font (f: EV_FONT) is
@@ -350,11 +353,13 @@ feature -- Basic operation
 				child_item := get_item (index)
 				child_imp ?= child_item.window
 				check
-					child_imp_not_void: child_imp /= Void
+					valid_cast: child_imp /= Void
 				end
 				child_imp.on_first_display
 				index := index + 1
 			end
+			adjust_items
+			already_displayed :=  True
 		end
 
 feature -- Assertion features

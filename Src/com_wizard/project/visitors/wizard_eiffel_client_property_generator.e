@@ -71,14 +71,19 @@ feature {NONE} -- Implementation
 				access_feature_name := clone (a_descriptor.coclass_eiffel_names.item (a_component_descriptor.name))
 				changed_names.put (access_feature_name, a_descriptor.interface_eiffel_name)
 
-				tmp_string := clone (Set_clause)
+				create tmp_string.make (100)
+				tmp_string.append (Set_clause)
 				tmp_string.append (a_descriptor.interface_eiffel_name)
-				set_feature_name := clone (Set_clause)
+				
+				create set_feature_name.make (100)
+				set_feature_name.append (Set_clause)
 				set_feature_name.append (access_feature_name)
 				changed_names.put (set_feature_name, tmp_string)
 			else
 				access_feature_name := a_descriptor.interface_eiffel_name
-				set_feature_name := clone (Set_clause)
+				
+				create set_feature_name.make (100)
+				set_feature_name.append (Set_clause)
 				set_feature_name.append (access_feature_name)
 			end
 			external_access_feature_name := external_feature_name (access_feature_name)
@@ -122,17 +127,18 @@ feature {NONE} -- Implementation
 			non_void_set_feature_name: set_feature_name /= Void
 			valid_set_feature_name: not set_feature_name.empty
 		local
-			tmp_string: STRING
+			an_argument: STRING
 		do
 			create setting_feature.make
 			setting_feature.set_name (set_feature_name)
 
 			-- Set arguments
-			tmp_string := clone (Argument_name)
-			tmp_string.append (Colon)
-			tmp_string.append (Space)
-			tmp_string.append (a_visitor.eiffel_type)
-			setting_feature.add_argument (tmp_string)
+			create an_argument.make (100)
+			an_argument.append (Argument_name)
+			an_argument.append (Colon)
+			an_argument.append (Space)
+			an_argument.append (a_visitor.eiffel_type)
+			setting_feature.add_argument (an_argument)
 
 			setting_feature.set_comment (setting_feature_comment (access_feature_name))
 			
@@ -183,18 +189,18 @@ feature {NONE} -- Implementation
 			valid_external_set_feature_name: not external_set_feature_name.empty
 			non_void_component: a_component_descriptor /= Void
 		local
-			tmp_string: STRING
+			an_argument: STRING
 		do
 			create external_setting_feature.make
 
 			external_setting_feature.set_name (external_set_feature_name)
 
-			tmp_string := clone (Default_pointer_argument)
-			external_setting_feature.add_argument (tmp_string)	
+			external_setting_feature.add_argument (clone (Default_pointer_argument))	
 		
-			tmp_string := clone (Argument_name)
-			tmp_string.append (Colon)
-			tmp_string.append (Space)
+			create an_argument.make (100)
+			an_argument.append (Argument_name)
+			an_argument.append (Colon)
+			an_argument.append (Space)
 			if 
 				a_visitor.is_array_basic_type or 
 				a_visitor.is_interface or 
@@ -202,11 +208,11 @@ feature {NONE} -- Implementation
 				a_visitor.is_structure_pointer or
 				a_visitor.is_interface_pointer
 			then
-				tmp_string.append (Pointer_type)
+				an_argument.append (Pointer_type)
 			else
-				tmp_string.append (a_visitor.eiffel_type)
+				an_argument.append (a_visitor.eiffel_type)
 			end
-			external_setting_feature.add_argument (tmp_string)
+			external_setting_feature.add_argument (an_argument)
 			
 			external_setting_feature.set_comment (setting_feature_comment (access_feature_name))
 			external_setting_feature.set_external
@@ -225,7 +231,8 @@ feature {NONE} -- Implementation
 			non_void_name: a_name /= Void
 			valid_name: not a_name.empty
 		do
-			Result := "Set "
+			create Result.make (1000)
+			Result.append ("Set ")
 			Result.append (Back_quote)
 			Result.append (a_name)
 			Result.append (Single_quote)
@@ -250,15 +257,18 @@ feature {NONE} -- Implementation
 			tmp_name, tmp_string, local_variable: STRING
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
-			Result := clone (Tab_tab_tab)
+			create Result.make (1000)
+			Result.append (Tab_tab_tab)
 
-			tmp_string := clone (external_set_feature_name)
+			create tmp_string.make (100)
+			tmp_string.append (external_set_feature_name)
 			tmp_string.append (Space_open_parenthesis)
 			tmp_string.append (Initializer_variable)
 			tmp_string.append (Comma_space)
 
 			if a_visitor.is_array_basic_type then
-				local_variable := clone (Any_clause)
+				create local_variable.make (100)
+				local_variable.append (Any_clause)
 				local_variable.append (Any_type)
 				setting_feature.add_local_variable (local_variable)
 
@@ -295,7 +305,8 @@ feature {NONE} -- Implementation
 			non_void_external_access_feature_name: external_access_feature_name /= Void
 			valid_external_access_feature_name: not external_access_feature_name.empty
 		do
-			Result := clone (Tab_tab_tab)
+			create Result.make (1000)
+			Result.append (Tab_tab_tab)
 			Result.append (Result_clause)
 			Result.append (external_access_feature_name)
 			Result.append (Space_open_parenthesis)
@@ -315,7 +326,8 @@ feature {NONE} -- Implementation
 			valud_header_file_name: not header_file_name.empty
 			non_void_visitor: visitor /= Void
 		do
-			Result := clone (Tab_tab_tab)
+			create Result.make (1000)
+			Result.append (Tab_tab_tab)
 			Result.append (Double_quote)
 			Result.append (Cpp_clause)
 			Result.append (class_name)
@@ -349,7 +361,8 @@ feature {NONE} -- Implementation
 		local
 			tmp_string: STRING
 		do
-			Result := clone (Tab_tab_tab)
+			create Result.make (1000)
+			Result.append (Tab_tab_tab)
 			Result.append (Double_quote)
 			Result.append (Cpp_clause)
 			Result.append (class_name)

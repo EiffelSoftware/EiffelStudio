@@ -37,14 +37,15 @@ feature -- Basic operations
 			tmp_assertion: WIZARD_WRITER_ASSERTION
 			flags: ECOM_PARAM_FLAGS
 			visitor: WIZARD_DATA_TYPE_VISITOR
-			an_access_name, a_set_name: STRING
+			an_access_name, a_set_name, an_argument, a_comment: STRING
 		do
 			create access_feature.make
 			create precondition_access_feature_writer.make
 
 			create visitor
 
-			an_access_name := clone (a_descriptor.interface_eiffel_name)
+			create an_access_name.make (100)
+			an_access_name.append (a_descriptor.interface_eiffel_name)
 			access_feature.set_name (an_access_name)
 
 			visitor.visit (a_descriptor.data_type)
@@ -59,22 +60,25 @@ feature -- Basic operations
 				create setting_feature.make
 				create precondition_set_feature_writer.make
 
-				a_set_name := clone (Set_clause)
+				create a_set_name.make (100)
+				a_set_name.append (Set_clause)
 				a_set_name.append (a_descriptor.interface_eiffel_name)
 				setting_feature.set_name (a_set_name)
 
 				-- Set arguments
-				tmp_string := clone (Argument_name)
-				tmp_string.append (Colon)
-				tmp_string.append (Space)
-				tmp_string.append (visitor.eiffel_type)
-				setting_feature.add_argument (tmp_string)
+				create an_argument.make (100)
+				an_argument.append (Argument_name)
+				an_argument.append (Colon)
+				an_argument.append (Space)
+				an_argument.append (visitor.eiffel_type)
+				setting_feature.add_argument (an_argument)
 
 				-- Set description
-				tmp_string := "Set %'"
-				tmp_string.append (an_access_name)
-				tmp_string.append ("%' with %'an_item%'")
-				setting_feature.set_comment (tmp_string)
+				create a_comment.make (100)
+				a_comment.append ("Set %'")
+				a_comment.append (an_access_name)
+				a_comment.append ("%' with %'an_item%'")
+				setting_feature.set_comment (a_comment)
 
 				-- Set pre-condition
 				if not visitor.is_basic_type then
@@ -94,10 +98,12 @@ feature -- Basic operations
 				end
 				setting_feature.set_deferred
 				tmp_assertion := user_defined_precondition (a_set_name)
-				tmp_string := clone (Space_open_parenthesis)
-				tmp_string.append (Argument_name)
-				tmp_string.append (Close_parenthesis)
-				tmp_assertion.body.append (tmp_string)
+				
+				create tmp_body.make (100)
+				tmp_body.append (Space_open_parenthesis)
+				tmp_body.append (Argument_name)
+				tmp_body.append (Close_parenthesis)
+				tmp_assertion.body.append (tmp_body)
 				setting_feature.add_precondition (tmp_assertion)
 				set_precondition_feature_writer (precondition_set_feature_writer, a_set_name)
 				precondition_set_feature_writer.arguments.append (clone (setting_feature.arguments))

@@ -18,7 +18,7 @@ feature -- Basic operations
 	generate (a_component_descriptor: WIZARD_COMPONENT_DESCRIPTOR; a_descriptor: WIZARD_PROPERTY_DESCRIPTOR) is
 			-- Generate access and setting features from property.
 		local
-			coclass_name, access_name, setting_name, tmp_string: STRING
+			coclass_name, access_name, setting_name, an_argument, a_comment, tmp_string: STRING
 			tmp_assertion: WIZARD_WRITER_ASSERTION
 			visitor: WIZARD_DATA_TYPE_VISITOR
 		do
@@ -33,15 +33,19 @@ feature -- Basic operations
 				access_name := a_descriptor.coclass_eiffel_names.item (coclass_name)
 				changed_names.put (access_name, a_descriptor.interface_eiffel_name)
 
-				tmp_string := clone (Set_clause)
+				create tmp_string.make (100)
+				tmp_string.append (Set_clause)
 				tmp_string.append (a_descriptor.interface_eiffel_name)
 
-				setting_name := clone (Set_clause)
+				create setting_name.make (100)
+				setting_name.append (Set_clause)
 				setting_name.append (access_name)
 				changed_names.put (setting_name, tmp_string)
 			else
 				access_name := a_descriptor.interface_eiffel_name
-				setting_name := clone (Set_clause)
+				
+				create setting_name.make (100)
+				setting_name.append (Set_clause)
 				setting_name.append (access_name)
 			end
 		
@@ -56,17 +60,19 @@ feature -- Basic operations
 			setting_feature.set_name (setting_name)
 
 			-- Set arguments
-			tmp_string := clone (An_item_variable)
-			tmp_string.append (Colon)
-			tmp_string.append (Space)
-			tmp_string.append (visitor.eiffel_type)
-			setting_feature.add_argument (tmp_string)
+			create an_argument.make (100)
+			an_argument.append (An_item_variable)
+			an_argument.append (Colon)
+			an_argument.append (Space)
+			an_argument.append (visitor.eiffel_type)
+			setting_feature.add_argument (an_argument)
 
 			-- Set description
-			tmp_string := "Set %'"
-			tmp_string.append (access_name)
-			tmp_string.append ("%' with %'an_item%'")
-			setting_feature.set_comment (tmp_string)
+			create a_comment.make (100)
+			a_comment.append ("Set %'")
+			a_comment.append (access_name)
+			a_comment.append ("%' with %'an_item%'")
+			setting_feature.set_comment (a_comment)
 			
 			setting_feature.set_effective
 			setting_feature.set_body (Empty_function_body)		

@@ -29,7 +29,7 @@ feature -- Basic operations
 			-- Generate C client for implemented interface.
 		local
 			data_member: WIZARD_WRITER_C_MEMBER
-			tmp_string: STRING
+			a_name, a_result_type: STRING
 			interface_generator: WIZARD_COMPONENT_INTERFACE_C_CLIENT_GENERATOR
 		do
 			create cpp_class_writer.make
@@ -45,15 +45,17 @@ feature -- Basic operations
 			data_member.set_comment (Interface_pointer_comment)
 
 			-- Variable name
-			tmp_string := clone (Interface_variable_prepend)
-			tmp_string.append (a_descriptor.interface_descriptor.c_type_name)
-			data_member.set_name (tmp_string)
+			create a_name.make (100)
+			a_name.append (Interface_variable_prepend)
+			a_name.append (a_descriptor.interface_descriptor.c_type_name)
+			data_member.set_name (a_name)
 
 			-- Variable type
-			tmp_string := clone (a_descriptor.interface_descriptor.c_type_name)
-			tmp_string.append (Space)
-			tmp_string.append (Asterisk)
-			data_member.set_result_type (tmp_string)
+			create a_result_type.make (100)
+			a_result_type.append (a_descriptor.interface_descriptor.c_type_name)
+			a_result_type.append (Space)
+			a_result_type.append (Asterisk)
+			data_member.set_result_type (a_result_type)
 
 			cpp_class_writer.add_member (data_member, Private)
 
@@ -77,10 +79,12 @@ feature -- Basic operations
 				-- Add memeber "EXCEPINFO * excepinfo"
 				create data_member.make
 				data_member.set_name (clone (Excepinfo_variable_name))
-				tmp_string := clone (Excepinfo)
-				tmp_string.append (Space)
-				tmp_string.append (Asterisk)
-				data_member.set_result_type (tmp_string)
+				
+				create a_result_type.make (100)
+				a_result_type.append (Excepinfo)
+				a_result_type.append (Space)
+				a_result_type.append (Asterisk)
+				data_member.set_result_type (a_result_type)
 				data_member.set_comment (Excepinfo_variable_comment)
 				cpp_class_writer.add_member (data_member, Private)
 				cpp_class_writer.add_function (ccom_last_error_code_function, Public)
@@ -216,7 +220,8 @@ feature {NONE} -- Implementation
 			non_void_coclass_descriptor: a_descriptor /= Void
 			non_void_interface_descriptors: a_descriptor.interface_descriptor /= Void
 		do
-			Result := clone (Tab)
+			create Result.make (1000)
+			Result.append (Tab)
 			Result.append (Iunknown_variable_name)
 			Result.append (Release_function)
 			Result.append (New_line_tab)

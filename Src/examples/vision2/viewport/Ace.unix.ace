@@ -1,0 +1,65 @@
+--!----------------------------------------------------------------
+--! EiffelVision2-application Ace-file for the GTK platform.
+--!
+--! See notice at end of file.
+--! date: "$Date$
+--!----------------------------------------------------------------
+
+system
+	viewport	
+
+root
+	VIEWPORT: make_and_launch
+
+default
+	assertion (all)
+
+cluster
+	root_cluster:	"."
+
+
+	all base:	"$ISE_EIFFEL/library/base"
+		exclude
+			"table"; "desc"; "CVS"; 
+		end
+
+	gel:		"$ISE_EIFFEL/library/gel"
+		exclude
+			"CVS"; "clib"; 
+		end
+
+	all vision2_interface:  "$ISE_EIFFEL/library/vision2/interface" 
+
+	all vision2_implementation:	"$ISE_EIFFEL/library/vision2/implementation"
+		exclude
+			"mswin"; "components"; "obsolete"; 
+		end
+
+external
+
+	include_path:
+		"\$(ISE_EIFFEL)/library/vision2/implementation/gtk/Clib `gtk-config --cflags`",
+		"\$(ISE_EIFFEL)/library/vision2/spec/include"
+
+	object:
+		"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/gtk_eiffel.o",
+		"$(ISE_EIFFEL)/library/vision2/spec/$(ISE_PLATFORM)/lib/load_pixmap.o `gtk-config --libs`",
+		"-lpng -lz -lXtst"
+
+end
+
+--!----------------------------------------------------------------
+--! EiffelVision2: library of reusable components for ISE Eiffel.
+--! Copyright (C) 1986-2001 Interactive Software Engineering Inc.
+--! All rights reserved. Duplication and distribution prohibited.
+--! May be used only with ISE Eiffel, under terms of user license.
+--! Contact ISE for any other use.
+--!
+--! Interactive Software Engineering Inc.
+--! ISE Building, 2nd floor
+--! 360 Storke Road, Goleta, CA 93117 USA
+--! Telephone 805-685-1006, Fax 805-685-6869
+--! Electronic mail <info@eiffel.com>
+--! Customer support e-mail <support@eiffel.com>
+--! For latest info see award-winning pages: http://www.eiffel.com
+--!----------------------------------------------------------------

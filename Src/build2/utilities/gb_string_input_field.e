@@ -107,6 +107,13 @@ feature -- Basic operations
 		ensure
 			text_set: text_entry.text.is_equal (a_text)
 		end
+		
+	hide_label is
+			-- Ensure that lable is hidden.
+		do
+			label.hide
+		end
+		
 
 feature -- Access
 
@@ -226,6 +233,9 @@ feature {NONE} -- Implementation
 	object: GB_OBJECT
 		-- Object referenced by `Current'.
 		
+	label: EV_LABEL
+		-- Label used to display tittle tag.
+		
 	last_selected_constant: GB_CONSTANT
 		-- Last constant that was selected in `Current'.
 		-- Must be stored so that when a user switches from using a constant,
@@ -286,8 +296,6 @@ feature {NONE} -- Implementation
 			-- tooltip `tooltip'.
 		require
 			label_text_not_void_or_empty: label_text /= Void and not label_text.is_empty
-		local
-			label: EV_LABEL
 		do
 			create label.make_with_text (label_text)
 			label.set_tooltip (tooltip)

@@ -81,6 +81,10 @@ inherit
 			copy, default_create
 		end
 		
+	GB_SHARED_PIXMAPS
+		undefine
+			copy, default_create
+		end
 		
 create
 	default_create
@@ -91,7 +95,7 @@ feature {NONE} -- Initialization
 			-- Initialize `Current'.
 		do
 			Precursor {EV_TITLED_WINDOW}
-			set_icon_pixmap ((create {GB_SHARED_PIXMAPS}).icon_build_window @ 1)
+			set_icon_pixmap (icon_build_window @ 1)
 		end
 
 feature -- Basic operation
@@ -528,7 +532,24 @@ feature {NONE} -- Implementation
 			-- Respond to a widget being removed from `multiple_split_area'
 		local
 			split_area_parent: EV_HORIZONTAL_BOX
+			external_representation: ARRAYED_LIST [EV_WIDGET]
+			widget: EV_WIDGET
 		do
+				-- This loop is a bit of a hack, as we are re-setting the
+				-- icon for all external windows, each time that one is removed.
+				-- This is because there is currently no nice method of
+				-- knowing which widget was just removed.
+			external_representation := Multiple_split_area.external_representation
+			from
+				external_representation.start
+			until
+				external_representation.off
+			loop
+				widget := external_representation.item
+				parent_dialog (widget).set_icon_pixmap (Icon_build_window @ 1)
+				external_representation.forth
+			end
+			
 			if multiple_split_area.count = 0 then
 				split_area_parent ?= horizontal_split_area.parent
 				if split_area_parent /= Void then

@@ -49,13 +49,7 @@ public:
 	/*-----------------------------------------------------------
 	Add a signed assembly to the project.
 	-----------------------------------------------------------*/
-	STDMETHODIMP add_signed_assembly(  /* [in] */ BSTR assembly_prefix, /* [in] */ BSTR assembly_identifier, /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey );
-
-
-	/*-----------------------------------------------------------
-	Add a unsigned (local) assembly to the project.
-	-----------------------------------------------------------*/
-	STDMETHODIMP add_unsigned_assembly(  /* [in] */ BSTR assembly_prefix, /* [in] */ BSTR assembly_identifier, /* [in] */ BSTR a_path );
+	STDMETHODIMP add_assembly(  /* [in] */ BSTR assembly_prefix, /* [in] */ BSTR cluster_name, /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey );
 
 
 	/*-----------------------------------------------------------
@@ -65,21 +59,21 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Cluster properties.
+	Assembly properties.
 	-----------------------------------------------------------*/
-	STDMETHODIMP assembly_properties(  /* [in] */ BSTR assembly_identifier, /* [out, retval] */ ecom_eiffel_compiler::IEiffelAssemblyProperties * * return_value );
+	STDMETHODIMP assembly_properties(  /* [in] */ BSTR cluster_name, /* [out, retval] */ ecom_eiffel_compiler::IEiffelAssemblyProperties * * return_value );
 
 
 	/*-----------------------------------------------------------
-	Checks to see if a assembly identifier is valid
+	Checks to see if a assembly cluster name is valid
 	-----------------------------------------------------------*/
-	STDMETHODIMP is_valid_identifier(  /* [in] */ BSTR assembly_identifier, /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP is_valid_cluster_name(  /* [in] */ BSTR cluster_name, /* [out, retval] */ VARIANT_BOOL * return_value );
 
 
 	/*-----------------------------------------------------------
-	Checks to see if a assembly identifier has already been added to the project
+	Checks to see if a assembly cluster name has already been added to the project
 	-----------------------------------------------------------*/
-	STDMETHODIMP contains_assembly(  /* [in] */ BSTR assembly_identifier, /* [out, retval] */ VARIANT_BOOL * return_value );
+	STDMETHODIMP contains_assembly(  /* [in] */ BSTR cluster_name, /* [out, retval] */ VARIANT_BOOL * return_value );
 
 
 	/*-----------------------------------------------------------
@@ -95,15 +89,15 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Retrieves the identifier for a signed assembly in the project
+	Retrieves the cluster name for a signed assembly in the project
 	-----------------------------------------------------------*/
-	STDMETHODIMP identifier_from_signed_assembly(  /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey, /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP cluster_name_from_signed_assembly(  /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey, /* [out, retval] */ BSTR * return_value );
 
 
 	/*-----------------------------------------------------------
-	Retrieves the identifier for a unsigned assembly in the project
+	Retrieves the cluster name for a unsigned assembly in the project
 	-----------------------------------------------------------*/
-	STDMETHODIMP identifier_from_unsigned_assembly(  /* [in] */ BSTR a_path, /* [out, retval] */ BSTR * return_value );
+	STDMETHODIMP cluster_name_from_unsigned_assembly(  /* [in] */ BSTR a_path, /* [out, retval] */ BSTR * return_value );
 
 
 	/*-----------------------------------------------------------
@@ -116,12 +110,6 @@ public:
 	Has the 'prefix' already been allocated to another assembly
 	-----------------------------------------------------------*/
 	STDMETHODIMP is_prefix_allocated(  /* [in] */ BSTR assembly_prefix, /* [out, retval] */ VARIANT_BOOL * return_value );
-
-
-	/*-----------------------------------------------------------
-	Rename the assembly identifier
-	-----------------------------------------------------------*/
-	STDMETHODIMP rename_assembly(  /* [in] */ BSTR assembly_new_identifier, /* [in] */ BSTR assembly_old_identifier );
 
 
 	/*-----------------------------------------------------------

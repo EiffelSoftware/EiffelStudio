@@ -81,19 +81,7 @@ public:
 	/*-----------------------------------------------------------
 	Assembly public key token
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_assembly_public_key(  );
-
-
-	/*-----------------------------------------------------------
-	Assembly path
-	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_assembly_path(  );
-
-
-	/*-----------------------------------------------------------
-	Assembly path
-	-----------------------------------------------------------*/
-	void ccom_set_assembly_path(  /* [in] */ EIF_OBJECT return_value );
+	EIF_REFERENCE ccom_assembly_public_key_token(  );
 
 
 	/*-----------------------------------------------------------
@@ -109,9 +97,9 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Assembly identifier.
+	Assembly cluster name.
 	-----------------------------------------------------------*/
-	EIF_REFERENCE ccom_assembly_identifier(  );
+	EIF_REFERENCE ccom_assembly_cluster_name(  );
 
 
 	/*-----------------------------------------------------------

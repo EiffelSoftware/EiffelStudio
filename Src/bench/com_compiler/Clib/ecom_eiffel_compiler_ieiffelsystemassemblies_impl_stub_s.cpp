@@ -52,7 +52,7 @@ EIF_PROCEDURE eiffel_procedure;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::add_signed_assembly(  /* [in] */ BSTR assembly_prefix, /* [in] */ BSTR assembly_identifier, /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::add_assembly(  /* [in] */ BSTR assembly_prefix, /* [in] */ BSTR cluster_name, /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey )
 
 /*-----------------------------------------------------------
 	Add a signed assembly to the project.
@@ -65,10 +65,10 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::add_signed
 	{
 		tmp_assembly_prefix = eif_protect (rt_ce.ccom_ce_bstr (assembly_prefix));
 	}
-	EIF_OBJECT tmp_assembly_identifier = NULL;
-	if (assembly_identifier != NULL)
+	EIF_OBJECT tmp_cluster_name = NULL;
+	if (cluster_name != NULL)
 	{
-		tmp_assembly_identifier = eif_protect (rt_ce.ccom_ce_bstr (assembly_identifier));
+		tmp_cluster_name = eif_protect (rt_ce.ccom_ce_bstr (cluster_name));
 	}
 	EIF_OBJECT tmp_a_name = NULL;
 	if (a_name != NULL)
@@ -92,13 +92,13 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::add_signed
 	}
 	
 	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("add_signed_assembly", type_id);
+	eiffel_procedure = eif_procedure ("add_assembly", type_id);
 
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_assembly_prefix != NULL) ? eif_access (tmp_assembly_prefix) : NULL), ((tmp_assembly_identifier != NULL) ? eif_access (tmp_assembly_identifier) : NULL), ((tmp_a_name != NULL) ? eif_access (tmp_a_name) : NULL), ((tmp_a_version != NULL) ? eif_access (tmp_a_version) : NULL), ((tmp_a_culture != NULL) ? eif_access (tmp_a_culture) : NULL), ((tmp_a_publickey != NULL) ? eif_access (tmp_a_publickey) : NULL));
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_assembly_prefix != NULL) ? eif_access (tmp_assembly_prefix) : NULL), ((tmp_cluster_name != NULL) ? eif_access (tmp_cluster_name) : NULL), ((tmp_a_name != NULL) ? eif_access (tmp_a_name) : NULL), ((tmp_a_version != NULL) ? eif_access (tmp_a_version) : NULL), ((tmp_a_culture != NULL) ? eif_access (tmp_a_culture) : NULL), ((tmp_a_publickey != NULL) ? eif_access (tmp_a_publickey) : NULL));
 	if (tmp_assembly_prefix != NULL)
 		eif_wean (tmp_assembly_prefix);
-	if (tmp_assembly_identifier != NULL)
-		eif_wean (tmp_assembly_identifier);
+	if (tmp_cluster_name != NULL)
+		eif_wean (tmp_cluster_name);
 	if (tmp_a_name != NULL)
 		eif_wean (tmp_a_name);
 	if (tmp_a_version != NULL)
@@ -107,46 +107,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::add_signed
 		eif_wean (tmp_a_culture);
 	if (tmp_a_publickey != NULL)
 		eif_wean (tmp_a_publickey);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::add_unsigned_assembly(  /* [in] */ BSTR assembly_prefix, /* [in] */ BSTR assembly_identifier, /* [in] */ BSTR a_path )
-
-/*-----------------------------------------------------------
-	Add a unsigned (local) assembly to the project.
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_OBJECT tmp_assembly_prefix = NULL;
-	if (assembly_prefix != NULL)
-	{
-		tmp_assembly_prefix = eif_protect (rt_ce.ccom_ce_bstr (assembly_prefix));
-	}
-	EIF_OBJECT tmp_assembly_identifier = NULL;
-	if (assembly_identifier != NULL)
-	{
-		tmp_assembly_identifier = eif_protect (rt_ce.ccom_ce_bstr (assembly_identifier));
-	}
-	EIF_OBJECT tmp_a_path = NULL;
-	if (a_path != NULL)
-	{
-		tmp_a_path = eif_protect (rt_ce.ccom_ce_bstr (a_path));
-	}
-	
-	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("add_unsigned_assembly", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_assembly_prefix != NULL) ? eif_access (tmp_assembly_prefix) : NULL), ((tmp_assembly_identifier != NULL) ? eif_access (tmp_assembly_identifier) : NULL), ((tmp_a_path != NULL) ? eif_access (tmp_a_path) : NULL));
-	if (tmp_assembly_prefix != NULL)
-		eif_wean (tmp_assembly_prefix);
-	if (tmp_assembly_identifier != NULL)
-		eif_wean (tmp_assembly_identifier);
-	if (tmp_a_path != NULL)
-		eif_wean (tmp_a_path);
 	
 	END_ECATCH;
 	return S_OK;
@@ -179,25 +139,25 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::remove_ass
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::assembly_properties(  /* [in] */ BSTR assembly_identifier, /* [out, retval] */ ecom_eiffel_compiler::IEiffelAssemblyProperties * * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::assembly_properties(  /* [in] */ BSTR cluster_name, /* [out, retval] */ ecom_eiffel_compiler::IEiffelAssemblyProperties * * return_value )
 
 /*-----------------------------------------------------------
-	Cluster properties.
+	Assembly properties.
 -----------------------------------------------------------*/
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_assembly_identifier = NULL;
-	if (assembly_identifier != NULL)
+	EIF_OBJECT tmp_cluster_name = NULL;
+	if (cluster_name != NULL)
 	{
-		tmp_assembly_identifier = eif_protect (rt_ce.ccom_ce_bstr (assembly_identifier));
+		tmp_cluster_name = eif_protect (rt_ce.ccom_ce_bstr (cluster_name));
 	}
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
 	eiffel_function = eif_reference_function ("assembly_properties", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_assembly_identifier != NULL) ? eif_access (tmp_assembly_identifier) : NULL));
+		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_cluster_name != NULL) ? eif_access (tmp_cluster_name) : NULL));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "assembly_properties", EIF_REFERENCE);
 	if (tmp_value != NULL)
@@ -208,68 +168,68 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::assembly_p
 	}
 	else
 		*return_value = NULL;
-	if (tmp_assembly_identifier != NULL)
-		eif_wean (tmp_assembly_identifier);
+	if (tmp_cluster_name != NULL)
+		eif_wean (tmp_cluster_name);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::is_valid_identifier(  /* [in] */ BSTR assembly_identifier, /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::is_valid_cluster_name(  /* [in] */ BSTR cluster_name, /* [out, retval] */ VARIANT_BOOL * return_value )
 
 /*-----------------------------------------------------------
-	Checks to see if a assembly identifier is valid
+	Checks to see if a assembly cluster name is valid
 -----------------------------------------------------------*/
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_assembly_identifier = NULL;
-	if (assembly_identifier != NULL)
+	EIF_OBJECT tmp_cluster_name = NULL;
+	if (cluster_name != NULL)
 	{
-		tmp_assembly_identifier = eif_protect (rt_ce.ccom_ce_bstr (assembly_identifier));
+		tmp_cluster_name = eif_protect (rt_ce.ccom_ce_bstr (cluster_name));
 	}
 	
 	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_boolean_function ("is_valid_identifier", type_id);
+	eiffel_function = eif_boolean_function ("is_valid_cluster_name", type_id);
 	EIF_BOOLEAN tmp_value = 0;
 	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_assembly_identifier != NULL) ? eif_access (tmp_assembly_identifier) : NULL));
+		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_cluster_name != NULL) ? eif_access (tmp_cluster_name) : NULL));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "is_valid_identifier", EIF_BOOLEAN);
+		tmp_value = eif_field (eif_access (eiffel_object), "is_valid_cluster_name", EIF_BOOLEAN);
 	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
-	if (tmp_assembly_identifier != NULL)
-		eif_wean (tmp_assembly_identifier);
+	if (tmp_cluster_name != NULL)
+		eif_wean (tmp_cluster_name);
 	
 	END_ECATCH;
 	return S_OK;
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::contains_assembly(  /* [in] */ BSTR assembly_identifier, /* [out, retval] */ VARIANT_BOOL * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::contains_assembly(  /* [in] */ BSTR cluster_name, /* [out, retval] */ VARIANT_BOOL * return_value )
 
 /*-----------------------------------------------------------
-	Checks to see if a assembly identifier has already been added to the project
+	Checks to see if a assembly cluster name has already been added to the project
 -----------------------------------------------------------*/
 {
 	ECATCH;
 
-	EIF_OBJECT tmp_assembly_identifier = NULL;
-	if (assembly_identifier != NULL)
+	EIF_OBJECT tmp_cluster_name = NULL;
+	if (cluster_name != NULL)
 	{
-		tmp_assembly_identifier = eif_protect (rt_ce.ccom_ce_bstr (assembly_identifier));
+		tmp_cluster_name = eif_protect (rt_ce.ccom_ce_bstr (cluster_name));
 	}
 	
 	EIF_BOOLEAN_FUNCTION eiffel_function = 0;
 	eiffel_function = eif_boolean_function ("contains_assembly", type_id);
 	EIF_BOOLEAN tmp_value = 0;
 	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_assembly_identifier != NULL) ? eif_access (tmp_assembly_identifier) : NULL));
+		tmp_value = (FUNCTION_CAST (EIF_BOOLEAN, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_cluster_name != NULL) ? eif_access (tmp_cluster_name) : NULL));
 	else
 		tmp_value = eif_field (eif_access (eiffel_object), "contains_assembly", EIF_BOOLEAN);
 	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
-	if (tmp_assembly_identifier != NULL)
-		eif_wean (tmp_assembly_identifier);
+	if (tmp_cluster_name != NULL)
+		eif_wean (tmp_cluster_name);
 	
 	END_ECATCH;
 	return S_OK;
@@ -357,10 +317,10 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::contains_u
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::identifier_from_signed_assembly(  /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey, /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::cluster_name_from_signed_assembly(  /* [in] */ BSTR a_name, /* [in] */ BSTR a_version, /* [in] */ BSTR a_culture, /* [in] */ BSTR a_publickey, /* [out, retval] */ BSTR * return_value )
 
 /*-----------------------------------------------------------
-	Retrieves the identifier for a signed assembly in the project
+	Retrieves the cluster name for a signed assembly in the project
 -----------------------------------------------------------*/
 {
 	ECATCH;
@@ -387,12 +347,12 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::identifier
 	}
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("identifier_from_signed_assembly", type_id);
+	eiffel_function = eif_reference_function ("cluster_name_from_signed_assembly", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_a_name != NULL) ? eif_access (tmp_a_name) : NULL), ((tmp_a_version != NULL) ? eif_access (tmp_a_version) : NULL), ((tmp_a_culture != NULL) ? eif_access (tmp_a_culture) : NULL), ((tmp_a_publickey != NULL) ? eif_access (tmp_a_publickey) : NULL));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "identifier_from_signed_assembly", EIF_REFERENCE);
+		tmp_value = eif_field (eif_access (eiffel_object), "cluster_name_from_signed_assembly", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
@@ -415,10 +375,10 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::identifier
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::identifier_from_unsigned_assembly(  /* [in] */ BSTR a_path, /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::cluster_name_from_unsigned_assembly(  /* [in] */ BSTR a_path, /* [out, retval] */ BSTR * return_value )
 
 /*-----------------------------------------------------------
-	Retrieves the identifier for a unsigned assembly in the project
+	Retrieves the cluster name for a unsigned assembly in the project
 -----------------------------------------------------------*/
 {
 	ECATCH;
@@ -430,12 +390,12 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::identifier
 	}
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("identifier_from_unsigned_assembly", type_id);
+	eiffel_function = eif_reference_function ("cluster_name_from_unsigned_assembly", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE, EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object), ((tmp_a_path != NULL) ? eif_access (tmp_a_path) : NULL));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "identifier_from_unsigned_assembly", EIF_REFERENCE);
+		tmp_value = eif_field (eif_access (eiffel_object), "cluster_name_from_unsigned_assembly", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
@@ -506,39 +466,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::is_prefix_
 	*return_value = rt_ec.ccom_ec_boolean (tmp_value);
 	if (tmp_assembly_prefix != NULL)
 		eif_wean (tmp_assembly_prefix);
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::rename_assembly(  /* [in] */ BSTR assembly_new_identifier, /* [in] */ BSTR assembly_old_identifier )
-
-/*-----------------------------------------------------------
-	Rename the assembly identifier
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_OBJECT tmp_assembly_new_identifier = NULL;
-	if (assembly_new_identifier != NULL)
-	{
-		tmp_assembly_new_identifier = eif_protect (rt_ce.ccom_ce_bstr (assembly_new_identifier));
-	}
-	EIF_OBJECT tmp_assembly_old_identifier = NULL;
-	if (assembly_old_identifier != NULL)
-	{
-		tmp_assembly_old_identifier = eif_protect (rt_ce.ccom_ce_bstr (assembly_old_identifier));
-	}
-	
-	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("rename_assembly", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_assembly_new_identifier != NULL) ? eif_access (tmp_assembly_new_identifier) : NULL), ((tmp_assembly_old_identifier != NULL) ? eif_access (tmp_assembly_old_identifier) : NULL));
-	if (tmp_assembly_new_identifier != NULL)
-		eif_wean (tmp_assembly_new_identifier);
-	if (tmp_assembly_old_identifier != NULL)
-		eif_wean (tmp_assembly_old_identifier);
 	
 	END_ECATCH;
 	return S_OK;
@@ -801,7 +728,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 				}
 				BSTR arg_5 = (BSTR)tmp_value [5]->bstrVal;
 				
-				hr = add_signed_assembly ( arg_0, arg_1, arg_2, arg_3, arg_4, arg_5);
+				hr = add_assembly ( arg_0, arg_1, arg_2, arg_3, arg_4, arg_5);
 				
 				if (FAILED (hr))
 				{
@@ -826,90 +753,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			break;
 
 		case 1610743810:
-			{
-				if (pDispParams->cArgs != 3)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (3*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {8, 8, 8};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 8)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
-				
-				if (tmp_value [1]->vt != 8)
-				{
-					hr = VariantChangeType (tmp_value [1], tmp_value [1], VARIANT_NOUSEROVERRIDE, 8);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 1;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				BSTR arg_1 = (BSTR)tmp_value [1]->bstrVal;
-				
-				if (tmp_value [2]->vt != 8)
-				{
-					hr = VariantChangeType (tmp_value [2], tmp_value [2], VARIANT_NOUSEROVERRIDE, 8);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 2;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				BSTR arg_2 = (BSTR)tmp_value [2]->bstrVal;
-				
-				hr = add_unsigned_assembly ( arg_0, arg_1, arg_2);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				CoTaskMemFree (tmp_value);
-			}
-			break;
-
-		case 1610743811:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -967,7 +810,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743812:
+		case 1610743811:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -1033,7 +876,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743813:
+		case 1610743812:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -1068,7 +911,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				VARIANT_BOOL result = 0;
 				
-				hr = is_valid_identifier ( arg_0,&result);
+				hr = is_valid_cluster_name ( arg_0,&result);
 				
 				if (FAILED (hr))
 				{
@@ -1099,7 +942,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743814:
+		case 1610743813:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -1165,7 +1008,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743815:
+		case 1610743814:
 			{
 				if (pDispParams->cArgs != 4)
 					return DISP_E_BADPARAMCOUNT;
@@ -1270,7 +1113,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743816:
+		case 1610743815:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -1336,7 +1179,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743817:
+		case 1610743816:
 			{
 				if (pDispParams->cArgs != 4)
 					return DISP_E_BADPARAMCOUNT;
@@ -1410,7 +1253,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 				BSTR arg_3 = (BSTR)tmp_value [3]->bstrVal;
 				BSTR result = 0;
 				
-				hr = identifier_from_signed_assembly ( arg_0, arg_1, arg_2, arg_3,&result);
+				hr = cluster_name_from_signed_assembly ( arg_0, arg_1, arg_2, arg_3,&result);
 				
 				if (FAILED (hr))
 				{
@@ -1441,7 +1284,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743818:
+		case 1610743817:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -1476,7 +1319,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
 				BSTR result = 0;
 				
-				hr = identifier_from_unsigned_assembly ( arg_0,&result);
+				hr = cluster_name_from_unsigned_assembly ( arg_0,&result);
 				
 				if (FAILED (hr))
 				{
@@ -1507,7 +1350,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743819:
+		case 1610743818:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -1573,7 +1416,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 			}
 			break;
 
-		case 1610743820:
+		case 1610743819:
 			{
 				if (pDispParams->cArgs != 1)
 					return DISP_E_BADPARAMCOUNT;
@@ -1635,77 +1478,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_stub::Invoke( DI
 					pVarResult->boolVal = result;
 				}
 					
-				CoTaskMemFree (tmp_value);
-			}
-			break;
-
-		case 1610743821:
-			{
-				if (pDispParams->cArgs != 2)
-					return DISP_E_BADPARAMCOUNT;
-
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (2*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {8, 8};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
-				
-				if (tmp_value [0]->vt != 8)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
-				
-				if (tmp_value [1]->vt != 8)
-				{
-					hr = VariantChangeType (tmp_value [1], tmp_value [1], VARIANT_NOUSEROVERRIDE, 8);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 1;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				BSTR arg_1 = (BSTR)tmp_value [1]->bstrVal;
-				
-				hr = rename_assembly ( arg_0, arg_1);
-				
-				if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
 				CoTaskMemFree (tmp_value);
 			}
 			break;

@@ -125,7 +125,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::assembly
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::assembly_public_key(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::assembly_public_key_token(  /* [out, retval] */ BSTR * return_value )
 
 /*-----------------------------------------------------------
 	Assembly public key token
@@ -135,12 +135,12 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::assembly
 
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("assembly_public_key", type_id);
+	eiffel_function = eif_reference_function ("assembly_public_key_token", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "assembly_public_key", EIF_REFERENCE);
+		tmp_value = eif_field (eif_access (eiffel_object), "assembly_public_key_token", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
@@ -149,62 +149,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::assembly
 	}
 	else
 		*return_value = NULL;
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::assembly_path(  /* [out, retval] */ BSTR * return_value )
-
-/*-----------------------------------------------------------
-	Assembly path
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	
-	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("assembly_path", type_id);
-	EIF_REFERENCE tmp_value = 0;
-	if (eiffel_function != NULL)
-		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
-	else
-		tmp_value = eif_field (eif_access (eiffel_object), "assembly_path", EIF_REFERENCE);
-	if (tmp_value != NULL)
-	{
-		EIF_OBJECT tmp_object = eif_protect (tmp_value);
-		*return_value = rt_ec.ccom_ec_bstr (eif_access (tmp_object));
-		eif_wean (tmp_object);
-	}
-	else
-		*return_value = NULL;
-	
-	END_ECATCH;
-	return S_OK;
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::set_assembly_path(  /* [in] */ BSTR return_value )
-
-/*-----------------------------------------------------------
-	Assembly path
------------------------------------------------------------*/
-{
-	ECATCH;
-
-	EIF_OBJECT tmp_return_value = NULL;
-	if (return_value != NULL)
-	{
-		tmp_return_value = eif_protect (rt_ce.ccom_ce_bstr (return_value));
-	}
-	
-	EIF_PROCEDURE eiffel_procedure = 0;
-	eiffel_procedure = eif_procedure ("set_assembly_path", type_id);
-
-	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE))eiffel_procedure) (eif_access (eiffel_object), ((tmp_return_value != NULL) ? eif_access (tmp_return_value) : NULL));
-	if (tmp_return_value != NULL)
-		eif_wean (tmp_return_value);
 	
 	END_ECATCH;
 	return S_OK;
@@ -257,22 +201,22 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::is_signe
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::assembly_identifier(  /* [out, retval] */ BSTR * return_value )
+STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::assembly_cluster_name(  /* [out, retval] */ BSTR * return_value )
 
 /*-----------------------------------------------------------
-	Assembly identifier.
+	Assembly cluster name.
 -----------------------------------------------------------*/
 {
 	ECATCH;
 
 	
 	EIF_REFERENCE_FUNCTION eiffel_function = 0;
-	eiffel_function = eif_reference_function ("assembly_identifier", type_id);
+	eiffel_function = eif_reference_function ("assembly_cluster_name", type_id);
 	EIF_REFERENCE tmp_value = 0;
 	if (eiffel_function != NULL)
 		tmp_value = (FUNCTION_CAST (EIF_REFERENCE, (EIF_REFERENCE))eiffel_function) (eif_access (eiffel_object));
 	else
-		tmp_value = eif_field (eif_access (eiffel_object), "assembly_identifier", EIF_REFERENCE);
+		tmp_value = eif_field (eif_access (eiffel_object), "assembly_cluster_name", EIF_REFERENCE);
 	if (tmp_value != NULL)
 	{
 		EIF_OBJECT tmp_object = eif_protect (tmp_value);
@@ -442,7 +386,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::Invoke( 
 	switch (dispID)
 	{
 		
-		case 203:
+		case 200:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -450,7 +394,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::Invoke( 
 
 				BSTR result = 0;
 				
-				hr = assembly_public_key (&result);
+				hr = assembly_name (&result);
 				
 				if (FAILED (hr))
 				{
@@ -479,7 +423,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::Invoke( 
 			}
 			break;
 
-		case 204:
+		case 201:
 			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
 				if (pDispParams->cArgs != 0)
@@ -487,7 +431,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::Invoke( 
 
 				BSTR result = 0;
 				
-				hr = assembly_path (&result);
+				hr = assembly_version (&result);
 				
 				if (FAILED (hr))
 				{
@@ -514,45 +458,20 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::Invoke( 
 				}
 					
 			}
-			if (wFlags & (DISPATCH_PROPERTYPUT | DISPATCH_PROPERTYPUTREF))
+			break;
+
+		case 202:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
 			{
-				if (pDispParams->cArgs != 1)
+				if (pDispParams->cArgs != 0)
 					return DISP_E_BADPARAMCOUNT;
 
-				tmp_value = (VARIANTARG **)CoTaskMemAlloc (1*sizeof (VARIANTARG*));
-
-				VARTYPE vt_type [] = {8};
-
-				if (cNamedArgs >0)
-					for (i = 0; i < cNamedArgs; i++)
-					{
-						tmp_value [rgdispidNamedArgs [i]] = &(rgvarg [i]);
-					}
-
-				for (i = cArgs; i > cNamedArgs; i--)
-				{
-					tmp_value [cArgs - i] = &(rgvarg [i - 1]);
-				}
-
+				BSTR result = 0;
 				
-				if (tmp_value [0]->vt != 8)
-				{
-					hr = VariantChangeType (tmp_value [0], tmp_value [0], VARIANT_NOUSEROVERRIDE, 8);
-					if (FAILED (hr))
-				{
-					CoTaskMemFree (tmp_value);
-					*puArgErr = 0;
-					return DISP_E_TYPEMISMATCH;
-				}
-			
-				}
-				BSTR arg_0 = (BSTR)tmp_value [0]->bstrVal;
-				
-				hr = set_assembly_path ( arg_0);
+				hr = assembly_culture (&result);
 				
 				if (FAILED (hr))
 				{
-					CoTaskMemFree (tmp_value);
 					if (pExcepInfo != NULL)
 					{
 						WCHAR * wide_string = 0;
@@ -568,7 +487,50 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::Invoke( 
 					}
 					return DISP_E_EXCEPTION;
 				}
-				CoTaskMemFree (tmp_value);
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 8;
+					pVarResult->bstrVal = result;
+				}
+					
+			}
+			break;
+
+		case 203:
+			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
+			{
+				if (pDispParams->cArgs != 0)
+					return DISP_E_BADPARAMCOUNT;
+
+				BSTR result = 0;
+				
+				hr = assembly_public_key_token (&result);
+				
+				if (FAILED (hr))
+				{
+					if (pExcepInfo != NULL)
+					{
+						WCHAR * wide_string = 0;
+						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
+						BSTR b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrDescription = b_string;
+						wide_string = ccom_create_from_string ("ISE");
+						b_string = SysAllocString (wide_string);
+						free (wide_string);
+						pExcepInfo->bstrSource = b_string;
+						pExcepInfo->wCode = HRESULT_CODE (hr);
+					}
+					return DISP_E_EXCEPTION;
+				}
+				if (pVarResult != NULL)
+				{
+					VariantClear (pVarResult);
+					pVarResult->vt = 8;
+					pVarResult->bstrVal = result;
+				}
+					
 			}
 			break;
 
@@ -617,7 +579,7 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::Invoke( 
 
 				BSTR result = 0;
 				
-				hr = assembly_identifier (&result);
+				hr = assembly_cluster_name (&result);
 				
 				if (FAILED (hr))
 				{
@@ -771,117 +733,6 @@ STDMETHODIMP ecom_eiffel_compiler::IEiffelAssemblyProperties_impl_stub::Invoke( 
 					VariantClear (pVarResult);
 					pVarResult->vt = 11;
 					pVarResult->boolVal = result;
-				}
-					
-			}
-			break;
-
-		case 200:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				BSTR result = 0;
-				
-				hr = assembly_name (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 8;
-					pVarResult->bstrVal = result;
-				}
-					
-			}
-			break;
-
-		case 201:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				BSTR result = 0;
-				
-				hr = assembly_version (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 8;
-					pVarResult->bstrVal = result;
-				}
-					
-			}
-			break;
-
-		case 202:
-			if (wFlags & (DISPATCH_PROPERTYGET | DISPATCH_METHOD))
-			{
-				if (pDispParams->cArgs != 0)
-					return DISP_E_BADPARAMCOUNT;
-
-				BSTR result = 0;
-				
-				hr = assembly_culture (&result);
-				
-				if (FAILED (hr))
-				{
-					if (pExcepInfo != NULL)
-					{
-						WCHAR * wide_string = 0;
-						wide_string = ccom_create_from_string (eename(HRESULT_CODE (hr) - 1024));
-						BSTR b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrDescription = b_string;
-						wide_string = ccom_create_from_string ("ISE");
-						b_string = SysAllocString (wide_string);
-						free (wide_string);
-						pExcepInfo->bstrSource = b_string;
-						pExcepInfo->wCode = HRESULT_CODE (hr);
-					}
-					return DISP_E_EXCEPTION;
-				}
-				if (pVarResult != NULL)
-				{
-					VariantClear (pVarResult);
-					pVarResult->vt = 8;
-					pVarResult->bstrVal = result;
 				}
 					
 			}

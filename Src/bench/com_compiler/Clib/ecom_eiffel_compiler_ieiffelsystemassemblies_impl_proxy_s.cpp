@@ -119,7 +119,7 @@ void ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_store()
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-void ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_add_signed_assembly(  /* [in] */ EIF_OBJECT assembly_prefix,  /* [in] */ EIF_OBJECT assembly_identifier,  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey )
+void ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_add_assembly(  /* [in] */ EIF_OBJECT assembly_prefix,  /* [in] */ EIF_OBJECT cluster_name,  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey )
 
 /*-----------------------------------------------------------
 	Add a signed assembly to the project.
@@ -138,8 +138,8 @@ void ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_add_signed_a
 	};
 	BSTR tmp_assembly_prefix = 0;
 	tmp_assembly_prefix = (BSTR)rt_ec.ccom_ec_bstr (eif_access (assembly_prefix));
-	BSTR tmp_assembly_identifier = 0;
-	tmp_assembly_identifier = (BSTR)rt_ec.ccom_ec_bstr (eif_access (assembly_identifier));
+	BSTR tmp_cluster_name = 0;
+	tmp_cluster_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (cluster_name));
 	BSTR tmp_a_name = 0;
 	tmp_a_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_name));
 	BSTR tmp_a_version = 0;
@@ -149,7 +149,7 @@ void ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_add_signed_a
 	BSTR tmp_a_publickey = 0;
 	tmp_a_publickey = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_publickey));
 	
-	hr = p_IEiffelSystemAssemblies->add_signed_assembly(tmp_assembly_prefix,tmp_assembly_identifier,tmp_a_name,tmp_a_version,tmp_a_culture,tmp_a_publickey);
+	hr = p_IEiffelSystemAssemblies->add_assembly(tmp_assembly_prefix,tmp_cluster_name,tmp_a_name,tmp_a_version,tmp_a_culture,tmp_a_publickey);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -158,50 +158,11 @@ void ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_add_signed_a
 	};
 	
 	rt_ce.free_memory_bstr (tmp_assembly_prefix);
-rt_ce.free_memory_bstr (tmp_assembly_identifier);
+rt_ce.free_memory_bstr (tmp_cluster_name);
 rt_ce.free_memory_bstr (tmp_a_name);
 rt_ce.free_memory_bstr (tmp_a_version);
 rt_ce.free_memory_bstr (tmp_a_culture);
 rt_ce.free_memory_bstr (tmp_a_publickey);
-
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_add_unsigned_assembly(  /* [in] */ EIF_OBJECT assembly_prefix,  /* [in] */ EIF_OBJECT assembly_identifier,  /* [in] */ EIF_OBJECT a_path )
-
-/*-----------------------------------------------------------
-	Add a unsigned (local) assembly to the project.
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelSystemAssemblies == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelSystemAssemblies_, (void **)&p_IEiffelSystemAssemblies);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR tmp_assembly_prefix = 0;
-	tmp_assembly_prefix = (BSTR)rt_ec.ccom_ec_bstr (eif_access (assembly_prefix));
-	BSTR tmp_assembly_identifier = 0;
-	tmp_assembly_identifier = (BSTR)rt_ec.ccom_ec_bstr (eif_access (assembly_identifier));
-	BSTR tmp_a_path = 0;
-	tmp_a_path = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_path));
-	
-	hr = p_IEiffelSystemAssemblies->add_unsigned_assembly(tmp_assembly_prefix,tmp_assembly_identifier,tmp_a_path);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	rt_ce.free_memory_bstr (tmp_assembly_prefix);
-rt_ce.free_memory_bstr (tmp_assembly_identifier);
-rt_ce.free_memory_bstr (tmp_a_path);
 
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
@@ -239,10 +200,10 @@ void ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_remove_assem
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_assembly_properties(  /* [in] */ EIF_OBJECT assembly_identifier )
+EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_assembly_properties(  /* [in] */ EIF_OBJECT cluster_name )
 
 /*-----------------------------------------------------------
-	Cluster properties.
+	Assembly properties.
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
@@ -256,11 +217,11 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_ass
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	BSTR tmp_assembly_identifier = 0;
-	tmp_assembly_identifier = (BSTR)rt_ec.ccom_ec_bstr (eif_access (assembly_identifier));
+	BSTR tmp_cluster_name = 0;
+	tmp_cluster_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (cluster_name));
 	ecom_eiffel_compiler::IEiffelAssemblyProperties * ret_value = 0;
 	
-	hr = p_IEiffelSystemAssemblies->assembly_properties(tmp_assembly_identifier, &ret_value);
+	hr = p_IEiffelSystemAssemblies->assembly_properties(tmp_cluster_name, &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -268,17 +229,17 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_ass
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	
-	rt_ce.free_memory_bstr (tmp_assembly_identifier);
+	rt_ce.free_memory_bstr (tmp_cluster_name);
 
 	EIF_REFERENCE eiffel_result = eif_protect ((EIF_REFERENCE)grt_ce_ISE.ccom_ce_pointed_interface_194 (ret_value));
 	return eif_wean (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_BOOLEAN ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_is_valid_identifier(  /* [in] */ EIF_OBJECT assembly_identifier )
+EIF_BOOLEAN ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_is_valid_cluster_name(  /* [in] */ EIF_OBJECT cluster_name )
 
 /*-----------------------------------------------------------
-	Checks to see if a assembly identifier is valid
+	Checks to see if a assembly cluster name is valid
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
@@ -292,11 +253,11 @@ EIF_BOOLEAN ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_is_va
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	BSTR tmp_assembly_identifier = 0;
-	tmp_assembly_identifier = (BSTR)rt_ec.ccom_ec_bstr (eif_access (assembly_identifier));
+	BSTR tmp_cluster_name = 0;
+	tmp_cluster_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (cluster_name));
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelSystemAssemblies->is_valid_identifier(tmp_assembly_identifier, &ret_value);
+	hr = p_IEiffelSystemAssemblies->is_valid_cluster_name(tmp_cluster_name, &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -304,17 +265,17 @@ EIF_BOOLEAN ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_is_va
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	
-	rt_ce.free_memory_bstr (tmp_assembly_identifier);
+	rt_ce.free_memory_bstr (tmp_cluster_name);
 
 	EIF_BOOLEAN eiffel_result =  (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
 	return (eiffel_result);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_BOOLEAN ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_contains_assembly(  /* [in] */ EIF_OBJECT assembly_identifier )
+EIF_BOOLEAN ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_contains_assembly(  /* [in] */ EIF_OBJECT cluster_name )
 
 /*-----------------------------------------------------------
-	Checks to see if a assembly identifier has already been added to the project
+	Checks to see if a assembly cluster name has already been added to the project
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
@@ -328,11 +289,11 @@ EIF_BOOLEAN ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_conta
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	};
-	BSTR tmp_assembly_identifier = 0;
-	tmp_assembly_identifier = (BSTR)rt_ec.ccom_ec_bstr (eif_access (assembly_identifier));
+	BSTR tmp_cluster_name = 0;
+	tmp_cluster_name = (BSTR)rt_ec.ccom_ec_bstr (eif_access (cluster_name));
 	VARIANT_BOOL ret_value = 0;
 	
-	hr = p_IEiffelSystemAssemblies->contains_assembly(tmp_assembly_identifier, &ret_value);
+	hr = p_IEiffelSystemAssemblies->contains_assembly(tmp_cluster_name, &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -340,7 +301,7 @@ EIF_BOOLEAN ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_conta
 		com_eraise (f.c_format_message (hr), EN_PROG);
 	};
 	
-	rt_ce.free_memory_bstr (tmp_assembly_identifier);
+	rt_ce.free_memory_bstr (tmp_cluster_name);
 
 	EIF_BOOLEAN eiffel_result =  (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
 	return (eiffel_result);
@@ -428,10 +389,10 @@ EIF_BOOLEAN ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_conta
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_identifier_from_signed_assembly(  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey )
+EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_cluster_name_from_signed_assembly(  /* [in] */ EIF_OBJECT a_name,  /* [in] */ EIF_OBJECT a_version,  /* [in] */ EIF_OBJECT a_culture,  /* [in] */ EIF_OBJECT a_publickey )
 
 /*-----------------------------------------------------------
-	Retrieves the identifier for a signed assembly in the project
+	Retrieves the cluster name for a signed assembly in the project
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
@@ -455,7 +416,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_ide
 	tmp_a_publickey = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_publickey));
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelSystemAssemblies->identifier_from_signed_assembly(tmp_a_name,tmp_a_version,tmp_a_culture,tmp_a_publickey, &ret_value);
+	hr = p_IEiffelSystemAssemblies->cluster_name_from_signed_assembly(tmp_a_name,tmp_a_version,tmp_a_culture,tmp_a_publickey, &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -474,10 +435,10 @@ rt_ce.free_memory_bstr (tmp_a_publickey);
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 
-EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_identifier_from_unsigned_assembly(  /* [in] */ EIF_OBJECT a_path )
+EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_cluster_name_from_unsigned_assembly(  /* [in] */ EIF_OBJECT a_path )
 
 /*-----------------------------------------------------------
-	Retrieves the identifier for a unsigned assembly in the project
+	Retrieves the cluster name for a unsigned assembly in the project
 -----------------------------------------------------------*/
 {
 	HRESULT hr;
@@ -495,7 +456,7 @@ EIF_REFERENCE ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_ide
 	tmp_a_path = (BSTR)rt_ec.ccom_ec_bstr (eif_access (a_path));
 	BSTR ret_value = 0;
 	
-	hr = p_IEiffelSystemAssemblies->identifier_from_unsigned_assembly(tmp_a_path, &ret_value);
+	hr = p_IEiffelSystemAssemblies->cluster_name_from_unsigned_assembly(tmp_a_path, &ret_value);
 	if (FAILED (hr))
 	{
 		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
@@ -580,42 +541,6 @@ EIF_BOOLEAN ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_is_pr
 
 	EIF_BOOLEAN eiffel_result =  (EIF_BOOLEAN)rt_ce.ccom_ce_boolean (ret_value);
 	return (eiffel_result);
-};
-/*----------------------------------------------------------------------------------------------------------------------*/
-
-void ecom_eiffel_compiler::IEiffelSystemAssemblies_impl_proxy::ccom_rename_assembly(  /* [in] */ EIF_OBJECT assembly_new_identifier,  /* [in] */ EIF_OBJECT assembly_old_identifier )
-
-/*-----------------------------------------------------------
-	Rename the assembly identifier
------------------------------------------------------------*/
-{
-	HRESULT hr;
-	if (p_IEiffelSystemAssemblies == NULL)
-	{
-		hr = p_unknown->QueryInterface (IID_IEiffelSystemAssemblies_, (void **)&p_IEiffelSystemAssemblies);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	};
-	BSTR tmp_assembly_new_identifier = 0;
-	tmp_assembly_new_identifier = (BSTR)rt_ec.ccom_ec_bstr (eif_access (assembly_new_identifier));
-	BSTR tmp_assembly_old_identifier = 0;
-	tmp_assembly_old_identifier = (BSTR)rt_ec.ccom_ec_bstr (eif_access (assembly_old_identifier));
-	
-	hr = p_IEiffelSystemAssemblies->rename_assembly(tmp_assembly_new_identifier,tmp_assembly_old_identifier);
-	if (FAILED (hr))
-	{
-		if ((HRESULT_FACILITY (hr)  ==  FACILITY_ITF) && (HRESULT_CODE (hr) > 1024) && (HRESULT_CODE (hr) < 1053))
-			com_eraise (rt_ec.ccom_ec_lpstr (eename(HRESULT_CODE (hr) - 1024), NULL),HRESULT_CODE (hr) - 1024);
-		com_eraise (f.c_format_message (hr), EN_PROG);
-	};
-	
-	rt_ce.free_memory_bstr (tmp_assembly_new_identifier);
-rt_ce.free_memory_bstr (tmp_assembly_old_identifier);
-
 };
 /*----------------------------------------------------------------------------------------------------------------------*/
 

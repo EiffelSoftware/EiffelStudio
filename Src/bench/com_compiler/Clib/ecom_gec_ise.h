@@ -660,7 +660,7 @@ public:
 	/*-----------------------------------------------------------
 	Convert CELL [STRING] to BSTR *.
 	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_211( EIF_REFERENCE eif_ref, BSTR * old );
+	BSTR * ccom_ec_pointed_cell_213( EIF_REFERENCE eif_ref, BSTR * old );
 
 
 	/*-----------------------------------------------------------
@@ -670,33 +670,27 @@ public:
 
 
 	/*-----------------------------------------------------------
-	Convert CELL [STRING] to BSTR *.
-	-----------------------------------------------------------*/
-	BSTR * ccom_ec_pointed_cell_215( EIF_REFERENCE eif_ref, BSTR * old );
-
-
-	/*-----------------------------------------------------------
 	Convert IENUM_COMPLETION_ENTRY_INTERFACE to ecom_eiffel_compiler::IEnumCompletionEntry *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumCompletionEntry * ccom_ec_pointed_interface_219( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEnumCompletionEntry * ccom_ec_pointed_interface_218( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [IENUM_COMPLETION_ENTRY_INTERFACE] to ecom_eiffel_compiler::IEnumCompletionEntry * *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEnumCompletionEntry * * ccom_ec_pointed_cell_220( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumCompletionEntry * * old );
+	ecom_eiffel_compiler::IEnumCompletionEntry * * ccom_ec_pointed_cell_219( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEnumCompletionEntry * * old );
 
 
 	/*-----------------------------------------------------------
 	Convert IEIFFEL_COMPLETION_ENTRY_INTERFACE to ecom_eiffel_compiler::IEiffelCompletionEntry *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelCompletionEntry * ccom_ec_pointed_interface_222( EIF_REFERENCE eif_ref );
+	ecom_eiffel_compiler::IEiffelCompletionEntry * ccom_ec_pointed_interface_221( EIF_REFERENCE eif_ref );
 
 
 	/*-----------------------------------------------------------
 	Convert CELL [IEIFFEL_COMPLETION_ENTRY_INTERFACE] to ecom_eiffel_compiler::IEiffelCompletionEntry * *.
 	-----------------------------------------------------------*/
-	ecom_eiffel_compiler::IEiffelCompletionEntry * * ccom_ec_pointed_cell_223( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelCompletionEntry * * old );
+	ecom_eiffel_compiler::IEiffelCompletionEntry * * ccom_ec_pointed_cell_222( EIF_REFERENCE eif_ref, ecom_eiffel_compiler::IEiffelCompletionEntry * * old );
 
 
 

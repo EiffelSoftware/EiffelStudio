@@ -59,6 +59,7 @@ feature -- Analyze
 			if call /= Void then
 				call.set_register (register)
 				call.set_need_invariant (False)
+				call.set_info (info)
 				call.analyze
 				call.free_register
 			else
@@ -95,15 +96,28 @@ feature -- Byte code generation
 	make_byte_code (ba: BYTE_ARRAY) is
 			-- Generate byte code for a creation instruction
 		local
-			target_type: TYPE_I
-			feat: FEATURE_B
-			cl_type: CL_TYPE_I
+			target_type: CL_TYPE_I
+			current_type: CL_TYPE_I
 		do
-			target_type := Context.real_type (target.type)
+			current_type := context.current_type
+			target_type ?= Context.real_type (info.type)
 			make_breakable (ba)
+
 			if target_type.is_separate then
+				
 			else
 				ba.append (Bc_create)
+				ba.append (Bc_create_exp)
+				if call /= Void then
+					ba.append ('%/001/')
+				else
+					ba.append ('%/000/')
+				end
+				info.make_byte_code (ba)
+				if call /= Void then
+					call.set_info (info)
+					call.make_creation_byte_code (ba)
+				end
 			end
 		end
 
@@ -132,6 +146,7 @@ feature -- Generation
 				is_expanded: BOOLEAN
 				target_type: CL_TYPE_I
 				current_type: CL_TYPE_I
+				buf: GENERATION_BUFFER
 			do
 				generate_line_info
 
@@ -144,6 +159,22 @@ feature -- Generation
 					call.set_type (target_type)
 					call.set_info (info)
 					call.generate
+				else
+					register.print_register
+					buf := buffer
+					buf.putstring (" = RTLN(")
+					info.generate
+					buf.putstring (");")
+					buf.new_line
+					if
+						context.workbench_mode
+						or else context.assertion_level.check_invariant
+					then
+						buf.putstring ("RTCI(")
+						register.print_register
+						buf.putstring (gc_rparan_comma)
+						buf.new_line
+					end
 				end
 
 				context.set_current_type (current_type)

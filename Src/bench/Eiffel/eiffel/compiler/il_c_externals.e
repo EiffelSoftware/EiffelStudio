@@ -104,7 +104,7 @@ feature -- Code generation
 				context.set_header_buffer (header_buffer)
 				extern_declarations.wipe_out
 				buffer.putstring ("#include %"eif_eiffel.h%"%N")
-				buffer.putstring ("#include %"" + System.name + ".h%"%N")
+				buffer.putstring ("#include %"lib" + System.name + ".h%"%N")
 				buffer.start_c_specific_code
 				header_buffer.putstring ("#include %"eif_eiffel.h%"%N")
 				header_buffer.start_c_specific_code
@@ -119,14 +119,16 @@ feature -- Code generation
 			buffer.end_c_specific_code
 			header_buffer.end_c_specific_code
 
-			create header_file.make_open_write (full_file_name (System.name + ".h", final_mode))
+			create header_file.make_open_write (
+				full_file_name ("lib" + System.name + ".h", final_mode))
 			if not Shared_include_queue.is_empty then
 				extern_declarations.generate_header_files (header_buffer)
 			end
 			header_file.put_string (header_buffer)
 			header_file.close
 
-			create external_file.make_open_write (full_file_name (System.name + ".c", final_mode))
+			create external_file.make_open_write (
+				full_file_name ("lib" + System.name + ".c", final_mode))
 			external_file.put_string (buffer)
 			external_file.close
 			

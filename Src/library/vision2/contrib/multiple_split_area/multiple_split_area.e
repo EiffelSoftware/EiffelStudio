@@ -472,6 +472,7 @@ feature -- Status setting
 			end
 		ensure
 			remove: not linear_representation.has (a_widget)
+			widget_not_parented: a_widget.parent = Void
 			count_decreased: old linear_representation.has (a_widget) implies linear_representation.count = old linear_representation.count - 1
 		end
 		

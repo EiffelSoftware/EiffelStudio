@@ -11,7 +11,8 @@ inherit
 	PRIMITIVE_WINDOWS
 		redefine
 			realize, 
-			unrealize
+			unrealize,
+			on_key_down
 		end
 
 	TEXT_FIELD_I
@@ -57,8 +58,7 @@ inherit
 			on_destroy,
 			on_set_cursor,
 			on_key_up,
-			on_key_down
-		redefine
+			on_key_down,
 			on_char
 		end
 
@@ -240,14 +240,117 @@ feature {NONE} -- Implementation
 
 	on_char (virtual_key, key_data: INTEGER) is
 			-- Wm_char message
+		do
+			if virtual_key = vk_return or virtual_key = vk_tab then
+				disable_default_processing
+			end
+		end
+
+	on_key_down (code, flags: INTEGER) is
+			-- Wm_keydown message
 		local
 			kw: KEYBOARD_WINDOWS
 			kpd: KYPRESS_DATA
 		do
 			!! kw.make_from_key_state
-			!! kpd.make (owner, virtual_key, virtual_keys @ virtual_key, kw) 
-			if virtual_key = vk_return or virtual_key = vk_tab then
+			!! kpd.make (owner, code, virtual_keys @ code, kw) 
+			key_press_actions.execute (Current, kpd)
+			if code = vk_return then
 				activate_actions.execute (Current, kpd)
+			end
+			if code = vk_return then
+				disable_default_processing
+			elseif code = vk_tab then
+				if key_state (Vk_shift) then
+					go_to_prev_text_field
+				else
+					go_to_next_text_field
+				end
+				disable_default_processing
+			end
+		end
+
+	go_to_prev_text_field is
+		local
+			tf: TEXT_FIELD_WINDOWS
+			found: BOOLEAN
+			p : POINTER
+			w: W_MANAGER
+		do
+			w := widget_manager
+			from
+				w.start
+			until
+				w.after or else w.item.implementation = Current
+			loop
+				w.forth
+			end
+			if not w.after then
+				from
+					w.forth
+				until
+					w.after or else found or else w.item.depth = 0
+				loop
+					tf ?= w.item.implementation
+					found := tf /= Void
+					w.forth
+				end
+				if not found then	
+					from
+						w.start
+					until
+						found or else w.item.implementation = Current
+					loop
+						tf ?= w.item.implementation
+						found := tf /= Void
+						w.forth
+					end
+				end		
+			end
+			if found then
+				tf.wel_set_focus
+			end
+		end
+
+	go_to_next_text_field is
+		local
+			tf: TEXT_FIELD_WINDOWS
+			found: BOOLEAN
+			p : POINTER
+			w: W_MANAGER
+		do
+			w := widget_manager
+			from
+				w.start
+			until
+				w.after or else w.item.implementation = Current
+			loop
+				w.forth
+			end
+			if not w.off then
+				from
+					w.back
+				until
+					w.before or else found or else w.item.depth = 0
+				loop
+					tf ?= w.item.implementation
+					found := tf /= Void
+					w.back
+				end
+				if not found then	
+					from
+						w.finish
+					until
+						found or else w.item.implementation = Current
+					loop
+						tf ?= w.item.implementation
+						found := tf /= Void
+						w.back
+					end
+				end		
+			end
+			if found then
+				tf.wel_set_focus
 			end
 		end
 

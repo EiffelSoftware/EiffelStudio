@@ -10,8 +10,7 @@ deferred class EWB_FILTER
 feature -- Initialization
 
 	init (fn: STRING) is
-			-- Initialize Current with class_name as `cn'
-			-- and filter_name as `fn'.
+			-- Initialize Current filter_name as `fn'.
 		require
 			fn_not_void: fn /= Void
 		do

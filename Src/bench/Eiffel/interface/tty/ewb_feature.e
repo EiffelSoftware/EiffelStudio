@@ -11,15 +11,15 @@ inherit
 
 	EWB_FILTER_CLASS
 		rename
-			make as class_make,
+			make as filter_class_make,
 			execute as class_execute
 		redefine
 			loop_action, process_compiled_class, 
 			want_compiled_class
-		end
+		end;
 	EWB_FILTER_CLASS
 		rename
-			make as class_make
+			make as filter_class_make
 		redefine
 			loop_action, process_compiled_class,
 			want_compiled_class, execute
@@ -29,9 +29,9 @@ inherit
 
 feature -- Initialization
 
-	make (cn, fn: STRING) is
-			-- Initialize Current with class_name `class_name'
-			-- and feature_name `feature_name'.
+	make (cn, fn, filter: STRING) is
+			-- Initialize Current with class_name `class_name',
+			-- feature_name `feature_name', and filter `filter_name'.
 		require
 			non_void_cn: cn /= Void;
 			non_void_fn: fn /= Void;
@@ -39,6 +39,7 @@ feature -- Initialization
 			class_make (cn);
 			feature_name := fn;
 			feature_name.to_lower;
+			init (filter)
 		ensure
 			feature_set: feature_name = fn;
 		end;
@@ -127,9 +128,13 @@ feature {NONE} -- Implementation
 			cmd := clone (associated_cmd);
 			cmd.set (e_feature, e_class, st);
 			cmd.execute;
-			!! filter.make (filter_name);
-			filter.process_text (st);
-			output_window.put_string (filter.image);
+			if filter_name /= Void and then not filter_name.empty then
+				!! filter.make (filter_name);
+				filter.process_text (st);
+				output_window.put_string (filter.image)
+			else
+				output_window.put_string (st.image)
+			end;
 			output_window.new_line
 		end
 

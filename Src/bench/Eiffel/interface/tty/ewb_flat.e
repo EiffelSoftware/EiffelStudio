@@ -11,7 +11,7 @@ inherit
 
 	EWB_COMPILED_CLASS
 		rename
-			make as class_make
+			make as compiled_class_make
 		redefine
 			name, help_message, abbreviation
 		end

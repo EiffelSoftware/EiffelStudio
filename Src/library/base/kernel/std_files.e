@@ -146,7 +146,7 @@ feature -- Element change
 			end
 		end;
 
-	new_line is
+	put_new_line, new_line is
 			-- Write line feed at end of default output.
 		do
 			standard_default.new_line
@@ -205,7 +205,7 @@ feature -- Input
 		end;
 
 
-	next_line is
+	to_next_line, next_line is
 			-- Move to next input line on standard input.
 		do
 			input.next_line

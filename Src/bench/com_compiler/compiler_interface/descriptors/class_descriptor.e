@@ -8,6 +8,8 @@ class
 
 inherit
 	IEIFFEL_CLASS_DESCRIPTOR_IMPL_STUB
+		undefine
+			is_equal
 		redefine
 			name,
 			description,
@@ -41,6 +43,11 @@ inherit
 		end
 
 	COMPILER_EXPORTER
+		undefine
+			is_equal
+		end
+	
+	COMPARABLE
 
 create
 	make_with_class_i
@@ -61,7 +68,7 @@ feature -- Access
 			-- Class name.
 		do
 			Result := clone (compiler_class.name)
-			REsult.to_upper
+			Result.to_upper
 		ensure then
 			result_exists: Result /= Void
 		end
@@ -69,6 +76,9 @@ feature -- Access
 	external_name: STRING is
 			-- Class external name.
 		do
+			check
+				is_external: is_external
+			end
 			Result := compiler_class.external_name
 		ensure then
 			result_exists: Result /= Void
@@ -91,15 +101,10 @@ feature -- Access
 			if is_external then
 				Result.append (", %Nexternal name: " + external_name)
 			end
-			if is_in_system then
-				if 
-					tool_tip /= Void and then 
-					not tool_tip.is_empty
-				then
-					Result.append ("%N")
-					Result.append ("Description: ")
-					Result.append (tool_tip)
-				end
+			if tool_tip /= Void and then not tool_tip.is_empty then
+				Result.append ("%N")
+				Result.append ("Description: ")
+				Result.append (tool_tip)
 			end
 			Result.prune_all ('%R')
 			Result.prune_all ('%T')
@@ -447,9 +452,14 @@ feature -- Access
 
 	is_external: BOOLEAN is
 			-- Is class external?
+		local
+			l_class_i: EXTERNAL_CLASS_I
 		do
 			if is_in_system then
 				Result := compiler_class.compiled_class.is_external
+			else
+				l_class_i ?= compiler_class
+				Result := l_class_i /= Void
 			end
 		end
 		
@@ -485,7 +495,14 @@ feature -- Access
 			create Result.make_with_cluster_i (compiler_class.cluster)
 		end
 		
+feature -- Comparison
 
+	infix "<" (other: like Current): BOOLEAN is
+			-- Compare on names
+		do
+			Result := name < other.name
+		end
+		
 feature {NONE} -- Implementation
 
 	compiler_class: CLASS_I

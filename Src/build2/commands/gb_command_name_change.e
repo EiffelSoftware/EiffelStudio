@@ -20,7 +20,6 @@ inherit
 	GB_SHARED_COMMAND_HANDLER
 	
 create
-	
 	make
 	
 feature {NONE} -- Initialization
@@ -28,13 +27,11 @@ feature {NONE} -- Initialization
 	make (child: GB_OBJECT; a_new_name, an_old_name: STRING) is
 			-- Create `Current' with `child' to be removed from `parent' at
 			-- position `position'.
-
 		do
-			child_layout_item := child.layout_item
+			object_id := child.id
 			new_name := a_new_name
 			old_name := an_old_name
 		end
-		
 
 feature -- Basic Operation
 
@@ -43,15 +40,16 @@ feature -- Basic Operation
 		local
 			object: GB_OBJECT
 		do
-			object := child_layout_item.object
+			object := Object_handler.deep_object_from_id (object_id)
+			
 			object.set_name (new_name)
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
 			if object.name.is_empty then
-				child_layout_item.set_text (object.type.substring (4, object.type.count))
+				object.layout_item.set_text (object.type.substring (4, object.type.count))
 			else
-				child_layout_item.set_text (object.name + ": " + object.type.substring (4, object.type.count))			
+				object.layout_item.set_text (object.name + ": " + object.type.substring (4, object.type.count))			
 			end
 			update_editors_by_calling_feature (object.object, Void, agent {GB_OBJECT_EDITOR}.update_name_field)
 			update_all_editors_by_calling_feature (object.object, Void, agent {GB_OBJECT_EDITOR}.update_merged_containers)
@@ -65,12 +63,12 @@ feature -- Basic Operation
 		local
 			object: GB_OBJECT
 		do
-			object := child_layout_item.object
+			object := Object_handler.deep_object_from_id (object_id)
 			object.set_name (old_name)
 			if object.name.is_empty then
-				child_layout_item.set_text (object.type.substring (4, object.type.count))
+				object.layout_item.set_text (object.type.substring (4, object.type.count))
 			else
-				child_layout_item.set_text (object.name + ": " + object.type.substring (4, object.type.count))			
+				object.layout_item.set_text (object.name + ": " + object.type.substring (4, object.type.count))			
 			end
 			update_editors_by_calling_feature (object.object, Void, agent {GB_OBJECT_EDITOR}.update_name_field)
 			command_handler.update
@@ -78,9 +76,12 @@ feature -- Basic Operation
 		
 	textual_representation: STRING is
 			-- Text representation of command exectuted.
+		local
+			object: GB_OBJECT
 		do
+			object := Object_handler.deep_object_from_id (object_id)
 			if old_name.is_empty then
-				Result := "Unnamed " + child_layout_item.object.short_type + " named as '" + new_name + "'"
+				Result := "Unnamed " + object.layout_item.object.short_type + " named as '" + new_name + "'"
 			else
 				if new_name.is_empty then
 					Result := "'" + old_name + "' name removed."	
@@ -89,12 +90,11 @@ feature -- Basic Operation
 				end
 			end
 		end
-		
-		
+
 feature {NONE} -- Implementation
 	
-	child_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-		-- Layout constructor representation of `child_object'.
+	object_id: INTEGER
+		-- Id of object whose name is changed.
 		
 	new_name: STRING
 		-- Name given to object.

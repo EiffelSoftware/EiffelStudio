@@ -32,8 +32,7 @@ inherit
 			{NONE} all
 		end
 	
-create
-	
+create	
 	make
 	
 feature {NONE} -- Initialization
@@ -41,10 +40,9 @@ feature {NONE} -- Initialization
 	make (parent, child: GB_OBJECT; a_position: INTEGER) is
 			-- Create `Current' with `child' to be removed from `parent' at
 			-- position `position'.
-
 		do
-			child_layout_item := child.layout_item
-			parent_layout_item := parent.layout_item
+			original_id := child.id
+			parent_id := parent.id
 			position := a_position
 		end
 		
@@ -55,7 +53,10 @@ feature -- Basic Operation
 			-- Execute `Current'.
 		local
 			previous_parent_object: GB_OBJECT
+			child_object: GB_OBJECT
 		do
+			child_object := Object_handler.deep_object_from_id (original_id)
+			
 				-- Call `update_for_delete' which does any processing
 				-- necessary before objects are deleted.
 				-- i.e. unmerge radio button groups.
@@ -63,12 +64,13 @@ feature -- Basic Operation
 				-- Note that unparenting an object does not update parent representations
 				-- in objects editors, so we must do it ourselves by calling
 				-- `update_object_editors_for_delete'.
-			previous_parent_object := child_layout_item.object.parent_object
-			child_layout_item.object.unparent
-			update_object_editors_for_delete (child_layout_item.object, previous_parent_object)
+			previous_parent_object := child_object.parent_object
+
+			child_object.unparent
+			update_object_editors_for_delete (child_object, previous_parent_object)
 				-- We now need to mark the deleted object and all children as
 				-- deleted.
-			object_handler.mark_as_deleted (child_layout_item.object)
+			object_handler.mark_as_deleted (child_object)
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
@@ -79,13 +81,17 @@ feature -- Basic Operation
 			-- Undo `Current'.
 			-- Calling `execute' followed by `undo' must restore
 			-- the system to its previous state.
+		local
+			child_object, parent_object: GB_OBJECT
 		do
+			child_object := Object_handler.deep_object_from_id (original_id)
+			parent_object := Object_handler.deep_object_from_id (parent_id)
 				-- We now need to ensure that the object is no longer marked as
 				-- deleted.
-			object_handler.mark_existing (child_layout_item.object)
+			object_handler.mark_existing (child_object)
 				-- Calling `add_object' on the obejct handler, will automatically
 				-- update any parent representations in the object editor.
-			object_handler.add_object (parent_layout_item.object, child_layout_item.object, position)
+			object_handler.add_object (parent_object, child_object, position)
 			command_handler.update
 		end
 		
@@ -93,29 +99,32 @@ feature -- Basic Operation
 			-- Text representation of command exectuted.
 		local
 			child_name, parent_name: STRING
+			child_object, parent_object: GB_OBJECT
 		do
-			if not child_layout_item.object.name.is_empty then
-				child_name := child_layout_item.object.name
+			child_object := Object_handler.deep_object_from_id (original_id)
+			parent_object := Object_handler.deep_object_from_id (parent_id)
+
+			if not child_object.name.is_empty then
+				child_name := child_object.name
 			else
-				child_name := child_layout_item.object.short_type
+				child_name := child_object.short_type
 			end
 			
-			if not parent_layout_item.object.name.is_empty then
-				parent_name := parent_layout_item.object.name
+			if not parent_object.name.is_empty then
+				parent_name := parent_object.name
 			else
-				parent_name := parent_layout_item.object.short_type
+				parent_name := parent_object.short_type
 			end
 			Result := child_name + " removed from " + parent_name
 		end
-		
-		
-feature {NONE} -- Implementation
 	
-	child_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-		-- Layout constructor representation of `child_object'.
+feature {NONE} -- Implementation
+
+	original_id: INTEGER
+		-- id of object that was deleted.
 		
-	parent_layout_item: GB_LAYOUT_CONSTRUCTOR_ITEM
-		-- Layout constructor representation of `previous_parent_object'.
+	parent_id: INTEGER
+		-- id of parent from which object was deleted.
 		
 	position: INTEGER
 		-- Position of `child_layout_item' within `parent_layout_item' when `make'
@@ -176,8 +185,8 @@ feature {NONE} -- Implementation
 				counter: INTEGER
 			do
 				create all_objects.make (10)
-				child_layout_item.object.all_children_recursive (all_objects)
-				all_objects.extend (child_layout_item.object)
+				object_handler.deep_object_from_id (original_id).all_children_recursive (all_objects)
+				all_objects.extend (object_handler.deep_object_from_id (original_id))
 				from
 					counter := 1
 				until

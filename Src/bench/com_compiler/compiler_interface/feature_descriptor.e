@@ -10,6 +10,7 @@ inherit
 	IEIFFEL_FEATURE_DESCRIPTOR_IMPL_STUB
 		redefine
 			name,
+			external_name,
 			written_class,
 			evaluated_class,
 			description,
@@ -74,6 +75,14 @@ feature -- Access
 			result_exists: Result /= void
 		end
 
+	external_name: STRING is
+			-- Feature external name.
+		do
+			Result := compiler_feature.external_name
+		ensure then
+			result_exists: Result /= Void
+		end
+		
 	written_class: STRING is
 			-- Name of the class where the feature is written in.
 		do

@@ -11,6 +11,7 @@ inherit
 		redefine
 			name,
 			description,
+			external_name,
 			feature_names,
 			features,
 			feature_count,
@@ -52,6 +53,14 @@ feature -- Access
 			-- Class name.
 		do
 			Result := compiler_class.name
+		ensure then
+			result_exists: Result /= Void
+		end
+
+	external_name: STRING is
+			-- Class external name.
+		do
+			Result := compiler_class.external_name
 		ensure then
 			result_exists: Result /= Void
 		end
@@ -201,7 +210,7 @@ feature -- Access
 		end
 
 	client_count: INTEGER is
-			-- Number of class client.
+			-- Number of class clients.
 		do
 			Result := compiler_class.compiled_class.clients.count - 1
 		end

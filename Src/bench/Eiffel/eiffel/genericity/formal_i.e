@@ -9,8 +9,10 @@ inherit
 	TYPE_I
 		redefine
 			is_formal, same_as, has_true_formal, has_formal, instantiation_in,
-			complete_instantiation_in, creation_instantiation_in,
-			generated_id, is_explicit, generate_gen_type_il
+			complete_instantiation_in,
+			generated_id, is_explicit, generate_gen_type_il,
+			generate_cid, generate_cid_array, generate_cid_init,
+			make_gen_type_byte_code
 		end
 
 	SHARED_BYTE_CONTEXT
@@ -18,10 +20,33 @@ inherit
 			{NONE} all
 		end
 
+create
+	make
+	
+feature {NONE} -- Initialization
+
+	make (i: INTEGER) is
+			-- Assign `i' to `position'.
+		require
+			valid_position: i > 0
+		do
+			position := i
+		ensure
+			position_set: position = i
+		end
+
 feature -- Status report
 
 	element_type: INTEGER_8 is
 			-- Formal element type. Should not be called.
+		do
+			check
+				False
+			end
+		end
+
+	tuple_code: INTEGER_8 is
+			-- Formal tuple code. Should not be called.
 		do
 			check
 				False
@@ -55,22 +80,30 @@ feature -- Status report
 			Result := other.meta_generic.item (position)
 		end
 
-	creation_instantiation_in, complete_instantiation_in (other: GEN_TYPE_I): TYPE_I is
+	complete_instantiation_in (other: GEN_TYPE_I): TYPE_I is
 			-- Instantiation of Current in context of `other'.
 		do
 				-- Keep formal generic parameters iff the
-				-- actual is not a basic type.
+				-- actual is not an expanded type.
 			Result := other.true_generics.item (position)
 
-			if not Result.is_basic then
+			if not Result.is_expanded then
 				Result := Current
 			end
+		end
+
+	name: STRING is
+			-- Name of current type.
+		do
+			create Result.make (9)
+			Result.append ("Formal #")
+			Result.append_integer (position)
 		end
 
 	il_type_name (a_prefix: STRING): STRING is
 			-- Name of current class type.
 		do
-			Result := internal_name
+			Result := name
 		end
 
 	type_a: FORMAL_A is
@@ -78,18 +111,6 @@ feature -- Status report
 		do
 			create Result
 			Result.set_position (position)
-		end
-
-feature -- Setting
-
-	set_position (i: INTEGER) is
-			-- Assign `i' to `position'.
-		require
-			valid_position: i > 0
-		do
-			position := i
-		ensure
-			position_set: position = i
 		end
 
 feature -- Comparison
@@ -105,25 +126,47 @@ feature -- Comparison
 						other_formal.position = position
 		end
 
-feature -- Formatting
-
-	append_signature (st: STRUCTURED_TEXT) is
-		do
-			st.add_string (internal_name)
-		end
-
-	dump (buffer: GENERATION_BUFFER) is
-			-- Debug purpose
-		do
-			buffer.putstring (internal_name)
-		end
-
 feature -- Generic conformance
 
-	generated_id (final_mode : BOOLEAN): INTEGER is
+	generated_id (final_mode: BOOLEAN): INTEGER is
 			-- Id of a generic formal parameter.
 		do
-			Result := Formal_type - position
+			Result := Formal_type
+		end
+
+	generate_cid (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN) is
+		do
+			buffer.putint (Formal_type)
+			buffer.putstring (", ")
+			buffer.putint (position)
+			buffer.putstring (", ")
+		end
+
+	make_gen_type_byte_code (ba: BYTE_ARRAY; use_info: BOOLEAN) is
+		do
+			ba.append_short_integer (formal_type)
+			ba.append_short_integer (position)
+		end
+
+	generate_cid_array (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER) is
+		local
+			dummy: INTEGER
+		do
+			buffer.putint (Formal_type)
+			buffer.putstring (", ")
+			buffer.putint (position)
+			buffer.putstring (", ")
+			dummy := idx_cnt.next
+			dummy := idx_cnt.next
+		end
+
+	generate_cid_init (buffer: GENERATION_BUFFER; final_mode, use_info: BOOLEAN; idx_cnt: COUNTER) is
+		local
+			dummy : INTEGER
+		do
+				-- Increment counter
+			dummy := idx_cnt.next
+			dummy := idx_cnt.next
 		end
 
 feature -- Generic conformance for IL
@@ -189,18 +232,6 @@ feature {NONE} -- Not applicable
 		do
 		ensure then
 			False
-		end
-
-feature {NONE} -- Implementation
-
-	internal_name: STRING is
-			-- Name of current type.
-		do
-			create Result.make (9)
-			Result.append ("Formal #")
-			Result.append_integer (position)
-		ensure
-			result_not_void: Result /= Void
 		end
 
 end -- class FORMAL_I

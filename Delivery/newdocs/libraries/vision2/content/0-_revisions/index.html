@@ -33,12 +33,13 @@ modifications are relative to the previously released version.</p>
     `area_clear_excluding_widget', `item_row_span', `item_column_span', `item_row_position'
     and `item_column_position'.
   <li><b>EV_WIDGET</b> - Changed type of `focus_in_actions' and `focus_out_actions'
-    from EV_FOCUS_ACTION_SEQUENCE to EV_NOTIFY_ACTION_SEQUENCE.
+    from EV_FOCUS_ACTION_SEQUENCE to EV_NOTIFY_ACTION_SEQUENCE. `is_parent_recursive' is no longer available. It has been moved to EV_CONTAINER. This was necessary to fix a catcall encountered using vision2 under .NET. The problem manifested with widgets that held items.</li>
   <li><b>EV_FIGURE</b> - `proximity_in_actions' and `proximity_out_actions' are
     now obsolete.</li>
 	<li><b>EV_FONTABLE</b> - `set_font' now sets a copy of the font internally.</li>
 	<LI><b>EV_TREE</b> - `ensure_item_visible' and `has_recursively' now take an EV_TREE_NODE as arguments, instead of an EV_TREE_ITEM.</li>
 	<li><b>EV_TEXT</b> - `put_new_line' is now obsolete. Use `set_text ("%N") instead.</li>"
+	<li><b>EV_APPLICATION_ACTION_SEQUENCES</b> - Added `cancel_actions', fired when a pick and drop is cancelled, and `pnd_motion_actions' fired while the pointer moves during a pick and drop.</li>
 </ul>
 <p><b>Bug fixes</b>
 <ul>
@@ -86,6 +87,7 @@ modifications are relative to the previously released version.</p>
 	<li><b>EV_TEXT</b> - Fixed `put_new_line', although it has been made obsolete, as you should just use `set_text ("%N") instead.</li>
 	<li><b>EV_SPLIT_AREA</b> - Fixed crash reproducable by inserting an EV_PIXMAP directly into the split area.</li>
 	<li><b>EV_CONTAINER</b> - Fixed `propagate_foreground_color' and `propagate_background_color' which failed when one of the children was a descendent of EV_CELL.</li>
+	<li><b>EV_APPLICATION_ACTION_SEQUENCES</b> - `drop_actions' was being fired even when the pick and drop was cancelled.</li>
     </ul>
   <li><b>Gtk</b>
     <ul>

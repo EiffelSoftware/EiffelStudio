@@ -1,0 +1,14 @@
+ISE Eiffel 4, release 4.1E, 10 July 1997.
+
+Copyright (c) Interactive Software Engineering Inc., 1990-1997
+Use subject to restrictions of customer license.
+Duplication prohibited except under terms of customer license.
+
+
+Note: under `es4', the message reads
+
+	Eiffel compilation manager
+	(version 4.1 c)
+
+This is normal, as the changes between 4.1C and 4.1E only
+affect libraries; the compilation manager is the same.

@@ -51,7 +51,7 @@ feature -- Comparison
 			else
 				Result := true
 			end
-		end; -- includes
+		end;
 
 	override (clip: CLIP): BOOLEAN is
 			-- Does rectangle override clip zone ?
@@ -66,7 +66,7 @@ feature -- Comparison
 			else
 				Result := true
 			end
-		end; -- override
+		end;
 
 	segment_override (a1, b1, a2, b2 : INTEGER): BOOLEAN is
 		require
@@ -78,7 +78,7 @@ feature -- Comparison
 				else
 					Result := true
 				end
-		end; -- segment_override
+		end;
 
 
 feature -- Conversion
@@ -137,7 +137,7 @@ feature -- Modification & Insertion
 			end
 		ensure
 			not empty
-		end; -- enlarge	
+		end;
 
 	merge (other: like Current) is
 			-- Enlarge the rectangle in order to include `other'.
@@ -158,7 +158,7 @@ feature -- Modification & Insertion
 			else
 				set_infinite
 			end
-		end; -- merge
+		end;
 
 	merge_clip (clip: CLIP) is
 			-- Enlarge the rectangle in order to include `clip'.
@@ -184,7 +184,7 @@ feature -- Modification & Insertion
 			end
 		ensure
 			not empty
-		end; -- merge_clip
+		end;
 
 	set_infinite is
 		do
@@ -207,7 +207,7 @@ feature -- Removal
 			infinite := false
 		ensure
 			empty
-		end -- wipe_out
+		end 
 
 
 feature -- Status report

@@ -29,7 +29,7 @@ feature {NONE}
 		ensure
 			Result >= -23040;
 			Result <= 23040
-		end; -- angle_x
+		end;
 
 feature
 

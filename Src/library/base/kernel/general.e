@@ -22,7 +22,7 @@ feature -- Access
  
 feature -- Status report
 
-	conforms_to (other: like Current): BOOLEAN is
+	conforms_to (other: GENERAL): BOOLEAN is
 			-- Does type of current object conform to type
 			-- of `other' (as per Eiffel: The Language, chapter 13)?
 		require

@@ -48,15 +48,7 @@ feature -- Access
 			-- Return the text of the row
 		require
 			exists: not destroyed
-		do
-			from
-				!! Result.make
-				Result.start
-			until
-				Result.count = columns
-			loop
-				Result.extend (cell_text (Result.count + 1))
-			end
+		deferred
 		end
 
 	cell_text (column: INTEGER): STRING is

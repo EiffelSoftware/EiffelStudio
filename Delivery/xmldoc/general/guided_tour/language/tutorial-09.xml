@@ -308,7 +308,7 @@
 		</list>
 		</paragraph>
 		<paragraph>That violations indicate bugs explains why it is legitimate to enable or disable assertion monitoring through mere compilation options: for a correct system -- one without bugs -- assertions will always hold, so the compilation option makes no difference to the semantics of the system. </paragraph>
-		<paragraph>But of course for an incorrect system the best way to find out where the bug is -- or just that there is a bug -- is often to monitor the assertions during development and testing. Hence the presence of the compilation options, which Eiffel Software's EiffelStudio lets you set separately for each class, with defaults at the system and cluster levels:
+		<paragraph>But of course for an incorrect system the best way to find out where the bug is -- or just that there is a bug -- is often to monitor the assertions during development and testing. Hence the presence of the compilation options, which EiffelStudio lets you set separately for each class, with defaults at the system and cluster levels:
 		<line_break/>
 		<list ordered="false">
 			<item>

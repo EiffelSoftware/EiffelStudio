@@ -62,4 +62,7 @@ feature -- Execution feature
 			f1.set_text(current_widget.text)
 		end
 	
+
+	
+
 end -- class FRAME_TAB

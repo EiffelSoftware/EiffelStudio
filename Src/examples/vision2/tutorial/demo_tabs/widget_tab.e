@@ -26,7 +26,13 @@ feature -- Initialization
 		do
 			{ANY_TAB} Precursor (par)
 				
-			-- Creates the commands for the buttons	
+
+				-- Create the features of the window	
+
+					
+
+				-- Creates the commands for the buttons	
+
 			!!cmd1.make (~set_xcoor)
 			!!cmd2.make (~get_xcoor)
 			create f1.make(Current, "X", cmd1, cmd2)
@@ -45,6 +51,9 @@ feature -- Initialization
 			!!cmd1.make (~set_min_height)
 			!!cmd2.make (~get_min_height)
 			create f6.make (Current, "Min Height", cmd1, cmd2)
+
+			set_parent(par) 
+
 		end
 
 feature -- element change

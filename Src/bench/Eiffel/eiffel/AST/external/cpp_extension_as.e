@@ -255,8 +255,7 @@ end
 			end
 
 			word := special.substring (1, end_keyword - 1)
-			lower_word := clone (word)
-			lower_word.to_lower
+			lower_word := word.as_lower
 
 			special := special.substring (end_keyword, special.count)
 			special.left_adjust
@@ -268,8 +267,7 @@ end
 					raise_error ("Header file is missing in C++ specific part")
 				end
 				word := special.substring (1, end_keyword - 1)
-				lower_word := clone (word)
-				lower_word.to_lower
+				lower_word := word.as_lower
 
 				special := special.substring (end_keyword, special.count)
 				special.left_adjust

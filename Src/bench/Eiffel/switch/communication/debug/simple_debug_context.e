@@ -68,8 +68,7 @@ feature -- Element change
 	formal_name (pos: INTEGER): ID_AS is
 			-- Formal name of class_c generics at position `pos.
 		do
-			Result := clone (e_class.generics.i_th (pos).formal_name)
-			Result.to_upper
+			Result := e_class.generics.i_th (pos).formal_name.as_upper
 		end
 
 	put_class_name (s: STRING) is
@@ -81,8 +80,7 @@ feature -- Element change
 			if not tabs_emitted then
 				emit_tabs
 			end
-			tmp := clone (s)
-			tmp.to_lower
+			tmp := s.as_lower
 			classi := Universe.class_named (tmp, e_class.cluster)
 			if classi = Void then
 				text.add_default_string (s)

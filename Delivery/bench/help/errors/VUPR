@@ -1,0 +1,23 @@
+VUPR
+        A Precursor is valid if and only if it satisfies the 
+        following five conditions:
+
+            1. It appears in a Routine_body.
+
+            2. That Routine_body is part of the declaration
+            of exactly one routine `r' of C.
+
+            3. That declaration is a redefinition.
+
+            4. If it is is the redefinition of routines from more
+            than one parent, the Parent_qualification part is present.
+
+            5. If the Parent_qualification part is present, its
+            Class_name is the name of one of the parents of C from
+            which C redefines `r'.
+
+        The "immediate precursor" of r in this case is the routine
+        being redefined from a parent of C, determined in case
+        of ambiguity (under condition 2 of the rule) by the
+        Class_name of the given Parent_qualification.
+

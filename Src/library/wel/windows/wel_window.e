@@ -1793,8 +1793,20 @@ feature {NONE} -- Removal
 			-- At this stage, the window has been already destroyed
 			-- by Windows (see `on_wm_destroy').
 			-- Reset C and WEL structure that keep track of Current.
+		local
+			object_id: INTEGER
 		do
-			eif_object_id_free (internal_data)
+			object_id := internal_data
+			check
+					-- `internal_data' cannot be 0 when the Window has not yet been
+					-- destroyed by Windows.
+				valid_id: object_id > 0
+			end
+
+			eif_object_id_free (object_id)
+
+				-- Remove `object_id' from `internal_data' of Current.
+			set_internal_data (0)
 
 				-- Clean `item' C pointer.
 			item := default_pointer
@@ -1810,7 +1822,6 @@ feature {NONE} -- Removal
 			if is_window (item) then
 					-- Our Window has not been destroyed by Windows yet. We can clean
 					-- our stuff then.
-
 				object_id := internal_data
 				check
 						-- `internal_data' cannot be 0 when the Window has not yet been
@@ -1819,6 +1830,9 @@ feature {NONE} -- Removal
 				end
 
 				eif_object_id_free (object_id)
+
+					-- Remove `object_id' from `internal_data' of Current.
+				set_internal_data (0)
 
 					-- Save protected reference to `dispatcher' object.
 				p := cwel_dispatcher_pointer
@@ -1833,6 +1847,8 @@ feature {NONE} -- Removal
 					-- Restore `dispatcher' object so that dispatching can proceed.
 				cwel_set_dispatcher_pointer (p)
 			end
+
+			item := default_pointer
 		end
 
 feature {NONE} -- Constants
@@ -2255,4 +2271,3 @@ end -- class WEL_WINDOW
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
 --|----------------------------------------------------------------
-

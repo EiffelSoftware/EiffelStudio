@@ -242,7 +242,7 @@ rt_private int cc_for_speed = 1;	/* Optimized for speed */
 #define Size(type)			40		/* Size of the object */
 #define Disp_rout(type)		0		/* No dispose procedure */
 #define XCreate(type)		0		/* No creation procedure */
-char *(**ecreate)();
+/* char *(**ecreate)(); FIXME: SEE EIF_PROJECT.C */
 
 #ifndef DEBUG
 #define DEBUG	 127		/* Highest debug level */
@@ -3576,8 +3576,8 @@ rt_private void mem_status(void);		/* Print memory status */
 rt_private void mem_reset(void);		/* Reset memory */
 rt_private void run_tests(void);		/* Run all the memory tests */
 
-char *(**ecreate)();
-void (**edispose)();
+/* char *(**ecreate)(); FIXME: SEE EIF_PROJECT.C */
+/* void (**edispose)(); FIXME: SEE EIF_PROJECT.C */
 long nbref[1];
 
 rt_public main(void)

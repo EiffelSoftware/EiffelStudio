@@ -41,8 +41,6 @@ rt_public int trace_call_level = 0;	/* call level for E-TRACE
 
 rt_public struct stack *prof_stack;
 
-/*JOCE extern EIF_INTEGER egc_prof_enabled;*/
-
 /* Total execution time */
 
 #ifdef HAS_GETRUSAGE

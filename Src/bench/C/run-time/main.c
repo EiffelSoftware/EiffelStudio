@@ -297,8 +297,8 @@ rt_public void eif_rtinit(int argc, char **argv, char **envp)
 	 */
 	esystem = egc_fsystem;
 	co_table = egc_fco_table;
-	nbref = fnbref;
-	esize = fsize;
+	nbref = egc_fnbref;
+	esize = egc_fsize;
 
 #endif
 

@@ -56,12 +56,8 @@ extern char *cr_exp(uint32 type);				/* Creation of expanded objects */
  */
 
 #ifndef WORKBENCH
-extern long fsize[];	/* Size of object given Dynamic Type (static system) */
 extern long *esize;		/* Size of object given DType (updated by DLE) */
-extern long fnbref[];	/* Gives # of references given DT (static system) */
 extern long *nbref;		/* Gives # of references given DT (updated by DLE) */
-extern void (**edispose)();			/* Records pointers to dispose routines */
-extern char *(**ecreate)();			/* Initialization routines */
 extern char *(**dle_make)();		/* Make routines of DYNAMIC descendants */
 #endif
 
@@ -70,9 +66,9 @@ extern char *(**dle_make)();		/* Make routines of DYNAMIC descendants */
 #ifndef WORKBENCH
 #define References(type)	nbref[type] 	/* # of references */
 #define Size(type)		esize[type] 	/* Object's size */
-#define Dispose(type)		edispose[type]	/* Dispose routine */
+#define Dispose(type)		egc_edispose[type]	/* Dispose routine */
 #define Disp_rout(type)	Dispose(type)	/* Does type have disp routine */
-#define XCreate(type)		ecreate[type]	/* Initialization routine */
+#define XCreate(type)		egc_ecreate[type]	/* Initialization routine */
 #else
 #define References(type)	esystem[type].nb_ref
 #define Size(type)		esystem[type].size

@@ -989,7 +989,6 @@ rt_public void epop(register struct stack *stk, register int nb_items) {}
 rt_public char *xmalloc(unsigned int nbytes, int type, int gc_flag) {}
 rt_public void eraise(char *tag, int val) {}
 rt_public char *eif_set(char *object, unsigned int nbytes, uint32 type) {}
-rt_public int egc_bit_dtype;/*JOCE??*/
 rt_public struct stack loc_stack;
 
 rt_private void dump_bit(char *bit)

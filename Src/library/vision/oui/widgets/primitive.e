@@ -42,7 +42,7 @@ feature -- Color
 	foreground_color: COLOR is
 			-- Foreground color of Current widget
 		do
-			Result:= implementation.foreground
+			Result:= implementation.foreground_color
 		ensure
 			valid_result: Result /= Void
 		end;

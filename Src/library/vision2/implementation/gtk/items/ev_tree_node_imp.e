@@ -126,13 +126,13 @@ feature -- Status setting
 	set_text (a_text: STRING) is
 			-- 
 		do
-			text := a_text
+			internal_text := a_text
 		end
 		
 	remove_text is
 			-- 
 		do
-			text := ""
+			internal_text := ""
 		end	
 
 feature -- PND
@@ -378,18 +378,46 @@ feature {EV_TREE_IMP} -- Implementation
 			end
 		end
 		
-	text: STRING
-	
-	tooltip: STRING
-	
-	set_tooltip (a_text: STRING) is
+	text: STRING is
+			-- Text displayed.
 		do
-			tooltip := a_text
+			if internal_text = Void then
+				Result := ""
+			else
+				Result := clone (internal_text)
+			end
+		ensure
+			text_not_void: Result /= Void
+		end
+
+	tooltip: STRING is
+			-- Tooltip if any.
+		do
+			if internal_tooltip = Void then
+				Result := ""
+			else
+				Result := clone (internal_tooltip)
+			end
+		ensure
+			tooltip_not_void: Result /= Void
+		end
+
+	internal_text: STRING
+		-- Internal representation of `text'.
+	
+	internal_tooltip: STRING
+		-- Internal representation of `tooltip'.
+
+	set_tooltip (a_text: STRING) is
+			-- Set `a_text' to `tooltip'.
+		do
+			internal_tooltip := a_text
 		end
 
 	remove_tooltip is
+			-- Remove text of `tooltip'.
 		do
-			tooltip := ""		
+			internal_tooltip := ""		
 		end
 	
 	align_text_left is do  end

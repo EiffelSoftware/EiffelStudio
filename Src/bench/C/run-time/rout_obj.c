@@ -136,7 +136,7 @@ rt_public void rout_obj_call_function (EIF_REFERENCE res, EIF_POINTER rout, EIF_
 		case EIF_INTEGER_16_CODE:
 			*((EIF_INTEGER_16 *) resp) = result.i16arg;
 			break;
-		case EIF_INTEGER_CODE:
+		case EIF_INTEGER_32_CODE:
 			*((EIF_INTEGER *) resp) = result.i32arg;
 			break;
 		case EIF_INTEGER_64_CODE:
@@ -206,7 +206,7 @@ rt_public void rout_obj_call_procedure_dynamic (BODY_INDEX body_id, EIF_ARG_UNIO
 				it->type = SK_INT16;
 				it->itu.itu_int16 = (args[i]).i16arg;
 				break;
-			case EIF_INTEGER_CODE:
+			case EIF_INTEGER_32_CODE:
 				it->type = SK_INT32;
 				it->itu.itu_int32 = (args[i]).i32arg;
 				break;
@@ -293,7 +293,7 @@ rt_public void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION
 				it->type = SK_INT16;
 				it->itu.itu_int16 = (args[i]).i16arg;
 				break;
-			case EIF_INTEGER_CODE:
+			case EIF_INTEGER_32_CODE:
 				it->type = SK_INT32;
 				it->itu.itu_int32 = (args[i]).i32arg;
 				break;
@@ -350,7 +350,7 @@ rt_public void rout_obj_call_function_dynamic (BODY_INDEX body_id, EIF_ARG_UNION
 			*((EIF_INTEGER_16 *) resp) = it->itu.itu_int16;
 			break;
 		case SK_INT32:
-			*((EIF_INTEGER *) resp) = it->itu.itu_int32;
+			*((EIF_INTEGER_32 *) resp) = it->itu.itu_int32;
 			break;
 		case SK_INT64:
 			*((EIF_INTEGER_64 *) resp) = it->itu.itu_int64;

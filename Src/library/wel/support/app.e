@@ -20,7 +20,7 @@ feature {NONE} -- Initialization
 		do
 			set_application (Current)
 			create_dispatcher
-                        init_instance
+			init_instance
 			init_application
 			set_application_main_window (main_window)
 			run
@@ -131,6 +131,7 @@ feature {NONE} -- Implementation
 			accel: WEL_ACCELERATORS
 			main_w: WEL_WINDOW
 			done: BOOLEAN
+			dlg: POINTER
 		do
 			-- `accel' and `main_w' are declared
 			-- locally to get a faster access.
@@ -149,10 +150,19 @@ feature {NONE} -- Implementation
 						if msg.quit then
 							done := True
 						else
-							msg.translate_accelerator (main_w, accel)
-							if not msg.last_boolean_result then
-								msg.translate
-								msg.dispatch
+							dlg := cwin_get_last_active_popup (main_window.item)
+							if dlg /= main_window.item then
+								msg.process_dialog_message (dlg)
+								if not msg.last_boolean_result then
+									msg.translate
+									msg.dispatch
+								end
+							else
+								msg.translate_accelerator (main_w, accel)
+								if not msg.last_boolean_result then
+									msg.translate
+									msg.dispatch
+								end
 							end
 						end
 					else
@@ -176,8 +186,17 @@ feature {NONE} -- Implementation
 						if msg.quit then
 							done := True
 						else
-							msg.translate
-							msg.dispatch
+							dlg := cwin_get_last_active_popup (main_window.item)
+							if dlg /= main_window.item then
+								msg.process_dialog_message (dlg)
+								if not msg.last_boolean_result then
+									msg.translate
+									msg.dispatch
+								end
+							else
+								msg.translate
+								msg.dispatch
+							end
 						end
 					else
 						if idle_action_enabled then
@@ -202,6 +221,16 @@ feature {NONE} -- Implementation
 
 	dispatcher: WEL_DISPATCHER
 			-- Windows and dialog boxes messages dispatcher
+
+feature {NONE} -- Externals
+
+	cwin_get_last_active_popup (hwnd: POINTER): POINTER is
+			-- SDK GetLastActivePopup
+		external
+			"C [macro <wel.h>] (HWND): EIF_POINTER"
+		alias
+			"GetLastActivePopup"
+		end
 
 end -- class WEL_APPLICATION
 

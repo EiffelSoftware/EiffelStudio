@@ -63,24 +63,27 @@ feature -- Execution
 			if temp_dir = Void then
 				temp_dir := get ("tmp")
 			end
-			if temp_dir /= Void then
-				create temp_filename.make_from_string (temp_dir)
-				temp_filename.set_file_name ("benchwiz")
-				temp_filename.add_extension ("tmp")
-				
-				create temp_file.make (temp_filename)
-				temp_file.open_write
-				temp_file.put_string ("Success=%"<SUCCESS>%"%N")
-				if Additional_parameters /= Void then
-					temp_file.put_string (Additional_parameters)
+			if temp_dir = Void then
+				if (create {DIRECTORY}.make ("/tmp")).exists then
+					temp_dir := "/tmp"
+				else
+					temp_dir := current_working_directory
 				end
-				temp_file.close
-
-				launch_wizard (temp_filename)
-				wizard_launched := True
-			else
-				(create {EXCEPTIONS}).raise (Interface_names.Workbench_name+" Exception")
 			end
+			create temp_filename.make_from_string (temp_dir)
+			temp_filename.set_file_name ("benchwiz")
+			temp_filename.add_extension ("tmp")
+			
+			create temp_file.make (temp_filename)
+			temp_file.open_write
+			temp_file.put_string ("Success=%"<SUCCESS>%"%N")
+			if Additional_parameters /= Void then
+				temp_file.put_string (Additional_parameters)
+			end
+			temp_file.close
+
+			launch_wizard (temp_filename)
+			wizard_launched := True
 		rescue
 			if error_messages.is_empty then
 				set_error_message ("Unable to create the temporary file required to launch the wizard")

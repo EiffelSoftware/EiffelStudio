@@ -614,6 +614,9 @@ feature {NONE} -- Implementation to resize the table when it comes from the bott
 				-- it to the the following lines.
 				if rest > 0 then
 					from
+						if line.after then
+							line.go_i_th (2)
+						end
 					until
 						rest = 0
 					loop
@@ -795,9 +798,19 @@ feature {NONE} -- Implementation to resize the table when it comes from the bott
 feature {NONE} -- EiffelVision implementation
 
    	on_first_display is
-   			-- (from EV_CONTAINER_IMP)
-   			-- (export status {EV_WIDGET_IMP})
+		local
+			i: INTEGER
    		do
+ 			if not ev_children.empty then
+ 				from
+ 					i := 1
+ 				until
+  					i = ev_children.count + 1
+   				loop
+ 					(ev_children @ i).widget.on_first_display;
+ 					i := i + 1
+ 				end
+ 			end
 			already_displayed := True
 			child_minwidth_changed (0, child)
 			child_minheight_changed (0, child)

@@ -485,7 +485,11 @@ feature {NONE} -- Graphical initialization
 
 			line_generation := new_check_button (vbox, "Line number generation")
 			trace_check := new_check_button (vbox, "Call tracing")
-			profile_check := new_check_button (vbox, "Profiling")
+			create profile_check.make_with_text ("Profiling")
+			if Has_profiler then
+				vbox.extend (profile_check)
+				vbox.disable_item_expand (profile_check)
+			end
 
 			Result.extend (vbox)
 		end

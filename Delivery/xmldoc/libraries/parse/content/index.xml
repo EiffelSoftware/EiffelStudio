@@ -799,7 +799,7 @@ You may go back to the next higher-level choice before C - or admit failure if t
 					<code_block>
 	<feature_name>document</feature_name><symbol>.</symbol><feature_name>set_input_file</feature_name> <symbol>(</symbol><local_variable>some_file_name</local_variable><symbol>)</symbol>
 </code_block>
-					<line_break/> where set_input_file, from class INPUT, has a self-explanatory effect.
+					<line_break/> where set_input_file, from class <code><class_name>INPUT</class_name></code>, has a self-explanatory effect.
 				</paragraph>
 				<paragraph>Finally, step 
 					<link>

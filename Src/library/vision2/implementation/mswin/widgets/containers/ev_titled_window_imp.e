@@ -15,7 +15,11 @@ inherit
 	EV_TITLED_WINDOW_I
 		undefine
 			propagate_foreground_color,
-			propagate_background_color
+			propagate_background_color,
+			--|FIXME See last_call_was_destroy from
+			--|EV_WINDOW_IMP to see why this is
+			--|undefined below.
+			last_call_was_destroy
 		redefine
 			interface
 		end
@@ -361,6 +365,9 @@ end -- class EV_TITLED_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.54  2000/02/29 17:55:24  rogers
+--| Undefined last_call_was_destroy  inherited from EV_TITLED_WINDOW_I as last_call_from_destroy is now re-defined in EV_WINDOW_IMP. Needs fixing.
+--|
 --| Revision 1.53  2000/02/28 19:39:07  rogers
 --| During creation, the window is now added to the root_windows list (Still used for windows implementation).
 --|

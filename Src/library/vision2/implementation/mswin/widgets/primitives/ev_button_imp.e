@@ -67,7 +67,7 @@ inherit
 	WEL_BITMAP_BUTTON
 		rename
 			make as wel_make,
-			parent as wel_window_parent,
+			parent as wel_parent,
 			set_parent as wel_set_parent,
 			font as wel_font,
 			shown as is_displayed,
@@ -135,11 +135,6 @@ feature -- Access
 
 	extra_width: INTEGER
 			-- Extra width on the size.
-
-	wel_parent: WEL_WINDOW is
-		do
-			Result := wel_window_parent
-		end
 
 	is_default_push_button: BOOLEAN
 			-- Is this button currently a default push button 
@@ -379,6 +374,9 @@ end -- class EV_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.48  2000/05/01 17:04:44  manus
+--| Use of `wel_parent' directly without the hack of renaming into `wel_window_parent'.
+--|
 --| Revision 1.47  2000/04/29 03:32:54  pichery
 --| Improved buttons: new default size,
 --| new feature (default_push_button).

@@ -18,10 +18,9 @@ inherit
 			--| FIXME Get back to this.
 			wel_make,
 			make_by_id,
-
 			default_style
 		redefine
-			interface
+			interface, wel_parent
 		end
 
 	WEL_SELECTABLE_BUTTON
@@ -116,6 +115,9 @@ end -- class EV_TOGGLE_BUTTON_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.29  2000/05/01 17:04:44  manus
+--| Use of `wel_parent' directly without the hack of renaming into `wel_window_parent'.
+--|
 --| Revision 1.28  2000/04/25 16:14:52  rogers
 --| Parent from WEL_SELECTABLE_BUTTON is now renamed as wel_parent.
 --|

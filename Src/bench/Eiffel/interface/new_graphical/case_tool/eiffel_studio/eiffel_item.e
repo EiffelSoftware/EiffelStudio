@@ -1,6 +1,6 @@
 indexing
 	description: "Objects that is a base class for all Eiffel Studio models."
-	author: ""
+	author: "Benno Baumgartner"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -25,6 +25,7 @@ feature -- Access
 		do
 			if internal_needed_on_diagram_changed = Void then
 				create internal_needed_on_diagram_changed
+				internal_needed_on_diagram_changed.compare_objects
 			end
 			Result := internal_needed_on_diagram_changed
 		end

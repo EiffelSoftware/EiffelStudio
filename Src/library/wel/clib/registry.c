@@ -268,7 +268,7 @@ EIF_POINTER cwin_reg_enum_value(
 	result = RegEnumValue(
 	(HKEY)key,
 	(DWORD)index,
-	(LPWSTR)name,
+	(LPTSTR)name,
 	(LPDWORD)&size,
 	NULL,
 	(LPDWORD) &(RK->type),
@@ -283,20 +283,15 @@ EIF_POINTER cwin_reg_enum_value(
 }
 
 //////////////////////////////////////////////////////////////
-/// Deleting a key value
-//////////////////////////////////////////////////////////////
+//
+// Deleting a key value
+//
 
 EIF_BOOLEAN cwin_reg_delete_value(EIF_POINTER key, EIF_POINTER value_name)
 {
+	if (RegDeleteValue((HKEY)key, (LPCTSTR)value_name) == ERROR_SUCCESS)
+		return EIF_TRUE;
 
-	long result;
-	HKEY hKey;
-	LPCWSTR lpszValueName;
-	
-	lpszValueName=value_name;
-	result = RegDeleteValue((HKEY)key, (LPCWSTR)lpszValueName);
-	if (result == ERROR_SUCCESS) 
-			return EIF_TRUE;
 	return EIF_FALSE;
 }
 

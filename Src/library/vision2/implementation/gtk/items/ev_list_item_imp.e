@@ -195,14 +195,14 @@ feature -- Event : command association
 			-- The toggle event doesn't work on gtk, then
 			-- we add both event command.
 		do
-			add_command (widget, "select", command, arguments)
+			add_command (widget, "select", command, arguments, default_pointer)
 		end
 
 	add_unselect_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Make `cmd' the executed command when the item is
 			-- unselected.
 		do
-			add_command (widget, "deselect", cmd, arg)
+			add_command (widget, "deselect", cmd, arg, default_pointer)
 		end	
 
 	add_double_click_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is

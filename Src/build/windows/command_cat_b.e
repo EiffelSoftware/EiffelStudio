@@ -46,7 +46,6 @@ feature {NONE}
 	work (argument: ANY) is
 		do
 			if main_panel.project_initialized then
-				toggle
 				if armed then
 					if main_panel.command_catalog.realized then
 						main_panel.command_catalog.show
@@ -54,7 +53,9 @@ feature {NONE}
 						main_panel.command_catalog.realize
 					end
 				else
-					main_panel.command_catalog.hide
+					if main_panel.command_catalog.realized then
+						main_panel.command_catalog.hide
+					end
 				end
 			end
 		end

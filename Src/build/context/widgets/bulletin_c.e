@@ -1,5 +1,3 @@
-
-
 class BULLETIN_C 
 
 inherit
@@ -17,9 +15,6 @@ inherit
 			original_stone, intermediate_name
 		
 		end
-
-
-
 	
 feature 
 
@@ -30,20 +25,19 @@ feature
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		local
-			temp: STRING;
-			temp1: ANY	
+--temp: STRING;
+--temp1: ANY	
 		do
 			!!widget.make (entity_name, a_parent);
 			select_widget;
-			temp := "resizePolicy";
-			temp1 := temp.to_c;
-			bulletin_c_set_int (widget.implementation.screen_object, 0, $temp1);
+--temp := "resizePolicy";
+--temp1 := temp.to_c;
+--bulletin_c_set_int (widget.implementation.screen_object, 0, $temp1);
 			set_size (40, 40);
 		end;
 
 	widget: EB_BULLETIN;
 
-	
 feature {NONE}
 
 	editor_form_cell: CELL [INTEGER] is
@@ -56,7 +50,6 @@ feature {NONE}
 			!!Result.make ("Bulletin");
 		end;
 
-	
 feature 
 
 	eiffel_type: STRING is "EB_BULLETIN";
@@ -138,7 +131,6 @@ feature {NONE}
 -- ****************
 -- Storage features
 -- ****************
-
 	
 feature 
 
@@ -155,5 +147,4 @@ feature {NONE} -- External features
 		alias
 			"set_int"
 		end; -- bulletin_c_set_int
-
 end

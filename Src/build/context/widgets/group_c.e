@@ -1,4 +1,3 @@
-
 class GROUP_C 
 
 inherit
@@ -47,9 +46,6 @@ inherit
 			reset_modified_flags, recursive_cut, cut, 
 			undo_cut, eiffel_callback_calls
 		end
-
-
-
 	
 feature 
 
@@ -60,14 +56,14 @@ feature
 
 	create_oui_widget (a_parent: COMPOSITE) is
 		local
-			temp: STRING;
-			temp1: ANY	
+--temp: STRING;
+--temp1: ANY	
 		do
 			!!widget.make (entity_name, a_parent);
 			select_widget;
-			temp := "resizePolicy";
-			temp1 := temp.to_c;
-			group_c_set_int (widget.implementation.screen_object, 0, $temp1);
+--temp := "resizePolicy";
+--temp1 := temp.to_c;
+--group_c_set_int (widget.implementation.screen_object, 0, $temp1);
 			group_type.increment_counter;
 		end;
 
@@ -364,8 +360,6 @@ feature {NONE}
 	
 feature {CONTEXT}
 
-
-
 	eiffel_declaration: STRING is
 		local
 			class_name: STRING;
@@ -489,9 +483,9 @@ feature {CLBKS, CONTEXT}
 feature 
 
 	group_text: STRING is
-			-- Text generated just after the creation of the first
-			-- instance of `group_type', before the reset of the
-			-- flags
+		-- Text generated just after the creation of the first
+		-- instance of `group_type', before the reset of the
+		-- flags
 		local
 			class_name: STRING;
 			color_text: STRING;
@@ -503,32 +497,32 @@ feature
 			Result.append ("class ");
 			Result.append (class_name);
 
-				-- ***********
-				-- Inheritance
-				-- ***********
+			-- ***********
+			-- Inheritance
+			-- ***********
 			Result.append ("%N%Ninherit%N%N%TEB_BULLETIN");
 			Result.append ("%N%T%Trename%N%T%T%Tmake as eb_bulletin_make");
 			Result.append ("%N%T%Tend;");
 
-				-- ********
-				-- Features
-				-- ********
+			-- ********
+			-- Features
+			-- ********
 			Result.append ("%N%Ncreation%N%N%Tmake");
 			Result.append ("%N%Nfeature%N%N");
 
-				-- Declaration
-				--============
+			-- Declaration
+			--============
 			Result.append (group_declaration);
 
-				-- Creation
-				--=========
+			-- Creation
+			--=========
 			Result.append (creation_procedure_text);
 			Result.append (group_creation ("Current"));
 			Result.append ("%T%T%Tset_values;%N");
 			Result.append ("%T%Tend;%N");
 
-				-- Initialization
-				--===============
+			-- Initialization
+			--===============
 			Result.append ("%N%Tset_values is%N%T%Tdo%N");
 			Result.append (context_initialization (""));
 			Result.append (font_creation (""));
@@ -552,9 +546,9 @@ feature
 			group_text_generation := False;
 		end;
 
--- ****************
--- Storage features
--- ****************
+	-- ****************
+	-- Storage features
+	-- ****************
 
 	stored_node: S_GROUP is
 		do

@@ -34,7 +34,7 @@ feature {NONE}
 
 	backgr_pixmap: EB_TEXT_FIELD;
 
-	foreground_color: EB_FG_COLOR_TF;
+	fgr_color: EB_FG_COLOR_TF;
 
 	pixmap_selection_box: PIXMAP_FILE_BOX;
 
@@ -63,7 +63,7 @@ feature
 			initialize (C_olor_form_name, a_parent);
 
 			!!label_fg_color.make (F_oreground_color, Current);
-			!!foreground_color.make (T_extfield, Current, fg_color_cmd, a_parent);
+			!!fgr_color.make (T_extfield, Current, fg_color_cmd, a_parent);
 			!!label_bg_color.make (B_ackground_color, Current);
 			!!label_colors.make (C_olors, Current);
 			!!backgr_color.make (T_extfield, Current, bg_color_cmd, a_parent);
@@ -89,16 +89,16 @@ feature
 			attach_left (label_bg_color, 10);
 			attach_left (label_pixmap, 10);
 
-			attach_left_widget (fg_color_stone, foreground_color, 5);
+			attach_left_widget (fg_color_stone, fgr_color, 5);
 			attach_left_widget (bg_color_stone, backgr_color, 5);
 			attach_left_widget (bg_pixmap_stone, backgr_pixmap, 5);
 			attach_left_widget (colors_stone, label_colors, 5);
 
 			attach_top (label_fg_color, 10);
-			attach_top_widget (label_fg_color, foreground_color, 10);
+			attach_top_widget (label_fg_color, fgr_color, 10);
 			attach_top_widget (label_fg_color, fg_color_stone, 10);
-			attach_top_widget (foreground_color, colors_stone, 10);
-			attach_top_widget (foreground_color, label_colors, 10);
+			attach_top_widget (fgr_color, colors_stone, 10);
+			attach_top_widget (fgr_color, label_colors, 10);
 			attach_top_widget (label_colors, label_bg_color, 15);
 			attach_top_widget (label_bg_color, backgr_color, 10);
 			attach_top_widget (label_bg_color, bg_color_stone, 10);
@@ -139,9 +139,9 @@ feature {NONE}
 				backgr_color.set_text ("")
 			end;
 			if not (context.fg_color_name = Void) then
-				foreground_color.set_text (context.fg_color_name)
+				fgr_color.set_text (context.fg_color_name)
 			else
-				foreground_color.set_text ("")
+				fgr_color.set_text ("")
 			end;
 		end;
 
@@ -156,8 +156,8 @@ feature
 			if (not equal (backgr_color.text, context.bg_color_name)) then
 				context.set_bg_color_name (backgr_color.text);
 			end;
-			if (not equal (foreground_color.text, context.fg_color_name)) then
-				context.set_fg_color_name (foreground_color.text);
+			if (not equal (fgr_color.text, context.fg_color_name)) then
+				context.set_fg_color_name (fgr_color.text);
 			end;
 		end;
 

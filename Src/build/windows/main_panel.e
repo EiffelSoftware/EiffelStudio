@@ -1,4 +1,5 @@
 class MAIN_PANEL 
+
 inherit
 	PIXMAPS
 		export
@@ -35,23 +36,23 @@ feature
 
 	base: TRANSPORTER
 
+	-- Is ebuild editing a project?
 	project_initialized: BOOLEAN
-			-- Is ebuild editing a project?
 
 	set_title (s: STRING) is 
-			-- Set the title of the main panel.
+		-- Set the title of the main panel.
 		do 
 			base.set_title (s) 
 		end
 
 	set_project_initialized is 
-			-- Set project_initialized to True.
+		-- Set project_initialized to True.
 		do 		
 			project_initialized := True 
 		end
 
 	unset_project_initialized is 
-			-- Set project_initialized to True.
+		-- Set project_initialized to False.
 		do 		
 			project_initialized := False 
 		end

@@ -1,4 +1,3 @@
-
 class PERM_ICON_CMD 
 
 inherit
@@ -6,12 +5,13 @@ inherit
 	CONTEXT_CMD
 		redefine
 			context
-		
-		end;
+		end
+
 	EDITOR_FORMS
 		export
 			{NONE} all
 		end;
+
 	COMMAND_NAMES
 		rename
 			P_erm_icon_cmd_name as c_name
@@ -32,33 +32,56 @@ feature {NONE}
 
 	pixmap_value: POINTER;
 
-	context_work is
-		local
-			ext_name: ANY;
-		do
-			old_pixmap_name := context.icon_pixmap_name;
-			if old_pixmap_name = Void then
-				ext_name := MiconPixmap.to_c;
-				pixmap_value := get_pixmap (context.widget.implementation.screen_object, $ext_name);
-			end
-		end;
+	old_pixmap: PIXMAP
 
-	MiconPixmap: STRING is "iconPixmap";
+	context_work is
+		do
+			old_pixmap_name := context.icon_pixmap_name
+			if old_pixmap_name = Void then
+				old_pixmap := context.widget.icon_pixmap
+			end
+		end
 
 	context_undo is
 		local
-			new_name: STRING;
-			ext_name: ANY;
+			new_name: STRING
 		do
-			new_name := context.icon_pixmap_name; 
+			new_name := context.icon_pixmap_name
 			if old_pixmap_name /= Void then
-				context.set_icon_pixmap (old_pixmap_name);
+				context.set_icon_pixmap (old_pixmap_name)
 			else
-				ext_name := MiconPixmap.to_c;
-				c_set_pixmap (context.widget.implementation.screen_object, pixmap_value, $ext_name);
-			end;
-			old_pixmap_name := new_name;
-		end;
+				context.set_icon_pixmap (old_pixmap_name)
+			end
+			old_pixmap_name := new_name
+		end
+
+--	context_work is
+--		local
+--			ext_name: ANY;
+--		do
+--			old_pixmap_name := context.icon_pixmap_name;
+--			if old_pixmap_name = Void then
+--				ext_name := MiconPixmap.to_c;
+--				pixmap_value := get_pixmap (context.widget.implementation.screen_object, $ext_name);
+--			end
+--		end;
+
+	MiconPixmap: STRING is "iconPixmap";
+
+--	context_undo is
+--		local
+--			new_name: STRING;
+--			ext_name: ANY;
+--		do
+--			new_name := context.icon_pixmap_name; 
+--			if old_pixmap_name /= Void then
+--				context.set_icon_pixmap (old_pixmap_name);
+--			else
+--				ext_name := MiconPixmap.to_c;
+--				c_set_pixmap (context.widget.implementation.screen_object, pixmap_value, $ext_name);
+--			end;
+--			old_pixmap_name := new_name;
+--		end;
 
 feature {NONE} -- Externals
 
@@ -72,5 +95,4 @@ feature {NONE} -- Externals
 			"C"
 		end
 	
-
 end

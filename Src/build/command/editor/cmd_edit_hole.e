@@ -1,4 +1,3 @@
-
 class CMD_EDIT_HOLE 
 
 inherit
@@ -8,7 +7,9 @@ inherit
 			button as source,
 			make_visible as make_icon_visible,
 			identifier as oui_identifier
-		end;
+		export 
+			{CMD_EDITOR} main_panel
+		end
 
 	ICON_HOLE
 		rename
@@ -18,22 +19,22 @@ inherit
 			make_visible
 		select
 			make_visible
-		end;
+		end
 
 	PIXMAPS
 		export
 			{NONE} all
-		end;
+		end
 
 	CMD_STONE
 		redefine
 			transportable
-		end;
+		end
 
 	REMOVABLE
 		export
 			{NONE} all
-		end;
+		end
 
 creation
 
@@ -42,13 +43,13 @@ creation
 	
 feature {NONE}
 
-	command_editor: CMD_EDITOR;
-			-- Associated command editor
+	command_editor: CMD_EDITOR
+		-- Associated command editor
 
 	remove_yourself is
 		do
 			command_editor.clear
-		end;
+		end
 	
 feature 
 
@@ -58,92 +59,92 @@ feature
 		require
 			not_void_cmd_editor: not (cmd_editor = Void)
 		do
-			command_editor := cmd_editor;
-			set_symbol (Command_pixmap);
-		end; -- Create
+			command_editor := cmd_editor
+			set_symbol (Command_pixmap)
+		end -- Create
 
 
 	reset is 
 		do
-			set_label ("");
-  			set_symbol (Command_pixmap);
-			original_stone := Void;
-		end;
+			set_label ("")
+  			set_symbol (Command_pixmap)
+			original_stone := Void
+		end
 
 	set_command (cmd: CMD) is
 		do
 			
-			original_stone := cmd;
+			original_stone := cmd
 			if realized and shown and (label = Void or else label.empty 
 			  or else cmd.label.count >= label.count) then
-				parent.unmanage;
+				parent.unmanage
 			elseif realized and (label = Void or else label.empty 
 			  or else cmd.label.count >= label.count) then
-				hide;
-			end;
-			set_label (cmd.label);
-			set_symbol (cmd.symbol);
+				hide
+			end
+			set_label (cmd.label)
+			set_symbol (cmd.symbol)
 			if realized and (not shown) then
-				show;
-			end;
+				show
+			end
 			if not parent.managed then
-				parent.manage;
-			end;
-		end;
+				parent.manage
+			end
+		end
 
-	original_stone: CMD;
+	original_stone: CMD
 
 	transportable: BOOLEAN is
 		do
-			Result := original_stone /= Void;
-		end;
+			Result := original_stone /= Void
+		end
 
 	eiffel_text: STRING is
 		do
 			Result := original_stone.eiffel_text
-		end;
+		end
 
 	identifier: INTEGER is
 		do
 			Result := original_stone.identifier
-		end;
+		end
 
 	eiffel_type: STRING is
 		do
 			Result := original_stone.eiffel_type
-		end;
+		end
 
 	arguments: EB_LINKED_LIST [ARG] is
 		do
 			Result := original_stone.arguments
-		end;
+		end
 
 	labels: EB_LINKED_LIST [CMD_LABEL] is
 		do
 			Result := original_stone.labels
-		end;
+		end
 
 
 	make_visible (a_parent: COMPOSITE) is
 		do
-			make_icon_visible (a_parent);
-			initialize_transport;
-		end;
+			make_icon_visible (a_parent)
+			initialize_transport
+		end
 
 	update_name is
 		do
-			set_label (command_label);
-		end;
+			set_label (command_label)
+		end
 	
 feature {NONE}
 
 	process_stone is
 		local
-			cmd_type: CMD_STONE;
+			cmd_type: CMD_STONE
 			cmd_inst: CMD_INST_STONE
 		do
-			cmd_type ?= stone;
-			cmd_inst ?= stone;
+			cmd_type ?= stone
+			cmd_inst ?= stone
 			if not (cmd_type = Void) then 
 				if cmd_type.original_stone.edited then
 					cmd_type.original_stone.command_editor.raise
@@ -157,12 +158,12 @@ feature {NONE}
 					command_editor.set_command (cmd_inst.associated_command)
 				end
 			end
-		end; -- process_stone
+		end -- process_stone
 
 
 	command_label: STRING is
 		do
 			Result := original_stone.label
-		end;
+		end
 
 end 

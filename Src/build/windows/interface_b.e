@@ -46,7 +46,6 @@ feature {NONE}
 	work (argument: ANY) is
 		do
 			if main_panel.project_initialized then
-				toggle
 				if armed then
 					main_panel.show_interface
 				else

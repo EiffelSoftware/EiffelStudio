@@ -28,7 +28,9 @@ feature
 			namer_window: NAMER_WINDOW
 		do
 			!!namer_window.make("namer", eb_screen, Current)
-			new_name := namer_window.text.text  
+			if namer_window.text.text /= "" then
+				new_name := namer_window.text.text  
+			end 
 		end
 
 	continue_after_popdown (box: MESSAGE_D; ok: BOOLEAN) is

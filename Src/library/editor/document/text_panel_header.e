@@ -101,7 +101,9 @@ feature -- Basic Operations
 			update_buffered_screen
 			update_display
 			panel.refresh_now
-			panel.set_focus	
+			if panel.editor_area.is_sensitive then
+				panel.set_focus
+			end
 
 			selection_actions.call ([Current])
 		end

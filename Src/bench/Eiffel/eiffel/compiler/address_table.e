@@ -211,7 +211,7 @@ feature {NONE} -- Generation
 		local
 			types: TYPE_LIST
 			sorted_set: TWO_WAY_SORTED_SET [INTEGER]
-			i, nb, type_id: INTEGER
+			i, nb, l_type_id: INTEGER
 			type_id_array: ARRAY [INTEGER]
 			cursor: CURSOR
 			a_class: CLASS_C
@@ -280,9 +280,9 @@ feature {NONE} -- Generation
 			until
 				i > nb
 			loop
-				type_id := type_id_array @ i
-				if type_id /= 0 then
-					a_type := System.class_type_of_id (type_id)
+				l_type_id := type_id_array @ i
+				if l_type_id /= 0 then
+					a_type := System.class_type_of_id (l_type_id)
 					if a_type /= Void then
 						if class_has_dollar_operator (a_type.associated_class.class_id) then
 							buffer.put_string ("(fnptr *) (")

@@ -112,7 +112,10 @@ public void dstart()
 	 */
 	
 	d_data.db_status = DX_CONT;				/* Default execution status */
-	if (db_stack.st_top != db_stack.st_hd->sk_arena) {	/* Not empty */
+	if (
+		db_stack.st_top != (struct dcall *) 0 &&		/* Stack allocated */
+		db_stack.st_top != db_stack.st_hd->sk_arena		/* Not empty */
+	) {
 		context = dtop();					/* Context from previous routine */
 		if (context->dc_status == DX_STEP)	/* Step by step execution? */
 			d_data.db_status = DX_STEP;		/* This one propagates */

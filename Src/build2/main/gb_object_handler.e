@@ -351,6 +351,7 @@ feature -- Basic operation
 			end
 			add_new_window (window_object)
 			window_selector.set_item_for_prebuilt_window (window_object)
+			window_object.set_as_root_window
 		end
 		
 	add_root_window: GB_TITLED_WINDOW_OBJECT is

@@ -64,9 +64,6 @@ RT_LNK int collect(void);				/* Generation-based collector */
 #ifdef ISE_GC
 RT_LNK void eremb(EIF_REFERENCE obj);				/* Remembers old object */
 RT_LNK void erembq(EIF_REFERENCE obj);				/* Quick veersion (no GC call) of eremb */
-RT_LNK void special_erembq(EIF_REFERENCE obj, EIF_INTEGER offst);				
-							/* Quick version (no GC call) of eremb for
-							 *special objects full of references.*/
 #endif
 RT_LNK char *onceset(void);				/* Recording of once function result */
 RT_LNK void new_onceset(EIF_REFERENCE);				/* Recording of once function result */

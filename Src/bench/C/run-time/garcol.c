@@ -646,9 +646,6 @@ rt_public int collect(void);				/* Generation based collector main entry */
 rt_private int generational_collect(void);	/* The generational collection algorithm */
 rt_public void eremb(EIF_REFERENCE obj);				/* Remember an old object */
 rt_public void erembq(EIF_REFERENCE obj);				/* Quick version (no GC call) of eremb */
-rt_public void special_erembq(EIF_REFERENCE obj, EIF_INTEGER offst);				
-									/* Quick version (no GC call) of eremb 
-									 * for special objects full of references.*/
 rt_private void update_memory_set (void);		/* Update memory set */
 rt_private void mark_new_generation(EIF_CONTEXT_NOARG);	/* The name says it all, I think--RAM */
 rt_private EIF_REFERENCE mark_expanded(EIF_REFERENCE root, MARKER marker);		/* Marks expanded reference in stack */

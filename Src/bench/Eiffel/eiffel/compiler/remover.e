@@ -15,7 +15,8 @@ inherit
 			make, mark_alive
 		select
 			make, mark_alive
-		end
+		end;
+	SHARED_EIFFEL_PROJECT
 
 creation
 
@@ -129,38 +130,31 @@ end;
 			inliner.process (original_feature)
 		end;
 
-	dots: INTEGER;
-		-- Number of dots on the current line
-
 	features: INTEGER;
 		-- Number of features for the current dot
 
-	dots_per_line: INTEGER is 79;
-
-	features_per_dot: INTEGER is 100;
+	features_per_message: INTEGER is 50;
 
 	mark_alive (feat: FEATURE_I; rout_id_val: ROUTINE_ID) is
 			-- Record feature `feat'
 		local
 			class_name: STRING;
-			temp: ROUT_ID_SET
+			temp: ROUT_ID_SET;
+			deg_output: DEGREE_OUTPUT
 		do
 			old_mark_alive (feat, rout_id_val);
 
 			features := features + 1;
-			if features = features_per_dot then
-				io.error.putchar ('.');
+			if features = features_per_message then
+				deg_output := Degree_output;
+				degree_output.put_dead_code_removal_message 
+					(features, control.count)
 debug ("COUNT")
 	io.error.putstring ("[");
 	io.error.putint (control.count);
 	io.error.putstring ("]%N");
 end
 				features := 0;
-				dots := dots + 1;
-				if dots = dots_per_line then
-					io.error.new_line;
-					dots := 0
-				end;
 			end;
 		end;
 

@@ -18,8 +18,11 @@ feature
 
 	new_compilation: BOOLEAN;
 
-	execute is
+	execute (degree_output: DEGREE_OUTPUT; to_go: INTEGER) is
 			-- Process a compiler pass on the `associated_class'
+		require
+			valid_degree_output: degree_output /= Void
+			positive_to_go: to_go > 0
 		deferred
 		end;
 

@@ -53,17 +53,12 @@ feature
 			assert_prop_list := l
 		end;
 
-	execute is
+	execute (degree_output: DEGREE_OUTPUT; to_go: INTEGER) is
 		local
-			temp: STRING;
 			do_pass2: BOOLEAN;
 		do
 				-- Verbose
-			io.error.putstring ("Degree 4: class ");
-				temp := clone (associated_class.class_name)
-				temp.to_upper;
-			io.error.putstring (temp);
-			io.error.new_line;
+			degree_output.put_degree_4 (associated_class.e_class, to_go);
 
 			associated_class.set_reverse_engineered (False);
 			if associated_class.changed then

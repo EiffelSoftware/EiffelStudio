@@ -62,4 +62,12 @@ feature -- Access
 			Result := Eiffel_project.system_defined
 		end;
 
+feature {NONE} -- Implementation
+
+	Degree_output: DEGREE_OUTPUT is
+			-- Degree output for Eiffel project
+		do
+			Result := Eiffel_project.degree_output
+		end;
+
 end -- class SHARED_EIFFEL_PROJECT

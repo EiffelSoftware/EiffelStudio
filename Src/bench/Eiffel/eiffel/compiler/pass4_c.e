@@ -14,38 +14,22 @@ creation
 
 feature
 
-	melt is
+	melt (degree_output: DEGREE_OUTPUT; to_go: INTEGER) is
 			-- Melt the features of the class
-		local
-			temp: STRING
 		do
 			associated_class.update_melted_set;
 			if associated_class.has_features_to_melt then
-					-- Verbose
-				io.error.putstring ("Degree 2: class ");
-					temp := clone (associated_class.class_name)
-					temp.to_upper;
-				io.error.putstring (temp);
-				io.error.new_line;
-
+				degree_output.put_degree_2 (associated_class.e_class, to_go);
 				associated_class.melt;
 			end;
 		end;
 
-	update_dispatch_table is
+	update_dispatch_table (degree_output: DEGREE_OUTPUT; to_go: INTEGER) is
 			-- Melt the features of the class
-		local
-			temp: STRING
 		do
 			associated_class.update_melted_set;
 			if associated_class.has_features_to_melt then
-					-- Verbose
-				io.error.putstring ("Degree 2: class ");
-					temp := clone (associated_class.class_name)
-					temp.to_upper;
-				io.error.putstring (temp);
-				io.error.new_line;
-
+				degree_output.put_degree_2 (associated_class.e_class, to_go);
 				associated_class.update_dispatch_table;
 			end;
 		end;

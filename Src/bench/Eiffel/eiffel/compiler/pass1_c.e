@@ -17,7 +17,7 @@ feature
 		do
 		end;
 
-	execute is
+	execute (degree_output: DEGREE_OUTPUT; to_go: INTEGER) is
 			-- Syntax analysis on `associated_class'
 		local
 			ast: CLASS_AS_B;
@@ -25,12 +25,7 @@ feature
 			temp: STRING;
 			comment_reg: COMMENT_REGISTRATION
 		do
-				-- Verbose
-			io.error.putstring ("Degree 5: class ");
-				temp := clone (associated_class.class_name)
-				temp.to_upper;
-			io.error.putstring (temp);
-			io.error.new_line;
+			degree_output.put_degree_5 (associated_class.e_class, to_go)
 
 			class_id := associated_class.id;
 			if new_compilation then

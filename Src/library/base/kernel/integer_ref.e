@@ -150,6 +150,14 @@ feature -- Status report
 			Result := item /= 0
 		end;
 
+feature -- Conversion
+
+	to_boolean: BOOLEAN is
+			-- True if not `zero'.
+		do
+			Result := item /= 0
+		end
+
 feature -- Basic operations
 
 	abs: INTEGER is

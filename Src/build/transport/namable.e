@@ -32,6 +32,19 @@ feature
 			-- Is Current able to be named at the moment?
 		do
 			Result := true
-		end
+		end;
+
+	check_new_name (new_name: STRING) is
+			-- Check `new_name' before setting visual name
+		require
+			valid_new_name: new_name /= Void
+		do
+		end;
+
+	is_valid_new_name: BOOLEAN is
+			-- Is new_name valid (after check_new_name)?
+		do
+			Result := True
+		end;
 
 end

@@ -99,6 +99,12 @@ feature -- Properties
 			-- Do nothing
 		end
 		
+	is_reference: BOOLEAN is
+			-- Is current actual type a reference one?
+		do
+			Result := not is_expanded
+		end
+		
 	is_true_expanded: BOOLEAN is
 			-- Is current actual type an expanded one which is not basic?
 		do

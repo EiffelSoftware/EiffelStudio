@@ -93,7 +93,7 @@ feature -- C code generation
 				Context.mark_result_used
 				generate_result_declaration (False)
 				if
-					--System.has_multithreaded and
+					System.has_multithreaded and
 					result_type.is_reference and l_ext.is_blocking_call
 				then
 						-- We need to protect `Result' only in `is_blocking_call' case

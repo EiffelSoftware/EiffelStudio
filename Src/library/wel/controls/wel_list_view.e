@@ -123,7 +123,7 @@ feature -- Status report
 			Result := cwin_send_message_result (item, 
 						Lvm_getnextitem, -1, Lvni_focused)
 		ensure
-			result_large_enough: Result >= 0
+			result_large_enough: Result >= -1
 			result_small_enough: Result < count
 		end
 
@@ -241,20 +241,20 @@ feature -- Status setting
 			cwin_send_message (item, Lvm_update, index, 0)
 		end	
 
-	set_item_state (index, state, mask: INTEGER) is
-			-- Make `value' the new state of the zero-based `index'-th item.
-			-- The mask give the state informations to retrieve.See 
-			-- WEL_LVIS_CONSTANTS for the value of the state and the mask.
+	set_item_state (index, state: INTEGER) is
+			-- Set state of item at `index' with `state'.
+			-- See class WEL_LVIS_CONSTANTS for possible `state' values.
 		require
 			exists: exists
 			index_large_enough: index >= 0
-			index_small_enough: index < column_count
+			index_small_enough: index < count
 		local
 			an_item: WEL_LIST_VIEW_ITEM
 		do
-			!! an_item.make_with_attributes (state, index, 0, 0, "")
-			an_item.set_statemask (mask)
-			cwin_send_message (item, Lvm_setitemstate, state, an_item.to_integer)
+			!! an_item.make
+			an_item.set_statemask (state)
+			an_item.set_state (state)
+			cwin_send_message (item, Lvm_setitemstate, index, an_item.to_integer)
 		end
 
 	set_item_count (value: INTEGER) is
@@ -393,6 +393,21 @@ feature -- Element change
 			cwin_send_message (item, Lvm_deleteallitems, 0, 0)
 		ensure
 			new_count: count = 0
+		end
+
+feature -- Basic Operations
+
+	search (a_search_info: WEL_LIST_VIEW_SEARCH_INFO; a_starting_index: INTEGER): INTEGER is
+			-- Search list view item according to `a_search_info'.
+			-- Search starts after zero based index `a_starting_index'.
+			-- If `a_starting_index' is -1 then search all items.
+			-- Result is zero based index of found item or -1 if item was not found.
+		require
+			non_void_search_info: a_search_info /= Void
+			valid_search_info: a_search_info.exists
+			valid_starting_index: a_starting_index >= -1 and a_starting_index < count 
+		do
+			Result := cwin_send_message_result (item, Lvm_finditem, a_starting_index, a_search_info.to_integer)
 		end
 
 feature -- Notifications

@@ -52,7 +52,6 @@ feature  -- Status setting
 			-- Default background.
 		local
 			windows_color: WEL_COLOR_REF
-			windows_brush: WEL_BRUSH
 		do
 			if private_background_color = Void then
 				!! Result.make_by_sys_color (Color_window + 1)

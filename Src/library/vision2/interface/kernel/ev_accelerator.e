@@ -193,8 +193,7 @@ feature -- Obsolete
 
 	id: INTEGER is
 			-- Integer representation of key combination.
-		obsolete
-			"Useless?"
+			--| FIXME Used by EV_INTERNAL_ACCELERATOR_IMP.
 		do
 			Result := key_code
 			if control_key then
@@ -241,6 +240,9 @@ end -- class EV_ACCELERATOR
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.6  2000/02/29 16:11:43  brendel
+--| Removed obsolete declaration. Added FIXME about usage of feature.
+--|
 --| Revision 1.5  2000/02/22 18:39:48  oconnor
 --| updated copyright date and formatting
 --|

@@ -354,11 +354,15 @@ feature {NONE} -- Translation
 					subst_platform (lastline)
 					subst_compiler (lastline)
 					subst_dir_sep (lastline)
+
 					lastline.replace_substring_all ("$ (CC) $ (CFLAGS) -c", options.get_string ("cc_text", "Void"))
 					lastline.replace_substring_all (".c.o:", options.get_string ("cobj_text", Void))
 					lastline.replace_substring_all (".cpp.o:", options.get_string ("cppobj_text", Void))
 					if lastline.count>4 and then lastline.substring (1,5).is_equal (".x.o:") then
 						lastline.replace_substring_all (".x.o:", options.get_string ("xobj_text", Void))
+					end
+					if lastline.count>6 and then lastline.substring (1,7).is_equal (".xpp.o:") then
+						lastline.replace_substring_all (".xpp.o:", options.get_string ("xppobj_text", Void))
 					end
 				end
 
@@ -684,7 +688,6 @@ feature {NONE} -- Translation
 			debug ("progress")
 				io.putstring ("%Tsubst%N")
 			end
-
 			lastline := clone (makefile_sh.laststring)
 
 			debug ("translate_line_subst")
@@ -804,16 +807,21 @@ feature {NONE} -- Translation
 			if lastline.count>8 and then lastline.substring (1,9).is_equal (options.get_string("externals_text", Void)) then
 				externals := True
 			end
-
 			-- .x.o
 			if lastline.count>4 and then lastline.substring (1,5).is_equal (".x.o:") then
 				lastline.replace_substring_all (".x.o:", options.get_string ("xobj_text", Void))
 			end
 
+			-- .xpp.o
+			if lastline.count>6 and then lastline.substring (1,7).is_equal (".xpp.o:") then
+				lastline.replace_substring_all (".xpp.o:", options.get_string ("xppobj_text", Void))
+			end
+
 			-- application name, cecil
 			if appl /= Void and then lastline.count>=appl.count and then lastline.substring (1, appl.count).is_equal (appl) then
 				translate_appl
-			elseif lastline.count>6 and then lastline.substring (1,6).is_equal ("cecil:") then
+			elseif lastline.count>13 and then lastline.substring (1,13).is_equal ("STATIC_CECIL=") then
+			--elseif lastline.count>6 and then lastline.substring (1,6).is_equal ("cecil:") then
 				translate_cecil
 			else
 				debug ("translate_line_change")
@@ -878,6 +886,12 @@ feature {NONE} -- Translation
 
 			lastline.replace_substring_all ("$appl", appl)
 
+			if options.has ("sharedlibs") then
+				lastline.replace_substring_all ("$sharedlibs", options.get_string ("sharedlibs", Void))	
+			else
+				lastline.replace_substring_all ("$sharedlibs", "$(SHAREDLIBS)")
+			end
+
 			subst_eiffel (lastline)
 			subst_platform (lastline)
 			subst_compiler (lastline)
@@ -916,9 +930,15 @@ feature {NONE} -- Translation
 			end
 
 			lastline := clone (makefile_sh.laststring)
+			lastline.replace_substring_all (".a",".lib")
+			makefile.putstring (lastline)
+			makefile.new_line
+			
+			read_next
+			makefile.putstring (makefile_sh.laststring)
+			makefile.new_line
 
 			precompile_libs := get_libs (lastline)
-
 			if options.has ("cecil_make") then
 				lastline := clone (options.get_string ("cecil_make", Void))
 			else
@@ -949,7 +969,87 @@ feature {NONE} -- Translation
 			makefile.new_line
 
 			read_next
-		end
+
+			read_next
+			read_next
+			read_next
+			read_next
+			read_next
+			lastline := clone (makefile_sh.laststring)
+			lastline.replace_substring_all (".exe.a",".lib")
+			lastline.replace_substring_all (".a",".lib")
+			makefile.putstring (lastline)
+			makefile.new_line
+
+			makefile.new_line
+			read_next
+
+
+-- SHARED_CECIL= appl.dll
+			read_next
+			lastline := clone (makefile_sh.laststring)
+			lastline.replace_substring_all (".so", ".dll")
+			makefile.putstring (lastline)
+			makefile.new_line
+
+-- DEF_FILE= appl.def
+			if options.has ("cecil_def") 
+			then 
+				lastline := clone (options.get_string ("cecil_def", Void))
+				lastline.replace_substring_all ("$appl", appl)
+				makefile.putstring (lastline)
+			end
+			makefile.new_line
+
+-- dynamic_cecil: $(SHARED_CECIL)
+			makefile.new_line
+			read_next
+			makefile.putstring (makefile_sh.laststring)
+			makefile.new_line
+
+-- SHARED_CECIL_OBJECT
+			read_next
+			lastline := clone (makefile_sh.laststring)
+			lastline.replace_substring_all (".o", ".obj")
+
+			subst_library (lastline)
+			subst_precomp_libs (lastline, precompile_libs)
+
+			makefile.putstring (lastline)
+			makefile.new_line
+
+
+-- SHAREDFLAGS
+			read_next
+			lastline := clone (makefile_sh.laststring)
+			makefile.putstring (lastline)
+			makefile.putstring (" \%N")
+			if options.has ("cecil_dll") 
+			then 
+				lastline := clone (options.get_string ("cecil_dll", Void))
+				lastline.replace_substring_all ("$appl", appl)
+				makefile.putstring (lastline)
+				makefile.new_line
+			end
+
+-- SHARED_CECIL
+			read_next
+			makefile.putstring (makefile_sh.laststring)
+			makefile.putstring (" $(DEF_FILE)")
+			makefile.new_line 
+
+-- $(RM) "$(SHARD_CECIL)"
+			read_next
+			makefile.putstring (makefile_sh.laststring)
+			makefile.new_line
+
+-- $(SHAREDLINK) $(SHAREDFLAGS) $(SHARED_CECIL_OBJECT) $(SHAREDLIBS)
+			read_next
+			makefile.putstring (makefile_sh.laststring)
+			makefile.new_line
+
+	end
+
 
 feature {NONE}	-- substitutions
 

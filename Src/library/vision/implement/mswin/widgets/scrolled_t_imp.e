@@ -258,12 +258,12 @@ feature {NONE} -- Implementation
 				Result := Result + Es_readonly
 			end
 
-			if is_horizontal_scrollbar then
-				Result := Result + Ws_hscroll
+			if not is_horizontal_scrollbar then
+				Result := Result - Ws_hscroll
 			end
 
-			if is_vertical_scrollbar then
-				Result := Result + Ws_vscroll
+			if not is_vertical_scrollbar then
+				Result := Result - Ws_vscroll
 			end
 		end
 

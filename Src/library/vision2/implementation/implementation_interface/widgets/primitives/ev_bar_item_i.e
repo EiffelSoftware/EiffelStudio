@@ -9,5 +9,8 @@ deferred class
 
 	EV_BAR_ITEM_I
 
+inherit
+	EV_PRIMITIVE_I
+
 end
 	

@@ -16,6 +16,10 @@ inherit
 	GB_SHARED_TOOLS
 	
 	GB_WIDGET_UTILITIES
+	
+	GB_SHARED_SYSTEM_STATUS
+	
+	GB_SHARED_XML_HANDLER
 
 creation
 	make
@@ -60,9 +64,11 @@ feature {NONE} -- Implementation
 			if (create {EV_ENVIRONMENT}).application.locked_window = first_window then
 				first_window.unlock_update
 			end
+			system_status.current_project_settings.save
 			create code_generator
 			code_generator.set_progress_bar (progress)
 			code_generator.generate
+			xml_handler.save
 			--| Add here the action of your wizard.
 			--|
 			--| Update `progress' and `progress_text' to give a

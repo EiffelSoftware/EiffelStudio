@@ -430,6 +430,8 @@ feature -- Access
 			Result.force ("min", "min")
 			Result.force ("max", "max")
 			Result.force ("RGB", "RGB")
+			Result.force ("hr", "hr")
+			Result.force ("Formatter", "Formatter")
 		end
 
 	eiffel_runtime_macros: HASH_TABLE [STRING, STRING] is

@@ -59,7 +59,8 @@ feature
 	call is
 		do
 			set_selection_text (argument_list);
-			popup
+			popup;
+			raise
 		end;
 
 feature {NONE}
@@ -70,6 +71,7 @@ feature {NONE}
 		local
 			arg_list: STRING;
 		do
+			warner.popdown;
 			if argument = apply_it then
 				arg_list := argument_list;
 				arg_list.wipe_out;

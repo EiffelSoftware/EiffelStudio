@@ -673,19 +673,22 @@ feature {NONE} -- Deletion implementation
 	load_and_delete_tablerows (table_code, fkey_code: INTEGER; fkey_value: ANY) is
 			-- Load and delete rows of table with `tablecode' where foreign key with `fkey_code'
 			-- equals `fkey_value'.
+		local
+			l_result_list: like result_list
 		do
 			prepare_select_with_table (table_code)
 			add_value_qualifier (fkey_code, fkey_value.out)
 			load_result
 			if not database_manager.has_error then
-				if result_list /= Void then
+				l_result_list := result_list
+				if l_result_list /= Void then
 					from
-						result_list.start
+						l_result_list.start
 					until
-						result_list.after
+						l_result_list.after
 					loop
-						delete_tablerow (result_list.item)
-						result_list.forth
+						delete_tablerow (l_result_list.item)
+						l_result_list.forth
 					end
 				end
 			end

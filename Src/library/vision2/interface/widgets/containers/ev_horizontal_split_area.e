@@ -67,8 +67,13 @@ feature -- Status setting
 			-- Set the pixel-split_position of the left side of `sep'
 			-- with respect to `split_box'.
 		do
-			first_cell.set_minimum_width (a_split_position)
-			second_cell.set_minimum_width (split_box.width - sep.width - a_split_position + 1)
+			if a_split_position < first_cell.width then
+				first_cell.set_minimum_width (a_split_position)
+				second_cell.set_minimum_width (split_box.width - sep.width - a_split_position)
+			elseif a_split_position > first_cell.width then
+				second_cell.set_minimum_width (split_box.width - sep.width - a_split_position)
+				first_cell.set_minimum_width (a_split_position)
+			end
 		end
 
 	set_proportion (a_proportion: REAL) is
@@ -208,8 +213,8 @@ end -- class EV_HORIZONTAL_SPLIT_AREA_I
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
---| Revision 1.10  2000/03/03 22:59:48  brendel
---| Fixed line positioning.
+--| Revision 1.11  2000/03/03 23:13:21  brendel
+--| Fixed bug in moving of separator.
 --|
 --| Revision 1.9  2000/03/03 20:32:24  brendel
 --| Fixed bug in initialize. Before, Precursor was not called.

@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			attach_top (rbox, 0);
 			attach_left (rbox, 0);
 			attach_right (rbox, 0);
-			attach_top_widget (rbox, buttons, 5);
+			attach_bottom_widget (buttons, rbox, 5);
 			!! option_one_b.make ("", rbox);
 			!! option_two_b.make ("", rbox);
 			set_composite_attributes (Current)

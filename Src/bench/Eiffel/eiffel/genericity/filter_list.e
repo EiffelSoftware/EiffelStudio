@@ -3,6 +3,8 @@ class FILTER_LIST
 inherit
 
 	LINKED_LIST [GEN_TYPE_I]
+		rename
+			append as list_append
 		redefine
 			search
 		end
@@ -45,6 +47,23 @@ feature
 				end;
 			end;
 		end;
+
+feature -- Merging
+
+	append (other: like Current) is
+			-- Append `other' to `Current'.
+			-- Used when merging precompilations.
+		require
+			other_not_void: other /= Void
+		do
+			from other.start until other.after loop
+				search (other.item);
+				if after then
+					extend (other.item)
+				end;
+				other.forth
+			end
+		end
 
 feature
 

@@ -141,6 +141,26 @@ end;
 			make_duplication;
 		end;
 
+feature -- Merging
+
+	append (other: like Current) is
+			-- Add externals of `other' to `Current'.
+			-- Used for precompilation merging.
+		local
+			external_name: STRING
+		do
+			from other.start until other.after loop
+				external_name := other.key_for_iteration;
+				if has (external_name) then
+					add_occurence (external_name)
+				else
+					put (other.item_for_iteration, external_name)
+				end
+				other.forth
+			end;
+			make_duplication
+		end
+
 feature -- Debug
 
 	trace is

@@ -353,7 +353,7 @@ feature -- Creation
 			--| Creation of the Java object
 
 			class_test := jni.find_class (&quot;test&quot;)
-			!! instance_of_class_test.create_instance (class_test, &quot;()V&quot;, Void)
+			<b>create</b> instance_of_class_test.create_instance (class_test, &quot;()V&quot;, Void)
 				
 			--| Access to a public attribute
 
@@ -381,7 +381,7 @@ feature -- Creation
 			fid := instance_of_class_test.method_id (&quot;my_method&quot;, &quot;(ILjava/lang/String;)V&quot;)
 				-- Get the id of 'my_method'
 
-			!! j_args.make(2)
+			<b>create</b> j_args.make(2)
 			j_args.push_int (2)
 			j_args.push_string(&quot;String test&quot;)
 				-- Create the set of arguments for 'my_method'

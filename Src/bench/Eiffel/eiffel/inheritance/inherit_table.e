@@ -10,7 +10,7 @@ class
 	INHERIT_TABLE 
 
 inherit
-	EXTEND_TABLE [INHERIT_FEAT, INTEGER]
+	HASH_TABLE [INHERIT_FEAT, INTEGER]
 		rename
 			make as extend_tbl_make,
 			merge as extend_table_merge
@@ -116,7 +116,7 @@ feature
 	parents: PARENT_LIST;
 			-- Compiled form of the parents of the current analyzed class
 
-	body_table: EXTEND_TABLE [READ_INFO, INTEGER];
+	body_table: HASH_TABLE [READ_INFO, INTEGER];
 			-- Body table information for `Tmp_body_server'.
 
 	changed_features: ARRAYED_LIST [INTEGER];
@@ -142,12 +142,6 @@ feature
 		once
 			!!Result.make
 		end;
-
-    rep_parent_list: LINKED_LIST [REP_NAME_LIST] is
-            -- List of replicated names for each parent clause 
-        once
-            !!Result.make
-        end;
 
 	new_externals: LINKED_LIST [INTEGER];
 			-- New externals introduced into the class
@@ -176,7 +170,7 @@ feature
 			pass2_control: PASS2_CONTROL;
 			pass3_control: PASS3_CONTROL;
 			depend_unit: DEPEND_UNIT;
-			old_creators, new_creators: EXTEND_TABLE [EXPORT_I, STRING];
+			old_creators, new_creators: HASH_TABLE [EXPORT_I, STRING];
 			creation_name: STRING;
 			equiv_tables: BOOLEAN;
 		do
@@ -412,7 +406,7 @@ end;
 -- generated temporarily in final mode in order to generate the
 -- static C routine tables.
 
-			if System.il_generation and then not a_class.is_external then
+			if System.il_generation then -- and then not a_class.is_external then
 				a_class.class_interface.process_features (resulting_table)
 			end
 
@@ -1061,7 +1055,6 @@ end;
 			changed_features.wipe_out;
 			origins.wipe_out;
 			new_externals.wipe_out;
-			rep_parent_list.wipe_out;
 			invariant_changed := False;
 			invariant_removed := False;
 			assert_prop_list := Void; 
@@ -1126,39 +1119,18 @@ end;
 		require
 			no_error: not Error_handler.has_error;
 		local
-			rep_dep: REP_CLASS_DEPEND;
-			feat_rep_dep: REP_FEATURE_DEPEND;
 			feature_name_id: INTEGER
 			class_id: INTEGER
 		do
 			from
 				class_id := a_class.class_id
-				if Rep_depend_server.server_has (class_id) then
-					rep_dep := Rep_depend_server.server_item (class_id);
-				elseif Tmp_rep_depend_server.has (class_id) then
-					rep_dep := Tmp_rep_depend_server.item (class_id);
-				end;
 				changed_features.start
 			until
 				changed_features.after
 			loop
 				feature_name_id := changed_features.item;
 				a_class.insert_changed_feature (feature_name_id);
-				if rep_dep /= Void then
-					feat_rep_dep := rep_dep.item (Names_heap.item (feature_name_id));
-					if feat_rep_dep /= Void then
-						a_class.propagate_replication (feat_rep_dep)
-					end;
-				end;
 				changed_features.forth;
-			end;
-
-			if rep_dep /= Void and then feat_rep_dep /= Void then 
-				if feat_rep_dep.count > 0 then
-					Tmp_rep_depend_server.put (rep_dep)
-				else
-					Tmp_rep_depend_server.remove (class_id)
-				end;
 			end;
 		end;
 

@@ -412,6 +412,7 @@ feature {NONE} -- Implementation
 			create Result.make (
 				eiffel_property_name,
 				dotnet_name,
+				consumed_arguments (l_info),
 				info.get_can_read,
 				info.get_can_write,
 				l_info.get_is_public,

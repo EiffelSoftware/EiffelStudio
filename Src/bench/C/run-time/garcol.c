@@ -13,6 +13,10 @@
 	executable.
 */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include "eif_globals.h"
 #include "misc.h"	/* %%ss added for eif_free_dlls */
 #include "config.h"
@@ -778,7 +782,7 @@ rt_public void reclaim(void)
 
 	EIF_GET_CONTEXT
 #ifdef EIF_WINDOWS
-	/* struct chunk *c, *cn;*/ /* %%ss removed  since lines below are commented */
+	 struct chunk *c, *cn; /* %%ss removed since lines below are commented */
 #endif
 
 #ifdef DEBUG
@@ -797,11 +801,11 @@ rt_public void reclaim(void)
 #ifdef EIF_WIN32
 	eif_cleanup();
 #endif
-	/*for (c = cklst.ck_head; c != (struct chunk *) 0; c = cn)
+	for (c = cklst.ck_head; c != (struct chunk *) 0; c = cn)
 		{
 		cn = c->ck_next;
 		free (c);
-		}*/
+		}
 #endif
 	eif_free_dlls();
 #endif
@@ -5282,4 +5286,8 @@ rt_public void panic(char *s)
 	exit(1);
 }
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif

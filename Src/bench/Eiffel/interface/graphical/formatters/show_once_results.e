@@ -11,7 +11,7 @@ inherit
 		redefine
 			dark_symbol, display_temp_header
 		end;
-	SHARED_DEBUG
+	SHARED_APPLICATION_EXECUTION
 
 creation
 
@@ -48,11 +48,14 @@ feature {NONE}
 			arguments: E_FEATURE_ARGUMENTS;
 			e_feature: E_FEATURE;
 			dynamic_class: E_CLASS;
-			type_name: STRING
+			type_name: STRING;
+			status: APPLICATION_STATUS;	
+			cs: CLASSC_STONE
 		do
-			if not Run_info.is_running then
+			status := Application.status;
+			if status = void then
 				warner (text_window).gotcha_call (w_System_not_running)
-			elseif not Run_info.is_stopped then
+			elseif not status.is_stopped then
 				warner (text_window).gotcha_call (w_System_not_stopped)
 			else
 				dynamic_class := object.dynamic_class;
@@ -60,9 +63,10 @@ feature {NONE}
 				!! once_request.make;
 				type_name := clone (dynamic_class.name);
 				type_name.to_upper;
-				text_window.put_clickable_string (dynamic_class.stone, type_name);
+				!! cs.make (dynamic_class);
+				text_window.put_stone (cs, type_name);
 				text_window.put_string (" [");
-				text_window.put_clickable_string (object, object.object_address);
+				text_window.put_stone (object, object.object_address);
 				text_window.put_char (']');
 				text_window.new_line;
 				text_window.new_line;
@@ -73,7 +77,7 @@ feature {NONE}
 				loop
 					text_window.put_string ("%T");
 					e_feature := once_func_list.item;
-					e_feature.append_clickable_name (text_window, dynamic_class);
+					e_feature.append_name (text_window, dynamic_class);
 					arguments := e_feature.arguments;
 					if arguments /= Void then
 						text_window.put_string (" (");
@@ -84,7 +88,7 @@ feature {NONE}
 						loop
 							text_window.put_string (arguments.argument_names.i_th (arguments.index));
 							text_window.put_string (": ");
-							arguments.item.actual_type.append_clickable_signature (text_window);
+							arguments.item.actual_type.append_to (text_window);
 							arguments.forth;
 							if not arguments.after then
 								text_window.put_string ("; ")
@@ -96,7 +100,7 @@ feature {NONE}
 					if once_request.already_called (e_feature) then
 						once_request.once_result (e_feature).append_type_and_value (text_window)
 					else
-						e_feature.type.append_clickable_signature (text_window);
+						e_feature.type.append_to (text_window);
 						text_window.put_string ("%TNot yet called")
 					end;
 					text_window.new_line;

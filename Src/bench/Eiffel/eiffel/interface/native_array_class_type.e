@@ -1,8 +1,7 @@
 indexing
-	description: "Class type for NATIVE_ARRAY class.";
-	date: "$Date$";
+	description: "Class type for NATIVE_ARRAY class."
+	date: "$Date$"
 	revision: "$Revision$"
-
 
 class NATIVE_ARRAY_CLASS_TYPE 
 
@@ -25,15 +24,15 @@ feature -- Access
 	first_generic: TYPE_I is
 			-- First generic parameter type
 		require
-			has_generics: type.meta_generic /= Void;
-			good_generic_count: type.meta_generic.count = 1;
+			has_generics: type.meta_generic /= Void
+			good_generic_count: type.meta_generic.count = 1
 		do
-			Result := type.meta_generic.item (1);
+			Result := type.meta_generic.item (1)
 		end
 
 	il_type_name: STRING is
 			-- Associated name to current generic derivation.
-			-- E.g. SPECIAL [INTEGER] gives `INTEGER []'.
+			-- E.g. NATIVE_ARRAY [INTEGER] gives `INTEGER []'.
 		require
 			has_generics: type.true_generics /= Void
 			good_generic_count: type.true_generics.count = 1
@@ -45,7 +44,7 @@ feature -- Access
 
 	il_element_type_name: STRING is
 			-- Associated name of element types.
-			-- E.g. SPECIAL [INTEGER] gives `INTEGER'.
+			-- E.g. NATIVE_ARRAY [INTEGER] gives `INTEGER'.
 		require
 			has_generics: type.true_generics /= Void
 			good_generic_count: type.true_generics.count = 1
@@ -73,8 +72,8 @@ feature -- Access
 
 feature -- IL code generation
 
-	generate_il (name_id: INTEGER) is
-			-- Generate call to `name_id' from SPECIAL.
+	generate_il (name_id: INTEGER; array_type: CL_TYPE_I) is
+			-- Generate call to `name_id' from NATIVE_ARRAY.
 		require
 			valid_name_id: name_id > 0
 			has_generics: type.true_generics /= Void
@@ -117,7 +116,7 @@ feature -- IL code generation
 					type_kind := il_i
 				else
 					type_kind := il_ref
-				end;
+				end
 
 				ref ?= gen_param
 
@@ -131,15 +130,16 @@ feature -- IL code generation
  					il_generator.generate_array_write (type_kind)
 
 				when make_name_id then
-					if ref /= Void and then not is_expanded then
-						generic_type_id := System.system_object_class.compiled_class.
-							types.first.static_type_id
-					else
-						cl_type ?= type.true_generics.item (1)
-						check
-							cl_type_not_void: cl_type /= Void
-						end
+						-- Find real type of ARRAY.
+					gen_param ?= array_type.true_generics.item (1)
+					cl_type ?= gen_param
+					if cl_type /= Void then
 						generic_type_id := cl_type.associated_class_type.static_type_id
+					else
+							-- Most likely it is a formal. We do not handle this
+							-- case correctly yet.
+						generic_type_id := system.system_object_class.compiled_class.
+							types.first.static_type_id	
 					end
 					il_generator.generate_array_creation (generic_type_id)
 					

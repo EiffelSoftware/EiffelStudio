@@ -34,7 +34,7 @@ feature -- Access
 			-- Window associated to the paint dc
 
 	paint_struct: WEL_PAINT_STRUCT
-			-- Informations about the Wm_paint message
+			-- Information about the Wm_paint message
 
 feature -- Basic operations
 

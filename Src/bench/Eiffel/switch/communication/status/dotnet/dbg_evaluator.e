@@ -74,12 +74,6 @@ feature -- Bridge
 			Result := eifnet_debugger.once_function_value_on_icd_class (a_icd_frame, a_icd_class, a_adapted_class_type, a_feat)			
 		end
 		
-	icor_debug_module (a_mod_name: STRING): ICOR_DEBUG_MODULE is
-			-- ICorDebugModule related to `a_mod_name'
-		do
-			Result := eifnet_debugger.icor_debug_module (a_mod_name)
-		end
-
 feature -- Access
 
 	dotnet_metamorphose_basic_to_reference_value (dmp: DUMP_VALUE): DUMP_VALUE is

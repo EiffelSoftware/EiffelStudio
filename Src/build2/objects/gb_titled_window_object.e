@@ -95,6 +95,7 @@ feature -- Access
 			if not layout_item.has (menu_object.layout_item) then
 				layout_item.start
 				layout_item.put_left (menu_object.layout_item)
+				layout_item.expand
 			end
 		end
 		

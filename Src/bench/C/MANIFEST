@@ -183,8 +183,12 @@ liman/licence/files/app.allow
 liman/licence/files/app.cf
 liman/licence/files/app.deny
 liman/licence/files/app.use
+liman/licence/files/bench_features
+liman/licence/files/build_features
+liman/licence/files/case_features
 liman/licence/files/features
 liman/licence/files/licences
+liman/licence/files/MODEL
 liman/licence/licence.pl
 liman/licence/mkey
 liman/licence/mkey/Jmakefile

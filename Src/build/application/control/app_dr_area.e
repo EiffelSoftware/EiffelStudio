@@ -150,7 +150,7 @@ feature {NONE}
 			-- Copy lists from `s' to new_state.
 		do
 			add_new_state;
-			new_state.copy_lists (s);
+			new_state.copy_contents (s);
 			new_state := Void
 		end;
 

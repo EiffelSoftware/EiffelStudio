@@ -1,8 +1,6 @@
---| FIXME NOT_REVIEWED this file has not been reviewed
 indexing
-	description:
-		"Eiffel Vision container. Mswindow implementation."
-	status: "See notice at end of class"
+	description: "Eiffel Vision container. Mswindow implementation."
+	status: "See notice at end of class."
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -34,7 +32,7 @@ inherit
 feature {NONE} -- Initialization
 
 	initialize is
-			-- Precusor and create new_item_actions.
+			-- Initialize `Current'. Precusor and create new_item_actions.
 		do
 			create radio_group.make
 			create new_item_actions.make ("new_item", <<"widget">>)
@@ -48,24 +46,28 @@ feature -- Access
 
 	client_x: INTEGER is
 			-- Left of the client area.
+			-- `Result' in pixels.
 		do
 			Result := client_rect.x
 		end
 
 	client_y: INTEGER is
 			-- Top of the client area.
+			-- `Result' in pixels.
 		do
 			Result := client_rect.y
 		end
 
 	client_width: INTEGER is
-			-- Width of the client area of container
+			-- Width of the client area of container.
+			-- `Result' in pixels.
 		do
 			Result := client_rect.width
 		end
 
 	client_height: INTEGER is
 			-- Height of the client area of container
+			-- `Result' in pixels.
 		do
 			Result := client_rect.height
 		end
@@ -76,7 +78,7 @@ feature -- Access
 feature -- Element change
 
 	set_parent (par: EV_CONTAINER) is
-			-- Make `par' the new parent of the widget.
+			-- Make `par' the new parent of `Current'.
 			-- `par' can be Void then the parent is the screen.
 		local
 			par_imp: EV_CONTAINER_IMP
@@ -122,13 +124,10 @@ feature {NONE} -- WEL Implementation
 			-- been changed and must be drawn. `draw_item' contains
 			-- information about the item to be drawn and the type
 			-- of drawing required.
---|FIXME Option button is now platform independant.
---|FIXME 			pixcon: EV_OPTION_BUTTON_IMP
+			--| This is empty as there are currently no controls that
+			--| are owner drawn. If some are added then code to handle
+			--| their re-drawing should be called from here.
 		do
---|FIXME 			pixcon ?= draw_item.window_item
---|FIXME 			if pixcon /= Void then
---|FIXME 				pixcon.on_draw (draw_item)
---|FIXME 			end
 		end
 
 	on_color_control (control: WEL_COLOR_CONTROL; paint_dc: WEL_PAINT_DC) is
@@ -165,9 +164,6 @@ feature {NONE} -- WEL Implementation
 
 	on_wm_vscroll (wparam, lparam: INTEGER) is
  			-- Wm_vscroll message.
- 			-- Should be implementated in EV_CONTAINER_IMP,
-			-- But as we can't implement a deferred feature
- 			-- with an external, it is not possible.
  		local
  			gauge: EV_GAUGE_IMP
  			p: POINTER
@@ -183,7 +179,8 @@ feature {NONE} -- WEL Implementation
 	 						check
  							gauge_exists: gauge.exists
  						end
-						gauge.on_scroll (get_wm_vscroll_code (wparam, lparam), get_wm_vscroll_pos (wparam, lparam))
+						gauge.on_scroll (get_wm_vscroll_code (wparam, lparam),
+							get_wm_vscroll_pos (wparam, lparam))
  						gauge.interface.change_actions.call ([])
  					end
  				else
@@ -211,7 +208,8 @@ feature {NONE} -- WEL Implementation
 	 					check
 	 						gauge_exists: gauge.exists
 	 					end
-						gauge.on_scroll (get_wm_vscroll_code (wparam, lparam), get_wm_vscroll_pos (wparam, lparam))
+						gauge.on_scroll (get_wm_vscroll_code (wparam, lparam),
+							get_wm_vscroll_pos (wparam, lparam))
 	 					gauge.interface.change_actions.call ([])
 	 				end
 				else
@@ -225,6 +223,7 @@ feature {NONE} -- WEL Implementation
 	on_destroy is
 			-- Wm_destroy message.
 			-- The window is about to be destroyed.
+			--| To be redefined in descendents as required.
 		do
 		end
 
@@ -293,7 +292,7 @@ feature {NONE} -- Feature that should be directly implemented by externals
 feature {EV_ANY_I} -- Implementation
 
 	add_child (child_imp: EV_WIDGET_IMP) is
-			-- Add child into composite
+			-- Add child into composite.
 		require
 			valid_child: child_imp /= Void
 			not_already_child: not is_child (child_imp)
@@ -304,27 +303,25 @@ feature {EV_ANY_I} -- Implementation
 		end
 
 	remove_child (child_imp: EV_WIDGET_IMP) is
-			-- Remove the given child from the children of
-			-- the container.
+			-- Remove the given child from the children of `Current'.
 		deferred
 		end
 
 	add_child_ok: BOOLEAN is
-			-- Used in the precondition of
-			-- 'add_child'. True, if it is ok to add a
-			-- child to container.
+			-- Used in the precondition of 'add_child'. True, if it is ok to
+			-- add a child to `Current'.
 		deferred
 		end
 
 	is_child (a_child: EV_WIDGET_IMP): BOOLEAN is
-			-- Is `a_child' a child of the container?
+			-- Is `a_child' a child of `Current'?
 		deferred
 		end
 
 feature {EV_CONTAINER_IMP} -- Implementation
 
 	radio_group: LINKED_LIST [EV_RADIO_BUTTON_IMP]
-			-- Radio items in this container.
+			-- Radio items in `Current'.
 			-- `Current' shares reference with merged containers.
 
 	is_merged (other: EV_CONTAINER): BOOLEAN is
@@ -346,6 +343,8 @@ feature {EV_CONTAINER_IMP} -- Implementation
 
 	add_radio_button (w: EV_WIDGET) is
 			-- Called every time a widget is added to the container.
+			--| If `w' is a radio button then we update associated
+			--| radio buttons as necessary.
 		require
 			w_not_void: w /= Void
 		local
@@ -362,6 +361,8 @@ feature {EV_CONTAINER_IMP} -- Implementation
 
 	remove_radio_button (w: EV_WIDGET) is
 			-- Called every time a widget is removed from the container.
+			--| If `w' is a radio button then we update  associated
+			--| radio buttons as necessary.
 		require
 			w_not_void: w /= Void
 		local
@@ -377,7 +378,7 @@ feature {EV_CONTAINER_IMP} -- Implementation
 feature -- Status setting
 
 	connect_radio_grouping (a_container: EV_CONTAINER) is
-			-- Join radio grouping of `a_container' to Current.
+			-- Join radio grouping of `a_container' to `Current'.
 		local
 			l: like radio_group
 			peer: EV_CONTAINER_IMP
@@ -418,7 +419,7 @@ invariant
 
 end -- class EV_CONTAINER_IMP
 
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 --| EiffelVision: library of reusable components for ISE Eiffel.
 --| Copyright (C) 1986-1998 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
@@ -432,13 +433,16 @@ end -- class EV_CONTAINER_IMP
 --| Electronic mail <info@eiffel.com>
 --| Customer support e-mail <support@eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|----------------------------------------------------------------
+--|-----------------------------------------------------------------------------
 
 --|-----------------------------------------------------------------------------
 --| CVS log
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.53  2000/05/01 21:54:32  rogers
+--| Comments, formatting. Removed FIXME NOT_REVIEWED.
+--|
 --| Revision 1.52  2000/04/29 03:22:39  pichery
 --| Cosmetics
 --|
@@ -509,10 +513,12 @@ end -- class EV_CONTAINER_IMP
 --|  Removed code in set_parent that was no longer necessary.
 --|
 --| Revision 1.34.10.9  2000/01/31 23:00:21  rogers
---| Removed set_text_for_item, implemented set_item_text, and re-implemented child_added.
+--| Removed set_text_for_item, implemented set_item_text, and re-implemented
+--| child_added.
 --|
 --| Revision 1.34.10.8  2000/01/31 19:30:45  brendel
---| Added previously deleted features from EV_CONTAINER_I as a temporary measure.
+--| Added previously deleted features from EV_CONTAINER_I as a temporary
+--| measure.
 --|
 --| Revision 1.34.10.7  2000/01/31 17:03:51  brendel
 --| Corrected error in set_parent.

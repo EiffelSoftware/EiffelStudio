@@ -29,7 +29,7 @@ feature -- Element change
 		require
 			a_name /= Void
 		do
-			name := a_name
+			name := clone (a_name)
 		ensure
 			name /= Void and then name.is_equal (a_name)
 		end
@@ -39,7 +39,7 @@ feature -- Element change
 		require
 			a_doc_string /= Void
 		do
-			doc_string := a_doc_string
+			doc_string := clone (a_doc_string)
 		ensure
 			doc_string /= Void and then doc_string.is_equal (a_doc_string)
 		end
@@ -57,7 +57,7 @@ feature -- Element change
 		require
 			a_help_file /= Void
 		do
-			help_file := a_help_file
+			help_file := clone (a_help_file)
 		ensure
 			help_file /= Void and then help_file.is_equal (a_help_file)
 		end

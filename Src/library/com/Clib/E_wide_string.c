@@ -18,7 +18,6 @@
 
 WCHAR * ccom_create_from_string (char * string)
 
-// constructor
 // create E_wide_string from pointer to string
 {
 	WCHAR * wide_string;

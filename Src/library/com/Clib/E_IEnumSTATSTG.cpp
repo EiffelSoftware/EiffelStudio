@@ -54,7 +54,7 @@ void E_IEnumSTATSTG::ccom_skip(ULONG n)
 	hr = pIEnum->Skip(n);
 	if (hr != S_OK)
 	{	
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -68,7 +68,7 @@ void E_IEnumSTATSTG::ccom_reset()
 	hr = pIEnum->Reset();
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 };
@@ -89,7 +89,7 @@ IEnumSTATSTG * E_IEnumSTATSTG::ccom_clone()
 	
 	if (hr != S_OK)
 	{
-		Formatter  f;
+		//Formatter  f;
 		com_eraise (f.c_format_message (hr), HRESULT_CODE (hr));
 	}
 	return pIEnum_cloned;

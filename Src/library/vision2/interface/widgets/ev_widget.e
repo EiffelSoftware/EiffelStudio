@@ -188,8 +188,6 @@ feature -- Status setting
 			is_sensitive: is_sensitive
 		do
 			implementation.set_focus
-		ensure
-			has_focus: has_focus
 		end
 
 	enable_capture is

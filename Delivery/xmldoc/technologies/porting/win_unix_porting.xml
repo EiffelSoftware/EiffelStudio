@@ -4,7 +4,7 @@
 		<heading>
 			<size>2</size>Requirements
 		</heading>
-		<paragraph>Before starting your project, you must first decide if you want your program to run either single or multi-platform. If you decide to go multi-platform make sure you use platform independent Eiffel libraries or C/C++ code.  Eiffel Software  Eiffel provides the following multi-platform libraries:</paragraph>
+		<paragraph>Before starting your project, you must first decide if you want your program to run either single or multi-platform. If you decide to go multi-platform make sure you use platform independent Eiffel libraries or C/C++ code. Eiffel Software provides the following multi-platform libraries:</paragraph>
 		<list ordered="false">
 			<item>Eiffel2Java (on platform that supports JNI)</item>
 			<item>EiffelBase</item>
@@ -58,7 +58,7 @@ external
 			<size>2</size>UNIX systems
 		</heading>
 		<paragraph>When compiling for many UNIX system, you should finalize without launching the C compilation. At the end, the EIFGEN/F_code directory is built. This is the portable C code that you can take from one platform to another. We recommend you to create an archive of the F_code for backup. </paragraph>
-		<paragraph>To compile on a given platform, you have to make sure that you have a complete  Eiffel Software  Eiffel delivery for the target platform and that your PATH environment variable contains $ISE_EIFFEL/studio/spec/$ ISE_PLATFORM/bin. You then have to check that all C externals that you are using have been compiled for this platform. </paragraph>
+		<paragraph>To compile on a given platform, you have to make sure that you have a complete EiffelStudio delivery for the target platform and that your PATH environment variable contains $ISE_EIFFEL/studio/spec/$ ISE_PLATFORM/bin. You then have to check that all C externals that you are using have been compiled for this platform. </paragraph>
 		<paragraph>You can then launch the `finish_freezing' script that will automatically recompile the C generated code and generate a new executable for the given platform. </paragraph>
 		<heading>
 			<size>2</size>Between UNIX and Windows

@@ -32,6 +32,9 @@ feature -- Access
 
 feature -- Access
 
+--| FIXME `constant_by_name' and `has_constant' `constants_initialized' are only required until the complete change to
+--| constants is complete. They are required for the pixmaps at the moment.
+
 	constants_initialized: BOOLEAN is
 			-- Have constants been initialized from file?
 		do
@@ -147,6 +150,21 @@ feature {NONE} -- Implementation
 		ensure
 			Result_not_void: Result /= Void
 			no_characters_lost: old content.count = Result.count + content.count
+		end
+
+	set_with_named_file (a_pixmap: EV_PIXMAP; a_file_name: STRING) is
+			-- Set image of `a_pixmap' from file, `a_file_name'.
+			-- If `a_file_name' does not exist, do nothing.
+		require
+			a_pixmap_not_void: a_pixmap /= Void
+			a_file_name /= Void
+		local
+			l_file: RAW_FILE
+		do
+			create l_file.make (a_file_name)
+			if l_file.exists then
+				a_pixmap.set_with_named_file (a_file_name)
+			end
 		end
 
 invariant

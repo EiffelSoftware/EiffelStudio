@@ -75,16 +75,17 @@ feature -- Basic Operation
 			check
 				links_correct: top_object.instance_referers.has (an_object.id) and an_object.associated_top_level_object = top_object.id
 			end
-
+			
+			top_object.remove_client_representation (an_object)
 			an_object.unconnect_instance_referers (top_object, an_object)
 			internal_shallow_flatten (an_object, top_object)
-
 			check
 				top_object_link_removed: not top_object.instance_referers.has (object_id)
 			end
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
 			end
+			update_editors_for_change
 			command_handler.update
 			check_execute_while_debugging
 		end
@@ -103,7 +104,6 @@ feature -- Basic Operation
 			old_pos: INTEGER
 			original_link_object, new_link_object, original_instance_object: GB_OBJECT
 			is_selected: BOOLEAN
-			l_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
 		do
 			an_object := object_handler.deep_object_from_id (object_id)
 			top_object := object_handler.deep_object_from_id (top_id)
@@ -179,24 +179,14 @@ feature -- Basic Operation
 			
 			new_object.connect_instance_referers (top_object, new_object)
 			top_object.instance_referers.put (new_object.id, new_object.id)
-			new_object.set_associated_top_level_object (top_object)
+			new_object.set_associated_top_level_object (top_object)			
 			
-				-- Now update all editors. As we have replaced the original object, we need to
-				-- ensure that if they reference the original object, they now reference the new object.
-			l_editors := all_editors
-			from
-				l_editors.start
-			until
-				l_editors.off
-			loop
-				if l_editors.item.object.id = new_object.id then
-					l_editors.item.set_object (new_object)
-				end
-				l_editors.forth
-			end
 			
+			top_object.add_client_representation (new_object)
+			
+			
+			update_editors_for_change
 			command_handler.update
-			
 			check_undo_while_debugging	
 		end
 		
@@ -237,7 +227,7 @@ feature {NONE} -- Implementation
 			current_object.children.count = associated_object.children.count
 		local
 			current_object_children, associated_object_children: ARRAYED_LIST [GB_OBJECT]
-			current_item, current_associated_item, top_object: GB_OBJECT
+			current_item, current_associated_item: GB_OBJECT
 			associated_cursor, current_cursor: CURSOR
 			original_link_object, new_link_object, original_instance_object: GB_OBJECT
 		do
@@ -262,26 +252,32 @@ feature {NONE} -- Implementation
 				current_item := current_object_children.item
 				current_associated_item := associated_object_children.item			
 				if current_associated_item.associated_top_level_object > 0 then
-						-- If the current associated object has a reference to a top level object then we must
-						-- set the current object as an association to this top level object directly.
-
-					new_links.extend (current_associated_item.associated_top_level_object)
-					original_instances.extend (current_item.id)
-					original_links.extend (current_associated_item.id)
-
-					original_link_object := current_associated_item
-					new_link_object := object_handler.deep_object_from_id (current_associated_item.associated_top_level_object)
-					original_instance_object := current_item
-					
-					original_link_object.instance_referers.remove (original_instance_object.id)
-					new_link_object.instance_referers.extend (original_instance_object.id, original_instance_object.id)
-					current_item.set_associated_top_level_object (new_link_object)
-					current_object.connect_instance_referers (new_link_object, original_instance_object)
-
-						-- Ensure that the representations are updated to reflect the fact that they are locked.
-					current_item.represent_as_locked_instance
-					current_item.update_representations_for_name_or_type_change
-				else
+					if is_deep_flatten then
+						original_instances.extend (current_item.id)
+						original_links.extend (current_associated_item.id)
+					else
+							-- If the current associated object has a reference to a top level object then we must
+							-- set the current object as an association to this top level object directly.
+	
+						new_links.extend (current_associated_item.associated_top_level_object)
+						original_instances.extend (current_item.id)
+						original_links.extend (current_associated_item.id)
+	
+						original_link_object := current_associated_item
+						new_link_object := object_handler.deep_object_from_id (current_associated_item.associated_top_level_object)
+						original_instance_object := current_item
+						
+						original_link_object.instance_referers.remove (original_instance_object.id)
+						new_link_object.instance_referers.extend (original_instance_object.id, original_instance_object.id)
+						current_item.set_associated_top_level_object (new_link_object)
+						current_object.connect_instance_referers (new_link_object, original_instance_object)
+	
+							-- Ensure that the representations are updated to reflect the fact that they are locked.
+						current_item.represent_as_locked_instance
+						current_item.update_representations_for_name_or_type_change
+					end
+				end
+				if current_associated_item.associated_top_level_object = 0 or is_deep_flatten then
 					internal_shallow_flatten (current_item, current_associated_item)
 				end
 				
@@ -295,6 +291,28 @@ feature {NONE} -- Implementation
 			current_object_children_index_not_changed: old current_object.children.index = current_object.children.index
 			associated_object_children_index_not_changed: old associated_object.children.index = associated_object.children.index
 		end
+		
+	update_editors_for_change is
+			-- Now update all editors. As we have replaced the original object, we need to
+			-- ensure that if they reference the original object, they now reference the new object.
+		local
+			l_editors: ARRAYED_LIST [GB_OBJECT_EDITOR]
+			current_editor: GB_OBJECT_EDITOR
+		do
+			l_editors := all_editors
+			from
+				l_editors.start
+			until
+				l_editors.off
+			loop
+				current_editor := l_editors.item
+				if current_editor.object /= Void and then current_editor.object.id = object_id then
+					current_editor.set_object (object_handler.deep_object_from_id (object_id))
+				end
+				l_editors.forth
+			end
+		end
+		
 
 	new_links: ARRAYED_LIST [INTEGER]
 	original_links: ARRAYED_LIST [INTEGER]

@@ -30,4 +30,6 @@ feature -- Type check
 			access_line.forth;
 		end;
 
+	operator_name: STRING is "-";
+
 end

@@ -6,7 +6,7 @@ inherit
 
 	INSTRUCTION_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node, format
 		end
 
 feature -- Attributes
@@ -51,6 +51,13 @@ feature -- Type check, byte code and dead code removal
 		do
 			!!Result;
 			Result.set_call (call.byte_node);
+		end;
+
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			call.format (ctxt);
 		end;
 
 end

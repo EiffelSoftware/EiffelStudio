@@ -4,7 +4,7 @@ inherit
 
 	EXPR_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node, format
 		end
 
 feature -- Attributes
@@ -100,6 +100,40 @@ feature -- Type check, byte code and dead code removal
 				attribute_i ?= feature_table.item (id_list.item);
 				Result.feature_ids.put (attribute_i.feature_id);
 				id_list.forth;
+			end;
+		end;
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		local
+			first_printed: BOOLEAN;
+		do
+			ctxt.begin;
+			ctxt.put_keyword("strip ");
+			ctxt.put_special("(");
+			
+			from
+				id_list.start;
+			until
+				id_list.offright
+			loop
+				ctxt.new_expression;
+				ctxt.prepare_for_feature(id_list.item, void);
+				if ctxt.is_feature_visible then	
+					if not first_printed then
+						ctxt.put_special(",");
+						ctxt.put_string(" ");
+					end;	
+					ctxt.put_current_feature;
+					first_printed := true;
+				end;
+				id_list.forth
+			end;
+		--	ctxt.same_types;
+			if not first_printed then
+				ctxt.rollback;
+			else
+				ctxt.commit;
 			end;
 		end;
 

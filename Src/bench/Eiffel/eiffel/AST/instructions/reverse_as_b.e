@@ -6,7 +6,7 @@ inherit
 
 	ASSIGN_AS
 		redefine
-			check_validity, byte_node
+			check_validity, byte_node, assign_symbol
 		end
 
 feature
@@ -42,6 +42,13 @@ feature
 			!!Result;
 			Result.set_target (target.byte_node);
 			Result.set_source (source.byte_node);
+		end;
+
+feature {} -- Formatter
+	
+	assign_symbol: STRING is 
+		once
+			Result := " ?= ";
 		end;
 
 end

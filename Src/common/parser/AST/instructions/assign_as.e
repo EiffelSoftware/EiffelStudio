@@ -6,7 +6,7 @@ inherit
 
 	INSTRUCTION_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node, format
 		end
 
 feature -- Attributes
@@ -94,5 +94,26 @@ feature -- Type check, byte code production, dead_code_removal
 			Result.set_target (target.byte_node);
 			Result.set_source (source.byte_node);
 		end;
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconsitute text.
+		do
+			ctxt.begin;
+			ctxt.new_expression;
+			target.format (ctxt);
+			ctxt.put_special (assign_symbol);
+			ctxt.new_expression;
+			source.format (ctxt);
+			ctxt.commit;
+		end;
+		
+feature {}
+	assign_symbol: STRING is
+		do
+			Result := constant_assign_symbol;
+		end;
+		
+
+	constant_assign_symbol: STRING is " := ";
 
 end

@@ -7,7 +7,7 @@ inherit
 	INSTRUCTION_AS
 		redefine
 			type_check, byte_node,
-			find_breakable
+			find_breakable, format
 		end
 
 feature -- Attributes
@@ -108,4 +108,38 @@ feature -- Debugger
 			record_break_node;
 		end;
 
+feature -- Formatter
+		
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute	text
+		do
+			ctxt.begin;
+			ctxt.put_keyword ("if ");
+			ctxt.new_expression;
+			condition.format (ctxt);
+			ctxt.put_keyword (" then");
+			ctxt.indent_one_more;
+			ctxt.next_line;
+			ctxt.set_separator(";");
+			ctxt.new_line_between_tokens;
+			compound.format (ctxt);
+			ctxt.indent_one_less;
+			if elsif_list /= void then	
+				ctxt.next_line;
+				ctxt.set_separator(void);
+				elsif_list.format (ctxt);
+				ctxt.set_separator(";");
+			end;
+			if else_part /= void then
+				ctxt.next_line;
+				ctxt.put_keyword ("else");
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				else_part.format (ctxt);
+				ctxt.indent_one_less;
+			end;
+			ctxt.next_line;
+			ctxt.put_keyword ("end");
+			ctxt.commit;
+		end;
 end

@@ -7,7 +7,7 @@ inherit
 	INSTRUCTION_AS
 		redefine
 			type_check, byte_node,
-			find_breakable
+			find_breakable, format
 		end
 
 feature -- Attributes
@@ -114,4 +114,56 @@ feature -- Debugger
 			record_break_node
 		end
 
+
+
+feature -- Formatter
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			ctxt.put_keyword ("from");
+			ctxt.set_separator(";");
+			ctxt.separator_is_special;
+			ctxt.new_line_between_tokens;
+			if from_part /= void then
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				from_part.format (ctxt);
+				ctxt.indent_one_less;
+			end;
+			if invariant_part /= void then
+				ctxt.next_line;
+				ctxt.put_keyword("invariant");
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				invariant_part.format (ctxt);
+				ctxt.indent_one_less;
+			end;
+			if variant_part /= void then
+				ctxt.next_line;
+				ctxt.put_keyword("variant");
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				variant_part.format(ctxt);
+				ctxt.indent_one_less;
+			end;
+			ctxt.next_line;
+			ctxt.put_keyword("until");
+			ctxt.indent_one_more;
+			ctxt.next_line;
+			stop.format (ctxt);
+			ctxt.indent_one_less;
+			ctxt.next_line;
+			ctxt.put_keyword("loop");
+			if compound /= void then
+				ctxt.indent_one_more;
+				ctxt.next_line;
+				compound.format (ctxt);
+				ctxt.indent_one_less;
+			end;
+			ctxt.next_line;
+			ctxt.put_keyword("end");
+			ctxt.commit
+		end;
 end

@@ -6,7 +6,7 @@ inherit
 
 	EXPR_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node, format
 		end
 
 feature -- Attributes
@@ -39,6 +39,13 @@ feature -- Type check, byte code and dead code removal
 			-- Associated byte code
 		do
 			Result := call.byte_node;
+		end;
+
+	format(ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+			--| might be the right place for new_expression
+		do
+			call.format (ctxt);
 		end;
 
 end

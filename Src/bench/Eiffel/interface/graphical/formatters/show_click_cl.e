@@ -42,48 +42,69 @@ feature
 		local
 			last_cursor_position, last_top_position: INTEGER;
 			position_saved: BOOLEAN;
-			root_stone: CLASSC_STONE
+			root_stone: CLASSC_STONE;
+			retried: BOOLEAN;
+			tool: BAR_AND_TEXT
 		do
-			root_stone ?= text_window.root_stone;
-			if
-				do_format or else filtered or else
-				(text_window.last_format /= Current or
-				not equal (stone, root_stone))
-			then
+			if not retried then
+				root_stone ?= text_window.root_stone;
 				if
-					stone /= Void and then
-					(stone.is_valid and stone.clickable)
+					do_format or else filtered or else
+					(text_window.last_format /= Current or
+					not equal (stone, root_stone))
 				then
-					display_temp_header (stone);
-					set_global_cursor (watch_cursor);
-					text_window.clean;
-					text_window.set_file_name (file_name (stone));
-					display_info (0, stone);
-					if 
-						text_window.last_format = text_window.tool.showtext_command
-					then
-						last_cursor_position := text_window.cursor_position;
-						last_top_position := text_window.top_character_position;
-						position_saved := true
-					end;
-					text_window.set_editable;
-					text_window.show_image;
-					text_window.set_read_only;
-					if position_saved then
-						if last_cursor_position > text_window.size then
-							last_cursor_position := text_window.size
-						end;
-						if last_top_position > text_window.size then
-							last_top_position := text_window.size
-						end;
-						text_window.set_cursor_position (last_cursor_position);
-						text_window.set_top_character_position (last_top_position)
-					end;
-					text_window.set_root_stone (stone);
-					text_window.set_last_format (Current);
-					filtered := false;
-					display_header (stone);
-					restore_cursors
+					if stone /= Void and then stone.is_valid then
+						if stone.clickable then
+							display_temp_header (stone);
+							set_global_cursor (watch_cursor);
+							text_window.clean;
+							text_window.set_file_name (file_name (stone));
+							display_info (0, stone);
+							if 
+								text_window.last_format = 
+									text_window.tool.showtext_command
+							then
+								last_cursor_position := text_window.cursor_position;
+								last_top_position := text_window.top_character_position;
+								position_saved := true
+							end;
+							text_window.set_editable;
+							text_window.show_image;
+							text_window.set_read_only;
+							if position_saved then
+								if last_cursor_position > text_window.size then
+									last_cursor_position := text_window.size
+								end;
+								if last_top_position > text_window.size then
+									last_top_position := text_window.size
+								end;
+								text_window.set_cursor_position (last_cursor_position);
+								text_window.set_top_character_position (last_top_position)
+							end;
+							text_window.set_root_stone (stone);
+							text_window.set_last_format (Current);
+							filtered := false;
+							display_header (stone);
+							restore_cursors
+						else
+							tool ?= text_window.tool;
+							if tool /= Void then
+								tool.showtext_command.execute (stone)
+							end
+						end
+					end
+				end
+			else
+				warner (text_window).gotcha_call (w_Cannot_retrieve_info);
+				restore_cursors
+			end
+		rescue
+			if not Rescue_status.fail_on_rescue then
+				if original_exception = Io_exception then
+						-- We probably don't have the read permissions
+						-- on the server files.
+					retried := true;
+					retry
 				end
 			end
 		end;

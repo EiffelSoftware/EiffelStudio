@@ -600,6 +600,7 @@
 								</EV_TEXT_COMPONENT>
 							</item>
 						<item type="EV_HORIZONTAL_BOX"><Internal_properties ><id >60</id>
+								<name >search_parent_box</name>
 								</Internal_properties>
 							<EV_COLORIZABLE />
 							<EV_SENSITIVE />

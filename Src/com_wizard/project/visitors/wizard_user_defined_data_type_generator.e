@@ -469,7 +469,7 @@ feature {NONE} -- Implementation
 			create Result.make (1000)
 			Result.append ("EIF_TYPE_ID type_id = -1;%N%T")
 			Result.append ("EIF_PROCEDURE make = 0;%N%T")
-			Result.append ("EIF_OBJECT result = 0;%N%%NT")
+			Result.append ("EIF_OBJECT result = 0;%N%N%T")
 			Result.append ("type_id = eif_type_id (%"")
 			Result.append (a_class_name)
 			Result.append ("%");%N%T")

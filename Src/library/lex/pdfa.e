@@ -72,7 +72,7 @@ feature
 			already_in: BOOLEAN
 		do
 			keywords_list.finish;
-			keywords_list.add_right (word)
+			keywords_list.put_right (word)
 		end; -- add_keyword
 
 	set_final (s, r: INTEGER) is
@@ -123,7 +123,7 @@ feature
 				!!list.make;
 				put (list, source)
 			end;
-			item (source).add_right (target);
+			item (source).put_right (target);
 			item (source).forth
 		end; -- set_e_transition
 
@@ -381,7 +381,7 @@ feature {NONE}
 		do
 			if input_array.item (inp_ut).has (source) then
 				!!Result.make;
-				Result.add_right (source + 1)
+				Result.put_right (source + 1)
 			end
 		end; -- find_successors
 

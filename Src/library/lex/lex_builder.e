@@ -130,7 +130,7 @@ feature
 			end;
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
-			tool_list.add_right (fa);
+			tool_list.put_right (fa);
 			if bb /= ee then
 				!!c_name.make (8);
 				c_name.extend ('%'');
@@ -147,7 +147,7 @@ feature
 				c_name.extend ('%'')
 			end;
 			tool_names.finish;
-			tool_names.add_right (c_name)
+			tool_names.put_right (c_name)
 		end; -- interval
 
 	any_character is
@@ -173,9 +173,9 @@ feature
 			end;
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
-			tool_list.add_right (new_tool);
+			tool_list.put_right (new_tool);
 			tool_names.finish;
-			tool_names.add_right ("$.")
+			tool_names.put_right ("$.")
 		end; -- any_character
 
 	any_printable is
@@ -202,9 +202,9 @@ feature
 			end;
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
-			tool_list.add_right (new_tool);
+			tool_list.put_right (new_tool);
 			tool_names.finish;
-			tool_names.add_right ("$P")
+			tool_names.put_right ("$P")
 		end; -- any_printable
 
 	difference (r: INTEGER; c: CHARACTER) is
@@ -232,7 +232,7 @@ feature
 			end;
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
-			tool_list.add_right (new);
+			tool_list.put_right (new);
 			!!c_name.make (0);
 			tool_names.go_i_th (r);
 			c_name.append (tool_names.item);
@@ -241,7 +241,7 @@ feature
 			c_name.extend (c);
 			c_name.extend ('%'');
 			tool_names.finish;
-			tool_names.add_right (c_name)
+			tool_names.put_right (c_name)
 		end; -- difference
 
 	append (p, s: INTEGER) is
@@ -271,7 +271,7 @@ feature
 			end;
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
-			tool_list.add_right (new);
+			tool_list.put_right (new);
 			!!c_name.make (0);
 			tool_names.go_i_th (p);
 			c_name.append (tool_names.item);
@@ -279,7 +279,7 @@ feature
 			tool_names.go_i_th (s);
 			c_name.append (tool_names.item);
 			tool_names.finish;
-			tool_names.add_right (c_name)
+			tool_names.put_right (c_name)
 		end; -- append
 
 	append_optional (p, s: INTEGER) is
@@ -310,7 +310,7 @@ feature
 			end;
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
-			tool_list.add_right (new);
+			tool_list.put_right (new);
 			!!c_name.make (0);
 			tool_names.go_i_th (p);
 			c_name.append (tool_names.item);
@@ -320,7 +320,7 @@ feature
 			c_name.append (tool_names.item);
 			c_name.extend (']');
 			tool_names.finish;
-			tool_names.add_right (c_name)
+			tool_names.put_right (c_name)
 		end; -- append_optional
 
 	prepend_optional (p, s: INTEGER) is
@@ -351,7 +351,7 @@ feature
 			end;
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
-			tool_list.add_right (new);
+			tool_list.put_right (new);
 			!!c_name.make (0);
 			c_name.extend ('[');
 			tool_names.go_i_th (p);
@@ -361,7 +361,7 @@ feature
 			tool_names.go_i_th (s);
 			c_name.append (tool_names.item);
 			tool_names.finish;
-			tool_names.add_right (c_name)
+			tool_names.put_right (c_name)
 		end; -- prepend_optional
 
 	case_insensitive (c: INTEGER) is
@@ -382,7 +382,7 @@ feature
 			new.remove_case_sensitiveness;
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
-			tool_list.add_right (new);
+			tool_list.put_right (new);
 			tool_names.go_i_th (c);
 			!!c_name.make (0);
 			c_name.extend ('~');
@@ -390,7 +390,7 @@ feature
 			c_name.append (tool_names.item);
 			c_name.extend (')');
 			tool_names.finish;
-			tool_names.add_right (c_name)
+			tool_names.put_right (c_name)
 		end; -- case_insensitive
 
 	optional (c: INTEGER) is
@@ -414,14 +414,14 @@ feature
 			end;
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
-			tool_list.add_right (new);
+			tool_list.put_right (new);
 			tool_names.go_i_th (c);
 			!!c_name.make (0);
 			c_name.extend ('[');
 			c_name.append (tool_names.item);
 			c_name.extend (']');
 			tool_names.finish;
-			tool_names.add_right (c_name)
+			tool_names.put_right (c_name)
 		end; -- optional
 
 	iteration1 (c: INTEGER) is
@@ -445,7 +445,7 @@ feature
 			end;
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
-			tool_list.add_right (new);
+			tool_list.put_right (new);
 			tool_names.go_i_th (c);
 			!!c_name.make (0);
 			c_name.precede ('+');
@@ -453,7 +453,7 @@ feature
 			c_name.append (tool_names.item);
 			c_name.extend (')');
 			tool_names.finish;
-			tool_names.add_right (c_name)
+			tool_names.put_right (c_name)
 		end; -- iteration1
 
 	iteration (c: INTEGER) is
@@ -478,7 +478,7 @@ feature
 			end;
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
-			tool_list.add_right (new);
+			tool_list.put_right (new);
 			tool_names.go_i_th (c);
 			!!c_name.make (0);
 			c_name.precede ('*');
@@ -486,7 +486,7 @@ feature
 			c_name.append (tool_names.item);
 			c_name.extend (')');
 			tool_names.finish;
-			tool_names.add_right (c_name)
+			tool_names.put_right (c_name)
 		end; -- iteration
 
 	iteration_n (n, c: INTEGER) is
@@ -522,7 +522,7 @@ feature
 			end;
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
-			tool_list.add_right (a_prefix);
+			tool_list.put_right (a_prefix);
 			tool_names.go_i_th (c);
 			!!c_name.make (0);
 			c_name.append (n.out);
@@ -530,7 +530,7 @@ feature
 			c_name.append (tool_names.item);
 			c_name.extend (')');
 			tool_names.finish;
-			tool_names.add_right (c_name)
+			tool_names.put_right (c_name)
 		end; -- iteration_n
 
 	union2 (a, b: INTEGER) is
@@ -585,7 +585,7 @@ feature
 			end;
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
-			tool_list.add_right (new);
+			tool_list.put_right (new);
 			!!c_name.make (0);
 			tool_names.go_i_th (a);
 			c_name.append (tool_names.item);
@@ -593,7 +593,7 @@ feature
 			tool_names.go_i_th (b);
 			c_name.append (tool_names.item);
 			tool_names.finish;
-			tool_names.add_right (c_name)
+			tool_names.put_right (c_name)
 		end; -- union2
 
 	union (a, b: INTEGER) is
@@ -672,7 +672,7 @@ feature
 			end;
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
-			tool_list.add_right (new);
+			tool_list.put_right (new);
 			!!c_name.make (0);
 			from
 				tool_names.go_i_th (a);
@@ -685,7 +685,7 @@ feature
 			end;
 			c_name.append (tool_names.item);
 			tool_names.finish;
-			tool_names.add_right (c_name)
+			tool_names.put_right (c_name)
 		end; -- union
 
 	set_word (word: STRING) is
@@ -717,12 +717,12 @@ feature
 			end;
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
-			tool_list.add_right (new_tool);
+			tool_list.put_right (new_tool);
 			tool_name := clone (word);
 			tool_name.precede ('"');
 			tool_name.extend ('"');
 			tool_names.finish;
-			tool_names.add_right (tool_name)
+			tool_names.put_right (tool_name)
 		end; -- set_word
 
 	up_to (word: STRING) is
@@ -779,7 +779,7 @@ feature
 			end;
 			last_created_tool := last_created_tool + 1;
 			tool_list.finish;
-			tool_list.add_right (new_tool);
+			tool_list.put_right (new_tool);
 			!!r_name.make (4);
 			r_name.extend ('-');
 			r_name.extend ('>');
@@ -787,7 +787,7 @@ feature
 			r_name.append (word);
 			r_name.extend ('"');
 			tool_names.finish;
-			tool_names.add_right (r_name)
+			tool_names.put_right (r_name)
 		end; -- up_to
 
 	put_keyword (s: STRING; exp: INTEGER) is
@@ -843,10 +843,10 @@ feature
 				!!token_type_list.make
 			end;
 			selected_tools.finish;
-			selected_tools.add_right (i);
+			selected_tools.put_right (i);
 			selected_tools.finish;
 			token_type_list.finish;
-			token_type_list.add_right (i);
+			token_type_list.put_right (i);
 			token_type_list.finish;
 			tool_list.go_i_th (i);
 			nb_states := nb_states + tool_list.item.nb_states
@@ -894,7 +894,7 @@ feature
 			until
 				i = s.count + 1
 			loop
-				l.add_right (categories_table.item (charcode (s.item (i))));
+				l.put_right (categories_table.item (charcode (s.item (i))));
 				l.forth;
 				i := i + 1
 			end;
@@ -1162,7 +1162,7 @@ feature {NONE}
 			until
 				i = kwd.count + 1
 			loop
-				l.add_right (categories_table.item (charcode (kwd.item (i))));
+				l.put_right (categories_table.item (charcode (kwd.item (i))));
 				l.forth;
 				i := i + 1
 			end;

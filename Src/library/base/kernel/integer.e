@@ -51,7 +51,7 @@ feature -- Basic operations
 			-- Built-in
 		end;
 
-	infix "/" (other: INTEGER): DOUBLE is
+	infix "/" (other: INTEGER): REAL is
 			-- Division by `other'
 		do
 			-- Built-in

@@ -52,7 +52,7 @@ feature
 			!!set_tree.make (nb_states, 0);
 			e_set := closure (start_number);
 			search_in_tree (e_set);
-			sets_list.add_right (e_set);
+			sets_list.put_right (e_set);
 			!!old_move.make (nb_states);
 			from
 				!!dstates.make (greatest_input);
@@ -80,7 +80,7 @@ feature
 							if new_set then
 								dstates.set_state;
 								sets_list.finish;
-								sets_list.add_right (e_set)
+								sets_list.put_right (e_set)
 							end;
 							dstates.go_i_th (set_position);
 							state_memory := dstates.item;

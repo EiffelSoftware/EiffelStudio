@@ -34,7 +34,7 @@ feature
 				Result := false
 			else
 				from
-					structure_list.add_right (production);
+					structure_list.put_right (production);
 					child_start;
 					Result := true
 				until
@@ -58,7 +58,7 @@ feature {CONSTRUCT}
 			b: BOOLEAN
 		do
 			if not check_recursion_list.has (production) then
-				check_recursion_list.add_left (production);
+				check_recursion_list.put_left (production);
 				if print_mode.item then
 					print_children
 				end;

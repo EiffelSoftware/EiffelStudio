@@ -49,7 +49,7 @@ feature
 		do
 			finish;
 			if (before or empty) or else not message.is_equal (item) then
-				add_right (message);
+				put_right (message);
 				if display then
 					output.putstring (message);
 					output.new_line

@@ -3,6 +3,7 @@
 */
 
 #include "eif_portable.h"
+#include "eif_macros.h"
 
 #if defined EIF_WIN32 || defined EIF_OS2
 	/* unistd.h doesn't exist */
@@ -27,5 +28,5 @@ EIF_REFERENCE c_get_hostname()
 	if (gethostname (hostname, sizeof(hostname)) == -1)
 		hostname[0] = '\0';
 
-	return (EIF_REFERENCE) makestr (hostname, strlen(hostname));
+	return (EIF_REFERENCE) RTMS (hostname);
 }

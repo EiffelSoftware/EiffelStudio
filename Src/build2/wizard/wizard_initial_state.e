@@ -16,6 +16,8 @@ inherit
 	GB_SHARED_TOOLS
 	
 	GB_SHARED_SYSTEM_STATUS
+	
+	GB_SHARED_XML_HANDLER
 
 creation
 	make
@@ -30,6 +32,7 @@ feature -- Initialization is
 				-- Set up the build interface if not already done.
 			if main_window.is_empty then
 				main_window.build_interface
+				xml_handler.load_components	
 			end
 		end
 		
@@ -46,13 +49,10 @@ feature {NONE} -- Implementation
 	display_state_text is
 			-- Set the messages for this state.
 		do
-			title.set_text ("Welcome to the%Nmy_wizard_application Wizard")
+			title.set_text ("Welcome to the%NEiffel Build Wizard")
 			message.set_text ("Describe here what your wizard does.")
 		end
 	
-	--pixmap_icon_location: STRING is "eiffel_wizard_icon.bmp"
-			-- Icon for the Eiffel Store Wizard
-			
 	pixmap_icon_location: FILE_NAME is
 			--
 		once

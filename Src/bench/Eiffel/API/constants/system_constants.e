@@ -146,8 +146,6 @@ feature {NONE}
 			Result := Platform_constants.Preobj
 		end
 
-	Project_txt: STRING is "project.txt"
-
 	Profiler: STRING is "Profiler"
 
 	Removed_log_file_name: STRING is "REMOVED";
@@ -162,11 +160,17 @@ feature {NONE}
 
 	W_code: STRING is "W_code"
 
+	project_extension: STRING is ".epr"
+
+	info_flag_begin: STRING is "-- System name is "
+
+	info_flag_end: STRING is "-- end of info"
+
 feature {NONE} -- Versioning
 
 	Precompilation_id_tag: STRING is "precompilation_id"
 	Version_number: STRING is "4.3 a"
-	Version_number_tag: STRING is "eiffelbench_version_number"
+	Version_number_tag: STRING is "version_number"
 	Storable_version_number: STRING is "4.3 a"
 	Storable_version_number_tag: STRING is "storable_version_number"
 

@@ -26,7 +26,7 @@ feature -- Basic operations
 			create cpp_writer.make
 			cpp_writer.set_header_file_name (Ecom_generated_rt_globals_header_file_name)
 
-			cpp_writer.set_header ("Global variables used generated code.")
+			cpp_writer.set_header ("Global variables used in generated code.")
 
 			cpp_writer.add_import ("ecom_rt_globals.h")
 			cpp_writer.add_import (Generated_ec_class_name + ".h")

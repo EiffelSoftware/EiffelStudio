@@ -2186,7 +2186,7 @@ feature {NONE} -- Implementation
 	platform_is_windows: BOOLEAN is
 			-- Is `Current' executing on Windows platform?
 		once
-			Result := (create {EV_ENVIRONMENT}).supported_image_formats.has ("ICO")
+			Result := (create {PLATFORM}).is_windows
 		end
 		
 	application: EV_APPLICATION is

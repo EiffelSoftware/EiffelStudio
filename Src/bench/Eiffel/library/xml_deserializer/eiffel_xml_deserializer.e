@@ -14,8 +14,6 @@ class
 
 inherit
 	INTERNAL
-		rename
-			dynamic_type_from_string as internal_dynamic_type_from_string
 		export
 			{NONE} all
 		end
@@ -210,7 +208,8 @@ feature {NONE} -- Object retrieval from node.
 			when String_type then
 				Result := string_array_from_xml (a_xml_element, l_lower, l_lower + l_count - 1)
 			else
-				Result := reference_array_from_xml (a_xml_element, l_lower, l_lower + l_count - 1)
+				Result := reference_array_from_xml (l_attr.value,
+					a_xml_element, l_lower, l_lower + l_count - 1)
 			end
 			if Result /= Void then
 				l_ar ?= Result
@@ -342,15 +341,14 @@ feature {NONE} -- Internal speedup
 		end
 
 	dynamic_type_from_id (an_id: INTEGER): INTEGER is
-			-- Given a type name `name' retrieves its corresponding 
-			-- dynamic type.
+			-- Given a type id `an_id' retrieves its corresponding dynamic type.
 		local
 			l_full_name: STRING
 		do
 			Result := internal_dynamic_types.item (an_id)
 			if Result = 0 then
 				l_full_name := types.item (an_id)
-				Result := internal_dynamic_type_from_string (l_full_name)
+				Result := dynamic_type_from_string (l_full_name)
 				internal_dynamic_types.put (Result, an_id)
 			end
 		end
@@ -492,16 +490,32 @@ feature {NONE} -- Array manipulations
 			valid_array: Result.lower = lower and Result.upper = upper
 		end
 
-	reference_array_from_xml (a_xml_element: like xml_element; lower, upper: INTEGER): ARRAY [ANY] is
+	reference_array_from_xml (a_array_element_type: STRING; a_xml_element: like xml_element; lower, upper: INTEGER): ARRAY [ANY] is
 			-- Integer array as described in XML file
 		require
+			a_array_element_type_not_void: a_array_element_type /= Void
+			a_array_element_type_valid: a_array_element_type.is_integer or
+				a_array_element_type.is_equal (none_node)
 			valid_bounds: lower <= upper + 1
+		local
+			l_element_type_id: INTEGER
+			l_array_type: STRING
 		do
-			create Result.make (lower, upper)
-			parse_array (a_xml_element, agent Result.put (?, ?))
+			if not a_array_element_type.is_equal (none_node) then
+				l_element_type_id := dynamic_type_from_id (a_array_element_type.to_integer)
+					-- Create ARRAY
+				l_array_type := "ARRAY ["
+				l_array_type.append (type_name_of_type (l_element_type_id))
+				l_array_type.append_character (']')
+				
+				Result ?= new_instance_of (dynamic_type_from_string (l_array_type))
+				Result.make (lower, upper)
+				parse_array (a_xml_element, agent Result.put (?, ?))
+			end
 		ensure
-			non_void_array: Result /= Void
-			valid_array: Result.lower = lower and Result.upper = upper
+			array_set_if_not_none_type:
+				not a_array_element_type.is_equal (none_node) implies
+					Result /= Void and then (Result.lower = lower and Result.upper = upper)
 		end
 
 	put_integer (array: ARRAY [INTEGER]; value: STRING; index: INTEGER) is

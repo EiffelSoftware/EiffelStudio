@@ -291,6 +291,9 @@ feature -- Basic operations
 				if not local_parent_object.is_full then
 					display.drop_actions.extend (agent add_new_object_in_parent (?))
 					layout.drop_actions.extend (agent add_new_object_in_parent (?))
+					display.drop_actions.extend (agent add_new_component_in_parent (?))
+					layout.drop_actions.extend (agent add_new_component_in_parent (?))
+					
 
 					
 					-- Need a veto pebble function that checks correctly.
@@ -306,6 +309,13 @@ feature -- Basic operations
 		do
 			Result := True
 		end
+		
+	add_new_component_in_parent (a_component: GB_COMPONENT) is
+			-- Add `a_component' to parent of `Current', before `Current'.
+		do
+			add_new_object_in_parent (new_object (xml_handler.xml_element_representing_named_component (a_component.name)))
+		end
+		
 		
 	add_new_object_in_parent (an_object: GB_OBJECT) is
 			-- Add `an_object' to parent of `Current', before `Current'.
@@ -409,20 +419,6 @@ feature {GB_OBJECT_HANDLER} -- Implementation
 				new_object_editor (Current)
 			else
 				Result := Current
-			end
-		end
-		
-	set_up_drop_actions_for_all_objects is
-			-- Check state of shift key, and set up drop actions
-			-- to accept `pebble' ready for the transport.
-		local
-			environment: EV_ENVIRONMENT
-		do
-			create environment
-			if environment.application.shift_pressed then
-				object_handler.for_all_objects_build_shift_drop_actions_for_new_object
-			else
-				object_handler.for_all_objects_build_drop_actions_for_new_object
 			end
 		end
 

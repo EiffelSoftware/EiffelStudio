@@ -1,0 +1,18 @@
+; This file is maintained by HCW. Do not modify this file directly.
+
+[OPTIONS]
+LCID=0x409 0x0 0x0 ; English (United States)
+REPORT=Yes
+FTS=1
+CNT=eiffelcom.cnt
+COPYRIGHT=Interactive Software Engineering
+HLP=eiffelcom.hlp
+
+[FILES]
+com.rtf
+gettingstarted.rtf
+library.rtf
+wizard.rtf
+
+[WINDOWS]
+ECOM="EiffelCOM Help",(541,102,469,684),20740,,,f3; EiffelCOM help files

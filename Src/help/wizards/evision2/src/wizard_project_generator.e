@@ -22,7 +22,8 @@ feature -- Basic Operations
 			tuple: TUPLE [STRING, STRING]
 			main_dialog_id: STRING
 			project_name_lowercase: STRING
-			project_location: STRING
+			project_location: FILE_NAME
+			ace_location: FILE_NAME
 			tuple2: TUPLE [STRING, STRING]
 			a_string: STRING
 			a_string2: STRING
@@ -30,10 +31,12 @@ feature -- Basic Operations
 				-- cached variables
 			project_name_lowercase := clone (wizard_information.project_name)
 			project_name_lowercase.to_lower
-			project_location := wizard_information.project_location
+			create project_location.make_from_string (wizard_information.project_location)
 
 				-- Update the ace file location.
-			wizard_information.set_ace_location (project_location+"\"+project_name_lowercase+".ace")
+			create ace_location.make_from_string (wizard_information.project_location)
+			ace_location.set_file_name (project_name_lowercase + ".ace")
+			wizard_information.set_ace_location (ace_location)
 
 			create map_list.make
 			add_common_parameters (map_list)

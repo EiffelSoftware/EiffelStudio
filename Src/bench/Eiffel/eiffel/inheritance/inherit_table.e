@@ -1239,7 +1239,7 @@ debug ("ACTIVITY")
 	io.putstring ("joining feature: ");
 	io.putstring (inherited_feature.feature_name);
 	io.putstring ("%N%Tfrom class: ");
-	io.putstring (inherited_feature.written_class.class_name);
+	io.putstring (inherited_feature.written_class.name);
 	io.new_line;
 end;
 						end;
@@ -1546,7 +1546,7 @@ end;
 			elseif Tmp_rep_info_server.has (a_class.id) then
 debug ("REPLICATION")
 	io.error.putstring ("removing class ");
-	io.error.putstring (a_class.class_name);
+	io.error.putstring (a_class.name);
 	io.error.putstring (" from tmp_rep_info server%N");
 end;
 				Tmp_rep_info_server.remove (a_class.id);

@@ -163,7 +163,7 @@ end;
 debug ("CASE_FEATURE")
 	io.error.putstring ("%T%T%TResult: ");
 -- Not available (class_id in an INTEGER)
---	io.error.putstring (System.class_of_id (result_type.class_id).class_name);
+--	io.error.putstring (System.class_of_id (result_type.class_id).name);
 	io.error.new_line;
 end
 								end;
@@ -209,7 +209,7 @@ end
 debug ("CASE_FEATURE")
 	io.error.putstring ("%T%T%TArgument: ");
 -- Not available (class_id in an INTEGER)
---	io.error.putstring (System.class_of_id (result_type.class_id).class_name);
+--	io.error.putstring (System.class_of_id (result_type.class_id).name);
 	io.error.new_line;
 end
 								if c_l.after then

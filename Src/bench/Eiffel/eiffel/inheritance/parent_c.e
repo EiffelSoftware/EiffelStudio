@@ -45,7 +45,7 @@ feature
 		require
 			parent_exists: parent /= Void;
 		do
-			Result := parent.class_name;
+			Result := parent.name;
 		end;
 
 	set_parent_type (t: CL_TYPE_A) is

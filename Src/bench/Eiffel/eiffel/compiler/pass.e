@@ -148,7 +148,7 @@ end;
 			until
 				changed_classes.after
 			loop
-				io.error.putstring (changed_classes.item.associated_class.class_name);
+				io.error.putstring (changed_classes.item.associated_class.name);
 				io.error.new_line;
 				changed_classes.forth
 			end;

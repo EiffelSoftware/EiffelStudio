@@ -121,7 +121,7 @@ feature
 		do
 debug
 	io.error.putstring ("========= START TRACE, class ");
-	io.error.putstring (new_t.associated_class.class_name);
+	io.error.putstring (new_t.associated_class.name);
 	io.error.putstring (" ============%N");
 end
 			from

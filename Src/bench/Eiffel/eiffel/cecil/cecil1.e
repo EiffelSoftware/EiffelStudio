@@ -55,7 +55,7 @@ debug ("CECIL")
     io.putstring ("Generating entry for feature: ");
     io.putstring (feat.feature_name);
     io.putstring (" of class: ");
-    io.putstring (written_type.associated_class.class_name);
+    io.putstring (written_type.associated_class.name);
     io.putstring (", encoded name is: ");
     io.putstring (routine_name);
     io.new_line;

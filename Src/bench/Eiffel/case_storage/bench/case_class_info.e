@@ -60,7 +60,7 @@ feature {CASE_CLUSTER_INFO}
 					classc.feature_table.has_introduced_new_externals,
 					False,
 					False,
-					classc.class_name.is_equal (System.root_class_name));
+					classc.name.is_equal (System.root_class_name));
 						-- The above is possible since there is
 						-- no renaming of classes in the compiler yet.
 

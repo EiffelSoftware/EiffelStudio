@@ -86,7 +86,7 @@ feature
 					feat_tbl := associated_class.feature_table;
 debug ("BYTE_CODE");
 io.error.putstring ("Associated class: ");
-io.error.putstring (associated_class.class_name);
+io.error.putstring (associated_class.name);
 io.error.putstring (", feature name: ");
 io.error.putstring (feature_name);
 io.error.putstring ("%NFEATURE_TABLE: ");

@@ -170,9 +170,9 @@ feature {NONE}
 debug ("MARKING")
     io.error.putstring (original_feature.feature_name);
     io.error.putstring (" from ");
-    io.error.putstring (actual_class.class_name);
+    io.error.putstring (actual_class.name);
     io.error.putstring (" written in ");
-    io.error.putstring (written_class.class_name);
+    io.error.putstring (written_class.name);
     io.error.new_line;
 end;
 				depend_list := Depend_server.item (written_class.id).item
@@ -201,7 +201,7 @@ debug ("MARKING")
 			io.error.putstring ("%TMarking ");
 			io.error.putstring (feat.feature_name);
 			io.error.putstring (" from ");
-			class_name := clone (feat.written_class.class_name)
+			class_name := clone (feat.written_class.name)
 			class_name.to_upper;
 			io.error.putstring (class_name);
 			io.error.new_line;

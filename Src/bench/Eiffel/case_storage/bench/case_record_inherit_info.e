@@ -64,7 +64,7 @@ feature {NONE} -- Recording information for eiffelcase
 						no_repeated_parents.item.id);
 debug ("CASE")
 	io.error.putstring ("%T%T%TParent: ");
-	io.error.putstring (System.class_of_id (no_repeated_parents.item).class_name);
+	io.error.putstring (System.class_of_id (no_repeated_parents.item).name);
 	io.error.new_line;
 end
 				p_l.extend (inherit_data);

@@ -53,7 +53,7 @@ feature
 	trace is
 		do
 			io.putstring ("written_in class: ");
-			io.putstring (System.class_of_id (written_in).class_name);
+			io.putstring (System.class_of_id (written_in).name);
 			io.new_line;
 			io.putstring ("body_index: ");
 			io.putstring (body_index.dump);

@@ -128,7 +128,7 @@ feature -- Generation
 
 debug ("DOLLAR")
 	io.putstring ("ADDRESS_TABLE.generate_feature ");
-	io.putstring (a_class.class_name);
+	io.putstring (a_class.name);
 	io.putchar (' ');
 	io.putstring (a_feature.feature_name)
 	io.new_line

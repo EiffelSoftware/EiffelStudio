@@ -60,7 +60,7 @@ feature -- Attributes
 			end;
 debug
 	io.error.putstring ("Dispatch : ");
-	io.error.putstring (a_class.class_name);
+	io.error.putstring (a_class.name);
 	a_class.id.trace;
 	io.error.new_line;
 	io.error.putstring (generic_type.dump);
@@ -143,7 +143,7 @@ end;
 							if not class_type.type.is_valid then
 debug
 	io.error.putstring ("Removing a type of ");
-	io.error.putstring (a_class.class_name);
+	io.error.putstring (a_class.name);
 	io.error.new_line;
 end;
 								System.class_types.put (Void, class_type.type_id);

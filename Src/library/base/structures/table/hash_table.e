@@ -207,13 +207,20 @@ feature -- Insertion, deletion
 			valid_keys: valid_key (new_key) and valid_key (old_key)
 		local
 			old_index: INTEGER;
+			dead_key: H;
+			dead_item: G
 		do
 			internal_search (old_key);
 			if control = Found_constant then
 				old_index := position;
 				put (content.item (old_index), new_key);
 				if control /= Conflict_constant then
-					remove (old_key);
+					count := count - 1;
+					if position /= old_index then
+						keys.put (dead_key, old_index);
+						content.put (dead_item, old_index);
+						deleted_marks.put (true, old_index);
+					end;
 					control := Changed_constant
 				end
 			end

@@ -137,7 +137,8 @@ feature {NONE} -- Implementation
 
 			if 
 				not a_data_type_visitor.is_structure_pointer and 
-				not a_data_type_visitor.is_interface_pointer 
+				not a_data_type_visitor.is_interface_pointer and
+				not a_data_type_visitor.is_coclass_pointer 
 			then
 				generate_postcondition (name_for_feature (a_field_descriptor.name), a_field_descriptor.data_type, True)
 				from
@@ -228,12 +229,12 @@ feature {NONE} -- Implementation
 				body.append (Dot)
 				body.append (To_c_function)
 
-			elseif a_data_type_visitor.is_interface_pointer then
-				body.append (an_argument_name)
-				body.append (Dot)
-				body.append ("item")
-
-			elseif a_data_type_visitor.is_structure_pointer or a_data_type_visitor.is_structure then
+			elseif 
+				a_data_type_visitor.is_interface_pointer or
+				a_data_type_visitor.is_coclass_pointer or
+				a_data_type_visitor.is_structure_pointer or 
+				a_data_type_visitor.is_structure 
+			then
 				body.append (an_argument_name)
 				body.append (Dot)
 				body.append ("item")
@@ -375,8 +376,14 @@ feature {NONE} -- Implementation
 				an_argument.append (Integer_type)
 				body.append (Eif_integer)
 
-			elseif a_data_visitor.is_interface or a_data_visitor.is_interface_pointer
-				or a_data_visitor.is_structure or a_data_visitor.is_structure_pointer then
+			elseif 
+				a_data_visitor.is_interface or 
+				a_data_visitor.is_interface_pointer or 
+				a_data_visitor.is_coclass or 
+				a_data_visitor.is_coclass_pointer or 
+				a_data_visitor.is_structure or 
+				a_data_visitor.is_structure_pointer 
+			then
 				an_argument.append (Pointer_type)
 				body.append (a_data_visitor.c_type)
 				if a_data_visitor.is_structure or a_data_visitor.is_interface then

@@ -90,8 +90,12 @@ feature {NONE} -- Implementation
 						if visitor.is_basic_type then
 							add_warning (Current, Not_pointer_type)
 
-						elseif visitor.is_array_basic_type or 
-								visitor.is_interface_pointer or visitor.is_structure_pointer then
+						elseif 
+							visitor.is_array_basic_type or 
+							visitor.is_interface_pointer or 
+							visitor.is_coclass_pointer or 
+							visitor.is_structure_pointer 
+						then
 							tmp_string.append (visitor.c_type)
 							tmp_string.append (Space)
 							tmp_string.append (arguments.item.name)
@@ -120,7 +124,11 @@ feature {NONE} -- Implementation
 						if visitor.is_basic_type then
 							tmp_string.append (visitor.cecil_type)
 
-						elseif visitor.is_interface_pointer or visitor.is_structure_pointer then
+						elseif 
+							visitor.is_interface_pointer or 
+							visitor.is_coclass_pointer or 
+							visitor.is_structure_pointer 
+						then
 							tmp_string.append (visitor.c_type)
 	
 						elseif visitor.is_array_basic_type or visitor.is_interface or visitor.is_structure then
@@ -378,8 +386,12 @@ feature {NONE} -- Implementation
 				Result.append (name)
 				Result.append (Space_equal_space)
 
-				if visitor.is_array_basic_type or visitor.is_structure_pointer or
-				 		visitor.is_interface_pointer then
+				if 
+					visitor.is_array_basic_type or 
+					visitor.is_structure_pointer or
+				 	visitor.is_interface_pointer or
+				 	visitor.is_coclass_pointer 
+				then
 					Result.append (name)
 				else
 					if visitor.need_generate_ec then

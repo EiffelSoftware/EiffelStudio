@@ -138,8 +138,12 @@ feature {NONE} -- Implementation
 							Result.append (Space)
 							Result.append (Asterisk)
 
-						elseif visitor.is_structure_pointer or visitor.is_interface_pointer or
-								visitor.is_basic_type_ref then
+						elseif 
+							visitor.is_structure_pointer or 
+							visitor.is_interface_pointer or
+							visitor.is_coclass_pointer or
+							visitor.is_basic_type_ref 
+						then
 							Result.append (visitor.c_type)
 						else
 							Result.append (Eif_object)
@@ -159,8 +163,12 @@ feature {NONE} -- Implementation
 							Result.append (Space)
 							Result.append (Asterisk)
 
-						elseif visitor.is_structure_pointer or visitor.is_interface_pointer or
-								visitor.is_basic_type_ref then
+						elseif 
+							visitor.is_structure_pointer or 
+							visitor.is_interface_pointer or
+							visitor.is_coclass_pointer or
+							visitor.is_basic_type_ref 
+						then
 							Result.append (visitor.c_type)
 
 						elseif visitor.is_enumeration then
@@ -236,8 +244,15 @@ feature {NONE} -- Implementation
 					tmp_string.append (Colon)
 					tmp_string.append (Space)
 
-					if visitor.is_interface or visitor.is_structure or visitor.is_structure_pointer 
-							or visitor.is_array_basic_type or visitor.is_interface_pointer then
+					if 
+						visitor.is_interface or 
+						visitor.is_structure or 
+						visitor.is_structure_pointer or 
+						visitor.is_coclass or 
+						visitor.is_coclass_pointer or 
+						visitor.is_array_basic_type or 
+						visitor.is_interface_pointer 
+					then
 						tmp_string.append (Pointer_type)
 					elseif visitor.is_enumeration then
 						tmp_string.append (Integer_type)
@@ -322,8 +337,14 @@ feature {NONE} -- Implementation
 							tmp_string.append (Dollar)
 							tmp_string.append (Tmp_clause)
 							tmp_string.append (arguments.item.name)
-						elseif visitor.is_interface or visitor.is_interface_pointer or visitor.is_structure_pointer 
-								or visitor.is_structure then
+						elseif 
+							visitor.is_interface or 
+							visitor.is_interface_pointer or 
+							visitor.is_coclass or 
+							visitor.is_coclass_pointer or 
+							visitor.is_structure_pointer or
+							visitor.is_structure 
+						then
 							tmp_string.append (arguments.item.name)
 							tmp_string.append (Item_function)
 						else

@@ -70,7 +70,11 @@ feature -- Basic operations
 				tmp_string := clone (visitor.c_type)
 				tmp_string.append (Space)
 				tmp_string.append (Asterisk)
-			elseif visitor.is_structure_pointer or visitor.is_interface_pointer then
+			elseif 
+				visitor.is_structure_pointer or 
+				visitor.is_interface_pointer or
+				visitor.is_coclass_pointer 
+			then
 				tmp_string := clone (visitor.c_type)
 
 			else

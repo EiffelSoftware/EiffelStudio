@@ -34,11 +34,10 @@ feature
 		deferred
 		end;
 
-	generate (file: INDENT_FILE; id: CLASS_ID) is
-			-- Generate assertion value in `file'.
+	generate (buffer: GENERATION_BUFFER; id: CLASS_ID) is
+			-- Generate assertion value in `buffer'.
 		require
-			good_argument: file /= Void;
-			is_open: file.is_open_write;
+			good_argument: buffer /= Void;
 		deferred
 		end;
 

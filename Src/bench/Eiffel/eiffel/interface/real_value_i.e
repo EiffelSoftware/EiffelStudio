@@ -39,10 +39,10 @@ feature
 			Result := t.is_real or t.is_double;
 		end;
 
-	generate (file: INDENT_FILE) is
-			-- Generate value in `file'.
+	generate (buffer: GENERATION_BUFFER) is
+			-- Generate value in `buffer'.
 		do
-			file.putstring (real_val);
+			buffer.putstring (real_val);
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is

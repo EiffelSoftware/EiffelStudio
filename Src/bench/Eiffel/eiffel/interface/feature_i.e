@@ -1691,11 +1691,10 @@ feature {NONE} -- log file
 
 feature -- C code generation
 
-	generate (class_type: CLASS_TYPE; file: INDENT_FILE) is
-			-- Generate feature written in `class_type' in `file'.
+	generate (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER) is
+			-- Generate feature written in `class_type' in `buffer'.
 		require
-			valid_file: file /= Void
-			file_open_for_writing: file.is_open_write or file.is_open_append
+			valid_buffer: buffer /= Void
 			written_in_type: class_type.associated_class.id.is_equal (generation_class_id)
 			not_deferred: not is_deferred
 		local
@@ -1705,7 +1704,7 @@ feature -- C code generation
 			if used then
 					-- `generate' from BYTE_CODE will log the feature name
 					-- and encoded name in `used_features_log_file' from SYSTEM_I
-				generate_header (file)
+				generate_header (buffer)
 
 				tmp_body_id := body_id
 				if Tmp_opt_byte_server.has (tmp_body_id) then
@@ -1733,15 +1732,14 @@ feature -- C code generation
 			end
 		end
 
-	generate_header (file: INDENT_FILE) is
+	generate_header (buffer: GENERATION_BUFFER) is
 			-- Generate a header before the body of the feature
 		require
-			valid_file: file /= Void
-			file_open_for_writing: file.is_open_write or file.is_open_append
+			valid_buffer: buffer /= Void
 		do
-			file.putstring ("/* ")
-			file.putstring (feature_name)
-			file.putstring (" */%N%N")
+			buffer.putstring ("/* ")
+			buffer.putstring (feature_name)
+			buffer.putstring (" */%N%N")
 		end
 
 feature -- Debug purpose
@@ -2000,14 +1998,14 @@ feature -- Case storage informatio
 			end
 		end
 
-	fill_body ( s : S_FEATURE_DATA_R40 ) is
+	fill_body (s: S_FEATURE_DATA_R40) is
 		local
-			s_body : S_FEATURE_BODY
-			bod1 : FEATURE_AS
-			bod2 : BODY_AS
-			bod3 : ROUTINE_AS
-			bod4 : CONSTANT_AS	
-			li_st  : LINKED_LIST [STRING]	
+			s_body: S_FEATURE_BODY
+			bod1: FEATURE_AS
+			bod2: BODY_AS
+			bod3: ROUTINE_AS
+			bod4: CONSTANT_AS	
+			li_st: LINKED_LIST [STRING]	
 		do
 			!! li_st.make
 			bod1 := body
@@ -2036,139 +2034,138 @@ feature -- Case storage informatio
 			s.set_body(s_body)		
 		end		
 
-	deal_with_rescue ( li : EIFFEL_LIST [ INSTRUCTION_AS ]; li_st : LINKED_LIST [ STRING ] ) is
-	local
-		instruc : INSTRUCTION_AS
-		format_c : FORMAT_CONTEXT
-		ss : STRING
-	do
-		li_st.extend("rescue")	
-		from
-			li.start
-		until
-			li.after
-		loop			
-			instruc := li.item
-			!! format_c.make_for_case
-			instruc.simple_format(format_c)
-			!!ss.make ( 20 )
-			if format_c.text/= Void then
-						from
-							format_c.text.start
-						until
-							format_c.text.after
-						loop
-							ss.append(format_c.text.item.image)	
-							format_c.text.forth
-						end	
+	deal_with_rescue (li: EIFFEL_LIST [INSTRUCTION_AS]; li_st: LINKED_LIST [STRING] ) is
+		local
+			instruc: INSTRUCTION_AS
+			format_c: FORMAT_CONTEXT
+			ss: STRING
+		do
+			li_st.extend("rescue")	
+			from
+				li.start
+			until
+				li.after
+			loop			
+				instruc := li.item
+				!! format_c.make_for_case
+				instruc.simple_format(format_c)
+				!!ss.make ( 20 )
+				if format_c.text/= Void then
+					from
+						format_c.text.start
+					until
+						format_c.text.after
+					loop
+						ss.append(format_c.text.item.image)	
+						format_c.text.forth
+					end	
 					li_st.extend(ss)
+				end
+				li.forth
 			end
-			li.forth
 		end
-	end
 
-
-
-	deal_with_body ( rot_body : ROUT_BODY_AS ; li_st : LINKED_LIST [ STRING ] ) is
-	local
-		intern : INTERNAL_AS
-		instruc : INSTRUCTION_AS
-		format_c : FORMAT_CONTEXT
-		ss : STRING	
-		defer : DEFERRED_AS
-		exter : EXTERNAL_AS
-	do
-		intern ?= rot_body
-		defer ?= rot_body
-		exter ?= rot_body
-
-		if defer/= Void then
-			-- Deferred
-			-- nothing special to add 
-		end
-		if exter/= Void then
-			-- external	
+	deal_with_body (rot_body: ROUT_BODY_AS; li_st: LINKED_LIST [STRING]) is
+		local
+			intern: INTERNAL_AS
+			instruc: INSTRUCTION_AS
+			format_c: FORMAT_CONTEXT
+			ss: STRING	
+			defer: DEFERRED_AS
+			exter: EXTERNAL_AS
+		do
+			intern ?= rot_body
+			defer ?= rot_body
+			exter ?= rot_body
+	
+			if defer/= Void then
+				-- Deferred
+				-- nothing special to add 
+			end
+			if exter/= Void then
+					-- external	
 				!! format_c.make_for_case
 				exter.simple_format(format_c)
 				!!ss.make ( 20 )
 				if format_c.text/= Void then
-						from
-							format_c.text.start
-						until
-							format_c.text.after
-						loop
-							ss.append(format_c.text.item.image)	
-							format_c.text.forth
-						end	
-						li_st.extend(ss)
-				end
-		end
-		if intern/= Void then
-			-- Internal
-			if intern.is_once then
-				li_st.extend("Once") 
-			else
-				li_st.extend("Do")
-			end
-			if intern.compound/= Void then
-				from
-					intern.compound.start
-				until
-					intern.compound.after
-				loop
-					instruc := intern.compound.item
-					!! format_c.make_for_case
-					instruc.simple_format(format_c)
-					!!ss.make ( 20 )
-					if format_c.text/= Void then
-						from
-							format_c.text.start
-						until
-							format_c.text.after
-						loop
-							ss.append(format_c.text.item.image)	
-							format_c.text.forth
-						end	
-					end
-					li_st.extend(ss)	
-					intern.compound.forth
-				end
-			end		
-		end
-	end
-
-	deal_with_loc (loc:FIXED_LIST[ TYPE_DEC_AS] ; li_st : LINKED_LIST [ STRING] ) is
-	local
-		id_list : FIXED_LIST [ ID_AS ]
-		line : TYPE_DEC_AS
-		st : STRING	
-	do
-		from
-			loc.start
-		until
-			loc.after
-		loop
-			line := loc.item
-			if line.id_list/= Void then
-				from
-					line.id_list.start
-					!! st.make ( 20 )
-				until
-					line.id_list.after
-				loop
-					if st.count>0 then
-						st.append(",")
+					from
+						format_c.text.start
+					until
+						format_c.text.after
+					loop
+						ss.append(format_c.text.item.image)	
+						format_c.text.forth
 					end	
-					st.append(line.id_list.item)
-					line.id_list.forth	
+					li_st.extend(ss)
 				end
-				st.append(":")
-				st.append(loc.item.type.dump)	
+			end
+			if intern/= Void then
+					-- Internal
+				if intern.is_once then
+					li_st.extend("Once") 
+				else
+					li_st.extend("Do")
+				end
+				if intern.compound/= Void then
+					from
+						intern.compound.start
+					until
+						intern.compound.after
+					loop
+						instruc := intern.compound.item
+						!! format_c.make_for_case
+						instruc.simple_format(format_c)
+						!!ss.make ( 20 )
+						if format_c.text/= Void then
+							from
+								format_c.text.start
+							until
+								format_c.text.after
+							loop
+								ss.append(format_c.text.item.image)	
+								format_c.text.forth
+							end	
+						end
+						li_st.extend(ss)	
+						intern.compound.forth
+					end
+				end		
+			end
+		end
+
+	deal_with_loc (loc: FIXED_LIST [TYPE_DEC_AS]; li_st: LINKED_LIST [STRING] ) is
+		local
+			id_list: FIXED_LIST [ ID_AS ]
+			line: TYPE_DEC_AS
+			st: STRING	
+		do
+			from
+				loc.start
+			until
+				loc.after
+			loop
+				line := loc.item
+				if line.id_list/= Void then
+					from
+						line.id_list.start
+						!! st.make ( 20 )
+					until
+						line.id_list.after
+					loop
+						if st.count>0 then
+							st.append(",")
+						end	
+						st.append(line.id_list.item)
+						line.id_list.forth	
+					end
+					st.append(":")
+					st.append(loc.item.type.dump)	
+				end	
+				loc.forth
+				li_st.extend(st)	
 			end	
-			loc.forth
-			li_st.extend(st)	
-		end	
-	end
+		end
+
 	case_feature_key: S_FEATURE_KEY is
 			-- Case feature Key for Current
 		local

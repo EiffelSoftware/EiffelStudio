@@ -74,11 +74,10 @@ feature
 			Result := True;
 		end;
 
-	generate (file: INDENT_FILE) is
+	generate (buffer: GENERATION_BUFFER) is
 			-- Generate value in `file'.
 		require
-			good_argument: file /= Void;
-			is_open: file.is_open_write or file.is_open_append;
+			good_argument: buffer /= Void;
 		deferred
 		end;
 

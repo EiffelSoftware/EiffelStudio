@@ -3,17 +3,13 @@
 class BOOLEAN_B 
 
 inherit
-
 	CLASS_B
 		redefine
 			actual_type, generate_cecil_value, cecil_value
 		end
 
-
 creation
-
 	make
-
 	
 feature 
 
@@ -26,7 +22,7 @@ feature
 	generate_cecil_value is
 			-- Generate Cecil type value
 		do
-			System.Cecil_file.putstring ("SK_BOOL");
+			generation_buffer.putstring ("SK_BOOL");
 		end;
 
 	cecil_value: INTEGER is

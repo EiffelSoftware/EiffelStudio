@@ -203,11 +203,10 @@ feature
 			Result := unselect;
 		end;
 
-	generate (class_type: CLASS_TYPE; file: INDENT_FILE) is
-				-- Generate feature written in `class_type' in `file'.
+	generate (class_type: CLASS_TYPE; buffer: GENERATION_BUFFER) is
+				-- Generate feature written in `class_type' in `buffer'.
 		require else
-			valid_file: file /= Void;
-			file_open_for_writing: file.is_open_write or file.is_open_append;
+			valid_buffer: buffer /= Void;
 			written_in_type: equal (class_type.associated_class.id, generation_class_id);
 			not_deferred: not is_deferred;
 		local
@@ -216,7 +215,7 @@ feature
 				-- if the external declaration has a macro or a signature
 				-- then encapsulated is True; otherwise do nothing
 			if encapsulated then
-				generate_header (file);
+				generate_header (buffer);
 				byte_code := Byte_server.disk_item (body_id);
 					-- Generation of C code for an Eiffel feature written in
 					-- the associated class of the current type.

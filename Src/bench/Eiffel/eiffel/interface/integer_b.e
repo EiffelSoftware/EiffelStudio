@@ -3,14 +3,12 @@
 class INTEGER_B 
 
 inherit
-
 	CLASS_B
 		redefine
 			actual_type, generate_cecil_value, cecil_value
 		end
 
 creation
-
 	make
 	
 feature 
@@ -24,7 +22,7 @@ feature
 	generate_cecil_value is
 			-- Generate Cecil type value
 		do
-			System.cecil_file.putstring ("SK_INT");
+			generation_buffer.putstring ("SK_INT");
 		end;
 
 	cecil_value: INTEGER is

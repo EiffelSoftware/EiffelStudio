@@ -42,12 +42,12 @@ feature
 			Result := t.is_character;
 		end;
 
-	generate (file: INDENT_FILE) is
-			-- Generate value in `file'.
+	generate (buffer: GENERATION_BUFFER) is
+			-- Generate value in `buffer'.
 		do
-			file.putstring ("(EIF_CHARACTER) '");
-			file.escape_char (char_val);
-			file.putchar ('%'');
+			buffer.putstring ("(EIF_CHARACTER) '");
+			buffer.escape_char (char_val);
+			buffer.putchar ('%'');
 		end;
 
 	make_byte_code (ba: BYTE_ARRAY) is

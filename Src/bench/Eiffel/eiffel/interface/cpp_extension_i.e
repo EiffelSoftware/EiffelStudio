@@ -71,7 +71,7 @@ feature -- Comparison
 
 feature -- Code generation
 
-	generate_external_name (gen_file: INDENT_FILE; external_name: STRING;
+	generate_external_name (buffer: GENERATION_BUFFER; external_name: STRING;
 				entry: POLY_TABLE [ENTRY]; cl_type: CL_TYPE_I; ret_type: TYPE_C) is
 			-- Generate the C name associated with the extension
 		do
@@ -93,35 +93,35 @@ feature -- Code generation
 
 	generate (external_name: STRING; parameters: BYTE_LIST [EXPR_B]) is
 		local
-			generated_file: INDENT_FILE
+			buffer: GENERATION_BUFFER
 		do
 			check
 					-- VAPE on precondition so ...
 				final_mode: Context.final_mode
 			end
 
-			generated_file := Context.generated_file
+			buffer := Context.buffer
 
-			generated_file.putchar ('(')
+			buffer.putchar ('(')
 
 			inspect
 				type
 			when standard, data_member then
-				generated_file.putchar ('(')
+				buffer.putchar ('(')
 				generate_cpp_object_access (parameters)
-				generated_file.putstring (")->")
-				generated_file.putstring (external_name);
+				buffer.putstring (")->")
+				buffer.putstring (external_name);
 			when static, static_data_member then
-				generated_file.putstring (class_name)
-				generated_file.putstring ("::")
-				generated_file.putstring (external_name);
+				buffer.putstring (class_name)
+				buffer.putstring ("::")
+				buffer.putstring (external_name);
 			when new then
-				generated_file.putstring ("new ")
-				generated_file.putstring (class_name)
+				buffer.putstring ("new ")
+				buffer.putstring (class_name)
 			when delete then
-				generated_file.putstring ("delete (")
+				buffer.putstring ("delete (")
 				generate_cpp_object_access (parameters)
-				generated_file.putchar (')')
+				buffer.putchar (')')
 			end
 
 			inspect
@@ -129,21 +129,21 @@ feature -- Code generation
 			when delete, data_member, static_data_member then
 					-- Nothing to generate
 			when standard, static, new then
-				generated_file.putchar ('(')
+				buffer.putchar ('(')
 				generate_arguments_with_cast (parameters)
-				generated_file.putchar (')')
+				buffer.putchar (')')
 			end
  
-			generated_file.putchar (')')
+			buffer.putchar (')')
 		end
 
 	generate_parameter_list (parameters: BYTE_LIST [EXPR_B]) is
 			-- Generate parameters for C++ extension
 		local
-			generated_file: INDENT_FILE
+			buffer: GENERATION_BUFFER
 		do
 			if parameters /= Void then
-				generated_file := Context.generated_file
+				buffer := Context.buffer
 
 					-- Cast will be done in encapsulation
 				from
@@ -153,7 +153,7 @@ feature -- Code generation
 				loop
 					parameters.item.print_register;
 					if not parameters.islast then
-						generated_file.putstring (", ");
+						buffer.putstring (", ");
 					end;
 					parameters.forth;
 				end;
@@ -168,13 +168,13 @@ feature {NONE} -- Code generation
 			non_void_arg: parameters /= Void
 			valid_arg: parameters.count >= 1
 		local
-			generated_file: INDENT_FILE
+			buffer: GENERATION_BUFFER
 		do
-			generated_file := Context.generated_file
+			buffer := Context.buffer
 
-			generated_file.putchar ('(')
-			generated_file.putstring (class_name)
-			generated_file.putstring ("*)")
+			buffer.putchar ('(')
+			buffer.putstring (class_name)
+			buffer.putstring ("*)")
 			parameters.first.print_register
 		end
 
@@ -187,11 +187,11 @@ feature {NONE} -- Code generation
 			i: INTEGER
 			generate_cast: BOOLEAN
 			arg_types: ARRAY [STRING]
-			generated_file: INDENT_FILE
+			buffer: GENERATION_BUFFER
 		do
 			if parameters /= Void then
 				from
-					generated_file := Context.generated_file
+					buffer := Context.buffer
 					if generate_parameter_cast then
 						generate_cast := True
 						arg_types := argument_types
@@ -207,13 +207,13 @@ feature {NONE} -- Code generation
 				loop
 					expr := parameters.item
 					if generate_cast then
-						generated_file.putchar ('(')
-						generated_file.putstring (arg_types.item (i))
-						generated_file.putstring (") ")
+						buffer.putchar ('(')
+						buffer.putstring (arg_types.item (i))
+						buffer.putstring (") ")
 					end
 					expr.print_register;
 					if not parameters.islast then
-						generated_file.putstring (", ")
+						buffer.putstring (", ")
 					end
 					parameters.forth
 					i := i + 1

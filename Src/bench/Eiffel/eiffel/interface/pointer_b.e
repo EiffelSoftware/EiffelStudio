@@ -24,7 +24,7 @@ feature
 	generate_cecil_value is
 			-- Generate Cecil type value
 		do
-			System.cecil_file.putstring ("SK_POINTER");
+			generation_buffer.putstring ("SK_POINTER");
 		end; -- generate_cecil_value
 
 	cecil_value: INTEGER is

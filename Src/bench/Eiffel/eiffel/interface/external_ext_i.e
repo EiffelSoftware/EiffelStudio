@@ -142,11 +142,11 @@ feature -- Code generation
 			end
 		end
 
-	generate_external_name (gen_file: INDENT_FILE; external_name: STRING;
+	generate_external_name (buffer: GENERATION_BUFFER; external_name: STRING;
 				entry: POLY_TABLE [ENTRY]; type: CL_TYPE_I; ret_type: TYPE_C) is
 			-- Generate the C name associated with the extension
 		do
-			gen_file.putstring (external_name)
+			buffer.putstring (external_name)
 			if has_standard_prototype then
 				Extern_declarations.add_routine (ret_type, external_name);
 			end
@@ -173,10 +173,10 @@ feature -- Code generation
 			i: INTEGER;
 			generate_cast: BOOLEAN
 			arg_types: ARRAY [STRING]
-			generated_file: INDENT_FILE
+			buffer: GENERATION_BUFFER
 		do
 			if parameters /= Void then
-				generated_file := Context.generated_file
+				buffer := Context.buffer
 
 				generate_cast := Context.final_mode and then
 					generate_parameter_cast
@@ -194,13 +194,13 @@ feature -- Code generation
 					expr := parameters.item;
 						-- add cast before parameter
 					if generate_cast then
-						generated_file.putchar ('(');
-						generated_file.putstring (arg_types.item (i));
-						generated_file.putstring (") ");
+						buffer.putchar ('(');
+						buffer.putstring (arg_types.item (i));
+						buffer.putstring (") ");
 					end;
 					expr.print_register;
 					if not parameters.islast then
-						generated_file.putstring (", ");
+						buffer.putstring (", ");
 					end;
 					parameters.forth;
 					i := i + 1;

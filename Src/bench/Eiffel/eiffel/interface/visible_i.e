@@ -3,9 +3,9 @@
 class VISIBLE_I 
 
 inherit
-
-	SHARED_CODE_FILES;
-	SHARED_WORKBENCH;
+	SHARED_CODE_FILES
+	SHARED_WORKBENCH
+	SHARED_GENERATION
 	SHARED_BYTE_CONTEXT
 		rename
 			context as byte_context
@@ -37,7 +37,6 @@ feature
 			Result := prime_size (nb_visible (a_class));
 		end;
 
-	
 feature {NONE}
 
 	primes: PRIMES is
@@ -50,11 +49,6 @@ feature {NONE}
 			-- Prime number greater than 5 * i / 4
 		do
 			Result := primes.higher_prime ((5 * i) // 4);
-		end;
-
-	cecil_file: INDENT_FILE is
-		do
-			Result := System.cecil_file
 		end;
 
 feature 

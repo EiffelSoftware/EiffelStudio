@@ -39,8 +39,15 @@ feature -- Access
 
 	name: STRING is
 			-- Cluster name.
+		local
+			ass_i: ASSEMBLY_I
 		do
-			Result := compiler_cluster.cluster_name
+			ass_i ?= compiler_cluster
+			if ass_i /= Void then
+				Result := ass_i.assembly_name
+			else
+				Result := compiler_cluster.cluster_name
+			end
 		ensure then
 			result_exists: Result /= Void
 		end
@@ -185,6 +192,15 @@ feature -- Access
 			Result := compiler_cluster.is_library
 		end
 		
+	is_external_cluster: BOOLEAN is
+			-- Is this cluster used for external classes?
+		local
+			ass_i: ASSEMBLY_I
+		do
+			ass_i ?= compiler_cluster
+			Result := ass_i /= Void
+		end
+	
 feature {NONE} -- Implementation
 
 	compiler_cluster: CLUSTER_I

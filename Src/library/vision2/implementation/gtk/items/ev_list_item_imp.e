@@ -83,13 +83,13 @@ feature -- Status report
 	is_first: BOOLEAN is
 			-- Is the item first in the list ?
 		do
-			Result := ( gtk_list_child_position(parent_imp.widget, Current.widget) + 1 = 1 )
+			Result := ( gtk_list_child_position (parent_imp.widget, Current.widget) + 1 = 1 )
 		end
 
 	is_last: BOOLEAN is
 			-- Is the item last in the list ?
 		do
-			Result := ( gtk_list_child_position(parent_imp.widget, Current.widget) + 1 = c_gtk_list_rows(parent_imp.widget) )
+			Result := ( gtk_list_child_position (parent_imp.widget, Current.widget) + 1 = c_gtk_list_rows (parent_imp.widget) )
 		end
 
 feature -- Status setting
@@ -115,7 +115,7 @@ feature -- Status setting
 		local
                         a: ANY
 		do
-			a ?= txt.to_c
+			a := txt.to_c
 			
 			set_label_widget (gtk_label_new ($a))
 			gtk_widget_show (label_widget)
@@ -126,9 +126,7 @@ feature -- element change
 
 	set_parent (par: EV_LIST) is
 			-- Make `par' the new parent of the widget.
-			-- `par' can be Void then the parent is the screen.
-		local
-			par_imp: EV_LIST_IMP
+			-- `par' can be Void.
 		do
 			if parent_imp /= Void then
 				gtk_object_ref (widget)
@@ -136,12 +134,11 @@ feature -- element change
 				parent_imp := Void
 			end
 			if par /= Void then
-				par_imp ?= par.implementation
+				parent_imp ?= par.implementation
 				check
-					parent_not_void: par_imp /= Void
+					parent_not_void: parent_imp /= Void
 				end
-				parent_imp ?= par_imp
-				par_imp.add_item (Current)
+				parent_imp.add_item (Current)
 				show
 				gtk_object_unref (widget)
 			end
@@ -172,7 +169,7 @@ feature -- Event -- removing command association
 			-- Empty the list of commands to be executed when
 			-- the item is double-clicked.
 		do
-			check False end
+			old_remove_dblclk (1)
 		end
 
 end -- class EV_LIST_ITEM_IMP

@@ -22,12 +22,17 @@ feature {NONE} -- Initialization
 			-- widgets with parents.
 		require
 			valid_parent: par /= Void
+		local
+			par_imp: EV_CONTAINER_IMP
 		do
 			implementation.set_interface (Current)
-			implementation.test_and_set_parent (par)
-			implementation.parent_imp.add_child (implementation)
+			par_imp ?= par.implementation
+			check
+				parent_not_void: par_imp /= Void
+			end
+			par_imp.add_child (implementation)
+			implementation.plateform_build (par_imp)
 			implementation.build
-			implementation.initialize_colors
 			managed := par.manager
  		ensure
  			exists: not destroyed
@@ -95,7 +100,7 @@ feature -- Status report
 		
 	horizontal_resizable: BOOLEAN is
 			-- Does the widget change its width when the parent
-			-- want to resize the widget
+			-- or the user want to resize the widget
 		require
 			exists: not destroyed
 		do
@@ -104,7 +109,7 @@ feature -- Status report
 
 	vertical_resizable: BOOLEAN is
 			-- Does the widget change its width when the parent
-			-- want to resize the widget
+			-- or the user want to resize the widget
 		require
 			exists: not destroyed
 		do

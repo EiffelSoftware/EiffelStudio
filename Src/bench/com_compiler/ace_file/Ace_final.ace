@@ -81,11 +81,6 @@ default
 
 
 cluster
-	all compiler_tests:		"$EIFFEL_SRC\com_compiler\compiler_tests"
-		exclude
-			"CVS"; 
-		end
-
 	all com_generated:		"$EIFFEL_SRC\com_compiler"
 		exclude
 			"EIFGEN"; "to_replace"; "generated"; "cvs"; "Clib"; "ace_file"; "idl"; "Client_Only"; "generated_client"; 

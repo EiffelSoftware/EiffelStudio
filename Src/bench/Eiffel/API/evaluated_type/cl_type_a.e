@@ -357,6 +357,8 @@ feature -- Debugging
 		do
 			if is_valid then
 				Result := associated_class.name_in_upper
+			else
+				Result := "Class not in system anymore"
 			end
 		end
 

@@ -8,7 +8,7 @@
 
 #include <stdio.h>
 
-#ifdef __WINDOWS_386__
+#ifdef EIF_WIN_31
 extern int print_err_msg(FILE *err, char *StrFmt, ...);
 #else
 #define print_err_msg fprintf

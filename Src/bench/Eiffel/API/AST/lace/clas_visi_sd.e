@@ -119,7 +119,7 @@ feature -- Initialization
 					!!table.make (export_restriction.count);
 					export_restriction.start;
 				until
-					export_restriction.offright
+					export_restriction.after
 				loop
 					table.put (export_restriction.item);
 					export_restriction.forth;
@@ -132,7 +132,7 @@ feature -- Initialization
 					renamings.start;
 					!!rename_table.make (renamings.count);
 				until
-					renamings.offright
+					renamings.after
 				loop
 					cuple := renamings.item;
 					rename_table.put (cuple.new_name, cuple.old_name);

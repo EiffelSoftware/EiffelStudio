@@ -95,6 +95,7 @@ feature -- Lace recompilation
 				if not cluster_file.exists then
 					!!vd01;
 					vd01.set_path (path);
+					vd01.set_cluster_name (cluster_name);
 					Error_handler.insert_error (vd01);
 					Error_handler.raise_error;
 				end;

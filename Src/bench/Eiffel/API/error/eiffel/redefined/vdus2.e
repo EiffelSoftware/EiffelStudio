@@ -42,8 +42,10 @@ feature
 			-- Build specific explanation image for current error
 			-- in `error_window'.
 		do
-			put_string ("%Tfeature ");
+			put_string ("Feature: ");
 			a_feature.append_clickable_signature (error_window, a_feature.written_class);
+			put_string ("%NIn Undefine clause for parent: ");
+			parent.append_clickable_name (error_window);
 			new_line
 		end
 

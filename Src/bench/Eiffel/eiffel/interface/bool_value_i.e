@@ -51,4 +51,9 @@ feature
 			end;
 		end;
 
+	vqmc: VQMC is
+		do
+			!VQMC1!Result;
+		end;
+
 end

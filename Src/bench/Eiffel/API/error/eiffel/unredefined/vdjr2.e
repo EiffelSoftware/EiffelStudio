@@ -6,12 +6,8 @@ inherit
 
 	VDJR1
 		redefine
-			subcode
+			build_explain
 		end;
-
-feature
-
-	subcode: INTEGER is 2;
 
 feature
 
@@ -22,6 +18,15 @@ feature
 			-- Assign `i' to `argument_number'.
 		do
 			argument_number := i;
+		end;
+
+	build_explain is
+		do
+			put_string ("Argument number: ");
+			put_int (argument_number);
+			new_line;
+			print_types;
+			print_signatures;
 		end;
 
 end

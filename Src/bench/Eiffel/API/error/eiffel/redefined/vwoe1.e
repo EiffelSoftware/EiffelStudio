@@ -7,20 +7,16 @@ inherit
 	VWOE
 		rename
 			build_explain as vwoe_build_explain
-		redefine
-			subcode
 		end;
 
 	VWOE
 		redefine
-			build_explain, subcode
+			build_explain
 		select
 			build_explain
 		end
 	
 feature
-
-	subcode: INTEGER is 1;
 
 	formal_type: TYPE_A;
 			-- Formal argument type

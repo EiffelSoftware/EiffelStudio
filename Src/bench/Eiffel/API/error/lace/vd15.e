@@ -11,22 +11,26 @@ inherit
 
 feature
 
-	node: D_OPTION_SD;
-			-- Option node
+	option_name: STRING;
 
-	set_node (n: like node) is
-			-- Assign `n' to `node'.
+	option_value: STRING;
+
+	set_option_name (s: STRING) is
 		do
-			node := n;
+			option_name := s;
+		end;
+
+	set_option_value (s: STRING) is
+		do
+			option_value := s;
 		end;
 
 	build_explain is
 		do
-			put_string ("Option name: `");
-			put_string (node.option.option_name);
-			put_string ("'%NOption value: `");
-			put_string (node.value.value);
-			put_char ('%'');
+			put_string ("Option: ");
+			put_string (option_name);
+			put_string ("%NInvalid option value: ");
+			put_string (option_value);
 			new_line
 		end;
 

@@ -11,31 +11,20 @@ inherit
 	
 feature 
 
-	type1: TYPE_A;
+	left_type: TYPE_A;
 			-- Left type of the equality
 
-	type2: TYPE_A;
+	right_type: TYPE_A;
 			-- Right type of the equality
 
-	node: BIN_EQ_AS;
-			-- Involved AS node
-
-	set_type1 (t: TYPE_A) is
-			-- Assign `t' to `type1'.
+	set_right_type (t: TYPE_A) is
 		do
-			type1 := t;
+			right_type := t;
 		end;
 
-	set_type2 (t: TYPE_A) is
-			-- Assign `t' to `type2'.
+	set_left_type (t: TYPE_A) is
 		do
-			type2 := t;
-		end;
-
-	set_node (n: BIN_EQ_AS) is
-			-- Assign `n' to `node'.
-		do
-			node := n;
+			left_type := t;
 		end;
 
 	code: STRING is "VWEQ";
@@ -45,10 +34,10 @@ feature
 			-- Build specific explanation image for current error
 			-- in `error_window'.
 		do
-			put_string ("%Ttype1 = ");
-			put_string (type1.dump);
-			put_string ("%N%Ttype2 = ");
-			put_string (type2.dump);
+			put_string ("Left-hand type: ");
+			left_type.append_clickable_signature (error_window);
+			put_string ("%NRight-hand type: ");
+			right_type.append_clickable_signature (error_window);
 			new_line
 		end
 

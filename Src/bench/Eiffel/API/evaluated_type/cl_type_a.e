@@ -13,6 +13,7 @@ inherit
 			meta_type,
 			same_as,
 			good_generics,
+			error_generics,
 			has_expanded,
 			is_valid,
 			format
@@ -67,6 +68,13 @@ feature
 			-- parameters in its formal generic declarations ?
 		do
 			Result := associated_class.generics = Void;
+		end;
+
+	error_generics: VTUG is
+		do
+			!!Result;
+			Result.set_type (Current);
+			Result.set_base_class (associated_class);
 		end;
 
 	has_expanded: BOOLEAN is

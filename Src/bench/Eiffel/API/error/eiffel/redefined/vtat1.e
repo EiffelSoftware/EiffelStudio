@@ -5,7 +5,7 @@
 --	4. anchor is a procedure
 --	5. cycle involving like arguments
 
-class VTAT1 
+class VTAT1 OBSOLETE "NOT THE SAME MEANING AS THE BOOK"
 
 inherit
 
@@ -18,17 +18,6 @@ feature
 
 	type: TYPE;
 			-- Type non evaluated
-
-	body_id: INTEGER;
-			-- Body id of the feature involved in.
-			-- [Note that this feature is written in the class of id
-			-- `class_id'.]
-
-	set_body_id (i: INTEGER) is
-			-- Assign `i' to `body_id'.
-		do
-			body_id := i;
-		end;
 
 	set_type (t: TYPE) is
 			-- Assign `t' to `type'.
@@ -45,9 +34,8 @@ feature
 			-- Build specific explanation explain for current error
 			-- in `error_window'.
 		do
-			put_string ("%Ttype: ");
--- FIXME: pass the classc for the type as argument
-			put_string (type.dump);
+			put_string ("Anchor type: ");
+			type.append_clickable_signature (error_window);
 			new_line;
 		end;
 

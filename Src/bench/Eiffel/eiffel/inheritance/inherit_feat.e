@@ -267,9 +267,8 @@ feature
 				info := deferred_features.item;
 				if info.parent.is_undefining (feature_name) then
 					!!vdus3;
-					vdus3.set_class_id (System.current_class.id);
-					vdus3.set_parent
-							(System.class_of_id (info.parent.parent_id));
+					vdus3.set_class (System.current_class);
+					vdus3.set_parent (info.parent.parent);
 					vdus3.set_a_feature (info.a_feature);
 					Error_handler.insert_error (vdus3);
 				end;
@@ -285,9 +284,8 @@ feature
 					a_feature := info.a_feature;
 					if not a_feature.undefinable then
 						!!vdus2;
-						vdus2.set_class_id (System.current_class.id);
-						vdus2.set_parent
-								(System.class_of_id (info.parent.parent_id));
+						vdus2.set_class (System.current_class);
+						vdus2.set_parent (info.parent.parent);
 						vdus2.set_a_feature (a_feature);
 						Error_handler.insert_error (vdus2);
 						features.forth;
@@ -361,10 +359,9 @@ feature
 				if Result and then not inherit_info.a_feature.redefinable then
 						-- Cannot redefine frozen feature, constant or once
 					!!vdrs2;
-					vdrs2.set_class_id (System.current_class.id);
+					vdrs2.set_class (System.current_class);
 					vdrs2.set_feature_name (feature_name);
-					vdrs2.set_body_id (inherit_info.a_feature.body_id);
-					vdrs2.set_parent_id (inherit_info.parent.parent_id);
+					vdrs2.set_parent (inherit_info.parent.parent);
 					Error_handler.insert_error (vdrs2);
 				end;
 				features.forth;

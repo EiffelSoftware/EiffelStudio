@@ -1,7 +1,7 @@
 -- Error when an argument of a redeclaration is expanded (resp. not expanded)
 -- and the precursor argument is not argument (resp. expanded).
 
-class VE02A 
+class VE02A obsolete "NOT DEFINED IN THE BOOK"
 
 inherit
 

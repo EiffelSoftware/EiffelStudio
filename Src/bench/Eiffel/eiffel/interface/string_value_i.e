@@ -51,4 +51,9 @@ feature
 			ba.append_raw_string (str_val);
 		end;
 
+	vqmc: VQMC is
+		do
+			!VQMC5!Result;
+		end;
+
 end

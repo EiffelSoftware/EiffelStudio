@@ -5,19 +5,28 @@ class VLEC
 inherit
 
 	EIFFEL_ERROR
+		redefine
+			build_explain
+		end;
 
 feature 
 
-	class_type: CLASS_TYPE;
+	client: CLASS_C;
 			-- Unvalid class type
 
 	code: STRING is "VLEC";
 			-- Error code
 
-	set_class_type (t: like class_type) is
-			-- Assign `t' to `class_type'.
+	set_client (c: CLASS_C) is
 		do
-			class_type := t;
+			client := c;
+		end;
+
+	build_explain is
+		do
+			put_string ("Name of class involved in cycle: ");
+			client.append_clickable_name (error_window);
+			new_line;
 		end;
 
 end

@@ -22,12 +22,12 @@ feature
 
 	build_explain is
 		do
-			put_string ("Conflicting clusters: `");
-			put_string (other_cluster.cluster_name);
-			put_string ("' and `");
-			put_string (cluster.cluster_name);
-			put_string ("';%N");
 			put_class_name;
+			put_string ("First cluster: ");
+			put_string (other_cluster.cluster_name);
+			put_string ("%NSecond cluster: ");
+			put_string (cluster.cluster_name);
+			new_line;
 		end;
 
 end

@@ -13,7 +13,7 @@ feature -- Debug pupose
 
 	Error_string: STRING is
 		do
-			Result := "Warning ";
+			Result := "Warning";
 		end;
 
 end

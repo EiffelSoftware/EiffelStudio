@@ -16,22 +16,13 @@ feature
 			Result := 1;
 		end;
 
-	attribute_name: ID_AS;
+	attribute_name: STRING;
 			-- Attribute name in the strip expresssion
 
-	strip_expr: UN_STRIP_AS;
-			-- Strip expression
-
-	set_attribute_name (s: ID_AS) is
+	set_attribute_name (s: STRING) is
 			-- Assign `s' to `attribute_name'.
 		do
 			attribute_name := s;
-		end;
-
-	set_strip_expr (expr: like strip_expr) is
-			-- Assign `expr' to `strip_expr'.
-		do
-			strip_expr := expr;
 		end;
 
 	code: STRING is "VWST";
@@ -40,10 +31,8 @@ feature
 	build_explain is
 			-- Build specific explanation image for current error
 			-- in `error_window'.
-		local
-			compiled_class: CLASS_C
 		do
-			put_string ("%Tattribute name: ");
+			put_string ("Name: ");
 			put_string (attribute_name);
 			new_line
 		end

@@ -50,6 +50,7 @@ feature {NONE}
 			current_skeleton: SKELETON;
 			expanded_desc: EXPANDED_DESC;
 			client_type: CLASS_TYPE;
+			client: CLASS_C;
 			id: INTEGER;
 			vlec: VLEC;
 			finished: BOOLEAN;
@@ -73,12 +74,13 @@ end;
 				else
 					expanded_desc ?= attr_desc;
 					client_type := System.class_type_of_id (expanded_desc.type_id);
-					id := client_type.associated_class.id;
+					client := client_type.associated_class;
+					id := client.id;
 					if id = current_type.associated_class.id then
 							-- Found expanded circuit
 						!!vlec;
-						vlec.set_class_id (id);
-						vlec.set_class_type (current_type);
+						vlec.set_class (current_type.associated_class);
+						vlec.set_client (class_type.associated_class);
 						Error_handler.insert_error (vlec);
 					else
 						id_set.put (id);

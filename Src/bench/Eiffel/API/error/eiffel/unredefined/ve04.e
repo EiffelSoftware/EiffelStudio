@@ -2,7 +2,7 @@
 --	1. Anchor in generical parameters
 --	2. NONE cannot be a parent
 
-class VE04 
+class VE04 obsolete "NOT DEFINED IN THE BOOK"
 
 inherit
 

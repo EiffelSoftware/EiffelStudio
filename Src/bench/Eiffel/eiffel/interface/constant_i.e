@@ -64,16 +64,15 @@ feature
 		local
 			actual_type: TYPE_A;	
 			good_constant_type: BOOLEAN;
-			vqmc2: VQMC2;
+			vqmc: VQMC;
 		do
 			old_check_types (feat_tbl);
 			actual_type := type.actual_type;
 			if not value.valid_type (actual_type) then
-				!!vqmc2;
-				vqmc2.set_class_id (written_in);
-				vqmc2.set_feature_name (feature_name);
-				vqmc2.set_constant_value (value);
-				Error_handler.insert_error (vqmc2);
+				vqmc := value.vqmc;
+				vqmc.set_class (written_class);
+				vqmc.set_feature_name (feature_name);
+				Error_handler.insert_error (vqmc);
 			end;
 		end;
 		

@@ -2,10 +2,6 @@
 
 class CONSTRAINT_INFO 
 
-inherit
-
-	WINDOWS
-
 feature 
 
 	type: GEN_TYPE_A;
@@ -42,19 +38,20 @@ feature
 			formal_number := i;
 		end;
 
-	build_explain is
+	build_explain (error_window: CLICK_WINDOW) is
 		require
 			type /= Void;
 			type1 /= Void;
 			type2 /= Void;
 		do
-			error_window.put_string (type.dump);
-			error_window.put_string (" [");
+			error_window.put_string ("For type: ");
+			type.append_clickable_signature (error_window);
+			error_window.put_string ("%NArgument number: ");
 			error_window.put_int (formal_number);
-			error_window.put_string ("]: ");
-			error_window.put_string (type1.dump);
-			error_window.put_string (" doesn't conform to ");
-			error_window.put_string (type2.dump);
+			error_window.put_string ("]:%NActual generic parameter: ");
+			type2.append_clickable_signature (error_window);
+			error_window.put_string ("%NType to which it should conform: ");
+			type1.append_clickable_signature (error_window);
 			error_window.new_line;
 		end
 

@@ -35,15 +35,20 @@ feature
 	build_explain is
 			-- Build specific explanation image for current error
 			-- in `error_window'.
+		local
+			r_class: CLASS_C;
+			p_class: CLASS_C;
 		do
-			put_string ("%Tprecursor: ");
-			precursor.append_clickable_signature (error_window, precursor.written_class);
+			r_class := redeclaration.written_class;
+			p_class := precursor.written_class;
+			put_string ("Redefined feature: ");
+			redeclaration.append_clickable_signature (error_window, r_class);
 			put_string (" written in ");
-			precursor.written_class.append_clickable_name (error_window);
-			put_string ("%N%Tredeclaration: ");
-			redeclaration.append_clickable_signature (error_window, redeclaration.written_class);
+			r_class.append_clickable_name (error_window);
+			put_string ("%NPrecursor: ");
+			precursor.append_clickable_signature (error_window, p_class);
 			put_string (" written in ");
-			redeclaration.written_class.append_clickable_name (error_window);
+			p_class.append_clickable_name (error_window);
 			new_line;
 		end;
 

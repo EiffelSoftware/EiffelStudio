@@ -27,9 +27,9 @@ feature
 			-- Build specific explanation image for current error
 			-- in `error_window'.
 		do
-			put_string ("Identifier: `");
+			put_string ("Identifier: ");
 			put_string (identifier);
-			put_string ("'%N")
+			new_line;
 		end
 
 end

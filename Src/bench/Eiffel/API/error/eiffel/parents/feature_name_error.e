@@ -26,8 +26,8 @@ feature
 			print_error_message;
 			put_string ("Class: ");
 			class_c.append_clickable_signature (error_window);
-			if feature_i /= Void then
-				put_string ("%NFeature: ");
+			if feature_name /= Void then
+				put_string ("%NFeature name: ");
 				put_string (feature_name);
 				new_line;
 			else
@@ -35,5 +35,5 @@ feature
 			end;
 			build_explain;
 		end;
-			
+
 end

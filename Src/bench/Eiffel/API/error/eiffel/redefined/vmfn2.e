@@ -6,7 +6,7 @@ inherit
 
 	EIFFEL_ERROR
 		redefine
-			build_explain, subcode
+			build_explain
 		end
 	
 feature
@@ -25,10 +25,8 @@ feature
 	code: STRING is "VMFN";
 			-- Error code
 
-	subcode: INTEGER is 2;
-
 	build_explain is
-            -- Build specific explanation explain for current error
+			-- Build specific explanation explain for current error
 			-- in `error_window'.
 		local
 			feature_info: INHERIT_INFO;
@@ -42,12 +40,13 @@ feature
 			loop
 				feature_info := features.item;
 				feature_i := feature_info.a_feature;
-				put_string ("%Tfeature ");
-				parent := System.class_of_id (feature_info.parent.parent_id);
+				parent := feature_info.parent.parent;
+
+				put_string ("Feature: ");
 				feature_i.append_clickable_signature (error_window, parent);
-				put_string (" inherited from ");
+				put_string (" inherited from: ");
 				parent.append_clickable_name (error_window);
-				put_string (" written in ");
+				put_string (" written in: ");
 				feature_i.written_class.append_clickable_name (error_window);
 				new_line;
 				features.forth;

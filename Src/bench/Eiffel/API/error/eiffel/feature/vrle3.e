@@ -1,6 +1,6 @@
 -- Error when an access to Result is invalid: invariant or procedure
 
-class VRLE3 
+class VRLE3 obsolete "NOT IN THE BOOK"
 
 inherit
 	

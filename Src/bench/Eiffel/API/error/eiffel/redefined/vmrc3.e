@@ -1,15 +1,15 @@
 -- Error when a selection is needed
 
-class VMRC3 
+class VMRC3 obsolete "NOT DEFINED IN THE BOOK"
 
 inherit
 
-	EIFFEL_ERROR
+	VMRC
 		redefine
 			build_explain, subcode
 		end
 	
-feature 
+feature
 
 	selection_list: SELECTION_LIST;
 			-- Info about the features to select
@@ -20,14 +20,11 @@ feature
 			selection_list := l;
 		end; -- set_selection_list
 
-	code: STRING is "VMRC";
-			-- Error code
-
 	subcode: INTEGER is 3;
 
 	build_explain is
-            -- Build specific explanation explain for current error
-            -- in `error_window'.
+			-- Build specific explanation explain for current error
+			-- in `error_window'.
 		local
 			info: INHERIT_INFO;
 		do
@@ -38,10 +35,10 @@ feature
 			loop
 				info := selection_list.item;
 				if (info.parent = Void) then
-					put_string ("%Tin current class: ");
+					put_string ("In current class: ");
 				else
-					put_string ("%Tin parent ");
-					put_string (info.parent.class_name);
+					put_string ("In parent ");
+					info.parent.parent.append_clickable_name (error_window);
 					put_string (": ");
 				end;
 				info.a_feature.append_clickable_signature (error_window, info.a_feature.written_class);

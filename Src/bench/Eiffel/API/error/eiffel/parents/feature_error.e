@@ -39,14 +39,13 @@ feature
 			if feature_i /= Void then
 				put_string ("%NFeature: ");
 				feature_i.append_clickable_name (error_window, class_c);
-				new_line;
 			elseif feature_name /= Void then
 				put_string ("%NFeature: ");
 				put_string (feature_name);
-				new_line;
 			else
-				put_string ("%NFeature: invariant%N");
+				put_string ("%NFeature: invariant");
 			end;
+			new_line;
 			build_explain;
 		end;
 

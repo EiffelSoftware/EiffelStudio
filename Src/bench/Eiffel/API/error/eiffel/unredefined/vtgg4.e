@@ -4,14 +4,10 @@ class VTGG4
 
 inherit
 
-	VTGG
+	EIFFEL_ERROR
 		redefine
-			subcode
+			build_explain
 		end;
-
-feature
-
-	subcode: INTEGER is 4;
 
 feature 
 
@@ -23,5 +19,35 @@ feature
 		do
 			parent_type := p;
 		end;
+
+	error_list: LINKED_LIST [CONSTRAINT_INFO];
+			-- Error description list
+
+	set_error_list (e: like error_list) is
+			-- Assign `e' to `error_list'.
+		do
+			error_list := e;
+		end;
+
+	build_explain is
+			-- Build specific explanation explain for current error
+			-- in `error_window'.
+		do
+			put_string ("In parent clause: ");
+			parent_type.append_clickable_signature (error_window);
+			new_line;
+			from
+				error_list.start
+			until
+				error_list.after
+			loop
+				put_char ('%T');
+				error_list.item.build_explain (error_window);
+				error_list.forth;
+			end;
+		end;
+
+	code: STRING is "VTCG";
+			-- Error code
 
 end

@@ -159,14 +159,14 @@ feature
 				loop
 					if renaming.key_for_iteration.is_equal (renaming.item_for_iteration) then
 						!!vhrc3;
-						vhrc3.set_class_id (System.current_class.id);
-						vhrc3.set_parent_id (parent_id);
+						vhrc3.set_class (System.current_class);
+						vhrc3.set_parent (parent);
 						vhrc3.set_feature_name (renaming.key_for_iteration);
 						Error_handler.insert_error (vhrc3);
 					elseif not parent_table.has (renaming.key_for_iteration) then
 						!!vhrc1;
-						vhrc1.set_class_id (System.current_class.id);
-						vhrc1.set_parent_id (parent_id);
+						vhrc1.set_class (System.current_class);
+						vhrc1.set_parent (parent);
 						vhrc1.set_feature_name (renaming.key_for_iteration);
 						Error_handler.insert_error (vhrc1);
 					end;
@@ -199,8 +199,8 @@ feature
 					
 					if real_name = Void or else not parent_table.has (real_name) then
 						!!vdrs1;
-						vdrs1.set_class_id (System.current_class.id);
-						vdrs1.set_parent_id (parent_id);
+						vdrs1.set_class (System.current_class);
+						vdrs1.set_parent (parent);
 						vdrs1.set_feature_name (feature_name);
 						Error_handler.insert_error (vdrs1);
 					end;
@@ -220,8 +220,8 @@ feature
 
 					if real_name = Void or else not parent_table.has (real_name) then
 						!!vmss1;
-						vmss1.set_class_id (System.current_class.id);
-						vmss1.set_parent_id (parent_id);
+						vmss1.set_class (System.current_class);
+						vmss1.set_parent (parent);
 						vmss1.set_feature_name (feature_name);
 						Error_handler.insert_error (vmss1);
 					end;
@@ -241,8 +241,8 @@ feature
 
 					if real_name = Void or else not parent_table.has (real_name) then
 						!!vdus1;
-						vdus1.set_class_id (System.current_class.id);
-						vdus1.set_parent_id (parent_id);
+						vdus1.set_class (System.current_class);
+						vdus1.set_parent (parent);
 						vdus1.set_feature_name (feature_name);
 						Error_handler.insert_error (vdus1);
 					end;
@@ -262,12 +262,12 @@ feature
 	
 					if real_name = Void or else not parent_table.has (real_name) then
 						!!vlel2;
-						vlel2.set_class_id (System.current_class.id);
-                    	vlel2.set_parent_id (parent_id);
-                    	vlel2.set_feature_name (feature_name);
-                    	Error_handler.insert_error (vlel2);
-                	end;
-                	exports.forth;
+						vlel2.set_class (System.current_class);
+						vlel2.set_parent (parent);
+						vlel2.set_feature_name (feature_name);
+						Error_handler.insert_error (vlel2);
+					end;
+					exports.forth;
 				end;
 			end;
 		end;
@@ -288,8 +288,8 @@ feature
 				Selected.search_equal (selecting.item_for_iteration);
 				if Selected.after then
 					!!vmss2;
-					vmss2.set_class_id (System.current_class.id);
-					vmss2.set_parent_id (parent_id);
+					vmss2.set_class (System.current_class);
+					vmss2.set_parent (parent);
 					vmss2.set_feature_name (selecting.item_for_iteration);
 					Error_handler.insert_error (vmss2);
 				end;

@@ -36,21 +36,20 @@ feature
 
 	build_explain is
 		do
-			put_string ("%Tin class ");
+			put_string ("Class: ");
 			associated_class.append_clickable_name (error_window);
 			if a_feature /= Void then
-				put_string ("%N%Tin feature `");
+				put_string ("%NFeature: ");
 				a_feature.append_clickable_signature (error_window, associated_class);
-				put_string ("':%N%T");
 			else
-				put_string ("%N%Tin invariant%N%T");
+				put_string ("%NFeature: invariant")
 			end;
+			put_string ("%NObsolete feature: ");
 			obsolete_feature.append_clickable_signature (error_window, obsolete_feature.written_class);
-			put_string (" is obsolete:%N%T");
-			put_string (obsolete_feature.obsolete_message);
 			put_string (" (class ");
 			obsolete_class.append_clickable_name (error_window);
-			put_string (")");
+			put_string (")%NObsolete message: ");
+			put_string (obsolete_feature.obsolete_message);
 			new_line;
 		end;
 

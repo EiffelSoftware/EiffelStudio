@@ -45,7 +45,12 @@ feature
 			-- Generate byte code for a real constant value
 		do
 			ba.append (Bc_float);
-            ba.append_real (real_val.to_double);
+			ba.append_real (real_val.to_double);
+		end;
+
+	vqmc: VQMC is
+		do
+			!VQMC4!Result;
 		end;
 
 end

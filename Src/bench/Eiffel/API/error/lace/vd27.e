@@ -24,11 +24,10 @@ feature
 
 	build_explain is
 		do
-			put_string ("Creation procedure name: `");
-			put_string (creation_routine);
-			put_string ("'%Nroot class: `");
+			put_string ("Root class: ");
 			root_class.append_clickable_name (error_window);
-			put_char ('%'');
+			put_string ("%NInvalid procedure name: ");
+			put_string (creation_routine);
 			new_line
 		end;
 

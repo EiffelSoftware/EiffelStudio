@@ -259,6 +259,11 @@ feature
 			Result := True;
 		end;
 
+	error_generics: VTUG is
+			-- Build the error if `good_generics' returns False
+		do
+		end;
+
 	check_constraints (context_class: CLASS_C) is
 			-- Check the constained genericity validity rule and leave
 			-- error info in `Constraint_error_list'

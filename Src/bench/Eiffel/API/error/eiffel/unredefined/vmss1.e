@@ -4,14 +4,14 @@ class VMSS1
 	
 inherit
 
-	VDRS1
+	VMSS2
 		redefine
-			code
+			subcode
 		end
 	
 feature 
 
-	code: STRING is "VMSS";
+	subcode: INTEGER is 1;
 			-- Error code
 
 end 

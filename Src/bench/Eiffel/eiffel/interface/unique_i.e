@@ -50,8 +50,9 @@ feature
 			then
 					-- Type of unique constant is not INTEGER
 				!!vqui;
-				vqui.set_class_id (written_in);
-				vqui.set_body_id (body_id);
+				vqui.set_class (written_class);
+				vqui.set_feature_name (feature_name);
+				vqui.set_type (actual_type);
 				Error_handler.insert_error (vqui);
 			end;
 		end;

@@ -9,18 +9,30 @@ inherit
 			build_explain, subcode
 		end;
 
-feature 
+feature
+
+	local_name: STRING;
+			-- Local variable name in conflict
+
+	set_local_name (s: STRING) is
+			-- Assign `s' to `local_name'.
+		do
+			local_name := s;
+		end;
 
 	code: STRING is "VRLE";
 			-- Error code
 
-	subcode: INTEGER is 2;
+	subcode: INTEGER is
+		do
+			Result := 1;
+		end;
 
 	build_explain is
 		do
-			put_string ("%T`");
-			feature_i.append_clickable_name (error_window, feature_i.written_class);
-			put_string ("' is a feature and cannot be used as a local%N");
+			put_string ("Local entity name: ");
+			put_string (local_name);
+			new_line;
 		end;
 
 end

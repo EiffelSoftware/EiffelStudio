@@ -5,19 +5,27 @@ class VAVE
 inherit
 
 	FEATURE_ERROR
+		redefine
+			build_explain
+		end
 	
 feature 
 
-	variant_part: VARIANT_AS;
-			-- Description of variant clause
-
-	set_variant_part (v: VARIANT_AS) is
-			-- Assign `v' to `variant_part'.
-		do
-			variant_part := v;
-		end;
-
 	code: STRING is "VAVE";
 			-- Error code
+
+	type: TYPE_A;
+
+	set_type (t: TYPE_A) is
+		do
+			type := t;
+		end;
+
+	build_explain is
+		do
+			put_string ("Expression type: ");
+			type.append_clickable_signature (error_window);
+			new_line;
+		end;
 
 end

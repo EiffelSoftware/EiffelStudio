@@ -4,7 +4,7 @@ class VTEC
 
 inherit
 
-	VTUG
+	FEATURE_ERROR
 	
 feature 
 

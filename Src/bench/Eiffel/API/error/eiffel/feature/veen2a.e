@@ -13,6 +13,6 @@ feature
 
 	build_explain is
 		do
-			put_string ("Identifier: `Result'%N")
+			put_string ("Identifier: Result%N")
 		end;
 end

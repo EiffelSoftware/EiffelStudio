@@ -13,7 +13,7 @@ feature
 
 	subcode: INTEGER is
 		do
-			Result := 5;
+			Result := 6;
 		end;
 
 	creation_feature: FEATURE_I;

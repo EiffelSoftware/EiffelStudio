@@ -774,8 +774,8 @@ feature
 	exception_stack_managed: BOOLEAN is
 			-- Do we have to manage the exception stack
 		do
-	--		Result := context.workbench_mode;
-			Result := true;
+			Result := context.workbench_mode or else
+						System.exception_stack_managed;
 		end;
 
 	generate_execution_declarations is

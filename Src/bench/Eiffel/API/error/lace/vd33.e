@@ -22,9 +22,8 @@ feature
 
 	build_explain is
 		do
-			put_string ("Language name: `");
+			put_string ("Invalid language name: ");
 			put_string (language_name);
-			put_char ('%'');
 			new_line
 		end;
 

@@ -36,17 +36,14 @@ feature
 	build_explain is
 		do
 			put_cluster_name;
-			put_string ("Class name: `");
+			put_string ("Class name: ");
 			put_string (first.class_name);
-			put_char ('%'');
 			new_line;
-			put_string ("First file `");
+			put_string ("First file: ");
 			put_string (first.file_name);
-			put_char ('%'');
 			new_line;
-			put_string ("Second file `");
+			put_string ("Second file: ");
 			put_string (second.class_name);
-			put_char ('%'');
 			new_line;
 		end;
 

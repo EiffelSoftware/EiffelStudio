@@ -247,11 +247,11 @@ feature -- Type check, byte code and dead code removal
 			context_locals: EXTEND_TABLE [LOCAL_INFO, STRING];
 			vrle1: VRLE1;
 			vrle2: VRLE2;
-			vtug3: VTUG3;
+			vtug: VTUG;
 			vtec1: VTEC1;
 			vtec2: VTEC2;
 			vtgg3: VTGG3;
-			vreg2: VREG2;
+			vreg: VREG;
 			curr_feat: FEATURE_I;
 		do
 			context_class := context.a_class;

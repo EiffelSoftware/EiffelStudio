@@ -4,32 +4,13 @@ class VRLE2
 
 inherit
 
-	FEATURE_ERROR
+	VRLE1
 		redefine
-			build_explain, subcode
+			subcode
 		end;
 	
 feature 
 
-	local_name: ID_AS;
-			-- Local variable name in conflict
-
-	set_local_name (s: like local_name) is
-			-- Assign `s' to `local_name'.
-		do
-			local_name := s;
-		end;
-
-	code: STRING is "VRLE";
-			-- Error code
-
 	subcode: INTEGER is 2;
-
-	build_explain is
-		do
-			put_string ("%TTwo local variables have the same name: `");
-			put_string (local_name);
-			put_string ("'%N");
-		end;
 
 end

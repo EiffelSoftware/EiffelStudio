@@ -22,9 +22,8 @@ feature
 
 	build_explain is
 		do
-			put_string ("Root class name: `");
+			put_string ("Invalid class name: ");
 			put_string (root_class_name);
-			put_char ('%'');
 			new_line
 		end;
 

@@ -1,6 +1,7 @@
 -- Error for useless selections
 
-class VMSS2 
+class VMSS2 obsolete "NOT DEFINED IN THE BOOK%N%
+			%VMSS2 is in fact in class VMSS3"
 
 inherit
 
@@ -14,7 +15,7 @@ feature
 	feature_name: STRING;
 			-- Feature name selected
 
-	parent_id: INTEGER;
+	parent: CLASS_C;
 			-- Class id of the involved parent
 
 	set_feature_name (s: STRING) is
@@ -23,26 +24,28 @@ feature
 			feature_name := s;
 		end;
 
-	set_parent_id (i: INTEGER) is
+	set_parent (c: CLASS_C) is
 			-- Assign `i' to `parent_id'.
 		do
-			parent_id := i;
+			parent := c;
 		end;
 
 	code: STRING is "VMSS";
 			-- Error code
 
-	subcode: INTEGER is 2;
+	subcode: INTEGER is
+		do
+			Result := 2
+		end;
 
 	build_explain is
 			-- Build specific explanation explain for current error
 			-- in `error_window'.
 		do
-			put_string ("%Tfeature: ");
--- FIXME 
+			put_string ("Feature name: ");
 			put_string (feature_name);
-			put_string (" in parent ");
-			System.class_of_id (parent_id).append_clickable_signature (error_window);
+			put_string ("%NIn Select subclause for parent: ");
+			parent.append_clickable_signature (error_window);
 			new_line;
 		end;
 

@@ -1,6 +1,6 @@
 -- There is no exported feature to NONE
 
-class VHNE
+class VHNE obsolete "NOT IN THE BOOK"
 
 inherit
 

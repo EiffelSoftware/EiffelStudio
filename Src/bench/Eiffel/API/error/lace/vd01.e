@@ -21,11 +21,19 @@ feature
 			path := s;
 		end;
 
+	cluster_name: STRING;
+
+	set_cluster_name (s: STRING) is
+		do
+			cluster_name := s;
+		end;
+
 	build_explain is
 		do
-			put_string ("Path: `");
+			put_string ("Cluster name: ");
+			put_string (cluster_name);
+			put_string ("%NPath name: ");
 			put_string (path);
-			put_char ('%'');
 			new_line
 		end;
 

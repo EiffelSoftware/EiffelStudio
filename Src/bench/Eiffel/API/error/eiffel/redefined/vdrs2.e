@@ -15,11 +15,8 @@ feature
 	feature_name: STRING;
 			-- Feature name involved
 
-	body_id: INTEGER;
-			-- Body id of the feature redefined
-
-	parent_id: INTEGER;
-			-- Parent id of the parent class involving the non-valid
+	parent: CLASS_C;
+			-- Parent class involving the non-valid
 			-- redefinition
 
 	set_feature_name (fn: STRING) is
@@ -28,16 +25,9 @@ feature
 			feature_name := fn;
 		end;
 
-	set_parent_id (i: INTEGER) is
-			-- Assign `i' to `parent_id'.
+	set_parent (p: CLASS_C) is
 		do
-			parent_id := i;
-		end;
-
-	set_body_id (i: INTEGER) is
-			-- Assign `i' to `body_id'.
-		do
-			body_id := i;
+			parent := p;
 		end;
 
 	code: STRING is "VDRS";
@@ -46,11 +36,13 @@ feature
 	subcode: INTEGER is 2;
 
 	build_explain is
-            -- Build specific explanation explain for current error
-            -- in `error_window'.
-        do
-			put_string ("%Tfeature name: ");
+			-- Build specific explanation explain for current error
+			-- in `error_window'.
+		do
+			put_string ("Feature name: ");
 			put_string (feature_name);
+			put_string ("%NIn Redefine clause for parent: ");
+			parent.append_clickable_name (error_window);
 			new_line;
 		end;
 

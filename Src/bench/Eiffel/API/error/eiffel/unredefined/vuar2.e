@@ -16,6 +16,8 @@ feature
 	argument_name: STRING;
 			-- Name of the involved argument
 
+	argument_position: INTEGER;
+
 	formal_type: TYPE_A;
 			-- Formal type of the argument
 
@@ -26,6 +28,11 @@ feature
 			-- Assign `n' to `argument_name'.
 		do
 			argument_name := n;
+		end;
+
+	set_argument_position (i: INTEGER) is
+		do
+			argument_position := i
 		end;
 
 	set_formal_type (t: TYPE_A) is
@@ -45,12 +52,14 @@ feature
 			-- in `error_window'.
 		do
 			print_called_feature;
-			put_string ("Argument name: `");
+			put_string ("Argument name: ");
 			put_string (argument_name);
-			put_string ("'%NTarget: ");
-			put_string (formal_type.dump);
-			put_string ("%NSource: ");
-			put_string (actual_type.dump);
+			put_string (" Argument position: ");
+			put_int (argument_position);
+			put_string ("%NActual argument type: ");
+			actual_type.append_clickable_signature (error_window);
+			put_string ("%NFormal argument type: ");
+			formal_type.append_clickable_signature (error_window);
 			new_line;
 		end;
 

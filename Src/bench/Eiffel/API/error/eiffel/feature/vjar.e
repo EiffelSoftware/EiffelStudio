@@ -11,20 +11,13 @@ inherit
 	
 feature 
 
-	attempt: ASSIGN_AS;
-			-- Reverse assignment
+	target_name: STRING;
 
 	target_type: TYPE_A;
 			-- Target type of the reverse assignment (left part)
 
 	source_type: TYPE_A;
 			-- Source type of the reverse assignment (right part)
-
-	set_attempt (r: ASSIGN_AS) is
-			-- Assign `r' to `attempt'.
-		do
-			attempt := r;
-		end;
 
 	set_source_type (s: TYPE_A) is
 			-- Assign `s' to `source_type'.
@@ -38,23 +31,23 @@ feature
 			target_type := t;
 		end;
 
-	code: STRING is 
-			-- Error code
+	set_target_name (s: STRING) is
 		do
-			Result := Assign_code;
+			target_name := s;
 		end;
 
-	Assign_code: STRING is "VJAR";
-			-- Error code
+	code: STRING is "VJAR";
 
 	build_explain is
-            -- Build specific explanation image for current error
-            -- in `error_window'.
-        do
-			put_string ("%Ttarget = ");
-			put_string (target_type.dump);
-			put_string ("%N%Tsource_type = ");
-			put_string (source_type.dump);
+			-- Build specific explanation image for current error
+			-- in `error_window'.
+		do
+			put_string ("Target name: ");
+			put_string (target_name);
+			put_string ("%NTarget type: ");
+			target_type.append_clickable_signature (error_window);
+			put_string ("%NSource_type: ");
+			source_type.append_clickable_signature (error_window);
 			new_line
 		end
 

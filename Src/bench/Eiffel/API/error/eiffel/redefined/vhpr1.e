@@ -28,15 +28,15 @@ feature
             -- Build specific explanation explain for current error
             -- in `error_window'.
         do
-			put_char ('%T');
 			from
 				involved_classes.start
 			until
 				involved_classes.after
 			loop
-				System.class_of_id (involved_classes.item).append_clickable_signature
-																(error_window);
-				put_string ("  ");
+				put_string ("    ");
+				System.class_of_id (involved_classes.item)
+							.append_clickable_signature (error_window);
+				new_line;
 				involved_classes.forth;
 			end;
 			new_line;

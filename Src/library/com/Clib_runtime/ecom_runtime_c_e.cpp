@@ -398,7 +398,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_double (EIF_DOUBLE * a_double, EI
 };
 //-------------------------------------------------------------------------
 
-EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_character (EIF_CHARACTER * a_character, EIF_OBJECT an_object)
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_character (char * a_character, EIF_OBJECT an_object)
 
 // Create CHARACTER_REF from character
 {
@@ -413,7 +413,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_character (EIF_CHARACTER * a_char
 		result = an_object;
 
 	set_item = eif_proc ("set_item", type_id);
-	set_item (eif_access (result), *a_character);
+	set_item (eif_access (result), (EIF_INTEGER)*a_character);
 
 	if ((an_object == NULL) || (eif_access (an_object) == NULL))
 		return eif_wean (result);

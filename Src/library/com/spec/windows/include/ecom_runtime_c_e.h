@@ -62,7 +62,7 @@ public:
 	EIF_REFERENCE ccom_ce_pointed_integer (int * an_integer, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_pointed_real (EIF_REAL * a_real, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_pointed_double (EIF_DOUBLE * a_double, EIF_OBJECT an_object);
-	EIF_REFERENCE ccom_ce_pointed_character (EIF_CHARACTER * a_character, EIF_OBJECT an_object);
+	EIF_REFERENCE ccom_ce_pointed_character (char * a_character, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_pointed_boolean (VARIANT_BOOL * a_bool, EIF_OBJECT an_object);
 	EIF_REFERENCE ccom_ce_pointed_currency (CURRENCY * a_currency);
 	EIF_REFERENCE ccom_ce_pointed_decimal (DECIMAL * a_decimal);

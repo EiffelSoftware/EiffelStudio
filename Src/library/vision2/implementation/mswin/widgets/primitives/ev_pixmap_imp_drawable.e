@@ -750,7 +750,7 @@ feature -- Delegated features
 			Result := False
 		end
 
-	pointer_position: EV_COORDINATES is
+	pointer_position: EV_COORDINATE is
             -- Position of the screen pointer relative to `Current'.
 		do
 				-- The pixmap is not on the screen, we
@@ -901,6 +901,9 @@ end -- class EV_PIXMAP_IMP_DRAWABLE
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.11  2001/06/14 18:26:17  rogers
+--| Renamed EV_COORDINATES to EV_COORDINATE.
+--|
 --| Revision 1.10  2001/06/07 23:08:17  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

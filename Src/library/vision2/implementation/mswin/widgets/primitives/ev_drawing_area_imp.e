@@ -518,7 +518,7 @@ feature -- Drawing primitives
 			end
 		end
 
-	draw_polyline (points: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
+	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN) is
 			-- Lock the device context, call precursor
 			-- and release the device context.
 		do
@@ -573,7 +573,7 @@ feature -- Drawing primitives
 			end
 		end
 
-	fill_polygon (points: ARRAY [EV_COORDINATES]) is
+	fill_polygon (points: ARRAY [EV_COORDINATE]) is
 			-- Lock the device context, call precursor
 			-- and release the device context.
 		do
@@ -637,6 +637,9 @@ end -- class EV_DRAWING_AREA_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2001/06/14 18:26:16  rogers
+--| Renamed EV_COORDINATES to EV_COORDINATE.
+--|
 --| Revision 1.43  2001/06/07 23:08:16  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

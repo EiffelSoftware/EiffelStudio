@@ -56,13 +56,13 @@ feature -- Status setting
 
 feature -- Implementation
 
-	polygon_array: ARRAY [EV_COORDINATES] is
+	polygon_array: ARRAY [EV_COORDINATE] is
 			-- Absolute coordinates of all corner points.
 		local
 			n: INTEGER
 			radius: INTEGER
 			ang, ang_step: DOUBLE
-			crd: EV_COORDINATES
+			crd: EV_COORDINATE
 		do
 			from
 				radius := distance (center_point.x_abs, center_point.y_abs,
@@ -97,7 +97,7 @@ feature -- Implementation
 			-- Smallest orthogonal rectangular area `Current' fits in.
 		local
 			min_x, min_y, max_x, max_y, n: INTEGER
-			poly: ARRAY [EV_COORDINATES]
+			poly: ARRAY [EV_COORDINATE]
 		do
 			from
 				poly := polygon_array

@@ -13,6 +13,8 @@ class
 
 inherit
 	EV_TITLED_WINDOW
+		export {NONE}
+			close_request_actions
 		redefine 
 			implementation,
 			create_implementation,

@@ -493,7 +493,7 @@ feature {EV_ANY_I} -- Delegated features
 		end
 
 	draw_polyline (
-		points				: ARRAY [EV_COORDINATES]
+		points				: ARRAY [EV_COORDINATE]
 		is_closed			: BOOLEAN
 		) is
 			-- Draw line segments between subsequent points in
@@ -569,7 +569,7 @@ feature {EV_ANY_I} -- Delegated features
 		end
 
 	fill_polygon (
-		points				: ARRAY [EV_COORDINATES]
+		points				: ARRAY [EV_COORDINATE]
 		) is
 			-- Draw line segments between subsequent points in `points'.
 			-- Fill with `background_color'.
@@ -916,7 +916,7 @@ feature {EV_ANY_I} -- Delegated features
 			Result := False
 		end
 
-	pointer_position: EV_COORDINATES is
+	pointer_position: EV_COORDINATE is
             -- Position of the screen pointer relative to `Current'.
 		do
 				-- The pixmap is not on the screen, we
@@ -1658,6 +1658,9 @@ end -- class EV_PIXMAP_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.41  2001/06/14 18:26:17  rogers
+--| Renamed EV_COORDINATES to EV_COORDINATE.
+--|
 --| Revision 1.40  2001/06/08 21:59:32  rogers
 --| Removed obsolete features.
 --|

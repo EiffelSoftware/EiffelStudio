@@ -39,7 +39,7 @@ feature -- Events
 
 feature -- Status report
 
-	center: EV_COORDINATES is
+	center: EV_COORDINATE is
 			-- get the center point of the ellipse.
 		do
 			create Result.set (center_x, center_y)

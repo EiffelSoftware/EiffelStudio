@@ -36,7 +36,7 @@ feature -- Events
 
 feature {EV_PROJECTOR} -- Implementation
 
-	coordinates: EV_COORDINATES is
+	coordinates: EV_COORDINATE is
 			-- Absolute center coordinates of `Current'.
 		do
 			Result := point.absolute_coordinates

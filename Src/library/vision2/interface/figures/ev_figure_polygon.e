@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 
-	make_with_coordinates (coords: ARRAY [EV_COORDINATES]) is
+	make_with_coordinates (coords: ARRAY [EV_COORDINATE]) is
 			-- Initialize with points in `coords'.
 		require
 			coords_exist: coords /= Void

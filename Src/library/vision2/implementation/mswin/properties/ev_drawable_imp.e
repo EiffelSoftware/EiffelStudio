@@ -561,7 +561,7 @@ feature -- Drawing operations
 			on_drawing_modified
 		end
 
-	draw_polyline (points: ARRAY [EV_COORDINATES]; is_closed: BOOLEAN) is
+	draw_polyline (points: ARRAY [EV_COORDINATE]; is_closed: BOOLEAN) is
 			-- Draw line segments between subsequent points in
 			-- `points'. If `is_closed' draw line segment between first
 			-- and last point in `points'.
@@ -569,7 +569,7 @@ feature -- Drawing operations
 			flat_points: ARRAY [INTEGER]
 			flat_index: INTEGER
 			i: INTEGER
-			coords: EV_COORDINATES
+			coords: EV_COORDINATE
 		do
 			if is_closed then
 				create flat_points.make (1, 2 * points.count + 2)
@@ -671,13 +671,13 @@ feature -- Filling operations
 			on_drawing_modified
 		end
 
-	fill_polygon (points: ARRAY [EV_COORDINATES]) is
+	fill_polygon (points: ARRAY [EV_COORDINATE]) is
 			-- Draw line segments between subsequent points in `points'.
 			-- Fill all enclosed area's with `foreground_color'.
 		local
 			flat_points: ARRAY [INTEGER]
 			i, flat_i: INTEGER
-			coords: EV_COORDINATES
+			coords: EV_COORDINATE
 		do
 			create flat_points.make (1, 2 * points.count)
 			flat_i := 1
@@ -1025,6 +1025,9 @@ end -- class EV_DRAWABLE_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.31  2001/06/14 18:25:59  rogers
+--| Renamed EV_COORDINATES to EV_COORDINATE.
+--|
 --| Revision 1.30  2001/06/07 23:08:13  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

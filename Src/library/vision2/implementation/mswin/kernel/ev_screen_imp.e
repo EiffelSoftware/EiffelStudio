@@ -49,7 +49,7 @@ feature -- Status report
 			Result := not dc.exists
 		end
 
-	pointer_position: EV_COORDINATES is
+	pointer_position: EV_COORDINATE is
 			-- Position of the screen pointer.
 		local
 			wel_point: WEL_POINT
@@ -215,6 +215,9 @@ end -- class EV_SCREEN_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.18  2001/06/14 18:25:50  rogers
+--| Renamed EV_COORDINATES to EV_COORDINATE.
+--|
 --| Revision 1.17  2001/06/07 23:08:17  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

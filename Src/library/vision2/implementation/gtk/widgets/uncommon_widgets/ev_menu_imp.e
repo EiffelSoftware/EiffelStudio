@@ -63,7 +63,7 @@ feature -- Basic operations
 	show is
 			-- Pop up on the current pointer position.
 		local
-			pc: EV_COORDINATES
+			pc: EV_COORDINATE
 			bw: INTEGER
 		do
 			pc := (create {EV_SCREEN}).pointer_position
@@ -158,6 +158,9 @@ end -- class EV_MENU_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.35  2001/06/14 18:25:27  rogers
+--| Renamed EV_COORDINATES to EV_COORDINATE.
+--|
 --| Revision 1.34  2001/06/07 23:08:07  rogers
 --| Merged DEVEL branch into Main trunc.
 --|

@@ -231,7 +231,7 @@ feature -- Figure drawing
 			-- Draw a standard representation of `picture' to
 			-- the canvas.
 		local
-			c: EV_COORDINATES
+			c: EV_COORDINATE
 		do
 			c := picture.point.absolute_coordinates
 			drawable.draw_pixmap (c.x, c.y, picture.pixmap)
@@ -413,8 +413,8 @@ feature -- Figure drawing
 			-- the canvas.
 		local
 			cx, cy: INTEGER
-			cl: ARRAY [EV_COORDINATES]
-			c: EV_COORDINATES
+			cl: ARRAY [EV_COORDINATE]
+			c: EV_COORDINATE
 			d: like drawable
 			i: INTEGER
 		do
@@ -445,7 +445,7 @@ feature -- Figure drawing
 			--| different values for `scale_x_abs'
 			--| and `scale_y_abs'.
 		local
-			c: EV_COORDINATES
+			c: EV_COORDINATE
 			cur_font, scaled_font: EV_FONT
 			d: like drawable
 		do

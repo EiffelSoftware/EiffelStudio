@@ -39,7 +39,7 @@ feature -- Access
 
 feature -- Status report
 
-	ensure_item_visible (an_item: EV_TREE_ITEM) is
+	ensure_item_visible (an_item: EV_TREE_NODE) is
 			-- Ensure `an_item' is visible in `Current'.
 			-- Tree nodes may be expanded to achieve this.
 		deferred

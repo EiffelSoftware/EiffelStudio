@@ -47,8 +47,7 @@ feature -- Element change
 			identifier_not_null: identifier /= default_pointer;
 			valid_gc: gc /= Void and then gc.is_valid;
 			valid_drawable: a_drawable /= Void and then a_drawable.is_valid;
-			valid_args: src_x >= 0 and src_y >= 0 and a_width >= 0 and 
-					a_height >= 0 and dest_x >= 0 and dest_y >= 0;
+			valid_args: a_width >= 0 and a_height >= 0;
 			same_depth: a_drawable.depth = depth
 		do
 			x_copy_area (display_handle, a_drawable.identifier, identifier, gc.handle,
@@ -67,8 +66,7 @@ feature -- Element change
 			identifier_not_null: identifier /= default_pointer;
 			valid_gc: gc /= Void and then gc.is_valid;
 			valid_drawable: a_drawable /= Void and then a_drawable.is_valid;
-			valid_args: src_x >= 0 and src_y >= 0 and a_width >= 0 and 
-					a_height >= 0 and dest_x >= 0 and dest_y >= 0 and a_plane >= 0;
+			valid_args: a_width >= 0 and a_height >= 0 and a_plane >= 0;
 		do
 			x_copy_plane (display_handle, a_drawable.identifier, identifier, gc.handle,
 				src_x, src_y, a_width, a_height, dest_x, dest_y, a_plane)

@@ -1,6 +1,5 @@
 indexing
 	description: "Common Status Types that may be returned to the browser."
-	author: "pascalf"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,7 +1,6 @@
 indexing
 	description: "Class which allows to access the files %
 				% corresponding to the in/out data flow"
-	author: "pascalf"
 	date: "$Date$"
 	revision: "$Revision$"
 

@@ -1,6 +1,5 @@
 indexing
 	description: "Class which contains the information relative to an html page."
-	author: "pascalf"
 	date: "$Date$"
 	revision: "$Revision$"
 

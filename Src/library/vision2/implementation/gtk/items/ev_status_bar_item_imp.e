@@ -128,13 +128,15 @@ feature -- Status setting
 
 	destroy is
 			-- Destroy the status bar item implementation.
-			-- Feature redefined to set expand options
+			-- Feature redefined to set expand options for the
+			-- last status bar item.
                 do
 			parent_imp.remove_status_bar_item (Current)
-			if not destroyed then
-	                        gtk_widget_destroy (widget)
-			end
-			widget := Default_pointer
+				-- we do not need to use 'gtk_widget_destroy'
+				-- because the widget is automatically destroyed when
+				-- no more affected to a parent.
+			widget := default_pointer
+				-- optionnal
 		end
 	
 feature -- Element change

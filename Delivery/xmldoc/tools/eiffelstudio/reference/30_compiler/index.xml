@@ -50,5 +50,11 @@
 					<label>Command line compiler</label>
 				</link>
 			</item>
+			<item>
+					<link>
+						<url>60_version_history/index.xml</url>
+						<label>Version History</label>
+					</link>
+			</item>
 		</list>
 	</paragraph></document>

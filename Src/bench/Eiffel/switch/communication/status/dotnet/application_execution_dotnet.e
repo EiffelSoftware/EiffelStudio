@@ -903,7 +903,7 @@ feature {NONE} -- Events on notification
 			-- Notify the system is exiting on debugger error
 		local
 			wd: EV_WARNING_DIALOG
-			st: STRUCTURED_TEXT
+--			st: STRUCTURED_TEXT
 			l_err_msg: STRING
 		do
 			--| We need to stop
@@ -912,9 +912,11 @@ feature {NONE} -- Events on notification
 						+ " - error_hr   = 0x" + eifnet_debugger_info.debugger_error_hr.to_hex_string + "%N"
 						+ " - error_code = 0x" + eifnet_debugger_info.debugger_error_code.to_hex_string + "%N" 
 			
-			create st.make
-			st.add_string (l_err_msg)
-			output_manager.process_text (st)
+-- FIXME JFIAT: removed because it is not used the good way
+-- assertion violation
+--			create st.make
+--			st.add_string (l_err_msg)
+--			output_manager.process_text (st)
 
 			create wd.make_with_text (l_err_msg)
 			wd.show_modal_to_window (window_manager.last_focused_development_window.window)

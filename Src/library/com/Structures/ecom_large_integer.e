@@ -12,7 +12,8 @@ inherit
 	ECOM_STRUCTURE
 
 creation
-	make, make_by_pointer,
+	make,
+	make_from_pointer,
 	make_from_integer
 
 feature {NONE} -- Initialization
@@ -33,7 +34,15 @@ feature -- Measurement
 		do
 			Result := c_size_of_large_integer 
 		end
-	
+
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
+		end
+
 feature {NONE} -- Externals 
 
 	c_size_of_large_integer: INTEGER is

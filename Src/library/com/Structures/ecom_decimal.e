@@ -21,7 +21,7 @@ inherit
 
 creation
 	make,
-	make_by_pointer,
+	make_from_pointer,
 	make_from_double
 
 feature -- Initialiazation
@@ -218,6 +218,14 @@ feature -- Basic operations
 			non_void_item: item /= Void
 			valid_item: item /= default_pointer
 		do
+		end
+
+feature {NONE} -- Initialization
+
+	make_from_pointer (a_pointer: POINTER) is
+			-- Make from pointer.
+		do
+			make_by_pointer (a_pointer)
 		end
 
 feature {NONE} -- Externals

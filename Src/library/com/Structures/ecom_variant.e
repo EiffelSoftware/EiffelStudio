@@ -259,7 +259,7 @@ feature -- Access
 		require
 			is_decimal_ref: is_decimal (variable_type) and is_byref (variable_type)
 		do
-			create Result.make_by_pointer (ccom_decimal_reference (initializer))
+			create Result.make_from_pointer (ccom_decimal_reference (initializer))
 		end
 
 	currency: ECOM_CURRENCY is
@@ -275,7 +275,7 @@ feature -- Access
 		require
 			is_currency_ref: is_currency (variable_type) and is_byref (variable_type)
 		do
-			create Result.make_by_pointer (ccom_currency_reference (initializer))
+			create Result.make_from_pointer (ccom_currency_reference (initializer))
 		end
 
 	string_value: STRING is

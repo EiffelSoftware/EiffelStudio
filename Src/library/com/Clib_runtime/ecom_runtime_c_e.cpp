@@ -27,7 +27,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_currency (CURRENCY a_currency)
 	eif_currency_id = eif_type_id ("ECOM_CURRENCY");
 	make = eif_procedure ("make", eif_currency_id);
 	result = eif_create (eif_currency_id);
-	make (eif_access (result));
+	(FUNCTION_CAST (void, (EIF_REFERENCE))make) (eif_access (result));
 	an_item = eif_field (eif_access (result), "item", EIF_POINTER);
 	memcpy (an_item, &a_currency, sizeof (CURRENCY));
 	return eif_wean (result);
@@ -36,8 +36,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_currency (CURRENCY a_currency)
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_decimal (DECIMAL a_decimal)
 
-// Create ECOM_DECIMAL from C
-{
+// Create ECOM_DECIMAL from C  
 	EIF_OBJECT result = 0;
 	EIF_TYPE_ID eif_decimal_id = -1;
 	EIF_PROCEDURE make = 0;
@@ -46,7 +45,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_decimal (DECIMAL a_decimal)
 	eif_decimal_id = eif_type_id ("ECOM_DECIMAL");
 	make = eif_procedure ("make", eif_decimal_id);
 	result = eif_create (eif_decimal_id);
-	make (eif_access (result));
+	(FUNCTION_CAST (void, (EIF_REFERENCE))make) (eif_access (result));
 	an_item = eif_field (eif_access (result), "item", EIF_POINTER);
 	memcpy (an_item, &a_decimal, sizeof (DECIMAL));
 	return eif_wean (result);
@@ -455,7 +454,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_currency (CURRENCY * a_currency)
 	EIF_PROCEDURE currency_make = 0;
 
 	eif_currency_id = eif_type_id ("ECOM_CURRENCY");
-	currency_make = eif_procedure ("make_by_pointer", eif_currency_id);
+	currency_make = eif_procedure ("make_from_pointer", eif_currency_id);
 	result = eif_create (eif_currency_id);
 	currency_make (eif_access (result), (EIF_POINTER)a_currency);
 	return eif_wean (result);
@@ -471,7 +470,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_decimal (DECIMAL * a_decimal)
 	EIF_PROCEDURE make = 0;
 
 	eif_decimal_id = eif_type_id ("ECOM_DECIMAL");
-	make = eif_procedure ("make_by_pointer", eif_decimal_id);
+	make = eif_procedure ("make_from_pointer", eif_decimal_id);
 	result = eif_create (eif_decimal_id);
 	make (eif_access (result), (EIF_POINTER)a_decimal);
 	return eif_wean (result);
@@ -487,9 +486,9 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_record (void * a_record_pointer, 
 	EIF_PROCEDURE make = 0;
 
 	type_id = eif_type_id (a_class_name);
-	make = eif_procedure ("make_by_pointer", type_id);
+	make = eif_procedure ("make_from_pointer", type_id);
 	result = eif_create (type_id);
-	make (eif_access (result), (EIF_POINTER)a_record_pointer);
+	(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_POINTER))make) (eif_access (result), (EIF_POINTER)a_record_pointer);
 	return eif_wean (result);
 };
 //-------------------------------------------------------------------------
@@ -519,7 +518,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_long_long (LARGE_INTEGER * a_larg
 	EIF_PROCEDURE large_integer_make = 0;
 
 	eif_large_integer_id = eif_type_id ("ECOM_LARGE_INTEGER");
-	large_integer_make = eif_procedure ("make_by_pointer", eif_large_integer_id);
+	large_integer_make = eif_procedure ("make_from_pointer", eif_large_integer_id);
 	result = eif_create (eif_large_integer_id);
 	large_integer_make (eif_access (result), (EIF_POINTER)a_large_integer);
 	return eif_wean (result);
@@ -535,7 +534,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_ulong_long (ULARGE_INTEGER * an_u
 	EIF_PROCEDURE ularge_integer_make = 0;
 
 	eif_ularge_integer_id = eif_type_id ("ECOM_ULARGE_INTEGER");
-	ularge_integer_make = eif_procedure ("make_by_pointer", eif_ularge_integer_id);
+	ularge_integer_make = eif_procedure ("make_from_pointer", eif_ularge_integer_id);
 	result = eif_create (eif_ularge_integer_id);
 	ularge_integer_make (eif_access (result), (EIF_POINTER)an_ularge_integer);
 	return eif_wean (result);

@@ -116,6 +116,7 @@ feature {NONE} -- Initialization
 			{EV_PRIMITIVE_IMP} Precursor
 			{EV_MULTI_COLUMN_LIST_I} Precursor
 			{EV_ITEM_LIST_IMP} Precursor
+			add_column
 		end
 
 feature -- Access
@@ -789,6 +790,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.75  2000/03/30 23:39:36  rogers
+--| The number of columns is now set to one by default.
+--|
 --| Revision 1.74  2000/03/30 19:56:24  rogers
 --| Now inherits from EV_PICK_AND_DROPABLE_ITEM_HOLDER_IMP.
 --| Removed features and attributes associated with source of PND as

@@ -19,7 +19,7 @@ feature -- Synchro Initialization
 			-- Initialize eStudio/.NET debugger synchronisation
 		do
 			debug ("DBG_SYNCHRO")
-				print (">>Initialize eStudio/.NET debugger synchronisation%N")
+				io.error.put_string (">>Initialize eStudio/.NET debugger synchronisation%N")
 			end
 			c_init_dbg_synchronisation
 		end
@@ -28,7 +28,7 @@ feature -- Synchro Initialization
 			-- Initialize eStudio/.NET debugger synchronisation
 		do
 			debug ("DBG_SYNCHRO")
-				print (">>Terminate eStudio/.NET debugger synchronisation%N")
+				io.error.put_string (">>Terminate eStudio/.NET debugger synchronisation%N")
 			end
 			c_terminate_dbg_synchronisation
 		end
@@ -64,7 +64,7 @@ feature -- Synchro Timer
 		do
 			l_id := c_dbg_timer_id
 			debug ("DBG_SYNCHRO")
-				print (">>timer::" + l_id.out + "%N")
+				io.error.put_string (">>timer::" + l_id.out + "%N")
 			end
 			if l_id = 0 then
 				debug ("DBG_SYNCHRO")
@@ -82,7 +82,7 @@ feature -- Synchro Timer
 		do
 			l_id := c_dbg_timer_id
 			debug ("DBG_SYNCHRO")
-				print (">>timer::" + l_id.out + "%N")
+				io.error.put_string (">>timer::" + l_id.out + "%N")
 			end
 			if l_id /= 0 then
 				debug ("DBG_SYNCHRO")

@@ -26,16 +26,30 @@ feature -- Access
 			-- Color usely used for the background of editable
 			-- when they are in read-only mode
 		do
-			check false end
-			Result := Void
+			check True end
+			Result := Color_dialog
 		end
 
 	Color_read_write: EV_COLOR is
 			-- Color usely used for the background of editable
 			-- when they are in read / write mode
 		do
-			check false end
-			Result := Void
+			check True end
+			Result := Color_dialog
+		end
+
+	default_background_color: EV_COLOR is
+			-- Default background color for most of the widgets.
+		do
+			check True end
+			Result := Color_dialog
+		end
+
+	default_foreground_color: EV_COLOR is
+			-- Default foreground color for most of the widgets.
+		do
+			check True end
+			Result := Color_dialog
 		end
 
 end -- class EV_DEFAULT_COLORS_IMP

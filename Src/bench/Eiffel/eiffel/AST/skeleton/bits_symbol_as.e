@@ -73,16 +73,16 @@ feature
 				error := int_value = Void
 				if not error then
 					bits_value := int_value.integer_32_value
-					error := bits_value <= 0
+					error :=
+						bits_value <= 0 or else
+						bits_value > feature {EIFFEL_SCANNER_SKELETON}.Maximum_bit_constant
 				end
 			end
 			if error then
 				create vtbt
 				vtbt.set_class (feat_table.associated_class)
 				vtbt.set_feature (f)
-				if bits_value < 0 then
-					vtbt.set_value (bits_value)
-				end
+				vtbt.set_value (bits_value)
 				Error_handler.insert_error (vtbt)
 					-- Cannot go on here
 				Error_handler.raise_error
@@ -108,14 +108,13 @@ feature
 				--
 				-- For now, since we cannot prevent the user to use
 				-- a BIT type within the declaration of a GENERIC CONSTRAINT we have to
-				-- create something, even if it is wrong, to emphasize, we set `bit_count'
-				-- to `-1'.
+				-- create something, even if it is wrong, to emphasize, we cannot
+				-- set `bit_count' to `-1', because of a precondition of `BITS_A.make',
+				-- so we set it to 1.
 				-- But that's ok, since the result will never been used except for 
 				-- displaying an error.
-			create Result.make (-1)
-		ensure then
-			False
-		end; -- actual_type
+			create Result.make (1)
+		end
 
 	append_to (st: STRUCTURED_TEXT) is
 		do

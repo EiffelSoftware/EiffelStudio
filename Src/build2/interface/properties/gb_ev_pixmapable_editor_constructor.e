@@ -31,7 +31,7 @@ feature -- Access
 			else			
 				if first.pixmap /= Void then
 					add_pixmap_to_pixmap_container (first.pixmap)
-					modify_button.set_text (Remove_string)
+					modify_button.set_text (Remove_button_text)
 					modify_button.set_tooltip (Remove_tooltip)
 				else
 					pixmap_container.wipe_out
@@ -42,10 +42,10 @@ feature -- Access
 						-- as the pixmap will no be no longer visible.
 					filler_label.remove_tooltip
 					if first.pixmap_path /= Void then
-						create error_label.make_with_text ("Error - named pixmap missing.")
+						create error_label.make_with_text (Pixmap_missing_string)
 						error_label.set_tooltip (first.pixmap_path)
 						pixmap_container.extend (error_label)
-						modify_button.set_text (Remove_string)
+						modify_button.set_text (Remove_button_text)
 						modify_button.set_tooltip (Remove_tooltip)
 					end
 				end
@@ -78,7 +78,7 @@ feature {NONE} -- Implementation
 						for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap (new_pixmap))
 						for_all_objects (agent {EV_PIXMAPABLE}.set_pixmap_path (dialog.file_name))
 						add_pixmap_to_pixmap_container (clone (new_pixmap))
-						modify_button.set_text (Remove_string)
+						modify_button.set_text (Remove_button_text)
 						modify_button.set_tooltip (Remove_tooltip)
 						opened_file := True
 					elseif not dialog.file_name.is_empty then
@@ -95,9 +95,8 @@ feature {NONE} -- Implementation
 				modify_button.set_tooltip (Select_tooltip)
 					-- Remove tooltip from `filler_label',
 					-- no need to remove it from the pixmap
-					-- as the pixmap will no be no longer visible.
+					-- as the pixmap will now be no longer visible.
 				filler_label.remove_tooltip
-				rebuild_associated_editors (first)
 			end	
 		end
 

@@ -43,7 +43,7 @@ inherit
 	WEL_STATIC
 		rename
 			make as wel_make,
-			parent as wel_parent,
+			parent as wel_window_parent,
 			set_parent as wel_set_parent,
 			background_color as wel_background_color,
 			foreground_color as wel_foreground_color,
@@ -100,12 +100,26 @@ feature {NONE} -- Initialization
 			wel_make (default_parent, " ", 0, 0, 0, 0, 0)
 		end
 
-	
 	initialize is
 			-- Initialize label.
 		do
 			{EV_PRIMITIVE_IMP} Precursor
 			set_font (font)
+		end
+
+feature -- Access
+
+	wel_parent: WEL_WINDOW is
+			--|---------------------------------------------------------------
+			--| FIXME ARNAUD
+			--|---------------------------------------------------------------
+			--| Small hack in order to avoid a SEGMENTATION VIOLATION
+			--| with Compiler 4.6.008. To remove the hack, simply remove
+			--| this feature and replace "parent as wel_window_parent" with
+			--| "parent as wel_parent" in the inheritance clause of this class
+			--|---------------------------------------------------------------
+		do
+			Result := wel_window_parent
 		end
 
 feature -- Status setting
@@ -254,6 +268,9 @@ end -- class EV_LABEL_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.39  2000/03/29 20:31:45  brendel
+--| Added compiler workaround. See code.
+--|
 --| Revision 1.38  2000/03/28 16:35:18  rogers
 --| Now use wel_text in set_default_minimum_size.
 --|

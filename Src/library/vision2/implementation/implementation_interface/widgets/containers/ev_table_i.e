@@ -130,95 +130,19 @@ feature {EV_ANY_I} -- Implementation
 
 end -- class EV_TABLE_I
 
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 --| EiffelVision2: library of reusable components for ISE Eiffel.
---| Copyright (C) 1986-2000 Interactive Software Engineering Inc.
+--| Copyright (C) 1986-2001 Interactive Software Engineering Inc.
 --| All rights reserved. Duplication and distribution prohibited.
 --| May be used only with ISE Eiffel, under terms of user license. 
 --| Contact ISE for any other use.
 --|
 --| Interactive Software Engineering Inc.
---| ISE Building, 2nd floor
---| 270 Storke Road, Goleta, CA 93117 USA
+--| ISE Building
+--| 360 Storke Road, Goleta, CA 93117 USA
 --| Telephone 805-685-1006, Fax 805-685-6869
 --| Electronic mail <info@eiffel.com>
---| Customer support e-mail <support@eiffel.com>
+--| Customer support: http://support.eiffel.com>
 --| For latest info see award-winning pages: http://www.eiffel.com
---|-----------------------------------------------------------------------------
+--|----------------------------------------------------------------
 
---|----------------------------------------------------------------
---| CVS log
---|----------------------------------------------------------------
---|
---| $Log$
---| Revision 1.10  2001/07/14 12:46:24  manus
---| Replace --! by --|
---|
---| Revision 1.9  2001/07/14 12:16:28  manus
---| Cosmetics, replace the long:
---| --|-----------------------------------------------------------------------------
---| by the short version which is standard among all ISE libraries
---| --|----------------------------------------------------------------
---|
---| Revision 1.8  2001/06/07 23:08:10  rogers
---| Merged DEVEL branch into Main trunc.
---|
---| Revision 1.3.4.11  2000/08/17 22:53:42  rogers
---| Removed fixme not_reviewed. Comments, formatting.
---|
---| Revision 1.3.4.10  2000/06/09 20:52:55  rogers
---| Removed FIXME Not for release.
---|
---| Revision 1.3.4.9  2000/06/06 23:37:41  rogers
---| Added border_Width and set_border_wdith. Removed some redundent
---| requires.
---|
---| Revision 1.3.4.8  2000/06/06 00:42:17  king
---| Added resize
---|
---| Revision 1.3.4.7  2000/06/05 21:11:13  king
---| Added widget_count, prune->remove
---|
---| Revision 1.3.4.6  2000/06/02 23:31:21  king
---| Now inheriting from EV_CONTAINER
---|
---| Revision 1.3.4.5  2000/06/02 22:07:51  king
---| New table implementation
---|
---| Revision 1.3.4.4  2000/05/31 22:30:18  king
---| Corrected argument ordering in set_position_by_widget
---|
---| Revision 1.3.4.3  2000/05/31 00:32:11  king
---| Corrected preconditions for set_position_by_widget
---|
---| Revision 1.3.4.2  2000/05/30 22:25:09  king
---| Implemented to new structure
---|
---| Revision 1.3.4.1  2000/05/03 19:09:05  oconnor
---| mergred from HEAD
---|
---| Revision 1.6  2000/03/21 16:52:53  oconnor
---| removed invisible container
---|
---| Revision 1.5  2000/02/22 18:39:43  oconnor
---| updated copyright date and formatting
---|
---| Revision 1.4  2000/02/14 11:40:37  oconnor
---| merged changes from prerelease_20000214
---|
---| Revision 1.3.6.2  2000/01/27 19:30:02  oconnor
---| added --| FIXME Not for release
---|
---| Revision 1.3.6.1  1999/11/24 17:30:10  oconnor
---| merged with DEVEL branch
---|
---| Revision 1.3.2.3  1999/11/04 23:10:42  oconnor
---| updates for new color model, removed exists: not destroyed
---|
---| Revision 1.3.2.2  1999/11/02 17:20:06  oconnor
---| Added CVS log, redoing creation sequence
---|
---|
---|----------------------------------------------------------------
---| End of CVS log
---|----------------------------------------------------------------

@@ -133,13 +133,24 @@ feature {EV_WINDOW_IMP, EV_INTERMEDIARY_ROUTINES, EV_ANY_I} -- Implementation
 						temp_key_string := a_key_string
 						if a_key /= Void then
 							if a_key.out.count /= 1 and not a_key.is_numpad then
-								temp_key_string := ""
-							end
-							if a_key.code = app_implementation.Key_constants.Key_space then
-								temp_key_string := " "
+									-- The key pressed is an action key, we only want
+								inspect
+									a_key.code
+								when feature {EV_KEY_CONSTANTS}.Key_space then
+									temp_key_string := " "
+								when feature {EV_KEY_CONSTANTS}.Key_enter then
+									temp_key_string := "%N"
+								when feature {EV_KEY_CONSTANTS}.Key_tab then
+									temp_key_string := "%T"
+								else
+										-- The action key pressed has no printable value
+									temp_key_string := Void
+								end
 							end
 						end
-						key_press_string_actions_internal.call ([temp_key_string])
+						if temp_key_string /= Void then
+							key_press_string_actions_internal.call ([temp_key_string])
+						end
 					end
 				else
 						-- The event is a key release event.

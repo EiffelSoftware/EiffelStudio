@@ -21,9 +21,9 @@ OBJECTS = lmalloc.obj math.obj malloc.obj garcol.obj local.obj except.obj store.
 	sig.obj hector.obj cecil.obj bits.obj file.obj dir.obj string.obj \
 	misc.obj pattern.obj error.obj umain.obj memory.obj argv.obj \
 	boolstr.obj search.obj main.obj dle.obj option.obj \
-	console.obj run_idr.obj  $(TOP)\ipc\shared\networku.obj \
+	console.obj run_idr.obj  $(TOP)\ipc\shared\networku.obj $(TOP)\ipc\shared\shword.obj \
 	path_name.obj object_id.obj $(TOP)\console\econsole.lib \
-	compress.obj eif_threads.obj eif_cond_var.obj $extra_object_files
+	compress.obj eif_threads.obj eif_cond_var.obj eif_once.obj $extra_object_files
 
 WOBJECTS = $(NETWORK) wlmalloc.obj wmath.obj wmalloc.obj wgarcol.obj wlocal.obj wexcept.obj \
 	wstore.obj wretrieve.obj whash.obj wtravers.obj whashin.obj wtools.obj \
@@ -34,18 +34,18 @@ WOBJECTS = $(NETWORK) wlmalloc.obj wmath.obj wmalloc.obj wgarcol.obj wlocal.obj 
 	debug.obj interp.obj woption.obj update.obj wbench.obj  \
 	wconsole.obj wrun_idr.obj wdle.obj $(TOP)\idrs\idr.lib wpath_name.obj \
 	wobject_id.obj $(TOP)\console\econsole.lib \
-	compress.obj weif_threads.obj weif_cond_var.obj $extra_object_files
+	compress.obj weif_threads.obj weif_cond_var.obj weif_once.obj $extra_object_files
 
-EOBJECTS = wlmalloc.obj wmath.obj wmalloc.obj wgarcol.obj wlocal.obj bexcept.obj wstore.obj \
-	wretrieve.obj whash.obj wtravers.obj whashin.obj wtools.obj winterna.obj \
-	wplug.obj wcopy.obj wequal.obj wout.obj wtimer.obj \
+EOBJECTS = wlmalloc.obj wmath.obj wmalloc.obj wgarcol.obj \
+	wlocal.obj bexcept.obj wstore.obj wretrieve.obj whash.obj wtravers.obj whashin.obj \
+	wtools.obj winterna.obj wplug.obj wcopy.obj wequal.obj wout.obj wtimer.obj \
 	wurgent.obj wsig.obj whector.obj wcecil.obj wbits.obj wfile.obj wdir.obj \
 	wstring.obj wmisc.obj wpattern.obj werror.obj wumain.obj wmemory.obj \
 	wargv.obj wboolstr.obj wsearch.obj bmain.obj debug.obj interp.obj \
 	woption.obj update.obj wbench.obj wconsole.obj wrun_idr.obj \
 	$(TOP)\ipc\shared\networku.obj wdle.obj \
 	wpath_name.obj wobject_id.obj $(TOP)\console\econsole.lib \
-	compress.obj weif_threads.obj weif_cond_var.obj
+	compress.obj weif_threads.obj weif_cond_var.obj weif_once.obj
 
 all:: eif_size.h
 
@@ -108,6 +108,9 @@ weif_threads.c : eif_threads.c
 
 weif_cond_var.c : eif_cond_var.c
 	$(LN) eif_cond_var.c weif_cond_var.c
+
+weif_once.c : eif_once.c
+	$(LN) eif_once.c weif_once.c
 
 wlocal.c : local.c
 	$(LN) local.c wlocal.c
@@ -236,6 +239,9 @@ weif_threads.obj : weif_threads.c
 	$(CC)  $(JCFLAGS) -DWORKBENCH $*.c
 
 weif_cond_var.obj : weif_cond_var.c
+	$(CC)  $(JCFLAGS) -DWORKBENCH $*.c
+
+weif_once.obj : weif_once.c
 	$(CC)  $(JCFLAGS) -DWORKBENCH $*.c
 
 wlocal.obj : wlocal.c
@@ -519,6 +525,8 @@ object_id.obj : eif_garcol.h eif_except.h eif_hector.h
 
 eif_threads.obj : eif_threads.h eif_cond_var.h
 eif_cond_var.obj : eif_cond_var.h
+eif_once.obj: eif_once.h eif_threads.h
 
 weif_threads.obj : eif_threads.h eif_cond_var.h
 weif_cond_var.obj : eif_cond_var.h
+weif_once.obj: eif_once.h eif_threads.h

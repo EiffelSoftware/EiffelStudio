@@ -1,25 +1,25 @@
 /* XPM */
-static char *noname[] = {
-/* width height ncolors chars_per_pixel */
-"16 16 2 1",
+static char *scluhier[] = {
+/* width height num_colors chars_per_pixel */
+"    16    16        2            1",
 /* colors */
-"` c #000000",
-"a c #C0C0C0",
+". c #000000",
+"# c #c0c0c0",
 /* pixels */
-"aaaaaaaaaaaaaaaa",
-"aaaaaa`````aaaaa",
-"aaaaaaaaa`aaaaaa",
-"aaaaaaaaa`aaaaaa",
-"aaaaa`````````aa",
-"aaaaa`aaaaaaa`aa",
-"aa``````aaaaa`aa",
-"aa`aa`a`````````",
-"aa`aa`aaaaaaa`aa",
-"aa`aa`aaaaaaa`aa",
-"aa`aa```aaaaa`aa",
-"aa`aaaa`aaaaa`aa",
-"aa`aaaa`aaaaa`aa",
-"aa`aaaa`aaaaa`aa",
-"a```aa```aa`````",
-"aaaaaaaaaaaaaaaa"
+"######.....#####",
+"######.....#####",
+"######.....#####",
+"########.#######",
+"########.#######",
+"########.#######",
+"####.........###",
+"####.#######.###",
+"####.#######.###",
+"####.#######.###",
+"#......###.....#",
+"#.####.###.###.#",
+"#.####.###.###.#",
+"#.####.###.###.#",
+"#.############.#",
+"################"
 };

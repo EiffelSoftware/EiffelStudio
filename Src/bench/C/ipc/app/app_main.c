@@ -22,6 +22,7 @@
 #endif
 #include "stream.h"
 #include "ewbio.h"
+#include "transfer.h"
 
 extern char *rindex(const char *s, int c);
 extern unsigned TIMEOUT;
@@ -58,6 +59,7 @@ rt_public void main(int argc, char **argv)
 	alarm(TIMEOUT);			/* Ensure we'll die in TIMEOUT seconds */
 	wide_listen();
 
+	end_debug(); /* Free communication buffer if necessary */
 	exit(0);
 }
 

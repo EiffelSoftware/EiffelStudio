@@ -23,6 +23,7 @@
 #include "eif_dir.h"
 #include "eif_file.h"	/* for PATH_MAX */
 #include "eif_error.h"
+#include "eif_path_name.h"  /* for eifrt_vms_filespec() */
 
 #ifdef EIF_WIN32
 #include <windows.h>
@@ -261,18 +262,29 @@ void eif_link_driver (EIF_OBJ c_code_dir, EIF_OBJ system_name, EIF_OBJ prelink_c
 	free (system_exe);
 
 #elif defined EIF_VMS
-	char *cmd = eif_access(prelink_command_name);
-	size_t len;
-	len = 40 + strlen(eif_access(driver_name)) + strlen(eif_access(c_code_dir)) + strlen(eif_access(system_name));
-	cmd = malloc(len);
-	if (cmd == (char *)0)
-		enomem();
+	char *cmd; size_t cmd_len; 
+	const char *c_code_dir_cstr  = eif_access (c_code_dir);
+	const char *system_name_cstr = eif_access (system_name);
+	const char *prelink_cmd_cstr = eif_access (prelink_command_name);	    /* what is this for? */
+	const char *driver_name_cstr = eif_access (driver_name);
+	char driver_name_vms[PATH_MAX +1], c_code_dir_vms[PATH_MAX +1];
+	int res;
 
-	sprintf (cmd, "COPY %s %s%s", eif_access(driver_name), eif_access(c_code_dir), eif_access(system_name));
-	assert (strlen(cmd) < len);
+	/* translate driver name and c code directory to VMS filespec syntax */
+	eifrt_vms_filespec (driver_name_cstr, driver_name_vms);
+	eifrt_vms_filespec (c_code_dir_cstr,  c_code_dir_vms);
+
+	/* allocate buffer for command, add 10 bytes of overhead for COPY command verb, spaces, and terminator */
+	cmd_len = strlen(driver_name_vms) + strlen(c_code_dir_vms) + strlen(system_name_cstr) + 10;
+	cmd = malloc (cmd_len);
+	if (cmd == NULL)
+	    enomem();
+
+	sprintf (cmd, "COPY %s %s%s", driver_name_vms, c_code_dir_vms, system_name_cstr);
+	assert (strlen(cmd) < cmd_len);
 	printf ("$ %s\n",cmd);
-	(void) eif_system (cmd);
-	free(cmd);
+	res = eif_system (cmd);
+	free (cmd);
 
 #else
 	char *cmd;

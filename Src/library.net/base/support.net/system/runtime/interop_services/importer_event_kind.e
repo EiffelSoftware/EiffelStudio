@@ -35,4 +35,21 @@ feature -- Access
 			"1"
 		end
 
+feature -- Basic Operations
+
+	infix "|" (infix_arg: like Current): like Current is
+		do
+			--Built-in
+		end
+
+	from_integer (a_value: INTEGER): like Current is
+		do
+			--Built-in
+		end
+
+	to_integer: INTEGER is
+		do
+			--Built-in
+		end
+
 end -- class IMPORTER_EVENT_KIND

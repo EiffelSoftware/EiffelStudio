@@ -119,4 +119,14 @@ feature -- Basic Operations
 			--Built-in
 		end
 
+	from_integer (a_value: INTEGER): like Current is
+		do
+			--Built-in
+		end
+
+	to_integer: INTEGER is
+		do
+			--Built-in
+		end
+
 end -- class FILE_ATTRIBUTES

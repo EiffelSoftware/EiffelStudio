@@ -322,4 +322,21 @@ feature -- Access
 			"7"
 		end
 
+feature -- Basic Operations
+
+	infix "|" (infix_arg: like Current): like Current is
+		do
+			--Built-in
+		end
+
+	from_integer (a_value: INTEGER): like Current is
+		do
+			--Built-in
+		end
+
+	to_integer: INTEGER is
+		do
+			--Built-in
+		end
+
 end -- class VAR_ENUM

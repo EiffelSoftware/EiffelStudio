@@ -402,7 +402,7 @@ feature -- Element change
 			status_bar := a_bar
 			v_imp.wel_set_parent (Current)
 			v_imp.set_top_level_window_imp (Current)
-			notify_change (1 + 2)
+			compute_minimum_size
 		end
 
 	remove_status_bar is
@@ -417,6 +417,7 @@ feature -- Element change
 			status_bar := Void
 			v_imp.on_orphaned
 			notify_change (1 + 2)
+			compute_minimum_size
 		end
 
 	enable_modal is
@@ -661,6 +662,8 @@ feature {NONE} -- Implementation
 				mw := mw + item_imp.minimum_width
 			end
 
+			mw := mw.max (status_bar.minimum_width)
+
 			-- Finaly, we set the value
 			internal_set_minimum_width (mw)
 		end
@@ -680,7 +683,7 @@ feature {NONE} -- Implementation
 				mh := mh + menu_bar_height
 			end
 			if status_bar /= Void then
-				mh := mh + status_bar.height
+				mh := mh + status_bar.minimum_height
 			end
 
 			-- Finaly, we set the value
@@ -704,8 +707,9 @@ feature {NONE} -- Implementation
 				mh := mh + menu_bar_height
 			end
 			if status_bar /= Void then
-				mh := mh + status_bar.height
+				mh := mh + status_bar.minimum_height
 			end
+			mw := mw.max (status_bar.minimum_width)
 
 			-- Finaly, we set the value
 			internal_set_minimum_size (mw, mh)
@@ -827,7 +831,7 @@ feature {NONE} -- Implementation
 					check
 						sb_imp_not_void: sb_imp /= Void
 					end
-					sb_imp.set_move_and_size (0, client_height, client_width, client_height + sb_imp.minimum_height)
+					sb_imp.set_move_and_size (0, client_height, client_width, sb_imp.minimum_height)
 				end
 				interface.resize_actions.call ([x_position, y_position, a_width, a_height])
 			end
@@ -1026,6 +1030,9 @@ end -- class EV_WINDOW_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.44  2000/04/29 00:43:56  brendel
+--| Improved status bar resizing.
+--|
 --| Revision 1.43  2000/04/28 23:39:42  brendel
 --| Fixed some status bar code. Not quite there yet, though.
 --|

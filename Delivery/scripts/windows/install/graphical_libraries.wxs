@@ -1527,6 +1527,7 @@
 									<File Id="ev_menu.e" Name="ev_menu.e" />
 									<File Id="ev_list_item.e" Name="EV_LIS~D.E" LongName="ev_list_item.e" />
 									<File Id="ev_menu_bar.e" Name="EV_MEN~L.E" LongName="ev_menu_bar.e" />
+									<File Id="ev_header_item_e" Name="EV_HEA~1.E" LongName="ev_header_item.e" />
 								</Component>
 							</Directory>
 							<Directory Id="figures19" Name="figures">
@@ -1679,6 +1680,8 @@
 									<File Id="V122" Name="EV_PIC~7.E" LongName="ev_pick_and_dropable_action_sequences.e" />
 									<File Id="ev_gauge_action_sequences.e" Name="EV_GAU~5.E" LongName="ev_gauge_action_sequences.e" />
 									<File Id="ev_rich_text_action_sequences.e" Name="EV_RIC~6.E" LongName="ev_rich_text_action_sequences.e" />
+									<File Id="ev_header_action_sequences_e" Name="EV_HEA~1.E" LongName="ev_header_action_sequences.e" />
+									<File Id="ev_header_item_action_sequence_e" Name="EV_HEA~2.E" LongName="ev_header_item_action_sequence.e" />
 								</Component>
 							</Directory>
 							<Directory Id="kernel32" Name="kernel">
@@ -1811,6 +1814,7 @@
 										<File Id="ev_primitive.e" Name="EV_PRI~D.E" LongName="ev_primitive.e" />
 										<File Id="ev_horizontal_range.e" Name="EV_HOR~H.E" LongName="ev_horizontal_range.e" />
 										<File Id="ev_rich_text.e" Name="EV_RIC~3.E" LongName="ev_rich_text.e" />
+										<File Id="ev_header_e" Name="EV_HEA~1.E" LongName="ev_header.e" />
 									</Component>
 								</Directory>
 							</Directory>
@@ -1903,6 +1907,7 @@
 										<File Id="ev_separator_item_imp.e" Name="EV_SEP~5.E" LongName="ev_separator_item_imp.e" />
 										<File Id="ev_list_item_imp.e" Name="EV_LIS~C.E" LongName="ev_list_item_imp.e" />
 										<File Id="ev_tool_bar_separator_imp.e" Name="EV_TOO~B.E" LongName="ev_tool_bar_separator_imp.e" />
+										<File Id="ev_header_item_imp_e" Name="EV_HEA~1.E" LongName="ev_header_item_imp.e" />
 									</Component>
 								</Directory>
 								<Directory Id="events24" Name="events">
@@ -1935,6 +1940,7 @@
 										<File Id="V125" Name="EV_DRA~B.E" LongName="ev_drawing_area_action_sequences_imp.e" />
 										<File Id="ev_container_action_sequences_imp.e" Name="EV_CON~7.E" LongName="ev_container_action_sequences_imp.e" />
 										<File Id="ev_rich_text_action_sequences_imp.e" Name="EV_RIC~5.E" LongName="ev_rich_text_action_sequences_imp.e" />
+										<File Id="ev_header_action_sequences_imp_e" Name="EV_HEA~1.E" LongName="ev_header_action_sequences_imp.e" />
 									</Component>
 								</Directory>
 								<Directory Id="kernel34" Name="kernel">
@@ -2007,6 +2013,7 @@
 											<File Id="ev_tool_bar_imp.e" Name="EV_TOO~I.E" LongName="ev_tool_bar_imp.e" />
 											<File Id="ev_pixmap_imp_widget.e" Name="EV_PIX~D.E" LongName="ev_pixmap_imp_widget.e" />
 											<File Id="ev_rich_text_imp.e" Name="EV_RIC~2.E" LongName="ev_rich_text_imp.e" />
+											<File Id="ev_header_imp_e" Name="EV_HEA~1.E" LongName="ev_header_imp.e" />
 										</Component>
 									</Directory>
 									<Directory Id="containers21" Name="CONTAI~2" LongName="containers">
@@ -2071,6 +2078,7 @@
 										<File Id="ev_simple_item_i.e" Name="EV_SIM~1.E" LongName="ev_simple_item_i.e" />
 										<File Id="ev_menu_bar_i.e" Name="EV_MEN~1.E" LongName="ev_menu_bar_i.e" />
 										<File Id="ev_check_menu_item_i.e" Name="EV_CHE~2.E" LongName="ev_check_menu_item_i.e" />
+										<File Id="ev_header_item_i_e" Name="EV_HEA~1.E" LongName="ev_header_item_i.e" />
 										<File Id="ev_item_i.e" Name="EV_ITE~3.E" LongName="ev_item_i.e" />
 										<File Id="ev_tool_bar_radio_button_i.e" Name="EV_TOO~2.E" LongName="ev_tool_bar_radio_button_i.e" />
 										<File Id="ev_tool_bar_toggle_button_i.e" Name="EV_TOO~8.E" LongName="ev_tool_bar_toggle_button_i.e" />
@@ -2134,6 +2142,7 @@
 										<File Id="V84" Name="EV_DOC~3.E" LongName="ev_dockable_target_action_sequences_i.e" />
 										<File Id="V103" Name="EV_DRA~8.E" LongName="ev_drawing_area_action_sequences_i.e" />
 										<File Id="ev_gauge_action_sequences_i.e" Name="EV_GAU~3.E" LongName="ev_gauge_action_sequences_i.e" />
+										<File Id="ev_header_action_sequences_i_e" Name="EV_HEA~1.E" LongName="ev_header_action_sequences_i.e"/>
 										<File Id="ev_item_action_sequences_i.e" Name="EV_ITE~2.E" LongName="ev_item_action_sequences_i.e" KeyPath="yes" />
 										<File Id="ev_list_item_action_sequences_i.e" Name="EV_LIS~F.E" LongName="ev_list_item_action_sequences_i.e" />
 										<File Id="V107" Name="EV_LIS~8.E" LongName="ev_list_item_list_action_sequences_i.e" />
@@ -2197,6 +2206,7 @@
 											<File Id="ev_tool_bar_i.e" Name="EV_TOO~K.E" LongName="ev_tool_bar_i.e" />
 											<File Id="ev_list_i.e" Name="EV_LIS~E.E" LongName="ev_list_i.e" />
 											<File Id="ev_rich_text_i.e" Name="EV_RIC~1.E" LongName="ev_rich_text_i.e" />
+											<File Id="ev_header_i_e" Name="EV_HEA~1.E" LongName="ev_header_i.e" />
 										</Component>
 									</Directory>
 									<Directory Id="dialogs27" Name="dialogs">
@@ -2459,6 +2469,7 @@
 								<File Id="wel_nm_list_view_getinfotip.e" Name="WE1FF9~1.E" LongName="wel_nm_list_view_getinfotip.e" />
 				<File Id="wel_tc_hittestinfo.e" Name="WEL_TC~1.E" LongName="wel_tc_hittestinfo.e" />
 								<File Id="wel_tc_keydown.e" Name="WEL_TC~2.E" LongName="wel_tc_keydown.e" />
+								<File Id="wel_nm_custom_draw_e" Name="WED58B~1.E" LongName="wel_nm_custom_draw.e" />
 							</Component>
 						</Directory>
 						<Directory Id="messages" Name="messages">
@@ -2737,7 +2748,10 @@
 								<File Id="wel_cbeif_constants.e" Name="WEL_CB~2.E" LongName="wel_cbeif_constants.e" />
 								<File Id="wel_brush_style_constants.e" Name="WEL_BR~2.E" LongName="wel_brush_style_constants.e" />
 								<File Id="wel_file_constants.e" Name="WEL_FI~6.E" LongName="wel_file_constants.e" />
-				<File Id="wel_nm_constants.e" Name="WEL_NM~1.E" LongName="wel_nm_constants.e" />
+								<File Id="wel_nm_constants.e" Name="WEL_NM~1.E" LongName="wel_nm_constants.e" />
+								<File Id="wel_theme_gbs_constants_e" Name="WEL_TH~1.E" LongName="wel_theme_gbs_constants.e" />
+								<File Id="wel_theme_part_constants_e" Name="WEL_TH~2.E" LongName="wel_theme_part_constants.e" />
+								<File Id="wel_theme_pbs_constants_e" Name="WEL_TH~3.E" LongName="wel_theme_pbs_constants.e" />
 							</Component>
 							<Directory Id="new_consts" Name="NEW_CO~1" LongName="new_consts">
 								<Component Id="wel_window_constants.e" Guid="A2A7F228-DC79-413A-BD44-A077BE16B22F">
@@ -2751,6 +2765,8 @@
 									<File Id="wel_list_view_constants.e" Name="WEL_LI~5.E" LongName="wel_list_view_constants.e" />
 									<File Id="wel_combo_box_constants.e" Name="WEL_CO~D.E" LongName="wel_combo_box_constants.e" />
 									<File Id="wel_en_selchange_constants.e" Name="WEL_EN~4.E" LongName="wel_en_selchange_constants.e" />
+									<File Id="wel_cdds_constants_e" Name="WEL_CD~1.E" LongName="wel_cdds_constants.e" />
+									<File Id="wel_cdrf_constants_e" Name="WEL_CD~2.E" LongName="wel_cdrf_constants.e" />
 								</Component>
 							</Directory>
 						</Directory>

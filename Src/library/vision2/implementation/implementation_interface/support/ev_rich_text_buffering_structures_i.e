@@ -90,7 +90,10 @@ feature -- Status Setting
 			if not hashed_formats.has (hashed_character_format) then
 				hashed_formats.put (a_format.interface, hashed_character_format)
 				formats.extend (a_format.interface)
-				heights.extend (pixels_to_half_points (a_format.height))
+				
+					-- Rich text requires font heights to be in half points, so
+					-- multiply by 2.
+				heights.extend (a_format.height_in_points * 2)
 				format_offsets.put (hashed_formats.count, hashed_character_format)
 			
 				build_color_from_format (a_format)
@@ -464,7 +467,9 @@ feature {NONE} -- Implementation
 				end
 				effects.set_vertical_offset (half_points_to_pixels (current_format.vertical_offset))
 				character_format.set_effects (effects)
-				a_font.set_height (half_points_to_pixels (current_format.font_height))
+				
+					-- RTF uses half points to specify font heights so divide by 2.
+				a_font.set_height_in_points (current_format.font_height // 2)
 				character_format.set_font (a_font)
 				all_formats.put (character_format, current_format.character_format_out)
 			end
@@ -783,7 +788,7 @@ feature {NONE} -- Implementation
 							-- Perform nothing if family is Nill.
 						end
 							-- It is possible that no font name was specificed in the RTF.
-						if last_fontname /= Void then
+						if last_fontname /= Void and then not last_fontname.is_empty then
 							a_font.preferred_families.extend (last_fontname)
 						end
 						all_fonts.force (a_font, last_fontindex)

@@ -1,4 +1,9 @@
--- Resource file name server
+indexing
+
+	description: 
+		"Resource file name server.";
+	date: "$Date$";
+	revision: "$Revision $"
 
 class RESOURCE_FILES
 

@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Parser for the resource file.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class RESOURCE_PARSER
 
 inherit

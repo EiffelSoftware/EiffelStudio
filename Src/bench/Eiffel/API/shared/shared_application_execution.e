@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"";
+		"Shared instance of Application execution.";
 	date: "$Date$";
 	revision: "$Revision $"
 

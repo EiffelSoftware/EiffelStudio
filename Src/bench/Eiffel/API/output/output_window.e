@@ -1,7 +1,7 @@
 indexing
 
 	description: 
-		"Window where output is generated to. ";
+		"Window where output is generated.";
 	date: "$Date$";
 	revision: "$Revision $"
 

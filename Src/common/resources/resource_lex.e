@@ -1,3 +1,10 @@
+indexing
+
+	description: 
+		"Lexical analysis of the resource.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class RESOURCE_LEX
 
 inherit

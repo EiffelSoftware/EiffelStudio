@@ -9,14 +9,16 @@ inherit
 			reset_modified_flags as old_reset_modified_flags
 		redefine
 			is_fontable, context_initialization, 
-			set_visual_name, retrieve_set_visual_name
+			set_visual_name, retrieve_set_visual_name,
+			update_visual_name_in_editor
 		end;
 
 	PRIMITIVE_C
 		redefine
 			reset_modified_flags, copy_attributes, 
 			is_fontable, context_initialization, 
-			set_visual_name, retrieve_set_visual_name
+			set_visual_name, retrieve_set_visual_name,
+			update_visual_name_in_editor
 		select
 			copy_attributes, reset_modified_flags
 		end
@@ -62,11 +64,11 @@ feature
 			resize_policy_disabled_modified := True;
 			resize_policy_disabled := flag;
 			if flag then
-				forbid_recompute_size;
+				--forbid_recompute_size;
 					-- the current size must be saved
 				size_modified := True;
 			else
-				allow_recompute_size
+				--allow_recompute_size
 			end;
 		end;
 
@@ -96,7 +98,6 @@ feature
 			if (s = Void) then
 				visual_name := Void;
 				text_modified := False;
-				size_modified := True;
 				widget.unmanage;
 				widget_set_text (label);
 				widget.manage;
@@ -112,7 +113,6 @@ feature
 		do
 			text_modified := True;
 			visual_name := clone (s);
-			size_modified := True;
 			widget_set_text (label);
 		end;
 
@@ -138,11 +138,11 @@ feature {NONE}
 
 	widget_set_center_alignment is
 		deferred
-        end;
+		end;
  
-    widget_set_left_alignment is
+	widget_set_left_alignment is
 		deferred
-        end;
+		end;
 
 	add_to_option_list (opt_list: ARRAY [INTEGER]) is
 		do
@@ -150,6 +150,17 @@ feature {NONE}
 						Context_const.Geometry_format_nbr);
 			opt_list.put (Context_const.label_text_att_form_nbr,
 						Context_const.Attribute_format_nbr);
+		end;
+
+	update_visual_name_in_editor is
+		local
+			editor: CONTEXT_EDITOR
+		do
+			editor := context_catalog.editor (Current, 
+					Context_const.label_text_att_form_nbr);
+			if editor /= Void then
+				editor.reset_current_form
+			end;
 		end;
 
 feature {CONTEXT}

@@ -41,7 +41,7 @@ feature
 
 	create_focus_label is
 		do
-			set_focus_string (Focus_labels.command_instance_label)
+			set_focus_string (Focus_labels.observer_label)
 		end;
 
 	associated_command: CMD is
@@ -100,15 +100,41 @@ feature {NONE}
 
 	process_instance (dropped: CMD_INST_STONE) is
 		local
-			inst: CMD_INSTANCE
+			observer, observed_command: CMD_INSTANCE
 			command: ADD_OBSERVER_CMD
+			warning: WARNING_BOX
+			error: BOOLEAN
+			error_message: STRING
 		do
-			inst ?= dropped.data;
-			if inst /= Void then
-				!! command.make (command_tool.command_instance, inst)
-				command.execute (Void)
+			observer ?= dropped.data
+			if observer /= Void then
+				error_message := observer.label
+				observed_command := command_tool.command_instance
+				if observed_command.instance /= Void then
+					if observed_command /= observer and then
+							not observed_command.is_observer (observer) and then
+							not observed_command.observers.has (observer) then  
+						!! command.make (observed_command, observer)
+						command.execute (Void)
+					else
+						error := True
+						error_message.append (" can't observe ")
+						error_message.append (observed_command.label)
+						error_message.append (" since %Nit already observe or it will imply an infinite loop.")
+					end
+				else
+					error := True
+					error_message.append (" can't observe ")
+					error_message.append (observed_command.label)
+					error_message.append (" since %Nit hasn't be totally instantiated yet.")
+				end
+				if error then
+					!! warning.make ("Warning", command_tool)
+					warning.set_message (error_message)
+					warning.popup
+				end
 			end
-		end; 
+		end 
 
 end
 

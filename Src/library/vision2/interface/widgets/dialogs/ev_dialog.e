@@ -13,7 +13,7 @@ class
 
 inherit
 	EV_TITLED_WINDOW
-		export {NONE}
+		export {EV_DOCKABLE_SOURCE_I}
 			close_request_actions
 		redefine 
 			implementation,

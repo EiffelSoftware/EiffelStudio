@@ -85,6 +85,10 @@ feature -- Definition: access
 		do
 			last_call_success := c_define_type_ref_by_name (item, resolution_scope,
 				type_name.item, $Result)
+
+			if last_call_success = feature {MD_ERRORS}.meta_s_duplicate then
+				last_call_success := 0
+			end
 		ensure
 			success: last_call_success = 0
 		end
@@ -99,6 +103,10 @@ feature -- Definition: access
 		do
 			last_call_success := c_define_member_ref (item, in_class_token,
 				method_name.item, signature.item.item, signature.size, $Result)
+
+			if last_call_success = feature {MD_ERRORS}.meta_s_duplicate then
+				last_call_success := 0
+			end
 		ensure
 			success: last_call_success = 0
 			result_valid: Result > 0

@@ -33,6 +33,15 @@ feature
 			io.error.put_string (s)
 		end
 
+	is_identical (other: TYPE_I): BOOLEAN is
+			-- Is `other' identical to Current
+			-- Takes `true_generics' into account.
+		require
+			good_argument: other /= Void
+		do
+			Result := same_as (other)
+		end
+		
 	same_as (other: TYPE_I): BOOLEAN is
 			-- Is `other' equal to Current ?
 		require

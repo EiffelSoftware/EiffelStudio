@@ -1,0 +1,160 @@
+<html>
+	<head>
+		<title>Reflection interface specification index</title>
+	</head>
+
+	<body>
+		<body background="#ffffff" text="#000000" link="#555ccc" vlink="#555ccc" alink="#555ccc">
+
+		<br><br>
+		<center>
+			<h1>Reflection system specification</h1>
+		</center>
+		<br><br>
+
+			<p>
+				ISE reflection system is composed of four components interacting with each other: `Emitter.exe', `ISE.EiffelComponents.dll', `ISE.CodeGenerator.dll' and `ISE.ReflectionInterface.dll'.
+				The two entry points are `Emitter.exe' and `ISE.ReflectionInterface.dll':<br>
+				<ul>
+					<li>The emitter enables you to generate Eiffel classes and Xml files from a .NET assembly.</li>
+					<li>The ISE reflection interface is aimed at connecting .NET names with corresponding Eiffel names by using XML files. It is a kind of database where you put XML files describing .NET types and you retrieve a more user-friendly type description. </li>
+				<ul>
+			</p>
+			<br>
+
+		<center>
+			<table width = 800>
+				<tr>
+					<td><a href = "./introduction.html" target = "_parent">1. Introduction</a></td>
+				</tr>
+				<tr height = 10></tr>
+				<tr>
+					<td><a href = "./Eiffel_components.html" target = "_parent">2. ISE.EiffelComponents.dll</a>
+						<table>
+							<tr>
+								<td width = 60></td>
+								<td><a href = "./Eiffel_components.html#eiffel_assembly" target = "_parent">2.1 EiffelAssembly</a><td>
+							</tr>
+							<tr>
+								<td width = 60></td>
+								<td><a href = "./Eiffel_components.html#eiffel_class" target = "_parent">2.2 EiffelClass</a><td>
+							</tr>
+							<tr>
+								<td width = 60></td>
+								<td><a href = "./Eiffel_components.html#eiffel_feature" target = "_parent">2.3 EiffelFeature</a><td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr height = 10></tr>
+				<tr>
+					<td><a href = "./reflection_interface.html" target = "_parent">3. ISE.ReflectionInterface.dll</a>
+
+						<table>
+						<tr>
+							<td width = 60></td>
+							<td><a href = "./reflection_interface.html#storage" target = "_parent">3.1 How can I put a type in the database?</a>
+								<table>
+									<tr>
+										<td width = 60></td>
+										<td><a href = "./reflection_interface.html#start_storage" target = "_parent">3.1.1 Start assembly storage...</a><td>
+									</tr>
+									<tr>
+										<td width = 60></td>
+										<td><a href = "./reflection_interface.html#add_type" target = "_parent">3.1.2 Add a type to the database...</a><td>
+									</tr>
+									<tr>
+										<td width = 60></td>
+										<td><a href = "./reflection_interface.html#end_storage" target = "_parent">3.1.3 End assembly storage...</a><td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td width = 60></td>
+							<td><a href = "./reflection_interface.html#retrieval" target = "_parent">3.2 How can I retrieve information from the database?</a>
+								<table>
+									<tr>
+										<td width = 60></td>
+										<td><a href = "./reflection_interface.html#assembly_retrieval" target = "_parent">3.2.1 Retrieve an assembly...</a><td>
+									</tr>
+									<tr>
+										<td width = 60></td>
+										<td><a href = "./reflection_interface.html#type_retrieval" target = "_parent">3.2.2 Retrieve a type...</a><td>
+									</tr>
+									<tr>
+										<td width = 60></td>
+										<td><a href = "./reflection_interface.html#assemblies_retrieval" target = "_parent">3.2.3 Retrieve all the assemblies ...</a><td>
+									</tr>
+									<tr>
+										<td width = 60></td>
+										<td><a href = "./reflection_interface.html#concurrence_issue" target = "_parent">3.2.4 Concurrence issue</a><td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+						<tr>
+							<td width = 60></td>
+							<td>
+								<a href = "./reflection_interface.html#hash_value" target = "_parent">3.3 MD5 Hash algorithm</a>
+							</td>
+						</tr>
+						</table>
+					</td>
+				</tr>
+				<tr height = 10></tr>
+				<tr>
+					<td><a href = "./code_generator.html" target = "_parent">4. ISE.CodeGenerator.dll</a>
+						<table>
+							<tr>
+								<td width = 60></td>
+								<td><a href = "./code_generator.html#eiffel_generator" target = "_parent">4.1 EiffelCodeGenerator</a><td>
+							</tr>
+							<tr>
+								<td width = 60></td>
+								<td><a href = "./code_generator.html#xml_assembly_generator" target = "_parent">4.2 XmlAssemblyCodeGenerator</a><td>
+							</tr>
+							<tr>
+								<td width = 60></td>
+								<td><a href = "./code_generator.html#xml_type_generator" target = "_parent">4.3 XmlTypeCodeGenerator</a><td>
+							</tr>
+							<tr>
+								<td width = 60></td>
+								<td><a href = "./code_generator.html#eiffel_generator_from_xml" target = "_parent">4.4 EiffelCodeGeneratorFromXml</a><td>
+							</tr>
+							<tr>
+								<td width = 60></td>
+								<td><a href = "./code_generator.html#diagram" target = "_parent">4.5 Classes diagram</a><td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr height = 10></tr>
+				<tr>
+					<td><a href = "./emitter.html" target = "_parent">5. Emitter.exe</a>
+						<table>
+							<tr>
+								<td width = 60></td>
+								<td><a href = "./emitter.html#eiffel_classes" target = "_parent">5.1 GenerateEiffelClasses</a><td>
+							</tr>
+							<tr>
+								<td width = 60></td>
+								<td><a href = "./emitter.html#xml_files" target = "_parent">5.2 GenerateXmlFiles</a><td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr height = 10></tr>
+				<tr>
+					<td><a href = "./interactions.html" target = "_parent">6. Main interactions</a>	</td>
+				</tr>
+				<tr height = 10></tr>
+				<tr>
+					<td><a href = "./implementation.html" target = "_parent">7. Current state of implementation</a>	</td>
+				</tr>
+			</table>
+		</center>
+		<br><br><br><br><br>
+
+	</body>
+</html>

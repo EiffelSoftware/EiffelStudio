@@ -12,7 +12,9 @@
 */
 
 #include <stdio.h>
+#if !defined EIF_VMS && !defined VXWORKS 
 #include <malloc.h>
+#endif
 #include "eif_config.h"
 #include "eif_portable.h"
 #include "eif_lmalloc.h"	/* for eif_malloc, eif_free */

@@ -1,48 +1,40 @@
+indexing
+	description: "Hole to do a loop transition on a state."
+	Id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class APP_SELF_HOLE 
 
 inherit
-
-	APP_EDITOR_HOLE
-        rename
-            make as parent_make
+	EB_BUTTON
 		redefine
-			process_label
+			make
 		end
 
 creation
-
 	make
 	
-feature {NONE}
+feature {NONE} -- Initialization
 
-    make (a_parent: COMPOSITE) is
-        do
-            parent_make (a_parent)
-        end
-
-	create_focus_label is
+	make (a_parent: EV_CONTAINER) is
+		local
+			cmd: APP_CUT_LABEL
 		do
-			set_focus_string (Focus_labels.self_label)
+			Precursor (a_parent)
+			create cmd
+			add_pnd_command (Pnd_types.label_type, cmd, Void)
 		end
 
-	symbol: PIXMAP is
+--	create_focus_label is
+--		do
+--			set_focus_string (Focus_labels.self_label)
+--		end
+
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.self_label_pixmap
-		end;
+		end
 
-	stone_type: INTEGER is
-		do
-			Result := Stone_types.label_type
-		end;
+end -- class APP_SELF_HOLE
 
-	process_label (dropped: LABEL_STONE) is
-			-- Update the transition to self. 
-		local
-			cut_label_command: APP_CUT_LABEL;
-		do
-			!!cut_label_command;
-			cut_label_command.execute (dropped.data.label)
-		end; 
-
-end 

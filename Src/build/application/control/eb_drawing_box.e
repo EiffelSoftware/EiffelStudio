@@ -1,183 +1,139 @@
+indexing
+	description: "EiffelBuild drawing manager."
+	Id: "$Id $"
+	date: "$Date$"
+	revision: "$Revision$"
 
-class EB_DRAWING_BOX [T -> FIGURE] 
+class EB_DRAWING_BOX [T -> EV_FIGURE] 
 
 inherit
+	EV_COMMAND
 
-	COMMAND;
-	COMMAND_ARGS
-			rename 
-				first as select_action
-			end
 	TWO_WAY_LIST [T]
 		rename 
 			make as twl_make,
 			item as element,
 			append as twl_append
-		end;
+		end
 
 creation
-
 	make
 
-feature -- Creation
+feature {NONE} -- Initialization
 
-	make (a_drawing: DRAWING_AREA) is
+	make (a_drawing: EV_DRAWING_AREA) is
 			-- Initialize world, drawing_area and mode is select_mode
 			-- by default. Set current_drawing_area to 'a_drawing1'.
 		require
-			not_void_drawing: not (a_drawing = Void);
+			not_void_drawing: not (a_drawing = Void)
 		do
-			twl_make;
-			drawing_area := a_drawing;
+			twl_make
+			drawing_area := a_drawing
 			set_select_mode
-		end;
+		end
 
-feature
+feature -- Access
 
-	enable_drawing is 
-			-- Enable the drawing of Current
-		do 
-			drawing_disabled := False 
-		end;
+	drawing_area: EV_DRAWING_AREA
+			-- Area where figures are drawn
 
-	disable_drawing is 
-			-- Disable the drawing of Current
-		do 
-			drawing_disabled := True
-		end;
-
-	found: BOOLEAN;
+	found: BOOLEAN
 			-- Was the element found? 
 
-	mode: INTEGER;
+	mode: INTEGER
 			-- Current mode 
-	
-	find_mode: INTEGER is unique;
+
+	find_mode: INTEGER is unique
 			-- Find mode of Current 
 
-	offset: COORD_XY_FIG;
+	offset: EV_POINT
 			-- Offset of the top left corner of `drawing_area'
 
-	select_mode: INTEGER is unique;
+	select_mode: INTEGER is unique
 			-- Select mode of Current
 
-	selected_element: T;
+	selected_element: T
 			-- Selected element from `drawing_area'
 
-	point: COORD_XY_FIG;
+	point: EV_POINT
 			-- Point of selection
-	
+
 	append (elmt: T) is
 			-- Append elmt to `Current'. 
 		require
+			drawing_area_exists: not drawing_area.destroyed
 			valid_elmt: elmt /= Void
 		do
-			finish;
-			put_right (elmt);
-			if not drawing_area.destroyed then
-				elmt.attach_drawing (drawing_area);
-			end
-		end; -- append
-
-	current_point: POINT is
-			-- Current point at mouse cursor position 
-		local
-			x0, y0: INTEGER
-		do
-			x0 := drawing_area.screen.x - drawing_area.real_x;
-			y0 := drawing_area.screen.y - drawing_area.real_y;
-			!!Result.make;
-			Result.set (x0, y0);
-		end; -- current_point
-
-	attach_to_drawing_area is
-			-- Attach figures to `drawing_area'.
-		do
-			if not drawing_disabled then
-				from
-					start
-				until
-					after
-				loop
-					element.attach_drawing (drawing_area);
-					forth
-				end;
-			end;
-		end; -- draw
+			finish
+			put_right (elmt)
+			elmt.attach_drawing (drawing_area)
+		end
 
 	draw is
 			-- Draw the all elements in Current.
 		do
-			if not drawing_disabled then
-				from
-					start
-				until
-					after
-				loop
-					element.draw;
-					forth
-				end;
-			end;
-		end; -- draw
+			from
+				start
+			until
+				after
+			loop
+				element.draw
+				forth
+			end
+		end
 
 	remove_selected is
 			-- Remove selected_element from Current.
 		do
 			if selected_element /= Void then
-				remove_selected_element;
-				selected_element := Void;
-				found := false;
-			end;
-		end;
+				remove_selected_element
+				selected_element := Void
+				found := false
+			end
+		end
 
 	set_find_mode is
 			-- Finds element in Current.
 		do
-			mode := find_mode;
+			mode := find_mode
 		ensure
 			mode = find_mode
-		end; -- set_find_mode
+		end
 
 	set_select_mode is
 			-- Finds and selects element in Current.
 		do
-			mode := select_mode;
+			mode := select_mode
 		ensure
 			mode = select_mode
-		end; -- set_select_mode
+		end
 
-	find is
-			-- Finds element using the mouse position on screen. If located, sets 
+	find (lx, ly: INTEGER) is
+			-- Finds element at position (`lx', `ly'). If located, sets 
 			-- found to true and move cursor position to element. Otherwise, 
 			-- the cursor position is offleft.
 		local
 			eltm_found: BOOLEAN
 		do
-			found := false;
-			point := current_point;
+			found := False
+			create point.set (lx, ly)
 			from
 				finish	
 			until
-				before
-				or found
+				before or found
 			loop
 				if element.contains (point) then
-					found := true;
+					found := True
 				else
 					back	
-				end;
-			end;
-		end; -- find
+				end
+			end
+		end
 
-feature {NONE}
-	
-	drawing_disabled: BOOLEAN;
-	
-	drawing_area: DRAWING_AREA;
-			-- Area where figures are drawn
+feature {NONE} -- Implementation
 
-	select_figure is
-			-- Selects element using the mouse position on screen. 
+	select_figure (lx, ly: INTEGER) is
+			-- Selects element using the mouse position `pt'. 
 			-- If found, assign selected_element to element. 
 			-- Otherwise, the cursor position is offleft. The previous
 			--  selected_figure (i.e. the selected_figure before 
@@ -186,54 +142,51 @@ feature {NONE}
 			-- previous selected_figure is equal to the 
 			-- selected_figure then do nothing.
 		local
-			prev_elmt: like selected_element;
+			prev_elmt: like selected_element
 		do
-			if selected_element /= Void	then	
-				prev_elmt := selected_element;
-			end;
-			find;
+			if selected_element /= Void	then
+				prev_elmt := selected_element
+			end
+			find (lx, ly)
 			if found then
-				selected_element := element;
+				selected_element := element
 				if prev_elmt /= selected_element then
 					if prev_elmt /= Void then
 						prev_elmt.deselect
-					end;
+					end
 					selected_element.select_figure
-				end;
-			end;
+				end
+			end
 			finish
-		end; -- select_figure
+		end
 
 	remove_selected_element is
 			-- Remove 'selected_element' from Current.
 		local
 			elmt_found: BOOLEAN
 		do
-			start;
-			search (selected_element);
+			start
+			search (selected_element)
 			if not after then
 				remove
 			end	
-		end; 
+		end 
 
-feature {NONE}
+feature {NONE} -- Command
 
-	execute (argument: ANY) is
+	execute (arg: EV_ARGUMENT; ev_data: EV_BUTTON_EVENT_DATA) is
 			-- Execute the command
 		do
-			if argument = select_action then
-				if not empty then
-					if mode = select_mode then
-						select_figure
-					elseif mode = find_mode then
-						find
-					else
-						-- should never happen
-					end;
-				else
-					found := false
-				end;
-			end;
-		end; -- execute
+			if not empty then
+				if mode = select_mode then
+					select_figure (ev_data.x, ev_data.y)
+				elseif mode = find_mode then
+					find (ev_data.x, ev_data.y)
+				end
+			else
+				found := False
+			end
+		end
 
 end -- class EB_DRAWING_BOX
+

@@ -1,50 +1,40 @@
+indexing
+	description: "Hole to make a transition which exit the Application."
+	Id: "$Id$"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class APP_EXIT_HOLE 
 
 inherit
-
-	APP_EDITOR_HOLE
-        rename
-            make as parent_make
+	EB_BUTTON
 		redefine
-			process_label
+			make
 		end
 
 creation
-
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
-	make (a_parent: COMPOSITE) is
+	make (par: EV_CONTAINER) is
+		local
+			cmd: APP_SET_EXIT
 		do
-			parent_make (a_parent)
+			Precursor (par)
+			create cmd
+			add_pnd_command (Pnd_types.label_type, cmd, Void)
 		end
 
-	symbol: PIXMAP is
+	symbol: EV_PIXMAP is
 		do
 			Result := Pixmaps.exit_label_pixmap
-		end;
+		end
 
-	create_focus_label is
-		do
-			set_focus_string (Focus_labels.exit_label)
-		end;
+--	create_focus_label is
+--		do
+--			set_focus_string (Focus_labels.exit_label)
+--		end
 
-feature {NONE}
+end -- class APP_EXIT_HOLE
 
-	stone_type: INTEGER is
-		do
-			Result := Stone_types.label_type
-		end;
-	
-	process_label (dropped: LABEL_STONE) is
-			-- Set exit label.
-		local
-			set_exit_command: APP_SET_EXIT;
-		do
-			!!set_exit_command;
-			set_exit_command.execute (dropped.data.label)
-		end; 
-
-end 

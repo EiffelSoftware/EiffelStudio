@@ -1,8 +1,12 @@
+indexing
+	description: "Transition name list."
+	Id: "$Id $"
+	date: "$Date$"
+	revision: "$Revision$"
 
 class TRAN_NAME_LIST 
 
 inherit
-
 	SORTED_TWO_WAY_LIST [TRAN_NAME]
 
 creation
@@ -19,9 +23,10 @@ feature
 			until
 				after or else Result
 			loop
-				Result := cmd_label.is_equal (item.cmd_label);
+				Result := cmd_label.is_equal (item.cmd_label)
 				forth
-			end;	
+			end	
 		end
 
-end
+end -- class TRAN_NAME_LIST
+

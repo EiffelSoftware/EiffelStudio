@@ -1,0 +1,220 @@
+<document output="studio" title="Major changes between ISE Eiffel 5.2 and ISE Eiffel 5.3">
+	<meta_data/>
+	<paragraph>
+		<heading>
+			<size>1</size>Changes between ISE Eiffel 5.3 and ISE Eiffel 5.4:
+		</heading>
+		<heading>
+			<size>2</size>What's new
+		</heading>
+		<list ordered="false">
+			<item>Limited support for new 
+				<code>
+					<keyword>convert</keyword>
+				</code> keyword           (only on argument passing and assignments. Not supported when used           with infix routines).
+			</item>
+			<item>Support for assertion checking on external routines.</item>
+			<item>Removed limitation about implementing or redefining a non-external           routine by an external one and vice versa.</item>
+			<item>Support for new C/C++ inline specification.</item>
+			<item>For .NET, allow calling of overloaded features for a .NET classes           to be called without using disambiguated names. Disambiguated names           are still needed when redefining inherited features from .NET classes.</item>
+			<item>Support for inclusion of .NET resources within Eiffel assemblies.</item>
+			<item>Launch C compilation when needed if 
+				"-c_compile" option is specified on the 
+				"ec" command line.
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Improvements
+		</heading>
+		<list ordered="false">
+			<item>Improved speed of compilation by about 20-30%</item>
+			<item>Improved run-time memory allocation speed and footprint so that it           has a 15%-20% faster allocation scheme and takes less memory than           before.</item>
+			<item>Reduced waiting time at the end of the degree 6 when performing a           compilation from scratch (reduced to about 50% or more of the time it           used to take)</item>
+			<item>Improved speed of 
+				<code>
+					<class_name>TUPLE</class_name>
+				</code> creation and 
+				<code>
+					<class_name>TUPLE</class_name>
+				</code> access           which generates more compact C code.
+			</item>
+			<item>Improved speed of agent calls by a factor of 2 to 3.</item>
+			<item>Improved speed of Eiffel calls from C (CECIL and use of $ operator           on routines). It also makes generated           executables smaller (about 1-5% smaller depending on number of           routines used in this context)</item>
+		</list>
+		<heading>
+			<size>2</size>Changes
+		</heading>
+		<list ordered="false">
+			<item>Changed the way we generate calls to C/C++ external routines. It           is possible that because of this change, code that used to C compile,           will not compile anymore. This happens mostly when mixing C and C++           code and the C call being made is incorrect but was not previously           checked against the C header files if provided.</item>
+			<item>In multithreaded mode, all C externals that could potentially           block the execution of the system should be marked `blocking' as in:
+				<line_break/>
+				<paragraph>
+					<code>
+						<feature_name>sleep</feature_name>
+					</code> (m: 
+					<code>
+						<class_name>INTEGER</class_name>
+					</code>) 
+					<code>
+						<keyword>is</keyword>
+					</code>
+					<code>
+						<keyword>external</keyword>
+					</code> "C blocking"          
+					<code>
+						<keyword>end</keyword>
+					</code>
+				</paragraph>Not doing it could generate dead-lock during the execution of a multithreaded system.
+			</item>
+			<item>Static access on externals is now only authorized when external is           a frozen external without assertions.</item>
+			<item>Compiler will now report a warning for assignments like those:
+				<line_break/>
+				<paragraph>td: 
+					<code>
+						<class_name>TUPLE</class_name>
+					</code> [
+					<code>
+						<class_name>DOUBLE</class_name>
+					</code>]ti: 
+					<code>
+						<class_name>TUPLE</class_name>
+					</code> [
+					<code>
+						<class_name>INTEGER</class_name>
+					</code>]td := ti
+				</paragraph>          The warning will help you correct code using this pattern, because in           the next release this will be rejected in order to conform to the           Eiffel language specification.          
+			</item>
+		</list>
+		<heading>
+			<size>2</size>Bug fixes
+		</heading>
+		<heading>
+			<size>3</size>Language issues
+		</heading>
+		<list ordered="false">
+			<item>Now checks for valid export status in agent creation. Meaning that           in class 
+				<code>
+					<class_name>MY_CLASS</class_name>
+				</code>, the following agent creation          
+				<code>
+					<keyword>agent</keyword>
+				</code>
+				<code>
+					<feature_name>target</feature_name>
+				</code>.
+				<code>
+					<feature_name>call</feature_name>
+				</code> is valid if and           only if 
+				<code>
+					<feature_name>call</feature_name>
+				</code> is exported to 
+				<code>
+					<class_name>MY_CLASS</class_name>
+				</code>.
+			</item>
+			<item>Allowed type specification for open operands in agent creation,           i.e. one can now write: 
+				<code>
+					<keyword>agent</keyword>
+				</code>
+				<code>
+					<feature_name>f</feature_name>
+				</code> ({
+				<code>
+					<class_name>A</class_name>
+				</code>}).
+			</item>
+			<item>Fixed bug which allowed compiler to accept the following incorrect           code: 
+				<code>
+					<feature_name>char</feature_name>
+				</code>: 
+				<code>
+					<class_name>CHARACTER</class_name>
+				</code>
+				<code>
+					<keyword>is</keyword>
+				</code>
+				<code>
+					<string>"rdsf"</string>
+				</code>
+			</item>
+			<item>Fixed bug in error reporting for incompatible 
+				<code>
+					<class_name>BIT</class_name>
+				</code> types           involving bit manifest constants. It would           always report 
+				<code>
+					<class_name>BIT 0</class_name>
+				</code>, instead of the actual number of bits in the bit           manifest constant.
+			</item>
+		</list>
+		<heading>
+			<size>3</size>Compiler issues
+		</heading>
+		<list ordered="false">
+			<item>Fixed non-detection of changes when changing code from          
+				<code>
+					<keyword>agent</keyword>
+				</code>
+				<code>
+					<feature_name>call </feature_name>
+				</code>to          
+				<code>
+					<keyword>agent</keyword>
+				</code>
+				<code>
+					<keyword>Current</keyword>
+				</code>.
+				<code>
+					<feature_name>call</feature_name>
+				</code>.   Which should check for the validity of export of 
+				<code>
+					<feature_name>call </feature_name>
+				</code>  to current class.
+			</item>
+		</list>
+		<heading>
+			<size>3</size>Runtime/code generation issues
+		</heading>
+		<list ordered="false">
+			<item>Fixed issue when shared library definition file did not exist or           was invalid. Now it will not produce any C compilation errors.</item>
+			<item>Fixed bug in recoverable storable when there is a mismatch. The           first assignment attempt in           
+				<code>
+					<feature_name>internal_correct_mismatch</feature_name>
+				</code> from 
+				<code>
+					<class_name>ANY</class_name>
+				</code> would crash.
+			</item>
+			<item>Fixed issues when using agents in a multithreaded application,           they will sometimes disable the garbage collector and the application           might quickly run out of memory.</item>
+			<item>Fixed random crashes when EIF_MEMORY_CHUNK, EIF_MEMORY_SCAVENGE           and EIF_STACK_CHUNK environment variables had an incorrect value.           Instead the runtime will now fix the value to an appropriate one.</item>
+		</list>
+		<heading>
+			<size>3</size>.NET issues
+		</heading>
+		<list ordered="false">
+			<item>Fixed bug in code generation  with following statement:
+				<line_break/>
+				<paragraph>l_time: 
+					<code>
+						<class_name>TIME_SPAN</class_name>
+					</code>
+					<code>
+						<feature_name>print</feature_name>
+					</code> (l_time.
+					<code>
+						<feature_name>total_milliseconds</feature_name>
+					</code>.
+					<code>
+						<feature_name>out</feature_name>
+					</code>)
+				</paragraph>
+			</item>
+			<item/>
+		</list>
+		<heading>
+			<size>3</size>Store/Retrieve issues
+		</heading>
+		<list ordered="false">
+			<item>Fixed memory corruption bug with recoverable storable when a           mismatch was detected</item>
+			<item>Fixed issue where mismatch was not detected if attributes were           dropped</item>
+		</list>
+	</paragraph></document>

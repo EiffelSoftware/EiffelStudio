@@ -6,6 +6,8 @@ echo Compiling monothreaded version of the library
 nmake /NOLOGO /C /S /f makefile.msc > make.log
 echo Compiling multithreaded version of the library
 nmake /NOLOGO /C /S /f mt-makefile.msc >> make.log
+echo Compiling .NET version of the library
+nmake /NOLOGO /C /S /f makefile.il >> make.log
 
 echo. 
 echo ------------------------------------------------------------------------

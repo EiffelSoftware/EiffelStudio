@@ -57,12 +57,10 @@ feature -- Basic Operation
 			create temp_file_name.make_from_string (generated_path.string)
 			temp_file_name.extend (directory_name)	
 			create directory.make (temp_file_name)
-			if directory.exists then
+			if directory.exists and directory.is_empty then
 					-- Only remove the directory if it is present on the disk.
 					-- If a project has not been generated, then there may be no directory yet.
 				delete_directory (directory)
-					-- Record the deletion
-				directory_deleted := True
 			end
 			if not history.command_list.has (Current) then
 				history.add_command (Current)
@@ -78,13 +76,13 @@ feature -- Basic Operation
 			temp_file_name: FILE_NAME
 			directory: DIRECTORY
 		do
-			if directory_deleted then
-					-- Only restore the directory to the disk if it was actually
-					-- removed previously.
-				create temp_file_name.make_from_string (generated_path.string)
-				temp_file_name.extend (directory_name)	
-				create directory.make (temp_file_name)
-				create_directory (directory)
+				-- Only restore the directory to the disk if it was actually
+				-- removed previously.
+			create temp_file_name.make_from_string (generated_path.string)
+			temp_file_name.extend (directory_name)	
+			create directory.make (temp_file_name)
+			if not directory.exists then
+				create_directory (directory)	
 			end
 			window_selector.silent_add_named_directory (directory_name)
 			command_handler.update
@@ -109,8 +107,5 @@ feature {NONE} -- Implementation
 	directory_name: STRING
 		-- Name of directory that was deleted. Only the actual name,
 		-- and not the full name, as all directories are relative to the project.
-		
-	directory_deleted: BOOLEAN
-		-- Was directory `directory_name' actually deleted from the disk?
 
 end -- class GB_COMMAND_DELETE_DIRECTORY

@@ -55,7 +55,6 @@ EIF_BOOLEAN cwel_hook_mouse(HWND hWnd)
 	{
 	HINSTANCE hLibrary;
 	FARPROC hook_mouse_func;
-	BOOL bRes;
 	
 		/* Disable debugger otherwise everything is blocked */
 	saved_debug_mode = debug_mode;
@@ -75,8 +74,7 @@ EIF_BOOLEAN cwel_hook_mouse(HWND hWnd)
 	
 	// Everything went ok, execute the function and return the value returned
 	// by the function.
-	bRes = (EIF_BOOLEAN) ((FUNCTION_CAST_TYPE(int, __stdcall, (HWND)) hook_mouse_func)(hWnd));
-	return bRes;
+	return (EIF_BOOLEAN) ((FUNCTION_CAST_TYPE(int, __stdcall, (HWND)) hook_mouse_func)(hWnd));
 	}
 
 /*---------------------------------------------------------------------------*/

@@ -31,6 +31,7 @@ feature {GB_COMMAND_HANDLER} -- Initialization
 			-- Create `Current'.
 		do
 			is_selected := component_viewer.is_show_requested
+			drop_agent := agent component_dropped
 		end
 
 feature -- Access
@@ -52,6 +53,18 @@ feature -- Access
 			-- `Current' command.
 		do
 			Result := component_viewer	
+		end
+		
+feature {NONE} -- Implementation
+
+	component_dropped (object_stone: GB_COMPONENT_OBJECT_STONE) is
+			-- Respond to the dropping of `object_stone' on representations of `Current'.
+		do
+			if not is_selected then
+					-- Show `component_viewer' if not already shown.
+				execute
+			end
+			component_viewer.set_component (object_stone.component)
 		end
 
 end -- class GB_SHOW_HIDE_COMPONENT_VIEWER_COMMAND

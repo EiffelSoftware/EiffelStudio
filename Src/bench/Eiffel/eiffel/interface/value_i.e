@@ -83,10 +83,38 @@ feature -- Status report
 			-- Do nothing
 		end
 
+	is_no_value: BOOLEAN is
+			-- Is current representing no value?
+		do
+		end
+		
+	is_numeric: BOOLEAN is
+			-- Is current a numeric value?
+		do
+			Result := is_integer or is_real or is_double
+		ensure
+			is_numeric_definition: is_integer or is_real or is_double
+		end
+		
+
 	is_propagation_equivalent (other: like Current): BOOLEAN is
 			-- Is `Current' equivalent for propagation of pass2/pass3?
 		do
 			Result := same_type (other) and then is_equivalent (other)
+		end
+
+	boolean_value: BOOLEAN is
+		require
+			is_boolean: is_boolean
+		do
+		end
+
+	no_value: NO_VALUE_I is
+			-- Shared instance of `NO_VALUE_I'.
+		once
+			create Result
+		ensure
+			no_value_not_void: Result /= Void
 		end
 
 feature -- Settings
@@ -133,6 +161,46 @@ feature -- Code generation
 	string_value: STRING is
 		do
 			Result := dump
+		end
+
+feature -- Unary operators
+
+	unary_plus: VALUE_I is
+			-- Apply `+' operator to Current.
+		require
+			is_operation_valid: is_numeric or is_no_value
+		do
+			Result := Current
+		ensure
+			unary_plus_not_void: Result /= Void
+		end
+
+	unary_minus: VALUE_I is
+			-- Apply `-' operator to Current.
+		require
+			is_operation_valid: is_numeric or is_no_value
+		do
+				-- Proper definition is made in descendants that are `is_numeric'
+			check
+				is_no_value: is_no_value
+			end
+			Result := no_value
+		ensure
+			unary_minus_not_void: Result /= Void
+		end
+
+	unary_not: VALUE_I is
+			-- Apply `not operator to Current.
+		require
+			is_operation_valid: is_boolean or is_no_value
+		do
+			if is_boolean then
+				create {BOOL_VALUE_I} Result.make (not boolean_value)
+			else
+				Result := no_value
+			end
+		ensure
+			unary_not_not_void: Result /= Void
 		end
 
 feature -- Debugging

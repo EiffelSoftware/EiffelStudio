@@ -9,9 +9,22 @@ class
 inherit
 	VALUE_I
 		redefine
-			generate, is_real
+			generate, is_real, unary_minus
 		end
-	
+
+create
+	make
+
+feature -- Settings
+
+	make (r: like real_value) is
+			-- Set `real_value' with `r'.
+		do
+			real_value := r
+		ensure
+			real_value_set: real_value = r
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -25,16 +38,6 @@ feature -- Access
 	real_value: REAL
 			-- Real value.
 
-feature -- Settings
-
-	set_real_value (r: like real_value) is
-			-- Set `real_value' with `r'.
-		do
-			real_value := r
-		ensure
-			real_value_set: real_value = r
-		end
-
 feature -- Status Report
 
 	is_real: BOOLEAN is True
@@ -44,6 +47,14 @@ feature -- Status Report
 			-- Is the current value compatible with `t' ?
 		do
 			Result := t.is_real or t.is_double
+		end
+
+feature -- Unary operators
+
+	unary_minus: VALUE_I is
+			-- Apply `-' operator to Current.
+		do
+			create {FLOAT_VALUE_I} Result.make (-real_value)
 		end
 
 feature -- Code generation

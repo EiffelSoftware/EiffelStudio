@@ -12,9 +12,22 @@ class
 inherit
 	VALUE_I
 		redefine
-			generate, is_double
+			generate, is_double, unary_minus
 		end
-	
+
+create
+	make
+
+feature {NONE} -- Initialization
+
+	make (d: like double_value) is
+			-- Create instance of current with `double_value' set to `d'.
+		do
+			double_value := d
+		ensure
+			double_value_set: double_value = d
+		end
+
 feature -- Comparison
 
 	is_equivalent (other: like Current): BOOLEAN is
@@ -28,25 +41,6 @@ feature -- Access
 	double_value: DOUBLE
 			-- Duble value.
 
-feature -- Settings
-
-	set_double_value (d: like double_value) is
-			-- Set `double_value' with `d'.
-		do
-			double_value := d
-		ensure
-			double_value_set: double_value = d
-		end
-
-	set_double_as_string_value (i: STRING) is
-			-- Assign `i' to `double_value'.
-			-- Remove the '_' signs in the real number.
-		require
-			i_not_void: i /= Void
-		do
-			double_value := i.to_double
-		end
-
 feature -- Status report
 
 	is_double: BOOLEAN is True
@@ -56,6 +50,14 @@ feature -- Status report
 			-- Is the current value compatible with `t' ?
 		do
 			Result := t.is_real or t.is_double
+		end
+
+feature -- Unary operators
+
+	unary_minus: VALUE_I is
+			-- Apply `-' operator to Current.
+		do
+			create {REAL_VALUE_I} Result.make (-double_value)
 		end
 
 feature -- Code generation

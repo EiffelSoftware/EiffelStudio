@@ -69,6 +69,8 @@ feature -- Initialization
 			parent ?= oui_parent.implementation
 			!! private_attributes
 			managed := man
+			set_x (parent.x)
+			set_y (parent.y)
 			make_root
 		end
 
@@ -104,10 +106,10 @@ feature -- Initialization
 				wel_make
 			end
 			reset
-			put_children_in_menu (Current)
+			realized := true
+			realize_children
 			associated_shell.associate_bar (Current)
 			parent.child_has_resized
-			realized := true
 		end
 
 	unrealize is
@@ -120,14 +122,14 @@ feature -- Access
 
 	help_button: MENU_B
 
-	remove_popup (mp: MENU_PULL_WINDOWS) is
-			-- Remove a popup `mp' from the menu.
+	remove_popup (w: WIDGET_WINDOWS) is
+			-- Remove a popup `w' from the menu.
 		require
 			realized: realized
 		do
-			--cwin_delete_menu (wel_item, index_of (mp) - unmanaged_count (mp) - 1, Mf_byposition)
+			cwin_delete_menu (wel_item, index_of (w) - unmanaged_count (w), Mf_byposition)
 		end
-			
+
 feature -- Measurement
 
 	form_height: INTEGER

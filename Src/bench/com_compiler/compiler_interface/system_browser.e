@@ -18,7 +18,9 @@ inherit
 			feature_descriptor,
 			cluster_descriptor,
 			search_classes,
-			search_features
+			search_features,
+			description_from_dotnet_type,
+			description_from_dotnet_feature
 		end
 
 	SHARED_EIFFEL_PROJECT
@@ -336,6 +338,57 @@ feature -- Basic Operations
 				create Result.make (res)
 			end
 		end
+		
+	description_from_dotnet_type (a_assembly_name, a_full_dotnet_type: STRING): STRING is
+			-- Retrieve summary information for a dotnet type.
+		local
+			a_member_info: MEMBER_INFORMATION
+			a_description_string: STRING
+		do
+			--assembly_information.initialize (a_assembly_name)
+			a_member_info := assembly_information.find_type (a_full_dotnet_type)
+			Result := a_member_info.summary
+			if a_member_info /= Void then
+				a_description_string := "%NSummary%N"
+				a_description_string := a_description_string + a_member_info.summary
+			else
+				a_description_string := ""
+			end
+			Result := a_description_string
+		end
+		
+	description_from_dotnet_feature (a_assembly_name, a_full_dotnet_feature, a_feature_signature: STRING): STRING is
+			-- Retrieve summary information for a dotnet feature.
+		local
+			a_member_info: MEMBER_INFORMATION
+			a_description_string: STRING
+		do
+			--assembly_information.initialize (a_assembly_name)
+			a_member_info := assembly_information.find_type (a_full_dotnet_feature + a_feature_signature)
+			if a_member_info /= Void then
+				a_description_string := "%NSummary%N"
+				a_description_string := a_description_string + a_member_info.summary
+				
+				from
+					a_member_info.parameters.start
+					if a_member_info.parameters.count > 0 then
+						a_description_string := a_description_string + "%N%NParameters:%N"
+					end
+				until
+					a_member_info.parameters.off
+				loop
+					a_description_string := a_description_string + "%N" + a_member_info.parameters.item.name + ":" + a_member_info.parameters.item.description
+					a_member_info.parameters.forth
+				end
+				
+				if not a_member_info.returns.is_equal ("") then
+					a_description_string := a_description_string + "%N%NReturns:%N" + a_member_info.returns
+				end
+			else
+				a_description_string := ""
+			end
+			Result := a_description_string
+		end
 
 feature {NONE} -- Implementation
 
@@ -345,4 +398,13 @@ feature {NONE} -- Implementation
 			create Result.make (10)
 		end
 		
+	assembly_information: ASSEMBLY_INFORMATION is
+			-- 
+		once
+			create Result.make
+			
+			--| FIXME IEK For testing only
+			Result.initialize ("C:\WINDOWS\Microsoft.NET\Framework\v1.0.3705\mscorlib.xml")
+		end
+
 end -- class SYSTEM_BROWSER

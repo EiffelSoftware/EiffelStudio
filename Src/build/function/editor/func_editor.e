@@ -31,7 +31,7 @@ feature -- Focus_label
 
 feature -- Edited function
 
-	edited_function: FUNCTION;
+	edited_function: BUILD_FUNCTION;
 			-- Currently edited function
 
 	save_previous_function is

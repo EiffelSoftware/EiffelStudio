@@ -87,9 +87,6 @@ feature -- Eiffel source line information
 		require
 			a_hook_number_positive: a_hook_number >= 0
 		do
-			if a_hook_number = 0 then
-				print ("")
-			end
 			context.set_breakpoint_slot (a_hook_number)
 		end
 

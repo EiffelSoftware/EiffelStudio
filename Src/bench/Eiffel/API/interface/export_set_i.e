@@ -106,7 +106,7 @@ feature -- Output
 				after
 			loop
 				cts := item.clients
-				if not (cts.count = 1 and then cts.first.is_equal ("any")) then
+				if not (cts.count = 1 and then cts.first.is_equal ("ANY")) then
 					st.add_string (S_l_curly)
 					from
 						cts.start
@@ -121,7 +121,7 @@ feature -- Output
 						if ci /= Void then
 							st.add_class (ci)
 						else
-							st.add_string (cts.item.as_upper)
+							st.add_string (cts.item)
 						end
 						cts.forth
 						if not cts.after then

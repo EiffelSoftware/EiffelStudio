@@ -54,19 +54,15 @@ feature {NONE} -- Initialization
 			create Result
 		end
 
-feature -- Access
-
-feature -- Measurement
-
 feature -- Status report
 
-	menus: LIST [EV_MENU_ITEM] is
+	menus: LIST [EB_COMMAND_MENU_ITEM] is
 			-- Create a list of menu items that represent the list of external commands.
 		local
 			i: INTEGER
 		do
 			from
-				create {ARRAYED_LIST [EV_MENU_ITEM]} Result.make (10)
+				create {ARRAYED_LIST [EB_COMMAND_MENU_ITEM]} Result.make (10)
 			until
 				i > 9
 			loop
@@ -83,24 +79,6 @@ feature -- Status report
 			create Result.make (0, 9)
 		end
 
-feature -- Status setting
-
-feature -- Cursor movement
-
-feature -- Element change
-
-feature -- Removal
-
-feature -- Resizing
-
-feature -- Transformation
-
-feature -- Conversion
-
-feature -- Duplication
-
-feature -- Miscellaneous
-
 feature -- Basic operations
 
 	execute is
@@ -114,10 +92,6 @@ feature -- Basic operations
 				dialog.show_modal_to_window (Window_manager.last_focused_development_window.window)
 			end
 		end
-
-feature -- Obsolete
-
-feature -- Inapplicable
 
 feature {NONE} -- Widgets
 

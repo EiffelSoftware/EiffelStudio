@@ -1,4 +1,5 @@
-system polling_server
+system
+	polling_server
 
 root
 	polling_server (ROOT_CLUSTER): "make"
@@ -10,7 +11,7 @@ cluster
 	ROOT_CLUSTER: 	".";
 	common_classes:	"../common";
 
-	-- EiffelNet
+		-- EiffelNet
 	net:				"$EIFFEL4/library/net";
 	abstract_socket (net):		"$/abstract/socket";
 	net_socket (net):		"$/network/socket";
@@ -23,7 +24,7 @@ cluster
 	net_client_server (net):	"$/network/client_server";
 	local_client_server (net):	"$/local/client_server";
 
-	-- EiffelBase
+		-- EiffelBase
 	base:			"$EIFFEL4/library/base";
 	kernel (base):		"$/kernel";
 	support (base):		"$/support";
@@ -43,6 +44,6 @@ cluster
 external
 	-- External EiffelNet library 
 	object:
-		"$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a"
--- win		"$(EIFFEL4)/library/net/spec/$(COMPILER)/lib/net.lib"
+-- unix		"$(EIFFEL4)/library/net/spec/$(PLATFORM)/lib/libnet.a"
+		"$(EIFFEL4)/library/net/spec/$(COMPILER)/lib/net.lib"
 end

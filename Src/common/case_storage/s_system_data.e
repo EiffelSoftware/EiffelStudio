@@ -14,11 +14,10 @@ inherit
 
 feature -- Properties
 
-	hyper_system_classes : HASH_TABLE [ STRING, INTEGER ]
+	hyper_system_classes : HASH_TABLE [STRING, INTEGER]
 		-- All the names of classes of the initial system that contained
 		-- the current system; it avoids loss of information during the
 		-- retrieving phase ...
-
 
 	root_cluster: S_CLUSTER_DATA;
 			-- Cluster root containing all system
@@ -35,7 +34,7 @@ feature -- Properties
 
 feature -- Setting 
 
-	set_hyper ( arg : HASH_TABLE [ STRING, INTEGER ] ) is
+	set_hyper (arg: HASH_TABLE [STRING, INTEGER]) is
 		do
 			hyper_system_classes := arg
 		end
@@ -79,43 +78,6 @@ feature -- Setting
 		ensure
 			root_cluster_set: root_cluster = cluster;
 		end;
-
-    set_list_class_with_string(system:SYSTEM_I) is
-    local
-          a_class: CLASS_C
-          i, j, nb: INTEGER
-          class_array: ARRAY [CLASS_C]
-          classes: CLASS_C_SERVER
-          class_counter : CLASS_COUNTER
-          dummy : S_SYSTEM_DATA_DUMMY
-     do
-        classes := system.classes
-        class_counter := system.class_counter
-        !! hyper_system_classes.make(classes.count)
-        !! dummy.make
-        from
-            classes.start
-        until
-            classes.after
-        loop
-                class_array := classes.item_for_iteration
-                nb := class_counter.item (classes.key_for_iteration).count
-         from
-                j := 1
-         until
-                j > nb
-         loop
-                a_class := class_array.item (j)
-                j := j + 1
-            if a_class /= Void then
-                hyper_system_classes.put ( clone(a_class.lace_class.name),
-                            dummy.class_id(a_class.id))
-            end
-        end
-        classes.forth
-        end
-
-    end
 
 feature -- Storing
 

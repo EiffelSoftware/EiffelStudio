@@ -408,7 +408,7 @@ feature -- Commands
 				Universe.clusters.after
 			loop
 				c := Universe.clusters.item
-				if not c.is_precompiled then
+				if not c.is_precompiled and not c.is_assembly then
 					from
 						class_list := c.classes
 						class_list.start

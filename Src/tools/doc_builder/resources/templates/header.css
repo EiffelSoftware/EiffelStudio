@@ -1,0 +1,42 @@
+body 
+{
+	font-family: verdana;
+	margin: 0px 0px 0px 0px;
+	width: 100%;
+	font-size: 70%;
+	color: white;
+}
+
+img 
+{
+	border: none; 
+	margin: 2px 2px 2px 2px;
+}
+
+/* level 0 outer */
+.nav_bar
+{
+	text-decoration : none;	
+	background-color: #003063;
+	width: 100%;	
+	border:0px;
+}
+
+.nav_bar_item
+{
+	text-decoration : none;
+	background: #003063;
+	font-size: 70%;
+}
+
+a
+{
+	text-decoration : none;
+	color: white;
+}
+
+a:hover
+{
+	text-decoration : none;
+	color: gray;
+}

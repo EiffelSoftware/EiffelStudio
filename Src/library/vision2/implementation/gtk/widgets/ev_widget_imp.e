@@ -13,13 +13,15 @@ deferred class
 inherit
         EV_WIDGET_I
 
-        EV_GTK_EXTERNALS
+	EV_PND_SOURCE_IMP
 
+	EV_PND_TARGET_IMP
+
+        EV_GTK_EXTERNALS
 	EV_GTK_TYPES_EXTERNALS
 	EV_GTK_WIDGETS_EXTERNALS
 	EV_GTK_GENERAL_EXTERNALS
 	EV_GTK_CONTAINERS_EXTERNALS
-
         EV_GTK_CONSTANTS
 
 feature {NONE} -- Initialization	
@@ -60,7 +62,7 @@ feature {NONE} -- Initialization
 			-- Initialize the size of the widget.
 			-- Redefine by some widgets.
 		do
-			-- To implement
+			-- To be implemented in EV_WIDGET_I
 		end
 
 feature -- Access
@@ -167,6 +169,42 @@ feature -- Status setting
 			end
 		end
 
+	set_horizontal_resize (flag: BOOLEAN) is
+			-- Adapt `resize_type' to `flag'.
+		do
+			if flag then
+				if vertical_resizable then
+					resize_type := 3
+				else
+					resize_type := 1
+				end
+			else
+				if vertical_resizable then
+					resize_type := 2
+				else
+					resize_type := 0
+				end				
+			end
+		end
+
+	set_vertical_resize (flag: BOOLEAN) is
+			-- Adapt `resize_type' to `flag'.
+		do
+			if flag then
+				if horizontal_resizable then
+					resize_type := 3
+			else
+					resize_type := 2
+				end
+			else
+				if horizontal_resizable then
+					resize_type := 1
+				else
+					resize_type := 0
+				end				
+			end
+		end
+
 feature -- Element change
 
 	set_parent (par: EV_CONTAINER) is
@@ -187,13 +225,13 @@ feature -- Element change
 				parent_imp := Void
 			end
 			if par /= Void then
-				show
 				par_imp ?= par.implementation
 				check
 					parent_not_void: par_imp /= Void
 				end
 				parent_imp ?= par_imp
 				par_imp.add_child (Current)
+				show
 				gtk_object_unref (widget)
 			end
 		end
@@ -201,13 +239,13 @@ feature -- Element change
 	set_background_color (color: EV_COLOR) is
 			-- Make `color' the new `background_color'
 		do
---			c_gtk_widget_set_bg_color (widget, color.red, color.green, color.blue)
+			c_gtk_widget_set_bg_color (widget, color.red, color.green, color.blue)
 		end
 
 	set_foreground_color (color: EV_COLOR) is
 			-- Make `color' the new `foreground_color'
 		do
---			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
+			c_gtk_widget_set_fg_color (widget, color.red, color.green, color.blue)
 		end
 	
 feature -- Measurement
@@ -254,7 +292,6 @@ feature -- Resizing
 			-- Set both width and height to `new_width'
 			-- and `new_height'.
                 do
---			gtk_widget_set_usize (widget, new_width, new_height) 
 			c_gtk_widget_set_size (widget, new_width, new_height)
 		end
 
@@ -403,9 +440,9 @@ feature -- Event - command association
 			add_command_with_event_data ("focus_in_event", cmd, arg, ev_data, 0, False)
 		end
 
-	add_loose_focus_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+	add_lose_focus_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
 			-- Add `cmd' to the list of commands to be executed
-			-- when the widget loose the focus.
+			-- when the widget lose the focus.
 		local
 			ev_data: EV_EVENT_DATA		
 		do
@@ -484,9 +521,9 @@ feature -- Event -- removing command association
 		do
 		end
 
-	remove_loose_focus_commands is
+	remove_lose_focus_commands is
 			-- Empty the list of commands to be executed when
-			-- the widget loose the focus.
+			-- the widget lose the focus.
 		do
 		end
 
@@ -566,7 +603,6 @@ feature {NONE} -- Implementation
 			check
 				successfull_connect: con_id > 0
 			end
---			last_command_id := con_id
 		end
         
 	add_command (event: STRING; cmd: EV_COMMAND; 
@@ -602,7 +638,6 @@ feature {NONE} -- Implementation
 			check
 				successfull_connect: con_id > 0		
 			end
---			last_command_id := con_id
 		end
 
 	remove_command (command_id: INTEGER) is

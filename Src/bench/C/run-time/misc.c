@@ -303,10 +303,10 @@ rt_public char * eif_getenv (char * k)
 		return result;
 	else {
 		char *key, *lower_k; /* %%ss removed *value */
-		static char buf[1024];
 		int appl_len, key_len;
 		HKEY hkey;
-		DWORD bsize;
+		DWORD bsize = 1024;
+		static char buf[1024];
 	
 		appl_len = strlen (egc_system_name);
 		key_len = strlen (k);
@@ -325,19 +325,33 @@ rt_public char * eif_getenv (char * k)
 		strncat (key, egc_system_name, appl_len);
 	
 		if (RegOpenKeyEx (HKEY_CURRENT_USER, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {
-			eif_free (key);
-			eif_free (lower_k);
-			return result;
+			if (RegOpenKeyEx (HKEY_LOCAL_MACHINE, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {
+				eif_free (key);
+				eif_free (lower_k);
+				return result;
+			}
+			if (RegQueryValueEx (hkey, lower_k, NULL, NULL, buf, &bsize) != ERROR_SUCCESS) {
+				eif_free (key);
+				eif_free (lower_k);
+				RegCloseKey (hkey);
+				return result;
+			}
+		} else {
+			if (RegQueryValueEx (hkey, lower_k, NULL, NULL, buf, &bsize) != ERROR_SUCCESS) {
+				if (RegOpenKeyEx (HKEY_LOCAL_MACHINE, key, 0, KEY_READ, &hkey) != ERROR_SUCCESS) {
+					eif_free (key);
+					eif_free (lower_k);
+					return result;
+				}
+				if (RegQueryValueEx (hkey, lower_k, NULL, NULL, buf, &bsize) != ERROR_SUCCESS) {
+					eif_free (key);
+					eif_free (lower_k);
+					RegCloseKey (hkey);
+					return result;
+				}
+			}
 		}
-	
-		bsize = 1024;
-		if (RegQueryValueEx (hkey, lower_k, NULL, NULL, (LPBYTE) buf, &bsize) != ERROR_SUCCESS) {
-			eif_free (key);
-			eif_free (lower_k);
-			RegCloseKey (hkey);
-			return result;
-		}
-	
+
 		eif_free (key);
 		eif_free (lower_k);
 		RegCloseKey (hkey);

@@ -191,10 +191,10 @@
 						<Component Id="com3" Guid="44AAE90D-433C-4148-838D-9D6B7AA44651">
 							<File Id="eiffelcom.cnt" Name="EIFFEL~1.CNT" LongName="eiffelcom.cnt" />
 							<File Id="Eiffelcom.hlp" Name="EIFFEL~1.HLP" LongName="Eiffelcom.hlp" >
-								<Shortcut Id="Eiffelcom.hlp" Directory="Documentation" Name="COMWIZ~1" LongName="COM Wizard Documentation" Description="Documentation concerning the COM wizard" Hotkey="0" Show="normal" />
+								<Shortcut Id="Eiffelcom.hlp" Directory="Documentation" Name="COMWIZ~1" LongName="EiffelCOM Wizard Documentation" Description="Documentation concerning the COM wizard" Hotkey="0" Show="normal" />
 							</File>
 							<File Id="com_wizard_launcher.exe" Name="COM_WI~2.EXE" LongName="com_wizard_launcher.exe" >
-								<Shortcut Id="com_wizard.exe" Directory="Tools" Name="COMWIZ~1" LongName="COM Wizard" Description="A wizard that helps you use and create COM components with Eiffel" Hotkey="0" Show="normal" />
+								<Shortcut Id="com_wizard.exe" Directory="Tools" Name="COMWIZ~1" LongName="EiffelCOM Wizard" Description="A wizard that helps you use and create COM components with Eiffel" Hotkey="0" Show="normal" />
 							</File>
 							<File Id="com_wizard.exe" Name="COM_WI~1.EXE" LongName="com_wizard.exe" />
 						</Component>

@@ -36,6 +36,7 @@ interface IEiffelParameterDescriptor;
 interface IEiffelHTMLDocGenerator;
 interface IEiffelHTMLDocEvents;
 enum tagEIF_ENTITY_IMAGES;
+enum tagEIF_FEATURE_TYPES;
 
 // IDispatch IDs
 enum
@@ -111,6 +112,22 @@ typedef enum tagEIF_ENTITY_IMAGES
   EIF_ENTITY_IMAGES_Variable = 26
 } EIF_ENTITY_IMAGES;
 
+// Eiffel feature types
+typedef enum tagEIF_FEATURE_TYPES
+{
+  EIF_FEATURE_TYPES_Attribute = 1,
+  EIF_FEATURE_TYPES_Constant = 2,
+  EIF_FEATURE_TYPES_Deferred = 4,
+  EIF_FEATURE_TYPES_External = 8,
+  EIF_FEATURE_TYPES_Frozen = 16,
+  EIF_FEATURE_TYPES_Function = 32,
+  EIF_FEATURE_TYPES_Infix = 64,
+  EIF_FEATURE_TYPES_Obsolete = 128,
+  EIF_FEATURE_TYPES_Once = 256,
+  EIF_FEATURE_TYPES_Prefix = 512,
+  EIF_FEATURE_TYPES_Procedure = 1024
+} EIF_FEATURE_TYPES;
+
 [
   oleautomation,
   uuid (53E4FF57-2F3C-4ed2-8B08-89AF6E2C10BA),
@@ -181,6 +198,11 @@ interface IEiffelCompletionInfo: IUnknown
   [helpstring ("Feature information")]
   HRESULT target_feature ([in] BSTR target, [in] BSTR feature_name, [in] BSTR file_name, [out, retval] IEiffelFeatureDescriptor** return_value);
 
+  [helpstring ("Flush temporary completion features for a specifi file")]
+  HRESULT flush_completion_features ([in] BSTR a_file_name);
+
+  [helpstring ("Initialize a feature for completion without compiltation")]
+  HRESULT initialize_feature ([in] BSTR a_name, [in] VARIANT a_arguments, [in] VARIANT a_argument_types, [in] BSTR a_return_type, [in] ULONG a_feature_type, [in] BSTR a_file_name);
 };
 //---------------------------------------------------------------------
 
@@ -1336,6 +1358,7 @@ library eiffel_compiler
   interface IEiffelHTMLDocGenerator;
   interface IEiffelHTMLDocEvents;
   enum tagEIF_ENTITY_IMAGES;
+  enum tagEIF_FEATURE_TYPES;
 
   [
     uuid (28F511DB-0CCE-44c5-9DD5-E93066C0B00F)

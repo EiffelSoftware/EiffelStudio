@@ -58,6 +58,7 @@ modifications are relative to the previously released version.</p>
     <ul>
 	<li><b>EV_FIGURE_POLYLINE</b> - Fixed `start_angle' and `end_angle' so that they are computed relative to the first and last polyline segments. This also fixes the start and end arrows, so that when displayed, they now actually point in the direction of their respective line segments.</li>
 	<li><b>EV_TREE and EV_TREE_NODE</b> - Fixed `find_item_recursively_by_data' which failed on the `index_not_changed' postcondition. Note that these features are now defined in EV_TREE_NODE_LIST.</li>
+	<li><b>EV_DYNAMIC_TREE_ITEM</b> - Fixed invariant violation from EV_ITEM_LIST, when created with `default_create'.</li>
     </ul>
   <li><b>Windows</b>
     <ul>

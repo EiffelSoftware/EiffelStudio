@@ -44,6 +44,15 @@ feature -- Access
 	void_keyword: STRING is "Void"
 		-- Void keyword for output
 		
+	last_string: STRING is
+			-- last string entered by user
+		do
+			if last_string_internal.item /= Void then
+				Result := last_string_internal.item.clone (last_string_internal.item)				
+			end
+		end
+		
+		
 feature -- Basic Operations
 
 	load_epr_project (a_epr_filename: STRING): BOOLEAN is
@@ -127,6 +136,9 @@ feature -- Basic Operations
 					put_string ("%NTest completed with errors%N")
 				end				
 			end
+		rescue
+			retried := True
+			retry
 		end
 		
 feature -- Atom Tests
@@ -335,6 +347,47 @@ feature -- Output
 			put_String ("%N=================================%N")
 		end
 		
+feature -- Input
+
+	read_line is
+			-- read a line from console
+		local
+			l_last_string: STRING
+		do
+			io.read_line
+			l_last_string := io.last_string.clone (io.last_string)
+			l_last_string.to_lower
+			if l_last_string.is_equal ("void") then
+				last_string_internal.put (Void)
+			else
+				last_string_internal.put (io.last_string)
+			end
+		end
+		
+	read_args_line (args: ARRAYED_LIST [STRING]) is
+			-- read a line from console or uses first items or 'args' if exists
+			-- arg item will then be removed
+		require
+			non_void_args: args /= Void
+		local
+			l_last_string: STRING
+		do
+			if args.count > 0 then
+				last_string_internal.put (args.first)
+				args.go_i_th (1)
+				args.remove
+			else
+				io.read_line
+				l_last_string := io.last_string.clone (io.last_string)
+				l_last_string.to_lower
+				if l_last_string.is_equal ("void") then
+					last_string_internal.put (Void)
+				else
+					last_string_internal.put (io.last_string)
+				end
+			end
+		end
+		
 feature -- Generators
 
 	random_string_generator (a_contains_whitespace, a_contains_alpha, a_contains_numerical, a_contains_other: BOOLEAN): STRING is
@@ -370,6 +423,12 @@ feature {NONE} -- Implementation
 		
 	project_manager_internal: CELL [TESTING_PROJECT_MANAGER] is
 		-- active project manager for loaded project
+		once
+			create Result.put (Void)
+		end
+		
+	last_string_internal: CELL[STRING] is
+			-- last string entered by user
 		once
 			create Result.put (Void)
 		end

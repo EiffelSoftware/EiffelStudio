@@ -259,11 +259,13 @@ feature -- Stone process
 					else
 						end_pos := txt.index_of ('%N', pos)
 					end
+					text_window.set_cursor_position (pos)
 					if pos /= 0 then
 						text_window.highlight_selected (pos, end_pos)
 					end
+				else
+					text_window.set_cursor_position (pos)
 				end
-				text_window.set_cursor_position (pos)
 			end
 		end
  

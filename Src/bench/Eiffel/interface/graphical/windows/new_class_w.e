@@ -192,20 +192,24 @@ feature -- Access
 					warner (tool.popup_parent).gotcha_call 
 						(Warning_messages.w_Cannot_create_class (class_name))
 				else
-					cluster_list.start;
-					cluster_list.compare_objects;
-					!! str_el.make (0);
-					str_el.append (cl.cluster_name);
-					cluster_list.search (str_el);
-					if cluster_list.after then
+					if cl = Void then
 						cluster_list.select_i_th (1);
 					else
-						cluster_list.select_item
-					end;
-					if cluster_list.count < 10 then
-						cluster_list.set_visible_item_count (cluster_list.count)
-					else
-						cluster_list.set_visible_item_count (10);
+						cluster_list.start;
+						cluster_list.compare_objects;
+						!! str_el.make (0);
+						str_el.append (cl.cluster_name);
+						cluster_list.search (str_el);
+						if cluster_list.after then
+							cluster_list.select_i_th (1);
+						else
+							cluster_list.select_item
+						end;
+						if cluster_list.count < 10 then
+							cluster_list.set_visible_item_count (cluster_list.count)
+						else
+							cluster_list.set_visible_item_count (10);
+						end
 					end
 				end
 			else

@@ -1,3 +1,11 @@
+indexing
+
+	description: 
+		"Class content information that includes features%
+		%clauses, invariants and chart information";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_CLASS_CONTENT
 
 inherit
@@ -8,7 +16,7 @@ creation
 
 	make
 
-feature {NONE}
+feature {NONE} -- Initialization
 
 	make is
 		do
@@ -16,7 +24,7 @@ feature {NONE}
 			!! feature_clause_list.make (2);
 		end;
 
-feature -- Specification
+feature -- Properties
 
 	feature_clause_list: ARRAYED_LIST [S_FEATURE_CLAUSE];
 			-- Features of class
@@ -54,5 +62,4 @@ invariant
 	valid_chart: chart /= Void;
 	valid_feature_clause_list: feature_clause_list /= Void
 
-end
-
+end -- class S_CLASS_CONTENT

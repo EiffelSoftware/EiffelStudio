@@ -1,6 +1,13 @@
+indexing
+
+	description: 
+		"Chart information based on the BON method.";
+	date: "$Date$";
+	revision: "$Revision $"
+
 class S_CHART
 
-feature
+feature -- Property
 
 	indexes: FIXED_LIST [S_TAG_DATA];
 		-- Data on Current synonymn,
@@ -8,7 +15,7 @@ feature
 		-- date of creation, revision level
 		-- and keywords.
 
-feature
+feature -- Setting
 
 	set_indexes (l: like indexes) is
 			-- Set indexes to `l'.
@@ -22,5 +29,4 @@ feature
 			indexes_set: indexes = l
 		end;
 
-end
-
+end -- class S_CHART

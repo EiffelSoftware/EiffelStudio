@@ -13,7 +13,7 @@ inherit
 		end;
 
 	SHARED_EXPORT_STATUS
-
+	
 feature -- Attributes
 
 	clients: EIFFEL_LIST_B [ID_AS_B];

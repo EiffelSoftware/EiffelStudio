@@ -1,11 +1,11 @@
 class SHARED_ERROR_HANDLER
-
-feature {NONE}
+	
+feature {NONE} -- Shared handler
 
 	Error_handler: ERROR_HANDLER is
-			-- GUI Error handler
+			-- Shared Error handler
 		once
-			!!Result.make
+			!! Result.make
 		end;
 
 end

@@ -10,6 +10,10 @@ indexing
 	date: "$Date$";
 	revision: "$Revision$"
 
+--| Beware:
+--|  For implementation reasons, additional operations on BIT types can
+--|  only be introduced by I.S.E.
+
 class BIT_REF
 
 inherit
@@ -32,7 +36,7 @@ feature
 			index_large_enough: i >= 1;
 			index_small_enough: i <= count;
 		do
-			b_put (Current, value, i)
+			b_put ($Current, value, i)
 		ensure
 			value_inserted: item (i) = value
 		end;
@@ -43,7 +47,7 @@ feature
 			index_large_enough: i >= 1;
 			index_small_enough: i <= count
 		do
-			Result := b_item (Current, i)
+			Result := b_item ($Current, i)
 		end;
 
 	infix "^" (s: INTEGER): like Current is
@@ -51,14 +55,14 @@ feature
 			-- (Positive `s' shifts right, negative `s' shifts left;
 			-- bits failing off the sequence's bounds are lost.)
 		do
-			Result := b_shift (Current, s)
+			Result := b_shift ($Current, s)
 		end;
 
 	infix "#" (s: INTEGER): like Current is
 			-- Result of rotating bit sequence by `s' positions
 			-- (Positive `s' rotates right, negative `s' rotates left.)
 		do
-			Result := b_rotate (Current, s)
+			Result := b_rotate ($Current, s)
 		end;
 
 	infix "and" (other: BIT_REF): BIT_REF is
@@ -67,7 +71,7 @@ feature
 			other_exists: other /= Void;
 			conformance: other.count <= count
 		do
-			Result := b_and (Current, other)
+			Result := b_and ($Current, $other)
 		end;
 
 	infix "implies" (other: BIT_REF): BIT_REF is
@@ -76,7 +80,7 @@ feature
 			other_exists: other /= Void;
 			conformance: other.count <= count
 		do
-			Result := b_implies (Current, other)
+			Result := b_implies ($Current, $other)
 		end;
 
 	infix "or" (other: BIT_REF): BIT_REF is
@@ -85,7 +89,7 @@ feature
 			other_exists: other /= Void;
 			conformance: other.count <= count
 		do
-			Result := b_or (Current, other)
+			Result := b_or ($Current, $other)
 		end;
 
 	infix "xor" (other: BIT_REF): BIT_REF is
@@ -94,13 +98,13 @@ feature
 			other_exists: other /= Void;
 			conformance: other.count <= count
 		do
-			Result := b_xor (Current, other)
+			Result := b_xor ($Current, $other)
 		end;
 
 	prefix "not": like Current is
 			-- Negation
 		do
-			Result := b_not (Current)
+			Result := b_not ($Current)
 		end;
 
 feature
@@ -123,24 +127,8 @@ feature
 
 	out: STRING is
 			-- Tagged printable representation of Current
-		local
-			i, nb_a_bits: INTEGER
 		do
-			nb_a_bits := count;
-			!!Result.make (nb_a_bits + 1);
-			from
-				i := nb_a_bits;
-			until
-				i > 0
-			loop
-				if item (i) then
-					Result.put ('1', nb_a_bits - i + 1)
-				else
-					Result.put ('0', nb_a_bits - i + 1)
-				end;
-				i := i - 1
-			end;
-			Result.put ('b', nb_a_bits + 1)
+			Result := c_out($Current);
 		end;
 
 feature
@@ -149,7 +137,7 @@ feature
 	count: INTEGER is
 			-- Size of the current bit object
 		do
-			Result := b_count (Current)
+			Result := b_count ($Current)
 		end;
 
 feature {NONE}
@@ -237,6 +225,14 @@ feature {NONE}
 			"C"
 		alias
 			"b_clone"
+		end;
+
+	c_out (bit: BIT_REF): STRING is
+			-- Out representation of Current
+		external
+			"C"
+		alias
+			"b_eout"
 		end;
 
 end -- class BIT_REF

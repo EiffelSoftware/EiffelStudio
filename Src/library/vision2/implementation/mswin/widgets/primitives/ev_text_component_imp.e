@@ -58,6 +58,21 @@ feature -- Status setting
 			end
 		end
 
+	set_position (pos: INTEGER) is
+			-- set current insertion position
+		do
+			set_caret_position (pos)
+		end
+
+	set_maximum_text_length (value: INTEGER) is
+			-- Make `value' the new maximal lenght of the text
+			-- in characte number.
+		do
+			set_text_limit (value)
+		end
+
+feature -- element change
+
 	insert_text (txt: STRING) is
 			-- Add `txt' to the left of `position' 
 		local
@@ -85,19 +100,6 @@ feature -- Status setting
 			insert_text (txt)	
 		end
 
-	set_position (pos: INTEGER) is
-			-- set current insertion position
-		do
-			set_caret_position (pos)
-		end
-
-	select_region (start_pos, end_pos: INTEGER) is
-			-- Select (hilight) the text between 
-			-- 'start_pos' and 'end_pos'
-		do
-			set_selection (start_pos, end_pos)
-		end
-
 feature -- Resizing
 
 	set_minimum_width_in_characters (nb: INTEGER) is
@@ -108,6 +110,13 @@ feature -- Resizing
 		end
 
 feature -- Basic operation
+
+	select_region (start_pos, end_pos: INTEGER) is
+			-- Select (hilight) the text between 
+			-- 'start_pos' and 'end_pos'
+		do
+			set_selection (start_pos, end_pos)
+		end
 
 	paste (index: INTEGER) is
 			-- Insert the string which is in the 
@@ -121,6 +130,24 @@ feature -- Basic operation
 			set_caret_position (index)
 			clip_paste
 			set_caret_position (pos)
+		end
+
+feature -- Event - command association
+
+	add_change_command (cmd: EV_COMMAND; arg: EV_ARGUMENT) is
+			-- Add 'cmd' to the list of commands to be executed 
+			-- when the text of the widget have changed.
+		do
+			add_command (Cmd_change, cmd, arg)
+		end
+
+feature -- Event -- removing command association
+
+	remove_change_commands is
+			-- Empty the list of commands to be executed
+			-- when the text of the widget have changed.
+		do
+			remove_command (Cmd_change)
 		end
 
 feature {NONE} -- Deferred features
@@ -141,8 +168,13 @@ feature {NONE} -- Deferred features
 		deferred
 		end
 
-	set_text (a_text: STRING) is
-   			-- Set the window text
+	set_text (txt: STRING) is
+			-- Make `txt' the new text of the component.
+		deferred
+		end
+
+	set_text_limit (value: INTEGER) is
+			-- Make `value' the new maximal length of the text.
 		deferred
 		end
 

@@ -98,7 +98,22 @@
 				<bold>Gtk</bold>
 				<list ordered="false">
 					<item>
-						<bold>EV_FONT</bold> Fixed memory leaks in font lookup
+						<bold>EV_FONT</bold> - Fixed memory leaks in font lookup
+					</item>
+					<item>
+						<bold>EV_TOOL_BAR_BUTTON</bold> - Improve appearance of text and pixmap when `disable_vertical_button_style' is called
+					</item>
+					<item>
+						<bold>EV_FONTABLE</bold> - Improved font handling with theme manager, all default fonts now relate to the Application font chosen from the Gtk theme manager
+					</item>
+					<item>
+						<bold>EV_FONT</bold> - Now precalculating `ascent' and `descent' to improve drawing performance
+					</item>
+					<item>
+						<bold>EV_DRAWABLE</bold> - Corrected font placement with `draw_text' using fonts of the same height that have varying ascent values
+					</item>
+					<item>
+						<bold>EV_MULTI_COLUMN_LIST</bold> - Fixed memory leak when setting string values
 					</item>
 				</list>
 			</item>

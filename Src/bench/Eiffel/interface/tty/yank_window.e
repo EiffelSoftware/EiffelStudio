@@ -50,7 +50,7 @@ feature -- Output
 
 	new_line is
 		do
-			error_window.new_line;;
+			error_window.new_line
 			stored_output.extend ('%N')
 		end;
 

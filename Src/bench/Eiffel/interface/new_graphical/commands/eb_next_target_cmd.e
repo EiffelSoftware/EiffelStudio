@@ -11,33 +11,18 @@ class
 inherit
 	EB_EDITOR_COMMAND
 
---	WARNER_CALLBACKS
---		rename
---			execute_warner_ok as save_changes,
---			execute_warner_help as loose_changes
---		end
+	EB_CONFIRM_SAVE_CALLBACK
 
 creation
 	make
 
-feature -- Callbacks
+feature {EB_CONFIRM_SAVE_DIALOG} -- Callbacks
 
---	loose_changes is
---			-- Useless here
---		do
---			text_window.disable_clicking
---			execute_licensed (Void)
---		end
-
---	save_changes (argument: ANY) is
---			-- The changes will be lost.
---		do
---			text_window.disable_clicking
---			if tool.save_cmd_holder /= Void then
---				tool.save_cmd_holder.associated_command.execute (Void)
---			end
---			execute_licensed (Void)
---		end
+	process is
+		do
+			tool.text_window.disable_clicking
+			execute_licensed (Void, Void)
+		end
 
 feature -- Properties
 
@@ -75,12 +60,13 @@ feature -- Execution
 
 	execute (argument: EV_ARGUMENT1 [ANY]; data: EV_EVENT_DATA) is
 			-- Execute the command, with parameter `argument'.
+		local
+			csd: EB_CONFIRM_SAVE_DIALOG
 		do
-			if not tool.text_window.changed then
-				execute_licensed (argument, data)
+			if tool.text_window.changed then
+				create csd.make_and_launch (tool, Current)
 			else
---				warner (popup_parent).custom_call (Current, Warning_messages.w_File_changed,
---					Interface_names.b_Yes, Interface_names.b_No, Interface_names.b_Cancel)
+				process
 			end
 		end
 

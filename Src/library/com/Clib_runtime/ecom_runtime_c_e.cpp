@@ -263,6 +263,13 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_dispatch (IDispatch * a_dispatch)
 };
 //-------------------------------------------------------------------------
 
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_unsigned_short (unsigned short * an_integer, EIF_OBJECT an_object)
+
+// Create INTEGER_REF from integer
+{
+	return ccom_ce_pointed_short ((short *) an_integer, an_object);
+};
+
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_short (short * an_integer, EIF_OBJECT an_object)
 
 // Create INTEGER_REF from integer
@@ -314,6 +321,13 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_hresult (HRESULT * a_hresult, EIF
 
 //-------------------------------------------------------------------------
 
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_unsigned_long (unsigned long * an_integer, EIF_OBJECT an_object)
+{
+	return ccom_ce_pointed_long ( (long *)an_integer, an_object);
+}
+
+//-------------------------------------------------------------------------
+
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_long (long * an_integer, EIF_OBJECT an_object)
 
 // Create INTEGER_REF from integer
@@ -337,6 +351,13 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_long (long * an_integer, EIF_OBJE
 	else
 		return NULL;
 };
+
+//-------------------------------------------------------------------------
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_unsigned_integer (unsigned int * an_integer, EIF_OBJECT an_object)
+{
+	return ccom_ce_pointed_integer ( (int *)an_integer, an_object);
+}
 
 //-------------------------------------------------------------------------
 
@@ -415,6 +436,15 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_double (EIF_DOUBLE * a_double, EI
 	else
 		return NULL;
 };
+
+//-------------------------------------------------------------------------
+
+EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_unsigned_character (unsigned char * a_character, EIF_OBJECT an_object)
+{
+	return ccom_ce_pointed_character ( (char *)a_character, an_object);
+}
+
+
 //-------------------------------------------------------------------------
 
 EIF_REFERENCE ecom_runtime_ce::ccom_ce_pointed_character (char * a_character, EIF_OBJECT an_object)

@@ -309,6 +309,14 @@ CURRENCY ecom_runtime_ec::ccom_ec_currency (EIF_REFERENCE a_ref)
 
 	return (*c_currency);
 };
+
+//----------------------------------------------------------------------------
+
+unsigned char * ecom_runtime_ec::ccom_ec_pointed_unsigned_character (EIF_REFERENCE a_ref, unsigned char * old)
+{
+	return (unsigned char *) ccom_ec_pointed_character (a_ref, (char *) old);
+}
+
 //----------------------------------------------------------------------------
 
 char * ecom_runtime_ec::ccom_ec_pointed_character (EIF_REFERENCE a_ref, char * old)
@@ -355,6 +363,14 @@ DATE * ecom_runtime_ec::ccom_ec_pointed_date (EIF_REFERENCE a_ref, DATE * old)
 	else
 		return result;
 };
+
+//----------------------------------------------------------------------------
+unsigned short * ecom_runtime_ec::ccom_ec_pointed_unsigned_short (EIF_REFERENCE a_ref, unsigned short * old)
+{
+	return (unsigned short *) ccom_ec_pointed_short (a_ref, (short *)old);
+}
+
+
 //----------------------------------------------------------------------------
 short * ecom_runtime_ec::ccom_ec_pointed_short (EIF_REFERENCE a_ref, short * old)
 
@@ -380,6 +396,13 @@ short * ecom_runtime_ec::ccom_ec_pointed_short (EIF_REFERENCE a_ref, short * old
 
 // ----------------------------------------------------------------------------
 
+unsigned int * ecom_runtime_ec::ccom_ec_pointed_unsigned_integer (EIF_REFERENCE a_ref, unsigned int * old)
+{
+	return (unsigned int *)ccom_ec_pointed_integer (a_ref, (int *) old);
+}
+
+// ----------------------------------------------------------------------------
+
 int * ecom_runtime_ec::ccom_ec_pointed_integer (EIF_REFERENCE a_ref, int * old)
 // Create int * from EIF_REFERENCE (INTEGER_REF)
 {
@@ -400,6 +423,13 @@ int * ecom_runtime_ec::ccom_ec_pointed_integer (EIF_REFERENCE a_ref, int * old)
 	else
 		return result;
 };
+
+//---------------------------------------------------------------------------
+
+unsigned long * ecom_runtime_ec::ccom_ec_pointed_unsigned_long (EIF_REFERENCE a_ref, unsigned long * old)
+{
+	return (unsigned long *) ccom_ec_pointed_long (a_ref, (long *)old);
+}
 
 //---------------------------------------------------------------------------
 

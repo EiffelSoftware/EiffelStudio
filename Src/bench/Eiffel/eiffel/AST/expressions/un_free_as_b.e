@@ -54,4 +54,9 @@ feature -- Type check
 			access_line.forth;
 		end;
 
+	operator_name: STRING is
+		do
+			Result := op_name;
+		end;
+
 end

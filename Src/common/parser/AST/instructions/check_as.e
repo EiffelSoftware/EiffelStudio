@@ -6,7 +6,7 @@ inherit
 
 	INSTRUCTION_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node, format
 		end
 
 feature -- Attributes
@@ -39,6 +39,18 @@ feature -- Type check, byte code and dead code removal
 			if check_list /= Void then
 				Result.set_check_list (check_list.byte_node);
 			end;
+		end;
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute Text
+		do
+			ctxt.begin;
+			ctxt.put_keyword("check");
+			ctxt.indent_one_more;
+			check_list.format (ctxt);
+			ctxt.indent_one_less;
+			ctxt.put_keyword ("end");
+			ctxt.commit;
 		end;
 
 end

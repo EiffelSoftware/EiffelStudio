@@ -31,5 +31,7 @@ feature -- Byte node
 			Result.init (feature_b);
 			access_line.forth;
 		end;
-
+	
+	operator_name: STRING is "+";
 end
+	

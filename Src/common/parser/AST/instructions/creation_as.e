@@ -4,7 +4,7 @@ inherit
 
 	INSTRUCTION_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node, format
 		end;
 	SHARED_HISTORY_CONTROL;
 
@@ -268,5 +268,26 @@ feature -- Type check, byte code and dead code removal
 				Result.set_call (nested);
 			end;
 		end;
+
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			if type /= void then
+				ctxt.put_special("!");
+				type.format (ctxt);
+				ctxt.put_special("!")
+			else
+				ctxt.put_special ("!!")
+			end;
+			target.format (ctxt);
+			if  call /= void then
+				ctxt.need_dot;
+				call.format (ctxt);
+				-- check whether "." is needeed
+			end;
+			ctxt.always_succeed;
+		end;
+
 
 end

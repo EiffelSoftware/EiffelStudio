@@ -6,7 +6,7 @@ inherit
 
 	AST_EIFFEL
 		redefine
-			byte_node, type_check
+			byte_node, type_check, format
 		end;
 	SHARED_INSPECT;
 
@@ -17,6 +17,7 @@ feature -- Attributes
 
 	upper: ATOMIC_AS;
 			-- Upper bound
+			-- void if constant rather than interval
 
 feature -- Initialization
 
@@ -92,6 +93,18 @@ feature -- Type check and byte code
 			-- by `byte_node'.
 		once
 			Result := context.interval_line;
+		end;
+
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			lower.format (ctxt);
+			if upper /= void then
+				ctxt.put_special("..");
+				upper.format (ctxt);
+			end;
+			ctxt.always_succeed;
 		end;
 
 end

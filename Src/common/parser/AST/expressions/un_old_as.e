@@ -4,7 +4,7 @@ inherit
 
 	UNARY_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node, operator_is_keyword
 		end;
 
 feature -- Type check
@@ -54,4 +54,7 @@ feature -- Type check, byte code and dead code removal
 			Result.add_old_expression;
 		end;
 
+	operator_name: STRING is "old";
+	
+	operator_is_keyword: BOOLEAN is true;
 end

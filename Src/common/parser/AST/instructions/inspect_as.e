@@ -7,7 +7,7 @@ inherit
 	INSTRUCTION_AS
 		redefine
 			type_check, byte_node,
-			find_breakable
+			find_breakable, format
 		end;
 	SHARED_INSPECT
 
@@ -103,6 +103,38 @@ feature -- Debugger
 				else_part.find_breakable;
 			end;
 			record_break_node
+		end;
+
+feature -- Formatter
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			ctxt.put_keyword ("inspect");
+			ctxt.indent_one_more;
+			switch.format (ctxt);
+			ctxt.indent_one_less;
+			ctxt.next_line;
+			if case_list /= void then
+				ctxt.set_separator("");
+				ctxt.separator_is_normal;
+				ctxt.new_line_between_tokens;
+				case_list.format (ctxt);
+				ctxt.next_line;
+			end;
+			if else_part /= void then
+				ctxt.put_keyword("else");
+				ctxt.indent_one_more;
+				ctxt.separator_is_special;
+				ctxt.set_separator(";");
+				ctxt.new_line_between_tokens;
+				else_part.format(ctxt);
+				ctxt.indent_one_less;
+				ctxt.next_line;
+			end;
+			ctxt.put_keyword("end");
+			ctxt.commit;
 		end;
 
 end

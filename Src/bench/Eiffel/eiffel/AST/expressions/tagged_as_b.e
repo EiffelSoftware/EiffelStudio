@@ -6,7 +6,7 @@ inherit
 
 	EXPR_AS
 		redefine
-			type_check, byte_node
+			type_check, byte_node, format
 		end
 
 feature -- Attributes
@@ -69,6 +69,23 @@ feature -- Type check, byte code and dead code removal
 			context.init_error (vwbe3);
 			vwbe3.set_assertion (Current);
 			Error_handler.insert_error (vwbe3);
+		end;
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			if tag /= void then
+				ctxt.put_string(tag);
+				ctxt.put_special(": ");
+			end;
+			ctxt.new_expression;
+			expr.format (ctxt);
+			if ctxt.last_was_printed then
+				ctxt.commit;
+			else
+				ctxt.rollback;
+			end;
 		end;
 	
 end

@@ -4,7 +4,7 @@ inherit
 
 	UNARY_AS
 		redefine
-			byte_node
+			byte_node, operator_is_keyword
 		end
 
 feature -- Type check
@@ -30,4 +30,7 @@ feature -- Type check
 			access_line.forth;
 		end;
 
+	operator_name: STRING is "not";
+	
+	operator_is_keyword: BOOLEAN is true;
 end

@@ -7,7 +7,7 @@ inherit
 	AST_EIFFEL
 		redefine
 			type_check, byte_node,
-			find_breakable
+			find_breakable, format
 		end
 
 feature -- Attributes
@@ -50,6 +50,7 @@ feature -- Type check, byte code production, dead code removal
 			end;
 		end;
 
+
 feature -- Debugging
 
 	find_breakable is
@@ -59,4 +60,22 @@ feature -- Debugging
 			end
 		end
 
+feature -- Formatter
+
+	format (ctxt: FORMAT_CONTEXT) is
+			-- Reconstitute text.
+		do
+			ctxt.begin;
+			ctxt.put_keyword ("when ");
+			ctxt.set_separator (",");
+			ctxt.no_new_line_between_tokens;
+			interval.format (ctxt);
+			ctxt.put_keyword ("then ");
+			ctxt.indent_one_more;
+			ctxt.next_line;
+			ctxt.set_separator(";");
+			ctxt.new_line_between_tokens;
+			compound.format(ctxt);			
+			ctxt.commit
+		end;			
 end

@@ -75,7 +75,9 @@ feature -- Element change
 	set_code (a_code: INTEGER) is
 			-- Set `code' to `a_code'.
 		do
-			make_by_predefined_id (cwel_integer_to_pointer (code))
+			destroy_item
+			code := a_code
+			make_by_predefined_id (cwel_integer_to_pointer (a_code))
 		end
 
 feature -- Status setting
@@ -113,6 +115,9 @@ end -- class EV_CURSOR_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.7  2000/03/15 18:52:00  rogers
+--| Fixed set_code.
+--|
 --| Revision 1.6  2000/02/19 05:44:59  oconnor
 --| released
 --|

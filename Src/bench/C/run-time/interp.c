@@ -2862,7 +2862,7 @@ rt_private void interpret(int flag, int where)
 
 			last = iget();
 			last->type = SK_REF;
-			RTCOMS (last->it_ref, body_index, number, string, length, 0);
+			RTCOMS (last->it_ref, body_index, number, (char *) string, length, 0);
 
 			if (tagval != stagval) {
 				sync_registers(MTC scur,stop);

@@ -40,7 +40,7 @@ library emitter
     [id(0x60020005)]
     HRESULT initialize();
     [id(0x60020006)]
-    HRESULT initialize_with_path([in] IUnknown* a_path);
+    HRESULT initialize_with_path([in] BSTR a_path);
     [id(0x60020007)]
     HRESULT consume_gac_assembly(
                     [in] BSTR aname,

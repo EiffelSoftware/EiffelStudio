@@ -5,7 +5,7 @@
 
 
  /* File created by MIDL compiler version 6.00.0347 */
-/* at Wed Aug 28 15:33:37 2002
+/* at Wed Aug 28 18:06:27 2002
  */
 /* Compiler settings for ise_cache_manager.idl:
     Os, W1, Zp8, env=Win32 (32b run)
@@ -119,7 +119,7 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE initialize( void) = 0;
         
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE initialize_with_path( 
-            /* [in] */ IUnknown *a_path) = 0;
+            /* [in] */ BSTR a_path) = 0;
         
         virtual /* [id] */ HRESULT STDMETHODCALLTYPE consume_gac_assembly( 
             /* [in] */ BSTR aname,
@@ -210,7 +210,7 @@ EXTERN_C const IID IID_ISE_Cache_COM_ISE_CACHE_MANAGER;
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *initialize_with_path )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
-            /* [in] */ IUnknown *a_path);
+            /* [in] */ BSTR a_path);
         
         /* [id] */ HRESULT ( STDMETHODCALLTYPE *consume_gac_assembly )( 
             ISE_Cache_COM_ISE_CACHE_MANAGER * This,
@@ -370,7 +370,7 @@ void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_Stub(
 
 /* [id] */ HRESULT STDMETHODCALLTYPE ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_with_path_Proxy( 
     ISE_Cache_COM_ISE_CACHE_MANAGER * This,
-    /* [in] */ IUnknown *a_path);
+    /* [in] */ BSTR a_path);
 
 
 void __RPC_STUB ISE_Cache_COM_ISE_CACHE_MANAGER_initialize_with_path_Stub(

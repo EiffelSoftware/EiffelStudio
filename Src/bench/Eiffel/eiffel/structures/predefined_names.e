@@ -135,6 +135,8 @@ feature -- Constants
 	three_way_comparison_name_id: INTEGER is 125
 	ctype_header_name_id: INTEGER is 126
 	as_integer_64_name_id: INTEGER is 127
+	to_real_32_name_id: INTEGER is 128
+	to_real_64_name_id: INTEGER is 129
 			-- Predefined name IDs constants
 
 end -- class PREDEFINED_NAMES

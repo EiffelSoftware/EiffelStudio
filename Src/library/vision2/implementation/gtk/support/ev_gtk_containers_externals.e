@@ -81,9 +81,9 @@ feature {NONE} -- GTK C functions for windows
 			"C | <gdk/gdk.h>"
 		end
 
-	gdk_window_set_icon_name (widget: POINTER; name: STRING) is
+	gdk_window_set_icon_name (widget: POINTER; name: POINTER) is
 		external
-			"C | <gdk/gdk.h>"
+			"C (GdkWindow *, char *)| <gdk/gdk.h>"
 		end
 
 	gtk_window_new (opt: INTEGER): POINTER is

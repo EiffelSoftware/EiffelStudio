@@ -14,7 +14,7 @@ inherit
 			on_draw
 		end
 
-feature {EV_LIST_ITEM_IMP} -- Access
+feature -- Access
 
 	ev_children: LINKED_LIST [EV_LIST_ITEM_IMP] is
 			-- List of the children
@@ -33,17 +33,11 @@ feature {EV_LIST_ITEM_IMP} -- Access
 			result_not_void: Result /= Void
 		end
 
-feature {EV_LIST_ITEM, EV_LIST_ITEM_IMP} -- Element change
+feature -- Element change
 
-	add_item (an_item: EV_LIST_ITEM) is
-			-- Add an item to the list
-	local
-			item_imp: EV_LIST_ITEM_IMP
+	add_item (item_imp: EV_LIST_ITEM_IMP) is
+			-- Add `item_imp' to the list
 		do
-			item_imp ?= an_item.implementation
-			check
-				valid_item: item_imp /= Void
-			end
 			ev_children.extend (item_imp)
 			add_string (item_imp.text)
 			item_imp.set_id (ev_children.count - 1)

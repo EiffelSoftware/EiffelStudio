@@ -794,10 +794,12 @@ feature -- Element change
 			new_name_not_empty: not new_name.is_empty
 		local
 			id_sd: ID_SD
+			root: ROOT_SD
 		do
 			if root_ast.root = Void then
 				create id_sd.initialize (new_name)
-				root_ast.set_root (create {ROOT_SD}.initialize (id_sd, Void, Void))
+				create root.initialize (id_sd, Void, Void)
+				root_ast.set_root (root)
 			else
 				root_ast.root.set_root_name (new_id_sd (new_name, False))
 			end
@@ -996,7 +998,8 @@ feature -- Element change
 					end
 				end
 			end
-			defaults.extend (new_special_option_sd (ace_dictionary.Namespace_keyword, namespace, True))
+			
+			defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Namespace, namespace, True))
 		end
 		
 	set_working_directory (directory: STRING) is
@@ -1030,7 +1033,7 @@ feature -- Element change
 				end
 			end
 			if not directory.is_empty then
-				defaults.extend (new_special_option_sd (ace_dictionary.working_directory_keyword, directory, True))	
+				defaults.extend (new_special_option_sd (feature {FREE_OPTION_SD}.Working_directory, directory, True))	
 			end
 		end
 		

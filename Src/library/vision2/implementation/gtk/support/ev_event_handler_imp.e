@@ -160,6 +160,8 @@ feature {NONE} -- Status report
 				Result := selection_changed_id
 			elseif ev_str.is_equal ("select_child") then
 				Result := select_child_id
+			elseif ev_str.is_equal ("unselect_child") then
+				Result := unselect_child_id
 
 			-- For multi column lists:
 			elseif ev_str.is_equal ("select_row") then
@@ -201,7 +203,8 @@ feature {NONE} -- Status report
 
 			end
 		ensure
-			event_id_ok: (Result>0 and Result<=23)
+			event_id_ok: (Result > 0 and Result <= 46)
+			-- there are 46 differents signals (cf EV_WIDGET_EVENTS_CONSTANTS_IMP).
 		end
 
 feature {NONE} -- Status setting

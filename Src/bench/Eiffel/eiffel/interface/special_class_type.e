@@ -268,7 +268,6 @@ feature {NONE} -- C code generation
 			consistency: feat.feature_name_id = feature {PREDEFINED_NAMES}.base_address_name_id
 		local
 			gen_param, result_type: TYPE_I;
-			non_expanded_type: CL_TYPE_I;
 			is_expanded: BOOLEAN;
 			type_c: TYPE_C;
 			final_mode: BOOLEAN;

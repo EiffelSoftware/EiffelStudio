@@ -36,8 +36,10 @@ feature {NONE} -- Initialization
 	make is
 			-- Initialize the C variables
 		do
-			cwel_set_window_procedure_address ($window_procedure)
-			cwel_set_dialog_procedure_address ($dialog_procedure)
+			create window_delegate.make (Current, $window_procedure)
+			create dialog_delegate.make (Current, $dialog_procedure)
+			cwel_set_window_procedure_address (window_delegate)
+			cwel_set_dialog_procedure_address (dialog_delegate)
 			dispatcher_object := feature {GCHANDLE}.alloc (Current)
 			cwel_set_dispatcher_object (feature {GCHANDLE}.op_explicit (dispatcher_object))
 		end
@@ -150,6 +152,9 @@ feature {NONE} -- Implementation
 	dispatcher_object: GCHANDLE
 			-- Handle to Current.
 			
+	window_delegate, dialog_delegate: WEL_DISPATCHER_DELEGATE
+			-- Delegate for callbacks.
+			
 	dispose is
 			-- Wean `Current'
 		local
@@ -166,14 +171,14 @@ feature {NONE} -- Externals
 			"C [macro %"wel.h%"]: EIF_POINTER"
 		end
 
-	cwel_set_window_procedure_address (address: POINTER) is
+	cwel_set_window_procedure_address (address: WEL_DISPATCHER_DELEGATE) is
 		external
-			"C [macro %"disptchr.h%"]"
+			"C [macro %"disptchr.h%"] (EIF_POINTER)"
 		end
 
-	cwel_set_dialog_procedure_address (address: POINTER) is
+	cwel_set_dialog_procedure_address (address: WEL_DISPATCHER_DELEGATE) is
 		external
-			"C [macro %"disptchr.h%"]"
+			"C [macro %"disptchr.h%"] (EIF_POINTER)"
 		end
 
 	cwel_set_dispatcher_object (dispatcher: POINTER) is

@@ -148,7 +148,7 @@ feature -- Event - command association
 			-- Add 'cmd' to the list of commands to be executed 
 			-- when the text of the widget have changed.
 		do
-			add_command (widget, "changed", cmd, arg)
+			add_command (widget, "changed", cmd, arg, default_pointer)
 		end
 
 feature -- Event -- removing command association

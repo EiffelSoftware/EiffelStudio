@@ -99,7 +99,6 @@ feature -- Basic Operation
 				check
 					counts_consistent: all_children.count + 1 = original_ids.count
 				end
-				object_handler.objects.print (new_object.id)
 				new_object.set_id (original_ids.i_th (1))
 				object_handler.objects.put (new_object, new_object.id)
 				from
@@ -107,7 +106,6 @@ feature -- Basic Operation
 				until
 					all_children.off
 				loop
-					object_handler.objects.print (all_children.item.id)
 					all_children.item.set_id (original_ids.i_th (all_children.index + 1))
 					object_handler.objects.put (all_children.item, all_children.item.id)
 					all_children.forth

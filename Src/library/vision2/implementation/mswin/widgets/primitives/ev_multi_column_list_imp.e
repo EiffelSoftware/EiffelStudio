@@ -22,6 +22,7 @@ inherit
 			on_right_button_down,
 			on_left_button_down,
 			on_middle_button_down,
+			on_left_button_up,
 			pnd_press
 		redefine
 			on_mouse_move,
@@ -983,6 +984,9 @@ end -- class EV_MULTI_COLUMN_LIST_IMP
 --|-----------------------------------------------------------------------------
 --|
 --| $Log$
+--| Revision 1.97  2000/04/27 23:23:10  rogers
+--| Undefined on_left_button_up from EV_PRIMITIVE_IMP.
+--|
 --| Revision 1.96  2000/04/27 23:03:44  pichery
 --| Added set_default_minimum_size
 --|

@@ -137,12 +137,12 @@ feature {EV_ANY, EV_ANY_I} -- Implementation
 		local
 			temp: BOOLEAN
 		do
-			temp := feature {ISE_RUNTIME}.c_check_assert (False)
+			temp := feature {ISE_RUNTIME}.check_assert (False)
 			implementation.disable_initialized
 			new_implementation.set_interface(Current)
 			implementation := new_implementation
 			implementation.enable_initialized
-			temp := feature {ISE_RUNTIME}.c_check_assert (temp)
+			temp := feature {ISE_RUNTIME}.check_assert (temp)
 		end
 
 feature {EV_ANY} -- Implementation

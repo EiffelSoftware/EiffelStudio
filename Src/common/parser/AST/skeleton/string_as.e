@@ -40,6 +40,11 @@ feature -- Simple formatting
 			ctxt.put_text_item_without_tabs (ti_Double_quote);
 		end;
 
+	string_value: STRING is
+		do
+			Result := eiffel_string (value)
+		end
+
 feature 
 
 	infix "<" (other: like Current): BOOLEAN is

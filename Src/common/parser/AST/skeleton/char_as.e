@@ -51,4 +51,9 @@ feature -- Simple formatting
 			ctxt.put_text_item_without_tabs (ti_Quote)
 		end;
 
+    string_value: STRING is
+        do
+            Result := char_text (value)
+        end
+
 end -- class CHAR_AS

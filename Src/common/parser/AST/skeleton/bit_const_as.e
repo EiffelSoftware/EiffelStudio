@@ -33,4 +33,11 @@ feature -- Simple formatting
 			ctxt.put_string ("B");
 		end;
 
+    string_value: STRING is
+        do
+            !! Result.make (0);
+			Result.append (value)
+        end
+
+
 end -- class BIT_CONST_AS

@@ -34,4 +34,9 @@ feature -- Simple formatting
 			end
 		end;
 
+    string_value: STRING is
+        do
+            Result := value.out
+        end
+
 end -- class BOOL_AS

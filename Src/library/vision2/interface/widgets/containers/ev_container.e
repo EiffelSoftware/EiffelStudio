@@ -128,10 +128,42 @@ feature -- Status setting
 			not_destroyed: not is_destroyed
 			other_not_void: other /= Void
 		do
-			implementation.connect_radio_grouping (other)
+			implementation.merge_radio_button_groups (other)
 		end
-	
+		
+	unmerge_radio_button_groups (other: EV_CONTAINER) is
+			-- Remove `other' from radio button group of `Current'.
+			-- If no radio button of `other' was checked before removal
+			-- then first radio button contained will be checked.
+		require
+			not_destroyed: not is_destroyed
+			other_is_merged: merged_radio_button_groups.has (other)
+		do
+			implementation.unmerge_radio_button_groups (other)
+		ensure
+			other_not_merged: other.merged_radio_button_groups = Void
+			not_contained_in_this_group: merged_radio_button_groups /= Void implies
+				not merged_radio_button_groups.has (other)
+			first_radio_button_now_selected: not old other.has_selected_radio_button implies
+				other.first_radio_button_selected
+			original_radio_button_still_selected: old has_selected_radio_button implies
+				has_selected_radio_button
+		end
+
 feature -- Status report
+
+	merged_radio_button_groups: ARRAYED_LIST [EV_CONTAINER] is
+			-- `Result' is all other radio button groups
+			-- merged with `Current'. Void if no other containers
+			-- are merged.
+		require
+			not_destroyed: not is_destroyed
+		do
+			Result := implementation.merged_radio_button_groups
+		ensure
+			not_is_empty: Result /= Void implies not Result.is_empty
+		end
+		
 
 	writable: BOOLEAN is
 			-- Is there a current item that may be modified?
@@ -232,30 +264,8 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			-- Do all items have parent `Current'?
 		require
 			not_destroyed: not is_destroyed
-		local
-			c: CURSOR
-			l: LINEAR [EV_WIDGET]
-			cs: CURSOR_STRUCTURE [EV_WIDGET]
 		do
-			Result := True
-			l := linear_representation
-			cs ?= l
-			if cs /= Void then
-				c := cs.cursor
-			end
-			from
-				l.start
-			until
-				l.after or Result = False
-			loop
-				if l.item.parent /= Current then
-					Result := False
-				end
-				l.forth
-			end
-			if cs /= Void then
-				cs.go_to (c)
-			end
+			Result := implementation.parent_of_items_is_current
 		end
 
 	items_unique: BOOLEAN is
@@ -263,136 +273,44 @@ feature {EV_CONTAINER, EV_CONTAINER_I} -- Contract support
 			-- (ie Are there no duplicates?)
 		require
 			not_destroyed: not is_destroyed
-		local
-			c: CURSOR
-			l: LINEAR [EV_WIDGET]
-			ll: LINKED_LIST [EV_WIDGET]
-			cs: CURSOR_STRUCTURE [EV_WIDGET]
 		do
-			create ll.make
-			Result := True
-			l := linear_representation
-			cs ?= l
-			if cs /= Void then
-				c := cs.cursor
-			end
-			from
-				l.start
-			until
-				l.after or Result = False
-			loop
-				if ll.has (l.item) then
-					Result := False
-				end
-				ll.extend (l.item)
-				l.forth
-			end
-			if cs /= Void then
-				cs.go_to (c)
-			end
+			Result := implementation.items_unique
 		end
 
 	foreground_color_propagated: BOOLEAN is
 			-- Do all children have same foreground color as `Current'?
 		require
 			not_destroyed: not is_destroyed
-		local
-			l: LINEAR [EV_WIDGET]
-			c: EV_CONTAINER
-			cs: CURSOR_STRUCTURE [EV_WIDGET]
-			cur: CURSOR
 		do
-			Result := True
-			l := linear_representation
-			cs ?= l
-			if cs /= Void then
-				cur := cs.cursor
-			end
-			from
-				l.start
-			until	
-				l.after or not Result
-			loop
-				c ?= l.item
-				if not foreground_color.is_equal (l.item.foreground_color) then
-					Result := False
-				elseif c /= Void and then not c.foreground_color_propagated then
-					Result := False
-				end
-				l.forth
-			end
-			if cs /= Void then
-				cs.go_to (cur)
-			end
+			Result := implementation.foreground_color_propagated
 		end
 
 	background_color_propagated: BOOLEAN is
 			-- Do all children have same background color as `Current'?
 		require
 			not_destroyed: not is_destroyed
-		local
-			l: LINEAR [EV_WIDGET]
-			c: EV_CONTAINER
-			cs: CURSOR_STRUCTURE [EV_WIDGET]
-			cur: CURSOR
 		do
-			Result := True
-			l := linear_representation
-			cs ?= l
-			if cs /= Void then
-				cur := cs.cursor
-			end
-			from
-				l.start
-			until	
-				l.after or not Result
-			loop
-				c ?= l.item
-				if not background_color.is_equal (l.item.background_color) then
-					Result := False
-				elseif c /= Void and then not c.background_color_propagated then
-					Result := False
-				end
-				l.forth
-			end
-			if cs /= Void then
-				cs.go_to (cur)
-			end
+			Result := implementation.background_color_propagated
 		end
 
 	all_radio_buttons_connected: BOOLEAN is
 			-- Are all radio buttons in this container connected?
 		require
 			not_destroyed: not is_destroyed
-		local
-			cur: CURSOR
-			l: DYNAMIC_LIST [EV_WIDGET]
-			peer: EV_RADIO_BUTTON
-			peers: LINKED_LIST [EV_RADIO_PEER]
 		do
-			l ?= linear_representation
-			if l /= Void then
-				from
-					cur := l.cursor
-					l.start
-				until
-					l.off or else not Result
-				loop
-					peer ?= item
-					if peer /= Void then
-						if peers = Void then
-							peers := peer.peers
-						else
-							Result := peers.has (peer)
-						end
-					end
-				l.forth
-				end
-				l.go_to (cur)
-			end
-			if peers = Void then
-				Result := True
-			end
+			Result := implementation.all_radio_buttons_connected
+		end
+
+	first_radio_button_selected: BOOLEAN is
+			-- Is first radio button contained in `Current',
+			-- selected?
+		do
+			Result := implementation.first_radio_button_selected
+		end
+	has_selected_radio_button: BOOLEAN is
+			-- Does `Current' contain a selected radio button?
+		do
+			Result := implementation.has_selected_radio_button
 		end
 		
 feature {NONE} -- Contract support
@@ -402,7 +320,7 @@ feature {NONE} -- Contract support
 		do
 			Result := Precursor {EV_WIDGET} and Precursor {EV_PIXMAPABLE}
 		end
-		
+
 feature {EV_ANY_I} -- Implementation
 
 	implementation: EV_CONTAINER_I

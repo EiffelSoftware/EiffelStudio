@@ -295,6 +295,8 @@ rt_private void partial_store_append(EIF_REFERENCE object, fnptr mid, fnptr nid)
 	max_object_id = 1;
 
 		/* Initialize buffer position for new storing */
+		/* The first two EIF_INTEGERs are the length of the STORABLE and 
+		 * the number of objects to retrieve. */
 	current_buffer_pos = 0;
 	current_buffer_pos += 2*sizeof(EIF_INTEGER);
 
@@ -449,7 +451,7 @@ rt_private int store_object (EIF_REFERENCE object, int object_count)
 		(FUNCTION_CAST (void, (EIF_REFERENCE, EIF_REFERENCE, EIF_INTEGER, EIF_INTEGER, EIF_INTEGER))
 			make_index)(server,
 						object,
-						file_position + saved_buffer_pos - sizeof(EIF_REFERENCE),
+						file_position + saved_buffer_pos,	/* Check why we need to read 4 bytes less */
 						object_count - saved_object_count,
 						current_buffer_pos - saved_buffer_pos);
 
@@ -531,21 +533,19 @@ rt_private int st_write_cid (char **tmp_buffer, uint32 dftype)
 {
 	int16 *cidarr, count;
 	int result = 0;
+	char *tmp=*tmp_buffer;
 
 	cidarr = eif_gen_cid ((int16) dftype);
 	count  = *cidarr;
 
 	*tmp_buffer = buffer_write (*tmp_buffer, &count, sizeof(int16));
-	result += sizeof(int16);
-
+	
 	/* If count = 1 then we don't need to write more data */
 
-	if (count > 1) {
+	if (count > 1)
 		*tmp_buffer = buffer_write (*tmp_buffer, cidarr+1, count * sizeof (int16));
-		result += (count * sizeof(int16));
-	}
 
-	return result;
+	return (int) (*tmp_buffer - tmp);
 }
 
 rt_private void traversal (EIF_REFERENCE object)

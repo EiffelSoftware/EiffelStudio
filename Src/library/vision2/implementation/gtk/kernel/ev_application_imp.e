@@ -52,7 +52,7 @@ feature {NONE} -- Initialization
 			feature {EV_GTK_EXTERNALS}.gdk_set_show_events (False)
 		
 			feature {EV_GTK_EXTERNALS}.gtk_widget_set_default_colormap (feature {EV_GTK_EXTERNALS}.gdk_rgb_get_cmap)
-			--feature {EV_GTK_EXTERNALS}.gtk_widget_set_default_visual (feature {EV_GTK_EXTERNALS}.gdk_rgb_get_visual)
+			feature {EV_GTK_DEPENDENT_EXTERNALS}.gtk_widget_set_default_visual (feature {EV_GTK_EXTERNALS}.gdk_rgb_get_visual)
 
 			tooltips := feature {EV_GTK_EXTERNALS}.gtk_tooltips_new
 			set_tooltip_delay (500)

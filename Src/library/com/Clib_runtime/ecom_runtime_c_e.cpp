@@ -731,7 +731,7 @@ EIF_REFERENCE ecom_runtime_ce::ccom_ce_array_decimal
 
 	element_number = (EIF_INTEGER) ccom_element_number (dim_count, element_count);
 
-	if ((an_object == NULL) || (eif_access (an_object) == NULL))
+	if (((an_object == NULL) || (eif_access (an_object) == NULL)))
 	{
 		intermediate_array = eif_create (type_id);
 		make (eif_access (intermediate_array), 1, element_number);
